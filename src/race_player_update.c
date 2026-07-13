@@ -4699,20 +4699,19 @@ void dispatchRacePlayerMode07CourseObject(RaceInputPlayer *player) {
     gRacePlayerMode07StateHandlers[player->updateState](player);
 }
 
-// updateRacePlayerMode07AlignToLaunchRamp best match: 95.401% (nonmatchings/updateRacePlayerMode07AlignToLaunchRamp-731940616440357983/base_26.c)
+// updateRacePlayerMode07AlignToLaunchRamp best match: 96.617% (nonmatchings/updateRacePlayerMode07AlignToLaunchRamp-2870645799593382959/base_5.c)
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_update/updateRacePlayerMode07AlignToLaunchRamp.s")
 
 #ifdef NON_MATCHING
 void updateRacePlayerMode07AlignToLaunchRamp(RaceInputPlayer *player) {
-    s16 savedAngle;
     s16 angleDelta;
+    s16 savedAngle;
     s16 angleStep;
     s16 updateTimer;
     s32 temp_a1;
     s32 tempX;
     s32 tempZ;
-    s32 timer;
 
     updateTimer = player->updateTimer;
     if (updateTimer == 0) {
@@ -4734,23 +4733,23 @@ void updateRacePlayerMode07AlignToLaunchRamp(RaceInputPlayer *player) {
     }
     savedAngle = angleDelta;
     updateRacePlayerLeanAngle(player, 0x10000, 0);
-    angleDelta = savedAngle;
 
     temp_a1 = player->unk80;
     if (temp_a1 != 0) {
         angleStep = angleDelta / temp_a1;
+        angleDelta = savedAngle;
         player->facingAngle += angleStep;
+        tempX = player->posX;
         tempZ = player->posZ;
         if (temp_a1) {
         }
-        tempX = player->posX;
-        player->posX = tempX + ((gRaceCourseStartEntries[gRaceCourseIndex].unk18 - tempX) / temp_a1);
+        if (1) {
+            player->posX = tempX + ((gRaceCourseStartEntries[gRaceCourseIndex].unk18 - tempX) / temp_a1);
+        }
         player->posZ = tempZ + ((gRaceCourseStartEntries[gRaceCourseIndex].unk1C - tempZ) / temp_a1);
     }
 
-    timer = player->stateTimer - 1;
-    player->stateTimer = timer;
-    if (timer == 0) {
+    if (--player->stateTimer == 0) {
         player->posX = gRaceCourseStartEntries[gRaceCourseIndex].unk18;
         player->posZ = gRaceCourseStartEntries[gRaceCourseIndex].unk1C;
         player->updateState++;
