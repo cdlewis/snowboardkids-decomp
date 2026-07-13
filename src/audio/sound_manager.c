@@ -171,8 +171,8 @@ void initSoundManager(void) {
     init.outputRate = 0x6E;
     init.heapBase = (u8 *)getRelocatableHeapBlockBase(gAssetHandles.unk6);
     init.heapLen = 0x80000;
-    init.unk14 = (PlayerCommandBank *)getRelocatableHeapBlockBase(gAssetHandles.unk8);
-    init.unk18 = D_27E290;
+    init.soundBank = (PlayerCommandBank *)getRelocatableHeapBlockBase(gAssetHandles.unk8);
+    init.sampleBaseOffset = D_27E290;
     init.unk1C = D_800DABB0;
     init.unk20 = D_800DACAC;
     init.fxHeader = D_800DB8FC;

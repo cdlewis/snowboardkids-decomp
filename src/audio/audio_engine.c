@@ -881,7 +881,7 @@ s32 initSoundPlayer(PlayerCommandInit *arg0) {
 
     initAudioSynthesizer(arg0->unk4, &synConfig, arg0->outputRate, &synthConfig,
                   arg0->unk3C, arg0->unk40, gAudioTicksPerSecond);
-    loadSoundBank(arg0->unk14, arg0->unk18);
+    loadSoundBank(arg0->soundBank, arg0->sampleBaseOffset);
     setSoundPlayerMasterVolume(3, 0x7FFF);
 
     gSoundPlayerUpdateCounter = 0;
@@ -1850,14 +1850,14 @@ extern u8 *gSoundWaveTable;
 extern s32 gSoundBankEntryCount;
 extern PlayerCommandBank *gCurrentSoundBank;
 
-void loadSoundBank(PlayerCommandBank *arg0, s32 arg1) {
+void loadSoundBank(PlayerCommandBank *bank, s32 sampleBaseOffset) {
     s32 count;
     s32 i;
     s32 offset;
-    PlayerCommandRelocEntry *entry;
+    ALWaveTable *wave;
 
-    gCurrentSoundBank = arg0;
-    count = arg0->count;
+    gCurrentSoundBank = bank;
+    count = bank->waveCount;
     gSoundBankEntryCount = ((count & 0xFFFFFFFFFFFFFFFF) & 0xFFFFFFFFFFFFFFFF) & 0xFFFFFFFFFFFFFFFF;
     gSoundWaveTable = alHeapDBAlloc(0, 0, &gSoundPlayerHeap, 1, count * 4);
 
@@ -1865,21 +1865,23 @@ void loadSoundBank(PlayerCommandBank *arg0, s32 arg1) {
     if (gSoundBankEntryCount > 0) {
         offset = 0;
         do {
-            *(PlayerCommandRelocEntry **)(gSoundWaveTable + offset) =
-                (PlayerCommandRelocEntry *)(*(s32 *)((u8 *)gCurrentSoundBank + offset + 0x14) + (s32)gCurrentSoundBank);
-            entry = *(PlayerCommandRelocEntry **)(gSoundWaveTable + offset);
-            if (entry->relocated == 0) {
+            *(ALWaveTable **)(gSoundWaveTable + offset) =
+                (ALWaveTable *)(*(s32 *)((u8 *)gCurrentSoundBank->waveTableOffsets + offset) + (s32)gCurrentSoundBank);
+            wave = *(ALWaveTable **)(gSoundWaveTable + offset);
+            if (wave->flags == 0) {
                 do {
-                    entry->unk0 += arg1;
-                    (*(PlayerCommandRelocEntry **)(gSoundWaveTable + offset))->relocated = 1;
-                    entry = *(PlayerCommandRelocEntry **)(gSoundWaveTable + offset);
+                    wave->base += sampleBaseOffset;
+                    (*(ALWaveTable **)(gSoundWaveTable + offset))->flags = 1;
+                    wave = *(ALWaveTable **)(gSoundWaveTable + offset);
                 } while (0);
-                if (entry->unkC != 0) {
-                    entry->unkC += (s32)gCurrentSoundBank;
-                    entry = *(PlayerCommandRelocEntry **)(gSoundWaveTable + offset);
+                if (wave->waveInfo.adpcmWave.loop != 0) {
+                    wave->waveInfo.adpcmWave.loop =
+                        (ALADPCMloop *)((s32)wave->waveInfo.adpcmWave.loop + (s32)gCurrentSoundBank);
+                    wave = *(ALWaveTable **)(gSoundWaveTable + offset);
                 }
-                if (entry->unk8 == 0) {
-                    entry->unk10 += (s32)arg0;
+                if (wave->type == AL_ADPCM_WAVE) {
+                    wave->waveInfo.adpcmWave.book =
+                        (ALADPCMBook *)((s32)wave->waveInfo.adpcmWave.book + (s32)bank);
                 }
             }
             i++;

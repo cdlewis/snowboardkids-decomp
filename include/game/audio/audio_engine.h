@@ -207,19 +207,9 @@ typedef struct OSIoMesg {
 
 typedef struct PlayerCommandBank {
     u8 pad0[0x10];
-    s32 count;
-    s32 offsets[1];
+    s32 waveCount;
+    s32 waveTableOffsets[1];
 } PlayerCommandBank;
-
-typedef struct PlayerCommandRelocEntry {
-    s32 unk0;
-    u8 pad4[4];
-    u8 unk8;
-    u8 relocated;
-    u8 padA[2];
-    s32 unkC;
-    s32 unk10;
-} PlayerCommandRelocEntry;
 
 typedef struct PlayerCommandInit {
     s32 count;
@@ -227,8 +217,8 @@ typedef struct PlayerCommandInit {
     s32 outputRate;
     u8 *heapBase;
     s32 heapLen;
-    PlayerCommandBank *unk14;
-    s32 unk18;
+    PlayerCommandBank *soundBank;
+    s32 sampleBaseOffset;
     s32 unk1C;
     s32 unk20;
     s32 *fxHeader;
@@ -360,7 +350,7 @@ void soundPlayerUpdateVibrato(PlayerCommandState *arg0);
 void soundPlayerUpdateVolumeTrack(PlayerCommandState *arg0);
 void soundPlayerUpdatePanTrack(PlayerCommandState *arg0);
 f32 approximatePitchRatio(f32 arg0);
-void loadSoundBank(PlayerCommandBank *arg0, s32 arg1);
+void loadSoundBank(PlayerCommandBank *bank, s32 sampleBaseOffset);
 s32 soundPlayerRandom();
 void resetSoundPlayerState(PlayerCommandState *arg0);
 s32 findFreeSoundPlayerIndex(s32 arg0, s32 arg1);
