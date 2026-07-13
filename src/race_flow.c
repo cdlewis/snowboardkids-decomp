@@ -1173,7 +1173,7 @@ void waitRaceFinishResultsFlow(void) {
 }
 #endif
 
-// interpolateRaceViewport best match: 60.588% (nonmatchings/interpolateRaceViewport-5802343343535905907/base_5.c)
+// interpolateRaceViewport best match: 62.264% (nonmatchings/interpolateRaceViewport-2663524570355072948/base_5.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_flow/interpolateRaceViewport.s")
 
 #ifdef NON_MATCHING
@@ -1181,17 +1181,15 @@ void waitRaceFinishResultsFlow(void) {
 void interpolateRaceViewport(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5, s32 arg6,
                   f32 arg7, s32 arg8, s32 arg9, s32 arg10, s32 arg11, s32 arg12, s32 arg13,
                   f32 arg14) {
-    register s32 viewportIndex;
-    volatile s32 sp2C;
-    volatile s32 sp28;
-    volatile f32 temp_fv0;
-    volatile s32 temp_t0;
-    volatile s32 temp_t1;
-    volatile s32 temp_t2;
-    volatile s32 temp_t3;
-    s32 temp_v0;
+    s32 sp2C;
+    s32 sp28;
+    f32 temp_fv0;
+    s32 temp_t0;
+    s32 temp_t1;
+    s32 temp_t2;
+    s32 temp_t3;
+    volatile s32 temp_v0;
 
-    viewportIndex = arg0;
     temp_v0 = gCurrentGameTask->fadeTimer;
     sp2C = (((arg8 - arg1) * temp_v0) / 15) + arg1;
     sp28 = (((arg9 - arg2) * temp_v0) / 15) + arg2;
@@ -1201,9 +1199,9 @@ void interpolateRaceViewport(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s
     temp_fv0 = (((arg14 - arg7) * (f32) temp_v0) / 15.0f) + arg7;
     temp_t3 = (((arg13 - arg6) * temp_v0) / 15) + arg6;
     if (gRaceCourseIndex.s != 6) {
-        configureViewport(viewportIndex, sp2C, sp28, temp_t0 & 0xFFFF, temp_t1, temp_t2, temp_t3, temp_fv0);
+        configureViewport(arg0, sp2C, sp28, temp_t0 & 0xFFFF, temp_t1, temp_t2, temp_t3, temp_fv0);
     } else {
-        configureRaceViewport(viewportIndex, sp2C, sp28, temp_t0 & 0xFFFF, temp_t1, temp_t2, temp_t3, temp_fv0);
+        configureRaceViewport(arg0, sp2C, sp28, temp_t0 & 0xFFFF, temp_t1, temp_t2, temp_t3, temp_fv0);
     }
 }
 #endif
