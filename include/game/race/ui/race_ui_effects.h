@@ -110,7 +110,7 @@ void func_8005B49C(void *arg0);
 void func_8005B55C(void *arg0);
 void func_8005B61C(void *arg0);
 void func_8005B6F8(void *arg0);
-void func_8005B798(void *arg0);
+void updateRaceUiHitPrizeFadeIn(struct RaceUiCounterActor *arg0);
 void func_8005B834(void *arg0);
 void func_8005B8E8(struct RaceUiAlphaActor *arg0);
 void func_8005B9F8(struct RaceUiDualCounterActor *arg0);
