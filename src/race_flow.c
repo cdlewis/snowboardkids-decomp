@@ -1321,7 +1321,7 @@ void zoomRaceWinnerViewport(void) {
     }
 }
 
-// prepareRaceResultsFlow best match: 92.744% (nonmatchings/prepareRaceResultsFlow-3357475854818838508/base_4.c)
+// prepareRaceResultsFlow best match: 93.715% (nonmatchings/prepareRaceResultsFlow-2870645799593382959/base_6.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_flow/prepareRaceResultsFlow.s")
 
 #ifdef NON_MATCHING
@@ -1331,6 +1331,7 @@ void prepareRaceResultsFlow(void) {
     u8 *saveCursor;
     s32 i;
     s32 index;
+    s32 found;
     s32 currentTime;
     s32 recordTime;
     s32 courseOffset;
@@ -1362,18 +1363,22 @@ void prepareRaceResultsFlow(void) {
         courseOffset <<= 2;
         saveCursor = (u8 *)&gGameSaveDataBuffer + courseOffset;
         index = 0;
-        do {
-            timeCourse = (TimeCourseView *)saveCursor;
-            recordTime = timeCourse->timeTrial[0].minutes * COURSE_TIME_MINUTE;
-            recordTime += timeCourse->timeTrial[0].fraction;
-            recordTime += timeCourse->timeTrial[0].seconds * COURSE_TIME_SECOND;
-            if (currentTime < recordTime) {
-                break;
-            }
+loop_time_trial:
+        found = index < 0x14;
+        timeCourse = (TimeCourseView *)saveCursor;
+        recordTime = timeCourse->timeTrial[0].minutes * COURSE_TIME_MINUTE;
+        recordTime += timeCourse->timeTrial[0].fraction;
+        recordTime += timeCourse->timeTrial[0].seconds * COURSE_TIME_SECOND;
+        if (currentTime >= recordTime) {
             index += 4;
             saveCursor += 4;
-        } while (index != 0x14);
-        if (index < 0x14) {
+            if (index == 0x14) {
+                found = index < 0x14;
+            } else {
+                goto loop_time_trial;
+            }
+        }
+        if (found != 0) {
             gRaceResultState = 1;
             D_80121B60 = 1;
             if (index == 0) {
@@ -1435,17 +1440,18 @@ void prepareRaceResultsFlow(void) {
             courseOffset <<= 2;
             saveCursor = (u8 *)&gGameSaveDataBuffer + courseOffset;
             i = 0;
-            do {
-                timeCourse = (TimeCourseView *)saveCursor;
-                recordTime = timeCourse->raceTimes[0].minutes * COURSE_TIME_MINUTE;
-                recordTime += timeCourse->raceTimes[0].fraction;
-                recordTime += timeCourse->raceTimes[0].seconds * COURSE_TIME_SECOND;
-                if (currentTime < recordTime) {
-                    break;
-                }
+loop_race_time:
+            timeCourse = (TimeCourseView *)saveCursor;
+            recordTime = timeCourse->raceTimes[0].minutes * COURSE_TIME_MINUTE;
+            recordTime += timeCourse->raceTimes[0].fraction;
+            recordTime += timeCourse->raceTimes[0].seconds * COURSE_TIME_SECOND;
+            if (currentTime >= recordTime) {
                 i++;
                 saveCursor += 4;
-            } while (i < 5);
+                if (i < 5) {
+                    goto loop_race_time;
+                }
+            }
             if (gRaceChallengeFailed != 0) {
                 i = 5;
             }
