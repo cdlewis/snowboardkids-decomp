@@ -577,6 +577,18 @@ typedef struct RaceUiPopupActor {
     /* 0x30 */ s8 playerIndex;
 } RaceUiPopupActor;
 
+typedef struct RaceUiTimeTrialRecordDeltaPopupActor {
+    /* 0x00 */ u8 pad0[0x18];
+    /* 0x18 */ u16 timer;
+    /* 0x1A */ u8 pad1A[2];
+    /* 0x1C */ s32 x;
+    /* 0x20 */ SplitWord y;
+    /* 0x24 */ u8 pad24[4];
+    /* 0x28 */ s32 velocity;
+    /* 0x2C */ RaceTimer delta;
+    /* 0x30 */ s8 isSlowerThanRecord;
+} RaceUiTimeTrialRecordDeltaPopupActor;
+
 typedef struct {
     /* 0x0000 */ u8 pad0[0x156];
     /* 0x0156 */ u8 resultNames[10][5][4];
@@ -5173,57 +5185,52 @@ void initForwardActionProjectileEffect(void *arg0) {
     setCallbackTaskCallback(arg0, func_80064D88);
 }
 
-void drawTimeTrialRecordDeltaPopup(void *arg0) {
-    void *temp_s0;
-
-    temp_s0 = arg0;
+void drawTimeTrialRecordDeltaPopup(RaceUiTimeTrialRecordDeltaPopupActor *arg0) {
     if (gCurrentViewportIndex == 0) {
-        if (*(s8 *)((u8 *)arg0 + 0x30) != 0) {
-            drawAssetTableSprite((s16)(*(s32 *)((u8 *)temp_s0 + 0x1C) - 0x66), *(s16 *)((u8 *)temp_s0 + 0x22), getRelocatableHeapBlockBase(gRaceUiSpriteAssetHandle), 0x98);
-            func_80059A04((u8 *)temp_s0 + 0x2C, *(s32 *)((u8 *)temp_s0 + 0x1C) + 0x26, *(s32 *)((u8 *)temp_s0 + 0x20), 0xC);
+        if (arg0->isSlowerThanRecord != 0) {
+            drawAssetTableSprite((s16)(arg0->x - 0x66), arg0->y.half.lo, getRelocatableHeapBlockBase(gRaceUiSpriteAssetHandle), 0x98);
+            func_80059A04(&arg0->delta, arg0->x + 0x26, arg0->y.word, 0xC);
             return;
         }
-        drawAssetTableSprite((s16)(*(s32 *)((u8 *)temp_s0 + 0x1C) - 0x62), *(s16 *)((u8 *)temp_s0 + 0x22), getRelocatableHeapBlockBase(gRaceUiSpriteAssetHandle), 0x97);
-        func_80059A04((u8 *)temp_s0 + 0x2C, *(s32 *)((u8 *)temp_s0 + 0x1C) + 0x22, *(s32 *)((u8 *)temp_s0 + 0x20), 0x10);
+        drawAssetTableSprite((s16)(arg0->x - 0x62), arg0->y.half.lo, getRelocatableHeapBlockBase(gRaceUiSpriteAssetHandle), 0x97);
+        func_80059A04(&arg0->delta, arg0->x + 0x22, arg0->y.word, 0x10);
     }
 }
 
-void updateTimeTrialRecordDeltaPopupSlideOut(void *arg0) {
-    *(s32 *)((u8 *)arg0 + 0x1C) -= *(s32 *)((u8 *)arg0 + 0x28);
-    *(s32 *)((u8 *)arg0 + 0x28) += 4;
-    if (*(s32 *)((u8 *)arg0 + 0x28) == 0x38) {
+void updateTimeTrialRecordDeltaPopupSlideOut(RaceUiTimeTrialRecordDeltaPopupActor *arg0) {
+    arg0->x -= arg0->velocity;
+    arg0->velocity += 4;
+    if (arg0->velocity == 0x38) {
         removeCallbackTask(arg0);
     } else {
         addRenderCallback(&gRaceOverlayRenderCallbackList, drawTimeTrialRecordDeltaPopup, arg0);
     }
 }
 
-void updateTimeTrialRecordDeltaPopupHold(void *arg0) {
-    *(s16 *)((u8 *)arg0 + 0x18) = *(u16 *)((u8 *)arg0 + 0x18) - 1;
-    if (*(u16 *)((u8 *)arg0 + 0x18) == 0) {
+void updateTimeTrialRecordDeltaPopupHold(RaceUiTimeTrialRecordDeltaPopupActor *arg0) {
+    arg0->timer--;
+    if (arg0->timer == 0) {
         setCallbackTaskCallback(arg0, updateTimeTrialRecordDeltaPopupSlideOut);
     }
     addRenderCallback(&gRaceOverlayRenderCallbackList, drawTimeTrialRecordDeltaPopup, arg0);
 }
 
-void updateTimeTrialRecordDeltaPopupSlideIn(void *arg0) {
-    *(s32 *)((u8 *)arg0 + 0x1C) -= *(s32 *)((u8 *)arg0 + 0x28);
-    *(s32 *)((u8 *)arg0 + 0x28) -= 4;
-    if (*(s32 *)((u8 *)arg0 + 0x28) == 0) {
-        *(s16 *)((u8 *)arg0 + 0x18) = 0x5A;
+void updateTimeTrialRecordDeltaPopupSlideIn(RaceUiTimeTrialRecordDeltaPopupActor *arg0) {
+    arg0->x -= arg0->velocity;
+    arg0->velocity -= 4;
+    if (arg0->velocity == 0) {
+        arg0->timer = 0x5A;
         setCallbackTaskCallback(arg0, updateTimeTrialRecordDeltaPopupHold);
     }
     addRenderCallback(&gRaceOverlayRenderCallbackList, drawTimeTrialRecordDeltaPopup, arg0);
 }
 
-void initTimeTrialRecordDeltaPopup(void *arg0) {
-    s32 v0;
-    *(s32 *)((u8 *)arg0 + 0x20) = -0x2C;
-    *(s32 *)((u8 *)arg0 + 0x1C) = 0x1A4;
-    *(s32 *)((u8 *)arg0 + 0x28) = 0x38;
-    v0 = calculateRaceTimerDelta(&gRaceElapsedTimer, (RaceTimer *)&gGameSaveDataBuffer[gRaceCourseIndex * 4 + 0x12A],
-                       (RaceTimer *)((u8 *)arg0 + 0x2C));
-    *(s8 *)((u8 *)arg0 + 0x30) = v0;
+void initTimeTrialRecordDeltaPopup(RaceUiTimeTrialRecordDeltaPopupActor *arg0) {
+    arg0->y.word = -0x2C;
+    arg0->x = 0x1A4;
+    arg0->velocity = 0x38;
+    arg0->isSlowerThanRecord = calculateRaceTimerDelta(&gRaceElapsedTimer, (RaceTimer *)&gGameSaveDataBuffer[gRaceCourseIndex * 4 + 0x12A],
+                       &arg0->delta);
     setCallbackTaskCallback(arg0, updateTimeTrialRecordDeltaPopupSlideIn);
 }
 
