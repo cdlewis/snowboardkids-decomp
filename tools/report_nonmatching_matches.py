@@ -26,6 +26,10 @@ MATCH_LINE_RE = re.compile(r"(?P<filename>[A-Za-z0-9_./-]+\.c)\s+(?P<percent>\d+
 ASM_LABEL_RE = re.compile(r"^\s*(?:glabel|dlabel)\s+(?P<name>[A-Za-z_][A-Za-z0-9_]*)\b", re.MULTILINE)
 ASM_LABEL_LINE_RE = re.compile(r"^\s*(?:glabel|dlabel)\s+(?P<name>[A-Za-z_][A-Za-z0-9_]*)\b")
 ASM_ADDRESS_RE = re.compile(r"/\*\s+[0-9A-Fa-f]+\s+(?P<addr>[0-9A-Fa-f]{8})\s+[0-9A-Fa-f]{8}\s+\*/")
+FUNC_ADDR_NAME_RE = re.compile(r"^func_(?P<addr>[0-9A-Fa-f]{8})$")
+SYMBOL_ADDR_RE = re.compile(
+    r"^\s*(?P<name>[A-Za-z_][A-Za-z0-9_]*)\s*=\s*0x(?P<addr>[0-9A-Fa-f]{8})\s*;(?P<comment>.*)$"
+)
 GFX_REGION_ALLOC_PTR_RE = re.compile(r"\bg(?:fx)?RegionAllocPtr\b", re.IGNORECASE)
 FULL_MATCH_PERCENT = 100.0
 
@@ -87,6 +91,39 @@ def function_name_from_workspace(workspace: Path) -> str:
     return workspace.name.split("-", 1)[0]
 
 
+def function_name_aliases(repo_root: Path) -> dict[str, str]:
+    aliases: dict[str, str] = {}
+    symbol_addrs_path = repo_root / "symbol_addrs.txt"
+    if not symbol_addrs_path.is_file():
+        return aliases
+
+    try:
+        lines = symbol_addrs_path.read_text(errors="ignore").splitlines()
+    except OSError as exc:
+        print(f"warning: could not read {symbol_addrs_path}: {exc}", file=sys.stderr)
+        return aliases
+
+    for line in lines:
+        match = SYMBOL_ADDR_RE.match(line)
+        if match is None or "type:func" not in match.group("comment"):
+            continue
+
+        name = match.group("name")
+        alias = f"func_{match.group('addr').upper()}"
+        if name != alias:
+            aliases[alias] = name
+
+    return aliases
+
+
+def canonical_function_name(function: str, aliases: dict[str, str]) -> str:
+    address_match = FUNC_ADDR_NAME_RE.match(function)
+    if address_match is None:
+        return function
+
+    return aliases.get(f"func_{address_match.group('addr').upper()}", function)
+
+
 def matched_function_names(repo_root: Path) -> set[str]:
     matchings_dir = repo_root / "asm" / "matchings"
     if not matchings_dir.is_dir():
@@ -130,9 +167,9 @@ def matched_function_address_aliases(text: str) -> set[str]:
     return aliases
 
 
-def parse_match_log(log_path: Path, repo_root: Path) -> Iterable[MatchResult]:
+def parse_match_log(log_path: Path, repo_root: Path, aliases: dict[str, str]) -> Iterable[MatchResult]:
     workspace = log_path.parent
-    function = function_name_from_workspace(workspace)
+    function = canonical_function_name(function_name_from_workspace(workspace), aliases)
     nonmatchings_dir = (repo_root / "nonmatchings").resolve()
 
     try:
@@ -182,7 +219,11 @@ def scratch_match_percent(scratch: dict) -> float | None:
     return max(0.0, (max_score - score) / max_score * 100.0)
 
 
-def parse_scratch_results(scratches_path: Path, matched_functions: set[str]) -> Iterable[ScratchResult]:
+def parse_scratch_results(
+    scratches_path: Path,
+    matched_functions: set[str],
+    aliases: dict[str, str],
+) -> Iterable[ScratchResult]:
     if not scratches_path.is_file():
         return
 
@@ -200,8 +241,12 @@ def parse_scratch_results(scratches_path: Path, matched_functions: set[str]) -> 
         if not isinstance(scratch, dict):
             continue
 
-        function = scratch.get("name")
-        if not isinstance(function, str) or not function or function in matched_functions:
+        scratch_name = scratch.get("name")
+        if not isinstance(scratch_name, str) or not scratch_name:
+            continue
+
+        function = canonical_function_name(scratch_name, aliases)
+        if function in matched_functions:
             continue
 
         percent = scratch_match_percent(scratch)
@@ -244,21 +289,23 @@ def best_local_results_by_function(
     scan_roots: Iterable[Path],
     primary_matched_functions: set[str],
     matched_functions_by_root: dict[Path, set[str]],
+    aliases_by_root: dict[Path, dict[str, str]],
     filter_scope: str,
 ) -> dict[str, MatchResult]:
     best_by_function: dict[str, MatchResult] = {}
 
     for scan_root in scan_roots:
         source_matched_functions = matched_functions_by_root.get(scan_root, set())
+        aliases = aliases_by_root.get(scan_root, {})
         nonmatchings_dir = scan_root / "nonmatchings"
         for log_path in sorted(nonmatchings_dir.glob("*/match_log.txt")):
-            function = function_name_from_workspace(log_path.parent)
+            function = canonical_function_name(function_name_from_workspace(log_path.parent), aliases)
             if filter_scope in {"primary", "both"} and function in primary_matched_functions:
                 continue
             if filter_scope in {"source", "both"} and function in source_matched_functions:
                 continue
 
-            for result in parse_match_log(log_path, scan_root):
+            for result in parse_match_log(log_path, scan_root, aliases):
                 best = best_by_function.get(result.function)
                 if is_better_match(result, best):
                     best_by_function[result.function] = result
@@ -269,10 +316,11 @@ def best_local_results_by_function(
 def best_scratch_results_by_function(
     scratches_paths: Iterable[Path],
     matched_functions: set[str],
+    aliases: dict[str, str],
 ) -> dict[str, ScratchResult]:
     best_by_function: dict[str, ScratchResult] = {}
     for scratches_path in scratches_paths:
-        for result in parse_scratch_results(scratches_path, matched_functions):
+        for result in parse_scratch_results(scratches_path, matched_functions, aliases):
             best = best_by_function.get(result.function)
             if is_better_scratch(result, best):
                 best_by_function[result.function] = result
@@ -288,14 +336,24 @@ def report_rows_by_function(
 ) -> dict[str, ReportRow]:
     scan_roots = list(scan_roots)
     matched_functions_by_root = matched_function_names_by_root([repo_root, *scan_roots])
+    primary_aliases = function_name_aliases(repo_root)
+    aliases_by_root = {
+        root: {**function_name_aliases(root), **primary_aliases}
+        for root in [repo_root, *scan_roots]
+    }
     primary_matched_functions = matched_functions_by_root.get(repo_root, set())
     local_results = best_local_results_by_function(
         scan_roots,
         primary_matched_functions,
         matched_functions_by_root,
+        aliases_by_root,
         filter_scope,
     )
-    scratch_results = best_scratch_results_by_function(scratches_paths, primary_matched_functions)
+    scratch_results = best_scratch_results_by_function(
+        scratches_paths,
+        primary_matched_functions,
+        primary_aliases,
+    )
 
     return {
         function: ReportRow(
