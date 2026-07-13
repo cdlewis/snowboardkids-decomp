@@ -3320,31 +3320,30 @@ void func_8005EA4C(RaceUiSparkleActor *arg0) {
     addRenderCallback(&D_801248EC, func_8005E6D0, (s32) arg0);
 }
 
-// func_8005ECA8 best match: 77.014% (nonmatchings/func_8005ECA8-3357475854818838508/base_4.c)
+// func_8005ECA8 best match: 98.075% (nonmatchings/func_8005ECA8-2870645799593382959/base_3.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_8005ECA8.s")
 
 #ifdef NON_MATCHING
 void func_8005ECA8(RaceUiSparkleActor *arg0) {
-    RaceUiSparkleTransformScratch stack;
+    Vec3i vec;
+    FixedMatrix3sScratch matrix;
     RacePlayerState *player;
     s16 timer;
-    s32 random;
-    s32 selected;
-    s32 playerCount;
-    s32 orderedPlayer;
-    u8 selectedMasked;
+    s32 activeCount;
+    register s32 selectedPlayerIndex;
 
     if (gRaceUpdatePaused == 0) {
         if (gFrameCounter & 1) {
             arg0->frame = (arg0->frame + 1) & 3;
         }
 
-        stack.vec.x = 0;
-        stack.vec.y = arg0->zOffset;
-        stack.vec.z = 0;
+        vec.x = 0;
+        vec.y = arg0->zOffset;
+        vec.z = 0;
+
         player = &D_80121D80[arg0->playerIndex];
-        makeFixedRotationXY(stack.matrix, player->pitch, player->yaw);
-        transformVec3iByFixedMatrix(stack.matrix, &stack.vec, &arg0->pos);
+        makeFixedRotationXY(matrix, player->pitch, player->yaw);
+        transformVec3iByFixedMatrix(matrix, &vec, &arg0->pos);
 
         player = &D_80121D80[arg0->playerIndex];
         arg0->pos.x += player->pos28.x;
@@ -3361,39 +3360,26 @@ void func_8005ECA8(RaceUiSparkleActor *arg0) {
             if (arg0->alpha < 0) {
                 arg0->alpha = 0;
                 arg0->alphaStep = 0x10;
-                random = randomNextMain();
-                if (random > 0) {
-                    playerCount = gRacePlayerCount;
-                    selected = 0;
-                    if (playerCount >= 4) {
-                        orderedPlayer = gRaceOrderPlayerIds[3];
-                        if ((arg0->playerIndex != orderedPlayer) && (random > 0)) {
-                            selected = orderedPlayer;
-                        }
+                activeCount = randomNextMain();
+                if (activeCount > 0) {
+                    selectedPlayerIndex = 0;
+                    if ((gRacePlayerCount >= 4) && (arg0->playerIndex != gRaceOrderPlayerIds[3]) &&
+                        (activeCount > 0)) {
+                        selectedPlayerIndex = gRaceOrderPlayerIds[3];
                     }
-                    if (playerCount >= 3) {
-                        orderedPlayer = gRaceOrderPlayerIds[2];
-                        if ((arg0->playerIndex != orderedPlayer) && (random >= 2) &&
-                            !(D_80121D80[orderedPlayer].flags & 0x40)) {
-                            selected = orderedPlayer;
-                        }
+                    if ((gRacePlayerCount >= 3) && (arg0->playerIndex != gRaceOrderPlayerIds[2]) &&
+                        (activeCount >= 2) && !(D_80121D80[gRaceOrderPlayerIds[2]].flags & 0x40)) {
+                        selectedPlayerIndex = gRaceOrderPlayerIds[2];
                     }
-                    if (playerCount >= 2) {
-                        orderedPlayer = gRaceOrderPlayerIds[1];
-                        if ((arg0->playerIndex != orderedPlayer) && (random >= 3) &&
-                            !(D_80121D80[orderedPlayer].flags & 0x40)) {
-                            selected = orderedPlayer;
-                        }
+                    if ((gRacePlayerCount >= 2) && (arg0->playerIndex != gRaceOrderPlayerIds[1]) &&
+                        (activeCount >= 3) && !(D_80121D80[gRaceOrderPlayerIds[1]].flags & 0x40)) {
+                        selectedPlayerIndex = gRaceOrderPlayerIds[1];
                     }
-                    selectedMasked = selected & 3;
-                    if (playerCount > 0) {
-                        orderedPlayer = gRaceOrderPlayerIds[0];
-                        if ((arg0->playerIndex != orderedPlayer) && (random >= 4) &&
-                            !(D_80121D80[orderedPlayer].flags & 0x40)) {
-                            selectedMasked = orderedPlayer & 3;
-                        }
+                    if ((gRacePlayerCount > 0) && (arg0->playerIndex != gRaceOrderPlayerIds[0]) &&
+                        (activeCount >= 4) && !(D_80121D80[gRaceOrderPlayerIds[0]].flags & 0x40)) {
+                        selectedPlayerIndex = gRaceOrderPlayerIds[0];
                     }
-                    arg0->playerIndex = selectedMasked;
+                    arg0->playerIndex = selectedPlayerIndex & 3;
                 }
 
                 player = &D_80121D80[arg0->playerIndex];
