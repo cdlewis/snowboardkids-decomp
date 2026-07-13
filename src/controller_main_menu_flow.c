@@ -377,40 +377,43 @@ void requestRumbleMotorInit(u16 arg0) {
     osRecvMesg(&gControllerSubsystemReplyQueue, &msg, OS_MESG_BLOCK);
 }
 
-// serviceRumbleMotorRequest best match: 96.181% (nonmatchings/serviceRumbleMotorRequest-5802343343535905907/base_5.c)
+// serviceRumbleMotorRequest best match: 96.554% (nonmatchings/serviceRumbleMotorRequest-2663524570355072948/base_7.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/controller_main_menu_flow/serviceRumbleMotorRequest.s")
 
 #ifdef NON_MATCHING
-void serviceRumbleMotorRequest(u16 arg0) {
-    u16 channel;
-    s16 *requestState;
-    s32 status;
+void serviceRumbleMotorRequest(s32 arg0) {
+    s16 *sp1C;
+    s16 *temp_v0_2;
+    u16 temp_a3;
+    s32 temp_v0;
 
-    channel = arg0;
-    status = (&gRumbleMotorStatuses)[channel];
-    if (status == 1) {
-        gRumbleMotorRequestStates[channel] = 0;
-        if (gRumblePakConnectedMask & (1 << channel)) {
-            osSendMesg(&gControllerSubsystemRequestQueue, channel + 0xD0, OS_MESG_BLOCK);
+    temp_a3 = arg0;
+    temp_v0 = (&gRumbleMotorStatuses)[temp_a3];
+    if (temp_v0 == 1) {
+        gRumbleMotorRequestStates[temp_a3] = 0;
+        if (gRumblePakConnectedMask & (1 << temp_a3)) {
+            osSendMesg(&gControllerSubsystemRequestQueue, temp_a3 + 0xD0, OS_MESG_BLOCK);
         }
-    } else if (status == 0xB) {
-        gRumbleMotorRequestStates[channel] = 0;
-        if (gRumblePakConnectedMask & (1 << channel)) {
-            osSendMesg(&gControllerSubsystemRequestQueue, channel + 0xD0, OS_MESG_BLOCK);
+    } else if (temp_v0 == 0xB) {
+        gRumbleMotorRequestStates[temp_a3] = 0;
+        if (gRumblePakConnectedMask & (1 << temp_a3)) {
+            osSendMesg(&gControllerSubsystemRequestQueue, temp_a3 + 0xD0, OS_MESG_BLOCK);
         }
-    } else if (status == 4) {
-        gRumbleMotorRequestStates[channel] = 0;
-        if (gRumblePakConnectedMask & (1 << channel)) {
-            osSendMesg(&gControllerSubsystemRequestQueue, channel + 0xD0, OS_MESG_BLOCK);
+    } else if (temp_v0 == 4) {
+        gRumbleMotorRequestStates[temp_a3] = 0;
+        if (gRumblePakConnectedMask & (1 << temp_a3)) {
+            osSendMesg(&gControllerSubsystemRequestQueue, temp_a3 + 0xD0, OS_MESG_BLOCK);
         }
     } else {
-        requestState = &gRumbleMotorRequestStates[channel];
-        if (*requestState == 0) {
-            osSendMesg(&gControllerSubsystemRequestQueue, channel + 0x90, OS_MESG_BLOCK);
+        temp_v0_2 = &gRumbleMotorRequestStates[temp_a3];
+        if (*temp_v0_2 == 0) {
+            sp1C = temp_v0_2;
+            osSendMesg(&gControllerSubsystemRequestQueue, temp_a3 + 0x90, OS_MESG_BLOCK);
         } else {
-            osSendMesg(&gControllerSubsystemRequestQueue, channel + 0x80, OS_MESG_BLOCK);
+            sp1C = temp_v0_2;
+            osSendMesg(&gControllerSubsystemRequestQueue, temp_a3 + 0x80, OS_MESG_BLOCK);
         }
-        *requestState = 0;
+        *temp_v0_2 = 0;
     }
 }
 #endif
