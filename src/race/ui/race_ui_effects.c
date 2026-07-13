@@ -2737,11 +2737,11 @@ void func_8005CD10(void *arg0) {
     addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005C14C, arg0);
 }
 
-void func_8005CDB0(void *arg0) {
-    *(s16 *)((u8 *)arg0 + 0x1C) = *(s16 *)((u8 *)arg0 + 0x1C) + 0x10;
-    if (*(s16 *)((u8 *)arg0 + 0x1C) >= 0x100) {
-        *(s16 *)((u8 *)arg0 + 0x1E) = 0x14;
-        *(s16 *)((u8 *)arg0 + 0x1C) = 0xFF;
+void func_8005CDB0(RaceUiDualCounterActor *arg0) {
+    arg0->alpha += RACE_UI_RESULTS_FADE_STEP;
+    if (arg0->alpha >= 0x100) {
+        arg0->timer = RACE_UI_RESULTS_REVEAL_TIMER;
+        arg0->alpha = RACE_UI_RESULTS_FULL_ALPHA;
         setCallbackTaskCallback(arg0, func_8005CD10);
     }
     addRenderCallback(&gMenuRenderCallbackList, func_8005B8E8, arg0);
