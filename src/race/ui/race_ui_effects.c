@@ -27,6 +27,9 @@ extern void *createCallbackTaskWithUserIdPreservingArgs(void *, s32, s32);
 #define RACE_UI_SINGLE_TRAIL_LOCAL_X 0
 #define RACE_UI_SINGLE_TRAIL_LOCAL_Y 0x100000
 #define RACE_UI_SINGLE_TRAIL_LOCAL_Z -0x200000
+#define RACE_UI_RESULTS_FADE_STEP 0x10
+#define RACE_UI_RESULTS_FULL_ALPHA 0xFF
+#define RACE_UI_RESULTS_REVEAL_TIMER 0x14
 #define SCALE_MATRIX_COMPONENT(value, scale) ((value * scale) / 0x1000)
 #define RACE_UI_SP_TRIANGLE_WORD(v0, v1, v2) (_SHIFTL((v0) * 2, 16, 8) | _SHIFTL((v1) * 2, 8, 8) | _SHIFTL((v2) * 2, 0, 8))
 #define RACE_UI_SP_QUADRANGLE_WORD0(v0, v1, v2, v3, flag) \
@@ -2250,11 +2253,11 @@ void func_8005B6F8(void *arg0) {
     addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005AC44, arg0);
 }
 
-void func_8005B798(void *arg0) {
-    *(s16 *)((u8 *)arg0 + 0x18) = *(s16 *)((u8 *)arg0 + 0x18) + 0x10;
-    if (*(s16 *)((u8 *)arg0 + 0x18) >= 0x100) {
-        *(s16 *)((u8 *)arg0 + 0x1A) = 0x14;
-        *(s16 *)((u8 *)arg0 + 0x18) = 0xFF;
+void updateRaceUiHitPrizeFadeIn(RaceUiCounterActor *arg0) {
+    arg0->alpha += RACE_UI_RESULTS_FADE_STEP;
+    if (arg0->alpha >= 0x100) {
+        arg0->timer = RACE_UI_RESULTS_REVEAL_TIMER;
+        arg0->alpha = RACE_UI_RESULTS_FULL_ALPHA;
         setCallbackTaskCallback(arg0, func_8005B6F8);
     }
     addRenderCallback(&gMenuRenderCallbackList, func_8005A31C, arg0);
@@ -2279,7 +2282,7 @@ void func_8005B834(void *arg0) {
             *(s16 *)((u8 *)arg0 + 0x20) = 0x3E8;
         }
     }
-    setCallbackTaskCallback(arg0, func_8005B798);
+    setCallbackTaskCallback(arg0, updateRaceUiHitPrizeFadeIn);
 }
 
 void func_8005B8E8(RaceUiAlphaActor *arg0) {
