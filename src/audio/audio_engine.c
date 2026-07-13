@@ -72,8 +72,8 @@ extern u8 *gSoundPlayerHeapEnd;
 extern u8 *gSoundPlayerVoices;
 extern s32 gSoundPlayerCount;
 extern PlayerCommandState *gSoundPlayerStates;
-extern s32 gSoundPlayerTuningTable;
-extern s32 gSoundPlayerPitchOffsets;
+extern u8 *gSoundPlayerTuningTable;
+extern f32 *gSoundPlayerPitchOffsets;
 extern s32 *gSoundPriorityTable;
 extern u16 gSoundEffectMasterVolume;
 extern u16 gMusicMasterVolume;
@@ -388,17 +388,17 @@ void *soundPlayerCommandSetInstrument(PlayerCommandState *arg0, u8 *arg1) {
         v |= *(new_var = arg1);
         arg1++;
     }
-    arg0->unkCC = v;
+    arg0->instrumentIndex = v;
     return arg1;
 }
 
 s32 soundPlayerCommandSetPortamentoTime(PlayerCommandState *arg0, u8 *arg1) {
-    arg0->unkEA = *arg1;
+    arg0->portamentoTime = *arg1;
     return (s32)(arg1 + 1);
 }
 
 s32 soundPlayerCommandClearPortamento(PlayerCommandState *arg0, s32 arg1) {
-    arg0->unkEA = 0;
+    arg0->portamentoTime = 0;
     return arg1;
 }
 
@@ -516,7 +516,7 @@ s32 soundPlayerCommandSetVibrato(PlayerCommandState *arg0, u8 *arg1) {
     arg1 += 2;
     temp_t8 = arg1[0];
     var_ft1 = (f32)(temp_t8 & 0xFFFF);
-    arg0->unk44 = (f32)(((double)var_ft1) / 50.0);
+    arg0->vibratoDepth = (f32)(((double)var_ft1) / 50.0);
     return (s32)(arg1 + 1);
 }
 
@@ -529,13 +529,13 @@ s32 soundPlayerCommandSetNegativeVibrato(PlayerCommandState *arg0, u8 *arg1) {
     arg1 += 2;
     temp_t8 = arg1[0];
     var_ft1 = (f32)(temp_t8 & 0xFFFF);
-    arg0->unk44 = (f32)(((double)-var_ft1) / 50.0);
+    arg0->vibratoDepth = (f32)(((double)-var_ft1) / 50.0);
     return (s32)(arg1 + 1);
 }
 
 s32 soundPlayerCommandClearVibrato(PlayerCommandState *arg0, s32 arg1) {
     arg0->unkE9 = 0;
-    arg0->unk48 = 0.0f;
+    arg0->vibratoPitchOffset = 0.0f;
     return arg1;
 }
 
@@ -570,7 +570,7 @@ s32 soundPlayerCommandSetPitchOffset(PlayerCommandState *arg0, u8 *arg1) {
 }
 
 s32 soundPlayerCommandClearPitchOffsetOnce(PlayerCommandState *arg0, s32 arg1) {
-    arg0->flagE7 = 1;
+    arg0->skipPitchOffsetOnce = 1;
     return arg1;
 }
 
@@ -583,7 +583,7 @@ s32 soundPlayerCommandAddFinePitch(PlayerCommandState *arg0, u8 *arg1) {
         b |= 0xFFFFFF00;
     }
     f = (f32)b;
-    arg0->unk2C = f / 100.0;
+    arg0->finePitchOffset = f / 100.0;
     return (s32)arg1;
 }
 
@@ -629,7 +629,7 @@ s32 soundPlayerCommandCallLoop(PlayerCommandState *arg0, u8 *arg1) {
     arg0->returnUnk60[depth] = arg0->unk60;
     arg0->returnUnk68[depth] = arg0->unk68;
     arg0->returnUnk10E[depth] = arg0->unkEF;
-    arg0->returnUnk113[depth] = arg0->unkF0;
+    arg0->returnUnk113[depth] = arg0->pitchBendValue;
     arg0->returnUnkC8[depth] = arg0->unkC8;
     arg0->returnUnkCA[depth] = arg0->unkCA;
     arg0->returnDepth++;
@@ -658,7 +658,7 @@ s32 soundPlayerCommandReturnLoop(PlayerCommandState *arg0, s32 arg1) {
         arg0->unk60 = arg0->returnUnk60[depth];
         arg0->unk68 = arg0->returnUnk68[depth];
         arg0->unkEF = arg0->returnUnk10E[depth];
-        arg0->unkF0 = arg0->returnUnk113[depth];
+        arg0->pitchBendValue = arg0->returnUnk113[depth];
         arg0->unkC8 = arg0->returnUnkC8[depth];
         arg0->unkCA = arg0->returnUnkCA[depth];
     }
@@ -836,7 +836,7 @@ s32 soundPlayerCommandSetPanSweep(PlayerCommandState *arg0, u8 *arg1) {
 }
 
 s32 soundPlayerCommandSetPitchSweepDepth(PlayerCommandState *arg0, u8 *arg1) {
-    arg0->unkF1 = *arg1;
+    arg0->pitchBendDepth = *arg1;
     return (s32)(arg1 + 1);
 }
 
@@ -847,8 +847,8 @@ s32 initSoundPlayer(PlayerCommandInit *arg0) {
     s32 i;
 
     gSoundPlayerCount = arg0->count;
-    gSoundPlayerTuningTable = arg0->unk1C;
-    gSoundPlayerPitchOffsets = arg0->unk20;
+    gSoundPlayerTuningTable = arg0->tuningTable;
+    gSoundPlayerPitchOffsets = arg0->pitchOffsetTable;
     libmus_fxheader_current = arg0->fxHeader;
     gSoundPriorityTable = arg0->unk28;
 
@@ -1224,7 +1224,7 @@ s32 setSoundPlayerPitchOffsetByHandle(s32 arg0, f32 arg1) {
         do {
             i++;
             if (arg0 == entry->id) {
-                entry->unk50 = arg1;
+                entry->handlePitchOffset = arg1;
                 matches++;
             }
             entry++;
@@ -1327,8 +1327,8 @@ loop_6:
                     }
 
                     temp_t9_2 = (u32)(var_s0->unk0 - var_s0->unk10) >> 8;
-                    var_s0->unkC6 = (u16)temp_t9_2;
-                    var_s0->unk40 = (f32)(temp_t9_2 & 0xFFFF);
+                    var_s0->noteAgeTicks = (u16)temp_t9_2;
+                    var_s0->noteAgeTicksF = (f32)(temp_t9_2 & 0xFFFF);
                 }
             }
             var_s1 += 1;
@@ -1375,7 +1375,7 @@ void soundPlayerReadNextNote(PlayerCommandState *arg0, s32 arg1) {
     arg0->sequencePos = (s32)seq;
 
     if (seq != NULL) {
-        arg0->unk3C = arg0->unk4C;
+        arg0->portamentoStartPitch = arg0->currentNotePitch;
         cmd = *seq;
         seq++;
         arg0->sequencePos = (s32)seq;
@@ -1416,23 +1416,23 @@ void soundPlayerReadNextNote(PlayerCommandState *arg0, s32 arg1) {
 
         duration = arg0->unkC;
         arg0->unkC += arg0->unkBC << 8;
-        arg0->unkC6 = 0;
-        arg0->unk11A = 0;
+        arg0->noteAgeTicks = 0;
+        arg0->pitchPulseOffset = 0;
         arg0->unk10 = duration;
-        arg0->unk40 = 0.0f;
+        arg0->noteAgeTicksF = 0.0f;
         arg0->unk107 = arg0->unk106;
 
         if (arg0->unkFE != 0) {
             if (arg0->jumpTarget != 0) {
                 u8 *entry = (u8 *)arg0->jumpTarget + (arg0->unkFE * 4);
 
-                arg0->unkCC = entry[-0x30];
+                arg0->instrumentIndex = entry[-0x30];
                 arg0->unkF2 = entry[-0x2E] / 2;
                 soundPlayerLoadEnvelope(arg0, arg0->data->commands + (entry[-0x2F] * 7));
                 arg0->unkFE = ((u8 *)arg0->jumpTarget + (arg0->unkFE * 4))[-0x2D];
             }
 
-            soundIndex = arg0->unkCC;
+            soundIndex = arg0->instrumentIndex;
             if (gSoundBankEntryCount <= soundIndex) {
                 soundIndex = 0;
             }
@@ -1448,7 +1448,7 @@ void soundPlayerReadNextNote(PlayerCommandState *arg0, s32 arg1) {
                                 *(ALWaveTable **)(gSoundWaveTable + (soundIndex * 4)));
             }
 
-            arg0->unkFF = ((u8 *)gSoundPlayerTuningTable)[soundIndex] + arg0->unkFE - 5;
+            arg0->notePitch = gSoundPlayerTuningTable[soundIndex] + arg0->unkFE - 5;
             if (arg0->flagE8 == 0) {
                 arg0->padF4[4] = 0;
                 arg0->padF4[5] = arg0->padF4[1];
@@ -1518,47 +1518,47 @@ void soundPlayerApplyVolumeAndPan(PlayerCommandState *arg0, s32 arg1) {
 
 #ifdef NON_MATCHING
 void soundPlayerApplyPitch(PlayerCommandState *arg0, s32 arg1) {
-    register f32 pitch;
-    f32 basePitch;
-    f32 slidePitch;
+    register f32 notePitch;
+    f32 portamentoStartPitch;
+    f32 portamentoPitchStep;
     f32 pitchRatio;
-    f32 flagPitch;
-    f64 finePitchScale;
-    s32 bend;
-    u8 slideTime;
+    f32 sequencePitchOffset;
+    f64 pitchBendScale;
+    s32 signedNotePitch;
+    u8 portamentoTime;
 
-    bend = arg0->unkFF;
-    if (bend & 0x80) {
-        pitch = -0x100 - -(s32)bend;
+    signedNotePitch = arg0->notePitch;
+    if (signedNotePitch & 0x80) {
+        notePitch = -0x100 - -(s32)signedNotePitch;
     } else {
-        pitch = bend;
+        notePitch = signedNotePitch;
     }
 
-    slideTime = arg0->unkEA;
-    if ((slideTime != (0, 0)) && (slideTime >= arg0->unkC6)) {
-        basePitch = arg0->unk3C;
+    portamentoTime = arg0->portamentoTime;
+    if ((portamentoTime != (0, 0)) && (portamentoTime >= arg0->noteAgeTicks)) {
+        portamentoStartPitch = arg0->portamentoStartPitch;
         if (1) {
-            slidePitch = (pitch - basePitch) / (f32)slideTime;
-            slidePitch *= arg0->unk40;
-            pitch = slidePitch + basePitch;
+            portamentoPitchStep = (notePitch - portamentoStartPitch) / (f32)portamentoTime;
+            portamentoPitchStep *= arg0->noteAgeTicksF;
+            notePitch = portamentoPitchStep + portamentoStartPitch;
         }
     }
 
-    flagPitch = (f32)arg0->pitchOffset * (f32)(1 - arg0->flagE7);
-    arg0->unk4C = pitch;
-    arg0->flagE7 = 0;
-    pitch += arg0->unk48 + flagPitch + arg0->unk2C + (f32)arg0->unk11A;
-    pitch += ((f32 *)gSoundPlayerPitchOffsets)[arg0->unkCC];
-    pitch = (f32)((f64)pitch + ((finePitchScale = (f64)(f32)arg0->unkF1 * 0.015625) * ((f64)(f32)arg0->unkF0 - 64.0)));
+    sequencePitchOffset = (f32)arg0->pitchOffset * (f32)(1 - arg0->skipPitchOffsetOnce);
+    arg0->currentNotePitch = notePitch;
+    arg0->skipPitchOffsetOnce = 0;
+    notePitch += arg0->vibratoPitchOffset + sequencePitchOffset + arg0->finePitchOffset + (f32)arg0->pitchPulseOffset;
+    notePitch += gSoundPlayerPitchOffsets[arg0->instrumentIndex];
+    notePitch = (f32)((f64)notePitch + ((pitchBendScale = (f64)(f32)arg0->pitchBendDepth * 0.015625) * ((f64)(f32)arg0->pitchBendValue - 64.0)));
     if (1) {}
     if (1) {}
     if (1) {}
     if (1) {}
-    pitch += arg0->unk50;
+    notePitch += arg0->handlePitchOffset;
 
-    if (pitch != arg0->unk24) {
-        arg0->unk24 = pitch;
-        pitchRatio = approximatePitchRatio((f32)((f64)pitch * 0.083333333333333329));
+    if (notePitch != arg0->cachedPitch) {
+        arg0->cachedPitch = notePitch;
+        pitchRatio = approximatePitchRatio((f32)((f64)notePitch * 0.083333333333333329));
         if (pitchRatio < 0.0f) {
             pitchRatio = 0.0f;
         }
@@ -1670,12 +1670,12 @@ void soundPlayerUpdateTremolo(PlayerCommandState *arg0) {
     if ((temp_t7 & 0xFF) == 0) {
         temp_v0 = arg0->unkEB;
         if (temp_v0 != 0) {
-            if (arg0->unk11A == 0) {
+            if (arg0->pitchPulseOffset == 0) {
                 arg0->unk107 = temp_v0;
-                arg0->unk11A = arg0->unk119;
+                arg0->pitchPulseOffset = arg0->unk119;
                 return;
             }
-            arg0->unk11A = 0;
+            arg0->pitchPulseOffset = 0;
             arg0->unk107 = arg0->unk106;
         }
     }
@@ -1688,10 +1688,10 @@ void soundPlayerUpdateVibrato(PlayerCommandState *arg0) {
 
     temp_v0 = arg0->unkE9;
     if (temp_v0 != 0) {
-        temp_v1 = arg0->unkC6 - arg0->unk105;
+        temp_v1 = arg0->noteAgeTicks - arg0->unk105;
         if (temp_v1 > 0) {
-            temp_fv1 = sinf((f32)((f64)((temp_v1 / (f32)temp_v0) * ((float)2.0)) * 3.1415926000000001)) * arg0->unk44;
-            arg0->unk48 = temp_fv1;
+            temp_fv1 = sinf((f32)((f64)((temp_v1 / (f32)temp_v0) * ((float)2.0)) * 3.1415926000000001)) * arg0->vibratoDepth;
+            arg0->vibratoPitchOffset = temp_fv1;
         }
     }
 }
@@ -1784,7 +1784,7 @@ void soundPlayerUpdatePanTrack(PlayerCommandState *arg0) {
                 arg0->unk68 = (s32)temp_t1;
                 if ((s32)temp_v0 >= 0x80) {
                     temp_t6 = temp_v0 & 0x7F;
-                    arg0->unkF0 = temp_t6;
+                    arg0->pitchBendValue = temp_t6;
                     temp_v0 = *temp_t1;
                     do {
                         ;
@@ -1802,7 +1802,7 @@ void soundPlayerUpdatePanTrack(PlayerCommandState *arg0) {
                         arg0->unkCA = temp_v0 + 2;
                     }
                 } else {
-                    arg0->unkF0 = temp_v0;
+                    arg0->pitchBendValue = temp_v0;
                     arg0->unkCA = one;
                 }
             }
@@ -1956,14 +1956,14 @@ loop:
     arg0->unkB6 = 0xFFFF;
     arg0->unkE2 = 0xFF;
     arg0->unkE3 = 0xFF;
-    arg0->unk24 = 99.9f;
+    arg0->cachedPitch = 99.9f;
     temp_t9 = 0x6000 / gAudioTicksPerSecond;
     arg0->unkBC = 1;
     arg0->unkED = 0;
     arg0->unkEE = 0x7F;
     arg0->unkEF = 0x7F;
-    arg0->unkF0 = 0x40;
-    arg0->unkF1 = 2;
+    arg0->pitchBendValue = 0x40;
+    arg0->pitchBendDepth = 2;
     *(u8 *)&arg0->unkF2 = 0x40;
     arg0->unkC8 = 1;
     arg0->unkCA = 1;
