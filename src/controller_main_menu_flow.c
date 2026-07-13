@@ -655,7 +655,7 @@ void requestControllerPakSaveWrite(u16 arg0) {
     osRecvMesg(&gControllerSubsystemReplyQueue, &msg, OS_MESG_BLOCK);
 }
 
-// writeControllerPakSave best match: 83.978%
+// writeControllerPakSave best match: 90.188%
 #pragma GLOBAL_ASM("asm/nonmatchings/controller_main_menu_flow/writeControllerPakSave.s")
 
 #ifdef NON_MATCHING
@@ -695,7 +695,7 @@ copy_name:
     dst[14] = *src;
     src++;
     dst++;
-    if (src < end) {
+    if ((src + 1) < (end + 1)) {
         goto copy_name;
     }
 
@@ -716,11 +716,13 @@ copy_name:
     offset = 4;
 checksum_loop:
     checksum += bytes[0];
-    checksum += bytes[1];
+    checksum += ((0, bytes))[1];
     checksum += bytes[2];
     checksum += bytes[3];
     offset += 4;
     bytes += 4;
+    if (gControllerPakSaveFileIdentity.gameCode) {
+    }
     if (offset != 0x78E0) {
         goto checksum_loop;
     }
