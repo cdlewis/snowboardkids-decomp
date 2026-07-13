@@ -174,7 +174,7 @@ void initRaceHud(void) {
     gRaceChallengeFailed = 0;
 }
 
-// drawTrickAttackChallengeHud best match: 99.768% at nonmatchings/drawTrickAttackChallengeHud-8331816093655448999/base_12.c.
+// drawTrickAttackChallengeHud best match: 99.923% at nonmatchings/drawTrickAttackChallengeHud-6866765942504228165/base_9.c.
 #pragma GLOBAL_ASM("asm/nonmatchings/race_hud/drawTrickAttackChallengeHud.s")
 
 #ifdef NON_MATCHING
@@ -203,12 +203,9 @@ void drawTrickAttackChallengeHud(s32 arg0) {
         sprintf(buffer, D_800E1710, gRaceChallengeTimeLimit.minutes);
         finalPalette = palette & 0xFFFF;
         x = 0x40;
-        digit = buffer;
-        end = &buffer[2];
-        do {
+        digit = buffer; end = &buffer[2]; do {
             drawAssetTableSpriteWithExplicitPalette((s16)x, 0x50, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
-                          ((u8)*digit - 5) & 0xFFFF, finalPalette);
-            digit++;
+                          ((u8)*digit - 5) & 0xFFFF, finalPalette); digit++;
             x += 8;
         } while ((u32)digit < (u32)end);
 
