@@ -3878,27 +3878,23 @@ void updateRacePlayerMode06TerrainFall(RaceInputPlayer *player) {
 }
 #endif
 
-// updateRacePlayerMode28TerrainFallWithItemEffect best match: 94.697% (nonmatchings/updateRacePlayerMode28TerrainFallWithItemEffect-2694253543240320626/base_7.c)
+// updateRacePlayerMode28TerrainFallWithItemEffect best match: 99.026% (nonmatchings/updateRacePlayerMode28TerrainFallWithItemEffect-3242520251544044307/base_3.c)
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_update/updateRacePlayerMode28TerrainFallWithItemEffect.s")
 
 #ifdef NON_MATCHING
 void updateRacePlayerMode28TerrainFallWithItemEffect(RaceInputPlayer *player) {
     s16 updateState;
-    s32 yVel;
-    u32 stateFlags;
 
+    player->unk40.y -= player->unk260;
+    player->posY += player->unk40.y;
     updateState = player->updateState;
-    yVel = player->unk40.y - player->unk260;
-    player->unk40.y = yVel;
-    player->posY += yVel;
 
     switch (updateState) {
         case 0:
-            stateFlags = player->stateFlags & 0xFE0C1FFB;
-            player->stateFlags = stateFlags;
+            player->stateFlags &= 0xFE0C1FFB;
             player->updateState = updateState + 1;
-            player->stateFlags = stateFlags | 0x42000;
+            player->stateFlags |= 0x42000;
             setRaceMotionAnimation(player, 0xE);
             stepRaceMotionAnimationUntilEnd(player);
             player->unk80 = player->unk502 + 2;
