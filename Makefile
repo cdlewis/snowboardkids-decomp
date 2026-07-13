@@ -85,7 +85,7 @@ C_MIPS       = -mips1
 C_OPT        = -O2
 CFLAGS       = -c $(C_MIPS) -G 0 -non_shared -fullwarn -Xcpluscomm \
                -nostdinc -Wab,-r4300_mul -woff 649,838,712,516 \
-               -Iinclude -Iinclude/PR -Isrc/ultra/audio -Isrc/ultra/libc \
+               -I. -Iinclude -Iinclude/PR -Isrc/ultra/audio -Isrc/ultra/libc \
                $(C_DEFINES)
 OBJCOPYFLAGS = -O binary
 RM_MDEBUG    = $(OBJCOPY) --remove-section .mdebug $@
