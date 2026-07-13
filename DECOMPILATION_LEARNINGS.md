@@ -171,6 +171,11 @@ and control flow already match and only register *names* differ.
   temp-register names differ across an otherwise identical sequence of field
   stores, reorder the assignments in C (not the logic) — writing them in
   ascending field order is a common winner — to renumber the allocator.
+- **Use scalar temporaries to batch adjacent field loads before stores.** For
+  neighboring struct fields that are transformed then stored, direct
+  `dst->x = f(src->x); dst->y = f(src->y); ...` can emit load-use nops.
+  Loading each source field into named locals first can reproduce IDO's batched
+  loads followed by arithmetic and stores.
 
 ## IDO codegen: loop shape and strength reduction
 
