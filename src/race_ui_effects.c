@@ -1918,7 +1918,7 @@ loop4:
 }
 #endif
 
-// func_8005A884 best match: 94.830% (nonmatchings/func_8005A884-2694253543240320626/base_12.c)
+// func_8005A884 best match: 98.684% (nonmatchings/func_8005A884-3242520251544044307/base_8.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_ui_effects/func_8005A884.s")
 
 #ifdef NON_MATCHING
@@ -1930,11 +1930,8 @@ void func_8005A884(RaceUiPopupActor *arg0) {
     s32 y;
     s32 space;
 
-    i = 0;
     y = -0x50;
-    space = ' ';
-    do {
-        char buffer[8];
+    i = 0; space = ' '; do { char buffer[8];
 
         drawAssetTableSprite(-8, (s16)y, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), (i + 0x77) & 0xFFFF);
 
@@ -1951,11 +1948,12 @@ void func_8005A884(RaceUiPopupActor *arg0) {
         if ((u8)buffer[0] != space) {
             drawAssetTableSpriteWithExplicitPalette(0x10, (s16)y, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
                           (buffer[0] - 5) & 0xFFFF, color);
+            do { } while (0);
         }
 
         if ((u8)buffer[1] != space) {
             drawAssetTableSpriteWithExplicitPalette(0x18, (s16)y, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
-                          (buffer[1] - 5) & 0xFFFF, color & 0xFFFF);
+                          (buffer[1] - 5) & 0xFFFF, (u16)color);
         }
 
         drawAssetTableSprite(0x46, (s16)y, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
