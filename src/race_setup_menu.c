@@ -644,7 +644,7 @@ void updateRaceSetupSaveMenu(void) {
 void raceSetupMenuNoop(void) {
 }
 
-// updateRaceSetupRumblePrompt best match: 92.414% (nonmatchings/updateRaceSetupRumblePrompt-5802343343535905907/base_12.c)
+// updateRaceSetupRumblePrompt best match: 95.000% (nonmatchings/updateRaceSetupRumblePrompt-2663524570355072948/base_8.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_setup_menu/updateRaceSetupRumblePrompt.s")
 
 #ifdef NON_MATCHING
@@ -668,12 +668,17 @@ extern void initCharacterSelectMenu(void);
 extern s32 gRumbleMotorStatuses[];
 
 void updateRaceSetupRumblePrompt(void) {
+    s32 statusIndex;
     s32 connectedCount;
     s32 i;
-    u8 state;
+    s32 state;
 
     state = gControllerPakRumbleCheckPromptTransition.state;
     switch (state) {
+        case 0:
+        case 4:
+        case 5:
+            break;
         case 1:
             if ((gPlayerInputPressed & 0x8000) || (gPlayerInputPressed & 0x1000)) {
                 enqueueSoundEffect(1, 0x32);
@@ -714,8 +719,9 @@ void updateRaceSetupRumblePrompt(void) {
             i = 0;
             if ((s32)gPlayerCount > 0) {
                 do {
+                    statusIndex = i;
                     requestRumbleMotorInit(i);
-                    if ((gRumbleMotorStatuses[i] != 1) && (gRumbleMotorStatuses[i] != 0xB) && (gRumbleMotorStatuses[i] != 4)) {
+                    if ((gRumbleMotorStatuses[statusIndex] != 1) && (gRumbleMotorStatuses[i] != 0xB) && (gRumbleMotorStatuses[i] != 4)) {
                         gRumblePakConnectedMask |= 1 << i;
                         gRumblePakConnectedByController[i] = 1;
                         connectedCount++;
@@ -732,8 +738,7 @@ void updateRaceSetupRumblePrompt(void) {
                 gControllerPakRumbleCheckPromptTransition.selectedOption = 0;
                 gControllerPakRumbleCheckPromptTransition.targetScale = 0;
             }
-            gControllerPakRumbleCheckPromptTransition.state = 0;
-            state = 0;
+            state = (gControllerPakRumbleCheckPromptTransition.state = 0);
             break;
         case 7:
             gControllerPakRumbleCheckPromptTransition.timer--;
@@ -791,6 +796,7 @@ void updateRaceSetupRumblePrompt(void) {
     }
     if (state == 5) {
         setCurrentGameTaskCallback(initCharacterSelectMenu, 0);
+        gControllerPakRumbleCheckPromptTransition.confirmSelection = gControllerPakRumbleCheckPromptTransition.confirmSelection;
     }
     updateCallbackTasks();
 }
