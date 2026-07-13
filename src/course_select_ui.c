@@ -144,7 +144,7 @@ extern void drawCourseSelectPreviewModel(CourseSelectCoursePreviewActor *);
 extern s32 allocFixedTransformMatrix(FixedTransform *);
 extern void drawCourseSelectCourseCursors(CourseSelectWidgetActor *);
 extern s8 gCourseUnlockSaveSlots[][0x78F8];
-extern s8 D_800EC9C0;
+extern u8 D_800EC9C0;
 extern u8 gRaceSplitscreenMode;
 extern u8 gCourseSelectModeSelection;
 extern s32 gActiveMenuTask;
@@ -522,7 +522,7 @@ void drawCourseSelectPreviewModelClose(CourseSelectCoursePreviewActor *arg0) {
 }
 #endif
 
-// updateCourseSelectPreviewModelOut best match: 91.879% (nonmatchings/updateCourseSelectPreviewModelOut-8331816093655448999/base_7.c)
+// updateCourseSelectPreviewModelOut best match: 96.512% (nonmatchings/updateCourseSelectPreviewModelOut-6866765942504228165/base_8.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/course_select_ui/updateCourseSelectPreviewModelOut.s")
 
 #ifdef NON_MATCHING
@@ -533,6 +533,7 @@ void updateCourseSelectPreviewModelOut(void *arg0) {
     s32 i;
     s32 move;
     s32 offset;
+    u8 statusState;
     u8 state;
 
     actor = arg0;
@@ -540,9 +541,10 @@ void updateCourseSelectPreviewModelOut(void *arg0) {
     if ((s32)gPlayerCount > 0) {
         offset = 0;
         do {
+            statusState = gCourseSelectStatus[8 + i];
             state = actor->state[i];
-            if (gCourseSelectStatus[8 + i] != state) {
-                actor->state[i] = gCourseSelectStatus[8 + i];
+            if (statusState != state) {
+                actor->state[i] = statusState;
                 actor->timer[i] = gCourseSelectStatus[0x10 + i];
                 actor->angle[i] = *(u16 *)&gCourseSelectStatus[offset + 0x1C];
                 gCourseSelectStatus[0x10 + i] = 0;
@@ -563,13 +565,13 @@ void updateCourseSelectPreviewModelOut(void *arg0) {
                 if (D_8010AECC[i] & 1) {
                     player = &D_80121D80[i];
                     if (D_8010AEE8[i] < 0) {
-                        if ((s32)((u8 *)player)[0x11] >= 9) {
+                        if ((s32)player->pad6[0xB] >= 9) {
                             actor->targetCourse[i] = 2;
                         } else {
-                            actor->targetCourse[i] = ((u8 *)player)[6] % 3 - 1;
+                            actor->targetCourse[i] = player->pad6[0] % 3 - 1;
                         }
                     } else {
-                        actor->targetCourse[i] = ((u8 *)player)[6] % 3 + 1;
+                        actor->targetCourse[i] = player->pad6[0] % 3 + 1;
                     }
                     if (actor->targetCourse[i] < 0) {
                         actor->targetCourse[i] = 2;
@@ -580,7 +582,7 @@ void updateCourseSelectPreviewModelOut(void *arg0) {
                     if (actor->targetCourse[i] == 8) {
                         actor->targetCourse[i] = 2;
                     }
-                    if (D_8010AECC[i] < 2) {
+                    if (D_8010AECC[i] == 1) {
                         actor->vecs[i].y = -D_8010AEE8[i];
                     }
                     actor->state[i] = 2;
@@ -612,15 +614,15 @@ void updateCourseSelectPreviewModelOut(void *arg0) {
                 if (actor->timer[i] == 0xF) {
                     actor->timer[i] = 0;
                     actor->state[i] = 4;
-                    if (gPlayerCount < 2) {
-                        ((u8 *)&D_80121D80[0])[8] = 3;
+                    if (gPlayerCount == 1) {
+                        D_80121D80[0].pad6[2] = 3;
                         D_800EC9C0 = 0x10;
                     }
                 }
                 state = actor->state[i];
                 break;
             case 4:
-                if (((u8 *)&D_80121D80[i])[8] == 3) {
+                if (D_80121D80[i].pad6[2] == 3) {
                     actor->state[i] = 5;
                     state = 5;
                 }
@@ -633,14 +635,14 @@ void updateCourseSelectPreviewModelOut(void *arg0) {
                 state = actor->state[i];
                 break;
             case 6:
-                ((u8 *)&D_80121D80[i])[8] = 4;
+                D_80121D80[i].pad6[2] = 4;
                 if (i == 2 && gPlayerCount == 3) {
-                    ((u8 *)&D_80121D80[3])[8] = 4;
+                    D_80121D80[3].pad6[2] = 4;
                 }
                 state = actor->state[i];
                 break;
             case 7:
-                if (((u8 *)&D_80121D80[i])[8] == 3) {
+                if (D_80121D80[i].pad6[2] == 3) {
                     actor->state[i] = 5;
                     state = 5;
                 } else if (gCurrentGameTask->screenState == 9) {
@@ -654,12 +656,12 @@ void updateCourseSelectPreviewModelOut(void *arg0) {
                     actor->state[i] = 9;
                     gCurrentGameTask->screenState = 0xB;
                 }
-                state = actor->state[i];
                 break;
             case 9:
                 break;
             }
 
+            state = actor->state[i];
             if ((s32)state < 3) {
                 actor->angle[i] += 0x20;
                 actor->angle[i] &= 0xFFF;
@@ -675,7 +677,7 @@ void updateCourseSelectPreviewModelOut(void *arg0) {
         } while (i < (s32)gPlayerCount);
     }
 
-    if (((u8 *)&D_80121D80[0])[8] == 4 || actor->state[0] == 9) {
+    if ((D_80121D80[0].pad6[2] == 4) || (actor->state[0] == 9)) {
         removeCallbackTask(actor);
         finishCourseSelectUiTask(2);
         D_8010ADE4 = 0;
