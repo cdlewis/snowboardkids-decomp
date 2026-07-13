@@ -645,9 +645,9 @@ typedef struct RaceUiCourseStatsActor {
         /* 0x1C */ s16 visibleRows;
         /* 0x1C */ s16 holdTimer;
     };
-    /* 0x1E */ s16 pendingFirstValue;
-    /* 0x20 */ s16 pendingSecondValue;
-    /* 0x22 */ s16 pendingThirdValue;
+    /* 0x1E */ s16 pendingTrickPrize;
+    /* 0x20 */ s16 pendingMakeBonus;
+    /* 0x22 */ s16 pendingCompleteBonus;
 } RaceUiCourseStatsActor;
 
 typedef struct {
@@ -2855,7 +2855,7 @@ void func_8005D1CC(RaceUiCourseStatsActor *arg0) {
     visibleRows = arg0->visibleRows;
     x = 0x20;
     if (visibleRows >= 0) {
-        sprintf(buffer - 4, D_800E1444, arg0->pendingFirstValue);
+        sprintf(buffer - 4, D_800E1444, arg0->pendingTrickPrize);
  ptr = buffer - 4; loop1: if (*ptr != 0) { if (*ptr != ' ') { drawAssetTableSprite(x, -0x47, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), (u16)(*ptr - 5));
         }
             x += 8;
@@ -2870,7 +2870,7 @@ void func_8005D1CC(RaceUiCourseStatsActor *arg0) {
     if (visibleRows > 0) {
         x = 0x20;
         ptr = 0;
-        sprintf(buffer - 4, D_800E1448, rowY = arg0->pendingSecondValue);
+        sprintf(buffer - 4, D_800E1448, rowY = arg0->pendingMakeBonus);
         rowY = y.half.lo;
         ptr = buffer;
         ptr = ptr - 4;
@@ -2891,7 +2891,7 @@ loop2:
     if (visibleRows >= 2) {
         x = 0x20;
         ptr = 0;
-        sprintf(buffer - 4, D_800E144C, rowY = arg0->pendingThirdValue);
+        sprintf(buffer - 4, D_800E144C, rowY = arg0->pendingCompleteBonus);
         rowY = y.half.lo;
         ptr = buffer - 4;
 loop3:
@@ -3110,33 +3110,33 @@ void func_8005DE6C(RaceUiCourseStatsActor *arg0) {
         arg0->timer--;
     }
 
-    value = arg0->pendingFirstValue;
+    value = arg0->pendingTrickPrize;
     if ((value >= 8) && !(gPlayerInputPressed & A_BUTTON)) {
         value = 8;
     }
     /* IDO register allocation depends on this always-zero index. */
     gRacePlayers[gPlayerInputPressed * 0].unk00C += value;
-    arg0->pendingFirstValue -= value;
+    arg0->pendingTrickPrize -= value;
 
-    value = arg0->pendingSecondValue;
+    value = arg0->pendingMakeBonus;
     if ((value >= 8) && !(gPlayerInputPressed & A_BUTTON)) {
         value = 8;
     }
     gRacePlayers[0].unk00C += value;
-    arg0->pendingSecondValue -= value;
+    arg0->pendingMakeBonus -= value;
 
-    value = arg0->pendingThirdValue;
+    value = arg0->pendingCompleteBonus;
     if ((value >= 8) && !(gPlayerInputPressed & A_BUTTON)) {
         value = 8;
     }
     gRacePlayers[0].unk00C += value;
-    arg0->pendingThirdValue -= value;
+    arg0->pendingCompleteBonus -= value;
 
     if (gRacePlayers[0].unk00C >= 0xF4240) {
         gRacePlayers[0].unk00C = 0xF423F;
     }
 
-    if ((arg0->pendingFirstValue == 0) && (arg0->pendingSecondValue == 0) && (arg0->pendingThirdValue == 0)) {
+    if ((arg0->pendingTrickPrize == 0) && (arg0->pendingMakeBonus == 0) && (arg0->pendingCompleteBonus == 0)) {
         enqueueSoundEffect(2, 0x32);
         arg0->timer = 0x14;
         setCallbackTaskCallback(arg0, func_8005DD88);
@@ -3239,16 +3239,16 @@ void func_8005E498(void *arg0) {
     addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005D9B4, arg0);
 }
 
-void func_8005E534(void *arg0) {
-    *(s16 *)((u8 *)arg0 + 0x18) = 0;
-    *(s16 *)((u8 *)arg0 + 0x20) = 0;
-    *(s16 *)((u8 *)arg0 + 0x22) = 0x12C;
+void initRaceUiTrickPrizePayout(RaceUiCourseStatsActor *arg0) {
+    arg0->titleAlpha = 0;
+    arg0->pendingMakeBonus = 0;
+    arg0->pendingCompleteBonus = 0x12C;
     if (gRaceChallengeFailed != 0) {
-        *(s16 *)((u8 *)arg0 + 0x1E) = 0;
-        *(volatile s16 *)((u8 *)arg0 + 0x20) = 0;
+        arg0->pendingTrickPrize = 0;
+        *(volatile s16 *)&arg0->pendingMakeBonus = 0;
     } else {
-        *(s16 *)((u8 *)arg0 + 0x1E) = gRacePlayers[0].unk2C0 * 3;
-        *(s16 *)((u8 *)arg0 + 0x20) = gRacePlayers[0].unk2C3 * 10;
+        arg0->pendingTrickPrize = gRacePlayers[0].unk2C0 * 3;
+        arg0->pendingMakeBonus = gRacePlayers[0].unk2C3 * 10;
     }
     setCallbackTaskCallback(arg0, func_8005E498);
 }

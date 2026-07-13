@@ -149,7 +149,7 @@ void func_8005E27C(void *arg0);
 void func_8005E33C(void *arg0);
 void func_8005E3F8(void *arg0);
 void func_8005E498(void *arg0);
-void func_8005E534(void *arg0);
+void initRaceUiTrickPrizePayout(struct RaceUiCourseStatsActor *arg0);
 void func_8005E5B4(void *arg0);
 void func_8005E68C(void *arg0);
 void func_8005E6D0(struct RaceUiSparkleActor *arg0);
