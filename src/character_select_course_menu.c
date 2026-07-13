@@ -83,7 +83,7 @@ extern u8 gCourseSelectFromRaceTypeMenu;
 extern u8 gPendingFramebufferSwapCount;
 extern u8 gFramebufferSwapHold;
 
-// initCharacterSelectCourseMenuFromRaceTypeSelect best match: 89.571% (nonmatchings/initCharacterSelectCourseMenuFromRaceTypeSelect-8331816093655448999/base_3.c)
+// initCharacterSelectCourseMenuFromRaceTypeSelect best match: 91.888% (nonmatchings/initCharacterSelectCourseMenuFromRaceTypeSelect-6866765942504228165/base_14.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/character_select_course_menu/initCharacterSelectCourseMenuFromRaceTypeSelect.s")
 
 #ifdef NON_MATCHING
@@ -109,7 +109,8 @@ void initCharacterSelectCourseMenuFromRaceTypeSelect(void) {
     gMenuChoicePromptState = 0;
     gMenuFadeAlpha = gCurrentGameTask->fade;
     var_v1 = 0;
-    if (gPlayerCount > 0) {
+    var_v1 = gPlayerCount;
+    if (var_v1 > 0) {
         var_v0 = gGameSaveDataBuffer;
         temp_a0 = &gGameSaveDataBuffer[gPlayerCount];
         do {
