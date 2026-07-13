@@ -33,7 +33,8 @@ extern void *createCallbackTaskWithUserIdPreservingArgs(void *, s32, s32);
 #define RACE_UI_HIT_PRIZE_SCORE_RATE 0x12C
 #define RACE_UI_HIT_PRIZE_QUICKSAND_VALLEY_SCORE_RATE 0x64
 #define RACE_UI_HIT_PRIZE_PERFECT_HIT_BONUS 0x3E8
-#define RACE_UI_HIT_PRIZE_SHOW_HIT_PRIZE 2
+#define RACE_UI_HIT_PRIZE_SHOW_PERFECT_HIT 1
+#define RACE_UI_HIT_PRIZE_SHOW_COMPLETE_BONUS 2
 #define RACE_UI_HIT_PRIZE_SHOW_TOTAL_MONEY 3
 #define SCALE_MATRIX_COMPONENT(value, scale) ((value * scale) / 0x1000)
 #define RACE_UI_SP_TRIANGLE_WORD(v0, v1, v2) (_SHIFTL((v0) * 2, 16, 8) | _SHIFTL((v1) * 2, 8, 8) | _SHIFTL((v2) * 2, 0, 8))
@@ -2213,7 +2214,7 @@ void updateRaceUiHitPrizeRevealTotalMoney(RaceUiCounterActor *arg0) {
 }
 
 void func_8005B49C(RaceUiCounterActor *arg0) {
-    arg0->state = RACE_UI_HIT_PRIZE_SHOW_HIT_PRIZE;
+    arg0->state = RACE_UI_HIT_PRIZE_SHOW_COMPLETE_BONUS;
     arg0->timer--;
     if (arg0->timer == 0) {
         enqueueSoundEffect(0x1A, 0x32);
@@ -2226,12 +2227,12 @@ void func_8005B49C(RaceUiCounterActor *arg0) {
     addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005AC44, arg0);
 }
 
-void func_8005B55C(void *arg0) {
-    *(s16 *)((u8 *)arg0 + 0x1C) = 1;
-    *(s16 *)((u8 *)arg0 + 0x1A) = *(s16 *)((u8 *)arg0 + 0x1A) - 1;
-    if (*(s16 *)((u8 *)arg0 + 0x1A) == 0) {
+void updateRaceUiHitPrizeRevealPerfectHit(RaceUiCounterActor *arg0) {
+    arg0->state = RACE_UI_HIT_PRIZE_SHOW_PERFECT_HIT;
+    arg0->timer--;
+    if (arg0->timer == 0) {
         enqueueSoundEffect(0x1A, 0x32);
-        *(s16 *)((u8 *)arg0 + 0x1A) = 0x14;
+        arg0->timer = RACE_UI_RESULTS_REVEAL_TIMER;
         setCallbackTaskCallback(arg0, func_8005B49C);
     }
     addRenderCallback(&gMenuRenderCallbackList, func_8005A31C, arg0);
@@ -2247,7 +2248,7 @@ void func_8005B61C(void *arg0) {
         enqueueSoundEffect(0x1A, 0x32);
         *(s16 *)((u8 *)arg0 + 0x1A) = 0x14;
         if (*(s16 *)((u8 *)arg0 + 0x24) != 0) {
-            setCallbackTaskCallback(arg0, func_8005B55C);
+            setCallbackTaskCallback(arg0, updateRaceUiHitPrizeRevealPerfectHit);
         } else {
             setCallbackTaskCallback(arg0, func_8005B49C);
         }
