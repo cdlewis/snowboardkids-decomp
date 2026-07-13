@@ -1,5 +1,6 @@
 #include "common.h"
 #include "race_course_effects.h"
+#include "race_player_input.h"
 #include "relocatable_heap.h"
 #include "callback_task_scheduler.h"
 #include "asset_manager.h"
@@ -49,28 +50,6 @@ typedef struct {
     char pad1[3];
     Vec3i pos;
 } CourseMarkerSpawnEntry;
-
-typedef struct CourseEffectPlayer {
-    /* 0x000 */ s16 unk0;
-    /* 0x002 */ char pad2[0x11];
-    /* 0x013 */ s8 isActive;
-    /* 0x014 */ char pad14[8];
-    /* 0x01C */ s32 posX;
-    /* 0x020 */ char pad20[4];
-    /* 0x024 */ s32 posZ;
-    /* 0x028 */ char pad28[0x34];
-    /* 0x05C */ s32 posY;
-    /* 0x060 */ char pad60[0x220];
-    /* 0x280 */ s32 collisionRadius;
-    /* 0x284 */ char pad284[0x78];
-    /* 0x2FC */ s32 flags;
-    /* 0x300 */ char pad300[0x32];
-    /* 0x332 */ s16 yaw;
-    /* 0x334 */ s16 pitch;
-    /* 0x336 */ char pad336[0x242];
-    /* 0x578 */ s16 unk578;
-    /* 0x57A */ char pad57A[0x92];
-} CourseEffectPlayer;
 
 typedef struct PatrolCourseObjectEffect {
     char pad[0x18];
@@ -262,7 +241,7 @@ extern u8 gRenderMatricesDirty;
 extern void waitForCourseGateTrigger(CourseGateObjectEffect *);
 void renderCourseGateObject(CourseGateObjectEffect *);
 void renderCourseTriggerVolume(RaceCourseTriggerEffect *);
-void collidePlayerWithCourseTriggerVolume(CourseEffectPlayer *, RaceCourseTriggerEffect *);
+void collidePlayerWithCourseTriggerVolume(RacePlayer *, RaceCourseTriggerEffect *);
 void updateCourseTriggerVolume(RaceCourseTriggerEffect *);
 void drawRaceCountdownReadyPrompt(RaceCountdownEffect *);
 void drawRaceCountdownGoPrompt(RaceCountdownEffect *);
@@ -294,7 +273,6 @@ extern CourseMarkerTextureResource gCourseBillboardMarkerTextureResources[];
 extern CourseTriggerEntry gCourseTriggerEntries[];
 extern Gfx D_2001D00[];
 extern SoundParamAngle gCourseGateAngles[];
-extern CourseEffectPlayer gRacePlayers[];
 extern CourseRenderCommand gIdentityMatrix[];
 extern s32 gMenuRenderCallbackList;
 extern s32 gRaceOverlayRenderCallbackList;
@@ -1408,9 +1386,9 @@ void renderCourseTriggerVolume(RaceCourseTriggerEffect *arg0) {
 #pragma GLOBAL_ASM("asm/nonmatchings/race_course_effects/collidePlayerWithCourseTriggerVolume.s")
 
 #ifdef NON_MATCHING
-void collidePlayerWithCourseTriggerVolume(CourseEffectPlayer *arg0, RaceCourseTriggerEffect *arg1) {
+void collidePlayerWithCourseTriggerVolume(RacePlayer *arg0, RaceCourseTriggerEffect *arg1) {
     RaceCourseTriggerEffect *trigger;
-    CourseEffectPlayer *player;
+    RacePlayer *player;
     Vec3i transformed;
     Vec3i delta;
     FixedMatrix3s matrix;
@@ -1432,10 +1410,10 @@ void collidePlayerWithCourseTriggerVolume(CourseEffectPlayer *arg0, RaceCourseTr
         entry = &gCourseTriggerEntries[trigger->entryIndex];
         makeFixedRotationYX(matrix, -entry->pitch, -entry->yaw);
 
-        if ((player->flags & 0x2000) == 0) {
-            delta.x = player->posX - gCourseTriggerEntries[trigger->entryIndex].pos.x;
-            delta.y = player->posY - gCourseTriggerEntries[trigger->entryIndex].pos.y;
-            delta.z = player->posZ - gCourseTriggerEntries[trigger->entryIndex].pos.z;
+        if ((player->stateFlags & 0x2000) == 0) {
+            delta.x = player->pos.x - gCourseTriggerEntries[trigger->entryIndex].pos.x;
+            delta.y = player->unk5C - gCourseTriggerEntries[trigger->entryIndex].pos.y;
+            delta.z = player->pos.z - gCourseTriggerEntries[trigger->entryIndex].pos.z;
             transformVec3iByFixedMatrix(matrix, &delta, &transformed);
 
             if ((transformed.z >= -trigger->scaleZ) && (trigger->scaleZ >= transformed.z) &&
@@ -1450,24 +1428,24 @@ void collidePlayerWithCourseTriggerVolume(CourseEffectPlayer *arg0, RaceCourseTr
                 makeFixedRotationXY(matrix, entry->pitch, entry->yaw);
                 transformVec3iByFixedMatrix(matrix, &delta, &transformed);
 
-                player->posX += transformed.x;
-                player->posY += transformed.y;
-                player->posZ += transformed.z;
-                player->flags |= 0x02000000;
-                player->yaw = gCourseTriggerEntries[trigger->entryIndex].yaw;
-                player->pitch = gCourseTriggerEntries[trigger->entryIndex].pitch;
+                player->pos.x += transformed.x;
+                player->unk5C += transformed.y;
+                player->pos.z += transformed.z;
+                player->stateFlags |= 0x02000000;
+                player->unk332 = gCourseTriggerEntries[trigger->entryIndex].yaw;
+                player->unk334 = gCourseTriggerEntries[trigger->entryIndex].pitch;
                 return;
             }
         }
 
         if (player->unk578 == 0) {
-            pushRacePlayerOutOfCylinder(&trigger->pos1, trigger->scaleX + 0x30000, 0x120000, player->unk0);
-            pushRacePlayerOutOfCylinder(&trigger->pos2, trigger->scaleX + 0x30000, 0x100000, player->unk0);
+            pushRacePlayerOutOfCylinder(&trigger->pos1, trigger->scaleX + 0x30000, 0x120000, player->playerIndex);
+            pushRacePlayerOutOfCylinder(&trigger->pos2, trigger->scaleX + 0x30000, 0x100000, player->playerIndex);
         }
 
-        delta.x = player->posX - gCourseTriggerEntries[trigger->entryIndex].pos.x;
-        delta.y = player->posY - gCourseTriggerEntries[trigger->entryIndex].pos.y;
-        delta.z = player->posZ - gCourseTriggerEntries[trigger->entryIndex].pos.z;
+        delta.x = player->pos.x - gCourseTriggerEntries[trigger->entryIndex].pos.x;
+        delta.y = player->unk5C - gCourseTriggerEntries[trigger->entryIndex].pos.y;
+        delta.z = player->pos.z - gCourseTriggerEntries[trigger->entryIndex].pos.z;
         transformVec3iByFixedMatrix(matrix, &delta, &transformed);
 
         if (transformed.y <= 0) {
@@ -1475,7 +1453,7 @@ void collidePlayerWithCourseTriggerVolume(CourseEffectPlayer *arg0, RaceCourseTr
                 if (transformed.z >= -trigger->scaleZ) {
                     if (trigger->scaleZ >= transformed.z) {
                         scaleX = trigger->scaleX;
-                        collisionRadius = player->collisionRadius;
+                        collisionRadius = player->unk280;
                         limit = scaleX + collisionRadius;
                         if (transformed.x >= ((-scaleX - collisionRadius) - 0x30000)) {
                             positiveLimit = limit + 0x30000;
@@ -1497,8 +1475,8 @@ void collidePlayerWithCourseTriggerVolume(CourseEffectPlayer *arg0, RaceCourseTr
                                     delta.z = 0;
                                     delta.x = savedPush;
                                     transformVec3iByFixedMatrix(matrix, &delta, &transformed);
-                                    player->posX += transformed.x;
-                                    player->posZ += transformed.z;
+                                    player->pos.x += transformed.x;
+                                    player->pos.z += transformed.z;
                                 }
                             }
                         }

@@ -3,7 +3,7 @@
 
 #include "common.h"
 
-struct CourseEffectPlayer;
+struct RacePlayer;
 struct RaceCountdownEffect;
 struct RaceCourseBackdropEffect;
 struct RaceCourseMarkerEffect;
@@ -57,7 +57,7 @@ void renderCourseBillboardMarker(struct RaceCourseMarkerEffect *arg0);
 void updateCourseBillboardMarker(struct RaceCourseMarkerEffect *arg0);
 void initCourseBillboardMarker(struct RaceCourseMarkerEffect *arg0);
 void renderCourseTriggerVolume(struct RaceCourseTriggerEffect *arg0);
-void collidePlayerWithCourseTriggerVolume(struct CourseEffectPlayer *player, struct RaceCourseTriggerEffect *trigger);
+void collidePlayerWithCourseTriggerVolume(struct RacePlayer *player, struct RaceCourseTriggerEffect *trigger);
 void updateCourseTriggerVolume(struct RaceCourseTriggerEffect *arg0);
 void initCourseTriggerVolume(struct RaceCourseTriggerEffect *arg0);
 
