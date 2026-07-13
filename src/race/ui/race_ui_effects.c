@@ -718,7 +718,7 @@ typedef struct RaceUiPrizePayoutActor {
 typedef struct RaceUiResultsBannerActor {
     /* 0x00 */ u8 pad0[0x18];
     /* 0x18 */ s16 alpha;
-    /* 0x1A */ u8 pad1A[2];
+    /* 0x1A */ s16 timer;
     /* 0x1C */ s8 player0;
     /* 0x1D */ s8 player1;
     /* 0x1E */ s8 player2;
@@ -1632,16 +1632,16 @@ void func_80059518(void *arg0) {
 }
 #endif
 
-void func_80059804(void *arg0) {
-    func_80059518(arg0);
-    addRenderCallback(&gMenuRenderCallbackList, func_80058C00, (s32)arg0);
-    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005905C, (s32)arg0);
+void updateRaceUiResultsBannerConfirmed(RaceUiResultsBannerActor *actor) {
+    func_80059518(actor);
+    addRenderCallback(&gMenuRenderCallbackList, func_80058C00, (s32)actor);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005905C, (s32)actor);
 }
 
-void func_80059854(void *arg0) {
+void updateRaceUiResultsBannerWaitForInput(RaceUiResultsBannerActor *arg0) {
     s32 *input;
     s32 i;
-    void *actor;
+    RaceUiResultsBannerActor *actor;
 
     actor = arg0;
     i = 0;
@@ -1650,7 +1650,7 @@ void func_80059854(void *arg0) {
             if ((*input & A_BUTTON) && !(gMenuFlowState & 0x10)) {
                 gMenuFlowState |= 0x10;
                 enqueueSoundEffect(0x18, 0x32);
-                setCallbackTaskCallback(actor, func_80059804);
+                setCallbackTaskCallback(actor, updateRaceUiResultsBannerConfirmed);
             }
             i++;
             input++;
@@ -1661,21 +1661,21 @@ void func_80059854(void *arg0) {
     addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005905C, (s32)actor);
 }
 
-void func_80059950(void *arg0) {
-    *(s16 *)((u8 *)arg0 + 0x18) = *(s16 *)((u8 *)arg0 + 0x18) + 0x10;
-    if (*(s16 *)((u8 *)arg0 + 0x18) >= 0x100) {
-        *(s16 *)((u8 *)arg0 + 0x1A) = 0x96;
-        *(s16 *)((u8 *)arg0 + 0x18) = 0xFF;
-        setCallbackTaskCallback(arg0, func_80059854);
+void updateRaceUiResultsBannerFadeIn(RaceUiResultsBannerActor *actor) {
+    actor->alpha += 0x10;
+    if (actor->alpha >= 0x100) {
+        actor->timer = 0x96;
+        actor->alpha = 0xFF;
+        setCallbackTaskCallback(actor, updateRaceUiResultsBannerWaitForInput);
     }
-    func_80059518(arg0);
-    addRenderCallback(&gMenuRenderCallbackList, func_80058C00, arg0);
-    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005905C, arg0);
+    func_80059518(actor);
+    addRenderCallback(&gMenuRenderCallbackList, func_80058C00, actor);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005905C, actor);
 }
 
-void func_800599DC(void *arg0) {
-    *(s16 *)((u8 *)arg0 + 0x18) = 0;
-    setCallbackTaskCallback(arg0, func_80059950);
+void initRaceUiResultsBanner(RaceUiResultsBannerActor *actor) {
+    actor->alpha = 0;
+    setCallbackTaskCallback(actor, updateRaceUiResultsBannerFadeIn);
 }
 
 // func_80059A04 best match: 96.586% (nonmatchings/func_80059A04-3242520251544044307/base_7.c)

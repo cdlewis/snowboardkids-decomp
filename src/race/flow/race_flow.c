@@ -1540,7 +1540,7 @@ void updateRaceResultsFlow(void) {
                     func_8009956C(updateRaceResultsMusicFlow, 0);
                 }
             } else {
-                task = func_80071408((void (*)(EffectTask *))func_800599DC, 6, 0x64);
+                task = func_80071408((void (*)(EffectTask *))initRaceUiResultsBanner, 6, 0x64);
                 if (task != NULL) {
                     player = gRacePlayers;
                     do {
