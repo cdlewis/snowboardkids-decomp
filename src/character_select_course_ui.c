@@ -95,20 +95,13 @@ extern u8 D_80121D80[];
 extern CharacterSelectCoursePlayerRecord gFrameCounter;
 extern s32 gMenuFlowState;
 
-// drawCharacterSelectCourseListOptions best match: 95.227% (nonmatchings/drawCharacterSelectCourseListOptions-2694253543240320626/base_7.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/character_select_course_ui/drawCharacterSelectCourseListOptions.s")
-
-#ifdef NON_MATCHING
 void drawCharacterSelectCourseListOptions(CharacterSelectCourseMenuFrameActor *arg0) {
-    CharacterSelectCourseMenuFrameActor *base;
+    register CharacterSelectCourseMenuFrameActor *actor;
     s16 *characterIds;
-    s16 *characterId;
-    s16 *pos;
     s32 i;
     s32 alpha;
-    s32 characterIdOffset;
 
-    base = arg0;
+    actor = arg0;
     if ((gRaceSplitscreenMode == 0) || (gRaceSplitscreenMode == 2)) {
         characterIds = gCharacterSelectCourseOptionsByUnlock[gHighestUnlockedCourse];
     } else if (gRaceTypeSelection >= 3) {
@@ -118,49 +111,41 @@ void drawCharacterSelectCourseListOptions(CharacterSelectCourseMenuFrameActor *a
     }
 
     i = 0;
-    characterIdOffset = 0;
-    if (base->itemCount > 0) {
-        pos = (s16 *)base;
+    if (actor->itemCount > 0) {
         do {
             alpha = 0;
             if (i == 0) {
                 if ((i == gRaceCourseIndex) && (gMenuSelectionConfirmTimer > 0) && (gMenuSelectionConfirmTimer < 8) && (gMenuSelectionConfirmTimer & 1)) {
                     alpha = 0xFF;
-                    do {
-                    } while (0);
                 }
-                drawMenuSprite(pos[12], pos[23], getRelocatableHeapBlockBase(gAssetHandles.textureHandle), 0x1C, 0x20, 0x20, 0, alpha);
+                drawMenuSprite(actor->x[i], actor->y[i], getRelocatableHeapBlockBase(gAssetHandles.textureHandle), 0x1C, 0x20, 0x20, 0, alpha);
             } else if (i == gCharacterSelectCourseExitOptionIndex) {
-                if ((gCharacterSelectCourseExitOptionIndex == gRaceCourseIndex) && (gMenuSelectionConfirmTimer > 0) && (gMenuSelectionConfirmTimer < 8) && (gMenuSelectionConfirmTimer & 1)) {
+                if ((gRaceCourseIndex == gCharacterSelectCourseExitOptionIndex) && (gMenuSelectionConfirmTimer > 0) && (gMenuSelectionConfirmTimer < 8) && (gMenuSelectionConfirmTimer & 1)) {
                     alpha = 0xFF;
                 }
                 if ((gPlayerCount - 1) == 0) {
-                    drawMenuSprite(pos[12], pos[23], getRelocatableHeapBlockBase(gAssetHandles.textureHandle), 0x1B, 0x20, 0x20, 0, alpha);
+                    drawMenuSprite(actor->x[i], actor->y[i], getRelocatableHeapBlockBase(gAssetHandles.textureHandle), 0x1B, 0x20, 0x20, 0, alpha);
                 } else {
-                    drawMenuSprite(pos[12], pos[23], getRelocatableHeapBlockBase(gAssetHandles.textureHandle), 0x1E, 0x20, 0x20, 0, alpha);
+                    drawMenuSprite(actor->x[i], actor->y[i], getRelocatableHeapBlockBase(gAssetHandles.textureHandle), 0x1E, 0x20, 0x20, 0, alpha);
                 }
             } else {
                 if ((i == gRaceCourseIndex) && (gMenuSelectionConfirmTimer > 0) && (gMenuSelectionConfirmTimer < 8) && (gMenuSelectionConfirmTimer & 1)) {
                     alpha = 0xFF;
                 }
-                drawMenuSprite(pos[12], pos[23], getRelocatableHeapBlockBase(gAssetHandles.textureHandle), (i + 0x12) & 0xFFFF, 0x20, 0x20, 0, alpha);
+                drawMenuSprite(actor->x[i], actor->y[i], getRelocatableHeapBlockBase(gAssetHandles.textureHandle), (i + 0x12) & 0xFFFF, 0x20, 0x20, 0, alpha);
             }
 
             if (i != gCharacterSelectCourseExitOptionIndex) {
-                characterId = (s16 *)((u8 *)characterIds + characterIdOffset);
-                if (((gPlayerCount - 1) == 0) && (D_800ECA24[*characterId] != 0)) {
-                    drawMenuSprite((s16)(pos[12] - 0x10), pos[23], getRelocatableHeapBlockBase(gAssetHandles.iconTextureHandle), (i + 0x1A) & 0xFFFF, 0x20, 0x20, 0, D_800ECA24[*characterId] + 6);
+                if (((gPlayerCount - 1) == 0) && (D_800ECA24[characterIds[i]] != 0)) {
+                    drawMenuSprite((s16)(actor->x[i] - 0x10), actor->y[i], getRelocatableHeapBlockBase(gAssetHandles.iconTextureHandle), (i + 0x1A) & 0xFFFF, 0x20, 0x20, 0, D_800ECA24[characterIds[i]] + 6);
                 } else {
-                    drawMenuSprite((s16)(pos[12] - 0x10), pos[23], getRelocatableHeapBlockBase(gAssetHandles.textureHandle), (i + 0x29) & 0xFFFF, 0x20, 0x20, 0, 0);
+                    drawMenuSprite((s16)(actor->x[i] - 0x10), actor->y[i], getRelocatableHeapBlockBase(gAssetHandles.textureHandle), (i + 0x29) & 0xFFFF, 0x20, 0x20, 0, 0);
                 }
             }
             i++;
-            characterIdOffset += 2;
-            pos++;
-        } while (i < base->itemCount);
+        } while (i < actor->itemCount);
     }
 }
-#endif
 
 // updateCharacterSelectUnlockedCourseList best match: 99.807% (nonmatchings/updateCharacterSelectUnlockedCourseList-3357475854818838508/base_8.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/character_select_course_ui/updateCharacterSelectUnlockedCourseList.s")
