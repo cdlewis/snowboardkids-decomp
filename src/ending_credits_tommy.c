@@ -405,13 +405,14 @@ void initEndingCreditsTommy(EndingCreditsTommy *arg0) {
     setCallbackTaskCallback(arg0, waitEndingTommyPhase01);
 }
 
-// drawEndingActorShadow best match: 86.405% at nonmatchings/drawEndingActorShadow-8331816093655448999/base_10.c.
+// drawEndingActorShadow best match: 91.812% at nonmatchings/drawEndingActorShadow-6866765942504228165/base_4.c.
 #pragma GLOBAL_ASM("asm/nonmatchings/ending_credits_tommy/drawEndingActorShadow.s")
 
 #ifdef NON_MATCHING
 void drawEndingActorShadow(MainMenuSceneActorShadow *arg0) {
     EndingShadowStack stack;
     MainMenuSceneModel *model;
+    Mtx *matrix;
 
     model = getMainMenuSceneModel((u8)arg0->actorId);
     stack.pos.x = arg0->posX;
@@ -435,7 +436,8 @@ void drawEndingActorShadow(MainMenuSceneActorShadow *arg0) {
     ENDING_GFX_CMD(gRegionAllocPtr++, 0xE6000000, 0);
     ENDING_GFX_CMD(gRegionAllocPtr++, 0xF0000000, 0x0703C000);
     ENDING_GFX_CMD(gRegionAllocPtr++, 0xE7000000, 0);
-    ENDING_GFX_CMD(gRegionAllocPtr++, 0x01020040, (u32)allocFixedTransformMatrix(&stack.transform));
+    matrix = allocFixedTransformMatrix(&stack.transform);
+    ENDING_GFX_CMD(gRegionAllocPtr++, 0x01020040, (u32)matrix);
     ENDING_GFX_CMD(gRegionAllocPtr++, 0xFD500000, (u32)stack.image);
     ENDING_GFX_CMD(gRegionAllocPtr++, 0xF5500000, 0x07080200);
     ENDING_GFX_CMD(gRegionAllocPtr++, 0xE6000000, 0);
