@@ -632,9 +632,19 @@ typedef struct RaceUiPromptActor {
 typedef struct RaceUiCourseStatsActor {
     /* 0x00 */ u8 pad0[0x10];
     /* 0x10 */ u16 index;
-    /* 0x12 */ u8 pad12[0x1A - 0x12];
-    /* 0x1A */ s16 timer;
-    /* 0x1C */ s16 visibleRows;
+    /* 0x12 */ u8 pad12[0x18 - 0x12];
+    union {
+        /* 0x18 */ s16 alpha;
+        /* 0x18 */ s16 titleAlpha;
+    };
+    union {
+        /* 0x1A */ s16 timer;
+        /* 0x1A */ s16 statsAlpha;
+    };
+    union {
+        /* 0x1C */ s16 visibleRows;
+        /* 0x1C */ s16 holdTimer;
+    };
     /* 0x1E */ s16 pendingFirstValue;
     /* 0x20 */ s16 pendingSecondValue;
     /* 0x22 */ s16 pendingThirdValue;
@@ -1773,13 +1783,13 @@ void func_80059F6C(RaceUiAlpha18Actor *arg0) {
     do { if (arg0->alpha != 0xFF) { gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w1 = 0; gfx->words.w0 = 0xE7000000; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = 0xFF2FFFFF; w0 = 0xFC119623; gfx->words.w0 = w0; gfx->words.w1 = w1; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = 0x00504240; w0 = 0xB900031D; gfx->words.w0 = w0; gfx->words.w1 = w1; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w0 = 0xFA000000; gfx->words.w1 = (arg0->alpha & 0xFF) | (~0xFF); } drawMenuAsciiTextDefaultScale(-0x74, -0x3C, D_800E12D4, 5); if (arg0->alpha != 0xFF) { gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = (s32) gMenuRenderModeResetDl; w0 = 0x06000000; gfx->words.w0 = w0; gfx->words.w1 = w1; } } while (0);
 }
 
-void func_8005A07C(void *arg0) {
+void func_8005A07C(RaceUiCourseStatsActor *arg0) {
     addRenderCallback(&gMenuRenderCallbackList, func_80059E5C, arg0);
     addRenderCallback(&gMenuRenderCallbackList, func_80059C34, arg0);
     addRenderCallback(&gMenuForegroundRenderCallbackList, func_80059F6C, arg0);
 }
 
-void func_8005A0E0(void *arg0) {
+void func_8005A0E0(RaceUiCourseStatsActor *arg0) {
     if (gPlayerInputPressed & A_BUTTON) {
         gMenuFlowState |= 0x10;
         enqueueSoundEffect(0x18, 0x32);
@@ -1790,38 +1800,38 @@ void func_8005A0E0(void *arg0) {
     addRenderCallback(&gMenuForegroundRenderCallbackList, func_80059F6C, arg0);
 }
 
-void func_8005A184(void *arg0) {
-    *(s16 *)((u8 *)arg0 + 0x1C) = *(s16 *)((u8 *)arg0 + 0x1C) - 1;
-    if (*(s16 *)((u8 *)arg0 + 0x1C) == 0) {
+void func_8005A184(RaceUiCourseStatsActor *arg0) {
+    arg0->holdTimer--;
+    if (arg0->holdTimer == 0) {
         setCallbackTaskCallback(arg0, func_8005A0E0);
     }
     addRenderCallback(&gMenuRenderCallbackList, func_80059E5C, arg0);
     addRenderCallback(&gMenuForegroundRenderCallbackList, func_80059F6C, arg0);
 }
 
-void func_8005A1FC(void *arg0) {
-    *(s16 *)((u8 *)arg0 + 0x1A) = *(s16 *)((u8 *)arg0 + 0x1A) + 0x10;
-    if (*(s16 *)((u8 *)arg0 + 0x1A) >= 0x100) {
-        *(s16 *)((u8 *)arg0 + 0x1C) = 0x1E;
-        *(s16 *)((u8 *)arg0 + 0x1A) = 0xFF;
+void func_8005A1FC(RaceUiCourseStatsActor *arg0) {
+    arg0->statsAlpha += 0x10;
+    if (arg0->statsAlpha >= 0x100) {
+        arg0->holdTimer = 0x1E;
+        arg0->statsAlpha = 0xFF;
         setCallbackTaskCallback(arg0, func_8005A184);
     }
     addRenderCallback(&gMenuRenderCallbackList, func_80059E5C, arg0);
     addRenderCallback(&gMenuForegroundRenderCallbackList, func_80059F6C, arg0);
 }
 
-void func_8005A288(RaceUiAlpha18Actor *arg0) {
-    arg0->alpha += 0x10;
-    if (arg0->alpha >= 0x100) {
-        arg0->alpha = 0xFF;
+void func_8005A288(RaceUiCourseStatsActor *arg0) {
+    arg0->titleAlpha += 0x10;
+    if (arg0->titleAlpha >= 0x100) {
+        arg0->titleAlpha = 0xFF;
         setCallbackTaskCallback(arg0, func_8005A1FC);
     }
     addRenderCallback(&gMenuForegroundRenderCallbackList, func_80059F6C, arg0);
 }
 
-void func_8005A2F0(void *arg0) {
-    *(s16 *)((u8 *)arg0 + 0x18) = 0;
-    *(s16 *)((u8 *)arg0 + 0x1A) = 0;
+void func_8005A2F0(RaceUiCourseStatsActor *arg0) {
+    arg0->titleAlpha = 0;
+    arg0->statsAlpha = 0;
     setCallbackTaskCallback(arg0, func_8005A288);
 }
 
