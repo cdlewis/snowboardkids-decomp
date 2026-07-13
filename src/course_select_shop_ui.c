@@ -1207,12 +1207,14 @@ void initCourseUnlockPricePanel(ShopMenuWidgetActor *arg0) {
     setCallbackTaskCallback(arg0, updateCourseUnlockPricePanel);
 }
 
-// drawCourseUnlockPurchasePrompt best match: 98.264% (nonmatchings/drawCourseUnlockPurchasePrompt-6061209858023118177/base_15.c)
+// drawCourseUnlockPurchasePrompt best match: 98.724% (nonmatchings/drawCourseUnlockPurchasePrompt-3242520251544044307/base_15.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/course_select_shop_ui/drawCourseUnlockPurchasePrompt.s")
 
 #ifdef NON_MATCHING
 void drawCourseUnlockPurchasePrompt(ShopMenuWidgetActor *arg0) {
+    s32 tileSize;
     s32 size;
+    ShopMenuWidgetActor *widget;
     volatile u16 drawAlpha;
     s32 zero;
     s16 alpha;
@@ -1220,6 +1222,7 @@ void drawCourseUnlockPurchasePrompt(ShopMenuWidgetActor *arg0) {
     drawMenuSprite(arg0->x, arg0->y, getRelocatableHeapBlockBase(gAssetHandles[0x24]), 0, 0x20, 0x20, 0, 0);
     drawMenuSprite((s16)(arg0->x + 0x40), arg0->y, getRelocatableHeapBlockBase(gAssetHandles[0x24]), 1, 0x20, 0x20, 0, 0);
     drawMenuSprite((s16)(arg0->x + 0x78), arg0->y, getRelocatableHeapBlockBase(gAssetHandles[0x24]), 1, 0x20, 0x20, 0, 0);
+    widget = arg0;
     drawMenuSprite((s16)(arg0->x + 0xB0), arg0->y, getRelocatableHeapBlockBase(gAssetHandles[0x24]), 2, 0x20, 0x20, 0, 0);
     drawMenuGlyphScript((s16)(arg0->x + 0x30), (s16)(arg0->y + 4), &gCourseUnlockPurchasePromptText, 0, 0x100, 0);
 
@@ -1228,9 +1231,10 @@ void drawCourseUnlockPurchasePrompt(ShopMenuWidgetActor *arg0) {
         alpha = 0x100;
     }
 
+    tileSize = 0x20;
     drawAlpha = alpha;
-    drawMenuSpriteWithAlpha((s16)(arg0->x + 0x50), (s16)(arg0->y + 0x14), getRelocatableHeapBlockBase(gAssetHandles[0x24]), 0x17, 0x20,
-                  0x20, 0, drawAlpha, 0);
+    drawMenuSpriteWithAlpha((s16)(arg0->x + 0x50), (s16)(arg0->y + 0x14), getRelocatableHeapBlockBase(gAssetHandles[0x24]), 0x17,
+                            tileSize, tileSize, 0, drawAlpha, 0);
 
     size = 0x20;
     zero = drawAlpha;
@@ -1242,10 +1246,11 @@ void drawCourseUnlockPurchasePrompt(ShopMenuWidgetActor *arg0) {
 
     zero = 0;
     drawAlpha = alpha;
-    drawMenuSpriteWithAlpha((s16)(arg0->x + 0x50), (s16)(arg0->y + 0x24), getRelocatableHeapBlockBase(gAssetHandles[0x24]), 0x18, size,
-                  size, zero, drawAlpha, zero);
+    drawMenuSpriteWithAlpha((s16)(((((((((arg0->x + 0x50) & 0xFFFFu) & 0xFFFFu) & 0xFFFFu) & 0xFFFFu) & 0xFFFFu) & 0xFFFFu) & 0xFFFFu) & 0xFFFFu),
+                            (s16)(widget->y + 0x24), getRelocatableHeapBlockBase(gAssetHandles[0x24]), 0x18, size, size, zero,
+                            drawAlpha, zero);
     drawMenuSpriteWithAlpha((s16)(arg0->x + 0x50), (s16)(arg0->y + (arg0->item.price * 0x10) + 0x14),
-                  getRelocatableHeapBlockBase(gAssetHandles[0x24]), 0x12, size, size, zero, arg0->sprite.index, zero);
+                            getRelocatableHeapBlockBase(gAssetHandles[0x24]), 0x12, size, size, zero, arg0->sprite.index, zero);
 }
 #endif
 
