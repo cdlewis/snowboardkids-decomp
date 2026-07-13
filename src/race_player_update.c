@@ -2281,18 +2281,9 @@ void updateRacePlayerMode42AerialTrick(RaceInputPlayer *player) {
     }
 }
 
-// updateRacePlayerMode43AerialTrick best match: 99.900%
-
-#pragma GLOBAL_ASM("asm/nonmatchings/race_player_update/updateRacePlayerMode43AerialTrick.s")
-
-#ifdef NON_MATCHING
 void updateRacePlayerMode43AerialTrick(RaceInputPlayer *player) {
     s16 updateTimer;
-    RaceInputPlayer *playerAlias;
-    s32 allBitsSet;
-    u64 clampValue;
     s32 yVel;
-    void (*soundFunc)(void *);
     s32 timer;
 
     if (player->updateState == 0) {
@@ -2322,32 +2313,27 @@ void updateRacePlayerMode43AerialTrick(RaceInputPlayer *player) {
     clampRacePlayerVectorXZSpeed(&player->velocity, player);
 
     yVel = player->velocity.y;
-    player->posX += player->velocity.x;
-    player->posY += yVel;
-    soundFunc = initRacePlayerLandingSnowSpray;
-    playerAlias = player;
-    player->posZ += player->velocity.z;
-    playerAlias->unk74 = yVel;
+    player->pos.x += player->velocity.x;
+    player->pos.y += yVel;
+    player->pos.z += player->velocity.z;
+    player->unk74 = yVel;
 
-    playerAlias->unk6E = (((0, fixedSine(player->unk7E))) << 14) / 0x1000;
+    player->unk6E = (fixedSine(player->unk7E) << 14) / 0x1000;
 
-    timer = playerAlias->stateTimer + 0x14;
-    playerAlias->stateTimer = timer;
-    allBitsSet = 0xFFFFFFFFFFFFFFFF;
-    if (timer >= 0x401) {
-        clampValue = 0x400;
-        player->stateTimer = (timer = clampValue) & 0xFFFFFFFFFFFFFFFFu;
+    player->stateTimer += 0x14;
+    if (player->stateTimer >= 0x401) {
+        player->stateTimer = 0x400;
     }
 
-    (*playerAlias).stateFlags |= 2;
+    timer = player->stateTimer;
+    player->stateFlags |= 2;
     if (timer < 0x3D0) {
-        playerAlias->stateFlags |= 0x800 & allBitsSet;
-        if ((playerAlias->soundDisabled == 0) && (gFrameCounter & 1)) {
-            createCallbackTaskWithUserIdPreservingArgs(soundFunc, 5, 2, (u16) player->playerIndex);
+        player->stateFlags |= 0x800;
+        if ((player->soundDisabled == 0) && (gFrameCounter & 1)) {
+            createCallbackTaskWithUserIdPreservingArgs(initRacePlayerLandingSnowSpray, 5, 2, (u16) player->playerIndex);
         }
     }
 }
-#endif
 
 void updateRacePlayerMode32AerialTrick(RaceInputPlayer *player) {
     s16 updateState;
