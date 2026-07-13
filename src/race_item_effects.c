@@ -977,16 +977,21 @@ void renderRaceItemTextureEffects(RaceItemTextureActor *arg0) {
 }
 #endif
 
-// updateRaceItemTextureEffects best match: 66.842%
+// updateRaceItemTextureEffects best match: 67.368%
+// (loop form: IDO emits $at-direct per-store addressing like the target, but
+// reloads lui per store instead of CSE-ing across adjacent pairs)
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race_item_effects/updateRaceItemTextureEffects.s")
 
 #ifdef NON_MATCHING
 void updateRaceItemTextureEffects(RaceItemEffectActor *arg0) {
-    gRaceItemTextureEffectDrawLists.heads[0] = NULL;
-    gRaceItemTextureEffectDrawLists.heads[1] = NULL;
-    gRaceItemTextureEffectDrawLists.heads[2] = NULL;
-    gRaceItemTextureEffectDrawLists.heads[3] = NULL;
+    RaceItemDrawNode **heads;
+    s32 i;
+
+    heads = gRaceItemTextureEffectDrawLists.heads;
+    for (i = 0; i < 4; i++) {
+        heads[i] = NULL;
+    }
     addRenderCallback(&D_801248E0, renderRaceItemTextureEffects, arg0);
 }
 #endif
