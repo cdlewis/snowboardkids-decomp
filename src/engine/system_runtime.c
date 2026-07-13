@@ -374,23 +374,23 @@ loop_17:
 #pragma GLOBAL_ASM("asm/nonmatchings/engine/system_runtime/gameThreadMain.s")
 #endif
 
-void dmaReadRom(u32 devAddr, void *dramAddr, s32 size) {
-    OSIoMesg mb;
-    OSMesg msg;
-    s32 chunk;
+void dmaReadRom(u32 romOffset, void *ramAddress, s32 size) {
+    OSIoMesg dmaRequest;
+    OSMesg dmaDoneMsg;
+    s32 transferSize;
 
     while (size != 0) {
         if (size > DMA_CHUNK_SIZE) {
-            chunk = DMA_CHUNK_SIZE;
+            transferSize = DMA_CHUNK_SIZE;
         } else {
-            chunk = size;
+            transferSize = size;
         }
-        osInvalDCache(dramAddr, chunk);
-        osPiStartDma(&mb, 0, OS_READ, devAddr, dramAddr, chunk, &gRomDmaQueue);
-        osRecvMesg(&gRomDmaQueue, &msg, OS_MESG_BLOCK);
-        size -= chunk;
-        devAddr += chunk;
-        dramAddr = (void *)((u8 *)dramAddr + chunk);
+        osInvalDCache(ramAddress, transferSize);
+        osPiStartDma(&dmaRequest, 0, OS_READ, romOffset, ramAddress, transferSize, &gRomDmaQueue);
+        osRecvMesg(&gRomDmaQueue, &dmaDoneMsg, OS_MESG_BLOCK);
+        size -= transferSize;
+        romOffset += transferSize;
+        ramAddress = (void *)((u8 *)ramAddress + transferSize);
     }
 }
 
