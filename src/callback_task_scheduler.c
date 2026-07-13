@@ -160,7 +160,7 @@ void updateRemainingCallbackTasks(void) {
 void noopCallbackTask(void) {
 }
 
-// createCallbackTaskPreservingArgs best match: 97.525%
+// createCallbackTaskPreservingArgs best match: 98.021%
 #pragma GLOBAL_ASM("asm/nonmatchings/callback_task_scheduler/createCallbackTaskPreservingArgs.s")
 
 #ifdef NON_MATCHING
@@ -171,6 +171,8 @@ void *createCallbackTaskPreservingArgs(void (*callback)(), u16 type, s32 priorit
     CallbackTask *sentinel;
     s32 index;
 
+    task = NULL;
+    next = NULL;
     switch (type & 0xFF) {
     case 0:
         if (gFreeCallbackTaskType0Count == 0) {
@@ -189,6 +191,7 @@ void *createCallbackTaskPreservingArgs(void (*callback)(), u16 type, s32 priorit
             return NULL;
         }
         gFreeCallbackTaskType2Count--;
+        prev = next;
         break;
     case 3:
         if (gFreeCallbackTaskType3Count == 0) {
