@@ -163,7 +163,7 @@ void spawnRacePlayerSparkleEffect(s16 arg0);
 #define spawnRaceUiSnowboardTrailEffect func_8005F5C8
 void renderRaceUiSnowboardTrailEffect(struct RaceUiSnowboardTrailActor *arg0);
 void updateRaceUiSnowboardTrailEffect(struct RaceUiSnowboardTrailActor *arg0);
-void initRaceUiSnowboardTrailEffect(void *arg0);
+void initRaceUiSnowboardTrailEffect(struct RaceUiSnowboardTrailActor *arg0);
 void spawnRaceUiSnowboardTrailEffect(struct RaceUiSnowboardTrailPlayer *player);
 void func_8005F6A4(struct RaceUiRankTrailActor *arg0);
 void func_8005F828(struct RaceUiRankTrailActor *arg0);
