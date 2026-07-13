@@ -565,7 +565,7 @@ s32 soundPlayerCommandForceDurationRead(PlayerCommandState *arg0, s32 arg1) {
 }
 
 s32 soundPlayerCommandSetPitchOffset(PlayerCommandState *arg0, u8 *arg1) {
-    arg0->unk118 = *arg1;
+    arg0->pitchOffset = *arg1;
     return (s32)(arg1 + 1);
 }
 
@@ -763,13 +763,13 @@ s32 soundPlayerCommandSetFxMix(PlayerCommandState *arg0, u8 *arg1) {
     return (s32)(arg1 + 1);
 }
 
-s32 soundPlayerCommandRandomizePitchOffset(void *arg0, u8 *arg1) {
-    u8 temp_a0;
+s32 soundPlayerCommandRandomizePitchOffset(PlayerCommandState *arg0, u8 *arg1) {
+    u8 range;
 
-    temp_a0 = *arg1;
+    range = *arg1;
     arg1++;
-    *(s8 *)((u8 *)arg0 + 0x118) = soundPlayerRandom(temp_a0, arg1, arg0);
-    *(s8 *)((u8 *)arg0 + 0x118) = *arg1 + *(s8 *)((u8 *)arg0 + 0x118);
+    arg0->pitchOffset = soundPlayerRandom(range, arg1, arg0);
+    arg0->pitchOffset += *arg1;
     return (s32)(arg1 + 1);
 }
 
@@ -1544,7 +1544,7 @@ void soundPlayerApplyPitch(PlayerCommandState *arg0, s32 arg1) {
         }
     }
 
-    flagPitch = (f32)arg0->unk118 * (f32)(1 - arg0->flagE7);
+    flagPitch = (f32)arg0->pitchOffset * (f32)(1 - arg0->flagE7);
     arg0->unk4C = pitch;
     arg0->flagE7 = 0;
     pitch += arg0->unk48 + flagPitch + arg0->unk2C + (f32)arg0->unk11A;
