@@ -3782,15 +3782,16 @@ void func_80060544(RaceUiPodiumTrailActor *arg0) {
     }
 }
 
-void func_8006069C(void *arg0) {
+void updateGhostSlowdownDriftAway(RaceUiPodiumTrailActor *arg0) {
     if (gRaceUpdatePaused == 0) {
-        *(s32 *)((u8 *)arg0 + 0x4C) += -0x10000;
-        *(s32 *)((u8 *)arg0 + 0x18) += 0x20000;
-        *(s32 *)((u8 *)arg0 + 0x1C) += *(s32 *)((u8 *)arg0 + 0x4C);
-        *(s32 *)((u8 *)arg0 + 0x20) += 0x10000;
-        *(s16 *)((u8 *)arg0 + 0x56) = *(s16 *)((u8 *)arg0 + 0x56) - 1;
+        arg0->velocity -= 0x10000;
+        arg0->pos.x += 0x20000;
+        arg0->pos.y += arg0->velocity;
+        arg0->pos.z += 0x10000;
+        arg0->timer--;
     }
-    if (*(s16 *)((u8 *)arg0 + 0x56) == 0) {
+
+    if (arg0->timer == 0) {
         removeCallbackTask(arg0);
     } else {
         addRenderCallback(&gSceneModelRenderCallbackList, func_80060544, arg0);
@@ -3816,7 +3817,7 @@ void updateGhostSlowdownImpact(RaceUiPodiumTrailActor *arg0) {
         if (height < 0x100000) {
             arg0->timer = 0x14;
             arg0->velocity = 0x80000;
-            setCallbackTaskCallback(arg0, func_8006069C);
+            setCallbackTaskCallback(arg0, updateGhostSlowdownDriftAway);
             height = arg0->height;
         }
 
