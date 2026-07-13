@@ -75,11 +75,11 @@ typedef ShopMenuSparkleOffset ShopMenuSparklePattern[13];
 
 struct ShopMenuRowActor {
     char pad0[0x18];
-    /* 0x18 */ s16 unk18[5];
-    /* 0x22 */ s16 unk22;
-    /* 0x24 */ u8 unk24;
-    /* 0x25 */ u8 unk25;
-    /* 0x26 */ u8 unk26;
+    /* 0x18 */ s16 rowXPositions[5];
+    /* 0x22 */ s16 baseY;
+    /* 0x24 */ u8 state;
+    /* 0x25 */ u8 revealTimer;
+    /* 0x26 */ u8 visibleRowCount;
 };
 
 struct ShopMenuWidgetActor {
@@ -169,20 +169,20 @@ void drawShopMenuModeChoiceRows(ShopMenuRowActor *arg0) {
     sp54 = arg0;
     var_s0 = 0;
     do {
-        if (arg0->unk26 > 0) {
+        if (arg0->visibleRowCount > 0) {
             var_s2 = 0; var_s3 = arg0; do { var_s1 = 0;
                 if ((gMenuSelectionConfirmTimer > 0) && (gMenuSelectionConfirmTimer < 8) && (gMenuExitSelection == 0) && (var_s0 == gCourseSelectModeSelection) &&
                     (gMenuSelectionConfirmTimer & 1)) {
                     var_s1 = 0xFF;
                 }
-                drawMenuSprite(var_s3->unk18[0], (s16)(arg0->unk22 + var_s2), getRelocatableHeapBlockBase(gAssetHandles[0x27]),
+                drawMenuSprite(var_s3->rowXPositions[0], (s16)(arg0->baseY + var_s2), getRelocatableHeapBlockBase(gAssetHandles[0x27]),
                               (var_s0 + 2) & 0xFFFF, 0x20, 0x20, 0, var_s1);
                 if (1) {
                 }
                 var_s0 += 1;
                 var_s2 += 0x1C;
                 var_s3 = (ShopMenuRowActor *)((s16 *)var_s3 + 1);
-            } while (var_s0 < sp54->unk26);
+            } while (var_s0 < sp54->visibleRowCount);
         }
     } while (0);
 }
@@ -238,54 +238,54 @@ void updateShopMenuModeChoiceRows(ShopMenuRowActor *arg0) {
     ShopMenuRowActor *row;
     ShopMenuRowActor *actor;
 
-    stateByte = arg0->unk24;
+    stateByte = arg0->state;
     actor = arg0;
     state = stateByte;
     row = arg0;
     switch (state) {
     case 0:
         moved = 0;
-        for (i = 0; i < row->unk26; i++) {
-            if (row->unk18[i] < -0x7C) {
-                row->unk18[i] += 0x10;
+        for (i = 0; i < row->visibleRowCount; i++) {
+            if (row->rowXPositions[i] < -0x7C) {
+                row->rowXPositions[i] += 0x10;
                 moved++;
-                if (row->unk18[i] >= -0x7C) {
-                    row->unk18[i] = -0x7C;
+                if (row->rowXPositions[i] >= -0x7C) {
+                    row->rowXPositions[i] = -0x7C;
                 }
             }
         }
-        row->unk25++;
+        row->revealTimer++;
         spawnRow = row;
-        if (!(spawnRow->unk25 & 1)) {
-            if (spawnRow->unk26 < 3) {
-                spawnRow->unk26++;
+        if (!(spawnRow->revealTimer & 1)) {
+            if (spawnRow->visibleRowCount < 3) {
+                spawnRow->visibleRowCount++;
             }
         }
         if (moved == 0) {
-            spawnRow->unk24 = 1;
+            spawnRow->state = 1;
             createCallbackTask(initShopMenuSelectedModePanel, 0, 0x5F);
             createCallbackTask(initShopMenuCourseListPanel, 0, 0x61);
         }
-        state = arg0->unk24;
+        state = arg0->state;
         break;
     case 1:
         if (gMenuTransitionState == 1) {
-            state = (u8) (arg0->unk24 = 2);
+            state = (u8) (arg0->state = 2);
         }
         break;
     case 2:
         for (i = 0; i < 5; i++) {
-            arg0->unk18[i] -= 0x20;
+            arg0->rowXPositions[i] -= 0x20;
         }
-        if (arg0->unk18[0] < -0x103) {
-            arg0->unk24 = 3;
+        if (arg0->rowXPositions[0] < -0x103) {
+            arg0->state = 3;
         }
         break;
     case 3:
         break;
     }
 
-    if (arg0->unk24 == 3) {
+    if (arg0->state == 3) {
         removeCallbackTask(arg0);
         return;
     }
@@ -295,12 +295,12 @@ void updateShopMenuModeChoiceRows(ShopMenuRowActor *arg0) {
 void initShopMenuModeChoiceRows(ShopMenuRowActor *arg0) {
     s32 i;
 
-    for (i = 0; i < 5; i++) { arg0->unk18[i] = -0x104; }
+    for (i = 0; i < 5; i++) { arg0->rowXPositions[i] = -0x104; }
 
-    arg0->unk22 = -0x50;
-    arg0->unk25 = 0;
-    arg0->unk26 = 1;
-    arg0->unk24 = 0;
+    arg0->baseY = -0x50;
+    arg0->revealTimer = 0;
+    arg0->visibleRowCount = 1;
+    arg0->state = 0;
 
     setCallbackTaskCallback(arg0, updateShopMenuModeChoiceRows);
 }
