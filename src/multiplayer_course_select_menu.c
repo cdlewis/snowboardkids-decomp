@@ -113,7 +113,7 @@ extern void (*D_8011236C)(void);
 extern s32 D_80112414;
 extern void (*D_8011241C)(void);
 extern u8 gPlayerCount;
-extern MultiplayerCourseSelectPlayer D_80121D80[];
+extern MultiplayerCourseSelectPlayer gRacePlayers[];
 extern s32 gMenuFlowState;
 extern u8 gFrameCounter;
 
@@ -208,7 +208,7 @@ void initMultiplayerCourseSelectMenu(void) {
     gCurrentGameTask->unk20 = 0;
     setCurrentGameTaskCallback(updateMultiplayerCourseSelectMenu, 0);
 
-    player = D_80121D80;
+    player = gRacePlayers;
     do {
         player++;
         player[-1].state = 0;
@@ -268,10 +268,10 @@ void initMultiplayerCourseSelectMenu(void) {
     }
 
     for (i = 0; i < gPlayerCount; i++) {
-        selected = D_80121D80[i].selection;
+        selected = gRacePlayers[i].selection;
         if ((selected >= 9) && (selected < 12)) {
             j = 3;
-            if (D_80121D80[i].mode == 5) {
+            if (gRacePlayers[i].mode == 5) {
                 j = 0;
             }
             k = gCourseSelectStatus.unk2E;
@@ -291,7 +291,7 @@ void initMultiplayerCourseSelectMenu(void) {
             j--;
         }
 
-        if (D_80121D80[i].mode == 5) {
+        if (gRacePlayers[i].mode == 5) {
             D_8010AEAC[i] = 0;
         } else if (selected < 9) {
             D_8010AEAC[i] = selected / 3;
@@ -309,7 +309,7 @@ void initMultiplayerCourseSelectMenu(void) {
             }
         }
 
-        D_80121D80[i].selection = D_8010AEF8[i][j];
+        gRacePlayers[i].selection = D_8010AEF8[i][j];
         gCourseSelectStatus.unk0[i] = 0;
         gCourseSelectStatus.unk4[i] = 0;
         gCourseSelectStatus.unk8[i] = 0;
@@ -393,13 +393,13 @@ void updateMultiplayerCourseSelectMenu(void) {
         playerCount = gPlayerCount;
         readyCount = 0;
         if (playerCount > 0) {
-            player = D_80121D80;
+            player = gRacePlayers;
             do {
                 if (player->state == 9) {
                     readyCount = (readyCount + 1) & 0xFF;
                 }
                 player++;
-            } while (player < &D_80121D80[playerCount]);
+            } while (player < &gRacePlayers[playerCount]);
         }
 
         if (playerCount == readyCount) {
@@ -414,14 +414,14 @@ void updateMultiplayerCourseSelectMenu(void) {
             if (blockingCount == 0) {
                 row = (playerCount < 3) ? playerCount : 4;
                 for (i = 0; i < row; i++) {
-                    D_80121D80[i].state = 3;
+                    gRacePlayers[i].state = 3;
                 }
                 D_800EC9C0 = 0xF;
                 gMenuFlowState = 1;
             }
         } else if (D_800EC9C0 == 0) {
             activeCount = 0;
-            player = D_80121D80;
+            player = gRacePlayers;
             for (i = 0; i < playerCount; i++, player++) {
                 row = gMenuChoicePromptState[i];
                 if (row == 0) {
@@ -501,7 +501,7 @@ void updateMultiplayerCourseSelectMenu(void) {
                                     if ((pressed & 0x1000) || (pressed & 0x8000)) {
                                         if ((gPlayerCount == 1) && (maxColumn == D_8010AE64[0])) {
                                             enqueueSoundEffect(0x18, 0x32);
-                                            D_80121D80[0].state = 9;
+                                            gRacePlayers[0].state = 9;
                                             D_8010AEB0 = 1;
                                             gMenuFlowState = 1;
                                         } else if ((player->selection >= 9) || (D_8010AEB8[i][*column] != 0)) {

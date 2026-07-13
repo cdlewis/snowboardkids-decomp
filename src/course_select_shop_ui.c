@@ -215,7 +215,7 @@ extern u8 gCourseDetailsPreviewPage;
 extern u8 gCourseDetailsCloseFromBack;
 extern s16 gCoursePreviewViewportHeight;
 extern s16 gMenuUiSpritesAssetHandle;
-extern ShopMenuState D_80121D80;
+extern ShopMenuState gRacePlayers;
 extern s32 gPlayer1Money;
 extern s32 gMenuFlowState;
 extern MainMenuState *gCurrentGameTask;
@@ -1140,7 +1140,7 @@ void updateCourseUnlockPricePanel(ShopMenuWidgetActor *arg0) {
         }
         break;
     case 1:
-        arg0->item.price = gCourseUnlockPrices[D_80121D80.selectedShopItem];
+        arg0->item.price = gCourseUnlockPrices[gRacePlayers.selectedShopItem];
         if (gCurrentGameTask->shopItemPrice >= 2) {
             arg0->slide.bytes.state = 2;
         }
@@ -1162,13 +1162,13 @@ void updateCourseUnlockPricePanel(ShopMenuWidgetActor *arg0) {
             }
         }
         arg0->item.price = price - amount;
-        D_80121D80.money -= amount;
+        gRacePlayers.money -= amount;
         /* Required for IDO register allocation. */
         if (gCurrentGameTask && gCurrentGameTask) {
         }
         if (arg0->item.price == 0) {
             arg0->slide.bytes.state = 3;
-            gCourseUnlockSaveSlots[D_80121D80.selectedShopItem] = 9;
+            gCourseUnlockSaveSlots[gRacePlayers.selectedShopItem] = 9;
         }
         break;
     case 3:
@@ -1180,7 +1180,7 @@ void updateCourseUnlockPricePanel(ShopMenuWidgetActor *arg0) {
         }
         break;
     case 4:
-        if (D_80121D80.shopMenuState == 3) {
+        if (gRacePlayers.shopMenuState == 3) {
             arg0->slide.bytes.state = 5;
         }
         /* fallthrough */

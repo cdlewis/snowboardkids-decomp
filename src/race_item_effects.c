@@ -227,7 +227,7 @@ extern s16 gRaceItemSpriteAssetHandle;
 extern s16 gRaceUiSpriteAssetHandle;
 extern s16 gRaceCourseIndex;
 extern u8 gRaceUpdatePaused;
-extern RaceItemFollowPlayer D_80121D80[];
+extern RaceItemFollowPlayer gRacePlayers[];
 extern RaceItemEffectPlayerState D_80121EE8[];
 extern s32 gRaceOverlayRenderCallbackList;
 extern s32 D_801248C8;
@@ -420,7 +420,7 @@ void initRacePlayerHitEffect(RaceItemEffectActor *arg0) {
 
     arg0->unk24.timer = -1;
     if (arg0->unk34.shorts.state.halfword == 0) {
-        sp58 = &D_80121D80[arg0->unk38.width];
+        sp58 = &gRacePlayers[arg0->unk38.width];
         makeFixedRotationY(sp30, arg0->unk34.shorts.height.halfword);
         sp24[0] = 0;
         sp24[1] = arg0->unk28.word;
@@ -588,8 +588,8 @@ void updateRacePlayerShockEffect(RaceItemEffectActor *arg0) {
     if (actor->unk34.shorts.height.byte < 0) {
         actor->unk34.shorts.height.byte = 0;
     }
-    transformVec3iByFixedMatrix(D_80121D80[actor->playerIndex].transform, &actor->unk24.velocityX, &actor->payload);
-    player = &D_80121D80[actor->playerIndex];
+    transformVec3iByFixedMatrix(gRacePlayers[actor->playerIndex].transform, &actor->unk24.velocityX, &actor->payload);
+    player = &gRacePlayers[actor->playerIndex];
     actor->payload.vec.x += player->posA8.x;
     actor->payload.vec.y += player->posA8.y;
     actor->payload.vec.z += player->posA8.z;
@@ -603,11 +603,11 @@ void initRacePlayerShockEffect(RaceItemEffectActor *arg0) {
     arg0->unk2C = 0;
     arg0->unk28.word = 0x280000;
     arg0->unk24.velocityX = 0x400000;
-    player = &D_80121D80[arg0->playerIndex];
+    player = &gRacePlayers[arg0->playerIndex];
     if (player->flags2FC & 0x400) {
         arg0->unk24.velocityX = -arg0->unk24.velocityX;
     }
-    player = &D_80121D80[arg0->playerIndex];
+    player = &gRacePlayers[arg0->playerIndex];
     enqueuePositionalSoundEffect(9, (SoundPosition *) &player->pos1C, 0x7F, 0x32);
     updateRacePlayerShockEffect(arg0);
     setCallbackTaskCallback(arg0, updateRacePlayerShockEffect);
@@ -691,7 +691,7 @@ void initRaceItemBreakParticle(RaceItemEffectActor *arg0) {
     arg0->unk30.screen.y = randomNextMain() & 3;
     getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gRaceCommonSpriteAssetHandle), gRaceItemEffectSpriteIds[arg0->playerIndex], &arg0->image, &arg0->palette);
 
-    player = &D_80121D80[arg0->followPlayerIndex];
+    player = &gRacePlayers[arg0->followPlayerIndex];
     arg0->payload.vec.x = player->pos.x;
     arg0->payload.vec.y = player->pos.y;
     arg0->payload.vec.z = player->pos.z;
@@ -722,9 +722,9 @@ void spawnRaceItemBreakParticles(s16 playerIndex, s16 itemIndex) {
     itemType = getRaceItemEffectType(itemIndex);
     if (itemType != 4) {
         if (itemType == 1) {
-            enqueuePositionalSoundEffect(0x12, (SoundPosition *) &D_80121D80[playerIndex].pos1C, 0x7F, 0x32);
+            enqueuePositionalSoundEffect(0x12, (SoundPosition *) &gRacePlayers[playerIndex].pos1C, 0x7F, 0x32);
         } else {
-            enqueuePositionalSoundEffect(0x11, (SoundPosition *) &D_80121D80[playerIndex].pos1C, 0x7F, 0x32);
+            enqueuePositionalSoundEffect(0x11, (SoundPosition *) &gRacePlayers[playerIndex].pos1C, 0x7F, 0x32);
         }
 
         callback = initRaceItemBreakParticle;
@@ -864,7 +864,7 @@ void updateRacePlayerSnowSpray(RaceItemFollowActor *arg0) {
 
     if (gRaceUpdatePaused == 0) {
         arg0->timer++;
-        player = &D_80121D80[arg0->playerIndex];
+        player = &gRacePlayers[arg0->playerIndex];
         arg0->pos1.x = arg0->offset1.x + player->pos.x;
         arg0->pos1.y = arg0->offset1.y + player->pos.y;
         arg0->pos1.z = arg0->offset1.z + player->pos.z;
@@ -886,7 +886,7 @@ void initRacePlayerSnowSpray(RaceItemFollowActor *arg0) {
     RaceItemFollowPlayer *player;
 
     arg0->timer = -1;
-    player = &D_80121D80[arg0->playerIndex];
+    player = &gRacePlayers[arg0->playerIndex];
     if (player->flags2FC & 0x400) {
         arg0->offset1.x = player->unk4A0.x - player->pos.x;
         arg0->offset1.y = player->unk4A0.y - player->pos.y;
@@ -1076,7 +1076,7 @@ void updateRacePlayerLandingSnowSpray(RaceItemFollowActor *arg0) {
 
     if (gRaceUpdatePaused == 0) {
         arg0->timer++;
-        player = &D_80121D80[arg0->playerIndex];
+        player = &gRacePlayers[arg0->playerIndex];
         arg0->pos1.x = arg0->offset1.x + player->pos.x;
         arg0->pos1.y = arg0->offset1.y + player->pos.y;
         arg0->pos1.z = arg0->offset1.z + player->pos.z;
@@ -1098,7 +1098,7 @@ void initRacePlayerLandingSnowSpray(RaceItemFollowActor *arg0) {
     RaceItemFollowPlayer *player;
 
     arg0->timer = -1;
-    player = &D_80121D80[arg0->playerIndex];
+    player = &gRacePlayers[arg0->playerIndex];
     if (player->flags2FC & 0x400) {
         arg0->offset1.x = player->unk4A0.x - player->pos.x;
         arg0->offset1.y = player->unk4A0.y - player->pos.y;

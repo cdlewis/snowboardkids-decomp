@@ -29,7 +29,7 @@ extern RaceSurfaceCue gRaceSurfaceCueShinobinSequence1[];
 extern RaceSurfaceCue gRaceSurfaceCueShinobinSequence2[];
 extern RaceSurfaceCue gRaceSurfaceCueShinobinSequence3[];
 
-s32 advanceRaceSurfaceCueSequence(RaceSurfaceCue *cues, RaceInputPlayer *player, s16 cueIndex) {
+s32 advanceRaceSurfaceCueSequence(RaceSurfaceCue *cues, RacePlayer *player, s16 cueIndex) {
     RaceSurfaceCue *cue;
     s16 step;
     s16 cueValue;
@@ -64,7 +64,7 @@ s32 advanceRaceSurfaceCueSequence(RaceSurfaceCue *cues, RaceInputPlayer *player,
     }
 }
 
-void resetRacePlayerSurfaceCueState(RaceInputPlayer *player) {
+void resetRacePlayerSurfaceCueState(RacePlayer *player) {
     player->surfaceCueState[0] = 0;
     player->surfaceCueState[1] = 0;
     player->surfaceCueState[2] = 0;
@@ -79,7 +79,7 @@ void resetRacePlayerSurfaceCueState(RaceInputPlayer *player) {
     player->surfaceCueStep[5] = 0;
 }
 
-s32 updateRacePlayerSurfaceCue(RaceInputPlayer *player) {
+s32 updateRacePlayerSurfaceCue(RacePlayer *player) {
     s32 value;
     s32 cue;
     s8 stickY;

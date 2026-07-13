@@ -30,9 +30,9 @@ extern s32 gRacePlayerHitDeltaZ;
 extern Unk8011228C gRacePlayerHudStatuses[];
 
 s32 enqueueSoundEffect(s16, s16);
-void enqueueRacePlayerVoiceSound(RaceInputPlayer *, s32);
+void enqueueRacePlayerVoiceSound(RacePlayer *, s32);
 
-s32 tryQueueRacePlayerHitCueSpinout(RaceInputPlayer *arg0) {
+s32 tryQueueRacePlayerHitCueSpinout(RacePlayer *arg0) {
     s32 temp_v0;
     s32 var_v1;
     s32 temp_t0;
@@ -61,7 +61,7 @@ s32 tryQueueRacePlayerHitCueSpinout(RaceInputPlayer *arg0) {
     return 0;
 }
 
-s32 tryQueueRacePlayerHitCueGhostSpinout(RaceInputPlayer *arg0) {
+s32 tryQueueRacePlayerHitCueGhostSpinout(RacePlayer *arg0) {
     s32 temp_v0;
     s32 var_v1;
     s32 temp_t0;
@@ -90,7 +90,7 @@ s32 tryQueueRacePlayerHitCueGhostSpinout(RaceInputPlayer *arg0) {
     return 0;
 }
 
-s32 tryQueueRacePlayerHitCueLaunch(RaceInputPlayer *arg0) {
+s32 tryQueueRacePlayerHitCueLaunch(RacePlayer *arg0) {
     if (arg0->stateFlags & 0x37D000) {
         return 1;
     }
@@ -100,7 +100,7 @@ s32 tryQueueRacePlayerHitCueLaunch(RaceInputPlayer *arg0) {
     return 0;
 }
 
-s32 tryQueueRacePlayerHitCueStun(RaceInputPlayer *arg0) {
+s32 tryQueueRacePlayerHitCueStun(RacePlayer *arg0) {
     if (arg0->stateFlags & 0x77D000) {
         return 1;
     }
@@ -110,7 +110,7 @@ s32 tryQueueRacePlayerHitCueStun(RaceInputPlayer *arg0) {
     return 0;
 }
 
-s32 tryQueueRacePlayerHitCueTrip(RaceInputPlayer *arg0) {
+s32 tryQueueRacePlayerHitCueTrip(RacePlayer *arg0) {
     if (arg0->stateFlags & 0x77D000) {
         return 1;
     }
@@ -120,7 +120,7 @@ s32 tryQueueRacePlayerHitCueTrip(RaceInputPlayer *arg0) {
     return 0;
 }
 
-s32 tryQueueRacePlayerHitCueTumble(RaceInputPlayer *arg0) {
+s32 tryQueueRacePlayerHitCueTumble(RacePlayer *arg0) {
     if (arg0->stateFlags & 0x77D000) {
         return 1;
     }
@@ -130,7 +130,7 @@ s32 tryQueueRacePlayerHitCueTumble(RaceInputPlayer *arg0) {
     return 0;
 }
 
-s32 tryQueueRacePlayerHitCueSlide(RaceInputPlayer *arg0) {
+s32 tryQueueRacePlayerHitCueSlide(RacePlayer *arg0) {
     if (arg0->stateFlags & 0x77D000) {
         return 1;
     }
@@ -140,7 +140,7 @@ s32 tryQueueRacePlayerHitCueSlide(RaceInputPlayer *arg0) {
     return 0;
 }
 
-s32 tryQueueRacePlayerHitCuePushForward(RaceInputPlayer *arg0) {
+s32 tryQueueRacePlayerHitCuePushForward(RacePlayer *arg0) {
     s32 temp_v0 = arg0->stateFlags;
 
     if (temp_v0 & 0x43000) {
@@ -155,7 +155,7 @@ s32 tryQueueRacePlayerHitCuePushForward(RaceInputPlayer *arg0) {
     return 0;
 }
 
-s32 tryQueueRacePlayerHitCuePushBack(RaceInputPlayer *arg0) {
+s32 tryQueueRacePlayerHitCuePushBack(RacePlayer *arg0) {
     s32 temp_v0 = arg0->stateFlags;
 
     if (temp_v0 & 0x43000) {
@@ -170,7 +170,7 @@ s32 tryQueueRacePlayerHitCuePushBack(RaceInputPlayer *arg0) {
     return 0;
 }
 
-s32 tryQueueRacePlayerHitCueNudge(RaceInputPlayer *arg0) {
+s32 tryQueueRacePlayerHitCueNudge(RacePlayer *arg0) {
     s32 temp_v0;
     s32 var_v1;
     s32 temp_t9;
@@ -197,7 +197,7 @@ s32 tryQueueRacePlayerHitCueNudge(RaceInputPlayer *arg0) {
     return 0;
 }
 
-s32 tryQueueRacePlayerHitCueSlowdown(RaceInputPlayer *arg0) {
+s32 tryQueueRacePlayerHitCueSlowdown(RacePlayer *arg0) {
     if (arg0->stateFlags & 0x43000) {
         return 1;
     }
@@ -207,7 +207,7 @@ s32 tryQueueRacePlayerHitCueSlowdown(RaceInputPlayer *arg0) {
     return 0;
 }
 
-s32 tryQueueRacePlayerHitCueObstacle(RaceInputPlayer *arg0) {
+s32 tryQueueRacePlayerHitCueObstacle(RacePlayer *arg0) {
     if (arg0->stateFlags & 0x345001) {
         return 1;
     }
@@ -217,7 +217,7 @@ s32 tryQueueRacePlayerHitCueObstacle(RaceInputPlayer *arg0) {
     return 0;
 }
 
-s32 tryQueueRacePlayerHitCueHeavyKnockdown(RaceInputPlayer *arg0) {
+s32 tryQueueRacePlayerHitCueHeavyKnockdown(RacePlayer *arg0) {
     if (arg0->stateFlags & 0x775000) {
         return 1;
     }
@@ -227,7 +227,7 @@ s32 tryQueueRacePlayerHitCueHeavyKnockdown(RaceInputPlayer *arg0) {
     return 0;
 }
 
-s32 tryQueueRacePlayerHitCueItemSteal(RaceInputPlayer *arg0) {
+s32 tryQueueRacePlayerHitCueItemSteal(RacePlayer *arg0) {
     if (arg0->stateFlags & 0x375000) {
         return 1;
     }
@@ -243,7 +243,7 @@ s32 tryQueueRacePlayerHitCueItemSteal(RaceInputPlayer *arg0) {
     return 0;
 }
 
-s32 tryQueueRacePlayerHitCueGhostSlowdown(RaceInputPlayer *arg0) {
+s32 tryQueueRacePlayerHitCueGhostSlowdown(RacePlayer *arg0) {
     if (arg0->stateFlags & 0x375000) {
         return 1;
     }
@@ -256,7 +256,7 @@ s32 tryQueueRacePlayerHitCueGhostSlowdown(RaceInputPlayer *arg0) {
     return 0;
 }
 
-s32 tryQueueRacePlayerHitCueSpin(RaceInputPlayer *arg0) {
+s32 tryQueueRacePlayerHitCueSpin(RacePlayer *arg0) {
     if (arg0->stateFlags & 0x775000) {
         return 1;
     }
@@ -266,7 +266,7 @@ s32 tryQueueRacePlayerHitCueSpin(RaceInputPlayer *arg0) {
     return 0;
 }
 
-s32 tryQueueRacePlayerHitCueReverseSpin(RaceInputPlayer *arg0) {
+s32 tryQueueRacePlayerHitCueReverseSpin(RacePlayer *arg0) {
     if (arg0->stateFlags & 0x775000) {
         return 1;
     }
@@ -276,7 +276,7 @@ s32 tryQueueRacePlayerHitCueReverseSpin(RaceInputPlayer *arg0) {
     return 0;
 }
 
-s32 tryQueueRacePlayerHitCueTerrainFall(RaceInputPlayer *arg0) {
+s32 tryQueueRacePlayerHitCueTerrainFall(RacePlayer *arg0) {
     if (arg0->stateFlags & 0x41001) {
         return 1;
     }
@@ -286,7 +286,7 @@ s32 tryQueueRacePlayerHitCueTerrainFall(RaceInputPlayer *arg0) {
     return 0;
 }
 
-s32 tryQueueRacePlayerHitCueTerrainCrash(RaceInputPlayer *arg0) {
+s32 tryQueueRacePlayerHitCueTerrainCrash(RacePlayer *arg0) {
     if (arg0->stateFlags & 0x41001) {
         return 1;
     }
@@ -300,7 +300,7 @@ s32 tryQueueRacePlayerHitCueTerrainCrash(RaceInputPlayer *arg0) {
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_collision/resolveRacePlayerHitReactions.s")
 
 #ifdef NON_MATCHING
-void resolveRacePlayerHitReactions(RaceInputPlayer *arg0) {
+void resolveRacePlayerHitReactions(RacePlayer *arg0) {
     s32 var_t0;
     s32 var_t1;
     s32 var_t2;
@@ -471,8 +471,8 @@ block_104:
             arg0->updateTimer = 0;
             break;
         case 11:
-            D_80121D80[arg0->unk2D2 & 3].unk517 = 1;
-            if (D_80121D80[arg0->unk2D2 & 3].unk4 != 0) {
+            gRacePlayers[arg0->unk2D2 & 3].unk517 = 1;
+            if (gRacePlayers[arg0->unk2D2 & 3].unk4 != 0) {
                 enqueueRacePlayerVoiceSound(arg0, 2);
             } else {
                 enqueueRacePlayerVoiceSound(arg0, 3);
@@ -481,8 +481,8 @@ block_104:
             arg0->updateState = 0;
             goto block_104;
         case 12:
-            D_80121D80[arg0->unk2D2 & 3].unk517 = 1;
-            if (D_80121D80[arg0->unk2D2 & 3].unk4 != 0) {
+            gRacePlayers[arg0->unk2D2 & 3].unk517 = 1;
+            if (gRacePlayers[arg0->unk2D2 & 3].unk4 != 0) {
                 enqueueRacePlayerVoiceSound(arg0, 2);
             } else {
                 enqueueRacePlayerVoiceSound(arg0, 3);
@@ -491,8 +491,8 @@ block_104:
             arg0->updateState = 0;
             goto block_104;
         case 13:
-            D_80121D80[arg0->unk2D2 & 3].unk517 = 1;
-            if (D_80121D80[arg0->unk2D2 & 3].unk4 != 0) {
+            gRacePlayers[arg0->unk2D2 & 3].unk517 = 1;
+            if (gRacePlayers[arg0->unk2D2 & 3].unk4 != 0) {
                 enqueueRacePlayerVoiceSound(arg0, 2);
             } else {
                 enqueueRacePlayerVoiceSound(arg0, 3);
@@ -506,8 +506,8 @@ block_104:
             arg0->updateState = 0;
             goto block_104;
         case 15:
-            D_80121D80[arg0->unk2D2 & 3].unk517 = 1;
-            if (D_80121D80[arg0->unk2D2 & 3].unk4 != 0) {
+            gRacePlayers[arg0->unk2D2 & 3].unk517 = 1;
+            if (gRacePlayers[arg0->unk2D2 & 3].unk4 != 0) {
                 enqueueRacePlayerVoiceSound(arg0, 2);
             } else {
                 enqueueRacePlayerVoiceSound(arg0, 3);
@@ -518,7 +518,7 @@ block_104:
         case 16:
         case 17:
             if (gRacePlayerHitCueId == 0x11) {
-                if (D_80121D80[arg0->unk2D2 & 3].unk4 != 0) {
+                if (gRacePlayers[arg0->unk2D2 & 3].unk4 != 0) {
                     enqueueRacePlayerVoiceSound(arg0, 2);
                 } else {
                     enqueueRacePlayerVoiceSound(arg0, 3);
@@ -533,8 +533,8 @@ block_104:
             arg0->updateState = 0;
             goto block_104;
         case 3:
-            D_80121D80[arg0->unk2D2 & 3].unk517 = 1;
-            if (D_80121D80[arg0->unk2D2 & 3].unk4 != 0) {
+            gRacePlayers[arg0->unk2D2 & 3].unk517 = 1;
+            if (gRacePlayers[arg0->unk2D2 & 3].unk4 != 0) {
                 enqueueRacePlayerVoiceSound(arg0, 2);
             } else {
                 enqueueRacePlayerVoiceSound(arg0, 3);
@@ -564,7 +564,7 @@ block_104:
 }
 #endif
 
-s32 isRacePlayerRespawnSurfaceValid(RaceInputPlayer *arg0) {
+s32 isRacePlayerRespawnSurfaceValid(RacePlayer *arg0) {
     s32 temp_v0;
 
     temp_v0 = getRaceCourseSurfaceType(arg0->unk502, arg0->posX, arg0->posZ);

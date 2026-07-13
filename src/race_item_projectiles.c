@@ -122,7 +122,7 @@ extern u8 gRaceUpdatePaused;
 extern u8 gRenderMatricesDirty;
 extern s16 gUiBlinkTimer;
 extern Mtx *gViewportMatrix;
-extern RacePlayerState D_80121D80[];
+extern RacePlayerState gRacePlayers[];
 extern RacePlayerHalfwordField gPlayerHitSource[];
 extern RacePlayerSurfaceState gRacePlayerSurfaceAngleByPlayer[];
 extern RacePlayerByteField gRacePlayerItemTargetFlags[];
@@ -158,7 +158,7 @@ s32 findRaceItemProjectileHomingTarget(Vec3i *pos, s32 radius, s16 angle, s16 pl
     i = 0;
     do {
         if (playerIndex != i) {
-            player = &D_80121D80[i];
+            player = &gRacePlayers[i];
             if ((player->actionSoundTimer == 0) && !(player->flags & 0x402000) && (player->isActive != 0)) {
                 dx = player->posX - pos->x;
                 if (dx < 0) {
@@ -334,28 +334,28 @@ void initWideHomingItemProjectile(RaceItemProjectileActor *arg0) {
     source.z = 0;
     source.y = 0;
     source.x = 0x1000;
-    if (D_80121D80[arg0->playerIndex].flags & 0x400) { source.x = -0x1000; } transformVec3iByFixedMatrix(D_80121D80[arg0->playerIndex].transform, &source, &sp4C); product = __ll_mul((s64) sp4C, (s64) sp4C); magnitude = integerSquareRoot64(product + __ll_mul((s64) sp54, (s64) sp54)); if (magnitude != 0) {
+    if (gRacePlayers[arg0->playerIndex].flags & 0x400) { source.x = -0x1000; } transformVec3iByFixedMatrix(gRacePlayers[arg0->playerIndex].transform, &source, &sp4C); product = __ll_mul((s64) sp4C, (s64) sp4C); magnitude = integerSquareRoot64(product + __ll_mul((s64) sp54, (s64) sp54)); if (magnitude != 0) {
         arg0->accelerationY = (((s64) arg0->velocityY) * sp50) / magnitude;
         var_a0 = -arg0->velocityY;
     } else {
         var_a0 = -arg0->velocityY;
         arg0->accelerationY = var_a0;
     }
-    arg0->accelerationY += D_80121D80[arg0->playerIndex].unk44;
+    arg0->accelerationY += gRacePlayers[arg0->playerIndex].unk44;
     arg0->velocityY = var_a0;
-    arg0->targetAngle = D_80121D80[arg0->playerIndex].unk2EC;
+    arg0->targetAngle = gRacePlayers[arg0->playerIndex].unk2EC;
     source.z = 0;
     source.y = 0x280000;
     source.x = 0x100000;
-    if (D_80121D80[arg0->playerIndex].flags & 0x400) {
+    if (gRacePlayers[arg0->playerIndex].flags & 0x400) {
         source.x = 0xFFF00000;
         arg0->targetAngle += 0x800;
     }
-    transformVec3iByFixedMatrix(D_80121D80[arg0->playerIndex].transform, &source, &arg0->pos.x);
-    arg0->pos.x += D_80121D80[arg0->playerIndex].velocity.x;
-    arg0->pos.y += D_80121D80[arg0->playerIndex].velocity.y;
-    arg0->pos.z += D_80121D80[arg0->playerIndex].velocity.z;
-    arg0->startAngle = D_80121D80[arg0->playerIndex].surfaceAngle;
+    transformVec3iByFixedMatrix(gRacePlayers[arg0->playerIndex].transform, &source, &arg0->pos.x);
+    arg0->pos.x += gRacePlayers[arg0->playerIndex].velocity.x;
+    arg0->pos.y += gRacePlayers[arg0->playerIndex].velocity.y;
+    arg0->pos.z += gRacePlayers[arg0->playerIndex].velocity.z;
+    arg0->startAngle = gRacePlayers[arg0->playerIndex].surfaceAngle;
     getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gRaceItemSpriteAssetHandle), 0, &arg0->image, &arg0->palette);
     updateWideHomingItemProjectile(arg0);
     setCallbackTaskCallback(arg0, updateWideHomingItemProjectile);
@@ -507,28 +507,28 @@ void initCloseRangeHomingItemProjectile(RaceItemProjectileActor *arg0) {
     source.z = 0;
     source.y = 0;
     source.x = 0x1000;
-    if (D_80121D80[arg0->playerIndex].flags & 0x400) { source.x = -0x1000; } transformVec3iByFixedMatrix(D_80121D80[arg0->playerIndex].transform, &source, &sp4C); product = __ll_mul((s64) sp4C, (s64) sp4C); magnitude = integerSquareRoot64(product + __ll_mul((s64) sp54, (s64) sp54)); if (magnitude != 0) {
+    if (gRacePlayers[arg0->playerIndex].flags & 0x400) { source.x = -0x1000; } transformVec3iByFixedMatrix(gRacePlayers[arg0->playerIndex].transform, &source, &sp4C); product = __ll_mul((s64) sp4C, (s64) sp4C); magnitude = integerSquareRoot64(product + __ll_mul((s64) sp54, (s64) sp54)); if (magnitude != 0) {
         arg0->accelerationY = (((s64) arg0->velocityY) * sp50) / magnitude;
         var_a0 = -arg0->velocityY;
     } else {
         var_a0 = -arg0->velocityY;
         arg0->accelerationY = var_a0;
     }
-    arg0->accelerationY += D_80121D80[arg0->playerIndex].unk44;
+    arg0->accelerationY += gRacePlayers[arg0->playerIndex].unk44;
     arg0->velocityY = var_a0;
-    arg0->targetAngle = D_80121D80[arg0->playerIndex].unk2EC;
+    arg0->targetAngle = gRacePlayers[arg0->playerIndex].unk2EC;
     source.z = 0;
     source.y = 0x280000;
     source.x = 0x100000;
-    if (D_80121D80[arg0->playerIndex].flags & 0x400) {
+    if (gRacePlayers[arg0->playerIndex].flags & 0x400) {
         source.x = 0xFFF00000;
         arg0->targetAngle += 0x800;
     }
-    transformVec3iByFixedMatrix(D_80121D80[arg0->playerIndex].transform, &source, &arg0->pos.x);
-    arg0->pos.x += D_80121D80[arg0->playerIndex].velocity.x;
-    arg0->pos.y += D_80121D80[arg0->playerIndex].velocity.y;
-    arg0->pos.z += D_80121D80[arg0->playerIndex].velocity.z;
-    arg0->startAngle = D_80121D80[arg0->playerIndex].surfaceAngle;
+    transformVec3iByFixedMatrix(gRacePlayers[arg0->playerIndex].transform, &source, &arg0->pos.x);
+    arg0->pos.x += gRacePlayers[arg0->playerIndex].velocity.x;
+    arg0->pos.y += gRacePlayers[arg0->playerIndex].velocity.y;
+    arg0->pos.z += gRacePlayers[arg0->playerIndex].velocity.z;
+    arg0->startAngle = gRacePlayers[arg0->playerIndex].surfaceAngle;
     getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gRaceItemSpriteAssetHandle), 2, &arg0->image, &arg0->palette);
     updateCloseRangeHomingItemProjectile(arg0);
     setCallbackTaskCallback(arg0, updateCloseRangeHomingItemProjectile);
@@ -677,28 +677,28 @@ void initBouncingItemProjectile(RaceItemProjectileActor *arg0) {
     source.z = 0;
     source.y = 0;
     source.x = 0x1000;
-    if (D_80121D80[arg0->playerIndex].flags & 0x400) { source.x = -0x1000; } transformVec3iByFixedMatrix(D_80121D80[arg0->playerIndex].transform, &source, &sp4C); product = __ll_mul((s64) sp4C, (s64) sp4C); magnitude = integerSquareRoot64(product + __ll_mul((s64) sp54, (s64) sp54)); if (magnitude != 0) {
+    if (gRacePlayers[arg0->playerIndex].flags & 0x400) { source.x = -0x1000; } transformVec3iByFixedMatrix(gRacePlayers[arg0->playerIndex].transform, &source, &sp4C); product = __ll_mul((s64) sp4C, (s64) sp4C); magnitude = integerSquareRoot64(product + __ll_mul((s64) sp54, (s64) sp54)); if (magnitude != 0) {
         arg0->accelerationY = (((s64) arg0->velocityY) * sp50) / magnitude;
         var_a0 = -arg0->velocityY;
     } else {
         var_a0 = -arg0->velocityY;
         arg0->accelerationY = var_a0;
     }
-    arg0->accelerationY += D_80121D80[arg0->playerIndex].unk44;
+    arg0->accelerationY += gRacePlayers[arg0->playerIndex].unk44;
     arg0->velocityY = var_a0;
-    arg0->targetAngle = D_80121D80[arg0->playerIndex].unk2EC;
+    arg0->targetAngle = gRacePlayers[arg0->playerIndex].unk2EC;
     source.z = 0;
     source.y = 0x280000;
     source.x = 0x100000;
-    if (D_80121D80[arg0->playerIndex].flags & 0x400) {
+    if (gRacePlayers[arg0->playerIndex].flags & 0x400) {
         source.x = 0xFFF00000;
         arg0->targetAngle += 0x800;
     }
-    transformVec3iByFixedMatrix(D_80121D80[arg0->playerIndex].transform, &source, &arg0->pos.x);
-    arg0->pos.x += D_80121D80[arg0->playerIndex].velocity.x;
-    arg0->pos.y += D_80121D80[arg0->playerIndex].velocity.y;
-    arg0->pos.z += D_80121D80[arg0->playerIndex].velocity.z;
-    arg0->startAngle = D_80121D80[arg0->playerIndex].surfaceAngle;
+    transformVec3iByFixedMatrix(gRacePlayers[arg0->playerIndex].transform, &source, &arg0->pos.x);
+    arg0->pos.x += gRacePlayers[arg0->playerIndex].velocity.x;
+    arg0->pos.y += gRacePlayers[arg0->playerIndex].velocity.y;
+    arg0->pos.z += gRacePlayers[arg0->playerIndex].velocity.z;
+    arg0->startAngle = gRacePlayers[arg0->playerIndex].surfaceAngle;
     getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gRaceItemSpriteAssetHandle), 3, &arg0->image, &arg0->palette);
     updateBouncingItemProjectile(arg0);
     setCallbackTaskCallback(arg0, updateBouncingItemProjectile);
@@ -966,26 +966,26 @@ void initAreaBlastItemProjectile(RaceItemProjectileActor *arg0) {
     sp58.z = (sp58.y = 0);
     sp58.x = 0x1000;
 
-    if (D_80121D80[arg0->playerIndex].flags & 0x400) {
+    if (gRacePlayers[arg0->playerIndex].flags & 0x400) {
         sp58.x = -0x1000;
         if (1) {
         }
     }
 
-    actor = arg0; transformVec3iByFixedMatrix(D_80121D80[arg0->playerIndex].transform, &sp58, &sp4C); product = __ll_mul((s64) sp4C, (s64) sp4C); magnitude = integerSquareRoot64(product + __ll_mul((s64) sp54, (s64) sp54)); if (magnitude != 0) { actor->accelerationY = (s64)actor->velocityY * sp50 / magnitude; velocityY = -actor->velocityY; } else { velocityY = -actor->velocityY; actor->accelerationY = velocityY; } actor->accelerationY += D_80121D80[actor->playerIndex].unk44; actor->velocityY = velocityY; actor->targetAngle = D_80121D80[actor->playerIndex].yaw; sp58.z = 0; sp58.x = 0xFFF00000;
+    actor = arg0; transformVec3iByFixedMatrix(gRacePlayers[arg0->playerIndex].transform, &sp58, &sp4C); product = __ll_mul((s64) sp4C, (s64) sp4C); magnitude = integerSquareRoot64(product + __ll_mul((s64) sp54, (s64) sp54)); if (magnitude != 0) { actor->accelerationY = (s64)actor->velocityY * sp50 / magnitude; velocityY = -actor->velocityY; } else { velocityY = -actor->velocityY; actor->accelerationY = velocityY; } actor->accelerationY += gRacePlayers[actor->playerIndex].unk44; actor->velocityY = velocityY; actor->targetAngle = gRacePlayers[actor->playerIndex].yaw; sp58.z = 0; sp58.x = 0xFFF00000;
     sp58.y = 0x280000;
     sp58.x = 0x100000;
 
-    if (D_80121D80[actor->playerIndex].flags & 0x400) {
+    if (gRacePlayers[actor->playerIndex].flags & 0x400) {
         sp58.x = 0xFFF00000;
         actor->targetAngle += 0x800;
     }
 
-    transformVec3iByFixedMatrix(D_80121D80[actor->playerIndex].transform, &sp58, &actor->pos);
-    actor->pos.x += ((0, D_80121D80))[actor->playerIndex].posA8.x;
-    actor->pos.y += D_80121D80[actor->playerIndex].posA8.y;
-    actor->pos.z += D_80121D80[actor->playerIndex].posA8.z;
-    actor->startAngle = D_80121D80[actor->playerIndex].surfaceAngle;
+    transformVec3iByFixedMatrix(gRacePlayers[actor->playerIndex].transform, &sp58, &actor->pos);
+    actor->pos.x += ((0, gRacePlayers))[actor->playerIndex].posA8.x;
+    actor->pos.y += gRacePlayers[actor->playerIndex].posA8.y;
+    actor->pos.z += gRacePlayers[actor->playerIndex].posA8.z;
+    actor->startAngle = gRacePlayers[actor->playerIndex].surfaceAngle;
     getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gRaceItemSpriteAssetHandle), 4, &actor->image, &actor->palette);
     updateAreaBlastItemProjectile(actor);
     setCallbackTaskCallback(actor, updateAreaBlastItemProjectile);
@@ -1130,27 +1130,27 @@ void initLongRangeHomingItemProjectile(RaceItemProjectileActor *arg0) {
     sp58.z = (sp58.y = 0);
     sp58.x = 0x1000;
 
-    if (D_80121D80[arg0->playerIndex].flags & 0x400) {
+    if (gRacePlayers[arg0->playerIndex].flags & 0x400) {
         sp58.x = -0x1000;
         if (1) {
         }
     }
 
-    actor = arg0; transformVec3iByFixedMatrix(D_80121D80[arg0->playerIndex].transform, &sp58, &sp4C); product = __ll_mul((s64) sp4C, (s64) sp4C); magnitude = integerSquareRoot64(product + __ll_mul((s64) sp54, (s64) sp54)); if (magnitude != 0) { actor->accelerationY = (s64)actor->velocityY * sp50 / magnitude; velocityY = -actor->velocityY; } else { velocityY = -actor->velocityY; actor->accelerationY = velocityY; } actor->accelerationY += D_80121D80[actor->playerIndex].unk44; actor->velocityY = velocityY; actor->targetAngle = D_80121D80[actor->playerIndex].yaw; sp58.z = 0;
+    actor = arg0; transformVec3iByFixedMatrix(gRacePlayers[arg0->playerIndex].transform, &sp58, &sp4C); product = __ll_mul((s64) sp4C, (s64) sp4C); magnitude = integerSquareRoot64(product + __ll_mul((s64) sp54, (s64) sp54)); if (magnitude != 0) { actor->accelerationY = (s64)actor->velocityY * sp50 / magnitude; velocityY = -actor->velocityY; } else { velocityY = -actor->velocityY; actor->accelerationY = velocityY; } actor->accelerationY += gRacePlayers[actor->playerIndex].unk44; actor->velocityY = velocityY; actor->targetAngle = gRacePlayers[actor->playerIndex].yaw; sp58.z = 0;
     new_var = &sp58;
     sp58.y = 0x280000;
     sp58.x = 0x100000;
 
-    if (D_80121D80[actor->playerIndex].flags & 0x400) {
+    if (gRacePlayers[actor->playerIndex].flags & 0x400) {
         sp58.x = 0xFFF00000;
         actor->targetAngle += 0x800;
     }
 
-    transformVec3iByFixedMatrix(D_80121D80[actor->playerIndex].transform, new_var, &actor->pos);
-    actor->pos.x += D_80121D80[actor->playerIndex].posA8.x;
-    actor->pos.y += D_80121D80[actor->playerIndex].posA8.y;
-    actor->pos.z += D_80121D80[actor->playerIndex].posA8.z;
-    actor->startAngle = D_80121D80[actor->playerIndex].surfaceAngle;
+    transformVec3iByFixedMatrix(gRacePlayers[actor->playerIndex].transform, new_var, &actor->pos);
+    actor->pos.x += gRacePlayers[actor->playerIndex].posA8.x;
+    actor->pos.y += gRacePlayers[actor->playerIndex].posA8.y;
+    actor->pos.z += gRacePlayers[actor->playerIndex].posA8.z;
+    actor->startAngle = gRacePlayers[actor->playerIndex].surfaceAngle;
     getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gRaceItemSpriteAssetHandle), 1, &actor->image, &actor->palette);
     updateLongRangeHomingItemProjectile(actor);
     setCallbackTaskCallback(actor, updateLongRangeHomingItemProjectile);
@@ -1270,7 +1270,7 @@ void initFallingActionProjectile(RaceItemProjectileActor *arg0) {
     arg0->timer = 0x3C;
     arg0->blinkTimer = 0x708;
     arg0->accelerationY = 0x30000;
-    player = &D_80121D80[arg0->playerIndex];
+    player = &gRacePlayers[arg0->playerIndex];
     arg0->pos.x = player->pos.x;
     arg0->pos.y = player->pos.y;
     arg0->pos.z = player->pos.z;
@@ -1369,7 +1369,7 @@ void updateShieldProjectile(RaceItemProjectileActor *arg0) {
         if (arg0->timer == 0) {
             spawnRaceItemImpactEffect(arg0->pos.x, arg0->pos.y, arg0->pos.z, 2);
             removeCallbackTask((RaceItemProjectileActor *)arg0);
-            D_80121D80[arg0->playerIndex].unk510++;
+            gRacePlayers[arg0->playerIndex].unk510++;
             return;
         }
 
@@ -1377,7 +1377,7 @@ void updateShieldProjectile(RaceItemProjectileActor *arg0) {
         spawnRaceItemProjectileTrailEffect(arg0->pos.x, arg0->pos.y, arg0->pos.z, 5);
         arg0->prevPos = arg0->pos;
         arg0->radius = 0x30000;
-        player = &D_80121D80[arg0->playerIndex];
+        player = &gRacePlayers[arg0->playerIndex];
         arg0->anglePtr = player->unk50C;
         player->unk50C = (s16 *)&arg0->anglePtr;
     }
@@ -1402,7 +1402,7 @@ void initShieldProjectile(RaceItemProjectileActor *arg0) {
     source.z = 0;
     source.y = 0;
     source.x = 0x1000;
-    if (D_80121D80[arg0->playerIndex].flags & 0x400) { source.x = -0x1000; } transformVec3iByFixedMatrix(D_80121D80[arg0->playerIndex].transform, &source, &sp4C); product = __ll_mul((s64) sp4C, (s64) sp4C); magnitude = integerSquareRoot64(product + __ll_mul((s64) sp54, (s64) sp54)); if (magnitude != 0) {
+    if (gRacePlayers[arg0->playerIndex].flags & 0x400) { source.x = -0x1000; } transformVec3iByFixedMatrix(gRacePlayers[arg0->playerIndex].transform, &source, &sp4C); product = __ll_mul((s64) sp4C, (s64) sp4C); magnitude = integerSquareRoot64(product + __ll_mul((s64) sp54, (s64) sp54)); if (magnitude != 0) {
         arg0->accelerationY = (s64)arg0->velocityY * sp50 / magnitude;
         newVelocity = -arg0->velocityY;
     } else {
@@ -1410,25 +1410,25 @@ void initShieldProjectile(RaceItemProjectileActor *arg0) {
         arg0->accelerationY = newVelocity;
     }
 
-    arg0->accelerationY += D_80121D80[arg0->playerIndex].unk44;
+    arg0->accelerationY += gRacePlayers[arg0->playerIndex].unk44;
     arg0->velocityY = newVelocity;
-    arg0->targetAngle = D_80121D80[arg0->playerIndex].yaw;
+    arg0->targetAngle = gRacePlayers[arg0->playerIndex].yaw;
 
     source.z = 0;
     source.y = 0x280000;
     source.x = 0x100000;
 
-    if (D_80121D80[arg0->playerIndex].flags & 0x400) {
+    if (gRacePlayers[arg0->playerIndex].flags & 0x400) {
         source.x = -0x100000;
         arg0->targetAngle += 0x800;
     }
 
-    transformVec3iByFixedMatrix(D_80121D80[arg0->playerIndex].transform, &source, &arg0->pos);
+    transformVec3iByFixedMatrix(gRacePlayers[arg0->playerIndex].transform, &source, &arg0->pos);
 
-    arg0->pos.x += D_80121D80[arg0->playerIndex].posA8.x;
-    arg0->pos.y += D_80121D80[arg0->playerIndex].posA8.y;
-    arg0->pos.z += D_80121D80[arg0->playerIndex].posA8.z;
-    arg0->startAngle = D_80121D80[arg0->playerIndex].surfaceAngle;
+    arg0->pos.x += gRacePlayers[arg0->playerIndex].posA8.x;
+    arg0->pos.y += gRacePlayers[arg0->playerIndex].posA8.y;
+    arg0->pos.z += gRacePlayers[arg0->playerIndex].posA8.z;
+    arg0->startAngle = gRacePlayers[arg0->playerIndex].surfaceAngle;
     getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gRaceItemSpriteAssetHandle), 5, &arg0->image, &arg0->palette);
     arg0->unk54 = 0;
     updateShieldProjectile(arg0);

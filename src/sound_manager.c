@@ -114,7 +114,7 @@ extern u16 gCourseMusicSequenceBanks[];
 extern AudioCamera D_801121E0[];
 extern AudioCamera D_801124A0[];
 extern s32 gPlayerPositionalSoundHandle0[];
-extern RacePlayerSoundView D_80121D80[];
+extern RacePlayerSoundView gRacePlayers[];
 extern u8 gCurrentQueuedSoundType;
 extern u8 gCurrentQueuedSoundId;
 extern u8 gCurrentQueuedSoundVolume;
@@ -555,7 +555,7 @@ void updatePlayerLoopingPositionalSound(s32 soundId, s32 mode, s32 volume, f32 p
         pitch = -6.0f;
     }
 
-    adjustedVolume = calculatePositionalSoundVolume(&D_80121D80[mode].pos, volume);
+    adjustedVolume = calculatePositionalSoundVolume(&gRacePlayers[mode].pos, volume);
 
     activeCameras = 0;
     if (D_801121E0[0].initialized != 0) {
@@ -601,7 +601,7 @@ void updatePlayerLoopingPositionalSound(s32 soundId, s32 mode, s32 volume, f32 p
 void playPlayerPositionalSound(s32 soundId, s32 playerIndex, s32 volume, s32 minVolume) {
     s32 adjustedVolume;
 
-    adjustedVolume = calculatePositionalSoundVolume(&D_80121D80[playerIndex].pos, volume);
+    adjustedVolume = calculatePositionalSoundVolume(&gRacePlayers[playerIndex].pos, volume);
     if (adjustedVolume < minVolume) {
         adjustedVolume = minVolume;
     }

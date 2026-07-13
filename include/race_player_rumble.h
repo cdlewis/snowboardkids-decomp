@@ -3,6 +3,6 @@
 
 #include "race_player_input.h"
 
-void updateRacePlayerRumble(RaceInputPlayer *player);
+void updateRacePlayerRumble(RacePlayer *player);
 
 #endif

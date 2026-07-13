@@ -3,7 +3,7 @@
 
 #include "race_player_input.h"
 
-void updateRacePlayerItemEffectUse(RaceInputPlayer *player);
-void updateRacePlayerActionEffectUse(RaceInputPlayer *player);
+void updateRacePlayerItemEffectUse(RacePlayer *player);
+void updateRacePlayerActionEffectUse(RacePlayer *player);
 
 #endif

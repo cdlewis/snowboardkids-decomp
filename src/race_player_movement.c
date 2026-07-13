@@ -54,7 +54,7 @@ extern s32 integerSquareRoot64(s64);
 extern u8 gRaceSplitscreenMode;
 extern s8 gRacePlayerCount;
 extern s8 gRaceOrderPlayerIds[];
-extern RaceInputPlayer gFrameCounter;
+extern RacePlayer gFrameCounter;
 extern s32 gMenuFlowState;
 extern RaceVec3i gRacePlayerGroundProbeOffsets[];
 extern s16 gRacePlayerVoiceSoundIds0[];
@@ -71,10 +71,10 @@ extern s16 gRaceLapCount;
 extern u8 gRaceCameraModeChangeDisabled;
 
 void getRacePlayerRankingProgress(s32 arg0, s32 *arg1, s32 *arg2) {
-    RaceInputPlayer *player;
+    RacePlayer *player;
     s32 temp;
 
-    player = &D_80121D80[arg0];
+    player = &gRacePlayers[arg0];
     *arg1 = player->unk502 * 8;
     *arg2 = player->unk504;
 
@@ -193,7 +193,7 @@ void updateRacePlayerRankings(void) {
     PlayerOrder order;
     s32 primary[4];
     s32 secondary[4];
-    RaceInputPlayer *player;
+    RacePlayer *player;
     s8 *orderI;
     s8 *orderJ;
     s32 playerCount;
@@ -219,7 +219,7 @@ void updateRacePlayerRankings(void) {
         order.order3 = 3;
         i = 0;
         if (playerCount > 0) {
-            player = D_80121D80;
+            player = gRacePlayers;
             do {
                 getRacePlayerRankingProgress(i, &primary[i], &secondary[i]);
                 i++;
@@ -241,7 +241,7 @@ void updateRacePlayerRankings(void) {
                     do {
                         right = orderJ[0];
                         left = orderI[0];
-                        if (D_80121D80[right].rankIndex < D_80121D80[left].rankIndex) {
+                        if (gRacePlayers[right].rankIndex < gRacePlayers[left].rankIndex) {
                             orderI[0] = right;
                             orderJ[0] = left;
                         }
@@ -262,13 +262,13 @@ void updateRacePlayerRankings(void) {
                     do {
                         left = orderI[0];
                         orderJ = &(&order.order0)[j];
-                        if (!(D_80121D80[left].stateFlags & 0x40)) {
+                        if (!(gRacePlayers[left].stateFlags & 0x40)) {
                             right = orderJ[0];
-                            if (!(D_80121D80[right].stateFlags & 0x40)) {
-                                if (D_80121D80[left].unk508 < D_80121D80[right].unk508) {
+                            if (!(gRacePlayers[right].stateFlags & 0x40)) {
+                                if (gRacePlayers[left].unk508 < gRacePlayers[right].unk508) {
                                     orderI[0] = right;
                                     orderJ[0] = left;
-                                } else if (D_80121D80[left].unk508 == D_80121D80[right].unk508) {
+                                } else if (gRacePlayers[left].unk508 == gRacePlayers[right].unk508) {
                                     if (primary[left] < primary[right]) {
                                         orderI[0] = right;
                                         orderJ[0] = left;
@@ -296,7 +296,7 @@ void updateRacePlayerRankings(void) {
                 right = orderI[0];
                 orderI++;
                 orderJ++;
-                player = &D_80121D80[right];
+                player = &gRacePlayers[right];
                 player->rankIndex = i;
                 i++;
                 orderJ[-1] = player->playerIndexU16;
@@ -306,7 +306,7 @@ void updateRacePlayerRankings(void) {
 }
 #endif
 
-void updateRacePlayerFinalLapStatus(RaceInputPlayer *player) {
+void updateRacePlayerFinalLapStatus(RacePlayer *player) {
     CallbackTask *task;
     u32 flags;
 
@@ -328,8 +328,8 @@ void updateRacePlayerFinalLapStatus(RaceInputPlayer *player) {
 
 #ifdef NON_MATCHING
 void resolveRacePlayerBodyCollisions(void) {
-    RaceInputPlayer *playerA;
-    RaceInputPlayer *playerB;
+    RacePlayer *playerA;
+    RacePlayer *playerB;
     s32 i;
     s32 j;
     s32 temp;
@@ -346,10 +346,10 @@ void resolveRacePlayerBodyCollisions(void) {
     for (i = 0; i != 3; i++) {
         j = i + 1;
         if (j < 4) {
-            playerA = &D_80121D80[i];
+            playerA = &gRacePlayers[i];
             do {
                 if (playerA->isActive != 0) {
-                    playerB = &D_80121D80[j];
+                    playerB = &gRacePlayers[j];
                     if ((playerB->isActive != 0) && (playerA->soundDisabled == 0) &&
                         (playerB->soundDisabled == 0) && !(playerA->stateFlags & 0x200000) &&
                         !(playerB->stateFlags & 0x200000)) {
@@ -415,7 +415,7 @@ void resolveRacePlayerBodyCollisions(void) {
 #ifdef NON_MATCHING
 void pushRacePlayersOutOfCylinderAndApplyItemHit(RaceVec3i *pos, s32 xzSize, s32 ySize, u16 flag) {
     volatile u8 pad[8];
-    RaceInputPlayer *player;
+    RacePlayer *player;
     s32 temp;
     s32 xDiff;
     s32 yLimit;
@@ -428,7 +428,7 @@ void pushRacePlayersOutOfCylinderAndApplyItemHit(RaceVec3i *pos, s32 xzSize, s32
     s32 sine;
     s32 cosine;
 
-    player = D_80121D80;
+    player = gRacePlayers;
     do {
         if (player->isActive != 0) {
             yLimit = ySize;
@@ -485,7 +485,7 @@ void pushRacePlayersOutOfCylinderAndApplyItemHit(RaceVec3i *pos, s32 xzSize, s32
 #ifdef NON_MATCHING
 void pushRacePlayerOutOfCylinderAndApplyItemHit(RaceVec3i *pos, s32 xzSize, s32 ySize, u16 flag, s16 playerIndex) {
     volatile u8 pad[8];
-    RaceInputPlayer *player;
+    RacePlayer *player;
     s32 temp;
     s32 xDiff;
     s32 yLimit;
@@ -498,7 +498,7 @@ void pushRacePlayerOutOfCylinderAndApplyItemHit(RaceVec3i *pos, s32 xzSize, s32 
     s32 localZ;
     s32 cosine;
 
-    player = &D_80121D80[playerIndex];
+    player = &gRacePlayers[playerIndex];
     if (player->isActive != 0) {
         yLimit = ySize;
         temp = pos->y - player->unk5C;
@@ -548,7 +548,7 @@ void pushRacePlayerOutOfCylinderAndApplyItemHit(RaceVec3i *pos, s32 xzSize, s32 
 
 void pushRacePlayersOutOfCylinderOrApplyItemHit(RaceVec3i *pos, s32 xzSize, s32 ySize, s32 arg3, s16 arg4) {
     volatile u8 pad[16];
-    RaceInputPlayer *player;
+    RacePlayer *player;
     s32 temp;
     s32 xDiff;
     s32 yLimit;
@@ -559,7 +559,7 @@ void pushRacePlayersOutOfCylinderOrApplyItemHit(RaceVec3i *pos, s32 xzSize, s32 
     s32 pushX;
     s32 pushZ;
 
-    player = D_80121D80;
+    player = gRacePlayers;
     do {
         if (player->isActive != 0) {
             yLimit = ySize;
@@ -609,7 +609,7 @@ void pushRacePlayersOutOfCylinderOrApplyItemHit(RaceVec3i *pos, s32 xzSize, s32 
 
 #ifdef NON_MATCHING
 void pushRacePlayerOutOfCylinder(RaceVec3i *pos, s32 xzSize, s32 ySize, s16 playerIndex) {
-    RaceInputPlayer *player;
+    RacePlayer *player;
     s32 temp;
     s32 xzLimit;
     s32 xDiff;
@@ -619,7 +619,7 @@ void pushRacePlayerOutOfCylinder(RaceVec3i *pos, s32 xzSize, s32 ySize, s16 play
     s32 pushX;
     s32 pushZ;
 
-    player = &D_80121D80[playerIndex];
+    player = &gRacePlayers[playerIndex];
     if (player->isActive != 0) {
         s16 angle;
 
@@ -653,7 +653,7 @@ void pushRacePlayerOutOfCylinder(RaceVec3i *pos, s32 xzSize, s32 ySize, s16 play
                     pushX = (s64)-sine * -temp / 0x1000;
                     pushZ = (s64)cosine * -temp / 0x1000;
                     player->posX -= pushX;
-                    (&D_80121D80[playerIndex])->posZ += pushZ;
+                    (&gRacePlayers[playerIndex])->posZ += pushZ;
                 }
             }
         }
@@ -666,7 +666,7 @@ void pushRacePlayerOutOfCylinder(RaceVec3i *pos, s32 xzSize, s32 ySize, s16 play
 
 #ifdef NON_MATCHING
 s32 isRacePlayerInsideCylinder(RaceVec3i *pos, s32 xzSize, s32 ySize, s16 playerIndex) {
-    RaceInputPlayer *player;
+    RacePlayer *player;
     s32 yDiff;
     s32 newLimit;
     s32 yLimit;
@@ -676,7 +676,7 @@ s32 isRacePlayerInsideCylinder(RaceVec3i *pos, s32 xzSize, s32 ySize, s16 player
     s16 result;
     volatile s32 stackPad[4];
 
-    player = &D_80121D80[playerIndex];
+    player = &gRacePlayers[playerIndex];
     result = 0;
     if (player->isActive == 0) {
         return 0;
@@ -714,14 +714,14 @@ s32 isRacePlayerInsideCylinder(RaceVec3i *pos, s32 xzSize, s32 ySize, s16 player
 
 void applyItemHitToRacePlayersInsideSphere(RaceVec3i *pos, s32 xzSize, s16 flag) {
     volatile u8 pad[16];
-    RaceInputPlayer *player;
-    RaceInputPlayer *end;
+    RacePlayer *player;
+    RacePlayer *end;
     s32 radius;
     s32 dx;
     s32 dy;
     s32 dz;
 
-    end = &gFrameCounter; player = D_80121D80;
+    end = &gFrameCounter; player = gRacePlayers;
     do {
         if ((player->isActive & 0xFFFFFFFF) != 0) {
             dx = player->posX - pos->x;
@@ -756,9 +756,9 @@ s32 tryApplyRacePlayerItemHit(RaceVec3i *pos, s32 xzSize, s16 flag, s16 playerIn
     s32 dx;
     s32 dy;
     s32 dz;
-    RaceInputPlayer *player;
+    RacePlayer *player;
 
-    player = &D_80121D80[playerIndex];
+    player = &gRacePlayers[playerIndex];
     if (player->isActive == 0) {
         return 0;
     }
@@ -799,7 +799,7 @@ s32 tryApplyRacePlayerItemHit(RaceVec3i *pos, s32 xzSize, s16 flag, s16 playerIn
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_movement/updateRacePlayerGroundAlignment.s")
 
 #ifdef NON_MATCHING
-void updateRacePlayerGroundAlignment(RaceInputPlayer *player) {
+void updateRacePlayerGroundAlignment(RacePlayer *player) {
     Matrix4s mtx;
     Matrix4s tiltMtx;
     Matrix4s baseMtx;
@@ -822,7 +822,7 @@ void updateRacePlayerGroundAlignment(RaceInputPlayer *player) {
     s16 i;
     s32 terrainId;
     s32 stateFlags;
-    RaceInputPlayer *temp_s2;
+    RacePlayer *temp_s2;
     RaceVec3i *point;
 
     temp_s2 = player;
@@ -988,7 +988,7 @@ void updateRacePlayerGroundAlignment(RaceInputPlayer *player) {
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_movement/updateRacePlayerLeanAngle.s")
 
 #ifdef NON_MATCHING
-s32 updateRacePlayerLeanAngle(RaceInputPlayer *player, s32 arg1, s16 arg2) {
+s32 updateRacePlayerLeanAngle(RacePlayer *player, s32 arg1, s16 arg2) {
     s16 temp_v0;
     s32 threshold;
     s32 scale;
@@ -1034,7 +1034,7 @@ s32 updateRacePlayerLeanAngle(RaceInputPlayer *player, s32 arg1, s16 arg2) {
 }
 #endif
 
-void clampRacePlayerVectorXZSpeed(RaceVec3i *vec, RaceInputPlayer *player) {
+void clampRacePlayerVectorXZSpeed(RaceVec3i *vec, RacePlayer *player) {
     s32 magnitude;
 
     magnitude = integerSquareRoot64((s64)vec->x * vec->x + (s64)vec->z * vec->z);
@@ -1044,7 +1044,7 @@ void clampRacePlayerVectorXZSpeed(RaceVec3i *vec, RaceInputPlayer *player) {
     }
 }
 
-void clampRacePlayerVectorXZHalfSpeed(RaceVec3i *vec, RaceInputPlayer *player) {
+void clampRacePlayerVectorXZHalfSpeed(RaceVec3i *vec, RacePlayer *player) {
     s32 magnitude;
 
     magnitude = integerSquareRoot64((s64)vec->x * vec->x + (s64)vec->z * vec->z);
@@ -1058,7 +1058,7 @@ void clampRacePlayerVectorXZHalfSpeed(RaceVec3i *vec, RaceInputPlayer *player) {
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_movement/updateRacePlayerLocalVelocity.s")
 
 #ifdef NON_MATCHING
-void updateRacePlayerLocalVelocity(RaceInputPlayer *player, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5) {
+void updateRacePlayerLocalVelocity(RacePlayer *player, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5) {
     volatile s32 pad[8];
     TransformScratch scratch;
     MovementSpeedScratch speedScratch;
@@ -1147,11 +1147,11 @@ void updateRacePlayerLocalVelocity(RaceInputPlayer *player, s32 arg1, s32 arg2, 
 }
 #endif
 
-void updateRacePlayerLocalVelocityNoVerticalOffset(RaceInputPlayer *arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4) {
+void updateRacePlayerLocalVelocityNoVerticalOffset(RacePlayer *arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4) {
     updateRacePlayerLocalVelocity(arg0, arg1, 0, arg2, arg3, arg4);
 }
 
-void addRacePlayerScore(RaceInputPlayer *arg0, s32 arg1) {
+void addRacePlayerScore(RacePlayer *arg0, s32 arg1) {
     if (arg0->isActive != 0) {
         arg0->unk568 += arg1;
         if (arg0->unk568 >= 0x186A0) {
@@ -1164,7 +1164,7 @@ void addRacePlayerScore(RaceInputPlayer *arg0, s32 arg1) {
     }
 }
 
-void enqueueRacePlayerVoiceSound(RaceInputPlayer *player, s16 soundType) {
+void enqueueRacePlayerVoiceSound(RacePlayer *player, s16 soundType) {
     if (player->soundDisabled == 0) {
         switch (soundType) {
         case 0:
@@ -1203,7 +1203,7 @@ void enqueueRacePlayerVoiceSound(RaceInputPlayer *player, s16 soundType) {
     }
 }
 
-void updateRacePlayerProjectedPosition(RaceInputPlayer *arg0) {
+void updateRacePlayerProjectedPosition(RacePlayer *arg0) {
     TransformScratch scratch;
 
     makeFixedRotationXY(scratch.rotationMtx, arg0->pitchAngle, arg0->facingAngle);

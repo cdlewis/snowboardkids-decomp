@@ -870,7 +870,7 @@ extern void getAssetTableImageAndPalette(s32, s32, void *, void *);
 extern int sprintf(char *, const char *, ...);
 extern void enqueuePositionalSoundEffect(s32, void *, s32, s32);
 extern void enqueuePlayerLoopingPositionalSoundRequest(s32, void *, s32, s32, f32, s32);
-extern RacePlayerState D_80121D80[];
+extern RacePlayerState gRacePlayers[];
 extern RacePlayerValue D_80121D98[];
 extern s16 D_8012206C[][0x306];
 extern RacePlayerFlags D_8012207C[];
@@ -1269,7 +1269,7 @@ void func_80058610(RaceUiAlpha18Actor *arg0) {
     if (value != 0) {
         shouldPlaySound = 1;
     }
-    player = (RacePlayerState *) (s32) D_80121D80;
+    player = (RacePlayerState *) (s32) gRacePlayers;
     if (value >= 9) {
         player->unk00C += 8;
         arg0->score -= 8;
@@ -1474,7 +1474,7 @@ void func_8005905C(void *arg0) {
             drawMenuAsciiTextDefaultScale(-0x20, -0x38, text, 0);
         }
 
-        player = &D_80121D80[actor->player0];
+        player = &gRacePlayers[actor->player0];
         if (player->pad002[2] == 0) {
             sprintf(text, D_800E1290, player->playerIndex + 1);
             drawMenuAsciiTextDefaultScale(-0x30, -0x48, text, 5);
@@ -1488,7 +1488,7 @@ void func_8005905C(void *arg0) {
         sprintf(text, D_800E1298, D_80121D98[playerIndex].value);
         drawMenuAsciiTextDefaultScale(0x70, -0x18, text, 6);
 
-        player = &D_80121D80[actor->player1];
+        player = &gRacePlayers[actor->player1];
         if (player->pad002[2] == 0) {
             sprintf(text, D_800E129C, player->playerIndex + 1);
             drawMenuAsciiTextDefaultScale(0x60, -0x28, text, 5);
@@ -1502,7 +1502,7 @@ void func_8005905C(void *arg0) {
         sprintf(text, D_800E12A4, D_80121D98[playerIndex].value);
         drawMenuAsciiTextDefaultScale(-0x20, 8, text, 6);
 
-        player = &D_80121D80[actor->player2];
+        player = &gRacePlayers[actor->player2];
         if (player->pad002[2] == 0) {
             sprintf(text, D_800E12A8, player->playerIndex + 1);
             drawMenuAsciiTextDefaultScale(-0x30, -8, text, 5);
@@ -1516,7 +1516,7 @@ void func_8005905C(void *arg0) {
         sprintf(text, D_800E12B0, D_80121D98[playerIndex].value);
         drawMenuAsciiTextDefaultScale(0x70, 0x28, text, 6);
 
-        player = &D_80121D80[actor->player3];
+        player = &gRacePlayers[actor->player3];
         if (player->pad002[2] == 0) {
             sprintf(text, D_800E12B4, player->playerIndex + 1);
             drawMenuAsciiTextDefaultScale(0x60, 0x18, text, 5);
@@ -1556,7 +1556,7 @@ void func_80059518(void *arg0) {
         j = next;
         if (next < 4) {
             do {
-                if (D_80121D80[actor[j + 0x1C]].mode < D_80121D80[actor[i + 0x1C]].mode) {
+                if (gRacePlayers[actor[j + 0x1C]].mode < gRacePlayers[actor[i + 0x1C]].mode) {
                     temp = actor[j + 0x1C];
                     actor[j + 0x1C] = actor[i + 0x1C];
                     actor[i + 0x1C] = temp;
@@ -1568,16 +1568,16 @@ void func_80059518(void *arg0) {
         i = next;
     } while (next < 3);
 
-    if (!(D_80121D80[actor[0x1C]].flags & 0x40)) {
+    if (!(gRacePlayers[actor[0x1C]].flags & 0x40)) {
         actor[0x1C] = -1;
     }
-    if (!(D_80121D80[actor[0x1D]].flags & 0x40)) {
+    if (!(gRacePlayers[actor[0x1D]].flags & 0x40)) {
         actor[0x1D] = -1;
     }
-    if (!(D_80121D80[actor[0x1E]].flags & 0x40)) {
+    if (!(gRacePlayers[actor[0x1E]].flags & 0x40)) {
         actor[0x1E] = -1;
     }
-    flags = D_80121D80[actor[0x1F]].flags;
+    flags = gRacePlayers[actor[0x1F]].flags;
     if (!(flags & 0x40)) {
         actor[0x1F] = -1;
     }
@@ -2086,25 +2086,25 @@ void func_8005B14C(RaceUiCounterActor *arg0) {
         value = 8;
     }
     /* IDO register allocation depends on this always-zero index. */
-    D_80121D80[gPlayerInputPressed * 0].unk00C += value;
+    gRacePlayers[gPlayerInputPressed * 0].unk00C += value;
     arg0->value -= value;
 
     value = arg0->bonus;
     if ((value >= 8) && !(gPlayerInputPressed & 0x8000)) {
         value = 8;
     }
-    D_80121D80[0].unk00C += value;
+    gRacePlayers[0].unk00C += value;
     arg0->bonus -= value;
 
     value = arg0->target;
     if ((value >= 8) && !(gPlayerInputPressed & 0x8000)) {
         value = 8;
     }
-    D_80121D80[0].unk00C += value;
+    gRacePlayers[0].unk00C += value;
     arg0->target -= value;
 
-    if (D_80121D80[0].unk00C >= 0xF4240) {
-        D_80121D80[0].unk00C = 0xF423F;
+    if (gRacePlayers[0].unk00C >= 0xF4240) {
+        gRacePlayers[0].unk00C = 0xF423F;
     }
 
     if ((arg0->value == 0) && (arg0->bonus == 0) && (arg0->target == 0)) {
@@ -2223,10 +2223,10 @@ void func_8005B834(void *arg0) {
         *(s16 *)((u8 *)arg0 + 0x22) = 0x64;
     }
     if (gRaceChallengeFailed != 0) {
-        *(s16 *)((u8 *)arg0 + 0x1E) = D_80121D80[0].score;
+        *(s16 *)((u8 *)arg0 + 0x1E) = gRacePlayers[0].score;
     } else {
-        *(s16 *)((u8 *)arg0 + 0x1E) = D_80121D80[0].score * 0x32;
-        if (D_80121D80[0].score == D_80121D80[0].targetScore) {
+        *(s16 *)((u8 *)arg0 + 0x1E) = gRacePlayers[0].score * 0x32;
+        if (gRacePlayers[0].score == gRacePlayers[0].targetScore) {
             *(s16 *)((u8 *)arg0 + 0x24) = 1;
             *(s16 *)((u8 *)arg0 + 0x20) = 0x3E8;
         }
@@ -2534,32 +2534,32 @@ void func_8005C64C(RaceUiDualCounterActor *arg0) {
         value = 8;
     }
     /* IDO register allocation depends on this always-zero index. */
-    D_80121D80[gPlayerInputPressed * 0].unk00C += value;
+    gRacePlayers[gPlayerInputPressed * 0].unk00C += value;
     arg0->leftValue -= value;
 
     value = arg0->rightValue;
     if ((value >= 8) && !(gPlayerInputPressed & 0x8000)) {
         value = 8;
     }
-    D_80121D80[0].unk00C += value;
+    gRacePlayers[0].unk00C += value;
     arg0->rightValue -= value;
 
     value = arg0->bonus;
     if ((value >= 8) && !(gPlayerInputPressed & 0x8000)) {
         value = 8;
     }
-    D_80121D80[0].unk00C += value;
+    gRacePlayers[0].unk00C += value;
     arg0->bonus -= value;
 
     value = arg0->leftTarget;
     if ((value >= 8) && !(gPlayerInputPressed & 0x8000)) {
         value = 8;
     }
-    D_80121D80[0].unk00C += value;
+    gRacePlayers[0].unk00C += value;
     arg0->leftTarget -= value;
 
-    if (D_80121D80[0].unk00C >= 0xF4240) {
-        D_80121D80[0].unk00C = 0xF423F;
+    if (gRacePlayers[0].unk00C >= 0xF4240) {
+        gRacePlayers[0].unk00C = 0xF423F;
     }
 
     if ((arg0->rightValue == 0) && (arg0->leftValue == 0) && (arg0->bonus == 0) && (arg0->leftTarget == 0)) {
@@ -2699,7 +2699,7 @@ void func_8005CE4C(RaceUiDualCounterActor *arg0) {
         temp_v0 = D_801222F0;
     } else {
         arg0->leftValue = ((arg0->row * 0x3C) + arg0->column) * 0x14;
-        if (D_80121D80[0].unk572 == (temp_v0 = D_80121D80[0].unk570)) {
+        if (gRacePlayers[0].unk572 == (temp_v0 = gRacePlayers[0].unk570)) {
             arg0->flag = 1;
             arg0->bonus = 0x12C;
             temp_v0 = D_801222F0;
@@ -3067,25 +3067,25 @@ void func_8005DE6C(RaceUiCourseStatsActor *arg0) {
         value = 8;
     }
     /* IDO register allocation depends on this always-zero index. */
-    D_80121D80[gPlayerInputPressed * 0].unk00C += value;
+    gRacePlayers[gPlayerInputPressed * 0].unk00C += value;
     arg0->pendingFirstValue -= value;
 
     value = arg0->pendingSecondValue;
     if ((value >= 8) && !(gPlayerInputPressed & 0x8000)) {
         value = 8;
     }
-    D_80121D80[0].unk00C += value;
+    gRacePlayers[0].unk00C += value;
     arg0->pendingSecondValue -= value;
 
     value = arg0->pendingThirdValue;
     if ((value >= 8) && !(gPlayerInputPressed & 0x8000)) {
         value = 8;
     }
-    D_80121D80[0].unk00C += value;
+    gRacePlayers[0].unk00C += value;
     arg0->pendingThirdValue -= value;
 
-    if (D_80121D80[0].unk00C >= 0xF4240) {
-        D_80121D80[0].unk00C = 0xF423F;
+    if (gRacePlayers[0].unk00C >= 0xF4240) {
+        gRacePlayers[0].unk00C = 0xF423F;
     }
 
     if ((arg0->pendingFirstValue == 0) && (arg0->pendingSecondValue == 0) && (arg0->pendingThirdValue == 0)) {
@@ -3199,8 +3199,8 @@ void func_8005E534(void *arg0) {
         *(s16 *)((u8 *)arg0 + 0x1E) = 0;
         *(volatile s16 *)((u8 *)arg0 + 0x20) = 0;
     } else {
-        *(s16 *)((u8 *)arg0 + 0x1E) = D_80121D80[0].unk2C0 * 3;
-        *(s16 *)((u8 *)arg0 + 0x20) = D_80121D80[0].unk2C3 * 10;
+        *(s16 *)((u8 *)arg0 + 0x1E) = gRacePlayers[0].unk2C0 * 3;
+        *(s16 *)((u8 *)arg0 + 0x20) = gRacePlayers[0].unk2C3 * 10;
     }
     setCallbackTaskCallback(arg0, func_8005E498);
 }
@@ -3286,7 +3286,7 @@ void func_8005EA4C(RaceUiSparkleActor *arg0) {
         } else {
             arg0->alpha -= 0x10;
             if (arg0->alpha <= 0) {
-                player = &D_80121D80[arg0->playerIndex];
+                player = &gRacePlayers[arg0->playerIndex];
                 player->unk2D8--;
                 removeCallbackTask((CallbackTask *) arg0);
                 return;
@@ -3298,11 +3298,11 @@ void func_8005EA4C(RaceUiSparkleActor *arg0) {
         makeFixedRotationY(stack.matrix, angle);
         transformVec3iByFixedMatrix(stack.matrix, &D_800D6110, &stack.vec);
 
-        player = &D_80121D80[arg0->playerIndex];
+        player = &gRacePlayers[arg0->playerIndex];
         makeFixedRotationXY(stack.matrix, player->pitch, player->yaw);
         transformVec3iByFixedMatrix(stack.matrix, &stack.vec, &arg0->pos);
 
-        player = &D_80121D80[arg0->playerIndex];
+        player = &gRacePlayers[arg0->playerIndex];
         arg0->pos.x += player->pos28.x;
         arg0->pos.y += player->pos28.y;
         arg0->pos.z += player->pos28.z;
@@ -3332,11 +3332,11 @@ void func_8005ECA8(RaceUiSparkleActor *arg0) {
         vec.y = arg0->zOffset;
         vec.z = 0;
 
-        player = &D_80121D80[arg0->playerIndex];
+        player = &gRacePlayers[arg0->playerIndex];
         makeFixedRotationXY(matrix, player->pitch, player->yaw);
         transformVec3iByFixedMatrix(matrix, &vec, &arg0->pos);
 
-        player = &D_80121D80[arg0->playerIndex];
+        player = &gRacePlayers[arg0->playerIndex];
         arg0->pos.x += player->pos28.x;
         arg0->pos.y += player->pos28.y;
         arg0->pos.z += player->pos28.z;
@@ -3359,26 +3359,26 @@ void func_8005ECA8(RaceUiSparkleActor *arg0) {
                         selectedPlayerIndex = gRaceOrderPlayerIds[3];
                     }
                     if ((gRacePlayerCount >= 3) && (arg0->playerIndex != gRaceOrderPlayerIds[2]) &&
-                        (activeCount >= 2) && !(D_80121D80[gRaceOrderPlayerIds[2]].flags & 0x40)) {
+                        (activeCount >= 2) && !(gRacePlayers[gRaceOrderPlayerIds[2]].flags & 0x40)) {
                         selectedPlayerIndex = gRaceOrderPlayerIds[2];
                     }
                     if ((gRacePlayerCount >= 2) && (arg0->playerIndex != gRaceOrderPlayerIds[1]) &&
-                        (activeCount >= 3) && !(D_80121D80[gRaceOrderPlayerIds[1]].flags & 0x40)) {
+                        (activeCount >= 3) && !(gRacePlayers[gRaceOrderPlayerIds[1]].flags & 0x40)) {
                         selectedPlayerIndex = gRaceOrderPlayerIds[1];
                     }
                     if ((gRacePlayerCount > 0) && (arg0->playerIndex != gRaceOrderPlayerIds[0]) &&
-                        (activeCount >= 4) && !(D_80121D80[gRaceOrderPlayerIds[0]].flags & 0x40)) {
+                        (activeCount >= 4) && !(gRacePlayers[gRaceOrderPlayerIds[0]].flags & 0x40)) {
                         selectedPlayerIndex = gRaceOrderPlayerIds[0];
                     }
                     arg0->playerIndex = selectedPlayerIndex & 3;
                 }
 
-                player = &D_80121D80[arg0->playerIndex];
+                player = &gRacePlayers[arg0->playerIndex];
                 player->unk2D8++;
                 if (gRacePlayerHudStatuses[arg0->playerIndex].active != 0) {
                     enqueueSoundEffect(0x53, 0x5A);
                 }
-                enqueuePositionalSoundEffect(0x10, &D_80121D80[arg0->playerIndex].pos1C, 0x7F, 0x32);
+                enqueuePositionalSoundEffect(0x10, &gRacePlayers[arg0->playerIndex].pos1C, 0x7F, 0x32);
                 arg0->timer = 0x12C;
                 setCallbackTaskCallback(arg0, func_8005EA4C);
             }
@@ -3405,11 +3405,11 @@ void func_8005EFFC(RaceUiSparkleActor *arg0) {
         sp2C.x = 0;
         sp2C.y = arg0->zOffset;
         sp2C.z = 0;
-        player = &D_80121D80[arg0->playerIndex];
+        player = &gRacePlayers[arg0->playerIndex];
         makeFixedRotationXY(sp38, player->pitch, player->yaw);
         transformVec3iByFixedMatrix(sp38, &sp2C, &arg0->pos);
 
-        player = &D_80121D80[arg0->playerIndex];
+        player = &gRacePlayers[arg0->playerIndex];
         arg0->pos.x += player->pos28.x;
         arg0->pos.y += player->pos28.y;
         arg0->pos.z += player->pos28.z;
@@ -3438,7 +3438,7 @@ void func_8005F174(RaceUiSparkleActor *arg0) {
     getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gRaceCommonSpriteAssetHandle), 0x24, &arg0->images[1], &arg0->palettes[1]);
     getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gRaceCommonSpriteAssetHandle), 0x25, &arg0->images[2], &arg0->palettes[2]);
     getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gRaceCommonSpriteAssetHandle), 0x26, &arg0->images[3], &arg0->palettes[3]);
-    enqueuePositionalSoundEffect(0x10, &D_80121D80[arg0->playerIndex].pos1C, 0x7F, 0x32);
+    enqueuePositionalSoundEffect(0x10, &gRacePlayers[arg0->playerIndex].pos1C, 0x7F, 0x32);
     setCallbackTaskCallback(arg0, func_8005EFFC);
 }
 
@@ -3539,7 +3539,7 @@ void func_8005F6A4(RaceUiRankTrailActor *arg0) {
 
     if (arg0->matrixDirty != 0) {
         arg0->matrixDirty = 0;
-        player = &D_80121D80[arg0->playerIndex];
+        player = &gRacePlayers[arg0->playerIndex];
         arg0->copyBlock.words[5] = player->pos28.x;
         arg0->copyBlock.words[6] = player->pos28.y + 0x100000;
         arg0->copyBlock.words[7] = player->pos28.z;
@@ -3561,7 +3561,7 @@ void func_8005F828(RaceUiRankTrailActor *arg0) {
     s32 i;
 
     arg0->copyBlock.transform = gIdentityFixedTransform;
-    player = &D_80121D80[arg0->playerIndex];
+    player = &gRacePlayers[arg0->playerIndex];
     arg0->pos.x = player->pos28.x;
     arg0->pos.y = player->pos28.y;
     arg0->pos.z = player->pos28.z;
@@ -3596,13 +3596,13 @@ void func_8005F828(RaceUiRankTrailActor *arg0) {
         func_80060454((void *)arg0->pos.x, (void *)arg0->pos.y, (void *)arg0->pos.z, i);
     }
 
-    enqueuePositionalSoundEffect(0x15, &D_80121D80[arg0->playerIndex].pos1C, 0x7F, 0x32);
+    enqueuePositionalSoundEffect(0x15, &gRacePlayers[arg0->playerIndex].pos1C, 0x7F, 0x32);
     removeCallbackTask(arg0);
 }
 
 void initRaceUiItemStealTrailEffect(RaceUiRankTrailActor *arg0) {
     arg0->scale = 2;
-    enqueuePositionalSoundEffect(0xF, &D_80121D80[arg0->playerIndex].pos1C, 0x7F, 0x32);
+    enqueuePositionalSoundEffect(0xF, &gRacePlayers[arg0->playerIndex].pos1C, 0x7F, 0x32);
     setCallbackTaskCallback(arg0, func_8005F828);
 }
 
@@ -3775,8 +3775,8 @@ void updateGhostSlowdownImpact(RaceUiPodiumTrailActor *arg0) {
         height = arg0->height + arg0->velocity;
         arg0->height = height;
         if ((height < 0x200000) && ((arg0->playImpactSound & 0xFF) != 0)) {
-            enqueuePositionalSoundEffect(0xC, &D_80121D80[arg0->targetPlayerIndex].pos1C, 0x7F, 0x32);
-            D_80121D80[arg0->targetPlayerIndex].pendingItemHitFlags |= PLAYER_HITFLAG_GHOST_SLOWDOWN;
+            enqueuePositionalSoundEffect(0xC, &gRacePlayers[arg0->targetPlayerIndex].pos1C, 0x7F, 0x32);
+            gRacePlayers[arg0->targetPlayerIndex].pendingItemHitFlags |= PLAYER_HITFLAG_GHOST_SLOWDOWN;
             gPlayerHitSource[arg0->targetPlayerIndex].value = arg0->playerIndex;
             height = arg0->height;
             arg0->playImpactSound = 0;
@@ -3789,7 +3789,7 @@ void updateGhostSlowdownImpact(RaceUiPodiumTrailActor *arg0) {
             height = arg0->height;
         }
 
-        player = &D_80121D80[arg0->targetPlayerIndex];
+        player = &gRacePlayers[arg0->targetPlayerIndex];
         arg0->pos.x = player->pos28.x;
         arg0->pos.y = player->pos28.y + height;
         arg0->pos.z = player->pos28.z;
@@ -3817,7 +3817,7 @@ void updateGhostSlowdownRise(RaceUiPodiumTrailActor *arg0) {
             height = arg0->height;
             arg0->copyBlock.transform = gIdentityFixedTransform;
             playerIndex = arg0->playerIndex;
-            player = &D_80121D80[playerIndex];
+            player = &gRacePlayers[playerIndex];
             arg0->pos.x = player->pos28.x;
             arg0->pos.y = player->pos28.y + height;
             arg0->pos.z = player->pos28.z;
@@ -3856,7 +3856,7 @@ void initGhostSlowdownActor(void *arg0) {
     *(s32 *)((u8 *)arg0 + 0x48) = 0;
     *(s32 *)((u8 *)arg0 + 0x4C) = 0;
     *(u8 *)((u8 *)arg0 + 0x59) = 1;
-    enqueuePositionalSoundEffect(0xD, &D_80121D80[*(s16 *)((u8 *)arg0 + 0x50)].pos1C, 0x7F, 0x32);
+    enqueuePositionalSoundEffect(0xD, &gRacePlayers[*(s16 *)((u8 *)arg0 + 0x50)].pos1C, 0x7F, 0x32);
     setCallbackTaskCallback(arg0, updateGhostSlowdownRise);
 }
 
@@ -4036,7 +4036,7 @@ void func_800615BC(RaceUiRankTrailActor *arg0) {
     RacePlayerState *player;
     s32 i;
 
-    arg0->copyBlock = (&D_80121D80[arg0->playerIndex])->copyBlock94;
+    arg0->copyBlock = (&gRacePlayers[arg0->playerIndex])->copyBlock94;
     arg0->copyBlock.halfwords[0] = arg0->copyBlock.halfwords[0] / 4;
     arg0->copyBlock.halfwords[1] = arg0->copyBlock.halfwords[1] / 4;
     arg0->copyBlock.halfwords[2] = arg0->copyBlock.halfwords[2] / 4;
@@ -4047,7 +4047,7 @@ void func_800615BC(RaceUiRankTrailActor *arg0) {
     arg0->copyBlock.halfwords[7] = arg0->copyBlock.halfwords[7] / 4;
     arg0->copyBlock.halfwords[8] = arg0->copyBlock.halfwords[8] / 4;
 
-    player = &D_80121D80[arg0->playerIndex];
+    player = &gRacePlayers[arg0->playerIndex];
     if (player->flags & 0x400000) {
         addRenderCallback(&gRaceModelEffectRenderCallbackList, func_80061484, (s32)arg0);
         return;
@@ -4170,7 +4170,7 @@ void func_80061B70(RaceUiSingleTrailActor *arg0) {
 }
 
 void func_80061CA8(RaceUiSingleTrailActor *arg0) {
-    composeFixedTransforms(&arg0->sourceTransform, &D_80121D80[arg0->playerIndex].transform, &arg0->copyBlock.transform);
+    composeFixedTransforms(&arg0->sourceTransform, &gRacePlayers[arg0->playerIndex].transform, &arg0->copyBlock.transform);
 
     if (gRaceUpdatePaused == 0) {
         arg0->timer--;
@@ -4330,11 +4330,11 @@ void func_800623E8(RaceUiTransitionActor *arg0) {
     s32 temp_t0;
 
     if (gRaceUpdatePaused == 0) {
-        if (!(D_80121D80[arg0->index].flags & 0x800000)) {
+        if (!(gRacePlayers[arg0->index].flags & 0x800000)) {
             arg0->unk6C = 0;
         }
         if (arg0->unk6C != 0) {
-            player = &D_80121D80[arg0->index];
+            player = &gRacePlayers[arg0->index];
             arg0->transformSource.source.words[5] = player->posC8.x;
             arg0->transformSource.source.words[6] = player->posC8.y;
             arg0->transformSource.source.words[7] = player->posC8.z;
@@ -4367,7 +4367,7 @@ void initRaceUiSpinHitTransitionEffect(RaceUiTransitionActor *arg0) {
     scaleFixedMatrix3sByQuarter(transform);
     arg0->unk6C = 1;
     arg0->unk6E = 0xF;
-    enqueuePositionalSoundEffect(0xB, &D_80121D80[arg0->index].pos1C, 0x7F, 0x32);
+    enqueuePositionalSoundEffect(0xB, &gRacePlayers[arg0->index].pos1C, 0x7F, 0x32);
     func_800623E8(arg0);
     setCallbackTaskCallback(arg0, func_800623E8);
 }
@@ -4413,14 +4413,14 @@ void func_800625D8(RaceUiOrbitingSpriteActor *arg0) {
 void func_800628DC(RaceUiOrbitingSpriteActor *arg0) {
     RacePlayerState *player;
 
-    player = &D_80121D80[arg0->index];
+    player = &gRacePlayers[arg0->index];
     if (!(player->flags & 0x10000)) {
         removeCallbackTask(arg0);
         return;
     }
 
     transformVec3iByFixedMatrix(player->transform.rotation, &D_800D62A0, &arg0->pos);
-    player = &D_80121D80[arg0->index];
+    player = &gRacePlayers[arg0->index];
     arg0->pos.x += player->transform.translation.x;
     arg0->pos.y += player->transform.translation.y + 0x80000;
     arg0->pos.z += player->transform.translation.z;
@@ -5011,11 +5011,11 @@ void func_800647E0(RaceUiProjectileActor *arg0) {
 
     actor = arg0;
     if (!gRaceUpdatePaused) {
-        makeFixedRotationXY(sp24.mtx, D_80121D80[actor->index].pitch, D_80121D80[actor->index].yaw);
+        makeFixedRotationXY(sp24.mtx, gRacePlayers[actor->index].pitch, gRacePlayers[actor->index].yaw);
         transformVec3iByFixedMatrix(sp24.mtx, &actor->velocity, &actor->pos);
-        actor->pos.x += D_80121D80[actor->index].pos28.x;
-        actor->pos.y += D_80121D80[actor->index].pos28.y + actor->verticalVelocity;
-        actor->pos.z += D_80121D80[actor->index].pos28.z;
+        actor->pos.x += gRacePlayers[actor->index].pos28.x;
+        actor->pos.y += gRacePlayers[actor->index].pos28.y + actor->verticalVelocity;
+        actor->pos.z += gRacePlayers[actor->index].pos28.z;
         temp = (actor->verticalVelocity += actor->verticalAcceleration);
         actor->verticalAcceleration += 0x10000;
         if (temp >= 0x300001) {
@@ -5036,11 +5036,11 @@ void func_80064914(RaceUiProjectileActor *arg0) {
     s16 flags;
 
     if (gRaceUpdatePaused == 0) {
-        player = &D_80121D80[arg0->index];
-        makeFixedRotationXY(sp44, D_80121D80[arg0->index].pitch, player->yaw);
+        player = &gRacePlayers[arg0->index];
+        makeFixedRotationXY(sp44, gRacePlayers[arg0->index].pitch, gRacePlayers[arg0->index].yaw);
         transformVec3iByFixedMatrix(sp44, &arg0->velocity, &arg0->pos);
 
-        player = &D_80121D80[arg0->index];
+        player = &gRacePlayers[arg0->index];
         arg0->pos.x += player->pos28.x;
         arg0->pos.y += player->pos28.y;
         arg0->pos.z += player->pos28.z;
@@ -5048,20 +5048,20 @@ void func_80064914(RaceUiProjectileActor *arg0) {
 
         i = 0;
         do {
-            otherPlayer = &D_80121D80[i];
+            otherPlayer = &gRacePlayers[i];
             if ((otherPlayer->isActive != 0) && (otherPlayer->playerIndex != arg0->index)) {
                 value = otherPlayer->unk568;
                 amount = (value >= 0xA6) ? 0xA6 : value;
                 otherPlayer->unk568 = value - amount;
-                addRacePlayerScore(&D_80121D80[arg0->index], amount);
+                addRacePlayerScore(&gRacePlayers[arg0->index], amount);
             }
             i++;
-        } while ((RacePlayerState *)&gFrameCounter != &D_80121D80[i]);
+        } while ((RacePlayerState *)&gFrameCounter != &gRacePlayers[i]);
 
         flags = arg0->flags;
         amount = flags & 1;
         if (flags & 8) {
-            enqueuePositionalSoundEffect(0x69, &D_80121D80[arg0->index].pos28, 0x7F, 0x32);
+            enqueuePositionalSoundEffect(0x69, &gRacePlayers[arg0->index].pos28, 0x7F, 0x32);
             arg0->flags &= ~8;
             amount = 1;
             amount = (flags = arg0->flags) & amount;
@@ -5069,7 +5069,7 @@ void func_80064914(RaceUiProjectileActor *arg0) {
         if (amount) {
             arg0->verticalAcceleration = 0;
             arg0->verticalVelocity = 0;
-            enqueuePositionalSoundEffect(0x6A, &D_80121D80[arg0->index].pos28, 0x7F, 0x32);
+            enqueuePositionalSoundEffect(0x6A, &gRacePlayers[arg0->index].pos28, 0x7F, 0x32);
             setCallbackTaskCallback(arg0, func_800647E0);
         }
     }
@@ -5084,15 +5084,15 @@ void func_80064B28(RaceUiProjectileActor *arg0) {
 
     actor = arg0;
     if (gRaceUpdatePaused == 0) {
-        player = &D_80121D80[actor->index];
+        player = &gRacePlayers[actor->index];
         arg0 += 0;
         if (((!actor) && (!actor)) && (!actor)) {
         }
-        player = &D_80121D80[actor->index];
+        player = &gRacePlayers[actor->index];
         makeFixedRotationXY(sp2C, player->pitch, player->yaw);
         transformVec3iByFixedMatrix(sp2C, &actor->velocity, &actor->pos);
 
-        player = &D_80121D80[actor->index];
+        player = &gRacePlayers[actor->index];
         actor->pos.x += player->pos28.x;
         actor->pos.y += player->pos28.y + actor->verticalVelocity;
         actor->pos.z += player->pos28.z;
@@ -5115,10 +5115,10 @@ void func_80064C68(RaceUiProjectileActor *arg0) {
 
     actor = arg0;
     if (gRaceUpdatePaused == 0) {
-        makeFixedRotationXY(sp2C, D_80121D80[actor->index].pitch, D_80121D80[actor->index].yaw);
+        makeFixedRotationXY(sp2C, gRacePlayers[actor->index].pitch, gRacePlayers[actor->index].yaw);
         transformVec3iByFixedMatrix(sp2C, &actor->velocity, &actor->pos);
 
-        player = &D_80121D80[actor->index];
+        player = &gRacePlayers[actor->index];
         actor->pos.x += player->pos28.x;
         actor->pos.y += player->pos28.y;
         actor->pos.z += player->pos28.z;
@@ -5139,10 +5139,10 @@ void func_80064D88(RaceUiProjectileActor *arg0) {
 
     actor = arg0;
     if (gRaceUpdatePaused == 0) {
-        makeFixedRotationXY(sp2C, D_80121D80[actor->index].pitch, D_80121D80[actor->index].yaw);
+        makeFixedRotationXY(sp2C, gRacePlayers[actor->index].pitch, gRacePlayers[actor->index].yaw);
         transformVec3iByFixedMatrix(sp2C, &actor->velocity, &actor->pos);
 
-        player = &D_80121D80[actor->index];
+        player = &gRacePlayers[actor->index];
         actor->pos.x += player->pos28.x;
         actor->pos.y += player->pos28.y + actor->verticalVelocity;
         actor->pos.z += player->pos28.z;
@@ -5165,7 +5165,7 @@ void initForwardActionProjectileEffect(void *arg0) {
     *(s32 *)((u8 *)arg0 + 0x50) = 0x300000;
     *(s32 *)((u8 *)arg0 + 0x54) = 0;
     func_800643B4(arg0, D_800D6520);
-    enqueuePositionalSoundEffect(0x66, &D_80121D80[*(u16 *)((u8 *)arg0 + 0x10)].pos28, 0x7F, 0x32);
+    enqueuePositionalSoundEffect(0x66, &gRacePlayers[*(u16 *)((u8 *)arg0 + 0x10)].pos28, 0x7F, 0x32);
     setCallbackTaskCallback(arg0, func_80064D88);
 }
 
@@ -5350,13 +5350,13 @@ loop:
             if (isRacePlayerInsideCylinder(pos, xzSize, ySize, 0) != 0) {
                 entry->active = 0;
                 enqueuePositionalSoundEffect(0x18, pos, 0x7F, 0x32);
-                D_80121D80[0].unk570++;
-                if (D_80121D80[0].unk2DA != 0) {
-                    D_80121D80[0].unk2DA = 0xF0;
+                gRacePlayers[0].unk570++;
+                if (gRacePlayers[0].unk2DA != 0) {
+                    gRacePlayers[0].unk2DA = 0xF0;
                 } else {
-                    startSnowboardTrailEffect((struct RaceInputPlayer *)D_80121D80);
+                    startSnowboardTrailEffect((struct RacePlayer *)gRacePlayers);
                 }
-                if (D_80121D80[0].unk2DA) {
+                if (gRacePlayers[0].unk2DA) {
                 }
             }
         }

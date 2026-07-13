@@ -3,7 +3,7 @@
 
 #include "common.h"
 
-#define RACE_INPUT_PLAYER_COUNT 4
+#define RACE_PLAYER_COUNT 4
 
 typedef s16 Matrix4s[0x10];
 
@@ -13,7 +13,7 @@ typedef struct RaceVec3i {
     /* 0x8 */ s32 z;
 } RaceVec3i;
 
-typedef struct RaceInputPlayer {
+typedef struct RacePlayer {
     /* 0x000 */ union {
         s16 playerIndex;
         u16 playerIndexU16;
@@ -167,7 +167,7 @@ typedef struct RaceInputPlayer {
     /* 0x34C */ char pad34C[0x106];
     /* 0x452 */ s16 animationId;
     /* 0x454 */ char pad454[0x14];
-    /* 0x468 */ RaceVec3i markerPoints[RACE_INPUT_PLAYER_COUNT];
+    /* 0x468 */ RaceVec3i markerPoints[RACE_PLAYER_COUNT];
     /* 0x498 */ char pad498[8];
     /* 0x4A0 */ RaceVec3i unk4A0;
     /* 0x4AC */ RaceVec3i unk4AC;
@@ -228,18 +228,17 @@ typedef struct RaceInputPlayer {
     };
     /* 0x609 */ char pad609[1];
     /* 0x60A */ s16 replayFrame;
-} RaceInputPlayer;
+} RacePlayer;
 
-extern RaceInputPlayer D_80121D80[RACE_INPUT_PLAYER_COUNT];
-extern RaceInputPlayer D_8012238C[];
-extern RaceInputPlayer D_80122998[];
-extern RaceInputPlayer D_80122FA4[];
+extern RacePlayer gRacePlayers[RACE_PLAYER_COUNT];
 
-void recordRaceReplayInputFrame(RaceInputPlayer *player);
-void playRaceReplayInputFrame(RaceInputPlayer *player);
-void recordRaceInputHistoryFrame(RaceInputPlayer *player);
-void playRaceInputHistoryFrame(RaceInputPlayer *player);
-void updateRacePlayerInput(RaceInputPlayer *player);
-s32 getRaceInputTimerDecrementBonus(RaceInputPlayer *player);
+#define gRacePlayersEnd (&gRacePlayers[RACE_PLAYER_COUNT])
+
+void recordRaceReplayInputFrame(RacePlayer *player);
+void playRaceReplayInputFrame(RacePlayer *player);
+void recordRaceInputHistoryFrame(RacePlayer *player);
+void playRaceInputHistoryFrame(RacePlayer *player);
+void updateRacePlayerInput(RacePlayer *player);
+s32 getRaceInputTimerDecrementBonus(RacePlayer *player);
 
 #endif

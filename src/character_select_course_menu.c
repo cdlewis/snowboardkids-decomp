@@ -54,7 +54,7 @@ extern f32 D_800E09A0;
 extern f32 D_800E09A4;
 extern s16 gMenuFadeAlpha;
 extern CharacterSelectSaveData gGameSaveDataBuffer[];
-extern u8 D_80121D80[];
+extern u8 gRacePlayers[];
 extern u8 gMenuTransitionState;
 extern u8 gPlayerCount;
 extern u8 gRaceTypeSelection;
@@ -552,13 +552,13 @@ void updateCharacterSelectCourseSubmenu(void) {
     s32 input;
     int state;
 
-    state = D_80121D80[8];
+    state = gRacePlayers[8];
     if (state < 3) {
         switch (gCharacterSelectCourseCursorState.fields.otherState) {
         case 2:
             input = gPlayerInputPressed;
             if (input & 0x4000) {
-                D_80121D80[8] = 3;
+                gRacePlayers[8] = 3;
                 enqueueSoundEffect(1, 0x32);
             } else if ((input & 0x8000) || (input & 0x1000)) {
                 enqueueSoundEffect(1, 0x32);
@@ -594,9 +594,9 @@ void updateCharacterSelectCourseSubmenu(void) {
         case 4:
             if (gCharacterSelectCourseCursorState.fields.otherTimer == 4) {
                 if (gMenuChoicePromptState == 6) {
-                    D_80121D80[8] = 3;
+                    gRacePlayers[8] = 3;
                 } else {
-                    D_80121D80[8] = 7;
+                    gRacePlayers[8] = 7;
                 }
                 gMenuChoicePromptState = 0;
             }
@@ -604,7 +604,7 @@ void updateCharacterSelectCourseSubmenu(void) {
         }
     } else {
         if (state == 6) {
-            D_80121D80[8] = 0;
+            gRacePlayers[8] = 0;
             gMenuSelectionConfirmTimer = 0;
             setCurrentGameTaskCallback(updateCharacterSelectCourseMenu, 0);
             gCharacterSelectCourseCursorState.fields.state = 1;

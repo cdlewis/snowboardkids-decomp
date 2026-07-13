@@ -294,10 +294,7 @@ extern CourseMarkerTextureResource gCourseBillboardMarkerTextureResources[];
 extern CourseTriggerEntry gCourseTriggerEntries[];
 extern Gfx D_2001D00[];
 extern SoundParamAngle gCourseGateAngles[];
-extern CourseEffectPlayer D_80121D80[];
-extern CourseEffectPlayer D_8012238C[];
-extern CourseEffectPlayer D_80122998[];
-extern CourseEffectPlayer D_80122FA4[];
+extern CourseEffectPlayer gRacePlayers[];
 extern CourseRenderCommand gIdentityMatrix[];
 extern s32 gMenuRenderCallbackList;
 extern s32 gRaceOverlayRenderCallbackList;
@@ -1514,17 +1511,17 @@ void collidePlayerWithCourseTriggerVolume(CourseEffectPlayer *arg0, RaceCourseTr
 #endif
 
 void updateCourseTriggerVolume(RaceCourseTriggerEffect *arg0) {
-    if (D_80121D80[0].isActive != 0) {
-        collidePlayerWithCourseTriggerVolume(D_80121D80, arg0);
+    if (gRacePlayers[0].isActive != 0) {
+        collidePlayerWithCourseTriggerVolume(&gRacePlayers[0], arg0);
     }
-    if (D_80121D80[1].isActive != 0) {
-        collidePlayerWithCourseTriggerVolume(D_8012238C, arg0);
+    if (gRacePlayers[1].isActive != 0) {
+        collidePlayerWithCourseTriggerVolume(&gRacePlayers[1], arg0);
     }
-    if (D_80121D80[2].isActive != 0) {
-        collidePlayerWithCourseTriggerVolume(D_80122998, arg0);
+    if (gRacePlayers[2].isActive != 0) {
+        collidePlayerWithCourseTriggerVolume(&gRacePlayers[2], arg0);
     }
-    if (D_80121D80[3].isActive != 0) {
-        collidePlayerWithCourseTriggerVolume(D_80122FA4, arg0);
+    if (gRacePlayers[3].isActive != 0) {
+        collidePlayerWithCourseTriggerVolume(&gRacePlayers[3], arg0);
     }
     addRenderCallback(&gRaceObjectRenderCallbackList, renderCourseTriggerVolume, arg0);
 }

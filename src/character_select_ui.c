@@ -89,7 +89,7 @@ extern s16 D_8010AE58;
 extern s32 gMenuFlowState;
 extern void *gMenuRenderCallbackList;
 extern u8 gPlayerCount;
-extern RacePlayer D_80121D80[];
+extern RacePlayer gRacePlayers[];
 extern u8 gMenuSelectionVariant[];
 extern s8 D_8010AE64[];
 extern u8 gAssetHandles[];
@@ -394,7 +394,7 @@ void drawCharacterSelectRosterIcons(CharacterSelectUiRosterIconActor *arg0) {
             j = 0;
             if (gPlayerCount > 0) {
                 do {
-                    if ((i == D_80121D80[j].playerIndex) && (D_80121D80[j].isActive != 0)) {
+                    if ((i == gRacePlayers[j].playerIndex) && (gRacePlayers[j].isActive != 0)) {
                         tile = (i + 0x41) & 0xFFFF;
                         alpha = 0x60;
                         textureIndex = 0x1F;
@@ -422,7 +422,7 @@ void drawCharacterSelectRosterIcons(CharacterSelectUiRosterIconActor *arg0) {
             j = 0;
             if (gPlayerCount > 0) {
                 do {
-                    if ((D_80121D80[j].playerIndex == 5) && (D_80121D80[j].isActive != 0)) {
+                    if ((gRacePlayers[j].playerIndex == 5) && (gRacePlayers[j].isActive != 0)) {
                         alpha = 0x60;
                         tile = 0x46;
                         textureIndex = 0x1F;
@@ -526,7 +526,7 @@ void drawCharacterSelectPlayerCursorMarkers(CharacterSelectUiPlayerCursorActor *
     RacePlayer *player;
     CharacterSelectUiPlayerCursorActor *actorX;
 
- do { if (arg0->mode != 0) { i = 0; if (((s32) gPlayerCount) > 0) { player = D_80121D80; tiles = gCharacterSelectPlayerMarkerTiles; actorX = arg0; do { evenMatch = 0; oddMatch = 0; j = 0; if (player->isActive != 0) { alpha = 0x100; } else { alpha = arg0->scale; } if (((s32) gPlayerCount) > 0) { do { if ((j != i) && (D_8010AE64[i] == D_8010AE64[j])) { if (!(j & 1)) { evenMatch = 1; } else { oddMatch = 2; } } j++; } while (j < ((s32) gPlayerCount)); } drawMenuSpriteWithAlpha(actorX->x[0], arg0->y, getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle), tiles[evenMatch + oddMatch], 0x20, 0x20, 0, alpha, 0); i++; player++; tiles += 4; actorX = (CharacterSelectUiPlayerCursorActor *) (((u8 *) actorX) + 2); } while (i < ((s32) gPlayerCount)); } } } while (0);
+ do { if (arg0->mode != 0) { i = 0; if (((s32) gPlayerCount) > 0) { player = gRacePlayers; tiles = gCharacterSelectPlayerMarkerTiles; actorX = arg0; do { evenMatch = 0; oddMatch = 0; j = 0; if (player->isActive != 0) { alpha = 0x100; } else { alpha = arg0->scale; } if (((s32) gPlayerCount) > 0) { do { if ((j != i) && (D_8010AE64[i] == D_8010AE64[j])) { if (!(j & 1)) { evenMatch = 1; } else { oddMatch = 2; } } j++; } while (j < ((s32) gPlayerCount)); } drawMenuSpriteWithAlpha(actorX->x[0], arg0->y, getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle), tiles[evenMatch + oddMatch], 0x20, 0x20, 0, alpha, 0); i++; player++; tiles += 4; actorX = (CharacterSelectUiPlayerCursorActor *) (((u8 *) actorX) + 2); } while (i < ((s32) gPlayerCount)); } } } while (0);
 }
 
 void updateCharacterSelectPlayerCursorMarkers(CharacterSelectUiPlayerCursorActor *arg0) {
@@ -544,7 +544,7 @@ void updateCharacterSelectPlayerCursorMarkers(CharacterSelectUiPlayerCursorActor
     }
 
     if (mode != 0) {
- i = 0; if ((s32)gPlayerCount > 0) { layout = D_8010AE64; player = D_80121D80; do {
+ i = 0; if ((s32)gPlayerCount > 0) { layout = D_8010AE64; player = gRacePlayers; do {
                 if (player->characterId < 5) {
                     arg0->x[i] = (layout[i] * 0x20) + arg0->baseX;
                 } else if (player->characterId == 5) {
@@ -634,7 +634,7 @@ void drawCharacterSelectPlayerStatsPanels(CharacterSelectUiPanelActor *arg0) {
     if (controller->unk26 != 0) {
         i = 0;
         if ((s32)gPlayerCount > 0) {
-            player = D_80121D80;
+            player = gRacePlayers;
             statsBase = gCharacterSelectCharacterStats;
             textureHandles = gAssetHandles;
             actor = arg0;
@@ -747,7 +747,7 @@ void updateCharacterSelectPlayerStatsPanels(CharacterSelectUiPanelActor *arg0) {
     u8 *timer;
 
     srcBase = D_8010ADE4;
-    player = (u8 *)D_80121D80; for (i = 0, src = srcBase, dst = (u8 *)arg0; i != CHARACTER_SELECT_PLAYER_COUNT; i++, dst += 2) {
+    player = (u8 *)gRacePlayers; for (i = 0, src = srcBase, dst = (u8 *)arg0; i != CHARACTER_SELECT_PLAYER_COUNT; i++, dst += 2) {
         *(s16 *)(dst + 0x18) = *(s16 *)(src + 0x18);
         src += 2;
         *(s16 *)(dst + 0x20) = *(s16 *)(src + 0x1E);
@@ -782,7 +782,7 @@ void drawCharacterSelectSelectedCharacterTokens(CharacterSelectUiSelectedCharact
     s32 color;
     u16 temp_v1;
 
- base = (u8 *)arg0; i = 0; if (gPlayerCount > 0) { player = (u8 *)D_80121D80; do {
+ base = (u8 *)arg0; i = 0; if (gPlayerCount > 0) { player = (u8 *)gRacePlayers; do {
             if (player[8] != 0) {
                 new_var = i * 2;
                 temp_s0 = base + new_var;

@@ -27,7 +27,7 @@ typedef struct {
 extern CharacterSelectFlowState *gCurrentGameTask;
 extern ControllerPakMenuState gControllerPakMenuState;
 extern ControllerPakRaceRecordSaveStatusTransition gControllerPakRaceRecordSaveStatusTransition;
-extern ControllerPakRaceRecordSaveFileContext D_80121D80;
+extern ControllerPakRaceRecordSaveFileContext gRacePlayers;
 extern u8 gPendingFramebufferSwapCount;
 extern u8 gFramebufferSwapHold;
 extern s8 gFramebufferSwapDelay;
@@ -61,7 +61,7 @@ void initControllerPakRaceRecordSaveFlow(void) {
     gControllerPakStatusCodes = 0;
     gMenuChoicePromptState = 0;
     gControllerPakRetryCounts = 0;
-    D_80121D80.status = 0;
+    gRacePlayers.status = 0;
     gMenuSelectionConfirmTimer = 0;
     gCurrentGameTask->fade = 0xFF;
     gActiveMenuTask = 0;
@@ -69,7 +69,7 @@ void initControllerPakRaceRecordSaveFlow(void) {
     D_8010ADE4 = 0;
     D_8010ADE8 = 0;
     gMenuFadeAlpha = gCurrentGameTask->fade;
-    D_800EC9F4 = D_80121D80.selectedFileInfo;
+    D_800EC9F4 = gRacePlayers.selectedFileInfo;
     loadCompressedRomAsset(&D_59AAA0, &D_59DFE0, 0x21);
     loadCompressedRomAsset(&D_59AAA0, &D_59DFE0, 0x24);
     loadCompressedRomAsset(&D_593D10, &D_598A70, 0x22);
@@ -249,9 +249,9 @@ void updateControllerPakRaceRecordSaveFlow(void)
           break;
 
         case 5:
-          if (((u8) D_80121D80.status) == 0)
+          if (((u8) gRacePlayers.status) == 0)
         {
-          D_80121D80.status = 1;
+          gRacePlayers.status = 1;
         }
           break;
 
@@ -403,7 +403,7 @@ void updateControllerPakRaceRecordSaveFlow(void)
       }
 
     }
-    sp24 = ((u8) D_80121D80.status) & 1;
+    sp24 = ((u8) gRacePlayers.status) & 1;
   }
   else
   {
