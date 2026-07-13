@@ -17,9 +17,17 @@ typedef struct {
 
 typedef struct {
     u8 pad0[0x18];
-    /* 0x18 */ s16 x;
-    u8 pad1A[6];
-    /* 0x20 */ s16 y;
+    union {
+        struct {
+            /* 0x18 */ s16 x;
+            u8 pad1A[6];
+            /* 0x20 */ s16 y;
+        };
+        struct {
+            /* 0x18 */ s16 panelX[4];
+            /* 0x20 */ s16 panelY[4];
+        };
+    };
 } CharacterSelectUiPlayerPanelFrameActor;
 
 typedef struct {

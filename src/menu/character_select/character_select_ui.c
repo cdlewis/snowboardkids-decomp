@@ -257,41 +257,41 @@ void initCharacterSelectConfirmationBanner(CharacterSelectUiBannerActor *arg0) {
 
 #ifdef NON_MATCHING
 void drawCharacterSelectPlayerPanelFrames(CharacterSelectUiPlayerPanelFrameActor *arg0) {
-    char buf[0x10];
-    u8 *sp6C;
-    s32 flip;
+    char playerNumberBuffer[0x10];
+    u8 *playerNumberText;
+    s32 palette;
     s32 alpha;
-    s32 i;
+    s32 playerIndex;
     s32 playerNumber;
     s32 texture;
-    CharacterSelectUiPlayerPanelFrameActor *actor;
+    CharacterSelectUiPlayerPanelFrameActor *panel;
 
-    sp6C = buf - 0xC;
-    actor = arg0; i = 0; do {
-        if ((gPlayerCount - 1) < i) {
+    playerNumberText = playerNumberBuffer - 0xC;
+    panel = arg0; playerIndex = 0; do {
+        if ((gPlayerCount - 1) < playerIndex) {
             alpha = 0x50;
         } else {
             alpha = 0x100;
         }
 
         texture = getRelocatableHeapBlockBase(CHARACTER_SELECT_UI_PLAYER_FRAME_HANDLE);
-        playerNumber = i + 1;
-        flip = playerNumber & 0xFF;
-        drawMenuSpriteWithAlpha(actor->x, actor->y, texture, 0x23, 0x20, 0x20, 0, alpha, flip);
+        playerNumber = playerIndex + 1;
+        palette = playerNumber & 0xFF;
+        drawMenuSpriteWithAlpha(panel->x, panel->y, texture, 0x23, 0x20, 0x20, 0, alpha, palette);
         texture = getRelocatableHeapBlockBase(CHARACTER_SELECT_UI_PLAYER_FRAME_HANDLE);
-        drawMenuSpriteWithAlpha((s16)(actor->x + 0x40), actor->y, texture, 0x24, 0x20, 0x20, 0, alpha, flip);
+        drawMenuSpriteWithAlpha((s16)(panel->x + 0x40), panel->y, texture, 0x24, 0x20, 0x20, 0, alpha, palette);
         texture = getRelocatableHeapBlockBase(CHARACTER_SELECT_UI_PLAYER_FRAME_HANDLE);
-        i = 2;
-        drawMenuSpriteWithAlpha((s16)(actor->x + 0x80), actor->y, texture, 0xC, 0x20, 0x20, 0, alpha, flip);
-        sprintf(sp6C, gCharacterSelectPlayerNumberFormat, playerNumber);
-        drawMenuAsciiText((s16)(actor->x + 0x32), (s16)(actor->y + 2), sp6C, 0, alpha);
+        playerIndex = 2;
+        drawMenuSpriteWithAlpha((s16)(panel->x + 0x80), panel->y, texture, 0xC, 0x20, 0x20, 0, alpha, palette);
+        sprintf(playerNumberText, gCharacterSelectPlayerNumberFormat, playerNumber);
+        drawMenuAsciiText((s16)(panel->x + 0x32), (s16)(panel->y + 2), playerNumberText, 0, alpha);
         if (alpha != 0x100) {
             texture = getRelocatableHeapBlockBase(CHARACTER_SELECT_UI_UNUSED_HANDLE);
-            drawMenuSpriteWithAlpha((s16)(actor->x + i), (s16)(actor->y + 0x14), texture, 0x90, 0x20, 0x20, 0, 0xF0, 0);
+            drawMenuSpriteWithAlpha((s16)(panel->x + playerIndex), (s16)(panel->y + 0x14), texture, 0x90, 0x20, 0x20, 0, 0xF0, 0);
         }
 
-        i = playerNumber;
-        actor = (CharacterSelectUiPlayerPanelFrameActor *)((u8 *)actor + 2);
+        playerIndex = playerNumber;
+        panel = (CharacterSelectUiPlayerPanelFrameActor *)((u8 *)panel + 2);
     } while (playerNumber != 4);
 }
 #endif
