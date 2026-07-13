@@ -790,7 +790,7 @@ s32 tryApplyRacePlayerItemHit(RaceVec3i *pos, s32 xzSize, s16 flag, s16 playerIn
     return 0;
 }
 
-// updateRacePlayerSurfaceContact best match: 63.781% (nonmatchings/updateRacePlayerSurfaceContact-731940616440357983/base_1.c)
+// updateRacePlayerSurfaceContact best match: 70.558% (nonmatchings/updateRacePlayerSurfaceContact-2870645799593382959/base_1.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_movement/updateRacePlayerSurfaceContact.s")
 
 // updateRacePlayerGroundAlignment best match: 84.154% (nonmatchings/updateRacePlayerGroundAlignment-8331816093655448999/base_9.c)
