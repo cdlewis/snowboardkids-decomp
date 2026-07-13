@@ -1330,183 +1330,123 @@ void drawCourseDetailsMenu(ShopMenuWidgetActor *arg0) {
     }
 }
 
-// updateCourseDetailsMenu best match: 87.486% (nonmatchings/updateCourseDetailsMenu-2870645799593382959/base_11.c)
+// updateCourseDetailsMenu best match: 98.153% (nonmatchings/updateCourseDetailsMenu/base_1.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/course_select/course_select_shop_ui/updateCourseDetailsMenu.s")
 
 #ifdef NON_MATCHING
 void updateCourseDetailsMenu(ShopMenuWidgetActor *arg0) {
     s32 i;
-    s32 moved;
-    u8 globalState;
+    s32 movingEntryCount;
+    u8 menuState;
     u8 state;
-    ShopMenuWidgetActor *actor;
-    ShopMenuWidgetActor *shifted;
-    s32 target;
-    s32 temp;
-    u16 count;
+    s32 screenState;
+    u16 visibleCount;
 
-    actor = arg0;
-    shifted = arg0;
-    globalState = gCourseDetailsMenuState;
+    enum {
+        COURSE_DETAILS_STATE_REVEAL_LIST = 0,
+        COURSE_DETAILS_STATE_FADE_IN_CURSOR = 1,
+        COURSE_DETAILS_STATE_IDLE = 2,
+        COURSE_DETAILS_STATE_SLIDE_PAGE_OUT = 3,
+        COURSE_DETAILS_STATE_SLIDE_PAGE_IN = 4,
+        COURSE_DETAILS_STATE_EXIT = 5,
+        COURSE_DETAILS_STATE_RESET_CURSOR = 6,
+        COURSE_DETAILS_STATE_DONE = 7,
+    };
+
+    menuState = gCourseDetailsMenuState;
     state = arg0->state;
-    if (globalState != state) {
-        state = globalState;
-        arg0->state = globalState;
+    if (menuState != state) {
+        state = menuState;
+        arg0->state = menuState;
     }
 
-    if (((gCurrentGameTask->unk20 == 3) || (gCurrentGameTask->unk20 == 9)) && (state < 5)) {
-        arg0->state = 5;
-        state = 5;
+    screenState = gCurrentGameTask->unk20;
+    if (((screenState == 3) || (screenState == 9)) && (state < COURSE_DETAILS_STATE_EXIT)) {
+        arg0->state = COURSE_DETAILS_STATE_EXIT;
+        state = COURSE_DETAILS_STATE_EXIT;
         arg0->prompt.bytes.pulseAlpha = 0x100;
     }
 
     switch (state) {
-    case 0:
-        moved = 0;
+    case COURSE_DETAILS_STATE_REVEAL_LIST:
+        movingEntryCount = 0;
         for (i = 0; i < (u16)arg0->visibleCount; i++) {
-            if (arg0->randomValues[i] < arg0->targetX) {
-                arg0->randomValues[i] += 0x10;
-                moved++;
-                if (arg0->randomValues[i] >= arg0->targetX) {
-                    arg0->randomValues[i] = arg0->targetX;
+            if (arg0->cursorPositions[i] < arg0->targetX) {
+                arg0->cursorPositions[i] += 0x10;
+                movingEntryCount++;
+                if (arg0->cursorPositions[i] >= arg0->targetX) {
+                    arg0->cursorPositions[i] = arg0->targetX;
                 }
             }
         }
+
         arg0->spawnTimer++;
         if (!(arg0->spawnTimer & 1)) {
-            count = shifted->visibleCount;
-            if ((s32)count < 10) {
-                arg0->visibleCount = count + 1;
+            visibleCount = arg0->visibleCount;
+            if ((s32)visibleCount < 10) {
+                arg0->visibleCount = visibleCount + 1;
                 if ((u16)arg0->visibleCount == 10) {
                     createCallbackTask(initCourseDetailsPreviewTile, 0, 0x63);
                 }
             }
         }
-        if (moved == 0) {
-            arg0->state = 1;
+        if (movingEntryCount == 0) {
+            arg0->state = COURSE_DETAILS_STATE_FADE_IN_CURSOR;
         }
         state = arg0->state;
         break;
-    case 1:
+    case COURSE_DETAILS_STATE_FADE_IN_CURSOR:
         arg0->prompt.bytes.pulseAlpha += 0x26;
         if (arg0->prompt.bytes.pulseAlpha >= 0x100) {
             arg0->prompt.bytes.pulseAlpha = 0x100;
-            arg0->state = 2;
+            arg0->state = COURSE_DETAILS_STATE_IDLE;
         }
         state = arg0->state;
         break;
-    case 3:
-        actor = arg0;
-        i = 3;
-        actor->randomValues[0] -= 0x20;
-        if (actor->randomValues[0] < -0x117) {
-            actor->randomValues[0] = -0x118;
+    case COURSE_DETAILS_STATE_SLIDE_PAGE_OUT:
+        for (i = 0; i < 7; i++) {
+            arg0->cursorPositions[i] -= 0x20;
+            if (arg0->cursorPositions[i] < -0x117) {
+                arg0->cursorPositions[i] = -0x118;
+            }
         }
-        actor->randomValues[1] -= 0x20;
-        shifted = (ShopMenuWidgetActor *)((s16 *)arg0 + i);
-        if (actor->randomValues[1] < -0x117) {
-            actor->randomValues[1] = -0x118;
-        }
-        actor->randomValues[2] -= 0x20;
-        if (actor->randomValues[2] < -0x117) {
-            actor->randomValues[2] = -0x118;
-        }
-        shifted->randomValues[0] -= 0x20;
-        if (shifted->randomValues[0] < -0x117) {
-            shifted->randomValues[0] = -0x118;
-        }
-        shifted->randomValues[1] -= 0x20;
-        if (shifted->randomValues[1] < -0x117) {
-            shifted->randomValues[1] = -0x118;
-        }
-        shifted->randomValues[2] -= 0x20;
-        if (shifted->randomValues[2] < -0x117) {
-            shifted->randomValues[2] = -0x118;
-        }
-        shifted->randomValues[3] -= 0x20;
-        if (shifted->randomValues[3] < -0x117) {
-            shifted->randomValues[3] = -0x118;
-        }
-        if (actor->randomValues[0] == -0x118) {
-            arg0->state = 4;
+        if (arg0->cursorPositions[0] == -0x118) {
+            arg0->state = COURSE_DETAILS_STATE_SLIDE_PAGE_IN;
             gCourseDetailsPreviewPage = (gCourseDetailsPreviewPage + 1) % 2;
         }
         state = arg0->state;
         break;
-    case 4:
-        actor = arg0;
-        i = 3;
-        target = arg0->targetX;
-        actor->randomValues[0] += 0x20;
-        if (actor->randomValues[0] >= target) {
-            actor->randomValues[0] = target;
+    case COURSE_DETAILS_STATE_SLIDE_PAGE_IN:
+        for (i = 0; i < 7; i++) {
+            arg0->cursorPositions[i] += 0x20;
+            if (arg0->cursorPositions[i] >= arg0->targetX) {
+                arg0->cursorPositions[i] = arg0->targetX;
+            }
         }
-        actor->randomValues[1] += 0x20;
-        target = arg0->targetX;
-        shifted = (ShopMenuWidgetActor *)((s16 *)arg0 + i);
-        if (actor->randomValues[1] >= target) {
-            actor->randomValues[1] = target;
-        }
-        actor->randomValues[2] += 0x20;
-        target = arg0->targetX;
-        if (actor->randomValues[2] >= target) {
-            actor->randomValues[2] = target;
-        }
-        shifted->randomValues[0] += 0x20;
-        target = arg0->targetX;
-        if (shifted->randomValues[0] >= target) {
-            shifted->randomValues[0] = target;
-        }
-        shifted->randomValues[1] += 0x20;
-        target = arg0->targetX;
-        if (shifted->randomValues[1] >= target) {
-            shifted->randomValues[1] = target;
-        }
-        shifted->randomValues[2] += 0x20;
-        target = arg0->targetX;
-        if (shifted->randomValues[2] >= target) {
-            shifted->randomValues[2] = target;
-        }
-        shifted->randomValues[3] += 0x20;
-        target = arg0->targetX;
-        if (shifted->randomValues[3] >= target) {
-            shifted->randomValues[3] = target;
-        }
-        if (arg0->targetX == actor->randomValues[0]) {
-            arg0->state = 2;
+        if (arg0->targetX == arg0->cursorPositions[0]) {
+            arg0->state = COURSE_DETAILS_STATE_IDLE;
         }
         state = arg0->state;
         break;
-    case 5:
-        temp = arg0->randomValues[0] - 0x20;
-        arg0->randomValues[1] -= 0x20;
-        arg0->randomValues[0] = temp;
-        shifted = (ShopMenuWidgetActor *)((char *)arg0 + 4);
-        i = 2;
-        do {
-            shifted->randomValues[3] -= 0x20;
-            shifted->randomValues[2] -= 0x20;
-            shifted->randomValues[1] -= 0x20;
-            temp = shifted->randomValues[0] - 0x20;
-            i += 4;
-            shifted = (ShopMenuWidgetActor *)((char *)shifted + 8);
-            shifted->randomValues[-4] = temp;
-        } while (i != 10);
-        if (arg0->randomValues[0] < -0x117) {
-            arg0->state = 7;
+    case COURSE_DETAILS_STATE_EXIT:
+        for (i = 0; i < 10; i++) {
+            arg0->cursorPositions[i] -= 0x20;
+        }
+        if (arg0->cursorPositions[0] < -0x117) {
+            arg0->state = COURSE_DETAILS_STATE_DONE;
         }
         state = arg0->state;
         break;
-    case 6:
+    case COURSE_DETAILS_STATE_RESET_CURSOR:
         arg0->prompt.bytes.pulseAlpha = 0x100;
         arg0->prompt.bytes.pulseTimer = 0;
         state = arg0->state;
         break;
-    case 7:
+    case COURSE_DETAILS_STATE_DONE:
         break;
     }
 
-    if ((state >= 2) && (state < 5)) {
+    if ((state >= COURSE_DETAILS_STATE_IDLE) && (state < COURSE_DETAILS_STATE_EXIT)) {
         if ((s32)(u16)arg0->prompt.bytes.pulseTimer < 0x10) {
             arg0->prompt.bytes.pulseAlpha -= 9;
         } else {
@@ -1517,11 +1457,11 @@ void updateCourseDetailsMenu(ShopMenuWidgetActor *arg0) {
     }
 
     gCourseDetailsMenuState = state;
-    if (arg0->state == 7) {
+    if (arg0->state == COURSE_DETAILS_STATE_DONE) {
         removeCallbackTask((CallbackTask *)arg0);
         return;
     }
-    addRenderCallback(&gMenuRenderCallbackList, drawCourseDetailsMenu, actor);
+    addRenderCallback(&gMenuRenderCallbackList, drawCourseDetailsMenu, arg0);
 }
 #endif
 
