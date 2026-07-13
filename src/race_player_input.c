@@ -220,7 +220,7 @@ void recordRaceInputHistoryFrame(RaceInputPlayer *player) {
     history->lastWriteIndex = index;
 }
 
-// playRaceInputHistoryFrame best match: 98.763% (base_9.c)
+// playRaceInputHistoryFrame best match: 99.178% (base_4.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_player_input/playRaceInputHistoryFrame.s")
 
 #ifdef NON_MATCHING
@@ -282,6 +282,8 @@ dummy_label:
             player->inputFlags |= 0x4000;
             buttons = history->buttons[history->writeIndex];
         }
+        player++;
+        player--;
         if (buttons & 0x40) {
             player->inputFlags |= 0x2000;
         }
