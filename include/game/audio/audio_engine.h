@@ -139,7 +139,7 @@ typedef struct PlayerCommandState {
     u8 returnUnk109[5];
     u8 returnUnk10E[5];
     u8 returnUnk113[5];
-    s8 unk118;
+    s8 pitchOffset;
     s8 unk119;
     s8 unk11A;
     u8 pad11B;
@@ -336,7 +336,7 @@ s32 soundPlayerCommandClearJumpTable(PlayerCommandState *arg0, s32 arg1);
 s32 soundPlayerCommandNoOp(s32 arg0, s32 arg1);
 s32 soundPlayerCommandJumpRelative(PlayerCommandState *arg0, u8 *arg1);
 s32 soundPlayerCommandSetFxMix(PlayerCommandState *arg0, u8 *arg1);
-s32 soundPlayerCommandRandomizePitchOffset(void *arg0, u8 *arg1);
+s32 soundPlayerCommandRandomizePitchOffset(PlayerCommandState *arg0, u8 *arg1);
 s32 soundPlayerCommandRandomizeVolume(PlayerCommandState *arg0, u8 *arg1);
 s32 soundPlayerCommandRandomizePan(PlayerCommandState *arg0, u8 *arg1);
 s32 soundPlayerCommandSetVolume(PlayerCommandState *arg0, u8 *arg1);
