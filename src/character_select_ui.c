@@ -669,7 +669,7 @@ state_6_done:
 }
 #endif
 
-// func_8001D254 best match: 52.632% (nonmatchings/func_8001D254-786318006044585456/base_3.c)
+// func_8001D254 best match: 74.868% (not yet matching)
 #pragma GLOBAL_ASM("asm/nonmatchings/character_select_ui/func_8001D254.s")
 
 #ifdef NON_MATCHING
@@ -690,27 +690,28 @@ void func_8001D254(CharacterSelectMenuFrameActor *arg0) {
     arg0->baseY = temp_t6;
     temp_t8 = arg0->baseY;
     temp_t9 = arg0->baseY;
-    arg0->itemSpacing = temp_t7;
-    temp_t0 = temp_t7;
-    temp_t3 = temp_t7;
-    temp_t7 = temp_t7;
-    arg0->y[0] = temp_t8;
-    temp_t2 = arg0->baseY;
-    temp_t6 = arg0->baseY;
-    temp_t8 = temp_t7 << 2;
-    temp_v1 = -0x104;
-    temp_t0 = temp_t9 + temp_t0;
-    temp_t8 -= temp_t7;
-    temp_t4 = temp_t3 << 1;
-    temp_t3 = 1;
-    temp_t5 = temp_t2 + temp_t4;
-    temp_t9 = temp_t6 + temp_t8;
-    arg0->y[3] = temp_t9;
-    arg0->y[2] = temp_t5;
-    arg0->y[1] = temp_t0;
-    arg0->x[1] = temp_v1;
-    arg0->x[2] = temp_v1;
-    arg0->x[3] = temp_v1;
+    if (1) {
+        temp_t7 = (temp_t3 = (temp_t0 = (arg0->itemSpacing = temp_t7)));
+    }
+    do {
+        arg0->y[0] = temp_t8;
+        temp_t2 = arg0->baseY;
+        temp_t6 = arg0->baseY;
+        temp_t8 = temp_t7 << 2;
+        temp_v1 = -0x104;
+        temp_t0 = temp_t9 + temp_t0;
+        temp_t8 -= temp_t7;
+        temp_t4 = temp_t3 << 1;
+        temp_t3 = 1;
+        temp_t5 = temp_t2 + temp_t4;
+        temp_t9 = temp_t6 + temp_t8;
+        arg0->y[3] = temp_t9;
+        arg0->y[2] = temp_t5;
+        arg0->y[1] = temp_t0;
+        arg0->x[1] = temp_v1;
+        arg0->x[2] = temp_v1;
+        arg0->x[3] = temp_v1;
+    } while (0);
     arg0->x[0] = temp_v1;
     arg0->timer = 0;
     arg0->itemCount = temp_t3;
