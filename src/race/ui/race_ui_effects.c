@@ -228,13 +228,16 @@ typedef struct RaceUiProjectileActor {
     /* 0x12 */ u8 pad12[0x18 - 0x12];
     /* 0x18 */ Vec3i pos;
     /* 0x24 */ Vec3i velocity;
-    /* 0x30 */ u8 pad30[0x36 - 0x30];
+    /* 0x30 */ u16 *animationScript;
+    /* 0x34 */ s16 frameTimer;
     /* 0x36 */ s16 flags;
     /* 0x38 */ RaceUiGfxCommandDest *matrix;
-    /* 0x3C */ u8 pad3C[4];
+    /* 0x3C */ s16 unk3C;
+    /* 0x3E */ u8 pad3E[2];
     /* 0x40 */ void *palette;
     /* 0x44 */ void *image;
-    /* 0x48 */ u8 pad48[0x50 - 0x48];
+    /* 0x48 */ u8 pad48[4];
+    /* 0x4C */ s32 unk4C;
     /* 0x50 */ s32 verticalVelocity;
     /* 0x54 */ s32 verticalAcceleration;
     /* 0x58 */ u8 matrixDirty;
@@ -4946,25 +4949,25 @@ void initRaceCourseRankModel(RaceUiRankParticleActor *actor) {
     setCallbackTaskCallback(actor, updateRaceCourseRankModel);
 }
 
-void func_800643B4(void *arg0, u16 *arg1) {
-    *(u16 **)((u8 *)arg0 + 0x30) = arg1;
-    *(s16 *)((u8 *)arg0 + 0x34) = arg1[0];
-    *(s16 *)((u8 *)arg0 + 0x36) = arg1[1];
-    getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gRaceItemSpriteAssetHandle), arg1[2], (u8 *)arg0 + 0x44, (u8 *)arg0 + 0x40);
+void func_800643B4(RaceUiProjectileActor *arg0, u16 *arg1) {
+    arg0->animationScript = arg1;
+    arg0->frameTimer = arg1[0];
+    arg0->flags = arg1[1];
+    getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gRaceItemSpriteAssetHandle), arg1[2], &arg0->image, &arg0->palette);
 }
 
-s32 func_80064414(void *arg0) {
+s32 func_80064414(RaceUiProjectileActor *arg0) {
     s16 temp_v0;
 
-    temp_v0 = *(s16 *)((u8 *)arg0 + 0x34);
+    temp_v0 = arg0->frameTimer;
     if (!(temp_v0 & 0x7FFF)) {
         if (temp_v0 & 0x8000) {
             return 1;
         }
-        func_800643B4(arg0, *(u16 **)((u8 *)arg0 + 0x30) + 3);
+        func_800643B4(arg0, arg0->animationScript + 3);
         goto block_5;
     }
-    *(s16 *)((u8 *)arg0 + 0x34) = temp_v0 - 1;
+    arg0->frameTimer = temp_v0 - 1;
 block_5:
     return 0;
 }
@@ -5175,16 +5178,16 @@ void func_80064D88(RaceUiProjectileActor *arg0) {
     addRenderCallback(&D_801248C8, func_80064470, actor);
 }
 
-void initForwardActionProjectileEffect(void *arg0) {
-    *(s32 *)((u8 *)arg0 + 0x24) = 0;
-    *(s32 *)((u8 *)arg0 + 0x28) = 0x280000;
-    *(s32 *)((u8 *)arg0 + 0x2C) = 0;
-    *(s16 *)((u8 *)arg0 + 0x3C) = 0;
-    *(s32 *)((u8 *)arg0 + 0x4C) = 0;
-    *(s32 *)((u8 *)arg0 + 0x50) = 0x300000;
-    *(s32 *)((u8 *)arg0 + 0x54) = 0;
+void initForwardActionProjectileEffect(RaceUiProjectileActor *arg0) {
+    arg0->velocity.x = 0;
+    arg0->velocity.y = 0x280000;
+    arg0->velocity.z = 0;
+    arg0->unk3C = 0;
+    arg0->unk4C = 0;
+    arg0->verticalVelocity = 0x300000;
+    arg0->verticalAcceleration = 0;
     func_800643B4(arg0, D_800D6520);
-    enqueuePositionalSoundEffect(0x66, &gRacePlayers[*(u16 *)((u8 *)arg0 + 0x10)].pos28, 0x7F, 0x32);
+    enqueuePositionalSoundEffect(0x66, &gRacePlayers[arg0->index].pos28, 0x7F, 0x32);
     setCallbackTaskCallback(arg0, func_80064D88);
 }
 
