@@ -10,28 +10,17 @@
 #include "race_item_effects.h"
 #include "race_course_props_and_pickups.h"
 #include "race_ui_effects.h"
-
-#define COURSE_PLAYER_COUNT 4
-#define COURSE_PLAYER_STRIDE 0x60C
+#include "race_player_input.h"
 
 typedef struct {
     /* 0x0 */ u8 *start;
     /* 0x4 */ u8 *end;
 } RomAssetRange;
 
-typedef struct {
-    /* 0x00 */ u8 pad0[0x10];
-    /* 0x10 */ u8 characterId;
-    /* 0x11 */ u8 pad11[2];
-    /* 0x13 */ s8 isActive;
-    /* 0x14 */ u8 pad14[COURSE_PLAYER_STRIDE - 0x14];
-} RaceScenePlayer;
-
 extern s16 gAssetHandles[];
 extern s16 gRaceCourseModelAssetHandle;
 extern s16 gRaceRspSegment2AssetHandle;
 extern u16 gRaceCourseIndex;
-extern RaceScenePlayer gRacePlayers[];
 extern RomAssetRange gCharacterRawAssetRanges[];
 extern RomAssetRange gCharacterTextureAssetRanges[];
 extern RomAssetRange gCharacterModelAssetRanges[];
@@ -223,7 +212,7 @@ void loadRaceCourseAssets(void) {
 // loadRaceCharacterAssets best match: 99.231% at nonmatchings/loadRaceCharacterAssets-8331816093655448999/base_6.c.
 #ifdef NON_MATCHING
 void loadRaceCharacterAssets(void) {
-    RaceScenePlayer *player;
+    RacePlayer *player;
     RomAssetRange *rawRanges;
     RomAssetRange *textureRanges;
     RomAssetRange *modelRanges;
@@ -240,7 +229,7 @@ void loadRaceCharacterAssets(void) {
     rawRanges = gCharacterRawAssetRanges;
     textureRanges = gCharacterTextureAssetRanges;
     modelRanges = gCharacterModelAssetRanges;
-    for (player = gRacePlayers, i = 0; i != COURSE_PLAYER_COUNT; i++, player++) {
+    for (player = gRacePlayers, i = 0; i != RACE_PLAYER_COUNT; i++, player++) {
         assetHandles = &gAssetHandles[i];
         if (player->isActive != 0) {
             size = rawRanges[player->characterId].end - rawRanges[player->characterId].start;

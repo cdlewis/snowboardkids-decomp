@@ -5501,7 +5501,7 @@ void updateRacePlayersPostUpdate(void) {
     }
 
     if (gRacePlayerCount > 0) {
-        player = gRacePlayers; soundPos = (RacePlayerSoundPosition *)&gRacePlayers[0].pos; nextSoundPos = (RacePlayerSoundPosition *)&gRacePlayers[0].unk2C; do {
+        player = gRacePlayers; soundPos = (RacePlayerSoundPosition *)&gRacePlayers[0].pos; nextSoundPos = (RacePlayerSoundPosition *)&gRacePlayers[0].unk28.y; do {
             if (player->soundDisabled == 0) {
                 enqueuePlayerLoopingPositionalSoundRequest(player->unk584, &soundPos->pos, player->unk582, 0x46, player->unk588, i);
             } else {
@@ -5509,7 +5509,7 @@ void updateRacePlayersPostUpdate(void) {
             }
 
             nextSoundPos->pos = soundPos->pos;
-            player->unk2C = player->unk64 + player->unk2C - player->unk58 + 0xA000;
+            player->unk28.y = player->unk64 + player->unk28.y - player->unk58 + 0xA000;
             if (player->soundDisabled == 0) {
                 addRenderCallback(&D_801248C8, (void (*)(void *))drawRacePlayerModel, (RacePlayerModelRenderState *)player);
                 addRenderCallback(&D_801248EC, (void (*)(void *))drawRacePlayerGroundShadow, (RacePlayerModelRenderState *)player);

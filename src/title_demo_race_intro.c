@@ -9,25 +9,10 @@
 #include "race_player_update.h"
 #include "race_hud.h"
 #include "viewport_manager.h"
+#include "race_player_input.h"
 #include "menu_screen_effects.h"
 
-typedef struct {
-    /* 0x000 */ s16 playerIndex;
-    /* 0x002 */ char pad2[2];
-    /* 0x004 */ u8 unk4;
-    /* 0x005 */ char pad5[0xB];
-    /* 0x010 */ u8 characterId;
-    /* 0x011 */ u8 unk11;
-    /* 0x012 */ u8 unk12;
-    /* 0x013 */ s8 isActive;
-    /* 0x014 */ s8 soundDisabled;
-    /* 0x015 */ s8 unk15;
-    /* 0x016 */ s8 replayInputSource;
-    /* 0x017 */ char pad17[0x5F5];
-} RaceIntroPlayer;
-
 extern RaceIntroTransitionState *gCurrentGameTask;
-extern RaceIntroPlayer gRacePlayers[];
 extern s16 gMenuFadeAlpha;
 extern s8 gMenuFadeOverlayActive;
 extern f32 D_800E10C8;
@@ -69,7 +54,7 @@ extern void releaseMenuAssetHandles(void);
 
 #ifdef NON_MATCHING
 void initTitleDemoRaceIntro(void) {
-    RaceIntroPlayer *players;
+    RacePlayer *players;
     register s32 one = 1;
     s32 active = 1;
     s32 two = 2;
