@@ -1454,49 +1454,50 @@ void drawMenuGlyph(s16 x, s16 y, u16 glyph, u8 palette, u16 scale, u16 fontBank)
 }
 #endif
 
-void drawMenuColoredGlyphScript(volatile s16 x, s16 y, u16 *script, s32 palette, u16 scale, u16 red, u16 blue) {
-    u16 first;
-    s32 code;
-    u16 *ptr;
-    s32 xPos;
-    u16 xStep;
-    s32 yPos;
-    s32 skip;
+void drawMenuColoredGlyphScript(volatile s16 x, s16 y, MenuGlyphScript *script, s32 palette, u16 scale, u16 colorMode, u16 fontBank) {
+    u16 firstGlyph;
+    s32 glyphCode;
+    MenuGlyphScript *scriptCursor;
+    s32 drawX;
+    u16 glyphAdvance;
+    s32 drawY;
+    s32 spaceGlyph;
     register s32 advance;
     u16 scaleValue;
-    u16 redValue;
-    u16 blueValue;
+    u16 colorModeValue;
+    u16 fontBankValue;
 
-    xPos = x;
-    yPos = y;
+    drawX = x;
+    drawY = y;
     if (!((u8 *)&palette)[3]) {
-        xStep = 0x10;
+        glyphAdvance = MENU_GLYPH_WIDE_ADVANCE;
     } else {
-        xStep = 8;
+        glyphAdvance = MENU_GLYPH_NARROW_ADVANCE;
     }
 
-    first = *script ^ 0;
-    if (0xFFFF != first) {
-        ptr = script;
+    firstGlyph = *script ^ 0;
+    if (MENU_GLYPH_SCRIPT_END != firstGlyph) {
+        scriptCursor = script;
         scaleValue = scale;
-        code = first;
-        redValue = red;
-        blueValue = blue;
+        glyphCode = firstGlyph;
+        colorModeValue = colorMode;
+        fontBankValue = fontBank;
         do {
-            skip = 0xFFFE;
-            if (0xFFFD == (code & 0xFFFF)) {
-                xPos = x;
-                yPos += 0x10;
+            spaceGlyph = MENU_GLYPH_SCRIPT_SPACE;
+            if (MENU_GLYPH_SCRIPT_NEWLINE == (glyphCode & 0xFFFF)) {
+                drawX = x;
+                drawY += MENU_GLYPH_LINE_HEIGHT;
             } else {
-                advance = xStep;
-                if (skip != (code & 0xFFFF)) {
-                    drawMenuColoredGlyph(xPos, yPos, code & 0xFFFF, ((u8 *)&palette)[3], scaleValue, redValue, blueValue);
+                advance = glyphAdvance;
+                if (spaceGlyph != (glyphCode & 0xFFFF)) {
+                    drawMenuColoredGlyph(drawX, drawY, glyphCode & 0xFFFF, ((u8 *)&palette)[3], scaleValue, colorModeValue,
+                                         fontBankValue);
                 }
-                xPos += advance;
+                drawX += advance;
             }
-            code = ptr[1];
-            ptr++;
-        } while (0xFFFF != (code & 0xFFFF));
+            glyphCode = scriptCursor[1];
+            scriptCursor++;
+        } while (MENU_GLYPH_SCRIPT_END != (glyphCode & 0xFFFF));
     }
 }
 
