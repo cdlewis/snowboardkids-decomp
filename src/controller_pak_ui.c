@@ -32,6 +32,8 @@ extern ControllerPakPromptTransition gControllerPakContinuePromptTransition;
 extern ControllerPakRumbleCheckPromptTransition gControllerPakRumbleCheckPromptTransition;
 extern ControllerPakMenuState gControllerPakMenuState;
 extern s16 gAssetHandles[];
+extern u8 gPlayerCount;
+extern u8 gRumblePakConnectedByController[];
 extern u8 gControllerPakRumbleCheckPromptState;
 extern u8 gControllerPakRumbleCheckPromptConfirmSelection;
 extern u8 gControllerPakMenuConfirmChoice;
@@ -45,6 +47,10 @@ extern s16 D_80112178;
 extern u8 gControllerPakContinuePromptText[];
 extern u8 gControllerPakAreYouSureText[];
 extern u8 gControllerPakCouldNotEraseNoteText[];
+extern u8 gControllerPakRumbleCheckPromptText[];
+extern u8 gControllerPakRumbleCheckNotUsedText[];
+extern u8 gControllerPakRumbleCheckNoEntryText[];
+extern u8 gControllerPakRumblePakText[];
 
 void drawControllerPakContinuePrompt(ControllerPakOptionsActor *arg0) {
     s32 i;
@@ -152,29 +158,14 @@ void initControllerPakContinuePrompt(ControllerPakOptionsActor *arg0) {
     setCallbackTaskCallback(arg0, updateControllerPakContinuePrompt);
 }
 
-// drawControllerPakRumbleCheckPrompt best match: 99.978% (nonmatchings/drawControllerPakRumbleCheckPrompt-8331816093655448999/base_5.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/controller_pak_ui/drawControllerPakRumbleCheckPrompt.s")
-
-#ifdef NON_MATCHING
-extern u8 gPlayerCount;
-extern u8 gRumblePakConnectedByController[];
-extern u8 gControllerPakRumbleCheckPromptText[];
-extern u8 gControllerPakRumbleCheckNotUsedText[];
-extern u8 gControllerPakRumbleCheckNoEntryText[];
-extern u8 gControllerPakRumblePakText[];
-
-void drawControllerPakRumbleCheckPrompt(ControllerPakRumbleCheckPromptActor *arg0) {
-    register ControllerPakRumbleCheckPromptActor *actor;
+void drawControllerPakRumbleCheckPrompt(ControllerPakRumbleCheckPromptActor *actor) {
     s32 i;
     s32 j;
     s32 playerIndex;
-    s32 playerY;
     s32 yAdjust;
     s32 alpha;
     u16 playerNumberText[5];
     u8 *message;
-
-    actor = arg0;
 
     if (actor->state == 8) {
         yAdjust = 8;
@@ -187,42 +178,33 @@ void drawControllerPakRumbleCheckPrompt(ControllerPakRumbleCheckPromptActor *arg
     drawMenuSpriteWithAlpha((s16)(actor->common.x + 0xD4), (s16)(actor->common.y - yAdjust - 4), getRelocatableHeapBlockBase(gAssetHandles[0x29]),
                   4, 0x20, 0x20, 0, actor->scale, 0);
 
-    i = 0;
-    do {
+    for (i = 0; i < 0xE0; i += 0x10) {
         drawMenuSpriteWithAlpha((s16)(actor->common.x + i), (s16)(actor->common.y - yAdjust - 4), getRelocatableHeapBlockBase(gAssetHandles[0x29]),
                       3, 0x20, 0x20, 0, actor->scale, 0);
         drawMenuSpriteWithAlpha((s16)(actor->common.x + i), (s16)(actor->common.y + yAdjust + 0x24), getRelocatableHeapBlockBase(gAssetHandles[0x29]),
                       8, 0x20, 0x20, 0, actor->scale, 0);
-        i += 0x10;
-    } while (i < 0xE0);
+    }
 
     drawMenuSpriteWithAlpha((s16)(actor->common.x - 4), (s16)(actor->common.y + yAdjust + 0x24), getRelocatableHeapBlockBase(gAssetHandles[0x29]),
                   7, 0x20, 0x20, 0, actor->scale, 0);
     drawMenuSpriteWithAlpha((s16)(actor->common.x + 0xD4), (s16)(actor->common.y + yAdjust + 0x24), getRelocatableHeapBlockBase(gAssetHandles[0x29]),
                   9, 0x20, 0x20, 0, actor->scale, 0);
 
-    i = 0;
-    do {
+    for (i = 0; i < 0x30; i += 0x10) {
         drawMenuSpriteWithAlpha((s16)(actor->common.x - 4), (s16)(actor->common.y + i), getRelocatableHeapBlockBase(gAssetHandles[0x29]), 5, 0x20,
                       0x20, 0, actor->scale, 0);
         drawMenuSpriteWithAlpha((s16)(actor->common.x + 0xD4), (s16)(actor->common.y + i), getRelocatableHeapBlockBase(gAssetHandles[0x29]), 6, 0x20,
                       0x20, 0, actor->scale, 0);
-        j = 0;
-        do {
+        for (j = 0; j < 0xE0; j += 0x10) {
             drawMenuSpriteWithAlpha((s16)(actor->common.x + j), (s16)(actor->common.y + i), getRelocatableHeapBlockBase(gAssetHandles[0x29]), 0xB,
                           0x20, 0x20, 0, actor->scale, 0);
-            j += 0x10;
-            // IDO register allocation nudge for matching codegen.
             if (((!actor) && (!actor)) && (!actor)) {
             }
-        } while (j != 0xE0);
-        i += 0x10;
-    } while (i < 0x30);
+        }
+    }
 
     if (actor->state == 8) {
-        playerIndex = 0;
-        playerY = 0;
-        do {
+        for (playerIndex = 0; playerIndex < 4; playerIndex++) {
             playerNumberText[0] = -4;
             playerNumberText[1] = 7;
             playerNumberText[2] = playerIndex + 1;
@@ -239,13 +221,11 @@ void drawControllerPakRumbleCheckPrompt(ControllerPakRumbleCheckPromptActor *arg
                 message = gControllerPakRumbleCheckNoEntryText;
                 alpha = 0x60;
             }
-            drawMenuGlyphScript((s16)(actor->common.x + 0x10), (s16)(actor->common.y - yAdjust + playerY),
+            drawMenuGlyphScript((s16)(actor->common.x + 0x10), (s16)(actor->common.y - yAdjust + playerIndex * 0x10),
                           (u8 *)playerNumberText, 0, alpha, 0);
-            drawMenuGlyphScript((s16)(actor->common.x + 0x40), (s16)(actor->common.y - yAdjust + playerY), message, 0, alpha,
+            drawMenuGlyphScript((s16)(actor->common.x + 0x40), (s16)(actor->common.y - yAdjust + playerIndex * 0x10), message, 0, alpha,
                           0);
-            playerIndex++;
-            playerY = playerY + 0x10;
-        } while (playerIndex != 4);
+        }
     } else {
         drawMenuGlyphScript(actor->common.x, actor->common.y, &gControllerPakRumbleCheckPromptText[(u16)actor->targetScale * 0x68], 0, actor->scale, 0);
     }
@@ -264,8 +244,6 @@ void drawControllerPakRumbleCheckPrompt(ControllerPakRumbleCheckPromptActor *arg
         drawMenuSpriteWithAlpha((s16)(actor->common.x + 0x4C),
                       (s16)(actor->common.y + (gControllerPakRumbleCheckPromptTransition.confirmSelection * 0x10) + 0x10),
                       getRelocatableHeapBlockBase(gAssetHandles[0x21]), 0x12, 0x20, 0x20, 0, actor->optionScale, 0);
-        if (1) {
-        }
     }
 
     if ((actor->state == 1) || (actor->state == 3) || (actor->state == 8)) {
@@ -273,7 +251,6 @@ void drawControllerPakRumbleCheckPrompt(ControllerPakRumbleCheckPromptActor *arg
                       ((actor->timer >= 8) + 5) & 0xFFFF, 0x20, 0x20, 0, 0);
     }
 }
-#endif
 
 void updateControllerPakRumbleCheckPrompt(ControllerPakRumbleCheckPromptActor *arg0) {
     u8 state;
