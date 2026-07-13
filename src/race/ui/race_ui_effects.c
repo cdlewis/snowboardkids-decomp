@@ -3271,18 +3271,18 @@ void initRaceUiTrickPrizePayout(RaceUiCourseStatsActor *arg0) {
     setCallbackTaskCallback(arg0, updateRaceUiTrickPrizePayoutFadeIn);
 }
 
-void func_8005E5B4(void *arg0) {
+void drawRaceUiResultAwardBadge(CallbackTask *task) {
     drawAssetTableSprite(-0x68, -0x2C, getRelocatableHeapBlockBase(gRaceUiSpriteAssetHandle), 0x4D);
     drawAssetTableSprite(-0x42, -0xC, getRelocatableHeapBlockBase(gRaceUiSpriteAssetHandle), D_80122289 & 0xFFFF);
     drawAssetTableSprite(-0x22, 4, getRelocatableHeapBlockBase(gRaceUiSpriteAssetHandle), (D_80122289 + 0x48) & 0xFFFF);
     drawAssetTableSprite(-0x68, 6, getRelocatableHeapBlockBase(gRaceUiSpriteAssetHandle), (D_80121D90[0].placement + 0x91) & 0xFFFF);
 }
 
-void func_8005E68C(void *arg0) {
-    if (*(u16 *)((u8 *)arg0 + 0x10) != 0) {
-        *(s16 *)((u8 *)arg0 + 0x10) = *(u16 *)((u8 *)arg0 + 0x10) - 1;
+void updateRaceUiResultAwardBadgeDelay(CallbackTask *task) {
+    if ((u16)task->userId != 0) {
+        task->userId = (u16)task->userId - 1;
     } else {
-        addRenderCallback(&gMenuRenderCallbackList, func_8005E5B4, (s32)arg0);
+        addRenderCallback(&gMenuRenderCallbackList, drawRaceUiResultAwardBadge, (s32)task);
     }
 }
 
