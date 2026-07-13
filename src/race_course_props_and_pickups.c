@@ -868,16 +868,16 @@ void updateRacePickupCollected(RacePickupActor *arg0) {
     addRenderCallback(&gEffectRenderCallbackList, renderRacePickupBase, arg0);
 }
 
-// updateRacePickupIdle best match: 99.901%
+// updateRacePickupIdle best match: 99.950% (base_3.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race_course_props_and_pickups/updateRacePickupIdle.s")
 
 #ifdef NON_MATCHING
 void updateRacePickupIdle(RacePickupActor *arg0) {
     RaceInputPlayer *player;
     Vec3i *pos;
-    s32 found;
     s32 i;
     s32 maxPlayers;
+    s32 found;
 
     if (gRaceUpdatePaused == 0) {
         found = 0;
