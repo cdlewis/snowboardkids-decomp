@@ -30,6 +30,9 @@ extern void *createCallbackTaskWithUserIdPreservingArgs(void *, s32, s32);
 #define RACE_UI_RESULTS_FADE_STEP 0x10
 #define RACE_UI_RESULTS_FULL_ALPHA 0xFF
 #define RACE_UI_RESULTS_REVEAL_TIMER 0x14
+#define RACE_UI_HIT_PRIZE_SCORE_RATE 0x12C
+#define RACE_UI_HIT_PRIZE_QUICKSAND_VALLEY_SCORE_RATE 0x64
+#define RACE_UI_HIT_PRIZE_PERFECT_HIT_BONUS 0x3E8
 #define SCALE_MATRIX_COMPONENT(value, scale) ((value * scale) / 0x1000)
 #define RACE_UI_SP_TRIANGLE_WORD(v0, v1, v2) (_SHIFTL((v0) * 2, 16, 8) | _SHIFTL((v1) * 2, 8, 8) | _SHIFTL((v2) * 2, 0, 8))
 #define RACE_UI_SP_QUADRANGLE_WORD0(v0, v1, v2, v3, flag) \
@@ -175,10 +178,22 @@ typedef struct RaceUiCounterActor {
     /* 0x18 */ s16 alpha;
     /* 0x1A */ s16 timer;
     /* 0x1C */ s16 state;
-    /* 0x1E */ s16 value;
-    /* 0x20 */ s16 bonus;
-    /* 0x22 */ s16 target;
-    /* 0x24 */ s16 flag;
+    union {
+        /* 0x1E */ s16 value;
+        /* 0x1E */ s16 pendingHitPrize;
+    };
+    union {
+        /* 0x20 */ s16 bonus;
+        /* 0x20 */ s16 pendingPerfectHitBonus;
+    };
+    union {
+        /* 0x22 */ s16 target;
+        /* 0x22 */ s16 pendingCompleteBonus;
+    };
+    union {
+        /* 0x24 */ s16 flag;
+        /* 0x24 */ s16 hasPerfectHitBonus;
+    };
 } RaceUiCounterActor;
 
 typedef struct RaceUiDualCounterActor {
@@ -2265,21 +2280,21 @@ void updateRaceUiHitPrizeFadeIn(RaceUiCounterActor *arg0) {
     addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005AC44, arg0);
 }
 
-void func_8005B834(void *arg0) {
-    *(s16 *)((u8 *)arg0 + 0x18) = 0;
-    *(s16 *)((u8 *)arg0 + 0x24) = 0;
-    *(s16 *)((u8 *)arg0 + 0x20) = 0;
-    *(s16 *)((u8 *)arg0 + 0x22) = 0x12C;
+void initRaceUiHitPrizePayout(RaceUiCounterActor *arg0) {
+    arg0->alpha = 0;
+    arg0->hasPerfectHitBonus = FALSE;
+    arg0->pendingPerfectHitBonus = 0;
+    arg0->pendingCompleteBonus = RACE_UI_HIT_PRIZE_SCORE_RATE;
     if (gRaceCourseIndex == 9) {
-        *(s16 *)((u8 *)arg0 + 0x22) = 0x64;
+        arg0->pendingCompleteBonus = RACE_UI_HIT_PRIZE_QUICKSAND_VALLEY_SCORE_RATE;
     }
     if (gRaceChallengeFailed != 0) {
-        *(s16 *)((u8 *)arg0 + 0x1E) = gRacePlayers[0].score;
+        arg0->pendingHitPrize = gRacePlayers[0].score;
     } else {
-        *(s16 *)((u8 *)arg0 + 0x1E) = gRacePlayers[0].score * 0x32;
+        arg0->pendingHitPrize = gRacePlayers[0].score * 0x32;
         if (gRacePlayers[0].score == gRacePlayers[0].targetScore) {
-            *(s16 *)((u8 *)arg0 + 0x24) = 1;
-            *(s16 *)((u8 *)arg0 + 0x20) = 0x3E8;
+            arg0->hasPerfectHitBonus = TRUE;
+            arg0->pendingPerfectHitBonus = RACE_UI_HIT_PRIZE_PERFECT_HIT_BONUS;
         }
     }
     setCallbackTaskCallback(arg0, updateRaceUiHitPrizeFadeIn);
