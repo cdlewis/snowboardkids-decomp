@@ -19,6 +19,10 @@
 #define MENU_GLYPH_NARROW_ADVANCE 8
 #define MENU_GLYPH_LINE_HEIGHT 0x10
 #define MENU_GLYPH_DEFAULT_FONT_BANK 0x22
+#define MENU_PALETTE_COLOR_COUNT 0x10
+#define MENU_RGBA5551_ALPHA_BIT 1
+#define MENU_RGBA5551_CHANNEL_MASK 0x1F
+#define MENU_HALF_SCALE_STEP 0x800
 
 typedef struct MenuRenderTask MenuRenderTask;
 typedef struct RenderCallbackNode RenderCallbackNode;
@@ -519,83 +523,84 @@ void drawMenuSpriteWithAlphaClipped(s16 x, s16 y, FontAsset *asset, u16 tileInde
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/renderer/menu_renderer/drawMenuSpriteWithPaletteScale.s")
 
 #ifdef NON_MATCHING
-void drawMenuSpriteWithPaletteScale(s16 x, s16 y, FontAsset *asset, u16 index, s32 alpha) {
+void drawMenuSpriteWithPaletteScale(s16 x, s16 y, FontAsset *asset, u16 index, s32 intensity) {
     FontTexture *texture;
-    u8 *textureBase;
+    u8 *textureEntryBase;
     u8 *paletteBase;
     u16 *srcPalette;
-    u16 *palette;
+    u16 *scaledPalette;
     u16 color;
-    u16 alphaScale;
+    u16 intensityScale;
     s32 i;
-    s32 left;
-    s32 top;
-    s32 right;
-    s32 bottom;
-    s32 minX;
-    s32 minY;
-    s32 maxX;
-    s32 maxY;
-    s32 srcX;
-    s32 srcY;
+    s32 drawLeft;
+    s32 drawTop;
+    s32 drawRight;
+    s32 drawBottom;
+    s32 viewportLeft;
+    s32 viewportTop;
+    s32 viewportRight;
+    s32 viewportBottom;
+    s32 sourceX;
+    s32 sourceY;
     s32 red;
     s32 green;
     s32 blue;
 
-    textureBase = (u8 *)asset + (index * sizeof(FontTexture));
-    texture = (FontTexture *)(textureBase + 8);
-    alphaScale = alpha;
+    textureEntryBase = (u8 *)asset + (index * sizeof(FontTexture));
+    texture = (FontTexture *)(textureEntryBase + sizeof(FontAssetHeader));
+    intensityScale = intensity;
     paletteBase = (u8 *)asset + 8 + (asset->header.entryCount * sizeof(FontTexture));
-    left = x + gMenuViewportCenterX;
-    top = y + gMenuViewportCenterY;
-    right = left + (texture->width >> 1);
-    bottom = top + (texture->height >> 1);
-    srcX = 0;
-    srcY = 0;
+    drawLeft = x + gMenuViewportCenterX;
+    drawTop = y + gMenuViewportCenterY;
+    drawRight = drawLeft + (texture->width >> 1);
+    drawBottom = drawTop + (texture->height >> 1);
+    sourceX = 0;
+    sourceY = 0;
 
-    maxX = gMenuViewportCenterX + (gMenuViewportWidth / 2);
-    minX = gMenuViewportCenterX - (gMenuViewportWidth / 2);
-    if (left < maxX) {
-        maxY = gMenuViewportCenterY + (gMenuViewportHeight / 2);
-        minY = gMenuViewportCenterY - (gMenuViewportHeight / 2);
-        if ((top < maxY) && (right >= minX) && (bottom >= minY)) {
-            if (left < minX) {
-                srcX = minX - left;
-                left = minX;
+    viewportRight = gMenuViewportCenterX + (gMenuViewportWidth / 2);
+    viewportLeft = gMenuViewportCenterX - (gMenuViewportWidth / 2);
+    if (drawLeft < viewportRight) {
+        viewportBottom = gMenuViewportCenterY + (gMenuViewportHeight / 2);
+        viewportTop = gMenuViewportCenterY - (gMenuViewportHeight / 2);
+        if ((drawTop < viewportBottom) && (drawRight >= viewportLeft) && (drawBottom >= viewportTop)) {
+            if (drawLeft < viewportLeft) {
+                sourceX = viewportLeft - drawLeft;
+                drawLeft = viewportLeft;
             }
-            if (top < minY) {
-                srcY = minY - top;
-                top = minY;
+            if (drawTop < viewportTop) {
+                sourceY = viewportTop - drawTop;
+                drawTop = viewportTop;
             }
-            if (right >= maxX) {
-                right = maxX;
+            if (drawRight >= viewportRight) {
+                drawRight = viewportRight;
             }
-            if (bottom >= maxY) {
-                bottom = maxY;
+            if (drawBottom >= viewportBottom) {
+                drawBottom = viewportBottom;
             }
 
             gDPPipeSync(gRegionAllocPtr++);
             FONT_GFX_CMD(gRegionAllocPtr++, 0xBA000C02, 0x3000);
 
             srcPalette = (u16 *)(paletteBase + (texture->paletteIndex * 0x20));
-            palette = allocMenuRenderScratch(0x20);
-            for (i = 0; i != 0x10; i++) {
+            scaledPalette = allocMenuRenderScratch(MENU_PALETTE_COLOR_COUNT * sizeof(u16));
+            for (i = 0; i != MENU_PALETTE_COLOR_COUNT; i++) {
                 color = srcPalette[i];
-                palette[i] = color;
-                if (color & 1) {
-                    red = (((color >> 11) & 0x1F) * alphaScale) / 256;
-                    green = (((color >> 6) & 0x1F) * alphaScale) / 256;
-                    blue = (((color >> 1) & 0x1F) * alphaScale) / 256;
-                    palette[i] = (red << 11) | (green << 6) | (blue << 1) | 1;
+                scaledPalette[i] = color;
+                if (color & MENU_RGBA5551_ALPHA_BIT) {
+                    red = (((color >> 11) & MENU_RGBA5551_CHANNEL_MASK) * intensityScale) / 256;
+                    green = (((color >> 6) & MENU_RGBA5551_CHANNEL_MASK) * intensityScale) / 256;
+                    blue = (((color >> 1) & MENU_RGBA5551_CHANNEL_MASK) * intensityScale) / 256;
+                    scaledPalette[i] = (red << 11) | (green << 6) | (blue << 1) | MENU_RGBA5551_ALPHA_BIT;
                 }
             }
 
-            gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, palette);
+            gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, scaledPalette);
             gDPLoadTextureTile_4b(gRegionAllocPtr++, (u8 *)asset + texture->imageOffset, G_IM_FMT_CI, texture->width,
                                   texture->height, 0, 0, texture->width, texture->height, 0, G_TX_WRAP, G_TX_WRAP, 0, 0,
                                   0, 0);
-            gSPTextureRectangle(gRegionAllocPtr++, left << 2, top << 2, right << 2, bottom << 2, 0,
-                                (srcX << 5) + 0x10, (srcY << 5) + 0x10, 0x800, 0x800);
+            gSPTextureRectangle(gRegionAllocPtr++, drawLeft << 2, drawTop << 2, drawRight << 2, drawBottom << 2, 0,
+                                (sourceX << 5) + 0x10, (sourceY << 5) + 0x10, MENU_HALF_SCALE_STEP,
+                                MENU_HALF_SCALE_STEP);
             gDPPipeSync(gRegionAllocPtr++);
             FONT_GFX_CMD(gRegionAllocPtr++, 0xBA000C02, 0);
             gDPPipeSync(gRegionAllocPtr++);
