@@ -2429,16 +2429,9 @@ void updateRacePlayerMode33AerialTrick(RaceInputPlayer *player) {
     }
 }
 
-// updateRacePlayerMode34AerialTrick best match: 99.760% (nonmatchings/updateRacePlayerMode34AerialTrick-3426750233777855594/base_17.c)
-
-#pragma GLOBAL_ASM("asm/nonmatchings/race_player_update/updateRacePlayerMode34AerialTrick.s")
-
-#ifdef NON_MATCHING
 void updateRacePlayerMode34AerialTrick(RaceInputPlayer *player) {
     s32 yVel;
-    RaceInputPlayer *player2;
-    s32 stateTimer;
-    u32 stateFlags;
+    s32 timer;
 
     if (player->updateState == 0) {
         setRaceMotionAnimation(player, 0x23);
@@ -2450,42 +2443,37 @@ void updateRacePlayerMode34AerialTrick(RaceInputPlayer *player) {
     }
 
     stepRaceMotionAnimationUntilEnd(player);
-    player2 = player;
     updateRacePlayerLeanAngle(player, player->unk254, 0);
-    player->velocity.y -= player->unk264;
-    clampRacePlayerVectorXZSpeed(&player2->velocity, player2);
+    player->unk40.y -= player->unk264;
+    clampRacePlayerVectorXZSpeed(&player->unk40, player);
 
-    yVel = player2->velocity.y;
-    player->posX += player->velocity.x;
-    player->posY += yVel;
-    player2->posZ += player->velocity.z;
-    stateTimer = player2->stateTimer;
-    player->unk6C = stateTimer * 4;
-    player2->unk74 = yVel;
+    yVel = player->unk40.y;
+    player->pos.x += player->unk40.x;
+    player->pos.y += yVel;
+    player->pos.z += player->unk40.z;
+    player->unk6C = player->stateTimer * 4;
+    player->unk74 = yVel;
 
     if (player->stateFlags & 0x400) {
-        player2->unk6E = (fixedSine((s16) stateTimer) * -0x4000) / 0x1000;
+        player->unk6E = (fixedSine((s16)player->stateTimer) * -0x4000) / 0x1000;
     } else {
-        player2->unk6E = (fixedSine((s16) stateTimer) << 14) / 0x1000;
+        player->unk6E = (fixedSine((s16)player->stateTimer) << 0xE) / 0x1000;
     }
 
-    stateTimer = (unsigned long long) (player2->stateTimer + 0x15);
-    player2->stateTimer = stateTimer;
-    if (stateTimer >= 0x401) {
-        player->stateTimer = (stateTimer = 0x400);
-        stateTimer = player2->stateTimer;
+    player->stateTimer += 0x15;
+    if (player->stateTimer >= 0x401) {
+        player->stateTimer = 0x400;
     }
 
-    stateFlags = player->stateFlags | 2;
-    player2->stateFlags = stateFlags;
-    if (stateTimer < 0x3D0) {
-        player2->stateFlags = stateFlags | 0x800;
-        if ((player2->soundDisabled == 0) && (gFrameCounter & 1)) {
-            createCallbackTaskWithUserIdPreservingArgs(initRacePlayerLandingSnowSpray, 5, 2, (u16) player->playerIndex);
+    timer = player->stateTimer;
+    player->stateFlags |= 2;
+    if (timer < 0x3D0) {
+        player->stateFlags |= 0x800;
+        if ((player->soundDisabled == 0) && (gFrameCounter & 1)) {
+            createCallbackTaskWithUserIdPreservingArgs(initRacePlayerLandingSnowSpray, 5, 2, (u16)player->playerIndex);
         }
     }
 }
-#endif
 
 void updateRacePlayerMode44AerialTrick(RaceInputPlayer *player) {
     s32 yVel;
