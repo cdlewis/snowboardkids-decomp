@@ -118,6 +118,20 @@ struct CourseSelectIconListActor {
 };
 
 typedef struct {
+    /* 0x00 */ u8 pad0[0x18];
+    /* 0x18 */ s16 iconX[4][3];
+    /* 0x30 */ s16 iconY[4][3];
+    /* 0x48 */ s16 clipLeft;
+    /* 0x4A */ s16 clipRight;
+    /* 0x4C */ s16 clipTop;
+    /* 0x4E */ s16 clipBottom;
+    /* 0x50 */ u8 rowSpacing[4];
+    /* 0x54 */ u8 pad54[8];
+    /* 0x5C */ u8 itemCounts[4];
+    /* 0x60 */ u16 alpha[4];
+} CourseSelectExtraCourseIconListActor;
+
+typedef struct {
     /* 0x000 */ u8 pad0[0x18];
     /* 0x018 */ s32 matrix;
     /* 0x01C */ FixedTransform sourceTransform;
@@ -2033,28 +2047,64 @@ void updateCourseSelectExtraCourseIconListClose(CourseSelectWidgetActor *arg0) {
 
 #ifdef NON_MATCHING
 void initCourseSelectExtraCourseIconList(CourseSelectWidgetActor *arg0) {
-    s32 new_var3;
-    s32 var_a0;
-    s32 var_t0;
-    s32 var_t5;
-    s32 var_v1;
-    u8 *var_t1;
-    u8 *var_t2;
-    u8 *var_t3;
-    u8 *var_v0;
-    s16 *temp_s1;
-    s16 *temp_ra;
-    s32 temp_s6;
-    s32 temp_s4;
-    CourseSelectWidgetActor *new_var;
-    unsigned int new_var2;
-    s32 temp_s3;
-    s32 temp_s2;
-    s32 temp_a3;
+    CourseSelectExtraCourseIconListActor *actor;
+    s16 *xLayout;
+    s16 *yLayout;
+    s32 layoutIndex;
+    s32 playerIndex;
+    s32 iconIndex;
+    s32 iconX;
+    s32 iconXOffset;
 
-    do {
-        if ((s32)gPlayerCount < 3) { var_t5 = gPlayerCount - 1; } else { var_t5 = 2; do { } while (0); } var_t0 = 0; do { if ((s32)gPlayerCount > 0) { new_var2 = var_t5; temp_ra = gCourseSelectIconListXLayout[new_var2]; temp_s1 = gCourseSelectIconListYLayout[new_var2]; var_t3 = (var_t2 = (var_t1 = (u8 *)arg0)); temp_s6 = 0xC; temp_s4 = 1; temp_s3 = 0x100; temp_s2 = 0xC; new_var3 = new_var2 * temp_s6; temp_a3 = 3; do { var_v1 = 0; if ((s32)gPlayerCount >= 3) { var_t1[0x50] = temp_s2; } else { var_t1[0x50] = *(s16 *)((u8 *)gCourseSelectIconListYLayout + new_var3); if (((arg0 && arg0) && arg0) != 0) { } } var_t1[0x5C] = 0; *(s16 *)(var_t3 + 0x60) = temp_s3; if (gPlayerCount == temp_s4) { var_a0 = 8; } else { var_a0 = 4; } var_v0 = var_t2; loop: var_v1 += 1; *(s16 *)(var_v0 + 0x18) = temp_ra[((var_t0 >= 2) * 2) + 1] + var_a0; var_v0 += 2; *(s16 *)(var_v0 + 0x2E) = temp_s1[((var_t0 & 1) * 2) + 2]; if (var_v1 != temp_a3) { goto loop; } var_t0 = var_t0 + 1; var_t1 += 1; var_t2 += 6; var_t3 += 2; } while (var_t0 < (s32)gPlayerCount); } } while (0); new_var = arg0; new_var->coordinates[0x19] = 0xA0; arg0->coordinates[0x1A] = 0x78; arg0->coordinates[0x1B] = 0x78; if (gPlayerCount == 1) { arg0->coordinates[0x18] = 0xA0; } else if (gPlayerCount == 2) { arg0->coordinates[0x18] = 0x7E; } else { arg0->coordinates[0x18] = 0x88; } setCallbackTaskCallback(arg0, updateCourseSelectExtraCourseIconList);
-    } while (0);
+    actor = (CourseSelectExtraCourseIconListActor *)arg0;
+    if ((s32)gPlayerCount < 3) {
+        layoutIndex = gPlayerCount - 1;
+    } else {
+        layoutIndex = 2;
+    }
+
+    if ((s32)gPlayerCount > 0) {
+        xLayout = gCourseSelectIconListXLayout[layoutIndex];
+        yLayout = gCourseSelectIconListYLayout[layoutIndex];
+        playerIndex = 0;
+        do {
+            if ((s32)gPlayerCount >= 3) {
+                actor->rowSpacing[playerIndex] = 0xC;
+            } else {
+                actor->rowSpacing[playerIndex] = yLayout[0];
+            }
+            actor->itemCounts[playerIndex] = 0;
+            actor->alpha[playerIndex] = 0x100;
+
+            if (gPlayerCount == 1) {
+                iconXOffset = 8;
+            } else {
+                iconXOffset = 4;
+            }
+            iconX = xLayout[((playerIndex >= 2) * 2) + 1] + iconXOffset;
+
+            iconIndex = 0;
+            do {
+                actor->iconX[playerIndex][iconIndex] = iconX;
+                actor->iconY[playerIndex][iconIndex] = yLayout[((playerIndex & 1) * 2) + 2];
+                iconIndex++;
+            } while (iconIndex != 3);
+
+            playerIndex++;
+        } while (playerIndex < (s32)gPlayerCount);
+    }
+
+    actor->clipRight = 0xA0;
+    actor->clipTop = 0x78;
+    actor->clipBottom = 0x78;
+    if (gPlayerCount == 1) {
+        actor->clipLeft = 0xA0;
+    } else if (gPlayerCount == 2) {
+        actor->clipLeft = 0x7E;
+    } else {
+        actor->clipLeft = 0x88;
+    }
+    setCallbackTaskCallback(arg0, updateCourseSelectExtraCourseIconList);
 }
 #endif
 
