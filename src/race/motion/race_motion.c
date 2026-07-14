@@ -1231,20 +1231,20 @@ void loadRaceMotionJointAnimationFrame(RaceMotionState *state) {
 #pragma GLOBAL_ASM("asm/nonmatchings/race/motion/race_motion/interpolateRaceMotionAnimationFrame.s")
 
 #ifdef NON_MATCHING
-extern volatile s32 gRaceMotionRotationFrameBuffer[];
-extern s32 gRaceMotionJointFrameBuffer[];
-extern s32 gRacePlayerHitCueId;
+#define RACE_MOTION_JOINT_COUNT 12
+#define RACE_MOTION_FRAME_SAMPLE_COUNT 2
+#define RACE_MOTION_JOINT_FRAME_STRIDE 14
 
 void interpolateRaceMotionAnimationFrame(RaceMotionState *state, s32 animIndex, s32 frameTimer, s32 frameTimerReset) {
-    s16 *data;
+    s16 *frameData;
     s32 base;
-    s32 count;
-    s32 offset;
-    s32 *rotFrame;
-    s32 *rot;
-    s32 *posFrame;
-    s32 *pos;
-    RaceMotionState *cursor;
+    s32 i;
+    s32 jointOffset;
+    volatile RaceMotionRotation *rootFrame;
+    volatile RaceMotionRotation *rootSample;
+    RaceMotionRotation *jointFrame;
+    RaceMotionRotation *jointSample;
+    RaceMotionStateJoint *jointCursor;
     s32 start;
     s32 delta;
     s32 x;
@@ -1254,93 +1254,93 @@ void interpolateRaceMotionAnimationFrame(RaceMotionState *state, s32 animIndex, 
     s16 packed1;
 
     base = getRelocatableHeapBlockBase(gRaceMotionAnimationAssetHandles[state->modelId]);
-    data = (s16 *)(base + (((u16 *)base)[animIndex] * 2) + 2);
+    frameData = (s16 *)(base + (((u16 *)base)[animIndex] * 2) + 2);
 
-    rotFrame = gRaceMotionRotationFrameBuffer;
-    posFrame = gRaceMotionJointFrameBuffer;
+    rootFrame = (RaceMotionRotation *)gRaceMotionRotationFrameBuffer;
+    jointFrame = gRaceMotionJointFrameBuffer;
     do {
-        count = 0;
-        rot = rotFrame;
+        i = 0;
+        rootSample = rootFrame;
 loop_rot:
-        rot[0] = data[0] << 14;
-        rot[1] = data[1] << 14;
-        rot[2] = data[2] << 14;
-        count++;
-        rot += 3;
-        data += 3;
-        if (count < 2) {
+        rootSample->x = frameData[0] << 14;
+        rootSample->y = frameData[1] << 14;
+        rootSample->z = frameData[2] << 14;
+        i++;
+        rootSample++;
+        frameData += 3;
+        if (i < RACE_MOTION_FRAME_SAMPLE_COUNT) {
             goto loop_rot;
         }
 
-        offset = 0;
-        pos = posFrame;
+        jointOffset = 0;
+        jointSample = jointFrame;
 loop_pos:
-        packed0 = data[0];
-        packed1 = data[1];
+        packed0 = frameData[0];
+        packed1 = frameData[1];
         x = (packed0 >> 4) & 0xFF0;
         y = (packed0 << 4) & 0xFF0;
         z = (packed1 >> 4) & 0xFF0;
-        data += 2;
-        pos[0] = x;
-        pos[1] = y;
-        pos[2] = z;
+        frameData += 2;
+        jointSample->x = x;
+        jointSample->y = y;
+        jointSample->z = z;
         if (packed1 & 1) {
-            pos[0] = x + 8;
+            jointSample->x = x + 8;
         }
         if (packed1 & 2) {
-            pos[1] = y + 8;
+            jointSample->y = y + 8;
         }
-        offset += 0xC;
+        jointOffset += sizeof(RaceMotionRotation);
         if (packed1 & 4) {
-            pos[2] = z + 8;
+            jointSample->z = z + 8;
         }
-        pos += 3;
-        if (offset < 0x90) {
+        jointSample++;
+        if (jointOffset < RACE_MOTION_JOINT_COUNT * sizeof(RaceMotionRotation)) {
             goto loop_pos;
         }
 
-        posFrame += 0x2A;
-        rotFrame += 6;
-    } while ((u32)posFrame < (u32)&gRacePlayerHitCueId);
+        jointFrame += RACE_MOTION_JOINT_FRAME_STRIDE;
+        rootFrame += RACE_MOTION_FRAME_SAMPLE_COUNT;
+    } while ((u32)jointFrame < (u32)&gRacePlayerHitCueId);
 
-    pos = gRaceMotionJointFrameBuffer;
-    count = 0;
-    cursor = state;
+    jointSample = gRaceMotionJointFrameBuffer;
+    i = 0;
+    jointCursor = state->animation.joints;
     do {
-        start = pos[0];
-        delta = (pos[0x2A] - start) & 0xFFF;
+        start = jointSample->x;
+        delta = (jointSample[RACE_MOTION_JOINT_FRAME_STRIDE].x - start) & 0xFFF;
         if (delta >= 0x801) {
             delta -= 0x1000;
         }
-        cursor->animation.motion.jointX = start + ((delta * frameTimer) / frameTimerReset);
+        jointCursor->unk6 = start + ((delta * frameTimer) / frameTimerReset);
 
-        start = pos[1];
-        delta = (pos[0x2B] - start) & 0xFFF;
+        start = jointSample->y;
+        delta = (jointSample[RACE_MOTION_JOINT_FRAME_STRIDE].y - start) & 0xFFF;
         if (delta >= 0x801) {
             delta -= 0x1000;
         }
-        cursor->animation.motion.jointY = start + ((delta * frameTimer) / frameTimerReset);
+        jointCursor->unk8 = start + ((delta * frameTimer) / frameTimerReset);
 
-        start = pos[2];
-        delta = (pos[0x2C] - start) & 0xFFF;
+        start = jointSample->z;
+        delta = (jointSample[RACE_MOTION_JOINT_FRAME_STRIDE].z - start) & 0xFFF;
         if (delta >= 0x801) {
             delta -= 0x1000;
         }
-        count++;
-        pos += 3;
-        cursor = (RaceMotionState *)((u8 *)cursor + 0x14);
-        *(s16 *)((u8 *)cursor + 0x32A) = start + ((delta * frameTimer) / frameTimerReset);
-    } while (count != 12);
+        jointCursor->unkA = start + ((delta * frameTimer) / frameTimerReset);
+        i++;
+        jointSample++;
+        jointCursor++;
+    } while (i != RACE_MOTION_JOINT_COUNT);
 
-    *(s32 *)((u8 *)state + 0x340) =
+    state->animation.motion.rootMotion.position.x =
         gRaceMotionRotationFrameBuffer[0] + (((gRaceMotionRotationFrameBuffer[6] - gRaceMotionRotationFrameBuffer[0]) * frameTimer) / frameTimerReset);
-    *(s32 *)((u8 *)state + 0x344) =
+    state->animation.motion.rootMotion.position.y =
         gRaceMotionRotationFrameBuffer[1] + (((gRaceMotionRotationFrameBuffer[7] - gRaceMotionRotationFrameBuffer[1]) * frameTimer) / frameTimerReset);
-    *(s32 *)((u8 *)state + 0x348) =
+    state->animation.motion.rootMotion.position.z =
         gRaceMotionRotationFrameBuffer[2] + (((gRaceMotionRotationFrameBuffer[8] - gRaceMotionRotationFrameBuffer[2]) * frameTimer) / frameTimerReset);
-    *(s32 *)((u8 *)state + 0x354) =
+    state->animation.motion.rootMotion.rotation.x =
         gRaceMotionRotationFrameBuffer[3] + (((gRaceMotionRotationFrameBuffer[9] - gRaceMotionRotationFrameBuffer[3]) * frameTimer) / frameTimerReset);
-    *(s32 *)((u8 *)state + 0x358) =
+    state->animation.motion.rootMotion.rotation.y =
         gRaceMotionRotationFrameBuffer[4] + (((gRaceMotionRotationFrameBuffer[10] - gRaceMotionRotationFrameBuffer[4]) * frameTimer) / frameTimerReset);
 
     state->modelJointX = state->animation.motion.jointX;
@@ -1350,9 +1350,13 @@ loop_pos:
     state->nextModelJointZ = state->animation.motion.jointZ;
     state->modelJointZ = state->animation.motion.jointZ;
 
-    *(s32 *)((u8 *)state + 0x35C) =
+    state->animation.motion.rootMotion.rotation.z =
         gRaceMotionRotationFrameBuffer[5] + (((gRaceMotionRotationFrameBuffer[11] - gRaceMotionRotationFrameBuffer[5]) * frameTimer) / frameTimerReset);
 }
+
+#undef RACE_MOTION_JOINT_COUNT
+#undef RACE_MOTION_FRAME_SAMPLE_COUNT
+#undef RACE_MOTION_JOINT_FRAME_STRIDE
 #endif
 
 // interpolateRaceMotionJointAnimationFrame best match: 81.286% (base_8.c)
