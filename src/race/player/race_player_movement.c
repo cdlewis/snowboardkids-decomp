@@ -661,10 +661,6 @@ void pushRacePlayerOutOfCylinder(RaceVec3i *pos, s32 xzSize, s32 ySize, s16 play
 }
 #endif
 
-// isRacePlayerInsideCylinder best match: 99.719% (nonmatchings/isRacePlayerInsideCylinder-6688367443449623229/base_7.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race/player/race_player_movement/isRacePlayerInsideCylinder.s")
-
-#ifdef NON_MATCHING
 s32 isRacePlayerInsideCylinder(RaceVec3i *pos, s32 xzSize, s32 ySize, s16 playerIndex) {
     RacePlayer *player;
     s32 yDiff;
@@ -673,11 +669,11 @@ s32 isRacePlayerInsideCylinder(RaceVec3i *pos, s32 xzSize, s32 ySize, s16 player
     s32 zDiff;
     s32 xDiff;
     s32 xzLimit;
-    s16 result;
-    volatile s32 stackPad[4];
+    volatile s32 stackPad[2];
+    s16 result[3];
 
     player = &gRacePlayers[playerIndex];
-    result = 0;
+    result[2] = 0;
     if (player->isActive == 0) {
         return 0;
     }
@@ -703,14 +699,13 @@ s32 isRacePlayerInsideCylinder(RaceVec3i *pos, s32 xzSize, s32 ySize, s16 player
                 zDiff = -zDiff;
             }
             if ((zDiff < xzLimit) && (integerSquareRoot64((s64)xDiff * xDiff + (s64)zDiff * zDiff) < xzLimit)) {
-                result = 1;
+                result[2] = 1;
             }
         }
     }
 
-    return result;
+    return result[2];
 }
-#endif
 
 void applyItemHitToRacePlayersInsideSphere(RaceVec3i *pos, s32 xzSize, s16 flag) {
     volatile u8 pad[16];
