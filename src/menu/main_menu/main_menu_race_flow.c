@@ -56,6 +56,18 @@ extern s16 gRacePlayerAttackStartTimer;
 extern s8 gRaceTypeSelection;
 extern s8 gRaceResultState;
 extern s16 gMainMenuModePreviewRaceDurationBySelection[];
+extern s8 D_80121D94;
+extern s8 D_80121D95;
+extern s8 D_80121D96;
+extern s8 D_801223A0;
+extern s8 D_801223A1;
+extern s8 D_801223A2;
+extern s8 D_801229AC;
+extern s8 D_801229AD;
+extern s8 D_801229AE;
+extern s8 D_80122FB8;
+extern s8 D_80122FB9;
+extern s8 D_80122FBA;
 
 extern void releaseMenuAssetHandles(void);
 extern u8 gPendingFramebufferSwapCount;
@@ -354,7 +366,7 @@ void queueTrainingCourseRaceInit(void) {
     setCurrentGameTaskCallback(&initTrainingCourseRace, 0);
 }
 
-// initTrainingCourseRace best match: 98.186% (nonmatchings/func_8004002C-6061209858023118177/base.c)
+// initTrainingCourseRace best match: 99.668% (asm-differ score 340, nonmatchings/initTrainingCourseRace-5512657642801906896)
 
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/main_menu/main_menu_race_flow/initTrainingCourseRace.s")
 
@@ -435,18 +447,18 @@ void initTrainingCourseRace(void) {
     gRaceLapCount = 5;
     gRacePlayerAttackStartTimer = 0x64;
     initCallbackTaskScheduler(1);
-    gRacePlayers[0].unk15 = 0;
-    gRacePlayers[0].replayInputSource = 0;
-    gRacePlayers[0].soundDisabled = 0;
-    gRacePlayers[1].unk15 = 0;
-    gRacePlayers[1].replayInputSource = 0;
-    gRacePlayers[1].soundDisabled = 0;
-    gRacePlayers[2].unk15 = 0;
-    gRacePlayers[2].replayInputSource = 0;
-    gRacePlayers[2].soundDisabled = 0;
-    gRacePlayers[3].unk15 = 0;
-    gRacePlayers[3].replayInputSource = 0;
-    gRacePlayers[3].soundDisabled = 0;
+    D_80121D95 = 0;
+    D_80121D96 = 0;
+    D_80121D94 = 0;
+    D_801223A1 = 0;
+    D_801223A2 = 0;
+    D_801223A0 = 0;
+    D_801229AD = 0;
+    D_801229AE = 0;
+    D_801229AC = 0;
+    D_80122FB9 = 0;
+    D_80122FBA = 0;
+    D_80122FB8 = 0;
     loadRaceCourseAssets();
     loadRaceCharacterAssets();
     resetRaceCameras();
