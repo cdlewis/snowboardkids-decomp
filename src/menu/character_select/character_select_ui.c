@@ -306,34 +306,31 @@ void drawCharacterSelectPlayerPanelFrames(CharacterSelectUiPlayerPanelFrameActor
 }
 #endif
 
-// updateCharacterSelectPlayerPanelFrames best match: 97.692% (nonmatchings/updateCharacterSelectPlayerPanelFrames-8331816093655448999/base_5.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/menu/character_select/character_select_ui/updateCharacterSelectPlayerPanelFrames.s")
-
-#ifdef NON_MATCHING
 void updateCharacterSelectPlayerPanelFrames(CharacterSelectUiPanelActor *arg0) {
-    s32 var_v0;
+    u8 var_v0;
     u8 desired;
-    s32 var_v1;
+    u8 var_v1;
     CharacterSelectUiPanelActor *actor;
     CharacterSelectUiPlayerPanelFrameController *owner;
 
     owner = D_8010ADE0;
     actor = arg0;
-    var_v0 = (var_v1 = actor->targetY.mode);
+    var_v0 = actor->targetY.mode;
     desired = gCharacterSelectHudState.exitMode;
+    var_v1 = var_v0;
     if (desired != var_v0) {
         actor->targetY.mode = desired;
         var_v0 = desired & 0xFF;
         actor->targetX.target[0] = gCharacterSelectHudState.cursorX;
+        var_v0 = actor->targetY.mode;
         var_v1 = var_v0;
         actor->targetX.target[1] = gCharacterSelectHudState.cursorY;
     }
 
     switch (var_v1) {
     case 1:
-        var_v1 = actor->y[3] + 8;
-        actor->y[3] = var_v1;
         actor->y[1] += 8;
+        actor->y[3] += 8;
         if (actor->y[3] == 0x24) {
             actor->targetY.mode = 2;
             owner->playerFrameReady = 1;
@@ -350,7 +347,6 @@ void updateCharacterSelectPlayerPanelFrames(CharacterSelectUiPanelActor *arg0) {
     D_8010AE51 = var_v0;
     addRenderCallback(&gMenuRenderCallbackList, drawCharacterSelectPlayerPanelFrames, actor);
 }
-#endif
 
 void initCharacterSelectPlayerPanelFrames(CharacterSelectUiPanelActor *arg0) {
     arg0->x[0] = -0x88;
