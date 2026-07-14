@@ -1358,7 +1358,7 @@ void initCourseSelectCourseListBackdrop(CourseSelectWidgetActor *arg0) {
     setCallbackTaskCallback(arg0, updateCourseSelectCourseListBackdrop);
 }
 
-// drawCourseSelectCourseStats best match: 98.594% (nonmatchings/drawCourseSelectCourseStats-6866765942504228165/base_5.c)
+// drawCourseSelectCourseStats best match: 98.714% (nonmatchings/drawCourseSelectCourseStats-4588856335748919862/base_13.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/course_select/course_select_ui/drawCourseSelectCourseStats.s")
 
 #ifdef NON_MATCHING
@@ -1400,7 +1400,7 @@ void drawCourseSelectCourseStats(CourseSelectWidgetActor *arg0) {
                 courseId = gRacePlayers[i].pad6[0];
                 if (!playerCount) {
                 }
-                if (courseId >= 9 && courseId < 12) {
+                if (courseId >= 9 && gRacePlayers[i].pad6[0] < 12) {
                     xOffset = (u16)courseId;
                 } else {
                     xOffset = (u16)(courseId % 3);
