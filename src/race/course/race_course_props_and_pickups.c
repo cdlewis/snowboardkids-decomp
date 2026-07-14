@@ -869,87 +869,75 @@ void updateRacePickupCollected(RacePickupActor *arg0) {
     addRenderCallback(&gEffectRenderCallbackList, renderRacePickupBase, arg0);
 }
 
-// updateRacePickupIdle best match: 99.950% (base_3.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race/course/race_course_props_and_pickups/updateRacePickupIdle.s")
-
-#ifdef NON_MATCHING
 void updateRacePickupIdle(RacePickupActor *arg0) {
     RacePlayer *player;
-    Vec3i *pos;
     s32 i;
-    s32 maxPlayers;
-    s32 found;
+    s32 playerInsideCylinder;
 
     if (gRaceUpdatePaused == 0) {
-        found = 0;
-        i = 0;
-        pos = &arg0->pos;
-        maxPlayers = 4;
+        playerInsideCylinder = 0;
 
-loop:
-        if (isRacePlayerInsideCylinder(pos, 0xBF000, 0x170000, i) == 0) {
-            goto next;
-        }
-
-        player = &gRacePlayers[i];
-        found = 1;
-        if ((player->unk568 < 0x64) && (player->unk4 == 0)) {
-            goto next;
-        }
-
-        arg0->velY = 0x60000;
-        if (player->unk568 >= 0x64) {
-            player->unk568 -= 0x64;
-        } else {
-            player->unk568 = 0;
-        }
-
-        if (arg0->variant == 0) {
-            player->itemEffectType = gItemEffectRollTable[player->rankIndex][randomNextObject((RandomStateObject *)player) & 0xF];
-            if (gTrainingCourseLesson != 0) {
-                player->itemEffectType = 1;
+        for (i = 0; i < 4; i++) {
+            if (!isRacePlayerInsideCylinder(&arg0->pos, 0xBF000, 0x170000, i)) {
+                continue;
             }
-            player->itemEffectCount = 3;
-            player->pad513[0] = maxPlayers;
-        } else {
-            player->actionEffectType = gActionEffectRollTable[player->rankIndex][randomNextObject((RandomStateObject *)player) & 0xF];
-            if (gTrainingCourseLesson != 0) {
-                player->actionEffectType = 1;
+
+            player = &gRacePlayers[i];
+            playerInsideCylinder = 1;
+
+            if ((player->unk568 < 0x64) && (player->unk4 == 0)) {
+                continue;
             }
-            if ((gRaceCourseIndex == 8) && (player->unk4 != 0) && (player->actionEffectType == maxPlayers)) {
-                if (randomNextMain() != 0) {
-                    player->actionEffectType = 6;
+
+            arg0->velY = 0x60000;
+            if (player->unk568 >= 0x64) {
+                player->unk568 -= 0x64;
+            } else {
+                player->unk568 = 0;
+            }
+
+            if (arg0->variant == 0) {
+                player->itemEffectType = gItemEffectRollTable[player->rankIndex][randomNextObject((RandomStateObject *)player) & 0xF];
+                if (gTrainingCourseLesson != 0) {
+                    player->itemEffectType = 1;
                 }
+                player->itemEffectCount = 3;
+                player->itemEffectPalette = 4;
+            } else {
+                player->actionEffectType = gActionEffectRollTable[player->rankIndex][randomNextObject((RandomStateObject *)player) & 0xF];
+                if (gTrainingCourseLesson != 0) {
+                    player->actionEffectType = 1;
+                }
+                if ((gRaceCourseIndex == 8) && (player->unk4 != 0) && (player->actionEffectType == 4)) {
+                    if (randomNextMain() != 0) {
+                        player->actionEffectType = 6;
+                    }
+                }
+                player->actionEffectPalette = 4;
             }
-            player->pad516[0] = maxPlayers;
+
+            setCallbackTaskCallback(arg0, updateRacePickupCollected);
+            spawnPickupShardParticle(arg0->pos.x, arg0->pos.y, arg0->pos.z, arg0->rotation, 0);
+            spawnPickupShardParticle(arg0->pos.x, arg0->pos.y, arg0->pos.z, arg0->rotation, 1);
+            spawnPickupShardParticle(arg0->pos.x, arg0->pos.y, arg0->pos.z, arg0->rotation, 2);
+            spawnPickupShardParticle(arg0->pos.x, arg0->pos.y, arg0->pos.z, arg0->rotation, 3);
+            spawnPickupShardParticle(arg0->pos.x, arg0->pos.y, arg0->pos.z, arg0->rotation, 4);
+            spawnPickupShardParticle(arg0->pos.x, arg0->pos.y, arg0->pos.z, arg0->rotation, 5);
+            spawnPickupShardParticle(arg0->pos.x, arg0->pos.y, arg0->pos.z, arg0->rotation, 6);
+            spawnPickupShardParticle(arg0->pos.x, arg0->pos.y, arg0->pos.z, arg0->rotation, 7);
+            enqueuePositionalSoundEffect(0x1F, &arg0->pos, 0x7F, 0x32);
+
+            goto done;
         }
 
-        setCallbackTaskCallback(arg0, updateRacePickupCollected);
-        spawnPickupShardParticle(arg0->pos.x, arg0->pos.y, arg0->pos.z, arg0->rotation, 0);
-        spawnPickupShardParticle(arg0->pos.x, arg0->pos.y, arg0->pos.z, arg0->rotation, 1);
-        spawnPickupShardParticle(arg0->pos.x, arg0->pos.y, arg0->pos.z, arg0->rotation, 2);
-        spawnPickupShardParticle(arg0->pos.x, arg0->pos.y, arg0->pos.z, arg0->rotation, 3);
-        spawnPickupShardParticle(arg0->pos.x, arg0->pos.y, arg0->pos.z, arg0->rotation, 4);
-        spawnPickupShardParticle(arg0->pos.x, arg0->pos.y, arg0->pos.z, arg0->rotation, 5);
-        spawnPickupShardParticle(arg0->pos.x, arg0->pos.y, arg0->pos.z, arg0->rotation, 6);
-        spawnPickupShardParticle(arg0->pos.x, arg0->pos.y, arg0->pos.z, arg0->rotation, 7);
-        enqueuePositionalSoundEffect(0x1F, pos, 0x7F, 0x32);
-        goto done;
-
-next:
-        i++;
-        if (i != maxPlayers) {
-            goto loop;
-        }
-        if (found != 0) {
-            pushRacePlayersOutOfCylinderAndApplyItemHit(pos, 0xBF000, 0x170000, 0x800);
+        if (playerInsideCylinder) {
+            pushRacePlayersOutOfCylinderAndApplyItemHit(&arg0->pos, 0xBF000, 0x170000, 0x800);
         }
     }
 
 done:
     addRenderCallback(&gEffectRenderCallbackList, renderRacePickupIdle, arg0);
 }
-#endif
 
 void initRacePickup(RacePickupActor *arg0) {
     PickupSpawnEntry *entry = &gRacePickupSpawnEntries[arg0->spawnIndex];
