@@ -3414,7 +3414,7 @@ void func_8005EA4C(RaceUiSparkleActor *arg0) {
     addRenderCallback(&D_801248EC, func_8005E6D0, (s32) arg0);
 }
 
-// func_8005ECA8 best match: 98.075% (nonmatchings/func_8005ECA8-2870645799593382959/base_3.c)
+// func_8005ECA8 best match: 99.437% (nonmatchings/func_8005ECA8-5313856277864964686/base_10.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race/ui/race_ui_effects/func_8005ECA8.s")
 
 #ifdef NON_MATCHING
@@ -3426,6 +3426,8 @@ void func_8005ECA8(RaceUiSparkleActor *arg0) {
     s32 activeCount;
     register s32 selectedPlayerIndex;
 
+    selectedPlayerIndex = 0;
+
     if (gRaceUpdatePaused == 0) {
         if (gFrameCounter & 1) {
             arg0->frame = (arg0->frame + 1) & 3;
@@ -3436,6 +3438,8 @@ void func_8005ECA8(RaceUiSparkleActor *arg0) {
         vec.z = 0;
 
         player = &gRacePlayers[arg0->playerIndex];
+        if (arg0) {
+        }
         makeFixedRotationXY(matrix, player->pitch, player->yaw);
         transformVec3iByFixedMatrix(matrix, &vec, &arg0->pos);
 
@@ -3451,12 +3455,11 @@ void func_8005ECA8(RaceUiSparkleActor *arg0) {
             if (arg0->scale < 0) {
                 arg0->scale = 0;
             }
-            if (arg0->alpha < 0) {
+            if (arg0->alpha < selectedPlayerIndex) {
                 arg0->alpha = 0;
                 arg0->alphaStep = 0x10;
-                activeCount = randomNextMain();
+                activeCount = randomNextMain() ^ 0;
                 if (activeCount > 0) {
-                    selectedPlayerIndex = 0;
                     if ((gRacePlayerCount >= 4) && (arg0->playerIndex != gRaceOrderPlayerIds[3]) &&
                         (activeCount > 0)) {
                         selectedPlayerIndex = gRaceOrderPlayerIds[3];
