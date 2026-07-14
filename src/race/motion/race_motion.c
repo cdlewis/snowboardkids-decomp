@@ -1110,26 +1110,24 @@ s16 getRaceCourseNextSurface(s32 arg0) {
 }
 
 void setRaceMotionAnimation(RaceMotionState *state, s32 animIndex) {
-    s16 *temp_a1;
-    s16 temp_v1;
-    s32 temp_v1_2;
-    s16 *sp1C;
-    s32 temp_v0;
-    RaceMotionState *temp_a2 = state;
+    s16 *animationFrame;
+    s16 frameCount;
+    s32 frameDataOffset;
+    s32 animationBase;
+    RaceMotionState *motionState = state;
 
-    temp_v0 = getRelocatableHeapBlockBase(gRaceMotionAnimationAssetHandles[state->modelId]);
-    temp_a1 = (s16 *)(temp_v0 + (((u16 *)temp_v0)[animIndex] * 2));
-    temp_v1 = *temp_a1;
-    temp_a2->framesRemaining = temp_v1;
-    temp_a2->framesRemaining++;
-    temp_a2->frameCount = temp_v1;
-    temp_a1 += 1;
-    sp1C = temp_a1;
-    temp_v1_2 = (s32)temp_a1 - getRelocatableHeapBlockBase(gRaceMotionAnimationAssetHandles[temp_a2->modelId]);
-    temp_a2->animStartOffset = temp_v1_2;
-    temp_a2->frameDataOffset = temp_v1_2;
-    temp_a2->frameTimer = 0;
-    temp_a2->animIndex = animIndex;
+    animationBase = getRelocatableHeapBlockBase(gRaceMotionAnimationAssetHandles[state->modelId]);
+    animationFrame = (s16 *)(animationBase + (((u16 *)animationBase)[animIndex] * sizeof(u16)));
+    frameCount = *animationFrame;
+    motionState->framesRemaining = frameCount;
+    motionState->framesRemaining++;
+    motionState->frameCount = frameCount;
+    animationFrame += 1;
+    frameDataOffset = (s32)animationFrame - getRelocatableHeapBlockBase(gRaceMotionAnimationAssetHandles[motionState->modelId]);
+    motionState->animStartOffset = frameDataOffset;
+    motionState->frameDataOffset = frameDataOffset;
+    motionState->frameTimer = 0;
+    motionState->animIndex = animIndex;
 }
 
 // loadRaceMotionAnimationFrame best match: 99.787% (nonmatchings/loadRaceMotionAnimationFrame-2870645799593382959/base_18.c)
