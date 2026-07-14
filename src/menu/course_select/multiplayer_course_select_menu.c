@@ -326,8 +326,6 @@ typedef struct MultiplayerCourseSelectObject {
     /* 0x30 */ u8 pad30[0x80];
 } MultiplayerCourseSelectObject;
 
-extern void initCourseSelectCourseIconList(CallbackTask *);
-extern void initCourseSelectExtraCourseIconList(CallbackTask *);
 extern void initCourseSelectPlayerPanels(CallbackTask *);
 extern void initCourseSelectCompletePanels(CallbackTask *);
 extern s32 enqueueSoundEffect(s16, s16);
