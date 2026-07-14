@@ -8,7 +8,7 @@ void controllerSubsystemThreadMain(void *arg0);
 void requestControllerRead(void);
 void updateControllerInputState(void);
 void requestRumbleMotorInit(u16 arg0);
-void serviceRumbleMotorRequest(s32 arg0);
+void serviceRumbleMotorRequest(u16 arg0);
 void requestRumbleMotorStart(u16 arg0);
 void requestControllerPakProbe(u16 arg0);
 void probeControllerPak(u16 arg0);
