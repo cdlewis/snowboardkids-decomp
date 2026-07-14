@@ -39,6 +39,7 @@ extern void *createCallbackTaskWithUserIdPreservingArgs(void *, s32, s32);
 #define RACE_UI_HIT_PRIZE_SCORE_RATE 0x12C
 #define RACE_UI_HIT_PRIZE_QUICKSAND_VALLEY_SCORE_RATE 0x64
 #define RACE_UI_HIT_PRIZE_PERFECT_HIT_BONUS 0x3E8
+#define RACE_UI_HIT_PRIZE_SHOW_HIT_PRIZE 0
 #define RACE_UI_HIT_PRIZE_SHOW_PERFECT_HIT 1
 #define RACE_UI_HIT_PRIZE_SHOW_COMPLETE_BONUS 2
 #define RACE_UI_HIT_PRIZE_SHOW_TOTAL_MONEY 3
@@ -2249,13 +2250,13 @@ void updateRaceUiHitPrizeRevealPerfectHit(RaceUiCounterActor *arg0) {
     addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005AC44, arg0);
 }
 
-void func_8005B61C(void *arg0) {
-    *(s16 *)((u8 *)arg0 + 0x1C) = 0;
-    *(s16 *)((u8 *)arg0 + 0x1A) = *(s16 *)((u8 *)arg0 + 0x1A) - 1;
-    if (*(s16 *)((u8 *)arg0 + 0x1A) == 0) {
+void updateRaceUiHitPrizeHoldHitPrize(RaceUiCounterActor *arg0) {
+    arg0->state = RACE_UI_HIT_PRIZE_SHOW_HIT_PRIZE;
+    arg0->timer--;
+    if (arg0->timer == 0) {
         enqueueSoundEffect(0x1A, 0x32);
-        *(s16 *)((u8 *)arg0 + 0x1A) = 0x14;
-        if (*(s16 *)((u8 *)arg0 + 0x24) != 0) {
+        arg0->timer = RACE_UI_RESULTS_REVEAL_TIMER;
+        if (arg0->hasPerfectHitBonus != 0) {
             setCallbackTaskCallback(arg0, updateRaceUiHitPrizeRevealPerfectHit);
         } else {
             setCallbackTaskCallback(arg0, func_8005B49C);
@@ -2267,12 +2268,12 @@ void func_8005B61C(void *arg0) {
     addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005AC44, arg0);
 }
 
-void func_8005B6F8(void *arg0) {
-    *(s16 *)((u8 *)arg0 + 0x1A) = *(s16 *)((u8 *)arg0 + 0x1A) - 1;
-    if (*(s16 *)((u8 *)arg0 + 0x1A) == 0) {
-        *(s16 *)((u8 *)arg0 + 0x1A) = 0x14;
+void updateRaceUiHitPrizeWaitBeforeHitPrize(RaceUiCounterActor *arg0) {
+    arg0->timer--;
+    if (arg0->timer == 0) {
+        arg0->timer = RACE_UI_RESULTS_REVEAL_TIMER;
         enqueueSoundEffect(0x1A, 0x32);
-        setCallbackTaskCallback(arg0, func_8005B61C);
+        setCallbackTaskCallback(arg0, updateRaceUiHitPrizeHoldHitPrize);
     }
     addRenderCallback(&gMenuRenderCallbackList, func_8005A31C, arg0);
     addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005AAE4, arg0);
@@ -2284,7 +2285,7 @@ void updateRaceUiHitPrizeFadeIn(RaceUiCounterActor *arg0) {
     if (arg0->alpha >= 0x100) {
         arg0->timer = RACE_UI_RESULTS_REVEAL_TIMER;
         arg0->alpha = RACE_UI_RESULTS_FULL_ALPHA;
-        setCallbackTaskCallback(arg0, func_8005B6F8);
+        setCallbackTaskCallback(arg0, updateRaceUiHitPrizeWaitBeforeHitPrize);
     }
     addRenderCallback(&gMenuRenderCallbackList, func_8005A31C, arg0);
     addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005AAE4, arg0);
