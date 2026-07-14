@@ -5,16 +5,17 @@
 #include "PRinternal/siint.h"
 
 #define READFORMAT(ptr) ((__OSContRamReadFormat *)(ptr))
+#define PFS_PIF_RAM_WORDS 16
+#define PFS_ADDRESS_SHIFT 5
 
 static void __osPackRamWriteData(int channel, u16 address, u8 *buffer);
 
 s32 __osContRamWrite(OSMesgQueue *mq, int channel, u16 address, u8 *buffer, int force) {
     s32 ret = 0;
     s32 i;
-    u8 *ptr = (u8 *)&__osPfsPifRam;
-    __OSContRamReadFormat ramreadformat;
+    u8 *responsePtr = (u8 *)&__osPfsPifRam;
+    __OSContRamReadFormat writeFormat;
     s32 retry = 2;
-    u8 crc;
 
     if ((force != TRUE) && (address < PFS_LABEL_AREA) && (address != 0)) {
         return 0;
@@ -29,19 +30,19 @@ s32 __osContRamWrite(OSMesgQueue *mq, int channel, u16 address, u8 *buffer, int 
     do {
         ret = __osSiRawStartDma(OS_READ, &__osPfsPifRam);
         osRecvMesg(mq, NULL, OS_MESG_BLOCK);
-        ptr = (u8 *)&__osPfsPifRam;
+        responsePtr = (u8 *)&__osPfsPifRam;
 
         if (channel != 0) {
             for (i = 0; i < channel; i++) {
-                ptr++;
+                responsePtr++;
             }
         }
 
-        ramreadformat = *READFORMAT(ptr);
+        writeFormat = *READFORMAT(responsePtr);
 
-        ret = CHNL_ERR(ramreadformat);
+        ret = CHNL_ERR(writeFormat);
         if (ret == 0) {
-            if (__osContDataCrc(buffer) != ramreadformat.datacrc) {
+            if (__osContDataCrc(buffer) != writeFormat.datacrc) {
                 ret = __osPfsGetStatus(mq, channel);
 
                 if (ret != 0) {
@@ -62,33 +63,33 @@ s32 __osContRamWrite(OSMesgQueue *mq, int channel, u16 address, u8 *buffer, int 
 }
 
 static void __osPackRamWriteData(int channel, u16 address, u8 *buffer) {
-    u8 *ptr;
-    __OSContRamReadFormat ramreadformat;
+    u8 *cmdBufPtr;
+    __OSContRamReadFormat writeFormat;
     int i;
 
-    ptr = (u8 *)__osPfsPifRam.ramarray;
-    for (i = 0; i < 16; i++) {
+    cmdBufPtr = (u8 *)__osPfsPifRam.ramarray;
+    for (i = 0; i < PFS_PIF_RAM_WORDS; i++) {
         ((u32 *)&__osPfsPifRam)[i] = 0;
     }
     __osPfsPifRam.pifstatus = CONT_CMD_EXE;
-    ramreadformat.dummy = CONT_CMD_NOP;
-    ramreadformat.txsize = CONT_CMD_WRITE_PAK_TX;
-    ramreadformat.rxsize = CONT_CMD_WRITE_PAK_RX;
-    ramreadformat.cmd = CONT_CMD_WRITE_PAK;
-    ramreadformat.address = (address << 0x5) | __osContAddressCrc(address);
-    ramreadformat.datacrc = CONT_CMD_NOP;
+    writeFormat.dummy = CONT_CMD_NOP;
+    writeFormat.txsize = CONT_CMD_WRITE_PAK_TX;
+    writeFormat.rxsize = CONT_CMD_WRITE_PAK_RX;
+    writeFormat.cmd = CONT_CMD_WRITE_PAK;
+    writeFormat.address = (address << PFS_ADDRESS_SHIFT) | __osContAddressCrc(address);
+    writeFormat.datacrc = CONT_CMD_NOP;
 
-    for (i = 0; i < ARRLEN(ramreadformat.data); i++) {
-        ramreadformat.data[i] = *buffer++;
+    for (i = 0; i < ARRLEN(writeFormat.data); i++) {
+        writeFormat.data[i] = *buffer++;
     }
 
     if (channel != 0) {
         for (i = 0; i < channel; i++) {
-            *ptr++ = CONT_CMD_REQUEST_STATUS;
+            *cmdBufPtr++ = CONT_CMD_REQUEST_STATUS;
         }
     }
 
-    *(__OSContRamReadFormat *)ptr = ramreadformat;
-    ptr += sizeof(__OSContRamReadFormat);
-    ptr[0] = CONT_CMD_END;
+    *(__OSContRamReadFormat *)cmdBufPtr = writeFormat;
+    cmdBufPtr += sizeof(__OSContRamReadFormat);
+    cmdBufPtr[0] = CONT_CMD_END;
 }
