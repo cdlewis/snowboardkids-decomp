@@ -508,7 +508,7 @@ void initControllerPakFileDeleteFreeSpaceInfo(ControllerPakTwoPointActor *arg0) 
     setCallbackTaskCallback(arg0, updateControllerPakFileDeleteFreeSpaceInfo);
 }
 
-// drawControllerPakFileDeleteFileList best match: 90.458%
+// drawControllerPakFileDeleteFileList best match: 90.473% (nonmatchings/drawControllerPakFileDeleteFileList-8367390958892477031/base_6.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/controller_pak/controller_pak_ui/drawControllerPakFileDeleteFileList.s")
 
 #ifdef NON_MATCHING
@@ -558,7 +558,7 @@ void drawControllerPakFileDeleteFileList(ControllerPakFileListActor *arg0) {
         if ((s32)state <= 0) {
         } else {
             alpha = 0xE0;
-            if (gControllerPakMenuState.fileIndex == fileIndex) {
+            if (fileIndex == gControllerPakMenuState.fileIndex) {
                 alpha = 0x100;
             }
         }
