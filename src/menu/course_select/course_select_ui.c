@@ -405,54 +405,30 @@ void updateCourseSelectPreviewModelIn(void *arg0) {
 #endif
 
 void initCourseSelectPreviewModelIn(void *arg0) {
-    void *actor;
-    Vec3i sp60;
-    u8 *var_s1;
-    u8 *var_s2;
-    s16 *var_s3;
-    u8 *var_s4;
-    s32 var_s5;
-    u8 *var_s6;
-    Vec3i *var_s7;
-    s32 const_s8;
+    CourseSelectAnimatedActor *actor;
+    Vec3i position;
+    s32 i;
 
     actor = arg0;
-    var_s1 = arg0;
-    var_s2 = arg0;
-    var_s3 = (s16 *) ((u8 *) arg0 + 0x3C);
-    var_s4 = arg0;
-    var_s5 = 0;
-    var_s6 = arg0;
-    var_s7 = (Vec3i *) ((u8 *) arg0 + 0xBC);
-    const_s8 = 0xC00000;
+    i = 0;
     do {
-        if (actor && actor) {
-        }
-        *(s32 *) (var_s2 + 0xBC) = const_s8;
-        *(s32 *) (var_s2 + (short) 0xC0) = 0;
-        *(s32 *) (var_s2 + 0xC4) = 0;
-        *(s16 *) (var_s4 + 0xEC) = 0;
-        makeFixedRotationY(var_s3, *(s16 *) (var_s4 + 0xEC));
-        if (actor && actor) {
-        }
-        transformVec3iByFixedMatrix(var_s3, var_s7, &sp60);
-        var_s5 += 2;
-        *(s32 *) (var_s1 + 0x50) = sp60.x;
-        *(s32 *) (var_s1 + 0x54) = sp60.y;
-        var_s1 += 0x20;
-        *(s32 *) (var_s1 + 0x38) = sp60.z;
-        var_s6 = var_s6 + 1;
-        var_s3 = (s16 *) ((u8 *) var_s3 + 0x20);
-        var_s2 += 0xC;
-        var_s7 += 1;
-        var_s4 += 2;
-        *(var_s6 + 0xFF) = 0;
-    } while (var_s5 != 8);
+        actor->vecs[i].x = 0xC00000;
+        actor->vecs[i].y = 0;
+        actor->vecs[i].z = 0;
+        actor->angle[i] = 0;
+        makeFixedRotationY(actor->playerTransforms[i].rotation, actor->angle[i]);
+        transformVec3iByFixedMatrix(actor->playerTransforms[i].rotation, &actor->vecs[i], &position);
+        actor->playerTransforms[i].translation.x = position.x;
+        actor->playerTransforms[i].translation.y = position.y;
+        actor->playerTransforms[i].translation.z = position.z;
+        i++;
+        actor->state[i - 1] = 0;
+    } while (i < 4);
 
-    *(s32 *) ((u8 *) actor + 0x30) = 0;
-    *(s32 *) ((u8 *) actor + 0x34) = 0;
-    *(s32 *) ((u8 *) actor + 0x38) = 0;
-    makeFixedRotationYX((s16 *) ((u8 *) actor + 0x1C), 0x400, 0x280);
+    actor->sourceTransform.translation.x = 0;
+    actor->sourceTransform.translation.y = 0;
+    actor->sourceTransform.translation.z = 0;
+    makeFixedRotationYX(actor->sourceTransform.rotation, 0x400, 0x280);
     setCallbackTaskCallback(actor, updateCourseSelectPreviewModelIn);
 }
 
