@@ -18,8 +18,8 @@ void __osDevMgrMain(void* args) {
         osRecvMesg(dm->cmdQueue, (OSMesg)&mb, OS_MESG_BLOCK);
 
         if (mb->piHandle != NULL && mb->piHandle->type == DEVICE_TYPE_64DD &&
-            (mb->piHandle->transferInfo.cmdType == LEO_CMD_TYPE_0 ||
-             mb->piHandle->transferInfo.cmdType == LEO_CMD_TYPE_1)) {
+            (mb->piHandle->transferInfo.cmdType == LEO_CMD_TYPE_READ ||
+             mb->piHandle->transferInfo.cmdType == LEO_CMD_TYPE_WRITE)) {
             __OSBlockInfo* blockInfo;
             __OSTranxInfo* info;
 
@@ -31,7 +31,7 @@ void __osDevMgrMain(void* args) {
                 blockInfo->dramAddr = (void*)((u32)blockInfo->dramAddr - blockInfo->sectorSize);
             }
 
-            if (info->transferMode == LEO_TRACK_MODE && mb->piHandle->transferInfo.cmdType == LEO_CMD_TYPE_0) {
+            if (info->transferMode == LEO_TRACK_MODE && mb->piHandle->transferInfo.cmdType == LEO_CMD_TYPE_READ) {
                 messageSend = 1;
             } else {
                 messageSend = 0;
@@ -39,7 +39,7 @@ void __osDevMgrMain(void* args) {
 
             osRecvMesg(dm->acsQueue, &dummy, OS_MESG_BLOCK);
             __osResetGlobalIntMask(OS_IM_PI);
-            __osEPiRawWriteIo(mb->piHandle, LEO_BM_CTL, (info->bmCtlShadow | 0x80000000));
+            __osEPiRawWriteIo(mb->piHandle, LEO_BM_CTL, (info->bmCtlShadow | LEO_BM_CTL_START));
 
         readblock1:
             osRecvMesg(dm->evtQueue, &em, OS_MESG_BLOCK);
