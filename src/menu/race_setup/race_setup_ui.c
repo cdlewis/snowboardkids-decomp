@@ -14,6 +14,11 @@
 #define SAVE_PANEL_BASE_BADGE_COUNT 6
 #define SAVE_PANEL_EMPTY_BADGE_TILE 9
 #define SAVE_PANEL_RECORD_ICON_TILE 0x19
+#define SAVE_STATUS_FADE_STEP 0x26
+#define SAVE_STATUS_TRANSITION_NONE 0
+#define SAVE_STATUS_TRANSITION_FADE_IN 1
+#define SAVE_STATUS_TRANSITION_FADE_OUT 2
+#define SAVE_STATUS_TRANSITION_DONE 3
 
 typedef struct {
     /* 0x00 */ u8 pad0[0x18];
@@ -27,7 +32,7 @@ typedef struct {
     /* 0x02 */ s16 alpha;
     /* 0x04 */ u8 pad4[2];
     /* 0x06 */ u16 selection[4];
-    /* 0x0E */ u8 padE[4];
+    /* 0x0E */ u8 saveStatusTransitionStates[4];
     /* 0x12 */ u16 nextSelection[4];
 } TitleIntroTransitionState;
 
@@ -1005,71 +1010,71 @@ void drawRaceSetupSaveStatusWidgets(TitleMenuWidgetActor *arg0) {
 #ifdef NON_MATCHING
 void updateRaceSetupSaveStatusWidgets(TitleMenuWidgetActor *arg0) {
     register TitleMenuWidgetActor *actor;
-    s32 i;
-    s32 sum;
+    s32 playerIndex;
+    s32 transitionStateSum;
     TitleIntroTransitionState *global;
-    TitleMenuWidgetItemView *view;
-    u8 state;
-    u8 oldState;
+    TitleMenuWidgetItemView *panelPositions;
+    u8 transitionState;
+    u8 previousTransitionState;
 
-    view = D_8010ADE0;
+    panelPositions = D_8010ADE0;
     actor = arg0;
-    i = 0;
+    playerIndex = 0;
     if ((s32) gPlayerCount > 0) {
         global = &gRaceSetupMenuSubState;
         do {
-            actor->x[i] = view->x;
-            actor->y[i] = view->y;
+            actor->x[playerIndex] = panelPositions->x;
+            actor->y[playerIndex] = panelPositions->y;
 
-            oldState = actor->unk31[i];
-            state = global->padE[i];
-            if (state != oldState) {
-                actor->unk31[i] = state;
-                actor->unk36[i] = global->nextSelection[i];
-                oldState = actor->unk31[i];
+            previousTransitionState = actor->statusTransitionStates[playerIndex];
+            transitionState = global->saveStatusTransitionStates[playerIndex];
+            if (transitionState != previousTransitionState) {
+                actor->statusTransitionStates[playerIndex] = transitionState;
+                actor->nextStatusCodes[playerIndex] = global->nextSelection[playerIndex];
+                previousTransitionState = actor->statusTransitionStates[playerIndex];
             }
 
-            state = oldState;
-            switch (state) {
-            case 1:
-                actor->alpha[i] += 0x26;
-                if (actor->alpha[i] >= 0x100) {
-                    actor->alpha[i] = 0x100;
-                    actor->unk31[i] = 0;
+            transitionState = previousTransitionState;
+            switch (transitionState) {
+            case SAVE_STATUS_TRANSITION_FADE_IN:
+                actor->alpha[playerIndex] += SAVE_STATUS_FADE_STEP;
+                if (actor->alpha[playerIndex] >= 0x100) {
+                    actor->alpha[playerIndex] = 0x100;
+                    actor->statusTransitionStates[playerIndex] = SAVE_STATUS_TRANSITION_NONE;
                 }
-                state = actor->unk31[i];
+                transitionState = actor->statusTransitionStates[playerIndex];
                 break;
-            case 2:
-                actor->alpha[i] -= 0x26;
-                if (actor->alpha[i] <= 0) {
-                    actor->alpha[i] = 0;
-                    actor->unk31[i] = 1;
-                    gControllerPakStatusCodes[i] = actor->unk36[i];
+            case SAVE_STATUS_TRANSITION_FADE_OUT:
+                actor->alpha[playerIndex] -= SAVE_STATUS_FADE_STEP;
+                if (actor->alpha[playerIndex] <= 0) {
+                    actor->alpha[playerIndex] = 0;
+                    actor->statusTransitionStates[playerIndex] = SAVE_STATUS_TRANSITION_FADE_IN;
+                    gControllerPakStatusCodes[playerIndex] = actor->nextStatusCodes[playerIndex];
                 }
-                state = actor->unk31[i];
+                transitionState = actor->statusTransitionStates[playerIndex];
                 break;
-            case 0:
-            case 3:
+            case SAVE_STATUS_TRANSITION_NONE:
+            case SAVE_STATUS_TRANSITION_DONE:
                 break;
             }
 
-            i++;
-            view = (TitleMenuWidgetItemView *) ((u8 *) view + 2);
-            global->padE[i - 1] = state;
-        } while (i < (s32) gPlayerCount);
+            playerIndex++;
+            panelPositions = (TitleMenuWidgetItemView *) ((u8 *) panelPositions + 2);
+            global->saveStatusTransitionStates[playerIndex - 1] = transitionState;
+        } while (playerIndex < (s32) gPlayerCount);
     }
 
     actor->frame = (actor->frame + 1) & 0xF;
-    sum = 0;
-    i = 0;
+    transitionStateSum = 0;
+    playerIndex = 0;
     if ((s32) gPlayerCount > 0) {
         do {
-            sum += actor->unk31[i];
-            i++;
-        } while (i < (s32) gPlayerCount);
+            transitionStateSum += actor->statusTransitionStates[playerIndex];
+            playerIndex++;
+        } while (playerIndex < (s32) gPlayerCount);
     }
 
-    if (sum == (gPlayerCount * 3)) {
+    if (transitionStateSum == (gPlayerCount * SAVE_STATUS_TRANSITION_DONE)) {
         removeCallbackTask((CallbackTask *) actor);
     } else {
         addRenderCallback(&gMenuRenderCallbackList, drawRaceSetupSaveStatusWidgets, (s32) actor);
@@ -1093,7 +1098,7 @@ void initRaceSetupSaveStatusWidgets(TitleMenuWidgetActor *arg0) {
 
     for (i = 0; i < gPlayerCount; i++) {
         new_var->alpha[i] = 0x100;
-        new_var->unk31[i] = 0;
+        new_var->statusTransitionStates[i] = SAVE_STATUS_TRANSITION_NONE;
     }
 
     setCallbackTaskCallback(new_var, updateRaceSetupSaveStatusWidgets);
