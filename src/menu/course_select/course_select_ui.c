@@ -2136,7 +2136,7 @@ void initCourseSelectExtraCourseIconList(CourseSelectWidgetActor *arg0) {
 }
 #endif
 
-// drawCourseSelectPlayerPanels best match: 98.748% (nonmatchings/drawCourseSelectPlayerPanels-6866765942504228165/base_16.c)
+// drawCourseSelectPlayerPanels best match: 98.973% (nonmatchings/drawCourseSelectPlayerPanels-5512657642801906896/base_11.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/course_select/course_select_ui/drawCourseSelectPlayerPanels.s")
 
 #ifdef NON_MATCHING
@@ -2147,6 +2147,7 @@ void drawCourseSelectPlayerPanels(CourseSelectWidgetInitActor *actor) {
     u8 text[4];
     s32 nextIndex;
     volatile s32 savedIndex;
+    s32 new_var;
     s32 offset;
     s32 j;
     s32 middleCount;
@@ -2166,20 +2167,21 @@ void drawCourseSelectPlayerPanels(CourseSelectWidgetInitActor *actor) {
 
     i = 0;
     if (count > 0) {
+        new_var = i;
         do {
             j = 0;
             alpha = 0x100;
             yPtr = &actor->unk20;
-            if (i == gPlayerCount) {
+            if (new_var == gPlayerCount) {
                 alpha = 0xC0;
             }
             if (i == 0) {
                 tile = 2;
             } else {
-                tile = (i + 5) & 0xFF;
+                tile = (new_var + 5) & 0xFF;
             }
 
-            savedIndex = i;
+            savedIndex = new_var;
             drawMenuSpriteWithAlpha(actor->unk18, *(&actor->unk20), getRelocatableHeapBlockBase(gAssetHandles[0x21]), 0x22, 0x20, 0x20, 0,
                           alpha, tile);
 
@@ -2228,7 +2230,7 @@ void drawCourseSelectPlayerPanels(CourseSelectWidgetInitActor *actor) {
             }
             j = 0;
             if (middleCount > 0) {
-                if (i) {
+                if (new_var) {
                 }
                 offset = 0;
                 do {
