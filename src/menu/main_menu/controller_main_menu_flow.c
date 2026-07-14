@@ -687,13 +687,12 @@ void requestControllerPakSaveWrite(u16 arg0) {
     osRecvMesg(&gControllerSubsystemReplyQueue, &msg, OS_MESG_BLOCK);
 }
 
-// writeControllerPakSave best match: 90.188%
+// writeControllerPakSave best match: 92.345% at nonmatchings/writeControllerPakSave-8367390958892477031/base_9.c
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/main_menu/controller_main_menu_flow/writeControllerPakSave.s")
 
 #ifdef NON_MATCHING
 void writeControllerPakSave(u16 arg0) {
     OSPfs *pfs;
-    OSPfs **pfsPtr;
     s32 *fileNo;
     s32 channel;
     u8 *src;
@@ -710,12 +709,11 @@ void writeControllerPakSave(u16 arg0) {
     gControllerPakSaveFileIdentity.companyCode = 'EB';
 
     src = gControllerPakSaveExtNameBytes;
-    dst = (u8 *)&gControllerPakSaveFileIdentity;
+    dst = (u8 *)&gControllerPakSaveFileIdentity + 9;
     end = gControllerPakSaveExtNameBytesEnd;
 copy_ext:
-    dst[10] = *src;
+    *++dst = *src;
     src++;
-    dst++;
     if (src < end) {
         goto copy_ext;
     }
@@ -732,13 +730,14 @@ copy_name:
     }
 
     pfs = &gControllerPakHandles[channel];
-    pfsPtr = &pfs;
-    osPfsInitPak(&gControllerEventQueue, *pfsPtr, channel);
+    osPfsInitPak(&gControllerEventQueue, pfs, channel);
 
     fileNo = &gControllerPakFileNos[channel];
-    if (osPfsFindFile(*pfsPtr, gControllerPakSaveFileIdentity.companyCode, gControllerPakSaveFileIdentity.gameCode,
+    pfs = &gControllerPakHandles[channel];
+    if (osPfsFindFile(pfs, gControllerPakSaveFileIdentity.companyCode, gControllerPakSaveFileIdentity.gameCode,
                       gControllerPakExtName, gControllerPakGameName, fileNo) == 5) {
-        osPfsAllocateFile(*pfsPtr, gControllerPakSaveFileIdentity.companyCode, gControllerPakSaveFileIdentity.gameCode,
+        pfs = &gControllerPakHandles[channel];
+        osPfsAllocateFile(pfs, gControllerPakSaveFileIdentity.companyCode, gControllerPakSaveFileIdentity.gameCode,
                           gControllerPakExtName, gControllerPakGameName, 0x7900, fileNo);
     }
 
@@ -760,7 +759,7 @@ checksum_loop:
     }
 
     save->checksum = checksum;
-    if (osPfsReadWriteFile(*pfsPtr, *fileNo, 1, 0, 0x78E0, (u8 *)save) == 0) {
+    if (osPfsReadWriteFile(&gControllerPakHandles[channel], *fileNo, 1, 0, 0x78E0, (u8 *)save) == 0) {
         (&gControllerPakRetryCounts)[channel] = 0;
         return;
     }
