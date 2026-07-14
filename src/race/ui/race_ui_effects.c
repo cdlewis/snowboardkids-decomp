@@ -3413,39 +3413,38 @@ void func_8005EA4C(RaceUiSparkleActor *arg0) {
     addRenderCallback(&D_801248EC, func_8005E6D0, (s32) arg0);
 }
 
-// func_8005ECA8 best match: 99.437% (nonmatchings/func_8005ECA8-5313856277864964686/base_10.c)
+// func_8005ECA8 best match: 99.671% (nonmatchings/func_8005ECA8-1225020319268080736/base_1.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race/ui/race_ui_effects/func_8005ECA8.s")
 
 #ifdef NON_MATCHING
 void func_8005ECA8(RaceUiSparkleActor *arg0) {
-    Vec3i vec;
     FixedMatrix3sScratch matrix;
     RacePlayerState *player;
     s16 timer;
+    s32 selectedPlayerIndex;
+    s32 vec[3];
     s32 activeCount;
-    register s32 selectedPlayerIndex;
-
-    selectedPlayerIndex = 0;
 
     if (gRaceUpdatePaused == 0) {
         if (gFrameCounter & 1) {
             arg0->frame = (arg0->frame + 1) & 3;
         }
 
-        vec.x = 0;
-        vec.y = arg0->zOffset;
-        vec.z = 0;
+        vec[0] = 0;
+        vec[1] = arg0->zOffset;
+        vec[2] = 0;
 
         player = &gRacePlayers[arg0->playerIndex];
         if (arg0) {
         }
         makeFixedRotationXY(matrix, player->pitch, player->yaw);
-        transformVec3iByFixedMatrix(matrix, &vec, &arg0->pos);
+        transformVec3iByFixedMatrix(matrix, (Vec3i *) vec, &arg0->pos);
 
         player = &gRacePlayers[arg0->playerIndex];
         arg0->pos.x += player->pos28.x;
         arg0->pos.y += player->pos28.y;
         arg0->pos.z += player->pos28.z;
+        selectedPlayerIndex = gRaceOrderPlayerIds[1];
 
         timer = arg0->timer;
         if (timer == 0) {
