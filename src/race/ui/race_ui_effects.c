@@ -46,6 +46,9 @@ extern void *createCallbackTaskWithUserIdPreservingArgs(void *, s32, s32);
 #define RACE_UI_TRICK_PRIZE_REVEAL_DELAY 0x14
 #define RACE_UI_TRICK_PRIZE_SHOW_COMPLETE_BONUS 2
 #define RACE_UI_TRICK_PRIZE_SHOW_TOTAL_MONEY 3
+#define RACE_UI_STUN_ORBIT_ANGLE_0 0
+#define RACE_UI_STUN_ORBIT_ANGLE_1 0x555
+#define RACE_UI_STUN_ORBIT_ANGLE_2 0xAAA
 #define SCALE_MATRIX_COMPONENT(value, scale) ((value * scale) / 0x1000)
 #define RACE_UI_SP_TRIANGLE_WORD(v0, v1, v2) (_SHIFTL((v0) * 2, 16, 8) | _SHIFTL((v1) * 2, 8, 8) | _SHIFTL((v2) * 2, 0, 8))
 #define RACE_UI_SP_QUADRANGLE_WORD0(v0, v1, v2, v3, flag) \
@@ -801,7 +804,7 @@ typedef struct RaceUiOrbitingSpriteActor {
     /* 0x2C */ void *palette;
     /* 0x30 */ void *image;
     /* 0x34 */ u8 matrixDirty;
-    /* 0x35 */ u8 index;
+    /* 0x35 */ u8 playerIndex;
 } RaceUiOrbitingSpriteActor;
 
 typedef struct RaceUiSparkleActor {
@@ -4497,14 +4500,14 @@ void func_800625D8(RaceUiOrbitingSpriteActor *arg0) {
 void func_800628DC(RaceUiOrbitingSpriteActor *arg0) {
     RacePlayerState *player;
 
-    player = &gRacePlayers[arg0->index];
+    player = &gRacePlayers[arg0->playerIndex];
     if (!(player->flags & 0x10000)) {
         removeCallbackTask(arg0);
         return;
     }
 
     transformVec3iByFixedMatrix(player->transform.rotation, &D_800D62A0, &arg0->pos);
-    player = &gRacePlayers[arg0->index];
+    player = &gRacePlayers[arg0->playerIndex];
     arg0->pos.x += player->transform.translation.x;
     arg0->pos.y += player->transform.translation.y + 0x80000;
     arg0->pos.z += player->transform.translation.z;
@@ -4514,27 +4517,28 @@ void func_800628DC(RaceUiOrbitingSpriteActor *arg0) {
     addRenderCallback(&D_801248EC, func_800625D8, (s32)arg0);
 }
 
-void func_80062A10(void *arg0) {
-    getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gRaceCommonSpriteAssetHandle), 0x35, (u8 *)arg0 + 0x30, (u8 *)arg0 + 0x2C);
+void func_80062A10(RaceUiOrbitingSpriteActor *arg0) {
+    getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gRaceCommonSpriteAssetHandle), 0x35, &arg0->image, &arg0->palette);
     setCallbackTaskCallback(arg0, func_800628DC);
 }
 
-void spawnRaceUiStunOrbitingIcons(s16 arg0) {
-    void *temp;
-    temp = createCallbackTaskPreservingArgs(func_80062A10, 0, 4);
-    if (temp != NULL) {
-        *(s8 *)((u8 *)temp + 0x35) = arg0;
-        *(s16 *)((u8 *)temp + 0x28) = 0;
+void spawnRaceUiStunOrbitingIcons(s16 playerIndex) {
+    RaceUiOrbitingSpriteActor *icon;
+
+    icon = createCallbackTaskPreservingArgs(func_80062A10, 0, 4);
+    if (icon != NULL) {
+        icon->playerIndex = playerIndex;
+        icon->angle = RACE_UI_STUN_ORBIT_ANGLE_0;
     }
-    temp = createCallbackTaskPreservingArgs(func_80062A10, 0, 4);
-    if (temp != NULL) {
-        *(s8 *)((u8 *)temp + 0x35) = arg0;
-        *(s16 *)((u8 *)temp + 0x28) = 0x555;
+    icon = createCallbackTaskPreservingArgs(func_80062A10, 0, 4);
+    if (icon != NULL) {
+        icon->playerIndex = playerIndex;
+        icon->angle = RACE_UI_STUN_ORBIT_ANGLE_1;
     }
-    temp = createCallbackTaskPreservingArgs(func_80062A10, 0, 4);
-    if (temp != NULL) {
-        *(s8 *)((u8 *)temp + 0x35) = arg0;
-        *(s16 *)((u8 *)temp + 0x28) = 0xAAA;
+    icon = createCallbackTaskPreservingArgs(func_80062A10, 0, 4);
+    if (icon != NULL) {
+        icon->playerIndex = playerIndex;
+        icon->angle = RACE_UI_STUN_ORBIT_ANGLE_2;
     }
 }
 

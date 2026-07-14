@@ -211,7 +211,7 @@ void func_800623E8(struct RaceUiTransitionActor *arg0);
 void initRaceUiSpinHitTransitionEffect(struct RaceUiTransitionActor *arg0);
 void func_800625D8(struct RaceUiOrbitingSpriteActor *arg0);
 void func_800628DC(struct RaceUiOrbitingSpriteActor *arg0);
-void func_80062A10(void *arg0);
+void func_80062A10(struct RaceUiOrbitingSpriteActor *arg0);
 void spawnRaceUiStunOrbitingIcons(s16 arg0);
 void renderIceCourseBumper(struct RaceUiScaledParticleActor *arg0);
 void updateIceCourseBumper(struct RaceUiScaledParticleActor *arg0);
