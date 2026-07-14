@@ -1213,7 +1213,7 @@ void updateCourseSelectCourseCursors(CourseSelectWidgetActor *arg0) {
     }
 }
 
-// initCourseSelectCourseCursors best match: 89.025% (nonmatchings/initCourseSelectCourseCursors-5512657642801906896/base_11.c)
+// initCourseSelectCourseCursors best match: 89.532% (nonmatchings/initCourseSelectCourseCursors-4588856335748919862/base_12.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/course_select/course_select_ui/initCourseSelectCourseCursors.s")
 
 #ifdef NON_MATCHING
@@ -1244,7 +1244,7 @@ void initCourseSelectCourseCursors(CourseSelectWidgetActor *arg0) {
         bytePtr = (u8 *)actor;
         posPtr = (s16 *)actor;
         do {
-            if (*courseUnlocked++ != 0) {
+            if (courseUnlocked[0] != 0) {
                 idx = 1;
                 if (gRacePlayers[i].selectedCharacterId == 5) {
                     idx = 0;
@@ -1252,6 +1252,7 @@ void initCourseSelectCourseCursors(CourseSelectWidgetActor *arg0) {
             } else {
                 idx = 0;
             }
+            courseUnlocked++;
             bytePtr[0x38] = (*xyTable)[idx];
             posPtr[0x10] = (*xyTable)[((i & 1) * 2) + idx + 2];
             posPtr[0xC] = (*xTable)[((i >= 2) * 2) + 1];
