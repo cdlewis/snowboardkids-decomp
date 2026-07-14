@@ -141,7 +141,7 @@ void func_8005DB3C(void *arg0);
 void func_8005DBD0(void *arg0);
 void func_8005DC4C(void *arg0);
 void func_8005DD0C(void *arg0);
-void func_8005DD88(void *arg0);
+void updateRaceUiTrickPrizePayoutWaitForConfirm(struct RaceUiCourseStatsActor *arg0);
 void func_8005DE6C(struct RaceUiCourseStatsActor *arg0);
 void updateRaceUiTrickPrizePayoutHoldMoneyRow(struct RaceUiCourseStatsActor *arg0);
 void updateRaceUiTrickPrizePayoutRevealMoneyRow(struct RaceUiCourseStatsActor *arg0);
