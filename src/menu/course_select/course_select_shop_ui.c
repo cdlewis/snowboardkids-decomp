@@ -1207,7 +1207,7 @@ void initCourseUnlockPricePanel(ShopMenuWidgetActor *arg0) {
     setCallbackTaskCallback(arg0, updateCourseUnlockPricePanel);
 }
 
-// drawCourseUnlockPurchasePrompt best match: 98.724% (nonmatchings/drawCourseUnlockPurchasePrompt-3242520251544044307/base_15.c)
+// drawCourseUnlockPurchasePrompt best match: 99.339% (nonmatchings/drawCourseUnlockPurchasePrompt-8460208293698481450/base_9.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/course_select/course_select_shop_ui/drawCourseUnlockPurchasePrompt.s")
 
 #ifdef NON_MATCHING
@@ -1226,9 +1226,10 @@ void drawCourseUnlockPurchasePrompt(ShopMenuWidgetActor *arg0) {
     drawMenuSprite((s16)(arg0->x + 0xB0), arg0->y, getRelocatableHeapBlockBase(gAssetHandles[0x24]), 2, 0x20, 0x20, 0, 0);
     drawMenuGlyphScript((s16)(arg0->x + 0x30), (s16)(arg0->y + 4), &gCourseUnlockPurchasePromptText, 0, 0x100, 0);
 
-    alpha = 0x60;
     if (arg0->item.price == 0) {
         alpha = 0x100;
+    } else {
+        alpha = 0x60;
     }
 
     tileSize = 0x20;
