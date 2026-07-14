@@ -1030,7 +1030,7 @@ void getRaceCourseSurfaceSpawnTransform(s32 arg0, s32 *x, s32 *y, s32 *z, s16 *a
     *angle = -((RaceMotionSurface *)((s32)gRaceCourseSurfaces + keyframeOffset))->angle;
 }
 
-// getRaceCourseTargetPositionAhead best match: 98.629% (nonmatchings/getRaceCourseTargetPositionAhead-2870645799593382959/base_1.c)
+// getRaceCourseTargetPositionAhead best match: 98.750% (nonmatchings/getRaceCourseTargetPositionAhead-5313856277864964686/base_12.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race/motion/race_motion/getRaceCourseTargetPositionAhead.s")
 
 #ifdef NON_MATCHING
@@ -1041,17 +1041,19 @@ void getRaceCourseTargetPositionAhead(s32 arg0, s32 arg1, s32 arg2, s32 *arg3, s
     s32 projected;
     s32 distance;
     s16 pathIndex;
+    s16 upperSurfaceIndex;
 
     if (arg0 != gRaceCourseStartEntries[gRaceCourseIndex].pathIndex) {
         keyframeOffset = arg0 * sizeof(RaceMotionSurface);
-        gRaceCourseSurfaceAngleSin = fixedSine(((RaceMotionSurface *)((s32)gRaceCourseSurfaces + keyframeOffset))->angle);
-        gRaceCourseSurfaceAngleCos = fixedCosine(((RaceMotionSurface *)((s32)gRaceCourseSurfaces + keyframeOffset))->angle);
+        deltaZ = arg0;
+        gRaceCourseSurfaceAngleSin = fixedSine(gRaceCourseSurfaces[deltaZ].angle);
+        gRaceCourseSurfaceAngleCos = fixedCosine(gRaceCourseSurfaces[arg0].angle);
 
-        deltaX = arg1 - (gRaceCourseSurfaceCoords[((RaceMotionSurface *)((s32)gRaceCourseSurfaces + keyframeOffset))->positionIndex].x << 0x11);
-        deltaZ = arg2 - (gRaceCourseSurfaceCoords[((RaceMotionSurface *)((s32)gRaceCourseSurfaces + keyframeOffset))->positionIndex].z << 0x11);
+        deltaX = arg1 - (gRaceCourseSurfaceCoords[gRaceCourseSurfaces[arg0].positionIndex].x << 0x11);
+        deltaZ = arg2 - (gRaceCourseSurfaceCoords[gRaceCourseSurfaces[arg0].positionIndex].z << 0x11);
         projected = ((s64)-gRaceCourseSurfaceAngleSin * deltaX + (s64)gRaceCourseSurfaceAngleCos * deltaZ) / 0x1000;
 
-        if ((arg0 >= gRaceCourseStartEntries[gRaceCourseIndex].unk38) && (gRaceCourseStartEntries[gRaceCourseIndex].unk3A >= arg0)) {
+        if ((arg0 >= gRaceCourseStartEntries[gRaceCourseIndex].unk38) && ((upperSurfaceIndex = gRaceCourseStartEntries[gRaceCourseIndex].unk3A) >= arg0)) {
             distance = projected + 0xC00000;
             *arg3 = ((s64)-gRaceCourseSurfaceAngleSin * distance) / 0x1000;
             deltaZ = gRaceCourseSurfaceAngleCos;
@@ -1066,23 +1068,23 @@ void getRaceCourseTargetPositionAhead(s32 arg0, s32 arg1, s32 arg2, s32 *arg3, s
             *arg4 = ((s64)gRaceCourseSurfaceAngleCos * distance) / 0x1000;
         }
 
-        *arg3 += gRaceCourseSurfaceCoords[((RaceMotionSurface *)((s32)gRaceCourseSurfaces + keyframeOffset))->positionIndex].x << 0x11;
-        *arg4 += gRaceCourseSurfaceCoords[((RaceMotionSurface *)((s32)gRaceCourseSurfaces + keyframeOffset))->positionIndex].z << 0x11;
+        *arg3 += gRaceCourseSurfaceCoords[gRaceCourseSurfaces[arg0].positionIndex].x << 0x11;
+        *arg4 = *arg4 + (gRaceCourseSurfaceCoords[gRaceCourseSurfaces[arg0].positionIndex].z << 0x11);
 
         pathIndex = findRaceCourseSurfaceFromHint(arg0, *arg3, *arg4 ^ 0);
         gRaceCourseSurfaceAngleSin = fixedSine(gRaceCourseSurfaces[(s32)pathIndex].angle);
         keyframeOffset = pathIndex * sizeof(RaceMotionSurface);
-        gRaceCourseSurfaceAngleCos = fixedCosine(((RaceMotionSurface *)((s32)gRaceCourseSurfaces + keyframeOffset))->angle);
+        gRaceCourseSurfaceAngleCos = fixedCosine(gRaceCourseSurfaces[pathIndex].angle);
 
-        deltaX = *arg3 - (gRaceCourseSurfaceCoords[((RaceMotionSurface *)((s32)gRaceCourseSurfaces + keyframeOffset))->positionIndex].x << 0x11);
-        deltaZ = *arg4 - (gRaceCourseSurfaceCoords[((RaceMotionSurface *)((s32)gRaceCourseSurfaces + keyframeOffset))->positionIndex].z << 0x11);
+        deltaX = *arg3 - (gRaceCourseSurfaceCoords[gRaceCourseSurfaces[pathIndex].positionIndex].x << 0x11);
+        deltaZ = *arg4 - (gRaceCourseSurfaceCoords[gRaceCourseSurfaces[pathIndex].positionIndex].z << 0x11);
         distance = updateRacePlayerSmoothedPathOffset(arg5, pathIndex, arg6);
         projected = ((s64)-gRaceCourseSurfaceAngleSin * deltaX + (s64)gRaceCourseSurfaceAngleCos * deltaZ) / 0x1000;
 
-        *arg3 = ((s64)gRaceCourseSurfaceAngleCos * distance + (s64)(0, deltaZ = -gRaceCourseSurfaceAngleSin) * projected) / 0x1000;
+        *arg3 = ((s64)gRaceCourseSurfaceAngleCos * distance + (s64)(0, deltaZ = (keyframeOffset = -gRaceCourseSurfaceAngleSin)) * projected) / 0x1000;
         *arg4 = ((s64)gRaceCourseSurfaceAngleSin * distance + (s64)gRaceCourseSurfaceAngleCos * projected) / 0x1000;
-        *arg3 += gRaceCourseSurfaceCoords[((RaceMotionSurface *)((s32)gRaceCourseSurfaces + keyframeOffset))->positionIndex].x << 0x11;
-        *arg4 += gRaceCourseSurfaceCoords[((RaceMotionSurface *)((s32)gRaceCourseSurfaces + keyframeOffset))->positionIndex].z << 0x11;
+        *arg3 += gRaceCourseSurfaceCoords[gRaceCourseSurfaces[pathIndex].positionIndex].x << 0x11;
+        *arg4 += gRaceCourseSurfaceCoords[gRaceCourseSurfaces[pathIndex].positionIndex].z << 0x11;
     } else {
         *arg3 = gRaceCourseStartEntries[gRaceCourseIndex].unk18;
         *arg4 = gRaceCourseStartEntries[gRaceCourseIndex].unk1C;
@@ -1706,38 +1708,33 @@ s32 stepRaceMotionJointAnimationUntilEnd(RaceMotionState *state) {
     return 0;
 }
 
-// initRaceMotionModelParts best match: 98.000% (base_5.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race/motion/race_motion/initRaceMotionModelParts.s")
-
-#ifdef NON_MATCHING
 void initRaceMotionModelParts(RaceMotionInitState *state) {
     s32 i;
     u8 *partIds;
     u8 *parentPartIds;
-    u8 modelId;
-    RaceMotionModelPart *part;
     RaceMotionCoord *positions;
+    s16 zero;
 
-    modelId = state->modelId;
-    state->partCount = gRaceMotionModelPartCounts[modelId];
-    partIds = gRaceMotionModelPartIds[modelId];
-    parentPartIds = gRaceMotionModelParentPartIds[modelId];
+    state->partCount = gRaceMotionModelPartCounts[state->modelId];
+    partIds = gRaceMotionModelPartIds[state->modelId];
+    parentPartIds = gRaceMotionModelParentPartIds[state->modelId];
 
     for (i = 0; i < state->partCount; i++) {
-        part = &state->parts[i];
-        part->partId = partIds[i];
-        part->parentPartId = parentPartIds[i];
+        state->parts[i].partId = *partIds;
+        state->parts[i].parentPartId = *parentPartIds;
+        partIds++;
+        parentPartIds++;
     }
 
     positions = gRaceMotionModelPartPositions[state->modelId];
-    for (i = 0; i < state->partCount; i++) {
-        part = &state->parts[i];
-        part->rotationX = 0;
-        part->rotationY = 0;
-        part->rotationZ = 0;
-        part->x = positions[i].x << RACE_MOTION_MODEL_POSITION_FRAC_BITS;
-        part->y = positions[i].y << RACE_MOTION_MODEL_POSITION_FRAC_BITS;
-        part->z = positions[i].z << RACE_MOTION_MODEL_POSITION_FRAC_BITS;
+
+    for (i = 0; i < state->partCount; i++, positions++) {
+        state->parts[i].rotationZ = 0;
+        zero = state->parts[i].rotationZ;
+        state->parts[i].rotationY = zero;
+        state->parts[i].rotationX = zero;
+        state->parts[i].x = positions->x << RACE_MOTION_MODEL_POSITION_FRAC_BITS;
+        state->parts[i].y = positions->y << RACE_MOTION_MODEL_POSITION_FRAC_BITS;
+        state->parts[i].z = positions->z << RACE_MOTION_MODEL_POSITION_FRAC_BITS;
     }
 }
-#endif

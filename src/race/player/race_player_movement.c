@@ -604,13 +604,13 @@ void pushRacePlayersOutOfCylinderOrApplyItemHit(RaceVec3i *pos, s32 xzSize, s32 
     } while (player != &gFrameCounter);
 }
 
-// pushRacePlayerOutOfCylinder best match: 99.776% (nonmatchings/pushRacePlayerOutOfCylinder-7273315160691878794/base_13.c)
+// pushRacePlayerOutOfCylinder best match: 99.851% (nonmatchings/pushRacePlayerOutOfCylinder-5313856277864964686/base_7.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race/player/race_player_movement/pushRacePlayerOutOfCylinder.s")
 
 #ifdef NON_MATCHING
 void pushRacePlayerOutOfCylinder(RaceVec3i *pos, s32 xzSize, s32 ySize, s16 playerIndex) {
-    RacePlayer *player;
     s32 temp;
+    RacePlayer *player;
     s32 xzLimit;
     s32 xDiff;
     s32 yLimit;

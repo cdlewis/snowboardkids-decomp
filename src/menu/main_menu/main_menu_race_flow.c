@@ -82,6 +82,18 @@ extern u8 D_598A70[];
 extern u8 D_60F1A0[];
 extern u8 D_60F990[];
 extern s16 gRacePlayerSurfaceAngleByPlayer;
+extern s8 D_80121D94;
+extern s8 D_80121D95;
+extern s8 D_80121D96;
+extern s8 D_801223A0;
+extern s8 D_801223A1;
+extern s8 D_801223A2;
+extern s8 D_801229AC;
+extern s8 D_801229AD;
+extern s8 D_801229AE;
+extern s8 D_80122FB8;
+extern s8 D_80122FB9;
+extern s8 D_80122FBA;
 
 void startMainMenuModePreviewRaceFlow(void) {
     gMainMenuModeSelection = 1;
@@ -157,20 +169,27 @@ void exitMainMenuModePreviewRaceSelectionMenu(void) {
     }
 }
 
-// initMainMenuModePreviewRace best match: 97.462% (nonmatchings/initMainMenuModePreviewRace-2870645799593382959/base_10.c)
+// initMainMenuModePreviewRace best match: 98.590% (nonmatchings/initMainMenuModePreviewRace-5313856277864964686/base_8.c)
 
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/main_menu/main_menu_race_flow/initMainMenuModePreviewRace.s")
 
 #ifdef NON_MATCHING
 void initMainMenuModePreviewRace(void) {
-    RacePlayer *players;
-    MainMenuModePreviewRaceCourseAsset *courseAsset;
+    MainMenuModePreviewRaceCourseAsset *temp_v0;
+    s32 one0;
+    s32 one1;
+    s32 two0;
     s32 five0;
-    s32 five1;
-    s32 five2;
-    s32 five3;
+    unsigned long five1;
+    s32 six0;
+    s32 seven0;
+    s32 two1;
+    long long two2;
+    s32 three0;
+    s32 seven1;
+    RacePlayer *player;
 
-    gRaceCourseIndex = (((gMainMenuModePreviewRaceCourseAssets[gMainMenuModeSelection].courseIndex & 0xFF) & 0xFF) & 0xFF) & 0xFF;
+    gRaceCourseIndex = (s16) gMainMenuModePreviewRaceCourseAssets[gMainMenuModeSelection].courseIndex;
     gRaceUpdatePaused = 0;
     gRaceCameraModeChangeDisabled = 0;
     gRaceResultState = 0;
@@ -180,56 +199,64 @@ void initMainMenuModePreviewRace(void) {
     gRaceTypeSelection = 0;
     resetGameplayRng();
 
-    players = gRacePlayers;
+    one0 = 1;
+    two2 = 1;
+    one1 = two2;
+    two0 = 2;
     five0 = 5;
+    six0 = 6;
+    seven0 = 7;
+    two1 = 2;
+    two2 = two1;
+    three0 = 3;
+    seven1 = 7;
+    gRacePlayers->unk4 = 0;
+    gRacePlayers[1].unk4 = 0;
+    gRacePlayers[2].unk4 = 0;
+    gRacePlayers[3].unk4 = 0;
+    gRacePlayers->characterId = 0;
+    gRacePlayers[1].characterId = one0;
+    gRacePlayers[2].characterId = two0;
+    gRacePlayers[3].characterId = 3;
+    gRacePlayers->unk11 = 0;
+    gRacePlayers[1].unk11 = 0;
+    gRacePlayers[2].unk11 = 0;
     five1 = 5;
-    five2 = 5;
-    five3 = 5;
-    players[0].unk4 = 0;
-    players[1].unk4 = 0;
-    players[2].unk4 = 0;
-    players[3].unk4 = 0;
-    players[0].characterId = 0;
-    players[1].characterId = 1;
-    players[2].characterId = 2;
-    players[3].characterId = 3;
-    players[0].unk11 = 0;
-    players[1].unk11 = 0;
-    players[2].unk11 = 0;
-    players[3].unk11 = 0;
-    players[0].unk12 = 3;
-    players[1].unk12 = 5;
-    players[2].unk12 = 6;
-    players[3].unk12 = 7;
-    players[0].unk17 = 0;
-    players[1].unk17 = 1;
-    players[2].unk17 = 2;
-    players[3].unk17 = 3;
+    gRacePlayers[3].unk11 = 0;
+    gRacePlayers->unk12 = 3;
+    gRacePlayers[1].unk12 = five0;
+    player = gRacePlayers;
+    gRacePlayers[2].unk12 = six0;
+    gRacePlayers[3].unk12 = seven0;
+    player->unk17 = 0;
+    gRacePlayers[1].unk17 = one1;
+    gRacePlayers[2].unk17 = two2;
+    gRacePlayers[3].unk17 = three0;
     gPlayerCount = 4;
-    players[0].isActive = 1;
-    players[1].isActive = 1;
-    players[2].isActive = 1;
-    players[3].isActive = 1;
+    player->isActive = 1;
+    gRacePlayers[1].isActive = 1;
+    gRacePlayers[2].isActive = 1;
+    gRacePlayers[3].isActive = 1;
     gRacePlayerCount = 4;
-    gRaceLapCount = 5;
+    gRaceLapCount = five1;
     gRacePlayerAttackStartTimer = 0x64;
     initCallbackTaskScheduler(1);
 
-    gRacePlayers[0].unk15 = 0;
-    gRacePlayers[0].soundDisabled = 0;
-    gRacePlayers[0].replayInputSource = five0;
-    gRacePlayers[1].unk15 = 0;
-    gRacePlayers[1].soundDisabled = 0;
-    gRacePlayers[1].replayInputSource = five1;
-    gRacePlayers[2].unk15 = 0;
-    gRacePlayers[2].soundDisabled = 0;
-    gRacePlayers[2].replayInputSource = five2;
-    gRacePlayers[3].unk15 = 0;
-    gRacePlayers[3].soundDisabled = 0;
-    gRacePlayers[3].replayInputSource = five3;
+    D_80121D95 = 0;
+    D_80121D94 = 0;
+    D_80121D96 = five1;
+    D_801223A1 = 0;
+    D_801223A0 = 0;
+    D_801223A2 = 5;
+    D_801229AD = 0;
+    D_801229AC = 0;
+    D_801229AE = five1;
+    D_80122FB9 = 0;
+    D_80122FB8 = 0;
+    D_80122FBA = five1;
 
-    courseAsset = &gMainMenuModePreviewRaceCourseAssets[gMainMenuModeSelection];
-    loadCompressedRomAsset(courseAsset->romStart, courseAsset->romEnd, 0x2B);
+    temp_v0 = &gMainMenuModePreviewRaceCourseAssets[gMainMenuModeSelection];
+    loadCompressedRomAsset(temp_v0->romStart, temp_v0->romEnd, 0x2B);
     loadRaceCourseAssets();
     loadRaceCharacterAssets();
     resetRaceCameras();
@@ -252,7 +279,7 @@ void initMainMenuModePreviewRace(void) {
     createCallbackTask(initMainMenuModeDescriptionPanel, 0, 0x64);
     createCallbackTask(initRaceSetupCornerPrompts, 0, 0x64);
     setCurrentGameTaskCallback(fadeInMainMenuModePreviewRace, 0);
-    requestMusicSequenceBank(7);
+    requestMusicSequenceBank(seven1);
 }
 #endif
 
