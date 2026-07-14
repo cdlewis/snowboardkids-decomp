@@ -30,6 +30,7 @@ extern void *createCallbackTaskWithUserIdPreservingArgs(void *, s32, s32);
 #define RACE_UI_RESULTS_FADE_STEP 0x10
 #define RACE_UI_RESULTS_FULL_ALPHA 0xFF
 #define RACE_UI_RESULTS_REVEAL_TIMER 0x14
+#define RACE_UI_PRIZE_PAYOUT_REVEAL_TIMER 0x14
 #define RACE_UI_COURSE_RECORD_REVEAL_TIME_PRIZE_STATE 0
 #define RACE_UI_COURSE_RECORD_REVEAL_SPEED_FAN_GET_STATE 1
 #define RACE_UI_COURSE_RECORD_REVEAL_PERFECT_GET_STATE 2
@@ -1435,11 +1436,11 @@ void func_8005893C(void *arg0) {
     addRenderCallback(&gMenuForegroundRenderCallbackList, func_80058360, arg0);
 }
 
-void func_800589F4(void *arg0) {
-    *(s16 *)((u8 *)arg0 + 0x1A) = *(s16 *)((u8 *)arg0 + 0x1A) - 1;
-    if (*(s16 *)((u8 *)arg0 + 0x1A) == 0) {
+void updateRaceUiPrizePayoutRevealRankPrize(RaceUiPrizePayoutActor *arg0) {
+    arg0->timer--;
+    if (arg0->timer == 0) {
         enqueueSoundEffect(0x1A, 0x32);
-        *(s16 *)((u8 *)arg0 + 0x1A) = 0x14;
+        arg0->timer = RACE_UI_PRIZE_PAYOUT_REVEAL_TIMER;
         setCallbackTaskCallback(arg0, func_8005893C);
     }
     addRenderCallback(&gMenuRenderCallbackList, func_80057E90, arg0);
@@ -1450,9 +1451,9 @@ void func_800589F4(void *arg0) {
 void updateRaceUiPrizePayoutShowRankPrize(RaceUiPrizePayoutActor *arg0) {
     arg0->timer--;
     if (arg0->timer == 0) {
-        arg0->timer = 0x14;
+        arg0->timer = RACE_UI_PRIZE_PAYOUT_REVEAL_TIMER;
         enqueueSoundEffect(0x1A, 0x32);
-        setCallbackTaskCallback(arg0, func_800589F4);
+        setCallbackTaskCallback(arg0, updateRaceUiPrizePayoutRevealRankPrize);
     }
     addRenderCallback(&gMenuRenderCallbackList, func_80057E90, arg0);
     addRenderCallback(&gMenuForegroundRenderCallbackList, func_80058360, arg0);
@@ -1461,7 +1462,7 @@ void updateRaceUiPrizePayoutShowRankPrize(RaceUiPrizePayoutActor *arg0) {
 void updateRaceUiPrizePayoutFadeIn(RaceUiPrizePayoutActor *arg0) {
     arg0->alpha += 0x10;
     if (arg0->alpha >= 0x100) {
-        arg0->timer = 0x14;
+        arg0->timer = RACE_UI_PRIZE_PAYOUT_REVEAL_TIMER;
         arg0->alpha = 0xFF;
         setCallbackTaskCallback(arg0, updateRaceUiPrizePayoutShowRankPrize);
     }
