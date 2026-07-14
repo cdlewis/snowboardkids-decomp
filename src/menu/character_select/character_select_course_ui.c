@@ -716,7 +716,7 @@ void drawCharacterSelectCoursePreviewFrame(CharacterSelectCourseWidgetActor *arg
 }
 #endif
 
-// updateCharacterSelectCoursePreviewFrame best match: 91.995%
+// updateCharacterSelectCoursePreviewFrame best match: 92.148% (nonmatchings/updateCharacterSelectCoursePreviewFrame-5512657642801906896/base_10.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/character_select/character_select_course_ui/updateCharacterSelectCoursePreviewFrame.s")
 
 #ifdef NON_MATCHING
@@ -748,7 +748,8 @@ void updateCharacterSelectCoursePreviewFrame(CharacterSelectCourseWidgetActor *a
     }
 
     if (state != D_8010AE8A) {
-        state = D_8010AE8A & 0xFF;
+        selectedIndex = D_8010AE8A & 0xFF;
+        state = selectedIndex;
         arg0->transition.bytes.state = D_8010AE8A;
     }
 
