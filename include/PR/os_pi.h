@@ -59,7 +59,7 @@ extern "C" {
 typedef struct {
     u32      errStatus;         /* error status */
     void    *dramAddr;          /* RDRAM buffer address (DMA) */
-    void    *C2Addr;            /* C2 buffer address */
+    u32     *C2Addr;            /* C2 buffer address */
     u32      sectorSize;        /* size of transfering sector */
     u32      C1ErrNum;          /* total # of C1 errors */
     u32      C1ErrSector[4];    /* error sectors */

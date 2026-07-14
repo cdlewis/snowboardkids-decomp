@@ -82,9 +82,9 @@
 #define LEO_BM_CTL_SECTOR_MASK 0x00FF0000
 #define LEO_BM_CTL_SECTOR_SHIFT 16
 
-#define LEO_CMD_TYPE_0 0 //TODO: name
-#define LEO_CMD_TYPE_1 1 //TODO: name
-#define LEO_CMD_TYPE_2 2 //TODO: name
+#define LEO_CMD_TYPE_READ 0
+#define LEO_CMD_TYPE_WRITE 1
+#define LEO_CMD_TYPE_C2_TRANSFER 2
 
 #define LEO_ERROR_GOOD 0
 #define LEO_ERROR_4 4   //maybe busy?
