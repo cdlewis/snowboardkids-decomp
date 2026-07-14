@@ -1415,17 +1415,17 @@ void func_80058610(RaceUiAlpha18Actor *arg0) {
     addRenderCallback(&gMenuForegroundRenderCallbackList, func_80058360, (s32)arg0);
 }
 
-void func_80058880(void *arg0) {
-    *(s16 *)((u8 *)arg0 + 0x1A) = *(s16 *)((u8 *)arg0 + 0x1A) - 1;
-    if (*(s16 *)((u8 *)arg0 + 0x1A) == 0) {
-        *(s16 *)((u8 *)arg0 + 0x1A) = 0;
-        setCallbackTaskCallback(arg0, func_80058610);
+void updateRaceUiPrizePayoutWaitBeforeMoneyCount(RaceUiPrizePayoutActor *actor) {
+    actor->timer = actor->timer - 1;
+    if (actor->timer == 0) {
+        actor->timer = 0;
+        setCallbackTaskCallback(actor, func_80058610);
     }
-    addRenderCallback(&gMenuRenderCallbackList, func_80057E90, arg0);
-    addRenderCallback(&gMenuRenderCallbackList, func_8005804C, arg0);
-    addRenderCallback(&gMenuRenderCallbackList, func_8005812C, arg0);
-    addRenderCallback(&gMenuRenderCallbackList, func_8005827C, arg0);
-    addRenderCallback(&gMenuForegroundRenderCallbackList, func_80058360, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_80057E90, actor);
+    addRenderCallback(&gMenuRenderCallbackList, func_8005804C, actor);
+    addRenderCallback(&gMenuRenderCallbackList, func_8005812C, actor);
+    addRenderCallback(&gMenuRenderCallbackList, func_8005827C, actor);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, func_80058360, actor);
 }
 
 void func_8005893C(void *arg0) {
@@ -1433,7 +1433,7 @@ void func_8005893C(void *arg0) {
     if (*(s16 *)((u8 *)arg0 + 0x1A) == 0) {
         *(s16 *)((u8 *)arg0 + 0x1A) = 0x14;
         enqueueSoundEffect(0x1A, 0x32);
-        setCallbackTaskCallback(arg0, func_80058880);
+        setCallbackTaskCallback(arg0, updateRaceUiPrizePayoutWaitBeforeMoneyCount);
     }
     addRenderCallback(&gMenuRenderCallbackList, func_80057E90, arg0);
     addRenderCallback(&gMenuRenderCallbackList, func_8005804C, arg0);
