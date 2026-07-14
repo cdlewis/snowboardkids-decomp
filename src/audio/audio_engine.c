@@ -259,7 +259,7 @@ void finishCurrentRdpTask(SchedulerState *arg0) {
     gSchedulerRdpTaskActive = 0;
 }
 
-// schedulerSwapBufferThreadMain best match: 95.100% (nonmatchings/schedulerSwapBufferThreadMain-2663524570355072948/base_10.c)
+// schedulerSwapBufferThreadMain best match: 95.450% (nonmatchings/schedulerSwapBufferThreadMain-8201208972835473051/base_6.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/audio/audio_engine/schedulerSwapBufferThreadMain.s")
 
 #ifdef NON_MATCHING
@@ -270,6 +270,7 @@ typedef struct SchedulerSwapLocals {
 } SchedulerSwapLocals;
 
 void schedulerSwapBufferThreadMain(SchedulerState *arg0) {
+    OSMesg *msgPtr;
     s16 retrace;
     SchedulerSwapLocals locals;
     SchedulerTask *task;
@@ -279,7 +280,10 @@ void schedulerSwapBufferThreadMain(SchedulerState *arg0) {
     locals.queue1A4 = &arg0->queue1A4; loop: do { osRecvMesg(&arg0->eventQueue, (OSMesg *)(&arg0->curRSPTask), 1); waitForFramebufferAvailable(arg0, arg0->curRSPTask);
         osSendMesg(&arg0->retraceQueue, (OSMesg)1, 1);
         osRecvMesg(&arg0->queue14C, &locals.msg, 1);
-        osRecvMesg(locals.queue1A4, &locals.msg, 1);
+        msgPtr = &locals.msg;
+        osRecvMesg(locals.queue1A4, msgPtr, 1);
+        if (!gRetraceCounter) {
+        }
         task = arg0->curRSPTask; } while (!(task->flags & 0x40));
 
     framebuffer = task->framebuffer;
