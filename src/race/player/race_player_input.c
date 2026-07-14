@@ -81,7 +81,7 @@ void recordRaceReplayInputFrame(RacePlayer *player) {
     }
 }
 
-// playRaceReplayInputFrame best match: 94.277% (base_9.c)
+// playRaceReplayInputFrame best match: 95.503% (base_4.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race/player/race_player_input/playRaceReplayInputFrame.s")
 
 #ifdef NON_MATCHING
@@ -102,17 +102,7 @@ void playRaceReplayInputFrame(RacePlayer *player) {
     replayFrame = player->replayFrame;
     if (replayFrame < 0x960) {
         replayOffset = (replayFrame * 4) - replayFrame;
-        player->stickX = history[(u16) player->playerIndex].bytes[replayOffset + 1];
-        stickY = history[(u16) player->playerIndex].bytes[replayOffset + 2];
-        player->inputFlags = 0;
-        player->stickY = stickY;
-        buttons = (u8) history[(u16) player->playerIndex].bytes[replayOffset];
-        if (buttons & 1) {
-            player->inputFlags = 8;
-            replayFrame = player->replayFrame;
-            replayOffset = (replayFrame * 4) - replayFrame;
-            buttons = (u8) history[PLAYER_INDEX(player)].bytes[replayOffset];
-        }
+        player->stickX = history[(u16) player->playerIndex].bytes[replayOffset + 1]; stickY = history[(u16) player->playerIndex].bytes[replayOffset + 2]; player->inputFlags = 0; player->stickY = stickY; buttons = (u8) history[(u16) player->playerIndex].bytes[replayOffset]; if (buttons & 1) { player->inputFlags = 8; replayFrame = player->replayFrame; replayOffset = (replayFrame * 4) - replayFrame; buttons = (u8) history[PLAYER_INDEX(player)].bytes[replayOffset]; }
         if (buttons & 2) {
             player->inputFlags |= 4;
             replayFrame = player->replayFrame;
@@ -138,7 +128,7 @@ void playRaceReplayInputFrame(RacePlayer *player) {
             if (1) {}
         }
         if (buttons & 0x10) {
-            player->inputFlags |= 0x8000;
+            player->inputFlags = player->inputFlags | 0x8000;
             replayFrame = player->replayFrame;
             replayOffset = (replayFrame * 4) - replayFrame;
             buttons = (u8) history[PLAYER_INDEX(player)].bytes[replayOffset];
