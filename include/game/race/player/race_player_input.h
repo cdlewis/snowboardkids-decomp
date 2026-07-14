@@ -20,7 +20,10 @@ typedef struct RacePlayer {
         u16 playerIndexU;
     };
     /* 0x002 */ s16 unk2;
-    /* 0x004 */ u8 unk4;
+    /* 0x004 */ union {
+        u8 unk4;
+        u8 isCpu;
+    };
     /* 0x005 */ u8 selectedCharacterId;
     /* 0x006 */ u8 menuSelection;
     /* 0x007 */ u8 selectionUnlockState;
@@ -187,7 +190,10 @@ typedef struct RacePlayer {
     /* 0x502 */ s16 unk502;
     /* 0x504 */ s32 unk504;
     /* 0x508 */ s8 unk508;
-    /* 0x509 */ s8 rankIndex;
+    /* 0x509 */ union {
+        s8 rankIndex;
+        s8 racePosition;
+    };
     /* 0x50A */ char pad50A[6];
     /* 0x510 */ s16 shieldEffectTimer;
     /* 0x512 */ s8 itemEffectType;
