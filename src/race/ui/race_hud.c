@@ -608,27 +608,29 @@ void noopRaceHudCallback(s32 arg0) {
 
 }
 
-// drawTrainingRaceHud best match: 99.348% at nonmatchings/drawTrainingRaceHud-2694253543240320626/base_11.c.
+// drawTrainingRaceHud best match: 99.534% at nonmatchings/drawTrainingRaceHud-8460208293698481450/base_10.c.
 #pragma GLOBAL_ASM("asm/nonmatchings/race/ui/race_hud/drawTrainingRaceHud.s")
 
 #ifdef NON_MATCHING
 const char D_800E180C[] = "%5ld";
 
 void drawTrainingRaceHud(s32 arg0) {
-    volatile u8 padding[0x18];
+    s32 new_var2;
     char end;
     char buffer[5];
+    volatile u8 padding[0x18];
     char *digit;
     s32 x;
     s32 palette;
+    s32 new_var;
     RacePlayer *player;
 
     player = &gRacePlayers[0];
-    sprintf(buffer, D_800E180C, gRacePlayers[0].unk568);
+    sprintf(buffer, D_800E180C, (&gRacePlayers[0])->unk568);
 
     x = 0x50;
     digit = buffer;
-    if (gRacePlayers[0].unk568 < 100) {
+    if (player->unk568 < 100) {
         palette = 0x10;
     } else {
         palette = 0xE;
@@ -636,7 +638,8 @@ void drawTrainingRaceHud(s32 arg0) {
 
     do {
         if (*digit != ' ') {
-            drawAssetTableSpriteWithExplicitPalette((s16)x, 0x50, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), (*digit - 5) & 0xFFFF,
+            new_var = 5;
+            drawAssetTableSpriteWithExplicitPalette((s16)x, 0x50, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), (*digit - new_var) & 0xFFFF,
                           palette & 0xFFFF);
         }
         digit++;
@@ -647,20 +650,20 @@ void drawTrainingRaceHud(s32 arg0) {
     if (((!buffer) && (!buffer)) && (!buffer)) {
     }
 
-    if (player->itemEffectPalette != 0) {
+    if ((&gRacePlayers[0])->itemEffectPalette != 0) {
         drawScaledAssetTableSprite(-0x20, -0x60, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
-                      (player->itemEffectCount + (((((((((gRaceTimerTensDigitTileOffsets[player->itemEffectType] & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) - 1) & 0xFFFF,
-                      player->itemEffectPalette);
+                      ((&gRacePlayers[0])->itemEffectCount + (((((((((gRaceTimerTensDigitTileOffsets[(&gRacePlayers[0])->itemEffectType] & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) - 1) & 0xFFFF,
+                      (&gRacePlayers[0])->itemEffectPalette);
     } else {
         drawAssetTableSprite(-0x20, -0x60, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
-                      (player->itemEffectCount + gRaceTimerTensDigitTileOffsets[player->itemEffectType] - 1) & 0xFFFF);
+                      ((&gRacePlayers[0])->itemEffectCount + gRaceTimerTensDigitTileOffsets[(&gRacePlayers[0])->itemEffectType] - (new_var2 = 1)) & 0xFFFF);
     }
 
-    if (player->actionEffectPalette != 0) {
-        drawScaledAssetTableSprite(0, -0x60, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), gRaceTimerOnesDigitTileIds[player->actionEffectType],
-                      player->actionEffectPalette);
+    if ((&gRacePlayers[0])->actionEffectPalette != 0) {
+        drawScaledAssetTableSprite(0, -0x60, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), gRaceTimerOnesDigitTileIds[(&gRacePlayers[0])->actionEffectType],
+                      (&gRacePlayers[0])->actionEffectPalette);
     } else {
-        drawAssetTableSprite(0, -0x60, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), gRaceTimerOnesDigitTileIds[player->actionEffectType]);
+        drawAssetTableSprite(0, -0x60, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), gRaceTimerOnesDigitTileIds[(&gRacePlayers[0])->actionEffectType]);
     }
 
     drawAssetTableSprite(-0x88, 0x40, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x24);
