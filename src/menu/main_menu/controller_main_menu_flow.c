@@ -81,6 +81,8 @@ typedef struct SaveFileIdentity {
     s32 size;
     u32 gameCode;
     u16 companyCode;
+    char extName[4];
+    char gameName[16];
 } SaveFileIdentity;
 
 typedef struct SaveSlotBytes {
@@ -500,7 +502,7 @@ void requestControllerPakSaveStatus(u16 arg0) {
     osRecvMesg(&gControllerSubsystemReplyQueue, &msg, OS_MESG_BLOCK);
 }
 
-// checkControllerPakSaveStatus best match: 81.386%
+// checkControllerPakSaveStatus best match: 85.470% at nonmatchings/checkControllerPakSaveStatus-8460208293698481450/base_15.c
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/main_menu/controller_main_menu_flow/checkControllerPakSaveStatus.s")
 
 #ifdef NON_MATCHING
@@ -517,37 +519,38 @@ void checkControllerPakSaveStatus(u16 arg0) {
     u8 byte2;
     u8 byte3;
 
-    gControllerPakSaveFileIdentity.file_size = 0x7900;
-    gControllerPakSaveFileIdentity.game_code = 0x4E534B45;
-    gControllerPakSaveFileIdentity.company_code = 0x4542;
+    arg0 &= 0xFFFF;
+    gControllerPakSaveFileIdentity.size = 0x7900;
+    gControllerPakSaveFileIdentity.gameCode = 0x4E534B45;
+    gControllerPakSaveFileIdentity.companyCode = 0x4542;
 
     src = gControllerPakSaveExtNameBytes;
-    dst = (u8 *) &gControllerPakSaveFileIdentity;
+    dst = (u8 *) gControllerPakSaveFileIdentity.extName - 1;
     do {
         byte0 = *src;
         src++;
         dst++;
-        dst[9] = byte0;
+        *dst = byte0;
     } while (src < gControllerPakSaveExtNameBytesEnd);
 
     src = gControllerPakSaveGameNameBytes;
-    dst = (u8 *) &gControllerPakSaveFileIdentity;
+    dst = (u8 *) gControllerPakSaveFileIdentity.gameName - 4;
     do {
         byte0 = *src++;
         byte1 = *src++;
         byte2 = *src++;
         byte3 = *src++;
         dst += 4;
-        dst[0xA] = byte0;
-        dst[0xB] = byte1;
-        dst[0xC] = byte2;
-        dst[0xD] = byte3;
+        dst[0] = byte0;
+        dst[1] = byte1;
+        dst[2] = byte2;
+        dst[3] = byte3;
     } while (src != gControllerPakSaveExtNameBytes);
 
     pfs = &gControllerPakHandles[arg0];
     osPfsInitPak(&gControllerEventQueue, pfs, arg0);
 
-    ret = osPfsFindFile(pfs, gControllerPakSaveFileIdentity.company_code, gControllerPakSaveFileIdentity.game_code, gControllerPakExtName, gControllerPakGameName,
+    ret = osPfsFindFile(pfs, gControllerPakSaveFileIdentity.companyCode, gControllerPakSaveFileIdentity.gameCode, gControllerPakExtName, gControllerPakGameName,
                         &gControllerPakFileNos[arg0]);
     if (ret == 0) {
         gControllerPakStatusCodes[arg0] = 2;
