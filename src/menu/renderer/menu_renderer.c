@@ -1344,7 +1344,7 @@ void drawMenuGlyphScriptDefaultFont(volatile s16 x, s16 y, MenuGlyphScript *scri
     }
 }
 
-// drawMenuGlyph best match: 79.572% (nonmatchings/drawMenuGlyph-5802343343535905907/base_2.c)
+// drawMenuGlyph best match: 82.622% (nonmatchings/drawMenuGlyph-8367390958892477031/base_2.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/renderer/menu_renderer/drawMenuGlyph.s")
 
 #ifdef NON_MATCHING
@@ -1368,7 +1368,7 @@ void drawMenuGlyph(s16 x, s16 y, u16 glyph, u8 palette, u16 scale, u16 fontBank)
     s32 clipS;
     s32 clipT;
     s32 drawX0;
-    s32 drawY0;
+    volatile s32 drawY0;
     s32 drawX1;
     s32 drawY1;
     s32 i;
