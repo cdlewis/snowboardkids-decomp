@@ -316,7 +316,7 @@ void initMultiplayerCourseSelectMenu(void) {
 }
 #endif
 
-// updateMultiplayerCourseSelectMenu best match: 67.818% (nonmatchings/updateMultiplayerCourseSelectMenu-5802343343535905907/base_7.c)
+// updateMultiplayerCourseSelectMenu best match: 69.119% (not yet matching)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/course_select/multiplayer_course_select_menu/updateMultiplayerCourseSelectMenu.s")
 
 #ifdef NON_MATCHING
@@ -351,6 +351,7 @@ void updateMultiplayerCourseSelectMenu(void) {
     s32 row;
     u8 maxColumnOriginal;
     s8 oldColumn;
+    s32 originalChoice;
     u8 maxColumn;
     s32 held;
     s32 pressed;
@@ -434,6 +435,7 @@ void updateMultiplayerCourseSelectMenu(void) {
 
                                 held = gPlayerInputHeld[i];
                                 oldColumn = *column;
+                                originalChoice = oldColumn;
                                 heldHorizontal = held & (STICK_UP | U_JPAD);
                                 if ((heldHorizontal == 0) && !(held & (STICK_DOWN | D_JPAD))) {
                                     *repeatTimer = 0;
@@ -469,12 +471,12 @@ void updateMultiplayerCourseSelectMenu(void) {
                                     }
                                 }
 
-                                if ((maxColumnOriginal != oldColumn) && (maxColumnOriginal != (u8) oldColumn) && ((u8) oldColumn != oldColumn)) {
+                                if ((maxColumnOriginal != *column) && (maxColumnOriginal != originalChoice) && (originalChoice != *column)) {
                                     *confirmHold = *confirmHold + 1;
-                                    if ((u8) oldColumn < *column) {
-                                        *momentum = -0x800000;
-                                    } else {
+                                    if (originalChoice < *column) {
                                         *momentum = 0x800000;
+                                    } else {
+                                        *momentum = -0x800000;
                                     }
                                 }
                                 if (maxColumnOriginal == *column) {
