@@ -81,8 +81,16 @@ typedef struct {
     u8 pad0[0x18];
     /* 0x18 */ s16 x[4];
     /* 0x20 */ s16 y[4];
-    u8 pad28[0x18];
+    /* 0x28 */ s16 xDistance[4];
+    /* 0x30 */ s16 yDistance[4];
+    /* 0x38 */ s16 accumulator[4];
     /* 0x40 */ u16 tileSize[4];
+    /* 0x48 */ s16 xDirection[4];
+    /* 0x50 */ s16 timer[4];
+    /* 0x58 */ s16 stepCount[4];
+    /* 0x60 */ u8 axis[4];
+    /* 0x64 */ u8 divisor[4];
+    /* 0x68 */ u8 state[4];
 } CharacterSelectUiSelectedCharacterTokenActor;
 
 typedef struct {
@@ -111,7 +119,7 @@ void drawCharacterSelectPlayerStatsPanels(CharacterSelectUiPanelActor *arg0);
 void updateCharacterSelectPlayerStatsPanels(CharacterSelectUiPanelActor *arg0);
 void initCharacterSelectPlayerStatsPanels(CharacterSelectUiPanelActor *arg0);
 void drawCharacterSelectSelectedCharacterTokens(CharacterSelectUiSelectedCharacterTokenActor *arg0);
-void updateCharacterSelectSelectedCharacterTokens(CharacterSelectUiPanelActor *arg0);
-void initCharacterSelectSelectedCharacterTokens(CharacterSelectUiPanelActor *arg0);
+void updateCharacterSelectSelectedCharacterTokens(CharacterSelectUiSelectedCharacterTokenActor *arg0);
+void initCharacterSelectSelectedCharacterTokens(CharacterSelectUiSelectedCharacterTokenActor *arg0);
 
 #endif
