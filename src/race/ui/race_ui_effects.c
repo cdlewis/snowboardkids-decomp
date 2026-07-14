@@ -226,8 +226,13 @@ typedef struct RaceUiDualCounterActor {
     /* 0x00 */ u8 pad0[0x10];
     /* 0x10 */ u16 index;
     /* 0x12 */ u8 pad12[0x18 - 0x12];
-    /* 0x18 */ s8 row;
-    /* 0x19 */ s8 column;
+    union {
+        struct {
+            /* 0x18 */ s8 row;
+            /* 0x19 */ s8 column;
+        };
+        /* 0x18 */ s16 alpha18;
+    };
     /* 0x1A */ u8 pad1A[2];
     /* 0x1C */ s16 alpha;
     /* 0x1E */ s16 timer;
@@ -2810,7 +2815,7 @@ void func_8005CE4C(RaceUiDualCounterActor *arg0) {
     setCallbackTaskCallback(arg0, func_8005CDB0);
 }
 
-// func_8005CF60 best match: 93.690% (nonmatchings/func_8005CF60-7123131487808489545/base_4.c)
+// func_8005CF60 best match: 93.819% (nonmatchings/func_8005CF60-8201208972835473051/base_10.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race/ui/race_ui_effects/func_8005CF60.s")
 
 #ifdef NON_MATCHING
@@ -2828,7 +2833,7 @@ void func_8005CF60(RaceUiDualCounterActor *arg0) {
     s32 x;
 
     gfxp = &gRegionAllocPtr;
-    if (arg0->alpha != 0xFF) { gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w1 = 0; gfx->words.w0 = 0xE7000000; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = 0xFF2FFFFF; w0 = 0xFC119623; gfx->words.w0 = w0; gfx->words.w1 = w1; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = 0x00504240; w0 = 0xB900031D; gfx->words.w0 = w0; gfx->words.w1 = w1; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w0 = 0xFA000000; gfx->words.w1 = (arg0->alpha & 0xFF) | (~0xFF); }
+    if (arg0->alpha18 != 0xFF) { gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w1 = 0; gfx->words.w0 = 0xE7000000; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = 0xFF2FFFFF; w0 = 0xFC119623; gfx->words.w0 = w0; gfx->words.w1 = w1; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = 0x00504240; w0 = 0xB900031D; gfx->words.w0 = w0; gfx->words.w1 = w1; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w0 = 0xFA000000; gfx->words.w1 = (arg0->alpha18 & 0xFF) | (~0xFF); }
 
     sprintf(buffer, D_800E143C, gRaceTrickAttackPointTotal);
     x = -0x50;
@@ -2882,7 +2887,14 @@ body2:
 done2:
     if (gfxp == NULL) {
     }
-    if (arg0->alpha != 0xFF) { gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = (s32) gMenuRenderModeResetDl; w0 = 0x06000000; gfx->words.w0 = w0; gfx->words.w1 = w1; }
+    if (arg0->alpha18 != 0xFF) {
+        gfx = gRegionAllocPtr;
+        gRegionAllocPtr = gfx + 1;
+        w1 = (s32) gMenuRenderModeResetDl;
+        w0 = 0x06000000;
+        gfx->words.w0 = w0;
+        gfx->words.w1 = w1;
+    }
 }
 #endif
 
