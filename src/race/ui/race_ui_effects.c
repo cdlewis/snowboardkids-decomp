@@ -582,7 +582,7 @@ typedef struct {
 typedef struct {
     /* 0x00 */ s16 active;
     /* 0x02 */ s16 sentinel;
-    /* 0x04 */ s32 command[3];
+    /* 0x04 */ Vec3i position;
 } RaceUiGfxCommandScriptEntry;
 
 typedef struct RaceUiGfxCommandActor {
@@ -946,7 +946,7 @@ extern u32 D_200CFB0[];
 extern u32 D_200D3A8[];
 extern void addRenderCallback(void *, void *, s32);
 extern RaceUiGfxCommandDest *allocFixedTransformMatrix(RaceUiTrailCopyBlock *);
-extern void setPackedMatrixTranslation(RaceUiGfxCommandDest *, s32 *);
+extern void setPackedMatrixTranslation(RaceUiGfxCommandDest *, Vec3i *);
 extern void osWritebackDCache(void *, s32);
 extern void drawAssetTableSprite(s16, s16, s32, s32);
 extern void drawAssetTableSprite8bpp(s16, s16, s32, s32);
@@ -5343,7 +5343,7 @@ void func_800651BC(RaceUiGfxCommandActor *arg0) {
     i = 0;
     if (entry->sentinel != -1) {
         do {
-            if ((entry->active != 0) && (isPositionNearCurrentRaceViewportCamera(&entry->command) != 0)) {
+            if ((entry->active != 0) && (isPositionNearCurrentRaceViewportCamera(&entry->position) != 0)) {
                 if (textureIndex != entry->sentinel + actor->textureOffset) {
                     textureIndex = entry->sentinel + actor->textureOffset;
                     getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gRaceUiSpriteAssetHandle), 0x14, &spA0, &sp9C);
@@ -5425,7 +5425,7 @@ void updateRaceCourseCoinMarkers(RaceUiGfxCommandActor *arg0) {
         goto done;
     }
     xzSize = 0x70000;
-    pos = &entry->command;
+    pos = &entry->position;
 
 loop:
     if (entry->active != 0) {
@@ -5446,7 +5446,7 @@ loop:
     }
 
     entry++;
-    pos = &entry->command;
+    pos = &entry->position;
     if (entry->sentinel != sentinel) {
         goto loop;
     }
@@ -5476,7 +5476,7 @@ void initRaceCourseCoinMarkerMatrices(RaceUiGfxCommandActor *arg0) {
         do {
             script->active = one;
             actor1->particles[i] = *template;
-            setPackedMatrixTranslation(&actor1->particles[i], script->command);
+            setPackedMatrixTranslation(&actor1->particles[i], &script->position);
             i++;
             offset += sizeof(RaceUiGfxCommandDest);
             script++;
@@ -5485,25 +5485,25 @@ void initRaceCourseCoinMarkerMatrices(RaceUiGfxCommandActor *arg0) {
     osWritebackDCache(actor1->particles, actor1->count * sizeof(RaceUiGfxCommandDest));
 }
 
-void initRaceCourseCoinMarkers(void *arg0) {
-    RaceUiGfxCommandScriptEntry *var_v0;
-    s32 var_v1;
+void initRaceCourseCoinMarkers(RaceUiGfxCommandActor *actor) {
+    RaceUiGfxCommandScriptEntry *marker;
+    s32 markerCount;
 
-    var_v0 = D_800D693C[gRaceCourseIndex];
-    var_v1 = 0;
-    if (var_v0->sentinel != -1) {
+    marker = D_800D693C[gRaceCourseIndex];
+    markerCount = 0;
+    if (marker->sentinel != -1) {
         do {
-            var_v1++;
-            var_v0++;
-        } while (var_v0->sentinel != -1);
+            markerCount++;
+            marker++;
+        } while (marker->sentinel != -1);
     }
-    D_801222F2 = var_v1;
-    *(s16 *)((u8 *)arg0 + 0x1E) = var_v1;
-    if (var_v1 != 0) {
-        gAssetHandles.resultTextHandle = allocRelocatableHeapBlock(var_v1 << 6);
-        *(s32 *)((u8 *)arg0 + 0x18) = getRelocatableHeapBlockBase(gAssetHandles.resultTextHandle);
-        initRaceCourseCoinMarkerMatrices(arg0);
-        setCallbackTaskCallback(arg0, updateRaceCourseCoinMarkers);
+    D_801222F2 = markerCount;
+    actor->count = markerCount;
+    if (markerCount != 0) {
+        gAssetHandles.resultTextHandle = allocRelocatableHeapBlock(markerCount * sizeof(RaceUiGfxCommandDest));
+        actor->particles = getRelocatableHeapBlockBase(gAssetHandles.resultTextHandle);
+        initRaceCourseCoinMarkerMatrices(actor);
+        setCallbackTaskCallback(actor, updateRaceCourseCoinMarkers);
     }
 }
 
