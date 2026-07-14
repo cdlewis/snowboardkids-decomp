@@ -1706,38 +1706,33 @@ s32 stepRaceMotionJointAnimationUntilEnd(RaceMotionState *state) {
     return 0;
 }
 
-// initRaceMotionModelParts best match: 98.000% (base_5.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race/motion/race_motion/initRaceMotionModelParts.s")
-
-#ifdef NON_MATCHING
 void initRaceMotionModelParts(RaceMotionInitState *state) {
     s32 i;
     u8 *partIds;
     u8 *parentPartIds;
-    u8 modelId;
-    RaceMotionModelPart *part;
     RaceMotionCoord *positions;
+    s16 zero;
 
-    modelId = state->modelId;
-    state->partCount = gRaceMotionModelPartCounts[modelId];
-    partIds = gRaceMotionModelPartIds[modelId];
-    parentPartIds = gRaceMotionModelParentPartIds[modelId];
+    state->partCount = gRaceMotionModelPartCounts[state->modelId];
+    partIds = gRaceMotionModelPartIds[state->modelId];
+    parentPartIds = gRaceMotionModelParentPartIds[state->modelId];
 
     for (i = 0; i < state->partCount; i++) {
-        part = &state->parts[i];
-        part->partId = partIds[i];
-        part->parentPartId = parentPartIds[i];
+        state->parts[i].partId = *partIds;
+        state->parts[i].parentPartId = *parentPartIds;
+        partIds++;
+        parentPartIds++;
     }
 
     positions = gRaceMotionModelPartPositions[state->modelId];
-    for (i = 0; i < state->partCount; i++) {
-        part = &state->parts[i];
-        part->rotationX = 0;
-        part->rotationY = 0;
-        part->rotationZ = 0;
-        part->x = positions[i].x << RACE_MOTION_MODEL_POSITION_FRAC_BITS;
-        part->y = positions[i].y << RACE_MOTION_MODEL_POSITION_FRAC_BITS;
-        part->z = positions[i].z << RACE_MOTION_MODEL_POSITION_FRAC_BITS;
+
+    for (i = 0; i < state->partCount; i++, positions++) {
+        state->parts[i].rotationZ = 0;
+        zero = state->parts[i].rotationZ;
+        state->parts[i].rotationY = zero;
+        state->parts[i].rotationX = zero;
+        state->parts[i].x = positions->x << RACE_MOTION_MODEL_POSITION_FRAC_BITS;
+        state->parts[i].y = positions->y << RACE_MOTION_MODEL_POSITION_FRAC_BITS;
+        state->parts[i].z = positions->z << RACE_MOTION_MODEL_POSITION_FRAC_BITS;
     }
 }
-#endif
