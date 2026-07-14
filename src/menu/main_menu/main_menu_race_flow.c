@@ -542,13 +542,14 @@ void waitForTrainingCourseStartSelection(void) {
     gViewportStates[0].overlayAlpha = 0x80;
 }
 
-// zoomTrainingCourseRaceViewport best match: 92.813% (nonmatchings/zoomTrainingCourseRaceViewport-3242520251544044307/base_10.c)
+// zoomTrainingCourseRaceViewport best match: 93.138% (nonmatchings/zoomTrainingCourseRaceViewport-8460208293698481450/base_11.c)
 
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/main_menu/main_menu_race_flow/zoomTrainingCourseRaceViewport.s")
 
 #ifdef NON_MATCHING
 void zoomTrainingCourseRaceViewport(void) {
     volatile u32 new_var;
+    MainMenuRaceFlowTask *task;
     s32 temp_v0;
 
     gCurrentGameTask->transitionTimer += 1;
@@ -559,7 +560,8 @@ void zoomTrainingCourseRaceViewport(void) {
                       (u16) ((s32) (new_var = (s16) ((((s32) (temp_v0 * 0x58)) / 16) + 0x78))), 0x140U,
                       (u16) ((s32) ((s16) ((((s32) (temp_v0 * 0x64)) / 16) + 0x8C))),
                       (f32) (((((f64) temp_v0) * (-0.9523809523809523)) / 0x10) + 2.2857142857142856));
-    if (gCurrentGameTask->transitionTimer == 0x10) {
+    task = gCurrentGameTask;
+    if (task->transitionTimer == 0x10) {
         requestMusicSequenceBank(0xF);
         configureViewport(0, 0xA0, 0x78, 0x120U, 0xD0U, 0x140U, 0xF0U, 1.3333334f);
         setCurrentGameTaskCallback(runTrainingCourseUntilLessonEnd, 0);
