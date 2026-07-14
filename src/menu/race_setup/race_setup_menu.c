@@ -280,24 +280,46 @@ void initRaceSetupSaveMenu(void) {
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/race_setup/race_setup_menu/updateRaceSetupSaveMenu.s")
 
 #ifdef NON_MATCHING
+#define CONTROLLER_PAK_STATUS_PROBE 0
+#define CONTROLLER_PAK_STATUS_SAVE_STATUS 1
+#define CONTROLLER_PAK_STATUS_SAVE_READ 2
+#define CONTROLLER_PAK_STATUS_REPAIR 3
+#define CONTROLLER_PAK_STATUS_RETRY 4
+#define CONTROLLER_PAK_STATUS_READY 5
+#define CONTROLLER_PAK_STATUS_NO_PAK 7
+#define CONTROLLER_PAK_STATUS_SAVE_FOUND 8
+#define CONTROLLER_PAK_STATUS_READ_FAILED 0xD
+#define CONTROLLER_PAK_STATUS_REPAIR_FAILED 0xE
+#define CONTROLLER_PAK_STATUS_REPAIRED 0xF
+#define CONTROLLER_PAK_STATUS_REPAIR_CONFIRM 0x11
+#define CONTROLLER_PAK_STATUS_USE_EXISTING_SAVE 0x12
+#define CONTROLLER_PAK_RETRY_LIMIT 3
+
+#define SAVE_CHOICE_USE_PAK 3
+#define SAVE_CHOICE_SKIP_PAK 4
+#define SAVE_STATUS_TRANSITION_FADE_OUT 2
+#define SAVE_STATUS_TRANSITION_DONE 3
+#define SAVE_PANEL_CREATE_DELAY 5
+#define SAVE_READY_CONFIRM_DELAY 0xF
+
 typedef struct {
     u8 state;
-    u8 unk1;
-    s16 unk2;
-    u8 unk4;
+    u8 timer;
+    s16 alpha;
+    u8 forceUpdate;
     u8 pad5;
-    s16 unk6[4];
-    u8 unkE[4];
-    s16 unk12[4];
-} RaceSetupSubState03798;
+    s16 pendingStatusCodes[4];
+    u8 statusTransitionStates[4];
+    s16 nextStatusCodes[4];
+} RaceSetupSaveMenuState;
 
 typedef struct {
     u8 pad0[0x4];
-    s32 unk4;
+    s32 money;
     u8 pad8[0x44];
-    u8 unk4C;
+    u8 highestUnlockedCourse;
     u8 pad4D[0x78AB];
-} RaceSetupSavePlayer03798;
+} RaceSetupSaveDataView;
 
 typedef struct {
     u8 pad0[2];
@@ -320,198 +342,198 @@ extern s16 gMenuChoicePromptState[];
 extern u8 gControllerPakRetryCounts[];
 extern u8 gControllerPakOperationCounts[];
 extern u8 D_800EC9E4;
-extern RaceSetupSavePlayer03798 gGameSaveDataBuffer[];
+extern RaceSetupSaveDataView gGameSaveDataBuffer[];
 extern ControllerPakRumbleCheckPromptTransition03798 gControllerPakRumbleCheckPromptTransition;
 extern CallbackTask *D_8010ADE0;
 extern CallbackTask *D_8010ADE4;
 extern CallbackTask *D_8010ADE8;
 extern RaceSetupPlayerState03798 gRacePlayers[];
 
-#define gRaceSetupSaveSubState (*(RaceSetupSubState03798 *)&gRaceSetupMenuSubState)
+#define gRaceSetupSaveMenuState (*(RaceSetupSaveMenuState *)&gRaceSetupMenuSubState)
 #define gRumblePakConnectedByControllerArray_03798 gRumblePakConnectedByController
 #define gPlayerInputPressedArray_03798 (&gPlayerInputPressed)
 
 void updateRaceSetupSaveMenu(void) {
     s32 allReady = 0;
-    s16 allPresent = 0;
-    CallbackTask *task = D_8010ADE0;
-    CallbackTask *transitionTask = D_8010ADE8;
-    s32 i;
-    u8 *present;
+    s16 allControllerPakOpsComplete = 0;
+    CallbackTask *panelFrameTask = D_8010ADE0;
+    CallbackTask *statusWidgetTask = D_8010ADE8;
+    s32 playerIndex;
+    u8 *controllerPakOpCount;
 
-    if ((gRaceSetupSaveSubState.unk4 == 1) && (gRaceSetupSaveSubState.state == 5)) {
-        gRaceSetupSaveSubState.state = 6;
+    if ((gRaceSetupSaveMenuState.forceUpdate == 1) && (gRaceSetupSaveMenuState.state == CONTROLLER_PAK_STATUS_READY)) {
+        gRaceSetupSaveMenuState.state = 6;
     }
 
-    if ((task == NULL) || (gRaceSetupSaveSubState.unk4 != 0)) {
-        if ((gRaceSetupSaveSubState.state >= 6) && (gRaceSetupSaveSubState.state < 8)) {
-            if (gRaceSetupSaveSubState.state == 6) {
+    if ((panelFrameTask == NULL) || (gRaceSetupSaveMenuState.forceUpdate != 0)) {
+        if ((gRaceSetupSaveMenuState.state >= 6) && (gRaceSetupSaveMenuState.state < 8)) {
+            if (gRaceSetupSaveMenuState.state == 6) {
                 s32 input = gPlayerInputPressedArray_03798[0];
                 if ((input & A_BUTTON) || (input & START_BUTTON)) {
                     enqueueSoundEffect(1, 0x32);
-                    gRaceSetupSaveSubState.state = 7;
-                    gRaceSetupSaveSubState.unk2 = 0xFF;
-                    gRaceSetupSaveSubState.unk1 = 0;
+                    gRaceSetupSaveMenuState.state = 7;
+                    gRaceSetupSaveMenuState.alpha = 0xFF;
+                    gRaceSetupSaveMenuState.timer = 0;
                 }
             }
         } else {
             allReady = 1;
-            allPresent = 1;
-            i = 0;
+            allControllerPakOpsComplete = 1;
+            playerIndex = 0;
             if (gPlayerCount > 0) {
-                present = gControllerPakOperationCounts;
+                controllerPakOpCount = gControllerPakOperationCounts;
                 do {
-                    u8 presentValue = *present;
+                    u8 operationCount = *controllerPakOpCount;
 
-                    if (presentValue != 1) {
-                        RaceSetupPlayerState03798 *player = &gRacePlayers[i];
-                        s32 stateIndex;
-                        s16 *choice;
+                    if (operationCount != 1) {
+                        RaceSetupPlayerState03798 *player = &gRacePlayers[playerIndex];
+                        s32 statusCode;
+                        s16 *choiceState;
                         s16 choiceValue;
                         s32 input;
 
-                        if ((transitionTask == NULL) || (gRaceSetupSaveSubState.unkE[i] == 0)) {
-                            stateIndex = i * 2;
-                            choice = &gMenuChoicePromptState[i];
-                            choiceValue = *choice;
+                        if ((statusWidgetTask == NULL) || (gRaceSetupSaveMenuState.statusTransitionStates[playerIndex] == 0)) {
+                            statusCode = playerIndex * 2;
+                            choiceState = &gMenuChoicePromptState[playerIndex];
+                            choiceValue = *choiceState;
                             if (choiceValue != 0) {
-                                stateIndex = 6;
+                                statusCode = 6;
                             } else {
-                                stateIndex = gControllerPakStatusCodes[i];
+                                statusCode = gControllerPakStatusCodes[playerIndex];
                             }
 
-                            switch (stateIndex) {
-                                case 0: {
+                            switch (statusCode) {
+                                case CONTROLLER_PAK_STATUS_PROBE: {
                                     s32 pakState;
-                                    u16 playerIndex = i;
+                                    u16 controllerIndex = playerIndex;
 
-                                    gRumblePakConnectedByControllerArray_03798[i] = 0;
-                                    requestRumbleMotorInit(playerIndex, gPlayerCount, choiceValue);
-                                    pakState = gRumbleMotorStatuses[i];
+                                    gRumblePakConnectedByControllerArray_03798[playerIndex] = 0;
+                                    requestRumbleMotorInit(controllerIndex, gPlayerCount, choiceValue);
+                                    pakState = gRumbleMotorStatuses[playerIndex];
                                     if ((pakState != 1) && (pakState != 0xB) && (pakState != 4)) {
-                                        gRumblePakConnectedByControllerArray_03798[i] = 1;
+                                        gRumblePakConnectedByControllerArray_03798[playerIndex] = 1;
                                     } else {
-                                        gRumblePakConnectedByControllerArray_03798[i] = 0;
+                                        gRumblePakConnectedByControllerArray_03798[playerIndex] = 0;
                                     }
-                                    requestControllerPakProbe(playerIndex);
+                                    requestControllerPakProbe(controllerIndex);
                                     break;
                                 }
 
-                                case 1:
-                                    requestControllerPakSaveStatus((u16)i, gPlayerCount, choiceValue);
+                                case CONTROLLER_PAK_STATUS_SAVE_STATUS:
+                                    requestControllerPakSaveStatus((u16)playerIndex, gPlayerCount, choiceValue);
                                     break;
 
-                                case 2: {
+                                case CONTROLLER_PAK_STATUS_SAVE_READ: {
                                     u8 result;
 
-                                    requestControllerPakSaveRead((u16)i, gPlayerCount, choiceValue);
-                                    result = gControllerPakRetryCounts[i];
+                                    requestControllerPakSaveRead((u16)playerIndex, gPlayerCount, choiceValue);
+                                    result = gControllerPakRetryCounts[playerIndex];
                                     if (result == 0) {
                                         player->unk568 = 0;
-                                        player->unkC = gGameSaveDataBuffer[i].unk4;
-                                        gControllerPakStatusCodes[i] = 8;
-                                        *choice = 1;
-                                    } else if (result == 3) {
-                                        if (transitionTask != NULL) {
-                                            gRaceSetupSaveSubState.unkE[i] = 2;
-                                            gRaceSetupSaveSubState.unk12[i] = 0xD;
+                                        player->unkC = gGameSaveDataBuffer[playerIndex].money;
+                                        gControllerPakStatusCodes[playerIndex] = CONTROLLER_PAK_STATUS_SAVE_FOUND;
+                                        *choiceState = 1;
+                                    } else if (result == CONTROLLER_PAK_RETRY_LIMIT) {
+                                        if (statusWidgetTask != NULL) {
+                                            gRaceSetupSaveMenuState.statusTransitionStates[playerIndex] = SAVE_STATUS_TRANSITION_FADE_OUT;
+                                            gRaceSetupSaveMenuState.nextStatusCodes[playerIndex] = CONTROLLER_PAK_STATUS_READ_FAILED;
                                         } else {
-                                            gControllerPakStatusCodes[i] = 0xD;
+                                            gControllerPakStatusCodes[playerIndex] = CONTROLLER_PAK_STATUS_READ_FAILED;
                                         }
-                                        gControllerPakRetryCounts[i] = 0;
+                                        gControllerPakRetryCounts[playerIndex] = 0;
                                     }
                                     break;
                                 }
 
-                                case 3: {
+                                case CONTROLLER_PAK_STATUS_REPAIR: {
                                     u8 result;
 
-                                    requestControllerPakRepair((u16)i, gPlayerCount, choiceValue);
-                                    result = gControllerPakRetryCounts[i];
+                                    requestControllerPakRepair((u16)playerIndex, gPlayerCount, choiceValue);
+                                    result = gControllerPakRetryCounts[playerIndex];
                                     if (result == 0) {
-                                        if (transitionTask != NULL) {
-                                            gRaceSetupSaveSubState.unkE[i] = 2;
-                                            gRaceSetupSaveSubState.unk12[i] = 0xF;
+                                        if (statusWidgetTask != NULL) {
+                                            gRaceSetupSaveMenuState.statusTransitionStates[playerIndex] = SAVE_STATUS_TRANSITION_FADE_OUT;
+                                            gRaceSetupSaveMenuState.nextStatusCodes[playerIndex] = CONTROLLER_PAK_STATUS_REPAIRED;
                                         } else {
-                                            gControllerPakStatusCodes[i] = 0xF;
+                                            gControllerPakStatusCodes[playerIndex] = CONTROLLER_PAK_STATUS_REPAIRED;
                                         }
-                                    } else if (result == 3) {
-                                        if (transitionTask != NULL) {
-                                            gRaceSetupSaveSubState.unkE[i] = 2;
-                                            gRaceSetupSaveSubState.unk12[i] = 0xE;
+                                    } else if (result == CONTROLLER_PAK_RETRY_LIMIT) {
+                                        if (statusWidgetTask != NULL) {
+                                            gRaceSetupSaveMenuState.statusTransitionStates[playerIndex] = SAVE_STATUS_TRANSITION_FADE_OUT;
+                                            gRaceSetupSaveMenuState.nextStatusCodes[playerIndex] = CONTROLLER_PAK_STATUS_REPAIR_FAILED;
                                         } else {
-                                            gControllerPakStatusCodes[i] = 0xE;
+                                            gControllerPakStatusCodes[playerIndex] = CONTROLLER_PAK_STATUS_REPAIR_FAILED;
                                         }
-                                        gControllerPakRetryCounts[i] = 0;
+                                        gControllerPakRetryCounts[playerIndex] = 0;
                                     }
                                     break;
                                 }
 
-                                case 4:
-                                    input = gPlayerInputPressedArray_03798[i];
+                                case CONTROLLER_PAK_STATUS_RETRY:
+                                    input = gPlayerInputPressedArray_03798[playerIndex];
                                     if ((input & A_BUTTON) || (input & START_BUTTON)) {
                                         enqueueSoundEffect(1, 0x32);
-                                        if (transitionTask != NULL) {
-                                            gRaceSetupSaveSubState.unkE[i] = 2;
-                                            gRaceSetupSaveSubState.unk12[i] = 0;
+                                        if (statusWidgetTask != NULL) {
+                                            gRaceSetupSaveMenuState.statusTransitionStates[playerIndex] = SAVE_STATUS_TRANSITION_FADE_OUT;
+                                            gRaceSetupSaveMenuState.nextStatusCodes[playerIndex] = CONTROLLER_PAK_STATUS_PROBE;
                                         } else {
-                                            gControllerPakStatusCodes[i] = 0;
+                                            gControllerPakStatusCodes[playerIndex] = CONTROLLER_PAK_STATUS_PROBE;
                                         }
                                     }
                                     break;
 
-                                case 5:
+                                case CONTROLLER_PAK_STATUS_READY:
                                     if (player->unk8 == 0) {
                                         player->unk8 = 1;
                                     }
                                     break;
 
                                 case 6:
-                                    if ((choiceValue == 3) || (choiceValue == 4)) {
-                                        input = gPlayerInputPressedArray_03798[i];
-                                        if ((input & (STICK_UP | U_JPAD)) && (choiceValue != 3)) {
-                                            *choice = choiceValue - 1;
+                                    if ((choiceValue == SAVE_CHOICE_USE_PAK) || (choiceValue == SAVE_CHOICE_SKIP_PAK)) {
+                                        input = gPlayerInputPressedArray_03798[playerIndex];
+                                        if ((input & (STICK_UP | U_JPAD)) && (choiceValue != SAVE_CHOICE_USE_PAK)) {
+                                            *choiceState = choiceValue - 1;
                                             enqueueSoundEffect(0x19, 0x32);
-                                            input = gPlayerInputPressedArray_03798[i];
+                                            input = gPlayerInputPressedArray_03798[playerIndex];
                                         }
                                         if (input & (STICK_DOWN | D_JPAD)) {
-                                            choiceValue = *choice;
-                                            if (choiceValue != 4) {
-                                                *choice = choiceValue + 1;
+                                            choiceValue = *choiceState;
+                                            if (choiceValue != SAVE_CHOICE_SKIP_PAK) {
+                                                *choiceState = choiceValue + 1;
                                                 enqueueSoundEffect(0x19, 0x32);
-                                                input = gPlayerInputPressedArray_03798[i];
+                                                input = gPlayerInputPressedArray_03798[playerIndex];
                                             }
                                         }
                                         if ((input & A_BUTTON) || (input & START_BUTTON)) {
-                                            s16 state = gControllerPakStatusCodes[i];
+                                            s16 state = gControllerPakStatusCodes[playerIndex];
 
                                             enqueueSoundEffect(1, 0x32);
-                                            if (*choice == 4) {
-                                                if (state == 8) {
-                                                    RaceSetupSavePlayer03798 *save = &gGameSaveDataBuffer[i];
+                                            if (*choiceState == SAVE_CHOICE_SKIP_PAK) {
+                                                if (state == CONTROLLER_PAK_STATUS_SAVE_FOUND) {
+                                                    RaceSetupSaveDataView *save = &gGameSaveDataBuffer[playerIndex];
 
-                                                    initRaceSetupPlayerSaveData(i);
-                                                    gRaceSetupSaveSubState.unk6[i] = 5;
-                                                    player->unkC = save->unk4;
-                                                } else if (state == 7) {
-                                                    gRaceSetupSaveSubState.unk6[i] = 3;
+                                                    initRaceSetupPlayerSaveData(playerIndex);
+                                                    gRaceSetupSaveMenuState.pendingStatusCodes[playerIndex] = CONTROLLER_PAK_STATUS_READY;
+                                                    player->unkC = save->money;
+                                                } else if (state == CONTROLLER_PAK_STATUS_NO_PAK) {
+                                                    gRaceSetupSaveMenuState.pendingStatusCodes[playerIndex] = CONTROLLER_PAK_STATUS_REPAIR;
                                                 } else {
-                                                    gRaceSetupSaveSubState.unk6[i] = 4;
+                                                    gRaceSetupSaveMenuState.pendingStatusCodes[playerIndex] = CONTROLLER_PAK_STATUS_RETRY;
                                                 }
                                             } else {
-                                                if (state == 8) {
-                                                    gRaceSetupSaveSubState.unk6[i] = 0x12;
-                                                } else if (state == 7) {
-                                                    gRaceSetupSaveSubState.unk6[i] = 4;
+                                                if (state == CONTROLLER_PAK_STATUS_SAVE_FOUND) {
+                                                    gRaceSetupSaveMenuState.pendingStatusCodes[playerIndex] = CONTROLLER_PAK_STATUS_USE_EXISTING_SAVE;
+                                                } else if (state == CONTROLLER_PAK_STATUS_NO_PAK) {
+                                                    gRaceSetupSaveMenuState.pendingStatusCodes[playerIndex] = CONTROLLER_PAK_STATUS_RETRY;
                                                 } else {
-                                                    RaceSetupSavePlayer03798 *save = &gGameSaveDataBuffer[i];
+                                                    RaceSetupSaveDataView *save = &gGameSaveDataBuffer[playerIndex];
 
-                                                    gRaceSetupSaveSubState.unk6[i] = 5;
-                                                    initRaceSetupPlayerSaveData(i);
-                                                    player->unkC = save->unk4;
+                                                    gRaceSetupSaveMenuState.pendingStatusCodes[playerIndex] = CONTROLLER_PAK_STATUS_READY;
+                                                    initRaceSetupPlayerSaveData(playerIndex);
+                                                    player->unkC = save->money;
                                                 }
                                             }
-                                            *choice += 2;
+                                            *choiceState += 2;
                                         }
                                     }
                                     break;
@@ -524,44 +546,44 @@ void updateRaceSetupSaveMenu(void) {
                                 case 12:
                                 case 13:
                                 case 16:
-                                    input = gPlayerInputPressedArray_03798[i];
+                                    input = gPlayerInputPressedArray_03798[playerIndex];
                                     if ((input & A_BUTTON) || (input & START_BUTTON)) {
                                         enqueueSoundEffect(1, 0x32);
-                                        *choice = D_800B3199[gControllerPakStatusCodes[i]];
+                                        *choiceState = D_800B3199[gControllerPakStatusCodes[playerIndex]];
                                     }
                                     break;
 
                                 case 14:
                                 case 15:
-                                    input = gPlayerInputPressedArray_03798[i];
+                                    input = gPlayerInputPressedArray_03798[playerIndex];
                                     if ((input & A_BUTTON) || (input & START_BUTTON)) {
                                         enqueueSoundEffect(1, 0x32);
-                                        if (gControllerPakStatusCodes[i] == 0xE) {
-                                            if (transitionTask != NULL) {
-                                                gRaceSetupSaveSubState.unkE[i] = 2;
-                                                gRaceSetupSaveSubState.unk12[i] = 0x11;
+                                        if (gControllerPakStatusCodes[playerIndex] == CONTROLLER_PAK_STATUS_REPAIR_FAILED) {
+                                            if (statusWidgetTask != NULL) {
+                                                gRaceSetupSaveMenuState.statusTransitionStates[playerIndex] = SAVE_STATUS_TRANSITION_FADE_OUT;
+                                                gRaceSetupSaveMenuState.nextStatusCodes[playerIndex] = CONTROLLER_PAK_STATUS_REPAIR_CONFIRM;
                                             } else {
-                                                gControllerPakStatusCodes[i] = 7;
+                                                gControllerPakStatusCodes[playerIndex] = CONTROLLER_PAK_STATUS_NO_PAK;
                                             }
-                                        } else if (transitionTask != NULL) {
-                                            gRaceSetupSaveSubState.unkE[i] = 2;
-                                            gRaceSetupSaveSubState.unk12[i] = 0;
+                                        } else if (statusWidgetTask != NULL) {
+                                            gRaceSetupSaveMenuState.statusTransitionStates[playerIndex] = SAVE_STATUS_TRANSITION_FADE_OUT;
+                                            gRaceSetupSaveMenuState.nextStatusCodes[playerIndex] = CONTROLLER_PAK_STATUS_PROBE;
                                         } else {
-                                            gControllerPakStatusCodes[i] = 0;
+                                            gControllerPakStatusCodes[playerIndex] = CONTROLLER_PAK_STATUS_PROBE;
                                         }
                                     }
                                     break;
 
-                                case 17:
-                                    input = gPlayerInputPressedArray_03798[i];
+                                case CONTROLLER_PAK_STATUS_REPAIR_CONFIRM:
+                                    input = gPlayerInputPressedArray_03798[playerIndex];
                                     if ((input & A_BUTTON) || (input & START_BUTTON)) {
                                         enqueueSoundEffect(1, 0x32);
-                                        gRaceSetupSaveSubState.unkE[i] = 2;
-                                        gRaceSetupSaveSubState.unk12[i] = 0;
+                                        gRaceSetupSaveMenuState.statusTransitionStates[playerIndex] = SAVE_STATUS_TRANSITION_FADE_OUT;
+                                        gRaceSetupSaveMenuState.nextStatusCodes[playerIndex] = CONTROLLER_PAK_STATUS_PROBE;
                                     }
                                     break;
 
-                                case 18:
+                                case CONTROLLER_PAK_STATUS_USE_EXISTING_SAVE:
                                     if (player->unk8 == 0) {
                                         player->unk8 = 1;
                                     }
@@ -571,20 +593,20 @@ void updateRaceSetupSaveMenu(void) {
                         allReady &= player->unk8;
                     }
 
-                    allPresent &= presentValue;
-                    i++;
-                    present++;
-                } while (i < gPlayerCount);
+                    allControllerPakOpsComplete &= operationCount;
+                    playerIndex++;
+                    controllerPakOpCount++;
+                } while (playerIndex < gPlayerCount);
             }
         }
     }
 
-    if (allPresent != 0) {
-        if (task == NULL) {
+    if (allControllerPakOpsComplete != 0) {
+        if (panelFrameTask == NULL) {
             D_800EC9E4++;
-            if (D_800EC9E4 >= 5) {
-                u8 *ptr;
-                u8 *end;
+            if (D_800EC9E4 >= SAVE_PANEL_CREATE_DELAY) {
+                u8 *operationCount;
+                u8 *operationCountEnd;
 
                 D_800EC9E4 = 0;
                 D_8010ADE8 = createCallbackTask((void (*)(CallbackTask *))initRaceSetupSaveStatusWidgets, 0, 0x63);
@@ -592,12 +614,12 @@ void updateRaceSetupSaveMenu(void) {
                 D_8010ADE0 = createCallbackTask((void (*)(CallbackTask *))initRaceSetupSavePanelFrame, 0, 0x63);
                 D_8010ADE4 = createCallbackTask((void (*)(CallbackTask *))initRaceSetupSaveChoicePrompts, 0, 0x63);
                 if (gPlayerCount > 0) {
-                    ptr = gControllerPakOperationCounts;
-                    end = &gControllerPakOperationCounts[gPlayerCount];
+                    operationCount = gControllerPakOperationCounts;
+                    operationCountEnd = &gControllerPakOperationCounts[gPlayerCount];
                     do {
-                        *ptr += 1;
-                        ptr++;
-                    } while (ptr < end);
+                        *operationCount += 1;
+                        operationCount++;
+                    } while (operationCount < operationCountEnd);
                 }
             }
         }
@@ -605,10 +627,10 @@ void updateRaceSetupSaveMenu(void) {
 
     if (allReady != 0) {
         gMenuSelectionConfirmTimer++;
-        if (gMenuSelectionConfirmTimer == 0xF) {
-            RaceSetupSubState03798 *subState;
-            RaceSetupSavePlayer03798 *save;
-            RaceSetupSavePlayer03798 *end;
+        if (gMenuSelectionConfirmTimer == SAVE_READY_CONFIRM_DELAY) {
+            RaceSetupSaveMenuState *subState;
+            RaceSetupSaveDataView *save;
+            RaceSetupSaveDataView *end;
 
             setCurrentGameTaskCallback(updateRaceSetupRumblePrompt, 0);
             createCallbackTask(initControllerPakRumbleCheckPrompt, 0, 0x64);
@@ -616,18 +638,18 @@ void updateRaceSetupSaveMenu(void) {
             gControllerPakRumbleCheckPromptTransition.selectedOption = 0;
             gControllerPakRumbleCheckPromptTransition.targetScale = 2;
             if (gPlayerCount > 0) {
-                subState = &gRaceSetupSaveSubState;
+                subState = &gRaceSetupSaveMenuState;
                 save = gGameSaveDataBuffer;
                 end = &gGameSaveDataBuffer[gPlayerCount];
                 do {
-                    u8 value = save->unk4C;
+                    u8 highestUnlockedCourse = save->highestUnlockedCourse;
 
-                    subState->unkE[0] = 3;
-                    if (gHighestUnlockedCourse < value) {
-                        gHighestUnlockedCourse = value;
+                    subState->statusTransitionStates[0] = SAVE_STATUS_TRANSITION_DONE;
+                    if (gHighestUnlockedCourse < highestUnlockedCourse) {
+                        gHighestUnlockedCourse = highestUnlockedCourse;
                     }
                     save++;
-                    subState = (RaceSetupSubState03798 *)((u8 *)subState + 1);
+                    subState = (RaceSetupSaveMenuState *)((u8 *)subState + 1);
                 } while (save < end);
             }
         }
@@ -636,9 +658,29 @@ void updateRaceSetupSaveMenu(void) {
     updateCallbackTasks();
 }
 
-#undef gRaceSetupSaveSubState
+#undef gRaceSetupSaveMenuState
 #undef gRumblePakConnectedByControllerArray_03798
 #undef gPlayerInputPressedArray_03798
+#undef SAVE_READY_CONFIRM_DELAY
+#undef SAVE_PANEL_CREATE_DELAY
+#undef SAVE_STATUS_TRANSITION_DONE
+#undef SAVE_STATUS_TRANSITION_FADE_OUT
+#undef SAVE_CHOICE_SKIP_PAK
+#undef SAVE_CHOICE_USE_PAK
+#undef CONTROLLER_PAK_RETRY_LIMIT
+#undef CONTROLLER_PAK_STATUS_USE_EXISTING_SAVE
+#undef CONTROLLER_PAK_STATUS_REPAIR_CONFIRM
+#undef CONTROLLER_PAK_STATUS_REPAIRED
+#undef CONTROLLER_PAK_STATUS_REPAIR_FAILED
+#undef CONTROLLER_PAK_STATUS_READ_FAILED
+#undef CONTROLLER_PAK_STATUS_SAVE_FOUND
+#undef CONTROLLER_PAK_STATUS_NO_PAK
+#undef CONTROLLER_PAK_STATUS_READY
+#undef CONTROLLER_PAK_STATUS_RETRY
+#undef CONTROLLER_PAK_STATUS_REPAIR
+#undef CONTROLLER_PAK_STATUS_SAVE_READ
+#undef CONTROLLER_PAK_STATUS_SAVE_STATUS
+#undef CONTROLLER_PAK_STATUS_PROBE
 #endif
 
 void raceSetupMenuNoop(void) {
