@@ -180,8 +180,7 @@ void drawCharacterSelectCourseListOptions(CharacterSelectCourseMenuFrameActor *a
     }
 }
 
-// updateCharacterSelectUnlockedCourseList best match: 99.807% (nonmatchings/updateCharacterSelectUnlockedCourseList/base_orig.c)
-// cleaned NON_MATCHING reference: 98.564% (nonmatchings/updateCharacterSelectUnlockedCourseList/base_2.c)
+// updateCharacterSelectUnlockedCourseList best match: 99.807% (nonmatchings/updateCharacterSelectUnlockedCourseList-1200943805599209058/base_2.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/character_select/character_select_course_ui/updateCharacterSelectUnlockedCourseList.s")
 
 #ifdef NON_MATCHING
@@ -190,8 +189,10 @@ void updateCharacterSelectUnlockedCourseList(CharacterSelectCourseMenuFrameActor
     s32 visibleCourseCount;
     s32 movingCourseCount;
     s32 selectedCourseY;
+    void (*finalCallback)(CallbackTask *);
     CharacterSelectCourseMenuFrameActor *menuActor;
     CharacterSelectCourseMenuFrameActor *coursePosition;
+    s16 *x;
 
     menuActor = actor;
     switch (actor->state) {
@@ -221,6 +222,7 @@ void updateCharacterSelectUnlockedCourseList(CharacterSelectCourseMenuFrameActor
                     D_8010ADE4 = createCallbackTask(initCharacterSelectCoursePreviewFrame, 0, 0x58);
                     createCallbackTask(initCharacterSelectCoursePreviewPanel1, 0, 0x59);
                     createCallbackTask(initCharacterSelectCoursePreviewPanel2, 0, 0x5A);
+                    finalCallback = (void (*)(CallbackTask *))initCharacterSelectCourseExitPreviewPanel;
                     createCallbackTask(initCharacterSelectCoursePreviewPanel3, 0, 0x5B);
                     createCallbackTask(initCharacterSelectCoursePreviewPanel4, 0, 0x5C);
                     createCallbackTask(initCharacterSelectCoursePreviewPanel5, 0, 0x5D);
@@ -233,7 +235,7 @@ void updateCharacterSelectUnlockedCourseList(CharacterSelectCourseMenuFrameActor
                             }
                         }
                     }
-                    createCallbackTask(initCharacterSelectCourseExitPreviewPanel, 0, 0x61);
+                    createCallbackTask(finalCallback, 0, 0x61);
                 }
             }
         }
@@ -263,17 +265,18 @@ void updateCharacterSelectUnlockedCourseList(CharacterSelectCourseMenuFrameActor
         }
         index = 3;
         do {
+            x = (s16 *)actor;
             if (index != gRaceCourseIndex) {
-                actor->x[index] -= 0x20;
+                x[index + 12] -= 0x20;
             }
             if ((index + 1) != gRaceCourseIndex) {
-                actor->x[index + 1] -= 0x20;
+                x[index + 13] -= 0x20;
             }
             if ((index + 2) != gRaceCourseIndex) {
-                actor->x[index + 2] -= 0x20;
+                x[index + 14] -= 0x20;
             }
             if ((index + 3) != gRaceCourseIndex) {
-                actor->x[index + 3] -= 0x20;
+                x[index + 15] -= 0x20;
             }
             index += 4;
         } while (index != 0xB);
@@ -316,22 +319,7 @@ void updateCharacterSelectUnlockedCourseList(CharacterSelectCourseMenuFrameActor
         selectedCourseY = (gRaceCourseIndex * actor->itemSpacing) + actor->baseY;
         if (actor->y[gRaceCourseIndex] >= selectedCourseY) {
             actor->y[gRaceCourseIndex] = selectedCourseY;
-            actor->state = COURSE_LIST_SLIDE_OTHERS_IN;
-        }
-        break;
-
-    case COURSE_LIST_SLIDE_OTHERS_IN:
-        visibleCourseCount = gCharacterSelectCourseExitOptionIndex + 1;
-        index = 0;
-        if (visibleCourseCount > 0) {
-            do {
-                if (index != gRaceCourseIndex) {
-                    actor->x[index] += 0x20;
-                    visibleCourseCount = gCharacterSelectCourseExitOptionIndex + 1;
-                }
-                index++;
-            } while (index < visibleCourseCount);
-        }
+            actor->state = COURSE_LIST_SLIDE_OTHERS_IN; } break; case COURSE_LIST_SLIDE_OTHERS_IN: visibleCourseCount = gCharacterSelectCourseExitOptionIndex + 1; index = 0; if (visibleCourseCount > 0) { do { if (index != gRaceCourseIndex) { actor->x[index] += 0x20; visibleCourseCount = gCharacterSelectCourseExitOptionIndex + 1; } index++; } while (index < (gCharacterSelectCourseExitOptionIndex + 1)); }
         if (gRaceCourseIndex != 0) {
             if (actor->x[0] >= -0x7C) {
                 actor->state = COURSE_LIST_IDLE;
