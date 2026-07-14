@@ -37,6 +37,25 @@ typedef struct {
     /* 0x02 */ u8 pad2[0x28];
 } CharacterSelectCourseFrameCornerTileMap;
 
+typedef struct {
+    /* 0x00 */ u8 pad0[8];
+    /* 0x08 */ u8 next;
+    /* 0x09 */ u8 pad9[7];
+    /* 0x10 */ s16 xNext;
+    /* 0x12 */ s16 pad12;
+    /* 0x14 */ s16 pad14;
+    /* 0x16 */ s16 pad16;
+    /* 0x18 */ s16 pad18;
+    /* 0x1A */ s16 x0;
+    /* 0x1C */ s16 x1;
+    /* 0x1E */ s16 x2;
+    /* 0x20 */ u8 pad20[6];
+    /* 0x26 */ s16 y0;
+    /* 0x28 */ s16 y1;
+    /* 0x2A */ s16 y2;
+    /* 0x2C */ s16 y3;
+} CharacterSelectCourseListInitLoop;
+
 typedef union {
     u8 bytes[8];
     struct {
@@ -347,16 +366,13 @@ void updateCharacterSelectUnlockedCourseList(CharacterSelectCourseMenuFrameActor
 }
 #endif
 
-// initCharacterSelectUnlockedCourseList best match: 99.211% (nonmatchings/initCharacterSelectUnlockedCourseList-2663524570355072948/base_20.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/menu/character_select/character_select_course_ui/initCharacterSelectUnlockedCourseList.s")
-
-#ifdef NON_MATCHING
 void initCharacterSelectUnlockedCourseList(CharacterSelectCourseMenuFrameActor *arg0) {
     u8 spacing;
     s16 baseY;
     s32 i;
     int mode;
     unsigned int limit;
+    CharacterSelectCourseListInitLoop *loop;
 
     mode = gHighestUnlockedCourse;
     if (mode == 0) {
@@ -378,36 +394,13 @@ void initCharacterSelectUnlockedCourseList(CharacterSelectCourseMenuFrameActor *
 
     arg0->baseY = baseY;
     arg0->itemSpacing = spacing;
-    do {
-        arg0->y[1] = baseY + spacing;
-        arg0->y[2] = baseY + (spacing * 2);
-        arg0->x[0] = -0x104;
-        arg0->x[1] = -0x104;
-        arg0->x[2] = -0x104;
-        arg0->x[2] = -0x104;
-        limit = 0xB;
-        arg0->y[0] = baseY;
-
-        i = 3;
-        do {
-            arg0->x[i + 1] = -0x104;
-            arg0->x[i + 2] = -0x104;
-            arg0->x[i + 3] = -0x104;
-            arg0->y[i] = baseY + (i * spacing);
-            arg0->y[i + 1] = baseY + ((i + 1) * spacing);
-            arg0->y[i + 2] = baseY + ((i + 2) * spacing);
-            arg0->y[i + 3] = baseY + ((i + 3) * spacing);
-            i += 4;
-            arg0->x[i - 4] = -0x104;
-        } while (i != limit);
-    } while (0);
+    do { arg0->y[1] = baseY + spacing; arg0->y[2] = baseY + (spacing * 2); arg0->x[0] = -0x104; arg0->x[1] = -0x104; arg0->x[2] = -0x104; arg0->x[2] = -0x104; arg0->y[0] = baseY; i = 3; loop = (CharacterSelectCourseListInitLoop *)&arg0->pad0[6]; limit = 0xB; do { loop->x0 = -0x104; loop->x1 = -0x104; loop->x2 = -0x104; loop = (CharacterSelectCourseListInitLoop *)&loop->next; loop->xNext = -0x104; loop->y0 = baseY + (i * spacing); loop->y1 = baseY + ((i + 1) * spacing); loop->y2 = baseY + ((i + 2) * spacing); loop->y3 = baseY + ((i + 3) * spacing); i += 4; } while (i != limit); } while (0);
 
     arg0->timer = 0;
     arg0->itemCount = 1;
     arg0->state = 0;
     setCallbackTaskCallback(arg0, updateCharacterSelectUnlockedCourseList);
 }
-#endif
 
 // drawCharacterSelectLimitedCourseListOptions best match: 99.556%
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/character_select/character_select_course_ui/drawCharacterSelectLimitedCourseListOptions.s")
