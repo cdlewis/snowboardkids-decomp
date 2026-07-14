@@ -163,186 +163,151 @@ void removeHuffmanQueueNode(s16 arg0) {
 #pragma GLOBAL_ASM("asm/nonmatchings/engine/asset_manager/decompressHuffmanAssetPayload.s")
 
 #ifdef NON_MATCHING
-void decompressHuffmanAssetPayload(u8 arg0, s32 arg1, s32 arg2, s32 arg3) {
-    HuffmanNode *temp_v0;
-    HuffmanNode *temp_v0_2;
-    HuffmanNode *temp_v1;
-    HuffmanNode *temp_v1_2;
-    HuffmanNode *temp_v1_3;
-    s16 temp_a1;
-    s16 temp_s3_2;
-    s16 temp_s6_2;
-    s16 temp_v0_3;
-    s16 temp_v0_4;
-    s16 temp_v0_5;
-    s16 var_s0_2;
-    s16 var_s0_3;
-    s16 var_s0_4;
-    s32 temp_a2;
-    s32 temp_a2_2;
-    s32 temp_at;
+typedef struct {
+    /* 0x0 */ u8 *byte;
+    /* 0x4 */ s32 bitIndex;
+} HuffmanBitReader;
+
+static s32 readHuffmanBit(HuffmanBitReader *reader) {
+    s32 bit;
+
+    if (reader->bitIndex == 8) {
+        reader->byte++;
+        reader->bitIndex = 0;
+    }
+
+    bit = *reader->byte & (1 << (7 - reader->bitIndex));
+    reader->bitIndex++;
+    return bit;
+}
+
+static u8 readHuffmanSymbol(HuffmanBitReader *reader) {
+    HuffmanNode *node;
+    s16 nodeIndex;
+    s16 value;
+
+    nodeIndex = gHuffmanNodeCount - 1;
+    while (TRUE) {
+        node = &gHuffmanNodes[nodeIndex];
+        value = node->value;
+        if (value != -1) {
+            return value & 0xFF;
+        }
+
+        if (readHuffmanBit(reader) == 0) {
+            nodeIndex = node->left;
+        } else {
+            nodeIndex = node->right;
+        }
+    }
+}
+
+void decompressHuffmanAssetPayload(u8 flags, s32 compressedPayload, s32 outputBuffer, s32 outputSize) {
+    HuffmanBitReader reader;
+    HuffmanNode *node;
+    s16 leftNode;
+    s16 rightNode;
+    s32 encodedLength;
+    s32 firstValue;
+    s32 lastValue;
     s32 nodeIndex;
-    s32 var_a0;
-    u8 *var_a1;
-    u8 *var_s1;
-    s32 var_s2;
-    s32 var_t2;
-    s32 var_v0;
-    s8 temp_t3;
-    u8 *var_s1_2;
-    u8 *var_v1;
-    s32 temp_s3;
-    s32 temp_s6;
-    u8 temp_t7;
-    u8 temp_t8;
-    s32 var_s0;
-    u8 *var_a1_2;
+    s32 outputOffset;
+    s32 tableBytesRead;
+    s32 value;
+    s32 matchLength;
+    s32 matchOffset;
+    s32 i;
+    u8 *dst;
+    u8 *output;
+    u8 *src;
+    u8 *treeData;
 
     gHuffmanQueueHead = -1;
     gHuffmanQueueTail = -1;
     gHuffmanQueueCount = 0;
     gHuffmanNodeCount = 0;
-    var_s2 = 0;
-    var_s1 = (u8 *) arg1;
-loop_1:
-    temp_s3 = *var_s1;
-    var_s2 += 1;
-    var_s1_2 = var_s1 + 1;
-    if (var_s2 != 1) {
-        if (temp_s3 == 0) {
-            goto loop_7;
+
+    tableBytesRead = 0;
+    treeData = (u8 *)compressedPayload;
+    output = (u8 *)outputBuffer;
+    while (TRUE) {
+        firstValue = *treeData++;
+        tableBytesRead++;
+        if ((tableBytesRead != 1) && (firstValue == 0)) {
+            break;
+        }
+
+        lastValue = *treeData++;
+        tableBytesRead++;
+        if (firstValue <= lastValue) {
+            value = firstValue;
+            do {
+                nodeIndex = gHuffmanNodeCount;
+                encodedLength = *treeData++;
+                tableBytesRead++;
+
+                node = &gHuffmanNodes[nodeIndex];
+                node->left = -1;
+                node->right = -1;
+                node->value = value;
+                node->weight = encodedLength;
+                insertHuffmanQueueNode((s16) nodeIndex);
+                value++;
+                gHuffmanNodeCount += 1;
+            } while ((lastValue + 1) != value);
         }
     }
-block_3:
-    temp_s6 = var_s1[1];
-    var_s2 += 1;
-    temp_at = (s32) temp_s6 < (s32) temp_s3;
-    var_s1 = var_s1_2 + 1;
-    var_s0 = temp_s3;
-    if (temp_at == 0) {
-        temp_s3 = temp_s6 + 1;
-        do {
-            nodeIndex = gHuffmanNodeCount;
-            temp_t7 = *var_s1;
-            var_s2 += 1;
-            var_s1 += 1;
-            temp_v0 = &gHuffmanNodes[nodeIndex];
-            temp_v0->left = -1;
-            temp_v0->right = -1;
-            temp_v0->value = (s16) var_s0;
-            temp_v0->weight = (s16) temp_t7;
-            insertHuffmanQueueNode((s16) nodeIndex);
-            var_s0 += 1;
-            gHuffmanNodeCount += 1;
-        } while (temp_s3 != var_s0);
-    }
-    goto loop_1;
-loop_7:
+
     if (gHuffmanQueueCount >= 2) {
-        temp_s3_2 = gHuffmanQueueTail;
-        removeHuffmanQueueNode(temp_s3_2);
-        temp_s6_2 = gHuffmanQueueTail;
-        removeHuffmanQueueNode(temp_s6_2);
-        nodeIndex = gHuffmanNodeCount;
-        temp_v0_2 = &gHuffmanNodes[nodeIndex];
-        temp_v0_2->weight = gHuffmanNodes[temp_s3_2].weight + gHuffmanNodes[temp_s6_2].weight;
-        temp_v0_2->left = temp_s6_2;
-        temp_v0_2->right = temp_s3_2;
-        temp_v0_2->value = -1;
-        insertHuffmanQueueNode((s16) nodeIndex);
-        gHuffmanNodeCount += 1;
-        goto loop_7;
-    }
-    var_a0 = 0;
-    var_t2 = 0;
-    if (arg0 == 0) {
-        var_a1 = (u8 *) arg2;
         do {
-            var_s0_2 = gHuffmanNodeCount - 1;
-loop_13:
-            temp_v1 = &gHuffmanNodes[var_s0_2];
-            temp_v0_3 = temp_v1->value;
-            if (temp_v0_3 == -1) {
-                if (var_a0 == 8) {
-                    var_s1 += 1;
-                    var_a0 = 0;
-                }
-                var_v0 = *var_s1 & (1 << (7 - var_a0));
-                var_a0 += 1;
-                if (var_v0 == 0) {
-                    var_s0_2 = temp_v1->left;
-                } else {
-                    var_s0_2 = temp_v1->right;
-                }
-                goto loop_13;
-            }
-            *var_a1 = (s8) (temp_v0_3 & 0xFF);
-            var_t2 += 1;
-            var_a1 += 1;
-        } while (var_t2 != arg3);
+            rightNode = gHuffmanQueueTail;
+            removeHuffmanQueueNode(rightNode);
+            leftNode = gHuffmanQueueTail;
+            removeHuffmanQueueNode(leftNode);
+
+            nodeIndex = gHuffmanNodeCount;
+            node = &gHuffmanNodes[nodeIndex];
+            node->weight = gHuffmanNodes[rightNode].weight + gHuffmanNodes[leftNode].weight;
+            node->left = leftNode;
+            node->right = rightNode;
+            node->value = -1;
+            insertHuffmanQueueNode((s16) nodeIndex);
+            gHuffmanNodeCount += 1;
+        } while (gHuffmanQueueCount >= 2);
+    }
+
+    reader.byte = treeData;
+    reader.bitIndex = 0;
+    outputOffset = 0;
+
+    if (flags == 0) {
+        dst = output;
+        do {
+            *dst++ = readHuffmanSymbol(&reader);
+            outputOffset++;
+        } while (outputOffset != outputSize);
     } else {
-loop_23:
-        temp_a1 = gHuffmanNodeCount - 1;
-        var_s0_3 = temp_a1;
-loop_24:
-        temp_v1_2 = &gHuffmanNodes[var_s0_3];
-        temp_v0_4 = temp_v1_2->value;
-        temp_a2 = temp_v0_4 & 0xFF;
-        if (temp_v0_4 == -1) {
-            if (var_a0 == 8) {
-                var_s1 += 1;
-                var_a0 = 0;
-            }
-            var_v0 = *var_s1 & (1 << (7 - var_a0));
-            var_a0 += 1;
-            if (var_v0 == 0) {
-                var_s0_3 = temp_v1_2->left;
+        do {
+            encodedLength = readHuffmanSymbol(&reader);
+            value = readHuffmanSymbol(&reader);
+            if (encodedLength == 0) {
+                output[outputOffset] = value;
+                outputOffset++;
             } else {
-                var_s0_3 = temp_v1_2->right;
+                matchLength = (encodedLength >> 4) & 0xF;
+                matchOffset = ((encodedLength << 8) | value) & 0xFFF;
+                if (matchLength > 0) {
+                    dst = &output[outputOffset];
+                    src = &output[outputOffset - matchOffset];
+                    i = 0;
+                    do {
+                        *dst++ = *src++;
+                        i++;
+                        outputOffset++;
+                    } while (i < matchLength);
+                }
             }
-            goto loop_24;
-        }
-        var_s0_4 = temp_a1;
-loop_31:
-        temp_v1_3 = &gHuffmanNodes[var_s0_4];
-        temp_v0_5 = temp_v1_3->value;
-        if (temp_v0_5 == -1) {
-            if (var_a0 == 8) {
-                var_s1 += 1;
-                var_a0 = 0;
-            }
-            var_v0 = *var_s1 & (1 << (7 - var_a0));
-            var_a0 += 1;
-            if (var_v0 == 0) {
-                var_s0_4 = temp_v1_3->left;
-            } else {
-                var_s0_4 = temp_v1_3->right;
-            }
-            goto loop_31;
-        }
-        temp_t3 = temp_v0_5 & 0xFF;
-        if (temp_a2 == 0) {
-            ((u8 *) arg2)[var_t2] = temp_t3;
-            var_t2 += 1;
-        } else {
-            temp_a2_2 = (temp_a2 >> 4) & 0xF;
-            var_v0 = 0;
-            if (temp_a2_2 > 0) {
-                var_a1_2 = (u8 *) arg2 + var_t2;
-                var_v1 = (u8 *) arg2 + (var_t2 - (((temp_a2 << 8) | temp_t3) & 0xFFF));
-                do {
-                    temp_t8 = *var_v1;
-                    var_v0 += 1;
-                    var_t2 += 1;
-                    var_a1_2 += 1;
-                    var_v1 += 1;
-                    var_a1_2[-1] = temp_t8;
-                } while (var_v0 < temp_a2_2);
-            }
-        }
-        if (var_t2 < arg3) {
-            goto loop_23;
-        }
+        } while (outputOffset < outputSize);
     }
 }
 #endif
