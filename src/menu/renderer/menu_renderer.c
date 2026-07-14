@@ -1682,7 +1682,7 @@ void drawMenuColoredGlyph(s16 x, s16 y, u16 glyph, u8 palette, u16 paletteScale,
 }
 #endif
 
-// drawMenuAsciiGlyph best match: 76.776% (nonmatchings/drawMenuAsciiGlyph-2870645799593382959/base_7.c)
+// drawMenuAsciiGlyph best match: 77.011% (nonmatchings/drawMenuAsciiGlyph-1225020319268080736/base_1.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/renderer/menu_renderer/drawMenuAsciiGlyph.s")
 
 #ifdef NON_MATCHING
