@@ -134,7 +134,7 @@ typedef struct CourseSpawnEntry {
     s16 unk38;
     s16 unk3A;
     char pad3C[2];
-    s16 keyframeCount;
+    s16 maxSurfaceIndex;
     s32 unk40;
     s32 unk44;
 } CourseSpawnEntry;
@@ -267,17 +267,17 @@ loop:
 
 #ifdef NON_MATCHING
 s32 findRaceCourseSurfaceAtPoint(s32 x, s32 z) {
-    s32 index;
+    s32 surfaceIndex;
 
-    index = 0;
+    surfaceIndex = 0;
     if (*(s16 *)((u8 *)&gRaceCourseMaxSurfaceIndices + gRaceCourseIndex * sizeof(CourseSpawnEntry)) >= 0) {
         do {
-            RaceMotionSurface *keyframe;
+            RaceMotionSurface *surface;
             RaceMotionCoord *coord0;
             RaceMotionCoord *coord1;
             RaceMotionCoord *coord2;
             RaceMotionCoord *coord3;
-            s32 outside;
+            s32 outsideSurface;
             s32 x0;
             s32 x1;
             s32 z0;
@@ -287,16 +287,16 @@ s32 findRaceCourseSurfaceAtPoint(s32 x, s32 z) {
             s32 z2;
             s32 z3;
 
-            keyframe = &gRaceCourseSurfaces[index];
-            outside = FALSE;
-            coord0 = &gRaceCourseSurfaceCoords[keyframe->coordIndices[0]];
-            coord1 = &gRaceCourseSurfaceCoords[keyframe->coordIndices[1]];
-            coord2 = &gRaceCourseSurfaceCoords[keyframe->coordIndices[2]];
-            coord3 = &gRaceCourseSurfaceCoords[keyframe->coordIndices[3]];
+            surface = &gRaceCourseSurfaces[surfaceIndex];
+            outsideSurface = FALSE;
+            coord0 = &gRaceCourseSurfaceCoords[surface->coordIndices[0]];
+            coord1 = &gRaceCourseSurfaceCoords[surface->coordIndices[1]];
+            coord2 = &gRaceCourseSurfaceCoords[surface->coordIndices[2]];
+            coord3 = &gRaceCourseSurfaceCoords[surface->coordIndices[3]];
 
             x0 = coord0->x << 0x11;
             x1 = coord1->x << 0x11;
-            coord2 = &gRaceCourseSurfaceCoords[keyframe->coordIndices[2]];
+            coord2 = &gRaceCourseSurfaceCoords[surface->coordIndices[2]];
             z0 = coord0->z << 0x11;
             x2 = coord2->x << 0x11;
             x3 = coord3->x << 0x11;
@@ -305,23 +305,23 @@ s32 findRaceCourseSurfaceAtPoint(s32 x, s32 z) {
             z3 = coord3->z << 0x11;
 
             if ((s64)(x0 - x1) * (z - z1) - (s64)(z0 - z1) * (x - x1) < 0) {
-                outside = TRUE;
+                outsideSurface = TRUE;
             }
             if ((s64)(x3 - x2) * (z - z2) - (s64)(z3 - z2) * (x - x2) < 0) {
-                outside = TRUE;
+                outsideSurface = TRUE;
             }
             if ((s64)(x2 - x0) * (z - z0) - (s64)(z2 - z0) * (x - x0) < 0) {
-                outside = TRUE;
+                outsideSurface = TRUE;
             }
             if ((s64)(x1 - x3) * (z - z3) - (s64)(z1 - z3) * (x - x3) < 0) {
-                outside = TRUE;
+                outsideSurface = TRUE;
             }
 
-            if (outside == FALSE) {
-                return index;
+            if (outsideSurface == FALSE) {
+                return surfaceIndex;
             }
-            index++;
-        } while (index <= *(s16 *)((u8 *)&gRaceCourseMaxSurfaceIndices + gRaceCourseIndex * sizeof(CourseSpawnEntry)));
+            surfaceIndex++;
+        } while (surfaceIndex <= *(s16 *)((u8 *)&gRaceCourseMaxSurfaceIndices + gRaceCourseIndex * sizeof(CourseSpawnEntry)));
     }
 
     return 0;
