@@ -4665,7 +4665,7 @@ void dispatchRacePlayerMode07CourseObject(RacePlayer *player) {
     gRacePlayerMode07StateHandlers[player->updateState](player);
 }
 
-// updateRacePlayerMode07AlignToLaunchRamp best match: 96.617% (nonmatchings/updateRacePlayerMode07AlignToLaunchRamp-2870645799593382959/base_5.c)
+// updateRacePlayerMode07AlignToLaunchRamp best match: 99.383% (nonmatchings/updateRacePlayerMode07AlignToLaunchRamp-5313856277864964686/base_9.c)
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race/player/race_player_update/updateRacePlayerMode07AlignToLaunchRamp.s")
 
@@ -4703,6 +4703,8 @@ void updateRacePlayerMode07AlignToLaunchRamp(RacePlayer *player) {
     temp_a1 = player->unk80;
     if (temp_a1 != 0) {
         angleStep = angleDelta / temp_a1;
+        if (gRaceCourseStartEntries[gRaceCourseIndex].unk1C) {
+        }
         angleDelta = savedAngle;
         player->facingAngle += angleStep;
         tempX = player->posX;
