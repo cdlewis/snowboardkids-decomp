@@ -2196,10 +2196,10 @@ void func_8005B14C(RaceUiCounterActor *arg0) {
     addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005AC44, (s32)arg0);
 }
 
-void func_8005B344(void *arg0) {
-    *(s16 *)((u8 *)arg0 + 0x1C) = 3;
-    *(s16 *)((u8 *)arg0 + 0x1A) = *(s16 *)((u8 *)arg0 + 0x1A) - 1;
-    if (*(s16 *)((u8 *)arg0 + 0x1A) == 0) {
+void updateRaceUiHitPrizeWaitBeforePayout(RaceUiCounterActor *arg0) {
+    arg0->state = RACE_UI_HIT_PRIZE_SHOW_TOTAL_MONEY;
+    arg0->timer--;
+    if (arg0->timer == 0) {
         setCallbackTaskCallback(arg0, func_8005B14C);
     }
     addRenderCallback(&gMenuRenderCallbackList, func_8005A31C, arg0);
@@ -2213,7 +2213,7 @@ void updateRaceUiHitPrizeRevealTotalMoney(RaceUiCounterActor *arg0) {
     arg0->timer--;
     if (arg0->timer == 0) {
         arg0->timer = 0xA;
-        setCallbackTaskCallback(arg0, func_8005B344);
+        setCallbackTaskCallback(arg0, updateRaceUiHitPrizeWaitBeforePayout);
     }
     addRenderCallback(&gMenuRenderCallbackList, func_8005A31C, arg0);
     addRenderCallback(&gMenuRenderCallbackList, func_8005A4BC, arg0);
