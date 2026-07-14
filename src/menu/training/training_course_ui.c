@@ -223,7 +223,7 @@ void drawTrainingCourseDialog(TrainingCourseUiActor *arg0) {
     TrainingCourseUiScript glyph[2];
     TrainingCourseUiScript *script;
     u16 xOffset;
-    s32 i;
+    int i;
     s32 glyphIndex;
     s32 lineOffset;
     s32 scriptOffset;
@@ -312,7 +312,7 @@ void drawTrainingCourseDialog(TrainingCourseUiActor *arg0) {
             } else {
                 glyph[0] = *((TrainingCourseUiScript *)((u8 *)arg0->layout.script + scriptOffset));
             }
-            drawMenuColoredGlyphScript((s16)(arg0->x + xOffset), (s16)(arg0->y + lineOffset + 0x18), glyph, 0, 0x100, (u16)arg0->glyphPalette, 0x29);
+            drawMenuColoredGlyphScript((s16)(arg0->x + xOffset), (s16)(arg0->y + lineOffset + 0x18), glyph, 0, 0x100, ((u16)arg0->glyphPalette) ^ 0, 0x29);
             if (stopped != 1) {
                 scriptOffset += 2;
                 xOffset = xOffset + 0x10;
