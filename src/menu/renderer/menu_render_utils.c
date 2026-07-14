@@ -98,7 +98,7 @@ extern s16 gMenuViewportWidth;
 extern s16 gMenuViewportHeight;
 extern s16 gMenuViewportCenterX;
 extern s16 gMenuViewportCenterY;
-extern s32 gRegionAllocPtr;
+extern Gfx *gRegionAllocPtr;
 extern void *gMenuAsciiFontPaletteBase;
 
 // initMenuAssetHandles best match: 97.917%
@@ -897,85 +897,51 @@ void initMenuAsciiFontTexture(void) {
     gMenuAsciiFontPaletteIndex = -1;
 }
 
-// drawMenuAsciiChar best match: 99.920% (nonmatchings/drawMenuAsciiChar-2694253543240320626/base_8.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/menu/renderer/menu_render_utils/drawMenuAsciiChar.s")
-
-#ifdef NON_MATCHING
-void drawMenuAsciiChar(s16 x, s16 y, s32 ch, u16 arg3) {
-    volatile char pad[0x48];
-    volatile s32 *chPtr;
-    s32 chByte;
-    s32 tile;
-    s32 s;
+void drawMenuAsciiChar(x, y, ch, arg3)
+s16 x;
+s16 y;
+u8 ch;
+u16 arg3;
+{
+    char pad[8];
+    u32 tile;
+    u16 s;
     FontTexture *font;
 
-    chByte = ch & 0xFF;
-    chPtr = &ch;
-    if ((chByte >= 'a') && (chByte < '{')) {
-        tile = chByte - 0x40;
-
-        if (gMenuAsciiFontTextureNeedsLoad != 0) {
+    if ((ch >= 'a') && (ch <= 'z')) {
+        if (gMenuAsciiFontTextureNeedsLoad) {
             font = (FontTexture *)getRelocatableHeapBlockBase(gMenuAsciiFontAssetHandle);
 
-            FONT_GFX_CMD(gRegionAllocPtr++, (((font->width >> 1) - 1) & 0xFFF) | 0xFD480000,
-                         (u32)(font->imageOffset + (u8 *)font));
-            FONT_GFX_CMD(gRegionAllocPtr++, (((((font->width + 1) >> 1) + 7) >> 3) & 0x1FF) << 9 | 0xF5480000,
-                         0x07080200);
-            FONT_GFX_CMD(gRegionAllocPtr++, 0xE6000000, 0);
-            FONT_GFX_CMD(gRegionAllocPtr++, 0xF4000000,
-                         (((font->width * 2) & 0xFFF) << 12) | 0x07000000 | ((font->height * 4) & 0xFFF));
-            FONT_GFX_CMD(gRegionAllocPtr++, 0xE7000000, 0);
-            FONT_GFX_CMD(gRegionAllocPtr++, (((((font->width + 1) >> 1) + 7) >> 3) & 0x1FF) << 9 | 0xF5400000,
-                         0x00080200);
-            FONT_GFX_CMD(gRegionAllocPtr++, 0xF2000000,
-                         (((font->width * 4) & 0xFFF) << 12) | ((font->height * 4) & 0xFFF));
+            gDPLoadTextureTile_4b(gRegionAllocPtr++, font->imageOffset + (u8 *)font, G_IM_FMT_CI,
+                                  font->width, font->height, 0, 0, font->width, font->height, 0,
+                                  G_TX_CLAMP, G_TX_CLAMP, G_TX_NOMASK, G_TX_NOMASK, G_TX_NOLOD, G_TX_NOLOD);
 
             gMenuAsciiFontTextureNeedsLoad = 0;
             gMenuAsciiFontPaletteIndex = -1;
-            tile = chByte - 0x40;
         }
+        tile = ch - 0x40;
+        s = ((tile & 7) << 3) & 0xFFFF & 0xFFFF;
+        drawMenuAsciiFontTile(x, y, s, tile & 0x38, arg3 & 0xFFFF & 0xFFFF & 0xFFFF);
+    } else {
+        if (gMenuAsciiFontTextureNeedsLoad != 0) {
+            font = (FontTexture *)getRelocatableHeapBlockBase(gMenuAsciiFontAssetHandle);
 
-        s = ((tile & 7) * 8) & 0xFFFF;
-        if ((s && s) && s) {
+            gDPLoadTextureTile_4b(gRegionAllocPtr++, font->imageOffset + (u8 *)font, G_IM_FMT_CI,
+                                  font->width, font->height, 0, 0, font->width, font->height, 0,
+                                  G_TX_CLAMP, G_TX_CLAMP, G_TX_NOMASK, G_TX_NOMASK, G_TX_NOLOD, G_TX_NOLOD);
+
+            gMenuAsciiFontTextureNeedsLoad = 0;
+            gMenuAsciiFontPaletteIndex = -1;
         }
-        drawMenuAsciiFontTile(x, y, s, tile & 0x38, arg3);
-        return;
-    }
-
-    tile = chByte - 0x20;
-    if (gMenuAsciiFontTextureNeedsLoad != 0) {
-        font = (FontTexture *)getRelocatableHeapBlockBase(gMenuAsciiFontAssetHandle);
-
-        FONT_GFX_CMD(gRegionAllocPtr++, (((font->width >> 1) - 1) & 0xFFF) | 0xFD480000,
-                     (u32)(font->imageOffset + (u8 *)font));
-        FONT_GFX_CMD(gRegionAllocPtr++, (((((font->width + 1) >> 1) + 7) >> 3) & 0x1FF) << 9 | 0xF5480000,
-                     0x07080200);
-        FONT_GFX_CMD(gRegionAllocPtr++, 0xE6000000, 0);
-        FONT_GFX_CMD(gRegionAllocPtr++, 0xF4000000,
-                     (((font->width * 2) & 0xFFF) << 12) | 0x07000000 | ((font->height * 4) & 0xFFF));
-        FONT_GFX_CMD(gRegionAllocPtr++, 0xE7000000, 0);
-        FONT_GFX_CMD(gRegionAllocPtr++, (((((font->width + 1) >> 1) + 7) >> 3) & 0x1FF) << 9 | 0xF5400000,
-                     0x00080200);
-        FONT_GFX_CMD(gRegionAllocPtr++, 0xF2000000,
-                     (((font->width * 4) & 0xFFF) << 12) | ((font->height * 4) & 0xFFF));
-
-        gMenuAsciiFontTextureNeedsLoad = 0;
-        gMenuAsciiFontPaletteIndex = -1;
-        tile = chByte - 0x20;
-    }
-
-    if ((u32)tile < 0x40) {
-        s = ((tile & 7) * 8) & 0xFFFF;
-        if ((s && s) && s) {
+        tile = ch - 0x20;
+        if (tile < 0x40) {
+            s = ((tile & 7) << 3) & 0xFFFF & 0xFFFF;
+            drawMenuAsciiFontTile(x, y, s, tile & 0x38, arg3 & 0xFFFF & 0xFFFF & 0xFFFF);
         }
-        drawMenuAsciiFontTile(x, y, s, tile & 0x38, arg3);
     }
 }
-#endif
 
-#ifndef NON_MATCHING
 extern void drawMenuAsciiChar(s16 x, s16 y, volatile s32 ch, u16 arg3);
-#endif
 
 void drawMenuAsciiTextDefaultScale(s16 arg0, s16 arg1, u8 *arg2, u16 arg3) {
     s32 var_s0;
@@ -1051,14 +1017,13 @@ void addRenderCallback(RenderCallbackNode **arg0, void (*arg1)(s32), s32 arg2) {
     }
 }
 
-extern s32 gRegionAllocPtr;
-extern s32 gCurrentTaskDisplayListStart;
+extern Gfx *gCurrentTaskDisplayListStart;
 
 void runRenderCallbacks(RenderCallbackNode **arg0) {
     RenderCallbackNode *s0 = *arg0;
     if (s0 != NULL) {
 loop:
-        if ((u32)((gRegionAllocPtr - gCurrentTaskDisplayListStart) - 0x5B8) < 0x14181U) {
+        if ((u32)(((u8 *)gRegionAllocPtr - (u8 *)gCurrentTaskDisplayListStart) - 0x5B8) < 0x14181U) {
             s0->callback(s0->arg);
             s0 = s0->next;
             if (s0 != NULL) {
