@@ -830,7 +830,7 @@ void initRaceSetupSavePanelFrame(RectListActor *arg0) {
     setCallbackTaskCallback(arg0, updateRaceSetupSavePanelFrame);
 }
 
-// drawRaceSetupSavePanelIcons best match: 95.696% (nonmatchings/drawRaceSetupSavePanelIcons-2663524570355072948/base_16.c)
+// drawRaceSetupSavePanelIcons best match: 96.022% (nonmatchings/drawRaceSetupSavePanelIcons-8201208972835473051/base_10.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/race_setup/race_setup_ui/drawRaceSetupSavePanelIcons.s")
 
 #ifdef NON_MATCHING
