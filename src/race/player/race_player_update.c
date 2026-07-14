@@ -3765,7 +3765,7 @@ void updateRacePlayerMode08SpinoutRecover(RacePlayer *player) {
     }
 }
 
-// updateRacePlayerMode06TerrainFall best match: 98.503% (nonmatchings/updateRacePlayerMode06TerrainFall-5512657642801906896/base_8.c)
+// updateRacePlayerMode06TerrainFall best match: 98.682% (nonmatchings/updateRacePlayerMode06TerrainFall-5512657642801906896/base_20.c)
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race/player/race_player_update/updateRacePlayerMode06TerrainFall.s")
 
@@ -3795,7 +3795,8 @@ void updateRacePlayerMode06TerrainFall(RacePlayer *player) {
         timer = player->stateTimer;
         player->actionEffectLevel = 2;
         player->actionEffectFrame = 0;
-        player->stateTimer = timer - ((timer * player->rankIndex) / 8);
+        player->stateTimer = timer;
+        player->stateTimer = player->stateTimer - ((timer * player->rankIndex) / 8);
         setRaceMotionAnimation(player, 0x20);
     }
 
@@ -3854,7 +3855,7 @@ void updateRacePlayerMode06TerrainFall(RacePlayer *player) {
         break;
     }
 
-    yVel = player->velocity.y - player->unk260;
+    yVel = (player->velocity.y - player->unk260) & 0xFFFFFFFFFFFFFFFF;
     player->velocity.y = yVel;
     goto dummy_label_968831;
 dummy_label_968831:
