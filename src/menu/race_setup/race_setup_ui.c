@@ -1000,7 +1000,7 @@ void drawRaceSetupSaveStatusWidgets(TitleMenuWidgetActor *arg0) {
     }
 }
 
-// updateRaceSetupSaveStatusWidgets best match: 94.542% (nonmatchings/updateRaceSetupSaveStatusWidgets-2694253543240320626/base_15.c)
+// updateRaceSetupSaveStatusWidgets best match: 94.550% (nonmatchings/updateRaceSetupSaveStatusWidgets-8460208293698481450/base_9.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/race_setup/race_setup_ui/updateRaceSetupSaveStatusWidgets.s")
 
 #ifdef NON_MATCHING
@@ -1022,8 +1022,8 @@ void updateRaceSetupSaveStatusWidgets(TitleMenuWidgetActor *arg0) {
             actor->x[playerIndex] = panelPositions->x;
             actor->y[playerIndex] = panelPositions->y;
 
-            previousTransitionState = actor->statusTransitionStates[playerIndex];
             transitionState = global->saveStatusTransitionStates[playerIndex];
+            previousTransitionState = actor->statusTransitionStates[playerIndex];
             if (transitionState != previousTransitionState) {
                 actor->statusTransitionStates[playerIndex] = transitionState;
                 actor->nextStatusCodes[playerIndex] = global->nextSelection[playerIndex];
