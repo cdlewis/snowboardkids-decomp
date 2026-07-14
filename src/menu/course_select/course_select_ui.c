@@ -13,12 +13,6 @@ typedef struct {
 } CourseSelectState;
 
 typedef struct {
-    s32 x;
-    s32 y;
-    s32 z;
-} CourseSelectTempVec3i;
-
-typedef struct {
     /* 0x000 */ u8 pad0[5];
     /* 0x005 */ u8 state;
     union {
@@ -124,10 +118,11 @@ typedef struct {
 } CourseSelectIconListActor;
 
 typedef struct {
-    /* 0x000 */ u8 pad0[0x3C];
-    /* 0x03C */ s16 matrix[0x10];
-    /* 0x05C */ u8 pad5C[0x60];
-    /* 0x0BC */ CourseSelectTempVec3i vecs[4];
+    /* 0x000 */ u8 pad0[0x18];
+    /* 0x018 */ s32 matrix;
+    /* 0x01C */ FixedTransform sourceTransform;
+    /* 0x03C */ FixedTransform playerTransforms[4];
+    /* 0x0BC */ Vec3i vecs[4];
     /* 0x0EC */ u16 angle[4];
     /* 0x0F4 */ s16 targetCourse[4];
     /* 0x0FC */ u8 timer[4];
@@ -248,7 +243,7 @@ void drawCourseSelectPreviewModel(CourseSelectCoursePreviewActor *arg0) {
 
 #ifdef NON_MATCHING
 void updateCourseSelectPreviewModelIn(void *arg0) {
-    CourseSelectTempVec3i sp78;
+    Vec3i sp78;
     CourseSelectAnimatedActor *actor;
     CourseSelectRacePlayer *player;
     s32 i;
@@ -411,14 +406,14 @@ void updateCourseSelectPreviewModelIn(void *arg0) {
 
 void initCourseSelectPreviewModelIn(void *arg0) {
     void *actor;
-    CourseSelectTempVec3i sp60;
+    Vec3i sp60;
     u8 *var_s1;
     u8 *var_s2;
     s16 *var_s3;
     u8 *var_s4;
     s32 var_s5;
     u8 *var_s6;
-    CourseSelectTempVec3i *var_s7;
+    Vec3i *var_s7;
     s32 const_s8;
 
     actor = arg0;
@@ -428,7 +423,7 @@ void initCourseSelectPreviewModelIn(void *arg0) {
     var_s4 = arg0;
     var_s5 = 0;
     var_s6 = arg0;
-    var_s7 = (CourseSelectTempVec3i *) ((u8 *) arg0 + 0xBC);
+    var_s7 = (Vec3i *) ((u8 *) arg0 + 0xBC);
     const_s8 = 0xC00000;
     do {
         if (actor && actor) {
@@ -527,7 +522,7 @@ void drawCourseSelectPreviewModelClose(CourseSelectCoursePreviewActor *arg0) {
 
 #ifdef NON_MATCHING
 void updateCourseSelectPreviewModelOut(void *arg0) {
-    CourseSelectTempVec3i sp78;
+    Vec3i sp78;
     CourseSelectAnimatedActor *actor;
     CourseSelectRacePlayer *player;
     s32 i;
@@ -688,52 +683,34 @@ void updateCourseSelectPreviewModelOut(void *arg0) {
 #endif
 
 void initCourseSelectPreviewModelOut(void *arg0) {
-    u8 *var_s1;
-    CourseSelectTempVec3i sp60;
-    void *actor;
-    u8 *var_s2;
-    u8 *var_s3;
-    s16 *var_s4;
-    u8 *var_s5;
-    u8 *var_s6;
-    CourseSelectTempVec3i *var_s7;
-    s32 one;
+    CourseSelectAnimatedActor *actor;
+    Vec3i position;
+    u8 *outgoingModelState;
+    s32 i;
 
-    var_s3 = (u8 *) &gCourseSelectStatus;
     actor = arg0;
-    var_s1 = arg0; var_s2 = arg0;
-    var_s4 = (s16 *) ((u8 *) arg0 + 0x3C);
-    var_s5 = arg0;
-    var_s6 = arg0;
-    var_s7 = (CourseSelectTempVec3i *) ((u8 *) arg0 + 0xBC);
-    one = 1;
+    outgoingModelState = (u8 *)&gCourseSelectStatus;
+    i = 0;
     do {
-        if (actor && actor) {
-        }
-        *(s32 *) (var_s2 + 0xBC) = 0;
-        *(s32 *) (var_s2 + 0xC0) = 0x800000;
-        *(s32 *) (var_s2 + 0xC4) = 0;
-        *(s16 *) (var_s5 + 0xEC) = 0;
-        makeFixedRotationY(var_s4, *(s16 *) (var_s5 + 0xEC));
-        if ((arg0 && arg0) && arg0) {
-        }
-        transformVec3iByFixedMatrix(var_s4, var_s7, &sp60);
-        *(s32 *) (var_s1 + 0x50) = sp60.x;
-        *(s32 *) (var_s1 + 0x54) = sp60.y;
-        *(s32 *) (var_s1 + 0x58) = sp60.z;
-        *(u8 *) (var_s6 + 0x100) = one;
-        var_s1 += 0x20;
-        var_s6 += 1;
-        var_s4 = (s16 *) ((u8 *) var_s4 + 0x20);
-        var_s2 += 0xC;
-        var_s7 += 1;
-        var_s5 += 2;
- var_s3 += 1; *(var_s3 + 7) = one; } while (var_s3 != &D_8010AF1C);
+        actor->vecs[i].x = 0;
+        actor->vecs[i].y = 0x800000;
+        actor->vecs[i].z = 0;
+        actor->angle[i] = 0;
+        makeFixedRotationY(actor->playerTransforms[i].rotation, actor->angle[i]);
+        transformVec3iByFixedMatrix(actor->playerTransforms[i].rotation, &actor->vecs[i], &position);
+        actor->playerTransforms[i].translation.x = position.x;
+        actor->playerTransforms[i].translation.y = position.y;
+        actor->playerTransforms[i].translation.z = position.z;
+        actor->state[i] = 1;
+        i++;
+        outgoingModelState[8] = 1;
+        outgoingModelState += 1;
+    } while (outgoingModelState != &D_8010AF1C);
 
-    *(s32 *) ((u8 *) actor + 0x30) = 0;
-    *(s32 *) ((u8 *) actor + 0x34) = 0;
-    *(s32 *) ((u8 *) actor + 0x38) = 0;
-    makeFixedRotationYX((s16 *) ((u8 *) actor + 0x1C), 0x400, 0x280);
+    actor->sourceTransform.translation.x = 0;
+    actor->sourceTransform.translation.y = 0;
+    actor->sourceTransform.translation.z = 0;
+    makeFixedRotationYX(actor->sourceTransform.rotation, 0x400, 0x280);
     setCallbackTaskCallback(actor, updateCourseSelectPreviewModelOut);
 }
 
