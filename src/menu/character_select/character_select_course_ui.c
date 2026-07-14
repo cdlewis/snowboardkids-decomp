@@ -661,7 +661,7 @@ void initCharacterSelectLimitedCourseList(CharacterSelectCourseMenuFrameActor *a
 }
 #endif
 
-// drawCharacterSelectCoursePreviewFrame best match: 98.863% (nonmatchings/drawCharacterSelectCoursePreviewFrame-3836525038718587862/base_7.c)
+// drawCharacterSelectCoursePreviewFrame best match: 98.879% (nonmatchings/drawCharacterSelectCoursePreviewFrame-5512657642801906896/base_7.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/character_select/character_select_course_ui/drawCharacterSelectCoursePreviewFrame.s")
 
 #ifdef NON_MATCHING
@@ -683,7 +683,7 @@ void drawCharacterSelectCoursePreviewFrame(CharacterSelectCourseWidgetActor *arg
             frameIndex = 9;
         } while (0);
     } else {
- frameIndex = actor->sprite.unsignedIndex; } savedFrame = (tileMap = &gCharacterSelectCoursePreviewFrameTileMaps[frameIndex]); i = (offset = 0); if (arg0 == 0) { } do { drawMenuSpriteTile((s16) (actor->x + ((i & 3) << 5)), (s16) (actor->y + ((i / 4) << 5)), getRelocatableHeapBlockBase(gAssetHandles.textureHandle), tileMap->center[0], 0, 0x100); i += 1; tileMap = (CharacterSelectCourseFrameTileMap *) (((u16 *) tileMap) + 1); } while (i < 0x10); tileMap = savedFrame; yOffset = offset; do { drawMenuSpriteTile((s16) (actor->x + 0x80), (s16) (actor->y + yOffset), getRelocatableHeapBlockBase(gAssetHandles.textureHandle), tileMap->right[0], 0, 0x100); drawMenuSpriteTile((s16) (actor->x + offset), (s16) (actor->y + 0x80), getRelocatableHeapBlockBase(gAssetHandles.textureHandle), tileMap->bottom[0], 0, 0x100); offset += 0x40; tileMap = (CharacterSelectCourseFrameTileMap *) (((u16 *) tileMap) + 1); } while (offset < 0x80); drawMenuSpriteTile((s16) (actor->x + 0x80), (s16) (actor->y + 0x80), getRelocatableHeapBlockBase(gAssetHandles.textureHandle), gCharacterSelectCoursePreviewFrameCornerTileMaps[frameIndex].corner, 0, 0x100);
+ frameIndex = actor->sprite.unsignedIndex; } savedFrame = (tileMap = &gCharacterSelectCoursePreviewFrameTileMaps[frameIndex]); offset = (i = 0); if (arg0 == 0) { } do { drawMenuSpriteTile((s16) (actor->x + ((i & 3) << 5)), (s16) (actor->y + ((i / 4) << 5)), getRelocatableHeapBlockBase(gAssetHandles.textureHandle), tileMap->center[0], 0, 0x100); i += 1; tileMap = (CharacterSelectCourseFrameTileMap *) (((u16 *) tileMap) + 1); } while (i < 0x10); tileMap = savedFrame; yOffset = offset; do { drawMenuSpriteTile((s16) (actor->x + 0x80), (s16) (actor->y + yOffset), getRelocatableHeapBlockBase(gAssetHandles.textureHandle), tileMap->right[0], 0, 0x100); drawMenuSpriteTile((s16) (actor->x + offset), (s16) (actor->y + 0x80), getRelocatableHeapBlockBase(gAssetHandles.textureHandle), tileMap->bottom[0], 0, 0x100); offset += 0x40; tileMap = (CharacterSelectCourseFrameTileMap *) (((u16 *) tileMap) + 1); } while (offset < 0x80); drawMenuSpriteTile((s16) (actor->x + 0x80), (s16) (actor->y + 0x80), getRelocatableHeapBlockBase(gAssetHandles.textureHandle), gCharacterSelectCoursePreviewFrameCornerTileMaps[frameIndex].corner, 0, 0x100);
 
     drawMenuSprite((s16)(actor->x - 4), (s16)(actor->y - 4), getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE), 0x33,
                   0x20, 0x20, 0, 0);
@@ -709,7 +709,7 @@ void drawCharacterSelectCoursePreviewFrame(CharacterSelectCourseWidgetActor *arg
 }
 #endif
 
-// updateCharacterSelectCoursePreviewFrame best match: 91.995%
+// updateCharacterSelectCoursePreviewFrame best match: 92.148% (nonmatchings/updateCharacterSelectCoursePreviewFrame-5512657642801906896/base_10.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/character_select/character_select_course_ui/updateCharacterSelectCoursePreviewFrame.s")
 
 #ifdef NON_MATCHING
@@ -741,7 +741,8 @@ void updateCharacterSelectCoursePreviewFrame(CharacterSelectCourseWidgetActor *a
     }
 
     if (state != D_8010AE8A) {
-        state = D_8010AE8A & 0xFF;
+        selectedIndex = D_8010AE8A & 0xFF;
+        state = selectedIndex;
         arg0->transition.bytes.state = D_8010AE8A;
     }
 

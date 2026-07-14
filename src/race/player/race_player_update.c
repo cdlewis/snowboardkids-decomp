@@ -3765,106 +3765,105 @@ void updateRacePlayerMode08SpinoutRecover(RacePlayer *player) {
     }
 }
 
-// updateRacePlayerMode06TerrainFall best match: 96.974% (nonmatchings/updateRacePlayerMode06TerrainFall-6866765942504228165/base_12.c)
+// updateRacePlayerMode06TerrainFall best match: 98.733% (nonmatchings/updateRacePlayerMode06TerrainFall-5512657642801906896/base_22.c)
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race/player/race_player_update/updateRacePlayerMode06TerrainFall.s")
 
 #ifdef NON_MATCHING
 void updateRacePlayerMode06TerrainFall(RacePlayer *player) {
+    u32 new_var2;
     s16 updateState;
     s16 updateTimer;
-    s32 *posX;
-    s32 *posY;
-    s32 *posZ;
-    s16 *angle;
     s32 yVel;
     s32 timer;
+    RacePlayer *new_var;
     u32 stateFlags;
 
-    updateState = player->updateState;
+    new_var = player;
+    updateState = new_var->updateState;
     if (updateState == 0) {
         updateState++;
-        stateFlags = player->stateFlags & 0xFE0C1FFB;
-        *(volatile u32 *)&player->stateFlags = stateFlags;
-        player->updateState = updateState;
-        player->stateTimer = 0x3C;
-        player->stateFlags = stateFlags | 0x42000;
-        player->updateTimer = 0;
-        setRaceCameraMode(player->playerIndex, 4);
-        player->unk60 = 0;
-        player->unk2E8 = player->unk502;
-        if (player->soundDisabled == 0) {
-            spawnRaceItemBreakParticles(player->playerIndex, player->unk330);
+        new_var2 = new_var->stateFlags;
+        stateFlags = new_var2 & 0xFE0C1FFB;
+        *(&new_var->stateFlags) = stateFlags;
+        new_var->updateState = updateState;
+        new_var->stateTimer = 0x3C;
+        new_var->stateFlags = stateFlags | 0x42000;
+        new_var->updateTimer = 0;
+        setRaceCameraMode(new_var->playerIndex, 4);
+        new_var->unk60 = 0;
+        new_var->unk2E8 = new_var->unk502;
+        if (new_var->soundDisabled == 0) {
+            spawnRaceItemBreakParticles(new_var->playerIndex, new_var->unk330);
         }
-        timer = player->stateTimer;
-        player->actionEffectLevel = 2;
-        player->actionEffectFrame = 0;
-        player->stateTimer = timer - ((timer * player->rankIndex) / 8);
-        setRaceMotionAnimation(player, 0x20);
+        timer = new_var->stateTimer;
+        new_var->actionEffectLevel = 2;
+        new_var->actionEffectFrame = 0;
+        new_var->stateTimer = timer;
+        new_var->stateTimer = new_var->stateTimer - ((timer * new_var->rankIndex) / 8);
+        setRaceMotionAnimation(new_var, 0x20);
     }
 
-    updateTimer = player->updateTimer;
+    updateTimer = new_var->updateTimer;
     switch (updateTimer) {
     case 0:
-        yVel = (player->stateTimer - 1) & 0xFFFFFFFFFFFFFFFFu;
-        player->stateTimer = yVel;
+        yVel = (new_var->stateTimer - 1) & 0xFFFFFFFFFFFFFFFFu;
+        new_var->stateTimer = yVel;
         if (yVel == 0) {
-            player->updateTimer++;
+            new_var->updateTimer++;
         }
-        if (stepRaceMotionAnimationUntilEnd(player) != 0) {
-            setRaceMotionAnimation(player, 0x21);
+        if (stepRaceMotionAnimationUntilEnd(new_var) != 0) {
+            setRaceMotionAnimation(new_var, 0x21);
         }
         break;
     case 1:
-        if (stepRaceMotionAnimationUntilEnd(player) != 0) {
-            setRaceMotionAnimation(player, 0x21);
+        if (stepRaceMotionAnimationUntilEnd(new_var) != 0) {
+            setRaceMotionAnimation(new_var, 0x21);
         }
-        player->stateFlags |= 0x80000;
-        if (gViewportStates[(u16) player->playerIndex].overlayAlpha == 0xFF) {
-            player->updateTimer++;
-            player->unk74 = 0;
-            player->unk502 = player->unk2E8;
-            posX = &player->posX;
-            posY = &player->posY;
-            posZ = &player->posZ;
-            angle = &player->facingAngle;
+        new_var->stateFlags |= 0x80000;
+        if (gViewportStates[(u16) new_var->playerIndex].overlayAlpha == 0xFF) {
+            new_var->updateTimer++;
+            new_var->unk74 = 0;
+            new_var->unk502 = new_var->unk2E8;
             do {
-                getRaceCourseSurfaceSpawnTransform(player->unk502, posX, posY, posZ, angle);
-                if (isRacePlayerRespawnSurfaceValid(player) == 0) {
-                    player->unk502--;
+                getRaceCourseSurfaceSpawnTransform(new_var->unk502, &new_var->posX, &new_var->posY, &new_var->posZ, &new_var->facingAngle);
+                if (isRacePlayerRespawnSurfaceValid(new_var) == 0) {
+                    new_var->unk502--;
                 } else {
                     break;
                 }
             } while (1);
-            player->posY = getRaceCourseSurfaceHeight(player->unk502, player->posX, player->posZ);
-            player->unk34 = player->pos;
-            player->velocity.x = 0;
-            player->velocity.y = 0;
-            player->velocity.z = 0;
-            player->stateFlags &= ~0x400;
-            player->unk2EE = 0;
-            updateRacePlayerLeanAngle(player, 0, 0);
-            setRaceMotionAnimation(player, 1);
-            stepRaceMotionAnimationUntilEnd(player);
-            setRaceCameraMode((u16) player->playerIndex, 1);
-            player->unk60 = 0x40000;
+            new_var->posY = getRaceCourseSurfaceHeight(new_var->unk502, new_var->posX, new_var->posZ);
+            new_var->unk34 = new_var->pos;
+            new_var->velocity.x = 0;
+            new_var->velocity.y = 0;
+            new_var->velocity.z = 0;
+            new_var->stateFlags &= ~0x400;
+            new_var->unk2EE = 0;
+            updateRacePlayerLeanAngle(new_var, 0, 0);
+            setRaceMotionAnimation(new_var, 1);
+            stepRaceMotionAnimationUntilEnd(new_var);
+            setRaceCameraMode((u16) new_var->playerIndex, 1);
+            new_var->unk60 = 0x40000;
         }
         break;
     case 2:
-        player->stateFlags &= 0xFFF7FFFF;
-        if (gViewportStates[(u16) player->playerIndex].overlayAlpha == 0) {
-            player->mode = 0;
-            player->updateState = 0;
-            player->updateTimer = 0;
-            player->stateFlags = 0;
+        new_var->stateFlags &= 0xFFF7FFFF;
+        if (gViewportStates[(u16) new_var->playerIndex].overlayAlpha == 0) {
+            new_var->mode = 0;
+            new_var->updateState = 0;
+            new_var->updateTimer = 0;
+            new_var->stateFlags = 0;
         }
-        stepRaceMotionAnimationUntilEnd(player);
+        stepRaceMotionAnimationUntilEnd(new_var);
         break;
     }
 
-    yVel = player->velocity.y - player->unk260;
-    player->velocity.y = yVel;
-    player->posY += yVel;
+    yVel = (new_var->velocity.y - new_var->unk260) & 0xFFFFFFFFFFFFFFFF;
+    new_var->velocity.y = yVel;
+    goto dummy_label_968831;
+dummy_label_968831:
+    new_var->posY = new_var->posY + yVel;
 }
 #endif
 
@@ -5080,7 +5079,7 @@ void dispatchRacePlayerMode30Attack(RacePlayer *player) {
     }
 }
 
-// updateRacePlayerMode30AttackApproach best match: 97.991% (nonmatchings/updateRacePlayerMode30AttackApproach-6113366811127043669/base_8.c)
+// updateRacePlayerMode30AttackApproach best match: 98.321% (nonmatchings/updateRacePlayerMode30AttackApproach-5512657642801906896/base_7.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race/player/race_player_update/updateRacePlayerMode30AttackApproach.s")
 
 #ifdef NON_MATCHING
@@ -5156,15 +5155,14 @@ void updateRacePlayerMode30AttackApproach(RacePlayer *player) {
         if (angleDiff < -0x30) {
             angleDiff = -0x30;
         }
-        player->unk2FA = roll + angleDiff;
+        player->unk2FA = player->unk2FA + angleDiff;
 
-        roll = player->unk2FA;
-        if (roll == 0) {
+        if (player->unk2FA == 0) {
             if (player->animationId != 1) {
                 setRaceMotionAnimation(player, 1);
             }
             stepRaceMotionLoopingJointAnimation(player);
-        } else if (roll >= 0) {
+        } else if (player->unk2FA >= 0) {
             setRaceMotionAnimation(player, 3);
             blendRaceMotionJointAnimation(player, 3, player->unk2FA, 0x118);
         } else {

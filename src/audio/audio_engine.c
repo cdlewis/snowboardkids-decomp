@@ -444,10 +444,6 @@ s32 soundPlayerLoadEnvelope(PlayerCommandState *arg0, u8 *arg1) {
     return (s32)arg1;
 }
 
-// soundPlayerCommandSetTempo best match: 98.929% (nonmatchings/soundPlayerCommandSetTempo-2911448260736516995/base_21.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/audio/audio_engine/soundPlayerCommandSetTempo.s")
-
-#ifdef NON_MATCHING
 s32 soundPlayerCommandSetTempo(PlayerCommandState *arg0, u8 *arg1) {
     s32 i;
     PlayerCommandState *entry;
@@ -459,27 +455,25 @@ s32 soundPlayerCommandSetTempo(PlayerCommandState *arg0, u8 *arg1) {
     scaled = (arg0->unkB4 * value) >> scaled;
     arg1++;
     if (arg0->soundId != 0) {
-        arg0->unkB8 = value;
         do {
+            arg0->unkB8 = value;
         } while (0);
-        return (s32)arg1;
-    }
-
-    i = 0;
-    entry = gSoundPlayerStates;
-    if (gSoundPlayerCount > 0) {
-        do {
-            i++;
-            if (entry->data == arg0->data) {
-                entry->unkBA = value;
-                entry->unkB8 = scaled;
-            }
-            entry++;
-        } while (i < gSoundPlayerCount);
+    } else {
+        i = 0;
+        entry = gSoundPlayerStates;
+        if (gSoundPlayerCount > 0) {
+            do {
+                i++;
+                if (entry->data == arg0->data) {
+                    entry->unkBA = value;
+                    entry->unkB8 = scaled;
+                }
+                entry++;
+            } while (i < gSoundPlayerCount);
+        }
     }
     return (s32)arg1;
 }
-#endif
 
 s32 soundPlayerCommandSetReleaseOffset(PlayerCommandState *arg0, u8 *arg1) {
     u8 *ret;
