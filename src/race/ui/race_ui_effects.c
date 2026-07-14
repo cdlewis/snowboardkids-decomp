@@ -66,6 +66,11 @@ extern void *createCallbackTaskWithUserIdPreservingArgs(void *, s32, s32);
 #define COURSE_START_FINISH_SCROLL_FRAME_MASK 7
 #define COURSE_START_FINISH_SCROLL_STEP 4
 #define COURSE_START_FINISH_SCROLL_MASK 0x3F
+#define TIME_TRIAL_RECORD_DELTA_POPUP_START_X 0x1A4
+#define TIME_TRIAL_RECORD_DELTA_POPUP_START_Y -0x2C
+#define TIME_TRIAL_RECORD_DELTA_POPUP_START_VELOCITY 0x38
+#define TIME_TRIAL_RECORD_DELTA_POPUP_HOLD_TIMER 0x5A
+#define RACE_UI_TIME_TRIAL_SAVE_DATA ((RaceUiTimeTrialSaveData *)gGameSaveDataBuffer)
 #define RACE_UI_GSP_VERTEX_F3DEX(pkt, v, n, v0) \
     gDma1p((pkt), G_VTX, (v), ((n) << 10) | (sizeof(Vtx) * (n) - 1), (v0) * 2)
 #define RACE_UI_GSP1QUADRANGLE_F3DEX(pkt, v0, v1, v2, v3, flag) \
@@ -646,6 +651,11 @@ typedef struct RaceUiTimeTrialRecordDeltaPopupActor {
     /* 0x2C */ RaceTimer delta;
     /* 0x30 */ s8 isSlowerThanRecord;
 } RaceUiTimeTrialRecordDeltaPopupActor;
+
+typedef struct {
+    /* 0x000 */ u8 pad0[0x12A];
+    /* 0x12A */ RaceTimer timeTrialRecordSplitTimes[11];
+} RaceUiTimeTrialSaveData;
 
 typedef struct {
     /* 0x0000 */ u8 pad0[0x156];
@@ -5297,19 +5307,19 @@ void updateTimeTrialRecordDeltaPopupSlideIn(RaceUiTimeTrialRecordDeltaPopupActor
     arg0->x -= arg0->velocity;
     arg0->velocity -= 4;
     if (arg0->velocity == 0) {
-        arg0->timer = 0x5A;
+        arg0->timer = TIME_TRIAL_RECORD_DELTA_POPUP_HOLD_TIMER;
         setCallbackTaskCallback(arg0, updateTimeTrialRecordDeltaPopupHold);
     }
     addRenderCallback(&gRaceOverlayRenderCallbackList, drawTimeTrialRecordDeltaPopup, arg0);
 }
 
-void initTimeTrialRecordDeltaPopup(RaceUiTimeTrialRecordDeltaPopupActor *arg0) {
-    arg0->y.word = -0x2C;
-    arg0->x = 0x1A4;
-    arg0->velocity = 0x38;
-    arg0->isSlowerThanRecord = calculateRaceTimerDelta(&gRaceElapsedTimer, (RaceTimer *)&gGameSaveDataBuffer[gRaceCourseIndex * 4 + 0x12A],
-                       &arg0->delta);
-    setCallbackTaskCallback(arg0, updateTimeTrialRecordDeltaPopupSlideIn);
+void initTimeTrialRecordDeltaPopup(RaceUiTimeTrialRecordDeltaPopupActor *popup) {
+    popup->y.word = TIME_TRIAL_RECORD_DELTA_POPUP_START_Y;
+    popup->x = TIME_TRIAL_RECORD_DELTA_POPUP_START_X;
+    popup->velocity = TIME_TRIAL_RECORD_DELTA_POPUP_START_VELOCITY;
+    popup->isSlowerThanRecord =
+        calculateRaceTimerDelta(&gRaceElapsedTimer, &RACE_UI_TIME_TRIAL_SAVE_DATA->timeTrialRecordSplitTimes[gRaceCourseIndex], &popup->delta);
+    setCallbackTaskCallback(popup, updateTimeTrialRecordDeltaPopupSlideIn);
 }
 
 // func_800651BC best match: 353 asm-differ differences
