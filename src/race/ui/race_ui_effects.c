@@ -218,7 +218,9 @@ typedef struct RaceUiCounterActor {
 } RaceUiCounterActor;
 
 typedef struct RaceUiDualCounterActor {
-    /* 0x00 */ u8 pad0[0x18];
+    /* 0x00 */ u8 pad0[0x10];
+    /* 0x10 */ u16 index;
+    /* 0x12 */ u8 pad12[0x18 - 0x12];
     /* 0x18 */ s8 row;
     /* 0x19 */ s8 column;
     /* 0x1A */ u8 pad1A[2];
@@ -2592,20 +2594,20 @@ void func_8005C4EC(void *arg0) {
     addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005C14C, arg0);
 }
 
-void func_8005C568(void *arg0) {
+void func_8005C568(RaceUiDualCounterActor *actor) {
     if (gPlayerInputPressed & A_BUTTON) {
         enqueueSoundEffect(0x18, 0x32);
-        if (*(u16 *)((u8 *)arg0 + 0x10) < 5) {
-            setCallbackTaskCallback(arg0, func_8005C448);
+        if (actor->index < 5) {
+            setCallbackTaskCallback(actor, func_8005C448);
         } else {
             gMenuFlowState |= 0x10;
-            setCallbackTaskCallback(arg0, func_8005C4EC);
+            setCallbackTaskCallback(actor, func_8005C4EC);
         }
     }
-    addRenderCallback(&gMenuRenderCallbackList, func_8005B8E8, (s32)arg0);
-    addRenderCallback(&gMenuRenderCallbackList, func_8005B9F8, (s32)arg0);
-    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005C03C, (s32)arg0);
-    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005C14C, (s32)arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_8005B8E8, actor);
+    addRenderCallback(&gMenuRenderCallbackList, func_8005B9F8, actor);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005C03C, actor);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005C14C, actor);
 }
 
 void func_8005C64C(RaceUiDualCounterActor *arg0) {
