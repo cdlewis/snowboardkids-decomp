@@ -33,6 +33,11 @@ typedef struct {
     /* 0x4D */ u8 pad4D[0x78F8 - 0x4D];
 } TitleMenuPlayerView;
 
+typedef struct {
+    /* 0x000 */ s32 money;
+    /* 0x004 */ u8 pad4[RACE_PLAYER_STATE_SIZE - 4];
+} RaceSetupPlayerMoneyView;
+
 extern void addRenderCallback(void *, void *, s32);
 extern s32 enqueueSoundEffect(s32, s32);
 extern u8 gRaceSetupSaveStatusMessages[][0x4C];
@@ -642,40 +647,40 @@ void initRaceSetupPlayerCountCursor(FadeItemActor *arg0) {
 
 #ifdef NON_MATCHING
 void drawRaceSetupSavePlayerPanels(TitleMenuWidgetItemView *arg0) {
-    char buf[0xC];
+    char textBuffer[0xC];
     s32 alpha;
-    s32 next;
-    s32 i;
-    TitleMenuWidgetItemView *item;
-    volatile u8 *selected;
+    s32 playerNumber;
+    s32 playerIndex;
+    TitleMenuWidgetItemView *panel;
+    volatile u8 *playerCount;
     u8 *text;
 
-    selected = &gPlayerCount;
-    item = arg0;
-    text = buf - 0x10;
-    for (i = 0; i != 4;) {
+    playerCount = &gPlayerCount;
+    panel = arg0;
+    text = textBuffer - 0x10;
+    for (playerIndex = 0; playerIndex != 4;) {
         alpha = 0x100;
-        next = (((s32)*selected - 1) < i);
-        if (next) {
+        playerNumber = (((s32)*playerCount - 1) < playerIndex);
+        if (playerNumber) {
             alpha = 0x50;
         }
 
-        drawMenuSpriteWithAlpha(item->x, item->y, getRelocatableHeapBlockBase(TITLE_MENU_FRAME_TEXTURE_HANDLE), 0xA, 0x20, 0x20,
-                      (i * RACE_PLAYER_STATE_SIZE) * 0, alpha, (i + 1) & 0xFF);
-        next = i + 1;
-        drawMenuSpriteWithAlpha((s16)(item->x + 0x40), item->y, getRelocatableHeapBlockBase(TITLE_MENU_FRAME_TEXTURE_HANDLE), 0xB, 0x20, 0x20, 0, alpha, next & 0xFF);
-        drawMenuSpriteWithAlpha((s16)(item->x + 0x80), item->y, getRelocatableHeapBlockBase(TITLE_MENU_FRAME_TEXTURE_HANDLE), 0xC, 0x20, 0x20, 0, alpha, next & 0xFF);
+        drawMenuSpriteWithAlpha(panel->x, panel->y, getRelocatableHeapBlockBase(TITLE_MENU_FRAME_TEXTURE_HANDLE), 0xA, 0x20, 0x20,
+                      (playerIndex * RACE_PLAYER_STATE_SIZE) * 0, alpha, (playerIndex + 1) & 0xFF);
+        playerNumber = playerIndex + 1;
+        drawMenuSpriteWithAlpha((s16)(panel->x + 0x40), panel->y, getRelocatableHeapBlockBase(TITLE_MENU_FRAME_TEXTURE_HANDLE), 0xB, 0x20, 0x20, 0, alpha, playerNumber & 0xFF);
+        drawMenuSpriteWithAlpha((s16)(panel->x + 0x80), panel->y, getRelocatableHeapBlockBase(TITLE_MENU_FRAME_TEXTURE_HANDLE), 0xC, 0x20, 0x20, 0, alpha, playerNumber & 0xFF);
 
-        sprintf(text, D_800E0A80, next);
-        drawMenuAsciiText((s16)(item->x + 0x32), (s16)(item->y + 2), text, 0, alpha);
+        sprintf(text, D_800E0A80, playerNumber);
+        drawMenuAsciiText((s16)(panel->x + 0x32), (s16)(panel->y + 2), text, 0, alpha);
         if (alpha == 0x100) {
-            sprintf(text, D_800E0A84, *(s32 *)((u8 *)&gPlayer1Money + (i * RACE_PLAYER_STATE_SIZE)));
-            drawMenuAsciiText((s16)(item->x + 0x44), (s16)(item->y + 0x1B), text, 0, alpha);
+            sprintf(text, D_800E0A84, ((RaceSetupPlayerMoneyView *)&gPlayer1Money)[playerIndex].money);
+            drawMenuAsciiText((s16)(panel->x + 0x44), (s16)(panel->y + 0x1B), text, 0, alpha);
         } else {
-            drawMenuSpriteWithAlpha((s16)(item->x + 2), (s16)(item->y + 0x14), getRelocatableHeapBlockBase(TITLE_MENU_SECONDARY_TEXTURE_HANDLE), 0x90, 0x20, 0x20, 0, 0xF0, 0);
+            drawMenuSpriteWithAlpha((s16)(panel->x + 2), (s16)(panel->y + 0x14), getRelocatableHeapBlockBase(TITLE_MENU_SECONDARY_TEXTURE_HANDLE), 0x90, 0x20, 0x20, 0, 0xF0, 0);
         }
-        i = next;
-        item = (TitleMenuWidgetItemView *)((s16 *)item + 1);
+        playerIndex = playerNumber;
+        panel = (TitleMenuWidgetItemView *)((s16 *)panel + 1);
     }
 }
 #endif
