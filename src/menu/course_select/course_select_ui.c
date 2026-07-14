@@ -1159,63 +1159,64 @@ void drawCourseSelectCourseCursors(CourseSelectWidgetActor *arg0) {
 void updateCourseSelectCourseCursors(CourseSelectWidgetActor *arg0) {
     register CourseSelectWidgetActor *actor;
     s32 i;
-    CourseSelectWidgetActor *statePtr;
     CourseSelectRacePlayer *player;
     u8 state;
 
     actor = arg0;
     i = 0;
     if ((s32) gPlayerCount > 0) {
-        statePtr = actor; do { if ((gMenuFlowState != 0) && (gRaceSplitscreenMode != 3)) { statePtr->unk30 = 4; }
-            state = statePtr->unk30;
+        do {
+            if ((gMenuFlowState != 0) && (gRaceSplitscreenMode != 3)) {
+                actor->courseCursorState[i] = 4;
+            }
+            state = actor->courseCursorState[i];
             switch (state) {
             case 0:
-                actor->coordinates[i + 8] += 0x26;
-                if (actor->coordinates[i + 8] >= 0x100) {
-                    actor->coordinates[i + 8] = 0x100;
-                    statePtr->unk30 = 1;
+                actor->courseCursorAlpha[i] += 0x26;
+                if (actor->courseCursorAlpha[i] >= 0x100) {
+                    actor->courseCursorAlpha[i] = 0x100;
+                    actor->courseCursorState[i] = 1;
                 }
-                state = statePtr->unk30;
+                state = actor->courseCursorState[i];
                 break;
             case 1:
                 player = &gRacePlayers[i];
-                if (statePtr->unk34 < 0x10) {
-                    actor->coordinates[i + 8] -= 9;
+                if (actor->courseCursorTimer[i] < 0x10) {
+                    actor->courseCursorAlpha[i] -= 9;
                 } else {
-                    actor->coordinates[i + 8] += 9;
+                    actor->courseCursorAlpha[i] += 9;
                 }
-                statePtr->unk34 = (statePtr->unk34 + 1) & 0x1F;
-                if ((player->pad6[2] == 1) || (gRacePlayers[0].pad6[2] == 3)) {
-                    statePtr->unk30 = 2;
+                actor->courseCursorTimer[i] = (actor->courseCursorTimer[i] + 1) & 0x1F;
+                if ((player->menuState == 1) || (gRacePlayers[0].menuState == 3)) {
+                    actor->courseCursorState[i] = 2;
                 }
-                state = statePtr->unk30;
+                state = actor->courseCursorState[i];
                 break;
             case 2:
                 player = &gRacePlayers[i];
-                if (player->pad6[2] == 3) {
-                    statePtr->unk30 = 4;
+                if (player->menuState == 3) {
+                    actor->courseCursorState[i] = 4;
                 }
-                if (player->pad6[2] == 0) {
-                    statePtr->unk30 = 1;
-                    actor->coordinates[i + 8] = 0x100;
-                    statePtr->unk34 = 0;
+                if (player->menuState == 0) {
+                    actor->courseCursorState[i] = 1;
+                    actor->courseCursorAlpha[i] = 0x100;
+                    actor->courseCursorTimer[i] = 0;
                 }
                 if (gCurrentGameTask->screenState == 9) {
-                    statePtr->unk30 = 4;
+                    actor->courseCursorState[i] = 4;
                 }
-                state = statePtr->unk30;
+                state = actor->courseCursorState[i];
                 break;
             case 3:
             case 4:
                 break;
             }
             i++;
-            statePtr = (CourseSelectWidgetActor *) ((u8 *) statePtr + 1);
             gCourseSelectStatus[i - 1] = state;
         } while (i < (s32) gPlayerCount);
     }
 
-    if (actor->unk30 == 4) {
+    if (actor->courseCursorState[0] == 4) {
         removeCallbackTask(actor);
     } else {
         addRenderCallback(&gMenuRenderCallbackList, drawCourseSelectCourseCursors, actor);

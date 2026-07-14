@@ -33,7 +33,7 @@ typedef struct {
         struct {
             /* 0x18 */ s16 courseCursorX[4];
             /* 0x20 */ s16 courseCursorY[4];
-            /* 0x28 */ u16 courseCursorAlpha[4];
+            /* 0x28 */ s16 courseCursorAlpha[4];
             /* 0x30 */ u8 courseCursorState[4];
             /* 0x34 */ u8 courseCursorTimer[4];
             /* 0x38 */ s8 courseCursorBobOffset[4];
