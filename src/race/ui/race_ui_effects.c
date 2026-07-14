@@ -27,6 +27,8 @@ extern void *createCallbackTaskWithUserIdPreservingArgs(void *, s32, s32);
 #define RACE_UI_SINGLE_TRAIL_LOCAL_X 0
 #define RACE_UI_SINGLE_TRAIL_LOCAL_Y 0x100000
 #define RACE_UI_SINGLE_TRAIL_LOCAL_Z -0x200000
+#define ICE_COURSE_BUMPER_BASE_SCALE 0x1000
+#define ICE_COURSE_BUMPER_ROTATION_STEP 0x40
 #define RACE_UI_RESULTS_FADE_STEP 0x10
 #define RACE_UI_RESULTS_FULL_ALPHA 0xFF
 #define RACE_UI_RESULTS_REVEAL_TIMER 0x14
@@ -475,7 +477,9 @@ typedef struct RaceUiSpinningParticleActor {
 } RaceUiSpinningParticleActor;
 
 typedef struct RaceUiScaledParticleActor {
-    /* 0x00 */ u8 pad0[0x18];
+    /* 0x00 */ u8 pad0[0x10];
+    /* 0x10 */ u16 index;
+    /* 0x12 */ u8 pad12[0x18 - 0x12];
     /* 0x18 */ Vec3i pos;
     /* 0x24 */ s16 scale;
     /* 0x26 */ u8 pad26[2];
@@ -864,7 +868,7 @@ extern Vec3i D_800D6220[];
 extern Vec3i D_800D62A0;
 extern Vec3i D_800D6324;
 extern Vec3i D_800D6330[];
-extern Vec3i D_800D62AC[];
+extern Vec3i gIceCourseBumperPositions[];
 extern s16 D_800D633C[];
 extern s32 gRaceCourseTargetTimes[];
 
@@ -4616,16 +4620,16 @@ void updateIceCourseBumper(RaceUiScaledParticleActor *arg0) {
     addRenderCallback(&gRaceModelEffectRenderCallbackList, renderIceCourseBumper, actor);
 }
 
-void initIceCourseBumper(RaceUiScaledParticleActor *arg0) {
-    arg0->rotY = randomNextSecondary() << 4;
+void initIceCourseBumper(RaceUiScaledParticleActor *bumper) {
+    bumper->rotY = randomNextSecondary() << 4;
     if (randomNextSecondary() & 1) {
-        arg0->rotYStep = 0x40;
+        bumper->rotYStep = ICE_COURSE_BUMPER_ROTATION_STEP;
     } else {
-        arg0->rotYStep = -0x40;
+        bumper->rotYStep = -ICE_COURSE_BUMPER_ROTATION_STEP;
     }
-    arg0->scale = 0x1000;
-    arg0->pos = D_800D62AC[*(u16 *)((u8 *)arg0 + 0x10)];
-    setCallbackTaskCallback(arg0, updateIceCourseBumper);
+    bumper->scale = ICE_COURSE_BUMPER_BASE_SCALE;
+    bumper->pos = gIceCourseBumperPositions[bumper->index];
+    setCallbackTaskCallback(bumper, updateIceCourseBumper);
 }
 
 void func_80062F6C(RaceUiTrailingParticleActor *arg0) {

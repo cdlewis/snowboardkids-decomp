@@ -1791,6 +1791,7 @@ gRaceIntroAnimatedBillboardTextureIds = 0x800D5D30; // rom:0xD6930 size:0x18
 gRaceIntroAnimatedBillboardCommandsByCourse = 0x800D5FC8; // rom:0xD6BC8 size:0x28
 gTranslucentSpriteRenderModeDl = 0x800D60E0; // rom:0xD6CE0
 gAlphaSpriteRenderModeDl = 0x800D6270; // rom:0xD6E70
+gIceCourseBumperPositions = 0x800D62AC; // rom:0xD6EAC size:0x78
 gRaceItemProjectileQuadVertices = 0x800D45E0; // rom:0xD51E0 size:0x40
 gFallingActionProjectileQuadVertices = 0x800D4620; // rom:0xD5220 size:0x40
 gRaceCourseItemEffectTypeTables = 0x800D46D0; // rom:0xD52D0 size:0x28
