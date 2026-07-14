@@ -46,6 +46,8 @@ typedef struct RaceMotionPackedJointRotation {
 #define RACE_MOTION_JOINT_COUNT 12
 #define RACE_MOTION_PARTIAL_ANIMATION_START_JOINT 6
 #define RACE_MOTION_PACKED_JOINT_ROTATION_SKIP_BYTES 0x24
+#define RACE_MOTION_MODEL_PART_CAPACITY 14
+#define RACE_MOTION_MODEL_POSITION_FRAC_BITS 14
 
 typedef struct RaceMotionRootMotion {
     RaceMotionRotation position;
@@ -59,6 +61,17 @@ typedef struct RaceMotionPartialJointCursor {
     s16 rotationY;
     s16 rotationZ;
 } RaceMotionPartialJointCursor;
+
+typedef struct RaceMotionModelPart {
+    u8 partId;
+    u8 parentPartId;
+    s16 rotationX;
+    s16 rotationY;
+    s16 rotationZ;
+    s32 x;
+    s32 y;
+    s32 z;
+} RaceMotionModelPart;
 
 typedef struct RaceMotionStateJoint {
     s32 unk0;
@@ -107,18 +120,8 @@ struct RaceMotionState {
 struct RaceMotionInitState {
     u8 pad0[0x10];
     u8 modelId;
-    u8 pad11[0x314];
-    u8 parentPartId;
-    u8 pad326[6];
-    s32 x;
-    s32 y;
-    s32 z;
-    u8 partId;
-    u8 pad339;
-    s16 unk33A;
-    s16 unk33C;
-    s16 unk33E;
-    u8 pad340[0x110];
+    u8 pad11[0x327];
+    RaceMotionModelPart parts[RACE_MOTION_MODEL_PART_CAPACITY];
     s16 partCount;
 };
 
@@ -1708,49 +1711,33 @@ s32 stepRaceMotionJointAnimationUntilEnd(RaceMotionState *state) {
 
 #ifdef NON_MATCHING
 void initRaceMotionModelParts(RaceMotionInitState *state) {
-    s32 tableOffset;
     s32 i;
-    u8 *parentIds;
     u8 *partIds;
+    u8 *parentPartIds;
     u8 modelId;
-    RaceMotionInitState *part;
-    RaceMotionCoord *coords;
+    RaceMotionModelPart *part;
+    RaceMotionCoord *positions;
 
     modelId = state->modelId;
-    tableOffset = modelId * 4;
     state->partCount = gRaceMotionModelPartCounts[modelId];
     partIds = gRaceMotionModelPartIds[modelId];
-    parentIds = gRaceMotionModelParentPartIds[modelId];
-    i = 0;
-    if (state->partCount > 0) {
-        part = state;
-        do {
-            part->partId = *partIds;
-            i++;
-            part = (RaceMotionInitState *)((u8 *)part + 0x14);
-            part->parentPartId = *parentIds;
-            partIds++;
-            parentIds++;
-        } while (i < state->partCount);
-        modelId = state->modelId;
-        i = 0;
-        tableOffset = modelId * 4;
+    parentPartIds = gRaceMotionModelParentPartIds[modelId];
+
+    for (i = 0; i < state->partCount; i++) {
+        part = &state->parts[i];
+        part->partId = partIds[i];
+        part->parentPartId = parentPartIds[i];
     }
 
-    coords = *(RaceMotionCoord **)((u8 *)gRaceMotionModelPartPositions + tableOffset);
-    if (state->partCount > 0) {
-        part = state;
-        do {
-            part->unk33E = 0;
-            part->unk33C = part->unk33E;
-            i++;
-            part->unk33A = part->unk33E;
-            part = (RaceMotionInitState *)((u8 *)part + 0x14);
-            part->x = coords->x << 0xE;
-            part->y = coords->y << 0xE;
-            part->z = coords->z << 0xE;
-            coords++;
-        } while (i < state->partCount);
+    positions = gRaceMotionModelPartPositions[state->modelId];
+    for (i = 0; i < state->partCount; i++) {
+        part = &state->parts[i];
+        part->rotationX = 0;
+        part->rotationY = 0;
+        part->rotationZ = 0;
+        part->x = positions[i].x << RACE_MOTION_MODEL_POSITION_FRAC_BITS;
+        part->y = positions[i].y << RACE_MOTION_MODEL_POSITION_FRAC_BITS;
+        part->z = positions[i].z << RACE_MOTION_MODEL_POSITION_FRAC_BITS;
     }
 }
 #endif
