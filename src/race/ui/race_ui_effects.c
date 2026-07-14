@@ -4840,7 +4840,7 @@ void initCourseStartFinishSprite(RaceUiCourseSpriteActor *actor) {
     setCallbackTaskCallback(actor, updateCourseStartFinishSprite);
 }
 
-// func_80063A9C best match: 98.816% (nonmatchings/func_80063A9C-6061209858023118177/base_9.c)
+// func_80063A9C best match: 98.939% (nonmatchings/func_80063A9C-8201208972835473051/base_3.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race/ui/race_ui_effects/func_80063A9C.s")
 
 #ifdef NON_MATCHING
@@ -4868,6 +4868,7 @@ void func_80063A9C(RaceUiEffectParticleActor *arg0) {
     s32 mask;
     RaceUiEffectParticleActor *actor;
     RaceUiEffectParticleActor *actor2;
+    Gfx *new_var3;
 
     RACE_UI_EFFECT_EMIT_GFX(0xFD500000, (u32)arg0->unk20);
     RACE_UI_EFFECT_EMIT_GFX(0xF5500000, 0x07080200);
@@ -4884,7 +4885,8 @@ void func_80063A9C(RaceUiEffectParticleActor *arg0) {
         Gfx *_g;
 
         _g = gRegionAllocPtr++;
-        _g->words.w0 = 0xE6000000;
+        new_var3 = _g;
+        new_var3->words.w0 = 0xE6000000;
         new_var2 = _g;
         new_var2->words.w1 = 0;
     }
