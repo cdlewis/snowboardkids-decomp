@@ -18,10 +18,10 @@ typedef struct RaceMotionFace {
     u8 unk7;
 } RaceMotionFace;
 
-typedef struct RaceMotionAssetHeader {
+typedef struct RaceMotionCountedTable {
     u16 count;
     u8 data[1];
-} RaceMotionAssetHeader;
+} RaceMotionCountedTable;
 
 typedef struct RaceMotionSurface {
     s16 nextFaceIndices[2];
@@ -155,15 +155,17 @@ extern RaceMotionCoord *gRaceMotionModelPartPositions[];
 extern void loadRaceMotionAnimationFrame(RaceMotionState *);
 
 void initRaceCourseSurfaceData(void) {
-    s32 ptr;
-    s32 v1;
+    RaceMotionCountedTable *coordTable;
+    RaceMotionCountedTable *faceTable;
 
-    ptr = getRelocatableHeapBlockBase(gRaceCourseSurfaceAssetHandle);
-    gRaceCourseSurfaceCoords = (RaceMotionCoord *)(ptr + 2);
-    v1 = (s32)gRaceCourseSurfaceCoords + *(u16 *)ptr * sizeof(RaceMotionCoord);
-    gRaceCourseSurfaceFaces = (RaceMotionFace *)(v1 + 2);
-    v1 = (s32)gRaceCourseSurfaceFaces + *(u16 *)v1 * sizeof(RaceMotionFace);
-    gRaceCourseSurfaces = (RaceMotionSurface *)(v1 + 2);
+    coordTable = (RaceMotionCountedTable *)getRelocatableHeapBlockBase(gRaceCourseSurfaceAssetHandle);
+    gRaceCourseSurfaceCoords = (RaceMotionCoord *)coordTable->data;
+
+    faceTable = (RaceMotionCountedTable *)&gRaceCourseSurfaceCoords[coordTable->count];
+    gRaceCourseSurfaceFaces = (RaceMotionFace *)faceTable->data;
+
+    faceTable = (RaceMotionCountedTable *)&gRaceCourseSurfaceFaces[faceTable->count];
+    gRaceCourseSurfaces = (RaceMotionSurface *)faceTable->data;
 }
 
 // findRaceCourseSurfaceFromHint best match: 93.071% (nonmatchings/findRaceCourseSurfaceFromHint-2694253543240320626/base_7.c)
