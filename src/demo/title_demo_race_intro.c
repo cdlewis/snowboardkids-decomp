@@ -49,10 +49,24 @@ extern void releaseMenuAssetHandles(void);
 
 #define COURSE_REPLAY_OFFSET(course) ((((((((course) << 2) - (course)) << 5) + (course)) << 2) - (course)) << 2)
 
-// initTitleDemoRaceIntro best match: 99.874% (nonmatchings/initTitleDemoRaceIntro-5635509610426229442/base_2.c)
+// initTitleDemoRaceIntro best match: 99.874% (nonmatchings/initTitleDemoRaceIntro-8460208293698481450/base_2.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/demo/title_demo_race_intro/initTitleDemoRaceIntro.s")
 
 #ifdef NON_MATCHING
+extern f32 D_800E10C0;
+extern s8 D_80121D94;
+extern s8 D_80121D95;
+extern s8 D_80121D96;
+extern s8 D_801223A0;
+extern s8 D_801223A1;
+extern s8 D_801223A2;
+extern s8 D_801229AC;
+extern s8 D_801229AD;
+extern s8 D_801229AE;
+extern s8 D_80122FB8;
+extern s8 D_80122FB9;
+extern s8 D_80122FBA;
+
 void initTitleDemoRaceIntro(void) {
     RacePlayer *players;
     register s32 one = 1;
@@ -103,19 +117,19 @@ void initTitleDemoRaceIntro(void) {
     gRacePlayerAttackStartTimer = 0x64;
     initCallbackTaskScheduler(1);
 
-    players[0].unk15 = 0;
-    players[0].soundDisabled = 0;
-    players[0].replayInputSource = five0;
-    players[1].unk15 = 0;
-    players[1].soundDisabled = 0;
-    players[1].replayInputSource = five1;
-    players[2].unk15 = 0;
-    players[2].soundDisabled = 0;
-    players[2].replayInputSource = five2;
-    players[3].unk15 = 0;
-    players[3].soundDisabled = 0;
+    D_80121D95 = 0;
+    D_80121D94 = 0;
+    D_80121D96 = five0;
+    D_801223A1 = 0;
+    D_801223A0 = 0;
+    D_801223A2 = five1;
+    D_801229AD = 0;
+    D_801229AC = 0;
+    D_801229AE = five2;
+    D_80122FB9 = 0;
+    D_80122FB8 = 0;
     players = gRacePlayers;
-    players[3].replayInputSource = five3;
+    D_80122FBA = five3;
 
     if (players[0].replayInputSource == 5) {
         loadCompressedRomAsset(&D_24C8E0, &D_24DBE0, 0x2B);
