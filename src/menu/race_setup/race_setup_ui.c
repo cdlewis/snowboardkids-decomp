@@ -652,7 +652,7 @@ void initRaceSetupPlayerCountCursor(FadeItemActor *arg0) {
     setCallbackTaskCallback(arg0, updateRaceSetupPlayerCountCursor);
 }
 
-// drawRaceSetupSavePlayerPanels best match: 97.244% (nonmatchings/drawRaceSetupSavePlayerPanels-6276316234415602851/base_8.c)
+// drawRaceSetupSavePlayerPanels best match: 97.348% (nonmatchings/drawRaceSetupSavePlayerPanels-8460208293698481450/base_13.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/race_setup/race_setup_ui/drawRaceSetupSavePlayerPanels.s")
 
 #ifdef NON_MATCHING
@@ -669,11 +669,7 @@ void drawRaceSetupSavePlayerPanels(TitleMenuWidgetItemView *arg0) {
     panel = arg0;
     text = textBuffer - 0x10;
     for (playerIndex = 0; playerIndex != 4;) {
-        alpha = 0x100;
-        playerNumber = (((s32)*playerCount - 1) < playerIndex);
-        if (playerNumber) {
-            alpha = 0x50;
-        }
+        alpha = (((s32)*playerCount - 1) < playerIndex) ? 0x50 : 0x100;
 
         drawMenuSpriteWithAlpha(panel->x, panel->y, getRelocatableHeapBlockBase(TITLE_MENU_FRAME_TEXTURE_HANDLE), 0xA, 0x20, 0x20,
                       (playerIndex * RACE_PLAYER_STATE_SIZE) * 0, alpha, (playerIndex + 1) & 0xFF);
