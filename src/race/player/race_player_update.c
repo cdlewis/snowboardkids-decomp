@@ -3765,7 +3765,7 @@ void updateRacePlayerMode08SpinoutRecover(RacePlayer *player) {
     }
 }
 
-// updateRacePlayerMode06TerrainFall best match: 96.974% (nonmatchings/updateRacePlayerMode06TerrainFall-6866765942504228165/base_12.c)
+// updateRacePlayerMode06TerrainFall best match: 98.503% (nonmatchings/updateRacePlayerMode06TerrainFall-5512657642801906896/base_8.c)
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race/player/race_player_update/updateRacePlayerMode06TerrainFall.s")
 
@@ -3773,10 +3773,6 @@ void updateRacePlayerMode08SpinoutRecover(RacePlayer *player) {
 void updateRacePlayerMode06TerrainFall(RacePlayer *player) {
     s16 updateState;
     s16 updateTimer;
-    s32 *posX;
-    s32 *posY;
-    s32 *posZ;
-    s16 *angle;
     s32 yVel;
     s32 timer;
     u32 stateFlags;
@@ -3785,7 +3781,7 @@ void updateRacePlayerMode06TerrainFall(RacePlayer *player) {
     if (updateState == 0) {
         updateState++;
         stateFlags = player->stateFlags & 0xFE0C1FFB;
-        *(volatile u32 *)&player->stateFlags = stateFlags;
+        *(&player->stateFlags) = stateFlags;
         player->updateState = updateState;
         player->stateTimer = 0x3C;
         player->stateFlags = stateFlags | 0x42000;
@@ -3824,12 +3820,8 @@ void updateRacePlayerMode06TerrainFall(RacePlayer *player) {
             player->updateTimer++;
             player->unk74 = 0;
             player->unk502 = player->unk2E8;
-            posX = &player->posX;
-            posY = &player->posY;
-            posZ = &player->posZ;
-            angle = &player->facingAngle;
             do {
-                getRaceCourseSurfaceSpawnTransform(player->unk502, posX, posY, posZ, angle);
+                getRaceCourseSurfaceSpawnTransform(player->unk502, &player->posX, &player->posY, &player->posZ, &player->facingAngle);
                 if (isRacePlayerRespawnSurfaceValid(player) == 0) {
                     player->unk502--;
                 } else {
@@ -3864,7 +3856,9 @@ void updateRacePlayerMode06TerrainFall(RacePlayer *player) {
 
     yVel = player->velocity.y - player->unk260;
     player->velocity.y = yVel;
-    player->posY += yVel;
+    goto dummy_label_968831;
+dummy_label_968831:
+    player->posY = player->posY + yVel;
 }
 #endif
 
