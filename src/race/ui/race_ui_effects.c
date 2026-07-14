@@ -45,6 +45,7 @@ extern void *createCallbackTaskWithUserIdPreservingArgs(void *, s32, s32);
 #define RACE_UI_HIT_PRIZE_SHOW_TOTAL_MONEY 3
 #define RACE_UI_TRICK_PRIZE_REVEAL_DELAY 0x14
 #define RACE_UI_TRICK_PRIZE_SHOW_COMPLETE_BONUS 2
+#define RACE_UI_TRICK_PRIZE_SHOW_TOTAL_MONEY 3
 #define SCALE_MATRIX_COMPONENT(value, scale) ((value * scale) / 0x1000)
 #define RACE_UI_SP_TRIANGLE_WORD(v0, v1, v2) (_SHIFTL((v0) * 2, 16, 8) | _SHIFTL((v1) * 2, 8, 8) | _SHIFTL((v2) * 2, 0, 8))
 #define RACE_UI_SP_QUADRANGLE_WORD0(v0, v1, v2, v3, flag) \
@@ -3178,10 +3179,10 @@ void func_8005DE6C(RaceUiCourseStatsActor *arg0) {
     addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005D9B4, (s32)arg0);
 }
 
-void func_8005E064(void *arg0) {
-    *(s16 *)((u8 *)arg0 + 0x1C) = 3;
-    *(s16 *)((u8 *)arg0 + 0x1A) = *(s16 *)((u8 *)arg0 + 0x1A) - 1;
-    if (*(s16 *)((u8 *)arg0 + 0x1A) == 0) {
+void updateRaceUiTrickPrizePayoutHoldMoneyRow(RaceUiCourseStatsActor *arg0) {
+    arg0->visibleRows = RACE_UI_TRICK_PRIZE_SHOW_TOTAL_MONEY;
+    arg0->timer--;
+    if (arg0->timer == 0) {
         setCallbackTaskCallback(arg0, func_8005DE6C);
     }
     addRenderCallback(&gMenuRenderCallbackList, func_8005CF60, arg0);
@@ -3195,7 +3196,7 @@ void updateRaceUiTrickPrizePayoutRevealMoneyRow(RaceUiCourseStatsActor *arg0) {
     arg0->timer--;
     if (arg0->timer == 0) {
         arg0->timer = 0xA;
-        setCallbackTaskCallback(arg0, func_8005E064);
+        setCallbackTaskCallback(arg0, updateRaceUiTrickPrizePayoutHoldMoneyRow);
     }
     addRenderCallback(&gMenuRenderCallbackList, func_8005CF60, arg0);
     addRenderCallback(&gMenuRenderCallbackList, func_8005D1CC, arg0);
