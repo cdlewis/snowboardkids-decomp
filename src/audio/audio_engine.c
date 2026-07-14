@@ -2129,15 +2129,11 @@ void audioThreadMain(s32 arg0) {
     alClose((ALGlobals *)&gAudioSynthesizer);
 }
 
-// buildAudioTask best match: 99.826% (nonmatchings/buildAudioTask-2775475442547365205/base_27.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/audio/audio_engine/buildAudioTask.s")
-
-#ifdef NON_MATCHING
 s32 buildAudioTask(AudioTask *task, AudioInfo *info) {
-    AudioTask *task2;
-    AudioTask *task3;
     u32 outBuf;
-    s32 cmdLen[4];
+    AudioTask *task3;
+    s32 cmdLen[3];
+    AudioTask *task2;
     Acmd *cmdListEnd;
 
     reclaimAudioDmaBuffers();
@@ -2186,7 +2182,6 @@ s32 buildAudioTask(AudioTask *task, AudioInfo *info) {
     gAudioCmdListIndex ^= 1;
     return 1;
 }
-#endif
 
 void updateAudioUnderrunState(s32 arg0) {
     s32 temp;
