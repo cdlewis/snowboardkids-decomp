@@ -207,6 +207,18 @@ extern s16 gCurrentRaceRecordReplayHandle;
 extern s8 D_8012239C;
 extern s8 D_8012239D;
 extern s8 D_8012239E;
+extern s8 D_80121D94;
+extern s8 D_80121D95;
+extern s8 D_80121D96;
+extern s8 D_801223A0;
+extern s8 D_801223A1;
+extern s8 D_801223A2;
+extern s8 D_801229AC;
+extern s8 D_801229AD;
+extern s8 D_801229AE;
+extern s8 D_80122FB8;
+extern s8 D_80122FB9;
+extern s8 D_80122FBA;
 extern u16 D_800ECC22;
 extern u16 D_800ECC26;
 extern u16 D_800ECC2A;
@@ -1739,13 +1751,14 @@ void fadeOutRaceResultsFlow(void) {
     }
 }
 
-// initRaceGhostReplayFlow best match: 99.464%
+// initRaceGhostReplayFlow best match: 99.868% (nonmatchings/initRaceGhostReplayFlow-1200943805599209058/base_1.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race/flow/race_flow/initRaceGhostReplayFlow.s")
 
 #ifdef NON_MATCHING
 void initRaceGhostReplayFlow(void) {
-    s32 one;
     s32 asset;
+    s32 one;
+    s8 active;
 
     gRaceUpdatePaused = 0;
     gRaceCameraModeChangeDisabled = 1;
@@ -1791,30 +1804,31 @@ void initRaceGhostReplayFlow(void) {
     }
     ((Unk80043040 *)asset)->unk0 = 0;
     one = 1;
+    active = 1;
     gRacePlayers[0].unk4 = 0;
     gRacePlayers[1].unk4 = one;
     gRacePlayers[2].unk4 = one;
     gRacePlayers[3].unk4 = one;
-    gRacePlayers[0].unk13 = one;
+    gRacePlayers[0].unk13 = active;
     gRacePlayers[1].unk13 = 0;
     gRacePlayers[2].unk13 = 0;
     gRacePlayers[3].unk13 = 0;
-    gRacePlayerCount = 1;
-    *(u16 *)&gRaceLapCount = 1;
+    gRacePlayerCount = active;
+    gRaceLapCount = active;
     gRacePlayerAttackStartTimer = 0x64;
     initCallbackTaskScheduler(2);
-    gRacePlayers[0].unk15 = 0;
-    gRacePlayers[0].unk16 = 0;
-    gRacePlayers[0].unk14 = 0;
-    gRacePlayers[1].unk15 = 0;
-    gRacePlayers[1].unk16 = 0;
-    gRacePlayers[1].unk14 = 0;
-    gRacePlayers[2].unk15 = 0;
-    gRacePlayers[2].unk16 = 0;
-    gRacePlayers[2].unk14 = 0;
-    gRacePlayers[3].unk15 = 0;
-    gRacePlayers[3].unk16 = 0;
-    gRacePlayers[3].unk14 = 0;
+    D_80121D95 = 0;
+    D_80121D96 = 0;
+    D_80121D94 = 0;
+    D_801223A1 = 0;
+    D_801223A2 = 0;
+    D_801223A0 = 0;
+    D_801229AD = 0;
+    D_801229AE = 0;
+    D_801229AC = 0;
+    D_80122FB9 = 0;
+    D_80122FBA = 0;
+    D_80122FB8 = 0;
     gRacePlayers[0].unk16 = 2;
     gMenuFlowState = 0;
     resetRaceCameras();
