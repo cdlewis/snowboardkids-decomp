@@ -351,19 +351,19 @@ sort_next:
 #undef RANK_NEAR_LIMIT
 #endif
 
-// updateRacePlayerCheckpointEvents best match: 99.480% (nonmatchings/updateRacePlayerCheckpointEvent-7273315160691878794/base_9.c)
+// updateRacePlayerCheckpointEvents best match: 99.800% (nonmatchings/updateRacePlayerCheckpointEvents-8075865578671233833/base_11.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race/player/race_player_progress/updateRacePlayerCheckpointEvents.s")
 
 #ifdef NON_MATCHING
 void updateRacePlayerCheckpointEvents(RacePlayerProgressState *player) {
-    s64 product;
+    RacePlayerCheckpointEvent *eventList;
+    RacePlayerCheckpointEvent *event;
     s32 x;
     s32 y;
     s32 z;
-    s16 angle;
-    RacePlayerCheckpointEvent *event;
     s32 eventIndex;
     s16 pathFrame;
+    s16 angle;
     s32 eventMask;
     s32 sine;
     s32 cosine;
@@ -373,7 +373,8 @@ void updateRacePlayerCheckpointEvents(RacePlayerProgressState *player) {
     }
 
     player->checkpointHit = 0;
-    event = gRaceCourseCheckpointEventLists[gRaceCourseIndex];
+    eventList = gRaceCourseCheckpointEventLists[gRaceCourseIndex];
+    event = eventList;
     eventIndex = 0;
 
     for (;;) {
@@ -394,8 +395,12 @@ void updateRacePlayerCheckpointEvents(RacePlayerProgressState *player) {
 
             sine = fixedSine(-angle);
             cosine = fixedCosine(-angle);
-            product = -(s64)sine * x;
-            z = (product + (s64)cosine * z) / 0x1000;
+            {
+                s64 innerProduct;
+
+                innerProduct = -(s64)sine * x;
+                z = (innerProduct + (s64)cosine * z) / 0x1000;
+            }
 
             if (z < 0x600000 && z > 0) {
                 player->checkpointEventMask |= eventMask;
