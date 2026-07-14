@@ -44,65 +44,65 @@ s32 __osIdCheckSum(u16* ptr, u16* csum, u16* icsum) {
     return 0;
 }
 
-s32 __osRepairPackId(OSPfs* pfs, __OSPackId* badid, __OSPackId* newid) {
+s32 __osRepairPackId(OSPfs* pfs, __OSPackId* oldId, __OSPackId* repairedId) {
     s32 ret = 0;
-    u8 temp[BLOCKSIZE];
-    u8 comp[BLOCKSIZE];
-    u8 mask = 0;
-    int i;
-    int j;
-    u16 index[4];
+    u8 probeBlock[BLOCKSIZE];
+    u8 verifyBlock[BLOCKSIZE];
+    u8 deviceIdBit = 0;
+    int byteIndex;
+    int bank;
+    u16 idBlockAddresses[4];
 
 #if BUILD_VERSION >= VERSION_J
-    j = 0;
+    bank = 0;
 #else
     SET_ACTIVEBANK_TO_ZERO();
 #endif
 
-    newid->repaired = -1;
-    newid->random = osGetCount();
-    newid->serial_mid = badid->serial_mid;
-    newid->serial_low = badid->serial_low;
+    repairedId->repaired = -1;
+    repairedId->random = osGetCount();
+    repairedId->serial_mid = oldId->serial_mid;
+    repairedId->serial_low = oldId->serial_low;
 
 #if BUILD_VERSION >= VERSION_J
     SET_ACTIVEBANK_TO_ZERO();
 #else
-    j = 0;
+    bank = 0;
 #endif
     do {
-        ERRCK(SELECT_BANK(pfs, j));
-        ERRCK(__osContRamRead(pfs->queue, pfs->channel, 0, temp));
+        ERRCK(SELECT_BANK(pfs, bank));
+        ERRCK(__osContRamRead(pfs->queue, pfs->channel, 0, probeBlock));
 
-        temp[0] = j | 0x80;
+        probeBlock[0] = bank | 0x80;
 
-        for (i = 1; i < BLOCKSIZE; i++) {
-            temp[i] = ~temp[i];
+        for (byteIndex = 1; byteIndex < BLOCKSIZE; byteIndex++) {
+            probeBlock[byteIndex] = ~probeBlock[byteIndex];
         }
 
-        ERRCK(__osContRamWrite(pfs->queue, pfs->channel, 0, temp, FALSE));
-        ERRCK(__osContRamRead(pfs->queue, pfs->channel, 0, comp));
+        ERRCK(__osContRamWrite(pfs->queue, pfs->channel, 0, probeBlock, FALSE));
+        ERRCK(__osContRamRead(pfs->queue, pfs->channel, 0, verifyBlock));
 
-        for (i = 0; i < BLOCKSIZE; i++) {
-            if (comp[i] != temp[i]) {
+        for (byteIndex = 0; byteIndex < BLOCKSIZE; byteIndex++) {
+            if (verifyBlock[byteIndex] != probeBlock[byteIndex]) {
                 break;
             }
         }
 
-        if (i != BLOCKSIZE) {
+        if (byteIndex != BLOCKSIZE) {
             break;
         }
 
-        if (j > 0) {
+        if (bank > 0) {
             ERRCK(SELECT_BANK(pfs, 0));
-            ERRCK(__osContRamRead(pfs->queue, pfs->channel, 0, (u8*)temp));
+            ERRCK(__osContRamRead(pfs->queue, pfs->channel, 0, (u8*)probeBlock));
 
-            if (temp[0] != 0x80) {
+            if (probeBlock[0] != 0x80) {
                 break;
             }
         }
 
-        j++;
-    } while (j < PFS_MAX_BANKS);
+        bank++;
+    } while (bank < PFS_MAX_BANKS);
 
 #if BUILD_VERSION >= VERSION_J
     SET_ACTIVEBANK_TO_ZERO();
@@ -110,25 +110,25 @@ s32 __osRepairPackId(OSPfs* pfs, __OSPackId* badid, __OSPackId* newid) {
     ERRCK(SELECT_BANK(pfs, 0));
 #endif
 
-    mask = (j > 0) ? 1 : 0;
+    deviceIdBit = (bank > 0) ? 1 : 0;
 
-    newid->deviceid = (badid->deviceid & (u16)~1) | mask;
-    newid->banks = j;
-    newid->version = badid->version;
-    __osIdCheckSum((u16*)newid, &newid->checksum, &newid->inverted_checksum);
-    index[0] = PFS_ID_0AREA;
-    index[1] = PFS_ID_1AREA;
-    index[2] = PFS_ID_2AREA;
-    index[3] = PFS_ID_3AREA;
+    repairedId->deviceid = (oldId->deviceid & (u16)~1) | deviceIdBit;
+    repairedId->banks = bank;
+    repairedId->version = oldId->version;
+    __osIdCheckSum((u16*)repairedId, &repairedId->checksum, &repairedId->inverted_checksum);
+    idBlockAddresses[0] = PFS_ID_0AREA;
+    idBlockAddresses[1] = PFS_ID_1AREA;
+    idBlockAddresses[2] = PFS_ID_2AREA;
+    idBlockAddresses[3] = PFS_ID_3AREA;
 
-    for (i = 0; i < ARRLEN(index); i++) {
-        ERRCK(__osContRamWrite(pfs->queue, pfs->channel, index[i], (u8*)newid, TRUE));
+    for (byteIndex = 0; byteIndex < ARRLEN(idBlockAddresses); byteIndex++) {
+        ERRCK(__osContRamWrite(pfs->queue, pfs->channel, idBlockAddresses[byteIndex], (u8*)repairedId, TRUE));
     }
 
-    ERRCK(__osContRamRead(pfs->queue, pfs->channel, PFS_ID_0AREA, (u8*)temp));
+    ERRCK(__osContRamRead(pfs->queue, pfs->channel, PFS_ID_0AREA, (u8*)probeBlock));
 
-    for (i = 0; i < BLOCKSIZE; i++) {
-        if (temp[i] != ((u8*)newid)[i]) {
+    for (byteIndex = 0; byteIndex < BLOCKSIZE; byteIndex++) {
+        if (probeBlock[byteIndex] != ((u8*)repairedId)[byteIndex]) {
 #if BUILD_VERSION >= VERSION_J
             return PFS_ERR_DEVICE;
 #else
