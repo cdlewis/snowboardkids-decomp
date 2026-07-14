@@ -5080,7 +5080,7 @@ void dispatchRacePlayerMode30Attack(RacePlayer *player) {
     }
 }
 
-// updateRacePlayerMode30AttackApproach best match: 97.991% (nonmatchings/updateRacePlayerMode30AttackApproach-6113366811127043669/base_8.c)
+// updateRacePlayerMode30AttackApproach best match: 98.321% (nonmatchings/updateRacePlayerMode30AttackApproach-5512657642801906896/base_7.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race/player/race_player_update/updateRacePlayerMode30AttackApproach.s")
 
 #ifdef NON_MATCHING
@@ -5156,15 +5156,14 @@ void updateRacePlayerMode30AttackApproach(RacePlayer *player) {
         if (angleDiff < -0x30) {
             angleDiff = -0x30;
         }
-        player->unk2FA = roll + angleDiff;
+        player->unk2FA = player->unk2FA + angleDiff;
 
-        roll = player->unk2FA;
-        if (roll == 0) {
+        if (player->unk2FA == 0) {
             if (player->animationId != 1) {
                 setRaceMotionAnimation(player, 1);
             }
             stepRaceMotionLoopingJointAnimation(player);
-        } else if (roll >= 0) {
+        } else if (player->unk2FA >= 0) {
             setRaceMotionAnimation(player, 3);
             blendRaceMotionJointAnimation(player, 3, player->unk2FA, 0x118);
         } else {
