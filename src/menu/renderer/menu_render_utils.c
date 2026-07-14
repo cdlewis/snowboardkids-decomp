@@ -101,39 +101,23 @@ extern s16 gMenuViewportCenterY;
 extern Gfx *gRegionAllocPtr;
 extern void *gMenuAsciiFontPaletteBase;
 
-// initMenuAssetHandles best match: 97.917%
-#pragma GLOBAL_ASM("asm/nonmatchings/menu/renderer/menu_render_utils/initMenuAssetHandles.s")
-
-#ifdef NON_MATCHING
 void initMenuAssetHandles(void)
 {
-    s16 **new_var;
     s16 *end;
     s16 *handle;
-    s16 *new_var2;
-
     end = &gMenuAsciiFontPaletteIndex;
-    do {
-        ;
-        if (1) {
-            handle = gAssetHandles;
-        }
-        end = (new_var2 = &gMenuAsciiFontPaletteIndex);
-        do {
-            *handle++ = -1;
-            new_var2 = &gMenuAsciiFontPaletteIndex;
-            *handle++ = -((0, 1));
-            *handle++ = -1;
-            if (!end) {
-            }
-dummy_label_220868:
-            ;
-            *handle++ = -1;
-            end = new_var2;
-        } while (*(&handle) != end);
-    } while (0 != 0);
+    do { handle = gAssetHandles; do { end = &gMenuAsciiFontPaletteIndex;
+        *handle++ = -1;
+        *handle++ = -1;
+        *handle++ = -1;
+        *handle++ = -1;
+    }
+    while (handle != end);
+    }
+    while (0);
+    end++;
+    end--;
 }
-#endif
 
 void releaseMenuAssetHandles(void)
 {
