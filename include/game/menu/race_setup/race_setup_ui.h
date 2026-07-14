@@ -73,9 +73,9 @@ typedef struct {
     /* 0x20 */ s16 y[4];
     /* 0x28 */ s16 alpha[4];
     /* 0x30 */ u8 frame;
-    /* 0x31 */ u8 unk31[4];
+    /* 0x31 */ u8 statusTransitionStates[4];
     /* 0x35 */ u8 pad35;
-    /* 0x36 */ u16 unk36[4];
+    /* 0x36 */ u16 nextStatusCodes[4];
 } TitleMenuWidgetActor;
 
 typedef struct {
