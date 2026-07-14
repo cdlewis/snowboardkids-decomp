@@ -9,6 +9,11 @@
 #define TITLE_MENU_FRAME_TEXTURE_HANDLE (*(s16 *)&gAssetHandles[0x42])
 #define TITLE_MENU_BANNER_TEXTURE_HANDLE (*(s16 *)&gAssetHandles[0x52])
 #define RACE_PLAYER_STATE_SIZE 0x60C
+#define CONTROLLER_PAK_STATUS_UNUSED 0x13
+#define SAVE_PANEL_MAX_RECORD_ICONS 3
+#define SAVE_PANEL_BASE_BADGE_COUNT 6
+#define SAVE_PANEL_EMPTY_BADGE_TILE 9
+#define SAVE_PANEL_RECORD_ICON_TILE 0x19
 
 typedef struct {
     /* 0x00 */ u8 pad0[0x18];
@@ -826,89 +831,89 @@ void initRaceSetupSavePanelFrame(RectListActor *arg0) {
 #ifdef NON_MATCHING
 void drawRaceSetupSavePanelIcons(TitleMenuIconStripActor *arg0) {
     volatile s32 unused;
-    volatile s32 i;
+    volatile s32 playerIndex;
     s32 pad[6];
-    s32 actorOffset;
-    s16 *courseId;
-    register TitleMenuPlayerView *player;
-    register TitleMenuIconStripActor *item;
+    s32 panelCoordinateOffset;
+    s16 *pakStatus;
+    register TitleMenuPlayerView *saveData;
+    register TitleMenuIconStripActor *iconActor;
     register s32 iconXOffset;
     register s32 alpha;
-    register s32 nextJ;
+    register s32 nextIconIndex;
     register s16 *badgeIndex;
-    register TitleMenuPlayerView *player2;
-    s32 j;
+    register TitleMenuPlayerView *badgeData;
+    s32 iconIndex;
     s32 count;
     s32 tile;
 
-    i = 0;
+    playerIndex = 0;
     if ((s32)gPlayerCount > 0) {
-        courseId = gControllerPakStatusCodes;
-        actorOffset = 0;
+        pakStatus = gControllerPakStatusCodes;
+        panelCoordinateOffset = 0;
         do {
-            (void)i;
-            if (*courseId != 0x13) {
-                player = &gGameSaveDataBuffer[i];
-                j = 0;
-                if (player->iconCount == 3) {
-                    count = 3;
+            (void)playerIndex;
+            if (*pakStatus != CONTROLLER_PAK_STATUS_UNUSED) {
+                saveData = &gGameSaveDataBuffer[playerIndex];
+                iconIndex = 0;
+                if (saveData->iconCount == SAVE_PANEL_MAX_RECORD_ICONS) {
+                    count = SAVE_PANEL_MAX_RECORD_ICONS;
                 } else {
-                    count = player->iconCount + 1;
+                    count = saveData->iconCount + 1;
                 }
                 if (count > 0) {
                     iconXOffset = 0;
-                    item = (TitleMenuIconStripActor *)((u8 *)arg0 + actorOffset);
+                    iconActor = (TitleMenuIconStripActor *)((u8 *)arg0 + panelCoordinateOffset);
                     do {
-                        nextJ = j + 1;
-                        if ((s32)player->iconCount < nextJ) {
+                        nextIconIndex = iconIndex + 1;
+                        if ((s32)saveData->iconCount < nextIconIndex) {
                             alpha = 0x70;
                         } else {
                             alpha = 0x100;
                         }
-                        drawMenuSpriteWithAlpha((s16)(item->rects[0].x0 + arg0->iconOffsetX + iconXOffset),
-                                      (s16)(item->rects[1].x0 + arg0->iconOffsetY), getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle), 0x19,
-                                      0x20, 0x20, 0, alpha, 9 - j);
-                        j = nextJ;
+                        drawMenuSpriteWithAlpha((s16)(iconActor->panelX[0] + arg0->iconOffsetX + iconXOffset),
+                                      (s16)(iconActor->panelY[0] + arg0->iconOffsetY), getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle),
+                                      SAVE_PANEL_RECORD_ICON_TILE, 0x20, 0x20, 0, alpha, 9 - iconIndex);
+                        iconIndex = nextIconIndex;
                         iconXOffset += 0x10;
-                    } while (nextJ != count);
-                    j = 0;
+                    } while (nextIconIndex != count);
+                    iconIndex = 0;
                 }
 
-                count = 6;
-                if (player->iconCount == 1) {
-                    count = 7;
-                } else if (player->iconCount == 2) {
-                    count = 8;
-                } else if (player->iconCount == 3) {
-                    count = 9;
+                count = SAVE_PANEL_BASE_BADGE_COUNT;
+                if (saveData->iconCount == 1) {
+                    count = SAVE_PANEL_BASE_BADGE_COUNT + 1;
+                } else if (saveData->iconCount == 2) {
+                    count = SAVE_PANEL_BASE_BADGE_COUNT + 2;
+                } else if (saveData->iconCount == SAVE_PANEL_MAX_RECORD_ICONS) {
+                    count = SAVE_PANEL_BASE_BADGE_COUNT + SAVE_PANEL_MAX_RECORD_ICONS;
                 }
 
                 if (count > 0) {
-                    player2 = &gGameSaveDataBuffer[i];
+                    badgeData = &gGameSaveDataBuffer[playerIndex];
                     badgeIndex = gPlayerBadgeDisplayOrder;
-                    nextJ = 0;
-                    item = (TitleMenuIconStripActor *)((u8 *)arg0 + actorOffset);
+                    iconXOffset = 0;
+                    iconActor = (TitleMenuIconStripActor *)((u8 *)arg0 + panelCoordinateOffset);
                     do {
-                        tile = player2->badgeIds[*badgeIndex];
+                        tile = badgeData->badgeIds[*badgeIndex];
                         alpha = 0x70;
                         if (tile != 0) {
                             alpha = 0x100;
                             tile += 6;
                         } else {
-                            tile = 9;
+                            tile = SAVE_PANEL_EMPTY_BADGE_TILE;
                         }
-                        drawMenuSpriteWithAlpha((s16)(item->rects[0].x0 + arg0->badgeOffsetX + nextJ),
-                                      (s16)(item->rects[1].x0 + arg0->badgeOffsetY), getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle),
-                                      (j + 0x1A) & 0xFFFF, 0x20, 0x20, 0, alpha, tile);
-                        j++;
-                        nextJ += 0xE;
+                        drawMenuSpriteWithAlpha((s16)(iconActor->panelX[0] + arg0->badgeOffsetX + iconXOffset),
+                                      (s16)(iconActor->panelY[0] + arg0->badgeOffsetY), getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle),
+                                      (iconIndex + 0x1A) & 0xFFFF, 0x20, 0x20, 0, alpha, tile);
+                        iconIndex++;
+                        iconXOffset += 0xE;
                         badgeIndex++;
-                    } while (j != count);
+                    } while (iconIndex != count);
                 }
             }
-            actorOffset += 2;
-            courseId++;
-        } while (++i < (s32)gPlayerCount);
+            panelCoordinateOffset += 2;
+            pakStatus++;
+        } while (++playerIndex < (s32)gPlayerCount);
     }
 }
 #endif

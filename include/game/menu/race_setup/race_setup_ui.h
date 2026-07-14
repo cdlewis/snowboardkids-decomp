@@ -48,7 +48,8 @@ typedef struct {
 
 typedef struct {
     /* 0x00 */ u8 pad0[0x18];
-    /* 0x18 */ Rect rects[2];
+    /* 0x18 */ s16 panelX[4];
+    /* 0x20 */ s16 panelY[4];
     /* 0x28 */ s16 iconOffsetX;
     /* 0x2A */ s16 iconOffsetY;
     /* 0x2C */ s16 badgeOffsetX;
