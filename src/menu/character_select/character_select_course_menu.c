@@ -184,7 +184,7 @@ loop_24:
 }
 #endif
 
-// initCharacterSelectCourseMenuFromRace best match: 92.559% (nonmatchings/initCharacterSelectCourseMenuFromRace-3242520251544044307/base_1.c)
+// initCharacterSelectCourseMenuFromRace best match: 95.028% (nonmatchings/initCharacterSelectCourseMenuFromRace-8075865578671233833/base_10.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/character_select/character_select_course_menu/initCharacterSelectCourseMenuFromRace.s")
 
 #ifdef NON_MATCHING
@@ -215,7 +215,7 @@ void initCharacterSelectCourseMenuFromRace(void) {
     if (gRaceSplitscreenMode == 1) {
         loadCompressedRomAsset(D_5CCD40, D_5D4280, 0x25);
         createCallbackTask((void (*)(CallbackTask *)) initCharacterSelectLimitedCourseList, 0, 0x63);
-        gCurrentGameTask->fade = 0;
+        (*gCurrentGameTask).fade = 0;
     } else {
         gCurrentGameTask->fade = 0xFF;
     }
@@ -223,28 +223,30 @@ void initCharacterSelectCourseMenuFromRace(void) {
     gCurrentGameTask->timer = 0;
     gMenuSelectionConfirmTimer = 0;
     gMenuExitSelection = 0;
-    gMenuFlowState = 0;
-    gMenuTransitionState = 0;
-    gMenuInputRepeatTimers = 0;
-    gMenuChoicePromptState = 0;
-    gMenuFadeAlpha = gCurrentGameTask->fade;
-    var_v1 = 0;
-    if (gPlayerCount > 0) {
-        var_v0 = gGameSaveDataBuffer;
-        temp_a0 = &gGameSaveDataBuffer[gPlayerCount];
-        do {
-            temp_v1 = var_v0->highestCourse;
-            var_v0 += 1;
-            if (gHighestUnlockedCourse < temp_v1) {
-                gHighestUnlockedCourse = temp_v1;
-            }
-        } while (var_v0 < temp_a0);
-    }
+    do {
+        gMenuFlowState = 0;
+        gMenuTransitionState = 0;
+        gMenuInputRepeatTimers = 0;
+        gMenuChoicePromptState = 0;
+        gMenuFadeAlpha = gCurrentGameTask->fade;
+        var_v1 = 0;
+        if (gPlayerCount > 0) {
+            var_v0 = gGameSaveDataBuffer;
+            temp_a0 = &gGameSaveDataBuffer[gPlayerCount];
+            do {
+                temp_v1 = var_v0->highestCourse;
+                var_v0 += 1;
+                if (gHighestUnlockedCourse < temp_v1) {
+                    gHighestUnlockedCourse = temp_v1;
+                }
+            } while (var_v0 < temp_a0);
+        }
 
-    gActiveMenuTask = 0;
-    D_8010ADE0 = 0;
-    D_8010ADE4 = 0;
-    sp2C = var_v1;
+        gActiveMenuTask = 0;
+        D_8010ADE0 = 0;
+        D_8010ADE4 = 0;
+        sp2C = var_v1;
+    } while (0);
     setCurrentGameTaskCallback(updateCharacterSelectCourseMenu, 0);
     var_v1 = sp2C;
     if (gCourseSelectFromRaceTypeMenu == 1) {
@@ -255,6 +257,8 @@ void initCharacterSelectCourseMenuFromRace(void) {
                 gRaceCourseIndex = 9;
             }
         } else {
+            do {
+            } while (0);
             gCharacterSelectActiveCourseOptions = (CharacterSelectOptionList *) gCharacterSelectSingleCourseOption;
             activeOptions = gCharacterSelectSingleCourseOption;
             gRaceCourseIndex = 7;
