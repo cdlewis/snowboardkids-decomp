@@ -1138,7 +1138,7 @@ void waitRaceFinishResultsFlow(void) {
 }
 #endif
 
-// interpolateRaceViewport best match: 62.264% (nonmatchings/interpolateRaceViewport-2663524570355072948/base_5.c)
+// interpolateRaceViewport best match: 68.700% (nonmatchings/interpolateRaceViewport-8201208972835473051/base_7.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race/flow/race_flow/interpolateRaceViewport.s")
 
 #ifdef NON_MATCHING
@@ -1153,16 +1153,14 @@ void interpolateRaceViewport(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s
     s32 temp_t1;
     s32 temp_t2;
     s32 temp_t3;
-    volatile s32 temp_v0;
 
-    temp_v0 = gCurrentGameTask->fadeTimer;
-    sp2C = (((arg8 - arg1) * temp_v0) / 15) + arg1;
-    sp28 = (((arg9 - arg2) * temp_v0) / 15) + arg2;
-    temp_t0 = (((arg10 - arg3) * temp_v0) / 15) + arg3;
-    temp_t1 = (((arg11 - arg4) * temp_v0) / 15) + arg4;
-    temp_t2 = (((arg12 - arg5) * temp_v0) / 15) + arg5;
-    temp_fv0 = (((arg14 - arg7) * (f32) temp_v0) / 15.0f) + arg7;
-    temp_t3 = (((arg13 - arg6) * temp_v0) / 15) + arg6;
+    sp2C = (((arg8 - arg1) * ((volatile RaceFlowState *)gCurrentGameTask)->fadeTimer) / 15) + arg1;
+    sp28 = (((arg9 - arg2) * ((volatile RaceFlowState *)gCurrentGameTask)->fadeTimer) / 15) + arg2;
+    temp_t0 = (((arg10 - arg3) * ((volatile RaceFlowState *)gCurrentGameTask)->fadeTimer) / 15) + arg3;
+    temp_t1 = (((arg11 - arg4) * ((volatile RaceFlowState *)gCurrentGameTask)->fadeTimer) / 15) + arg4;
+    temp_t2 = (((arg12 - arg5) * ((volatile RaceFlowState *)gCurrentGameTask)->fadeTimer) / 15) + arg5;
+    temp_fv0 = (((arg14 - arg7) * (f32)((volatile RaceFlowState *)gCurrentGameTask)->fadeTimer) / 15.0f) + arg7;
+    temp_t3 = (((arg13 - arg6) * ((volatile RaceFlowState *)gCurrentGameTask)->fadeTimer) / 15) + arg6;
     if (gRaceCourseIndex.s != 6) {
         configureViewport(arg0, sp2C, sp28, temp_t0 & 0xFFFF, temp_t1, temp_t2, temp_t3, temp_fv0);
     } else {
