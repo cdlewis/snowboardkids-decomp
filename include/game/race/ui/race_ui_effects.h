@@ -223,7 +223,7 @@ void renderRaceCourseSpinningObject(struct RaceUiSpinningParticleActor *arg0);
 void updateRaceCourseSpinningObject(struct RaceUiSpinningParticleActor *arg0);
 void initRaceCourseSpinningObject(struct RaceUiSpinningParticleActor *arg0);
 void renderCourseStartFinishSprite(struct RaceUiCourseSpriteActor *arg0);
-void updateCourseStartFinishSprite(void *arg0);
+void updateCourseStartFinishSprite(struct RaceUiCourseSpriteActor *actor);
 void initCourseStartFinishSprite(struct RaceUiCourseSpriteActor *actor);
 void func_80063A9C(struct RaceUiEffectParticleActor *arg0);
 void func_80063E70(struct RaceUiEffectParticleActor *arg0);

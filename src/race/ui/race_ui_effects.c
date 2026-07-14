@@ -58,6 +58,9 @@ extern void *createCallbackTaskWithUserIdPreservingArgs(void *, s32, s32);
      ((flag) == 1) ? RACE_UI_SP_TRIANGLE_WORD(v1, v3, v0) : \
      ((flag) == 2) ? RACE_UI_SP_TRIANGLE_WORD(v2, v0, v1) : \
                      RACE_UI_SP_TRIANGLE_WORD(v3, v1, v2))
+#define COURSE_START_FINISH_SCROLL_FRAME_MASK 7
+#define COURSE_START_FINISH_SCROLL_STEP 4
+#define COURSE_START_FINISH_SCROLL_MASK 0x3F
 #define RACE_UI_GSP_VERTEX_F3DEX(pkt, v, n, v0) \
     gDma1p((pkt), G_VTX, (v), ((n) << 10) | (sizeof(Vtx) * (n) - 1), (v0) * 2)
 #define RACE_UI_GSP1QUADRANGLE_F3DEX(pkt, v0, v1, v2, v3, flag) \
@@ -4789,11 +4792,11 @@ void renderCourseStartFinishSprite(RaceUiCourseSpriteActor *arg0) {
 }
 #endif
 
-void updateCourseStartFinishSprite(void *arg0) {
-    if ((gFrameCounter & 7) == 0) {
-        *(s16 *)((u8 *)arg0 + 0x4C) = (*(s16 *)((u8 *)arg0 + 0x4C) + 4) & 0x3F;
+void updateCourseStartFinishSprite(RaceUiCourseSpriteActor *actor) {
+    if ((gFrameCounter & COURSE_START_FINISH_SCROLL_FRAME_MASK) == 0) {
+        actor->angle = (actor->angle + COURSE_START_FINISH_SCROLL_STEP) & COURSE_START_FINISH_SCROLL_MASK;
     }
-    addRenderCallback(&D_801248C8, renderCourseStartFinishSprite, arg0);
+    addRenderCallback(&D_801248C8, renderCourseStartFinishSprite, actor);
 }
 
 void initCourseStartFinishSprite(RaceUiCourseSpriteActor *actor) {
