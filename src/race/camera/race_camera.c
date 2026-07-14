@@ -398,15 +398,12 @@ void initRaceCameraFollowPlayer(void) {
     D_801124A0->update();
 }
 
-// updateRaceCameraFollowPlayer best match: 94.298% (nonmatchings/updateRaceCameraFollowPlayer-2663524570355072948/base_7.c)
+// updateRaceCameraFollowPlayer best match: 94.483% (nonmatchings/updateRaceCameraFollowPlayer-8201208972835473051/base_6.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race/camera/race_camera/updateRaceCameraFollowPlayer.s")
 
 #ifdef NON_MATCHING
 void updateRaceCameraFollowPlayer(void) {
     RacePlayerSlot *player;
-    s32 x;
-    s32 y;
-    s32 z;
     s32 dx;
     s32 dy;
     s32 dz;
@@ -416,6 +413,9 @@ void updateRaceCameraFollowPlayer(void) {
     s32 diff;
     s32 groundY;
     s32 old;
+    s32 x;
+    s32 y;
+    s32 z;
 
     if (gRaceUpdatePaused == 0) {
         D_801124A0->focus.x += (D_80122010[D_801124A0->playerIndex].value - D_801124A0->focus.x) >> 1;
