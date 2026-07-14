@@ -71,7 +71,7 @@ void func_80058360(struct RaceUiAlpha18Actor *arg0);
 void func_800584A0(void *arg0);
 void func_80058538(void *arg0);
 void func_80058610(struct RaceUiAlpha18Actor *arg0);
-void func_80058880(void *arg0);
+void updateRaceUiPrizePayoutWaitBeforeMoneyCount(struct RaceUiPrizePayoutActor *arg0);
 void func_8005893C(void *arg0);
 void updateRaceUiPrizePayoutRevealRankPrize(struct RaceUiPrizePayoutActor *arg0);
 void updateRaceUiPrizePayoutShowRankPrize(struct RaceUiPrizePayoutActor *arg0);
