@@ -87,7 +87,7 @@ extern u8 gPlayerCount;
 extern u8 gPendingFramebufferSwapCount;
 extern u8 gFramebufferSwapHold;
 
-// initCharacterSelectMenu best match: 92.662% (nonmatchings/initCharacterSelectMenu-2663524570355072948/base_7.c)
+// initCharacterSelectMenu best match: 94.109% (nonmatchings/initCharacterSelectMenu-1868946805648840590/base_8.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/character_select/character_select_menu/initCharacterSelectMenu.s")
 
 #ifdef NON_MATCHING
@@ -121,6 +121,9 @@ void initCharacterSelectMenu(void) {
 
         playerCount = gPlayerCount;
         i = 0;
+        // Compiler-shaping no-op retained in the NON_MATCHING attempt.
+        if (D_60F1A0) {
+        }
         if (playerCount > 0) {
             player = gRacePlayers;
             do {
