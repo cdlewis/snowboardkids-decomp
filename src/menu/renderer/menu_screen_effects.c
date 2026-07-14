@@ -245,12 +245,9 @@ void updateFallingMenuSnowflakeSway(MenuScreenEffectActor *arg0) {
     addRenderCallback(gRaceOverlayRenderCallbackList, drawFallingMenuSnowflake, (s32)arg0);
 }
 
-// initFallingMenuSnowflake best match: 98.862% at nonmatchings/initFallingMenuSnowflake/base_2.c
-#pragma GLOBAL_ASM("asm/nonmatchings/menu/renderer/menu_screen_effects/initFallingMenuSnowflake.s")
-
-#ifdef NON_MATCHING
 void initFallingMenuSnowflake(MenuScreenEffectActor *arg0) {
     s32 temp_v1;
+    s16 rand;
 
     temp_v1 = randomNextMain() & 1;
     switch (temp_v1) {
@@ -258,10 +255,11 @@ void initFallingMenuSnowflake(MenuScreenEffectActor *arg0) {
         arg0->unk18.half.hi = (randomNextMain() - 0x80) << 4;
         arg0->unk18.half.lo = -0x780;
         arg0->unk1C.half.lo = randomNextMain() & 0xF;
-        arg0->unk24.half.hi = randomNextMain() * 0x10;
+        rand = randomNextMain();
+        arg0->unk24.half.hi = rand << 4;
         if (randomNextMain() & 1) {
             arg0->timer = 0x20;
-            arg0->unk20.half.lo = ((unsigned long long)(randomNextMain() & 7)) + 0x40;
+            arg0->unk20.half.lo = (randomNextMain() & 7) + 0x40;
         } else {
             arg0->timer = 0x1B;
             arg0->unk20.half.lo = (randomNextMain() & 7) + 0x20;
@@ -273,7 +271,8 @@ void initFallingMenuSnowflake(MenuScreenEffectActor *arg0) {
         arg0->unk18.half.hi = (randomNextMain() - 0x80) << 4;
         arg0->unk18.half.lo = -0x780;
         arg0->unk1C.half.lo = (randomNextMain() & 0x1F) - 0xF;
-        arg0->unk24.half.hi = randomNextMain() * 0x10;
+        rand = randomNextMain();
+        arg0->unk24.half.hi = rand << 4;
         if (randomNextMain() & 1) {
             arg0->timer = 0x20;
             arg0->unk20.half.lo = (randomNextMain() & 7) + 0x3C;
@@ -293,7 +292,6 @@ void initFallingMenuSnowflake(MenuScreenEffectActor *arg0) {
         return;
     }
 }
-#endif
 
 void drawRaceSetupBackdropModels(MenuScreenEffectActor *arg0) {
     register MenuScreenEffectActor *actor = arg0;
