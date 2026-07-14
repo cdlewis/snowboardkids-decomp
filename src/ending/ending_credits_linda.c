@@ -621,12 +621,8 @@ void updateEndingLindaHandshakeAnimComplete(EndingCreditsLinda *arg0) {
     } else {
         count = 1;
     }
-    i = 0;
-    if (count > 0) {
-        do {
-            sp20 = stepMainMenuSceneModelAnimation(3);
-            i++;
-        } while (i != count);
+    for (i = 0; i < count; i++) {
+        sp20 = stepMainMenuSceneModelAnimation(3);
     }
 
     addMainMenuSceneModelDrawCallback(3);
