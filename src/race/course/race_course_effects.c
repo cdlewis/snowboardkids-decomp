@@ -1258,11 +1258,12 @@ void initCourseGateObject(CourseGateObjectEffect *arg0) {
     setCallbackTaskCallback(arg0, waitForCourseGateTrigger);
 }
 
-// renderCourseBillboardMarker best match: 99.673% at nonmatchings/renderCourseBillboardMarker-2870645799593382959/base_2.c.
+// renderCourseBillboardMarker best match: 99.720% at nonmatchings/renderCourseBillboardMarker-5313856277864964686/base_3.c.
 #pragma GLOBAL_ASM("asm/nonmatchings/race/course/race_course_effects/renderCourseBillboardMarker.s")
 
 #ifdef NON_MATCHING
 void renderCourseBillboardMarker(RaceCourseMarkerEffect *arg0) {
+    Gfx *segmentGfx;
     Gfx *gfx;
     s32 i;
     s16 vertexCount;
@@ -1285,9 +1286,9 @@ void renderCourseBillboardMarker(RaceCourseMarkerEffect *arg0) {
 
     if (arg0->vertices != NULL) {
         gDPPipeSync(gRegionAllocPtr++);
-        gfx = gRegionAllocPtr++;
-        gfx->words.w0 = 0xBC000806;
-        gfx->words.w1 = (u32) getRelocatableHeapBlockBase(gRaceCourseModelAssetHandle);
+        segmentGfx = gRegionAllocPtr++;
+        segmentGfx->words.w0 = 0xBC000806;
+        segmentGfx->words.w1 = (u32) getRelocatableHeapBlockBase(gRaceCourseModelAssetHandle);
         gSPMatrix(gRegionAllocPtr++, gIdentityMatrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
         gSPDisplayList(gRegionAllocPtr++, arg0->texturePtr);
         gDPLoadTextureBlock_4b(gRegionAllocPtr++, arg0->texture, G_IM_FMT_CI, 0x20, 0x40, 0, G_TX_WRAP,
