@@ -250,7 +250,7 @@ void updateRaceCourseCoinMarkers(struct RaceUiGfxCommandActor *arg0);
 void initRaceCourseCoinMarkerMatrices(struct RaceUiGfxCommandActor *arg0);
 void initRaceCourseCoinMarkers(void *arg0);
 void func_80065808(struct RaceUiOverlayActor *arg0);
-void func_80065CB8(void *arg0);
+void updateRaceStartOverlayFallOut(struct RaceUiOverlayActor *arg0);
 void func_80065D24(struct RaceUiOverlayActor *arg0);
 void func_80065E0C(struct RaceUiOverlayActor *arg0);
 void func_80065E90(struct RaceUiOverlayActor *arg0);
