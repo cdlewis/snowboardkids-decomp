@@ -171,7 +171,6 @@ extern void addRenderCallback(void *, void (*)(CourseSelectWidgetActor *), Cours
 extern void drawCourseSelectPreviewModel(CourseSelectCoursePreviewActor *);
 extern void drawCourseSelectPreviewModelClose(CourseSelectCoursePreviewActor *);
 extern s32 allocFixedTransformMatrix(FixedTransform *);
-extern void drawCourseSelectCourseCursors(CourseSelectWidgetActor *);
 extern s8 gCourseUnlockSaveSlots[][0x78F8];
 extern u8 D_800EC9C0;
 extern u8 gRaceSplitscreenMode;
@@ -1099,22 +1098,21 @@ void initCourseSelectCourseIconList(CourseSelectIconListActor *actor) {
 }
 #endif
 
-// drawCourseSelectCourseCursors best match: 99.494% (nonmatchings/drawCourseSelectCourseCursors-3242520251544044307/base_16.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/menu/course_select/course_select_ui/drawCourseSelectCourseCursors.s")
-
-#ifdef NON_MATCHING
 void drawCourseSelectCourseCursors(CourseSelectWidgetActor *arg0) {
     u8 *actor;
+    s16 *drawPosPtr;
     s32 i;
     u8 *statePtr;
     s16 *posPtr;
+    int cursorStride;
     s8 *directionPtr;
     s16 *handles;
-    u8 *new_var;
+    u8 *cursorBytes;
     s32 tileIndex;
     s32 handleIndex;
     s32 one;
     s32 playerCount;
+    u8 *cursorBase;
 
     actor = (u8 *) arg0;
     if (D_8010AEB0 == 0) {
@@ -1122,12 +1120,14 @@ void drawCourseSelectCourseCursors(CourseSelectWidgetActor *arg0) {
         i = 0;
         if ((playerCount - 1) >= 0) {
             statePtr = (u8 *) arg0;
+            cursorStride = 2;
             handles = gAssetHandles;
             one = 1;
             do {
                 directionPtr = &D_8010AE64[i];
-                if (statePtr[0x30] < 2) {
-                    posPtr = (s16 *) ((new_var = actor) + (i * 2));
+                if (statePtr[0x30] < cursorStride) {
+                    cursorBase = actor;
+                    posPtr = (s16 *) ((cursorBytes = cursorBase) + (i * cursorStride));
                     if (one == gPlayerCount) {
                         tileIndex = 7;
                         handleIndex = 0x25;
@@ -1135,10 +1135,9 @@ void drawCourseSelectCourseCursors(CourseSelectWidgetActor *arg0) {
                         tileIndex = 0x13;
                         handleIndex = 0x21;
                     }
-                    drawMenuSpriteWithAlpha(posPtr[0xC],
-                                  (s16)(posPtr[0x10] + ((*directionPtr) * statePtr[0x38])),
-                                  getRelocatableHeapBlockBase(handles[handleIndex]), tileIndex & 0xFFFF, 0x20, 0x20, 0,
-                                  posPtr[0x14], (short)0);
+                    drawMenuSpriteWithAlpha(posPtr[0xC], (s16)((drawPosPtr = posPtr)[0x10] + ((*directionPtr) * statePtr[0x38])),
+                                            getRelocatableHeapBlockBase(handles[handleIndex]), tileIndex & (0xFFFF ^ 0),
+                                            0x20, 0x20, 0, drawPosPtr[0x14], (short)0);
                 }
                 i++;
                 statePtr++;
@@ -1146,7 +1145,6 @@ void drawCourseSelectCourseCursors(CourseSelectWidgetActor *arg0) {
         }
     }
 }
-#endif
 
 void updateCourseSelectCourseCursors(CourseSelectWidgetActor *arg0) {
     register CourseSelectWidgetActor *actor;
