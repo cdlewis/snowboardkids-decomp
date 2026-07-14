@@ -3229,12 +3229,12 @@ void updateRaceUiTrickPrizePayoutRevealMakeBonus(RaceUiCourseStatsActor *arg0) {
     addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005D9B4, arg0);
 }
 
-void func_8005E33C(void *arg0) {
-    *(s16 *)((u8 *)arg0 + 0x1A) = *(s16 *)((u8 *)arg0 + 0x1A) - 1;
-    *(s16 *)((u8 *)arg0 + 0x1C) = 0;
-    if (*(s16 *)((u8 *)arg0 + 0x1A) == 0) {
+void updateRaceUiTrickPrizePayoutRevealTrickPrize(RaceUiCourseStatsActor *arg0) {
+    arg0->timer--;
+    arg0->visibleRows = 0;
+    if (arg0->timer == 0) {
         enqueueSoundEffect(0x1A, 0x32);
-        *(s16 *)((u8 *)arg0 + 0x1A) = 0x14;
+        arg0->timer = RACE_UI_TRICK_PRIZE_REVEAL_DELAY;
         setCallbackTaskCallback(arg0, updateRaceUiTrickPrizePayoutRevealMakeBonus);
     }
     addRenderCallback(&gMenuRenderCallbackList, func_8005CF60, arg0);
@@ -3248,7 +3248,7 @@ void func_8005E3F8(void *arg0) {
     if (*(s16 *)((u8 *)arg0 + 0x1A) == 0) {
         *(s16 *)((u8 *)arg0 + 0x1A) = 0x14;
         enqueueSoundEffect(0x1A, 0x32);
-        setCallbackTaskCallback(arg0, func_8005E33C);
+        setCallbackTaskCallback(arg0, updateRaceUiTrickPrizePayoutRevealTrickPrize);
     }
     addRenderCallback(&gMenuRenderCallbackList, func_8005CF60, arg0);
     addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005D860, arg0);
