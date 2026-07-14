@@ -975,14 +975,11 @@ void drawMenuTextureByAssetId(s16 x, s16 y, s32 texture, u16 assetId, u16 width,
     FONT_GFX_CMD(gRegionAllocPtr++, 0xB3000000, 0x04000400);
 }
 
-void func_80011C3C(MenuRenderSpriteActor *actor);
-void func_80011D44(MenuRenderSprite *sprite);
-
 void func_80011C18(MenuRenderSpriteActor *arg0) {
-    setCallbackTaskCallback(arg0, func_80011C3C);
+    setCallbackTaskCallback(arg0, updateMenuSpriteActorDebugControls);
 }
 
-void func_80011C3C(MenuRenderSpriteActor *actor) {
+void updateMenuSpriteActorDebugControls(MenuRenderSpriteActor *actor) {
     if (gPlayerInputHeld & U_CBUTTONS) {
         actor->sprite.y++;
     }
@@ -1009,10 +1006,10 @@ void func_80011C3C(MenuRenderSpriteActor *actor) {
         actor->sprite.y = 0x9BF;
     }
 
-    addRenderCallback(&gMenuRenderCallbackList, func_80011D44, &actor->sprite);
+    addRenderCallback(&gMenuRenderCallbackList, drawMenuTilemapSpriteCallback, &actor->sprite);
 }
 
-void func_80011D44(MenuRenderSprite *arg0) {
+void drawMenuTilemapSpriteCallback(MenuRenderSprite *arg0) {
     drawMenuTilemapSprite(arg0, 0, 0, 0);
 }
 
