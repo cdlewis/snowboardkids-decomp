@@ -958,7 +958,7 @@ void spawnRaceUiSparkle(s32 arg0, s32 arg1, s16 arg2, s16 arg3, s16 arg4) {
     }
 }
 
-// renderRaceItemTextureEffects best match: 99.403% (nonmatchings/renderRaceItemTextureEffects-2663524570355072948/base_10.c)
+// renderRaceItemTextureEffects best match: 99.422% (nonmatchings/renderRaceItemTextureEffects-8201208972835473051/base_12.c)
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race/items/race_item_effects/renderRaceItemTextureEffects.s")
 
@@ -973,7 +973,24 @@ void renderRaceItemTextureEffects(RaceItemTextureActor *arg0) {
     Gfx *gfx;
 
     sp94 = gIdentityFixedTransform;
- do { if (gRenderMatricesDirty != 0) { head = gRaceItemTextureEffectDrawLists.heads; do { node = *(head++); if (node != NULL) { do { node->matrixDirty = 1; node = node->next; } while (node != NULL); } } while (head != D_801121E0.heads); } gfx = gRegionAllocPtr++; gfx->words.w1 = (u32) gEffectRenderModeSetupDl; gfx->words.w0 = 0x06000000; head = gRaceItemTextureEffectDrawLists.heads; do { textureOffset = 0; do { node = *head; if (node != NULL) { { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xFD500000; _g->words.w1 = *((u32 *) ((((u8 *) arg0) + textureOffset) + 0x18)); } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xF5500000; _g->words.w1 = 0x07080200; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xE6000000; _g->words.w1 = 0; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xF3000000; _g->words.w1 = 0x0703F800; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xE7000000; _g->words.w1 = 0; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xF5400200; _g->words.w1 = 0x80200; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xF2000000; _g->words.w1 = 0x3C03C; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xFD100000; _g->words.w1 = *((u32 *) ((((u8 *) arg0) + textureOffset) + 0x28)); } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xE8000000; _g->words.w1 = 0; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xF5000100; _g->words.w1 = 0x07000000; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xE6000000; _g->words.w1 = 0; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xF0000000; _g->words.w1 = 0x0703C000; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xE7000000; _g->words.w1 = 0; } ; } if (node != NULL) { do { if (isPositionNearCurrentRaceViewportCamera(node->pos) != 0) { if (node->matrixDirty != 0) { node->matrixDirty = 0; sp94.x = node->pos->x; sp94.y = node->pos->y; sp94.z = node->pos->z; node->matrix = allocFixedTransformMatrix(&sp94); } gfx = gRegionAllocPtr++; gfx->words.w0 = 0x01020040; gfx->words.w1 = (u32) node->matrix; gfx = gRegionAllocPtr++; gfx->words.w0 = 0x01000040; gfx->words.w1 = (u32) gViewportMatrix; gfx = gRegionAllocPtr++; gfx->words.w0 = 0x0400103F; gfx->words.w1 = node->displayList; gfx = gRegionAllocPtr++; gfx->words.w0 = 0xB1060402; gfx->words.w1 = 0x00060200; } node = node->next; } while (node != NULL); } head++; textureOffset += 4; } while (head != D_801121E0.heads); gfx = gRegionAllocPtr++; gfx->words.w0 = 0x06000000; gfx->words.w1 = (u32) gEffectRenderModeCleanupDl; } while (0); } while (0);
+    do {
+        if (gRenderMatricesDirty != 0) {
+            head = gRaceItemTextureEffectDrawLists.heads;
+            do {
+                node = *(head++);
+                if (node != NULL) {
+                    do {
+                        node->matrixDirty = 1;
+                        node = node->next;
+                    } while (node != NULL);
+                }
+            } while (head != D_801121E0.heads);
+        }
+        gfx = gRegionAllocPtr++;
+        gfx->words.w1 = (u32) gEffectRenderModeSetupDl;
+        gfx->words.w0 = 0x06000000;
+        do { head = gRaceItemTextureEffectDrawLists.heads; do { textureOffset = 0; do { node = *head; if (node != NULL) { { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xFD500000; _g->words.w1 = *((u32 *) ((((u8 *) arg0) + textureOffset) + 0x18)); } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xF5500000; _g->words.w1 = 0x07080200; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xE6000000; _g->words.w1 = 0; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xF3000000; _g->words.w1 = 0x0703F800; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xE7000000; _g->words.w1 = 0; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xF5400200; _g->words.w1 = 0x80200; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xF2000000; _g->words.w1 = 0x3C03C; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xFD100000; _g->words.w1 = *((u32 *) ((((u8 *) arg0) + textureOffset) + 0x28)); } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xE8000000; _g->words.w1 = 0; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xF5000100; _g->words.w1 = 0x07000000; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xE6000000; _g->words.w1 = 0; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xF0000000; _g->words.w1 = 0x0703C000; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xE7000000; _g->words.w1 = 0; } ; } if (node != NULL) { do { if (isPositionNearCurrentRaceViewportCamera(node->pos) != 0) { if (node->matrixDirty != 0) { node->matrixDirty = 0; sp94.x = node->pos->x; sp94.y = node->pos->y; sp94.z = node->pos->z; node->matrix = allocFixedTransformMatrix(&sp94); } gfx = gRegionAllocPtr++; gfx->words.w0 = 0x01020040; gfx->words.w1 = (u32) node->matrix; gfx = gRegionAllocPtr++; gfx->words.w0 = 0x01000040; gfx->words.w1 = (u32) gViewportMatrix; gfx = gRegionAllocPtr++; gfx->words.w0 = 0x0400103F; gfx->words.w1 = node->displayList; gfx = gRegionAllocPtr++; gfx->words.w0 = 0xB1060402; gfx->words.w1 = 0x00060200; } node = node->next; } while (node != NULL); } head++; textureOffset += 4; } while (head != D_801121E0.heads); gfx = gRegionAllocPtr++; gfx->words.w0 = 0x06000000; gfx->words.w1 = (u32) gEffectRenderModeCleanupDl; } while (0); } while (0);
+    } while (0);
 }
 #endif
 
