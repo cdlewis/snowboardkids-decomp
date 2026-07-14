@@ -6,6 +6,7 @@
 #include "game/engine/relocatable_heap.h"
 #include "game/race/flow/race_flow.h"
 #include "game/engine/viewport_manager.h"
+#include "PR/sptask.h"
 
 #define BOOT_THREAD_ID 1
 #define MAIN_THREAD_ID 2
@@ -19,6 +20,13 @@
 #define STARTUP_CALLBACK_PRIORITY 100
 #define BOOT_FADE_TIMER 0x3E4
 #define TITLE_FADE_TIMER 0x3B6
+#define FRAMEBUFFER_COUNT 3
+#define FRAMEBUFFER_SIZE 0x25800
+#define FRAMEBUFFER_RENDER_TASK_STRIDE 0x18620
+#define FRAMEBUFFER_PREP_TASK_STRIDE 0x860
+#define FRAMEBUFFER_TASK_DATA_OFFSET 0x620
+#define FRAMEBUFFER_RENDER_DL_SIZE (FRAMEBUFFER_TASK_DATA_OFFSET - 0x68)
+#define FRAMEBUFFER_PREP_DL_SIZE (FRAMEBUFFER_PREP_TASK_STRIDE - 0x60)
 #define OS_MESG_NOBLOCK 0
 #define OS_MESG_BLOCK 1
 #define OS_READ 0
@@ -42,48 +50,34 @@ typedef struct OSPiHandle_s OSPiHandle;
 #include "game/audio/audio_engine.h"
 
 typedef struct {
-    /* 0x00 */ s32 unk0;
-    /* 0x04 */ s32 pad4;
-    /* 0x08 */ s32 unk8;
-    /* 0x0C */ void *unkC;
-    /* 0x10 */ s32 unk10;
-    /* 0x14 */ s32 unk14;
-    /* 0x18 */ void *unk18;
-    /* 0x1C */ s32 unk1C;
-    /* 0x20 */ void *unk20;
-    /* 0x24 */ s32 pad24;
-    /* 0x28 */ void *unk28;
-    /* 0x2C */ s32 unk2C;
-    /* 0x30 */ void *unk30;
-    /* 0x34 */ s32 unk34;
-    /* 0x38 */ void *unk38;
-    /* 0x3C */ void *unk3C;
-    /* 0x40 */ void *unk40;
-    /* 0x44 */ s32 unk44;
-    /* 0x48 */ void *unk48;
-    /* 0x4C */ s32 unk4C;
-    /* 0x50 */ void *unk50;
-    /* 0x54 */ void *unk54;
-    /* 0x58 */ s16 unk58;
+    /* 0x00 */ void *next;
+    /* 0x04 */ s32 state;
+    /* 0x08 */ s32 flags;
+    /* 0x0C */ void *framebuffer;
+    /* 0x10 */ OSTask rspTask;
+    /* 0x50 */ OSMesgQueue *doneQueue;
+    /* 0x54 */ OSMesg doneMsg;
+    /* 0x58 */ s16 retrace;
     /* 0x5A */ u8 pad5A[6];
-    /* 0x60 */ void *unk60;
-    /* 0x64 */ u8 msg[2];
-    /* 0x66 */ u8 unk66;
+} FramebufferSchedulerTask;
+
+typedef struct {
+    /* 0x00000 */ FramebufferSchedulerTask schedulerTask;
+    /* 0x00060 */ void *colorFramebuffer;
+    /* 0x00064 */ s16 completionMsgType;
+    /* 0x00066 */ u8 status;
     /* 0x67 */ u8 pad67;
-    /* 0x68 */ Gfx dlStart[1];
-} BootSchedulerTask;
+    /* 0x00068 */ Gfx displayList[FRAMEBUFFER_RENDER_DL_SIZE / sizeof(Gfx)];
+    /* 0x00620 */ u8 taskData[FRAMEBUFFER_RENDER_TASK_STRIDE - FRAMEBUFFER_TASK_DATA_OFFSET];
+} FramebufferRenderTask;
 
 typedef struct {
-    /* 0x00 */ u8 pad0[0x60];
-    /* 0x60 */ void *framebuffer;
-    /* 0x64 */ s16 msgType;
-} BootTaskHeader;
+    /* 0x000 */ FramebufferSchedulerTask schedulerTask;
+    /* 0x060 */ Gfx displayList[FRAMEBUFFER_PREP_DL_SIZE / sizeof(Gfx)];
+} FramebufferPrepTask;
 
-typedef struct {
-    /* 0x000 */ u8 pad0[0x680];
-    /* 0x680 */ void *framebuffer;
-    /* 0x684 */ s16 msgType;
-} BootTaskHeader2;
+typedef char FramebufferRenderTaskSizeCheck[(sizeof(FramebufferRenderTask) == FRAMEBUFFER_RENDER_TASK_STRIDE) ? 1 : -1];
+typedef char FramebufferPrepTaskSizeCheck[(sizeof(FramebufferPrepTask) == FRAMEBUFFER_PREP_TASK_STRIDE) ? 1 : -1];
 
 typedef struct {
     /* 0x00 */ s32 unk0;
@@ -173,8 +167,8 @@ extern s32 gClearFramebufferOnNextTask;
 extern s8 gMenuFadeOverlayActive;
 extern Gfx *gCurrentTaskDisplayListStart;
 extern u8 gFramebufferColorBufferIndex;
-extern BootTaskHeader gFramebufferRenderTask0;
-extern u8 D_80155548[];
+extern FramebufferRenderTask gFramebufferRenderTask0[];
+extern FramebufferPrepTask D_80155548[];
 extern u8 D_369000[];
 extern u8 D_800B1CC0[];
 extern u8 D_800E21C0[];
@@ -188,7 +182,6 @@ extern u8 aspMainTextStart[];
 extern u8 rspbootTextStart[];
 extern u8 D_80324480[];
 extern u8 D_80328480[];
-extern BootTaskHeader2 gFramebufferRenderTask1;
 extern GfxCommandDest gIdentityMatrix;
 extern GfxCommandDest D_80124C28;
 extern GfxCommandDest D_80124C68;
@@ -417,11 +410,11 @@ void resetRenderCallbackQueues(void) {
 }
 
 void initFramebufferRenderTaskState(void) {
-    gFramebufferRenderTask0.msgType = 5;
-    gFramebufferRenderTask0.framebuffer = D_8038E800;
-    gFramebufferRenderTask1.msgType = 6;
+    gFramebufferRenderTask0[0].completionMsgType = 5;
+    gFramebufferRenderTask0[0].colorFramebuffer = D_8038E800;
+    gFramebufferRenderTask0[1].completionMsgType = 6;
     if (1) {
-        gFramebufferRenderTask1.framebuffer = D_803B4000;
+        gFramebufferRenderTask0[1].colorFramebuffer = D_803B4000;
     }
     osViSetSpecialFeatures(0x6A);
     gFramebufferRenderTask0Statuses = 0;
@@ -497,13 +490,13 @@ Gfx *appendFadeOverlayDisplayList(void) {
 
 // submitFramebufferRenderTask best match: 80.089% at nonmatchings/submitFramebufferRenderTask-8207005055717715604/base_5.c.
 #ifdef NON_MATCHING
-void submitFramebufferRenderTask(u8 arg0) {
-    BootSchedulerTask *task;
-    BootSchedulerTask *nextTask;
+void submitFramebufferRenderTask(u8 frameIndex) {
+    FramebufferRenderTask *renderTask;
+    FramebufferPrepTask *prepTask;
     s32 colorIndex;
     s32 bufferIndex;
     s32 nextColorIndex;
-    s32 textSize;
+    s32 rspTextSize;
     void *dramStack;
     u8 nextBufferIndex;
     s32 one;
@@ -513,19 +506,19 @@ void submitFramebufferRenderTask(u8 arg0) {
     colorIndex &= 0xFF;
     bufferIndex = arg0 & 0xFF;
     gFramebufferColorBufferIndex = colorIndex;
-    if (colorIndex >= 3) {
+    if (colorIndex >= FRAMEBUFFER_COUNT) {
         gFramebufferColorBufferIndex = 0;
         colorIndex = 0;
     }
 
     one = 1;
     allBits = 0xFFFF;
-    task = (BootSchedulerTask *)((u8 *)&gFramebufferRenderTask0 + bufferIndex * 0x18620);
-    task->unk60 = D_8038E800 + colorIndex * 0x25800;
+    renderTask = &gFramebufferRenderTask0[bufferIndex];
+    renderTask->colorFramebuffer = D_8038E800 + colorIndex * FRAMEBUFFER_SIZE;
     selectMenuRenderScratchBuffer(bufferIndex);
 
-    gRegionAllocPtr = (Gfx *)((u8 *)task + 0x620);
-    gCurrentTaskDisplayListStart = task->dlStart;
+    gRegionAllocPtr = (Gfx *)renderTask->taskData;
+    gCurrentTaskDisplayListStart = renderTask->displayList;
 
     BOOT_GFX_CMD(0xBC000006, 0);
     BOOT_GFX_CMD(0xED000000, 0x5003C0);
@@ -546,7 +539,7 @@ void submitFramebufferRenderTask(u8 arg0) {
         BOOT_GFX_CMD(0xF64FC3BC, 0);
         BOOT_GFX_CMD(0xFE000000, D_80369000);
         BOOT_GFX_CMD(0xE7000000, 0);
-        BOOT_GFX_CMD(0xFF10013F, task->unk60);
+        BOOT_GFX_CMD(0xFF10013F, renderTask->colorFramebuffer);
         BOOT_GFX_CMD(0xF7000000, 0x10001);
         BOOT_GFX_CMD(0xF64FC3BC, 0);
         BOOT_GFX_CMD(0xFB000000, 0);
@@ -578,48 +571,49 @@ void submitFramebufferRenderTask(u8 arg0) {
         BOOT_GFX_CMD(0xF5000000, 0x07000000);
     } else {
         BOOT_GFX_CMD(0xFE000000, D_80369000);
-        BOOT_GFX_CMD(0xFF10013F, task->unk60);
+        BOOT_GFX_CMD(0xFF10013F, renderTask->colorFramebuffer);
     }
 
     BOOT_GFX_CMD(0xB9000002, 0);
-    appendViewportDisplayLists(arg0);
+    appendViewportDisplayLists(frameIndex);
     BOOT_GFX_CMD(0xE9000000, 0);
     BOOT_GFX_CMD(0xB8000000, 0);
 
-    task->unk40 = (u8 *)gCurrentTaskDisplayListStart + 0x5B8;
-    task->unk44 = ((((u8 *)gRegionAllocPtr - (u8 *)gCurrentTaskDisplayListStart) - 0x5B8) >> 3) * 8;
-    task->unk20 = D_800B1CC0;
-    task->unk10 = 1;
-    textSize = aspMainTextStart - rspbootTextStart;
-    task->unk34 = 0x400;
+    renderTask->schedulerTask.rspTask.t.data_ptr = (u64 *)((u8 *)gCurrentTaskDisplayListStart + FRAMEBUFFER_RENDER_DL_SIZE);
+    renderTask->schedulerTask.rspTask.t.data_size =
+        ((((u8 *)gRegionAllocPtr - (u8 *)gCurrentTaskDisplayListStart) - FRAMEBUFFER_RENDER_DL_SIZE) >> 3) * 8;
+    renderTask->schedulerTask.rspTask.t.ucode = (u64 *)D_800B1CC0;
+    renderTask->schedulerTask.rspTask.t.type = 1;
+    rspTextSize = aspMainTextStart - rspbootTextStart;
+    renderTask->schedulerTask.rspTask.t.output_buff_size = (u64 *)0x400;
     dramStack = D_80360000 + 0x8000;
-    task->unk28 = D_800E21C0;
-    task->unk2C = 0x800;
-    task->unk30 = D_80368C00;
-    task->unk3C = dramStack;
-    task->unk4C = 0xC00;
-    task->unk48 = D_80368000;
-    task->unk8 = 0x40;
-    task->unk14 = 0;
-    task->unk18 = rspbootTextStart;
-    task->unk1C = textSize;
-    task->unk38 = D_80360000;
-    task->unk0 = 0;
-    task->unk50 = &gFramebufferRenderDoneQueue;
-    task->unk54 = task->msg;
-    task->unkC = task->unk60;
-    task->unk58 = (gLastSchedulerRetraceCounter + 3) & 0xFFF;
-    task->unk66 |= 1;
-    osSendMesg(getSchedulerGraphicsTaskQueue((s32)&gSchedulerState), task, 1);
+    renderTask->schedulerTask.rspTask.t.ucode_data = (u64 *)D_800E21C0;
+    renderTask->schedulerTask.rspTask.t.ucode_data_size = 0x800;
+    renderTask->schedulerTask.rspTask.t.dram_stack = (u64 *)D_80368C00;
+    renderTask->schedulerTask.rspTask.t.output_buff = (u64 *)dramStack;
+    renderTask->schedulerTask.rspTask.t.yield_data_size = 0xC00;
+    renderTask->schedulerTask.rspTask.t.yield_data_ptr = (u64 *)D_80368000;
+    renderTask->schedulerTask.flags = 0x40;
+    renderTask->schedulerTask.rspTask.t.flags = 0;
+    renderTask->schedulerTask.rspTask.t.ucode_boot = (u64 *)rspbootTextStart;
+    renderTask->schedulerTask.rspTask.t.ucode_boot_size = rspTextSize;
+    renderTask->schedulerTask.rspTask.t.dram_stack_size = (u32)D_80360000;
+    renderTask->schedulerTask.next = NULL;
+    renderTask->schedulerTask.doneQueue = &gFramebufferRenderDoneQueue;
+    renderTask->schedulerTask.doneMsg = &renderTask->completionMsgType;
+    renderTask->schedulerTask.framebuffer = renderTask->colorFramebuffer;
+    renderTask->schedulerTask.retrace = (gLastSchedulerRetraceCounter + 3) & 0xFFF;
+    renderTask->status |= 1;
+    osSendMesg(getSchedulerGraphicsTaskQueue((s32)&gSchedulerState), renderTask, 1);
 
     nextColorIndex = gFramebufferColorBufferIndex + 1;
     nextBufferIndex = (bufferIndex + 1) & 1;
-    if (nextColorIndex >= 3) {
+    if (nextColorIndex >= FRAMEBUFFER_COUNT) {
         nextColorIndex = 0;
     }
 
-    nextTask = (BootSchedulerTask *)(D_80155548 + nextBufferIndex * 0x860);
-    gRegionAllocPtr = (Gfx *)&nextTask->unk60;
+    prepTask = &D_80155548[nextBufferIndex];
+    gRegionAllocPtr = prepTask->displayList;
     BOOT_GFX_CMD(0xBC000006, 0);
     BOOT_GFX_CMD(0xED000000, 0x5003C0);
     BOOT_GFX_CMD(0xB6000000, 0x33205);
@@ -636,32 +630,33 @@ void submitFramebufferRenderTask(u8 arg0) {
     BOOT_GFX_CMD(0xF64FC3BC, 0);
     BOOT_GFX_CMD(0xFE000000, D_80369000);
     BOOT_GFX_CMD(0xE7000000, 0);
-    nextTask->unkC = D_8038E800 + nextColorIndex * 0x25800;
-    BOOT_GFX_CMD(0xFF10013F, nextTask->unkC);
+    prepTask->schedulerTask.framebuffer = D_8038E800 + nextColorIndex * FRAMEBUFFER_SIZE;
+    BOOT_GFX_CMD(0xFF10013F, prepTask->schedulerTask.framebuffer);
     BOOT_GFX_CMD(0xF7000000, 0x10001);
     BOOT_GFX_CMD(0xF64FC3BC, 0);
     BOOT_GFX_CMD(0xE9000000, 0);
     BOOT_GFX_CMD(0xB8000000, 0);
 
-    nextTask->unk40 = &nextTask->unk60;
-    nextTask->unk44 = ((((u8 *)gRegionAllocPtr - (u8 *)nextTask) - 0x60) >> 3) * 8;
-    nextTask->unk10 = 1;
-    nextTask->unk18 = rspbootTextStart;
-    nextTask->unk28 = D_800E21C0;
-    nextTask->unk1C = textSize;
-    nextTask->unk20 = D_800B1CC0;
-    nextTask->unk2C = 0x800;
-    nextTask->unk30 = D_80368C00;
-    nextTask->unk34 = 0x400;
-    nextTask->unk38 = D_80360000;
-    nextTask->unk48 = D_80368000;
-    nextTask->unk4C = 0xC00;
-    nextTask->unk0 = 0;
-    nextTask->unk8 = 0;
-    nextTask->unk50 = &gFramebufferRenderDoneQueue;
-    nextTask->unk54 = 0;
-    nextTask->unk3C = dramStack;
-    osSendMesg(getSchedulerGraphicsTaskQueue((s32)&gSchedulerState), nextTask, 1);
+    prepTask->schedulerTask.rspTask.t.data_ptr = (u64 *)prepTask->displayList;
+    prepTask->schedulerTask.rspTask.t.data_size =
+        ((((u8 *)gRegionAllocPtr - (u8 *)prepTask) - 0x60) >> 3) * 8;
+    prepTask->schedulerTask.rspTask.t.type = 1;
+    prepTask->schedulerTask.rspTask.t.ucode_boot = (u64 *)rspbootTextStart;
+    prepTask->schedulerTask.rspTask.t.ucode_data = (u64 *)D_800E21C0;
+    prepTask->schedulerTask.rspTask.t.ucode_boot_size = rspTextSize;
+    prepTask->schedulerTask.rspTask.t.ucode = (u64 *)D_800B1CC0;
+    prepTask->schedulerTask.rspTask.t.ucode_data_size = 0x800;
+    prepTask->schedulerTask.rspTask.t.dram_stack = (u64 *)D_80368C00;
+    prepTask->schedulerTask.rspTask.t.output_buff_size = (u64 *)0x400;
+    prepTask->schedulerTask.rspTask.t.dram_stack_size = (u32)D_80360000;
+    prepTask->schedulerTask.rspTask.t.yield_data_ptr = (u64 *)D_80368000;
+    prepTask->schedulerTask.rspTask.t.yield_data_size = 0xC00;
+    prepTask->schedulerTask.next = NULL;
+    prepTask->schedulerTask.flags = 0;
+    prepTask->schedulerTask.doneQueue = &gFramebufferRenderDoneQueue;
+    prepTask->schedulerTask.doneMsg = NULL;
+    prepTask->schedulerTask.rspTask.t.output_buff = (u64 *)dramStack;
+    osSendMesg(getSchedulerGraphicsTaskQueue((s32)&gSchedulerState), prepTask, 1);
 }
 
 #else
