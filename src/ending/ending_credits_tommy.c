@@ -34,13 +34,12 @@ typedef struct {
 } GfxCommandSource;
 
 typedef struct {
-    /* 0x00 */ MainMenuSceneModel *model;
-    /* 0x04 */ void *palette;
-    /* 0x08 */ void *image;
-    /* 0x0C */ Vec3i transformed;
-    /* 0x18 */ Vec3i pos;
-    /* 0x24 */ s32 pad90;
-    /* 0x28 */ GfxCommandSource transform;
+    /* 0x00 */ void *palette;
+    /* 0x04 */ void *image;
+    /* 0x08 */ Vec3i transformed;
+    /* 0x14 */ Vec3i pos;
+    /* 0x20 */ s32 pad90;
+    /* 0x24 */ GfxCommandSource transform;
 } EndingShadowStack;
 
 extern void getAssetTableImageAndPalette(s32 arg0, s32 arg1, void **arg2, void **arg3);
@@ -54,7 +53,6 @@ extern GfxCommandSource gIdentityFixedTransform;
 extern u32 gAlphaSpriteRenderModeDl[];
 extern Vtx D_800B8100[];
 extern s16 gMenuCommonSpritesAssetHandle;
-extern void drawEndingActorShadow(MainMenuSceneActorShadow *arg0);
 
 void noopEndingCreditsTommy(void) {
 }
@@ -405,25 +403,20 @@ void initEndingCreditsTommy(EndingCreditsTommy *arg0) {
     setCallbackTaskCallback(arg0, waitEndingTommyPhase01);
 }
 
-// drawEndingActorShadow best match: 91.812% at nonmatchings/drawEndingActorShadow-6866765942504228165/base_4.c.
-#pragma GLOBAL_ASM("asm/nonmatchings/ending/ending_credits_tommy/drawEndingActorShadow.s")
-
-#ifdef NON_MATCHING
 void drawEndingActorShadow(MainMenuSceneActorShadow *arg0) {
+    Mtx *matrix;
     EndingShadowStack stack;
     MainMenuSceneModel *model;
-    Mtx *matrix;
 
     model = getMainMenuSceneModel((u8)arg0->actorId);
     stack.pos.x = arg0->posX;
     stack.pos.y = arg0->posY;
     stack.pos.z = arg0->posZ;
-    stack.model = model;
     transformVec3iByFixedMatrix(model->displayObjects[(u8)arg0->unkC].pad0, &stack.pos, &stack.transformed);
     stack.transform = gIdentityFixedTransform;
-    stack.transform.x = stack.model->displayObjects[(u8)arg0->unkC].screenX + stack.transformed.x;
-    stack.transform.y = stack.model->displayObjects[(u8)arg0->unkC].screenY + stack.transformed.y;
-    stack.transform.z = stack.model->displayObjects[(u8)arg0->unkC].screenZ;
+    stack.transform.x = model->displayObjects[(u8)arg0->unkC].screenX + stack.transformed.x;
+    stack.transform.y = model->displayObjects[(u8)arg0->unkC].screenY + stack.transformed.y;
+    stack.transform.z = model->displayObjects[(u8)arg0->unkC].screenZ;
 
     ENDING_GFX_CMD(gRegionAllocPtr++, 0x06000000, (u32)gAlphaSpriteRenderModeDl);
 
@@ -448,7 +441,6 @@ void drawEndingActorShadow(MainMenuSceneActorShadow *arg0) {
     ENDING_GFX_CMD(gRegionAllocPtr++, 0x0400103F, (u32)D_800B8100);
     ENDING_GFX_CMD(gRegionAllocPtr++, 0xB1060402, 0x60200);
 }
-#endif
 
 void addEndingActorShadowRenderCallback(MainMenuSceneActorShadow *arg0) {
     addRenderCallback(&gModelRenderCallbackList, drawEndingActorShadow, arg0);
