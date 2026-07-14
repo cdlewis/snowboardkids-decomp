@@ -1296,7 +1296,8 @@ void zoomRaceWinnerViewport(void) {
     }
 }
 
-// prepareRaceResultsFlow best match: 93.715% (nonmatchings/prepareRaceResultsFlow-2870645799593382959/base_6.c)
+// prepareRaceResultsFlow best clean match: 94.530% (nonmatchings/prepareRaceResultsFlow-1225020319268080736/base_7.c)
+// Highest permuter score: 94.807% (base_5.c), rejected as an empty-branch artifact.
 #pragma GLOBAL_ASM("asm/nonmatchings/race/flow/race_flow/prepareRaceResultsFlow.s")
 
 #ifdef NON_MATCHING
