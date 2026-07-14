@@ -731,15 +731,8 @@ void initCourseSelectPreviewModelOut(void *arg0) {
     setCallbackTaskCallback(actor, updateCourseSelectPreviewModelOut);
 }
 
-// drawCourseSelectCourseIconList best match: 99.574% (nonmatchings/drawCourseSelectCourseIconList-5802343343535905907/base_11.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/menu/course_select/course_select_ui/drawCourseSelectCourseIconList.s")
-
-#ifdef NON_MATCHING
 void drawCourseSelectCourseIconList(CourseSelectIconListActor *arg0) {
-    CourseSelectIconListActor *sp8C;
-    CourseSelectIconListActor **sp8CPtr;
-    CourseSelectIconListActor *sp74;
-    u8 *sp60;
+    CourseSelectIconListActor *localPtrs[12];
     CourseSelectIconListActor *new_var;
     s32 i;
     s32 j;
@@ -747,36 +740,36 @@ void drawCourseSelectCourseIconList(CourseSelectIconListActor *arg0) {
     s32 tileIndex;
     s32 clipOffset;
     s32 courseId;
+    CourseSelectIconListActor *playerActor;
     s32 selectedCourse;
     CourseSelectRacePlayer *player;
     s16 *position;
 
-    sp8C = arg0;
-    sp8CPtr = &sp8C;
+    localPtrs[11] = arg0;
     new_var = arg0;
     i = 0;
     if ((s32)gPlayerCount > 0) {
-        sp60 = (u8 *)new_var;
+        localPtrs[0] = new_var;
         do {
+            playerActor = (CourseSelectIconListActor *)((u8 *)localPtrs[11] + i);
             j = 0;
             clipOffset = (i >= 2) * 0x88;
-            if (sp60[0x98] > 0) {
-                sp74 = (CourseSelectIconListActor *)((u8 *)*sp8CPtr + i);
+            if (((u8 *)localPtrs[0])[0x98] > 0) {
+                localPtrs[5] = playerActor;
                 do {
-                    if (j < (sp60[0x98] - 1)) {
+                    if (j < (((u8 *)localPtrs[0])[0x98] - 1)) {
                         position = (s16 *)((u8 *)new_var + (i * 10) + (j * 2));
                         if (1) {
                         }
                         player = &gRacePlayers[i];
                         alpha = 0;
-                        clipOffset = (i >= 2) * 0x8C;
                         if (gPlayerCount == 1) {
-                            if (player->state != 5) {
+                            if (player->selectedCharacterId != 5) {
                                 tileIndex = (j + 1) & 0xFFFF;
                             } else {
                                 tileIndex = (j + 6) & 0xFFFF;
                             }
-                        } else if (player->state != 5) {
+                        } else if (player->selectedCharacterId != 5) {
                             tileIndex = (j + 0x14) & 0xFFFF;
                         } else {
                             tileIndex = (j + 0x18) & 0xFFFF;
@@ -796,7 +789,7 @@ void drawCourseSelectCourseIconList(CourseSelectIconListActor *arg0) {
 
                         drawMenuSpriteClipped(position[12], position[32], getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle),
                                       (u16)tileIndex, 0x20, 0x20, 0, alpha,
-                                      new_var->clipLeft - clipOffset, arg0->clipTop, arg0->clipRight,
+                                      new_var->clipLeft - ((i >= 2) * 0x8C), arg0->clipTop, arg0->clipRight,
                                       new_var->clipBottom);
                     } else if (gPlayerCount == 1) {
                         alpha = 0;
@@ -818,14 +811,13 @@ void drawCourseSelectCourseIconList(CourseSelectIconListActor *arg0) {
                         }
                     }
                     j++;
-                } while (j < sp74->itemCounts[0]);
+                } while (j < localPtrs[5]->itemCounts[0]);
             }
             i++;
-            sp60++;
+            localPtrs[0] = (CourseSelectIconListActor *)((u8 *)localPtrs[0] + 1);
         } while (i < (s32)gPlayerCount);
     }
 }
-#endif
 
 // updateCourseSelectCourseIconList best match: 82.656% (nonmatchings/updateCourseSelectCourseIconList-2694253543240320626/base_2.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/course_select/course_select_ui/updateCourseSelectCourseIconList.s")
