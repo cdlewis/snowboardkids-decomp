@@ -583,14 +583,14 @@ void requestControllerPakSaveRead(u16 arg0) {
     osRecvMesg(&gControllerSubsystemReplyQueue, &msg, OS_MESG_BLOCK);
 }
 
-// readControllerPakSave best match: 93.459%
+// readControllerPakSave best match: 95.386%
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/main_menu/controller_main_menu_flow/readControllerPakSave.s")
 
 #ifdef NON_MATCHING
 void readControllerPakSave(u16 controllerIndex) {
     s32 readStatus;
-    u16 checksumFailed;
     OSPfs *controllerPak;
+    int new_var;
     s32 channel;
     volatile s32 validationChannel;
     s32 *fileNo;
@@ -599,11 +599,12 @@ void readControllerPakSave(u16 controllerIndex) {
     u8 *dst;
     u8 *end;
     u8 *checksumBytes;
+    u16 checksumFailed;
     u8 *retryCounts;
     s32 checksum;
     s32 offset;
 
-    channel = controllerIndex & 0xFFFF;
+    channel = controllerIndex & ((short)0xFFFF);
     validationChannel = channel;
     controllerPak = &gControllerPakHandles[channel];
     checksumFailed = 0;
@@ -637,21 +638,25 @@ copy_name:
     fileNo = &gControllerPakFileNos[channel];
     osPfsFindFile(controllerPak, gControllerPakSaveFileIdentity.companyCode, gControllerPakSaveFileIdentity.gameCode,
                   gControllerPakExtName, gControllerPakGameName, fileNo);
+    fileNo = &gControllerPakFileNos[channel];
 
     save = &gGameSaveDataBuffer[channel];
-    readStatus = osPfsReadWriteFile(controllerPak, *fileNo, 0, 0, CONTROLLER_PAK_SAVE_READ_SIZE, (u8 *)save);
+    readStatus = osPfsReadWriteFile(controllerPak, *fileNo, 0, 0, 0x78E0, (u8 *)save);
     if (readStatus == 0) {
         checksum = 0;
         checksumBytes = save->bytes;
-        offset = CONTROLLER_PAK_CHECKSUM_START_OFFSET;
+        offset = 4;
 checksum_loop:
         checksum += checksumBytes[0];
         checksum += checksumBytes[1];
+        new_var = 3;
         checksum += checksumBytes[2];
-        checksum += checksumBytes[3];
+        checksum += checksumBytes[new_var];
         offset += 4;
         checksumBytes += 4;
-        if (offset != CONTROLLER_PAK_SAVE_READ_SIZE) {
+        if (offset != 0x78E0) {
+            if (1) {
+            }
             goto checksum_loop;
         }
         if (checksum != save->checksum) {
@@ -670,7 +675,7 @@ checksum_loop:
     }
 
     if ((readStatus != 0) || (retryCounts[channel] != 0)) {
-        if (retryCounts[channel] != CONTROLLER_PAK_MAX_READ_RETRIES) {
+        if (retryCounts[channel] != 3) {
             return;
         }
     }
