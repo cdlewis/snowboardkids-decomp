@@ -147,7 +147,7 @@ void func_8005E064(void *arg0);
 void updateRaceUiTrickPrizePayoutRevealMoneyRow(struct RaceUiCourseStatsActor *arg0);
 void updateRaceUiTrickPrizePayoutRevealCompleteBonus(struct RaceUiCourseStatsActor *arg0);
 void updateRaceUiTrickPrizePayoutRevealMakeBonus(struct RaceUiCourseStatsActor *arg0);
-void func_8005E33C(void *arg0);
+void updateRaceUiTrickPrizePayoutRevealTrickPrize(struct RaceUiCourseStatsActor *arg0);
 void func_8005E3F8(void *arg0);
 void updateRaceUiTrickPrizePayoutFadeIn(struct RaceUiCourseStatsActor *arg0);
 void initRaceUiTrickPrizePayout(struct RaceUiCourseStatsActor *arg0);
