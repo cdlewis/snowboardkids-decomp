@@ -1518,7 +1518,7 @@ void soundPlayerApplyVolumeAndPan(PlayerCommandState *arg0, s32 arg1) {
     }
 }
 
-// soundPlayerApplyPitch best match: 97.107% (nonmatchings/soundPlayerApplyPitch-3357475854818838508/base_22.c)
+// soundPlayerApplyPitch best match: 97.179% (nonmatchings/soundPlayerApplyPitch-1225020319268080736/base_2.c)
 
 #pragma GLOBAL_ASM("asm/nonmatchings/audio/audio_engine/soundPlayerApplyPitch.s")
 
@@ -1546,7 +1546,7 @@ void soundPlayerApplyPitch(PlayerCommandState *arg0, s32 arg1) {
         if (1) {
             portamentoPitchStep = (notePitch - portamentoStartPitch) / (f32)portamentoTime;
             portamentoPitchStep *= arg0->noteAgeTicksF;
-            notePitch = portamentoPitchStep + portamentoStartPitch;
+            notePitch = portamentoStartPitch + portamentoPitchStep;
         }
     }
 
@@ -1555,7 +1555,7 @@ void soundPlayerApplyPitch(PlayerCommandState *arg0, s32 arg1) {
     arg0->skipPitchOffsetOnce = 0;
     notePitch += arg0->vibratoPitchOffset + sequencePitchOffset + arg0->finePitchOffset + (f32)arg0->pitchPulseOffset;
     notePitch += gSoundPlayerPitchOffsets[arg0->instrumentIndex];
-    notePitch = (f32)((f64)notePitch + ((pitchBendScale = (f64)(f32)arg0->pitchBendDepth * 0.015625) * ((f64)(f32)arg0->pitchBendValue - 64.0)));
+    notePitch = (f32)((f64)notePitch + ((pitchBendScale = (f64)(f32)arg0->pitchBendDepth * 0.015625) * ((f32)arg0->pitchBendValue - 64.0)));
     if (1) {}
     if (1) {}
     if (1) {}
