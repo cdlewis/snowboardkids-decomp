@@ -245,7 +245,7 @@ void updateFallingMenuSnowflakeSway(MenuScreenEffectActor *arg0) {
     addRenderCallback(gRaceOverlayRenderCallbackList, drawFallingMenuSnowflake, (s32)arg0);
 }
 
-// initFallingMenuSnowflake best match: 97.480% at nonmatchings/initFallingMenuSnowflake-5802343343535905907/base_1.c
+// initFallingMenuSnowflake best match: 98.862% at nonmatchings/initFallingMenuSnowflake/base_2.c
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/renderer/menu_screen_effects/initFallingMenuSnowflake.s")
 
 #ifdef NON_MATCHING
@@ -261,7 +261,7 @@ void initFallingMenuSnowflake(MenuScreenEffectActor *arg0) {
         arg0->unk24.half.hi = randomNextMain() * 0x10;
         if (randomNextMain() & 1) {
             arg0->timer = 0x20;
-            arg0->unk20.half.lo = (randomNextMain() & 7) + 0x40;
+            arg0->unk20.half.lo = ((unsigned long long)(randomNextMain() & 7)) + 0x40;
         } else {
             arg0->timer = 0x1B;
             arg0->unk20.half.lo = (randomNextMain() & 7) + 0x20;
