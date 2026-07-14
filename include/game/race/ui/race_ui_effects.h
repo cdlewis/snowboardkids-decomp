@@ -248,7 +248,7 @@ void initTimeTrialRecordDeltaPopup(struct RaceUiTimeTrialRecordDeltaPopupActor *
 void func_800651BC(struct RaceUiGfxCommandActor *arg0);
 void updateRaceCourseCoinMarkers(struct RaceUiGfxCommandActor *arg0);
 void initRaceCourseCoinMarkerMatrices(struct RaceUiGfxCommandActor *arg0);
-void initRaceCourseCoinMarkers(void *arg0);
+void initRaceCourseCoinMarkers(struct RaceUiGfxCommandActor *arg0);
 void func_80065808(struct RaceUiOverlayActor *arg0);
 void updateRaceStartOverlayFallOut(struct RaceUiOverlayActor *arg0);
 void func_80065D24(struct RaceUiOverlayActor *arg0);
