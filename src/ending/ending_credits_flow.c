@@ -56,7 +56,6 @@ extern u8 D_60ECB0[];
 extern u8 D_60F1A0[];
 extern s8 gFramebufferSwapDelay;
 extern s16 gMenuFadeAlpha;
-extern f32 gEndingCreditsViewportAspectRatio;
 extern s16 gEndingCreditsUnusedValue;
 extern u16 gEndingCreditsSequencePhase;
 extern s8 gEndingCreditsHandshakeState;
@@ -70,21 +69,19 @@ extern EndingCreditsFlowState *gCurrentGameTask;
 extern u8 gPendingFramebufferSwapCount;
 extern u8 gFramebufferSwapHold;
 
-// initEndingCreditsFlow best match: 99.898% at nonmatchings/initEndingCreditsFlow-1384449139331208173/base_22.c.
-#pragma GLOBAL_ASM("asm/nonmatchings/ending/ending_credits_flow/initEndingCreditsFlow.s")
+const f32 gEndingCreditsViewportAspectRatio[4] = { 1.333333373f, 0.0f, 0.0f, 0.0f };
 
-#ifdef NON_MATCHING
 void initEndingCreditsFlow(void) {
     s32 sp34;
     s32 temp_v0;
-    EndingCreditsFlowState *state;
+    volatile EndingCreditsFlowState *state;
 
     resetRaceCameras();
     D_801121E0.update = updateMenuCameraObjectWithTargetOffsetCallback;
     D_801121E0.depth = 0x5D24000;
     D_801121E0.yaw = 0xFC0;
     resetAllViewports();
-    configureViewportWithFovAndFarClip(0, 0xA0, 0x38, 0x120, 0x50, 0x140, 0xF0, gEndingCreditsViewportAspectRatio, 0x14, 0xAF0);
+    configureViewportWithFovAndFarClip(0, 0xA0, 0x38, 0x120, 0x50, 0x140, 0xF0, gEndingCreditsViewportAspectRatio[0], 0x14, 0xAF0);
     gFramebufferSwapDelay = 0;
     gMenuCameraTargetOffset.x = 0;
     if (1) {
@@ -125,7 +122,6 @@ void initEndingCreditsFlow(void) {
     gCurrentGameTask->timer = 5;
     setCurrentGameTaskCallback(fadeInEndingCreditsFlow, 0);
 }
-#endif
 
 void fadeInEndingCreditsFlow(void) {
     if (gCurrentGameTask->timer != 0) {
