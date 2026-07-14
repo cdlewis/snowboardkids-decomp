@@ -10,6 +10,12 @@ extern void drawMainMenuSceneModel(MainMenuSceneModel *);
 extern void drawTexturedMainMenuSceneModel(MainMenuSceneModel *);
 
 // initMainMenuSceneModelRenderer best match: 75.000% at nonmatchings/initMainMenuSceneModelRenderer-4104915701176831593/base_1.c.
+// This 0x14-byte range is not really one function: the leading stack restore is
+// the delay slot of the return that ends the previous segment, because the YAML
+// boundary lands mid-delay-slot. The remaining bytes are two consecutive empty
+// functions. A legitimate C function cannot reproduce that orphaned first
+// instruction without moving the segment boundary and disturbing the previous
+// still-unmatched function.
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/main_menu/main_menu_scene_model_renderer/initMainMenuSceneModelRenderer.s")
 
 #ifdef NON_MATCHING
