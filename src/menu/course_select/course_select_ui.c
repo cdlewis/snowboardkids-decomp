@@ -1870,7 +1870,7 @@ void initCourseSelectExtraCourseBadge(CourseSelectWidgetActor *arg0) {
     setCallbackTaskCallback(arg0, updateCourseSelectExtraCourseBadge);
 }
 
-// drawCourseSelectExtraCourseIconList best match: 92.684% (nonmatchings/drawCourseSelectExtraCourseIconList-2694253543240320626/base_12.c)
+// drawCourseSelectExtraCourseIconList best match: 92.748% (nonmatchings/drawCourseSelectExtraCourseIconList-8460208293698481450/base_6.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/course_select/course_select_ui/drawCourseSelectExtraCourseIconList.s")
 
 #ifdef NON_MATCHING
@@ -1883,9 +1883,6 @@ void drawCourseSelectExtraCourseIconList(CourseSelectWidgetActor *arg0_in) {
     s32 sp74;
     u8 *sp68;
     s16 *var_s5;
-    s16 temp_v0;
-    s16 temp_v0_2;
-    s16 temp_v0_3;
     s32 var_fp;
     s32 var_s0;
     s32 var_s0_2;
@@ -1900,21 +1897,19 @@ void drawCourseSelectExtraCourseIconList(CourseSelectWidgetActor *arg0_in) {
         var_s5 = gMenuChoicePromptState;
         sp74 = 0;
         do {
-            temp_v0 = *var_s5;
-            if (temp_v0 != 0) {
+            if (*var_s5 != 0) {
                 temp_t6 = &arg0[var_fp];
-                if (temp_v0 != 9) {
+                if (*var_s5 != 9) {
                     sp68 = temp_t6;
                     var_s2 = EXTRA_COURSE_ICON_LIST_U8(temp_t6, 0x5C) - 1;
                     if (var_s2 >= 0) {
                         var_s1 = arg0 + (var_fp * 6) + (var_s2 * 2);
                         do {
-                            temp_v0_2 = *var_s5;
-                            if (temp_v0_2 == 1) {
+                            if (*var_s5 == 1) {
                                 var_s0 = 0x100;
                             } else {
                                 var_s0 = 0x60;
-                                if ((var_s2 + 2) == temp_v0_2) {
+                                if ((var_s2 + 2) == *var_s5) {
                                     var_s0 = 0x100;
                                 }
                             }
@@ -1931,8 +1926,7 @@ void drawCourseSelectExtraCourseIconList(CourseSelectWidgetActor *arg0_in) {
                         } while (var_s2 >= 0);
                     }
                     if (D_8010AEB0 == 0) {
-                        temp_v0_3 = *var_s5;
-                        if ((temp_v0_3 >= 2) && (temp_v0_3 < 5)) {
+                        if ((*var_s5 >= 2) && (*var_s5 < 5)) {
                             temp_s1 = arg0 + (var_fp * 6);
                             temp_s2 = &arg0[sp74];
                             if ((s32) gPlayerCount == 1) {
