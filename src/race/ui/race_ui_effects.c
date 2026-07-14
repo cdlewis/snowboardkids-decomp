@@ -2981,7 +2981,7 @@ loop4:
 }
 #endif
 
-// func_8005D558 best match: 98.194% (nonmatchings/func_8005D558-6061209858023118177/base_9.c)
+// func_8005D558 best match: 98.500% (nonmatchings/func_8005D558-8201208972835473051/base_7.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race/ui/race_ui_effects/func_8005D558.s")
 
 #ifdef NON_MATCHING
@@ -2995,18 +2995,8 @@ void func_8005D558(RaceUiCourseStatsActor *arg0) {
     s32 y;
     s32 space;
 
-    i = 0;
     y = -0x50;
-    space = ' ';
-    do {
-        char buffer[8];
-
-        drawAssetTableSprite(-8, (s16)y, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), (i + 0x77) & 0xFFFF);
-        if ((i == arg0->index) && (gUiBlinkTimer & 1)) {
-            color = 0x10;
-        } else if (i < 3) {
-            color = 0xC;
-        } else {
+    i = 0; space = ' '; do { char buffer[8]; drawAssetTableSprite(-8, (s16)y, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), (i + 0x77) & 0xFFFF); if ((i == arg0->index) && (gUiBlinkTimer & 1)) { color = 0x10; } else if (i < 3) { color = 0xC; } else {
             color = 0xD;
         }
 
