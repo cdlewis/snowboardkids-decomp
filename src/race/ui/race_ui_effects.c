@@ -3127,20 +3127,20 @@ void func_8005DD0C(void *arg0) {
     addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005D9B4, arg0);
 }
 
-void func_8005DD88(void *arg0) {
+void updateRaceUiTrickPrizePayoutWaitForConfirm(RaceUiCourseStatsActor *actor) {
     if (gPlayerInputPressed & A_BUTTON) {
         enqueueSoundEffect(0x18, 0x32);
-        if (*(u16 *)((u8 *)arg0 + 0x10) < 5) {
-            setCallbackTaskCallback(arg0, func_8005DC4C);
+        if (actor->index < 5) {
+            setCallbackTaskCallback(actor, func_8005DC4C);
         } else {
             gMenuFlowState |= 0x10;
-            setCallbackTaskCallback(arg0, func_8005DD0C);
+            setCallbackTaskCallback(actor, func_8005DD0C);
         }
     }
-    addRenderCallback(&gMenuRenderCallbackList, func_8005CF60, (s32)arg0);
-    addRenderCallback(&gMenuRenderCallbackList, func_8005D1CC, (s32)arg0);
-    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005D860, (s32)arg0);
-    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005D9B4, (s32)arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_8005CF60, actor);
+    addRenderCallback(&gMenuRenderCallbackList, func_8005D1CC, actor);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005D860, actor);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005D9B4, actor);
 }
 
 void func_8005DE6C(RaceUiCourseStatsActor *arg0) {
@@ -3182,7 +3182,7 @@ void func_8005DE6C(RaceUiCourseStatsActor *arg0) {
     if ((arg0->pendingTrickPrize == 0) && (arg0->pendingMakeBonus == 0) && (arg0->pendingCompleteBonus == 0)) {
         enqueueSoundEffect(2, 0x32);
         arg0->timer = 0x14;
-        setCallbackTaskCallback(arg0, func_8005DD88);
+        setCallbackTaskCallback(arg0, updateRaceUiTrickPrizePayoutWaitForConfirm);
     }
 
     addRenderCallback(&gMenuRenderCallbackList, func_8005CF60, (s32)arg0);
