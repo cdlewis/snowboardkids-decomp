@@ -799,7 +799,7 @@ void drawScaledAssetTableSpriteWithExplicitPalette(s16 x, s16 y, AssetTable *ass
 }
 #endif
 
-// drawMenuAsciiFontTile best match: 89.942% (nonmatchings/drawMenuAsciiFontTile-3357475854818838508/base_6.c)
+// drawMenuAsciiFontTile best match: 90.780% (nonmatchings/drawMenuAsciiFontTile-1200943805599209058/base_1.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/renderer/menu_render_utils/drawMenuAsciiFontTile.s")
 
 #ifdef NON_MATCHING
@@ -808,13 +808,13 @@ void drawMenuAsciiFontTile(s16 x, s16 y, u16 s, u16 t, u16 paletteIndex) {
     s32 y0;
     s32 x1;
     s32 y1;
-    volatile char pad[0x48];
+    volatile char pad[0x40];
     s32 maxX;
+    register s32 minX;
     s32 maxY;
-    s32 minX;
     s32 minY;
     s32 clipS;
-    s32 clipT;
+    register s32 clipT;
     s32 viewHalfWidth;
     s32 viewHalfHeight;
 
