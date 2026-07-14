@@ -5557,21 +5557,21 @@ void func_80065808(RaceUiOverlayActor *arg0) {
     } while (0);
 }
 
-void func_80065CB8(void *arg0) {
-    s16 temp_v1;
-    void *temp_a2;
+void updateRaceStartOverlayFallOut(RaceUiOverlayActor *arg0) {
+    s16 timer;
+    RaceUiOverlayActor *actor;
 
-    temp_v1 = *(s16 *)((u8 *)arg0 + 0x30);
-    temp_a2 = arg0;
-    if (temp_v1 != 0) {
-        *(s32 *)((u8 *)arg0 + 0x1C) += *(s32 *)((u8 *)arg0 + 0x28);
-        *(s32 *)((u8 *)arg0 + 0x28) += 0x2000;
-        *(s16 *)((u8 *)arg0 + 0x30) = temp_v1 - 1;
+    timer = arg0->timer;
+    actor = arg0;
+    if (timer != 0) {
+        arg0->y += arg0->velocity;
+        arg0->velocity += 0x2000;
+        arg0->timer = timer - 1;
     } else {
-        removeCallbackTask(temp_a2);
+        removeCallbackTask(actor);
         return;
     }
-    addRenderCallback(&gRaceModelEffectRenderCallbackList, func_80065808, temp_a2);
+    addRenderCallback(&gRaceModelEffectRenderCallbackList, func_80065808, actor);
 }
 
 void func_80065D24(RaceUiOverlayActor *arg0) {
@@ -5595,7 +5595,7 @@ void func_80065D24(RaceUiOverlayActor *arg0) {
         temp_s0->assetTimer++;
         if (temp_s0->assetTimer >= 0xB) {
             temp_s0->timer = 0x3C;
-            setCallbackTaskCallback(temp_s0, func_80065CB8);
+            setCallbackTaskCallback(temp_s0, updateRaceStartOverlayFallOut);
         }
     } else {
         temp_s0->timer = temp_v0 - 1;
