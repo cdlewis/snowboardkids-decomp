@@ -103,7 +103,7 @@ void func_8005AE1C(void *arg0);
 void func_8005AEB0(void *arg0);
 void func_8005AF2C(void *arg0);
 void func_8005AFEC(void *arg0);
-void func_8005B068(void *arg0);
+void func_8005B068(struct RaceUiCounterActor *arg0);
 void func_8005B14C(struct RaceUiCounterActor *arg0);
 void updateRaceUiHitPrizeWaitBeforePayout(struct RaceUiCounterActor *arg0);
 void updateRaceUiHitPrizeRevealTotalMoney(struct RaceUiCounterActor *arg0);

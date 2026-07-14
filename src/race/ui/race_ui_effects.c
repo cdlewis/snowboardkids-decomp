@@ -2144,20 +2144,20 @@ void func_8005AFEC(void *arg0) {
     addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005AC44, arg0);
 }
 
-void func_8005B068(void *arg0) {
+void func_8005B068(RaceUiCounterActor *actor) {
     if (gPlayerInputPressed & A_BUTTON) {
         enqueueSoundEffect(0x18, 0x32);
-        if (*(u16 *)((u8 *)arg0 + 0x10) < 5) {
-            setCallbackTaskCallback(arg0, func_8005AF2C);
+        if (actor->index < 5) {
+            setCallbackTaskCallback(actor, func_8005AF2C);
         } else {
             gMenuFlowState |= 0x10;
-            setCallbackTaskCallback(arg0, func_8005AFEC);
+            setCallbackTaskCallback(actor, func_8005AFEC);
         }
     }
-    addRenderCallback(&gMenuRenderCallbackList, func_8005A31C, (s32)arg0);
-    addRenderCallback(&gMenuRenderCallbackList, func_8005A4BC, (s32)arg0);
-    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005AAE4, (s32)arg0);
-    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005AC44, (s32)arg0);
+    addRenderCallback(&gMenuRenderCallbackList, func_8005A31C, actor);
+    addRenderCallback(&gMenuRenderCallbackList, func_8005A4BC, actor);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005AAE4, actor);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005AC44, actor);
 }
 
 void func_8005B14C(RaceUiCounterActor *arg0) {
