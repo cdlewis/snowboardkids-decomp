@@ -272,20 +272,22 @@ void waitForMainMenuModePreviewRaceStart(void) {
     gViewportStates[0].overlayAlpha = 0x80;
 }
 
-// zoomMainMenuModePreviewRaceViewport best match: 85.661% (nonmatchings/zoomMainMenuModePreviewRaceViewport-5802343343535905907/base_13.c)
+// zoomMainMenuModePreviewRaceViewport best match: 92.825% (nonmatchings/zoomMainMenuModePreviewRaceViewport-8201208972835473051/base_7.c)
 
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/main_menu/main_menu_race_flow/zoomMainMenuModePreviewRaceViewport.s")
 
 #ifdef NON_MATCHING
 void zoomMainMenuModePreviewRaceViewport(void) {
+    volatile u32 new_var;
     s32 timer;
 
     gCurrentGameTask->transitionTimer += 1;
     timer = gCurrentGameTask->transitionTimer;
 
-    configureViewport(0, 0xA0, (s32) ((s16) ((((s32) (timer * 0x28)) / 16) + 0x50)),
+    configureViewport(((s16) ((((s32) (timer * 0x18)) / 16) - -0x108)) * 0, 0xA0,
+                      (s32) ((s16) ((((s32) (timer * 0x28)) / 16) + 0x50)),
                       (s16) ((((s32) (timer * 0x18)) / 16) + 0x108),
-                      (u16) ((s32) ((s16) ((((s32) (timer * 0x58)) / 16) + 0x78))), 0x140U,
+                      (u16) ((s32) (new_var = (s16) ((((s32) (timer * 0x58)) / 16) + 0x78))), 0x140U,
                       (u16) ((s32) ((s16) ((((s32) (timer * 0x64)) / 16) + 0x8C))),
                       (f32) (((((f64) timer) * (-0.9523809523809523)) / 0x10) + 2.2857142857142856));
     if (gCurrentGameTask->transitionTimer == MAIN_MENU_MODE_PREVIEW_RACE_VIEWPORT_ZOOM_FRAMES) {
