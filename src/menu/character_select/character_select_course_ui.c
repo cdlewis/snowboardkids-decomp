@@ -402,38 +402,28 @@ void initCharacterSelectUnlockedCourseList(CharacterSelectCourseMenuFrameActor *
     setCallbackTaskCallback(arg0, updateCharacterSelectUnlockedCourseList);
 }
 
-// drawCharacterSelectLimitedCourseListOptions best match: 99.556%
+// drawCharacterSelectLimitedCourseListOptions best match: 99.941% (not yet matching)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/character_select/character_select_course_ui/drawCharacterSelectLimitedCourseListOptions.s")
 
 #ifdef NON_MATCHING
 void drawCharacterSelectLimitedCourseListOptions(CharacterSelectCourseMenuFrameActor *arg0) {
     register CharacterSelectCourseMenuFrameActor *actor;
+    s32 arrowTexture;
+    u16 tile;
     s32 arrowBase;
     s32 lastArrowIndex;
     s32 i;
     s32 alpha;
-    u16 tile;
 
     actor = arg0;
-    if (gRaceTypeSelection < 2) {
-        arrowBase = 2;
-    } else {
-        arrowBase = 0;
-    }
+    arrowBase = (gRaceTypeSelection < 2) ? 2 : 0;
     i = 0;
     lastArrowIndex = arrowBase + 1;
     if (actor->itemCount > 0) {
         do {
             alpha = 0;
             if (i == 0) {
-                if (gRaceTypeSelection == 2) {
-                    goto use_alt_tile;
-                }
-                tile = 0x1C;
-                goto tile_selected;
-use_alt_tile:
-                tile = 0x1D;
-tile_selected:
+                tile = (gRaceTypeSelection == 2) ? 0x1D : 0x1C;
                 if ((i == gRaceCourseIndex) && (gMenuSelectionConfirmTimer > 0) && (gMenuSelectionConfirmTimer < 8) && (gMenuSelectionConfirmTimer & 1)) {
                     alpha = 0xFF;
                 }
@@ -451,7 +441,8 @@ tile_selected:
             }
 
             if (i != lastArrowIndex) {
-                drawMenuSprite((s16)(actor->x[i] - 0x10), actor->y[i], getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE), (i + 0x29) & 0xFFFF, 0x20, 0x20, 0, 0);
+                arrowTexture = getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE);
+                drawMenuSprite((s16)(actor->x[i] - 0x10), actor->y[i], arrowTexture, (i + 0x29) & 0xFFFF, 0x20, 0x20, 0, 0);
             }
             i++;
         } while (i < actor->itemCount);
@@ -610,7 +601,7 @@ void updateCharacterSelectLimitedCourseList(CharacterSelectCourseMenuFrameActor 
 }
 #endif
 
-// initCharacterSelectLimitedCourseList best match: 73.684% (nonmatchings/initCharacterSelectLimitedCourseList-4104915701176831593/base_12.c)
+// initCharacterSelectLimitedCourseList best match: 74.868% (not yet matching)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/character_select/character_select_course_ui/initCharacterSelectLimitedCourseList.s")
 
 #ifdef NON_MATCHING
@@ -631,28 +622,28 @@ void initCharacterSelectLimitedCourseList(CharacterSelectCourseMenuFrameActor *a
     arg0->baseY = temp_t6;
     temp_t8 = *(volatile s16 *)&arg0->baseY;
     temp_t9 = *(volatile s16 *)&arg0->baseY;
-    arg0->itemSpacing = temp_t7;
-    temp_t0 = arg0->itemSpacing;
-    if (1) {}
-    temp_t3 = arg0->itemSpacing;
-    temp_t7 = arg0->itemSpacing;
-    arg0->y[0] = temp_t8;
-    temp_t2 = *(volatile s16 *)&arg0->baseY;
-    temp_t6 = *(volatile s16 *)&arg0->baseY;
-    temp_t8 = temp_t7 << 2;
-    temp_v1 = -0x104;
-    temp_t0 = temp_t9 + temp_t0;
-    temp_t8 -= temp_t7;
-    temp_t4 = temp_t3 << 1;
-    temp_t3 = 1;
-    temp_t5 = temp_t2 + temp_t4;
-    temp_t9 = temp_t6 + temp_t8;
-    arg0->y[3] = temp_t9;
-    arg0->y[2] = temp_t5;
-    arg0->y[1] = temp_t0;
-    arg0->x[1] = temp_v1;
-    arg0->x[2] = temp_v1;
-    arg0->x[3] = temp_v1;
+    if (1) {
+        temp_t7 = (temp_t3 = (temp_t0 = (arg0->itemSpacing = temp_t7)));
+    }
+    do {
+        arg0->y[0] = temp_t8;
+        temp_t2 = *(volatile s16 *)&arg0->baseY;
+        temp_t6 = *(volatile s16 *)&arg0->baseY;
+        temp_t8 = temp_t7 << 2;
+        temp_v1 = -0x104;
+        temp_t0 = temp_t9 + temp_t0;
+        temp_t8 -= temp_t7;
+        temp_t4 = temp_t3 << 1;
+        temp_t3 = 1;
+        temp_t5 = temp_t2 + temp_t4;
+        temp_t9 = temp_t6 + temp_t8;
+        arg0->y[3] = temp_t9;
+        arg0->y[2] = temp_t5;
+        arg0->y[1] = temp_t0;
+        arg0->x[1] = temp_v1;
+        arg0->x[2] = temp_v1;
+        arg0->x[3] = temp_v1;
+    } while (0);
     arg0->x[0] = temp_v1;
     arg0->timer = 0;
     arg0->itemCount = temp_t3;
