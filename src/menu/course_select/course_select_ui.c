@@ -1222,50 +1222,44 @@ void updateCourseSelectCourseCursors(CourseSelectWidgetActor *arg0) {
 
 #ifdef NON_MATCHING
 void initCourseSelectCourseCursors(CourseSelectWidgetActor *arg0) {
-    CourseSelectWidgetActor *actor = arg0;
-    s32 idx;
-    s32 i;
-    u8 *courseUnlocked;
-    s16 (*xyTable)[6];
-    s16 (*xTable)[4];
-    u8 *bytePtr;
-    s16 *posPtr;
+    CourseSelectWidgetActor *actor;
+    s32 layoutIndex;
+    s32 playerIndex;
+    s32 cursorVariant;
+    s16 *yLayout;
+    s16 *xLayout;
+    u8 *courseUnlockStates;
 
-    if (actor && actor) {
-    }
-
-    if (gPlayerCount < 3) {
-        idx = gPlayerCount - 1;
+    actor = arg0;
+    if ((s32)gPlayerCount < 3) {
+        layoutIndex = gPlayerCount - 1;
     } else {
-        idx = 2;
+        layoutIndex = 2;
     }
 
-    i = 0;
+    playerIndex = 0;
     if ((s32)gPlayerCount > 0) {
-        xyTable = &gCourseSelectIconListYLayout[idx];
-        xTable = &gCourseSelectIconListXLayout[idx];
-        courseUnlocked = D_8010AEA0;
-        bytePtr = (u8 *)actor;
-        posPtr = (s16 *)actor;
+        yLayout = gCourseSelectIconListYLayout[layoutIndex];
+        xLayout = gCourseSelectIconListXLayout[layoutIndex];
+        courseUnlockStates = D_8010AEA0;
         do {
-            if (*courseUnlocked++ != 0) {
-                idx = 1;
-                if (gRacePlayers[i].state == 5) {
-                    idx = 0;
+            if (*courseUnlockStates++ != 0) {
+                cursorVariant = 1;
+                if (gRacePlayers[playerIndex].selectedCharacterId == 5) {
+                    cursorVariant = 0;
                 }
             } else {
-                idx = 0;
+                cursorVariant = 0;
             }
-            bytePtr[0x38] = (*xyTable)[idx];
-            posPtr[0x10] = (*xyTable)[((i & 1) * 2) + idx + 2];
-            posPtr[0xC] = (*xTable)[((i >= 2) * 2) + 1];
-            posPtr[0x14] = 0;
-            bytePtr[0x30] = 0;
-            bytePtr[0x34] = 0;
-            i++;
-            bytePtr++;
-            posPtr = (s16 *)((u8 *)posPtr + 2);
-        } while (i < (s32)gPlayerCount);
+
+            actor->courseCursorBobOffset[playerIndex] = yLayout[cursorVariant];
+            actor->courseCursorY[playerIndex] = yLayout[((playerIndex & 1) * 2) + cursorVariant + 2];
+            actor->courseCursorX[playerIndex] = xLayout[((playerIndex >= 2) * 2) + 1];
+            actor->courseCursorAlpha[playerIndex] = 0;
+            actor->courseCursorState[playerIndex] = 0;
+            actor->courseCursorTimer[playerIndex] = 0;
+            playerIndex++;
+        } while (playerIndex < (s32)gPlayerCount);
     }
 
     setCallbackTaskCallback(actor, updateCourseSelectCourseCursors);
