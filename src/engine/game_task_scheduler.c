@@ -120,7 +120,7 @@ void initGameTaskScheduler(void) {
     resetRenderCallbackQueues();
 }
 
-// updateGameTaskScheduler best match: 92.786% (nonmatchings/updateGameTaskScheduler-5802343343535905907/base_5.c)
+// updateGameTaskScheduler best match: 95.344% (nonmatchings/updateGameTaskScheduler/base_4.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/engine/game_task_scheduler/updateGameTaskScheduler.s")
 
 #ifdef NON_MATCHING
@@ -137,8 +137,11 @@ void updateGameTaskScheduler(void) {
     GameTask *task;
     GameTask *nextTask;
     GameTaskCallback callback;
+    GameTaskCallback *callbackArray;
     s32 oldInput;
     s32 currentInput;
+    s32 newInputValue;
+    s32 stickHighThreshold;
     s32 stickXTooHigh;
     s8 stickX;
     s8 stickY;
@@ -161,11 +164,14 @@ void updateGameTaskScheduler(void) {
 
     do {
         stickXTooHigh = controller->stickX >= 0x2E;
+        stickHighThreshold = 0x2E;
         oldInput = *input;
         currentInput = oldInput & 0xFFFF0000;
         *input = currentInput;
         *input = currentInput | controller->buttons;
         *previousInput = oldInput;
+        do {
+        } while (0);
 
         if (stickXTooHigh) {
             controller->stickX = 0x2D;
@@ -175,7 +181,7 @@ void updateGameTaskScheduler(void) {
         }
 
         stickY = controller->stickY;
-        if (stickY >= 0x2E) {
+        if (stickY >= stickHighThreshold) {
             controller->stickY = 0x2D;
             stickY = controller->stickY;
         }
@@ -187,6 +193,8 @@ void updateGameTaskScheduler(void) {
         stickX = controller->stickX;
         controller++;
         if (stickX >= 0) {
+            goto positiveStickX;
+positiveStickX:
             *stickXOut = responseCurve[stickX];
         } else {
             *stickXOut = -responseCurve[-stickX];
@@ -200,7 +208,7 @@ void updateGameTaskScheduler(void) {
 
         stickX = *stickXOut;
         stickXOut++;
-        if (stickX >= 0x1B) {
+        if (stickX > 0x1B - 1) {
             *input |= 0x40000;
         }
         if (stickX < -0x1A) {
@@ -238,8 +246,9 @@ void updateGameTaskScheduler(void) {
             if (timer >= 9) {
                 *repeatInput = currentInput;
             } else {
+                newInputValue = *newInput;
                 *repeatTimer = timer + 1;
-                *repeatInput = *newInput;
+                *repeatInput = newInputValue;
             }
         }
 
@@ -279,7 +288,8 @@ void updateGameTaskScheduler(void) {
                     callback();
                     task = gCurrentGameTask;
                 }
-                callback = task->callbacks[2];
+                callbackArray = task->callbacks;
+                callback = callbackArray[2];
                 if (callback != NULL) {
                     callback();
                     task = gCurrentGameTask;
