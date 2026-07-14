@@ -885,7 +885,7 @@ void updateRacePickupIdle(RacePickupActor *arg0) {
             player = &gRacePlayers[i];
             playerInsideCylinder = 1;
 
-            if ((player->unk568 < 0x64) && (player->unk4 == 0)) {
+            if ((player->unk568 < 0x64) && (player->isCpu == 0)) {
                 continue;
             }
 
@@ -896,19 +896,29 @@ void updateRacePickupIdle(RacePickupActor *arg0) {
                 player->unk568 = 0;
             }
 
+            // arg0->variant distinguishes the two item box colors: one branch resolves a held
+            // item (itemEffectType), the other an immediate action/ability (actionEffectType).
+            // Both roll tables are indexed by [racePosition][rollIndex], where rollIndex comes
+            // from randomNextObject walking a per-player counter through the shared byte table.
+            // Each player advances their own counter by 1 every time they draw an item/action,
+            // regardless of box color. Lower racePosition values are closer to 1st place and
+            // skew toward common/weaker tier values; higher values skew rarer/stronger.
             if (arg0->variant == 0) {
-                player->itemEffectType = gItemEffectRollTable[player->rankIndex][randomNextObject((RandomStateObject *)player) & 0xF];
+                player->itemEffectType = gItemEffectRollTable[player->racePosition][randomNextObject((RandomStateObject *)player) & 0xF];
                 if (gTrainingCourseLesson != 0) {
                     player->itemEffectType = 1;
                 }
                 player->itemEffectCount = 3;
                 player->itemEffectPalette = 4;
             } else {
-                player->actionEffectType = gActionEffectRollTable[player->rankIndex][randomNextObject((RandomStateObject *)player) & 0xF];
+                player->actionEffectType = gActionEffectRollTable[player->racePosition][randomNextObject((RandomStateObject *)player) & 0xF];
                 if (gTrainingCourseLesson != 0) {
                     player->actionEffectType = 1;
                 }
-                if ((gRaceCourseIndex == 8) && (player->unk4 != 0) && (player->actionEffectType == 4)) {
+                // Course index 8 special case, CPU opponents only. When a CPU's action roll
+                // lands on the common tier-4 result, there is a 255/256 chance to upgrade it
+                // to the rarer tier 6.
+                if ((gRaceCourseIndex == 8) && (player->isCpu != 0) && (player->actionEffectType == 4)) {
                     if (randomNextMain() != 0) {
                         player->actionEffectType = 6;
                     }
