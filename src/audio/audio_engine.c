@@ -7,6 +7,14 @@
 #include <PR/ucode.h>
 #include "game/audio/audio_engine.h"
 
+typedef struct AudioInitTask {
+    void *outBuf;
+    u8 pad4[0x64];
+    s16 type;
+    u8 pad6A[2];
+    OSMesg msg;
+} AudioInitTask;
+
 extern s32 osSendMesg(OSMesgQueue *, OSMesg, s32);
 extern s32 osSetIntMask(s32);
 extern s32 osRecvMesg(OSMesgQueue *, OSMesg *, s32);
@@ -2017,7 +2025,7 @@ s32 startSoundPlayerState(PlayerCommandState *arg0, s32 arg1, s32 arg2, s32 arg3
     return arg0->id;
 }
 
-// initAudioSynthesizer best match: 84.741% (nonmatchings/initAudioSynthesizer-2694253543240320626/base_7.c)
+// initAudioSynthesizer best match: 87.624% (nonmatchings/initAudioSynthesizer-8460208293698481450/base_6.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/audio/audio_engine/initAudioSynthesizer.s")
 
 #ifdef NON_MATCHING
@@ -2029,7 +2037,7 @@ void initAudioSynthesizer(SchedulerState *scheduler, ALSynConfig *config, s32 th
     s32 dmaBufferIndex;
     f32 targetFrameSamples;
     Acmd **cmdList;
-    AudioTask **task;
+    AudioInitTask **task;
 
     gAudioSchedulerState = (s32)scheduler;
     gAudioDmaBufferSize = dmaBufferSize;
@@ -2080,15 +2088,15 @@ void initAudioSynthesizer(SchedulerState *scheduler, ALSynConfig *config, s32 th
     } while ((u32)cmdList < (u32)&gAudioCmdListEnd0);
 
     gAudioCmdListCapacity = initConfig->commandListSize;
-    task = (AudioTask **)gAudioCmdLists;
+    task = (AudioInitTask **)gAudioCmdLists;
     do {
-        task[2] = alHeapDBAlloc(0, 0, config->heap, 1, sizeof(AudioTask));
-        task[2]->outLen = 2;
+        task[2] = alHeapDBAlloc(0, 0, config->heap, 1, sizeof(AudioInitTask));
+        task[2]->type = 2;
         task[2]->msg = task[2];
         task[2]->outBuf =
             alHeapDBAlloc(0, 0, config->heap, 1, gMaxAudioTaskOutputLen * sizeof(s32));
         task++;
-    } while (task != (AudioTask **)&gAudioCmdListEnd1);
+    } while (task != (AudioInitTask **)&gAudioCmdListEnd1);
 
     osCreateMesgQueue((OSMesgQueue *)gAudioTaskDoneQueue, gAudioTaskDoneMessages, 8);
     osCreateMesgQueue(&gAudioThreadQueue, gAudioThreadMessages, 8);
