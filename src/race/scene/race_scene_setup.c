@@ -209,7 +209,7 @@ void loadRaceCourseAssets(void) {
 #pragma GLOBAL_ASM("asm/nonmatchings/race/scene/race_scene_setup/loadRaceCourseAssets.s")
 #endif
 
-// loadRaceCharacterAssets best match: 99.231% at nonmatchings/loadRaceCharacterAssets-8331816093655448999/base_6.c.
+// loadRaceCharacterAssets best match: 99.904% at nonmatchings/loadRaceCharacterAssets-5512657642801906896/base_8.c.
 #ifdef NON_MATCHING
 void loadRaceCharacterAssets(void) {
     RacePlayer *player;
@@ -235,9 +235,9 @@ void loadRaceCharacterAssets(void) {
             size = rawRanges[player->characterId].end - rawRanges[player->characterId].start;
             assetHandles[0xE] = allocRelocatableHeapBlock(size);
             heapBase = getRelocatableHeapBlockBase(assetHandles[0xE]);
-            dmaReadRom(rawRanges[player->characterId].start, heapBase, size);
-            loadCompressedRomAsset(textureRanges[player->characterId].start, textureRanges[player->characterId].end, i + 0x12);
-            loadCompressedRomAsset(modelRanges[player->characterId].start, modelRanges[player->characterId].end, i + 0x16);
+            dmaReadRom(rawRanges[player->characterId & 0xFFFF].start, heapBase, size);
+            loadCompressedRomAsset(textureRanges[player->characterId & 0xFFFF].start, textureRanges[player->characterId & 0xFFFF].end, i + 0x12);
+            loadCompressedRomAsset(modelRanges[player->characterId & 0xFFFF].start, modelRanges[player->characterId & 0xFFFF].end, i + 0x16);
         }
     }
 
