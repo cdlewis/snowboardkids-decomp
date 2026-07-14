@@ -161,8 +161,6 @@ extern u8 gPendingFramebufferSwapCount;
 extern u8 gFramebufferSwapHold;
 extern s32 gPlayerInputHeld;
 extern s32 gPlayerInputPressed;
-extern void initCourseSelectCourseIconList(CallbackTask *);
-extern void initCourseSelectExtraCourseIconList(CallbackTask *);
 extern void releaseMenuAssetHandles(void);
 extern void requestMusicSequenceBank(s32);
 extern void requestMusicSequenceStop(s32);

@@ -46,10 +46,14 @@ typedef struct {
     /* 0x1C */ u16 playerPanelFadeAlpha[4];
 } CourseSelectPlayerPanelsActor;
 
+typedef struct CourseSelectIconListActor CourseSelectIconListActor;
+
 void updateCourseSelectPreviewModelIn(void *arg0);
 void initCourseSelectPreviewModelIn(void *arg0);
 void updateCourseSelectPreviewModelOut(void *arg0);
 void initCourseSelectPreviewModelOut(void *arg0);
+void initCourseSelectCourseIconList(CourseSelectIconListActor *arg0);
+void initCourseSelectExtraCourseIconList(CourseSelectWidgetActor *arg0);
 void updateCourseSelectCourseCursors(CourseSelectWidgetActor *arg0);
 void initCourseSelectCourseCursors(CourseSelectWidgetActor *arg0);
 void drawCourseSelectCourseListBackdrop(CourseSelectWidgetActor *arg0);

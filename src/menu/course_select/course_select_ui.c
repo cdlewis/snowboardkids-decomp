@@ -93,7 +93,7 @@ typedef struct {
     };
 } CourseSelectWidgetInitActor;
 
-typedef struct {
+struct CourseSelectIconListActor {
     /* 0x00 */ u8 pad0[0x18];
     union {
         /* 0x18 */ s16 coordinates[0x40];
@@ -115,7 +115,7 @@ typedef struct {
     /* 0xA2 */ s16 clipRight;
     /* 0xA4 */ s16 clipTop;
     /* 0xA6 */ s16 clipBottom;
-} CourseSelectIconListActor;
+};
 
 typedef struct {
     /* 0x000 */ u8 pad0[0x18];
@@ -1003,17 +1003,11 @@ void updateCourseSelectCourseIconList(CourseSelectIconListActor *arg0) {
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/course_select/course_select_ui/initCourseSelectCourseIconList.s")
 
 #ifdef NON_MATCHING
-void initCourseSelectCourseIconList(u8 *arg0) {
-    s16 *xyTable;
-    s32 temp_lo;
-    s32 enabled;
-    s32 i;
-    u8 *unlockPtr;
-    u8 *bytePtr;
-    u8 *stride10Ptr;
-    s16 *halfPtr;
-    u8 *rowPtr;
-    s16 *xPair;
+void initCourseSelectCourseIconList(CourseSelectIconListActor *actor) {
+    s16 *yLayout;
+    s16 *xLayout;
+    s32 hasExtraCourse;
+    s32 playerIndex;
     s32 layoutIndex;
 
     if ((s32) gPlayerCount < 3) {
@@ -1021,62 +1015,54 @@ void initCourseSelectCourseIconList(u8 *arg0) {
     } else {
         layoutIndex = 2;
     }
-    i = 0;
+
+    playerIndex = 0;
     if ((s32) gPlayerCount > 0) {
-        unlockPtr = D_8010AEA0;
-        xyTable = gCourseSelectIconListYLayout[layoutIndex];
-        bytePtr = arg0;
-        stride10Ptr = arg0;
-        halfPtr = (s16 *) arg0;
-        rowPtr = arg0;
+        yLayout = gCourseSelectIconListYLayout[layoutIndex];
+        xLayout = gCourseSelectIconListXLayout[layoutIndex];
         do {
-            if (*unlockPtr != 0) {
-                enabled = 1;
-                if (gRacePlayers[i].state == 5) {
-                    enabled = 0;
+            if (D_8010AEA0[playerIndex] != 0) {
+                hasExtraCourse = 1;
+                if (gRacePlayers[playerIndex].state == 5) {
+                    hasExtraCourse = 0;
                 }
             } else {
-                enabled = 0;
+                hasExtraCourse = 0;
             }
-            bytePtr[0x9C] = xyTable[enabled];
-            halfPtr[0x34] = xyTable[((i & 1) * 2) + enabled + 2];
-            halfPtr[0x44] = xyTable[((i & 1) * 2) + 2];
-            xPair = &gCourseSelectIconListXLayout[layoutIndex][(i >= 2) * 2];
-            halfPtr[0x40] = xPair[1];
-            halfPtr[0x3C] = xPair[0];
-            ((s16 *) arg0)[0x52] = 0x78;
-            ((s16 *) arg0)[0x51] = 0xA0;
-            ((s16 *) arg0)[0x53] = 0x78;
+
+            actor->speed[playerIndex] = yLayout[hasExtraCourse];
+            actor->baseX[playerIndex] = yLayout[((playerIndex & 1) * 2) + hasExtraCourse + 2];
+            actor->targetX[playerIndex] = yLayout[((playerIndex & 1) * 2) + 2];
+            actor->targetY[playerIndex] = xLayout[((playerIndex >= 2) * 2) + 1];
+            actor->startY[playerIndex] = xLayout[(playerIndex >= 2) * 2];
+
+            actor->clipTop = 0x78;
+            actor->clipRight = 0xA0;
+            actor->clipBottom = 0x78;
             if (gPlayerCount == 1) {
-                ((s16 *) arg0)[0x50] = 0xA0;
+                actor->clipLeft = 0xA0;
             } else if (gPlayerCount == 2) {
-                ((s16 *) arg0)[0x50] = 0x7E;
+                actor->clipLeft = 0x7E;
             } else {
-                ((s16 *) arg0)[0x50] = 0x88;
+                actor->clipLeft = 0x88;
             }
-            ((s16 *) rowPtr)[0xC] = halfPtr[0x3C];
-            ((s16 *) rowPtr)[0x20] = halfPtr[0x34];
-            ((s16 *) (stride10Ptr + 2))[0xC] = halfPtr[0x3C];
-            temp_lo = bytePtr[0x9C];
-            stride10Ptr += 0xA;
-            unlockPtr++;
-            bytePtr++;
-            halfPtr = (s16 *) ((u8 *) halfPtr + 2);
-            rowPtr += 0xA;
-            i++;
-            ((s16 *) (stride10Ptr - 8))[0x20] = temp_lo + halfPtr[0x33];
-            ((s16 *) (stride10Ptr - 8))[0xD] = halfPtr[0x3B];
-            ((s16 *) (stride10Ptr - 8))[0x21] = (bytePtr[0x9B] * 2) + halfPtr[0x33];
-            ((s16 *) (stride10Ptr - 8))[0xE] = halfPtr[0x3B];
-            ((s16 *) (stride10Ptr - 8))[0x22] = (bytePtr[0x9B] * 3) + halfPtr[0x33];
-            ((s16 *) (stride10Ptr - 8))[0xF] = halfPtr[0x3B];
-            ((s16 *) (stride10Ptr - 8))[0x23] = (bytePtr[0x9B] * 4) + halfPtr[0x33];
-            bytePtr[0x93] = 0;
-            bytePtr[0x97] = 1;
-            bytePtr[0x8F] = 0;
-        } while (i < (s32) gPlayerCount);
+
+            actor->y[playerIndex][0] = actor->startY[playerIndex];
+            actor->x[playerIndex][0] = actor->baseX[playerIndex];
+            actor->y[playerIndex][1] = actor->startY[playerIndex];
+            actor->x[playerIndex][1] = actor->baseX[playerIndex] + actor->speed[playerIndex];
+            actor->y[playerIndex][2] = actor->startY[playerIndex];
+            actor->x[playerIndex][2] = actor->baseX[playerIndex] + (actor->speed[playerIndex] * 2);
+            actor->y[playerIndex][3] = actor->startY[playerIndex];
+            actor->x[playerIndex][3] = actor->baseX[playerIndex] + (actor->speed[playerIndex] * 3);
+            actor->state[playerIndex] = 0;
+            actor->timer[playerIndex] = 1;
+            actor->itemCounts[playerIndex] = 0;
+
+            playerIndex++;
+        } while (playerIndex < (s32) gPlayerCount);
     }
-    setCallbackTaskCallback(arg0, updateCourseSelectCourseIconList);
+    setCallbackTaskCallback(actor, updateCourseSelectCourseIconList);
 }
 #endif
 
