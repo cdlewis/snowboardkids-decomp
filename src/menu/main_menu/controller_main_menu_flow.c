@@ -111,6 +111,10 @@ typedef struct ControllerPakSaveData {
     /* 0x78D7 */ u8 unlockFlags;
 } ControllerPakSaveData;
 
+#define CONTROLLER_PAK_SAVE_READ_SIZE 0x78E0
+#define CONTROLLER_PAK_CHECKSUM_START_OFFSET 4
+#define CONTROLLER_PAK_MAX_READ_RETRIES 3
+
 #define CONTROLLER_PAK_SAVE_FIELD_OFFSET(field) ((u32)&(((ControllerPakSaveData *)0)->field))
 #define CONTROLLER_PAK_RECORD_AT(cursor, field) \
     (*(ControllerPakRecordTime *)((cursor) + CONTROLLER_PAK_SAVE_FIELD_OFFSET(field)))
@@ -585,26 +589,28 @@ void requestControllerPakSaveRead(u16 arg0) {
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/main_menu/controller_main_menu_flow/readControllerPakSave.s")
 
 #ifdef NON_MATCHING
-void readControllerPakSave(u16 arg0) {
-    s32 ret;
-    u16 badChecksum;
-    OSPfs *pfs;
+void readControllerPakSave(u16 controllerIndex) {
+    s32 readStatus;
+    u16 checksumFailed;
+    OSPfs *controllerPak;
     s32 channel;
-    volatile s32 savedChannel;
+    volatile s32 validationChannel;
     s32 *fileNo;
     SaveSlotBytes *save;
     u8 *src;
     u8 *dst;
     u8 *end;
-    u8 *bytes;
+    u8 *checksumBytes;
+    u8 *retryCounts;
     s32 checksum;
     s32 offset;
 
-    channel = arg0 & 0xFFFF;
-    savedChannel = channel;
-    pfs = &gControllerPakHandles[channel];
-    badChecksum = 0;
-    osPfsInitPak(&gControllerEventQueue, pfs, channel);
+    channel = controllerIndex & 0xFFFF;
+    validationChannel = channel;
+    controllerPak = &gControllerPakHandles[channel];
+    checksumFailed = 0;
+    retryCounts = &gControllerPakRetryCounts;
+    osPfsInitPak(&gControllerEventQueue, controllerPak, channel);
 
     gControllerPakSaveFileIdentity.gameCode = 'NSKE';
     gControllerPakSaveFileIdentity.companyCode = 'EB';
@@ -631,41 +637,42 @@ copy_name:
     }
 
     fileNo = &gControllerPakFileNos[channel];
-    osPfsFindFile(pfs, gControllerPakSaveFileIdentity.companyCode, gControllerPakSaveFileIdentity.gameCode, gControllerPakExtName, gControllerPakGameName, fileNo);
+    osPfsFindFile(controllerPak, gControllerPakSaveFileIdentity.companyCode, gControllerPakSaveFileIdentity.gameCode,
+                  gControllerPakExtName, gControllerPakGameName, fileNo);
 
     save = &gGameSaveDataBuffer[channel];
-    ret = osPfsReadWriteFile(pfs, *fileNo, 0, 0, 0x78E0, (u8 *)save);
-    if (ret == 0) {
+    readStatus = osPfsReadWriteFile(controllerPak, *fileNo, 0, 0, CONTROLLER_PAK_SAVE_READ_SIZE, (u8 *)save);
+    if (readStatus == 0) {
         checksum = 0;
-        bytes = save->bytes;
-        offset = 4;
+        checksumBytes = save->bytes;
+        offset = CONTROLLER_PAK_CHECKSUM_START_OFFSET;
 checksum_loop:
-        checksum += bytes[0];
-        checksum += bytes[1];
-        checksum += bytes[2];
-        checksum += bytes[3];
+        checksum += checksumBytes[0];
+        checksum += checksumBytes[1];
+        checksum += checksumBytes[2];
+        checksum += checksumBytes[3];
         offset += 4;
-        bytes += 4;
-        if (offset != 0x78E0) {
+        checksumBytes += 4;
+        if (offset != CONTROLLER_PAK_SAVE_READ_SIZE) {
             goto checksum_loop;
         }
         if (checksum != save->checksum) {
-            badChecksum = 1;
+            checksumFailed = 1;
         }
 
-        if (badChecksum == 0) {
-            if (validateControllerPakSave(savedChannel) == 0) {
-                (&gControllerPakRetryCounts)[channel] = 0;
+        if (checksumFailed == 0) {
+            if (validateControllerPakSave(validationChannel) == 0) {
+                retryCounts[channel] = 0;
             }
         } else {
-            (&gControllerPakRetryCounts)[channel]++;
+            retryCounts[channel]++;
         }
     } else {
-        (&gControllerPakRetryCounts)[channel]++;
+        retryCounts[channel]++;
     }
 
-    if ((ret != 0) || ((&gControllerPakRetryCounts)[channel] != 0)) {
-        if ((&gControllerPakRetryCounts)[channel] != 3) {
+    if ((readStatus != 0) || (retryCounts[channel] != 0)) {
+        if (retryCounts[channel] != CONTROLLER_PAK_MAX_READ_RETRIES) {
             return;
         }
     }
