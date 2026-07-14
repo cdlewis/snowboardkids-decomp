@@ -271,7 +271,7 @@ void drawCourseSelectPreviewModel(CourseSelectCoursePreviewActor *arg0) {
 }
 #endif
 
-// updateCourseSelectPreviewModelIn best match: 92.392% (nonmatchings/updateCourseSelectPreviewModelIn-2663524570355072948/base_4.c)
+// updateCourseSelectPreviewModelIn best match: 93.384% (nonmatchings/updateCourseSelectPreviewModelIn-8367390958892477031/base_11.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/course_select/course_select_ui/updateCourseSelectPreviewModelIn.s")
 
 #ifdef NON_MATCHING
@@ -283,8 +283,9 @@ void updateCourseSelectPreviewModelIn(void *arg0) {
     s32 i;
     s32 slideStep;
     s32 angleIndex;
-    u8 requestedState;
-    u8 state;
+    s32 requestedState;
+    s32 state;
+    s32 switchState;
 
     actor = arg0;
     courseSelectStatus = (CourseSelectStatusOverlay *)gCourseSelectStatus;
@@ -303,13 +304,15 @@ void updateCourseSelectPreviewModelIn(void *arg0) {
                 state = actor->state[i];
             }
 
-            if (gMenuFlowState != 0 && state < 5) {
+            switchState = state;
+            if (gMenuFlowState != 0 && switchState < 5) {
                 actor->state[i] = 4;
                 actor->angle[i] = 0;
                 state = actor->state[i];
+                switchState = state;
             }
 
-            switch (state) {
+            switch (switchState) {
             case 0:
                 actor->vecs[i].x += -0x200000;
                 if (actor->vecs[i].x <= 0) {
