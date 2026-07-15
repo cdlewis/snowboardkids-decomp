@@ -60,6 +60,11 @@ isolation rather than importing a whole batch, since some of its output (e.g.
   stores it should follow, even though the scheduler ultimately interleaves
   them. Reordering just the constant assignment can fix a pure
   scheduling/register diff.
+- **Recover accumulators from a folded first use.** If one call receives a
+  literal but the following calls use an incremented value held in a saved
+  register, model the source as a single accumulator starting at the first
+  call's value and increment it between calls. IDO can fold the initial use to
+  a literal while keeping the incremented value live for the later calls.
 
 ## IDO codegen: parameter homing and narrowing
 
