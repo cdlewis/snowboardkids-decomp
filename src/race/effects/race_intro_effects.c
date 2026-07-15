@@ -106,7 +106,7 @@ extern Gfx D_2002DB8[];
 extern Gfx *allocFixedTransformMatrix(FixedTransform *arg0);
 extern void getAssetTableImageAndPalette(s32 arg0, s32 arg1, s16 *arg2, s16 *arg3);
 extern Vec3i gRaceIntroBillboardPositions[];
-extern GfxCommandDest *gRaceIntroModelVerticesByCourse[];
+extern Vtx *gRaceIntroModelVerticesByCourse[];
 extern RaceIntroRenderCommandEntry *gRaceIntroModelCommandsByCourse[];
 extern RaceIntroRenderCommandEntry *gRaceIntroAnimatedBillboardCommandsByCourse[];
 extern u16 gRaceIntroAnimatedBillboardTextureIds[];
@@ -125,10 +125,6 @@ extern s16 gRaceCourseIndex;
 extern s16 gFrameCounter;
 extern u32 gViewportMatrix;
 
-// drawRaceIntroModelMeshes best match: 99.531% (nonmatchings/drawRaceIntroModelMeshes-6061209858023118177/base_12.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race/effects/race_intro_effects/drawRaceIntroModelMeshes.s")
-
-#ifdef NON_MATCHING
 void drawRaceIntroModelMeshes(RaceIntroMeshActor *arg0) {
     volatile u8 pad[0xC];
     u32 image;
@@ -136,11 +132,10 @@ void drawRaceIntroModelMeshes(RaceIntroMeshActor *arg0) {
     s16 width;
     s16 height;
     RaceIntroRenderCommandEntry *entry;
-    GfxCommandDest *vertices;
+    Vtx *vertices;
     Gfx *gfx;
     s16 textureIndex;
     s32 i;
-    s8 nextTextureIndex;
 
     gSPDisplayList(gRegionAllocPtr++, gEffectRenderModeSetupDl);
     entry = gRaceIntroModelCommandsByCourse[gRaceCourseIndex];
@@ -164,20 +159,16 @@ void drawRaceIntroModelMeshes(RaceIntroMeshActor *arg0) {
                 gSPMatrix(gRegionAllocPtr++, gViewportMatrix, G_MTX_NOPUSH | G_MTX_MUL | G_MTX_MODELVIEW);
                 gfx = gRegionAllocPtr++;
                 gfx->words.w0 = 0x0400103F;
-                gfx->words.w1 = (u32)&vertices[entry->textureIndex];
-                gfx = gRegionAllocPtr++;
-                gfx->words.w0 = 0xB1060402;
-                gfx->words.w1 = 0x60200;
+                gfx->words.w1 = (u32)&vertices[entry->textureIndex * 4];
+                RACE_INTRO_EFFECTS_GFX_CMD(gRegionAllocPtr++, 0xB1060402, 0x60200);
             }
-            nextTextureIndex = entry[1].textureIndex;
             entry++;
             i++;
-        } while (nextTextureIndex != -1);
+        } while (entry->textureIndex != -1);
     }
 
     gSPDisplayList(gRegionAllocPtr++, gEffectRenderModeCleanupDl);
 }
-#endif
 
 void enqueueDrawRaceIntroModelMeshes(s32 arg0) {
     addRenderCallback(&gEffectRenderCallbackList, drawRaceIntroModelMeshes, arg0);
