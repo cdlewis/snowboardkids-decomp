@@ -6,6 +6,7 @@
 #include "game/engine/game_task_scheduler.h"
 #include "game/menu/race_setup/race_setup_ui.h"
 #include "game/engine/viewport_manager.h"
+#include "game/race/player/race_player_input.h"
 
 // initRaceSetupMenu best match: 98.403% (nonmatchings/initRaceSetupMenu-8331816093655448999/base_6.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/race_setup/race_setup_menu/initRaceSetupMenu.s")
@@ -150,20 +151,10 @@ void updateRaceSetupPlayerCountMenu(void) {
 }
 #endif
 
-// initRaceSetupSaveMenu best match: 99.808% (nonmatchings/initRaceSetupSaveMenu-5802343343535905907/base_22.c)
+// initRaceSetupSaveMenu best match: 99.808% (nonmatchings/initRaceSetupSaveMenu-8367390958892477031/base_4.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/race_setup/race_setup_menu/initRaceSetupSaveMenu.s")
 
 #ifdef NON_MATCHING
-typedef struct {
-    u8 pad0[0x8];
-    u8 unk8;
-    u8 pad9[0x3];
-    s32 unkC;
-    u8 pad10[0x558];
-    s32 unk568;
-    u8 pad56C[0xA0];
-} RaceSetupPlayerState03798;
-
 extern s16 D_800B31B8;
 extern s16 D_800B31BA;
 extern s16 D_800B31BC;
@@ -188,10 +179,9 @@ extern s16 gRaceSetupSavePanelRect1X0;
 extern s16 gRaceSetupSavePanelRect1Y0;
 extern s16 gRaceSetupSavePanelRect1X1;
 extern s16 gRaceSetupSavePanelRect1Y1;
-extern RaceSetupPlayerState03798 gRacePlayers[];
 
 void initRaceSetupSaveMenu(void) {
-    RaceSetupPlayerState03798 *player;
+    RacePlayer *player;
     s32 i;
     u8 count;
     int zero;
@@ -207,7 +197,7 @@ void initRaceSetupSaveMenu(void) {
     } while (&gControllerPakOperationCounts[i] < &D_800EC9E4);
 
     count = gConnectedControllerCount;
-    do { D_800EC9E4 = zero; i = zero; if (count > zero) { player = gRacePlayers; do { player++; player[-1].unk8 = 0; i++; } while (player < (&gRacePlayers[count])); i = 0; } do { initRaceSetupPlayerSaveData(i); i++; } while (i < 4); D_8010ADE0 = 0; D_8010ADE4 = zero; D_8010ADE8 = 0; gMenuSelectionConfirmTimer = 0; gMenuFlowState = zero; gRaceRumbleEnabled = 0; gRaceSetupSavePanelRect0X0 = D_800B31B8; gRaceSetupSavePanelRect1X0 = D_800B31BA; gRaceSetupSavePanelRect0Y0 = D_800B31BC; } while (0);
+    do { D_800EC9E4 = zero; i = zero; if (count > zero) { player = gRacePlayers; do { player++; player[-1].menuState = 0; i++; } while (player < (&gRacePlayers[count])); i = 0; } do { initRaceSetupPlayerSaveData(i); i++; } while (i < 4); D_8010ADE0 = 0; D_8010ADE4 = zero; D_8010ADE8 = 0; gMenuSelectionConfirmTimer = 0; gMenuFlowState = zero; gRaceRumbleEnabled = 0; gRaceSetupSavePanelRect0X0 = D_800B31B8; gRaceSetupSavePanelRect1X0 = D_800B31BA; gRaceSetupSavePanelRect0Y0 = D_800B31BC; } while (0);
     gRaceSetupSavePanelRect1Y0 = D_800B31BE;
     gRaceSetupSavePanelRect0X1 = D_800B31C0;
     gRaceSetupSavePanelRect1X1 = D_800B31C2;
