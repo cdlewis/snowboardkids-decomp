@@ -296,7 +296,7 @@ void initCourseSelectMenu(void) {
 }
 #endif
 
-// updateCourseSelectModeMenu best match: 82.145% (nonmatchings/updateCourseSelectModeMenu-8331816093655448999/base_5.c)
+// updateCourseSelectModeMenu best match: 83.655% (nonmatchings/updateCourseSelectModeMenu-8808947407184708385/base_13.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/course_select/course_select_menu/updateCourseSelectModeMenu.s")
 
 #ifdef NON_MATCHING
@@ -339,8 +339,8 @@ void updateCourseSelectModeMenu(void) {
                         repeat = gMenuInputRepeatTimers;
                     }
                     if (selection > 0) {
-                        selection = tempSelection;
-                        gCourseSelectModeSelection = selection;
+                        gCourseSelectModeSelection = tempSelection;
+                        selection = (u8) tempSelection;
                     }
                 } else {
                     repeat = gMenuInputRepeatTimers;
@@ -924,7 +924,7 @@ void updateCourseSelectPurchasePrompt(void) {
     updateCallbackTasks();
 }
 
-// updateCourseSelectUnlockCourseList best match: 56.849% (nonmatchings/updateCourseSelectUnlockCourseList-7273315160691878794/base_9.c)
+// updateCourseSelectUnlockCourseList best match: 62.317% (nonmatchings/updateCourseSelectUnlockCourseList-8808947407184708385/base_6.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/course_select/course_select_menu/updateCourseSelectUnlockCourseList.s")
 
 #ifdef NON_MATCHING
@@ -963,53 +963,43 @@ void updateCourseSelectUnlockCourseList(void) {
 
     buttonsPressed = gPlayerInputPressed;
     repeat = gMenuInputRepeatTimers;
-    if (buttonsPressed & (STICK_UP | U_JPAD)) {
-        goto move_up;
-    }
-    if (held10800 != 0) {
-        if (repeat >= 9) {
-            if (repeat & 1) {
-                goto move_up;
+    if ((buttonsPressed & (STICK_UP | U_JPAD)) || ((held10800 != 0) && (repeat >= 9) && (repeat & 1))) {
+        if (repeat == 0) {
+            repeat++;
+        }
+        gMenuInputRepeatTimers = repeat;
+        if (state >= 3) {
+            gMenuChoicePromptState = state - 1;
+            enqueueSoundEffect(0x19, 0x32);
+            buttonsPressed = gPlayerInputPressed;
+        }
+        state = gMenuChoicePromptState;
+    } else {
+        if (!(buttonsPressed & (STICK_DOWN | D_JPAD))) {
+            gMenuInputRepeatTimers = repeat;
+            if (!(buttonsHeld & (STICK_DOWN | D_JPAD))) {
+                goto after_row_change;
+            }
+            gMenuInputRepeatTimers = repeat;
+            if (repeat < 9) {
+                goto after_row_change;
+            }
+            gMenuInputRepeatTimers = repeat;
+            if (!(repeat & 1)) {
+                goto after_row_change;
             }
         }
-    }
-    if (!(buttonsPressed & (STICK_DOWN | D_JPAD))) {
-        gMenuInputRepeatTimers = repeat;
-        if (!(buttonsHeld & (STICK_DOWN | D_JPAD))) {
-            goto after_row_change;
+
+        if (repeat == 0) {
+            repeat++;
         }
         gMenuInputRepeatTimers = repeat;
-        if (repeat < 9) {
-            goto after_row_change;
+        if (state < D_8010AF3C + 1) {
+            gMenuChoicePromptState = state + 1;
+            enqueueSoundEffect(0x19, 0x32);
+            state = gMenuChoicePromptState;
+            buttonsPressed = gPlayerInputPressed;
         }
-        if (!(repeat & 1)) {
-            goto after_row_change;
-        }
-    }
-
-move_down:
-    if (repeat == 0) {
-        repeat++;
-    }
-    gMenuInputRepeatTimers = repeat;
-    if (state < D_8010AF3C + 1) {
-        gMenuChoicePromptState = state + 1;
-        enqueueSoundEffect(0x19, 0x32);
-        state = gMenuChoicePromptState;
-        buttonsPressed = gPlayerInputPressed;
-    }
-    goto after_row_change;
-
-move_up:
-    if (repeat == 0) {
-        repeat++;
-    }
-    gMenuInputRepeatTimers = repeat;
-    if (state >= 3) {
-        gMenuChoicePromptState = state - 1;
-        enqueueSoundEffect(0x19, 0x32);
-        state = gMenuChoicePromptState;
-        buttonsPressed = gPlayerInputPressed;
     }
 
 after_row_change:

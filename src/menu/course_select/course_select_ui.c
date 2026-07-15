@@ -213,20 +213,20 @@ extern s32 gMenuRenderCallbackList;
 extern s32 gModelRenderCallbackList;
 extern u8 gCurrentViewportIndex;
 
-// drawCourseSelectPreviewModel best match: 99.298% (nonmatchings/drawCourseSelectPreviewModel-8331816093655448999/base_23.c)
+// drawCourseSelectPreviewModel best match: 99.380% (nonmatchings/drawCourseSelectPreviewModel-8808947407184708385/base_12.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/course_select/course_select_ui/drawCourseSelectPreviewModel.s")
 
 #ifdef NON_MATCHING
 void drawCourseSelectPreviewModel(CourseSelectCoursePreviewActor *arg0) {
     u8 sp2F;
     unsigned char sp2E;
+    u8 var_t0;
     s8 temp_v0_2;
     CourseSelectRacePlayer *temp_v0_3;
     FixedTransform sp30;
-    int temp_v0;
     u8 var_a3;
-    u8 var_t0;
     u8 var_v1;
+    int temp_v0;
 
     if ((D_8010AED0 != 0) && (gCurrentViewportIndex == 1)) {
         var_t0 = 0;
@@ -2247,7 +2247,7 @@ void drawCourseSelectPlayerPanels(CourseSelectWidgetInitActor *actor) {
 }
 #endif
 
-// updateCourseSelectPlayerPanels best match: 83.090% (nonmatchings/updateCourseSelectPlayerPanels-6866765942504228165/base_7.c)
+// updateCourseSelectPlayerPanels best match: 84.640% (nonmatchings/updateCourseSelectPlayerPanels-8808947407184708385/base_13.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/course_select/course_select_ui/updateCourseSelectPlayerPanels.s")
 
 #ifdef NON_MATCHING
@@ -2269,6 +2269,7 @@ void updateCourseSelectPlayerPanels(CourseSelectWidgetActor *arg0) {
     volatile u8 pad[0x20];
     CourseSelectWidgetTransitionActor *actor;
     s32 i;
+    s16 *deltaX;
     s32 count;
     s32 next;
     s32 step;
@@ -2286,16 +2287,16 @@ void updateCourseSelectPlayerPanels(CourseSelectWidgetActor *arg0) {
 
     i = 0;
     if (count > 0) {
-        statePtr = actor->state;
+        statePtr = (u8 *)actor;
         do {
             next = i + 1;
-            switch (statePtr[0]) {
+            switch (statePtr[0x5A]) {
                 case 0:
                     step = 0;
                     do {
                         u16 timer = actor->timer[i] + actor->speed[i];
                         u16 period = actor->period[i];
-                        actor->x[i] += actor->deltaX[i];
+                        actor->x[i] += *(deltaX = &actor->deltaX[i]);
                         actor->timer[i] = timer;
                         if (timer >= period) {
                             actor->y[i] += actor->deltaY[i];
@@ -2303,11 +2304,11 @@ void updateCourseSelectPlayerPanels(CourseSelectWidgetActor *arg0) {
                         }
                         step++;
                         if (actor->x[i] == actor->targetX[i]) {
-                            statePtr[0] = 1;
+                            statePtr[0x5A] = 1;
                             if (count == next) {
                                 savedStatePtr = statePtr;
-                                D_8010ADE0 = createCallbackTask((void (*)(CallbackTask *))initCourseSelectPreviewModelIn, 0, 0x62);
-                                D_8010ADE4 = createCallbackTask((void (*)(CallbackTask *))initCourseSelectPreviewModelOut, 0, 0x62);
+                                D_8010ADE0 = createCallbackTask(initCourseSelectPreviewModelIn, 0, 0x62);
+                                D_8010ADE4 = createCallbackTask(initCourseSelectPreviewModelOut, 0, 0x62);
                                 createCallbackTask(initCourseSelectCourseIconList, 0, 0x62);
                                 statePtr = savedStatePtr;
                             }
@@ -2317,7 +2318,7 @@ void updateCourseSelectPlayerPanels(CourseSelectWidgetActor *arg0) {
                     break;
                 case 1:
                     if (*(&gMenuTransitionState + (i * sizeof(CourseSelectRacePlayer))) == 4) {
-                        statePtr[0] = 2;
+                        statePtr[0x5A] = 2;
                         actor->timer[i] = 0;
                     }
                     break;
@@ -2334,7 +2335,7 @@ void updateCourseSelectPlayerPanels(CourseSelectWidgetActor *arg0) {
                         }
                         step++;
                         if (count == next) {
-                            if (((*modePtr == 2) && (actor->x[0] >= actor->exitTargetX[0])) ||
+                            if (((*modePtr == 2) && (actor->x[0] >= actor->exitTargetX[i * 0])) ||
                                 ((*modePtr >= 3) && (actor->exitTargetX[0] >= actor->x[0]))) {
                                 s32 j = 0;
                                 if (count > 0) {
@@ -2347,6 +2348,8 @@ void updateCourseSelectPlayerPanels(CourseSelectWidgetActor *arg0) {
                             }
                         }
                 } while (step != 0x18);
+                if (i) {
+                }
                 break;
             case 3:
                 break;

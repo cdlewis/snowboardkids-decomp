@@ -1761,13 +1761,14 @@ void soundPlayerUpdateVolumeTrack(PlayerCommandState *arg0) {
 }
 #endif
 
-// soundPlayerUpdatePanTrack best match: 98.333%
+// soundPlayerUpdatePanTrack best match: 98.824% (nonmatchings/soundPlayerUpdatePanTrack-8808947407184708385/base_11.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/audio/audio_engine/soundPlayerUpdatePanTrack.s")
 
 #ifdef NON_MATCHING
 void soundPlayerUpdatePanTrack(PlayerCommandState *arg0) {
     u16 temp_ca;
     s32 one = 1;
+    int new_var;
     register u8 *temp_v1;
     register u8 temp_v0;
     register u8 *temp_t1;
@@ -1783,7 +1784,7 @@ void soundPlayerUpdatePanTrack(PlayerCommandState *arg0) {
             arg0->unk8 = arg0->unk8 + 0x100;
             arg0->unkCA = temp_t9;
             temp_t0 = (temp_t9 ^ (temp_v0 = 0)) & 0xFFFF;
-            if (temp_t0 == 0) {
+            if (!temp_t0) {
                 temp_v1 = (u8 *)arg0->unk68;
                 temp_v0 = *temp_v1;
                 temp_t1 = temp_v1 + one;
@@ -1799,10 +1800,10 @@ void soundPlayerUpdatePanTrack(PlayerCommandState *arg0) {
                     } while (0);
                     temp_t0 = one;
                     if ((s32)temp_v0 >= 0x80) {
-                        temp_s16 = (temp_v0 & 0x7F) << 8;
+                        temp_s16 = (((temp_v0 & 0x7F) & 0xFFFF) & 0xFFu) << 8;
                         temp_t6 = temp_s16;
-                        arg0->unkCA = temp_t6;
-                        arg0->unkCA = temp_t6 + *temp_t3 + 2;
+                        arg0->unkCA = (short) temp_t6;
+                        arg0->unkCA = temp_t6 + *temp_t3 + (new_var = 2);
                         arg0->unk68 = (s32)(temp_t3 + temp_t0);
                     } else {
                         arg0->unkCA = temp_v0 + 2;

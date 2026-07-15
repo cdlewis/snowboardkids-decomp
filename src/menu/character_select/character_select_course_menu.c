@@ -302,7 +302,7 @@ loop_24:
 }
 #endif
 
-// initCharacterSelectCourseMenuFromPlayerSelect best match: 94.066% (nonmatchings/initCharacterSelectCourseMenuFromPlayerSelect-6866765942504228165/base_9.c)
+// initCharacterSelectCourseMenuFromPlayerSelect best match: 96.889% (nonmatchings/initCharacterSelectCourseMenuFromPlayerSelect-8808947407184708385/base_7.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/character_select/character_select_course_menu/initCharacterSelectCourseMenuFromPlayerSelect.s")
 
 #ifdef NON_MATCHING
@@ -349,7 +349,8 @@ void initCharacterSelectCourseMenuFromPlayerSelect(void) {
     gActiveMenuTask = 0;
     D_8010ADE0 = 0;
     D_8010ADE4 = 0;
-    var_v1 = 0;
+    sp2C = 0;
+    var_v1 = sp2C;
     if (gPlayerCount > 0) {
         var_v0 = gGameSaveDataBuffer;
         temp_a0 = &gGameSaveDataBuffer[gPlayerCount];
@@ -360,9 +361,10 @@ void initCharacterSelectCourseMenuFromPlayerSelect(void) {
                 gHighestUnlockedCourse = temp_v1;
             }
         } while (var_v0 < temp_a0);
+        var_v1++;
+        var_v1--;
     }
 
-    sp2C = var_v1;
     setCurrentGameTaskCallback(updateCharacterSelectCourseMenu, 0);
     var_v1 = sp2C;
     if (gCourseSelectFromRaceTypeMenu == 1) {
@@ -415,7 +417,7 @@ loop_24:
     gCharacterSelectCourseCursorState.bytes[2] = 0;
     gCharacterSelectCourseCursorState.fields.spriteIndex = 0;
     gCharacterSelectCourseCursorState.bytes[6] = 0;
-    gCharacterSelectCourseCursorState.bytes[7] = 0;
+    gCharacterSelectCourseCursorState.bytes[7] = 0 * 0;
     updateCallbackTasks();
 }
 #endif

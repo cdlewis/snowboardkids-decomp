@@ -4426,7 +4426,7 @@ void func_800622B0(RaceUiTransitionRenderActor *arg0) {
     }
 }
 
-// func_800623E8 best match: 97.111% (base_1.c)
+// func_800623E8 best match: 98.037% (base_12.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race/ui/race_ui_effects/func_800623E8.s")
 
 #ifdef NON_MATCHING
@@ -4445,7 +4445,7 @@ void func_800623E8(RaceUiTransitionActor *arg0) {
             player = &gRacePlayers[arg0->index];
             arg0->transformSource.source.words[5] = player->posC8.x;
             arg0->transformSource.source.words[6] = player->posC8.y;
-            arg0->transformSource.source.words[7] = player->posC8.z;
+            arg0->transformSource.source.words[7] = (u64)player->posC8.z;
         } else {
             if (arg0->unk6E == 0) {
                 removeCallbackTask(arg0);

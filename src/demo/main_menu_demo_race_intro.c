@@ -58,14 +58,14 @@ extern u8 gFramebufferSwapHold;
 extern u8 gPendingFramebufferSwapCount;
 extern s32 gPlayerInputPressed;
 extern void releaseMenuAssetHandles(void);
-// initMainMenuDemoRaceIntro best match: 68.393% (nonmatchings/initMainMenuDemoRaceIntro-8331816093655448999/base_8.c)
+// initMainMenuDemoRaceIntro best match: 69.693% (nonmatchings/initMainMenuDemoRaceIntro-8808947407184708385/base_7.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/demo/main_menu_demo_race_intro/initMainMenuDemoRaceIntro.s")
 
 #ifdef NON_MATCHING
 void initMainMenuDemoRaceIntro(void) {
     RacePlayer *players;
     MainMenuDemoRaceIntroEntry *demoEntry;
-    volatile register s32 one;
+    s32 one;
     s32 character0;
     s32 character1;
     s32 character2;

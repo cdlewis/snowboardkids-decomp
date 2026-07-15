@@ -154,10 +154,6 @@ void initRaceHud(void) {
     gRaceChallengeFailed = 0;
 }
 
-// drawTrickAttackChallengeHud best match: 99.923% at nonmatchings/drawTrickAttackChallengeHud-6866765942504228165/base_9.c.
-#pragma GLOBAL_ASM("asm/nonmatchings/race/ui/race_hud/drawTrickAttackChallengeHud.s")
-
-#ifdef NON_MATCHING
 const char D_800E1710[] = "%2.2d";
 const char D_800E1718[] = "%2.2d";
 const char D_800E1720[] = "%2.2d";
@@ -170,7 +166,10 @@ void drawTrickAttackChallengeHud(s32 arg0) {
     char buffer[4];
     s32 palette;
     s32 finalPalette;
-    s32 i;
+    union {
+        char *end;
+        s32 i;
+    } temp;
 
     palette = 0xC;
     if ((gRaceChallengeTimeLimit.minutes == 0) && (gRaceChallengeTimeLimit.seconds < 10) && (gUiBlinkTimer & 1)) {
@@ -178,39 +177,37 @@ void drawTrickAttackChallengeHud(s32 arg0) {
     }
 
     {
-        char *end;
-
         sprintf(buffer, D_800E1710, gRaceChallengeTimeLimit.minutes);
         finalPalette = palette & 0xFFFF;
         x = 0x40;
-        digit = buffer; end = &buffer[2]; do {
+        digit = buffer; temp.end = &buffer[2]; do {
             drawAssetTableSpriteWithExplicitPalette((s16)x, 0x50, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
                           ((u8)*digit - 5) & 0xFFFF, finalPalette); digit++;
             x += 8;
-        } while ((u32)digit < (u32)end);
+        } while ((u32)digit < (u32)temp.end);
 
         x += 8;
         sprintf(buffer, D_800E1718, gRaceChallengeTimeLimit.seconds);
         digit = buffer;
-        end = &buffer[2];
-        end += 0;
+        temp.end = &buffer[2];
+        temp.end += 0;
         do {
             drawAssetTableSpriteWithExplicitPalette((s16)x, 0x50, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
                           ((u8)*digit - 5) & 0xFFFF, finalPalette);
             digit++;
             x += 8;
-        } while ((u32)digit < (u32)end);
+        } while ((u32)digit < (u32)temp.end);
 
         x += 8;
         sprintf(buffer, D_800E1720, gRaceChallengeTimeLimit.fraction >> 8);
         digit = buffer;
-        end = &buffer[2];
+        temp.end = &buffer[2];
         do {
             drawAssetTableSpriteWithExplicitPalette((s16)x, 0x50, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
                           ((u8)*digit - 5) & 0xFFFF, finalPalette);
             digit++;
             x += 8;
-        } while ((u32)digit < (u32)end);
+        } while ((u32)digit < (u32)temp.end);
     }
 
     drawAssetTableSpriteWithExplicitPalette(0x50, 0x50, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x36, finalPalette);
@@ -218,13 +215,13 @@ void drawTrickAttackChallengeHud(s32 arg0) {
 
     if (D_80122043 < 10) {
         x = -0x90;
-        i = 0;
+        temp.i = 0;
         if (D_80122043 > 0) {
             do {
                 drawScaledAssetTableSprite((s16)x, -0x68, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x26, 1);
-                i++;
+                temp.i++;
                 x += 8;
-            } while (i < D_80122043);
+            } while (temp.i < D_80122043);
         }
     } else {
         drawAssetTableSprite(-0x84, -0x60, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x26);
@@ -259,7 +256,6 @@ void drawTrickAttackChallengeHud(s32 arg0) {
         drawAssetTableSprite(-0x5C, -0x59, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), ((u8)buffer[1] - 5) & 0xFFFF);
     }
 }
-#endif
 
 const char D_800E1730[] = "Point";
 const char D_800E1738[] = "Time Limit";

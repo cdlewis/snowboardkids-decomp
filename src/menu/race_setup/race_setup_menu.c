@@ -777,7 +777,7 @@ void updateRaceSetupRumblePrompt(void) {
 }
 #endif
 
-// initRaceSetupPlayerSaveData best match: 51.210% (nonmatchings/initRaceSetupPlayerSaveData-8331816093655448999/base_2.c)
+// initRaceSetupPlayerSaveData best match: 65.893% (nonmatchings/initRaceSetupPlayerSaveData-8808947407184708385/base_7.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/race_setup/race_setup_menu/initRaceSetupPlayerSaveData.s")
 
 #ifdef NON_MATCHING
@@ -951,14 +951,18 @@ void initRaceSetupPlayerSaveData(s32 arg0) {
     i = 0;
     if (gMainMenuSecretCodeUnlocked == 1) {
         byteCursor = sp30;
-        do {
+secret_unlock_loop:
             i++;
             RACE_SETUP_SAVE_BYTE_045D8(byteCursor, 0x34) = 1;
             byteCursor++;
-        } while (i < 0xB);
+            if (i < 0xB) {
+                goto secret_unlock_loop;
+            }
 
         byteCursor = sp30;
-        for (wordCursor = (u8 *)D_800B3490; wordCursor != (u8 *)gCourseSelectColumnSoundEffects;) {
+        wordCursor = (u8 *)D_800B3490;
+secret_copy_loop:
+        {
             s8 temp0 = wordCursor[0];
             s8 temp1 = wordCursor[1];
             s8 temp2 = wordCursor[2];
@@ -970,6 +974,9 @@ void initRaceSetupPlayerSaveData(s32 arg0) {
             RACE_SETUP_SAVE_BYTE_045D8(byteCursor, 0x3C) = temp1;
             RACE_SETUP_SAVE_BYTE_045D8(byteCursor, 0x3D) = temp2;
             RACE_SETUP_SAVE_BYTE_045D8(byteCursor, 0x3E) = temp3;
+            if (wordCursor != (u8 *)gCourseSelectColumnSoundEffects) {
+                goto secret_copy_loop;
+            }
         }
 
         RACE_SETUP_SAVE_BYTE_045D8(save, 0x4B) = 1;
