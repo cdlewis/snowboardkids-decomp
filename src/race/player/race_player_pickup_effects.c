@@ -9,7 +9,7 @@
 #include "game/race/effects/snowboard_trail_effects.h"
 #include "game/race/ui/race_ui_effects.h"
 
-// updateRacePlayerItemEffectUse best match: 99.869% (nonmatchings/updateRacePlayerItemEffectUse-3357475854818838508/base_16.c)
+// updateRacePlayerItemEffectUse best match: 99.825% (nonmatchings/updateRacePlayerItemEffectUse/base_final.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race/player/race_player_pickup_effects/updateRacePlayerItemEffectUse.s")
 
 typedef void (*EffectCallback)(void *);
@@ -62,7 +62,7 @@ void updateRacePlayerItemEffectUse(RacePlayer *player) {
                     }
                 }
                 otherPlayer++;
-            } while (otherPlayer != gRacePlayersEnd);
+            } while ((0, otherPlayer) != gRacePlayersEnd);
         }
     }
 

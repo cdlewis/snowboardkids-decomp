@@ -1049,7 +1049,7 @@ void clampRacePlayerVectorXZHalfSpeed(RaceVec3i *vec, RacePlayer *player) {
     }
 }
 
-// updateRacePlayerLocalVelocity best match: 99.739% (nonmatchings/updateRacePlayerLocalVelocity-2225551288923588688/base_16.c)
+// updateRacePlayerLocalVelocity best match: 99.799% (nonmatchings/updateRacePlayerLocalVelocity/base_final.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race/player/race_player_movement/updateRacePlayerLocalVelocity.s")
 
 #ifdef NON_MATCHING
@@ -1060,6 +1060,7 @@ void updateRacePlayerLocalVelocity(RacePlayer *player, s32 arg1, s32 arg2, s32 a
     s32 sin;
     s32 cos;
     s32 useHalfLimit;
+    s32 *localPosYPtr;
 
     sin = fixedSine(-player->facingAngle);
     cos = fixedCosine(-player->facingAngle);
@@ -1128,10 +1129,11 @@ void updateRacePlayerLocalVelocity(RacePlayer *player, s32 arg1, s32 arg2, s32 a
     player->unk254 = scratch.worldPos.z;
 
     makeFixedRotationZX(scratch.rotationMtx, player->unk2F0, player->unk2F4);
+    localPosYPtr = &scratch.localPos.y;
     transformVec3iByFixedMatrix(scratch.rotationMtx, &scratch.worldPos, &scratch.localPos);
 
     player->unk74 = scratch.localPos.y + 0x1000;
-    scratch.localPos.y = (scratch.localPos.y + player->unk40.y) - scratch.localPos.y;
+    scratch.localPos.y = (scratch.localPos.y + player->unk40.y) - (*localPosYPtr);
 
     sin = fixedSine(player->facingAngle);
     cos = fixedCosine(player->facingAngle);

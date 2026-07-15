@@ -180,8 +180,7 @@ void drawCharacterSelectCourseListOptions(CharacterSelectCourseMenuFrameActor *a
     }
 }
 
-// updateCharacterSelectUnlockedCourseList best match: 99.807% (nonmatchings/updateCharacterSelectUnlockedCourseList/base_orig.c)
-// cleaned NON_MATCHING reference: 98.564% (nonmatchings/updateCharacterSelectUnlockedCourseList/base_2.c)
+// updateCharacterSelectUnlockedCourseList best match: 99.807% (nonmatchings/updateCharacterSelectUnlockedCourseList/base_1.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/character_select/character_select_course_ui/updateCharacterSelectUnlockedCourseList.s")
 
 #ifdef NON_MATCHING
@@ -330,6 +329,7 @@ void updateCharacterSelectUnlockedCourseList(CharacterSelectCourseMenuFrameActor
                     visibleCourseCount = gCharacterSelectCourseExitOptionIndex + 1;
                 }
                 index++;
+                visibleCourseCount = gCharacterSelectCourseExitOptionIndex + 1;
             } while (index < visibleCourseCount);
         }
         if (gRaceCourseIndex != 0) {
@@ -402,7 +402,7 @@ void initCharacterSelectUnlockedCourseList(CharacterSelectCourseMenuFrameActor *
     setCallbackTaskCallback(arg0, updateCharacterSelectUnlockedCourseList);
 }
 
-// drawCharacterSelectLimitedCourseListOptions best match: 99.941% (not yet matching)
+// drawCharacterSelectLimitedCourseListOptions best match: 99.941% (nonmatchings/drawCharacterSelectLimitedCourseListOptions/base_final.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/character_select/character_select_course_ui/drawCharacterSelectLimitedCourseListOptions.s")
 
 #ifdef NON_MATCHING
@@ -413,6 +413,7 @@ void drawCharacterSelectLimitedCourseListOptions(CharacterSelectCourseMenuFrameA
     s32 arrowBase;
     s32 lastArrowIndex;
     s32 i;
+    s32 zeroFlip;
     s32 alpha;
 
     actor = arg0;
@@ -442,7 +443,8 @@ void drawCharacterSelectLimitedCourseListOptions(CharacterSelectCourseMenuFrameA
 
             if (i != lastArrowIndex) {
                 arrowTexture = getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE);
-                drawMenuSprite((s16)(actor->x[i] - 0x10), actor->y[i], arrowTexture, (i + 0x29) & 0xFFFF, 0x20, 0x20, 0, 0);
+                zeroFlip = 0;
+                drawMenuSprite((s16)(actor->x[i] - 0x10), actor->y[i], arrowTexture, (i + 0x29) & 0xFFFF, 0x20, 0x20, zeroFlip, zeroFlip);
             }
             i++;
         } while (i < actor->itemCount);
