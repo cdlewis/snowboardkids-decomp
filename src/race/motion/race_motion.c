@@ -1517,108 +1517,71 @@ loop_interp:
 #undef RACE_MOTION_JOINT_FRAME_STRIDE
 #endif
 
-// blendRaceMotionJointAnimation best match: 98.785% (base_6.c)
+// blendRaceMotionJointAnimation best match: 99.038% (nonmatchings/blendRaceMotionJointAnimation-8075865578671233833/base_11.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race/motion/race_motion/blendRaceMotionJointAnimation.s")
 
 #ifdef NON_MATCHING
-#define RACE_MOTION_JOINT_COUNT 12
-#define RACE_MOTION_BLEND_START_JOINT 6
-#define RACE_MOTION_JOINT_FRAME_STRIDE 14
-#define RACE_MOTION_JOINT_FRAME_SKIP_BYTES 0x24
-
 void blendRaceMotionJointAnimation(RaceMotionState *state, s32 animIndex, s32 timer, s32 duration) {
-    s32 animationBase;
-    RaceMotionPackedJointRotation *packedJoint;
-    RaceMotionRotation *jointFrame;
-    RaceMotionRotation *decodedJoint;
-    RaceMotionRotation *jointFrameEnd;
-    RaceMotionRotation *blendSample;
-    RaceMotionRotation *targetSample;
-    RaceMotionRotation *decodedJointAlias;
-    RaceMotionStateJoint *joint;
-    s32 jointIndex;
-    s16 packedXY;
-    s16 packedX;
-    s16 packedZAndFlags;
-    s32 rotationX;
+    s32 frameBase;
+    s16 *packed;
+    RaceMotionRotation *row;
+    RaceMotionRotation *out;
+    RaceMotionRotation *end;
+    s32 *interp;
+    RaceMotionRotation *outAlias;
+    void *joint;
+    s32 i;
+    s16 xy;
+    s16 shiftedX;
+    s16 zAndFlags;
+    s32 jointStride;
+    s32 x;
     u16 frameOffset;
-    s32 rotationY;
-    s32 rotationZ;
+    s32 y;
+    s32 z;
     s32 delta;
 
-    animationBase = getRelocatableHeapBlockBase(gRaceMotionAnimationAssetHandles[state->modelId]);
-    frameOffset = ((u16 *)animationBase)[animIndex];
-    packedJoint = (RaceMotionPackedJointRotation *)(animationBase + (frameOffset * 2) + 2 + RACE_MOTION_JOINT_FRAME_SKIP_BYTES);
-
-    jointFrame = gRaceMotionJointFrameBuffer;
-    jointFrameEnd = (RaceMotionRotation *)&gRacePlayerHitCueId;
+    frameBase = getRelocatableHeapBlockBase(gRaceMotionAnimationAssetHandles[state->modelId]);
+    frameOffset = ((u16 *)frameBase)[animIndex];
+    packed = (s16 *)(frameBase + (frameOffset * 2));
+    packed++;
+    state++;
+    state--;
+    packed = (s16 *)((u8 *)packed + 0x24);
+    row = gRaceMotionJointFrameBuffer;
+    end = (RaceMotionRotation *)&gRacePlayerHitCueId;
     do {
-        jointIndex = RACE_MOTION_BLEND_START_JOINT * sizeof(RaceMotionRotation);
-        decodedJoint = &jointFrame[RACE_MOTION_BLEND_START_JOINT];
+        i = 0x48;
+        out = row + 6;
         do {
-            packedXY = packedJoint->xy;
-            packedZAndFlags = packedJoint->zAndFlags;
-            packedX = packedXY >> 4;
-            rotationX = packedX & 0xFF0;
-            rotationY = (packedXY << 4) & 0xFF0;
-            rotationZ = (packedZAndFlags >> 4) & 0xFF0;
-            packedJoint++;
-            decodedJoint->x = rotationX;
-            decodedJoint->y = rotationY;
-            decodedJoint->z = rotationZ;
-            if (packedZAndFlags & 1) {
-                decodedJoint->x = rotationX + 8;
+            xy = packed[0];
+            zAndFlags = packed[1];
+            shiftedX = xy >> 4;
+            x = shiftedX & 0xFF0;
+            y = (xy << 4) & 0xFF0;
+            z = (zAndFlags >> 4) & 0xFF0;
+            packed += 2;
+            out->x = x;
+            out->y = y;
+            out->z = z;
+            if (zAndFlags & 1) {
+                out->x = x + 8;
             }
-            if (packedZAndFlags & 2) {
-                decodedJoint->y += 8;
+            if ((zAndFlags & 2) & 0xFFFF) {
+                out->y += 8;
             }
-            jointIndex += sizeof(RaceMotionRotation);
-            decodedJointAlias = decodedJoint;
-            if (packedZAndFlags & 4) {
-                decodedJointAlias->z += 8;
+            i += 0xC;
+            outAlias = out;
+            if (zAndFlags & 4) {
+                outAlias->z += 8;
             }
-            decodedJoint++;
-        } while (jointIndex < RACE_MOTION_JOINT_COUNT * sizeof(RaceMotionRotation));
-        jointFrame += RACE_MOTION_JOINT_FRAME_STRIDE;
-        packedJoint = (RaceMotionPackedJointRotation *)((u8 *)packedJoint + RACE_MOTION_JOINT_FRAME_SKIP_BYTES);
-    } while (jointFrame < jointFrameEnd);
-
-    blendSample = (RaceMotionRotation *)gRaceMotionJointBlendBuffer;
-    targetSample = &blendSample[RACE_MOTION_JOINT_FRAME_STRIDE];
-    jointIndex = RACE_MOTION_BLEND_START_JOINT;
-    joint = &state->animation.joints[RACE_MOTION_BLEND_START_JOINT];
-    do {
-        rotationX = blendSample->x;
-        delta = (targetSample->x - rotationX) & 0xFFF;
-        if (delta >= 0x801) {
-            delta -= 0x1000;
-        }
-        joint->rotationX = rotationX + ((delta * timer) / duration);
-
-        rotationY = blendSample->y;
-        delta = (targetSample->y - rotationY) & 0xFFF;
-        if (delta >= 0x801) {
-            delta -= 0x1000;
-        }
-        joint->rotationY = rotationY + ((delta * timer) / duration);
-
-        rotationZ = blendSample->z;
-        delta = (targetSample->z - rotationZ) & 0xFFF;
-        if (delta >= 0x801) {
-            delta -= 0x1000;
-        }
-        jointIndex++;
-        blendSample++;
-        targetSample++;
-        joint++;
-        joint[-1].rotationZ = rotationZ + ((delta * timer) / duration);
-    } while (jointIndex != RACE_MOTION_JOINT_COUNT);
+            out++;
+        } while (i < 0x90);
+ row += 14; packed = (s16 *)((u8 *)packed + 0x24); } while (row < end); interp = gRaceMotionJointBlendBuffer; i = 6; joint = (u8 *)state + 0x78; loop: x = interp[0]; jointStride = 0x14; delta = (interp[42] - x) & 0xFFF; if (delta >= 0x801) { delta -= 0x1000; } *(s16 *)((u8 *)joint + 0x33A) = x + ((delta * timer) / duration); y = interp[1]; delta = (interp[43] - y) & 0xFFF; if (delta >= 0x801) { delta -= 0x1000; } *(s16 *)((u8 *)joint + 0x33C) = y + ((delta * timer) / duration); z = interp[2]; delta = (interp[44] - z) & 0xFFF; if (delta >= 0x801) { delta -= 0x1000; } i++; interp += 3; joint = (u8 *)joint + jointStride; *(s16 *)((u8 *)joint + 0x32A) = z + ((delta * timer) / duration);
+    if (i != 12) {
+        goto loop;
+    }
 }
-
-#undef RACE_MOTION_JOINT_COUNT
-#undef RACE_MOTION_BLEND_START_JOINT
-#undef RACE_MOTION_JOINT_FRAME_STRIDE
-#undef RACE_MOTION_JOINT_FRAME_SKIP_BYTES
 #endif
 
 void stepRaceMotionLoopingAnimation(RaceMotionState *state) {
