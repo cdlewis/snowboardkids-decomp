@@ -111,7 +111,7 @@ void updateMenuCameraObjectWithTargetOffsetCallback(void) {
     updateMenuCameraObjectWithTargetOffset();
 }
 
-// initRaceStartTransition best match: 97.431% (nonmatchings/initRaceStartTransition-8331816093655448999/base_12.c)
+// initRaceStartTransition best match: 98.224% (nonmatchings/initRaceStartTransition-8808947407184708385/base_1.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race/effects/race_start_transition/initRaceStartTransition.s")
 
 #ifdef NON_MATCHING
@@ -161,6 +161,7 @@ void initRaceStartTransition(void) {
                 transition = 2;
                 gGameSaveDataBuffer.unk4C = 2;
                 state = 2 & 0xFF;
+                state = gGameSaveDataBuffer.unk4C;
             }
             if (state == 0) {
                 if (gGameSaveDataBuffer.unk3D == 1) {
