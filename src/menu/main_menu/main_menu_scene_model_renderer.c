@@ -17,22 +17,11 @@ extern s32 gSceneModelRenderCallbackList;
 extern void drawMainMenuSceneModel(MainMenuSceneModel *);
 extern void drawTexturedMainMenuSceneModel(MainMenuSceneModel *);
 
-// initMainMenuSceneModelRenderer best match: 75.000% at nonmatchings/initMainMenuSceneModelRenderer-4104915701176831593/base_1.c.
-// This 0x14-byte range is not really one function: the leading stack restore is
-// the delay slot of the return that ends the previous segment, because the YAML
-// boundary lands mid-delay-slot. The remaining bytes are two consecutive empty
-// functions. A legitimate C function cannot reproduce that orphaned first
-// instruction without moving the segment boundary and disturbing the previous
-// still-unmatched function.
-#pragma GLOBAL_ASM("asm/nonmatchings/menu/main_menu/main_menu_scene_model_renderer/initMainMenuSceneModelRenderer.s")
-
-#ifdef NON_MATCHING
 void initMainMenuSceneModelRenderer(void) {
 }
 
 void initMainMenuSceneModelRenderer_pad(void) {
 }
-#endif
 
 // drawMainMenuSceneModel best source-tree match: 99.706% at nonmatchings/drawMainMenuSceneModel-4139837607000619032/base_6.c.
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/main_menu/main_menu_scene_model_renderer/drawMainMenuSceneModel.s")
@@ -123,8 +112,6 @@ void addMainMenuSceneModelDrawCallbackForViewport(s32 modelIndex, s32 viewportIn
 }
 
 // initMainMenuSceneModelParts best match: 99.077% at nonmatchings/initMainMenuSceneModelParts-5802343343535905907/base_4.c.
-#pragma GLOBAL_ASM("asm/nonmatchings/menu/main_menu/main_menu_scene_model_renderer/initMainMenuSceneModelParts.s")
-
 #ifdef NON_MATCHING
 typedef struct MainMenuInitPartPair {
     s32 word0;
