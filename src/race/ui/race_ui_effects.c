@@ -2898,7 +2898,7 @@ done2:
 }
 #endif
 
-// func_8005D1CC best match: 97.441% (nonmatchings/func_8005D1CC-5802343343535905907/base_8.c, permuter artifact)
+// func_8005D1CC best match: 98.894% (nonmatchings/func_8005D1CC-8367390958892477031/base_9.c, permuter artifact)
 #pragma GLOBAL_ASM("asm/nonmatchings/race/ui/race_ui_effects/func_8005D1CC.s")
 
 #ifdef NON_MATCHING
@@ -2935,7 +2935,7 @@ void func_8005D1CC(RaceUiCourseStatsActor *arg0) {
     if (visibleRows > 0) {
         x = 0x20;
         ptr = 0;
-        sprintf(buffer - 4, D_800E1448, rowY = arg0->pendingMakeBonus);
+        sprintf(buffer - 4, D_800E1448, arg0->pendingMakeBonus, ptr);
         rowY = y.half.lo;
         ptr = buffer;
         ptr = ptr - 4;
@@ -2956,7 +2956,7 @@ loop2:
     if (visibleRows >= 2) {
         x = 0x20;
         ptr = 0;
-        sprintf(buffer - 4, D_800E144C, rowY = arg0->pendingCompleteBonus);
+        sprintf(buffer - 4, D_800E144C, arg0->pendingCompleteBonus, ptr);
         rowY = y.half.lo;
         ptr = buffer - 4;
 loop3:
@@ -2976,7 +2976,7 @@ loop3:
     if (visibleRows >= 3) {
         x = 0x18;
         ptr = 0;
-        sprintf(buffer - 4, D_800E1450, gPlayer1Money);
+        sprintf(buffer - 4, D_800E1450, gPlayer1Money, ptr);
         rowY = y.half.lo;
         ptr = buffer - 4;
 loop4:
