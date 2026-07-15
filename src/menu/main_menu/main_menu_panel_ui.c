@@ -226,7 +226,7 @@ void initMainMenuModeSelectGrid(MenuPanelActor *arg0) {
     setCallbackTaskCallback(arg0, updateMainMenuModeSelectGrid);
 }
 
-// drawMainMenuModeDescriptionPanel best match: 91.534%
+// drawMainMenuModeDescriptionPanel best match: 92.194% (nonmatchings/drawMainMenuModeDescriptionPanel-1189375296343516052/base_12.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/main_menu/main_menu_panel_ui/drawMainMenuModeDescriptionPanel.s")
 
 #ifdef NON_MATCHING
@@ -284,7 +284,7 @@ void drawMainMenuModeDescriptionPanel(MenuPanelActor *arg0) {
             glyph = arg0->tileList[streamIndex++];
             glyphText[0] = glyph;
 
-            switch (glyph) {
+            switch (glyph & 0xFFFF) {
             case 0xFFFF:
                 arg0->selectionState = 1;
                 visibleIndex = arg0->selectedTile;
