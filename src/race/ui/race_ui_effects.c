@@ -909,6 +909,7 @@ extern s16 gRaceLapCount;
 extern s32 gPlayer1Money;
 extern RacePlayerPlacement D_80122288[];
 extern s8 D_80122289;
+extern s32 D_801222E8;
 extern RacePlayerByteField D_80121D94[];
 extern RacePlayerHalfwordField gPlayerHitSource[];
 extern RacePlayerHalfwordField D_8012265E[];
@@ -1012,6 +1013,7 @@ const char D_800E1230[0x10] = "Board Reverse";
 const char D_800E1240[0x4] = "%2d";
 const char D_800E1244[0xC] = "%3d";
 const char D_800E1250[0x4] = "%5d";
+const char D_800E1254[0x4] = "%5d";
 
 extern s32 isPositionNearAnyRaceViewportFocus(Vec3i *);
 extern void packFixedTransformMatrix(void *, void *);
@@ -1270,28 +1272,37 @@ void func_8005804C(RaceUiAlpha18Actor *arg0) {
     drawAssetTableSprite(x, -0x3F, getRelocatableHeapBlockBase(handles->popupFontHandle), 0x37);
 }
 
-// func_8005812C best match: 99.881% (nonmatchings/func_8005812C-4033633224288138541/base_8.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race/ui/race_ui_effects/func_8005812C.s")
-
-#ifdef NON_MATCHING
-void func_8005812C(void *arg0) {
-    char buffer[0x14];
+void func_8005812C(void *arg0)
+{
     s32 x;
     s32 i;
     s32 space;
     s32 colorValue;
     u16 color;
     RaceUiAssetHandles *assets;
+    char buffer[0x14];
 
     i = 0;
-    do { sprintf(&buffer[i], D_800E1254, D_801222E8); x = 0x20; if (D_80122289 == 3) { colorValue = 0xD; } else { colorValue = 0xC; } do { assets = (RaceUiAssetHandles *)((u8 *)&gAssetHandles + (u8)i); space = ' '; color = colorValue; if (space) { }
-loop:
-    if (buffer[i] != '\0') { if (buffer[i] != space) { drawAssetTableSpriteWithExplicitPalette((s16)x, -0xF, getRelocatableHeapBlockBase(assets->popupFontHandle), (buffer[i] - 5) & 0xFFFF, color); } x += 8; i++; goto loop; } } while (0); drawAssetTableSpriteWithExplicitPalette((s16)x, -0xF, getRelocatableHeapBlockBase(assets->popupFontHandle), 0x37, color); } while (0);
-    if (D_80122289 == 3) {
+    do
+    {
+        sprintf(&buffer[i], D_800E1254, D_801222E8);
+        x = 0x20;
+        if (D_80122289 == 3)
+        {
+ colorValue = 0xD; } else { colorValue = 0xC; } do { assets = (RaceUiAssetHandles *) (((u8 *) (&gAssetHandles)) + ((u8) i)); space = ' '; color = colorValue; if (space != 0U) { } loop: if (buffer[i] != '\0') { if (buffer[i] != space) { drawAssetTableSpriteWithExplicitPalette((s16) x, -0xF, getRelocatableHeapBlockBase(assets->popupFontHandle), (buffer[i] - 5) & ((0, 0xFFFF)), color); }
+            x += 8;
+            i++;
+            goto loop;
+        }
+        } while (0);
+        drawAssetTableSpriteWithExplicitPalette((s16) x, -0xF, getRelocatableHeapBlockBase(assets->popupFontHandle), 0x37, color);
+    }
+    while (0);
+    if (D_80122289 == 3)
+    {
         drawAssetTableSprite(0x18, -0xB, getRelocatableHeapBlockBase(assets->popupFontHandle), 0x4E);
     }
 }
-#endif
 
 const char D_800E1258[0x4] = "%6d";
 const char D_800E125C[0x10] = "-Rank Prize-";
