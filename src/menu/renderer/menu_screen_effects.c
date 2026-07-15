@@ -125,17 +125,7 @@ extern GfxCommandSource gIdentityFixedTransform;
 extern u32 gIdentityMatrix[];
 extern s16 gMenuFadeAlpha;
 extern u32 gMenuRenderModeResetDl[];
-extern s16 gMenuAsciiFontAssetHandle;
-extern s16 gRaceCourseModelAssetHandle;
-extern s16 gRaceCourseTextureAssetHandle;
-extern s16 D_8011214C;
-extern s16 D_80112154;
-extern s16 gRaceCommonSpriteAssetHandle;
-extern s16 gRaceCourseSpriteAssetHandle;
-extern s16 gRaceItemSpriteAssetHandle;
-extern s16 gRaceUiSpriteAssetHandle;
-extern s16 D_80112174;
-extern s16 D_80112184;
+extern s16 gAssetHandles[];
 extern s16 gRaceCourseIndex;
 extern s16 gFrameCounter;
 extern RacePlayerState gRacePlayers[];
@@ -183,7 +173,7 @@ void enqueueSoundEffect(s16, s32, void *);
 
 void drawFallingMenuSnowflake(MenuScreenEffectActor *arg0) {
     if (gCurrentViewportIndex == arg0->index) {
-        drawMenuSprite((s16)(arg0->unk18.half.hi >> 4), (s16)(arg0->unk18.half.lo >> 4), getRelocatableHeapBlockBase(D_80112184), (arg0->unk1C.half.hi + 2) & 0xFFFF,
+        drawMenuSprite((s16)(arg0->unk18.half.hi >> 4), (s16)(arg0->unk18.half.lo >> 4), getRelocatableHeapBlockBase(gAssetHandles[42]), (arg0->unk1C.half.hi + 2) & 0xFFFF,
                       arg0->timer, arg0->timer, 0, arg0->unk2A + 2);
     }
 }
@@ -299,8 +289,8 @@ void drawRaceSetupBackdropModels(MenuScreenEffectActor *arg0) {
     if (gCurrentViewportIndex == 0) {
         gDPPipeSync(gRegionAllocPtr++);
 
-        gSPSegment(gRegionAllocPtr++, 0x02, getRelocatableHeapBlockBase(gRaceCourseModelAssetHandle));
-        gSPSegment(gRegionAllocPtr++, 0x03, getRelocatableHeapBlockBase(gRaceCourseTextureAssetHandle));
+        gSPSegment(gRegionAllocPtr++, 0x02, getRelocatableHeapBlockBase(gAssetHandles[8]));
+        gSPSegment(gRegionAllocPtr++, 0x03, getRelocatableHeapBlockBase(gAssetHandles[9]));
 
         gSPMatrix(gRegionAllocPtr++, gIdentityMatrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
 
@@ -321,8 +311,8 @@ void drawRaceSetupCourseBackdrop(void *arg0) {
     if (gCurrentViewportIndex == 0) {
         gDPPipeSync(gRegionAllocPtr++);
 
-        gSPSegment(gRegionAllocPtr++, 0x02, getRelocatableHeapBlockBase(D_8011214C));
-        gSPSegment(gRegionAllocPtr++, 0x03, getRelocatableHeapBlockBase(D_80112154));
+        gSPSegment(gRegionAllocPtr++, 0x02, getRelocatableHeapBlockBase(gAssetHandles[14]));
+        gSPSegment(gRegionAllocPtr++, 0x03, getRelocatableHeapBlockBase(gAssetHandles[18]));
 
         gSPMatrix(gRegionAllocPtr++, gIdentityMatrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
 
@@ -435,7 +425,7 @@ void drawRaceStartPlayerEffectSprite(MenuScreenEffectActor *arg0) {
 
     if (arg0->unk24.word != 0) {
         gSPDisplayList(gRegionAllocPtr++, gAlphaSpriteRenderModeDl);
-        getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gRaceItemSpriteAssetHandle), (u16)(arg0->unk2E + 0x24), &spA4, &spA0);
+        getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gAssetHandles[30]), (u16)(arg0->unk2E + 0x24), &spA4, &spA0);
         MAIN_MENU_GFX_CMD(gRegionAllocPtr++, 0xFD500000, (u32)spA4);
         MAIN_MENU_GFX_CMD(gRegionAllocPtr++, 0xF5500000, 0x07080200);
         MAIN_MENU_GFX_CMD(gRegionAllocPtr++, 0xE6000000, 0);
@@ -503,9 +493,9 @@ void waitForRaceStartPlayerEffect(MenuScreenEffectActor *arg0) {
 
 void drawTitleMenuSparkle(MenuScreenEffectActor *arg0) {
     if ((gFrameCounter & 0x3E) >= 0x1F) {
-        drawAssetTableSprite(arg0->unk18.half.hi, arg0->unk18.half.lo, getRelocatableHeapBlockBase(gMenuAsciiFontAssetHandle), 1);
+        drawAssetTableSprite(arg0->unk18.half.hi, arg0->unk18.half.lo, getRelocatableHeapBlockBase(gAssetHandles[6]), 1);
     } else {
-        drawAssetTableSprite(arg0->unk18.half.hi, arg0->unk18.half.lo, getRelocatableHeapBlockBase(gMenuAsciiFontAssetHandle), titleMenuSparkleTileFrames[(gFrameCounter & 0x1E) >> 1]);
+        drawAssetTableSprite(arg0->unk18.half.hi, arg0->unk18.half.lo, getRelocatableHeapBlockBase(gAssetHandles[6]), titleMenuSparkleTileFrames[(gFrameCounter & 0x1E) >> 1]);
     }
 }
 
@@ -527,7 +517,7 @@ void drawCourseRecordBanner(MenuScreenEffectActor *arg0) {
     gfx = gRegionAllocPtr;
     gRegionAllocPtr = gfx + 1;
     /* IDO scheduling for this function depends on this block staying on one line. */
-    do { gfx->words.w0 = 0xE7000000; gfx->words.w1 = 0; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w0 = 0xFC119623; gfx->words.w1 = 0xFF2FFFFF; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w0 = 0xB900031D; gfx->words.w1 = 0x00504240; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w0 = 0xFA000000; gfx->words.w1 = (arg0->unk18.half.lo & 0xFF) | (~0xFF); drawAssetTableSprite(-0x54, -0x10, getRelocatableHeapBlockBase(gRaceCommonSpriteAssetHandle), 0x5D); drawAssetTableSprite(4, -0x10, getRelocatableHeapBlockBase(gRaceCommonSpriteAssetHandle), 0x5E); if (arg0) { } drawAssetTableSprite(-0x4C, -0xC, getRelocatableHeapBlockBase(gRaceCourseSpriteAssetHandle), courseRecordDigitTileOffsets[gRaceCourseIndex]); drawAssetTableSprite(4, -0xC, getRelocatableHeapBlockBase(gRaceCourseSpriteAssetHandle), courseRecordDigitTileOffsets[gRaceCourseIndex] + 1); gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w0 = 0x06000000; gfx->words.w1 = (u32) gMenuRenderModeResetDl; } while (0);
+    do { gfx->words.w0 = 0xE7000000; gfx->words.w1 = 0; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w0 = 0xFC119623; gfx->words.w1 = 0xFF2FFFFF; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w0 = 0xB900031D; gfx->words.w1 = 0x00504240; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w0 = 0xFA000000; gfx->words.w1 = (arg0->unk18.half.lo & 0xFF) | (~0xFF); drawAssetTableSprite(-0x54, -0x10, getRelocatableHeapBlockBase(gAssetHandles[28]), 0x5D); drawAssetTableSprite(4, -0x10, getRelocatableHeapBlockBase(gAssetHandles[28]), 0x5E); if (arg0) { } drawAssetTableSprite(-0x4C, -0xC, getRelocatableHeapBlockBase(gAssetHandles[29]), courseRecordDigitTileOffsets[gRaceCourseIndex]); drawAssetTableSprite(4, -0xC, getRelocatableHeapBlockBase(gAssetHandles[29]), courseRecordDigitTileOffsets[gRaceCourseIndex] + 1); gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w0 = 0x06000000; gfx->words.w1 = (u32) gMenuRenderModeResetDl; } while (0);
 }
 
 void updateCourseRecordBannerFadeOut(MenuScreenEffectActor *arg0) {
@@ -555,7 +545,7 @@ void drawRaceSetupNamePlate(MenuScreenEffectActor *arg0) {
 
     new_var = &gCurrentViewportIndex;
     if (arg0->index == *new_var) {
-        drawAssetTableSprite((s16)((arg0->unk18.word >> 1) - 0x38), -8, getRelocatableHeapBlockBase(gRaceUiSpriteAssetHandle), 0x76);
+        drawAssetTableSprite((s16)((arg0->unk18.word >> 1) - 0x38), -8, getRelocatableHeapBlockBase(gAssetHandles[31]), 0x76);
     }
 }
 
@@ -612,7 +602,7 @@ void drawMainMenuModeBoardTransition(MenuScreenEffectActor *arg0) {
     GfxCommandDest *matrix;
 
     if (gCurrentViewportIndex == 2) {
-        getAssetTableImageAndPalette(getRelocatableHeapBlockBase(D_80112174), 0, &image, &palette);
+        getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gAssetHandles[34]), 0, &image, &palette);
         makeFixedRotationZ(transform.rotation, arg0->spriteIndex);
         transform.x = arg0->unk18.word;
         transform.y = arg0->unk1C.word;
@@ -683,7 +673,7 @@ void initMainMenuModeBoardTransition(MenuScreenEffectActor *arg0) {
 
 void drawMainMenuModeIconFlash(MenuScreenEffectActor *arg0) {
     if (gCurrentViewportIndex == 2) {
-        drawAssetTableSpriteWithExplicitPalette(-0x6C, -0x48, getRelocatableHeapBlockBase(D_80112174), 0, mainMenuModeIconFlashTileOffsets[arg0->unk18.half.lo]);
+        drawAssetTableSpriteWithExplicitPalette(-0x6C, -0x48, getRelocatableHeapBlockBase(gAssetHandles[34]), 0, mainMenuModeIconFlashTileOffsets[arg0->unk18.half.lo]);
     }
 }
 
@@ -732,16 +722,16 @@ void drawMainMenuModeLabel(MenuScreenEffectActor *arg0) {
     temp_t0 = arg0->index;
     switch (temp_t0) {
     case 0:
-        drawAssetTableSprite(-0x8C, 0x38, getRelocatableHeapBlockBase(D_80112174), 1);
-        drawAssetTableSpriteWithExplicitPalette(-0x10, 0x38, getRelocatableHeapBlockBase(D_80112174), 2, mainMenuModeLabelFlashTileOffsets[gFrameCounter & 3]);
+        drawAssetTableSprite(-0x8C, 0x38, getRelocatableHeapBlockBase(gAssetHandles[34]), 1);
+        drawAssetTableSpriteWithExplicitPalette(-0x10, 0x38, getRelocatableHeapBlockBase(gAssetHandles[34]), 2, mainMenuModeLabelFlashTileOffsets[gFrameCounter & 3]);
         break;
     case 1:
-        drawAssetTableSprite(-0x89, 0x38, getRelocatableHeapBlockBase(D_80112174), 1);
-        drawAssetTableSpriteWithExplicitPalette(-0xD, 0x38, getRelocatableHeapBlockBase(D_80112174), 3, mainMenuModeLabelFlashTileOffsets[gFrameCounter & 3]);
+        drawAssetTableSprite(-0x89, 0x38, getRelocatableHeapBlockBase(gAssetHandles[34]), 1);
+        drawAssetTableSpriteWithExplicitPalette(-0xD, 0x38, getRelocatableHeapBlockBase(gAssetHandles[34]), 3, mainMenuModeLabelFlashTileOffsets[gFrameCounter & 3]);
         break;
     case 2:
-        drawAssetTableSprite(-0x7E, 0x38, getRelocatableHeapBlockBase(D_80112174), 1);
-        drawAssetTableSpriteWithExplicitPalette(-2, 0x38, getRelocatableHeapBlockBase(D_80112174), 4, mainMenuModeLabelFlashTileOffsets[gFrameCounter & 3]);
+        drawAssetTableSprite(-0x7E, 0x38, getRelocatableHeapBlockBase(gAssetHandles[34]), 1);
+        drawAssetTableSpriteWithExplicitPalette(-2, 0x38, getRelocatableHeapBlockBase(gAssetHandles[34]), 4, mainMenuModeLabelFlashTileOffsets[gFrameCounter & 3]);
         break;
     } temp_v0_5 = gRegionAllocPtr; gRegionAllocPtr = temp_v0_5 + 1; temp_v0_5->words.w0 = 0x06000000; temp_v0_5->words.w1 = (u32) gMenuRenderModeResetDl;
 }
@@ -779,8 +769,8 @@ void drawMainMenuRotatingBoardModel(MenuScreenEffectActor *arg0) {
         if (matrix != NULL) {
             gDPPipeSync(gRegionAllocPtr++);
 
-            gSPSegment(gRegionAllocPtr++, 0x02, getRelocatableHeapBlockBase(gRaceCourseModelAssetHandle));
-            gSPSegment(gRegionAllocPtr++, 0x03, getRelocatableHeapBlockBase(gRaceCourseTextureAssetHandle));
+            gSPSegment(gRegionAllocPtr++, 0x02, getRelocatableHeapBlockBase(gAssetHandles[8]));
+            gSPSegment(gRegionAllocPtr++, 0x03, getRelocatableHeapBlockBase(gAssetHandles[9]));
 
             gSPMatrix(gRegionAllocPtr++, matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
 
@@ -793,8 +783,8 @@ void drawMainMenuStaticBoardModel(void *arg0) {
     if (gCurrentViewportIndex == 0) {
         gDPPipeSync(gRegionAllocPtr++);
 
-        gSPSegment(gRegionAllocPtr++, 0x02, getRelocatableHeapBlockBase(gRaceCourseModelAssetHandle));
-        gSPSegment(gRegionAllocPtr++, 0x03, getRelocatableHeapBlockBase(gRaceCourseTextureAssetHandle));
+        gSPSegment(gRegionAllocPtr++, 0x02, getRelocatableHeapBlockBase(gAssetHandles[8]));
+        gSPSegment(gRegionAllocPtr++, 0x03, getRelocatableHeapBlockBase(gAssetHandles[9]));
 
         gSPMatrix(gRegionAllocPtr++, gIdentityMatrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
 

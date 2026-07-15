@@ -203,8 +203,6 @@ extern u16 gCourseDetailsMenuEntryTiles[];
 extern u8 gCourseSelectSelectedCourseId;
 extern u8 gMenuTransitionState;
 extern u8 gMenuSelectionVariant;
-extern s16 gMenuPanelTilemapAssetHandle;
-extern s16 gShopMenuTextureAssetHandle;
 extern CourseSelectStatus gCourseSelectStatus;
 extern s32 gActiveMenuTask;
 extern u8 gShopMenuModeCursorState;
@@ -214,7 +212,6 @@ extern u8 gCourseDetailsMenuSelection;
 extern u8 gCourseDetailsPreviewPage;
 extern u8 gCourseDetailsCloseFromBack;
 extern s16 gCoursePreviewViewportHeight;
-extern s16 gMenuUiSpritesAssetHandle;
 extern ShopMenuState gRacePlayers;
 extern s32 gPlayer1Money;
 extern s32 gMenuFlowState;
@@ -306,10 +303,10 @@ void initShopMenuModeChoiceRows(ShopMenuRowActor *arg0) {
 }
 
 void drawShopMenuSidePanel(ShopMenuWidgetActor *arg0) {
-    drawMenuSprite(arg0->x, arg0->y, getRelocatableHeapBlockBase(gMenuUiSpritesAssetHandle), 3, 0x20, 0x20, 0, 0);
-    drawMenuSprite((s16) (arg0->x + 0x40), arg0->y, getRelocatableHeapBlockBase(gMenuUiSpritesAssetHandle), 4, 0x20, 0x20, 0, 0);
-    drawMenuSprite(arg0->x, (s16) (arg0->y + 0x40), getRelocatableHeapBlockBase(gMenuUiSpritesAssetHandle), 5, 0x20, 0x20, 0, 0);
-    drawMenuSprite((s16) (arg0->x + 0x40), (s16) (arg0->y + 0x40), getRelocatableHeapBlockBase(gMenuUiSpritesAssetHandle), 6, 0x20, 0x20, 0, 0);
+    drawMenuSprite(arg0->x, arg0->y, getRelocatableHeapBlockBase(gAssetHandles[0x25]), 3, 0x20, 0x20, 0, 0);
+    drawMenuSprite((s16) (arg0->x + 0x40), arg0->y, getRelocatableHeapBlockBase(gAssetHandles[0x25]), 4, 0x20, 0x20, 0, 0);
+    drawMenuSprite(arg0->x, (s16) (arg0->y + 0x40), getRelocatableHeapBlockBase(gAssetHandles[0x25]), 5, 0x20, 0x20, 0, 0);
+    drawMenuSprite((s16) (arg0->x + 0x40), (s16) (arg0->y + 0x40), getRelocatableHeapBlockBase(gAssetHandles[0x25]), 6, 0x20, 0x20, 0, 0);
 }
 
 void updateShopMenuSidePanel(ShopMenuWidgetActor *arg0) {
@@ -721,7 +718,7 @@ void initShopMenuCourseListPanel(ShopMenuWidgetActor *arg0) {
 
 void drawShopMenuModeCursor(ShopMenuWidgetActor *arg0) {
     if (arg0->transition.bytes.state != 5) {
-        drawMenuSpriteWithAlpha(arg0->x, (s16)(arg0->y + (gCourseSelectModeSelection * 0x1C)), getRelocatableHeapBlockBase(gMenuUiSpritesAssetHandle), 7, 0x20, 0x20, 0, arg0->sprite.index, 0);
+        drawMenuSpriteWithAlpha(arg0->x, (s16)(arg0->y + (gCourseSelectModeSelection * 0x1C)), getRelocatableHeapBlockBase(gAssetHandles[0x25]), 7, 0x20, 0x20, 0, arg0->sprite.index, 0);
     }
 }
 
@@ -857,7 +854,7 @@ void initShopMenuDescriptionText(ShopMenuWidgetActor *arg0) {
 }
 
 void drawShopMenuPromptPanel(ShopMenuWidgetActor *arg0) {
-    drawMenuSpriteWithAlpha(arg0->x, arg0->y, getRelocatableHeapBlockBase(gMenuPanelTilemapAssetHandle), 0, 0x20, 0x20, 0, arg0->sprite.index, 0);
+    drawMenuSpriteWithAlpha(arg0->x, arg0->y, getRelocatableHeapBlockBase(gAssetHandles[0x27]), 0, 0x20, 0x20, 0, arg0->sprite.index, 0);
 }
 
 void updateShopMenuPromptPanel(ShopMenuWidgetActor *arg0) {
@@ -906,7 +903,7 @@ void drawShopMenuMoneyPanel(ShopMenuWidgetActor *arg0) {
     char sp40[0x18];
 
     drawMenuPanelBackdrop(arg0->x, arg0->y, 0x5000, 0x4000);
-    drawMenuSpriteWithAlpha((s16)(arg0->x + 8), (s16)(arg0->y + 4), getRelocatableHeapBlockBase(gMenuUiSpritesAssetHandle), 0x11, 0x20, 0x20, 0, arg0->sprite.index, 0);
+    drawMenuSpriteWithAlpha((s16)(arg0->x + 8), (s16)(arg0->y + 4), getRelocatableHeapBlockBase(gAssetHandles[0x25]), 0x11, 0x20, 0x20, 0, arg0->sprite.index, 0);
     sprintf(sp40, gShopMenuMoneyFormat, gPlayer1Money);
     drawMenuAsciiText((s16)(arg0->x + 0x10), (s16)(arg0->y + 0x10), sp40, 0, arg0->sprite.index);
 }
@@ -1124,7 +1121,7 @@ void drawCourseUnlockPricePanel(ShopMenuWidgetActor *arg0) {
         return;
     }
 
-    drawMenuSpriteWithAlpha(arg0->x, arg0->y, getRelocatableHeapBlockBase(gMenuPanelTilemapAssetHandle), 6, 0x20, 0x20, 0, arg0->sprite.index, 0);
+    drawMenuSpriteWithAlpha(arg0->x, arg0->y, getRelocatableHeapBlockBase(gAssetHandles[0x27]), 6, 0x20, 0x20, 0, arg0->sprite.index, 0);
 }
 
 void updateCourseUnlockPricePanel(ShopMenuWidgetActor *arg0) {
@@ -1494,11 +1491,11 @@ void drawCourseDetailsPreviewTile(ShopMenuWidgetActor *arg0) {
         tileIndex = gCourseDetailsPreviewExtraTiles[gCourseDetailsPreviewPage * 7];
     }
 
-    drawMenuSpriteSubrect(arg0->x, arg0->y, getRelocatableHeapBlockBase(gShopMenuTextureAssetHandle), tileIndex, 0, 0, 0x40, 0x1C, 0x20, 0x20);
-    drawMenuSpriteSubrect((s16)(arg0->x + 0x40), arg0->y, getRelocatableHeapBlockBase(gShopMenuTextureAssetHandle), tileIndex, 0, 0x1C, 0x40, 0x1C, 0x20,
+    drawMenuSpriteSubrect(arg0->x, arg0->y, getRelocatableHeapBlockBase(gAssetHandles[0xD]), tileIndex, 0, 0, 0x40, 0x1C, 0x20, 0x20);
+    drawMenuSpriteSubrect((s16)(arg0->x + 0x40), arg0->y, getRelocatableHeapBlockBase(gAssetHandles[0xD]), tileIndex, 0, 0x1C, 0x40, 0x1C, 0x20,
                   0x20);
-    drawMenuSprite((s16)(arg0->x - 4), (s16)(arg0->y - 1), getRelocatableHeapBlockBase(gMenuPanelTilemapAssetHandle), 0xA, 0x20, 0x20, 0, 0);
-    drawMenuSprite((s16)(arg0->x + 0x3C), (s16)(arg0->y - 1), getRelocatableHeapBlockBase(gMenuPanelTilemapAssetHandle), 0xB, 0x20, 0x20, 1, 0);
+    drawMenuSprite((s16)(arg0->x - 4), (s16)(arg0->y - 1), getRelocatableHeapBlockBase(gAssetHandles[0x27]), 0xA, 0x20, 0x20, 0, 0);
+    drawMenuSprite((s16)(arg0->x + 0x3C), (s16)(arg0->y - 1), getRelocatableHeapBlockBase(gAssetHandles[0x27]), 0xB, 0x20, 0x20, 1, 0);
 }
 
 void updateCourseDetailsPreviewTile(ShopMenuWidgetActor *arg0) {

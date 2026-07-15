@@ -177,9 +177,6 @@ extern s32 D_8012207C;
 extern s32 gPlayerInputPressed[];
 extern void *gMenuRenderCallbackList;
 extern s16 gAssetHandles[];
-extern s16 gRaceReplayInputBufferHandle;
-extern s16 gRaceReplayPlayerStateBufferHandle;
-extern s16 gRaceUiSpriteAssetHandle;
 extern SignedUnsignedShort gRaceCourseIndex;
 extern s16 gRaceLapCount;
 extern s32 D_80121B7C;
@@ -203,7 +200,6 @@ extern u8 D_800DC5B4[];
 extern u8 D_800DC4C4[][4];
 extern RaceCourseCharacterEntry *D_800DC58C[];
 extern RacePlayerState gFrameCounter;
-extern s16 gCurrentRaceRecordReplayHandle;
 extern s8 D_8012239C;
 extern s8 D_8012239D;
 extern s8 D_8012239E;
@@ -336,7 +332,7 @@ loop:
         goto loop;
     }
     if (count != 0) {
-        gRaceReplayPlayerStateBufferHandle = allocRelocatableHeapBlock(count * sizeof(RacePlayerState));
+        gAssetHandles[0x2C] = allocRelocatableHeapBlock(count * sizeof(RacePlayerState));
     }
 }
 
@@ -368,8 +364,8 @@ s32 loadNextRaceReplayCourseGridEntry(void) {
 loop:
     if (entry->status != COURSE_GRID_ENTRY_END) {
         if (entry->status != COURSE_GRID_ENTRY_FREE) {
-            gRacePlayers[0] = ((RacePlayerState *)getRelocatableHeapBlockBase(gRaceReplayPlayerStateBufferHandle))[count];
-            *(s32 *)getRelocatableHeapBlockBase(gRaceReplayInputBufferHandle) = entry->status;
+            gRacePlayers[0] = ((RacePlayerState *)getRelocatableHeapBlockBase(gAssetHandles[0x2C]))[count];
+            *(s32 *)getRelocatableHeapBlockBase(gAssetHandles[0x2B]) = entry->status;
             entry->status = COURSE_GRID_ENTRY_FREE;
             gRaceCameraReplayStartX = entry->unk4;
             gRaceCameraReplayStartY = entry->unk8;
@@ -825,9 +821,9 @@ void initRaceSceneFlow(void) {
             break;
         }
         if ((gRaceCourseIndex.s != 7) && (*replayRecordFlag != 0)) {
-            gCurrentRaceRecordReplayHandle = allocRelocatableHeapBlock(0x34CC);
+            gAssetHandles[0x7] = allocRelocatableHeapBlock(0x34CC);
             loadCurrentRaceRecordReplayData();
-            history = getRelocatableHeapBlockBase(gCurrentRaceRecordReplayHandle);
+            history = getRelocatableHeapBlockBase(gAssetHandles[0x7]);
             if (history->enabled != 0) {
                 history->writeIndex = 0;
                 gRacePlayers[1].unk13 = 1;
@@ -1000,22 +996,22 @@ void startRaceGameplayFlow(void) {
 void drawRacePauseMenu(s32 arg0) {
     s32 color;
 
-    drawAssetTableSprite(-0x14, -0x10, getRelocatableHeapBlockBase(gRaceUiSpriteAssetHandle), 0x57);
+    drawAssetTableSprite(-0x14, -0x10, getRelocatableHeapBlockBase(gAssetHandles[0x1F]), 0x57);
     color = 0x1A;
     if (D_80121B57 == 0) {
         color = 0x1B;
     }
-    drawAssetTableSpriteWithExplicitPalette(-0x1C, 0, getRelocatableHeapBlockBase(gRaceUiSpriteAssetHandle), 0x58, color);
+    drawAssetTableSpriteWithExplicitPalette(-0x1C, 0, getRelocatableHeapBlockBase(gAssetHandles[0x1F]), 0x58, color);
     color = 0x1A;
     if (D_80121B57 == 1) {
         color = 0x1B;
     }
-    drawAssetTableSpriteWithExplicitPalette(-0x1C, 0xA, getRelocatableHeapBlockBase(gRaceUiSpriteAssetHandle), 0x59, color);
+    drawAssetTableSpriteWithExplicitPalette(-0x1C, 0xA, getRelocatableHeapBlockBase(gAssetHandles[0x1F]), 0x59, color);
     color = 0x1A;
     if (D_80121B57 == 2) {
         color = 0x1B;
     }
-    drawAssetTableSpriteWithExplicitPalette(-0x1C, 0x14, getRelocatableHeapBlockBase(gRaceUiSpriteAssetHandle), 0x5A, color);
+    drawAssetTableSpriteWithExplicitPalette(-0x1C, 0x14, getRelocatableHeapBlockBase(gAssetHandles[0x1F]), 0x5A, color);
 }
 
 void updateRaceGameplayFlow(void) {
@@ -1738,7 +1734,7 @@ void fadeOutRaceResultsFlow(void) {
         gCurrentGameTask->fadeTimer -= 1;
         if (gCurrentGameTask->fadeTimer == 0) {
             stopSoundEffects();
-            if ((gRaceSplitscreenMode == 2) && (((Unk80043040 *)getRelocatableHeapBlockBase(gRaceReplayInputBufferHandle))->unk8 != 0) && (D_80121B61 != 0) &&
+            if ((gRaceSplitscreenMode == 2) && (((Unk80043040 *)getRelocatableHeapBlockBase(gAssetHandles[0x2B]))->unk8 != 0) && (D_80121B61 != 0) &&
                 (saveRaceRecordReplayData() != 0)) {
                 D_80121B61 = -1;
             }

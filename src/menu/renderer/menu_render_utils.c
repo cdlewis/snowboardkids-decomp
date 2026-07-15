@@ -92,7 +92,6 @@ extern s32 D_80112360;
 extern s32 D_80112408;
 extern s32 D_80112410;
 extern s16 gAssetHandles[];
-extern s16 gCurrentRaceRecordReplayHandle;
 extern s16 gMenuAsciiFontPaletteIndex;
 extern s16 gMenuViewportWidth;
 extern s16 gMenuViewportHeight;
@@ -121,7 +120,7 @@ void initMenuAssetHandles(void)
 
 void releaseMenuAssetHandles(void)
 {
- do { s16 *handle = &gCurrentRaceRecordReplayHandle; do { if ((*handle) != (-1)) { *handle = freeRelocatableHeapBlock(*handle); } handle++; } while (handle != (&gMenuAsciiFontPaletteIndex)); } while (0);
+ do { s16 *handle = &gAssetHandles[7]; do { if ((*handle) != (-1)) { *handle = freeRelocatableHeapBlock(*handle); } handle++; } while (handle != (&gMenuAsciiFontPaletteIndex)); } while (0);
 }
 
 void *resolveAssetTableRelativePointer(void *arg0, u32 arg1) {
@@ -931,11 +930,10 @@ void drawMenuAsciiFontTile(s16 x, s16 y, u16 s, u16 t, u16 paletteIndex) {
 }
 #endif
 
-extern s16 gMenuAsciiFontAssetHandle;
 extern s16 gMenuAsciiFontTextureNeedsLoad;
 
 void initMenuAsciiFontTexture(void) {
-    s32 v0 = getRelocatableHeapBlockBase(gMenuAsciiFontAssetHandle);
+    s32 v0 = getRelocatableHeapBlockBase(gAssetHandles[6]);
     AssetTable *assetTable = (AssetTable *)v0;
 
     gMenuAsciiFontPaletteBase = (void *)((assetTable->entryCount * sizeof(AssetTableEntry)) + (u8 *)assetTable + sizeof(AssetTableEntry));
@@ -956,7 +954,7 @@ u16 arg3;
 
     if ((ch >= 'a') && (ch <= 'z')) {
         if (gMenuAsciiFontTextureNeedsLoad) {
-            font = (FontTexture *)getRelocatableHeapBlockBase(gMenuAsciiFontAssetHandle);
+            font = (FontTexture *)getRelocatableHeapBlockBase(gAssetHandles[6]);
 
             gDPLoadTextureTile_4b(gRegionAllocPtr++, font->imageOffset + (u8 *)font, G_IM_FMT_CI,
                                   font->width, font->height, 0, 0, font->width, font->height, 0,
@@ -970,7 +968,7 @@ u16 arg3;
         drawMenuAsciiFontTile(x, y, s, tile & 0x38, arg3 & 0xFFFF & 0xFFFF & 0xFFFF);
     } else {
         if (gMenuAsciiFontTextureNeedsLoad != 0) {
-            font = (FontTexture *)getRelocatableHeapBlockBase(gMenuAsciiFontAssetHandle);
+            font = (FontTexture *)getRelocatableHeapBlockBase(gAssetHandles[6]);
 
             gDPLoadTextureTile_4b(gRegionAllocPtr++, font->imageOffset + (u8 *)font, G_IM_FMT_CI,
                                   font->width, font->height, 0, 0, font->width, font->height, 0,

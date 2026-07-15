@@ -6,6 +6,7 @@
 #include "game/math/spatial_math.h"
 #include "game/math/fixed_point_math.h"
 
+#define ASSET_HANDLE(index) (((s16 *)&gAssetHandles)[index])
 #define RACE_INTRO_EFFECTS_GFX_CMD(pkt, cmd0, cmd1) \
 { \
     Gfx *_g = (Gfx *)(pkt); \
@@ -97,10 +98,6 @@ typedef struct {
 extern void *gEffectRenderCallbackList;
 extern void addRenderCallback(void *, void *, s32);
 extern void osWritebackDCache(void *, s32);
-extern s16 gRaceRspSegment2AssetHandle;
-extern s16 gRaceRspSegment3AssetHandle;
-extern s16 gRaceCommonSpriteAssetHandle;
-extern s16 gRaceCourseSpriteAssetHandle;
 extern RaceIntroAssetHandles gAssetHandles;
 extern u8 gRenderMatricesDirty;
 extern Gfx *gRegionAllocPtr;
@@ -156,7 +153,7 @@ void drawRaceIntroModelMeshes(RaceIntroMeshActor *arg0) {
             if (isPositionNearCurrentRaceViewportCamera(entry->command) != 0) {
                 if (textureIndex != entry->textureIndex) {
                     textureIndex = entry->textureIndex;
-                    getAssetTableImagePaletteAndSize((u8 *)getRelocatableHeapBlockBase((s32)gRaceCourseSpriteAssetHandle), (u16)textureIndex, &image, &palette,
+                    getAssetTableImagePaletteAndSize((u8 *)getRelocatableHeapBlockBase((s32)ASSET_HANDLE(0x1D)), (u16)textureIndex, &image, &palette,
                                   &width, &height);
                     gDPLoadTextureBlock_4b(gRegionAllocPtr++, image, G_IM_FMT_CI, width, height, 0, G_TX_CLAMP,
                                             G_TX_CLAMP, G_TX_NOMASK, G_TX_NOMASK, G_TX_NOLOD, G_TX_NOLOD);
@@ -298,7 +295,7 @@ void waitRaceIntroBillboardSpawn(RaceIntroEffectActor *arg0) {
 
 void initRaceIntroBillboard(RaceIntroEffectActor *arg0) {
     arg0->timer = (arg0->index * 0x1E) + 0x1E;
-    getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gRaceCourseSpriteAssetHandle), (arg0->index + 3) & 0xFFFF, &arg0->scale, &arg0->pitchVelocity);
+    getAssetTableImageAndPalette(getRelocatableHeapBlockBase(ASSET_HANDLE(0x1D)), (arg0->index + 3) & 0xFFFF, &arg0->scale, &arg0->pitchVelocity);
     setCallbackTaskCallback(arg0, waitRaceIntroBillboardSpawn);
 }
 
@@ -330,8 +327,8 @@ void drawRaceIntroFlyoverActor(RaceIntroEffectActor *arg0) {
 
         if (arg0->displayList1 != NULL) {
             gDPPipeSync(gRegionAllocPtr++);
-            gSPSegment(gRegionAllocPtr++, 0x02, getRelocatableHeapBlockBase(gRaceRspSegment2AssetHandle));
-            gSPSegment(gRegionAllocPtr++, 0x03, getRelocatableHeapBlockBase(gRaceRspSegment3AssetHandle));
+            gSPSegment(gRegionAllocPtr++, 0x02, getRelocatableHeapBlockBase(ASSET_HANDLE(0xA)));
+            gSPSegment(gRegionAllocPtr++, 0x03, getRelocatableHeapBlockBase(ASSET_HANDLE(0xB)));
             gSPMatrix(gRegionAllocPtr++, arg0->displayList0, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
             gSPDisplayList(gRegionAllocPtr++, D_20028F0);
             gSPMatrix(gRegionAllocPtr++, arg0->displayList1, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
@@ -633,7 +630,7 @@ void drawRaceIntroAnimatedBillboards(RaceIntroMeshActor *arg0) {
                 textureIndex = gRaceIntroAnimatedBillboardTextureIds[entry->textureIndex] + ((s32)(gFrameCounter & 4) / 4);
                 if (textureIndex != loadedTextureIndex) {
                     loadedTextureIndex = textureIndex;
-                    getAssetTableImagePaletteAndSize((u8 *)getRelocatableHeapBlockBase((s32)gRaceCommonSpriteAssetHandle), textureIndex & 0xFFFF, &image, &palette,
+                    getAssetTableImagePaletteAndSize((u8 *)getRelocatableHeapBlockBase((s32)ASSET_HANDLE(0x1C)), textureIndex & 0xFFFF, &image, &palette,
                                   &width, &height);
                     gDPLoadTextureBlock_4b(gRegionAllocPtr++, image, G_IM_FMT_CI, width, height, 0, G_TX_CLAMP,
                                             G_TX_CLAMP, G_TX_NOMASK, G_TX_NOMASK, G_TX_NOLOD, G_TX_NOLOD);

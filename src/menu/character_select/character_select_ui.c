@@ -5,10 +5,10 @@
 #include "game/menu/character_select/character_select_ui.h"
 #include "game/race/player/race_player_input.h"
 
-#define CHARACTER_SELECT_UI_UNUSED_HANDLE (*(s16 *)&gAssetHandles[0x3E])
-#define CHARACTER_SELECT_UI_PLAYER_FRAME_HANDLE (*(s16 *)&gAssetHandles[0x42])
-#define CHARACTER_SELECT_UI_BANNER_TEXTURE_HANDLE (*(s16 *)&gAssetHandles[0x52])
-#define CHARACTER_SELECT_UI_AVAILABLE_CHARACTER_ICON_HANDLE (*(s16 *)&gAssetHandles[0x3E])
+#define CHARACTER_SELECT_UI_UNUSED_HANDLE (gAssetHandles[0x1F])
+#define CHARACTER_SELECT_UI_PLAYER_FRAME_HANDLE (gAssetHandles[0x21])
+#define CHARACTER_SELECT_UI_BANNER_TEXTURE_HANDLE (gAssetHandles[0x29])
+#define CHARACTER_SELECT_UI_AVAILABLE_CHARACTER_ICON_HANDLE (gAssetHandles[0x1F])
 #define CHARACTER_SELECT_TOKEN_IDLE 0
 #define CHARACTER_SELECT_TOKEN_START 1
 #define CHARACTER_SELECT_TOKEN_FLYING 2
@@ -89,7 +89,7 @@ extern s32 gMenuFlowState;
 extern void *gMenuRenderCallbackList;
 extern u8 gPlayerCount;
 extern s8 D_8010AE64[];
-extern u8 gAssetHandles[];
+extern s16 gAssetHandles[];
 extern u8 gCharacterSelectConfirmationBannerText[];
 extern CharacterSelectUiCharacterStats gCharacterSelectCharacterStats[];
 extern u16 gCharacterSelectCharacterStatLabels[];
@@ -99,7 +99,6 @@ extern RacePlayerState gGameSaveDataBuffer[];
 extern u8 D_8010AE5E;
 extern u8 D_8010AE5F;
 extern u16 gCharacterSelectPlayerMarkerTiles[];
-extern s16 gMenuCommonSpritesAssetHandle;
 
 void drawCharacterSelectConfirmationBanner(CharacterSelectUiBannerActor *arg0) {
     s32 i;
@@ -374,7 +373,7 @@ void drawCharacterSelectRosterIcons(CharacterSelectUiRosterIconActor *arg0) {
     s32 selectedAlpha;
     s32 tileTemp;
 
-    i = 0; if (arg0->state != 0) { assetHandles = (s16 *)gAssetHandles; xOffset = 0; selectedAlpha = 0x60; do { alpha = 0x100; j = 0; if (gPlayerCount > 0) { do { if ((i == gRacePlayers[j].selectedCharacterId) && (gRacePlayers[j].menuState != 0)) {
+    i = 0; if (arg0->state != 0) { assetHandles = gAssetHandles; xOffset = 0; selectedAlpha = 0x60; do { alpha = 0x100; j = 0; if (gPlayerCount > 0) { do { if ((i == gRacePlayers[j].selectedCharacterId) && (gRacePlayers[j].menuState != 0)) {
                         tileTemp = i + 0x41;
                         alpha = 0x60;
                         tile = tileTemp;
@@ -508,7 +507,7 @@ void drawCharacterSelectPlayerCursorMarkers(CharacterSelectUiPlayerCursorActor *
     RacePlayer *player;
     CharacterSelectUiPlayerCursorActor *actorX;
 
- do { if (arg0->mode != 0) { i = 0; if (((s32) gPlayerCount) > 0) { player = gRacePlayers; tiles = gCharacterSelectPlayerMarkerTiles; actorX = arg0; do { evenMatch = 0; oddMatch = 0; j = 0; if (player->menuState != 0) { alpha = 0x100; } else { alpha = arg0->scale; } if (((s32) gPlayerCount) > 0) { do { if ((j != i) && (D_8010AE64[i] == D_8010AE64[j])) { if (!(j & 1)) { evenMatch = 1; } else { oddMatch = 2; } } j++; } while (j < ((s32) gPlayerCount)); } drawMenuSpriteWithAlpha(actorX->x[0], arg0->y, getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle), tiles[evenMatch + oddMatch], 0x20, 0x20, 0, alpha, 0); i++; player++; tiles += 4; actorX = (CharacterSelectUiPlayerCursorActor *) (((u8 *) actorX) + 2); } while (i < ((s32) gPlayerCount)); } } } while (0);
+ do { if (arg0->mode != 0) { i = 0; if (((s32) gPlayerCount) > 0) { player = gRacePlayers; tiles = gCharacterSelectPlayerMarkerTiles; actorX = arg0; do { evenMatch = 0; oddMatch = 0; j = 0; if (player->menuState != 0) { alpha = 0x100; } else { alpha = arg0->scale; } if (((s32) gPlayerCount) > 0) { do { if ((j != i) && (D_8010AE64[i] == D_8010AE64[j])) { if (!(j & 1)) { evenMatch = 1; } else { oddMatch = 2; } } j++; } while (j < ((s32) gPlayerCount)); } drawMenuSpriteWithAlpha(actorX->x[0], arg0->y, getRelocatableHeapBlockBase(gAssetHandles[0x21]), tiles[evenMatch + oddMatch], 0x20, 0x20, 0, alpha, 0); i++; player++; tiles += 4; actorX = (CharacterSelectUiPlayerCursorActor *) (((u8 *) actorX) + 2); } while (i < ((s32) gPlayerCount)); } } } while (0);
 }
 
 void updateCharacterSelectPlayerCursorMarkers(CharacterSelectUiPlayerCursorActor *arg0) {
@@ -646,7 +645,7 @@ void drawCharacterSelectPlayerStatsPanels(CharacterSelectUiPanelActor *arg0) {
                 }
 
                 drawMenuSpriteTile((s16)(arg0->x[playerIndex] + 6), (s16)(arg0->y[playerIndex] + 0xD),
-                              getRelocatableHeapBlockBase(*(s16 *)&gAssetHandles[textureIndex * 2]), characterIconTile, 0, 0x100);
+                              getRelocatableHeapBlockBase(gAssetHandles[textureIndex]), characterIconTile, 0, 0x100);
                 drawMenuSprite((s16)(arg0->x[playerIndex] + 2), (s16)(arg0->y[playerIndex] + 0x28),
                               getRelocatableHeapBlockBase(CHARACTER_SELECT_UI_AVAILABLE_CHARACTER_ICON_HANDLE),
                               (player->selectedCharacterId + 0x91) & 0xFFFF, 0x20, 0x20, 0, 0);
@@ -721,7 +720,7 @@ void drawCharacterSelectSelectedCharacterTokens(CharacterSelectUiSelectedCharact
             if (player[8] != 0) {
                 new_var = i * 2;
                 temp_s0 = base + new_var;
-                color = getRelocatableHeapBlockBase(*(s16 *) &gAssetHandles[0x42]);
+                color = getRelocatableHeapBlockBase(gAssetHandles[0x21]);
                 temp_v1 = *(u16 *) (temp_s0 + 0x40);
                 drawMenuSprite(*(s16 *) (temp_s0 + 0x18), *(s16 *) (temp_s0 + 0x20), color, 0xD, temp_v1, temp_v1, 0, 0);
             }

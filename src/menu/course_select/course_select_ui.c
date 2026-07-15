@@ -200,9 +200,6 @@ extern s16 gCourseSelectIconListXLayout[][4];
 extern s16 gCourseSelectStatsPanelLayout[][4];
 extern s16 gCourseSelectStatsPlayerMarkerLayout[][2];
 extern s16 gAssetHandles[];
-extern s16 gMenuCommonSpritesAssetHandle;
-extern s16 gMenuUiSpritesAssetHandle;
-extern s16 gMenuPanelTilemapAssetHandle;
 extern u8 gPlayerCount;
 extern CourseSelectRacePlayer gRacePlayers[];
 extern u8 gCourseSelectSelectedCourseId[][sizeof(CourseSelectRacePlayer)];
@@ -788,7 +785,7 @@ void drawCourseSelectCourseIconList(CourseSelectIconListActor *arg0) {
                             }
                         }
 
-                        drawMenuSpriteClipped(position[12], position[32], getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle),
+                        drawMenuSpriteClipped(position[12], position[32], getRelocatableHeapBlockBase(gAssetHandles[0x21]),
                                       (u16)tileIndex, 0x20, 0x20, 0, alpha,
                                       new_var->clipLeft - ((i >= 2) * 0x8C), arg0->clipTop, arg0->clipRight,
                                       new_var->clipBottom);
@@ -802,11 +799,11 @@ void drawCourseSelectCourseIconList(CourseSelectIconListActor *arg0) {
                         }
 
                         if (gRaceSplitscreenMode == 3) {
-                            drawMenuSpriteClipped(position[12], position[32], getRelocatableHeapBlockBase(gMenuPanelTilemapAssetHandle), 5, 0x20,
+                            drawMenuSpriteClipped(position[12], position[32], getRelocatableHeapBlockBase(gAssetHandles[0x27]), 5, 0x20,
                                           0x20, 0, alpha, arg0->clipLeft - clipOffset, new_var->clipTop,
                                           new_var->clipRight, new_var->clipBottom);
                         } else {
-                            drawMenuSpriteClipped(position[12], position[32], getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle), 5, 0x20,
+                            drawMenuSpriteClipped(position[12], position[32], getRelocatableHeapBlockBase(gAssetHandles[0x21]), 5, 0x20,
                                           0x20, 0, alpha, arg0->clipLeft - clipOffset, arg0->clipTop,
                                           arg0->clipRight, new_var->clipBottom);
                         }
@@ -1272,10 +1269,10 @@ void initCourseSelectCourseCursors(CourseSelectWidgetActor *arg0) {
 #endif
 
 void drawCourseSelectCourseListBackdrop(CourseSelectWidgetActor *arg0) {
-    drawMenuSprite(arg0->x, arg0->y, getRelocatableHeapBlockBase(gMenuUiSpritesAssetHandle), 3, 0x20, 0x20, 0, 0);
-    drawMenuSprite((s16) (arg0->x + 0x40), arg0->y, getRelocatableHeapBlockBase(gMenuUiSpritesAssetHandle), 4, 0x20, 0x20, 0, 0);
-    drawMenuSprite(arg0->x, (s16) (arg0->y + 0x40), getRelocatableHeapBlockBase(gMenuUiSpritesAssetHandle), 5, 0x20, 0x20, 0, 0);
-    drawMenuSprite((s16) (arg0->x + 0x40), (s16) (arg0->y + 0x40), getRelocatableHeapBlockBase(gMenuUiSpritesAssetHandle), 6, 0x20, 0x20, 0, 0);
+    drawMenuSprite(arg0->x, arg0->y, getRelocatableHeapBlockBase(gAssetHandles[0x25]), 3, 0x20, 0x20, 0, 0);
+    drawMenuSprite((s16) (arg0->x + 0x40), arg0->y, getRelocatableHeapBlockBase(gAssetHandles[0x25]), 4, 0x20, 0x20, 0, 0);
+    drawMenuSprite(arg0->x, (s16) (arg0->y + 0x40), getRelocatableHeapBlockBase(gAssetHandles[0x25]), 5, 0x20, 0x20, 0, 0);
+    drawMenuSprite((s16) (arg0->x + 0x40), (s16) (arg0->y + 0x40), getRelocatableHeapBlockBase(gAssetHandles[0x25]), 6, 0x20, 0x20, 0, 0);
 }
 
 void updateCourseSelectCourseListBackdrop(CourseSelectWidgetActor *arg0) {

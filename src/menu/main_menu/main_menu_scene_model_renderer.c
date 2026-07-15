@@ -3,8 +3,16 @@
 #include "game/menu/main_menu/main_menu_scene_model_renderer.h"
 #include "game/race/player/race_player_model_renderer.h"
 
+typedef struct MainMenuModelAssetHandles {
+    u8 pad0[0x66];
+    s16 modelAssetSlots[6];
+    s16 animationAssetSlots[6];
+} MainMenuModelAssetHandles;
+
+#define ASSET_HANDLE(index) (((s16 *)&gAssetHandles)[(index)])
+
 extern void addRenderCallback(void *, void (*)(MainMenuSceneModel *), MainMenuSceneModel *);
-extern s16 gMainMenuSceneModelHandles[];
+extern MainMenuModelAssetHandles gAssetHandles;
 extern s32 gSceneModelRenderCallbackList;
 extern void drawMainMenuSceneModel(MainMenuSceneModel *);
 extern void drawTexturedMainMenuSceneModel(MainMenuSceneModel *);
@@ -30,16 +38,9 @@ void initMainMenuSceneModelRenderer_pad(void) {
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/main_menu/main_menu_scene_model_renderer/drawMainMenuSceneModel.s")
 
 #ifdef NON_MATCHING
-typedef struct MainMenuModelAssetHandles {
-    u8 pad0[0x66];
-    s16 modelAssetSlots[6];
-    s16 animationAssetSlots[6];
-} MainMenuModelAssetHandles;
-
 extern Mtx *allocFixedTransformMatrix(MainMenuModelDisplayObject *);
 extern Gfx *gRegionAllocPtr;
 extern u8 gCurrentViewportIndex;
-extern MainMenuModelAssetHandles gAssetHandles;
 extern Gfx *gMainMenuSceneModelPartDisplayLists[];
 
 void drawMainMenuSceneModel(MainMenuSceneModel *arg0) {
@@ -75,7 +76,7 @@ void drawTexturedMainMenuSceneModel(MainMenuSceneModel *arg0) {
 void addMainMenuSceneModelDrawCallback(s32 modelIndex) {
     MainMenuSceneModel *model;
 
-    model = (MainMenuSceneModel *)getRelocatableHeapBlockBase(gMainMenuSceneModelHandles[modelIndex]);
+    model = (MainMenuSceneModel *)getRelocatableHeapBlockBase(ASSET_HANDLE(45 + modelIndex));
     updateMainMenuSceneModelTransforms(model);
     model->viewportIndex = 0;
     addRenderCallback(&gSceneModelRenderCallbackList, drawMainMenuSceneModel, model);
@@ -84,7 +85,7 @@ void addMainMenuSceneModelDrawCallback(s32 modelIndex) {
 void addMainMenuSceneModelTexturedDrawCallback(s32 modelIndex, s32 textureId, s32 paletteId) {
     MainMenuSceneModel *model;
 
-    model = (MainMenuSceneModel *)getRelocatableHeapBlockBase(gMainMenuSceneModelHandles[modelIndex]);
+    model = (MainMenuSceneModel *)getRelocatableHeapBlockBase(ASSET_HANDLE(45 + modelIndex));
     updateMainMenuSceneModelTransforms(model);
     model->viewportIndex = 0;
     model->textureId = (s16)textureId;
@@ -95,7 +96,7 @@ void addMainMenuSceneModelTexturedDrawCallback(s32 modelIndex, s32 textureId, s3
 void addMainMenuSceneModelTexturedDrawCallbackWithUnusedArg(s32 modelIndex, s32 textureId, s32 paletteId, s32 unusedArg) {
     MainMenuSceneModel *model;
 
-    model = (MainMenuSceneModel *)getRelocatableHeapBlockBase(gMainMenuSceneModelHandles[modelIndex]);
+    model = (MainMenuSceneModel *)getRelocatableHeapBlockBase(ASSET_HANDLE(45 + modelIndex));
     updateMainMenuSceneModelTransforms(model);
     model->viewportIndex = 0;
     model->textureId = (s16)textureId;
@@ -106,7 +107,7 @@ void addMainMenuSceneModelTexturedDrawCallbackWithUnusedArg(s32 modelIndex, s32 
 void addMainMenuSceneModelDrawCallbackForViewport0(s32 modelIndex) {
     MainMenuSceneModel *model;
 
-    model = (MainMenuSceneModel *)getRelocatableHeapBlockBase(gMainMenuSceneModelHandles[modelIndex]);
+    model = (MainMenuSceneModel *)getRelocatableHeapBlockBase(ASSET_HANDLE(45 + modelIndex));
     updateMainMenuSceneModelTransforms(model);
     model->viewportIndex = 0;
     addRenderCallback(&gSceneModelRenderCallbackList, drawMainMenuSceneModel, model);
@@ -115,7 +116,7 @@ void addMainMenuSceneModelDrawCallbackForViewport0(s32 modelIndex) {
 void addMainMenuSceneModelDrawCallbackForViewport(s32 modelIndex, s32 viewportIndex) {
     MainMenuSceneModel *model;
 
-    model = (MainMenuSceneModel *)getRelocatableHeapBlockBase(gMainMenuSceneModelHandles[modelIndex]);
+    model = (MainMenuSceneModel *)getRelocatableHeapBlockBase(ASSET_HANDLE(45 + modelIndex));
     updateMainMenuSceneModelTransforms(model);
     model->viewportIndex = (s16)viewportIndex;
     addRenderCallback(&gSceneModelRenderCallbackList, drawMainMenuSceneModel, model);

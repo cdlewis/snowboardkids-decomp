@@ -158,8 +158,6 @@ extern u32 gPlayerInputHeld;
 extern Gfx gMenuRenderModeResetDl[];
 extern s16 gMenuSpriteFlipScales[][2];
 extern s16 gMenuFadeAlpha;
-extern s16 gMenuAsciiFontAssetHandle;
-extern s16 gShopMenuTextureAssetHandle;
 extern s16 gMenuViewportWidth;
 extern s16 gMenuViewportHeight;
 extern s16 gMenuViewportCenterX;
@@ -960,7 +958,7 @@ void drawMenuTextureByAssetId(s16 x, s16 y, s32 texture, u16 assetId, u16 width,
         y1 = clipY1 - 4;
     }
 
-    getAssetTableImageAndPalette((void *)getRelocatableHeapBlockBase(gShopMenuTextureAssetHandle), assetId, &image, &palette);
+    getAssetTableImageAndPalette((void *)getRelocatableHeapBlockBase(gAssetHandles[13]), assetId, &image, &palette);
 
     FONT_GFX_CMD(gRegionAllocPtr++, 0xFD500000, (u32)&image);
     FONT_GFX_CMD(gRegionAllocPtr++, 0xF5500000, 0x07080200);
@@ -1713,7 +1711,7 @@ void drawMenuAsciiGlyph(s16 x, s16 y, u16 tileS, s32 tileT, u16 paletteIndex, u1
     s32 paletteScaleValue;
     s16 selectedPalette;
 
-    asset = (FontAsset *)getRelocatableHeapBlockBase(gMenuAsciiFontAssetHandle);
+    asset = (FontAsset *)getRelocatableHeapBlockBase(gAssetHandles[6]);
     paletteBase = (u16 *)&asset->textures[asset->header.entryCount];
     atlasTexture = &asset->textures[0];
     x0 = x + gMenuViewportCenterX;

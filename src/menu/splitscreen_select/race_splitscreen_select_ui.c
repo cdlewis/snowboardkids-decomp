@@ -4,6 +4,8 @@
 #include "game/menu/splitscreen_select/race_splitscreen_select_ui.h"
 #include "game/menu/renderer/menu_renderer.h"
 
+#define ASSET_HANDLE(index) (((s16 *)&gAssetHandles)[(index)])
+
 typedef struct {
     char pad0[0x42];
     /* 0x42 */ s16 textureHandle;
@@ -41,7 +43,6 @@ extern u32 gMenuPanelBackdropTexture[];
 extern Gfx gMenuRenderModeResetDl[];
 extern s32 gActiveMenuTask;
 extern u8 gMenuExitSelection;
-extern s16 gMenuCommonSpritesAssetHandle;
 extern s16 gMenuViewportCenterX;
 extern s16 gMenuViewportCenterY;
 extern s32 gPlayer1Money;
@@ -147,10 +148,10 @@ void initRaceSplitscreenSelectPlayerCountIcons(RaceSplitscreenSelectRowActor *ar
 }
 
 void drawRaceSplitscreenSelectCornerSprites(RaceSplitscreenSelectWidgetActor *arg0) {
-    drawMenuSprite(arg0->x, arg0->y, getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle), 3, 0x20, 0x20, 0, 0);
-    drawMenuSprite((s16) (arg0->x + 0x40), arg0->y, getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle), 4, 0x20, 0x20, 0, 0);
-    drawMenuSprite(arg0->x, (s16) (arg0->y + 0x40), getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle), 5, 0x20, 0x20, 0, 0);
-    drawMenuSprite((s16) (arg0->x + 0x40), (s16) (arg0->y + 0x40), getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle), 6, 0x20, 0x20, 0, 0);
+    drawMenuSprite(arg0->x, arg0->y, getRelocatableHeapBlockBase(ASSET_HANDLE(33)), 3, 0x20, 0x20, 0, 0);
+    drawMenuSprite((s16) (arg0->x + 0x40), arg0->y, getRelocatableHeapBlockBase(ASSET_HANDLE(33)), 4, 0x20, 0x20, 0, 0);
+    drawMenuSprite(arg0->x, (s16) (arg0->y + 0x40), getRelocatableHeapBlockBase(ASSET_HANDLE(33)), 5, 0x20, 0x20, 0, 0);
+    drawMenuSprite((s16) (arg0->x + 0x40), (s16) (arg0->y + 0x40), getRelocatableHeapBlockBase(ASSET_HANDLE(33)), 6, 0x20, 0x20, 0, 0);
 }
 
 void updateRaceSplitscreenSelectCornerSprites(RaceSplitscreenSelectWidgetActor *arg0) {
@@ -774,7 +775,7 @@ void initRaceSplitscreenSelectOption4Frame(RaceSplitscreenSelectWidgetActor *arg
 }
 
 void drawRaceSplitscreenSelectCursor(RaceSplitscreenSelectWidgetActor *arg0) {
-    drawMenuSpriteWithAlpha(arg0->x, (s16)(arg0->y + (gRaceSplitscreenMode * 0x14)), getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle), 7, 0x20, 0x20, 0, arg0->sprite.spriteIndex, 0);
+    drawMenuSpriteWithAlpha(arg0->x, (s16)(arg0->y + (gRaceSplitscreenMode * 0x14)), getRelocatableHeapBlockBase(ASSET_HANDLE(33)), 7, 0x20, 0x20, 0, arg0->sprite.spriteIndex, 0);
 }
 
 void updateRaceSplitscreenSelectCursor(RaceSplitscreenSelectWidgetActor *arg0) {
@@ -900,7 +901,7 @@ void initRaceSplitscreenSelectPortrait(RaceSplitscreenSelectWidgetActor *arg0) {
 }
 
 void drawRaceSplitscreenSelectArrowPrompt(RaceSplitscreenSelectWidgetActor *arg0) {
-    drawMenuSpriteWithAlpha(arg0->x, arg0->y, getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle), 0, 0x20, 0x20, 0, arg0->sprite.spriteIndex, 0);
+    drawMenuSpriteWithAlpha(arg0->x, arg0->y, getRelocatableHeapBlockBase(ASSET_HANDLE(33)), 0, 0x20, 0x20, 0, arg0->sprite.spriteIndex, 0);
 }
 
 void updateRaceSplitscreenSelectArrowPrompt(RaceSplitscreenSelectWidgetActor *arg0) {
@@ -949,7 +950,7 @@ void drawRaceSplitscreenSelectEntryFee(RaceSplitscreenSelectWidgetActor *arg0) {
     char sp40[0x18];
 
     drawMenuPanelBackdrop(arg0->x, arg0->y, 0x5000, 0x4000);
-    drawMenuSpriteWithAlpha((s16)(arg0->x + 8), (s16)(arg0->y + 4), getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle), 0x11, 0x20, 0x20, 0, arg0->sprite.spriteIndex, 0);
+    drawMenuSpriteWithAlpha((s16)(arg0->x + 8), (s16)(arg0->y + 4), getRelocatableHeapBlockBase(ASSET_HANDLE(33)), 0x11, 0x20, 0x20, 0, arg0->sprite.spriteIndex, 0);
     sprintf(sp40, gRaceSplitscreenSelectEntryFeeFormat, gPlayer1Money);
     drawMenuAsciiText((s16)(arg0->x + 0x10), (s16)(arg0->y + 0x10), sp40, 0, arg0->sprite.spriteIndex);
 }

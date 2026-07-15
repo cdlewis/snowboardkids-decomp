@@ -5,9 +5,9 @@
 #include "game/menu/renderer/menu_renderer.h"
 #include "game/menu/race_setup/race_setup_ui.h"
 
-#define TITLE_MENU_SECONDARY_TEXTURE_HANDLE (*(s16 *)&gAssetHandles[0x3E])
-#define TITLE_MENU_FRAME_TEXTURE_HANDLE (*(s16 *)&gAssetHandles[0x42])
-#define TITLE_MENU_BANNER_TEXTURE_HANDLE (*(s16 *)&gAssetHandles[0x52])
+#define TITLE_MENU_SECONDARY_TEXTURE_HANDLE (gAssetHandles[31])
+#define TITLE_MENU_FRAME_TEXTURE_HANDLE (gAssetHandles[33])
+#define TITLE_MENU_BANNER_TEXTURE_HANDLE (gAssetHandles[41])
 #define RACE_PLAYER_STATE_SIZE 0x60C
 #define CONTROLLER_PAK_STATUS_UNUSED 0x13
 #define SAVE_PANEL_MAX_RECORD_ICONS 3
@@ -81,10 +81,7 @@ extern u16 gRaceSetupTwoPlayerOptionText[];
 extern u16 gRaceSetupThreePlayerOptionText[];
 extern u16 gRaceSetupFourPlayerOptionText[];
 extern u8 gRaceSetupPlayerCountPromptText[];
-extern u8 gAssetHandles[];
-extern s16 gRaceUiSpriteAssetHandle;
-extern s16 gMenuCommonSpritesAssetHandle;
-extern s16 gMenuIconTilemapAssetHandle;
+extern s16 gAssetHandles[];
 extern u8 gPlayerCount;
 extern u8 gRaceSetupSaveChoicePromptBottomSprites[];
 extern u8 gRaceSetupSaveChoicePromptTopSprites[];
@@ -278,17 +275,17 @@ void drawRaceSetupOnePlayerOption(void *arg0) {
     }
 
     if ((gMenuSelectionConfirmTimer == 0) || (gMenuSelectionConfirmTimer & 1) || (gPlayerCount != 1)) {
-        drawMenuSpriteWithAlpha(actor->x, actor->y, getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle), 3, 0x20, 0x20, 0, alpha, 0);
+        drawMenuSpriteWithAlpha(actor->x, actor->y, getRelocatableHeapBlockBase(gAssetHandles[33]), 3, 0x20, 0x20, 0, alpha, 0);
         if (width == 0x20) {
             temp = width & 0xFFFF;
-            drawMenuSpriteWithAlpha((s16)(actor->x + xOffset), (s16)(actor->y - yOffset), getRelocatableHeapBlockBase(gRaceUiSpriteAssetHandle), 0, temp, temp, 0, alpha, 0);
+            drawMenuSpriteWithAlpha((s16)(actor->x + xOffset), (s16)(actor->y - yOffset), getRelocatableHeapBlockBase(gAssetHandles[31]), 0, temp, temp, 0, alpha, 0);
         } else {
-            drawMenuSpriteWithPaletteScale((s16)(actor->x + xOffset), (s16)(actor->y - yOffset), getRelocatableHeapBlockBase(gRaceUiSpriteAssetHandle), 0, alpha);
+            drawMenuSpriteWithPaletteScale((s16)(actor->x + xOffset), (s16)(actor->y - yOffset), getRelocatableHeapBlockBase(gAssetHandles[31]), 0, alpha);
         }
         drawMenuGlyphScriptDefaultFont((s16)(actor->x + 0x30), (s16)(actor->y + 4), gRaceSetupOnePlayerOptionText, 1, alpha);
     }
 
-    drawMenuSpriteWithAlpha((s16)(actor->x + 0x80), actor->y, getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle), 7, 0x20, 0x20, 0, alpha, 0);
+    drawMenuSpriteWithAlpha((s16)(actor->x + 0x80), actor->y, getRelocatableHeapBlockBase(gAssetHandles[33]), 7, 0x20, 0x20, 0, alpha, 0);
 }
 
 void updateRaceSetupOnePlayerOption(MenuItemActor *arg0) {
@@ -609,7 +606,7 @@ void drawRaceSetupPlayerCountCursor(void *arg0) {
     drawMenuSpriteWithAlpha(
         actor->x,
         (s16)((actor->y + (gPlayerCount << 5)) - 0x20),
-        getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle),
+        getRelocatableHeapBlockBase(gAssetHandles[33]),
         4,
         0x20,
         0x20,
@@ -872,7 +869,7 @@ void drawRaceSetupSavePanelIcons(TitleMenuIconStripActor *arg0) {
                             alpha = 0x100;
                         }
                         drawMenuSpriteWithAlpha((s16)(iconActor->panelX[0] + arg0->iconOffsetX + iconXOffset),
-                                      (s16)(iconActor->panelY[0] + arg0->iconOffsetY), getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle),
+                                      (s16)(iconActor->panelY[0] + arg0->iconOffsetY), getRelocatableHeapBlockBase(gAssetHandles[33]),
                                       SAVE_PANEL_RECORD_ICON_TILE, 0x20, 0x20, 0, alpha, 9 - iconIndex);
                         iconIndex = nextIconIndex;
                         iconXOffset += 0x10;
@@ -904,7 +901,7 @@ void drawRaceSetupSavePanelIcons(TitleMenuIconStripActor *arg0) {
                             tile = SAVE_PANEL_EMPTY_BADGE_TILE;
                         }
                         drawMenuSpriteWithAlpha((s16)(iconActor->panelX[0] + arg0->badgeOffsetX + iconXOffset),
-                                      (s16)(iconActor->panelY[0] + arg0->badgeOffsetY), getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle),
+                                      (s16)(iconActor->panelY[0] + arg0->badgeOffsetY), getRelocatableHeapBlockBase(gAssetHandles[33]),
                                       (iconIndex + 0x1A) & 0xFFFF, 0x20, 0x20, 0, alpha, tile);
                         iconIndex++;
                         iconXOffset += 0xE;
@@ -1281,7 +1278,7 @@ void updateMenuIconTilemapSpriteActor(SpriteActor *arg0) {
 void initMenuIconTilemapSpriteActor(SpriteActor *arg0) {
     SpriteActor *temp_a2 = arg0;
 
-    initMenuTilemapSprite(&temp_a2->sprite, getRelocatableHeapBlockBase(gMenuIconTilemapAssetHandle));
+    initMenuTilemapSprite(&temp_a2->sprite, getRelocatableHeapBlockBase(gAssetHandles[38]));
     temp_a2->x = temp_a2->sprite.unk8;
     temp_a2->y = temp_a2->sprite.unkA;
     setCallbackTaskCallback(temp_a2, updateMenuIconTilemapSpriteActor);

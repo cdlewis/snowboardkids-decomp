@@ -9,7 +9,7 @@
 #include "game/math/fixed_point_math.h"
 #include "game/race/motion/race_motion.h"
 
-#define RACE_MODEL_BUFFER_HANDLE (*(s16 *)&gAssetHandles[0x48])
+#define RACE_MODEL_BUFFER_HANDLE gAssetHandles[0x24]
 #define RACE_PICKUP_G_TRI2 0xB1
 #define racePickupTriangleWord(v0, v1, v2, flag) \
     (_SHIFTL((flag), 24, 8) | _SHIFTL((v0) * 2, 16, 8) | _SHIFTL((v1) * 2, 8, 8) | _SHIFTL((v2) * 2, 0, 8))
@@ -182,9 +182,6 @@ extern void *gRaceCourseSceneryDisplayLists[];
 extern Gfx *gThrownPickupModelDisplayList;
 extern s32 gEffectRenderCallbackList;
 extern s32 gSceneModelRenderCallbackList;
-extern s16 gRaceRspSegment2AssetHandle;
-extern s16 gRaceRspSegment3AssetHandle;
-extern s16 gRaceCommonSpriteAssetHandle;
 extern u8 gRenderMatricesDirty;
 extern u8 gRaceUpdatePaused;
 extern u8 gTrainingCourseLesson;
@@ -202,7 +199,7 @@ extern s32 D_801229BC;
 extern s8 D_80122FB7;
 extern s32 D_80122FC0;
 extern s32 D_80122FC8;
-extern u8 gAssetHandles[];
+extern s16 gAssetHandles[];
 extern CourseCollectibleSpriteEntry *gCourseCollectibleSpriteListsByCourse[];
 extern u32 gCourseCollectibleSpriteVertices[];
 extern Vtx gRacePickupBaseVertices[];
@@ -241,10 +238,10 @@ void renderRaceCoursePropModels(CourseEffectModelListActor *arg0) {
                     gDPPipeSync(gRegionAllocPtr++);
                     temp_s2 = gRegionAllocPtr++;
                     var_s7 = FALSE;
-                    gSPSegment(temp_s2, 0x02, getRelocatableHeapBlockBase(*(s16 *)&gAssetHandles[0x14]));
+                    gSPSegment(temp_s2, 0x02, getRelocatableHeapBlockBase(gAssetHandles[0xA]));
 
                     temp_s3 = gRegionAllocPtr++;
-                    gSPSegment(temp_s3, 0x03, getRelocatableHeapBlockBase(*(s16 *)&gAssetHandles[0x16]));
+                    gSPSegment(temp_s3, 0x03, getRelocatableHeapBlockBase(gAssetHandles[0xB]));
                 }
 
                 temp_s0 = gRegionAllocPtr++;
@@ -298,8 +295,8 @@ void initRaceCoursePropModels(CourseEffectModelListActor *arg0) {
     if (count != 0) {
         entry = base;
         size = count << 6;
-        *(s16 *)&gAssetHandles[0x46] = allocRelocatableHeapBlock(size);
-        arg0->modelBuffer = (void *)getRelocatableHeapBlockBase(*(s16 *)&gAssetHandles[0x46]);
+        gAssetHandles[0x23] = allocRelocatableHeapBlock(size);
+        arg0->modelBuffer = (void *)getRelocatableHeapBlockBase(gAssetHandles[0x23]);
 
         for (i = 0; i < count; i++) {
             makeFixedRotationY(&transform, entry->assetIndex);
@@ -335,7 +332,7 @@ void renderCourseCollectibleSprites(CourseEffectModelListActor *arg0) {
             if ((entry->enabled != 0) && (isPositionNearCurrentRaceViewportCamera(&entry->transform) != 0)) {
                 if (modelIndex != entry->modelIndex + actor->modelIndexOffset) {
                     modelIndex = entry->modelIndex + actor->modelIndexOffset;
-                    getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gRaceCommonSpriteAssetHandle), (modelIndex + 4) & 0xFFFF, &spA0, &sp9C);
+                    getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gAssetHandles[0x1C]), (modelIndex + 4) & 0xFFFF, &spA0, &sp9C);
 
                     gDPLoadTextureBlock_4b(gRegionAllocPtr++, spA0, G_IM_FMT_CI, 16, 16, 0, G_TX_CLAMP,
                                            G_TX_CLAMP, 0, 0, 0, 0);
@@ -498,8 +495,8 @@ void renderThrownPickupModel(ThrownPickupRenderActor *arg0) {
 
         if (arg0->matrix != NULL) {
             gDPPipeSync(gRegionAllocPtr++);
-            gSPSegment(gRegionAllocPtr++, 0x02, getRelocatableHeapBlockBase(gRaceRspSegment2AssetHandle));
-            gSPSegment(gRegionAllocPtr++, 0x03, getRelocatableHeapBlockBase(gRaceRspSegment3AssetHandle));
+            gSPSegment(gRegionAllocPtr++, 0x02, getRelocatableHeapBlockBase(gAssetHandles[0xA]));
+            gSPSegment(gRegionAllocPtr++, 0x03, getRelocatableHeapBlockBase(gAssetHandles[0xB]));
             gSPMatrix(gRegionAllocPtr++, arg0->matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
             gSPDisplayList(gRegionAllocPtr++, gThrownPickupModelDisplayList);
         }
@@ -658,10 +655,10 @@ void renderRacePickupIdle(RacePickupActor *arg0) {
             gDPPipeSync(gRegionAllocPtr++);
             sp10C = gRegionAllocPtr++;
             sp10C->words.w0 = 0xBC000806;
-            sp10C->words.w1 = getRelocatableHeapBlockBase(gRaceRspSegment2AssetHandle);
+            sp10C->words.w1 = getRelocatableHeapBlockBase(gAssetHandles[0xA]);
             sp108 = gRegionAllocPtr++;
             sp108->words.w0 = 0xBC000C06;
-            sp108->words.w1 = getRelocatableHeapBlockBase(gRaceRspSegment3AssetHandle);
+            sp108->words.w1 = getRelocatableHeapBlockBase(gAssetHandles[0xB]);
             gSPMatrix(gRegionAllocPtr++, arg0->scaleDisplayList, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
             if (arg0->variant == 0) {
                 gSPDisplayList(gRegionAllocPtr++, gRaceItemPickupDisplayList);
@@ -969,13 +966,13 @@ void initRacePickup(RacePickupActor *arg0) {
     arg0->spawnPos.x = arg0->pos.x;
     arg0->spawnPos.y = arg0->pos.y;
     arg0->spawnPos.z = arg0->pos.z;
-    getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gRaceCommonSpriteAssetHandle), 0x1E, &arg0->image0, &arg0->palette0);
+    getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gAssetHandles[0x1C]), 0x1E, &arg0->image0, &arg0->palette0);
     if (arg0->variant == 0) {
-        getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gRaceCommonSpriteAssetHandle), 0x20, &arg0->image1, &arg0->palette1);
+        getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gAssetHandles[0x1C]), 0x20, &arg0->image1, &arg0->palette1);
     } else {
-        getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gRaceCommonSpriteAssetHandle), 0x21, &arg0->image1, &arg0->palette1);
+        getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gAssetHandles[0x1C]), 0x21, &arg0->image1, &arg0->palette1);
     }
-    getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gRaceCommonSpriteAssetHandle), 0x22, &arg0->image2, &arg0->palette2);
+    getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gAssetHandles[0x1C]), 0x22, &arg0->image2, &arg0->palette2);
     setCallbackTaskCallback(arg0, updateRacePickupIdle);
 }
 
@@ -1073,7 +1070,7 @@ void initPickupShardParticle(PickupShardParticleActor *arg0) {
     arg0->rotVelZ = randomNextMain() - 0x80;
     makeFixedRotationY(sp28, arg0->rotY);
     transformVec3iByFixedMatrix(sp28, &gPickupShardInitialVelocities[arg0->spawnOffsetIndex], &arg0->velocity);
-    getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gRaceCommonSpriteAssetHandle), 0x22, &arg0->palette, &arg0->image);
+    getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gAssetHandles[0x1C]), 0x22, &arg0->palette, &arg0->image);
     setCallbackTaskCallback(arg0, updatePickupShardParticle);
 }
 

@@ -52,7 +52,7 @@ extern Gfx *gRegionAllocPtr;
 extern GfxCommandSource gIdentityFixedTransform;
 extern u32 gAlphaSpriteRenderModeDl[];
 extern Vtx D_800B8100[];
-extern s16 gMenuCommonSpritesAssetHandle;
+extern s16 gAssetHandles[];
 
 void noopEndingCreditsTommy(void) {
 }
@@ -420,7 +420,7 @@ void drawEndingActorShadow(MainMenuSceneActorShadow *arg0) {
 
     ENDING_GFX_CMD(gRegionAllocPtr++, 0x06000000, (u32)gAlphaSpriteRenderModeDl);
 
-    getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle), 0x31, &stack.image,
+    getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gAssetHandles[0x21]), 0x31, &stack.image,
                                  &stack.palette);
 
     ENDING_GFX_CMD(gRegionAllocPtr++, 0xFD100000, (u32)stack.palette);

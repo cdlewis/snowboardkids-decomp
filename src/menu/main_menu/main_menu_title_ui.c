@@ -6,7 +6,8 @@
 #include "game/menu/renderer/menu_renderer.h"
 #include "game/menu/race_setup/race_setup_ui.h"
 
-#define TITLE_SCREEN_LOGO_SPRITE_HANDLE gMenuUiSpritesAssetHandle
+#define ASSET_HANDLE(index) (((s16 *)&gAssetHandles)[(index)])
+#define TITLE_SCREEN_LOGO_SPRITE_HANDLE ASSET_HANDLE(37)
 #define TITLE_SCREEN_TEXTURE_HANDLE (gAssetHandles.titleTextureHandle)
 
 typedef struct {
@@ -57,8 +58,6 @@ typedef struct {
 extern MainMenuState *gCurrentGameTask;
 extern s32 gMenuRenderCallbackList;
 extern MainMenuTitleAssetHandles gAssetHandles;
-extern s16 gMenuUiSpritesAssetHandle;
-extern s16 gMenuCommonSpritesAssetHandle;
 extern u8 gConnectedControllerCount;
 
 extern void addRenderCallback(void *, void *, void *);
@@ -132,7 +131,7 @@ void initMainMenuTitleOptions(MainMenuTitleOptionsActor *arg0) {
 }
 
 void drawMainMenuTitleCursor(MainMenuTitleCursorActor *arg0) {
-    s32 temp = getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle);
+    s32 temp = getRelocatableHeapBlockBase(ASSET_HANDLE(33));
 
     drawMenuSprite(arg0->common.x, arg0->common.y, temp, 3, 0x20, 0x20, 0, 0);
 }

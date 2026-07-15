@@ -65,9 +65,8 @@ extern void transformVec3iByFixedMatrix(s16 *rotation, Vec3i *source, Vec3i *des
 extern void multiplyFixedMatrix3s(s16 *rotation, FixedMatrix3s source, FixedMatrix3s dest);
 extern void composeFixedTransforms(FixedTransform *scratch, FixedTransform *source, FixedTransform *dest);
 
+extern s16 gAssetHandles[];
 extern u8 gRaceUpdatePaused;
-extern s16 gRaceRspSegment2AssetHandle;
-extern s16 gRaceRspSegment3AssetHandle;
 extern u32 gSnowboardTrailFrontDisplayList[];
 extern u32 gSnowboardTrailBackDisplayList[];
 extern Gfx *gRegionAllocPtr;
@@ -89,8 +88,8 @@ void renderSnowboardTrailEffect(SnowboardTrailState *trail) {
 
     if (trail->frontDisplayList != NULL) {
         gDPPipeSync(gRegionAllocPtr++);
-        gSPSegment(gRegionAllocPtr++, 0x02, getRelocatableHeapBlockBase(gRaceRspSegment2AssetHandle));
-        gSPSegment(gRegionAllocPtr++, 0x03, getRelocatableHeapBlockBase(gRaceRspSegment3AssetHandle));
+        gSPSegment(gRegionAllocPtr++, 0x02, getRelocatableHeapBlockBase(gAssetHandles[0xA]));
+        gSPSegment(gRegionAllocPtr++, 0x03, getRelocatableHeapBlockBase(gAssetHandles[0xB]));
         gSPMatrix(gRegionAllocPtr++, trail->frontDisplayList, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
         gSPDisplayList(gRegionAllocPtr++, gSnowboardTrailFrontDisplayList);
         gSPMatrix(gRegionAllocPtr++, trail->backDisplayList, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
