@@ -732,7 +732,7 @@ s32 soundPlayerCommandNoOp(s32 arg0, s32 arg1) {
     return arg1;
 }
 
-// soundPlayerCommandJumpRelative best match: 97.0%
+// soundPlayerCommandJumpRelative best match: 98.2% (nonmatchings/soundPlayerCommandJumpRelative-8757365433159351387/base_10.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/audio/audio_engine/soundPlayerCommandJumpRelative.s")
 
 #ifdef NON_MATCHING
@@ -740,7 +740,8 @@ s32 soundPlayerCommandJumpRelative(PlayerCommandState *arg0, u8 *arg1) {
     register s32 temp_v0;
     register s32 temp_v1;
     s32 temp_t9;
-    u8 *new_var;
+    PlayerCommandState *state;
+    u8 *command;
     s32 temp_t7;
 
     temp_v0 = arg1[2];
@@ -748,16 +749,18 @@ s32 soundPlayerCommandJumpRelative(PlayerCommandState *arg0, u8 *arg1) {
     temp_t9 = (arg1[3] & 0xFF) & 0xFF;
     temp_v0 = temp_v0 << 8;
     arg1 += 5;
-    new_var = arg1 - 5;
-    temp_t7 = new_var[1];
-    temp_v0 = temp_v0 + temp_t9;
-    arg0->unk60 = arg0->unk64 + temp_v0;
-    arg0->unkC8 = 1;
-    temp_v0 = new_var[4];
-    temp_t9 = new_var[5];
-    temp_v0 = (temp_v0 << 8) + temp_t9;
+    command = arg1 - 5;
+    temp_t7 = command[1];
+    temp_v0 = temp_v0 + (temp_t9 & 0xFFFFu);
+    temp_t9 = arg0->unk64;
+    arg0->unk60 = temp_t9 + temp_v0;
+    state = arg0;
+    state->unkC8 = 1;
+    temp_v0 = command[4];
+    temp_t9 = command[5];
+    temp_v0 = (temp_v0 << 8) + (temp_t9 & 0xFF);
+    state->unk68 = arg0->unk6C + temp_v0;
     temp_v1 = (temp_v1 << 8) + temp_t7;
-    arg0->unk68 = arg0->unk6C + temp_v0;
     arg0->unkCA = 1;
     temp_t7 = arg0->restartPos;
     return temp_t7 + temp_v1;
