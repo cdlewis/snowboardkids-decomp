@@ -66,6 +66,7 @@ extern u8 gTrainingCourseLesson;
 extern void enqueueSoundEffect(s32, s32, TrainingCourseUiActor *);
 void drawTrainingCourseDialog(TrainingCourseUiActor *);
 void updateTrainingCourseDialog(TrainingCourseUiActor *);
+void redrawTrainingCourseDialog(s32);
 void drawTrainingCourseLessonTitlePanel(TrainingCourseUiActor *);
 void updateTrainingCourseLessonTitlePanelScrollOut(TrainingCourseUiActor *);
 void updateTrainingCourseLessonTitlePanel(TrainingCourseUiActor *);
@@ -344,17 +345,10 @@ void updateTrainingCourseDialogScrollOut(TrainingCourseUiActor *arg0) {
     }
 }
 
-// updateTrainingCourseDialog best match: 99.819% (nonmatchings/updateTrainingCourseDialog-5802343343535905907/base_11.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/menu/training/training_course_ui/updateTrainingCourseDialog.s")
-
-#ifdef NON_MATCHING
 void updateTrainingCourseDialog(TrainingCourseUiActor *arg0) {
     TrainingCourseUiScript *scan;
-    TrainingCourseUiScript *script;
-    TrainingCourseUiScript *next;
     s32 keepScanning;
     u16 token;
-    u16 marker;
 
     switch (arg0->scriptState) {
     case 0:
@@ -405,19 +399,12 @@ void updateTrainingCourseDialog(TrainingCourseUiActor *arg0) {
         arg0->confirmBlinkTimer = (arg0->confirmBlinkTimer + 1) & 0xF;
         if ((gPlayerInputPressed & A_BUTTON) || (gPlayerInputPressed & START_BUTTON)) {
             enqueueSoundEffect(1, 0x32, arg0);
-            script = arg0->layout.script;
-            if (*script != 0xFFFB) {
+            if (*arg0->layout.script != 0xFFFB) {
                 do {
-                    next = script + 1;
-                    arg0->layout.script = next;
-                    script = next;
-                    marker = (*script) & 0xFFFF;
-                    script++;
-                    script--;
-                    script = arg0->layout.script;
-                } while (marker != 0xFFFB);
+                    arg0->layout.script++;
+                } while (*arg0->layout.script != 0xFFFB);
             }
-            arg0->layout.script = script + 1;
+            arg0->layout.script++;
             arg0->scriptState = 0;
             arg0->state.script.visibleGlyphCount = 1;
             arg0->glyphTimer = 0;
@@ -428,7 +415,6 @@ void updateTrainingCourseDialog(TrainingCourseUiActor *arg0) {
 
     addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawTrainingCourseDialog, (s32)arg0);
 }
-#endif
 
 void initTrainingCourseOpeningDialog(TrainingCourseUiActor *arg0) {
     arg0->x = -0x80;
