@@ -2349,7 +2349,7 @@ void func_8005B8E8(RaceUiAlphaActor *arg0) {
     do { if (arg0->alpha != 0xFF) { gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w1 = 0; gfx->words.w0 = 0xE7000000; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = 0xFF2FFFFF; w0 = 0xFC119623; gfx->words.w0 = w0; gfx->words.w1 = w1; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = 0x00504240; w0 = 0xB900031D; gfx->words.w0 = w0; gfx->words.w1 = w1; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w0 = 0xFA000000; gfx->words.w1 = (arg0->alpha & 0xFF) | (~0xFF); } func_80059A04(&gRaceElapsedTimer, -0x68, -0x37, 0xC); if (arg0->alpha != 0xFF) { gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = (s32) gMenuRenderModeResetDl; w0 = 0x06000000; gfx->words.w0 = w0; gfx->words.w1 = w1; } } while (0);
 }
 
-// func_8005B9F8 best match: 98.993% at nonmatchings/func_8005B9F8-8367390958892477031/base_6.c.
+// func_8005B9F8 best match: 99.099% at nonmatchings/func_8005B9F8-8367390958892477031/base_10.c.
 #pragma GLOBAL_ASM("asm/nonmatchings/race/ui/race_ui_effects/func_8005B9F8.s")
 
 #ifdef NON_MATCHING
@@ -2371,8 +2371,7 @@ void func_8005B9F8(RaceUiDualCounterActor *arg0) {
     if (arg0->state >= 0) {
         x = 0x20;
         sprintf(buf - 4, D_800E137C, arg0->leftValue);
-        ptr = buf - 4;
-        while (1) {
+        ptr = buf - 4; while (1) {
             if (*ptr == 0) {
                 break;
             }
