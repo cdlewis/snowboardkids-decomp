@@ -865,35 +865,36 @@ void updateControllerPakFreeSpaceInfo(void) {
     gControllerPakFreeFileCount = maxFiles - filesUsed;
 }
 
-// validateControllerPakSave best match: 72.861% at nonmatchings/validateControllerPakSave-2694253543240320626/base_5.c
+// validateControllerPakSave best match: 79.976% at nonmatchings/validateControllerPakSave-1189375296343516052/base_10.c
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/main_menu/controller_main_menu_flow/validateControllerPakSave.s")
 
 #ifdef NON_MATCHING
 u16 validateControllerPakSave(volatile s32 arg0) {
-    u8 *var_a3;
-    u8 *var_a2;
-    u8 *var_v1;
-    s32 var_a1;
-    s32 var_a0;
+    u8 *save;
+    u32 *wordCursor;
+    u8 *byteCursor;
+    s32 offset;
+    s32 i;
+    s32 count;
 
-    var_a3 = (u8 *)&gGameSaveDataBuffer[arg0];
-    var_a2 = var_a3;
-    var_v1 = var_a3;
-    var_a1 = 0;
+    save = (u8 *)&gGameSaveDataBuffer[arg0];
+    wordCursor = (u32 *)save;
+    byteCursor = save;
+    offset = 0;
     do {
-        var_a1 = var_a2 - var_a3;
-        var_a1 += 4;
-        var_a2 += 4;
-        var_v1 += 1;
-    } while (var_a1 < 0x2C);
+        offset += (u8 *)(wordCursor + 1) - (u8 *)wordCursor;
+        offset += ((byteCursor + 1) - byteCursor) - 1;
+        wordCursor++;
+        byteCursor++;
+    } while (offset < 0x2C);
 
-    var_a0 = 0;
-    var_v1 = var_a3;
+    i = 0;
+    byteCursor = save;
+    count = 0xC;
     do {
-        var_a0 = var_v1 - var_a3;
-        var_a0 += 1;
-        var_v1 += 1;
-    } while (var_a0 != 0xC);
+        i += (byteCursor + 1) - byteCursor;
+        byteCursor++;
+    } while (i != count);
 
     return validateControllerPakSaveData(arg0);
 }
