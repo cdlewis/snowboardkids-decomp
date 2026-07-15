@@ -296,7 +296,7 @@ void initCourseSelectMenu(void) {
 }
 #endif
 
-// updateCourseSelectModeMenu best match: 82.145% (nonmatchings/updateCourseSelectModeMenu-8331816093655448999/base_5.c)
+// updateCourseSelectModeMenu best match: 83.655% (nonmatchings/updateCourseSelectModeMenu-8808947407184708385/base_13.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/course_select/course_select_menu/updateCourseSelectModeMenu.s")
 
 #ifdef NON_MATCHING
@@ -339,8 +339,8 @@ void updateCourseSelectModeMenu(void) {
                         repeat = gMenuInputRepeatTimers;
                     }
                     if (selection > 0) {
-                        selection = tempSelection;
-                        gCourseSelectModeSelection = selection;
+                        gCourseSelectModeSelection = tempSelection;
+                        selection = (u8) tempSelection;
                     }
                 } else {
                     repeat = gMenuInputRepeatTimers;
