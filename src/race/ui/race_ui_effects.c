@@ -881,7 +881,7 @@ extern RaceUiSpriteInit D_800D5FF0[];
 extern CourseSpawnEntry gRaceCourseStartEntries[];
 extern Vec3i D_800D61C0[];
 extern Vec3i D_800D6340[];
-extern Vtx D_800D6350[][4];
+extern Vtx D_800D6350[];
 extern Vec3i D_800D6220[];
 extern Vec3i D_800D62A0;
 extern Vec3i D_800D6324;
@@ -4758,7 +4758,7 @@ void initRaceCourseSpinningObject(RaceUiSpinningParticleActor *arg0) {
     setCallbackTaskCallback(arg0, updateRaceCourseSpinningObject);
 }
 
-// renderCourseStartFinishSprite best match: 99.268% (nonmatchings/func_800634C8-7273315160691878794/base_9.c)
+// renderCourseStartFinishSprite best match: 99.946% (nonmatchings/renderCourseStartFinishSprite-1189375296343516052/base_5.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race/ui/race_ui_effects/renderCourseStartFinishSprite.s")
 
 #ifdef NON_MATCHING
@@ -4775,13 +4775,13 @@ void renderCourseStartFinishSprite(RaceUiCourseSpriteActor *arg0) {
             arg0->matrixDirty = 0;
             arg0->vertices = allocMenuRenderScratch(0x40);
             if (arg0->vertices != NULL) {
-                arg0->vertices[0] = D_800D6350[arg0->index][0];
+                arg0->vertices[0] = D_800D6350[arg0->index * 4];
                 arg0->vertices[0].v.tc[0] += arg0->angle << 5;
-                arg0->vertices[1] = D_800D6350[arg0->index][1];
+                arg0->vertices[1] = D_800D6350[arg0->index * 4 + 1];
                 arg0->vertices[1].v.tc[0] += arg0->angle << 5;
-                arg0->vertices[2] = D_800D6350[arg0->index][2];
+                arg0->vertices[2] = D_800D6350[arg0->index * 4 + 2];
                 arg0->vertices[2].v.tc[0] += arg0->angle << 5;
-                arg0->vertices[3] = D_800D6350[arg0->index][3];
+                arg0->vertices[3] = D_800D6350[arg0->index * 4 + 3];
                 arg0->vertices[3].v.tc[0] += arg0->angle << 5;
             }
         }
