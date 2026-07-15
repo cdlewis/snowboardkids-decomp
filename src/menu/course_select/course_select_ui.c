@@ -473,16 +473,14 @@ void initCourseSelectPreviewModelIn(void *arg0) {
     setCallbackTaskCallback(actor, updateCourseSelectPreviewModelIn);
 }
 
-// drawCourseSelectPreviewModelClose best match: 97.744% (nonmatchings/drawCourseSelectPreviewModelClose-5802343343535905907/base_2.c)
+// drawCourseSelectPreviewModelClose best match: 99.774% (nonmatchings/drawCourseSelectPreviewModelClose-8367390958892477031/base_3.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/course_select/course_select_ui/drawCourseSelectPreviewModelClose.s")
 
 #ifdef NON_MATCHING
 void drawCourseSelectPreviewModelClose(CourseSelectCoursePreviewActor *arg0) {
-    FixedTransform sp30;
     u8 sp2F;
     u8 sp2E;
-    CourseSelectRacePlayer *temp_v0_3;
-    s32 temp_v0_4;
+    FixedTransform sp30;
     s32 temp_v0_2;
     int temp_v0;
     u8 temp_v1;
@@ -499,6 +497,8 @@ void drawCourseSelectPreviewModelClose(CourseSelectCoursePreviewActor *arg0) {
     if ((D_8010AECC[var_t0] == 2) || (D_8010AECC[var_t0] & 1)) {
         temp_v0 = arg0->playerFlags[var_t0];
         if ((temp_v0 == 0) || (temp_v0 & 1)) {
+            CourseSelectRacePlayer *temp_v0_3;
+
             if (D_8010AECC[var_t0] == 3) {
                 var_a3 = arg0->playerSlots[var_t0].courseIndex;
             } else {
@@ -514,7 +514,7 @@ void drawCourseSelectPreviewModelClose(CourseSelectCoursePreviewActor *arg0) {
                 var_v1 = D_8010AED0 - 1;
             }
             temp_v0_3 = &gRacePlayers[gCurrentViewportIndex];
-            if (temp_v0_3->state == 5) {
+            if (temp_v0_3->selectedCharacterId == 5) {
                 var_v1 = 0;
                 var_a3 = (var_a3 % 3) + 0xC;
             }
@@ -524,10 +524,9 @@ void drawCourseSelectPreviewModelClose(CourseSelectCoursePreviewActor *arg0) {
             sp2E = var_v1;
             sp2F = var_a3;
             composeFixedTransforms(&arg0->sourceTransform, &arg0->playerTransforms[var_t0], &sp30);
-            temp_v0_4 = allocFixedTransformMatrix(&sp30);
-            arg0->matrix = temp_v0_4;
-            if (temp_v0_4 != 0) {
-                drawRacePlayerModelRootPart((void *)temp_v0_4, (s16) sp2F, (s16) sp2E);
+            arg0->matrix = allocFixedTransformMatrix(&sp30);
+            if (arg0->matrix != 0) {
+                drawRacePlayerModelRootPart((void *)arg0->matrix, (s16) sp2F, (s16) sp2E);
             }
         }
     }
