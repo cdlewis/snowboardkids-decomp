@@ -5018,17 +5018,11 @@ void dispatchRacePlayerMode30Attack(RacePlayer *player) {
     }
 }
 
-// updateRacePlayerMode30AttackApproach best match: 98.321% (nonmatchings/updateRacePlayerMode30AttackApproach-5512657642801906896/base_7.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race/player/race_player_update/updateRacePlayerMode30AttackApproach.s")
-
-#ifdef NON_MATCHING
 void updateRacePlayerMode30AttackApproach(RacePlayer *player) {
     s16 updateTimer;
     s16 facingAngle;
     s16 angleDiff;
     s16 roll;
-    s32 tempFlags;
-    s32 stateFlags;
 
     updateTimer = player->updateTimer;
     if (updateTimer == 0) {
@@ -5038,22 +5032,19 @@ void updateRacePlayerMode30AttackApproach(RacePlayer *player) {
         if (player->unk29C >= 0x20001) {
             player->unk306 = 1;
             player->unk31E = calculateFixedAngleFromDeltaXZ(player->unk40.x, player->unk40.z);
-            tempFlags = player->stateFlags & 0x400;
-            stateFlags = tempFlags;
-            if (tempFlags != 0) {
-                stateFlags = player->stateFlags & 0x400;
+            if (player->stateFlags & 0x400) {
                 player->unk31E += 0x800;
             }
 
-            if ((s16) ((player->unk31E - player->facingAngle) & 0x800) < 0x800) {
+            if ((s16) (angleDiff = 0x800 & (player->unk31E - player->facingAngle)) < 0x800) {
                 player->unk31C = 0;
-                if (stateFlags != 0) {
+                if (player->stateFlags & 0x400) {
                     player->unk31C = 1;
                 }
                 player->unk31E -= 0x400;
             } else {
                 player->unk31C = 1;
-                if (stateFlags != 0) {
+                if (player->stateFlags & 0x400) {
                     player->unk31C = 0;
                 }
                 player->unk31E += 0x400;
@@ -5130,7 +5121,6 @@ void updateRacePlayerMode30AttackApproach(RacePlayer *player) {
         }
     }
 }
-#endif
 
 void updateRacePlayerMode30AttackResolve(RacePlayer *player) {
     if (gRaceResultState != 0) {
