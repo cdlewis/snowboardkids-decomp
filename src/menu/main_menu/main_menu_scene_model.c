@@ -635,10 +635,11 @@ void setMainMenuSceneModelRotation(s32 modelIndex, s16 x, s16 y, s16 z) {
     model->rot.z = z;
 }
 
-// updateMainMenuSceneModelTransforms best match: 84.572% (nonmatchings/updateMainMenuSceneModelTransforms-2694253543240320626/base_6.c)
+// updateMainMenuSceneModelTransforms best match: 84.923% (nonmatchings/updateMainMenuSceneModelTransforms-8075865578671233833/base_9.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/main_menu/main_menu_scene_model/updateMainMenuSceneModelTransforms.s")
 
 #ifdef NON_MATCHING
+#if 0
 static s32 getMainMenuSceneModelPartOffsetZ(MainMenuSceneModel *model, s32 partIndex) {
     if (partIndex == MAIN_MENU_SCENE_MODEL_PART_COUNT - 1) {
         return model->lastPartOffsetZ;
@@ -755,4 +756,134 @@ void updateMainMenuSceneModelTransforms(MainMenuSceneModel *model) {
         displayObject++;
     } while (partIndex != MAIN_MENU_SCENE_MODEL_PART_COUNT);
 }
+#endif
+
+typedef struct MainMenuTransformPartCursor {
+    u8 bytes[0x14];
+} MainMenuTransformPartCursor;
+
+typedef struct MainMenuTransformMatrixSlot {
+    s16 e0;
+    s16 e2;
+    s16 e4;
+    s16 e6;
+    s16 e8;
+    s16 eA;
+    s16 eC;
+    s16 eE;
+    s16 e10;
+    s16 pad12[7];
+} MainMenuTransformMatrixSlot;
+
+#define MAIN_MENU_TRANSFORM_CURSOR_S16(cursor, offset) (*(s16 *)((u8 *)(cursor) + (offset)))
+#define MAIN_MENU_TRANSFORM_CURSOR_S32(cursor, offset) (*(s32 *)((u8 *)(cursor) + (offset)))
+
+void updateMainMenuSceneModelTransforms(MainMenuSceneModel *model) {
+    MainMenuTransformMatrixSlot partMatrices[MAIN_MENU_SCENE_MODEL_PART_COUNT];
+    s16 rootMatrix[16];
+    MainMenuTransformPartCursor *partCursor;
+    MainMenuTransformMatrixSlot *matrixSlot;
+    MainMenuTransformMatrixSlot *matrixSlotEnd;
+    MainMenuTransformMatrixSlot *localSlot;
+    s16 *combinedMatrix;
+    s16 *localMatrix;
+    s16 *rootAxis;
+    u8 *modelCursor;
+    u8 *displayCursor;
+    u8 *displayBase;
+    u8 *partBase;
+    s16 *rootCursor;
+    s16 *positionCursor;
+    s32 sineX;
+    s32 cosineX;
+    s32 sineY;
+    s32 cosineY;
+    s32 sineZ;
+    s32 cosineZ;
+    s32 sineXTimesSineY;
+    s32 cosineXTimesSineY;
+    s32 axisOffset;
+    s32 partOffset;
+    s32 dot;
+
+    matrixSlot = partMatrices;
+    partCursor = (MainMenuTransformPartCursor *)model;
+    matrixSlotEnd = (MainMenuTransformMatrixSlot *)rootMatrix;
+    do {
+        sineX = fixedSine(MAIN_MENU_TRANSFORM_CURSOR_S16(partCursor, 0x1E));
+        cosineX = fixedCosine(MAIN_MENU_TRANSFORM_CURSOR_S16(partCursor, 0x1E));
+        sineY = fixedSine(MAIN_MENU_TRANSFORM_CURSOR_S16(partCursor, 0x20));
+        cosineY = fixedCosine(MAIN_MENU_TRANSFORM_CURSOR_S16(partCursor, 0x20));
+        sineZ = fixedSine(MAIN_MENU_TRANSFORM_CURSOR_S16(partCursor, 0x22));
+        cosineZ = fixedCosine(MAIN_MENU_TRANSFORM_CURSOR_S16(partCursor, 0x22));
+        matrixSlot->e4 = -sineY;
+        matrixSlot++;
+        partCursor++;
+        matrixSlot[-1].e0 = (cosineY * cosineZ) / FIXED_MATRIX_ONE;
+        matrixSlot[-1].e2 = (cosineY * sineZ) / FIXED_MATRIX_ONE;
+        sineXTimesSineY = (sineX * sineY) / FIXED_MATRIX_ONE;
+        matrixSlot[-1].e6 = ((sineXTimesSineY * cosineZ) / FIXED_MATRIX_ONE) + ((cosineX * -sineZ) / FIXED_MATRIX_ONE);
+        matrixSlot[-1].e8 = ((sineXTimesSineY * sineZ) / FIXED_MATRIX_ONE) + ((cosineX * cosineZ) / FIXED_MATRIX_ONE);
+        matrixSlot[-1].eA = (sineX * cosineY) / FIXED_MATRIX_ONE;
+        cosineXTimesSineY = (cosineX * sineY) / FIXED_MATRIX_ONE;
+        matrixSlot[-1].eC = ((cosineXTimesSineY * cosineZ) / FIXED_MATRIX_ONE) + ((sineX * sineZ) / FIXED_MATRIX_ONE);
+        matrixSlot[-1].eE = ((cosineXTimesSineY * sineZ) / FIXED_MATRIX_ONE) + (((-sineX) * cosineZ) / FIXED_MATRIX_ONE);
+        matrixSlot[-1].e10 = (cosineX * cosineY) / FIXED_MATRIX_ONE;
+    } while (matrixSlot != matrixSlotEnd);
+
+    makeFixedRotationZXY(rootMatrix, model->rot.x, model->rot.y, model->rot.z);
+    *(s32 *)&rootMatrix[10] = model->pos.x;
+    *(s32 *)&rootMatrix[12] = model->pos.y;
+    *(s32 *)&rootMatrix[14] = model->pos.z;
+
+    displayBase = (u8 *)model;
+    localSlot = partMatrices;
+    do {
+        displayCursor = displayBase;
+        axisOffset = 0;
+        localMatrix = (s16 *)localSlot;
+        do {
+            modelCursor = displayCursor;
+            rootAxis = rootMatrix;
+            do {
+                dot = (rootAxis[6] * localMatrix[2]) + (rootAxis[0] * localMatrix[0]) +
+                      (rootAxis[2] * localMatrix[1]);
+                rootAxis++;
+                modelCursor += 2;
+                MAIN_MENU_TRANSFORM_CURSOR_S16(modelCursor, 0x146) = dot / FIXED_MATRIX_ONE;
+            } while (rootAxis != &rootMatrix[MAIN_MENU_SCENE_MODEL_MATRIX_AXES]);
+            axisOffset += 6;
+            displayCursor += 6;
+            localMatrix += MAIN_MENU_SCENE_MODEL_MATRIX_AXES;
+        } while (axisOffset != 0x12);
+        localSlot++;
+        displayBase += 0x20;
+    } while (localSlot < (MainMenuTransformMatrixSlot *)rootMatrix);
+
+    displayBase = (u8 *)model;
+    partBase = (u8 *)model;
+    partOffset = 0;
+    do {
+        positionCursor = rootMatrix;
+        rootCursor = positionCursor;
+        combinedMatrix = (s16 *)displayBase;
+        do {
+            dot = (((s64)rootCursor[3] * MAIN_MENU_TRANSFORM_CURSOR_S32(partBase, 0x28)) +
+                   ((s64)rootCursor[0] * MAIN_MENU_TRANSFORM_CURSOR_S32(partBase, 0x24)) +
+                   ((s64)rootCursor[6] * MAIN_MENU_TRANSFORM_CURSOR_S32(partBase, 0x2C))) / FIXED_MATRIX_ONE;
+            MAIN_MENU_TRANSFORM_CURSOR_S32(combinedMatrix, 0x15C) = dot;
+            dot += MAIN_MENU_TRANSFORM_CURSOR_S32(positionCursor, 0x14);
+            positionCursor += 2;
+            rootCursor++;
+            combinedMatrix = (s16 *)((u8 *)combinedMatrix + 4);
+            MAIN_MENU_TRANSFORM_CURSOR_S32(combinedMatrix, 0x158) = dot;
+        } while (positionCursor != &rootMatrix[6]);
+        partOffset += 0x14;
+        displayBase += 0x20;
+        partBase += 0x14;
+    } while (partOffset != 0x118);
+}
+
+#undef MAIN_MENU_TRANSFORM_CURSOR_S16
+#undef MAIN_MENU_TRANSFORM_CURSOR_S32
 #endif
