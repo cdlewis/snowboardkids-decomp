@@ -1811,16 +1811,9 @@ void updateRacePlayerMode13AerialTrick(RacePlayer *player) {
 }
 #endif
 
-// updateRacePlayerMode15AerialTrick best match: 99.719% (nonmatchings/updateRacePlayerMode15AerialTrick-8331816093655448999/base_7.c)
-
-#pragma GLOBAL_ASM("asm/nonmatchings/race/player/race_player_update/updateRacePlayerMode15AerialTrick.s")
-
-#ifdef NON_MATCHING
 void updateRacePlayerMode15AerialTrick(RacePlayer *player) {
     s32 yVel;
     s32 stateTimer;
-    u32 stateFlags;
-    long long clampedTimer;
 
     if (player->updateState == 0) {
         setRaceMotionAnimation(player, 4);
@@ -1836,7 +1829,6 @@ void updateRacePlayerMode15AerialTrick(RacePlayer *player) {
 
     updateRacePlayerTrickSubstate(player);
     updateRacePlayerLeanAngle(player, player->unk254, 0);
-    stateTimer = 0x400;
     player->velocity.y -= player->unk264;
     clampRacePlayerVectorXZSpeed(&player->velocity, player);
 
@@ -1847,24 +1839,19 @@ void updateRacePlayerMode15AerialTrick(RacePlayer *player) {
     player->unk74 = yVel;
 
     player->unk6C = (s16) ((s32) (fixedSine(player->unk7E) * -0x1000) / 0x1000);
-    stateTimer = (player->stateTimer & 0xFFFFFFFFFFFFFFFF) + 0x20;
-    player->stateTimer = stateTimer;
-    if (stateTimer >= 0x401) {
-        clampedTimer = 0x400;
-        stateTimer = clampedTimer;
-        player->stateTimer = stateTimer;
+    player->stateTimer += 0x20;
+    if (player->stateTimer >= 0x401) {
+        player->stateTimer = 0x400;
     }
-
-    stateFlags = player->stateFlags | 2;
-    player->stateFlags = stateFlags;
+    stateTimer = player->stateTimer;
+    player->stateFlags |= 2;
     if (stateTimer < 0x3D0) {
-        player->stateFlags = stateFlags | 0x800;
+        player->stateFlags |= 0x800;
         if ((player->soundDisabled == 0) && (gFrameCounter & 1)) {
             createCallbackTaskWithUserIdPreservingArgs(initRacePlayerSnowSpray, 5, 2, (u16) player->playerIndex);
         }
     }
 }
-#endif
 
 void updateRacePlayerMode16AerialTrick(RacePlayer *player) {
     s32 yVel;
