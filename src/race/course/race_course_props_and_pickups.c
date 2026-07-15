@@ -613,7 +613,7 @@ void updateThrownPickupSpawner(ThrownPickupSpawnerActor *arg0) {
 #undef SPAWN_RANGE_MAX
 #undef SPAWN_RANGE_MIN
 
-// renderRacePickupIdle best match: 96.574% (base_4.c)
+// renderRacePickupIdle best match: 97.686% (base_7.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race/course/race_course_props_and_pickups/renderRacePickupIdle.s")
 
 #ifdef NON_MATCHING
@@ -623,7 +623,7 @@ void renderRacePickupIdle(RacePickupActor *arg0) {
     Gfx *sp108;
     Gfx *spB0;
     Gfx *spAC;
-    Gfx *sp8C;
+    Gfx *volatile sp8C;
     Gfx *temp_v0;
     Gfx *temp_t1;
 
@@ -656,13 +656,11 @@ void renderRacePickupIdle(RacePickupActor *arg0) {
 
         if (arg0->scaleDisplayList != NULL) {
             gDPPipeSync(gRegionAllocPtr++);
-            temp_v0 = gRegionAllocPtr++;
-            temp_v0->words.w0 = 0xBC000806;
-            sp10C = temp_v0;
+            sp10C = gRegionAllocPtr++;
+            sp10C->words.w0 = 0xBC000806;
             sp10C->words.w1 = getRelocatableHeapBlockBase(gRaceRspSegment2AssetHandle);
-            temp_v0 = gRegionAllocPtr++;
-            temp_v0->words.w0 = 0xBC000C06;
-            sp108 = temp_v0;
+            sp108 = gRegionAllocPtr++;
+            sp108->words.w0 = 0xBC000C06;
             sp108->words.w1 = getRelocatableHeapBlockBase(gRaceRspSegment3AssetHandle);
             gSPMatrix(gRegionAllocPtr++, arg0->scaleDisplayList, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
             if (arg0->variant == 0) {
