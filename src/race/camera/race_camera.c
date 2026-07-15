@@ -594,7 +594,7 @@ void initRaceCameraChase(void) {
     D_801124A0->update();
 }
 
-// updateRaceCameraChase best match: 84.185% (nonmatchings/updateRaceCameraChase-2694253543240320626/base_11.c)
+// updateRaceCameraChase best match: 85.055% (nonmatchings/updateRaceCameraChase-8075865578671233833/base_8.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race/camera/race_camera/updateRaceCameraChase.s")
 
 #ifdef NON_MATCHING
@@ -610,7 +610,7 @@ void updateRaceCameraChase(void) {
     s32 blockedAngles;
     s32 dx;
     s32 dz;
-    s64 distSq;
+    s32 distSqHigh;
     s32 dist;
     s32 sine;
     s32 cosine;
@@ -644,10 +644,10 @@ void updateRaceCameraChase(void) {
                     otherPlayer = (RacePlayerSlot *)((u8 *)players + (i * otherStride));
                     dx = player->state.pos.x - otherPlayer->state.pos.x;
                     dz = player->state.pos.z - otherPlayer->state.pos.z;
-                    distSq = (s64)dx * dx + (s64)dz * dz;
+                    distSqHigh = ((s64)dx * dx + (s64)dz * dz) >> 32;
 
-                    if (distSq < 0xE1000000000LL) {
-                        if (distSq < 0xE0F00000000LL) {
+                    if (distSqHigh < 0xE11) {
+                        if (distSqHigh < 0xE10) {
                             blockedAngles |= 1 << (s16)(((((calculateFixedAngleFromDeltaXZ(dx, dz) + 0x800) - targetYaw) + 0x100) & 0xFFF) >> 9);
                         }
                     }
