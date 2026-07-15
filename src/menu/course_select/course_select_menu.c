@@ -1081,7 +1081,7 @@ void initCourseSelectCourseDetailsMenu(void) {
     updateCallbackTasks();
 }
 
-// updateCourseSelectCourseDetailsMenu best match: 97.679% (nonmatchings/updateCourseSelectCourseDetailsMenu-1189375296343516052/base_17.c)
+// updateCourseSelectCourseDetailsMenu best match: 97.871% (nonmatchings/updateCourseSelectCourseDetailsMenu-8953690873630951657/base_1.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/course_select/course_select_menu/updateCourseSelectCourseDetailsMenu.s")
 
 #ifdef NON_MATCHING
@@ -1092,17 +1092,19 @@ void updateCourseSelectCourseDetailsMenu(void) {
     u8 selection;
     u8 oldSelection;
     s32 input;
+    s32 heldUp;
 
     if (gCourseDetailsMenuState >= 2) {
         selection = gCourseDetailsMenuSelection;
         oldSelection = selection;
-        i = gPlayerInputHeld & (STICK_UP | U_JPAD);
+        heldUp = gPlayerInputHeld & (STICK_UP | U_JPAD);
+        i = heldUp;
         if (!i &&
             !(gPlayerInputHeld & (STICK_DOWN | D_JPAD))) {
             gMenuInputRepeatTimers = 0;
         }
         if ((gPlayerInputPressed & (STICK_UP | U_JPAD)) ||
-            ((gPlayerInputHeld & (STICK_UP | U_JPAD)) &&
+            (heldUp &&
              ((u16) gMenuInputRepeatTimers >= 0xB) &&
              (((u16) gMenuInputRepeatTimers % 3) == 0))) {
             repeat = gMenuInputRepeatTimers;
