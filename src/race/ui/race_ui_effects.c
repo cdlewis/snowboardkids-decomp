@@ -5322,23 +5322,19 @@ void initTimeTrialRecordDeltaPopup(RaceUiTimeTrialRecordDeltaPopupActor *popup) 
     setCallbackTaskCallback(popup, updateTimeTrialRecordDeltaPopupSlideIn);
 }
 
-// func_800651BC best match: 98.009%
-#pragma GLOBAL_ASM("asm/nonmatchings/race/ui/race_ui_effects/func_800651BC.s")
-
-#ifdef NON_MATCHING
 void func_800651BC(RaceUiGfxCommandActor *arg0) {
     RaceUiGfxCommandScriptEntry *entry;
     s16 textureIndex;
     s32 i;
     register RaceUiGfxCommandActor *actor;
-    u8 padding[8];
+    u8 padding[1];
     void *image;
     void *palette;
 
+    textureIndex = -1;
     actor = arg0;
     gSPDisplayList(gRegionAllocPtr++, gEffectRenderModeSetupDl);
 
-    textureIndex = -1;
     entry = D_800D693C[gRaceCourseIndex];
     i = 0;
     if (entry->sentinel != -1) {
@@ -5365,7 +5361,6 @@ void func_800651BC(RaceUiGfxCommandActor *arg0) {
 
     gSPDisplayList(gRegionAllocPtr++, gEffectRenderModeCleanupDl);
 }
-#endif
 
 void updateRaceCourseCoinMarkers(RaceUiGfxCommandActor *arg0) {
     RaceUiGfxCommandScriptEntry *entry;
