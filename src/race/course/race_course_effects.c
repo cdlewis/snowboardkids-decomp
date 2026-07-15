@@ -1383,16 +1383,16 @@ void renderCourseTriggerVolume(RaceCourseTriggerEffect *arg0) {
     }
 }
 
-// collidePlayerWithCourseTriggerVolume best match: 73.429% at nonmatchings/collidePlayerWithCourseTriggerVolume-5802343343535905907/base_5.c.
+// collidePlayerWithCourseTriggerVolume best match: 75.486% at nonmatchings/collidePlayerWithCourseTriggerVolume-8367390958892477031/base_9.c.
 #pragma GLOBAL_ASM("asm/nonmatchings/race/course/race_course_effects/collidePlayerWithCourseTriggerVolume.s")
 
 #ifdef NON_MATCHING
 void collidePlayerWithCourseTriggerVolume(RacePlayer *arg0, RaceCourseTriggerEffect *arg1) {
     RaceCourseTriggerEffect *trigger;
     RacePlayer *player;
-    Vec3i transformed;
     Vec3i delta;
-    FixedMatrix3s matrix;
+    Vec3i transformed;
+    s16 matrix[0x10];
     s32 savedPush;
     CourseTriggerEntry *entry;
     s32 scaleX;
