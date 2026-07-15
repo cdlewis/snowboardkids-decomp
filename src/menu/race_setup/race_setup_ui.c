@@ -1029,7 +1029,7 @@ void initRaceSetupSaveStatusWidgets(TitleMenuWidgetActor *arg0) {
     setCallbackTaskCallback(new_var, updateRaceSetupSaveStatusWidgets);
 }
 
-// drawRaceSetupSaveChoicePrompts best match: 99.867% (nonmatchings/drawRaceSetupSaveChoicePrompts-8331816093655448999/base_9.c)
+// drawRaceSetupSaveChoicePrompts best match: 99.900% (nonmatchings/drawRaceSetupSaveChoicePrompts/base_1.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/race_setup/race_setup_ui/drawRaceSetupSaveChoicePrompts.s")
 
 #ifdef NON_MATCHING
@@ -1042,16 +1042,18 @@ void drawRaceSetupSaveChoicePrompts(TitleMenuTransitionActor *arg0) {
     s32 alpha;
     TitleMenuTransitionActor *new_var4;
     s16 state;
+    u16 selection;
 
     intro = gActiveMenuTask;
     new_var2 = arg0;
     if (intro->state == 8) {
         for (i = 0; i < gPlayerCount; i++) {
-            if (gRaceSetupMenuSubState.selection[i] != arg0->selection[i]) {
+            selection = gRaceSetupMenuSubState.selection[i];
+            state = gMenuChoicePromptState[i];
+            if (selection != arg0->selection[i]) {
                 arg0->selection[i] = gRaceSetupMenuSubState.selection[i];
             }
 
-            state = gMenuChoicePromptState[i];
             if (state != 0) {
                 new_var4 = arg0;
                 if (!(state & 1)) {

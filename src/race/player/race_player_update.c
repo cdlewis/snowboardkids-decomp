@@ -4947,63 +4947,65 @@ void updateRacePlayerMode07SpiralExit(RacePlayer *player) {
     }
 }
 
-// tryStartRacePlayerCourseObjectMode best match: 99.836% (nonmatchings/tryStartRacePlayerCourseObjectMode-2225551288923588688/base_16.c)
+// tryStartRacePlayerCourseObjectMode best match: 99.016% (nonmatchings/tryStartRacePlayerCourseObjectMode/base_final.c)
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race/player/race_player_update/tryStartRacePlayerCourseObjectMode.s")
 
 #ifdef NON_MATCHING
 s32 tryStartRacePlayerCourseObjectMode(s16 arg0) {
-    RacePlayer *temp_v0;
-    Struct800955C0 *temp_a1;
-    s32 var_a0;
-    s32 var_a0_2;
-    RacePlayer *new_var;
-    u32 temp_v1;
+    RacePlayer *player;
+    Struct800955C0 *courseEntry;
+    s32 deltaOrFlags;
+    s32 delta;
+    RacePlayer *firstPlayer;
+    RacePlayer *players;
+    u32 stateFlags;
 
-    temp_v0 = &gRacePlayers[arg0];
-    temp_v1 = temp_v0->stateFlags;
-    if (temp_v1 & 0x40) {
-        return 0;
-    }
-
-    new_var = gRacePlayers;
-    if (((gRacePlayers[0].isActive != 0) && (arg0 != (u16) new_var->playerIndex)) && (gRacePlayers[0].stateFlags & 0x20)) {
-        return 0;
-    }
-    if (((gRacePlayers[1].isActive != 0) && (arg0 != (u16) gRacePlayers[1].playerIndex)) && (gRacePlayers[1].stateFlags & 0x20)) {
-        return 0;
-    }
-    if (((gRacePlayers[2].isActive != 0) && (arg0 != (u16) gRacePlayers[2].playerIndex)) && (gRacePlayers[2].stateFlags & 0x20)) {
-        var_a0_2 = 0;
-        return var_a0_2;
-    }
-    if (((gRacePlayers[3].isActive != 0) && (arg0 != (u16) gRacePlayers[3].playerIndex)) && (gRacePlayers[3].stateFlags & 0x20)) {
+    player = &gRacePlayers[arg0];
+    stateFlags = player->stateFlags;
+    players = gRacePlayers;
+    if (stateFlags & 0x40) {
         return 0;
     }
 
-    temp_a1 = &gRaceCourseStartEntries[gRaceCourseIndex];
-    var_a0 = temp_v0->posX - temp_a1->unk18;
-    if (var_a0 < 0) {
-        var_a0 = -var_a0;
+    firstPlayer = players;
+    if (((players[0].isActive != 0) && (arg0 != (u16) firstPlayer->playerIndex)) && (players[0].stateFlags & 0x20)) {
+        return 0;
     }
-    if (var_a0 >= 0x180001) {
+    if (((players[1].isActive != 0) && (arg0 != (u16) players[1].playerIndex)) && (players[1].stateFlags & 0x20)) {
+        return 0;
+    }
+    if (((players[2].isActive != 0) && (arg0 != (u16) players[2].playerIndex)) && (players[2].stateFlags & 0x20)) {
+        delta = 0;
+        return delta;
+    }
+    if (((players[3].isActive != 0) && (arg0 != (u16) players[3].playerIndex)) && (players[3].stateFlags & 0x20)) {
         return 0;
     }
 
-    var_a0_2 = temp_v0->posZ - temp_a1->unk1C;
-    if (var_a0_2 < 0) {
-        var_a0_2 = -var_a0_2;
+    courseEntry = &gRaceCourseStartEntries[gRaceCourseIndex];
+    deltaOrFlags = player->posX - courseEntry->unk18;
+    if (deltaOrFlags < 0) {
+        deltaOrFlags = -deltaOrFlags;
     }
-    if (var_a0_2 >= 0x180001) {
+    if (deltaOrFlags >= 0x180001) {
         return 0;
     }
 
-    var_a0_2 = gRacePlayerAttackStartTimer;
-    var_a0 = 0x04001020;
-    temp_v0->stateFlags = temp_v1 | var_a0;
-    gRacePlayers[arg0].unk57C = var_a0_2;
-    if (var_a0_2 != 0) {
-        gRacePlayerAttackStartTimer = var_a0_2 - 1;
+    delta = player->posZ - courseEntry->unk1C;
+    if (delta < 0) {
+        delta = -delta;
+    }
+    if (delta >= 0x180001) {
+        return 0;
+    }
+
+    delta = gRacePlayerAttackStartTimer;
+    deltaOrFlags = 0x04001020;
+    player->stateFlags = stateFlags | deltaOrFlags;
+    gRacePlayers[arg0].unk57C = delta;
+    if (delta != 0) {
+        gRacePlayerAttackStartTimer = delta - 1;
     }
     return 1;
 }
