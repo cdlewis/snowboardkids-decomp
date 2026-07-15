@@ -1212,38 +1212,37 @@ void updateCourseSelectCourseCursors(CourseSelectWidgetActor *arg0) {
     }
 }
 
-// initCourseSelectCourseCursors best match: 89.532% (nonmatchings/initCourseSelectCourseCursors-4588856335748919862/base_12.c)
+// initCourseSelectCourseCursors best match: 97.456% (nonmatchings/initCourseSelectCourseCursors-3549320994361659932/base_18.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/course_select/course_select_ui/initCourseSelectCourseCursors.s")
 
 #ifdef NON_MATCHING
 void initCourseSelectCourseCursors(CourseSelectWidgetActor *arg0) {
     CourseSelectWidgetActor *actor = arg0;
+    s32 layoutIndex;
     s32 idx;
     s32 i;
     u8 *courseUnlocked;
-    s16 (*xyTable)[6];
-    s16 (*xTable)[4];
-    u8 *bytePtr;
-    s16 *posPtr;
+    s16 *xLayout;
+    char mask;
+    s32 unlockState;
 
+    mask = 0xFFFFFFFFFFFFFFFFu;
     if (actor && actor) {
     }
-
     if (gPlayerCount < 3) {
         idx = gPlayerCount - 1;
     } else {
         idx = 2;
     }
-
     i = 0;
-    if ((s32)gPlayerCount > 0) {
-        xyTable = &gCourseSelectIconListYLayout[idx];
-        xTable = &gCourseSelectIconListXLayout[idx];
-        courseUnlocked = D_8010AEA0;
-        bytePtr = (u8 *)actor;
-        posPtr = (s16 *)actor;
-        do {
-            if (courseUnlocked[0] != 0) {
+    layoutIndex = idx;
+    if ((s32) gPlayerCount > 0) {
+        s16 *yLayout;
+        yLayout = gCourseSelectIconListYLayout[layoutIndex];
+        xLayout = gCourseSelectIconListXLayout[layoutIndex]; courseUnlocked = D_8010AEA0; do {
+            unlockState = *courseUnlocked & mask;
+            courseUnlocked++;
+            if ((0, unlockState) != 0) {
                 idx = 1;
                 if (gRacePlayers[i].selectedCharacterId == 5) {
                     idx = 0;
@@ -1251,19 +1250,17 @@ void initCourseSelectCourseCursors(CourseSelectWidgetActor *arg0) {
             } else {
                 idx = 0;
             }
-            courseUnlocked++;
-            bytePtr[0x38] = (*xyTable)[idx];
-            posPtr[0x10] = (*xyTable)[((i & 1) * 2) + idx + 2];
-            posPtr[0xC] = (*xTable)[((i >= 2) * 2) + 1];
-            posPtr[0x14] = 0;
-            bytePtr[0x30] = 0;
-            bytePtr[0x34] = 0;
+            if ((i && i) && i) {
+            }
+            actor->courseCursorBobOffset[i] = yLayout[idx];
+            actor->courseCursorY[i] = yLayout[((i & 1) * 2) + idx + 2];
+            actor->courseCursorX[i] = xLayout[((i >= 2) * 2) + 1];
+            actor->courseCursorAlpha[i] = 0;
+            actor->courseCursorState[i] = 0;
+            actor->courseCursorTimer[i] = 0;
             i++;
-            bytePtr++;
-            posPtr = (s16 *)((u8 *)posPtr + 2);
-        } while (i < (s32)gPlayerCount);
+        } while (i < (s32) gPlayerCount);
     }
-
     setCallbackTaskCallback(actor, updateCourseSelectCourseCursors);
 }
 #endif
