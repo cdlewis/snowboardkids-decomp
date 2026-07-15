@@ -111,6 +111,8 @@ extern RaceTimerUiS8Stride D_80122296[];
 extern RaceTimerUiS32Stride D_801222E8[];
 extern s16 D_80122290;
 extern s16 D_801222F0;
+extern s32 gMenuFlowState;
+extern s32 D_80121B7C;
 
 void initRaceHud(void) {
     loadCompressedRomAsset(D_245A80, D_24C8E0, 0x1F);
@@ -1009,103 +1011,79 @@ void updateRaceCourseProgressMeter(void) {
 }
 #endif
 
-// updateRaceHud best match: 95.252% at nonmatchings/updateRaceHud-2870645799593382959/base_11.c.
-#pragma GLOBAL_ASM("asm/nonmatchings/race/ui/race_hud/updateRaceHud.s")
-
-#ifdef NON_MATCHING
 void updateRaceHud(void) {
-    RacePlayer *player;
     s32 i;
-    s8 palette;
 
     gRaceHudSpinnerFrame++;
     if (gRaceHudSpinnerFrame >= 12) {
         gRaceHudSpinnerFrame = 0;
     }
 
-    switch ((u16)gRaceHudMode) {
+    switch (*(u16 *)&gRaceHudMode) {
     case 0:
-        player = gRacePlayers;
-        palette = player->itemEffectPalette;
-        if (palette != 0) {
-            if (palette == 4) {
+        if (gRacePlayers[0].itemEffectPalette != 0) {
+            if (gRacePlayers[0].itemEffectPalette == 4) {
                 spawnRaceUiSparkle(-0x20, -0x60, 0, 0, 0);
-                palette = player->itemEffectPalette;
             }
-            player->itemEffectPalette = palette - 1;
+            gRacePlayers[0].itemEffectPalette--;
         }
-        palette = player->actionEffectPalette;
-        if (palette != 0) {
-            if (palette == 4) {
+        if (gRacePlayers[0].actionEffectPalette != 0) {
+            if (gRacePlayers[0].actionEffectPalette == 4) {
                 spawnRaceUiSparkle(0, -0x60, 0, 0, 1);
-                palette = player->actionEffectPalette;
             }
-            player->actionEffectPalette = palette - 1;
+            gRacePlayers[0].actionEffectPalette--;
         }
         addRenderCallback(&gRaceOverlayRenderCallbackList, drawSinglePlayerRaceHud, 0);
         addRenderCallback(&gRaceForegroundRenderCallbackList, noopRaceHudCallback, 0);
         updateRaceCourseProgressMeter();
         return;
     case 1:
-        player = gRacePlayers;
-        i = 0;
-        do {
-            if (player->itemEffectPalette != 0) {
-                if (player->itemEffectPalette == 4) {
+        for (i = 0; i < 2; i++) {
+            if (gRacePlayers[i].itemEffectPalette != 0) {
+                if (gRacePlayers[i].itemEffectPalette == 4) {
                     spawnRaceUiSparkle(-0x88, -0x30, (s16)i, 0, 0);
                 }
-                player->itemEffectPalette--;
+                gRacePlayers[i].itemEffectPalette--;
             }
-            if (player->actionEffectPalette != 0) {
-                if (player->actionEffectPalette == 4) {
+            if (gRacePlayers[i].actionEffectPalette != 0) {
+                if (gRacePlayers[i].actionEffectPalette == 4) {
                     spawnRaceUiSparkle(-0x68, -0x30, (s16)i, 0, 1);
                 }
-                player->actionEffectPalette--;
+                gRacePlayers[i].actionEffectPalette--;
             }
-            i++;
-            player++;
-        } while (i != 2);
+        }
         addRenderCallback(&gRaceOverlayRenderCallbackList, drawTwoPlayerRaceHud, 0);
         addRenderCallback(&gRaceForegroundRenderCallbackList, drawTwoPlayerLapCounter, 0);
         updateRaceCourseProgressMeter();
         return;
     case 3:
-        player = gRacePlayers;
-        palette = player[3].itemEffectPalette;
-        if (palette != 0) {
-            if (palette == 4) {
+        if (gRacePlayers[3].itemEffectPalette != 0) {
+            if (gRacePlayers[3].itemEffectPalette == 4) {
                 spawnRaceUiSparkle(-0x10, -0x30, 3, 1, 0);
-                palette = player[3].itemEffectPalette;
             }
-            player[3].itemEffectPalette = palette - 1;
+            gRacePlayers[3].itemEffectPalette--;
         }
-        palette = player[3].actionEffectPalette;
-        if (palette != 0) {
-            if (palette == 4) {
+        if (gRacePlayers[3].actionEffectPalette != 0) {
+            if (gRacePlayers[3].actionEffectPalette == 4) {
                 spawnRaceUiSparkle(0, -0x30, 3, 1, 1);
-                palette = player[3].actionEffectPalette;
             }
-            player[3].actionEffectPalette = palette - 1;
+            gRacePlayers[3].actionEffectPalette--;
         }
     case 2:
-        player = gRacePlayers;
-        i = 0;
-        do {
-            if (player->itemEffectPalette != 0) {
-                if (player->itemEffectPalette == 4) {
+        for (i = 0; i < 3; i++) {
+            if (gRacePlayers[i].itemEffectPalette != 0) {
+                if (gRacePlayers[i].itemEffectPalette == 4) {
                     spawnRaceUiSparkle(-0x10, -0x30, (s16)i, 1, 0);
                 }
-                player->itemEffectPalette--;
+                gRacePlayers[i].itemEffectPalette--;
             }
-            if (player->actionEffectPalette != 0) {
-                if (player->actionEffectPalette == 4) {
+            if (gRacePlayers[i].actionEffectPalette != 0) {
+                if (gRacePlayers[i].actionEffectPalette == 4) {
                     spawnRaceUiSparkle(0, -0x30, (s16)i, 1, 1);
                 }
-                player->actionEffectPalette--;
+                gRacePlayers[i].actionEffectPalette--;
             }
-            i++;
-            player++;
-        } while (i != 3);
+        }
         addRenderCallback(&gRaceOverlayRenderCallbackList, drawMultiplayerRaceHud, 0);
         addRenderCallback(&gRaceForegroundRenderCallbackList, drawMultiplayerLapCounter, 0);
         updateRaceCourseProgressMeter();
@@ -1168,28 +1146,22 @@ void updateRaceHud(void) {
         addRenderCallback(&gRaceForegroundRenderCallbackList, drawTrickAttackChallengeLabels, 0);
         return;
     case 8:
-        player = gRacePlayers;
-        palette = player->itemEffectPalette;
-        if (palette != 0) {
-            if (palette == 4) {
+        if (gRacePlayers[0].itemEffectPalette != 0) {
+            if (gRacePlayers[0].itemEffectPalette == 4) {
                 spawnRaceUiSparkle(-0x20, -0x60, 0, 0, 0);
-                palette = player->itemEffectPalette;
             }
-            player->itemEffectPalette = palette - 1;
+            gRacePlayers[0].itemEffectPalette--;
         }
-        palette = player->actionEffectPalette;
-        if (palette != 0) {
-            if (palette == 4) {
+        if (gRacePlayers[0].actionEffectPalette != 0) {
+            if (gRacePlayers[0].actionEffectPalette == 4) {
                 spawnRaceUiSparkle(0, -0x60, 0, 0, 1);
-                palette = player->actionEffectPalette;
             }
-            player->actionEffectPalette = palette - 1;
+            gRacePlayers[0].actionEffectPalette--;
         }
         addRenderCallback(&gRaceOverlayRenderCallbackList, drawTrainingRaceHud, 0);
         return;
     }
 }
-#endif
 
 s32 calculateRaceTimerDelta(RaceTimer *arg0, RaceTimer *arg1, RaceTimer *arg2) {
     s32 total1;
