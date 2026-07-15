@@ -58,7 +58,7 @@ extern u8 D_800E0A84[];
 extern s32 gPlayer1Money;
 #endif
 extern MenuIntroActor *gActiveMenuTask;
-extern TitleMenuWidgetItemView *D_8010ADE0;
+extern TitleMenuWidgetActor *D_8010ADE0;
 extern s16 gControllerPakStatusCodes[];
 extern s16 gMenuChoicePromptState[];
 extern s16 gPlayerBadgeDisplayOrder[];
@@ -929,7 +929,7 @@ void drawRaceSetupSaveStatusWidgets(TitleMenuWidgetActor *arg0) {
     }
 }
 
-// updateRaceSetupSaveStatusWidgets best match: 94.550% (nonmatchings/updateRaceSetupSaveStatusWidgets-8460208293698481450/base_9.c)
+// updateRaceSetupSaveStatusWidgets best match: 97.389% (nonmatchings/updateRaceSetupSaveStatusWidgets-1189375296343516052/base_9.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/race_setup/race_setup_ui/updateRaceSetupSaveStatusWidgets.s")
 
 #ifdef NON_MATCHING
@@ -937,8 +937,7 @@ void updateRaceSetupSaveStatusWidgets(TitleMenuWidgetActor *arg0) {
     register TitleMenuWidgetActor *actor;
     s32 playerIndex;
     s32 transitionStateSum;
-    TitleIntroTransitionState *global;
-    TitleMenuWidgetItemView *panelPositions;
+    TitleMenuWidgetActor *panelPositions;
     u8 transitionState;
     u8 previousTransitionState;
 
@@ -946,20 +945,19 @@ void updateRaceSetupSaveStatusWidgets(TitleMenuWidgetActor *arg0) {
     actor = arg0;
     playerIndex = 0;
     if ((s32) gPlayerCount > 0) {
-        global = &gRaceSetupMenuSubState;
         do {
-            actor->x[playerIndex] = panelPositions->x;
-            actor->y[playerIndex] = panelPositions->y;
+            actor->x[playerIndex] = panelPositions->x[playerIndex];
+            actor->y[playerIndex] = panelPositions->y[playerIndex];
 
-            transitionState = global->saveStatusTransitionStates[playerIndex];
             previousTransitionState = actor->statusTransitionStates[playerIndex];
+            transitionState = gRaceSetupMenuSubState.saveStatusTransitionStates[playerIndex];
             if (transitionState != previousTransitionState) {
                 actor->statusTransitionStates[playerIndex] = transitionState;
-                actor->nextStatusCodes[playerIndex] = global->nextSelection[playerIndex];
+                actor->nextStatusCodes[playerIndex] = gRaceSetupMenuSubState.nextSelection[playerIndex];
                 previousTransitionState = actor->statusTransitionStates[playerIndex];
+                transitionState = previousTransitionState;
             }
 
-            transitionState = previousTransitionState;
             switch (transitionState) {
             case SAVE_STATUS_TRANSITION_FADE_IN:
                 actor->alpha[playerIndex] += SAVE_STATUS_FADE_STEP;
@@ -984,8 +982,7 @@ void updateRaceSetupSaveStatusWidgets(TitleMenuWidgetActor *arg0) {
             }
 
             playerIndex++;
-            panelPositions = (TitleMenuWidgetItemView *) ((u8 *) panelPositions + 2);
-            global->saveStatusTransitionStates[playerIndex - 1] = transitionState;
+            gRaceSetupMenuSubState.saveStatusTransitionStates[playerIndex - 1] = transitionState;
         } while (playerIndex < (s32) gPlayerCount);
     }
 
