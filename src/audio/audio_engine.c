@@ -1270,7 +1270,7 @@ s32 setSoundPlayerTempoByHandle(s32 arg0, s32 arg1) {
     return matches;
 }
 
-// soundPlayerUpdate best match: 96.963% (nonmatchings/soundPlayerUpdate-2694253543240320626/base_4.c)
+// soundPlayerUpdate best match: 99.025% (nonmatchings/soundPlayerUpdate-8075865578671233833/base_17.c)
 
 #pragma GLOBAL_ASM("asm/nonmatchings/audio/audio_engine/soundPlayerUpdate.s")
 
@@ -1288,38 +1288,41 @@ ALMicroTime soundPlayerUpdate(void *arg0) {
     if (gSoundPlayerCount > 0) {
         do {
             if (var_s0->sequencePos != 0) {
-                temp_t9 = var_s0->unk0 + (u16)var_s0->unkB8;
-                var_s0->unk0 = temp_t9;
+                temp_t9 = (var_s0->unk0 += (u16)var_s0->unkB8);
 
                 if ((var_s0->unkBC != 0x7FFF) && ((u32)var_s0->unkC < temp_t9) && (var_s0->sequencePos != 0)) {
 loop_6:
                     soundPlayerReadNextNote(var_s0, var_s1);
-                    if ((u32)var_s0->unkC < (u32)var_s0->unk0) {
+                    if ((int)((u32)var_s0->unkC < (u32)var_s0->unk0)) {
                         if (var_s0->sequencePos != 0) {
                             goto loop_6;
                         }
                     }
                 }
 
-                if (var_s0->sequencePos == 0) {
+                if (0 == var_s0->sequencePos) {
 
                 } else {
                     if (var_s0->unk60 != 0) {
                         soundPlayerUpdateVolumeTrack(var_s0);
+                    }
+                    if (var_s0) {
                     }
                     if (var_s0->unk68 != 0) {
                         soundPlayerUpdatePanTrack(var_s0);
                     }
 
                     temp_v0 = var_s0->fadeTarget;
-                    temp_t0 = temp_v0 - 1;
-                    if (temp_v0 != -1) {
+                    temp_t0 = temp_v0 - (1 & 0xFFFFFFFFFFFFFFFF);
+                    if (var_s0->fadeTarget != -1) {
                         var_s0->fadeTarget = temp_t0;
-                        if (temp_t0 == -1) {
+                        if ((temp_t0 ^ 0) == -1) {
                             var_s0->sequencePos = soundPlayerCommandEndTrack(var_s0, 0);
-                            if (var_s0->unkE4 != 0) {
+                            temp_t9_2 = var_s0->unkE4;
+                            if (temp_t9_2 != 0) {
                                 var_s0->unkE4 = 0;
-                                alSynStopVoice(&gAudioSynthesizer, (ALVoice *)(gSoundPlayerVoices + (var_s1 * 0x1C)));
+                                alSynStopVoice(&gAudioSynthesizer,
+                                               (ALVoice *)(gSoundPlayerVoices + (7 * (((0, var_s1)) * 4))));
                             }
                         }
                     }
