@@ -453,40 +453,10 @@ void setTitleFadeColor(u8 a0, u8 a1, u8 a2) {
     gFadeTimer = TITLE_FADE_TIMER;
 }
 
-// appendFadeOverlayDisplayList best match: 88.485% at nonmatchings/appendFadeOverlayDisplayList-9017456803007796287/base_19.c.
-#ifdef NON_MATCHING
-Gfx *appendFadeOverlayDisplayList(void) {
-    Gfx *gfx;
-    Gfx *ret;
-    Gfx *retCopy;
-    s32 negFade;
-    s32 fade;
-    s32 denom;
-    s32 scale;
-
-    gfx = gRegionAllocPtr;
-    gRegionAllocPtr = gfx + 1;
-    gfx->words.w0 = 0xBC000008;
-    fade = gFadeTimer;
-    do {
-    } while (0 != 0U);
-    retCopy = gfx;
-    negFade = -fade;
-    scale = 0x1F400;
-    denom = 0x3E8 - fade;
-    ret = retCopy;
-    gfx->words.w1 = (((u16)(scale / (0x3E8 - fade))) << 16) | ((((negFade << 8) + scale) / denom) & 0xFFFF);
-
-    gfx = gRegionAllocPtr;
-    gRegionAllocPtr = gfx + 1;
-    gfx->words.w0 = 0xF8000000;
-    gfx->words.w1 = (gFadeColorRed << 24) | ((gFadeColorGreen << 8) << 8) | (gFadeColorBlue << 8) | 0xFF;
-
-    return ret;
+void appendFadeOverlayDisplayList(void) {
+    gSPFogPosition(gRegionAllocPtr++, gFadeTimer, 1000);
+    gDPSetFogColor(gRegionAllocPtr++, gFadeColorRed, gFadeColorGreen, gFadeColorBlue, 255);
 }
-#else
-#pragma GLOBAL_ASM("asm/nonmatchings/engine/system_runtime/appendFadeOverlayDisplayList.s")
-#endif
 
 // submitFramebufferRenderTask best match: 81.299% at nonmatchings/submitFramebufferRenderTask-8808947407184708385/base_4.c.
 #ifdef NON_MATCHING
