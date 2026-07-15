@@ -1,72 +1,41 @@
 #include "game/engine/viewport_manager.h"
 
-// resetAllViewports best match: 53.082% (nonmatchings/resetAllViewports-3357475854818838508/base_7.c)
+// resetAllViewports best match: 69.524% (nonmatchings/resetAllViewports-1189375296343516052/base_9.c)
 
 #pragma GLOBAL_ASM("asm/nonmatchings/engine/viewport_manager/resetAllViewports.s")
 
 #ifdef NON_MATCHING
-#define RESET_VIEWPORT_FIELD(index, field, value)     \
-    do {                                              \
-        volatile ViewportState *viewport;             \
-        viewport = &gViewportStates[index];           \
-        viewport->field = value;                      \
-    } while (0)
+typedef struct {
+    ViewportState viewport0;
+    ViewportState viewport1;
+    ViewportState viewport2;
+    ViewportState viewport3;
+} ViewportStates;
+
+extern ViewportStates gViewportStates;
+
+#define RESET_VIEWPORT(viewport)                     \
+    gViewportStates.viewport.active = 0;             \
+    gViewportStates.viewport.screenBoundsValid = 0;  \
+    gViewportStates.viewport.clearFramebuffer = 0;   \
+    gViewportStates.viewport.overlayActive = 0;      \
+    gViewportStates.viewport.overlayR = 0;           \
+    gViewportStates.viewport.overlayG = 0;           \
+    gViewportStates.viewport.overlayB = 0;           \
+    gViewportStates.viewport.overlayAlpha = 0;       \
+    gViewportStates.viewport.unk14 = 0x1FF;          \
+    gViewportStates.viewport.unk16 = 0;              \
+    gViewportStates.viewport.unk1C = 0x1FF;          \
+    gViewportStates.viewport.unk1E = 0
 
 void resetAllViewports(void) {
-    RESET_VIEWPORT_FIELD(0, active, 0);
-    RESET_VIEWPORT_FIELD(0, screenBoundsValid, 0);
-    RESET_VIEWPORT_FIELD(0, clearFramebuffer, 0);
-    RESET_VIEWPORT_FIELD(0, overlayActive, 0);
-    RESET_VIEWPORT_FIELD(0, overlayR, 0);
-    RESET_VIEWPORT_FIELD(0, overlayG, 0);
-    RESET_VIEWPORT_FIELD(0, overlayB, 0);
-    RESET_VIEWPORT_FIELD(0, overlayAlpha, 0);
-    RESET_VIEWPORT_FIELD(0, unk14, 0x1FF);
-    RESET_VIEWPORT_FIELD(0, unk16, 0);
-    RESET_VIEWPORT_FIELD(0, unk1C, 0x1FF);
-    RESET_VIEWPORT_FIELD(0, unk1E, 0);
-
-    RESET_VIEWPORT_FIELD(1, active, 0);
-    RESET_VIEWPORT_FIELD(1, screenBoundsValid, 0);
-    RESET_VIEWPORT_FIELD(1, clearFramebuffer, 0);
-    RESET_VIEWPORT_FIELD(1, overlayActive, 0);
-    RESET_VIEWPORT_FIELD(1, overlayR, 0);
-    RESET_VIEWPORT_FIELD(1, overlayG, 0);
-    RESET_VIEWPORT_FIELD(1, overlayB, 0);
-    RESET_VIEWPORT_FIELD(1, overlayAlpha, 0);
-    RESET_VIEWPORT_FIELD(1, unk14, 0x1FF);
-    RESET_VIEWPORT_FIELD(1, unk16, 0);
-    RESET_VIEWPORT_FIELD(1, unk1C, 0x1FF);
-    RESET_VIEWPORT_FIELD(1, unk1E, 0);
-
-    RESET_VIEWPORT_FIELD(2, active, 0);
-    RESET_VIEWPORT_FIELD(2, screenBoundsValid, 0);
-    RESET_VIEWPORT_FIELD(2, clearFramebuffer, 0);
-    RESET_VIEWPORT_FIELD(2, overlayActive, 0);
-    RESET_VIEWPORT_FIELD(2, overlayR, 0);
-    RESET_VIEWPORT_FIELD(2, overlayG, 0);
-    RESET_VIEWPORT_FIELD(2, overlayB, 0);
-    RESET_VIEWPORT_FIELD(2, overlayAlpha, 0);
-    RESET_VIEWPORT_FIELD(2, unk14, 0x1FF);
-    RESET_VIEWPORT_FIELD(2, unk16, 0);
-    RESET_VIEWPORT_FIELD(2, unk1C, 0x1FF);
-    RESET_VIEWPORT_FIELD(2, unk1E, 0);
-
-    RESET_VIEWPORT_FIELD(3, active, 0);
-    RESET_VIEWPORT_FIELD(3, screenBoundsValid, 0);
-    RESET_VIEWPORT_FIELD(3, clearFramebuffer, 0);
-    RESET_VIEWPORT_FIELD(3, overlayActive, 0);
-    RESET_VIEWPORT_FIELD(3, overlayR, 0);
-    RESET_VIEWPORT_FIELD(3, overlayG, 0);
-    RESET_VIEWPORT_FIELD(3, overlayB, 0);
-    RESET_VIEWPORT_FIELD(3, overlayAlpha, 0);
-    RESET_VIEWPORT_FIELD(3, unk14, 0x1FF);
-    RESET_VIEWPORT_FIELD(3, unk16, 0);
-    RESET_VIEWPORT_FIELD(3, unk1C, 0x1FF);
-    RESET_VIEWPORT_FIELD(3, unk1E, 0);
+    RESET_VIEWPORT(viewport0);
+    RESET_VIEWPORT(viewport1);
+    RESET_VIEWPORT(viewport2);
+    RESET_VIEWPORT(viewport3);
 }
 
-#undef RESET_VIEWPORT_FIELD
+#undef RESET_VIEWPORT
 #endif
 
 void resetViewport(s32 arg0) {
