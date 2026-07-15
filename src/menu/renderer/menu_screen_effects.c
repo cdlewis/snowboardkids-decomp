@@ -693,49 +693,32 @@ void updateMainMenuModeIconFlash(MenuScreenEffectActor *arg0) {
     addRenderCallback(gRaceOverlayRenderCallbackList, drawMainMenuModeIconFlash, arg0);
 }
 
-// drawMainMenuModeLabel best match: 99.220%
-#pragma GLOBAL_ASM("asm/nonmatchings/menu/renderer/menu_screen_effects/drawMainMenuModeLabel.s")
-
-#ifdef NON_MATCHING
 void drawMainMenuModeLabel(MenuScreenEffectActor *arg0) {
-    Gfx *temp_v0;
-    Gfx *temp_v0_2;
-    Gfx *temp_v0_3;
-    Gfx *temp_v0_4;
-    Gfx *temp_v0_5;
-    u16 temp_t0;
+    gDPPipeSync(gRegionAllocPtr++);
+    gDPSetCombineMode(gRegionAllocPtr++, G_CC_MODULATEIA_PRIM, G_CC_MODULATEIA_PRIM);
+    gDPSetRenderMode(gRegionAllocPtr++, G_RM_XLU_SURF, G_RM_XLU_SURF2);
+    gDPSetPrimColor(gRegionAllocPtr++, 0, 0, 0xFF, 0xFF, 0xFF, arg0->unk18.half.lo);
 
-    temp_v0 = gRegionAllocPtr;
-    gRegionAllocPtr = temp_v0 + 1;
-    temp_v0->words.w0 = 0xE7000000;
-    temp_v0->words.w1 = 0;
-    temp_v0_2 = gRegionAllocPtr;
-    gRegionAllocPtr = temp_v0_2 + 1;
-    temp_v0_2->words.w0 = 0xFC119623;
-    temp_v0_2->words.w1 = 0xFF2FFFFF;
-    temp_v0_3 = gRegionAllocPtr;
-    gRegionAllocPtr = temp_v0_3 + 1; temp_v0_3->words.w0 = 0xB900031D; temp_v0_3->words.w1 = 0x00504240;
-    temp_v0_4 = gRegionAllocPtr;
-    gRegionAllocPtr = temp_v0_4 + 1;
-    temp_v0_4->words.w0 = 0xFA000000;
-    temp_v0_4->words.w1 = (arg0->unk18.half.lo & 0xFF) | ~0xFF;
-    temp_t0 = arg0->index;
-    switch (temp_t0) {
+    switch (arg0->index) {
     case 0:
         drawAssetTableSprite(-0x8C, 0x38, getRelocatableHeapBlockBase(gAssetHandles[34]), 1);
-        drawAssetTableSpriteWithExplicitPalette(-0x10, 0x38, getRelocatableHeapBlockBase(gAssetHandles[34]), 2, mainMenuModeLabelFlashTileOffsets[gFrameCounter & 3]);
+        drawAssetTableSpriteWithExplicitPalette(-0x10, 0x38, getRelocatableHeapBlockBase(gAssetHandles[34]), 2,
+                                                mainMenuModeLabelFlashTileOffsets[gFrameCounter & 3]);
         break;
     case 1:
         drawAssetTableSprite(-0x89, 0x38, getRelocatableHeapBlockBase(gAssetHandles[34]), 1);
-        drawAssetTableSpriteWithExplicitPalette(-0xD, 0x38, getRelocatableHeapBlockBase(gAssetHandles[34]), 3, mainMenuModeLabelFlashTileOffsets[gFrameCounter & 3]);
+        drawAssetTableSpriteWithExplicitPalette(-0xD, 0x38, getRelocatableHeapBlockBase(gAssetHandles[34]), 3,
+                                                mainMenuModeLabelFlashTileOffsets[gFrameCounter & 3]);
         break;
     case 2:
         drawAssetTableSprite(-0x7E, 0x38, getRelocatableHeapBlockBase(gAssetHandles[34]), 1);
-        drawAssetTableSpriteWithExplicitPalette(-2, 0x38, getRelocatableHeapBlockBase(gAssetHandles[34]), 4, mainMenuModeLabelFlashTileOffsets[gFrameCounter & 3]);
+        drawAssetTableSpriteWithExplicitPalette(-2, 0x38, getRelocatableHeapBlockBase(gAssetHandles[34]), 4,
+                                                mainMenuModeLabelFlashTileOffsets[gFrameCounter & 3]);
         break;
-    } temp_v0_5 = gRegionAllocPtr; gRegionAllocPtr = temp_v0_5 + 1; temp_v0_5->words.w0 = 0x06000000; temp_v0_5->words.w1 = (u32) gMenuRenderModeResetDl;
+    }
+
+    gSPDisplayList(gRegionAllocPtr++, gMenuRenderModeResetDl);
 }
-#endif
 
 void updateMainMenuModeLabelFadeIn(MenuScreenEffectActor *arg0) {
     s16 v = arg0->unk18.half.hi;
