@@ -6,6 +6,8 @@
 #define MENU_RENDERER_BROAD_PROTOTYPES
 #include "game/menu/renderer/menu_renderer.h"
 
+#define ASSET_HANDLE(index) (((s16 *)&gAssetHandles)[(index)])
+
 typedef u8 RaceTypeSelectPortrait[0x8C];
 
 typedef struct {
@@ -48,7 +50,6 @@ extern RaceTypeSelectFrameTileMapTable gRaceTypeSelectFrameTileMaps;
 extern u16 gRaceTypeSelectSpecialFrameCornerTile;
 extern RaceTypeSelectPortrait gRaceTypeSelectPortraitScripts[];
 extern RaceTypeSelectAssetHandles gAssetHandles;
-extern s16 gMenuCommonSpritesAssetHandle;
 extern RaceTypeSelectCursorState gRaceTypeSelectCursorTarget;
 extern u8 gRaceTypeSelectCursorAnimState;
 extern s32 gActiveMenuTask;
@@ -156,10 +157,10 @@ void initRaceTypeSelectOptionIcons(RaceTypeSelectRowActor *arg0) {
 }
 
 void drawRaceTypeSelectCornerSprites(RaceTypeSelectWidgetActor *arg0) {
-    drawMenuSprite(arg0->x, arg0->y, getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle), 3, 0x20, 0x20, 0, 0);
-    drawMenuSprite((s16) (arg0->x + 0x40), arg0->y, getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle), 4, 0x20, 0x20, 0, 0);
-    drawMenuSprite(arg0->x, (s16) (arg0->y + 0x40), getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle), 5, 0x20, 0x20, 0, 0);
-    drawMenuSprite((s16) (arg0->x + 0x40), (s16) (arg0->y + 0x40), getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle), 6, 0x20, 0x20, 0, 0);
+    drawMenuSprite(arg0->x, arg0->y, getRelocatableHeapBlockBase(ASSET_HANDLE(33)), 3, 0x20, 0x20, 0, 0);
+    drawMenuSprite((s16) (arg0->x + 0x40), arg0->y, getRelocatableHeapBlockBase(ASSET_HANDLE(33)), 4, 0x20, 0x20, 0, 0);
+    drawMenuSprite(arg0->x, (s16) (arg0->y + 0x40), getRelocatableHeapBlockBase(ASSET_HANDLE(33)), 5, 0x20, 0x20, 0, 0);
+    drawMenuSprite((s16) (arg0->x + 0x40), (s16) (arg0->y + 0x40), getRelocatableHeapBlockBase(ASSET_HANDLE(33)), 6, 0x20, 0x20, 0, 0);
 }
 
 void updateRaceTypeSelectCornerSprites(RaceTypeSelectWidgetActor *arg0) {
@@ -693,7 +694,7 @@ void initRaceTypeSelectOption3Frame(RaceTypeSelectWidgetActor *arg0) {
 }
 
 void drawRaceTypeSelectCursor(RaceTypeSelectWidgetActor *arg0) {
-    drawMenuSpriteWithAlpha(arg0->x, (s16)(arg0->y + (gRaceTypeSelection * 0x18)), getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle), 7, 0x20, 0x20, 0, arg0->sprite.spriteIndex, 0);
+    drawMenuSpriteWithAlpha(arg0->x, (s16)(arg0->y + (gRaceTypeSelection * 0x18)), getRelocatableHeapBlockBase(ASSET_HANDLE(33)), 7, 0x20, 0x20, 0, arg0->sprite.spriteIndex, 0);
 }
 
 void updateRaceTypeSelectCursor(RaceTypeSelectWidgetActor *arg0) {
@@ -813,7 +814,7 @@ void initRaceTypeSelectPortrait(RaceTypeSelectWidgetActor *arg0) {
 }
 
 void drawRaceTypeSelectArrowPrompt(RaceTypeSelectWidgetActor *arg0) {
-    drawMenuSpriteWithAlpha(arg0->x, arg0->y, getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle), 2, 0x20, 0x20, 0, arg0->sprite.spriteIndex, 0);
+    drawMenuSpriteWithAlpha(arg0->x, arg0->y, getRelocatableHeapBlockBase(ASSET_HANDLE(33)), 2, 0x20, 0x20, 0, arg0->sprite.spriteIndex, 0);
 }
 
 void updateRaceTypeSelectArrowPrompt(RaceTypeSelectWidgetActor *arg0) {
@@ -863,7 +864,7 @@ void drawRaceTypeSelectEntryFee(RaceTypeSelectWidgetActor *arg0) {
 
     if (gRaceTypeSelection != 3) {
         drawMenuPanelBackdrop(arg0->x, arg0->y, 0x5000, 0x4000);
-        drawMenuSpriteWithAlpha((s16)(arg0->x + 8), (s16)(arg0->y + 4), getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle), 0x11, 0x20, 0x20, 0, arg0->sprite.spriteIndex, 0);
+        drawMenuSpriteWithAlpha((s16)(arg0->x + 8), (s16)(arg0->y + 4), getRelocatableHeapBlockBase(ASSET_HANDLE(33)), 0x11, 0x20, 0x20, 0, arg0->sprite.spriteIndex, 0);
         sprintf(sp40, gRaceTypeSelectEntryFeeFormat, gPlayer1Money);
         drawMenuAsciiText((s16)(arg0->x + 0x10), (s16)(arg0->y + 0x10), sp40, 0, arg0->sprite.spriteIndex);
     }

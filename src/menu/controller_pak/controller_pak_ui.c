@@ -41,9 +41,6 @@ extern u8 gControllerPakMenuCursorState;
 extern u8 gControllerPakDeletePromptState;
 extern s32 gControllerPakFreeBytes;
 extern s32 gControllerPakFreeFileCount;
-extern s16 gMenuCommonSpritesAssetHandle;
-extern s16 gMenuIconTilemapAssetHandle;
-extern s16 D_80112178;
 extern u8 gControllerPakContinuePromptText[];
 extern u8 gControllerPakAreYouSureText[];
 extern u8 gControllerPakCouldNotEraseNoteText[];
@@ -348,7 +345,7 @@ void drawControllerPakFileDeleteMainOptions(ControllerPakOptionsActor *arg0) {
     }
 
     drawAlpha = alpha;
-    drawMenuSpriteWithAlpha(arg0->common.x, arg0->common.y, getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle), 1, 0x20, 0x20, 0, drawAlpha, 0);
+    drawMenuSpriteWithAlpha(arg0->common.x, arg0->common.y, getRelocatableHeapBlockBase(gAssetHandles[0x21]), 1, 0x20, 0x20, 0, drawAlpha, 0);
 
     if (drawAlpha == 0x100) {
         alpha = 0x80;
@@ -356,9 +353,9 @@ void drawControllerPakFileDeleteMainOptions(ControllerPakOptionsActor *arg0) {
         alpha = 0x100;
     }
 
-    drawMenuSpriteWithAlpha((s16)(arg0->common.x + 0x70), arg0->common.y, getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle), 2, 0x20, 0x20, 0,
+    drawMenuSpriteWithAlpha((s16)(arg0->common.x + 0x70), arg0->common.y, getRelocatableHeapBlockBase(gAssetHandles[0x21]), 2, 0x20, 0x20, 0,
                   alpha, 0);
-    drawMenuSpriteWithAlpha((s16)(arg0->common.x + (gControllerPakMenuState.mainChoice * 0x70)), arg0->common.y, getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle),
+    drawMenuSpriteWithAlpha((s16)(arg0->common.x + (gControllerPakMenuState.mainChoice * 0x70)), arg0->common.y, getRelocatableHeapBlockBase(gAssetHandles[0x21]),
                   5, 0x20, 0x20, 0, arg0->scale, 0);
 }
 
@@ -411,12 +408,12 @@ void drawControllerPakFileDeleteConfirmOptions(ControllerPakOptionsActor *arg0) 
         }
     }
 
-    drawMenuSpriteWithAlpha(arg0->common.x, arg0->common.y, getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle), 3, 0x20, 0x20, 0, alpha, 0);
-    drawMenuSpriteWithAlpha((s16)(actor->common.x + 0x70), actor->common.y, getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle), 4, 0x20, 0x20, 0,
+    drawMenuSpriteWithAlpha(arg0->common.x, arg0->common.y, getRelocatableHeapBlockBase(gAssetHandles[0x21]), 3, 0x20, 0x20, 0, alpha, 0);
+    drawMenuSpriteWithAlpha((s16)(actor->common.x + 0x70), actor->common.y, getRelocatableHeapBlockBase(gAssetHandles[0x21]), 4, 0x20, 0x20, 0,
                   otherAlpha, 0);
 
     if (gControllerPakMenuCursorState == 2) {
-        drawMenuSpriteWithAlpha((s16)(actor->common.x + (gControllerPakMenuConfirmChoice * 0x70)), actor->common.y, getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle), 5, 0x20,
+        drawMenuSpriteWithAlpha((s16)(actor->common.x + (gControllerPakMenuConfirmChoice * 0x70)), actor->common.y, getRelocatableHeapBlockBase(gAssetHandles[0x21]), 5, 0x20,
                       0x20, 0, actor->scale, 0);
     }
 }
@@ -719,7 +716,7 @@ void updateControllerPakFileDeleteIcon(s32 arg0) {
 }
 
 void initControllerPakFileDeleteIcon(ControllerPakSpriteActor *arg0) {
-    initMenuTilemapSprite((MenuTilemapSprite *)&arg0->sprite, getRelocatableHeapBlockBase(gMenuIconTilemapAssetHandle));
+    initMenuTilemapSprite((MenuTilemapSprite *)&arg0->sprite, getRelocatableHeapBlockBase(gAssetHandles[0x26]));
     arg0->sprite.x = 0x10;
     arg0->sprite.y = 0x10;
     arg0->common.x = arg0->startX;
@@ -736,7 +733,7 @@ void updateControllerPakMessageIcon(s32 arg0) {
 }
 
 void initControllerPakMessageIcon(ControllerPakSpriteActor *arg0) {
-    initMenuTilemapSprite((MenuTilemapSprite *)&arg0->sprite, getRelocatableHeapBlockBase(gMenuIconTilemapAssetHandle));
+    initMenuTilemapSprite((MenuTilemapSprite *)&arg0->sprite, getRelocatableHeapBlockBase(gAssetHandles[0x26]));
     arg0->sprite.x = 0x10;
     arg0->sprite.y = 0x20;
     arg0->common.x = arg0->startX;
@@ -745,13 +742,13 @@ void initControllerPakMessageIcon(ControllerPakSpriteActor *arg0) {
 }
 
 void drawControllerPakFileDeleteErrorPrompt(ControllerPakWindowActor *arg0) {
-    drawMenuSpriteWithAlpha(arg0->common.x, arg0->common.y, getRelocatableHeapBlockBase(D_80112178), 0, 0x20, 0x20, 0, arg0->scale, 0);
-    drawMenuSpriteWithAlpha((s16)(arg0->common.x + 0x40), arg0->common.y, getRelocatableHeapBlockBase(D_80112178), 1, 0x20, 0x20, 0, arg0->scale, 0);
-    drawMenuSpriteWithAlpha((s16)(arg0->common.x + 0x78), arg0->common.y, getRelocatableHeapBlockBase(D_80112178), 1, 0x20, 0x20, 0, arg0->scale, 0);
-    drawMenuSpriteWithAlpha((s16)(arg0->common.x + 0xB0), arg0->common.y, getRelocatableHeapBlockBase(D_80112178), 2, 0x20, 0x20, 0, arg0->scale, 0);
+    drawMenuSpriteWithAlpha(arg0->common.x, arg0->common.y, getRelocatableHeapBlockBase(gAssetHandles[0x24]), 0, 0x20, 0x20, 0, arg0->scale, 0);
+    drawMenuSpriteWithAlpha((s16)(arg0->common.x + 0x40), arg0->common.y, getRelocatableHeapBlockBase(gAssetHandles[0x24]), 1, 0x20, 0x20, 0, arg0->scale, 0);
+    drawMenuSpriteWithAlpha((s16)(arg0->common.x + 0x78), arg0->common.y, getRelocatableHeapBlockBase(gAssetHandles[0x24]), 1, 0x20, 0x20, 0, arg0->scale, 0);
+    drawMenuSpriteWithAlpha((s16)(arg0->common.x + 0xB0), arg0->common.y, getRelocatableHeapBlockBase(gAssetHandles[0x24]), 2, 0x20, 0x20, 0, arg0->scale, 0);
     drawMenuGlyphScript((s16)(arg0->common.x + 4), (s16)(arg0->common.y + 4), gControllerPakCouldNotEraseNoteText, 0, arg0->scale, 0);
     if (arg0->selectedOption == 1) {
-        drawMenuSprite((s16)(arg0->common.x + 0xD4), (s16)(arg0->common.y + 0x24), getRelocatableHeapBlockBase(D_80112178),
+        drawMenuSprite((s16)(arg0->common.x + 0xD4), (s16)(arg0->common.y + 0x24), getRelocatableHeapBlockBase(gAssetHandles[0x24]),
                       ((arg0->timer >= 8) + 5) & 0xFFFF, 0x20, 0x20, 0, 0);
     }
 }

@@ -62,9 +62,7 @@ extern s32 gMenuOverlayRenderCallbackList;
 extern s32 gMenuRenderCallbackList;
 extern Gfx gMenuRenderModeResetDl[];
 extern s16 gMenuFadeAlpha;
-extern s16 gMenuCommonSpritesAssetHandle;
-extern s16 gMenuIconTilemapAssetHandle;
-extern s16 gMenuPanelTilemapAssetHandle;
+extern s16 gAssetHandles[];
 extern u16 gEndingCreditsSequencePhase;
 extern u8 gEndingCreditsTransitionSnowboardIconSpinStep;
 extern s16 gEndingCreditsTransitionSnowboardIconAngle;
@@ -98,7 +96,7 @@ void updateEndingCreditsPhaseAdvanceSparkle(EndingCreditsEffectActor *arg0);
 void updateEndingCreditsDelayedSparkle(EndingCreditsEffectActor *arg0);
 
 void drawEndingCreditsCharacterVanishPoof(EndingCreditsEffectActor *arg0) {
-    drawMenuSprite(arg0->x + arg0->offsetX, arg0->y + arg0->offsetY, getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle), ((u16) arg0->angle + 0x32) & 0xFFFF, 0x20, 0x20, arg0->palette, 0);
+    drawMenuSprite(arg0->x + arg0->offsetX, arg0->y + arg0->offsetY, getRelocatableHeapBlockBase(gAssetHandles[0x21]), ((u16) arg0->angle + 0x32) & 0xFFFF, 0x20, 0x20, arg0->palette, 0);
 }
 
 void updateEndingCreditsCharacterVanishPoof(EndingCreditsEffectActor *arg0) {
@@ -136,7 +134,7 @@ void spawnEndingCreditsCharacterVanishPoof(s16 arg0, s16 arg1, u8 arg2, u8 arg3)
 }
 
 void drawEndingCreditsNancySpeedLine(EndingCreditsEffectActor *arg0) {
-    s32 temp = getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle);
+    s32 temp = getRelocatableHeapBlockBase(gAssetHandles[0x21]);
     EndingCreditsEffectActor *linePosition =
         (EndingCreditsEffectActor *)((s32)arg0 + arg0->uFrameIndex * sizeof(arg0->linePositions[0]));
 
@@ -170,7 +168,7 @@ void initEndingCreditsNancySpeedLines(EndingCreditsEffectActor *arg0) {
 }
 
 void drawEndingCreditsCharacterLoopingSparkle(EndingCreditsEffectActor *arg0) {
-    drawMenuSprite(arg0->x + arg0->offsetX, arg0->y + arg0->offsetY, getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle), ((u16) arg0->angle + 0x10) & 0xFFFF, 0x20, 0x20, 0, 0);
+    drawMenuSprite(arg0->x + arg0->offsetX, arg0->y + arg0->offsetY, getRelocatableHeapBlockBase(gAssetHandles[0x21]), ((u16) arg0->angle + 0x10) & 0xFFFF, 0x20, 0x20, 0, 0);
 }
 
 void updateEndingCreditsCharacterLoopingSparkle(EndingCreditsEffectActor *arg0) {
@@ -214,16 +212,16 @@ void drawEndingCreditsTommyBigBurst(EndingCreditsEffectActor *arg0) {
     gDPSetPrimColor(gRegionAllocPtr++, 0, 0, 0xFF, 0xFF, 0xFF, 0xA0);
 
     if (arg0->effectFrame != 0) {
-        drawMenuSprite(arg0->offsetX, arg0->offsetY, getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle), (arg0->effectFrame + 0x24) & 0xFFFF, 0x30, 0x20, 0, 0);
+        drawMenuSprite(arg0->offsetX, arg0->offsetY, getRelocatableHeapBlockBase(gAssetHandles[0x21]), (arg0->effectFrame + 0x24) & 0xFFFF, 0x30, 0x20, 0, 0);
     }
 
     gSPDisplayList(gRegionAllocPtr++, gMenuRenderModeResetDl);
 
     if (arg0->effectFrame < 0xC) {
-        drawMenuSprite(arg0->offsetX, arg0->offsetY, getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle), (arg0->effectFrame + 0x25) & 0xFFFF, 0x30, 0x20, 0, 0);
+        drawMenuSprite(arg0->offsetX, arg0->offsetY, getRelocatableHeapBlockBase(gAssetHandles[0x21]), (arg0->effectFrame + 0x25) & 0xFFFF, 0x30, 0x20, 0, 0);
     }
 
-    drawMenuSprite(arg0->x, arg0->y, getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle), 0x31, 0x20, 0x20, 0, 0);
+    drawMenuSprite(arg0->x, arg0->y, getRelocatableHeapBlockBase(gAssetHandles[0x21]), 0x31, 0x20, 0x20, 0, 0);
 }
 
 void updateEndingCreditsTommyBigBurst(EndingCreditsEffectActor *arg0) {
@@ -274,7 +272,7 @@ void initEndingCreditsTommyBigBurst(EndingCreditsEffectActor *arg0) {
 void drawEndingCreditsSlashRisingStar(EndingCreditsEffectActor *arg0) {
     s32 temp;
 
-    temp = getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle);
+    temp = getRelocatableHeapBlockBase(gAssetHandles[0x21]);
     drawMenuSprite(arg0->x, arg0->y, temp, (arg0->animFrame + 9) & 0xFFFF, 0x20, 0x20, 0, 0);
 }
 
@@ -304,7 +302,7 @@ void initEndingCreditsSlashRisingStar(EndingCreditsEffectActor *arg0) {
 }
 
 void drawEndingCreditsNancyRunDust(EndingCreditsEffectActor *arg0) {
-    s32 temp = getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle);
+    s32 temp = getRelocatableHeapBlockBase(gAssetHandles[0x21]);
     drawMenuSprite(arg0->x - 0xE, arg0->y - 0x50, temp, (u16)(gEndingCreditsNancyRunDustFrameOffsets[arg0->animFrame] + 6), 0x20, 0x20, 0, 0);
 }
 
@@ -337,7 +335,7 @@ void initEndingCreditsNancyRunDust(EndingCreditsEffectActor *arg0) {
 void drawEndingCreditsSmallBurst(EndingCreditsEffectActor *arg0) {
     s32 temp;
 
-    temp = getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle);
+    temp = getRelocatableHeapBlockBase(gAssetHandles[0x21]);
     drawMenuSprite(arg0->x, arg0->y, temp, (arg0->animFrame + 0x14) & 0xFFFF, 0x20, 0x20, 0, 0);
 }
 
@@ -370,7 +368,7 @@ void spawnEndingCreditsSmallBurst(s16 arg0, s16 arg1) {
 }
 
 void drawEndingCreditsCharacterAura(EndingCreditsEffectActor *arg0) {
-    drawMenuSprite(arg0->x + arg0->offsetX, arg0->y + arg0->offsetY, getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle), ((u16) arg0->angle + 0x20) & 0xFFFF, 0x20, 0x20, arg0->palette, 0);
+    drawMenuSprite(arg0->x + arg0->offsetX, arg0->y + arg0->offsetY, getRelocatableHeapBlockBase(gAssetHandles[0x21]), ((u16) arg0->angle + 0x20) & 0xFFFF, 0x20, 0x20, arg0->palette, 0);
 }
 
 void updateEndingCreditsCharacterAura(EndingCreditsEffectActor *arg0) {
@@ -412,7 +410,7 @@ void spawnEndingCreditsCharacterAura(s16 arg0, s16 arg1, u8 arg2, u8 arg3) {
 void drawEndingCreditsIdleSparkle(EndingCreditsEffectActor *arg0) {
     s32 temp;
 
-    temp = getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle);
+    temp = getRelocatableHeapBlockBase(gAssetHandles[0x21]);
     drawMenuSprite(arg0->x, arg0->y, temp, (arg0->animFrame + 0x20) & 0xFFFF, 0x20, 0x20, 0, 0);
 }
 
@@ -443,7 +441,7 @@ void initEndingCreditsIdleSparkle(EndingCreditsEffectActor *arg0) {
 }
 
 void drawEndingCreditsPhaseAdvanceSparkle(EndingCreditsEffectActor *arg0) {
-    s32 temp = getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle);
+    s32 temp = getRelocatableHeapBlockBase(gAssetHandles[0x21]);
     drawMenuSprite(arg0->x, arg0->y, temp, arg0->animFrame, 0x20, 0x20, 0, 0);
 }
 
@@ -483,7 +481,7 @@ void spawnEndingCreditsPhaseAdvanceSparkle(s16 arg0, s16 arg1) {
 void drawEndingCreditsDelayedSparkle(EndingCreditsEffectActor *arg0) {
     s32 temp;
 
-    temp = getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle);
+    temp = getRelocatableHeapBlockBase(gAssetHandles[0x21]);
     drawMenuSprite(arg0->x, arg0->y, temp, (arg0->animFrame + 0x1C) & 0xFFFF, 0x20, 0x20, 0, 0);
 }
 
@@ -532,7 +530,7 @@ void spawnEndingCreditsDelayedSparkle(s16 arg0, s16 arg1, u8 arg2) {
 void drawEndingCreditsTommySnowmanEntrance(EndingCreditsEffectActor *arg0) {
     s32 temp;
 
-    temp = getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle);
+    temp = getRelocatableHeapBlockBase(gAssetHandles[0x21]);
     drawMenuSprite(arg0->x, arg0->y, temp, (gEndingCreditsTommySnowmanEntranceFrameOffsets[arg0->animFrame] + 0x19) & 0xFFFF, 0x20, 0x20, 0, 0);
 }
 
@@ -712,7 +710,7 @@ void updateEndingCreditsTransitionSnowboardIconWaitStart(EndingCreditsEffectActo
 }
 
 void initEndingCreditsTransitionSnowboardIcon(EndingCreditsEffectActor *arg0) {
-    initMenuTilemapSprite((MenuTilemapSprite *)arg0->spriteState, getRelocatableHeapBlockBase(gMenuIconTilemapAssetHandle));
+    initMenuTilemapSprite((MenuTilemapSprite *)arg0->spriteState, getRelocatableHeapBlockBase(gAssetHandles[0x26]));
     arg0->angleVelocity = 0x10;
     arg0->x = arg0->startX;
     arg0->y = arg0->startY;
@@ -757,7 +755,7 @@ void updateEndingCreditsTransitionSnowflakeIconIdle(EndingCreditsEffectActor *ar
 }
 
 void initEndingCreditsTransitionSnowflakeIcon(EndingCreditsEffectActor *arg0) {
-    initMenuTilemapSprite((MenuTilemapSprite *)arg0->spriteState, getRelocatableHeapBlockBase(gMenuIconTilemapAssetHandle));
+    initMenuTilemapSprite((MenuTilemapSprite *)arg0->spriteState, getRelocatableHeapBlockBase(gAssetHandles[0x26]));
     arg0->angle = 0;
     arg0->angleVelocity = 0x1F0;
     arg0->x = 0x14;
@@ -817,7 +815,7 @@ void updateEndingCreditsTransitionLogoWipeOpen(EndingCreditsEffectActor *arg0) {
 }
 
 void initEndingCreditsTransitionLogoWipe(EndingCreditsEffectActor *arg0) {
-    initMenuTilemapSprite((MenuTilemapSprite *)arg0->spriteState, getRelocatableHeapBlockBase(gMenuPanelTilemapAssetHandle));
+    initMenuTilemapSprite((MenuTilemapSprite *)arg0->spriteState, getRelocatableHeapBlockBase(gAssetHandles[0x27]));
     arg0->angle = 0;
     arg0->angleVelocity = 0x10;
     arg0->x = arg0->startX;

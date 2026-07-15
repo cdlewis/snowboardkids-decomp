@@ -26,7 +26,6 @@ extern u8 gControllerPakRaceRecordSaveStatusMessages[][0x4C];
 extern u8 gControllerPakRaceRecordSaveChoicePromptTopSprites[];
 extern u8 gControllerPakRaceRecordSaveChoicePromptBottomSprites[];
 extern u8 gControllerPakRaceRecordSaveExitMessage[];
-extern s16 gMenuCommonSpritesAssetHandle;
 extern s16 gControllerPakRaceRecordSaveStatusTransitionAlpha;
 extern ControllerPakRaceRecordSaveStatusTransition gControllerPakRaceRecordSaveStatusTransition;
 extern u16 gControllerPakRaceRecordSaveStatusTransitionTargetStatus;
@@ -38,9 +37,10 @@ extern void *D_8010ADE4;
 extern s16 gControllerPakStatusCodes;
 extern s16 gMenuChoicePromptState;
 extern u8 gMenuSelectionConfirmTimer;
+extern s16 gAssetHandles[];
 
 #ifdef NON_MATCHING
-#define CONTROLLER_PAK_RACE_RECORD_SAVE_SCORE_TEXTURE_HANDLE (*(s16 *)&gAssetHandles[0x42])
+#define CONTROLLER_PAK_RACE_RECORD_SAVE_SCORE_TEXTURE_HANDLE (gAssetHandles[0x21])
 
 typedef struct {
     char pad[0x34];
@@ -50,7 +50,6 @@ typedef struct {
 
 extern s16 gPlayerBadgeDisplayOrder[];
 extern ControllerPakRaceRecordSaveScoreView gGameSaveDataBuffer;
-extern u8 gAssetHandles[];
 extern s32 gPlayer1Money;
 #endif
 
@@ -231,9 +230,9 @@ void drawControllerPakRaceRecordSavePromptFrame(ControllerPakRaceRecordSaveActor
 
     if (gControllerPakStatusCodes != 8) {
         alpha = arg0->unk1C.scale;
-        drawMenuSpriteWithAlpha((s16)(arg0->x - 2), (s16)(arg0->y + 0xC), getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle), 8, 0x20, 0x20,
+        drawMenuSpriteWithAlpha((s16)(arg0->x - 2), (s16)(arg0->y + 0xC), getRelocatableHeapBlockBase(gAssetHandles[0x21]), 8, 0x20, 0x20,
                       zero, alpha, zero);
-        drawMenuSpriteWithAlpha((s16)(arg0->x + 0x3E), (s16)(arg0->y + 0xC), getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle), 9, 0x20,
+        drawMenuSpriteWithAlpha((s16)(arg0->x + 0x3E), (s16)(arg0->y + 0xC), getRelocatableHeapBlockBase(gAssetHandles[0x21]), 9, 0x20,
                       0x20, zero, alpha, zero);
     }
 }
@@ -292,7 +291,7 @@ void drawControllerPakRaceRecordSaveStatusMessage(ControllerPakRaceRecordSaveAct
         drawMenuGlyphScript(arg0->x, arg0->y, text, 1, arg0->unk1C.scale, 0);
         if (((gControllerPakStatusCodes == 4) || (gControllerPakStatusCodes >= 7)) && (gMenuChoicePromptState == 0)) {
             if (arg0->unk1C.scale == 0x100) {
-                drawMenuSprite((s16)(arg0->x + 0x70), (s16)(arg0->y + 0x10), getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle),
+                drawMenuSprite((s16)(arg0->x + 0x70), (s16)(arg0->y + 0x10), getRelocatableHeapBlockBase(gAssetHandles[0x21]),
                               (((s32)arg0->state.b.frame >= 8) + 5) & 0xFFFF, 0x20, 0x20, 0, 0);
             }
         }
@@ -383,7 +382,7 @@ void drawControllerPakRaceRecordSaveStatusChoicePrompt(ControllerPakRaceRecordSa
         }
 
         drawAlpha = alpha;
-        drawMenuSpriteWithAlpha(arg0->x, arg0->unk1C.scale, getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle), gControllerPakRaceRecordSaveChoicePromptBottomSprites[gControllerPakStatusCodes * 2], 0x20, 0x20,
+        drawMenuSpriteWithAlpha(arg0->x, arg0->unk1C.scale, getRelocatableHeapBlockBase(gAssetHandles[0x21]), gControllerPakRaceRecordSaveChoicePromptBottomSprites[gControllerPakStatusCodes * 2], 0x20, 0x20,
                       0, drawAlpha, 0);
 
         if (drawAlpha == 0x100) {
@@ -392,12 +391,12 @@ void drawControllerPakRaceRecordSaveStatusChoicePrompt(ControllerPakRaceRecordSa
             alpha = 0x100;
         }
 
-        drawMenuSpriteWithAlpha(arg0->x, arg0->y, getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle), gControllerPakRaceRecordSaveChoicePromptTopSprites[gControllerPakStatusCodes * 2], 0x20, 0x20, 0, alpha,
+        drawMenuSpriteWithAlpha(arg0->x, arg0->y, getRelocatableHeapBlockBase(gAssetHandles[0x21]), gControllerPakRaceRecordSaveChoicePromptTopSprites[gControllerPakStatusCodes * 2], 0x20, 0x20, 0, alpha,
                       0);
 
         state = gMenuChoicePromptState;
         if ((state == 3) || (state == 4)) {
-            drawMenuSpriteWithAlpha(arg0->x, (s16)(((gMenuChoicePromptState * 0x10) + arg0->y) - 0x30), getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle), 0x12,
+            drawMenuSpriteWithAlpha(arg0->x, (s16)(((gMenuChoicePromptState * 0x10) + arg0->y) - 0x30), getRelocatableHeapBlockBase(gAssetHandles[0x21]), 0x12,
                           0x20, 0x20, 0, (u16)arg0->state.w.alpha, 7);
             state = gMenuChoicePromptState;
         }

@@ -10,6 +10,7 @@
 #include "game/race/player/race_player_movement.h"
 
 #define COURSE_INDEX_RELOAD (*(volatile s16 *)&gRaceCourseIndex)
+#define ASSET_HANDLE(index) (((s16 *)&gAssetHandles)[index])
 #define RACE_COURSE_EFFECTS_GFX_CMD(pkt, cmd0, cmd1) \
 { \
     Gfx *_g = (Gfx *)(pkt); \
@@ -232,9 +233,6 @@ extern void *resolveAssetTableRelativePointer(void *, u32);
 extern void drawScaledAssetTableSprite(s32, s32, s32, s32, s32);
 extern void drawAssetTableSprite(s32, s32, s32, s32);
 extern void osWritebackDCache(void *, s32);
-extern s16 gRaceCommonSpriteAssetHandle;
-extern s16 gRaceCourseModelAssetHandle;
-extern s16 gRaceCourseTextureAssetHandle;
 extern s32 gMenuFlowState;
 extern u8 gCurrentViewportIndex;
 extern u8 gRenderMatricesDirty;
@@ -257,8 +255,6 @@ void renderSpiralCourseObject(RaceMovingEffect *);
 extern u8 gRaceUpdatePaused;
 extern s16 gRaceCourseIndex;
 extern CourseAssetHandles gAssetHandles;
-extern s16 gRaceRspSegment2AssetHandle;
-extern s16 gRaceRspSegment3AssetHandle;
 extern RaceCamera D_801121E0[];
 extern CourseMarkerSpawnEntry *gCourseTextureMarkerSpawnEntriesByCourse[];
 extern CourseRenderEntry *gRaceCourseSceneryEntriesByCourse[];
@@ -311,17 +307,17 @@ extern Gfx D_2006880[];
 extern Gfx D_20058A8[];
 void drawRaceCountdownReadyPrompt(RaceCountdownEffect *arg0) {
     if (arg0->step != 0) {
-        drawScaledAssetTableSprite(-0x34, -0xC, getRelocatableHeapBlockBase(gRaceCommonSpriteAssetHandle), 0x3F, arg0->step);
+        drawScaledAssetTableSprite(-0x34, -0xC, getRelocatableHeapBlockBase(ASSET_HANDLE(0x1C)), 0x3F, arg0->step);
     } else {
-        drawAssetTableSprite(-0x34, -0xC, getRelocatableHeapBlockBase(gRaceCommonSpriteAssetHandle), 0x3F);
+        drawAssetTableSprite(-0x34, -0xC, getRelocatableHeapBlockBase(ASSET_HANDLE(0x1C)), 0x3F);
     }
 }
 
 void drawRaceCountdownGoPrompt(RaceCountdownEffect *arg0) {
     if (arg0->step != 0) {
-        drawScaledAssetTableSprite(-0x20, -0xC, getRelocatableHeapBlockBase(gRaceCommonSpriteAssetHandle), 0x40, arg0->step);
+        drawScaledAssetTableSprite(-0x20, -0xC, getRelocatableHeapBlockBase(ASSET_HANDLE(0x1C)), 0x40, arg0->step);
     } else {
-        drawAssetTableSprite(-0x20, -0xC, getRelocatableHeapBlockBase(gRaceCommonSpriteAssetHandle), 0x40);
+        drawAssetTableSprite(-0x20, -0xC, getRelocatableHeapBlockBase(ASSET_HANDLE(0x1C)), 0x40);
     }
 }
 
@@ -388,8 +384,8 @@ void renderRaceCourseModel(void *arg0) {
 
     gDPPipeSync(gRegionAllocPtr++);
 
-    gSPSegment(gRegionAllocPtr++, 0x02, getRelocatableHeapBlockBase(gRaceCourseModelAssetHandle));
-    gSPSegment(gRegionAllocPtr++, 0x03, getRelocatableHeapBlockBase(gRaceCourseTextureAssetHandle));
+    gSPSegment(gRegionAllocPtr++, 0x02, getRelocatableHeapBlockBase(ASSET_HANDLE(0x8)));
+    gSPSegment(gRegionAllocPtr++, 0x03, getRelocatableHeapBlockBase(ASSET_HANDLE(0x9)));
 
     gSPMatrix(gRegionAllocPtr++, gIdentityMatrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
 
@@ -517,7 +513,7 @@ void initRaceCourseModelRenderTask(void *arg0) {
 
 void drawFinalLapPromptForViewport(RacePlayerEffect *arg0) {
     if (gCurrentViewportIndex == arg0->playerIndex) {
-        drawAssetTableSprite(-0x30, -0xC, getRelocatableHeapBlockBase(gRaceCommonSpriteAssetHandle), 0x41);
+        drawAssetTableSprite(-0x30, -0xC, getRelocatableHeapBlockBase(ASSET_HANDLE(0x1C)), 0x41);
     }
 }
 
@@ -559,7 +555,7 @@ void renderCourseTextureMarkers(RaceCourseRenderEffect *arg0) {
             if (isPositionNearCurrentRaceViewportCamera(&entry->pos) != 0) {
                 if (entry->type != textureIndex) {
                     textureIndex = entry->type;
-                    getAssetTableImagePaletteAndSize((u8 *)getRelocatableHeapBlockBase((s32)gRaceCommonSpriteAssetHandle), textureIndex & 0xFFFF,
+                    getAssetTableImagePaletteAndSize((u8 *)getRelocatableHeapBlockBase((s32)ASSET_HANDLE(0x1C)), textureIndex & 0xFFFF,
                                   &image, &palette, &width, &height);
                     gDPLoadTextureBlock_4b(gRegionAllocPtr++, image, G_IM_FMT_CI, width, height, 0,
                                             G_TX_CLAMP, G_TX_CLAMP, G_TX_NOMASK, G_TX_NOMASK,
@@ -754,8 +750,8 @@ void renderPatrolCourseObject(PatrolCourseObjectEffect *arg0) {
 
         if (arg0->displayList != NULL) {
             gDPPipeSync(gRegionAllocPtr++);
-            gSPSegment(gRegionAllocPtr++, 0x02, getRelocatableHeapBlockBase(gRaceRspSegment2AssetHandle));
-            gSPSegment(gRegionAllocPtr++, 0x03, getRelocatableHeapBlockBase(gRaceRspSegment3AssetHandle));
+            gSPSegment(gRegionAllocPtr++, 0x02, getRelocatableHeapBlockBase(ASSET_HANDLE(0xA)));
+            gSPSegment(gRegionAllocPtr++, 0x03, getRelocatableHeapBlockBase(ASSET_HANDLE(0xB)));
             {
                 Gfx *_g = (Gfx *) (gRegionAllocPtr++);
 
@@ -917,8 +913,8 @@ void renderLaunchRampCourseObject(RaceMovingEffect *arg0) {
             Gfx *_g;
 
             gDPPipeSync(gRegionAllocPtr++);
-            gSPSegment(gRegionAllocPtr++, 0x02, getRelocatableHeapBlockBase(gRaceRspSegment2AssetHandle));
-            gSPSegment(gRegionAllocPtr++, 0x03, getRelocatableHeapBlockBase(gRaceRspSegment3AssetHandle));
+            gSPSegment(gRegionAllocPtr++, 0x02, getRelocatableHeapBlockBase(ASSET_HANDLE(0xA)));
+            gSPSegment(gRegionAllocPtr++, 0x03, getRelocatableHeapBlockBase(ASSET_HANDLE(0xB)));
             gSPMatrix(gRegionAllocPtr++, arg0->matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
             if (gRaceCourseIndex != 8) {
                 gSPDisplayList(gRegionAllocPtr++, D_2000910);
@@ -1011,8 +1007,8 @@ void renderSpiralCourseObject(RaceMovingEffect *arg0) {
     if (isPositionNearCurrentRaceViewportCamera(&arg0->pos) != 0) {
         if (arg0->matrix != NULL) {
             gDPPipeSync(gRegionAllocPtr++);
-            gSPSegment(gRegionAllocPtr++, 0x02, getRelocatableHeapBlockBase(gRaceRspSegment2AssetHandle));
-            gSPSegment(gRegionAllocPtr++, 0x03, getRelocatableHeapBlockBase(gRaceRspSegment3AssetHandle));
+            gSPSegment(gRegionAllocPtr++, 0x02, getRelocatableHeapBlockBase(ASSET_HANDLE(0xA)));
+            gSPSegment(gRegionAllocPtr++, 0x03, getRelocatableHeapBlockBase(ASSET_HANDLE(0xB)));
             gSPMatrix(gRegionAllocPtr++, arg0->matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
             if (gRaceCourseIndex != 8) {
                 gSPDisplayList(gRegionAllocPtr++, D_2000910);
@@ -1142,10 +1138,10 @@ void renderCourseGateObject(CourseGateObjectEffect *arg0) {
         gDPPipeSync(gRegionAllocPtr++);
         segment1 = gRegionAllocPtr++;
         segment1->words.w0 = 0xBC000806;
-        segment1->words.w1 = getRelocatableHeapBlockBase(gRaceRspSegment2AssetHandle);
+        segment1->words.w1 = getRelocatableHeapBlockBase(ASSET_HANDLE(0xA));
         segment2 = gRegionAllocPtr++;
         segment2->words.w0 = 0xBC000C06;
-        segment2->words.w1 = getRelocatableHeapBlockBase(gRaceRspSegment3AssetHandle);
+        segment2->words.w1 = getRelocatableHeapBlockBase(ASSET_HANDLE(0xB));
         arg0++;
         arg0--;
         gSPMatrix(gRegionAllocPtr++, arg0->sourceMatrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
@@ -1288,7 +1284,7 @@ void renderCourseBillboardMarker(RaceCourseMarkerEffect *arg0) {
         gDPPipeSync(gRegionAllocPtr++);
         segmentGfx = gRegionAllocPtr++;
         segmentGfx->words.w0 = 0xBC000806;
-        segmentGfx->words.w1 = (u32) getRelocatableHeapBlockBase(gRaceCourseModelAssetHandle);
+        segmentGfx->words.w1 = (u32) getRelocatableHeapBlockBase(ASSET_HANDLE(0x8));
         gSPMatrix(gRegionAllocPtr++, gIdentityMatrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
         gSPDisplayList(gRegionAllocPtr++, arg0->texturePtr);
         gDPLoadTextureBlock_4b(gRegionAllocPtr++, arg0->texture, G_IM_FMT_CI, 0x20, 0x40, 0, G_TX_WRAP,
@@ -1314,11 +1310,11 @@ void updateCourseBillboardMarker(RaceCourseMarkerEffect *arg0) {
 }
 
 void initCourseBillboardMarker(RaceCourseMarkerEffect *arg0) {
-    getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gRaceCommonSpriteAssetHandle),
+    getAssetTableImageAndPalette(getRelocatableHeapBlockBase(ASSET_HANDLE(0x1C)),
                   gCourseBillboardMarkerTextureResources[arg0->entryIndex].textureIndex,
                   &arg0->texture, &arg0->palette);
     arg0->baseVertices =
-        (Vtx *) resolveAssetTableRelativePointer(getRelocatableHeapBlockBase(gRaceCourseModelAssetHandle), (s32) gCourseBillboardMarkerVertexResources[arg0->entryIndex].baseVerticesInput);
+        (Vtx *) resolveAssetTableRelativePointer(getRelocatableHeapBlockBase(ASSET_HANDLE(0x8)), (s32) gCourseBillboardMarkerVertexResources[arg0->entryIndex].baseVerticesInput);
 
     {
         CourseMarkerEntry *entry = &gCourseBillboardMarkerEntries[arg0->entryIndex];
@@ -1359,14 +1355,14 @@ void renderCourseTriggerVolume(RaceCourseTriggerEffect *arg0) {
             Gfx *_g = gRegionAllocPtr++;
 
             _g->words.w0 = 0xBC000806;
-            _g->words.w1 = getRelocatableHeapBlockBase(gRaceCourseModelAssetHandle);
+            _g->words.w1 = getRelocatableHeapBlockBase(ASSET_HANDLE(0x8));
         }
         {
             Gfx *_g = gRegionAllocPtr++;
             volatile s32 pad[2];
 
             _g->words.w0 = 0xBC000C06;
-            _g->words.w1 = getRelocatableHeapBlockBase(gRaceCourseTextureAssetHandle);
+            _g->words.w1 = getRelocatableHeapBlockBase(ASSET_HANDLE(0x9));
         }
         {
             Gfx *_g = gRegionAllocPtr++;

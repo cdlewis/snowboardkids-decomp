@@ -18,8 +18,6 @@ typedef struct {
 } RomAssetRange;
 
 extern s16 gAssetHandles[];
-extern s16 gRaceCourseModelAssetHandle;
-extern s16 gRaceRspSegment2AssetHandle;
 extern u16 gRaceCourseIndex;
 extern RomAssetRange gCharacterRawAssetRanges[];
 extern RomAssetRange gCharacterTextureAssetRanges[];
@@ -96,9 +94,9 @@ void loadRaceCourseAssets(void) {
     switch (gRaceCourseIndex) {
     case 0:
         size = D_EC9A0 - D_E35C0;
-        gRaceCourseModelAssetHandle = allocRelocatableHeapBlock(size);
-        lockRelocatableHeapBlock(gRaceCourseModelAssetHandle);
-        dmaReadRom(D_E35C0, getRelocatableHeapBlockBase(gRaceCourseModelAssetHandle), size);
+        gAssetHandles[0x8] = allocRelocatableHeapBlock(size);
+        lockRelocatableHeapBlock(gAssetHandles[0x8]);
+        dmaReadRom(D_E35C0, getRelocatableHeapBlockBase(gAssetHandles[0x8]), size);
         loadCompressedRomAsset(D_163410, D_171480, 9);
         loadCompressedRomAsset(D_21D9D0, D_222500, 0x1B);
         initRaceCourseSurfaceData();
@@ -106,9 +104,9 @@ void loadRaceCourseAssets(void) {
         break;
     case 1:
         size = D_F6160 - D_EC9A0;
-        gRaceCourseModelAssetHandle = allocRelocatableHeapBlock(size);
-        lockRelocatableHeapBlock(gRaceCourseModelAssetHandle);
-        dmaReadRom(D_EC9A0, getRelocatableHeapBlockBase(gRaceCourseModelAssetHandle), size);
+        gAssetHandles[0x8] = allocRelocatableHeapBlock(size);
+        lockRelocatableHeapBlock(gAssetHandles[0x8]);
+        dmaReadRom(D_EC9A0, getRelocatableHeapBlockBase(gAssetHandles[0x8]), size);
         loadCompressedRomAsset(D_171480, D_17D220, 9);
         loadCompressedRomAsset(D_222500, D_2274A0, 0x1B);
         initRaceCourseSurfaceData();
@@ -116,9 +114,9 @@ void loadRaceCourseAssets(void) {
         break;
     case 2:
         size = D_FEDA0 - D_F6160;
-        gRaceCourseModelAssetHandle = allocRelocatableHeapBlock(size);
-        lockRelocatableHeapBlock(gRaceCourseModelAssetHandle);
-        dmaReadRom(D_F6160, getRelocatableHeapBlockBase(gRaceCourseModelAssetHandle), size);
+        gAssetHandles[0x8] = allocRelocatableHeapBlock(size);
+        lockRelocatableHeapBlock(gAssetHandles[0x8]);
+        dmaReadRom(D_F6160, getRelocatableHeapBlockBase(gAssetHandles[0x8]), size);
         loadCompressedRomAsset(D_17D220, D_186910, 9);
         loadCompressedRomAsset(D_2274A0, D_22AE50, 0x1B);
         initRaceCourseSurfaceData();
@@ -126,9 +124,9 @@ void loadRaceCourseAssets(void) {
         break;
     case 3:
         size = D_10AAB0 - D_FEDA0;
-        gRaceCourseModelAssetHandle = allocRelocatableHeapBlock(size);
-        lockRelocatableHeapBlock(gRaceCourseModelAssetHandle);
-        dmaReadRom(D_FEDA0, getRelocatableHeapBlockBase(gRaceCourseModelAssetHandle), size);
+        gAssetHandles[0x8] = allocRelocatableHeapBlock(size);
+        lockRelocatableHeapBlock(gAssetHandles[0x8]);
+        dmaReadRom(D_FEDA0, getRelocatableHeapBlockBase(gAssetHandles[0x8]), size);
         loadCompressedRomAsset(D_186910, D_197490, 9);
         loadCompressedRomAsset(D_22AE50, D_2308E0, 0x1B);
         initRaceCourseSurfaceData();
@@ -136,9 +134,9 @@ void loadRaceCourseAssets(void) {
         break;
     case 4:
         size = D_118670 - D_10AAB0;
-        gRaceCourseModelAssetHandle = allocRelocatableHeapBlock(size);
-        lockRelocatableHeapBlock(gRaceCourseModelAssetHandle);
-        dmaReadRom(D_10AAB0, getRelocatableHeapBlockBase(gRaceCourseModelAssetHandle), size);
+        gAssetHandles[0x8] = allocRelocatableHeapBlock(size);
+        lockRelocatableHeapBlock(gAssetHandles[0x8]);
+        dmaReadRom(D_10AAB0, getRelocatableHeapBlockBase(gAssetHandles[0x8]), size);
         loadCompressedRomAsset(D_197490, D_1A5620, 9);
         loadCompressedRomAsset(D_2308E0, D_2349E0, 0x1B);
         initRaceCourseSurfaceData();
@@ -146,9 +144,9 @@ void loadRaceCourseAssets(void) {
         break;
     case 5:
         size = D_125C90 - D_118670;
-        gRaceCourseModelAssetHandle = allocRelocatableHeapBlock(size);
-        lockRelocatableHeapBlock(gRaceCourseModelAssetHandle);
-        dmaReadRom(D_118670, getRelocatableHeapBlockBase(gRaceCourseModelAssetHandle), size);
+        gAssetHandles[0x8] = allocRelocatableHeapBlock(size);
+        lockRelocatableHeapBlock(gAssetHandles[0x8]);
+        dmaReadRom(D_118670, getRelocatableHeapBlockBase(gAssetHandles[0x8]), size);
         loadCompressedRomAsset(D_1A5620, D_1B3160, 9);
         loadCompressedRomAsset(D_2349E0, D_23A7D0, 0x1B);
         initRaceCourseSurfaceData();
@@ -156,9 +154,9 @@ void loadRaceCourseAssets(void) {
         break;
     case 6:
         size = D_131A90 - D_125C90;
-        gRaceCourseModelAssetHandle = allocRelocatableHeapBlock(size);
-        lockRelocatableHeapBlock(gRaceCourseModelAssetHandle);
-        dmaReadRom(D_125C90, getRelocatableHeapBlockBase(gRaceCourseModelAssetHandle), size);
+        gAssetHandles[0x8] = allocRelocatableHeapBlock(size);
+        lockRelocatableHeapBlock(gAssetHandles[0x8]);
+        dmaReadRom(D_125C90, getRelocatableHeapBlockBase(gAssetHandles[0x8]), size);
         loadCompressedRomAsset(D_1B3160, D_1C24B0, 9);
         loadCompressedRomAsset(D_23A7D0, D_23E9D0, 0x1B);
         initRaceCourseSurfaceData();
@@ -166,18 +164,18 @@ void loadRaceCourseAssets(void) {
         break;
     case 7:
         size = D_1384B0 - D_131A90;
-        gRaceCourseModelAssetHandle = allocRelocatableHeapBlock(size);
-        lockRelocatableHeapBlock(gRaceCourseModelAssetHandle);
-        dmaReadRom(D_131A90, getRelocatableHeapBlockBase(gRaceCourseModelAssetHandle), size);
+        gAssetHandles[0x8] = allocRelocatableHeapBlock(size);
+        lockRelocatableHeapBlock(gAssetHandles[0x8]);
+        dmaReadRom(D_131A90, getRelocatableHeapBlockBase(gAssetHandles[0x8]), size);
         loadCompressedRomAsset(D_1C24B0, D_1C9630, 9);
         loadCompressedRomAsset(D_23E9D0, D_23FCC0, 0x1B);
         initRaceCourseSurfaceData();
         break;
     case 8:
         size = D_13F3B0 - D_1384B0;
-        gRaceCourseModelAssetHandle = allocRelocatableHeapBlock(size);
-        lockRelocatableHeapBlock(gRaceCourseModelAssetHandle);
-        dmaReadRom(D_1384B0, getRelocatableHeapBlockBase(gRaceCourseModelAssetHandle), size);
+        gAssetHandles[0x8] = allocRelocatableHeapBlock(size);
+        lockRelocatableHeapBlock(gAssetHandles[0x8]);
+        dmaReadRom(D_1384B0, getRelocatableHeapBlockBase(gAssetHandles[0x8]), size);
         loadCompressedRomAsset(D_1C9630, D_1D3070, 9);
         loadCompressedRomAsset(D_23FCC0, D_241160, 0x1B);
         initRaceCourseSurfaceData();
@@ -185,9 +183,9 @@ void loadRaceCourseAssets(void) {
         break;
     case 9:
         size = D_145380 - D_13F3B0;
-        gRaceCourseModelAssetHandle = allocRelocatableHeapBlock(size);
-        lockRelocatableHeapBlock(gRaceCourseModelAssetHandle);
-        dmaReadRom(D_13F3B0, getRelocatableHeapBlockBase(gRaceCourseModelAssetHandle), size);
+        gAssetHandles[0x8] = allocRelocatableHeapBlock(size);
+        lockRelocatableHeapBlock(gAssetHandles[0x8]);
+        dmaReadRom(D_13F3B0, getRelocatableHeapBlockBase(gAssetHandles[0x8]), size);
         loadCompressedRomAsset(D_1D3070, D_1D82B0, 9);
         loadCompressedRomAsset(D_241160, D_2427D0, 0x1B);
         initRaceCourseSurfaceData();
@@ -196,11 +194,11 @@ void loadRaceCourseAssets(void) {
     }
 
     size = D_14B450 - D_147910;
-    if (gRaceCourseModelAssetHandle) {
+    if (gAssetHandles[0x8]) {
     }
     gAssetHandles[10] = allocRelocatableHeapBlock(size);
     lockRelocatableHeapBlock(gAssetHandles[10]);
-    dmaReadRom(D_147910, getRelocatableHeapBlockBase(gRaceRspSegment2AssetHandle), size);
+    dmaReadRom(D_147910, getRelocatableHeapBlockBase(gAssetHandles[0xA]), size);
     loadCompressedRomAsset(D_1D82B0, D_1DCED0, 0xB);
     loadCompressedRomAsset(D_1E74E0, D_1EC0F0, 0x1C);
     loadCompressedRomAsset(D_5DAF30, D_5DB9D0, 0x2A);

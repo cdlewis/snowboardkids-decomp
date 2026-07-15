@@ -28,9 +28,8 @@ typedef struct {
     /* 0x2335 */ u8 buttons[RACE_INPUT_HISTORY_LENGTH];
 } RaceInputHistoryBuffer;
 
-extern s16 gCurrentRaceRecordReplayHandle;
-extern s16 gRaceReplayInputBufferHandle;
 
+extern s16 gAssetHandles[];
 extern s32 gMenuFlowState;
 extern u32 gPlayerInputHeld[];
 extern s8 gPlayerStickX[];
@@ -41,7 +40,7 @@ void recordRaceReplayInputFrame(RacePlayer *player) {
     s16 frame;
     u32 inputFlags;
 
-    history = (RaceInputReplayHistory *)getRelocatableHeapBlockBase(gRaceReplayInputBufferHandle);
+    history = (RaceInputReplayHistory *)getRelocatableHeapBlockBase(gAssetHandles[0x2B]);
     frame = player->replayFrame;
     if (frame < RACE_INPUT_REPLAY_FRAME_COUNT) {
         history[(u16) player->playerIndex].inputs[frame].stickX = player->stickX;
@@ -98,7 +97,7 @@ void playRaceReplayInputFrame(RacePlayer *player) {
     s32 replayOffset;
     s8 stickY;
 
-    history = (RaceReplayInputHistoryPlayer *) getRelocatableHeapBlockBase(gRaceReplayInputBufferHandle);
+    history = (RaceReplayInputHistoryPlayer *) getRelocatableHeapBlockBase(gAssetHandles[0x2B]);
     replayFrame = player->replayFrame;
     if (replayFrame < 0x960) {
         replayOffset = (replayFrame * 4) - replayFrame;
@@ -165,7 +164,7 @@ void recordRaceInputHistoryFrame(RacePlayer *player) {
         return;
     }
 
-    history = (RaceInputHistoryBuffer *)getRelocatableHeapBlockBase(gRaceReplayInputBufferHandle);
+    history = (RaceInputHistoryBuffer *)getRelocatableHeapBlockBase(gAssetHandles[0x2B]);
     index = history->writeIndex;
     if (index >= RACE_INPUT_HISTORY_LENGTH) {
         history->enabled = 0;
@@ -227,12 +226,12 @@ void playRaceInputHistoryFrame(RacePlayer *player) {
     }
 
     if (replayInputSource == 1) {
-        history = (RaceInputHistoryBuffer *)getRelocatableHeapBlockBase(gCurrentRaceRecordReplayHandle);
+        history = (RaceInputHistoryBuffer *)getRelocatableHeapBlockBase(gAssetHandles[0x7]);
         replayInputSource = player->replayInputSource;
     }
 
     if (replayInputSource == 2) {
-        history = (RaceInputHistoryBuffer *)getRelocatableHeapBlockBase(gRaceReplayInputBufferHandle);
+        history = (RaceInputHistoryBuffer *)getRelocatableHeapBlockBase(gAssetHandles[0x2B]);
     }
 
     if (history->enabled == 0) {

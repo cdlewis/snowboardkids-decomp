@@ -44,7 +44,7 @@ typedef struct {
 } EndingCreditsPageTextLineLayout;
 
 extern u16 gEndingCreditsSequencePhase;
-extern s16 gMenuCommonSpritesAssetHandle;
+extern s16 gAssetHandles[];
 extern void *gMenuRenderCallbackList;
 extern s32 gPlayerInputHeld;
 extern s32 gPlayerInputPressed[];
@@ -111,9 +111,9 @@ void drawEndingCreditsPageText(EndingCreditsPageTextActor *arg0) {
 #endif
 
 void drawEndingCreditsTheEndText(EndingCreditsPageTextActor *arg0) {
-    drawMenuSpriteWithAlpha(arg0->x, arg0->y, getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle), 0x35, 0x20, 0x20, 0,
+    drawMenuSpriteWithAlpha(arg0->x, arg0->y, getRelocatableHeapBlockBase(gAssetHandles[0x21]), 0x35, 0x20, 0x20, 0,
                             arg0->alpha, 0);
-    drawMenuSpriteWithAlpha((s16)(arg0->x + 0x40), arg0->y, getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle), 0x36, 0x20,
+    drawMenuSpriteWithAlpha((s16)(arg0->x + 0x40), arg0->y, getRelocatableHeapBlockBase(gAssetHandles[0x21]), 0x36, 0x20,
                             0x20, 0, arg0->alpha, 0);
 }
 
@@ -189,7 +189,7 @@ void drawEndingObjectSpriteDebugViewer(EndingObjectSpriteDebugViewerActor *arg0)
     char sp38[0x10];
 
     if (arg0->enabled == 1) {
-        drawMenuSprite(arg0->x, arg0->y, getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle), (u16)arg0->spriteId, 0x20, 0x20, arg0->palette,
+        drawMenuSprite(arg0->x, arg0->y, getRelocatableHeapBlockBase(gAssetHandles[0x21]), (u16)arg0->spriteId, 0x20, 0x20, arg0->palette,
                        0);
         sprintf(sp38, "ENDOBJ %2d \n", arg0->spriteId);
         drawMenuAsciiText(0x40, -0x66, sp38, 0, 0x100);

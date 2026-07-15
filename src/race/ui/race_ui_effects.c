@@ -17,6 +17,7 @@
 extern void *createCallbackTaskWithUserIdPreservingArgs(void *, s32, s32);
 
 #define RACE_UI_TRAIL_GFX_ALLOC_PTR (*(RaceUiDisplayCommand **)&gRegionAllocPtr)
+#define ASSET_HANDLE(index) (((s16 *)&gAssetHandles)[index])
 #define RACE_UI_SNOWBOARD_TRAIL_SCALE_X 0xF0000
 #define RACE_UI_SNOWBOARD_TRAIL_SCALE_Y 0x230000
 #define RACE_UI_SNOWBOARD_TRAIL_SCALE_Z 0
@@ -904,13 +905,6 @@ extern s32 D_80121DA4;
 extern u8 gCurrentViewportIndex;
 extern u8 gRenderMatricesDirty;
 extern s16 gUiBlinkTimer;
-extern s16 gRaceCourseModelAssetHandle;
-extern s16 gRaceCourseTextureAssetHandle;
-extern s16 gRaceRspSegment2AssetHandle;
-extern s16 gRaceRspSegment3AssetHandle;
-extern s16 gRaceCourseSpriteAssetHandle;
-extern s16 gRaceUiSpriteAssetHandle;
-extern s16 gRaceCommonSpriteAssetHandle;
 extern s16 gRaceLapCount;
 extern s32 gPlayer1Money;
 extern RacePlayerPlacement D_80122288[];
@@ -922,7 +916,6 @@ extern RacePlayerHalfwordField D_80122C6A[];
 extern RacePlayerHalfwordField D_80123276[];
 extern RacePlayerByteField gRacePlayerItemTargetFlags[];
 extern s16 gFrameCounter;
-extern s16 gRaceItemSpriteAssetHandle;
 extern RaceUiAssetHandles gAssetHandles;
 extern s16 gRaceScoreAttackPointTarget;
 extern s16 D_801222F2;
@@ -1031,8 +1024,8 @@ void renderRaceCourseSlideSprite(RaceUiSlideActor *arg0) {
     Gfx *gfx;
 
     gDPPipeSync(gRegionAllocPtr++);
-    gSPSegment(gRegionAllocPtr++, 0x02, getRelocatableHeapBlockBase(gRaceCourseModelAssetHandle));
-    gSPSegment(gRegionAllocPtr++, 0x03, getRelocatableHeapBlockBase(gRaceCourseTextureAssetHandle));
+    gSPSegment(gRegionAllocPtr++, 0x02, getRelocatableHeapBlockBase(ASSET_HANDLE(0x8)));
+    gSPSegment(gRegionAllocPtr++, 0x03, getRelocatableHeapBlockBase(ASSET_HANDLE(0x9)));
     gSPMatrix(gRegionAllocPtr++, &gIdentityMatrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
     gDPLoadTextureBlock_4b(gRegionAllocPtr++, arg0->image, G_IM_FMT_CI, 0x20, 0x40, 0, G_TX_WRAP, G_TX_WRAP,
                            5, 6, G_TX_NOLOD, G_TX_NOLOD);
@@ -1063,7 +1056,7 @@ void updateRaceCourseSlideSprite(RaceUiSlideActor *arg0) {
 
 void initRaceCourseSlideSprite(RaceUiSlideActor *arg0) {
     arg0->angle = 0;
-    getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gRaceCommonSpriteAssetHandle), D_800D5FF4[arg0->index].assetId, &arg0->image, &arg0->palette);
+    getAssetTableImageAndPalette(getRelocatableHeapBlockBase(ASSET_HANDLE(0x1C)), D_800D5FF4[arg0->index].assetId, &arg0->image, &arg0->palette);
     arg0->displayList = (Gfx *) D_800D5FF0[arg0->index].word;
     arg0->velocity = D_800D5FF0[arg0->index].b6;
     arg0->soundIndex = D_800D5FF0[arg0->index].b7;
@@ -1182,7 +1175,7 @@ void spawnRaceUiTrickScorePopup(void *arg0, s16 arg1) {
 
 void drawRaceUiCrashScorePopup(RaceUiPopupActor *arg0) {
     if (gCurrentViewportIndex == 0) {
-        drawAssetTableSprite(-0x3C, arg0->y.half.lo, getRelocatableHeapBlockBase(gRaceUiSpriteAssetHandle), 0x8F);
+        drawAssetTableSprite(-0x3C, arg0->y.half.lo, getRelocatableHeapBlockBase(ASSET_HANDLE(0x1F)), 0x8F);
     }
 }
 
@@ -1223,7 +1216,7 @@ void initRaceUiCrashScorePopup(RaceUiPopupActor *arg0) {
 
 void func_80057E10(void *arg0) {
     if (gUiBlinkTimer & 8) {
-        drawAssetTableSprite(0x20, 0x4A, getRelocatableHeapBlockBase(gRaceUiSpriteAssetHandle), 0x5B);
+        drawAssetTableSprite(0x20, 0x4A, getRelocatableHeapBlockBase(ASSET_HANDLE(0x1F)), 0x5B);
     }
 }
 
@@ -1244,10 +1237,10 @@ void func_80057E90(RaceUiAlpha18Actor *arg0) {
                 gfx->words.w1 = (arg0->alpha & 0xFF) | ~0xFF;
             }
         }
-        drawAssetTableSprite(-0x68, -0x2C, getRelocatableHeapBlockBase(gRaceUiSpriteAssetHandle), 0x4D);
-        drawAssetTableSprite(-0x42, -0xC, getRelocatableHeapBlockBase(gRaceUiSpriteAssetHandle), D_80122289 & 0xFFFF);
-        drawAssetTableSprite(-0x22, 4, getRelocatableHeapBlockBase(gRaceUiSpriteAssetHandle), (D_80122289 + 0x48) & 0xFFFF);
-        drawAssetTableSprite(-0x68, 6, getRelocatableHeapBlockBase(gRaceUiSpriteAssetHandle), (D_80121D90[0].placement + 0x91) & 0xFFFF);
+        drawAssetTableSprite(-0x68, -0x2C, getRelocatableHeapBlockBase(ASSET_HANDLE(0x1F)), 0x4D);
+        drawAssetTableSprite(-0x42, -0xC, getRelocatableHeapBlockBase(ASSET_HANDLE(0x1F)), D_80122289 & 0xFFFF);
+        drawAssetTableSprite(-0x22, 4, getRelocatableHeapBlockBase(ASSET_HANDLE(0x1F)), (D_80122289 + 0x48) & 0xFFFF);
+        drawAssetTableSprite(-0x68, 6, getRelocatableHeapBlockBase(ASSET_HANDLE(0x1F)), (D_80121D90[0].placement + 0x91) & 0xFFFF);
         if (arg0->alpha != 0xFF) {
             gSPDisplayList(gRegionAllocPtr++, gMenuRenderModeResetDl);
         }
@@ -1910,15 +1903,15 @@ void func_8005A31C(RaceUiAlpha18Actor *arg0) {
         gDPSetPrimColor(gRegionAllocPtr++, 0, 0, 0xFF, 0xFF, 0xFF, actor->alpha);
     }
 
-    drawAssetTableSprite(-0x6C, -0x24, getRelocatableHeapBlockBase(gRaceUiSpriteAssetHandle), 0x20);
+    drawAssetTableSprite(-0x6C, -0x24, getRelocatableHeapBlockBase(ASSET_HANDLE(0x1F)), 0x20);
     sprintf(buffer + -8, D_800E12E0, gRaceScoreAttackPointTotal);
 
     if (buffer[-8] != ' ') {
-        drawAssetTableSprite(-0x4C, -0x1C, getRelocatableHeapBlockBase(gRaceUiSpriteAssetHandle), (buffer[-8] - 5) & 0xFFFF);
+        drawAssetTableSprite(-0x4C, -0x1C, getRelocatableHeapBlockBase(ASSET_HANDLE(0x1F)), (buffer[-8] - 5) & 0xFFFF);
     }
 
     x = -0x44;
-    drawAssetTableSprite(((SplitWord *)&x)->half.lo, -0x1C, getRelocatableHeapBlockBase(gRaceUiSpriteAssetHandle), (buffer[-7] - 5) & 0xFFFF);
+    drawAssetTableSprite(((SplitWord *)&x)->half.lo, -0x1C, getRelocatableHeapBlockBase(ASSET_HANDLE(0x1F)), (buffer[-7] - 5) & 0xFFFF);
 
     if (actor->alpha != 0xFF) {
         gSPDisplayList(gRegionAllocPtr++, gMenuRenderModeResetDl);
@@ -3310,10 +3303,10 @@ void initRaceUiTrickPrizePayout(RaceUiCourseStatsActor *arg0) {
 }
 
 void drawRaceUiResultAwardBadge(CallbackTask *task) {
-    drawAssetTableSprite(-0x68, -0x2C, getRelocatableHeapBlockBase(gRaceUiSpriteAssetHandle), 0x4D);
-    drawAssetTableSprite(-0x42, -0xC, getRelocatableHeapBlockBase(gRaceUiSpriteAssetHandle), D_80122289 & 0xFFFF);
-    drawAssetTableSprite(-0x22, 4, getRelocatableHeapBlockBase(gRaceUiSpriteAssetHandle), (D_80122289 + 0x48) & 0xFFFF);
-    drawAssetTableSprite(-0x68, 6, getRelocatableHeapBlockBase(gRaceUiSpriteAssetHandle), (D_80121D90[0].placement + 0x91) & 0xFFFF);
+    drawAssetTableSprite(-0x68, -0x2C, getRelocatableHeapBlockBase(ASSET_HANDLE(0x1F)), 0x4D);
+    drawAssetTableSprite(-0x42, -0xC, getRelocatableHeapBlockBase(ASSET_HANDLE(0x1F)), D_80122289 & 0xFFFF);
+    drawAssetTableSprite(-0x22, 4, getRelocatableHeapBlockBase(ASSET_HANDLE(0x1F)), (D_80122289 + 0x48) & 0xFFFF);
+    drawAssetTableSprite(-0x68, 6, getRelocatableHeapBlockBase(ASSET_HANDLE(0x1F)), (D_80121D90[0].placement + 0x91) & 0xFFFF);
 }
 
 void updateRaceUiResultAwardBadgeDelay(CallbackTask *task) {
@@ -3540,10 +3533,10 @@ void func_8005F174(RaceUiSparkleActor *arg0) {
     arg0->scale = 0x1000;
     arg0->unk28 = 0;
 
-    getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gRaceCommonSpriteAssetHandle), 0x23, &arg0->images[0], &arg0->palettes[0]);
-    getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gRaceCommonSpriteAssetHandle), 0x24, &arg0->images[1], &arg0->palettes[1]);
-    getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gRaceCommonSpriteAssetHandle), 0x25, &arg0->images[2], &arg0->palettes[2]);
-    getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gRaceCommonSpriteAssetHandle), 0x26, &arg0->images[3], &arg0->palettes[3]);
+    getAssetTableImageAndPalette(getRelocatableHeapBlockBase(ASSET_HANDLE(0x1C)), 0x23, &arg0->images[0], &arg0->palettes[0]);
+    getAssetTableImageAndPalette(getRelocatableHeapBlockBase(ASSET_HANDLE(0x1C)), 0x24, &arg0->images[1], &arg0->palettes[1]);
+    getAssetTableImageAndPalette(getRelocatableHeapBlockBase(ASSET_HANDLE(0x1C)), 0x25, &arg0->images[2], &arg0->palettes[2]);
+    getAssetTableImageAndPalette(getRelocatableHeapBlockBase(ASSET_HANDLE(0x1C)), 0x26, &arg0->images[3], &arg0->palettes[3]);
     enqueuePositionalSoundEffect(0x10, &gRacePlayers[arg0->playerIndex].pos1C, 0x7F, 0x32);
     setCallbackTaskCallback(arg0, func_8005EFFC);
 }
@@ -3571,8 +3564,8 @@ void renderRaceUiSnowboardTrailEffect(RaceUiSnowboardTrailActor *arg0) {
 
     if (arg0->frontMatrix != NULL) {
         gDPPipeSync(RACE_UI_TRAIL_GFX_ALLOC_PTR++);
-        gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x02, getRelocatableHeapBlockBase(gRaceRspSegment2AssetHandle));
-        gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x03, getRelocatableHeapBlockBase(gRaceRspSegment3AssetHandle));
+        gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x02, getRelocatableHeapBlockBase(ASSET_HANDLE(0xA)));
+        gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x03, getRelocatableHeapBlockBase(ASSET_HANDLE(0xB)));
         gSPMatrix(RACE_UI_TRAIL_GFX_ALLOC_PTR++, arg0->frontMatrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
         gSPDisplayList(RACE_UI_TRAIL_GFX_ALLOC_PTR++, gSnowboardTrailFrontDisplayList);
         gSPMatrix(RACE_UI_TRAIL_GFX_ALLOC_PTR++, arg0->backMatrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
@@ -3654,8 +3647,8 @@ void func_8005F6A4(RaceUiRankTrailActor *arg0) {
 
     if (arg0->matrix != NULL) {
         gDPPipeSync(RACE_UI_TRAIL_GFX_ALLOC_PTR++);
-        gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x02, getRelocatableHeapBlockBase(gRaceRspSegment2AssetHandle));
-        gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x03, getRelocatableHeapBlockBase(gRaceRspSegment3AssetHandle));
+        gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x02, getRelocatableHeapBlockBase(ASSET_HANDLE(0xA)));
+        gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x03, getRelocatableHeapBlockBase(ASSET_HANDLE(0xB)));
         gSPMatrix(RACE_UI_TRAIL_GFX_ALLOC_PTR++, arg0->matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
         gSPDisplayList(RACE_UI_TRAIL_GFX_ALLOC_PTR++, D_2003870);
     }
@@ -3850,8 +3843,8 @@ void func_80060544(RaceUiPodiumTrailActor *arg0) {
 
     if (arg0->matrix != NULL) {
         gDPPipeSync(RACE_UI_TRAIL_GFX_ALLOC_PTR++);
-        gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x02, getRelocatableHeapBlockBase(gRaceRspSegment2AssetHandle));
-        gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x03, getRelocatableHeapBlockBase(gRaceRspSegment3AssetHandle));
+        gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x02, getRelocatableHeapBlockBase(ASSET_HANDLE(0xA)));
+        gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x03, getRelocatableHeapBlockBase(ASSET_HANDLE(0xB)));
         gSPMatrix(RACE_UI_TRAIL_GFX_ALLOC_PTR++, arg0->matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
         gSPDisplayList(RACE_UI_TRAIL_GFX_ALLOC_PTR++, D_2002660);
     }
@@ -4094,8 +4087,8 @@ void renderRaceCourseTripleParticle(RaceUiTripleParticleActor *arg0) {
 
         if ((arg0->matrix0 != NULL) && (arg0->matrix1 != NULL) && (arg0->matrix2 != NULL)) {
             gDPPipeSync(RACE_UI_TRAIL_GFX_ALLOC_PTR++);
-            gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x02, getRelocatableHeapBlockBase(gRaceCourseModelAssetHandle));
-            gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x03, getRelocatableHeapBlockBase(gRaceCourseTextureAssetHandle));
+            gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x02, getRelocatableHeapBlockBase(ASSET_HANDLE(0x8)));
+            gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x03, getRelocatableHeapBlockBase(ASSET_HANDLE(0x9)));
             gSPMatrix(RACE_UI_TRAIL_GFX_ALLOC_PTR++, arg0->matrix0, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
             gSPDisplayList(RACE_UI_TRAIL_GFX_ALLOC_PTR++, D_200C1C8);
             gSPMatrix(RACE_UI_TRAIL_GFX_ALLOC_PTR++, arg0->matrix1, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
@@ -4132,8 +4125,8 @@ void func_80061484(RaceUiRankTrailActor *arg0) {
 
     if (arg0->matrix != NULL) {
         gDPPipeSync(RACE_UI_TRAIL_GFX_ALLOC_PTR++);
-        gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x02, getRelocatableHeapBlockBase(gRaceRspSegment2AssetHandle));
-        gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x03, getRelocatableHeapBlockBase(gRaceRspSegment3AssetHandle));
+        gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x02, getRelocatableHeapBlockBase(ASSET_HANDLE(0xA)));
+        gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x03, getRelocatableHeapBlockBase(ASSET_HANDLE(0xB)));
         gSPMatrix(RACE_UI_TRAIL_GFX_ALLOC_PTR++, arg0->matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
         gSPDisplayList(RACE_UI_TRAIL_GFX_ALLOC_PTR++, D_20019C0);
     }
@@ -4198,8 +4191,8 @@ void func_800617EC(RaceUiRisingTrailActor *arg0) {
 
         if (arg0->matrix != NULL) {
             gDPPipeSync(gRegionAllocPtr++);
-            gSPSegment(gRegionAllocPtr++, 0x02, getRelocatableHeapBlockBase(gRaceRspSegment2AssetHandle));
-            gSPSegment(gRegionAllocPtr++, 0x03, getRelocatableHeapBlockBase(gRaceRspSegment3AssetHandle));
+            gSPSegment(gRegionAllocPtr++, 0x02, getRelocatableHeapBlockBase(ASSET_HANDLE(0xA)));
+            gSPSegment(gRegionAllocPtr++, 0x03, getRelocatableHeapBlockBase(ASSET_HANDLE(0xB)));
             gSPMatrix(gRegionAllocPtr++, arg0->matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
             gSPDisplayList(gRegionAllocPtr++, D_20019C0);
         }
@@ -4270,8 +4263,8 @@ void renderRaceUiSingleTrailEffect(RaceUiSingleTrailActor *arg0) {
 
     if (arg0->matrix != NULL) {
         gDPPipeSync(RACE_UI_TRAIL_GFX_ALLOC_PTR++);
-        gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x02, getRelocatableHeapBlockBase(gRaceRspSegment2AssetHandle));
-        gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x03, getRelocatableHeapBlockBase(gRaceRspSegment3AssetHandle));
+        gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x02, getRelocatableHeapBlockBase(ASSET_HANDLE(0xA)));
+        gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x03, getRelocatableHeapBlockBase(ASSET_HANDLE(0xB)));
         gSPMatrix(RACE_UI_TRAIL_GFX_ALLOC_PTR++, arg0->matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
         gSPDisplayList(RACE_UI_TRAIL_GFX_ALLOC_PTR++, D_2003538);
     }
@@ -4319,8 +4312,8 @@ void func_80061DE8(RaceUiFadingTrailActor *arg0) {
 
     if (arg0->matrix != NULL) {
         gDPPipeSync(RACE_UI_TRAIL_GFX_ALLOC_PTR++);
-        gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x02, getRelocatableHeapBlockBase(gRaceRspSegment2AssetHandle));
-        gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x03, getRelocatableHeapBlockBase(gRaceRspSegment3AssetHandle));
+        gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x02, getRelocatableHeapBlockBase(ASSET_HANDLE(0xA)));
+        gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x03, getRelocatableHeapBlockBase(ASSET_HANDLE(0xB)));
         gSPMatrix(RACE_UI_TRAIL_GFX_ALLOC_PTR++, arg0->matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
         gDPSetPrimColor(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0, 0, 0xFF, 0xFF, 0xFF, arg0->alpha);
         gSPDisplayList(RACE_UI_TRAIL_GFX_ALLOC_PTR++, D_20035F8);
@@ -4419,8 +4412,8 @@ void func_800622B0(RaceUiTransitionRenderActor *arg0) {
 
     if (arg0->matrix != NULL) {
         gDPPipeSync(RACE_UI_TRAIL_GFX_ALLOC_PTR++);
-        gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x02, getRelocatableHeapBlockBase(gRaceRspSegment2AssetHandle));
-        gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x03, getRelocatableHeapBlockBase(gRaceRspSegment3AssetHandle));
+        gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x02, getRelocatableHeapBlockBase(ASSET_HANDLE(0xA)));
+        gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x03, getRelocatableHeapBlockBase(ASSET_HANDLE(0xB)));
         gSPMatrix(RACE_UI_TRAIL_GFX_ALLOC_PTR++, arg0->matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
         gSPDisplayList(RACE_UI_TRAIL_GFX_ALLOC_PTR++, D_2002490);
     }
@@ -4539,7 +4532,7 @@ void func_800628DC(RaceUiOrbitingSpriteActor *arg0) {
 }
 
 void func_80062A10(RaceUiOrbitingSpriteActor *arg0) {
-    getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gRaceCommonSpriteAssetHandle), 0x35, &arg0->image, &arg0->palette);
+    getAssetTableImageAndPalette(getRelocatableHeapBlockBase(ASSET_HANDLE(0x1C)), 0x35, &arg0->image, &arg0->palette);
     setCallbackTaskCallback(arg0, func_800628DC);
 }
 
@@ -4588,8 +4581,8 @@ void renderIceCourseBumper(RaceUiScaledParticleActor *arg0) {
 
         if (arg0->matrix != NULL) {
             gDPPipeSync(RACE_UI_TRAIL_GFX_ALLOC_PTR++);
-            gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x02, getRelocatableHeapBlockBase(gRaceCourseModelAssetHandle));
-            gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x03, getRelocatableHeapBlockBase(gRaceCourseTextureAssetHandle));
+            gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x02, getRelocatableHeapBlockBase(ASSET_HANDLE(0x8)));
+            gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x03, getRelocatableHeapBlockBase(ASSET_HANDLE(0x9)));
             gSPMatrix(RACE_UI_TRAIL_GFX_ALLOC_PTR++, arg0->matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
             gSPDisplayList(RACE_UI_TRAIL_GFX_ALLOC_PTR++, D_200C910);
         }
@@ -4676,8 +4669,8 @@ void func_80062F6C(RaceUiTrailingParticleActor *arg0) {
 
         if (arg0->matrix1 != NULL) {
             gDPPipeSync(RACE_UI_TRAIL_GFX_ALLOC_PTR++);
-            gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x02, getRelocatableHeapBlockBase(gRaceCourseModelAssetHandle));
-            gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x03, getRelocatableHeapBlockBase(gRaceCourseTextureAssetHandle));
+            gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x02, getRelocatableHeapBlockBase(ASSET_HANDLE(0x8)));
+            gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x03, getRelocatableHeapBlockBase(ASSET_HANDLE(0x9)));
             gSPMatrix(RACE_UI_TRAIL_GFX_ALLOC_PTR++, arg0->matrix0, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
             gSPDisplayList(RACE_UI_TRAIL_GFX_ALLOC_PTR++, D_200CE48);
             gSPMatrix(RACE_UI_TRAIL_GFX_ALLOC_PTR++, arg0->matrix1, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
@@ -4731,8 +4724,8 @@ void renderRaceCourseSpinningObject(RaceUiSpinningParticleActor *arg0) {
 
     if (arg0->matrix1 != NULL) {
         gDPPipeSync(gRegionAllocPtr++);
-        gSPSegment(gRegionAllocPtr++, 0x02, getRelocatableHeapBlockBase(gRaceCourseModelAssetHandle));
-        gSPSegment(gRegionAllocPtr++, 0x03, getRelocatableHeapBlockBase(gRaceCourseTextureAssetHandle));
+        gSPSegment(gRegionAllocPtr++, 0x02, getRelocatableHeapBlockBase(ASSET_HANDLE(0x8)));
+        gSPSegment(gRegionAllocPtr++, 0x03, getRelocatableHeapBlockBase(ASSET_HANDLE(0x9)));
         gSPMatrix(gRegionAllocPtr++, arg0->matrix0, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
         gSPDisplayList(gRegionAllocPtr++, D_200D3A8);
         gSPMatrix(gRegionAllocPtr++, arg0->matrix1, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
@@ -4831,14 +4824,14 @@ void initCourseStartFinishSprite(RaceUiCourseSpriteActor *actor) {
     switch (actor->index) {
         case 0:
             getRaceCourseSurfaceSpawnTransform(0, &actor->x, &actor->y, &actor->z, &angle);
-            getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gRaceCourseSpriteAssetHandle), 0, &actor->images[0], &actor->palettes[0]);
+            getAssetTableImageAndPalette(getRelocatableHeapBlockBase(ASSET_HANDLE(0x1D)), 0, &actor->images[0], &actor->palettes[0]);
             actor->images[1] = actor->images[0];
             actor->palettes[1] = actor->palettes[0];
             break;
         case 1:
             getRaceCourseSurfaceSpawnTransform(gRaceCourseStartEntries[gRaceCourseIndex].pathIndex, &actor->x, &actor->y, &actor->z, &angle);
-            getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gRaceCourseSpriteAssetHandle), 1, &actor->images[0], &actor->palettes[0]);
-            getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gRaceCourseSpriteAssetHandle), 2, &actor->images[1], &actor->palettes[1]);
+            getAssetTableImageAndPalette(getRelocatableHeapBlockBase(ASSET_HANDLE(0x1D)), 1, &actor->images[0], &actor->palettes[0]);
+            getAssetTableImageAndPalette(getRelocatableHeapBlockBase(ASSET_HANDLE(0x1D)), 2, &actor->images[1], &actor->palettes[1]);
             break;
     }
     unused = 0;
@@ -5001,8 +4994,8 @@ void renderRaceCourseRankModel(RaceUiRankParticleActor *arg0) {
             }
 
             gDPPipeSync(RACE_UI_TRAIL_GFX_ALLOC_PTR++);
-            gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x02, getRelocatableHeapBlockBase(gRaceCourseModelAssetHandle));
-            gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x03, getRelocatableHeapBlockBase(gRaceCourseTextureAssetHandle));
+            gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x02, getRelocatableHeapBlockBase(ASSET_HANDLE(0x8)));
+            gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x03, getRelocatableHeapBlockBase(ASSET_HANDLE(0x9)));
             gSPMatrix(RACE_UI_TRAIL_GFX_ALLOC_PTR++, arg0->matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
             gSPDisplayList(RACE_UI_TRAIL_GFX_ALLOC_PTR++, arg0->displayLists[displayListIndex]);
         }
@@ -5042,7 +5035,7 @@ void func_800643B4(RaceUiProjectileActor *arg0, u16 *arg1) {
     arg0->animationScript = arg1;
     arg0->frameTimer = arg1[0];
     arg0->flags = arg1[1];
-    getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gRaceItemSpriteAssetHandle), arg1[2], &arg0->image, &arg0->palette);
+    getAssetTableImageAndPalette(getRelocatableHeapBlockBase(ASSET_HANDLE(0x1E)), arg1[2], &arg0->image, &arg0->palette);
 }
 
 s32 func_80064414(RaceUiProjectileActor *arg0) {
@@ -5283,11 +5276,11 @@ void initForwardActionProjectileEffect(RaceUiProjectileActor *arg0) {
 void drawTimeTrialRecordDeltaPopup(RaceUiTimeTrialRecordDeltaPopupActor *arg0) {
     if (gCurrentViewportIndex == 0) {
         if (arg0->isSlowerThanRecord != 0) {
-            drawAssetTableSprite((s16)(arg0->x - 0x66), arg0->y.half.lo, getRelocatableHeapBlockBase(gRaceUiSpriteAssetHandle), 0x98);
+            drawAssetTableSprite((s16)(arg0->x - 0x66), arg0->y.half.lo, getRelocatableHeapBlockBase(ASSET_HANDLE(0x1F)), 0x98);
             func_80059A04(&arg0->delta, arg0->x + 0x26, arg0->y.word, 0xC);
             return;
         }
-        drawAssetTableSprite((s16)(arg0->x - 0x62), arg0->y.half.lo, getRelocatableHeapBlockBase(gRaceUiSpriteAssetHandle), 0x97);
+        drawAssetTableSprite((s16)(arg0->x - 0x62), arg0->y.half.lo, getRelocatableHeapBlockBase(ASSET_HANDLE(0x1F)), 0x97);
         func_80059A04(&arg0->delta, arg0->x + 0x22, arg0->y.word, 0x10);
     }
 }
@@ -5353,7 +5346,7 @@ void func_800651BC(RaceUiGfxCommandActor *arg0) {
             if ((entry->active != 0) && (isPositionNearCurrentRaceViewportCamera(&entry->position) != 0)) {
                 if (textureIndex != entry->sentinel + actor->textureOffset) {
                     textureIndex = entry->sentinel + actor->textureOffset;
-                    getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gRaceUiSpriteAssetHandle), 0x14, &image, &palette);
+                    getAssetTableImageAndPalette(getRelocatableHeapBlockBase(ASSET_HANDLE(0x1F)), 0x14, &image, &palette);
 
                     gDPLoadTextureBlock_4b(gRegionAllocPtr++, image, G_IM_FMT_CI, 32, 32, 0, G_TX_CLAMP,
                                            G_TX_CLAMP, 0, 0, 0, 0);
@@ -5563,7 +5556,7 @@ void func_80065D24(RaceUiOverlayActor *arg0) {
         if (arg0->assetTimer == 0) {
             enqueuePositionalSoundEffect(9, &temp_s0->x, 0x7F, 0x32);
         }
-        temp_v0_3 = getRelocatableHeapBlockBase(gRaceUiSpriteAssetHandle);
+        temp_v0_3 = getRelocatableHeapBlockBase(ASSET_HANDLE(0x1F));
         temp_a1 = temp_s0->assetTimer;
         temp_a1 = (temp_a1 >> 1) + 0x3B;
         temp_a1 = (u16)temp_a1;
@@ -5613,8 +5606,8 @@ void func_80065E90(RaceUiOverlayActor *arg0) {
         arg0->timer++;
     }
 
-    getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gRaceUiSpriteAssetHandle), 0x3A, &arg0->palette3A, &arg0->image3A);
-    getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gRaceUiSpriteAssetHandle), 0x3B, &arg0->palette3B, &arg0->image3B);
+    getAssetTableImageAndPalette(getRelocatableHeapBlockBase(ASSET_HANDLE(0x1F)), 0x3A, &arg0->palette3A, &arg0->image3A);
+    getAssetTableImageAndPalette(getRelocatableHeapBlockBase(ASSET_HANDLE(0x1F)), 0x3B, &arg0->palette3B, &arg0->image3B);
     setCallbackTaskCallback(arg0, func_80065E0C);
 }
 

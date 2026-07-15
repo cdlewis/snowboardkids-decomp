@@ -110,9 +110,8 @@ struct RaceItemProjectileActor {
     /* 0x58 */ s8 matrixDirty2;
 };
 
-extern s16 gRaceItemSpriteAssetHandle;
-extern s16 gRaceCommonSpriteAssetHandle;
 extern RaceEffectMatrixSource gIdentityFixedTransform;
+extern s16 gAssetHandles[];
 extern Gfx gRaceItemProjectileQuadVertices[];
 extern Gfx gFallingActionProjectileQuadVertices[];
 extern Gfx gEffectRenderModeSetupDl[];
@@ -356,7 +355,7 @@ void initWideHomingItemProjectile(RaceItemProjectileActor *arg0) {
     arg0->pos.y += gRacePlayers[arg0->playerIndex].velocity.y;
     arg0->pos.z += gRacePlayers[arg0->playerIndex].velocity.z;
     arg0->startAngle = gRacePlayers[arg0->playerIndex].surfaceAngle;
-    getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gRaceItemSpriteAssetHandle), 0, &arg0->image, &arg0->palette);
+    getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gAssetHandles[0x1E]), 0, &arg0->image, &arg0->palette);
     updateWideHomingItemProjectile(arg0);
     setCallbackTaskCallback(arg0, updateWideHomingItemProjectile);
 }
@@ -529,7 +528,7 @@ void initCloseRangeHomingItemProjectile(RaceItemProjectileActor *arg0) {
     arg0->pos.y += gRacePlayers[arg0->playerIndex].velocity.y;
     arg0->pos.z += gRacePlayers[arg0->playerIndex].velocity.z;
     arg0->startAngle = gRacePlayers[arg0->playerIndex].surfaceAngle;
-    getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gRaceItemSpriteAssetHandle), 2, &arg0->image, &arg0->palette);
+    getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gAssetHandles[0x1E]), 2, &arg0->image, &arg0->palette);
     updateCloseRangeHomingItemProjectile(arg0);
     setCallbackTaskCallback(arg0, updateCloseRangeHomingItemProjectile);
 }
@@ -699,7 +698,7 @@ void initBouncingItemProjectile(RaceItemProjectileActor *arg0) {
     arg0->pos.y += gRacePlayers[arg0->playerIndex].velocity.y;
     arg0->pos.z += gRacePlayers[arg0->playerIndex].velocity.z;
     arg0->startAngle = gRacePlayers[arg0->playerIndex].surfaceAngle;
-    getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gRaceItemSpriteAssetHandle), 3, &arg0->image, &arg0->palette);
+    getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gAssetHandles[0x1E]), 3, &arg0->image, &arg0->palette);
     updateBouncingItemProjectile(arg0);
     setCallbackTaskCallback(arg0, updateBouncingItemProjectile);
 }
@@ -808,7 +807,7 @@ void initThrownTrailImpactProjectile(RaceItemProjectileActor *arg0) {
     arg0->targetPlayerIndex = -1;
     arg0->velocityY = 0xFFF00000;
     arg0->accelerationY = 0;
-    getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gRaceItemSpriteAssetHandle), 3, &arg0->image, &arg0->palette);
+    getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gAssetHandles[0x1E]), 3, &arg0->image, &arg0->palette);
     updateThrownTrailImpactProjectile(arg0);
     setCallbackTaskCallback(arg0, updateThrownTrailImpactProjectile);
 }
@@ -986,7 +985,7 @@ void initAreaBlastItemProjectile(RaceItemProjectileActor *arg0) {
     actor->pos.y += gRacePlayers[actor->playerIndex].posA8.y;
     actor->pos.z += gRacePlayers[actor->playerIndex].posA8.z;
     actor->startAngle = gRacePlayers[actor->playerIndex].surfaceAngle;
-    getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gRaceItemSpriteAssetHandle), 4, &actor->image, &actor->palette);
+    getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gAssetHandles[0x1E]), 4, &actor->image, &actor->palette);
     updateAreaBlastItemProjectile(actor);
     setCallbackTaskCallback(actor, updateAreaBlastItemProjectile);
 }
@@ -1151,7 +1150,7 @@ void initLongRangeHomingItemProjectile(RaceItemProjectileActor *arg0) {
     actor->pos.y += gRacePlayers[actor->playerIndex].posA8.y;
     actor->pos.z += gRacePlayers[actor->playerIndex].posA8.z;
     actor->startAngle = gRacePlayers[actor->playerIndex].surfaceAngle;
-    getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gRaceItemSpriteAssetHandle), 1, &actor->image, &actor->palette);
+    getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gAssetHandles[0x1E]), 1, &actor->image, &actor->palette);
     updateLongRangeHomingItemProjectile(actor);
     setCallbackTaskCallback(actor, updateLongRangeHomingItemProjectile);
 }
@@ -1276,7 +1275,7 @@ void initFallingActionProjectile(RaceItemProjectileActor *arg0) {
     arg0->pos.z = player->pos.z;
     enqueuePositionalSoundEffect(0x6A, &arg0->pos, 0x7F, 0x32);
     arg0->angle = gRacePlayerSurfaceAngleByPlayer[arg0->playerIndex].surfaceAngle;
-    getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gRaceCommonSpriteAssetHandle), 2, &arg0->image, &arg0->palette);
+    getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gAssetHandles[0x1C]), 2, &arg0->image, &arg0->palette);
     updateFallingActionProjectile(arg0);
     setCallbackTaskCallback(arg0, updateFallingActionProjectile);
 }
@@ -1429,7 +1428,7 @@ void initShieldProjectile(RaceItemProjectileActor *arg0) {
     arg0->pos.y += gRacePlayers[arg0->playerIndex].posA8.y;
     arg0->pos.z += gRacePlayers[arg0->playerIndex].posA8.z;
     arg0->startAngle = gRacePlayers[arg0->playerIndex].surfaceAngle;
-    getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gRaceItemSpriteAssetHandle), 5, &arg0->image, &arg0->palette);
+    getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gAssetHandles[0x1E]), 5, &arg0->image, &arg0->palette);
     arg0->unk54 = 0;
     updateShieldProjectile(arg0);
     setCallbackTaskCallback(arg0, updateShieldProjectile);

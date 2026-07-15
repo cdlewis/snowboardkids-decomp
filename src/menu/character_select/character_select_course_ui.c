@@ -7,6 +7,7 @@
 #include "game/menu/renderer/menu_renderer.h"
 
 #define CHARACTER_SELECT_FRAME_TEXTURE_HANDLE (gAssetHandles.textureHandle)
+#define ASSET_HANDLE(index) (((s16 *)&gAssetHandles)[index])
 
 typedef u8 CharacterSelectCourseText[0x94];
 
@@ -85,8 +86,6 @@ enum {
 extern void drawAssetTableSpriteWithExplicitPalette(s16, s16, s32, s32, s32);
 extern int sprintf(char *, const char *, ...);
 extern CharacterSelectCourseAssetHandles gAssetHandles;
-extern s16 gMenuCommonSpritesAssetHandle;
-extern s16 D_80112178;
 extern s16 gCharacterSelectCourseOptionsByUnlock[][11];
 extern CharacterSelectCourseFrameTileMap gCharacterSelectCoursePreviewFrameTileMaps[];
 extern CharacterSelectCourseFrameCornerTileMap gCharacterSelectCoursePreviewFrameCornerTileMaps[];
@@ -1918,7 +1917,7 @@ void drawCharacterSelectCourseListCursor(CharacterSelectCourseWidgetActor *arg0)
         drawMenuSpriteWithAlpha(
             arg0->x,
             (s16)(arg0->y + gRaceCourseIndex * arg0->selection.bytes.rowSpacing),
-            getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle),
+            getRelocatableHeapBlockBase(ASSET_HANDLE(0x21)),
             0x12,
             0x20,
             0x20,
@@ -2012,7 +2011,7 @@ void initCharacterSelectCourseListCursor(CharacterSelectCourseWidgetActor *arg0)
 }
 
 void drawCharacterSelectCourseTitleCursor(CharacterSelectCourseWidgetActor *arg0) {
-    drawMenuSpriteWithAlpha(arg0->x, arg0->y, getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle), 1, 0x20, 0x20, 0, arg0->sprite.index, 0);
+    drawMenuSpriteWithAlpha(arg0->x, arg0->y, getRelocatableHeapBlockBase(ASSET_HANDLE(0x21)), 1, 0x20, 0x20, 0, arg0->sprite.index, 0);
 }
 
 void updateCharacterSelectCourseTitleCursor(CharacterSelectCourseWidgetActor *arg0) {
@@ -2230,10 +2229,10 @@ void initCharacterSelectCoursePlayerStatsPanel(CharacterSelectCourseWidgetActor 
 }
 
 void drawCharacterSelectCourseSubmenuFrame(CharacterSelectCourseWidgetActor *arg0) {
-    drawMenuSprite(arg0->x, arg0->y, getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle), 3, 0x20, 0x20, 0, 0);
-    drawMenuSprite((s16) (arg0->x + 0x40), arg0->y, getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle), 4, 0x20, 0x20, 0, 0);
-    drawMenuSprite(arg0->x, (s16) (arg0->y + 0x40), getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle), 5, 0x20, 0x20, 0, 0);
-    drawMenuSprite((s16) (arg0->x + 0x40), (s16) (arg0->y + 0x40), getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle), 6, 0x20,
+    drawMenuSprite(arg0->x, arg0->y, getRelocatableHeapBlockBase(ASSET_HANDLE(0x21)), 3, 0x20, 0x20, 0, 0);
+    drawMenuSprite((s16) (arg0->x + 0x40), arg0->y, getRelocatableHeapBlockBase(ASSET_HANDLE(0x21)), 4, 0x20, 0x20, 0, 0);
+    drawMenuSprite(arg0->x, (s16) (arg0->y + 0x40), getRelocatableHeapBlockBase(ASSET_HANDLE(0x21)), 5, 0x20, 0x20, 0, 0);
+    drawMenuSprite((s16) (arg0->x + 0x40), (s16) (arg0->y + 0x40), getRelocatableHeapBlockBase(ASSET_HANDLE(0x21)), 6, 0x20,
                   0x20, 0, 0);
 }
 
@@ -2282,10 +2281,10 @@ void initCharacterSelectCourseSubmenuFrame(CharacterSelectCourseWidgetActor *arg
 }
 
 void drawCharacterSelectCourseRecordsFrame(CharacterSelectCourseWidgetActor *arg0) {
-    drawMenuSprite(arg0->x, arg0->y, getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle), 3, 0x20, 0x20, 0, 0);
-    drawMenuSprite((s16) (arg0->x + 0x40), arg0->y, getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle), 4, 0x20, 0x20, 0, 0);
-    drawMenuSprite(arg0->x, (s16) (arg0->y + 0x40), getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle), 5, 0x20, 0x20, 0, 0);
-    drawMenuSprite((s16) (arg0->x + 0x40), (s16) (arg0->y + 0x40), getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle), 6, 0x20, 0x20, 0, 0);
+    drawMenuSprite(arg0->x, arg0->y, getRelocatableHeapBlockBase(ASSET_HANDLE(0x21)), 3, 0x20, 0x20, 0, 0);
+    drawMenuSprite((s16) (arg0->x + 0x40), arg0->y, getRelocatableHeapBlockBase(ASSET_HANDLE(0x21)), 4, 0x20, 0x20, 0, 0);
+    drawMenuSprite(arg0->x, (s16) (arg0->y + 0x40), getRelocatableHeapBlockBase(ASSET_HANDLE(0x21)), 5, 0x20, 0x20, 0, 0);
+    drawMenuSprite((s16) (arg0->x + 0x40), (s16) (arg0->y + 0x40), getRelocatableHeapBlockBase(ASSET_HANDLE(0x21)), 6, 0x20, 0x20, 0, 0);
 }
 
 void updateCharacterSelectCourseRecordsFrame(CharacterSelectCourseWidgetActor *arg0) {
@@ -2367,7 +2366,7 @@ void drawCharacterSelectCourseNamePopup(CharacterSelectCourseWidgetActor *arg0) 
         drawMenuSprite(
             (s16)(arg0->x + 0x60),
             (s16)(arg0->y + 0x40),
-            getRelocatableHeapBlockBase(D_80112178),
+            getRelocatableHeapBlockBase(ASSET_HANDLE(0x24)),
             (((s32)arg0->transition.bytes.timer >= 8) + 5) & 0xFFFF,
             0x20,
             0x20,
@@ -2569,7 +2568,7 @@ void drawCharacterSelectCourseConfirmCursor(CharacterSelectCourseWidgetActor *ar
         }
 
         drawAlpha = alpha;
-        drawMenuSpriteWithAlpha(arg0->x, arg0->sprite.index, getRelocatableHeapBlockBase(D_80112178), 0x18, 0x20, 0x20, 0, drawAlpha, 0);
+        drawMenuSpriteWithAlpha(arg0->x, arg0->sprite.index, getRelocatableHeapBlockBase(ASSET_HANDLE(0x24)), 0x18, 0x20, 0x20, 0, drawAlpha, 0);
 
         if (drawAlpha == 0x100) {
             alpha = 0x60;
@@ -2577,11 +2576,11 @@ void drawCharacterSelectCourseConfirmCursor(CharacterSelectCourseWidgetActor *ar
             alpha = 0x100;
         }
 
-        drawMenuSpriteWithAlpha(arg0->x, arg0->y, getRelocatableHeapBlockBase(D_80112178), 0x17, 0x20, 0x20, 0, alpha, 0);
+        drawMenuSpriteWithAlpha(arg0->x, arg0->y, getRelocatableHeapBlockBase(ASSET_HANDLE(0x24)), 0x17, 0x20, 0x20, 0, alpha, 0);
 
         state = gMenuChoicePromptState;
         if ((state == 3) || (state == 4)) {
-            drawMenuSpriteWithAlpha(arg0->x, (s16)(((gMenuChoicePromptState * 0x10) + arg0->y) - 0x30), getRelocatableHeapBlockBase(D_80112178), 0x12,
+            drawMenuSpriteWithAlpha(arg0->x, (s16)(((gMenuChoicePromptState * 0x10) + arg0->y) - 0x30), getRelocatableHeapBlockBase(ASSET_HANDLE(0x24)), 0x12,
                           0x20, 0x20, 0, (u16)arg0->selection.counter, 0);
             state = gMenuChoicePromptState;
         }
@@ -2841,13 +2840,13 @@ void initCharacterSelectCourseRecordsPopup(CharacterSelectCourseWidgetActor *arg
 }
 
 void drawCharacterSelectCourseExitPopup(CharacterSelectCourseWidgetActor *arg0) {
-    drawMenuSprite(arg0->x, arg0->y, getRelocatableHeapBlockBase(gMenuCommonSpritesAssetHandle), 0x28, 0x20, 0x20, 0, 0);
+    drawMenuSprite(arg0->x, arg0->y, getRelocatableHeapBlockBase(ASSET_HANDLE(0x21)), 0x28, 0x20, 0x20, 0, 0);
     if ((s32) arg0->transition.bytes.state > 0) {
         drawMenuGlyphScript((s16) (arg0->x + 4), (s16) (arg0->y + 4), gCharacterSelectCourseStartGameText, 1, 0x100, 0);
         drawMenuSprite(
             (s16) (arg0->x + 0x64),
             (s16) (arg0->y + 4),
-            getRelocatableHeapBlockBase(D_80112178),
+            getRelocatableHeapBlockBase(ASSET_HANDLE(0x24)),
             (u16) ((arg0->transition.bytes.timer >= 8) + 5),
             0x20,
             0x20,

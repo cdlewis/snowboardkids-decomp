@@ -7,6 +7,8 @@
 #include "game/race/ui/race_ui_effects.h"
 #include "game/race/player/race_player_input.h"
 
+#define ASSET_HANDLE(index) (((s16 *)&gAssetHandles)[index])
+
 typedef struct {
     /* 0x00 */ char pad[0x14];
 } CourseDataStride;
@@ -80,7 +82,6 @@ extern u16 gRaceProgressMeterIconPalettes[];
 extern RaceUiCoursePosition gRaceCourseTargetTimes[];
 extern CourseDataStride gGameSaveDataBuffer[];
 extern RaceTimerUiAssetHandles gAssetHandles;
-extern s16 gRaceUiSpriteAssetHandle;
 extern s16 gRaceLapCount;
 extern s16 gRaceHudSpinnerFrame;
 extern s16 gRaceHudMode;
@@ -805,7 +806,7 @@ void drawMultiplayerLapCounter(s32 arg0) {
 }
 
 void drawThreePlayerHudDivider(s32 arg0) {
-    drawAssetTableSprite(0xC, 0x2C, getRelocatableHeapBlockBase(gRaceUiSpriteAssetHandle), 0x90);
+    drawAssetTableSprite(0xC, 0x2C, getRelocatableHeapBlockBase(ASSET_HANDLE(0x1F)), 0x90);
 }
 
 void incrementRaceElapsedTimer(void) {

@@ -57,8 +57,6 @@ extern void getAssetTableImageAndPalette(void *asset, u16 index, void **image, v
 
 extern u8 gRenderMatricesDirty;
 extern s16 gUiBlinkTimer;
-extern s16 gRacePlayerModelTextureSegmentAssetHandle;
-extern s16 gShopMenuTextureAssetHandle;
 extern s16 gAssetHandles[];
 extern Gfx *gRegionAllocPtr;
 extern Gfx gRacePlayerShadowRenderSetupDisplayList[];
@@ -106,9 +104,9 @@ static void racePlayerModelLoadAssetTexture(void *asset, u16 textureIndex, u32 s
     void *palette;
 
     racePlayerModelAppendGfx(0xE7000000, 0);
-    racePlayerModelAppendGfx(0xBC000806, (u32)getRelocatableHeapBlockBase(gRacePlayerModelTextureSegmentAssetHandle));
+    racePlayerModelAppendGfx(0xBC000806, (u32)getRelocatableHeapBlockBase(gAssetHandles[0xC]));
     racePlayerModelAppendGfx(0x01020040, (u32)asset);
-    getAssetTableImageAndPalette((void *)getRelocatableHeapBlockBase(gShopMenuTextureAssetHandle), textureIndex, &image, &palette);
+    getAssetTableImageAndPalette((void *)getRelocatableHeapBlockBase(gAssetHandles[0xD]), textureIndex, &image, &palette);
     racePlayerModelAppendGfx(0xFD500000, (u32)image);
     racePlayerModelAppendGfx(0xF5500000, 0x07080200);
     racePlayerModelAppendGfx(0xE6000000, 0);
@@ -218,10 +216,10 @@ void drawRacePlayerModelRootPart(void *asset, s16 dlIndex, s16 textureIndex) {
     void *palette;
 
     gDPPipeSync(gRegionAllocPtr++);
-    gSPSegment(gRegionAllocPtr++, 2, getRelocatableHeapBlockBase(gRacePlayerModelTextureSegmentAssetHandle));
+    gSPSegment(gRegionAllocPtr++, 2, getRelocatableHeapBlockBase(gAssetHandles[0xC]));
     gSPMatrix(gRegionAllocPtr++, (Mtx *)asset, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
 
-    getAssetTableImageAndPalette((void *)getRelocatableHeapBlockBase(gShopMenuTextureAssetHandle), textureIndex, &image, &palette);
+    getAssetTableImageAndPalette((void *)getRelocatableHeapBlockBase(gAssetHandles[0xD]), textureIndex, &image, &palette);
 
     gDPLoadTextureBlock_4b(gRegionAllocPtr++, image, G_IM_FMT_CI, 64, 64, 0, G_TX_CLAMP, G_TX_CLAMP, 0, 0, 0, 0);
     gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, palette);
@@ -233,9 +231,9 @@ void drawRaceGhostPlayerModelRootPart(void *asset, s16 dlIndex, s16 textureIndex
     void *palette;
 
     gDPPipeSync(gRegionAllocPtr++);
-    gSPSegment(gRegionAllocPtr++, 2, getRelocatableHeapBlockBase(gRacePlayerModelTextureSegmentAssetHandle));
+    gSPSegment(gRegionAllocPtr++, 2, getRelocatableHeapBlockBase(gAssetHandles[0xC]));
     gSPMatrix(gRegionAllocPtr++, (Mtx *)asset, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
-    getAssetTableImageAndPalette((void *)getRelocatableHeapBlockBase(gShopMenuTextureAssetHandle), textureIndex, &image, &palette);
+    getAssetTableImageAndPalette((void *)getRelocatableHeapBlockBase(gAssetHandles[0xD]), textureIndex, &image, &palette);
 
     gDPLoadTextureBlock_4b(gRegionAllocPtr++, image, G_IM_FMT_CI, 64, 64, 0, G_TX_CLAMP, G_TX_CLAMP, 0, 0, 0, 0);
     gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, palette);
