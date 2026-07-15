@@ -604,7 +604,7 @@ void pushRacePlayersOutOfCylinderOrApplyItemHit(RaceVec3i *pos, s32 xzSize, s32 
     } while (player != &gFrameCounter);
 }
 
-// pushRacePlayerOutOfCylinder best match: 99.851% (nonmatchings/pushRacePlayerOutOfCylinder-5313856277864964686/base_7.c)
+// pushRacePlayerOutOfCylinder best match: 99.925% (nonmatchings/pushRacePlayerOutOfCylinder-1189375296343516052/base_11.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race/player/race_player_movement/pushRacePlayerOutOfCylinder.s")
 
 #ifdef NON_MATCHING
@@ -612,8 +612,8 @@ void pushRacePlayerOutOfCylinder(RaceVec3i *pos, s32 xzSize, s32 ySize, s16 play
     s32 temp;
     RacePlayer *player;
     s32 xzLimit;
-    s32 xDiff;
     s32 yLimit;
+    s32 zDiff;
     s32 sine;
     s32 cosine;
     s32 pushX;
@@ -622,6 +622,7 @@ void pushRacePlayerOutOfCylinder(RaceVec3i *pos, s32 xzSize, s32 ySize, s16 play
     player = &gRacePlayers[playerIndex];
     if (player->isActive != 0) {
         s16 angle;
+        s32 xDiff;
 
         yLimit = ySize;
         temp = pos->y - player->unk5C;
@@ -638,14 +639,13 @@ void pushRacePlayerOutOfCylinder(RaceVec3i *pos, s32 xzSize, s32 ySize, s16 play
                 xDiff = -xDiff;
             }
             if (xDiff < xzLimit) {
-                volatile u8 pad[8];
-                temp = pos->z - player->posZ;
-                if (temp < 0) {
-                    temp = -temp;
+                zDiff = pos->z - player->posZ;
+                if (zDiff < 0) {
+                    zDiff = -zDiff;
                 }
-                if ((temp < xzLimit) &&
+                if ((zDiff < xzLimit) &&
                     ((temp = integerSquareRoot64((s64)((0, xDiff)) * xDiff +
-                                           (((s64)temp * temp) & 0xFFFFFFFFFFFFFFFF))) < xzLimit)) {
+                                           (((s64)zDiff * zDiff) & 0xFFFFFFFFFFFFFFFF))) < xzLimit)) {
                     angle = calculateFixedAngleBetweenXZPoints(pos->x, pos->z, player->posX, player->posZ);
                     sine = fixedSine(angle);
                     cosine = fixedCosine(angle);
