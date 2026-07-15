@@ -4,6 +4,7 @@
 #include "game/menu/character_select/character_select_course_ui.h"
 #include "game/menu/splitscreen_select/race_splitscreen_select_ui.h"
 #define MENU_RENDERER_BROAD_PROTOTYPES
+#define MENU_RENDERER_U32_TILE_INDEX_PROTOTYPE
 #include "game/menu/renderer/menu_renderer.h"
 
 #define CHARACTER_SELECT_FRAME_TEXTURE_HANDLE (gAssetHandles.textureHandle)
@@ -389,13 +390,10 @@ void initCharacterSelectUnlockedCourseList(CharacterSelectCourseMenuFrameActor *
     setCallbackTaskCallback(arg0, updateCharacterSelectUnlockedCourseList);
 }
 
-// drawCharacterSelectLimitedCourseListOptions best match: 99.941% (not yet matching)
-#pragma GLOBAL_ASM("asm/nonmatchings/menu/character_select/character_select_course_ui/drawCharacterSelectLimitedCourseListOptions.s")
-
-#ifdef NON_MATCHING
 void drawCharacterSelectLimitedCourseListOptions(CharacterSelectCourseMenuFrameActor *arg0) {
     register CharacterSelectCourseMenuFrameActor *actor;
     s32 arrowTexture;
+    volatile u8 pad;
     u16 tile;
     s32 arrowBase;
     s32 lastArrowIndex;
@@ -435,7 +433,6 @@ void drawCharacterSelectLimitedCourseListOptions(CharacterSelectCourseMenuFrameA
         } while (i < actor->itemCount);
     }
 }
-#endif
 
 // updateCharacterSelectLimitedCourseList best match: 84.270% (nonmatchings/updateCharacterSelectLimitedCourseList-5802343343535905907/base_8.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/character_select/character_select_course_ui/updateCharacterSelectLimitedCourseList.s")
