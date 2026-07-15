@@ -1599,7 +1599,7 @@ void soundPlayerStartEnvelope(PlayerCommandState *arg0) {
     arg0->unkF8 = 1;
 }
 
-// soundPlayerUpdateEnvelope best match: 93.258% (nonmatchings/soundPlayerUpdateEnvelope-2694253543240320626/base_9.c)
+// soundPlayerUpdateEnvelope best match: 94.856% (nonmatchings/soundPlayerUpdateEnvelope-8075865578671233833/base_11.c)
 
 #pragma GLOBAL_ASM("asm/nonmatchings/audio/audio_engine/soundPlayerUpdateEnvelope.s")
 
@@ -1607,15 +1607,21 @@ void soundPlayerStartEnvelope(PlayerCommandState *arg0) {
 void soundPlayerUpdateEnvelope(PlayerCommandState *arg0) {
     u8 state;
     s32 tick;
+    PlayerCommandState *new_var;
+    u8 new_var4;
     u8 rate;
+    PlayerCommandState *new_var2;
+    float new_var3;
     u32 step;
     u8 value;
     f32 temp;
 
-    state = arg0->unkF8;
-    if (state != 0) {
+    new_var2 = arg0;
+    state = new_var2->unkF8;
+    if (state) {
         if (((u32)arg0->unk0 >= (u32)arg0->unk100) && (state < 4)) {
-            arg0->unkF8 = 4;
+            step = 4;
+            arg0->unkF8 = step;
             arg0->unkFA = 1;
             arg0->unk104 = arg0->unkF9;
         }
@@ -1629,9 +1635,10 @@ void soundPlayerUpdateEnvelope(PlayerCommandState *arg0) {
         arg0->unkFA = rate;
         switch (state) {
             case 1:
-                step = ((u32)(arg0->unk0 - arg0->unk10) >> 8) / rate;
+                step = ((u32)(arg0->unk0 - arg0->unk10)) >> 8;
+                step = step / rate;
                 if (step < arg0->unkFB) {
-                    value = arg0->unkF5;
+                    value = arg0->unkF5 ^ 0;
                     arg0->unkF9 = (s32)((f32)value + ((arg0->unkF6 - value) * arg0->unk30 * (f32)step));
                     return;
                 }
@@ -1641,7 +1648,8 @@ void soundPlayerUpdateEnvelope(PlayerCommandState *arg0) {
                 return;
             case 2:
                 step = (((u32)(arg0->unk0 - arg0->unk10) >> 8) - arg0->unkFB) / rate;
-                if (step < arg0->unkFC) {
+                new_var4 = arg0->unkFC;
+                if (step < new_var4) {
                     value = arg0->unkF6;
                     arg0->unkF9 = (s32)((f32)value + ((arg0->unkF7 - value) * arg0->unk34 * (f32)step));
                     return;
@@ -1653,15 +1661,16 @@ void soundPlayerUpdateEnvelope(PlayerCommandState *arg0) {
                 return;
             case 4:
                 step = ((u32)(arg0->unk0 - arg0->unk100) >> 8) / rate;
-                if (step < (u8)arg0->unkFD) {
-                    value = arg0->unk104;
+                new_var = arg0;
+                if (step < arg0->unkFD) {
+                    value = new_var->unk104;
                     temp = value;
-                    arg0->unkF9 = (s32)(temp - (temp * arg0->unk38 * (f32)step));
+                    new_var3 = temp * new_var->unk38;
+                    new_var->unkF9 = (s32)(temp - (new_var3 * (f32)step));
                     return;
                 }
-                arg0->unkF8 = state + 1;
-                // Match-shaping no-op; this value is always stored as zero.
-                arg0->unkF9 = (((((u32)(arg0->unk0 - arg0->unk10)) >> 8) - arg0->unkFB) / rate) * 0;
+                new_var->unkF8 = state + 1;
+                arg0->unkF9 = (((((u32)(arg0->unk0 - arg0->unk10)) >> 8) - new_var->unkFB) / rate) * 0;
                 break;
         }
     }

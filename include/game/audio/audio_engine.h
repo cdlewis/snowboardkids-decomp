@@ -127,7 +127,7 @@ typedef struct PlayerCommandState {
     u8 unkFA;
     u8 unkFB;
     u8 unkFC;
-    s8 unkFD;
+    u8 unkFD;
     u8 unkFE;
     u8 notePitch;
     u32 unk100;
