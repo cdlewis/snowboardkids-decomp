@@ -76,24 +76,11 @@ extern u8 gTrainingCourseLesson;
 extern s8 gRaceRumbleEnabled;
 extern s8 gRaceSplitscreenMode;
 extern MainMenuModePreviewRaceCourseAsset gMainMenuModePreviewRaceCourseAssets[];
-extern f32 gMainMenuModePreviewRaceAspectRatio;
 extern u8 D_593D10[];
 extern u8 D_598A70[];
 extern u8 D_60F1A0[];
 extern u8 D_60F990[];
 extern s16 gRacePlayerSurfaceAngleByPlayer;
-extern s8 D_80121D94;
-extern s8 D_80121D95;
-extern s8 D_80121D96;
-extern s8 D_801223A0;
-extern s8 D_801223A1;
-extern s8 D_801223A2;
-extern s8 D_801229AC;
-extern s8 D_801229AD;
-extern s8 D_801229AE;
-extern s8 D_80122FB8;
-extern s8 D_80122FB9;
-extern s8 D_80122FBA;
 
 void startMainMenuModePreviewRaceFlow(void) {
     gMainMenuModeSelection = 1;
@@ -169,11 +156,6 @@ void exitMainMenuModePreviewRaceSelectionMenu(void) {
     }
 }
 
-// initMainMenuModePreviewRace best match: 98.590% (nonmatchings/initMainMenuModePreviewRace-5313856277864964686/base_8.c)
-
-#pragma GLOBAL_ASM("asm/nonmatchings/menu/main_menu/main_menu_race_flow/initMainMenuModePreviewRace.s")
-
-#ifdef NON_MATCHING
 void initMainMenuModePreviewRace(void) {
     MainMenuModePreviewRaceCourseAsset *temp_v0;
     s32 one0;
@@ -185,7 +167,7 @@ void initMainMenuModePreviewRace(void) {
     s32 seven0;
     s32 two1;
     long long two2;
-    s32 three0;
+    long long three0;
     s32 seven1;
     RacePlayer *player;
 
@@ -233,14 +215,14 @@ void initMainMenuModePreviewRace(void) {
     gRacePlayers[2].unk17 = two2;
     gRacePlayers[3].unk17 = three0;
     gPlayerCount = 4;
-    player->isActive = 1;
-    gRacePlayers[1].isActive = 1;
-    gRacePlayers[2].isActive = 1;
-    gRacePlayers[3].isActive = 1;
+    player->isActive = one1;
+    gRacePlayers[1].isActive = one1;
+    gRacePlayers[2].isActive = one1;
+    gRacePlayers[3].isActive = one1;
     gRacePlayerCount = 4;
     gRaceLapCount = five1;
     gRacePlayerAttackStartTimer = 0x64;
-    initCallbackTaskScheduler(1);
+    initCallbackTaskScheduler(one1);
 
     D_80121D95 = 0;
     D_80121D94 = 0;
@@ -266,22 +248,23 @@ void initMainMenuModePreviewRace(void) {
     gPlayerCount = 1;
     initRaceHud();
     gPlayerCount = 4;
-    configureViewport(0, 0xA0, 0x50, 0x108, 0x78, 0x140, 0x8C, gMainMenuModePreviewRaceAspectRatio);
-    gRacePlayerHudStatuses = 1;
+    configureViewport(0, 0xA0, 0x50, 0x108, 0x78, 0x140, 0x8C, 2.285714388f);
+    gRacePlayerHudStatuses = one1;
     gFramebufferSwapDelay = 0;
     initRaceCourseSceneTasks();
     gMenuFadeAlpha = 0xFF;
     gRaceRumbleEnabled = 0;
-    gMenuFlowState = 1;
+    gMenuFlowState = one1;
     loadCompressedRomAsset(D_593D10, D_598A70, 0x29);
     loadCompressedRomAsset(D_60F1A0, D_60F990, 0x2A);
     gMainMenuSelectionResult = 0;
     createCallbackTask(initMainMenuModeDescriptionPanel, 0, 0x64);
     createCallbackTask(initRaceSetupCornerPrompts, 0, 0x64);
+    one1++;
+    one1--;
     setCurrentGameTaskCallback(fadeInMainMenuModePreviewRace, 0);
     requestMusicSequenceBank(seven1);
 }
-#endif
 
 void fadeInMainMenuModePreviewRace(void) {
     gMenuFadeAlpha -= 0x10;
