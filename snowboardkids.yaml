@@ -366,6 +366,8 @@ segments:
       - [0xE2AD0, .rodata, ultra/audio/reverb]
       - [0xE2B00, rodata]
       - { type: bss, name: bss_chunk_a, vram: 0x800E29C0 }
+      - { type: .bss, name: menu/race_setup/race_setup_menu, vram: 0x8010AE00 }
+      - { type: bss, name: bss_chunk_a_2, vram: 0x8010AE10 }
       - { type: .bss, name: ultra/os/seteventmesg, vram: 0x8015C980 }
       - { type: bss, name: bss_chunk_b, vram: 0x8015CA00 }
       - { type: .bss, name: ultra/os/initialize, vram: 0x8015CCD0 }
