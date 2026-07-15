@@ -213,20 +213,20 @@ extern s32 gMenuRenderCallbackList;
 extern s32 gModelRenderCallbackList;
 extern u8 gCurrentViewportIndex;
 
-// drawCourseSelectPreviewModel best match: 99.298% (nonmatchings/drawCourseSelectPreviewModel-8331816093655448999/base_23.c)
+// drawCourseSelectPreviewModel best match: 99.380% (nonmatchings/drawCourseSelectPreviewModel-8808947407184708385/base_12.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/course_select/course_select_ui/drawCourseSelectPreviewModel.s")
 
 #ifdef NON_MATCHING
 void drawCourseSelectPreviewModel(CourseSelectCoursePreviewActor *arg0) {
     u8 sp2F;
     unsigned char sp2E;
+    u8 var_t0;
     s8 temp_v0_2;
     CourseSelectRacePlayer *temp_v0_3;
     FixedTransform sp30;
-    int temp_v0;
     u8 var_a3;
-    u8 var_t0;
     u8 var_v1;
+    int temp_v0;
 
     if ((D_8010AED0 != 0) && (gCurrentViewportIndex == 1)) {
         var_t0 = 0;
