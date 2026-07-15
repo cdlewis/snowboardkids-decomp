@@ -176,7 +176,9 @@ void drawRacePlayerGroundShadow(RacePlayerModelRenderState *player) {
             ((RacePlayerShadowVtx *)((u8 *)player->shadowVtx + vtxOffset))->g = 0;
             ((RacePlayerShadowVtx *)((u8 *)player->shadowVtx + vtxOffset))->b = 0;
             vtx = (RacePlayerShadowVtx *)((u8 *)player->shadowVtx + vtxOffset);
-            vtxOffset += sizeof(RacePlayerShadowVtx);
+            if (1) {
+                vtxOffset += sizeof(RacePlayerShadowVtx);
+            }
             vtx->a = 0x30;
         } while (posOffset != endOffset);
 
@@ -207,7 +209,7 @@ void drawRacePlayerGroundShadow(RacePlayerModelRenderState *player) {
 }
 #undef racePlayerModelAppendGfx
 #else
-// drawRacePlayerGroundShadow best match: 98.529% (base_6.c, 256 differences)
+// drawRacePlayerGroundShadow best match: 98.644% (base_3.c, 236 differences)
 #pragma GLOBAL_ASM("asm/nonmatchings/race/player/race_player_model_renderer/drawRacePlayerGroundShadow.s")
 #endif
 
