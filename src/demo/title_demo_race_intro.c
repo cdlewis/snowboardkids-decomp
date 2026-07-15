@@ -49,24 +49,6 @@ extern void releaseMenuAssetHandles(void);
 
 #define COURSE_REPLAY_OFFSET(course) ((((((((course) << 2) - (course)) << 5) + (course)) << 2) - (course)) << 2)
 
-// initTitleDemoRaceIntro best match: 99.874% (nonmatchings/initTitleDemoRaceIntro-8460208293698481450/base_2.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/demo/title_demo_race_intro/initTitleDemoRaceIntro.s")
-
-#ifdef NON_MATCHING
-extern f32 D_800E10C0;
-extern s8 D_80121D94;
-extern s8 D_80121D95;
-extern s8 D_80121D96;
-extern s8 D_801223A0;
-extern s8 D_801223A1;
-extern s8 D_801223A2;
-extern s8 D_801229AC;
-extern s8 D_801229AD;
-extern s8 D_801229AE;
-extern s8 D_80122FB8;
-extern s8 D_80122FB9;
-extern s8 D_80122FBA;
-
 void initTitleDemoRaceIntro(void) {
     RacePlayer *players;
     register s32 one = 1;
@@ -79,8 +61,10 @@ void initTitleDemoRaceIntro(void) {
     s32 five1 = 5;
     s32 five2 = 5;
     s32 five3 = 5;
+    s32 playerOne;
 
     gRaceCourseIndex = 0;
+    playerOne = 1;
     gRaceUpdatePaused = 0;
     gRaceCameraModeChangeDisabled = 0;
     gRaceResultState = 0;
@@ -92,11 +76,11 @@ void initTitleDemoRaceIntro(void) {
 
     players = gRacePlayers;
     players[0].unk4 = 0;
-    players[1].unk4 = 0;
+    players[playerOne].unk4 = 0;
     players[2].unk4 = 0;
     players[3].unk4 = 0;
     players[0].characterId = 0;
-    players[1].characterId = one;
+    players[playerOne].characterId = one;
     players[2].characterId = two;
     players[3].characterId = three;
     players[0].unk11 = six;
@@ -104,7 +88,7 @@ void initTitleDemoRaceIntro(void) {
     players[2].unk11 = six;
     players[3].unk11 = six;
     players[0].unk12 = one;
-    players[1].unk12 = two;
+    players[playerOne].unk12 = two;
     players[2].unk12 = three;
     players[3].unk12 = four;
     players[0].isActive = active;
@@ -117,19 +101,19 @@ void initTitleDemoRaceIntro(void) {
     gRacePlayerAttackStartTimer = 0x64;
     initCallbackTaskScheduler(1);
 
-    D_80121D95 = 0;
-    D_80121D94 = 0;
-    D_80121D96 = five0;
-    D_801223A1 = 0;
-    D_801223A0 = 0;
-    D_801223A2 = five1;
-    D_801229AD = 0;
-    D_801229AC = 0;
-    D_801229AE = five2;
-    D_80122FB9 = 0;
-    D_80122FB8 = 0;
+    players[0].unk15 = 0;
+    players[0].soundDisabled = 0;
+    players[0].replayInputSource = five0;
+    players[1].unk15 = 0;
+    players[1].soundDisabled = 0;
+    players[1].replayInputSource = five1;
+    players[2].unk15 = 0;
+    players[2].soundDisabled = 0;
+    players[2].replayInputSource = five2;
+    players[3].unk15 = 0;
+    players[3].soundDisabled = 0;
     players = gRacePlayers;
-    D_80122FBA = five3;
+    players[3].replayInputSource = five3;
 
     if (players[0].replayInputSource == 5) {
         loadCompressedRomAsset(&D_24C8E0, &D_24DBE0, 0x2B);
@@ -139,10 +123,12 @@ void initTitleDemoRaceIntro(void) {
     gMenuFlowState = 0;
     resetRaceCameras();
     resetAllViewports();
-    configureViewport(0, 0xA0, 0x78, 0x120, 0xB0, 0x140, 0xF0, D_800E10C0);
-    gRacePlayerHudStatuses = 1;
+    configureViewport(0, 0xA0, 0x78, 0x120, 0xB0, 0x140, 0xF0, 1.333333373f);
+    gRacePlayerHudStatuses = playerOne;
     gFramebufferSwapDelay = 0;
-    initRacePlayers();
+    if ((six && six) != 0) {
+        initRacePlayers();
+    }
     initRaceHud();
     initRaceCourseSceneTasks();
     setCurrentGameTaskCallback(waitForTitleDemoRaceIntroStart, 0);
@@ -155,7 +141,6 @@ void initTitleDemoRaceIntro(void) {
     gTitleDemoRaceIntroFadeStep = 0;
     gTitleDemoRaceIntroViewportHeight = 0;
 }
-#endif
 
 void waitForTitleDemoRaceIntroStart(void) {
     gCurrentGameTask->startDelay--;
