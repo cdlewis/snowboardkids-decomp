@@ -311,31 +311,33 @@ void waitForMainMenuModePreviewRaceStart(void) {
     gViewportStates[0].overlayAlpha = 0x80;
 }
 
-// zoomMainMenuModePreviewRaceViewport best match: 92.825% (nonmatchings/zoomMainMenuModePreviewRaceViewport-8201208972835473051/base_7.c)
+// zoomMainMenuModePreviewRaceViewport best match: 93.302% (nonmatchings/zoomMainMenuModePreviewRaceViewport-8757365433159351387/base_3.c)
 
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/main_menu/main_menu_race_flow/zoomMainMenuModePreviewRaceViewport.s")
 
 #ifdef NON_MATCHING
 void zoomMainMenuModePreviewRaceViewport(void) {
-    volatile u32 new_var;
+    volatile s32 height;
+    MainMenuRaceFlowTask *task;
     s32 timer;
 
     gCurrentGameTask->transitionTimer += 1;
     timer = gCurrentGameTask->transitionTimer;
-
-    configureViewport(((s16) ((((s32) (timer * 0x18)) / 16) - -0x108)) * 0, 0xA0,
-                      (s32) ((s16) ((((s32) (timer * 0x28)) / 16) + 0x50)),
-                      (s16) ((((s32) (timer * 0x18)) / 16) + 0x108),
-                      (u16) ((s32) (new_var = (s16) ((((s32) (timer * 0x58)) / 16) + 0x78))), 0x140U,
-                      (u16) ((s32) ((s16) ((((s32) (timer * 0x64)) / 16) + 0x8C))),
-                      (f32) (((((f64) timer) * (-0.9523809523809523)) / 0x10) + 2.2857142857142856));
-    if (gCurrentGameTask->transitionTimer == MAIN_MENU_MODE_PREVIEW_RACE_VIEWPORT_ZOOM_FRAMES) {
+    configureViewport(((s16) ((timer * 0x18) / 16 + 0x108)) * 0, 0xA0,
+                      (s16) ((timer * 0x28) / 16 + 0x50),
+                      (s16) ((timer * 0x18) / 16 + 0x108),
+                      (u16) (height = (s16) ((timer * 0x58) / 16 + 0x78)), 0x140U,
+                      (u16) (s16) ((timer * 0x64) / 16 + 0x8C),
+                      (f32) (((f64) timer * -0.9523809523809523 / 0x10) + 2.2857142857142856));
+    task = gCurrentGameTask;
+    if (task->transitionTimer == MAIN_MENU_MODE_PREVIEW_RACE_VIEWPORT_ZOOM_FRAMES) {
         requestMusicSequenceBank(0xF);
         configureViewport(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.3333334f);
         gCurrentGameTask->transitionTimer = 0;
         setCurrentGameTaskCallback(runMainMenuModePreviewRace, 0);
     }
-    if (timer && timer) {}
+    if (timer && timer) {
+    }
     updateRacePlayers();
     updateCallbackTasksWithMinPriority(0x63);
     updateRacePlayersPostUpdate();
