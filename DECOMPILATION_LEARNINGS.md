@@ -306,6 +306,12 @@ and control flow already match and only register *names* differ.
   store to `sw $zero` and re-CSE-ing the address — useful when the target uses
   a fresh `lui %hi` per access. `volatile` on the global typically does *not*
   help here; only the register-held store value defeats the address CSE.
+- **Use an owning struct field to distinguish an interior-symbol alias.** If a
+  byte has both a standalone symbol and a named field in an enclosing global
+  struct, reading through one name and writing through the other prevents IDO
+  from CSE-ing their addresses. The relocations have different spellings in an
+  isolated object, but resolve to identical linked instructions; verify this
+  shape with the full-ROM checksum.
 - **Extern pointer globals are reloaded between aliased accesses.** For
   `g->field -= 1; if (g->field == 0)`, IDO re-emits the `lui`/`lw` of `g`
   between the store and the re-read (it cannot prove the store does not alias

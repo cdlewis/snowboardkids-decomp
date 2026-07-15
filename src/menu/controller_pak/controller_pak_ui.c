@@ -753,22 +753,21 @@ void drawControllerPakFileDeleteErrorPrompt(ControllerPakWindowActor *arg0) {
     }
 }
 
-// updateControllerPakFileDeleteErrorPromptUi best match: 86.471% (nonmatchings/updateControllerPakFileDeleteErrorPromptUi-2694253543240320626/base_3.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/menu/controller_pak/controller_pak_ui/updateControllerPakFileDeleteErrorPromptUi.s")
-
-#ifdef NON_MATCHING
 void updateControllerPakFileDeleteErrorPromptUi(ControllerPakDeletePromptActor *arg0) {
     u8 globalState;
     u8 state;
+    u8 *statePtr;
 
     globalState = gControllerPakDeletePromptState;
     state = arg0->timer;
-    if (state != globalState) {
+    if (globalState != state) {
         state = globalState;
         arg0->timer = globalState;
     }
 
-    switch (state) {
+    statePtr = &arg0->timer;
+    // IDO register allocation nudge for matching codegen.
+    switch (state ^ 0) {
     case 0:
         arg0->scale = (s16)arg0->scale + 0x28;
         if ((s16)arg0->scale >= 0x100) {
@@ -778,8 +777,8 @@ void updateControllerPakFileDeleteErrorPromptUi(ControllerPakDeletePromptActor *
         state = arg0->timer;
         break;
     case 1:
-        state = arg0->timer;
         arg0->selectedOption = (arg0->selectedOption + 1) & 0xF;
+        state = arg0->timer;
         break;
     case 2:
         arg0->scale = (s16)arg0->scale - 0x28;
@@ -793,15 +792,14 @@ void updateControllerPakFileDeleteErrorPromptUi(ControllerPakDeletePromptActor *
         break;
     }
 
-    gControllerPakDeletePromptState = state;
-    if (arg0->timer == 3) {
-        removeCallbackTask((CallbackTask *)arg0);
+    gControllerPakMenuState.unk6 = state;
+    if (*statePtr == 3) {
+        removeCallbackTask(arg0);
         return;
     }
 
     addRenderCallback(&gMenuRenderCallbackList, drawControllerPakFileDeleteErrorPrompt, (s32)arg0);
 }
-#endif
 
 void initControllerPakFileDeleteErrorPrompt(ControllerPakDeletePromptActor *arg0) {
     arg0->common.x = -0x70;
