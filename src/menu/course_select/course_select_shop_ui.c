@@ -992,39 +992,45 @@ void initShopMenuMoneyPanelForCourseSelectReturn(ShopMenuWidgetActor *arg0) {
     setCallbackTaskCallback(arg0, updateShopMenuMoneyPanelForCourseSelectReturn);
 }
 
-// drawShopMenuSparkles best match: 97.500% (nonmatchings/drawShopMenuSparkles-2870645799593382959/base_7.c)
+// drawShopMenuSparkles best match: 97.625% (nonmatchings/drawShopMenuSparkles-7501265508483202319/base_6.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/course_select/course_select_shop_ui/drawShopMenuSparkles.s")
 
 #ifdef NON_MATCHING
-void drawShopMenuSparkles(ShopMenuWidgetActor *arg0) {
-    s32 tileOffset;
-    s16 y;
-    s16 alpha;
-    s16 *randomValues;
-    s32 i;
-    ShopMenuWidgetActor *actor;
-    ShopMenuSparkleOffset *entry;
-    ShopMenuSparkleOffset *offset;
-    s32 texture;
-    s32 tile;
-
-    actor = arg0;
-    i = 0;
-    if (gShopMenuSparklePatterns[actor->sparkle.patternIndex][0].x != -1) {
-        tileOffset = 0;
-        do {
-            texture = getRelocatableHeapBlockBase(((((((((gAssetHandles[0x27] & 0xFFFFFFFFFFFFFFFFu) & 0xFFFFFFFFFFFFFFFFu) & 0xFFFFFFFFFFFFFFFFu) & 0xFFFFFFFFFFFFFFFFu) & 0xFFFFFFFFFFFFFFFFu) & 0xFFFFFFFFFFFFFFFFu) & 0xFFFFFFFFFFFFFFFFu) & 0xFFFFFFFFFFFFFFFFu) & 0xFFFFFFFFFFFFFFFFu);
-            randomValues = actor->randomValues;
-            alpha = actor->sparkle.alpha;
-            offset = &gShopMenuSparklePatterns[actor->sparkle.patternIndex][tileOffset];
-            tile = actor->sparkle.tileBase + i;
-            entry = offset;
-            y = randomValues[1];
-            drawMenuSpriteTile((s16)(entry->x + randomValues[0]), (s16)(y + (*entry).y), texture, tile & 0xFFFF, 0, alpha);
-            tileOffset++;
-            i++;
-        } while (gShopMenuSparklePatterns[actor->sparkle.patternIndex][tileOffset].x != -1);
+void drawShopMenuSparkles(ShopMenuWidgetActor *arg0)
+{
+  s32 tileOffset;
+  s16 y;
+  s32 zero;
+  s16 alpha;
+  s16 *randomValues;
+  s32 i;
+  ShopMenuWidgetActor *actor;
+  ShopMenuSparkleOffset *entry;
+  ShopMenuSparkleOffset *offset;
+  s32 texture;
+  s32 tile;
+  ShopMenuSparkleOffset *drawEntry;
+  actor = arg0;
+  i = 0;
+  zero = 0;
+  if (gShopMenuSparklePatterns[actor->sparkle.patternIndex][0].x != (-1))
+  {
+    tileOffset = zero;
+    do
+    {
+      texture = getRelocatableHeapBlockBase(((((((((gAssetHandles[0x27] & 0xFFFFFFFFFFFFFFFFu) & 0xFFFFFFFFFFFFFFFFu) & 0xFFFFFFFFFFFFFFFFu) & 0xFFFFFFFFFFFFFFFFu) & 0xFFFFFFFFFFFFFFFFu) & 0xFFFFFFFFFFFFFFFFu) & 0xFFFFFFFFFFFFFFFFu) & 0xFFFFFFFFFFFFFFFFu) & 0xFFFFFFFFFFFFFFFFu);
+      randomValues = actor->randomValues;
+      alpha = actor->sparkle.alpha;
+      offset = (entry = &gShopMenuSparklePatterns[actor->sparkle.patternIndex][tileOffset]);
+      tile = actor->sparkle.tileBase + i;
+      y = randomValues[1];
+      alpha = actor->sparkle.alpha;
+      drawMenuSpriteTile((s16) (randomValues[0] + (drawEntry = entry)->x), (s16) (y + (*entry).y), texture, tile & 0xFFFF, 0, alpha);
+      tileOffset++;
+      i++;
     }
+    while (gShopMenuSparklePatterns[actor->sparkle.patternIndex][tileOffset].x != (-1));
+  }
 }
 #endif
 
