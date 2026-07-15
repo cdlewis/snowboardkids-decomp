@@ -1637,7 +1637,7 @@ void func_8005905C(void *arg0) {
 }
 #endif
 
-// func_80059518 best match: 97.278% (nonmatchings/func_80059518-2870645799593382959/base_10.c)
+// func_80059518 best match: 97.332% (nonmatchings/func_80059518-1225020319268080736/base_6.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race/ui/race_ui_effects/func_80059518.s")
 
 #ifdef NON_MATCHING
@@ -1664,8 +1664,10 @@ void func_80059518(void *arg0) {
             do {
                 if (gRacePlayers[actor[j + 0x1C]].mode < gRacePlayers[actor[i + 0x1C]].mode) {
                     temp = actor[j + 0x1C];
-                    actor[j + 0x1C] = actor[i + 0x1C];
-                    actor[i + 0x1C] = temp;
+                    flags = i + 0x1C;
+                    actor = arg0;
+                    actor[j + 0x1C] = actor[flags];
+                    actor[flags] = temp;
                 }
                 j++;
             } while (j < 4);
