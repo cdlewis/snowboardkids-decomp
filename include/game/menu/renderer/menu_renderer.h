@@ -43,7 +43,11 @@ void drawMenuSpriteCrossfade(s16 x, s16 y, s32 texture, u16 imageIndex0, u16 ima
 #elif defined(MENU_RENDERER_BROAD_PROTOTYPES)
 void drawMenuAssetRegion(s16 x, s16 y, s32 texture, s32 tileIndex, s32 scaleX, s32 scaleY, s32 startS, s32 startT,
                    s32 width, s32 height);
+#ifdef MENU_RENDERER_U32_TILE_INDEX_PROTOTYPE
+void drawMenuSprite(s16 x, s16 y, s32 texture, u32 tileIndex, s32 width, s32 height, s32 palette, s32 flip);
+#else
 void drawMenuSprite(s16 x, s16 y, s32 texture, s32 tileIndex, s32 width, s32 height, s32 palette, s32 flip);
+#endif
 void drawMenuSpriteClipped(s16 x, s16 y, s32 texture, u16 tileIndex, u16 width, u16 height, u8 flip, u8 palette,
                    s32 clipLeft, s32 clipTop, s32 clipRight, s32 clipBottom);
 #ifdef MENU_RENDERER_F8AC_U16_ALPHA_PROTOTYPE
