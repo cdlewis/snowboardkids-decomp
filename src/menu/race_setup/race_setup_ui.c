@@ -823,96 +823,28 @@ void initRaceSetupSavePanelFrame(RectListActor *arg0) {
     setCallbackTaskCallback(arg0, updateRaceSetupSavePanelFrame);
 }
 
-// drawRaceSetupSavePanelIcons best match: 96.022% (nonmatchings/drawRaceSetupSavePanelIcons-8201208972835473051/base_10.c)
+// drawRaceSetupSavePanelIcons best match: 98.114% (nonmatchings/drawRaceSetupSavePanelIcons-4/output-310-1/source.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/race_setup/race_setup_ui/drawRaceSetupSavePanelIcons.s")
 
 #ifdef NON_MATCHING
 void drawRaceSetupSavePanelIcons(TitleMenuIconStripActor *arg0) {
     volatile s32 unused;
-    volatile s32 playerIndex;
+    volatile s32 i;
     s32 pad[6];
-    s32 panelCoordinateOffset;
-    s16 *pakStatus;
-    register TitleMenuPlayerView *saveData;
-    register TitleMenuIconStripActor *iconActor;
+    s32 actorOffset;
+    s16 *courseId;
+    register TitleMenuPlayerView *player;
+    register TitleMenuIconStripActor *item;
     register s32 iconXOffset;
     register s32 alpha;
-    register s32 nextIconIndex;
+    register s32 nextJ;
     register s16 *badgeIndex;
-    register TitleMenuPlayerView *badgeData;
-    s32 iconIndex;
+    register TitleMenuPlayerView *player2;
+    s32 j;
     s32 count;
     s32 tile;
 
-    playerIndex = 0;
-    if ((s32)gPlayerCount > 0) {
-        pakStatus = gControllerPakStatusCodes;
-        panelCoordinateOffset = 0;
-        do {
-            (void)playerIndex;
-            if (*pakStatus != CONTROLLER_PAK_STATUS_UNUSED) {
-                saveData = &gGameSaveDataBuffer[playerIndex];
-                iconIndex = 0;
-                if (saveData->iconCount == SAVE_PANEL_MAX_RECORD_ICONS) {
-                    count = SAVE_PANEL_MAX_RECORD_ICONS;
-                } else {
-                    count = saveData->iconCount + 1;
-                }
-                if (count > 0) {
-                    iconXOffset = 0;
-                    iconActor = (TitleMenuIconStripActor *)((u8 *)arg0 + panelCoordinateOffset);
-                    do {
-                        nextIconIndex = iconIndex + 1;
-                        if ((s32)saveData->iconCount < nextIconIndex) {
-                            alpha = 0x70;
-                        } else {
-                            alpha = 0x100;
-                        }
-                        drawMenuSpriteWithAlpha((s16)(iconActor->panelX[0] + arg0->iconOffsetX + iconXOffset),
-                                      (s16)(iconActor->panelY[0] + arg0->iconOffsetY), getRelocatableHeapBlockBase(gAssetHandles[33]),
-                                      SAVE_PANEL_RECORD_ICON_TILE, 0x20, 0x20, 0, alpha, 9 - iconIndex);
-                        iconIndex = nextIconIndex;
-                        iconXOffset += 0x10;
-                    } while (nextIconIndex != count);
-                    iconIndex = 0;
-                }
-
-                count = SAVE_PANEL_BASE_BADGE_COUNT;
-                if (saveData->iconCount == 1) {
-                    count = SAVE_PANEL_BASE_BADGE_COUNT + 1;
-                } else if (saveData->iconCount == 2) {
-                    count = SAVE_PANEL_BASE_BADGE_COUNT + 2;
-                } else if (saveData->iconCount == SAVE_PANEL_MAX_RECORD_ICONS) {
-                    count = SAVE_PANEL_BASE_BADGE_COUNT + SAVE_PANEL_MAX_RECORD_ICONS;
-                }
-
-                if (count > 0) {
-                    badgeData = &gGameSaveDataBuffer[playerIndex];
-                    badgeIndex = gPlayerBadgeDisplayOrder;
-                    iconXOffset = 0;
-                    iconActor = (TitleMenuIconStripActor *)((u8 *)arg0 + panelCoordinateOffset);
-                    do {
-                        tile = badgeData->badgeIds[*badgeIndex];
-                        alpha = 0x70;
-                        if (tile != 0) {
-                            alpha = 0x100;
-                            tile += 6;
-                        } else {
-                            tile = SAVE_PANEL_EMPTY_BADGE_TILE;
-                        }
-                        drawMenuSpriteWithAlpha((s16)(iconActor->panelX[0] + arg0->badgeOffsetX + iconXOffset),
-                                      (s16)(iconActor->panelY[0] + arg0->badgeOffsetY), getRelocatableHeapBlockBase(gAssetHandles[33]),
-                                      (iconIndex + 0x1A) & 0xFFFF, 0x20, 0x20, 0, alpha, tile);
-                        iconIndex++;
-                        iconXOffset += 0xE;
-                        badgeIndex++;
-                    } while (iconIndex != count);
-                }
-            }
-            panelCoordinateOffset += 2;
-            pakStatus++;
-        } while (++playerIndex < (s32)gPlayerCount);
-    }
+    do { i = 0; if (((s32) gPlayerCount) > 0) { courseId = gControllerPakStatusCodes; actorOffset = 0; do { (void) i; if ((*courseId) != 0x13) { player = &gGameSaveDataBuffer[i]; j = 0; if (player->iconCount == 3) { count = 3; } else { count = player->iconCount + 1; } if (count > 0) { iconXOffset = 0; item = (TitleMenuIconStripActor *) (((u8 *) arg0) + actorOffset); do { nextJ = j + 1; if (((s32) player->iconCount) < nextJ) { alpha = 0x70; } else { alpha = 0x100; } drawMenuSpriteWithAlpha((s16) ((item->panelX[0] + arg0->iconOffsetX) + iconXOffset), (s16) (item->panelY[0] + arg0->iconOffsetY), getRelocatableHeapBlockBase(gAssetHandles[33]), 0x19, 0x20, 0x20, 0, alpha, 9 - j); j = nextJ; iconXOffset += 0x10; } while (nextJ != count); j = 0; } count = 6; if (player->iconCount == 1) { count = 7; } else if (player->iconCount == 2) { count = 8; } else if (player->iconCount == 3) { count = 9; } if (count > 0) { player2 = &gGameSaveDataBuffer[i]; badgeIndex = gPlayerBadgeDisplayOrder; nextJ = 0; item = (TitleMenuIconStripActor *) (((u8 *) arg0) + actorOffset); do { tile = player2->badgeIds[*badgeIndex]; alpha = 0x70; if (tile != 0) { alpha = 0x100; tile += 6; } else { tile = 9; } drawMenuSpriteWithAlpha((s16) ((item->panelX[0] + arg0->badgeOffsetX) + nextJ), (s16) (item->panelY[0] + arg0->badgeOffsetY), getRelocatableHeapBlockBase(gAssetHandles[33]), (j + 0x1A) & 0xFFFF, 0x20, 0x20, 0, alpha, tile); j++; nextJ += 0xE; badgeIndex++; } while (j != count); } } actorOffset += 2; courseId++; } while ((++i) < ((s32) gPlayerCount)); } } while (0);
 }
 #endif
 
