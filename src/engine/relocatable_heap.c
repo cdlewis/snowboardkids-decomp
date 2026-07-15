@@ -53,56 +53,19 @@ void updateRelocatableHeapNextFreeAddress(void) {
 void updateRelocatableHeap(void) {
 }
 
-// initRelocatableHeap best match: 97.727%
-#pragma GLOBAL_ASM("asm/nonmatchings/engine/relocatable_heap/initRelocatableHeap.s")
-
-#ifdef NON_MATCHING
-extern RelocatableHeapBlock gRelocatableHeapBlockPoolSlot1[];
-extern RelocatableHeapBlock gRelocatableHeapBlockPoolSlot2[];
-extern RelocatableHeapBlock gRelocatableHeapBlockPoolSlot3[];
-
 void initRelocatableHeap(void) {
-    RelocatableHeapBlock **freeList = gRelocatableHeapFreeBlockStack;
-    RelocatableHeapBlock *block0 = gRelocatableHeapBlockPool;
-    RelocatableHeapBlock *block1 = gRelocatableHeapBlockPoolSlot1;
-    RelocatableHeapBlock *block2 = gRelocatableHeapBlockPoolSlot2;
-    RelocatableHeapBlock *block3 = gRelocatableHeapBlockPoolSlot3;
-    s32 i = 0;
-    s32 next1;
-    s32 next2;
-    s32 next3;
+    s32 i;
 
-    do {
-        next1 = i + 1;
-        next2 = i + 2;
-        next3 = i + 3;
-        block0->index = i;
-        i += 4;
-        if ((i && i) && i) {
-        }
-        freeList[1] = block1;
-        freeList[2] = block2;
-        freeList[3] = block3;
-        freeList[0] = block0;
-        block0 += 4;
-        block3 += 4;
-        block2 += 4;
-        block1 += 4;
-        block0[-1].index = next3;
-        block0[-2].index = next2;
-        block0[-3].index = next1;
-        block0[-3].status = RELOCATABLE_HEAP_BLOCK_FREE;
-        block0[-2].status = RELOCATABLE_HEAP_BLOCK_FREE;
-        block0[-1].status = RELOCATABLE_HEAP_BLOCK_FREE;
-        freeList += 4;
-        block0[-4].status = RELOCATABLE_HEAP_BLOCK_FREE;
-    } while (i != RELOCATABLE_HEAP_BLOCK_COUNT);
+    for (i = 0; i < RELOCATABLE_HEAP_BLOCK_COUNT; i++) {
+        gRelocatableHeapFreeBlockStack[i] = &gRelocatableHeapBlockPool[i];
+        gRelocatableHeapBlockPool[i].index = i;
+        gRelocatableHeapBlockPool[i].status = RELOCATABLE_HEAP_BLOCK_FREE;
+    }
 
     gRelocatableHeapUsedBlockCount = 0;
     gFirstAllocatedRelocatableHeapBlock = NULL;
     updateRelocatableHeapNextFreeAddress();
 }
-#endif
 
 void *acquireRelocatableHeapBlockMetadata(void) {
     RelocatableHeapBlock *block;
