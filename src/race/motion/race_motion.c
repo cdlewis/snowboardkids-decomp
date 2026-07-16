@@ -1025,7 +1025,7 @@ void getRaceCourseSurfaceSpawnTransform(s32 arg0, s32 *x, s32 *y, s32 *z, s16 *a
     *angle = -((RaceMotionSurface *)((s32)gRaceCourseSurfaces + keyframeOffset))->angle;
 }
 
-// getRaceCourseTargetPositionAhead best match: 98.750% (nonmatchings/getRaceCourseTargetPositionAhead-5313856277864964686/base_12.c)
+// getRaceCourseTargetPositionAhead best match: 98.993% (nonmatchings/getRaceCourseTargetPositionAhead-7501265508483202319/base.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race/motion/race_motion/getRaceCourseTargetPositionAhead.s")
 
 #ifdef NON_MATCHING
@@ -1055,7 +1055,7 @@ void getRaceCourseTargetPositionAhead(s32 arg0, s32 arg1, s32 arg2, s32 *arg3, s
             *arg4 = ((s64)deltaZ * distance) / 0x1000;
         } else if ((gRaceCourseIndex == 3) && ((arg0 == 0x11D) || (arg0 == 0x11E))) {
             distance = projected + 0xC00000;
-            *arg3 = ((s64)-gRaceCourseSurfaceAngleSin * distance) / 0x1000;
+            *arg3 = (distance * (s64)-gRaceCourseSurfaceAngleSin) / 0x1000;
             *arg4 = ((s64)gRaceCourseSurfaceAngleCos * distance) / 0x1000;
         } else {
             distance = projected + 0xFF400000;
@@ -1072,7 +1072,8 @@ void getRaceCourseTargetPositionAhead(s32 arg0, s32 arg1, s32 arg2, s32 *arg3, s
         gRaceCourseSurfaceAngleCos = fixedCosine(gRaceCourseSurfaces[pathIndex].angle);
 
         deltaX = *arg3 - (gRaceCourseSurfaceCoords[gRaceCourseSurfaces[pathIndex].positionIndex].x << 0x11);
-        deltaZ = *arg4 - (gRaceCourseSurfaceCoords[gRaceCourseSurfaces[pathIndex].positionIndex].z << 0x11);
+        deltaZ = gRaceCourseSurfaceCoords[gRaceCourseSurfaces[pathIndex].positionIndex].z;
+        deltaZ = *arg4 - (deltaZ << 0x11);
         distance = updateRacePlayerSmoothedPathOffset(arg5, pathIndex, arg6);
         projected = ((s64)-gRaceCourseSurfaceAngleSin * deltaX + (s64)gRaceCourseSurfaceAngleCos * deltaZ) / 0x1000;
 
