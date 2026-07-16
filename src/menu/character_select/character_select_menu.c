@@ -448,7 +448,7 @@ loop_48:
 }
 #endif
 
-// updateCharacterSelectConfirmationMenu best match: 87.873% (nonmatchings/updateCharacterSelectConfirmationMenu-8201208972835473051/base_4.c)
+// updateCharacterSelectConfirmationMenu best match: 88.390% (nonmatchings/updateCharacterSelectConfirmationMenu-1936695454966205676/base_2.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/character_select/character_select_menu/updateCharacterSelectConfirmationMenu.s")
 
 #ifdef NON_MATCHING
@@ -459,25 +459,19 @@ void updateCharacterSelectConfirmationMenu(void) {
     u8 *readyEnd;
     s32 oldSelection;
     s32 buttons;
-    s32 selection;
     u8 playerCount;
 
     if (gCharacterSelectHudState.fade == 0x100) {
         buttons = gPlayerInputPressed;
-        selection = gCharacterSelectHudState.confirmSelection;
-        oldSelection = selection;
+        oldSelection = gCharacterSelectHudState.confirmSelection;
 
-        if ((buttons & (STICK_UP | U_JPAD)) && (selection != 0)) {
-            gCharacterSelectHudState.confirmSelection = selection - 1;
-            selection = (u8) (selection - 1);
-        } else if (buttons & (STICK_DOWN | D_JPAD)) {
-            if (selection == 0) {
-                gCharacterSelectHudState.confirmSelection = selection + 1;
-                selection = (u8) (selection + 1);
-            }
+        if ((buttons & (STICK_UP | U_JPAD)) && (gCharacterSelectHudState.confirmSelection != 0)) {
+            gCharacterSelectHudState.confirmSelection--;
+        } else if ((buttons & (STICK_DOWN | D_JPAD)) && (gCharacterSelectHudState.confirmSelection == 0)) {
+            gCharacterSelectHudState.confirmSelection++;
         }
 
-        if (selection != oldSelection) {
+        if (gCharacterSelectHudState.confirmSelection != oldSelection) {
             enqueueSoundEffect(0x19, 0x32);
             buttons = gPlayerInputPressed;
         }
