@@ -99,7 +99,7 @@ void initRaceSplitscreenSelectMenu(void) {
     updateCallbackTasks();
 }
 
-// updateRaceSplitscreenSelectMenu best match: 98.535% (nonmatchings/func_80005788-7273315160691878794/base_15.c)
+// updateRaceSplitscreenSelectMenu best match: 98.743% (nonmatchings/updateRaceSplitscreenSelectMenu-3549320994361659932/base_2.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/splitscreen_select/race_splitscreen_select_menu/updateRaceSplitscreenSelectMenu.s")
 
 #ifdef NON_MATCHING
@@ -111,6 +111,8 @@ void updateRaceSplitscreenSelectMenu(void) {
     s32 selection;
     s32 newInputCopy;
     s32 previousSelection;
+    s32 pressedUpCopy;
+    s32 repeatTimerCopy;
     s32 tempSelection;
     u8 waitTimer;
 
@@ -134,8 +136,10 @@ void updateRaceSplitscreenSelectMenu(void) {
                     }
 
                     heldInput = gPlayerInputPressed;
+                    pressedUpCopy = pressedUp;
                     if ((heldInput & (STICK_UP | U_JPAD)) ||
-                        ((pressedUp != 0) && (gMenuInputRepeatTimers >= 0xB) && ((gMenuInputRepeatTimers % 3) == 0))) {
+                        ((pressedUpCopy != 0) && (gMenuInputRepeatTimers >= 0xB) &&
+                         ((gMenuInputRepeatTimers % 3) == 0))) {
                         repeatTimer = gMenuInputRepeatTimers;
                         tempSelection = selection - 1;
                         if (repeatTimer == 0) {
@@ -148,10 +152,11 @@ void updateRaceSplitscreenSelectMenu(void) {
                         }
                     } else {
                         repeatTimer = gMenuInputRepeatTimers;
+                        repeatTimerCopy = repeatTimer;
                         if ((heldInput & (STICK_DOWN | D_JPAD)) ||
                             ((newInput & (STICK_DOWN | D_JPAD)) && (repeatTimer >= 0xB) && ((repeatTimer % 3) == 0))) {
-                            if (repeatTimer == 0) {
-                                gMenuInputRepeatTimers = repeatTimer + 1;
+                            if (repeatTimerCopy == 0) {
+                                gMenuInputRepeatTimers = repeatTimerCopy + 1;
                                 repeatTimer = gMenuInputRepeatTimers;
                             }
                             if (selection < 4) {
