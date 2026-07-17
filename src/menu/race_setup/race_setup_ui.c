@@ -30,7 +30,7 @@ typedef struct {
     /* 0x00 */ u8 state;
     /* 0x01 */ u8 pad1;
     /* 0x02 */ s16 alpha;
-    /* 0x04 */ u8 pad4[2];
+    /* 0x04 */ u16 savePanelFrameState;
     /* 0x06 */ u16 selection[4];
     /* 0x0E */ u8 saveStatusTransitionStates[4];
     /* 0x12 */ u16 nextSelection[4];
@@ -64,10 +64,6 @@ extern s16 gMenuChoicePromptState[];
 extern s16 gPlayerBadgeDisplayOrder[];
 extern TitleMenuPlayerView gGameSaveDataBuffer[];
 extern TitleIntroTransitionState gRaceSetupMenuSubState;
-extern s16 gRaceSetupPlayerCountPromptAlpha;
-extern u16 gRaceSetupSaveStatusSelections[];
-extern u8 gRaceSetupSaveStatusTransitionStates[];
-extern u16 gRaceSetupSaveStatusNextSelections[];
 extern s16 gRaceSetupSavePanelRect0X0;
 extern s16 gRaceSetupSavePanelRect0Y0;
 extern s16 gRaceSetupSavePanelRect0X1;
@@ -232,7 +228,7 @@ void updateRaceSetupPlayerCountPrompt(MenuIntroActor *arg0) {
         actor->state = 8;
     }
     gRaceSetupMenuSubState.state = actor->state;
-    gRaceSetupPlayerCountPromptAlpha = actor->alpha;
+    gRaceSetupMenuSubState.alpha = actor->alpha;
     if (actor->state != 8) {
         addRenderCallback(&gMenuRenderCallbackList, drawRaceSetupPlayerCountPrompt, (s32)actor);
     }
@@ -700,9 +696,9 @@ void updateRaceSetupSavePanelFrame(RectListActor *arg0) {
     s16 delta1;
     s16 *coords;
 
-    outer = gRaceSetupSavePanelFrameState;
+    outer = gRaceSetupMenuSubState.savePanelFrameState;
     state = arg0->frame;
-    if (gRaceSetupSavePanelFrameState != state) {
+    if (gRaceSetupMenuSubState.savePanelFrameState != state) {
         state = outer;
         arg0->frame = outer;
     }
@@ -786,7 +782,7 @@ void updateRaceSetupSavePanelFrame(RectListActor *arg0) {
         break;
     }
 
-    gRaceSetupSavePanelFrameState = state;
+    gRaceSetupMenuSubState.savePanelFrameState = state;
     gRaceSetupSavePanelRect0X0 = arg0->rects[0].x0;
     gRaceSetupSavePanelRect1X0 = arg0->rects[1].x0;
     gRaceSetupSavePanelRect0Y0 = arg0->rects[0].y0;
@@ -1089,7 +1085,7 @@ void drawRaceSetupSaveChoicePrompts(TitleMenuTransitionActor *arg0) {
 
             if ((state >= 5) && (new_var2->slideOffset[i] == 0)) {
                 gRaceSetupMenuSubState.nextSelection[i] = arg0->selection[i];
-                gRaceSetupSaveStatusTransitionStates[i] = 2;
+                gRaceSetupMenuSubState.saveStatusTransitionStates[i] = 2;
                 gMenuChoicePromptState[i] = 0;
             }
         }

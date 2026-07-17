@@ -15,73 +15,43 @@ typedef struct {
 } RaceSetupMenuState;
 
 typedef struct {
-    /* 0x0 */ u8 state;
-    /* 0x1 */ u8 unk1;
-    /* 0x2 */ s16 unk2;
-    /* 0x4 */ u8 unk4;
+    /* 0x00 */ u8 state;
+    /* 0x01 */ u8 unk1;
+    /* 0x02 */ s16 unk2;
+    /* 0x04 */ u8 unk4;
+    /* 0x05 */ u8 pad5;
+    /* 0x06 */ s16 selection[4];
+    /* 0x0E */ u8 saveStatusTransitionStates[4];
+    /* 0x12 */ s16 nextSelection[4];
+    /* 0x1A */ u8 pad1A[0x1E];
 } RaceSetupMenuSubState;
 
 typedef struct {
-    /* 0x0 */ u8 state;
-    /* 0x1 */ u8 unk1;
-} RaceSetupMenuSubStatePrefix;
+    /* 0x000 */ s8 selectedCourseId;
+    /* 0x001 */ u8 pad1[0x60B];
+} RaceSetupPlayerMenuState;
+
+RaceSetupMenuSubState gRaceSetupMenuSubState;
+s16 gRaceSetupSavePanelRect0X0;
+s16 gRaceSetupSavePanelRect0Y0;
+s16 gRaceSetupSavePanelRect0X1;
+s16 gRaceSetupSavePanelRect0Y1;
 
 extern u8 gConnectedControllerCount;
 extern s32 enqueueSoundEffect(s16 soundId, s16 priority);
-extern RaceSetupMenuState *gCurrentGameTask;
-extern u16 gMenuInputRepeatTimers;
-extern u8 gMenuSelectionConfirmTimer;
-extern u8 gPlayerCount;
-extern s32 gPlayerInputHeld;
-extern s32 gPlayerInputPressed;
-
-RaceSetupMenuSubStatePrefix gRaceSetupMenuSubState;
-s16 gRaceSetupPlayerCountPromptAlpha;
-u16 gRaceSetupSavePanelFrameState;
-s16 gRaceSetupSaveStatusSelections;
-s16 D_8010AE08;
-s16 D_8010AE0A;
-s16 D_8010AE0C;
-s8 gRaceSetupSaveStatusTransitionStates;
-s8 D_8010AE0F;
-
-// initRaceSetupMenu best match: 98.403% (nonmatchings/initRaceSetupMenu-8331816093655448999/base_6.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/menu/race_setup/race_setup_menu/initRaceSetupMenu.s")
-
-#ifdef NON_MATCHING
-extern f32 D_800E0900;
-extern u8 gConnectedControllerCount;
 extern s8 gFramebufferSwapDelay;
 extern s16 gMenuFadeAlpha;
 extern u8 gRaceRumbleEnabled;
 extern u8 gRumblePakConnectedByController[];
-extern s8 D_800EC8B5;
-extern s8 D_800EC8B6;
-extern s8 D_800EC8B7;
 extern u8 gMenuSelectionConfirmTimer;
 extern char D_800EC9E5;
 extern s8 gCourseSelectModeSelection;
 extern CallbackTask *gActiveMenuTask;
 extern u16 gMenuInputRepeatTimers;
 extern s8 gHighestUnlockedCourse;
-extern s16 gRaceSetupSaveStatusSelections;
-extern s16 D_8010AE08;
-extern s16 D_8010AE0A;
-extern s16 D_8010AE0C;
-extern s8 gRaceSetupSaveStatusTransitionStates;
-extern s8 D_8010AE0F;
-extern s8 D_8010AE10;
-extern s8 D_8010AE11;
-extern s16 gRaceSetupSaveStatusNextSelections;
-extern s16 D_8010AE14;
-extern s16 D_8010AE16;
-extern s16 D_8010AE18;
 extern s16 gRaceCourseIndex;
 extern u8 gPlayerCount;
-extern s8 gCourseSelectSelectedCourseId;
-extern s8 D_80122392;
-extern s8 D_8012299E;
-extern s8 D_80122FAA;
+extern RaceSetupPlayerMenuState gCourseSelectSelectedCourseId[];
 extern RaceSetupMenuState *gCurrentGameTask;
 extern s32 gMenuFlowState;
 extern s32 gPlayerInputHeld;
@@ -96,9 +66,11 @@ extern u8 D_60F1A0;
 extern u8 D_60F990;
 
 void initRaceSetupMenu(void) {
+    s32 i;
+
     requestMusicSequenceBank(1);
     resetAllViewports();
-    configureViewport(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, D_800E0900);
+    configureViewport(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.3333334f);
 
     gFramebufferSwapDelay = 0;
     gCurrentGameTask->fade = 0;
@@ -123,34 +95,20 @@ void initRaceSetupMenu(void) {
     initCallbackTaskScheduler(0);
     gActiveMenuTask = createCallbackTask(initRaceSetupPlayerCountPrompt, 0, 0x64);
 
-    ((RaceSetupMenuSubState *)&gRaceSetupMenuSubState)->state = 0;
-    ((RaceSetupMenuSubState *)&gRaceSetupMenuSubState)->unk1 = 0;
-    ((RaceSetupMenuSubState *)&gRaceSetupMenuSubState)->unk2 = 0;
-    ((RaceSetupMenuSubState *)&gRaceSetupMenuSubState)->unk4 = 0;
-    gRumblePakConnectedByController[0] = 0;
-    gRaceSetupSaveStatusSelections = 0;
-    gRaceSetupSaveStatusTransitionStates = 0;
-    gRaceSetupSaveStatusNextSelections = 0;
-    gCourseSelectSelectedCourseId = 0;
-    D_800EC8B5 = 0;
-    D_8010AE08 = 0;
-    D_8010AE0F = 0;
-    D_8010AE14 = 0;
-    D_80122392 = 0;
-    D_800EC8B6 = 0;
-    D_8010AE0A = 0;
-    D_8010AE10 = 0;
-    D_8010AE16 = 0;
-    D_8012299E = 0;
-    D_800EC8B7 = 0;
-    D_8010AE0C = 0;
-    D_8010AE11 = 0;
-    D_8010AE18 = 0;
-    D_80122FAA = 0;
+    gRaceSetupMenuSubState.state = 0;
+    gRaceSetupMenuSubState.unk1 = 0;
+    gRaceSetupMenuSubState.unk2 = 0;
+    gRaceSetupMenuSubState.unk4 = 0;
+    for (i = 0; i < 4; i++) {
+        gRumblePakConnectedByController[i] = 0;
+        gRaceSetupMenuSubState.selection[i] = 0;
+        gRaceSetupMenuSubState.saveStatusTransitionStates[i] = 0;
+        gRaceSetupMenuSubState.nextSelection[i] = 0;
+        gCourseSelectSelectedCourseId[i].selectedCourseId = 0;
+    }
 
     setCurrentGameTaskCallback(updateRaceSetupPlayerCountMenu, 0);
 }
-#endif
 
 void updateRaceSetupPlayerCountMenu(void) {
     s32 confirmationNext;
@@ -244,10 +202,6 @@ extern u8 D_800EC9E4;
 extern s32 D_8010ADE0;
 extern s32 D_8010ADE4;
 extern s32 D_8010ADE8;
-extern s16 gRaceSetupSavePanelRect0X0;
-extern s16 gRaceSetupSavePanelRect0Y0;
-extern s16 gRaceSetupSavePanelRect0X1;
-extern s16 gRaceSetupSavePanelRect0Y1;
 extern s16 gRaceSetupSavePanelRect1X0;
 extern s16 gRaceSetupSavePanelRect1Y0;
 extern s16 gRaceSetupSavePanelRect1X1;
