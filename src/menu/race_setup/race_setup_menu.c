@@ -692,7 +692,7 @@ void updateRaceSetupSaveMenu(void) {
 void raceSetupMenuNoop(void) {
 }
 
-// updateRaceSetupRumblePrompt best match: 95.000% (nonmatchings/updateRaceSetupRumblePrompt-2663524570355072948/base_8.c)
+// updateRaceSetupRumblePrompt best match: 96.678% (nonmatchings/updateRaceSetupRumblePrompt-1936695454966205676/base_11.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/race_setup/race_setup_menu/updateRaceSetupRumblePrompt.s")
 
 #ifdef NON_MATCHING
@@ -730,8 +730,8 @@ void updateRaceSetupRumblePrompt(void) {
         case 1:
             if ((gPlayerInputPressed & A_BUTTON) || (gPlayerInputPressed & START_BUTTON)) {
                 enqueueSoundEffect(1, 0x32);
-                gControllerPakRumbleCheckPromptState = 2;
                 D_8010ADD4 = 1;
+                gControllerPakRumbleCheckPromptState = 2;
                 state = 2;
             }
             break;
@@ -753,6 +753,7 @@ void updateRaceSetupRumblePrompt(void) {
             gControllerPakRumbleCheckPromptTransition.state = 7;
             gControllerPakRumbleCheckPromptTransition.timer = 0x11;
             state = 7;
+            state = gControllerPakRumbleCheckPromptTransition.state;
             break;
         case 3:
             if ((gPlayerInputPressed & A_BUTTON) || (gPlayerInputPressed & START_BUTTON)) {
@@ -794,6 +795,7 @@ void updateRaceSetupRumblePrompt(void) {
                 gControllerPakRumbleCheckPromptTransition.state = 8;
                 gControllerPakRumbleCheckPromptTransition.targetScale = 2;
                 state = 8;
+                state = gControllerPakRumbleCheckPromptTransition.state;
             }
             break;
         case 8:
