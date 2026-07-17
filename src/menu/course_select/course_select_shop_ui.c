@@ -349,15 +349,12 @@ void initShopMenuSidePanel(ShopMenuWidgetActor *arg0) {
     setCallbackTaskCallback(arg0, updateShopMenuSidePanel);
 }
 
-// drawShopMenuSelectedModePanel best match: 99.855% (nonmatchings/drawShopMenuSelectedModePanel-8331816093655448999/base_1.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/menu/course_select/course_select_shop_ui/drawShopMenuSelectedModePanel.s")
-
-#ifdef NON_MATCHING
 void drawShopMenuSelectedModePanel(ShopMenuWidgetActor *arg0) {
     s32 shouldDraw;
     s32 i;
     s32 tileOffset;
     s32 offset;
+    s32 borderOffset;
 
     tileOffset = 0;
     shouldDraw = 1;
@@ -368,9 +365,7 @@ void drawShopMenuSelectedModePanel(ShopMenuWidgetActor *arg0) {
 
     if (shouldDraw) {
         tileOffset = 0;
-        if (1) {
-            i = 0x80;
-        }
+        i = 0x80;
     }
     offset = 0;
     if ((i && i) && i) {
@@ -390,22 +385,18 @@ void drawShopMenuSelectedModePanel(ShopMenuWidgetActor *arg0) {
     drawMenuSpriteTile((s16)(arg0->x + 0x80), (s16)(arg0->y + 0x80), getRelocatableHeapBlockBase(gAssetHandles[0x27]),
                   gShopMenuPanelFrameTilemaps[(u16)arg0->item.counter].corner, 0, 0x100);
 
-    drawMenuSprite(arg0->x - 4, (s16)(arg0->y - 4), getRelocatableHeapBlockBase(gAssetHandles[0x25]), 0x33, 0x20, 0x20, 0, 0);
+    drawMenuSprite((s16)(arg0->x - 4), (s16)(arg0->y - 4), getRelocatableHeapBlockBase(gAssetHandles[0x25]), 0x33, 0x20, 0x20, 0, 0);
     drawMenuSprite((s16)(arg0->x - 4), (s16)(arg0->y + 0x8C), getRelocatableHeapBlockBase(gAssetHandles[0x25]), 0x38, 0x20, 0x20, 0, 0);
     drawMenuSprite((s16)(arg0->x + 0x8C), (s16)(arg0->y - 4), getRelocatableHeapBlockBase(gAssetHandles[0x25]), 0x35, 0x20, 0x20, 0, 0);
-    if (offset && offset) {}
     drawMenuSprite((s16)(arg0->x + 0x8C), (s16)(arg0->y + 0x8C), getRelocatableHeapBlockBase(gAssetHandles[0x25]), 0x3A, 0x20, 0x20, 0, 0);
 
-    for (offset = 0; (offset ^ 0) != 0x80; offset += 0x10) {
-        drawMenuSprite((s16)((arg0->x + offset) + 0xC), (s16)(arg0->y - 4), getRelocatableHeapBlockBase(gAssetHandles[0x25]), 0x34, 0x20, 0x20, 0, 0);
-        do {
-            drawMenuSprite((s16)((arg0->x + offset) + 0xC), (s16)(arg0->y + 0x8C), getRelocatableHeapBlockBase(gAssetHandles[0x25]), 0x39, 0x20, 0x20, 0, 0);
-        } while (0);
-        drawMenuSprite((s16)(arg0->x - 4), (s16)((arg0->y + offset) + 0xC), getRelocatableHeapBlockBase(gAssetHandles[0x25]), 0x36, 0x20, 0x20, 0, 0);
-        drawMenuSprite((s16)(arg0->x + 0x8C), (s16)((arg0->y + offset) + 0xC), getRelocatableHeapBlockBase(gAssetHandles[0x25]), 0x37, 0x20, 0x20, 0, 0);
+    for (borderOffset = 0; borderOffset != 0x80; borderOffset += 0x10) {
+        drawMenuSprite((s16)((arg0->x + borderOffset) + 0xC), (s16)(arg0->y - 4), getRelocatableHeapBlockBase(gAssetHandles[0x25]), 0x34, 0x20, 0x20, 0, 0);
+        drawMenuSprite((s16)((arg0->x + borderOffset) + 0xC), (s16)(arg0->y + 0x8C), getRelocatableHeapBlockBase(gAssetHandles[0x25]), 0x39, 0x20, 0x20, 0, 0);
+        drawMenuSprite((s16)(arg0->x - 4), (s16)((arg0->y + borderOffset) + 0xC), getRelocatableHeapBlockBase(gAssetHandles[0x25]), 0x36, 0x20, 0x20, 0, 0);
+        drawMenuSprite((s16)(arg0->x + 0x8C), (s16)((arg0->y + borderOffset) + 0xC), getRelocatableHeapBlockBase(gAssetHandles[0x25]), 0x37, 0x20, 0x20, 0, 0);
     }
 }
-#endif
 
 void updateShopMenuSelectedModePanel(ShopMenuWidgetActor *arg0) {
     int state;
