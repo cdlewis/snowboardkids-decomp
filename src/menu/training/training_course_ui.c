@@ -140,14 +140,7 @@ void redrawTrainingCourseLessonEndMenu(s32 arg0) {
     addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)redrawTrainingCourseLessonEndMenu, arg0);
 }
 
-// updateTrainingCourseLessonEndMenu best match: 99.562%
-#pragma GLOBAL_ASM("asm/nonmatchings/menu/training/training_course_ui/updateTrainingCourseLessonEndMenu.s")
-
-#ifdef NON_MATCHING
 void updateTrainingCourseLessonEndMenu(TrainingCourseUiActor *arg0) {
-    s32 temp_t1;
-    s32 temp_t8;
-    s32 temp_t9;
     s32 temp_a1;
     s32 var_a0;
     s32 var_v0;
@@ -156,27 +149,22 @@ void updateTrainingCourseLessonEndMenu(TrainingCourseUiActor *arg0) {
     temp_a1 = var_v0;
     if (gPlayerInputPressed & (STICK_UP | U_JPAD)) {
         if (gTrainingCourseLesson != 9) {
-            temp_t8 = var_v0 - 1;
             if (var_v0 != 0) {
-                arg0->state.selectedAction = temp_t8;
-                var_v0 = temp_t8 & 0xFFFF;
+                arg0->state.selectedAction = var_v0 - 1;
+                var_v0 = (u16)arg0->state.selectedAction;
             }
         } else {
-            temp_t9 = var_v0 - 1;
             if (var_v0 != 1) {
-                arg0->state.selectedAction = temp_t9;
-                var_v0 = temp_t9 & 0xFFFF;
+                arg0->state.selectedAction = var_v0 - 1;
+                var_v0 = (u16)arg0->state.selectedAction;
             }
         }
     }
     var_a0 = var_v0;
     if (gPlayerInputPressed & (STICK_DOWN | D_JPAD)) {
-        temp_t1 = var_v0 + 1;
         if (var_v0 != 2) {
-            arg0->state.selectedAction = ((temp_t1 & 0xFFFFu) & 0xFFFFu) & 0xFFFFu;
-            do {
-            } while (0);
-            var_a0 = temp_t1 & 0xFFFF;
+            arg0->state.selectedAction = var_v0 + 1;
+            var_a0 = (u16)arg0->state.selectedAction;
         }
     }
     if (var_a0 != temp_a1) {
@@ -197,7 +185,6 @@ void updateTrainingCourseLessonEndMenu(TrainingCourseUiActor *arg0) {
     }
     addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawTrainingCourseLessonEndMenu, (s32)arg0);
 }
-#endif
 
 void initTrainingCourseLessonEndMenu(TrainingCourseUiActor *arg0) {
     arg0->x = -0x30;
