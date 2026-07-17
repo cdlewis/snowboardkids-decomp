@@ -134,7 +134,8 @@ $(BUILD_DIR)/src/ultra/os/exceptasm.o: ULTRA_AS_ISA = mips3
 $(BUILD_DIR)/src/ultra/os/exceptasm.o: ULTRA_AS_POST = $(PYTHON) $(TOOLS_DIR)/set_o32abi_bit.py $@
 
 LD_SCRIPT      = $(BASENAME).ld
-LINKER_SCRIPTS = linker_scripts/hardware_regs.ld linker_scripts/libultra_syms.ld
+LINKER_SCRIPTS = linker_scripts/hardware_regs.ld linker_scripts/libultra_syms.ld \
+                 linker_scripts/race_setup_menu_syms.ld
 LDFLAGS        = -T $(LD_SCRIPT) -Map $(TARGET).map \
                  -T undefined_funcs_auto.txt \
                  -T undefined_syms_auto.txt \

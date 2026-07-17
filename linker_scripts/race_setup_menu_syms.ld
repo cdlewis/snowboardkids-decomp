@@ -1,0 +1,15 @@
+D_8010AE01 = gRaceSetupMenuSubState + 0x1;
+gRaceSetupPlayerCountPromptAlpha = gRaceSetupMenuSubState + 0x2;
+gRaceSetupSavePanelFrameState = gRaceSetupMenuSubState + 0x4;
+gRaceSetupSaveStatusSelections = gRaceSetupMenuSubState + 0x6;
+D_8010AE08 = gRaceSetupMenuSubState + 0x8;
+D_8010AE0A = gRaceSetupMenuSubState + 0xA;
+D_8010AE0C = gRaceSetupMenuSubState + 0xC;
+gRaceSetupSaveStatusTransitionStates = gRaceSetupMenuSubState + 0xE;
+D_8010AE0F = gRaceSetupMenuSubState + 0xF;
+D_8010AE10 = gRaceSetupMenuSubState + 0x10;
+D_8010AE11 = gRaceSetupMenuSubState + 0x11;
+gRaceSetupSaveStatusNextSelections = gRaceSetupMenuSubState + 0x12;
+D_8010AE14 = gRaceSetupMenuSubState + 0x14;
+D_8010AE16 = gRaceSetupMenuSubState + 0x16;
+D_8010AE18 = gRaceSetupMenuSubState + 0x18;
