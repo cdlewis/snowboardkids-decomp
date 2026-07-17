@@ -154,6 +154,11 @@ and control flow already match and only register *names* differ.
 - **Force commutative operand order with the comma operator.** `(0, x)` is a
   standard decomp idiom that flips the operand order IDO assigns for a
   commutative op, with no runtime effect.
+- **A constant-true conditional can change temp allocation without emitting
+  code.** Wrapping a region in `if (1) { ... }` can move an otherwise identical
+  value between `$v0` and `$v1` under `-O2`; a plain compound block does not
+  necessarily have the same effect. Reserve this for a final register-only
+  mismatch after confirming that the condition emits no branch.
 - **Bind a return expression's intermediate to a named local.** When an
   intermediate computation (e.g. a shift) must occupy a temp distinct from
   `$v0`, capture it in a named local and return that local, rather than
