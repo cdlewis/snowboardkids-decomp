@@ -716,7 +716,7 @@ void initRaceCourseSceneryObjects(RaceCourseRenderEffect *arg0) {
     setCallbackTaskCallback(arg0, updateRaceCourseSceneryObjects);
 }
 
-// renderPatrolCourseObject best match: 99.182% at nonmatchings/renderPatrolCourseObject-731940616440357983/angle_5.c.
+// renderPatrolCourseObject best match: 99.273% at nonmatchings/renderPatrolCourseObject-8239461464121803931/base_5.c.
 #pragma GLOBAL_ASM("asm/nonmatchings/race/course/race_course_effects/renderPatrolCourseObject.s")
 
 #ifdef NON_MATCHING
@@ -736,7 +736,8 @@ void renderPatrolCourseObject(PatrolCourseObjectEffect *arg0) {
             sine = fixedSine(arg0->unk40);
             if (1) {
                 doubleSine = fixedSine((s16)(arg0->unk40 * 2));
-                makeFixedRotationY(transform.rotation, (sine >> 4) + (0x800 + arg0->angle));
+                sine >>= 4;
+                makeFixedRotationY(transform.rotation, arg0->angle + sine + 0x800);
                 transform.basePos.x = arg0->pos.x;
                 transform.basePos.y = (arg0->pos.y + ((doubleSine + 0x1000) << 4)) + 0xA4000;
             }
@@ -752,13 +753,7 @@ void renderPatrolCourseObject(PatrolCourseObjectEffect *arg0) {
             gDPPipeSync(gRegionAllocPtr++);
             gSPSegment(gRegionAllocPtr++, 0x02, getRelocatableHeapBlockBase(ASSET_HANDLE(0xA)));
             gSPSegment(gRegionAllocPtr++, 0x03, getRelocatableHeapBlockBase(ASSET_HANDLE(0xB)));
-            {
-                Gfx *_g = (Gfx *) (gRegionAllocPtr++);
-
-                _g->words.w0 = (unsigned int) ((((unsigned int) ((0x00 | 0x02) | 0x00)) & ((0x01 << 8) - 1)) << 16);
-                _g->words.w0 = (((unsigned int) ((((unsigned int) 1) & ((0x01 << 8) - 1)) << 24)) | _g->words.w0) | ((unsigned int) ((((unsigned int) (sizeof(Mtx))) & ((0x01 << 16) - 1)) << 0));
-                _g->words.w1 = (unsigned int) arg0->displayList;
-            }
+            gSPMatrix(gRegionAllocPtr++, arg0->displayList, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
             gSPDisplayList(gRegionAllocPtr++, D_2001D00);
         }
     }

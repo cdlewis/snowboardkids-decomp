@@ -147,6 +147,10 @@ and control flow already match and only register *names* differ.
   assigns the destination/operand registers based on source operand order.
   When a match is functionally perfect but differs only in which temp holds
   each operand of an `addu`/`or`, try swapping the addends in the C source.
+- **Narrow a dead local in place before its final commutative use.** Writing
+  `value >>= N; consume(field + value);` can preserve the target shift while
+  making the field the first `addu` operand. The inline equivalent
+  `consume((value >> N) + field);` often gives IDO the opposite operand order.
 - **Force commutative operand order with the comma operator.** `(0, x)` is a
   standard decomp idiom that flips the operand order IDO assigns for a
   commutative op, with no runtime effect.
