@@ -3994,17 +3994,11 @@ void updateRacePlayerMode09TerrainCrash(RacePlayer *player) {
     }
 }
 
-// updateRacePlayerMode10TerrainCrashSlide best match: 99.683% (nonmatchings/updateRacePlayerMode10TerrainCrashSlide-7273315160691878794/base_7.c)
-
-#pragma GLOBAL_ASM("asm/nonmatchings/race/player/race_player_update/updateRacePlayerMode10TerrainCrashSlide.s")
-
-#ifdef NON_MATCHING
 void updateRacePlayerMode10TerrainCrashSlide(RacePlayer *player) {
     s16 updateState;
     s32 yVel;
     s32 velocityX;
     s32 velocityZ;
-    s32 stateTimer;
     u32 stateFlags;
 
     updateState = player->updateState;
@@ -4050,12 +4044,9 @@ void updateRacePlayerMode10TerrainCrashSlide(RacePlayer *player) {
         player->facingAngle += 0x800;
     }
     if (player->unk330 != 3) {
-        stateTimer = (((((player->stateTimer & 0xFFFFFFFFFFFFFFFFu) & 0xFFFFFFFFFFFFFFFFu) & 0xFFFFFFFFFFFFFFFFu) & 0xFFFFFFFFFFFFFFFFu) & 0xFFFFFFFFFFFFFFFFu) - 1;
-        player->stateTimer = stateTimer;
-        if (stateTimer == 0) {
-            stateFlags = player->stateFlags & 0xFE0C1FFB;
-            player->stateFlags = stateFlags;
-            if (stateFlags & 1) {
+        if (--player->stateTimer == 0) {
+            player->stateFlags &= 0xFE0C1FFB;
+            if (player->stateFlags & 1) {
                 player->mode = 1;
                 player->updateState = 0;
                 player->updateTimer = 0;
@@ -4071,7 +4062,6 @@ void updateRacePlayerMode10TerrainCrashSlide(RacePlayer *player) {
     player->actionEffectLevel = 4;
     player->actionEffectFrame = 2;
 }
-#endif
 
 void updateRacePlayerMode12LaunchRecover(RacePlayer *player) {
     s16 updateState;
