@@ -221,7 +221,11 @@ extern Gfx gEffectRenderModeSetupDl[];
 extern Gfx gEffectRenderModeCleanupDl[];
 extern RaceItemGfxCommandSource gIdentityFixedTransform;
 extern RaceItemEffectAssetHandles gAssetHandles;
+#ifdef NON_MATCHING
+extern volatile RaceItemDrawLists gRaceItemTextureEffectDrawLists;
+#else
 extern RaceItemDrawLists gRaceItemTextureEffectDrawLists;
+#endif
 extern RaceItemDrawLists D_801121E0;
 extern s16 gRaceCourseIndex;
 extern u8 gRaceUpdatePaused;
@@ -1005,21 +1009,17 @@ void renderRaceItemTextureEffects(RaceItemTextureActor *arg0) {
 }
 #endif
 
-// updateRaceItemTextureEffects best match: 67.368%
-// (loop form: IDO emits $at-direct per-store addressing like the target, but
-// reloads lui per store instead of CSE-ing across adjacent pairs)
+// updateRaceItemTextureEffects best match: 72.059%
+// (nonmatchings/updateRaceItemTextureEffects-8239461464121803931/base_3.c)
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race/items/race_item_effects/updateRaceItemTextureEffects.s")
 
 #ifdef NON_MATCHING
 void updateRaceItemTextureEffects(RaceItemEffectActor *arg0) {
-    RaceItemDrawNode **heads;
-    s32 i;
-
-    heads = gRaceItemTextureEffectDrawLists.heads;
-    for (i = 0; i < 4; i++) {
-        heads[i] = NULL;
-    }
+    gRaceItemTextureEffectDrawLists.heads[0] = NULL;
+    gRaceItemTextureEffectDrawLists.heads[1] = NULL;
+    gRaceItemTextureEffectDrawLists.heads[2] = NULL;
+    gRaceItemTextureEffectDrawLists.heads[3] = NULL;
     addRenderCallback(&D_801248E0, renderRaceItemTextureEffects, arg0);
 }
 #endif
