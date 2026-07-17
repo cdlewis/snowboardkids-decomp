@@ -234,50 +234,27 @@ void waitEndingLindaPhase35(EndingCreditsLinda *arg0) {
     }
 }
 
-// updateEndingLindaSlideLeftFromFarRight best match: 99.453%
-#pragma GLOBAL_ASM("asm/nonmatchings/ending/ending_credits_linda/updateEndingLindaSlideLeftFromFarRight.s")
-
-#ifdef NON_MATCHING
 void updateEndingLindaSlideLeftFromFarRight(EndingCreditsLinda *arg0) {
-    s32 new_var;
-    s32 temp_t7;
-    s32 var_a1;
-    s32 temp_v0;
-
     loopMainMenuSceneModelAnimation(3);
-    temp_t7 = arg0->posX + -0x48000;
-    arg0->posX = temp_t7;
-    var_a1 = temp_t7;
-    if ((temp_t7 < -0x400000) != 0) {
-        goto block_1;
-    }
-    var_a1 = temp_t7;
-    arg0->posZ += -0x48000;
-    var_a1 = arg0->posX;
-    goto block_2;
-
-block_1:
-    temp_v0 = arg0->posZ;
-    if (temp_v0 < 0) {
-        var_a1 = arg0->posX;
-        arg0->posZ = temp_v0 + 0x70000;
+    arg0->posX += -0x48000;
+    if (arg0->posX >= -0x400000) {
+        arg0->posZ += -0x48000;
+    } else if (arg0->posZ < 0) {
+        arg0->posZ += 0x70000;
     }
 
-block_2:
-    if (var_a1 < -0x1900000 + 1) {
+    if (arg0->posX <= -0x1900000) {
         arg0->posX = -0x1900000;
         setCallbackTaskCallback(arg0, waitEndingLindaPhase35);
-        var_a1 = arg0->posX;
     }
-    if ((var_a1 < -0xF00000 + 1) && (gEndingCreditsSequencePhase == 0x31)) {
+
+    if (arg0->posX <= -0xF00000 && gEndingCreditsSequencePhase == 0x31) {
         gEndingCreditsSequencePhase = 0x32;
-        var_a1 = arg0->posX;
     }
-    new_var = 0xB;
-    setMainMenuSceneModelPosition(3, var_a1, temp_t7 = arg0->posY, arg0->posZ);
-    addMainMenuSceneModelTexturedDrawCallbackWithUnusedArg(3, arg0->textureId, arg0->paletteId, new_var);
+
+    setMainMenuSceneModelPosition(3, arg0->posX, arg0->posY, arg0->posZ);
+    addMainMenuSceneModelTexturedDrawCallbackWithUnusedArg(3, arg0->textureId, arg0->paletteId, 0xB);
 }
-#endif
 
 void waitEndingLindaPhase31(EndingCreditsLinda *arg0) {
     stepMainMenuSceneModelAnimation(3);
