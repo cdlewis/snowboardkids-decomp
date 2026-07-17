@@ -1081,7 +1081,7 @@ void initCourseSelectCourseDetailsMenu(void) {
     updateCallbackTasks();
 }
 
-// updateCourseSelectCourseDetailsMenu best match: 97.871% (nonmatchings/updateCourseSelectCourseDetailsMenu-8953690873630951657/base_1.c)
+// updateCourseSelectCourseDetailsMenu best match: 98.421% (nonmatchings/updateCourseSelectCourseDetailsMenu-8239461464121803931/base_10.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/course_select/course_select_menu/updateCourseSelectCourseDetailsMenu.s")
 
 #ifdef NON_MATCHING
@@ -1094,16 +1094,20 @@ void updateCourseSelectCourseDetailsMenu(void) {
     s32 input;
     s32 heldUp;
 
+    soundId = STICK_UP;
     if (gCourseDetailsMenuState >= 2) {
         selection = gCourseDetailsMenuSelection;
         oldSelection = selection;
-        heldUp = gPlayerInputHeld & (STICK_UP | U_JPAD);
+        heldUp = gPlayerInputHeld & (soundId | U_JPAD);
         i = heldUp;
         if (!i &&
-            !(gPlayerInputHeld & (STICK_DOWN | D_JPAD))) {
+            !((STICK_DOWN | D_JPAD) & gPlayerInputHeld)) {
             gMenuInputRepeatTimers = 0;
+            if (1) {}
+            if (1) {}
+            if (1) {}
         }
-        if ((gPlayerInputPressed & (STICK_UP | U_JPAD)) ||
+        if ((gPlayerInputPressed & (soundId | U_JPAD)) ||
             (heldUp &&
              ((u16) gMenuInputRepeatTimers >= 0xB) &&
              (((u16) gMenuInputRepeatTimers % 3) == 0))) {
@@ -1121,7 +1125,7 @@ void updateCourseSelectCourseDetailsMenu(void) {
             repeat = gMenuInputRepeatTimers;
             input = gPlayerInputPressed;
             if ((input & (STICK_DOWN | D_JPAD)) ||
-                ((gPlayerInputHeld & (STICK_DOWN | D_JPAD)) &&
+                (((STICK_DOWN | D_JPAD) & gPlayerInputHeld) &&
                  (repeat >= 0xB) && ((repeat % 3) == 0))) {
                 if (!repeat) {
                     gMenuInputRepeatTimers = repeat + 1;
