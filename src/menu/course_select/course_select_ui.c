@@ -2464,60 +2464,61 @@ void drawCourseSelectCompletePanels(CourseSelectPlayerPanelsActor *actor) {
     }
 }
 
-// updateCourseSelectCompletePanels best match: 90.448% (nonmatchings/updateCourseSelectCompletePanels-2663524570355072948/base_11.c)
+// updateCourseSelectCompletePanels best match: 98.116% (nonmatchings/updateCourseSelectCompletePanels-1936695454966205676/base_29.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/course_select/course_select_ui/updateCourseSelectCompletePanels.s")
 
 #ifdef NON_MATCHING
 void updateCourseSelectCompletePanels(CourseSelectWidgetActor *arg0) {
-    CourseSelectRacePlayer *player;
-    CourseSelectRacePlayer *end;
-    CourseSelectWidgetActor *base;
+    s32 maxAlpha;
+    CourseSelectPlayerPanelsActor *base;
     CourseSelectCompletePanelSource *source0;
+    CourseSelectCompletePanelSource *sourceAlias;
     CourseSelectCompletePanelSource *source1;
     s32 i;
+    s32 j;
     u16 alpha;
+    u8 playerState;
     s16 nextAlpha;
 
-    base = arg0;
     i = 0;
     source0 = (CourseSelectCompletePanelSource *)D_8010ADE0;
     source1 = (CourseSelectCompletePanelSource *)D_8010ADE4;
+    maxAlpha = 0x100;
+    base = (CourseSelectPlayerPanelsActor *)arg0;
     if ((s32)gPlayerCount > 0) {
         do {
-            alpha = arg0->alpha;
+            alpha = base->playerPanelFadeAlpha[i];
+            sourceAlias = source0;
             if (alpha == 0) {
-                if ((source0 != NULL) && ((source0->playerStates[i] == 4) || (source1->playerStates[i] == 4))) {
-                    arg0->alpha = 1;
+                if ((sourceAlias != NULL) && ((source0->playerStates[i] == 4) || (source1->playerStates[i] == 4))) {
+                    base->playerPanelFadeAlpha[i] = 1;
                 }
             } else {
-                if (alpha != 0x100) {
-                    nextAlpha = alpha + 0x30;
-                    arg0->alpha = nextAlpha;
-                    if ((u16)nextAlpha >= 0x100) {
-                        arg0->alpha = 0x100;
+                if (alpha != maxAlpha) {
+                    nextAlpha = 0x30;
+                    nextAlpha = alpha + nextAlpha;
+                    base->playerPanelFadeAlpha[i] = nextAlpha;
+                    if ((u16)(alpha + 0x30) >= maxAlpha) {
+                        base->playerPanelFadeAlpha[i] = 0x100;
                     }
                 }
-                if (gRacePlayers[i].pad6[2] == 1) {
-                    arg0->alpha = 0;
+                playerState = gRacePlayers[i].menuState;
+                if (playerState == 1) {
+                    base->playerPanelFadeAlpha[i] = 0;
                 }
             }
             i++;
-            arg0 = (CourseSelectWidgetActor *)((u8 *)arg0 + sizeof(s16));
         } while (i < (s32)gPlayerCount);
     }
 
-    if (D_800EC9C0 == 0x10) {
-        removeCallbackTask(base);
-        player = gRacePlayers;
-        if ((s32)gPlayerCount > 0) {
-            end = &gRacePlayers[gPlayerCount];
-            do {
-                player->pad6[2] = 3;
-                player++;
-            } while ((u32)player < (u32)end);
+    if ((s32)D_800EC9C0 == 0x10) {
+        ((void (*)())removeCallbackTask)(base, 0);
+        for (j = 0; j < (s32)gPlayerCount; j++) {
+            gRacePlayers[j].menuState = 3;
         }
     } else {
-        addRenderCallback(&gMenuRenderCallbackList, (void (*)(CourseSelectWidgetActor *))drawCourseSelectCompletePanels, base);
+        addRenderCallback(&gMenuRenderCallbackList, (void (*)(CourseSelectWidgetActor *))drawCourseSelectCompletePanels,
+                          (CourseSelectWidgetActor *)base);
     }
 }
 #endif
