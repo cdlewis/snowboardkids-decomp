@@ -3898,32 +3898,22 @@ void updateGhostSlowdownImpact(RaceUiPodiumTrailActor *arg0) {
     addRenderCallback(&gRaceModelEffectRenderCallbackList, func_80060544, arg0);
 }
 
-// updateGhostSlowdownRise best match: 84.110% (nonmatchings/updateGhostSlowdownRise-2694253543240320626/base_4.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race/ui/race_ui_effects/updateGhostSlowdownRise.s")
-
-#ifdef NON_MATCHING
 void updateGhostSlowdownRise(RaceUiPodiumTrailActor *arg0) {
     RacePlayerState *player;
-    s16 playerIndex;
     s16 scale;
-    s32 height;
-    s32 scaled0;
 
     if (arg0->timer == 0) {
         if (gRaceUpdatePaused == 0) {
             arg0->velocity += 0x10000;
             arg0->height += arg0->velocity;
-            height = arg0->height;
             arg0->copyBlock.transform = gIdentityFixedTransform;
-            playerIndex = arg0->playerIndex;
-            player = &gRacePlayers[playerIndex];
+            player = &gRacePlayers[arg0->playerIndex];
             arg0->pos.x = player->pos28.x;
-            arg0->pos.y = player->pos28.y + height;
+            arg0->pos.y = player->pos28.y + arg0->height;
             arg0->pos.z = player->pos28.z;
-            scale = arg0->state;
-            scaled0 = arg0->copyBlock.halfwords[0] * scale;
 
-            arg0->copyBlock.halfwords[0] = scaled0 / 64;
+            scale = arg0->state;
+            arg0->copyBlock.halfwords[0] = (arg0->copyBlock.halfwords[0] * scale) / 64;
             arg0->copyBlock.halfwords[1] = (arg0->copyBlock.halfwords[1] * scale) / 64;
             arg0->copyBlock.halfwords[2] = (arg0->copyBlock.halfwords[2] * scale) / 64;
             arg0->copyBlock.halfwords[3] = (arg0->copyBlock.halfwords[3] * scale) / 64;
@@ -3948,7 +3938,6 @@ void updateGhostSlowdownRise(RaceUiPodiumTrailActor *arg0) {
         arg0->timer--;
     }
 }
-#endif
 
 void initGhostSlowdownActor(RaceUiPodiumTrailActor *arg0) {
     arg0->state = 1;
