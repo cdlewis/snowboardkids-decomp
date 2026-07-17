@@ -569,32 +569,31 @@ void renderBouncingItemProjectile(RaceItemProjectileActor *arg0) {
     }
 }
 
-// updateBouncingItemProjectile best match: 99.823% (nonmatchings/updateBouncingItemProjectile-2/output-226-1/source.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race/items/race_item_projectiles/updateBouncingItemProjectile.s")
-
-#ifdef NON_MATCHING
 void updateBouncingItemProjectile(RaceItemProjectileActor *arg0) {
+    s16 *angleDiffOut;
     s32 sin;
-    s32 xOffset;
     s32 cos;
-    s32 zOffset;
+    RaceItemProjectileActor *projectile;
     s32 pushX;
     s32 pushZ;
     s32 prevY;
     s32 y;
     s16 angleDiff;
     s32 groundY;
+    Vec3i velocity;
     Vec3i *pos;
     s32 i;
-    volatile u8 padding[0x10];
+    volatile u8 padding[4];
 
     if (gRaceUpdatePaused == 0) {
-        pos = &arg0->pos;
-        arg0->targetPlayerIndex = findRaceItemProjectileHomingTarget(pos, 0x600000, arg0->targetAngle, arg0->playerIndex, &angleDiff);
+        projectile = arg0;
+        pos = &projectile->pos;
+        angleDiffOut = &angleDiff;
+        projectile->targetPlayerIndex = findRaceItemProjectileHomingTarget(pos, 0x600000, projectile->targetAngle, projectile->playerIndex, angleDiffOut);
 
-        if (arg0->targetPlayerIndex != -1) {
-            gRacePlayerItemTargetFlags[arg0->targetPlayerIndex].value = 1;
-            angleDiff = (angleDiff - arg0->targetAngle) & 0xFFF;
+        if (projectile->targetPlayerIndex != -1) {
+            gRacePlayerItemTargetFlags[projectile->targetPlayerIndex].value = 1;
+            angleDiff = (angleDiff - projectile->targetAngle) & 0xFFF;
             if (angleDiff >= 0x801) {
                 angleDiff -= 0x1000;
             }
@@ -606,18 +605,18 @@ void updateBouncingItemProjectile(RaceItemProjectileActor *arg0) {
                 angleDiff = -0x1C;
             }
 
-            arg0->targetAngle += angleDiff;
+            projectile->targetAngle += angleDiff;
         }
 
         sin = fixedSine(arg0->targetAngle);
         cos = fixedCosine(arg0->targetAngle);
-        xOffset = ((s64) sin * arg0->velocityY) / 0x1000;
-        zOffset = ((s64) cos * arg0->velocityY) / 0x1000;
+        velocity.x = ((s64) sin * arg0->velocityY) / 0x1000;
+        velocity.z = ((s64) cos * arg0->velocityY) / 0x1000;
 
         prevY = arg0->pos.y;
-        arg0->pos.x += xOffset;
+        arg0->pos.x += velocity.x;
         arg0->pos.y = prevY + (arg0->accelerationY & 0xFFFFFFFFu);
-        arg0->pos.z += zOffset;
+        arg0->pos.z += velocity.z;
 
         arg0->startAngle = findRaceCourseSurfaceFromHint(arg0->startAngle, arg0->pos.x, arg0->pos.z);
         groundY = getRaceCourseSurfaceHeight(arg0->startAngle, arg0->pos.x, arg0->pos.z) + 0xA0000;
@@ -628,12 +627,12 @@ void updateBouncingItemProjectile(RaceItemProjectileActor *arg0) {
         }
         arg0->accelerationY = (y - prevY) - 0x20000;
 
-        resolveRaceCourseSurfaceCollisionWithVelocity(arg0->startAngle, arg0->pos.x, arg0->pos.z, 0x20000, &pushX, &pushZ, &xOffset, &zOffset);
+        resolveRaceCourseSurfaceCollisionWithVelocity(projectile->startAngle, arg0->pos.x, arg0->pos.z, 0x20000, &pushX, &pushZ, &velocity.x, &velocity.z);
         if (pushX != 0 || pushZ != 0) {
             arg0->accelerationY = 0;
             arg0->pos.x += pushX;
             arg0->pos.z += pushZ;
-            arg0->targetAngle = calculateFixedAngleFromDeltaXZ(xOffset, zOffset);
+            arg0->targetAngle = calculateFixedAngleFromDeltaXZ(velocity.x, velocity.z);
             enqueuePositionalSoundEffect(0x11, pos, 0x7F, 0x32);
         }
 
@@ -658,7 +657,6 @@ void updateBouncingItemProjectile(RaceItemProjectileActor *arg0) {
 
     addRenderCallback(&gRaceObjectRenderCallbackList, renderBouncingItemProjectile, arg0);
 }
-#endif
 
 void initBouncingItemProjectile(RaceItemProjectileActor *arg0) {
     volatile s32 pad0;
