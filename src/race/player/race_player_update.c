@@ -4260,11 +4260,6 @@ void updateRacePlayerMode14PushHit(RacePlayer *player) {
     player->actionEffectFrame = 2;
 }
 
-// updateRacePlayerMode23ItemSteal best match: 99.884%
-
-#pragma GLOBAL_ASM("asm/nonmatchings/race/player/race_player_update/updateRacePlayerMode23ItemSteal.s")
-
-#ifdef NON_MATCHING
 void updateRacePlayerMode23ItemSteal(RacePlayer *player) {
     s16 updateState;
     s16 nextState;
@@ -4300,8 +4295,8 @@ void updateRacePlayerMode23ItemSteal(RacePlayer *player) {
     player->unk40.y -= 0xA000;
     player->posY += player->unk40.y;
 
-    timer = (player->stateTimer - getRaceInputTimerDecrementBonus(player) - 1) & 0xFFFFFFFFFFFFFFFFu;
-    player->stateTimer = timer;
+    player->stateTimer -= getRaceInputTimerDecrementBonus(player) + 1;
+    timer = player->stateTimer;
     if (timer < 0) {
         player->stateTimer = 0;
         timer = 0;
@@ -4315,7 +4310,6 @@ void updateRacePlayerMode23ItemSteal(RacePlayer *player) {
         player->unk2E4 = 0;
     }
 }
-#endif
 
 void updateRacePlayerMode24HeavyKnockdown(RacePlayer *player) {
     s16 temp_v1_2;
