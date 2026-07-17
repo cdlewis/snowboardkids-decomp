@@ -636,7 +636,7 @@ void initCharacterSelectLimitedCourseList(CharacterSelectCourseMenuFrameActor *a
 }
 #endif
 
-// drawCharacterSelectCoursePreviewFrame best match: 98.879% (nonmatchings/drawCharacterSelectCoursePreviewFrame-5512657642801906896/base_7.c)
+// drawCharacterSelectCoursePreviewFrame best match: 99.412% (nonmatchings/drawCharacterSelectCoursePreviewFrame-8239461464121803931/base_22.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/character_select/character_select_course_ui/drawCharacterSelectCoursePreviewFrame.s")
 
 #ifdef NON_MATCHING
@@ -644,43 +644,32 @@ void drawCharacterSelectCoursePreviewFrame(CharacterSelectCourseWidgetActor *arg
     volatile s32 padTop[2];
     volatile u16 frameIndex;
     volatile s32 padAfter[1];
-    CharacterSelectCourseFrameTileMap *savedFrame;
+    CharacterSelectCourseFrameTileMap *volatile savedFrame;
     volatile s32 padBefore[2];
-    s32 yOffset;
-    register CharacterSelectCourseFrameTileMap *tileMap;
-    register s32 i;
-    register s32 offset;
+    s32 shouldDraw;
+    s32 i;
+    s32 tileOffset;
+    s32 offset;
+    s32 borderOffset;
+    register CharacterSelectCourseFrameTileMap *frame;
     register CharacterSelectCourseWidgetActor *actor;
 
     actor = arg0;
-    if ((gRaceSplitscreenMode == 1) && (gRaceTypeSelection == 2)) {
-        do {
-            frameIndex = 9;
-        } while (0);
-    } else {
- frameIndex = actor->sprite.unsignedIndex; } savedFrame = (tileMap = &gCharacterSelectCoursePreviewFrameTileMaps[frameIndex]); offset = (i = 0); if (arg0 == 0) { } do { drawMenuSpriteTile((s16) (actor->x + ((i & 3) << 5)), (s16) (actor->y + ((i / 4) << 5)), getRelocatableHeapBlockBase(gAssetHandles.textureHandle), tileMap->center[0], 0, 0x100); i += 1; tileMap = (CharacterSelectCourseFrameTileMap *) (((u16 *) tileMap) + 1); } while (i < 0x10); tileMap = savedFrame; yOffset = offset; do { drawMenuSpriteTile((s16) (actor->x + 0x80), (s16) (actor->y + yOffset), getRelocatableHeapBlockBase(gAssetHandles.textureHandle), tileMap->right[0], 0, 0x100); drawMenuSpriteTile((s16) (actor->x + offset), (s16) (actor->y + 0x80), getRelocatableHeapBlockBase(gAssetHandles.textureHandle), tileMap->bottom[0], 0, 0x100); offset += 0x40; tileMap = (CharacterSelectCourseFrameTileMap *) (((u16 *) tileMap) + 1); } while (offset < 0x80); drawMenuSpriteTile((s16) (actor->x + 0x80), (s16) (actor->y + 0x80), getRelocatableHeapBlockBase(gAssetHandles.textureHandle), gCharacterSelectCoursePreviewFrameCornerTileMaps[frameIndex].corner, 0, 0x100);
+    do { if ((gRaceSplitscreenMode == 1) && (gRaceTypeSelection == 2)) { frameIndex = 9; } else { frameIndex = actor->sprite.unsignedIndex; } savedFrame = (frame = &gCharacterSelectCoursePreviewFrameTileMaps[frameIndex]); tileOffset = 0; shouldDraw = 1; for (i = 0; i < 16; i++, tileOffset++) { drawMenuSpriteTile((s16)(actor->x + ((i & 3) << 5)), (s16)(actor->y + ((i / 4) << 5)), getRelocatableHeapBlockBase(gAssetHandles.textureHandle), frame->center[tileOffset], 0, 0x100); } if (shouldDraw) { frame = savedFrame; tileOffset = 0; i = 0x80; } offset = 0; if ((i && i) && i) { } do { drawMenuSpriteTile((s16)(actor->x + 0x80), (s16)(actor->y + offset), getRelocatableHeapBlockBase(gAssetHandles.textureHandle), frame->right[tileOffset], 0, 0x100); drawMenuSpriteTile((s16)(actor->x + offset), (s16)(actor->y + 0x80), getRelocatableHeapBlockBase(gAssetHandles.textureHandle), frame->bottom[tileOffset], 0, 0x100); offset += 0x40; tileOffset++; } while (offset <= (0x80 - 1)); i++; i--; drawMenuSpriteTile((s16)(actor->x + 0x80), (s16)(actor->y + 0x80), getRelocatableHeapBlockBase(gAssetHandles.textureHandle), gCharacterSelectCoursePreviewFrameCornerTileMaps[frameIndex].corner, 0, 0x100); drawMenuSprite((s16)(actor->x - 4), (s16)(actor->y - 4), getRelocatableHeapBlockBase(gAssetHandles.textureHandle), 0x33, 0x20, 0x20, 0, 0); drawMenuSprite((s16)(actor->x - 4), (s16)(actor->y + 0x8C), getRelocatableHeapBlockBase(gAssetHandles.textureHandle), 0x38, 0x20, 0x20, 0, 0); drawMenuSprite((s16)(actor->x + 0x8C), (s16)(actor->y - 4), getRelocatableHeapBlockBase(gAssetHandles.textureHandle), 0x35, 0x20, 0x20, 0, 0); } while (0);
 
-    drawMenuSprite((s16)(actor->x - 4), (s16)(actor->y - 4), getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE), 0x33,
-                  0x20, 0x20, 0, 0);
-    drawMenuSprite((s16)(actor->x - 4), (s16)(actor->y + 0x8C), getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE),
-                  0x38, 0x20, 0x20, 0, 0);
-    drawMenuSprite((s16)(actor->x + 0x8C), (s16)(actor->y - 4), getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE),
-                  0x35, 0x20, 0x20, 0, 0);
     drawMenuSprite((s16)(actor->x + 0x8C), (s16)(actor->y + 0x8C), getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE),
                   0x3A, 0x20, 0x20, 0, 0);
 
-    offset = 0;
-    do {
-        drawMenuSprite((s16)(actor->x + offset + 0xC), (s16)(actor->y - 4),
+    for (borderOffset = 0; borderOffset != 0x80; borderOffset += 0x10) {
+        drawMenuSprite((s16)(actor->x + borderOffset + 0xC), (s16)(actor->y - 4),
                       getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE), 0x34, 0x20, 0x20, 0, 0);
-        drawMenuSprite((s16)(actor->x + offset + 0xC), (s16)(actor->y + 0x8C),
+        drawMenuSprite((s16)(actor->x + borderOffset + 0xC), (s16)(actor->y + 0x8C),
                       getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE), 0x39, 0x20, 0x20, 0, 0);
-        drawMenuSprite((s16)(actor->x - 4), (s16)(actor->y + offset + 0xC),
+        drawMenuSprite((s16)(actor->x - 4), (s16)(actor->y + borderOffset + 0xC),
                       getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE), 0x36, 0x20, 0x20, 0, 0);
-        drawMenuSprite((s16)(actor->x + 0x8C), (s16)(actor->y + offset + 0xC),
+        drawMenuSprite((s16)(actor->x + 0x8C), (s16)(actor->y + borderOffset + 0xC),
                       getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE), 0x37, 0x20, 0x20, 0, 0);
-        offset += 0x10;
-    } while (offset != 0x80);
+    }
 }
 #endif
 
