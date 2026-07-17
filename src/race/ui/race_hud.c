@@ -370,7 +370,7 @@ void drawScoreAttackChallengeLabels(s32 arg0) {
     drawMenuAsciiTextDefaultScale(0x70, -0x48, sp18, 6);
 }
 
-// drawTargetTimeChallengeHud best match: 94.594% at nonmatchings/drawTargetTimeChallengeHud-2663524570355072948/base_5.c.
+// drawTargetTimeChallengeHud best clean match: 95.117% at nonmatchings/drawTargetTimeChallengeHud-8239461464121803931/base_10.c.
 #pragma GLOBAL_ASM("asm/nonmatchings/race/ui/race_hud/drawTargetTimeChallengeHud.s")
 
 #ifdef NON_MATCHING
@@ -383,7 +383,7 @@ void drawTargetTimeChallengeHud(s32 arg0) {
     char buffer[0xC];
     s32 x;
     char *digit;
-    char *end;
+    u32 end;
 
     sprintf(buffer, D_800E1770, gRaceElapsedTimer.minutes);
     x = 0x48;
@@ -392,8 +392,8 @@ void drawTargetTimeChallengeHud(s32 arg0) {
         drawAssetTableSprite((s16)x, 0x50, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), ((u8)*digit - 5) & 0xFFFF);
         digit++;
         x += 8;
-        end = &buffer[2];
-    } while ((u32)digit < (u32)end);
+        end = (u32)&buffer[2];
+    } while ((u32)digit < end);
 
     x += 8;
     sprintf(buffer, D_800E1778, gRaceElapsedTimer.seconds);
@@ -402,8 +402,8 @@ void drawTargetTimeChallengeHud(s32 arg0) {
         drawAssetTableSprite((s16)x, 0x50, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), ((u8)*digit - 5) & 0xFFFF);
         digit++;
         x += 8;
-        end = &buffer[2];
-    } while ((u32)digit < (u32)end);
+        end = (u32)&buffer[2];
+    } while ((u32)digit < end);
 
     x += 8;
     sprintf(buffer, D_800E1780, gRaceElapsedTimer.fraction >> 8);
@@ -412,8 +412,8 @@ void drawTargetTimeChallengeHud(s32 arg0) {
         drawAssetTableSprite((s16)x, 0x50, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), ((u8)*digit - 5) & 0xFFFF);
         digit++;
         x += 8;
-        end = &buffer[2];
-    } while (digit != end);
+        end = (u32)&buffer[2];
+    } while ((u32)digit != end);
 
     drawAssetTableSprite(0x58, 0x50, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x36);
     drawAssetTableSprite(0x70, 0x50, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x35);
