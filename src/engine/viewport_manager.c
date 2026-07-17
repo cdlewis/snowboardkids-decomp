@@ -1,42 +1,25 @@
 #include "game/engine/viewport_manager.h"
 
-// resetAllViewports best match: 69.524% (nonmatchings/resetAllViewports-1189375296343516052/base_9.c)
-
-#pragma GLOBAL_ASM("asm/nonmatchings/engine/viewport_manager/resetAllViewports.s")
-
-#ifdef NON_MATCHING
-typedef struct {
-    ViewportState viewport0;
-    ViewportState viewport1;
-    ViewportState viewport2;
-    ViewportState viewport3;
-} ViewportStates;
-
-extern ViewportStates gViewportStates;
-
-#define RESET_VIEWPORT(viewport)                     \
-    gViewportStates.viewport.active = 0;             \
-    gViewportStates.viewport.screenBoundsValid = 0;  \
-    gViewportStates.viewport.clearFramebuffer = 0;   \
-    gViewportStates.viewport.overlayActive = 0;      \
-    gViewportStates.viewport.overlayR = 0;           \
-    gViewportStates.viewport.overlayG = 0;           \
-    gViewportStates.viewport.overlayB = 0;           \
-    gViewportStates.viewport.overlayAlpha = 0;       \
-    gViewportStates.viewport.unk14 = 0x1FF;          \
-    gViewportStates.viewport.unk16 = 0;              \
-    gViewportStates.viewport.unk1C = 0x1FF;          \
-    gViewportStates.viewport.unk1E = 0
+ViewportState gViewportStates[4];
 
 void resetAllViewports(void) {
-    RESET_VIEWPORT(viewport0);
-    RESET_VIEWPORT(viewport1);
-    RESET_VIEWPORT(viewport2);
-    RESET_VIEWPORT(viewport3);
-}
+    s32 i;
 
-#undef RESET_VIEWPORT
-#endif
+    for (i = 0; i < 4; i++) {
+        gViewportStates[i].active = 0;
+        gViewportStates[i].screenBoundsValid = 0;
+        gViewportStates[i].clearFramebuffer = 0;
+        gViewportStates[i].overlayActive = 0;
+        gViewportStates[i].overlayR = 0;
+        gViewportStates[i].overlayG = 0;
+        gViewportStates[i].overlayB = 0;
+        gViewportStates[i].overlayAlpha = 0;
+        gViewportStates[i].unk14 = 0x1FF;
+        gViewportStates[i].unk16 = 0;
+        gViewportStates[i].unk1C = 0x1FF;
+        gViewportStates[i].unk1E = 0;
+    }
+}
 
 void resetViewport(s32 arg0) {
     ViewportState *viewport = &gViewportStates[arg0];
