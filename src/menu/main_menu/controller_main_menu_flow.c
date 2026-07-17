@@ -131,6 +131,12 @@ typedef struct MainMenuState {
     s32 timer;
 } MainMenuState;
 
+u8 gControllerSubsystemBssPrefix[8];
+ControllerInputState gControllerInputState[4];
+u8 gControllerSubsystemBssPadding[0x7C68];
+s32 gRumbleMotorStatuses[4];
+s16 gRumbleMotorRequestStates[4];
+
 extern s32 osRecvMesg(OSMesgQueue *, OSMesg *, s32);
 extern s32 osSendMesg(OSMesgQueue *, OSMesg, s32);
 extern void osCreateMesgQueue(OSMesgQueue *, OSMesg *, s32);
@@ -183,26 +189,10 @@ extern u8 gMainMenuReturnFromRace;
 extern u8 gFramebufferSwapDelay;
 extern u8 gControllerReadPending;
 extern OSContStatus gControllerStatuses[];
-extern ControllerInputState gControllerInputState[];
-extern u8 D_800E4C1A;
-extern u8 D_800E4C1B;
-extern s16 D_800E4C1E;
-extern u8 D_800E4C20;
-extern u8 D_800E4C21;
-extern s16 D_800E4C24;
-extern u8 D_800E4C26;
-extern u8 D_800E4C27;
-extern s16 D_800E4C2A;
-extern u8 D_800E4C2C;
-extern u8 D_800E4C2D;
 extern s32 gControllerPakFileNos[];
 extern u8 gControllerPakGameName[];
 extern u8 gControllerPakExtName[];
 extern u8 gControllerPakRetryCounts;
-extern s32 gRumbleMotorStatuses;
-extern s32 D_800EC89C;
-extern s32 D_800EC8A0;
-extern s32 D_800EC8A4;
 extern u8 gRumblePakConnectedByController[];
 extern void *gControllerSubsystemThreadStack;
 extern s16 gControllerPakStatusCodes[];
@@ -210,7 +200,6 @@ extern u8 gControllerPakOperationCounts[];
 extern SaveSlotBytes gGameSaveDataBuffer[];
 extern s32 gPlayerInputHeld;
 extern s16 gMenuFadeAlpha;
-extern s16 gRumbleMotorRequestStates[];
 extern u8 D_593D10[];
 extern u8 D_598A70[];
 extern u8 D_1F1A90[];
@@ -246,21 +235,8 @@ extern u8 gControllerPakSaveGameNameBytes[];
 extern u8 gControllerPakSaveExtNameBytes[];
 extern u8 gControllerPakSaveExtNameBytesEnd[];
 
-// initControllerSubsystem best match: 93.458%
-#pragma GLOBAL_ASM("asm/nonmatchings/menu/main_menu/controller_main_menu_flow/initControllerSubsystem.s")
-
-#ifdef NON_MATCHING
 void initControllerSubsystem(void) {
     s32 i;
-    s32 one1;
-    s32 one2;
-    s32 one3;
-    s32 one4;
-
-    one1 = 1;
-    one2 = 1;
-    one3 = 1;
-    one4 = 1;
 
     osCreateMesgQueue(&gControllerEventQueue, gControllerEventMessages, 1);
     osCreateMesgQueue(&gControllerSubsystemRequestQueue, gControllerSubsystemRequestMessages, 8);
@@ -284,27 +260,16 @@ loop:
     }
 
     gControllerEventMessage = 9;
-    gControllerInputState = 0;
-    D_800E4C1A = 0;
-    D_800E4C1B = 0;
-    gRumbleMotorStatuses = one1;
-    D_800E4C1E = 0;
-    D_800E4C20 = 0;
-    D_800E4C21 = 0;
-    D_800EC89C = one2;
-    D_800E4C24 = 0;
-    D_800E4C26 = 0;
-    D_800E4C27 = 0;
-    D_800EC8A0 = one3;
-    D_800E4C2A = 0;
-    D_800E4C2C = 0;
-    D_800E4C2D = 0;
-    D_800EC8A4 = one4;
+    for (i = 0; i < 4; i++) {
+        gControllerInputState[i].buttons = 0;
+        gControllerInputState[i].stickX = 0;
+        gControllerInputState[i].stickY = 0;
+        gRumbleMotorStatuses[i] = 1;
+    }
 
     osCreateThread(&gControllerSubsystemThread, 4, controllerSubsystemThreadMain, gControllerSubsystemThreadStack, &gControllerSubsystemRequestQueue, 0x14);
     osStartThread(&gControllerSubsystemThread);
 }
-#endif
 
 // controllerSubsystemThreadMain best match: 99.507% at nonmatchings/controllerSubsystemThreadMain-2694253543240320626/base_2.c
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/main_menu/controller_main_menu_flow/controllerSubsystemThreadMain.s")
@@ -348,28 +313,28 @@ void controllerSubsystemThreadMain(void *arg0) {
             break;
         case 0x70:
             channel = msgValue & 3;
-            (&gRumbleMotorStatuses)[channel] = osMotorInit(&gControllerEventQueue, &gRumblePakHandles[channel], channel);
+            gRumbleMotorStatuses[channel] = osMotorInit(&gControllerEventQueue, &gRumblePakHandles[channel], channel);
             osSendMesg(&gControllerSubsystemReplyQueue, &gControllerEventMessage, 0);
             break;
         case 0xD0:
             channel = msgValue & 3;
-            (&gRumbleMotorStatuses)[channel] = osMotorInit(&gControllerEventQueue, &gRumblePakHandles[channel], channel);
+            gRumbleMotorStatuses[channel] = osMotorInit(&gControllerEventQueue, &gRumblePakHandles[channel], channel);
             break;
         case 0x80:
-            if (((&gRumbleMotorStatuses)[msgValue & 3] != 1) && ((&gRumbleMotorStatuses)[msgValue & 3] != 11) &&
-                ((&gRumbleMotorStatuses)[msgValue & 3] != 4)) {
+            if ((gRumbleMotorStatuses[msgValue & 3] != 1) && (gRumbleMotorStatuses[msgValue & 3] != 11) &&
+                (gRumbleMotorStatuses[msgValue & 3] != 4)) {
                 channel = msgValue & 3;
                 if (osMotorStart(&gRumblePakHandles[channel]) == 4) {
-                    (&gRumbleMotorStatuses)[channel] = 4;
+                    gRumbleMotorStatuses[channel] = 4;
                 }
             }
             break;
         case 0x90:
-            if (((&gRumbleMotorStatuses)[msgValue & 3] != 1) && ((&gRumbleMotorStatuses)[msgValue & 3] != 11) &&
-                ((&gRumbleMotorStatuses)[msgValue & 3] != 4)) {
+            if ((gRumbleMotorStatuses[msgValue & 3] != 1) && (gRumbleMotorStatuses[msgValue & 3] != 11) &&
+                (gRumbleMotorStatuses[msgValue & 3] != 4)) {
                 channel = msgValue & 3;
                 if (osMotorStop(&gRumblePakHandles[channel]) == 4) {
-                    (&gRumbleMotorStatuses)[channel] = 4;
+                    gRumbleMotorStatuses[channel] = 4;
                 }
             }
             break;
@@ -412,17 +377,17 @@ void requestRumbleMotorInit(u16 arg0) {
 }
 
 void serviceRumbleMotorRequest(u16 arg0) {
-    if ((&gRumbleMotorStatuses)[arg0] == 1) {
+    if (gRumbleMotorStatuses[arg0] == 1) {
         gRumbleMotorRequestStates[arg0] = 0;
         if (gRumblePakConnectedMask & (1 << arg0)) {
             osSendMesg(&gControllerSubsystemRequestQueue, (OSMesg)(arg0 + 0xD0), OS_MESG_BLOCK);
         }
-    } else if ((&gRumbleMotorStatuses)[arg0] == 0xB) {
+    } else if (gRumbleMotorStatuses[arg0] == 0xB) {
         gRumbleMotorRequestStates[arg0] = 0;
         if (gRumblePakConnectedMask & (1 << arg0)) {
             osSendMesg(&gControllerSubsystemRequestQueue, (OSMesg)(arg0 + 0xD0), OS_MESG_BLOCK);
         }
-    } else if ((&gRumbleMotorStatuses)[arg0] == 4) {
+    } else if (gRumbleMotorStatuses[arg0] == 4) {
         gRumbleMotorRequestStates[arg0] = 0;
         if (gRumblePakConnectedMask & (1 << arg0)) {
             osSendMesg(&gControllerSubsystemRequestQueue, (OSMesg)(arg0 + 0xD0), OS_MESG_BLOCK);
