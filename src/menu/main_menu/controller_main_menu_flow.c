@@ -865,36 +865,55 @@ void updateControllerPakFreeSpaceInfo(void) {
     gControllerPakFreeFileCount = maxFiles - filesUsed;
 }
 
-// validateControllerPakSave best match: 79.976% at nonmatchings/validateControllerPakSave-1189375296343516052/base_10.c
+// validateControllerPakSave best match: 99.306% at nonmatchings/validateControllerPakSave-8239461464121803931/base_23.c
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/main_menu/controller_main_menu_flow/validateControllerPakSave.s")
 
 #ifdef NON_MATCHING
 u16 validateControllerPakSave(volatile s32 arg0) {
+    u8 *nextByte;
+    s32 wordCursorValid;
     u8 *save;
     u32 *wordCursor;
     u8 *byteCursor;
     s32 offset;
     s32 i;
+    s32 firstByteStep;
+    s32 secondByteStep;
     s32 count;
 
-    save = (u8 *)&gGameSaveDataBuffer[arg0];
+    save = (u8 *)&gGameSaveDataBuffer[arg0 & 0xFFFFFFFFFFFFFFFF];
     wordCursor = (u32 *)save;
     byteCursor = save;
     offset = 0;
     do {
-        offset += (u8 *)(wordCursor + 1) - (u8 *)wordCursor;
-        offset += ((byteCursor + 1) - byteCursor) - 1;
+        offset += 4;
+        firstByteStep = (byteCursor + 1) - byteCursor;
         wordCursor++;
         byteCursor++;
+        secondByteStep = firstByteStep && firstByteStep;
+        if (secondByteStep) {
+        }
     } while (offset < 0x2C);
 
     i = 0;
+    wordCursorValid = wordCursor && wordCursor;
     byteCursor = save;
+    offset += firstByteStep - 1;
     count = 0xC;
     do {
-        i += (byteCursor + 1) - byteCursor;
+        i++;
+        nextByte = byteCursor + 1;
+        secondByteStep = nextByte - byteCursor;
+        firstByteStep = wordCursorValid;
+        if (secondByteStep) {
+        }
+        if ((firstByteStep ^ 0) && wordCursor) {
+        }
+        if (save && save) {
+        }
         byteCursor++;
     } while (i != count);
+    i += secondByteStep - 1;
 
     return validateControllerPakSaveData(arg0);
 }
