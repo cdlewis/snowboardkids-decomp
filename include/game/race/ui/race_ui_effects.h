@@ -178,7 +178,6 @@ void spawnRaceUiAltBurstTextParticle(void *arg0, void *arg1, void *arg2, s16 arg
 void func_80060544(struct RaceUiPodiumTrailActor *arg0);
 void updateGhostSlowdownDriftAway(struct RaceUiPodiumTrailActor *arg0);
 void updateGhostSlowdownImpact(struct RaceUiPodiumTrailActor *arg0);
-void func_80060914(struct RaceUiPodiumTrailActor *arg0);
 void updateGhostSlowdownRise(struct RaceUiPodiumTrailActor *arg0);
 void initGhostSlowdownActor(struct RaceUiPodiumTrailActor *arg0);
 void spawnGhostSlowdownTargets(s16 arg0);
