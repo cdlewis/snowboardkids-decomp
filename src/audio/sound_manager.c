@@ -284,10 +284,6 @@ SoundHandleNode *acquireSoundEffectHandleNode(void) {
     return gFreeSoundHandleStack[gFreeSoundHandleCount];
 }
 
-// startCurrentQueuedSoundEffect best match: 99.910%
-#pragma GLOBAL_ASM("asm/nonmatchings/audio/sound_manager/startCurrentQueuedSoundEffect.s")
-
-#ifdef NON_MATCHING
 s32 startCurrentQueuedSoundEffect(void) {
     SoundHandleNode *temp_v0;
     SoundHandleNode *temp_v0_2;
@@ -326,7 +322,8 @@ s32 startCurrentQueuedSoundEffect(void) {
     var_v1 = gActiveSoundHandleListHead;
     if (gActiveSoundHandleListHead != NULL) {
         do {
-            if (temp_v0->priority >= var_v1->priority) {
+            if (temp_v0->priority >=
+                (s32)((u64)((((var_v1->priority & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFFULL)) {
                 temp_v0_2 = var_v1->prev;
                 temp_v0->next = var_v1;
                 temp_v0->prev = temp_v0_2;
@@ -348,7 +345,6 @@ s32 startCurrentQueuedSoundEffect(void) {
     gActiveSoundHandleListTail = temp_v0;
     return 1;
 }
-#endif
 
 void updateSoundManager(void) {
     SoundHandleNode *node;
