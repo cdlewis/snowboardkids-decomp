@@ -2764,16 +2764,10 @@ void updateRacePlayerMode47AerialTrick(RacePlayer *player) {
     }
 }
 
-// updateRacePlayerMode48AerialTrick best match: 99.795%
-#pragma GLOBAL_ASM("asm/nonmatchings/race/player/race_player_update/updateRacePlayerMode48AerialTrick.s")
-
-#ifdef NON_MATCHING
 void updateRacePlayerMode48AerialTrick(RacePlayer *player) {
     s16 updateState;
     s32 yVel;
     s32 stateTimer;
-    u32 stateFlags;
-    long long clampedTimer;
 
     updateState = player->updateState;
     if (updateState == 0) {
@@ -2814,22 +2808,18 @@ void updateRacePlayerMode48AerialTrick(RacePlayer *player) {
     stateTimer = player->stateTimer;
     player->unk6E = (player->updateTimer << 0xC) / 45;
     if (stateTimer >= 0x401) {
-        clampedTimer = 0x400;
-        stateTimer = clampedTimer;
-        clampedTimer = stateTimer;
-        player->stateTimer = clampedTimer;
+        player->stateTimer = 0x400;
     }
 
-    stateFlags = player->stateFlags | 2;
-    player->stateFlags = stateFlags;
+    stateTimer = player->stateTimer;
+    player->stateFlags |= 2;
     if (stateTimer < 0x3D0) {
-        player->stateFlags = stateFlags | 0x800;
+        player->stateFlags |= 0x800;
         if ((player->soundDisabled == 0) && (gFrameCounter & 1)) {
             createCallbackTaskWithUserIdPreservingArgs(initRacePlayerLandingSnowSpray, 5, 2, (u16) player->playerIndex);
         }
     }
 }
-#endif
 
 void updateRacePlayerMode49AerialTrick(RacePlayer *player) {
     s32 yVel;
