@@ -209,15 +209,18 @@ void recordRaceInputHistoryFrame(RacePlayer *player) {
     history->lastWriteIndex = index;
 }
 
-// playRaceInputHistoryFrame best match: 99.178% (base_4.c)
+// playRaceInputHistoryFrame best match: 99.770% (base_4.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race/player/race_player_input/playRaceInputHistoryFrame.s")
 
 #ifdef NON_MATCHING
 void playRaceInputHistoryFrame(RacePlayer *player) {
     RaceInputHistoryBuffer *history;
+    RacePlayer *playerAlias;
     s32 index;
-    s8 replayInputSource;
-    u8 buttons;
+    s32 buttonIndex;
+    u8 *buttonHistory;
+    u32 replayInputSource;
+    s32 buttons;
 
     replayInputSource = player->replayInputSource;
     if (replayInputSource == 5) {
@@ -238,6 +241,7 @@ void playRaceInputHistoryFrame(RacePlayer *player) {
         return;
     }
 
+    buttonHistory = history->buttons;
     index = history->writeIndex;
     if (index < RACE_INPUT_HISTORY_LENGTH) {
         player->stickX = history->stickX[index];
@@ -247,20 +251,24 @@ dummy_label:
         player->inputFlags = 0;
 
         buttons = history->buttons[history->writeIndex] ^ 0;
-        if (buttons & 1) {
+        if ((buttons & 0xFFu) & 1) {
             player->inputFlags = 8;
-            buttons = history->buttons[history->writeIndex];
+            buttonIndex = history->writeIndex;
+            buttons = buttonHistory[buttonIndex];
         }
         if (buttons & 2) {
             player->inputFlags |= 4;
             buttons = history->buttons[history->writeIndex];
+            if (history->stickY) {
+            }
         }
         if (buttons & 8) {
             player->inputFlags |= 1;
             buttons = history->buttons[history->writeIndex];
         }
+        playerAlias = player;
         if (buttons & 4) {
-            player->inputFlags |= 2;
+            playerAlias->inputFlags |= 2;
             buttons = history->buttons[history->writeIndex];
         }
         if (buttons & 0x10) {
@@ -268,7 +276,7 @@ dummy_label:
             buttons = history->buttons[history->writeIndex];
         }
         if (buttons & 0x20) {
-            player->inputFlags |= 0x4000;
+            playerAlias->inputFlags |= 0x4000;
             buttons = history->buttons[history->writeIndex];
         }
         player++;
