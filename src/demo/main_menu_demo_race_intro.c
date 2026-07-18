@@ -70,7 +70,7 @@ extern s8 D_80122FB8;
 extern s8 D_80122FB9;
 extern s8 D_80122FBA;
 extern void releaseMenuAssetHandles(void);
-// initMainMenuDemoRaceIntro best match: 97.063% (nonmatchings/initMainMenuDemoRaceIntro-3549320994361659932/base_11.c)
+// initMainMenuDemoRaceIntro best match: 98.251% (nonmatchings/initMainMenuDemoRaceIntro-6887713755923057488/base_40.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/demo/main_menu_demo_race_intro/initMainMenuDemoRaceIntro.s")
 
 #ifdef NON_MATCHING
@@ -79,6 +79,7 @@ void initMainMenuDemoRaceIntro(void) {
     MainMenuDemoRaceIntroEntry *temp_v1_2;
     u8 loadCourseAssetsFlag;
     long demoIndex;
+    s32 one;
     MainMenuDemoRaceIntroEntry *temp_v1_3;
 
     demoIndex = gMainMenuDemoRaceIntroIndex;
@@ -105,9 +106,9 @@ void initMainMenuDemoRaceIntro(void) {
     gRacePlayers[3].unk11 = 6;
     gRacePlayers->unk12 = 1;
     gRacePlayers[1].unk12 = 2;
+    gRacePlayers->characterId = temp_v1_2->player0Character;
     gRacePlayers[2].unk12 = 3;
     gRacePlayers[3].unk12 = 4;
-    gRacePlayers->characterId = temp_v1_2->player0Character;
     gRacePlayers[1].characterId = temp_v1_2->player1Character;
     gRacePlayers[2].characterId = temp_v1_2->player2Character;
     gRacePlayers[3].characterId = temp_v1_2->player3Character;
@@ -126,11 +127,12 @@ void initMainMenuDemoRaceIntro(void) {
         gRacePlayerCount = 1;
         gPlayerCount = 1;
     }
+    one = 1;
     gRaceLapCount = 2;
     demoIndex = 5;
     gRacePlayerAttackStartTimer = 0x64;
     if (gRaceSplitscreenMode == 0) {
-        initCallbackTaskScheduler(1);
+        initCallbackTaskScheduler(one);
     } else {
         initCallbackTaskScheduler(2);
     }
@@ -146,24 +148,27 @@ void initMainMenuDemoRaceIntro(void) {
     D_80122FB9 = 0;
     D_80122FB8 = 0;
     D_80122FBA = demoIndex;
-    temp_v1_3 = &gMainMenuDemoRaceIntroEntries[gMainMenuDemoRaceIntroIndex];
+    demoIndex = gMainMenuDemoRaceIntroIndex;
+    temp_v1_3 = &gMainMenuDemoRaceIntroEntries[demoIndex];
     loadCompressedRomAsset(temp_v1_3->romStart, temp_v1_3->romEnd, 0x2B);
     loadRaceCourseAssets();
     loadRaceCharacterAssets();
     gMenuFlowState = 0;
     resetRaceCameras();
     resetAllViewports();
-    gRacePlayerHudStatuses = 1;
+    gRacePlayerHudStatuses = one;
     gFramebufferSwapDelay = 0;
     initRacePlayers();
-    loadCourseAssetsFlag = gMainMenuDemoRaceIntroLoadCourseAssetsFlags[gMainMenuDemoRaceIntroIndex * sizeof(MainMenuDemoRaceIntroEntry)];
-    if (loadCourseAssetsFlag == 0) {
+    if (!gMainMenuDemoRaceIntroLoadCourseAssetsFlags[gMainMenuDemoRaceIntroIndex * sizeof(MainMenuDemoRaceIntroEntry)]) {
         gPlayerCount = 1;
     }
     initRaceHud();
-    if (gPlayerCount == 1) {
+    loadCourseAssetsFlag = gPlayerCount;
+    if (loadCourseAssetsFlag == one) {
         configureViewport(0, 0xA0, 0x78, 0x120U, 0xD0U, 0x140U, 0xF0U, 1.3333334f);
-        gRacePlayerHudStatuses = 1;
+        one++;
+        one--;
+        gRacePlayerHudStatuses = one;
         gFramebufferSwapDelay = 0;
     } else {
         configureViewport(0, 0x57, 0x43, 0x90U, 0x68U, 0xA0U, 0x78U, 1.3333334f);
@@ -174,7 +179,9 @@ void initMainMenuDemoRaceIntro(void) {
         D_801121E0[1].active = 1;
         D_801121E0[2].active = 1;
         D_801121E0[3].active = 1;
-        gFramebufferSwapDelay = 1;
+        one++;
+        one--;
+        gFramebufferSwapDelay = one;
     }
     if (gRaceSplitscreenMode == 0) {
         gPlayerCount = 4;
