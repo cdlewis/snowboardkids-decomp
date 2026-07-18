@@ -5,6 +5,7 @@
 
 void main(void *arg);
 void bootThreadMain(void *arg);
+void gameThreadMain(void *arg);
 void initGameSystems(void);
 void dmaReadRom(u32 romOffset, void *ramAddress, s32 size);
 void resetRenderCallbackQueues(void);
