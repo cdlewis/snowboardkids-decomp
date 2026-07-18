@@ -60,7 +60,7 @@ typedef struct {
     /* 0x004 */ u8 pad4[0x60C - 0x004];
 } RaceTimerUiS32Stride;
 
-extern void drawAssetTableSprite(s32, s32, s32, s32);
+extern void drawAssetTableSprite(s16, s16, s32, s32);
 extern void drawAssetTableSpriteWithExplicitPalette(s16, s16, s32, s32, s32);
 extern void drawScaledAssetTableSprite(s32, s32, s32, s32, s32);
 extern void drawMenuAsciiChar(s32, s16, s32, s32);
@@ -659,20 +659,18 @@ void drawTrainingRaceHud(s32 arg0) {
 }
 #endif
 
-// drawTwoPlayerRaceHud best match: 88.406% at nonmatchings/drawTwoPlayerRaceHud-2663524570355072948/base_17.c.
-#pragma GLOBAL_ASM("asm/nonmatchings/race/ui/race_hud/drawTwoPlayerRaceHud.s")
-
-#ifdef NON_MATCHING
 const char D_800E1814[] = "%5ld";
 
 void drawTwoPlayerRaceHud(s32 arg0) {
-    volatile u8 padding[0x20];
-    char end;
-    char buffer[5];
-    s16 y;
+    volatile u8 padding[0x18];
+    s32 y;
     s32 x;
     s32 color;
     char *ptr;
+    volatile char filler1;
+    volatile char filler2;
+    char end;
+    char buffer[5];
 
     if (gCurrentViewportIndex == 0) {
         y = -0x28;
@@ -680,10 +678,10 @@ void drawTwoPlayerRaceHud(s32 arg0) {
         y = 0x1A;
     }
 
-    sprintf(buffer, D_800E1814, D_801222E8[gCurrentViewportIndex].value);
+    sprintf(buffer, D_800E1814, gRacePlayers[gCurrentViewportIndex].unk568);
     x = 0x50;
     ptr = buffer;
-    if (D_801222E8[gCurrentViewportIndex].value < 0x64) {
+    if (gRacePlayers[gCurrentViewportIndex].unk568 < 0x64) {
         color = 0x10;
     } else {
         color = 0xE;
@@ -701,11 +699,11 @@ void drawTwoPlayerRaceHud(s32 arg0) {
 
     if (D_80122293[gCurrentViewportIndex].value != 0) {
         drawScaledAssetTableSprite(-0x88, -0x30, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
-                      (gRacePlayers[gCurrentViewportIndex].itemEffectCount + gRaceTimerTensDigitTileOffsets[gRacePlayers[gCurrentViewportIndex].itemEffectType] - 1) & 0xFFFF,
+                      (gRaceTimerTensDigitTileOffsets[gRacePlayers[gCurrentViewportIndex].itemEffectType] + gRacePlayers[gCurrentViewportIndex].itemEffectCount - 1) & 0xFFFF,
                       gRacePlayers[gCurrentViewportIndex].itemEffectPalette);
     } else {
         drawAssetTableSprite(-0x88, -0x30, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
-                      (gRacePlayers[gCurrentViewportIndex].itemEffectCount + gRaceTimerTensDigitTileOffsets[gRacePlayers[gCurrentViewportIndex].itemEffectType] - 1) & 0xFFFF);
+                      (gRaceTimerTensDigitTileOffsets[gRacePlayers[gCurrentViewportIndex].itemEffectType] + gRacePlayers[gCurrentViewportIndex].itemEffectCount - 1) & 0xFFFF);
     }
 
     if (D_80122296[gCurrentViewportIndex].value != 0) {
@@ -718,13 +716,15 @@ void drawTwoPlayerRaceHud(s32 arg0) {
 
     drawAssetTableSprite(-0x88, 0x12, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), D_80122289[gCurrentViewportIndex].value & 0xFFFF);
 
-    y = 0x2A;
     if (gCurrentViewportIndex == 0) {
         y = -0x30;
+    } else {
+        y = 0x2A;
+    }
+    if (buffer) {
     }
     drawAssetTableSprite(0x58, y, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x1A);
 }
-#endif
 
 void drawTwoPlayerLapCounter(s32 arg0) {
     s32 y;
