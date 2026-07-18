@@ -105,7 +105,7 @@ void initRaceTypeSelectMenu(void) {
     gRaceTypeSelectCursorTarget.alpha = 0;
 }
 
-// updateRaceTypeSelectMenu best match: 94.130% (nonmatchings/updateRaceTypeSelectMenu-5313856277864964686/base_14.c)
+// updateRaceTypeSelectMenu best match: 95.369% (nonmatchings/updateRaceTypeSelectMenu-8239461464121803931/base_1.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/race_type_select/race_type_select_menu/updateRaceTypeSelectMenu.s")
 
 #ifdef NON_MATCHING
@@ -191,7 +191,7 @@ void updateRaceTypeSelectMenu(void) {
                         gMenuSelectionConfirmTimer = 1;
                         cursorTarget = &gRaceTypeSelectCursorTarget;
                         cursorTarget->state = 2;
-                        cursorTarget->alpha = 0x100;
+                        (&gRaceTypeSelectCursorTarget)->alpha = 0x100;
                         gMenuExitSelection = gMenuInputRepeatTimers * 0;
                     }
                 }
