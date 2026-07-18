@@ -409,7 +409,7 @@ void resolveRacePlayerBodyCollisions(void) {
 }
 #endif
 
-// pushRacePlayersOutOfCylinderAndApplyItemHit best match: 97.612% (nonmatchings/pushRacePlayersOutOfCylinderAndApplyItemHit-2694253543240320626/base_1.c)
+// pushRacePlayersOutOfCylinderAndApplyItemHit best match: 97.776% (nonmatchings/pushRacePlayersOutOfCylinderAndApplyItemHit-2341155904261615822/base_15.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race/player/race_player_movement/pushRacePlayersOutOfCylinderAndApplyItemHit.s")
 
 #ifdef NON_MATCHING
@@ -468,6 +468,8 @@ void pushRacePlayersOutOfCylinderAndApplyItemHit(RaceVec3i *pos, s32 xzSize, s32
                             localZ = -localZ;
                         }
                         player->unk2C8 = ((s64)cosine * localX + (s64)sine * localZ) / 0x1000;
+                        if ((player && player) && player) {
+                        }
                         player->unk2CC = ((s64)-sine * localX + (s64)cosine * localZ) / 0x1000;
                         player->pendingItemHitFlags |= flag;
                     }
