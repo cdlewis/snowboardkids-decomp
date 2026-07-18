@@ -1081,64 +1081,68 @@ void initCourseSelectCourseDetailsMenu(void) {
     updateCallbackTasks();
 }
 
-// updateCourseSelectCourseDetailsMenu best match: 98.421% (nonmatchings/updateCourseSelectCourseDetailsMenu-8239461464121803931/base_10.c)
+// updateCourseSelectCourseDetailsMenu best match: 98.565% (nonmatchings/updateCourseSelectCourseDetailsMenu-2341155904261615822/base_36.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/course_select/course_select_menu/updateCourseSelectCourseDetailsMenu.s")
 
 #ifdef NON_MATCHING
 void updateCourseSelectCourseDetailsMenu(void) {
     s32 i;
+    s32 condition;
     u32 soundId;
-    u16 repeat;
     u8 selection;
     u8 oldSelection;
     s32 input;
     s32 heldUp;
+    s32 tempSelection;
+    register u16 repeat;
 
     soundId = STICK_UP;
-    if (gCourseDetailsMenuState >= 2) {
+    if ((s32) gCourseDetailsMenuState >= 2) {
         selection = gCourseDetailsMenuSelection;
-        oldSelection = selection;
         heldUp = gPlayerInputHeld & (soundId | U_JPAD);
+        oldSelection = selection;
         i = heldUp;
-        if (!i &&
-            !((STICK_DOWN | D_JPAD) & gPlayerInputHeld)) {
+        if (!i && !((STICK_DOWN | D_JPAD) & gPlayerInputHeld)) {
             gMenuInputRepeatTimers = 0;
             if (1) {}
             if (1) {}
             if (1) {}
         }
+        if (1) {
         if ((gPlayerInputPressed & (soundId | U_JPAD)) ||
             (heldUp &&
              ((u16) gMenuInputRepeatTimers >= 0xB) &&
-             (((u16) gMenuInputRepeatTimers % 3) == 0))) {
+            (((u16) gMenuInputRepeatTimers % 3) == 0))) {
             repeat = gMenuInputRepeatTimers;
-            i = ((u32) selection) - 1;
+            tempSelection = ((u32) selection) - 1;
             if (!repeat) {
                 gMenuInputRepeatTimers = repeat + 1;
                 repeat = gMenuInputRepeatTimers;
             }
             if (selection > 0) {
-                gCourseDetailsMenuSelection = i;
-                selection = (u8) i;
+                gCourseDetailsMenuSelection = tempSelection;
+                selection = (u8) tempSelection;
             }
         } else {
             repeat = gMenuInputRepeatTimers;
             input = gPlayerInputPressed;
+            condition = repeat >= 0xB;
             if ((input & (STICK_DOWN | D_JPAD)) ||
                 (((STICK_DOWN | D_JPAD) & gPlayerInputHeld) &&
-                 (repeat >= 0xB) && ((repeat % 3) == 0))) {
+                 condition && ((repeat % 3) == 0))) {
                 if (!repeat) {
                     gMenuInputRepeatTimers = repeat + 1;
                     repeat = gMenuInputRepeatTimers;
                 }
-                i = selection + 1;
+                tempSelection = selection + 1;
                 if (selection < 9) {
-                    gCourseDetailsMenuSelection = i;
-                    selection = (u8) i;
+                    gCourseDetailsMenuSelection = tempSelection;
+                    selection = (u8) tempSelection;
                 }
             } else if (gPlayerInputPressed & (STICK_LEFT | L_JPAD)) {
                 gMenuExitSelection = 1;
             }
+        }
         }
         if (repeat) {
             repeat += 1;
@@ -1147,15 +1151,16 @@ void updateCourseSelectCourseDetailsMenu(void) {
                 gMenuInputRepeatTimers = 0xC;
             }
         }
-        if (selection != oldSelection) {
+        if (oldSelection != selection) {
             enqueueSoundEffect(0x19, 0x32);
         }
         if (gPlayerInputPressed & B_BUTTON) {
             gMenuExitSelection = 2;
         }
         soundId = 0x18;
+        condition = gPlayerInputPressed & START_BUTTON;
         repeat = 1;
-        if ((gPlayerInputPressed & A_BUTTON) || (gPlayerInputPressed & START_BUTTON) ||
+        if ((gPlayerInputPressed & A_BUTTON) || condition ||
             (gMenuExitSelection != 0)) {
             if (((u8) gCourseDetailsMenuSelection >= 7) || (gMenuExitSelection != 0)) {
                 enqueueSoundEffect(soundId, 0x32);
