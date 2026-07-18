@@ -2983,17 +2983,13 @@ loop4:
 }
 #endif
 
-// func_8005D558 best match: 98.500% (nonmatchings/func_8005D558-8201208972835473051/base_7.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race/ui/race_ui_effects/func_8005D558.s")
-
-#ifdef NON_MATCHING
 const char D_800E1454[0x4] = "%4d";
 
 void func_8005D558(RaceUiCourseStatsActor *arg0) {
     volatile u8 padding[0x18];
     char new_var;
     s32 i;
-    u16 color;
+    s32 color;
     s32 y;
     s32 space;
 
@@ -3004,22 +3000,22 @@ void func_8005D558(RaceUiCourseStatsActor *arg0) {
 
         sprintf(buffer, D_800E1454, ((RaceUiTrickValueData *)gGameSaveDataBuffer)->values[gRaceCourseIndex][i]);
 
-        new_var = buffer[0];
-        if ((u8)new_var != space) {
+        if ((u8)buffer[0] != space) {
             drawAssetTableSpriteWithExplicitPalette(0x10, (s16)y, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
-                          (buffer[(color & 0xFFFF) * 0] - 5) & 0xFFFF, color);
+                          (buffer[0] - 5) & 0xFFFF, color);
+            do { } while (0);
         }
         if ((u8)buffer[1] != space) {
             drawAssetTableSpriteWithExplicitPalette(0x18, (s16)y, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
-                          (buffer[1] - 5) & 0xFFFF, color & 0xFFFF);
+                          (buffer[1] - 5) & 0xFFFF, (u16)color);
         }
         if ((u8)buffer[2] != space) {
             drawAssetTableSpriteWithExplicitPalette(0x20, (s16)y, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
-                          (buffer[2] - 5) & 0xFFFF, color & 0xFFFF);
+                          (buffer[2] - 5) & 0xFFFF, (u16)color);
         }
         if ((u8)buffer[3] != space) {
             drawAssetTableSpriteWithExplicitPalette(0x28, (s16)y, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
-                          (buffer[3] - 5) & 0xFFFF, color & 0xFFFF);
+                          (buffer[3] - 5) & 0xFFFF, (u16)color);
         }
 
         drawAssetTableSprite(0x40, (s16)y, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
@@ -3031,7 +3027,6 @@ void func_8005D558(RaceUiCourseStatsActor *arg0) {
         y += 0x20;
     } while (i != 5);
 }
-#endif
 
 const char D_800E1458[0x8] = "-Trick-";
 const char D_800E1460[0x8] = "-Make-";
