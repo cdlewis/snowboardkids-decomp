@@ -50,8 +50,8 @@ s32 osPfsIsPlug(OSMesgQueue *mq, u8 *pattern) {
 }
 
 void __osPfsRequestData(u8 cmd) {
-    __OSContRequesFormat *request;
-    __OSContRequesFormat requestFormat;
+    u8 *ptr;
+    __OSContRequesFormat requestformat;
     int i;
 
     __osContLastCmd = cmd;
@@ -59,22 +59,22 @@ void __osPfsRequestData(u8 cmd) {
         ((u32 *)&__osPfsPifRam)[i] = 0;
     }
     __osPfsPifRam.pifstatus = CONT_CMD_EXE;
-    request = (__OSContRequesFormat *)__osPfsPifRam.ramarray;
+    ptr = (u8 *)__osPfsPifRam.ramarray;
 
-    requestFormat.dummy = CONT_CMD_NOP;
-    requestFormat.txsize = CONT_CMD_REQUEST_STATUS_TX;
-    requestFormat.rxsize = CONT_CMD_REQUEST_STATUS_RX;
-    requestFormat.cmd = cmd;
-    requestFormat.typeh = CONT_CMD_NOP;
-    requestFormat.typel = CONT_CMD_NOP;
-    requestFormat.status = CONT_CMD_NOP;
-    requestFormat.dummy1 = CONT_CMD_NOP;
+    requestformat.dummy = CONT_CMD_NOP;
+    requestformat.txsize = CONT_CMD_REQUEST_STATUS_TX;
+    requestformat.rxsize = CONT_CMD_REQUEST_STATUS_RX;
+    requestformat.cmd = cmd;
+    requestformat.typeh = CONT_CMD_NOP;
+    requestformat.typel = CONT_CMD_NOP;
+    requestformat.status = CONT_CMD_NOP;
+    requestformat.dummy1 = CONT_CMD_NOP;
 
     for (i = 0; i < __osMaxControllers; i++) {
-        *request++ = requestFormat;
+        *(__OSContRequesFormat *)ptr = requestformat;
+        ptr += sizeof(requestformat);
     }
-
-    *(u8 *)request = CONT_CMD_END;
+    *ptr = CONT_CMD_END;
 }
 
 void __osPfsGetInitData(u8 *pattern, OSContStatus *data) {
