@@ -1249,7 +1249,7 @@ void initCourseGateObject(CourseGateObjectEffect *arg0) {
     setCallbackTaskCallback(arg0, waitForCourseGateTrigger);
 }
 
-// renderCourseBillboardMarker best match: 99.720% at nonmatchings/renderCourseBillboardMarker-5313856277864964686/base_3.c.
+// renderCourseBillboardMarker best match: 99.860% at nonmatchings/renderCourseBillboardMarker-2341155904261615822/base_4.c.
 #pragma GLOBAL_ASM("asm/nonmatchings/race/course/race_course_effects/renderCourseBillboardMarker.s")
 
 #ifdef NON_MATCHING
@@ -1258,10 +1258,10 @@ void renderCourseBillboardMarker(RaceCourseMarkerEffect *arg0) {
     Gfx *gfx;
     s32 i;
     s16 vertexCount;
-    volatile s32 pad[8];
+    u8 pad[0x10];
 
     if (gRenderMatricesDirty != 0) {
-        arg0->vertices = allocMenuRenderScratch(arg0->vertexCount * sizeof(Vtx));
+        arg0->vertices = allocMenuRenderScratch((arg0->vertexCount * sizeof(Vtx)) + ((u32) pad & 0));
         if (arg0->vertices != NULL) {
             i = 0;
             if (arg0->vertexCount > 0) {
