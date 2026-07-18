@@ -9,10 +9,14 @@
 
 #define CHNL_ERR(format) (((format).rxsize & CHNL_ERR_MASK) >> 4)
 
-typedef struct
+typedef union
 {
-    /* 0x0 */ u32 ramarray[15];
-    /* 0x3C */ u32 pifstatus;
+    struct
+    {
+        /* 0x0 */ u32 ramarray[15];
+        /* 0x3C */ u32 pifstatus;
+    };
+    /* 0x0 */ u32 words[16];
 } OSPifRam ALIGNED(0x10);
 
 typedef struct

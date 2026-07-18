@@ -70,7 +70,7 @@ static void __osPackRamReadData(int channel, u16 address) {
 
     cmdBufPtr = (u8 *)__osPfsPifRam.ramarray;
     for (i = 0; i < PFS_PIF_RAM_WORDS; i++) {
-        ((u32 *)&__osPfsPifRam)[i] = 0;
+        __osPfsPifRam.words[i] = 0;
     }
     __osPfsPifRam.pifstatus = CONT_CMD_EXE;
     readFormat.dummy = CONT_CMD_NOP;

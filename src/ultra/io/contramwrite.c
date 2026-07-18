@@ -69,7 +69,7 @@ static void __osPackRamWriteData(int channel, u16 address, u8 *buffer) {
 
     cmdBufPtr = (u8 *)__osPfsPifRam.ramarray;
     for (i = 0; i < PFS_PIF_RAM_WORDS; i++) {
-        ((u32 *)&__osPfsPifRam)[i] = 0;
+        __osPfsPifRam.words[i] = 0;
     }
     __osPfsPifRam.pifstatus = CONT_CMD_EXE;
     writeFormat.dummy = CONT_CMD_NOP;
