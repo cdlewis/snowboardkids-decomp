@@ -207,7 +207,6 @@ extern void selectMenuRenderScratchBuffer(s32);
 extern void appendViewportDisplayLists(u8);
 extern s32 osSendMesg(void *, void *, s32);
 extern void updateGameTaskScheduler(void);
-extern void gameThreadMain(void *);
 extern void initFramebufferRenderTaskState(void);
 
 void main(void *arg) {
@@ -254,39 +253,27 @@ void initGameSystems(void) {
     gRumblePakConnectedMask = 0;
 }
 
-// gameThreadMain best match: 91.364% at nonmatchings/gameThreadMain-2663524570355072948/base_13.c.
-#ifdef NON_MATCHING
 void gameThreadMain(void *arg0) {
     OSMesg msg;
-    s32 done;
     s32 initialized;
     s32 finalType;
-    u16 *retraceCounter;
-    s32 statusMask;
-    OSMesgQueue *queue18;
-    OSMesgQueue *queue70;
-    u32 zero;
-    OSMesgQueue *queue50;
-    volatile u8 *counter;
+    volatile s32 done;
 
     msg = NULL;
-    zero = 0;
-    initialized = (done = 0);
-    retraceCounter = &gRetraceCounter;
+    initialized = 0;
+    done = 0;
     initGameSystems();
-    queue18 = &gFramebufferRenderDoneQueue;
-    queue70 = &gControllerInputUpdateQueue;
-    queue50 = &gSchedulerClientQueue;
-    counter = &gPendingFramebufferSwapCount;
-loop_1:
-    do {
-        statusMask = 0xFFFE;
-        if ((osRecvMesg(queue18, &msg, zero) != zero) && (osRecvMesg(queue70, &msg, OS_MESG_NOBLOCK) != 0) && (osRecvMesg(queue50, &msg, OS_MESG_NOBLOCK) != 0)) {
-            goto loop_1;
+
+    while ((u64)1) {
+        if ((osRecvMesg(&gFramebufferRenderDoneQueue, &msg, OS_MESG_NOBLOCK) != 0) &&
+            (osRecvMesg(&gControllerInputUpdateQueue, &msg, OS_MESG_NOBLOCK) != 0) &&
+            (osRecvMesg(&gSchedulerClientQueue, &msg, OS_MESG_NOBLOCK) != 0)) {
+            continue;
         }
+
         switch (*(s16 *)msg) {
         case 1:
-            gLastSchedulerRetraceCounter = *retraceCounter;
+            gLastSchedulerRetraceCounter = gRetraceCounter;
             if (initialized == 0) {
                 initialized = 1;
                 updateGameTaskScheduler();
@@ -301,21 +288,25 @@ loop_1:
             }
             break;
         case 5:
-            *counter += 1;
-            gFramebufferRenderTask0Statuses &= statusMask;
+            gPendingFramebufferSwapCount++;
+            gFramebufferRenderTask0[0].status = gFramebufferRenderTask0Statuses & 0xFFFE;
             break;
         case 6:
-            *counter += 1;
-            gFramebufferRenderTask1Statuses &= 0xFFFE;
+            gPendingFramebufferSwapCount++;
+            gFramebufferRenderTask0[1].status = gFramebufferRenderTask1Statuses & 0xFFFE;
             break;
         case 3:
-            *(volatile s32 *)&done = 1;
+            done = 1;
             break;
         case 9:
             updateControllerInputState();
             break;
         }
-    } while (*(volatile s32 *)&done == 0);
+        if (done != 0) {
+            break;
+        }
+    }
+
     fadeOutAllMusicSequences();
     osViBlack(1);
     requestRumbleMotorInit(0);
@@ -342,18 +333,19 @@ loop_1:
     serviceRumbleMotorRequest(1);
     serviceRumbleMotorRequest(2);
     serviceRumbleMotorRequest(3);
+
     finalType = 1;
 loop_16:
     do {
-        zero = 0;
 loop_17:
-        if ((osRecvMesg(queue18, &msg, zero) != zero) && (osRecvMesg(queue70, &msg, OS_MESG_NOBLOCK) != 0)) {
-            if (osRecvMesg(queue50, &msg, OS_MESG_NOBLOCK) != 0) {
-                goto loop_17;
-            }
+        if ((osRecvMesg(&gFramebufferRenderDoneQueue, &msg, OS_MESG_NOBLOCK) != 0) &&
+            (osRecvMesg(&gControllerInputUpdateQueue, &msg, OS_MESG_NOBLOCK) != 0) &&
+            (osRecvMesg(&gSchedulerClientQueue, &msg, OS_MESG_NOBLOCK) != 0)) {
+            goto loop_17;
         }
     } while (*(s16 *)msg != finalType);
-    requestRumbleMotorInit(zero);
+
+    requestRumbleMotorInit(0);
     requestRumbleMotorInit(1);
     requestRumbleMotorInit(2);
     requestRumbleMotorInit(3);
@@ -363,9 +355,6 @@ loop_17:
     serviceRumbleMotorRequest(3);
     goto loop_16;
 }
-#else
-#pragma GLOBAL_ASM("asm/nonmatchings/engine/system_runtime/gameThreadMain.s")
-#endif
 
 void dmaReadRom(u32 romOffset, void *ramAddress, s32 size) {
     OSIoMesg dmaRequest;
