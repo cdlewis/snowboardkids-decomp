@@ -15,6 +15,8 @@ typedef struct AudioInitTask {
     OSMesg msg;
 } AudioInitTask;
 
+const char D_800E1A60[16] = "NG Channel\n";
+
 extern s32 osSendMesg(OSMesgQueue *, OSMesg, s32);
 extern s32 osSetIntMask(s32);
 extern s32 osRecvMesg(OSMesgQueue *, OSMesg *, s32);
@@ -928,10 +930,6 @@ void setSoundPlayerMasterVolume(s32 arg0, s32 arg1) {
     }
 }
 
-// startMusicSequence best match: 99.321% (nonmatchings/startMusicSequence-3242520251544044307/base_14.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/audio/audio_engine/startMusicSequence.s")
-
-#ifdef NON_MATCHING
 s32 startMusicSequence(PlayerCommandData *arg0) {
     s32 i;
     int handle;
@@ -943,6 +941,8 @@ s32 startMusicSequence(PlayerCommandData *arg0) {
     s32 free;
     s32 trackCount;
 
+    ptr = (s32 *)arg0++;
+    arg0 = (PlayerCommandData *)ptr;
     trackCount = arg0->trackCount;
     if ((u32)arg0->sequenceOffsets < 0x400U) {
         ptr = (s32 *)&arg0->sequenceOffsets;
@@ -955,9 +955,7 @@ s32 startMusicSequence(PlayerCommandData *arg0) {
         }
     }
 
-    arg0++;
     needed = 0;
-    arg0--;
     for (i = 0; i < trackCount; i++) {
         if (arg0->sequenceOffsets[i] != 0) {
             needed++;
@@ -985,7 +983,7 @@ s32 startMusicSequence(PlayerCommandData *arg0) {
         if (arg0->sequenceOffsets[i] != 0) {
             index = findFreeSoundPlayerIndex(value, i);
             if (index == -1) {
-                rmonPrintf("NG Channel\n");
+                rmonPrintf(D_800E1A60);
             }
             state = &gSoundPlayerStates[index];
             resetSoundPlayerState(state);
@@ -1005,7 +1003,6 @@ s32 startMusicSequence(PlayerCommandData *arg0) {
 
     return handle;
 }
-#endif
 
 s32 startSoundEffectDefault(s32 arg0) {
     s32 i;
