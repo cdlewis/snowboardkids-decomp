@@ -4826,7 +4826,7 @@ void initCourseStartFinishSprite(RaceUiCourseSpriteActor *actor) {
     setCallbackTaskCallback(actor, updateCourseStartFinishSprite);
 }
 
-// func_80063A9C best match: 98.939% (nonmatchings/func_80063A9C-8201208972835473051/base_3.c)
+// func_80063A9C best match: 99.571% (nonmatchings/func_80063A9C-8239461464121803931/base_5.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race/ui/race_ui_effects/func_80063A9C.s")
 
 #ifdef NON_MATCHING
@@ -4839,22 +4839,13 @@ void initCourseStartFinishSprite(RaceUiCourseSpriteActor *actor) {
     }
 
 void func_80063A9C(RaceUiEffectParticleActor *arg0) {
-    RaceUiTrailCopyBlock spA0;
-    Gfx *new_var;
-    RaceUiGfxCommandDest *matrix;
-    RaceUiCameraTransformSource *camera;
+    RaceUiEffectParticleActor *actor2;
     s32 negX;
     s32 negY;
     s32 negZ;
-    s32 maskedNegX;
-    s32 maskedNegY;
-    s32 maskedNegZ;
     s32 i;
-    Gfx *new_var2;
-    s32 mask;
-    RaceUiEffectParticleActor *actor;
-    RaceUiEffectParticleActor *actor2;
-    Gfx *new_var3;
+    RaceUiGfxCommandDest *matrix;
+    RaceUiTrailCopyBlock spA0;
 
     RACE_UI_EFFECT_EMIT_GFX(0xFD500000, (u32)arg0->unk20);
     RACE_UI_EFFECT_EMIT_GFX(0xF5500000, 0x07080200);
@@ -4867,51 +4858,36 @@ void func_80063A9C(RaceUiEffectParticleActor *arg0) {
     RACE_UI_EFFECT_EMIT_GFX(0xFD100000, (u32)arg0->unk1C);
     RACE_UI_EFFECT_EMIT_GFX(0xE8000000, 0);
     RACE_UI_EFFECT_EMIT_GFX(0xF5000100, 0x07000000);
-    {
-        Gfx *_g;
-
-        _g = gRegionAllocPtr++;
-        new_var3 = _g;
-        new_var3->words.w0 = 0xE6000000;
-        new_var2 = _g;
-        new_var2->words.w1 = 0;
-    }
+    RACE_UI_EFFECT_EMIT_GFX(0xE6000000, 0);
     RACE_UI_EFFECT_EMIT_GFX(0xF0000000, 0x0703C000);
     RACE_UI_EFFECT_EMIT_GFX(0xE7000000, 0);
     RACE_UI_EFFECT_EMIT_GFX(0x06000000, (u32)gAlphaSpriteRenderModeDl);
 
     spA0.transform = gIdentityFixedTransform;
 
-    actor = arg0;
     actor2 = arg0;
-    camera = &D_801121E0[gCurrentViewportIndex];
-    negX = -camera->transformOffset.x;
-    negY = -camera->transformOffset.y;
-    negZ = -camera->transformOffset.z;
+    negX = -D_801121E0[gCurrentViewportIndex].transformOffset.x;
+    negY = -D_801121E0[gCurrentViewportIndex].transformOffset.y;
+    negZ = -D_801121E0[gCurrentViewportIndex].transformOffset.z;
 
     i = 0;
-    if (actor->count > 0) {
-        mask = 0xFFFFFF;
-        maskedNegX = negX & mask;
-        maskedNegY = negY & mask;
-        maskedNegZ = negZ & mask;
+    if (arg0->count > 0) {
         do {
-            spA0.transform.translation.x = ((actor->particles[i].unk0 - maskedNegX) & mask) + negX + 0xFF800000;
-            spA0.transform.translation.y = ((actor->particles[i].unk4 - maskedNegY) & mask) + negY + 0xFF800000;
-            spA0.transform.translation.z = ((actor->particles[i].unk8 - maskedNegZ) & mask) + negZ + 0xFF800000;
+            spA0.transform.translation.x = ((arg0->particles[i].unk0 - (negX & 0xFFFFFF)) & 0xFFFFFF) + negX + 0xFF800000;
+            spA0.transform.translation.y = ((arg0->particles[i].unk4 - (negY & 0xFFFFFF)) & 0xFFFFFF) + negY + 0xFF800000;
+            spA0.transform.translation.z = ((arg0->particles[i].unk8 - (negZ & 0xFFFFFF)) & 0xFFFFFF) + negZ + 0xFF800000;
             matrix = allocFixedTransformMatrix(&spA0);
             if (matrix != NULL) {
-                RACE_UI_EFFECT_EMIT_GFX(0x01020040, (u32)matrix);
-                RACE_UI_EFFECT_EMIT_GFX(0x01000040, gViewportMatrix);
-                RACE_UI_EFFECT_EMIT_GFX(0x04000C2F, (u32)D_800D63D0);
                 {
                     Gfx *_g;
 
                     _g = gRegionAllocPtr++;
-                    new_var = _g;
-                    new_var->words.w0 = 0xBF000000;
-                    _g->words.w1 = 0x402;
+                    _g->words.w1 = (u32)matrix;
+                    _g->words.w0 = 0x01020040;
                 }
+                RACE_UI_EFFECT_EMIT_GFX(0x01000040, gViewportMatrix);
+                RACE_UI_EFFECT_EMIT_GFX(0x04000C2F, (u32)D_800D63D0);
+                RACE_UI_EFFECT_EMIT_GFX(0xBF000000, 0x402);
             }
             i++;
         } while (i < actor2->count);
