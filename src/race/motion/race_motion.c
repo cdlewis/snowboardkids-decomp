@@ -1076,24 +1076,26 @@ s16 getRaceCourseNextSurface(s32 arg0) {
 }
 
 void setRaceMotionAnimation(RaceMotionState *state, s32 animIndex) {
-    s16 *animationFrame;
+    s16 *frameData;
     s16 frameCount;
     s32 frameDataOffset;
     s32 animationBase;
-    RaceMotionState *motionState = state;
 
+    // The animation asset begins with a table of u16 offsets (one per
+    // animation), each in units of u16. Indexing it yields a pointer to the
+    // requested animation, whose first entry is its frame count.
     animationBase = getRelocatableHeapBlockBase(gAssetHandles[0x16 + state->modelId]);
-    animationFrame = (s16 *)(animationBase + (((u16 *)animationBase)[animIndex] * sizeof(u16)));
-    frameCount = *animationFrame;
-    motionState->framesRemaining = frameCount;
-    motionState->framesRemaining++;
-    motionState->frameCount = frameCount;
-    animationFrame += 1;
-    frameDataOffset = (s32)animationFrame - getRelocatableHeapBlockBase(gAssetHandles[0x16 + motionState->modelId]);
-    motionState->animStartOffset = frameDataOffset;
-    motionState->frameDataOffset = frameDataOffset;
-    motionState->frameTimer = 0;
-    motionState->animIndex = animIndex;
+    frameData = (s16 *)(animationBase + (((u16 *)animationBase)[animIndex] * sizeof(u16)));
+    frameCount = *frameData;
+    state->framesRemaining = frameCount;
+    state->framesRemaining++;
+    state->frameCount = frameCount;
+    frameData++;
+    frameDataOffset = (s32)frameData - getRelocatableHeapBlockBase(gAssetHandles[0x16 + state->modelId]);
+    state->animStartOffset = frameDataOffset;
+    state->frameDataOffset = frameDataOffset;
+    state->frameTimer = 0;
+    state->animIndex = animIndex;
 }
 
 void loadRaceMotionAnimationFrame(RaceMotionState *state) {
