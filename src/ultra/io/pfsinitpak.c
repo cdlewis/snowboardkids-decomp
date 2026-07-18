@@ -30,11 +30,9 @@ s32 osPfsInitPak(OSMesgQueue* queue, OSPfs* pfs, int channel) {
     packId = (__OSPackId*)packIdBlock;
 
     if ((packId->checksum != checksum) || (packId->inverted_checksum != invertedChecksum)) {
-        ret = __osCheckPackId(pfs, packId);
-
+        // The original binary checks the result twice; keep the duplicate to preserve the match.
+        ERRCK(__osCheckPackId(pfs, packId));
         if (ret != 0) {
-            return ret;
-        } else if (ret != 0) {
             return ret;
         }
     }
