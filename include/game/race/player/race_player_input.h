@@ -189,18 +189,37 @@ typedef struct RacePlayer {
     /* 0x501 */ char pad501[1];
     /* 0x502 */ s16 unk502;
     /* 0x504 */ s32 unk504;
-    /* 0x508 */ s8 unk508;
+    /* 0x508 */ union {
+        s8 unk508;
+        s8 lapDigit;
+    };
     /* 0x509 */ union {
         s8 rankIndex;
         s8 racePosition;
+        s8 iconTile;
     };
     /* 0x50A */ char pad50A[6];
     /* 0x510 */ s16 shieldEffectTimer;
-    /* 0x512 */ s8 itemEffectType;
-    /* 0x513 */ s8 itemEffectPalette;
-    /* 0x514 */ s8 itemEffectCount;
-    /* 0x515 */ s8 actionEffectType;
-    /* 0x516 */ s8 actionEffectPalette;
+    /* 0x512 */ union {
+        s8 itemEffectType;
+        s8 tensDigitTile;
+    };
+    /* 0x513 */ union {
+        s8 itemEffectPalette;
+        s8 tensDigitPalette;
+    };
+    /* 0x514 */ union {
+        s8 itemEffectCount;
+        s8 tensDigitOffset;
+    };
+    /* 0x515 */ union {
+        s8 actionEffectType;
+        s8 onesDigitTile;
+    };
+    /* 0x516 */ union {
+        s8 actionEffectPalette;
+        s8 onesDigitPalette;
+    };
     /* 0x517 */ s8 unk517;
     /* 0x518 */ s8 randomIndex;
     /* 0x519 */ s8 unk519;
@@ -215,7 +234,10 @@ typedef struct RacePlayer {
     /* 0x52C */ s8 actionTriggerCooldown;
     /* 0x52D */ s8 itemTriggerCooldown;
     /* 0x52E */ char pad52E[0x3A];
-    /* 0x568 */ s32 unk568;
+    /* 0x568 */ union {
+        s32 unk568;
+        s32 timerValue;
+    };
     /* 0x56C */ s32 unk56C;
     /* 0x570 */ s16 unk570;
     /* 0x572 */ s16 unk572;

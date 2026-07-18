@@ -531,62 +531,55 @@ void drawTimeTrialLabels(s32 arg0) {
 const char D_800E1804[] = "%5ld";
 
 void drawSinglePlayerRaceHud(s32 arg0) {
-    volatile u8 padding[0x14];
-    s32 x;
-    char *end;
-    u16 palette;
-    char *digit;
-    char buffer[5];
-    volatile RacePlayer *player;
+    s32 palette;
+    s32 i;
+    s32 var_s1;
+    char buffer[0x20];
 
-    player = &gRacePlayers[0];
-    sprintf(buffer, D_800E1804, (&gRacePlayers[0])->unk568);
-
-    x = 0x50;
-    digit = buffer;
-    if (player->unk568 < 100) {
+    sprintf(buffer, D_800E1804, gRacePlayers[0].timerValue);
+    if (gRacePlayers[0].timerValue < 100) {
         palette = 0x10;
     } else {
         palette = 0xE;
     }
 
-    end = &buffer[5];
-    do {
-        if (*digit != ' ') {
-            drawAssetTableSpriteWithExplicitPalette((s16)x, 0x50, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), (*digit - 5) & 0xFFFF,
-                          palette & 0xFFFF);
+    for (i = 0, var_s1 = 0x50; i < 5; i++, var_s1 += 8) {
+        if (buffer[i] != ' ') {
+            drawAssetTableSpriteWithExplicitPalette(var_s1, 0x50, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
+                                                    ((u8)buffer[i] - 5) & 0xFFFF, palette & 0xFFFF);
         }
-        digit++;
-        x += 8;
-        end = &buffer[5];
-    } while (digit != end);
+    }
 
-    drawAssetTableSprite(0x78, 0x50, getRelocatableHeapBlockBase(gAssetHandles.mainFontHandle), ((gRaceHudSpinnerFrame >> 1) + 4) & 0xFFFF);
+    drawAssetTableSprite(0x78, 0x50, getRelocatableHeapBlockBase(gAssetHandles.mainFontHandle),
+                         ((gRaceHudSpinnerFrame >> 1) + 4) & 0xFFFF);
 
-    if ((&gRacePlayers[0])->itemEffectPalette != 0) {
+    if (gRacePlayers[0].tensDigitPalette != 0) {
         drawScaledAssetTableSprite(-0x20, -0x60, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
-                      (gRaceTimerTensDigitTileOffsets[(&gRacePlayers[0])->itemEffectType] + (&gRacePlayers[0])->itemEffectCount - 1) & 0xFFFF,
-                      (&gRacePlayers[0])->itemEffectPalette);
+                                   (gRaceTimerTensDigitTileOffsets[gRacePlayers[0].tensDigitTile] + gRacePlayers[0].tensDigitOffset - 1) &
+                                       0xFFFF,
+                                   gRacePlayers[0].tensDigitPalette);
     } else {
         drawAssetTableSprite(-0x20, -0x60, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
-                      (gRaceTimerTensDigitTileOffsets[(&gRacePlayers[0])->itemEffectType] + (&gRacePlayers[0])->itemEffectCount - 1) & 0xFFFF);
+                             (gRaceTimerTensDigitTileOffsets[gRacePlayers[0].tensDigitTile] + gRacePlayers[0].tensDigitOffset - 1) &
+                                 0xFFFF);
     }
 
-    if ((&gRacePlayers[0])->actionEffectPalette != 0) {
-        drawScaledAssetTableSprite(0, -0x60, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), gRaceTimerOnesDigitTileIds[(&gRacePlayers[0])->actionEffectType],
-                      (&gRacePlayers[0])->actionEffectPalette);
+    if (gRacePlayers[0].onesDigitPalette != 0) {
+        drawScaledAssetTableSprite(0, -0x60, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
+                                   gRaceTimerOnesDigitTileIds[gRacePlayers[0].onesDigitTile], gRacePlayers[0].onesDigitPalette);
     } else {
-        drawAssetTableSprite(0, -0x60, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), gRaceTimerOnesDigitTileIds[(&gRacePlayers[0])->actionEffectType]);
+        drawAssetTableSprite(0, -0x60, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
+                             gRaceTimerOnesDigitTileIds[gRacePlayers[0].onesDigitTile]);
     }
 
-    x = 0x88;
-    drawAssetTableSprite(-x, 0x40, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), (&gRacePlayers[0])->rankIndex & 0xFFFF);
+    drawAssetTableSprite(-0x88, 0x40, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
+                         gRacePlayers[0].iconTile & 0xFFFF);
     drawAssetTableSprite(-0x88, -0x60, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x39);
-    if (buffer) {
-    }
-    drawAssetTableSpriteWithExplicitPalette(-0x68, -0x60, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), ((&gRacePlayers[0])->unk508 + 0x2C) & 0xFFFF, 0xE);
+    drawAssetTableSpriteWithExplicitPalette(-0x68, -0x60, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
+                                            (gRacePlayers[0].lapDigit + 0x2C) & 0xFFFF, 0xE);
     drawAssetTableSprite(-0x5C, -0x60, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x38);
-    drawAssetTableSpriteWithExplicitPalette(-0x50, -0x60, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), (gRaceLapCount + 0x2B) & 0xFFFF, 0xE);
+    drawAssetTableSpriteWithExplicitPalette(-0x50, -0x60, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
+                                            (gRaceLapCount + 0x2B) & 0xFFFF, 0xE);
 }
 
 void noopRaceHudCallback(s32 arg0) {
