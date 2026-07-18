@@ -1483,14 +1483,14 @@ void drawMenuColoredGlyphScript(volatile s16 x, s16 y, MenuGlyphScript *script, 
     u16 glyphAdvance;
     s32 drawY;
     s32 spaceGlyph;
-    register s32 advance;
+    s32 advance;
     u16 scaleValue;
     u16 colorModeValue;
     u16 fontBankValue;
 
     drawX = x;
     drawY = y;
-    if (!((u8 *)&palette)[3]) {
+    if (((u8 *)&palette)[3] == 0) {
         glyphAdvance = MENU_GLYPH_WIDE_ADVANCE;
     } else {
         glyphAdvance = MENU_GLYPH_NARROW_ADVANCE;
