@@ -1875,7 +1875,7 @@ void initCourseSelectExtraCourseBadge(CourseSelectWidgetActor *arg0) {
     setCallbackTaskCallback(arg0, updateCourseSelectExtraCourseBadge);
 }
 
-// drawCourseSelectExtraCourseIconList best match: 98.781% (nonmatchings/drawCourseSelectExtraCourseIconList-2341155904261615822/base_14.c)
+// drawCourseSelectExtraCourseIconList best match: 99.742% (nonmatchings/drawCourseSelectExtraCourseIconList-6934502587000073416/base_14.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/course_select/course_select_ui/drawCourseSelectExtraCourseIconList.s")
 
 #ifdef NON_MATCHING
@@ -1886,8 +1886,8 @@ void drawCourseSelectExtraCourseIconList(CourseSelectWidgetActor *arg0_in) {
     s16 *promptState;
     s32 iconAlpha;
     s32 playerIndex;
-    s32 alphaOffset;
     s32 iconIndex;
+    s32 alphaOffset;
 
     playerIndex = 0;
     if ((s32)gPlayerCount > 0) { promptState = gMenuChoicePromptState; alphaOffset = 0; do {
@@ -1896,16 +1896,12 @@ void drawCourseSelectExtraCourseIconList(CourseSelectWidgetActor *arg0_in) {
                     iconIndex = arg0->itemCounts[playerIndex] - 1;
                     if (iconIndex >= 0) {
                         do {
-                            switch (*promptState) {
-                            case 1:
+                            if (*promptState == 1) {
                                 iconAlpha = 0x100;
-                                break;
-                            default:
+                            } else if ((iconIndex + 2) == *promptState) {
+                                iconAlpha = 0x100;
+                            } else {
                                 iconAlpha = 0x60;
-                                if ((iconIndex + 2) == *promptState) {
-                                    iconAlpha = 0x100;
-                                }
-                                break;
                             }
                             drawMenuSpriteWithAlphaClipped(
                                 arg0->iconX[playerIndex][iconIndex], arg0->iconY[playerIndex][iconIndex],
@@ -1927,7 +1923,7 @@ void drawCourseSelectExtraCourseIconList(CourseSelectWidgetActor *arg0_in) {
                             drawMenuSpriteWithAlpha(
                                 arg0->iconX[playerIndex][0],
                                 (s16)(arg0->iconY[playerIndex][0] +
-                                      (arg0->rowSpacing[playerIndex] * (*promptState - 2))),
+                                      ((*promptState - 2) * arg0->rowSpacing[playerIndex])),
                                 getRelocatableHeapBlockBase(gAssetHandles[0x21]), overlayTile & 0xFFFF,
                                 0x20, 0x20, 0, alphaActor->alpha[0], 0);
                         }
