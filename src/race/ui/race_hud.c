@@ -370,7 +370,7 @@ void drawScoreAttackChallengeLabels(s32 arg0) {
     drawMenuAsciiTextDefaultScale(0x70, -0x48, sp18, 6);
 }
 
-// drawTargetTimeChallengeHud best match: 95.508% at nonmatchings/drawTargetTimeChallengeHud-2341155904261615822/base_18.c.
+// drawTargetTimeChallengeHud best match: 96.511% at nonmatchings/drawTargetTimeChallengeHud-6887713755923057488/base_18.c.
 #pragma GLOBAL_ASM("asm/nonmatchings/race/ui/race_hud/drawTargetTimeChallengeHud.s")
 
 #ifdef NON_MATCHING
@@ -380,6 +380,8 @@ const char D_800E1780[] = "%2.2d";
 const char D_800E1788[] = "%d";
 
 void drawTargetTimeChallengeHud(s32 arg0) {
+    char *bufferAlias;
+    char *endPointer;
     char buffer[0xC];
     s32 x;
     char *digit;
@@ -389,27 +391,33 @@ void drawTargetTimeChallengeHud(s32 arg0) {
     x = 0x48;
     digit = buffer;
     do {
-        drawAssetTableSprite((s16)x, 0x50, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), ((u8)*digit - 5) & 0xFFFF);
+        drawAssetTableSprite((s16)x, 0x50, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
+                             ((u8)*digit - 5) & 0xFFFF);
         digit++;
         x += 8;
-        end = (u32)&buffer[2];
-    } while ((u32)digit < end);
+        endPointer = &buffer[2];
+        end = (u32)endPointer;
+    } while (((u32)digit < end) != 0);
 
     x += 8;
     sprintf(buffer, D_800E1778, gRaceElapsedTimer.seconds);
     digit = buffer;
     do {
-        drawAssetTableSprite((s16)x, 0x50, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), ((u8)*digit - 5) & 0xFFFF);
+        drawAssetTableSprite((s16)((short)x), 0x50, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
+                             ((u8)*digit - 5) & 0xFFFF);
         digit++;
         x += 8;
-        end = (u32)&buffer[2];
+        end = (u32)endPointer;
     } while ((u32)digit < end);
 
     x += 8;
     sprintf(buffer, D_800E1780, gRaceElapsedTimer.fraction >> 8);
     digit = buffer;
     do {
-        drawAssetTableSprite((s16)x, 0x50, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), ((u8)*digit - 5) & 0xFFFF);
+        drawAssetTableSprite((s16)x, 0x50, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
+                             (((u8)*digit & 0xFF) - 5) & 0xFFFF);
+        do {
+        } while (0);
         digit++;
         x += 8;
         end = (u32)&buffer[2];
@@ -427,9 +435,12 @@ void drawTargetTimeChallengeHud(s32 arg0) {
     drawAssetTableSprite(-0x88, 0x40, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x25);
 
     sprintf(buffer, D_800E1788, D_801222F0);
-    drawAssetTableSprite(-0x60, -0x50, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), ((u8)buffer[0] - 5) & 0xFFFF);
-    if (buffer[1] != 0) {
-        drawAssetTableSprite(-0x58, -0x50, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), ((u8)buffer[1] - 5) & 0xFFFF);
+    bufferAlias = buffer;
+    drawAssetTableSprite(-0x60, -0x50, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
+                         ((u8)bufferAlias[0] - 5) & 0xFFFF);
+    if (bufferAlias[1] != 0) {
+        drawAssetTableSprite(-0x58, -0x50, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
+                             ((u8)bufferAlias[1] + -5) & 0xFFFF);
     }
     if (!end) {
     }
