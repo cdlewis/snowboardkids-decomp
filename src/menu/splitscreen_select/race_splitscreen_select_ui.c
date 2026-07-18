@@ -60,7 +60,29 @@ void drawRaceSplitscreenSelectPlayerCountIcons(RaceSplitscreenSelectRowActor *ic
     row = icons;
     iconIndex = 0;
     if ((s32) icons->playerCount > 0) {
-        do { yOffset = 0; iconCursor = icons; do { blinkAlpha = 0; if (((((gMenuSelectionConfirmTimer != 0) && (((s32)gMenuSelectionConfirmTimer) < 8)) && (gMenuExitSelection == 0)) && (iconIndex == gRaceSplitscreenMode)) && (gMenuSelectionConfirmTimer & 1)) { blinkAlpha = 0xFF; } drawMenuSprite(iconCursor->iconX[0], (s16)(icons->iconY + yOffset), getRelocatableHeapBlockBase(gAssetHandles.textureHandle), (iconIndex + 8) & 0xFFFF, 0x20, 0x20, 0, blinkAlpha); iconIndex += 1; yOffset += 0x14; iconCursor = (RaceSplitscreenSelectRowActor *)((u8 *)iconCursor + 2); if (icons->playerCount) {} } while (iconIndex < ((s32)row->playerCount)); } while (0);
+        /*
+         * The outer do/while (0), the row/iconCursor aliases of icons, and the
+         * empty "if (icons->playerCount) {}" are all required for IDO to spill
+         * the argument and allocate registers exactly as the original; do not
+         * simplify them. yOffset = 0; iconCursor = icons; must stay on one line
+         * for the same reason.
+         */
+        do { yOffset = 0; iconCursor = icons; do {
+            blinkAlpha = 0;
+            if (((((gMenuSelectionConfirmTimer != 0) && (((s32) gMenuSelectionConfirmTimer) < 8)) &&
+                 (gMenuExitSelection == 0)) &&
+                (iconIndex == gRaceSplitscreenMode)) &&
+                (gMenuSelectionConfirmTimer & 1)) {
+                blinkAlpha = 0xFF;
+            }
+            drawMenuSprite(iconCursor->iconX[0], (s16)(icons->iconY + yOffset),
+                           getRelocatableHeapBlockBase(gAssetHandles.textureHandle),
+                           (iconIndex + 8) & 0xFFFF, 0x20, 0x20, 0, blinkAlpha);
+            iconIndex += 1;
+            yOffset += 0x14;
+            iconCursor = (RaceSplitscreenSelectRowActor *)((u8 *)iconCursor + 2);
+            if (icons->playerCount) {}
+        } while (iconIndex < ((s32) row->playerCount)); } while (0);
     }
 }
 
