@@ -914,14 +914,14 @@ void drawRaceSetupSaveStatusWidgets(TitleMenuWidgetActor *arg0) {
     }
 }
 
-// updateRaceSetupSaveStatusWidgets best match: 97.389% (nonmatchings/updateRaceSetupSaveStatusWidgets-1189375296343516052/base_9.c)
+// updateRaceSetupSaveStatusWidgets best match: 97.656% (nonmatchings/updateRaceSetupSaveStatusWidgets-8239461464121803931/base_5.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/race_setup/race_setup_ui/updateRaceSetupSaveStatusWidgets.s")
 
 #ifdef NON_MATCHING
 void updateRaceSetupSaveStatusWidgets(TitleMenuWidgetActor *arg0) {
+    s32 transitionStateSum;
     register TitleMenuWidgetActor *actor;
     s32 playerIndex;
-    s32 transitionStateSum;
     TitleMenuWidgetActor *panelPositions;
     u8 transitionState;
     u8 previousTransitionState;
@@ -943,6 +943,9 @@ void updateRaceSetupSaveStatusWidgets(TitleMenuWidgetActor *arg0) {
                 transitionState = previousTransitionState;
             }
 
+            /* Preserve IDO's transition-state register allocation. */
+            if (1) {}
+            if (1) {}
             switch (transitionState) {
             case SAVE_STATUS_TRANSITION_FADE_IN:
                 actor->alpha[playerIndex] += SAVE_STATUS_FADE_STEP;
