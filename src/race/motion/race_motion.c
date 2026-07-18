@@ -139,6 +139,11 @@ typedef struct CourseSpawnEntry {
     s32 unk44;
 } CourseSpawnEntry;
 
+typedef struct RaceCourseSurfaceLimit {
+    s16 maxSurfaceIndex;
+    char pad2[0x46];
+} RaceCourseSurfaceLimit;
+
 extern RaceMotionCoord *gRaceCourseSurfaceCoords;
 extern RaceMotionFace *gRaceCourseSurfaceFaces;
 extern RaceMotionSurface *gRaceCourseSurfaces;
@@ -156,7 +161,7 @@ extern s32 gRaceMotionJointBlendBuffer[];
 extern s16 gAssetHandles[];
 extern s32 gRacePlayerHitCueId;
 extern s16 gRaceCourseIndex;
-extern s16 gRaceCourseMaxSurfaceIndices;
+extern RaceCourseSurfaceLimit gRaceCourseMaxSurfaceIndices[];
 extern CourseSpawnEntry gRaceCourseStartEntries[];
 extern u8 gRaceMotionModelPartCounts[];
 extern u8 *gRaceMotionModelPartIds[];
@@ -260,21 +265,15 @@ loop:
 }
 #endif
 
-// findRaceCourseSurfaceAtPoint best match: 96.293% (base_9.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race/motion/race_motion/findRaceCourseSurfaceAtPoint.s")
-
-#ifdef NON_MATCHING
 s32 findRaceCourseSurfaceAtPoint(s32 x, s32 z) {
+    s32 z2;
+    s32 z3;
     s32 surfaceIndex;
 
     surfaceIndex = 0;
-    if (*(s16 *)((u8 *)&gRaceCourseMaxSurfaceIndices + gRaceCourseIndex * sizeof(CourseSpawnEntry)) >= 0) {
+    if (gRaceCourseMaxSurfaceIndices[gRaceCourseIndex].maxSurfaceIndex >= 0) {
         do {
-            RaceMotionSurface *surface;
-            RaceMotionCoord *coord0;
-            RaceMotionCoord *coord1;
-            RaceMotionCoord *coord2;
-            RaceMotionCoord *coord3;
+            RaceMotionCoord *coords;
             s32 outsideSurface;
             s32 x0;
             s32 x1;
@@ -282,25 +281,17 @@ s32 findRaceCourseSurfaceAtPoint(s32 x, s32 z) {
             s32 x2;
             s32 x3;
             s32 z1;
-            s32 z2;
-            s32 z3;
 
-            surface = &gRaceCourseSurfaces[surfaceIndex];
+            coords = gRaceCourseSurfaceCoords;
             outsideSurface = FALSE;
-            coord0 = &gRaceCourseSurfaceCoords[surface->coordIndices[0]];
-            coord1 = &gRaceCourseSurfaceCoords[surface->coordIndices[1]];
-            coord2 = &gRaceCourseSurfaceCoords[surface->coordIndices[2]];
-            coord3 = &gRaceCourseSurfaceCoords[surface->coordIndices[3]];
-
-            x0 = coord0->x << 0x11;
-            x1 = coord1->x << 0x11;
-            coord2 = &gRaceCourseSurfaceCoords[surface->coordIndices[2]];
-            z0 = coord0->z << 0x11;
-            x2 = coord2->x << 0x11;
-            x3 = coord3->x << 0x11;
-            z1 = coord1->z << 0x11;
-            z2 = coord2->z << 0x11;
-            z3 = coord3->z << 0x11;
+            x0 = coords[gRaceCourseSurfaces[surfaceIndex].coordIndices[0]].x << 0x11;
+            x1 = coords[gRaceCourseSurfaces[surfaceIndex].coordIndices[1]].x << 0x11;
+            x2 = coords[gRaceCourseSurfaces[surfaceIndex].coordIndices[2]].x << 0x11;
+            x3 = coords[(&gRaceCourseSurfaces[surfaceIndex])->coordIndices[3]].x << 0x11;
+            z0 = coords[gRaceCourseSurfaces[surfaceIndex].coordIndices[0]].z << 0x11;
+            z1 = coords[gRaceCourseSurfaces[surfaceIndex].coordIndices[1]].z << 0x11;
+            z2 = coords[gRaceCourseSurfaces[surfaceIndex].coordIndices[2]].z << 0x11;
+            z3 = coords[gRaceCourseSurfaces[surfaceIndex].coordIndices[3]].z << 0x11;
 
             if ((s64)(x0 - x1) * (z - z1) - (s64)(z0 - z1) * (x - x1) < 0) {
                 outsideSurface = TRUE;
@@ -319,12 +310,11 @@ s32 findRaceCourseSurfaceAtPoint(s32 x, s32 z) {
                 return surfaceIndex;
             }
             surfaceIndex++;
-        } while (surfaceIndex <= *(s16 *)((u8 *)&gRaceCourseMaxSurfaceIndices + gRaceCourseIndex * sizeof(CourseSpawnEntry)));
+        } while (surfaceIndex <= gRaceCourseMaxSurfaceIndices[gRaceCourseIndex].maxSurfaceIndex);
     }
 
     return 0;
 }
-#endif
 
 void pushRaceCourseSurfaceBoundaryWithVelocity(s32 *arg0, s32 *arg1, s32 arg2) {
     s32 temp5;
