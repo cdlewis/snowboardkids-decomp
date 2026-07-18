@@ -242,11 +242,13 @@ and control flow already match and only register *names* differ.
   instructions but IDO shrank the stack frame, an otherwise-unused
   `volatile u8 padding[N]` local can restore the target frame size without
   changing scheduling or register allocation.
-- **Inter-function alignment nops are padding, not logic.** A trailing `nop`
-  that appears only in the single-function workspace diff (not in the real
-  multi-function build) is 16-byte alignment padding for the *next* function.
-  Do not try to force it via C; integrate into the real source and the build
-  emits it automatically.
+- **Object-relative alignment nops are padding, not logic.** IDO may emit an
+  alignment directive before an unreachable epilogue or the next function.
+  A single-function workspace starts at a different section offset than the
+  real multi-function object, so the same directive can produce a different
+  number of trailing `nop`s even when the live instructions match. Inspect
+  the compiler's assembly output and verify the candidate in the real
+  translation unit instead of forcing the workspace padding via C.
 
 ## IDO codegen: signedness and comparisons
 
