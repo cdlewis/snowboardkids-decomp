@@ -526,19 +526,15 @@ void drawTimeTrialLabels(s32 arg0) {
     drawMenuAsciiTextDefaultScale(0x48, -0x58, sp28, 7);
 }
 
-// drawSinglePlayerRaceHud best match: 99.924% at nonmatchings/drawSinglePlayerRaceHud-3242520251544044307/base_11.c.
-#pragma GLOBAL_ASM("asm/nonmatchings/race/ui/race_hud/drawSinglePlayerRaceHud.s")
-
-#ifdef NON_MATCHING
 const char D_800E1804[] = "%5ld";
 
 void drawSinglePlayerRaceHud(s32 arg0) {
-    volatile u8 padding[0x18];
-    char end;
-    char buffer[5];
+    volatile u8 padding[0x14];
     s32 x;
-    s32 palette;
+    char *end;
+    u16 palette;
     char *digit;
+    char buffer[5];
     volatile RacePlayer *player;
 
     player = &gRacePlayers[0];
@@ -552,6 +548,7 @@ void drawSinglePlayerRaceHud(s32 arg0) {
         palette = 0xE;
     }
 
+    end = &buffer[5];
     do {
         if (*digit != ' ') {
             drawAssetTableSpriteWithExplicitPalette((s16)x, 0x50, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), (*digit - 5) & 0xFFFF,
@@ -559,7 +556,8 @@ void drawSinglePlayerRaceHud(s32 arg0) {
         }
         digit++;
         x += 8;
-    } while (digit != &end);
+        end = &buffer[5];
+    } while (digit != end);
 
     drawAssetTableSprite(0x78, 0x50, getRelocatableHeapBlockBase(gAssetHandles.mainFontHandle), ((gRaceHudSpinnerFrame >> 1) + 4) & 0xFFFF);
 
@@ -588,7 +586,6 @@ void drawSinglePlayerRaceHud(s32 arg0) {
     drawAssetTableSprite(-0x5C, -0x60, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x38);
     drawAssetTableSpriteWithExplicitPalette(-0x50, -0x60, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), (gRaceLapCount + 0x2B) & 0xFFFF, 0xE);
 }
-#endif
 
 void noopRaceHudCallback(s32 arg0) {
 
