@@ -1271,7 +1271,7 @@ void drawMenuGlyphScriptWithFontBank(volatile s16 x, s16 y, MenuGlyphScript *scr
     u16 glyphAdvance;
     s32 drawY;
     u16 scaleValue;
-    register s32 advance;
+    s32 advance;
     u16 fontBankValue;
 
     drawX = x;

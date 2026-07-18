@@ -427,3 +427,10 @@ and control flow already match and only register *names* differ.
   preserving the original line grouping — e.g. keep an initializer on the same
   line as the `for` (`player = gRacePlayers; for (...)`) rather than on its own
   line. The decomp-permuter will surface this as a whitespace-only winning diff.
+- **The `register` storage-class specifier is usually inert in IDO 5.3 and can
+  be dropped.** For a local that must already live in a callee-saved register
+  (because it is live across a call), IDO selects that saved register on its
+  own; a `register` qualifier changes neither the allocation nor the codegen, so
+  it is pure noise from the decompiler and safe to remove. (Do not confuse this
+  with genuinely load-bearing qualifiers like a `volatile` parameter that forces
+  a stack reload on every use.)
