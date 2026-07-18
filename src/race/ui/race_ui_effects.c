@@ -4727,68 +4727,50 @@ void initRaceCourseSpinningObject(RaceUiSpinningParticleActor *arg0) {
     setCallbackTaskCallback(arg0, updateRaceCourseSpinningObject);
 }
 
-// renderCourseStartFinishSprite best match: 99.946% (nonmatchings/renderCourseStartFinishSprite-1189375296343516052/base_5.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race/ui/race_ui_effects/renderCourseStartFinishSprite.s")
-
-#ifdef NON_MATCHING
 void renderCourseStartFinishSprite(RaceUiCourseSpriteActor *arg0) {
     volatile u8 padding[4];
     s32 imageIndex;
+    RaceUiCourseSpriteActor *new_var;
+
+    new_var = arg0;
 
     if (gRenderMatricesDirty != 0) {
-        arg0->matrixDirty = 1;
+        new_var->matrixDirty = 1;
     }
 
-    if (isPositionNearCurrentRaceViewportCamera((Vec3i *)&arg0->x) != 0) {
+    if (isPositionNearCurrentRaceViewportCamera((Vec3i *)&new_var->x) != 0) {
         if (arg0->matrixDirty != 0) {
-            arg0->matrixDirty = 0;
-            arg0->vertices = allocMenuRenderScratch(0x40);
-            if (arg0->vertices != NULL) {
-                arg0->vertices[0] = D_800D6350[arg0->index * 4];
+            new_var->matrixDirty = 0;
+            new_var->vertices = allocMenuRenderScratch(0x40);
+            if (new_var->vertices != NULL) {
+                new_var->vertices[0] = D_800D6350[arg0->index * 4];
                 arg0->vertices[0].v.tc[0] += arg0->angle << 5;
-                arg0->vertices[1] = D_800D6350[arg0->index * 4 + 1];
-                arg0->vertices[1].v.tc[0] += arg0->angle << 5;
-                arg0->vertices[2] = D_800D6350[arg0->index * 4 + 2];
+                new_var->vertices[1] = D_800D6350[new_var->index * 4 + 1];
+                arg0->vertices[1].v.tc[0] += new_var->angle << 5;
+                new_var->vertices[2] = D_800D6350[new_var->index * 4 + 2];
                 arg0->vertices[2].v.tc[0] += arg0->angle << 5;
-                arg0->vertices[3] = D_800D6350[arg0->index * 4 + 3];
-                arg0->vertices[3].v.tc[0] += arg0->angle << 5;
+                new_var->vertices[3] = D_800D6350[new_var->index * 4 + 3];
+                arg0->vertices[3].v.tc[0] += new_var->angle << 5;
             }
         }
 
-        if (arg0->vertices != NULL) {
+        if (new_var->vertices != NULL) {
             imageIndex = 0;
             if ((D_80122288[gCurrentViewportIndex].placement + 1) >= gRaceLapCount) {
                 imageIndex = 1;
             }
 
-            gSPDisplayList(RACE_UI_TRAIL_GFX_ALLOC_PTR++, gAlphaSpriteRenderModeDl);
-            gSPMatrix(RACE_UI_TRAIL_GFX_ALLOC_PTR++, &gIdentityMatrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
-            gDPSetTextureImage(RACE_UI_TRAIL_GFX_ALLOC_PTR++, G_IM_FMT_RGBA, G_IM_SIZ_16b, 1, arg0->palettes[imageIndex]);
-            gDPTileSync(RACE_UI_TRAIL_GFX_ALLOC_PTR++);
-            gDPSetTile(RACE_UI_TRAIL_GFX_ALLOC_PTR++, G_IM_FMT_RGBA, G_IM_SIZ_4b, 0, 0x100, G_TX_LOADTILE, 0,
-                       G_TX_NOMIRROR | G_TX_WRAP, G_TX_NOMASK, G_TX_NOLOD,
-                       G_TX_NOMIRROR | G_TX_WRAP, G_TX_NOMASK, G_TX_NOLOD);
-            gDPLoadSync(RACE_UI_TRAIL_GFX_ALLOC_PTR++);
-            gDPLoadTLUTCmd(RACE_UI_TRAIL_GFX_ALLOC_PTR++, G_TX_LOADTILE, 0xF);
-            gDPPipeSync(RACE_UI_TRAIL_GFX_ALLOC_PTR++);
-            gDPSetTextureImage(RACE_UI_TRAIL_GFX_ALLOC_PTR++, G_IM_FMT_CI, G_IM_SIZ_16b, 1, arg0->images[imageIndex]);
-            gDPSetTile(RACE_UI_TRAIL_GFX_ALLOC_PTR++, G_IM_FMT_CI, G_IM_SIZ_16b, 0, 0, G_TX_LOADTILE, 0,
-                       G_TX_NOMIRROR | G_TX_CLAMP, G_TX_NOMASK, G_TX_NOLOD,
-                       G_TX_NOMIRROR | G_TX_WRAP, 6, G_TX_NOLOD);
-            gDPLoadSync(RACE_UI_TRAIL_GFX_ALLOC_PTR++);
-            gDPLoadBlock(RACE_UI_TRAIL_GFX_ALLOC_PTR++, G_TX_LOADTILE, 0, 0, 0xFF, 0x200);
-            gDPPipeSync(RACE_UI_TRAIL_GFX_ALLOC_PTR++);
-            gDPSetTile(RACE_UI_TRAIL_GFX_ALLOC_PTR++, G_IM_FMT_CI, G_IM_SIZ_4b, 4, 0, G_TX_RENDERTILE, 0,
-                       G_TX_NOMIRROR | G_TX_CLAMP, G_TX_NOMASK, G_TX_NOLOD,
-                       G_TX_NOMIRROR | G_TX_WRAP, 6, G_TX_NOLOD);
-            gDPSetTileSize(RACE_UI_TRAIL_GFX_ALLOC_PTR++, G_TX_RENDERTILE, 0, 0, 0x3F << 2, 0xF << 2);
-            RACE_UI_GSP_VERTEX_F3DEX(RACE_UI_TRAIL_GFX_ALLOC_PTR++, arg0->vertices, 4, 0);
-            RACE_UI_GSP1QUADRANGLE_F3DEX(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 3, 2, 1, 0, 0);
-            RACE_UI_GSP1QUADRANGLE_F3DEX(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 1, 2, 3, 0, 0);
+            gSPDisplayList(gRegionAllocPtr++, gAlphaSpriteRenderModeDl);
+            gSPMatrix(gRegionAllocPtr++, &gIdentityMatrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+            gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, new_var->palettes[imageIndex]);
+            gDPLoadTextureBlock_4b(gRegionAllocPtr++, new_var->images[imageIndex], G_IM_FMT_CI, 64, 16, 0,
+                                   G_TX_WRAP, G_TX_CLAMP, 6, G_TX_NOMASK, G_TX_NOLOD, G_TX_NOLOD);
+            gSPVertex(gRegionAllocPtr++, new_var->vertices, 4, 0);
+            gSP1Quadrangle(gRegionAllocPtr++, 3, 2, 1, 0, 0);
+            gSP1Quadrangle(gRegionAllocPtr++, 1, 2, 3, 0, 0);
         }
     }
 }
-#endif
 
 void updateCourseStartFinishSprite(RaceUiCourseSpriteActor *actor) {
     if ((gFrameCounter & COURSE_START_FINISH_SCROLL_FRAME_MASK) == 0) {
