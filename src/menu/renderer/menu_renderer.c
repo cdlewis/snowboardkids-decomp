@@ -1310,11 +1310,10 @@ void drawMenuGlyphScriptDefaultFont(volatile s16 x, s16 y, MenuGlyphScript *scri
     s32 glyphCode;
     MenuGlyphScript *scriptCursor;
     s32 drawX;
-    s32 drawY;
-    s32 spaceGlyph;
-    register s32 advance;
     u16 glyphAdvance;
+    s32 drawY;
     u16 scaleValue;
+    s32 advance;
 
     drawX = x;
     drawY = y;
@@ -1330,13 +1329,12 @@ void drawMenuGlyphScriptDefaultFont(volatile s16 x, s16 y, MenuGlyphScript *scri
         scaleValue = scale;
         glyphCode = firstGlyph;
         do {
-            spaceGlyph = MENU_GLYPH_SCRIPT_SPACE;
             if (MENU_GLYPH_SCRIPT_NEWLINE == (glyphCode & 0xFFFF)) {
                 drawX = x;
                 drawY += MENU_GLYPH_LINE_HEIGHT;
             } else {
                 advance = glyphAdvance;
-                if (spaceGlyph != (glyphCode & 0xFFFF)) {
+                if ((glyphCode & 0xFFFF) != MENU_GLYPH_SCRIPT_SPACE) {
                     drawMenuGlyph(drawX, drawY, glyphCode & 0xFFFF, ((u8 *)&palette)[3], scaleValue,
                                   MENU_GLYPH_DEFAULT_FONT_BANK);
                 }
