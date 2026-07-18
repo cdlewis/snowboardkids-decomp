@@ -4841,23 +4841,21 @@ void updateRacePlayerMode07LaunchRampClimb(RacePlayer *player) {
 }
 
 void updateRacePlayerMode07SpiralExit(RacePlayer *player) {
-    s32 scratch[13];
-    Vec3i *playerPos;
+    PlayerTransformScratch80095A88 scratch;
 
     if (player->updateTimer == 0) {
         player->updateTimer++;
-        scratch[10] = -0x200000;
-        scratch[11] = 0;
-        scratch[12] = 0x400000;
-        makeFixedRotationY((s16 *)&scratch[-1], gSpiralCourseObjectAngles[gRaceCourseIndex].angle);
-        playerPos = (Vec3i *) &player->posX;
-        transformVec3iByFixedMatrix((s16 *)&scratch[-1], (Vec3i *)&scratch[10], playerPos);
+        scratch.sourceX = -0x200000;
+        scratch.sourceY = 0;
+        scratch.sourceZ = 0x400000;
+        makeFixedRotationY((s16 *)scratch.matrix, gSpiralCourseObjectAngles[gRaceCourseIndex].angle);
+        transformVec3iByFixedMatrix((s16 *)scratch.matrix, (Vec3i *) &scratch.sourceX, (Vec3i *) &player->pos);
         player->posX += gRaceCourseStartEntries[gRaceCourseIndex].unk8.x;
         player->posY += gRaceCourseStartEntries[gRaceCourseIndex].unk8.y + 0x80000;
         player->posZ += gRaceCourseStartEntries[gRaceCourseIndex].unk8.z;
         player->unk502 = gRaceCourseStartEntries[gRaceCourseIndex].unk4;
         player->unk508++;
-        player->unk34 = *(RaceVec3i *) playerPos;
+        player->unk34 = player->pos;
         player->stateTimer = 0x28;
         player->stateFlags &= 0xFBFFFBFF;
         player->facingAngle = gRaceCourseStartEntries[gRaceCourseIndex].unk14;
@@ -4873,13 +4871,13 @@ void updateRacePlayerMode07SpiralExit(RacePlayer *player) {
     }
 
     player->stateFlags &= ~0x80000;
-    scratch[10] = 0;
-    scratch[11] = 0;
-    scratch[12] = -0x40000;
-    makeFixedRotationY((s16 *)&scratch[-1], gSpiralCourseObjectAngles[gRaceCourseIndex].angle);
-    transformVec3iByFixedMatrix((s16 *)&scratch[-1], (Vec3i *)&scratch[10], (Vec3i *)&scratch[7]);
-    player->posX += scratch[7];
-    player->posZ += scratch[9];
+    scratch.sourceX = 0;
+    scratch.sourceY = 0;
+    scratch.sourceZ = -0x40000;
+    makeFixedRotationY((s16 *)scratch.matrix, gSpiralCourseObjectAngles[gRaceCourseIndex].angle);
+    transformVec3iByFixedMatrix((s16 *)scratch.matrix, (Vec3i *) &scratch.sourceX, (Vec3i *) &scratch.transformedX);
+    player->posX += scratch.transformedX;
+    player->posZ += scratch.transformedZ;
     player->stateTimer--;
 
     if (player->stateTimer == 0) {
