@@ -677,19 +677,16 @@ void updateCharacterSelectPlayerStatsPanels(CharacterSelectUiPanelActor *arg0) {
     u8 *src;
     void *srcBase;
     u8 *dst;
-    u8 *player;
-    u8 *timer;
+    RacePlayer *player;
 
     srcBase = D_8010ADE4;
-    player = (u8 *)gRacePlayers; for (i = 0, src = srcBase, dst = (u8 *)arg0; i != RACE_PLAYER_COUNT; i++, dst += 2) {
+    player = gRacePlayers; for (i = 0, src = srcBase, dst = (u8 *)arg0; i != RACE_PLAYER_COUNT; i++, dst += 2) {
         *(s16 *)(dst + 0x18) = *(s16 *)(src + 0x18);
         src += 2;
         *(s16 *)(dst + 0x20) = *(s16 *)(src + 0x1E);
-        player += sizeof(RacePlayer);
-        timer = (u8 *)arg0;
-        timer += i;
-        if (player[-0x604] == 0) {
-            timer[0x2C] = (timer[0x2C] + 1) % 20;
+        player++;
+        if (player[-1].menuState == 0) {
+            arg0->targetX.overlay.inactiveTimer[i] = (arg0->targetX.overlay.inactiveTimer[i] + 1) % 20;
         }
     }
     addRenderCallback(&gMenuRenderCallbackList, drawCharacterSelectPlayerStatsPanels, arg0);

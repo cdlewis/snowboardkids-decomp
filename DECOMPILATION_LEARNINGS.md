@@ -418,3 +418,12 @@ and control flow already match and only register *names* differ.
   fails, diff all functions in the modified file(s).
 - **Pre-commit hooks are authoritative.** A failed hook means the C update is
   incomplete; do not bypass it.
+- **IDO is occasionally line-break sensitive for instruction scheduling.** Two
+  source files that are token-for-token identical except for where statements
+  are split across lines can produce different prologue instruction ordering
+  (e.g. an independent `li` and `lui`/`addiu` pair swapping). If a cleanup that
+  only changes statement types/variable names flips two adjacent prologue
+  instructions while leaving the entire function body byte-identical, try
+  preserving the original line grouping — e.g. keep an initializer on the same
+  line as the `for` (`player = gRacePlayers; for (...)`) rather than on its own
+  line. The decomp-permuter will surface this as a whitespace-only winning diff.
