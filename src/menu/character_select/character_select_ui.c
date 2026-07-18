@@ -705,24 +705,21 @@ void initCharacterSelectPlayerStatsPanels(CharacterSelectUiPanelActor *arg0) {
 }
 
 void drawCharacterSelectSelectedCharacterTokens(CharacterSelectUiSelectedCharacterTokenActor *arg0) {
-    u8 *base;
+    CharacterSelectUiSelectedCharacterTokenActor *tokens;
     s32 i;
-    u8 *player;
-    u8 *temp_s0;
-    int new_var;
     s32 color;
-    u16 temp_v1;
+    u16 tileSize;
 
- base = (u8 *)arg0; i = 0; if (gPlayerCount > 0) { player = (u8 *)gRacePlayers; do {
-            if (player[8] != 0) {
-                new_var = i * 2;
-                temp_s0 = base + new_var;
-                color = getRelocatableHeapBlockBase(gAssetHandles[0x21]);
-                temp_v1 = *(u16 *) (temp_s0 + 0x40);
-                drawMenuSprite(*(s16 *) (temp_s0 + 0x18), *(s16 *) (temp_s0 + 0x20), color, 0xD, temp_v1, temp_v1, 0, 0);
+    tokens = arg0;
+    i = 0;
+    if (gPlayerCount > 0) {
+        do {
+            if (gRacePlayers[i].menuState != 0) {
+                color = getRelocatableHeapBlockBase(CHARACTER_SELECT_UI_PLAYER_FRAME_HANDLE);
+                tileSize = tokens->tileSize[i];
+                drawMenuSprite(tokens->x[i], tokens->y[i], color, 0xD, tileSize, tileSize, 0, 0);
             }
             i++;
-            player += sizeof(RacePlayer);
         } while (i < gPlayerCount);
     }
 }
