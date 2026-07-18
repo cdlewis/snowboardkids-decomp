@@ -376,6 +376,12 @@ and control flow already match and only register *names* differ.
   with the linker map. Jump-table functions need care when converting raw asm
   to C: rodata tables may reference file-local `.L` labels that break when a
   function is split into separate `GLOBAL_ASM` files.
+- **Preserve late-rodata padding when replacing a `GLOBAL_ASM`.** If a matched
+  C function emits one fewer trailing padding word and shifts the next
+  unmatched function's jump tables, declare the padding address as a typed
+  symbol in `symbol_addrs.txt` and migrate it to the following function with
+  `function_owner` and `force_migration:true`. This keeps the fix reproducible
+  across `make extract`; edits to generated assembly are discarded.
 - **YAML comments are hints, not proof.** Verify actual function/file
   boundaries against disassembly, `symbol_addrs.txt`, and the linker map.
 

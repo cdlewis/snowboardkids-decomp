@@ -2624,6 +2624,7 @@ mainMenuModeBoardTransitionVertices = 0x800D57C8; // rom:0xD63C8
 mainMenuModeIconFlashTileOffsets = 0x800D5808; // rom:0xD6408
 mainMenuModeLabelFlashTileOffsets = 0x800D581C; // rom:0xD641C
 gMainMenuModePreviewRaceAspectRatio = 0x800E10D4; // rom:0xE1CD4 size:0x4
+D_800E10EC = 0x800E10EC; // rom:0xE1CEC size:0x4 type:f32 function_owner:initTrainingCourseRace force_migration:true
 gActiveMenuTask = 0x8010ADDC; // size:0x4
 gMenuInputRepeatTimers = 0x8010ADF0; // size:0x8
 gMenuExitSelection = 0x8010ADF8; // size:0x1
