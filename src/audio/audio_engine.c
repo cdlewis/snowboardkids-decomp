@@ -15,6 +15,12 @@ typedef struct AudioInitTask {
     OSMesg msg;
 } AudioInitTask;
 
+typedef struct SchedulerThreadMainLocals {
+    OSMesgQueue *queue;
+    u8 pad4[4];
+    OSMesg msg;
+} SchedulerThreadMainLocals;
+
 const char D_800E1A60[16] = "NG Channel\n";
 
 extern s32 osSendMesg(OSMesgQueue *, OSMesg, s32);
@@ -46,6 +52,7 @@ extern f32 sinf(f32);
 extern s32 gSchedulerYieldResult;
 extern u16 gRetraceCounter;
 extern s32 gSchedulerYieldRequested;
+extern s32 gSchedulerStartupRetraceCount;
 extern s32 gAudioThreadStarted;
 extern s32 gAudioCmdListIndex;
 extern u32 gAudioFrameCounter;
@@ -133,38 +140,18 @@ s32 getSchedulerGraphicsTaskQueue(s32 arg0) {
     return arg0 + 0x5C;
 }
 
-// schedulerThreadMain best match: 98.133% (nonmatchings/schedulerThreadMain-2694253543240320626/base_14.c)
-
-#pragma GLOBAL_ASM("asm/nonmatchings/audio/audio_engine/schedulerThreadMain.s")
-
-#ifdef NON_MATCHING
 void schedulerThreadMain(SchedulerState *arg0) {
-    s32 zero;
-    OSMesgQueue *queue;
     s32 started;
     s32 delayedStart;
     s32 pendingAudio;
-    OSMesg msg;
+    SchedulerThreadMainLocals locals;
 
-    zero = 0;
-    started = zero;
-    delayedStart = zero;
-    pendingAudio = zero;
-    msg = (OSMesg)zero;
+    started = 0;
+    delayedStart = 0;
+    pendingAudio = 0;
+    locals.msg = NULL;
     gSchedulerStartupRetraceCount = 0;
-    queue = &arg0->retraceQueue;
-
-loop:
-    osRecvMesg(queue, &msg, 1);
-    switch ((s32)msg) {
-        case 0x29A:
-            gRetraceCounter = gRetraceCounter + 1;
-            gRetraceCounter = gRetraceCounter & 0xFFF;
-            if ((started == 0) || (gSchedulerStartupRetraceCount < ((0, 0x16)))) {
-                tryStartPendingRdpTask(arg0);
-                pendingAudio = pendingAudio * 0;
-                if (gSchedulerRdpTaskActive != 0) {
-                    pendingAudio = 1;
+    locals.queue = &arg0->retraceQueue; loop: osRecvMesg(locals.queue, &locals.msg, 1); switch ((s32)locals.msg) { case 0x29A: gRetraceCounter = gRetraceCounter + 1; gRetraceCounter = gRetraceCounter & 0xFFF; if ((started == 0) || (gSchedulerStartupRetraceCount < ((0, 0x16)))) { tryStartPendingRdpTask(arg0); pendingAudio = pendingAudio * 0; if (gSchedulerRdpTaskActive != 0) { pendingAudio = 1;
                 } else {
                     notifySchedulerClients(arg0, (s32)arg0);
                 }
@@ -219,7 +206,6 @@ loop:
     }
     goto loop;
 }
-#endif
 
 void tryStartPendingRdpTask(SchedulerState *arg0) {
     if (gSchedulerRdpTaskActive == 0) {
