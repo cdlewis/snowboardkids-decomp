@@ -1266,17 +1266,25 @@ void initCourseUnlockPurchasePrompt(ShopMenuWidgetActor *arg0) {
 }
 
 void drawCourseDetailsMenu(ShopMenuWidgetActor *arg0) {
-    volatile s32 unused;
+    volatile s32 unused; /* reserves stack space, pinning `script` at sp+0x70 (load-bearing) */
     u16 *tiles;
     s32 i;
     s32 yOffset;
     u16 script[3];
-    s16 *cursor;
+    s16 *cursor; /* walks arg0->cursorPositions; [12] reaches the first entry at offset 0x18 */
     s32 value;
     s32 tens;
     s16 selectedCursorX;
 
- tiles = gCourseDetailsMenuEntryTiles; yOffset = 0; cursor = (s16 *) arg0; for (i = 0; i < 7; i++) { drawMenuSprite(cursor[12], (s16) (arg0->targetY + yOffset), getRelocatableHeapBlockBase(gAssetHandles[0x27]), tiles[gCourseDetailsPreviewPage * 7], 0x20, 0x20, 0, 0); value = ((gCourseDetailsPreviewPage * 7) + i) + 1; if (arg0 && arg0) { } tens = value / 10; if (tens == 0) { script[0] = -2;
+ tiles = gCourseDetailsMenuEntryTiles; yOffset = 0; cursor = (s16 *) arg0; for (i = 0; i < 7; i++) {
+        drawMenuSprite(cursor[12], (s16)(arg0->targetY + yOffset),
+                       getRelocatableHeapBlockBase(gAssetHandles[0x27]),
+                       tiles[gCourseDetailsPreviewPage * 7], 0x20, 0x20, 0, 0);
+        value = ((gCourseDetailsPreviewPage * 7) + i) + 1;
+        if (arg0 && arg0) { /* empty block preserves IDO's register allocation */ }
+        tens = value / 10;
+        if (tens == 0) {
+            script[0] = -2;
         } else {
             script[0] = tens;
         }
@@ -1293,9 +1301,8 @@ void drawCourseDetailsMenu(ShopMenuWidgetActor *arg0) {
     yOffset = 0x85;
     cursor = &((s16 *)arg0)[7];
     do {
-        drawMenuSprite(cursor[12], (s16)(arg0->targetY + yOffset), getRelocatableHeapBlockBase(gAssetHandles[0x27]), (u16)i,
-                       0x20, 0x20, 0, 0);
-
+        drawMenuSprite(cursor[12], (s16)(arg0->targetY + yOffset),
+                       getRelocatableHeapBlockBase(gAssetHandles[0x27]), (u16)i, 0x20, 0x20, 0, 0);
         i++;
         yOffset += 0x13;
         cursor++;
