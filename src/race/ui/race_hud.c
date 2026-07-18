@@ -597,70 +597,55 @@ void noopRaceHudCallback(s32 arg0) {
 
 }
 
-// drawTrainingRaceHud best match: 99.783% at nonmatchings/drawTrainingRaceHud-3/output-35-1/source.c.
-#pragma GLOBAL_ASM("asm/nonmatchings/race/ui/race_hud/drawTrainingRaceHud.s")
-
-#ifdef NON_MATCHING
 const char D_800E180C[] = "%5ld";
 
 void drawTrainingRaceHud(s32 arg0) {
-    s32 newVar2;
-    volatile u8 padding[8];
-    char *digit;
-    char *new_var;
-    s32 x;
     s32 palette;
-    char *end;
-    s32 newVar;
-    volatile RacePlayer *player;
-    char buffer[6];
+    s32 i;
+    s32 x;
+    char buffer[0x20];
 
-    player = &gRacePlayers[0];
     sprintf(buffer, D_800E180C, gRacePlayers[0].unk568);
-    x = 0x50;
-    digit = buffer;
-    if (player->unk568 < 100) {
+    if (gRacePlayers[0].unk568 < 100) {
         palette = 0x10;
     } else {
         palette = 0xE;
     }
-    end = &buffer[5];
-    do {
-        if (*digit != ' ') {
-            newVar = 5;
-            drawAssetTableSpriteWithExplicitPalette((s16)x, 0x50, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), (*digit - newVar) & 0xFFFF,
-                          palette & 0xFFFF);
-        }
-        digit++;
-        end = &buffer[5];
-        x += 8;
-    } while (digit != end);
 
-    new_var = buffer;
-    drawAssetTableSprite(0x78, 0x50, getRelocatableHeapBlockBase(gAssetHandles.mainFontHandle), ((gRaceHudSpinnerFrame >> 1) + 4) & 0xFFFF);
-    if (((!new_var) && ((!new_var) ^ 0)) && (!new_var)) {
+    for (i = 0, x = 0x50; i < 5; i++, x += 8) {
+        if (buffer[i] != ' ') {
+            drawAssetTableSpriteWithExplicitPalette(x, 0x50, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
+                                                    ((u8)buffer[i] - 5) & 0xFFFF, palette & 0xFFFF);
+        }
     }
+
+    drawAssetTableSprite(0x78, 0x50, getRelocatableHeapBlockBase(gAssetHandles.mainFontHandle),
+                         ((gRaceHudSpinnerFrame >> 1) + 4) & 0xFFFF);
 
     if (gRacePlayers[0].itemEffectPalette != 0) {
         drawScaledAssetTableSprite(-0x20, -0x60, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
-                      ((gRacePlayers[0].itemEffectCount & 0xFFFFu) + ((((((((gRaceTimerTensDigitTileOffsets[gRacePlayers[0].itemEffectType] & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) - 1) & 0xFFFF,
-                      gRacePlayers[0].itemEffectPalette);
+                                   (gRaceTimerTensDigitTileOffsets[gRacePlayers[0].itemEffectType] +
+                                    gRacePlayers[0].itemEffectCount - 1) &
+                                       0xFFFF,
+                                   gRacePlayers[0].itemEffectPalette);
     } else {
         drawAssetTableSprite(-0x20, -0x60, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
-                      (gRacePlayers[0].itemEffectCount + gRaceTimerTensDigitTileOffsets[gRacePlayers[0].itemEffectType] - (newVar2 = 1)) & 0xFFFF);
+                             (gRaceTimerTensDigitTileOffsets[gRacePlayers[0].itemEffectType] + gRacePlayers[0].itemEffectCount - 1) &
+                                 0xFFFF);
     }
 
     if (gRacePlayers[0].actionEffectPalette != 0) {
-        drawScaledAssetTableSprite(0, -0x60, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), gRaceTimerOnesDigitTileIds[gRacePlayers[0].actionEffectType],
-                      gRacePlayers[0].actionEffectPalette);
+        drawScaledAssetTableSprite(0, -0x60, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
+                                   gRaceTimerOnesDigitTileIds[gRacePlayers[0].actionEffectType],
+                                   gRacePlayers[0].actionEffectPalette);
     } else {
-        drawAssetTableSprite(0, -0x60, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), gRaceTimerOnesDigitTileIds[gRacePlayers[0].actionEffectType]);
+        drawAssetTableSprite(0, -0x60, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
+                             gRaceTimerOnesDigitTileIds[gRacePlayers[0].actionEffectType]);
     }
 
     drawAssetTableSprite(-0x88, 0x40, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x24);
     drawAssetTableSprite(-0x88, 0x40, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x29);
 }
-#endif
 
 const char D_800E1814[] = "%5ld";
 
