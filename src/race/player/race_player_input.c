@@ -209,7 +209,7 @@ void recordRaceInputHistoryFrame(RacePlayer *player) {
     history->lastWriteIndex = index;
 }
 
-// playRaceInputHistoryFrame best match: 99.770% (base_4.c)
+// playRaceInputHistoryFrame best match: 99.889% (base_18.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race/player/race_player_input/playRaceInputHistoryFrame.s")
 
 #ifdef NON_MATCHING
@@ -219,21 +219,19 @@ void playRaceInputHistoryFrame(RacePlayer *player) {
     s32 index;
     s32 buttonIndex;
     u8 *buttonHistory;
-    u32 replayInputSource;
     s32 buttons;
 
-    replayInputSource = player->replayInputSource;
-    if (replayInputSource == 5) {
-        playRaceReplayInputFrame(player);
+    playerAlias = player;
+    if (playerAlias->replayInputSource == 5) {
+        playRaceReplayInputFrame(playerAlias);
         return;
     }
 
-    if (replayInputSource == 1) {
+    if (playerAlias->replayInputSource == 1) {
         history = (RaceInputHistoryBuffer *)getRelocatableHeapBlockBase(gAssetHandles[0x7]);
-        replayInputSource = player->replayInputSource;
     }
 
-    if (replayInputSource == 2) {
+    if (playerAlias->replayInputSource == 2) {
         history = (RaceInputHistoryBuffer *)getRelocatableHeapBlockBase(gAssetHandles[0x2B]);
     }
 
@@ -244,48 +242,47 @@ void playRaceInputHistoryFrame(RacePlayer *player) {
     buttonHistory = history->buttons;
     index = history->writeIndex;
     if (index < RACE_INPUT_HISTORY_LENGTH) {
-        player->stickX = history->stickX[index];
-        player->stickY = history->stickY[history->writeIndex];
+        playerAlias->stickX = history->stickX[index];
+        playerAlias->stickY = history->stickY[history->writeIndex];
         goto dummy_label;
 dummy_label:
-        player->inputFlags = 0;
+        playerAlias->inputFlags = 0;
 
         buttons = history->buttons[history->writeIndex] ^ 0;
         if ((buttons & 0xFFu) & 1) {
-            player->inputFlags = 8;
+            playerAlias->inputFlags = 8;
             buttonIndex = history->writeIndex;
             buttons = buttonHistory[buttonIndex];
         }
         if (buttons & 2) {
-            player->inputFlags |= 4;
+            playerAlias->inputFlags |= 4;
             buttons = history->buttons[history->writeIndex];
             if (history->stickY) {
             }
         }
         if (buttons & 8) {
-            player->inputFlags |= 1;
+            playerAlias->inputFlags |= 1;
             buttons = history->buttons[history->writeIndex];
         }
-        playerAlias = player;
         if (buttons & 4) {
             playerAlias->inputFlags |= 2;
             buttons = history->buttons[history->writeIndex];
         }
         if (buttons & 0x10) {
-            player->inputFlags |= 0x8000;
+            playerAlias->inputFlags |= 0x8000;
             buttons = history->buttons[history->writeIndex];
         }
         if (buttons & 0x20) {
             playerAlias->inputFlags |= 0x4000;
             buttons = history->buttons[history->writeIndex];
         }
-        player++;
-        player--;
-        if (buttons & 0x40) {
-            player->inputFlags |= 0x2000;
-        }
 
-        history->writeIndex++;
+        if (1) {
+            if (buttons & 0x40) {
+                playerAlias->inputFlags |= 0x2000;
+            }
+            (*history).writeIndex++;
+        }
     }
 }
 #endif
