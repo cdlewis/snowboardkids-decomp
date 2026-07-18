@@ -965,7 +965,7 @@ extern void setPackedMatrixTranslation(RaceUiGfxCommandDest *, Vec3i *);
 extern void osWritebackDCache(void *, s32);
 extern void drawAssetTableSprite(s16, s16, s32, s32);
 extern void drawAssetTableSprite8bpp(s16, s16, s32, s32);
-extern void drawAssetTableSpriteWithExplicitPalette(s16, s16, s32, s32, s32);
+extern void drawAssetTableSpriteWithExplicitPalette(s16, s16, s32, s32, volatile u16);
 extern void getAssetTableImageAndPalette(s32, s32, void *, void *);
 extern int sprintf(char *, const char *, ...);
 extern void enqueuePositionalSoundEffect(s32, void *, s32, s32);
@@ -978,7 +978,6 @@ extern u8 gGameSaveDataBuffer[];
 extern RaceTimer gRaceElapsedTimer;
 extern void enqueueSoundEffect(s32, s32);
 extern void drawMenuAsciiTextDefaultScale(s32, s32, const void *, s32);
-extern char D_800E12F4[];
 extern char D_800E128C[];
 extern char D_800E1290[];
 extern char D_800E1294[];
@@ -2020,19 +2019,18 @@ loop4:
 }
 #endif
 
-// func_8005A884 best match: 98.684% (nonmatchings/func_8005A884-3242520251544044307/base_8.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race/ui/race_ui_effects/func_8005A884.s")
+const char D_800E12F4[4] = "%2d";
 
-#ifdef NON_MATCHING
 void func_8005A884(RaceUiPopupActor *arg0) {
     volatile u8 padding[0x18];
     char new_var;
     s32 i;
-    u16 color;
+    s32 color;
     s32 y;
     s32 space;
 
     y = -0x50;
+    /* IDO scheduling for this function depends on these statements staying on one line. */
     i = 0; space = ' '; do { char buffer[8];
 
         drawAssetTableSprite(-8, (s16)y, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), (i + 0x77) & 0xFFFF);
@@ -2067,7 +2065,6 @@ void func_8005A884(RaceUiPopupActor *arg0) {
         y += 0x20;
     } while (i != 5);
 }
-#endif
 
 const char D_800E12F8[0x4] = "/%d";
 const char D_800E12FC[0x4] = "*";
