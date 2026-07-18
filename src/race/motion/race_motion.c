@@ -804,7 +804,7 @@ void resolveRaceCourseSurfaceCollision(s16 arg0, s32 arg1, s32 arg2, s32 arg3, s
 }
 #endif
 
-// getRaceCourseSurfaceHeight best match: 99.071% (nonmatchings/getRaceCourseSurfaceHeight-4/output-906-1/source.c)
+// getRaceCourseSurfaceHeight best match: 99.464% (nonmatchings/getRaceCourseSurfaceHeight-5/output-628-1/source.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race/motion/race_motion/getRaceCourseSurfaceHeight.s")
 
 #ifdef NON_MATCHING
@@ -812,6 +812,7 @@ s32 getRaceCourseSurfaceHeight(s32 arg0, s32 arg1, s32 arg2) {
     register s32 keyframeOffset;
     register s32 faceIndex;
     register s32 faceOffset;
+    register s32 numeratorA;
     register RaceMotionFace *face;
     register RaceMotionCoord *coord0;
     register RaceMotionCoord *coord1;
@@ -820,6 +821,7 @@ s32 getRaceCourseSurfaceHeight(s32 arg0, s32 arg1, s32 arg2) {
 
     keyframeOffset = arg0 * sizeof(RaceMotionSurface);
     faceIndex = ((RaceMotionSurface *)((s32)gRaceCourseSurfaces + keyframeOffset))->unk14[0];
+    coord1 = gRaceCourseSurfaceCoords;
     if (faceIndex < ((RaceMotionSurface *)((s32)gRaceCourseSurfaces + keyframeOffset))->unk14[1]) {
         faceOffset = faceIndex * sizeof(RaceMotionFace);
         do {
@@ -859,7 +861,6 @@ s32 getRaceCourseSurfaceHeight(s32 arg0, s32 arg1, s32 arg2) {
                 s16 x10;
                 s16 y10;
                 s16 z10;
-                register s32 numeratorA;
                 register s32 xDelta;
                 register s32 zDelta;
 
@@ -880,10 +881,11 @@ s32 getRaceCourseSurfaceHeight(s32 arg0, s32 arg1, s32 arg2) {
                 zDelta = arg2 - (coord2->z << 0x11);
 
                 numeratorA = (y20 * z10) - (z20 * y10);
-                return (-((s64)numeratorA * xDelta) -
+                keyframeOffset = (-((s64)numeratorA * xDelta) -
                     ((s64)((x20 * y10) - (y20 * x10)) * zDelta)) /
-                    ((z20 * x10) - (x20 * z10))
-                    + (gRaceCourseSurfaceCoords[((RaceMotionFace *)((s32)gRaceCourseSurfaceFaces + faceOffset))->coord0].y << 0x11);
+                    ((z20 * x10) - (x20 * z10));
+                return keyframeOffset +
+                    (gRaceCourseSurfaceCoords[((RaceMotionFace *)((s32)gRaceCourseSurfaceFaces + faceOffset))->coord0].y << 0x11);
             }
 
 next:
