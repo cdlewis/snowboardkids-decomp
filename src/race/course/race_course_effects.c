@@ -1102,34 +1102,28 @@ void initSpiralCourseObject(RaceMovingEffect *arg0) {
     updateSpiralCourseObjectLaunch(arg0);
 }
 
-// renderCourseGateObject best match: 99.414% (nonmatchings/renderCourseGateObject-6182772958467082306/base_6.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race/course/race_course_effects/renderCourseGateObject.s")
-
-#ifdef NON_MATCHING
 void renderCourseGateObject(CourseGateObjectEffect *arg0) {
     CourseEffectMatrixSource scratch;
     volatile s32 pad[2];
-    void *matrix;
+    CourseGateObjectEffect *temp_s0 = arg0;
     Gfx *segment1;
     Gfx *segment2;
 
     if (gRenderMatricesDirty != 0) {
-        arg0->sourceMatrix = NULL;
-        arg0->pos1Matrix = NULL;
-        arg0->pos2Matrix = NULL;
+        temp_s0->sourceMatrix = NULL;
+        temp_s0->pos1Matrix = NULL;
+        temp_s0->pos2Matrix = NULL;
     }
 
     if (isPositionNearCurrentRaceViewportCamera((Vec3i *) &gCourseGateSoundParams[gRaceCourseIndex]) == 0) {
         return;
     }
 
-    matrix = arg0->sourceMatrix;
-    if (matrix == NULL) {
-        arg0->sourceMatrix = allocFixedTransformMatrix(&arg0->source);
-        matrix = arg0->sourceMatrix;
+    if (temp_s0->sourceMatrix == NULL) {
+        temp_s0->sourceMatrix = allocFixedTransformMatrix(&temp_s0->source);
     }
 
-    if (matrix != NULL) {
+    if (temp_s0->sourceMatrix != NULL) {
         gDPPipeSync(gRegionAllocPtr++);
         segment1 = gRegionAllocPtr++;
         segment1->words.w0 = 0xBC000806;
@@ -1137,48 +1131,41 @@ void renderCourseGateObject(CourseGateObjectEffect *arg0) {
         segment2 = gRegionAllocPtr++;
         segment2->words.w0 = 0xBC000C06;
         segment2->words.w1 = getRelocatableHeapBlockBase(ASSET_HANDLE(0xB));
-        arg0++;
-        arg0--;
-        gSPMatrix(gRegionAllocPtr++, arg0->sourceMatrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+        gSPMatrix(gRegionAllocPtr++, temp_s0->sourceMatrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
         gSPDisplayList(gRegionAllocPtr++, D_2001678);
     }
 
-    matrix = arg0->pos1Matrix;
-    if (matrix == NULL) {
-        makeFixedRotationZY(scratch.rotation, gCourseGateAngles[gRaceCourseIndex].angle, arg0->unk50);
-        scratch.basePos.x = arg0->pos1.x;
-        scratch.basePos.y = arg0->pos1.y;
-        scratch.basePos.z = arg0->pos1.z;
-        arg0->pos1Matrix = allocFixedTransformMatrix(&scratch);
-        matrix = arg0->pos1Matrix;
+    if (temp_s0->pos1Matrix == NULL) {
+        makeFixedRotationZY(scratch.rotation, gCourseGateAngles[gRaceCourseIndex].angle, temp_s0->unk50);
+        scratch.basePos.x = temp_s0->pos1.x;
+        scratch.basePos.y = temp_s0->pos1.y;
+        scratch.basePos.z = temp_s0->pos1.z;
+        temp_s0->pos1Matrix = allocFixedTransformMatrix(&scratch);
     }
 
-    if (matrix != NULL) {
-        gSPMatrix(gRegionAllocPtr++, arg0->pos1Matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+    if (temp_s0->pos1Matrix != NULL) {
+        gSPMatrix(gRegionAllocPtr++, temp_s0->pos1Matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
         gSPDisplayList(gRegionAllocPtr++, D_2001730);
     }
 
-    matrix = arg0->pos2Matrix;
-    if (matrix == NULL) {
-        scratch = arg0->source;
-        scratch.basePos.x = arg0->pos2.x;
-        scratch.basePos.y = arg0->pos2.y;
-        scratch.basePos.z = arg0->pos2.z;
-        arg0->pos2Matrix = allocFixedTransformMatrix(&scratch);
-        matrix = arg0->pos2Matrix;
+    if (temp_s0->pos2Matrix == NULL) {
+        scratch = temp_s0->source;
+        scratch.basePos.x = temp_s0->pos2.x;
+        scratch.basePos.y = temp_s0->pos2.y;
+        scratch.basePos.z = temp_s0->pos2.z;
+        temp_s0->pos2Matrix = allocFixedTransformMatrix(&scratch);
     }
 
-    if (matrix != NULL) {
-        gSPMatrix(gRegionAllocPtr++, arg0->pos2Matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+    if (temp_s0->pos2Matrix != NULL) {
+        gSPMatrix(gRegionAllocPtr++, temp_s0->pos2Matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
 
-        if (arg0->unk56 == 0) {
+        if (temp_s0->unk56 == 0) {
             gSPDisplayList(gRegionAllocPtr++, D_2001810);
         } else {
             gSPDisplayList(gRegionAllocPtr++, D_20018E8);
         }
     }
 }
-#endif
 
 void updateCourseGateClosing(CourseGateObjectEffect *arg0) {
     if (gRaceUpdatePaused == 0) {
