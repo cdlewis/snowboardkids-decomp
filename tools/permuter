@@ -2,6 +2,7 @@
 
 # Parse arguments
 SOURCE_FILE="src/temp.c"
+PRESERVE_F3DEX=false
 POSITIONAL_ARGS=()
 
 while [[ $# -gt 0 ]]; do
@@ -14,9 +15,13 @@ while [[ $# -gt 0 ]]; do
             SOURCE_FILE="$2"
             shift 2
             ;;
+        --preserve-f3dex)
+            PRESERVE_F3DEX=true
+            shift
+            ;;
         -*)
             echo "Unknown option: $1"
-            echo "Usage: $0 [--source-file <path>] <function_name_or_path_or_scratch_id>"
+            echo "Usage: $0 [--source-file <path>] [--preserve-f3dex] <function_name_or_path_or_scratch_id>"
             exit 1
             ;;
         *)
@@ -31,8 +36,9 @@ set -- "${POSITIONAL_ARGS[@]}"
 
 # Check if argument is provided
 if [ $# -eq 0 ]; then
-    echo "Usage: $0 [--source-file <path>] <function_name_or_path_or_scratch_id>"
+    echo "Usage: $0 [--source-file <path>] [--preserve-f3dex] <function_name_or_path_or_scratch_id>"
     echo "Options:"
+    echo "  --preserve-f3dex          Preserve gDP* and gSP* macros during import"
     echo "  --source-file, -s <path>  Use specified source file instead of src/temp.c"
     exit 1
 fi
@@ -138,7 +144,12 @@ fi
 # Run the import script
 echo "Importing from $SOURCE_FILE..."
 
-IMPORT_OUTPUT=$(./tools/decomp-permuter/import.py "$SOURCE_FILE" "$ASM_PATH" 2>&1)
+IMPORT_ARGS=("$SOURCE_FILE" "$ASM_PATH")
+if [ "$PRESERVE_F3DEX" = true ]; then
+    IMPORT_ARGS=(--preserve-macros 'g[DS]P.*' "${IMPORT_ARGS[@]}")
+fi
+
+IMPORT_OUTPUT=$(./tools/decomp-permuter/import.py "${IMPORT_ARGS[@]}" 2>&1)
 IMPORT_EXIT_CODE=$?
 
 echo "$IMPORT_OUTPUT"

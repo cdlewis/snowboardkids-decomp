@@ -53,3 +53,9 @@ Be aware that some macros in `gbi.h` aggregate a number of regular F3DEX command
 * gDPLoadTextureBlock (and its variations gDPLoadTextureBlock*)
 
 But there are many others.
+
+## Permuter
+
+The permuter may sometimes be helpful but it is not aware of the macros in gbi.h and will often try to replace them with their underlying commands. This is not what you want. Do not use its results if it requires you to remove gbi.h macros.
+
+You can use the --preserve-f3dex argument when calling the permuter to explicitly prevent it from expanding maros. This can be useful for fixing register assignment issues on very close matches.

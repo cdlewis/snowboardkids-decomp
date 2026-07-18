@@ -116,4 +116,8 @@ Don't be intimidated — these are often straightforward if approached methodica
 
 ### Graphics Microcode (F3Dex)
 
-gRegionAllocPtr is indicative of dynamic display list construction. Use the decompile-microcode skill to help match these functions. *Never* engage in manual manipulation of gRegionAllocPtr. *Always* use gbi.h macros. Using the permuter is usually a bad idea since it can't see through the gbi.h macros.
+gRegionAllocPtr is indicative of dynamic display list construction. Use the decompile-microcode skill to help match these functions. *Never* engage in manual manipulation of gRegionAllocPtr. *Always* use gbi.h macros. 
+
+The permuter may sometimes be helpful but it is not aware of the macros in gbi.h and will often try to replace them with their underlying commands. This is not what you want. Do not use its results if it requires you to remove gbi.h macros.
+
+You can use the --preserve-f3dex argument when calling the permuter to explicitly prevent it from expanding maros. This can be useful for fixing register assignment issues on very close matches.
