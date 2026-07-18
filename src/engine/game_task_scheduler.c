@@ -336,7 +336,7 @@ return_one:
     return 1;
 }
 
-// allocateGameTask best match: 95.727% (nonmatchings/allocateGameTask-180949888360117632/base_16.c)
+// allocateGameTask best match: 99.818% (nonmatchings/allocateGameTask-8239461464121803931/base_13.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/engine/game_task_scheduler/allocateGameTask.s")
 
 #ifdef NON_MATCHING
@@ -347,11 +347,13 @@ GameTask *allocateGameTask(s32 priority) {
     GameTaskScheduler *scheduler;
     u8 *clear;
     s32 i;
+    GameTask **head;
 
     if (gGameTaskCount >= GAME_TASK_COUNT) {
         return NULL;
     }
 
+    scheduler = &gGameTaskScheduler;
     task = gFreeGameTaskStack[gGameTaskCount];
     i = 0;
     clear = (u8 *)task;
@@ -360,11 +362,11 @@ GameTask *allocateGameTask(s32 priority) {
         i++;
     } while (i != sizeof(GameTask));
 
-    gGameTaskCount++;
     prev = (GameTask *)&gGameTaskScheduler;
-    scheduler = &gGameTaskScheduler;
+    gGameTaskCount++;
+    head = &scheduler->activeTask;
     if (gGameTaskScheduler.activeTask != NULL) {
-        next = scheduler->activeTask;
+        next = *head;
         do {
             if (next->priority < priority) {
                 break;
