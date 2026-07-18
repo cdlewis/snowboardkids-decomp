@@ -370,7 +370,7 @@ void drawScoreAttackChallengeLabels(s32 arg0) {
     drawMenuAsciiTextDefaultScale(0x70, -0x48, sp18, 6);
 }
 
-// drawTargetTimeChallengeHud best clean match: 95.117% at nonmatchings/drawTargetTimeChallengeHud-8239461464121803931/base_10.c.
+// drawTargetTimeChallengeHud best match: 95.508% at nonmatchings/drawTargetTimeChallengeHud-2341155904261615822/base_18.c.
 #pragma GLOBAL_ASM("asm/nonmatchings/race/ui/race_hud/drawTargetTimeChallengeHud.s")
 
 #ifdef NON_MATCHING
@@ -430,6 +430,8 @@ void drawTargetTimeChallengeHud(s32 arg0) {
     drawAssetTableSprite(-0x60, -0x50, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), ((u8)buffer[0] - 5) & 0xFFFF);
     if (buffer[1] != 0) {
         drawAssetTableSprite(-0x58, -0x50, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), ((u8)buffer[1] - 5) & 0xFFFF);
+    }
+    if (!end) {
     }
 }
 #endif
