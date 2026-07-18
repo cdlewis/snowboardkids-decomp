@@ -2447,7 +2447,7 @@ void drawCourseSelectCompletePanels(CourseSelectPlayerPanelsActor *actor) {
     }
 }
 
-// updateCourseSelectCompletePanels best match: 98.116% (nonmatchings/updateCourseSelectCompletePanels-1936695454966205676/base_29.c)
+// updateCourseSelectCompletePanels best match: 99.468% (nonmatchings/updateCourseSelectCompletePanels-6887713755923057488/base_1.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/course_select/course_select_ui/updateCourseSelectCompletePanels.s")
 
 #ifdef NON_MATCHING
@@ -2460,8 +2460,9 @@ void updateCourseSelectCompletePanels(CourseSelectWidgetActor *arg0) {
     s32 i;
     s32 j;
     u16 alpha;
-    u8 playerState;
     s16 nextAlpha;
+    u8 playerState;
+    long long fadeStep;
 
     i = 0;
     source0 = (CourseSelectCompletePanelSource *)D_8010ADE0;
@@ -2470,6 +2471,7 @@ void updateCourseSelectCompletePanels(CourseSelectWidgetActor *arg0) {
     base = (CourseSelectPlayerPanelsActor *)arg0;
     if ((s32)gPlayerCount > 0) {
         do {
+            fadeStep = 0x30;
             alpha = base->playerPanelFadeAlpha[i];
             sourceAlias = source0;
             if (alpha == 0) {
@@ -2478,10 +2480,10 @@ void updateCourseSelectCompletePanels(CourseSelectWidgetActor *arg0) {
                 }
             } else {
                 if (alpha != maxAlpha) {
-                    nextAlpha = 0x30;
+                    nextAlpha = fadeStep;
                     nextAlpha = alpha + nextAlpha;
                     base->playerPanelFadeAlpha[i] = nextAlpha;
-                    if ((u16)(alpha + 0x30) >= maxAlpha) {
+                    if ((u16)(alpha + fadeStep) >= maxAlpha) {
                         base->playerPanelFadeAlpha[i] = 0x100;
                     }
                 }
