@@ -434,3 +434,21 @@ and control flow already match and only register *names* differ.
   it is pure noise from the decompiler and safe to remove. (Do not confuse this
   with genuinely load-bearing qualifiers like a `volatile` parameter that forces
   a stack reload on every use.)
+- **IDO 5.3 instruction scheduling is path-sensitive to source-level statement
+  presence, not just semantics.** When cleaning up an already-matching
+  function, edits that are semantic no-ops can still break the match because
+  IDO keys its scheduling off the source expression tree. Confirmed breakers:
+  removing a redundant self-alias (a local that just holds a copy of another
+  pointer and is used in its place), deleting an empty constant-true block
+  (`if (1) {}`), deleting an assignment that is overwritten before any use, and
+  dropping a redundant mask whose result is immediately re-cast at the call site
+  so the mask emits no instruction. In every case the assembly was unchanged at
+  the edit site but the surrounding address-computation scheduling reordered.
+  Conversely, pure identifier renames and swapping one union field name for
+  another that names the same byte at the same offset (e.g. a `u8` `pad[0]`
+  alias for a `u8` field both at offset 6) are always safe. When a matching
+  function is dominated by decompiler pointer-arith artifacts (scratch pointer
+  arrays, a sliding base pointer reinterpreted to read per-player fields, or
+  `ptr[12]` / `ptr[32]` indexing to reach two arrays off one shared base),
+  expect those artifacts to be load-bearing and restrict cleanup to renames
+  unless you can re-derive the exact address-math scheduling by hand.

@@ -737,7 +737,7 @@ void initCourseSelectPreviewModelOut(void *arg0) {
     setCallbackTaskCallback(actor, updateCourseSelectPreviewModelOut);
 }
 
-void drawCourseSelectCourseIconList(CourseSelectIconListActor *arg0) {
+void drawCourseSelectCourseIconList(CourseSelectIconListActor *iconList) {
     CourseSelectIconListActor *localPtrs[12];
     CourseSelectIconListActor *new_var;
     s32 i;
@@ -751,8 +751,8 @@ void drawCourseSelectCourseIconList(CourseSelectIconListActor *arg0) {
     CourseSelectRacePlayer *player;
     s16 *position;
 
-    localPtrs[11] = arg0;
-    new_var = arg0;
+    localPtrs[11] = iconList;
+    new_var = iconList;
     i = 0;
     if ((s32)gPlayerCount > 0) {
         localPtrs[0] = new_var;
@@ -783,7 +783,7 @@ void drawCourseSelectCourseIconList(CourseSelectIconListActor *arg0) {
 
                         selectedCourse = D_8010AEA4[i];
                         if ((selectedCourse > 0) && (selectedCourse < 8)) {
-                            courseId = player->pad6[0];
+                            courseId = player->courseIndex;
                             if (courseId >= 9) {
                                 if ((j == 3) && (selectedCourse & 1)) {
                                     alpha = 0xFF;
@@ -795,11 +795,11 @@ void drawCourseSelectCourseIconList(CourseSelectIconListActor *arg0) {
 
                         drawMenuSpriteClipped(position[12], position[32], getRelocatableHeapBlockBase(gAssetHandles[0x21]),
                                       (u16)tileIndex, 0x20, 0x20, 0, alpha,
-                                      new_var->clipLeft - ((i >= 2) * 0x8C), arg0->clipTop, arg0->clipRight,
+                                      new_var->clipLeft - ((i >= 2) * 0x8C), iconList->clipTop, iconList->clipRight,
                                       new_var->clipBottom);
                     } else if (gPlayerCount == 1) {
                         alpha = 0;
-                        position = (s16 *)((u8 *)arg0 + (i * 10) + (j * 2));
+                        position = (s16 *)((u8 *)iconList + (i * 10) + (j * 2));
                         clipOffset = (i >= 2) * 0x88;
                         if ((D_8010AEA4[i] > 0) && (D_8010AEA4[i] < 8) && (gCourseSelectExtraCourseColumnState == 1) &&
                             (D_8010AEA4[i] & 1)) {
@@ -808,12 +808,12 @@ void drawCourseSelectCourseIconList(CourseSelectIconListActor *arg0) {
 
                         if (gRaceSplitscreenMode == 3) {
                             drawMenuSpriteClipped(position[12], position[32], getRelocatableHeapBlockBase(gAssetHandles[0x27]), 5, 0x20,
-                                          0x20, 0, alpha, arg0->clipLeft - clipOffset, new_var->clipTop,
+                                          0x20, 0, alpha, iconList->clipLeft - clipOffset, new_var->clipTop,
                                           new_var->clipRight, new_var->clipBottom);
                         } else {
                             drawMenuSpriteClipped(position[12], position[32], getRelocatableHeapBlockBase(gAssetHandles[0x21]), 5, 0x20,
-                                          0x20, 0, alpha, arg0->clipLeft - clipOffset, arg0->clipTop,
-                                          arg0->clipRight, new_var->clipBottom);
+                                          0x20, 0, alpha, iconList->clipLeft - clipOffset, iconList->clipTop,
+                                          iconList->clipRight, new_var->clipBottom);
                         }
                     }
                     j++;
