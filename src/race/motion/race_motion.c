@@ -182,88 +182,61 @@ void initRaceCourseSurfaceData(void) {
     gRaceCourseSurfaces = (RaceMotionSurface *)faceTable->data;
 }
 
-// findRaceCourseSurfaceFromHint best match: 94.490% (nonmatchings/findRaceCourseSurfaceFromHint-8075865578671233833/base_12.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race/motion/race_motion/findRaceCourseSurfaceFromHint.s")
-
-#ifdef NON_MATCHING
 s32 findRaceCourseSurfaceFromHint(s32 surfaceIndex, s32 x, s32 z) {
-    RaceMotionSurface *keyframes;
-    RaceMotionSurface *keyframe;
-    RaceMotionCoord *coords;
-    RaceMotionCoord *coord0;
-    RaceMotionCoord *coord1;
-    RaceMotionCoord *coord2;
-    RaceMotionCoord *coord3;
-    s32 offset;
-    s32 x0;
-    s32 x1;
-    s32 index;
-    s32 x2;
-    s32 x3;
-    s32 z0;
-    s32 z1;
     s32 z2;
-    s32 z3;
-    s16 next;
+    s32 index;
 
-    keyframes = gRaceCourseSurfaces;
     index = surfaceIndex;
 
 loop:
-    offset = index * sizeof(RaceMotionSurface);
-    coords = gRaceCourseSurfaceCoords;
-    keyframe = (RaceMotionSurface *)((s32)keyframes + offset);
-    coord0 = (RaceMotionCoord *)((s32)coords + keyframe->coordIndices[0] * sizeof(RaceMotionCoord));
-    coord1 = (RaceMotionCoord *)((s32)coords + keyframe->coordIndices[1] * sizeof(RaceMotionCoord));
-    coord2 = (RaceMotionCoord *)((s32)coords + keyframe->coordIndices[2] * sizeof(RaceMotionCoord));
-    coord3 = (RaceMotionCoord *)((s32)coords + keyframe->coordIndices[3] * sizeof(RaceMotionCoord));
+    {
+        RaceMotionCoord *coords;
+        s32 x0;
+        s32 x1;
+        s32 z3;
+        s32 z0;
+        s32 x2;
+        s32 x3;
+        s32 z1;
 
-    x0 = coord0->x << 0x11;
-    z1 = coord1->x << 0x11;
-    x1 = z1;
-    z0 = coord0->z << 0x11;
-    x2 = coord2->x << 0x11;
-    x3 = coord3->x << 0x11;
-    z1 = coord1->z << 0x11;
-    z2 = coord2->z << 0x11;
-    z3 = coord3->z << 0x11;
+        coords = gRaceCourseSurfaceCoords;
+        x0 = coords[gRaceCourseSurfaces[index].coordIndices[0]].x << 0x11;
+        x1 = coords[gRaceCourseSurfaces[index].coordIndices[1]].x << 0x11;
+        x2 = coords[gRaceCourseSurfaces[index].coordIndices[2]].x << 0x11;
+        x3 = coords[(&gRaceCourseSurfaces[index])->coordIndices[3]].x << 0x11;
+        z0 = coords[gRaceCourseSurfaces[index].coordIndices[0]].z << 0x11;
+        z1 = coords[gRaceCourseSurfaces[index].coordIndices[1]].z << 0x11;
+        z2 = coords[gRaceCourseSurfaces[index].coordIndices[2]].z << 0x11;
+        z3 = coords[gRaceCourseSurfaces[index].coordIndices[3]].z << 0x11;
 
-    if ((s64)(x0 - x1) * (z - z1) - (s64)(z0 - z1) * (x - x1) < 0) {
-        keyframes = gRaceCourseSurfaces;
-        next = ((RaceMotionSurface *)((s32)keyframes + offset))->nextFaceIndices[0];
-        if (next >= 0) {
-            index = next;
-            goto loop;
+        if ((s64)(x0 - x1) * (z - z1) - (s64)(z0 - z1) * (x - x1) < 0) {
+            if (gRaceCourseSurfaces[index].nextFaceIndices[0] >= 0) {
+                index = gRaceCourseSurfaces[index].nextFaceIndices[0];
+                goto loop;
+            }
         }
-    }
-    if ((s64)(x3 - x2) * (z - z2) - (s64)(z3 - z2) * (x - x2) < 0) {
-        keyframes = gRaceCourseSurfaces;
-        next = ((RaceMotionSurface *)((s32)keyframes + offset))->nextFaceIndices[1];
-        if (next >= 0) {
-            index = next;
-            goto loop;
+        if ((s64)(x3 - x2) * (z - z2) - (s64)(z3 - z2) * (x - x2) < 0) {
+            if (gRaceCourseSurfaces[index].nextFaceIndices[1] >= 0) {
+                index = gRaceCourseSurfaces[index].nextFaceIndices[1];
+                goto loop;
+            }
         }
-    }
-    if ((s64)(x2 - x0) * (z - z0) - (s64)(z2 - z0) * (x - x0) < 0) {
-        keyframes = gRaceCourseSurfaces;
-        next = ((RaceMotionSurface *)((s32)keyframes + offset))->unk4[1];
-        if (next >= 0) {
-            index = next;
-            goto loop;
+        if ((s64)(x2 - x0) * (z - z0) - (s64)(z2 - z0) * (x - x0) < 0) {
+            if (gRaceCourseSurfaces[index].unk4[1] >= 0) {
+                index = gRaceCourseSurfaces[index].unk4[1];
+                goto loop;
+            }
         }
-    }
-    if ((s64)(x1 - x3) * (z - z3) - (s64)(z1 - z3) * (x - x3) < 0) {
-        keyframes = gRaceCourseSurfaces;
-        next = ((RaceMotionSurface *)((s32)keyframes + offset))->unk4[0];
-        if (next >= 0) {
-            index = next;
-            goto loop;
+        if ((s64)(x1 - x3) * (z - z3) - (s64)(z1 - z3) * (x - x3) < 0) {
+            if (gRaceCourseSurfaces[index].unk4[0] >= 0) {
+                index = gRaceCourseSurfaces[index].unk4[0];
+                goto loop;
+            }
         }
     }
 
     return index;
 }
-#endif
 
 s32 findRaceCourseSurfaceAtPoint(s32 x, s32 z) {
     s32 z2;
