@@ -275,6 +275,12 @@ and control flow already match and only register *names* differ.
   known fields with `->`, `.`, and indexed access; verify field offsets and
   total struct sizes against the assembly access patterns, since a small
   layout mistake shifts codegen across every function sharing the type.
+- **Use post-increment on typed pointer fields for bytecode cursors.** When a
+  target loads a cursor field, reads through the old pointer, increments it,
+  and stores it back, model the field as the pointed-to byte type and write
+  `*state->cursor++`. Keeping the cursor as an integer and spelling out casted
+  pointer temporaries obscures the field's role and changes IDO's temp
+  allocation even when the instruction sequence is otherwise equivalent.
 - **Use the most specific parameter/local types the surrounding code
   supports.** Broad `void *` typing hides useful offset information and
   produces unstable casts. When the ABI signature must stay `void *`/`s32`
