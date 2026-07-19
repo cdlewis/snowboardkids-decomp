@@ -177,6 +177,11 @@ and control flow already match and only register *names* differ.
   array index) rather than reaching for `volatile` or dead-code hacks. The
   extra read changes liveness and can flip the allocator to the target's
   registers cleanly.
+- **Let GBI bitfield macros perform their own narrowing.** Macros such as
+  `gDPSetPrimColor` mask fields to their encoded width while packing command
+  words. A caller-side mask on the same argument is redundant and can extend
+  a temporary's live range enough to shift register allocation throughout the
+  following display-list writes.
 - **Split declaration from assignment for a pointer local to hoist its `lui`.**
   `T *ptr; ptr = &arr[expr]; f(ptr);` can schedule the base-address `lui %hi`
   earlier than the combined initializer `T *ptr = &arr[expr];`. When chasing a
