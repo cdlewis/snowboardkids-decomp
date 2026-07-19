@@ -57,10 +57,7 @@ extern s16 gMenuFadeAlpha;
 extern s16 gMenuInputRepeatTimers[];
 extern s8 gFramebufferSwapDelay;
 extern s8 gMenuSelectionConfirmTimer;
-extern s8 D_8010AE53;
-extern s8 D_8010AE54;
-extern s8 D_8010AE55;
-extern s8 D_8010AE56;
+extern s8 D_8010AE53[];
 // Per-player highlighted index. During character-roster browsing
 // (gCharacterSelectHudState.phase == 3), this indexes gCharacterSelectIdOrder,
 // not RacePlayer.characterId directly. Live-observed values: 1 = Slash,
@@ -87,7 +84,7 @@ extern u8 gPlayerCount;
 extern u8 gPendingFramebufferSwapCount;
 extern u8 gFramebufferSwapHold;
 
-// initCharacterSelectMenu best match: 94.109% (nonmatchings/initCharacterSelectMenu-1868946805648840590/base_8.c)
+// initCharacterSelectMenu best functional match: 98.171% (nonmatchings/initCharacterSelectMenu-6887713755923057488/base_39.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/character_select/character_select_menu/initCharacterSelectMenu.s")
 
 #ifdef NON_MATCHING
@@ -97,6 +94,7 @@ void initCharacterSelectMenu(void) {
     s32 i;
     s32 j;
     s32 keepGoing;
+    s32 nextIndex;
     s32 playerCount;
     u8 *selectionPtr;
     s16 *timerPtr;
@@ -127,14 +125,10 @@ void initCharacterSelectMenu(void) {
         if (playerCount > 0) {
             player = gRacePlayers;
             do {
-                j = 0;
-loop_1:
-                if (player->selectedCharacterId == gCharacterSelectIdOrder[j].characterId) {
-                    D_8010AE64[i] = j;
-                } else {
-                    j++;
-                    if (j != 6) {
-                        goto loop_1;
+                for (j = 0; j != 6; j++) {
+                    if (player->selectedCharacterId == gCharacterSelectIdOrder[j].characterId) {
+                        D_8010AE64[i] = j;
+                        break;
                     }
                 }
                 i++;
@@ -150,13 +144,13 @@ loop_1:
             selectionPtr = (u8 *) D_8010AE64;
             player = gRacePlayers;
             do {
-                j = i + 1;
-                keepGoing = j < playerCount;
+                nextIndex = i + 1;
+                keepGoing = nextIndex < playerCount;
                 player->selectedCharacterId = i;
-                i = j;
+                i = nextIndex;
                 player++;
                 selectionPtr++;
-                selectionPtr[-1] = j;
+                selectionPtr[-1] = nextIndex;
             } while (keepGoing);
         }
     }
@@ -176,10 +170,14 @@ loop_1:
         player = gRacePlayers;
         do {
             timerPtr++;
+            keepGoing = (u32) timerPtr < (u32) timerEnd;
             player++;
+            // Compiler-shaping use retained in the best matching attempt.
+            if (((!player) && (!player)) && (!player)) {
+            }
             player[-1].menuState = 0;
             timerPtr[-1] = 0;
-        } while ((u32) timerPtr < (u32) timerEnd);
+        } while (keepGoing);
     }
 
     state = &gCharacterSelectHudState;
@@ -194,10 +192,10 @@ loop_1:
     state->blockIncrease = 0;
     state->cursorX = 0;
     state->cursorY = 0;
-    D_8010AE53 = 0;
-    D_8010AE54 = 0;
-    D_8010AE55 = 0;
-    D_8010AE56 = 0;
+    i = -1;
+    while (++i < 4) {
+        D_8010AE53[i] = 0;
+    }
     D_8010AE68 = 0;
     if (gMainMenuSecretCodeUnlocked != 0) {
         D_8010AE68 = 1;
@@ -415,7 +413,7 @@ loop_48:
                 var_a0 = sp48 + 4;
                 if ((*var_s7 & 0x4000) && (cachedIsCpu != 0)) {
                     var_s4->isCpu = 0;
-                    (&D_8010AE53)[var_s0] = 0;
+                    D_8010AE53[var_s0] = 0;
                 }
                 var_s0 += 1;
                 var_s4 = (CharacterSelectPlayer *) ((u8 *) var_s4 + 0x60C);
