@@ -434,24 +434,20 @@ void drawCharacterSelectLimitedCourseListOptions(CharacterSelectCourseMenuFrameA
     }
 }
 
-// updateCharacterSelectLimitedCourseList best match: 84.270% (nonmatchings/updateCharacterSelectLimitedCourseList-5802343343535905907/base_8.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/menu/character_select/character_select_course_ui/updateCharacterSelectLimitedCourseList.s")
-
-#ifdef NON_MATCHING
 void updateCharacterSelectLimitedCourseList(CharacterSelectCourseMenuFrameActor *arg0) {
+    CharacterSelectCourseMenuFrameActor *actor;
+    s32 optionIndex;
     s32 movingOptionCount;
     s32 visibleOptionCount;
-    s32 optionIndex;
-    s32 extraCourseOptionCount;
-    s32 selectedOptionTargetY;
-    u8 nextVisibleOptionCount;
+    u16 extraCourseOptionCount;
 
+    actor = arg0;
     extraCourseOptionCount = (gRaceTypeSelection < 2) ? 2 : 0;
 
     switch (arg0->state) {
     case COURSE_LIST_SLIDE_IN:
         movingOptionCount = 0;
-        for (optionIndex = 0; optionIndex < arg0->itemCount; optionIndex++) {
+        for (optionIndex = 0; optionIndex < actor->itemCount; optionIndex++) {
             if (arg0->x[optionIndex] < -0x7C) {
                 arg0->x[optionIndex] += 0x10;
                 movingOptionCount++;
@@ -463,11 +459,11 @@ void updateCharacterSelectLimitedCourseList(CharacterSelectCourseMenuFrameActor 
 
         arg0->timer++;
         if (!(arg0->timer & 1)) {
-            visibleOptionCount = extraCourseOptionCount + 2;
+            visibleOptionCount = extraCourseOptionCount;
+            visibleOptionCount += 2;
             if (arg0->itemCount < visibleOptionCount) {
-                nextVisibleOptionCount = arg0->itemCount + 1;
-                arg0->itemCount = nextVisibleOptionCount;
-                if (visibleOptionCount == nextVisibleOptionCount) {
+                arg0->itemCount++;
+                if (visibleOptionCount == arg0->itemCount) {
                     D_8010ADE4 = createCallbackTask(initCharacterSelectCoursePreviewFrame, 0, 0x59);
                     if (gRaceTypeSelection < 2) {
                         createCallbackTask(initCharacterSelectCoursePreviewPanel1, 0, 0x5A);
@@ -494,7 +490,7 @@ void updateCharacterSelectLimitedCourseList(CharacterSelectCourseMenuFrameActor 
         break;
 
     case COURSE_LIST_SLIDE_OTHERS_OUT:
-        for (optionIndex = 0; optionIndex < arg0->itemCount; optionIndex++) {
+        for (optionIndex = 0; optionIndex < actor->itemCount; optionIndex++) {
             if (optionIndex != gRaceCourseIndex) {
                 arg0->x[optionIndex] -= 0x20;
             }
@@ -530,19 +526,22 @@ void updateCharacterSelectLimitedCourseList(CharacterSelectCourseMenuFrameActor 
 
     case COURSE_LIST_RESTORE_SELECTED_Y:
         arg0->y[gRaceCourseIndex] += arg0->itemSpacing;
-        selectedOptionTargetY = arg0->baseY + (gRaceCourseIndex * arg0->itemSpacing);
-        if (arg0->y[gRaceCourseIndex] >= selectedOptionTargetY) {
-            arg0->y[gRaceCourseIndex] = selectedOptionTargetY;
+        if (arg0->y[gRaceCourseIndex] >= (arg0->baseY + (gRaceCourseIndex * arg0->itemSpacing))) {
+            arg0->y[gRaceCourseIndex] = arg0->baseY + (gRaceCourseIndex * arg0->itemSpacing);
             arg0->state = COURSE_LIST_SLIDE_OTHERS_IN;
         }
         break;
 
     case COURSE_LIST_SLIDE_OTHERS_IN:
         visibleOptionCount = extraCourseOptionCount + 2;
-        for (optionIndex = 0; optionIndex < visibleOptionCount; optionIndex++) {
-            if (optionIndex != gRaceCourseIndex) {
-                arg0->x[optionIndex] += 0x20;
-            }
+        optionIndex = 0;
+        if (visibleOptionCount > 0) {
+            do {
+                if (optionIndex != gRaceCourseIndex) {
+                    arg0->x[optionIndex] += 0x20;
+                }
+                optionIndex++;
+            } while (optionIndex < (extraCourseOptionCount + 2));
         }
         if (gRaceCourseIndex != 0) {
             if (arg0->x[0] >= -0x7C) {
@@ -583,7 +582,6 @@ void updateCharacterSelectLimitedCourseList(CharacterSelectCourseMenuFrameActor 
         addRenderCallback(&gMenuRenderCallbackList, drawCharacterSelectLimitedCourseListOptions, arg0);
     }
 }
-#endif
 
 // initCharacterSelectLimitedCourseList best match: 74.868% (not yet matching)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/character_select/character_select_course_ui/initCharacterSelectLimitedCourseList.s")
