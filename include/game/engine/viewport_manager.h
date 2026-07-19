@@ -10,7 +10,7 @@ typedef union {
 
 typedef struct {
     /* 0x00 */ s8 active;
-    /* 0x01 */ s8 screenBoundsValid;
+    /* 0x01 */ u8 screenBoundsValid;
     /* 0x02 */ s8 clearFramebuffer;
     /* 0x03 */ s8 overlayActive;
     /* 0x04 */ s8 overlayR;
