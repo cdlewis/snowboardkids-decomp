@@ -306,20 +306,19 @@ loop_24:
 }
 #endif
 
-// initCharacterSelectCourseMenuFromPlayerSelect best match: 96.889% (nonmatchings/initCharacterSelectCourseMenuFromPlayerSelect-8808947407184708385/base_7.c)
+// initCharacterSelectCourseMenuFromPlayerSelect best match: 99.877% (nonmatchings/initCharacterSelectCourseMenuFromPlayerSelect-6887713755923057488/base_28.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/character_select/character_select_course_menu/initCharacterSelectCourseMenuFromPlayerSelect.s")
 
 #ifdef NON_MATCHING
 void initCharacterSelectCourseMenuFromPlayerSelect(void) {
-    s32 sp2C;
-    s16 *var_v0_2;
-    s16 *var_v1_2;
-    s16 *activeOptions;
     s32 var_v1;
+    s32 sp2C;
     s32 var_v0_3;
+    s16 *activeCourseOptions;
+    s16 selectedCourse;
+    CharacterSelectCourseUnlockList *courseOptionsByUnlock;
     u8 temp_v1;
     CharacterSelectSaveData *var_v0;
-    CharacterSelectSaveData *temp_a0;
 
     requestMusicSequenceBank(2);
     if (gPlayerCount >= 2) {
@@ -351,69 +350,63 @@ void initCharacterSelectCourseMenuFromPlayerSelect(void) {
     gMenuChoicePromptState = 0;
     gMenuFadeAlpha = gCurrentGameTask->fade;
     gActiveMenuTask = 0;
+    sp2C = 0;
     D_8010ADE0 = 0;
     D_8010ADE4 = 0;
-    sp2C = 0;
     var_v1 = sp2C;
     if (gPlayerCount > 0) {
         var_v0 = gGameSaveDataBuffer;
-        temp_a0 = &gGameSaveDataBuffer[gPlayerCount];
         do {
             temp_v1 = var_v0->highestCourse;
             var_v0 += 1;
             if (gHighestUnlockedCourse < temp_v1) {
                 gHighestUnlockedCourse = temp_v1;
             }
-        } while (var_v0 < temp_a0);
+        } while (var_v0 < &gGameSaveDataBuffer[gPlayerCount]);
         var_v1++;
         var_v1--;
     }
 
     setCurrentGameTaskCallback(updateCharacterSelectCourseMenu, 0);
     var_v1 = sp2C;
+    courseOptionsByUnlock = gCharacterSelectCourseOptionsByUnlock;
     if (gCourseSelectFromRaceTypeMenu == 1) {
         if (gRaceTypeSelection < 2) {
             gCharacterSelectActiveCourseOptions = (CharacterSelectOptionList *) gCharacterSelectShortCourseOptions;
-            activeOptions = gCharacterSelectShortCourseOptions;
-            if ((gRaceCourseIndex != 9) && (gRaceCourseIndex != 0) && (gRaceCourseIndex != 1)) {
+            selectedCourse = gRaceCourseIndex;
+            if ((selectedCourse != 9) && (selectedCourse != 0) && (selectedCourse != 1)) {
                 gRaceCourseIndex = 9;
+                selectedCourse = gRaceCourseIndex;
             }
         } else {
             gCharacterSelectActiveCourseOptions = (CharacterSelectOptionList *) gCharacterSelectSingleCourseOption;
-            activeOptions = gCharacterSelectSingleCourseOption;
             gRaceCourseIndex = 7;
+            selectedCourse = gRaceCourseIndex;
         }
     } else {
-        gCharacterSelectActiveCourseOptions = (CharacterSelectOptionList *) gCharacterSelectCourseOptionsByUnlock[gHighestUnlockedCourse];
-        activeOptions = gCharacterSelectCourseOptionsByUnlock[gHighestUnlockedCourse];
-        if (gRaceCourseIndex == -1) {
+        gCharacterSelectActiveCourseOptions = (CharacterSelectOptionList *) courseOptionsByUnlock[gHighestUnlockedCourse];
+        selectedCourse = gRaceCourseIndex;
+        if (selectedCourse == -1) {
             gRaceCourseIndex = 9;
+            selectedCourse = gRaceCourseIndex;
         }
     }
 
-    var_v0_2 = activeOptions;
-loop_20:
-    if (gRaceCourseIndex == *var_v0_2) {
-        gRaceCourseIndex = var_v1;
-    } else {
-        var_v1 += 1;
-        var_v0_2 += 1;
-        if (var_v1 != 0xA) {
-            goto loop_20;
+    var_v0_3 = 0;
+    activeCourseOptions = *gCharacterSelectActiveCourseOptions;
+    for (; var_v1 != 0xA; var_v1++, var_v0_3++) {
+        if (selectedCourse == activeCourseOptions[var_v0_3]) {
+            gRaceCourseIndex = var_v1;
+            break;
         }
     }
 
     gCharacterSelectCourseExitOptionIndex = 0;
-    var_v0_3 = 0;
-    var_v1_2 = activeOptions;
-loop_24:
-    var_v0_3 += 2;
-    if (*var_v1_2 != -1) {
-        var_v1_2 += 1;
-        gCharacterSelectCourseExitOptionIndex += 1;
-        if (var_v0_3 != 0x14) {
-            goto loop_24;
+    for (var_v0_3 = 0; var_v0_3 < 0xA; var_v0_3++) {
+        if ((*gCharacterSelectActiveCourseOptions)[var_v0_3] == -1) {
+            break;
         }
+        gCharacterSelectCourseExitOptionIndex += 1;
     }
 
     gCharacterSelectCourseCursorState.bytes[0] = 0;
