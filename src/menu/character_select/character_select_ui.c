@@ -589,52 +589,48 @@ void initCharacterSelectPlayerCursorMarkers(CharacterSelectUiPlayerCursorActor *
     setCallbackTaskCallback(arg0, updateCharacterSelectPlayerCursorMarkers);
 }
 
-// drawCharacterSelectPlayerStatsPanels best match: 86.570% (nonmatchings/drawCharacterSelectPlayerStatsPanels-2870645799593382959/base_7.c)
+// drawCharacterSelectPlayerStatsPanels best match: 96.939% (nonmatchings/drawCharacterSelectPlayerStatsPanels-7475224831549593718/base_20.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/character_select/character_select_ui/drawCharacterSelectPlayerStatsPanels.s")
 
 #ifdef NON_MATCHING
-static void drawCharacterSelectStatMeter(s16 x, s16 y, u8 value) {
-    s32 fullPips;
-    s32 pipIndex;
-    s32 xOffset;
-
-    xOffset = 0;
-    fullPips = value / 2;
-
-    for (pipIndex = 0; pipIndex < fullPips; pipIndex++) {
-        drawMenuSprite((s16)(x + xOffset), y, getRelocatableHeapBlockBase(CHARACTER_SELECT_UI_PLAYER_FRAME_HANDLE), 0x25, 0x20, 0x20, 0, 0);
-        xOffset += 0xC;
-    }
-
-    if (value & 1) {
-        drawMenuSprite((s16)(x + xOffset), y, getRelocatableHeapBlockBase(CHARACTER_SELECT_UI_PLAYER_FRAME_HANDLE), 0x26, 0x20, 0x20, 0, 0);
-    }
-}
-
 void drawCharacterSelectPlayerStatsPanels(CharacterSelectUiPanelActor *arg0) {
-    char statLabelText[4];
-    s32 playerIndex;
-    s32 textureIndex;
-    u16 characterIconTile;
+    CharacterSelectUiPanelActor *base;
+    u8 *statsBase;
+    s32 stride;
     RacePlayer *player;
-    CharacterSelectUiCharacterStats *stats;
+    volatile s16 *textureHandles;
+    CharacterSelectUiPanelActor *actor;
+    s32 playerIndex;
+    s32 statIndex;
+    s32 xOffset;
+    s32 textureIndex;
+    s32 characterIconTile;
+    u8 *stats;
+    s32 stat;
+    char statLabelText[4];
     CharacterSelectUiPanelController *controller;
 
     controller = D_8010ADE8;
+    base = arg0;
     if (controller->unk26 != 0) {
         playerIndex = 0;
         if ((s32)gPlayerCount > 0) {
+            textureHandles = gAssetHandles;
+            statsBase = (u8 *)gCharacterSelectCharacterStats;
             player = gRacePlayers;
+            actor = arg0;
+            stride = sizeof(CharacterSelectUiCharacterStats);
             do {
+                statIndex = (xOffset = 0);
                 if (player->menuState == 0) {
                     textureIndex = 0x21;
-                    if (arg0->targetX.overlay.inactiveTimer[playerIndex] >= 0xB) {
-                        arg0->targetY.finishedBlink[playerIndex] = 1;
+                    if (base->targetX.overlay.inactiveTimer[playerIndex] >= 0xB) {
+                        base->targetY.finishedBlink[playerIndex] = 1;
                     } else {
-                        arg0->targetY.finishedBlink[playerIndex] = 0;
+                        base->targetY.finishedBlink[playerIndex] = 0;
                     }
 
-                    if (arg0->targetY.finishedBlink[playerIndex] != 0) {
+                    if (base->targetY.finishedBlink[playerIndex] != 0) {
                         characterIconTile = (player->selectedCharacterId + 0x3D) & 0xFFFF;
                     } else {
                         characterIconTile = (player->selectedCharacterId + 0x37) & 0xFFFF;
@@ -644,11 +640,11 @@ void drawCharacterSelectPlayerStatsPanels(CharacterSelectUiPanelActor *arg0) {
                     characterIconTile = (player->selectedCharacterId + 0x41) & 0xFFFF;
                 }
 
-                drawMenuSpriteTile((s16)(arg0->x[playerIndex] + 6), (s16)(arg0->y[playerIndex] + 0xD),
-                              getRelocatableHeapBlockBase(gAssetHandles[textureIndex]), characterIconTile, 0, 0x100);
-                drawMenuSprite((s16)(arg0->x[playerIndex] + 2), (s16)(arg0->y[playerIndex] + 0x28),
-                              getRelocatableHeapBlockBase(CHARACTER_SELECT_UI_AVAILABLE_CHARACTER_ICON_HANDLE),
-                              (player->selectedCharacterId + 0x91) & 0xFFFF, 0x20, 0x20, 0, 0);
+                drawMenuSpriteTile((s16)(actor->x[0] + 6), (s16)(actor->y[0] + 0xD),
+                                   getRelocatableHeapBlockBase(textureHandles[textureIndex]), characterIconTile, 0, 0x100);
+                drawMenuSprite((s16)(actor->x[0] + 2), (s16)(actor->y[0] + 0x28),
+                               getRelocatableHeapBlockBase(textureHandles[0x1F]),
+                               (player->selectedCharacterId + 0x91) & 0xFFFF, 0x20, 0x20, 0, 0);
 
                 if (player->selectedCharacterId == 5) {
                     statLabelText[0] = 0x3F;
@@ -657,15 +653,65 @@ void drawCharacterSelectPlayerStatsPanels(CharacterSelectUiPanelActor *arg0) {
                 } else {
                     sprintf(statLabelText, gCharacterSelectCharacterStatFormat, gCharacterSelectCharacterStatLabels[player->selectedCharacterId]);
                 }
-                drawMenuAsciiText((s16)(arg0->x[playerIndex] + 0x70), (s16)(arg0->y[playerIndex] + 0xD), (u8 *)statLabelText, 0, 0x100);
+                drawMenuAsciiText((s16)(actor->x[0] + 0x70), (s16)(actor->y[0] + 0xD), (u8 *)statLabelText, 0, 0x100);
 
-                stats = &gCharacterSelectCharacterStats[player->selectedCharacterId];
-                drawCharacterSelectStatMeter((s16)(arg0->x[playerIndex] + 0x5D), (s16)(arg0->y[playerIndex] + 0x16), stats->speed);
-                drawCharacterSelectStatMeter((s16)(arg0->x[playerIndex] + 0x5D), (s16)(arg0->y[playerIndex] + 0x22), stats->turn);
-                drawCharacterSelectStatMeter((s16)(arg0->x[playerIndex] + 0x5D), (s16)(arg0->y[playerIndex] + 0x2E), stats->trick);
+                stats = &statsBase[player->selectedCharacterId * stride];
+                stat = stats[0];
+                if (stat / 2 > 0) {
+                    do {
+                        drawMenuSprite((s16)(actor->x[0] + xOffset + 0x5D), (s16)(actor->y[0] + 0x16),
+                                       getRelocatableHeapBlockBase(textureHandles[0x21]), 0x25, 0x20, 0x20, 0, 0);
+                        statIndex++;
+                        xOffset += 0xC;
+                        stats = &statsBase[player->selectedCharacterId * stride];
+                        stat = stats[0];
+                    } while (statIndex < stat / 2);
+                    statIndex = 0;
+                }
+                if (stat & 1) {
+                    drawMenuSprite((s16)(actor->x[0] + xOffset + 0x5D), (s16)(actor->y[0] + 0x16),
+                                   getRelocatableHeapBlockBase(textureHandles[0x21]), 0x26, 0x20, 0x20, 0, 0);
+                    stats = (u8 *)&gCharacterSelectCharacterStats[player->selectedCharacterId];
+                }
+
+                stat = stats[1];
+                xOffset = 0;
+                if (stat / 2 > 0) {
+                    do {
+                        drawMenuSprite((s16)(actor->x[0] + xOffset + 0x5D), (s16)(actor->y[0] + 0x22),
+                                       getRelocatableHeapBlockBase(textureHandles[0x21]), 0x25, 0x20, 0x20, 0, 0);
+                        statIndex++;
+                        xOffset += 0xC;
+                        stats = &statsBase[player->selectedCharacterId * stride];
+                        stat = stats[1];
+                    } while (statIndex < stat / 2);
+                    statIndex = 0;
+                }
+                if (stat & 1) {
+                    drawMenuSprite((s16)(actor->x[0] + xOffset + 0x5D), (s16)(actor->y[0] + 0x22),
+                                   getRelocatableHeapBlockBase(textureHandles[0x21]), 0x26, 0x20, 0x20, 0, 0);
+                    stats = (u8 *)&gCharacterSelectCharacterStats[player->selectedCharacterId];
+                }
+
+                stat = stats[2];
+                xOffset = 0;
+                if (stat / 2 > 0) {
+                    do {
+                        drawMenuSprite((s16)(actor->x[0] + xOffset + 0x5D), (s16)(actor->y[0] + 0x2E),
+                                       getRelocatableHeapBlockBase(textureHandles[0x21]), 0x25, 0x20, 0x20, 0, 0);
+                        statIndex++;
+                        xOffset += 0xC;
+                        stat = statsBase[(player->selectedCharacterId * stride) + 2];
+                    } while (statIndex < stat / 2);
+                }
+                if (stat & 1) {
+                    drawMenuSprite((s16)(actor->x[0] + xOffset + 0x5D), (s16)(actor->y[0] + 0x2E),
+                                   getRelocatableHeapBlockBase(textureHandles[0x21]), 0x26, 0x20, 0x20, 0, 0);
+                }
 
                 playerIndex++;
                 player++;
+                actor = (CharacterSelectUiPanelActor *)((u8 *)actor + 2);
             } while (playerIndex < (s32)gPlayerCount);
         }
     }
