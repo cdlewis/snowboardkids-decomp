@@ -99,7 +99,7 @@ extern void requestControllerPakRepair(u16);
 extern void initControllerPakDeleteConfirmPrompt(CallbackTask *);
 #endif
 
-// updateControllerPakRaceRecordSaveFlow best match: 96.629% (base_37.c)
+// updateControllerPakRaceRecordSaveFlow best match: 97.313% (base_29.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/controller_pak/controller_pak_race_record_save_flow/updateControllerPakRaceRecordSaveFlow.s")
 
 #ifdef NON_MATCHING
@@ -215,11 +215,11 @@ void updateControllerPakRaceRecordSaveFlow(void)
           }
         }
         else
-          if (gControllerPakRetryCounts == 3)
+          if (gControllerPakRetryCounts == new_var)
         {
           if (temp_t0 != 0)
           {
-            gControllerPakRaceRecordSaveStatusTransition.step = new_var;
+            gControllerPakRaceRecordSaveStatusTransition.step = 3;
             gControllerPakRaceRecordSaveStatusTransition.targetStatus = 0xE;
           }
           else
@@ -231,7 +231,8 @@ void updateControllerPakRaceRecordSaveFlow(void)
           break;
 
         case 4:
-          if ((gPlayerInputPressed & A_BUTTON) || (gPlayerInputPressed & START_BUTTON))
+          temp_v1 = gPlayerInputPressed;
+          if ((temp_v1 & A_BUTTON) || (temp_v1 & START_BUTTON))
         {
           sp1C = temp_t0;
           enqueueSoundEffect(1, 0x32);
@@ -342,7 +343,8 @@ void updateControllerPakRaceRecordSaveFlow(void)
         case 13:
 
         case 17:
-          if ((gPlayerInputPressed & A_BUTTON) || (gPlayerInputPressed & START_BUTTON))
+          temp_v1 = gPlayerInputPressed;
+          if ((temp_v1 & A_BUTTON) || (temp_v1 & START_BUTTON))
         {
           enqueueSoundEffect(1, 0x32);
           gMenuChoicePromptState = gControllerPakRaceRecordSaveStatusChoicePromptStates[(long) gControllerPakStatusCodes];
@@ -350,7 +352,8 @@ void updateControllerPakRaceRecordSaveFlow(void)
           break;
 
         case 15:
-          if ((gPlayerInputPressed & A_BUTTON) || (gPlayerInputPressed & START_BUTTON))
+          temp_v1 = gPlayerInputPressed;
+          if ((temp_v1 & A_BUTTON) || (temp_v1 & START_BUTTON))
         {
           enqueueSoundEffect(1, 0x32);
           gMenuChoicePromptState = gControllerPakRaceRecordSaveStatusChoicePromptStates[gControllerPakStatusCodes];
@@ -360,7 +363,8 @@ void updateControllerPakRaceRecordSaveFlow(void)
         case 14:
 
         case 16:
-          if ((gPlayerInputPressed & A_BUTTON) || (gPlayerInputPressed & START_BUTTON))
+          temp_v1 = gPlayerInputPressed;
+          if ((temp_v1 & A_BUTTON) || (temp_v1 & START_BUTTON))
         {
           sp1C = temp_t0;
           enqueueSoundEffect(1, 0x32);
@@ -391,7 +395,8 @@ void updateControllerPakRaceRecordSaveFlow(void)
           break;
 
         case 18:
-          if ((gPlayerInputPressed & A_BUTTON) || (gPlayerInputPressed & START_BUTTON))
+          temp_v1 = gPlayerInputPressed;
+          if ((temp_v1 & A_BUTTON) || (temp_v1 & START_BUTTON))
         {
           enqueueSoundEffect(1, 0x32);
           gControllerPakRaceRecordSaveStatusTransition.step = 3;
