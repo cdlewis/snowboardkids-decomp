@@ -1147,11 +1147,6 @@ void waitRaceFinishResultsFlow(void) {
 }
 #endif
 
-// interpolateRaceViewport best match: 73.108% (nonmatchings/interpolateRaceViewport-6887713755923057488/base_37.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race/flow/race_flow/interpolateRaceViewport.s")
-
-#ifdef NON_MATCHING
-
 void interpolateRaceViewport(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5, s32 arg6,
                   f32 arg7, s32 arg8, s32 arg9, s32 arg10, s32 arg11, s32 arg12, s32 arg13,
                   f32 arg14) {
@@ -1163,20 +1158,19 @@ void interpolateRaceViewport(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s
     s32 temp_t2;
     s32 temp_t3;
 
-    sp2C = (((arg8 - arg1) * ((volatile RaceFlowState *)gCurrentGameTask)->fadeTimer) / 15) + arg1;
-    sp28 = (((arg9 - arg2) * ((volatile RaceFlowState *)gCurrentGameTask)->fadeTimer) / 15) + arg2;
-    temp_t0 = (((arg10 - arg3) * ((volatile RaceFlowState *)gCurrentGameTask)->fadeTimer) / 15) + arg3;
-    temp_t1 = (((arg11 - arg4) * ((volatile RaceFlowState *)gCurrentGameTask)->fadeTimer) / 15) + arg4;
-    temp_t2 = (((arg12 - arg5) * ((volatile RaceFlowState *)gCurrentGameTask)->fadeTimer) / 15) + arg5;
-    temp_fv0 = (((arg14 - arg7) * (f32)((volatile RaceFlowState *)gCurrentGameTask)->fadeTimer) / 15.0f) + arg7;
-    temp_t3 = (((arg13 - arg6) * ((volatile RaceFlowState *)gCurrentGameTask)->fadeTimer) / 15) + arg6;
+    sp2C = (((arg8 - arg1) * gCurrentGameTask->fadeTimer) / 15) + arg1;
+    sp28 = (((arg9 - arg2) * gCurrentGameTask->fadeTimer) / 15) + arg2;
+    temp_t0 = (((arg10 - arg3) * gCurrentGameTask->fadeTimer) / 15) + arg3;
+    temp_t1 = (((arg11 - arg4) * gCurrentGameTask->fadeTimer) / 15) + arg4;
+    temp_t2 = (((arg12 - arg5) * gCurrentGameTask->fadeTimer) / 15) + arg5;
+    temp_t3 = (((arg13 - arg6) * gCurrentGameTask->fadeTimer) / 15) + arg6;
+    temp_fv0 = (((arg14 - arg7) * (f32)gCurrentGameTask->fadeTimer) / 15.0f) + arg7;
     if (gRaceCourseIndex.s != 6) {
         configureViewport(arg0, sp2C, sp28, temp_t0, temp_t1, temp_t2, temp_t3, temp_fv0);
     } else {
         configureRaceViewport(arg0, sp2C, sp28, temp_t0, temp_t1, temp_t2, temp_t3, temp_fv0);
     }
 }
-#endif
 
 void zoomRaceWinnerViewport(void) {
     gCurrentGameTask->fadeTimer += 1;
