@@ -935,7 +935,7 @@ void updateCourseSelectPurchasePrompt(void) {
     updateCallbackTasks();
 }
 
-// updateCourseSelectUnlockCourseList best match: 62.317% (nonmatchings/updateCourseSelectUnlockCourseList-8808947407184708385/base_6.c)
+// updateCourseSelectUnlockCourseList best match: 62.880% (nonmatchings/updateCourseSelectUnlockCourseList-4742974436804708368/base_15.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/course_select/course_select_menu/updateCourseSelectUnlockCourseList.s")
 
 #ifdef NON_MATCHING
@@ -949,7 +949,7 @@ void updateCourseSelectUnlockCourseList(void) {
     u16 repeat;
     s32 divisor;
     s32 i;
-    u8 index;
+    s32 index;
     ObjectA3E0 **currentPtr;
 
     if (gMenuChoicePromptState == 9) {
