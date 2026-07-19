@@ -1575,7 +1575,7 @@ void drawMenuGlyphScript(volatile s16 x, s16 y, MenuGlyphScript *script, s32 pal
 }
 #endif
 
-// drawMenuColoredGlyph best match: 84.033% (nonmatchings/drawMenuColoredGlyph-6866765942504228165/base_9.c)
+// drawMenuColoredGlyph best match: 84.271%
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/renderer/menu_renderer/drawMenuColoredGlyph.s")
 
 #ifdef NON_MATCHING
@@ -1665,13 +1665,35 @@ void drawMenuColoredGlyph(s16 x, s16 y, u16 glyph, u8 palette, u16 paletteScale,
                     }
                 }
 
-                gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, dstPalette);
                 entry = &((MenuFontAssetTable *)font)->entries[glyph];
-                gDPLoadTextureTile_4b(gRegionAllocPtr++, font + entry->imageOffset, G_IM_FMT_CI, entry->width,
-                                      entry->height, 0, 0, entry->width, entry->height, 0, G_TX_CLAMP, G_TX_CLAMP,
-                                      G_TX_NOMASK, G_TX_NOMASK, G_TX_NOLOD, G_TX_NOLOD);
-                gSPTextureRectangle(gRegionAllocPtr++, drawX0 << 2, drawY0 << 2, drawX1 << 2, drawY1 << 2, G_TX_RENDERTILE,
-                                    clipS << 5, clipT << 5, 0x0400, 0x0400);
+                FONT_GFX_CMD(gRegionAllocPtr++, 0xFD100000, (u32)dstPalette);
+                FONT_GFX_CMD(gRegionAllocPtr++, 0xE8000000, 0);
+                FONT_GFX_CMD(gRegionAllocPtr++, 0xF5000100, 0x07000000);
+                FONT_GFX_CMD(gRegionAllocPtr++, 0xE6000000, 0);
+                FONT_GFX_CMD(gRegionAllocPtr++, 0xF0000000, 0x0703C000);
+                FONT_GFX_CMD(gRegionAllocPtr++, 0xE7000000, 0);
+
+                FONT_GFX_CMD(gRegionAllocPtr++, (((entry->width >> 1) - 1) & 0xFFF) | 0xFD480000,
+                             (u32)(font + entry->imageOffset));
+                FONT_GFX_CMD(gRegionAllocPtr++,
+                             ((((((s32)(entry->width + 1) >> 1) + 7) >> 3) & 0x1FF) << 9) | 0xF5480000,
+                             0x07080200);
+                FONT_GFX_CMD(gRegionAllocPtr++, 0xE6000000, 0);
+                FONT_GFX_CMD(gRegionAllocPtr++, 0xF4000000,
+                             (((entry->width * 2) & 0xFFF) << 12) | 0x07000000 |
+                                 ((entry->height * 4) & 0xFFF));
+                FONT_GFX_CMD(gRegionAllocPtr++, 0xE7000000, 0);
+                FONT_GFX_CMD(gRegionAllocPtr++,
+                             ((((((s32)(entry->width + 1) >> 1) + 7) >> 3) & 0x1FF) << 9) | 0xF5400000,
+                             0x00080200);
+                FONT_GFX_CMD(gRegionAllocPtr++, 0xF2000000,
+                             (((entry->width * 4) & 0xFFF) << 12) | ((entry->height * 4) & 0xFFF));
+                FONT_GFX_CMD(gRegionAllocPtr++,
+                             0xE4000000 | (((drawX1 << 2) & 0xFFF) << 12) | ((drawY1 << 2) & 0xFFF),
+                             (((drawX0 << 2) & 0xFFF) << 12) | ((drawY0 << 2) & 0xFFF));
+                FONT_GFX_CMD(gRegionAllocPtr++, 0xB4000000,
+                             (clipS << 21) | ((clipT << 5) & 0xFFFF));
+                FONT_GFX_CMD(gRegionAllocPtr++, 0xB3000000, 0x04000400);
             }
         }
     }
