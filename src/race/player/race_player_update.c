@@ -4561,7 +4561,7 @@ void dispatchRacePlayerMode07CourseObject(RacePlayer *player) {
     gRacePlayerMode07StateHandlers[player->updateState](player);
 }
 
-// updateRacePlayerMode07AlignToLaunchRamp best match: 99.383% (nonmatchings/updateRacePlayerMode07AlignToLaunchRamp-5313856277864964686/base_9.c)
+// updateRacePlayerMode07AlignToLaunchRamp best match: 99.568% (nonmatchings/updateRacePlayerMode07AlignToLaunchRamp-6934502587000073416/base_37.c)
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race/player/race_player_update/updateRacePlayerMode07AlignToLaunchRamp.s")
 
@@ -4570,10 +4570,13 @@ void updateRacePlayerMode07AlignToLaunchRamp(RacePlayer *player) {
     s16 angleDelta;
     s16 savedAngle;
     s16 angleStep;
+    u32 angleQuotient;
+    s32 chainedDivisor;
     s16 updateTimer;
     s32 temp_a1;
     s32 tempX;
     s32 tempZ;
+    s32 positionDivisor;
 
     updateTimer = player->updateTimer;
     if (updateTimer == 0) {
@@ -4598,19 +4601,25 @@ void updateRacePlayerMode07AlignToLaunchRamp(RacePlayer *player) {
 
     temp_a1 = player->unk80;
     if (temp_a1 != 0) {
-        angleStep = angleDelta / temp_a1;
-        if (gRaceCourseStartEntries[gRaceCourseIndex].unk1C) {
+        if (1) {
+            angleQuotient = angleDelta / temp_a1;
+            angleStep = angleQuotient;
+            if (gRaceCourseStartEntries[gRaceCourseIndex].unk1C) {
+            }
+            angleDelta = savedAngle;
+            player->facingAngle += angleStep;
+            chainedDivisor = temp_a1 ^ 0;
         }
-        angleDelta = savedAngle;
-        player->facingAngle += angleStep;
-        tempX = player->posX;
+        if (player && player) {
+        }
         tempZ = player->posZ;
         if (temp_a1) {
         }
         if (1) {
-            player->posX = tempX + ((gRaceCourseStartEntries[gRaceCourseIndex].unk18 - tempX) / temp_a1);
+            positionDivisor = chainedDivisor;
+            player->posX += (gRaceCourseStartEntries[gRaceCourseIndex].unk18 - player->posX) / positionDivisor;
         }
-        player->posZ = tempZ + ((gRaceCourseStartEntries[gRaceCourseIndex].unk1C - tempZ) / temp_a1);
+        player->posZ = tempZ + ((gRaceCourseStartEntries[gRaceCourseIndex].unk1C - tempZ) / positionDivisor);
     }
 
     if (--player->stateTimer == 0) {
