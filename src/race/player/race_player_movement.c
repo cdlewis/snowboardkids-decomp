@@ -481,27 +481,29 @@ void pushRacePlayersOutOfCylinderAndApplyItemHit(RaceVec3i *pos, s32 xzSize, s32
 }
 #endif
 
-// pushRacePlayerOutOfCylinderAndApplyItemHit best match: 99.643% (nonmatchings/pushRacePlayerOutOfCylinderAndApplyItemHit-6113366811127043669/base_order_18.c)
+// pushRacePlayerOutOfCylinderAndApplyItemHit best match: 99.832% (nonmatchings/pushRacePlayerOutOfCylinderAndApplyItemHit-6887713755923057488/base_5.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race/player/race_player_movement/pushRacePlayerOutOfCylinderAndApplyItemHit.s")
 
 #ifdef NON_MATCHING
 void pushRacePlayerOutOfCylinderAndApplyItemHit(RaceVec3i *pos, s32 xzSize, s32 ySize, u16 flag, s16 playerIndex) {
-    volatile u8 pad[8];
-    RacePlayer *player;
+    volatile int pad;
     s32 temp;
-    s32 xDiff;
-    s32 yLimit;
-    s32 sine;
+    RacePlayer *player;
     s32 xzLimit;
+    s32 yLimit;
+    s32 zDiff;
+    s32 sine;
+    s32 cosine;
     s32 pushX;
     s32 pushZ;
     s16 angle;
     s32 localX;
     s32 localZ;
-    s32 cosine;
 
     player = &gRacePlayers[playerIndex];
     if (player->isActive != 0) {
+        s32 xDiff;
+
         yLimit = ySize;
         temp = pos->y - player->unk5C;
         if (temp < 0) {
@@ -517,13 +519,13 @@ void pushRacePlayerOutOfCylinderAndApplyItemHit(RaceVec3i *pos, s32 xzSize, s32 
                 xDiff = -xDiff;
             }
             if (xDiff < xzLimit) {
-                temp = pos->z - player->posZ;
-                if (temp < 0) {
-                    temp = -temp;
+                zDiff = pos->z - player->posZ;
+                if (zDiff < 0) {
+                    zDiff = -zDiff;
                 }
-                if ((temp < xzLimit) &&
+                if ((zDiff < xzLimit) &&
                     ((temp = integerSquareRoot64((s64)((0, xDiff)) * xDiff +
-                                           (((s64)temp * temp) & 0xFFFFFFFFFFFFFFFF))) < xzLimit)) {
+                                           (((s64)zDiff * zDiff) & 0xFFFFFFFFFFFFFFFF))) < xzLimit)) {
                     angle = calculateFixedAngleBetweenXZPoints(pos->x, pos->z, player->posX, player->posZ);
                     sine = fixedSine(angle);
                     cosine = fixedCosine(angle);
@@ -540,7 +542,7 @@ void pushRacePlayerOutOfCylinderAndApplyItemHit(RaceVec3i *pos, s32 xzSize, s32 
                     }
                     player->unk2C8 = ((s64)cosine * localX + (s64)sine * localZ) / 0x1000;
                     player->unk2CC = ((s64)-sine * localX + (s64)cosine * localZ) / 0x1000;
-                    player->pendingItemHitFlags |= flag;
+                    player->pendingItemHitFlags = player->pendingItemHitFlags | flag;
                 }
             }
         }
