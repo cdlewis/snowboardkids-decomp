@@ -1149,7 +1149,7 @@ void waitRaceFinishResultsFlow(void) {
 }
 #endif
 
-// interpolateRaceViewport best match: 68.700% (nonmatchings/interpolateRaceViewport-8201208972835473051/base_7.c)
+// interpolateRaceViewport best match: 73.108% (nonmatchings/interpolateRaceViewport-6887713755923057488/base_37.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race/flow/race_flow/interpolateRaceViewport.s")
 
 #ifdef NON_MATCHING
@@ -1173,9 +1173,9 @@ void interpolateRaceViewport(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s
     temp_fv0 = (((arg14 - arg7) * (f32)((volatile RaceFlowState *)gCurrentGameTask)->fadeTimer) / 15.0f) + arg7;
     temp_t3 = (((arg13 - arg6) * ((volatile RaceFlowState *)gCurrentGameTask)->fadeTimer) / 15) + arg6;
     if (gRaceCourseIndex.s != 6) {
-        configureViewport(arg0, sp2C, sp28, temp_t0 & 0xFFFF, temp_t1, temp_t2, temp_t3, temp_fv0);
+        configureViewport(arg0, sp2C, sp28, temp_t0, temp_t1, temp_t2, temp_t3, temp_fv0);
     } else {
-        configureRaceViewport(arg0, sp2C, sp28, temp_t0 & 0xFFFF, temp_t1, temp_t2, temp_t3, temp_fv0);
+        configureRaceViewport(arg0, sp2C, sp28, temp_t0, temp_t1, temp_t2, temp_t3, temp_fv0);
     }
 }
 #endif
