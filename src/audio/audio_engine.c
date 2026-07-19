@@ -1704,7 +1704,7 @@ void soundPlayerUpdateVibrato(PlayerCommandState *arg0) {
     }
 }
 
-// soundPlayerUpdateVolumeTrack best match: 99.020% (nonmatchings/soundPlayerUpdateVolumeTrack-3242520251544044307/base_15.c)
+// soundPlayerUpdateVolumeTrack best match: 99.608% (nonmatchings/soundPlayerUpdateVolumeTrack-6934502587000073416/base_13.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/audio/audio_engine/soundPlayerUpdateVolumeTrack.s")
 
 #ifdef NON_MATCHING
@@ -1720,33 +1720,36 @@ void soundPlayerUpdateVolumeTrack(PlayerCommandState *arg0) {
     register u8 temp_v0_2;
     register u8 *temp_t3;
     register u16 temp_t6;
-    register u16 temp_t9;
+    u16 new_var2;
+    register unsigned int temp_t9;
     register u16 temp_t0;
 
     if ((u32)arg0->unk4 < (u32)arg0->unk0) {
         do {
-            temp_t9 = (temp_c8 = arg0->unkC8) - one;
+            temp_s16 = (temp_c8 = arg0->unkC8);
+            temp_t9 = temp_s16 - one;
             arg0->unk4 = arg0->unk4 + 0x100;
             arg0->unkC8 = temp_t9;
             temp_t0 = (temp_t9 ^ (temp_v0 = 0)) & 0xFFFF;
             if (temp_t0 == 0) {
-                temp_v1 = (u8 *)arg0->unk60;
+                temp_t1 = (u8 *)arg0->unk60;
+                temp_v1 = temp_t1;
                 temp_v0 = *temp_v1;
-                temp_t1 = temp_v1 + one;
-                arg0->unk60 = (s32)temp_t1;
+                arg0->unk60 = (s32)(temp_v1 + one);
                 if ((s32)temp_v0 >= 0x80) {
-                    temp_t6 = temp_v0 & 0x7F;
-                    arg0->unkEF = temp_t6;
+                    temp_t6 = (arg0->unkEF = temp_v0 & 0x7F);
+                    temp_t1 = (u8 *)arg0->unk60;
                     temp_v0_2 = *temp_t1;
                     do {
                         ;
-                        temp_t3 = (temp_t1 = temp_t1 + one);
+                        temp_t3 = (temp_t1 += one);
                         arg0->unk60 = (s32)temp_t3;
                     } while (0);
                     high_mask = temp_v0_2 & 0x7F;
                     temp_t0 = one;
                     if ((s32)temp_v0_2 >= 0x80) {
-                        temp_s16 = (temp_t6 = high_mask << 8);
+                        new_var2 = (temp_t6 = high_mask << 8);
+                        temp_s16 = new_var2;
                         arg0->unkC8 = temp_t6;
                         arg0->unkC8 = temp_t6 + *temp_t3 + (new_var = 2);
                         arg0->unk60 = (s32)(temp_t3 + temp_t0);
