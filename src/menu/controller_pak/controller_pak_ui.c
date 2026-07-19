@@ -443,53 +443,47 @@ void initControllerPakFileDeleteConfirmOptions(ControllerPakOptionsActor *arg0) 
     setCallbackTaskCallback(arg0, updateControllerPakFileDeleteConfirmOptionsUi);
 }
 
-// drawControllerPakFileDeleteFreeSpaceInfo best match: 95.220% (nonmatchings/drawControllerPakFileDeleteFreeSpaceInfo-5802343343535905907/base_12.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/menu/controller_pak/controller_pak_ui/drawControllerPakFileDeleteFreeSpaceInfo.s")
-
-#ifdef NON_MATCHING
 void drawControllerPakFileDeleteFreeSpaceInfo(ControllerPakTwoPointActor *arg0) {
-    char before[4];
+    char padBefore[4];
     u16 text[4];
+    char padAfter[8];
     s32 value;
-    u16 *fill;
-    u16 *digit;
-    s32 remainder;
+    s32 i;
 
-    fill = text - 1;
-    do {
-        fill++;
-        *fill = 0xFFFE;
-    } while (fill < text + 3);
+    // IDO register allocation nudge.
+    if (1) {
+        i = 0;
+        do {
+            text[i] = 0xFFFE;
+            i++;
+        } while (i < 4);
 
-    value = gControllerPakFreeFileCount;
-    digit = &text[1];
+        value = gControllerPakFreeFileCount;
+        i = 0;
+        do {
+            text[1 - i] = value % 10;
+            value = value / 10;
+            i++;
+        } while (value != 0);
+        text[2] = 0xFFFF;
+        drawMenuGlyphScript(arg0->common.x, arg0->common.y, (u8 *)text, 1, 0x100, 8);
+        i = 0;
+    }
     do {
-        remainder = value % 10;
-        value = value / 10;
-        digit--;
-        digit[1] = remainder;
-    } while (value != 0);
-    text[2] = 0xFFFF;
-    drawMenuGlyphScript(arg0->common.x, arg0->common.y, (u8 *)text, 1, 0x100, 8);
-
-    fill = text - 1;
-    do {
-        fill++;
-        *fill = 0xFFFE;
-    } while (fill < text + 3);
+        text[i] = 0xFFFE;
+        i++;
+    } while (i < 4);
 
     value = gControllerPakFreeBytes / 0x100;
-    digit = &text[2];
+    i = 0;
     do {
-        remainder = value % 10;
+        text[2 - i] = value % 10;
         value = value / 10;
-        digit--;
-        digit[1] = remainder;
+        i++;
     } while (value != 0);
     text[3] = 0xFFFF;
     drawMenuGlyphScript(arg0->x2, arg0->y2, (u8 *)text, 1, 0x100, 8);
 }
-#endif
 
 void updateControllerPakFileDeleteFreeSpaceInfo(s32 arg0) {
     addRenderCallback(&gMenuRenderCallbackList, drawControllerPakFileDeleteFreeSpaceInfo, arg0);
