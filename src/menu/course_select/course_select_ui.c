@@ -276,7 +276,7 @@ void drawCourseSelectPreviewModel(CourseSelectCoursePreviewActor *arg0) {
 }
 #endif
 
-// updateCourseSelectPreviewModelIn best match: 93.384% (nonmatchings/updateCourseSelectPreviewModelIn-8367390958892477031/base_11.c)
+// updateCourseSelectPreviewModelIn best match: 98.598% (nonmatchings/updateCourseSelectPreviewModelIn-7998791169205557824/base_20.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/course_select/course_select_ui/updateCourseSelectPreviewModelIn.s")
 
 #ifdef NON_MATCHING
@@ -284,40 +284,37 @@ void updateCourseSelectPreviewModelIn(void *arg0) {
     CourseSelectAnimatedActor *actor;
     CourseSelectStatusOverlay *courseSelectStatus;
     CourseSelectRacePlayer *player;
-    Vec3i rotatedPosition;
     s32 i;
     s32 slideStep;
-    s32 angleIndex;
     s32 requestedState;
     s32 state;
+    Vec3i rotatedPosition;
     s32 switchState;
+    s32 case2ReachedStep;
 
     actor = arg0;
     courseSelectStatus = (CourseSelectStatusOverlay *)gCourseSelectStatus;
     i = 0;
     if ((s32)gPlayerCount > 0) {
-        angleIndex = 0;
         do {
             requestedState = courseSelectStatus->incomingPreviewModelState[i];
             state = actor->state[i];
             if (requestedState != state) {
                 actor->state[i] = requestedState;
-                actor->timer[i] = courseSelectStatus->incomingPreviewModelTimer[i];
-                actor->angle[i] = courseSelectStatus->incomingPreviewModelAngle[angleIndex];
-                courseSelectStatus->incomingPreviewModelTimer[i] = 0;
-                courseSelectStatus->incomingPreviewModelAngle[angleIndex] = 0;
+                actor->timer[i] = ((CourseSelectStatusOverlay *)gCourseSelectStatus)->incomingPreviewModelTimer[i];
+                actor->angle[i] = ((CourseSelectStatusOverlay *)gCourseSelectStatus)->incomingPreviewModelAngle[i];
+                ((CourseSelectStatusOverlay *)gCourseSelectStatus)->incomingPreviewModelTimer[i] = 0;
+                ((CourseSelectStatusOverlay *)gCourseSelectStatus)->incomingPreviewModelAngle[i] = 0;
                 state = actor->state[i];
             }
 
-            switchState = state;
-            if (gMenuFlowState != 0 && switchState < 5) {
+            if (gMenuFlowState != 0 && actor->state[i] < 5) {
                 actor->state[i] = 4;
                 actor->angle[i] = 0;
                 state = actor->state[i];
-                switchState = state;
             }
 
-            switch (switchState) {
+            switch (actor->state[i]) {
             case 0:
                 actor->vecs[i].x += -0x200000;
                 if (actor->vecs[i].x <= 0) {
@@ -351,10 +348,10 @@ void updateCourseSelectPreviewModelIn(void *arg0) {
                         actor->vecs[i].y = -D_8010AEE8[i];
                     }
                     actor->state[i] = 2;
-                    state = 2;
+                    state = actor->state[i];
                 } else if (gCurrentGameTask->screenState == 9) {
                     actor->state[i] = 8;
-                    state = 8;
+                    state = actor->state[i];
                 }
                 break;
             case 2:
@@ -363,10 +360,12 @@ void updateCourseSelectPreviewModelIn(void *arg0) {
                     slideStep = -0x200000;
                 }
                 actor->vecs[i].y += slideStep;
-                if (D_8010AEE8[i] == slideStep) {
+                case2ReachedStep = D_8010AEE8[i] == slideStep;
+                if (case2ReachedStep) {
                     actor->state[i] = 1;
                 }
-                state = actor->state[i];
+                // Compiler-shaping narrowing retained for IDO register allocation.
+                state = ((((actor->state[i] & 0xFFFFU) & 0xFFFFU) & 0xFFFFU) & 0xFFFFU) & 0xFFFFU;
                 break;
             case 3:
                 actor->timer[i]++;
@@ -386,7 +385,7 @@ void updateCourseSelectPreviewModelIn(void *arg0) {
             case 4:
                 if (gRacePlayers[i].menuState == 3) {
                     actor->state[i] = 5;
-                    state = 5;
+                    state = actor->state[i];
                 }
                 break;
             case 5:
@@ -406,10 +405,10 @@ void updateCourseSelectPreviewModelIn(void *arg0) {
             case 7:
                 if (gRacePlayers[i].menuState == 3) {
                     actor->state[i] = 5;
-                    state = 5;
+                    state = actor->state[i];
                 } else if (gCurrentGameTask->screenState == 9) {
                     actor->state[i] = 8;
-                    state = 8;
+                    state = actor->state[i];
                 }
                 break;
             case 8:
@@ -434,9 +433,8 @@ void updateCourseSelectPreviewModelIn(void *arg0) {
             actor->playerTransforms[i].translation.x = rotatedPosition.x;
             actor->playerTransforms[i].translation.y = rotatedPosition.y;
             actor->playerTransforms[i].translation.z = rotatedPosition.z;
-            courseSelectStatus->incomingPreviewModelState[i] = actor->state[i];
+            ((CourseSelectStatusOverlay *)gCourseSelectStatus)->incomingPreviewModelState[i] = actor->state[i];
             i++;
-            angleIndex++;
         } while (i < (s32)gPlayerCount);
     }
 
