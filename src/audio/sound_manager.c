@@ -4,7 +4,7 @@
 #include "game/engine/relocatable_heap.h"
 #include "game/audio/sound_manager.h"
 #include "game/engine/system_runtime.h"
-#include "game/audio/audio_engine.h"
+#include "libmus/libmus.h"
 #include "game/race/player/race_player_input.h"
 
 #define SOUND_MANAGER_FREE_HANDLE_COUNT 13
@@ -183,14 +183,14 @@ void initSoundManager(void) {
     init.unk38 = 1;
     init.unk3C = 0x20;
     init.unk40 = 0x1000;
-    initSoundPlayer(&init);
-    setSoundPlayerMasterVolume(1, 0x7FFF);
+    MusInitialize(&init);
+    MusSetMasterVolume(1, 0x7FFF);
 }
 
 void stopCurrentMusicSequence(s32 arg0) {
     if (gMusicSequenceStopped == 0) {
         if (gCurrentMusicSequenceHandle != 0) {
-            stopSoundPlayerByHandle(gCurrentMusicSequenceHandle, arg0);
+            MusHandleStop(gCurrentMusicSequenceHandle, arg0);
         }
         gMusicSequenceStopped = 1;
     }
@@ -204,12 +204,12 @@ s32 loadMusicSequenceBank(s32 arg0) {
         range = (SoundRomRange *)((arg0 * 2) + (s32 *)gMusicSequenceRomRanges);
         size = range->words[1] - range->words[0];
         dmaReadRom(range->words[0], getRelocatableHeapBlockBase(gAssetHandles.unkA), size);
-        if ((gCurrentMusicSequenceHandle = startMusicSequence((PlayerCommandData *)getRelocatableHeapBlockBase(gAssetHandles.unkA))) != 0) {
+        if ((gCurrentMusicSequenceHandle = MusStartSong((PlayerCommandData *)getRelocatableHeapBlockBase(gAssetHandles.unkA))) != 0) {
             gCurrentMusicSequenceBank = arg0;
             if (range == gRaceMusicSequenceRomRanges) {
-                setSoundPlayerMasterVolume(2, 0x7FFF);
+                MusSetMasterVolume(2, 0x7FFF);
             } else {
-                setSoundPlayerMasterVolume(2, 0x60FF);
+                MusSetMasterVolume(2, 0x60FF);
             }
             gMusicSequenceStopped = 0;
             return 0;
@@ -297,7 +297,7 @@ s32 startCurrentQueuedSoundEffect(void) {
         }
         if (gActiveSoundHandleListTail->stopRequested != 0) {
             gActiveSoundHandleListTail->stopRequested = 0;
-            stopSoundPlayerByHandle(gActiveSoundHandleListTail->handle, 0);
+            MusHandleStop(gActiveSoundHandleListTail->handle, 0);
         }
         return 0;
     }
@@ -307,7 +307,7 @@ s32 startCurrentQueuedSoundEffect(void) {
         var_a0 = (gCurrentQueuedSoundId = 0);
     }
 
-    temp_v0->handle = startSoundEffect(var_a0, gCurrentQueuedSoundVolume, gCurrentQueuedSoundPan, 0, gCurrentQueuedSoundPriority);
+    temp_v0->handle = MusStartEffect2(var_a0, gCurrentQueuedSoundVolume, gCurrentQueuedSoundPan, 0, gCurrentQueuedSoundPriority);
     temp_v0->volume = gCurrentQueuedSoundAux;
     temp_v0->priority = gCurrentQueuedSoundPriority;
     temp_v0->stopRequested = 1;
@@ -361,7 +361,7 @@ void updateSoundManager(void) {
             releaseSoundEffectHandleNode(node);
             goto next_node;
         } else {
-            if (countSoundPlayersByHandle(node->handle) == 0) {
+            if (MusHandleAsk(node->handle) == 0) {
                 releaseSoundEffectHandleNode(node);
             }
         }
@@ -371,16 +371,16 @@ void updateSoundManager(void) {
 
     right = &gPlayerLoopingSoundHandle0, left = gPlayerPositionalSoundHandle0;
     do {
-        if ((*right != 0) && (countSoundPlayersByHandle(*right) == 0)) {
+        if ((*right != 0) && (MusHandleAsk(*right) == 0)) {
             *right = 0;
         }
-        if ((*left != 0) && (countSoundPlayersByHandle(*left) == 0)) {
+        if ((*left != 0) && (MusHandleAsk(*left) == 0)) {
             *left = 0;
         }
         right++;
     } while (&gPlayerLoopingSoundHandle0 > ++left);
 
-    if ((gSharedLoopingPositionalSoundHandle != 0) && (countSoundPlayersByHandle(gSharedLoopingPositionalSoundHandle) == 0)) {
+    if ((gSharedLoopingPositionalSoundHandle != 0) && (MusHandleAsk(gSharedLoopingPositionalSoundHandle) == 0)) {
         gSharedLoopingPositionalSoundHandle = 0;
     }
 
@@ -401,7 +401,7 @@ void updateSoundManager(void) {
         gCurrentQueuedSoundType = 0;
     }
 
-    if ((gCurrentMusicSequenceHandle != 0) && (countSoundPlayersByHandle(gCurrentMusicSequenceHandle) == 0)) {
+    if ((gCurrentMusicSequenceHandle != 0) && (MusHandleAsk(gCurrentMusicSequenceHandle) == 0)) {
         gCurrentMusicSequenceHandle = 0;
         gCurrentMusicSequenceBank = -1;
     }
@@ -478,13 +478,13 @@ void stopSoundEffects(void) {
     gCurrentQueuedSoundType = 0;
     gSoundQueueWriteIndex = 0;
     gSoundQueueReadIndex = 0;
-    fadeOutSoundPlayersByType(1, 0);
+    MusStop(1, 0);
     osStartThread(&gAudioThread);
 }
 
 void fadeOutAllMusicSequences(void) {
     osStopThread(&gAudioThread);
-    fadeOutSoundPlayersByType(3, 0x14);
+    MusStop(3, 0x14);
     osStartThread(&gAudioThread);
 }
 
@@ -568,22 +568,22 @@ void updatePlayerLoopingPositionalSound(s32 soundId, s32 mode, s32 volume, f32 p
 
     if (adjustedVolume == 0) {
         if (*(&gPlayerLoopingSoundHandle0 + mode) != 0) {
-            stopSoundPlayerByHandle(*(&gPlayerLoopingSoundHandle0 + mode), 0);
+            MusHandleStop(*(&gPlayerLoopingSoundHandle0 + mode), 0);
             *(&gPlayerLoopingSoundHandle0 + mode) = 0;
         }
     } else {
         if ((*(&gPlayerLoopingSoundHandle0 + mode) != 0) && (soundId != *(&gPlayerLoopingSoundId0 + mode))) {
-            stopSoundPlayerByHandle(*(&gPlayerLoopingSoundHandle0 + mode), 0);
+            MusHandleStop(*(&gPlayerLoopingSoundHandle0 + mode), 0);
             *(&gPlayerLoopingSoundHandle0 + mode) = 0;
         }
 
         if (*(&gPlayerLoopingSoundHandle0 + mode) == 0) {
             *(&gPlayerLoopingSoundId0 + mode) = soundId;
-            *(&gPlayerLoopingSoundHandle0 + mode) = startSoundEffect(soundId, adjustedVolume, 0x80, 0, 0x46);
-            setSoundPlayerPitchOffsetByHandle(*(&gPlayerLoopingSoundHandle0 + mode), pitch);
+            *(&gPlayerLoopingSoundHandle0 + mode) = MusStartEffect2(soundId, adjustedVolume, 0x80, 0, 0x46);
+            MusHandleSetFreqOffset(*(&gPlayerLoopingSoundHandle0 + mode), pitch);
         } else {
-            setSoundPlayerVolumeByHandle(*(&gPlayerLoopingSoundHandle0 + mode), adjustedVolume);
-            setSoundPlayerPitchOffsetByHandle(*(&gPlayerLoopingSoundHandle0 + mode), pitch);
+            MusHandleSetVolume(*(&gPlayerLoopingSoundHandle0 + mode), adjustedVolume);
+            MusHandleSetFreqOffset(*(&gPlayerLoopingSoundHandle0 + mode), pitch);
         }
     }
 }
@@ -597,10 +597,10 @@ void playPlayerPositionalSound(s32 soundId, s32 playerIndex, s32 volume, s32 min
     }
     if (adjustedVolume != 0) {
         if (gPlayerPositionalSoundHandle0[playerIndex] != 0) {
-            stopSoundPlayerByHandle(gPlayerPositionalSoundHandle0[playerIndex], 0);
+            MusHandleStop(gPlayerPositionalSoundHandle0[playerIndex], 0);
             gPlayerPositionalSoundHandle0[playerIndex] = 0;
         }
-        gPlayerPositionalSoundHandle0[playerIndex] = startSoundEffect(soundId, adjustedVolume, 0x80, 0, 0x5A);
+        gPlayerPositionalSoundHandle0[playerIndex] = MusStartEffect2(soundId, adjustedVolume, 0x80, 0, 0x5A);
     }
 }
 
@@ -610,13 +610,13 @@ void updateSingleLoopingPositionalSound(s16 soundId, SoundPosition *pos, s16 vol
     adjustedVolume = calculatePositionalSoundVolume(pos, volume);
     if (adjustedVolume == 0) {
         if (gSharedLoopingPositionalSoundHandle != 0) {
-            stopSoundPlayerByHandle(gSharedLoopingPositionalSoundHandle, 0);
+            MusHandleStop(gSharedLoopingPositionalSoundHandle, 0);
             gSharedLoopingPositionalSoundHandle = 0;
         }
     } else if (gSharedLoopingPositionalSoundHandle == 0) {
-        gSharedLoopingPositionalSoundHandle = startSoundEffect(soundId, adjustedVolume, 0x80, 0, 0x32);
+        gSharedLoopingPositionalSoundHandle = MusStartEffect2(soundId, adjustedVolume, 0x80, 0, 0x32);
     } else {
-        setSoundPlayerVolumeByHandle(gSharedLoopingPositionalSoundHandle, adjustedVolume);
+        MusHandleSetVolume(gSharedLoopingPositionalSoundHandle, adjustedVolume);
     }
 }
 
@@ -625,11 +625,11 @@ void requestCourseMusicSequence(void) {
 }
 
 void countActiveSoundPlayers(void) {
-    countActiveSoundPlayersByType(3);
+    MusAsk(3);
 }
 
 s32 countActiveMusicSequences(void) {
-    countActiveSoundPlayersByType(2);
+    MusAsk(2);
 }
 
 extern PositionalSoundRequest *gPendingPositionalSoundRequests;
