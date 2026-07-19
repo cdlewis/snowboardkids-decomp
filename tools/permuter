@@ -146,7 +146,11 @@ echo "Importing from $SOURCE_FILE..."
 
 IMPORT_ARGS=("$SOURCE_FILE" "$ASM_PATH")
 if [ "$PRESERVE_F3DEX" = true ]; then
-    IMPORT_ARGS=(--preserve-macros 'g[DS]P.*' "${IMPORT_ARGS[@]}")
+    # gDPSetCombineMode's G_CC_* arguments are themselves comma-separated
+    # macros. Preserve them too so the importer retains the original
+    # three-argument invocation, plus the mux constants used by the nested
+    # gDPSetCombineLERP implementation.
+    IMPORT_ARGS=(--preserve-macros '(?:g[DS]P.*)|(?:G_CC_.*)|(?:G_[CA]CMUX_.*)' "${IMPORT_ARGS[@]}")
 fi
 
 IMPORT_OUTPUT=$(./tools/decomp-permuter/import.py "${IMPORT_ARGS[@]}" 2>&1)
