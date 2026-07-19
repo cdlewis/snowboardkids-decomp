@@ -274,7 +274,7 @@ void __MusIntSetVolumeAndPan(PlayerCommandState *arg0, s32 arg1) {
     }
 }
 
-// __MusIntSetPitch best match: 97.179% (nonmatchings/__MusIntSetPitch-1225020319268080736/base_2.c)
+// __MusIntSetPitch best match: 97.250% (nonmatchings/__MusIntSetPitch-7475224831549593718/base_6.c)
 
 #pragma GLOBAL_ASM("asm/nonmatchings/libmus/player/__MusIntSetPitch.s")
 
@@ -316,6 +316,8 @@ void __MusIntSetPitch(PlayerCommandState *arg0, s32 arg1) {
     if (1) {}
     if (1) {}
     if (1) {}
+    sequencePitchOffset++;
+    sequencePitchOffset--;
     notePitch += arg0->handlePitchOffset;
 
     if (notePitch != arg0->cachedPitch) {
