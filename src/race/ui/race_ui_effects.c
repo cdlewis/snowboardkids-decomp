@@ -2805,27 +2805,31 @@ void func_8005CE4C(RaceUiDualCounterActor *arg0) {
     setCallbackTaskCallback(arg0, func_8005CDB0);
 }
 
-// func_8005CF60 best match: 93.819% (nonmatchings/func_8005CF60-8201208972835473051/base_10.c)
+// func_8005CF60 best match: 95.097% (nonmatchings/func_8005CF60-6887713755923057488/base_19.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race/ui/race_ui_effects/func_8005CF60.s")
 
 #ifdef NON_MATCHING
+extern s16 gRaceTrickAttackPointTotalForFormat;
+
 const char D_800E143C[4] = "%d";
 const char D_800E1440[4] = "%d";
 
 void func_8005CF60(RaceUiDualCounterActor *arg0) {
-    char buffer[0x2C];
     char *ptr;
     char *ptr2;
-    Gfx *gfx;
+    char buffer[0x24];
     Gfx **gfxp;
-    s32 w0;
-    s32 w1;
     s32 x;
 
     gfxp = &gRegionAllocPtr;
-    if (arg0->alpha18 != 0xFF) { gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w1 = 0; gfx->words.w0 = 0xE7000000; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = 0xFF2FFFFF; w0 = 0xFC119623; gfx->words.w0 = w0; gfx->words.w1 = w1; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = 0x00504240; w0 = 0xB900031D; gfx->words.w0 = w0; gfx->words.w1 = w1; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w0 = 0xFA000000; gfx->words.w1 = (arg0->alpha18 & 0xFF) | (~0xFF); }
+    if (arg0->alpha18 != 0xFF) {
+        gDPPipeSync(gRegionAllocPtr++);
+        gDPSetCombineMode(gRegionAllocPtr++, G_CC_MODULATEIA_PRIM, G_CC_MODULATEIA_PRIM);
+        gDPSetRenderMode(gRegionAllocPtr++, G_RM_XLU_SURF, G_RM_XLU_SURF2);
+        gDPSetPrimColor(gRegionAllocPtr++, 0, 0, 0xFF, 0xFF, 0xFF, arg0->alpha18);
+    }
 
-    sprintf(buffer, D_800E143C, gRaceTrickAttackPointTotal);
+    sprintf(buffer, D_800E143C, gRaceTrickAttackPointTotalForFormat);
     x = -0x50;
     ptr = buffer;
     if (gRaceTrickAttackPointTotal >= 10) {
@@ -2878,12 +2882,7 @@ done2:
     if (gfxp == NULL) {
     }
     if (arg0->alpha18 != 0xFF) {
-        gfx = gRegionAllocPtr;
-        gRegionAllocPtr = gfx + 1;
-        w1 = (s32) gMenuRenderModeResetDl;
-        w0 = 0x06000000;
-        gfx->words.w0 = w0;
-        gfx->words.w1 = w1;
+        gSPDisplayList(gRegionAllocPtr++, gMenuRenderModeResetDl);
     }
 }
 #endif
