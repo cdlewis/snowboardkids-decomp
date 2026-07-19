@@ -83,7 +83,7 @@ extern u8 gCourseSelectFromRaceTypeMenu;
 extern u8 gPendingFramebufferSwapCount;
 extern u8 gFramebufferSwapHold;
 
-// initCharacterSelectCourseMenuFromRaceTypeSelect best match: 91.888% (nonmatchings/initCharacterSelectCourseMenuFromRaceTypeSelect-6866765942504228165/base_14.c)
+// initCharacterSelectCourseMenuFromRaceTypeSelect best match: 99.941% (nonmatchings/initCharacterSelectCourseMenuFromRaceTypeSelect-7998791169205557824/base_10.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/character_select/character_select_course_menu/initCharacterSelectCourseMenuFromRaceTypeSelect.s")
 
 #ifdef NON_MATCHING
@@ -94,9 +94,9 @@ void initCharacterSelectCourseMenuFromRaceTypeSelect(void) {
     s16 *activeOptions;
     s32 var_v1;
     s32 var_v0_3;
+    CharacterSelectCourseUnlockList *courseOptionsByUnlock;
     u8 temp_v1;
     CharacterSelectSaveData *var_v0;
-    CharacterSelectSaveData *temp_a0;
 
     gCurrentGameTask->fade = 0;
     requestMusicSequenceBank(2);
@@ -109,47 +109,45 @@ void initCharacterSelectCourseMenuFromRaceTypeSelect(void) {
     gMenuChoicePromptState = 0;
     gMenuFadeAlpha = gCurrentGameTask->fade;
     var_v1 = 0;
-    var_v1 = gPlayerCount;
-    if (var_v1 > 0) {
-        var_v0 = gGameSaveDataBuffer;
-        temp_a0 = &gGameSaveDataBuffer[gPlayerCount];
-        do {
+    if (gPlayerCount > var_v1) {
+        var_v0 = gGameSaveDataBuffer; do {
             temp_v1 = var_v0->highestCourse;
             var_v0 += 1;
             if (gHighestUnlockedCourse < temp_v1) {
                 gHighestUnlockedCourse = temp_v1;
             }
-        } while (var_v0 < temp_a0);
-        var_v1 = 0;
+        } while (var_v0 < &gGameSaveDataBuffer[gPlayerCount]);
+        var_v1++;
+        var_v1--;
     }
 
-    gActiveMenuTask = 0;
+    var_v1 = 0;
+    gActiveMenuTask = var_v1;
     D_8010ADE0 = 0;
     D_8010ADE4 = 0;
     sp1C = var_v1;
     setCurrentGameTaskCallback(updateCharacterSelectCourseMenu, 0);
     updateCallbackTasks();
     var_v1 = sp1C;
+    courseOptionsByUnlock = gCharacterSelectCourseOptionsByUnlock;
     if (gCourseSelectFromRaceTypeMenu == 1) {
         if (gRaceTypeSelection < 2) {
             gCharacterSelectActiveCourseOptions = (CharacterSelectOptionList *) gCharacterSelectShortCourseOptions;
-            activeOptions = gCharacterSelectShortCourseOptions;
             if ((gRaceCourseIndex != 9) && (gRaceCourseIndex != 0) && (gRaceCourseIndex != 1)) {
                 gRaceCourseIndex = 9;
             }
         } else {
             gCharacterSelectActiveCourseOptions = (CharacterSelectOptionList *) gCharacterSelectSingleCourseOption;
-            activeOptions = gCharacterSelectSingleCourseOption;
             gRaceCourseIndex = 7;
         }
     } else {
-        gCharacterSelectActiveCourseOptions = (CharacterSelectOptionList *) gCharacterSelectCourseOptionsByUnlock[gHighestUnlockedCourse];
-        activeOptions = gCharacterSelectCourseOptionsByUnlock[gHighestUnlockedCourse];
+        gCharacterSelectActiveCourseOptions = (CharacterSelectOptionList *) courseOptionsByUnlock[gHighestUnlockedCourse];
         if (gRaceCourseIndex == -1) {
             gRaceCourseIndex = 9;
         }
     }
 
+    activeOptions = *gCharacterSelectActiveCourseOptions;
     var_v0_2 = activeOptions;
 loop_20:
     if (gRaceCourseIndex == *var_v0_2) {
