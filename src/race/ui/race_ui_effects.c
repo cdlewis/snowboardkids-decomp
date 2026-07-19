@@ -4400,16 +4400,11 @@ void func_800622B0(RaceUiTransitionRenderActor *arg0) {
     }
 }
 
-// func_800623E8 best match: 98.037% (base_12.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race/ui/race_ui_effects/func_800623E8.s")
-
-#ifdef NON_MATCHING
 void func_800623E8(RaceUiTransitionActor *arg0) {
     RacePlayerState *player;
     s16 temp_v0;
     s16 temp_v1;
     s16 temp_a0;
-    s32 temp_t0;
 
     if (gRaceUpdatePaused == 0) {
         if (!(gRacePlayers[arg0->index].flags & 0x800000)) {
@@ -4419,7 +4414,7 @@ void func_800623E8(RaceUiTransitionActor *arg0) {
             player = &gRacePlayers[arg0->index];
             arg0->transformSource.source.words[5] = player->posC8.x;
             arg0->transformSource.source.words[6] = player->posC8.y;
-            arg0->transformSource.source.words[7] = (u64)player->posC8.z;
+            arg0->transformSource.source.words[7] = player->posC8.z;
         } else {
             if (arg0->unk6E == 0) {
                 removeCallbackTask(arg0);
@@ -4428,9 +4423,8 @@ void func_800623E8(RaceUiTransitionActor *arg0) {
             temp_v0 = arg0->transformSource.source.halfwords[1];
             temp_v1 = arg0->transformSource.source.halfwords[4];
             temp_a0 = arg0->transformSource.source.halfwords[7];
-            temp_t0 = arg0->unk68 - 0x1000;
-            arg0->unk68 = temp_t0;
-            arg0->transformSource.source.words[6] += temp_t0;
+            arg0->unk68 -= 0x1000;
+            arg0->transformSource.source.words[6] += arg0->unk68;
             arg0->transformSource.source.halfwords[1] = temp_v0 - (temp_v0 / 16);
             arg0->transformSource.source.halfwords[4] = temp_v1 - (temp_v1 / 16);
             arg0->transformSource.source.halfwords[7] = temp_a0 - (temp_a0 / 16);
@@ -4438,7 +4432,6 @@ void func_800623E8(RaceUiTransitionActor *arg0) {
     }
     addRenderCallback(&gRaceModelEffectRenderCallbackList, func_800622B0, arg0);
 }
-#endif
 
 void initRaceUiSpinHitTransitionEffect(RaceUiTransitionActor *arg0) {
     s16 *transform = arg0->transformSource.source.halfwords;
