@@ -99,14 +99,14 @@ extern void requestControllerPakRepair(u16);
 extern void initControllerPakDeleteConfirmPrompt(CallbackTask *);
 #endif
 
-// updateControllerPakRaceRecordSaveFlow best match: 95.751% (base_24.c)
+// updateControllerPakRaceRecordSaveFlow best match: 96.629% (base_37.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/controller_pak/controller_pak_race_record_save_flow/updateControllerPakRaceRecordSaveFlow.s")
 
 #ifdef NON_MATCHING
 void updateControllerPakRaceRecordSaveFlow(void)
 {
   s32 sp1C;
-  int new_var;
+  u32 new_var;
   s32 sp24;
   s16 var_v0;
   s32 temp_t0;
@@ -171,14 +171,14 @@ void updateControllerPakRaceRecordSaveFlow(void)
           break;
 
         case 2:
-          if (((u8) gControllerPakRaceRecordSaveStatusTransition.step) != new_var)
+          if (((u8) gControllerPakRaceRecordSaveStatusTransition.step) != 3)
         {
           sp1C = temp_t0;
-          requestControllerPakSaveWrite(0, new_var, &gControllerPakRaceRecordSaveStatusTransition, gMenuChoicePromptState);
+          requestControllerPakSaveWrite(0, 3, &gControllerPakRaceRecordSaveStatusTransition, gMenuChoicePromptState);
           if (gControllerPakRetryCounts == 0)
           {
             gControllerPakRaceRecordSaveStatusTransition.targetStatus = 5;
-            gControllerPakRaceRecordSaveStatusTransition.step = new_var;
+            gControllerPakRaceRecordSaveStatusTransition.step = 3;
             gControllerPakRaceRecordSaveStatusTransition.alpha = 0x100;
           }
           else
@@ -345,7 +345,7 @@ void updateControllerPakRaceRecordSaveFlow(void)
           if ((gPlayerInputPressed & A_BUTTON) || (gPlayerInputPressed & START_BUTTON))
         {
           enqueueSoundEffect(1, 0x32);
-          gMenuChoicePromptState = gControllerPakRaceRecordSaveStatusChoicePromptStates[gControllerPakStatusCodes];
+          gMenuChoicePromptState = gControllerPakRaceRecordSaveStatusChoicePromptStates[(long) gControllerPakStatusCodes];
         }
           break;
 
