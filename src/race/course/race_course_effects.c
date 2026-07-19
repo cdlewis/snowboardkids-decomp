@@ -760,7 +760,7 @@ void renderPatrolCourseObject(PatrolCourseObjectEffect *arg0) {
 }
 #endif
 
-// updatePatrolCourseObject best match: 98.763% at nonmatchings/updatePatrolCourseObject-2694253543240320626/base_16.c.
+// updatePatrolCourseObject best match: 98.978% at nonmatchings/updatePatrolCourseObject-6934502587000073416/base_14.c.
 #pragma GLOBAL_ASM("asm/nonmatchings/race/course/race_course_effects/updatePatrolCourseObject.s")
 
 #ifdef NON_MATCHING
@@ -800,9 +800,10 @@ void updatePatrolCourseObject(PatrolCourseObjectEffect *arg0) {
             }
             arg0->angle = (u64)(temp_a1 + var_v1);
             arg0->pos.x += fixedSine(arg0->angle) * ((s32)-arg0->unk50 / 4096);
-            dz = (arg0->pos.z += fixedCosine(arg0->angle) * ((s32)-arg0->unk50 / 4096));
+            dz = (arg0->pos.z = arg0->pos.z + (fixedCosine(arg0->angle) * ((s32)-arg0->unk50 / 4096)));
             new_var = dz;
-            arg0->surfaceIndex = findRaceCourseSurfaceFromHint(arg0->surfaceIndex, arg0->pos.x, new_var);
+            arg0->surfaceIndex =
+                findRaceCourseSurfaceFromHint(arg0->surfaceIndex, arg0->pos.x, new_var) & 0xFFFF;
             arg0->pos.y = getRaceCourseSurfaceHeight(arg0->surfaceIndex, arg0->pos.x, arg0->pos.z);
             if (arg0->pad42 != 0) {
                 dx = arg0->pos.x - arg0->startPos.x;
