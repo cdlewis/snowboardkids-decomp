@@ -296,7 +296,7 @@ void initCourseSelectMenu(void) {
 }
 #endif
 
-// updateCourseSelectModeMenu best match: 83.655% (nonmatchings/updateCourseSelectModeMenu-8808947407184708385/base_13.c)
+// updateCourseSelectModeMenu best match: 85.783% (nonmatchings/updateCourseSelectModeMenu-6887713755923057488/base_16.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/course_select/course_select_menu/updateCourseSelectModeMenu.s")
 
 #ifdef NON_MATCHING
@@ -309,7 +309,9 @@ void updateCourseSelectModeMenu(void) {
     s32 selection;
     s32 oldSelection;
     s32 tempSelection;
-    u8 transition;
+    s32 timerValue;
+    u8 timerByte;
+    u32 timerOriginal;
 
     if (gCurrentGameTask->fade != 0) {
         gCurrentGameTask->fade = stepMenuFadeAlpha((s16) gCurrentGameTask->fade, 0x24, 0);
@@ -320,8 +322,10 @@ void updateCourseSelectModeMenu(void) {
             }
         }
     } else {
-        transition = gMenuSelectionConfirmTimer;
-        if (transition == 0) {
+        timerByte = gMenuSelectionConfirmTimer;
+        timerOriginal = timerByte;
+        timerValue = timerByte;
+        if (timerByte == 0) {
             if ((gMenuTransitionState == 0) && (gCourseSelectStatus.unk28 == 1)) {
                 selection = gCourseSelectModeSelection;
                 oldSelection = selection;
@@ -331,7 +335,10 @@ void updateCourseSelectModeMenu(void) {
                     gMenuInputRepeatTimers = 0;
                 }
                 held = gPlayerInputPressed;
-                if ((held & (STICK_UP | U_JPAD)) || ((leftPressed != 0) && ((repeat = gMenuInputRepeatTimers) >= 0xB) && ((repeat % 3) == 0))) {
+                if ((held & (STICK_UP | U_JPAD)) ||
+                    ((leftPressed != 0) && ((s32) (u16) gMenuInputRepeatTimers >= 0xB) &&
+                     (((s32) (u16) gMenuInputRepeatTimers % 3) == 0))) {
+                    repeat = gMenuInputRepeatTimers;
                     repeat = gMenuInputRepeatTimers;
                     tempSelection = selection - 1;
                     if (repeat == 0) {
@@ -383,26 +390,30 @@ void updateCourseSelectModeMenu(void) {
                         gMenuExitSelection = 1;
                         enqueueSoundEffect(0x46, 0x32);
                     }
-                    transition = gMenuSelectionConfirmTimer;
+                    timerByte = gMenuSelectionConfirmTimer;
+                    timerValue = timerByte;
                 } else {
-                    transition = gMenuSelectionConfirmTimer;
-                    if ((input & B_BUTTON) && (gMenuFlowState == 2) && (transition == 0)) {
+                    timerByte = gMenuSelectionConfirmTimer;
+                    timerValue = timerByte;
+                    if ((input & B_BUTTON) && (gMenuFlowState == 2) && (timerValue == 0)) {
                         gMenuSelectionConfirmTimer = 1;
                         gCourseSelectStatus.unk28 = 2;
                         gCourseSelectStatus.unk2A = 0x100;
                         gMenuExitSelection = 1;
                         enqueueSoundEffect(0x46, 0x32);
-                        transition = gMenuSelectionConfirmTimer;
+                        timerByte = gMenuSelectionConfirmTimer;
+                        timerValue = timerByte;
                     }
                 }
             }
         } else {
-            transition += 1;
-            gMenuSelectionConfirmTimer = transition;
+            timerByte = timerOriginal + 1;
+            timerValue = timerByte;
+            gMenuSelectionConfirmTimer = timerByte;
         }
-        if (transition == 8) {
+        if (timerValue == 8) {
             gMenuTransitionState = 1;
-            gMenuSelectionConfirmTimer = transition + 1;
+            gMenuSelectionConfirmTimer = timerByte + 1;
         }
         if (gMenuTransitionState == 2) {
             gMenuSelectionConfirmTimer = 0;
