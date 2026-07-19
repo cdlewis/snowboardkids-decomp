@@ -1075,12 +1075,13 @@ void updateRaceGameplayFlow(void) {
     }
 }
 
-// waitRaceFinishResultsFlow best match: 89.250% (nonmatchings/waitRaceFinishResultsFlow-8331816093655448999/base_9.c)
+// waitRaceFinishResultsFlow best match: 91.968% (nonmatchings/waitRaceFinishResultsFlow-6887713755923057488/base_5.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race/flow/race_flow/waitRaceFinishResultsFlow.s")
 
 #ifdef NON_MATCHING
 void waitRaceFinishResultsFlow(void) {
     s32 bestPlayer;
+    s8 fixedValue;
     s8 value;
 
     D_80121B57 = 0;
@@ -1092,8 +1093,9 @@ void waitRaceFinishResultsFlow(void) {
         case 3:
             CURRENT_RACE_FLOW_TASK->unk1C = 0;
             bestPlayer = CURRENT_RACE_FLOW_TASK->unk1C;
+            fixedValue = RACE_PLAYER_RESULT_VALUE(1);
             value = RACE_PLAYER_RESULT_VALUE(bestPlayer);
-            if (RACE_PLAYER_RESULT_VALUE(1) < value) {
+            if (fixedValue < value) {
                 CURRENT_RACE_FLOW_TASK->unk1C = 1;
                 bestPlayer = CURRENT_RACE_FLOW_TASK->unk1C;
                 value = RACE_PLAYER_RESULT_VALUE(bestPlayer);
@@ -1108,8 +1110,9 @@ void waitRaceFinishResultsFlow(void) {
         case 4:
             CURRENT_RACE_FLOW_TASK->unk1C = 0;
             bestPlayer = CURRENT_RACE_FLOW_TASK->unk1C;
+            fixedValue = RACE_PLAYER_RESULT_VALUE(1);
             value = RACE_PLAYER_RESULT_VALUE(bestPlayer);
-            if (RACE_PLAYER_RESULT_VALUE(1) < value) {
+            if (fixedValue < value) {
                 CURRENT_RACE_FLOW_TASK->unk1C = 1;
                 bestPlayer = CURRENT_RACE_FLOW_TASK->unk1C;
                 value = RACE_PLAYER_RESULT_VALUE(bestPlayer);
