@@ -151,6 +151,11 @@ typedef struct {
 } RacePlayerState;
 
 typedef struct {
+    /* 0x00 */ s8 active;
+    /* 0x01 */ u8 pad1[0xB0 - 0x01];
+} RacePlayerHudStatus;
+
+typedef struct {
     /* 0x00 */ u8 pad0[0x14];
     /* 0x14 */ s16 modelVtxHandle;
     /* 0x16 */ s16 modelTextureHandle;
@@ -855,6 +860,13 @@ typedef struct {
 } RaceUiSparkleTransformScratch;
 
 typedef struct {
+    /* 0x00 */ u8 pad30[4];
+    /* 0x04 */ Vec3i vec;
+    /* 0x10 */ FixedMatrix3s matrix;
+    /* 0x22 */ u8 pad52[4];
+} RaceUiSparkleRetargetScratch;
+
+typedef struct {
     /* 0x00 */ s16 pathIndex;
     /* 0x02 */ u8 pad2[0x48 - 0x2];
 } CourseSpawnEntry;
@@ -899,6 +911,8 @@ extern void *D_801248C8;
 extern u8 gPlayerCount;
 extern u8 gRaceUpdatePaused;
 extern s8 gRacePlayerCount;
+extern u8 gRaceOrderPlayerIds[];
+extern RacePlayerHudStatus gRacePlayerHudStatuses[];
 extern u8 gRaceChallengeFailed;
 extern RacePlayerUnsignedPlacement D_80121D90[];
 extern s32 D_80121DA4;
@@ -3400,32 +3414,27 @@ void func_8005EA4C(RaceUiSparkleActor *arg0) {
     addRenderCallback(&D_801248EC, func_8005E6D0, (s32) arg0);
 }
 
-// func_8005ECA8 best match: 99.671% (nonmatchings/func_8005ECA8-1225020319268080736/base_1.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race/ui/race_ui_effects/func_8005ECA8.s")
-
-#ifdef NON_MATCHING
 void func_8005ECA8(RaceUiSparkleActor *arg0) {
-    FixedMatrix3sScratch matrix;
     RacePlayerState *player;
     s16 timer;
     s32 selectedPlayerIndex;
-    s32 vec[3];
     s32 activeCount;
+    RaceUiSparkleRetargetScratch scratch;
 
     if (gRaceUpdatePaused == 0) {
         if (gFrameCounter & 1) {
             arg0->frame = (arg0->frame + 1) & 3;
         }
 
-        vec[0] = 0;
-        vec[1] = arg0->zOffset;
-        vec[2] = 0;
+        scratch.vec.x = 0;
+        scratch.vec.y = arg0->zOffset;
+        scratch.vec.z = 0;
 
         player = &gRacePlayers[arg0->playerIndex];
         if (arg0) {
         }
-        makeFixedRotationXY(matrix, player->pitch, player->yaw);
-        transformVec3iByFixedMatrix(matrix, (Vec3i *) vec, &arg0->pos);
+        makeFixedRotationXY(scratch.matrix, player->pitch, player->yaw);
+        transformVec3iByFixedMatrix(scratch.matrix, &scratch.vec, &arg0->pos);
 
         player = &gRacePlayers[arg0->playerIndex];
         arg0->pos.x += player->pos28.x;
@@ -3435,16 +3444,17 @@ void func_8005ECA8(RaceUiSparkleActor *arg0) {
 
         timer = arg0->timer;
         if (timer == 0) {
-            arg0->scale -= 0x200;
             arg0->alpha += arg0->alphaStep;
+            arg0->scale -= 0x200;
             if (arg0->scale < 0) {
                 arg0->scale = 0;
             }
-            if (arg0->alpha < selectedPlayerIndex) {
+            if (arg0->alpha < 0) {
                 arg0->alpha = 0;
                 arg0->alphaStep = 0x10;
                 activeCount = randomNextMain() ^ 0;
                 if (activeCount > 0) {
+                    selectedPlayerIndex = 0;
                     if ((gRacePlayerCount >= 4) && (arg0->playerIndex != gRaceOrderPlayerIds[3]) &&
                         (activeCount > 0)) {
                         selectedPlayerIndex = gRaceOrderPlayerIds[3];
@@ -3480,7 +3490,6 @@ void func_8005ECA8(RaceUiSparkleActor *arg0) {
 
     addRenderCallback(&D_801248EC, func_8005E6D0, (s32) arg0);
 }
-#endif
 
 void func_8005EFFC(RaceUiSparkleActor *arg0) {
     s16 sp38[0x10];
