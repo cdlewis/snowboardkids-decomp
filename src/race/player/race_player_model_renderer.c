@@ -316,28 +316,25 @@ void drawRacePlayerModel(RacePlayerModelRenderState *player) {
     }
 }
 
-// drawRaceGhostPlayerModel best match: 99.003% (base_7.c, 370 differences)
-#pragma GLOBAL_ASM("asm/nonmatchings/race/player/race_player_model_renderer/drawRaceGhostPlayerModel.s")
-
-#ifdef NON_MATCHING
 void drawRaceGhostPlayerModel(RacePlayerModelRenderState *player) {
     RacePlayerModelRenderState *countPlayer;
     RacePlayerModelRenderState *partVtxPlayer;
     u8 (*partSource)[0x20];
     s32 i;
     s32 alphaPulse;
-    s16 partCount;
     Gfx *segmentGfx;
 
     countPlayer = player;
     if (gRenderMatricesDirty != 0) {
-        partCount = player->partCount;
         player->flags |= RACE_PLAYER_MODEL_RENDERER_FLAG_SHADOW;
         i = 0;
-        if (partCount > 0) {
+        if (player->partCount > 0) {
             partVtxPlayer = player;
             partSource = player->partSources;
             do {
+                // Folded away by IDO, but preserves the target's saved-register allocation.
+                if ((partVtxPlayer && partVtxPlayer) && partVtxPlayer) {
+                }
                 partVtxPlayer->partVtx[0] = allocFixedTransformMatrix(partSource);
                 if (partVtxPlayer->partVtx[0] == NULL) {
                     player->flags &= ~RACE_PLAYER_MODEL_RENDERER_FLAG_SHADOW;
@@ -358,7 +355,7 @@ void drawRaceGhostPlayerModel(RacePlayerModelRenderState *player) {
         alphaPulse = 0x1F - alphaPulse;
     }
     alphaPulse = (alphaPulse * 4) + 0x26;
-    gDPSetPrimColor(gRegionAllocPtr++, 0, 0, 0, 0, 0, alphaPulse & 0xFF);
+    gDPSetPrimColor(gRegionAllocPtr++, 0, 0, 0, 0, 0, alphaPulse);
 
     drawRaceGhostPlayerModelRootPart(player->partVtx[0], player->texHeaderIndex, player->textureVariant);
 
@@ -395,4 +392,3 @@ void drawRaceGhostPlayerModel(RacePlayerModelRenderState *player) {
         gSPDisplayList(gRegionAllocPtr++, gRaceGhostPlayerModelPart12DisplayLists[player->textureSet]);
     }
 }
-#endif
