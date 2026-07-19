@@ -22,11 +22,12 @@ typedef struct {
 } RaceStartTransitionState;
 
 typedef struct {
-    u8 pad0[0x35];
-    u8 unk35;
-    u8 unk36;
-    u8 unk37;
-    u8 unk38;
+    u8 ready;
+} RaceReadinessFlag;
+
+typedef struct {
+    u8 pad0[0x34];
+    RaceReadinessFlag readiness[5];
     u8 unk39;
     u8 unk3A;
     u8 pad3B[2];
@@ -111,7 +112,7 @@ void updateMenuCameraObjectWithTargetOffsetCallback(void) {
     updateMenuCameraObjectWithTargetOffset();
 }
 
-// initRaceStartTransition best match: 98.224% (nonmatchings/initRaceStartTransition-8808947407184708385/base_1.c)
+// initRaceStartTransition best valid match: 98.537% (nonmatchings/initRaceStartTransition-6887713755923057488/base_7.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race/effects/race_start_transition/initRaceStartTransition.s")
 
 #ifdef NON_MATCHING
@@ -140,45 +141,38 @@ const f32 D_800E1094 = 1.333333373f;
 const f32 D_800E1098 = 1.333333373f;
 
 void initRaceStartTransition(void) {
-    volatile RaceSetupSaveData *save;
-    s32 transition;
     s32 effectArg;
     s32 allReady;
-    u8 state;
+    s32 transition;
 
     transition = 0;
     if (gRaceSplitscreenMode == 0) {
         if (gPlayerCount == 1) {
-            save = &gGameSaveDataBuffer;
-            state = save->unk4C;
-            if ((state == 2) && (gGameSaveDataBuffer.unk3A == 1)) {
+            if ((gGameSaveDataBuffer.unk4C == 2) && (gGameSaveDataBuffer.unk3A == 1)) {
                 gGameSaveDataBuffer.unk4C = 3;
                 gPendingEndingCreditsFlow = 1;
-                state = save->unk4C;
                 transition = 3;
             }
-            if ((state == 1) && (save->unk39 == 1)) {
+            if ((gGameSaveDataBuffer.unk4C == 1) && (gGameSaveDataBuffer.unk39 == 1)) {
                 transition = 2;
                 gGameSaveDataBuffer.unk4C = 2;
-                state = 2 & 0xFF;
-                state = gGameSaveDataBuffer.unk4C;
             }
-            if (state == 0) {
+            if (gGameSaveDataBuffer.unk4C == 0) {
                 if (gGameSaveDataBuffer.unk3D == 1) {
                     allReady = 1;
                     if (D_800ECA24 != 1) {
                         allReady = 0;
                     }
-                    if (gGameSaveDataBuffer.unk35 != 1) {
+                    if (gGameSaveDataBuffer.readiness[1].ready != 1) {
                         allReady = 0;
                     }
-                    if (gGameSaveDataBuffer.unk36 != 1) {
+                    if (gGameSaveDataBuffer.readiness[2].ready != 1) {
                         allReady = 0;
                     }
-                    if (gGameSaveDataBuffer.unk37 != 1) {
+                    if (gGameSaveDataBuffer.readiness[3].ready != 1) {
                         allReady = 0;
                     }
-                    if (gGameSaveDataBuffer.unk38 != 1) {
+                    if (gGameSaveDataBuffer.readiness[4].ready != 1) {
                         allReady = 0;
                     }
                     if (allReady != 0) {
@@ -222,8 +216,7 @@ void initRaceStartTransition(void) {
     createCallbackTaskWithUserId(initRaceSetupCharacterFocus, 0, 0x64, D_80121D90);
     createRaceSetupOpponentFocus(1, gRaceSetupOpponentFocusCharacterIds[D_80121D90][0]);
     createRaceSetupOpponentFocus(2, gRaceSetupOpponentFocusCharacterIds[D_80121D90][1]);
-    allReady = gRaceSetupOpponentFocusCharacterIds[D_80121D90][2];
-    createRaceSetupOpponentFocus(3, allReady);
+    createRaceSetupOpponentFocus(3, gRaceSetupOpponentFocusCharacterIds[D_80121D90][2]);
     createRaceSetupOpponentFocus(4, gRaceSetupOpponentFocusCharacterIds[D_80121D90][3]);
     setCurrentGameTaskCallback(updateRaceStartTransitionIntroDelay, 0);
 }
