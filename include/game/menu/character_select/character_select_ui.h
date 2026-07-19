@@ -84,7 +84,10 @@ typedef struct {
     /* 0x28 */ s16 xDistance[4];
     /* 0x30 */ s16 yDistance[4];
     /* 0x38 */ s16 accumulator[4];
-    /* 0x40 */ u16 tileSize[4];
+    union {
+        /* 0x40 */ u16 tileSize[4];
+        /* 0x40 */ s16 signedTileSize[4];
+    };
     /* 0x48 */ s16 xDirection[4];
     /* 0x50 */ s16 timer[4];
     /* 0x58 */ s16 stepCount[4];

@@ -770,7 +770,7 @@ void drawCharacterSelectSelectedCharacterTokens(CharacterSelectUiSelectedCharact
     }
 }
 
-// updateCharacterSelectSelectedCharacterTokens best match: 86.079% (nonmatchings/updateCharacterSelectSelectedCharacterTokens-7892263622508053986/base_3.c)
+// updateCharacterSelectSelectedCharacterTokens best match: 94.820% (nonmatchings/updateCharacterSelectSelectedCharacterTokens-7475224831549593718/base_24.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/character_select/character_select_ui/updateCharacterSelectSelectedCharacterTokens.s")
 
 #ifdef NON_MATCHING
@@ -778,8 +778,9 @@ void updateCharacterSelectSelectedCharacterTokens(CharacterSelectUiSelectedChara
     CharacterSelectUiPanelTransitionActor *panelFrames;
     CharacterSelectUiSelectedCharacterTokenActor *tokens;
     s32 playerIndex;
-    s32 tokenState;
-    s32 rosterX;
+    s32 menuState;
+    u8 state;
+    s16 rosterX;
     s16 yDirection;
     s32 step;
     s32 exitXStep;
@@ -792,20 +793,23 @@ void updateCharacterSelectSelectedCharacterTokens(CharacterSelectUiSelectedChara
     playerIndex = 0;
     if ((s32)gPlayerCount > 0) {
         do {
-            tokenState = tokens->state[playerIndex];
-            if (gCharacterSelectHudState.selectedTokenState[playerIndex] != tokenState) {
-                tokenState = gCharacterSelectHudState.selectedTokenState[playerIndex];
-                tokens->state[playerIndex] = tokenState;
+            menuState = gCharacterSelectHudState.selectedTokenState[playerIndex];
+            step = 0;
+            state = tokens->state[playerIndex];
+            if (state != (menuState & 0xFFFFFFFF)) {
+                state = menuState;
+                arg0->state[playerIndex] = menuState;
             }
 
-            switch (tokenState) {
+            switch (state) {
             case CHARACTER_SELECT_TOKEN_IDLE:
                 break;
             case CHARACTER_SELECT_TOKEN_START:
-                tokenState = gRacePlayers[playerIndex].menuSelection;
-                if ((s32)tokenState < 5) {
-                    rosterX = (tokenState * 0x20) - 0x40;
-                } else if (tokenState == 5) {
+                menuState = gRacePlayers[playerIndex].menuSelection;
+                if ((s32)menuState < 5) {
+                    rosterX = menuState;
+                    rosterX = (rosterX * 0x20) - 0x40;
+                } else if (menuState == 5) {
                     rosterX = -0x70;
                 } else {
                     rosterX = 0x50;
@@ -813,10 +817,10 @@ void updateCharacterSelectSelectedCharacterTokens(CharacterSelectUiSelectedChara
 
                 panelX = panelFrames->x[playerIndex] + 0x38;
                 panelY = panelFrames->y[playerIndex];
-                tokens->xDistance[playerIndex] = panelX - rosterX;
-                tokens->yDistance[playerIndex] = panelY + 0x20;
-                tokens->xDirection[playerIndex] = 1;
-                if (tokens->xDistance[playerIndex] < 0) {
+                arg0->xDistance[playerIndex] = panelX - rosterX;
+                arg0->yDistance[playerIndex] = panelY + 0x20;
+                arg0->xDirection[playerIndex] = 1;
+                if (arg0->xDistance[playerIndex] < 0) {
                     tokens->xDirection[playerIndex] = -1;
                     tokens->xDistance[playerIndex] = tokens->xDistance[playerIndex] * -1;
                 }
@@ -824,8 +828,8 @@ void updateCharacterSelectSelectedCharacterTokens(CharacterSelectUiSelectedChara
                     tokens->yDistance[playerIndex] = tokens->yDistance[playerIndex] * -1;
                 }
 
-                tokens->axis[playerIndex] = 0;
                 tokens->divisor[playerIndex] = tokens->xDistance[playerIndex] / 0x20;
+                tokens->axis[playerIndex] = 0;
                 tokens->stepCount[playerIndex] = tokens->xDistance[playerIndex] / 4;
                 if (tokens->xDistance[playerIndex] < tokens->yDistance[playerIndex]) {
                     tokens->axis[playerIndex] = 1;
@@ -834,15 +838,15 @@ void updateCharacterSelectSelectedCharacterTokens(CharacterSelectUiSelectedChara
                 }
                 tokens->x[playerIndex] = rosterX;
                 tokens->y[playerIndex] = -8;
-                tokens->tileSize[playerIndex] = 1;
+                tokens->signedTileSize[playerIndex] = 1;
                 tokens->timer[playerIndex] = 0;
                 tokens->state[playerIndex] = CHARACTER_SELECT_TOKEN_FLYING;
-                tokenState = tokens->state[playerIndex];
+                state = tokens->state[playerIndex];
                 break;
             case CHARACTER_SELECT_TOKEN_FLYING:
-                step = 0;
                 if (playerIndex & 1) {
                     yDirection = 1;
+                    state = tokens->state[playerIndex];
                 } else {
                     yDirection = -1;
                 }
@@ -865,19 +869,20 @@ void updateCharacterSelectSelectedCharacterTokens(CharacterSelectUiSelectedChara
                         }
                         tokens->timer[playerIndex]++;
                         if ((tokens->timer[playerIndex] % tokens->divisor[playerIndex]) == 0) {
-                            tokens->tileSize[playerIndex]++;
+                            arg0->signedTileSize[playerIndex]++;
                         }
-                        if (tokens->tileSize[playerIndex] >= 0x21) {
-                            tokens->tileSize[playerIndex] = 0x20;
+                        if (arg0->signedTileSize[playerIndex] >= 0x21) {
+                            arg0->signedTileSize[playerIndex] = 0x20;
                         }
                         if ((tokens->x[playerIndex] == panelFrames->x[playerIndex] + 0x38) && (tokens->y[playerIndex] == panelFrames->y[playerIndex] + 0x18)) {
-                            tokens->state[playerIndex] = CHARACTER_SELECT_TOKEN_LANDED;
-                            tokens->tileSize[playerIndex] = 0x20;
-                            tokenState = tokens->state[playerIndex];
-                            goto next_player;
+                            arg0->state[playerIndex] = CHARACTER_SELECT_TOKEN_LANDED;
+                            arg0->signedTileSize[playerIndex] = 0x20;
+                            state = tokens->state[playerIndex];
+                            break;
                         }
                         step++;
                     } while (step < tokens->stepCount[playerIndex]);
+                    state = tokens->state[playerIndex];
                 }
                 break;
             case CHARACTER_SELECT_TOKEN_LANDED:
@@ -886,8 +891,7 @@ void updateCharacterSelectSelectedCharacterTokens(CharacterSelectUiSelectedChara
                 break;
             }
 
-next_player:
-            gCharacterSelectHudState.selectedTokenState[playerIndex] = tokenState;
+            gCharacterSelectHudState.selectedTokenState[playerIndex] = state;
             playerIndex++;
         } while (playerIndex < (s32)gPlayerCount);
     }
@@ -916,8 +920,9 @@ next_player:
                         panelFrames->frameCounter -= panelFrames->frameLimit;
                     }
                 }
-                tokens->x[playerIndex] = panelFrames->x[playerIndex] + 0x38;
-                tokens->y[playerIndex] = panelFrames->y[playerIndex] + 0x18;
+                arg0->x[playerIndex] = panelFrames->x[playerIndex] + 0x38;
+                yDirection = panelFrames->y[playerIndex] + 0x18;
+                arg0->y[playerIndex] = yDirection;
             }
             step++;
             if (panelFrames->x[0] == -0x114) {
