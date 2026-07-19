@@ -75,13 +75,13 @@ typedef struct PlayerCommandState {
     PlayerCommandData *data;
     s32 sequencePos;
     s32 restartPos;
-    s32 unk60;
+    u8 *unk60;
     s32 unk64;
     u8 *unk68;
     s32 unk6C;
     s32 jumpTarget;
     u8 *returnScripts[5];
-    s32 returnUnk60[5];
+    u8 *returnUnk60[5];
     u8 *returnUnk68[5];
     s16 unkB0;
     s16 unkB2;
