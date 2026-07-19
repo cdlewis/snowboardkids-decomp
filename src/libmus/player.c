@@ -2,40 +2,25 @@
 
 #include "player_commands.c"
 
-// Fgoto best match: 98.2% (nonmatchings/Fgoto-8757365433159351387/base_10.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/libmus/player/Fgoto.s")
-
-#ifdef NON_MATCHING
 s32 Fgoto(PlayerCommandState *arg0, u8 *arg1) {
-    register s32 temp_v0;
-    register s32 temp_v1;
-    s32 temp_t9;
-    PlayerCommandState *state;
-    u8 *command;
-    s32 temp_t7;
+    s32 offset;
+    s32 sequenceOffset;
 
-    temp_v0 = arg1[2];
-    temp_v1 = arg1[0];
-    temp_t9 = (arg1[3] & 0xFF) & 0xFF;
-    temp_v0 = temp_v0 << 8;
-    arg1 += 5;
-    command = arg1 - 5;
-    temp_t7 = command[1];
-    temp_v0 = temp_v0 + (temp_t9 & 0xFFFFu);
-    temp_t9 = arg0->unk64;
-    arg0->unk60 = temp_t9 + temp_v0;
-    state = arg0;
-    state->unkC8 = 1;
-    temp_v0 = command[4];
-    temp_t9 = command[5];
-    temp_v0 = (temp_v0 << 8) + (temp_t9 & 0xFF);
-    state->unk68 = arg0->unk6C + temp_v0;
-    temp_v1 = (temp_v1 << 8) + temp_t7;
+    sequenceOffset = *arg1++ << 8;
+    sequenceOffset += *arg1++;
+
+    offset = *arg1++ << 8;
+    offset += *arg1++;
+    arg0->unk60 = arg0->unk64 + offset;
+    arg0->unkC8 = 1;
+
+    offset = *arg1++ << 8;
+    offset += *arg1++;
+    arg0->unk68 = arg0->unk6C + offset;
     arg0->unkCA = 1;
-    temp_t7 = arg0->restartPos;
-    return temp_t7 + temp_v1;
+
+    return arg0->restartPos + sequenceOffset;
 }
-#endif
 
 #include "player_commands_tail.c"
 #include "player_api.c"
