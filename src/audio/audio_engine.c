@@ -89,6 +89,9 @@ extern u8 *gSoundPlayerHeapEnd;
 extern u8 *gSoundPlayerVoices;
 extern s32 gSoundPlayerCount;
 extern PlayerCommandState *gSoundPlayerStates;
+extern ALWaveTable **gSoundWaveTable;
+extern s32 gSoundBankEntryCount;
+extern PlayerCommandBank *gCurrentSoundBank;
 extern u8 *gSoundPlayerTuningTable;
 extern f32 *gSoundPlayerPitchOffsets;
 extern s32 *gSoundPriorityTable;
@@ -1348,8 +1351,6 @@ typedef u8 *(*PlayerCommandHandler)(PlayerCommandState *, u8 *, s32);
 
 extern PlayerCommandHandler gSoundPlayerCommandHandlers[];
 extern u8 gSoundPlayerDefaultVelocities[];
-extern u8 *gSoundWaveTable;
-extern s32 gSoundBankEntryCount;
 
 void soundPlayerReadNextNote(PlayerCommandState *arg0, s32 arg1) {
     u8 *seq;
@@ -1443,7 +1444,7 @@ void soundPlayerReadNextNote(PlayerCommandState *arg0, s32 arg1) {
                 arg0->unkB6 = 0xFFFF;
                 arg0->unkE3 = 0xFF;
                 alSynStartVoice(&gAudioSynthesizer, (ALVoice *)(gSoundPlayerVoices + (arg1 * 0x1C)),
-                                *(ALWaveTable **)(gSoundWaveTable + (soundIndex * 4)));
+                                gSoundWaveTable[soundIndex]);
             }
 
             arg0->notePitch = gSoundPlayerTuningTable[soundIndex] + arg0->unkFE - 5;
@@ -1835,43 +1836,28 @@ f32 approximatePitchRatio(f32 arg0) {
         ((f64)(fourth * square) * 0.00015403530393381601)));
 }
 
-// loadSoundBank best match: 99.845%
-
-#pragma GLOBAL_ASM("asm/nonmatchings/audio/audio_engine/loadSoundBank.s")
-
-#ifdef NON_MATCHING
-extern u8 *gSoundWaveTable;
-extern s32 gSoundBankEntryCount;
-extern PlayerCommandBank *gCurrentSoundBank;
-
 void loadSoundBank(PlayerCommandBank *bank, s32 sampleBaseOffset) {
-    s32 count;
     s32 i;
-    s32 offset;
     ALWaveTable *wave;
 
-    gCurrentSoundBank = bank;
-    count = bank->waveCount;
-    gSoundBankEntryCount = ((count & 0xFFFFFFFFFFFFFFFF) & 0xFFFFFFFFFFFFFFFF) & 0xFFFFFFFFFFFFFFFF;
-    gSoundWaveTable = alHeapDBAlloc(0, 0, &gSoundPlayerHeap, 1, count * 4);
+    gSoundBankEntryCount = (gCurrentSoundBank = bank)->waveCount;
+    gSoundWaveTable = alHeapDBAlloc(0, 0, &gSoundPlayerHeap, 1,
+                                   gSoundBankEntryCount * sizeof(*gSoundWaveTable));
 
     i = 0;
     if (gSoundBankEntryCount > 0) {
-        offset = 0;
         do {
-            *(ALWaveTable **)(gSoundWaveTable + offset) =
-                (ALWaveTable *)(*(s32 *)((u8 *)gCurrentSoundBank->waveTableOffsets + offset) + (s32)gCurrentSoundBank);
-            wave = *(ALWaveTable **)(gSoundWaveTable + offset);
+            gSoundWaveTable[i] =
+                (ALWaveTable *)(gCurrentSoundBank->waveTableOffsets[i] + (s32)gCurrentSoundBank);
+            wave = gSoundWaveTable[i];
             if (wave->flags == 0) {
-                do {
-                    wave->base += sampleBaseOffset;
-                    (*(ALWaveTable **)(gSoundWaveTable + offset))->flags = 1;
-                    wave = *(ALWaveTable **)(gSoundWaveTable + offset);
-                } while (0);
+                wave->base += sampleBaseOffset;
+                gSoundWaveTable[i]->flags = 1;
+                wave = gSoundWaveTable[i];
                 if (wave->waveInfo.adpcmWave.loop != 0) {
                     wave->waveInfo.adpcmWave.loop =
                         (ALADPCMloop *)((s32)wave->waveInfo.adpcmWave.loop + (s32)gCurrentSoundBank);
-                    wave = *(ALWaveTable **)(gSoundWaveTable + offset);
+                    wave = gSoundWaveTable[i];
                 }
                 if (wave->type == AL_ADPCM_WAVE) {
                     wave->waveInfo.adpcmWave.book =
@@ -1879,12 +1865,10 @@ void loadSoundBank(PlayerCommandBank *bank, s32 sampleBaseOffset) {
                 }
             }
             i++;
-            offset += 4;
         } while (i < gSoundBankEntryCount);
     }
     osWritebackDCacheAll();
 }
-#endif
 
 s32 soundPlayerRandom(s32 arg0) {
     s32 temp_v1;

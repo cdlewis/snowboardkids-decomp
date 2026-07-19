@@ -159,6 +159,11 @@ and control flow already match and only register *names* differ.
   value between `$v0` and `$v1` under `-O2`; a plain compound block does not
   necessarily have the same effect. Reserve this for a final register-only
   mismatch after confirming that the condition emits no branch.
+- **Fold a pointer-global assignment into its first field access.** Writing
+  `(current = ptr)->field` can emit the same store and field load as two
+  statements while giving IDO a distinct internal temporary for the assigned
+  pointer. This can fix an otherwise isolated register-allocation mismatch and
+  is especially plausible when matched sibling functions use the same shape.
 - **Bind a return expression's intermediate to a named local.** When an
   intermediate computation (e.g. a shift) must occupy a temp distinct from
   `$v0`, capture it in a named local and return that local, rather than
