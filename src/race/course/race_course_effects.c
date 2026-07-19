@@ -1236,15 +1236,12 @@ void initCourseGateObject(CourseGateObjectEffect *arg0) {
     setCallbackTaskCallback(arg0, waitForCourseGateTrigger);
 }
 
-// renderCourseBillboardMarker best match: 99.860% at nonmatchings/renderCourseBillboardMarker-2341155904261615822/base_4.c.
-#pragma GLOBAL_ASM("asm/nonmatchings/race/course/race_course_effects/renderCourseBillboardMarker.s")
-
-#ifdef NON_MATCHING
 void renderCourseBillboardMarker(RaceCourseMarkerEffect *arg0) {
     Gfx *segmentGfx;
     Gfx *gfx;
     s32 i;
     s16 vertexCount;
+    Gfx *newGfx;
     u8 pad[0x10];
 
     if (gRenderMatricesDirty != 0) {
@@ -1255,16 +1252,17 @@ void renderCourseBillboardMarker(RaceCourseMarkerEffect *arg0) {
                 do {
                     arg0->vertices[i] = arg0->baseVertices[i];
                     arg0->vertices[i].v.tc[1] += arg0->rotation;
-                    arg0->vertices[i].v.tc[1] = arg0->vertices[i].v.tc[1];
+                    arg0->vertices[i].v.tc[1] &= 0xFFFF;
                     i++;
-                } while ((i < arg0->vertexCount) != 0);
+                } while (i < arg0->vertexCount);
             }
         }
     }
 
     if (arg0->vertices != NULL) {
         gDPPipeSync(gRegionAllocPtr++);
-        segmentGfx = gRegionAllocPtr++;
+        newGfx = gRegionAllocPtr++;
+        segmentGfx = newGfx;
         segmentGfx->words.w0 = 0xBC000806;
         segmentGfx->words.w1 = (u32) getRelocatableHeapBlockBase(ASSET_HANDLE(0x8));
         gSPMatrix(gRegionAllocPtr++, gIdentityMatrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
@@ -1279,7 +1277,6 @@ void renderCourseBillboardMarker(RaceCourseMarkerEffect *arg0) {
         gSPDisplayList(gRegionAllocPtr++, arg0->palettePtr);
     }
 }
-#endif
 
 void updateCourseBillboardMarker(RaceCourseMarkerEffect *arg0) {
     arg0->rotation -= 0x40;
