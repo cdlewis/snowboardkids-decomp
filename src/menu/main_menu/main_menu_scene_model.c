@@ -346,7 +346,7 @@ s32 saveRaceRecordReplayData(void) {
 #undef RACE_INPUT_HISTORY_LENGTH
 #endif
 
-// loadCurrentRaceRecordReplayData best match: 85.133% (nonmatchings/loadCurrentRaceRecordReplayData-2870645799593382959/base_3.c)
+// loadCurrentRaceRecordReplayData best match: 97.083% (nonmatchings/loadCurrentRaceRecordReplayData-6934502587000073416/base_46.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/main_menu/main_menu_scene_model/loadCurrentRaceRecordReplayData.s")
 
 #ifdef NON_MATCHING
@@ -367,18 +367,18 @@ void loadCurrentRaceRecordReplayData(void) {
     u16 *srcBase;
     u16 *src;
     u8 *dst;
-    u8 *model;
     s32 outPos;
     s32 count;
     s32 copied;
-    u16 code;
+    s32 code;
     s32 length;
     s32 offset;
     s32 remainder;
     u8 *copy;
+    RaceInputHistoryBuffer *history;
     s32 i;
-    u8 *read;
-    u8 *write;
+    volatile u8 *read;
+    s32 copyMore;
 
     srcBase = &D_800ECC46;
     outPos = 0;
@@ -427,48 +427,47 @@ loop:
     if (length != 0) {
         goto compressed;
     }
-    dst[outPos] = code;
+    dst[outPos] = (u16)code;
     outPos++;
-    src++;
-    goto loop;
+    goto next;
 
 compressed:
     offset = outPos - (code & 0x3FF);
-    if (length <= 0) {
-        goto next;
-    }
-    remainder = length & 3;
-    if (remainder == 0) {
-        goto copy4;
-    }
-    copy = offset + dst;
+    if (length > 0) {
+        remainder = length & 3;
+        if (remainder == 0) {
+            goto copy4;
+        }
+        copy = offset + dst;
 copy1:
-    dst[outPos] = *copy;
-    copied++;
-    outPos++;
-    copy++;
-    if (remainder != copied) {
-        goto copy1;
-    }
-    if (copied == length) {
-        goto next;
-    }
+        dst[outPos] = *copy;
+        copied++;
+        outPos++;
+        copy++;
+        if (remainder != copied) {
+            goto copy1;
+        }
+        if (copied == length) {
+            goto next;
+        }
 
 copy4:
-    copy = offset + copied + dst;
+        copy = offset + copied + dst;
 copy4_loop:
-    dst[outPos] = copy[0];
-    outPos++;
-    dst[outPos] = copy[1];
-    outPos++;
-    dst[outPos] = copy[2];
-    outPos++;
-    dst[outPos] = copy[3];
-    copied += 4;
-    outPos++;
-    copy += 4;
-    if (copied != length) {
-        goto copy4_loop;
+        dst[outPos] = copy[0];
+        outPos++;
+        dst[outPos] = copy[1];
+        outPos++;
+        dst[outPos] = copy[2];
+        outPos++;
+        dst[outPos] = copy[3];
+        copied += 4;
+        copyMore = copied != length;
+        outPos++;
+        copy += 4;
+        if (copyMore) {
+            goto copy4_loop;
+        }
     }
 next:
     src++;
@@ -476,29 +475,26 @@ next:
 
 done:
     read = dst;
-    model = (u8 *)getRelocatableHeapBlockBase(ASSET_HANDLE(7));
-    *(s32 *)&model[0] = 0;
-    *(s32 *)&model[4] = *(s16 *)&read[0];
-    model[8] = 1;
-    model[9] = gRaceCourseIndex;
-    model[10] = *(s8 *)&read[2];
-    model[12] = 0;
-    model[11] = *(s8 *)&read[3];
+    history = (RaceInputHistoryBuffer *)getRelocatableHeapBlockBase(ASSET_HANDLE(7));
+    history->writeIndex = 0;
+    copied = *(volatile s16 *)&read[0];
+    history->lastWriteIndex = copied;
+    history->enabled = 1;
+    history->pad9[0] = gRaceCourseIndex;
+    history->pad9[1] = *(volatile s8 *)&read[2];
+    history->pad9[2] = *(volatile s8 *)&read[3];
+    history->pad9[3] = 0;
 
     i = 0;
-    if (*(s16 *)&read[0] <= 0) {
+    if (copied <= 0) {
         return;
     }
-    read = dst;
-    write = model;
 write_loop:
+    history->stickX[i] = *(s8 *)&D_8010B200[4 + (i * 3)];
+    history->stickY[i] = *(s8 *)&D_8010B200[5 + (i * 3)];
+    history->buttons[i] = D_8010B200[6 + (i * 3)];
     i++;
-    write[0xD] = *(s8 *)&read[4];
-    write[0x11A1] = *(s8 *)&read[5];
-    read += 3;
-    write++;
-    write[0x2334] = read[3];
-    if (i < *(s32 *)&model[4]) {
+    if (i < history->lastWriteIndex) {
         goto write_loop;
     }
 }
