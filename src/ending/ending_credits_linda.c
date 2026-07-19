@@ -1,6 +1,7 @@
 #include "common.h"
 #include "game/engine/callback_task_scheduler.h"
 #include "game/ending/ending_credits_effects.h"
+#include "game/ending/ending_credits_flow.h"
 #include "game/ending/ending_credits_linda.h"
 #include "game/menu/main_menu/main_menu_scene_model.h"
 #include "game/menu/main_menu/main_menu_scene_model_renderer.h"
@@ -44,8 +45,6 @@ extern void makeFixedRotationX(void *, s16);
 extern void makeFixedRotationZ(void *, s16);
 extern void multiplyFixedMatrix3s(void *, void *, void *);
 extern void makeFixedRotationYX(void *, s16, s16, ...);
-extern u16 gEndingCreditsSequencePhase;
-extern u8 gEndingCreditsHandshakeState;
 extern s32 gModelRenderCallbackList;
 extern void *D_8010ADE0;
 
