@@ -1,6 +1,7 @@
 #include "common.h"
 #include "game/engine/callback_task_scheduler.h"
 #include "game/ending/ending_credits_effects.h"
+#include "game/ending/ending_credits_flow.h"
 #include "game/ending/ending_credits_slash.h"
 #include "game/ending/ending_credits_tommy.h"
 #include "game/menu/main_menu/main_menu_scene_model.h"
@@ -19,10 +20,6 @@ struct EndingCreditsSlash {
 };
 
 extern MainMenuSceneActorShadow gEndingActorShadow;
-
-extern u16 gEndingCreditsSequencePhase;
-extern u8 gEndingCreditsHandshakeState;
-extern u8 gEndingCreditsTransitionSnowboardIconSpinStep;
 
 void noopEndingCreditsSlash(void) {
 }

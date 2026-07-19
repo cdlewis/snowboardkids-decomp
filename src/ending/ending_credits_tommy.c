@@ -2,6 +2,7 @@
 #include "game/engine/callback_task_scheduler.h"
 #include "game/math/fixed_point_math.h"
 #include "game/ending/ending_credits_effects.h"
+#include "game/ending/ending_credits_flow.h"
 #include "game/ending/ending_credits_tommy.h"
 #include "game/menu/main_menu/main_menu_scene_model.h"
 #include "game/menu/main_menu/main_menu_scene_model_renderer.h"
@@ -45,7 +46,6 @@ typedef struct {
 extern void getAssetTableImageAndPalette(s32 arg0, s32 arg1, void **arg2, void **arg3);
 extern Mtx *allocFixedTransformMatrix(GfxCommandSource *arg0);
 extern MainMenuSceneActorShadow gEndingActorShadow;
-extern u16 gEndingCreditsSequencePhase;
 extern void addRenderCallback(void *, void *, void *);
 extern s32 gModelRenderCallbackList;
 extern Gfx *gRegionAllocPtr;

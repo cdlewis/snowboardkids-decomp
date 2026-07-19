@@ -1,6 +1,7 @@
 #include "common.h"
 #include "game/engine/callback_task_scheduler.h"
 #include "game/ending/ending_credits_effects.h"
+#include "game/ending/ending_credits_flow.h"
 #include "game/ending/ending_credits_jam.h"
 #include "game/ending/ending_credits_linda.h"
 #include "game/menu/main_menu/main_menu_scene_model.h"
@@ -16,9 +17,6 @@ struct EndingCreditsJam {
     /* 0x28 */ s16 rotZ;
     /* 0x2A */ u16 timer;
 };
-
-extern u8 gEndingCreditsHandshakeState;
-extern u16 gEndingCreditsSequencePhase;
 
 void updateEndingJamFinalPose(EndingCreditsJam *arg0) {
     stepMainMenuSceneModelAnimation(2);

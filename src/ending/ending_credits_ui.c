@@ -2,6 +2,7 @@
 #include "game/engine/relocatable_heap.h"
 #include "game/engine/callback_task_scheduler.h"
 #include "game/ending/ending_credits_ui.h"
+#include "game/ending/ending_credits_flow.h"
 #define MENU_RENDERER_BROAD_PROTOTYPES
 #include "game/menu/renderer/menu_renderer.h"
 
@@ -43,7 +44,6 @@ typedef struct {
     /* 0x16 */ s16 pad;
 } EndingCreditsPageTextLineLayout;
 
-extern u16 gEndingCreditsSequencePhase;
 extern s16 gAssetHandles[];
 extern void *gMenuRenderCallbackList;
 extern s32 gPlayerInputHeld;

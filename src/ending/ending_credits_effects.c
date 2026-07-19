@@ -2,6 +2,7 @@
 #include "game/engine/relocatable_heap.h"
 #include "game/engine/callback_task_scheduler.h"
 #include "game/ending/ending_credits_effects.h"
+#include "game/ending/ending_credits_flow.h"
 #include "game/menu/main_menu/main_menu_scene_model.h"
 #define MENU_RENDERER_BROAD_PROTOTYPES
 #include "game/menu/renderer/menu_renderer.h"
@@ -63,9 +64,6 @@ extern s32 gMenuRenderCallbackList;
 extern Gfx gMenuRenderModeResetDl[];
 extern s16 gMenuFadeAlpha;
 extern s16 gAssetHandles[];
-extern u16 gEndingCreditsSequencePhase;
-extern u8 gEndingCreditsTransitionSnowboardIconSpinStep;
-extern s16 gEndingCreditsTransitionSnowboardIconAngle;
 extern u16 gEndingCreditsTransitionSnowboardIconExpandFrameCounter;
 extern u16 gEndingCreditsNancyRunDustFrameOffsets[];
 extern u16 gEndingCreditsTommySnowmanEntranceFrameOffsets[];

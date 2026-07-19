@@ -14,7 +14,7 @@ enum EndingCreditsCharacterId {
     ENDING_CREDITS_CHARACTER_COUNT
 };
 
-extern u8 gEndingCreditsCharacterAuraDoneFlags[];
+extern u8 gEndingCreditsCharacterAuraDoneFlags[ENDING_CREDITS_CHARACTER_COUNT];
 
 void spawnEndingCreditsCharacterVanishPoof(s16 arg0, s16 arg1, u8 arg2, u8 arg3);
 void initEndingCreditsNancySpeedLines(EndingCreditsEffectActor *arg0);

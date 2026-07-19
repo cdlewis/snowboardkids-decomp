@@ -325,6 +325,11 @@ and control flow already match and only register *names* differ.
 
 ## Globals, data, and linker behavior
 
+- **Adjacent narrow BSS globals do not imply a struct.** IDO naturally packs
+  distinct byte and halfword globals at their type alignment within one
+  translation unit. The containing `.bss` contribution can then receive
+  larger section-end padding, so distinguish object-boundary padding from
+  padding between C objects before inferring an aggregate type.
 - **Local definition vs. `extern` affects codegen.** IDO generates different
   code for globals defined in the current TU (can keep base addresses in
   registers across adjacent stores) versus globals declared `extern` (can

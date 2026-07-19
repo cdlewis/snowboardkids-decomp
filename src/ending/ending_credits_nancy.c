@@ -1,6 +1,7 @@
 #include "common.h"
 #include "game/engine/callback_task_scheduler.h"
 #include "game/ending/ending_credits_effects.h"
+#include "game/ending/ending_credits_flow.h"
 #include "game/ending/ending_credits_nancy.h"
 #include "game/menu/main_menu/main_menu_scene_model.h"
 #include "game/menu/main_menu/main_menu_scene_model_renderer.h"
@@ -15,8 +16,6 @@ struct EndingCreditsNancy {
     /* 0x28 */ s16 rotZ;
     /* 0x2A */ u16 timer;
 };
-
-extern u16 gEndingCreditsSequencePhase;
 
 void updateEndingNancyFinalPose(EndingCreditsNancy *arg0) {
     stepMainMenuSceneModelAnimation(1);

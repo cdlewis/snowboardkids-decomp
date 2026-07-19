@@ -42,6 +42,14 @@ typedef struct {
 
 typedef void (*CallbackTaskCallback)(void *);
 
+/* These globals form the original 0x10-byte ending_credits_flow BSS contribution. */
+s16 gEndingCreditsUnusedValue;
+u16 gEndingCreditsSequencePhase;
+u8 gEndingCreditsHandshakeState;
+u8 gEndingCreditsTransitionSnowboardIconSpinStep;
+s16 gEndingCreditsTransitionSnowboardIconAngle;
+u8 gEndingCreditsCharacterAuraDoneFlags[ENDING_CREDITS_CHARACTER_COUNT];
+
 extern void releaseMenuAssetHandles(void);
 
 extern u8 D_14B450[];
@@ -56,11 +64,6 @@ extern u8 D_60ECB0[];
 extern u8 D_60F1A0[];
 extern s8 gFramebufferSwapDelay;
 extern s16 gMenuFadeAlpha;
-extern s16 gEndingCreditsUnusedValue;
-extern u16 gEndingCreditsSequencePhase;
-extern s8 gEndingCreditsHandshakeState;
-extern u8 gEndingCreditsTransitionSnowboardIconSpinStep;
-extern s16 gEndingCreditsTransitionSnowboardIconAngle;
 extern Vec3i gMenuCameraTargetOffset;
 extern s16 gAssetHandles[];
 extern MenuCameraObject D_801121E0;
