@@ -151,6 +151,12 @@ and control flow already match and only register *names* differ.
   `value >>= N; consume(field + value);` can preserve the target shift while
   making the field the first `addu` operand. The inline equivalent
   `consume((value >> N) + field);` often gives IDO the opposite operand order.
+- **Split chained arithmetic assignments on a narrow parameter.** Writing
+  `arg = arg * K; arg = arg - bias;` can emit the same shift/subtract/narrow
+  sequence as `arg = (arg * K) - bias`, while changing IDO's SSA coalescing
+  enough to rotate the surrounding temporary registers. This is a clean nudge
+  when the instruction stream already matches and only register allocation
+  differs.
 - **Force commutative operand order with the comma operator.** `(0, x)` is a
   standard decomp idiom that flips the operand order IDO assigns for a
   commutative op, with no runtime effect.
