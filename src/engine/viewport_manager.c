@@ -106,72 +106,60 @@ void configureViewport(s32 arg0, s32 arg1, s32 arg2, u16 arg3, u16 arg4, u16 arg
 }
 #endif
 
-// configureViewportWithFovAndFarClip best match: 97.634% (nonmatchings/configureViewportWithFovAndFarClip-5512657642801906896/base_3.c)
+// configureViewportWithFovAndFarClip best match: 98.053%
+// (nonmatchings/configureViewportWithFovAndFarClip-6887713755923057488/base_5.c)
 
 #pragma GLOBAL_ASM("asm/nonmatchings/engine/viewport_manager/configureViewportWithFovAndFarClip.s")
 
 #ifdef NON_MATCHING
 extern void guPerspective(ViewportMtx *, u16 *, f32, f32, f32, f32, f32);
-extern f32 gCustomViewportOverlayFarClip;
 
-void configureViewportWithFovAndFarClip(s32 arg0, s32 arg1, s32 arg2, u16 arg3, u16 arg4, u16 arg5, u16 arg6, f32 arg7,
-                                        s16 arg8, s32 arg9) {
-    ViewportState *viewport;
-    s32 halfHeight;
-    s32 boundsInvalid;
-    u32 boundsValid;
-    f32 fovy;
-    s32 halfWidth;
+void configureViewportWithFovAndFarClip(s32 viewportIndex, s32 centerX, s32 centerY, u16 width, u16 height, u16 scaleX,
+                                        u16 scaleY, f32 aspect, s16 fovY, s32 farClip) {
+    gViewportStates[viewportIndex].viewportTranslateX = centerX * 4;
+    gViewportStates[viewportIndex].active = 1;
+    gViewportStates[viewportIndex].viewportTranslateY = centerY * 4;
+    gViewportStates[viewportIndex].viewportScaleX = scaleX * 2;
+    gViewportStates[viewportIndex].viewportScaleY = scaleY * 2;
+    gViewportStates[viewportIndex].left = centerX - (width / 2);
+    gViewportStates[viewportIndex].right = (width / 2) + centerX;
+    gViewportStates[viewportIndex].top = centerY - (height / 2);
+    gViewportStates[viewportIndex].bottom = (height / 2) + centerY;
+    gViewportStates[viewportIndex].left = gViewportStates[viewportIndex].left;
+    gViewportStates[viewportIndex].top = gViewportStates[viewportIndex].top;
+    gViewportStates[viewportIndex].right = gViewportStates[viewportIndex].right;
+    gViewportStates[viewportIndex].bottom = gViewportStates[viewportIndex].bottom;
+    gViewportStates[viewportIndex].screenBoundsValid = 1;
 
-    boundsValid = (halfHeight = 1);
-    (&gViewportStates[arg0])->viewportTranslateX = arg1 * 4;
-    (&gViewportStates[arg0])->active = halfHeight;
-    (&gViewportStates[arg0])->viewportTranslateY = arg2 * 4;
-    (&gViewportStates[arg0])->viewportScaleX = arg5 * 2;
-    (&gViewportStates[arg0])->viewportScaleY = arg6 * 2;
-    halfWidth = arg3 / 2;
-    (&gViewportStates[arg0])->left = arg1 - halfWidth;
-    (&gViewportStates[arg0])->right = halfWidth + arg1;
-    halfHeight = arg4 / 2;
-    (&gViewportStates[arg0])->top = arg2 - halfHeight;
-    (&gViewportStates[arg0])->bottom = halfHeight + arg2;
-    (&gViewportStates[arg0])->left = (&gViewportStates[arg0])->left;
-    (&gViewportStates[arg0])->top = (&gViewportStates[arg0])->top;
-    (&gViewportStates[arg0])->right = (&gViewportStates[arg0])->right;
-    (&gViewportStates[arg0])->bottom = (&gViewportStates[arg0])->bottom;
-    (&gViewportStates[arg0])->screenBoundsValid = boundsValid;
-    boundsInvalid = 0;
-
-    if ((&gViewportStates[arg0])->right < 0) {
-        (&gViewportStates[arg0])->screenBoundsValid = 0;
+    if (gViewportStates[viewportIndex].right < 0) {
+        gViewportStates[viewportIndex].screenBoundsValid = 0;
     }
-    if ((&gViewportStates[arg0])->bottom < 0) {
-        (&gViewportStates[arg0])->screenBoundsValid = boundsInvalid;
+    if (gViewportStates[viewportIndex].bottom < 0) {
+        gViewportStates[viewportIndex].screenBoundsValid = 0;
     }
-    if ((&gViewportStates[arg0])->left >= 0x140) {
-        (&gViewportStates[arg0])->screenBoundsValid = 0;
+    if (gViewportStates[viewportIndex].left >= 0x140) {
+        gViewportStates[viewportIndex].screenBoundsValid = 0;
     }
-    if ((&gViewportStates[arg0])->top >= 0xF0) {
-        (&gViewportStates[arg0])->screenBoundsValid = 0;
+    if (gViewportStates[viewportIndex].top >= 0xF0) {
+        gViewportStates[viewportIndex].screenBoundsValid = 0;
     }
-    if ((&gViewportStates[arg0])->left < 0) {
-        (&gViewportStates[arg0])->left = 0;
+    if (gViewportStates[viewportIndex].left < 0) {
+        gViewportStates[viewportIndex].left = 0;
     }
-    if ((&gViewportStates[arg0])->top < 0) {
-        (&gViewportStates[arg0])->top = 0;
+    if (gViewportStates[viewportIndex].top < 0) {
+        gViewportStates[viewportIndex].top = 0;
     }
-    if ((&gViewportStates[arg0])->right >= 0x140) {
-        (&gViewportStates[arg0])->right = 0x13F;
+    if (gViewportStates[viewportIndex].right >= 0x140) {
+        gViewportStates[viewportIndex].right = 0x13F;
     }
-    if ((&gViewportStates[arg0])->bottom >= 0xF0) {
-        (&gViewportStates[arg0])->bottom = 0xEF;
+    if (gViewportStates[viewportIndex].bottom >= 0xF0) {
+        gViewportStates[viewportIndex].bottom = 0xEF;
     }
 
-    fovy = (f32)arg8;
-    guPerspective(&(&gViewportStates[arg0])->projection, &(&gViewportStates[arg0])->perspectiveNorm, fovy, arg7, 10.0f,
-                  (f32)arg9, 0.5f);
-    guPerspective(&(&gViewportStates[arg0])->overlayProjection, &(&gViewportStates[arg0])->overlayPerspectiveNorm, fovy, arg7,
-                  10.0f, gCustomViewportOverlayFarClip, 0.5f);
+    guPerspective(&gViewportStates[viewportIndex].projection, &gViewportStates[viewportIndex].perspectiveNorm, (f32)fovY,
+                  aspect, 10.0f, (f32)farClip, 0.5f);
+    guPerspective(&gViewportStates[viewportIndex].overlayProjection,
+                  &gViewportStates[viewportIndex].overlayPerspectiveNorm, (f32)fovY, aspect, 10.0f, 15000.0f, 0.5f);
 }
 #endif
 
