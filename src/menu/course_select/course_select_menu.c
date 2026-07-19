@@ -1099,7 +1099,7 @@ void initCourseSelectCourseDetailsMenu(void) {
     updateCallbackTasks();
 }
 
-// updateCourseSelectCourseDetailsMenu best match: 98.804% (nonmatchings/updateCourseSelectCourseDetailsMenu-6934502587000073416/base_38.c)
+// updateCourseSelectCourseDetailsMenu best match: 98.852% (nonmatchings/updateCourseSelectCourseDetailsMenu-7475224831549593718/base_20.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/course_select/course_select_menu/updateCourseSelectCourseDetailsMenu.s")
 
 #ifdef NON_MATCHING
@@ -1164,7 +1164,7 @@ void updateCourseSelectCourseDetailsMenu(void) {
         if (repeat) {
             repeat += 1;
             gMenuInputRepeatTimers = repeat;
-            if ((((((((repeat & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) == 0xFFFF) {
+            if ((((((((repeat & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) == ((0xFFFF & 0xFFFF) & 0xFFFF)) {
                 gMenuInputRepeatTimers = 0xC;
             }
         }
@@ -1175,10 +1175,9 @@ void updateCourseSelectCourseDetailsMenu(void) {
             gMenuExitSelection = 2;
         }
         soundId = 0x18;
-        condition = gPlayerInputPressed & START_BUTTON;
         repeat = 1;
-        if ((gPlayerInputPressed & A_BUTTON) || condition ||
-            (gMenuExitSelection != 0)) {
+        if ((gPlayerInputPressed & A_BUTTON) || (gPlayerInputPressed & START_BUTTON) ||
+            ((selection = gMenuExitSelection) != 0)) {
             if (((u8) gCourseDetailsMenuSelection >= 7) || (gMenuExitSelection != 0)) {
                 enqueueSoundEffect(soundId, 0x32);
             }
