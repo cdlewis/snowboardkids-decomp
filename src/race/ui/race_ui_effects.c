@@ -2887,7 +2887,7 @@ done2:
 }
 #endif
 
-// func_8005D1CC best match: 98.894% (nonmatchings/func_8005D1CC-8367390958892477031/base_9.c, permuter artifact)
+// func_8005D1CC best match: 99.159% (nonmatchings/func_8005D1CC-6887713755923057488/base_25.c, permuter artifact)
 #pragma GLOBAL_ASM("asm/nonmatchings/race/ui/race_ui_effects/func_8005D1CC.s")
 
 #ifdef NON_MATCHING
@@ -2963,6 +2963,8 @@ loop3:
     }
 
     if (visibleRows >= 3) {
+        if (gPlayer1Money && gPlayer1Money) {
+        }
         x = 0x18;
         ptr = 0;
         sprintf(buffer - 4, D_800E1450, gPlayer1Money, ptr);
