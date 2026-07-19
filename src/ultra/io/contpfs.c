@@ -94,7 +94,7 @@ s32 __osRepairPackId(OSPfs* pfs, __OSPackId* oldId, __OSPackId* repairedId) {
 
         if (bank > 0) {
             ERRCK(SELECT_BANK(pfs, 0));
-            ERRCK(__osContRamRead(pfs->queue, pfs->channel, 0, (u8*)probeBlock));
+            ERRCK(__osContRamRead(pfs->queue, pfs->channel, 0, probeBlock));
 
             if (probeBlock[0] != 0x80) {
                 break;
@@ -125,7 +125,7 @@ s32 __osRepairPackId(OSPfs* pfs, __OSPackId* oldId, __OSPackId* repairedId) {
         ERRCK(__osContRamWrite(pfs->queue, pfs->channel, idBlockAddresses[byteIndex], (u8*)repairedId, TRUE));
     }
 
-    ERRCK(__osContRamRead(pfs->queue, pfs->channel, PFS_ID_0AREA, (u8*)probeBlock));
+    ERRCK(__osContRamRead(pfs->queue, pfs->channel, PFS_ID_0AREA, probeBlock));
 
     for (byteIndex = 0; byteIndex < BLOCKSIZE; byteIndex++) {
         if (probeBlock[byteIndex] != ((u8*)repairedId)[byteIndex]) {
