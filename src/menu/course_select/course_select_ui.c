@@ -1038,31 +1038,38 @@ void updateCourseSelectCourseIconList(CourseSelectIconListActor *arg0) {
 }
 #endif
 
-// initCourseSelectCourseIconList best match: 65.621% (nonmatchings/initCourseSelectCourseIconList-3357475854818838508/base_1.c)
+// initCourseSelectCourseIconList best match: 96.310% (nonmatchings/initCourseSelectCourseIconList-6934502587000073416/base_19.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/course_select/course_select_ui/initCourseSelectCourseIconList.s")
 
 #ifdef NON_MATCHING
-void initCourseSelectCourseIconList(CourseSelectIconListActor *actor) {
+void initCourseSelectCourseIconList(CourseSelectIconListActor *arg0) {
+    CourseSelectIconListActor *actor;
+    u8 *courseUnlocked;
     s16 *yLayout;
     s16 *xLayout;
-    s32 hasExtraCourse;
+    s16 hasExtraCourse;
+    s32 isCharacterFive;
     s32 playerIndex;
     s32 layoutIndex;
+    s32 iconIndex;
 
-    if ((s32) gPlayerCount < 3) {
+    actor = arg0;
+    if ((s32)gPlayerCount < 3) {
         layoutIndex = gPlayerCount - 1;
     } else {
         layoutIndex = 2;
     }
 
     playerIndex = 0;
-    if ((s32) gPlayerCount > 0) {
+    if ((s32)gPlayerCount > 0) {
+        courseUnlocked = D_8010AEA0;
         yLayout = gCourseSelectIconListYLayout[layoutIndex];
         xLayout = gCourseSelectIconListXLayout[layoutIndex];
         do {
-            if (D_8010AEA0[playerIndex] != 0) {
+            if (*courseUnlocked != 0) {
+                isCharacterFive = gRacePlayers[playerIndex].selectedCharacterId == 5;
                 hasExtraCourse = 1;
-                if (gRacePlayers[playerIndex].state == 5) {
+                if (isCharacterFive) {
                     hasExtraCourse = 0;
                 }
             } else {
@@ -1086,22 +1093,22 @@ void initCourseSelectCourseIconList(CourseSelectIconListActor *actor) {
                 actor->clipLeft = 0x88;
             }
 
-            actor->y[playerIndex][0] = actor->startY[playerIndex];
-            actor->x[playerIndex][0] = actor->baseX[playerIndex];
-            actor->y[playerIndex][1] = actor->startY[playerIndex];
-            actor->x[playerIndex][1] = actor->baseX[playerIndex] + actor->speed[playerIndex];
-            actor->y[playerIndex][2] = actor->startY[playerIndex];
-            actor->x[playerIndex][2] = actor->baseX[playerIndex] + (actor->speed[playerIndex] * 2);
-            actor->y[playerIndex][3] = actor->startY[playerIndex];
-            actor->x[playerIndex][3] = actor->baseX[playerIndex] + (actor->speed[playerIndex] * 3);
+            iconIndex = 0;
+            do {
+                actor->y[playerIndex][iconIndex] = actor->startY[playerIndex];
+                actor->x[playerIndex][iconIndex] =
+                    actor->baseX[playerIndex] + (actor->speed[playerIndex] * iconIndex);
+                iconIndex++;
+            } while (iconIndex < 5);
+            actor->timer[playerIndex] = 0;
+            actor->itemCounts[playerIndex] = 1;
             actor->state[playerIndex] = 0;
-            actor->timer[playerIndex] = 1;
-            actor->itemCounts[playerIndex] = 0;
 
+            courseUnlocked++;
             playerIndex++;
-        } while (playerIndex < (s32) gPlayerCount);
+        } while (playerIndex < (s32)gPlayerCount);
     }
-    setCallbackTaskCallback(actor, updateCourseSelectCourseIconList);
+    setCallbackTaskCallback(arg0, updateCourseSelectCourseIconList);
 }
 #endif
 
