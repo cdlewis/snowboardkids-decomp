@@ -22,7 +22,7 @@ s32 MusInitialize(PlayerCommandInit *arg0) {
     mus_voices = alHeapDBAlloc(0, 0, &gSoundPlayerHeap, 1, max_channels * sizeof(ALVoice));
     mus_channels = alHeapDBAlloc(0, 0, &gSoundPlayerHeap, 1, max_channels * sizeof(PlayerCommandState));
 
-    __MusIntMemSet(mus_voices, 0, max_channels * sizeof(ALVoice));
+    __MusIntMemSet((u8 *)mus_voices, 0, max_channels * sizeof(ALVoice));
     __MusIntMemSet(mus_channels, 0, max_channels * sizeof(PlayerCommandState));
 
     synConfig.maxVVoices = max_channels;
@@ -57,7 +57,7 @@ s32 MusInitialize(PlayerCommandInit *arg0) {
         vc.unityPitch = 0;
         vc.priority = arg0->outputRate;
         vc.fxBus = 0;
-        alSynAllocVoice(&gAudioSynthesizer, &mus_voices[i * 0x1C], &vc);
+        alSynAllocVoice(&gAudioSynthesizer, &mus_voices[i], &vc);
     }
 
     return gSoundPlayerHeapEnd - gSoundPlayerHeap.base;

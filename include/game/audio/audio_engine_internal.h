@@ -89,7 +89,7 @@ extern s32 *libmus_fxheader_current;
 extern ALPlayer plr_player;
 extern ALHeap gSoundPlayerHeap;
 extern u8 *gSoundPlayerHeapEnd;
-extern u8 *mus_voices;
+extern ALVoice *mus_voices;
 extern s32 max_channels;
 extern PlayerCommandState *mus_channels;
 extern ALWaveTable **gSoundWaveTable;
