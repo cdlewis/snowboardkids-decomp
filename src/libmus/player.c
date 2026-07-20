@@ -247,12 +247,13 @@ void __MusIntSetVolumeAndPan(PlayerCommandState *arg0, s32 arg1) {
     }
 }
 
-// __MusIntSetPitch best match: 97.250% (nonmatchings/__MusIntSetPitch-7475224831549593718/base_6.c)
+// __MusIntSetPitch best match: 97.393% (nonmatchings/__MusIntSetPitch-5787290371232622032/base_2.c)
 
 #pragma GLOBAL_ASM("asm/nonmatchings/libmus/player/__MusIntSetPitch.s")
 
 #ifdef NON_MATCHING
 void __MusIntSetPitch(PlayerCommandState *arg0, s32 arg1) {
+    f32 interpolationStep;
     register f32 notePitch;
     f32 portamentoStartPitch;
     f32 portamentoPitchStep;
@@ -272,11 +273,14 @@ void __MusIntSetPitch(PlayerCommandState *arg0, s32 arg1) {
     portamentoTime = arg0->portamentoTime;
     if ((portamentoTime != (0, 0)) && (portamentoTime >= arg0->noteAgeTicks)) {
         portamentoStartPitch = arg0->portamentoStartPitch;
+        interpolationStep = (notePitch - portamentoStartPitch) / (f32)portamentoTime;
+        portamentoPitchStep = interpolationStep;
         if (1) {
-            portamentoPitchStep = (notePitch - portamentoStartPitch) / (f32)portamentoTime;
             portamentoPitchStep *= arg0->noteAgeTicksF;
             notePitch = portamentoStartPitch + portamentoPitchStep;
         }
+        portamentoPitchStep++;
+        portamentoPitchStep--;
     }
 
     sequencePitchOffset = (f32)arg0->pitchOffset * (f32)(1 - arg0->skipPitchOffsetOnce);
