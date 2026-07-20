@@ -82,7 +82,7 @@ typedef struct {
     /* 0x0156 */ RaceTime raceRecords[11][5];
     /* 0x0232 */ RaceFlowResultEntry unk232[9];
     /* 0x0256 */ u8 pad256[0x7756 - 0x256];
-    /* 0x7756 */ s16 trickAttackScores[11][5];
+    /* 0x7756 */ u16 trickAttackScores[11][5];
     /* 0x77C4 */ u8 trickAttackCharacterIds[11][5];
     /* 0x77FB */ u8 timeTrialCharacterIds[11][5];
     /* 0x7832 */ u8 scoreAttackScores[11][5];
@@ -1289,20 +1289,11 @@ void zoomRaceWinnerViewport(void) {
     }
 }
 
-// prepareRaceResultsFlow best clean match: 94.530% (nonmatchings/prepareRaceResultsFlow-1225020319268080736/base_7.c)
-// Highest permuter score: 94.807% (base_5.c), rejected as an empty-branch artifact.
-#pragma GLOBAL_ASM("asm/nonmatchings/race/flow/race_flow/prepareRaceResultsFlow.s")
-
-#ifdef NON_MATCHING
 void prepareRaceResultsFlow(void) {
     RacePlayerState *player;
-    RaceTime *record;
-    s16 *trickScore;
-    u8 *score;
-    s32 playerIndex;
-    s32 recordIndex;
-    s32 currentTime;
+    s32 i;
     s32 recordTime;
+    s32 currentTime;
 
     gPendingEndingCreditsFlow = 0;
     gFramebufferSwapDelay = 0;
@@ -1312,35 +1303,36 @@ void prepareRaceResultsFlow(void) {
     switch (gRaceSplitscreenMode) {
     case 0:
         gRaceResultState = 1;
-        playerIndex = 0;
+        i = 0;
         if (gPlayerCount > 0) {
             player = gRacePlayers;
             do {
                 if (player->result == 0) {
-                    D_80121B60 = playerIndex + 1;
+                    D_80121B60 = i + 1;
                 }
-                playerIndex++;
+                i++;
                 player++;
-            } while (playerIndex < gPlayerCount);
+            } while (i < gPlayerCount);
         }
         break;
 
     case 2:
-        currentTime = (gRaceElapsedTimer.seconds * COURSE_TIME_SECOND) + gRaceElapsedTimer.fraction + (gRaceElapsedTimer.minutes * COURSE_TIME_MINUTE);
-        record = gGameSaveDataBuffer.timeTrialRecords[gRaceCourseIndex.s];
-        recordIndex = 0;
+        currentTime = gRaceElapsedTimer.fraction + (gRaceElapsedTimer.seconds * COURSE_TIME_SECOND) +
+                      (gRaceElapsedTimer.minutes * COURSE_TIME_MINUTE);
+        i = 0;
         do {
-            recordTime = (record->minutes * COURSE_TIME_MINUTE) + record->fraction + (record->seconds * COURSE_TIME_SECOND);
+            recordTime = gGameSaveDataBuffer.timeTrialRecords[gRaceCourseIndex.s][i].fraction +
+                         (gGameSaveDataBuffer.timeTrialRecords[gRaceCourseIndex.s][i].seconds * COURSE_TIME_SECOND) +
+                         (gGameSaveDataBuffer.timeTrialRecords[gRaceCourseIndex.s][i].minutes * COURSE_TIME_MINUTE);
             if (currentTime < recordTime) {
                 break;
             }
-            recordIndex++;
-            record++;
-        } while (recordIndex < 5);
-        if (recordIndex < 5) {
+            i++;
+        } while (i < 5);
+        if (i < 5) {
             gRaceResultState = 1;
             D_80121B60 = 1;
-            if (recordIndex == 0) {
+            if (i == 0) {
                 D_80121B61 = 1;
             }
         } else {
@@ -1350,21 +1342,20 @@ void prepareRaceResultsFlow(void) {
 
     case 1:
         if (gRaceTypeSelection != 0) {
-            recordIndex = 0;
-            if (gRaceTypeSelection != 1) {
+            i = gRaceTypeSelection;
+            if (i != 1) {
                 if (gRaceTypeSelection == 2) {
-                    trickScore = gGameSaveDataBuffer.trickAttackScores[gRaceCourseIndex.s];
+                    i = 0;
                     do {
-                        if (*trickScore < gRaceTrickAttackPointTotal) {
+                        if (gGameSaveDataBuffer.trickAttackScores[gRaceCourseIndex.s][i] < gRaceTrickAttackPointTotal) {
                             break;
                         }
-                        recordIndex++;
-                        trickScore++;
-                    } while (recordIndex < 5);
+                        i++;
+                    } while (i < 5);
                     if (gRaceChallengeFailed != 0) {
-                        recordIndex = 5;
+                        i = 5;
                     }
-                    if (recordIndex < 5) {
+                    if (i < 5) {
                         gRaceResultState = 1;
                         D_80121B60 = 1;
                     } else {
@@ -1372,18 +1363,17 @@ void prepareRaceResultsFlow(void) {
                     }
                 }
             } else {
-                score = gGameSaveDataBuffer.scoreAttackScores[gRaceCourseIndex.s];
+                i = 0;
                 do {
-                    if (*score < gRaceScoreAttackPointTotal) {
+                    if (gGameSaveDataBuffer.scoreAttackScores[gRaceCourseIndex.s][i] < gRaceScoreAttackPointTotal) {
                         break;
                     }
-                    recordIndex++;
-                    score++;
-                } while (recordIndex < 5);
+                    i++;
+                } while (i < 5);
                 if (gRaceChallengeFailed != 0) {
-                    recordIndex = 5;
+                    i = 5;
                 }
-                if (recordIndex < 5) {
+                if (i < 5) {
                     gRaceResultState = 1;
                     D_80121B60 = 1;
                 } else {
@@ -1391,21 +1381,22 @@ void prepareRaceResultsFlow(void) {
                 }
             }
         } else {
-            currentTime = (gRaceElapsedTimer.seconds * COURSE_TIME_SECOND) + gRaceElapsedTimer.fraction + (gRaceElapsedTimer.minutes * COURSE_TIME_MINUTE);
-            record = gGameSaveDataBuffer.raceRecords[gRaceCourseIndex.s];
-            recordIndex = 0;
+            currentTime = gRaceElapsedTimer.fraction + (gRaceElapsedTimer.seconds * COURSE_TIME_SECOND) +
+                          (gRaceElapsedTimer.minutes * COURSE_TIME_MINUTE);
+            i = 0;
             do {
-                recordTime = (record->minutes * COURSE_TIME_MINUTE) + record->fraction + (record->seconds * COURSE_TIME_SECOND);
+                recordTime = gGameSaveDataBuffer.raceRecords[gRaceCourseIndex.s][i].fraction +
+                             (gGameSaveDataBuffer.raceRecords[gRaceCourseIndex.s][i].seconds * COURSE_TIME_SECOND) +
+                             (gGameSaveDataBuffer.raceRecords[gRaceCourseIndex.s][i].minutes * COURSE_TIME_MINUTE);
                 if (currentTime < recordTime) {
                     break;
                 }
-                recordIndex++;
-                record++;
-            } while (recordIndex < 5);
+                i++;
+            } while (i < 5);
             if (gRaceChallengeFailed != 0) {
-                recordIndex = 5;
+                i = 5;
             }
-            if (recordIndex < 5) {
+            if (i < 5) {
                 gRaceResultState = 1;
                 D_80121B60 = 1;
             } else {
@@ -1426,7 +1417,6 @@ void prepareRaceResultsFlow(void) {
     }
     updateRaceFlowFrame();
 }
-#endif
 
 // updateRaceResultsFlow best match: 93.039% at nonmatchings/updateRaceResultsFlow-731940616440357983/base_1.c.
 #pragma GLOBAL_ASM("asm/nonmatchings/race/flow/race_flow/updateRaceResultsFlow.s")
