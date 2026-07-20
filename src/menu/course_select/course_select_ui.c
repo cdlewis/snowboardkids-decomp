@@ -2057,7 +2057,7 @@ void updateCourseSelectExtraCourseIconListClose(CourseSelectWidgetActor *arg0) {
     addRenderCallback(&gMenuRenderCallbackList, drawCourseSelectExtraCourseIconList, temp_a2);
 }
 
-// updateCourseSelectExtraCourseIconList best match: 96.865% (nonmatchings/updateCourseSelectExtraCourseIconList-7475224831549593718/base_12.c)
+// updateCourseSelectExtraCourseIconList best match: 97.539% (nonmatchings/updateCourseSelectExtraCourseIconList-5787290371232622032/base_14.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/course_select/course_select_ui/updateCourseSelectExtraCourseIconList.s")
 
 #ifdef NON_MATCHING
@@ -2079,13 +2079,13 @@ void updateCourseSelectExtraCourseIconList(CourseSelectWidgetActor *arg0) {
         playerIndex = 0;
         if ((s32)gPlayerCount > 0) {
             do {
-                actor->alpha[playerIndex] = 0x100;
+                ((CourseSelectExtraCourseIconListActor *)arg0)->alpha[playerIndex] = 0x100;
                 playerIndex++;
             } while (playerIndex < (s32)gPlayerCount);
         }
     } else if (gCurrentGameTask->screenState == 1) {
         setCallbackTaskCallback(arg0, updateCourseSelectExtraCourseIconListOut);
-        actor->alpha[0] = 0x100;
+        ((CourseSelectExtraCourseIconListActor *)arg0)->alpha[0] = 0x100;
         actor->pulseTimer[0] = 0;
     } else {
         playerIndex = 0;
@@ -2113,7 +2113,7 @@ void updateCourseSelectExtraCourseIconList(CourseSelectWidgetActor *arg0) {
                                                 itemCount = actor->itemCounts[playerIndex] + 1;
                                                 actor->itemCounts[playerIndex] = itemCount;
                                                 if (gPlayerCount == 1) {
-                                                    actor->tileIndices[playerIndex][itemCount - 1] = iconIndex + 0xC;
+                                                    actor->tileIndices[playerIndex][(u8)itemCount - 1] = iconIndex + 0xC;
                                                 } else {
                                                     actor->tileIndices[playerIndex][actor->itemCounts[playerIndex] - 1] =
                                                         iconIndex + 0x1F;
@@ -2172,23 +2172,25 @@ void updateCourseSelectExtraCourseIconList(CourseSelectWidgetActor *arg0) {
                                         actor->iconY[playerIndex][iconIndex] += (s32)actor->rowSpacing[playerIndex] / 3;
                                     }
                                 } else if (((iconIndex * 2) + 2) >= (s32)actor->revealTimer[playerIndex]) {
-                                    actor->iconY[playerIndex][iconIndex] -= (s32)actor->rowSpacing[playerIndex] / 2;
+                                    actor->iconY[playerIndex][iconIndex] -=
+                                        (s32)((CourseSelectExtraCourseIconListActor *)arg0)->rowSpacing[playerIndex] / 2;
                                 }
                                 iconIndex++;
                             } while (iconIndex < (s32)actor->itemCounts[playerIndex]);
                         }
                         if (direction == 1) {
-                            actor->revealTimer[playerIndex]++;
+                            ((CourseSelectExtraCourseIconListActor *)arg0)->revealTimer[playerIndex]++;
                         } else {
-                            actor->revealTimer[playerIndex]--;
+                            ((CourseSelectExtraCourseIconListActor *)arg0)->revealTimer[playerIndex]--;
                         }
                         if (direction == 1) {
-                            if (actor->revealTimer[playerIndex] == (actor->itemCounts[playerIndex] * 3)) {
+                            if (((CourseSelectExtraCourseIconListActor *)arg0)->revealTimer[playerIndex] ==
+                                (((CourseSelectExtraCourseIconListActor *)arg0)->itemCounts[playerIndex] * 3)) {
                                 *promptState = D_8010AEAC[playerIndex] + 2;
                             }
-                        } else if (actor->revealTimer[playerIndex] == 0) {
+                        } else if (((CourseSelectExtraCourseIconListActor *)arg0)->revealTimer[playerIndex] == 0) {
                             *promptState = 0;
-                            actor->itemCounts[playerIndex] = 0;
+                            ((CourseSelectExtraCourseIconListActor *)arg0)->itemCounts[playerIndex] = 0;
                             if ((s32)gPlayerCount < 3) {
                                 layoutIndex = gPlayerCount - 1;
                             } else {
@@ -2196,22 +2198,24 @@ void updateCourseSelectExtraCourseIconList(CourseSelectWidgetActor *arg0) {
                             }
                             iconIndex = 0;
                             do {
-                                actor->iconY[playerIndex][iconIndex] =
+                                ((CourseSelectExtraCourseIconListActor *)arg0)->iconY[playerIndex][iconIndex] =
                                     gCourseSelectIconListYLayout[layoutIndex][((playerIndex & 1) * 2) + 2];
                                 iconIndex++;
                             } while (iconIndex != 3);
                         }
                     }
                     if ((*promptState >= 2) && (*promptState < 5)) {
-                        if ((s32)actor->pulseTimer[playerIndex] < 0x10) {
-                            actor->alpha[playerIndex] -= 9;
+                        if ((s32)((CourseSelectExtraCourseIconListActor *)arg0)->pulseTimer[playerIndex] < 0x10) {
+                            ((CourseSelectExtraCourseIconListActor *)arg0)->alpha[playerIndex] -= 9;
                         } else {
-                            actor->alpha[playerIndex] += 9;
+                            ((CourseSelectExtraCourseIconListActor *)arg0)->alpha[playerIndex] += 9;
                         }
-                        actor->pulseTimer[playerIndex] = (actor->pulseTimer[playerIndex] + 1) & 0x1F;
+                        ((CourseSelectExtraCourseIconListActor *)arg0)->pulseTimer[playerIndex] =
+                            (((CourseSelectExtraCourseIconListActor *)arg0)->pulseTimer[playerIndex] + 1) & 0x1F;
                     }
                 }
-                gCourseSelectStatus[playerIndex + 0x24] = actor->itemCounts[playerIndex];
+                gCourseSelectStatus[playerIndex + 0x24] =
+                    ((CourseSelectExtraCourseIconListActor *)arg0)->itemCounts[playerIndex];
                 playerIndex++;
                 player++;
             } while (playerIndex < (s32)gPlayerCount);
