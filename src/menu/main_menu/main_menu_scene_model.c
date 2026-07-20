@@ -629,7 +629,7 @@ void setMainMenuSceneModelRotation(s32 modelIndex, s16 x, s16 y, s16 z) {
     model->rot.z = z;
 }
 
-// updateMainMenuSceneModelTransforms best match: 84.923% (nonmatchings/updateMainMenuSceneModelTransforms-8075865578671233833/base_9.c)
+// updateMainMenuSceneModelTransforms best match: 90.196% (nonmatchings/updateMainMenuSceneModelTransforms-5787290371232622032/base.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/main_menu/main_menu_scene_model/updateMainMenuSceneModelTransforms.s")
 
 #ifdef NON_MATCHING
@@ -802,7 +802,7 @@ void updateMainMenuSceneModelTransforms(MainMenuSceneModel *model) {
 
     matrixSlot = partMatrices;
     partCursor = (MainMenuTransformPartCursor *)model;
-    matrixSlotEnd = (MainMenuTransformMatrixSlot *)rootMatrix;
+    matrixSlotEnd = &partMatrices[MAIN_MENU_SCENE_MODEL_PART_COUNT];
     do {
         sineX = fixedSine(MAIN_MENU_TRANSFORM_CURSOR_S16(partCursor, 0x1E));
         cosineX = fixedCosine(MAIN_MENU_TRANSFORM_CURSOR_S16(partCursor, 0x1E));
@@ -840,8 +840,9 @@ void updateMainMenuSceneModelTransforms(MainMenuSceneModel *model) {
             modelCursor = displayCursor;
             rootAxis = rootMatrix;
             do {
-                dot = (rootAxis[6] * localMatrix[2]) + (rootAxis[0] * localMatrix[0]) +
-                      (rootAxis[2] * localMatrix[1]);
+                sineXTimesSineY = rootAxis[6] * localMatrix[2];
+                cosineXTimesSineY = rootAxis[0] * localMatrix[0];
+                dot = sineXTimesSineY + cosineXTimesSineY + (rootAxis[2] * localMatrix[1]);
                 rootAxis++;
                 modelCursor += 2;
                 MAIN_MENU_TRANSFORM_CURSOR_S16(modelCursor, 0x146) = dot / FIXED_MATRIX_ONE;
@@ -852,7 +853,7 @@ void updateMainMenuSceneModelTransforms(MainMenuSceneModel *model) {
         } while (axisOffset != 0x12);
         localSlot++;
         displayBase += 0x20;
-    } while (localSlot < (MainMenuTransformMatrixSlot *)rootMatrix);
+    } while (localSlot < &partMatrices[MAIN_MENU_SCENE_MODEL_PART_COUNT]);
 
     displayBase = (u8 *)model;
     partBase = (u8 *)model;
@@ -863,8 +864,8 @@ void updateMainMenuSceneModelTransforms(MainMenuSceneModel *model) {
         combinedMatrix = (s16 *)displayBase;
         do {
             dot = (((s64)rootCursor[3] * MAIN_MENU_TRANSFORM_CURSOR_S32(partBase, 0x28)) +
-                   ((s64)rootCursor[0] * MAIN_MENU_TRANSFORM_CURSOR_S32(partBase, 0x24)) +
-                   ((s64)rootCursor[6] * MAIN_MENU_TRANSFORM_CURSOR_S32(partBase, 0x2C))) / FIXED_MATRIX_ONE;
+                   (((s64)rootCursor[0] * MAIN_MENU_TRANSFORM_CURSOR_S32(partBase, 0x24)) +
+                    ((s64)rootCursor[6] * MAIN_MENU_TRANSFORM_CURSOR_S32(partBase, 0x2C)))) / FIXED_MATRIX_ONE;
             MAIN_MENU_TRANSFORM_CURSOR_S32(combinedMatrix, 0x15C) = dot;
             dot += MAIN_MENU_TRANSFORM_CURSOR_S32(positionCursor, 0x14);
             positionCursor += 2;
