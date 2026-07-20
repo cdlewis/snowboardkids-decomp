@@ -54,7 +54,7 @@ extern s16 gRaceCourseIndex;
 
 #define gRacePlayerProgressStates gRacePlayers
 
-// updateRacePlayerRankDisplay best match: 55.500% (nonmatchings/updateRacePlayerRankDisplay-3357475854818838508/base_9.c)
+// updateRacePlayerRankDisplay best match: 55.599% (nonmatchings/updateRacePlayerRankDisplay-3357475854818838508/base_11.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race/player/race_player_progress/updateRacePlayerRankDisplay.s")
 
 #ifdef NON_MATCHING
@@ -95,7 +95,7 @@ void updateRacePlayerRankDisplay(void) {
     s32 *rankSlot;
     s32 *scan;
     s32 rankIndex;
-    s32 mode;
+    u8 mode;
     RacePlayerProgressState *player;
     RacePlayerProgressState *other;
     s32 dx;
@@ -251,20 +251,20 @@ sort_next:
         }
         break;
     case 2:
-        if (!(gRacePlayerProgressStates[1].raceRank < gRacePlayerProgressStates[0].raceRank)) {
+        if (gRacePlayerProgressStates[1].raceRank >= gRacePlayerProgressStates[0].raceRank) {
             if (gRacePlayerProgressStates[1].raceRank == 3) {
                 if (gRacePlayerProgressStates[3].raceRank >= gRacePlayerProgressStates[2].raceRank) {
                     gRacePlayerProgressStates[2].displayRank = 2;
-                    gRacePlayerProgressStates[3].displayRank = 1;
-                } else {
-                    gRacePlayerProgressStates[2].displayRank = 1;
-                    gRacePlayerProgressStates[3].displayRank = 2;
+                    goto case2_first_display_1;
                 }
+                gRacePlayerProgressStates[2].displayRank = 1;
+                gRacePlayerProgressStates[3].displayRank = 2;
             } else if (gRacePlayerProgressStates[3].raceRank >= gRacePlayerProgressStates[2].raceRank) {
                 gRacePlayerProgressStates[2].displayRank = 1;
                 gRacePlayerProgressStates[3].displayRank = 2;
             } else {
                 gRacePlayerProgressStates[2].displayRank = 2;
+case2_first_display_1:
                 gRacePlayerProgressStates[3].displayRank = 1;
             }
             gRacePlayerProgressStates[2].rankChangeTimer = 1;
@@ -273,16 +273,16 @@ sort_next:
             if (gRacePlayerProgressStates[0].raceRank == 3) {
                 if (gRacePlayerProgressStates[3].raceRank >= gRacePlayerProgressStates[2].raceRank) {
                     gRacePlayerProgressStates[2].displayRank = 2;
-                    gRacePlayerProgressStates[3].displayRank = 1;
-                } else {
-                    gRacePlayerProgressStates[2].displayRank = 1;
-                    gRacePlayerProgressStates[3].displayRank = 2;
+                    goto case2_second_display_1;
                 }
+                gRacePlayerProgressStates[2].displayRank = 1;
+                gRacePlayerProgressStates[3].displayRank = 2;
             } else if (gRacePlayerProgressStates[3].raceRank >= gRacePlayerProgressStates[2].raceRank) {
                 gRacePlayerProgressStates[2].displayRank = 1;
                 gRacePlayerProgressStates[3].displayRank = 2;
             } else {
                 gRacePlayerProgressStates[2].displayRank = 2;
+case2_second_display_1:
                 gRacePlayerProgressStates[3].displayRank = 1;
             }
             gRacePlayerProgressStates[2].rankChangeTimer = 0;
