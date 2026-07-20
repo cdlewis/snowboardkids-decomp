@@ -296,21 +296,7 @@ s32 tryQueueRacePlayerHitCueTerrainCrash(RacePlayer *arg0) {
     return 0;
 }
 
-// resolveRacePlayerHitReactions best match: 88.687% (nonmatchings/resolveRacePlayerHitReactions-2694253543240320626/base_3.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race/player/race_player_collision/resolveRacePlayerHitReactions.s")
-
-#ifdef NON_MATCHING
 void resolveRacePlayerHitReactions(RacePlayer *arg0) {
-    s32 var_t0;
-    s32 var_t1;
-    s32 var_t2;
-    s32 var_t3;
-    s32 var_t4;
-    s32 var_t4_2;
-    s32 var_t8;
-    s32 var_t9;
-    s32 temp_a0;
-    s32 temp_a0_2;
     u16 temp_v0;
 
     gRacePlayerHitCueId = 0;
@@ -329,55 +315,37 @@ void resolveRacePlayerHitReactions(RacePlayer *arg0) {
         if ((arg0->pendingItemHitFlags & 2) && (tryQueueRacePlayerHitCuePushForward(arg0) != 0)) {
             tryQueueRacePlayerHitCueSpinout(arg0);
         }
-        temp_a0 = arg0->pendingItemHitFlags;
-        var_t4 = temp_a0 & 0x400;
-        if (temp_a0 & 0x800) {
+        if (arg0->pendingItemHitFlags & 0x800) {
             tryQueueRacePlayerHitCueGhostSpinout(arg0);
-            var_t4 = arg0->pendingItemHitFlags & 0x400;
         }
-        if ((var_t4 != 0) && (tryQueueRacePlayerHitCueTrip(arg0) != 0)) {
+        if ((arg0->pendingItemHitFlags & 0x400) && (tryQueueRacePlayerHitCueTrip(arg0) != 0)) {
             tryQueueRacePlayerHitCueTrip(arg0);
         }
         if ((arg0->pendingItemHitFlags & 4) && (tryQueueRacePlayerHitCuePushBack(arg0) != 0)) {
             tryQueueRacePlayerHitCueLaunch(arg0);
         }
-        temp_a0_2 = arg0->pendingItemHitFlags;
-        var_t3 = temp_a0_2 & 0x100;
-        if (temp_a0_2 & 8) {
+        if (arg0->pendingItemHitFlags & 8) {
             tryQueueRacePlayerHitCueStun(arg0);
-            var_t3 = arg0->pendingItemHitFlags & 0x100;
         }
-        var_t8 = arg0->pendingItemHitFlags & 0x10;
-        if (var_t3 != 0) {
+        if (arg0->pendingItemHitFlags & 0x100) {
             tryQueueRacePlayerHitCueSlide(arg0);
-            var_t8 = arg0->pendingItemHitFlags & 0x10;
         }
-        var_t9 = arg0->pendingItemHitFlags & 0x20;
-        if (var_t8 != 0) {
+        if (arg0->pendingItemHitFlags & 0x10) {
             tryQueueRacePlayerHitCueHeavyKnockdown(arg0);
-            var_t9 = arg0->pendingItemHitFlags & 0x20;
         }
-        var_t0 = arg0->pendingItemHitFlags & PLAYER_HITFLAG_GHOST_SLOWDOWN;
-        if (var_t9 != 0) {
+        if (arg0->pendingItemHitFlags & 0x20) {
             tryQueueRacePlayerHitCueItemSteal(arg0);
-            var_t0 = arg0->pendingItemHitFlags & PLAYER_HITFLAG_GHOST_SLOWDOWN;
         }
-        var_t1 = arg0->pendingItemHitFlags & 0x40;
-        if (var_t0 != 0) {
+        if (arg0->pendingItemHitFlags & PLAYER_HITFLAG_GHOST_SLOWDOWN) {
             tryQueueRacePlayerHitCueGhostSlowdown(arg0);
-            var_t1 = arg0->pendingItemHitFlags & 0x40;
         }
-        var_t2 = arg0->pendingItemHitFlags & 0x2000;
-        if (var_t1 != 0) {
+        if (arg0->pendingItemHitFlags & 0x40) {
             tryQueueRacePlayerHitCueSpin(arg0);
-            var_t2 = arg0->pendingItemHitFlags & 0x2000;
         }
-        var_t4_2 = arg0->pendingItemHitFlags & 0x80;
-        if (var_t2 != 0) {
+        if (arg0->pendingItemHitFlags & 0x2000) {
             tryQueueRacePlayerHitCueReverseSpin(arg0);
-            var_t4_2 = arg0->pendingItemHitFlags & 0x80;
         }
-        if (var_t4_2 != 0) {
+        if (arg0->pendingItemHitFlags & 0x80) {
             tryQueueRacePlayerHitCueTumble(arg0);
         }
     }
@@ -467,7 +435,6 @@ void resolveRacePlayerHitReactions(RacePlayer *arg0) {
             enqueueRacePlayerVoiceSound(arg0, 2);
             arg0->mode = 0xB;
             arg0->updateState = 0;
-block_104:
             arg0->updateTimer = 0;
             break;
         case 11:
@@ -479,7 +446,8 @@ block_104:
             }
             arg0->mode = 0x28;
             arg0->updateState = 0;
-            goto block_104;
+            arg0->updateTimer = 0;
+            break;
         case 12:
             gRacePlayers[arg0->unk2D2 & 3].unk517 = 1;
             if (gRacePlayers[arg0->unk2D2 & 3].unk4 != 0) {
@@ -489,7 +457,8 @@ block_104:
             }
             arg0->mode = 0x1A;
             arg0->updateState = 0;
-            goto block_104;
+            arg0->updateTimer = 0;
+            break;
         case 13:
             gRacePlayers[arg0->unk2D2 & 3].unk517 = 1;
             if (gRacePlayers[arg0->unk2D2 & 3].unk4 != 0) {
@@ -499,12 +468,14 @@ block_104:
             }
             arg0->mode = 0x1B;
             arg0->updateState = 0;
-            goto block_104;
+            arg0->updateTimer = 0;
+            break;
         case 14:
             enqueueRacePlayerVoiceSound(arg0, 4);
             arg0->mode = 0xA;
             arg0->updateState = 0;
-            goto block_104;
+            arg0->updateTimer = 0;
+            break;
         case 15:
             gRacePlayers[arg0->unk2D2 & 3].unk517 = 1;
             if (gRacePlayers[arg0->unk2D2 & 3].unk4 != 0) {
@@ -514,7 +485,8 @@ block_104:
             }
             arg0->mode = 0x17;
             arg0->updateState = 0;
-            goto block_104;
+            arg0->updateTimer = 0;
+            break;
         case 16:
         case 17:
             if (gRacePlayerHitCueId == 0x11) {
@@ -531,7 +503,8 @@ block_104:
             }
             arg0->mode = 0x18;
             arg0->updateState = 0;
-            goto block_104;
+            arg0->updateTimer = 0;
+            break;
         case 3:
             gRacePlayers[arg0->unk2D2 & 3].unk517 = 1;
             if (gRacePlayers[arg0->unk2D2 & 3].unk4 != 0) {
@@ -541,12 +514,14 @@ block_104:
             }
             arg0->mode = 0x19;
             arg0->updateState = 0;
-            goto block_104;
+            arg0->updateTimer = 0;
+            break;
         case 4:
             enqueueRacePlayerVoiceSound(arg0, 2);
             arg0->mode = 0x19;
             arg0->updateState = 0;
-            goto block_104;
+            arg0->updateTimer = 0;
+            break;
         case 18:
             arg0->mode = 6;
             arg0->updateState = 0;
@@ -558,12 +533,11 @@ block_104:
         case 19:
             arg0->mode = 9;
             arg0->updateState = 0;
-            goto block_104;
+            arg0->updateTimer = 0;
+            break;
         }
     }
 }
-#endif
-
 s32 isRacePlayerRespawnSurfaceValid(RacePlayer *arg0) {
     s32 temp_v0;
 
