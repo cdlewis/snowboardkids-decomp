@@ -9,7 +9,7 @@ void resetRaceCameras(void);
 void updateRaceCameras(void);
 void updateRaceCamera(s32 arg0);
 void updateRaceCameraTransformFromAngles(void);
-void updateRaceCameraLookAtTransform();
+void updateRaceCameraLookAtTransform(void);
 void updateRaceCameraAlternateLookAtTransform(void);
 void noopRaceCameraUpdate(void);
 void unusedRaceCameraNoop1(void);

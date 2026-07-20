@@ -12,6 +12,7 @@
 #define RACE_PLAYER_STATE_SIZE 0x60C
 #define RACE_PLAYER_STATE(index, stride) ((RacePlayerState *)((u8 *)gRacePlayers + (index) * (stride)))
 #define FIXED_MUL(a, b) (((a) * (b)) / 0x1000)
+#define FIXED_MATRIX_ROWS(matrix) ((s16(*)[3])(matrix))
 #define RACE_CAMERA_FP_DOT(a, b, c, d, e, f) \
     (((a) * (b)) / RACE_CAMERA_FP_ONE + ((c) * (d)) / RACE_CAMERA_FP_ONE + ((e) * (f)) / RACE_CAMERA_FP_ONE)
 
@@ -195,18 +196,14 @@ void updateRaceCameraTransformFromAngles(void) {
     packFixedTransformMatrix(stack.sp28, D_801124A0->transform);
 }
 
-// updateRaceCameraLookAtTransform best match: 98.250% (nonmatchings/updateRaceCameraLookAtTransform-2694253543240320626/base_7.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race/camera/race_camera/updateRaceCameraLookAtTransform.s")
-
-#ifdef NON_MATCHING
 void updateRaceCameraLookAtTransform(void) {
     s32 dx;
     s32 dy;
     s32 dz;
     s32 xzDist;
     s32 dist;
-    s32 sine;
     s32 cosine;
+    s32 sine;
     FixedTransform pitchMtx;
     FixedTransform yawMtx;
     s32 pad[3];
@@ -245,12 +242,12 @@ void updateRaceCameraLookAtTransform(void) {
         yawMtx.rotation[MTX_ZZ] = cosine;
     }
 
-    for (i = 0; i + 1 <= 3; i++) {
+    for (i = 0; i < 3; i++) {
         for (j = 0; j < 3; j++) {
-            D_801124A0->rotationMatrix[(i * 3) + j] =
-                FIXED_MUL(pitchMtx.rotation[j + 6], yawMtx.rotation[(i * 3) + 2]) +
-                FIXED_MUL(yawMtx.rotation[i * 3], pitchMtx.rotation[j]) +
-                FIXED_MUL(yawMtx.rotation[(i * 3) + 1], pitchMtx.rotation[j + 3]);
+            FIXED_MATRIX_ROWS(D_801124A0->rotationMatrix)[i][j] =
+                FIXED_MUL(FIXED_MATRIX_ROWS(yawMtx.rotation)[i][0], FIXED_MATRIX_ROWS(pitchMtx.rotation)[0][j]) +
+                FIXED_MUL(FIXED_MATRIX_ROWS(yawMtx.rotation)[i][1], FIXED_MATRIX_ROWS(pitchMtx.rotation)[1][j]) +
+                FIXED_MUL(FIXED_MATRIX_ROWS(yawMtx.rotation)[i][2], FIXED_MATRIX_ROWS(pitchMtx.rotation)[2][j]);
         }
     }
 
@@ -262,9 +259,9 @@ void updateRaceCameraLookAtTransform(void) {
     for (i = 0; i < 3; i++) {
         for (j = 0; j < 3; j++) {
             resultMtx[(i * 3) + j] =
-                FIXED_MUL(yawMtx.rotation[j], pitchMtx.rotation[i * 3]) +
-                FIXED_MUL(yawMtx.rotation[j + 3], pitchMtx.rotation[(i * 3) + 1]) +
-                FIXED_MUL(yawMtx.rotation[j + 6], pitchMtx.rotation[(i * 3) + 2]);
+                FIXED_MUL(pitchMtx.rotation[i * 3], yawMtx.rotation[j]) +
+                FIXED_MUL(pitchMtx.rotation[(i * 3) + 1], yawMtx.rotation[j + 3]) +
+                FIXED_MUL(pitchMtx.rotation[(i * 3) + 2], yawMtx.rotation[j + 6]);
         }
     }
 
@@ -276,7 +273,6 @@ void updateRaceCameraLookAtTransform(void) {
         -((((s64)resultMtx[MTX_YZ] * D_801124A0->unk28) / 0x10000) + D_801124A0->pos.z);
     packFixedTransformMatrix(resultMtx, D_801124A0->transform);
 }
-#endif
 
 // updateRaceCameraAlternateLookAtTransform best match: 98.141% (nonmatchings/updateRaceCameraAlternateLookAtTransform-2694253543240320626/base_6.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race/camera/race_camera/updateRaceCameraAlternateLookAtTransform.s")
@@ -770,7 +766,7 @@ void updateRaceCameraReplayPosition(void) {
     D_801124A0->focus.x = RACE_PLAYER_STATE(D_801124A0->playerIndex, stride)->cameraPos.x;
     D_801124A0->focus.y = RACE_PLAYER_STATE(D_801124A0->playerIndex, stride)->cameraPos.y;
     D_801124A0->focus.z = RACE_PLAYER_STATE(D_801124A0->playerIndex, stride)->cameraPos.z;
-    updateRaceCameraLookAtTransform(gRacePlayers, stride);
+    updateRaceCameraLookAtTransform();
 }
 
 void updateRaceCameraRotationTransition(void) {
