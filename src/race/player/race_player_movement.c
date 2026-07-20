@@ -31,7 +31,10 @@ typedef struct {
 } PlayerOrder;
 
 typedef struct {
-    s32 pad[3];
+    s32 pad0[2];
+    s32 cos;
+    s32 sin;
+    s32 pad1;
     s32 speed;
 } MovementSpeedScratch;
 
@@ -1368,24 +1371,18 @@ void clampRacePlayerVectorXZHalfSpeed(RaceVec3i *vec, RacePlayer *player) {
     }
 }
 
-// updateRacePlayerLocalVelocity best match: 99.799% (nonmatchings/updateRacePlayerLocalVelocity/base_final.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race/player/race_player_movement/updateRacePlayerLocalVelocity.s")
-
-#ifdef NON_MATCHING
 void updateRacePlayerLocalVelocity(RacePlayer *player, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5) {
     volatile s32 pad[8];
     TransformScratch scratch;
     MovementSpeedScratch speedScratch;
-    s32 sin;
-    s32 cos;
     s32 useHalfLimit;
     s32 *localPosYPtr;
 
-    sin = fixedSine(-player->facingAngle);
-    cos = fixedCosine(-player->facingAngle);
+    speedScratch.sin = fixedSine(-player->facingAngle);
+    speedScratch.cos = fixedCosine(-player->facingAngle);
 
-    scratch.localPos.x = ((s64)player->unk40.x * cos + (s64)player->unk40.z * sin) / 0x1000;
-    scratch.localPos.z = ((s64)player->unk40.x * -sin + (s64)player->unk40.z * cos) / 0x1000;
+    scratch.localPos.x = ((s64)player->unk40.x * speedScratch.cos + (s64)player->unk40.z * speedScratch.sin) / 0x1000;
+    scratch.localPos.z = ((s64)player->unk40.x * -speedScratch.sin + (s64)player->unk40.z * speedScratch.cos) / 0x1000;
     scratch.localPos.y = player->unk40.y;
 
     makeFixedRotationXZ(scratch.rotationMtx, -player->unk2F0, -player->unk2F4);
@@ -1454,14 +1451,13 @@ void updateRacePlayerLocalVelocity(RacePlayer *player, s32 arg1, s32 arg2, s32 a
     player->unk74 = scratch.localPos.y + 0x1000;
     scratch.localPos.y = (scratch.localPos.y + player->unk40.y) - (*localPosYPtr);
 
-    sin = fixedSine(player->facingAngle);
-    cos = fixedCosine(player->facingAngle);
+    speedScratch.sin = fixedSine(player->facingAngle);
+    speedScratch.cos = fixedCosine(player->facingAngle);
 
-    player->unk40.x = ((s64)scratch.localPos.x * cos + (s64)scratch.localPos.z * sin) / 0x1000;
-    player->unk40.z = ((s64)scratch.localPos.x * -sin + (s64)scratch.localPos.z * cos) / 0x1000;
+    player->unk40.x = ((s64)scratch.localPos.x * speedScratch.cos + (s64)scratch.localPos.z * speedScratch.sin) / 0x1000;
+    player->unk40.z = ((s64)scratch.localPos.x * -speedScratch.sin + (s64)scratch.localPos.z * speedScratch.cos) / 0x1000;
     player->unk40.y = scratch.localPos.y;
 }
-#endif
 
 void updateRacePlayerLocalVelocityNoVerticalOffset(RacePlayer *arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4) {
     updateRacePlayerLocalVelocity(arg0, arg1, 0, arg2, arg3, arg4);
