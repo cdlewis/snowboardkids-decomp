@@ -107,7 +107,7 @@ extern void (*D_8011241C)(void);
 extern u8 gPlayerCount;
 extern s32 gMenuFlowState;
 
-// initMultiplayerCourseSelectMenu best match: 83.066% (nonmatchings/initMultiplayerCourseSelectMenu-2870645799593382959/base_2.c)
+// initMultiplayerCourseSelectMenu best match: 83.825% (nonmatchings/initMultiplayerCourseSelectMenu-5787290371232622032/base_14.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/course_select/multiplayer_course_select_menu/initMultiplayerCourseSelectMenu.s")
 
 #ifdef NON_MATCHING
@@ -119,9 +119,10 @@ void initMultiplayerCourseSelectMenu(void) {
     s32 sum;
     s32 selected;
     s32 screenBase;
+    register s32 one = 1;
     RacePlayer *player;
 
-    if (gRaceSplitscreenMode == 1) {
+    if (gRaceSplitscreenMode == one) {
         requestMusicSequenceBank(2);
     }
     resetRaceCameras();
@@ -204,56 +205,125 @@ void initMultiplayerCourseSelectMenu(void) {
         player[-1].menuState = 0;
     } while ((u32) player < (u32) gRacePlayersEnd);
 
-    for (i = 0; i < gPlayerCount; i++) {
-        D_8010AEA4[i] = 0;
-        D_8010AEC8[i] = 0;
-        D_8010AECC[i] = 0;
-        gMenuChoicePromptState[i] = 0;
-        gMenuInputRepeatTimers[i] = 0;
-        D_8010AED8[i] = 0;
-        D_8010AEE8[i] = 0;
+    {
+        volatile s32 playerCount;
+        s32 extraOffset;
+        MultiplayerCourseSelectSaveData *save;
+        s8 *stateA;
+        u8 *stateC;
+        s8 *stateB;
+        s16 *prompt;
+        u16 *repeatTimer;
+        s32 *valueA;
+        s32 *valueB;
+        s8 *availableColumns;
+        s8 *availableColumn;
+        u8 *extraCourse;
+        u8 *selectionRow;
+        u8 *selectionPtr;
+        u8 *unlocked;
 
-        for (j = 0; j < 3; j++) {
-            sum = 0;
-            for (k = 0; k < 3; k++) {
-                sum += gGameSaveDataBuffer[i].characterState[j + k * 3];
-            }
-            D_8010AEB8[i][j] = (sum != -3);
-        }
+        i = 0;
+        playerCount = gPlayerCount;
+        if (gPlayerCount > 0) {
+            unlocked = D_8010AEA0;
+            availableColumns = D_8010AEB8[0];
+            save = gGameSaveDataBuffer;
+            valueB = D_8010AEE8;
+            valueA = D_8010AED8;
+            repeatTimer = gMenuInputRepeatTimers;
+            prompt = gMenuChoicePromptState;
+            stateB = D_8010AECC;
+            stateC = D_8010AEC8;
+            stateA = D_8010AEA4;
+            selectionRow = D_8010AEF8[0];
+            extraOffset = 0;
+            do {
+                *stateA = 0;
+                *stateC = 0;
+                *stateB = 0;
+                *prompt = 0;
+                *repeatTimer = 0;
+                *valueA = 0;
+                *valueB = 0;
 
-        sum = 0;
-        for (j = 9; j < 12; j++) {
-            sum += gGameSaveDataBuffer[i].characterState[j];
-        }
-        if (sum >= -2) {
-            D_8010AEC8[i] = 4;
-        }
-        if (D_8010AEC8[i] == 4) {
-            D_8010AEA0[i] = 1;
-        }
+                j = 0;
+                availableColumn = availableColumns;
+                do {
+                    sum = 0;
+                    k = 0;
+                    do {
+                        sum += save->characterState[j + k * 3];
+                        k++;
+                    } while (k < 3);
+                    j++;
+                    if (sum != -3) {
+                        *availableColumn = one;
+                    } else {
+                        *availableColumn = 0;
+                    }
+                    availableColumn++;
+                } while (j < 3);
 
-        for (j = 0; j < 3; j++) {
-            D_8010AEF8[i][j] = j;
-        }
-
-        if (D_8010AEA0[i] == 1) {
-            for (j = 9; j < 12; j++) {
-                if (gGameSaveDataBuffer[i].characterState[j] != -1) {
-                    D_8010AEFB[i * 4] = j;
-                    break;
+                sum = 0;
+                j = 9;
+                do {
+                    sum += save->characterState[j];
+                    j++;
+                } while (j < 12);
+                stateA++;
+                if (sum >= -2) {
+                    *stateC = 4;
                 }
-            }
-
-            k = 0;
-            for (j = 9; j < 12; j++) {
-                D_8010AF08[i][k] = 0;
-                if (gGameSaveDataBuffer[i].characterState[j] != -1) {
-                    D_8010AF08[i][k] = j;
-                    k++;
+                stateC++;
+                if (stateC[-1] == 4) {
+                    *unlocked = one;
                 }
-            }
-        } else {
-            D_8010AEFB[i * 4] = 0;
+
+                selectionPtr = selectionRow;
+                j = 0;
+                do {
+                    *selectionPtr = j;
+                    j++;
+                    selectionPtr++;
+                } while (j < 3);
+
+                stateB++;
+                prompt++;
+                if (*unlocked == one) {
+                    j = 9;
+                    while (j < 12) {
+                        if (save->characterState[j] != -one) {
+                            D_8010AEFB[extraOffset] = j;
+                            break;
+                        }
+                        j++;
+                    }
+
+                    j = 9;
+                    extraCourse = D_8010AF08[i];
+                    do {
+                        *extraCourse = 0;
+                        if (save->characterState[j] != -one) {
+                            *extraCourse = j;
+                            extraCourse++;
+                        }
+                        j++;
+                    } while (j != 12);
+                } else {
+                    D_8010AEFB[extraOffset] = 0;
+                }
+
+                i++;
+                selectionRow += 4;
+                repeatTimer++;
+                extraOffset += 4;
+                valueA++;
+                valueB++;
+                save++;
+                availableColumns += 3;
+                unlocked++;
+            } while (i < playerCount);
         }
     }
 
@@ -267,7 +337,7 @@ void initMultiplayerCourseSelectMenu(void) {
             k = gCourseSelectStatus.unk2E;
         } else {
             k = gCourseSelectStatus.unk2E;
-            if (k == 1) {
+            if (k == one) {
                 j = 0;
                 gCourseSelectStatus.unk2E = 0;
                 k = 0;
@@ -277,7 +347,7 @@ void initMultiplayerCourseSelectMenu(void) {
         }
 
         D_8010AE64[i] = j;
-        if (k == 1) {
+        if (k == one) {
             j--;
         }
 
