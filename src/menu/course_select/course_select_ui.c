@@ -180,7 +180,6 @@ typedef struct {
 
 extern void addRenderCallback(void *, void (*)(CourseSelectWidgetActor *), CourseSelectWidgetActor *);
 extern void drawCourseSelectPlayerPanels(CourseSelectWidgetActor *);
-extern void drawCourseSelectPreviewModel(CourseSelectCoursePreviewActor *);
 extern void drawCourseSelectPreviewModelClose(CourseSelectCoursePreviewActor *);
 extern s32 allocFixedTransformMatrix(FixedTransform *);
 extern s8 gCourseUnlockSaveSlots[][0x78F8];
@@ -224,10 +223,6 @@ extern s32 gModelRenderCallbackList;
 extern u8 gCurrentViewportIndex;
 extern u8 gGameSaveDataBuffer[][0x78F8];
 
-// drawCourseSelectPreviewModel best match: 99.380% (nonmatchings/drawCourseSelectPreviewModel-8808947407184708385/base_12.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/menu/course_select/course_select_ui/drawCourseSelectPreviewModel.s")
-
-#ifdef NON_MATCHING
 void drawCourseSelectPreviewModel(CourseSelectCoursePreviewActor *arg0) {
     u8 sp2F;
     unsigned char sp2E;
@@ -257,14 +252,13 @@ void drawCourseSelectPreviewModel(CourseSelectCoursePreviewActor *arg0) {
                 var_v1 = 9;
             } else {
                 var_v1 = temp_v0_2;
-                var_v1 = var_v1 & ((unsigned long long) 0xFF);
             }
             if ((D_8010AED0 != 0) && (gCurrentViewportIndex == 1)) {
-                var_v1 = D_8010AED0 - 1;
+                var_v1 = (u8)(D_8010AED0 - 1);
             }
-            temp_v0_3 = &gRacePlayers[(long long) gCurrentViewportIndex];
-            if (temp_v0_3->state == 5) {
-                var_v1 = (short) 0;
+            temp_v0_3 = &gRacePlayers[gCurrentViewportIndex];
+            if (temp_v0_3->selectedCharacterId == 5) {
+                var_v1 = 0;
                 var_a3 = (var_a3 % 3) + 0xC;
             }
             if (temp_v0_3->courseIndex >= 9) {
@@ -280,7 +274,6 @@ void drawCourseSelectPreviewModel(CourseSelectCoursePreviewActor *arg0) {
         }
     }
 }
-#endif
 
 // updateCourseSelectPreviewModelIn best match: 98.638% (nonmatchings/updateCourseSelectPreviewModelIn-1219509448159986855/base.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/course_select/course_select_ui/updateCourseSelectPreviewModelIn.s")
