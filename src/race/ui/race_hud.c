@@ -824,23 +824,21 @@ void decrementRaceChallengeTimeLimit(void) {
     }
 }
 
-// drawRaceCourseProgressMeter best match: 78.938% at nonmatchings/drawRaceCourseProgressMeter-5802343343535905907/base_4.c.
+// drawRaceCourseProgressMeter best match: 95.777% at nonmatchings/drawRaceCourseProgressMeter-7998791169205557824/base_32.c.
 #pragma GLOBAL_ASM("asm/nonmatchings/race/ui/race_hud/drawRaceCourseProgressMeter.s")
 
 #ifdef NON_MATCHING
 void drawRaceCourseProgressMeter(s32 arg0) {
     s16 yBase;
     s16 xBase;
-    s32 order[4];
-    s32 previous;
-    s32 index;
-    s32 *slot;
-    s32 *scan;
+    s32 i;
+    s32 j;
     s32 temp;
-    s8 bestTile;
+    s32 *orderPtr;
     RacePlayer *player;
     s16 x;
-    u8 iconGroup;
+    u8 characterId;
+    s32 order[4];
     s32 spriteBase;
 
     order[0] = 0;
@@ -848,46 +846,15 @@ void drawRaceCourseProgressMeter(s32 arg0) {
     order[2] = 2;
     order[3] = 3;
 
-    previous = 0;
-    index = 1;
-    do {
-        if (index < 4) {
-            slot = &order[previous];
-            if ((4 - index) & 1) {
-                scan = &order[index];
-                temp = *scan;
-                if (gRacePlayers[temp].rankIndex < gRacePlayers[*slot].rankIndex) {
-                    *scan = *slot;
-                    *slot = temp;
-                }
-                index++;
-                if (index == 4) {
-                    goto sort_next;
-                }
+    for (i = 0; i < 3; i++) {
+        for (j = i + 1; j < 4; j++) {
+            if (gRacePlayers[order[j]].rankIndex < gRacePlayers[*(orderPtr = &order[i])].rankIndex) {
+                temp = order[i];
+                order[i] = order[j];
+                order[j] = temp;
             }
-
-            scan = &order[index];
-            do {
-                temp = *scan;
-                bestTile = gRacePlayers[*slot].rankIndex;
-                if (gRacePlayers[temp].rankIndex < bestTile) {
-                    *scan = *slot;
-                    *slot = temp;
-                    bestTile = gRacePlayers[*slot].rankIndex;
-                }
-
-                temp = scan[1];
-                if (gRacePlayers[temp].rankIndex < bestTile) {
-                    scan[1] = *slot;
-                    *slot = temp;
-                }
-                scan += 2;
-            } while (scan != &order[4]);
         }
-sort_next:
-        previous = index;
-        index++;
-    } while (previous < 3);
+    }
 
     if (gRaceHudMode == 0) {
         yBase = -0x56;
@@ -902,19 +869,19 @@ sort_next:
         yBase = -0x48;
     }
 
-    drawAssetTableSprite((s16)(xBase + 4), (s16)(yBase + 4), getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x50);
+    player = &gRacePlayers[*orderPtr];
+    drawAssetTableSprite((s16)(xBase + 4), (s16)(yBase + 4),
+                         getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x50);
 
-    for (index = 3; index >= 0; index--) {
-        slot = &order[index];
-        player = &gRacePlayers[*slot];
+    orderPtr++;
+    do {
+        player = &gRacePlayers[*orderPtr];
         x = xBase - 8;
 
-        temp = player->stateFlags & 0x200000;
-        if ((temp != 0) || (player->unk580 != 0)) {
+        if (((player->stateFlags & 0x200000) != 0) || (player->unk580 != 0)) {
             player->unk580++;
-            temp = player->stateFlags & 0x200000;
         }
-        if ((temp != 0) && (player->unk580 >= 5)) {
+        if (((player->stateFlags & 0x200000) != 0) && (player->unk580 >= 5)) {
             player->unk580 = 4;
         }
         if (player->unk580 >= 6) {
@@ -924,35 +891,36 @@ sort_next:
         if (player->unk580 != 0) {
             if (player->unk2D8 != 0) {
                 spriteBase = getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle);
-                player = &gRacePlayers[*slot];
-                iconGroup = player->characterId;
+                player = &gRacePlayers[*orderPtr];
+                characterId = player->characterId;
                 drawAssetTableSpriteWithExplicitPalette(x, (s16)(player->unk57E + yBase),
                               spriteBase,
-                              gRaceProgressMeterIconTiles[player->unk580 + (iconGroup * 6)],
-                              gRaceProgressMeterIconPalettes[iconGroup]);
+                              gRaceProgressMeterIconTiles[player->unk580 + (characterId * 6)],
+                              gRaceProgressMeterIconPalettes[characterId]);
             } else {
                 spriteBase = getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle);
-                player = &gRacePlayers[*slot];
+                player = &gRacePlayers[*orderPtr];
                 drawAssetTableSprite(x, (s16)(player->unk57E + yBase),
                               spriteBase,
                               gRaceProgressMeterIconTiles[player->unk580 + (player->characterId * 6)]);
             }
         } else if (player->unk2D8 != 0) {
             spriteBase = getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle);
-            player = &gRacePlayers[*slot];
-            iconGroup = player->characterId;
+            player = &gRacePlayers[*orderPtr];
+            characterId = player->characterId;
             drawAssetTableSpriteWithExplicitPalette(xBase, (s16)(player->unk57E + yBase),
                           spriteBase,
-                          gRaceProgressMeterIconTiles[player->unk580 + (iconGroup * 6)],
-                          gRaceProgressMeterIconPalettes[iconGroup]);
+                          gRaceProgressMeterIconTiles[player->unk580 + (characterId * 6)],
+                          gRaceProgressMeterIconPalettes[characterId]);
         } else {
             spriteBase = getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle);
-            player = &gRacePlayers[*slot];
+            player = &gRacePlayers[*orderPtr];
             drawAssetTableSprite(xBase, (s16)(player->unk57E + yBase),
                           spriteBase,
                           gRaceProgressMeterIconTiles[player->unk580 + (player->characterId * 6)]);
         }
-    }
+        orderPtr--;
+    } while (orderPtr >= order);
 }
 #endif
 
