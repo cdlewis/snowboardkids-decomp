@@ -5,6 +5,7 @@
 
 typedef struct MenuRenderSprite MenuRenderSprite;
 typedef struct MenuRenderSpriteActor MenuRenderSpriteActor;
+typedef struct MenuFontAssetTable MenuFontAssetTable;
 typedef u16 MenuGlyphScript;
 
 #ifdef MENU_RENDERER_C
@@ -39,7 +40,7 @@ void drawMenuAsciiGlyph(s16 x, s16 y, u16 tileX, s32 tileY, u16 palette, u16 sca
 void drawMenuAsciiText(s16 x, s16 y, u8 *text, u16 palette, u16 scale);
 void drawMenuSolidRect(s16 x0, s16 y0, s16 x1, s16 y1, s16 r, s16 g, s16 b);
 s32 stepMenuFadeAlpha(s32 value, s16 step, u8 increase);
-void drawMenuSpriteCrossfade(s16 x, s16 y, s32 texture, u16 imageIndex0, u16 imageIndex1, u8 alpha);
+void drawMenuSpriteCrossfade(s16 x, s16 y, MenuFontAssetTable *table, u16 imageIndex0, u16 imageIndex1, u8 alpha);
 #elif defined(MENU_RENDERER_BROAD_PROTOTYPES)
 void drawMenuAssetRegion(s16 x, s16 y, s32 texture, s32 tileIndex, s32 scaleX, s32 scaleY, s32 startS, s32 startT,
                    s32 width, s32 height);
@@ -84,7 +85,7 @@ s32 stepMenuFadeAlpha(s16 value, s32 step, s32 increase);
 #else
 s32 stepMenuFadeAlpha(s32 value, s32 step, s32 increase);
 #endif
-void drawMenuSpriteCrossfade(s16 x, s16 y, s32 texture, s32 imageIndex0, s32 imageIndex1, s32 alpha);
+void drawMenuSpriteCrossfade(s16 x, s16 y, MenuFontAssetTable *table, s32 imageIndex0, s32 imageIndex1, s32 alpha);
 #else
 void drawMenuAssetRegion(s16 x, s16 y, s32 texture, s32 tileIndex, s32 scaleX, s32 scaleY, s32 startS, s32 startT,
                    s32 width, s32 height);
@@ -121,7 +122,7 @@ s32 stepMenuFadeAlpha(s16 value, s32 step, s32 increase);
 #else
 s32 stepMenuFadeAlpha(s32 value, s32 step, s32 increase);
 #endif
-void drawMenuSpriteCrossfade(s16 x, s16 y, s32 texture, u16 imageIndex0, u16 imageIndex1, u8 alpha);
+void drawMenuSpriteCrossfade(s16 x, s16 y, MenuFontAssetTable *table, u16 imageIndex0, u16 imageIndex1, u8 alpha);
 #endif
 
 #endif

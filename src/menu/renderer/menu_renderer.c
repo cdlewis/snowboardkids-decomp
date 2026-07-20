@@ -44,7 +44,6 @@ typedef struct FontAssetHeader FontAssetHeader;
 typedef struct FontTexture FontTexture;
 typedef struct FontAsset FontAsset;
 typedef struct MenuFontAssetEntry MenuFontAssetEntry;
-typedef struct MenuFontAssetTable MenuFontAssetTable;
 
 struct MenuRenderTask {
     /* 0x00 */ MenuRenderTask *prev;
@@ -1912,123 +1911,91 @@ u8 increase;
     return value;
 }
 
-// drawMenuSpriteCrossfade best match: 82.448% (nonmatchings/func_80013FEC-7273315160691878794/base_4.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/menu/renderer/menu_renderer/drawMenuSpriteCrossfade.s")
-
-#ifdef NON_MATCHING
-void drawMenuSpriteCrossfade(s16 x, s16 y, MenuFontAssetTable *table, u16 fromImageIndex, u16 toImageIndex, u8 alpha) {
-    MenuFontAssetEntry *fromEntry;
-    MenuFontAssetEntry *toEntry;
-    s32 viewportLeft;
-    s32 viewportRight;
-    s32 viewportTop;
-    s32 viewportBottom;
-    s32 drawLeft;
-    s32 drawTop;
-    s32 drawRight;
-    s32 drawBottom;
-    s32 rectLeft;
-    s32 rectTop;
-    s32 rectRight;
-    s32 rectBottom;
-    s32 sourceS;
-    s32 sourceT;
-    u16 *paletteBase;
+void drawMenuSpriteCrossfade(s16 x, s16 y, MenuFontAssetTable *table, u16 imageIndex0, u16 imageIndex1, u8 alpha) {
+    MenuFontAssetEntry *entry0;
+    MenuFontAssetEntry *entry1;
+    MenuFontAssetEntry *paletteBase;
+    s32 minX;
+    s32 maxX;
+    s32 minY;
+    s32 maxY;
+    s32 x0;
+    s32 y0;
     s32 halfWidth;
+    s32 x1;
+    s32 y1;
+    s32 clipS;
+    s32 clipT;
     s32 halfHeight;
+    s32 pad;
+    s32 pad2;
 
-    fromEntry = &table->entries[fromImageIndex];
-    toEntry = &table->entries[toImageIndex];
-    paletteBase = (u16 *)&table->entries[table->entryCount];
+    paletteBase = table->entries + (0, table->entryCount);
+    entry0 = &table->entries[imageIndex0++];
+    entry1 = &table->entries[imageIndex1];
 
-    drawLeft = x + gMenuViewportCenterX;
-    drawTop = y + gMenuViewportCenterY;
-    drawRight = drawLeft + fromEntry->width;
-    drawBottom = drawTop + fromEntry->height;
+    clipS = entry0->width;
+    x1 = x0 = x + gMenuViewportCenterX;
+    y0 = y + gMenuViewportCenterY;
+    x1 += clipS;
+    y1 = y0 + entry0->height;
 
-    sourceS = 0;
-    sourceT = 0;
+    clipS = 0;
+    clipT = 0;
     halfWidth = gMenuViewportWidth / 2;
-    viewportRight = gMenuViewportCenterX + halfWidth;
-    if (drawLeft < viewportRight) {
-        halfHeight = gMenuViewportHeight / 2;
-        viewportBottom = gMenuViewportCenterY + halfHeight;
-        if (drawTop < viewportBottom) {
-            viewportLeft = gMenuViewportCenterX - halfWidth;
-            if (drawRight >= viewportLeft) {
-                viewportTop = gMenuViewportCenterY - halfHeight;
-                if (drawBottom >= viewportTop) {
-                    if (drawLeft < viewportLeft) {
-                        sourceS = viewportLeft - drawLeft;
-                        drawLeft = viewportLeft;
-                    }
-                    if (drawTop < viewportTop) {
-                        sourceT = viewportTop - drawTop;
-                        drawTop = viewportTop;
-                    }
-                    if (drawRight >= viewportRight) {
-                        drawRight = viewportRight - 1;
-                    }
-                    if (drawBottom >= viewportBottom) {
-                        drawBottom = viewportBottom - 1;
-                    }
-                    rectLeft = drawLeft;
-                    rectTop = drawTop;
-                    rectRight = drawRight;
-                    rectBottom = drawBottom;
-
-                    FONT_GFX_CMD(gRegionAllocPtr++, 0xE7000000, 0);
-                    FONT_GFX_CMD(gRegionAllocPtr++, 0xBA001402, 0x00100000);
-                    FONT_GFX_CMD(gRegionAllocPtr++, 0xBA001001, 0);
-                    FONT_GFX_CMD(gRegionAllocPtr++, 0xFA000000, alpha);
-                    FONT_GFX_CMD(gRegionAllocPtr++, 0xFC2527FF, 0x1FFC9238);
-
-                    FONT_GFX_CMD(gRegionAllocPtr++, 0xFD080000 | ((fromEntry->width - 1) & 0xFFF),
-                                 (u32)((u8 *)table + fromEntry->imageOffset));
-                    FONT_GFX_CMD(gRegionAllocPtr++, ((((fromEntry->width + 8) >> 3) & 0x1FF) << 9) | 0xF5080000,
-                                 MENU_CROSSFADE_LOAD_BLOCK_FLAGS);
-                    FONT_GFX_CMD(gRegionAllocPtr++, 0xE6000000, 0);
-                    FONT_GFX_CMD(gRegionAllocPtr++, 0xF4000000,
-                                 MENU_CROSSFADE_LOAD_BLOCK_FLAGS | (((fromEntry->width << 2) & 0xFFF) << 12) |
-                                     ((fromEntry->height << 2) & 0xFFF));
-                    FONT_GFX_CMD(gRegionAllocPtr++, 0xE7000000, 0);
-                    FONT_GFX_CMD(gRegionAllocPtr++, ((((fromEntry->width + 8) >> 3) & 0x1FF) << 9) | 0xF5080000, 0);
-                    FONT_GFX_CMD(gRegionAllocPtr++, 0xF2000000,
-                                 (((fromEntry->width << 2) & 0xFFF) << 12) | ((fromEntry->height << 2) & 0xFFF));
-
-                    FONT_GFX_CMD(gRegionAllocPtr++, 0xFD080000 | ((toEntry->width - 1) & 0xFFF),
-                                 (u32)((u8 *)table + toEntry->imageOffset));
-                    FONT_GFX_CMD(gRegionAllocPtr++, ((((toEntry->width + 8) >> 3) & 0x1FF) << 9) | 0xF5080100,
-                                 MENU_CROSSFADE_LOAD_BLOCK_FLAGS);
-                    FONT_GFX_CMD(gRegionAllocPtr++, 0xE6000000, 0);
-                    FONT_GFX_CMD(gRegionAllocPtr++, 0xF4000000,
-                                 MENU_CROSSFADE_LOAD_BLOCK_FLAGS | (((toEntry->width << 2) & 0xFFF) << 12) |
-                                     ((toEntry->height << 2) & 0xFFF));
-                    FONT_GFX_CMD(gRegionAllocPtr++, 0xE7000000, 0);
-                    FONT_GFX_CMD(gRegionAllocPtr++, ((((toEntry->width + 8) >> 3) & 0x1FF) << 9) | 0xF5080100,
-                                 MENU_CROSSFADE_TEXTURE_1_TILE);
-                    FONT_GFX_CMD(gRegionAllocPtr++, 0xF2000000,
-                                 MENU_CROSSFADE_TEXTURE_1_TILE | (((toEntry->width << 2) & 0xFFF) << 12) |
-                                     ((toEntry->height << 2) & 0xFFF));
-
-                    FONT_GFX_CMD(gRegionAllocPtr++, 0xFD100000,
-                                 (u32)(paletteBase + (toEntry->textureIndex * MENU_PALETTE_COLOR_COUNT)));
-                    FONT_GFX_CMD(gRegionAllocPtr++, 0xE8000000, 0);
-                    FONT_GFX_CMD(gRegionAllocPtr++, 0xF5000100, 0x07000000);
-                    FONT_GFX_CMD(gRegionAllocPtr++, 0xE6000000, 0);
-                    FONT_GFX_CMD(gRegionAllocPtr++, 0xF0000000, 0x073FC000);
-                    FONT_GFX_CMD(gRegionAllocPtr++, 0xE7000000, 0);
-                    FONT_GFX_CMD(gRegionAllocPtr++, 0xE4000000 | (((rectRight << 2) & 0xFFF) << 12) |
-                                                    ((rectBottom << 2) & 0xFFF),
-                                 (((rectLeft << 2) & 0xFFF) << 12) | ((rectTop << 2) & 0xFFF));
-                    FONT_GFX_CMD(gRegionAllocPtr++, 0xB4000000,
-                                 ((sourceS << 21) & 0xFFFF0000) | ((sourceT << 5) & 0xFFFF));
-                    FONT_GFX_CMD(gRegionAllocPtr++, 0xB3000000,
-                                 (MENU_CROSSFADE_SCALE_STEP << 16) | MENU_CROSSFADE_SCALE_STEP);
-                    FONT_GFX_CMD(gRegionAllocPtr++, 0x06000000, (u32)gMenuRenderModeResetDl);
-                }
-            }
-        }
+    maxX = gMenuViewportCenterX + halfWidth;
+    if (x0 >= maxX) {
+        return;
     }
+
+    halfHeight = gMenuViewportHeight / 2;
+    maxY = gMenuViewportCenterY + halfHeight;
+    minX = gMenuViewportCenterX - halfWidth;
+    if (y0 >= maxY) {
+        return;
+    }
+
+    if (x1 < minX) {
+        return;
+    }
+
+    minY = gMenuViewportCenterY - halfHeight;
+    if (y1 < minY) {
+        return;
+    }
+
+    if (x0 < minX) {
+        do { clipS = minX - x0; } while (0);
+        x0 = minX;
+    }
+    if (y0 < minY) {
+        clipT = minY - y0;
+        y0 = minY;
+    }
+    if (x1 >= maxX) {
+        x1 = maxX - 1;
+    }
+    if (y1 >= maxY) {
+        y1 = maxY - 1;
+    }
+
+    gDPPipeSync(gRegionAllocPtr++);
+    gDPSetCycleType(gRegionAllocPtr++, G_CYC_2CYCLE);
+    gDPSetTextureLOD(gRegionAllocPtr++, G_TL_TILE);
+    gDPSetPrimColor(gRegionAllocPtr++, 0, 0, 0, 0, 0, alpha);
+    gDPSetCombineLERP(gRegionAllocPtr++, TEXEL1, TEXEL0, PRIMITIVE_ALPHA, TEXEL0, TEXEL1, TEXEL0,
+                      PRIMITIVE, TEXEL0, 0, 0, 0, COMBINED, 0, 0, 0, COMBINED);
+
+    gDPLoadTextureTile(gRegionAllocPtr++, (u8 *)table + (0, entry0->imageOffset), G_IM_FMT_RGBA,
+                       G_IM_SIZ_8b, entry0->width, entry0->height, 0, 0, entry0->width,
+                       entry0->height, 0, G_TX_WRAP, G_TX_WRAP, G_TX_NOMASK, G_TX_NOMASK,
+                       G_TX_NOLOD, G_TX_NOLOD);
+    gDPLoadMultiTile(gRegionAllocPtr++, (u8 *)table + (0, entry1->imageOffset), 0x100,
+                     G_TX_RENDERTILE + 1, G_IM_FMT_RGBA, G_IM_SIZ_8b, entry1->width, entry1->height,
+                     0, 0, entry1->width, entry1->height, 0, G_TX_WRAP, G_TX_WRAP, G_TX_NOMASK,
+                     G_TX_NOMASK, G_TX_NOLOD, G_TX_NOLOD);
+    gDPLoadTLUT_pal256(gRegionAllocPtr++, (entry1->textureIndex << 5) + (u8*)paletteBase);
+    gSPTextureRectangle(gRegionAllocPtr++, x0 << 2, y0 << 2, x1 << 2, y1 << 2,
+                        G_TX_RENDERTILE, clipS << 5, clipT << 5, 0x400, 0x400);
+    gSPDisplayList(gRegionAllocPtr++, gMenuRenderModeResetDl);
 }
-#endif
