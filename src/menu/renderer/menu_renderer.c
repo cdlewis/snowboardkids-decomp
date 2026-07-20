@@ -804,7 +804,7 @@ void drawMenuSpriteTile(s16 arg0, s16 arg1, s32 arg2, u16 arg3, u16 arg4, u16 ar
     drawMenuSpriteTileClipped(arg0, arg1, arg2, arg3, arg4, arg5, gMenuViewportWidth / 2, gMenuViewportHeight / 2);
 }
 
-// drawMenuSpriteTileClipped best match: 80.680% (nonmatchings/drawMenuSpriteTileClipped-6061209858023118177/base_13.c)
+// drawMenuSpriteTileClipped best match: 83.573% (nonmatchings/drawMenuSpriteTileClipped-1219509448159986855/base_1.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/renderer/menu_renderer/drawMenuSpriteTileClipped.s")
 
 #ifdef NON_MATCHING
@@ -869,34 +869,21 @@ void drawMenuSpriteTileClipped(s16 x, s16 y, MenuFontAssetTable *table, u16 entr
             y1 = maxY - 1;
         }
 
-        FONT_GFX_CMD(gRegionAllocPtr++, 0xFD480000 | ((entry->width - 1) & 0xFFF),
-                     (u32)((u8 *)table + entry->imageOffset));
-        FONT_GFX_CMD(gRegionAllocPtr++, ((((entry->width + 8) >> 3) & 0x1FF) << 9) | 0xF5480000, 0x07080200);
-        FONT_GFX_CMD(gRegionAllocPtr++, 0xE6000000, 0);
-        FONT_GFX_CMD(gRegionAllocPtr++, 0xF4000000,
-                     0x07000000 | (((entry->width << 2) & 0xFFF) << 12) | ((entry->height << 2) & 0xFFF));
-        FONT_GFX_CMD(gRegionAllocPtr++, 0xE7000000, 0);
-        FONT_GFX_CMD(gRegionAllocPtr++, ((((entry->width + 8) >> 3) & 0x1FF) << 9) | 0xF5480000, 0x00080200);
-        FONT_GFX_CMD(gRegionAllocPtr++, 0xF2000000,
-                     (((entry->width << 2) & 0xFFF) << 12) | ((entry->height << 2) & 0xFFF));
+        gDPLoadTextureTile(gRegionAllocPtr++, (u8 *)table + entry->imageOffset,
+                           G_IM_FMT_CI, G_IM_SIZ_8b, entry->width, entry->height,
+                           0, 0, entry->width, entry->height, 0,
+                           G_TX_CLAMP, G_TX_CLAMP, G_TX_NOMASK, G_TX_NOMASK,
+                           G_TX_NOLOD, G_TX_NOLOD);
         if (alpha != 0x100) {
-            FONT_GFX_CMD(gRegionAllocPtr++, 0xE7000000, 0);
-            FONT_GFX_CMD(gRegionAllocPtr++, 0xFC119623, 0xFF2FFFFF);
-            FONT_GFX_CMD(gRegionAllocPtr++, 0xFA000000,
-                         ((alpha & 0xFF) << 0x18) | ((alpha & 0xFF) << 0x10) | ((alpha & 0xFF) << 8) | 0xFF);
+            gDPPipeSync(gRegionAllocPtr++);
+            gDPSetCombineMode(gRegionAllocPtr++, G_CC_MODULATEIA_PRIM, G_CC_MODULATEIA_PRIM);
+            gDPSetPrimColor(gRegionAllocPtr++, 0, 0, alpha, alpha, alpha, 0xFF);
         }
-        FONT_GFX_CMD(gRegionAllocPtr++, 0xFD100000, (u32)(paletteBase + (entry->textureIndex << 5)));
-        FONT_GFX_CMD(gRegionAllocPtr++, 0xE8000000, 0);
-        FONT_GFX_CMD(gRegionAllocPtr++, 0xF5000100, 0x07000000);
-        FONT_GFX_CMD(gRegionAllocPtr++, 0xE6000000, 0);
-        FONT_GFX_CMD(gRegionAllocPtr++, 0xF0000000, 0x073FC000);
-        FONT_GFX_CMD(gRegionAllocPtr++, 0xE7000000, 0);
-        FONT_GFX_CMD(gRegionAllocPtr++, 0xE4000000 | (((x1 << 2) & 0xFFF) << 12) | ((y1 << 2) & 0xFFF),
-                     (((x0 << 2) & 0xFFF) << 12) | ((y0 << 2) & 0xFFF));
-        FONT_GFX_CMD(gRegionAllocPtr++, 0xB4000000, ((clipS << 21) & 0xFFFF0000) | ((clipT << 5) & 0xFFFF));
-        FONT_GFX_CMD(gRegionAllocPtr++, 0xB3000000, 0x04000400);
+        gDPLoadTLUT_pal256(gRegionAllocPtr++, paletteBase + (entry->textureIndex << 5));
+        gSPTextureRectangle(gRegionAllocPtr++, x0 << 2, y0 << 2, x1 << 2, y1 << 2,
+                            G_TX_RENDERTILE, clipS << 5, clipT << 5, 0x400, 0x400);
         if (alpha != 0x100) {
-            FONT_GFX_CMD(gRegionAllocPtr++, 0x06000000, (u32)gMenuRenderModeResetDl);
+            gSPDisplayList(gRegionAllocPtr++, gMenuRenderModeResetDl);
         }
     }
 }
