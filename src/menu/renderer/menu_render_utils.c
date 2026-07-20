@@ -444,89 +444,75 @@ void drawMenuFillRectangle(s16 x, s16 y, s16 width, s16 height, u8 red, u8 green
 }
 #endif
 
-// drawAssetTableSprite8bpp best match: 97.189% (nonmatchings/drawAssetTableSprite8bpp-2694253543240320626/base_2.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/menu/renderer/menu_render_utils/drawAssetTableSprite8bpp.s")
-
-#ifdef NON_MATCHING
-void drawAssetTableSprite8bpp(s16 arg0, s16 arg1, AssetTable *arg2, u16 arg3)
-{
-    volatile char pad[0x18];
-    u8 *textureBase;
-    s32 clipU;
-    s32 clipV;
-    s32 rightClip;
-    s32 bottomClip;
-    s32 leftClip;
-    s32 topClip;
-    s32 x0;
+void drawAssetTableSprite8bpp(s16 x, s16 y, AssetTable *table, u16 entryIndex) {
+    AssetTableEntry *entry;
+    s32 maxX;
+    u8 *paletteBase;
+    s32 maxY;
     s32 y0;
     s32 x1;
     s32 y1;
-    AssetTableEntry *rawEntry;
+    s32 clipS;
+    s32 clipT;
+    s32 minY;
+    s32 x0;
+    s32 minX;
+    s32 halfHeight;
 
-    textureBase = (((u8 *)arg2) + (arg2->entryCount * sizeof(AssetTableEntry))) + sizeof(AssetTableEntry);
-    rawEntry = (AssetTableEntry *)(((u8 *)arg2) + (arg3 * sizeof(AssetTableEntry)));
-    x0 = arg0 + gMenuViewportCenterX;
-    y0 = arg1 + gMenuViewportCenterY;
-    x1 = rawEntry[1].width + x0;
-    do {
-        y1 = rawEntry[1].height + y0;
-        rawEntry++;
-        clipU = 0;
-        clipV = 0;
-        rightClip = gMenuViewportCenterX + (gMenuViewportWidth / 2);
-        if (x0 < rightClip) {
-            leftClip = gMenuViewportCenterX - (gMenuViewportWidth / 2);
-            bottomClip = gMenuViewportCenterY + (gMenuViewportHeight / 2);
-            if (y0 < bottomClip) {
-                topClip = gMenuViewportCenterY - (gMenuViewportHeight / 2);
-                if ((x1 >= leftClip) && (y1 >= topClip)) {
-                    if (x0 < leftClip) {
-                        clipU = leftClip - x0;
-                        x0 = leftClip;
-                    }
-                    do {
-                        if (y0 < topClip) {
-                            clipV = topClip - y0;
-                            y0 = topClip;
-                        }
-                        if (rightClip <= x1) {
-                            x1 = rightClip;
-                        }
-                        if (y1 >= bottomClip) {
-                            y1 = bottomClip;
-                        }
-                        FONT_GFX_CMD(gRegionAllocPtr++, ((rawEntry->width - 1) & 0xFFF) | 0xFD480000,
-                                     (u32)(((u8 *)arg2) + rawEntry->imageOffset));
-                        FONT_GFX_CMD(gRegionAllocPtr++, ((((rawEntry->width + 8) >> 3) & 0x1FF) << 9) | 0xF5480000,
-                                     0x07080200);
-                        FONT_GFX_CMD(gRegionAllocPtr++, 0xE6000000, 0);
-                        FONT_GFX_CMD(gRegionAllocPtr++, 0xF4000000,
-                                     ((((rawEntry->width * 4) & 0xFFF) << 12) | 0x07000000) |
-                                         ((rawEntry->height * 4) & 0xFFF));
-                        FONT_GFX_CMD(gRegionAllocPtr++, 0xE7000000, 0);
-                        FONT_GFX_CMD(gRegionAllocPtr++, ((((rawEntry->width + 8) >> 3) & 0x1FF) << 9) | 0xF5480000,
-                                     0x00080200);
-                        FONT_GFX_CMD(gRegionAllocPtr++, 0xF2000000,
-                                     (((rawEntry->width * 4) & 0xFFF) << 12) | ((rawEntry->height * 4) & 0xFFF));
-                        FONT_GFX_CMD(gRegionAllocPtr++, 0xFD100000, (u32)(textureBase + (rawEntry->textureIndex << 5)));
-                        FONT_GFX_CMD(gRegionAllocPtr++, 0xE8000000, 0);
-                        FONT_GFX_CMD(gRegionAllocPtr++, 0xF5000100, 0x07000000);
-                        FONT_GFX_CMD(gRegionAllocPtr++, 0xE6000000, 0);
-                        FONT_GFX_CMD(gRegionAllocPtr++, 0xF0000000, 0x073FC000);
-                        FONT_GFX_CMD(gRegionAllocPtr++, 0xE7000000, 0);
-                        FONT_GFX_CMD(gRegionAllocPtr++, ((((x1 * 4) & 0xFFF) << 12) | 0xE4000000) |
-                                                         ((y1 * 4) & 0xFFF),
-                                     (((x0 * 4) & 0xFFF) << 12) | ((y0 * 4) & 0xFFF));
-                        FONT_GFX_CMD(gRegionAllocPtr++, 0xB4000000, (clipU << 21) | ((clipV << 5) & 0xFFFF));
-                        FONT_GFX_CMD(gRegionAllocPtr++, 0xB3000000, 0x04000400);
-                    } while (0);
-                }
-            }
-        }
-    } while (0);
+    paletteBase = (table->entryCount * sizeof(AssetTableEntry)) + (u8 *)table + sizeof(AssetTableEntry);
+    entry = &table->entries[entryIndex];
+    x0 = x + gMenuViewportCenterX;
+    entry += 0;
+    y0 = y + gMenuViewportCenterY;
+    x1 = x0 + entry->width;
+    y1 = y0 + entry->height;
+    clipS = 0;
+    clipT = 0;
+
+    maxX = gMenuViewportCenterX + (gMenuViewportWidth / 2);
+    if (x0 >= maxX) {
+        return;
+    }
+
+    halfHeight = gMenuViewportHeight / 2;
+    maxY = gMenuViewportCenterY + halfHeight;
+    minX = gMenuViewportCenterX - (gMenuViewportWidth / 2);
+    if (y0 >= maxY) {
+        return;
+    }
+    if (x1 < minX) {
+        return;
+    }
+
+    minY = gMenuViewportCenterY - halfHeight;
+    if (y1 < minY) {
+        return;
+    }
+
+    if (x0 < minX) {
+        clipS = minX - x0;
+        x0 = minX;
+    }
+    if (y0 < minY) {
+        clipT = minY - y0;
+        y0 = minY;
+    }
+    if (x1 >= maxX) {
+        x1 = maxX;
+    }
+    if (y1 >= maxY) {
+        y1 = maxY;
+    }
+
+    gDPLoadTextureTile(gRegionAllocPtr++, entry->imageOffset + (u8 *)table,
+                       G_IM_FMT_CI, G_IM_SIZ_8b, entry->width, entry->height,
+                       0, 0, entry->width, entry->height, 0,
+                       G_TX_CLAMP, G_TX_CLAMP, G_TX_NOMASK, G_TX_NOMASK,
+                       G_TX_NOLOD, G_TX_NOLOD);
+    gDPLoadTLUT_pal256(gRegionAllocPtr++, paletteBase + (entry->textureIndex << 5));
+    gSPTextureRectangle(gRegionAllocPtr++, x0 << 2, y0 << 2, x1 << 2, y1 << 2,
+                        G_TX_RENDERTILE, clipS << 5, clipT << 5, 0x400, 0x400);
 }
-#endif
 
 // drawAssetTableSpriteWithExplicitPalette best match: 99.923% (nonmatchings/drawAssetTableSpriteWithExplicitPalette-1219509448159986855/base.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/renderer/menu_render_utils/drawAssetTableSpriteWithExplicitPalette.s")
