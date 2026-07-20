@@ -1176,7 +1176,7 @@ void noopThreeArgs(void *arg0, void *arg1, void *arg2) {
 void noopFourArgs(void *arg0, void *arg1, void *arg2, void *arg3) {
 }
 
-// isPositionNearAnyRaceViewportFocus best match: 99.175% at nonmatchings/isPositionNearAnyRaceViewportFocus-8331816093655448999/base_9.c.
+// isPositionNearAnyRaceViewportFocus best match: 99.563% at nonmatchings/isPositionNearAnyRaceViewportFocus-1219509448159986855/base_1.c.
 
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/renderer/menu_render_utils/isPositionNearAnyRaceViewportFocus.s")
 
@@ -1190,8 +1190,6 @@ s32 isPositionNearAnyRaceViewportFocus(Vec3i *pos) {
     s32 tempZ;
     s32 *zPtr;
     s32 diffX;
-    s32 temp;
-    s32 lowerCheck;
     s32 lower;
     s32 diffZ;
 
@@ -1216,10 +1214,9 @@ s32 isPositionNearAnyRaceViewportFocus(Vec3i *pos) {
     posAlias = pos;
     if (gViewportStatesViewport1Active != 0) {
         diffX = D_801122A8 - pos->x;
-        temp = D_801122B0;
-        diffZ = temp - posAlias->z;
-        lowerCheck = diffX >= (s32)0xFA000001;
-        if ((diffX < 0x6000000) && lowerCheck && (diffZ < 0x6000000) && (diffZ >= (s32)0xFA000001)) {
+        diffZ = D_801122B0 - posAlias->z;
+        if ((diffX < 0x6000000) && (diffX >= (s32)0xFA000001) && (diffZ < 0x6000000) &&
+            (diffZ >= (s32)0xFA000001)) {
             return 1;
         }
     }
