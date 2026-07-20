@@ -186,7 +186,7 @@ void applyRacePlayerTuning(RacePlayer *arg0) {
 }
 #endif
 
-// initRacePlayer best match: 83.754% (nonmatchings/initRacePlayer-2694253543240320626/base_2.c)
+// initRacePlayer best match: 89.078% (nonmatchings/initRacePlayer-5787290371232622032/base_1.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race/player/race_player_update/initRacePlayer.s")
 
 #ifdef NON_MATCHING
@@ -199,11 +199,10 @@ void initRacePlayer(RacePlayer *player) {
     char *clearPtr;
     s32 groundY;
 
-    size = ((s32)player - (s32)player) + 0x5F0;
+    size = (s32)(player + 1) - (s32)&player->pos;
     i = 0;
-    pos = &player->pos;
     if (size != 0) {
-        clearPtr = (char *)pos;
+        clearPtr = (char *)&player->pos;
         do {
             i++;
             *clearPtr = 0;
@@ -211,6 +210,7 @@ void initRacePlayer(RacePlayer *player) {
         } while (i < size);
     }
     player->unk588 = 0.0f;
+    pos = &player->pos;
     initRaceMotionModelParts(player);
     setRaceMotionAnimation(player, 1);
     if (gRacePlayerCount == 4) {
@@ -262,10 +262,11 @@ void initRacePlayer(RacePlayer *player) {
     if (gRaceDemoPlaybackEnabled == 1) {
         if (player->playerIndexU16 == 0) {
             player->itemEffectType = 3;
+            player->itemEffectCount = 3;
         } else {
             player->itemEffectType = 5;
+            player->itemEffectCount = 3;
         }
-        player->itemEffectCount = 3;
         player->actionEffectType = 1;
     }
     switch (gTrainingCourseLesson) {
@@ -379,8 +380,9 @@ void initRacePlayer(RacePlayer *player) {
         pos->x = start->x;
         pos->y = start->y;
         pos->z = start->z;
-        player->facingAngle = start->angle;
-        player->unk502 = start->unkC;
+        player->facingAngle =
+            gRacePlayerPreviewStartPositions[gMainMenuModeSelection - 1][player->playerIndexU16].angle;
+        player->unk502 = gRacePlayerPreviewStartPositions[gMainMenuModeSelection - 1][player->playerIndexU16].unkC;
     }
     player->unk502 = findRaceCourseSurfaceFromHint(player->unk502, player->posX, player->posZ);
     groundY = getRaceCourseSurfaceHeight(player->unk502, player->posX, player->posZ);
