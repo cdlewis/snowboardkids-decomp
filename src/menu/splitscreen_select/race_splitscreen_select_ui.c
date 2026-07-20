@@ -41,6 +41,7 @@ extern u8 gRaceSplitscreenSelectCursorAnimState;
 extern s16 gRaceSplitscreenSelectPortraitAlpha;
 extern u32 gMenuPanelBackdropTexture[];
 extern Gfx gMenuRenderModeResetDl[];
+extern Gfx *gRegionAllocPtr;
 extern s32 gActiveMenuTask;
 extern u8 gMenuExitSelection;
 extern s16 gMenuViewportCenterX;
@@ -1010,15 +1011,11 @@ void initRaceSplitscreenSelectEntryFee(RaceSplitscreenSelectWidgetActor *arg0) {
     setCallbackTaskCallback(arg0, updateRaceSplitscreenSelectEntryFee);
 }
 
-// drawMenuPanelBackdrop best match: 98.594% at nonmatchings/drawMenuPanelBackdrop-8331816093655448999/base_8.c.
-#pragma GLOBAL_ASM("asm/nonmatchings/menu/splitscreen_select/race_splitscreen_select_ui/drawMenuPanelBackdrop.s")
-
-#ifdef NON_MATCHING
 void drawMenuPanelBackdrop(s32 x, s32 y, s32 width, s32 height) {
+    /* These scratch declarations and their scopes reproduce IDO's texture-load spill layout. */
     Gfx *volatile unused0;
     Gfx *volatile unused1;
     Gfx *volatile unused2;
-    Gfx *volatile unused3;
     register s32 widthU;
     register s32 heightU;
     s32 ulx;
@@ -1033,14 +1030,18 @@ void drawMenuPanelBackdrop(s32 x, s32 y, s32 width, s32 height) {
                           G_TX_NOLOD, G_TX_NOLOD);
     gDPSetPrimColor(gRegionAllocPtr++, 0, 0, 0, 0, 0, 0x64);
 
+    /* The repeated cast assignment is required for the original register allocation. */
+    widthU = (u16)width;
     widthU = (u16)width;
     heightU = (u16)height;
     ulx = ((s16)x + gMenuViewportCenterX) << 2;
     uly = ((s16)y + gMenuViewportCenterY) << 2;
 
     gSPTextureRectangle(gRegionAllocPtr++, ulx, uly, ulx + (((widthU << 4) << 2) / 0x1000),
-                        uly + (((heightU << 3) << 2) / 0x1000), G_TX_RENDERTILE, 0, 0,
-                        0x400000 / widthU, 0x400000 / heightU);
+                        (((heightU << 3) << 2) / 0x1000) + uly, G_TX_RENDERTILE, 0, 0,
+                        (0x400000 / widthU) & 0xFFFFU, (0x400000 / (u16)height) & 0xFFFF);
     gSPDisplayList(gRegionAllocPtr++, gMenuRenderModeResetDl);
+    {
+        Gfx *volatile unused3;
+    }
 }
-#endif
