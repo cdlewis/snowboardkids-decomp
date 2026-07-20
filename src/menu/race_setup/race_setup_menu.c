@@ -806,7 +806,7 @@ void updateRaceSetupRumblePrompt(void) {
 }
 #endif
 
-// initRaceSetupPlayerSaveData best match: 65.893% (nonmatchings/initRaceSetupPlayerSaveData-8808947407184708385/base_7.c)
+// initRaceSetupPlayerSaveData best match: 74.849% (nonmatchings/initRaceSetupPlayerSaveData-1219509448159986855/base_50.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/race_setup/race_setup_menu/initRaceSetupPlayerSaveData.s")
 
 #ifdef NON_MATCHING
@@ -828,14 +828,14 @@ extern u8 gMainMenuSecretCodeUnlocked;
 
 #define RACE_SETUP_SAVE_WORD_045D8(ptr, offset) (*(s32 *)((ptr) + (offset)))
 #define RACE_SETUP_SAVE_HALF_045D8(ptr, offset) (*(s16 *)((ptr) + (offset)))
-#define RACE_SETUP_SAVE_BYTE_045D8(ptr, offset) (*((u8 *)(ptr) + (offset)))
+#define RACE_SETUP_SAVE_BYTE_045D8(ptr, offset) (*((s8 *)(ptr) + (offset)))
 
 void initRaceSetupPlayerSaveData(s32 arg0) {
     u8 *sp30;
     s32 i;
     s32 course;
     s32 recordOffset;
-    u8 *save = (u8 *)&gGameSaveDataBuffer[arg0];
+    u8 *save = (u8 *)&gGameSaveDataBuffer[arg0 & 0xFFFFFFFFFFFFFFFF];
     u8 *base = (u8 *)&gGameSaveDataBuffer[arg0];
     u8 *wordCursor;
     u8 *byteCursor;
@@ -843,7 +843,7 @@ void initRaceSetupPlayerSaveData(s32 arg0) {
     u8 *courseCursor1;
     u8 *courseCursor2;
     u8 *courseCursor3;
-    u8 *courseCursor4;
+    u8 *scoreCursor;
     RaceSetupSaveTriplet045D8 *courseTimes;
     RaceSetupSaveTriplet045D8 *courseRows;
     RaceSetupSaveTriplet045D8 *specialRecords;
@@ -888,29 +888,31 @@ void initRaceSetupPlayerSaveData(s32 arg0) {
     RACE_SETUP_SAVE_BYTE_045D8(save, 0x4C) = 0;
     RACE_SETUP_SAVE_BYTE_045D8(save, 0x78D7) = 0;
 
-    courseRows = D_800B3270;
-    courseTimes = D_800B31C8;
     specialRecords = D_800B3294;
     records = D_800B32A4;
     course = 0;
     courseCursor0 = base;
+    courseTimes = D_800B31C8;
     courseCursor1 = base;
     courseCursor2 = base;
     courseCursor3 = base;
+    courseRows = D_800B3270;
     sp30 = base;
-    courseCursor4 = base;
 
     do {
         u8 *rankIcons = D_800B32C4;
         u16 *recordText = D_800B32D0;
+        s8 row0;
+        s8 row1;
+        s8 row2;
 
         i = 0;
         byteCursor = courseCursor0;
         recordOffset = 0;
         wordCursor = (u8 *)courseTimes;
         base = courseCursor1;
-        save = courseCursor2;
-        courseCursor4 = courseCursor3;
+        scoreCursor = courseCursor2;
+        if (1) {
         do {
             RaceSetupSaveTriplet045D8 *record;
 
@@ -935,7 +937,7 @@ void initRaceSetupPlayerSaveData(s32 arg0) {
                 RACE_SETUP_SAVE_BYTE_045D8(base, 0x7832) = rankIcons[5];
             }
             RACE_SETUP_SAVE_BYTE_045D8(base, 0x7869) = i;
-            RACE_SETUP_SAVE_HALF_045D8(save, 0x7756) = *recordText;
+            RACE_SETUP_SAVE_HALF_045D8(scoreCursor, 0x7756) = *recordText;
             RACE_SETUP_SAVE_BYTE_045D8(base, 0x77C4) = i;
             i++;
             byteCursor += 4;
@@ -943,13 +945,14 @@ void initRaceSetupPlayerSaveData(s32 arg0) {
             wordCursor += 3;
             base++;
             rankIcons++;
-            save += 2;
+            scoreCursor += 2;
             recordText++;
         } while (i < 5);
+        }
 
-        RACE_SETUP_SAVE_BYTE_045D8(courseCursor4, 0x126) = courseRows->unk0;
-        RACE_SETUP_SAVE_BYTE_045D8(courseCursor4, 0x127) = courseRows->unk1;
-        RACE_SETUP_SAVE_HALF_045D8(courseCursor4, 0x128) = courseRows->unk2;
+        row0 = courseRows->unk0;
+        row1 = courseRows->unk1;
+        row2 = courseRows->unk2;
         course++;
         courseCursor0 += 0x14;
         courseTimes += 5;
@@ -957,6 +960,9 @@ void initRaceSetupPlayerSaveData(s32 arg0) {
         courseCursor2 += 0xA;
         courseCursor3 += 4;
         courseRows++;
+        RACE_SETUP_SAVE_BYTE_045D8(courseCursor3, 0x126) = row0;
+        RACE_SETUP_SAVE_BYTE_045D8(courseCursor3, 0x127) = row1;
+        RACE_SETUP_SAVE_HALF_045D8(courseCursor3, 0x128) = row2;
     } while (course < 0xB);
 
     RACE_SETUP_SAVE_HALF_045D8(save, 0x232) = 0;
