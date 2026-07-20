@@ -783,10 +783,15 @@ typedef struct RaceUiResultsBannerActor {
     /* 0x00 */ u8 pad0[0x18];
     /* 0x18 */ s16 alpha;
     /* 0x1A */ s16 timer;
-    /* 0x1C */ s8 player0;
-    /* 0x1D */ s8 player1;
-    /* 0x1E */ s8 player2;
-    /* 0x1F */ s8 player3;
+    union {
+        struct {
+            /* 0x1C */ s8 player0;
+            /* 0x1D */ s8 player1;
+            /* 0x1E */ s8 player2;
+            /* 0x1F */ s8 player3;
+        };
+        /* 0x1C */ s8 playerIndices[4];
+    };
 } RaceUiResultsBannerActor;
 
 typedef struct {
@@ -1654,14 +1659,9 @@ void func_8005905C(void *arg0) {
 }
 #endif
 
-// func_80059518 best match: 97.332% (nonmatchings/func_80059518-1225020319268080736/base_6.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race/ui/race_ui_effects/func_80059518.s")
-
-#ifdef NON_MATCHING
-void func_80059518(void *arg0) {
-    s8 *actor;
+void func_80059518(RaceUiResultsBannerActor *arg0) {
+    RaceUiResultsBannerActor *actor;
     s32 i;
-    s32 flags;
     s32 j;
     s32 next;
     s32 temp;
@@ -1669,22 +1669,17 @@ void func_80059518(void *arg0) {
     actor = arg0;
     i = 0;
     do {
-        actor[i + 0x1C] = i;
+        actor->playerIndices[i] = i;
         i++;
     } while (i < 4);
 
-    i = 0;
-    do {
-        next = i + 1;
-        j = next;
+    i = 0; do { next = i + 1; j = next;
         if (next < 4) {
             do {
-                if (gRacePlayers[actor[j + 0x1C]].mode < gRacePlayers[actor[i + 0x1C]].mode) {
-                    temp = actor[j + 0x1C];
-                    flags = i + 0x1C;
-                    actor = arg0;
-                    actor[j + 0x1C] = actor[flags];
-                    actor[flags] = temp;
+                if (gRacePlayers[actor->playerIndices[j]].mode < gRacePlayers[actor->playerIndices[i]].mode) {
+                    temp = actor->playerIndices[i];
+                    actor->playerIndices[i] = actor->playerIndices[j];
+                    actor->playerIndices[j] = temp;
                 }
                 j++;
             } while (j < 4);
@@ -1693,21 +1688,14 @@ void func_80059518(void *arg0) {
         i = next;
     } while (next < 3);
 
-    if (!(gRacePlayers[actor[0x1C]].flags & 0x40)) {
-        actor[0x1C] = -1;
-    }
-    if (!(gRacePlayers[actor[0x1D]].flags & 0x40)) {
-        actor[0x1D] = -1;
-    }
-    if (!(gRacePlayers[actor[0x1E]].flags & 0x40)) {
-        actor[0x1E] = -1;
-    }
-    flags = gRacePlayers[actor[0x1F]].flags;
-    if (!(flags & 0x40)) {
-        actor[0x1F] = -1;
-    }
+    i = 0;
+    do {
+        if (!(gRacePlayers[actor->playerIndices[i]].flags & 0x40)) {
+            actor->playerIndices[i] = -1;
+        }
+        i++;
+    } while (i < 4);
 }
-#endif
 
 void updateRaceUiResultsBannerConfirmed(RaceUiResultsBannerActor *actor) {
     func_80059518(actor);
