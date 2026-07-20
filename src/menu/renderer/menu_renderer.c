@@ -39,7 +39,6 @@ typedef struct MenuRenderTask MenuRenderTask;
 typedef struct RenderCallbackNode RenderCallbackNode;
 typedef struct MenuRenderAssetTableHeader MenuRenderAssetTableHeader;
 typedef struct MenuRenderAssetTableEntry MenuRenderAssetTableEntry;
-typedef struct MenuRenderAssetTableEntryCursor MenuRenderAssetTableEntryCursor;
 typedef struct FontAssetHeader FontAssetHeader;
 typedef struct FontTexture FontTexture;
 typedef struct FontAsset FontAsset;
@@ -85,11 +84,6 @@ struct MenuRenderSpriteActor {
     /* 0x18 */ MenuRenderSprite sprite;
 };
 
-struct MenuRenderAssetTableHeader {
-    /* 0x0 */ s32 unk0;
-    /* 0x4 */ s32 entryCount;
-};
-
 struct MenuRenderAssetTableEntry {
     /* 0x0 */ s32 imageOffset;
     /* 0x4 */ u16 textureIndex;
@@ -97,12 +91,10 @@ struct MenuRenderAssetTableEntry {
     /* 0x7 */ u8 height;
 };
 
-struct MenuRenderAssetTableEntryCursor {
-    /* 0x0 */ u8 pad0[8];
-    /* 0x8 */ s32 imageOffset;
-    /* 0xC */ u16 textureIndex;
-    /* 0xE */ u8 width;
-    /* 0xF */ u8 height;
+struct MenuRenderAssetTableHeader {
+    /* 0x0 */ s32 unk0;
+    /* 0x4 */ s32 entryCount;
+    /* 0x8 */ MenuRenderAssetTableEntry entries[1];
 };
 
 struct MenuFontAssetEntry {
@@ -163,45 +155,35 @@ extern s16 gMenuViewportCenterX;
 extern s16 gMenuViewportCenterY;
 extern u16 D_800B51D0[];
 
-// drawMenuAssetRegion best match: 78.146% (nonmatchings/drawMenuAssetRegion-5802343343535905907/base_9.c)
+// drawMenuAssetRegion best match: 89.734% (nonmatchings/drawMenuAssetRegion-1219509448159986855/base_88.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/renderer/menu_renderer/drawMenuAssetRegion.s")
 
 #ifdef NON_MATCHING
-#define MENU_RENDER_EMIT_GFX(cmd0, cmd1) \
-    gfx = gRegionAllocPtr;               \
-    gRegionAllocPtr = gfx + 1;           \
-    gfx->words.w0 = (cmd0);              \
-    gfx->words.w1 = (cmd1)
-
-extern Gfx *gRegionAllocPtr;
-extern s16 gMenuViewportCenterX;
-extern s16 gMenuViewportCenterY;
-
 void drawMenuAssetRegion(s16 x, s16 y, MenuRenderAssetTableHeader *table, u16 entryIndex, u16 scaleX, u16 scaleY,
-                   u8 startS, u8 startT, u8 width, u8 height) {
-    MenuRenderAssetTableEntry *entry;
-    MenuRenderAssetTableHeader *tableBase;
-    MenuRenderAssetTableEntryCursor *entryCursor;
-    u8 *paletteBase;
-    Gfx *gfx;
+                         u8 startS, u8 startT, u8 width, u8 height) {
     s32 x0;
     s32 y0;
-    s32 x1;
-    s32 y1;
+    register s32 x1;
+    register s32 y1;
+    s32 clipTop;
+    s32 clipLeft;
+    s16 clipBottom;
+    s16 clipRight;
     s32 s;
     s32 t;
-    s32 clipLeft;
-    s32 clipTop;
-    s16 clipRight;
-    s16 clipBottom;
-    volatile u8 pad[0x38];
+    register u16 sy;
+    register u16 sx;
+    register MenuRenderAssetTableEntry *entry;
+    register u8 *paletteBase;
 
-    tableBase = table;
-    paletteBase = (u8 *)tableBase + 8 + (tableBase->entryCount * sizeof(MenuRenderAssetTableEntry));
+    paletteBase = (table->entryCount * sizeof(MenuRenderAssetTableEntry)) + (u8 *)table +
+                  sizeof(MenuRenderAssetTableEntry);
     x0 = (x + gMenuViewportCenterX) * 4;
     y0 = (y + gMenuViewportCenterY) * 4;
-    x1 = x0 + (((width * scaleX) * 4) >> 5);
-    y1 = y0 + (((height * scaleY) * 4) >> 5);
+    x1 = (((width * scaleX) << 2) >> 5) + x0;
+    sx = scaleX;
+    sy = scaleY;
+    y1 = (((height * scaleY) << 2) >> 5) + y0;
     s = startS << 5;
     t = startT << 5;
 
@@ -226,34 +208,18 @@ void drawMenuAssetRegion(s16 x, s16 y, MenuRenderAssetTableHeader *table, u16 en
             y1 = clipBottom - 4;
         }
 
-        entryCursor = (MenuRenderAssetTableEntryCursor *)((u8 *)tableBase + (entryIndex * sizeof(MenuRenderAssetTableEntry)));
-
-        MENU_RENDER_EMIT_GFX(((((s32)entryCursor->width >> 1) - 1) & 0xFFF) | 0xFD480000,
-                             entryCursor->imageOffset + (u8 *)tableBase + 0x80000000);
-        MENU_RENDER_EMIT_GFX((((((s32)(entryCursor->width + 1) >> 1) + 7) >> 3 & 0x1FF) << 9) | 0xF5480000,
-                             0x07080200);
-        entry = (MenuRenderAssetTableEntry *)&entryCursor->imageOffset;
-        MENU_RENDER_EMIT_GFX(0xE6000000, 0);
-        MENU_RENDER_EMIT_GFX(0xF4000000,
-                             (((entry->width * 2) & 0xFFF) << 12) | 0x07000000 | ((entry->height * 4) & 0xFFF));
-        MENU_RENDER_EMIT_GFX(0xE7000000, 0);
-        MENU_RENDER_EMIT_GFX(((((entry->width + 1) >> 1) + 7) >> 3 & 0x1FF) << 9 | 0xF5400000,
-                             0x00080200);
-        MENU_RENDER_EMIT_GFX(0xF2000000, (((entry->width * 4) & 0xFFF) << 12) | ((entry->height * 4) & 0xFFF));
-        MENU_RENDER_EMIT_GFX(0xFD100000, &paletteBase[entry->textureIndex * 0x20] + 0x80000000);
-        MENU_RENDER_EMIT_GFX(0xE8000000, 0);
-        MENU_RENDER_EMIT_GFX(0xF5000100, 0x07000000);
-        MENU_RENDER_EMIT_GFX(0xE6000000, 0);
-        MENU_RENDER_EMIT_GFX(0xF0000000, 0x0703C000);
-        MENU_RENDER_EMIT_GFX(0xE7000000, 0);
-        MENU_RENDER_EMIT_GFX((((x1) & 0xFFF) << 12) | 0xE4000000 | ((y1) & 0xFFF),
-                             (((x0) & 0xFFF) << 12) | ((y0) & 0xFFF));
-        MENU_RENDER_EMIT_GFX(0xB4000000, (s << 16) | (t & 0xFFFF));
-        MENU_RENDER_EMIT_GFX(0xB3000000, ((0x8000 / scaleX) << 16) | ((0x8000 / scaleY) & 0xFFFF));
+        entry = &table->entries[entryIndex];
+        entry += 0;
+        gDPLoadTextureTile_4b(gRegionAllocPtr++, (u8 *)table + (0, entry->imageOffset) + 0x80000000,
+                              G_IM_FMT_CI, entry->width, entry->height, 0, 0, entry->width,
+                              entry->height, 0, G_TX_CLAMP, G_TX_CLAMP, G_TX_NOMASK,
+                              G_TX_NOMASK, G_TX_NOLOD, G_TX_NOLOD);
+        gDPLoadTLUT_pal16(gRegionAllocPtr++, 0,
+                          paletteBase + (entry->textureIndex << 5) + 0x80000000);
+        gSPTextureRectangle(gRegionAllocPtr++, x0, y0, x1, y1, G_TX_RENDERTILE, s, t,
+                            (u16)(0x8000 / sx), (u16)(0x8000 / sy));
     }
 }
-
-#undef MENU_RENDER_EMIT_GFX
 #endif
 
 void drawMenuSprite(s16 arg0, s16 arg1, s32 arg2, u16 arg3, u16 arg4, u16 arg5, u8 arg6, u8 arg7) {
