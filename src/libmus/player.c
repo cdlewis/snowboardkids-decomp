@@ -341,22 +341,14 @@ void __MusIntInitEnvelope(PlayerCommandState *arg0) {
     arg0->unkF8 = 1;
 }
 
-// __MusIntProcessEnvelope best match: 98.711% (nonmatchings/__MusIntProcessEnvelope-5787290371232622032/base_21.c)
-
-#pragma GLOBAL_ASM("asm/nonmatchings/libmus/player/__MusIntProcessEnvelope.s")
-
-#ifdef NON_MATCHING
 void __MusIntProcessEnvelope(PlayerCommandState *arg0) {
     u32 env_phase_count;
     u8 phase;
-    f32 new_var4;
-    f32 new_var2;
+    f32 initial_level;
     u8 rate;
-    f32 new_var;
-    u8 value;
-    s32 new_var3;
-    f32 new_var5;
-    f32 new_var6;
+    f32 envelope_value;
+    u8 start_level;
+    f32 release_amount;
 
     if (!arg0->unkF8) {
         return;
@@ -378,12 +370,12 @@ void __MusIntProcessEnvelope(PlayerCommandState *arg0) {
                 env_phase_count = (u32)(arg0->unk0 - arg0->unk10) >> 8;
                 env_phase_count = env_phase_count / rate;
                 if (env_phase_count < arg0->unkFB) {
-                    new_var = arg0->unk30;
-                    value = arg0->unkF5;
-                    new_var = (arg0->unkF6 - value) * new_var;
-                    new_var = new_var * (f32)env_phase_count;
-                    new_var2 = (f32)value;
-                    arg0->unkF9 = (s32)(new_var2 + new_var);
+                    start_level = arg0->unkF5;
+                    envelope_value = arg0->unkF6 - start_level;
+                    envelope_value *= arg0->unk30;
+                    envelope_value *= (f32)env_phase_count;
+                    initial_level = (f32)start_level;
+                    arg0->unkF9 = (s32)(initial_level + envelope_value);
                     return;
                 } else {
                     arg0->unkF8 = arg0->unkF8 + 1;
@@ -391,13 +383,13 @@ void __MusIntProcessEnvelope(PlayerCommandState *arg0) {
                     return;
                 }
             case 2:
-                env_phase_count = (u32)(arg0->unk0 - arg0->unk10);
-                env_phase_count = ((env_phase_count >> 8) - arg0->unkFB) / rate;
+                env_phase_count = ((u32)(arg0->unk0 - arg0->unk10) >> 8) - arg0->unkFB;
+                env_phase_count = env_phase_count / rate;
                 if (env_phase_count < arg0->unkFC) {
-                    new_var = arg0->unkF7 - arg0->unkF6;
-                    new_var4 = arg0->unk34;
-                    new_var6 = arg0->unkF6 + (new_var * new_var4 * (f32)env_phase_count);
-                    arg0->unkF9 = (s32)new_var6;
+                    envelope_value = arg0->unkF7 - arg0->unkF6;
+                    envelope_value *= arg0->unk34;
+                    envelope_value *= (f32)env_phase_count;
+                    arg0->unkF9 = (s32)((f32)arg0->unkF6 + envelope_value);
                     return;
                 } else {
                     arg0->unkF8 = arg0->unkF8 + 1;
@@ -410,18 +402,19 @@ void __MusIntProcessEnvelope(PlayerCommandState *arg0) {
                 env_phase_count = (u32)(arg0->unk0 - arg0->unk100) >> 8;
                 env_phase_count = env_phase_count / rate;
                 if (env_phase_count < arg0->unkFD) {
-                    new_var5 = (arg0->unk104 * arg0->unk38) * (f32)env_phase_count;
-                    arg0->unkF9 = (s32)((f32)arg0->unk104 - new_var5);
+                    release_amount = arg0->unk104;
+                    release_amount *= arg0->unk38;
+                    release_amount *= (f32)env_phase_count;
+                    arg0->unkF9 = (s32)((f32)arg0->unk104 - release_amount);
                     return;
                 } else {
                     arg0->unkF8 = arg0->unkF8 + 1;
-                    arg0->unkF9 = (new_var3 = 0);
+                    arg0->unkF9 = 0;
                     return;
                 }
         }
     }
 }
-#endif
 
 void __MusIntProcessWobble(PlayerCommandState *arg0) {
     u8 temp_t7;
