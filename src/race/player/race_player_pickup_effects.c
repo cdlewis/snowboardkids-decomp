@@ -9,16 +9,13 @@
 #include "game/race/effects/snowboard_trail_effects.h"
 #include "game/race/ui/race_ui_effects.h"
 
-// updateRacePlayerItemEffectUse best match: 99.869% (nonmatchings/updateRacePlayerItemEffectUse-3357475854818838508/base_16.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race/player/race_player_pickup_effects/updateRacePlayerItemEffectUse.s")
-
 typedef void (*EffectCallback)(void *);
 
 extern void enqueuePositionalSoundEffect(s32 soundId, void *pos, s32 volume, s32 distance);
 
 extern void *createCallbackTaskWithUserIdPreservingArgs(void *, s32, s32, s32);
+extern RacePlayer gFrameCounter;
 
-#ifdef NON_MATCHING
 void updateRacePlayerItemEffectUse(RacePlayer *player) {
     struct TriggerSlot { s32 pad0; s32 pad1; s32 pad2; s32 trigger; } triggerSlot;
     volatile s32 dummy;
@@ -50,11 +47,10 @@ void updateRacePlayerItemEffectUse(RacePlayer *player) {
             do {
                 if (otherPlayer->unk4 == 0) {
                     deltaX = otherPlayer->posX - player->posX;
-                    deltaZ = otherPlayer->posZ;
-                    deltaZ = deltaZ - player->posZ;
+                    deltaZ = otherPlayer->posZ - player->posZ;
                     if ((deltaX < 0x6000000) && (deltaX >= -0x5FFFFFF) &&
                         (deltaZ < 0x6000000) && (deltaZ >= -0x5FFFFFF)) {
-                        angle = (s16) ((((((calculateFixedAngleFromDeltaXZ(deltaX, deltaZ) - player->facingAngle) & 0xFFFFu) & 0xFFFFu) & 0xFFFFu) & 0xFFFFu) & (mask = 0xFFF));
+                        angle = (s16) ((calculateFixedAngleFromDeltaXZ(deltaX, deltaZ) - (s16) (player->facingAngle & 0xFFFFu)) & (mask = 0xFFF));
                         if ((angle >= 0xE01) || (angle < (((((((((((0x200 & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF))) {
                             trigger = 1;
                             player->itemTriggerCooldown = -0x3E;
@@ -62,7 +58,7 @@ void updateRacePlayerItemEffectUse(RacePlayer *player) {
                     }
                 }
                 otherPlayer++;
-            } while (otherPlayer != gRacePlayersEnd);
+            } while (otherPlayer != &gFrameCounter);
         }
     }
 
@@ -112,7 +108,6 @@ void updateRacePlayerItemEffectUse(RacePlayer *player) {
     }
 #undef trigger
 }
-#endif
 
 void updateRacePlayerActionEffectUse(RacePlayer *player) {
     s32 trigger;

@@ -155,6 +155,7 @@ struct ShopMenuWidgetActor {
 
 extern void addRenderCallback(void *, void *, void *);
 extern s16 gAssetHandles[];
+extern u8 gCourseDetailsMenuState;
 extern u8 gCourseSelectModeSelection;
 extern u8 gMenuSelectionConfirmTimer;
 extern u8 gMenuExitSelection;
@@ -1320,18 +1321,15 @@ void drawCourseDetailsMenu(ShopMenuWidgetActor *arg0) {
     }
 }
 
-// updateCourseDetailsMenu best match: 99.873% (nonmatchings/updateCourseDetailsMenu-5313856277864964686/base_8.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/menu/course_select/course_select_shop_ui/updateCourseDetailsMenu.s")
-
-#ifdef NON_MATCHING
 void updateCourseDetailsMenu(ShopMenuWidgetActor *arg0) {
     ShopMenuWidgetActor *visibleActor;
     s32 i;
     s32 movingEntryCount;
-    u8 menuState;
+    s32 menuState;
     u8 state;
     s32 screenState;
     u16 visibleCount;
+    s16 cursorX;
 
     enum {
         COURSE_DETAILS_STATE_REVEAL_LIST = 0,
@@ -1341,13 +1339,13 @@ void updateCourseDetailsMenu(ShopMenuWidgetActor *arg0) {
         COURSE_DETAILS_STATE_SLIDE_PAGE_IN = 4,
         COURSE_DETAILS_STATE_EXIT = 5,
         COURSE_DETAILS_STATE_RESET_CURSOR = 6,
-        COURSE_DETAILS_STATE_DONE = 7,
+        COURSE_DETAILS_STATE_DONE = 7
     };
 
     visibleActor = arg0;
     menuState = gCourseDetailsMenuState;
     state = arg0->state;
-    if (menuState != state) {
+    if ((menuState & 0xFFFFFFFF) != state) {
         state = menuState;
         arg0->state = menuState;
     }
@@ -1361,12 +1359,13 @@ void updateCourseDetailsMenu(ShopMenuWidgetActor *arg0) {
     switch (state) {
     case COURSE_DETAILS_STATE_REVEAL_LIST:
         movingEntryCount = 0;
-        for (i = 0; i < (u16)visibleActor->visibleCount; i++) {
-            if (arg0->cursorPositions[i] < arg0->targetX) {
-                arg0->cursorPositions[i] += 0x10;
+        for (menuState = 0; menuState < (u16)visibleActor->visibleCount; menuState++) {
+            cursorX = arg0->cursorPositions[menuState];
+            if (cursorX < arg0->targetX) {
+                arg0->cursorPositions[menuState] = cursorX + 0x10;
                 movingEntryCount++;
-                if (arg0->cursorPositions[i] >= arg0->targetX) {
-                    arg0->cursorPositions[i] = arg0->targetX;
+                if (arg0->cursorPositions[menuState] >= arg0->targetX) {
+                    arg0->cursorPositions[menuState] = arg0->targetX;
                 }
             }
         }
@@ -1454,7 +1453,6 @@ void updateCourseDetailsMenu(ShopMenuWidgetActor *arg0) {
     }
     addRenderCallback(&gMenuRenderCallbackList, drawCourseDetailsMenu, arg0);
 }
-#endif
 
 void initCourseDetailsMenu(ShopMenuWidgetActor *arg0) {
     s32 i;

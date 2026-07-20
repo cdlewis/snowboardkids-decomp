@@ -86,8 +86,6 @@ extern u8 gRaceTypeSelection;
 extern u8 gRaceCourseModelEffectsDisabled;
 extern u8 gRaceCourseOverlayEffectsDisabled;
 
-#ifdef NON_MATCHING
-// loadRaceCourseAssets best match: 99.693% at nonmatchings/loadRaceCourseAssets-2694253543240320626/base_perm_140.c.
 void loadRaceCourseAssets(void) {
     s32 size;
 
@@ -203,9 +201,6 @@ void loadRaceCourseAssets(void) {
     loadCompressedRomAsset(D_1E74E0, D_1EC0F0, 0x1C);
     loadCompressedRomAsset(D_5DAF30, D_5DB9D0, 0x2A);
 }
-#else
-#pragma GLOBAL_ASM("asm/nonmatchings/race/scene/race_scene_setup/loadRaceCourseAssets.s")
-#endif
 
 void loadRaceCharacterAssets(void) {
     RacePlayer *player;

@@ -1472,7 +1472,7 @@ loop_interp:
 #undef RACE_MOTION_JOINT_FRAME_STRIDE
 #endif
 
-// blendRaceMotionJointAnimation best match: 99.038% (nonmatchings/blendRaceMotionJointAnimation-8075865578671233833/base_11.c)
+// blendRaceMotionJointAnimation best match: 99.323% (nonmatchings/blendRaceMotionJointAnimation-7475224831549593718/base_30.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race/motion/race_motion/blendRaceMotionJointAnimation.s")
 
 #ifdef NON_MATCHING
@@ -1495,16 +1495,10 @@ void blendRaceMotionJointAnimation(RaceMotionState *state, s32 animIndex, s32 ti
     s32 y;
     s32 z;
     s32 delta;
+    s32 quotient;
 
     frameBase = getRelocatableHeapBlockBase(gAssetHandles[0x16 + state->modelId]);
-    frameOffset = ((u16 *)frameBase)[animIndex];
-    packed = (s16 *)(frameBase + (frameOffset * 2));
-    packed++;
-    state++;
-    state--;
-    packed = (s16 *)((u8 *)packed + 0x24);
-    row = gRaceMotionJointFrameBuffer;
-    end = (RaceMotionRotation *)&gRacePlayerHitCueId;
+    frameOffset = ((u16 *)frameBase)[animIndex]; packed = (s16 *)(frameBase + (frameOffset * 2)); packed++; state++; state--; packed = (s16 *)((u8 *)packed + 0x24); row = gRaceMotionJointFrameBuffer; end = (RaceMotionRotation *)&gRacePlayerHitCueId;
     do {
         i = 0x48;
         out = row + 6;
@@ -1532,7 +1526,7 @@ void blendRaceMotionJointAnimation(RaceMotionState *state, s32 animIndex, s32 ti
             }
             out++;
         } while (i < 0x90);
- row += 14; packed = (s16 *)((u8 *)packed + 0x24); } while (row < end); interp = gRaceMotionJointBlendBuffer; i = 6; joint = (u8 *)state + 0x78; loop: x = interp[0]; jointStride = 0x14; delta = (interp[42] - x) & 0xFFF; if (delta >= 0x801) { delta -= 0x1000; } *(s16 *)((u8 *)joint + 0x33A) = x + ((delta * timer) / duration); y = interp[1]; delta = (interp[43] - y) & 0xFFF; if (delta >= 0x801) { delta -= 0x1000; } *(s16 *)((u8 *)joint + 0x33C) = y + ((delta * timer) / duration); z = interp[2]; delta = (interp[44] - z) & 0xFFF; if (delta >= 0x801) { delta -= 0x1000; } i++; interp += 3; joint = (u8 *)joint + jointStride; *(s16 *)((u8 *)joint + 0x32A) = z + ((delta * timer) / duration);
+ row += 14; packed = (s16 *)((u8 *)packed + 0x24); } while (row < end); interp = gRaceMotionJointBlendBuffer; i = 6; joint = (u8 *)state + 0x78; loop: x = interp[0]; jointStride = 0x14; delta = (interp[42] - x) & 0xFFF; if (delta >= 0x801) { delta -= 0x1000; } quotient = (delta * timer) / duration; *(s16 *)((u8 *)joint + 0x33A) = x + quotient; y = interp[1]; delta = (interp[43] - y) & 0xFFF; if (delta >= 0x801) { delta -= 0x1000; } quotient = (delta * timer) / duration; *(s16 *)((u8 *)joint + 0x33C) = y + quotient; z = interp[2]; delta = (interp[44] - z) & 0xFFF; if (delta >= 0x801) { delta -= 0x1000; } quotient = (delta * timer) / duration; i++; interp += 3; joint = (u8 *)joint + jointStride; *(s16 *)((u8 *)joint + 0x32A) = z + quotient;
     if (i != 12) {
         goto loop;
     }
