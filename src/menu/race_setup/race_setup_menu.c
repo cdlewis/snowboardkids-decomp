@@ -236,7 +236,7 @@ void initRaceSetupSaveMenu(void) {
 }
 #endif
 
-// updateRaceSetupSaveMenu best match: 73.013% (nonmatchings/updateRaceSetupSaveMenu-5802343343535905907/base_1.c)
+// updateRaceSetupSaveMenu best match: 73.253% (nonmatchings/updateRaceSetupSaveMenu-1219509448159986855/base_3.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/race_setup/race_setup_menu/updateRaceSetupSaveMenu.s")
 
 #ifdef NON_MATCHING
