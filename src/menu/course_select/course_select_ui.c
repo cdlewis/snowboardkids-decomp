@@ -279,7 +279,7 @@ void drawCourseSelectPreviewModel(CourseSelectCoursePreviewActor *arg0) {
 }
 #endif
 
-// updateCourseSelectPreviewModelIn best match: 98.598% (nonmatchings/updateCourseSelectPreviewModelIn-7998791169205557824/base_20.c)
+// updateCourseSelectPreviewModelIn best match: 98.638% (nonmatchings/updateCourseSelectPreviewModelIn-1219509448159986855/base.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/course_select/course_select_ui/updateCourseSelectPreviewModelIn.s")
 
 #ifdef NON_MATCHING
@@ -300,6 +300,7 @@ void updateCourseSelectPreviewModelIn(void *arg0) {
     i = 0;
     if ((s32)gPlayerCount > 0) {
         do {
+            player = &gRacePlayers[i];
             requestedState = courseSelectStatus->incomingPreviewModelState[i];
             state = actor->state[i];
             if (requestedState != state) {
@@ -311,7 +312,7 @@ void updateCourseSelectPreviewModelIn(void *arg0) {
                 state = actor->state[i];
             }
 
-            if (gMenuFlowState != 0 && actor->state[i] < 5) {
+            if (gMenuFlowState != 0 && state < 5) {
                 actor->state[i] = 4;
                 actor->angle[i] = 0;
                 state = actor->state[i];
@@ -328,7 +329,6 @@ void updateCourseSelectPreviewModelIn(void *arg0) {
                 break;
             case 1:
                 if (D_8010AECC[i] & 1) {
-                    player = &gRacePlayers[i];
                     if (D_8010AEE8[i] < 0) {
                         if ((s32)player->characterId >= 9) {
                             actor->targetCourse[i] = 2;
@@ -386,7 +386,7 @@ void updateCourseSelectPreviewModelIn(void *arg0) {
                 state = actor->state[i];
                 break;
             case 4:
-                if (gRacePlayers[i].menuState == 3) {
+                if (player->menuState == 3) {
                     actor->state[i] = 5;
                     state = actor->state[i];
                 }
@@ -399,14 +399,14 @@ void updateCourseSelectPreviewModelIn(void *arg0) {
                 state = actor->state[i];
                 break;
             case 6:
-                gRacePlayers[i].menuState = 4;
+                player->menuState = 4;
                 if ((i == 2) && (gPlayerCount == 3)) {
                     gRacePlayers[3].menuState = 4;
                 }
                 state = actor->state[i];
                 break;
             case 7:
-                if (gRacePlayers[i].menuState == 3) {
+                if (player->menuState == 3) {
                     actor->state[i] = 5;
                     state = actor->state[i];
                 } else if (gCurrentGameTask->screenState == 9) {
