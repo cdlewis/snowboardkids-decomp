@@ -555,141 +555,82 @@ void drawAssetTableSprite8bpp(s16 arg0, s16 arg1, AssetTable *arg2, u16 arg3)
 }
 #endif
 
-// drawAssetTableSpriteWithExplicitPalette best match: 96.915% (nonmatchings/drawAssetTableSpriteWithExplicitPalette-8367390958892477031/base_12.c)
+// drawAssetTableSpriteWithExplicitPalette best match: 99.923% (nonmatchings/drawAssetTableSpriteWithExplicitPalette-1219509448159986855/base.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/renderer/menu_render_utils/drawAssetTableSpriteWithExplicitPalette.s")
 
 #ifdef NON_MATCHING
 void drawAssetTableSpriteWithExplicitPalette(s16 x, s16 y, AssetTable *asset, u16 entryIndex, u16 paletteIndex) {
-    volatile char pad[0x18];
-    u8 *paletteBase;
+    volatile char pad[8];
+    AssetTableEntry *paletteBase;
+    s32 viewportLeft;
+    s32 viewportRight;
+    s32 viewportTop;
+    s32 viewportBottom;
     s32 srcS;
     s32 srcT;
-    s32 viewportRight;
-    s32 viewportBottom;
-    s32 viewportLeft;
-    s32 viewportTop;
     s32 screenLeft;
+    u8 *palette;
     s32 screenTop;
+    s32 halfWidth;
     s32 screenRight;
     s32 screenBottom;
+    s32 halfHeight;
     AssetTableEntry *sprite;
 
-    paletteBase = (u8 *)&asset->entries[asset->entryCount];
-    sprite = &asset->entries[entryIndex];
+    paletteBase = asset->entryCount + asset->entries;
+    sprite = (AssetTableEntry *)asset + entryIndex;
     screenLeft = x + gMenuViewportCenterX;
-    do {
-        screenTop = y + gMenuViewportCenterY;
-        srcS = 0;
-        srcT = 0;
-        screenRight = sprite->width + screenLeft;
-        screenBottom = sprite->height + screenTop;
-        viewportRight = gMenuViewportCenterX + (gMenuViewportWidth / 2);
-        if (screenLeft < viewportRight) {
-            viewportLeft = gMenuViewportCenterX - (gMenuViewportWidth / 2);
-            viewportBottom = gMenuViewportCenterY + (gMenuViewportHeight / 2);
-            if (screenTop < viewportBottom) {
-                viewportTop = gMenuViewportCenterY - (gMenuViewportHeight / 2);
-                if ((screenRight >= viewportLeft) && (screenBottom >= viewportTop)) {
-                    if (screenLeft < viewportLeft) {
-                        srcS = viewportLeft - screenLeft;
-                        screenLeft = viewportLeft;
-                    }
-                    if (screenTop < viewportTop) {
-                        srcT = viewportTop - screenTop;
-                        screenTop = viewportTop;
-                    }
-                    if (screenRight >= viewportRight) {
-                        screenRight = viewportRight;
-                    }
-                    if (screenBottom >= viewportBottom) {
-                        screenBottom = viewportBottom;
-                    }
-                    {
-                        Gfx *_g = (Gfx *)(gRegionAllocPtr++);
-                        _g->words.w0 = (((sprite->width >> 1) - 1) & 0xFFF) | 0xFD480000;
-                        _g->words.w1 = (u32)((u8 *)asset + sprite->imageOffset);
-                    }
-                    {
-                        Gfx *_g = (Gfx *)(gRegionAllocPtr++);
-                        _g->words.w0 = (((((sprite->width + 1) >> 1) + 7) >> 3) & 0x1FF) << 9 | 0xF5480000;
-                        _g->words.w1 = 0x07080200;
-                    }
-                    {
-                        Gfx *_g = (Gfx *)(gRegionAllocPtr++);
-                        _g->words.w0 = 0xE6000000;
-                        _g->words.w1 = 0;
-                    }
-                    {
-                        Gfx *_g = (Gfx *)(gRegionAllocPtr++);
-                        _g->words.w0 = 0xF4000000;
-                        (*_g).words.w1 =
-                            ((((sprite->width * 2) & 0xFFF) << 12) | 0x07000000) | ((sprite->height * 4) & 0xFFF);
-                    }
-                    {
-                        Gfx *_g = (Gfx *)(gRegionAllocPtr++);
-                        _g->words.w0 = 0xE7000000;
-                        _g->words.w1 = 0;
-                    }
-                    {
-                        Gfx *_g = (Gfx *)(gRegionAllocPtr++);
-                        _g->words.w0 = (((((sprite->width + 1) >> 1) + 7) >> 3) & 0x1FF) << 9 | 0xF5400000;
-                        _g->words.w1 = 0x00080200;
-                    }
-                    {
-                        Gfx *_g = (Gfx *)(gRegionAllocPtr++);
-                        _g->words.w0 = 0xF2000000;
-                        _g->words.w1 = (((sprite->width * 4) & 0xFFF) << 12) | ((sprite->height * 4) & 0xFFF);
-                    }
-                    {
-                        Gfx *_g = (Gfx *)(gRegionAllocPtr++);
-                        _g->words.w0 = 0xFD100000;
-                        _g->words.w1 = (u32)(paletteBase + (paletteIndex << 5));
-                    }
-                    {
-                        Gfx *_g = (Gfx *)(gRegionAllocPtr++);
-                        _g->words.w0 = 0xE8000000;
-                        _g->words.w1 = 0;
-                    }
-                    {
-                        Gfx *_g = (Gfx *)(gRegionAllocPtr++);
-                        _g->words.w0 = 0xF5000100;
-                        _g->words.w1 = 0x07000000;
-                    }
-                    {
-                        Gfx *_g = (Gfx *)(gRegionAllocPtr++);
-                        _g->words.w0 = 0xE6000000;
-                        _g->words.w1 = 0;
-                    }
-                    {
-                        Gfx *_g = (Gfx *)(gRegionAllocPtr++);
-                        _g->words.w0 = 0xF0000000;
-                        _g->words.w1 = 0x0703C000;
-                    }
-                    {
-                        Gfx *_g = (Gfx *)(gRegionAllocPtr++);
-                        _g->words.w0 = 0xE7000000;
-                        _g->words.w1 = 0;
-                    }
-                    {
-                        Gfx *_g = (Gfx *)(gRegionAllocPtr++);
-                        _g->words.w0 =
-                            (((screenRight * 4) & 0xFFF) << 12) | 0xE4000000 | ((screenBottom * 4) & 0xFFF);
-                        _g->words.w1 = (((screenLeft * 4) & 0xFFF) << 12) | ((screenTop * 4) & 0xFFF);
-                    }
-                    {
-                        Gfx *_g = (Gfx *)(gRegionAllocPtr++);
-                        _g->words.w0 = 0xB4000000;
-                        _g->words.w1 = (srcS << 21) | ((srcT << 5) & 0xFFFF);
-                    }
-                    {
-                        Gfx *_g = (Gfx *)(gRegionAllocPtr++);
-                        _g->words.w0 = 0xB3000000;
-                        _g->words.w1 = 0x04000400;
-                    }
-                }
-            }
-        }
-    } while (0);
+    screenTop = y + gMenuViewportCenterY;
+    screenRight = sprite[1].width + screenLeft;
+    screenBottom = sprite[1].height + screenTop;
+    sprite++;
+    srcS = 0;
+    srcT = 0;
+    halfWidth = gMenuViewportWidth / 2;
+    viewportRight = gMenuViewportCenterX + halfWidth;
+    if (screenLeft >= viewportRight) {
+        return;
+    }
+
+    halfHeight = gMenuViewportHeight / 2;
+    entryIndex &= 0xFFFF;
+    palette = (u8 *)paletteBase;
+    viewportBottom = gMenuViewportCenterY + halfHeight;
+    viewportLeft = gMenuViewportCenterX - halfWidth;
+    if (screenTop >= viewportBottom) {
+        return;
+    }
+    if (screenRight < viewportLeft) {
+        return;
+    }
+
+    viewportTop = gMenuViewportCenterY - halfHeight;
+    if (screenBottom < viewportTop) {
+        return;
+    }
+    if (screenLeft < viewportLeft) {
+        srcS = viewportLeft - screenLeft;
+        screenLeft = viewportLeft;
+    }
+    if (screenTop < viewportTop) {
+        srcT = viewportTop - screenTop;
+        screenTop = viewportTop;
+    }
+    if (screenRight >= viewportRight) {
+        screenRight = viewportRight;
+    }
+    if (screenBottom >= viewportBottom) {
+        screenBottom = viewportBottom;
+    }
+
+    gDPLoadTextureTile_4b(gRegionAllocPtr++, sprite->imageOffset + (u8 *)asset, G_IM_FMT_CI,
+                          sprite->width, sprite->height, 0, 0, sprite->width, sprite->height,
+                          0, G_TX_CLAMP, G_TX_CLAMP, G_TX_NOMASK, G_TX_NOMASK,
+                          G_TX_NOLOD, G_TX_NOLOD);
+    gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, palette + (paletteIndex << 5));
+    gSPTextureRectangle(gRegionAllocPtr++, screenLeft << 2, screenTop << 2,
+                        screenRight << 2, screenBottom << 2, G_TX_RENDERTILE,
+                        srcS << 5, srcT << 5, 0x400, 0x400);
 }
 #endif
 
