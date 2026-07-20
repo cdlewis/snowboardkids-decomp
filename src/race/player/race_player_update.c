@@ -487,22 +487,23 @@ void updateRacePlayerMotionFeedback(RacePlayer *player) {
     }
 }
 
-// updateRacePlayerMode00Grounded best match: 97.707% (nonmatchings/updateRacePlayerMode00Grounded-2694253543240320626/base_7.c)
+// updateRacePlayerMode00Grounded best match: 99.879% (nonmatchings/updateRacePlayerMode00Grounded-5787290371232622032/base_1.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race/player/race_player_update/updateRacePlayerMode00Grounded.s")
 
 #ifdef NON_MATCHING
 void updateRacePlayerMode00Grounded(RacePlayer *player) {
     volatile s32 pad[26];
-    s32 targetX;
+    s64 temp;
     s32 targetZ;
-    s32 speed;
-    s32 lean;
-    s16 turn;
+    s32 targetX;
+    s32 turnTarget;
     s16 quickTurn;
     Struct800955C0 *spawn;
     s32 surfaceCue;
-    s32 turnTarget;
+    s32 lean;
+    s32 speed;
     s16 turnDelta;
+    s16 turn;
     s32 rotation;
     s32 bankRate;
     s32 interpolated;
@@ -644,7 +645,8 @@ void updateRacePlayerMode00Grounded(RacePlayer *player) {
     if (!(gMenuFlowState & 1)) {
         turnTarget = updateRacePlayerLeanAngle(player, lean, turn);
         if (player->unk93 == 0) {
-            turnDelta = turnTarget - player->unk2FA;
+            turnDelta = player->unk2FA;
+            turnDelta = turnTarget - turnDelta;
             if (turnDelta >= 0x31) {
                 turnDelta = 0x30;
             }
@@ -668,7 +670,7 @@ void updateRacePlayerMode00Grounded(RacePlayer *player) {
                 blendRaceMotionJointAnimation(player, 3, player->unk2FA, 0x118);
             } else {
                 setRaceMotionAnimation(player, 2);
-                blendRaceMotionJointAnimation(player, 2, -player->unk2FA, 0x118);
+                blendRaceMotionJointAnimation(player, 2, -(turnDelta = player->unk2FA), 0x118);
             }
         } else {
             turnDelta = -player->unk2FA;
@@ -689,8 +691,6 @@ void updateRacePlayerMode00Grounded(RacePlayer *player) {
             bankRate = (-turn * 0x10 * player->unk268) / 0x100;
             interpolated = (((player->unk270 - player->unk26C) * (0x3F - player->unk2F8)) / 0x20) + player->unk26C;
             if (bankRate != 0) {
-                s64 temp;
-
                 lean = (lean - 0xFF) / 0x100;
                 temp = ((s64) interpolated * lean * lean) / bankRate;
                 if (temp != 0) {
@@ -713,8 +713,8 @@ void updateRacePlayerMode00Grounded(RacePlayer *player) {
                     if (temp < 0) {
                         steerAngle -= 0xC00;
                     }
-                    steerAngle &= 0xFFF;
                 }
+                steerAngle &= 0xFFF;
             }
 
             if (steerAngle < 0x801) {
