@@ -808,11 +808,13 @@ void drawScaledAssetTableSpriteWithExplicitPalette(s16 x, s16 y, AssetTable *ass
 }
 #endif
 
-// drawMenuAsciiFontTile best match: 99.711% (nonmatchings/drawMenuAsciiFontTile-7475224831549593718/base.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/menu/renderer/menu_render_utils/drawMenuAsciiFontTile.s")
-
-#ifdef NON_MATCHING
-void drawMenuAsciiFontTile(s16 x, s16 y, u16 s, u16 t, u16 paletteIndex) {
+void drawMenuAsciiFontTile(x, y, s, t, paletteIndex)
+s16 x;
+s16 y;
+u16 s;
+u16 t;
+u16 paletteIndex;
+{
     s32 x0;
     s32 y0;
     s32 x1;
@@ -824,6 +826,7 @@ void drawMenuAsciiFontTile(s16 x, s16 y, u16 s, u16 t, u16 paletteIndex) {
     s32 minY;
     s32 clipS;
     s32 clipT;
+    s32 halfHeight;
 
     x0 = x + gMenuViewportCenterX;
     y0 = y + gMenuViewportCenterY;
@@ -834,10 +837,11 @@ void drawMenuAsciiFontTile(s16 x, s16 y, u16 s, u16 t, u16 paletteIndex) {
 
     maxX = gMenuViewportCenterX + (gMenuViewportWidth / 2);
     if (x0 < maxX) {
-        maxY = gMenuViewportCenterY + (gMenuViewportHeight / 2);
+        halfHeight = gMenuViewportHeight / 2;
+        maxY = gMenuViewportCenterY + halfHeight;
         minX = gMenuViewportCenterX - (gMenuViewportWidth / 2);
         if (y0 < maxY) {
-            minY = gMenuViewportCenterY - (gMenuViewportHeight / 2);
+            minY = gMenuViewportCenterY - halfHeight;
             if ((x1 >= minX) && (y1 >= minY)) {
                 if (x0 < minX) {
                     clipS = minX - x0;
@@ -872,7 +876,6 @@ void drawMenuAsciiFontTile(s16 x, s16 y, u16 s, u16 t, u16 paletteIndex) {
         }
     }
 }
-#endif
 
 extern s16 gMenuAsciiFontTextureNeedsLoad;
 
@@ -885,12 +888,7 @@ void initMenuAsciiFontTexture(void) {
     gMenuAsciiFontPaletteIndex = -1;
 }
 
-void drawMenuAsciiChar(x, y, ch, arg3)
-s16 x;
-s16 y;
-u8 ch;
-u16 arg3;
-{
+void drawMenuAsciiChar(s16 x, s16 y, u8 ch, u16 arg3) {
     char pad[8];
     u32 tile;
     u16 s;
@@ -929,7 +927,8 @@ u16 arg3;
     }
 }
 
-extern void drawMenuAsciiChar(s16 x, s16 y, volatile s32 ch, u16 arg3);
+#pragma weak drawMenuAsciiCharLegacy = drawMenuAsciiChar
+extern void drawMenuAsciiCharLegacy(s16 x, s16 y, volatile s32 ch, u16 arg3);
 
 void drawMenuAsciiTextDefaultScale(s16 arg0, s16 arg1, u8 *arg2, u16 arg3) {
     s32 var_s0;
@@ -956,7 +955,7 @@ void drawMenuAsciiTextDefaultScale(s16 arg0, s16 arg1, u8 *arg2, u16 arg3) {
                 var_s0 = temp_s4;
                 var_s2 += 8;
             } else {
-                drawMenuAsciiChar(var_s0, var_s2, var_a2, arg3);
+                drawMenuAsciiCharLegacy(var_s0, var_s2, var_a2, arg3);
                 var_s0 += 8;
             }
             var_a2 = var_s1[1];
