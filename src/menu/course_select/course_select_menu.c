@@ -93,6 +93,7 @@ extern s8 D_800EC9F1;
 extern s8 D_800EC9F9;
 extern s8 gCourseUnlockSaveSlots[];
 extern s32 gActiveMenuTask;
+extern CallbackTask *D_8010ADE8;
 extern s8 D_8010AE64;
 extern u8 D_8010AEA0[];
 extern s8 D_8010AEA4;
@@ -432,7 +433,7 @@ void updateCourseSelectModeMenu(void) {
 }
 #endif
 
-// initCourseSelectCourseList best match: 97.763% (nonmatchings/initCourseSelectCourseList-2663524570355072948/base_16.c)
+// initCourseSelectCourseList best match: 99.737% (nonmatchings/initCourseSelectCourseList-7998791169205557824/base_8.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/course_select/course_select_menu/initCourseSelectCourseList.s")
 
 #ifdef NON_MATCHING
@@ -444,7 +445,8 @@ void initCourseSelectCourseList(void) {
     s32 one;
     s32 column;
     u8 *extraCourse;
-    u8 selected;
+    s32 selected;
+    u8 loadedCourseFlags;
 
     gMenuTransitionState = 0;
     D_8010AEA0[0] = 0;
@@ -452,7 +454,8 @@ void initCourseSelectCourseList(void) {
     gMenuInputRepeatTimers = 0;
     createCallbackTask(initCourseSelectCourseIconList, 0, 0x63);
     D_8010ADE8 = createCallbackTask(initCourseSelectExtraCourseIconList, 0, 0x61);
-    courseFlags = gUnlockedExtraCourseFlags;
+    loadedCourseFlags = gUnlockedExtraCourseFlags;
+    courseFlags = loadedCourseFlags;
     if (courseFlags & 7) {
         D_8010AEA0[0] = 1;
     }
@@ -492,7 +495,11 @@ void initCourseSelectCourseList(void) {
     } else {
         selected = gCourseSelectStatus.unk2E;
         column = 0;
-        if (selected == one) {
+        if (one == selected) {
+            /* Preserve IDO's selected-course register allocation. */
+            if (column) {
+                do { } while (0);
+            }
             selected = (gCourseSelectStatus.unk2E = 0);
         } else {
             column = (s32) gRacePlayers.unk6 % 3;
@@ -500,7 +507,7 @@ void initCourseSelectCourseList(void) {
     }
 
     D_8010AE64 = column;
-    if (selected == one) {
+    if (one == selected) {
         column--;
     }
 
