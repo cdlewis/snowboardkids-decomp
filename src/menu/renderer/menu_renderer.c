@@ -1291,7 +1291,7 @@ void drawMenuGlyphScriptDefaultFont(volatile s16 x, s16 y, MenuGlyphScript *scri
     }
 }
 
-// drawMenuGlyph best match: 82.622% (nonmatchings/drawMenuGlyph-8367390958892477031/base_2.c)
+// drawMenuGlyph best match: 87.326% (nonmatchings/drawMenuGlyph-1219509448159986855/base_15.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/renderer/menu_renderer/drawMenuGlyph.s")
 
 #ifdef NON_MATCHING
@@ -1321,8 +1321,8 @@ void drawMenuGlyph(s16 x, s16 y, u16 glyph, u8 palette, u16 scale, u16 fontBank)
     s32 i;
     u16 color;
     s32 red;
-    s32 green;
-    s32 blue;
+    u8 green;
+    u16 blue;
 
     if (palette == 0) {
         fontAsset = (MenuFontAssetTable *)getRelocatableHeapBlockBase(gAssetHandles[fontBank]);
@@ -1368,7 +1368,8 @@ void drawMenuGlyph(s16 x, s16 y, u16 glyph, u8 palette, u16 scale, u16 fontBank)
                 drawX1 = x1;
                 drawY1 = y1;
 
-                glyphTexture = &fontAsset->entries[glyph];
+                glyphTexture = fontAsset->entries;
+                glyphTexture += glyph;
                 glyphPalette = fontPalettes + ((u16)glyphTexture->textureIndex * MENU_PALETTE_COLOR_COUNT);
                 scaledPalette = allocMenuRenderScratch(MENU_PALETTE_SIZE_BYTES);
                 for (i = 0; i != MENU_PALETTE_COLOR_COUNT; i++) {
