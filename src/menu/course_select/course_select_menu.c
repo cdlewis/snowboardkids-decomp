@@ -52,6 +52,7 @@ typedef struct {
     /* 0x06 */ u8 unk6;
     /* 0x07 */ u8 unk7;
     /* 0x08 */ u8 unk8;
+    /* 0x09 */ u8 pad9[0x603];
 } CourseSelectSelection;
 
 typedef struct ObjectA3E0 {
@@ -61,6 +62,11 @@ typedef struct ObjectA3E0 {
     /* 0x2C */ void (*unk2C)(void);
     /* 0x30 */ u8 pad30[0x80];
 } ObjectA3E0;
+
+typedef union {
+    CourseSelectSelection *selection;
+    ObjectA3E0 *object;
+} CourseSelectPointer;
 
 extern u8 D_14B450[];
 extern u8 D_1502A0[];
@@ -517,20 +523,15 @@ void initCourseSelectCourseList(void) {
 }
 #endif
 
-// updateCourseSelectCourseList best match: 57.099% (nonmatchings/updateCourseSelectCourseList-2694253543240320626/base_8.c)
+// updateCourseSelectCourseList best match: 77.188% (nonmatchings/updateCourseSelectCourseList-5787290371232622032/base_18.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/course_select/course_select_menu/updateCourseSelectCourseList.s")
 
 #ifdef NON_MATCHING
 void updateCourseSelectCourseList(void) {
-    s32 sp44;
-    s8 sp33;                                        /* compiler-managed */
     u8 sp32;
     s8 sp31;
-    ObjectA3E0 *sp18;
+    volatile CourseSelectPointer sp18;
     CourseSelectSelection *var_v0_5;
-    CourseSelectSelection *temp_v0_3;
-    ObjectA3E0 *var_v0_7;
-    s16 temp_a0;
     s16 temp_t6;
     s16 temp_t7;
     s16 temp_v0;
@@ -540,11 +541,8 @@ void updateCourseSelectCourseList(void) {
     s32 temp_v1;
     s32 var_a0;
     s32 var_a3;
-    s32 var_a3_2;
-    s32 var_a3_3;
     s8 temp_a0_2;
     u16 var_v1_2;
-    u16 var_v1_3;
     u8 var_a1;
     u8 var_t1;
     u8 var_t8;
@@ -574,40 +572,17 @@ void updateCourseSelectCourseList(void) {
             } else {
                 var_a1 = 4;
             }
-            if ((s32) var_a1 > 0) {
-                temp_v1 = var_a1 & 3;
-                if (temp_v1 != 0) {
-                    var_v0 = &gRacePlayers;
-                    do {
-                        var_a3 += 1;
-                        var_v0->unk8 = 3;
-                        var_v0 += 1;
-                    } while (temp_v1 != var_a3);
-                    if (var_a3 != var_a1) {
-                        goto block_17;
-                    }
-                } else {
-block_17:
-                    var_v0_2 = &gRacePlayers + var_a3;
-                    do {
-                        var_a3 += 4;
-                        var_v0_2->unk8 = 3;
-                        var_v0_2[1].unk8 = 3;
-                        var_v0_2[2].unk8 = 3;
-                        var_v0_2[3].unk8 = 3;
-                        var_v0_2 += 4;
-                    } while (var_a3 != var_a1);
-                }
+            for (var_a3 = 0; var_a3 < (s32) var_a1; var_a3++) {
+                (&gRacePlayers)[var_a3].unk8 = 3;
             }
             D_800EC9C0 = 0xF;
             gMenuFlowState = 1;
         }
         var_v0_3 = (u8) D_800EC9C0;
-        sp44 = var_a3;
     } else if ((u8) D_800EC9C0 == 0) {
-        temp_a0 = gMenuChoicePromptState;
-        var_a3_2 = 0;
-        if (temp_a0 == 0) {
+
+        var_a3 = 0;
+        if (gMenuChoicePromptState == 0) {
             if ((gCourseSelectStatus.unk0[0] == 1) && (gMenuTransitionState == 0) && !(D_8010AECC & 1)) {
                 if ((gMenuSelectionVariant == 5) || (*D_8010AEA0 == 0) || (var_t1 = 4, (gCourseSelectModeSelection == 1))) {
                     var_t1 = 3;
@@ -616,39 +591,34 @@ block_17:
                 if ((s32) gPlayerCount >= 2) {
                     var_t1 = (var_t1 - 1) & 0xFF;
                 }
-                temp_v0_2 = gPlayerInputHeld & (STICK_UP | U_JPAD);
+                temp_v0_2 = gPlayerInputHeld & 0x10800;
                 sp31 = D_8010AE64;
-                if ((temp_v0_2 == 0) && !(gPlayerInputHeld & (STICK_DOWN | D_JPAD))) {
+                if ((temp_v0_2 == 0) && !(gPlayerInputHeld & 0x20400)) {
                     gMenuInputRepeatTimers = 0;
                 }
-                if ((gPlayerInputPressed & (STICK_UP | U_JPAD)) || ((temp_v0_2 != 0) && ((s32) (u16) gMenuInputRepeatTimers >= 9))) {
+                if ((gPlayerInputPressed & 0x10800) || ((temp_v0_2 != 0) && ((s32) (u16) gMenuInputRepeatTimers >= 9))) {
                     if ((u16) gMenuInputRepeatTimers == 0) {
                         gMenuInputRepeatTimers = (u16) gMenuInputRepeatTimers + 1;
                     }
                     if (D_8010AE64 > 0) {
                         D_8010AE64 -= 1;
-                        sp44 = 0;
-                        sp33 = var_t1;
                         enqueueSoundEffect(0x19, 0x32);
-                        var_a3_2 = 0;
+                        var_a3 = 0;
                     }
-                } else if ((gPlayerInputPressed & (STICK_DOWN | D_JPAD)) || ((gPlayerInputHeld & (STICK_DOWN | D_JPAD)) && ((s32) (u16) gMenuInputRepeatTimers >= 9))) {
+                } else if ((gPlayerInputPressed & 0x20400) || ((gPlayerInputHeld & 0x20400) && ((s32) (u16) gMenuInputRepeatTimers >= 9))) {
                     if ((u16) gMenuInputRepeatTimers == 0) {
                         gMenuInputRepeatTimers = (u16) gMenuInputRepeatTimers + 1;
                     }
                     if (D_8010AE64 < (s32) var_t1) {
                         D_8010AE64 += 1;
-                        sp44 = 0;
-                        sp33 = (s8) var_t1;
                         enqueueSoundEffect(0x19, 0x32);
-                        var_a3_2 = 0;
-                        var_t1 = (u8) sp33;
+                        var_a3 = 0;
                     }
                 }
                 if ((u16) gMenuInputRepeatTimers != 0) {
-                    temp_t7 = (u16) gMenuInputRepeatTimers + 1;
-                    gMenuInputRepeatTimers = temp_t7;
-                    if ((temp_t7 & 0xFFFF) == 0xFFFF) {
+                    var_v1_2 = (u16) gMenuInputRepeatTimers + 1;
+                    gMenuInputRepeatTimers = var_v1_2;
+                    if (var_v1_2 == 0xFFFF) {
                         gMenuInputRepeatTimers = 0xA;
                     }
                 }
@@ -678,11 +648,9 @@ block_17:
                         gRacePlayers.unk7 = (u8) temp_a0_2;
                     }
                 }
-                if ((D_8010AEE8[0] == 0) && ((gPlayerInputPressed & START_BUTTON) || (gPlayerInputPressed & A_BUTTON))) {
-                    sp44 = 0;
-                    sp33 = var_t1;
+                if ((D_8010AEE8[0] == 0) && ((gPlayerInputPressed & 0x1000) || (gPlayerInputPressed & 0x8000))) {
                     enqueueSoundEffect(1, 0x32);
-                    var_a3_2 = 0;
+                    var_a3 = 0;
                     if ((gPlayerCount == 1) && (var_t1 == D_8010AE64)) {
                         gMenuTransitionState = 9;
                         gMenuFlowState = 1;
@@ -692,42 +660,40 @@ block_17:
                         gMenuInputRepeatTimers = 0;
                         gMenuTransitionState = 1;
                         if (gCourseSelectModeSelection == 0) {
-                            sp44 = 0;
                             createCallbackTask(initCourseUnlockPricePanel, 0, 0x62);
-                            var_a3_2 = 0;
+                            var_a3 = 0;
                         }
                     }
-                } else if (gPlayerInputPressed & B_BUTTON) {
-                    sp44 = 0;
+                } else if (gPlayerInputPressed & 0x4000) {
                     enqueueSoundEffect(1, 0x32);
                     gMenuInputRepeatTimers = 0;
-                    var_a3_2 = 0;
-                    if ((s32) gPlayerCount > 0) {
+                    var_a3 = 0;
+                    var_a1 = gPlayerCount;
+                    if ((s32) var_a1 > 0) {
                         var_v0_5 = &gRacePlayers;
                         do {
                             var_v0_5->unk8 = 9;
                             var_v0_5 += 1;
-                        } while ((u32) var_v0_5 < (u32) (&gRacePlayers + gPlayerCount));
+                        } while ((u32) var_v0_5 < (u32) (&gRacePlayers + var_a1));
                     }
                 }
             }
             if ((gMenuTransitionState == 1) && (gCourseSelectModeSelection == 1)) {
-                sp44 = var_a3_2;
                 setCurrentGameTaskCallback(updateCourseSelectUnlockCourseList, 0);
                 gCurrentGameTask->screenState = 0;
             }
         } else {
-            if (temp_a0 == 9) {
+            if (gMenuChoicePromptState == 9) {
                 D_8010AEA4 = (u8) D_8010AEA4 + 1;
             } else {
                 D_8010AEA4 = 0;
             }
             if ((gMenuChoicePromptState >= 2) && (gMenuChoicePromptState < 5)) {
-                if (!(gPlayerInputHeld & (STICK_UP | U_JPAD)) && !(gPlayerInputHeld & (STICK_DOWN | D_JPAD))) {
+                if (!(gPlayerInputHeld & 0x10800) && !(gPlayerInputHeld & 0x20400)) {
                     gMenuInputRepeatTimers = 0;
                 }
                 temp_t4 = gPlayerInputPressed;
-                if ((temp_t4 & (STICK_UP | U_JPAD)) || ((gPlayerInputHeld & (STICK_UP | U_JPAD)) && ((s32) (u16) gMenuInputRepeatTimers >= 9) && ((u16) gMenuInputRepeatTimers & 1))) {
+                if ((temp_t4 & 0x10800) || ((gPlayerInputHeld & 0x10800) && ((s32) (u16) gMenuInputRepeatTimers >= 9) && ((u16) gMenuInputRepeatTimers & 1))) {
                     var_v1_2 = (u16) gMenuInputRepeatTimers;
                     if (var_v1_2 == 0) {
                         var_v1_2 = (var_v1_2 + 1) & 0xFFFF;
@@ -735,54 +701,51 @@ block_17:
                     gMenuInputRepeatTimers = (s16) var_v1_2;
                     if (gMenuChoicePromptState >= 3) {
                         gMenuChoicePromptState -= 1;
-                        sp44 = 0;
                         enqueueSoundEffect(0x19, 0x32);
-                        var_a3_2 = 0;
+                        var_a3 = 0;
                         D_8010AF44 = 0;
                     }
                 } else {
-                    var_v1_3 = (u16) gMenuInputRepeatTimers;
-                    if ((temp_t4 & (STICK_DOWN | D_JPAD)) || ((gPlayerInputHeld & (STICK_DOWN | D_JPAD)) && ((s32) var_v1_3 >= 9) && (var_v1_3 & 1))) {
-                        if (var_v1_3 == 0) {
-                            var_v1_3 = (var_v1_3 + 1) & 0xFFFF;
+                    var_v1_2 = (u16) gMenuInputRepeatTimers;
+                    if ((temp_t4 & 0x20400) || ((gPlayerInputHeld & 0x20400) && ((s32) var_v1_2 >= 9) && (var_v1_2 & 1))) {
+                        if (var_v1_2 == 0) {
+                            var_v1_2 = (var_v1_2 + 1) & 0xFFFF;
                         }
-                        gMenuInputRepeatTimers = (s16) var_v1_3;
+                        gMenuInputRepeatTimers = (s16) var_v1_2;
                         if (gMenuChoicePromptState < (D_8010AF3C + 1)) {
                             gMenuChoicePromptState += 1;
-                            sp44 = 0;
                             enqueueSoundEffect(0x19, 0x32);
-                            var_a3_2 = 0;
+                            var_a3 = 0;
                             D_8010AF44 = 0;
                         }
                     }
                 }
                 if ((u16) gMenuInputRepeatTimers != 0) {
-                    temp_t6 = ((u16) gMenuInputRepeatTimers + 1) & 0xFFFF;
-                    gMenuInputRepeatTimers = temp_t6;
-                    if (temp_t6 == -1) {
+                    var_v1_2 = (u16) gMenuInputRepeatTimers + 1;
+                    gMenuInputRepeatTimers = var_v1_2;
+                    if (var_v1_2 == 0xFFFF) {
                         gMenuInputRepeatTimers = 0xA;
                     }
                 }
                 if ((*D_8010AEA0 == 1) && (D_8010AE64 == 3)) {
-                    var_t8 = *(&D_8010AF06 + temp_a0);
+                    var_t8 = *(&D_8010AF06 + gMenuChoicePromptState);
                 } else {
-                    var_t8 = ((temp_a0 * 3) + ((s32) gCourseSelectSelectedCourseId % 3)) - 6;
+                    var_t8 = ((gMenuChoicePromptState * 3) + ((s32) gCourseSelectSelectedCourseId % 3)) - 6;
                 }
                 gCourseSelectSelectedCourseId = var_t8;
-                if (temp_t4 & B_BUTTON) {
-                    sp44 = 0;
+                temp_t4 = gPlayerInputPressed;
+                if (temp_t4 & 0x4000) {
                     enqueueSoundEffect(0x18, 0x32);
                     D_8010AF44 = 0;
                     gCourseSelectSelectedCourseId = D_8010AEF8[D_8010AE64];
                     gMenuInputRepeatTimers = 0;
-                    var_a3_2 = 0;
+                    var_a3 = 0;
                     gMenuChoicePromptState += 3;
-                } else if ((temp_t4 & A_BUTTON) || (temp_t4 & START_BUTTON)) {
+                } else if ((temp_t4 & 0x8000) || (temp_t4 & 0x1000)) {
                     if (gCourseUnlockSaveSlots[gCourseSelectSelectedCourseId] == -1) {
                         if ((u32) gPlayer1Money >= (u32) gCourseUnlockPrices[gCourseSelectSelectedCourseId]) {
-                            sp44 = 0;
                             enqueueSoundEffect(0x49, 0x32);
-                            var_a3_2 = 0;
+                            var_a3 = 0;
                             if ((*D_8010AEA0 == 1) && (D_8010AE64 == 3)) {
                                 var_v0_6 = *(&D_8010AF06 + gMenuChoicePromptState);
                             } else {
@@ -798,9 +761,8 @@ block_17:
                                 D_8010AF20 = 7;
                             }
                         } else if (D_8010AF44 == 0) {
-                            sp44 = 0;
                             enqueueSoundEffect(0x47, 0x32);
-                            var_a3_2 = 0;
+                            var_a3 = 0;
                             D_8010AF44 = 1;
                         }
                     } else if (D_8010AF44 == 0) {
@@ -811,12 +773,10 @@ block_17:
         }
         if ((D_8010AF1C == 7) || (D_8010AF20 == 7)) {
             gCurrentGameTask->timer = 0;
-            sp44 = var_a3_2;
             setCurrentGameTaskCallback(updateCourseSelectPurchasePrompt, 0);
             createCallbackTask(initCourseUnlockPurchasePrompt, 0, 0x64);
         }
         var_v0_3 = (u8) D_800EC9C0;
-        sp44 = var_a3_2;
     } else {
         D_800EC9C0 = (u8) D_800EC9C0 + 1;
         var_v0_3 = (u8) D_800EC9C0;
@@ -826,12 +786,11 @@ block_17:
         }
     }
     if (var_v0_3 == 0x1B) {
-        temp_v0_3 = &gRacePlayers + sp44;
+        sp18.selection = &gRacePlayers + var_a3;
         gCurrentGameTask->fade = 1;
         gMenuTransitionState = 0;
-        sp18 = temp_v0_3;
         setCurrentGameTaskCallback(updateCourseSelectModeMenu, 0);
-        temp_v0_3->pad0[6] = D_8010AEF8[D_8010AE64];
+        sp18.selection->pad0[6] = D_8010AEF8[D_8010AE64];
         if (gMenuFlowState == 1) {
             gCourseSelectSelectedCourseId = 0;
         }
@@ -877,17 +836,15 @@ block_17:
         gCourseSelectStatus.unk2C = 0;
         gCourseSelectStatus.unk2E = 0;
     }
-    var_a3_3 = 0;
+    var_a3 = 0;
     if ((s32) gPlayerCount > 0) {
-        var_v0_7 = D_801121E0;
+        sp18.object = D_801121E0;
         do {
-            gCurrentMenuCameraObject = var_v0_7;
-            sp18 = var_v0_7;
-            sp44 = var_a3_3;
-            var_v0_7->unk2C();
-            var_a3_3 += 1;
-            var_v0_7 += 0xB0;
-        } while (var_a3_3 < (s32) gPlayerCount);
+            gCurrentMenuCameraObject = sp18.object;
+            sp18.object->unk2C();
+            var_a3 += 1;
+            sp18.object += 1;
+        } while (var_a3 < (s32) gPlayerCount);
     }
     updateCallbackTasks();
 }
