@@ -107,19 +107,18 @@ extern void (*D_8011241C)(void);
 extern u8 gPlayerCount;
 extern s32 gMenuFlowState;
 
-// initMultiplayerCourseSelectMenu best match: 83.825% (nonmatchings/initMultiplayerCourseSelectMenu-5787290371232622032/base_14.c)
+// initMultiplayerCourseSelectMenu best match: 84.684% (nonmatchings/initMultiplayerCourseSelectMenu-5787290371232622032/base_38.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/course_select/multiplayer_course_select_menu/initMultiplayerCourseSelectMenu.s")
 
 #ifdef NON_MATCHING
 void initMultiplayerCourseSelectMenu(void) {
-    s32 size;
     s32 i;
     s32 j;
     s32 k;
     s32 sum;
     s32 selected;
     s32 screenBase;
-    register s32 one = 1;
+    u32 one = 1;
     RacePlayer *player;
 
     if (gRaceSplitscreenMode == one) {
@@ -180,9 +179,9 @@ void initMultiplayerCourseSelectMenu(void) {
     loadCompressedRomAsset(D_5A1ED0, D_5C5320, 0x25);
     loadCompressedRomAsset(D_59DFE0, D_59E7F0, 0x26);
 
-    size = D_1502A0 - D_14B450;
-    gAssetHandles[0xC] = allocRelocatableHeapBlock(size);
-    dmaReadRom((u32)D_14B450, (void *)getRelocatableHeapBlockBase(gAssetHandles[0xC]), size);
+    one = D_1502A0 - D_14B450;
+    gAssetHandles[0xC] = allocRelocatableHeapBlock(one);
+    dmaReadRom((u32)D_14B450, (void *)getRelocatableHeapBlockBase(gAssetHandles[0xC]), one);
     loadCompressedRomAsset(D_1EF530, D_1F1A90, 0xD);
     loadCompressedRomAsset(D_245A80, D_24C8E0, 0x1F);
     initCallbackTaskScheduler(0);
@@ -205,6 +204,7 @@ void initMultiplayerCourseSelectMenu(void) {
         player[-1].menuState = 0;
     } while ((u32) player < (u32) gRacePlayersEnd);
 
+    one = 1;
     {
         volatile s32 playerCount;
         s32 extraOffset;
