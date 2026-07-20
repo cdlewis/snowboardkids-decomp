@@ -40,6 +40,7 @@
 #define RACE_PLAYER_RESULT_VALUE(index) (*(s8 *)((u8 *)gRacePlayers + ((((((((index) << 2) - (index)) << 5) + (index)) << 2) - (index)) << 2) + 0x509))
 #define CURRENT_RACE_FLOW_TASK ((volatile RaceFlowState *)gCurrentGameTask)
 #define RACE_PLAYER_OFFSET(index) (((((((((index) << 2) - (index)) << 5) + (index)) << 2) - (index)) << 2))
+#define RACE_PLAYER_OFFSET_ALT(index) ((((((((((index) << 1) << 1) - (index)) << 5) + (index)) << 2) - (index)) << 2))
 #define RACE_INPUT_HISTORY_LENGTH 0x1194
 #endif
 
@@ -143,10 +144,8 @@ typedef struct {
 
 #ifdef NON_MATCHING
 typedef struct {
-    /* 0x00 */ u8 buttons;
-    /* 0x01 */ s8 stickX;
-    /* 0x02 */ s8 stickY;
-    /* 0x03 */ u8 pad3;
+    /* 0x00 */ u8 stickX;
+    /* 0x01 */ u8 stickY;
 } RaceCourseCharacterEntry;
 
 typedef struct {
@@ -627,11 +626,12 @@ void openRaceStartTransitionFlow(void) {
     suspendGameTask(2);
 }
 
-// initRaceSceneFlow best match: 79.684% (nonmatchings/initRaceSceneFlow-8331816093655448999/base_5.c)
+// initRaceSceneFlow best match: 90.876% (nonmatchings/initRaceSceneFlow-1219509448159986855/base_1.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race/flow/race_flow/initRaceSceneFlow.s")
 
 #ifdef NON_MATCHING
 void initRaceSceneFlow(void) {
+    s32 i;
     RacePlayerState *player;
     RacePlayerState *end;
     RacePlayerState *other;
@@ -640,9 +640,9 @@ void initRaceSceneFlow(void) {
     u8 *courseCharacterIds;
     u16 *replayRecordFlag;
     u8 characterId;
-    s32 i;
     s32 duplicate;
     s32 playerCount;
+    s32 courseIndex;
 
     gRaceUpdatePaused = 0;
     D_80121B57 = 0;
@@ -660,7 +660,8 @@ void initRaceSceneFlow(void) {
     gRacePlayers[2].unk4 = 1;
     gRacePlayers[3].unk4 = 1;
 
-    characterId = D_800DC5B4[gRaceCourseIndex.s];
+    courseIndex = gRaceCourseIndex.s;
+    characterId = D_800DC5B4[courseIndex];
     gRacePlayers[0].pad1A[0] = characterId;
     gRacePlayers[1].pad1A[0] = characterId;
     gRacePlayers[2].pad1A[0] = characterId;
@@ -709,11 +710,12 @@ void initRaceSceneFlow(void) {
     gRacePlayers[3].pad12[0] = gRacePlayers[3].unk7;
 
     if (playerCount < 4) {
-        player = (RacePlayerState *)((u8 *)gRacePlayers + RACE_PLAYER_OFFSET(playerCount));
-        courseCharacters = D_800DC58C[gRaceCourseIndex.s];
-        courseCharacterIds = D_800DC4C4[gRaceCourseIndex.s];
+        player = (RacePlayerState *)((u8 *)gRacePlayers + RACE_PLAYER_OFFSET_ALT(playerCount));
+        courseCharacters = D_800DC58C[courseIndex];
+        courseCharacterIds = D_800DC4C4[courseIndex];
         do {
-            do {
+            duplicate = 0;
+            while (duplicate == 0) {
                 duplicate = 1;
                 characterId = *courseCharacterIds++;
                 player->characterId = characterId;
@@ -727,7 +729,7 @@ void initRaceSceneFlow(void) {
                         other++;
                     } while (other < end);
                 }
-            } while (duplicate == 0);
+            }
             player->characterVariant = courseCharacters[player->characterId].stickX;
             player->pad12[0] = courseCharacters[player->characterId].stickY;
             player++;
@@ -774,19 +776,19 @@ void initRaceSceneFlow(void) {
         history->replayInputSource = gRacePlayers[0].pad12[0];
         i = 0;
         do {
-            history->stickX[i] = 0;
             history->stickX[i + 1] = 0;
-            history->stickX[i + 2] = 0;
-            history->stickX[i + 3] = 0;
-            history->stickY[i] = 0;
             history->stickY[i + 1] = 0;
-            history->stickY[i + 2] = 0;
-            history->stickY[i + 3] = 0;
-            history->buttons[i] = 0;
             history->buttons[i + 1] = 0;
+            history->stickX[i + 2] = 0;
+            history->stickY[i + 2] = 0;
             history->buttons[i + 2] = 0;
+            history->stickX[i + 3] = 0;
+            history->stickY[i + 3] = 0;
             history->buttons[i + 3] = 0;
             i += 4;
+            history->stickX[i - 4] = 0;
+            history->stickY[i - 4] = 0;
+            history->buttons[i - 4] = 0;
         } while (i != RACE_INPUT_HISTORY_LENGTH);
 
         switch (gRaceCourseIndex.s) {
@@ -871,7 +873,7 @@ void initRaceSceneFlow(void) {
     i = 0;
     if ((s32)gPlayerCount > 0) {
         do {
-            requestRumbleMotorInit(i & 0xFFFF);
+            requestRumbleMotorInit(i);
             i++;
         } while (i < (s32)gPlayerCount);
     }
