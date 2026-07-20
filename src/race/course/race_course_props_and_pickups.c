@@ -610,19 +610,8 @@ void updateThrownPickupSpawner(ThrownPickupSpawnerActor *arg0) {
 #undef SPAWN_RANGE_MAX
 #undef SPAWN_RANGE_MIN
 
-// renderRacePickupIdle best match: 97.686% (base_7.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race/course/race_course_props_and_pickups/renderRacePickupIdle.s")
-
-#ifdef NON_MATCHING
 void renderRacePickupIdle(RacePickupActor *arg0) {
-    GfxCommandSource spF4;
-    Gfx *sp10C;
-    Gfx *sp108;
-    Gfx *spB0;
-    Gfx *spAC;
-    Gfx *volatile sp8C;
-    Gfx *temp_v0;
-    Gfx *temp_t1;
+    RacePickupMatrixScratch spF4;
 
     if (gRenderMatricesDirty != 0) {
         arg0->matrixDirty = 1;
@@ -631,34 +620,31 @@ void renderRacePickupIdle(RacePickupActor *arg0) {
     if (isPositionNearCurrentRaceViewportCamera(&arg0->pos) != 0) {
         if (arg0->matrixDirty != 0) {
             arg0->matrixDirty = 0;
-            spF4 = *(GfxCommandSource *)&gIdentityFixedTransform;
-            spF4.words[5] = arg0->drawPos.x;
-            spF4.words[6] = arg0->drawPos.y;
-            spF4.words[7] = arg0->drawPos.z;
-            arg0->displayList = allocFixedTransformMatrix(&spF4);
-            arg0->rotationDisplayList = allocFixedTransformMatrix((GfxCommandSource *) arg0->rotationMatrix);
-            spF4 = *(GfxCommandSource *) arg0->rotationMatrix;
-            spF4.halfwords[0] /= 2;
-            spF4.halfwords[1] /= 2;
-            spF4.halfwords[2] /= 2;
-            spF4.halfwords[3] /= 2;
-            spF4.halfwords[4] /= 2;
-            spF4.halfwords[5] /= 2;
-            spF4.halfwords[6] /= 2;
-            spF4.halfwords[7] /= 2;
-            spF4.halfwords[8] /= 2;
-            spF4.words[6] += (fixedSine((s16)((gFrameCounter << 7) & 0xFFF)) << 7) + 0x300000;
-            arg0->scaleDisplayList = allocFixedTransformMatrix(&spF4);
+            spF4.source = gIdentityFixedTransform;
+            spF4.source.translation.x = arg0->drawPos.x;
+            spF4.source.translation.y = arg0->drawPos.y;
+            spF4.source.translation.z = arg0->drawPos.z;
+            arg0->displayList = allocFixedTransformMatrix(&spF4.source);
+            arg0->rotationDisplayList = allocFixedTransformMatrix(arg0->rotationMatrix);
+            spF4.source = *(FixedTransform *)arg0->rotationMatrix;
+            spF4.source.rotation[0] /= 2;
+            spF4.source.rotation[1] /= 2;
+            spF4.source.rotation[2] /= 2;
+            spF4.source.rotation[3] /= 2;
+            spF4.source.rotation[4] /= 2;
+            spF4.source.rotation[5] /= 2;
+            spF4.source.rotation[6] /= 2;
+            spF4.source.rotation[7] /= 2;
+            spF4.source.rotation[8] /= 2;
+            spF4.source.translation.y +=
+                (fixedSine((s16)((gFrameCounter << 7) & 0xFFF)) << 7) + 0x300000;
+            arg0->scaleDisplayList = allocFixedTransformMatrix(&spF4.source);
         }
 
         if (arg0->scaleDisplayList != NULL) {
             gDPPipeSync(gRegionAllocPtr++);
-            sp10C = gRegionAllocPtr++;
-            sp10C->words.w0 = 0xBC000806;
-            sp10C->words.w1 = getRelocatableHeapBlockBase(gAssetHandles[0xA]);
-            sp108 = gRegionAllocPtr++;
-            sp108->words.w0 = 0xBC000C06;
-            sp108->words.w1 = getRelocatableHeapBlockBase(gAssetHandles[0xB]);
+            gSPSegment(gRegionAllocPtr++, 0x02, getRelocatableHeapBlockBase(gAssetHandles[0xA]));
+            gSPSegment(gRegionAllocPtr++, 0x03, getRelocatableHeapBlockBase(gAssetHandles[0xB]));
             gSPMatrix(gRegionAllocPtr++, arg0->scaleDisplayList, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
             if (arg0->variant == 0) {
                 gSPDisplayList(gRegionAllocPtr++, gRaceItemPickupDisplayList);
@@ -672,41 +658,25 @@ void renderRacePickupIdle(RacePickupActor *arg0) {
             gSPMatrix(gRegionAllocPtr++, arg0->displayList, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
             gSPMatrix(gRegionAllocPtr++, gViewportMatrix, G_MTX_NOPUSH | G_MTX_MUL | G_MTX_MODELVIEW);
             gDma1p(gRegionAllocPtr++, G_VTX, gRacePickupBaseVertices, 0x207F, 0);
-            temp_v0 = gRegionAllocPtr++;
-            temp_v0->words.w1 = 0x60200;
-            temp_v0->words.w0 = 0xB1060402;
+            gRacePickupQuadrangle(gRegionAllocPtr++, 3, 2, 1, 0, 0);
             gDPLoadTextureBlock_4b(gRegionAllocPtr++, arg0->image1, G_IM_FMT_CI, 32, 32, 0, G_TX_CLAMP,
                                     G_TX_CLAMP, 0, 0, 0, 0);
-            spAC = gRegionAllocPtr;
             gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, arg0->palette1);
-            sp8C = gRegionAllocPtr;
             gSPMatrix(gRegionAllocPtr++, arg0->rotationDisplayList,
                       G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
             gDma1p(gRegionAllocPtr++, G_VTX, gRacePickupTopVertices, 0x513F, 0);
-            temp_t1 = gRegionAllocPtr++;
-            temp_t1->words.w0 = 0xB1060402;
-            temp_t1->words.w1 = 0x60200;
-            temp_v0 = gRegionAllocPtr++;
-            temp_v0->words.w1 = 0xE0A08;
-            temp_v0->words.w0 = 0xB10E0C0A;
-            temp_v0 = gRegionAllocPtr++;
-            temp_v0->words.w1 = 0x161210;
-            temp_v0->words.w0 = 0xB1161412;
-            temp_v0 = gRegionAllocPtr++;
-            temp_v0->words.w1 = 0x1E1A18;
-            temp_v0->words.w0 = 0xB11E1C1A;
-            spB0 = gRegionAllocPtr;
+            gRacePickupQuadrangle(gRegionAllocPtr++, 3, 2, 1, 0, 0);
+            gRacePickupQuadrangle(gRegionAllocPtr++, 7, 6, 5, 4, 0);
+            gRacePickupQuadrangle(gRegionAllocPtr++, 11, 10, 9, 8, 0);
+            gRacePickupQuadrangle(gRegionAllocPtr++, 15, 14, 13, 12, 0);
             gDPLoadTextureBlock_4b(gRegionAllocPtr++, arg0->image2, G_IM_FMT_CI, 32, 32, 0, G_TX_CLAMP,
                                     G_TX_CLAMP, 0, 0, 0, 0);
             gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, arg0->palette2);
-            temp_v0 = gRegionAllocPtr++;
-            temp_v0->words.w1 = 0x262220;
-            temp_v0->words.w0 = 0xB1262422;
+            gRacePickupQuadrangle(gRegionAllocPtr++, 19, 18, 17, 16, 0);
             gSPDisplayList(gRegionAllocPtr++, gEffectRenderModeCleanupDl);
         }
     }
 }
-#endif
 
 void renderRacePickupBase(RacePickupActor *arg0) {
     RacePickupMatrixScratch sp64;
