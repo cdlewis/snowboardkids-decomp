@@ -54,12 +54,12 @@ extern MainMenuModelAssetHandles gAssetHandles;
 
 #define ASSET_HANDLE(index) (((s16 *)&gAssetHandles)[(index)])
 
-// compressRaceRecordReplayData best match: 98.696% (nonmatchings/compressRaceRecordReplayData-5802343343535905907/base_8.c)
+// compressRaceRecordReplayData best match: 99.203% (nonmatchings/compressRaceRecordReplayData-1219509448159986855/base_2.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/main_menu/main_menu_scene_model/compressRaceRecordReplayData.s")
 
 #ifdef NON_MATCHING
-s32 compressRaceRecordReplayData(u8 *src, s32 srcLen, s16 *dst) {
-    s16 *out;
+s32 compressRaceRecordReplayData(u8 *src, s32 srcLen, u16 *dst) {
+    s32 count;
     s32 srcPos;
     s32 outCount;
     s32 remaining;
@@ -69,7 +69,7 @@ s32 compressRaceRecordReplayData(u8 *src, s32 srcLen, s16 *dst) {
     s32 maxLength;
     s32 searchPos;
     s32 length;
-    s32 count;
+    volatile u16 *out;
     u8 *cur;
     u8 *prev;
 
@@ -80,7 +80,7 @@ s32 compressRaceRecordReplayData(u8 *src, s32 srcLen, s16 *dst) {
     bestDistance = 0;
     bestLength = 0;
     distance = 1;
-    out = &dst[1];
+    out = 1 + dst;
 
 loop:
     maxLength = remaining;
@@ -95,12 +95,12 @@ search_loop:
     }
 
     length = 0;
+    cur = src;
+    count = 0;
     if (maxLength > 0) {
-        count = 0;
-        cur = src;
         cur += srcPos;
         prev = src;
-        prev += searchPos;
+        prev = searchPos + prev;
 match_loop:
         count += 1;
         if (*cur != *prev) {
@@ -131,12 +131,12 @@ search_done:
     if (bestLength <= 0) {
         *out = src[srcPos];
         outCount += 1;
-        out += 1;
+        out = out + 1;
         srcPos += 1;
     } else {
         *out = (bestLength << 10) | bestDistance;
         outCount += 1;
-        out += 1;
+        out = out + 1;
         srcPos += bestLength;
     }
 
