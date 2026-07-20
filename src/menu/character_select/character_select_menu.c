@@ -204,7 +204,7 @@ void initCharacterSelectMenu(void) {
 }
 #endif
 
-// updateCharacterSelectMenu best match: 66.871% (nonmatchings/updateCharacterSelectMenu/base_final.c)
+// updateCharacterSelectMenu best match: 69.415% (nonmatchings/updateCharacterSelectMenu-5787290371232622032/base_46.c)
 // Per-frame driver for the character roster screen only. Live RAM-watch
 // testing observed gCharacterSelectHudState.phase as:
 //   0 = transient init value
@@ -233,7 +233,7 @@ void updateCharacterSelectMenu(void) {
     s16 temp_t7;
     s16 temp_t8;
     s16 temp_v1;
-    s16 var_ra;
+    s32 var_ra;
     volatile int savedRa;
     s32 *var_s7;
     s32 temp_a1;
@@ -246,7 +246,7 @@ void updateCharacterSelectMenu(void) {
     s32 var_s0;
     s32 var_s1;
     s32 var_t1;
-    s32 var_v0_2;
+    u32 var_v0_2;
     s32 var_v0_3;
     s32 var_v1_2;
     u8 *temp_fp;
@@ -271,15 +271,16 @@ void updateCharacterSelectMenu(void) {
         if ((D_8010AE50.phase == 1) && (D_8010AE50.fade == 0x100) && ((D_80123778 & 0x8000) || (D_80123778 & 0x1000))) {
             D_8010AE50.phase = 2;
             func_80072138(1, 0x32);
+            temp_a3 = D_80121B55;
             var_v0 = &D_800EC9C8;
-            if ((s32) D_80121B55 > 0) {
+            if ((s32) temp_a3 > 0) {
                 do {
                     temp_v1 = *var_v0;
                     if ((temp_v1 == 0x12) || (temp_v1 == 5)) {
                         *var_v0 = 0x13;
                     }
                     var_v0 += 1;
-                } while ((u32) var_v0 < (u32) (&D_800EC9C8 + D_80121B55));
+                } while ((u32) var_v0 < (u32) (&D_800EC9C8 + temp_a3));
             }
         }
     } else if (D_8010AE50.readyCount == 1) {
@@ -415,12 +416,13 @@ loop_48:
                     var_s4->isCpu = 0;
                     D_8010AE53[var_s0] = 0;
                 }
+                cachedIsCpu = var_s4->isCpu;
                 var_s0 += 1;
                 var_s4 = (CharacterSelectPlayer *) ((u8 *) var_s4 + 0x60C);
                 var_s7 += 1;
             } while (var_s0 < (s32) D_80121B55);
             sp6A = var_t5;
-            sp68 = var_s4[-1].isCpu & 1;
+            sp68 = cachedIsCpu & 1;
         }
         if (sp68 != 0) {
             var_v0_3 = 0;
