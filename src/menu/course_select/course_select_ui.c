@@ -180,7 +180,6 @@ typedef struct {
 
 extern void addRenderCallback(void *, void (*)(CourseSelectWidgetActor *), CourseSelectWidgetActor *);
 extern void drawCourseSelectPlayerPanels(CourseSelectWidgetActor *);
-extern void drawCourseSelectPreviewModelClose(CourseSelectCoursePreviewActor *);
 extern s32 allocFixedTransformMatrix(FixedTransform *);
 extern s8 gCourseUnlockSaveSlots[][0x78F8];
 extern u8 D_800EC9C0;
@@ -475,32 +474,25 @@ void initCourseSelectPreviewModelIn(void *arg0) {
     setCallbackTaskCallback(actor, updateCourseSelectPreviewModelIn);
 }
 
-// drawCourseSelectPreviewModelClose best match: 99.774% (nonmatchings/drawCourseSelectPreviewModelClose-8367390958892477031/base_3.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/menu/course_select/course_select_ui/drawCourseSelectPreviewModelClose.s")
-
-#ifdef NON_MATCHING
 void drawCourseSelectPreviewModelClose(CourseSelectCoursePreviewActor *arg0) {
     u8 sp2F;
-    u8 sp2E;
-    FixedTransform sp30;
-    s32 temp_v0_2;
-    int temp_v0;
-    u8 temp_v1;
-    u8 var_a3;
+    unsigned char sp2E;
     u8 var_t0;
+    s8 temp_v0_2;
+    CourseSelectRacePlayer *temp_v0_3;
+    FixedTransform sp30;
+    u8 var_a3;
     u8 var_v1;
+    int temp_v0;
 
     if ((D_8010AED0 != 0) && (gCurrentViewportIndex == 1)) {
         var_t0 = 0;
     } else {
         var_t0 = gCurrentViewportIndex;
     }
-    temp_v1 = D_8010AECC[var_t0];
     if ((D_8010AECC[var_t0] == 2) || (D_8010AECC[var_t0] & 1)) {
         temp_v0 = arg0->playerFlags[var_t0];
         if ((temp_v0 == 0) || (temp_v0 & 1)) {
-            CourseSelectRacePlayer *temp_v0_3;
-
             if (D_8010AECC[var_t0] == 3) {
                 var_a3 = arg0->playerSlots[var_t0].courseIndex;
             } else {
@@ -513,7 +505,7 @@ void drawCourseSelectPreviewModelClose(CourseSelectCoursePreviewActor *arg0) {
                 var_v1 = temp_v0_2;
             }
             if ((D_8010AED0 != 0) && (gCurrentViewportIndex == 1)) {
-                var_v1 = D_8010AED0 - 1;
+                var_v1 = (u8)(D_8010AED0 - 1);
             }
             temp_v0_3 = &gRacePlayers[gCurrentViewportIndex];
             if (temp_v0_3->selectedCharacterId == 5) {
@@ -528,12 +520,11 @@ void drawCourseSelectPreviewModelClose(CourseSelectCoursePreviewActor *arg0) {
             composeFixedTransforms(&arg0->sourceTransform, &arg0->playerTransforms[var_t0], &sp30);
             arg0->matrix = allocFixedTransformMatrix(&sp30);
             if (arg0->matrix != 0) {
-                drawRacePlayerModelRootPart((void *)arg0->matrix, (s16) sp2F, (s16) sp2E);
+                drawRacePlayerModelRootPart((void *)(arg0->matrix ^ 0), (s16) sp2F, (s16) sp2E);
             }
         }
     }
 }
-#endif
 
 // updateCourseSelectPreviewModelOut best match: 98.730% (nonmatchings/updateCourseSelectPreviewModelOut-1219509448159986855/base_25.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/course_select/course_select_ui/updateCourseSelectPreviewModelOut.s")
