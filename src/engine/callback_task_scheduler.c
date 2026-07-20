@@ -1,9 +1,16 @@
 #include "common.h"
+#define CALLBACK_TASK_SCHEDULER_IMPLEMENTATION
 #include "game/engine/callback_task_scheduler.h"
+#undef CALLBACK_TASK_SCHEDULER_IMPLEMENTATION
 
 typedef struct CallbackTaskGroup {
     CallbackTask tasks[4];
 } CallbackTaskGroup;
+
+typedef struct CallbackTaskSchedulerBss {
+    u8 unk0[0x10];
+    CallbackTask activeListSentinel;
+} CallbackTaskSchedulerBss;
 
 extern CallbackTask *gCurrentCallbackTask;
 extern CallbackTask *gFreeCallbackTaskPool[];
@@ -17,6 +24,9 @@ extern u16 gFreeCallbackTaskType3Count;
 extern u16 gFreeCallbackTaskType4Count;
 extern CallbackTask gCallbackTaskActiveListSentinel;
 extern CallbackTask *gCallbackTaskActiveListHead;
+extern CallbackTaskSchedulerBss D_80112770;
+#pragma weak createCallbackTaskPreservingArgsS32 = createCallbackTaskPreservingArgs
+void *createCallbackTaskPreservingArgsS32(void (*callback)(), s32 type, s32 priority);
 
 // initCallbackTaskScheduler best match: 99.412%
 #pragma GLOBAL_ASM("asm/nonmatchings/engine/callback_task_scheduler/initCallbackTaskScheduler.s")
@@ -160,15 +170,11 @@ void updateRemainingCallbackTasks(void) {
 void noopCallbackTask(void) {
 }
 
-// createCallbackTaskPreservingArgs best match: 99.085%
-#pragma GLOBAL_ASM("asm/nonmatchings/engine/callback_task_scheduler/createCallbackTaskPreservingArgs.s")
-
-#ifdef NON_MATCHING
 void *createCallbackTaskPreservingArgs(void (*callback)(), u16 type, s32 priority) {
     CallbackTask *task;
     CallbackTask *prev;
     CallbackTask *next;
-    CallbackTask *sentinel;
+    volatile CallbackTask *sentinel;
     s32 index;
 
     task = NULL;
@@ -226,14 +232,14 @@ void *createCallbackTaskPreservingArgs(void (*callback)(), u16 type, s32 priorit
         return NULL;
     }
     index = (index & 0xFFFF) - 1;
-    sentinel = &gCallbackTaskActiveListSentinel;
-    prev = sentinel;
+    prev = &gCallbackTaskActiveListSentinel;
+    sentinel = &D_80112770.activeListSentinel;
     gFreeCallbackTaskCount = index;
     task = gFreeCallbackTaskPool[(((((((index & 0xFFFF) & 0xFFFFu) & 0xFFFFu) & 0xFFFFu) & 0xFFFFu) & 0xFFFFu) & 0xFFFFu) & 0xFFFFu];
     if (prev->next != NULL) {
         next = sentinel->next;
         do {
-            if ((u16)(next->priority ^ 0) < priority) {
+            if ((u16)next->priority < priority) {
                 break;
             }
             prev = next;
@@ -254,7 +260,6 @@ void *createCallbackTaskPreservingArgs(void (*callback)(), u16 type, s32 priorit
     task->priority = priority;
     return task;
 }
-#endif
 
 // createCallbackTask best match: 97.533%
 #pragma GLOBAL_ASM("asm/nonmatchings/engine/callback_task_scheduler/createCallbackTask.s")
@@ -354,7 +359,7 @@ void *createCallbackTask(void (*callback)(), u16 type, s32 priority) {
 
 void *createCallbackTaskWithUserId(void (*callback)(), s32 type, s32 priority, s32 userId){ CallbackTask *t=createCallbackTask(callback,type&0xFFFF,priority); if(t!=NULL){t->userId=userId;} return t;}
 
-void *createCallbackTaskWithUserIdPreservingArgs(void (*callback)(), s32 type, s32 priority, s32 userId){ CallbackTask *t=createCallbackTaskPreservingArgs(callback,type&0xFFFF,priority); if(t!=NULL){t->userId=userId;} return t;}
+void *createCallbackTaskWithUserIdPreservingArgs(void (*callback)(), s32 type, s32 priority, s32 userId){ CallbackTask *t=createCallbackTaskPreservingArgsS32(callback,type&0xFFFF,priority); if(t!=NULL){t->userId=userId;} return t;}
 
 void removeCallbackTask(void *taskPtr) {
     CallbackTask *task = taskPtr;
