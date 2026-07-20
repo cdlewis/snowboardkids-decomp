@@ -331,79 +331,83 @@ void __MusIntInitEnvelope(PlayerCommandState *arg0) {
     arg0->unkF8 = 1;
 }
 
-// __MusIntProcessEnvelope best match: 94.856% (nonmatchings/__MusIntProcessEnvelope-8075865578671233833/base_11.c)
+// __MusIntProcessEnvelope best match: 98.711% (nonmatchings/__MusIntProcessEnvelope-5787290371232622032/base_21.c)
 
 #pragma GLOBAL_ASM("asm/nonmatchings/libmus/player/__MusIntProcessEnvelope.s")
 
 #ifdef NON_MATCHING
 void __MusIntProcessEnvelope(PlayerCommandState *arg0) {
-    u8 state;
-    s32 tick;
-    PlayerCommandState *new_var;
-    u8 new_var4;
+    u32 env_phase_count;
+    u8 phase;
+    f32 new_var4;
+    f32 new_var2;
     u8 rate;
-    PlayerCommandState *new_var2;
-    float new_var3;
-    u32 step;
+    f32 new_var;
     u8 value;
-    f32 temp;
+    s32 new_var3;
+    f32 new_var5;
+    f32 new_var6;
 
-    new_var2 = arg0;
-    state = new_var2->unkF8;
-    if (state) {
-        if (((u32)arg0->unk0 >= (u32)arg0->unk100) && (state < 4)) {
-            step = 4;
-            arg0->unkF8 = step;
-            arg0->unkFA = 1;
-            arg0->unk104 = arg0->unkF9;
-        }
-        tick = arg0->unkFA - 1;
-        arg0->unkFA = tick;
-        if ((tick & 0xFF) != 0) {
-            return;
-        }
+    if (!arg0->unkF8) {
+        return;
+    }
+
+    if ((arg0->unk0 >= arg0->unk100) && (arg0->unkF8 < 4)) {
+        arg0->unkF8 = 4;
+        arg0->unkFA = 1;
+        arg0->unk104 = arg0->unkF9;
+    }
+
+    arg0->unkFA--;
+    if (!arg0->unkFA) {
         rate = arg0->unkF4;
-        state = arg0->unkF8;
+        phase = arg0->unkF8;
         arg0->unkFA = rate;
-        switch (state) {
+        switch (arg0->unkF8) {
             case 1:
-                step = ((u32)(arg0->unk0 - arg0->unk10)) >> 8;
-                step = step / rate;
-                if (step < arg0->unkFB) {
-                    value = arg0->unkF5 ^ 0;
-                    arg0->unkF9 = (s32)((f32)value + ((arg0->unkF6 - value) * arg0->unk30 * (f32)step));
+                env_phase_count = (u32)(arg0->unk0 - arg0->unk10) >> 8;
+                env_phase_count = env_phase_count / rate;
+                if (env_phase_count < arg0->unkFB) {
+                    new_var = arg0->unk30;
+                    value = arg0->unkF5;
+                    new_var = (arg0->unkF6 - value) * new_var;
+                    new_var = new_var * (f32)env_phase_count;
+                    new_var2 = (f32)value;
+                    arg0->unkF9 = (s32)(new_var2 + new_var);
+                    return;
+                } else {
+                    arg0->unkF8 = arg0->unkF8 + 1;
+                    arg0->unkF9 = arg0->unkF6;
                     return;
                 }
-                arg0->unkF8 = state;
-                arg0->unkF8 = arg0->unkF8 + 1;
-                arg0->unkF9 = arg0->unkF6;
-                return;
             case 2:
-                step = (((u32)(arg0->unk0 - arg0->unk10) >> 8) - arg0->unkFB) / rate;
-                new_var4 = arg0->unkFC;
-                if (step < new_var4) {
-                    value = arg0->unkF6;
-                    arg0->unkF9 = (s32)((f32)value + ((arg0->unkF7 - value) * arg0->unk34 * (f32)step));
+                env_phase_count = (u32)(arg0->unk0 - arg0->unk10);
+                env_phase_count = ((env_phase_count >> 8) - arg0->unkFB) / rate;
+                if (env_phase_count < arg0->unkFC) {
+                    new_var = arg0->unkF7 - arg0->unkF6;
+                    new_var4 = arg0->unk34;
+                    new_var6 = arg0->unkF6 + (new_var * new_var4 * (f32)env_phase_count);
+                    arg0->unkF9 = (s32)new_var6;
+                    return;
+                } else {
+                    arg0->unkF8 = arg0->unkF8 + 1;
+                    arg0->unkF9 = arg0->unkF7;
                     return;
                 }
-                arg0->unkF8 = state + 1;
-                arg0->unkF9 = arg0->unkF7;
-                return;
             case 3:
                 return;
             case 4:
-                step = ((u32)(arg0->unk0 - arg0->unk100) >> 8) / rate;
-                new_var = arg0;
-                if (step < arg0->unkFD) {
-                    value = new_var->unk104;
-                    temp = value;
-                    new_var3 = temp * new_var->unk38;
-                    new_var->unkF9 = (s32)(temp - (new_var3 * (f32)step));
+                env_phase_count = (u32)(arg0->unk0 - arg0->unk100) >> 8;
+                env_phase_count = env_phase_count / rate;
+                if (env_phase_count < arg0->unkFD) {
+                    new_var5 = (arg0->unk104 * arg0->unk38) * (f32)env_phase_count;
+                    arg0->unkF9 = (s32)((f32)arg0->unk104 - new_var5);
+                    return;
+                } else {
+                    arg0->unkF8 = arg0->unkF8 + 1;
+                    arg0->unkF9 = (new_var3 = 0);
                     return;
                 }
-                new_var->unkF8 = state + 1;
-                arg0->unkF9 = (((((u32)(arg0->unk0 - arg0->unk10)) >> 8) - new_var->unkFB) / rate) * 0;
-                break;
         }
     }
 }
