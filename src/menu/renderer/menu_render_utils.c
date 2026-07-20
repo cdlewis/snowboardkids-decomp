@@ -563,11 +563,11 @@ void drawAssetTableSpriteWithExplicitPalette(s16 x, s16 y, AssetTable *asset, u1
 }
 #endif
 
-// drawScaledAssetTableSprite best match: 74.481% (nonmatchings/drawScaledAssetTableSprite-8331816093655448999/base_1.c)
+// drawScaledAssetTableSprite best match: 80.088% (nonmatchings/drawScaledAssetTableSprite-1219509448159986855/base_1.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/renderer/menu_render_utils/drawScaledAssetTableSprite.s")
 
 #ifdef NON_MATCHING
-void drawScaledAssetTableSprite(s16 x, s16 y, AssetTable *asset, u16 entryIndex, u16 scale) {
+void drawScaledAssetTableSprite(s16 x, s16 y, AssetTable *asset, u16 entryIndex, volatile u16 scale) {
     u8 *paletteBase;
     AssetTableEntry *sprite;
     s32 x0;
@@ -586,22 +586,26 @@ void drawScaledAssetTableSprite(s16 x, s16 y, AssetTable *asset, u16 entryIndex,
     s32 spriteHeight;
     s32 scaledWidth;
     s32 scaledHeight;
-    s32 dsdx;
-    Gfx *gfx;
+    u16 textureScale;
 
+    textureScale = scale;
+    if (textureScale >= 0) {
     paletteBase = (u8 *)&asset->entries[asset->entryCount];
-    sprite = &asset->entries[entryIndex];
-    spriteWidth = sprite->width;
-    spriteHeight = sprite->height;
-    scaledWidth = spriteWidth >> scale;
-    scaledHeight = spriteHeight >> scale;
+    sprite = (AssetTableEntry *)asset + entryIndex;
+    spriteWidth = sprite[1].width;
+    spriteHeight = sprite[1].height;
 
-    x0 = x + gMenuViewportCenterX + ((spriteWidth - scaledWidth) / 2);
-    y0 = y + gMenuViewportCenterY + ((spriteHeight - scaledHeight) / 2);
+    x0 = x + gMenuViewportCenterX;
+    y0 = y + gMenuViewportCenterY;
+    scaledWidth = spriteWidth >> textureScale;
+    scaledHeight = spriteHeight >> textureScale;
+    x0 += (spriteWidth - scaledWidth) / 2;
+    y0 += (spriteHeight - scaledHeight) / 2;
     x1 = x0 + scaledWidth;
     y1 = y0 + scaledHeight;
     clippedS = 0;
     clippedT = 0;
+    sprite++;
 
     viewHalfWidth = gMenuViewportWidth / 2;
     clipRight = gMenuViewportCenterX + viewHalfWidth;
@@ -628,41 +632,29 @@ void drawScaledAssetTableSprite(s16 x, s16 y, AssetTable *asset, u16 entryIndex,
                         y1 = clipBottom;
                     }
 
-                    FONT_GFX_CMD(gRegionAllocPtr++, 0xE7000000, 0);
-                    FONT_GFX_CMD(gRegionAllocPtr++, 0xBA000C02, 0x3000);
-                    FONT_GFX_CMD(gRegionAllocPtr++, (((sprite->width >> 1) - 1) & 0xFFF) | 0xFD480000,
-                                 (u32)((u8 *)asset + sprite->imageOffset));
-                    FONT_GFX_CMD(gRegionAllocPtr++, (((((sprite->width + 1) >> 1) + 7) >> 3) & 0x1FF) << 9 | 0xF5480000,
-                                 0x07080200);
-                    FONT_GFX_CMD(gRegionAllocPtr++, 0xE6000000, 0);
-                    FONT_GFX_CMD(gRegionAllocPtr++, 0xF4000000,
-                                 (((sprite->width * 2) & 0xFFF) << 12) | 0x07000000 | ((sprite->height * 4) & 0xFFF));
-                    FONT_GFX_CMD(gRegionAllocPtr++, 0xE7000000, 0);
-                    FONT_GFX_CMD(gRegionAllocPtr++, (((((sprite->width + 1) >> 1) + 7) >> 3) & 0x1FF) << 9 | 0xF5400000,
-                                 0x00080200);
-                    FONT_GFX_CMD(gRegionAllocPtr++, 0xF2000000,
-                                 (((sprite->width * 4) & 0xFFF) << 12) | ((sprite->height * 4) & 0xFFF));
-                    FONT_GFX_CMD(gRegionAllocPtr++, 0xFD100000, (u32)(paletteBase + (sprite->textureIndex << 5)));
-                    FONT_GFX_CMD(gRegionAllocPtr++, 0xE8000000, 0);
-                    FONT_GFX_CMD(gRegionAllocPtr++, 0xF5000100, 0x07000000);
-                    FONT_GFX_CMD(gRegionAllocPtr++, 0xE6000000, 0);
-                    FONT_GFX_CMD(gRegionAllocPtr++, 0xF0000000, 0x0703C000);
-                    gfx = gRegionAllocPtr++;
-                    gfx->words.w0 = 0xE7000000;
-                    gfx->words.w1 = 0;
-
-                    FONT_GFX_CMD(gRegionAllocPtr++, (((x1 * 4) & 0xFFF) << 12) | 0xE4000000 | ((y1 * 4) & 0xFFF),
-                                 (((x0 * 4) & 0xFFF) << 12) | ((y0 * 4) & 0xFFF));
-                    FONT_GFX_CMD(gRegionAllocPtr++, 0xB4000000,
-                                 (((clippedS << 5) + 0x10) << 16) | (((clippedT << 5) + 0x10) & 0xFFFF));
-                    dsdx = (1 << (scale + 10)) & 0xFFFF;
-                    FONT_GFX_CMD(gRegionAllocPtr++, 0xB3000000, (dsdx << 16) | dsdx);
-                    FONT_GFX_CMD(gRegionAllocPtr++, 0xE7000000, 0);
-                    FONT_GFX_CMD(gRegionAllocPtr++, 0xBA000C02, 0);
-                    FONT_GFX_CMD(gRegionAllocPtr++, 0xE7000000, 0);
+                    gDPPipeSync(gRegionAllocPtr++);
+                    gDPSetTextureFilter(gRegionAllocPtr++, G_TF_AVERAGE);
+                    gDPLoadTextureTile_4b(gRegionAllocPtr++,
+                                          (u8 *)asset + sprite->imageOffset,
+                                          G_IM_FMT_CI, sprite->width, sprite->height,
+                                          0, 0, sprite->width, sprite->height, 0,
+                                          G_TX_CLAMP, G_TX_CLAMP, G_TX_NOMASK, G_TX_NOMASK,
+                                          G_TX_NOLOD, G_TX_NOLOD);
+                    gDPLoadTLUT_pal16(gRegionAllocPtr++, 0,
+                                      paletteBase + (sprite->textureIndex << 5));
+                    gSPTextureRectangle(gRegionAllocPtr++, x0 << 2, y0 << 2,
+                                        x1 << 2, y1 << 2, G_TX_RENDERTILE,
+                                        (clippedS << 5) + 0x10,
+                                        (clippedT << 5) + 0x10,
+                                        (1 << (scale + 10)) & 0xFFFF,
+                                        (1 << (scale + 10)) & 0xFFFF);
+                    gDPPipeSync(gRegionAllocPtr++);
+                    gDPSetTextureFilter(gRegionAllocPtr++, G_TF_POINT);
+                    gDPPipeSync(gRegionAllocPtr++);
                 }
             }
         }
+    }
     }
 }
 #endif
