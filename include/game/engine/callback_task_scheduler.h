@@ -21,7 +21,7 @@ void updateCallbackTasks(void);
 void updateCallbackTasksWithMinPriority(s32 minPriority);
 void updateRemainingCallbackTasks(void);
 void noopCallbackTask(void);
-#ifdef NON_MATCHING
+#ifdef CALLBACK_TASK_SCHEDULER_IMPLEMENTATION
 void *createCallbackTaskPreservingArgs(void (*callback)(), u16 type, s32 priority);
 #else
 void *createCallbackTaskPreservingArgs(void (*callback)(), s32 type, s32 priority);
