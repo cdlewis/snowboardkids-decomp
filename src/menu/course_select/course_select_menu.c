@@ -942,21 +942,24 @@ void updateCourseSelectPurchasePrompt(void) {
     updateCallbackTasks();
 }
 
-// updateCourseSelectUnlockCourseList best match: 62.880% (nonmatchings/updateCourseSelectUnlockCourseList-4742974436804708368/base_15.c)
+// updateCourseSelectUnlockCourseList best match: 71.007% (nonmatchings/updateCourseSelectUnlockCourseList-1219509448159986855/base_5.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/course_select/course_select_menu/updateCourseSelectUnlockCourseList.s")
 
 #ifdef NON_MATCHING
 void updateCourseSelectUnlockCourseList(void) {
     s32 sp24;
+    u16 new_var3;
     ObjectA3E0 *var_s0;
+    u16 *new_var2;
     s16 state;
     s32 buttonsHeld;
+    s32 new_var;
     s32 buttonsPressed;
     s32 held10800;
     u16 repeat;
-    s32 divisor;
+    s16 divisor;
     s32 i;
-    s32 index;
+    u8 index;
     ObjectA3E0 **currentPtr;
 
     if (gMenuChoicePromptState == 9) {
@@ -979,39 +982,48 @@ void updateCourseSelectUnlockCourseList(void) {
         gMenuInputRepeatTimers = 0;
     }
 
+    new_var = 0x19;
     buttonsPressed = gPlayerInputPressed;
     repeat = gMenuInputRepeatTimers;
-    if ((buttonsPressed & (STICK_UP | U_JPAD)) || ((held10800 != 0) && (repeat >= 9) && (repeat & 1))) {
-        if (repeat == 0) {
+    new_var3 = repeat;
+    new_var2 = &repeat;
+    if ((buttonsPressed & (STICK_UP | U_JPAD)) || ((held10800 != 0) && (new_var3 >= 9) && (new_var3 & 1))) {
+        if (*new_var2 == 0) {
             repeat++;
         }
-        gMenuInputRepeatTimers = repeat;
+        gMenuInputRepeatTimers = *new_var2;
         if (state >= 3) {
             gMenuChoicePromptState = state - 1;
-            enqueueSoundEffect(0x19, 0x32);
+            enqueueSoundEffect(new_var, 0x32);
             buttonsPressed = gPlayerInputPressed;
         }
         state = gMenuChoicePromptState;
     } else {
         if (!(buttonsPressed & (STICK_DOWN | D_JPAD))) {
-            gMenuInputRepeatTimers = repeat;
+            gMenuInputRepeatTimers = *new_var2;
             if (!(buttonsHeld & (STICK_DOWN | D_JPAD))) {
                 goto after_row_change;
             }
-            gMenuInputRepeatTimers = repeat;
-            if (repeat < 9) {
+            gMenuInputRepeatTimers = *new_var2;
+            if (*new_var2 < 9) {
                 goto after_row_change;
             }
-            gMenuInputRepeatTimers = repeat;
-            if (!(repeat & 1)) {
+            gMenuInputRepeatTimers = *new_var2;
+            if (!(*new_var2 & 1)) {
                 goto after_row_change;
             }
         }
 
-        if (repeat == 0) {
+        if (1) { }
+        if (1) { }
+        if (1) { }
+        if (1) { }
+        if (1) { }
+        if (1) { }
+        if (*new_var2 == 0) {
             repeat++;
         }
-        gMenuInputRepeatTimers = repeat;
+        gMenuInputRepeatTimers = *new_var2;
         if (state < D_8010AF3C + 1) {
             gMenuChoicePromptState = state + 1;
             enqueueSoundEffect(0x19, 0x32);
@@ -1023,12 +1035,12 @@ void updateCourseSelectUnlockCourseList(void) {
 after_row_change:
     divisor = 3;
     repeat = gMenuInputRepeatTimers;
-    if (repeat != 0) {
+    if (*new_var2 != 0) {
         repeat++;
-        gMenuInputRepeatTimers = repeat;
-        if (repeat == 0xFFFF) {
+        gMenuInputRepeatTimers = *new_var2;
+        if (*new_var2 == 0xFFFF) {
             repeat = 10;
-            gMenuInputRepeatTimers = repeat;
+            gMenuInputRepeatTimers = *new_var2;
         }
     }
 
@@ -1038,7 +1050,7 @@ after_row_change:
         enqueueSoundEffect(0x18, 0x32);
         gCourseSelectSelectedCourseId = (gCourseSelectSelectedCourseId % divisor) & 0xFF;
         gMenuInputRepeatTimers = 0;
-        gMenuChoicePromptState += 3;
+        gMenuChoicePromptState = gMenuChoicePromptState + 3;
     } else if ((buttonsPressed & A_BUTTON) || (buttonsPressed & START_BUTTON)) {
         enqueueSoundEffect(0x18, 0x32);
         index = ((gMenuChoicePromptState * divisor) + (gCourseSelectSelectedCourseId % divisor) - 6) & 0xFF;
