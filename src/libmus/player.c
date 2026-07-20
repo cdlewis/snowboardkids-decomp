@@ -78,7 +78,7 @@ ALMicroTime __MusIntMain(void *arg0) {
     return 1000000 / mus_vsyncs_per_second;
 }
 
-// __MusIntGetNewNote best match: 93.328% (nonmatchings/__MusIntGetNewNote-2694253543240320626/base_11.c)
+// __MusIntGetNewNote best match: 99.389% (nonmatchings/__MusIntGetNewNote-5787290371232622032/base_31.c)
 
 #pragma GLOBAL_ASM("asm/nonmatchings/libmus/player/__MusIntGetNewNote.s")
 
@@ -91,9 +91,13 @@ extern u8 mus_default_velocities[];
 void __MusIntGetNewNote(PlayerCommandState *arg0, s32 arg1) {
     u8 *seq;
     u8 *durationPos;
+    u8 velocity;
     u8 cmd;
     u8 fxMix;
     u32 duration;
+    u32 durationValue;
+    u16 baseDuration;
+    int instrumentIndex;
     s32 soundIndex;
 
     seq = arg0->sequencePos;
@@ -102,6 +106,8 @@ void __MusIntGetNewNote(PlayerCommandState *arg0, s32 arg1) {
         while (cmd >= 0x80) {
             seq = jumptable[cmd & 0x7F](arg0, seq + 1, cmd);
             if (seq == NULL) {
+                if (1) {
+                }
                 break;
             }
             cmd = seq[0];
@@ -117,20 +123,23 @@ void __MusIntGetNewNote(PlayerCommandState *arg0, s32 arg1) {
         arg0->unkFE = cmd;
 
         if (arg0->unkED != 0) {
-            arg0->unk108 = mus_default_velocities[*seq];
+            velocity = mus_default_velocities[*seq];
+            arg0->unk108 = velocity;
             seq++;
             arg0->sequencePos = (s32)seq;
         } else {
-            arg0->unk108 = mus_default_velocities[arg0->unkEE];
+            arg0->unk108 = mus_default_velocities[((((((arg0->unkEE & 0xFFFFu) & 0xFFFFu) & 0xFFFFu) & 0xFFFFu) & 0xFFFFu) & 0xFFFFu) & 0xFFFFu];
         }
 
-        duration = (u16)arg0->unkC0;
-        if (duration != 0) {
-            arg0->unkBC = duration;
-            arg0->unk28 = (f32)(duration & 0xFFFF);
+        baseDuration = (u16)arg0->unkC0;
+        if (baseDuration != 0) {
+            durationValue = baseDuration;
+            durationValue = durationValue & 0xFFFF;
+            arg0->unkBC = durationValue;
+            arg0->unk28 = (f32)durationValue;
         }
 
-        if ((arg0->flagE6 != 0) || (duration == 0)) {
+        if ((arg0->flagE6 != 0) || (baseDuration == 0)) {
             arg0->flagE6 = 0;
             durationPos = (u8 *)arg0->sequencePos;
             cmd = *durationPos;
@@ -144,7 +153,7 @@ void __MusIntGetNewNote(PlayerCommandState *arg0, s32 arg1) {
                 arg0->unkBC = duration;
                 duration += *durationPos;
                 arg0->unkBC = duration;
-                arg0->unk28 = (f32)(duration & 0xFFFF);
+                arg0->unk28 = (f32)((duration & 0xFFFF) & 0xFFFFu);
                 arg0->sequencePos = (s32)(durationPos + 1);
             }
         }
@@ -154,7 +163,7 @@ void __MusIntGetNewNote(PlayerCommandState *arg0, s32 arg1) {
         arg0->noteAgeTicks = 0;
         arg0->pitchPulseOffset = 0;
         arg0->unk10 = duration;
-        arg0->noteAgeTicksF = 0.0f;
+        arg0->noteAgeTicksF = 0.f;
         arg0->unk107 = arg0->unk106;
 
         if (arg0->unkFE != 0) {
@@ -167,9 +176,10 @@ void __MusIntGetNewNote(PlayerCommandState *arg0, s32 arg1) {
                 arg0->unkFE = ((u8 *)arg0->jumpTarget + (arg0->unkFE * 4))[-0x2D];
             }
 
-            soundIndex = arg0->instrumentIndex;
-            if (gSoundBankEntryCount <= soundIndex) {
+            if (gSoundBankEntryCount <= (instrumentIndex = arg0->instrumentIndex)) {
                 soundIndex = 0;
+            } else {
+                soundIndex = instrumentIndex;
             }
 
             if (arg0->flagE5 == 0) {
@@ -192,14 +202,14 @@ void __MusIntGetNewNote(PlayerCommandState *arg0, s32 arg1) {
             __MusIntSetPitch(arg0, arg1);
             __MusIntSetVolumeAndPan(arg0, arg1);
             fxMix = arg0->unkF3;
-            if (arg0->unkE2 != fxMix) {
+            if (fxMix != arg0->unkE2) {
                 arg0->unkE2 = fxMix;
                 alSynSetFXMix(&gAudioSynthesizer, &mus_voices[arg1], fxMix);
             }
         } else if (arg0->padF4[4] < 4) {
             arg0->padF4[4] = 4;
-            arg0->padF4[6] = 1;
             arg0->unk100 = arg0->unk0;
+            arg0->padF4[6] = 1;
             arg0->unk104 = arg0->padF4[5];
         }
     } else if (arg0->unkE4 != 0) {
