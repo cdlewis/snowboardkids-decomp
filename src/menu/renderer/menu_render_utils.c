@@ -169,31 +169,75 @@ void getAssetTableImagePaletteAndSize(u8 *arg0, u16 arg1, void **arg2, void **ar
     *arg5 = temp_v1[idx].height;
 }
 
-// drawAssetTableSprite best match: 97.050% (nonmatchings/drawAssetTableSprite/output-775-1/source.c)
+// drawAssetTableSprite best match: 99.826% (nonmatchings/drawAssetTableSprite-5787290371232622032/base_34.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/renderer/menu_render_utils/drawAssetTableSprite.s")
 
 #ifdef NON_MATCHING
 void drawAssetTableSprite(s16 arg0, s16 arg1, AssetTable *arg2, u16 arg3) {
-    volatile char pad[0x18];
+    volatile char tailPad[8];
     u8 *textureBase;
+    volatile char pad[0x10];
     s32 clipU;
     s32 clipV;
     s32 rightClip;
     s32 bottomClip;
     s32 leftClip;
     s32 topClip;
+    s32 topHalf;
+    AssetTableEntry *rawEntry;
     s32 x0;
     s32 y0;
+    s32 halfWidth;
     s32 x1;
     s32 y1;
-    AssetTableEntry *rawEntry;
 
-    textureBase = (((u8 *)arg2) + (arg2->entryCount * sizeof(AssetTableEntry))) + sizeof(AssetTableEntry);
-    rawEntry = (AssetTableEntry *)(((u8 *)arg2) + (arg3 * sizeof(AssetTableEntry)));
+    textureBase = (u8 *)(arg2->entryCount + arg2->entries);
+    rawEntry = &arg2->entries[arg3 - 1];
     x0 = arg0 + gMenuViewportCenterX;
     y0 = arg1 + gMenuViewportCenterY;
     x1 = rawEntry[1].width + x0;
-    do { y1 = rawEntry[1].height + y0; rawEntry++; clipU = 0; clipV = 0; rightClip = gMenuViewportCenterX + (gMenuViewportWidth / 2); if (x0 < rightClip) { leftClip = gMenuViewportCenterX - (gMenuViewportWidth / 2); bottomClip = gMenuViewportCenterY + (gMenuViewportHeight / 2); if (y0 < bottomClip) { topClip = gMenuViewportCenterY - (gMenuViewportHeight / 2); if ((x1 >= leftClip) && (y1 >= topClip)) { if (x0 < leftClip) { clipU = leftClip - x0; x0 = leftClip; } if (y0 < topClip) { clipV = topClip - y0; y0 = topClip; } if (rightClip <= x1) { x1 = rightClip; } if (y1 >= bottomClip) { y1 = bottomClip; } { Gfx *_g = (Gfx *)(gRegionAllocPtr++); _g->words.w0 = (((rawEntry->width >> 1) - 1) & 0xFFF) | 0xFD480000; _g->words.w1 = (u32)(((u8 *)arg2) + rawEntry->imageOffset); } { Gfx *_g = (Gfx *)(gRegionAllocPtr++); _g->words.w0 = ((((((rawEntry->width + 1) >> 1) + 7) >> 3) & 0x1FF) << 9) | 0xF5480000; _g->words.w1 = 0x07080200; } { Gfx *_g = (Gfx *)(gRegionAllocPtr++); _g->words.w0 = 0xE6000000; _g->words.w1 = 0; } { Gfx *_g = (Gfx *)(gRegionAllocPtr++); _g->words.w0 = 0xF4000000; _g->words.w1 = ((((rawEntry->width * 2) & 0xFFF) << 12) | 0x07000000) | ((rawEntry->height * 4) & 0xFFF); } { Gfx *_g = (Gfx *)(gRegionAllocPtr++); _g->words.w0 = 0xE7000000; _g->words.w1 = 0; } { Gfx *_g = (Gfx *)(gRegionAllocPtr++); _g->words.w0 = ((((((rawEntry->width + 1) >> 1) + 7) >> 3) & 0x1FF) << 9) | 0xF5400000; _g->words.w1 = 0x00080200; } { Gfx *_g = (Gfx *)(gRegionAllocPtr++); do { _g->words.w0 = 0xF2000000; } while (0); _g->words.w1 = (((rawEntry->width * 4) & 0xFFF) << 12) | ((rawEntry->height * 4) & 0xFFF); } { Gfx *_g = (Gfx *)(gRegionAllocPtr++); _g->words.w0 = 0xFD100000; _g->words.w1 = (u32)(textureBase + (rawEntry->textureIndex << 5)); } { Gfx *_g = (Gfx *)(gRegionAllocPtr++); _g->words.w0 = 0xE8000000; _g->words.w1 = 0; } { Gfx *_g = (Gfx *)(gRegionAllocPtr++); _g->words.w0 = 0xF5000100; _g->words.w1 = 0x07000000; } { Gfx *_g = (Gfx *)(gRegionAllocPtr++); _g->words.w0 = 0xE6000000; _g->words.w1 = 0; } { Gfx *_g = (Gfx *)(gRegionAllocPtr++); _g->words.w0 = 0xF0000000; _g->words.w1 = 0x0703C000; } { Gfx *_g = (Gfx *)(gRegionAllocPtr++); _g->words.w0 = 0xE7000000; _g->words.w1 = 0; } { Gfx *_g = (Gfx *)(gRegionAllocPtr++); _g->words.w0 = ((((x1 * 4) & 0xFFF) << 12) | 0xE4000000) | ((y1 * 4) & 0xFFF); _g->words.w1 = (((x0 * 4) & 0xFFF) << 12) | ((y0 * 4) & 0xFFF); } { Gfx *_g = (Gfx *)(gRegionAllocPtr++); _g->words.w0 = 0xB4000000; leftClip = clipU; _g->words.w1 = (leftClip << 21) | ((clipV << 5) & 0xFFFF); } { Gfx *_g = (Gfx *)(gRegionAllocPtr++); _g->words.w0 = 0xB3000000; _g->words.w1 = 0x04000400; } } } } } while (0);
+    y1 = rawEntry[1].height + y0;
+    rawEntry++;
+    clipU = 0;
+    clipV = 0;
+    halfWidth = gMenuViewportWidth / 2;
+    rightClip = gMenuViewportCenterX + halfWidth;
+    if (x0 < rightClip) {
+        bottomClip = gMenuViewportHeight / 2;
+        topHalf = bottomClip;
+        leftClip = gMenuViewportCenterX - halfWidth;
+        bottomClip = gMenuViewportCenterY + bottomClip;
+        if (y0 < bottomClip) {
+            topClip = gMenuViewportCenterY - topHalf;
+            if ((x1 >= leftClip) && (y1 >= topClip)) {
+                if (x0 < leftClip) {
+                    clipU = leftClip - x0;
+                    x0 = leftClip;
+                }
+                if (y0 < topClip) {
+                    clipV = topClip - y0;
+                    y0 = topClip;
+                }
+                if (rightClip <= x1) {
+                    x1 = rightClip;
+                }
+                if (y1 >= bottomClip) {
+                    y1 = bottomClip;
+                }
+
+                gDPLoadTextureTile_4b(gRegionAllocPtr++, (u8 *)arg2 + (0, rawEntry->imageOffset),
+                                      G_IM_FMT_CI, rawEntry->width, rawEntry->height, 0, 0,
+                                      rawEntry->width, rawEntry->height, 0, G_TX_CLAMP, G_TX_CLAMP,
+                                      G_TX_NOMASK, G_TX_NOMASK, G_TX_NOLOD, G_TX_NOLOD);
+                gDPLoadTLUT_pal16(gRegionAllocPtr++, 0,
+                                  textureBase + (rawEntry->textureIndex << 5));
+                gSPTextureRectangle(gRegionAllocPtr++, x0 << 2, y0 << 2, x1 << 2, y1 << 2,
+                                    G_TX_RENDERTILE, clipU << 5, clipV << 5, 0x400, 0x400);
+            }
+            rawEntry++;
+            rawEntry--;
+        }
+    }
 }
 #endif
 
