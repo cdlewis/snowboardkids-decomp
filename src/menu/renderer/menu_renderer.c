@@ -492,7 +492,7 @@ void drawMenuSpriteWithAlphaClipped(s16 x, s16 y, FontAsset *asset, u16 tileInde
 }
 #endif
 
-// drawMenuSpriteWithPaletteScale best match: 78.517% (nonmatchings/drawMenuSpriteWithPaletteScale-8367390958892477031/base_10.c)
+// drawMenuSpriteWithPaletteScale best match: 79.337% (nonmatchings/drawMenuSpriteWithPaletteScale-1219509448159986855/base.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/renderer/menu_renderer/drawMenuSpriteWithPaletteScale.s")
 
 #ifdef NON_MATCHING
@@ -515,16 +515,18 @@ void drawMenuSpriteWithPaletteScale(s16 x, s16 y, FontAsset *asset, u16 index, s
     s32 viewportBottom;
     s32 viewportHalfWidth;
     s32 viewportHalfHeight;
+    u16 headerSize;
     s32 sourceX;
     s32 sourceY;
     s32 red;
     s32 green;
     s32 blue;
 
+    headerSize = sizeof(FontAssetHeader);
     textureEntryBase = (u8 *)asset + (index * sizeof(FontTexture));
-    texture = (FontTexture *)(textureEntryBase + sizeof(FontAssetHeader));
+    texture = (FontTexture *)(textureEntryBase + headerSize);
     intensityScale = intensity;
-    paletteBase = (u8 *)asset + 8 + (asset->header.entryCount * sizeof(FontTexture));
+    paletteBase = (u8 *)asset + headerSize + (asset->header.entryCount * sizeof(FontTexture));
     drawLeft = x + gMenuViewportCenterX;
     drawTop = y + gMenuViewportCenterY;
     drawRight = drawLeft + (texture->width >> 1);
@@ -534,13 +536,22 @@ void drawMenuSpriteWithPaletteScale(s16 x, s16 y, FontAsset *asset, u16 index, s
 
     viewportHalfWidth = gMenuViewportWidth / 2;
     viewportRight = gMenuViewportCenterX + viewportHalfWidth;
-    if (drawLeft < viewportRight) {
-        viewportLeft = gMenuViewportCenterX - viewportHalfWidth;
-        viewportHalfHeight = gMenuViewportHeight / 2;
-        viewportBottom = gMenuViewportCenterY + viewportHalfHeight;
-        if ((drawTop < viewportBottom) && (drawRight >= viewportLeft)) {
-            viewportTop = gMenuViewportCenterY - viewportHalfHeight;
-            if (drawBottom >= viewportTop) {
+    if (drawLeft >= viewportRight) {
+        return;
+    }
+    viewportHalfHeight = gMenuViewportHeight / 2;
+    viewportBottom = gMenuViewportCenterY + viewportHalfHeight;
+    viewportLeft = gMenuViewportCenterX - viewportHalfWidth;
+    if (drawTop >= viewportBottom) {
+        return;
+    }
+    if (drawRight < viewportLeft) {
+        return;
+    }
+    viewportTop = gMenuViewportCenterY - viewportHalfHeight;
+    if (drawBottom < viewportTop) {
+        return;
+    }
                 if (drawLeft < viewportLeft) {
                     sourceX = viewportLeft - drawLeft;
                     drawLeft = viewportLeft;
@@ -582,9 +593,6 @@ void drawMenuSpriteWithPaletteScale(s16 x, s16 y, FontAsset *asset, u16 index, s
                 gDPPipeSync(gRegionAllocPtr++);
                 FONT_GFX_CMD(gRegionAllocPtr++, 0xBA000C02, 0);
                 gDPPipeSync(gRegionAllocPtr++);
-            }
-        }
-    }
 }
 #endif
 
