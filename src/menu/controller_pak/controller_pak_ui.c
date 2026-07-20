@@ -499,7 +499,7 @@ void initControllerPakFileDeleteFreeSpaceInfo(ControllerPakTwoPointActor *arg0) 
     setCallbackTaskCallback(arg0, updateControllerPakFileDeleteFreeSpaceInfo);
 }
 
-// drawControllerPakFileDeleteFileList best match: 90.473% (nonmatchings/drawControllerPakFileDeleteFileList-8367390958892477031/base_6.c)
+// drawControllerPakFileDeleteFileList best match: 91.344% (nonmatchings/drawControllerPakFileDeleteFileList-1219509448159986855/base_20.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/controller_pak/controller_pak_ui/drawControllerPakFileDeleteFileList.s")
 
 #ifdef NON_MATCHING
@@ -514,23 +514,16 @@ typedef struct {
 extern ControllerPakPfsState gControllerPakFileStates[];
 extern u8 gControllerPakVisibleFileIndex;
 void drawControllerPakFileDeleteFileList(ControllerPakFileListActor *arg0) {
-    ControllerPakPfsState *fileState;
+    char padAfter[0x14];
+    register s32 alpha;
+    register s32 i;
+    register s32 insertIndex;
     u16 textB0[4];
     u16 fileNameText[19];
     u16 text7C[5];
-    u16 *digit;
-    u16 *out;
-    u8 *name;
-    s32 value;
     s32 rowY;
     u16 fileIndex;
-    s32 alpha;
-    u8 state;
-    s32 indexXOffset;
-    s32 i;
-    s32 insertIndex;
-    s32 ch;
-    s32 ten;
+    s32 state;
 
     if (gControllerPakMenuState.visibleFileIndex == 0) {
         fileIndex = gControllerPakMenuState.fileIndex;
@@ -540,12 +533,11 @@ void drawControllerPakFileDeleteFileList(ControllerPakFileListActor *arg0) {
         fileIndex = gControllerPakMenuState.fileIndex - gControllerPakMenuState.visibleFileIndex;
     }
 
-    ten = 10;
     rowY = 0;
     do {
         state = gControllerPakMenuState.state;
         alpha = 0xE0;
-        indexXOffset = 0;
+        i = 0;
         if ((s32)state <= 0) {
         } else {
             alpha = 0xE0;
@@ -556,98 +548,87 @@ void drawControllerPakFileDeleteFileList(ControllerPakFileListActor *arg0) {
 
         if (fileIndex < 9) {
             textB0[0] = 0xFFFE;
-            indexXOffset = -4;
+            i = -4;
         } else {
             textB0[0] = 1;
         }
         textB0[2] = 0xFFFF;
-        textB0[1] = (fileIndex + 1) % ten;
-        drawMenuGlyphScript((s16)(arg0->positions[0].x + indexXOffset), (s16)(arg0->positions[0].y + rowY), (u8 *)textB0, 1, alpha, 8);
+        textB0[1] = (fileIndex + 1) % 10;
+        drawMenuGlyphScript((s16)(arg0->positions[0].x + i), (s16)(arg0->positions[0].y + rowY), (u8 *)textB0, 1, alpha, 8);
 
-        fileState = &gControllerPakFileStates[fileIndex];
-        i = gControllerPakVisibleFileIndex * 0;
-        if (fileState->company_code != 0) {
+        if (gControllerPakFileStates[fileIndex].company_code != 0) {
+            i = gControllerPakVisibleFileIndex * 0;
             insertIndex = 0;
-            name = fileState->game_name;
-            out = fileNameText;
             do {
-                ch = *name++;
-                if ((ch == 0) && (insertIndex == 0)) {
+                if ((gControllerPakFileStates[fileIndex].game_name[i] == 0) && (insertIndex == 0)) {
                     insertIndex = i;
                 }
-                i++;
-                if (ch < 0x10) {
-                    *out = 0xFFFE;
+                if (gControllerPakFileStates[fileIndex].game_name[i] < 0x10) {
+                    fileNameText[i] = 0xFFFE;
                 } else {
-                    *out = ch - 0x10;
+                    fileNameText[i] = gControllerPakFileStates[fileIndex].game_name[i] - 0x10;
                 }
-                out++;
+                i++;
             } while (i < 0x10);
 
-            ch = fileState->ext_name[0];
             fileNameText[16] = 0xFFFE;
             fileNameText[17] = 0xFFFE;
-            if (ch != 0) {
+            if (gControllerPakFileStates[fileIndex].ext_name[0] != 0) {
                 if (insertIndex == 0) {
                     insertIndex = 0x10;
                 }
                 fileNameText[insertIndex] = 0x2C;
-                fileNameText[insertIndex + 1] = ch - 0x10;
+                fileNameText[insertIndex + 1] = gControllerPakFileStates[fileIndex].ext_name[0] - 0x10;
             }
             fileNameText[18] = 0xFFFF;
             drawMenuGlyphScript(arg0->positions[1].x, (s16)(arg0->positions[1].y + rowY), (u8 *)fileNameText, 1, alpha, 8);
 
-            out = text7C;
-            i = 0x18;
+            i = 0;
             do {
-                ch = (fileState->game_code >> i) & 0xFF;
-                if ((ch < 0x30) || (ch >= 0x5B)) {
-                    *out = 0xFFFE;
-                } else if (ch >= 0x41) {
-                    *out = ch - 0x37;
-                } else if (ch >= 0x3A) {
-                    *out = 0xFFFE;
+                insertIndex = (gControllerPakFileStates[fileIndex].game_code >> ((3 - i) * 8)) & 0xFF;
+                if ((insertIndex < 0x30) || (insertIndex >= 0x5B)) {
+                    text7C[i] = 0xFFFE;
+                } else if (insertIndex >= 0x41) {
+                    text7C[i] = insertIndex - 0x37;
+                } else if (insertIndex >= 0x3A) {
+                    text7C[i] = 0xFFFE;
                 } else {
-                    *out = ch - 0x30;
+                    text7C[i] = insertIndex - 0x30;
                 }
-                out++;
-                i -= 8;
-            } while (out < &text7C[4]);
+                i++;
+            } while (i < 4);
             text7C[4] = 0xFFFF;
             drawMenuGlyphScript(arg0->positions[2].x, (s16)(arg0->positions[2].y + rowY), (u8 *)text7C, 1, alpha, 8);
 
-            out = text7C;
-            i = 8;
+            i = 0;
             do {
-                ch = (fileState->company_code >> i) & 0xFF;
-                if ((ch < 0x30) || (ch >= 0x5B)) {
-                    *out = 0xFFFE;
-                } else if (ch >= 0x41) {
-                    *out = ch - 0x37;
-                } else if (ch >= 0x3A) {
-                    *out = 0xFFFE;
+                insertIndex = (gControllerPakFileStates[fileIndex].company_code >> ((1 - i) * 8)) & 0xFF;
+                if ((insertIndex < 0x30) || (insertIndex >= 0x5B)) {
+                    text7C[i] = 0xFFFE;
+                } else if (insertIndex >= 0x41) {
+                    text7C[i] = insertIndex - 0x37;
+                } else if (insertIndex >= 0x3A) {
+                    text7C[i] = 0xFFFE;
                 } else {
-                    *out = ch - 0x30;
+                    text7C[i] = insertIndex - 0x30;
                 }
-                i -= 8;
-                out++;
-            } while ((i ^ 0) >= -7);
+                i++;
+            } while (i < 2);
             text7C[2] = 0xFFFF;
             drawMenuGlyphScript(arg0->positions[3].x, (s16)(arg0->positions[3].y + rowY), (u8 *)text7C, 1, alpha, 8);
 
-            digit = textB0;
+            i = 0;
             do {
-                digit++;
-                digit[-1] = 0xFFFE;
-            } while ((digit - 1) < (&textB0[3] - 1));
-
-            value = fileState->file_size >> 8;
-            digit = &textB0[2];
+                textB0[i] = 0xFFFE;
+                i++;
+            } while (i < 3);
+            insertIndex = gControllerPakFileStates[fileIndex].file_size >> 8;
+            i = 2;
             do {
-                digit--;
-                digit[1] = value % ten;
-                value = value / ten;
-            } while (value != 0);
+                textB0[i] = insertIndex % 10;
+                insertIndex = insertIndex / 10;
+                i--;
+            } while (insertIndex != 0);
             textB0[3] = 0xFFFF;
             drawMenuGlyphScript(arg0->positions[4].x, (s16)(arg0->positions[4].y + rowY), (u8 *)textB0, 1, alpha, 8);
         }
