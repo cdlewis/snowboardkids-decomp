@@ -563,11 +563,11 @@ void drawAssetTableSpriteWithExplicitPalette(s16 x, s16 y, AssetTable *asset, u1
 }
 #endif
 
-// drawScaledAssetTableSprite best match: 89.065% (nonmatchings/drawScaledAssetTableSprite-1219509448159986855/base_11.c)
+// drawScaledAssetTableSprite best match: 91.534% (nonmatchings/drawScaledAssetTableSprite-1219509448159986855/base_55.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/renderer/menu_render_utils/drawScaledAssetTableSprite.s")
 
 #ifdef NON_MATCHING
-void drawScaledAssetTableSprite(s16 x, s16 y, AssetTable *asset, volatile u16 entryIndex, u32 scale) {
+void drawScaledAssetTableSprite(s16 x, s16 y, AssetTable *asset, volatile u16 entryIndex, u16 scale) {
     s32 viewHalfWidth;
     AssetTableEntry *paletteBase;
     s32 clipLeft;
@@ -659,7 +659,7 @@ void drawScaledAssetTableSprite(s16 x, s16 y, AssetTable *asset, volatile u16 en
                                 x1 << textureScale, y1 << textureScale, G_TX_RENDERTILE,
                                 (clippedS << 5) + 0x10,
                                 (clippedT << 5) + 0x10,
-                                textureStep = (1 << (scale + 10)) & 0xFFFF,
+                                textureStep = 1 << (scale + 10),
                                 textureStep);
             gDPPipeSync(gRegionAllocPtr++);
             gDPSetTextureFilter(gRegionAllocPtr++, G_TF_POINT);
