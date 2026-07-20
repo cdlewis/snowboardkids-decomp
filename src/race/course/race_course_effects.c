@@ -17,6 +17,12 @@
     _g->words.w0 = (cmd0); \
     _g->words.w1 = (cmd1); \
 }
+#define EMIT_COURSE_BACKDROP(list)                                                                      \
+        gDPPipeSync(gRegionAllocPtr++);                                                                 \
+        gSPSegment(gRegionAllocPtr++, 0x02, getRelocatableHeapBlockBase(handles->courseVtxHandle));     \
+        gSPSegment(gRegionAllocPtr++, 0x03, getRelocatableHeapBlockBase(handles->courseTextureHandle)); \
+        gSPMatrix(gRegionAllocPtr++, effect->matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);      \
+        gSPDisplayList(gRegionAllocPtr++, list)
 
 typedef struct RaceCountdownEffect {
     char pad[0x18];
@@ -209,6 +215,12 @@ typedef struct {
 } CourseAssetHandles;
 
 typedef struct {
+    char pad0[0x10];
+    s16 courseVtxHandle;
+    s16 courseTextureHandle;
+} CourseBackdropAssetHandles;
+
+typedef struct {
     char pad0[0x44];
     Vec3i transformOffset;
     char pad50[0x60];
@@ -256,6 +268,7 @@ extern u8 gRaceUpdatePaused;
 extern s16 gRaceCourseIndex;
 extern CourseAssetHandles gAssetHandles;
 extern RaceCamera D_801121E0[];
+extern CourseEffectMatrixSource gIdentityFixedTransform;
 extern CourseMarkerSpawnEntry *gCourseTextureMarkerSpawnEntriesByCourse[];
 extern CourseRenderEntry *gRaceCourseSceneryEntriesByCourse[];
 extern void *gRaceCourseSceneryDisplayLists[];
@@ -288,6 +301,7 @@ extern Gfx D_20057D8[];
 extern Gfx D_2006430[];
 extern Gfx D_20067B0[];
 extern Gfx D_2008628[];
+extern Gfx D_2008790[];
 extern Gfx D_2008900[];
 extern Gfx D_20089E0[];
 extern Gfx D_2008D50[];
@@ -423,47 +437,24 @@ void renderRaceCourseModel(void *arg0) {
     }
 }
 
-// renderRaceCourseBackdrop best match: 83.627% (base_10.c)
+// renderRaceCourseBackdrop best match: 96.122% (base_42.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race/course/race_course_effects/renderRaceCourseBackdrop.s")
 
 #ifdef NON_MATCHING
-typedef struct {
-    char pad0[0x10];
-    s16 courseVtxHandle;
-    s16 courseTextureHandle;
-} CourseBackdropAssetHandles;
-
-#define EMIT_COURSE_BACKDROP(list)                                                                            \
-    do {                                                                                                      \
-        gDPPipeSync(gRegionAllocPtr++);                                                                       \
-        gSPSegment(gRegionAllocPtr++, 0x02, getRelocatableHeapBlockBase(handles->courseVtxHandle));           \
-        gSPSegment(gRegionAllocPtr++, 0x03, getRelocatableHeapBlockBase(handles->courseTextureHandle));       \
-        gSPMatrix(gRegionAllocPtr++, temp_s3->matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);           \
-        gSPDisplayList(gRegionAllocPtr++, list);                                                              \
-    } while (0)
-
 void renderRaceCourseBackdrop(RaceCourseBackdropEffect *arg0) {
     CourseEffectMatrixSource sp100;
-    RaceCamera *camera;
-    RaceCourseBackdropEffect *temp_s3;
+    RaceCourseBackdropEffect *effect;
     CourseBackdropAssetHandles *handles;
-    s32 x;
-    s32 y;
-    s32 z;
 
-    temp_s3 = arg0;
-    handles = (CourseBackdropAssetHandles *)&gAssetHandles;
+    effect = arg0;
+    handles = (CourseBackdropAssetHandles *)(s32)&gAssetHandles;
     sp100 = gIdentityFixedTransform;
-    camera = &D_801121E0[gCurrentViewportIndex];
-    x = camera->transformOffset.x;
-    y = camera->transformOffset.y;
-    z = camera->transformOffset.z;
-    sp100.basePos.x = -x;
-    sp100.basePos.y = -y;
-    sp100.basePos.z = -z;
+    sp100.basePos.x = -D_801121E0[gCurrentViewportIndex].transformOffset.x;
+    sp100.basePos.y = -D_801121E0[gCurrentViewportIndex].transformOffset.y;
+    sp100.basePos.z = -D_801121E0[gCurrentViewportIndex].transformOffset.z;
 
-    temp_s3->matrix = allocFixedTransformMatrix(&sp100);
-    if (temp_s3->matrix != NULL) {
+    effect->matrix = allocFixedTransformMatrix(&sp100);
+    if (effect->matrix != NULL) {
         switch (*(u16 *)&gRaceCourseIndex) {
             case 0:
                 EMIT_COURSE_BACKDROP(D_20089E0);
