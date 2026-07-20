@@ -78,7 +78,7 @@ extern void addRenderCallback(RenderCallbackNode **, RenderCallback, s32);
 extern void drawAssetTableSprite(s16, s16, s32, u16);
 extern void drawPulsingAssetTableSprite(s16, s16, s32, s32);
 extern void drawAssetTableSpriteWithDefaultPalette(s32, s32, s32, s32);
-extern void drawMenuFillRectangle(s16, s16, s32, s32, s32, s32, s32);
+extern void drawMenuFillRectangle(s16, s16, s16, s16, u8, u8, u8);
 extern void drawAssetTableSpriteWithExplicitPalette(s16, s16, s32, s32, s32);
 extern void enqueueSoundEffect(s16, s16);
 

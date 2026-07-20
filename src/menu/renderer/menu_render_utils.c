@@ -393,64 +393,59 @@ void drawAssetTableSpriteWithDefaultPalette(s16 x, s16 y, AssetTable *table, u16
     gSPTextureRectangle(gRegionAllocPtr++, x0 << 2, y0 << 2, x1 << 2, y1 << 2,
                         G_TX_RENDERTILE, clipS << 5, clipT << 5, 0x400, 0x400);
 }
-// drawMenuFillRectangle best match: 90.158% (nonmatchings/drawMenuFillRectangle-3357475854818838508/base_2.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/menu/renderer/menu_render_utils/drawMenuFillRectangle.s")
 
-#ifdef NON_MATCHING
 void drawMenuFillRectangle(s16 x, s16 y, s16 width, s16 height, u8 red, u8 green, u8 blue) {
     volatile char pad[0x18];
-    s32 rightClip;
-    s32 bottomClip;
-    s32 leftClip;
-    s32 topClip;
-    s32 x0;
+    s32 minY;
+    s32 maxY;
     s32 y0;
     s32 x1;
     s32 y1;
-    s32 halfWidth;
+    s32 x0;
+    s32 minX;
     s32 halfHeight;
-    s32 color;
+    s32 halfWidth;
+    s32 maxX;
 
     x0 = x + gMenuViewportCenterX;
     y0 = y + gMenuViewportCenterY;
-    x1 = width + x0;
-    y1 = height + y0;
+    x1 = x0 + width;
+    y1 = y0 + height;
 
-    halfWidth = gMenuViewportWidth / 2;
-    rightClip = gMenuViewportCenterX + halfWidth;
-    if (x0 < rightClip) {
-        halfHeight = gMenuViewportHeight / 2;
-        bottomClip = gMenuViewportCenterY + halfHeight;
-        leftClip = gMenuViewportCenterX - halfWidth;
-        if (y0 < bottomClip) {
-            topClip = gMenuViewportCenterY - halfHeight;
-            if ((x1 >= leftClip) && (y1 >= topClip)) {
-                if (x0 < leftClip) {
-                    x0 = leftClip;
+    halfWidth = gMenuViewportWidth / 2; maxX = gMenuViewportCenterX + halfWidth;
+    if (x0 < maxX) {
+        do {
+            halfHeight = gMenuViewportHeight / 2;
+        } while (0);
+        maxY = gMenuViewportCenterY + halfHeight;
+        minX = gMenuViewportCenterX - halfWidth;
+        if (y0 < maxY) {
+            minY = gMenuViewportCenterY - halfHeight;
+            if ((x1 >= minX) && (y1 >= minY)) {
+                if (x0 < minX) {
+                    x0 = minX;
                 }
-                if (y0 < topClip) {
-                    y0 = topClip;
+                if (y0 < minY) {
+                    y0 = minY;
                 }
-                if (x1 >= rightClip) {
-                    x1 = rightClip;
+                if (x1 >= maxX) {
+                    x1 = maxX;
                 }
-                if (y1 >= bottomClip) {
-                    y1 = bottomClip;
+                if (y1 >= maxY) {
+                    y1 = maxY;
                 }
-
-                color = ((red << 8) & 0xF800) | ((green << 3) & 0x7C0) | ((blue >> 2) & 0x3E) | 1;
 
                 gDPPipeSync(gRegionAllocPtr++);
                 gDPSetCycleType(gRegionAllocPtr++, G_CYC_FILL);
                 gDPSetRenderMode(gRegionAllocPtr++, G_RM_NOOP, G_RM_NOOP2);
-                gDPSetFillColor(gRegionAllocPtr++, (color << 16) | color);
+                gDPSetFillColor(gRegionAllocPtr++, (GPACK_RGBA5551(red, green, blue, 1) << 16) |
+                                                    GPACK_RGBA5551(red, green, blue, 1));
                 gDPFillRectangle(gRegionAllocPtr++, x0, y0, x1 - 1, y1 - 1);
                 gSPDisplayList(gRegionAllocPtr++, gMenuRenderModeResetDl);
             }
         }
     }
 }
-#endif
 
 void drawAssetTableSprite8bpp(s16 x, s16 y, AssetTable *table, u16 entryIndex) {
     AssetTableEntry *entry;
