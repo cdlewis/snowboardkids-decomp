@@ -5468,10 +5468,6 @@ void updateRacePlayerPostUpdateMode00(RacePlayer *player) {
     interpolateRaceMotionJointAnimationFrame(player, 0, (0x60000 - player->unk58) / 0x600, 0x100);
 }
 
-// updateRacePlayerVoiceSounds best match: 98.443% (nonmatchings/updateRacePlayerVoiceSounds-2694253543240320626/base_12.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race/player/race_player_update/updateRacePlayerVoiceSounds.s")
-
-#ifdef NON_MATCHING
 void updateRacePlayerVoiceSounds(RacePlayer *player) {
     s32 soundType;
     RacePlayer *player2;
@@ -5495,13 +5491,10 @@ void updateRacePlayerVoiceSounds(RacePlayer *player) {
         voiceType = player2->unk2A6;
     }
     if (voiceType != 0) {
-        bitIndex = voiceType;
         soundId = (&gRacePlayerVoiceBaseSoundIds)[voiceType];
-        score = 0x28;
-        if (voiceType < 9) {
-            score = 0xA;
-        }
-        if (bitIndex >= 0xA) {
+        score = voiceType < 9 ? 0xA : 0x28;
+        bitIndex = voiceType;
+        if ((s32)(u32)bitIndex >= 0xA) {
             bitIndex = 9;
         }
         player->unk2C4 |= 1 << bitIndex;
@@ -5549,8 +5542,8 @@ void updateRacePlayerVoiceSounds(RacePlayer *player) {
                 if (score >= 0x2710) {
                     score = 0x270F;
                 }
-                player->unk2C3++;
                 player->unk2C0 += score;
+                player->unk2C3++;
                 if (player->unk2C3 >= 0x64) {
                     player->unk2C3 = 0x63;
                 }
@@ -5570,8 +5563,8 @@ void updateRacePlayerVoiceSounds(RacePlayer *player) {
                     soundType = 0x50;
                 }
                 if (player2->unk2C4 == 0x3FE) {
-                    player2->unk2C4 = 0x3FF;
                     player2->unk2C0 += 0x12C;
+                    player2->unk2C4 = 0x3FF;
                     soundType = 0x51;
                     spawnRaceUiTrickScorePopup((void *)score, 1);
                 } else {
@@ -5585,7 +5578,6 @@ void updateRacePlayerVoiceSounds(RacePlayer *player) {
         }
     }
 }
-#endif
 
 void updateRacePlayerLoopingSound(RacePlayer *player) {
     s32 v0 = -player->unk44 >> 13;
