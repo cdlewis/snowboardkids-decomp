@@ -841,25 +841,24 @@ void drawCourseSelectCourseIconList(CourseSelectIconListActor *iconList) {
     }
 }
 
-// updateCourseSelectCourseIconList best match: 97.047% (nonmatchings/updateCourseSelectCourseIconList-5787290371232622032/base_22.c)
+// updateCourseSelectCourseIconList best match: 97.662% (nonmatchings/updateCourseSelectCourseIconList-5787290371232622032/base_23.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/course_select/course_select_ui/updateCourseSelectCourseIconList.s")
 
 #ifdef NON_MATCHING
 void updateCourseSelectCourseIconList(CourseSelectIconListActor *arg0) {
     CourseSelectIconListActor *base;
     CourseSelectIconListActor *actor;
-    CourseSelectIconListActor *stateActor;
     CourseSelectIconListActor *countBase;
-    CourseSelectIconListActor * volatile saved;
+    CourseSelectIconListActor *stateActor;
     s32 playerIndex;
-    s32 movingCount;
     s32 i;
+    CourseSelectIconListActor * volatile saved;
+    s32 movingCount;
     void (*initOut)(void *);
     void (*initBackdrop)(void *);
     volatile u8 maxItems;
 
-    base = arg0;
-    saved = arg0;
+    saved = (base = arg0);
     playerIndex = 0;
     if ((s32)gPlayerCount > 0) {
         actor = arg0;
@@ -894,11 +893,11 @@ void updateCourseSelectCourseIconList(CourseSelectIconListActor *arg0) {
                     } while (i < (s32)countBase->itemCounts[playerIndex]);
                 }
                 actor->timer[0]++;
-                if ((gRacePlayers[playerIndex].state != 5) && (D_8010AEA0[playerIndex] != 0) &&
-                    (gCourseSelectModeSelection != 1)) {
-                    maxItems = 5;
-                } else {
+                if ((gRacePlayers[playerIndex].state == 5) || (D_8010AEA0[playerIndex] == 0) ||
+                    (gCourseSelectModeSelection == 1)) {
                     maxItems = 4;
+                } else {
+                    maxItems = 5;
                 }
                 if (!(actor->timer[0] & 1) && ((s32)actor->itemCounts[0] < maxItems)) {
                     actor->itemCounts[0]++;
@@ -978,7 +977,7 @@ void updateCourseSelectCourseIconList(CourseSelectIconListActor *arg0) {
                       base->x[playerIndex][D_8010AE64[playerIndex]])) ||
                     ((base->direction[playerIndex] == -1) &&
                      (base->x[playerIndex][D_8010AE64[playerIndex]] >=
-                      ((D_8010AE64[playerIndex] * actor->speed[0]) + base->baseX[playerIndex])))) {
+                      (base->baseX[playerIndex] + (actor->speed[0] * D_8010AE64[playerIndex]))))) {
                     base->x[playerIndex][D_8010AE64[playerIndex]] =
                         (D_8010AE64[playerIndex] * actor->speed[0]) + base->baseX[playerIndex];
                     actor->state[0] = 6;
