@@ -125,6 +125,17 @@ extern s16 gRacePlayerAttackStartTimer;
 extern s16 gRaceLapCount;
 extern s16 gFrameCounter;
 extern Unk8011228C gRacePlayerHudStatuses[];
+extern s8 D_80121D93;
+extern s32 D_8012207C;
+extern u16 D_8012238C;
+extern s8 D_8012239F;
+extern s32 D_80122688;
+extern u16 D_80122998;
+extern s8 D_801229AB;
+extern s32 D_80122C94;
+extern u16 D_80122FA4;
+extern s8 D_80122FB7;
+extern s32 D_801232A0;
 extern void *D_801248C8;
 extern void *D_801248EC;
 
@@ -4918,7 +4929,7 @@ void updateRacePlayerMode07SpiralExit(RacePlayer *player) {
     }
 }
 
-// tryStartRacePlayerCourseObjectMode best match: 99.016% (nonmatchings/tryStartRacePlayerCourseObjectMode/base_final.c)
+// tryStartRacePlayerCourseObjectMode best match: 99.836% (nonmatchings/tryStartRacePlayerCourseObjectMode-5787290371232622032/base_2.c)
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race/player/race_player_update/tryStartRacePlayerCourseObjectMode.s")
 
@@ -4940,17 +4951,17 @@ s32 tryStartRacePlayerCourseObjectMode(s16 arg0) {
     }
 
     firstPlayer = players;
-    if (((players[0].isActive != 0) && (arg0 != (u16) firstPlayer->playerIndex)) && (players[0].stateFlags & 0x20)) {
+    if (((D_80121D93 != 0) && (arg0 != firstPlayer->playerIndex)) && (D_8012207C & 0x20)) {
         return 0;
     }
-    if (((players[1].isActive != 0) && (arg0 != (u16) players[1].playerIndex)) && (players[1].stateFlags & 0x20)) {
+    if (((D_8012239F != 0) && (arg0 != D_8012238C)) && (D_80122688 & 0x20)) {
         return 0;
     }
-    if (((players[2].isActive != 0) && (arg0 != (u16) players[2].playerIndex)) && (players[2].stateFlags & 0x20)) {
+    if (((D_801229AB != 0) && (arg0 != D_80122998)) && (D_80122C94 & 0x20)) {
         delta = 0;
         return delta;
     }
-    if (((players[3].isActive != 0) && (arg0 != (u16) players[3].playerIndex)) && (players[3].stateFlags & 0x20)) {
+    if (((D_80122FB7 != 0) && (arg0 != D_80122FA4)) && (D_801232A0 & 0x20)) {
         return 0;
     }
 
