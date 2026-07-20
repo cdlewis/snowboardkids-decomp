@@ -770,7 +770,7 @@ void drawCharacterSelectSelectedCharacterTokens(CharacterSelectUiSelectedCharact
     }
 }
 
-// updateCharacterSelectSelectedCharacterTokens best match: 94.820% (nonmatchings/updateCharacterSelectSelectedCharacterTokens-7475224831549593718/base_24.c)
+// updateCharacterSelectSelectedCharacterTokens best match: 96.329% (nonmatchings/updateCharacterSelectSelectedCharacterTokens-5787290371232622032/base_1.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/character_select/character_select_ui/updateCharacterSelectSelectedCharacterTokens.s")
 
 #ifdef NON_MATCHING
@@ -788,8 +788,8 @@ void updateCharacterSelectSelectedCharacterTokens(CharacterSelectUiSelectedChara
     s16 panelX;
     s16 panelY;
 
-    tokens = arg0;
     panelFrames = D_8010ADE4;
+    tokens = arg0;
     playerIndex = 0;
     if ((s32)gPlayerCount > 0) {
         do {
@@ -844,45 +844,47 @@ void updateCharacterSelectSelectedCharacterTokens(CharacterSelectUiSelectedChara
                 state = tokens->state[playerIndex];
                 break;
             case CHARACTER_SELECT_TOKEN_FLYING:
-                if (playerIndex & 1) {
+                exitXStep = playerIndex;
+                if (exitXStep & 1) {
                     yDirection = 1;
-                    state = tokens->state[playerIndex];
+                    state = tokens->state[exitXStep];
                 } else {
                     yDirection = -1;
                 }
-                if (tokens->stepCount[playerIndex] > 0) {
+                if (tokens->stepCount[exitXStep] > 0) {
                     do {
-                        if (tokens->axis[playerIndex] != 0) {
-                            tokens->y[playerIndex] += yDirection;
-                            tokens->accumulator[playerIndex] += tokens->xDistance[playerIndex];
-                            if (tokens->accumulator[playerIndex] >= tokens->yDistance[playerIndex]) {
-                                tokens->accumulator[playerIndex] -= tokens->yDistance[playerIndex];
-                                tokens->x[playerIndex] += tokens->xDirection[playerIndex];
+                        if (tokens->axis[exitXStep] != 0) {
+                            tokens->y[exitXStep] += yDirection;
+                            tokens->accumulator[exitXStep] += tokens->xDistance[exitXStep];
+                            if (tokens->accumulator[exitXStep] >= tokens->yDistance[exitXStep]) {
+                                tokens->accumulator[exitXStep] -= tokens->yDistance[exitXStep];
+                                arg0->x[exitXStep] += arg0->xDirection[exitXStep];
                             }
                         } else {
-                            tokens->x[playerIndex] += tokens->xDirection[playerIndex];
-                            tokens->accumulator[playerIndex] += tokens->yDistance[playerIndex];
-                            if (tokens->accumulator[playerIndex] >= tokens->xDistance[playerIndex]) {
-                                tokens->accumulator[playerIndex] -= tokens->xDistance[playerIndex];
-                                tokens->y[playerIndex] += yDirection;
+                            arg0->x[exitXStep] += arg0->xDirection[exitXStep];
+                            arg0->accumulator[exitXStep] += arg0->yDistance[exitXStep];
+                            if (arg0->accumulator[exitXStep] >= arg0->xDistance[exitXStep]) {
+                                arg0->y[exitXStep] += yDirection;
+                                arg0->accumulator[exitXStep] -= arg0->xDistance[exitXStep];
                             }
                         }
-                        tokens->timer[playerIndex]++;
-                        if ((tokens->timer[playerIndex] % tokens->divisor[playerIndex]) == 0) {
-                            arg0->signedTileSize[playerIndex]++;
+                        arg0->timer[exitXStep]++;
+                        if ((arg0->timer[exitXStep] % arg0->divisor[exitXStep]) == 0) {
+                            arg0->signedTileSize[exitXStep]++;
                         }
-                        if (arg0->signedTileSize[playerIndex] >= 0x21) {
-                            arg0->signedTileSize[playerIndex] = 0x20;
+                        if (arg0->signedTileSize[exitXStep] >= 0x21) {
+                            arg0->signedTileSize[exitXStep] = 0x20;
                         }
-                        if ((tokens->x[playerIndex] == panelFrames->x[playerIndex] + 0x38) && (tokens->y[playerIndex] == panelFrames->y[playerIndex] + 0x18)) {
-                            arg0->state[playerIndex] = CHARACTER_SELECT_TOKEN_LANDED;
-                            arg0->signedTileSize[playerIndex] = 0x20;
-                            state = tokens->state[playerIndex];
+                        if ((arg0->x[exitXStep] == panelFrames->x[exitXStep] + 0x38) &&
+                            (arg0->y[exitXStep] == panelFrames->y[exitXStep] + 0x18)) {
+                            arg0->state[exitXStep] = CHARACTER_SELECT_TOKEN_LANDED;
+                            arg0->signedTileSize[exitXStep] = 0x20;
+                            state = arg0->state[playerIndex];
                             break;
                         }
                         step++;
                     } while (step < tokens->stepCount[playerIndex]);
-                    state = tokens->state[playerIndex];
+                    state = tokens->state[exitXStep];
                 }
                 break;
             case CHARACTER_SELECT_TOKEN_LANDED:
@@ -891,8 +893,8 @@ void updateCharacterSelectSelectedCharacterTokens(CharacterSelectUiSelectedChara
                 break;
             }
 
-            gCharacterSelectHudState.selectedTokenState[playerIndex] = state;
             playerIndex++;
+            gCharacterSelectHudState.selectedTokenState[playerIndex - 1] = state;
         } while (playerIndex < (s32)gPlayerCount);
     }
 
@@ -932,7 +934,7 @@ void updateCharacterSelectSelectedCharacterTokens(CharacterSelectUiSelectedChara
         } while (step != 0x10);
     }
 
-    addRenderCallback(&gMenuRenderCallbackList, drawCharacterSelectSelectedCharacterTokens, tokens);
+    addRenderCallback(&gMenuRenderCallbackList, drawCharacterSelectSelectedCharacterTokens, arg0);
 }
 #endif
 
