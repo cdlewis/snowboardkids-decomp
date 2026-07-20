@@ -902,7 +902,7 @@ void drawScaledAssetTableSpriteWithExplicitPalette(s16 x, s16 y, AssetTable *ass
 }
 #endif
 
-// drawMenuAsciiFontTile best match: 90.780% (nonmatchings/drawMenuAsciiFontTile-1200943805599209058/base_1.c)
+// drawMenuAsciiFontTile best match: 99.711% (nonmatchings/drawMenuAsciiFontTile-7475224831549593718/base.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/renderer/menu_render_utils/drawMenuAsciiFontTile.s")
 
 #ifdef NON_MATCHING
@@ -913,13 +913,11 @@ void drawMenuAsciiFontTile(s16 x, s16 y, u16 s, u16 t, u16 paletteIndex) {
     s32 y1;
     volatile char pad[0x40];
     s32 maxX;
-    register s32 minX;
     s32 maxY;
+    s32 minX;
     s32 minY;
     s32 clipS;
-    register s32 clipT;
-    s32 viewHalfWidth;
-    s32 viewHalfHeight;
+    s32 clipT;
 
     x0 = x + gMenuViewportCenterX;
     y0 = y + gMenuViewportCenterY;
@@ -928,14 +926,12 @@ void drawMenuAsciiFontTile(s16 x, s16 y, u16 s, u16 t, u16 paletteIndex) {
     clipS = 0;
     clipT = 0;
 
-    viewHalfWidth = gMenuViewportWidth / 2;
-    maxX = gMenuViewportCenterX + viewHalfWidth;
+    maxX = gMenuViewportCenterX + (gMenuViewportWidth / 2);
     if (x0 < maxX) {
-        minX = gMenuViewportCenterX - viewHalfWidth;
-        viewHalfHeight = gMenuViewportHeight / 2;
-        maxY = gMenuViewportCenterY + viewHalfHeight;
+        maxY = gMenuViewportCenterY + (gMenuViewportHeight / 2);
+        minX = gMenuViewportCenterX - (gMenuViewportWidth / 2);
         if (y0 < maxY) {
-            minY = gMenuViewportCenterY - viewHalfHeight;
+            minY = gMenuViewportCenterY - (gMenuViewportHeight / 2);
             if ((x1 >= minX) && (y1 >= minY)) {
                 if (x0 < minX) {
                     clipS = minX - x0;
@@ -954,9 +950,9 @@ void drawMenuAsciiFontTile(s16 x, s16 y, u16 s, u16 t, u16 paletteIndex) {
                 clipS += s;
                 clipT += t;
 
-                if (paletteIndex != gMenuAsciiFontPaletteIndex) {
+                if (gMenuAsciiFontPaletteIndex != paletteIndex) {
                     gMenuAsciiFontPaletteIndex = paletteIndex;
-                    FONT_GFX_CMD(gRegionAllocPtr++, 0xFD100000, (u32)gMenuAsciiFontPaletteBase + (paletteIndex << 5));
+                    FONT_GFX_CMD(gRegionAllocPtr++, 0xFD100000, (paletteIndex << 5) + (u32)gMenuAsciiFontPaletteBase);
                     FONT_GFX_CMD(gRegionAllocPtr++, 0xE8000000, 0);
                     FONT_GFX_CMD(gRegionAllocPtr++, 0xF5000100, 0x07000000);
                     FONT_GFX_CMD(gRegionAllocPtr++, 0xE6000000, 0);
