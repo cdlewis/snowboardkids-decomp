@@ -841,74 +841,70 @@ void drawCourseSelectCourseIconList(CourseSelectIconListActor *iconList) {
     }
 }
 
-// updateCourseSelectCourseIconList best match: 82.656% (nonmatchings/updateCourseSelectCourseIconList-2694253543240320626/base_2.c)
+// updateCourseSelectCourseIconList best match: 97.047% (nonmatchings/updateCourseSelectCourseIconList-5787290371232622032/base_22.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/course_select/course_select_ui/updateCourseSelectCourseIconList.s")
 
 #ifdef NON_MATCHING
 void updateCourseSelectCourseIconList(CourseSelectIconListActor *arg0) {
+    CourseSelectIconListActor *base;
     CourseSelectIconListActor *actor;
+    CourseSelectIconListActor *stateActor;
+    CourseSelectIconListActor *countBase;
+    CourseSelectIconListActor * volatile saved;
     s32 playerIndex;
-    s32 i;
     s32 movingCount;
-    s32 screenState;
-    s32 maxItems;
-    s32 selectedIndex;
-    s16 target;
-    s16 current;
+    s32 i;
     void (*initOut)(void *);
     void (*initBackdrop)(void *);
-    void (*initCursors)(void *);
+    volatile u8 maxItems;
 
+    base = arg0;
+    saved = arg0;
     playerIndex = 0;
     if ((s32)gPlayerCount > 0) {
         actor = arg0;
         do {
-            screenState = gCurrentGameTask->screenState;
-            if (screenState == 1) {
-                actor->state[playerIndex] = 9;
-                screenState = gCurrentGameTask->screenState;
+            if (gCurrentGameTask->screenState == 1) {
+                actor->state[0] = 9;
             }
-            if ((screenState == 3) && (actor->state[playerIndex] < 0xB)) {
-                actor->state[playerIndex] = 0xB;
-                screenState = gCurrentGameTask->screenState;
+            if ((gCurrentGameTask->screenState == 3) && (actor->state[0] < 0xB)) {
+                actor->state[0] = 0xB;
             }
-            if (screenState == 9) {
-                actor->state[playerIndex] = 0xD;
+            if (gCurrentGameTask->screenState == 9) {
+                actor->state[0] = 0xD;
             }
-            screenState = actor->state[playerIndex];
-            if ((gMenuFlowState != 0) && (screenState < 4)) {
-                actor->state[playerIndex] = 4;
-                screenState = 4;
+            if ((gMenuFlowState != 0) && (actor->state[0] < 4)) {
+                actor->state[0] = 4;
             }
 
-            switch (screenState) {
+            switch (actor->state[0]) {
             case 0:
-                movingCount = 0;
-                i = 0;
-                if ((s32)actor->itemCounts[playerIndex] > 0) {
+                movingCount = (i = 0);
+                if ((s32)actor->itemCounts[0] > 0) {
+                    countBase = saved;
                     do {
-                        if (actor->y[playerIndex][i] < actor->targetY[playerIndex]) {
-                            actor->y[playerIndex][i] += 0x10;
+                        if ((base->y[playerIndex][i] + 1) <= base->targetY[playerIndex]) {
+                            base->y[playerIndex][i] += 0x10;
                             movingCount++;
-                            if (actor->targetY[playerIndex] < actor->y[playerIndex][i]) {
-                                actor->y[playerIndex][i] = actor->targetY[playerIndex];
+                            if (base->y[playerIndex][i] >= base->targetY[playerIndex]) {
+                                base->y[playerIndex][i] = base->targetY[playerIndex];
                             }
                         }
                         i++;
-                    } while (i < (s32)arg0->itemCounts[playerIndex]);
+                    } while (i < (s32)countBase->itemCounts[playerIndex]);
                 }
-                actor->timer[playerIndex]++;
+                actor->timer[0]++;
                 if ((gRacePlayers[playerIndex].state != 5) && (D_8010AEA0[playerIndex] != 0) &&
                     (gCourseSelectModeSelection != 1)) {
                     maxItems = 5;
                 } else {
                     maxItems = 4;
                 }
-                if (!(actor->timer[playerIndex] & 1) && ((s32)actor->itemCounts[playerIndex] < maxItems)) {
-                    actor->itemCounts[playerIndex]++;
+                if (!(actor->timer[0] & 1) && ((s32)actor->itemCounts[0] < maxItems)) {
+                    actor->itemCounts[0]++;
                 }
                 if (movingCount == 0) {
-                    actor->state[playerIndex] = 1;
+                    actor->state[0] = 1;
                     if (gPlayerCount == 1) {
                         initOut = initCourseSelectPreviewModelOut;
                         initBackdrop = initCourseSelectCourseListBackdrop;
@@ -916,141 +912,149 @@ void updateCourseSelectCourseIconList(CourseSelectIconListActor *arg0) {
                         D_8010ADE4 = createCallbackTask(initOut, 0, 0x62);
                         createCallbackTask(initBackdrop, 0, 0x60);
                     } else if (playerIndex == 0) {
-                        initCursors = initCourseSelectCourseCursors;
+                        initOut = initCourseSelectCourseCursors;
                         createCallbackTask(initCourseSelectCourseStats, 0, 0x62);
-                        gActiveMenuTask = createCallbackTask(initCursors, 0, 0x64);
+                        gActiveMenuTask = createCallbackTask(initOut, 0, 0x64);
                     }
                 }
                 break;
             case 1:
                 if (*(&gMenuTransitionState + (playerIndex * sizeof(CourseSelectRacePlayer))) == 1) {
-                    actor->state[playerIndex] = 2;
+                    actor->state[0] = 2;
                 }
                 break;
             case 2:
                 i = 0;
                 if ((s32)D_8010AEA4[playerIndex] >= 9) {
-                    if ((s32)actor->itemCounts[playerIndex] > 0) {
+                    if ((s32)actor->itemCounts[0] > 0) {
+                        countBase = saved;
                         do {
-                            if (i != D_8010AE64[playerIndex]) {
-                                actor->y[playerIndex][i] -= 0x20;
+                            if ((i != D_8010AE64[playerIndex]) != 0) {
+                                base->y[playerIndex][i] -= 0x20;
                             }
                             i++;
-                        } while (i < (s32)arg0->itemCounts[playerIndex]);
+                        } while (i < (s32)countBase->itemCounts[playerIndex]);
                     }
                     if (D_8010AE64[playerIndex] != 0) {
-                        if (actor->startY[playerIndex] >= actor->y[playerIndex][0]) {
-                            actor->state[playerIndex] = 3;
+                        if (base->startY[playerIndex] >= base->y[playerIndex][0]) {
+                            actor->state[0] = 3;
                         }
-                    } else if (actor->startY[playerIndex] >= actor->y[playerIndex][1]) {
-                        actor->state[playerIndex] = 3;
+                    } else if (base->startY[playerIndex] >= base->y[playerIndex][1]) {
+                        actor->state[0] = 3;
                     }
-                    if (actor->state[playerIndex] == 3) {
-                        if (actor->x[playerIndex][D_8010AE64[playerIndex]] < actor->targetX[playerIndex]) {
-                            actor->direction[playerIndex] = 1;
+                    if (actor->state[0] == 3) {
+                        if (base->x[playerIndex][D_8010AE64[playerIndex]] < base->targetX[playerIndex]) {
+                            base->direction[playerIndex] = 1;
                         } else {
-                            actor->direction[playerIndex] = -1;
+                            base->direction[playerIndex] = -1;
                         }
                     }
                 }
                 break;
             case 3:
-                actor->x[playerIndex][D_8010AE64[playerIndex]] += actor->speed[playerIndex] * actor->direction[playerIndex];
-                current = actor->x[playerIndex][D_8010AE64[playerIndex]];
-                target = actor->targetX[playerIndex];
-                if (((actor->direction[playerIndex] == 1) && (current >= target)) ||
-                    ((actor->direction[playerIndex] == -1) && (target >= current))) {
-                    actor->x[playerIndex][D_8010AE64[playerIndex]] = target;
-                    actor->state[playerIndex] = 4;
+                base->x[playerIndex][D_8010AE64[playerIndex]] += actor->speed[0] * base->direction[playerIndex];
+                if (((base->direction[playerIndex] == 1) &&
+                     (base->x[playerIndex][D_8010AE64[playerIndex]] >= base->targetX[playerIndex])) ||
+                    ((base->direction[playerIndex] == -1) &&
+                     (base->targetX[playerIndex] >= base->x[playerIndex][D_8010AE64[playerIndex]]))) {
+                    base->x[playerIndex][D_8010AE64[playerIndex]] = base->targetX[playerIndex];
+                    actor->state[0] = 4;
                     gMenuChoicePromptState[playerIndex] = 1;
                 }
                 break;
             case 4:
                 if ((gMenuFlowState == 0) && (gMenuChoicePromptState[playerIndex] == 0)) {
-                    actor->state[playerIndex] = 5;
+                    actor->state[0] = 5;
                 }
                 if (gRacePlayers[playerIndex].pad6[2] == 3) {
-                    actor->state[playerIndex] = 7;
+                    stateActor = actor;
+                    stateActor->state[0] = 7;
                 }
                 break;
             case 5:
-                selectedIndex = D_8010AE64[playerIndex];
-                actor->x[playerIndex][selectedIndex] += actor->speed[playerIndex] * actor->direction[playerIndex] * -1;
-                current = actor->x[playerIndex][selectedIndex];
-                target = (selectedIndex * actor->speed[playerIndex]) + actor->baseX[playerIndex];
-                if (((actor->direction[playerIndex] == 1) && (target >= current)) ||
-                    ((actor->direction[playerIndex] == -1) && (current >= target))) {
-                    actor->x[playerIndex][selectedIndex] = target;
-                    actor->state[playerIndex] = 6;
+                base->x[playerIndex][D_8010AE64[playerIndex]] += actor->speed[0] * base->direction[playerIndex] * -1;
+                if (((base->direction[playerIndex] == 1) &&
+                     (((D_8010AE64[playerIndex] * actor->speed[0]) + base->baseX[playerIndex]) >=
+                      base->x[playerIndex][D_8010AE64[playerIndex]])) ||
+                    ((base->direction[playerIndex] == -1) &&
+                     (base->x[playerIndex][D_8010AE64[playerIndex]] >=
+                      ((D_8010AE64[playerIndex] * actor->speed[0]) + base->baseX[playerIndex])))) {
+                    base->x[playerIndex][D_8010AE64[playerIndex]] =
+                        (D_8010AE64[playerIndex] * actor->speed[0]) + base->baseX[playerIndex];
+                    actor->state[0] = 6;
                 }
                 break;
             case 6:
                 i = 0;
-                if ((s32)actor->itemCounts[playerIndex] > 0) {
+                if ((s32)actor->itemCounts[0] > 0) {
+                    countBase = saved;
                     do {
-                        if (i != D_8010AE64[playerIndex]) {
-                            actor->y[playerIndex][i] += 0x20;
+                        if ((i != D_8010AE64[playerIndex]) != 0) {
+                            base->y[playerIndex][i] += 0x20;
                         }
                         i++;
-                    } while (i < (s32)arg0->itemCounts[playerIndex]);
+                    } while (i < (s32)countBase->itemCounts[playerIndex]);
                 }
                 if (D_8010AE64[playerIndex] != 0) {
-                    if (actor->y[playerIndex][0] >= actor->targetY[playerIndex]) {
-                        actor->state[playerIndex] = 1;
+                    if (base->y[playerIndex][0] >= base->targetY[playerIndex]) {
+                        actor->state[0] = 1;
                     }
-                } else if (actor->y[playerIndex][1] >= actor->targetY[playerIndex]) {
-                    actor->state[playerIndex] = 1;
+                } else if (base->y[playerIndex][1] >= base->targetY[playerIndex]) {
+                    actor->state[0] = 1;
                 }
-                if (actor->state[playerIndex] == 1) {
+                if (actor->state[0] == 1) {
                     *(&gMenuTransitionState + (playerIndex * sizeof(CourseSelectRacePlayer))) = 0;
                 }
                 break;
             case 7:
                 if (gMenuFlowState != 0) {
                     i = 0;
-                    if ((s32)actor->itemCounts[playerIndex] > 0) {
+                    if ((s32)actor->itemCounts[0] > 0) {
                         do {
-                            actor->y[playerIndex][i] -= 0x20;
+                            base->y[playerIndex][i] -= 0x20;
                             i++;
-                        } while (i < (s32)actor->itemCounts[playerIndex]);
+                        } while (i < (s32)actor->itemCounts[0]);
                     }
                 } else {
-                    actor->y[playerIndex][D_8010AE64[playerIndex]] -= 0x20;
+                    base->y[playerIndex][D_8010AE64[playerIndex]] -= 0x20;
                 }
-                if (actor->startY[playerIndex] >= actor->y[playerIndex][D_8010AE64[playerIndex]]) {
-                    actor->state[playerIndex] = 8;
+                if (base->startY[playerIndex] >= base->y[playerIndex][D_8010AE64[playerIndex]]) {
+                    actor->state[0] = 8;
                 }
                 break;
             case 9:
-                actor->y[playerIndex][D_8010AE64[playerIndex]] -= 0x20;
-                if (actor->startY[playerIndex] >= actor->y[playerIndex][D_8010AE64[playerIndex]]) {
-                    actor->state[playerIndex] = 0xA;
+                base->y[playerIndex][D_8010AE64[playerIndex]] -= 0x20;
+                if (base->startY[playerIndex] >= base->y[playerIndex][D_8010AE64[playerIndex]]) {
+                    actor->state[0] = 0xA;
                 }
                 break;
             case 11:
-                actor->y[playerIndex][D_8010AE64[playerIndex]] += 0x20;
-                if (actor->y[playerIndex][D_8010AE64[playerIndex]] >= actor->targetY[playerIndex]) {
-                    actor->y[playerIndex][D_8010AE64[playerIndex]] = actor->targetY[playerIndex];
-                    actor->state[playerIndex] = 0xC;
+                base->y[playerIndex][D_8010AE64[playerIndex]] += 0x20;
+                if (base->y[playerIndex][D_8010AE64[playerIndex]] >= base->targetY[playerIndex]) {
+                    base->y[playerIndex][D_8010AE64[playerIndex]] = base->targetY[playerIndex];
+                    actor->state[0] = 0xC;
                 }
                 break;
             case 12:
                 if (gCurrentGameTask->screenState == 4) {
-                    actor->state[playerIndex] = 4;
+                    actor->state[0] = 4;
                 }
+                break;
+            case 13:
                 break;
             }
             playerIndex++;
+            actor = (CourseSelectIconListActor *)((u8 *)actor + 1);
         } while (playerIndex < (s32)gPlayerCount);
     }
 
-    if ((arg0->state[0] == 8) || (arg0->state[0] == 0xD)) {
-        removeCallbackTask(arg0);
+    if ((base->state[0] == 8) || (base->state[0] == 0xD)) {
+        removeCallbackTask(base);
         finishCourseSelectUiTask(3);
         return;
     }
     addRenderCallback(&gMenuRenderCallbackList, (void (*)(CourseSelectWidgetActor *))drawCourseSelectCourseIconList,
-                      (CourseSelectWidgetActor *)arg0);
+                      (CourseSelectWidgetActor *)base);
 }
 #endif
 
