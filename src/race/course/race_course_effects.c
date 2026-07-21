@@ -707,10 +707,6 @@ void initRaceCourseSceneryObjects(RaceCourseRenderEffect *arg0) {
     setCallbackTaskCallback(arg0, updateRaceCourseSceneryObjects);
 }
 
-// renderPatrolCourseObject best match: 99.273% at nonmatchings/renderPatrolCourseObject-8239461464121803931/base_5.c.
-#pragma GLOBAL_ASM("asm/nonmatchings/race/course/race_course_effects/renderPatrolCourseObject.s")
-
-#ifdef NON_MATCHING
 void renderPatrolCourseObject(PatrolCourseObjectEffect *arg0) {
     s32 sine;
     s32 doubleSine;
@@ -730,14 +726,14 @@ void renderPatrolCourseObject(PatrolCourseObjectEffect *arg0) {
                 sine >>= 4;
                 makeFixedRotationY(transform.rotation, arg0->angle + sine + 0x800);
                 transform.basePos.x = arg0->pos.x;
-                transform.basePos.y = (arg0->pos.y + ((doubleSine + 0x1000) << 4)) + 0xA4000;
+                transform.basePos.y = (arg0->pos.y + (((doubleSine + 0x1000) << 2) << 2)) + 0xA4000;
             }
             transform.basePos.z = arg0->pos.z;
             scaleFixedMatrix3sByQuarter(&transform);
             arg0->displayList = allocFixedTransformMatrix(&transform);
         }
 
-        if (((&transform) && (&transform)) && (&transform)) {
+        if ((((&transform) && (&transform)) && (&transform)) & 0xFFFFu) {
         }
 
         if (arg0->displayList != NULL) {
@@ -749,7 +745,6 @@ void renderPatrolCourseObject(PatrolCourseObjectEffect *arg0) {
         }
     }
 }
-#endif
 
 // updatePatrolCourseObject best match: 98.978% at nonmatchings/updatePatrolCourseObject-6934502587000073416/base_14.c.
 #pragma GLOBAL_ASM("asm/nonmatchings/race/course/race_course_effects/updatePatrolCourseObject.s")
