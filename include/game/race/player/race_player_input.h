@@ -175,7 +175,7 @@ typedef struct RacePlayer {
     /* 0x30E */ s16 subStateParam;
     /* 0x310 */ s32 unk310;
     /* 0x314 */ s32 unk314;
-    /* 0x318 */ char pad318[4];
+    /* 0x318 */ s32 unk318;
     /* 0x31C */ s16 unk31C;
     /* 0x31E */ s16 unk31E;
     /* 0x320 */ s16 actionSoundTimer;
@@ -244,7 +244,9 @@ typedef struct RacePlayer {
     /* 0x526 */ char pad526[1];
     /* 0x527 */ s8 surfaceCueOverrideMask;
     /* 0x528 */ s8 unk528;
-    /* 0x529 */ char pad529[3];
+    /* 0x529 */ char pad529[1];
+    /* 0x52A */ s8 unk52A;
+    /* 0x52B */ char pad52B[1];
     /* 0x52C */ s8 actionTriggerCooldown;
     /* 0x52D */ s8 itemTriggerCooldown;
     /* 0x52E */ char pad52E[0x3A];
