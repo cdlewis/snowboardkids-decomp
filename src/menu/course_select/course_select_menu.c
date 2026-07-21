@@ -1070,7 +1070,7 @@ void initCourseSelectCourseDetailsMenu(void) {
     updateCallbackTasks();
 }
 
-// updateCourseSelectCourseDetailsMenu best match: 98.852% (nonmatchings/updateCourseSelectCourseDetailsMenu-7475224831549593718/base_20.c)
+// updateCourseSelectCourseDetailsMenu best match: 99.378% (nonmatchings/updateCourseSelectCourseDetailsMenu-8699393380584516020/base_19.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/course_select/course_select_menu/updateCourseSelectCourseDetailsMenu.s")
 
 #ifdef NON_MATCHING
@@ -1084,24 +1084,26 @@ void updateCourseSelectCourseDetailsMenu(void) {
     s32 heldUp;
     s32 tempSelection;
     register u16 repeat;
+    s32 divisor;
 
     soundId = STICK_UP;
     if ((s32) gCourseDetailsMenuState >= 2) {
         selection = gCourseDetailsMenuSelection;
-        heldUp = gPlayerInputHeld & (soundId | U_JPAD);
+        heldUp = (input = gPlayerInputHeld) & (soundId | U_JPAD);
         oldSelection = selection;
         i = heldUp;
-        if (!i && !((STICK_DOWN | D_JPAD) & gPlayerInputHeld)) {
+        if (!i && !(gPlayerInputHeld & (STICK_DOWN | D_JPAD))) {
             gMenuInputRepeatTimers = 0;
             if (1) {}
             if (1) {}
             if (1) {}
         }
+        divisor = 3;
         if (1) {
         if ((gPlayerInputPressed & (soundId | U_JPAD)) ||
             (heldUp &&
              ((u16) gMenuInputRepeatTimers >= 0xB) &&
-            (((u16) gMenuInputRepeatTimers % 3) == 0))) {
+            (((u16) gMenuInputRepeatTimers % divisor) == ((gPlayerInputHeld & (STICK_DOWN | D_JPAD)) * 0)))) {
             repeat = (u16) gMenuInputRepeatTimers;
             tempSelection = ((u32) selection) - 1;
             if (!repeat) {
@@ -1114,15 +1116,16 @@ void updateCourseSelectCourseDetailsMenu(void) {
             }
         } else {
             repeat = (u16) gMenuInputRepeatTimers;
-            input = gPlayerInputPressed;
-            if ((input & (STICK_DOWN | D_JPAD)) ||
+            if ((gPlayerInputPressed & (STICK_DOWN | D_JPAD)) ||
                 (((STICK_DOWN | D_JPAD) & gPlayerInputHeld) &&
-                 (repeat >= 0xB) && ((repeat % 3) == 0))) {
+                 (repeat >= 0xB) && ((repeat % divisor) == 0))) {
                 if (!repeat) {
                     gMenuInputRepeatTimers = repeat + 1;
                     repeat = (u16) gMenuInputRepeatTimers;
                 }
-                tempSelection = selection + 1;
+                if (1) {
+                    tempSelection = selection + 1;
+                }
                 if (selection < 9) {
                     gCourseDetailsMenuSelection = (u16) tempSelection;
                     selection = (u8) tempSelection;
@@ -1135,7 +1138,8 @@ void updateCourseSelectCourseDetailsMenu(void) {
         if (repeat) {
             repeat += 1;
             gMenuInputRepeatTimers = repeat;
-            if ((((((((repeat & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) == ((0xFFFF & 0xFFFF) & 0xFFFF)) {
+            soundId = (repeat & 0xFFFF) & 0xFFFF;
+            if ((((((soundId & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) == ((0xFFFF & 0xFFFF) & 0xFFFF)) {
                 gMenuInputRepeatTimers = 0xC;
             }
         }
@@ -1154,7 +1158,7 @@ void updateCourseSelectCourseDetailsMenu(void) {
             }
             if ((((u8) gCourseDetailsMenuSelection == 7) || (gMenuExitSelection == 1)) &&
                 (gMenuExitSelection != 2)) {
-                gCourseDetailsMenuState = 3;
+                gCourseDetailsMenuState = divisor;
                 if (gMenuExitSelection == repeat) {
                     gCourseDetailsCloseFromBack = repeat;
                 }
@@ -1165,7 +1169,7 @@ void updateCourseSelectCourseDetailsMenu(void) {
                 if (((u8) gCourseDetailsMenuSelection == 8) || (input == 2)) {
                     setCurrentGameTaskCallback(returnToCourseSelectUnlockCourseList, 0);
                     gMenuExitSelection = 0;
-                    gCurrentGameTask->screenState = 3;
+                    gCurrentGameTask->screenState = divisor;
                 } else if ((u8) gCourseDetailsMenuSelection == 9) {
                     setCurrentGameTaskCallback(returnToCourseSelectModeMenu, 0);
                     gCurrentGameTask->screenState = 9;
