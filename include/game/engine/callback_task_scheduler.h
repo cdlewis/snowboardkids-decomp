@@ -26,7 +26,7 @@ void *createCallbackTaskPreservingArgs(void (*callback)(), u16 type, s32 priorit
 #else
 void *createCallbackTaskPreservingArgs(void (*callback)(), s32 type, s32 priority);
 #endif
-#ifdef NON_MATCHING
+#ifdef CALLBACK_TASK_SCHEDULER_IMPLEMENTATION
 void *createCallbackTask(void (*callback)(), u16 type, s32 priority);
 #else
 void *createCallbackTask(void (*callback)(), s32 type, s32 priority);
