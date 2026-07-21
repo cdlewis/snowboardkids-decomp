@@ -374,7 +374,7 @@ void drawMenuSpriteWithAlpha(s16 arg0, s16 arg1, s32 arg2, u16 arg3, u16 arg4, u
                   temp_v1 = (s16)(gMenuViewportHeight / 2), temp_v0, temp_v1);
 }
 
-// drawMenuSpriteWithAlphaClipped best match: 90.399% (nonmatchings/drawMenuSpriteWithAlphaClipped-1219509448159986855/base_21.c)
+// drawMenuSpriteWithAlphaClipped best match: 91.212% (nonmatchings/drawMenuSpriteWithAlphaClipped-1219509448159986855/base_35.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/renderer/menu_renderer/drawMenuSpriteWithAlphaClipped.s")
 
 #ifdef NON_MATCHING
@@ -467,7 +467,7 @@ void drawMenuSpriteWithAlphaClipped(s16 x, s16 y, FontAsset *asset, u16 tileInde
                 bottom = maxY - 4;
             }
 
-            if (paletteArg == 0) {
+            if (paletteArg == (texture->imageOffset * 0)) {
                 palette = texture->paletteIndex;
             } else {
                 palette = paletteArg - 1;
@@ -486,7 +486,7 @@ void drawMenuSpriteWithAlphaClipped(s16 x, s16 y, FontAsset *asset, u16 tileInde
             gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, paletteBase + (palette * 0x20));
             palette = 0x8000 / scaleXValue;
             gSPTextureRectangle(gRegionAllocPtr++, left, top, right, bottom, 0, texS, texT,
-                                (u16)(palette * flipS), (u16)((0x8000 / scaleYValue) * flipT));
+                                (u16)(palette * flipS), (u16)((u16)(0x8000 / scaleYValue) * flipT));
             if (alpha != 0x100) {
                 gSPDisplayList(gRegionAllocPtr++, gMenuRenderModeResetDl);
             }
