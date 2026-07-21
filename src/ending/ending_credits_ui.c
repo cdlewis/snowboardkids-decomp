@@ -59,33 +59,31 @@ void updateEndingCreditsTheEndTextFadeIn(EndingCreditsPageTextActor *arg0);
 void updateEndingCreditsPageText(EndingCreditsPageTextActor *arg0);
 void updateEndingObjectSpriteDebugViewer(EndingObjectSpriteDebugViewerActor *arg0);
 
-// drawEndingCreditsPageText best match: 96.103% (nonmatchings/drawEndingCreditsPageText-1189375296343516052/base_26.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/ending/ending_credits_ui/drawEndingCreditsPageText.s")
-
-#ifdef NON_MATCHING
 void drawEndingCreditsPageText(EndingCreditsPageTextActor *arg0) {
     register s32 lineCount;
     s32 lineIndex;
     s32 scriptIndex;
     s32 lineLength;
     s32 positionIndex;
-    register s16 x;
+    s16 alpha;
+    s16 x;
     s32 y;
     u16 lineText[0x1C];
     u16 pad[6];
+    EndingCreditsPageTextPosition *position;
+    EndingCreditsPageTextLineLayout *layout;
     volatile u16 colorMode;
     u16 glyph;
-    EndingCreditsPageTextLineLayout *layout;
-    EndingCreditsPageTextPosition *position;
 
     lineCount = (&gEndingCreditsPageTextLineLayouts[arg0->pageIndex])->count;
     lineIndex = 0;
+    if (!position->y) {
+    }
     if (lineCount > 0) {
         scriptIndex = 0;
         positionIndex = 0;
         do {
-            layout = &gEndingCreditsPageTextLineLayouts[arg0->pageIndex];
-            lineIndex++;
+            layout = &gEndingCreditsPageTextLineLayouts[y = arg0->pageIndex];
             position = &layout->positions[positionIndex];
             x = position->x;
             glyph = gEndingCreditsPageTextScripts[arg0->pageIndex][scriptIndex];
@@ -101,18 +99,25 @@ void drawEndingCreditsPageText(EndingCreditsPageTextActor *arg0) {
                     }
                     lineLength++;
                 } while (gEndingCreditsPageTextScripts[arg0->pageIndex][scriptIndex] != 0xFFFF);
+                if (!x) {
+                }
                 if (!lineCount) {
                 }
             }
             lineText[lineLength] = 0xFFFF;
+            alpha = 0xFFFF;
             scriptIndex++;
-            drawMenuGlyphScript((x << 16) >> 16, y, (u8 *)lineText, (((0 & 0xFFFFu) & 0xFFFFu) & 0xFFFFu) & 0xFFFFu,
-                                arg0->alpha, colorMode);
+            drawMenuGlyphScript((x << 16) >> 16, y, (u8 *)lineText,
+                                (((0 & 0xFFFFu) & 0xFFFFu) & 0xFFFFu) & 0xFFFFu, arg0->alpha, colorMode & alpha);
+            if (((!arg0) && (!arg0)) && (!arg0)) {
+            }
+            lineIndex++;
             positionIndex++;
         } while (lineIndex != lineCount);
+        if (x) {
+        }
     }
 }
-#endif
 
 void drawEndingCreditsTheEndText(EndingCreditsPageTextActor *arg0) {
     drawMenuSpriteWithAlpha(arg0->x, arg0->y, getRelocatableHeapBlockBase(gAssetHandles[0x21]), 0x35, 0x20, 0x20, 0,
