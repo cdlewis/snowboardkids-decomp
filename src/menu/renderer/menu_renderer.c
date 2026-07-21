@@ -495,18 +495,18 @@ void drawMenuSpriteWithAlphaClipped(s16 x, s16 y, FontAsset *asset, u16 tileInde
 }
 #endif
 
-// drawMenuSpriteWithPaletteScale best match: 79.337% (nonmatchings/drawMenuSpriteWithPaletteScale-1219509448159986855/base.c)
+// drawMenuSpriteWithPaletteScale best match: 80.428% (nonmatchings/drawMenuSpriteWithPaletteScale-1219509448159986855/base_20.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/renderer/menu_renderer/drawMenuSpriteWithPaletteScale.s")
 
 #ifdef NON_MATCHING
-void drawMenuSpriteWithPaletteScale(s16 x, s16 y, FontAsset *asset, u16 index, s32 intensity) {
+void drawMenuSpriteWithPaletteScale(s16 x, s16 y, FontAsset *asset, u16 index, u16 intensity) {
     FontTexture *texture;
     u8 *textureEntryBase;
     u8 *paletteBase;
     u16 *srcPalette;
     u16 *scaledPalette;
-    u16 color;
-    u16 intensityScale;
+    u16 paletteColor;
+    s32 color;
     s32 i;
     s32 drawLeft;
     s32 drawTop;
@@ -522,13 +522,12 @@ void drawMenuSpriteWithPaletteScale(s16 x, s16 y, FontAsset *asset, u16 index, s
     s32 sourceX;
     s32 sourceY;
     s32 red;
-    s32 green;
-    s32 blue;
+    u16 green;
+    u16 blue;
 
     headerSize = sizeof(FontAssetHeader);
     textureEntryBase = (u8 *)asset + (index * sizeof(FontTexture));
     texture = (FontTexture *)(textureEntryBase + headerSize);
-    intensityScale = intensity;
     paletteBase = (u8 *)asset + headerSize + (asset->header.entryCount * sizeof(FontTexture));
     drawLeft = x + gMenuViewportCenterX;
     drawTop = y + gMenuViewportCenterY;
@@ -576,12 +575,16 @@ void drawMenuSpriteWithPaletteScale(s16 x, s16 y, FontAsset *asset, u16 index, s
                 srcPalette = (u16 *)(paletteBase + (texture->paletteIndex * 0x20));
                 scaledPalette = allocMenuRenderScratch(MENU_PALETTE_COLOR_COUNT * sizeof(u16));
                 for (i = 0; i != MENU_PALETTE_COLOR_COUNT; i++) {
-                    color = srcPalette[i];
-                    scaledPalette[i] = color;
+                    paletteColor = srcPalette[i];
+                    color = paletteColor & 0xFFFF;
+                    scaledPalette[i] = paletteColor;
                     if (color & MENU_RGBA5551_ALPHA_BIT) {
-                        red = (((color >> 11) & MENU_RGBA5551_CHANNEL_MASK) * intensityScale) / 256;
-                        green = (((color >> 6) & MENU_RGBA5551_CHANNEL_MASK) * intensityScale) / 256;
-                        blue = (((color >> 1) & MENU_RGBA5551_CHANNEL_MASK) * intensityScale) / 256;
+                        red = (color >> 11) & MENU_RGBA5551_CHANNEL_MASK;
+                        green = (color >> 6) & MENU_RGBA5551_CHANNEL_MASK;
+                        blue = (color >> 1) & MENU_RGBA5551_CHANNEL_MASK;
+                        red = (red * intensity) / 256;
+                        green = (green * intensity) / 256;
+                        blue = (blue * intensity) / 256;
                         scaledPalette[i] = (red << 11) | (green << 6) | (blue << 1) | MENU_RGBA5551_ALPHA_BIT;
                     }
                 }
