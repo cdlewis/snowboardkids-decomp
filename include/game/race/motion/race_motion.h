@@ -15,7 +15,7 @@ void resolveRaceCourseSurfaceCollisionWithNormal(s32 surfaceIndex, s32 x, s32 z,
 void resolveRaceCourseSurfaceCollisionWithVelocity(s32 surfaceIndex, s32 x, s32 z, s32 radius, s32 *pushX,
                   s32 *pushZ, s32 *velocityX, s32 *velocityZ);
 void pushRaceCourseSurfaceBoundary(s32 radius);
-void resolveRaceCourseSurfaceCollision(s16 surfaceIndex, s32 x, s32 z, s32 radius, s32 *pushX, s32 *pushZ);
+void resolveRaceCourseSurfaceCollision(s32 surfaceIndex, s32 x, s32 z, s32 radius, s32 *pushX, s32 *pushZ);
 s32 getRaceCourseSurfaceHeight(s32 surfaceIndex, s32 x, s32 z);
 s32 getRaceCourseSurfaceType(s32 surfaceIndex, s32 x, s32 z);
 u32 projectRaceCourseSurfaceProgress(s32 surfaceIndex, s32 x, s32 z);

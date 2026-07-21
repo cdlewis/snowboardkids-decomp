@@ -619,13 +619,31 @@ void pushRaceCourseSurfaceBoundary(s32 arg0) {
     }
 }
 
-// resolveRaceCourseSurfaceCollision best match: 74.835% (base_3.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race/motion/race_motion/resolveRaceCourseSurfaceCollision.s")
+#define CLAMP_RACE_COURSE_SURFACE_COLLISION_TO_ENDPOINT(pointX, pointZ)                          \
+    do {                                                                                         \
+        deltaX = gRaceCourseCollisionAdjustedX - (pointX);                                       \
+        side = gRaceCourseCollisionAdjustedZ - (pointZ);                                         \
+        length = integerSquareRoot64((s64)deltaX * deltaX + (s64)side * side);                    \
+        if (length < radius) {                                                                    \
+            alongEdge = ((s64)deltaX * radius) / length;                                          \
+            side = ((s64)side * radius) / length;                                                 \
+            gRaceCourseCollisionAdjustedX = alongEdge + (pointX);                                \
+            gRaceCourseCollisionAdjustedZ = side + (pointZ);                                     \
+        }                                                                                        \
+    } while (0)
 
-#ifdef NON_MATCHING
-void resolveRaceCourseSurfaceCollision(s16 arg0, s32 arg1, s32 arg2, s32 arg3, s32 *arg4, s32 *arg5) {
-    RaceMotionSurface *keyframe;
-    s32 keyframeOffset;
+#define PUSH_RACE_COURSE_SURFACE_COLLISION_FROM_EDGE()                                           \
+    do {                                                                                         \
+        if (-radius < side) {                                                                    \
+            gRaceCourseCollisionEdgeDeltaZ = -radius - side;                                     \
+            gRaceCourseCollisionAdjustedX +=                                                     \
+                ((s64)-normalX * gRaceCourseCollisionEdgeDeltaZ) / 0x1000;                       \
+            gRaceCourseCollisionAdjustedZ +=                                                     \
+                ((s64)tangentX * gRaceCourseCollisionEdgeDeltaZ) / 0x1000;                       \
+        }                                                                                        \
+    } while (0)
+
+void resolveRaceCourseSurfaceCollision(s32 surfaceIndex, s32 x, s32 z, s32 radius, s32 *pushX, s32 *pushZ) {
     s32 x0;
     s32 x1;
     s32 x2;
@@ -634,147 +652,108 @@ void resolveRaceCourseSurfaceCollision(s16 arg0, s32 arg1, s32 arg2, s32 arg3, s
     s32 z1;
     s32 z2;
     s32 z3;
+    s32 normalX;
+    s32 tangentX;
     s32 length;
-    s32 nx;
-    s32 nz;
-    s32 along;
+    s32 alongEdge;
     s32 side;
     s32 edgeLength;
     s32 deltaX;
-    s32 deltaZ;
-    s32 dist;
-    u16 flags;
+    s32 surfaceOffset;
 
-    keyframe = &gRaceCourseSurfaces[arg0];
-    x0 = gRaceCourseSurfaceCoords[keyframe->coordIndices[0]].x << 0x11;
-    x1 = gRaceCourseSurfaceCoords[keyframe->coordIndices[1]].x << 0x11;
-    x2 = gRaceCourseSurfaceCoords[keyframe->coordIndices[2]].x << 0x11;
-    x3 = gRaceCourseSurfaceCoords[keyframe->coordIndices[3]].x << 0x11;
-    z0 = gRaceCourseSurfaceCoords[keyframe->coordIndices[0]].z << 0x11;
-    z1 = gRaceCourseSurfaceCoords[keyframe->coordIndices[1]].z << 0x11;
-    z2 = gRaceCourseSurfaceCoords[keyframe->coordIndices[2]].z << 0x11;
-    z3 = gRaceCourseSurfaceCoords[keyframe->coordIndices[3]].z << 0x11;
+    surfaceOffset = surfaceIndex * sizeof(RaceMotionSurface);
+    x0 = gRaceCourseSurfaceCoords[gRaceCourseSurfaces[surfaceIndex].coordIndices[0]].x << 0x11;
+    x1 = gRaceCourseSurfaceCoords[gRaceCourseSurfaces[surfaceIndex].coordIndices[1]].x << 0x11;
+    x2 = gRaceCourseSurfaceCoords[gRaceCourseSurfaces[surfaceIndex].coordIndices[2]].x << 0x11;
+    x3 = gRaceCourseSurfaceCoords[gRaceCourseSurfaces[surfaceIndex].coordIndices[3]].x << 0x11;
+    z0 = gRaceCourseSurfaceCoords[gRaceCourseSurfaces[surfaceIndex].coordIndices[0]].z << 0x11;
+    z1 = gRaceCourseSurfaceCoords[gRaceCourseSurfaces[surfaceIndex].coordIndices[1]].z << 0x11;
+    z2 = gRaceCourseSurfaceCoords[gRaceCourseSurfaces[surfaceIndex].coordIndices[2]].z << 0x11;
+    z3 = gRaceCourseSurfaceCoords[gRaceCourseSurfaces[surfaceIndex].coordIndices[3]].z << 0x11;
 
-    gRaceCourseCollisionAdjustedX = arg1;
-    gRaceCourseCollisionAdjustedZ = arg2;
-    keyframeOffset = arg0 * sizeof(RaceMotionSurface);
+    gRaceCourseCollisionAdjustedX = x;
+    gRaceCourseCollisionAdjustedZ = z;
 
-    if (keyframe->nextFaceIndices[0] < 0) {
+    if (gRaceCourseSurfaces[surfaceIndex].nextFaceIndices[0] < 0) {
         gRaceCourseCollisionEdgeDeltaX = x1 - x0;
         gRaceCourseCollisionEdgeDeltaZ = z1 - z0;
-        gRaceCourseCollisionDeltaX = arg1 - x0;
-        gRaceCourseCollisionDeltaZ = arg2 - z0;
-        pushRaceCourseSurfaceBoundary(arg3);
-        keyframe = (RaceMotionSurface *)((s32)gRaceCourseSurfaces + keyframeOffset);
+        gRaceCourseCollisionDeltaX = x - x0;
+        gRaceCourseCollisionDeltaZ = z - z0;
+        pushRaceCourseSurfaceBoundary(radius);
     }
 
-    if (keyframe->nextFaceIndices[1] < 0) {
+    if (gRaceCourseSurfaces[surfaceIndex].nextFaceIndices[1] < 0) {
         gRaceCourseCollisionEdgeDeltaX = x2 - x3;
         gRaceCourseCollisionEdgeDeltaZ = z2 - z3;
         gRaceCourseCollisionDeltaX = gRaceCourseCollisionAdjustedX - x3;
         gRaceCourseCollisionDeltaZ = gRaceCourseCollisionAdjustedZ - z3;
-        pushRaceCourseSurfaceBoundary(arg3);
-        keyframe = (RaceMotionSurface *)((s32)gRaceCourseSurfaces + keyframeOffset);
+        pushRaceCourseSurfaceBoundary(radius);
     }
 
-    if (keyframe->unk4[0] < 0) {
+    if (gRaceCourseSurfaces[surfaceIndex].unk4[0] < 0) {
         gRaceCourseCollisionEdgeDeltaX = x3 - x1;
         gRaceCourseCollisionEdgeDeltaZ = z3 - z1;
         gRaceCourseCollisionDeltaX = gRaceCourseCollisionAdjustedX - x1;
         gRaceCourseCollisionDeltaZ = gRaceCourseCollisionAdjustedZ - z1;
 
-        length = integerSquareRoot64((s64)gRaceCourseCollisionEdgeDeltaX * gRaceCourseCollisionEdgeDeltaX + (s64)gRaceCourseCollisionEdgeDeltaZ * gRaceCourseCollisionEdgeDeltaZ);
-        nx = ((s64)gRaceCourseCollisionEdgeDeltaZ * 0x1000) / length;
-        nz = ((s64)gRaceCourseCollisionEdgeDeltaX * 0x1000) / length;
-        along = ((s64)nz * gRaceCourseCollisionDeltaX + (s64)nx * gRaceCourseCollisionDeltaZ) / 0x1000;
-        side = ((s64)-nx * gRaceCourseCollisionDeltaX + (s64)nz * gRaceCourseCollisionDeltaZ) / 0x1000;
-        edgeLength = ((s64)nz * gRaceCourseCollisionEdgeDeltaX + (s64)nx * gRaceCourseCollisionEdgeDeltaZ) / 0x1000;
-        flags = ((RaceMotionSurface *)((s32)gRaceCourseSurfaces + keyframeOffset))->unk14[3];
-
-        if ((flags & 2) && (along < 0)) {
-            deltaX = gRaceCourseCollisionAdjustedX - x1;
-            deltaZ = gRaceCourseCollisionAdjustedZ - z1;
-            dist = integerSquareRoot64((s64)deltaX * deltaX + (s64)deltaZ * deltaZ);
-            if (dist < arg3) {
-                gRaceCourseCollisionAdjustedX = (((s64)deltaX * arg3) / dist) + x1;
-                gRaceCourseCollisionAdjustedZ = (((s64)deltaZ * arg3) / dist) + z1;
-            }
-            keyframe = (RaceMotionSurface *)((s32)gRaceCourseSurfaces + keyframeOffset);
+        length = integerSquareRoot64((s64)gRaceCourseCollisionEdgeDeltaX * gRaceCourseCollisionEdgeDeltaX +
+                                     (s64)gRaceCourseCollisionEdgeDeltaZ * gRaceCourseCollisionEdgeDeltaZ);
+        if (surfaceOffset) {
+        }
+        normalX = ((s64)gRaceCourseCollisionEdgeDeltaZ * 0x1000) / length;
+        tangentX = ((s64)gRaceCourseCollisionEdgeDeltaX * 0x1000) / length;
+        alongEdge = ((s64)tangentX * gRaceCourseCollisionDeltaX +
+                     (s64)normalX * gRaceCourseCollisionDeltaZ) /
+                    0x1000;
+        side = ((s64)-normalX * gRaceCourseCollisionDeltaX +
+                (s64)tangentX * gRaceCourseCollisionDeltaZ) /
+               0x1000;
+        edgeLength = ((s64)tangentX * gRaceCourseCollisionEdgeDeltaX +
+                      (s64)normalX * gRaceCourseCollisionEdgeDeltaZ) /
+                     0x1000;
+        if ((gRaceCourseSurfaces[surfaceIndex].unk14[3] & 2) && (alongEdge < 0)) {
+            CLAMP_RACE_COURSE_SURFACE_COLLISION_TO_ENDPOINT(x1, z1);
+        } else if ((gRaceCourseSurfaces[surfaceIndex].unk14[3] & 8) && (edgeLength < alongEdge)) {
+            CLAMP_RACE_COURSE_SURFACE_COLLISION_TO_ENDPOINT(x3, z3);
         } else {
-            if (flags & 8) {
-                if (edgeLength < along) {
-                    deltaX = gRaceCourseCollisionAdjustedX - x3;
-                    deltaZ = gRaceCourseCollisionAdjustedZ - z3;
-                    dist = integerSquareRoot64((s64)deltaX * deltaX + (s64)deltaZ * deltaZ);
-                    if (dist < arg3) {
-                        gRaceCourseCollisionAdjustedX = (((s64)deltaX * arg3) / dist) + x3;
-                        gRaceCourseCollisionAdjustedZ = (((s64)deltaZ * arg3) / dist) + z3;
-                    }
-                    keyframe = (RaceMotionSurface *)((s32)gRaceCourseSurfaces + keyframeOffset);
-                } else if (-arg3 < side) {
-                    gRaceCourseCollisionEdgeDeltaZ = -arg3 - side;
-                    gRaceCourseCollisionAdjustedX += ((s64)-nx * gRaceCourseCollisionEdgeDeltaZ) / 0x1000;
-                    gRaceCourseCollisionAdjustedZ += ((s64)nz * gRaceCourseCollisionEdgeDeltaZ) / 0x1000;
-                    keyframe = (RaceMotionSurface *)((s32)gRaceCourseSurfaces + keyframeOffset);
-                }
-            } else if (-arg3 < side) {
-                gRaceCourseCollisionEdgeDeltaZ = -arg3 - side;
-                gRaceCourseCollisionAdjustedX += ((s64)-nx * gRaceCourseCollisionEdgeDeltaZ) / 0x1000;
-                gRaceCourseCollisionAdjustedZ += ((s64)nz * gRaceCourseCollisionEdgeDeltaZ) / 0x1000;
-                keyframe = (RaceMotionSurface *)((s32)gRaceCourseSurfaces + keyframeOffset);
-            }
+            PUSH_RACE_COURSE_SURFACE_COLLISION_FROM_EDGE();
         }
     }
 
-    if (keyframe->unk4[1] < 0) {
+    if (gRaceCourseSurfaces[surfaceIndex].unk4[1] < 0) {
         gRaceCourseCollisionEdgeDeltaX = x0 - x2;
         gRaceCourseCollisionEdgeDeltaZ = z0 - z2;
         gRaceCourseCollisionDeltaX = gRaceCourseCollisionAdjustedX - x2;
         gRaceCourseCollisionDeltaZ = gRaceCourseCollisionAdjustedZ - z2;
 
-        length = integerSquareRoot64((s64)gRaceCourseCollisionEdgeDeltaX * gRaceCourseCollisionEdgeDeltaX + (s64)gRaceCourseCollisionEdgeDeltaZ * gRaceCourseCollisionEdgeDeltaZ);
-        nx = ((s64)gRaceCourseCollisionEdgeDeltaZ * 0x1000) / length;
-        nz = ((s64)gRaceCourseCollisionEdgeDeltaX * 0x1000) / length;
-        along = ((s64)nz * gRaceCourseCollisionDeltaX + (s64)nx * gRaceCourseCollisionDeltaZ) / 0x1000;
-        side = ((s64)-nx * gRaceCourseCollisionDeltaX + (s64)nz * gRaceCourseCollisionDeltaZ) / 0x1000;
-        edgeLength = ((s64)nz * gRaceCourseCollisionEdgeDeltaX + (s64)nx * gRaceCourseCollisionEdgeDeltaZ) / 0x1000;
-        flags = ((RaceMotionSurface *)((s32)gRaceCourseSurfaces + keyframeOffset))->unk14[3];
-
-        if ((flags & 4) && (along < 0)) {
-            deltaX = gRaceCourseCollisionAdjustedX - x2;
-            deltaZ = gRaceCourseCollisionAdjustedZ - z2;
-            dist = integerSquareRoot64((s64)deltaX * deltaX + (s64)deltaZ * deltaZ);
-            if (dist < arg3) {
-                gRaceCourseCollisionAdjustedX = (((s64)deltaX * arg3) / dist) + x2;
-                gRaceCourseCollisionAdjustedZ = (((s64)deltaZ * arg3) / dist) + z2;
-            }
+        length = integerSquareRoot64((s64)gRaceCourseCollisionEdgeDeltaX * gRaceCourseCollisionEdgeDeltaX +
+                                     (s64)gRaceCourseCollisionEdgeDeltaZ * gRaceCourseCollisionEdgeDeltaZ);
+        normalX = ((s64)gRaceCourseCollisionEdgeDeltaZ * 0x1000) / length;
+        tangentX = ((s64)gRaceCourseCollisionEdgeDeltaX * 0x1000) / length;
+        alongEdge = ((s64)tangentX * gRaceCourseCollisionDeltaX +
+                     (s64)normalX * gRaceCourseCollisionDeltaZ) /
+                    0x1000;
+        side = ((s64)-normalX * gRaceCourseCollisionDeltaX +
+                (s64)tangentX * gRaceCourseCollisionDeltaZ) /
+               0x1000;
+        edgeLength = ((s64)tangentX * gRaceCourseCollisionEdgeDeltaX +
+                      (s64)normalX * gRaceCourseCollisionEdgeDeltaZ) /
+                     0x1000;
+        if ((gRaceCourseSurfaces[surfaceIndex].unk14[3] & 4) && (alongEdge < 0)) {
+            CLAMP_RACE_COURSE_SURFACE_COLLISION_TO_ENDPOINT(x2, z2);
+        } else if ((gRaceCourseSurfaces[surfaceIndex].unk14[3] & 1) && (edgeLength < alongEdge)) {
+            CLAMP_RACE_COURSE_SURFACE_COLLISION_TO_ENDPOINT(x0, z0);
         } else {
-            if (flags & 1) {
-                if (edgeLength < along) {
-                    deltaX = gRaceCourseCollisionAdjustedX - x0;
-                    deltaZ = gRaceCourseCollisionAdjustedZ - z0;
-                    dist = integerSquareRoot64((s64)deltaX * deltaX + (s64)deltaZ * deltaZ);
-                    if (dist < arg3) {
-                        gRaceCourseCollisionAdjustedX = (((s64)deltaX * arg3) / dist) + x0;
-                        gRaceCourseCollisionAdjustedZ = (((s64)deltaZ * arg3) / dist) + z0;
-                    }
-                } else if (-arg3 < side) {
-                    gRaceCourseCollisionEdgeDeltaZ = -arg3 - side;
-                    gRaceCourseCollisionAdjustedX += ((s64)-nx * gRaceCourseCollisionEdgeDeltaZ) / 0x1000;
-                    gRaceCourseCollisionAdjustedZ += ((s64)nz * gRaceCourseCollisionEdgeDeltaZ) / 0x1000;
-                }
-            } else if (-arg3 < side) {
-                gRaceCourseCollisionEdgeDeltaZ = -arg3 - side;
-                gRaceCourseCollisionAdjustedX += ((s64)-nx * gRaceCourseCollisionEdgeDeltaZ) / 0x1000;
-                gRaceCourseCollisionAdjustedZ += ((s64)nz * gRaceCourseCollisionEdgeDeltaZ) / 0x1000;
-            }
+            PUSH_RACE_COURSE_SURFACE_COLLISION_FROM_EDGE();
         }
     }
 
-    *arg4 = gRaceCourseCollisionAdjustedX - arg1;
-    *arg5 = gRaceCourseCollisionAdjustedZ - arg2;
+    *pushX = gRaceCourseCollisionAdjustedX - x;
+    *pushZ = gRaceCourseCollisionAdjustedZ - z;
 }
-#endif
+
+#undef CLAMP_RACE_COURSE_SURFACE_COLLISION_TO_ENDPOINT
+#undef PUSH_RACE_COURSE_SURFACE_COLLISION_FROM_EDGE
 
 // getRaceCourseSurfaceHeight best match: 99.786% (nonmatchings/getRaceCourseSurfaceHeight-6934502587000073416/base_28.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race/motion/race_motion/getRaceCourseSurfaceHeight.s")
