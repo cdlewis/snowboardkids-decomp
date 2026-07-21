@@ -90,63 +90,8 @@ extern u32 gRaceGhostPlayerModelPart10DisplayLists[RACE_PLAYER_MODEL_RENDERER_TE
 extern u32 gRaceGhostPlayerModelPart11DisplayLists[RACE_PLAYER_MODEL_RENDERER_TEXTURE_VARIANTS];
 extern u32 gRaceGhostPlayerModelPart12DisplayLists[RACE_PLAYER_MODEL_RENDERER_TEXTURE_VARIANTS];
 
-#ifdef NON_MATCHING
-static void racePlayerModelAppendGfx(u32 w0, u32 w1) {
-    Gfx *gfx = gRegionAllocPtr;
-
-    gRegionAllocPtr = gfx + 1;
-    gfx->words.w0 = w0;
-    gfx->words.w1 = w1;
-}
-
-static void racePlayerModelLoadAssetTexture(void *asset, u16 textureIndex, u32 segmentAddress) {
-    void *image;
-    void *palette;
-
-    racePlayerModelAppendGfx(0xE7000000, 0);
-    racePlayerModelAppendGfx(0xBC000806, (u32)getRelocatableHeapBlockBase(gAssetHandles[0xC]));
-    racePlayerModelAppendGfx(0x01020040, (u32)asset);
-    getAssetTableImageAndPalette((void *)getRelocatableHeapBlockBase(gAssetHandles[0xD]), textureIndex, &image, &palette);
-    racePlayerModelAppendGfx(0xFD500000, (u32)image);
-    racePlayerModelAppendGfx(0xF5500000, 0x07080200);
-    racePlayerModelAppendGfx(0xE6000000, 0);
-    racePlayerModelAppendGfx(0xF3000000, 0x073FF200);
-    racePlayerModelAppendGfx(0xE7000000, 0);
-    racePlayerModelAppendGfx(0xF5400800, 0x00080200);
-    racePlayerModelAppendGfx(0xF2000000, 0x000FC0FC);
-    racePlayerModelAppendGfx(0xFD100000, (u32)palette);
-    racePlayerModelAppendGfx(0xE8000000, 0);
-    racePlayerModelAppendGfx(0xF5000100, 0x07000000);
-    racePlayerModelAppendGfx(0xE6000000, 0);
-    racePlayerModelAppendGfx(0xF0000000, 0x0703C000);
-    racePlayerModelAppendGfx(0xE7000000, 0);
-    racePlayerModelAppendGfx(0x06000000, segmentAddress);
-}
-
-static void racePlayerModelDrawParts(RacePlayerModelRenderState *player, u32 *textures[RACE_PLAYER_MODEL_RENDERER_PART_COUNT]) {
-    s32 i;
-
-    racePlayerModelAppendGfx(0xE7000000, 0);
-    racePlayerModelAppendGfx(0xBC000806, (u32)getRelocatableHeapBlockBase(gAssetHandles[player->playerIndex + 0xE]));
-    racePlayerModelAppendGfx(0xBC000C06, (u32)getRelocatableHeapBlockBase(gAssetHandles[player->playerIndex + 0x12]));
-
-    for (i = 0; i < RACE_PLAYER_MODEL_RENDERER_PART_COUNT; i++) {
-        racePlayerModelAppendGfx(0x01020040, (u32)player->partVtx[i + 1]);
-        racePlayerModelAppendGfx(0x06000000, textures[i][player->textureSet]);
-    }
-}
-
-#define racePlayerModelAppendGfx(cmd0, cmd1) \
-    (gfx = gRegionAllocPtr, gRegionAllocPtr = gfx + 1, gfx->words.w0 = (cmd0), gfx->words.w1 = (cmd1))
-
 void drawRacePlayerGroundShadow(RacePlayerModelRenderState *player) {
-    s32 posOffset;
-    u8 vtxOffset;
-    s32 vtxFlagOffset;
-    s32 endOffset;
-    u8 *point;
-    RacePlayerShadowVtx *vtx;
-    Gfx *gfx;
+    s32 i;
 
     if (gRenderMatricesDirty != 0) {
         player->flags &= ~RACE_PLAYER_MODEL_RENDERER_FLAG_SHADOW_READY;
@@ -155,30 +100,16 @@ void drawRacePlayerGroundShadow(RacePlayerModelRenderState *player) {
             return;
         }
 
-        vtxOffset = 0;
-        posOffset = 0;
-        point = (u8 *)player;
-        endOffset = 0x30;
-        do {
-            ((RacePlayerShadowVtx *)((u8 *)player->shadowVtx + vtxOffset))->x =
-                (((RacePlayerModelRenderState *)point)->shadowPoints[0].x - player->shadowPoints[0].x) >> 14;
-            ((RacePlayerShadowVtx *)((u8 *)player->shadowVtx + vtxOffset))->y =
-                (((RacePlayerModelRenderState *)point)->shadowPoints[0].y - player->shadowPoints[0].y) >> 14;
-            ((RacePlayerShadowVtx *)((u8 *)player->shadowVtx + vtxOffset))->z =
-                (((RacePlayerModelRenderState *)point)->shadowPoints[0].z - player->shadowPoints[0].z) >> 14;
-            posOffset += sizeof(Vec3i);
-            vtxFlagOffset = vtxOffset;
-            ((RacePlayerShadowVtx *)((u8 *)player->shadowVtx + vtxFlagOffset))->flag = 0;
-            point += sizeof(Vec3i);
-            ((RacePlayerShadowVtx *)((u8 *)player->shadowVtx + vtxOffset))->r = 0;
-            ((RacePlayerShadowVtx *)((u8 *)player->shadowVtx + vtxOffset))->g = 0;
-            ((RacePlayerShadowVtx *)((u8 *)player->shadowVtx + vtxOffset))->b = 0;
-            vtx = (RacePlayerShadowVtx *)((u8 *)player->shadowVtx + vtxOffset);
-            if (1) {
-                vtxOffset += sizeof(RacePlayerShadowVtx);
-            }
-            vtx->a = 0x30;
-        } while (posOffset != endOffset);
+        for (i = 0; i < RACE_PLAYER_MODEL_RENDERER_PLAYER_COUNT; i++) {
+            player->shadowVtx[i].x = (player->shadowPoints[i].x - player->shadowPoints[0].x) >> 14;
+            player->shadowVtx[i].y = (player->shadowPoints[i].y - player->shadowPoints[0].y) >> 14;
+            player->shadowVtx[i].z = (player->shadowPoints[i].z - player->shadowPoints[0].z) >> 14;
+            player->shadowVtx[i].flag = 0;
+            player->shadowVtx[i].r = 0;
+            player->shadowVtx[i].g = 0;
+            player->shadowVtx[i].b = 0;
+            player->shadowVtx[i].a = 0x30;
+        }
 
         player->shadowMtx = allocMenuRenderScratch(0x100);
         if (player->shadowMtx == NULL) {
@@ -198,18 +129,13 @@ void drawRacePlayerGroundShadow(RacePlayerModelRenderState *player) {
 
     if (isPositionNearCurrentRaceViewportCamera(player->shadowPoints) != 0
         && (player->flags & RACE_PLAYER_MODEL_RENDERER_FLAG_SHADOW_READY) != 0) {
-        racePlayerModelAppendGfx(0x06000000, (u32)gRacePlayerShadowRenderSetupDisplayList);
-        racePlayerModelAppendGfx(0x01020040, (u32)player->shadowMtx);
-        racePlayerModelAppendGfx(0x0400103F, (u32)player->shadowVtx);
-        racePlayerModelAppendGfx(0xB1020604, 0x00020400);
-        racePlayerModelAppendGfx(0xB1040602, 0x00040200);
+        gSPDisplayList(gRegionAllocPtr++, gRacePlayerShadowRenderSetupDisplayList);
+        gSPMatrix(gRegionAllocPtr++, (Mtx *)player->shadowMtx, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+        gSPVertex(gRegionAllocPtr++, (Vtx *)player->shadowVtx, RACE_PLAYER_MODEL_RENDERER_PLAYER_COUNT, 0);
+        gSP1Quadrangle(gRegionAllocPtr++, 1, 3, 2, 0, 0);
+        gSP1Quadrangle(gRegionAllocPtr++, 2, 3, 1, 0, 0);
     }
 }
-#undef racePlayerModelAppendGfx
-#else
-// drawRacePlayerGroundShadow best match: 98.644% (base_3.c, 236 differences)
-#pragma GLOBAL_ASM("asm/nonmatchings/race/player/race_player_model_renderer/drawRacePlayerGroundShadow.s")
-#endif
 
 void drawRacePlayerModelRootPart(void *asset, s16 dlIndex, s16 textureIndex) {
     void *image;
