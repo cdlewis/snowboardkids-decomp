@@ -667,17 +667,14 @@ void drawMenuSpriteSubrect(s16 x, s16 y, FontAsset *asset, u16 index, u8 srcX, u
 }
 #endif
 
-// drawMenuSpriteFixedScale best match: 70.436% (nonmatchings/drawMenuSpriteFixedScale-1219509448159986855/base_9.c)
+// drawMenuSpriteFixedScale best match: 87.000% (nonmatchings/drawMenuSpriteFixedScale-1219509448159986855/base_54.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/renderer/menu_renderer/drawMenuSpriteFixedScale.s")
 
 #ifdef NON_MATCHING
 void drawMenuSpriteFixedScale(s16 x, s16 y, s32 assetAddress, u16 tileIndex, u16 scaleX, u16 scaleY, u8 flipMode,
                               u8 unusedPalette) {
-    FontAsset *asset;
     FontTexture *texture;
     u8 *paletteBase;
-    s16 sScale;
-    s16 tScale;
     s32 drawLeft;
     s32 drawTop;
     s32 drawRight;
@@ -687,14 +684,16 @@ void drawMenuSpriteFixedScale(s16 x, s16 y, s32 assetAddress, u16 tileIndex, u16
     s16 clipRight;
     s16 clipBottom;
     s32 texS;
+    s16 sScale;
+    s16 tScale;
     s32 texT;
     s32 texWidth;
     s32 texHeight;
-    s32 scaleXValue;
-    s32 scaleYValue;
+    u16 scaleYValue;
+    u16 scaleYStep;
 
-    asset = (FontAsset *)assetAddress;
-    paletteBase = (u8 *)&asset->textures[asset->header.entryCount];
+    paletteBase = (u8 *)&((FontAsset *)assetAddress)->textures[((FontAsset *)assetAddress)->header.entryCount];
+    scaleYValue = scaleY;
 
     if (scaleX >= 0xF001) {
         return;
@@ -711,14 +710,15 @@ void drawMenuSpriteFixedScale(s16 x, s16 y, s32 assetAddress, u16 tileIndex, u16
 
     sScale = gMenuSpriteFlipScales[flipMode & 3][0];
     tScale = gMenuSpriteFlipScales[flipMode & 3][1];
-    texture = &asset->textures[tileIndex];
+    texture = &((FontAsset *)assetAddress)->textures[tileIndex];
     texWidth = texture->width;
     texHeight = texture->height;
 
-    drawLeft = (x + gMenuViewportCenterX) << 2;
-    drawTop = (y + gMenuViewportCenterY) << 2;
+    drawLeft = (drawRight = x + gMenuViewportCenterX) << 2;
+    texS = (y + gMenuViewportCenterY) << 2;
+    drawTop = texS;
     drawRight = (((scaleX * texWidth) << 2) / 0x1000) + drawLeft;
-    drawBottom = (((scaleY * texHeight) << 2) / 0x1000) + drawTop;
+    drawBottom = (((scaleYValue * texHeight) << 2) / 0x1000) + drawTop;
     texS = 0;
     texT = 0;
 
@@ -734,11 +734,9 @@ void drawMenuSpriteFixedScale(s16 x, s16 y, s32 assetAddress, u16 tileIndex, u16
     clipLeft = (s16)((gMenuViewportCenterX - (gMenuViewportWidth / 2)) << 2);
     clipRight = (gMenuViewportCenterX + (gMenuViewportWidth / 2)) << 2;
 
-    scaleYValue = scaleY;
-    scaleXValue = scaleX;
     if ((drawLeft < clipRight) && (drawTop < clipBottom) && (drawRight >= clipLeft) && (drawBottom >= clipTop)) {
         if (drawLeft < clipLeft) {
-            texS = (((clipLeft - drawLeft) << 3) << 12) / scaleXValue;
+            texS = (((clipLeft - drawLeft) << 3) << 12) / scaleX;
             if (sScale == -1) {
                 texS = ((texWidth - 1) << 5) - texS;
             }
@@ -759,12 +757,14 @@ void drawMenuSpriteFixedScale(s16 x, s16 y, s32 assetAddress, u16 tileIndex, u16
         }
 
         gDPLoadTextureTile_4b(gRegionAllocPtr++, (u8 *)(assetAddress + texture->imageOffset + 0x80000000), G_IM_FMT_CI,
-                              texture->width, texture->height, 0, 0, texture->width, texture->height, 0, G_TX_WRAP,
-                              G_TX_WRAP, 0, 0, 0, 0);
+                              texture->width, texture->height, 0, 0, texture->width, texture->height, 0, G_TX_CLAMP,
+                              G_TX_CLAMP, G_TX_NOMASK, G_TX_NOMASK, G_TX_NOLOD, G_TX_NOLOD);
         gDPLoadTLUT_pal16(gRegionAllocPtr++, 0,
-                          (u8 *)((u32)paletteBase + (texture->paletteIndex * 0x20) + 0x80000000));
+                          (u8 *)((u32)paletteBase + (texture->paletteIndex << 5) + 0x80000000));
+        scaleYValue = 0x400000 / scaleX;
+        scaleYStep = scaleY;
         gSPTextureRectangle(gRegionAllocPtr++, drawLeft, drawTop, drawRight, drawBottom, 0, texS, texT,
-                            (u16)((0x400000 / scaleXValue) * sScale), (u16)((0x400000 / scaleYValue) * tScale));
+                            (u16)(scaleYValue * sScale), (u16)((0x400000 / scaleYStep) * tScale));
     }
 }
 #endif
