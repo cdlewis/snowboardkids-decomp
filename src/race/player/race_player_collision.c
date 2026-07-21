@@ -569,11 +569,9 @@ s32 isRacePlayerRespawnSurfaceValid(RacePlayer *arg0) {
     return 1;
 }
 
-// resolveRacePlayerCollisionVolumes best match: 47.068% (nonmatchings/resolveRacePlayerCollisionVolumes-731940616440357983/base_1.c)
+// resolveRacePlayerCollisionVolumes best match: 97.311% (nonmatchings/resolveRacePlayerCollisionVolumes-5787290371232622032/base_44.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race/player/race_player_collision/resolveRacePlayerCollisionVolumes.s")
 
 #ifdef NON_MATCHING
-// The current best attempt is a cleaned m2c baseline in the matching workspace.
-// It is not integrated here because the generated pointer arithmetic still needs
-// restructuring around byte-stride collision subrecords before it is useful.
+#include "resolve_race_player_collision_volumes.inc.c"
 #endif

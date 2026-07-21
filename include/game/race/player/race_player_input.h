@@ -13,6 +13,23 @@ typedef struct RaceVec3i {
     /* 0x8 */ s32 z;
 } RaceVec3i;
 
+typedef struct RacePlayerCollisionVolume {
+    /* 0x00 */ s16 axis[9];
+    /* 0x12 */ s16 pad12;
+    /* 0x14 */ s32 point[3];
+} RacePlayerCollisionVolume;
+
+typedef struct RacePlayerCollisionSource {
+    /* 0x00 */ u8 parentIndex;
+    /* 0x01 */ u8 mirroredParentIndex;
+    /* 0x02 */ s16 rotX;
+    /* 0x04 */ s16 rotY;
+    /* 0x06 */ s16 rotZ;
+    /* 0x08 */ s32 sizeX;
+    /* 0x0C */ s32 sizeY;
+    /* 0x10 */ s32 sizeZ;
+} RacePlayerCollisionSource;
+
 typedef struct RacePlayer {
     /* 0x000 */ union {
         s16 playerIndex;
@@ -93,7 +110,7 @@ typedef struct RacePlayer {
     /* 0x091 */ s8 stickY;
     /* 0x092 */ s8 unk92;
     /* 0x093 */ s8 unk93;
-    /* 0x094 */ char pad94[0x1C0];
+    /* 0x094 */ RacePlayerCollisionVolume collisionVolumes[14];
     /* 0x254 */ s32 unk254;
     /* 0x258 */ s32 unk258;
     /* 0x25C */ s32 unk25C;
@@ -107,7 +124,10 @@ typedef struct RacePlayer {
     /* 0x27C */ s32 unk27C;
     /* 0x280 */ s32 unk280;
     /* 0x284 */ s32 unk284;
-    /* 0x288 */ char pad288[8];
+    /* 0x288 */ s16 unk288;
+    /* 0x28A */ s16 unk28A;
+    /* 0x28C */ s16 unk28C;
+    /* 0x28E */ char pad28E[2];
     /* 0x290 */ RaceVec3i projectedPos;
     /* 0x29C */ s32 unk29C;
     /* 0x2A0 */ s16 unk2A0;
@@ -165,14 +185,8 @@ typedef struct RacePlayer {
     /* 0x332 */ s16 unk332;
     /* 0x334 */ s16 unk334;
     /* 0x336 */ s16 unk336;
-    /* 0x338 */ char pad338[2];
-    /* 0x33A */ s16 unk33A;
-    /* 0x33C */ s16 unk33C;
-    /* 0x33E */ s16 unk33E;
-    /* 0x340 */ s32 unk340;
-    /* 0x344 */ s32 unk344;
-    /* 0x348 */ s32 unk348;
-    /* 0x34C */ char pad34C[0x106];
+    /* 0x338 */ RacePlayerCollisionSource collisionSources[14];
+    /* 0x450 */ s16 collisionVolumeCount;
     /* 0x452 */ s16 animationId;
     /* 0x454 */ char pad454[0x14];
     /* 0x468 */ RaceVec3i markerPoints[RACE_PLAYER_COUNT];
