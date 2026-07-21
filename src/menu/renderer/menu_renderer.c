@@ -770,7 +770,7 @@ void drawMenuSpriteTile(s16 arg0, s16 arg1, s32 arg2, u16 arg3, u16 arg4, u16 ar
     drawMenuSpriteTileClipped(arg0, arg1, arg2, arg3, arg4, arg5, gMenuViewportWidth / 2, gMenuViewportHeight / 2);
 }
 
-// drawMenuSpriteTileClipped best match: 83.573% (nonmatchings/drawMenuSpriteTileClipped-1219509448159986855/base_1.c)
+// drawMenuSpriteTileClipped best match: 95.026% (nonmatchings/drawMenuSpriteTileClipped-1219509448159986855/base_30.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/renderer/menu_renderer/drawMenuSpriteTileClipped.s")
 
 #ifdef NON_MATCHING
@@ -781,24 +781,28 @@ void drawMenuSpriteTileClipped(s16 x, s16 y, MenuFontAssetTable *table, u16 entr
     s16 minX;
     s16 maxX;
     s16 minY;
-    s16 maxY;
     s32 x0;
-    volatile s32 y0;
+    volatile s16 clipBottomValue;
+    s32 y0;
     s32 x1;
     s32 y1;
-    volatile s32 clipS;
-    volatile s32 clipT;
+    s32 clipS;
+    s32 clipT;
     s32 halfWidth;
+    s16 maxY;
     s32 halfHeight;
 
-    entry = &table->entries[entryIndex];
+    entry = (MenuFontAssetEntry *)table + entryIndex;
     paletteBase = (u8 *)&table->entries[table->entryCount];
     x0 = x + gMenuViewportCenterX;
+    x1 = entry[1].width;
+    x1 = x0 + x1;
     y0 = y + gMenuViewportCenterY;
-    x1 = x0 + entry->width;
-    y1 = y0 + entry->height;
+    y1 = entry[1].height;
+    y1 = y0 + y1;
+    clipBottomValue = clipBottom;
     minX = gMenuViewportCenterX - clipRight;
-    minY = gMenuViewportCenterY - clipBottom;
+    minY = gMenuViewportCenterY - clipBottomValue;
     maxX = gMenuViewportCenterX + clipRight;
     maxY = gMenuViewportCenterY + clipBottom;
     clipS = 0;
@@ -819,38 +823,49 @@ void drawMenuSpriteTileClipped(s16 x, s16 y, MenuFontAssetTable *table, u16 entr
         maxY = gMenuViewportCenterY + halfHeight;
     }
 
-    if ((x0 < maxX) && (y0 < maxY) && (x1 >= minX) && (y1 >= minY)) {
-        if (x0 < minX) {
-            clipS = minX - x0;
-            x0 = minX;
-        }
-        if (y0 < minY) {
-            clipT = minY - y0;
-            y0 = minY;
-        }
-        if (x1 >= maxX) {
-            x1 = maxX - 1;
-        }
-        if (y1 >= maxY) {
-            y1 = maxY - 1;
-        }
+    if (x0 >= maxX) {
+        return;
+    }
+    if (y0 >= maxY) {
+        return;
+    }
+    if (x1 < minX) {
+        return;
+    }
+    if (y1 < minY) {
+        return;
+    }
 
-        gDPLoadTextureTile(gRegionAllocPtr++, (u8 *)table + entry->imageOffset,
-                           G_IM_FMT_CI, G_IM_SIZ_8b, entry->width, entry->height,
-                           0, 0, entry->width, entry->height, 0,
-                           G_TX_CLAMP, G_TX_CLAMP, G_TX_NOMASK, G_TX_NOMASK,
-                           G_TX_NOLOD, G_TX_NOLOD);
-        if (alpha != 0x100) {
-            gDPPipeSync(gRegionAllocPtr++);
-            gDPSetCombineMode(gRegionAllocPtr++, G_CC_MODULATEIA_PRIM, G_CC_MODULATEIA_PRIM);
-            gDPSetPrimColor(gRegionAllocPtr++, 0, 0, alpha, alpha, alpha, 0xFF);
-        }
-        gDPLoadTLUT_pal256(gRegionAllocPtr++, paletteBase + (entry->textureIndex << 5));
-        gSPTextureRectangle(gRegionAllocPtr++, x0 << 2, y0 << 2, x1 << 2, y1 << 2,
-                            G_TX_RENDERTILE, clipS << 5, clipT << 5, 0x400, 0x400);
-        if (alpha != 0x100) {
-            gSPDisplayList(gRegionAllocPtr++, gMenuRenderModeResetDl);
-        }
+    if (x0 < minX) {
+        clipS = minX - x0;
+        x0 = minX;
+    }
+    if (y0 < minY) {
+        clipT = minY - y0;
+        y0 = minY;
+    }
+    if (x1 >= maxX) {
+        x1 = maxX - 1;
+    }
+    if (y1 >= maxY) {
+        y1 = maxY - 1;
+    }
+
+    gDPLoadTextureTile(gRegionAllocPtr++, (u8 *)table + entry->imageOffset,
+                       G_IM_FMT_CI, G_IM_SIZ_8b, entry->width, entry->height,
+                       0, 0, entry->width, entry->height, 0,
+                       G_TX_CLAMP, G_TX_CLAMP, G_TX_NOMASK, G_TX_NOMASK,
+                       G_TX_NOLOD, G_TX_NOLOD);
+    if (alpha != 0x100) {
+        gDPPipeSync(gRegionAllocPtr++);
+        gDPSetCombineMode(gRegionAllocPtr++, G_CC_MODULATEIA_PRIM, G_CC_MODULATEIA_PRIM);
+        gDPSetPrimColor(gRegionAllocPtr++, 0, 0, alpha, alpha, alpha, 0xFF);
+    }
+    gDPLoadTLUT_pal256(gRegionAllocPtr++, paletteBase + (entry->textureIndex << 5));
+    gSPTextureRectangle(gRegionAllocPtr++, x0 << 2, y0 << 2, x1 << 2, y1 << 2,
+                        G_TX_RENDERTILE, clipS << 5, clipT << 5, 0x400, 0x400);
+    if (alpha != 0x100) {
+        gSPDisplayList(gRegionAllocPtr++, gMenuRenderModeResetDl);
     }
 }
 #endif
