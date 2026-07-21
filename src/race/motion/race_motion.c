@@ -318,45 +318,43 @@ void pushRaceCourseSurfaceBoundaryWithVelocity(s32 *arg0, s32 *arg1, s32 arg2) {
     }
 }
 
-// resolveRaceCourseSurfaceCollisionWithNormal best match: 91.140% (base_5.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race/motion/race_motion/resolveRaceCourseSurfaceCollisionWithNormal.s")
-
-#ifdef NON_MATCHING
-#define CLAMP_RACE_COURSE_SURFACE_COLLISION_TO_ENDPOINT(pointX, pointZ)                          \
+#define CLAMP_RACE_COURSE_SURFACE_COLLISION_TO_ENDPOINT(pointX, pointZ, loopCondition)                                                        \
     do {                                                                                         \
         deltaX = gRaceCourseCollisionAdjustedX - (pointX);                                       \
-        deltaZ = gRaceCourseCollisionAdjustedZ - (pointZ);                                       \
-        dist = integerSquareRoot64((s64)deltaX * deltaX + (s64)deltaZ * deltaZ);                 \
-        if (dist < radius) {                                                                     \
-            gRaceCourseCollisionAdjustedX = ((s64)deltaX * radius) / dist + (pointX);            \
-            gRaceCourseCollisionAdjustedZ = ((s64)deltaZ * radius) / dist + (pointZ);            \
+        side = gRaceCourseCollisionAdjustedZ - (pointZ);                                         \
+        length = integerSquareRoot64((s64)deltaX * deltaX + (s64)side * side);                    \
+        if (length < radius) {                                                                    \
+            alongEdge = ((s64)deltaX * radius) / length;                                          \
+            side = ((s64)side * radius) / length;                                                 \
+            gRaceCourseCollisionAdjustedX = alongEdge + (pointX);                                \
+            gRaceCourseCollisionAdjustedZ = side + (pointZ);                                     \
         }                                                                                        \
-    } while (0)
+    } while (loopCondition)
 
-#define PUSH_RACE_COURSE_SURFACE_COLLISION_FROM_EDGE()                                           \
+#define PUSH_RACE_COURSE_SURFACE_COLLISION_FROM_EDGE()                                                                         \
     do {                                                                                         \
         if (-radius < side) {                                                                    \
-            alongEdge = ((s64)tangentX * *velocityX + (s64)normalX * *velocityZ) / 0x1000;       \
-            edgeLength = ((s64)tangentZ * *velocityX + (s64)tangentX * *velocityZ) / 0x1000;     \
+            velocityAlongEdge =                                                                 \
+                ((s64)tangentX * *velocityX + (s64)normalX * *velocityZ) / 0x1000;               \
+            edgeLength =                                                                        \
+                ((s64)-normalX * *velocityX + (s64)tangentX * *velocityZ) / 0x1000;              \
             if (edgeLength > 0) {                                                                \
                 edgeLength = -edgeLength;                                                        \
             }                                                                                    \
-            *velocityX = ((s64)tangentX * alongEdge - (s64)normalX * edgeLength) / 0x1000;       \
-            *velocityZ = ((s64)normalX * alongEdge + (s64)tangentX * edgeLength) / 0x1000;       \
+            *velocityX =                                                                        \
+                ((s64)tangentX * velocityAlongEdge - (s64)normalX * edgeLength) / 0x1000;        \
+            *velocityZ =                                                                        \
+                ((s64)normalX * velocityAlongEdge + (s64)tangentX * edgeLength) / 0x1000;        \
             gRaceCourseCollisionEdgeDeltaZ = -radius - side;                                     \
-            gRaceCourseCollisionAdjustedX += ((s64)tangentZ * gRaceCourseCollisionEdgeDeltaZ) / 0x1000; \
-            gRaceCourseCollisionAdjustedZ += ((s64)tangentX * gRaceCourseCollisionEdgeDeltaZ) / 0x1000; \
+            gRaceCourseCollisionAdjustedX +=                                                     \
+                ((s64)-normalX * gRaceCourseCollisionEdgeDeltaZ) / 0x1000;                       \
+            gRaceCourseCollisionAdjustedZ +=                                                     \
+                ((s64)tangentX * gRaceCourseCollisionEdgeDeltaZ) / 0x1000;                       \
         }                                                                                        \
     } while (0)
 
-void resolveRaceCourseSurfaceCollisionWithNormal(s16 surfaceIndex, s32 x, s32 z, s32 radius, s8 normalIndex, s32 *pushX,
-                  s32 *pushZ, s32 *velocityX, s32 *velocityZ) {
-    RaceMotionSurface *surface;
-    RaceMotionCoord *coord0;
-    RaceMotionCoord *coord1;
-    RaceMotionCoord *coord2;
-    RaceMotionCoord *coord3;
-    s32 surfaceOffset;
+void resolveRaceCourseSurfaceCollisionWithNormal(s32 surfaceIndex, s32 x, s32 z, s32 radius, s8 normalIndex,
+                                                 s32 *pushX, s32 *pushZ, s32 *velocityX, s32 *velocityZ) {
     s32 x0;
     s32 x1;
     s32 x2;
@@ -365,56 +363,47 @@ void resolveRaceCourseSurfaceCollisionWithNormal(s16 surfaceIndex, s32 x, s32 z,
     s32 z1;
     s32 z2;
     s32 z3;
-    s32 length;
+    s32 velocityAlongEdge;
+    s32 edgeLength;
     s32 normalX;
     s32 tangentX;
-    s32 tangentZ;
+    s32 length;
     s32 alongEdge;
     s32 side;
-    s32 edgeLength;
     s32 deltaX;
-    s32 deltaZ;
-    s32 dist;
+    s32 surfaceOffset;
 
     normalIndex = -normalIndex;
     surfaceOffset = surfaceIndex * sizeof(RaceMotionSurface);
-    surface = (RaceMotionSurface *)((s32)gRaceCourseSurfaces + surfaceOffset);
-    coord0 = &gRaceCourseSurfaceCoords[surface->coordIndices[0]];
-    coord1 = &gRaceCourseSurfaceCoords[surface->coordIndices[1]];
-    coord2 = &gRaceCourseSurfaceCoords[surface->coordIndices[2]];
-    coord3 = &gRaceCourseSurfaceCoords[surface->coordIndices[3]];
-
-    x0 = coord0->x << 0x11;
-    x1 = coord1->x << 0x11;
-    x2 = coord2->x << 0x11;
-    x3 = coord3->x << 0x11;
-    z0 = coord0->z << 0x11;
-    z1 = coord1->z << 0x11;
-    z2 = coord2->z << 0x11;
-    z3 = coord3->z << 0x11;
+    x0 = gRaceCourseSurfaceCoords[gRaceCourseSurfaces[surfaceIndex].coordIndices[0]].x << 0x11;
+    x1 = gRaceCourseSurfaceCoords[gRaceCourseSurfaces[surfaceIndex].coordIndices[1]].x << 0x11;
+    x2 = gRaceCourseSurfaceCoords[gRaceCourseSurfaces[surfaceIndex].coordIndices[2]].x << 0x11;
+    x3 = gRaceCourseSurfaceCoords[gRaceCourseSurfaces[surfaceIndex].coordIndices[3]].x << 0x11;
+    z0 = gRaceCourseSurfaceCoords[gRaceCourseSurfaces[surfaceIndex].coordIndices[0]].z << 0x11;
+    z1 = gRaceCourseSurfaceCoords[gRaceCourseSurfaces[surfaceIndex].coordIndices[1]].z << 0x11;
+    z2 = gRaceCourseSurfaceCoords[gRaceCourseSurfaces[surfaceIndex].coordIndices[2]].z << 0x11;
+    z3 = gRaceCourseSurfaceCoords[gRaceCourseSurfaces[surfaceIndex].coordIndices[3]].z << 0x11;
 
     gRaceCourseCollisionAdjustedX = x;
     gRaceCourseCollisionAdjustedZ = z;
 
-    if (normalIndex == surface->nextFaceIndices[0]) {
+    if (normalIndex == gRaceCourseSurfaces[surfaceIndex].nextFaceIndices[0]) {
         gRaceCourseCollisionEdgeDeltaX = x1 - x0;
         gRaceCourseCollisionEdgeDeltaZ = z1 - z0;
         gRaceCourseCollisionDeltaX = x - x0;
         gRaceCourseCollisionDeltaZ = z - z0;
         pushRaceCourseSurfaceBoundaryWithVelocity(velocityX, velocityZ, radius);
-        surface = (RaceMotionSurface *)((s32)gRaceCourseSurfaces + surfaceOffset);
     }
 
-    if (normalIndex == surface->nextFaceIndices[1]) {
+    if (normalIndex == gRaceCourseSurfaces[surfaceIndex].nextFaceIndices[1]) {
         gRaceCourseCollisionEdgeDeltaX = x2 - x3;
         gRaceCourseCollisionEdgeDeltaZ = z2 - z3;
         gRaceCourseCollisionDeltaX = gRaceCourseCollisionAdjustedX - x3;
         gRaceCourseCollisionDeltaZ = gRaceCourseCollisionAdjustedZ - z3;
         pushRaceCourseSurfaceBoundaryWithVelocity(velocityX, velocityZ, radius);
-        surface = (RaceMotionSurface *)((s32)gRaceCourseSurfaces + surfaceOffset);
     }
 
-    if (normalIndex == surface->unk4[0]) {
+    if (normalIndex == gRaceCourseSurfaces[surfaceIndex].unk4[0]) {
         gRaceCourseCollisionEdgeDeltaX = x3 - x1;
         gRaceCourseCollisionEdgeDeltaZ = z3 - z1;
         gRaceCourseCollisionDeltaX = gRaceCourseCollisionAdjustedX - x1;
@@ -422,25 +411,29 @@ void resolveRaceCourseSurfaceCollisionWithNormal(s16 surfaceIndex, s32 x, s32 z,
 
         length = integerSquareRoot64((s64)gRaceCourseCollisionEdgeDeltaX * gRaceCourseCollisionEdgeDeltaX +
                                      (s64)gRaceCourseCollisionEdgeDeltaZ * gRaceCourseCollisionEdgeDeltaZ);
+        if (surfaceOffset) {
+        }
         normalX = ((s64)gRaceCourseCollisionEdgeDeltaZ * 0x1000) / length;
         tangentX = ((s64)gRaceCourseCollisionEdgeDeltaX * 0x1000) / length;
-        tangentZ = -normalX;
-        alongEdge = ((s64)tangentX * gRaceCourseCollisionDeltaX + (s64)normalX * gRaceCourseCollisionDeltaZ) / 0x1000;
-        side = ((s64)tangentZ * gRaceCourseCollisionDeltaX + (s64)tangentX * gRaceCourseCollisionDeltaZ) / 0x1000;
-        edgeLength = ((s64)tangentX * gRaceCourseCollisionEdgeDeltaX + (s64)normalX * gRaceCourseCollisionEdgeDeltaZ) / 0x1000;
-        if ((((RaceMotionSurface *)((s32)gRaceCourseSurfaces + surfaceOffset))->unk14[3] & 2) && (alongEdge < 0)) {
-            CLAMP_RACE_COURSE_SURFACE_COLLISION_TO_ENDPOINT(x1, z1);
-            surface = (RaceMotionSurface *)((s32)gRaceCourseSurfaces + surfaceOffset);
-        } else if ((((RaceMotionSurface *)((s32)gRaceCourseSurfaces + surfaceOffset))->unk14[3] & 8) && (edgeLength < alongEdge)) {
-            CLAMP_RACE_COURSE_SURFACE_COLLISION_TO_ENDPOINT(x3, z3);
-            surface = (RaceMotionSurface *)((s32)gRaceCourseSurfaces + surfaceOffset);
+        alongEdge = ((s64)tangentX * gRaceCourseCollisionDeltaX +
+                     (s64)normalX * gRaceCourseCollisionDeltaZ) /
+                    0x1000;
+        side = ((s64)-normalX * gRaceCourseCollisionDeltaX +
+                (s64)tangentX * gRaceCourseCollisionDeltaZ) /
+               0x1000;
+        edgeLength = ((s64)tangentX * gRaceCourseCollisionEdgeDeltaX +
+                      (s64)normalX * gRaceCourseCollisionEdgeDeltaZ) /
+                     0x1000;
+        if ((gRaceCourseSurfaces[surfaceIndex].unk14[3] & 2) && (alongEdge < 0)) {
+            CLAMP_RACE_COURSE_SURFACE_COLLISION_TO_ENDPOINT(x1, z1, 0);
+        } else if ((gRaceCourseSurfaces[surfaceIndex].unk14[3] & 8) && (edgeLength < alongEdge)) {
+            CLAMP_RACE_COURSE_SURFACE_COLLISION_TO_ENDPOINT(x3, z3, (u64)0);
         } else {
             PUSH_RACE_COURSE_SURFACE_COLLISION_FROM_EDGE();
-            surface = (RaceMotionSurface *)((s32)gRaceCourseSurfaces + surfaceOffset);
         }
     }
 
-    if (normalIndex == surface->unk4[1]) {
+    if (normalIndex == gRaceCourseSurfaces[surfaceIndex].unk4[1]) {
         gRaceCourseCollisionEdgeDeltaX = x0 - x2;
         gRaceCourseCollisionEdgeDeltaZ = z0 - z2;
         gRaceCourseCollisionDeltaX = gRaceCourseCollisionAdjustedX - x2;
@@ -450,14 +443,19 @@ void resolveRaceCourseSurfaceCollisionWithNormal(s16 surfaceIndex, s32 x, s32 z,
                                      (s64)gRaceCourseCollisionEdgeDeltaZ * gRaceCourseCollisionEdgeDeltaZ);
         normalX = ((s64)gRaceCourseCollisionEdgeDeltaZ * 0x1000) / length;
         tangentX = ((s64)gRaceCourseCollisionEdgeDeltaX * 0x1000) / length;
-        tangentZ = -normalX;
-        alongEdge = ((s64)tangentX * gRaceCourseCollisionDeltaX + (s64)normalX * gRaceCourseCollisionDeltaZ) / 0x1000;
-        side = ((s64)tangentZ * gRaceCourseCollisionDeltaX + (s64)tangentX * gRaceCourseCollisionDeltaZ) / 0x1000;
-        edgeLength = ((s64)tangentX * gRaceCourseCollisionEdgeDeltaX + (s64)normalX * gRaceCourseCollisionEdgeDeltaZ) / 0x1000;
-        if ((((RaceMotionSurface *)((s32)gRaceCourseSurfaces + surfaceOffset))->unk14[3] & 4) && (alongEdge < 0)) {
-            CLAMP_RACE_COURSE_SURFACE_COLLISION_TO_ENDPOINT(x2, z2);
-        } else if ((((RaceMotionSurface *)((s32)gRaceCourseSurfaces + surfaceOffset))->unk14[3] & 1) && (edgeLength < alongEdge)) {
-            CLAMP_RACE_COURSE_SURFACE_COLLISION_TO_ENDPOINT(x0, z0);
+        alongEdge = ((s64)tangentX * gRaceCourseCollisionDeltaX +
+                     (s64)normalX * gRaceCourseCollisionDeltaZ) /
+                    0x1000;
+        side = ((s64)-normalX * gRaceCourseCollisionDeltaX +
+                (s64)tangentX * gRaceCourseCollisionDeltaZ) /
+               0x1000;
+        edgeLength = ((s64)tangentX * gRaceCourseCollisionEdgeDeltaX +
+                      (s64)normalX * gRaceCourseCollisionEdgeDeltaZ) /
+                     0x1000;
+        if ((gRaceCourseSurfaces[surfaceIndex].unk14[3] & 4) && (alongEdge < 0)) {
+            CLAMP_RACE_COURSE_SURFACE_COLLISION_TO_ENDPOINT(x2, z2, 0);
+        } else if ((gRaceCourseSurfaces[surfaceIndex].unk14[3] & 1) && (edgeLength < alongEdge)) {
+            CLAMP_RACE_COURSE_SURFACE_COLLISION_TO_ENDPOINT(x0, z0, 0);
         } else {
             PUSH_RACE_COURSE_SURFACE_COLLISION_FROM_EDGE();
         }
@@ -469,7 +467,6 @@ void resolveRaceCourseSurfaceCollisionWithNormal(s16 surfaceIndex, s32 x, s32 z,
 
 #undef CLAMP_RACE_COURSE_SURFACE_COLLISION_TO_ENDPOINT
 #undef PUSH_RACE_COURSE_SURFACE_COLLISION_FROM_EDGE
-#endif
 
 #define CLAMP_RACE_COURSE_SURFACE_COLLISION_TO_ENDPOINT(pointX, pointZ)                          \
     do {                                                                                         \
