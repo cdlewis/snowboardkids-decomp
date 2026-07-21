@@ -693,7 +693,7 @@ void drawScaledAssetTableSprite(s16 x, s16 y, AssetTable *asset, volatile u16 en
 }
 #endif
 
-// drawScaledAssetTableSpriteWithExplicitPalette best match: 94.647% (nonmatchings/drawScaledAssetTableSpriteWithExplicitPalette-1219509448159986855/base_20.c)
+// drawScaledAssetTableSpriteWithExplicitPalette best match: 95.607% (nonmatchings/drawScaledAssetTableSpriteWithExplicitPalette-2188069624939011928/base_21.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/renderer/menu_render_utils/drawScaledAssetTableSpriteWithExplicitPalette.s")
 
 #ifdef NON_MATCHING
@@ -710,6 +710,7 @@ void drawScaledAssetTableSpriteWithExplicitPalette(s16 x, s16 y, AssetTable *ass
     s32 x0;
     s32 y0;
     s32 x1;
+    s32 spriteWidth;
     s32 y1;
     s32 viewHalfHeight;
     AssetTableEntry *sprite;
@@ -718,9 +719,8 @@ void drawScaledAssetTableSpriteWithExplicitPalette(s16 x, s16 y, AssetTable *ass
     textureScale = scale;
     if (textureScale >= 0) {
         paletteBase = asset->entryCount + asset->entries;
-        sprite = (AssetTableEntry *)asset + (entryIndex & 0xFFFFu);
+        sprite = (AssetTableEntry *)asset + (0xFFFFu & entryIndex);
         {
-            s32 spriteWidth;
             s32 spriteHeight;
 
             spriteWidth = sprite[1].width;
@@ -781,7 +781,7 @@ void drawScaledAssetTableSpriteWithExplicitPalette(s16 x, s16 y, AssetTable *ass
             gDPLoadTextureTile_4b(gRegionAllocPtr++, sprite->imageOffset + (u8 *)asset, G_IM_FMT_CI,
                                   sprite->width, sprite->height, 0, 0, sprite->width, sprite->height, 0,
                                   G_TX_CLAMP, G_TX_CLAMP, G_TX_NOMASK, G_TX_NOMASK, G_TX_NOLOD, G_TX_NOLOD);
-            gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, (u8 *)paletteBase + (paletteIndex << 5));
+            gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, (u8 *)paletteBase + ((0, paletteIndex) << 5));
             gSPTextureRectangle(gRegionAllocPtr++, x0 << textureScale, y0 << textureScale,
                                 x1 << textureScale, y1 << textureScale, G_TX_RENDERTILE,
                                 (clippedS << 5) + 0x10, (clippedT << 5) + 0x10,
