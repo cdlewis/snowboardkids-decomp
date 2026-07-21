@@ -27,6 +27,8 @@ extern CallbackTask *gCallbackTaskActiveListHead;
 extern CallbackTaskSchedulerBss D_80112770;
 #pragma weak createCallbackTaskPreservingArgsS32 = createCallbackTaskPreservingArgs
 void *createCallbackTaskPreservingArgsS32(void (*callback)(), s32 type, s32 priority);
+#pragma weak createCallbackTaskS32 = createCallbackTask
+void *createCallbackTaskS32(void (*callback)(), s32 type, s32 priority);
 
 // initCallbackTaskScheduler best match: 99.412%
 #pragma GLOBAL_ASM("asm/nonmatchings/engine/callback_task_scheduler/initCallbackTaskScheduler.s")
@@ -261,19 +263,18 @@ void *createCallbackTaskPreservingArgs(void (*callback)(), u16 type, s32 priorit
     return task;
 }
 
-// createCallbackTask best match: 97.533%
-#pragma GLOBAL_ASM("asm/nonmatchings/engine/callback_task_scheduler/createCallbackTask.s")
-
-#ifdef NON_MATCHING
 void *createCallbackTask(void (*callback)(), u16 type, s32 priority) {
     CallbackTask *task;
     CallbackTask *prev;
     CallbackTask *next;
-    CallbackTask *sentinel;
+    volatile CallbackTask *sentinel;
     s32 index;
     u32 i;
+    u32 nextIndex;
 
-    switch (type & 0xFF) {
+    task = NULL;
+    next = NULL;
+    switch ((type & 0xFFFFu) & 0xFF) {
     case 0:
         if (gFreeCallbackTaskType0Count == 0) {
             return NULL;
@@ -291,6 +292,7 @@ void *createCallbackTask(void (*callback)(), u16 type, s32 priority) {
             return NULL;
         }
         gFreeCallbackTaskType2Count--;
+        prev = next;
         break;
     case 3:
         if (gFreeCallbackTaskType3Count == 0) {
@@ -320,18 +322,19 @@ void *createCallbackTask(void (*callback)(), u16 type, s32 priority) {
         return NULL;
     }
 
-    if ((gFreeCallbackTaskCount & 0xFFFFu) == 0) {
+    index = gFreeCallbackTaskCount;
+    if ((index & 0xFFFFu) == 0) {
         return NULL;
     }
-    index = gFreeCallbackTaskCount - 1;
-    sentinel = &gCallbackTaskActiveListSentinel;
-    prev = sentinel;
+    index = (index & 0xFFFF) - 1;
+    prev = &gCallbackTaskActiveListSentinel;
+    sentinel = &D_80112770.activeListSentinel;
     gFreeCallbackTaskCount = index;
-    task = gFreeCallbackTaskPool[index & 0xFFFF];
+    task = gFreeCallbackTaskPool[(((((((index & 0xFFFF) & 0xFFFFu) & 0xFFFFu) & 0xFFFFu) & 0xFFFFu) & 0xFFFFu) & 0xFFFFu) & 0xFFFFu];
     if (prev->next != NULL) {
         next = sentinel->next;
         do {
-            if ((u16) next->priority < priority) {
+            if ((u16)next->priority < priority) {
                 break;
             }
             prev = next;
@@ -352,12 +355,11 @@ void *createCallbackTask(void (*callback)(), u16 type, s32 priority) {
     task->isActive = 1;
 
     i = 0;
-    do {
-        task->args[i] = NULL; i = (i + 1) & 0xFFFF; } while (i < 0x40U); return task;
+    do { task->args[i] = NULL; i = (i + 1) & 0xFFFF; } while (i < 0x40U);
+    return task;
 }
-#endif
 
-void *createCallbackTaskWithUserId(void (*callback)(), s32 type, s32 priority, s32 userId){ CallbackTask *t=createCallbackTask(callback,type&0xFFFF,priority); if(t!=NULL){t->userId=userId;} return t;}
+void *createCallbackTaskWithUserId(void (*callback)(), s32 type, s32 priority, s32 userId){ CallbackTask *t=createCallbackTaskS32(callback,type&0xFFFF,priority); if(t!=NULL){t->userId=userId;} return t;}
 
 void *createCallbackTaskWithUserIdPreservingArgs(void (*callback)(), s32 type, s32 priority, s32 userId){ CallbackTask *t=createCallbackTaskPreservingArgsS32(callback,type&0xFFFF,priority); if(t!=NULL){t->userId=userId;} return t;}
 
