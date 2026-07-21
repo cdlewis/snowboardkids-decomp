@@ -185,49 +185,34 @@ void drawCharacterSelectCourseListOptions(CharacterSelectCourseMenuFrameActor *a
     }
 }
 
-// updateCharacterSelectUnlockedCourseList best match: 99.807% (nonmatchings/updateCharacterSelectUnlockedCourseList-1200943805599209058/base_2.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/menu/character_select/character_select_course_ui/updateCharacterSelectUnlockedCourseList.s")
-
-#ifdef NON_MATCHING
-void updateCharacterSelectUnlockedCourseList(CharacterSelectCourseMenuFrameActor *actor) {
+void updateCharacterSelectUnlockedCourseList(CharacterSelectCourseMenuFrameActor *arg0) {
     s32 index;
     s32 visibleCourseCount;
     s32 movingCourseCount;
-    s32 selectedCourseY;
-    void (*finalCallback)(CallbackTask *);
-    CharacterSelectCourseMenuFrameActor *menuActor;
-    CharacterSelectCourseMenuFrameActor *coursePosition;
-    s16 *x;
+    CharacterSelectCourseMenuFrameActor *actor;
 
-    menuActor = actor;
-    switch (actor->state) {
+    actor = arg0;
+    switch (arg0->state) {
     case COURSE_LIST_SLIDE_IN:
         movingCourseCount = 0;
-        index = 0;
-        if (actor->itemCount > 0) {
-            coursePosition = actor;
-            do {
-                if (coursePosition->x[0] < -0x7C) {
-                    coursePosition->x[0] += 0x10;
-                    movingCourseCount++;
-                    if (coursePosition->x[0] >= -0x7C) {
-                        coursePosition->x[0] = -0x7C;
-                    }
+        for (index = 0; index < actor->itemCount; index++) {
+            if (arg0->x[index] < -0x7C) {
+                arg0->x[index] += 0x10;
+                movingCourseCount++;
+                if (arg0->x[index] >= -0x7C) {
+                    arg0->x[index] = -0x7C;
                 }
-                index++;
-                coursePosition = (CharacterSelectCourseMenuFrameActor *)((s16 *)coursePosition + 1);
-            } while (index < menuActor->itemCount);
+            }
         }
 
-        actor->timer++;
-        if (!(actor->timer & 1)) {
-            if (actor->itemCount < (gCharacterSelectCourseExitOptionIndex + 1)) {
-                actor->itemCount++;
-                if (actor->itemCount == (gCharacterSelectCourseExitOptionIndex + 1)) {
+        arg0->timer++;
+        if (!(arg0->timer & 1)) {
+            if (arg0->itemCount < (gCharacterSelectCourseExitOptionIndex + 1)) {
+                arg0->itemCount++;
+                if (arg0->itemCount == (gCharacterSelectCourseExitOptionIndex + 1)) {
                     D_8010ADE4 = createCallbackTask(initCharacterSelectCoursePreviewFrame, 0, 0x58);
                     createCallbackTask(initCharacterSelectCoursePreviewPanel1, 0, 0x59);
                     createCallbackTask(initCharacterSelectCoursePreviewPanel2, 0, 0x5A);
-                    finalCallback = (void (*)(CallbackTask *))initCharacterSelectCourseExitPreviewPanel;
                     createCallbackTask(initCharacterSelectCoursePreviewPanel3, 0, 0x5B);
                     createCallbackTask(initCharacterSelectCoursePreviewPanel4, 0, 0x5C);
                     createCallbackTask(initCharacterSelectCoursePreviewPanel5, 0, 0x5D);
@@ -240,66 +225,45 @@ void updateCharacterSelectUnlockedCourseList(CharacterSelectCourseMenuFrameActor
                             }
                         }
                     }
-                    createCallbackTask(finalCallback, 0, 0x61);
+                    createCallbackTask(initCharacterSelectCourseExitPreviewPanel, 0, 0x61);
                 }
             }
         }
         if (movingCourseCount == 0) {
-            actor->state = COURSE_LIST_IDLE;
+            arg0->state = COURSE_LIST_IDLE;
         }
         break;
 
     case COURSE_LIST_IDLE:
         if (gMenuTransitionState == 1) {
-            actor->state = COURSE_LIST_SLIDE_OTHERS_OUT;
+            arg0->state = COURSE_LIST_SLIDE_OTHERS_OUT;
         }
         if (gMenuTransitionState == 7) {
-            actor->state = COURSE_LIST_EXIT;
+            arg0->state = COURSE_LIST_EXIT;
         }
         break;
 
     case COURSE_LIST_SLIDE_OTHERS_OUT:
-        if (gRaceCourseIndex != 0) {
-            actor->x[0] -= 0x20;
-        }
-        if (gRaceCourseIndex != 1) {
-            actor->x[1] -= 0x20;
-        }
-        if (gRaceCourseIndex != 2) {
-            actor->x[2] -= 0x20;
-        }
-        index = 3;
-        do {
-            x = (s16 *)actor;
+        for (index = 0; index < 11; index++) {
             if (index != gRaceCourseIndex) {
-                x[index + 12] -= 0x20;
+                arg0->x[index] -= 0x20;
             }
-            if ((index + 1) != gRaceCourseIndex) {
-                x[index + 13] -= 0x20;
-            }
-            if ((index + 2) != gRaceCourseIndex) {
-                x[index + 14] -= 0x20;
-            }
-            if ((index + 3) != gRaceCourseIndex) {
-                x[index + 15] -= 0x20;
-            }
-            index += 4;
-        } while (index != 0xB);
+        }
 
         if (gRaceCourseIndex != 0) {
-            if (actor->x[0] < -0x103) {
-                actor->state = COURSE_LIST_MOVE_SELECTED_UP;
+            if (arg0->x[0] < -0x103) {
+                arg0->state = COURSE_LIST_MOVE_SELECTED_UP;
             }
-        } else if (actor->x[1] < -0x103) {
-            actor->state = COURSE_LIST_MOVE_SELECTED_UP;
+        } else if (arg0->x[1] < -0x103) {
+            arg0->state = COURSE_LIST_MOVE_SELECTED_UP;
         }
         break;
 
     case COURSE_LIST_MOVE_SELECTED_UP:
-        actor->y[gRaceCourseIndex] -= actor->itemSpacing;
-        if (actor->y[gRaceCourseIndex] < -0x5F) {
-            actor->y[gRaceCourseIndex] = -0x60;
-            actor->state = COURSE_LIST_SUBMENU_OPEN;
+        arg0->y[gRaceCourseIndex] -= arg0->itemSpacing;
+        if (arg0->y[gRaceCourseIndex] < -0x5F) {
+            arg0->y[gRaceCourseIndex] = -0x60;
+            arg0->state = COURSE_LIST_SUBMENU_OPEN;
             if (gRaceSplitscreenMode == 2) {
                 D_8010ADE0 = createCallbackTask(initCharacterSelectCourseExitPopup, 0, 0x62);
                 createCallbackTask(initCharacterSelectCourseRecordsPopup, 0, 0x63);
@@ -312,52 +276,56 @@ void updateCharacterSelectUnlockedCourseList(CharacterSelectCourseMenuFrameActor
 
     case COURSE_LIST_SUBMENU_OPEN:
         if (gMenuTransitionState == 4) {
-            actor->state = COURSE_LIST_RESTORE_SELECTED_Y;
+            arg0->state = COURSE_LIST_RESTORE_SELECTED_Y;
         }
         if (gMenuTransitionState == 7) {
-            actor->state = COURSE_LIST_EXIT;
+            arg0->state = COURSE_LIST_EXIT;
         }
         break;
 
     case COURSE_LIST_RESTORE_SELECTED_Y:
-        actor->y[gRaceCourseIndex] += actor->itemSpacing;
-        selectedCourseY = (gRaceCourseIndex * actor->itemSpacing) + actor->baseY;
-        if (actor->y[gRaceCourseIndex] >= selectedCourseY) {
-            actor->y[gRaceCourseIndex] = selectedCourseY;
-            actor->state = COURSE_LIST_SLIDE_OTHERS_IN; } break; case COURSE_LIST_SLIDE_OTHERS_IN: visibleCourseCount = gCharacterSelectCourseExitOptionIndex + 1; index = 0; if (visibleCourseCount > 0) { do { if (index != gRaceCourseIndex) { actor->x[index] += 0x20; visibleCourseCount = gCharacterSelectCourseExitOptionIndex + 1; } index++; } while (index < (gCharacterSelectCourseExitOptionIndex + 1)); }
-        if (gRaceCourseIndex != 0) {
-            if (actor->x[0] >= -0x7C) {
-                actor->state = COURSE_LIST_IDLE;
-            }
-        } else if (actor->x[1] >= -0x7C) {
-            actor->state = COURSE_LIST_IDLE;
+        arg0->y[gRaceCourseIndex] += arg0->itemSpacing;
+        if (arg0->y[gRaceCourseIndex] >= (arg0->baseY + (gRaceCourseIndex * arg0->itemSpacing))) {
+            arg0->y[gRaceCourseIndex] = arg0->baseY + (gRaceCourseIndex * arg0->itemSpacing);
+            arg0->state = COURSE_LIST_SLIDE_OTHERS_IN;
         }
-        if (actor->state == COURSE_LIST_IDLE) {
+        break;
+
+    case COURSE_LIST_SLIDE_OTHERS_IN:
+        visibleCourseCount = gCharacterSelectCourseExitOptionIndex + 1; index = 0; if (visibleCourseCount > 0) { do {
+            if (index != gRaceCourseIndex) {
+                arg0->x[index] += 0x20;
+                visibleCourseCount = gCharacterSelectCourseExitOptionIndex + 1;
+            }
+            index++;
+        } while (index < (gCharacterSelectCourseExitOptionIndex + 1));
+        }
+        if (gRaceCourseIndex != 0) {
+            if (arg0->x[0] >= -0x7C) {
+                arg0->state = COURSE_LIST_IDLE;
+            }
+        } else if (arg0->x[1] >= -0x7C) {
+            arg0->state = COURSE_LIST_IDLE;
+        }
+        if (arg0->state == COURSE_LIST_IDLE) {
             gMenuTransitionState = 5;
         }
         break;
 
     case COURSE_LIST_EXIT:
-        index = 0;
-        if ((gCharacterSelectCourseExitOptionIndex + 1) > 0) {
-            coursePosition = actor;
-            do {
-                index++;
-                coursePosition->x[0] -= 0x20;
-                coursePosition = (CharacterSelectCourseMenuFrameActor *)((s16 *)coursePosition + 1);
-            } while (index < (gCharacterSelectCourseExitOptionIndex + 1));
+        for (index = 0; index < (gCharacterSelectCourseExitOptionIndex + 1); index++) {
+            arg0->x[index] -= 0x20;
         }
         break;
     }
 
-    if ((actor->state == COURSE_LIST_EXIT) && (actor->x[0] < -0x103)) {
-        removeCallbackTask(actor);
+    if ((arg0->state == COURSE_LIST_EXIT) && (arg0->x[0] < -0x103)) {
+        removeCallbackTask(arg0);
         return;
     }
 
-    addRenderCallback(&gMenuRenderCallbackList, drawCharacterSelectCourseListOptions, actor);
+    addRenderCallback(&gMenuRenderCallbackList, drawCharacterSelectCourseListOptions, arg0);
 }
-#endif
 
 void initCharacterSelectUnlockedCourseList(CharacterSelectCourseMenuFrameActor *arg0) {
     u8 spacing;
