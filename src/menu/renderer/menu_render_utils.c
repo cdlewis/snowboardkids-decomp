@@ -587,7 +587,7 @@ void drawAssetTableSpriteWithExplicitPalette(s16 x, s16 y, AssetTable *table, u1
                         G_TX_RENDERTILE, clipS << 5, clipT << 5, 0x400, 0x400);
 }
 
-// drawScaledAssetTableSprite best match: 91.534% (nonmatchings/drawScaledAssetTableSprite-1219509448159986855/base_55.c)
+// drawScaledAssetTableSprite best match: 95.622% (nonmatchings/drawScaledAssetTableSprite-1219509448159986855/base_83.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/renderer/menu_render_utils/drawScaledAssetTableSprite.s")
 
 #ifdef NON_MATCHING
@@ -611,7 +611,7 @@ void drawScaledAssetTableSprite(s16 x, s16 y, AssetTable *asset, volatile u16 en
     textureScale = scale;
     if (textureScale >= 0) {
         paletteBase = asset->entryCount + asset->entries;
-        sprite = (AssetTableEntry *)asset + entryIndex;
+        sprite = (AssetTableEntry *)asset + (entryIndex & 0xFFFFu);
         {
             s32 spriteWidth;
             s32 spriteHeight;
@@ -622,12 +622,12 @@ void drawScaledAssetTableSprite(s16 x, s16 y, AssetTable *asset, volatile u16 en
             spriteHeight = sprite[1].height;
             y0 = y + gMenuViewportCenterY;
             y1 = spriteHeight >> textureScale;
-            x0 += (spriteWidth - x1) / 2;
+            sprite++;
+            x0 = x0 + ((spriteWidth - x1) / 2);
             y0 = y0 + ((spriteHeight - y1) / 2);
             x1 += x0;
             y1 += y0;
         }
-        sprite++;
         clippedS = 0;
         clippedT = 0;
 
@@ -656,7 +656,7 @@ void drawScaledAssetTableSprite(s16 x, s16 y, AssetTable *asset, volatile u16 en
             clippedS = clipLeft - x0;
             x0 = clipLeft;
         }
-        if (y0 < clipTop) {
+        if (y0 < (gMenuViewportCenterY - viewHalfHeight)) {
             clippedT = clipTop - y0;
             y0 = clipTop;
         }
@@ -672,13 +672,13 @@ void drawScaledAssetTableSprite(s16 x, s16 y, AssetTable *asset, volatile u16 en
 
             gDPPipeSync(gRegionAllocPtr++);
             gDPSetTextureFilter(gRegionAllocPtr++, G_TF_AVERAGE);
-            gDPLoadTextureTile_4b(gRegionAllocPtr++, (u8 *)asset + sprite->imageOffset,
+            gDPLoadTextureTile_4b(gRegionAllocPtr++, sprite->imageOffset + (u8 *)asset,
                                   G_IM_FMT_CI, sprite->width, sprite->height,
                                   0, 0, sprite->width, sprite->height, 0,
                                   G_TX_CLAMP, G_TX_CLAMP, G_TX_NOMASK, G_TX_NOMASK,
                                   G_TX_NOLOD, G_TX_NOLOD);
             gDPLoadTLUT_pal16(gRegionAllocPtr++, 0,
-                              (u8 *)paletteBase + (sprite->textureIndex << 5));
+                              (u8 *)paletteBase + ((*sprite).textureIndex << 5));
             gSPTextureRectangle(gRegionAllocPtr++, x0 << textureScale, y0 << textureScale,
                                 x1 << textureScale, y1 << textureScale, G_TX_RENDERTILE,
                                 (clippedS << 5) + 0x10,
