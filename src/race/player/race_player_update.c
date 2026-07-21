@@ -99,6 +99,8 @@ extern void (*gRacePlayerMode30StateHandlers[])(RacePlayer *);
 extern void (*gRacePlayerMode32CharacterHandlers[])(RacePlayer *);
 extern void (*gRacePlayerMode35CharacterHandlers[])(RacePlayer *);
 extern void (*gRacePlayerModePostUpdateHandlers[])(RacePlayer *);
+extern void (*gRacePlayerModeUpdateHandlers[])(RacePlayer *);
+extern s32 D_800DECC0[];
 extern CourseStartPosition gRacePlayerPreviewStartPositions[][4];
 extern u16 gRacePlayerVoiceBaseSoundIds;
 extern u16 gRacePlayerVoiceLeadSoundOffsets;
@@ -433,8 +435,231 @@ void updateRacePlayers(void) {
     }
 }
 
-// updateRacePlayer best match: 91.734% (nonmatchings/updateRacePlayer-7273315160691878794/base_3.c)
+// updateRacePlayer best match: 97.524% (nonmatchings/updateRacePlayer-1219509448159986855/base_16.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race/player/race_player_update/updateRacePlayer.s")
+
+#ifdef NON_MATCHING
+
+void updateRacePlayer(RacePlayer *player) {
+    s32 spawnX;
+    s32 spawnY;
+    s32 spawnZ;
+    s32 deltaZ;
+    s16 spawnAngle;
+    RaceVec3i offset;
+    RaceVec3i transformedOffset;
+    s16 rotation[16];
+    s32 verticalDelta;
+    s32 i;
+    s32 targetSpeed;
+    s32 catchupDelta;
+    s32 speedDelta;
+    s32 deltaX;
+    s16 timer;
+    u8 cooldown;
+
+    player->unk50C = 0;
+    player->unk331 = player->unk330;
+    player->unk330 = getRaceCourseSurfaceType(player->unk502, player->pos.x, player->pos.z);
+    if (player->stateFlags & 0x02000000) {
+        player->unk330 = 0xB;
+    }
+
+    if (player->unk330 < 0x11) {
+        goto skip_surface_displacement;
+    }
+    if (player->unk330 >= 0x19) {
+        goto skip_surface_displacement;
+    }
+    if (player->stateFlags & 0x200) {
+        goto skip_surface_displacement;
+    }
+
+    offset.x = 0;
+    offset.y = 0;
+    offset.z = -0x2000;
+    getRaceCourseSurfaceSpawnTransform(player->unk502, &spawnX, &spawnY, &spawnZ, &spawnAngle);
+    spawnAngle = spawnAngle - (player->unk330 << 9) + 0x2200;
+    makeFixedRotationY(rotation, spawnAngle);
+    transformVec3iByFixedMatrix(rotation, &offset, &transformedOffset);
+    player->pos.x += transformedOffset.x;
+    player->pos.y += transformedOffset.y;
+    player->pos.z += transformedOffset.z;
+
+skip_surface_displacement:
+    player->unk504 = -projectRaceCourseSurfaceProgress(player->unk502, player->pos.x, player->pos.z);
+    player->unk40.x = player->pos.x - player->unk34.x;
+    player->unk40.y = player->pos.y - player->unk34.y;
+    player->unk40.z = player->pos.z - player->unk34.z;
+    if (player->unk74 < player->unk40.y) {
+        player->unk40.y = player->unk74;
+    }
+    verticalDelta = player->unk40.y;
+    if (verticalDelta < -0x400000) {
+        player->unk40.y = -0x400000;
+        verticalDelta = -0x400000;
+    }
+    if (verticalDelta >= 0x400001) {
+        player->unk40.y = 0x400000;
+    }
+
+    player->unk34.x = player->pos.x;
+    player->unk34 = player->pos;
+    player->unk74 = 0x7FFFFFFF;
+    player->unk4D0 = player->unk4A0;
+    player->unk4DC = player->unk4AC;
+    player->unk4E8 = player->unk4B8;
+    player->unk4F4 = player->unk4C4;
+
+    targetSpeed = player->unk25C;
+    player->unk310 = targetSpeed;
+    if (player->unk4 != 0) {
+        player->unk310 = targetSpeed + 0x6000;
+    }
+
+    i = 0;
+    if (player->unk2D8 <= 0) {
+        goto speed_reduction_done;
+    }
+speed_reduction_loop:
+    player->unk310 -= player->unk310 >> 2;
+    i++;
+    if (i < player->unk2D8) {
+        goto speed_reduction_loop;
+    }
+speed_reduction_done:
+
+    if ((player->pendingItemHitFlags == 0) && (player->unk330 == 1) && (player->unk310 >= 0x50001)) {
+        player->unk310 = 0x50000;
+    }
+
+    if (player->trailEffectTimer != 0) {
+        if ((gRaceSplitscreenMode == 1) && (gRaceTypeSelection == 0)) {
+            player->unk310 += 0x40000;
+        } else {
+            player->unk310 += 0x30000;
+        }
+    }
+
+    resolveRacePlayerHitReactions(player);
+
+    if ((player->unk4 == 0) || (player->unk52A == 0)) {
+        catchupDelta = D_800DECC0[player->rankIndex] - player->unk318;
+        if (catchupDelta >= 0x21) {
+            catchupDelta = 0x20;
+        }
+        if (catchupDelta < -0x30) {
+            catchupDelta = -0x30;
+        }
+        player->unk318 += catchupDelta;
+        player->unk310 += player->unk318;
+    } else {
+        if (player->unk52A == 1) {
+            player->unk310 += 0x70000;
+        }
+        if (player->unk52A == 2) {
+            player->unk310 /= 3;
+        }
+        if ((player->unk52A == 3) && (player->rankIndex != 3)) {
+            player->unk310 -= player->unk310 >> 4;
+        }
+    }
+
+    if ((player->unk4 != 0) && (player->unk508 >= (gRaceLapCount - 1))) {
+        s16 startPath;
+
+        startPath = gRaceCourseStartEntries[gRaceCourseIndex].unk0;
+        if (((startPath - 0x14) < player->unk502) && (player->unk502 < startPath)) {
+            player->unk310 = player->unk25C;
+        }
+    }
+
+    targetSpeed = player->unk314;
+    speedDelta = player->unk310 - targetSpeed;
+    if (speedDelta >= 0xE01) {
+        speedDelta = 0xE00;
+    }
+    if (speedDelta < -0xE00) {
+        speedDelta = -0xE00;
+    }
+    player->unk314 = targetSpeed + speedDelta;
+    player->stateFlags &= ~0x800;
+
+    if (player->unk4 != 0) {
+        updateRacePlayerCheckpointEvents((struct RacePlayerProgressState *) player);
+    }
+
+    timer = player->unk578;
+    if (timer != 0) {
+        player->unk578 = timer - 1;
+    }
+
+    gRacePlayerModeUpdateHandlers[player->mode](player);
+
+    player->stateFlags &= 0xFDFFFFFF;
+    player->unk517 = 0;
+    player->unk57B = 0;
+    player->actionEffectEnabled = 0;
+    if (player->stateFlags & 2) {
+        player->stateFlags &= ~2;
+    } else {
+        player->unk6C = 0;
+        player->unk6E = 0;
+        player->unk70 = 0;
+    }
+
+    if (player->stateFlags & 0x80000) {
+        gViewportStates[player->playerIndex].overlayAlpha += 0x10;
+        if (gViewportStates[player->playerIndex].overlayAlpha >= 0x100) {
+            gViewportStates[player->playerIndex].overlayAlpha = 0xFF;
+        }
+    } else {
+        gViewportStates[player->playerIndex].overlayAlpha -= 0x10;
+        if (gViewportStates[player->playerIndex].overlayAlpha < 0) {
+            gViewportStates[player->playerIndex].overlayAlpha = 0;
+        }
+    }
+
+    deltaX = player->pos.x - player->unk34.x;
+    deltaZ = player->pos.z - player->unk34.z;
+    player->unk29C = integerSquareRoot64((s64) deltaX * deltaX + (s64) deltaZ * deltaZ);
+    player->unk5C = player->pos.y - 0x60000;
+    player->unk2C8 = player->unk40.x;
+    player->unk2CC = player->unk40.z;
+
+    timer = player->unk2D4;
+    if (timer != 0) {
+        player->unk2D4 = timer - 1;
+    }
+
+    timer = player->trailEffectTimer;
+    if (timer != 0) {
+        player->unk584 = 7;
+        player->unk582 = 0x7F;
+        player->unk588 = 0.0f;
+        if (timer >= 0xDD) {
+            player->actionEffectLevel = 2;
+            player->actionEffectFrame = 0;
+        }
+    }
+
+    timer = player->actionSoundTimer;
+    if (timer != 0) {
+        player->actionSoundTimer = timer - 1;
+    }
+    if (player->stateFlags & 0x403040) {
+        player->actionSoundTimer = 0;
+    }
+
+    if (!(gMenuFlowState & 1)) {
+        cooldown = player->unk519;
+        if (cooldown != 0) {
+            player->unk519 = cooldown - 1;
+        }
+    }
+}
+
+#endif
 
 void updateRacePlayerMotionFeedback(RacePlayer *player) {
     s16 angleDiff;
