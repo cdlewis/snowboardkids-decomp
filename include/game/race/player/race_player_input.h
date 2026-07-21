@@ -212,7 +212,8 @@ typedef struct RacePlayer {
         s8 racePosition;
         s8 iconTile;
     };
-    /* 0x50A */ char pad50A[6];
+    /* 0x50A */ char pad50A[2];
+    /* 0x50C */ s32 unk50C;
     /* 0x510 */ s16 shieldEffectTimer;
     /* 0x512 */ union {
         s8 itemEffectType;
