@@ -1493,10 +1493,6 @@ void drawMenuColoredGlyphScript(volatile s16 x, s16 y, MenuGlyphScript *script, 
     }
 }
 
-// drawMenuGlyphScript best match: 99.737%
-#pragma GLOBAL_ASM("asm/nonmatchings/menu/renderer/menu_renderer/drawMenuGlyphScript.s")
-
-#ifdef NON_MATCHING
 void drawMenuGlyphScript(volatile s16 x, s16 y, MenuGlyphScript *script, s32 palette, u16 scale, volatile u16 colorMode) {
     u16 firstGlyph;
     s32 glyphCode;
@@ -1523,6 +1519,8 @@ void drawMenuGlyphScript(volatile s16 x, s16 y, MenuGlyphScript *script, s32 pal
         scaleValue = scale;
         glyphCode = firstGlyph;
         colorModeValue = colorMode;
+        if (scale) {
+        }
         do {
             spaceGlyph = MENU_GLYPH_SCRIPT_SPACE;
             if (MENU_GLYPH_SCRIPT_NEWLINE == (glyphCode & 0xFFFF)) {
@@ -1530,6 +1528,8 @@ void drawMenuGlyphScript(volatile s16 x, s16 y, MenuGlyphScript *script, s32 pal
                 drawY += MENU_GLYPH_LINE_HEIGHT;
             } else if (spaceGlyph == (glyphCode & 0xFFFF)) {
                 drawX += glyphAdvance;
+                if (0) {
+                }
             } else if ((glyphCode & 0xFFFF) == MENU_GLYPH_SCRIPT_COLOR) {
                 colorModeValue = scriptCursor[1];
                 scriptCursor++;
@@ -1544,7 +1544,6 @@ void drawMenuGlyphScript(volatile s16 x, s16 y, MenuGlyphScript *script, s32 pal
         colorMode = colorModeValue;
     }
 }
-#endif
 
 // drawMenuColoredGlyph best match: 84.271%
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/renderer/menu_renderer/drawMenuColoredGlyph.s")
