@@ -131,6 +131,12 @@ and control flow already match and only register *names* differ.
   - Inlining the assignment *inside* the consuming expression
     (`*p = *arg1 + (temp = result);`) can flip register homes where a
     separate statement on its own line does not.
+- **Compound OR after a known-zero store can fold to a direct constant store.**
+  If a field is cleared earlier in the same block, `field |= MASK` may emit the
+  same single `sw` of `MASK` as `field = MASK`, while giving IDO different
+  internal temporaries and register allocation. This is a useful, natural
+  nudge when the instruction stream already matches and only a nearby mask
+  test uses the wrong temp register.
 - **Mask a narrow read explicitly to push off register reuse.** On a `u16`
   field, writing `(field & 0xFFFF) + 1` instead of `field + 1` is
   semantically a no-op (`lhu` already zero-extends) but can push IDO off a

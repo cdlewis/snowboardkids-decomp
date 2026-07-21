@@ -209,17 +209,13 @@ void recordRaceInputHistoryFrame(RacePlayer *player) {
     history->lastWriteIndex = index;
 }
 
-// playRaceInputHistoryFrame best match: 99.889% (base_18.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race/player/race_player_input/playRaceInputHistoryFrame.s")
-
-#ifdef NON_MATCHING
 void playRaceInputHistoryFrame(RacePlayer *player) {
     RaceInputHistoryBuffer *history;
     RacePlayer *playerAlias;
-    s32 index;
-    s32 buttonIndex;
-    u8 *buttonHistory;
     s32 buttons;
+    s32 index;
+    u32 buttonIndex;
+    u8 *buttonHistory;
 
     playerAlias = player;
     if (playerAlias->replayInputSource == 5) {
@@ -249,8 +245,8 @@ dummy_label:
         playerAlias->inputFlags = 0;
 
         buttons = history->buttons[history->writeIndex] ^ 0;
-        if ((buttons & 0xFFu) & 1) {
-            playerAlias->inputFlags = 8;
+        if (buttons & 1) {
+            playerAlias->inputFlags |= 8;
             buttonIndex = history->writeIndex;
             buttons = buttonHistory[buttonIndex];
         }
@@ -285,7 +281,6 @@ dummy_label:
         }
     }
 }
-#endif
 
 void updateRacePlayerInput(RacePlayer *player) {
     u16 index;
