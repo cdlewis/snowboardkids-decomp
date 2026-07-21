@@ -39,7 +39,6 @@ extern s16 gMenuChoicePromptState;
 extern u8 gMenuSelectionConfirmTimer;
 extern s16 gAssetHandles[];
 
-#ifdef NON_MATCHING
 #define CONTROLLER_PAK_RACE_RECORD_SAVE_SCORE_TEXTURE_HANDLE (gAssetHandles[0x21])
 
 typedef struct {
@@ -51,7 +50,6 @@ typedef struct {
 extern s16 gPlayerBadgeDisplayOrder[];
 extern ControllerPakRaceRecordSaveScoreView gGameSaveDataBuffer;
 extern s32 gPlayer1Money;
-#endif
 
 struct ControllerPakRaceRecordSaveActor {
     char pad[0x18];
@@ -85,10 +83,6 @@ struct ControllerPakRaceRecordSaveActor {
     } state;
 };
 
-// drawControllerPakRaceRecordSaveScorePanel best match: 99.423% (nonmatchings/drawControllerPakRaceRecordSaveScorePanel-8331816093655448999/base_10.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/menu/controller_pak/controller_pak_race_record_save_ui/drawControllerPakRaceRecordSaveScorePanel.s")
-
-#ifdef NON_MATCHING
 const char D_800E0F30[] = "%6d";
 
 void drawControllerPakRaceRecordSaveScorePanel(ControllerPakRaceRecordSaveActor *arg0) {
@@ -123,13 +117,14 @@ void drawControllerPakRaceRecordSaveScorePanel(ControllerPakRaceRecordSaveActor 
 
     i = 0;
     if (count > 0) {
-        xOffset = 0;
+        next = 0;
         do {
             xOffset = 1;
             xOffset = i + xOffset;
-            alpha = 0x100;
-            if (gGameSaveDataBuffer.iconCount < xOffset) {
+            if ((s32)gGameSaveDataBuffer.iconCount < xOffset) {
                 alpha = 0x70;
+            } else {
+                alpha = 0x100;
             }
 
             drawMenuSpriteWithAlpha((s16)(arg0->x + next + 4), (s16)(arg0->y + 0x11),
@@ -146,10 +141,10 @@ void drawControllerPakRaceRecordSaveScorePanel(ControllerPakRaceRecordSaveActor 
     } else if (gGameSaveDataBuffer.iconCount == 2) {
         count = 8;
     } else {
+        i = 0;
         if (gGameSaveDataBuffer.iconCount == 3) {
             count = 9;
         }
-        i = 0;
     }
 
     if (count > 0) {
@@ -176,7 +171,6 @@ void drawControllerPakRaceRecordSaveScorePanel(ControllerPakRaceRecordSaveActor 
         } while (i != count);
     }
 }
-#endif
 
 void updateControllerPakRaceRecordSaveScorePanel(ControllerPakRaceRecordSaveActor *arg0) {
     u8 state = arg0->unk1C.state;
