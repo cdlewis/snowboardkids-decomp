@@ -58,6 +58,11 @@ typedef struct {
     /* 0x2C */ s16 y3;
 } CharacterSelectCourseListInitLoop;
 
+typedef struct {
+    /* 0x00 */ u8 pad0[8];
+    /* 0x08 */ u8 unk8;
+} CharacterSelectCourseRaceState;
+
 typedef union {
     u8 bytes[8];
     struct {
@@ -124,7 +129,7 @@ extern u8 gRaceTypeSelection;
 extern void *gMenuRenderCallbackList;
 extern void addRenderCallback(void *, void *, void *);
 extern u8 gPlayerCount;
-extern u8 gRacePlayers[];
+extern CharacterSelectCourseRaceState gRacePlayers[];
 extern CharacterSelectCoursePlayerRecord gFrameCounter;
 extern s32 gMenuFlowState;
 
@@ -671,45 +676,35 @@ void drawCharacterSelectCoursePreviewFrame(CharacterSelectCourseWidgetActor *arg
 }
 #endif
 
-// updateCharacterSelectCoursePreviewFrame best match: 92.327% (nonmatchings/updateCharacterSelectCoursePreviewFrame-8757365433159351387/base_2.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/menu/character_select/character_select_course_ui/updateCharacterSelectCoursePreviewFrame.s")
-
-#ifdef NON_MATCHING
 void updateCharacterSelectCoursePreviewFrame(CharacterSelectCourseWidgetActor *arg0) {
-    int state;
-    int stateValue;
-    u16 selectedSpriteIndex;
-    s32 selectedIndex;
-    u16 spriteIndex;
+    u8 state;
+    int switchState;
+    u32 selectedSpriteIndex;
+    int menuState;
+    register s32 selectedIndex;
+    register u16 spriteIndex;
 
     selectedIndex = gRaceCourseIndex;
     spriteIndex = (u16)arg0->sprite.index;
     selectedSpriteIndex = spriteIndex;
     if ((selectedIndex >= (s32)selectedSpriteIndex) && (arg0->transition.bytes.state != 0) && (arg0->y != -0x48)) {
-        stateValue = 2;
-        state = stateValue & 0xFF;
-        arg0->transition.bytes.state = stateValue;
+        switchState = state = arg0->transition.bytes.state = 2;
     } else {
-        state = arg0->transition.bytes.state;
-        if ((selectedIndex < (s32)selectedSpriteIndex) && (state != 0) && (arg0->y != -0x140)) {
-            stateValue = 1;
-            state = stateValue & 0xFF;
-            arg0->transition.bytes.state = stateValue;
-        } else if ((state != 0) && (state < 4)) {
-            stateValue = 3;
-            state = stateValue & 0xFF;
-            arg0->transition.bytes.state = stateValue;
+        switchState = state = arg0->transition.bytes.state;
+        if ((selectedIndex < (s32)selectedSpriteIndex) && (switchState != 0) && (arg0->y != -0x140)) {
+            switchState = state = arg0->transition.bytes.state = 1;
+        } else if ((switchState != 0) && (switchState < 4)) {
+            switchState++;
+            switchState--;
+            switchState = state = arg0->transition.bytes.state = 3;
         }
     }
 
-    state = arg0->transition.bytes.state;
-    if (state != D_8010AE8A) {
-        selectedIndex = D_8010AE8A & 0xFF;
-        state = selectedIndex;
-        arg0->transition.bytes.state = D_8010AE8A;
+    if (switchState != D_8010AE8A) {
+        switchState = state = arg0->transition.bytes.state = D_8010AE8A;
     }
 
-    switch (state) {
+    switch (switchState) {
     case 0:
         arg0->x -= 0x26;
         if (arg0->x < -7) {
@@ -739,24 +734,23 @@ void updateCharacterSelectCoursePreviewFrame(CharacterSelectCourseWidgetActor *a
         break;
     case 3:
         gMenuFlowState += 1;
-        state = gRacePlayers[8];
-        if (state == 1) {
+        menuState = gRacePlayers[0].unk8;
+        if (menuState == 1) {
             arg0->transition.bytes.state = 4;
-            state = gMenuTransitionState;
+            menuState = gMenuTransitionState;
         }
-        if (state == 7) {
+        if (menuState == 7) {
             arg0->transition.bytes.state = 5;
         }
         state = arg0->transition.bytes.state;
         break;
     case 4:
-        state = gRacePlayers[8];
-        if (state == 5) {
+        if (gRacePlayers[0].unk8 == 5) {
             arg0->transition.bytes.state = 3;
-            gRacePlayers[8] = 6;
-            state = 6 & 0xFF;
+            gRacePlayers[0].unk8 = 6;
         }
-        if (state == 7) {
+        if (gRacePlayers[0].unk8 == 7) {
+            state = 6 & 0xFF;
             arg0->transition.bytes.state = 5;
         }
         state = arg0->transition.bytes.state;
@@ -770,7 +764,7 @@ void updateCharacterSelectCoursePreviewFrame(CharacterSelectCourseWidgetActor *a
         break;
     case 6:
         arg0->transition.bytes.state = 7;
-        gRacePlayers[8] = 8;
+        gRacePlayers[0].unk8 = 8;
         state = arg0->transition.bytes.state;
         break;
     }
@@ -782,7 +776,6 @@ void updateCharacterSelectCoursePreviewFrame(CharacterSelectCourseWidgetActor *a
     }
     addRenderCallback(&gMenuRenderCallbackList, drawCharacterSelectCoursePreviewFrame, arg0);
 }
-#endif
 
 void initCharacterSelectCoursePreviewFrame(CharacterSelectCourseWidgetActor *arg0) {
     arg0->x = 0x96;
@@ -2198,8 +2191,8 @@ void updateCharacterSelectCoursePlayerStatsPanel(CharacterSelectCourseWidgetActo
     }
     if ((unsigned int)state == 3) {
         removeCallbackTask(arg0);
-        if (gRacePlayers[8] == 3) {
-            gRacePlayers[8] = 4;
+        if (gRacePlayers[0].unk8 == 3) {
+            gRacePlayers[0].unk8 = 4;
         }
     } else {
         addRenderCallback(&gMenuRenderCallbackList, drawCharacterSelectCoursePlayerStatsPanel, arg0);
