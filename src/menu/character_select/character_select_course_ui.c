@@ -583,52 +583,52 @@ void updateCharacterSelectLimitedCourseList(CharacterSelectCourseMenuFrameActor 
     }
 }
 
-// initCharacterSelectLimitedCourseList best match: 74.868% (not yet matching)
+// initCharacterSelectLimitedCourseList best match: 83.158% (nonmatchings/initCharacterSelectLimitedCourseList-2188069624939011928/base_11.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/character_select/character_select_course_ui/initCharacterSelectLimitedCourseList.s")
 
 #ifdef NON_MATCHING
 void initCharacterSelectLimitedCourseList(CharacterSelectCourseMenuFrameActor *arg0) {
-    s32 temp_t6;
-    s32 temp_t7;
-    s32 temp_t8;
-    s32 temp_t9;
-    s32 temp_t0;
-    s32 temp_t3;
-    s32 temp_t2;
-    s32 temp_t4;
-    s32 temp_t5;
-    s32 temp_v1;
+    s32 baseY;
+    u8 spacing;
+    s32 firstBase;
+    s32 secondBase;
+    u8 spacing1;
+    u8 spacing2;
+    s32 thirdBase;
+    s32 fourthBase;
+    s32 tripleSpacing;
+    s32 doubleSpacing;
+    s32 y1;
+    s32 y2;
+    s32 y3;
+    s32 x;
 
-    temp_t6 = -0x58;
-    temp_t7 = 0x18;
-    arg0->baseY = temp_t6;
-    temp_t8 = *(volatile s16 *)&arg0->baseY;
-    temp_t9 = *(volatile s16 *)&arg0->baseY;
-    if (1) {
-        temp_t7 = (temp_t3 = (temp_t0 = (arg0->itemSpacing = temp_t7)));
-    }
-    do {
-        arg0->y[0] = temp_t8;
-        temp_t2 = *(volatile s16 *)&arg0->baseY;
-        temp_t6 = *(volatile s16 *)&arg0->baseY;
-        temp_t8 = temp_t7 << 2;
-        temp_v1 = -0x104;
-        temp_t0 = temp_t9 + temp_t0;
-        temp_t8 -= temp_t7;
-        temp_t4 = temp_t3 << 1;
-        temp_t3 = 1;
-        temp_t5 = temp_t2 + temp_t4;
-        temp_t9 = temp_t6 + temp_t8;
-        arg0->y[3] = temp_t9;
-        arg0->y[2] = temp_t5;
-        arg0->y[1] = temp_t0;
-        arg0->x[1] = temp_v1;
-        arg0->x[2] = temp_v1;
-        arg0->x[3] = temp_v1;
-    } while (0);
-    arg0->x[0] = temp_v1;
+    baseY = -0x58;
+    spacing = 0x18;
+    arg0->baseY = baseY;
+    firstBase = *(volatile s16 *)&arg0->baseY;
+    secondBase = *(volatile s16 *)&arg0->baseY;
+    spacing = spacing2 = spacing1 = (arg0->itemSpacing = spacing);
+    *(volatile s16 *)&arg0->y[0] = firstBase;
+    thirdBase = *(volatile s16 *)&arg0->baseY;
+    fourthBase = *(volatile s16 *)&arg0->baseY;
+    tripleSpacing = spacing << 2;
+    x = -0x104;
+    y1 = secondBase + spacing1;
+    tripleSpacing -= spacing;
+    doubleSpacing = spacing2 << 1;
+    spacing1 = 1;
+    y2 = thirdBase + doubleSpacing;
+    y3 = fourthBase + tripleSpacing;
+    arg0->y[3] = y3;
+    arg0->y[2] = y2;
+    arg0->y[1] = y1;
+    arg0->x[1] = x;
+    arg0->x[2] = x;
+    arg0->x[3] = x;
+    arg0->x[0] = x;
     arg0->timer = 0;
-    arg0->itemCount = temp_t3;
+    arg0->itemCount = spacing1;
     arg0->state = 0;
     setCallbackTaskCallback(arg0, updateCharacterSelectLimitedCourseList);
 }
