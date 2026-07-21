@@ -12,7 +12,7 @@ s32 findRaceCourseSurfaceAtPoint(s32 x, s32 z);
 void pushRaceCourseSurfaceBoundaryWithVelocity(s32 *velocityX, s32 *velocityZ, s32 radius);
 void resolveRaceCourseSurfaceCollisionWithNormal(s16 surfaceIndex, s32 x, s32 z, s32 radius, s8 normalIndex, s32 *pushX,
                   s32 *pushZ, s32 *velocityX, s32 *velocityZ);
-void resolveRaceCourseSurfaceCollisionWithVelocity(s16 surfaceIndex, s32 x, s32 z, s32 radius, s32 *pushX,
+void resolveRaceCourseSurfaceCollisionWithVelocity(s32 surfaceIndex, s32 x, s32 z, s32 radius, s32 *pushX,
                   s32 *pushZ, s32 *velocityX, s32 *velocityZ);
 void pushRaceCourseSurfaceBoundary(s32 radius);
 void resolveRaceCourseSurfaceCollision(s16 surfaceIndex, s32 x, s32 z, s32 radius, s32 *pushX, s32 *pushZ);
