@@ -693,12 +693,12 @@ void drawScaledAssetTableSprite(s16 x, s16 y, AssetTable *asset, volatile u16 en
 }
 #endif
 
-// drawScaledAssetTableSpriteWithExplicitPalette best match: 89.050% (nonmatchings/drawScaledAssetTableSpriteWithExplicitPalette-1219509448159986855/base_8.c)
+// drawScaledAssetTableSpriteWithExplicitPalette best match: 94.647% (nonmatchings/drawScaledAssetTableSpriteWithExplicitPalette-1219509448159986855/base_20.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/renderer/menu_render_utils/drawScaledAssetTableSpriteWithExplicitPalette.s")
 
 #ifdef NON_MATCHING
 void drawScaledAssetTableSpriteWithExplicitPalette(s16 x, s16 y, AssetTable *asset, volatile u16 entryIndex,
-                                                   u16 paletteIndex, u32 scale) {
+                                                   u16 paletteIndex, u16 scale) {
     s32 viewHalfWidth;
     AssetTableEntry *paletteBase;
     s32 clipLeft;
@@ -718,7 +718,7 @@ void drawScaledAssetTableSpriteWithExplicitPalette(s16 x, s16 y, AssetTable *ass
     textureScale = scale;
     if (textureScale >= 0) {
         paletteBase = asset->entryCount + asset->entries;
-        sprite = &((AssetTableEntry *)asset)[entryIndex];
+        sprite = (AssetTableEntry *)asset + (entryIndex & 0xFFFFu);
         {
             s32 spriteWidth;
             s32 spriteHeight;
@@ -729,12 +729,12 @@ void drawScaledAssetTableSpriteWithExplicitPalette(s16 x, s16 y, AssetTable *ass
             spriteHeight = sprite[1].height;
             y0 = y + gMenuViewportCenterY;
             y1 = spriteHeight >> textureScale;
-            x0 += (spriteWidth - x1) / 2;
-            y0 += (spriteHeight - y1) / 2;
+            sprite++;
+            x0 = x0 + ((spriteWidth - x1) / 2);
+            y0 = y0 + ((spriteHeight - y1) / 2);
             x1 += x0;
             y1 += y0;
         }
-        sprite++;
         clippedS = 0;
         clippedT = 0;
 
@@ -762,7 +762,7 @@ void drawScaledAssetTableSpriteWithExplicitPalette(s16 x, s16 y, AssetTable *ass
             clippedS = clipLeft - x0;
             x0 = clipLeft;
         }
-        if (y0 < clipTop) {
+        if (y0 < (gMenuViewportCenterY - viewHalfHeight)) {
             clippedT = clipTop - y0;
             y0 = clipTop;
         }
@@ -774,18 +774,18 @@ void drawScaledAssetTableSpriteWithExplicitPalette(s16 x, s16 y, AssetTable *ass
         }
 
         {
-            u32 textureStep;
+            s32 textureStep;
 
             gDPPipeSync(gRegionAllocPtr++);
             gDPSetTextureFilter(gRegionAllocPtr++, G_TF_AVERAGE);
-            gDPLoadTextureTile_4b(gRegionAllocPtr++, (u8 *)asset + sprite->imageOffset, G_IM_FMT_CI,
+            gDPLoadTextureTile_4b(gRegionAllocPtr++, sprite->imageOffset + (u8 *)asset, G_IM_FMT_CI,
                                   sprite->width, sprite->height, 0, 0, sprite->width, sprite->height, 0,
                                   G_TX_CLAMP, G_TX_CLAMP, G_TX_NOMASK, G_TX_NOMASK, G_TX_NOLOD, G_TX_NOLOD);
             gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, (u8 *)paletteBase + (paletteIndex << 5));
             gSPTextureRectangle(gRegionAllocPtr++, x0 << textureScale, y0 << textureScale,
                                 x1 << textureScale, y1 << textureScale, G_TX_RENDERTILE,
                                 (clippedS << 5) + 0x10, (clippedT << 5) + 0x10,
-                                textureStep = (1 << (scale + 10)) & 0xFFFF, textureStep);
+                                textureStep = 1 << (scale + 10), textureStep);
             gDPPipeSync(gRegionAllocPtr++);
             gDPSetTextureFilter(gRegionAllocPtr++, G_TF_POINT);
             gDPPipeSync(gRegionAllocPtr++);
