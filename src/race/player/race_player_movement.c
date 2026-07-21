@@ -185,7 +185,7 @@ void getRacePlayerRankingProgress(s32 arg0, s32 *arg1, s32 *arg2) {
     }
 }
 
-// updateRacePlayerRankings best match: 84.263% (nonmatchings/updateRacePlayerRankings-8331816093655448999/base_7.c)
+// updateRacePlayerRankings best match: 93.510% (nonmatchings/updateRacePlayerRankings-1219509448159986855/base_43.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race/player/race_player_movement/updateRacePlayerRankings.s")
 
 #ifdef NON_MATCHING
@@ -193,17 +193,17 @@ void updateRacePlayerRankings(void) {
     PlayerOrder order;
     s32 primary[4];
     s32 secondary[4];
-    RacePlayer *player;
-    s8 *orderI;
-    s8 *orderJ;
     s32 playerCount;
-    s32 lastPair;
     s32 i;
     s32 j;
+    s32 lastPair;
+    s8 *orderI;
+    s8 *orderJ;
+    RacePlayer *player;
     s8 right;
     s8 left;
 
-    if (gRaceSplitscreenMode != 2) {
+    if ((u32)gRaceSplitscreenMode != 2) {
         if (gMenuFlowState & 1) {
             gRaceOrderPlayerIds[0] = 0;
             gRaceOrderPlayerIds[1] = 1;
@@ -213,28 +213,29 @@ void updateRacePlayerRankings(void) {
         }
 
         playerCount = gRacePlayerCount;
-        order.order0 = 0;
-        order.order1 = 1;
-        order.order2 = 2;
-        order.order3 = 3;
+        (&order.order0)[0] = 0;
+        (&order.order0)[1] = 1;
+        (&order.order0)[2] = 2;
+        (&order.order0)[3] = 3;
         i = 0;
         if (playerCount > 0) {
             player = gRacePlayers;
             do {
                 getRacePlayerRankingProgress(i, &primary[i], &secondary[i]);
-                i++;
                 if ((s32)(player->stateFlags << 5) < 0) {
-                    primary[i - 1] += player->unk57C;
+                    primary[i] += player->unk57C;
                 }
+                i++;
                 player++;
-            } while (i < gRacePlayerCount);
+            } while (i < ((playerCount = gRacePlayerCount) ^ 0));
             i = 0;
         }
 
         lastPair = playerCount - 1;
         if (lastPair > 0) {
             do {
-                j = i + 1;
+                j = 1;
+                j = i + j;
                 if (j < playerCount) {
                     orderJ = &(&order.order0)[j];
                     orderI = &(&order.order0)[i];
@@ -248,7 +249,6 @@ void updateRacePlayerRankings(void) {
                         orderJ++;
                     } while (orderJ < &(&order.order0)[playerCount]);
                 }
-                j = i + 1;
                 i = j;
             } while (j < lastPair);
             i = 0;
@@ -258,6 +258,7 @@ void updateRacePlayerRankings(void) {
             do {
                 j = i + 1;
                 if (j < playerCount) {
+                    j = i + 1;
                     orderI = &(&order.order0)[i];
                     do {
                         left = orderI[0];
@@ -279,9 +280,11 @@ void updateRacePlayerRankings(void) {
                                     }
                                 }
                             }
+                            if (gRacePlayers) {
+                            }
                         }
                         j++;
-                    } while (j < playerCount);
+                    } while ((j ^ 0) < playerCount);
                 }
                 j = i + 1;
                 i = j;
@@ -293,7 +296,7 @@ void updateRacePlayerRankings(void) {
             orderI = &order.order0;
             orderJ = gRaceOrderPlayerIds;
             do {
-                right = orderI[0];
+                right = orderI[playerCount * 0];
                 orderI++;
                 orderJ++;
                 player = &gRacePlayers[right];
