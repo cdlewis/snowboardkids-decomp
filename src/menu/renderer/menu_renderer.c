@@ -374,16 +374,15 @@ void drawMenuSpriteWithAlpha(s16 arg0, s16 arg1, s32 arg2, u16 arg3, u16 arg4, u
                   temp_v1 = (s16)(gMenuViewportHeight / 2), temp_v0, temp_v1);
 }
 
-// drawMenuSpriteWithAlphaClipped best match: 82.706% (nonmatchings/drawMenuSpriteWithAlphaClipped-8331816093655448999/base_9.c)
+// drawMenuSpriteWithAlphaClipped best match: 90.399% (nonmatchings/drawMenuSpriteWithAlphaClipped-1219509448159986855/base_21.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/renderer/menu_renderer/drawMenuSpriteWithAlphaClipped.s")
 
 #ifdef NON_MATCHING
 void drawMenuSpriteWithAlphaClipped(s16 x, s16 y, FontAsset *asset, u16 tileIndex, u16 scaleX, u16 scaleY, u8 flipMode, u16 alpha,
                    u8 paletteArg, s16 clipLeft, s16 clipTop, s16 clipRight, s16 clipBottom) {
     FontTexture *texture;
+    volatile s32 pad;
     u8 *paletteBase;
-    s16 flipS;
-    s16 flipT;
     s32 left;
     s32 top;
     s32 right;
@@ -393,15 +392,17 @@ void drawMenuSpriteWithAlphaClipped(s16 x, s16 y, FontAsset *asset, u16 tileInde
     s32 maxX;
     s32 maxY;
     s32 texS;
+    s16 flipS;
+    s16 flipT;
     s32 texT;
     s32 texWidth;
     s32 texHeight;
     s32 scaleXValue;
     s32 scaleYValue;
     s32 color;
-    s32 palette;
+    u16 palette;
 
-    paletteBase = (u8 *)asset + 8 + (asset->header.entryCount * sizeof(FontTexture));
+    paletteBase = (asset->header.entryCount * sizeof(FontTexture)) + (u8 *)asset + 8;
 
     if (scaleX >= 0x201) {
         return;
@@ -419,14 +420,16 @@ void drawMenuSpriteWithAlphaClipped(s16 x, s16 y, FontAsset *asset, u16 tileInde
         flipS = gMenuSpriteFlipScales[flipMode & 3][0];
         flipT = gMenuSpriteFlipScales[flipMode & 3][1];
         texture = &asset->textures[tileIndex];
+        texT = x + gMenuViewportCenterX;
         texWidth = texture->width;
         texHeight = texture->height;
 
-        left = (x + gMenuViewportCenterX) << 2;
-        top = (y + gMenuViewportCenterY) << 2;
+        left = texT << 2;
+        top = ((y + gMenuViewportCenterY) << 1) << 1;
         right = (((scaleX * texWidth) << 2) >> 5) + left;
-        bottom = (((scaleY * texHeight) << 2) >> 5) + top;
+        bottom = (((scaleY * texHeight) << 2) >> 5) + (0, top);
         texS = 0;
+        texT = 0;
         texT = 0;
         if (flipS == -1) {
             texS = (texWidth - 1) << 5;
@@ -464,10 +467,10 @@ void drawMenuSpriteWithAlphaClipped(s16 x, s16 y, FontAsset *asset, u16 tileInde
                 bottom = maxY - 4;
             }
 
-            if (paletteArg != 0) {
-                palette = paletteArg - 1;
-            } else {
+            if (paletteArg == 0) {
                 palette = texture->paletteIndex;
+            } else {
+                palette = paletteArg - 1;
             }
 
             if (alpha != 0x100) {
@@ -481,8 +484,9 @@ void drawMenuSpriteWithAlphaClipped(s16 x, s16 y, FontAsset *asset, u16 tileInde
                                   texture->height, 0, 0, texture->width, texture->height, 0, G_TX_CLAMP, G_TX_CLAMP, 0,
                                   0, 0, 0);
             gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, paletteBase + (palette * 0x20));
+            palette = 0x8000 / scaleXValue;
             gSPTextureRectangle(gRegionAllocPtr++, left, top, right, bottom, 0, texS, texT,
-                                (u16)((0x8000 / scaleXValue) * flipS), (u16)((0x8000 / scaleYValue) * flipT));
+                                (u16)(palette * flipS), (u16)((0x8000 / scaleYValue) * flipT));
             if (alpha != 0x100) {
                 gSPDisplayList(gRegionAllocPtr++, gMenuRenderModeResetDl);
             }
