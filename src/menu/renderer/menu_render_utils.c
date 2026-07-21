@@ -517,84 +517,75 @@ void drawAssetTableSprite8bpp(s16 x, s16 y, AssetTable *table, u16 entryIndex) {
                         G_TX_RENDERTILE, clipS << 5, clipT << 5, 0x400, 0x400);
 }
 
-// drawAssetTableSpriteWithExplicitPalette best match: 99.923% (nonmatchings/drawAssetTableSpriteWithExplicitPalette-1219509448159986855/base.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/menu/renderer/menu_render_utils/drawAssetTableSpriteWithExplicitPalette.s")
-
-#ifdef NON_MATCHING
-void drawAssetTableSpriteWithExplicitPalette(s16 x, s16 y, AssetTable *asset, u16 entryIndex, u16 paletteIndex) {
-    volatile char pad[8];
-    AssetTableEntry *paletteBase;
-    s32 viewportLeft;
-    s32 viewportRight;
-    s32 viewportTop;
-    s32 viewportBottom;
-    s32 srcS;
-    s32 srcT;
-    s32 screenLeft;
-    u8 *palette;
-    s32 screenTop;
-    s32 halfWidth;
-    s32 screenRight;
-    s32 screenBottom;
+void drawAssetTableSpriteWithExplicitPalette(s16 x, s16 y, AssetTable *table, u16 entryIndex, u16 paletteIndex) {
+    AssetTableEntry *entry;
+    s32 maxX;
+    u8 *paletteBase;
+    s32 maxY;
+    s32 y0;
+    s32 x1;
+    s32 y1;
+    s32 clipS;
+    s32 clipT;
+    s32 minY;
+    s32 x0;
+    s32 minX;
     s32 halfHeight;
-    AssetTableEntry *sprite;
 
-    paletteBase = asset->entryCount + asset->entries;
-    sprite = (AssetTableEntry *)asset + entryIndex;
-    screenLeft = x + gMenuViewportCenterX;
-    screenTop = y + gMenuViewportCenterY;
-    screenRight = sprite[1].width + screenLeft;
-    screenBottom = sprite[1].height + screenTop;
-    sprite++;
-    srcS = 0;
-    srcT = 0;
-    halfWidth = gMenuViewportWidth / 2;
-    viewportRight = gMenuViewportCenterX + halfWidth;
-    if (screenLeft >= viewportRight) {
+    paletteBase = (table->entryCount * sizeof(AssetTableEntry)) + (u8 *)table + sizeof(AssetTableEntry);
+    entry = &table->entries[entryIndex];
+    x0 = x + gMenuViewportCenterX;
+    entry += 0;
+    y0 = y + gMenuViewportCenterY;
+    x1 = x0 + entry->width;
+    y1 = y0 + entry->height;
+    clipS = 0;
+    clipT = 0;
+
+    maxX = gMenuViewportCenterX + (gMenuViewportWidth / 2);
+    if (x0 >= maxX) {
         return;
     }
 
     halfHeight = gMenuViewportHeight / 2;
-    entryIndex &= 0xFFFF;
-    palette = (u8 *)paletteBase;
-    viewportBottom = gMenuViewportCenterY + halfHeight;
-    viewportLeft = gMenuViewportCenterX - halfWidth;
-    if (screenTop >= viewportBottom) {
+    maxY = gMenuViewportCenterY + halfHeight;
+    minX = gMenuViewportCenterX - (gMenuViewportWidth / 2);
+    if (y0 >= maxY) {
         return;
     }
-    if (screenRight < viewportLeft) {
+    if (x1 < minX) {
         return;
     }
 
-    viewportTop = gMenuViewportCenterY - halfHeight;
-    if (screenBottom < viewportTop) {
+    minY = gMenuViewportCenterY - halfHeight;
+    if (y1 < minY) {
         return;
     }
-    if (screenLeft < viewportLeft) {
-        srcS = viewportLeft - screenLeft;
-        screenLeft = viewportLeft;
+
+    if (x0 < minX) {
+        clipS = minX - x0;
+        x0 = minX;
     }
-    if (screenTop < viewportTop) {
-        srcT = viewportTop - screenTop;
-        screenTop = viewportTop;
+    if (y0 < minY) {
+        clipT = minY - y0;
+        y0 = minY;
     }
-    if (screenRight >= viewportRight) {
-        screenRight = viewportRight;
+    if (x1 >= maxX) {
+        x1 = maxX;
     }
-    if (screenBottom >= viewportBottom) {
-        screenBottom = viewportBottom;
+    if (y1 >= maxY) {
+        y1 = maxY;
     }
 
-    gDPLoadTextureTile_4b(gRegionAllocPtr++, sprite->imageOffset + (u8 *)asset, G_IM_FMT_CI,
-                          sprite->width, sprite->height, 0, 0, sprite->width, sprite->height,
-                          0, G_TX_CLAMP, G_TX_CLAMP, G_TX_NOMASK, G_TX_NOMASK,
+    gDPLoadTextureTile_4b(gRegionAllocPtr++, entry->imageOffset + (u8 *)table,
+                          G_IM_FMT_CI, entry->width, entry->height,
+                          0, 0, entry->width, entry->height, 0,
+                          G_TX_CLAMP, G_TX_CLAMP, G_TX_NOMASK, G_TX_NOMASK,
                           G_TX_NOLOD, G_TX_NOLOD);
-    gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, palette + (paletteIndex << 5));
-    gSPTextureRectangle(gRegionAllocPtr++, screenLeft << 2, screenTop << 2,
-                        screenRight << 2, screenBottom << 2, G_TX_RENDERTILE,
-                        srcS << 5, srcT << 5, 0x400, 0x400);
+    gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, paletteBase + (paletteIndex << 5));
+    gSPTextureRectangle(gRegionAllocPtr++, x0 << 2, y0 << 2, x1 << 2, y1 << 2,
+                        G_TX_RENDERTILE, clipS << 5, clipT << 5, 0x400, 0x400);
 }
-#endif
 
 // drawScaledAssetTableSprite best match: 91.534% (nonmatchings/drawScaledAssetTableSprite-1219509448159986855/base_55.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/renderer/menu_render_utils/drawScaledAssetTableSprite.s")
