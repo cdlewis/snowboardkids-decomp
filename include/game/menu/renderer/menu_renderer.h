@@ -34,7 +34,7 @@ void drawMenuGlyphScriptWithFontBank(volatile s16 x, s16 y, MenuGlyphScript *scr
 void drawMenuGlyphScriptDefaultFont(volatile s16 x, s16 y, MenuGlyphScript *script, s32 palette, u16 scale);
 void drawMenuGlyph(s16 x, s16 y, u16 glyph, u8 palette, u16 scale, u16 arg5);
 void drawMenuColoredGlyphScript(volatile s16 x, s16 y, MenuGlyphScript *script, s32 palette, u16 scale, u16 colorMode, u16 fontBank);
-void drawMenuGlyphScript(s32 x, s32 y, u8 *text, s32 palette, s32 scale, s32 colorMode);
+void drawMenuGlyphScript(volatile s16 x, s16 y, MenuGlyphScript *script, s32 palette, u16 scale, volatile u16 colorMode);
 void drawMenuColoredGlyph(s16 x, s16 y, u16 glyph, u8 palette, u16 scale, u16 colorMode, s32 fontBank);
 void drawMenuAsciiGlyph(s16 x, s16 y, u16 tileX, s32 tileY, u16 palette, u16 scale);
 void drawMenuAsciiText(s16 x, s16 y, u8 *text, u16 palette, u16 scale);
