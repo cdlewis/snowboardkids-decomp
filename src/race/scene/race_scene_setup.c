@@ -79,7 +79,7 @@ void loadRaceCourseAssets(void) {
         LOAD_ASSET(LEVEL_GRASS_VALLEY_SPRITES, 0x1D);
         break;
     case 4:
-        size = ASSET_SIZE(LEVEL_DIZZY_LAND);
+        size = (u8 *)&LEVEL_DIZZY_LAND_SUFFIX_ROM_END - (u8 *)&LEVEL_DIZZY_LAND_ROM_START;
         gAssetHandles[0x8] = allocRelocatableHeapBlock(size);
         lockRelocatableHeapBlock(gAssetHandles[0x8]);
         DMA_ASSET(LEVEL_DIZZY_LAND, getRelocatableHeapBlockBase(gAssetHandles[0x8]), size);
@@ -139,7 +139,7 @@ void loadRaceCourseAssets(void) {
         break;
     }
 
-    size = ASSET_SIZE(_147910);
+    size = (u8 *)&_147910_SUFFIX_ROM_END - (u8 *)&_147910_ROM_START;
     gAssetHandles[10] = allocRelocatableHeapBlock(size);
     lockRelocatableHeapBlock(gAssetHandles[10]);
     DMA_ASSET(_147910, getRelocatableHeapBlockBase(gAssetHandles[0xA]), size);
