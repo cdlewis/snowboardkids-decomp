@@ -773,16 +773,17 @@ void drawMenuSpriteTile(s16 arg0, s16 arg1, s32 arg2, u16 arg3, u16 arg4, u16 ar
     drawMenuSpriteTileClipped(arg0, arg1, arg2, arg3, arg4, arg5, gMenuViewportWidth / 2, gMenuViewportHeight / 2);
 }
 
-// drawMenuSpriteTileClipped best match: 95.026% (nonmatchings/drawMenuSpriteTileClipped-1219509448159986855/base_30.c)
+// drawMenuSpriteTileClipped best match: 96.142% (nonmatchings/drawMenuSpriteTileClipped-8909410381742387388/base_34.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/renderer/menu_renderer/drawMenuSpriteTileClipped.s")
 
 #ifdef NON_MATCHING
 void drawMenuSpriteTileClipped(s16 x, s16 y, MenuFontAssetTable *table, u16 entryIndex, u16 unused, u16 alpha, s16 clipRight,
                    s16 clipBottom) {
     MenuFontAssetEntry *entry;
+    volatile s32 padBefore[1];
     u8 *paletteBase;
+    volatile s32 padAfter[3];
     s16 minX;
-    s16 maxX;
     s16 minY;
     s32 x0;
     volatile s16 clipBottomValue;
@@ -791,18 +792,15 @@ void drawMenuSpriteTileClipped(s16 x, s16 y, MenuFontAssetTable *table, u16 entr
     s32 y1;
     s32 clipS;
     s32 clipT;
+    volatile s32 padAfterClip[3];
     s32 halfWidth;
+    s16 maxX;
     s16 maxY;
     s32 halfHeight;
 
     entry = (MenuFontAssetEntry *)table + entryIndex;
-    paletteBase = (u8 *)&table->entries[table->entryCount];
-    x0 = x + gMenuViewportCenterX;
-    x1 = entry[1].width;
-    x1 = x0 + x1;
-    y0 = y + gMenuViewportCenterY;
-    y1 = entry[1].height;
-    y1 = y0 + y1;
+    paletteBase = (table->entryCount * sizeof(MenuFontAssetEntry)) + (u8 *)table + sizeof(MenuFontAssetEntry);
+    x0 = x + gMenuViewportCenterX; x1 = entry[1].width; x1 = x0 + x1; y0 = y + gMenuViewportCenterY; y1 = entry[1].height; y1 = y0 + y1;
     clipBottomValue = clipBottom;
     minX = gMenuViewportCenterX - clipRight;
     minY = gMenuViewportCenterY - clipBottomValue;
@@ -854,7 +852,7 @@ void drawMenuSpriteTileClipped(s16 x, s16 y, MenuFontAssetTable *table, u16 entr
         y1 = maxY - 1;
     }
 
-    gDPLoadTextureTile(gRegionAllocPtr++, (u8 *)table + entry->imageOffset,
+    gDPLoadTextureTile(gRegionAllocPtr++, entry->imageOffset + (u8 *)table,
                        G_IM_FMT_CI, G_IM_SIZ_8b, entry->width, entry->height,
                        0, 0, entry->width, entry->height, 0,
                        G_TX_CLAMP, G_TX_CLAMP, G_TX_NOMASK, G_TX_NOMASK,
