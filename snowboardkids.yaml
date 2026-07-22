@@ -422,7 +422,20 @@ segments:
   - type: bin
     start: 0x10AAB0
     name: LEVEL_DIZZY_LAND
-    vram: 0
+    vram: 0x02000000
+    align: 8
+    subalign: 8
+    exclusive_ram_id: level_dizzy_land
+
+  - { start: 0x116C78, type: bin, name: _ADDR_200C1C8, vram: 0x0200C1C8, align: 8, subalign: 8, exclusive_ram_id: level_dizzy_land }
+  - { start: 0x117150, type: bin, name: _ADDR_200C6A0, vram: 0x0200C6A0, align: 8, subalign: 8, exclusive_ram_id: level_dizzy_land }
+  - { start: 0x117288, type: bin, name: _ADDR_200C7D8, vram: 0x0200C7D8, align: 8, subalign: 8, exclusive_ram_id: level_dizzy_land }
+  - { start: 0x1173C0, type: bin, name: _ADDR_200C910, vram: 0x0200C910, align: 8, subalign: 8, exclusive_ram_id: level_dizzy_land }
+  - { start: 0x1176D0, type: bin, name: _ADDR_200CC20, vram: 0x0200CC20, align: 8, subalign: 8, exclusive_ram_id: level_dizzy_land }
+  - { start: 0x1178F8, type: bin, name: _ADDR_200CE48, vram: 0x0200CE48, align: 8, subalign: 8, exclusive_ram_id: level_dizzy_land }
+  - { start: 0x117A60, type: bin, name: _ADDR_200CFB0, vram: 0x0200CFB0, align: 8, subalign: 8, exclusive_ram_id: level_dizzy_land }
+  - { start: 0x117E58, type: bin, name: _ADDR_200D3A8, vram: 0x0200D3A8, align: 8, subalign: 8, exclusive_ram_id: level_dizzy_land }
+  - { start: 0x117EF8, type: bin, name: LEVEL_DIZZY_LAND_SUFFIX, vram: 0x0200D448, align: 8, subalign: 8, exclusive_ram_id: level_dizzy_land }
 
   - type: bin
     start: 0x118670
@@ -461,7 +474,20 @@ segments:
   - type: bin
     start: 0x147910
     name: _147910
-    vram: 0
+    vram: 0x02000000
+    align: 8
+    subalign: 8
+    exclusive_ram_id: shared_race_models
+
+  - { start: 0x1492D0, type: bin, name: _ADDR_20019C0, vram: 0x020019C0, align: 8, subalign: 8, exclusive_ram_id: shared_race_models }
+  - { start: 0x149610, type: bin, name: _147910_GAP_2001D00_2002490, vram: 0x02001D00, align: 8, subalign: 8, exclusive_ram_id: shared_race_models }
+  - { start: 0x149DA0, type: bin, name: _ADDR_2002490, vram: 0x02002490, align: 8, subalign: 8, exclusive_ram_id: shared_race_models }
+  - { start: 0x149F70, type: bin, name: _ADDR_2002660, vram: 0x02002660, align: 8, subalign: 8, exclusive_ram_id: shared_race_models }
+  - { start: 0x14A200, type: bin, name: _147910_GAP_20028F0_2003538, vram: 0x020028F0, align: 8, subalign: 8, exclusive_ram_id: shared_race_models }
+  - { start: 0x14AE48, type: bin, name: _ADDR_2003538, vram: 0x02003538, align: 8, subalign: 8, exclusive_ram_id: shared_race_models }
+  - { start: 0x14AF08, type: bin, name: _ADDR_20035F8, vram: 0x020035F8, align: 8, subalign: 8, exclusive_ram_id: shared_race_models }
+  - { start: 0x14B180, type: bin, name: _ADDR_2003870, vram: 0x02003870, align: 8, subalign: 8, exclusive_ram_id: shared_race_models }
+  - { start: 0x14B348, type: bin, name: _147910_SUFFIX, vram: 0x02003A38, align: 8, subalign: 8, exclusive_ram_id: shared_race_models }
 
   - type: bin
     start: 0x14B450
