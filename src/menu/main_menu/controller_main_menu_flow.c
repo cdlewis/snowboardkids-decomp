@@ -34,6 +34,11 @@ typedef struct OSMesgQueue_s {
     OSMesg *msg;
 } OSMesgQueue;
 
+typedef struct ControllerThreadMessages {
+    OSMesg event;
+    OSMesg request;
+} ControllerThreadMessages;
+
 typedef struct OSContStatus {
     u16 type;
     u8 status;
@@ -260,23 +265,20 @@ loop:
     osStartThread(&gControllerSubsystemThread);
 }
 
-// controllerSubsystemThreadMain best match: 99.507% at nonmatchings/controllerSubsystemThreadMain-2694253543240320626/base_2.c
-#pragma GLOBAL_ASM("asm/nonmatchings/menu/main_menu/controller_main_menu_flow/controllerSubsystemThreadMain.s")
-
-#ifdef NON_MATCHING
 void controllerSubsystemThreadMain(void *arg0) {
     OSMesg msg;
     s32 msgValue;
     s32 channel;
 
     msg = NULL;
-    while (((1 & 0xFFFFFFFFFFFFFFFF) & 0xFFFFFFFFFFFFFFFF) & 1) {
-        osRecvMesg(&gControllerSubsystemRequestQueue, &msg, OS_MESG_BLOCK);
-        msgValue = (s32)msg;
-        switch (msgValue & 0xF0) {
+loop:
+    osRecvMesg(&gControllerSubsystemRequestQueue, &msg, OS_MESG_BLOCK);
+    msgValue = (s32)msg;
+    switch (msgValue & 0xF0) {
         case 0x10:
             osContStartReadData(&gControllerEventQueue);
-            osRecvMesg(&gControllerEventQueue, ((OSMesg *)&arg0) - 2, OS_MESG_BLOCK);
+            /* IDO places this event slot immediately before the request message and homed thread argument. */
+            osRecvMesg(&gControllerEventQueue, &((ControllerThreadMessages *)&arg0)[-1].event, OS_MESG_BLOCK);
             osContGetReadData(gControllerPads);
             osSendMesg(&gControllerInputUpdateQueue, &gControllerEventMessage, 0);
             break;
@@ -339,10 +341,9 @@ void controllerSubsystemThreadMain(void *arg0) {
             updateControllerPakFreeSpaceInfo();
             osSendMesg(&gControllerSubsystemReplyQueue, &gControllerEventMessage, 0);
             break;
-        }
     }
+    goto loop;
 }
-#endif
 
 void requestControllerRead(void) {
     if ((gControllerReadPending == 0) && (gConnectedControllerBitmask != 0)) {
@@ -447,10 +448,10 @@ void requestControllerPakSaveStatus(u16 arg0) {
 }
 
 // checkControllerPakSaveStatus best match: 94.144% at nonmatchings/checkControllerPakSaveStatus-8699393380584516020/base_18.c
-#pragma GLOBAL_ASM("asm/nonmatchings/menu/main_menu/controller_main_menu_flow/checkControllerPakSaveStatus.s")
+#pragma GLOBAL_ASM("src/menu/main_menu/checkControllerPakSaveStatusWithRodataPadding.s")
 
 #ifdef NON_MATCHING
-void checkControllerPakSaveStatus(s32 arg0) {
+void checkControllerPakSaveStatus(u16 arg0) {
     s32 ret;
     s32 maxFiles;
     s32 filesUsed;
