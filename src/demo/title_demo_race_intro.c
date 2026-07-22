@@ -1,3 +1,4 @@
+#include "assets.h"
 #include "game/demo/race_demo_intro.h"
 #include "game/demo/title_demo_race_intro.h"
 #include "game/audio/sound_manager.h"
@@ -40,8 +41,6 @@ extern s16 gRacePlayerAttackStartTimer;
 extern u8 gRaceResultState;
 extern u8 gFramebufferSwapHold;
 extern s32 gMenuFlowState;
-extern u8 D_24C8E0;
-extern u8 D_24DBE0;
 extern void updateCallbackTasksWithMinPriority(s32);
 extern void updateRemainingCallbackTasks(void);
 extern void requestMusicSequenceStop(s32);
@@ -116,7 +115,7 @@ void initTitleDemoRaceIntro(void) {
     players[3].replayInputSource = five3;
 
     if (players[0].replayInputSource == 5) {
-        loadCompressedRomAsset(&D_24C8E0, &D_24DBE0, 0x2B);
+        LOAD_ASSET(_24C8E0, 0x2B);
     }
     loadRaceCourseAssets();
     loadRaceCharacterAssets();

@@ -1,3 +1,4 @@
+#include "assets.h"
 #include "game/menu/main_menu/main_menu_scene_model.h"
 #include "game/engine/relocatable_heap.h"
 #include "game/engine/asset_manager.h"
@@ -14,10 +15,6 @@
 #define MAIN_MENU_SCENE_MODEL_MATRIX_AXES 3
 #define MAIN_MENU_SCENE_MODEL_MATRIX_ELEMENTS 9
 
-extern u8 gMainMenuSceneModelAssetStart;
-extern u8 D_608560;
-extern u8 D_215BE0;
-extern u8 D_21D9D0;
 
 typedef s32 RomAssetAddress;
 
@@ -501,11 +498,11 @@ write_loop:
 #endif
 
 void loadMainMenuSceneModelAssets(void) {
-    loadCompressedRomAsset(&gMainMenuSceneModelAssetStart, &D_608560, 0x3F);
+    LOAD_ASSET(_5E34A0, 0x3F);
 }
 
 void loadMainMenuSceneModelAnimationBank(void) {
-    loadCompressedRomAsset(&D_215BE0, &D_21D9D0, 0x3F);
+    LOAD_ASSET(_215BE0, 0x3F);
 }
 
 void initMainMenuSceneModel(s32 actorIndex, s32 modelIndex) {

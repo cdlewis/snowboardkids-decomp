@@ -1,4 +1,5 @@
 #include "common.h"
+#include "assets.h"
 #include "game/engine/callback_task_scheduler.h"
 #include "game/engine/asset_manager.h"
 #include "game/menu/character_select/character_select_menu.h"
@@ -68,14 +69,7 @@ extern s8 D_8010AE53[];
 extern s8 D_8010AE64[];
 extern s32 gMenuFlowState;
 extern s32 gPlayerInputPressed;
-extern u8 D_245A80[];
-extern u8 D_24C8E0[];
-extern u8 D_593D10[];
-extern u8 D_598A70[];
-extern u8 D_59AAA0[];
-extern u8 D_59DFE0[];
 extern u8 D_60F1A0[];
-extern u8 D_60F990[];
 extern u8 gMainMenuSecretCodeUnlocked;
 extern u8 D_800EC9E5;
 extern u8 gMenuExitSelection;
@@ -110,11 +104,11 @@ void initCharacterSelectMenu(void) {
         gCurrentGameTask->fade = 0xFF;
         gCurrentGameTask->timer = 0;
         gMenuFadeAlpha = gCurrentGameTask->fade;
-        loadCompressedRomAsset(D_59AAA0, D_59DFE0, 0x21);
-        loadCompressedRomAsset(D_245A80, D_24C8E0, 0x1F);
-        loadCompressedRomAsset(D_593D10, D_598A70, 0x22);
-        loadCompressedRomAsset(D_598A70, D_59AAA0, 0x23);
-        loadCompressedRomAsset(D_60F1A0, D_60F990, 0x29);
+        LOAD_ASSET(_59AAA0, 0x21);
+        LOAD_ASSET(_245A80, 0x1F);
+        LOAD_ASSET(_593D10, 0x22);
+        LOAD_ASSET(_598A70, 0x23);
+        LOAD_ASSET(_60F1A0, 0x29);
         initCallbackTaskScheduler(0);
 
         playerCount = gPlayerCount;

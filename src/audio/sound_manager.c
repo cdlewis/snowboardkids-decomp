@@ -1,4 +1,5 @@
 #include "common.h"
+#include "assets.h"
 #include "game/engine/asset_manager.h"
 #include "game/math/fixed_point_math.h"
 #include "game/engine/relocatable_heap.h"
@@ -72,7 +73,6 @@ typedef union SoundHalfArg {
 extern SoundAssetHandles gAssetHandles;
 extern s16 gRaceCourseIndex;
 extern u8 gRaceDemoPlaybackEnabled;
-extern u8 D_275A90[];
 extern u8 D_27E290[];
 extern u8 D_800DABB0[];
 extern f32 D_800DACAC[];
@@ -163,7 +163,7 @@ void initSoundManager(void) {
     gSharedLoopingPositionalSoundHandle = 0;
 
     gAssetHandles.unk6 = allocRelocatableHeapBlock(0x80000);
-    loadCompressedRomAsset(D_275A90, D_27E290, 4);
+    LOAD_ASSET(_275A90, 4);
     gAssetHandles.unkA = allocRelocatableHeapBlock(0x10000);
 
     init.count = 0x18;

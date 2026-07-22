@@ -111,12 +111,6 @@ extern void loadMainMenuSceneModelAnimationBank();
 extern u8 D_13F3B0[];
 extern u8 D_145380[];
 extern u8 D_1467B0[];
-extern u8 D_1DCED0[];
-extern u8 D_1DE360[];
-extern u8 D_1E0F70[];
-extern u8 D_1E19C0[];
-extern u8 D_5DAF30[];
-extern u8 D_5DB9D0[];
 extern u8 gRaceSetupOpponentFocusCharacterIds[][4];
 extern u8 gPendingEndingCreditsFlow;
 extern u8 gRaceSplitscreenMode;
@@ -187,12 +181,12 @@ void initRaceStartTransition(void) {
     }
 
     loadMainMenuSceneModelAnimationBank();
-    loadCompressedRomAsset(D_5DAF30, D_5DB9D0, 0x2A);
-    loadCompressedRomAsset(D_1E0F70, D_1E19C0, 0x22);
+    LOAD_ASSET(_5DAF30, 0x2A);
+    LOAD_ASSET(_1E0F70, 0x22);
     loadRawRomAsset(D_145380, D_1467B0, 8);
-    loadCompressedRomAsset(D_1DCED0, D_1DE360, 9);
+    LOAD_ASSET(_1DCED0, 9);
     loadRawRomAsset(D_13F3B0, D_145380, 0xE);
-    loadCompressedRomAsset(ASSET_START(LEVEL_ROOKIE_MOUNTAIN_TEXTURES), ASSET_END(LEVEL_ROOKIE_MOUNTAIN_TEXTURES), 0x12);
+    LOAD_ASSET(LEVEL_ROOKIE_MOUNTAIN_TEXTURES, 0x12);
     initCallbackTaskScheduler(2);
     if (((!gRaceSetupOpponentFocusCharacterIds) && (!gRaceSetupOpponentFocusCharacterIds)) && (!gRaceSetupOpponentFocusCharacterIds)) {
     }
