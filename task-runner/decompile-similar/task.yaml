@@ -1,5 +1,5 @@
-candidate_source: python3 tools/score_functions.py asm/nonmatchings --json --by-similarity
-prompt: "decompile the function: $INPUT[0]. There are several similar functions that have been matched, they might provide a useful reference: $INPUT[1]. If a function is only available on one worktree, that worktrees will be indicated in parentheses, e.g. `myFunction (../sbk-a)`. When creating your claude environment use --id $TASK_ID."
+candidate_source: python3 tools/score_functions.py asm/nonmatchings --json --by-similarity --top-n 1
+prompt: "decompile the function: $INPUT[0]. A similar function has been matched and might provide a useful reference: $INPUT[1]. If a function is only available on one worktree, that worktree will be indicated in parentheses, e.g. `myFunction (../sbk-a)`. When creating your claude environment use --id $TASK_ID."
 claude_command: codex
 success_command: 'git add -u && git commit -m "matched $CANDIDATE"'
 timeout: 60m

@@ -469,9 +469,9 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--top-n",
         type=int,
-        default=5,
+        default=1,
         metavar="N",
-        help="number of hints used by decompile-similar (default: 5)",
+        help="number of hints used by decompile-similar (default: 1)",
     )
     parser.add_argument(
         "--limit",
