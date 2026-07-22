@@ -2,6 +2,7 @@
 
 ViewportState gViewportStates[4];
 
+extern f32 gRaceViewportOverlayFarClip;
 extern void guPerspective(ViewportMtx *, u16 *, f32, f32, f32, f32, f32);
 
 void resetAllViewports(void) {
@@ -147,24 +148,17 @@ void configureViewportWithFovAndFarClip(s32 viewportIndex, s32 centerX, s32 cent
                   &gViewportStates[viewportIndex].overlayPerspectiveNorm, (f32)fovY, aspect, 10.0f, 15000.0f, 0.5f);
 }
 
-// configureRaceViewport best match: 97.944% (nonmatchings/configureRaceViewport-6934502587000073416/base_5.c)
-
-#pragma GLOBAL_ASM("asm/nonmatchings/engine/viewport_manager/configureRaceViewport.s")
-
-#ifdef NON_MATCHING
-extern f32 gRaceViewportOverlayFarClip;
-
 void configureRaceViewport(s32 viewportIndex, s32 centerX, s32 centerY, u16 width, u16 height, u16 scaleX, u16 scaleY,
                            f32 aspect) {
-    gViewportStates[viewportIndex].viewportTranslateX = centerX * 4;
     gViewportStates[viewportIndex].active = 1;
+    gViewportStates[viewportIndex].viewportTranslateX = centerX * 4;
     gViewportStates[viewportIndex].viewportTranslateY = centerY * 4;
     gViewportStates[viewportIndex].viewportScaleX = scaleX * 2;
     gViewportStates[viewportIndex].viewportScaleY = scaleY * 2;
 
     gViewportStates[viewportIndex].left = centerX - (width / 2);
-    gViewportStates[viewportIndex].right = (width / 2) + centerX;
     gViewportStates[viewportIndex].top = centerY - (height / 2);
+    gViewportStates[viewportIndex].right = (width / 2) + centerX;
     gViewportStates[viewportIndex].bottom = (height / 2) + centerY;
     gViewportStates[viewportIndex].left = gViewportStates[viewportIndex].left;
     gViewportStates[viewportIndex].top = gViewportStates[viewportIndex].top;
@@ -203,7 +197,6 @@ void configureRaceViewport(s32 viewportIndex, s32 centerX, s32 centerY, u16 widt
                   &gViewportStates[viewportIndex].overlayPerspectiveNorm, 70.0f, aspect, 10.0f,
                   gRaceViewportOverlayFarClip, 0.5f);
 }
-#endif
 
 // configureMenuViewport best match: 99.597% (nonmatchings/configureMenuViewport-6934502587000073416/base_17.c)
 
