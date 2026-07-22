@@ -202,8 +202,6 @@ extern u8 gControllerPakOperationCounts[];
 extern SaveSlotBytes gGameSaveDataBuffer[];
 extern s32 gPlayerInputHeld;
 extern s16 gMenuFadeAlpha;
-extern u8 D_1467B0[];
-extern u8 D_147910[];
 extern s8 gMainMenuSecretCodeUnlocked;
 extern u8 gMainMenuSecretCodeStep;
 extern s8 gMenuFadeOverlayActive;
@@ -1018,7 +1016,7 @@ void initMainMenu(void) {
     LOAD_ASSET(_5DB9D0, 0x21);
     LOAD_ASSET(_5DCBE0, 0x25);
     LOAD_ASSET(_593D10, 0x22);
-    loadRawRomAsset(D_1467B0, D_147910, 8);
+    LOAD_RAW_ASSET(_1467B0, 8);
     LOAD_ASSET(_1DE360, 9);
     gCurrentGameTask->fade = 0xFF;
     gCurrentGameTask->selection = 0;
@@ -1197,7 +1195,7 @@ void initMainMenuModeSelect(void) {
     gViewportStates[0].overlayAlpha = 0x80;
     gFramebufferSwapDelay = 0;
     configureMenuViewport(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.3333334f);
-    loadRawRomAsset(D_1467B0, D_147910, 8);
+    LOAD_RAW_ASSET(_1467B0, 8);
     LOAD_ASSET(_1DE360, 9);
     LOAD_ASSET(_1F1A90, 0x28);
     resetRaceCameras();
@@ -1293,7 +1291,7 @@ void initMainMenuSettings(void) {
     LOAD_ASSET(_593D10, 0x29);
     LOAD_ASSET(_1F1A90, 0x28);
     LOAD_ASSET(_60F1A0, 0x2A);
-    loadRawRomAsset(D_1467B0, D_147910, 8);
+    LOAD_RAW_ASSET(_1467B0, 8);
     LOAD_ASSET(_1DE360, 9);
     resetRaceCameras();
     setRaceCameraMode(0, 0x1F);

@@ -5,6 +5,9 @@
 
 #define LOAD_ASSET(id, handleIndex) \
     loadCompressedRomAsset((void *)&id##_ROM_START, (void *)&id##_ROM_END, handleIndex)
+#define LOAD_RAW_ASSET(id, handleIndex) \
+    loadRawRomAsset((void *)&id##_ROM_START, (void *)&id##_ROM_END, handleIndex)
+#define DMA_ASSET(id, ramAddress, size) dmaReadRom((u32)&id##_ROM_START, ramAddress, size)
 #define ASSET_SIZE(id) ((u8 *)&id##_ROM_END - (u8 *)&id##_ROM_START)
 
 USE_ASSET(LEVEL_BIG_SNOWMAN);
@@ -17,6 +20,11 @@ USE_ASSET(LEVEL_SILVER_MOUNTAIN);
 USE_ASSET(LEVEL_ANIMAL_LAND);
 USE_ASSET(LEVEL_NINJA_LAND);
 USE_ASSET(LEVEL_ROOKIE_MOUNTAIN);
+
+USE_ASSET(_145380);
+USE_ASSET(_1467B0);
+USE_ASSET(_147910);
+USE_ASSET(_14B450);
 
 USE_ASSET(LEVEL_BIG_SNOWMAN_TEXTURES);
 USE_ASSET(LEVEL_SUNSET_ROCK_TEXTURES);

@@ -53,8 +53,6 @@ u8 gEndingCreditsCharacterAuraDoneFlags[ENDING_CREDITS_CHARACTER_COUNT];
 
 extern void releaseMenuAssetHandles(void);
 
-extern u8 D_14B450[];
-extern u8 D_1502A0[];
 extern s8 gFramebufferSwapDelay;
 extern s16 gMenuFadeAlpha;
 extern Vec3i gMenuCameraTargetOffset;
@@ -100,10 +98,10 @@ void initEndingCreditsFlow(void) {
             LOAD_ASSET(_593D10, 0x22);
             LOAD_ASSET(_609AA0, 0x26);
             LOAD_ASSET(_60ECB0, 0x27);
-            temp_v0 = D_1502A0 - D_14B450;
+            temp_v0 = ASSET_SIZE(_14B450);
             sp34 = temp_v0;
             gAssetHandles[0xC] = allocRelocatableHeapBlock((unsigned long) temp_v0);
-            dmaReadRom(D_14B450, getRelocatableHeapBlockBase(gAssetHandles[0xC]), sp34);
+            DMA_ASSET(_14B450, getRelocatableHeapBlockBase(gAssetHandles[0xC]), sp34);
             LOAD_ASSET(_1EF530, 0xD);
             loadMainMenuSceneModelAssets();
             initCallbackTaskScheduler(0);
