@@ -18,6 +18,11 @@ typedef struct AudioInitTask {
     OSMesg msg;
 } AudioInitTask;
 
+typedef struct AudioWorkBuffers {
+    Acmd *commandLists[2];
+    AudioInitTask *tasks[3];
+} AudioWorkBuffers;
+
 typedef struct SchedulerThreadMainLocals {
     OSMesgQueue *queue;
     u8 pad4[4];
@@ -64,14 +69,13 @@ extern AudioInfo *gNextAudioInfo;
 extern s32 gAudioUnderrunState;
 extern SchedulerViMode gSchedulerViModes[];
 extern u8 gSchedulerThreadStack[];
-extern Acmd *gAudioCmdLists[];
-extern Acmd *gAudioCmdListEnd0;
-extern Acmd *gAudioCmdListEnd1;
+extern AudioWorkBuffers gAudioWorkBuffers;
 extern SchedulerThread gAudioThread;
 extern OSMesgQueue gAudioThreadQueue;
 extern OSMesg gAudioThreadMessages[];
 extern u64 gAudioTaskDoneQueue[];
 extern OSMesg gAudioTaskDoneMessages[];
+extern u8 gAudioThreadStack[0x2000];
 extern s32 mus_current_handle;
 extern s32 mus_random_seed;
 extern s32 gSchedulerRspTaskState;
