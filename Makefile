@@ -138,7 +138,6 @@ LINKER_SCRIPTS = linker_scripts/hardware_regs.ld linker_scripts/libultra_syms.ld
                  linker_scripts/race_setup_menu_syms.ld \
                  linker_scripts/controller_subsystem_syms.ld
 LDFLAGS        = -T $(LD_SCRIPT) -Map $(TARGET).map \
-                 -T undefined_funcs_auto.txt \
                  -T undefined_syms_auto.txt \
                  $(foreach ld,$(LINKER_SCRIPTS),-T $(ld)) \
                  --no-check-sections
@@ -238,7 +237,7 @@ $(BUILD_DIR)/%.o: %.bin
 	$(V)$(LD) -r -b binary -o $@ $<
 
 # *.o -> *.elf
-$(TARGET).elf: $(LD_SCRIPT) undefined_funcs_auto.txt undefined_syms_auto.txt $(LINKER_SCRIPTS) $(O_FILES)
+$(TARGET).elf: $(LD_SCRIPT) $(LINKER_SCRIPTS) $(O_FILES)
 	$(PRINTF) "[$(PINK) linker $(NO_COL)]  Linking $(TARGET).elf\n"
 	$(V)$(LD) $(LDFLAGS) -o $@
 
