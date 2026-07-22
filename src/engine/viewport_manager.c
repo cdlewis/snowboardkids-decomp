@@ -2,6 +2,7 @@
 
 ViewportState gViewportStates[4];
 
+extern f32 gDefaultViewportOverlayFarClip;
 extern f32 gRaceViewportOverlayFarClip;
 extern void guPerspective(ViewportMtx *, u16 *, f32, f32, f32, f32, f32);
 
@@ -41,24 +42,17 @@ void resetViewport(s32 arg0) {
     viewport->unk1E = 0;
 }
 
-// configureViewport best match: 97.944% (nonmatchings/configureViewport-6934502587000073416/base_2.c)
-
-#pragma GLOBAL_ASM("asm/nonmatchings/engine/viewport_manager/configureViewport.s")
-
-#ifdef NON_MATCHING
-extern f32 gDefaultViewportOverlayFarClip;
-
 void configureViewport(s32 viewportIndex, s32 centerX, s32 centerY, u16 width, u16 height, u16 scaleX, u16 scaleY,
                        f32 aspect) {
-    gViewportStates[viewportIndex].viewportTranslateX = centerX * 4;
     gViewportStates[viewportIndex].active = 1;
+    gViewportStates[viewportIndex].viewportTranslateX = centerX * 4;
     gViewportStates[viewportIndex].viewportTranslateY = centerY * 4;
     gViewportStates[viewportIndex].viewportScaleX = scaleX * 2;
     gViewportStates[viewportIndex].viewportScaleY = scaleY * 2;
 
     gViewportStates[viewportIndex].left = centerX - (width / 2);
-    gViewportStates[viewportIndex].right = (width / 2) + centerX;
     gViewportStates[viewportIndex].top = centerY - (height / 2);
+    gViewportStates[viewportIndex].right = (width / 2) + centerX;
     gViewportStates[viewportIndex].bottom = (height / 2) + centerY;
     gViewportStates[viewportIndex].left = gViewportStates[viewportIndex].left;
     gViewportStates[viewportIndex].top = gViewportStates[viewportIndex].top;
@@ -97,7 +91,6 @@ void configureViewport(s32 viewportIndex, s32 centerX, s32 centerY, u16 width, u
                   &gViewportStates[viewportIndex].overlayPerspectiveNorm, 70.0f, aspect, 10.0f,
                   gDefaultViewportOverlayFarClip, 0.5f);
 }
-#endif
 
 void configureViewportWithFovAndFarClip(s32 viewportIndex, s32 centerX, s32 centerY, u16 width, u16 height, u16 scaleX,
                                         u16 scaleY, f32 aspect, s16 fovY, s32 farClip) {
