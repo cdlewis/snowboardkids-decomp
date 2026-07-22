@@ -2,8 +2,12 @@
 
 ViewportState gViewportStates[4];
 
-extern f32 gDefaultViewportOverlayFarClip;
-extern f32 gRaceViewportOverlayFarClip;
+const f32 gDefaultViewportOverlayFarClip[1] = { 15000.0f };
+const f32 gCustomViewportOverlayFarClip[1] = { 15000.0f };
+const f32 gRaceViewportOverlayFarClip[1] = { 15000.0f };
+const f32 gMenuViewportFarClip[1] = { 10000.0f };
+const f32 gMenuViewportOverlayFarClip[4] = { 15000.0f, 0.0f, 0.0f, 0.0f };
+
 extern void guPerspective(ViewportMtx *, u16 *, f32, f32, f32, f32, f32);
 
 void resetAllViewports(void) {
@@ -89,7 +93,7 @@ void configureViewport(s32 viewportIndex, s32 centerX, s32 centerY, u16 width, u
                   aspect, 10.0f, 2800.0f, 0.5f);
     guPerspective(&gViewportStates[viewportIndex].overlayProjection,
                   &gViewportStates[viewportIndex].overlayPerspectiveNorm, 70.0f, aspect, 10.0f,
-                  gDefaultViewportOverlayFarClip, 0.5f);
+                  gDefaultViewportOverlayFarClip[0], 0.5f);
 }
 
 void configureViewportWithFovAndFarClip(s32 viewportIndex, s32 centerX, s32 centerY, u16 width, u16 height, u16 scaleX,
@@ -138,7 +142,8 @@ void configureViewportWithFovAndFarClip(s32 viewportIndex, s32 centerX, s32 cent
     guPerspective(&gViewportStates[viewportIndex].projection, &gViewportStates[viewportIndex].perspectiveNorm, (f32)fovY,
                   aspect, 10.0f, (f32)farClip, 0.5f);
     guPerspective(&gViewportStates[viewportIndex].overlayProjection,
-                  &gViewportStates[viewportIndex].overlayPerspectiveNorm, (f32)fovY, aspect, 10.0f, 15000.0f, 0.5f);
+                  &gViewportStates[viewportIndex].overlayPerspectiveNorm, (f32)fovY, aspect, 10.0f,
+                  gCustomViewportOverlayFarClip[0], 0.5f);
 }
 
 void configureRaceViewport(s32 viewportIndex, s32 centerX, s32 centerY, u16 width, u16 height, u16 scaleX, u16 scaleY,
@@ -188,7 +193,7 @@ void configureRaceViewport(s32 viewportIndex, s32 centerX, s32 centerY, u16 widt
                   aspect, 10.0f, 1000.0f, 0.5f);
     guPerspective(&gViewportStates[viewportIndex].overlayProjection,
                   &gViewportStates[viewportIndex].overlayPerspectiveNorm, 70.0f, aspect, 10.0f,
-                  gRaceViewportOverlayFarClip, 0.5f);
+                  gRaceViewportOverlayFarClip[0], 0.5f);
 }
 
 void configureMenuViewport(s32 viewportIndex, s32 centerX, s32 centerY, u16 width, u16 height, u16 scaleX, u16 scaleY,
@@ -235,9 +240,10 @@ void configureMenuViewport(s32 viewportIndex, s32 centerX, s32 centerY, u16 widt
     }
 
     guPerspective(&gViewportStates[viewportIndex].projection, &gViewportStates[viewportIndex].perspectiveNorm, 70.0f,
-                  aspect, 10.0f, 10000.0f, 0.5f);
+                  aspect, 10.0f, gMenuViewportFarClip[0], 0.5f);
     guPerspective(&gViewportStates[viewportIndex].overlayProjection,
-                  &gViewportStates[viewportIndex].overlayPerspectiveNorm, 70.0f, aspect, 10.0f, 15000.0f, 0.5f);
+                  &gViewportStates[viewportIndex].overlayPerspectiveNorm, 70.0f, aspect, 10.0f,
+                  gMenuViewportOverlayFarClip[0], 0.5f);
 }
 
 void setViewportOverlayColor(s32 arg0, s32 arg1, s32 arg2, s32 arg3) {
