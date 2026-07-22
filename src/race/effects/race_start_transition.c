@@ -1,4 +1,5 @@
 #include "common.h"
+#include "assets.h"
 #include "game/engine/asset_manager.h"
 #include "game/audio/sound_manager.h"
 #include "game/engine/callback_task_scheduler.h"
@@ -110,8 +111,6 @@ extern void loadMainMenuSceneModelAnimationBank();
 extern u8 D_13F3B0[];
 extern u8 D_145380[];
 extern u8 D_1467B0[];
-extern u8 D_1D3070[];
-extern u8 D_1D82B0[];
 extern u8 D_1DCED0[];
 extern u8 D_1DE360[];
 extern u8 D_1E0F70[];
@@ -193,7 +192,7 @@ void initRaceStartTransition(void) {
     loadRawRomAsset(D_145380, D_1467B0, 8);
     loadCompressedRomAsset(D_1DCED0, D_1DE360, 9);
     loadRawRomAsset(D_13F3B0, D_145380, 0xE);
-    loadCompressedRomAsset(D_1D3070, D_1D82B0, 0x12);
+    loadCompressedRomAsset(ASSET_START(LEVEL_ROOKIE_MOUNTAIN_TEXTURES), ASSET_END(LEVEL_ROOKIE_MOUNTAIN_TEXTURES), 0x12);
     initCallbackTaskScheduler(2);
     if (((!gRaceSetupOpponentFocusCharacterIds) && (!gRaceSetupOpponentFocusCharacterIds)) && (!gRaceSetupOpponentFocusCharacterIds)) {
     }
