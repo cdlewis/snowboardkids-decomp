@@ -2809,7 +2809,7 @@ void func_8005CE4C(RaceUiDualCounterActor *arg0) {
     setCallbackTaskCallback(arg0, func_8005CDB0);
 }
 
-// func_8005CF60 best match: 95.097% (nonmatchings/func_8005CF60-6887713755923057488/base_19.c)
+// func_8005CF60 best match: 97.371% (nonmatchings/func_8005CF60-2188069624939011928/base_19.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race/ui/race_ui_effects/func_8005CF60.s")
 
 #ifdef NON_MATCHING
@@ -2871,6 +2871,8 @@ done1:
 loop2:
     if (*ptr2 != '\0') {
         goto body2;
+    }
+    if (gfxp) {
     }
     goto done2;
 
