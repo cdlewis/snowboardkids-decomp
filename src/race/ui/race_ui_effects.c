@@ -97,6 +97,11 @@ typedef union {
 } RaceUiTrailCopyBlock;
 
 typedef union {
+    /* 0x00 */ RaceUiTrailCopyBlock source;
+    /* 0x00 */ s64 forceAlignment;
+} RaceUiAlignedTrailCopyBlock;
+
+typedef union {
     s32 word;
     struct {
         s16 hi;
@@ -4795,76 +4800,47 @@ void initCourseStartFinishSprite(RaceUiCourseSpriteActor *actor) {
     setCallbackTaskCallback(actor, updateCourseStartFinishSprite);
 }
 
-// func_80063A9C best match: 99.571% (nonmatchings/func_80063A9C-8239461464121803931/base_5.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race/ui/race_ui_effects/func_80063A9C.s")
-
-#ifdef NON_MATCHING
-#define RACE_UI_EFFECT_EMIT_GFX(word0, word1) \
-    {                                         \
-        Gfx *_g;                              \
-        _g = gRegionAllocPtr++;               \
-        _g->words.w0 = (word0);               \
-        _g->words.w1 = (word1);               \
-    }
-
 void func_80063A9C(RaceUiEffectParticleActor *arg0) {
-    RaceUiEffectParticleActor *actor2;
-    s32 negX;
-    s32 negY;
-    s32 negZ;
+    RaceUiEffectParticleActor *actor;
+    s32 cameraX;
+    s32 cameraY;
+    s32 cameraZ;
+    RaceUiAlignedTrailCopyBlock transform;
     s32 i;
     RaceUiGfxCommandDest *matrix;
-    RaceUiTrailCopyBlock spA0;
 
-    RACE_UI_EFFECT_EMIT_GFX(0xFD500000, (u32)arg0->unk20);
-    RACE_UI_EFFECT_EMIT_GFX(0xF5500000, 0x07080200);
-    RACE_UI_EFFECT_EMIT_GFX(0xE6000000, 0);
-    negX = 0x070FF400;
-    RACE_UI_EFFECT_EMIT_GFX(0xF3000000, negX);
-    RACE_UI_EFFECT_EMIT_GFX(0xE7000000, 0);
-    RACE_UI_EFFECT_EMIT_GFX(0xF5400400, 0x00080200);
-    RACE_UI_EFFECT_EMIT_GFX(0xF2000000, 0x0007C07C);
-    RACE_UI_EFFECT_EMIT_GFX(0xFD100000, (u32)arg0->unk1C);
-    RACE_UI_EFFECT_EMIT_GFX(0xE8000000, 0);
-    RACE_UI_EFFECT_EMIT_GFX(0xF5000100, 0x07000000);
-    RACE_UI_EFFECT_EMIT_GFX(0xE6000000, 0);
-    RACE_UI_EFFECT_EMIT_GFX(0xF0000000, 0x0703C000);
-    RACE_UI_EFFECT_EMIT_GFX(0xE7000000, 0);
-    RACE_UI_EFFECT_EMIT_GFX(0x06000000, (u32)gAlphaSpriteRenderModeDl);
+    actor = arg0;
+    gDPLoadTextureBlock_4b(gRegionAllocPtr++, actor->unk20, G_IM_FMT_CI, 32, 32, 0,
+                           G_TX_CLAMP, G_TX_CLAMP, 0, 0, G_TX_NOLOD, G_TX_NOLOD);
+    gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, actor->unk1C);
+    gSPDisplayList(gRegionAllocPtr++, gAlphaSpriteRenderModeDl);
 
-    spA0.transform = gIdentityFixedTransform;
-
-    actor2 = arg0;
-    negX = -D_801121E0[gCurrentViewportIndex].transformOffset.x;
-    negY = -D_801121E0[gCurrentViewportIndex].transformOffset.y;
-    negZ = -D_801121E0[gCurrentViewportIndex].transformOffset.z;
+    transform.source.transform = gIdentityFixedTransform;
+    cameraX = -D_801121E0[gCurrentViewportIndex].transformOffset.x;
+    cameraY = -D_801121E0[gCurrentViewportIndex].transformOffset.y;
+    cameraZ = -D_801121E0[gCurrentViewportIndex].transformOffset.z;
 
     i = 0;
-    if (arg0->count > 0) {
+    if (actor->count > 0) {
         do {
-            spA0.transform.translation.x = ((arg0->particles[i].unk0 - (negX & 0xFFFFFF)) & 0xFFFFFF) + negX + 0xFF800000;
-            spA0.transform.translation.y = ((arg0->particles[i].unk4 - (negY & 0xFFFFFF)) & 0xFFFFFF) + negY + 0xFF800000;
-            spA0.transform.translation.z = ((arg0->particles[i].unk8 - (negZ & 0xFFFFFF)) & 0xFFFFFF) + negZ + 0xFF800000;
-            matrix = allocFixedTransformMatrix(&spA0);
+            transform.source.transform.translation.x =
+                ((actor->particles[i].unk0 - (cameraX & 0xFFFFFF)) & 0xFFFFFF) + cameraX + 0xFF800000;
+            transform.source.transform.translation.y =
+                ((actor->particles[i].unk4 - (cameraY & 0xFFFFFF)) & 0xFFFFFF) + cameraY + 0xFF800000;
+            transform.source.transform.translation.z =
+                ((actor->particles[i].unk8 - (cameraZ & 0xFFFFFF)) & 0xFFFFFF) + cameraZ + 0xFF800000;
+            matrix = allocFixedTransformMatrix(&transform.source);
             if (matrix != NULL) {
-                {
-                    Gfx *_g;
-
-                    _g = gRegionAllocPtr++;
-                    _g->words.w1 = (u32)matrix;
-                    _g->words.w0 = 0x01020040;
-                }
-                RACE_UI_EFFECT_EMIT_GFX(0x01000040, gViewportMatrix);
-                RACE_UI_EFFECT_EMIT_GFX(0x04000C2F, (u32)D_800D63D0);
-                RACE_UI_EFFECT_EMIT_GFX(0xBF000000, 0x402);
+                gSPMatrix(gRegionAllocPtr++, matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+                gSPMatrix(gRegionAllocPtr++, gViewportMatrix, G_MTX_NOPUSH | G_MTX_MUL | G_MTX_MODELVIEW);
+                gSPVertex(gRegionAllocPtr++, D_800D63D0, 3, 0);
+                gSP1Triangle(gRegionAllocPtr++, 0, 2, 1, 0);
+                actor = arg0;
             }
             i++;
-        } while (i < actor2->count);
+        } while (i < actor->count);
     }
 }
-
-#undef RACE_UI_EFFECT_EMIT_GFX
-#endif
 
 void func_80063E70(RaceUiEffectParticleActor *arg0) {
     register RaceUiEffectParticleActor *actor;
