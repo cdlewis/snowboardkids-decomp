@@ -22,18 +22,8 @@ typedef struct {
 } RaceStartTransitionState;
 
 typedef struct {
-    u8 ready;
-} RaceReadinessFlag;
-
-typedef struct {
     u8 pad0[0x34];
-    RaceReadinessFlag readiness[5];
-    u8 unk39;
-    u8 unk3A;
-    u8 pad3B[2];
-    u8 unk3D;
-    u8 pad3E[0xE];
-    u8 unk4C;
+    u8 cupPlacements[0x1A];
 } RaceSetupSaveData;
 
 typedef struct {
@@ -112,7 +102,7 @@ void updateMenuCameraObjectWithTargetOffsetCallback(void) {
     updateMenuCameraObjectWithTargetOffset();
 }
 
-// initRaceStartTransition best valid match: 98.537% (nonmatchings/initRaceStartTransition-6887713755923057488/base_7.c)
+// initRaceStartTransition best valid match: 99.898% (nonmatchings/initRaceStartTransition-2188069624939011928/base_55.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race/effects/race_start_transition/initRaceStartTransition.s")
 
 #ifdef NON_MATCHING
@@ -147,37 +137,42 @@ void initRaceStartTransition(void) {
 
     transition = 0;
     if (gRaceSplitscreenMode == 0) {
-        if (gPlayerCount == 1) {
-            if ((gGameSaveDataBuffer.unk4C == 2) && (gGameSaveDataBuffer.unk3A == 1)) {
-                gGameSaveDataBuffer.unk4C = 3;
+        effectArg = gPlayerCount;
+        if (((effectArg ^ 0) == 1) != 0) {
+            if ((gGameSaveDataBuffer.cupPlacements[0x18] == 2) && (gGameSaveDataBuffer.cupPlacements[6] == 1)) {
+                gGameSaveDataBuffer.cupPlacements[0x18] = 3;
                 gPendingEndingCreditsFlow = 1;
                 transition = 3;
             }
-            if ((gGameSaveDataBuffer.unk4C == 1) && (gGameSaveDataBuffer.unk39 == 1)) {
+            if ((gGameSaveDataBuffer.cupPlacements[0x18] == 1) && (gGameSaveDataBuffer.cupPlacements[5] == 1)) {
                 transition = 2;
-                gGameSaveDataBuffer.unk4C = 2;
+                gGameSaveDataBuffer.cupPlacements[0x18] = 2;
             }
-            if (gGameSaveDataBuffer.unk4C == 0) {
-                if (gGameSaveDataBuffer.unk3D == 1) {
+            if (gGameSaveDataBuffer.cupPlacements[0x18] == 0) {
+                if (gGameSaveDataBuffer.cupPlacements[9] == 1) {
                     allReady = 1;
                     if (D_800ECA24 != 1) {
                         allReady = 0;
                     }
-                    if (gGameSaveDataBuffer.readiness[1].ready != 1) {
+                    if (1) {
+                    }
+                    if (1) {
+                    }
+                    if (gGameSaveDataBuffer.cupPlacements[effectArg] != 1) {
                         allReady = 0;
                     }
-                    if (gGameSaveDataBuffer.readiness[2].ready != 1) {
+                    if (gGameSaveDataBuffer.cupPlacements[effectArg + 1] != 1) {
                         allReady = 0;
                     }
-                    if (gGameSaveDataBuffer.readiness[3].ready != 1) {
+                    if (gGameSaveDataBuffer.cupPlacements[effectArg + 2] != 1) {
                         allReady = 0;
                     }
-                    if (gGameSaveDataBuffer.readiness[4].ready != 1) {
+                    if (gGameSaveDataBuffer.cupPlacements[effectArg + 3] != 1) {
                         allReady = 0;
                     }
                     if (allReady != 0) {
                         transition = 1;
-                        gGameSaveDataBuffer.unk4C = 1;
+                        gGameSaveDataBuffer.cupPlacements[0x18] = 1;
                     }
                 }
             }
@@ -185,6 +180,8 @@ void initRaceStartTransition(void) {
     }
 
     if (transition == 0) {
+        if (1) {
+        }
         resumeGameTask(2);
         removeGameTask(4);
         return;
@@ -198,6 +195,8 @@ void initRaceStartTransition(void) {
     loadRawRomAsset(D_13F3B0, D_145380, 0xE);
     loadCompressedRomAsset(D_1D3070, D_1D82B0, 0x12);
     initCallbackTaskScheduler(2);
+    if (((!gRaceSetupOpponentFocusCharacterIds) && (!gRaceSetupOpponentFocusCharacterIds)) && (!gRaceSetupOpponentFocusCharacterIds)) {
+    }
     resetRaceCameras();
     setRaceCameraModeForced(0, 0x1D);
     setRaceCameraModeForced(1, 0x1D);
@@ -208,6 +207,7 @@ void initRaceStartTransition(void) {
     configureViewport(2, 0xA0, 0x78, 0x120, 0xC0, 0x140, 0xF0, D_800E1098);
     enableViewportClear(2);
     gMenuFadeAlpha = 0xFF;
+    ;
     gCurrentGameTask->fade = 5;
     effectArg = transition - 1;
     createCallbackTaskWithUserId(initRaceSetupBackdrop, 0, 0x64, effectArg);
@@ -217,7 +217,8 @@ void initRaceStartTransition(void) {
     createRaceSetupOpponentFocus(1, gRaceSetupOpponentFocusCharacterIds[D_80121D90][0]);
     createRaceSetupOpponentFocus(2, gRaceSetupOpponentFocusCharacterIds[D_80121D90][1]);
     createRaceSetupOpponentFocus(3, gRaceSetupOpponentFocusCharacterIds[D_80121D90][2]);
-    createRaceSetupOpponentFocus(4, gRaceSetupOpponentFocusCharacterIds[D_80121D90][3]);
+    effectArg = gRaceSetupOpponentFocusCharacterIds[D_80121D90][3];
+    createRaceSetupOpponentFocus(4, effectArg);
     setCurrentGameTaskCallback(updateRaceStartTransitionIntroDelay, 0);
 }
 #endif
