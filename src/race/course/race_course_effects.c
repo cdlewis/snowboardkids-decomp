@@ -78,6 +78,11 @@ typedef struct PatrolCourseObjectEffect {
 } PatrolCourseObjectEffect;
 
 typedef struct {
+    s32 dz;
+    Vec3i *volatile pos;
+} PatrolCourseObjectUpdateLocals;
+
+typedef struct {
     s16 rotation[9];
     s16 pad2A;
     Vec3i basePos;
@@ -746,36 +751,33 @@ void renderPatrolCourseObject(PatrolCourseObjectEffect *arg0) {
     }
 }
 
-// updatePatrolCourseObject best match: 98.978% at nonmatchings/updatePatrolCourseObject-6934502587000073416/base_14.c.
+// updatePatrolCourseObject best match: 99.086% at nonmatchings/updatePatrolCourseObject-8699393380584516020/base_18.c.
 #pragma GLOBAL_ASM("asm/nonmatchings/race/course/race_course_effects/updatePatrolCourseObject.s")
 
 #ifdef NON_MATCHING
 void updatePatrolCourseObject(PatrolCourseObjectEffect *arg0) {
-    Vec3i *pos;
+    volatile u8 padding[0x18];
+    PatrolCourseObjectUpdateLocals local;
     s16 temp_a1;
-    s16 temp_t2;
     s16 temp_v0;
     s16 rand;
     s32 targetAngle;
     s32 var_v1;
-    s32 dx;
-    s32 new_var;
-    s32 targetDz;
-    s32 dz;
 
     if (gRaceUpdatePaused == 0) {
-        pos = &arg0->pos;
-        if (isPositionNearAnyRaceViewportFocus(pos) != 0) {
+        local.pos = &arg0->pos;
+        if (isPositionNearAnyRaceViewportFocus(&arg0->pos) != 0) {
             if (arg0->pad42 != 0) {
                 targetAngle = calculateFixedAngleBetweenXZPoints(arg0->pos.x, arg0->pos.z, arg0->startPos.x, arg0->startPos.z);
             } else {
                 targetAngle = calculateFixedAngleBetweenXZPoints(arg0->pos.x, arg0->pos.z, arg0->endX, arg0->endZ);
             }
             temp_a1 = arg0->angle;
-            temp_t2 = ((targetAngle & 0xFFFFu) - temp_a1) & 0xFFF;
-            var_v1 = temp_t2;
-            if (temp_t2 >= 0x801) {
-                var_v1 = (s16)(temp_t2 - 0x1000);
+            var_v1 = ((targetAngle & 0xFFFFu) - temp_a1) & 0xFFF;
+            targetAngle = -targetAngle;
+            var_v1 = (s16)var_v1;
+            if (var_v1 >= 0x801) {
+                var_v1 = (s16)(var_v1 - 0x1000);
             }
             temp_v0 = arg0->unk4C;
             if (temp_v0 < var_v1) {
@@ -786,39 +788,39 @@ void updatePatrolCourseObject(PatrolCourseObjectEffect *arg0) {
             }
             arg0->angle = (u64)(temp_a1 + var_v1);
             arg0->pos.x += fixedSine(arg0->angle) * ((s32)-arg0->unk50 / 4096);
-            dz = (arg0->pos.z = arg0->pos.z + (fixedCosine(arg0->angle) * ((s32)-arg0->unk50 / 4096)));
-            new_var = dz;
+            local.dz =
+                (arg0->pos.z = arg0->pos.z + (fixedCosine(arg0->angle) * ((s32)-arg0->unk50 / 4096)));
             arg0->surfaceIndex =
-                findRaceCourseSurfaceFromHint(arg0->surfaceIndex, arg0->pos.x, new_var) & 0xFFFF;
+                findRaceCourseSurfaceFromHint(arg0->surfaceIndex, arg0->pos.x, local.dz) & 0xFFFF;
             arg0->pos.y = getRaceCourseSurfaceHeight(arg0->surfaceIndex, arg0->pos.x, arg0->pos.z);
             if (arg0->pad42 != 0) {
-                dx = arg0->pos.x - arg0->startPos.x;
-                targetDz = arg0->pos.z - arg0->startPos.z;
-                if (dx < 0) {
-                    dx = -dx;
+                targetAngle = arg0->pos.x - arg0->startPos.x;
+                var_v1 = arg0->pos.z - arg0->startPos.z;
+                if (targetAngle < 0) {
+                    targetAngle = -targetAngle;
                 }
-                if (targetDz < 0) {
-                    targetDz = -targetDz;
+                if (var_v1 < 0) {
+                    var_v1 = -var_v1;
                 }
-                if (dx < 0x30000) {
-                    if (targetDz < 0x30000) {
+                if (targetAngle < 0x30000) {
+                    if (var_v1 < 0x30000) {
                         arg0->pad42 = 0;
                     }
                 }
             } else {
-                dx = arg0->pos.x - arg0->endX;
-                targetDz = arg0->pos.z - arg0->endZ;
-                if (dx < 0) {
-                    dx = -dx;
+                targetAngle = arg0->pos.x - arg0->endX;
+                var_v1 = arg0->pos.z - arg0->endZ;
+                if (targetAngle < 0) {
+                    targetAngle = -targetAngle;
                 }
-                if (targetDz < 0) {
-                    targetDz = -targetDz;
+                if (var_v1 < 0) {
+                    var_v1 = -var_v1;
                 }
-                if ((dx < 0x30000) && (targetDz < 0x30000)) {
+                if ((targetAngle < 0x30000) && (var_v1 < 0x30000)) {
                     arg0->pad42 = 1;
                 }
             }
-            pushRacePlayersOutOfCylinderOrApplyItemHit(pos, 0x40000, 0x50000, 0x30000, 4);
+            pushRacePlayersOutOfCylinderOrApplyItemHit(local.pos, 0x40000, 0x50000, 0x30000, 4);
             arg0->unk40 += arg0->unk4E;
             if (arg0->unk40 == 0) {
                 rand = randomNextSecondary();
