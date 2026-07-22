@@ -397,8 +397,26 @@ segments:
 
   - type: bin
     start: 0xE35C0
-    follows_vram: main
+    name: LEVEL_BIG_SNOWMAN
+    vram: 0
 
+  - type: bin
+    start: 0xEC9A0
+    name: LEVEL_SUNSET_ROCK
+    vram: 0
+
+  - { start: 0xF6160, type: bin, name: LEVEL_NIGHT_HIGHWAY, vram: 0 }
+  - { start: 0xFEDA0, type: bin, name: LEVEL_GRASS_VALLEY, vram: 0 }
+  - { start: 0x10AAB0, type: bin, name: LEVEL_DIZZY_LAND, vram: 0 }
+  - { start: 0x118670, type: bin, name: LEVEL_QUICKSAND_VALLEY, vram: 0 }
+  - { start: 0x125C90, type: bin, name: LEVEL_SILVER_MOUNTAIN, vram: 0 }
+  - { start: 0x131A90, type: bin, name: LEVEL_ANIMAL_LAND, vram: 0 }
+  - { start: 0x1384B0, type: bin, name: LEVEL_NINJA_LAND, vram: 0 }
+  - { start: 0x13F3B0, type: bin, name: LEVEL_ROOKIE_MOUNTAIN, vram: 0 }
+  - [0x145380, bin]
+  - [0x1467B0, bin]
+  - [0x147910, bin]
+  - [0x14B450, bin]
   - [0x1502A0, bin]
   - [0x152930, bin]
   - [0x155A20, bin]
@@ -406,6 +424,19 @@ segments:
   - [0x15C750, bin]
   - [0x160360, bin]
   - [0x163410, bin]
+  - [0x171480, bin]
+  - [0x17D220, bin]
+  - [0x186910, bin]
+  - [0x197490, bin]
+  - [0x1A5620, bin]
+  - [0x1B3160, bin]
+  - [0x1C24B0, bin]
+  - [0x1C9630, bin]
+  - [0x1D3070, bin]
+  - [0x1D82B0, bin]
+  - [0x1DCED0, bin]
+  - [0x1DE360, bin]
+  - [0x1E0F70, bin]
   - [0x1E19C0, bin]
   - [0x1E2380, bin]
   - [0x1E2DE0, bin]
@@ -413,6 +444,17 @@ segments:
   - [0x1E4AB0, bin]
   - [0x1E68A0, bin]
   - [0x1E74E0, bin]
+  - [0x1EC0F0, bin]
+  - [0x1EC4A0, bin]
+  - [0x1EC810, bin]
+  - [0x1ECD00, bin]
+  - [0x1ED910, bin]
+  - [0x1EDC80, bin]
+  - [0x1EE060, bin]
+  - [0x1EEEA0, bin]
+  - [0x1EF1D0, bin]
+  - [0x1EF530, bin]
+  - [0x1F1A90, bin]
   - [0x1F2220, bin]
   - [0x1F7D20, bin]
   - [0x1FE860, bin]
@@ -420,6 +462,46 @@ segments:
   - [0x20A940, bin]
   - [0x211470, bin]
   - [0x215BE0, bin]
+  - [0x21D9D0, bin]
+  - [0x222500, bin]
+  - [0x2274A0, bin]
+  - [0x22AE50, bin]
+  - [0x2308E0, bin]
+  - [0x2349E0, bin]
+  - [0x23A7D0, bin]
+  - [0x23E9D0, bin]
+  - [0x23FCC0, bin]
+  - [0x241160, bin]
+  - [0x2427D0, bin]
+  - [0x243270, bin]
+  - [0x245A80, bin]
+  - [0x24C8E0, bin]
+  - [0x24DBE0, bin]
+  - [0x275A90, bin]
+  - [0x27E290, bin]
+  - [0x369000, bin]
+  - [0x593D10, bin]
+  - [0x598A70, bin]
+  - [0x59AAA0, bin]
+  - [0x59DFE0, bin]
+  - [0x59E7F0, bin]
+  - [0x5A1ED0, bin]
+  - [0x5C5320, bin]
+  - [0x5CBA80, bin]
+  - [0x5CCD40, bin]
+  - [0x5D4280, bin]
+  - [0x5DAF30, bin]
+  - [0x5DB9D0, bin]
+  - [0x5DCBE0, bin]
+  - [0x5DFDD0, bin]
+  - [0x5E0350, bin]
+  - [0x5E0E40, bin]
+  - [0x5E26E0, bin]
+  - [0x5E34A0, bin]
+  - [0x608560, bin]
+  - [0x609AA0, bin]
+  - [0x60ECB0, bin]
+  - [0x60F1A0, bin]
 
   - [0x60F990, bin] # everything beyond this point is blank
 
