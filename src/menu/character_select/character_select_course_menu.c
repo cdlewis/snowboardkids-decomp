@@ -83,18 +83,10 @@ extern u8 gCourseSelectFromRaceTypeMenu;
 extern u8 gPendingFramebufferSwapCount;
 extern u8 gFramebufferSwapHold;
 
-// initCharacterSelectCourseMenuFromRaceTypeSelect best match: 99.941% (nonmatchings/initCharacterSelectCourseMenuFromRaceTypeSelect-7998791169205557824/base_10.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/menu/character_select/character_select_course_menu/initCharacterSelectCourseMenuFromRaceTypeSelect.s")
-
-#ifdef NON_MATCHING
 void initCharacterSelectCourseMenuFromRaceTypeSelect(void) {
-    s32 sp1C;
-    s16 *var_v0_2;
-    s16 *var_v1_2;
-    s16 *activeOptions;
     s32 var_v1;
+    register s32 unused; /* Preserve IDO's spill layout. */
     s32 var_v0_3;
-    CharacterSelectCourseUnlockList *courseOptionsByUnlock;
     u8 temp_v1;
     CharacterSelectSaveData *var_v0;
 
@@ -121,14 +113,16 @@ void initCharacterSelectCourseMenuFromRaceTypeSelect(void) {
         var_v1--;
     }
 
-    var_v1 = 0;
-    gActiveMenuTask = var_v1;
+    gActiveMenuTask = var_v1 = 0;
     D_8010ADE0 = 0;
     D_8010ADE4 = 0;
-    sp1C = var_v1;
     setCurrentGameTaskCallback(updateCharacterSelectCourseMenu, 0);
     updateCallbackTasks();
-    var_v1 = sp1C;
+
+    {
+    s16 *activeOptions;
+    CharacterSelectCourseUnlockList *courseOptionsByUnlock;
+
     courseOptionsByUnlock = gCharacterSelectCourseOptionsByUnlock;
     if (gCourseSelectFromRaceTypeMenu == 1) {
         if (gRaceTypeSelection < 2) {
@@ -148,6 +142,9 @@ void initCharacterSelectCourseMenuFromRaceTypeSelect(void) {
     }
 
     activeOptions = *gCharacterSelectActiveCourseOptions;
+    {
+    s16 *var_v0_2;
+
     var_v0_2 = activeOptions;
 loop_20:
     if (gRaceCourseIndex == *var_v0_2) {
@@ -159,9 +156,13 @@ loop_20:
             goto loop_20;
         }
     }
+    }
 
     gCharacterSelectCourseExitOptionIndex = 0;
     var_v0_3 = 0;
+    {
+    s16 *var_v1_2;
+
     var_v1_2 = activeOptions;
 loop_24:
     var_v0_3 += 2;
@@ -172,6 +173,7 @@ loop_24:
             goto loop_24;
         }
     }
+    }
 
     gCharacterSelectCourseCursorState.bytes[0] = 0;
     gCharacterSelectCourseCursorState.bytes[1] = 0;
@@ -179,8 +181,8 @@ loop_24:
     gCharacterSelectCourseCursorState.fields.spriteIndex = 0;
     gCharacterSelectCourseCursorState.bytes[6] = 0;
     gCharacterSelectCourseCursorState.bytes[7] = 0;
+    }
 }
-#endif
 
 // initCharacterSelectCourseMenuFromRace best match: 97.579% (nonmatchings/initCharacterSelectCourseMenuFromRace-6934502587000073416/base_19.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/character_select/character_select_course_menu/initCharacterSelectCourseMenuFromRace.s")
