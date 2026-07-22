@@ -448,7 +448,7 @@ loop_48:
 }
 #endif
 
-// updateCharacterSelectConfirmationMenu best match: 88.390% (nonmatchings/updateCharacterSelectConfirmationMenu-1936695454966205676/base_2.c)
+// updateCharacterSelectConfirmationMenu best match: 91.299% (nonmatchings/updateCharacterSelectConfirmationMenu-2188069624939011928/base_15.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/character_select/character_select_menu/updateCharacterSelectConfirmationMenu.s")
 
 #ifdef NON_MATCHING
@@ -459,16 +459,17 @@ void updateCharacterSelectConfirmationMenu(void) {
     u8 *readyEnd;
     s32 oldSelection;
     s32 buttons;
+    s32 keepGoing;
     u8 playerCount;
 
     if (gCharacterSelectHudState.fade == 0x100) {
         buttons = gPlayerInputPressed;
         oldSelection = gCharacterSelectHudState.confirmSelection;
 
-        if ((buttons & (STICK_UP | U_JPAD)) && (gCharacterSelectHudState.confirmSelection != 0)) {
-            gCharacterSelectHudState.confirmSelection--;
-        } else if ((buttons & (STICK_DOWN | D_JPAD)) && (gCharacterSelectHudState.confirmSelection == 0)) {
-            gCharacterSelectHudState.confirmSelection++;
+        if ((buttons & (STICK_UP | U_JPAD)) && (oldSelection != 0)) {
+            gCharacterSelectHudState.confirmSelection = oldSelection - 1;
+        } else if ((buttons & (STICK_DOWN | D_JPAD)) && (oldSelection == 0)) {
+            gCharacterSelectHudState.confirmSelection = oldSelection + 1;
         }
 
         if (gCharacterSelectHudState.confirmSelection != oldSelection) {
@@ -491,10 +492,11 @@ void updateCharacterSelectConfirmationMenu(void) {
                     readyEnd = playerCount + readyPtr;
                     do {
                         readyPtr++;
+                        keepGoing = (u32) readyPtr < (u32) readyEnd;
                         player++;
                         player[-1].menuState = 0;
                         readyPtr[2] = 0;
-                    } while ((u32) readyPtr < (u32) readyEnd);
+                    } while (keepGoing);
                 }
                 setCurrentGameTaskCallback(updateCharacterSelectMenu, 0);
                 gCharacterSelectHudState.phase = 3;
@@ -509,10 +511,11 @@ void updateCharacterSelectConfirmationMenu(void) {
                 readyEnd = playerCount + readyPtr;
                 do {
                     readyPtr++;
+                    keepGoing = (u32) readyPtr < (u32) readyEnd;
                     player++;
                     player[-1].menuState = 0;
                     readyPtr[2] = 0;
-                } while ((u32) readyPtr < (u32) readyEnd);
+                } while (keepGoing);
             }
             setCurrentGameTaskCallback(updateCharacterSelectMenu, 0);
             state = &gCharacterSelectHudState;
