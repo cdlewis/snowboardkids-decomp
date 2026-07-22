@@ -182,8 +182,6 @@ void loadRaceCourseAssets(void) {
     }
 
     size = D_14B450 - D_147910;
-    if (gAssetHandles[0x8]) {
-    }
     gAssetHandles[10] = allocRelocatableHeapBlock(size);
     lockRelocatableHeapBlock(gAssetHandles[10]);
     dmaReadRom(D_147910, getRelocatableHeapBlockBase(gAssetHandles[0xA]), size);
