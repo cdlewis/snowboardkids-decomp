@@ -202,22 +202,22 @@ void initTrainingCourseLessonEndMenu(TrainingCourseUiActor *arg0) {
     setCallbackTaskCallback(arg0, updateTrainingCourseLessonEndMenu);
 }
 
-// drawTrainingCourseDialog best match: 95.948% (nonmatchings/drawTrainingCourseDialog-8953690873630951657/base_1.c)
+// drawTrainingCourseDialog best match: 96.113% (nonmatchings/drawTrainingCourseDialog-8699393380584516020/base_28.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/training/training_course_ui/drawTrainingCourseDialog.s")
 
 #ifdef NON_MATCHING
 void drawTrainingCourseDialog(TrainingCourseUiActor *arg0) {
-    unsigned int new_var;
     TrainingCourseUiScript *script;
     u16 xOffset;
-    int i;
-    TrainingCourseUiScript glyph[2];
-    s32 glyphIndex;
-    s32 lineOffset;
-    s32 scriptOffset;
     unsigned short stopped;
+    int i;
+    unsigned int new_var;
+    TrainingCourseUiScript glyph[2];
     u16 token;
     u16 drawToken;
+    s32 glyphIndex;
+    s32 scriptOffset;
+    s32 lineOffset;
     unsigned int pad;
 
     drawMenuSprite((s16)(arg0->x - 4), (s16)(arg0->y + 0x14), getRelocatableHeapBlockBase(TRAINING_COURSE_UI_TEXTURE_HANDLE), 2, 0x20, 0x20, 0, 0);
@@ -265,10 +265,10 @@ void drawTrainingCourseDialog(TrainingCourseUiActor *arg0) {
                     }
                     if (token == 0xFFFD) {
                         token = script[1];
-                        lineOffset = (lineOffset + 0x10) & 0xFFFF;
                         xOffset = 0;
                         scriptOffset += 2;
                         script++;
+                        lineOffset = (lineOffset + 0x10) & 0xFFFF;
                         drawToken = token;
                     } else if (token == 0xFFFC) {
                         arg0->glyphPalette = script[1];
@@ -278,12 +278,7 @@ void drawTrainingCourseDialog(TrainingCourseUiActor *arg0) {
                         drawToken = token;
                     } else if (token == 0xFFFB) {
                         arg0->scriptState = 2;
-                        if (1) {
-                            do {
-                                stopped = 1;
-                                break;
-                            } while (new_var);
-                        }
+ do { if (1) { do { } while (0); do { stopped = 1; break; } while (new_var); } } while (0);
                     }
                     if (drawToken < 0xFF01) {
                         break;
@@ -310,7 +305,7 @@ void drawTrainingCourseDialog(TrainingCourseUiActor *arg0) {
     }
 
     arg0->glyphTimer++;
-    if ((u16)arg0->glyphTimer == 4) {
+    if ((u16)(*arg0).glyphTimer == 4) {
         arg0->glyphTimer = 0;
         if (stopped != 1) {
             arg0->state.script.visibleGlyphCount++;
