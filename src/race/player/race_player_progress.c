@@ -351,10 +351,6 @@ case2_second_display_1:
 #undef RANK_NEAR_LIMIT
 #endif
 
-// updateRacePlayerCheckpointEvents best match: 99.800% (nonmatchings/updateRacePlayerCheckpointEvents-8075865578671233833/base_11.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race/player/race_player_progress/updateRacePlayerCheckpointEvents.s")
-
-#ifdef NON_MATCHING
 void updateRacePlayerCheckpointEvents(RacePlayerProgressState *player) {
     RacePlayerCheckpointEvent *eventList;
     RacePlayerCheckpointEvent *event;
@@ -362,9 +358,9 @@ void updateRacePlayerCheckpointEvents(RacePlayerProgressState *player) {
     s32 y;
     s32 z;
     s32 eventIndex;
-    s16 pathFrame;
-    s16 angle;
     s32 eventMask;
+    s16 angle;
+    s16 pathFrame;
     s32 sine;
     s32 cosine;
 
@@ -379,7 +375,7 @@ void updateRacePlayerCheckpointEvents(RacePlayerProgressState *player) {
 
     for (;;) {
         pathFrame = event->pathFrame;
-        if (pathFrame == -1) {
+        if (pathFrame == -(u32)1) {
             break;
         }
 
@@ -414,7 +410,6 @@ void updateRacePlayerCheckpointEvents(RacePlayerProgressState *player) {
         event++;
     }
 }
-#endif
 
 s32 updateRacePlayerSmoothedPathOffset(s32 playerIndex, s32 pathIndex, s32 rankSlot) {
     s32 courseIndex;
