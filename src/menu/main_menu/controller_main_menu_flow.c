@@ -458,11 +458,11 @@ void requestControllerPakSaveStatus(u16 arg0) {
     osRecvMesg(&gControllerSubsystemReplyQueue, &msg, OS_MESG_BLOCK);
 }
 
-// checkControllerPakSaveStatus best match: 92.879% at nonmatchings/checkControllerPakSaveStatus-6934502587000073416/base_21.c
+// checkControllerPakSaveStatus best match: 94.144% at nonmatchings/checkControllerPakSaveStatus-8699393380584516020/base_18.c
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/main_menu/controller_main_menu_flow/checkControllerPakSaveStatus.s")
 
 #ifdef NON_MATCHING
-void checkControllerPakSaveStatus(u16 arg0) {
+void checkControllerPakSaveStatus(s32 arg0) {
     s32 ret;
     s32 maxFiles;
     s32 filesUsed;
@@ -494,6 +494,10 @@ void checkControllerPakSaveStatus(u16 arg0) {
         byte0 = *src++;
         byte1 = *src++;
         byte2 = *src++;
+        if (((((((((((!arg0) && (!arg0)) & 0xFFu) & 0xFFu) & 0xFFu) & 0xFFu) & 0xFFu) & 0xFFu) & 0xFFu) &
+             0xFFu) &&
+            (!arg0)) {
+        }
         byte3 = *src++;
         dst += 4;
         dst[0] = byte0;
