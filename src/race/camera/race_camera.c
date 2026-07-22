@@ -391,12 +391,12 @@ void initRaceCameraFollowPlayer(void) {
     D_801124A0->update();
 }
 
-// updateRaceCameraFollowPlayer best match: 94.907% (nonmatchings/updateRaceCameraFollowPlayer-1936695454966205676/base_8.c)
+// updateRaceCameraFollowPlayer best match: 97.646% (nonmatchings/updateRaceCameraFollowPlayer-2188069624939011928/base_24.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race/camera/race_camera/updateRaceCameraFollowPlayer.s")
 
 #ifdef NON_MATCHING
 void updateRaceCameraFollowPlayer(void) {
-    RacePlayerSlot *player;
+    s32 diff;
     s32 dx;
     s32 dy;
     s32 dz;
@@ -431,9 +431,9 @@ void updateRaceCameraFollowPlayer(void) {
             z = D_801124A0->focus.z - dz;
         }
 
-        dist = integerSquareRoot64((s64) dy * dy + (s64) dx * dx + (s64) dz * dz);
+        dist = integerSquareRoot64((s64) dx * dx + (s64) dy * dy + (s64) dz * dz);
 
-        if ((0x460000 - D_801124A0->distance) < dist) {
+        if (dist > (0x460000 - D_801124A0->distance)) {
             dx = ((s64) dx * (0x460000 - D_801124A0->distance)) / dist;
             dy = ((s64) dy * (0x460000 - D_801124A0->distance)) / dist;
             dz = ((s64) dz * (0x460000 - D_801124A0->distance)) / dist;
@@ -443,6 +443,8 @@ void updateRaceCameraFollowPlayer(void) {
         } else {
             if (dist < (0x458000 - D_801124A0->distance)) {
                 dx = ((s64) dx * (0x458000 - D_801124A0->distance)) / dist;
+                if (!gRacePlayers) {
+                }
                 dy = ((s64) dy * (0x458000 - D_801124A0->distance)) / dist;
                 dz = ((s64) dz * (0x458000 - D_801124A0->distance)) / dist;
                 x = D_801124A0->focus.x - dx;
@@ -452,12 +454,11 @@ void updateRaceCameraFollowPlayer(void) {
         }
 
         {
-            s32 diff;
-
-            player = &gRacePlayers[D_801124A0->playerIndex];
-            if (!(player->state.flags2FC & 0x1000)) {
+            if (!(gRacePlayers[D_801124A0->playerIndex].state.flags2FC & 0x1000)) {
                 diff = getRaceCourseSurfaceHeight(
-                           (s16) findRaceCourseSurfaceFromHint(player->state.surfaceHint, x, z), x, z) -
+                           (s16) findRaceCourseSurfaceFromHint(
+                               gRacePlayers[D_801124A0->playerIndex].state.surfaceHint, x, z),
+                           x, z) -
                        0x40000;
                 if (y < diff) {
                     y = diff;
@@ -499,7 +500,7 @@ void updateRaceCameraFollowPlayer(void) {
         }
     }
 
-    D_801124A0->prevPos.x = gRacePlayers[D_801124A0->playerIndex].state.pos.x;
+    D_801124A0->prevPos.x = gRacePlayers[(*D_801124A0).playerIndex].state.pos.x;
     D_801124A0->prevPos.y = gRacePlayers[D_801124A0->playerIndex].state.pos.y;
     D_801124A0->prevPos.z = gRacePlayers[D_801124A0->playerIndex].state.pos.z;
     updateRaceCameraAlternateLookAtTransform();
