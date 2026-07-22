@@ -24,9 +24,6 @@ extern RomAssetRange gCharacterRawAssetRanges[];
 extern RomAssetRange gCharacterTextureAssetRanges[];
 extern RomAssetRange gCharacterModelAssetRanges[];
 
-extern u8 D_147910[];
-extern u8 D_14B450[];
-extern u8 D_1502A0[];
 
 extern u8 gRaceSplitscreenMode;
 extern u8 gPlayerCount;
@@ -45,7 +42,7 @@ void loadRaceCourseAssets(void) {
         size = ASSET_SIZE(LEVEL_BIG_SNOWMAN);
         gAssetHandles[0x8] = allocRelocatableHeapBlock(size);
         lockRelocatableHeapBlock(gAssetHandles[0x8]);
-        dmaReadRom((u32)&LEVEL_BIG_SNOWMAN_ROM_START, getRelocatableHeapBlockBase(gAssetHandles[0x8]), size);
+        DMA_ASSET(LEVEL_BIG_SNOWMAN, getRelocatableHeapBlockBase(gAssetHandles[0x8]), size);
         LOAD_ASSET(LEVEL_BIG_SNOWMAN_TEXTURES, 9);
         LOAD_ASSET(LEVEL_BIG_SNOWMAN_SURFACE_DATA, 0x1B);
         initRaceCourseSurfaceData();
@@ -55,7 +52,7 @@ void loadRaceCourseAssets(void) {
         size = ASSET_SIZE(LEVEL_SUNSET_ROCK);
         gAssetHandles[0x8] = allocRelocatableHeapBlock(size);
         lockRelocatableHeapBlock(gAssetHandles[0x8]);
-        dmaReadRom((u32)&LEVEL_SUNSET_ROCK_ROM_START, getRelocatableHeapBlockBase(gAssetHandles[0x8]), size);
+        DMA_ASSET(LEVEL_SUNSET_ROCK, getRelocatableHeapBlockBase(gAssetHandles[0x8]), size);
         LOAD_ASSET(LEVEL_SUNSET_ROCK_TEXTURES, 9);
         LOAD_ASSET(LEVEL_SUNSET_ROCK_SURFACE_DATA, 0x1B);
         initRaceCourseSurfaceData();
@@ -65,7 +62,7 @@ void loadRaceCourseAssets(void) {
         size = ASSET_SIZE(LEVEL_NIGHT_HIGHWAY);
         gAssetHandles[0x8] = allocRelocatableHeapBlock(size);
         lockRelocatableHeapBlock(gAssetHandles[0x8]);
-        dmaReadRom((u32)&LEVEL_NIGHT_HIGHWAY_ROM_START, getRelocatableHeapBlockBase(gAssetHandles[0x8]), size);
+        DMA_ASSET(LEVEL_NIGHT_HIGHWAY, getRelocatableHeapBlockBase(gAssetHandles[0x8]), size);
         LOAD_ASSET(LEVEL_NIGHT_HIGHWAY_TEXTURES, 9);
         LOAD_ASSET(LEVEL_NIGHT_HIGHWAY_SURFACE_DATA, 0x1B);
         initRaceCourseSurfaceData();
@@ -75,7 +72,7 @@ void loadRaceCourseAssets(void) {
         size = ASSET_SIZE(LEVEL_GRASS_VALLEY);
         gAssetHandles[0x8] = allocRelocatableHeapBlock(size);
         lockRelocatableHeapBlock(gAssetHandles[0x8]);
-        dmaReadRom((u32)&LEVEL_GRASS_VALLEY_ROM_START, getRelocatableHeapBlockBase(gAssetHandles[0x8]), size);
+        DMA_ASSET(LEVEL_GRASS_VALLEY, getRelocatableHeapBlockBase(gAssetHandles[0x8]), size);
         LOAD_ASSET(LEVEL_GRASS_VALLEY_TEXTURES, 9);
         LOAD_ASSET(LEVEL_GRASS_VALLEY_SURFACE_DATA, 0x1B);
         initRaceCourseSurfaceData();
@@ -85,7 +82,7 @@ void loadRaceCourseAssets(void) {
         size = ASSET_SIZE(LEVEL_DIZZY_LAND);
         gAssetHandles[0x8] = allocRelocatableHeapBlock(size);
         lockRelocatableHeapBlock(gAssetHandles[0x8]);
-        dmaReadRom((u32)&LEVEL_DIZZY_LAND_ROM_START, getRelocatableHeapBlockBase(gAssetHandles[0x8]), size);
+        DMA_ASSET(LEVEL_DIZZY_LAND, getRelocatableHeapBlockBase(gAssetHandles[0x8]), size);
         LOAD_ASSET(LEVEL_DIZZY_LAND_TEXTURES, 9);
         LOAD_ASSET(LEVEL_DIZZY_LAND_SURFACE_DATA, 0x1B);
         initRaceCourseSurfaceData();
@@ -95,7 +92,7 @@ void loadRaceCourseAssets(void) {
         size = ASSET_SIZE(LEVEL_QUICKSAND_VALLEY);
         gAssetHandles[0x8] = allocRelocatableHeapBlock(size);
         lockRelocatableHeapBlock(gAssetHandles[0x8]);
-        dmaReadRom((u32)&LEVEL_QUICKSAND_VALLEY_ROM_START, getRelocatableHeapBlockBase(gAssetHandles[0x8]), size);
+        DMA_ASSET(LEVEL_QUICKSAND_VALLEY, getRelocatableHeapBlockBase(gAssetHandles[0x8]), size);
         LOAD_ASSET(LEVEL_QUICKSAND_VALLEY_TEXTURES, 9);
         LOAD_ASSET(LEVEL_QUICKSAND_VALLEY_SURFACE_DATA, 0x1B);
         initRaceCourseSurfaceData();
@@ -105,7 +102,7 @@ void loadRaceCourseAssets(void) {
         size = ASSET_SIZE(LEVEL_SILVER_MOUNTAIN);
         gAssetHandles[0x8] = allocRelocatableHeapBlock(size);
         lockRelocatableHeapBlock(gAssetHandles[0x8]);
-        dmaReadRom((u32)&LEVEL_SILVER_MOUNTAIN_ROM_START, getRelocatableHeapBlockBase(gAssetHandles[0x8]), size);
+        DMA_ASSET(LEVEL_SILVER_MOUNTAIN, getRelocatableHeapBlockBase(gAssetHandles[0x8]), size);
         LOAD_ASSET(LEVEL_SILVER_MOUNTAIN_TEXTURES, 9);
         LOAD_ASSET(LEVEL_SILVER_MOUNTAIN_SURFACE_DATA, 0x1B);
         initRaceCourseSurfaceData();
@@ -115,7 +112,7 @@ void loadRaceCourseAssets(void) {
         size = ASSET_SIZE(LEVEL_ANIMAL_LAND);
         gAssetHandles[0x8] = allocRelocatableHeapBlock(size);
         lockRelocatableHeapBlock(gAssetHandles[0x8]);
-        dmaReadRom((u32)&LEVEL_ANIMAL_LAND_ROM_START, getRelocatableHeapBlockBase(gAssetHandles[0x8]), size);
+        DMA_ASSET(LEVEL_ANIMAL_LAND, getRelocatableHeapBlockBase(gAssetHandles[0x8]), size);
         LOAD_ASSET(LEVEL_ANIMAL_LAND_TEXTURES, 9);
         LOAD_ASSET(LEVEL_ANIMAL_LAND_SURFACE_DATA, 0x1B);
         initRaceCourseSurfaceData();
@@ -124,7 +121,7 @@ void loadRaceCourseAssets(void) {
         size = ASSET_SIZE(LEVEL_NINJA_LAND);
         gAssetHandles[0x8] = allocRelocatableHeapBlock(size);
         lockRelocatableHeapBlock(gAssetHandles[0x8]);
-        dmaReadRom((u32)&LEVEL_NINJA_LAND_ROM_START, getRelocatableHeapBlockBase(gAssetHandles[0x8]), size);
+        DMA_ASSET(LEVEL_NINJA_LAND, getRelocatableHeapBlockBase(gAssetHandles[0x8]), size);
         LOAD_ASSET(LEVEL_NINJA_LAND_TEXTURES, 9);
         LOAD_ASSET(LEVEL_NINJA_LAND_SURFACE_DATA, 0x1B);
         initRaceCourseSurfaceData();
@@ -134,7 +131,7 @@ void loadRaceCourseAssets(void) {
         size = ASSET_SIZE(LEVEL_ROOKIE_MOUNTAIN);
         gAssetHandles[0x8] = allocRelocatableHeapBlock(size);
         lockRelocatableHeapBlock(gAssetHandles[0x8]);
-        dmaReadRom((u32)&LEVEL_ROOKIE_MOUNTAIN_ROM_START, getRelocatableHeapBlockBase(gAssetHandles[0x8]), size);
+        DMA_ASSET(LEVEL_ROOKIE_MOUNTAIN, getRelocatableHeapBlockBase(gAssetHandles[0x8]), size);
         LOAD_ASSET(LEVEL_ROOKIE_MOUNTAIN_TEXTURES, 9);
         LOAD_ASSET(LEVEL_ROOKIE_MOUNTAIN_SURFACE_DATA, 0x1B);
         initRaceCourseSurfaceData();
@@ -142,10 +139,10 @@ void loadRaceCourseAssets(void) {
         break;
     }
 
-    size = D_14B450 - D_147910;
+    size = ASSET_SIZE(_147910);
     gAssetHandles[10] = allocRelocatableHeapBlock(size);
     lockRelocatableHeapBlock(gAssetHandles[10]);
-    dmaReadRom(D_147910, getRelocatableHeapBlockBase(gAssetHandles[0xA]), size);
+    DMA_ASSET(_147910, getRelocatableHeapBlockBase(gAssetHandles[0xA]), size);
     LOAD_ASSET(_1D82B0, 0xB);
     LOAD_ASSET(_1E74E0, 0x1C);
     LOAD_ASSET(_5DAF30, 0x2A);
@@ -161,9 +158,9 @@ void loadRaceCharacterAssets(void) {
     s32 heapBase;
     s32 size;
 
-    size = D_1502A0 - D_14B450;
+    size = ASSET_SIZE(_14B450);
     gAssetHandles[0xC] = allocRelocatableHeapBlock(size);
-    dmaReadRom(D_14B450, getRelocatableHeapBlockBase(gAssetHandles[0xC]), size);
+    DMA_ASSET(_14B450, getRelocatableHeapBlockBase(gAssetHandles[0xC]), size);
     LOAD_ASSET(_1EF530, 0xD);
 
     rawRanges = gCharacterRawAssetRanges;

@@ -31,8 +31,6 @@ typedef struct {
 } MainMenuModePreviewRaceCourseAsset;
 
 
-extern u8 D_1467B0[];
-extern u8 D_147910[];
 extern MainMenuRaceFlowTask *gCurrentGameTask;
 extern u8 gMainMenuSelectionResult;
 extern s8 gRacePlayerHudStatuses;
@@ -83,7 +81,7 @@ void initMainMenuModePreviewRaceSelectionMenu(void) {
     LOAD_ASSET(_593D10, 0x29);
     LOAD_ASSET(_60F1A0, 0x2A);
     LOAD_ASSET(_245A80, 0x1F);
-    loadRawRomAsset(D_1467B0, D_147910, 8);
+    LOAD_RAW_ASSET(_1467B0, 8);
     LOAD_ASSET(_1DE360, 9);
     gMainMenuSelectionResult = 0;
     gFramebufferSwapDelay = 0;

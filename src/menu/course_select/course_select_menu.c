@@ -69,8 +69,6 @@ typedef union {
     ObjectA3E0 *object;
 } CourseSelectPointer;
 
-extern u8 D_14B450[];
-extern u8 D_1502A0[];
 extern u8 D_5C5320[];
 extern f32 D_800E0A30;
 extern ObjectA3E0 *gCurrentMenuCameraObject;
@@ -205,9 +203,9 @@ void initCourseSelectMenu(void) {
     LOAD_ASSET(_59DFE0, 0x26);
     LOAD_ASSET(_5D4280, 0x27);
 
-    size = D_1502A0 - D_14B450;
+    size = ASSET_SIZE(_14B450);
     gAssetHandles[0xC] = allocRelocatableHeapBlock(size);
-    dmaReadRom((u32)D_14B450, (void *)getRelocatableHeapBlockBase(gAssetHandles[0xC]), size);
+    DMA_ASSET(_14B450, (void *)getRelocatableHeapBlockBase(gAssetHandles[0xC]), size);
     LOAD_ASSET(_1EF530, 0xD);
     LOAD_ASSET(_1E74E0, 0x1C);
     initCallbackTaskScheduler(0);

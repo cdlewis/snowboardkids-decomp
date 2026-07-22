@@ -108,9 +108,6 @@ void updateMenuCameraObjectWithTargetOffsetCallback(void) {
 
 #ifdef NON_MATCHING
 extern void loadMainMenuSceneModelAnimationBank();
-extern u8 D_13F3B0[];
-extern u8 D_145380[];
-extern u8 D_1467B0[];
 extern u8 gRaceSetupOpponentFocusCharacterIds[][4];
 extern u8 gPendingEndingCreditsFlow;
 extern u8 gRaceSplitscreenMode;
@@ -183,9 +180,9 @@ void initRaceStartTransition(void) {
     loadMainMenuSceneModelAnimationBank();
     LOAD_ASSET(_5DAF30, 0x2A);
     LOAD_ASSET(_1E0F70, 0x22);
-    loadRawRomAsset(D_145380, D_1467B0, 8);
+    LOAD_RAW_ASSET(_145380, 8);
     LOAD_ASSET(_1DCED0, 9);
-    loadRawRomAsset(D_13F3B0, D_145380, 0xE);
+    LOAD_RAW_ASSET(LEVEL_ROOKIE_MOUNTAIN, 0xE);
     LOAD_ASSET(LEVEL_ROOKIE_MOUNTAIN_TEXTURES, 0x12);
     initCallbackTaskScheduler(2);
     if (((!gRaceSetupOpponentFocusCharacterIds) && (!gRaceSetupOpponentFocusCharacterIds)) && (!gRaceSetupOpponentFocusCharacterIds)) {

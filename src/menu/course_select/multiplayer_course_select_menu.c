@@ -48,8 +48,6 @@ typedef struct {
 
 extern void n_alSeqpDelete(void);
 extern void requestMusicSequenceBank(s32);
-extern u8 D_14B450[];
-extern u8 D_1502A0[];
 extern s16 gMenuFadeAlpha;
 extern u8 D_800EC9C0;
 extern u8 gRaceSplitscreenMode;
@@ -167,9 +165,9 @@ void initMultiplayerCourseSelectMenu(void) {
     LOAD_ASSET(_5A1ED0, 0x25);
     LOAD_ASSET(_59DFE0, 0x26);
 
-    one = D_1502A0 - D_14B450;
+    one = ASSET_SIZE(_14B450);
     gAssetHandles[0xC] = allocRelocatableHeapBlock(one);
-    dmaReadRom((u32)D_14B450, (void *)getRelocatableHeapBlockBase(gAssetHandles[0xC]), one);
+    DMA_ASSET(_14B450, (void *)getRelocatableHeapBlockBase(gAssetHandles[0xC]), one);
     LOAD_ASSET(_1EF530, 0xD);
     LOAD_ASSET(_245A80, 0x1F);
     initCallbackTaskScheduler(0);

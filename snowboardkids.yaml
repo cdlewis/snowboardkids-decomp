@@ -444,10 +444,26 @@ segments:
     start: 0x13F3B0
     name: LEVEL_ROOKIE_MOUNTAIN
     vram: 0
-  - [0x145380, bin]
-  - [0x1467B0, bin]
-  - [0x147910, bin]
-  - [0x14B450, bin]
+  - type: bin
+    start: 0x145380
+    name: _145380
+    vram: 0
+
+  - type: bin
+    start: 0x1467B0
+    name: _1467B0
+    vram: 0
+
+  - type: bin
+    start: 0x147910
+    name: _147910
+    vram: 0
+
+  - type: bin
+    start: 0x14B450
+    name: _14B450
+    vram: 0
+
   - [0x1502A0, bin]
   - [0x152930, bin]
   - [0x155A20, bin]
