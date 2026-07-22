@@ -1,4 +1,5 @@
 #include "common.h"
+#include "assets.h"
 #include "game/audio/sound_manager.h"
 #include "game/engine/callback_task_scheduler.h"
 #include "game/engine/asset_manager.h"
@@ -25,12 +26,6 @@ extern s32 gMenuFlowState;
 extern u8 gPendingFramebufferSwapCount;
 extern u8 gFramebufferSwapHold;
 extern s32 gPlayerInputPressed;
-extern u8 D_593D10[];
-extern u8 D_598A70[];
-extern u8 D_59AAA0[];
-extern u8 D_59DFE0[];
-extern u8 D_60F1A0[];
-extern u8 D_60F990[];
 
 void initControllerPakContinuePromptFlow(void) {
     requestMusicSequenceBank(3);
@@ -42,10 +37,10 @@ void initControllerPakContinuePromptFlow(void) {
     gMenuFlowState = 0;
     gControllerPakContinuePromptTransition.state = 0;
     gControllerPakContinuePromptTransition.x = 0x100;
-    loadCompressedRomAsset(D_593D10, D_598A70, 0x22);
-    loadCompressedRomAsset(D_598A70, D_59AAA0, 0x23);
-    loadCompressedRomAsset(D_59AAA0, D_59DFE0, 0x24);
-    loadCompressedRomAsset(D_60F1A0, D_60F990, 0x29);
+    LOAD_ASSET(_593D10, 0x22);
+    LOAD_ASSET(_598A70, 0x23);
+    LOAD_ASSET(_59AAA0, 0x24);
+    LOAD_ASSET(_60F1A0, 0x29);
     initCallbackTaskScheduler(0);
     createCallbackTask(initControllerPakContinuePrompt, 0, 0x64);
     gMenuFadeAlpha = gCurrentGameTask->fade;

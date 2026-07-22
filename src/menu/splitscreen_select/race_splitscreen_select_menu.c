@@ -1,4 +1,5 @@
 #include "common.h"
+#include "assets.h"
 #include "game/audio/sound_manager.h"
 #include "game/engine/callback_task_scheduler.h"
 #include "game/engine/asset_manager.h"
@@ -27,15 +28,6 @@ extern void releaseMenuAssetHandles(void);
 extern s32 enqueueSoundEffect(s16, s16);
 
 extern u8 D_800EC9DC;
-extern u8 D_5A1ED0[];
-extern u8 D_5C5320[];
-extern u8 D_593D10[];
-extern u8 D_598A70[];
-extern u8 D_59AAA0[];
-extern u8 D_59DFE0[];
-extern u8 D_59E7F0[];
-extern u8 D_245A80[];
-extern u8 D_24C8E0[];
 
 extern RaceSplitscreenSelectMenuState *gCurrentGameTask;
 extern RaceSplitscreenSelectCursorTarget gRaceSplitscreenSelectCursorTarget;
@@ -78,12 +70,12 @@ void initRaceSplitscreenSelectMenu(void) {
     configureViewport(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.333333373f);
     gFramebufferSwapDelay = 0;
     gCurrentGameTask->fade = 0xFF;
-    loadCompressedRomAsset(D_5A1ED0, D_5C5320, 0x21);
-    loadCompressedRomAsset(D_593D10, D_598A70, 0x22);
-    loadCompressedRomAsset(D_598A70, D_59AAA0, 0x23);
-    loadCompressedRomAsset(D_59DFE0, D_59E7F0, 0x26);
-    loadCompressedRomAsset(D_245A80, D_24C8E0, 0x1F);
-    loadCompressedRomAsset(D_59AAA0, D_59DFE0, 0x24);
+    LOAD_ASSET(_5A1ED0, 0x21);
+    LOAD_ASSET(_593D10, 0x22);
+    LOAD_ASSET(_598A70, 0x23);
+    LOAD_ASSET(_59DFE0, 0x26);
+    LOAD_ASSET(_245A80, 0x1F);
+    LOAD_ASSET(_59AAA0, 0x24);
     initCallbackTaskScheduler(0);
     createCallbackTask((void (*)(CallbackTask *))initMenuIconTilemapSpriteActor, 0, 0x5E);
     gMenuSelectionConfirmTimer = 0;

@@ -1,4 +1,5 @@
 #include "common.h"
+#include "assets.h"
 #include "game/engine/callback_task_scheduler.h"
 #include "game/engine/asset_manager.h"
 #include "game/menu/character_select/character_select_course_menu.h"
@@ -29,15 +30,6 @@ extern u8 gRaceRumbleEnabled;
 extern s32 gControllerPakFreeBytes;
 extern s32 gControllerPakFreeFileCount;
 extern s32 gMenuFlowState;
-extern u8 D_593D10;
-extern u8 D_598A70;
-extern u8 D_59AAA0;
-extern u8 D_59DFE0;
-extern u8 D_5DFDD0;
-extern u8 D_5E0350;
-extern u8 gControllerPakReplaySaveMessageSecondPageStart;
-extern u8 D_60F1A0;
-extern u8 D_60F990;
 
 void initControllerPakFileDeleteFlow(void) {
     requestControllerPakProbe(0);
@@ -56,12 +48,12 @@ void initControllerPakFileDeleteFlow(void) {
     gControllerPakFreeFileCount = 0;
     gRaceRumbleEnabled = 0;
     gMenuFadeAlpha = gCurrentGameTask->fade;
-    loadCompressedRomAsset(&D_5DFDD0, &D_5E0350, 0x21);
-    loadCompressedRomAsset(&D_593D10, &D_598A70, 0x22);
-    loadCompressedRomAsset(&D_598A70, &D_59AAA0, 0x23);
-    loadCompressedRomAsset(&D_59AAA0, &D_59DFE0, 0x24);
-    loadCompressedRomAsset(&D_5E0350, &gControllerPakReplaySaveMessageSecondPageStart, 0x26);
-    loadCompressedRomAsset(&D_60F1A0, &D_60F990, 0x29);
+    LOAD_ASSET(_5DFDD0, 0x21);
+    LOAD_ASSET(_593D10, 0x22);
+    LOAD_ASSET(_598A70, 0x23);
+    LOAD_ASSET(_59AAA0, 0x24);
+    LOAD_ASSET(_5E0350, 0x26);
+    LOAD_ASSET(_60F1A0, 0x29);
     initCallbackTaskScheduler(0);
     createCallbackTask(&initControllerPakFileDeleteMainOptions, 0, 0x63);
     createCallbackTask(&initControllerPakFileDeleteConfirmOptions, 0, 0x63);

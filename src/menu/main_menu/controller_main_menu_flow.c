@@ -1,4 +1,5 @@
 #include "common.h"
+#include "assets.h"
 #include "game/audio/sound_manager.h"
 #include "game/engine/callback_task_scheduler.h"
 #include "game/engine/asset_manager.h"
@@ -201,19 +202,8 @@ extern u8 gControllerPakOperationCounts[];
 extern SaveSlotBytes gGameSaveDataBuffer[];
 extern s32 gPlayerInputHeld;
 extern s16 gMenuFadeAlpha;
-extern u8 D_593D10[];
-extern u8 D_598A70[];
-extern u8 D_1F1A90[];
-extern u8 D_1F2220[];
-extern u8 D_60F1A0[];
-extern u8 D_60F990[];
 extern u8 D_1467B0[];
 extern u8 D_147910[];
-extern u8 D_1DE360[];
-extern u8 D_1E0F70[];
-extern u8 D_5DB9D0[];
-extern u8 D_5DCBE0[];
-extern u8 D_5DFDD0[];
 extern s8 gMainMenuSecretCodeUnlocked;
 extern u8 gMainMenuSecretCodeStep;
 extern s8 gMenuFadeOverlayActive;
@@ -1025,11 +1015,11 @@ void initMainMenu(void) {
     resetAllViewports();
     configureMenuViewport(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.3333334f);
     gFramebufferSwapDelay = 0;
-    loadCompressedRomAsset(D_5DB9D0, D_5DCBE0, 0x21);
-    loadCompressedRomAsset(D_5DCBE0, D_5DFDD0, 0x25);
-    loadCompressedRomAsset(D_593D10, D_598A70, 0x22);
+    LOAD_ASSET(_5DB9D0, 0x21);
+    LOAD_ASSET(_5DCBE0, 0x25);
+    LOAD_ASSET(_593D10, 0x22);
     loadRawRomAsset(D_1467B0, D_147910, 8);
-    loadCompressedRomAsset(D_1DE360, D_1E0F70, 9);
+    LOAD_ASSET(_1DE360, 9);
     gCurrentGameTask->fade = 0xFF;
     gCurrentGameTask->selection = 0;
     gCurrentGameTask->delay = 0x32;
@@ -1208,8 +1198,8 @@ void initMainMenuModeSelect(void) {
     gFramebufferSwapDelay = 0;
     configureMenuViewport(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.3333334f);
     loadRawRomAsset(D_1467B0, D_147910, 8);
-    loadCompressedRomAsset(D_1DE360, D_1E0F70, 9);
-    loadCompressedRomAsset(D_1F1A90, D_1F2220, 0x28);
+    LOAD_ASSET(_1DE360, 9);
+    LOAD_ASSET(_1F1A90, 0x28);
     resetRaceCameras();
     setRaceCameraMode(0, 0x1F);
     initCallbackTaskScheduler(0);
@@ -1300,11 +1290,11 @@ void initMainMenuSettings(void) {
     configureMenuViewport(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.3333334f);
     gViewportStates[0].overlayAlpha = 0x80;
     gFramebufferSwapDelay = 0;
-    loadCompressedRomAsset(D_593D10, D_598A70, 0x29);
-    loadCompressedRomAsset(D_1F1A90, D_1F2220, 0x28);
-    loadCompressedRomAsset(D_60F1A0, D_60F990, 0x2A);
+    LOAD_ASSET(_593D10, 0x29);
+    LOAD_ASSET(_1F1A90, 0x28);
+    LOAD_ASSET(_60F1A0, 0x2A);
     loadRawRomAsset(D_1467B0, D_147910, 8);
-    loadCompressedRomAsset(D_1DE360, D_1E0F70, 9);
+    LOAD_ASSET(_1DE360, 9);
     resetRaceCameras();
     setRaceCameraMode(0, 0x1F);
     initCallbackTaskScheduler(0);

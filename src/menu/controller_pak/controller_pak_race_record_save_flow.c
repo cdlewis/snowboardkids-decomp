@@ -1,4 +1,5 @@
 #include "common.h"
+#include "assets.h"
 #include "game/engine/callback_task_scheduler.h"
 #include "game/engine/asset_manager.h"
 #include "game/menu/character_select/character_select_course_menu.h"
@@ -44,12 +45,6 @@ extern s32 D_8010ADE4;
 extern s32 D_8010ADE8;
 extern s16 gMenuFadeAlpha;
 extern s32 D_800EC9F4;
-extern u8 D_593D10;
-extern u8 D_598A70;
-extern u8 D_59AAA0;
-extern u8 D_59DFE0;
-extern u8 D_60F1A0;
-extern u8 D_60F990;
 
 extern void releaseMenuAssetHandles(void);
 extern s32 enqueueSoundEffect(s16, s16);
@@ -70,11 +65,11 @@ void initControllerPakRaceRecordSaveFlow(void) {
     D_8010ADE8 = 0;
     gMenuFadeAlpha = gCurrentGameTask->fade;
     D_800EC9F4 = gRacePlayers.selectedFileInfo;
-    loadCompressedRomAsset(&D_59AAA0, &D_59DFE0, 0x21);
-    loadCompressedRomAsset(&D_59AAA0, &D_59DFE0, 0x24);
-    loadCompressedRomAsset(&D_593D10, &D_598A70, 0x22);
-    loadCompressedRomAsset(&D_598A70, &D_59AAA0, 0x23);
-    loadCompressedRomAsset(&D_60F1A0, &D_60F990, 0x29);
+    LOAD_ASSET(_59AAA0, 0x21);
+    LOAD_ASSET(_59AAA0, 0x24);
+    LOAD_ASSET(_593D10, 0x22);
+    LOAD_ASSET(_598A70, 0x23);
+    LOAD_ASSET(_60F1A0, 0x29);
     initCallbackTaskScheduler(0);
     gActiveMenuTask = createCallbackTask(&initControllerPakRaceRecordSaveScorePanel, 0, 0x61);
     D_8010ADE8 = createCallbackTask(&initControllerPakRaceRecordSaveStatusChoicePrompt, 0, 0x60);

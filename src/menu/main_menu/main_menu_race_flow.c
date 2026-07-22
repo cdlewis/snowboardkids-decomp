@@ -1,4 +1,5 @@
 #include "common.h"
+#include "assets.h"
 #include "game/audio/sound_manager.h"
 #include "game/engine/callback_task_scheduler.h"
 #include "game/engine/asset_manager.h"
@@ -32,12 +33,6 @@ typedef struct {
 
 extern u8 D_1467B0[];
 extern u8 D_147910[];
-extern u8 D_1DE360[];
-extern u8 D_1E0F70[];
-extern u8 D_1F1A90[];
-extern u8 D_1F2220[];
-extern u8 D_245A80[];
-extern u8 D_24C8E0[];
 extern MainMenuRaceFlowTask *gCurrentGameTask;
 extern u8 gMainMenuSelectionResult;
 extern s8 gRacePlayerHudStatuses;
@@ -76,10 +71,6 @@ extern u8 gTrainingCourseLesson;
 extern s8 gRaceRumbleEnabled;
 extern s8 gRaceSplitscreenMode;
 extern MainMenuModePreviewRaceCourseAsset gMainMenuModePreviewRaceCourseAssets[];
-extern u8 D_593D10[];
-extern u8 D_598A70[];
-extern u8 D_60F1A0[];
-extern u8 D_60F990[];
 extern s16 gRacePlayerSurfaceAngleByPlayer;
 
 void startMainMenuModePreviewRaceFlow(void) {
@@ -88,12 +79,12 @@ void startMainMenuModePreviewRaceFlow(void) {
 }
 
 void initMainMenuModePreviewRaceSelectionMenu(void) {
-    loadCompressedRomAsset(D_1F1A90, D_1F2220, 0x28);
-    loadCompressedRomAsset(D_593D10, D_598A70, 0x29);
-    loadCompressedRomAsset(D_60F1A0, D_60F990, 0x2A);
-    loadCompressedRomAsset(D_245A80, D_24C8E0, 0x1F);
+    LOAD_ASSET(_1F1A90, 0x28);
+    LOAD_ASSET(_593D10, 0x29);
+    LOAD_ASSET(_60F1A0, 0x2A);
+    LOAD_ASSET(_245A80, 0x1F);
     loadRawRomAsset(D_1467B0, D_147910, 8);
-    loadCompressedRomAsset(D_1DE360, D_1E0F70, 9);
+    LOAD_ASSET(_1DE360, 9);
     gMainMenuSelectionResult = 0;
     gFramebufferSwapDelay = 0;
     gMenuFadeAlpha = 0xFF;
@@ -255,8 +246,8 @@ void initMainMenuModePreviewRace(void) {
     gMenuFadeAlpha = 0xFF;
     gRaceRumbleEnabled = 0;
     gMenuFlowState = one1;
-    loadCompressedRomAsset(D_593D10, D_598A70, 0x29);
-    loadCompressedRomAsset(D_60F1A0, D_60F990, 0x2A);
+    LOAD_ASSET(_593D10, 0x29);
+    LOAD_ASSET(_60F1A0, 0x2A);
     gMainMenuSelectionResult = 0;
     createCallbackTask(initMainMenuModeDescriptionPanel, 0, 0x64);
     createCallbackTask(initRaceSetupCornerPrompts, 0, 0x64);
@@ -483,8 +474,8 @@ void initTrainingCourseRace(void) {
     gMenuFadeAlpha = 0xFF;
     gRaceRumbleEnabled = 0;
     gMenuFlowState = 1;
-    loadCompressedRomAsset(D_593D10, D_598A70, 0x29);
-    loadCompressedRomAsset(D_60F1A0, D_60F990, 0x2A);
+    LOAD_ASSET(_593D10, 0x29);
+    LOAD_ASSET(_60F1A0, 0x2A);
     gMainMenuSelectionResult = 0;
     createCallbackTask(initTrainingCourseOpeningDialog, 0, 0x64);
     createCallbackTask(initTrainingCourseLessonTitlePanel, 0, 0x63);
@@ -679,8 +670,8 @@ void finishTrainingCourse(void) {
         setCurrentGameTaskCallback(returnToMainMenuFromTrainingCourse, 0);
         return;
     }
-    loadCompressedRomAsset(D_593D10, D_598A70, 0x29);
-    loadCompressedRomAsset(D_60F1A0, D_60F990, 0x2A);
+    LOAD_ASSET(_593D10, 0x29);
+    LOAD_ASSET(_60F1A0, 0x2A);
     gMainMenuSelectionResult = 0;
     gFramebufferSwapDelay = 0;
     gMenuFadeAlpha = 0xFF;

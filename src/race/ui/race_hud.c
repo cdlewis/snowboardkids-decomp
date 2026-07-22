@@ -1,4 +1,5 @@
 #include "common.h"
+#include "assets.h"
 #include "game/engine/asset_manager.h"
 #include "game/engine/relocatable_heap.h"
 #include "game/race/items/race_item_effects.h"
@@ -68,8 +69,6 @@ extern void drawMenuAsciiTextDefaultScale(s32, s32, char *, s32);
 extern void addRenderCallback(void *, void *, s32);
 extern void *createCallbackTask(void (*)(), s32, s32);
 extern int sprintf(char *, const char *, ...);
-extern u8 D_245A80[];
-extern u8 D_24C8E0[];
 extern RaceTimer D_800DC928[];
 extern RaceTimer D_800DC950;
 extern u8 gRaceSplitscreenMode;
@@ -116,7 +115,7 @@ extern s32 gMenuFlowState;
 extern s32 D_80121B7C;
 
 void initRaceHud(void) {
-    loadCompressedRomAsset(D_245A80, D_24C8E0, 0x1F);
+    LOAD_ASSET(_245A80, 0x1F);
     gRaceHudMode = -1;
     gRaceHudSpinnerFrame = 0;
 

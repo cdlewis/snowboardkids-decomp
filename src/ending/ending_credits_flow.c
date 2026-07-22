@@ -1,3 +1,4 @@
+#include "assets.h"
 #include "game/ending/ending_credits_flow.h"
 #include "game/engine/relocatable_heap.h"
 #include "game/audio/sound_manager.h"
@@ -54,14 +55,6 @@ extern void releaseMenuAssetHandles(void);
 
 extern u8 D_14B450[];
 extern u8 D_1502A0[];
-extern u8 D_1EF530[];
-extern u8 D_1F1A90[];
-extern u8 D_593D10[];
-extern u8 D_598A70[];
-extern u8 D_608560[];
-extern u8 D_609AA0[];
-extern u8 D_60ECB0[];
-extern u8 D_60F1A0[];
 extern s8 gFramebufferSwapDelay;
 extern s16 gMenuFadeAlpha;
 extern Vec3i gMenuCameraTargetOffset;
@@ -103,15 +96,15 @@ void initEndingCreditsFlow(void) {
             gEndingCreditsCharacterAuraDoneFlags[temp_v0 + 2] = 0;
             gEndingCreditsCharacterAuraDoneFlags[temp_v0 + 3] = 0;
             gEndingCreditsCharacterAuraDoneFlags[temp_v0] = 0;
-            loadCompressedRomAsset(D_608560, D_609AA0, 0x21);
-            loadCompressedRomAsset(D_593D10, D_598A70, 0x22);
-            loadCompressedRomAsset(D_609AA0, D_60ECB0, 0x26);
-            loadCompressedRomAsset(D_60ECB0, D_60F1A0, 0x27);
+            LOAD_ASSET(_608560, 0x21);
+            LOAD_ASSET(_593D10, 0x22);
+            LOAD_ASSET(_609AA0, 0x26);
+            LOAD_ASSET(_60ECB0, 0x27);
             temp_v0 = D_1502A0 - D_14B450;
             sp34 = temp_v0;
             gAssetHandles[0xC] = allocRelocatableHeapBlock((unsigned long) temp_v0);
             dmaReadRom(D_14B450, getRelocatableHeapBlockBase(gAssetHandles[0xC]), sp34);
-            loadCompressedRomAsset(D_1EF530, D_1F1A90, 0xD);
+            LOAD_ASSET(_1EF530, 0xD);
             loadMainMenuSceneModelAssets();
             initCallbackTaskScheduler(0);
             createCallbackTask(initEndingCreditsTransitionSnowboardIcon, 0, 0x64);

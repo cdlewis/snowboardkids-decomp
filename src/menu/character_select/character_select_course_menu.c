@@ -1,4 +1,5 @@
 #include "common.h"
+#include "assets.h"
 #include "game/audio/sound_manager.h"
 #include "game/engine/callback_task_scheduler.h"
 #include "game/engine/asset_manager.h"
@@ -34,17 +35,6 @@ typedef union {
 
 extern void enqueueSoundEffect(s32, s32);
 extern void releaseMenuAssetHandles(void);
-extern u8 D_245A80[];
-extern u8 D_24C8E0[];
-extern u8 D_593D10[];
-extern u8 D_598A70[];
-extern u8 D_59AAA0[];
-extern u8 D_59DFE0[];
-extern u8 D_59E7F0[];
-extern u8 D_5A1ED0[];
-extern u8 D_5C5320[];
-extern u8 D_5CCD40[];
-extern u8 D_5D4280[];
 extern CharacterSelectCourseUnlockList gCharacterSelectCourseOptionsByUnlock[];
 extern s16 gCharacterSelectShortCourseOptions[];
 extern s16 gCharacterSelectSingleCourseOption[];
@@ -187,7 +177,6 @@ void initCharacterSelectCourseMenuFromRace(void)
   s32 sp2C;
   s16 *var_v0_2;
   s16 *var_v1_2;
-  u8 *new_var2;
   s16 *activeOptions;
   s32 var_v1;
   s32 var_v0_3;
@@ -197,19 +186,18 @@ void initCharacterSelectCourseMenuFromRace(void)
   requestMusicSequenceBank(2);
   resetAllViewports();
   configureViewport(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.333333373f);
-  new_var2 = D_598A70;
   gFramebufferSwapDelay = 0;
-  loadCompressedRomAsset(D_5A1ED0, D_5C5320, 0x21);
-  loadCompressedRomAsset(D_593D10, D_598A70, 0x22);
-  loadCompressedRomAsset(new_var2, D_59AAA0, 0x23);
-  loadCompressedRomAsset(D_59AAA0, D_59DFE0, 0x24);
-  loadCompressedRomAsset(D_59DFE0, D_59E7F0, 0x26);
-  loadCompressedRomAsset(D_245A80, D_24C8E0, 0x1F);
+  LOAD_ASSET(_5A1ED0, 0x21);
+  LOAD_ASSET(_593D10, 0x22);
+  LOAD_ASSET(_598A70, 0x23);
+  LOAD_ASSET(_59AAA0, 0x24);
+  LOAD_ASSET(_59DFE0, 0x26);
+  LOAD_ASSET(_245A80, 0x1F);
   initCallbackTaskScheduler(0);
   createCallbackTask((void (*)(CallbackTask *)) initMenuIconTilemapSpriteActor, 0, 0x5E);
   if (gRaceSplitscreenMode == 1)
   {
- loadCompressedRomAsset(D_5CCD40, D_5D4280, 0x25); createCallbackTask((void (*)(CallbackTask *)) initCharacterSelectLimitedCourseList, 0, 0x63); gCurrentGameTask->fade = 0; } else { gCurrentGameTask->fade = 0xFF; } gCurrentGameTask->timer = 0; gMenuSelectionConfirmTimer = 0; gMenuExitSelection = 0; gMenuFlowState = 0; gMenuTransitionState = 0; gMenuInputRepeatTimers = 0; gMenuChoicePromptState = 0; gMenuFadeAlpha = gCurrentGameTask->fade; var_v1 = 0; if (gPlayerCount > var_v1) { var_v0 = gGameSaveDataBuffer; do { temp_v1 = var_v0->highestCourse; var_v0 += 1; if (gHighestUnlockedCourse < temp_v1) { gHighestUnlockedCourse = temp_v1; } } while (var_v0 < (&gGameSaveDataBuffer[gPlayerCount]));
+ LOAD_ASSET(_5CCD40, 0x25); createCallbackTask((void (*)(CallbackTask *)) initCharacterSelectLimitedCourseList, 0, 0x63); gCurrentGameTask->fade = 0; } else { gCurrentGameTask->fade = 0xFF; } gCurrentGameTask->timer = 0; gMenuSelectionConfirmTimer = 0; gMenuExitSelection = 0; gMenuFlowState = 0; gMenuTransitionState = 0; gMenuInputRepeatTimers = 0; gMenuChoicePromptState = 0; gMenuFadeAlpha = gCurrentGameTask->fade; var_v1 = 0; if (gPlayerCount > var_v1) { var_v0 = gGameSaveDataBuffer; do { temp_v1 = var_v0->highestCourse; var_v0 += 1; if (gHighestUnlockedCourse < temp_v1) { gHighestUnlockedCourse = temp_v1; } } while (var_v0 < (&gGameSaveDataBuffer[gPlayerCount]));
     var_v1 *= 0;
   }
   gActiveMenuTask = 0;
@@ -298,12 +286,12 @@ void initCharacterSelectCourseMenuFromPlayerSelect(void) {
         gFramebufferSwapDelay = 0;
         if (gCharacterSelectShortCourseOptions) {
         }
-        loadCompressedRomAsset(D_5A1ED0, D_5C5320, 0x21);
-        loadCompressedRomAsset(D_593D10, D_598A70, 0x22);
-        loadCompressedRomAsset(D_598A70, D_59AAA0, 0x23);
-        loadCompressedRomAsset(D_59AAA0, D_59DFE0, 0x24);
-        loadCompressedRomAsset(D_59DFE0, D_59E7F0, 0x26);
-        loadCompressedRomAsset(D_245A80, D_24C8E0, 0x1F);
+        LOAD_ASSET(_5A1ED0, 0x21);
+        LOAD_ASSET(_593D10, 0x22);
+        LOAD_ASSET(_598A70, 0x23);
+        LOAD_ASSET(_59AAA0, 0x24);
+        LOAD_ASSET(_59DFE0, 0x26);
+        LOAD_ASSET(_245A80, 0x1F);
         initCallbackTaskScheduler(0);
         createCallbackTask((void (*)(CallbackTask *))initMenuIconTilemapSpriteActor, 0, 0x5E);
         gCurrentGameTask->fade = 0xFF;

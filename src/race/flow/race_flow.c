@@ -185,7 +185,6 @@ extern s8 gMenuFadeOverlayActive;
 extern u8 gRaceRumbleEnabled;
 extern RaceFlowInitScratch gGameSaveDataBuffer;
 extern u8 gRaceTypeSelection;
-extern u8 D_59AAA0[];
 extern s8 gRacePlayerCount;
 extern s16 gRacePlayerAttackStartTimer;
 extern u8 gRacePlayerHudStatuses;
@@ -228,8 +227,6 @@ extern void initCourseRecordBannerFadeOut(void *);
 extern void initRaceCountdownPrompt(void *);
 extern void func_80065E90(void *);
 #endif
-extern u8 D_2427D0[];
-extern u8 D_243270[];
 extern u8 gPlayerCount;
 extern u8 D_80121B57;
 extern u8 gRaceCameraModeChangeDisabled;
@@ -247,17 +244,6 @@ extern u8 gRumblePakConnectedMask;
 extern u8 gPendingEndingCreditsFlow;
 extern u8 gRaceUpdatePaused;
 extern ViewportSlot D_801121E0[];
-extern u8 D_1E74E0[];
-extern u8 D_1EC0F0[];
-extern u8 D_1EF530[];
-extern u8 D_1F1A90[];
-extern u8 D_1F2220[];
-extern u8 D_593D10[];
-extern u8 D_598A70[];
-extern u8 D_59DFE0[];
-extern u8 D_59E7F0[];
-extern u8 D_60F1A0[];
-extern u8 D_60F990[];
 extern s16 gRaceTrickAttackPointTotal;
 extern s16 gRaceScoreAttackPointTotal;
 
@@ -269,7 +255,7 @@ extern void addRenderCallback(void *, void (*)(s32), s32);
 extern void enqueueSoundEffect(s32, s32);
 
 void initStartupControllerPakFlow(void) {
-    loadCompressedRomAsset(D_2427D0, D_243270, 6);
+    LOAD_ASSET(_2427D0, 6);
     initCallbackTaskScheduler(0);
     gCurrentGameTask->fadeTimer = 0xA;
     setCurrentGameTaskCallback(&waitStartupRumbleInit, 0);
@@ -1817,7 +1803,7 @@ void initRaceGhostReplayFlow(void) {
     } else {
         configureRaceViewport(0, 0xA0, 0x78, 0x100, 0xB0, 0x120, 0xD0, 1.3333334f);
     }
-    loadCompressedRomAsset(D_598A70, D_59AAA0, 0x29);
+    LOAD_ASSET(_598A70, 0x29);
     gRacePlayerHudStatuses = 1;
     gFramebufferSwapDelay = 0;
     resetSecondaryRng();
@@ -1977,40 +1963,40 @@ void initRaceRecordSettingsFlow(void) {
     }
     resetAllViewports();
     gFramebufferSwapDelay = 0;
-    loadCompressedRomAsset(D_593D10, D_598A70, 0x29);
-    loadCompressedRomAsset(D_60F1A0, D_60F990, 0x2A);
-    loadCompressedRomAsset(D_59DFE0, D_59E7F0, 0x26);
-    loadCompressedRomAsset(D_1F1A90, D_1F2220, 0x28);
+    LOAD_ASSET(_593D10, 0x29);
+    LOAD_ASSET(_60F1A0, 0x2A);
+    LOAD_ASSET(_59DFE0, 0x26);
+    LOAD_ASSET(_1F1A90, 0x28);
     switch (gRaceCourseIndex.u) {
     case 0:
-        loadCompressedRomAsset(ASSET_START(LEVEL_BIG_SNOWMAN_SPRITES), ASSET_END(LEVEL_BIG_SNOWMAN_SPRITES), 0x1D);
+        LOAD_ASSET(LEVEL_BIG_SNOWMAN_SPRITES, 0x1D);
         break;
     case 1:
-        loadCompressedRomAsset(ASSET_START(LEVEL_SUNSET_ROCK_SPRITES), ASSET_END(LEVEL_SUNSET_ROCK_SPRITES), 0x1D);
+        LOAD_ASSET(LEVEL_SUNSET_ROCK_SPRITES, 0x1D);
         break;
     case 2:
-        loadCompressedRomAsset(ASSET_START(LEVEL_NIGHT_HIGHWAY_SPRITES), ASSET_END(LEVEL_NIGHT_HIGHWAY_SPRITES), 0x1D);
+        LOAD_ASSET(LEVEL_NIGHT_HIGHWAY_SPRITES, 0x1D);
         break;
     case 3:
-        loadCompressedRomAsset(ASSET_START(LEVEL_GRASS_VALLEY_SPRITES), ASSET_END(LEVEL_GRASS_VALLEY_SPRITES), 0x1D);
+        LOAD_ASSET(LEVEL_GRASS_VALLEY_SPRITES, 0x1D);
         break;
     case 4:
-        loadCompressedRomAsset(ASSET_START(LEVEL_DIZZY_LAND_SPRITES), ASSET_END(LEVEL_DIZZY_LAND_SPRITES), 0x1D);
+        LOAD_ASSET(LEVEL_DIZZY_LAND_SPRITES, 0x1D);
         break;
     case 5:
-        loadCompressedRomAsset(ASSET_START(LEVEL_QUICKSAND_VALLEY_SPRITES), ASSET_END(LEVEL_QUICKSAND_VALLEY_SPRITES), 0x1D);
+        LOAD_ASSET(LEVEL_QUICKSAND_VALLEY_SPRITES, 0x1D);
         break;
     case 6:
-        loadCompressedRomAsset(ASSET_START(LEVEL_SILVER_MOUNTAIN_SPRITES), ASSET_END(LEVEL_SILVER_MOUNTAIN_SPRITES), 0x1D);
+        LOAD_ASSET(LEVEL_SILVER_MOUNTAIN_SPRITES, 0x1D);
         break;
     case 8:
-        loadCompressedRomAsset(ASSET_START(LEVEL_NINJA_LAND_SPRITES), ASSET_END(LEVEL_NINJA_LAND_SPRITES), 0x1D);
+        LOAD_ASSET(LEVEL_NINJA_LAND_SPRITES, 0x1D);
         break;
     case 9:
-        loadCompressedRomAsset(ASSET_START(LEVEL_ROOKIE_MOUNTAIN_SPRITES), ASSET_END(LEVEL_ROOKIE_MOUNTAIN_SPRITES), 0x1D);
+        LOAD_ASSET(LEVEL_ROOKIE_MOUNTAIN_SPRITES, 0x1D);
         break;
     }
-    loadCompressedRomAsset(D_1E74E0, D_1EC0F0, 0x1C);
+    LOAD_ASSET(_1E74E0, 0x1C);
     initCallbackTaskScheduler(0);
     gMenuFlowState = 0;
     createCallbackTaskWithUserId(initRaceRecordSettingsPanel, 0, 0x64, 0);

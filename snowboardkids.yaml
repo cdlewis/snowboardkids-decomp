@@ -405,14 +405,45 @@ segments:
     name: LEVEL_SUNSET_ROCK
     vram: 0
 
-  - { start: 0xF6160, type: bin, name: LEVEL_NIGHT_HIGHWAY, vram: 0 }
-  - { start: 0xFEDA0, type: bin, name: LEVEL_GRASS_VALLEY, vram: 0 }
-  - { start: 0x10AAB0, type: bin, name: LEVEL_DIZZY_LAND, vram: 0 }
-  - { start: 0x118670, type: bin, name: LEVEL_QUICKSAND_VALLEY, vram: 0 }
-  - { start: 0x125C90, type: bin, name: LEVEL_SILVER_MOUNTAIN, vram: 0 }
-  - { start: 0x131A90, type: bin, name: LEVEL_ANIMAL_LAND, vram: 0 }
-  - { start: 0x1384B0, type: bin, name: LEVEL_NINJA_LAND, vram: 0 }
-  - { start: 0x13F3B0, type: bin, name: LEVEL_ROOKIE_MOUNTAIN, vram: 0 }
+  - type: bin
+    start: 0xF6160
+    name: LEVEL_NIGHT_HIGHWAY
+    vram: 0
+
+  - type: bin
+    start: 0xFEDA0
+    name: LEVEL_GRASS_VALLEY
+    vram: 0
+
+  - type: bin
+    start: 0x10AAB0
+    name: LEVEL_DIZZY_LAND
+    vram: 0
+
+  - type: bin
+    start: 0x118670
+    name: LEVEL_QUICKSAND_VALLEY
+    vram: 0
+
+  - type: bin
+    start: 0x125C90
+    name: LEVEL_SILVER_MOUNTAIN
+    vram: 0
+
+  - type: bin
+    start: 0x131A90
+    name: LEVEL_ANIMAL_LAND
+    vram: 0
+
+  - type: bin
+    start: 0x1384B0
+    name: LEVEL_NINJA_LAND
+    vram: 0
+
+  - type: bin
+    start: 0x13F3B0
+    name: LEVEL_ROOKIE_MOUNTAIN
+    vram: 0
   - [0x145380, bin]
   - [0x1467B0, bin]
   - [0x147910, bin]
@@ -423,85 +454,326 @@ segments:
   - [0x158D90, bin]
   - [0x15C750, bin]
   - [0x160360, bin]
-  - { start: 0x163410, type: bin, name: LEVEL_BIG_SNOWMAN_TEXTURES, vram: 0 }
-  - { start: 0x171480, type: bin, name: LEVEL_SUNSET_ROCK_TEXTURES, vram: 0 }
-  - { start: 0x17D220, type: bin, name: LEVEL_NIGHT_HIGHWAY_TEXTURES, vram: 0 }
-  - { start: 0x186910, type: bin, name: LEVEL_GRASS_VALLEY_TEXTURES, vram: 0 }
-  - { start: 0x197490, type: bin, name: LEVEL_DIZZY_LAND_TEXTURES, vram: 0 }
-  - { start: 0x1A5620, type: bin, name: LEVEL_QUICKSAND_VALLEY_TEXTURES, vram: 0 }
-  - { start: 0x1B3160, type: bin, name: LEVEL_SILVER_MOUNTAIN_TEXTURES, vram: 0 }
-  - { start: 0x1C24B0, type: bin, name: LEVEL_ANIMAL_LAND_TEXTURES, vram: 0 }
-  - { start: 0x1C9630, type: bin, name: LEVEL_NINJA_LAND_TEXTURES, vram: 0 }
-  - { start: 0x1D3070, type: bin, name: LEVEL_ROOKIE_MOUNTAIN_TEXTURES, vram: 0 }
-  - [0x1D82B0, bin]
-  - [0x1DCED0, bin]
-  - [0x1DE360, bin]
-  - [0x1E0F70, bin]
+  - type: bin
+    start: 0x163410
+    name: LEVEL_BIG_SNOWMAN_TEXTURES
+    vram: 0
+
+  - type: bin
+    start: 0x171480
+    name: LEVEL_SUNSET_ROCK_TEXTURES
+    vram: 0
+
+  - type: bin
+    start: 0x17D220
+    name: LEVEL_NIGHT_HIGHWAY_TEXTURES
+    vram: 0
+
+  - type: bin
+    start: 0x186910
+    name: LEVEL_GRASS_VALLEY_TEXTURES
+    vram: 0
+
+  - type: bin
+    start: 0x197490
+    name: LEVEL_DIZZY_LAND_TEXTURES
+    vram: 0
+
+  - type: bin
+    start: 0x1A5620
+    name: LEVEL_QUICKSAND_VALLEY_TEXTURES
+    vram: 0
+
+  - type: bin
+    start: 0x1B3160
+    name: LEVEL_SILVER_MOUNTAIN_TEXTURES
+    vram: 0
+
+  - type: bin
+    start: 0x1C24B0
+    name: LEVEL_ANIMAL_LAND_TEXTURES
+    vram: 0
+
+  - type: bin
+    start: 0x1C9630
+    name: LEVEL_NINJA_LAND_TEXTURES
+    vram: 0
+
+  - type: bin
+    start: 0x1D3070
+    name: LEVEL_ROOKIE_MOUNTAIN_TEXTURES
+    vram: 0
+
+  - type: bin
+    start: 0x1D82B0
+    name: _1D82B0
+    vram: 0
+
+  - type: bin
+    start: 0x1DCED0
+    name: _1DCED0
+    vram: 0
+
+  - type: bin
+    start: 0x1DE360
+    name: _1DE360
+    vram: 0
+
+  - type: bin
+    start: 0x1E0F70
+    name: _1E0F70
+    vram: 0
   - [0x1E19C0, bin]
   - [0x1E2380, bin]
   - [0x1E2DE0, bin]
   - [0x1E3FE0, bin]
   - [0x1E4AB0, bin]
   - [0x1E68A0, bin]
-  - [0x1E74E0, bin]
-  - { start: 0x1EC0F0, type: bin, name: LEVEL_BIG_SNOWMAN_SPRITES, vram: 0 }
-  - { start: 0x1EC4A0, type: bin, name: LEVEL_SUNSET_ROCK_SPRITES, vram: 0 }
-  - { start: 0x1EC810, type: bin, name: LEVEL_NIGHT_HIGHWAY_SPRITES, vram: 0 }
-  - { start: 0x1ECD00, type: bin, name: LEVEL_GRASS_VALLEY_SPRITES, vram: 0 }
-  - { start: 0x1ED910, type: bin, name: LEVEL_DIZZY_LAND_SPRITES, vram: 0 }
-  - { start: 0x1EDC80, type: bin, name: LEVEL_QUICKSAND_VALLEY_SPRITES, vram: 0 }
-  - { start: 0x1EE060, type: bin, name: LEVEL_SILVER_MOUNTAIN_SPRITES, vram: 0 }
-  - { start: 0x1EEEA0, type: bin, name: LEVEL_NINJA_LAND_SPRITES, vram: 0 }
-  - { start: 0x1EF1D0, type: bin, name: LEVEL_ROOKIE_MOUNTAIN_SPRITES, vram: 0 }
-  - [0x1EF530, bin]
-  - [0x1F1A90, bin]
+  - type: bin
+    start: 0x1E74E0
+    name: _1E74E0
+    vram: 0
+
+  - type: bin
+    start: 0x1EC0F0
+    name: LEVEL_BIG_SNOWMAN_SPRITES
+    vram: 0
+
+  - type: bin
+    start: 0x1EC4A0
+    name: LEVEL_SUNSET_ROCK_SPRITES
+    vram: 0
+
+  - type: bin
+    start: 0x1EC810
+    name: LEVEL_NIGHT_HIGHWAY_SPRITES
+    vram: 0
+
+  - type: bin
+    start: 0x1ECD00
+    name: LEVEL_GRASS_VALLEY_SPRITES
+    vram: 0
+
+  - type: bin
+    start: 0x1ED910
+    name: LEVEL_DIZZY_LAND_SPRITES
+    vram: 0
+
+  - type: bin
+    start: 0x1EDC80
+    name: LEVEL_QUICKSAND_VALLEY_SPRITES
+    vram: 0
+
+  - type: bin
+    start: 0x1EE060
+    name: LEVEL_SILVER_MOUNTAIN_SPRITES
+    vram: 0
+
+  - type: bin
+    start: 0x1EEEA0
+    name: LEVEL_NINJA_LAND_SPRITES
+    vram: 0
+
+  - type: bin
+    start: 0x1EF1D0
+    name: LEVEL_ROOKIE_MOUNTAIN_SPRITES
+    vram: 0
+
+  - type: bin
+    start: 0x1EF530
+    name: _1EF530
+    vram: 0
+
+  - type: bin
+    start: 0x1F1A90
+    name: _1F1A90
+    vram: 0
   - [0x1F2220, bin]
   - [0x1F7D20, bin]
   - [0x1FE860, bin]
   - [0x2044B0, bin]
   - [0x20A940, bin]
   - [0x211470, bin]
-  - [0x215BE0, bin]
-  - { start: 0x21D9D0, type: bin, name: LEVEL_BIG_SNOWMAN_SURFACE_DATA, vram: 0 }
-  - { start: 0x222500, type: bin, name: LEVEL_SUNSET_ROCK_SURFACE_DATA, vram: 0 }
-  - { start: 0x2274A0, type: bin, name: LEVEL_NIGHT_HIGHWAY_SURFACE_DATA, vram: 0 }
-  - { start: 0x22AE50, type: bin, name: LEVEL_GRASS_VALLEY_SURFACE_DATA, vram: 0 }
-  - { start: 0x2308E0, type: bin, name: LEVEL_DIZZY_LAND_SURFACE_DATA, vram: 0 }
-  - { start: 0x2349E0, type: bin, name: LEVEL_QUICKSAND_VALLEY_SURFACE_DATA, vram: 0 }
-  - { start: 0x23A7D0, type: bin, name: LEVEL_SILVER_MOUNTAIN_SURFACE_DATA, vram: 0 }
-  - { start: 0x23E9D0, type: bin, name: LEVEL_ANIMAL_LAND_SURFACE_DATA, vram: 0 }
-  - { start: 0x23FCC0, type: bin, name: LEVEL_NINJA_LAND_SURFACE_DATA, vram: 0 }
-  - { start: 0x241160, type: bin, name: LEVEL_ROOKIE_MOUNTAIN_SURFACE_DATA, vram: 0 }
-  - [0x2427D0, bin]
-  - [0x243270, bin]
-  - [0x245A80, bin]
-  - [0x24C8E0, bin]
+  - type: bin
+    start: 0x215BE0
+    name: _215BE0
+    vram: 0
+
+  - type: bin
+    start: 0x21D9D0
+    name: LEVEL_BIG_SNOWMAN_SURFACE_DATA
+    vram: 0
+
+  - type: bin
+    start: 0x222500
+    name: LEVEL_SUNSET_ROCK_SURFACE_DATA
+    vram: 0
+
+  - type: bin
+    start: 0x2274A0
+    name: LEVEL_NIGHT_HIGHWAY_SURFACE_DATA
+    vram: 0
+
+  - type: bin
+    start: 0x22AE50
+    name: LEVEL_GRASS_VALLEY_SURFACE_DATA
+    vram: 0
+
+  - type: bin
+    start: 0x2308E0
+    name: LEVEL_DIZZY_LAND_SURFACE_DATA
+    vram: 0
+
+  - type: bin
+    start: 0x2349E0
+    name: LEVEL_QUICKSAND_VALLEY_SURFACE_DATA
+    vram: 0
+
+  - type: bin
+    start: 0x23A7D0
+    name: LEVEL_SILVER_MOUNTAIN_SURFACE_DATA
+    vram: 0
+
+  - type: bin
+    start: 0x23E9D0
+    name: LEVEL_ANIMAL_LAND_SURFACE_DATA
+    vram: 0
+
+  - type: bin
+    start: 0x23FCC0
+    name: LEVEL_NINJA_LAND_SURFACE_DATA
+    vram: 0
+
+  - type: bin
+    start: 0x241160
+    name: LEVEL_ROOKIE_MOUNTAIN_SURFACE_DATA
+    vram: 0
+
+  - type: bin
+    start: 0x2427D0
+    name: _2427D0
+    vram: 0
+
+  - type: bin
+    start: 0x243270
+    name: _243270
+    vram: 0
+
+  - type: bin
+    start: 0x245A80
+    name: _245A80
+    vram: 0
+
+  - type: bin
+    start: 0x24C8E0
+    name: _24C8E0
+    vram: 0
   - [0x24DBE0, bin]
-  - [0x275A90, bin]
+  - type: bin
+    start: 0x275A90
+    name: _275A90
+    vram: 0
   - [0x27E290, bin]
   - [0x369000, bin]
-  - [0x593D10, bin]
-  - [0x598A70, bin]
-  - [0x59AAA0, bin]
-  - [0x59DFE0, bin]
+  - type: bin
+    start: 0x593D10
+    name: _593D10
+    vram: 0
+
+  - type: bin
+    start: 0x598A70
+    name: _598A70
+    vram: 0
+
+  - type: bin
+    start: 0x59AAA0
+    name: _59AAA0
+    vram: 0
+
+  - type: bin
+    start: 0x59DFE0
+    name: _59DFE0
+    vram: 0
   - [0x59E7F0, bin]
-  - [0x5A1ED0, bin]
+  - type: bin
+    start: 0x5A1ED0
+    name: _5A1ED0
+    vram: 0
   - [0x5C5320, bin]
-  - [0x5CBA80, bin]
-  - [0x5CCD40, bin]
-  - [0x5D4280, bin]
-  - [0x5DAF30, bin]
-  - [0x5DB9D0, bin]
-  - [0x5DCBE0, bin]
-  - [0x5DFDD0, bin]
-  - [0x5E0350, bin]
-  - [0x5E0E40, bin]
-  - [0x5E26E0, bin]
-  - [0x5E34A0, bin]
-  - [0x608560, bin]
-  - [0x609AA0, bin]
-  - [0x60ECB0, bin]
-  - [0x60F1A0, bin]
+  - type: bin
+    start: 0x5CBA80
+    name: _5CBA80
+    vram: 0
+
+  - type: bin
+    start: 0x5CCD40
+    name: _5CCD40
+    vram: 0
+
+  - type: bin
+    start: 0x5D4280
+    name: _5D4280
+    vram: 0
+
+  - type: bin
+    start: 0x5DAF30
+    name: _5DAF30
+    vram: 0
+
+  - type: bin
+    start: 0x5DB9D0
+    name: _5DB9D0
+    vram: 0
+
+  - type: bin
+    start: 0x5DCBE0
+    name: _5DCBE0
+    vram: 0
+
+  - type: bin
+    start: 0x5DFDD0
+    name: _5DFDD0
+    vram: 0
+
+  - type: bin
+    start: 0x5E0350
+    name: _5E0350
+    vram: 0
+
+  - type: bin
+    start: 0x5E0E40
+    name: _5E0E40
+    vram: 0
+
+  - type: bin
+    start: 0x5E26E0
+    name: _5E26E0
+    vram: 0
+
+  - type: bin
+    start: 0x5E34A0
+    name: _5E34A0
+    vram: 0
+
+  - type: bin
+    start: 0x608560
+    name: _608560
+    vram: 0
+
+  - type: bin
+    start: 0x609AA0
+    name: _609AA0
+    vram: 0
+
+  - type: bin
+    start: 0x60ECB0
+    name: _60ECB0
+    vram: 0
+
+  - type: bin
+    start: 0x60F1A0
+    name: _60F1A0
+    vram: 0
 
   - [0x60F990, bin] # everything beyond this point is blank
 

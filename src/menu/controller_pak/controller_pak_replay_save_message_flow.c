@@ -1,4 +1,5 @@
 #include "common.h"
+#include "assets.h"
 #include "game/engine/callback_task_scheduler.h"
 #include "game/engine/asset_manager.h"
 #include "game/menu/character_select/character_select_course_menu.h"
@@ -15,9 +16,6 @@ extern s8 gFramebufferSwapDelay;
 extern s16 gMenuFadeAlpha;
 extern u8 gPendingFramebufferSwapCount;
 extern u8 gFramebufferSwapHold;
-extern u8 gControllerPakReplaySaveMessageSecondPageStart[];
-extern u8 gControllerPakReplaySaveMessageFirstPageStart[];
-extern u8 gMainMenuSceneModelAssetStart[];
 
 void initControllerPakReplaySaveMessageFlow(void) {
     resetAllViewports();
@@ -26,8 +24,7 @@ void initControllerPakReplaySaveMessageFlow(void) {
     gCurrentGameTask->fade = 0xFF;
     gCurrentGameTask->timer = 0;
     gMenuFadeAlpha = gCurrentGameTask->fade;
-    loadCompressedRomAsset(gControllerPakReplaySaveMessageFirstPageStart,
-                           gMainMenuSceneModelAssetStart, 0x26);
+    LOAD_ASSET(_5E26E0, 0x26);
     initCallbackTaskScheduler(0);
     createCallbackTask(initControllerPakMessageIcon, 0, 0x5E);
     setCurrentGameTaskCallback(updateControllerPakReplaySaveMessageFirstPageFadeIn, 0);
@@ -52,8 +49,7 @@ void updateControllerPakReplaySaveMessageFirstPageFadeOut(void) {
         gCurrentGameTask->fade = stepMenuFadeAlpha(gCurrentGameTask->fade, 0xF, 1);
         if (gCurrentGameTask->fade == 0xFF) {
             releaseMenuAssetHandles();
-            loadCompressedRomAsset(gControllerPakReplaySaveMessageSecondPageStart,
-                                   gControllerPakReplaySaveMessageFirstPageStart, 0x26);
+            LOAD_ASSET(_5E0E40, 0x26);
         }
     } else {
         setCurrentGameTaskCallback(waitForControllerPakReplaySaveMessageSecondPage, 0);

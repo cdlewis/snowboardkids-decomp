@@ -1,4 +1,5 @@
 #include "common.h"
+#include "assets.h"
 #include "game/engine/asset_manager.h"
 #include "game/race/camera/race_camera.h"
 #include "game/engine/callback_task_scheduler.h"
@@ -70,21 +71,7 @@ typedef union {
 
 extern u8 D_14B450[];
 extern u8 D_1502A0[];
-extern u8 D_1E74E0[];
-extern u8 D_1EC0F0[];
-extern u8 D_1EF530[];
-extern u8 D_1F1A90[];
-extern u8 D_593D10[];
-extern u8 D_598A70[];
-extern u8 D_59AAA0[];
-extern u8 D_59DFE0[];
-extern u8 D_59E7F0[];
-extern u8 D_5A1ED0[];
 extern u8 D_5C5320[];
-extern u8 D_5CBA80[];
-extern u8 D_5CCD40[];
-extern u8 D_5D4280[];
-extern u8 D_5DAF30[];
 extern f32 D_800E0A30;
 extern ObjectA3E0 *gCurrentMenuCameraObject;
 extern u16 gCourseDetailsPreviewCourseTiles[];
@@ -210,19 +197,19 @@ void initCourseSelectMenu(void) {
 
     gFramebufferSwapDelay = 0;
     gCurrentGameTask->fade = 0xFF;
-    loadCompressedRomAsset(D_5CBA80, D_5CCD40, 0x21);
-    loadCompressedRomAsset(D_593D10, D_598A70, 0x22);
-    loadCompressedRomAsset(D_598A70, D_59AAA0, 0x23);
-    loadCompressedRomAsset(D_59AAA0, D_59DFE0, 0x24);
-    loadCompressedRomAsset(D_5A1ED0, D_5C5320, 0x25);
-    loadCompressedRomAsset(D_59DFE0, D_59E7F0, 0x26);
-    loadCompressedRomAsset(D_5D4280, D_5DAF30, 0x27);
+    LOAD_ASSET(_5CBA80, 0x21);
+    LOAD_ASSET(_593D10, 0x22);
+    LOAD_ASSET(_598A70, 0x23);
+    LOAD_ASSET(_59AAA0, 0x24);
+    LOAD_ASSET(_5A1ED0, 0x25);
+    LOAD_ASSET(_59DFE0, 0x26);
+    LOAD_ASSET(_5D4280, 0x27);
 
     size = D_1502A0 - D_14B450;
     gAssetHandles[0xC] = allocRelocatableHeapBlock(size);
     dmaReadRom((u32)D_14B450, (void *)getRelocatableHeapBlockBase(gAssetHandles[0xC]), size);
-    loadCompressedRomAsset(D_1EF530, D_1F1A90, 0xD);
-    loadCompressedRomAsset(D_1E74E0, D_1EC0F0, 0x1C);
+    LOAD_ASSET(_1EF530, 0xD);
+    LOAD_ASSET(_1E74E0, 0x1C);
     initCallbackTaskScheduler(0);
     createCallbackTask((void (*)(CallbackTask *))initMenuIconTilemapSpriteActor, 0, 0x5E);
 
