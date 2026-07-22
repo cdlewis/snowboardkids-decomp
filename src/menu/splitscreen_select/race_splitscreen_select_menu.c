@@ -99,7 +99,7 @@ void initRaceSplitscreenSelectMenu(void) {
     updateCallbackTasks();
 }
 
-// updateRaceSplitscreenSelectMenu best match: 98.743% (nonmatchings/updateRaceSplitscreenSelectMenu-3549320994361659932/base_2.c)
+// updateRaceSplitscreenSelectMenu best match: 98.810% (nonmatchings/updateRaceSplitscreenSelectMenu-2188069624939011928/base_8.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/splitscreen_select/race_splitscreen_select_menu/updateRaceSplitscreenSelectMenu.s")
 
 #ifdef NON_MATCHING
@@ -113,7 +113,6 @@ void updateRaceSplitscreenSelectMenu(void) {
     s32 previousSelection;
     s32 pressedUpCopy;
     s32 repeatTimerCopy;
-    s32 tempSelection;
     u8 waitTimer;
 
     if (gCurrentGameTask->fade != 0) {
@@ -141,14 +140,13 @@ void updateRaceSplitscreenSelectMenu(void) {
                         ((pressedUpCopy != 0) && (gMenuInputRepeatTimers >= 0xB) &&
                          ((gMenuInputRepeatTimers % 3) == 0))) {
                         repeatTimer = gMenuInputRepeatTimers;
-                        tempSelection = selection - 1;
                         if (repeatTimer == 0) {
                             gMenuInputRepeatTimers = repeatTimer + 1;
                             repeatTimer = gMenuInputRepeatTimers;
                         }
                         if (selection > 0) {
-                            gRaceSplitscreenMode = tempSelection;
-                            selection = ((tempSelection & 0xFF) & 0xFF) & 0xFF;
+                            gRaceSplitscreenMode = selection - 1;
+                            selection = (((selection - 1) & 0xFF) & 0xFF) & 0xFF;
                         }
                     } else {
                         repeatTimer = gMenuInputRepeatTimers;
