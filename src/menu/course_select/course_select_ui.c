@@ -2302,7 +2302,7 @@ void initCourseSelectExtraCourseIconList(CourseSelectWidgetActor *arg0) {
 }
 #endif
 
-// drawCourseSelectPlayerPanels best match: 98.973% (nonmatchings/drawCourseSelectPlayerPanels-5512657642801906896/base_11.c)
+// drawCourseSelectPlayerPanels best match: 99.592% (nonmatchings/drawCourseSelectPlayerPanels-2188069624939011928/base_20.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/course_select/course_select_ui/drawCourseSelectPlayerPanels.s")
 
 #ifdef NON_MATCHING
@@ -2310,21 +2310,23 @@ extern int sprintf(u8 *, u8 *, ...);
 
 void drawCourseSelectPlayerPanels(CourseSelectWidgetInitActor *actor) {
     s16 *yPtr;
-    u8 text[4];
     s32 nextIndex;
+    u8 text[4];
     volatile s32 savedIndex;
     s32 new_var;
     s32 offset;
     s32 j;
-    s32 middleCount;
     s32 count;
-    s32 edgeOffset;
+    s32 middleCount;
     s32 tile;
+    s32 edgeOffset;
     s32 alpha;
     s32 i;
 
     if (gPlayerCount == 2) {
-        if (((!actor->unk20) && (!actor->unk20)) && (!actor->unk20)) {
+        {
+            if (1) {
+            }
         }
         count = 2;
     } else {
@@ -2336,10 +2338,11 @@ void drawCourseSelectPlayerPanels(CourseSelectWidgetInitActor *actor) {
         new_var = i;
         do {
             j = 0;
-            alpha = 0x100;
             yPtr = &actor->unk20;
             if (new_var == gPlayerCount) {
                 alpha = 0xC0;
+            } else {
+                alpha = 0x100;
             }
             if (i == 0) {
                 tile = 2;
@@ -2411,8 +2414,8 @@ void drawCourseSelectPlayerPanels(CourseSelectWidgetInitActor *actor) {
                           getRelocatableHeapBlockBase(gAssetHandles[0x21]), 0x29, 0x20, 0x20, 0, alpha, tile);
 
             nextIndex = savedIndex + 1;
-            sprintf(text, "%d", nextIndex);
-            drawMenuAsciiText((s16)(actor->unk18 + 0x34), (s16)(*yPtr + 2), text, 0, alpha);
+            sprintf(text - 0x18, "%d", nextIndex);
+            drawMenuAsciiText((s16)(actor->unk18 + 0x34), (s16)(*yPtr + 2), text - 0x18, 0, alpha);
 
             if (alpha == 0xC0) {
                 drawMenuSpriteWithAlpha((s16)(actor->unk18 + 2), (s16)(actor->unk20 + 0x24),
