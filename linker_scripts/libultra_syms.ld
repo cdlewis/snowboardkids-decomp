@@ -9,3 +9,4 @@ gRaceSplitscreenSelectCursorAnimState = gRaceSplitscreenSelectCursorTarget;
 D_8010AE52_state = D_8010AE52;
 gCharacterSelectCourseCursorStateByte = gCharacterSelectCourseCursorState;
 gControllerPakRaceRecordSaveStatusTransitionStep = gControllerPakRaceRecordSaveStatusTransition;
+gGameTaskSchedulerView = gGameTaskScheduler;
