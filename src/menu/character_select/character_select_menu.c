@@ -84,7 +84,7 @@ extern u8 gPlayerCount;
 extern u8 gPendingFramebufferSwapCount;
 extern u8 gFramebufferSwapHold;
 
-// initCharacterSelectMenu best functional match: 98.171% (nonmatchings/initCharacterSelectMenu-6887713755923057488/base_39.c)
+// initCharacterSelectMenu best functional match: 99.069% (nonmatchings/initCharacterSelectMenu-2188069624939011928/base_12.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/character_select/character_select_menu/initCharacterSelectMenu.s")
 
 #ifdef NON_MATCHING
@@ -120,12 +120,7 @@ void initCharacterSelectMenu(void) {
         playerCount = gPlayerCount;
         i = 0;
         // Compiler-shaping no-op retained in the NON_MATCHING attempt.
-        if (D_60F1A0) {
-        }
-        if (playerCount > 0) {
-            player = gRacePlayers;
-            do {
-                for (j = 0; j != 6; j++) {
+        if (D_60F1A0) { } if (playerCount > 0) { player = gRacePlayers; do { for (j = 0; j != 6; j++) {
                     if (player->selectedCharacterId == gCharacterSelectIdOrder[j].characterId) {
                         D_8010AE64[i] = j;
                         break;
@@ -161,36 +156,8 @@ void initCharacterSelectMenu(void) {
     D_8010ADE0 = createCallbackTask(initCharacterSelectRosterIcons, 0, 0x64);
     createCallbackTask(initCharacterSelectPlayerStatsPanels, 0, 0x64);
     D_8010ADE4 = createCallbackTask(initCharacterSelectPlayerPanelFrames, 0, 0x63);
-    setCurrentGameTaskCallback(updateCharacterSelectMenu, 0);
-
-    playerCount = gPlayerCount;
-    if (playerCount > 0) {
-        timerPtr = gMenuInputRepeatTimers;
-        timerEnd = timerPtr + playerCount;
-        player = gRacePlayers;
-        do {
-            timerPtr++;
-            keepGoing = (u32) timerPtr < (u32) timerEnd;
-            player++;
-            // Compiler-shaping use retained in the best matching attempt.
-            if (((!player) && (!player)) && (!player)) {
-            }
-            player[-1].menuState = 0;
-            timerPtr[-1] = 0;
-        } while (keepGoing);
-    }
-
-    state = &gCharacterSelectHudState;
-    state->phase = 0;
-    state->exitMode = 0;
-    state->readyCount = 0;
-    state->fade = 0;
-    state->unkA = 0;
-    state->confirmSelection = 0;
-    state->unkD = 0;
-    state->blockDecrease = 0;
-    state->blockIncrease = 0;
-    state->cursorX = 0;
+    // Compiler-shaping grouping retained in the best matching attempt.
+    do { setCurrentGameTaskCallback(updateCharacterSelectMenu, 0); playerCount = gPlayerCount; if (playerCount > 0) { timerPtr = gMenuInputRepeatTimers; timerEnd = timerPtr + playerCount; player = gRacePlayers; do { timerPtr++; keepGoing = (u32) timerPtr < (u32) timerEnd; player++; if (((!player) && (!player)) && (!player)) { } player[-1].menuState = 0; timerPtr[-1] = 0; } while (keepGoing); } state = &gCharacterSelectHudState; state->phase = 0; state->exitMode = 0; state->readyCount = 0; state->fade = 0; state->unkA = 0; state->confirmSelection = 0; state->unkD = 0; state->blockDecrease = 0; state->blockIncrease = 0; state->cursorX = 0; } while (0);
     state->cursorY = 0;
     i = -1;
     while (++i < 4) {
