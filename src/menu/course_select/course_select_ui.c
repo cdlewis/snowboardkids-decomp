@@ -2065,7 +2065,7 @@ void updateCourseSelectExtraCourseIconListClose(CourseSelectWidgetActor *arg0) {
     addRenderCallback(&gMenuRenderCallbackList, drawCourseSelectExtraCourseIconList, temp_a2);
 }
 
-// updateCourseSelectExtraCourseIconList best match: 97.539% (nonmatchings/updateCourseSelectExtraCourseIconList-5787290371232622032/base_14.c)
+// updateCourseSelectExtraCourseIconList best match: 97.858% (nonmatchings/updateCourseSelectExtraCourseIconList-8699393380584516020/base_27.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/course_select/course_select_ui/updateCourseSelectExtraCourseIconList.s")
 
 #ifdef NON_MATCHING
@@ -2128,14 +2128,19 @@ void updateCourseSelectExtraCourseIconList(CourseSelectWidgetActor *arg0) {
                                                 }
                                             }
                                             unlockMask *= 2;
-                                        } else if ((s8)gGameSaveDataBuffer[playerIndex][iconIndex + 0x48] != -1) {
-                                            itemCount = actor->itemCounts[playerIndex] + 1;
-                                            actor->itemCounts[playerIndex] = itemCount;
-                                            if (gPlayerCount == 1) {
-                                                actor->tileIndices[playerIndex][itemCount - 1] = iconIndex + 0xC;
-                                            } else {
-                                                actor->tileIndices[playerIndex][actor->itemCounts[playerIndex] - 1] =
-                                                    iconIndex + 0x1F;
+                                        } else {
+                                            if (!gRaceSplitscreenMode) {
+                                                /* Empty block preserves IDO's register allocation. */
+                                            }
+                                            if ((s8)gGameSaveDataBuffer[playerIndex][iconIndex + 0x48] != -1) {
+                                                itemCount = actor->itemCounts[playerIndex] + 1;
+                                                actor->itemCounts[playerIndex] = itemCount;
+                                                if (gPlayerCount == 1) {
+                                                    actor->tileIndices[playerIndex][itemCount - 1] = iconIndex + 0xC;
+                                                } else {
+                                                    actor->tileIndices[playerIndex][actor->itemCounts[playerIndex] - 1] =
+                                                        iconIndex + 0x1F;
+                                                }
                                             }
                                         }
                                     } else if ((s8)gGameSaveDataBuffer[playerIndex]
@@ -2222,10 +2227,10 @@ void updateCourseSelectExtraCourseIconList(CourseSelectWidgetActor *arg0) {
                             (((CourseSelectExtraCourseIconListActor *)arg0)->pulseTimer[playerIndex] + 1) & 0x1F;
                     }
                 }
+                player++;
                 gCourseSelectStatus[playerIndex + 0x24] =
                     ((CourseSelectExtraCourseIconListActor *)arg0)->itemCounts[playerIndex];
                 playerIndex++;
-                player++;
             } while (playerIndex < (s32)gPlayerCount);
         }
     }
