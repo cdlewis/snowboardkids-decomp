@@ -329,10 +329,6 @@ void updateRacePlayerFinalLapStatus(RacePlayer *player) {
     }
 }
 
-// resolveRacePlayerBodyCollisions best match: 99.957% (nonmatchings/resolveRacePlayerBodyCollisions-6866765942504228165/base_3.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race/player/race_player_movement/resolveRacePlayerBodyCollisions.s")
-
-#ifdef NON_MATCHING
 void resolveRacePlayerBodyCollisions(void) {
     RacePlayer *playerA;
     RacePlayer *playerB;
@@ -340,14 +336,11 @@ void resolveRacePlayerBodyCollisions(void) {
     s32 j;
     s32 temp;
     s32 xDiff;
-    s32 yLimit;
     s32 radius;
-    s64 xDiff64;
     s16 angle;
     s32 sine;
     s32 cosine;
     s32 pushX;
-    s32 pushZ;
 
     for (i = 0; i != 3; i++) {
         j = i + 1;
@@ -360,14 +353,7 @@ void resolveRacePlayerBodyCollisions(void) {
                         (playerB->soundDisabled == 0) && !(playerA->stateFlags & 0x200000) &&
                         !(playerB->stateFlags & 0x200000)) {
                         temp = playerA->unk5C - playerB->unk5C;
-                        if (temp < 0) {
-                            yLimit = playerA->unk284;
-                            temp = -temp;
-                        } else {
-                            yLimit = playerB->unk284;
-                        }
-
-                        if (temp <= yLimit) {
+                        if ((temp < 0 ? (temp = -temp, playerA->unk284) : playerB->unk284) >= temp) {
                             radius = playerB->unk280 + playerA->unk280;
                             xDiff = playerA->posX - playerB->posX;
                             if (xDiff < 0) {
@@ -378,9 +364,8 @@ void resolveRacePlayerBodyCollisions(void) {
                                 if (temp < 0) {
                                     temp *= -1;
                                 }
-                                xDiff64 = (s64)((0, xDiff));
                                 if ((temp < radius) &&
-                                    ((temp = integerSquareRoot64((xDiff64 * xDiff) +
+                                    ((temp = integerSquareRoot64((s64)((0, xDiff)) * xDiff +
                                                            (((s64)temp * temp) & 0xFFFFFFFFFFFFFFFF))) < radius)) {
                                     temp = ((radius - temp) * -1) / 2;
                                     angle = calculateFixedAngleBetweenXZPoints(playerA->posX, playerA->posZ,
@@ -388,20 +373,20 @@ void resolveRacePlayerBodyCollisions(void) {
                                     sine = fixedSine(angle);
                                     cosine = fixedCosine(angle);
                                     pushX = (s64)-sine * temp / 0x1000;
-                                    pushZ = (s64)cosine * temp / 0x1000;
+                                    temp = (s64)cosine * temp / 0x1000;
                                     if (playerA->stateFlags & 0x1000) {
                                         if (!(playerB->stateFlags & 0x1000)) {
                                             playerB->posX -= pushX * 2;
-                                            playerB->posZ += pushZ * 2;
+                                            playerB->posZ += temp * 2;
                                         }
                                     } else if (playerB->stateFlags & 0x1000) {
                                         playerA->posX += pushX * 2;
-                                        playerA->posZ -= pushZ * 2;
+                                        playerA->posZ -= temp * 2;
                                     } else {
                                         playerA->posX += pushX;
-                                        playerA->posZ -= pushZ;
+                                        playerA->posZ -= temp;
                                         playerB->posX -= pushX;
-                                        playerB->posZ += pushZ;
+                                        playerB->posZ += temp;
                                     }
                                 }
                             }
@@ -413,7 +398,6 @@ void resolveRacePlayerBodyCollisions(void) {
         }
     }
 }
-#endif
 
 // pushRacePlayersOutOfCylinderAndApplyItemHit best match: 97.776% (nonmatchings/pushRacePlayersOutOfCylinderAndApplyItemHit-2341155904261615822/base_15.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race/player/race_player_movement/pushRacePlayersOutOfCylinderAndApplyItemHit.s")
