@@ -646,7 +646,7 @@ void updateRaceSetupSaveMenu(void) {
 void raceSetupMenuNoop(void) {
 }
 
-// updateRaceSetupRumblePrompt best match: 96.678% (nonmatchings/updateRaceSetupRumblePrompt-1936695454966205676/base_11.c)
+// updateRaceSetupRumblePrompt best match: 99.154% (nonmatchings/updateRaceSetupRumblePrompt-2188069624939011928/base_21.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/race_setup/race_setup_menu/updateRaceSetupRumblePrompt.s")
 
 #ifdef NON_MATCHING
@@ -660,9 +660,19 @@ typedef struct {
     /* 0x9 */ u8 confirmSelection;
 } ControllerPakRumbleCheckPromptTransition;
 
+typedef struct {
+    /* 0x0 */ u8 state;
+    /* 0x1 */ u8 pad1;
+    /* 0x2 */ u16 targetScale;
+} ControllerPakRumbleCheckPromptState;
+
+ControllerPakRumbleCheckPromptState gRaceSetupRumblePromptStateCase1;
+ControllerPakRumbleCheckPromptState gRaceSetupRumblePromptStateCase8;
+ControllerPakRumbleCheckPromptState gRaceSetupRumblePromptStateCase9Yes;
+ControllerPakRumbleCheckPromptState gRaceSetupRumblePromptStateCase9Connected;
+
 extern ControllerPakRumbleCheckPromptTransition gControllerPakRumbleCheckPromptTransition;
 extern u8 gControllerPakRumbleCheckPromptState;
-extern u16 D_8010ADD4;
 extern u8 gControllerPakRumbleCheckPromptConfirmSelection;
 extern void enqueueSoundEffect(s16 arg0, s32 arg1);
 extern void requestRumbleMotorInit(u16 arg0);
@@ -683,9 +693,10 @@ void updateRaceSetupRumblePrompt(void) {
             break;
         case 1:
             if ((gPlayerInputPressed & A_BUTTON) || (gPlayerInputPressed & START_BUTTON)) {
+                state = 2;
                 enqueueSoundEffect(1, 0x32);
-                D_8010ADD4 = 1;
-                gControllerPakRumbleCheckPromptState = 2;
+                gRaceSetupRumblePromptStateCase1.state = state;
+                gRaceSetupRumblePromptStateCase1.targetScale = 1;
                 state = 2;
             }
             break;
@@ -754,9 +765,10 @@ void updateRaceSetupRumblePrompt(void) {
             break;
         case 8:
             if ((gPlayerInputPressed & A_BUTTON) || (gPlayerInputPressed & START_BUTTON)) {
+                state = 9;
                 enqueueSoundEffect(1, 0x32);
-                gControllerPakRumbleCheckPromptState = 9;
-                D_8010ADD4 = 3;
+                gRaceSetupRumblePromptStateCase8.state = state;
+                gRaceSetupRumblePromptStateCase8.targetScale = 3;
                 gControllerPakRumbleCheckPromptConfirmSelection = 1;
                 state = 9;
             }
@@ -773,9 +785,15 @@ void updateRaceSetupRumblePrompt(void) {
             }
             if ((gPlayerInputPressed & A_BUTTON) || (gPlayerInputPressed & START_BUTTON)) {
                 enqueueSoundEffect(1, 0x32);
-                if (gControllerPakRumbleCheckPromptConfirmSelection == 1) {
-                    gControllerPakRumbleCheckPromptState = 1;
-                    D_8010ADD4 = 0;
+                statusIndex = 1;
+                if ((((((((((gControllerPakRumbleCheckPromptConfirmSelection & 0xFFu) & 0xFFu) & 0xFFu) & 0xFFu) &
+                           0xFFu) &
+                          0xFFu) &
+                         0xFFu) &
+                        0xFFu) &
+                       0xFFu) == 1) {
+                    gRaceSetupRumblePromptStateCase9Yes.state = statusIndex;
+                    gRaceSetupRumblePromptStateCase9Yes.targetScale = 0;
                 } else {
                     connectedCount = 0;
                     i = 0;
@@ -787,11 +805,13 @@ void updateRaceSetupRumblePrompt(void) {
                             i++;
                         } while (i < (s32)gPlayerCount);
                     }
+                    i = 4;
+                    statusIndex = 3;
                     if (connectedCount > 0) {
-                        gControllerPakRumbleCheckPromptState = 3;
-                        D_8010ADD4 = 2;
+                        gRaceSetupRumblePromptStateCase9Connected.state = statusIndex;
+                        gRaceSetupRumblePromptStateCase9Connected.targetScale = 2;
                     } else {
-                        gControllerPakRumbleCheckPromptState = 4;
+                        gControllerPakRumbleCheckPromptState = i;
                     }
                 }
             }
