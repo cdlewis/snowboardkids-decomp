@@ -95,7 +95,7 @@ void initRaceTypeSelectMenu(void) {
     gRaceTypeSelectCursorTarget.alpha = 0;
 }
 
-// updateRaceTypeSelectMenu best match: 96.609% (nonmatchings/updateRaceTypeSelectMenu-8699393380584516020/base_1.c)
+// updateRaceTypeSelectMenu best match: 97.180% (nonmatchings/updateRaceTypeSelectMenu-8129558366194613874/base_19.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/race_type_select/race_type_select_menu/updateRaceTypeSelectMenu.s")
 
 #ifdef NON_MATCHING
@@ -143,7 +143,9 @@ void updateRaceTypeSelectMenu(void) {
                         tempSelection = selection - 1;
                         if (repeatTimer == 0) {
                             gMenuInputRepeatTimers = repeatTimer + 1;
-                            repeatTimer = gMenuInputRepeatTimers;
+                            repeatTimer = (((((gMenuInputRepeatTimers & 0xFFFFu) & 0xFFFFu) & 0xFFFFu) & 0xFFFFu) &
+                                           0xFFFFu) &
+                                          0xFFFFu;
                         }
                         if (selection > 0) {
                             gRaceTypeSelection = tempSelection;
@@ -151,12 +153,12 @@ void updateRaceTypeSelectMenu(void) {
                         }
                     } else {
                         repeatTimer = gMenuInputRepeatTimers;
-                        repeatTimerCopy = repeatTimer;
                         if ((heldInput & (STICK_DOWN | D_JPAD)) ||
-                            ((newInput & (STICK_DOWN | D_JPAD)) && (repeatTimer >= 9) && ((repeatTimer % 3) == 0))) {
+                            ((newInput & (STICK_DOWN | D_JPAD)) && ((repeatTimerCopy = repeatTimer) >= 9) &&
+                             ((repeatTimerCopy % 3) == 0))) {
                             canIncrement = selection < 3;
-                            if (repeatTimerCopy == 0) {
-                                gMenuInputRepeatTimers = repeatTimerCopy + 1;
+                            if (repeatTimer == 0) {
+                                gMenuInputRepeatTimers = repeatTimer + 1;
                                 repeatTimer = gMenuInputRepeatTimers;
                             }
                             if (canIncrement) {
