@@ -756,7 +756,8 @@ Examples:
                     )
                     if results:
                         func_score.similar_to = [
-                            candidate_label_cache[r.function.file_path]
+                            f"{candidate_label_cache[r.function.file_path]} "
+                            f"({r.total_score:.0%})"
                             for r in results
                         ]
                         func_score.similarity_score = results[0].total_score
