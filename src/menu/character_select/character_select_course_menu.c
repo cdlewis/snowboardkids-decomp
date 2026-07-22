@@ -51,7 +51,6 @@ extern s16 gCharacterSelectSingleCourseOption[];
 extern CharacterSelectFlowState *gCurrentGameTask;
 extern s8 gFramebufferSwapDelay;
 extern f32 D_800E09A0;
-extern f32 D_800E09A4;
 extern s16 gMenuFadeAlpha;
 extern CharacterSelectSaveData gGameSaveDataBuffer[];
 extern u8 gRacePlayers[];
@@ -304,16 +303,13 @@ void initCharacterSelectCourseMenuFromRace(void)
 }
 #endif
 
-// initCharacterSelectCourseMenuFromPlayerSelect best match: 99.877% (nonmatchings/initCharacterSelectCourseMenuFromPlayerSelect-6887713755923057488/base_28.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/menu/character_select/character_select_course_menu/initCharacterSelectCourseMenuFromPlayerSelect.s")
-
-#ifdef NON_MATCHING
 void initCharacterSelectCourseMenuFromPlayerSelect(void) {
     s32 var_v1;
     s32 sp2C;
     s32 var_v0_3;
-    s16 *activeCourseOptions;
-    s16 selectedCourse;
+    s16 *var_v0_2;
+    s16 *var_v1_2;
+    s16 *activeOptions;
     CharacterSelectCourseUnlockList *courseOptionsByUnlock;
     u8 temp_v1;
     CharacterSelectSaveData *var_v0;
@@ -321,7 +317,7 @@ void initCharacterSelectCourseMenuFromPlayerSelect(void) {
     requestMusicSequenceBank(2);
     if (gPlayerCount >= 2) {
         resetAllViewports();
-        configureViewport(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, D_800E09A4);
+        configureViewport(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.333333373f);
         gFramebufferSwapDelay = 0;
         if (gCharacterSelectShortCourseOptions) {
         }
@@ -336,7 +332,7 @@ void initCharacterSelectCourseMenuFromPlayerSelect(void) {
         gCurrentGameTask->fade = 0xFF;
     } else {
         gCurrentGameTask->fade = 0;
-        createCallbackTask(initCharacterSelectUnlockedCourseList, 0, 0x63);
+        createCallbackTask((void (*)())initCharacterSelectUnlockedCourseList, 0, 0x63);
     }
 
     gCurrentGameTask->timer = 0;
@@ -352,60 +348,47 @@ void initCharacterSelectCourseMenuFromPlayerSelect(void) {
     D_8010ADE0 = 0;
     D_8010ADE4 = 0;
     var_v1 = sp2C;
-    if (gPlayerCount > 0) {
-        var_v0 = gGameSaveDataBuffer;
-        do {
-            temp_v1 = var_v0->highestCourse;
-            var_v0 += 1;
-            if (gHighestUnlockedCourse < temp_v1) {
-                gHighestUnlockedCourse = temp_v1;
-            }
-        } while (var_v0 < &gGameSaveDataBuffer[gPlayerCount]);
-        var_v1++;
-        var_v1--;
-    }
-
-    setCurrentGameTaskCallback(updateCharacterSelectCourseMenu, 0);
-    var_v1 = sp2C;
+    if (gPlayerCount > 0) { var_v0 = gGameSaveDataBuffer; do { temp_v1 = var_v0->highestCourse; var_v0 += 1; if (gHighestUnlockedCourse < temp_v1) { gHighestUnlockedCourse = temp_v1; } } while (var_v0 < &gGameSaveDataBuffer[gPlayerCount]); var_v1++; var_v1--; } setCurrentGameTaskCallback(updateCharacterSelectCourseMenu, 0); var_v1 = sp2C;
     courseOptionsByUnlock = gCharacterSelectCourseOptionsByUnlock;
     if (gCourseSelectFromRaceTypeMenu == 1) {
         if (gRaceTypeSelection < 2) {
             gCharacterSelectActiveCourseOptions = (CharacterSelectOptionList *) gCharacterSelectShortCourseOptions;
-            selectedCourse = gRaceCourseIndex;
-            if ((selectedCourse != 9) && (selectedCourse != 0) && (selectedCourse != 1)) {
+            if ((gRaceCourseIndex != 9) && (gRaceCourseIndex != 0) && (gRaceCourseIndex != 1)) {
                 gRaceCourseIndex = 9;
-                selectedCourse = gRaceCourseIndex;
             }
         } else {
             gCharacterSelectActiveCourseOptions = (CharacterSelectOptionList *) gCharacterSelectSingleCourseOption;
             gRaceCourseIndex = 7;
-            selectedCourse = gRaceCourseIndex;
         }
     } else {
         gCharacterSelectActiveCourseOptions = (CharacterSelectOptionList *) courseOptionsByUnlock[gHighestUnlockedCourse];
-        selectedCourse = gRaceCourseIndex;
-        if (selectedCourse == -1) {
+        if (gRaceCourseIndex == -1) {
             gRaceCourseIndex = 9;
-            selectedCourse = gRaceCourseIndex;
         }
     }
 
-    var_v0_3 = 0;
-    activeCourseOptions = *gCharacterSelectActiveCourseOptions;
-    for (; var_v1 != 0xA; var_v1++, var_v0_3++) {
-        if (selectedCourse == activeCourseOptions[var_v0_3]) {
+    activeOptions = *gCharacterSelectActiveCourseOptions;
+    var_v0_2 = activeOptions;
+    do {
+        if (gRaceCourseIndex == *var_v0_2) {
             gRaceCourseIndex = var_v1;
             break;
         }
-    }
+        var_v1 += 1;
+        var_v0_2 += 1;
+    } while (var_v1 != 10);
 
     gCharacterSelectCourseExitOptionIndex = 0;
-    for (var_v0_3 = 0; var_v0_3 < 0xA; var_v0_3++) {
-        if ((*gCharacterSelectActiveCourseOptions)[var_v0_3] == -1) {
+    var_v0_3 = 0;
+    var_v1_2 = activeOptions;
+    do {
+        var_v0_3 += 2;
+        if (*var_v1_2 == -1) {
             break;
         }
+        var_v1_2 += 1;
         gCharacterSelectCourseExitOptionIndex += 1;
-    }
+    } while (var_v0_3 != 20);
 
     gCharacterSelectCourseCursorState.bytes[0] = 0;
     gCharacterSelectCourseCursorState.bytes[1] = 0;
@@ -415,7 +398,6 @@ void initCharacterSelectCourseMenuFromPlayerSelect(void) {
     gCharacterSelectCourseCursorState.bytes[7] = 0 * 0;
     updateCallbackTasks();
 }
-#endif
 
 // updateCharacterSelectCourseMenu best compliant match: 79.439% (nonmatchings/updateCharacterSelectCourseMenu-8239461464121803931/base_18.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/character_select/character_select_course_menu/updateCharacterSelectCourseMenu.s")
