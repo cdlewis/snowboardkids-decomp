@@ -1,4 +1,5 @@
 #include "common.h"
+#include "assets.h"
 #include "game/audio/sound_manager.h"
 #include "game/engine/callback_task_scheduler.h"
 #include "game/engine/relocatable_heap.h"
@@ -248,14 +249,6 @@ extern u8 gRaceUpdatePaused;
 extern ViewportSlot D_801121E0[];
 extern u8 D_1E74E0[];
 extern u8 D_1EC0F0[];
-extern u8 D_1EC4A0[];
-extern u8 D_1EC810[];
-extern u8 D_1ECD00[];
-extern u8 D_1ED910[];
-extern u8 D_1EDC80[];
-extern u8 D_1EE060[];
-extern u8 D_1EEEA0[];
-extern u8 D_1EF1D0[];
 extern u8 D_1EF530[];
 extern u8 D_1F1A90[];
 extern u8 D_1F2220[];
@@ -1990,31 +1983,31 @@ void initRaceRecordSettingsFlow(void) {
     loadCompressedRomAsset(D_1F1A90, D_1F2220, 0x28);
     switch (gRaceCourseIndex.u) {
     case 0:
-        loadCompressedRomAsset(D_1EC0F0, D_1EC4A0, 0x1D);
+        loadCompressedRomAsset(ASSET_START(LEVEL_BIG_SNOWMAN_SPRITES), ASSET_END(LEVEL_BIG_SNOWMAN_SPRITES), 0x1D);
         break;
     case 1:
-        loadCompressedRomAsset(D_1EC4A0, D_1EC810, 0x1D);
+        loadCompressedRomAsset(ASSET_START(LEVEL_SUNSET_ROCK_SPRITES), ASSET_END(LEVEL_SUNSET_ROCK_SPRITES), 0x1D);
         break;
     case 2:
-        loadCompressedRomAsset(D_1EC810, D_1ECD00, 0x1D);
+        loadCompressedRomAsset(ASSET_START(LEVEL_NIGHT_HIGHWAY_SPRITES), ASSET_END(LEVEL_NIGHT_HIGHWAY_SPRITES), 0x1D);
         break;
     case 3:
-        loadCompressedRomAsset(D_1ECD00, D_1ED910, 0x1D);
+        loadCompressedRomAsset(ASSET_START(LEVEL_GRASS_VALLEY_SPRITES), ASSET_END(LEVEL_GRASS_VALLEY_SPRITES), 0x1D);
         break;
     case 4:
-        loadCompressedRomAsset(D_1ED910, D_1EDC80, 0x1D);
+        loadCompressedRomAsset(ASSET_START(LEVEL_DIZZY_LAND_SPRITES), ASSET_END(LEVEL_DIZZY_LAND_SPRITES), 0x1D);
         break;
     case 5:
-        loadCompressedRomAsset(D_1EDC80, D_1EE060, 0x1D);
+        loadCompressedRomAsset(ASSET_START(LEVEL_QUICKSAND_VALLEY_SPRITES), ASSET_END(LEVEL_QUICKSAND_VALLEY_SPRITES), 0x1D);
         break;
     case 6:
-        loadCompressedRomAsset(D_1EE060, D_1EEEA0, 0x1D);
+        loadCompressedRomAsset(ASSET_START(LEVEL_SILVER_MOUNTAIN_SPRITES), ASSET_END(LEVEL_SILVER_MOUNTAIN_SPRITES), 0x1D);
         break;
     case 8:
-        loadCompressedRomAsset(D_1EEEA0, D_1EF1D0, 0x1D);
+        loadCompressedRomAsset(ASSET_START(LEVEL_NINJA_LAND_SPRITES), ASSET_END(LEVEL_NINJA_LAND_SPRITES), 0x1D);
         break;
     case 9:
-        loadCompressedRomAsset(D_1EF1D0, D_1EF530, 0x1D);
+        loadCompressedRomAsset(ASSET_START(LEVEL_ROOKIE_MOUNTAIN_SPRITES), ASSET_END(LEVEL_ROOKIE_MOUNTAIN_SPRITES), 0x1D);
         break;
     }
     loadCompressedRomAsset(D_1E74E0, D_1EC0F0, 0x1C);
