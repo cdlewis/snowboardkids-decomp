@@ -1,6 +1,6 @@
 #include "game/audio/audio_engine_internal.h"
 
-// initAudioSynthesizer best match: 99.882% (nonmatchings/initAudioSynthesizer-8953690873630951657/base_9.c)
+// initAudioSynthesizer best match: 99.961% (nonmatchings/initAudioSynthesizer-8699393380584516020/base_4.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/libmus/aud_thread/initAudioSynthesizer.s")
 
 #ifdef NON_MATCHING
@@ -44,18 +44,22 @@ void initAudioSynthesizer(SchedulerState *scheduler, ALSynConfig *config, s32 th
     }
     gAudioDmaBufferPool[i].buffer = alHeapDBAlloc(0, 0, config->heap, 1, dmaBufferSize);
 
-    for (i = 0; i < 2; i++) {
+    i = 0;
+    do {
         gAudioCmdLists[i] = alHeapDBAlloc(0, 0, config->heap, 1, initConfig->commandListSize * sizeof(Acmd));
-    }
+        i++;
+    } while (&gAudioCmdLists[i] < &gAudioCmdListEnd0);
 
     gAudioCmdListCapacity = initConfig->commandListSize;
-    for (i = 0; i < 3; i++) {
+    i = 0;
+    do {
         ((AudioInitTask **)gAudioCmdLists)[i + 2] = alHeapDBAlloc(0, 0, config->heap, 1, sizeof(AudioInitTask));
         ((AudioInitTask **)gAudioCmdLists)[i + 2]->type = 2;
         ((AudioInitTask **)gAudioCmdLists)[i + 2]->msg = ((AudioInitTask **)gAudioCmdLists)[i + 2];
         ((AudioInitTask **)gAudioCmdLists)[i + 2]->outBuf =
             alHeapDBAlloc(0, 0, config->heap, 1, gMaxAudioTaskOutputLen * sizeof(s32));
-    }
+        i++;
+    } while (&gAudioCmdListEnd1 != &gAudioCmdLists[i]);
 
     osCreateMesgQueue((OSMesgQueue *)gAudioTaskDoneQueue, gAudioTaskDoneMessages, 8);
     osCreateMesgQueue(&gAudioThreadQueue, gAudioThreadMessages, 8);
