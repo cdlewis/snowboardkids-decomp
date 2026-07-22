@@ -2,8 +2,8 @@
 """Report logged match progress from nonmatchings/ workspaces.
 
 This scans nonmatchings/**/match_log.txt and tools/scratches.json, ignores
-functions already present in asm/matchings according to the selected filter
-scope, and reports:
+functions that no longer exist in either active assembly tree or are already
+present in asm/matchings according to the selected filter scope, and reports:
 
 - functions with a logged 100% match that have not been moved to asm/matchings
 - partially matched functions, ordered by best logged match percentage
@@ -124,13 +124,17 @@ def canonical_function_name(function: str, aliases: dict[str, str]) -> str:
     return aliases.get(f"func_{address_match.group('addr').upper()}", function)
 
 
-def matched_function_names(repo_root: Path) -> set[str]:
-    matchings_dir = repo_root / "asm" / "matchings"
-    if not matchings_dir.is_dir():
+def canonicalize_function_names(names: set[str], aliases: dict[str, str]) -> set[str]:
+    return names | {canonical_function_name(name, aliases) for name in names}
+
+
+def assembly_function_names(repo_root: Path, directory: str) -> set[str]:
+    assembly_dir = repo_root / "asm" / directory
+    if not assembly_dir.is_dir():
         return set()
 
     names: set[str] = set()
-    for path in matchings_dir.rglob("*.s"):
+    for path in assembly_dir.rglob("*.s"):
         names.add(path.stem)
         try:
             text = path.read_text(errors="ignore")
@@ -141,8 +145,20 @@ def matched_function_names(repo_root: Path) -> set[str]:
     return names
 
 
+def matched_function_names(repo_root: Path) -> set[str]:
+    return assembly_function_names(repo_root, "matchings")
+
+
+def existing_function_names(repo_root: Path) -> set[str]:
+    return matched_function_names(repo_root) | assembly_function_names(repo_root, "nonmatchings")
+
+
 def matched_function_names_by_root(repo_roots: Iterable[Path]) -> dict[Path, set[str]]:
     return {repo_root: matched_function_names(repo_root) for repo_root in repo_roots}
+
+
+def existing_function_names_by_root(repo_roots: Iterable[Path]) -> dict[Path, set[str]]:
+    return {repo_root: existing_function_names(repo_root) for repo_root in repo_roots}
 
 
 def matched_function_address_aliases(text: str) -> set[str]:
@@ -289,6 +305,8 @@ def best_local_results_by_function(
     scan_roots: Iterable[Path],
     primary_matched_functions: set[str],
     matched_functions_by_root: dict[Path, set[str]],
+    primary_existing_functions: set[str],
+    existing_functions_by_root: dict[Path, set[str]],
     aliases_by_root: dict[Path, dict[str, str]],
     filter_scope: str,
 ) -> dict[str, MatchResult]:
@@ -296,10 +314,13 @@ def best_local_results_by_function(
 
     for scan_root in scan_roots:
         source_matched_functions = matched_functions_by_root.get(scan_root, set())
+        source_existing_functions = existing_functions_by_root.get(scan_root, set())
         aliases = aliases_by_root.get(scan_root, {})
         nonmatchings_dir = scan_root / "nonmatchings"
         for log_path in sorted(nonmatchings_dir.glob("*/match_log.txt")):
             function = canonical_function_name(function_name_from_workspace(log_path.parent), aliases)
+            if function not in primary_existing_functions and function not in source_existing_functions:
+                continue
             if filter_scope in {"primary", "both"} and function in primary_matched_functions:
                 continue
             if filter_scope in {"source", "both"} and function in source_matched_functions:
@@ -336,16 +357,28 @@ def report_rows_by_function(
 ) -> dict[str, ReportRow]:
     scan_roots = list(scan_roots)
     matched_functions_by_root = matched_function_names_by_root([repo_root, *scan_roots])
+    existing_functions_by_root = existing_function_names_by_root([repo_root, *scan_roots])
     primary_aliases = function_name_aliases(repo_root)
     aliases_by_root = {
         root: {**function_name_aliases(root), **primary_aliases}
         for root in [repo_root, *scan_roots]
     }
+    matched_functions_by_root = {
+        root: canonicalize_function_names(names, aliases_by_root.get(root, {}))
+        for root, names in matched_functions_by_root.items()
+    }
+    existing_functions_by_root = {
+        root: canonicalize_function_names(names, aliases_by_root.get(root, {}))
+        for root, names in existing_functions_by_root.items()
+    }
     primary_matched_functions = matched_functions_by_root.get(repo_root, set())
+    primary_existing_functions = existing_functions_by_root.get(repo_root, set())
     local_results = best_local_results_by_function(
         scan_roots,
         primary_matched_functions,
         matched_functions_by_root,
+        primary_existing_functions,
+        existing_functions_by_root,
         aliases_by_root,
         filter_scope,
     )
@@ -439,8 +472,9 @@ def main() -> int:
         description=(
             "Report full and partial matches from nonmatchings/**/match_log.txt, "
             "supplemented with decomp.me scratches from tools/scratches.json. By default this scans "
-            "the current checkout and ../sbk-a when present, excluding functions already matched in "
-            "either the primary repo root or the scan root that produced each match_log entry."
+            "the current checkout and sibling worktrees when present, excluding functions that no "
+            "longer exist in their assembly trees or are already matched in either the primary repo "
+            "root or the scan root that produced each match_log entry."
         )
     )
     parser.add_argument(
