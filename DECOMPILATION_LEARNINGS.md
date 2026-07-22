@@ -255,6 +255,12 @@ and control flow already match and only register *names* differ.
   local lands one slot too high, declaring an additional — even register-only
   — local *before* it shifts the real local down to the target offset.
   Declaring locals in the same order as a matched sibling is the safe move.
+- **Combine block scopes with declaration order to tune small frames.** Moving
+  non-overlapping pointer iterators into their actual loop scopes can shrink an
+  otherwise-correct frame without changing the instruction stream. An unused
+  `register` local immediately after a value that crosses calls can then shift
+  that value's spill slot within the smaller frame; test the two changes
+  together because either one alone may choose a different frame size.
 - **The `struct { s32 v; s32 pad; }` idiom for a spilled call result.** When a
   single spilled `s32` lands at `0x24(sp)` but the target uses `0x20(sp)`,
   declaring it as a two-word struct with a trailing pad shifts IDO's
