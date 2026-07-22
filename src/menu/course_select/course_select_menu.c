@@ -172,7 +172,7 @@ extern void releaseMenuAssetHandles(void);
 extern void requestMusicSequenceBank(s32);
 extern void requestMusicSequenceStop(s32);
 extern void enqueueSoundEffect(s32, s32);
-// initCourseSelectMenu best match: 99.060% (nonmatchings/initCourseSelectMenu-3/output-265-1/source.c)
+// initCourseSelectMenu best match: 99.238% (nonmatchings/initCourseSelectMenu-2188069624939011928/base_23.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/course_select/course_select_menu/initCourseSelectMenu.s")
 
 #ifdef NON_MATCHING
@@ -181,6 +181,7 @@ void initCourseSelectMenu(void) {
     s32 i;
     s32 zero;
     s32 mask;
+    s32 hasMore;
     u8 *unlockedCourse;
     u8 *otherCourse;
     ObjectA3E0 *obj;
@@ -196,15 +197,16 @@ void initCourseSelectMenu(void) {
     otherCourse = D_8010AEAC;
     do {
         otherCourse++;
+        hasMore = (u32)otherCourse < (u32)&D_8010AEB0;
         obj++;
         unlockedCourse++;
         obj[-1].unk2C = updateMenuCameraObjectLookAtOriginCallback;
         obj[-1].unk24 = 0xA40000;
-        if ((D_5C5320 && D_5C5320) && D_5C5320) {
+        if ((obj && obj) && obj) {
         }
         unlockedCourse[-1] = 0;
         otherCourse[-1] = 0;
-    } while (otherCourse < D_8010AEAC + 4);
+    } while (hasMore);
 
     gFramebufferSwapDelay = 0;
     gCurrentGameTask->fade = 0xFF;
@@ -248,7 +250,7 @@ void initCourseSelectMenu(void) {
 
     gMenuFadeAlpha = gCurrentGameTask->fade;
     mask = 1;
- i = 0; do { savedUnlocks = gGameSaveDataBuffer[0x78D7]; i++; if (savedUnlocks & mask) { if (!(savedUnlocks & (mask << 3))) { gShopMenuShowNewCoursesMessage = 1; gShopMenuDescriptionSeen = 1;
+ i = 0; do { savedUnlocks = gGameSaveDataBuffer[0x78D7]; i++; if (mask & savedUnlocks) { if (!(savedUnlocks & (mask << 3))) { gShopMenuShowNewCoursesMessage = 1; gShopMenuDescriptionSeen = 1;
                 gGameSaveDataBuffer[0x78D7] = savedUnlocks | (mask << 3);
             }
         }
