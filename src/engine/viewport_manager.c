@@ -2,6 +2,8 @@
 
 ViewportState gViewportStates[4];
 
+extern void guPerspective(ViewportMtx *, u16 *, f32, f32, f32, f32, f32);
+
 void resetAllViewports(void) {
     s32 i;
 
@@ -44,7 +46,6 @@ void resetViewport(s32 arg0) {
 
 #ifdef NON_MATCHING
 extern f32 gDefaultViewportOverlayFarClip;
-extern void guPerspective(ViewportMtx *, u16 *, f32, f32, f32, f32, f32);
 
 void configureViewport(s32 viewportIndex, s32 centerX, s32 centerY, u16 width, u16 height, u16 scaleX, u16 scaleY,
                        f32 aspect) {
@@ -97,24 +98,17 @@ void configureViewport(s32 viewportIndex, s32 centerX, s32 centerY, u16 width, u
 }
 #endif
 
-// configureViewportWithFovAndFarClip best match: 98.053%
-// (nonmatchings/configureViewportWithFovAndFarClip-6887713755923057488/base_5.c)
-
-#pragma GLOBAL_ASM("asm/nonmatchings/engine/viewport_manager/configureViewportWithFovAndFarClip.s")
-
-#ifdef NON_MATCHING
-extern void guPerspective(ViewportMtx *, u16 *, f32, f32, f32, f32, f32);
-
 void configureViewportWithFovAndFarClip(s32 viewportIndex, s32 centerX, s32 centerY, u16 width, u16 height, u16 scaleX,
                                         u16 scaleY, f32 aspect, s16 fovY, s32 farClip) {
-    gViewportStates[viewportIndex].viewportTranslateX = centerX * 4;
     gViewportStates[viewportIndex].active = 1;
+    gViewportStates[viewportIndex].viewportTranslateX = centerX * 4;
     gViewportStates[viewportIndex].viewportTranslateY = centerY * 4;
     gViewportStates[viewportIndex].viewportScaleX = scaleX * 2;
     gViewportStates[viewportIndex].viewportScaleY = scaleY * 2;
+
     gViewportStates[viewportIndex].left = centerX - (width / 2);
-    gViewportStates[viewportIndex].right = (width / 2) + centerX;
     gViewportStates[viewportIndex].top = centerY - (height / 2);
+    gViewportStates[viewportIndex].right = (width / 2) + centerX;
     gViewportStates[viewportIndex].bottom = (height / 2) + centerY;
     gViewportStates[viewportIndex].left = gViewportStates[viewportIndex].left;
     gViewportStates[viewportIndex].top = gViewportStates[viewportIndex].top;
@@ -152,7 +146,6 @@ void configureViewportWithFovAndFarClip(s32 viewportIndex, s32 centerX, s32 cent
     guPerspective(&gViewportStates[viewportIndex].overlayProjection,
                   &gViewportStates[viewportIndex].overlayPerspectiveNorm, (f32)fovY, aspect, 10.0f, 15000.0f, 0.5f);
 }
-#endif
 
 // configureRaceViewport best match: 97.944% (nonmatchings/configureRaceViewport-6934502587000073416/base_5.c)
 
@@ -160,7 +153,6 @@ void configureViewportWithFovAndFarClip(s32 viewportIndex, s32 centerX, s32 cent
 
 #ifdef NON_MATCHING
 extern f32 gRaceViewportOverlayFarClip;
-extern void guPerspective(ViewportMtx *, u16 *, f32, f32, f32, f32, f32);
 
 void configureRaceViewport(s32 viewportIndex, s32 centerX, s32 centerY, u16 width, u16 height, u16 scaleX, u16 scaleY,
                            f32 aspect) {
