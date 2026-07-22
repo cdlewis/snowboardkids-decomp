@@ -191,28 +191,18 @@ void configureRaceViewport(s32 viewportIndex, s32 centerX, s32 centerY, u16 widt
                   gRaceViewportOverlayFarClip, 0.5f);
 }
 
-// configureMenuViewport best match: 99.597% (nonmatchings/configureMenuViewport-6934502587000073416/base_17.c)
-
-#pragma GLOBAL_ASM("asm/nonmatchings/engine/viewport_manager/configureMenuViewport.s")
-
-#ifdef NON_MATCHING
-extern f32 gMenuViewportFarClip;
-extern f32 gMenuViewportOverlayFarClip;
-
 void configureMenuViewport(s32 viewportIndex, s32 centerX, s32 centerY, u16 width, u16 height, u16 scaleX, u16 scaleY,
                            f32 aspect) {
-    s32 halfHeight;
-
-    gViewportStates[viewportIndex].viewportTranslateX = centerX * 4;
     gViewportStates[viewportIndex].active = 1;
+    gViewportStates[viewportIndex].viewportTranslateX = centerX * 4;
     gViewportStates[viewportIndex].viewportTranslateY = centerY * 4;
     gViewportStates[viewportIndex].viewportScaleX = scaleX * 2;
     gViewportStates[viewportIndex].viewportScaleY = scaleY * 2;
+
     gViewportStates[viewportIndex].left = centerX - (width / 2);
-    halfHeight = height / 2;
-    gViewportStates[viewportIndex].right = (width / 2) + centerX;
     gViewportStates[viewportIndex].top = centerY - (height / 2);
-    gViewportStates[viewportIndex].bottom = halfHeight + centerY;
+    gViewportStates[viewportIndex].right = (width / 2) + centerX;
+    gViewportStates[viewportIndex].bottom = (height / 2) + centerY;
     gViewportStates[viewportIndex].left = gViewportStates[viewportIndex].left;
     gViewportStates[viewportIndex].top = gViewportStates[viewportIndex].top;
     gViewportStates[viewportIndex].right = gViewportStates[viewportIndex].right;
@@ -235,8 +225,6 @@ void configureMenuViewport(s32 viewportIndex, s32 centerX, s32 centerY, u16 widt
         gViewportStates[viewportIndex].left = 0;
     }
     if (gViewportStates[viewportIndex].top < 0) {
-        halfHeight++;
-        halfHeight--;
         gViewportStates[viewportIndex].top = 0;
     }
     if (gViewportStates[viewportIndex].right >= 0x140) {
@@ -247,12 +235,10 @@ void configureMenuViewport(s32 viewportIndex, s32 centerX, s32 centerY, u16 widt
     }
 
     guPerspective(&gViewportStates[viewportIndex].projection, &gViewportStates[viewportIndex].perspectiveNorm, 70.0f,
-                  aspect, 10.0f, gMenuViewportFarClip, 0.5f);
+                  aspect, 10.0f, 10000.0f, 0.5f);
     guPerspective(&gViewportStates[viewportIndex].overlayProjection,
-                  &gViewportStates[viewportIndex].overlayPerspectiveNorm, 70.0f, aspect, 10.0f,
-                  gMenuViewportOverlayFarClip, 0.5f);
+                  &gViewportStates[viewportIndex].overlayPerspectiveNorm, 70.0f, aspect, 10.0f, 15000.0f, 0.5f);
 }
-#endif
 
 void setViewportOverlayColor(s32 arg0, s32 arg1, s32 arg2, s32 arg3) {
     ViewportState *viewport = &gViewportStates[arg0];

@@ -421,6 +421,12 @@ and control flow already match and only register *names* differ.
   symbol in `symbol_addrs.txt` and migrate it to the following function with
   `function_owner` and `force_migration:true`. This keeps the fix reproducible
   across `make extract`; edits to generated assembly are discarded.
+- **Choose the C form according to the original float's section.** With IDO
+  5.3, a scalar global `const f32` can land in `.data`, a global const array
+  lands in early `.rodata`, and a float literal used by a function lands in
+  late rodata. When removing a `GLOBAL_ASM` that owns late-rodata float
+  constants, using the equivalent literals can preserve their ordering and
+  addresses when no other code needs the symbols.
 - **YAML comments are hints, not proof.** Verify actual function/file
   boundaries against disassembly, `symbol_addrs.txt`, and the linker map.
 
