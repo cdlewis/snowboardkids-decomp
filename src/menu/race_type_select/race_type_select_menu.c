@@ -105,16 +105,18 @@ void initRaceTypeSelectMenu(void) {
     gRaceTypeSelectCursorTarget.alpha = 0;
 }
 
-// updateRaceTypeSelectMenu best match: 95.369% (nonmatchings/updateRaceTypeSelectMenu-8239461464121803931/base_1.c)
+// updateRaceTypeSelectMenu best match: 96.609% (nonmatchings/updateRaceTypeSelectMenu-8699393380584516020/base_1.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/race_type_select/race_type_select_menu/updateRaceTypeSelectMenu.s")
 
 #ifdef NON_MATCHING
 void updateRaceTypeSelectMenu(void) {
     u16 sp18[4];
+    s32 nextSelection;
     s32 newInput;
     s32 heldInput;
     s32 pressedUp;
     s32 repeatTimer;
+    s32 canIncrement;
     s32 selection;
     s32 previousSelection;
     s32 pressedUpCopy;
@@ -162,12 +164,14 @@ void updateRaceTypeSelectMenu(void) {
                         repeatTimerCopy = repeatTimer;
                         if ((heldInput & (STICK_DOWN | D_JPAD)) ||
                             ((newInput & (STICK_DOWN | D_JPAD)) && (repeatTimer >= 9) && ((repeatTimer % 3) == 0))) {
+                            canIncrement = selection < 3;
                             if (repeatTimerCopy == 0) {
                                 gMenuInputRepeatTimers = repeatTimerCopy + 1;
                                 repeatTimer = gMenuInputRepeatTimers;
                             }
-                            if (selection < 3) {
-                                gRaceTypeSelection = selection + 1;
+                            if (canIncrement) {
+                                nextSelection = selection + 1;
+                                gRaceTypeSelection = nextSelection;
                                 selection = (u8) (selection + 1);
                             }
                         }
@@ -190,9 +194,11 @@ void updateRaceTypeSelectMenu(void) {
                         enqueueSoundEffect(0x18, 0x32);
                         gMenuSelectionConfirmTimer = 1;
                         cursorTarget = &gRaceTypeSelectCursorTarget;
-                        cursorTarget->state = 2;
-                        (&gRaceTypeSelectCursorTarget)->alpha = 0x100;
+                        (&gRaceTypeSelectCursorTarget)->state = 2;
+                        cursorTarget->alpha = 0x100;
                         gMenuExitSelection = gMenuInputRepeatTimers * 0;
+                        if (cursorTarget) {
+                        }
                     }
                 }
             } else {
