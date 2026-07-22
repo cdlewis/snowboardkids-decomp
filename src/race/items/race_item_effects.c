@@ -222,7 +222,7 @@ extern Gfx gEffectRenderModeCleanupDl[];
 extern RaceItemGfxCommandSource gIdentityFixedTransform;
 extern RaceItemEffectAssetHandles gAssetHandles;
 extern s32 D_801248E0;
-void *gRaceItemTextureEffectDrawLists[4];
+RaceItemDrawNode *gRaceItemTextureEffectDrawLists[4];
 extern RaceItemDrawLists D_801121E0;
 extern s16 gRaceCourseIndex;
 extern u8 gRaceUpdatePaused;
@@ -981,41 +981,62 @@ void spawnRaceUiSparkle(s32 arg0, s32 arg1, s16 arg2, s16 arg3, s16 arg4) {
     }
 }
 
-// renderRaceItemTextureEffects best match: 99.422% (nonmatchings/renderRaceItemTextureEffects-8201208972835473051/base_12.c)
-
-#pragma GLOBAL_ASM("asm/nonmatchings/race/items/race_item_effects/renderRaceItemTextureEffects.s")
-
-#ifdef NON_MATCHING
 void renderRaceItemTextureEffects(RaceItemTextureActor *arg0) {
-    volatile u8 pad[0xC];
-    RaceItemGfxCommandSource sp94;
-    volatile u8 pad2[0x10];
-    s32 textureOffset;
-    RaceItemDrawNode **head;
+    register RaceItemTextureActor *actor;
+    s32 i;
     RaceItemDrawNode *node;
-    Gfx *gfx;
+    RaceItemGfxCommandSource transform;
 
-    sp94 = gIdentityFixedTransform;
+    actor = arg0;
+    transform = gIdentityFixedTransform;
     do {
         if (gRenderMatricesDirty != 0) {
-            head = (RaceItemDrawNode **) gRaceItemTextureEffectDrawLists;
+            i = 0;
             do {
-                node = *(head++);
+                node = gRaceItemTextureEffectDrawLists[i++];
                 if (node != NULL) {
                     do {
                         node->matrixDirty = 1;
                         node = node->next;
                     } while (node != NULL);
                 }
-            } while (head != D_801121E0.heads);
+            } while (D_801121E0.heads != &gRaceItemTextureEffectDrawLists[i]);
         }
-        gfx = gRegionAllocPtr++;
-        gfx->words.w1 = (u32) gEffectRenderModeSetupDl;
-        gfx->words.w0 = 0x06000000;
-        do { head = (RaceItemDrawNode **) gRaceItemTextureEffectDrawLists; do { textureOffset = 0; do { node = *head; if (node != NULL) { { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xFD500000; _g->words.w1 = *((u32 *) ((((u8 *) arg0) + textureOffset) + 0x18)); } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xF5500000; _g->words.w1 = 0x07080200; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xE6000000; _g->words.w1 = 0; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xF3000000; _g->words.w1 = 0x0703F800; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xE7000000; _g->words.w1 = 0; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xF5400200; _g->words.w1 = 0x80200; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xF2000000; _g->words.w1 = 0x3C03C; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xFD100000; _g->words.w1 = *((u32 *) ((((u8 *) arg0) + textureOffset) + 0x28)); } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xE8000000; _g->words.w1 = 0; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xF5000100; _g->words.w1 = 0x07000000; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xE6000000; _g->words.w1 = 0; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xF0000000; _g->words.w1 = 0x0703C000; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xE7000000; _g->words.w1 = 0; } ; } if (node != NULL) { do { if (isPositionNearCurrentRaceViewportCamera(node->pos) != 0) { if (node->matrixDirty != 0) { node->matrixDirty = 0; sp94.x = node->pos->x; sp94.y = node->pos->y; sp94.z = node->pos->z; node->matrix = allocFixedTransformMatrix(&sp94); } gfx = gRegionAllocPtr++; gfx->words.w0 = 0x01020040; gfx->words.w1 = (u32) node->matrix; gfx = gRegionAllocPtr++; gfx->words.w0 = 0x01000040; gfx->words.w1 = (u32) gViewportMatrix; gfx = gRegionAllocPtr++; gfx->words.w0 = 0x0400103F; gfx->words.w1 = node->displayList; gfx = gRegionAllocPtr++; gfx->words.w0 = 0xB1060402; gfx->words.w1 = 0x00060200; } node = node->next; } while (node != NULL); } head++; textureOffset += 4; } while (head != D_801121E0.heads); gfx = gRegionAllocPtr++; gfx->words.w0 = 0x06000000; gfx->words.w1 = (u32) gEffectRenderModeCleanupDl; } while (0); } while (0);
+        gSPDisplayList(gRegionAllocPtr++, gEffectRenderModeSetupDl);
+        i = 0;
+        do {
+            node = gRaceItemTextureEffectDrawLists[i];
+            if (node != NULL) {
+                gDPLoadTextureBlock_4b(gRegionAllocPtr++, actor->images[i], G_IM_FMT_CI,
+                                       16, 16, 0, G_TX_CLAMP, G_TX_CLAMP, G_TX_NOMASK,
+                                       G_TX_NOMASK, G_TX_NOLOD, G_TX_NOLOD);
+                gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, actor->palettes[i]);
+            }
+            if (node != NULL) {
+                do {
+                    if (isPositionNearCurrentRaceViewportCamera(node->pos) != 0) {
+                        if (node->matrixDirty != 0) {
+                            node->matrixDirty = 0;
+                            transform.x = node->pos->x;
+                            transform.y = node->pos->y;
+                            transform.z = node->pos->z;
+                            node->matrix = allocFixedTransformMatrix(&transform);
+                        }
+                        gSPMatrix(gRegionAllocPtr++, node->matrix,
+                                  G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+                        gSPMatrix(gRegionAllocPtr++, gViewportMatrix,
+                                  G_MTX_NOPUSH | G_MTX_MUL | G_MTX_MODELVIEW);
+                        gSPVertex(gRegionAllocPtr++, node->displayList, 4, 0);
+                        gSP2Triangles(gRegionAllocPtr++, 3, 2, 1, 0, 3, 1, 0, 0);
+                    }
+                    node = node->next;
+                } while (node != NULL);
+            }
+            i++;
+        } while (D_801121E0.heads != &gRaceItemTextureEffectDrawLists[i]);
+        gSPDisplayList(gRegionAllocPtr++, gEffectRenderModeCleanupDl);
     } while (0);
 }
-#endif
 
 void updateRaceItemTextureEffects(RaceItemEffectActor *arg0) {
     s32 i;
