@@ -43,6 +43,11 @@ isolation rather than importing a whole batch, since some of its output (e.g.
   `case N: break;` identical to `default`) — state-machine switches frequently
   need this explicit terminal case even when the post-switch cleanup handles
   that same state.
+- **Restoring a C jump table can expose padding that an assembly include hid.**
+  An included function's late-rodata fragment is padded at its boundary, while
+  a decompiled switch table can be coalesced directly with later constants in
+  the same C object. If text matches but all later rodata/BSS symbols shift,
+  compare the table's trailing padding before changing unrelated data.
 - **A no-op expression in a switch selector can change temp register without
   changing control flow** (e.g. `switch (x ^ 0)` vs `switch (x)`). Reach for
   this only when the diff is a pure register-name swap on the dispatch value.
@@ -215,6 +220,11 @@ and control flow already match and only register *names* differ.
 
 ## IDO codegen: loop shape and strength reduction
 
+- **A terminal backward `goto` can align an unreachable epilogue.** IDO may
+  emit `.align 5` between an infinite loop's final branch and its dead
+  epilogue. The number of resulting nops depends on the function's offset in
+  the full translation unit, so an isolated matching workspace can show excess
+  padding even when the integrated function has the exact target length.
 - **Pointer-bump `do`/`while` vs. strength-reduced indexed `for`.** A loop
   that bumps a pointer over an array makes IDO hoist the shared base address
   into a callee-saved register and reuse it everywhere, forcing an extra saved
