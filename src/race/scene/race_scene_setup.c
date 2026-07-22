@@ -1,4 +1,5 @@
 #include "common.h"
+#include "assets.h"
 #include "game/engine/relocatable_heap.h"
 #include "game/engine/asset_manager.h"
 #include "game/race/scene/race_scene_setup.h"
@@ -23,17 +24,6 @@ extern RomAssetRange gCharacterRawAssetRanges[];
 extern RomAssetRange gCharacterTextureAssetRanges[];
 extern RomAssetRange gCharacterModelAssetRanges[];
 
-extern u8 D_E35C0[];
-extern u8 D_EC9A0[];
-extern u8 D_F6160[];
-extern u8 D_FEDA0[];
-extern u8 D_10AAB0[];
-extern u8 D_118670[];
-extern u8 D_125C90[];
-extern u8 D_131A90[];
-extern u8 D_1384B0[];
-extern u8 D_13F3B0[];
-extern u8 D_145380[];
 extern u8 D_147910[];
 extern u8 D_14B450[];
 extern u8 D_1502A0[];
@@ -91,99 +81,99 @@ void loadRaceCourseAssets(void) {
 
     switch (gRaceCourseIndex) {
     case 0:
-        size = D_EC9A0 - D_E35C0;
+        size = ASSET_SIZE(LEVEL_BIG_SNOWMAN);
         gAssetHandles[0x8] = allocRelocatableHeapBlock(size);
         lockRelocatableHeapBlock(gAssetHandles[0x8]);
-        dmaReadRom(D_E35C0, getRelocatableHeapBlockBase(gAssetHandles[0x8]), size);
+        dmaReadRom((u32)&LEVEL_BIG_SNOWMAN_ROM_START, getRelocatableHeapBlockBase(gAssetHandles[0x8]), size);
         loadCompressedRomAsset(D_163410, D_171480, 9);
         loadCompressedRomAsset(D_21D9D0, D_222500, 0x1B);
         initRaceCourseSurfaceData();
         loadCompressedRomAsset(D_1EC0F0, D_1EC4A0, 0x1D);
         break;
     case 1:
-        size = D_F6160 - D_EC9A0;
+        size = ASSET_SIZE(LEVEL_SUNSET_ROCK);
         gAssetHandles[0x8] = allocRelocatableHeapBlock(size);
         lockRelocatableHeapBlock(gAssetHandles[0x8]);
-        dmaReadRom(D_EC9A0, getRelocatableHeapBlockBase(gAssetHandles[0x8]), size);
+        dmaReadRom((u32)&LEVEL_SUNSET_ROCK_ROM_START, getRelocatableHeapBlockBase(gAssetHandles[0x8]), size);
         loadCompressedRomAsset(D_171480, D_17D220, 9);
         loadCompressedRomAsset(D_222500, D_2274A0, 0x1B);
         initRaceCourseSurfaceData();
         loadCompressedRomAsset(D_1EC4A0, D_1EC810, 0x1D);
         break;
     case 2:
-        size = D_FEDA0 - D_F6160;
+        size = ASSET_SIZE(LEVEL_NIGHT_HIGHWAY);
         gAssetHandles[0x8] = allocRelocatableHeapBlock(size);
         lockRelocatableHeapBlock(gAssetHandles[0x8]);
-        dmaReadRom(D_F6160, getRelocatableHeapBlockBase(gAssetHandles[0x8]), size);
+        dmaReadRom((u32)&LEVEL_NIGHT_HIGHWAY_ROM_START, getRelocatableHeapBlockBase(gAssetHandles[0x8]), size);
         loadCompressedRomAsset(D_17D220, D_186910, 9);
         loadCompressedRomAsset(D_2274A0, D_22AE50, 0x1B);
         initRaceCourseSurfaceData();
         loadCompressedRomAsset(D_1EC810, D_1ECD00, 0x1D);
         break;
     case 3:
-        size = D_10AAB0 - D_FEDA0;
+        size = ASSET_SIZE(LEVEL_GRASS_VALLEY);
         gAssetHandles[0x8] = allocRelocatableHeapBlock(size);
         lockRelocatableHeapBlock(gAssetHandles[0x8]);
-        dmaReadRom(D_FEDA0, getRelocatableHeapBlockBase(gAssetHandles[0x8]), size);
+        dmaReadRom((u32)&LEVEL_GRASS_VALLEY_ROM_START, getRelocatableHeapBlockBase(gAssetHandles[0x8]), size);
         loadCompressedRomAsset(D_186910, D_197490, 9);
         loadCompressedRomAsset(D_22AE50, D_2308E0, 0x1B);
         initRaceCourseSurfaceData();
         loadCompressedRomAsset(D_1ECD00, D_1ED910, 0x1D);
         break;
     case 4:
-        size = D_118670 - D_10AAB0;
+        size = ASSET_SIZE(LEVEL_DIZZY_LAND);
         gAssetHandles[0x8] = allocRelocatableHeapBlock(size);
         lockRelocatableHeapBlock(gAssetHandles[0x8]);
-        dmaReadRom(D_10AAB0, getRelocatableHeapBlockBase(gAssetHandles[0x8]), size);
+        dmaReadRom((u32)&LEVEL_DIZZY_LAND_ROM_START, getRelocatableHeapBlockBase(gAssetHandles[0x8]), size);
         loadCompressedRomAsset(D_197490, D_1A5620, 9);
         loadCompressedRomAsset(D_2308E0, D_2349E0, 0x1B);
         initRaceCourseSurfaceData();
         loadCompressedRomAsset(D_1ED910, D_1EDC80, 0x1D);
         break;
     case 5:
-        size = D_125C90 - D_118670;
+        size = ASSET_SIZE(LEVEL_QUICKSAND_VALLEY);
         gAssetHandles[0x8] = allocRelocatableHeapBlock(size);
         lockRelocatableHeapBlock(gAssetHandles[0x8]);
-        dmaReadRom(D_118670, getRelocatableHeapBlockBase(gAssetHandles[0x8]), size);
+        dmaReadRom((u32)&LEVEL_QUICKSAND_VALLEY_ROM_START, getRelocatableHeapBlockBase(gAssetHandles[0x8]), size);
         loadCompressedRomAsset(D_1A5620, D_1B3160, 9);
         loadCompressedRomAsset(D_2349E0, D_23A7D0, 0x1B);
         initRaceCourseSurfaceData();
         loadCompressedRomAsset(D_1EDC80, D_1EE060, 0x1D);
         break;
     case 6:
-        size = D_131A90 - D_125C90;
+        size = ASSET_SIZE(LEVEL_SILVER_MOUNTAIN);
         gAssetHandles[0x8] = allocRelocatableHeapBlock(size);
         lockRelocatableHeapBlock(gAssetHandles[0x8]);
-        dmaReadRom(D_125C90, getRelocatableHeapBlockBase(gAssetHandles[0x8]), size);
+        dmaReadRom((u32)&LEVEL_SILVER_MOUNTAIN_ROM_START, getRelocatableHeapBlockBase(gAssetHandles[0x8]), size);
         loadCompressedRomAsset(D_1B3160, D_1C24B0, 9);
         loadCompressedRomAsset(D_23A7D0, D_23E9D0, 0x1B);
         initRaceCourseSurfaceData();
         loadCompressedRomAsset(D_1EE060, D_1EEEA0, 0x1D);
         break;
     case 7:
-        size = D_1384B0 - D_131A90;
+        size = ASSET_SIZE(LEVEL_ANIMAL_LAND);
         gAssetHandles[0x8] = allocRelocatableHeapBlock(size);
         lockRelocatableHeapBlock(gAssetHandles[0x8]);
-        dmaReadRom(D_131A90, getRelocatableHeapBlockBase(gAssetHandles[0x8]), size);
+        dmaReadRom((u32)&LEVEL_ANIMAL_LAND_ROM_START, getRelocatableHeapBlockBase(gAssetHandles[0x8]), size);
         loadCompressedRomAsset(D_1C24B0, D_1C9630, 9);
         loadCompressedRomAsset(D_23E9D0, D_23FCC0, 0x1B);
         initRaceCourseSurfaceData();
         break;
     case 8:
-        size = D_13F3B0 - D_1384B0;
+        size = ASSET_SIZE(LEVEL_NINJA_LAND);
         gAssetHandles[0x8] = allocRelocatableHeapBlock(size);
         lockRelocatableHeapBlock(gAssetHandles[0x8]);
-        dmaReadRom(D_1384B0, getRelocatableHeapBlockBase(gAssetHandles[0x8]), size);
+        dmaReadRom((u32)&LEVEL_NINJA_LAND_ROM_START, getRelocatableHeapBlockBase(gAssetHandles[0x8]), size);
         loadCompressedRomAsset(D_1C9630, D_1D3070, 9);
         loadCompressedRomAsset(D_23FCC0, D_241160, 0x1B);
         initRaceCourseSurfaceData();
         loadCompressedRomAsset(D_1EEEA0, D_1EF1D0, 0x1D);
         break;
     case 9:
-        size = D_145380 - D_13F3B0;
+        size = ASSET_SIZE(LEVEL_ROOKIE_MOUNTAIN);
         gAssetHandles[0x8] = allocRelocatableHeapBlock(size);
         lockRelocatableHeapBlock(gAssetHandles[0x8]);
-        dmaReadRom(D_13F3B0, getRelocatableHeapBlockBase(gAssetHandles[0x8]), size);
+        dmaReadRom((u32)&LEVEL_ROOKIE_MOUNTAIN_ROM_START, getRelocatableHeapBlockBase(gAssetHandles[0x8]), size);
         loadCompressedRomAsset(D_1D3070, D_1D82B0, 9);
         loadCompressedRomAsset(D_241160, D_2427D0, 0x1B);
         initRaceCourseSurfaceData();

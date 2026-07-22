@@ -13,4 +13,8 @@ void submitFramebufferRenderTask(u8 frameIndex);
 void setBootFadeColor(u8 a0, u8 a1, u8 a2);
 void setTitleFadeColor(u8 a0, u8 a1, u8 a2);
 
+#define USE_ASSET(id)           \
+    extern u32 *id##_ROM_START; \
+    extern u32 *id##_ROM_END
+
 #endif
