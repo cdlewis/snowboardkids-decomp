@@ -938,7 +938,7 @@ extern RacePlayerByteField gRacePlayerItemTargetFlags[];
 extern s16 gFrameCounter;
 extern RaceUiAssetHandles gAssetHandles;
 extern s16 gRaceScoreAttackPointTarget;
-extern s16 D_801222F2;
+extern s16 gRaceCourseCoinMarkerCount;
 extern s16 D_801222F0;
 extern RaceUiRankTrigger *D_8012228C;
 extern void *gRaceOverlayRenderCallbackList;
@@ -5441,7 +5441,7 @@ void initRaceCourseCoinMarkers(RaceUiGfxCommandActor *actor) {
             marker++;
         } while (marker->sentinel != -1);
     }
-    D_801222F2 = markerCount;
+    gRaceCourseCoinMarkerCount = markerCount;
     actor->count = markerCount;
     if (markerCount != 0) {
         gAssetHandles.resultTextHandle = allocRelocatableHeapBlock(markerCount * sizeof(RaceUiGfxCommandDest));
