@@ -275,6 +275,9 @@ and control flow already match and only register *names* differ.
   local lands one slot too high, declaring an additional — even register-only
   — local *before* it shifts the real local down to the target offset.
   Declaring locals in the same order as a matched sibling is the safe move.
+  Even an unused narrow local can preserve the frame size and alignment of
+  every lower slot, so do not remove one merely because it emits no direct
+  load or store.
 - **Combine block scopes with declaration order to tune small frames.** Moving
   non-overlapping pointer iterators into their actual loop scopes can shrink an
   otherwise-correct frame without changing the instruction stream. An unused
