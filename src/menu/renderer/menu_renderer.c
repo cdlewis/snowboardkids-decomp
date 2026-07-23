@@ -154,69 +154,68 @@ extern s16 gMenuViewportCenterX;
 extern s16 gMenuViewportCenterY;
 extern u16 D_800B51D0[];
 
-// drawMenuAssetRegion best match: 89.734% (nonmatchings/drawMenuAssetRegion-1219509448159986855/base_88.c)
+// drawMenuAssetRegion best match: 99.808% (nonmatchings/drawMenuAssetRegion-1645024839200431810/base_3.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/renderer/menu_renderer/drawMenuAssetRegion.s")
 
 #ifdef NON_MATCHING
-void drawMenuAssetRegion(s16 x, s16 y, MenuRenderAssetTableHeader *table, u16 entryIndex, u16 scaleX, u16 scaleY,
+void drawMenuAssetRegion(s16 x, s16 y, s32 tableAddress, u16 entryIndex, u16 scaleX, u16 scaleY,
                          u8 startS, u8 startT, u8 width, u8 height) {
-    s32 x0;
-    s32 y0;
-    register s32 x1;
-    register s32 y1;
-    s32 clipTop;
-    s32 clipLeft;
-    s16 clipBottom;
-    s16 clipRight;
-    s32 s;
-    s32 t;
-    register u16 sy;
-    register u16 sx;
-    register MenuRenderAssetTableEntry *entry;
-    register u8 *paletteBase;
+    MenuRenderAssetTableEntry *entry;
+    s32 minY;
+    s32 minX;
+    s32 left;
+    u8 *paletteBase;
+    s32 top;
+    s32 halfY;
+    s32 right;
+    s32 bottom;
+    s32 texS;
+    s32 texT;
+    s32 halfX;
+    u16 scaleXValue;
+    u16 scaleYValue;
+    s16 maxX;
+    s16 maxY;
 
-    paletteBase = (table->entryCount * sizeof(MenuRenderAssetTableEntry)) + (u8 *)table +
-                  sizeof(MenuRenderAssetTableEntry);
-    x0 = (x + gMenuViewportCenterX) * 4;
-    y0 = (y + gMenuViewportCenterY) * 4;
-    x1 = (((width * scaleX) << 2) >> 5) + x0;
-    sx = scaleX;
-    sy = scaleY;
-    y1 = (((height * scaleY) << 2) >> 5) + y0;
-    s = startS << 5;
-    t = startT << 5;
+    entry = &((MenuRenderAssetTableHeader *)tableAddress)->entries[entryIndex];
+    paletteBase = (((MenuRenderAssetTableHeader *)tableAddress)->entryCount * sizeof(MenuRenderAssetTableEntry)) +
+                  (u8 *)tableAddress + sizeof(MenuRenderAssetTableEntry);
+    scaleXValue = scaleX;
+    scaleYValue = scaleY;
+    left = (x + gMenuViewportCenterX) << 2;
+    top = (y + gMenuViewportCenterY) << 2;
+    right = (((width * scaleXValue) << 2) >> 5) + left;
+    bottom = height;
+    bottom *= scaleYValue;
+    bottom = ((bottom << 2) >> 5) + top;
+    // Keeping these assignments on one source line preserves IDO's instruction scheduling.
+    texS = startS << 5; texT = startT << 5; halfY = gMenuViewportHeight / 2; minY = (s16)((gMenuViewportCenterY - halfY) << 2); maxY = (gMenuViewportCenterY + halfY) << 2; halfX = gMenuViewportWidth / 2; minX = (s16)((gMenuViewportCenterX - halfX) << 2);
+    maxX = (gMenuViewportCenterX + halfX) << 2;
 
-    clipTop = (gMenuViewportCenterY - (gMenuViewportHeight / 2)) * 4;
-    clipBottom = (gMenuViewportCenterY + (gMenuViewportHeight / 2)) * 4;
-    clipLeft = (gMenuViewportCenterX - (gMenuViewportWidth / 2)) * 4;
-    clipRight = (gMenuViewportCenterX + (gMenuViewportWidth / 2)) * 4;
-
-    if ((x0 < clipRight) && (y0 < clipBottom) && (x1 >= clipLeft) && (y1 >= clipTop)) {
-        if (x0 < clipLeft) {
-            s += (((clipLeft - x0) * 8) << 5) / scaleX;
-            x0 = clipLeft;
+    if ((left < maxX) && (top < maxY) && (right >= minX) && (bottom >= minY)) {
+        if (left < minX) {
+            do {
+                texS = ((((minX - left) << 3) << 5) / scaleXValue) + texS;
+                left = minX;
+            } while (0);
         }
-        if (y0 < clipTop) {
-            t += (((clipTop - y0) * 8) << 5) / scaleY;
-            y0 = clipTop;
+        if (top < minY) {
+            texT = ((((minY - top) << 3) << 5) / scaleYValue) + texT;
+            top = minY;
         }
-        if (x1 >= clipRight) {
-            x1 = clipRight - 4;
+        if (right >= maxX) {
+            right = maxX - 4;
         }
-        if (y1 >= clipBottom) {
-            y1 = clipBottom - 4;
+        if (bottom >= maxY) {
+            bottom = maxY - 4;
         }
 
-        entry = &table->entries[entryIndex];
-        entry += 0;
-        gDPLoadTextureTile_4b(gRegionAllocPtr++, (u8 *)table + (0, entry->imageOffset) + 0x80000000,
-                              G_IM_FMT_CI, entry->width, entry->height, 0, 0, entry->width,
-                              entry->height, 0, G_TX_CLAMP, G_TX_CLAMP, G_TX_NOMASK,
-                              G_TX_NOMASK, G_TX_NOLOD, G_TX_NOLOD);
-        gDPLoadTLUT_pal16(gRegionAllocPtr++, 0,
-                          paletteBase + (entry->textureIndex << 5) + 0x80000000);
-        gSPTextureRectangle(gRegionAllocPtr++, x0, y0, x1, y1, G_TX_RENDERTILE, s, t,
-                            (u16)(0x8000 / sx), (u16)(0x8000 / sy));
+        gDPLoadTextureTile_4b(gRegionAllocPtr++, entry->imageOffset + (u8 *)tableAddress + 0x80000000, G_IM_FMT_CI, entry->width,
+                              entry->height, 0, 0, entry->width, entry->height, 0, G_TX_CLAMP, G_TX_CLAMP,
+                              G_TX_NOMASK, G_TX_NOMASK, G_TX_NOLOD, G_TX_NOLOD);
+        gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, paletteBase + (entry->textureIndex << 5) + 0x80000000);
+        gSPTextureRectangle(gRegionAllocPtr++, left, top, right, bottom, G_TX_RENDERTILE, texS, texT,
+                            (u16)(0x8000 / scaleXValue), (u16)(0x8000 / scaleYValue));
     }
 }
 #endif
