@@ -2627,7 +2627,7 @@ void drawCourseSelectCompletePanels(CourseSelectPlayerPanelsActor *actor) {
     }
 }
 
-// updateCourseSelectCompletePanels best match: 99.468% (nonmatchings/updateCourseSelectCompletePanels-6887713755923057488/base_1.c)
+// updateCourseSelectCompletePanels best match: 99.574% (nonmatchings/updateCourseSelectCompletePanels-1645024839200431810/base_3.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/course_select/course_select_ui/updateCourseSelectCompletePanels.s")
 
 #ifdef NON_MATCHING
@@ -2667,7 +2667,7 @@ void updateCourseSelectCompletePanels(CourseSelectWidgetActor *arg0) {
                         base->playerPanelFadeAlpha[i] = 0x100;
                     }
                 }
-                playerState = gRacePlayers[i].menuState;
+                playerState = ((((((gRacePlayers[i].menuState & 0xFFu) & 0xFFu) & 0xFFu) & 0xFFu) & 0xFFu) & 0xFFu) & 0xFFu;
                 if (playerState == 1) {
                     base->playerPanelFadeAlpha[i] = 0;
                 }
