@@ -2,6 +2,7 @@
 #define CALLBACK_TASK_SCHEDULER_IMPLEMENTATION
 #include "game/engine/callback_task_scheduler.h"
 #undef CALLBACK_TASK_SCHEDULER_IMPLEMENTATION
+#include "game/engine/system_runtime.h"
 
 typedef struct CallbackTaskGroup {
     CallbackTask tasks[4];
@@ -25,22 +26,18 @@ extern u16 gFreeCallbackTaskType4Count;
 extern CallbackTask gCallbackTaskActiveListSentinel;
 extern CallbackTask *gCallbackTaskActiveListHead;
 extern CallbackTaskSchedulerBss D_80112770;
-#pragma weak createCallbackTaskPreservingArgsS32 = createCallbackTaskPreservingArgs
-void *createCallbackTaskPreservingArgsS32(void (*callback)(), s32 type, s32 priority);
-#pragma weak createCallbackTaskS32 = createCallbackTask
-void *createCallbackTaskS32(void (*callback)(), s32 type, s32 priority);
-
-// initCallbackTaskScheduler best match: 99.412%
-#pragma GLOBAL_ASM("asm/nonmatchings/engine/callback_task_scheduler/initCallbackTaskScheduler.s")
-
-#ifdef NON_MATCHING
 extern CallbackTaskGroup D_80112898;
 extern CallbackTaskGroup D_801129B0;
 extern CallbackTaskGroup D_80112AC8;
 extern CallbackTaskGroup D_80112BE0;
 extern CallbackTaskGroup D_80121820;
-extern void resetRenderCallbackQueues(void);
+#pragma weak createCallbackTaskPreservingArgsS32 = createCallbackTaskPreservingArgs
+void *createCallbackTaskPreservingArgsS32(void (*callback)(), s32 type, s32 priority);
+#pragma weak createCallbackTaskS32 = createCallbackTask
+void *createCallbackTaskS32(void (*callback)(), s32 type, s32 priority);
 
+// The empty condition steers IDO's instruction scheduler to advance task3
+// immediately after storing it while leaving task0's advance after its store.
 void initCallbackTaskScheduler(s32 arg0) {
     CallbackTask **pool;
     CallbackTaskGroup *task0;
@@ -49,14 +46,7 @@ void initCallbackTaskScheduler(s32 arg0) {
     CallbackTaskGroup *task3;
     CallbackTaskGroup *end;
 
-    gCallbackTaskActiveListHead = NULL;
-    resetRenderCallbackQueues();
- pool = gFreeCallbackTaskPool; task0 = &D_80112898; task1 = &D_801129B0; task2 = &D_80112AC8; task3 = &D_80112BE0; end = &D_80121820; loop: pool[3] = &task3->tasks[0]; task3++; pool[1] = &task1->tasks[0];
-    pool[2] = &task2->tasks[0];
-    pool[0] = &task0->tasks[0];
-    task0++;
-    task2++;
-    task1++;
+    gCallbackTaskActiveListHead = NULL; resetRenderCallbackQueues(); pool = gFreeCallbackTaskPool; task0 = &D_80112898; task1 = &D_801129B0; task2 = &D_80112AC8; task3 = &D_80112BE0; end = &D_80121820; loop: pool[3] = &task3->tasks[0]; task3++; pool[1] = &task1->tasks[0]; pool[2] = &task2->tasks[0]; if (((!task0) && (!task0)) && (!task0)) { } task2++; task1++; pool[0] = &task0->tasks[0]; task0++;
     task0[-1].tasks[1].isActive = 0;
     task0[-1].tasks[1].callbackTimer = 0;
     task0[-1].tasks[2].isActive = 0;
@@ -101,7 +91,6 @@ void initCallbackTaskScheduler(s32 arg0) {
         break;
     }
 }
-#endif
 
 // Mirrors the linked list head gCallbackTaskActiveListHead into the global cursor gCurrentCallbackTask,
 // then for each node clears callbackTimer and invokes its callback with a
