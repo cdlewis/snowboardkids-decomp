@@ -20,6 +20,7 @@ typedef struct {
 } CharacterId;
 
 CharacterSelectState gCharacterSelectHudState;
+u8 D_8010AE68;
 
 extern void releaseMenuAssetHandles(void);
 extern void enqueueSoundEffect(s32, s32);
@@ -51,7 +52,6 @@ extern u8 D_60F1A0[];
 extern u8 gMainMenuSecretCodeUnlocked;
 extern u8 D_800EC9E5;
 extern u8 gMenuExitSelection;
-extern u8 D_8010AE68;
 extern u8 gPlayerCount;
 extern u8 gPendingFramebufferSwapCount;
 extern u8 gFramebufferSwapHold;
