@@ -2238,12 +2238,13 @@ void updateCourseSelectExtraCourseIconList(CourseSelectWidgetActor *arg0) {
 }
 #endif
 
-// initCourseSelectExtraCourseIconList best match: 98.393% (nonmatchings/initCourseSelectExtraCourseIconList-2663524570355072948/base_5.c)
+// initCourseSelectExtraCourseIconList best match: 99.018% (nonmatchings/initCourseSelectExtraCourseIconList-1645024839200431810/base_9.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/course_select/course_select_ui/initCourseSelectExtraCourseIconList.s")
 
 #ifdef NON_MATCHING
 void initCourseSelectExtraCourseIconList(CourseSelectWidgetActor *arg0) {
     CourseSelectExtraCourseIconListActor *actor;
+    u8 playerCount;
     s16 *xLayout;
     s16 *yLayout;
     s32 layoutIndex;
@@ -2272,7 +2273,8 @@ void initCourseSelectExtraCourseIconList(CourseSelectWidgetActor *arg0) {
             actor->itemCounts[playerIndex] = 0;
             actor->alpha[playerIndex] = 0x100;
 
-            if (gPlayerCount == 1) {
+            playerCount = gPlayerCount;
+            if (playerCount == 1) {
                 iconXOffset = 8;
             } else {
                 iconXOffset = 4;
