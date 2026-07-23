@@ -93,7 +93,7 @@ extern void (*D_8011241C)(void);
 extern u8 gPlayerCount;
 extern s32 gMenuFlowState;
 
-// initMultiplayerCourseSelectMenu best match: 94.628% (nonmatchings/initMultiplayerCourseSelectMenu-3379532139742180785/base_66.c)
+// initMultiplayerCourseSelectMenu best match: 95.861% (nonmatchings/initMultiplayerCourseSelectMenu/base_11.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/course_select/multiplayer_course_select_menu/initMultiplayerCourseSelectMenu.s")
 
 #ifdef NON_MATCHING
@@ -241,7 +241,7 @@ void initMultiplayerCourseSelectMenu(void) {
                     do {
                         sum += save->characterState[k * 3 + j];
                         k++;
-                    } while (k < 3);
+                    } while ((k < 3) & 0xFF);
                     j++;
                     if (sum != -3) {
                         *availableColumn = one;
@@ -358,7 +358,8 @@ void initMultiplayerCourseSelectMenu(void) {
                 }
             }
 
-            gRacePlayers[playerIndex].menuSelection = D_8010AEF8[playerIndex][j];
+            i = D_8010AEF8[playerIndex][j];
+            gRacePlayers[playerIndex].menuSelection = i;
             gCourseSelectStatus.unk0[playerIndex] = 0;
             gCourseSelectStatus.unk4[playerIndex] = 0;
             gCourseSelectStatus.unk8[playerIndex] = 0;
