@@ -3,6 +3,8 @@
 #include "game/engine/asset_manager.h"
 #include "game/race/camera/race_camera.h"
 #include "game/engine/callback_task_scheduler.h"
+#include "game/engine/relocatable_heap.h"
+#include "game/menu/character_select/character_select_menu.h"
 #include "game/menu/course_select/course_select_menu.h"
 #include "game/engine/game_task_scheduler.h"
 #include "game/menu/renderer/menu_renderer.h"
@@ -56,22 +58,25 @@ typedef struct {
     /* 0x09 */ u8 pad9[0x603];
 } CourseSelectSelection;
 
-typedef struct ObjectA3E0 {
+typedef struct {
+    /* 0x0000 */ u8 pad0[0x78D7];
+    /* 0x78D7 */ u8 courseUnlockFlags;
+} CourseSelectSaveData;
+
+typedef struct MenuCameraObject {
     /* 0x00 */ u8 pad0[0x24];
-    /* 0x24 */ s32 unk24;
+    /* 0x24 */ s32 depth;
     /* 0x28 */ u8 pad28[4];
-    /* 0x2C */ void (*unk2C)(void);
+    /* 0x2C */ void (*update)(void);
     /* 0x30 */ u8 pad30[0x80];
-} ObjectA3E0;
+} MenuCameraObject;
 
 typedef union {
     CourseSelectSelection *selection;
-    ObjectA3E0 *object;
+    MenuCameraObject *object;
 } CourseSelectPointer;
 
-extern u8 D_5C5320[];
-extern f32 D_800E0A30;
-extern ObjectA3E0 *gCurrentMenuCameraObject;
+extern MenuCameraObject *gCurrentMenuCameraObject;
 extern u16 gCourseDetailsPreviewCourseTiles[];
 extern s16 gMenuFadeAlpha;
 extern s16 gMenuChoicePromptState;
@@ -139,8 +144,8 @@ extern s8 gCourseDetailsPreviewPage;
 extern s16 gCoursePreviewViewportHeight;
 extern s8 gCourseDetailsCloseFromBack;
 extern s16 gAssetHandles[];
-extern ObjectA3E0 D_801121E0[];
-extern ObjectA3E0 D_80112340;
+extern MenuCameraObject D_801121E0[];
+extern MenuCameraObject D_80112340;
 extern u8 gPlayerCount;
 extern u8 gCourseSelectSelectedCourseId;
 extern s8 gCourseSelectSelectedCourseSavedSlot;
@@ -157,41 +162,24 @@ extern void releaseMenuAssetHandles(void);
 extern void requestMusicSequenceBank(s32);
 extern void requestMusicSequenceStop(s32);
 extern void enqueueSoundEffect(s32, s32);
-// initCourseSelectMenu best match: 99.238% (nonmatchings/initCourseSelectMenu-2188069624939011928/base_23.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/menu/course_select/course_select_menu/initCourseSelectMenu.s")
 
-#ifdef NON_MATCHING
 void initCourseSelectMenu(void) {
     u32 size;
     s32 i;
-    s32 zero;
     s32 mask;
-    s32 hasMore;
-    u8 *unlockedCourse;
-    u8 *otherCourse;
-    ObjectA3E0 *obj;
-    char savedUnlocks;
+    s32 showNewCourses;
 
     requestMusicSequenceBank(3);
     resetRaceCameras();
     resetAllViewports();
-    configureViewport(0, 0xE8, 0x78, 0x90, 0xD0, 0xA0, 0xF0, D_800E0A30);
+    configureViewport(0, 0xE8, 0x78, 0x90, 0xD0, 0xA0, 0xF0, 0.6666666865f);
 
-    obj = D_801121E0;
-    unlockedCourse = D_8010AEA0;
-    otherCourse = D_8010AEAC;
-    do {
-        otherCourse++;
-        hasMore = (u32)otherCourse < (u32)&D_8010AEB0;
-        obj++;
-        unlockedCourse++;
-        obj[-1].unk2C = updateMenuCameraObjectLookAtOriginCallback;
-        obj[-1].unk24 = 0xA40000;
-        if ((obj && obj) && obj) {
-        }
-        unlockedCourse[-1] = 0;
-        otherCourse[-1] = 0;
-    } while (hasMore);
+    for (i = 0; i < 4; i++) {
+        D_801121E0[i].update = updateMenuCameraObjectLookAtOriginCallback;
+        D_801121E0[i].depth = 0xA40000;
+        D_8010AEA0[i] = 0;
+        D_8010AEAC[i] = 0;
+    }
 
     gFramebufferSwapDelay = 0;
     gCurrentGameTask->fade = 0xFF;
@@ -216,31 +204,35 @@ void initCourseSelectMenu(void) {
     gCourseDetailsCloseFromBack = 0;
     gRacePlayers.unk8 = 0;
     gRacePlayers.unk6 = 0;
-    D_8010AE64 = 0;
+    gCharacterSelectHudState.playerSelections[0] = 0;
     gActiveMenuTask = 0;
     gCurrentGameTask->timer = 0;
     gMenuExitSelection = 0;
-    gShopMenuDescriptionSeen = 0;
-    gShopMenuShowNewCoursesMessage = 0;
+    showNewCourses = 0;
+    gShopMenuDescriptionSeen = showNewCourses;
+    gShopMenuShowNewCoursesMessage = showNewCourses;
     gCourseDetailsMenuSelection = 0;
     gCourseDetailsPreviewPage = 0;
-    zero = 0;
-    D_8010AED0 = zero;
-    D_8010AEA8 = zero;
-    D_8010AEA4 = zero;
+    D_8010AED0 = 0;
+    D_8010AEA8 = 0;
+    D_8010AEA4 = 0;
     D_8010AEB0 = 0;
     gMenuChoicePromptState = 0;
     D_8010AECC = 0;
     gMenuInputRepeatTimers = 0;
-
     gMenuFadeAlpha = gCurrentGameTask->fade;
+
     mask = 1;
- i = 0; do { savedUnlocks = gGameSaveDataBuffer[0x78D7]; i++; if (mask & savedUnlocks) { if (!(savedUnlocks & (mask << 3))) { gShopMenuShowNewCoursesMessage = 1; gShopMenuDescriptionSeen = 1;
-                gGameSaveDataBuffer[0x78D7] = savedUnlocks | (mask << 3);
+    for (i = 0; i < 3; i++) {
+        if (((CourseSelectSaveData *)gGameSaveDataBuffer)->courseUnlockFlags & mask) {
+            if (!(((CourseSelectSaveData *)gGameSaveDataBuffer)->courseUnlockFlags & (mask << 3))) {
+                gShopMenuShowNewCoursesMessage = 1;
+                gShopMenuDescriptionSeen = 1;
+                ((CourseSelectSaveData *)gGameSaveDataBuffer)->courseUnlockFlags |= mask << 3;
             }
         }
         mask <<= 1;
-    } while (i < 3);
+    }
 
     if (gCourseSelectModeSelection == 2) {
         gCourseSelectModeSelection = 0;
@@ -249,46 +241,22 @@ void initCourseSelectMenu(void) {
     setCurrentGameTaskCallback(updateCourseSelectModeMenu, 0);
     updateCallbackTasks();
 
-    gCourseSelectStatus.unk0Array[zero] = zero;
-    D_8010AF1C = zero;
-    D_8010AF20 = 0;
-    D_8010AF24 = 0;
-    D_8010AF28 = 0;
-    D_8010AF2C = 0;
-    D_8010AF34 = zero;
-    D_8010AF3C = 0;
-    D_8010AF19 = 0;
-    D_8010AF1D = 0;
-    D_8010AF21 = zero;
-    D_8010AF25 = 0;
-    D_8010AF29 = 0;
-    D_8010AF2E = zero;
-    D_8010AF36 = zero;
-    D_8010AF3D = 0;
-    D_8010AF1A = 0;
-    D_8010AF1E = 0;
-    D_8010AF22 = 0;
-    D_8010AF26 = zero;
-    i = 0;
-    D_8010AF2A = i;
-    D_8010AF30 = i;
-    D_8010AF38 = zero;
-    D_8010AF3E = zero;
-    D_8010AF1B = i;
-    D_8010AF1F = i;
-    D_8010AF23 = i;
-    D_8010AF27 = i;
-    D_8010AF2B = i;
-    D_8010AF32 = i;
-    D_8010AF3A = i;
-    D_8010AF3F = i;
-    gCourseSelectStatus.transitionState = i;
-    gCourseSelectStatus.unk28 = i;
-    gCourseSelectStatus.unk2A = i;
-    gCourseSelectStatus.unk2C = i;
-    gCourseSelectStatus.unk2E = i;
+    for (i = 0; i < 4; i++) {
+        gCourseSelectStatus.unk0Array[i] = 0;
+        gCourseSelectStatus.unk4Array[i] = 0;
+        gCourseSelectStatus.unk8Array[i] = 0;
+        gCourseSelectStatus.unkCArray[i] = 0;
+        gCourseSelectStatus.unk10Array[i] = 0;
+        gCourseSelectStatus.unk14[i] = 0;
+        gCourseSelectStatus.unk1C[i] = 0;
+        gCourseSelectStatus.unk24[i] = 0;
+    }
+    gCourseSelectStatus.transitionState = 0;
+    gCourseSelectStatus.unk28 = 0;
+    gCourseSelectStatus.unk2A = 0;
+    gCourseSelectStatus.unk2C = 0;
+    gCourseSelectStatus.unk2E = 0;
 }
-#endif
 
 // updateCourseSelectModeMenu best match: 88.922% (nonmatchings/updateCourseSelectModeMenu-1645024839200431810/base_29.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/course_select/course_select_menu/updateCourseSelectModeMenu.s")
@@ -833,7 +801,7 @@ void updateCourseSelectCourseList(void) {
         sp18.object = D_801121E0;
         do {
             gCurrentMenuCameraObject = sp18.object;
-            sp18.object->unk2C();
+            sp18.object->update();
             var_a3 += 1;
             sp18.object += 1;
         } while (var_a3 < (s32) gPlayerCount);
@@ -886,7 +854,7 @@ void updateCourseSelectPurchasePrompt(void) {
     }
 
     for (i = 0; i < gPlayerCount; i++) {
-        (gCurrentMenuCameraObject = &D_801121E0[i])->unk2C();
+        (gCurrentMenuCameraObject = &D_801121E0[i])->update();
     }
     updateCallbackTasks();
 }
@@ -1036,7 +1004,7 @@ after_input:
     }
 
     {
-        ObjectA3E0 *var_s0;
+        MenuCameraObject *var_s0;
         s32 i;
 
         i = 0;
@@ -1044,7 +1012,7 @@ after_input:
             (((gMenuChoicePromptState * divisor) + (gCourseSelectSelectedCourseId % divisor)) * 0)) {
             var_s0 = D_801121E0;
             do {
-                (gCurrentMenuCameraObject = var_s0)->unk2C();
+                (gCurrentMenuCameraObject = var_s0)->update();
                 i++;
                 var_s0++;
             } while (i < (s32) gPlayerCount);
@@ -1055,7 +1023,7 @@ after_input:
 #endif
 
 void initCourseSelectCourseDetailsMenu(void) {
-    ObjectA3E0 *var_s1;
+    MenuCameraObject *var_s1;
     s32 var_s0;
     s8 temp_v0;
 
@@ -1069,7 +1037,7 @@ void initCourseSelectCourseDetailsMenu(void) {
         setCurrentGameTaskCallback(updateCourseSelectCourseDetailsMenu, 0);
     }
 
- do { var_s0 = 0; if (gPlayerCount > 0) { var_s1 = D_801121E0; do { ; (gCurrentMenuCameraObject = var_s1)->unk2C(); var_s0 += 1; var_s1 += 1; } while (var_s0 < gPlayerCount); } } while (0);
+ do { var_s0 = 0; if (gPlayerCount > 0) { var_s1 = D_801121E0; do { ; (gCurrentMenuCameraObject = var_s1)->update(); var_s0 += 1; var_s1 += 1; } while (var_s0 < gPlayerCount); } } while (0);
     updateCallbackTasks();
 }
 
@@ -1184,14 +1152,14 @@ void updateCourseSelectCourseDetailsMenu(void) {
     }
 
     for (i = 0; i < gPlayerCount; i++) {
-        (gCurrentMenuCameraObject = &D_801121E0[i])->unk2C();
+        (gCurrentMenuCameraObject = &D_801121E0[i])->update();
     }
     updateCallbackTasks();
 }
 #endif
 
 void waitCourseSelectRecordsClose(void) {
-    ObjectA3E0 *var_s1;
+    MenuCameraObject *var_s1;
     s32 var_s0;
 
     if (gCourseSelectStatus.transitionState == 2) {
@@ -1200,12 +1168,12 @@ void waitCourseSelectRecordsClose(void) {
         setCurrentGameTaskCallback(updateCourseSelectCourseDetailsMenu, 0);
     }
 
- do { var_s0 = 0; if (gPlayerCount > 0) { var_s1 = D_801121E0; do { ; (gCurrentMenuCameraObject = var_s1)->unk2C(); var_s0 += 1; var_s1 += 1; } while (var_s0 < gPlayerCount); } } while (0);
+ do { var_s0 = 0; if (gPlayerCount > 0) { var_s1 = D_801121E0; do { ; (gCurrentMenuCameraObject = var_s1)->update(); var_s0 += 1; var_s1 += 1; } while (var_s0 < gPlayerCount); } } while (0);
     updateCallbackTasks();
 }
 
 void returnToCourseSelectUnlockCourseList(void) {
-    ObjectA3E0 *var_s1;
+    MenuCameraObject *var_s1;
     s32 var_s0;
 
     if (gCurrentGameTask->screenState == 5) {
@@ -1220,12 +1188,12 @@ void returnToCourseSelectUnlockCourseList(void) {
         setCurrentGameTaskCallback(updateCourseSelectUnlockCourseList, 0);
     }
 
- do { var_s0 = 0; if (gPlayerCount > 0) { var_s1 = D_801121E0; do { ; (gCurrentMenuCameraObject = var_s1)->unk2C(); var_s0 += 1; var_s1 += 1; } while (var_s0 < gPlayerCount); } } while (0);
+ do { var_s0 = 0; if (gPlayerCount > 0) { var_s1 = D_801121E0; do { ; (gCurrentMenuCameraObject = var_s1)->update(); var_s0 += 1; var_s1 += 1; } while (var_s0 < gPlayerCount); } } while (0);
     updateCallbackTasks();
 }
 
 void returnToCourseSelectModeMenu(void) {
-    ObjectA3E0 *var_s1;
+    MenuCameraObject *var_s1;
     s32 var_s0;
     s32 i;
 
@@ -1258,12 +1226,12 @@ void returnToCourseSelectModeMenu(void) {
         gCourseSelectStatus.unk2E = 0;
     }
 
- do { var_s0 = 0; if (gPlayerCount > 0) { var_s1 = D_801121E0; do { ; (gCurrentMenuCameraObject = var_s1)->unk2C(); var_s0 += 1; var_s1 += 1; } while (var_s0 < gPlayerCount); } } while (0);
+ do { var_s0 = 0; if (gPlayerCount > 0) { var_s1 = D_801121E0; do { ; (gCurrentMenuCameraObject = var_s1)->update(); var_s0 += 1; var_s1 += 1; } while (var_s0 < gPlayerCount); } } while (0);
     updateCallbackTasks();
 }
 
 void initCourseSelectPreview(void) {
-    ObjectA3E0 *var_s0;
+    MenuCameraObject *var_s0;
     s8 *temp;
 
     gCoursePreviewViewportHeight = 0x78;
@@ -1274,7 +1242,7 @@ void initCourseSelectPreview(void) {
     temp[0x3F] = gCourseDetailsPreviewCourseTiles[(u8) gCourseDetailsPreviewPage * 7 + (u8) gCourseDetailsMenuSelection];
     gCourseSelectStatus.transitionState = 6;
     createCallbackTask(&initCoursePreviewCloseSparkles, 0, 0x64);
-    setCurrentGameTaskCallback(updateCourseSelectPreviewClose, 0); var_s0 = D_801121E0; do { gCurrentMenuCameraObject = var_s0; var_s0->unk2C();
+    setCurrentGameTaskCallback(updateCourseSelectPreviewClose, 0); var_s0 = D_801121E0; do { gCurrentMenuCameraObject = var_s0; var_s0->update();
         var_s0 += 1;
     } while (var_s0 != &D_80112340);
     updateCallbackTasks();
@@ -1282,7 +1250,7 @@ void initCourseSelectPreview(void) {
 }
 
 void updateCourseSelectPreviewClose(void) {
-    ObjectA3E0 *var_s0;
+    MenuCameraObject *var_s0;
 
     gCoursePreviewViewportHeight -= 4;
     if (gCoursePreviewViewportHeight < 0) {
@@ -1293,7 +1261,7 @@ void updateCourseSelectPreviewClose(void) {
         resetViewport(1);
         setCurrentGameTaskCallback(updateCourseSelectCourseDetailsMenu, 0);
         gCourseSelectStatus.transitionState = 2;
- D_8010AED0 = 0; } var_s0 = D_801121E0; do { (gCurrentMenuCameraObject = var_s0)->unk2C(); var_s0 += 1; } while (var_s0 != (&D_80112340)); updateCallbackTasks();
+ D_8010AED0 = 0; } var_s0 = D_801121E0; do { (gCurrentMenuCameraObject = var_s0)->update(); var_s0 += 1; } while (var_s0 != (&D_80112340)); updateCallbackTasks();
 }
 
 void exitCourseSelectMenu(void) {
