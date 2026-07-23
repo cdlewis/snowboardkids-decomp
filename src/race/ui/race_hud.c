@@ -112,7 +112,7 @@ extern RaceTimerUiS32Stride D_801222E8[];
 extern s16 D_80122290;
 extern s16 D_801222F0;
 extern s32 gMenuFlowState;
-extern s32 D_80121B7C;
+extern s32 gRaceTimeTrialFinishTime;
 
 void initRaceHud(void) {
     LOAD_ASSET(_245A80, 0x1F);
@@ -1045,7 +1045,7 @@ void updateRaceHud(void) {
             if (gRaceTimeTrialFinishRecorded == 0) {
                 getRacePlayerRankingProgress(0, &sp40, &sp3C);
                 if ((D_800B957C[gRaceCourseIndex].finishLinePathIndex * 8) < sp40) {
-                    D_80121B7C = *(s32 *)&gRaceElapsedTimer;
+                    gRaceTimeTrialFinishTime = *(s32 *)&gRaceElapsedTimer;
                     gRaceTimeTrialFinishRecorded = 1;
                     createCallbackTask(initTimeTrialRecordDeltaPopup, 0, 0);
                 }

@@ -2513,6 +2513,7 @@ gRaceHudMode = 0x80121B70; // size:0x2
 gRaceHudSpinnerFrame = 0x80121B72; // size:0x2
 gRaceElapsedTimer = 0x80121B74; // size:0x4
 gRaceChallengeTimeLimit = 0x80121B78; // size:0x4
+gRaceTimeTrialFinishTime = 0x80121B7C; // size:0x4
 gRaceTimeTrialFinishRecorded = 0x80121B80; // size:0x1
 gRaceChallengeFailed = 0x80121B81; // size:0x1
 gRaceOrderPlayerIds = 0x80121D70; // size:0x10
