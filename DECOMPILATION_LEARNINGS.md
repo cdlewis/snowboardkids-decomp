@@ -65,6 +65,12 @@ isolation rather than importing a whole batch, since some of its output (e.g.
   stores it should follow, even though the scheduler ultimately interleaves
   them. Reordering just the constant assignment can fix a pure
   scheduling/register diff.
+- **A folded empty pointer condition can steer induction-update scheduling.**
+  Once loop control, registers, and memory accesses already match, a repeated
+  empty test such as `if (((!p) && (!p)) && (!p)) {}` can change which of two
+  independent pointer increments IDO schedules immediately after its store
+  while emitting no instructions for the condition itself. Reserve this for a
+  final pure instruction-order mismatch.
 - **Recover accumulators from a folded first use.** If one call receives a
   literal but the following calls use an incremented value held in a saved
   register, model the source as a single accumulator starting at the first
