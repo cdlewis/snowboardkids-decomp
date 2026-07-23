@@ -2519,6 +2519,7 @@ gRaceOrderPlayerIds = 0x80121D70; // size:0x10
 gRacePlayers = 0x80121D80;
 gRaceTrickAttackPointTotal = 0x80122040; // size:0x2
 gPlayerHitSource = 0x80122052; // size:0x1A
+gRaceCourseCoinMarkerCount = 0x801222F2; // size:0x2
 gRaceScoreAttackPointTotal = 0x801222F4; // size:0x2
 gRaceScoreAttackPointTarget = 0x801222F6; // size:0x2
 gViewportStates = 0x801124B0; // size:0x2C0
