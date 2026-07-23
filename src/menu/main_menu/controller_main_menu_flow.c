@@ -305,7 +305,7 @@ void requestControllerPakSaveStatus(u16 arg0) {
     osRecvMesg(&gControllerSubsystemReplyQueue, &msg, OS_MESG_BLOCK);
 }
 
-// checkControllerPakSaveStatus best match: 96.439% at nonmatchings/checkControllerPakSaveStatus-8133904965749362142/base_34.c
+// checkControllerPakSaveStatus best match: 97.424% at nonmatchings/checkControllerPakSaveStatus-3379532139742180785/base_11.c
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/main_menu/controller_main_menu_flow/checkControllerPakSaveStatus.s")
 
 #ifdef NON_MATCHING
@@ -332,11 +332,14 @@ void checkControllerPakSaveStatus(u16 arg0) {
     } while (src < gControllerPakSaveExtNameBytesEnd);
 
     src = gControllerPakSaveGameNameBytes;
+    if (1) { } if (1) { } if (1) { }
     index = 0;
     do {
         byte0 = *src++;
         byte1 = *src++;
         byte2 = *src++;
+        if (gControllerPakSaveFileIdentity.gameCode) {
+        }
         byte3 = *src++;
         if ((!index) && (!index)) {
         }
@@ -357,7 +360,7 @@ void checkControllerPakSaveStatus(u16 arg0) {
     } else {
         osPfsNumFiles(&gControllerPakHandles[arg0], &maxFiles, &filesUsed);
         if (filesUsed == 0x10) {
-            gControllerPakStatusCodes[arg0] = 0xC;
+            gControllerPakStatusCodes[(long long)arg0] = 0xC;
         } else {
             osPfsFreeBlocks(&gControllerPakHandles[arg0], &freeBytes);
             maxFiles = freeBytes / 256;
