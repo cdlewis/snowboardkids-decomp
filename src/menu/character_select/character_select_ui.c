@@ -2,6 +2,7 @@
 #include "game/engine/relocatable_heap.h"
 #include "game/engine/callback_task_scheduler.h"
 #include "game/menu/renderer/menu_renderer.h"
+#include "game/menu/character_select/character_select_menu.h"
 #include "game/menu/character_select/character_select_ui.h"
 #include "game/race/player/race_player_input.h"
 
@@ -19,23 +20,6 @@ typedef struct {
     /* 0x4B */ u8 flags;
     u8 pad4C[0x78F8 - 0x4C];
 } RacePlayerState;
-
-typedef struct {
-    /* 0x00 */ u8 phase;
-    /* 0x01 */ u8 exitMode;
-    /* 0x02 */ u8 readyCount;
-    /* 0x03 */ u8 selectedTokenState[RACE_PLAYER_COUNT];
-    u8 pad7;
-    /* 0x08 */ s16 fade;
-    /* 0x0A */ s16 unkA;
-    /* 0x0C */ u8 confirmSelection;
-    /* 0x0D */ u8 unkD;
-    /* 0x0E */ u8 blockDecrease;
-    /* 0x0F */ u8 blockIncrease;
-    /* 0x10 */ u16 cursorX;
-    /* 0x12 */ u16 cursorY;
-    /* 0x14 */ s8 playerSelections[RACE_PLAYER_COUNT];
-} CharacterSelectUiCharacterSelectState;
 
 typedef struct {
     u8 pad0[0x24];
@@ -80,7 +64,6 @@ extern void addRenderCallback(void *, void *, void *);
 extern s8 D_8010AE52;
 extern u8 D_8010AE52_state;
 extern u8 D_8010AE51;
-extern CharacterSelectUiCharacterSelectState gCharacterSelectHudState;
 extern CharacterSelectUiPlayerPanelFrameController *D_8010ADE0;
 extern void *D_8010ADE4;
 extern CharacterSelectUiPanelController *D_8010ADE8;
