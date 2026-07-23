@@ -69,7 +69,8 @@ segments:
     subalign: 4
     bss_size: 0x7DAC0
     subsegments:
-      - [0x1050, c, menu/main_menu/controller_main_menu_flow]
+      - [0x1050, c, menu/main_menu/controller_subsystem]
+      - [0x1560, c, menu/main_menu/controller_main_menu_flow]
       - [0x3D40, c, menu/race_setup/race_setup_menu]
       - [0x5560, c, menu/character_select/character_select_menu]
       - [0x6140, c, menu/splitscreen_select/race_splitscreen_select_menu]
@@ -309,7 +310,8 @@ segments:
       - [0xE0F40, .data, ultra/audio/env]
       - [0xE1080, .data, ultra/libc/xlitob]
       - [0xE10B0, data]
-      - [0xE11A0, .rodata, menu/main_menu/controller_main_menu_flow]
+      - [0xE11A0, .rodata, menu/main_menu/controller_subsystem]
+      - [0xE14B0, .rodata, menu/main_menu/controller_main_menu_flow]
       - [0xE1500, .rodata, menu/race_setup/race_setup_menu]
       - [0xE1580, .rodata, menu/character_select/character_select_menu]
       - [0xE1590, .rodata, menu/splitscreen_select/race_splitscreen_select_menu]
@@ -370,7 +372,7 @@ segments:
       - [0xE2AD0, .rodata, ultra/audio/reverb]
       - [0xE2B00, rodata]
       - { type: bss, name: bss_chunk_a, vram: 0x800E29C0 }
-      - { type: .bss, name: menu/main_menu/controller_main_menu_flow, vram: 0x800E4C10 }
+      - { type: .bss, name: menu/main_menu/controller_subsystem, vram: 0x800E4C10 }
       - { type: bss, name: bss_chunk_a_controller_tail, vram: 0x800EC8B0 }
       - { type: .bss, name: menu/race_setup/race_setup_menu, vram: 0x8010AE00 }
       - { type: bss, name: bss_chunk_a_2, vram: 0x8010AE40 }

@@ -43,11 +43,11 @@ isolation rather than importing a whole batch, since some of its output (e.g.
   `case N: break;` identical to `default`) — state-machine switches frequently
   need this explicit terminal case even when the post-switch cleanup handles
   that same state.
-- **Restoring a C jump table can expose padding that an assembly include hid.**
-  An included function's late-rodata fragment is padded at its boundary, while
-  a decompiled switch table can be coalesced directly with later constants in
-  the same C object. If text matches but all later rodata/BSS symbols shift,
-  compare the table's trailing padding before changing unrelated data.
+- **Restoring a C jump table can expose a missing object boundary.** If the
+  table has the correct semantic size but later rodata/BSS symbols shift, check
+  whether the decomp project merged original translation units. Reconstructing
+  the text/rodata/BSS split lets linker section alignment restore the padding
+  naturally; do not attach padding to an unrelated assembly include.
 - **A no-op expression in a switch selector can change temp register without
   changing control flow** (e.g. `switch (x ^ 0)` vs `switch (x)`). Reach for
   this only when the diff is a pure register-name swap on the dispatch value.
