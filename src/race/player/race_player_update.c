@@ -670,27 +670,23 @@ void updateRacePlayerMotionFeedback(RacePlayer *player) {
     }
 }
 
-// updateRacePlayerMode00Grounded best match: 99.879% (nonmatchings/updateRacePlayerMode00Grounded-5787290371232622032/base_1.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race/player/race_player_update/updateRacePlayerMode00Grounded.s")
-
-#ifdef NON_MATCHING
 void updateRacePlayerMode00Grounded(RacePlayer *player) {
     volatile s32 pad[26];
     s64 temp;
-    s32 targetZ;
-    s32 targetX;
     s32 turnTarget;
-    s16 quickTurn;
-    Struct800955C0 *spawn;
+    s32 targetX;
     s32 surfaceCue;
+    s32 targetZ;
+    s32 bankRate;
+    Struct800955C0 *spawn;
     s32 lean;
     s32 speed;
-    s16 turnDelta;
-    s16 turn;
-    s32 rotation;
-    s32 bankRate;
-    s32 interpolated;
     s16 steerAngle;
+    s16 turn;
+    s16 quickTurn;
+    s32 rotation;
+    s16 unused;
+    s32 interpolated;
 
     if (player->updateState == 0) {
         player->updateState++;
@@ -783,7 +779,7 @@ void updateRacePlayerMode00Grounded(RacePlayer *player) {
 
     if (player->unk4 == 0) {
         spawn = &gRaceCourseStartEntries[gRaceCourseIndex];
-        if ((player->unk502 == spawn->unk0) && !(player->stateFlags & 0x40)) {
+        if ((spawn->unk0 == player->unk502) && !(player->stateFlags & 0x40)) {
             surfaceCue = (s16)(((calculateFixedAngleBetweenXZPoints(player->posX, player->posZ, spawn->unk40, spawn->unk44) -
                                   player->facingAngle) +
                                  0x400) &
@@ -828,15 +824,15 @@ void updateRacePlayerMode00Grounded(RacePlayer *player) {
     if (!(gMenuFlowState & 1)) {
         turnTarget = updateRacePlayerLeanAngle(player, lean, turn);
         if (player->unk93 == 0) {
-            turnDelta = player->unk2FA;
-            turnDelta = turnTarget - turnDelta;
-            if (turnDelta >= 0x31) {
-                turnDelta = 0x30;
+            steerAngle = player->unk2FA;
+            steerAngle = turnTarget - steerAngle;
+            if (steerAngle >= 0x31) {
+                steerAngle = 0x30;
             }
-            if (turnDelta < -0x30) {
-                turnDelta = -0x30;
+            if (steerAngle < -0x30) {
+                steerAngle = -0x30;
             }
-            player->unk2FA += turnDelta;
+            player->unk2FA += steerAngle;
             if (player->unk2FA == 0) {
                 if (player->animationId == 0x22) {
                     if (stepRaceMotionJointAnimationUntilEnd(player) != 0) {
@@ -853,18 +849,18 @@ void updateRacePlayerMode00Grounded(RacePlayer *player) {
                 blendRaceMotionJointAnimation(player, 3, player->unk2FA, 0x118);
             } else {
                 setRaceMotionAnimation(player, 2);
-                blendRaceMotionJointAnimation(player, 2, -(turnDelta = player->unk2FA), 0x118);
+                blendRaceMotionJointAnimation(player, 2, -player->unk2FA, 0x118);
             }
         } else {
-            turnDelta = -player->unk2FA;
             player->unk93--;
-            if (turnDelta >= 0x31) {
-                turnDelta = 0x30;
+            steerAngle = -player->unk2FA;
+            if (steerAngle >= 0x31) {
+                steerAngle = 0x30;
             }
-            if (turnDelta < -0x30) {
-                turnDelta = -0x30;
+            if (steerAngle < -0x30) {
+                steerAngle = -0x30;
             }
-            player->unk2FA += turnDelta;
+            player->unk2FA += steerAngle;
             setRaceMotionAnimation(player, player->unk93 + 8);
             stepRaceMotionJointAnimationUntilEnd(player);
         }
@@ -972,7 +968,6 @@ void updateRacePlayerMode00Grounded(RacePlayer *player) {
         enqueueRacePlayerVoiceSound(player, 5);
     }
 }
-#endif
 
 void updateRacePlayerMode29Crash(RacePlayer *player) {
     s16 updateState;
