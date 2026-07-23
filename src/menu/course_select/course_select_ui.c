@@ -1568,7 +1568,7 @@ void initCourseSelectCourseStats(CourseSelectWidgetActor *arg0) {
     setCallbackTaskCallback(temp_a3, updateCourseSelectCourseStats);
 }
 
-// drawCourseSelectCourseDescription best match: 92.819% (nonmatchings/drawCourseSelectCourseDescription-5787290371232622032/base_71.c)
+// drawCourseSelectCourseDescription best match: 93.701% (nonmatchings/drawCourseSelectCourseDescription-3379532139742180785/base_28.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/course_select/course_select_ui/drawCourseSelectCourseDescription.s")
 
 #ifdef NON_MATCHING
@@ -1613,7 +1613,7 @@ void drawCourseSelectCourseDescription(CourseSelectWidgetActor *arg0) {
     value = digitCount;
     if ((u32)value == 0) {
         s32 courseIndex;
-        volatile s32 padSelected;
+        s32 selectedCourseId;
 
         if ((D_8010AEA8 == 0) && ((value = selection->mode) == 0 || (value == 3) || (value == 9))) {
             value = status->unk2E;
@@ -1624,7 +1624,8 @@ void drawCourseSelectCourseDescription(CourseSelectWidgetActor *arg0) {
             } else if ((courseId = selection->courseId, courseId >= 9) && (courseId < 12)) {
                 value = 5;
             } else {
-                value = (courseId % 3) & 0xFFFFU;
+                value = courseId % 3;
+                value &= 0xFFFFU;
             }
             text = gCourseSelectModeDescriptionText + (value * 0x46);
         } else {
@@ -1644,8 +1645,7 @@ void drawCourseSelectCourseDescription(CourseSelectWidgetActor *arg0) {
                 selectedIndex = arg0->timer;
             }
 
-            splitMode = gRaceSplitscreenMode;
-            if ((splitMode == 3) && ((courseId = selection->courseId) <= 8)) {
+            if ((gRaceSplitscreenMode == 3) && ((courseId = selection->courseId) <= 8)) {
                 text = gCourseSelectBoardLevelByCourseText + ((courseId % 3) * 0x30);
             } else if (((courseId = selection->courseId) >= 9) && (courseId < 12)) {
                 text = gCourseSelectExtraCourseBoardLevelText + ((gCourseSelectExtraCourseIds[selectedIndex] % 3) * 0x60);
@@ -1665,14 +1665,16 @@ void drawCourseSelectCourseDescription(CourseSelectWidgetActor *arg0) {
                 drawMenuGlyphScript((s16)(arg0->x + 0x48), (s16)(arg0->y + 0x10), (u8 *)buffer, 1, arg0->spriteIndex, 0);
             }
 
-            if (gCourseSelectModeSelection == 0) {
+            splitMode = gCourseSelectModeSelection;
+            if (splitMode == 0) {
                 buffer[0] = -4;
                 buffer[1] = 6;
                 if ((selectedIndex >= 2) || (selection->courseId >= 9)) {
-                    if (selection->courseId >= 9) {
+                    selectedCourseId = selection->courseId;
+                    if (selectedCourseId >= 9) {
                         courseIndex = gCourseSelectExtraCourseIds[selectedIndex];
                     } else {
-                        courseIndex = ((selection->courseId % 3) + (selectedIndex * 3)) - 3;
+                        courseIndex = ((selectedCourseId % 3) + (selectedIndex * 3)) - 3;
                     }
 
                     price = gCourseUnlockPrices[courseIndex];
