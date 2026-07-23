@@ -250,7 +250,7 @@ s32 getRaceItemEffectType(s32 arg0) {
     return p[arg0];
 }
 
-// updateRaceItemSparkBurst best match: 91.364% (nonmatchings/updateRaceItemSparkBurst-6/output-475-2/source.c)
+// updateRaceItemSparkBurst best match: 95.091% (nonmatchings/updateRaceItemSparkBurst-1645024839200431810/base_2.c)
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race/items/race_item_effects/updateRaceItemSparkBurst.s")
 
@@ -292,24 +292,7 @@ void updateRaceItemSparkBurst(RaceItemEffectActor *arg0) {
     drawList = (RaceItemDrawNode **) gRaceItemTextureEffectDrawLists;
     if (state == 0) {
         actor->unk64 = state + 1;
-    }
-
-    node = fieldNode = actor->drawNodes;
-    playerIndex = actor->playerIndex;
-    if (playerIndex >= 4) {
-        playerIndex = 0;
-    }
-
-    drawList = &drawList[playerIndex];
-    payload = actor->payloads;
-
-loop:
-    fieldNode->next = *drawList;
-    if (((actor == NULL) && (actor == NULL)) && (actor == NULL)) {
-    }
-    i++;
-    *drawList = node;
-    displayList = &gRaceItemSparkBurstVertices[(actor->unk68[actor->unk64 - 1] * 8) * 2];
+    } node = (fieldNode = actor->drawNodes); playerIndex = actor->playerIndex; if (playerIndex >= 4) { playerIndex = 0; } drawList = &drawList[playerIndex]; payload = actor->payloads; loop: fieldNode->next = *drawList; if (((actor == NULL) && (actor == NULL)) && (actor == NULL)) { } i++; *drawList = node; displayList = &gRaceItemSparkBurstVertices[(actor->unk68[actor->unk64 - 1] * 8) * 2];
     node++;
     fieldNode->pos = &payload->vec;
     payload++;
