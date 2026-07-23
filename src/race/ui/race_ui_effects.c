@@ -720,9 +720,9 @@ typedef struct {
 } RaceUiCourseStatsNameData;
 
 typedef struct {
-    /* 0x0 */ s8 first;
-    /* 0x1 */ s8 second;
-    /* 0x2 */ s16 third;
+    /* 0x0 */ s8 minutes;
+    /* 0x1 */ s8 seconds;
+    /* 0x2 */ s16 fraction;
 } RaceUiPackedTime;
 
 typedef struct {
@@ -1747,9 +1747,9 @@ void initRaceUiResultsBanner(RaceUiResultsBannerActor *actor) {
 #pragma GLOBAL_ASM("asm/nonmatchings/race/ui/race_ui_effects/func_80059A04.s")
 
 #ifdef NON_MATCHING
-const char D_800E12BC[] = "%2.2d";
-const char D_800E12C4[] = "%2.2d";
-const char D_800E12CC[] = "%2.2d";
+const char gRaceUiPackedTimeMinutesFormat[] = "%2.2d";
+const char gRaceUiPackedTimeSecondsFormat[] = "%2.2d";
+const char gRaceUiPackedTimeFractionFormat[] = "%2.2d";
 
 void func_80059A04(void *arg0, s32 arg1, s32 arg2, s32 arg3)
 {
@@ -1760,8 +1760,8 @@ void func_80059A04(void *arg0, s32 arg1, s32 arg2, s32 arg3)
   u16 color;
   char *ptr;
   char *end;
- do { record = arg0; x = arg1; y = arg2; color = arg3; sprintf(buffer - 0x10, D_800E12BC, record->first); if (!color) { } end = &buffer[-0xE]; ptr = buffer - 0x10; do { drawAssetTableSpriteWithExplicitPalette((s16) x, y, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), (((u8) (*ptr)) - 5) & 0xFFFF, color); ptr++; x += 8; } while (ptr < end); drawAssetTableSpriteWithExplicitPalette((s16) x, y, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x36, color); end = buffer; x += 8; } while (0);
-  sprintf(end - 0x10, D_800E12C4, record->second);
+ do { record = arg0; x = arg1; y = arg2; color = arg3; sprintf(buffer - 0x10, gRaceUiPackedTimeMinutesFormat, record->minutes); if (!color) { } end = &buffer[-0xE]; ptr = buffer - 0x10; do { drawAssetTableSpriteWithExplicitPalette((s16) x, y, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), (((u8) (*ptr)) - 5) & 0xFFFF, color); ptr++; x += 8; } while (ptr < end); drawAssetTableSpriteWithExplicitPalette((s16) x, y, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x36, color); end = buffer; x += 8; } while (0);
+  sprintf(end - 0x10, gRaceUiPackedTimeSecondsFormat, record->seconds);
   ptr = end - 0x10;
   end = &buffer[-0xE];
   do
@@ -1777,7 +1777,7 @@ void func_80059A04(void *arg0, s32 arg1, s32 arg2, s32 arg3)
   drawAssetTableSpriteWithExplicitPalette((s16) x, y, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x35, color);
   x += 8;
   end = buffer;
-  sprintf(end - 0x10, D_800E12CC, record->third >> 8);
+  sprintf(end - 0x10, gRaceUiPackedTimeFractionFormat, record->fraction >> 8);
   ptr = end - 0x10;
   end = &buffer[-0xE];
   do
@@ -1947,10 +1947,10 @@ void func_8005A31C(RaceUiAlpha18Actor *arg0) {
 #pragma GLOBAL_ASM("asm/nonmatchings/race/ui/race_ui_effects/func_8005A4BC.s")
 
 #ifdef NON_MATCHING
-const char D_800E12E4[0x4] = "%5d";
-const char D_800E12E8[0x4] = "%5d";
-const char D_800E12EC[0x4] = "%5d";
-const char D_800E12F0[0x4] = "%6d";
+const char gRaceUiCounterHitPrizeFormat[0x4] = "%5d";
+const char gRaceUiCounterPerfectHitBonusFormat[0x4] = "%5d";
+const char gRaceUiCounterCompleteBonusFormat[0x4] = "%5d";
+const char gRaceUiCounterMoneyFormat[0x4] = "%6d";
 
 void func_8005A4BC(RaceUiCounterActor *arg0)
 {
@@ -1971,7 +1971,7 @@ void func_8005A4BC(RaceUiCounterActor *arg0)
   {
     ptr = buffer - 4;
     x = 0x20;
-    sprintf(ptr, D_800E12E4, arg0->value, arg0);
+    sprintf(ptr, gRaceUiCounterHitPrizeFormat, arg0->value, arg0);
     rowY = y.half.lo;
     ptr = buffer - 4;
     loop1:
@@ -1997,7 +1997,7 @@ void func_8005A4BC(RaceUiCounterActor *arg0)
       x = 0x20;
       ptr = 0;
       ptr = buffer - 4;
-      sprintf(ptr, D_800E12E8, arg0->bonus, arg0);
+      sprintf(ptr, gRaceUiCounterPerfectHitBonusFormat, arg0->bonus, arg0);
       rowY = y.half.lo;
       ptr = buffer + (-((0, 4)));
       loop2:
@@ -2021,7 +2021,7 @@ void func_8005A4BC(RaceUiCounterActor *arg0)
   {
     x = 0x20;
     ptr = 0;
-    sprintf(ptr, D_800E12EC, arg0->target, arg0);
+    sprintf(ptr, gRaceUiCounterCompleteBonusFormat, arg0->target, arg0);
     rowY = y.half.lo;
     ptr = buffer - 4;
     loop3:
@@ -2047,7 +2047,7 @@ void func_8005A4BC(RaceUiCounterActor *arg0)
     }
     x = 0x18;
     ptr = 0;
-    sprintf(ptr, D_800E12F0, gPlayer1Money, arg0);
+    sprintf(ptr, gRaceUiCounterMoneyFormat, gPlayer1Money, arg0);
     rowY = y.half.lo;
     ptr = buffer - 4;
     loop4:
@@ -2597,7 +2597,7 @@ void func_8005C14C(RaceUiDualCounterActor *arg0) {
         drawMenuAsciiTextDefaultScale(-0x68, -0x1F, D_800E139C, 7);
         targetTime = &gRaceCourseTargetTimes[gRaceCourseIndex];
         bufp = buf - 0xC;
-        sprintf(bufp, D_800E13A8, targetTime->first, targetTime->second, targetTime->third >> 8);
+        sprintf(bufp, D_800E13A8, targetTime->minutes, targetTime->seconds, targetTime->fraction >> 8);
         drawMenuAsciiTextDefaultScale(-0x68, -0x16, bufp, 7);
         drawMenuAsciiTextDefaultScale(-0x68, -8, D_800E13BC, 7);
         sprintf(bufp, D_800E13C4, arg0->row, arg0->column, arg0->timeFraction >> 8);
@@ -2862,8 +2862,8 @@ void func_8005CE4C(RaceUiDualCounterActor *arg0) {
 extern s16 gRaceTrickAttackPointTotal;
 extern s8 D_80122043;
 
-const char D_800E143C[4] = "%d";
-const char D_800E1440[4] = "%d";
+const char gRaceUiTrickAttackPointTotalFormat[4] = "%d";
+const char gRaceUiTrickAttackSecondaryCounterFormat[4] = "%d";
 
 void func_8005CF60(RaceUiDualCounterActor *arg0) {
     char *ptr;
@@ -2880,7 +2880,7 @@ void func_8005CF60(RaceUiDualCounterActor *arg0) {
         gDPSetPrimColor(gRegionAllocPtr++, 0, 0, 0xFF, 0xFF, 0xFF, arg0->alpha18);
     }
 
-    sprintf(buffer, D_800E143C, gRaceTrickAttackPointTotal);
+    sprintf(buffer, gRaceUiTrickAttackPointTotalFormat, gRaceTrickAttackPointTotal);
     x = -0x50;
     ptr = buffer;
     if (gRaceTrickAttackPointTotal >= 10) {
@@ -2909,7 +2909,7 @@ body1:
 
 done1:
     x = -0x50;
-    sprintf(buffer, D_800E1440, D_80122043);
+    sprintf(buffer, gRaceUiTrickAttackSecondaryCounterFormat, D_80122043);
     ptr2 = buffer;
     if (D_80122043 >= 10) {
         x = -0x54;
@@ -2944,10 +2944,10 @@ done2:
 #pragma GLOBAL_ASM("asm/nonmatchings/race/ui/race_ui_effects/func_8005D1CC.s")
 
 #ifdef NON_MATCHING
-const char D_800E1444[0x4] = "%5d";
-const char D_800E1448[0x4] = "%5d";
-const char D_800E144C[0x4] = "%5d";
-const char D_800E1450[0x4] = "%6d";
+const char gRaceUiPendingTrickPrizeFormat[0x4] = "%5d";
+const char gRaceUiPendingMakeBonusFormat[0x4] = "%5d";
+const char gRaceUiPendingCompleteBonusFormat[0x4] = "%5d";
+const char gRaceUiPendingMoneyFormat[0x4] = "%6d";
 
 void func_8005D1CC(RaceUiCourseStatsActor *arg0)
 {
@@ -2963,7 +2963,7 @@ void func_8005D1CC(RaceUiCourseStatsActor *arg0)
   x = 0x20;
   if (visibleRows >= 0)
   {
-    sprintf(buffer - 4, D_800E1444, arg0->pendingTrickPrize);
+    sprintf(buffer - 4, gRaceUiPendingTrickPrizeFormat, arg0->pendingTrickPrize);
  do { ptr = buffer - 4; loop1: if ((*ptr) != 0) { if ((*ptr) != ' ') { drawAssetTableSprite(x, -0x47, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), (u16) ((*(buffer - 4)) - 5)); } x += 8; ptr++; goto loop1; } drawAssetTableSprite(x, -0x47, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x37); y.word = -0x1F; } while (0);
     visibleRows = arg0->visibleRows;
   }
@@ -2971,7 +2971,7 @@ void func_8005D1CC(RaceUiCourseStatsActor *arg0)
   {
     x = 0x20;
     ptr = 0;
-    sprintf(buffer - 4, D_800E1448, arg0->pendingMakeBonus, ptr);
+    sprintf(buffer - 4, gRaceUiPendingMakeBonusFormat, arg0->pendingMakeBonus, ptr);
     rowY = y.half.lo;
     ptr = buffer;
     ptr = ptr - 4;
@@ -2995,7 +2995,7 @@ void func_8005D1CC(RaceUiCourseStatsActor *arg0)
   {
     x = 0x20;
     ptr = 0;
-    sprintf(buffer - 4, D_800E144C, arg0->pendingCompleteBonus, ptr);
+    sprintf(buffer - 4, gRaceUiPendingCompleteBonusFormat, arg0->pendingCompleteBonus, ptr);
     rowY = y.half.lo;
     ptr = buffer - 4;
     loop3:
@@ -3021,7 +3021,7 @@ void func_8005D1CC(RaceUiCourseStatsActor *arg0)
     }
     x = 0x18;
     ptr = 0;
-    sprintf(buffer - 4, D_800E1450, gPlayer1Money, ptr);
+    sprintf(buffer - 4, gRaceUiPendingMoneyFormat, gPlayer1Money, ptr);
     rowY = y.half.lo;
     ptr = buffer - 4;
     loop4:
