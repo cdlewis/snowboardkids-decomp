@@ -78,7 +78,7 @@ extern u8 gPlayerCount;
 extern u8 gPendingFramebufferSwapCount;
 extern u8 gFramebufferSwapHold;
 
-// initCharacterSelectMenu best functional match: 99.069% (nonmatchings/initCharacterSelectMenu-2188069624939011928/base_12.c)
+// initCharacterSelectMenu best functional match: 99.161% (nonmatchings/initCharacterSelectMenu-1645024839200431810/base_11.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/character_select/character_select_menu/initCharacterSelectMenu.s")
 
 #ifdef NON_MATCHING
@@ -127,16 +127,18 @@ void initCharacterSelectMenu(void) {
     } else {
         gCurrentGameTask->fade = 1;
         gMenuFadeAlpha = 1;
-        playerCount = gPlayerCount;
         i = 0;
+        playerCount = gPlayerCount;
         if (playerCount > 0) {
             selectionPtr = (u8 *) D_8010AE64;
             player = gRacePlayers;
             do {
                 nextIndex = i + 1;
-                keepGoing = nextIndex < playerCount;
-                player->selectedCharacterId = i;
-                i = nextIndex;
+                if (1) {
+                    keepGoing = nextIndex < playerCount;
+                    player->selectedCharacterId = i;
+                    i = nextIndex;
+                }
                 player++;
                 selectionPtr++;
                 selectionPtr[-1] = nextIndex;
