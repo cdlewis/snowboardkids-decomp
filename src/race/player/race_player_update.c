@@ -1245,50 +1245,37 @@ void updateRacePlayerAirborneLaunch(RacePlayer *player) {
     }
 }
 
-// updateRacePlayerAirborneCruise best match: 98.609% (nonmatchings/updateRacePlayerAirborneCruise-2870645799593382959/base_7.c)
+// updateRacePlayerAirborneCruise best match: 99.550% (nonmatchings/updateRacePlayerAirborneCruise-3379532139742180785/base_10.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race/player/race_player_update/updateRacePlayerAirborneCruise.s")
 
 #ifdef NON_MATCHING
 void updateRacePlayerAirborneCruise(RacePlayer *player)
 {
-  Struct800955C0 *temp_v0;
-  s16 temp_v0_6;
-  s32 temp_t4;
-  s32 temp_v0_9;
   s32 sp2C;
   s32 var_a2;
   s32 var_v1;
-  s8 temp_v0_7;
-  s32 var_t7;
-  u32 temp_v0_10;
-  u32 temp_v0_2;
-  u32 temp_v0_3;
-  u32 temp_v0_4;
-  u32 temp_v0_5;
-  u32 temp_v0_8;
+  s8 turnTimer;
+
   sp2C = 0;
   if (player->unk4 == 0)
   {
-    temp_v0 = &gRaceCourseStartEntries[gRaceCourseIndex];
-    if ((player->unk502 == (*temp_v0).unk0) && (!(player->stateFlags & 0x40)))
+    if ((player->unk502 == gRaceCourseStartEntries[gRaceCourseIndex].unk0) && (!(player->stateFlags & 0x40)))
     {
-      if (((s16) (((calculateFixedAngleBetweenXZPoints(player->pos.x, player->pos.z, temp_v0->unk40, temp_v0->unk44) - player->facingAngle) + 0x400) & 0xFFF)) < 0x800)
+      var_v1 = calculateFixedAngleBetweenXZPoints(player->pos.x, player->pos.z, gRaceCourseStartEntries[gRaceCourseIndex].unk40, gRaceCourseStartEntries[gRaceCourseIndex].unk44) - player->facingAngle + 0x400;
+      if ((s16) (var_v1 & 0xFFF) < 0x800)
       {
-        temp_v0_2 = player->stateFlags;
-        if (temp_v0_2 & 0x400)
+        if (player->stateFlags & 0x400)
         {
+          player->stateFlags &= ~0x400;
           player->unk93 = 6 - player->unk93;
         }
-        player->stateFlags = temp_v0_2 & (~0x400);
       }
       else
       {
-        temp_v0_3 = player->stateFlags;
-        if (!(temp_v0_3 & 0x400))
+        if (!(player->stateFlags & 0x400))
         {
-          var_t7 = 6 - player->unk93;
-          player->stateFlags = temp_v0_3 | 0x400;
-          goto block_15;
+          player->stateFlags |= 0x400;
+          player->unk93 = 6 - player->unk93;
         }
       }
     }
@@ -1296,59 +1283,53 @@ void updateRacePlayerAirborneCruise(RacePlayer *player)
     {
       if (player->unk254 < (-0x8000))
       {
-        temp_v0_4 = player->stateFlags;
-        if (temp_v0_4 & 0x400)
+        if (player->stateFlags & 0x400)
         {
-          player->stateFlags = temp_v0_4 & (~0x400);
+          player->stateFlags &= ~0x400;
           player->unk93 = 6 - player->unk93;
         }
       }
-      if ((temp_t4 = player->unk254) >= 0x8001)
+      if (player->unk254 >= 0x8001)
       {
-        temp_v0_5 = player->stateFlags;
-        if (!(temp_v0_5 & 0x400))
+        if (!(player->stateFlags & 0x400))
         {
-          player->stateFlags = temp_v0_5 | 0x400;
-          var_t7 = 6 - player->unk93;
-          block_15:
-          player->unk93 = var_t7;
-
+          player->stateFlags |= 0x400;
+          player->unk93 = 6 - player->unk93;
         }
       }
     }
     if (gRaceDemoPlaybackEnabled == 0)
     {
-      temp_v0_6 = player->unk336;
-      if (temp_v0_6 < 0x5A)
+      if (player->unk336 < 0x5A)
       {
-        player->unk336 = temp_v0_6 + 1;
+        player->unk336++;
       }
     }
   }
-  temp_v0_7 = player->unk93;
-  if (temp_v0_7 != 0)
+
+  turnTimer = player->unk93;
+  if (turnTimer != 0)
   {
-    player->unk93 = temp_v0_7 - 1;
-    setRaceMotionAnimation((RaceMotionState *) ((RaceMotionState *) player), player->unk93 + 8);
+    player->unk93 = turnTimer - 1;
+    setRaceMotionAnimation(player, player->unk93 + 8);
   }
-  else
-    if (player->animationId != 5)
+  else if (player->animationId != 5)
   {
-    setRaceMotionAnimation((RaceMotionState *) ((RaceMotionState *) player), 5);
+    setRaceMotionAnimation(player, 5);
   }
-  temp_v0_8 = player->stateFlags;
-  if (temp_v0_8 & 0x10)
+
+  if (player->stateFlags & 0x10)
   {
     if (player->unk4 == 0)
     {
       if (!(player->inputFlags & 0x8000))
       {
-        player->stateFlags = temp_v0_8 & (~0x10);
+        player->stateFlags &= ~0x10;
       }
     }
     else
     {
-      player->stateFlags = temp_v0_8 & (~0x10);
+      player->stateFlags &= ~0x10;
       if (player->unk525 != 0)
       {
         player->stateTimer = 0x46000;
@@ -1356,10 +1337,9 @@ void updateRacePlayerAirborneCruise(RacePlayer *player)
     }
     if (player->stateFlags & 0x10)
     {
-      temp_v0_9 = player->stateTimer;
-      if (temp_v0_9 < 0x46000)
+      if (player->stateTimer < 0x46000)
       {
-        player->stateTimer = temp_v0_9 + 0x2000;
+        player->stateTimer += 0x2000;
       }
     }
   }
@@ -1375,10 +1355,9 @@ void updateRacePlayerAirborneCruise(RacePlayer *player)
       var_a2 = 0x8000;
     }
   }
-  temp_v0_10 = player->stateFlags;
-  if (!(temp_v0_10 & 0x10))
+  if (!(player->stateFlags & 0x10))
   {
-    if (temp_v0_10 & 0x400)
+    if (player->stateFlags & 0x400)
     {
       sp2C = 0x30000;
       if (((u8) player->unk519) != 0)
@@ -1452,8 +1431,7 @@ void updateRacePlayerAirborneCruise(RacePlayer *player)
         enqueuePositionalSoundEffect(0x17, (SoundPosition *) (&player->pos), 0x7F, 0x32);
         enqueueRacePlayerVoiceSound(player, 0);
       }
-        temp_v0_2 = 0x10;
-        player->mode = temp_v0_2;
+        player->mode = 0x10;
         player->unk2A6 = 3;
         player->stateFlags |= 0x800;
         break;
@@ -1808,14 +1786,13 @@ void updateRacePlayerAirborneCruise(RacePlayer *player)
 
     }
 
-    temp_t4 = player->unk40.y + player->stateTimer;
     player->updateState = 0;
     player->updateTimer = 0;
-    player->unk40.y = temp_t4;
+    player->unk40.y += player->stateTimer;
     player->pos.y += 0x60000;
-    player->unk74 = temp_t4;
+    player->unk74 = player->unk40.y;
     player->stateFlags |= 0x208;
-    setRaceMotionAnimation((RaceMotionState *) ((RaceMotionState *) player), 4);
+    setRaceMotionAnimation(player, 4);
   }
   else
   {
@@ -1824,7 +1801,7 @@ void updateRacePlayerAirborneCruise(RacePlayer *player)
   player->pos.x += player->unk40.x;
   player->pos.y += player->unk40.y;
   player->pos.z += player->unk40.z;
-  stepRaceMotionJointAnimationUntilEnd((RaceMotionState *) ((RaceMotionState *) player));
+  stepRaceMotionJointAnimationUntilEnd(player);
   updateRacePlayerMotionFeedback(player);
   if (player->unk517 != 0)
   {
