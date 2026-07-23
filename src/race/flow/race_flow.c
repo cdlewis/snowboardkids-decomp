@@ -179,7 +179,7 @@ extern void *gMenuRenderCallbackList;
 extern s16 gAssetHandles[];
 extern SignedUnsignedShort gRaceCourseIndex;
 extern s16 gRaceLapCount;
-extern s32 D_80121B7C;
+extern s32 gRaceTimeTrialFinishTime;
 extern s16 gMenuFadeAlpha;
 extern s8 gMenuFadeOverlayActive;
 extern u8 gRaceRumbleEnabled;
@@ -1530,7 +1530,7 @@ void updateRaceResultsFlow(void) {
                     D_800EC9F0.timeTrialCharacterIds[gRaceCourseIndex.s][i] =
                         (gRacePlayers[0].characterVariant * 8) + gRacePlayers[0].characterId;
                     if (i == 0) {
-                        D_800EC9F0.bestLapRecords[gRaceCourseIndex.s] = *(RaceTime *)&D_80121B7C;
+                        D_800EC9F0.bestLapRecords[gRaceCourseIndex.s] = *(RaceTime *)&gRaceTimeTrialFinishTime;
                     }
                 }
                 if (i < 5) {
