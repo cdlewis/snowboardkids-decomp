@@ -391,12 +391,14 @@ void initRaceCameraFollowPlayer(void) {
     D_801124A0->update();
 }
 
-// updateRaceCameraFollowPlayer best match: 97.646% (nonmatchings/updateRaceCameraFollowPlayer-2188069624939011928/base_24.c)
+// updateRaceCameraFollowPlayer best match: 99.891% (nonmatchings/updateRaceCameraFollowPlayer-11/output-50-1/source.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race/camera/race_camera/updateRaceCameraFollowPlayer.s")
 
 #ifdef NON_MATCHING
 void updateRaceCameraFollowPlayer(void) {
     s32 diff;
+    register s32 new_var;
+    register s32 new_var2;
     s32 dx;
     s32 dy;
     s32 dz;
@@ -411,10 +413,13 @@ void updateRaceCameraFollowPlayer(void) {
         D_801124A0->focus.z += (D_80122018[D_801124A0->playerIndex].value - D_801124A0->focus.z) >> 1;
 
         x = D_801124A0->pos.x;
-        y = D_801124A0->pos.y;
+        new_var2 = D_801124A0->pos.y;
+        diff = D_801124A0->pos.x;
+        dist = new_var2;
+        y = dist;
         z = D_801124A0->pos.z;
 
-        dx = D_801124A0->focus.x - x;
+        dx = (new_var = D_801124A0->focus.x) - x;
         dy = D_801124A0->focus.y - y;
         dz = D_801124A0->focus.z - z;
 
@@ -466,10 +471,11 @@ void updateRaceCameraFollowPlayer(void) {
             }
 
             diff = D_801124A0->pos.x;
-            D_801124A0->pos.x = (diff + x) - diff;
+            D_801124A0->pos.x = (D_801124A0->pos.x + x) - diff;
             diff = D_801124A0->pos.y;
             D_801124A0->pos.y = (diff + y) - diff;
-            diff = D_801124A0->pos.z;
+            new_var = D_801124A0->pos.z;
+            diff = new_var;
             D_801124A0->pos.z = (diff + z) - diff;
 
             diff = 0x12C0000;
@@ -496,7 +502,8 @@ void updateRaceCameraFollowPlayer(void) {
             if (diff > 0) {
                 diff /= 6;
             }
-            D_801124A0->distance += diff;
+            new_var2 = diff;
+            D_801124A0->distance += new_var2;
         }
     }
 
