@@ -1151,7 +1151,7 @@ void loadRaceMotionJointAnimationFrame(RaceMotionState *state) {
     state->frameDataOffset = (s32)packedRotation - getRelocatableHeapBlockBase(gAssetHandles[0x16 + state->modelId]);
 }
 
-// interpolateRaceMotionAnimationFrame best match: 97.740% (nonmatchings/interpolateRaceMotionAnimationFrame-1219509448159986855/base_22.c)
+// interpolateRaceMotionAnimationFrame best match: 98.013% (nonmatchings/interpolateRaceMotionAnimationFrame-3885303446860889946/base_23.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race/motion/race_motion/interpolateRaceMotionAnimationFrame.s")
 
 #ifdef NON_MATCHING
@@ -1182,6 +1182,8 @@ void interpolateRaceMotionAnimationFrame(RaceMotionState *state, s32 animIndex, 
     s16 modelJoint;
     register s32 *rootData;
 
+    if (!frameData) {
+    }
     base = getRelocatableHeapBlockBase(gAssetHandles[0x16 + state->modelId]);
     frameData = (s16 *)(base + (x = ((u16 *)base)[animIndex] * 2) + 2);
 
@@ -1258,16 +1260,16 @@ loop_interp:
         z = jointSample->z;
         delta = jointSample[RACE_MOTION_JOINT_FRAME_STRIDE].z;
         delta = (delta - z) & 0xFFF;
-        if (delta >= 0x801) {
-            delta -= 0x1000;
-        }
-        i++;
-        jointSample++;
-        jointCursor = (RaceMotionState *)((u8 *)jointCursor + sizeof(RaceMotionStateJoint));
-        jointCursor->animation.motion.jointZ = ((delta * frameTimer) / frameTimerReset) + z;
-        if (i != RACE_MOTION_JOINT_COUNT) {
-            goto loop_interp;
-        }
+    if (delta >= 0x801) {
+        delta -= 0x1000;
+    }
+    jointCursor->animation.motion.jointZ = ((delta * frameTimer) / frameTimerReset) + z;
+    i++;
+    jointSample++;
+    jointCursor = (RaceMotionState *)((u8 *)jointCursor + sizeof(RaceMotionStateJoint));
+    if (i != RACE_MOTION_JOINT_COUNT) {
+        goto loop_interp;
+    }
 
 #define ROOT_DATA(i) (rootData[i])
     rootData = gRaceMotionRotationFrameBufferReload;
