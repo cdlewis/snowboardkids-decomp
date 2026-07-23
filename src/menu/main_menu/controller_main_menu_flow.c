@@ -627,83 +627,78 @@ void requestControllerPakSaveWrite(u16 arg0) {
     osRecvMesg(&gControllerSubsystemReplyQueue, &msg, OS_MESG_BLOCK);
 }
 
-// writeControllerPakSave best match: 92.345% at nonmatchings/writeControllerPakSave-8367390958892477031/base_9.c
+// writeControllerPakSave best match: 99.559% at nonmatchings/writeControllerPakSave-8909410381742387388/base_38.c
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/main_menu/controller_main_menu_flow/writeControllerPakSave.s")
 
 #ifdef NON_MATCHING
 void writeControllerPakSave(u16 arg0) {
-    OSPfs *pfs;
+    union Work {
+        u8 *end;
+        OSPfs *pfs;
+        s32 offset;
+    } work;
+    union SourceSave {
+        u8 *src;
+        SaveSlotBytes *save;
+    } data;
     s32 *fileNo;
-    s32 channel;
-    u8 *src;
     u8 *dst;
-    u8 *end;
-    SaveSlotBytes *save;
-    u8 *bytes;
     s32 checksum;
-    s32 offset;
 
-    channel = arg0 & 0xFFFF;
     gControllerPakSaveFileIdentity.size = 0x7900;
     gControllerPakSaveFileIdentity.gameCode = 'NSKE';
     gControllerPakSaveFileIdentity.companyCode = 'EB';
 
-    src = gControllerPakSaveExtNameBytes;
-    dst = (u8 *)&gControllerPakSaveFileIdentity + 9;
-    end = gControllerPakSaveExtNameBytesEnd;
-copy_ext:
-    *++dst = *src;
-    src++;
-    if (src < end) {
+    work.end = gControllerPakSaveExtNameBytesEnd; dst = (u8 *)gControllerPakSaveFileIdentity.extName; data.src = gControllerPakSaveExtNameBytes; copy_ext: *dst = *data.src; data.src++;
+    dst++;
+    if (data.src < work.end) {
         goto copy_ext;
     }
 
-    src = gControllerPakSaveGameNameBytes;
-    dst = (u8 *)&gControllerPakSaveFileIdentity;
-    end = gControllerPakSaveExtNameBytes;
-copy_name:
-    dst[14] = *src;
-    src++;
+    dst = (u8 *)gControllerPakSaveFileIdentity.gameName; data.src = gControllerPakSaveGameNameBytes; work.end = gControllerPakSaveGameNameBytesEnd; copy_name: *dst = *data.src; data.src++;
     dst++;
-    if ((src + 1) < (end + 1)) {
+    if (data.src < work.end) {
         goto copy_name;
     }
 
-    pfs = &gControllerPakHandles[channel];
-    osPfsInitPak(&gControllerEventQueue, pfs, channel);
+    work.pfs = &gControllerPakHandles[arg0];
+    osPfsInitPak(&gControllerEventQueue, work.pfs, arg0);
 
-    fileNo = &gControllerPakFileNos[channel];
-    pfs = &gControllerPakHandles[channel];
-    if (osPfsFindFile(pfs, gControllerPakSaveFileIdentity.companyCode, gControllerPakSaveFileIdentity.gameCode,
-                      gControllerPakExtName, gControllerPakGameName, fileNo) == 5) {
-        pfs = &gControllerPakHandles[channel];
-        osPfsAllocateFile(pfs, gControllerPakSaveFileIdentity.companyCode, gControllerPakSaveFileIdentity.gameCode,
-                          gControllerPakExtName, gControllerPakGameName, 0x7900, fileNo);
+    fileNo = &gControllerPakFileNos[arg0];
+    work.pfs = &gControllerPakHandles[arg0];
+    if (osPfsFindFile(work.pfs, gControllerPakSaveFileIdentity.companyCode,
+                      gControllerPakSaveFileIdentity.gameCode, gControllerPakExtName,
+                      gControllerPakGameName, fileNo) == 5) {
+        work.pfs = &gControllerPakHandles[arg0];
+        osPfsAllocateFile(work.pfs, gControllerPakSaveFileIdentity.companyCode,
+                          gControllerPakSaveFileIdentity.gameCode, gControllerPakExtName,
+                          gControllerPakGameName, 0x7900, fileNo);
     }
 
-    save = &gGameSaveDataBuffer[channel];
+    data.save = &gGameSaveDataBuffer[arg0];
     checksum = 0;
-    bytes = save->bytes;
-    offset = 4;
+    dst = data.save->bytes;
+    work.offset = 4;
 checksum_loop:
-    checksum += bytes[0];
-    checksum += ((0, bytes))[1];
-    checksum += bytes[2];
-    checksum += bytes[3];
-    offset += 4;
-    bytes += 4;
-    if (gControllerPakSaveFileIdentity.gameCode) {
+    checksum += dst[0];
+    checksum += ((0, dst))[1];
+    checksum += dst[2];
+    checksum += dst[3];
+    work.offset += 4;
+    dst += 4;
+    if (1) {
     }
-    if (offset != 0x78E0) {
+    if (work.offset != 0x78E0) {
         goto checksum_loop;
     }
 
-    save->checksum = checksum;
-    if (osPfsReadWriteFile(&gControllerPakHandles[channel], *fileNo, 1, 0, 0x78E0, (u8 *)save) == 0) {
-        (&gControllerPakRetryCounts)[channel] = 0;
+    gGameSaveDataBuffer[arg0].checksum = checksum;
+    if (osPfsReadWriteFile(&gControllerPakHandles[arg0], *fileNo, 1, 0, 0x78E0,
+                           (u8 *)data.save) == 0) {
+        (&gControllerPakRetryCounts)[arg0] = 0;
         return;
     }
-    (&gControllerPakRetryCounts)[channel]++;
+    (&gControllerPakRetryCounts)[arg0]++;
 }
 #endif
 
