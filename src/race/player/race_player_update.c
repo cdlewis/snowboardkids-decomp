@@ -4769,11 +4769,6 @@ void dispatchRacePlayerMode07CourseObject(RacePlayer *player) {
     gRacePlayerMode07StateHandlers[player->updateState](player);
 }
 
-// updateRacePlayerMode07AlignToLaunchRamp best match: 99.877% (nonmatchings/updateRacePlayerMode07AlignToLaunchRamp-8699393380584516020/base_27.c)
-
-#pragma GLOBAL_ASM("asm/nonmatchings/race/player/race_player_update/updateRacePlayerMode07AlignToLaunchRamp.s")
-
-#ifdef NON_MATCHING
 void updateRacePlayerMode07AlignToLaunchRamp(RacePlayer *player) {
     s16 angleDelta;
     s16 updateTimer;
@@ -4818,9 +4813,9 @@ void updateRacePlayerMode07AlignToLaunchRamp(RacePlayer *player) {
         if (temp_a1) {
         }
         if (1) {
-            player->posX = tempX + ((gRaceCourseStartEntries[gRaceCourseIndex].unk18 - tempX) / temp_a1);
+            player->posX = tempX - (0 - ((gRaceCourseStartEntries[gRaceCourseIndex].unk18 - tempX) / temp_a1));
         }
-        player->posZ = tempZ + ((gRaceCourseStartEntries[gRaceCourseIndex].unk1C - tempZ) / temp_a1);
+        player->posZ = tempZ - (0 - ((gRaceCourseStartEntries[gRaceCourseIndex].unk1C - tempZ) / temp_a1));
     }
 
     if (--player->stateTimer == 0) {
@@ -4833,7 +4828,6 @@ void updateRacePlayerMode07AlignToLaunchRamp(RacePlayer *player) {
         setRaceCameraMode(player->playerIndex, 3);
     }
 }
-#endif
 
 void updateRacePlayerMode07StartLaunchRamp(RacePlayer *player) {
     if (stepRaceMotionAnimationUntilEnd(player) != 0) {

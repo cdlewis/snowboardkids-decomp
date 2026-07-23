@@ -158,6 +158,10 @@ and control flow already match and only register *names* differ.
   assigns the destination/operand registers based on source operand order.
   When a match is functionally perfect but differs only in which temp holds
   each operand of an `addu`/`or`, try swapping the addends in the C source.
+- **A double subtraction can prevent IDO from canonicalizing addends.** When
+  both `a + b` and `b + a` emit `addu dest,b,a`, the equivalent form
+  `a - (0 - b)` can emit `addu dest,a,b`. Use it only when the value ranges
+  make the intermediate negation well-defined.
 - **Narrow a dead local in place before its final commutative use.** Writing
   `value >>= N; consume(field + value);` can preserve the target shift while
   making the field the first `addu` operand. The inline equivalent
