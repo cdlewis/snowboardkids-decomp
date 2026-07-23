@@ -101,25 +101,25 @@ void initCharacterSelectMenu(void) {
     D_8010ADE0 = createCallbackTask(initCharacterSelectRosterIcons, 0, 0x64);
     createCallbackTask(initCharacterSelectPlayerStatsPanels, 0, 0x64);
     D_8010ADE4 = createCallbackTask(initCharacterSelectPlayerPanelFrames, 0, 0x63);
-    do {
-        setCurrentGameTaskCallback(updateCharacterSelectMenu, 0);
 
-        for (i = 0; i < gPlayerCount; i++) {
-            gRacePlayers[i].menuState = 0;
-            gMenuInputRepeatTimers[i] = 0;
-        }
-        gCharacterSelectHudState.phase = 0;
-        gCharacterSelectHudState.exitMode = 0;
-        gCharacterSelectHudState.readyCount = 0;
-        gCharacterSelectHudState.fade = 0;
-        gCharacterSelectHudState.unkA = 0;
-        gCharacterSelectHudState.confirmSelection = 0;
-        gCharacterSelectHudState.unkD = 0;
-        gCharacterSelectHudState.blockDecrease = 0;
-        gCharacterSelectHudState.blockIncrease = 0;
-        gCharacterSelectHudState.cursorX = 0;
-        gCharacterSelectHudState.cursorY = 0;
-    } while (0);
+    setCurrentGameTaskCallback(updateCharacterSelectMenu, 0);
+
+    for (i = 0; i < gPlayerCount; i++) {
+        gRacePlayers[i].menuState = 0;
+        gMenuInputRepeatTimers[i] = 0;
+    }
+    gCharacterSelectHudState.phase = 0;
+    gCharacterSelectHudState.exitMode = 0;
+    gCharacterSelectHudState.readyCount = 0;
+    gCharacterSelectHudState.fade = 0;
+    gCharacterSelectHudState.unkA = 0;
+    gCharacterSelectHudState.confirmSelection = 0;
+    gCharacterSelectHudState.unkD = 0;
+    gCharacterSelectHudState.blockDecrease = 0;
+    gCharacterSelectHudState.blockIncrease = 0;
+    gCharacterSelectHudState.cursorX = 0;
+    gCharacterSelectHudState.cursorY = 0;
+
     i = -1;
     while (++i < 4) {
         gCharacterSelectHudState.selectedTokenState[i] = 0;
