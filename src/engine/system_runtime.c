@@ -770,7 +770,7 @@ void appendFadeOverlayDisplayList(void) {
     gDPSetFogColor(gRegionAllocPtr++, gFadeColorRed, gFadeColorGreen, gFadeColorBlue, 255);
 }
 
-// submitFramebufferRenderTask best match: 93.126% at nonmatchings/submitFramebufferRenderTask-7998791169205557824/base_30.c.
+// submitFramebufferRenderTask best match: 93.170% at nonmatchings/submitFramebufferRenderTask-210831275846872038/base_2.c.
 #ifdef NON_MATCHING
 void submitFramebufferRenderTask(u8 frameIndex) {
     FramebufferRenderTask *renderTask;
@@ -778,6 +778,7 @@ void submitFramebufferRenderTask(u8 frameIndex) {
     FramebufferRenderTask *renderTaskAlias;
     SchedulerState *schedulerState;
     s32 colorIndex;
+    u8 colorByte;
     s32 bufferIndex;
     s32 nextColorIndex;
     u64 rspTextSize;
@@ -789,13 +790,13 @@ void submitFramebufferRenderTask(u8 frameIndex) {
     s32 prepOne;
     s32 allBits;
 
-    colorIndex = gFramebufferColorBufferIndex + 1;
-    colorIndex = colorIndex & 0xFF;
+    colorByte = gFramebufferColorBufferIndex + 1;
+    colorIndex = colorByte & 0xFF;
     bufferIndex = frameIndex & 0xFF;
-    gFramebufferColorBufferIndex = colorIndex;
+    gFramebufferColorBufferIndex = colorByte;
     if (colorIndex >= FRAMEBUFFER_COUNT) {
         gFramebufferColorBufferIndex = 0;
-        colorIndex = 0;
+        colorIndex = 0 & 0xFF;
     }
 
     one = 1;
@@ -853,7 +854,6 @@ void submitFramebufferRenderTask(u8 frameIndex) {
         BOOT_GFX_CMD(0xF2000000, 0x07000000);
         BOOT_GFX_CMD(0xF5000000, 0);
         BOOT_GFX_CMD(0xF5000000, 0x01000000);
-        BOOT_GFX_CMD(0xF5000000, 0x02000000);
         BOOT_GFX_CMD(0xF5000000, 0x02000000);
         BOOT_GFX_CMD(0xF5000000, 0x03000000);
         BOOT_GFX_CMD(0xF5000000, 0x04000000);
