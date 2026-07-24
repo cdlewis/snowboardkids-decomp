@@ -65,7 +65,7 @@ extern s8 D_8010AE52;
 extern u8 D_8010AE52_state;
 extern u8 D_8010AE51;
 extern CharacterSelectUiPlayerPanelFrameController *D_8010ADE0;
-extern void *D_8010ADE4;
+extern CharacterSelectUiPanelActor *D_8010ADE4;
 extern CharacterSelectUiPanelController *D_8010ADE8;
 extern s16 D_8010AE58;
 extern s32 gMenuFlowState;
@@ -703,19 +703,16 @@ void drawCharacterSelectPlayerStatsPanels(CharacterSelectUiPanelActor *arg0) {
 
 void updateCharacterSelectPlayerStatsPanels(CharacterSelectUiPanelActor *arg0) {
     s32 i;
-    u8 *src;
-    void *srcBase;
-    u8 *dst;
-    RacePlayer *player;
+    CharacterSelectUiPanelActor *statsPanels;
+    CharacterSelectUiPanelActor *panelFrames;
 
-    srcBase = D_8010ADE4;
-    player = gRacePlayers; for (i = 0, src = srcBase, dst = (u8 *)arg0; i != RACE_PLAYER_COUNT; i++, dst += 2) {
-        *(s16 *)(dst + 0x18) = *(s16 *)(src + 0x18);
-        src += 2;
-        *(s16 *)(dst + 0x20) = *(s16 *)(src + 0x1E);
-        player++;
-        if (player[-1].menuState == 0) {
-            arg0->targetX.overlay.inactiveTimer[i] = (arg0->targetX.overlay.inactiveTimer[i] + 1) % 20;
+    panelFrames = D_8010ADE4;
+    statsPanels = arg0;
+    for (i = 0; i != RACE_PLAYER_COUNT; i++) {
+        statsPanels->x[i] = panelFrames->x[i];
+        statsPanels->y[i] = panelFrames->y[i];
+        if (gRacePlayers[i].menuState == 0) {
+            statsPanels->targetX.overlay.inactiveTimer[i] = (statsPanels->targetX.overlay.inactiveTimer[i] + 1) % 20;
         }
     }
     addRenderCallback(&gMenuRenderCallbackList, drawCharacterSelectPlayerStatsPanels, arg0);
