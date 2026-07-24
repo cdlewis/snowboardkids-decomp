@@ -183,7 +183,7 @@ segments:
       - [0xA4850, c, ultra/os/initialize]
       - [0xA4AE0, c, ultra/io/pimgr]
       - [0xA4C70, c, ultra/os/setthreadpri]
-      - [0xA4D50, c, ultra/os/thread_padding]
+      - [0xA4D50, pad]
       - [0xA4DB0, c, ultra/io/viblack]
       - [0xA4E20, hasm, ultra/os/invaldcache]
       - [0xA4ED0, c, ultra/io/pidma]
