@@ -38,6 +38,29 @@ typedef struct {
     s32 speed;
 } MovementSpeedScratch;
 
+typedef s16 GroundAlignmentMatrix3s[9];
+
+typedef struct {
+    GroundAlignmentMatrix3s values;
+    u8 pad[14];
+} MatrixScratch;
+
+typedef struct {
+    GroundAlignmentMatrix3s values;
+    s16 pad;
+    s32 transformedX;
+    s32 transformedY;
+    s32 transformedZ;
+} EffectMatrixScratch;
+
+typedef struct {
+    volatile s32 baseY;
+    u8 pad4[0x10];
+    s32 sideHeightDiff;
+    u8 pad18[4];
+    s32 backHeightDiff;
+} GroundProbeScratch;
+
 extern s32 calculateFixedAngleBetweenXZPoints(s32, s32, s32, s32);
 extern s16 calculateFixedAngleFromDeltaXZ(s32, s32);
 extern void makeFixedRotationX(Matrix4s, s16);
@@ -1129,33 +1152,27 @@ s32 updateRacePlayerSurfaceContact(RacePlayer *player) {
 }
 #endif
 
-// updateRacePlayerGroundAlignment best match: 84.154% (nonmatchings/updateRacePlayerGroundAlignment-8331816093655448999/base_9.c)
+// updateRacePlayerGroundAlignment best match: 98.150% (nonmatchings/updateRacePlayerGroundAlignment-210831275846872038/base_30.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race/player/race_player_movement/updateRacePlayerGroundAlignment.s")
 
 #ifdef NON_MATCHING
-void updateRacePlayerGroundAlignment(RacePlayer *player) {
-    Matrix4s mtx;
-    Matrix4s tiltMtx;
-    Matrix4s baseMtx;
-    Matrix4s effectMtx;
+s32 updateRacePlayerGroundAlignment(RacePlayer *player) {
+    MatrixScratch mtxScratch;
+    MatrixScratch tiltScratch;
+    MatrixScratch baseScratch;
+    EffectMatrixScratch effectScratch;
     RaceVec3i points[6];
-    volatile u8 pad[24];
-    s32 heightDiffs[6];
+    GroundProbeScratch probeScratch;
     s32 groundHeights[6];
-    s32 transformedX;
-    s32 transformedY;
-    s32 transformedZ;
-    volatile s32 frontMidGround;
-    volatile s32 backMidGround;
-    volatile s32 baseY;
-    s32 pitchSpan;
+    s32 heights[6];
+    s32 heightDiffs[6];
     s32 rollSpan;
+    s32 pitchSpan;
     s32 frontHeightDiff;
-    s32 backHeightDiff;
-    s32 sideHeightDiff;
+    s32 pointX;
+    s32 pointY;
     s16 i;
-    s32 terrainId;
-    s32 stateFlags;
+    s16 terrainId;
     RacePlayer *temp_s2;
     RaceVec3i *point;
 
@@ -1163,45 +1180,49 @@ void updateRacePlayerGroundAlignment(RacePlayer *player) {
     temp_s2->unk500 = 0;
     terrainId = temp_s2->unk502;
 
-    makeFixedRotationZ(mtx, temp_s2->unk2EE);
-    transformVec3iByFixedMatrix(mtx, &D_800DE7F8, points);
+    makeFixedRotationZ(mtxScratch.values, temp_s2->unk2EE);
+    transformVec3iByFixedMatrix(mtxScratch.values, &D_800DE7F8, points);
     pitchSpan = points[0].x;
 
-    makeFixedRotationX(mtx, temp_s2->pitchAngle);
-    transformVec3iByFixedMatrix(mtx, &D_800DE810, points);
+    makeFixedRotationX(mtxScratch.values, temp_s2->pitchAngle);
+    transformVec3iByFixedMatrix(mtxScratch.values, &D_800DE810, points);
     rollSpan = points[0].z;
 
-    baseY = temp_s2->posY - 0x30000;
-    makeFixedRotationXY(mtx, temp_s2->pitchAngle, temp_s2->facingAngle);
+    probeScratch.baseY = temp_s2->posY;
+    probeScratch.baseY -= 0x30000;
+    makeFixedRotationXY(mtxScratch.values, temp_s2->pitchAngle, temp_s2->facingAngle);
 
     i = 0;
     do {
         point = &points[i];
-        transformVec3iByFixedMatrix(mtx, &gRacePlayerGroundProbeOffsets[i + 2], point);
-        point->x += temp_s2->posX;
-        point->y += baseY;
+        transformVec3iByFixedMatrix(mtxScratch.values, &gRacePlayerGroundProbeOffsets[i + 2], &points[i]);
+        pointX = point->x + temp_s2->posX;
+        point->x = pointX;
+        point->y += probeScratch.baseY;
         point->z += temp_s2->posZ;
-        groundHeights[i] = getRaceCourseSurfaceHeight(terrainId, point->x, point->z);
-        heightDiffs[i] = groundHeights[i] - point->y;
+        heights[i] = getRaceCourseSurfaceHeight(terrainId, pointX, point->z);
+        pointY = point->y;
+        groundHeights[i] = heights[i];
+        heightDiffs[i] = heights[i] - pointY;
         if (heightDiffs[i] < 0) {
-            groundHeights[i] = point->y;
+            groundHeights[i] = pointY;
         }
         i++;
     } while (i < 6);
 
-    frontMidGround = ((s64)groundHeights[0] + groundHeights[2]) / 2;
-    backMidGround = ((s64)groundHeights[1] + groundHeights[3]) / 2;
+    heights[4] = ((s64)heights[0] + heights[2]) / 2;
+    heights[5] = ((s64)heights[1] + heights[3]) / 2;
 
     frontHeightDiff = heightDiffs[0];
     if (frontHeightDiff < heightDiffs[1]) {
         frontHeightDiff = heightDiffs[1];
         groundHeights[0] = groundHeights[1];
-        points[0].y = points[1].y;
+        heights[0] = heights[1];
     }
     if (heightDiffs[2] < heightDiffs[3]) {
         heightDiffs[2] = heightDiffs[3];
         groundHeights[2] = groundHeights[3];
-        points[2].y = points[3].y;
+        heights[2] = heights[3];
     }
     if (heightDiffs[4] < heightDiffs[5]) {
         heightDiffs[4] = heightDiffs[5];
@@ -1213,97 +1234,112 @@ void updateRacePlayerGroundAlignment(RacePlayer *player) {
         if (!(temp_s2->stateFlags & 4)) {
             temp_s2->pitchAngle = calculateFixedAngleFromDeltaXZ(-(groundHeights[0] - groundHeights[2]), -rollSpan * 2);
         }
-        baseY = ((s64)groundHeights[2] + groundHeights[0]) / 2;
+        probeScratch.baseY = ((s64)groundHeights[2] + groundHeights[0]) / 2;
     } else {
         heightDiffs[0] = frontHeightDiff;
         if (frontHeightDiff >= 0) {
             if (!(temp_s2->stateFlags & 4)) {
                 temp_s2->pitchAngle = calculateFixedAngleFromDeltaXZ(-(groundHeights[0] - groundHeights[4]), -rollSpan);
             }
-            baseY = groundHeights[4];
+            probeScratch.baseY = groundHeights[4];
         } else if (heightDiffs[2] >= 0) {
             if (!(temp_s2->stateFlags & 4)) {
                 temp_s2->pitchAngle = calculateFixedAngleFromDeltaXZ(-(groundHeights[4] - groundHeights[2]), -rollSpan);
             }
-            baseY = groundHeights[4];
+            probeScratch.baseY = groundHeights[4];
         }
     }
 
-    temp_s2->unk2F0 = calculateFixedAngleFromDeltaXZ(-(points[0].y - points[2].y), -rollSpan * 2);
-    temp_s2->unk2F4 = calculateFixedAngleFromDeltaXZ(-(frontMidGround - backMidGround), -pitchSpan * 2);
+    temp_s2->unk2F0 = calculateFixedAngleFromDeltaXZ(-(heights[0] - heights[2]), -rollSpan * 2);
+    temp_s2->unk2F4 = calculateFixedAngleFromDeltaXZ(-(heights[4] - heights[5]), -pitchSpan * 2) & 0xFFFF;
     temp_s2->unk64 = 0;
 
-    makeFixedRotationZXY(mtx, temp_s2->pitchAngle, temp_s2->facingAngle, temp_s2->unk2EE);
+    makeFixedRotationZXY(mtxScratch.values, temp_s2->pitchAngle, temp_s2->facingAngle, temp_s2->unk2EE);
     i = 0;
     do {
         point = &points[i];
-        transformVec3iByFixedMatrix(mtx, &gRacePlayerGroundProbeOffsets[i + 2], point);
-        point->x += temp_s2->posX;
+        transformVec3iByFixedMatrix(mtxScratch.values, &gRacePlayerGroundProbeOffsets[i + 2], point);
+        pointX = point->x + temp_s2->posX;
+        point->x = pointX;
         point->z += temp_s2->posZ;
-        point->y += baseY + temp_s2->unk64;
-        groundHeights[i] = getRaceCourseSurfaceHeight(terrainId, point->x, point->z);
-        if (point->y < groundHeights[i]) {
-            temp_s2->unk64 += groundHeights[i] - point->y;
+        point->y += probeScratch.baseY + temp_s2->unk64;
+        groundHeights[i] = getRaceCourseSurfaceHeight(terrainId, pointX, point->z);
+        pointY = point->y;
+        if (pointY < groundHeights[i]) {
+            temp_s2->unk64 += groundHeights[i] - pointY;
         }
         i++;
     } while (i < 4);
 
-    if (temp_s2->posY < baseY + 0x30000) {
-        temp_s2->posY = baseY + 0x2FFFF;
+    pointX = probeScratch.baseY;
+    if (temp_s2->posY < pointX + 0x30000) {
+        temp_s2->posY = pointX + 0x2FFFF;
         temp_s2->unk58 = 0x2FFFF;
     } else {
-        temp_s2->posY = baseY + 0x30000;
+        temp_s2->posY = pointX + 0x30000;
         temp_s2->unk58 = 0x30000;
     }
 
-    transformedX = (s64)mtx[3] * temp_s2->unk68 / 0x1000;
-    transformedY = (s64)mtx[4] * temp_s2->unk68 / 0x1000;
-    transformedZ = (s64)mtx[5] * temp_s2->unk68 / 0x1000;
+    effectScratch.transformedX = (s64)mtxScratch.values[3] * temp_s2->unk68 / 0x1000;
+    effectScratch.transformedY = (s64)mtxScratch.values[4] * temp_s2->unk68 / 0x1000;
+    effectScratch.transformedZ = (s64)mtxScratch.values[5] * temp_s2->unk68 / 0x1000;
 
     if (temp_s2->stateFlags & 0x400) {
-        makeFixedRotationZYX(effectMtx, temp_s2->unk6C, -temp_s2->unk6E, -temp_s2->unk70);
-        multiplyFixedMatrix3s(effectMtx, mtx, baseMtx);
+        makeFixedRotationZYX(effectScratch.values, temp_s2->unk6C, -temp_s2->unk6E, -temp_s2->unk70);
+        multiplyFixedMatrix3s(effectScratch.values, mtxScratch.values, baseScratch.values);
     } else {
-        makeFixedRotationZYX(effectMtx, temp_s2->unk6C, temp_s2->unk6E, temp_s2->unk70);
-        makeFixedRotationY(baseMtx, 0x800);
-        multiplyFixedMatrix3s(baseMtx, mtx, tiltMtx);
-        multiplyFixedMatrix3s(effectMtx, tiltMtx, baseMtx);
+        makeFixedRotationZYX(effectScratch.values, temp_s2->unk6C, temp_s2->unk6E, temp_s2->unk70);
+        makeFixedRotationY(baseScratch.values, 0x800);
+        multiplyFixedMatrix3s(baseScratch.values, mtxScratch.values, tiltScratch.values);
+        multiplyFixedMatrix3s(effectScratch.values, tiltScratch.values, baseScratch.values);
     }
 
-    stateFlags = temp_s2->stateFlags;
-    if (stateFlags & 0x400) {
-        sideHeightDiff = ((s64)baseMtx[3] * (temp_s2->unk344 - temp_s2->unk68) +
-                          (s64)-baseMtx[0] * temp_s2->unk340 + (s64)baseMtx[6] * temp_s2->unk348) /
-                         0x1000;
-        ((s64)baseMtx[4] * (temp_s2->unk344 - temp_s2->unk68) + (s64)-baseMtx[1] * temp_s2->unk340 +
-         (s64)baseMtx[7] * temp_s2->unk348) /
+    if (temp_s2->stateFlags & 0x400) {
+        probeScratch.sideHeightDiff =
+            (-(s64)baseScratch.values[0] * temp_s2->collisionSources[0].sizeX +
+             (s64)baseScratch.values[3] * (temp_s2->collisionSources[0].sizeY - temp_s2->unk68) +
+             (s64)baseScratch.values[6] * temp_s2->collisionSources[0].sizeZ) /
             0x1000;
-        backHeightDiff = ((s64)baseMtx[5] * (temp_s2->unk344 - temp_s2->unk68) +
-                          (s64)-baseMtx[2] * temp_s2->unk340 + (s64)baseMtx[8] * temp_s2->unk348) /
-                         0x1000;
-        makeFixedRotationXYZ(tiltMtx, temp_s2->unk33A, -temp_s2->unk33C, -temp_s2->unk33E);
+        (-(s64)baseScratch.values[1] * temp_s2->collisionSources[0].sizeX +
+         (s64)baseScratch.values[4] * (temp_s2->collisionSources[0].sizeY - temp_s2->unk68) +
+         (s64)baseScratch.values[7] * temp_s2->collisionSources[0].sizeZ) /
+            0x1000;
+        probeScratch.backHeightDiff =
+            (-(s64)baseScratch.values[2] * temp_s2->collisionSources[0].sizeX +
+             (s64)baseScratch.values[5] * (temp_s2->collisionSources[0].sizeY - temp_s2->unk68) +
+             (s64)baseScratch.values[8] * temp_s2->collisionSources[0].sizeZ) /
+            0x1000;
+        makeFixedRotationXYZ(tiltScratch.values, temp_s2->collisionSources[0].rotX,
+                             -temp_s2->collisionSources[0].rotY, -temp_s2->collisionSources[0].rotZ);
     } else {
-        sideHeightDiff = ((s64)baseMtx[3] * (temp_s2->unk344 - temp_s2->unk68) +
-                          (s64)baseMtx[0] * temp_s2->unk340 + (s64)baseMtx[6] * temp_s2->unk348) /
-                         0x1000;
-        ((s64)baseMtx[4] * (temp_s2->unk344 - temp_s2->unk68) + (s64)baseMtx[1] * temp_s2->unk340 +
-         (s64)baseMtx[7] * temp_s2->unk348) /
+        probeScratch.sideHeightDiff =
+            ((s64)baseScratch.values[0] * temp_s2->collisionSources[0].sizeX +
+             (s64)baseScratch.values[3] * (temp_s2->collisionSources[0].sizeY - temp_s2->unk68) +
+             (s64)baseScratch.values[6] * temp_s2->collisionSources[0].sizeZ) /
             0x1000;
-        backHeightDiff = ((s64)baseMtx[5] * (temp_s2->unk344 - temp_s2->unk68) +
-                          (s64)baseMtx[2] * temp_s2->unk340 + (s64)baseMtx[8] * temp_s2->unk348) /
-                         0x1000;
-        makeFixedRotationXYZ(tiltMtx, temp_s2->unk33A, temp_s2->unk33C, temp_s2->unk33E);
+        ((s64)baseScratch.values[1] * temp_s2->collisionSources[0].sizeX +
+         (s64)baseScratch.values[4] * (temp_s2->collisionSources[0].sizeY - temp_s2->unk68) +
+         (s64)baseScratch.values[7] * temp_s2->collisionSources[0].sizeZ) /
+            0x1000;
+        probeScratch.backHeightDiff =
+            ((s64)baseScratch.values[2] * temp_s2->collisionSources[0].sizeX +
+             (s64)baseScratch.values[5] * (temp_s2->collisionSources[0].sizeY - temp_s2->unk68) +
+             (s64)baseScratch.values[8] * temp_s2->collisionSources[0].sizeZ) /
+            0x1000;
+        makeFixedRotationXYZ(tiltScratch.values, temp_s2->collisionSources[0].rotX,
+                             temp_s2->collisionSources[0].rotY, temp_s2->collisionSources[0].rotZ);
     }
 
-    sideHeightDiff += temp_s2->posX + transformedX;
-    backHeightDiff += temp_s2->posZ + transformedZ;
-    multiplyFixedMatrix3s(tiltMtx, baseMtx, mtx);
+    probeScratch.sideHeightDiff += temp_s2->posX + effectScratch.transformedX;
+    probeScratch.backHeightDiff += temp_s2->posZ + effectScratch.transformedZ;
+    multiplyFixedMatrix3s(tiltScratch.values, baseScratch.values, mtxScratch.values);
 
     i = 0;
     do {
-        transformVec3iByFixedMatrix(mtx, &gRacePlayerGroundProbeOffsets[i + 9], &temp_s2->markerPoints[i]);
-        temp_s2->markerPoints[i].x += sideHeightDiff;
-        temp_s2->markerPoints[i].z += backHeightDiff;
+        transformVec3iByFixedMatrix(mtxScratch.values, &gRacePlayerGroundProbeOffsets[i + 9],
+                                    &temp_s2->markerPoints[i]);
+        temp_s2->markerPoints[i].x += probeScratch.sideHeightDiff;
+        temp_s2->markerPoints[i].z += probeScratch.backHeightDiff;
         temp_s2->markerPoints[i].y =
             getRaceCourseSurfaceHeight(terrainId, temp_s2->markerPoints[i].x, temp_s2->markerPoints[i].z);
         i++;
@@ -1312,9 +1348,10 @@ void updateRacePlayerGroundAlignment(RacePlayer *player) {
     updateRacePlayerProjectedPosition(temp_s2);
     if (temp_s2->unk58 == 0x30000) {
         temp_s2->stateFlags |= 1;
-        return;
+        return 1;
     }
     temp_s2->stateFlags &= ~1;
+    return 0;
 }
 #endif
 
