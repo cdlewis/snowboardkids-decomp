@@ -1,5 +1,7 @@
 #include "common.h"
+#define calculateFixedAngleBetweenXZPoints calculateFixedAngleBetweenXZPoints_s32
 #include "game/race/items/race_item_projectiles.h"
+#undef calculateFixedAngleBetweenXZPoints
 #include "game/race/motion/race_motion.h"
 #include "game/engine/relocatable_heap.h"
 #include "game/engine/callback_task_scheduler.h"
@@ -132,16 +134,13 @@ void addRenderCallback(void *, void *, void *);
 void getAssetTableImageAndPalette(s32, s32, void **, void **);
 void spawnRaceUiFadingImpact(s32, s32, s32, u16);
 void enqueuePositionalSoundEffect(s32, void *, s32, s32);
+s16 calculateFixedAngleBetweenXZPoints(s32, s32, s32, s32);
 s32 integerSquareRoot64(s64);
 s16 fixedSine(s16);
 s16 fixedCosine(s16);
 void transformVec3iByFixedMatrix(s16 *, Vec3i *, void *);
 s64 __ll_mul(s64, s64);
 
-// findRaceItemProjectileHomingTarget best match: 99.927% (nonmatchings/findRaceItemProjectileHomingTarget-7273315160691878794/base_3.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race/items/race_item_projectiles/findRaceItemProjectileHomingTarget.s")
-
-#ifdef NON_MATCHING
 s32 findRaceItemProjectileHomingTarget(Vec3i *pos, s32 radius, s16 angle, s16 playerIndex, s16 *outAngle) {
     RacePlayerState *player;
     s32 closest;
@@ -150,6 +149,7 @@ s32 findRaceItemProjectileHomingTarget(Vec3i *pos, s32 radius, s16 angle, s16 pl
     s32 dist;
     s32 i;
     s32 hit;
+    s16 angleDiff;
     s16 playerAngle;
 
     closest = radius + 0x1000;
@@ -175,7 +175,8 @@ s32 findRaceItemProjectileHomingTarget(Vec3i *pos, s32 radius, s16 angle, s16 pl
                         }
                         if (dz < radius) {
                             playerAngle = calculateFixedAngleBetweenXZPoints(pos->x, pos->z, player->posX, player->posZ);
-                            if ((s16)((playerAngle - angle + 0x380) & 0xFFF) < 0x700) {
+                            angleDiff = playerAngle - angle;
+                            if ((s16)((angleDiff + 0x380) & 0xFFF) < 0x700) {
                                 dist = integerSquareRoot64((s64)dx * dx + (s64)dz * dz);
                                 if ((dist < radius) && (dist < closest)) {
                                     hit = i;
@@ -192,7 +193,6 @@ s32 findRaceItemProjectileHomingTarget(Vec3i *pos, s32 radius, s16 angle, s16 pl
     } while (i != 4);
     return hit;
 }
-#endif
 
 void renderWideHomingItemProjectile(RaceItemProjectileActor *arg0) {
     RaceEffectMatrixScratch sp6C;
