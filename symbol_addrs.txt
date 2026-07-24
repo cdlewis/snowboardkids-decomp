@@ -2640,6 +2640,7 @@ gTitleDemoRaceIntroViewportHeight = 0x8010B1E0; // size:0x1
 gTitleDemoRaceIntroFadeStep = 0x8010B1E1; // size:0xF
 gRaceCourseIndex = 0x80121B50; // size:0x2
 gRacePlayerSurfaceAngleByPlayer = 0x80122282; // size:0x6
+gRaceScoreAttackRingTriggerList = 0x8012228C; // size:0x4
 gRaceLapCount = 0x80121B52; // size:0x2
 gRaceCameraModeUpdates = 0x800DA880; // rom:0xDB480 size:0x80
 gRaceCameraChaseYawOffsets = 0x800DA900; // rom:0xDB500 size:0x14
