@@ -646,7 +646,7 @@ void initRaceSetupPlayerCountCursor(FadeItemActor *arg0) {
     setCallbackTaskCallback(arg0, updateRaceSetupPlayerCountCursor);
 }
 
-// drawRaceSetupSavePlayerPanels best match: 99.267% (nonmatchings/drawRaceSetupSavePlayerPanels-7475224831549593718/base_2.c)
+// drawRaceSetupSavePlayerPanels best match: 99.297% (nonmatchings/drawRaceSetupSavePlayerPanels-5755426475870421788/base_16.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/race_setup/race_setup_ui/drawRaceSetupSavePlayerPanels.s")
 
 #ifdef NON_MATCHING
@@ -664,7 +664,8 @@ void drawRaceSetupSavePlayerPanels(TitleMenuWidgetItemView *arg0) {
     playerCount = &gPlayerCount; panel = arg0; text = textBuffer - 0x18; for (playerIndex = 0; playerIndex != 4;) { alpha = (((s32)*playerCount - 1) < playerIndex) ? 0x50 : 0x100; drawMenuSpriteWithAlpha(panel->x, panel->y, getRelocatableHeapBlockBase(TITLE_MENU_FRAME_TEXTURE_HANDLE), 0xA, 0x20, 0x20, 0, alpha, palette = (playerNumber = playerIndex + 1) & 0xFF);
         if ((playerIndex && playerIndex) && playerIndex) {
         }
-        texture = getRelocatableHeapBlockBase(TITLE_MENU_FRAME_TEXTURE_HANDLE);
+        playerNumber = TITLE_MENU_FRAME_TEXTURE_HANDLE;
+        texture = getRelocatableHeapBlockBase(playerNumber);
         playerNumber = playerIndex + 1;
         drawMenuSpriteWithAlpha((s16)(panel->x + 0x40), panel->y, texture, 0xB, 0x20, 0x20, 0, alpha, palette);
         drawMenuSpriteWithAlpha((s16)(panel->x + 0x80), panel->y, getRelocatableHeapBlockBase(TITLE_MENU_FRAME_TEXTURE_HANDLE), 0xC, 0x20, 0x20, 0, alpha, palette);
