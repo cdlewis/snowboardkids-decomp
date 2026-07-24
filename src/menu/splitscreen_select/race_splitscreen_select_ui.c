@@ -52,23 +52,21 @@ extern s32 gMenuFlowState;
 const char gRaceSplitscreenSelectEntryFeeFormat[] = "%6dG";
 
 void drawRaceSplitscreenSelectPlayerCountIcons(RaceSplitscreenSelectRowActor *icons) {
-    RaceSplitscreenSelectRowActor *row;
-    RaceSplitscreenSelectRowActor *iconCursor;
+    RaceSplitscreenSelectRowActor *savedIcons;
     s32 iconIndex;
     s32 blinkAlpha;
     s32 yOffset;
 
-    row = icons;
+    savedIcons = icons;
     iconIndex = 0;
-    if ((s32) icons->playerCount > 0) {
+    if (iconIndex < (s32) icons->playerCount) {
         /*
-         * The outer do/while (0), the row/iconCursor aliases of icons, and the
-         * empty "if (icons->playerCount) {}" are all required for IDO to spill
-         * the argument and allocate registers exactly as the original; do not
-         * simplify them. yOffset = 0; iconCursor = icons; must stay on one line
-         * for the same reason.
+         * The outer do/while (0), repeated iconIndex initialization, empty if,
+         * and paired statements must retain this shape for IDO's register
+         * allocation. The icon position itself is nevertheless a normal array
+         * access; the compiler converts it to the pointer walk in the ROM.
          */
-        do { yOffset = 0; iconCursor = icons; do {
+        do { iconIndex = 0; yOffset = 0; do {
             blinkAlpha = 0;
             if (((((gMenuSelectionConfirmTimer != 0) && (((s32) gMenuSelectionConfirmTimer) < 8)) &&
                  (gMenuExitSelection == 0)) &&
@@ -76,14 +74,12 @@ void drawRaceSplitscreenSelectPlayerCountIcons(RaceSplitscreenSelectRowActor *ic
                 (gMenuSelectionConfirmTimer & 1)) {
                 blinkAlpha = 0xFF;
             }
-            drawMenuSprite(iconCursor->iconX[0], (s16)(icons->iconY + yOffset),
+            drawMenuSprite(icons->iconX[iconIndex], (s16)(icons->iconY + yOffset),
                            getRelocatableHeapBlockBase(gAssetHandles.textureHandle),
                            (iconIndex + 8) & 0xFFFF, 0x20, 0x20, 0, blinkAlpha);
-            iconIndex += 1;
-            yOffset += 0x14;
-            iconCursor = (RaceSplitscreenSelectRowActor *)((u8 *)iconCursor + 2);
+            yOffset += 0x14; iconIndex++;
             if (icons->playerCount) {}
-        } while (iconIndex < ((s32) row->playerCount)); } while (0);
+        } while (iconIndex < ((s32) savedIcons->playerCount)); } while (0);
     }
 }
 
