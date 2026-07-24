@@ -95,23 +95,21 @@ void initRaceTypeSelectMenu(void) {
     gRaceTypeSelectCursorTarget.alpha = 0;
 }
 
-// updateRaceTypeSelectMenu best match: 97.180% (nonmatchings/updateRaceTypeSelectMenu-8129558366194613874/base_19.c)
+// updateRaceTypeSelectMenu best match: 97.301% (nonmatchings/updateRaceTypeSelectMenu-3885303446860889946/base_17.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/race_type_select/race_type_select_menu/updateRaceTypeSelectMenu.s")
 
 #ifdef NON_MATCHING
 void updateRaceTypeSelectMenu(void) {
     u16 sp18[4];
-    s32 nextSelection;
+    u16 nextSelection;
     s32 newInput;
     s32 heldInput;
     s32 pressedUp;
     s32 repeatTimer;
-    s32 canIncrement;
     s32 selection;
     s32 previousSelection;
     s32 pressedUpCopy;
     s32 repeatTimerCopy;
-    s32 tempSelection;
     u8 waitTimer;
     volatile RaceTypeSelectCursorState *cursorTarget;
 
@@ -140,7 +138,6 @@ void updateRaceTypeSelectMenu(void) {
                         ((pressedUpCopy != 0) && ((gMenuInputRepeatTimers & 0xFFFF) >= 9) &&
                          ((gMenuInputRepeatTimers % 3) == 0))) {
                         repeatTimer = gMenuInputRepeatTimers;
-                        tempSelection = selection - 1;
                         if (repeatTimer == 0) {
                             gMenuInputRepeatTimers = repeatTimer + 1;
                             repeatTimer = (((((gMenuInputRepeatTimers & 0xFFFFu) & 0xFFFFu) & 0xFFFFu) & 0xFFFFu) &
@@ -148,20 +145,19 @@ void updateRaceTypeSelectMenu(void) {
                                           0xFFFFu;
                         }
                         if (selection > 0) {
-                            gRaceTypeSelection = tempSelection;
-                            selection = (u8) tempSelection;
+                            gRaceTypeSelection = selection - 1;
+                            selection = (u8) (selection - 1);
                         }
                     } else {
                         repeatTimer = gMenuInputRepeatTimers;
                         if ((heldInput & (STICK_DOWN | D_JPAD)) ||
                             ((newInput & (STICK_DOWN | D_JPAD)) && ((repeatTimerCopy = repeatTimer) >= 9) &&
                              ((repeatTimerCopy % 3) == 0))) {
-                            canIncrement = selection < 3;
                             if (repeatTimer == 0) {
                                 gMenuInputRepeatTimers = repeatTimer + 1;
                                 repeatTimer = gMenuInputRepeatTimers;
                             }
-                            if (canIncrement) {
+                            if (selection < 3) {
                                 nextSelection = selection + 1;
                                 gRaceTypeSelection = nextSelection;
                                 selection = (u8) (selection + 1);
