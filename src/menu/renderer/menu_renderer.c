@@ -1659,7 +1659,7 @@ paletteLoop:
 }
 #endif
 
-// drawMenuAsciiGlyph best match: 98.274% (nonmatchings/drawMenuAsciiGlyph-8129558366194613874/base_3.c)
+// drawMenuAsciiGlyph best match: 98.369% (nonmatchings/drawMenuAsciiGlyph-3885303446860889946/base_13.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/renderer/menu_renderer/drawMenuAsciiGlyph.s")
 
 #ifdef NON_MATCHING
@@ -1755,15 +1755,23 @@ paletteLoop:
     *dstPalette = (paletteColor = *(u16 *)((u8 *)sourcePalette + y0));
     y0 += 2;
     color = paletteColor & 0xFFFF;
+    if (color && color) {
+    }
     if (color & 1) {
         red = (color >> 11) & 0x1F;
         green = (color >> 6) & 0x1F;
- blue = (color >> 1) & 0x1F; red = (red * paletteScale) / 256; green = (green * paletteScale) / 256; color = green;
+ blue = (color >> 1) & 0x1F; red = (paletteScale * red) / 256; green = (paletteScale * green) / 256; color = green;
+        if (red && red) {
+        }
         blue = (blue * paletteScale) / 256;
+        if (red && red) {
+        }
         // This empty condition preserves IDO's palette-loop register allocation.
         if (blue && blue) {
         }
         *dstPalette = (((red << 11) | (color << 6)) | (blue << 1)) | 1;
+        if (dstPalette && dstPalette) {
+        }
     }
     dstPalette++;
     if (y0 != 0x20) {
