@@ -27,14 +27,14 @@ void initMainMenuSceneModelRenderer_pad(void) {
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/main_menu/main_menu_scene_model_renderer/drawMainMenuSceneModel.s")
 
 #ifdef NON_MATCHING
-extern Mtx *allocFixedTransformMatrix(MainMenuModelDisplayObject *);
+extern Mtx *allocFixedTransformMatrix(MainMenuModelTransform *);
 extern Gfx *gRegionAllocPtr;
 extern u8 gCurrentViewportIndex;
 extern Gfx *gMainMenuSceneModelPartDisplayLists[];
 
 void drawMainMenuSceneModel(MainMenuSceneModel *arg0) {
     MainMenuSceneModel *model;
-    MainMenuModelDisplayObject *displayObject;
+    MainMenuModelTransform *displayObject;
     Gfx **displayLists;
     Mtx *matrix;
     s32 i;
@@ -51,7 +51,7 @@ void drawMainMenuSceneModel(MainMenuSceneModel *arg0) {
 #ifdef NON_MATCHING
 void drawTexturedMainMenuSceneModel(MainMenuSceneModel *arg0) {
     MainMenuSceneModel *model;
-    MainMenuModelDisplayObject *displayObject;
+    MainMenuModelTransform *displayObject;
     Gfx **displayLists;
     Mtx *matrix;
     s32 i;

@@ -412,11 +412,11 @@ void drawEndingActorShadow(MainMenuSceneActorShadow *arg0) {
     stack.pos.x = arg0->posX;
     stack.pos.y = arg0->posY;
     stack.pos.z = arg0->posZ;
-    transformVec3iByFixedMatrix(model->displayObjects[(u8)arg0->unkC].pad0, &stack.pos, &stack.transformed);
+    transformVec3iByFixedMatrix(model->displayObjects[(u8)arg0->unkC].rotation, &stack.pos, &stack.transformed);
     stack.transform = gIdentityFixedTransform;
-    stack.transform.x = model->displayObjects[(u8)arg0->unkC].screenX + stack.transformed.x;
-    stack.transform.y = model->displayObjects[(u8)arg0->unkC].screenY + stack.transformed.y;
-    stack.transform.z = model->displayObjects[(u8)arg0->unkC].screenZ;
+    stack.transform.x = model->displayObjects[(u8)arg0->unkC].translation.x + stack.transformed.x;
+    stack.transform.y = model->displayObjects[(u8)arg0->unkC].translation.y + stack.transformed.y;
+    stack.transform.z = model->displayObjects[(u8)arg0->unkC].translation.z;
 
     ENDING_GFX_CMD(gRegionAllocPtr++, 0x06000000, (u32)gAlphaSpriteRenderModeDl);
 
