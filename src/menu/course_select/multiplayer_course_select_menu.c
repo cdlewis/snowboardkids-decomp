@@ -93,7 +93,7 @@ extern void (*D_8011241C)(void);
 extern u8 gPlayerCount;
 extern s32 gMenuFlowState;
 
-// initMultiplayerCourseSelectMenu best match: 95.861% (nonmatchings/initMultiplayerCourseSelectMenu/base_11.c)
+// initMultiplayerCourseSelectMenu best match: 98.238% (nonmatchings/initMultiplayerCourseSelectMenu-4/base_69.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/course_select/multiplayer_course_select_menu/initMultiplayerCourseSelectMenu.s")
 
 #ifdef NON_MATCHING
