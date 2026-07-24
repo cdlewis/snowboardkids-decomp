@@ -800,22 +800,20 @@ void decrementRaceChallengeTimeLimit(void) {
     }
 }
 
-// drawRaceCourseProgressMeter best match: 95.777% at nonmatchings/drawRaceCourseProgressMeter-7998791169205557824/base_32.c.
+// drawRaceCourseProgressMeter best match: 99.769% at nonmatchings/drawRaceCourseProgressMeter-210831275846872038/base_21.c.
 #pragma GLOBAL_ASM("asm/nonmatchings/race/ui/race_hud/drawRaceCourseProgressMeter.s")
 
 #ifdef NON_MATCHING
 void drawRaceCourseProgressMeter(s32 arg0) {
-    s16 yBase;
-    s16 xBase;
     s32 i;
     s32 j;
     s32 temp;
-    s32 *orderPtr;
     RacePlayer *player;
     s16 x;
     u8 characterId;
     s32 order[4];
-    s32 spriteBase;
+    s16 xBase;
+    s16 yBase;
 
     order[0] = 0;
     order[1] = 1;
@@ -824,7 +822,7 @@ void drawRaceCourseProgressMeter(s32 arg0) {
 
     for (i = 0; i < 3; i++) {
         for (j = i + 1; j < 4; j++) {
-            if (gRacePlayers[order[j]].rankIndex < gRacePlayers[*(orderPtr = &order[i])].rankIndex) {
+            if (gRacePlayers[order[j]].rankIndex < gRacePlayers[order[i]].rankIndex) {
                 temp = order[i];
                 order[i] = order[j];
                 order[j] = temp;
@@ -833,8 +831,8 @@ void drawRaceCourseProgressMeter(s32 arg0) {
     }
 
     if (gRaceHudMode == 0) {
-        yBase = -0x56;
         xBase = 0x78;
+        yBase = -0x56;
     }
     if (gRaceHudMode == 1) {
         xBase = 0x78;
@@ -845,13 +843,12 @@ void drawRaceCourseProgressMeter(s32 arg0) {
         yBase = -0x48;
     }
 
-    player = &gRacePlayers[*orderPtr];
     drawAssetTableSprite((s16)(xBase + 4), (s16)(yBase + 4),
                          getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x50);
 
-    orderPtr++;
+    i = 3;
     do {
-        player = &gRacePlayers[*orderPtr];
+        player = &gRacePlayers[order[i]];
         x = xBase - 8;
 
         if (((player->stateFlags & 0x200000) != 0) || (player->unk580 != 0)) {
@@ -866,37 +863,37 @@ void drawRaceCourseProgressMeter(s32 arg0) {
 
         if (player->unk580 != 0) {
             if (player->unk2D8 != 0) {
-                spriteBase = getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle);
-                player = &gRacePlayers[*orderPtr];
+                temp = getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle);
+                player = &gRacePlayers[order[i]];
                 characterId = player->characterId;
-                drawAssetTableSpriteWithExplicitPalette(x, (s16)(player->unk57E + yBase),
-                              spriteBase,
-                              gRaceProgressMeterIconTiles[player->unk580 + (characterId * 6)],
-                              gRaceProgressMeterIconPalettes[characterId]);
+                drawAssetTableSpriteWithExplicitPalette(
+                    x, (s16)(player->unk57E + yBase), temp,
+                    gRaceProgressMeterIconTiles[player->unk580 + (characterId * 6)],
+                    gRaceProgressMeterIconPalettes[characterId]);
             } else {
-                spriteBase = getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle);
-                player = &gRacePlayers[*orderPtr];
-                drawAssetTableSprite(x, (s16)(player->unk57E + yBase),
-                              spriteBase,
-                              gRaceProgressMeterIconTiles[player->unk580 + (player->characterId * 6)]);
+                temp = getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle);
+                player = &gRacePlayers[order[i]];
+                drawAssetTableSprite(
+                    x, (s16)(gRacePlayers[order[i]].unk57E + yBase), temp,
+                    gRaceProgressMeterIconTiles[gRacePlayers[order[i]].unk580 + (player->characterId * 6)]);
             }
         } else if (player->unk2D8 != 0) {
-            spriteBase = getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle);
-            player = &gRacePlayers[*orderPtr];
+            temp = getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle);
+            player = &gRacePlayers[order[i]];
             characterId = player->characterId;
-            drawAssetTableSpriteWithExplicitPalette(xBase, (s16)(player->unk57E + yBase),
-                          spriteBase,
-                          gRaceProgressMeterIconTiles[player->unk580 + (characterId * 6)],
-                          gRaceProgressMeterIconPalettes[characterId]);
+            drawAssetTableSpriteWithExplicitPalette(
+                xBase, (s16)(player->unk57E + yBase), temp,
+                gRaceProgressMeterIconTiles[player->unk580 + (characterId * 6)],
+                gRaceProgressMeterIconPalettes[characterId]);
         } else {
-            spriteBase = getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle);
-            player = &gRacePlayers[*orderPtr];
-            drawAssetTableSprite(xBase, (s16)(player->unk57E + yBase),
-                          spriteBase,
-                          gRaceProgressMeterIconTiles[player->unk580 + (player->characterId * 6)]);
+            temp = getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle);
+            player = &gRacePlayers[order[i]];
+            drawAssetTableSprite(
+                xBase, (s16)(gRacePlayers[order[i]].unk57E + yBase), temp,
+                gRaceProgressMeterIconTiles[gRacePlayers[order[i]].unk580 + (player->characterId * 6)]);
         }
-        orderPtr--;
-    } while (orderPtr >= order);
+        i--;
+    } while (i >= 0);
 }
 #endif
 
