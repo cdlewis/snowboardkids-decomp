@@ -13,6 +13,7 @@
 #include "game/engine/system_runtime.h"
 #include "game/menu/race_setup/race_setup_ui.h"
 #include "game/engine/viewport_manager.h"
+#include "game/audio/sound_manager.h"
 
 typedef struct {
     /* 0x00 */ u8 pad0[0x18];
@@ -159,8 +160,6 @@ extern u8 gFramebufferSwapHold;
 extern s32 gPlayerInputHeld;
 extern s32 gPlayerInputPressed;
 extern void releaseMenuAssetHandles(void);
-extern void requestMusicSequenceBank(s32);
-extern void requestMusicSequenceStop(s32);
 extern void enqueueSoundEffect(s32, s32);
 
 void initCourseSelectMenu(void) {

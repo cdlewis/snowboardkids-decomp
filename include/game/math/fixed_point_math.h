@@ -1,6 +1,7 @@
 #ifndef FIXED_POINT_MATH_H
 #define FIXED_POINT_MATH_H
 
+#include "game/math/fixed_matrix_multiply.h"
 #include "game/math/spatial_math.h"
 
 /*
@@ -21,9 +22,6 @@ typedef enum {
     MTX_ZZ
 } FixedMatrixIndex;
 
-/* 3x3 fixed-point rotation matrix (row-major). */
-typedef s16 FixedMatrix3s[9];
-
 /* Rotation transform: a 3x3 rotation followed by a translation. */
 typedef struct {
     /* 0x00 */ FixedMatrix3s rotation;
@@ -38,7 +36,6 @@ void makeFixedRotationX(FixedMatrix3s arg0, s16 arg1);
 void makeFixedRotationY(FixedMatrix3s arg0, s16 arg1);
 void makeFixedRotationZ(FixedMatrix3s arg0, s16 arg1);
 void scaleFixedMatrix3sByQuarter(FixedMatrix3s arg0);
-void multiplyFixedMatrix3s(FixedMatrix3s arg0, FixedMatrix3s arg1, FixedMatrix3s arg2);
 void makeFixedRotationXYZ(FixedMatrix3s arg0, s16 arg1, s16 arg2, s16 arg3);
 void makeFixedRotationXY(FixedMatrix3s arg0, s16 arg1, s16 arg2);
 void makeFixedRotationZX(FixedMatrix3s arg0, s16 arg1, s16 arg2);

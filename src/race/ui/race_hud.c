@@ -7,6 +7,7 @@
 #include "game/race/ui/race_hud.h"
 #include "game/race/ui/race_ui_effects.h"
 #include "game/race/player/race_player_input.h"
+#include "game/engine/callback_task_scheduler.h"
 
 #define ASSET_HANDLE(index) (((s16 *)&gAssetHandles)[index])
 
@@ -52,7 +53,6 @@ extern void drawScaledAssetTableSprite(s32, s32, s32, s32, s32);
 extern void drawMenuAsciiChar(s32, s16, s32, s32);
 extern void drawMenuAsciiTextDefaultScale(s32, s32, char *, s32);
 extern void addRenderCallback(void *, void *, s32);
-extern void *createCallbackTask(void (*)(), s32, s32);
 extern int sprintf(char *, const char *, ...);
 extern RaceTimer D_800DC928[];
 extern RaceTimer D_800DC950;

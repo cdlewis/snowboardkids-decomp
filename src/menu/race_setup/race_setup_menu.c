@@ -8,6 +8,7 @@
 #include "game/menu/race_setup/race_setup_ui.h"
 #include "game/engine/viewport_manager.h"
 #include "game/race/player/race_player_input.h"
+#include "game/menu/character_select/character_select_menu.h"
 
 typedef struct {
     /* 0x00 */ u8 pad0[0x18];
@@ -644,7 +645,6 @@ extern u8 gControllerPakRumbleCheckPromptState;
 extern u8 gControllerPakRumbleCheckPromptConfirmSelection;
 extern void enqueueSoundEffect(s16 arg0, s32 arg1);
 extern void requestRumbleMotorInit(u16 arg0);
-extern void initCharacterSelectMenu(void);
 extern s32 gRumbleMotorStatuses[];
 
 void updateRaceSetupRumblePrompt(void) {

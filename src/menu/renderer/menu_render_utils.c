@@ -103,6 +103,8 @@ extern Gfx gMenuRenderModeResetDl[];
 extern void *gMenuAsciiFontPaletteBase;
 extern u16 D_800D40B0[];
 
+extern void *allocMenuRenderScratch(s32);
+
 void initMenuAssetHandles(void)
 {
     s16 *end;
@@ -1050,8 +1052,6 @@ void writebackMenuRenderScratchBuffer(s32 arg0) {
         osWritebackDCache((void *)getRelocatableHeapBlockBase(gAssetHandles[2]), gMenuRenderScratchUsedSize);
     }
 }
-
-extern void *allocMenuRenderScratch(s32);
 
 void *copyGfxCommandBlockToScratch(GfxCommandBlock *arg0) {
     GfxCommandBlock *p = allocMenuRenderScratch(sizeof(GfxCommandBlock));
