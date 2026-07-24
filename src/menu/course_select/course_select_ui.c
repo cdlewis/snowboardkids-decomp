@@ -698,90 +698,99 @@ void initCourseSelectPreviewModelOut(void *arg0) {
 }
 
 void drawCourseSelectCourseIconList(CourseSelectIconListActor *iconList) {
-    CourseSelectIconListActor *localPtrs[12];
-    CourseSelectIconListActor *new_var;
-    s32 i;
-    s32 j;
-    s32 alpha;
-    s32 tileIndex;
-    s32 clipOffset;
-    s32 courseId;
-    CourseSelectIconListActor *playerActor;
-    s32 selectedCourse;
+    enum {
+        CURRENT_ITEM_COUNT_ACTOR,
+        PLAYER_ITEM_COUNT_ACTOR = 5,
+        BASE_ICON_LIST_ACTOR = 11
+    };
+    CourseSelectIconListActor *itemCountActors[12];
+    s32 playerIndex;
+    s32 iconIndex;
+    s32 highlightAlpha;
+    s32 iconTileIndex;
+    s32 leftClipOffset;
+    s32 selectedCourseId;
+    s32 selectionState;
+    s32 splitScreenClipOffset;
+    CourseSelectIconListActor *playerItemCountActor;
     CourseSelectRacePlayer *player;
-    s16 *position;
 
-    localPtrs[11] = iconList;
-    new_var = iconList;
-    i = 0;
+    itemCountActors[BASE_ICON_LIST_ACTOR] = iconList;
+    playerIndex = 0;
     if ((s32)gPlayerCount > 0) {
-        localPtrs[0] = new_var;
+        itemCountActors[CURRENT_ITEM_COUNT_ACTOR] = iconList;
         do {
-            playerActor = (CourseSelectIconListActor *)((u8 *)localPtrs[11] + i);
-            j = 0;
-            clipOffset = (i >= 2) * 0x88;
-            if (((u8 *)localPtrs[0])[0x98] > 0) {
-                localPtrs[5] = playerActor;
+            playerItemCountActor =
+                (CourseSelectIconListActor *)&itemCountActors[BASE_ICON_LIST_ACTOR]->pad0[playerIndex];
+            iconIndex = 0;
+            leftClipOffset = (playerIndex >= 2) * 0x88;
+            if (itemCountActors[CURRENT_ITEM_COUNT_ACTOR]->itemCounts[0] > 0) {
+                itemCountActors[PLAYER_ITEM_COUNT_ACTOR] = playerItemCountActor;
                 do {
-                    if (j < (((u8 *)localPtrs[0])[0x98] - 1)) {
-                        position = (s16 *)((u8 *)new_var + (i * 10) + (j * 2));
-                        if (1) {
-                        }
-                        player = &gRacePlayers[i];
-                        alpha = 0;
+                    if (iconIndex < (itemCountActors[CURRENT_ITEM_COUNT_ACTOR]->itemCounts[0] - 1)) {
+                        do {
+                            player = &gRacePlayers[playerIndex];
+                        } while (0);
+                        highlightAlpha = 0;
                         if (gPlayerCount == 1) {
                             if (player->selectedCharacterId != 5) {
-                                tileIndex = (j + 1) & 0xFFFF;
+                                iconTileIndex = (iconIndex + 1) & 0xFFFF;
                             } else {
-                                tileIndex = (j + 6) & 0xFFFF;
+                                iconTileIndex = (iconIndex + 6) & 0xFFFF;
                             }
                         } else if (player->selectedCharacterId != 5) {
-                            tileIndex = (j + 0x14) & 0xFFFF;
+                            iconTileIndex = (iconIndex + 0x14) & 0xFFFF;
                         } else {
-                            tileIndex = (j + 0x18) & 0xFFFF;
+                            iconTileIndex = (iconIndex + 0x18) & 0xFFFF;
                         }
 
-                        selectedCourse = D_8010AEA4[i];
-                        if ((selectedCourse > 0) && (selectedCourse < 8)) {
-                            courseId = player->courseIndex;
-                            if (courseId >= 9) {
-                                if ((j == 3) && (selectedCourse & 1)) {
-                                    alpha = 0xFF;
+                        selectionState = D_8010AEA4[playerIndex];
+                        splitScreenClipOffset = (playerIndex >= 2) * 0x8C;
+                        if ((selectionState > 0) && (selectionState < 8)) {
+                            selectedCourseId = player->courseIndex;
+                            if (selectedCourseId >= 9) {
+                                if ((iconIndex == 3) && (selectionState & 1)) {
+                                    highlightAlpha = 0xFF;
                                 }
-                            } else if ((j == (courseId % 3)) && (selectedCourse & 1)) {
-                                alpha = 0xFF;
+                            } else if ((iconIndex == (selectedCourseId % 3)) && (selectionState & 1)) {
+                                highlightAlpha = 0xFF;
                             }
                         }
 
-                        drawMenuSpriteClipped(position[12], position[32], getRelocatableHeapBlockBase(gAssetHandles[0x21]),
-                                      (u16)tileIndex, 0x20, 0x20, 0, alpha,
-                                      new_var->clipLeft - ((i >= 2) * 0x8C), iconList->clipTop, iconList->clipRight,
-                                      new_var->clipBottom);
+                        drawMenuSpriteClipped(
+                            iconList->y[playerIndex][iconIndex], iconList->x[playerIndex][iconIndex],
+                            getRelocatableHeapBlockBase(gAssetHandles[0x21]), (u16)iconTileIndex, 0x20, 0x20, 0,
+                            highlightAlpha, iconList->clipLeft - splitScreenClipOffset, iconList->clipTop,
+                            iconList->clipRight, iconList->clipBottom);
                     } else if (gPlayerCount == 1) {
-                        alpha = 0;
-                        position = (s16 *)((u8 *)iconList + (i * 10) + (j * 2));
-                        clipOffset = (i >= 2) * 0x88;
-                        if ((D_8010AEA4[i] > 0) && (D_8010AEA4[i] < 8) && (gCourseSelectExtraCourseColumnState == 1) &&
-                            (D_8010AEA4[i] & 1)) {
-                            alpha = 0xFF;
+                        highlightAlpha = 0;
+                        leftClipOffset = (playerIndex >= 2) * 0x88;
+                        if ((D_8010AEA4[playerIndex] > 0) && (D_8010AEA4[playerIndex] < 8) &&
+                            (gCourseSelectExtraCourseColumnState == 1) && (D_8010AEA4[playerIndex] & 1)) {
+                            highlightAlpha = 0xFF;
                         }
 
                         if (gRaceSplitscreenMode == 3) {
-                            drawMenuSpriteClipped(position[12], position[32], getRelocatableHeapBlockBase(gAssetHandles[0x27]), 5, 0x20,
-                                          0x20, 0, alpha, iconList->clipLeft - clipOffset, new_var->clipTop,
-                                          new_var->clipRight, new_var->clipBottom);
+                            drawMenuSpriteClipped(
+                                iconList->y[playerIndex][iconIndex], iconList->x[playerIndex][iconIndex],
+                                getRelocatableHeapBlockBase(gAssetHandles[0x27]), 5, 0x20, 0x20, 0, highlightAlpha,
+                                iconList->clipLeft - leftClipOffset, iconList->clipTop, iconList->clipRight,
+                                iconList->clipBottom);
                         } else {
-                            drawMenuSpriteClipped(position[12], position[32], getRelocatableHeapBlockBase(gAssetHandles[0x21]), 5, 0x20,
-                                          0x20, 0, alpha, iconList->clipLeft - clipOffset, iconList->clipTop,
-                                          iconList->clipRight, new_var->clipBottom);
+                            drawMenuSpriteClipped(
+                                iconList->y[playerIndex][iconIndex], iconList->x[playerIndex][iconIndex],
+                                getRelocatableHeapBlockBase(gAssetHandles[0x21]), 5, 0x20, 0x20, 0, highlightAlpha,
+                                iconList->clipLeft - leftClipOffset, iconList->clipTop, iconList->clipRight,
+                                iconList->clipBottom);
                         }
                     }
-                    j++;
-                } while (j < localPtrs[5]->itemCounts[0]);
+                    iconIndex++;
+                } while (iconIndex < itemCountActors[PLAYER_ITEM_COUNT_ACTOR]->itemCounts[0]);
             }
-            i++;
-            localPtrs[0] = (CourseSelectIconListActor *)((u8 *)localPtrs[0] + 1);
-        } while (i < (s32)gPlayerCount);
+            playerIndex++;
+            itemCountActors[CURRENT_ITEM_COUNT_ACTOR] =
+                (CourseSelectIconListActor *)&itemCountActors[CURRENT_ITEM_COUNT_ACTOR]->pad0[1];
+        } while (playerIndex < (s32)gPlayerCount);
     }
 }
 
