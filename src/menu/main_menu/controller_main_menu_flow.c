@@ -305,50 +305,28 @@ void requestControllerPakSaveStatus(u16 arg0) {
     osRecvMesg(&gControllerSubsystemReplyQueue, &msg, OS_MESG_BLOCK);
 }
 
-// checkControllerPakSaveStatus best match: 97.424% at nonmatchings/checkControllerPakSaveStatus-3379532139742180785/base_11.c
-#pragma GLOBAL_ASM("asm/nonmatchings/menu/main_menu/controller_main_menu_flow/checkControllerPakSaveStatus.s")
-
-#ifdef NON_MATCHING
 void checkControllerPakSaveStatus(u16 arg0) {
     s32 ret;
     s32 maxFiles;
     s32 filesUsed;
     s32 freeBytes;
-    u8 byte0;
-    u8 byte1;
-    u8 byte2;
-    u8 byte3;
-    u8 *src;
-    s32 index;
+    s32 i;
 
     gControllerPakSaveFileIdentity.size = 0x7900;
-    gControllerPakSaveFileIdentity.gameCode = 0x4E534B45;
-    gControllerPakSaveFileIdentity.companyCode = 0x4542;
+    gControllerPakSaveFileIdentity.gameCode = 'NSKE';
+    gControllerPakSaveFileIdentity.companyCode = 'EB';
 
-    src = gControllerPakSaveExtNameBytes;
-    index = 0;
+    i = 0;
     do {
-        gControllerPakSaveFileIdentity.extName[index++] = *src++;
-    } while (src < gControllerPakSaveExtNameBytesEnd);
+        gControllerPakSaveFileIdentity.extName[i] = gControllerPakSaveGameNameBytesEnd[i];
+        i++;
+    } while (i < 4);
 
-    src = gControllerPakSaveGameNameBytes;
-    if (1) { } if (1) { } if (1) { }
-    index = 0;
+    i = 0;
     do {
-        byte0 = *src++;
-        byte1 = *src++;
-        byte2 = *src++;
-        if (gControllerPakSaveFileIdentity.gameCode) {
-        }
-        byte3 = *src++;
-        if ((!index) && (!index)) {
-        }
-        gControllerPakSaveFileIdentity.gameName[index] = byte0;
-        gControllerPakSaveFileIdentity.gameName[index + 1] = byte1;
-        gControllerPakSaveFileIdentity.gameName[index + 2] = byte2;
-        gControllerPakSaveFileIdentity.gameName[index + 3] = byte3;
-        index += 4;
-    } while (src != gControllerPakSaveGameNameBytesEnd);
+        gControllerPakSaveFileIdentity.gameName[i] = gControllerPakSaveGameNameBytes[i];
+        i++;
+    } while (i < 16);
 
     osPfsInitPak(&gControllerEventQueue, &gControllerPakHandles[arg0], arg0);
 
@@ -360,7 +338,7 @@ void checkControllerPakSaveStatus(u16 arg0) {
     } else {
         osPfsNumFiles(&gControllerPakHandles[arg0], &maxFiles, &filesUsed);
         if (filesUsed == 0x10) {
-            gControllerPakStatusCodes[(long long)arg0] = 0xC;
+            gControllerPakStatusCodes[arg0] = 0xC;
         } else {
             osPfsFreeBlocks(&gControllerPakHandles[arg0], &freeBytes);
             maxFiles = freeBytes / 256;
@@ -376,7 +354,6 @@ void checkControllerPakSaveStatus(u16 arg0) {
         gControllerPakOperationCounts[arg0]++;
     }
 }
-#endif
 
 void requestControllerPakSaveRead(u16 arg0) {
     OSMesg msg;
