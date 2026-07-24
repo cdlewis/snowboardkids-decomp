@@ -18,7 +18,7 @@ s32 isRacePlayerInsideCylinder(struct RaceVec3i *pos, s32 xzSize, s32 ySize, s16
 void applyItemHitToRacePlayersInsideSphere(struct RaceVec3i *pos, s32 xzSize, s16 flag);
 s32 tryApplyRacePlayerItemHit(struct RaceVec3i *pos, s32 xzSize, s16 flag, s16 playerIndex);
 s32 updateRacePlayerSurfaceContact(void);
-void updateRacePlayerGroundAlignment(struct RacePlayer *player);
+s32 updateRacePlayerGroundAlignment(struct RacePlayer *player);
 s32 updateRacePlayerLeanAngle(struct RacePlayer *player, s32 arg1, s16 arg2);
 void clampRacePlayerVectorXZSpeed(struct RaceVec3i *vec, struct RacePlayer *player);
 void clampRacePlayerVectorXZHalfSpeed(struct RaceVec3i *vec, struct RacePlayer *player);
