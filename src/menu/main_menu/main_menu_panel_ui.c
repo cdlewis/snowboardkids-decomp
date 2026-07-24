@@ -232,7 +232,7 @@ void initMainMenuModeSelectGrid(MenuPanelActor *arg0) {
     setCallbackTaskCallback(arg0, updateMainMenuModeSelectGrid);
 }
 
-// drawMainMenuModeDescriptionPanel best match: 99.028% (nonmatchings/drawMainMenuModeDescriptionPanel-6934502587000073416/base_8.c)
+// drawMainMenuModeDescriptionPanel best match: 99.067% (nonmatchings/drawMainMenuModeDescriptionPanel-8129558366194613874/base_8.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/main_menu/main_menu_panel_ui/drawMainMenuModeDescriptionPanel.s")
 
 #ifdef NON_MATCHING
@@ -269,14 +269,14 @@ void drawMainMenuModeDescriptionPanel(MenuPanelActor *arg0) {
     } while (i < 0x30);
 
     {
-        u16 glyphText[2];
-        u16 glyph;
+        u16 *text;
+        register u16 lineY;
         s32 visibleIndex;
         s32 streamIndex;
+        u16 glyphText[2];
+        u16 glyph;
         s32 lineX;
-        u16 lineY;
         s32 color;
-        u16 *text;
 
         glyphText[1] = 0xFFFF;
         visibleIndex = 0;

@@ -91,7 +91,7 @@ void initRaceSplitscreenSelectMenu(void) {
     updateCallbackTasks();
 }
 
-// updateRaceSplitscreenSelectMenu best match: 98.810% (nonmatchings/updateRaceSplitscreenSelectMenu-2188069624939011928/base_8.c)
+// updateRaceSplitscreenSelectMenu best match: 98.876% (nonmatchings/updateRaceSplitscreenSelectMenu-1645024839200431810/base_9.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/splitscreen_select/race_splitscreen_select_menu/updateRaceSplitscreenSelectMenu.s")
 
 #ifdef NON_MATCHING
@@ -151,7 +151,15 @@ void updateRaceSplitscreenSelectMenu(void) {
                             }
                             if (selection < 4) {
                                 gRaceSplitscreenMode = selection + 1;
-                                selection = (u8) (selection + 1);
+                                selection = (u8) (((((((((((((selection + 1) & 0xFFu) & 0xFFu) & 0xFFu) & 0xFFu) &
+                                                          0xFFu) &
+                                                         0xFFu) &
+                                                        0xFFu) &
+                                                       0xFFu) &
+                                                      0xFFu) &
+                                                     0xFFu) &
+                                                    0xFFu) &
+                                                   0xFFu);
                             }
                         }
                     }

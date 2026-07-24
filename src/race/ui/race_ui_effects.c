@@ -1,4 +1,5 @@
 #include "common.h"
+#include "assets.h"
 #include "game/race/ui/race_ui_effects.h"
 #include "game/race/effects/snowboard_trail_effects.h"
 #include "game/engine/relocatable_heap.h"
@@ -95,6 +96,11 @@ typedef union {
     /* 0x00 */ s16 halfwords[0x10];
     /* 0x00 */ FixedTransform transform;
 } RaceUiTrailCopyBlock;
+
+typedef union {
+    /* 0x00 */ RaceUiTrailCopyBlock source;
+    /* 0x00 */ s64 forceAlignment;
+} RaceUiAlignedTrailCopyBlock;
 
 typedef union {
     s32 word;
@@ -879,101 +885,6 @@ typedef struct RaceUiCourseSpriteActor {
     /* 0x62 */ u8 matrixDirty;
 } RaceUiCourseSpriteActor;
 
-extern RaceUiSpriteInit D_800D5FF0[];
-
-extern CourseSpawnEntry gRaceCourseStartEntries[];
-extern Vec3i D_800D61C0[];
-extern Vec3i D_800D6340[];
-extern Vtx D_800D6350[];
-extern Vec3i D_800D6220[];
-extern Vec3i D_800D62A0;
-extern Vec3i D_800D6324;
-extern Vec3i D_800D6330[];
-extern Vec3i gIceCourseBumperPositions[];
-extern s16 D_800D633C[];
-extern RaceUiPackedTime gRaceCourseTargetTimes[];
-
-extern void *gMenuRenderCallbackList;
-extern void *gMenuForegroundRenderCallbackList;
-extern void *gRaceForegroundRenderCallbackList;
-extern void *gSceneModelRenderCallbackList;
-extern void *gRaceModelEffectRenderCallbackList;
-extern void *D_801248C8;
-extern u8 gPlayerCount;
-extern u8 gRaceUpdatePaused;
-extern s8 gRacePlayerCount;
-extern u8 gRaceOrderPlayerIds[];
-extern RacePlayerHudStatus gRacePlayerHudStatuses[];
-extern u8 gRaceChallengeFailed;
-extern s32 D_80121DA4;
-extern u8 gCurrentViewportIndex;
-extern u8 gRenderMatricesDirty;
-extern s16 gUiBlinkTimer;
-extern s16 gRaceLapCount;
-extern s32 gPlayer1Money;
-extern s8 D_80122289;
-extern RacePlayerHalfwordField gPlayerHitSource[];
-extern RacePlayerByteField gRacePlayerItemTargetFlags[];
-extern s16 gFrameCounter;
-extern RaceUiAssetHandles gAssetHandles;
-extern s16 gRaceScoreAttackPointTarget;
-extern s16 gRaceCourseCoinMarkerCount;
-extern s16 D_801222F0;
-extern RaceUiRankTrigger *gRaceScoreAttackRingTriggerList;
-extern void *gRaceOverlayRenderCallbackList;
-extern void *gRaceObjectRenderCallbackList;
-extern void *D_801248EC;
-extern s16 gRacePrizeAmountsByCourseAndRank[][4];
-extern Vec3i D_800D6030[];
-extern u32 *D_800D6400[];
-extern RaceUiRankTextRenderEntry *D_800D761C[];
-extern RaceUiGfxCommandScriptEntry *D_800D693C[];
-extern FixedTransform gIdentityFixedTransform;
-extern RaceUiGfxCommandDest gIdentityMatrix;
-extern RaceUiCameraTransformSource D_801121E0[];
-extern Gfx D_800D6120[];
-extern Gfx D_800D6160[];
-extern Gfx D_800D6968[];
-extern u32 D_800D6230[];
-extern u32 gAlphaSpriteRenderModeDl[];
-extern u32 D_800D63D0[];
-extern RaceUiProjectileVertexBlock D_800D64A0[];
-extern u32 D_800D69A8[];
-extern Gfx gEffectRenderModeSetupDl[];
-extern Gfx gEffectRenderModeCleanupDl[];
-extern u32 D_20019C0[];
-extern u32 gSnowboardTrailFrontDisplayList[];
-extern u32 gSnowboardTrailBackDisplayList[];
-extern u32 D_2002660[];
-extern u32 D_2002490[];
-extern u32 D_2003870[];
-extern u32 D_2003538[];
-extern u32 D_20035F8[];
-extern u32 D_200CC20[];
-extern u32 D_200C910[];
-extern u32 D_200C1C8[];
-extern u32 D_200C6A0[];
-extern u32 D_200C7D8[];
-extern u32 D_200CE48[];
-extern u32 D_200CFB0[];
-extern u32 D_200D3A8[];
-extern void addRenderCallback(void *, void *, s32);
-extern RaceUiGfxCommandDest *allocFixedTransformMatrix(RaceUiTrailCopyBlock *);
-extern void setPackedMatrixTranslation(RaceUiGfxCommandDest *, Vec3i *);
-extern void osWritebackDCache(void *, s32);
-extern void drawAssetTableSprite(s16, s16, s32, s32);
-extern void drawAssetTableSprite8bpp(s16, s16, s32, s32);
-extern void drawAssetTableSpriteWithExplicitPalette(s16, s16, s32, s32, volatile u16);
-extern void getAssetTableImageAndPalette(s32, s32, void *, void *);
-extern int sprintf(char *, const char *, ...);
-extern void enqueuePositionalSoundEffect(s32, void *, s32, s32);
-extern void enqueuePlayerLoopingPositionalSoundRequest(s32, void *, s32, s32, f32, s32);
-extern RacePlayerState gRacePlayers[];
-extern s16 D_8012206C[][0x306];
-extern u8 gGameSaveDataBuffer[];
-extern RaceTimer gRaceElapsedTimer;
-extern void enqueueSoundEffect(s32, s32);
-extern void drawMenuAsciiTextDefaultScale(s32, s32, const void *, s32);
 extern char D_800E128C[];
 extern char D_800E1290[];
 extern char D_800E1294[];
@@ -990,18 +901,104 @@ extern const char gRaceUiPendingTrickPrizeLabel[];
 extern const char gRaceUiPendingMakeBonusLabel[];
 extern const char gRaceUiPendingCompleteBonusLabel[];
 extern const char gRaceUiPendingMoneyLabel[];
-extern Gfx D_800D60A0[];
-extern Gfx gTranslucentSpriteRenderModeDl[];
-extern Gfx D_800D6120[];
-extern Gfx D_800D6190[];
-extern u32 gMenuRenderModeResetDl[];
+extern CourseSpawnEntry gRaceCourseStartEntries[];
+extern FixedTransform gIdentityFixedTransform;
 extern Gfx *gRegionAllocPtr;
+extern Gfx D_800D60A0[];
+extern Gfx D_800D6120[];
+extern Gfx D_800D6120[];
+extern Gfx D_800D6160[];
+extern Gfx D_800D6190[];
+extern Gfx D_800D6968[];
+extern Gfx gEffectRenderModeCleanupDl[];
+extern Gfx gEffectRenderModeSetupDl[];
+extern Gfx gTranslucentSpriteRenderModeDl[];
+extern int sprintf(char *, const char *, ...);
+extern RacePlayerByteField gRacePlayerItemTargetFlags[];
+extern RacePlayerHalfwordField gPlayerHitSource[];
+extern RacePlayerHudStatus gRacePlayerHudStatuses[];
+extern RacePlayerState gRacePlayers[];
+extern RaceTimer gRaceElapsedTimer;
 extern RaceUiAssetEntry D_800D5FF4[];
-extern Vec3i D_800D6110;
-extern u16 D_800D6520[];
-extern s32 gPlayerInputPressed;
+extern RaceUiAssetHandles gAssetHandles;
+extern RaceUiCameraTransformSource D_801121E0[];
+extern RaceUiGfxCommandDest *allocFixedTransformMatrix(RaceUiTrailCopyBlock *);
+extern RaceUiGfxCommandDest gIdentityMatrix;
+extern RaceUiGfxCommandScriptEntry *D_800D693C[];
+extern RaceUiPackedTime gRaceCourseTargetTimes[];
+extern RaceUiProjectileVertexBlock D_800D64A0[];
+extern RaceUiRankTextRenderEntry *D_800D761C[];
+extern RaceUiRankTrigger *gRaceScoreAttackRingTriggerList;
+extern RaceUiSpriteInit D_800D5FF0[];
+extern s16 D_800D633C[];
+extern s16 D_8012206C[][0x306];
+extern s16 D_801222F0;
+extern s16 gRaceCourseCoinMarkerCount;
+extern s16 gFrameCounter;
+extern s16 gRaceCourseIndex;
+extern s16 gRaceLapCount;
+extern s16 gRacePrizeAmountsByCourseAndRank[][4];
+extern s16 gRaceScoreAttackPointTarget;
+extern s16 gRaceScoreAttackPointTotal;
+extern s16 gUiBlinkTimer;
+extern s32 D_80121DA4;
 extern s32 gMenuFlowState;
+extern s32 gPlayer1Money;
+extern s32 gPlayerInputPressed;
+extern s32 isPositionNearAnyRaceViewportFocus(Vec3i *);
+extern s8 D_80122289;
+extern s8 gRacePlayerCount;
+extern u16 D_800D6520[];
+extern u32 *D_800D6400[];
+
+extern u32 D_800D6230[];
+extern u32 D_800D63D0[];
+extern u32 D_800D69A8[];
+extern Vec3i D_800D6030[];
+extern Vec3i D_800D6110;
+extern Vec3i D_800D61C0[];
+extern Vec3i D_800D6220[];
+extern Vec3i D_800D62A0;
+extern Vec3i D_800D6324;
+extern Vec3i D_800D6330[];
+extern Vec3i D_800D6340[];
+extern Vtx D_800D6350[];
+extern void *D_801248C8;
+extern void *D_801248EC;
+extern u32 gAlphaSpriteRenderModeDl[];
+extern u32 gMenuRenderModeResetDl[];
+extern u32 gSnowboardTrailBackDisplayList[];
+extern u32 gSnowboardTrailFrontDisplayList[];
 extern u32 gViewportMatrix;
+extern u8 gCurrentViewportIndex;
+extern u8 gGameSaveDataBuffer[];
+extern u8 gPlayerCount;
+extern u8 gRaceChallengeFailed;
+extern u8 gRaceOrderPlayerIds[];
+extern u8 gRaceUpdatePaused;
+extern u8 gRenderMatricesDirty;
+extern Vec3i gIceCourseBumperPositions[];
+
+extern void *gEffectRenderCallbackList;
+extern void *gMenuForegroundRenderCallbackList;
+extern void *gMenuRenderCallbackList;
+extern void *gRaceForegroundRenderCallbackList;
+extern void *gRaceModelEffectRenderCallbackList;
+extern void *gRaceObjectRenderCallbackList;
+extern void *gRaceOverlayRenderCallbackList;
+extern void *gSceneModelRenderCallbackList;
+extern void addRenderCallback(void *, void *, s32);
+extern void drawAssetTableSprite(s16, s16, s32, s32);
+extern void drawAssetTableSprite8bpp(s16, s16, s32, s32);
+extern void drawAssetTableSpriteWithExplicitPalette(s16, s16, s32, s32, volatile u16);
+extern void drawMenuAsciiTextDefaultScale(s32, s32, const void *, s32);
+extern void enqueuePlayerLoopingPositionalSoundRequest(s32, void *, s32, s32, f32, s32);
+extern void enqueuePositionalSoundEffect(s32, void *, s32, s32);
+extern void enqueueSoundEffect(s32, s32);
+extern void getAssetTableImageAndPalette(s32, s32, void *, void *);
+extern void osWritebackDCache(void *, s32);
+extern void packFixedTransformMatrix(void *, void *);
+extern void setPackedMatrixTranslation(RaceUiGfxCommandDest *, Vec3i *);
 
 const char gRaceUiBoardReversePromptLabelBlinkOn[0x10] = "Board Reverse";
 const char gRaceUiBoardReversePromptLabelBlinkOff[0x10] = "Board Reverse";
@@ -1009,12 +1006,6 @@ const char gRaceUiTrickScorePopupPointsFormat[0x4] = "%2d";
 const char gRaceUiTrickScorePopupBonusFormat[0xC] = "%3d";
 const char gRaceUiRankPrizeCounterFormat[0x4] = "%5d";
 const char gRaceUiCoinCounterFormat[0x4] = "%5d";
-
-extern s32 isPositionNearAnyRaceViewportFocus(Vec3i *);
-extern void packFixedTransformMatrix(void *, void *);
-extern s16 gRaceCourseIndex;
-extern s16 gRaceScoreAttackPointTotal;
-extern void *gEffectRenderCallbackList;
 
 void renderRaceCourseSlideSprite(RaceUiSlideActor *arg0) {
     volatile u8 pad[8];
@@ -3670,7 +3661,7 @@ void func_8005F6A4(RaceUiRankTrailActor *arg0) {
         gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x02, getRelocatableHeapBlockBase(ASSET_HANDLE(0xA)));
         gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x03, getRelocatableHeapBlockBase(ASSET_HANDLE(0xB)));
         gSPMatrix(RACE_UI_TRAIL_GFX_ALLOC_PTR++, arg0->matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
-        gSPDisplayList(RACE_UI_TRAIL_GFX_ALLOC_PTR++, D_2003870);
+        gSPDisplayList(RACE_UI_TRAIL_GFX_ALLOC_PTR++, &_ADDR_2003870_VRAM);
     }
 }
 
@@ -3866,7 +3857,7 @@ void func_80060544(RaceUiPodiumTrailActor *arg0) {
         gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x02, getRelocatableHeapBlockBase(ASSET_HANDLE(0xA)));
         gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x03, getRelocatableHeapBlockBase(ASSET_HANDLE(0xB)));
         gSPMatrix(RACE_UI_TRAIL_GFX_ALLOC_PTR++, arg0->matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
-        gSPDisplayList(RACE_UI_TRAIL_GFX_ALLOC_PTR++, D_2002660);
+        gSPDisplayList(RACE_UI_TRAIL_GFX_ALLOC_PTR++, &_ADDR_2002660_VRAM);
     }
 }
 
@@ -4099,11 +4090,11 @@ void renderRaceCourseTripleParticle(RaceUiTripleParticleActor *arg0) {
             gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x02, getRelocatableHeapBlockBase(ASSET_HANDLE(0x8)));
             gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x03, getRelocatableHeapBlockBase(ASSET_HANDLE(0x9)));
             gSPMatrix(RACE_UI_TRAIL_GFX_ALLOC_PTR++, arg0->matrix0, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
-            gSPDisplayList(RACE_UI_TRAIL_GFX_ALLOC_PTR++, D_200C1C8);
+            gSPDisplayList(RACE_UI_TRAIL_GFX_ALLOC_PTR++, &_ADDR_200C1C8_VRAM);
             gSPMatrix(RACE_UI_TRAIL_GFX_ALLOC_PTR++, arg0->matrix1, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
-            gSPDisplayList(RACE_UI_TRAIL_GFX_ALLOC_PTR++, D_200C6A0);
+            gSPDisplayList(RACE_UI_TRAIL_GFX_ALLOC_PTR++, &_ADDR_200C6A0_VRAM);
             gSPMatrix(RACE_UI_TRAIL_GFX_ALLOC_PTR++, arg0->matrix2, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
-            gSPDisplayList(RACE_UI_TRAIL_GFX_ALLOC_PTR++, D_200C7D8);
+            gSPDisplayList(RACE_UI_TRAIL_GFX_ALLOC_PTR++, &_ADDR_200C7D8_VRAM);
         }
     }
 }
@@ -4137,7 +4128,7 @@ void func_80061484(RaceUiRankTrailActor *arg0) {
         gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x02, getRelocatableHeapBlockBase(ASSET_HANDLE(0xA)));
         gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x03, getRelocatableHeapBlockBase(ASSET_HANDLE(0xB)));
         gSPMatrix(RACE_UI_TRAIL_GFX_ALLOC_PTR++, arg0->matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
-        gSPDisplayList(RACE_UI_TRAIL_GFX_ALLOC_PTR++, D_20019C0);
+        gSPDisplayList(RACE_UI_TRAIL_GFX_ALLOC_PTR++, &_ADDR_20019C0_VRAM);
     }
 }
 
@@ -4203,7 +4194,7 @@ void func_800617EC(RaceUiRisingTrailActor *arg0) {
             gSPSegment(gRegionAllocPtr++, 0x02, getRelocatableHeapBlockBase(ASSET_HANDLE(0xA)));
             gSPSegment(gRegionAllocPtr++, 0x03, getRelocatableHeapBlockBase(ASSET_HANDLE(0xB)));
             gSPMatrix(gRegionAllocPtr++, arg0->matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
-            gSPDisplayList(gRegionAllocPtr++, D_20019C0);
+            gSPDisplayList(gRegionAllocPtr++, &_ADDR_20019C0_VRAM);
         }
     }
 }
@@ -4275,7 +4266,7 @@ void renderRaceUiSingleTrailEffect(RaceUiSingleTrailActor *arg0) {
         gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x02, getRelocatableHeapBlockBase(ASSET_HANDLE(0xA)));
         gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x03, getRelocatableHeapBlockBase(ASSET_HANDLE(0xB)));
         gSPMatrix(RACE_UI_TRAIL_GFX_ALLOC_PTR++, arg0->matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
-        gSPDisplayList(RACE_UI_TRAIL_GFX_ALLOC_PTR++, D_2003538);
+        gSPDisplayList(RACE_UI_TRAIL_GFX_ALLOC_PTR++, &_ADDR_2003538_VRAM);
     }
 }
 
@@ -4325,7 +4316,7 @@ void func_80061DE8(RaceUiFadingTrailActor *arg0) {
         gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x03, getRelocatableHeapBlockBase(ASSET_HANDLE(0xB)));
         gSPMatrix(RACE_UI_TRAIL_GFX_ALLOC_PTR++, arg0->matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
         gDPSetPrimColor(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0, 0, 0xFF, 0xFF, 0xFF, arg0->alpha);
-        gSPDisplayList(RACE_UI_TRAIL_GFX_ALLOC_PTR++, D_20035F8);
+        gSPDisplayList(RACE_UI_TRAIL_GFX_ALLOC_PTR++, &_ADDR_20035F8_VRAM);
     }
 }
 
@@ -4424,7 +4415,7 @@ void func_800622B0(RaceUiTransitionRenderActor *arg0) {
         gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x02, getRelocatableHeapBlockBase(ASSET_HANDLE(0xA)));
         gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x03, getRelocatableHeapBlockBase(ASSET_HANDLE(0xB)));
         gSPMatrix(RACE_UI_TRAIL_GFX_ALLOC_PTR++, arg0->matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
-        gSPDisplayList(RACE_UI_TRAIL_GFX_ALLOC_PTR++, D_2002490);
+        gSPDisplayList(RACE_UI_TRAIL_GFX_ALLOC_PTR++, &_ADDR_2002490_VRAM);
     }
 }
 
@@ -4586,7 +4577,7 @@ void renderIceCourseBumper(RaceUiScaledParticleActor *arg0) {
             gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x02, getRelocatableHeapBlockBase(ASSET_HANDLE(0x8)));
             gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x03, getRelocatableHeapBlockBase(ASSET_HANDLE(0x9)));
             gSPMatrix(RACE_UI_TRAIL_GFX_ALLOC_PTR++, arg0->matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
-            gSPDisplayList(RACE_UI_TRAIL_GFX_ALLOC_PTR++, D_200C910);
+            gSPDisplayList(RACE_UI_TRAIL_GFX_ALLOC_PTR++, &_ADDR_200C910_VRAM);
         }
     }
 }
@@ -4674,9 +4665,9 @@ void func_80062F6C(RaceUiTrailingParticleActor *arg0) {
             gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x02, getRelocatableHeapBlockBase(ASSET_HANDLE(0x8)));
             gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x03, getRelocatableHeapBlockBase(ASSET_HANDLE(0x9)));
             gSPMatrix(RACE_UI_TRAIL_GFX_ALLOC_PTR++, arg0->matrix0, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
-            gSPDisplayList(RACE_UI_TRAIL_GFX_ALLOC_PTR++, D_200CE48);
+            gSPDisplayList(RACE_UI_TRAIL_GFX_ALLOC_PTR++, &_ADDR_200CE48_VRAM);
             gSPMatrix(RACE_UI_TRAIL_GFX_ALLOC_PTR++, arg0->matrix1, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
-            gSPDisplayList(RACE_UI_TRAIL_GFX_ALLOC_PTR++, D_200CC20);
+            gSPDisplayList(RACE_UI_TRAIL_GFX_ALLOC_PTR++, &_ADDR_200CC20_VRAM);
         }
     }
 }
@@ -4729,9 +4720,9 @@ void renderRaceCourseSpinningObject(RaceUiSpinningParticleActor *arg0) {
         gSPSegment(gRegionAllocPtr++, 0x02, getRelocatableHeapBlockBase(ASSET_HANDLE(0x8)));
         gSPSegment(gRegionAllocPtr++, 0x03, getRelocatableHeapBlockBase(ASSET_HANDLE(0x9)));
         gSPMatrix(gRegionAllocPtr++, arg0->matrix0, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
-        gSPDisplayList(gRegionAllocPtr++, D_200D3A8);
+        gSPDisplayList(gRegionAllocPtr++, &_ADDR_200D3A8_VRAM);
         gSPMatrix(gRegionAllocPtr++, arg0->matrix1, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
-        gSPDisplayList(gRegionAllocPtr++, D_200CFB0);
+        gSPDisplayList(gRegionAllocPtr++, &_ADDR_200CFB0_VRAM);
     }
 }
 
@@ -4822,76 +4813,47 @@ void initCourseStartFinishSprite(RaceUiCourseSpriteActor *actor) {
     setCallbackTaskCallback(actor, updateCourseStartFinishSprite);
 }
 
-// func_80063A9C best match: 99.571% (nonmatchings/func_80063A9C-8239461464121803931/base_5.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race/ui/race_ui_effects/func_80063A9C.s")
-
-#ifdef NON_MATCHING
-#define RACE_UI_EFFECT_EMIT_GFX(word0, word1) \
-    {                                         \
-        Gfx *_g;                              \
-        _g = gRegionAllocPtr++;               \
-        _g->words.w0 = (word0);               \
-        _g->words.w1 = (word1);               \
-    }
-
 void func_80063A9C(RaceUiEffectParticleActor *arg0) {
-    RaceUiEffectParticleActor *actor2;
-    s32 negX;
-    s32 negY;
-    s32 negZ;
+    RaceUiEffectParticleActor *actor;
+    s32 cameraX;
+    s32 cameraY;
+    s32 cameraZ;
+    RaceUiAlignedTrailCopyBlock transform;
     s32 i;
     RaceUiGfxCommandDest *matrix;
-    RaceUiTrailCopyBlock spA0;
 
-    RACE_UI_EFFECT_EMIT_GFX(0xFD500000, (u32)arg0->unk20);
-    RACE_UI_EFFECT_EMIT_GFX(0xF5500000, 0x07080200);
-    RACE_UI_EFFECT_EMIT_GFX(0xE6000000, 0);
-    negX = 0x070FF400;
-    RACE_UI_EFFECT_EMIT_GFX(0xF3000000, negX);
-    RACE_UI_EFFECT_EMIT_GFX(0xE7000000, 0);
-    RACE_UI_EFFECT_EMIT_GFX(0xF5400400, 0x00080200);
-    RACE_UI_EFFECT_EMIT_GFX(0xF2000000, 0x0007C07C);
-    RACE_UI_EFFECT_EMIT_GFX(0xFD100000, (u32)arg0->unk1C);
-    RACE_UI_EFFECT_EMIT_GFX(0xE8000000, 0);
-    RACE_UI_EFFECT_EMIT_GFX(0xF5000100, 0x07000000);
-    RACE_UI_EFFECT_EMIT_GFX(0xE6000000, 0);
-    RACE_UI_EFFECT_EMIT_GFX(0xF0000000, 0x0703C000);
-    RACE_UI_EFFECT_EMIT_GFX(0xE7000000, 0);
-    RACE_UI_EFFECT_EMIT_GFX(0x06000000, (u32)gAlphaSpriteRenderModeDl);
+    actor = arg0;
+    gDPLoadTextureBlock_4b(gRegionAllocPtr++, actor->unk20, G_IM_FMT_CI, 32, 32, 0,
+                           G_TX_CLAMP, G_TX_CLAMP, 0, 0, G_TX_NOLOD, G_TX_NOLOD);
+    gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, actor->unk1C);
+    gSPDisplayList(gRegionAllocPtr++, gAlphaSpriteRenderModeDl);
 
-    spA0.transform = gIdentityFixedTransform;
-
-    actor2 = arg0;
-    negX = -D_801121E0[gCurrentViewportIndex].transformOffset.x;
-    negY = -D_801121E0[gCurrentViewportIndex].transformOffset.y;
-    negZ = -D_801121E0[gCurrentViewportIndex].transformOffset.z;
+    transform.source.transform = gIdentityFixedTransform;
+    cameraX = -D_801121E0[gCurrentViewportIndex].transformOffset.x;
+    cameraY = -D_801121E0[gCurrentViewportIndex].transformOffset.y;
+    cameraZ = -D_801121E0[gCurrentViewportIndex].transformOffset.z;
 
     i = 0;
-    if (arg0->count > 0) {
+    if (actor->count > 0) {
         do {
-            spA0.transform.translation.x = ((arg0->particles[i].unk0 - (negX & 0xFFFFFF)) & 0xFFFFFF) + negX + 0xFF800000;
-            spA0.transform.translation.y = ((arg0->particles[i].unk4 - (negY & 0xFFFFFF)) & 0xFFFFFF) + negY + 0xFF800000;
-            spA0.transform.translation.z = ((arg0->particles[i].unk8 - (negZ & 0xFFFFFF)) & 0xFFFFFF) + negZ + 0xFF800000;
-            matrix = allocFixedTransformMatrix(&spA0);
+            transform.source.transform.translation.x =
+                ((actor->particles[i].unk0 - (cameraX & 0xFFFFFF)) & 0xFFFFFF) + cameraX + 0xFF800000;
+            transform.source.transform.translation.y =
+                ((actor->particles[i].unk4 - (cameraY & 0xFFFFFF)) & 0xFFFFFF) + cameraY + 0xFF800000;
+            transform.source.transform.translation.z =
+                ((actor->particles[i].unk8 - (cameraZ & 0xFFFFFF)) & 0xFFFFFF) + cameraZ + 0xFF800000;
+            matrix = allocFixedTransformMatrix(&transform.source);
             if (matrix != NULL) {
-                {
-                    Gfx *_g;
-
-                    _g = gRegionAllocPtr++;
-                    _g->words.w1 = (u32)matrix;
-                    _g->words.w0 = 0x01020040;
-                }
-                RACE_UI_EFFECT_EMIT_GFX(0x01000040, gViewportMatrix);
-                RACE_UI_EFFECT_EMIT_GFX(0x04000C2F, (u32)D_800D63D0);
-                RACE_UI_EFFECT_EMIT_GFX(0xBF000000, 0x402);
+                gSPMatrix(gRegionAllocPtr++, matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+                gSPMatrix(gRegionAllocPtr++, gViewportMatrix, G_MTX_NOPUSH | G_MTX_MUL | G_MTX_MODELVIEW);
+                gSPVertex(gRegionAllocPtr++, D_800D63D0, 3, 0);
+                gSP1Triangle(gRegionAllocPtr++, 0, 2, 1, 0);
+                actor = arg0;
             }
             i++;
-        } while (i < actor2->count);
+        } while (i < actor->count);
     }
 }
-
-#undef RACE_UI_EFFECT_EMIT_GFX
-#endif
 
 void func_80063E70(RaceUiEffectParticleActor *arg0) {
     register RaceUiEffectParticleActor *actor;
@@ -5595,7 +5557,7 @@ void renderRaceScoreAttackRings(RaceUiRankTextRenderActor *arg0) {
                 gSPMatrix(temp_s0, (u32)arg0->matrices + (var_s6 << 6), G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
 
                 temp_s0 = gRegionAllocPtr++;
-                gSPDisplayList(temp_s0, D_20019C0);
+                gSPDisplayList(temp_s0, &_ADDR_20019C0_VRAM);
             }
             var_s4++;
             var_s6++;

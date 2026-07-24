@@ -1,4 +1,5 @@
 #include "common.h"
+#include "assets.h"
 #include "game/race/course/race_course_effects.h"
 #include "game/race/player/race_player_input.h"
 #include "game/engine/relocatable_heap.h"
@@ -17,12 +18,6 @@
     _g->words.w0 = (cmd0); \
     _g->words.w1 = (cmd1); \
 }
-#define EMIT_COURSE_BACKDROP(list)                                                                      \
-        gDPPipeSync(gRegionAllocPtr++);                                                                 \
-        gSPSegment(gRegionAllocPtr++, 0x02, getRelocatableHeapBlockBase(handles->courseVtxHandle));     \
-        gSPSegment(gRegionAllocPtr++, 0x03, getRelocatableHeapBlockBase(handles->courseTextureHandle)); \
-        gSPMatrix(gRegionAllocPtr++, effect->matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);      \
-        gSPDisplayList(gRegionAllocPtr++, list)
 
 typedef struct RaceCountdownEffect {
     char pad[0x18];
@@ -285,7 +280,6 @@ extern CourseMarkerEntry gCourseBillboardMarkerEntries[];
 extern CourseMarkerVertexResource gCourseBillboardMarkerVertexResources[];
 extern CourseMarkerTextureResource gCourseBillboardMarkerTextureResources[];
 extern CourseTriggerEntry gCourseTriggerEntries[];
-extern Gfx D_2001D00[];
 extern SoundParamAngle gCourseGateAngles[];
 extern CourseRenderCommand gIdentityMatrix[];
 extern s32 gMenuRenderCallbackList;
@@ -296,34 +290,7 @@ extern s32 gSceneModelRenderCallbackList;
 extern s32 gRaceObjectRenderCallbackList;
 extern s32 gBackdropRenderCallbackList;
 extern Gfx *gRegionAllocPtr;
-extern Gfx D_2001678[];
-extern Gfx D_2001730[];
-extern Gfx D_2001810[];
-extern Gfx D_20018E8[];
-extern Gfx D_2000910[];
-extern Gfx D_2003218[];
-extern Gfx D_20057D8[];
-extern Gfx D_2006430[];
-extern Gfx D_20067B0[];
-extern Gfx D_2008628[];
-extern Gfx D_2008790[];
-extern Gfx D_2008900[];
-extern Gfx D_20089E0[];
-extern Gfx D_2008D50[];
-extern Gfx D_2008E30[];
-extern Gfx D_2008F80[];
-extern Gfx D_200B400[];
-extern Gfx D_200B4E0[];
-extern Gfx D_200B7B8[];
-extern Gfx D_200B8C8[];
-extern Gfx D_200BD48[];
-extern Gfx D_200BF40[];
-extern Gfx D_200C060[];
-extern Gfx D_200C238[];
-extern Gfx D_200C7A8[];
-extern Gfx D_2006548[];
-extern Gfx D_2006880[];
-extern Gfx D_20058A8[];
+
 void drawRaceCountdownReadyPrompt(RaceCountdownEffect *arg0) {
     if (arg0->step != 0) {
         drawScaledAssetTableSprite(-0x34, -0xC, getRelocatableHeapBlockBase(ASSET_HANDLE(0x1C)), 0x3F, arg0->step);
@@ -410,93 +377,159 @@ void renderRaceCourseModel(void *arg0) {
 
     switch (*(u16 *)&gRaceCourseIndex) {
         case 0:
-            gSPDisplayList(gRegionAllocPtr++, D_2008900);
+            gSPDisplayList(gRegionAllocPtr++, &_EBEC0_VRAM);
             break;
         case 1:
-            gSPDisplayList(gRegionAllocPtr++, D_2008E30);
+            gSPDisplayList(gRegionAllocPtr++, &_F57D0_VRAM);
             break;
         case 2:
-            gSPDisplayList(gRegionAllocPtr++, D_2008628);
+            gSPDisplayList(gRegionAllocPtr++, &_FE788_VRAM);
             break;
         case 3:
-            gSPDisplayList(gRegionAllocPtr++, D_200B400);
+            gSPDisplayList(gRegionAllocPtr++, &_10A1A0_VRAM);
             break;
         case 4:
-            gSPDisplayList(gRegionAllocPtr++, D_200BD48);
+            gSPDisplayList(gRegionAllocPtr++, &_1167F8_VRAM);
             break;
         case 5:
-            gSPDisplayList(gRegionAllocPtr++, D_200C060);
+            gSPDisplayList(gRegionAllocPtr++, &_1246D0_VRAM);
             break;
         case 6:
-            gSPDisplayList(gRegionAllocPtr++, D_200B7B8);
+            gSPDisplayList(gRegionAllocPtr++, &_131448_VRAM);
             break;
         case 7:
-            gSPDisplayList(gRegionAllocPtr++, D_2006430);
+            gSPDisplayList(gRegionAllocPtr++, &_137EC0_VRAM);
             break;
         case 8:
-            gSPDisplayList(gRegionAllocPtr++, D_20067B0);
+            gSPDisplayList(gRegionAllocPtr++, &_13EC60_VRAM);
             break;
         case 9:
-            gSPDisplayList(gRegionAllocPtr++, D_20057D8);
+            gSPDisplayList(gRegionAllocPtr++, &_144B88_VRAM);
             break;
     }
 }
 
-// renderRaceCourseBackdrop best match: 96.122% (base_42.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race/course/race_course_effects/renderRaceCourseBackdrop.s")
-
-#ifdef NON_MATCHING
 void renderRaceCourseBackdrop(RaceCourseBackdropEffect *arg0) {
+    s32 matrixFlags;
+    void *textureBase;
     CourseEffectMatrixSource sp100;
-    RaceCourseBackdropEffect *effect;
-    CourseBackdropAssetHandles *handles;
+    volatile u8 pad[8];
 
-    effect = arg0;
-    handles = (CourseBackdropAssetHandles *)(s32)&gAssetHandles;
     sp100 = gIdentityFixedTransform;
     sp100.basePos.x = -D_801121E0[gCurrentViewportIndex].transformOffset.x;
     sp100.basePos.y = -D_801121E0[gCurrentViewportIndex].transformOffset.y;
+    matrixFlags = G_MTX_NOPUSH;
     sp100.basePos.z = -D_801121E0[gCurrentViewportIndex].transformOffset.z;
 
-    effect->matrix = allocFixedTransformMatrix(&sp100);
-    if (effect->matrix != NULL) {
+    arg0->matrix = allocFixedTransformMatrix(&sp100);
+    if (arg0->matrix != NULL) {
         switch (*(u16 *)&gRaceCourseIndex) {
             case 0:
-                EMIT_COURSE_BACKDROP(D_20089E0);
-                gSPDisplayList(gRegionAllocPtr++, D_2008D50);
+                gDPPipeSync(gRegionAllocPtr++);
+                gSPSegment(gRegionAllocPtr++, 0x02,
+                           getRelocatableHeapBlockBase(((CourseBackdropAssetHandles *)&gAssetHandles)->courseVtxHandle));
+                gSPSegment(gRegionAllocPtr++, 0x03,
+                           getRelocatableHeapBlockBase(((CourseBackdropAssetHandles *)&gAssetHandles)->courseTextureHandle));
+                gSPMatrix(gRegionAllocPtr++, arg0->matrix,
+                          G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+                gSPDisplayList(gRegionAllocPtr++, &_EBFA0_VRAM);
+                gSPDisplayList(gRegionAllocPtr++, &_EC310_VRAM);
                 break;
             case 1:
-                EMIT_COURSE_BACKDROP(D_2008F80);
+                gDPPipeSync(gRegionAllocPtr++);
+                gSPSegment(gRegionAllocPtr++, 0x02,
+                           getRelocatableHeapBlockBase(((CourseBackdropAssetHandles *)&gAssetHandles)->courseVtxHandle));
+                gSPSegment(gRegionAllocPtr++, 0x03,
+                           textureBase = getRelocatableHeapBlockBase(
+                               ((CourseBackdropAssetHandles *)&gAssetHandles)->courseTextureHandle));
+                gSPMatrix(gRegionAllocPtr++, arg0->matrix,
+                          G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+                gSPDisplayList(gRegionAllocPtr++, &_F5920_VRAM);
                 break;
             case 2:
-                EMIT_COURSE_BACKDROP(D_2008790);
+                gDPPipeSync(gRegionAllocPtr++);
+                gSPSegment(gRegionAllocPtr++, 0x02,
+                           getRelocatableHeapBlockBase(((CourseBackdropAssetHandles *)&gAssetHandles)->courseVtxHandle));
+                gSPSegment(gRegionAllocPtr++, 0x03,
+                           getRelocatableHeapBlockBase(((CourseBackdropAssetHandles *)&gAssetHandles)->courseTextureHandle));
+                gSPMatrix(gRegionAllocPtr++, arg0->matrix,
+                          G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+                gSPDisplayList(gRegionAllocPtr++, &_FE8F0_VRAM);
                 break;
             case 3:
-                EMIT_COURSE_BACKDROP(D_200B4E0);
+                gDPPipeSync(gRegionAllocPtr++);
+                gSPSegment(gRegionAllocPtr++, 0x02,
+                           getRelocatableHeapBlockBase(((CourseBackdropAssetHandles *)&gAssetHandles)->courseVtxHandle));
+                gSPSegment(gRegionAllocPtr++, 0x03,
+                           getRelocatableHeapBlockBase(((CourseBackdropAssetHandles *)&gAssetHandles)->courseTextureHandle));
+                gSPMatrix(gRegionAllocPtr++, arg0->matrix,
+                          (G_MTX_NOPUSH | G_MTX_LOAD) | matrixFlags);
+                gSPDisplayList(gRegionAllocPtr++, &_10A280_VRAM);
                 break;
             case 4:
-                EMIT_COURSE_BACKDROP(D_200BF40);
+                gDPPipeSync(gRegionAllocPtr++);
+                gSPSegment(gRegionAllocPtr++, 0x02,
+                           getRelocatableHeapBlockBase(((CourseBackdropAssetHandles *)&gAssetHandles)->courseVtxHandle));
+                gSPSegment(gRegionAllocPtr++, 0x03,
+                           getRelocatableHeapBlockBase(((CourseBackdropAssetHandles *)&gAssetHandles)->courseTextureHandle));
+                gSPMatrix(gRegionAllocPtr++, arg0->matrix,
+                          (matrixFlags | G_MTX_LOAD) | matrixFlags);
+                gSPDisplayList(gRegionAllocPtr++, &_1169F0_VRAM);
                 break;
             case 5:
-                EMIT_COURSE_BACKDROP(D_200C238);
-                gSPDisplayList(gRegionAllocPtr++, D_200C7A8);
+                gDPPipeSync(gRegionAllocPtr++);
+                gSPSegment(gRegionAllocPtr++, 0x02,
+                           getRelocatableHeapBlockBase(((CourseBackdropAssetHandles *)&gAssetHandles)->courseVtxHandle));
+                gSPSegment(gRegionAllocPtr++, 0x03,
+                           getRelocatableHeapBlockBase(((CourseBackdropAssetHandles *)&gAssetHandles)->courseTextureHandle));
+                gSPMatrix(gRegionAllocPtr++, arg0->matrix,
+                          (matrixFlags | G_MTX_LOAD) | matrixFlags);
+                gSPDisplayList(gRegionAllocPtr++, &_1248A8_VRAM);
+                gSPDisplayList(gRegionAllocPtr++, &_124E18_VRAM);
                 break;
             case 6:
-                EMIT_COURSE_BACKDROP(D_200B8C8);
+                gDPPipeSync(gRegionAllocPtr++);
+                gSPSegment(gRegionAllocPtr++, 0x02,
+                           getRelocatableHeapBlockBase(((CourseBackdropAssetHandles *)&gAssetHandles)->courseVtxHandle));
+                gSPSegment(gRegionAllocPtr++, 0x03,
+                           getRelocatableHeapBlockBase(((CourseBackdropAssetHandles *)&gAssetHandles)->courseTextureHandle));
+                gSPMatrix(gRegionAllocPtr++, arg0->matrix,
+                          (matrixFlags | G_MTX_LOAD) | matrixFlags);
+                gSPDisplayList(gRegionAllocPtr++, &_131558_VRAM);
                 break;
             case 7:
-                EMIT_COURSE_BACKDROP(D_2006548);
+                gDPPipeSync(gRegionAllocPtr++);
+                gSPSegment(gRegionAllocPtr++, 0x02,
+                           getRelocatableHeapBlockBase(((CourseBackdropAssetHandles *)&gAssetHandles)->courseVtxHandle));
+                gSPSegment(gRegionAllocPtr++, 0x03,
+                           getRelocatableHeapBlockBase(((CourseBackdropAssetHandles *)&gAssetHandles)->courseTextureHandle));
+                gSPMatrix(gRegionAllocPtr++, arg0->matrix,
+                          (matrixFlags | G_MTX_LOAD) | matrixFlags);
+                gSPDisplayList(gRegionAllocPtr++, &_137FD8_VRAM);
                 break;
             case 8:
-                EMIT_COURSE_BACKDROP(D_2006880);
+                gDPPipeSync(gRegionAllocPtr++);
+                gSPSegment(gRegionAllocPtr++, 0x02,
+                           getRelocatableHeapBlockBase(((CourseBackdropAssetHandles *)&gAssetHandles)->courseVtxHandle));
+                gSPSegment(gRegionAllocPtr++, 0x03,
+                           getRelocatableHeapBlockBase(((CourseBackdropAssetHandles *)&gAssetHandles)->courseTextureHandle));
+                gSPMatrix(gRegionAllocPtr++, arg0->matrix,
+                          (matrixFlags | G_MTX_LOAD) | matrixFlags);
+                gSPDisplayList(gRegionAllocPtr++, &_13ED30_VRAM);
                 break;
             case 9:
-                EMIT_COURSE_BACKDROP(D_20058A8);
+                gDPPipeSync(gRegionAllocPtr++);
+                gSPSegment(gRegionAllocPtr++, 0x02,
+                           getRelocatableHeapBlockBase(((CourseBackdropAssetHandles *)&gAssetHandles)->courseVtxHandle));
+                gSPSegment(gRegionAllocPtr++, 0x03,
+                           getRelocatableHeapBlockBase(((CourseBackdropAssetHandles *)&gAssetHandles)->courseTextureHandle));
+                gSPMatrix(gRegionAllocPtr++, arg0->matrix,
+                          (matrixFlags | G_MTX_LOAD) | matrixFlags);
+                gSPDisplayList(gRegionAllocPtr++, &_144C58_VRAM);
                 break;
         }
     }
 }
-#endif
 
 void updateRaceCourseModelRenderTask(void *arg0) {
     addRenderCallback(&gRaceObjectRenderCallbackList, renderRaceCourseModel, arg0);
@@ -746,7 +779,7 @@ void renderPatrolCourseObject(PatrolCourseObjectEffect *arg0) {
             gSPSegment(gRegionAllocPtr++, 0x02, getRelocatableHeapBlockBase(ASSET_HANDLE(0xA)));
             gSPSegment(gRegionAllocPtr++, 0x03, getRelocatableHeapBlockBase(ASSET_HANDLE(0xB)));
             gSPMatrix(gRegionAllocPtr++, arg0->displayList, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
-            gSPDisplayList(gRegionAllocPtr++, D_2001D00);
+            gSPDisplayList(gRegionAllocPtr++, &_149610_VRAM);
         }
     }
 }
@@ -901,9 +934,9 @@ void renderLaunchRampCourseObject(RaceMovingEffect *arg0) {
             gSPSegment(gRegionAllocPtr++, 0x03, getRelocatableHeapBlockBase(ASSET_HANDLE(0xB)));
             gSPMatrix(gRegionAllocPtr++, arg0->matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
             if (gRaceCourseIndex != 8) {
-                gSPDisplayList(gRegionAllocPtr++, D_2000910);
+                gSPDisplayList(gRegionAllocPtr++, &_148220_VRAM);
             } else {
-                gSPDisplayList(gRegionAllocPtr++, D_2003218);
+                gSPDisplayList(gRegionAllocPtr++, &_14AB28_VRAM);
             }
         }
     }
@@ -995,9 +1028,9 @@ void renderSpiralCourseObject(RaceMovingEffect *arg0) {
             gSPSegment(gRegionAllocPtr++, 0x03, getRelocatableHeapBlockBase(ASSET_HANDLE(0xB)));
             gSPMatrix(gRegionAllocPtr++, arg0->matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
             if (gRaceCourseIndex != 8) {
-                gSPDisplayList(gRegionAllocPtr++, D_2000910);
+                gSPDisplayList(gRegionAllocPtr++, &_148220_VRAM);
             } else {
-                gSPDisplayList(gRegionAllocPtr++, D_2003218);
+                gSPDisplayList(gRegionAllocPtr++, &_14AB28_VRAM);
             }
         }
     }
@@ -1121,7 +1154,7 @@ void renderCourseGateObject(CourseGateObjectEffect *arg0) {
         segment2->words.w0 = 0xBC000C06;
         segment2->words.w1 = getRelocatableHeapBlockBase(ASSET_HANDLE(0xB));
         gSPMatrix(gRegionAllocPtr++, temp_s0->sourceMatrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
-        gSPDisplayList(gRegionAllocPtr++, D_2001678);
+        gSPDisplayList(gRegionAllocPtr++, &_148F88_VRAM);
     }
 
     if (temp_s0->pos1Matrix == NULL) {
@@ -1134,7 +1167,7 @@ void renderCourseGateObject(CourseGateObjectEffect *arg0) {
 
     if (temp_s0->pos1Matrix != NULL) {
         gSPMatrix(gRegionAllocPtr++, temp_s0->pos1Matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
-        gSPDisplayList(gRegionAllocPtr++, D_2001730);
+        gSPDisplayList(gRegionAllocPtr++, &_149040_VRAM);
     }
 
     if (temp_s0->pos2Matrix == NULL) {
@@ -1149,9 +1182,9 @@ void renderCourseGateObject(CourseGateObjectEffect *arg0) {
         gSPMatrix(gRegionAllocPtr++, temp_s0->pos2Matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
 
         if (temp_s0->unk56 == 0) {
-            gSPDisplayList(gRegionAllocPtr++, D_2001810);
+            gSPDisplayList(gRegionAllocPtr++, &_149120_VRAM);
         } else {
-            gSPDisplayList(gRegionAllocPtr++, D_20018E8);
+            gSPDisplayList(gRegionAllocPtr++, &_1491F8_VRAM);
         }
     }
 }

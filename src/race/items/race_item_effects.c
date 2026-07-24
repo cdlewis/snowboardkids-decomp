@@ -250,7 +250,7 @@ s32 getRaceItemEffectType(s32 arg0) {
     return p[arg0];
 }
 
-// updateRaceItemSparkBurst best match: 91.364% (nonmatchings/updateRaceItemSparkBurst-6/output-475-2/source.c)
+// updateRaceItemSparkBurst best match: 95.091% (nonmatchings/updateRaceItemSparkBurst-1645024839200431810/base_2.c)
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race/items/race_item_effects/updateRaceItemSparkBurst.s")
 
@@ -292,24 +292,7 @@ void updateRaceItemSparkBurst(RaceItemEffectActor *arg0) {
     drawList = (RaceItemDrawNode **) gRaceItemTextureEffectDrawLists;
     if (state == 0) {
         actor->unk64 = state + 1;
-    }
-
-    node = fieldNode = actor->drawNodes;
-    playerIndex = actor->playerIndex;
-    if (playerIndex >= 4) {
-        playerIndex = 0;
-    }
-
-    drawList = &drawList[playerIndex];
-    payload = actor->payloads;
-
-loop:
-    fieldNode->next = *drawList;
-    if (((actor == NULL) && (actor == NULL)) && (actor == NULL)) {
-    }
-    i++;
-    *drawList = node;
-    displayList = &gRaceItemSparkBurstVertices[(actor->unk68[actor->unk64 - 1] * 8) * 2];
+    } node = (fieldNode = actor->drawNodes); playerIndex = actor->playerIndex; if (playerIndex >= 4) { playerIndex = 0; } drawList = &drawList[playerIndex]; payload = actor->payloads; loop: fieldNode->next = *drawList; if (((actor == NULL) && (actor == NULL)) && (actor == NULL)) { } i++; *drawList = node; displayList = &gRaceItemSparkBurstVertices[(actor->unk68[actor->unk64 - 1] * 8) * 2];
     node++;
     fieldNode->pos = &payload->vec;
     payload++;
@@ -327,7 +310,7 @@ void initRaceItemSparkBurst(RaceItemEffectActor *arg0) {
     setCallbackTaskCallback(arg0, updateRaceItemSparkBurst);
 }
 
-// spawnRaceItemTrackSparkBurst best match: 93.868% (nonmatchings/spawnRaceItemTrackSparkBurst-6887713755923057488/base_28.c)
+// spawnRaceItemTrackSparkBurst best match: 94.291% (nonmatchings/spawnRaceItemTrackSparkBurst-1645024839200431810/base_11.c)
 
 #pragma GLOBAL_ASM("asm/nonmatchings/race/items/race_item_effects/spawnRaceItemTrackSparkBurst.s")
 
@@ -367,21 +350,13 @@ void spawnRaceItemTrackSparkBurst(Vec3i *arg0, Vec3i *arg1, Vec3i *arg2, Vec3i *
         midBX = ((arg2->x - arg3->x) / 2) + arg3->x;
         midBY = ((arg2->y - arg3->y) / 2) + arg3->y;
         midBZ = ((arg2->z - arg3->z) / 2) + arg3->z;
-
-        dx = midAY - midBY;
-        distY = (s64) dx * dx;
-        dx = midAX - midBX;
-        distX = (s64) dx * dx;
-        dx = midAZ - midBZ;
-        distZ = (s64) dx * dx;
-        locals.total.value = distZ + distX + distY;
-        if (locals.total.word.high > 0) {
+ dx = midAY - midBY; distY = (s64) dx * dx; dx = midAX - midBX; distX = (s64) dx * dx; dx = midAZ - midBZ; distZ = (s64) dx * dx; locals.total.value = (distZ + distX) + distY; if (locals.total.word.high > 0) { { }
             actor = (RaceItemSparkBurstSpawnActor *) createCallbackTaskWithUserIdPreservingArgs(
                 initRaceItemSparkBurst, 5, 0x32, itemType);
             if (actor != NULL) {
                 actor->unk68 = gRaceItemSparkBurstLargeFrameSequence;
                 if (locals.total.word.high < 0x65) {
-                    if (locals.total.word.high >= 0x64) {
+                    if ((locals.total.word.high >= 0x64) != 0) {
                         arg4 = locals.total.word.high;
                         goto mediumDone;
                     }

@@ -1,13 +1,10 @@
 #include "game/audio/audio_engine_internal.h"
 
-// initAudioSynthesizer best match: 99.961% (nonmatchings/initAudioSynthesizer-8699393380584516020/base_4.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/libmus/aud_thread/initAudioSynthesizer.s")
+#define ARRAY_COUNT(array) (sizeof(array) / sizeof((array)[0]))
 
-#ifdef NON_MATCHING
 void initAudioSynthesizer(SchedulerState *scheduler, ALSynConfig *config, s32 threadPriority,
                           AudioSynthInitConfig *initConfig, s32 dmaBufferCount, s32 dmaBufferSize,
                           s32 retraceRate) {
-    s32 dmaMessageCount;
     u32 i;
     f32 targetFrameSamples;
 
@@ -18,10 +15,8 @@ void initAudioSynthesizer(SchedulerState *scheduler, ALSynConfig *config, s32 th
     config->outputRate = osAiSetFrequency(initConfig->outputRate);
 
     gAudioDmaBufferPool = alHeapDBAlloc(0, 0, config->heap, 1, dmaBufferCount * sizeof(AudioDmaBuffer));
-    dmaMessageCount = dmaBufferCount * 2;
-    i = dmaMessageCount * sizeof(OSMesg);
-    gAudioDmaMessages = alHeapDBAlloc(0, 0, config->heap, 1, dmaMessageCount * sizeof(OSIoMesg));
-    gAudioDmaMessageBuffer = alHeapDBAlloc(0, 0, config->heap, 1, i);
+    gAudioDmaMessages = alHeapDBAlloc(0, 0, config->heap, 1, dmaBufferCount * 2 * sizeof(OSIoMesg));
+    gAudioDmaMessageBuffer = alHeapDBAlloc(0, 0, config->heap, 1, dmaBufferCount * 2 * sizeof(OSMesg));
 
     targetFrameSamples = ((f32)(u32)initConfig->frameRate * (f32)config->outputRate) / (f32)retraceRate;
     gTargetAudioTaskOutputLen = (s32)targetFrameSamples;
@@ -44,33 +39,30 @@ void initAudioSynthesizer(SchedulerState *scheduler, ALSynConfig *config, s32 th
     }
     gAudioDmaBufferPool[i].buffer = alHeapDBAlloc(0, 0, config->heap, 1, dmaBufferSize);
 
-    i = 0;
-    do {
-        gAudioCmdLists[i] = alHeapDBAlloc(0, 0, config->heap, 1, initConfig->commandListSize * sizeof(Acmd));
-        i++;
-    } while (&gAudioCmdLists[i] < &gAudioCmdListEnd0);
+    for (i = 0; i < ARRAY_COUNT(gAudioWorkBuffers.commandLists); i++) {
+        gAudioWorkBuffers.commandLists[i] =
+            alHeapDBAlloc(0, 0, config->heap, 1, initConfig->commandListSize * sizeof(Acmd));
+    }
 
     gAudioCmdListCapacity = initConfig->commandListSize;
-    i = 0;
-    do {
-        ((AudioInitTask **)gAudioCmdLists)[i + 2] = alHeapDBAlloc(0, 0, config->heap, 1, sizeof(AudioInitTask));
-        ((AudioInitTask **)gAudioCmdLists)[i + 2]->type = 2;
-        ((AudioInitTask **)gAudioCmdLists)[i + 2]->msg = ((AudioInitTask **)gAudioCmdLists)[i + 2];
-        ((AudioInitTask **)gAudioCmdLists)[i + 2]->outBuf =
+    for (i = 0; i < ARRAY_COUNT(gAudioWorkBuffers.tasks); i++) {
+        gAudioWorkBuffers.tasks[i] = alHeapDBAlloc(0, 0, config->heap, 1, sizeof(AudioInitTask));
+        gAudioWorkBuffers.tasks[i]->type = 2;
+        gAudioWorkBuffers.tasks[i]->msg = gAudioWorkBuffers.tasks[i];
+        gAudioWorkBuffers.tasks[i]->outBuf =
             alHeapDBAlloc(0, 0, config->heap, 1, gMaxAudioTaskOutputLen * sizeof(s32));
-        i++;
-    } while (&gAudioCmdListEnd1 != &gAudioCmdLists[i]);
+    }
 
     osCreateMesgQueue((OSMesgQueue *)gAudioTaskDoneQueue, gAudioTaskDoneMessages, 8);
     osCreateMesgQueue(&gAudioThreadQueue, gAudioThreadMessages, 8);
-    osCreateMesgQueue(&gAudioDmaQueue, gAudioDmaMessageBuffer, dmaMessageCount);
+    osCreateMesgQueue(&gAudioDmaQueue, gAudioDmaMessageBuffer, dmaBufferCount * 2);
     if (gAudioThreadStarted == 0) {
-        osCreateThread(&gAudioThread, 3, audioThreadMain, NULL, &gAudioDmaState, threadPriority);
+        osCreateThread(&gAudioThread, 3, audioThreadMain, NULL,
+                       gAudioThreadStack + sizeof(gAudioThreadStack), threadPriority);
     }
     osStartThread(&gAudioThread);
     gAudioThreadStarted = 1;
 }
-#endif
 
 void audioThreadMain(s32 arg0) {
     AudioThreadLocals locals;
@@ -84,7 +76,7 @@ void audioThreadMain(s32 arg0) {
         case 3:
             break;
         case 1:
-            if (buildAudioTask((AudioTask *)gAudioCmdLists[(gAudioFrameCounter % 3) + 2], gNextAudioInfo) != 0) {
+            if (buildAudioTask((AudioTask *)gAudioWorkBuffers.tasks[gAudioFrameCounter % 3], gNextAudioInfo) != 0) {
                 osRecvMesg((OSMesgQueue *)gAudioTaskDoneQueue, &locals.msg, 1);
                 updateAudioUnderrunState((s32)((AudioFrameMessage *)locals.msg)->info);
                 gNextAudioInfo = ((AudioFrameMessage *)locals.msg)->info;
@@ -119,7 +111,8 @@ s32 buildAudioTask(AudioTask *task, AudioInfo *info) {
         task->outLen = gMinAudioTaskOutputLen;
     }
 
-    cmdListEnd = alAudioFrame(gAudioCmdLists[gAudioCmdListIndex], &cmdLen[2], (s16 *)outBuf, task->outLen);
+    cmdListEnd = alAudioFrame(gAudioWorkBuffers.commandLists[gAudioCmdListIndex], &cmdLen[2], (s16 *)outBuf,
+                              task->outLen);
     if (cmdLen[2] == 0) {
         return 0;
     }
@@ -129,8 +122,8 @@ s32 buildAudioTask(AudioTask *task, AudioInfo *info) {
     task3->msgQ = (OSMesgQueue *)gAudioTaskDoneQueue;
     task3->msg = (OSMesg)&task3->unk68;
     task3->unk10 = 0;
-    task3->dataPtr = gAudioCmdLists[gAudioCmdListIndex];
-    task3->dataSize = (((s32)cmdListEnd - (s32)gAudioCmdLists[gAudioCmdListIndex]) >> 3) << 3;
+    task3->dataPtr = gAudioWorkBuffers.commandLists[gAudioCmdListIndex];
+    task3->dataSize = (((s32)cmdListEnd - (s32)gAudioWorkBuffers.commandLists[gAudioCmdListIndex]) >> 3) << 3;
 
     task3->type = 2;
     task3->ucodeBoot = rspbootTextStart;

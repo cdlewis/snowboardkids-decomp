@@ -8,14 +8,14 @@ void resolveRacePlayerCollisionVolumes(RacePlayer *player) {
     s16 localAxes[14][16];
     FixedMatrix3s tempMtx;
     FixedMatrix3s playerMtx;
-    FixedMatrix3s baseMtx;
-    s32 offset[3];
-    FixedMatrix3s effectMtx;
     s32 i;
     s32 j;
     s32 k;
     s32 sinX;
     s32 cosX;
+    s32 offset[3];
+    FixedMatrix3s effectMtx;
+    FixedMatrix3s baseMtx;
     s32 sinY;
     s32 cosY;
     s32 sinZ;
@@ -40,7 +40,7 @@ void resolveRacePlayerCollisionVolumes(RacePlayer *player) {
         sourceStride = sizeof(RacePlayerCollisionSource);
         sourceIterator = player;
         for (i = 0; i < player->collisionVolumeCount; i++, sourceIterator = (RacePlayer *)((u8 *)sourceIterator + sourceStride)) {
-            sinX = fixedSine(((RacePlayer *)((u8 *)savedPlayer + sourceIterator->collisionSources[0].mirroredParentIndex * sourceStride))->collisionSources[0].rotX);
+            sinX = fixedSine(((RacePlayer *)((u8 *)savedPlayer + sourceIterator->collisionSources->mirroredParentIndex * sourceStride))->collisionSources[0].rotX);
             cosX = fixedCosine(((RacePlayer *)((u8 *)savedPlayer + sourceIterator->collisionSources[0].mirroredParentIndex * sourceStride))->collisionSources[0].rotX);
             sinY = fixedSine(-((RacePlayer *)((u8 *)savedPlayer + sourceIterator->collisionSources[0].mirroredParentIndex * sourceStride))->collisionSources[0].rotY);
             cosY = fixedCosine(-((RacePlayer *)((u8 *)savedPlayer + sourceIterator->collisionSources->mirroredParentIndex * sourceStride))->collisionSources[0].rotY);

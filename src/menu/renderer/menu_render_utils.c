@@ -691,7 +691,7 @@ void drawScaledAssetTableSprite(s16 x, s16 y, AssetTable *asset, volatile u16 en
 }
 #endif
 
-// drawScaledAssetTableSpriteWithExplicitPalette best match: 95.607% (nonmatchings/drawScaledAssetTableSpriteWithExplicitPalette-2188069624939011928/base_21.c)
+// drawScaledAssetTableSpriteWithExplicitPalette best match: 95.777% (nonmatchings/drawScaledAssetTableSpriteWithExplicitPalette-8909410381742387388/base_23.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/renderer/menu_render_utils/drawScaledAssetTableSpriteWithExplicitPalette.s")
 
 #ifdef NON_MATCHING
@@ -703,16 +703,16 @@ void drawScaledAssetTableSpriteWithExplicitPalette(s16 x, s16 y, AssetTable *ass
     s32 clipRight;
     s32 clipTop;
     s32 clipBottom;
-    s32 clippedS;
-    s32 clippedT;
     s32 x0;
     s32 y0;
-    s32 x1;
     s32 spriteWidth;
-    s32 y1;
     s32 viewHalfHeight;
     AssetTableEntry *sprite;
     u16 textureScale;
+    s32 clippedT;
+    s32 x1;
+    s32 y1;
+    s32 clippedS;
 
     textureScale = scale;
     if (textureScale >= 0) {

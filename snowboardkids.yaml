@@ -69,7 +69,8 @@ segments:
     subalign: 4
     bss_size: 0x7DAC0
     subsegments:
-      - [0x1050, c, menu/main_menu/controller_main_menu_flow]
+      - [0x1050, c, menu/main_menu/controller_subsystem]
+      - [0x1560, c, menu/main_menu/controller_main_menu_flow]
       - [0x3D40, c, menu/race_setup/race_setup_menu]
       - [0x5560, c, menu/character_select/character_select_menu]
       - [0x6140, c, menu/splitscreen_select/race_splitscreen_select_menu]
@@ -291,7 +292,65 @@ segments:
       - [0xB1840, c, ultra/libc/ldiv]
       - { start: 0xB19D0, type: textbin, use_src_path: True, name: rsp/rspboot }
       - { start: 0xB1AA0, type: textbin, use_src_path: True, name: rsp/aspMain }
-      - [0xB1C00, data]
+      - [0xB1C00, data, rsp/graphics_ucode_block_0]
+      - [0xB28C0, data, rsp/graphics_ucode_block_1]
+      - [0xB3CF0, data, menu/main_menu/controller_main_menu_flow]
+      - [0xB3D90, data, menu/race_setup/race_setup_menu]
+      - [0xB4000, data, menu/character_select/character_select_menu]
+      - [0xB4020, data, menu/character_select/character_select_course_menu]
+      - [0xB4090, data, menu/course_select/multiplayer_course_select_menu]
+      - [0xB40B0, data, menu/course_select/course_select_menu]
+      - [0xB4100, data, menu/training/training_course_ui]
+      - [0xB5DD0, data, menu/renderer/menu_renderer]
+      - [0xB5E00, data, menu/race_setup/race_setup_ui]
+      - [0xB6670, data, menu/character_select/character_select_ui]
+      - [0xB6750, data, menu/splitscreen_select/race_splitscreen_select_ui]
+      - [0xB6BC0, data, menu/character_select/character_select_course_ui]
+      - [0xB77E0, data, menu/course_select/course_select_ui]
+      - [0xB7CF0, data, menu/race_type_select/race_type_select_ui]
+      - [0xB7FF0, data, menu/controller_pak/controller_pak_race_record_save_ui]
+      - [0xB85C0, data, menu/course_select/course_select_shop_ui]
+      - [0xB8A60, data, menu/controller_pak/controller_pak_ui]
+      - [0xB8D00, data, ending/ending_credits_tommy]
+      - [0xB8D40, data, ending/ending_credits_ui]
+      - [0xBA130, data, ending/ending_credits_effects]
+      - [0xBA140, data, race/effects/race_start_transition]
+      - [0xBC430, data, demo/main_menu_demo_race_intro]
+      - [0xBC490, data, demo/title_demo_race_intro]
+      - [0xD4800, data, menu/main_menu/main_menu_race_flow]
+      - [0xD48B0, data, menu/main_menu/main_menu_scene_model_renderer]
+      - [0xD4B00, data, engine/asset_manager]
+      - [0xD4C20, data, race/scene/race_scene_setup]
+      - [0xD4CB0, data, menu/renderer/menu_render_utils]
+      - [0xD4CD0, data, math/spatial_math]
+      - [0xD51E0, data, race/items/race_item_projectiles]
+      - [0xD52D0, data, race/items/race_item_effects]
+      - [0xD5640, data, menu/main_menu/main_menu_panel_ui]
+      - [0xD6330, data, menu/renderer/menu_screen_effects]
+      - [0xD6850, data, race/effects/race_intro_effects]
+      - [0xD6BF0, data, race/ui/race_ui_effects]
+      - [0xD8350, data, race/course/race_course_props_and_pickups]
+      - [0xDA840, data, race/course/race_course_effects]
+      - [0xDB480, data, race/camera/race_camera]
+      - [0xDB7B0, data, audio/sound_manager]
+      - [0xDD090, data, race/flow/race_flow]
+      - [0xDD1E0, data, race/motion/race_motion_animation_debug_viewer]
+      - [0xDD4F0, data, race/ui/race_hud]
+      - [0xDEA70, data, race/player/race_player_progress]
+      - [0xDEC70, data, race/player/race_player_model_renderer]
+      - [0xDEF80, data, race/motion/race_motion]
+      - [0xDF150, data, race/player/race_player_rumble]
+      - [0xDF190, data, race/course/race_surface_cues]
+      - [0xDF3B0, data, race/player/race_player_movement]
+      - [0xDF4D0, data, race/player/race_player_update]
+      - [0xDFA30, data, math/fixed_point_math]
+      - [0xDFAD0, data, engine/game_task_scheduler]
+      - [0xDFB10, data, engine/system_runtime]
+      - [0xDFD50, data, audio/scheduler]
+      - [0xDFD60, data, libmus/player]
+      - [0xDFE90, data, libmus/aud_thread]
+      - [0xDFEB0, data, ultra/io/controller]
+      - [0xDFEC0, data, ultra/io/motor]
       - [0xDFED0, .data, ultra/os/initialize]
       - [0xDFEF0, .data, ultra/io/pimgr]
       - [0xDFF20, .data, ultra/io/vimgr]
@@ -309,7 +368,8 @@ segments:
       - [0xE0F40, .data, ultra/audio/env]
       - [0xE1080, .data, ultra/libc/xlitob]
       - [0xE10B0, data]
-      - [0xE11A0, .rodata, menu/main_menu/controller_main_menu_flow]
+      - [0xE11A0, .rodata, menu/main_menu/controller_subsystem]
+      - [0xE14B0, .rodata, menu/main_menu/controller_main_menu_flow]
       - [0xE1500, .rodata, menu/race_setup/race_setup_menu]
       - [0xE1580, .rodata, menu/character_select/character_select_menu]
       - [0xE1590, .rodata, menu/splitscreen_select/race_splitscreen_select_menu]
@@ -370,10 +430,12 @@ segments:
       - [0xE2AD0, .rodata, ultra/audio/reverb]
       - [0xE2B00, rodata]
       - { type: bss, name: bss_chunk_a, vram: 0x800E29C0 }
-      - { type: .bss, name: menu/main_menu/controller_main_menu_flow, vram: 0x800E4C10 }
+      - { type: .bss, name: menu/main_menu/controller_subsystem, vram: 0x800E4C10 }
       - { type: bss, name: bss_chunk_a_controller_tail, vram: 0x800EC8B0 }
       - { type: .bss, name: menu/race_setup/race_setup_menu, vram: 0x8010AE00 }
       - { type: bss, name: bss_chunk_a_2, vram: 0x8010AE40 }
+      - { type: .bss, name: menu/character_select/character_select_menu, vram: 0x8010AE50 }
+      - { type: bss, name: bss_chunk_a_2_character_select_tail, vram: 0x8010AE70 }
       - { type: .bss, name: ending/ending_credits_flow, vram: 0x8010B1A0 }
       - { type: bss, name: bss_chunk_a_2_ending_credits_flow_tail, vram: 0x8010B1B0 }
       - { type: .bss, name: race/items/race_item_effects, vram: 0x801121D0 }
@@ -398,52 +460,133 @@ segments:
   - type: bin
     start: 0xE35C0
     name: LEVEL_BIG_SNOWMAN
-    vram: 0
+    vram: 0x02000000
+    align: 8
+    subalign: 8
+    exclusive_ram_id: level_big_snowman
+
+  - { start: 0xEBEC0, type: bin, name: _EBEC0, vram: 0x02008900, align: 8, subalign: 8, exclusive_ram_id: level_big_snowman }
+  - { start: 0xEBFA0, type: bin, name: _EBFA0, vram: 0x020089E0, align: 8, subalign: 8, exclusive_ram_id: level_big_snowman }
+  - { start: 0xEC310, type: bin, name: _EC310, vram: 0x02008D50, align: 8, subalign: 8, exclusive_ram_id: level_big_snowman }
+  - { start: 0xEC400, type: bin, name: _EC400, vram: 0x02008E40, align: 8, subalign: 8, exclusive_ram_id: level_big_snowman }
 
   - type: bin
     start: 0xEC9A0
     name: LEVEL_SUNSET_ROCK
-    vram: 0
+    vram: 0x02000000
+    align: 8
+    subalign: 8
+    exclusive_ram_id: level_sunset_rock
+
+  - { start: 0xF57D0, type: bin, name: _F57D0, vram: 0x02008E30, align: 8, subalign: 8, exclusive_ram_id: level_sunset_rock }
+  - { start: 0xF5920, type: bin, name: _F5920, vram: 0x02008F80, align: 8, subalign: 8, exclusive_ram_id: level_sunset_rock }
+  - { start: 0xF5AE8, type: bin, name: _F5AE8, vram: 0x02009148, align: 8, subalign: 8, exclusive_ram_id: level_sunset_rock }
 
   - type: bin
     start: 0xF6160
     name: LEVEL_NIGHT_HIGHWAY
-    vram: 0
+    vram: 0x02000000
+    align: 8
+    subalign: 8
+    exclusive_ram_id: level_night_highway
+
+  - { start: 0xFE788, type: bin, name: _FE788, vram: 0x02008628, align: 8, subalign: 8, exclusive_ram_id: level_night_highway }
+  - { start: 0xFE8F0, type: bin, name: _FE8F0, vram: 0x02008790, align: 8, subalign: 8, exclusive_ram_id: level_night_highway }
+  - { start: 0xFECA0, type: bin, name: _FECA0, vram: 0x02008B40, align: 8, subalign: 8, exclusive_ram_id: level_night_highway }
 
   - type: bin
     start: 0xFEDA0
     name: LEVEL_GRASS_VALLEY
-    vram: 0
+    vram: 0x02000000
+    align: 8
+    subalign: 8
+    exclusive_ram_id: level_grass_valley
+
+  - { start: 0x10A1A0, type: bin, name: _10A1A0, vram: 0x0200B400, align: 8, subalign: 8, exclusive_ram_id: level_grass_valley }
+  - { start: 0x10A280, type: bin, name: _10A280, vram: 0x0200B4E0, align: 8, subalign: 8, exclusive_ram_id: level_grass_valley }
+  - { start: 0x10A490, type: bin, name: _10A490, vram: 0x0200B6F0, align: 8, subalign: 8, exclusive_ram_id: level_grass_valley }
 
   - type: bin
     start: 0x10AAB0
     name: LEVEL_DIZZY_LAND
-    vram: 0
+    vram: 0x02000000
+    align: 8
+    subalign: 8
+    exclusive_ram_id: level_dizzy_land
+
+  - { start: 0x1167F8, type: bin, name: _1167F8, vram: 0x0200BD48, align: 8, subalign: 8, exclusive_ram_id: level_dizzy_land }
+  - { start: 0x1169F0, type: bin, name: _1169F0, vram: 0x0200BF40, align: 8, subalign: 8, exclusive_ram_id: level_dizzy_land }
+  - { start: 0x116C78, type: bin, name: _ADDR_200C1C8, vram: 0x0200C1C8, align: 8, subalign: 8, exclusive_ram_id: level_dizzy_land }
+  - { start: 0x117150, type: bin, name: _ADDR_200C6A0, vram: 0x0200C6A0, align: 8, subalign: 8, exclusive_ram_id: level_dizzy_land }
+  - { start: 0x117288, type: bin, name: _ADDR_200C7D8, vram: 0x0200C7D8, align: 8, subalign: 8, exclusive_ram_id: level_dizzy_land }
+  - { start: 0x1173C0, type: bin, name: _ADDR_200C910, vram: 0x0200C910, align: 8, subalign: 8, exclusive_ram_id: level_dizzy_land }
+  - { start: 0x1176D0, type: bin, name: _ADDR_200CC20, vram: 0x0200CC20, align: 8, subalign: 8, exclusive_ram_id: level_dizzy_land }
+  - { start: 0x1178F8, type: bin, name: _ADDR_200CE48, vram: 0x0200CE48, align: 8, subalign: 8, exclusive_ram_id: level_dizzy_land }
+  - { start: 0x117A60, type: bin, name: _ADDR_200CFB0, vram: 0x0200CFB0, align: 8, subalign: 8, exclusive_ram_id: level_dizzy_land }
+  - { start: 0x117E58, type: bin, name: _ADDR_200D3A8, vram: 0x0200D3A8, align: 8, subalign: 8, exclusive_ram_id: level_dizzy_land }
+  - { start: 0x117EF8, type: bin, name: LEVEL_DIZZY_LAND_SUFFIX, vram: 0x0200D448, align: 8, subalign: 8, exclusive_ram_id: level_dizzy_land }
 
   - type: bin
     start: 0x118670
     name: LEVEL_QUICKSAND_VALLEY
-    vram: 0
+    vram: 0x02000000
+    align: 8
+    subalign: 8
+    exclusive_ram_id: level_quicksand_valley
+
+  - { start: 0x1246D0, type: bin, name: _1246D0, vram: 0x0200C060, align: 8, subalign: 8, exclusive_ram_id: level_quicksand_valley }
+  - { start: 0x1248A8, type: bin, name: _1248A8, vram: 0x0200C238, align: 8, subalign: 8, exclusive_ram_id: level_quicksand_valley }
+  - { start: 0x124A98, type: bin, name: _124A98, vram: 0x0200C428, align: 8, subalign: 8, exclusive_ram_id: level_quicksand_valley }
+  - { start: 0x124E18, type: bin, name: _124E18, vram: 0x0200C7A8, align: 8, subalign: 8, exclusive_ram_id: level_quicksand_valley }
+  - { start: 0x124E78, type: bin, name: _124E78, vram: 0x0200C808, align: 8, subalign: 8, exclusive_ram_id: level_quicksand_valley }
 
   - type: bin
     start: 0x125C90
     name: LEVEL_SILVER_MOUNTAIN
-    vram: 0
+    vram: 0x02000000
+    align: 8
+    subalign: 8
+    exclusive_ram_id: level_silver_mountain
+
+  - { start: 0x131448, type: bin, name: _131448, vram: 0x0200B7B8, align: 8, subalign: 8, exclusive_ram_id: level_silver_mountain }
+  - { start: 0x131558, type: bin, name: _131558, vram: 0x0200B8C8, align: 8, subalign: 8, exclusive_ram_id: level_silver_mountain }
+  - { start: 0x131768, type: bin, name: _131768, vram: 0x0200BAD8, align: 8, subalign: 8, exclusive_ram_id: level_silver_mountain }
 
   - type: bin
     start: 0x131A90
     name: LEVEL_ANIMAL_LAND
-    vram: 0
+    vram: 0x02000000
+    align: 8
+    subalign: 8
+    exclusive_ram_id: level_animal_land
+
+  - { start: 0x137EC0, type: bin, name: _137EC0, vram: 0x02006430, align: 8, subalign: 8, exclusive_ram_id: level_animal_land }
+  - { start: 0x137FD8, type: bin, name: _137FD8, vram: 0x02006548, align: 8, subalign: 8, exclusive_ram_id: level_animal_land }
+  - { start: 0x1382E8, type: bin, name: _1382E8, vram: 0x02006858, align: 8, subalign: 8, exclusive_ram_id: level_animal_land }
 
   - type: bin
     start: 0x1384B0
     name: LEVEL_NINJA_LAND
-    vram: 0
+    vram: 0x02000000
+    align: 8
+    subalign: 8
+    exclusive_ram_id: level_ninja_land
+
+  - { start: 0x13EC60, type: bin, name: _13EC60, vram: 0x020067B0, align: 8, subalign: 8, exclusive_ram_id: level_ninja_land }
+  - { start: 0x13ED30, type: bin, name: _13ED30, vram: 0x02006880, align: 8, subalign: 8, exclusive_ram_id: level_ninja_land }
+  - { start: 0x13F050, type: bin, name: _13F050, vram: 0x02006BA0, align: 8, subalign: 8, exclusive_ram_id: level_ninja_land }
 
   - type: bin
     start: 0x13F3B0
     name: LEVEL_ROOKIE_MOUNTAIN
-    vram: 0
+    vram: 0x02000000
+    align: 8
+    subalign: 8
+    exclusive_ram_id: level_rookie_mountain
+
+  - { start: 0x144B88, type: bin, name: _144B88, vram: 0x020057D8, align: 8, subalign: 8, exclusive_ram_id: level_rookie_mountain }
+  - { start: 0x144C58, type: bin, name: _144C58, vram: 0x020058A8, align: 8, subalign: 8, exclusive_ram_id: level_rookie_mountain }
+  - { start: 0x144F58, type: bin, name: _144F58, vram: 0x02005BA8, align: 8, subalign: 8, exclusive_ram_id: level_rookie_mountain }
   - type: bin
     start: 0x145380
     name: _145380
@@ -457,7 +600,28 @@ segments:
   - type: bin
     start: 0x147910
     name: _147910
-    vram: 0
+    vram: 0x02000000
+    align: 8
+    subalign: 8
+    exclusive_ram_id: shared_race_models
+
+  - { start: 0x148220, type: bin, name: _148220, vram: 0x02000910, align: 8, subalign: 8, exclusive_ram_id: shared_race_models }
+  - { start: 0x148440, type: bin, name: _148440, vram: 0x02000B30, align: 8, subalign: 8, exclusive_ram_id: shared_race_models }
+  - { start: 0x148F88, type: bin, name: _148F88, vram: 0x02001678, align: 8, subalign: 8, exclusive_ram_id: shared_race_models }
+  - { start: 0x149040, type: bin, name: _149040, vram: 0x02001730, align: 8, subalign: 8, exclusive_ram_id: shared_race_models }
+  - { start: 0x149120, type: bin, name: _149120, vram: 0x02001810, align: 8, subalign: 8, exclusive_ram_id: shared_race_models }
+  - { start: 0x1491F8, type: bin, name: _1491F8, vram: 0x020018E8, align: 8, subalign: 8, exclusive_ram_id: shared_race_models }
+  - { start: 0x1492D0, type: bin, name: _ADDR_20019C0, vram: 0x020019C0, align: 8, subalign: 8, exclusive_ram_id: shared_race_models }
+  - { start: 0x149610, type: bin, name: _149610, vram: 0x02001D00, align: 8, subalign: 8, exclusive_ram_id: shared_race_models }
+  - { start: 0x1499B8, type: bin, name: _1499B8, vram: 0x020020A8, align: 8, subalign: 8, exclusive_ram_id: shared_race_models }
+  - { start: 0x149DA0, type: bin, name: _ADDR_2002490, vram: 0x02002490, align: 8, subalign: 8, exclusive_ram_id: shared_race_models }
+  - { start: 0x149F70, type: bin, name: _ADDR_2002660, vram: 0x02002660, align: 8, subalign: 8, exclusive_ram_id: shared_race_models }
+  - { start: 0x14A200, type: bin, name: _14A200, vram: 0x020028F0, align: 8, subalign: 8, exclusive_ram_id: shared_race_models }
+  - { start: 0x14AB28, type: bin, name: _14AB28, vram: 0x02003218, align: 8, subalign: 8, exclusive_ram_id: shared_race_models }
+  - { start: 0x14AE48, type: bin, name: _ADDR_2003538, vram: 0x02003538, align: 8, subalign: 8, exclusive_ram_id: shared_race_models }
+  - { start: 0x14AF08, type: bin, name: _ADDR_20035F8, vram: 0x020035F8, align: 8, subalign: 8, exclusive_ram_id: shared_race_models }
+  - { start: 0x14B180, type: bin, name: _ADDR_2003870, vram: 0x02003870, align: 8, subalign: 8, exclusive_ram_id: shared_race_models }
+  - { start: 0x14B348, type: bin, name: _147910_SUFFIX, vram: 0x02003A38, align: 8, subalign: 8, exclusive_ram_id: shared_race_models }
 
   - type: bin
     start: 0x14B450

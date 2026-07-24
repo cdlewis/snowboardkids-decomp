@@ -607,39 +607,77 @@ void initCharacterSelectLimitedCourseList(CharacterSelectCourseMenuFrameActor *a
 }
 #endif
 
-// drawCharacterSelectCoursePreviewFrame best match: 99.412% (nonmatchings/drawCharacterSelectCoursePreviewFrame-8239461464121803931/base_22.c)
+// drawCharacterSelectCoursePreviewFrame best match: 99.967% (nonmatchings/drawCharacterSelectCoursePreviewFrame-8909410381742387388/base_25.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/character_select/character_select_course_ui/drawCharacterSelectCoursePreviewFrame.s")
 
 #ifdef NON_MATCHING
 void drawCharacterSelectCoursePreviewFrame(CharacterSelectCourseWidgetActor *arg0) {
-    volatile s32 padTop[2];
-    volatile u16 frameIndex;
-    volatile s32 padAfter[1];
-    CharacterSelectCourseFrameTileMap *volatile savedFrame;
-    volatile s32 padBefore[2];
     s32 shouldDraw;
     s32 i;
     s32 tileOffset;
+    s32 zero;
     s32 offset;
     s32 borderOffset;
-    register CharacterSelectCourseFrameTileMap *frame;
-    register CharacterSelectCourseWidgetActor *actor;
+    u16 frameIndex;
 
-    actor = arg0;
-    do { if ((gRaceSplitscreenMode == 1) && (gRaceTypeSelection == 2)) { frameIndex = 9; } else { frameIndex = actor->sprite.unsignedIndex; } savedFrame = (frame = &gCharacterSelectCoursePreviewFrameTileMaps[frameIndex]); tileOffset = 0; shouldDraw = 1; for (i = 0; i < 16; i++, tileOffset++) { drawMenuSpriteTile((s16)(actor->x + ((i & 3) << 5)), (s16)(actor->y + ((i / 4) << 5)), getRelocatableHeapBlockBase(gAssetHandles.textureHandle), frame->center[tileOffset], 0, 0x100); } if (shouldDraw) { frame = savedFrame; tileOffset = 0; i = 0x80; } offset = 0; if ((i && i) && i) { } do { drawMenuSpriteTile((s16)(actor->x + 0x80), (s16)(actor->y + offset), getRelocatableHeapBlockBase(gAssetHandles.textureHandle), frame->right[tileOffset], 0, 0x100); drawMenuSpriteTile((s16)(actor->x + offset), (s16)(actor->y + 0x80), getRelocatableHeapBlockBase(gAssetHandles.textureHandle), frame->bottom[tileOffset], 0, 0x100); offset += 0x40; tileOffset++; } while (offset <= (0x80 - 1)); i++; i--; drawMenuSpriteTile((s16)(actor->x + 0x80), (s16)(actor->y + 0x80), getRelocatableHeapBlockBase(gAssetHandles.textureHandle), gCharacterSelectCoursePreviewFrameCornerTileMaps[frameIndex].corner, 0, 0x100); drawMenuSprite((s16)(actor->x - 4), (s16)(actor->y - 4), getRelocatableHeapBlockBase(gAssetHandles.textureHandle), 0x33, 0x20, 0x20, 0, 0); drawMenuSprite((s16)(actor->x - 4), (s16)(actor->y + 0x8C), getRelocatableHeapBlockBase(gAssetHandles.textureHandle), 0x38, 0x20, 0x20, 0, 0); drawMenuSprite((s16)(actor->x + 0x8C), (s16)(actor->y - 4), getRelocatableHeapBlockBase(gAssetHandles.textureHandle), 0x35, 0x20, 0x20, 0, 0); } while (0);
+    if ((gRaceSplitscreenMode == 1) && (gRaceTypeSelection == 2)) {
+        frameIndex = 9;
+    } else {
+        frameIndex = arg0->sprite.unsignedIndex;
+    }
 
-    drawMenuSprite((s16)(actor->x + 0x8C), (s16)(actor->y + 0x8C), getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE),
-                  0x3A, 0x20, 0x20, 0, 0);
+    tileOffset = 0;
+    shouldDraw = 1;
+    for (i = 0; i < 16; i++, tileOffset++) {
+        drawMenuSpriteTile((s16)(arg0->x + ((i & 3) << 5)), (s16)(arg0->y + ((i / 4) << 5)),
+                           getRelocatableHeapBlockBase(gAssetHandles.textureHandle),
+                           gCharacterSelectCoursePreviewFrameTileMaps[frameIndex].center[tileOffset], 0, 0x100);
+    }
 
-    for (borderOffset = 0; borderOffset != 0x80; borderOffset += 0x10) {
-        drawMenuSprite((s16)(actor->x + borderOffset + 0xC), (s16)(actor->y - 4),
-                      getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE), 0x34, 0x20, 0x20, 0, 0);
-        drawMenuSprite((s16)(actor->x + borderOffset + 0xC), (s16)(actor->y + 0x8C),
-                      getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE), 0x39, 0x20, 0x20, 0, 0);
-        drawMenuSprite((s16)(actor->x - 4), (s16)(actor->y + borderOffset + 0xC),
-                      getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE), 0x36, 0x20, 0x20, 0, 0);
-        drawMenuSprite((s16)(actor->x + 0x8C), (s16)(actor->y + borderOffset + 0xC),
-                      getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE), 0x37, 0x20, 0x20, 0, 0);
+    if (shouldDraw) {
+        if (!offset) {
+        }
+        tileOffset = 0;
+        i = 0x80;
+    }
+    offset = 0;
+    if ((i && i) && i) {
+    }
+    do {
+        drawMenuSpriteTile((s16)(arg0->x + 0x80), (s16)(arg0->y + offset),
+                           getRelocatableHeapBlockBase(gAssetHandles.textureHandle),
+                           gCharacterSelectCoursePreviewFrameTileMaps[frameIndex].right[tileOffset], 0, 0x100);
+        drawMenuSpriteTile((s16)(arg0->x + offset), (s16)(arg0->y + 0x80),
+                           getRelocatableHeapBlockBase(gAssetHandles.textureHandle),
+                           gCharacterSelectCoursePreviewFrameTileMaps[frameIndex].bottom[tileOffset], 0, 0x100);
+        offset += 0x40;
+        tileOffset++;
+    } while (offset < 0x80);
+    i++;
+    i--;
+
+    zero = 0;
+    drawMenuSpriteTile((s16)(arg0->x + 0x80), (s16)(arg0->y + 0x80),
+                       getRelocatableHeapBlockBase(gAssetHandles.textureHandle),
+                       gCharacterSelectCoursePreviewFrameCornerTileMaps[frameIndex].corner, zero, 0x100);
+    drawMenuSprite((s16)(arg0->x - 4), (s16)(arg0->y - 4), getRelocatableHeapBlockBase(gAssetHandles.textureHandle),
+                   0x33, 0x20, 0x20, zero, zero);
+    drawMenuSprite((s16)(arg0->x - 4), (s16)(arg0->y + 0x8C), getRelocatableHeapBlockBase(gAssetHandles.textureHandle),
+                   0x38, 0x20, 0x20, zero, zero);
+    drawMenuSprite((s16)(arg0->x + 0x8C), (s16)(arg0->y - 4), getRelocatableHeapBlockBase(gAssetHandles.textureHandle),
+                   0x35, 0x20, 0x20, zero, zero);
+    drawMenuSprite((s16)(arg0->x + 0x8C), (s16)(arg0->y + 0x8C), getRelocatableHeapBlockBase(gAssetHandles.textureHandle),
+                   0x3A, 0x20, 0x20, zero, zero);
+
+    for (borderOffset = zero; borderOffset != 0x80; borderOffset += 0x10) {
+        drawMenuSprite((s16)(arg0->x + borderOffset + 0xC), (s16)(arg0->y - 4),
+                       getRelocatableHeapBlockBase(gAssetHandles.textureHandle), 0x34, 0x20, 0x20, zero, zero);
+        drawMenuSprite((s16)(arg0->x + borderOffset + 0xC), (s16)(arg0->y + 0x8C),
+                       getRelocatableHeapBlockBase(gAssetHandles.textureHandle), 0x39, 0x20, 0x20, zero, zero);
+        drawMenuSprite((s16)(arg0->x - 4), (s16)(arg0->y + borderOffset + 0xC),
+                       getRelocatableHeapBlockBase(gAssetHandles.textureHandle), 0x36, 0x20, 0x20, zero, zero);
+        drawMenuSprite((s16)(arg0->x + 0x8C), (s16)(arg0->y + borderOffset + 0xC),
+                       getRelocatableHeapBlockBase(gAssetHandles.textureHandle), 0x37, 0x20, 0x20, zero, zero);
     }
 }
 #endif
@@ -2581,7 +2619,7 @@ void initCharacterSelectCourseConfirmCursor(CharacterSelectCourseWidgetActor *ar
     setCallbackTaskCallback(arg0, updateCharacterSelectCourseConfirmCursor);
 }
 
-// drawCharacterSelectCourseRecordsPopup best match: 93.716% (nonmatchings/drawCharacterSelectCourseRecordsPopup-8075865578671233833/base_11.c)
+// drawCharacterSelectCourseRecordsPopup best match: 97.003% (nonmatchings/drawCharacterSelectCourseRecordsPopup-3379532139742180785/base_20.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/character_select/character_select_course_ui/drawCharacterSelectCourseRecordsPopup.s")
 
 #ifdef NON_MATCHING
@@ -2600,6 +2638,23 @@ typedef struct {
     /* 0x779C */ u16 trickValues[5];
 } CharacterSelectStatsData;
 
+typedef struct {
+    /* 0x0000 */ u8 pad0[0x77E7];
+    /* 0x77E7 */ u8 icon;
+} CharacterSelectTrickIconData;
+
+typedef struct {
+    /* 0x00 */ CharacterSelectTrickIconData *trickIcon;
+    /* 0x04 */ u8 pad04[0x15];
+    /* 0x19 */ u8 color;
+    /* 0x1A */ u8 pad1A[2];
+    /* 0x1C */ u16 quotient;
+    /* 0x1E */ u16 remainder;
+    /* 0x20 */ u8 pad20[8];
+    /* 0x28 */ s16 *courseIds;
+    /* 0x2C */ u8 pad2C[0x20];
+} CharacterSelectCourseRecordsPopupStack;
+
 extern u8 gGameSaveDataBuffer[];
 extern u8 D_800F41EB[];
 extern u8 D_800F4222[];
@@ -2609,119 +2664,139 @@ extern u8 D_800E0B90[];
 extern u8 D_800E0B94[];
 
 void drawCharacterSelectCourseRecordsPopup(CharacterSelectCourseWidgetActor *arg0) {
-    volatile u8 padding[0x20];
-    s16 *courseIds;
-    volatile u8 padSlots[0x20];
-    volatile u16 sp72;
-    volatile u16 sp70;
-    volatile u8 color;
-    u8 *trickIcon;
+    volatile CharacterSelectCourseRecordsPopupStack stack;
     s16 *selectedCoursePtr;
     s32 quotient;
+    s32 rowIndex;
+    s32 newQuotient;
     s32 var_s1;
-    s32 var_s4;
-    s32 var_s4_2;
     s32 var_s5;
     s32 var_s7;
     s32 var_s0;
     volatile CharacterSelectCourseAssetHandles *assetHandles;
 
     if (gRaceSplitscreenMode == 2) {
-        courseIds = gCharacterSelectCourseOptionsByUnlock[gHighestUnlockedCourse];
+        stack.courseIds = gCharacterSelectCourseOptionsByUnlock[gHighestUnlockedCourse];
     } else if ((s32)gRaceTypeSelection < 2) {
-        courseIds = gCharacterSelectShortCourseOptions;
+        stack.courseIds = gCharacterSelectShortCourseOptions;
     } else {
-        courseIds = gCharacterSelectSingleCourseOption;
+        stack.courseIds = gCharacterSelectSingleCourseOption;
     }
 
     assetHandles = &gAssetHandles;
     var_s7 = 0;
     var_s5 = 0;
     do {
-        if (var_s7 < 3) {
-            color = 6;
+        rowIndex = var_s7;
+        if (rowIndex < 3) {
+            stack.color = 6;
         } else {
-            color = 4;
+            stack.color = 4;
         }
 
         drawMenuSprite(arg0->x, (s16)(arg0->y + var_s5), getRelocatableHeapBlockBase(assetHandles->popupFontHandle),
-                      (var_s7 + 0x77) & 0xFFFF, 0x20, 0x20, 0, 0);
+                      (rowIndex + 0x77) & 0xFFFF, 0x20, 0x20, 0, 0);
 
         if (gPlayerCount == 1) {
             if (gRaceSplitscreenMode != 2) {
                 if (gRaceTypeSelection == 0) {
-                    if (var_s7 < 3) {
-                        color = 0xC;
+                    if (rowIndex < 3) {
+                        stack.color = 0xC;
                     } else {
-                        color = 0xD;
+                        stack.color = 0xD;
                     }
-                    drawCharacterSelectCourseRecordTime((CharacterSelectCourseRecordTime *)((CharacterSelectResultNameData *)gGameSaveDataBuffer)->resultNames[courseIds[gRaceCourseIndex]][var_s7],
-                                  arg0->x + 0x14, arg0->y + var_s5, color);
-                    drawMenuSprite((s16)(arg0->x + 0x54), (s16)(arg0->y + var_s5),
+                    drawCharacterSelectCourseRecordTime(
+                        (CharacterSelectCourseRecordTime *)((CharacterSelectResultNameData *)gGameSaveDataBuffer)
+                            ->resultNames[stack.courseIds[gRaceCourseIndex]][rowIndex],
+                        arg0->x + 0x14, arg0->y + var_s5, stack.color);
+                    drawMenuSprite((s16)(arg0->x + 0x54), (s16)(var_s5 + arg0->y),
                                   getRelocatableHeapBlockBase(assetHandles->popupFontHandle),
-                                  ((D_800F4290[(courseIds[gRaceCourseIndex] * 5) + var_s7] & 7) + 0x51) & 0xFFFF, 0x20, 0x20, 0, 0);
+                                  ((D_800F4290[(stack.courseIds[gRaceCourseIndex] * 5) + rowIndex] & 7) + 0x51) & 0xFFFF,
+                                  0x20, 0x20, 0, 0);
                     drawMenuSprite((s16)(arg0->x + 0x65), (s16)(arg0->y + var_s5),
                                   getRelocatableHeapBlockBase(assetHandles->popupFontHandle),
-                                  ((D_800F4290[(courseIds[gRaceCourseIndex] * 5) + var_s7] >> 3) + 0x7C) & 0xFFFF, 0x20, 0x20, 0, 0);
-                } else if (gRaceTypeSelection == 1) {
-                    if (var_s7 < 3) {
-                        var_s4 = 0xC;
-                    } else {
-                        var_s4 = 0xD;
-                    }
-                    selectedCoursePtr = &courseIds[gRaceCourseIndex];
-                    quotient = D_800F4222[((*selectedCoursePtr * 5) + var_s7)] / 10;
-                    sp70 = quotient;
-                    if (quotient & 0xFFFF) {
-                        drawMenuSprite((s16)(arg0->x + 0x18), (s16)(arg0->y + var_s5),
-                                      getRelocatableHeapBlockBase(assetHandles->popupFontHandle), (sp70 + 0x2B) & 0xFFFF, 0x20, 0x20, 0,
-                                      var_s4 + 1);
-                        selectedCoursePtr = &courseIds[gRaceCourseIndex];
-                    }
-                    sp72 = D_800F4222[((*selectedCoursePtr * 5) + var_s7)] % 10;
-                    drawMenuSprite((s16)(arg0->x + 0x20), (s16)(arg0->y + var_s5), getRelocatableHeapBlockBase(assetHandles->popupFontHandle),
-                                  (sp72 + 0x2B) & 0xFFFF, 0x20, 0x20, 0, (var_s4 + 1) & 0xFF);
-                    drawMenuAsciiText((s16)(arg0->x + 0x28), (s16)(arg0->y + var_s5 + 8), D_800E0B90, color, 0x100);
-                    drawMenuSprite((s16)(arg0->x + 0x48), (s16)(arg0->y + var_s5),
-                                  getRelocatableHeapBlockBase(assetHandles->popupFontHandle),
-                                  ((D_800F4259[(courseIds[gRaceCourseIndex] * 5) + var_s7] & 7) + 0x51) & 0xFFFF, 0x20, 0x20, 0, 0);
-                    drawMenuSprite((s16)(arg0->x + 0x60), (s16)(arg0->y + var_s5),
-                                  getRelocatableHeapBlockBase(assetHandles->popupFontHandle),
-                                  ((D_800F4259[(courseIds[gRaceCourseIndex] * 5) + var_s7] >> 3) + 0x7C) & 0xFFFF, 0x20, 0x20, 0, 0);
+                                  ((D_800F4290[(stack.courseIds[gRaceCourseIndex] * 5) + rowIndex] >> 3) + 0x7C) & 0xFFFF,
+                                  0x20, 0x20, 0, 0);
                 } else {
-                    trickIcon = &gGameSaveDataBuffer[var_s7];
-                    if (var_s7 < 3) {
-                        var_s4_2 = 0xC;
+                    s32 var_s4;
+
+                    if (gRaceTypeSelection == 1) {
+                        if (rowIndex < 3) {
+                            var_s4 = 0xC;
+                        } else {
+                            var_s4 = 0xD;
+                        }
+                        selectedCoursePtr = &stack.courseIds[gRaceCourseIndex];
+                        newQuotient = D_800F4222[((*selectedCoursePtr * 5) + rowIndex)] / 10;
+                        quotient = (stack.quotient = newQuotient);
+                        if (quotient & 0xFFFF) {
+                            drawMenuSprite((s16)(arg0->x + 0x18), (s16)(arg0->y + var_s5),
+                                          getRelocatableHeapBlockBase(assetHandles->popupFontHandle),
+                                          (stack.quotient + 0x2B) & 0xFFFF, 0x20, 0x20, 0, var_s4 + 1);
+                            selectedCoursePtr = &stack.courseIds[gRaceCourseIndex];
+                        }
+                        stack.remainder = D_800F4222[((*selectedCoursePtr * 5) + rowIndex)] % 10;
+                        drawMenuSprite((s16)(arg0->x + 0x20), (s16)(arg0->y + var_s5),
+                                      getRelocatableHeapBlockBase(assetHandles->popupFontHandle),
+                                      (stack.remainder + 0x2B) & 0xFFFF, 0x20, 0x20, 0, (var_s4 + 1) & 0xFF);
+                        drawMenuAsciiText((s16)(arg0->x + 0x28), (s16)(arg0->y + var_s5 + 8), D_800E0B90,
+                                          stack.color, 0x100);
+                        drawMenuSprite((s16)(arg0->x + 0x48), (s16)(arg0->y + var_s5),
+                                      getRelocatableHeapBlockBase(assetHandles->popupFontHandle),
+                                      ((D_800F4259[(stack.courseIds[gRaceCourseIndex] * 5) + rowIndex] & 7) + 0x51) &
+                                          0xFFFF,
+                                      0x20, 0x20, 0, 0);
+                        drawMenuSprite((s16)(arg0->x + 0x60), (s16)(arg0->y + var_s5),
+                                      getRelocatableHeapBlockBase(assetHandles->popupFontHandle),
+                                      ((D_800F4259[(stack.courseIds[gRaceCourseIndex] * 5) + rowIndex] >> 3) + 0x7C) &
+                                          0xFFFF,
+                                      0x20, 0x20, 0, 0);
                     } else {
-                        var_s4_2 = 0xD;
+                        stack.trickIcon = (CharacterSelectTrickIconData *)&gGameSaveDataBuffer[rowIndex];
+                        if (rowIndex < 3) {
+                            var_s4 = 0xC;
+                        } else {
+                            var_s4 = 0xD;
+                        }
+                        var_s0 = ((CharacterSelectStatsData *)gGameSaveDataBuffer)->trickValues[rowIndex ^ 0];
+                        var_s1 = 0;
+                        do {
+                            drawMenuSprite((s16)((arg0->x - var_s1) + 0x38), (s16)(arg0->y + var_s5),
+                                          getRelocatableHeapBlockBase(assetHandles->popupFontHandle),
+                                          ((var_s0 % 10) + 0x2B) & 0xFFFF, 0x20, 0x20, 0,
+                                          (var_s4 + 1) & 0xFF);
+                            var_s1 += 8;
+                            var_s0 = var_s0 / 10;
+                        } while (var_s0 != 0);
+                        drawMenuAsciiText((s16)(arg0->x + 0x40), (s16)(arg0->y + var_s5 + 8), D_800E0B94,
+                                          stack.color, 0x100);
+                        drawMenuSprite((s16)(arg0->x + 0x4C), (s16)(arg0->y + var_s5),
+                                      getRelocatableHeapBlockBase(assetHandles->popupFontHandle),
+                                      ((stack.trickIcon->icon & 7) + 0x51) & 0xFFFF, 0x20, 0x20, 0, 0);
+                        drawMenuSprite((s16)(arg0->x + 0x60), (s16)(arg0->y + var_s5),
+                                      getRelocatableHeapBlockBase(assetHandles->popupFontHandle),
+                                      ((stack.trickIcon->icon >> 3) + 0x7C) & 0xFFFF, 0x20, 0x20, 0, 0);
                     }
-                    var_s0 = ((CharacterSelectStatsData *)gGameSaveDataBuffer)->trickValues[var_s7];
-                    var_s1 = 0;
-                    do {
-                        drawMenuSprite((s16)((arg0->x - var_s1) + 0x38), (s16)(arg0->y + var_s5),
-                                      getRelocatableHeapBlockBase(assetHandles->popupFontHandle), ((var_s0 % 10) + 0x2B) & 0xFFFF, 0x20, 0x20, 0,
-                                      (var_s4_2 + 1) & 0xFF);
-                        var_s1 += 8;
-                        var_s0 = var_s0 / 10;
-                    } while (var_s0 != 0);
-                    drawMenuAsciiText((s16)(arg0->x + 0x40), (s16)(arg0->y + var_s5 + 8), D_800E0B94, color, 0x100);
-                    drawMenuSprite((s16)(arg0->x + 0x4C), (s16)(arg0->y + var_s5), getRelocatableHeapBlockBase(assetHandles->popupFontHandle),
-                                  ((trickIcon[0x77E7] & 7) + 0x51) & 0xFFFF, 0x20, 0x20, 0, 0);
-                    drawMenuSprite((s16)(arg0->x + 0x60), (s16)(arg0->y + var_s5), getRelocatableHeapBlockBase(assetHandles->popupFontHandle),
-                                  ((trickIcon[0x77E7] >> 3) + 0x7C) & 0xFFFF, 0x20, 0x20, 0, 0);
                 }
             } else {
-                if (var_s7 < 3) {
-                    color = 0xC;
+                if (rowIndex < 3) {
+                    stack.color = 0xC;
                 } else {
-                    color = 0xD;
+                    stack.color = 0xD;
                 }
-                drawCharacterSelectCourseRecordTime((CharacterSelectCourseRecordTime *)((CharacterSelectCourseStatsNameData *)gGameSaveDataBuffer)->courseStatsNames[courseIds[gRaceCourseIndex]][var_s7],
-                              arg0->x + 0x14, arg0->y + var_s5, color);
-                drawMenuSprite((s16)(arg0->x + 0x54), (s16)(arg0->y + var_s5), getRelocatableHeapBlockBase(assetHandles->popupFontHandle),
-                              ((D_800F41EB[(courseIds[gRaceCourseIndex] * 5) + var_s7] & 7) + 0x51) & 0xFFFF, 0x20, 0x20, 0, 0);
-                drawMenuSprite((s16)(arg0->x + 0x65), (s16)(arg0->y + var_s5), getRelocatableHeapBlockBase(assetHandles->popupFontHandle),
-                              ((D_800F41EB[(courseIds[gRaceCourseIndex] * 5) + var_s7] >> 3) + 0x7C) & 0xFFFF, 0x20, 0x20, 0, 0);
+                drawCharacterSelectCourseRecordTime(
+                    (CharacterSelectCourseRecordTime *)((CharacterSelectCourseStatsNameData *)gGameSaveDataBuffer)
+                        ->courseStatsNames[stack.courseIds[gRaceCourseIndex]][rowIndex],
+                    arg0->x + 0x14, arg0->y + var_s5, stack.color);
+                drawMenuSprite((s16)(arg0->x + 0x54), (s16)(arg0->y + var_s5),
+                              getRelocatableHeapBlockBase(assetHandles->popupFontHandle),
+                              ((D_800F41EB[(stack.courseIds[gRaceCourseIndex] * 5) + rowIndex] & 7) + 0x51) & 0xFFFF,
+                              0x20, 0x20, 0, 0);
+                drawMenuSprite((s16)(arg0->x + 0x65), (s16)(arg0->y + var_s5),
+                              getRelocatableHeapBlockBase(assetHandles->popupFontHandle),
+                              ((D_800F41EB[(stack.courseIds[gRaceCourseIndex] * 5) + rowIndex] >> 3) + 0x7C) &
+                                  0xFFFF,
+                              0x20, 0x20, 0, 0);
             }
         }
         var_s7++;

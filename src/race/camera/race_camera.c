@@ -1,5 +1,7 @@
 #include "common.h"
+#define calculateFixedAngleBetweenXZPoints calculateFixedAngleBetweenXZPoints_s32
 #include "game/math/fixed_point_math.h"
+#undef calculateFixedAngleBetweenXZPoints
 #include "game/race/motion/race_motion.h"
 #include "game/race/camera/race_camera.h"
 
@@ -97,6 +99,7 @@ typedef struct StackD7D4 {
 } StackD7D4;
 
 extern void packFixedTransformMatrix(void *, void *);
+extern s16 calculateFixedAngleBetweenXZPoints(s32, s32, s32, s32);
 extern RaceCamera D_801121E0[RACE_CAMERA_COUNT];
 extern RaceCamera *D_801124A0;
 extern RacePlayerSlot gRacePlayers[];
@@ -384,12 +387,14 @@ void initRaceCameraFollowPlayer(void) {
     D_801124A0->update();
 }
 
-// updateRaceCameraFollowPlayer best match: 97.646% (nonmatchings/updateRaceCameraFollowPlayer-2188069624939011928/base_24.c)
+// updateRaceCameraFollowPlayer best match: 99.891% (nonmatchings/updateRaceCameraFollowPlayer-11/output-50-1/source.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race/camera/race_camera/updateRaceCameraFollowPlayer.s")
 
 #ifdef NON_MATCHING
 void updateRaceCameraFollowPlayer(void) {
     s32 diff;
+    register s32 new_var;
+    register s32 new_var2;
     s32 dx;
     s32 dy;
     s32 dz;
@@ -404,10 +409,13 @@ void updateRaceCameraFollowPlayer(void) {
         D_801124A0->focus.z += (gRacePlayers[D_801124A0->playerIndex].state.cameraPos.z - D_801124A0->focus.z) >> 1;
 
         x = D_801124A0->pos.x;
-        y = D_801124A0->pos.y;
+        new_var2 = D_801124A0->pos.y;
+        diff = D_801124A0->pos.x;
+        dist = new_var2;
+        y = dist;
         z = D_801124A0->pos.z;
 
-        dx = D_801124A0->focus.x - x;
+        dx = (new_var = D_801124A0->focus.x) - x;
         dy = D_801124A0->focus.y - y;
         dz = D_801124A0->focus.z - z;
 
@@ -459,10 +467,11 @@ void updateRaceCameraFollowPlayer(void) {
             }
 
             diff = D_801124A0->pos.x;
-            D_801124A0->pos.x = (diff + x) - diff;
+            D_801124A0->pos.x = (D_801124A0->pos.x + x) - diff;
             diff = D_801124A0->pos.y;
             D_801124A0->pos.y = (diff + y) - diff;
-            diff = D_801124A0->pos.z;
+            new_var = D_801124A0->pos.z;
+            diff = new_var;
             D_801124A0->pos.z = (diff + z) - diff;
 
             diff = 0x12C0000;
@@ -489,7 +498,8 @@ void updateRaceCameraFollowPlayer(void) {
             if (diff > 0) {
                 diff /= 6;
             }
-            D_801124A0->distance += diff;
+            new_var2 = diff;
+            D_801124A0->distance += new_var2;
         }
     }
 
@@ -578,66 +588,39 @@ void initRaceCameraChase(void) {
     D_801124A0->update();
 }
 
-// updateRaceCameraChase best match: 85.055% (nonmatchings/updateRaceCameraChase-8075865578671233833/base_8.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race/camera/race_camera/updateRaceCameraChase.s")
-
-#ifdef NON_MATCHING
 void updateRaceCameraChase(void) {
-    RaceCamera *camera;
-    RacePlayerSlot *player;
-    RacePlayerSlot *otherPlayer;
-    RacePlayerSlot *players;
-    s8 *playerCount;
-    s32 stride;
-    s32 otherStride;
     s32 i;
     s32 blockedAngles;
     s32 dx;
     s32 dz;
-    s32 distSqHigh;
     s32 dist;
     s32 sine;
     s32 cosine;
+    s16 angle;
     s16 targetYaw;
     s16 yaw;
-    s16 diff;
     u8 *angleOrder;
 
     if (gRaceUpdatePaused == 0) {
-        stride = RACE_PLAYER_STATE_SIZE;
-        players = gRacePlayers;
-        playerCount = &gRacePlayerCount;
-        player = (RacePlayerSlot *)((u8 *)players + (D_801124A0->playerIndex * stride));
-
-        D_801124A0->focus.x += (player->state.cameraPos.x - D_801124A0->focus.x) >> 1;
-        player = (RacePlayerSlot *)((u8 *)players + (D_801124A0->playerIndex * stride));
-        D_801124A0->focus.y += (player->state.cameraPos.y - D_801124A0->focus.y) >> 1;
-        player = (RacePlayerSlot *)((u8 *)players + (D_801124A0->playerIndex * stride));
-        D_801124A0->focus.z += (player->state.cameraPos.z - D_801124A0->focus.z) >> 1;
-
-        player = (RacePlayerSlot *)((u8 *)players + (D_801124A0->playerIndex * stride));
-        targetYaw = player->state.yaw - 0x300;
-        blockedAngles = 0;
+        D_801124A0->focus.x += (gRacePlayers[D_801124A0->playerIndex].state.cameraPos.x - D_801124A0->focus.x) >> 1;
+        D_801124A0->focus.y += (gRacePlayers[D_801124A0->playerIndex].state.cameraPos.y - D_801124A0->focus.y) >> 1;
+        D_801124A0->focus.z += (gRacePlayers[D_801124A0->playerIndex].state.cameraPos.z - D_801124A0->focus.z) >> 1;
+        targetYaw = gRacePlayers[D_801124A0->playerIndex].state.yaw - 0x300;
+        blockedAngles = targetYaw * 0;
         i = 0;
 
-        if (*playerCount > 0) {
-            otherStride = RACE_PLAYER_STATE_SIZE;
+        if (gRacePlayerCount > 0) {
             do {
                 if (i != D_801124A0->playerIndex) {
-                    player = (RacePlayerSlot *)((u8 *)players + (D_801124A0->playerIndex * stride));
-                    otherPlayer = (RacePlayerSlot *)((u8 *)players + (i * otherStride));
-                    dx = player->state.pos.x - otherPlayer->state.pos.x;
-                    dz = player->state.pos.z - otherPlayer->state.pos.z;
-                    distSqHigh = ((s64)dx * dx + (s64)dz * dz) >> 32;
-
-                    if (distSqHigh < 0xE11) {
-                        if (distSqHigh < 0xE10) {
-                            blockedAngles |= 1 << (s16)(((((calculateFixedAngleFromDeltaXZ(dx, dz) + 0x800) - targetYaw) + 0x100) & 0xFFF) >> 9);
-                        }
+                    dx = gRacePlayers[D_801124A0->playerIndex].state.pos.x - gRacePlayers[i].state.pos.x;
+                    dz = gRacePlayers[D_801124A0->playerIndex].state.pos.z - gRacePlayers[i].state.pos.z;
+                    if ((s64)dx * dx + (s64)dz * dz < 0xE1000000000LL) {
+                        angle = calculateFixedAngleFromDeltaXZ(dx, dz) + 0x800;
+                        blockedAngles |= 1 << (s16)((((angle - targetYaw) + 0x100) & 0xFFF) >> 9);
                     }
                 }
                 i++;
-            } while (i < *playerCount);
+            } while (i < gRacePlayerCount);
             i = 0;
         }
 
@@ -653,26 +636,24 @@ loop_11:
         }
 loop_11_done:
 
-        yaw = targetYaw + gRaceCameraChaseYawOffsets[i];
-        yaw = (s16)yaw;
-        camera = D_801124A0;
-        sine = calculateFixedAngleBetweenXZPoints(camera->focus.x, camera->focus.z, camera->pos.x, camera->pos.z);
-        diff = (yaw - sine) & 0xFFF;
-        if (diff >= 0x801) {
-            diff -= 0x1000;
+        targetYaw += gRaceCameraChaseYawOffsets[i];
+        targetYaw = (s16)targetYaw;
+        angle = calculateFixedAngleBetweenXZPoints(D_801124A0->focus.x, D_801124A0->focus.z, D_801124A0->pos.x, D_801124A0->pos.z);
+        yaw = (targetYaw - angle) & 0xFFF;
+        if (yaw >= 0x801) {
+            yaw -= 0x1000;
         }
-        if (diff >= 0x21) {
-            diff = 0x20;
+        if (yaw >= 0x21) {
+            yaw = 0x20;
         }
-        if (diff < -0x20) {
-            diff = -0x20;
+        if (yaw < -0x20) {
+            yaw = -0x20;
         }
-        yaw = diff + sine;
+        yaw += angle;
         D_801124A0->unk92 = yaw;
 
-        camera = D_801124A0;
-        dx = camera->pos.x - camera->focus.x;
-        dz = camera->pos.z - camera->focus.z;
+        dx = D_801124A0->pos.x - D_801124A0->focus.x;
+        dz = D_801124A0->pos.z - D_801124A0->focus.z;
         dist = integerSquareRoot64((s64)dx * dx + (s64)dz * dz);
         dist = ((0x300000 - dist) >> 1) + dist;
 
@@ -680,11 +661,8 @@ loop_11_done:
         cosine = fixedCosine(yaw);
         D_801124A0->pos.x = (((s64)sine * -dist) / 0x1000) + D_801124A0->focus.x;
         D_801124A0->pos.z = (((s64)cosine * -dist) / 0x1000) + D_801124A0->focus.z;
-
         D_801124A0->pos.y += (D_801124A0->focus.y - D_801124A0->pos.y) >> 1;
-
         D_801124A0->unk28 += (0x960000 - D_801124A0->unk28) >> 1;
-
         if (gMenuFlowState & 0x20) {
             D_801124A0->update = updateRaceCameraFinishOrbit;
         }
@@ -695,7 +673,6 @@ loop_11_done:
     D_801124A0->prevPos.z = gRacePlayers[D_801124A0->playerIndex].state.pos.z;
     updateRaceCameraLookAtTransform();
 }
-#endif
 
 void updateRaceCameraFinishOrbit(void) {
     s32 unused[3];

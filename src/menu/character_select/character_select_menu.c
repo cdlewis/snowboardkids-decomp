@@ -15,30 +15,12 @@ typedef struct {
     s32 timer;
 } CharacterSelectMenuState;
 
-// exitMode/readyCount are legacy names; they are not just "reason for exit" or
-// "players ready". The character-select UI actors also use them as animation
-// state: exitMode drives panel display/slide state, and readyCount is set once
-// the message/banner UI finishes moving into position.
-typedef struct {
-    u8 phase;
-    u8 exitMode;
-    u8 readyCount;
-    u8 pad3;
-    char pad4[4];
-    s16 fade;
-    s16 unkA;
-    u8 confirmSelection;
-    u8 unkD;
-    u8 blockDecrease;
-    u8 blockIncrease;
-    s16 cursorX;
-    s16 cursorY;
-    s8 playerSelections[4];
-} CharacterSelectState;
-
 typedef struct {
     u16 characterId;
 } CharacterId;
+
+CharacterSelectState gCharacterSelectHudState;
+u8 D_8010AE68;
 
 extern void releaseMenuAssetHandles(void);
 extern void enqueueSoundEffect(s32, s32);
@@ -46,19 +28,17 @@ extern void updateCharacterSelectMenu(void);
 extern void fadeOutCharacterSelectMenu(void);
 extern void requestMusicSequenceBank(s32);
 extern CharacterSelectMenuState *gCurrentGameTask;
-extern CharacterSelectState gCharacterSelectHudState;
 extern CharacterId gCharacterSelectIdOrder[];
 extern CallbackTask *gActiveMenuTask;
 extern CallbackTask *D_8010ADE0;
 extern CallbackTask *D_8010ADE4;
 extern CallbackTask *D_8010ADE8;
 extern CallbackTask *D_8010ADEC;
-extern f32 gCharacterSelectViewportAspectRatio;
 extern s16 gMenuFadeAlpha;
 extern s16 gMenuInputRepeatTimers[];
 extern s8 gFramebufferSwapDelay;
 extern s8 gMenuSelectionConfirmTimer;
-extern s8 D_8010AE53[];
+extern s8 D_8010AE64[];
 // Per-player highlighted index. During character-roster browsing
 // (gCharacterSelectHudState.phase == 3), this indexes gCharacterSelectIdOrder,
 // not RacePlayer.characterId directly. Live-observed values: 1 = Slash,
@@ -66,38 +46,24 @@ extern s8 D_8010AE53[];
 // During later board-type selection, this address is reused by different code:
 // 0 = Free Style, 1 = All Around, 2 = Alpine, 3 = back, and 4/5 appear to be
 // locked/unowned special board states.
-extern s8 D_8010AE64[];
 extern s32 gMenuFlowState;
 extern s32 gPlayerInputPressed;
 extern u8 D_60F1A0[];
 extern u8 gMainMenuSecretCodeUnlocked;
 extern u8 D_800EC9E5;
 extern u8 gMenuExitSelection;
-extern u8 D_8010AE68;
 extern u8 gPlayerCount;
 extern u8 gPendingFramebufferSwapCount;
 extern u8 gFramebufferSwapHold;
 
-// initCharacterSelectMenu best functional match: 99.069% (nonmatchings/initCharacterSelectMenu-2188069624939011928/base_12.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/menu/character_select/character_select_menu/initCharacterSelectMenu.s")
-
-#ifdef NON_MATCHING
 void initCharacterSelectMenu(void) {
-    RacePlayer *player;
-    CharacterSelectState *state;
     s32 i;
     s32 j;
-    s32 keepGoing;
-    s32 nextIndex;
-    s32 playerCount;
-    u8 *selectionPtr;
-    s16 *timerPtr;
-    s16 *timerEnd;
 
     if ((D_800EC9E5 == 0) || (gMenuExitSelection == 1)) {
         requestMusicSequenceBank(1);
         resetAllViewports();
-        configureViewport(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, gCharacterSelectViewportAspectRatio);
+        configureViewport(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.333333373f);
         gFramebufferSwapDelay = 0;
         gMenuSelectionConfirmTimer = 0;
         gMenuExitSelection = 0;
@@ -111,36 +77,21 @@ void initCharacterSelectMenu(void) {
         LOAD_ASSET(_60F1A0, 0x29);
         initCallbackTaskScheduler(0);
 
-        playerCount = gPlayerCount;
-        i = 0;
-        // Compiler-shaping no-op retained in the NON_MATCHING attempt.
-        if (D_60F1A0) { } if (playerCount > 0) { player = gRacePlayers; do { for (j = 0; j != 6; j++) {
-                    if (player->selectedCharacterId == gCharacterSelectIdOrder[j].characterId) {
-                        D_8010AE64[i] = j;
-                        break;
-                    }
+        for (i = 0; i < gPlayerCount; i++) {
+            for (j = 0; j != 6; j++) {
+                if (gRacePlayers[i].selectedCharacterId == gCharacterSelectIdOrder[j].characterId) {
+                    D_8010AE64[i] = j;
+                    break;
                 }
-                i++;
-                player++;
-            } while (i < playerCount);
+            }
         }
     } else {
         gCurrentGameTask->fade = 1;
         gMenuFadeAlpha = 1;
-        playerCount = gPlayerCount;
-        i = 0;
-        if (playerCount > 0) {
-            selectionPtr = (u8 *) D_8010AE64;
-            player = gRacePlayers;
-            do {
-                nextIndex = i + 1;
-                keepGoing = nextIndex < playerCount;
-                player->selectedCharacterId = i;
-                i = nextIndex;
-                player++;
-                selectionPtr++;
-                selectionPtr[-1] = nextIndex;
-            } while (keepGoing);
+
+        for (i = 0; i < gPlayerCount; i++) {
+            gRacePlayers[i].selectedCharacterId = i;
+            D_8010AE64[i] = i + 1;
         }
     }
 
@@ -150,12 +101,28 @@ void initCharacterSelectMenu(void) {
     D_8010ADE0 = createCallbackTask(initCharacterSelectRosterIcons, 0, 0x64);
     createCallbackTask(initCharacterSelectPlayerStatsPanels, 0, 0x64);
     D_8010ADE4 = createCallbackTask(initCharacterSelectPlayerPanelFrames, 0, 0x63);
-    // Compiler-shaping grouping retained in the best matching attempt.
-    do { setCurrentGameTaskCallback(updateCharacterSelectMenu, 0); playerCount = gPlayerCount; if (playerCount > 0) { timerPtr = gMenuInputRepeatTimers; timerEnd = timerPtr + playerCount; player = gRacePlayers; do { timerPtr++; keepGoing = (u32) timerPtr < (u32) timerEnd; player++; if (((!player) && (!player)) && (!player)) { } player[-1].menuState = 0; timerPtr[-1] = 0; } while (keepGoing); } state = &gCharacterSelectHudState; state->phase = 0; state->exitMode = 0; state->readyCount = 0; state->fade = 0; state->unkA = 0; state->confirmSelection = 0; state->unkD = 0; state->blockDecrease = 0; state->blockIncrease = 0; state->cursorX = 0; } while (0);
-    state->cursorY = 0;
+    do {
+        setCurrentGameTaskCallback(updateCharacterSelectMenu, 0);
+
+        for (i = 0; i < gPlayerCount; i++) {
+            gRacePlayers[i].menuState = 0;
+            gMenuInputRepeatTimers[i] = 0;
+        }
+        gCharacterSelectHudState.phase = 0;
+        gCharacterSelectHudState.exitMode = 0;
+        gCharacterSelectHudState.readyCount = 0;
+        gCharacterSelectHudState.fade = 0;
+        gCharacterSelectHudState.unkA = 0;
+        gCharacterSelectHudState.confirmSelection = 0;
+        gCharacterSelectHudState.unkD = 0;
+        gCharacterSelectHudState.blockDecrease = 0;
+        gCharacterSelectHudState.blockIncrease = 0;
+        gCharacterSelectHudState.cursorX = 0;
+        gCharacterSelectHudState.cursorY = 0;
+    } while (0);
     i = -1;
     while (++i < 4) {
-        D_8010AE53[i] = 0;
+        gCharacterSelectHudState.selectedTokenState[i] = 0;
     }
     D_8010AE68 = 0;
     if (gMainMenuSecretCodeUnlocked != 0) {
@@ -163,7 +130,6 @@ void initCharacterSelectMenu(void) {
     }
     updateCallbackTasks();
 }
-#endif
 
 // updateCharacterSelectMenu best match: 69.415% (nonmatchings/updateCharacterSelectMenu-5787290371232622032/base_46.c)
 // Per-frame driver for the character roster screen only. Live RAM-watch
@@ -264,7 +230,7 @@ void updateCharacterSelectMenu(void) {
                 cachedIsCpu = var_s4->isCpu;
                 sp48 = var_a0;
                 if (cachedIsCpu == 0) {
-                    temp_fp = (u8 *) &D_8010AE64[var_s0];
+                    temp_fp = (u8 *) &gCharacterSelectHudState.playerSelections[var_s0];
                     temp_t2 = *temp_fp;
                     temp_v0_2 = D_80123758[var_s0];
                     temp_a1 = temp_v0_2 & 0x40100;
@@ -313,17 +279,18 @@ loop_48:
                         var_v0_2 = 0;
                         if ((s32) D_80121B55 > 0) {
                             do {
-                                if ((var_v0_2 != var_s0) && (var_a0_2 == D_8010AE64[var_v0_2])) {
+                                if ((var_v0_2 != var_s0) &&
+                                    (var_a0_2 == gCharacterSelectHudState.playerSelections[var_v0_2])) {
                                     var_v1_2 = (var_v1_2 + 1) & 0xFF;
                                 }
                                 var_v0_2 += 1;
                             } while (var_v0_2 < (s32) D_80121B55);
                         }
                         var_t1 += 1;
-                        if ((D_8010AE5E == 0) && (var_a0_2 == 0)) {
+                        if ((gCharacterSelectHudState.blockDecrease == 0) && (var_a0_2 == 0)) {
                             var_v1_2 = (var_v1_2 + 1) & 0xFF;
                         }
-                        if ((D_8010AE5F == 0) && (var_a0_2 == 6)) {
+                        if ((gCharacterSelectHudState.blockIncrease == 0) && (var_a0_2 == 6)) {
                             var_v1_2 = (var_v1_2 + 1) & 0xFF;
                         }
                         if (var_v1_2 != 0) {
@@ -375,7 +342,7 @@ loop_48:
                 var_a0 = sp48 + 4;
                 if ((*var_s7 & 0x4000) && (cachedIsCpu != 0)) {
                     var_s4->isCpu = 0;
-                    D_8010AE53[var_s0] = 0;
+                    gCharacterSelectHudState.selectedTokenState[var_s0] = 0;
                 }
                 cachedIsCpu = var_s4->isCpu;
                 var_s0 += 1;

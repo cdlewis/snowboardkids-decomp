@@ -93,7 +93,7 @@ extern void (*D_8011241C)(void);
 extern u8 gPlayerCount;
 extern s32 gMenuFlowState;
 
-// initMultiplayerCourseSelectMenu best match: 84.684% (nonmatchings/initMultiplayerCourseSelectMenu-5787290371232622032/base_38.c)
+// initMultiplayerCourseSelectMenu best match: 94.628% (nonmatchings/initMultiplayerCourseSelectMenu-3379532139742180785/base_66.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/course_select/multiplayer_course_select_menu/initMultiplayerCourseSelectMenu.s")
 
 #ifdef NON_MATCHING
@@ -104,7 +104,8 @@ void initMultiplayerCourseSelectMenu(void) {
     s32 sum;
     s32 selected;
     s32 screenBase;
-    u32 one = 1;
+    volatile s32 playerCount;
+    s32 one = 1;
     RacePlayer *player;
 
     if (gRaceSplitscreenMode == one) {
@@ -192,7 +193,6 @@ void initMultiplayerCourseSelectMenu(void) {
 
     one = 1;
     {
-        volatile s32 playerCount;
         s32 extraOffset;
         MultiplayerCourseSelectSaveData *save;
         s8 *stateA;
@@ -212,16 +212,16 @@ void initMultiplayerCourseSelectMenu(void) {
         i = 0;
         playerCount = gPlayerCount;
         if (gPlayerCount > 0) {
-            unlocked = D_8010AEA0;
-            availableColumns = D_8010AEB8[0];
-            save = gGameSaveDataBuffer;
-            valueB = D_8010AEE8;
-            valueA = D_8010AED8;
-            repeatTimer = gMenuInputRepeatTimers;
-            prompt = gMenuChoicePromptState;
-            stateB = D_8010AECC;
-            stateC = D_8010AEC8;
             stateA = D_8010AEA4;
+            stateC = D_8010AEC8;
+            stateB = D_8010AECC;
+            prompt = gMenuChoicePromptState;
+            repeatTimer = gMenuInputRepeatTimers;
+            valueA = D_8010AED8;
+            valueB = D_8010AEE8;
+            save = gGameSaveDataBuffer;
+            availableColumns = D_8010AEB8[0];
+            unlocked = D_8010AEA0;
             selectionRow = D_8010AEF8[0];
             extraOffset = 0;
             do {
@@ -239,7 +239,7 @@ void initMultiplayerCourseSelectMenu(void) {
                     sum = 0;
                     k = 0;
                     do {
-                        sum += save->characterState[j + k * 3];
+                        sum += save->characterState[k * 3 + j];
                         k++;
                     } while (k < 3);
                     j++;
@@ -263,7 +263,7 @@ void initMultiplayerCourseSelectMenu(void) {
                 }
                 stateC++;
                 if (stateC[-1] == 4) {
-                    *unlocked = one;
+                    *unlocked = 1;
                 }
 
                 selectionPtr = selectionRow;
@@ -313,62 +313,66 @@ void initMultiplayerCourseSelectMenu(void) {
         }
     }
 
-    for (i = 0; i < gPlayerCount; i++) {
-        selected = gRacePlayers[i].menuSelection;
-        if ((selected >= 9) && (selected < 12)) {
-            j = 3;
-            if (gRacePlayers[i].selectedCharacterId == 5) {
-                j = 0;
-            }
-            k = gCourseSelectStatus.unk2E;
-        } else {
-            k = gCourseSelectStatus.unk2E;
-            if (k == one) {
-                j = 0;
-                gCourseSelectStatus.unk2E = 0;
-                k = 0;
+    {
+        s32 playerIndex;
+
+        for (playerIndex = 0; playerIndex < playerCount; playerIndex++) {
+            selected = gRacePlayers[playerIndex].menuSelection;
+            if ((selected >= 9) && (selected < 12)) {
+                if (gRacePlayers[playerIndex].selectedCharacterId == 5) {
+                    j = 0;
+                } else {
+                    j = 3;
+                }
+                k = gCourseSelectStatus.unk2E;
             } else {
-                j = selected % 3;
+                k = gCourseSelectStatus.unk2E;
+                if (k == one) {
+                    j = 0;
+                    k = gCourseSelectStatus.unk2E = 0;
+                } else {
+                    j = selected % 3;
+                }
             }
-        }
 
-        D_8010AE64[i] = j;
-        if (k == one) {
-            j--;
-        }
-
-        if (gRacePlayers[i].selectedCharacterId == 5) {
-            D_8010AEAC[i] = 0;
-        } else if (selected < 9) {
-            D_8010AEAC[i] = selected / 3;
-        } else {
-            if (selected >= 12) {
-                D_8010AEAC[i] = 0;
+            D_8010AE64[playerIndex] = j;
+            if (k == one) {
+                j--;
             }
-            if (selected >= 9 && selected < 12) {
-                for (k = 0; k < 3; k++) {
-                    if (D_8010AF08[i][k] == selected) {
-                        D_8010AEAC[i] = k;
-                        break;
+
+            if (gRacePlayers[playerIndex].selectedCharacterId == 5) {
+                D_8010AEAC[playerIndex] = 0;
+            } else if (selected < 9) {
+                D_8010AEAC[playerIndex] = selected / 3;
+            } else {
+                if (selected >= 12) {
+                    D_8010AEAC[playerIndex] = 0;
+                }
+                if (selected >= 9 && selected < 12) {
+                    for (k = 0; k < 3; k++) {
+                        if (D_8010AF08[playerIndex][k] == selected) {
+                            D_8010AEAC[playerIndex] = k;
+                            break;
+                        }
                     }
                 }
             }
-        }
 
-        gRacePlayers[i].menuSelection = D_8010AEF8[i][j];
-        gCourseSelectStatus.unk0[i] = 0;
-        gCourseSelectStatus.unk4[i] = 0;
-        gCourseSelectStatus.unk8[i] = 0;
-        gCourseSelectStatus.unkC[i] = 0;
-        gCourseSelectStatus.unk10[i] = 0;
-        gCourseSelectStatus.unk14[i] = 0;
-        gCourseSelectStatus.unk1C[i] = 0;
-        gCourseSelectStatus.unk24[i] = 0;
+            gRacePlayers[playerIndex].menuSelection = D_8010AEF8[playerIndex][j];
+            gCourseSelectStatus.unk0[playerIndex] = 0;
+            gCourseSelectStatus.unk4[playerIndex] = 0;
+            gCourseSelectStatus.unk8[playerIndex] = 0;
+            gCourseSelectStatus.unkC[playerIndex] = 0;
+            gCourseSelectStatus.unk10[playerIndex] = 0;
+            gCourseSelectStatus.unk14[playerIndex] = 0;
+            gCourseSelectStatus.unk1C[playerIndex] = 0;
+            gCourseSelectStatus.unk24[playerIndex] = 0;
+        }
     }
 
-    gCourseSelectStatus.unk28 = 0;
-    gCourseSelectStatus.unk2A = 0;
-    gCourseSelectStatus.unk2C = 0;
+    *(volatile u8 *)&gCourseSelectStatus.unk28 = 0;
+    *(volatile s16 *)&gCourseSelectStatus.unk2A = 0;
+    *(volatile s16 *)&gCourseSelectStatus.unk2C = 0;
 }
 #endif
 

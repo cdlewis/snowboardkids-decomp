@@ -43,6 +43,11 @@ isolation rather than importing a whole batch, since some of its output (e.g.
   `case N: break;` identical to `default`) — state-machine switches frequently
   need this explicit terminal case even when the post-switch cleanup handles
   that same state.
+- **Restoring a C jump table can expose a missing object boundary.** If the
+  table has the correct semantic size but later rodata/BSS symbols shift, check
+  whether the decomp project merged original translation units. Reconstructing
+  the text/rodata/BSS split lets linker section alignment restore the padding
+  naturally; do not attach padding to an unrelated assembly include.
 - **A no-op expression in a switch selector can change temp register without
   changing control flow** (e.g. `switch (x ^ 0)` vs `switch (x)`). Reach for
   this only when the diff is a pure register-name swap on the dispatch value.
@@ -60,6 +65,12 @@ isolation rather than importing a whole batch, since some of its output (e.g.
   stores it should follow, even though the scheduler ultimately interleaves
   them. Reordering just the constant assignment can fix a pure
   scheduling/register diff.
+- **A folded empty pointer condition can steer induction-update scheduling.**
+  Once loop control, registers, and memory accesses already match, a repeated
+  empty test such as `if (((!p) && (!p)) && (!p)) {}` can change which of two
+  independent pointer increments IDO schedules immediately after its store
+  while emitting no instructions for the condition itself. Reserve this for a
+  final pure instruction-order mismatch.
 - **Recover accumulators from a folded first use.** If one call receives a
   literal but the following calls use an incremented value held in a saved
   register, model the source as a single accumulator starting at the first
@@ -153,6 +164,10 @@ and control flow already match and only register *names* differ.
   assigns the destination/operand registers based on source operand order.
   When a match is functionally perfect but differs only in which temp holds
   each operand of an `addu`/`or`, try swapping the addends in the C source.
+- **A double subtraction can prevent IDO from canonicalizing addends.** When
+  both `a + b` and `b + a` emit `addu dest,b,a`, the equivalent form
+  `a - (0 - b)` can emit `addu dest,a,b`. Use it only when the value ranges
+  make the intermediate negation well-defined.
 - **Narrow a dead local in place before its final commutative use.** Writing
   `value >>= N; consume(field + value);` can preserve the target shift while
   making the field the first `addu` operand. The inline equivalent
@@ -215,6 +230,11 @@ and control flow already match and only register *names* differ.
 
 ## IDO codegen: loop shape and strength reduction
 
+- **A terminal backward `goto` can align an unreachable epilogue.** IDO may
+  emit `.align 5` between an infinite loop's final branch and its dead
+  epilogue. The number of resulting nops depends on the function's offset in
+  the full translation unit, so an isolated matching workspace can show excess
+  padding even when the integrated function has the exact target length.
 - **Pointer-bump `do`/`while` vs. strength-reduced indexed `for`.** A loop
   that bumps a pointer over an array makes IDO hoist the shared base address
   into a callee-saved register and reuse it everywhere, forcing an extra saved
