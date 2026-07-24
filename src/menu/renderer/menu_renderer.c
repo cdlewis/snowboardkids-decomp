@@ -500,7 +500,7 @@ void drawMenuSpriteWithAlphaClipped(s16 x, s16 y, FontAsset *asset, u16 tileInde
 }
 #endif
 
-// drawMenuSpriteWithPaletteScale best match: 97.702% (nonmatchings/drawMenuSpriteWithPaletteScale-210831275846872038/base_12.c)
+// drawMenuSpriteWithPaletteScale best match: 97.729% (nonmatchings/drawMenuSpriteWithPaletteScale-3885303446860889946/base_7.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/renderer/menu_renderer/drawMenuSpriteWithPaletteScale.s")
 
 #ifdef NON_MATCHING
@@ -534,7 +534,7 @@ void drawMenuSpriteWithPaletteScale(s16 x, s16 y, FontAsset *asset, u16 index, u
     headerSize = sizeof(FontAssetHeader);
     textureBase = (u8 *)asset + (index * sizeof(FontTexture));
     texture = (FontTexture *)(textureBase + headerSize);
-    paletteBase = (u8 *)asset + headerSize + (asset->header.entryCount * sizeof(FontTexture));
+    paletteBase = (asset->header.entryCount * sizeof(FontTexture)) + (u8 *)asset + headerSize;
     left = x + gMenuViewportCenterX;
     top = y + gMenuViewportCenterY;
     loadBlockFlags = 0x07000000;
@@ -579,21 +579,21 @@ void drawMenuSpriteWithPaletteScale(s16 x, s16 y, FontAsset *asset, u16 index, u
     gDPPipeSync(gRegionAllocPtr++);
     FONT_GFX_CMD(gRegionAllocPtr++, 0xBA000C02, 0x3000);
 
-    srcPalette = (u16 *)(paletteBase + (texture->paletteIndex * 0x20));
-    palette = allocMenuRenderScratch(0x20);
-    for (i = 0; i != 0x10; i++) {
+    srcPalette = (u16 *)(paletteBase + (texture->paletteIndex * MENU_PALETTE_SIZE_BYTES));
+    palette = allocMenuRenderScratch(MENU_PALETTE_SIZE_BYTES);
+    for (i = 0; i != MENU_PALETTE_COLOR_COUNT; i++) {
         paletteColor = srcPalette[i] ^ 0;
         color = paletteColor & 0xFFFF;
         palette[i] = paletteColor;
-        if (color & 1) {
-            red = (color >> 11) & 0x1F;
-            green = (color >> 6) & 0x1F;
-            color = (color >> 1) & 0x1F;
+        if (color & MENU_RGBA5551_ALPHA_BIT) {
+            red = (color >> 11) & MENU_RGBA5551_CHANNEL_MASK;
+            green = (color >> 6) & MENU_RGBA5551_CHANNEL_MASK;
+            color = (color >> 1) & MENU_RGBA5551_CHANNEL_MASK;
             blue = color;
-            red = (red * intensity) / 256;
-            green = (green * intensity) / 256;
-            blue = (blue * intensity) / 256;
-            palette[i] = (red << 11) | (green << 6) | (blue << 1) | 1;
+            red = (red * intensity) / MENU_RGBA5551_SCALE_BASE;
+            green = (green * intensity) / MENU_RGBA5551_SCALE_BASE;
+            blue = (blue * intensity) / MENU_RGBA5551_SCALE_BASE;
+            palette[i] = (red << 11) | (green << 6) | (blue << 1) | MENU_RGBA5551_ALPHA_BIT;
         }
     }
 
@@ -624,7 +624,7 @@ void drawMenuSpriteWithPaletteScale(s16 x, s16 y, FontAsset *asset, u16 index, u
                  (((left << 2) & 0xFFF) << 12) | ((top << 2) & 0xFFF));
     FONT_GFX_CMD(gRegionAllocPtr++, 0xB4000000,
                  ((((srcX << 5) + 0x10) << 14) << 2) | (((srcY << 5) + 0x10) & 0xFFFF));
-    FONT_GFX_CMD(gRegionAllocPtr++, 0xB3000000, (0x800 << 16) | 0x800);
+    FONT_GFX_CMD(gRegionAllocPtr++, 0xB3000000, (MENU_HALF_SCALE_STEP << 16) | MENU_HALF_SCALE_STEP);
     gDPPipeSync(gRegionAllocPtr++);
     FONT_GFX_CMD(gRegionAllocPtr++, 0xBA000C02, 0);
     gDPPipeSync(gRegionAllocPtr++);
