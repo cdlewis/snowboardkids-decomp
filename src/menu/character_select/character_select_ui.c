@@ -557,7 +557,7 @@ void initCharacterSelectPlayerCursorMarkers(CharacterSelectUiPlayerCursorActor *
     setCallbackTaskCallback(arg0, updateCharacterSelectPlayerCursorMarkers);
 }
 
-// drawCharacterSelectPlayerStatsPanels best match: 96.939% (nonmatchings/drawCharacterSelectPlayerStatsPanels-7475224831549593718/base_20.c)
+// drawCharacterSelectPlayerStatsPanels best match: 98.422% (nonmatchings/drawCharacterSelectPlayerStatsPanels-8498672362023432715/base_4.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/character_select/character_select_ui/drawCharacterSelectPlayerStatsPanels.s")
 
 #ifdef NON_MATCHING
