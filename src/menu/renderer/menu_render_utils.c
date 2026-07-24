@@ -585,7 +585,7 @@ void drawAssetTableSpriteWithExplicitPalette(s16 x, s16 y, AssetTable *table, u1
                         G_TX_RENDERTILE, clipS << 5, clipT << 5, 0x400, 0x400);
 }
 
-// drawScaledAssetTableSprite best match: 95.622% (nonmatchings/drawScaledAssetTableSprite-1219509448159986855/base_83.c)
+// drawScaledAssetTableSprite best match: 96.102% (nonmatchings/drawScaledAssetTableSprite-3885303446860889946/base.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/renderer/menu_render_utils/drawScaledAssetTableSprite.s")
 
 #ifdef NON_MATCHING
@@ -655,8 +655,8 @@ void drawScaledAssetTableSprite(s16 x, s16 y, AssetTable *asset, volatile u16 en
             x0 = clipLeft;
         }
         if (y0 < (gMenuViewportCenterY - viewHalfHeight)) {
-            clippedT = clipTop - y0;
-            y0 = clipTop;
+            clippedT = (gMenuViewportCenterY - viewHalfHeight) - y0;
+            y0 = gMenuViewportCenterY - viewHalfHeight;
         }
         if (x1 >= clipRight) {
             x1 = clipRight;
