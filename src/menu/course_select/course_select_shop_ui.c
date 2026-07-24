@@ -154,35 +154,31 @@ extern u8 gCourseSelectModeSelection;
 extern u8 gMenuSelectionConfirmTimer;
 extern u8 gMenuExitSelection;
 
-void drawShopMenuModeChoiceRows(ShopMenuRowActor *arg0) {
-    ShopMenuRowActor *rowActor;
-    ShopMenuRowActor *rowPos;
-    s32 row;
-    s32 alpha;
+void drawShopMenuModeChoiceRows(ShopMenuRowActor *actor) {
+    ShopMenuRowActor *savedActor;
+    ShopMenuRowActor *rows;
+    s32 rowIndex;
+    s32 blinkAlpha;
     s32 yOffset;
 
-    rowActor = arg0;
-    row = 0;
-    do {
-        if (arg0->visibleRowCount > 0) {
-            yOffset = 0; rowPos = arg0; do { alpha = 0;
-                if ((gMenuSelectionConfirmTimer > 0) && (gMenuSelectionConfirmTimer < 8) &&
-                    (gMenuExitSelection == 0) && (row == gCourseSelectModeSelection) &&
-                    (gMenuSelectionConfirmTimer & 1)) {
-                    alpha = 0xFF;
-                }
-                drawMenuSprite(rowPos->rowXPositions[0], (s16)(arg0->baseY + yOffset),
-                               getRelocatableHeapBlockBase(gAssetHandles[0x27]),
-                               (row + 2) & 0xFFFF, 0x20, 0x20, 0, alpha);
-                /* Empty block preserves IDO's register allocation (arg0 in s4). */
-                if (1) {
-                }
-                row += 1;
-                yOffset += 0x1C;
-                rowPos = (ShopMenuRowActor *)((s16 *)rowPos + 1);
-            } while (row < rowActor->visibleRowCount);
-        }
-    } while (0);
+    savedActor = actor;
+    rowIndex = 0;
+    if (actor->visibleRowCount > 0) {
+        /* Keeping the loop setup together preserves IDO's original scheduling. */
+        yOffset = 0; rows = actor; do {
+            blinkAlpha = 0;
+            if ((gMenuSelectionConfirmTimer > 0) && (gMenuSelectionConfirmTimer < 8) &&
+                (gMenuExitSelection == 0) && (rowIndex == gCourseSelectModeSelection) &&
+                (gMenuSelectionConfirmTimer & 1)) {
+                blinkAlpha = 0xFF;
+            }
+            drawMenuSprite(rows->rowXPositions[rowIndex], (s16)(actor->baseY + yOffset),
+                           getRelocatableHeapBlockBase(gAssetHandles[0x27]),
+                           (u16)(rowIndex + 2), 0x20, 0x20, 0, blinkAlpha);
+            yOffset += 0x1C;
+            rowIndex += 1;
+        } while (rowIndex < savedActor->visibleRowCount);
+    }
 }
 
 extern int sprintf(char *, const char *, ...);
