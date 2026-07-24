@@ -923,7 +923,6 @@ extern s16 gRaceLapCount;
 extern s32 gPlayer1Money;
 extern RacePlayerPlacement D_80122288[];
 extern s8 D_80122289;
-extern s32 D_801222E8;
 extern RacePlayerByteField D_80121D94[];
 extern RacePlayerHalfwordField gPlayerHitSource[];
 extern RacePlayerByteField gRacePlayerItemTargetFlags[];
@@ -1294,7 +1293,7 @@ void func_8005812C(void *arg0)
     i = 0;
     do
     {
-        sprintf(&buffer[i], gRaceUiCoinCounterFormat, D_801222E8);
+        sprintf(&buffer[i], gRaceUiCoinCounterFormat, gRacePlayers[0].unk568);
         x = 0x20;
         if (D_80122289 == 3)
         {
@@ -2851,7 +2850,6 @@ void func_8005CE4C(RaceUiDualCounterActor *arg0) {
 
 #ifdef NON_MATCHING
 extern s16 gRaceTrickAttackPointTotal;
-extern s8 D_80122043;
 
 const char gRaceUiTrickAttackPointTotalFormat[4] = "%d";
 const char gRaceUiTrickAttackSecondaryCounterFormat[4] = "%d";
@@ -2900,9 +2898,9 @@ body1:
 
 done1:
     x = -0x50;
-    sprintf(buffer, gRaceUiTrickAttackSecondaryCounterFormat, D_80122043);
+    sprintf(buffer, gRaceUiTrickAttackSecondaryCounterFormat, gRacePlayers[0].unk2C3);
     ptr2 = buffer;
-    if (D_80122043 >= 10) {
+    if (gRacePlayers[0].unk2C3 >= 10) {
         x = -0x54;
     }
 
