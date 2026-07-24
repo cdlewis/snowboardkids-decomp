@@ -937,7 +937,7 @@ extern RaceUiAssetHandles gAssetHandles;
 extern s16 gRaceScoreAttackPointTarget;
 extern s16 gRaceCourseCoinMarkerCount;
 extern s16 D_801222F0;
-extern RaceUiRankTrigger *D_8012228C;
+extern RaceUiRankTrigger *gRaceScoreAttackRingTriggerList;
 extern void *gRaceOverlayRenderCallbackList;
 extern void *gRaceObjectRenderCallbackList;
 extern void *D_801248EC;
@@ -5639,7 +5639,7 @@ void updateRaceScoreAttackRings(void *arg0) {
         do {
             if (entry->active != 0) {
                 pushRacePlayersOutOfCylinderAndApplyItemHit(&entry->position, 0xE0000, 0x100000, 2);
-                trigger = D_8012228C;
+                trigger = gRaceScoreAttackRingTriggerList;
                 if (trigger != NULL) {
                     do {
                         if (trigger->triggered == 0) {
