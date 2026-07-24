@@ -364,17 +364,21 @@ void initCharacterSelectCourseMenuFromPlayerSelect(void) {
     updateCallbackTasks();
 }
 
-// updateCharacterSelectCourseMenu best compliant match: 79.439% (nonmatchings/updateCharacterSelectCourseMenu-8239461464121803931/base_18.c)
+// updateCharacterSelectCourseMenu best compliant match: 83.324% (nonmatchings/updateCharacterSelectCourseMenu-8498672362023432715/base_8.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/character_select/character_select_course_menu/updateCharacterSelectCourseMenu.s")
 
 #ifdef NON_MATCHING
 void updateCharacterSelectCourseMenu(void) {
+    s32 upMask;
     s32 input;
+    s32 cursorState;
     s32 pressedInput;
+    s32 *pressedInputPtr;
     s32 upInput;
-    s32 previousSelection;
+    s16 previousSelection;
     u16 repeatTimer;
 
+    pressedInputPtr = &gPlayerInputPressed;
     if (gCurrentGameTask->fade != 0) {
         gCurrentGameTask->fade = stepMenuFadeAlpha((s16) gCurrentGameTask->fade, 0x24, 0);
         if (gCurrentGameTask->fade == 0) {
@@ -391,9 +395,10 @@ void updateCharacterSelectCourseMenu(void) {
                         gMenuInputRepeatTimers = 0;
                     }
 
-                    pressedInput = gPlayerInputPressed;
+                    pressedInput = *pressedInputPtr;
                     repeatTimer = gMenuInputRepeatTimers;
-                    if ((pressedInput & (STICK_UP | U_JPAD)) ||
+                    upMask = STICK_UP | U_JPAD;
+                    if ((pressedInput & upMask) ||
                         ((upInput != 0) && ((s32) repeatTimer >= 0xB) && ((repeatTimer % 3) == 0))) {
                         if (repeatTimer == 0) {
                             repeatTimer += 1;
@@ -430,13 +435,14 @@ void updateCharacterSelectCourseMenu(void) {
                     input = gPlayerInputPressed;
                     if (((input & START_BUTTON) || (input & A_BUTTON)) &&
                         (gMenuFlowState == (gCharacterSelectCourseExitOptionIndex + 1))) {
+                        cursorState = 2;
                         enqueueSoundEffect(1, 0x32);
                         if ((*gCharacterSelectActiveCourseOptions)[gRaceCourseIndex] != -1) {
                             gMenuSelectionConfirmTimer = 1;
-                            gCharacterSelectCourseCursorState.fields.state = 2;
+                            gCharacterSelectCourseCursorState.fields.state = cursorState;
                             gCharacterSelectCourseCursorState.fields.spriteIndex = 0x100;
                         } else {
-                            gCharacterSelectCourseCursorState.fields.state = 2;
+                            gCharacterSelectCourseCursorState.fields.state = cursorState;
                             gCharacterSelectCourseCursorState.fields.spriteIndex = 0x100;
                             gMenuTransitionState = 7;
                             setCurrentGameTaskCallback(&handleCharacterSelectCourseSelection, 0);
