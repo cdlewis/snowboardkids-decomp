@@ -533,37 +533,45 @@ void updateCharacterSelectPlayerCursorMarkers(CharacterSelectUiPlayerCursorActor
 }
 
 void initCharacterSelectPlayerCursorMarkers(CharacterSelectUiPlayerCursorActor *arg0) {
+    /* Paired views preserve IDO's register reuse without pointer casts or byte offsets. */
+    union {
+        RacePlayerState *playersEnd;
+        s32 playerIndex;
+    } loop;
+    union {
+        CharacterSelectUiPlayerCursorActor *actor;
+        s16 *next;
+    } marker;
     RacePlayerState *player;
-    s8 *playerMarkerLayout;
-    CharacterSelectUiPlayerCursorActor *markerCursor;
-    s32 i;
-    s32 playerFlags;
+    s8 *playerSelections;
+    s32 combinedPlayerFlags;
 
-    playerFlags = 0;
-    i = 0;
- if ((s32)gPlayerCount > 0) { player = gGameSaveDataBuffer; do {
-            playerFlags |= player->flags;
-            i = (s32)&gGameSaveDataBuffer[gPlayerCount];
+    combinedPlayerFlags = 0;
+    loop.playerIndex = 0;
+    /* Splitting this loop header across lines changes IDO's instruction scheduling. */
+    if ((s32)gPlayerCount > 0) { player = gGameSaveDataBuffer; do {
+            combinedPlayerFlags |= player->flags;
+            loop.playersEnd = &gGameSaveDataBuffer[gPlayerCount];
             player++;
-        } while ((u32)player < (u32)i);
-        i = 0;
+        } while (player < loop.playersEnd);
+        loop.playerIndex = 0;
     }
 
-    if (playerFlags == 1) {
+    if (combinedPlayerFlags == 1) {
         arg0->baseX = -0x60;
     } else {
         arg0->baseX = -0x70;
     }
 
     if ((s32)gPlayerCount > 0) {
-        playerMarkerLayout = D_8010AE64;
-        markerCursor = arg0;
+        playerSelections = gCharacterSelectHudState.playerSelections;
+        marker.actor = arg0;
         do {
-            markerCursor->x[0] = (*playerMarkerLayout * 0x20) + arg0->baseX;
-            i++;
-            playerMarkerLayout++;
-            markerCursor = (CharacterSelectUiPlayerCursorActor *)((u8 *)markerCursor + 2);
-        } while (i < (s32)gPlayerCount);
+            marker.actor->x[0] = (*playerSelections * 0x20) + arg0->baseX;
+            loop.playerIndex++;
+            playerSelections++;
+            marker.next++;
+        } while (loop.playerIndex < (s32)gPlayerCount);
     }
 
     arg0->y = -0x18;
