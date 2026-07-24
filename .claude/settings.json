@@ -26,6 +26,10 @@
           },
           {
             "type": "command",
+            "command": "bash -lc 'cd \"$(git rev-parse --show-toplevel)\" && .claude/hooks/block-asm-edits.sh'"
+          },
+          {
+            "type": "command",
             "command": "bash -lc 'cd \"$(git rev-parse --show-toplevel)\" && .claude/hooks/block-asm-processor-edits.sh'"
           },
           {
