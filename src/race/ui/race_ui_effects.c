@@ -795,11 +795,6 @@ typedef struct RaceUiResultsBannerActor {
 } RaceUiResultsBannerActor;
 
 typedef struct {
-    /* 0x00 */ s32 flags;
-    /* 0x04 */ u8 pad4[0x608];
-} RacePlayerFlags;
-
-typedef struct {
     /* 0x00 */ u8 pad0[0x30];
     /* 0x30 */ u16 *script;
     /* 0x34 */ s16 timer;
@@ -989,7 +984,6 @@ extern void enqueuePlayerLoopingPositionalSoundRequest(s32, void *, s32, s32, f3
 extern RacePlayerState gRacePlayers[];
 extern RacePlayerValue D_80121D98[];
 extern s16 D_8012206C[][0x306];
-extern RacePlayerFlags D_8012207C[];
 extern u8 gGameSaveDataBuffer[];
 extern RaceTimer gRaceElapsedTimer;
 extern void enqueueSoundEffect(s32, s32);
@@ -1091,14 +1085,14 @@ void drawRaceUiBoardReversePrompt(RaceUiPromptActor *arg0) {
 }
 
 void updateRaceUiBoardReversePrompt(RaceUiPromptActor *arg0) {
-    if (D_8012207C[arg0->index].flags & 0x400) {
+    if (gRacePlayers[arg0->index].flags & 0x400) {
         if (arg0->timer < 0x1E) {
             arg0->timer++;
         }
     } else {
         arg0->timer = 0;
     }
-    if (D_8012207C[arg0->index].flags & 0x1040) {
+    if (gRacePlayers[arg0->index].flags & 0x1040) {
         arg0->timer = 0;
     }
     if (arg0->timer >= 0x1E) {
@@ -3727,7 +3721,7 @@ void func_8005F828(RaceUiRankTrailActor *arg0) {
         arg0->scale = scale + 2;
     }
 
-    if (D_8012207C[arg0->playerIndex].flags & 0x100000) {
+    if (gRacePlayers[arg0->playerIndex].flags & 0x100000) {
         addRenderCallback(&D_801248EC, func_8005F6A4, (s32)arg0);
         return;
     }
@@ -4305,7 +4299,7 @@ void updateRaceUiSingleTrailEffect(RaceUiSingleTrailActor *arg0) {
 
     if (gRaceUpdatePaused == 0) {
         arg0->timer--;
-        if (!(D_8012207C[arg0->playerIndex].flags & 0x2000)) {
+        if (!(gRacePlayers[arg0->playerIndex].flags & 0x2000)) {
             arg0->timer = 0;
         }
     }

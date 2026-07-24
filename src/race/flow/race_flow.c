@@ -173,7 +173,6 @@ extern s32 gRaceCameraReplayStartY;
 extern s32 gRaceCameraReplayStartZ;
 extern s32 gMenuFlowState;
 extern s32 gPlayerInputHeld;
-extern s32 D_8012207C;
 extern s32 gPlayerInputPressed[];
 extern void *gMenuRenderCallbackList;
 extern s16 gAssetHandles[];
@@ -1925,7 +1924,7 @@ s32 areRacePlayersFinished(void) {
     RacePlayerState *player;
 
     if (gRaceSplitscreenMode == 1) {
-        if (!(D_8012207C & 0x40)) {
+        if (!(gRacePlayers[0].flags & 0x40)) {
             return 0;
         }
     } else {
