@@ -46,21 +46,6 @@ typedef struct {
     /* 0x3E */ s16 popupFontHandle;
 } RaceTimerUiAssetHandles;
 
-typedef struct {
-    /* 0x000 */ s8 value;
-    /* 0x001 */ u8 pad1[0x60C - 0x001];
-} RaceTimerUiS8Stride;
-
-typedef struct {
-    /* 0x000 */ s8 currentLap;
-    /* 0x001 */ u8 pad1[0x60C - 0x001];
-} RacePlayerLapCounterState;
-
-typedef struct {
-    /* 0x000 */ s32 value;
-    /* 0x004 */ u8 pad4[0x60C - 0x004];
-} RaceTimerUiS32Stride;
-
 extern void drawAssetTableSprite(s16, s16, s32, s32);
 extern void drawAssetTableSpriteWithExplicitPalette(s16, s16, s32, s32, s32);
 extern void drawScaledAssetTableSprite(s32, s32, s32, s32, s32);
@@ -73,7 +58,7 @@ extern RaceTimer D_800DC928[];
 extern RaceTimer D_800DC950;
 extern u8 gRaceSplitscreenMode;
 extern RaceTimerCourseSpawnEntry gRaceCourseStartEntries[];
-extern RaceFinishLinePathIndexEntry D_800B957C[];
+extern RaceFinishLinePathIndexEntry gRaceCourseFinishLineData[];
 extern u8 gRaceTimerTensDigitTileOffsets[];
 extern u8 gRaceTimerOnesDigitTileIds[];
 extern u16 gRaceProgressMeterIconTiles[];
@@ -103,16 +88,8 @@ extern RaceTimer gRaceElapsedTimer;
 extern RaceTimer gRaceChallengeTimeLimit;
 extern u8 gRaceTimeTrialFinishRecorded;
 extern u8 gRaceChallengeFailed;
-extern RacePlayerLapCounterState D_80122288[];
-extern RaceTimerUiS8Stride D_80122289[];
-extern RaceTimerUiS8Stride D_80122293[];
-extern RaceTimerUiS8Stride D_80122295[];
-extern RaceTimerUiS8Stride D_80122296[];
-extern RaceTimerUiS32Stride D_801222E8[];
-extern s16 D_80122290;
-extern s16 D_801222F0;
 extern s32 gMenuFlowState;
-extern s32 D_80121B7C;
+extern s32 gRaceTimeTrialFinishTime;
 
 void initRaceHud(void) {
     LOAD_ASSET(_245A80, 0x1F);
@@ -154,11 +131,11 @@ void initRaceHud(void) {
     gRaceChallengeFailed = 0;
 }
 
-const char D_800E1710[] = "%2.2d";
-const char D_800E1718[] = "%2.2d";
-const char D_800E1720[] = "%2.2d";
-const char D_800E1728[] = "%4d";
-const char D_800E172C[] = "%2d";
+const char gRaceHudChallengeTimeLimitMinutesFormat[] = "%2.2d";
+const char gRaceHudChallengeTimeLimitSecondsFormat[] = "%2.2d";
+const char gRaceHudChallengeTimeLimitFractionFormat[] = "%2.2d";
+const char gRaceHudTrickAttackPointTotalFormat[] = "%4d";
+const char gRaceHudTrickAttackSecondaryCounterFormat[] = "%2d";
 
 void drawTrickAttackChallengeHud(s32 arg0) {
     s32 x;
@@ -177,7 +154,7 @@ void drawTrickAttackChallengeHud(s32 arg0) {
     }
 
     {
-        sprintf(buffer, D_800E1710, gRaceChallengeTimeLimit.minutes);
+        sprintf(buffer, gRaceHudChallengeTimeLimitMinutesFormat, gRaceChallengeTimeLimit.minutes);
         finalPalette = palette & 0xFFFF;
         x = 0x40;
         digit = buffer; temp.end = &buffer[2]; do {
@@ -187,7 +164,7 @@ void drawTrickAttackChallengeHud(s32 arg0) {
         } while ((u32)digit < (u32)temp.end);
 
         x += 8;
-        sprintf(buffer, D_800E1718, gRaceChallengeTimeLimit.seconds);
+        sprintf(buffer, gRaceHudChallengeTimeLimitSecondsFormat, gRaceChallengeTimeLimit.seconds);
         digit = buffer;
         temp.end = &buffer[2];
         temp.end += 0;
@@ -199,7 +176,7 @@ void drawTrickAttackChallengeHud(s32 arg0) {
         } while ((u32)digit < (u32)temp.end);
 
         x += 8;
-        sprintf(buffer, D_800E1720, gRaceChallengeTimeLimit.fraction >> 8);
+        sprintf(buffer, gRaceHudChallengeTimeLimitFractionFormat, gRaceChallengeTimeLimit.fraction >> 8);
         digit = buffer;
         temp.end = &buffer[2];
         do {
@@ -231,7 +208,7 @@ void drawTrickAttackChallengeHud(s32 arg0) {
         char *end;
 
         x = 0x64;
-        sprintf(buffer, D_800E1728, gRaceTrickAttackPointTotal);
+        sprintf(buffer, gRaceHudTrickAttackPointTotalFormat, gRaceTrickAttackPointTotal);
         digit = buffer;
         end = &buffer[4];
         do {
@@ -251,24 +228,24 @@ void drawTrickAttackChallengeHud(s32 arg0) {
     }
 
     if (D_80122043 >= 10) {
-        sprintf(buffer, D_800E172C, D_80122043);
+        sprintf(buffer, gRaceHudTrickAttackSecondaryCounterFormat, D_80122043);
         drawAssetTableSprite(-0x64, -0x59, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), ((u8)buffer[0] - 5) & 0xFFFF);
         drawAssetTableSprite(-0x5C, -0x59, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), ((u8)buffer[1] - 5) & 0xFFFF);
     }
 }
 
-const char D_800E1730[] = "Point";
-const char D_800E1738[] = "Time Limit";
+const char gRaceHudTrickAttackPointLabel[] = "Point";
+const char gRaceHudTrickAttackTimeLimitLabel[] = "Time Limit";
 
 void drawTrickAttackChallengeLabels(s32 arg0) {
-    drawMenuAsciiTextDefaultScale(0x60, -0x61, (char *)D_800E1730, 5);
-    drawMenuAsciiTextDefaultScale(0x38, 0x47, (char *)D_800E1738, 5);
+    drawMenuAsciiTextDefaultScale(0x60, -0x61, (char *)gRaceHudTrickAttackPointLabel, 5);
+    drawMenuAsciiTextDefaultScale(0x38, 0x47, (char *)gRaceHudTrickAttackTimeLimitLabel, 5);
 }
 
-const char D_800E1744[] = "%2.2d";
-const char D_800E174C[] = "%2.2d";
-const char D_800E1754[] = "%2.2d";
-const char D_800E175C[] = "%2d";
+const char gRaceHudScoreAttackTimeLimitMinutesFormat[] = "%2.2d";
+const char gRaceHudScoreAttackTimeLimitSecondsFormat[] = "%2.2d";
+const char gRaceHudScoreAttackTimeLimitFractionFormat[] = "%2.2d";
+const char gRaceHudScoreAttackPointTotalFormat[] = "%2d";
 
 void drawScoreAttackChallengeHud(s32 arg0) {
     s32 x;
@@ -284,12 +261,12 @@ void drawScoreAttackChallengeHud(s32 arg0) {
     palette = 0xC;
     if ((gRaceChallengeTimeLimit.minutes == 0) && (gRaceChallengeTimeLimit.seconds < 10) && (gUiBlinkTimer & 1)) {
         palette = 0x10;
-        if (!D_80122290) {
+        if (!gRacePlayers[0].shieldEffectTimer) {
         }
     }
 
     {
-        sprintf(buffer, D_800E1744, gRaceChallengeTimeLimit.minutes);
+        sprintf(buffer, gRaceHudScoreAttackTimeLimitMinutesFormat, gRaceChallengeTimeLimit.minutes);
         finalPalette = palette & 0xFFFF;
         x = 0x40;
         digit = buffer; temp.end = &buffer[2]; do { drawAssetTableSpriteWithExplicitPalette((s16)x, 0x50, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), ((u8)*digit - 5) & 0xFFFF, finalPalette); digit++;
@@ -297,7 +274,7 @@ void drawScoreAttackChallengeHud(s32 arg0) {
         } while ((u32)digit < (u32)temp.end);
 
         x += 8;
-        sprintf(buffer, D_800E174C, gRaceChallengeTimeLimit.seconds);
+        sprintf(buffer, gRaceHudScoreAttackTimeLimitSecondsFormat, gRaceChallengeTimeLimit.seconds);
         digit = buffer;
         temp.end = &buffer[2];
         temp.end += 0;
@@ -309,7 +286,7 @@ void drawScoreAttackChallengeHud(s32 arg0) {
         } while ((u32)digit < (u32)temp.end);
 
         x += 8;
-        sprintf(buffer, D_800E1754, gRaceChallengeTimeLimit.fraction >> 8);
+        sprintf(buffer, gRaceHudScoreAttackTimeLimitFractionFormat, gRaceChallengeTimeLimit.fraction >> 8);
         digit = buffer;
         temp.end = &buffer[2];
         do {
@@ -327,7 +304,7 @@ void drawScoreAttackChallengeHud(s32 arg0) {
     {
         char *end;
 
-        sprintf(buffer, D_800E175C, gRaceScoreAttackPointTotal);
+        sprintf(buffer, gRaceHudScoreAttackPointTotalFormat, gRaceScoreAttackPointTotal);
         x = 0;
         digit = buffer;
         end = &buffer[2];
@@ -343,12 +320,12 @@ void drawScoreAttackChallengeHud(s32 arg0) {
 
     x = 0;
     temp.i = 0;
-    if (D_80122290 > 0) {
+    if (gRacePlayers[0].shieldEffectTimer > 0) {
         do {
             drawAssetTableSprite((s16)(x - 0x88), -0x60, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x21);
             temp.i++;
             x += 8;
-        } while (temp.i < D_80122290);
+        } while (temp.i < gRacePlayers[0].shieldEffectTimer);
     }
 
     drawAssetTableSprite(-0x88, 0x40, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x22);
@@ -358,14 +335,14 @@ void drawScoreAttackChallengeHud(s32 arg0) {
     }
 }
 
-const char D_800E1760[] = "Time Limit";
-const char D_800E176C[] = "/%d";
+const char gRaceHudScoreAttackTimeLimitLabel[] = "Time Limit";
+const char gRaceHudScoreAttackPointTargetFormat[] = "/%d";
 
 void drawScoreAttackChallengeLabels(s32 arg0) {
     char sp18[0x20];
 
-    drawMenuAsciiTextDefaultScale(0x38, 0x47, (char *)D_800E1760, 5);
-    sprintf(sp18, D_800E176C, gRaceScoreAttackPointTarget);
+    drawMenuAsciiTextDefaultScale(0x38, 0x47, (char *)gRaceHudScoreAttackTimeLimitLabel, 5);
+    sprintf(sp18, gRaceHudScoreAttackPointTargetFormat, gRaceScoreAttackPointTarget);
     drawMenuAsciiTextDefaultScale(0x70, -0x48, sp18, 6);
 }
 
@@ -373,10 +350,10 @@ void drawScoreAttackChallengeLabels(s32 arg0) {
 #pragma GLOBAL_ASM("asm/nonmatchings/race/ui/race_hud/drawTargetTimeChallengeHud.s")
 
 #ifdef NON_MATCHING
-const char D_800E1770[] = "%2.2d";
-const char D_800E1778[] = "%2.2d";
-const char D_800E1780[] = "%2.2d";
-const char D_800E1788[] = "%d";
+const char gRaceHudTargetTimeChallengeMinutesFormat[] = "%2.2d";
+const char gRaceHudTargetTimeChallengeSecondsFormat[] = "%2.2d";
+const char gRaceHudTargetTimeChallengeFractionFormat[] = "%2.2d";
+const char gRaceHudTargetTimeChallengeSecondaryCounterFormat[] = "%d";
 
 void drawTargetTimeChallengeHud(s32 arg0) {
     char *bufferAlias;
@@ -386,7 +363,7 @@ void drawTargetTimeChallengeHud(s32 arg0) {
     char *digit;
     u32 end;
 
-    sprintf(buffer, D_800E1770, gRaceElapsedTimer.minutes);
+    sprintf(buffer, gRaceHudTargetTimeChallengeMinutesFormat, gRaceElapsedTimer.minutes);
     x = 0x48;
     digit = buffer;
     do {
@@ -399,7 +376,7 @@ void drawTargetTimeChallengeHud(s32 arg0) {
     } while (((u32)digit < end) != 0);
 
     x += 8;
-    sprintf(buffer, D_800E1778, gRaceElapsedTimer.seconds);
+    sprintf(buffer, gRaceHudTargetTimeChallengeSecondsFormat, gRaceElapsedTimer.seconds);
     digit = buffer;
     do {
         drawAssetTableSprite((s16)((short)x), 0x50, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
@@ -410,7 +387,7 @@ void drawTargetTimeChallengeHud(s32 arg0) {
     } while ((u32)digit < end);
 
     x += 8;
-    sprintf(buffer, D_800E1780, gRaceElapsedTimer.fraction >> 8);
+    sprintf(buffer, gRaceHudTargetTimeChallengeFractionFormat, gRaceElapsedTimer.fraction >> 8);
     digit = buffer;
     do {
         drawAssetTableSprite((s16)x, 0x50, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
@@ -433,7 +410,7 @@ void drawTargetTimeChallengeHud(s32 arg0) {
     drawAssetTableSprite(-0x88, 0x40, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x24);
     drawAssetTableSprite(-0x88, 0x40, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x25);
 
-    sprintf(buffer, D_800E1788, D_801222F0);
+    sprintf(buffer, gRaceHudTargetTimeChallengeSecondaryCounterFormat, gRacePlayers[0].unk570);
     bufferAlias = buffer;
     drawAssetTableSprite(-0x60, -0x50, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
                          ((u8)bufferAlias[0] - 5) & 0xFFFF);
@@ -446,21 +423,21 @@ void drawTargetTimeChallengeHud(s32 arg0) {
 }
 #endif
 
-const char D_800E178C[] = "Lap Time";
-const char D_800E1798[] = "Target Time";
-const char D_800E17A4[] = "%2.2d'%2.2d\"%2.2d";
-const char D_800E17B8[] = "*%d/%d";
+const char gRaceHudTargetTimeChallengeLapTimeLabel[] = "Lap Time";
+const char gRaceHudTargetTimeChallengeTargetTimeLabel[] = "Target Time";
+const char gRaceHudTargetTimeChallengeTargetTimeFormat[] = "%2.2d'%2.2d\"%2.2d";
+const char gRaceHudTargetTimeChallengeLapProgressFormat[] = "*%d/%d";
 
 void drawTargetTimeChallengeLabels(s32 arg0) {
     char sp28[0x20];
     RaceUiCoursePosition *pos;
 
-    drawMenuAsciiTextDefaultScale(0x48, 0x47, (char *)D_800E178C, 5);
-    drawMenuAsciiTextDefaultScale(0x32, -0x60, (char *)D_800E1798, 7);
+    drawMenuAsciiTextDefaultScale(0x48, 0x47, (char *)gRaceHudTargetTimeChallengeLapTimeLabel, 5);
+    drawMenuAsciiTextDefaultScale(0x32, -0x60, (char *)gRaceHudTargetTimeChallengeTargetTimeLabel, 7);
     pos = &gRaceCourseTargetTimes[gRaceCourseIndex];
-    sprintf(sp28, D_800E17A4, pos->x, pos->y, pos->z >> 8);
+    sprintf(sp28, gRaceHudTargetTimeChallengeTargetTimeFormat, pos->x, pos->y, pos->z >> 8);
     drawMenuAsciiTextDefaultScale(0x48, -0x57, sp28, 7);
-    sprintf(sp28, D_800E17B8, gRacePlayers[0].unk570, gRacePlayers[0].unk572);
+    sprintf(sp28, gRaceHudTargetTimeChallengeLapProgressFormat, gRacePlayers[0].unk570, gRacePlayers[0].unk572);
     sp28[1] = ' ';
     if (sp28[2] != '/') {
         sp28[2] = ' ';
@@ -468,9 +445,9 @@ void drawTargetTimeChallengeLabels(s32 arg0) {
     drawMenuAsciiTextDefaultScale(-0x68, -0x48, sp28, 6);
 }
 
-const char D_800E17C0[] = "%2.2d";
-const char D_800E17C8[] = "%2.2d";
-const char D_800E17D0[] = "%2.2d";
+const char gRaceHudTimeTrialMinutesFormat[] = "%2.2d";
+const char gRaceHudTimeTrialSecondsFormat[] = "%2.2d";
+const char gRaceHudTimeTrialFractionFormat[] = "%2.2d";
 
 void drawTimeTrialHud(s32 arg0) {
     char buffer[0xC];
@@ -479,7 +456,7 @@ void drawTimeTrialHud(s32 arg0) {
     char *end;
     s32 endValue;
 
-    sprintf(buffer, D_800E17C0, gRaceElapsedTimer.minutes);
+    sprintf(buffer, gRaceHudTimeTrialMinutesFormat, gRaceElapsedTimer.minutes);
     x = 0x48;
     if (x && gAssetHandles.popupFontHandle) {
     }
@@ -492,7 +469,7 @@ void drawTimeTrialHud(s32 arg0) {
     } while ((u32)digit < (u32)end);
 
     x += 8;
-    sprintf(buffer, D_800E17C8, gRaceElapsedTimer.seconds);
+    sprintf(buffer, gRaceHudTimeTrialSecondsFormat, gRaceElapsedTimer.seconds);
     digit = buffer;
     end = &buffer[2];
     endValue = (u32)end;
@@ -503,7 +480,7 @@ void drawTimeTrialHud(s32 arg0) {
     } while ((u32)digit < endValue);
 
     x += 8;
-    sprintf(end = buffer, D_800E17D0, gRaceElapsedTimer.fraction >> 8);
+    sprintf(end = buffer, gRaceHudTimeTrialFractionFormat, gRaceElapsedTimer.fraction >> 8);
     digit = end;
     end = &buffer[2];
     do {
@@ -523,22 +500,22 @@ void drawTimeTrialHud(s32 arg0) {
     drawAssetTableSprite(-0x88, 0x40, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x2A);
 }
 
-const char D_800E17D8[] = "Lap Time";
-const char D_800E17E4[] = "Best Lap";
-const char D_800E17F0[] = "%2.2d'%2.2d\"%2.2d";
+const char gRaceHudTimeTrialLapTimeLabel[] = "Lap Time";
+const char gRaceHudTimeTrialBestLapLabel[] = "Best Lap";
+const char gRaceHudTimeTrialBestLapFormat[] = "%2.2d'%2.2d\"%2.2d";
 
 void drawTimeTrialLabels(s32 arg0) {
     char sp28[0x20];
     CourseBestLapView *course;
 
-    drawMenuAsciiTextDefaultScale(0x48, 0x47, (char *)D_800E17D8, 5);
-    drawMenuAsciiTextDefaultScale(0x48, -0x61, (char *)D_800E17E4, 7);
+    drawMenuAsciiTextDefaultScale(0x48, 0x47, (char *)gRaceHudTimeTrialLapTimeLabel, 5);
+    drawMenuAsciiTextDefaultScale(0x48, -0x61, (char *)gRaceHudTimeTrialBestLapLabel, 7);
     course = (CourseBestLapView *)&gGameSaveDataBuffer[gRaceCourseIndex];
-    sprintf(sp28, D_800E17F0, course->bestLapMinutes, course->bestLapSeconds, course->bestLapFraction >> 8);
+    sprintf(sp28, gRaceHudTimeTrialBestLapFormat, course->bestLapMinutes, course->bestLapSeconds, course->bestLapFraction >> 8);
     drawMenuAsciiTextDefaultScale(0x48, -0x58, sp28, 7);
 }
 
-const char D_800E1804[] = "%5ld";
+const char gRaceHudSinglePlayerTimerFormat[] = "%5ld";
 
 void drawSinglePlayerRaceHud(s32 arg0) {
     s32 palette;
@@ -546,7 +523,7 @@ void drawSinglePlayerRaceHud(s32 arg0) {
     s32 var_s1;
     char buffer[0x20];
 
-    sprintf(buffer, D_800E1804, gRacePlayers[0].timerValue);
+    sprintf(buffer, gRaceHudSinglePlayerTimerFormat, gRacePlayers[0].timerValue);
     if (gRacePlayers[0].timerValue < 100) {
         palette = 0x10;
     } else {
@@ -596,7 +573,7 @@ void noopRaceHudCallback(s32 arg0) {
 
 }
 
-const char D_800E180C[] = "%5ld";
+const char gRaceHudTrainingTimerFormat[] = "%5ld";
 
 void drawTrainingRaceHud(s32 arg0) {
     s32 palette;
@@ -604,7 +581,7 @@ void drawTrainingRaceHud(s32 arg0) {
     s32 x;
     char buffer[0x20];
 
-    sprintf(buffer, D_800E180C, gRacePlayers[0].unk568);
+    sprintf(buffer, gRaceHudTrainingTimerFormat, gRacePlayers[0].unk568);
     if (gRacePlayers[0].unk568 < 100) {
         palette = 0x10;
     } else {
@@ -646,7 +623,7 @@ void drawTrainingRaceHud(s32 arg0) {
     drawAssetTableSprite(-0x88, 0x40, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x29);
 }
 
-const char D_800E1814[] = "%5ld";
+const char gRaceHudTwoPlayerTimerFormat[] = "%5ld";
 
 void drawTwoPlayerRaceHud(s32 arg0) {
     volatile u8 padding[0x18];
@@ -665,7 +642,7 @@ void drawTwoPlayerRaceHud(s32 arg0) {
         y = 0x1A;
     }
 
-    sprintf(buffer, D_800E1814, gRacePlayers[gCurrentViewportIndex].unk568);
+    sprintf(buffer, gRaceHudTwoPlayerTimerFormat, gRacePlayers[gCurrentViewportIndex].unk568);
     x = 0x50;
     ptr = buffer;
     if (gRacePlayers[gCurrentViewportIndex].unk568 < 0x64) {
@@ -684,7 +661,7 @@ void drawTwoPlayerRaceHud(s32 arg0) {
 
     drawAssetTableSprite(0x78, y, getRelocatableHeapBlockBase(gAssetHandles.mainFontHandle), ((gRaceHudSpinnerFrame >> 1) + 4) & 0xFFFF);
 
-    if (D_80122293[gCurrentViewportIndex].value != 0) {
+    if (gRacePlayers[gCurrentViewportIndex].itemEffectPalette != 0) {
         drawScaledAssetTableSprite(-0x88, -0x30, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
                       (gRaceTimerTensDigitTileOffsets[gRacePlayers[gCurrentViewportIndex].itemEffectType] + gRacePlayers[gCurrentViewportIndex].itemEffectCount - 1) & 0xFFFF,
                       gRacePlayers[gCurrentViewportIndex].itemEffectPalette);
@@ -693,15 +670,15 @@ void drawTwoPlayerRaceHud(s32 arg0) {
                       (gRaceTimerTensDigitTileOffsets[gRacePlayers[gCurrentViewportIndex].itemEffectType] + gRacePlayers[gCurrentViewportIndex].itemEffectCount - 1) & 0xFFFF);
     }
 
-    if (D_80122296[gCurrentViewportIndex].value != 0) {
+    if (gRacePlayers[gCurrentViewportIndex].actionEffectPalette != 0) {
         drawScaledAssetTableSprite(-0x68, -0x30, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), gRaceTimerOnesDigitTileIds[gRacePlayers[gCurrentViewportIndex].actionEffectType],
                       gRacePlayers[gCurrentViewportIndex].actionEffectPalette);
     } else {
         drawAssetTableSprite(-0x68, -0x30, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
-                      gRaceTimerOnesDigitTileIds[D_80122295[gCurrentViewportIndex].value]);
+                      gRaceTimerOnesDigitTileIds[gRacePlayers[gCurrentViewportIndex].actionEffectType]);
     }
 
-    drawAssetTableSprite(-0x88, 0x12, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), D_80122289[gCurrentViewportIndex].value & 0xFFFF);
+    drawAssetTableSprite(-0x88, 0x12, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), gRacePlayers[gCurrentViewportIndex].iconTile & 0xFFFF);
 
     if (gCurrentViewportIndex == 0) {
         y = -0x30;
@@ -724,7 +701,7 @@ void drawTwoPlayerLapCounter(s32 arg0) {
         y = 0x2A;
     }
 
-    drawMenuAsciiChar(0x70, (s16)y, (D_80122288[viewportIndex].currentLap + '1') & 0xFF, 2);
+    drawMenuAsciiChar(0x70, (s16)y, (gRacePlayers[viewportIndex].lapDigit + '1') & 0xFF, 2);
     drawMenuAsciiChar(0x78, (s16)y, '/', 2);
     drawMenuAsciiChar(0x80, (s16)y, (gRaceLapCount + '0') & 0xFF, 2);
 }
@@ -746,7 +723,7 @@ void drawMultiplayerRaceHud(s32 arg0) {
     drawScaledAssetTableSprite(-8, -0x38, texture, gRaceTimerOnesDigitTileIds[player->actionEffectType], player->actionEffectPalette + 1);
 
     texture = getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle);
-    drawScaledAssetTableSprite(-0x4C, 0x18, texture, D_80122289[gCurrentViewportIndex].value & 0xFFFF, 1);
+    drawScaledAssetTableSprite(-0x4C, 0x18, texture, gRacePlayers[gCurrentViewportIndex].iconTile & 0xFFFF, 1);
 
     if (gCurrentViewportIndex < 2) {
         drawAssetTableSprite(-0x44, -0x30, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x1A);
@@ -755,15 +732,15 @@ void drawMultiplayerRaceHud(s32 arg0) {
     drawAssetTableSprite(0x14, -0x30, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x1A);
 }
 
-const char D_800E181C[] = "%5ld";
+const char gRaceHudMultiplayerLapCounterFormat[] = "%5ld";
 
 void drawMultiplayerLapCounter(s32 arg0) {
     s32 x;
     s32 palette;
     char buffer[0x20];
 
-    sprintf(buffer, D_800E181C, D_801222E8[gCurrentViewportIndex].value);
-    if (D_801222E8[gCurrentViewportIndex].value < 0x64) {
+    sprintf(buffer, gRaceHudMultiplayerLapCounterFormat, gRacePlayers[gCurrentViewportIndex].unk568);
+    if (gRacePlayers[gCurrentViewportIndex].unk568 < 0x64) {
         palette = 1;
     } else {
         palette = 2;
@@ -776,7 +753,7 @@ void drawMultiplayerLapCounter(s32 arg0) {
         x = 0x2C;
     }
 
-    drawMenuAsciiChar((s16)x, -0x30, (D_80122288[gCurrentViewportIndex].currentLap + '1') & 0xFF, 2);
+    drawMenuAsciiChar((s16)x, -0x30, (gRacePlayers[gCurrentViewportIndex].lapDigit + '1') & 0xFF, 2);
     drawMenuAsciiChar((s16)(x + 8), -0x30, 0x2F, 2);
     drawMenuAsciiChar((s16)(x + 0x10), -0x30, (gRaceLapCount + 0x30) & 0xFF, 2);
 }
@@ -1044,8 +1021,8 @@ void updateRaceHud(void) {
             incrementRaceElapsedTimer();
             if (gRaceTimeTrialFinishRecorded == 0) {
                 getRacePlayerRankingProgress(0, &sp40, &sp3C);
-                if ((D_800B957C[gRaceCourseIndex].finishLinePathIndex * 8) < sp40) {
-                    D_80121B7C = *(s32 *)&gRaceElapsedTimer;
+                if ((gRaceCourseFinishLineData[gRaceCourseIndex].finishLinePathIndex * 8) < sp40) {
+                    gRaceTimeTrialFinishTime = *(s32 *)&gRaceElapsedTimer;
                     gRaceTimeTrialFinishRecorded = 1;
                     createCallbackTask(initTimeTrialRecordDeltaPopup, 0, 0);
                 }
