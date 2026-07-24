@@ -30,7 +30,8 @@ typedef struct {
     /* 0x00 */ u8 state;
     /* 0x01 */ u8 pad1;
     /* 0x02 */ s16 alpha;
-    /* 0x04 */ u16 savePanelFrameState;
+    /* 0x04 */ u8 savePanelFrameState;
+    /* 0x05 */ u8 pad5;
     /* 0x06 */ u16 selection[4];
     /* 0x0E */ u8 saveStatusTransitionStates[4];
     /* 0x12 */ u16 nextSelection[4];
@@ -681,7 +682,7 @@ void drawRaceSetupSavePlayerPanels(TitleMenuWidgetItemView *arg0) {
 }
 #endif
 
-// updateRaceSetupSavePanelFrame best match: 99.888% (nonmatchings/updateRaceSetupSavePanelFrame-8662636370764828261/base_12.c)
+// updateRaceSetupSavePanelFrame best match: 99.944% (nonmatchings/updateRaceSetupSavePanelFrame-2/base.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/race_setup/race_setup_ui/updateRaceSetupSavePanelFrame.s")
 
 #ifdef NON_MATCHING
@@ -758,11 +759,14 @@ void updateRaceSetupSavePanelFrame(RectListActor *arg0) {
             } while (i != 4);
 
             outer++;
-            if (arg0->rects[0].x0 == -0x88) {
+            if (arg0->rects[(arg0->rects[0].x0 == -0x88) * 0].x0 == -0x88) {
                 arg0->frame = 1;
                 break;
             }
-        } while (outer != 0x10);
+            if (outer == 0x10) {
+                break;
+            }
+        } while (1);
         state = arg0->frame;
         break;
     case 2:
