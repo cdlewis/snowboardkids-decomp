@@ -65,12 +65,6 @@ typedef struct {
     /* 0x02 */ s16 y;
 } ShopMenuSparkleOffset;
 
-typedef struct {
-    /* 0x00 */ s16 x;
-    /* 0x02 */ s16 y;
-    /* 0x04 */ s16 tileBase;
-} ShopMenuCursorIconInit;
-
 typedef ShopMenuSparkleOffset ShopMenuSparklePattern[13];
 
 struct ShopMenuRowActor {
@@ -196,7 +190,7 @@ extern s32 gCourseUnlockPrices[];
 extern u16 gCourseDetailsPreviewCourseTiles[];
 extern u16 gCourseDetailsPreviewExtraTiles[];
 extern ShopMenuFrameTileMap gShopMenuPanelFrameTilemaps[];
-extern ShopMenuCursorIconInit gShopMenuSparkleInitTable[];
+extern s16 gShopMenuSparkleInitTable[];
 extern ShopMenuSparkleOffset gCoursePreviewCloseSparkleOffsets[];
 extern ShopMenuSparkleOffset gCoursePreviewCloseSparkleMirrorStart[];
 extern ShopMenuSparkleOffset gCoursePreviewCloseSparkleOffsetsEnd[];
@@ -1039,23 +1033,21 @@ void updateShopMenuSparkles(ShopMenuWidgetActor *arg0) {
     addRenderCallback(&gMenuRenderCallbackList, drawShopMenuSparkles, arg0);
 }
 
-// initShopMenuSparkles best match: 98.621% (nonmatchings/initShopMenuSparkles-8331816093655448999/base_4.c)
+// initShopMenuSparkles best match: 99.655% (nonmatchings/initShopMenuSparkles-5755426475870421788/base_21.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/course_select/course_select_shop_ui/initShopMenuSparkles.s")
 
 #ifdef NON_MATCHING
 void initShopMenuSparkles(ShopMenuWidgetActor *arg0) {
     s32 index;
-    ShopMenuCursorIconInit *entry;
-    s16 new_var;
+    s16 *entry;
 
     index = gMenuSelectionVariant;
-    entry = &gShopMenuSparkleInitTable[0xFFFF & (u16)index];
+    entry = &gShopMenuSparkleInitTable[(0xFFFF & (u16)index) * 3];
     arg0->sparkle.patternIndex = index;
-    new_var = entry->x ^ 0;
-    arg0->sprite.index = new_var;
+    arg0->sprite.index = entry[0] ^ 0;
     arg0->x = 0x94;
-    arg0->y = entry->y;
-    arg0->sparkle.tileBase = entry->tileBase;
+    arg0->y = entry[1];
+    arg0->sparkle.tileBase = entry[2];
     arg0->sparkle.alpha = 0x100;
     arg0->slide.slideState = 0;
     setCallbackTaskCallback(arg0, updateShopMenuSparkles);
