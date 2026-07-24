@@ -5,187 +5,190 @@
     ((-(s64)(x) * (sizeX) + (s64)(y) * (sizeY) + (s64)(z) * (sizeZ)) / 0x1000)
 
 void resolveRacePlayerCollisionVolumes(RacePlayer *player) {
-    s16 localAxes[14][16];
-    FixedMatrix3s tempMtx;
-    FixedMatrix3s playerMtx;
-    s32 i;
-    s32 j;
-    s32 k;
+    Matrix4s localRotations[14];
+    FixedMatrix3s yawAdjustedPlayerRotation;
+    FixedMatrix3s playerRotation;
+    s32 volumeIndex;
+    s32 axisRow;
+    s32 axisColumn;
     s32 sinX;
     s32 cosX;
-    s32 offset[3];
-    FixedMatrix3s effectMtx;
-    FixedMatrix3s baseMtx;
+    s32 centerOffset[3];
+    FixedMatrix3s effectRotation;
+    FixedMatrix3s worldRotation;
     s32 sinY;
     s32 cosY;
     s32 sinZ;
     s32 cosZ;
-    s32 temp;
+    s32 rotationProduct;
     RacePlayerCollisionSource *source;
     RacePlayerCollisionVolume *volume;
     RacePlayerCollisionVolume *parent;
-    RacePlayer *sourceView;
-    RacePlayer *volumeView;
-    RacePlayer *parentView;
-    RacePlayer * volatile savedPlayer;
-    RacePlayer *sourceIterator;
-    s32 sourceStride;
 
     player->unk288 = player->pitchAngle;
     player->unk28A = player->facingAngle;
     player->unk28C = player->unk2EE;
-    savedPlayer = player;
 
-    if (player->stateFlags & 0x400) {
-        sourceStride = sizeof(RacePlayerCollisionSource);
-        sourceIterator = player;
-        for (i = 0; i < player->collisionVolumeCount; i++, sourceIterator = (RacePlayer *)((u8 *)sourceIterator + sourceStride)) {
-            sinX = fixedSine(((RacePlayer *)((u8 *)savedPlayer + sourceIterator->collisionSources->mirroredParentIndex * sourceStride))->collisionSources[0].rotX);
-            cosX = fixedCosine(((RacePlayer *)((u8 *)savedPlayer + sourceIterator->collisionSources[0].mirroredParentIndex * sourceStride))->collisionSources[0].rotX);
-            sinY = fixedSine(-((RacePlayer *)((u8 *)savedPlayer + sourceIterator->collisionSources[0].mirroredParentIndex * sourceStride))->collisionSources[0].rotY);
-            cosY = fixedCosine(-((RacePlayer *)((u8 *)savedPlayer + sourceIterator->collisionSources->mirroredParentIndex * sourceStride))->collisionSources[0].rotY);
-            sinZ = fixedSine(-((RacePlayer *)((u8 *)savedPlayer + sourceIterator->collisionSources[0].mirroredParentIndex * sourceStride))->collisionSources[0].rotZ);
-            cosZ = fixedCosine(-((RacePlayer *)((u8 *)savedPlayer + sourceIterator->collisionSources[0].mirroredParentIndex * sourceStride))->collisionSources[0].rotZ);
+    if (player->stateFlags & RACE_PLAYER_COLLISION_YAW_FLIPPED) {
+        for (volumeIndex = 0; volumeIndex < player->collisionVolumeCount; volumeIndex++) {
+            source =
+                &player->collisionSources[player->collisionSources[volumeIndex].mirroredParentIndex];
+            sinX = fixedSine(source->rotX);
+            cosX = fixedCosine(source->rotX);
+            sinY = fixedSine(-source->rotY);
+            cosY = fixedCosine(-source->rotY);
+            sinZ = fixedSine(-source->rotZ);
+            cosZ = fixedCosine(-source->rotZ);
 
-            localAxes[i][0] = FIXED_PRODUCT(cosY, cosZ);
-            localAxes[i][1] = FIXED_PRODUCT(cosY, sinZ);
-            localAxes[i][2] = -sinY;
-            temp = FIXED_PRODUCT(sinX, sinY);
-            localAxes[i][3] = FIXED_PRODUCT(temp, cosZ) + FIXED_PRODUCT(cosX, -sinZ);
-            localAxes[i][4] = FIXED_PRODUCT(temp, sinZ) + FIXED_PRODUCT(cosX, cosZ);
-            localAxes[i][5] = FIXED_PRODUCT(sinX, cosY);
-            temp = FIXED_PRODUCT(cosX, sinY);
-            localAxes[i][6] = FIXED_PRODUCT(temp, cosZ) + FIXED_PRODUCT(sinX, sinZ);
-            localAxes[i][7] = FIXED_PRODUCT(temp, sinZ) + FIXED_PRODUCT(-sinX, cosZ);
-            localAxes[i][8] = FIXED_PRODUCT(cosX, cosY);
+            localRotations[volumeIndex][0] = FIXED_PRODUCT(cosY, cosZ);
+            localRotations[volumeIndex][1] = FIXED_PRODUCT(cosY, sinZ);
+            localRotations[volumeIndex][2] = -sinY;
+            rotationProduct = FIXED_PRODUCT(sinX, sinY);
+            localRotations[volumeIndex][3] =
+                FIXED_PRODUCT(rotationProduct, cosZ) + FIXED_PRODUCT(cosX, -sinZ);
+            localRotations[volumeIndex][4] =
+                FIXED_PRODUCT(rotationProduct, sinZ) + FIXED_PRODUCT(cosX, cosZ);
+            localRotations[volumeIndex][5] = FIXED_PRODUCT(sinX, cosY);
+            rotationProduct = FIXED_PRODUCT(cosX, sinY);
+            localRotations[volumeIndex][6] =
+                FIXED_PRODUCT(rotationProduct, cosZ) + FIXED_PRODUCT(sinX, sinZ);
+            localRotations[volumeIndex][7] =
+                FIXED_PRODUCT(rotationProduct, sinZ) + FIXED_PRODUCT(-sinX, cosZ);
+            localRotations[volumeIndex][8] = FIXED_PRODUCT(cosX, cosY);
 
-            if (player->stateFlags & 0x200000) {
-                localAxes[i][1] = localAxes[i][1] * player->unk2D6 / 8;
-                localAxes[i][4] = localAxes[i][4] * player->unk2D6 / 8;
-                localAxes[i][7] = localAxes[i][7] * player->unk2D6 / 8;
+            if (player->stateFlags & RACE_PLAYER_COLLISION_SQUASHED) {
+                localRotations[volumeIndex][1] = localRotations[volumeIndex][1] * player->unk2D6 / 8;
+                localRotations[volumeIndex][4] = localRotations[volumeIndex][4] * player->unk2D6 / 8;
+                localRotations[volumeIndex][7] = localRotations[volumeIndex][7] * player->unk2D6 / 8;
             }
         }
 
-        makeFixedRotationZYX(effectMtx, player->unk6C, -player->unk6E, -player->unk70);
-        makeFixedRotationZXY(playerMtx, player->unk288, player->unk28A, player->unk28C);
-        offset[0] = (s64)playerMtx[3] * player->unk68 / 0x1000;
-        offset[1] = (s64)playerMtx[4] * player->unk68 / 0x1000;
-        offset[2] = (s64)playerMtx[5] * player->unk68 / 0x1000;
-        multiplyFixedMatrix3s(effectMtx, playerMtx, baseMtx);
+        makeFixedRotationZYX(effectRotation, player->unk6C, -player->unk6E, -player->unk70);
+        makeFixedRotationZXY(playerRotation, player->unk288, player->unk28A, player->unk28C);
+        centerOffset[0] = (s64)playerRotation[3] * player->unk68 / 0x1000;
+        centerOffset[1] = (s64)playerRotation[4] * player->unk68 / 0x1000;
+        centerOffset[2] = (s64)playerRotation[5] * player->unk68 / 0x1000;
+        multiplyFixedMatrix3s(effectRotation, playerRotation, worldRotation);
 
-        for (i = 0; i < player->collisionVolumeCount; i++) {
-            for (j = 0; j != 9; j += 3) {
-                for (k = 0; k != 3; k++) {
-                    player->collisionVolumes[i].axis[j + k] =
-                        (baseMtx[k + 6] * localAxes[i][j + 2] + baseMtx[k] * localAxes[i][j] +
-                         baseMtx[k + 3] * localAxes[i][j + 1]) /
+        for (volumeIndex = 0; volumeIndex < player->collisionVolumeCount; volumeIndex++) {
+            for (axisRow = 0; axisRow != 9; axisRow += 3) {
+                for (axisColumn = 0; axisColumn != 3; axisColumn++) {
+                    player->collisionVolumes[volumeIndex].axis[axisRow + axisColumn] =
+                        (worldRotation[axisColumn + 6] * localRotations[volumeIndex][axisRow + 2] +
+                         worldRotation[axisColumn] * localRotations[volumeIndex][axisRow] +
+                         worldRotation[axisColumn + 3] * localRotations[volumeIndex][axisRow + 1]) /
                         0x1000;
                 }
             }
         }
 
-        player->collisionVolumes[0].point[0] = MIRRORED_COLLISION_POINT(baseMtx[0], baseMtx[3], baseMtx[6], player->collisionSources[0].sizeX, player->collisionSources[0].sizeY - player->unk68, player->collisionSources[0].sizeZ);
-        player->collisionVolumes[0].point[1] = MIRRORED_COLLISION_POINT(baseMtx[1], baseMtx[4], baseMtx[7], player->collisionSources[0].sizeX, player->collisionSources[0].sizeY - player->unk68, player->collisionSources[0].sizeZ);
-        player->collisionVolumes[0].point[2] = MIRRORED_COLLISION_POINT(baseMtx[2], baseMtx[5], baseMtx[8], player->collisionSources[0].sizeX, player->collisionSources[0].sizeY - player->unk68, player->collisionSources[0].sizeZ);
+        player->collisionVolumes[0].point[0] = MIRRORED_COLLISION_POINT(worldRotation[0], worldRotation[3], worldRotation[6], player->collisionSources[0].sizeX, player->collisionSources[0].sizeY - player->unk68, player->collisionSources[0].sizeZ);
+        player->collisionVolumes[0].point[1] = MIRRORED_COLLISION_POINT(worldRotation[1], worldRotation[4], worldRotation[7], player->collisionSources[0].sizeX, player->collisionSources[0].sizeY - player->unk68, player->collisionSources[0].sizeZ);
+        player->collisionVolumes[0].point[2] = MIRRORED_COLLISION_POINT(worldRotation[2], worldRotation[5], worldRotation[8], player->collisionSources[0].sizeX, player->collisionSources[0].sizeY - player->unk68, player->collisionSources[0].sizeZ);
         player->collisionVolumes[1].point[0] = MIRRORED_COLLISION_POINT(player->collisionVolumes[0].axis[0], player->collisionVolumes[0].axis[3], player->collisionVolumes[0].axis[6], player->collisionSources[1].sizeX, player->collisionSources[1].sizeY, player->collisionSources[1].sizeZ);
         player->collisionVolumes[1].point[1] = MIRRORED_COLLISION_POINT(player->collisionVolumes[0].axis[1], player->collisionVolumes[0].axis[4], player->collisionVolumes[0].axis[7], player->collisionSources[1].sizeX, player->collisionSources[1].sizeY, player->collisionSources[1].sizeZ);
         player->collisionVolumes[1].point[2] = MIRRORED_COLLISION_POINT(player->collisionVolumes[0].axis[2], player->collisionVolumes[0].axis[5], player->collisionVolumes[0].axis[8], player->collisionSources[1].sizeX, player->collisionSources[1].sizeY, player->collisionSources[1].sizeZ);
     } else {
-        sourceStride = sizeof(RacePlayerCollisionSource);
-        sourceIterator = player;
-        for (i = 0; i < player->collisionVolumeCount; i++, sourceIterator = (RacePlayer *)((u8 *)sourceIterator + sourceStride)) {
-            sinX = fixedSine(sourceIterator->collisionSources[0].rotX);
-            cosX = fixedCosine(sourceIterator->collisionSources[0].rotX);
-            sinY = fixedSine(sourceIterator->collisionSources[0].rotY);
-            cosY = fixedCosine(sourceIterator->collisionSources[0].rotY);
-            sinZ = fixedSine(sourceIterator->collisionSources[0].rotZ);
-            cosZ = fixedCosine(sourceIterator->collisionSources[0].rotZ);
+        for (volumeIndex = 0; volumeIndex < player->collisionVolumeCount; volumeIndex++) {
+            source = &player->collisionSources[volumeIndex];
+            sinX = fixedSine(source->rotX);
+            cosX = fixedCosine(source->rotX);
+            sinY = fixedSine(source->rotY);
+            cosY = fixedCosine(source->rotY);
+            sinZ = fixedSine(source->rotZ);
+            cosZ = fixedCosine(source->rotZ);
 
-            localAxes[i][0] = FIXED_PRODUCT(cosY, cosZ);
-            localAxes[i][1] = FIXED_PRODUCT(cosY, sinZ);
-            localAxes[i][2] = -sinY;
-            temp = FIXED_PRODUCT(sinX, sinY);
-            localAxes[i][3] = FIXED_PRODUCT(temp, cosZ) + FIXED_PRODUCT(cosX, -sinZ);
-            localAxes[i][4] = FIXED_PRODUCT(temp, sinZ) + FIXED_PRODUCT(cosX, cosZ);
-            localAxes[i][5] = FIXED_PRODUCT(sinX, cosY);
-            temp = FIXED_PRODUCT(cosX, sinY);
-            localAxes[i][6] = FIXED_PRODUCT(temp, cosZ) + FIXED_PRODUCT(sinX, sinZ);
-            localAxes[i][7] = FIXED_PRODUCT(temp, sinZ) + FIXED_PRODUCT(-sinX, cosZ);
-            localAxes[i][8] = FIXED_PRODUCT(cosX, cosY);
+            localRotations[volumeIndex][0] = FIXED_PRODUCT(cosY, cosZ);
+            localRotations[volumeIndex][1] = FIXED_PRODUCT(cosY, sinZ);
+            localRotations[volumeIndex][2] = -sinY;
+            rotationProduct = FIXED_PRODUCT(sinX, sinY);
+            localRotations[volumeIndex][3] =
+                FIXED_PRODUCT(rotationProduct, cosZ) + FIXED_PRODUCT(cosX, -sinZ);
+            localRotations[volumeIndex][4] =
+                FIXED_PRODUCT(rotationProduct, sinZ) + FIXED_PRODUCT(cosX, cosZ);
+            localRotations[volumeIndex][5] = FIXED_PRODUCT(sinX, cosY);
+            rotationProduct = FIXED_PRODUCT(cosX, sinY);
+            localRotations[volumeIndex][6] =
+                FIXED_PRODUCT(rotationProduct, cosZ) + FIXED_PRODUCT(sinX, sinZ);
+            localRotations[volumeIndex][7] =
+                FIXED_PRODUCT(rotationProduct, sinZ) + FIXED_PRODUCT(-sinX, cosZ);
+            localRotations[volumeIndex][8] = FIXED_PRODUCT(cosX, cosY);
 
-            if (player->stateFlags & 0x200000) {
-                localAxes[i][1] = localAxes[i][1] * player->unk2D6 / 8;
-                localAxes[i][4] = localAxes[i][4] * player->unk2D6 / 8;
-                localAxes[i][7] = localAxes[i][7] * player->unk2D6 / 8;
+            if (player->stateFlags & RACE_PLAYER_COLLISION_SQUASHED) {
+                localRotations[volumeIndex][1] = localRotations[volumeIndex][1] * player->unk2D6 / 8;
+                localRotations[volumeIndex][4] = localRotations[volumeIndex][4] * player->unk2D6 / 8;
+                localRotations[volumeIndex][7] = localRotations[volumeIndex][7] * player->unk2D6 / 8;
             }
         }
 
-        makeFixedRotationZYX(effectMtx, player->unk6C, player->unk6E, player->unk70);
-        makeFixedRotationZXY(playerMtx, player->unk288, player->unk28A, player->unk28C);
-        offset[0] = (s64)playerMtx[3] * player->unk68 / 0x1000;
-        offset[1] = (s64)playerMtx[4] * player->unk68 / 0x1000;
-        offset[2] = (s64)playerMtx[5] * player->unk68 / 0x1000;
-        makeFixedRotationY(baseMtx, 0x800);
-        multiplyFixedMatrix3s(baseMtx, playerMtx, tempMtx);
-        multiplyFixedMatrix3s(effectMtx, tempMtx, baseMtx);
+        makeFixedRotationZYX(effectRotation, player->unk6C, player->unk6E, player->unk70);
+        makeFixedRotationZXY(playerRotation, player->unk288, player->unk28A, player->unk28C);
+        centerOffset[0] = (s64)playerRotation[3] * player->unk68 / 0x1000;
+        centerOffset[1] = (s64)playerRotation[4] * player->unk68 / 0x1000;
+        centerOffset[2] = (s64)playerRotation[5] * player->unk68 / 0x1000;
+        makeFixedRotationY(worldRotation, RACE_PLAYER_COLLISION_HALF_TURN);
+        multiplyFixedMatrix3s(worldRotation, playerRotation, yawAdjustedPlayerRotation);
+        multiplyFixedMatrix3s(effectRotation, yawAdjustedPlayerRotation, worldRotation);
 
-        for (i = 0; i < player->collisionVolumeCount; i++) {
-            for (j = 0; j != 9; j += 3) {
-                for (k = 0; k != 3; k++) {
-                    player->collisionVolumes[i].axis[j + k] =
-                        (baseMtx[k + 6] * localAxes[i][j + 2] + baseMtx[k] * localAxes[i][j] +
-                         baseMtx[k + 3] * localAxes[i][j + 1]) /
+        for (volumeIndex = 0; volumeIndex < player->collisionVolumeCount; volumeIndex++) {
+            for (axisRow = 0; axisRow != 9; axisRow += 3) {
+                for (axisColumn = 0; axisColumn != 3; axisColumn++) {
+                    player->collisionVolumes[volumeIndex].axis[axisRow + axisColumn] =
+                        (worldRotation[axisColumn + 6] * localRotations[volumeIndex][axisRow + 2] +
+                         worldRotation[axisColumn] * localRotations[volumeIndex][axisRow] +
+                         worldRotation[axisColumn + 3] * localRotations[volumeIndex][axisRow + 1]) /
                         0x1000;
                 }
             }
         }
 
-        player->collisionVolumes[0].point[0] = COLLISION_POINT(baseMtx[0], baseMtx[3], baseMtx[6], player->collisionSources[0].sizeX, player->collisionSources[0].sizeY - player->unk68, player->collisionSources[0].sizeZ);
-        player->collisionVolumes[0].point[1] = COLLISION_POINT(baseMtx[1], baseMtx[4], baseMtx[7], player->collisionSources[0].sizeX, player->collisionSources[0].sizeY - player->unk68, player->collisionSources[0].sizeZ);
-        player->collisionVolumes[0].point[2] = COLLISION_POINT(baseMtx[2], baseMtx[5], baseMtx[8], player->collisionSources[0].sizeX, player->collisionSources[0].sizeY - player->unk68, player->collisionSources[0].sizeZ);
+        player->collisionVolumes[0].point[0] = COLLISION_POINT(worldRotation[0], worldRotation[3], worldRotation[6], player->collisionSources[0].sizeX, player->collisionSources[0].sizeY - player->unk68, player->collisionSources[0].sizeZ);
+        player->collisionVolumes[0].point[1] = COLLISION_POINT(worldRotation[1], worldRotation[4], worldRotation[7], player->collisionSources[0].sizeX, player->collisionSources[0].sizeY - player->unk68, player->collisionSources[0].sizeZ);
+        player->collisionVolumes[0].point[2] = COLLISION_POINT(worldRotation[2], worldRotation[5], worldRotation[8], player->collisionSources[0].sizeX, player->collisionSources[0].sizeY - player->unk68, player->collisionSources[0].sizeZ);
         player->collisionVolumes[1].point[0] = COLLISION_POINT(player->collisionVolumes[0].axis[0], player->collisionVolumes[0].axis[3], player->collisionVolumes[0].axis[6], player->collisionSources[1].sizeX, player->collisionSources[1].sizeY, player->collisionSources[1].sizeZ);
         player->collisionVolumes[1].point[1] = COLLISION_POINT(player->collisionVolumes[0].axis[1], player->collisionVolumes[0].axis[4], player->collisionVolumes[0].axis[7], player->collisionSources[1].sizeX, player->collisionSources[1].sizeY, player->collisionSources[1].sizeZ);
         player->collisionVolumes[1].point[2] = COLLISION_POINT(player->collisionVolumes[0].axis[2], player->collisionVolumes[0].axis[5], player->collisionVolumes[0].axis[8], player->collisionSources[1].sizeX, player->collisionSources[1].sizeY, player->collisionSources[1].sizeZ);
     }
 
-    player->collisionVolumes[0].point[0] += player->posX + offset[0];
-    player->collisionVolumes[0].point[1] += player->posY - player->unk58 + player->unk64 + offset[1] + 0xA000;
-    player->collisionVolumes[0].point[2] += player->posZ + offset[2];
+    player->collisionVolumes[0].point[0] += player->posX + centerOffset[0];
+    player->collisionVolumes[0].point[1] +=
+        player->posY - player->unk58 + player->unk64 + centerOffset[1] + 0xA000;
+    player->collisionVolumes[0].point[2] += player->posZ + centerOffset[2];
     player->collisionVolumes[1].point[0] += player->collisionVolumes[0].point[0];
     player->collisionVolumes[1].point[1] += player->collisionVolumes[0].point[1];
     player->collisionVolumes[1].point[2] += player->collisionVolumes[0].point[2];
 
-    i = 2;
+    volumeIndex = 2;
     if (player->collisionVolumeCount >= 3) {
-        volumeView = (RacePlayer *)((u8 *)player + 0x40);
-        sourceView = (RacePlayer *)((u8 *)player + 0x28);
+        volume = &player->collisionVolumes[2];
+        source = &player->collisionSources[2];
         do {
-            parentView = (RacePlayer *)((u8 *)player + (sourceView->collisionSources[0].parentIndex << 5));
-            for (j = 0; j != 3; j++) {
-                volumeView->collisionVolumes[0].point[j] =
-                    COLLISION_POINT(parentView->collisionVolumes[0].axis[j],
-                                    parentView->collisionVolumes[0].axis[j + 3],
-                                    parentView->collisionVolumes[0].axis[j + 6],
-                                    sourceView->collisionSources[0].sizeX,
-                                    sourceView->collisionSources[0].sizeY,
-                                    sourceView->collisionSources[0].sizeZ);
-                volumeView->collisionVolumes[0].point[j] += parentView->collisionVolumes[0].point[j];
+            parent = &player->collisionVolumes[source->parentIndex];
+            for (axisColumn = 0; axisColumn != 3; axisColumn++) {
+                volume->point[axisColumn] =
+                    COLLISION_POINT(parent->axis[axisColumn],
+                                    parent->axis[axisColumn + 3],
+                                    parent->axis[axisColumn + 6],
+                                    source->sizeX,
+                                    source->sizeY,
+                                    source->sizeZ);
+                volume->point[axisColumn] += parent->point[axisColumn];
             }
-            i++;
-            volumeView = (RacePlayer *)((u8 *)volumeView + sizeof(RacePlayerCollisionVolume));
-            sourceView = (RacePlayer *)((u8 *)sourceView + sizeof(RacePlayerCollisionSource));
-        } while (i < player->collisionVolumeCount);
+            volumeIndex++;
+            volume++;
+            source++;
+        } while (volumeIndex < player->collisionVolumeCount);
     }
 
-    for (i = 0; i < player->collisionVolumeCount; i++) {
-        player->collisionVolumes[i].axis[0] /= 4;
-        player->collisionVolumes[i].axis[1] /= 4;
-        player->collisionVolumes[i].axis[2] /= 4;
-        player->collisionVolumes[i].axis[3] /= 4;
-        player->collisionVolumes[i].axis[4] /= 4;
-        player->collisionVolumes[i].axis[5] /= 4;
-        player->collisionVolumes[i].axis[6] /= 4;
-        player->collisionVolumes[i].axis[7] /= 4;
-        player->collisionVolumes[i].axis[8] /= 4;
+    for (volumeIndex = 0; volumeIndex < player->collisionVolumeCount; volumeIndex++) {
+        player->collisionVolumes[volumeIndex].axis[0] /= 4;
+        player->collisionVolumes[volumeIndex].axis[1] /= 4;
+        player->collisionVolumes[volumeIndex].axis[2] /= 4;
+        player->collisionVolumes[volumeIndex].axis[3] /= 4;
+        player->collisionVolumes[volumeIndex].axis[4] /= 4;
+        player->collisionVolumes[volumeIndex].axis[5] /= 4;
+        player->collisionVolumes[volumeIndex].axis[6] /= 4;
+        player->collisionVolumes[volumeIndex].axis[7] /= 4;
+        player->collisionVolumes[volumeIndex].axis[8] /= 4;
     }
 }
