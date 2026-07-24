@@ -10,11 +10,6 @@
 #define CHARACTER_SELECT_UI_PLAYER_FRAME_HANDLE (gAssetHandles[0x21])
 #define CHARACTER_SELECT_UI_BANNER_TEXTURE_HANDLE (gAssetHandles[0x29])
 #define CHARACTER_SELECT_UI_AVAILABLE_CHARACTER_ICON_HANDLE (gAssetHandles[0x1F])
-#define CHARACTER_SELECT_TOKEN_IDLE 0
-#define CHARACTER_SELECT_TOKEN_START 1
-#define CHARACTER_SELECT_TOKEN_FLYING 2
-#define CHARACTER_SELECT_TOKEN_LANDED 3
-
 typedef struct {
     u8 pad0[0x4B];
     /* 0x4B */ u8 flags;
@@ -36,18 +31,6 @@ typedef struct {
     u8 pad2E[2];
     /* 0x30 */ u8 mode;
 } CharacterSelectUiPanelTransitionActor;
-
-typedef struct {
-    /* 0x00 */ u8 phase;
-    /* 0x01 */ u8 exitMode;
-    /* 0x02 */ u8 readyCount;
-    /* 0x03 */ u8 pad3;
-    u8 pad4[4];
-    /* 0x08 */ s16 fade;
-    /* 0x0A */ s16 unkA;
-    /* 0x0C */ u8 confirmSelection;
-    /* 0x0D */ u8 unkD;
-} CharacterSelectUiSharedState;
 
 typedef struct {
     u8 pad0[0x26];
@@ -178,13 +161,13 @@ void updateCharacterSelectConfirmationBanner(CharacterSelectUiBannerActor *arg0)
     actor = arg0;
     if (gCharacterSelectHudState.phase != arg0->state) {
         arg0->state = gCharacterSelectHudState.phase;
-        arg0->alpha = gCharacterSelectHudState.fade;
-        arg0->bounceTimer = gCharacterSelectHudState.unkD;
-        arg0->unk1E = gCharacterSelectHudState.unkA;
+        arg0->alpha = gCharacterSelectHudState.bannerAlpha;
+        arg0->bounceTimer = gCharacterSelectHudState.bannerBounceTimer;
+        arg0->unk1E = gCharacterSelectHudState.bannerBounceOffset;
     }
 
-    if (gCharacterSelectHudState.confirmSelection != actor->mode) {
-        actor->mode = gCharacterSelectHudState.confirmSelection;
+    if (gCharacterSelectHudState.confirmationChoice != actor->mode) {
+        actor->mode = gCharacterSelectHudState.confirmationChoice;
     }
 
     alpha = actor->alpha;
@@ -543,7 +526,7 @@ void initCharacterSelectPlayerCursorMarkers(CharacterSelectUiPlayerCursorActor *
         s16 *next;
     } marker;
     RacePlayerState *player;
-    s8 *playerSelections;
+    s8 *highlightedRosterIndices;
     s32 combinedPlayerFlags;
 
     combinedPlayerFlags = 0;
@@ -564,12 +547,12 @@ void initCharacterSelectPlayerCursorMarkers(CharacterSelectUiPlayerCursorActor *
     }
 
     if ((s32)gPlayerCount > 0) {
-        playerSelections = gCharacterSelectHudState.playerSelections;
+        highlightedRosterIndices = gCharacterSelectHudState.highlightedRosterIndices;
         marker.actor = arg0;
         do {
-            marker.actor->x[0] = (*playerSelections * 0x20) + arg0->baseX;
+            marker.actor->x[0] = (*highlightedRosterIndices * 0x20) + arg0->baseX;
             loop.playerIndex++;
-            playerSelections++;
+            highlightedRosterIndices++;
             marker.next++;
         } while (loop.playerIndex < (s32)gPlayerCount);
     }
