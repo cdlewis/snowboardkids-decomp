@@ -88,7 +88,6 @@ extern RaceTimer gRaceElapsedTimer;
 extern RaceTimer gRaceChallengeTimeLimit;
 extern u8 gRaceTimeTrialFinishRecorded;
 extern u8 gRaceChallengeFailed;
-extern s16 D_801222F0;
 extern s32 gMenuFlowState;
 extern s32 gRaceTimeTrialFinishTime;
 
@@ -411,7 +410,7 @@ void drawTargetTimeChallengeHud(s32 arg0) {
     drawAssetTableSprite(-0x88, 0x40, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x24);
     drawAssetTableSprite(-0x88, 0x40, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x25);
 
-    sprintf(buffer, gRaceHudTargetTimeChallengeSecondaryCounterFormat, D_801222F0);
+    sprintf(buffer, gRaceHudTargetTimeChallengeSecondaryCounterFormat, gRacePlayers[0].unk570);
     bufferAlias = buffer;
     drawAssetTableSprite(-0x60, -0x50, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
                          ((u8)bufferAlias[0] - 5) & 0xFFFF);
