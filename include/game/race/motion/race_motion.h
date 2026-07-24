@@ -24,7 +24,7 @@ void getRaceCourseTargetPositionAhead(s32 surfaceIndex, s32 x, s32 z, s32 *targe
                   s32 lookahead);
 void getRaceCourseProgressPosition(s32 surfaceIndex, s32 *x, s32 *z, s32 playerIndex);
 s16 getRaceCourseNextSurface(s32 surfaceIndex);
-void setRaceMotionAnimation(RaceMotionState *state, s32 animIndex);
+void setRaceMotionAnimation(RaceMotionState *state, s32 animationIndex);
 void loadRaceMotionAnimationFrame(RaceMotionState *state);
 void loadRaceMotionJointAnimationFrame(RaceMotionState *state);
 void interpolateRaceMotionAnimationFrame(RaceMotionState *state, s32 animIndex, s32 frameTimer, s32 frameTimerReset);
