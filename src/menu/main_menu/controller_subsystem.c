@@ -1,7 +1,9 @@
 #include "common.h"
 #include "game/menu/main_menu/controller_main_menu_flow.h"
 
+#define OS_MESG_NOBLOCK 0
 #define OS_MESG_BLOCK 1
+#define OS_EVENT_SI 5
 
 typedef struct OSThread_s OSThread;
 typedef void *OSMesg;
@@ -90,7 +92,7 @@ void initControllerSubsystem(void) {
     osCreateMesgQueue(&gControllerEventQueue, gControllerEventMessages, 1);
     osCreateMesgQueue(&gControllerSubsystemRequestQueue, gControllerSubsystemRequestMessages, 8);
     osCreateMesgQueue(&gControllerSubsystemReplyQueue, gControllerSubsystemReplyMessages, 1);
-    osSetEventMesg(5, &gControllerEventQueue, (OSMesg)1);
+    osSetEventMesg(OS_EVENT_SI, &gControllerEventQueue, (OSMesg)1);
     osContInit(&gControllerEventQueue, &gConnectedControllerBitmask, gControllerStatuses);
 
     gConnectedControllerCount = 0;
@@ -113,7 +115,7 @@ loop:
         gControllerInputState[i].buttons = 0;
         gControllerInputState[i].stickX = 0;
         gControllerInputState[i].stickY = 0;
-        gRumbleMotorStatuses[i] = 1;
+        gRumbleMotorStatuses[i] = RUMBLE_MOTOR_NO_PAK;
     }
 
     osCreateThread(&gControllerSubsystemThread, 4, controllerSubsystemThreadMain, gControllerSubsystemThreadStack,
@@ -121,81 +123,88 @@ loop:
     osStartThread(&gControllerSubsystemThread);
 }
 
-void controllerSubsystemThreadMain(void *arg0) {
-    OSMesg msg;
-    s32 msgValue;
+void controllerSubsystemThreadMain(void *threadArg) {
+    OSMesg requestMessage;
+    s32 requestValue;
     s32 channel;
 
-    msg = NULL;
+    requestMessage = NULL;
 loop:
-    osRecvMesg(&gControllerSubsystemRequestQueue, &msg, OS_MESG_BLOCK);
-    msgValue = (s32)msg;
-    switch (msgValue & 0xF0) {
-        case 0x10:
+    osRecvMesg(&gControllerSubsystemRequestQueue, &requestMessage, OS_MESG_BLOCK);
+    requestValue = (s32)requestMessage;
+    switch (requestValue & CONTROLLER_REQUEST_TYPE_MASK) {
+        case CONTROLLER_REQUEST_READ_INPUT:
             osContStartReadData(&gControllerEventQueue);
-            /* IDO places this event slot immediately before the request message and homed thread argument. */
-            osRecvMesg(&gControllerEventQueue, &((ControllerThreadMessages *)&arg0)[-1].event, OS_MESG_BLOCK);
+            /*
+             * This is the unused thread argument's adjacent ABI home slot. Naming both slots as messages keeps
+             * IDO's original stack layout; declaring a second OSMesg local expands the frame and breaks the match.
+             */
+            osRecvMesg(&gControllerEventQueue, &((ControllerThreadMessages *)&threadArg)[-1].event, OS_MESG_BLOCK);
             osContGetReadData(gControllerPads);
-            osSendMesg(&gControllerInputUpdateQueue, &gControllerEventMessage, 0);
+            osSendMesg(&gControllerInputUpdateQueue, &gControllerEventMessage, OS_MESG_NOBLOCK);
             break;
-        case 0x20:
-            probeControllerPak(msgValue & 3);
-            osSendMesg(&gControllerSubsystemReplyQueue, &gControllerEventMessage, 0);
+        case CONTROLLER_REQUEST_PROBE_PAK:
+            probeControllerPak(requestValue & CONTROLLER_REQUEST_CHANNEL_MASK);
+            osSendMesg(&gControllerSubsystemReplyQueue, &gControllerEventMessage, OS_MESG_NOBLOCK);
             break;
-        case 0x30:
-            checkControllerPakSaveStatus(msgValue & 3);
-            osSendMesg(&gControllerSubsystemReplyQueue, &gControllerEventMessage, 0);
+        case CONTROLLER_REQUEST_CHECK_SAVE:
+            checkControllerPakSaveStatus(requestValue & CONTROLLER_REQUEST_CHANNEL_MASK);
+            osSendMesg(&gControllerSubsystemReplyQueue, &gControllerEventMessage, OS_MESG_NOBLOCK);
             break;
-        case 0x40:
-            readControllerPakSave(msgValue & 3);
-            osSendMesg(&gControllerSubsystemReplyQueue, &gControllerEventMessage, 0);
+        case CONTROLLER_REQUEST_READ_SAVE:
+            readControllerPakSave(requestValue & CONTROLLER_REQUEST_CHANNEL_MASK);
+            osSendMesg(&gControllerSubsystemReplyQueue, &gControllerEventMessage, OS_MESG_NOBLOCK);
             break;
-        case 0x50:
-            writeControllerPakSave(msgValue & 3);
-            osSendMesg(&gControllerSubsystemReplyQueue, &gControllerEventMessage, 0);
+        case CONTROLLER_REQUEST_WRITE_SAVE:
+            writeControllerPakSave(requestValue & CONTROLLER_REQUEST_CHANNEL_MASK);
+            osSendMesg(&gControllerSubsystemReplyQueue, &gControllerEventMessage, OS_MESG_NOBLOCK);
             break;
-        case 0x60:
-            repairControllerPakId(msgValue & 3);
-            osSendMesg(&gControllerSubsystemReplyQueue, &gControllerEventMessage, 0);
+        case CONTROLLER_REQUEST_REPAIR_PAK:
+            repairControllerPakId(requestValue & CONTROLLER_REQUEST_CHANNEL_MASK);
+            osSendMesg(&gControllerSubsystemReplyQueue, &gControllerEventMessage, OS_MESG_NOBLOCK);
             break;
-        case 0x70:
-            channel = msgValue & 3;
+        case CONTROLLER_REQUEST_INIT_RUMBLE:
+            channel = requestValue & CONTROLLER_REQUEST_CHANNEL_MASK;
             gRumbleMotorStatuses[channel] = osMotorInit(&gControllerEventQueue, &gRumblePakHandles[channel], channel);
-            osSendMesg(&gControllerSubsystemReplyQueue, &gControllerEventMessage, 0);
+            osSendMesg(&gControllerSubsystemReplyQueue, &gControllerEventMessage, OS_MESG_NOBLOCK);
             break;
-        case 0xD0:
-            channel = msgValue & 3;
+        case CONTROLLER_REQUEST_RETRY_RUMBLE_INIT:
+            channel = requestValue & CONTROLLER_REQUEST_CHANNEL_MASK;
             gRumbleMotorStatuses[channel] = osMotorInit(&gControllerEventQueue, &gRumblePakHandles[channel], channel);
             break;
-        case 0x80:
-            if ((gRumbleMotorStatuses[msgValue & 3] != 1) && (gRumbleMotorStatuses[msgValue & 3] != 11) &&
-                (gRumbleMotorStatuses[msgValue & 3] != 4)) {
-                channel = msgValue & 3;
-                if (osMotorStart(&gRumblePakHandles[channel]) == 4) {
-                    gRumbleMotorStatuses[channel] = 4;
+        case CONTROLLER_REQUEST_START_RUMBLE:
+            if ((gRumbleMotorStatuses[requestValue & CONTROLLER_REQUEST_CHANNEL_MASK] != RUMBLE_MOTOR_NO_PAK) &&
+                (gRumbleMotorStatuses[requestValue & CONTROLLER_REQUEST_CHANNEL_MASK] != RUMBLE_MOTOR_WRONG_DEVICE) &&
+                (gRumbleMotorStatuses[requestValue & CONTROLLER_REQUEST_CHANNEL_MASK] !=
+                 RUMBLE_MOTOR_CONTROLLER_FAILURE)) {
+                channel = requestValue & CONTROLLER_REQUEST_CHANNEL_MASK;
+                if (osMotorStart(&gRumblePakHandles[channel]) == RUMBLE_MOTOR_CONTROLLER_FAILURE) {
+                    gRumbleMotorStatuses[channel] = RUMBLE_MOTOR_CONTROLLER_FAILURE;
                 }
             }
             break;
-        case 0x90:
-            if ((gRumbleMotorStatuses[msgValue & 3] != 1) && (gRumbleMotorStatuses[msgValue & 3] != 11) &&
-                (gRumbleMotorStatuses[msgValue & 3] != 4)) {
-                channel = msgValue & 3;
-                if (osMotorStop(&gRumblePakHandles[channel]) == 4) {
-                    gRumbleMotorStatuses[channel] = 4;
+        case CONTROLLER_REQUEST_STOP_RUMBLE:
+            if ((gRumbleMotorStatuses[requestValue & CONTROLLER_REQUEST_CHANNEL_MASK] != RUMBLE_MOTOR_NO_PAK) &&
+                (gRumbleMotorStatuses[requestValue & CONTROLLER_REQUEST_CHANNEL_MASK] != RUMBLE_MOTOR_WRONG_DEVICE) &&
+                (gRumbleMotorStatuses[requestValue & CONTROLLER_REQUEST_CHANNEL_MASK] !=
+                 RUMBLE_MOTOR_CONTROLLER_FAILURE)) {
+                channel = requestValue & CONTROLLER_REQUEST_CHANNEL_MASK;
+                if (osMotorStop(&gRumblePakHandles[channel]) == RUMBLE_MOTOR_CONTROLLER_FAILURE) {
+                    gRumbleMotorStatuses[channel] = RUMBLE_MOTOR_CONTROLLER_FAILURE;
                 }
             }
             break;
-        case 0xA0:
+        case CONTROLLER_REQUEST_LIST_FILES:
             readControllerPakFileStates();
-            osSendMesg(&gControllerSubsystemReplyQueue, &gControllerEventMessage, 0);
+            osSendMesg(&gControllerSubsystemReplyQueue, &gControllerEventMessage, OS_MESG_NOBLOCK);
             break;
-        case 0xB0:
-            deleteControllerPakFile(msgValue & 0xF);
-            osSendMesg(&gControllerSubsystemReplyQueue, &gControllerEventMessage, 0);
+        case CONTROLLER_REQUEST_DELETE_FILE:
+            deleteControllerPakFile(requestValue & CONTROLLER_REQUEST_FILE_INDEX_MASK);
+            osSendMesg(&gControllerSubsystemReplyQueue, &gControllerEventMessage, OS_MESG_NOBLOCK);
             break;
-        case 0xC0:
+        case CONTROLLER_REQUEST_UPDATE_FREE_SPACE:
             updateControllerPakFreeSpaceInfo();
-            osSendMesg(&gControllerSubsystemReplyQueue, &gControllerEventMessage, 0);
+            osSendMesg(&gControllerSubsystemReplyQueue, &gControllerEventMessage, OS_MESG_NOBLOCK);
             break;
     }
     goto loop;

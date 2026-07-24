@@ -205,7 +205,7 @@ extern u8 gControllerPakSaveExtNameBytesEnd[];
 
 void requestControllerRead(void) {
     if ((gControllerReadPending == 0) && (gConnectedControllerBitmask != 0)) {
-        osSendMesg(&gControllerSubsystemRequestQueue, (OSMesg)0x10, OS_MESG_BLOCK);
+        osSendMesg(&gControllerSubsystemRequestQueue, (OSMesg)CONTROLLER_REQUEST_READ_INPUT, OS_MESG_BLOCK);
         gControllerReadPending = 1;
     }
 }
@@ -220,31 +220,36 @@ void requestRumbleMotorInit(u16 arg0) {
 
     msg = NULL;
 
-    osSendMesg(&gControllerSubsystemRequestQueue, (OSMesg)(arg0 + 0x70), OS_MESG_BLOCK);
+    osSendMesg(&gControllerSubsystemRequestQueue, (OSMesg)(arg0 + CONTROLLER_REQUEST_INIT_RUMBLE), OS_MESG_BLOCK);
     osRecvMesg(&gControllerSubsystemReplyQueue, &msg, OS_MESG_BLOCK);
 }
 
 void serviceRumbleMotorRequest(u16 arg0) {
-    if (gRumbleMotorStatuses[arg0] == 1) {
+    if (gRumbleMotorStatuses[arg0] == RUMBLE_MOTOR_NO_PAK) {
         gRumbleMotorRequestStates[arg0] = 0;
         if (gRumblePakConnectedMask & (1 << arg0)) {
-            osSendMesg(&gControllerSubsystemRequestQueue, (OSMesg)(arg0 + 0xD0), OS_MESG_BLOCK);
+            osSendMesg(&gControllerSubsystemRequestQueue, (OSMesg)(arg0 + CONTROLLER_REQUEST_RETRY_RUMBLE_INIT),
+                       OS_MESG_BLOCK);
         }
-    } else if (gRumbleMotorStatuses[arg0] == 0xB) {
+    } else if (gRumbleMotorStatuses[arg0] == RUMBLE_MOTOR_WRONG_DEVICE) {
         gRumbleMotorRequestStates[arg0] = 0;
         if (gRumblePakConnectedMask & (1 << arg0)) {
-            osSendMesg(&gControllerSubsystemRequestQueue, (OSMesg)(arg0 + 0xD0), OS_MESG_BLOCK);
+            osSendMesg(&gControllerSubsystemRequestQueue, (OSMesg)(arg0 + CONTROLLER_REQUEST_RETRY_RUMBLE_INIT),
+                       OS_MESG_BLOCK);
         }
-    } else if (gRumbleMotorStatuses[arg0] == 4) {
+    } else if (gRumbleMotorStatuses[arg0] == RUMBLE_MOTOR_CONTROLLER_FAILURE) {
         gRumbleMotorRequestStates[arg0] = 0;
         if (gRumblePakConnectedMask & (1 << arg0)) {
-            osSendMesg(&gControllerSubsystemRequestQueue, (OSMesg)(arg0 + 0xD0), OS_MESG_BLOCK);
+            osSendMesg(&gControllerSubsystemRequestQueue, (OSMesg)(arg0 + CONTROLLER_REQUEST_RETRY_RUMBLE_INIT),
+                       OS_MESG_BLOCK);
         }
     } else {
         if (gRumbleMotorRequestStates[arg0] == 0) {
-            osSendMesg(&gControllerSubsystemRequestQueue, (OSMesg)(arg0 + 0x90), OS_MESG_BLOCK);
+            osSendMesg(&gControllerSubsystemRequestQueue, (OSMesg)(arg0 + CONTROLLER_REQUEST_STOP_RUMBLE),
+                       OS_MESG_BLOCK);
         } else {
-            osSendMesg(&gControllerSubsystemRequestQueue, (OSMesg)(arg0 + 0x80), OS_MESG_BLOCK);
+            osSendMesg(&gControllerSubsystemRequestQueue, (OSMesg)(arg0 + CONTROLLER_REQUEST_START_RUMBLE),
+                       OS_MESG_BLOCK);
         }
         gRumbleMotorRequestStates[arg0] = 0;
     }
@@ -263,7 +268,7 @@ void requestControllerPakProbe(u16 arg0) {
 
     msg = NULL;
 
-    osSendMesg(&gControllerSubsystemRequestQueue, (OSMesg)(arg0 + 0x20), OS_MESG_BLOCK);
+    osSendMesg(&gControllerSubsystemRequestQueue, (OSMesg)(arg0 + CONTROLLER_REQUEST_PROBE_PAK), OS_MESG_BLOCK);
     osRecvMesg(&gControllerSubsystemReplyQueue, &msg, OS_MESG_BLOCK);
 }
 
@@ -301,7 +306,7 @@ void requestControllerPakSaveStatus(u16 arg0) {
 
     msg = NULL;
 
-    osSendMesg(&gControllerSubsystemRequestQueue, (OSMesg)(arg0 + 0x30), OS_MESG_BLOCK);
+    osSendMesg(&gControllerSubsystemRequestQueue, (OSMesg)(arg0 + CONTROLLER_REQUEST_CHECK_SAVE), OS_MESG_BLOCK);
     osRecvMesg(&gControllerSubsystemReplyQueue, &msg, OS_MESG_BLOCK);
 }
 
@@ -360,7 +365,7 @@ void requestControllerPakSaveRead(u16 arg0) {
 
     msg = NULL;
 
-    osSendMesg(&gControllerSubsystemRequestQueue, (OSMesg)(arg0 + 0x40), OS_MESG_BLOCK);
+    osSendMesg(&gControllerSubsystemRequestQueue, (OSMesg)(arg0 + CONTROLLER_REQUEST_READ_SAVE), OS_MESG_BLOCK);
     osRecvMesg(&gControllerSubsystemReplyQueue, &msg, OS_MESG_BLOCK);
 }
 
@@ -457,7 +462,7 @@ void requestControllerPakSaveWrite(u16 arg0) {
 
     msg = NULL;
 
-    osSendMesg(&gControllerSubsystemRequestQueue, (OSMesg)(arg0 + 0x50), OS_MESG_BLOCK);
+    osSendMesg(&gControllerSubsystemRequestQueue, (OSMesg)(arg0 + CONTROLLER_REQUEST_WRITE_SAVE), OS_MESG_BLOCK);
     osRecvMesg(&gControllerSubsystemReplyQueue, &msg, OS_MESG_BLOCK);
 }
 
@@ -541,7 +546,7 @@ void requestControllerPakRepair(u16 arg0) {
 
     msg = NULL;
 
-    osSendMesg(&gControllerSubsystemRequestQueue, (OSMesg)(arg0 + 0x60), OS_MESG_BLOCK);
+    osSendMesg(&gControllerSubsystemRequestQueue, (OSMesg)(arg0 + CONTROLLER_REQUEST_REPAIR_PAK), OS_MESG_BLOCK);
     osRecvMesg(&gControllerSubsystemReplyQueue, &msg, OS_MESG_BLOCK);
 }
 
@@ -564,7 +569,7 @@ void requestControllerPakFileList(void) {
 
     msg = NULL;
 
-    osSendMesg(&gControllerSubsystemRequestQueue, (OSMesg)0xA0, OS_MESG_BLOCK);
+    osSendMesg(&gControllerSubsystemRequestQueue, (OSMesg)CONTROLLER_REQUEST_LIST_FILES, OS_MESG_BLOCK);
     osRecvMesg(&gControllerSubsystemReplyQueue, &msg, OS_MESG_BLOCK);
 }
 
@@ -582,7 +587,7 @@ void requestControllerPakDeleteFile(u16 arg0) {
 
     msg = NULL;
 
-    osSendMesg(&gControllerSubsystemRequestQueue, (OSMesg)(arg0 + 0xB0), OS_MESG_BLOCK);
+    osSendMesg(&gControllerSubsystemRequestQueue, (OSMesg)(arg0 + CONTROLLER_REQUEST_DELETE_FILE), OS_MESG_BLOCK);
     osRecvMesg(&gControllerSubsystemReplyQueue, &msg, OS_MESG_BLOCK);
 }
 
@@ -624,7 +629,7 @@ void requestControllerPakFreeSpaceUpdate(void) {
 
     msg = NULL;
 
-    osSendMesg(&gControllerSubsystemRequestQueue, (OSMesg)0xC0, OS_MESG_BLOCK);
+    osSendMesg(&gControllerSubsystemRequestQueue, (OSMesg)CONTROLLER_REQUEST_UPDATE_FREE_SPACE, OS_MESG_BLOCK);
     osRecvMesg(&gControllerSubsystemReplyQueue, &msg, OS_MESG_BLOCK);
 }
 
