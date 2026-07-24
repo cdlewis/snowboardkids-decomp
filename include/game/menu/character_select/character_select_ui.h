@@ -53,8 +53,8 @@ typedef union {
     s16 target[4];
     struct {
         u8 pad0[4];
-        u8 inactiveTimer[4];
-    } overlay;
+        u8 statsBlinkTimer[4];
+    };
 } CharacterSelectUiPanelTargetX;
 
 typedef struct {
@@ -64,7 +64,7 @@ typedef struct {
     /* 0x28 */ CharacterSelectUiPanelTargetX targetX;
     union {
         s16 target[4];
-        u8 finishedBlink[4];
+        u8 statsBlinkVisible[4];
         u8 mode;
     } targetY;
     /* 0x38 */ s16 accumulator[4];
