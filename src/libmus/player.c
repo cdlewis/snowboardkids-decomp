@@ -1,5 +1,7 @@
 #include "game/audio/audio_engine_internal.h"
 
+#define U8_TO_FLOAT(c) ((c) & 128) ? -(256 - (c)) : (c)
+
 #include "player_commands.c"
 
 s32 Fgoto(PlayerCommandState *arg0, u8 *arg1) {
@@ -257,70 +259,42 @@ void __MusIntSetVolumeAndPan(PlayerCommandState *arg0, s32 arg1) {
     }
 }
 
-// __MusIntSetPitch best match: 97.393% (nonmatchings/__MusIntSetPitch-5787290371232622032/base_2.c)
-
-#pragma GLOBAL_ASM("asm/nonmatchings/libmus/player/__MusIntSetPitch.s")
-
-#ifdef NON_MATCHING
 void __MusIntSetPitch(PlayerCommandState *arg0, s32 arg1) {
-    f32 interpolationStep;
-    register f32 notePitch;
-    f32 portamentoStartPitch;
-    f32 portamentoPitchStep;
-    f32 pitchRatio;
-    f32 sequencePitchOffset;
-    f64 pitchBendScale;
-    s32 signedNotePitch;
-    u8 portamentoTime;
+    f32 frequency;
+    f32 temp;
 
-    signedNotePitch = arg0->notePitch;
-    if (signedNotePitch & 0x80) {
-        notePitch = -0x100 - -(s32)signedNotePitch;
-    } else {
-        notePitch = signedNotePitch;
-    }
-
-    portamentoTime = arg0->portamentoTime;
-    if ((portamentoTime != (0, 0)) && (portamentoTime >= arg0->noteAgeTicks)) {
-        portamentoStartPitch = arg0->portamentoStartPitch;
-        interpolationStep = (notePitch - portamentoStartPitch) / (f32)portamentoTime;
-        portamentoPitchStep = interpolationStep;
-        if (1) {
-            portamentoPitchStep *= arg0->noteAgeTicksF;
-            notePitch = portamentoStartPitch + portamentoPitchStep;
+    frequency = U8_TO_FLOAT(arg0->notePitch);
+    if (arg0->portamentoTime != 0) {
+        if (arg0->noteAgeTicks <= arg0->portamentoTime) {
+            temp = (frequency - arg0->portamentoStartPitch) / (f32)arg0->portamentoTime;
+            temp *= arg0->noteAgeTicksF;
+            frequency = arg0->portamentoStartPitch + temp;
         }
-        portamentoPitchStep++;
-        portamentoPitchStep--;
     }
-
-    sequencePitchOffset = (f32)arg0->pitchOffset * (f32)(1 - arg0->skipPitchOffsetOnce);
-    arg0->currentNotePitch = notePitch;
+    arg0->currentNotePitch = frequency;
+    frequency += arg0->vibratoPitchOffset +
+                 (((f32)arg0->pitchOffset) * (1 - arg0->skipPitchOffsetOnce)) +
+                 arg0->finePitchOffset +
+                 ((f32)arg0->pitchPulseOffset);
     arg0->skipPitchOffsetOnce = 0;
-    notePitch += arg0->vibratoPitchOffset + sequencePitchOffset + arg0->finePitchOffset + (f32)arg0->pitchPulseOffset;
-    notePitch += gSoundPlayerPitchOffsets[arg0->instrumentIndex];
-    notePitch = (f32)((f64)notePitch + ((pitchBendScale = (f64)(f32)arg0->pitchBendDepth * 0.015625) * ((f32)arg0->pitchBendValue - 64.0)));
-    if (1) {}
-    if (1) {}
-    if (1) {}
-    if (1) {}
-    sequencePitchOffset++;
-    sequencePitchOffset--;
-    notePitch += arg0->handlePitchOffset;
-
-    if (notePitch != arg0->cachedPitch) {
-        arg0->cachedPitch = notePitch;
-        pitchRatio = __MusIntPowerOf2((f32)((f64)notePitch * 0.083333333333333329));
-        if (pitchRatio < 0.0f) {
-            pitchRatio = 0.0f;
-        }
-        if (pitchRatio > 2.0) {
-            pitchRatio = 2.0f;
-            arg0->unk108 = 0;
-        }
-        alSynSetPitch(&gAudioSynthesizer, &mus_voices[arg1], pitchRatio);
+    frequency += gSoundPlayerPitchOffsets[arg0->instrumentIndex];
+    frequency += (f32)arg0->pitchBendDepth * (1.0 / 64.0) *
+                 ((f32)arg0->pitchBendValue - 64.0);
+    frequency += arg0->handlePitchOffset;
+    if (frequency == arg0->cachedPitch) {
+        return;
     }
+    arg0->cachedPitch = frequency;
+    frequency = __MusIntPowerOf2(frequency * (1.0 / 12.0));
+    if (frequency < 0) {
+        frequency = 0;
+    }
+    if (frequency > 2.0) {
+        frequency = 2.0;
+        arg0->unk108 = 0;
+    }
+    alSynSetPitch(&gAudioSynthesizer, &mus_voices[arg1], frequency);
 }
-#endif
 
 void __MusIntInitEnvelope(PlayerCommandState *arg0) {
     u16 temp_v0;
