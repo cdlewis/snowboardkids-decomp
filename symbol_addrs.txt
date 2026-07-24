@@ -1974,6 +1974,7 @@ gRaceModelEffectRenderCallbackList = 0x801248BC; // size:0xC
 gEffectRenderCallbackList = 0x801248D4; // size:0xC
 gBackdropRenderCallbackList = 0x801248F8; // size:0xC
 gFramebufferRenderTask0 = 0x80124908; // size:0x60
+gFramebufferClearTasks = 0x80155548; // size:0x10C0
 gFramebufferSwapHold = 0x80123751; // type:u8
 gTrainingCourseLesson = 0x80121B5A; // size:0x1
 gMainMenuModeSelection = 0x80121B5B; // size:0x1

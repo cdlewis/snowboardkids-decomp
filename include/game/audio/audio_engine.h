@@ -3,6 +3,7 @@
 
 #include "common.h"
 #include <PR/libaudio.h>
+#include <PR/sptask.h>
 
 typedef void *OSMesg;
 
@@ -150,10 +151,11 @@ typedef struct SchedulerTask {
     u32 state;
     u32 flags;
     void *framebuffer;
-    u8 list[0x40];
-    OSMesgQueue *queue;
-    OSMesg msg;
+    OSTask rspTask;
+    OSMesgQueue *doneQueue;
+    OSMesg doneMsg;
     s16 retrace;
+    u8 pad5A[6];
 } SchedulerTask;
 
 typedef struct SchedulerState {
@@ -273,8 +275,8 @@ typedef struct AudioTask {
 } AudioTask;
 
 void initScheduler(SchedulerState *arg0, u8 arg1, u8 arg2);
-s32 getSchedulerAudioTaskQueue(s32 arg0);
-s32 getSchedulerGraphicsTaskQueue(s32 arg0);
+OSMesgQueue *getSchedulerAudioTaskQueue(SchedulerState *scheduler);
+OSMesgQueue *getSchedulerGraphicsTaskQueue(SchedulerState *scheduler);
 void schedulerThreadMain(SchedulerState *arg0);
 void tryStartPendingRdpTask(SchedulerState *arg0);
 void startCurrentRdpTask(SchedulerState *arg0);

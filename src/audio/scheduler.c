@@ -31,12 +31,12 @@ void initScheduler(SchedulerState *arg0, u8 arg1, u8 arg2) {
     osStartThread(&arg0->thread408);
 }
 
-s32 getSchedulerAudioTaskQueue(s32 arg0) {
-    return arg0 + 4;
+OSMesgQueue *getSchedulerAudioTaskQueue(SchedulerState *scheduler) {
+    return &scheduler->messageQueue;
 }
 
-s32 getSchedulerGraphicsTaskQueue(s32 arg0) {
-    return arg0 + 0x5C;
+OSMesgQueue *getSchedulerGraphicsTaskQueue(SchedulerState *scheduler) {
+    return &scheduler->eventQueue;
 }
 
 void schedulerThreadMain(SchedulerState *arg0) {
@@ -74,8 +74,8 @@ void schedulerThreadMain(SchedulerState *arg0) {
                     delayedStart = 0;
                     osWritebackDCacheAll();
                     gSchedulerRspTaskState |= 1;
-                    osSpTaskLoad(&arg0->curRSPTask->list);
-                    osSpTaskStartGo(&arg0->curRSPTask->list);
+                    osSpTaskLoad(&arg0->curRSPTask->rspTask);
+                    osSpTaskStartGo(&arg0->curRSPTask->rspTask);
                 }
             } else if (gSchedulerRspTaskState & 1) {
                 if (gSchedulerYieldRequested != 0) {
@@ -91,8 +91,8 @@ void schedulerThreadMain(SchedulerState *arg0) {
             if (gSchedulerRdpTaskActive == 0) {
                 osWritebackDCacheAll();
                 gSchedulerRspTaskState |= 1;
-                osSpTaskLoad(&arg0->curRSPTask->list);
-                osSpTaskStartGo(&(*arg0).curRSPTask->list);
+                osSpTaskLoad(&arg0->curRSPTask->rspTask);
+                osSpTaskStartGo(&(*arg0).curRSPTask->rspTask);
             } else {
                 delayedStart = 1;
             }
@@ -126,7 +126,7 @@ void tryStartPendingRdpTask(SchedulerState *arg0) {
 void startCurrentRdpTask(SchedulerState *arg0) {
     if (gSchedulerYieldRequested != 0) {
         gSchedulerYieldRequested = 0;
-        if (osSpTaskYielded(&arg0->curRSPTask->list) != 0) {
+        if (osSpTaskYielded(&arg0->curRSPTask->rspTask) != 0) {
             gSchedulerYieldResult = 1;
         } else {
             gSchedulerYieldResult = 2;
@@ -134,8 +134,8 @@ void startCurrentRdpTask(SchedulerState *arg0) {
     }
     gSchedulerRspTaskState |= 2;
     osWritebackDCacheAll();
-    osSpTaskLoad(&arg0->curRDPTask->list);
-    osSpTaskStartGo(&arg0->curRDPTask->list);
+    osSpTaskLoad(&arg0->curRDPTask->rspTask);
+    osSpTaskStartGo(&arg0->curRDPTask->rspTask);
 }
 
 void finishCurrentRdpTask(SchedulerState *arg0) {
@@ -144,13 +144,13 @@ void finishCurrentRdpTask(SchedulerState *arg0) {
     msg = 0;
     osWritebackDCacheAll();
     if (gSchedulerYieldResult == 1) {
-        osSpTaskLoad(arg0->curRSPTask->list);
-        osSpTaskStartGo(arg0->curRSPTask->list);
+        osSpTaskLoad(&arg0->curRSPTask->rspTask);
+        osSpTaskStartGo(&arg0->curRSPTask->rspTask);
     } else if (gSchedulerYieldResult == 2) {
         gSchedulerRspTaskState &= ~1;
         osSendMesg(&arg0->queue14C, &msg, 1);
     }
-    osSendMesg(arg0->curRDPTask->queue, arg0->curRDPTask->msg, 1);
+    osSendMesg(arg0->curRDPTask->doneQueue, arg0->curRDPTask->doneMsg, 1);
     gSchedulerRdpTaskActive = 0;
 }
 
@@ -186,7 +186,7 @@ void schedulerSwapBufferThreadMain(SchedulerState *arg0) {
 
     framebuffer = task->framebuffer;
     retrace = task->retrace;
-    osSendMesg(task->queue, sentMsg = task->msg, 1);
+    osSendMesg(task->doneQueue, sentMsg = task->doneMsg, 1);
     if ((0xFFF & (gRetraceCounter - retrace)) >= 0x801) {
         do {
             if ((retrace && retrace) && retrace) {
