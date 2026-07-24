@@ -28,7 +28,8 @@ void setRaceMotionAnimation(RaceMotionState *state, s32 animationIndex);
 void loadRaceMotionAnimationFrame(RaceMotionState *state);
 void loadRaceMotionJointAnimationFrame(RaceMotionState *state);
 void interpolateRaceMotionAnimationFrame(RaceMotionState *state, s32 animIndex, s32 frameTimer, s32 frameTimerReset);
-void interpolateRaceMotionJointAnimationFrame(RaceMotionState *state, s32 animIndex, s32 frameTimer, s32 frameTimerReset);
+void interpolateRaceMotionJointAnimationFrame(RaceMotionState *state, s32 animationIndex,
+                                              s32 frameTimer, s32 frameTimerReset);
 void blendRaceMotionJointAnimation(RaceMotionState *state, s32 animIndex, s32 timer, s32 duration);
 void stepRaceMotionLoopingAnimation(RaceMotionState *state);
 void stepRaceMotionLoopingJointAnimation(RaceMotionState *state);
