@@ -29,12 +29,11 @@ typedef struct MainMenuModelPart {
     s32 offsetY;
 } MainMenuModelPart;
 
-typedef struct MainMenuModelDisplayObject {
-    char pad0[0x14];
-    s32 screenX;
-    s32 screenY;
-    s32 screenZ;
-} MainMenuModelDisplayObject;
+typedef struct MainMenuModelTransform {
+    s16 rotation[9];
+    s16 pad12;
+    MainMenuModelVec3i translation;
+} MainMenuModelTransform;
 
 typedef struct MainMenuSceneModel {
     s16 actorIndex;
@@ -52,7 +51,7 @@ typedef struct MainMenuSceneModel {
     MainMenuModelVec3i pos;
     MainMenuModelVec3s rot;
     s16 unk146;
-    MainMenuModelDisplayObject displayObjects[14];
+    MainMenuModelTransform displayObjects[14];
 } MainMenuSceneModel;
 
 void loadMainMenuSceneModelAssets(void);

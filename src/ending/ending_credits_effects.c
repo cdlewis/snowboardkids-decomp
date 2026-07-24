@@ -103,8 +103,8 @@ void updateEndingCreditsCharacterVanishPoof(EndingCreditsEffectActor *arg0) {
 
     model = getMainMenuSceneModel(arg0->characterId); divisor = 0x24000;
     if (0) {}
-    arg0->x = model->displayObjects[7].screenX / divisor;
-    arg0->y = -(model->displayObjects[7].screenY / divisor);
+    arg0->x = model->displayObjects[7].translation.x / divisor;
+    arg0->y = -(model->displayObjects[7].translation.y / divisor);
     if ((arg0->effectTimer += 1) == 3) {
         arg0->effectTimer = 0;
         arg0->effectFrame++;
@@ -175,8 +175,8 @@ void updateEndingCreditsCharacterLoopingSparkle(EndingCreditsEffectActor *arg0) 
 
     model = getMainMenuSceneModel(arg0->characterId); divisor = 0x24000;
     if (0) {}
-    arg0->x = model->displayObjects[7].screenX / divisor;
-    arg0->y = -(model->displayObjects[7].screenY / divisor);
+    arg0->x = model->displayObjects[7].translation.x / divisor;
+    arg0->y = -(model->displayObjects[7].translation.y / divisor);
     if ((arg0->effectTimer += 1) == 8) {
         arg0->effectTimer = 0;
         arg0->effectFrame++;
@@ -310,8 +310,8 @@ void updateEndingCreditsNancyRunDust(EndingCreditsEffectActor *arg0) {
 
     model = getMainMenuSceneModel(1); divisor = 0x24000;
     if (0) {}
-    arg0->x = model->displayObjects[7].screenX / divisor;
-    arg0->y = -(model->displayObjects[7].screenY / divisor);
+    arg0->x = model->displayObjects[7].translation.x / divisor;
+    arg0->y = -(model->displayObjects[7].translation.y / divisor);
     if ((arg0->animTimer += 1) == 3) {
         arg0->animTimer = 0;
         arg0->animFrame++;
@@ -375,8 +375,8 @@ void updateEndingCreditsCharacterAura(EndingCreditsEffectActor *arg0) {
 
     model = getMainMenuSceneModel(arg0->characterId); divisor = 0x24000;
     if (0) {}
-    arg0->x = model->displayObjects[7].screenX / divisor;
-    arg0->y = -(model->displayObjects[7].screenY / divisor);
+    arg0->x = model->displayObjects[7].translation.x / divisor;
+    arg0->y = -(model->displayObjects[7].translation.y / divisor);
     if ((arg0->effectTimer += 1) == 4) {
         arg0->effectTimer = 0;
         if ((arg0->effectFrame += 1) == 5) {

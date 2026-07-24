@@ -13,7 +13,6 @@
 #define MAIN_MENU_MODEL_ASSET_RANGE_END(table, index) ((table)[((index) * MAIN_MENU_MODEL_ASSET_RANGE_WORDS) + 1])
 #define MAIN_MENU_SCENE_MODEL_PART_COUNT 14
 #define MAIN_MENU_SCENE_MODEL_MATRIX_AXES 3
-#define MAIN_MENU_SCENE_MODEL_MATRIX_ELEMENTS 9
 
 
 typedef s32 RomAssetAddress;
@@ -34,16 +33,6 @@ typedef struct MainMenuAnimationWritePart {
     s32 wordC;
     s32 word10;
 } MainMenuAnimationWritePart;
-
-typedef s16 MainMenuFixedMatrix3x3[MAIN_MENU_SCENE_MODEL_MATRIX_ELEMENTS];
-
-typedef union MainMenuFixedMatrixWithTranslation {
-    s16 elements[16];
-    struct {
-        s16 rotation[10];
-        MainMenuModelVec3i translation;
-    } parts;
-} MainMenuFixedMatrixWithTranslation;
 
 extern RomAssetAddress gCharacterRawAssetRanges[];
 extern RomAssetAddress gCharacterTextureAssetRanges[];
@@ -626,11 +615,10 @@ void setMainMenuSceneModelRotation(s32 modelIndex, s16 x, s16 y, s16 z) {
     model->rot.z = z;
 }
 
-// updateMainMenuSceneModelTransforms best match: 92.160% (nonmatchings/updateMainMenuSceneModelTransforms-3379532139742180785/base_37.c)
+// A readable NON_MATCHING implementation is kept below; the production build uses the matching assembly.
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/main_menu/main_menu_scene_model/updateMainMenuSceneModelTransforms.s")
 
 #ifdef NON_MATCHING
-#if 0
 static s32 getMainMenuSceneModelPartOffsetZ(MainMenuSceneModel *model, s32 partIndex) {
     if (partIndex == MAIN_MENU_SCENE_MODEL_PART_COUNT - 1) {
         return model->lastPartOffsetZ;
@@ -639,11 +627,11 @@ static s32 getMainMenuSceneModelPartOffsetZ(MainMenuSceneModel *model, s32 partI
 }
 
 void updateMainMenuSceneModelTransforms(MainMenuSceneModel *model) {
-    s16 partLocalMatrices[MAIN_MENU_SCENE_MODEL_PART_COUNT][16];
-    MainMenuFixedMatrixWithTranslation rootMatrix;
+    MainMenuModelTransform partLocalTransforms[MAIN_MENU_SCENE_MODEL_PART_COUNT];
+    MainMenuModelTransform rootTransform;
     MainMenuModelPart *part;
-    s16 (*localMatrix)[16];
-    s16 (*localMatrixEnd)[16];
+    MainMenuModelTransform *localTransform;
+    MainMenuModelTransform *localTransformEnd;
     s32 sineX;
     s32 cosineX;
     s32 sineY;
@@ -654,21 +642,20 @@ void updateMainMenuSceneModelTransforms(MainMenuSceneModel *model) {
     s32 negSineZ;
     s32 sineXTimesSineY;
     s32 cosineXTimesSineY;
-    MainMenuFixedMatrix3x3 *worldMatrix;
     s16 *worldAxis;
     s16 *localAxis;
     s16 *rootAxis;
     s32 axis;
     s32 partIndex;
-    MainMenuModelDisplayObject *displayObject;
+    MainMenuModelTransform *displayObject;
     s32 offsetX;
     s32 offsetY;
     s32 offsetZ;
     s32 dot;
 
     part = model->parts;
-    localMatrix = partLocalMatrices;
-    localMatrixEnd = &partLocalMatrices[MAIN_MENU_SCENE_MODEL_PART_COUNT];
+    localTransform = partLocalTransforms;
+    localTransformEnd = &partLocalTransforms[MAIN_MENU_SCENE_MODEL_PART_COUNT];
     do {
         sineX = fixedSine(part->rot.x);
         cosineX = fixedCosine(part->rot.x);
@@ -679,214 +666,79 @@ void updateMainMenuSceneModelTransforms(MainMenuSceneModel *model) {
         negSineY = -sineY;
         negSineZ = -sineZ;
 
-        (*localMatrix)[0] = (cosineY * cosineZ) / FIXED_MATRIX_ONE;
-        (*localMatrix)[1] = (cosineY * sineZ) / FIXED_MATRIX_ONE;
+        localTransform->rotation[MTX_XX] = (cosineY * cosineZ) / FIXED_MATRIX_ONE;
+        localTransform->rotation[MTX_XY] = (cosineY * sineZ) / FIXED_MATRIX_ONE;
         sineXTimesSineY = (sineX * sineY) / FIXED_MATRIX_ONE;
-        (*localMatrix)[2] = negSineY;
-        (*localMatrix)[3] = ((sineXTimesSineY * cosineZ) / FIXED_MATRIX_ONE) + ((cosineX * negSineZ) / FIXED_MATRIX_ONE);
-        (*localMatrix)[4] = ((sineXTimesSineY * sineZ) / FIXED_MATRIX_ONE) + ((cosineX * cosineZ) / FIXED_MATRIX_ONE);
-        (*localMatrix)[5] = (sineX * cosineY) / FIXED_MATRIX_ONE;
+        localTransform->rotation[MTX_XZ] = negSineY;
+        localTransform->rotation[MTX_YX] =
+            ((sineXTimesSineY * cosineZ) / FIXED_MATRIX_ONE) +
+            ((cosineX * negSineZ) / FIXED_MATRIX_ONE);
+        localTransform->rotation[MTX_YY] =
+            ((sineXTimesSineY * sineZ) / FIXED_MATRIX_ONE) +
+            ((cosineX * cosineZ) / FIXED_MATRIX_ONE);
+        localTransform->rotation[MTX_YZ] = (sineX * cosineY) / FIXED_MATRIX_ONE;
         cosineXTimesSineY = (cosineX * sineY) / FIXED_MATRIX_ONE;
-        (*localMatrix)[6] = ((cosineXTimesSineY * cosineZ) / FIXED_MATRIX_ONE) + ((sineX * sineZ) / FIXED_MATRIX_ONE);
-        (*localMatrix)[7] = ((cosineXTimesSineY * sineZ) / FIXED_MATRIX_ONE) + (((-sineX) * cosineZ) / FIXED_MATRIX_ONE);
-        (*localMatrix)[8] = (cosineX * cosineY) / FIXED_MATRIX_ONE;
-        localMatrix++;
+        localTransform->rotation[MTX_ZX] =
+            ((cosineXTimesSineY * cosineZ) / FIXED_MATRIX_ONE) +
+            ((sineX * sineZ) / FIXED_MATRIX_ONE);
+        localTransform->rotation[MTX_ZY] =
+            ((cosineXTimesSineY * sineZ) / FIXED_MATRIX_ONE) +
+            (((-sineX) * cosineZ) / FIXED_MATRIX_ONE);
+        localTransform->rotation[MTX_ZZ] = (cosineX * cosineY) / FIXED_MATRIX_ONE;
+        localTransform++;
         part++;
-    } while (localMatrix != localMatrixEnd);
+    } while (localTransform != localTransformEnd);
 
-    makeFixedRotationZXY(rootMatrix.elements, model->rot.x, model->rot.y, model->rot.z);
-    rootMatrix.parts.translation = model->pos;
+    makeFixedRotationZXY(rootTransform.rotation, model->rot.x, model->rot.y, model->rot.z);
+    rootTransform.translation = model->pos;
 
-    localMatrix = partLocalMatrices;
+    localTransform = partLocalTransforms;
     displayObject = model->displayObjects;
     do {
-        worldMatrix = (MainMenuFixedMatrix3x3 *)displayObject->pad0;
-        worldAxis = *worldMatrix;
-        localAxis = *localMatrix;
+        worldAxis = displayObject->rotation;
+        localAxis = localTransform->rotation;
         axis = 0;
         do {
-            rootAxis = rootMatrix.elements;
+            rootAxis = rootTransform.rotation;
             do {
                 dot = (rootAxis[6] * localAxis[2]) + (rootAxis[0] * localAxis[0]) +
                       (rootAxis[2] * localAxis[1]);
                 *worldAxis++ = dot / FIXED_MATRIX_ONE;
                 rootAxis++;
-            } while (rootAxis != &rootMatrix.elements[MAIN_MENU_SCENE_MODEL_MATRIX_AXES]);
+            } while (rootAxis != &rootTransform.rotation[MAIN_MENU_SCENE_MODEL_MATRIX_AXES]);
             axis++;
             localAxis += MAIN_MENU_SCENE_MODEL_MATRIX_AXES;
         } while (axis != MAIN_MENU_SCENE_MODEL_MATRIX_AXES);
-        localMatrix++;
+        localTransform++;
         displayObject++;
-    } while (localMatrix < localMatrixEnd);
+    } while (localTransform < localTransformEnd);
 
     part = model->parts;
     displayObject = model->displayObjects;
     partIndex = 0;
     do {
-        localAxis = rootMatrix.elements;
+        localAxis = rootTransform.rotation;
         offsetX = part->offsetX;
         offsetY = part->offsetY;
         offsetZ = getMainMenuSceneModelPartOffsetZ(model, partIndex);
 
         dot = (((s64)localAxis[3] * offsetY) + ((s64)localAxis[0] * offsetX) +
                ((s64)localAxis[6] * offsetZ)) / FIXED_MATRIX_ONE;
-        displayObject->screenX = dot + rootMatrix.parts.translation.x;
+        displayObject->translation.x = dot + rootTransform.translation.x;
         localAxis++;
 
         dot = (((s64)localAxis[3] * offsetY) + ((s64)localAxis[0] * offsetX) +
                ((s64)localAxis[6] * offsetZ)) / FIXED_MATRIX_ONE;
-        displayObject->screenY = dot + rootMatrix.parts.translation.y;
+        displayObject->translation.y = dot + rootTransform.translation.y;
         localAxis++;
 
         dot = (((s64)localAxis[3] * offsetY) + ((s64)localAxis[0] * offsetX) +
                ((s64)localAxis[6] * offsetZ)) / FIXED_MATRIX_ONE;
-        displayObject->screenZ = dot + rootMatrix.parts.translation.z;
+        displayObject->translation.z = dot + rootTransform.translation.z;
 
         partIndex++;
         part++;
         displayObject++;
     } while (partIndex != MAIN_MENU_SCENE_MODEL_PART_COUNT);
 }
-#endif
-
-typedef struct MainMenuTransformPartCursor {
-    u8 bytes[0x14];
-} MainMenuTransformPartCursor;
-
-typedef struct MainMenuTransformMatrixSlot {
-    s16 e0;
-    s16 e2;
-    s16 e4;
-    s16 e6;
-    s16 e8;
-    s16 eA;
-    s16 eC;
-    s16 eE;
-    s16 e10;
-    s16 pad12[7];
-} MainMenuTransformMatrixSlot;
-
-typedef struct MainMenuTransformProducts {
-    u8 pad[0x10];
-    s64 first;
-    s64 second;
-} MainMenuTransformProducts;
-
-#define MAIN_MENU_TRANSFORM_CURSOR_S16(cursor, offset) (*(s16 *)((u8 *)(cursor) + (offset)))
-#define MAIN_MENU_TRANSFORM_CURSOR_S32(cursor, offset) (*(s32 *)((u8 *)(cursor) + (offset)))
-
-void updateMainMenuSceneModelTransforms(MainMenuSceneModel *model) {
-    u8 partMatrices[0x1B0];
-    MainMenuTransformPartCursor *partCursor;
-    MainMenuTransformMatrixSlot *matrixSlot;
-    MainMenuTransformMatrixSlot *matrixSlotEnd;
-    MainMenuTransformMatrixSlot *localSlot;
-    s16 *combinedMatrix;
-    s16 *localMatrix;
-    s16 *rootAxis;
-    s16 *modelCursor;
-    s16 *displayCursor;
-    u8 *displayBase;
-    u8 *partBase;
-    s16 *rootCursor;
-    s16 *positionCursor;
-    s32 sineX;
-    s32 cosineX;
-    s32 sineY;
-    s32 cosineY;
-    s32 sineZ;
-    s32 cosineZ;
-    s32 sineXTimesSineY;
-    s32 cosineXTimesSineY;
-    s32 axisOffset;
-    s32 partOffset;
-    s32 dot;
-    MainMenuTransformProducts products;
-
-    matrixSlot = (MainMenuTransformMatrixSlot *)((u8 *)partMatrices - 0x30);
-    partCursor = (MainMenuTransformPartCursor *)model;
-    matrixSlotEnd = matrixSlot + MAIN_MENU_SCENE_MODEL_PART_COUNT;
-    do {
-        sineX = fixedSine(MAIN_MENU_TRANSFORM_CURSOR_S16(partCursor, 0x1E));
-        cosineX = fixedCosine(MAIN_MENU_TRANSFORM_CURSOR_S16(partCursor, 0x1E));
-        sineY = fixedSine(MAIN_MENU_TRANSFORM_CURSOR_S16(partCursor, 0x20));
-        cosineY = fixedCosine(MAIN_MENU_TRANSFORM_CURSOR_S16(partCursor, 0x20));
-        sineZ = fixedSine(MAIN_MENU_TRANSFORM_CURSOR_S16(partCursor, 0x22));
-        cosineZ = fixedCosine(MAIN_MENU_TRANSFORM_CURSOR_S16(partCursor, 0x22));
-        matrixSlot->e4 = -sineY;
-        matrixSlot++;
-        partCursor++;
-        dot = (cosineY * cosineZ) / FIXED_MATRIX_ONE;
-        matrixSlot[-1].e0 = dot;
-        matrixSlot[-1].e2 = (cosineY * sineZ) / FIXED_MATRIX_ONE;
-        sineXTimesSineY = (sineX * sineY) / FIXED_MATRIX_ONE;
-        matrixSlot[-1].e6 = ((sineXTimesSineY * cosineZ) / FIXED_MATRIX_ONE) + ((cosineX * -sineZ) / FIXED_MATRIX_ONE);
-        matrixSlot[-1].e8 = ((sineXTimesSineY * sineZ) / FIXED_MATRIX_ONE) + ((cosineX * cosineZ) / FIXED_MATRIX_ONE);
-        matrixSlot[-1].eA = (sineX * cosineY) / FIXED_MATRIX_ONE;
-        cosineXTimesSineY = (cosineX * sineY) / FIXED_MATRIX_ONE;
-        matrixSlot[-1].eC = ((cosineXTimesSineY * cosineZ) / FIXED_MATRIX_ONE) + ((sineX * sineZ) / FIXED_MATRIX_ONE);
-        matrixSlot[-1].eE = ((cosineXTimesSineY * sineZ) / FIXED_MATRIX_ONE) + (((-sineX) * cosineZ) / FIXED_MATRIX_ONE);
-        matrixSlot[-1].e10 = (cosineX * cosineY) / FIXED_MATRIX_ONE;
-    } while (matrixSlot != matrixSlotEnd);
-
-    makeFixedRotationZXY((s16 *)matrixSlot, model->rot.x, model->rot.y, model->rot.z);
-    MAIN_MENU_TRANSFORM_CURSOR_S32(matrixSlot, 0x14) = model->pos.x;
-    MAIN_MENU_TRANSFORM_CURSOR_S32(matrixSlot, 0x18) = model->pos.y;
-    MAIN_MENU_TRANSFORM_CURSOR_S32(matrixSlot, 0x1C) = model->pos.z;
-
-    displayBase = (u8 *)model;
-    localSlot = (MainMenuTransformMatrixSlot *)((u8 *)partMatrices - 0x30);
-    do {
-        displayCursor = (s16 *)displayBase;
-        axisOffset = 0;
-        localMatrix = (s16 *)localSlot;
-        do {
-            rootAxis = (s16 *)matrixSlot;
-            modelCursor = displayCursor;
-            do {
-                sineXTimesSineY = localMatrix[2] * rootAxis[6];
-                cosineXTimesSineY = rootAxis[0] * localMatrix[0];
-                dot = rootAxis[2] * localMatrix[1];
-                dot = sineXTimesSineY + cosineXTimesSineY + dot;
-                rootAxis++;
-                modelCursor++;
-                MAIN_MENU_TRANSFORM_CURSOR_S16(modelCursor, 0x146) = dot / FIXED_MATRIX_ONE;
-            } while (rootAxis != (s16 *)matrixSlot + MAIN_MENU_SCENE_MODEL_MATRIX_AXES);
-            axisOffset += 6;
-            displayCursor += 3;
-            localMatrix += MAIN_MENU_SCENE_MODEL_MATRIX_AXES;
-        } while (axisOffset != 0x12);
-        localSlot++;
-        displayBase += 0x20;
-    } while (localSlot < matrixSlot);
-
-    displayBase = (u8 *)model;
-    partBase = (u8 *)model;
-    partOffset = 0;
-    do {
-        positionCursor = (s16 *)matrixSlot;
-        rootCursor = positionCursor;
-        combinedMatrix = (s16 *)displayBase;
-        do {
-            products.first = (s64)rootCursor[3] * MAIN_MENU_TRANSFORM_CURSOR_S32(partBase, 0x28);
-            products.second = (s64)rootCursor[0] * MAIN_MENU_TRANSFORM_CURSOR_S32(partBase, 0x24);
-            dot = (products.first +
-                   (products.second +
-                    ((s64)rootCursor[6] * MAIN_MENU_TRANSFORM_CURSOR_S32(partBase, 0x2C)))) /
-                  FIXED_MATRIX_ONE;
-            MAIN_MENU_TRANSFORM_CURSOR_S32(combinedMatrix, 0x15C) = dot;
-            dot += MAIN_MENU_TRANSFORM_CURSOR_S32(positionCursor, 0x14);
-            positionCursor += 2;
-            rootCursor++;
-            combinedMatrix = (s16 *)((u8 *)combinedMatrix + 4);
-            MAIN_MENU_TRANSFORM_CURSOR_S32(combinedMatrix, 0x158) = dot;
-        } while (positionCursor != (s16 *)matrixSlot + 6);
-        partOffset += 0x14;
-        displayBase += 0x20;
-        partBase += 0x14;
-    } while (partOffset != 0x118);
-}
-
-#undef MAIN_MENU_TRANSFORM_CURSOR_S16
-#undef MAIN_MENU_TRANSFORM_CURSOR_S32
 #endif
