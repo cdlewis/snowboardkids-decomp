@@ -94,7 +94,7 @@ extern void requestControllerPakRepair(u16);
 extern void initControllerPakDeleteConfirmPrompt(CallbackTask *);
 #endif
 
-// updateControllerPakRaceRecordSaveFlow best match: 97.313% (base_29.c)
+// updateControllerPakRaceRecordSaveFlow best match: 97.524% (base_16.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/controller_pak/controller_pak_race_record_save_flow/updateControllerPakRaceRecordSaveFlow.s")
 
 #ifdef NON_MATCHING
@@ -257,7 +257,7 @@ void updateControllerPakRaceRecordSaveFlow(void)
           temp_v1 = gPlayerInputPressed;
           if (temp_v1 & (STICK_UP | U_JPAD))
           {
-            if (gMenuChoicePromptState != new_var)
+            if (gMenuChoicePromptState != (new_var & 0xFFFFFFFFu))
             {
               gMenuChoicePromptState -= 1;
               enqueueSoundEffect(0x19, 0x32);

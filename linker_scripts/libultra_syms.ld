@@ -6,6 +6,13 @@ osResetType = 0x8000030C;
 osAppNMIBuffer = 0x8000031C;
 
 gRaceSplitscreenSelectCursorAnimState = gRaceSplitscreenSelectCursorTarget;
-D_8010AE52_state = D_8010AE52;
+D_8010AE51 = gCharacterSelectHudState + 0x1;
+D_8010AE52 = gCharacterSelectHudState + 0x2;
+D_8010AE52_state = gCharacterSelectHudState + 0x2;
+D_8010AE58 = gCharacterSelectHudState + 0x8;
+D_8010AE5E = gCharacterSelectHudState + 0xE;
+D_8010AE5F = gCharacterSelectHudState + 0xF;
+D_8010AE64 = gCharacterSelectHudState + 0x14;
 gCharacterSelectCourseCursorStateByte = gCharacterSelectCourseCursorState;
 gControllerPakRaceRecordSaveStatusTransitionStep = gControllerPakRaceRecordSaveStatusTransition;
+gGameTaskSchedulerView = gGameTaskScheduler;

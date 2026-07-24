@@ -1057,7 +1057,7 @@ void updateCourseSelectCourseIconList(CourseSelectIconListActor *arg0) {
 }
 #endif
 
-// initCourseSelectCourseIconList best match: 96.310% (nonmatchings/initCourseSelectCourseIconList-6934502587000073416/base_19.c)
+// initCourseSelectCourseIconList best match: 97.690% (nonmatchings/initCourseSelectCourseIconList-3379532139742180785/base_4.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/course_select/course_select_ui/initCourseSelectCourseIconList.s")
 
 #ifdef NON_MATCHING
@@ -1079,54 +1079,7 @@ void initCourseSelectCourseIconList(CourseSelectIconListActor *arg0) {
         layoutIndex = 2;
     }
 
-    playerIndex = 0;
-    if ((s32)gPlayerCount > 0) {
-        courseUnlocked = D_8010AEA0;
-        yLayout = gCourseSelectIconListYLayout[layoutIndex];
-        xLayout = gCourseSelectIconListXLayout[layoutIndex];
-        do {
-            if (*courseUnlocked != 0) {
-                isCharacterFive = gRacePlayers[playerIndex].selectedCharacterId == 5;
-                hasExtraCourse = 1;
-                if (isCharacterFive) {
-                    hasExtraCourse = 0;
-                }
-            } else {
-                hasExtraCourse = 0;
-            }
-
-            actor->speed[playerIndex] = yLayout[hasExtraCourse];
-            actor->baseX[playerIndex] = yLayout[((playerIndex & 1) * 2) + hasExtraCourse + 2];
-            actor->targetX[playerIndex] = yLayout[((playerIndex & 1) * 2) + 2];
-            actor->targetY[playerIndex] = xLayout[((playerIndex >= 2) * 2) + 1];
-            actor->startY[playerIndex] = xLayout[(playerIndex >= 2) * 2];
-
-            actor->clipTop = 0x78;
-            actor->clipRight = 0xA0;
-            actor->clipBottom = 0x78;
-            if (gPlayerCount == 1) {
-                actor->clipLeft = 0xA0;
-            } else if (gPlayerCount == 2) {
-                actor->clipLeft = 0x7E;
-            } else {
-                actor->clipLeft = 0x88;
-            }
-
-            iconIndex = 0;
-            do {
-                actor->y[playerIndex][iconIndex] = actor->startY[playerIndex];
-                actor->x[playerIndex][iconIndex] =
-                    actor->baseX[playerIndex] + (actor->speed[playerIndex] * iconIndex);
-                iconIndex++;
-            } while (iconIndex < 5);
-            actor->timer[playerIndex] = 0;
-            actor->itemCounts[playerIndex] = 1;
-            actor->state[playerIndex] = 0;
-
-            courseUnlocked++;
-            playerIndex++;
-        } while (playerIndex < (s32)gPlayerCount);
-    }
+    do { playerIndex = 0; if ((s32)gPlayerCount > 0) { courseUnlocked = D_8010AEA0; yLayout = gCourseSelectIconListYLayout[layoutIndex]; xLayout = gCourseSelectIconListXLayout[layoutIndex]; do { if (*courseUnlocked != 0) { isCharacterFive = gRacePlayers[playerIndex].selectedCharacterId == 5; hasExtraCourse = 1; if (isCharacterFive) { hasExtraCourse = 0; } } else { hasExtraCourse = 0; } actor->speed[playerIndex] = yLayout[hasExtraCourse]; actor->baseX[playerIndex] = yLayout[((playerIndex & 1) * 2) + hasExtraCourse + 2]; actor->targetX[playerIndex] = yLayout[((playerIndex & 1) * 2) + 2]; actor->targetY[playerIndex] = xLayout[((playerIndex >= 2) * 2) + 1]; actor->startY[playerIndex] = xLayout[(playerIndex >= 2) * 2]; actor->clipBottom = 0x78; actor->clipRight = 0xA0; actor->clipTop = 0x78; if (gPlayerCount == 1) { actor->clipLeft = 0xA0; } else if (gPlayerCount == 2) { actor->clipLeft = 0x7E; } else { actor->clipLeft = 0x88; } iconIndex = 0; do { actor->y[playerIndex][iconIndex] = actor->startY[playerIndex]; actor->x[playerIndex][iconIndex] = actor->baseX[playerIndex] + (actor->speed[playerIndex] * iconIndex); iconIndex++; } while (iconIndex < 5); actor->state[playerIndex] = 0; actor->itemCounts[playerIndex] = 1; actor->timer[playerIndex] = 0; courseUnlocked++; playerIndex++; } while (playerIndex < (s32)gPlayerCount); } } while (0);
     setCallbackTaskCallback(arg0, updateCourseSelectCourseIconList);
 }
 #endif
@@ -1615,7 +1568,7 @@ void initCourseSelectCourseStats(CourseSelectWidgetActor *arg0) {
     setCallbackTaskCallback(temp_a3, updateCourseSelectCourseStats);
 }
 
-// drawCourseSelectCourseDescription best match: 92.819% (nonmatchings/drawCourseSelectCourseDescription-5787290371232622032/base_71.c)
+// drawCourseSelectCourseDescription best match: 93.701% (nonmatchings/drawCourseSelectCourseDescription-3379532139742180785/base_28.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/course_select/course_select_ui/drawCourseSelectCourseDescription.s")
 
 #ifdef NON_MATCHING
@@ -1660,7 +1613,7 @@ void drawCourseSelectCourseDescription(CourseSelectWidgetActor *arg0) {
     value = digitCount;
     if ((u32)value == 0) {
         s32 courseIndex;
-        volatile s32 padSelected;
+        s32 selectedCourseId;
 
         if ((D_8010AEA8 == 0) && ((value = selection->mode) == 0 || (value == 3) || (value == 9))) {
             value = status->unk2E;
@@ -1671,7 +1624,8 @@ void drawCourseSelectCourseDescription(CourseSelectWidgetActor *arg0) {
             } else if ((courseId = selection->courseId, courseId >= 9) && (courseId < 12)) {
                 value = 5;
             } else {
-                value = (courseId % 3) & 0xFFFFU;
+                value = courseId % 3;
+                value &= 0xFFFFU;
             }
             text = gCourseSelectModeDescriptionText + (value * 0x46);
         } else {
@@ -1691,8 +1645,7 @@ void drawCourseSelectCourseDescription(CourseSelectWidgetActor *arg0) {
                 selectedIndex = arg0->timer;
             }
 
-            splitMode = gRaceSplitscreenMode;
-            if ((splitMode == 3) && ((courseId = selection->courseId) <= 8)) {
+            if ((gRaceSplitscreenMode == 3) && ((courseId = selection->courseId) <= 8)) {
                 text = gCourseSelectBoardLevelByCourseText + ((courseId % 3) * 0x30);
             } else if (((courseId = selection->courseId) >= 9) && (courseId < 12)) {
                 text = gCourseSelectExtraCourseBoardLevelText + ((gCourseSelectExtraCourseIds[selectedIndex] % 3) * 0x60);
@@ -1712,14 +1665,16 @@ void drawCourseSelectCourseDescription(CourseSelectWidgetActor *arg0) {
                 drawMenuGlyphScript((s16)(arg0->x + 0x48), (s16)(arg0->y + 0x10), (u8 *)buffer, 1, arg0->spriteIndex, 0);
             }
 
-            if (gCourseSelectModeSelection == 0) {
+            splitMode = gCourseSelectModeSelection;
+            if (splitMode == 0) {
                 buffer[0] = -4;
                 buffer[1] = 6;
                 if ((selectedIndex >= 2) || (selection->courseId >= 9)) {
-                    if (selection->courseId >= 9) {
+                    selectedCourseId = selection->courseId;
+                    if (selectedCourseId >= 9) {
                         courseIndex = gCourseSelectExtraCourseIds[selectedIndex];
                     } else {
-                        courseIndex = ((selection->courseId % 3) + (selectedIndex * 3)) - 3;
+                        courseIndex = ((selectedCourseId % 3) + (selectedIndex * 3)) - 3;
                     }
 
                     price = gCourseUnlockPrices[courseIndex];
@@ -2238,12 +2193,13 @@ void updateCourseSelectExtraCourseIconList(CourseSelectWidgetActor *arg0) {
 }
 #endif
 
-// initCourseSelectExtraCourseIconList best match: 98.393% (nonmatchings/initCourseSelectExtraCourseIconList-2663524570355072948/base_5.c)
+// initCourseSelectExtraCourseIconList best match: 99.018% (nonmatchings/initCourseSelectExtraCourseIconList-1645024839200431810/base_9.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/course_select/course_select_ui/initCourseSelectExtraCourseIconList.s")
 
 #ifdef NON_MATCHING
 void initCourseSelectExtraCourseIconList(CourseSelectWidgetActor *arg0) {
     CourseSelectExtraCourseIconListActor *actor;
+    u8 playerCount;
     s16 *xLayout;
     s16 *yLayout;
     s32 layoutIndex;
@@ -2272,7 +2228,8 @@ void initCourseSelectExtraCourseIconList(CourseSelectWidgetActor *arg0) {
             actor->itemCounts[playerIndex] = 0;
             actor->alpha[playerIndex] = 0x100;
 
-            if (gPlayerCount == 1) {
+            playerCount = gPlayerCount;
+            if (playerCount == 1) {
                 iconXOffset = 8;
             } else {
                 iconXOffset = 4;
@@ -2627,7 +2584,7 @@ void drawCourseSelectCompletePanels(CourseSelectPlayerPanelsActor *actor) {
     }
 }
 
-// updateCourseSelectCompletePanels best match: 99.468% (nonmatchings/updateCourseSelectCompletePanels-6887713755923057488/base_1.c)
+// updateCourseSelectCompletePanels best match: 99.574% (nonmatchings/updateCourseSelectCompletePanels-1645024839200431810/base_3.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/course_select/course_select_ui/updateCourseSelectCompletePanels.s")
 
 #ifdef NON_MATCHING
@@ -2667,7 +2624,7 @@ void updateCourseSelectCompletePanels(CourseSelectWidgetActor *arg0) {
                         base->playerPanelFadeAlpha[i] = 0x100;
                     }
                 }
-                playerState = gRacePlayers[i].menuState;
+                playerState = ((((((gRacePlayers[i].menuState & 0xFFu) & 0xFFu) & 0xFFu) & 0xFFu) & 0xFFu) & 0xFFu) & 0xFFu;
                 if (playerState == 1) {
                     base->playerPanelFadeAlpha[i] = 0;
                 }

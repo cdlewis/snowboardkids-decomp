@@ -43,6 +43,7 @@ extern GameTask *gCurrentGameTask;
 extern GameTask gGameTaskPool[GAME_TASK_COUNT];
 extern u8 gGameTaskCount;
 extern GameTaskScheduler gGameTaskScheduler;
+extern GameTaskScheduler gGameTaskSchedulerView;
 extern GameTask *gActiveGameTaskListHead;
 extern GameTask *gFreeGameTaskStack[];
 extern u8 gPendingFramebufferSwapCount;
@@ -336,24 +337,18 @@ return_one:
     return 1;
 }
 
-// allocateGameTask best match: 99.818% (nonmatchings/allocateGameTask-8239461464121803931/base_13.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/engine/game_task_scheduler/allocateGameTask.s")
-
-#ifdef NON_MATCHING
 GameTask *allocateGameTask(s32 priority) {
     GameTask *task;
     GameTask *next;
     GameTask *prev;
-    GameTaskScheduler *scheduler;
+    volatile GameTaskScheduler *sentinel;
     u8 *clear;
     s32 i;
-    GameTask **head;
 
     if (gGameTaskCount >= GAME_TASK_COUNT) {
         return NULL;
     }
 
-    scheduler = &gGameTaskScheduler;
     task = gFreeGameTaskStack[gGameTaskCount];
     i = 0;
     clear = (u8 *)task;
@@ -363,10 +358,10 @@ GameTask *allocateGameTask(s32 priority) {
     } while (i != sizeof(GameTask));
 
     prev = (GameTask *)&gGameTaskScheduler;
+    sentinel = &gGameTaskSchedulerView;
     gGameTaskCount++;
-    head = &scheduler->activeTask;
-    if (gGameTaskScheduler.activeTask != NULL) {
-        next = *head;
+    if (prev->next != NULL) {
+        next = sentinel->activeTask;
         do {
             if (next->priority < priority) {
                 break;
@@ -385,7 +380,6 @@ GameTask *allocateGameTask(s32 priority) {
     prev->next = task;
     return task;
 }
-#endif
 
 void releaseGameTaskById(s32 taskId) {
     GameTask *task;
