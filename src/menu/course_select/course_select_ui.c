@@ -798,215 +798,223 @@ void drawCourseSelectCourseIconList(CourseSelectIconListActor *iconList) {
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/course_select/course_select_ui/updateCourseSelectCourseIconList.s")
 
 #ifdef NON_MATCHING
-void updateCourseSelectCourseIconList(CourseSelectIconListActor *arg0) {
-    CourseSelectIconListActor *base;
-    CourseSelectIconListActor *actor;
-    CourseSelectIconListActor *countBase;
-    CourseSelectIconListActor *stateActor;
+void updateCourseSelectCourseIconList(CourseSelectIconListActor *iconList) {
+    enum {
+        COURSE_ICON_LIST_ENTER,
+        COURSE_ICON_LIST_IDLE,
+        COURSE_ICON_LIST_HIDE_UNSELECTED,
+        COURSE_ICON_LIST_CENTER_SELECTED,
+        COURSE_ICON_LIST_SELECTED,
+        COURSE_ICON_LIST_UNCENTER_SELECTED,
+        COURSE_ICON_LIST_SHOW_UNSELECTED,
+        COURSE_ICON_LIST_EXIT,
+        COURSE_ICON_LIST_EXIT_COMPLETE,
+        COURSE_ICON_LIST_SCREEN_EXIT,
+        COURSE_ICON_LIST_SCREEN_EXIT_COMPLETE,
+        COURSE_ICON_LIST_SCREEN_ENTER,
+        COURSE_ICON_LIST_SCREEN_ENTER_COMPLETE,
+        COURSE_ICON_LIST_CLOSE
+    };
     s32 playerIndex;
-    s32 i;
-    CourseSelectIconListActor * volatile saved;
-    s32 movingCount;
-    void (*initOut)(void *);
-    void (*initBackdrop)(void *);
-    volatile u8 maxItems;
+    s32 iconIndex;
+    s32 movingIconCount;
+    s32 selectedColumn;
+    u8 maxItemCount;
 
-    saved = (base = arg0);
     playerIndex = 0;
     if ((s32)gPlayerCount > 0) {
-        actor = arg0;
         do {
+            selectedColumn = D_8010AE64[playerIndex];
+
             if (gCurrentGameTask->screenState == 1) {
-                actor->state[0] = 9;
+                iconList->state[playerIndex] = COURSE_ICON_LIST_SCREEN_EXIT;
             }
-            if ((gCurrentGameTask->screenState == 3) && (actor->state[0] < 0xB)) {
-                actor->state[0] = 0xB;
+            if ((gCurrentGameTask->screenState == 3) &&
+                (iconList->state[playerIndex] < COURSE_ICON_LIST_SCREEN_ENTER)) {
+                iconList->state[playerIndex] = COURSE_ICON_LIST_SCREEN_ENTER;
             }
             if (gCurrentGameTask->screenState == 9) {
-                actor->state[0] = 0xD;
+                iconList->state[playerIndex] = COURSE_ICON_LIST_CLOSE;
             }
-            if ((gMenuFlowState != 0) && (actor->state[0] < 4)) {
-                actor->state[0] = 4;
+            if ((gMenuFlowState != 0) && (iconList->state[playerIndex] < COURSE_ICON_LIST_SELECTED)) {
+                iconList->state[playerIndex] = COURSE_ICON_LIST_SELECTED;
             }
 
-            switch (actor->state[0]) {
-            case 0:
-                movingCount = (i = 0);
-                if ((s32)actor->itemCounts[0] > 0) {
-                    countBase = saved;
+            switch (iconList->state[playerIndex]) {
+            case COURSE_ICON_LIST_ENTER:
+                movingIconCount = 0;
+                iconIndex = 0;
+                if ((s32)iconList->itemCounts[playerIndex] > 0) {
                     do {
-                        if ((base->y[playerIndex][i] + 1) <= base->targetY[playerIndex]) {
-                            base->y[playerIndex][i] += 0x10;
-                            movingCount++;
-                            if (base->y[playerIndex][i] >= base->targetY[playerIndex]) {
-                                base->y[playerIndex][i] = base->targetY[playerIndex];
+                        if (iconList->y[playerIndex][iconIndex] < iconList->targetY[playerIndex]) {
+                            iconList->y[playerIndex][iconIndex] += 0x10;
+                            movingIconCount++;
+                            if (iconList->y[playerIndex][iconIndex] >= iconList->targetY[playerIndex]) {
+                                iconList->y[playerIndex][iconIndex] = iconList->targetY[playerIndex];
                             }
                         }
-                        i++;
-                    } while (i < (s32)countBase->itemCounts[playerIndex]);
+                        iconIndex++;
+                    } while (iconIndex < (s32)iconList->itemCounts[playerIndex]);
                 }
-                actor->timer[0]++;
-                if ((gRacePlayers[playerIndex].state == 5) || (D_8010AEA0[playerIndex] == 0) ||
+                iconList->timer[playerIndex]++;
+                if ((gRacePlayers[playerIndex].selectedCharacterId == 5) || (D_8010AEA0[playerIndex] == 0) ||
                     (gCourseSelectModeSelection == 1)) {
-                    maxItems = 4;
+                    maxItemCount = 4;
                 } else {
-                    maxItems = 5;
+                    maxItemCount = 5;
                 }
-                if (!(actor->timer[0] & 1) && ((s32)actor->itemCounts[0] < maxItems)) {
-                    actor->itemCounts[0]++;
+                if (!(iconList->timer[playerIndex] & 1) &&
+                    ((s32)iconList->itemCounts[playerIndex] < maxItemCount)) {
+                    iconList->itemCounts[playerIndex]++;
                 }
-                if (movingCount == 0) {
-                    actor->state[0] = 1;
+                if (movingIconCount == 0) {
+                    iconList->state[playerIndex] = COURSE_ICON_LIST_IDLE;
                     if (gPlayerCount == 1) {
-                        initOut = initCourseSelectPreviewModelOut;
-                        initBackdrop = initCourseSelectCourseListBackdrop;
                         D_8010ADE0 = createCallbackTask(initCourseSelectPreviewModelIn, 0, 0x63);
-                        D_8010ADE4 = createCallbackTask(initOut, 0, 0x62);
-                        createCallbackTask(initBackdrop, 0, 0x60);
+                        D_8010ADE4 = createCallbackTask(initCourseSelectPreviewModelOut, 0, 0x62);
+                        createCallbackTask(initCourseSelectCourseListBackdrop, 0, 0x60);
                     } else if (playerIndex == 0) {
-                        initOut = initCourseSelectCourseCursors;
                         createCallbackTask(initCourseSelectCourseStats, 0, 0x62);
-                        gActiveMenuTask = createCallbackTask(initOut, 0, 0x64);
+                        gActiveMenuTask = createCallbackTask(initCourseSelectCourseCursors, 0, 0x64);
                     }
                 }
                 break;
-            case 1:
-                if (*(&gMenuTransitionState + (playerIndex * sizeof(CourseSelectRacePlayer))) == 1) {
-                    actor->state[0] = 2;
+            case COURSE_ICON_LIST_IDLE:
+                if (gRacePlayers[playerIndex].menuState == 1) {
+                    iconList->state[playerIndex] = COURSE_ICON_LIST_HIDE_UNSELECTED;
                 }
                 break;
-            case 2:
-                i = 0;
+            case COURSE_ICON_LIST_HIDE_UNSELECTED:
+                iconIndex = 0;
                 if ((s32)D_8010AEA4[playerIndex] >= 9) {
-                    if ((s32)actor->itemCounts[0] > 0) {
-                        countBase = saved;
+                    if ((s32)iconList->itemCounts[playerIndex] > 0) {
                         do {
-                            if ((i != D_8010AE64[playerIndex]) != 0) {
-                                base->y[playerIndex][i] -= 0x20;
+                            if (iconIndex != selectedColumn) {
+                                iconList->y[playerIndex][iconIndex] -= 0x20;
                             }
-                            i++;
-                        } while (i < (s32)countBase->itemCounts[playerIndex]);
+                            iconIndex++;
+                        } while (iconIndex < (s32)iconList->itemCounts[playerIndex]);
                     }
-                    if (D_8010AE64[playerIndex] != 0) {
-                        if (base->startY[playerIndex] >= base->y[playerIndex][0]) {
-                            actor->state[0] = 3;
+                    if (selectedColumn != 0) {
+                        if (iconList->startY[playerIndex] >= iconList->y[playerIndex][0]) {
+                            iconList->state[playerIndex] = COURSE_ICON_LIST_CENTER_SELECTED;
                         }
-                    } else if (base->startY[playerIndex] >= base->y[playerIndex][1]) {
-                        actor->state[0] = 3;
+                    } else if (iconList->startY[playerIndex] >= iconList->y[playerIndex][1]) {
+                        iconList->state[playerIndex] = COURSE_ICON_LIST_CENTER_SELECTED;
                     }
-                    if (actor->state[0] == 3) {
-                        if (base->x[playerIndex][D_8010AE64[playerIndex]] < base->targetX[playerIndex]) {
-                            base->direction[playerIndex] = 1;
+                    if (iconList->state[playerIndex] == COURSE_ICON_LIST_CENTER_SELECTED) {
+                        if (iconList->x[playerIndex][selectedColumn] < iconList->targetX[playerIndex]) {
+                            iconList->direction[playerIndex] = 1;
                         } else {
-                            base->direction[playerIndex] = -1;
+                            iconList->direction[playerIndex] = -1;
                         }
                     }
                 }
                 break;
-            case 3:
-                base->x[playerIndex][D_8010AE64[playerIndex]] += actor->speed[0] * base->direction[playerIndex];
-                if (((base->direction[playerIndex] == 1) &&
-                     (base->x[playerIndex][D_8010AE64[playerIndex]] >= base->targetX[playerIndex])) ||
-                    ((base->direction[playerIndex] == -1) &&
-                     (base->targetX[playerIndex] >= base->x[playerIndex][D_8010AE64[playerIndex]]))) {
-                    base->x[playerIndex][D_8010AE64[playerIndex]] = base->targetX[playerIndex];
-                    actor->state[0] = 4;
+            case COURSE_ICON_LIST_CENTER_SELECTED:
+                iconList->x[playerIndex][selectedColumn] +=
+                    iconList->speed[playerIndex] * iconList->direction[playerIndex];
+                if (((iconList->direction[playerIndex] == 1) &&
+                     (iconList->x[playerIndex][selectedColumn] >= iconList->targetX[playerIndex])) ||
+                    ((iconList->direction[playerIndex] == -1) &&
+                     (iconList->targetX[playerIndex] >= iconList->x[playerIndex][selectedColumn]))) {
+                    iconList->x[playerIndex][selectedColumn] = iconList->targetX[playerIndex];
+                    iconList->state[playerIndex] = COURSE_ICON_LIST_SELECTED;
                     gMenuChoicePromptState[playerIndex] = 1;
                 }
                 break;
-            case 4:
+            case COURSE_ICON_LIST_SELECTED:
                 if ((gMenuFlowState == 0) && (gMenuChoicePromptState[playerIndex] == 0)) {
-                    actor->state[0] = 5;
+                    iconList->state[playerIndex] = COURSE_ICON_LIST_UNCENTER_SELECTED;
                 }
-                if (gRacePlayers[playerIndex].pad6[2] == 3) {
-                    stateActor = actor;
-                    stateActor->state[0] = 7;
-                }
-                break;
-            case 5:
-                base->x[playerIndex][D_8010AE64[playerIndex]] += actor->speed[0] * base->direction[playerIndex] * -1;
-                if (((base->direction[playerIndex] == 1) &&
-                     (((D_8010AE64[playerIndex] * actor->speed[0]) + base->baseX[playerIndex]) >=
-                      base->x[playerIndex][D_8010AE64[playerIndex]])) ||
-                    ((base->direction[playerIndex] == -1) &&
-                     (base->x[playerIndex][D_8010AE64[playerIndex]] >=
-                      (base->baseX[playerIndex] + (actor->speed[0] * D_8010AE64[playerIndex]))))) {
-                    base->x[playerIndex][D_8010AE64[playerIndex]] =
-                        (D_8010AE64[playerIndex] * actor->speed[0]) + base->baseX[playerIndex];
-                    actor->state[0] = 6;
+                if (gRacePlayers[playerIndex].menuState == 3) {
+                    iconList->state[playerIndex] = COURSE_ICON_LIST_EXIT;
                 }
                 break;
-            case 6:
-                i = 0;
-                if ((s32)actor->itemCounts[0] > 0) {
-                    countBase = saved;
+            case COURSE_ICON_LIST_UNCENTER_SELECTED:
+                iconList->x[playerIndex][selectedColumn] -=
+                    iconList->speed[playerIndex] * iconList->direction[playerIndex];
+                if (((iconList->direction[playerIndex] == 1) &&
+                     (((selectedColumn * iconList->speed[playerIndex]) + iconList->baseX[playerIndex]) >=
+                      iconList->x[playerIndex][selectedColumn])) ||
+                    ((iconList->direction[playerIndex] == -1) &&
+                     (iconList->x[playerIndex][selectedColumn] >=
+                      (iconList->baseX[playerIndex] + (iconList->speed[playerIndex] * selectedColumn))))) {
+                    iconList->x[playerIndex][selectedColumn] =
+                        (selectedColumn * iconList->speed[playerIndex]) + iconList->baseX[playerIndex];
+                    iconList->state[playerIndex] = COURSE_ICON_LIST_SHOW_UNSELECTED;
+                }
+                break;
+            case COURSE_ICON_LIST_SHOW_UNSELECTED:
+                iconIndex = 0;
+                if ((s32)iconList->itemCounts[playerIndex] > 0) {
                     do {
-                        if ((i != D_8010AE64[playerIndex]) != 0) {
-                            base->y[playerIndex][i] += 0x20;
+                        if (iconIndex != selectedColumn) {
+                            iconList->y[playerIndex][iconIndex] += 0x20;
                         }
-                        i++;
-                    } while (i < (s32)countBase->itemCounts[playerIndex]);
+                        iconIndex++;
+                    } while (iconIndex < (s32)iconList->itemCounts[playerIndex]);
                 }
-                if (D_8010AE64[playerIndex] != 0) {
-                    if (base->y[playerIndex][0] >= base->targetY[playerIndex]) {
-                        actor->state[0] = 1;
+                if (selectedColumn != 0) {
+                    if (iconList->y[playerIndex][0] >= iconList->targetY[playerIndex]) {
+                        iconList->state[playerIndex] = COURSE_ICON_LIST_IDLE;
                     }
-                } else if (base->y[playerIndex][1] >= base->targetY[playerIndex]) {
-                    actor->state[0] = 1;
+                } else if (iconList->y[playerIndex][1] >= iconList->targetY[playerIndex]) {
+                    iconList->state[playerIndex] = COURSE_ICON_LIST_IDLE;
                 }
-                if (actor->state[0] == 1) {
-                    *(&gMenuTransitionState + (playerIndex * sizeof(CourseSelectRacePlayer))) = 0;
+                if (iconList->state[playerIndex] == COURSE_ICON_LIST_IDLE) {
+                    gRacePlayers[playerIndex].menuState = 0;
                 }
                 break;
-            case 7:
+            case COURSE_ICON_LIST_EXIT:
                 if (gMenuFlowState != 0) {
-                    i = 0;
-                    if ((s32)actor->itemCounts[0] > 0) {
+                    iconIndex = 0;
+                    if ((s32)iconList->itemCounts[playerIndex] > 0) {
                         do {
-                            base->y[playerIndex][i] -= 0x20;
-                            i++;
-                        } while (i < (s32)actor->itemCounts[0]);
+                            iconList->y[playerIndex][iconIndex] -= 0x20;
+                            iconIndex++;
+                        } while (iconIndex < (s32)iconList->itemCounts[playerIndex]);
                     }
                 } else {
-                    base->y[playerIndex][D_8010AE64[playerIndex]] -= 0x20;
+                    iconList->y[playerIndex][selectedColumn] -= 0x20;
                 }
-                if (base->startY[playerIndex] >= base->y[playerIndex][D_8010AE64[playerIndex]]) {
-                    actor->state[0] = 8;
-                }
-                break;
-            case 9:
-                base->y[playerIndex][D_8010AE64[playerIndex]] -= 0x20;
-                if (base->startY[playerIndex] >= base->y[playerIndex][D_8010AE64[playerIndex]]) {
-                    actor->state[0] = 0xA;
+                if (iconList->startY[playerIndex] >= iconList->y[playerIndex][selectedColumn]) {
+                    iconList->state[playerIndex] = COURSE_ICON_LIST_EXIT_COMPLETE;
                 }
                 break;
-            case 11:
-                base->y[playerIndex][D_8010AE64[playerIndex]] += 0x20;
-                if (base->y[playerIndex][D_8010AE64[playerIndex]] >= base->targetY[playerIndex]) {
-                    base->y[playerIndex][D_8010AE64[playerIndex]] = base->targetY[playerIndex];
-                    actor->state[0] = 0xC;
+            case COURSE_ICON_LIST_SCREEN_EXIT:
+                iconList->y[playerIndex][selectedColumn] -= 0x20;
+                if (iconList->startY[playerIndex] >= iconList->y[playerIndex][selectedColumn]) {
+                    iconList->state[playerIndex] = COURSE_ICON_LIST_SCREEN_EXIT_COMPLETE;
                 }
                 break;
-            case 12:
+            case COURSE_ICON_LIST_SCREEN_ENTER:
+                iconList->y[playerIndex][selectedColumn] += 0x20;
+                if (iconList->y[playerIndex][selectedColumn] >= iconList->targetY[playerIndex]) {
+                    iconList->y[playerIndex][selectedColumn] = iconList->targetY[playerIndex];
+                    iconList->state[playerIndex] = COURSE_ICON_LIST_SCREEN_ENTER_COMPLETE;
+                }
+                break;
+            case COURSE_ICON_LIST_SCREEN_ENTER_COMPLETE:
                 if (gCurrentGameTask->screenState == 4) {
-                    actor->state[0] = 4;
+                    iconList->state[playerIndex] = COURSE_ICON_LIST_SELECTED;
                 }
                 break;
-            case 13:
+            case COURSE_ICON_LIST_CLOSE:
                 break;
             }
             playerIndex++;
-            actor = (CourseSelectIconListActor *)((u8 *)actor + 1);
         } while (playerIndex < (s32)gPlayerCount);
     }
 
-    if ((base->state[0] == 8) || (base->state[0] == 0xD)) {
-        removeCallbackTask(base);
+    if ((iconList->state[0] == COURSE_ICON_LIST_EXIT_COMPLETE) ||
+        (iconList->state[0] == COURSE_ICON_LIST_CLOSE)) {
+        removeCallbackTask(iconList);
         finishCourseSelectUiTask(3);
         return;
     }
     addRenderCallback(&gMenuRenderCallbackList, (void (*)(CourseSelectWidgetActor *))drawCourseSelectCourseIconList,
-                      (CourseSelectWidgetActor *)base);
+                      (CourseSelectWidgetActor *)iconList);
 }
 #endif
 
