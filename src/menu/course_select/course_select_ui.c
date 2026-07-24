@@ -147,7 +147,7 @@ typedef union {
     u8 bytes[0x80];
 } CourseSelectExtraCourseIconListActor;
 
-typedef struct {
+struct CourseSelectAnimatedActor {
     /* 0x000 */ u8 pad0[0x18];
     /* 0x018 */ s32 matrix;
     /* 0x01C */ FixedTransform sourceTransform;
@@ -157,7 +157,7 @@ typedef struct {
     /* 0x0F4 */ s16 targetCourse[4];
     /* 0x0FC */ u8 timer[4];
     /* 0x100 */ u8 state[4];
-} CourseSelectAnimatedActor;
+};
 
 typedef struct {
     /* 0x000 */ u8 pad0[0x100];
@@ -526,200 +526,144 @@ void drawCourseSelectPreviewModelClose(CourseSelectCoursePreviewActor *arg0) {
     }
 }
 
-// updateCourseSelectPreviewModelOut best match: 98.730% (nonmatchings/updateCourseSelectPreviewModelOut-1219509448159986855/base_25.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/menu/course_select/course_select_ui/updateCourseSelectPreviewModelOut.s")
-
-#ifdef NON_MATCHING
-void updateCourseSelectPreviewModelOut(void *arg0)
+void updateCourseSelectPreviewModelOut(CourseSelectAnimatedActor *arg0)
 {
-  CourseSelectAnimatedActor *actor;
-  CourseSelectStatusOverlay *courseSelectStatus;
-  CourseSelectRacePlayer *player;
-  Vec3i rotatedPosition;
-  s32 i;
-  s32 slideStep;
-  s32 angleIndex;
-  s32 requestedState;
-  s32 state;
-  actor = arg0;
-  courseSelectStatus = (CourseSelectStatusOverlay *) gCourseSelectStatus;
-  i = 0;
- if (((s32) gPlayerCount) > 0) { angleIndex = 0; do { requestedState = courseSelectStatus->outgoingPreviewModelState[i]; state = actor->state[i]; if (requestedState != state) { actor->state[i] = requestedState;
-        actor->timer[i] = courseSelectStatus->outgoingPreviewModelTimer[i];
-        actor->angle[i] = *((u16 *) (&courseSelectStatus->outgoingPreviewModelAngleBytes[angleIndex]));
-        courseSelectStatus->outgoingPreviewModelTimer[i] = 0;
-        *((u16 *) (&courseSelectStatus->outgoingPreviewModelAngleBytes[angleIndex])) = 0;
-        state = actor->state[i];
-      }
-      if ((gMenuFlowState != 0) && (state < 5))
-      {
-        actor->state[i] = 4;
-        actor->angle[i] = 0;
-        state = actor->state[i];
-      }
-      switch (state)
-      {
+    CourseSelectAnimatedActor *actor;
+    Vec3i rotatedPosition;
+    s32 i;
+    s32 slideStep;
+
+    actor = arg0;
+
+    for (i = 0; i < (s32)gPlayerCount; i++) {
+        if (((CourseSelectStatusOverlay *)gCourseSelectStatus)->outgoingPreviewModelState[i] != actor->state[i]) {
+            actor->state[i] = ((CourseSelectStatusOverlay *)gCourseSelectStatus)->outgoingPreviewModelState[i];
+            actor->timer[i] = ((CourseSelectStatusOverlay *)gCourseSelectStatus)->outgoingPreviewModelTimer[i];
+            actor->angle[i] = ((CourseSelectStatusOverlay *)gCourseSelectStatus)->outgoingPreviewModelAngle[i];
+            ((CourseSelectStatusOverlay *)gCourseSelectStatus)->outgoingPreviewModelTimer[i] = 0;
+            ((CourseSelectStatusOverlay *)gCourseSelectStatus)->outgoingPreviewModelAngle[i] = 0;
+        }
+
+        if ((gMenuFlowState != 0) && (actor->state[i] < 5)) {
+            actor->state[i] = 4;
+            actor->angle[i] = 0;
+        }
+
+        switch (actor->state[i]) {
         case 0:
-          break;
-
+            break;
         case 1:
-          if (D_8010AECC[i] & 1)
-        {
-          player = &gRacePlayers[i];
-          if (D_8010AEE8[i] < 0)
-          {
-            if (((s32) player->characterId) >= 9)
-            {
-              actor->targetCourse[i] = 2;
+            if (D_8010AECC[i] & 1) {
+                if (D_8010AEE8[i] < 0) {
+                    if ((s32)gRacePlayers[i].characterId >= 9) {
+                        actor->targetCourse[i] = 2;
+                    } else {
+                        actor->targetCourse[i] = (gRacePlayers[i].menuSelection % 3) - 1;
+                    }
+                } else {
+                    actor->targetCourse[i] = (gRacePlayers[i].menuSelection % 3) + 1;
+                }
+                if (actor->targetCourse[i] < 0) {
+                    actor->targetCourse[i] = 2;
+                }
+                if (actor->targetCourse[i] == 3) {
+                    actor->targetCourse[i] = D_8010AEFB[i * 4];
+                }
+                if (actor->targetCourse[i] == 8) {
+                    actor->targetCourse[i] = 2;
+                }
+                if (D_8010AECC[i] == 1) {
+                    actor->vecs[i].y = -D_8010AEE8[i];
+                }
+                actor->state[i] = 2;
+            } else if (gCurrentGameTask->screenState == 9) {
+                actor->state[i] = 8;
             }
-            else
-            {
-              actor->targetCourse[i] = (player->menuSelection % 3) - 1;
-            }
-          }
-          else
-          {
-            actor->targetCourse[i] = (player->menuSelection % 3) + 1;
-          }
-          if (actor->targetCourse[i] < 0)
-          {
-            actor->targetCourse[i] = 2;
-          }
-          if (actor->targetCourse[i] == 3)
-          {
-            actor->targetCourse[i] = D_8010AEFB[i * 4];
-          }
-          if (actor->targetCourse[i] == 8)
-          {
-            actor->targetCourse[i] = 2;
-          }
-          if (D_8010AECC[i] == 1)
-          {
-            actor->vecs[i].y = -D_8010AEE8[i];
-          }
-          actor->state[i] = 2;
-          state = 2;
-        }
-        else
-          if (gCurrentGameTask->screenState == 9)
-        {
-          actor->state[i] = 8;
-          state = 8;
-        }
-          break;
-
+            break;
         case 2:
-          slideStep = 0x200000;
-          if (D_8010AEE8[i] < 0)
-        {
-          slideStep = -0x200000;
-        }
-          actor->vecs[i].y += slideStep;
-          D_8010AEE8[i] -= slideStep;
-          if (D_8010AEE8[i] == 0)
-        {
-          actor->state[i] = 1;
-          D_8010AECC[i]++;
-          D_8010AECC[i] &= 3;
-        }
-          state = actor->state[i];
-          break;
-
+            slideStep = 0x200000;
+            if (D_8010AEE8[i] < 0) {
+                slideStep = -0x200000;
+            }
+            actor->vecs[i].y += slideStep;
+            D_8010AEE8[i] -= slideStep;
+            if (D_8010AEE8[i] == 0) {
+                actor->state[i] = 1;
+                D_8010AECC[i]++;
+                D_8010AECC[i] &= 3;
+            }
+            break;
         case 3:
-          actor->timer[i]++;
-          if (D_800EC9C0 != 0)
-        {
-          D_800EC9C0 = 1;
-        }
-          if (actor->timer[i] == 0xF)
-        {
-          actor->timer[i] = 0;
-          actor->state[i] = 4;
-          if (gPlayerCount == 1)
-          {
-            gRacePlayers[0].menuState = 3;
-            D_800EC9C0 = 0x10;
-          }
-        }
-          state = actor->state[i];
-          break;
-
+            actor->timer[i]++;
+            if (D_800EC9C0 != 0) {
+                D_800EC9C0 = 1;
+            }
+            if (actor->timer[i] == 0xF) {
+                actor->timer[i] = 0;
+                actor->state[i] = 4;
+                if (gPlayerCount == 1) {
+                    gRacePlayers[0].menuState = 3;
+                    D_800EC9C0 = 0x10;
+                }
+            }
+            break;
         case 4:
-          if (gRacePlayers[i].menuState == 3)
-        {
-          actor->state[i] = 5;
-          state = 5;
-        }
-          break;
-
+            if (gRacePlayers[i].menuState == 3) {
+                actor->state[i] = 5;
+            }
+            break;
         case 5:
-          actor->vecs[i].x += 0x200000;
-          if (actor->vecs[i].x == 0x1000000)
-        {
-          actor->state[i] = 6;
-        }
-          state = actor->state[i];
-          break;
-
+            actor->vecs[i].x += 0x200000;
+            if (actor->vecs[i].x == 0x1000000) {
+                actor->state[i] = 6;
+            }
+            break;
         case 6:
-          gRacePlayers[i].menuState = 4;
-          if ((i == 2) && (gPlayerCount == 3))
-        {
-          gRacePlayers[3].menuState = 4;
-        }
-          state = actor->state[i];
-          break;
-
+            gRacePlayers[i].menuState = 4;
+            if ((i == 2) && (gPlayerCount == 3)) {
+                gRacePlayers[3].menuState = 4;
+            }
+            break;
         case 7:
-          if (gRacePlayers[i].menuState == 3)
-        {
-          actor->state[i] = 5;
-          state = 5;
-        }
-        else
-          if (gCurrentGameTask->screenState == 9)
-        {
-          actor->state[i] = 8;
-          state = 8;
-        }
-          break;
-
+            if (gRacePlayers[i].menuState == 3) {
+                actor->state[i] = 5;
+            } else if (gCurrentGameTask->screenState == 9) {
+                actor->state[i] = 8;
+            }
+            break;
         case 8:
-          actor->vecs[i].x += 0x200000;
-          if (actor->vecs[i].x == 0xC00000)
-        {
-          actor->state[i] = 9;
-          gCurrentGameTask->screenState = 0xB;
-        }
-          break;
-
+            actor->vecs[i].x += 0x200000;
+            if (actor->vecs[i].x == 0xC00000) {
+                actor->state[i] = 9;
+                gCurrentGameTask->screenState = 0xB;
+            }
+            break;
         case 9:
-          break;
+            break;
+        }
 
-      }
+        if ((s32)actor->state[i] < 3) {
+            actor->angle[i] += 0x20;
+            actor->angle[i] &= 0xFFF;
+        }
 
-      state = actor->state[i];
-      if (((s32) state) < 3)
-      {
-        actor->angle[i] += 0x20;
-        actor->angle[i] &= 0xFFF;
-      }
-      makeFixedRotationY(actor->playerTransforms[i].rotation, (s16) actor->angle[i]), transformVec3iByFixedMatrix(actor->playerTransforms[i].rotation, &actor->vecs[i], &rotatedPosition), actor->playerTransforms[i].translation.x = rotatedPosition.x, actor->playerTransforms[i].translation.y = rotatedPosition.y, actor->playerTransforms[i].translation.z = rotatedPosition.z, courseSelectStatus->outgoingPreviewModelState[i] = actor->state[i], i++, angleIndex += 2;
+        makeFixedRotationY(actor->playerTransforms[i].rotation, (s16)actor->angle[i]);
+        transformVec3iByFixedMatrix(actor->playerTransforms[i].rotation, &actor->vecs[i], &rotatedPosition);
+        actor->playerTransforms[i].translation.x = rotatedPosition.x;
+        actor->playerTransforms[i].translation.y = rotatedPosition.y;
+        actor->playerTransforms[i].translation.z = rotatedPosition.z;
+        ((CourseSelectStatusOverlay *)gCourseSelectStatus)->outgoingPreviewModelState[i] = actor->state[i];
     }
-    while (i < ((s32) gPlayerCount));
-  }
-  if ((gRacePlayers[0].menuState == 4) || (actor->state[0] == 9))
-  {
-    removeCallbackTask(actor);
-    finishCourseSelectUiTask(2);
-    D_8010ADE4 = 0;
-  }
-  else
-  {
-    addRenderCallback(&gModelRenderCallbackList, drawCourseSelectPreviewModelClose, actor);
-  }
+
+    if ((gRacePlayers[0].menuState == 4) || (actor->state[0] == 9)) {
+        removeCallbackTask(actor);
+        finishCourseSelectUiTask(2);
+        D_8010ADE4 = 0;
+    } else {
+        addRenderCallback(&gModelRenderCallbackList, (void (*)(CourseSelectWidgetActor *))drawCourseSelectPreviewModelClose,
+                          (CourseSelectWidgetActor *)actor);
+    }
 }
-#endif
 
 void initCourseSelectPreviewModelOut(void *arg0) {
     CourseSelectAnimatedActor *actor;
