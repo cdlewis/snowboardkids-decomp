@@ -258,7 +258,7 @@ void initCourseSelectMenu(void) {
     gCourseSelectStatus.unk2E = 0;
 }
 
-// updateCourseSelectModeMenu best match: 88.922% (nonmatchings/updateCourseSelectModeMenu-1645024839200431810/base_29.c)
+// updateCourseSelectModeMenu best match: 98.071% (nonmatchings/updateCourseSelectModeMenu-3885303446860889946/base_19.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/course_select/course_select_menu/updateCourseSelectModeMenu.s")
 
 #ifdef NON_MATCHING
@@ -269,13 +269,20 @@ void updateCourseSelectModeMenu(void) {
     s32 held;
     s32 timer;
     s32 selection;
+    s32 zero;
     s32 oldSelection;
     s32 tempSelection;
     s32 timerValue;
     s32 repeatNext;
+    s32 timerAlias1;
+    s32 timerAlias2;
+    s32 timerAlias3;
     u32 timerOriginal;
+    s32 *inputPtr;
 
-    if (gCurrentGameTask->fade != 0) {
+    zero = 0;
+    inputPtr = &gPlayerInputPressed;
+    if (gCurrentGameTask->fade != zero) {
         gCurrentGameTask->fade = stepMenuFadeAlpha((s16) gCurrentGameTask->fade, 0x24, 0);
         if (gCurrentGameTask->fade == 0) {
             createCallbackTask(initShopMenuModeChoiceRows, 0, 0x63);
@@ -286,7 +293,7 @@ void updateCourseSelectModeMenu(void) {
     } else {
         timer = gMenuSelectionConfirmTimer;
         timerOriginal = timer;
-        timerValue = timer;
+        timerValue = (timerAlias3 = (timerAlias2 = (timerAlias1 = timer)));
         if (timer == 0) {
             if ((gMenuTransitionState == 0) && (gCourseSelectStatus.unk28 == 1)) {
                 selection = gCourseSelectModeSelection;
@@ -345,13 +352,25 @@ void updateCourseSelectModeMenu(void) {
                         gShopMenuShowNewCoursesMessage = 0;
                     }
                 }
-                input = gPlayerInputPressed;
-                if (((input & START_BUTTON) || (input & A_BUTTON)) && (gMenuFlowState == 2)) {
+                input = *inputPtr;
+                if (((input & START_BUTTON) || ((*inputPtr) & A_BUTTON)) && (gMenuFlowState == 2)) {
                     gMenuSelectionConfirmTimer = 1;
                     gCourseSelectStatus.unk28 = 2;
                     gCourseSelectStatus.unk2A = 0x100;
                     if ((s32) gCourseSelectModeSelection < 2) {
                         gMenuExitSelection = 0;
+                        if (1) {
+                        }
+                        if (1) {
+                        }
+                        if (1) {
+                        }
+                        if (1) {
+                        }
+                        if (1) {
+                        }
+                        if (1) {
+                        }
                         enqueueSoundEffect(0x18, 0x32);
                     } else {
                         gMenuExitSelection = 1;
@@ -361,8 +380,8 @@ void updateCourseSelectModeMenu(void) {
                     timerValue = timer;
                 } else {
                     timer = gMenuSelectionConfirmTimer;
-                    timerValue = timer;
-                    if ((input & B_BUTTON) && (gMenuFlowState == 2) && (timerValue == 0)) {
+                    timerValue = (u32) timer;
+                    if (((*inputPtr) & B_BUTTON) && (gMenuFlowState == 2) && (timerValue == 0)) {
                         gMenuSelectionConfirmTimer = 1;
                         gCourseSelectStatus.unk28 = 2;
                         gCourseSelectStatus.unk2A = 0x100;
@@ -374,8 +393,7 @@ void updateCourseSelectModeMenu(void) {
                 }
             }
         } else {
-            timer = (u8) (timerOriginal + 1);
-            timerValue = timer;
+            timer = (timerValue = (u8) (timerOriginal + 1));
             gMenuSelectionConfirmTimer = timer;
         }
         if (timerValue == 8) {
@@ -387,14 +405,14 @@ void updateCourseSelectModeMenu(void) {
             if (gMenuExitSelection == 0) {
                 setCurrentGameTaskCallback(initCourseSelectCourseList, 0);
             } else {
-                setCurrentGameTaskCallback(exitCourseSelectMenu, 0);
+                setCurrentGameTaskCallback(exitCourseSelectMenu, gCourseSelectStatus.unk28 * 0);
                 requestMusicSequenceStop(8);
                 gMenuExitSelection = 0;
                 gCourseSelectExtraCourseColumnState = 0;
             }
         }
     }
-    gMenuFlowState = 0;
+    gMenuFlowState = gMenuSelectionConfirmTimer * 0;
     updateCallbackTasks();
 }
 #endif
