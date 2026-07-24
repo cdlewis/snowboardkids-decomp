@@ -50,16 +50,16 @@ s32 osPfsIsPlug(OSMesgQueue *mq, u8 *pattern) {
 }
 
 void __osPfsRequestData(u8 cmd) {
-    u8 *ptr;
+    __OSContRequesFormat *request;
     __OSContRequesFormat requestformat;
     int i;
 
     __osContLastCmd = cmd;
-    for (i = 0; i < ARRLEN(__osPfsPifRam.ramarray) + 1; i++) {
-        ((u32 *)&__osPfsPifRam)[i] = 0;
+    for (i = 0; i < ARRLEN(__osPfsPifRam.words); i++) {
+        __osPfsPifRam.words[i] = 0;
     }
     __osPfsPifRam.pifstatus = CONT_CMD_EXE;
-    ptr = (u8 *)__osPfsPifRam.ramarray;
+    request = (__OSContRequesFormat *)__osPfsPifRam.ramarray;
 
     requestformat.dummy = CONT_CMD_NOP;
     requestformat.txsize = CONT_CMD_REQUEST_STATUS_TX;
@@ -71,10 +71,9 @@ void __osPfsRequestData(u8 cmd) {
     requestformat.dummy1 = CONT_CMD_NOP;
 
     for (i = 0; i < __osMaxControllers; i++) {
-        *(__OSContRequesFormat *)ptr = requestformat;
-        ptr += sizeof(requestformat);
+        *request++ = requestformat;
     }
-    *ptr = CONT_CMD_END;
+    *(u8 *)request = CONT_CMD_END;
 }
 
 void __osPfsGetInitData(u8 *pattern, OSContStatus *data) {
