@@ -87,10 +87,6 @@ typedef struct {
     /* 0x22 */ s16 endYaw;
 } RaceCameraRotationTransition;
 
-typedef struct {
-    /* 0x000 */ s32 value;
-    /* 0x004 */ u8 pad4[RACE_PLAYER_STATE_SIZE - 4];
-} RacePlayerCameraComponentAlias;
 
 typedef struct StackD7D4 {
     char sp28[0x20];
@@ -109,9 +105,6 @@ extern RaceCamera *D_801124A0;
 extern RacePlayerSlot gRacePlayers[];
 extern CourseSpawnEntry gRaceCourseStartEntries[];
 extern u8 gRaceCameraRotationTransitions[];
-extern RacePlayerCameraComponentAlias D_80122010[];
-extern RacePlayerCameraComponentAlias D_80122014[];
-extern RacePlayerCameraComponentAlias D_80122018[];
 extern s16 gRaceCameraChaseYawOffsets[];
 extern u8 gRaceCameraChaseYawPreferenceOrder[];
 extern RaceCameraTransition gRaceCameraPositionTransitions[];
@@ -411,9 +404,9 @@ void updateRaceCameraFollowPlayer(void) {
     s32 dist;
 
     if (gRaceUpdatePaused == 0) {
-        D_801124A0->focus.x += (D_80122010[D_801124A0->playerIndex].value - D_801124A0->focus.x) >> 1;
-        D_801124A0->focus.y += (D_80122014[D_801124A0->playerIndex].value - D_801124A0->focus.y) >> 1;
-        D_801124A0->focus.z += (D_80122018[D_801124A0->playerIndex].value - D_801124A0->focus.z) >> 1;
+        D_801124A0->focus.x += (gRacePlayers[D_801124A0->playerIndex].state.cameraPos.x - D_801124A0->focus.x) >> 1;
+        D_801124A0->focus.y += (gRacePlayers[D_801124A0->playerIndex].state.cameraPos.y - D_801124A0->focus.y) >> 1;
+        D_801124A0->focus.z += (gRacePlayers[D_801124A0->playerIndex].state.cameraPos.z - D_801124A0->focus.z) >> 1;
 
         x = D_801124A0->pos.x;
         new_var2 = D_801124A0->pos.y;
