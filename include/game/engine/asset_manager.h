@@ -12,7 +12,7 @@ u8 randomNextObject(RandomStateObject *arg0);
 void resetGameplayRng(void);
 void insertHuffmanQueueNode(s16 arg0);
 void removeHuffmanQueueNode(s16 arg0);
-void decompressHuffmanAssetPayload(u8 arg0, s32 arg1, s32 arg2, s32 arg3);
+void decompressHuffmanAssetPayload(u8 flags, u8 *compressedPayload, u8 *output, s32 outputSize);
 void loadCompressedRomAsset(void *arg0, void *arg1, s32 arg2);
 void loadRawRomAsset(void *arg0, void *arg1, s32 arg2);
 

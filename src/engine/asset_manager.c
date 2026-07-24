@@ -163,354 +163,142 @@ void removeHuffmanQueueNode(s16 arg0) {
 #pragma GLOBAL_ASM("asm/nonmatchings/engine/asset_manager/decompressHuffmanAssetPayload.s")
 
 #ifdef NON_MATCHING
-#if 1
-void decompressHuffmanAssetPayload(u8 arg0, s32 arg1, s32 arg2, s32 arg3) {
-    volatile s32 *unusedArg1Address;
-    HuffmanNode *temp_v0;
-    HuffmanNode *temp_v0_2;
-    s32 temp_a2;
-    s32 temp_a2_2;
-    s32 temp_at;
-    s32 nodeIndex;
-    s32 leafNodeIndex;
-    s32 var_a0;
-    s32 var_a1;
-    s32 var_s2;
-    s32 var_t2;
-    s32 var_v0;
-    s32 temp_t3;
-    u8 *var_s1;
-    u8 *var_v1;
-    s32 temp_s3;
-    s32 temp_s6;
-    u8 temp_t7;
-    u8 temp_t8;
-    s32 var_s0;
-    u8 *var_a1_2;
+typedef struct {
+    /* 0x0 */ u8 *byte;
+    /* 0x4 */ s32 bitIndex;
+} HuffmanBitReader;
 
-    unusedArg1Address = &arg1;
-    gHuffmanQueueHead = -1;
-    gHuffmanQueueTail = -1;
-    gHuffmanQueueCount = 0;
-    gHuffmanNodeCount = 0;
-    var_s2 = 0;
-    var_s1 = (u8 *) arg1; loop_1: temp_s3 = *var_s1; var_s2 += 1; var_s1 += 1; if (var_s2 != 1) { if (temp_s3 == 0) { goto loop_7; } } block_3: temp_s6 = *var_s1; var_s2 += 1; temp_at = temp_s6 < temp_s3; var_s1 += 1; var_s0 = temp_s3; if (temp_at == 0) {
-        temp_s3 = temp_s6 + 1;
-        do {
-            leafNodeIndex = gHuffmanNodeCount;
-            temp_t7 = *var_s1;
-            var_s2 += 1;
-            var_s1 += 1;
-            temp_v0 = &gHuffmanNodes[leafNodeIndex];
-            temp_v0->left = -1;
-            temp_v0->right = -1;
-            temp_v0->value = (s16) var_s0;
-            temp_v0->weight = (s16) temp_t7;
-            insertHuffmanQueueNode((s16) leafNodeIndex);
-            var_s0 += 1;
-            gHuffmanNodeCount += 1;
-        } while (temp_s3 != var_s0);
-    }
-    goto loop_1;
-loop_7:
-    if (gHuffmanQueueCount >= 2) {
-        temp_s3 = gHuffmanQueueTail;
-        removeHuffmanQueueNode(temp_s3);
-        temp_s6 = gHuffmanQueueTail;
-        removeHuffmanQueueNode(temp_s6);
-        nodeIndex = gHuffmanNodeCount;
-        temp_v0_2 = &gHuffmanNodes[nodeIndex];
-        temp_v0_2->weight = gHuffmanNodes[temp_s6].weight + gHuffmanNodes[temp_s3].weight;
-        temp_v0_2->left = temp_s6;
-        temp_v0_2->right = temp_s3;
-        temp_v0_2->value = -1;
-        insertHuffmanQueueNode((s16) nodeIndex);
-        gHuffmanNodeCount += 1;
-        goto loop_7;
+static s32 readHuffmanBit(HuffmanBitReader *reader) {
+    s32 bit;
+
+    if (reader->bitIndex == 8) {
+        reader->byte++;
+        reader->bitIndex = 0;
     }
 
-    var_a0 = 0;
-    var_t2 = 0;
-    if (arg0 == 0) {
-        var_a1 = arg2;
-        do {
-            var_s0 = gHuffmanNodeCount - 1;
-loop_inverted_13:
-            var_v0 = gHuffmanNodes[var_s0].value;
-            if (var_v0 != -1) {
-                temp_a2 = var_v0 & (0xFF & 0xFFFF);
-            } else {
-                if (var_a0 == 8) {
-                    var_s1 += 1;
-                    var_a0 = 0;
-                }
-                temp_at = *var_s1 & (1 << (7 - var_a0));
-                var_a0 += 1;
-                if (temp_at == 0) {
-                    var_s0 = gHuffmanNodes[var_s0].left;
-                } else {
-                    var_s0 = gHuffmanNodes[var_s0].right;
-                }
-                goto loop_inverted_13;
-            }
-            *(u8 *) var_a1 = (s8) temp_a2;
-            var_t2 += 1;
-            var_a1 += 1;
-        } while (var_t2 != arg3);
-    } else {
-loop_inverted_23:
-        var_a1 = (leafNodeIndex = gHuffmanNodeCount - 1);
-        var_s0 = var_a1;
-loop_inverted_24:
-        var_v0 = gHuffmanNodes[var_s0].value;
-        temp_a2 = var_v0 & 0xFF;
-        if (var_v0 != -1) {
-            var_s0 = var_a1;
+    bit = *reader->byte & (1 << (7 - reader->bitIndex));
+    reader->bitIndex++;
+    return bit;
+}
+
+static u8 readHuffmanSymbol(HuffmanBitReader *reader) {
+    HuffmanNode *node;
+    s16 nodeIndex;
+
+    nodeIndex = gHuffmanNodeCount - 1;
+    while (TRUE) {
+        node = &gHuffmanNodes[nodeIndex];
+        if (node->value != -1) {
+            return node->value & 0xFF;
+        }
+
+        if (readHuffmanBit(reader) == 0) {
+            nodeIndex = node->left;
         } else {
-            if (var_a0 == 8) {
-                var_s1 += 1;
-                var_a0 = 0;
-            }
-            temp_at = *var_s1 & (1 << (7 - var_a0));
-            var_a0 += 1;
-            if (temp_at == 0) {
-                var_s0 = gHuffmanNodes[var_s0].left;
-            } else {
-                var_s0 = gHuffmanNodes[var_s0].right;
-            }
-            goto loop_inverted_24;
+            nodeIndex = node->right;
         }
-loop_inverted_31:
-        var_v0 = gHuffmanNodes[var_s0].value;
-        if (var_v0 != -1) {
-            temp_t3 = var_v0 & 0xFF;
-        } else {
-            if (var_a0 == 8) {
-                var_s1 += 1;
-                var_a0 = 0;
-            }
-            temp_at = *var_s1 & (1 << (7 - var_a0));
-            var_a0 += 1;
-            if (temp_at == 0) {
-                var_s0 = gHuffmanNodes[var_s0].left;
-            } else {
-                var_s0 = gHuffmanNodes[var_s0].right;
-            }
-            goto loop_inverted_31;
-        }
-        if (temp_a2 == 0) {
-            ((u8 *) arg2)[var_t2] = temp_t3 & 0xFFFFFFFF;
-            var_t2 += 1;
-        } else {
-            temp_a2_2 = temp_a2;
-            temp_a2_2 = (temp_a2_2 >> 4) & 0xF;
-            temp_t3 = var_t2 - ((((temp_a2 << 3) << 5) | temp_t3) & 0xFFF);
-            var_v0 = 0;
-            if (temp_a2_2 > 0) {
-                var_a1_2 = (u8 *) arg2 + var_t2;
-                var_v1 = (u8 *) arg2 + temp_t3;
-                do {
-                    temp_t8 = *var_v1;
-                    var_v0 += 1;
-                    var_t2 += 1;
-                    var_a1_2 += 1;
-                    var_v1 += 1;
-                    var_a1_2[-1] = temp_t8;
-                } while (var_v0 < temp_a2_2);
-            }
-        }
-        if (var_t2 < arg3) {
-            goto loop_inverted_23;
-        }
-    }
-    if (!temp_a2) {
     }
 }
-#else
-void decompressHuffmanAssetPayload(u8 arg0, s32 arg1, s32 arg2, s32 arg3) {
-    HuffmanNode *temp_v0;
-    HuffmanNode *temp_v0_2;
-    HuffmanNode *temp_v1;
-    HuffmanNode *temp_v1_2;
-    HuffmanNode *temp_v1_3;
-    s32 temp_a1;
-    s16 temp_s3_2;
-    s16 temp_s6_2;
-    s16 temp_v0_3;
-    s16 temp_v0_4;
-    s16 temp_v0_5;
-    s32 var_s0_2;
-    s32 var_s0_3;
-    s32 var_s0_4;
-    s32 temp_a2;
-    s32 temp_a2_2;
-    s32 temp_at;
-    s32 temp_s2;
+
+void decompressHuffmanAssetPayload(u8 flags, u8 *compressedPayload, u8 *output, s32 outputSize) {
+    HuffmanBitReader reader;
+    HuffmanNode *node;
+    s16 leftNodeIndex;
+    s16 rightNodeIndex;
+    s32 rangeStart;
+    s32 rangeEnd;
+    s32 symbol;
     s32 nodeIndex;
-    s32 var_a0;
-    u8 *var_a1;
-    u8 *var_s1;
-    s32 var_s2;
-    s32 var_t2;
-    s32 var_v0;
-    s32 temp_t3;
-    u8 *var_s1_2;
-    u8 *var_v1;
-    s32 temp_s3;
-    s32 temp_s6;
-    u8 temp_t7;
-    u8 temp_t8;
-    s32 var_s0;
-    u8 *var_a1_2;
+    s32 tableBytesRead;
+    s32 outputOffset;
+    s32 backreferenceLength;
+    s32 backreferenceOffset;
+    s32 copied;
+    u8 *dst;
+    u8 *src;
 
     gHuffmanQueueHead = -1;
     gHuffmanQueueTail = -1;
     gHuffmanQueueCount = 0;
     gHuffmanNodeCount = 0;
-    var_s2 = 0;
-    var_s1 = (u8 *) arg1;
-loop_1:
-    temp_s3 = *var_s1;
-    var_s2 += 1;
-    var_s1_2 = var_s1 + 1;
-    if (var_s2 != 1) {
-        if (temp_s3 == 0) {
-            goto loop_7;
+
+    tableBytesRead = 0;
+    reader.byte = compressedPayload;
+    while (TRUE) {
+        rangeStart = *reader.byte++;
+        tableBytesRead++;
+        if ((tableBytesRead != 1) && (rangeStart == 0)) {
+            break;
+        }
+
+        rangeEnd = *reader.byte++;
+        tableBytesRead++;
+        if (rangeStart <= rangeEnd) {
+            symbol = rangeStart;
+            do {
+                nodeIndex = gHuffmanNodeCount;
+                node = &gHuffmanNodes[nodeIndex];
+                node->left = -1;
+                node->right = -1;
+                node->value = symbol;
+                node->weight = *reader.byte++;
+                tableBytesRead++;
+
+                insertHuffmanQueueNode((s16)nodeIndex);
+                symbol++;
+                gHuffmanNodeCount++;
+            } while (symbol != rangeEnd + 1);
         }
     }
-block_3:
-    temp_s6 = var_s1[1];
-    var_s2 += 1;
-    temp_at = (s32) temp_s6 < (s32) temp_s3;
-    var_s1 = var_s1_2 + 1;
-    var_s0 = temp_s3;
-    if (temp_at == 0) {
-        temp_s3 = temp_s6 + 1;
-        do {
-            nodeIndex = gHuffmanNodeCount;
-            temp_t7 = *var_s1;
-            var_s2 += 1;
-            var_s1 += 1;
-            temp_v0 = &gHuffmanNodes[nodeIndex];
-            temp_v0->left = -1;
-            temp_v0->right = -1;
-            temp_v0->value = (s16) var_s0;
-            temp_v0->weight = (s16) temp_t7;
-            insertHuffmanQueueNode((s16) nodeIndex);
-            var_s0 += 1;
-            gHuffmanNodeCount += 1;
-        } while (temp_s3 != var_s0);
-    }
-    goto loop_1;
-loop_7:
-    if (gHuffmanQueueCount >= 2) {
-        temp_s3_2 = gHuffmanQueueTail;
-        removeHuffmanQueueNode(temp_s3_2);
-        temp_s6_2 = gHuffmanQueueTail;
-        removeHuffmanQueueNode(temp_s6_2);
+
+    while (gHuffmanQueueCount >= 2) {
+        rightNodeIndex = gHuffmanQueueTail;
+        removeHuffmanQueueNode(rightNodeIndex);
+        leftNodeIndex = gHuffmanQueueTail;
+        removeHuffmanQueueNode(leftNodeIndex);
+
         nodeIndex = gHuffmanNodeCount;
-        temp_v0_2 = &gHuffmanNodes[nodeIndex];
-        temp_v0_2->weight = gHuffmanNodes[temp_s3_2].weight + gHuffmanNodes[temp_s6_2].weight;
-        temp_v0_2->left = temp_s6_2;
-        temp_v0_2->right = temp_s3_2;
-        temp_v0_2->value = -1;
-        insertHuffmanQueueNode((s16) nodeIndex);
-        gHuffmanNodeCount += 1;
-        goto loop_7;
+        node = &gHuffmanNodes[nodeIndex];
+        node->weight = gHuffmanNodes[rightNodeIndex].weight + gHuffmanNodes[leftNodeIndex].weight;
+        node->left = leftNodeIndex;
+        node->right = rightNodeIndex;
+        node->value = -1;
+
+        insertHuffmanQueueNode((s16)nodeIndex);
+        gHuffmanNodeCount++;
     }
-    var_a0 = 0;
-    var_t2 = 0;
-    if (arg0 == 0) {
-        var_a1 = (u8 *) arg2;
+
+    reader.bitIndex = 0;
+    outputOffset = 0;
+    if (flags == 0) {
+        dst = output;
         do {
-            var_s0_2 = gHuffmanNodeCount - 1;
-loop_13:
-            temp_v1 = &gHuffmanNodes[var_s0_2];
-            temp_v0_3 = temp_v1->value;
-            if (temp_v0_3 == -1) {
-                if (var_a0 == 8) {
-                    var_s1_2 += 1;
-                    var_a0 = 0;
-                }
-                var_v0 = *var_s1_2 & (1 << (7 - var_a0));
-                var_a0 += 1;
-                if (var_v0 == 0) {
-                    var_s0_2 = temp_v1->left;
-                } else {
-                    var_s0_2 = temp_v1->right;
-                }
-                goto loop_13;
-            }
-            *var_a1 = (s8) (temp_v0_3 & 0xFF);
-            var_t2 += 1;
-            var_a1 += 1;
-        } while (var_t2 != arg3);
+            *dst++ = readHuffmanSymbol(&reader);
+            outputOffset++;
+        } while (outputOffset != outputSize);
     } else {
-loop_23:
-        temp_a1 = gHuffmanNodeCount - 1;
-        var_s0_3 = temp_a1;
-loop_24:
-        temp_v1_2 = &gHuffmanNodes[var_s0_3];
-        temp_v0_4 = temp_v1_2->value;
-        temp_a2 = temp_v0_4 & 0xFF;
-        if (temp_v0_4 == -1) {
-            if (var_a0 == 8) {
-                var_s1_2 += 1;
-                var_a0 = 0;
-            }
-            var_v0 = *var_s1_2 & (1 << (7 - var_a0));
-            var_a0 += 1;
-            if (var_v0 == 0) {
-                var_s0_3 = temp_v1_2->left;
+        do {
+            backreferenceLength = readHuffmanSymbol(&reader);
+            symbol = readHuffmanSymbol(&reader);
+            if (backreferenceLength == 0) {
+                output[outputOffset++] = symbol;
             } else {
-                var_s0_3 = temp_v1_2->right;
+                backreferenceOffset = ((backreferenceLength << 8) | symbol) & 0xFFF;
+                backreferenceLength = (backreferenceLength >> 4) & 0xF;
+                copied = 0;
+                if (backreferenceLength > 0) {
+                    dst = &output[outputOffset];
+                    src = &output[outputOffset - backreferenceOffset];
+                    do {
+                        *dst++ = *src++;
+                        copied++;
+                        outputOffset++;
+                    } while (copied < backreferenceLength);
+                }
             }
-            goto loop_24;
-        }
-        var_s0_4 = temp_a1;
-loop_31:
-        temp_v1_3 = &gHuffmanNodes[var_s0_4];
-        temp_v0_5 = temp_v1_3->value;
-        if (temp_v0_5 == -1) {
-            if (var_a0 == 8) {
-                var_s1_2 += 1;
-                var_a0 = 0;
-            }
-            var_v0 = *var_s1_2 & (1 << (7 - var_a0));
-            var_a0 += 1;
-            if (var_v0 == 0) {
-                var_s0_4 = temp_v1_3->left;
-            } else {
-                var_s0_4 = temp_v1_3->right;
-            }
-            goto loop_31;
-        }
-        temp_t3 = temp_v0_5 & 0xFF;
-        if (temp_a2 == 0) {
-            ((u8 *) arg2)[var_t2] = temp_t3;
-            var_t2 += 1;
-        } else {
-            temp_a2_2 = (temp_a2 >> 4) & 0xF;
-            var_v0 = 0;
-            if (temp_a2_2 > 0) {
-                var_a1_2 = (u8 *) arg2 + var_t2;
-                var_v1 = (u8 *) arg2 + (var_t2 - (((temp_a2 << 8) | temp_t3) & 0xFFF));
-                do {
-                    temp_t8 = *var_v1;
-                    var_v0 += 1;
-                    var_t2 += 1;
-                    var_a1_2 += 1;
-                    var_v1 += 1;
-                    var_a1_2[-1] = temp_t8;
-                } while (var_v0 < temp_a2_2);
-            }
-        }
-        if (var_t2 < arg3) {
-            goto loop_23;
-        }
+        } while (outputOffset < outputSize);
     }
 }
-#endif
 #endif
 
 void loadCompressedRomAsset(void *arg0, void *arg1, s32 arg2) {
@@ -523,7 +311,8 @@ void loadCompressedRomAsset(void *arg0, void *arg1, s32 arg2) {
     dmaReadRom((u32)arg0, (void *)getRelocatableHeapBlockBase(gAssetHandles.compressedAssetHandle), (s32)arg1 - (s32)arg0);
     sp30 = getRelocatableHeapBlockBase(gAssetHandles.compressedAssetHandle) + 5;
     sp28 = &gAssetHandles.assetHandles[arg2];
-    decompressHuffmanAssetPayload(gCompressedAssetHeader.flags, sp30, getRelocatableHeapBlockBase(*sp28), gCompressedAssetHeader.compressedSize);
+    decompressHuffmanAssetPayload(gCompressedAssetHeader.flags, (u8 *)sp30, (u8 *)getRelocatableHeapBlockBase(*sp28),
+                                  gCompressedAssetHeader.compressedSize);
     getRelocatableHeapBlockBase(*sp28);
     gAssetHandles.compressedAssetHandle = freeRelocatableHeapBlock(gAssetHandles.compressedAssetHandle);
 }
