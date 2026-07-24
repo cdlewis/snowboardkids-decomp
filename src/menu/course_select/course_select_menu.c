@@ -1059,7 +1059,7 @@ void initCourseSelectCourseDetailsMenu(void) {
     updateCallbackTasks();
 }
 
-// updateCourseSelectCourseDetailsMenu best match: 99.426% (nonmatchings/updateCourseSelectCourseDetailsMenu-8699393380584516020/base_31.c)
+// updateCourseSelectCourseDetailsMenu best match: 99.474% (nonmatchings/updateCourseSelectCourseDetailsMenu-8498672362023432715/base_7.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/course_select/course_select_menu/updateCourseSelectCourseDetailsMenu.s")
 
 #ifdef NON_MATCHING
@@ -1068,7 +1068,7 @@ void updateCourseSelectCourseDetailsMenu(void) {
     s32 condition;
     u32 soundId;
     u8 selection;
-    u8 oldSelection;
+    u16 oldSelection;
     s32 input;
     s32 heldUp;
     s32 tempSelection;
@@ -1135,7 +1135,7 @@ void updateCourseSelectCourseDetailsMenu(void) {
         if (oldSelection != selection) {
             enqueueSoundEffect(0x19, 0x32);
         }
-        if (gPlayerInputPressed & B_BUTTON) {
+        if (oldSelection = gPlayerInputPressed & B_BUTTON) {
             gMenuExitSelection = 2;
         }
         soundId = 0x18;
