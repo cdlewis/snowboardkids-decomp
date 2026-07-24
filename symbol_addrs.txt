@@ -1819,6 +1819,7 @@ gMusicSequenceRomRanges = 0x800DBC5C; // rom:0xDC85C size:0x50
 gRaceMusicSequenceRomRanges = 0x800DBCAC; // rom:0xDC8AC size:0x48
 gCourseMusicSequenceBanks = 0x800DBCF4; // rom:0xDC8F4 size:0x1C
 gRaceCourseStartEntries = 0x800B9540; // rom:0xBA140
+gRaceCourseFinishLineData = 0x800B957C; // rom:0xBA17C
 gRaceCourseMaxSurfaceIndices = 0x800B957E; // rom:0xBA17E
 gPlayerBadgeDisplayOrder = 0x800B3462; // rom:0xB4062 size:0x16
 gCourseDetailsPreviewCourseTiles = 0x800B34E0; // rom:0xB40E0 size:0xC

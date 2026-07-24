@@ -73,7 +73,7 @@ extern RaceTimer D_800DC928[];
 extern RaceTimer D_800DC950;
 extern u8 gRaceSplitscreenMode;
 extern RaceTimerCourseSpawnEntry gRaceCourseStartEntries[];
-extern RaceFinishLinePathIndexEntry D_800B957C[];
+extern RaceFinishLinePathIndexEntry gRaceCourseFinishLineData[];
 extern u8 gRaceTimerTensDigitTileOffsets[];
 extern u8 gRaceTimerOnesDigitTileIds[];
 extern u16 gRaceProgressMeterIconTiles[];
@@ -1044,7 +1044,7 @@ void updateRaceHud(void) {
             incrementRaceElapsedTimer();
             if (gRaceTimeTrialFinishRecorded == 0) {
                 getRacePlayerRankingProgress(0, &sp40, &sp3C);
-                if ((D_800B957C[gRaceCourseIndex].finishLinePathIndex * 8) < sp40) {
+                if ((gRaceCourseFinishLineData[gRaceCourseIndex].finishLinePathIndex * 8) < sp40) {
                     gRaceTimeTrialFinishTime = *(s32 *)&gRaceElapsedTimer;
                     gRaceTimeTrialFinishRecorded = 1;
                     createCallbackTask(initTimeTrialRecordDeltaPopup, 0, 0);
