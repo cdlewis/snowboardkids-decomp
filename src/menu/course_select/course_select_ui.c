@@ -2222,32 +2222,26 @@ void initCourseSelectExtraCourseIconList(CourseSelectWidgetActor *arg0) {
 }
 #endif
 
-// drawCourseSelectPlayerPanels best match: 99.592% (nonmatchings/drawCourseSelectPlayerPanels-2188069624939011928/base_20.c)
+// drawCourseSelectPlayerPanels best match: 99.966% (nonmatchings/drawCourseSelectPlayerPanels-8498672362023432715/base_15.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/course_select/course_select_ui/drawCourseSelectPlayerPanels.s")
 
 #ifdef NON_MATCHING
-extern int sprintf(u8 *, u8 *, ...);
+extern u8 D_800E0DB8[];
 
-void drawCourseSelectPlayerPanels(CourseSelectWidgetInitActor *actor) {
-    s16 *yPtr;
-    s32 nextIndex;
-    u8 text[4];
-    volatile s32 savedIndex;
-    s32 new_var;
+void drawCourseSelectPlayerPanels(CourseSelectWidgetActor *arg0) {
     s32 offset;
     s32 j;
-    s32 count;
+    CourseSelectWidgetInitActor *actor;
+    s32 i;
     s32 middleCount;
     s32 tile;
-    s32 edgeOffset;
     s32 alpha;
-    s32 i;
+    s32 count;
+    u8 text[4];
+    s32 edgeOffset;
 
+    actor = (CourseSelectWidgetInitActor *)arg0;
     if (gPlayerCount == 2) {
-        {
-            if (1) {
-            }
-        }
         count = 2;
     } else {
         count = 4;
@@ -2255,11 +2249,9 @@ void drawCourseSelectPlayerPanels(CourseSelectWidgetInitActor *actor) {
 
     i = 0;
     if (count > 0) {
-        new_var = i;
         do {
             j = 0;
-            yPtr = &actor->unk20;
-            if (new_var == gPlayerCount) {
+            if (i == gPlayerCount) {
                 alpha = 0xC0;
             } else {
                 alpha = 0x100;
@@ -2267,11 +2259,10 @@ void drawCourseSelectPlayerPanels(CourseSelectWidgetInitActor *actor) {
             if (i == 0) {
                 tile = 2;
             } else {
-                tile = (new_var + 5) & 0xFF;
+                tile = (i + 5) & 0xFF;
             }
 
-            savedIndex = new_var;
-            drawMenuSpriteWithAlpha(actor->unk18, *(&actor->unk20), getRelocatableHeapBlockBase(gAssetHandles[0x21]), 0x22, 0x20, 0x20, 0,
+            drawMenuSpriteWithAlpha(actor->x[i], actor->y[i], getRelocatableHeapBlockBase(gAssetHandles[0x21]), 0x22, 0x20, 0x20, 0,
                           alpha, tile);
 
             if (gPlayerCount == 2) {
@@ -2282,7 +2273,7 @@ void drawCourseSelectPlayerPanels(CourseSelectWidgetInitActor *actor) {
             edgeOffset = 0x38;
             if (middleCount > 0) {
                 do {
-                    drawMenuSpriteWithAlpha((s16)(actor->unk18 + edgeOffset), *(&actor->unk20), getRelocatableHeapBlockBase(gAssetHandles[0x21]),
+                    drawMenuSpriteWithAlpha((s16)(actor->x[i] + edgeOffset), actor->y[i], getRelocatableHeapBlockBase(gAssetHandles[0x21]),
                                   0x23, 0x20, 0x20, 0, alpha, tile);
                     j++;
                     edgeOffset += 0x10;
@@ -2290,26 +2281,24 @@ void drawCourseSelectPlayerPanels(CourseSelectWidgetInitActor *actor) {
             }
 
             j = getRelocatableHeapBlockBase(gAssetHandles[0x21]);
-            drawMenuSpriteWithAlpha((s16)(actor->unk18 + edgeOffset), *(&actor->unk20), j, 0x24,
+            drawMenuSpriteWithAlpha((s16)(actor->x[i] + edgeOffset), actor->y[i], j, 0x24,
                           0x20, 0x20, 0, alpha, tile);
 
             offset = 0;
             if (gPlayerCount == 2) {
-                if (1) {
-                    edgeOffset = 0xF8;
-                }
+                edgeOffset = 0xF8;
             } else {
                 edgeOffset = 0x78;
             }
             do {
-                drawMenuSpriteWithAlpha(actor->unk18, (s16)((*(&actor->unk20)) + offset + 0x10), getRelocatableHeapBlockBase(gAssetHandles[0x21]),
+                drawMenuSpriteWithAlpha(actor->x[i], (s16)(actor->y[i] + offset + 0x10), getRelocatableHeapBlockBase(gAssetHandles[0x21]),
                               0x25, 0x20, 0x20, 0, alpha, tile);
-                drawMenuSpriteWithAlpha((s16)(actor->unk18 + edgeOffset), (s16)((*(&actor->unk20)) + offset + 0x10),
+                drawMenuSpriteWithAlpha((s16)(actor->x[i] + edgeOffset), (s16)(actor->y[i] + offset + 0x10),
                               getRelocatableHeapBlockBase(gAssetHandles[0x21]), 0x26, 0x20, 0x20, 0, alpha, tile);
                 offset += 0x10;
             } while (offset < 0x40);
 
-            drawMenuSpriteWithAlpha(actor->unk18, (s16)((*(&actor->unk20)) + 0x50), getRelocatableHeapBlockBase(gAssetHandles[0x21]), 0x27, 0x20,
+            drawMenuSpriteWithAlpha(actor->x[i], (s16)(actor->y[i] + 0x50), getRelocatableHeapBlockBase(gAssetHandles[0x21]), 0x27, 0x20,
                           0x20, 0, alpha, tile);
 
             if (gPlayerCount == 2) {
@@ -2319,32 +2308,33 @@ void drawCourseSelectPlayerPanels(CourseSelectWidgetInitActor *actor) {
             }
             j = 0;
             if (middleCount > 0) {
-                if (new_var) {
-                }
                 offset = 0;
                 do {
-                    drawMenuSpriteWithAlpha((s16)(actor->unk18 + offset + 0x10), (s16)(actor->unk20 + 0x50),
+                    drawMenuSpriteWithAlpha((s16)(actor->x[i] + offset + 0x10), (s16)(actor->y[i] + 0x50),
                                   getRelocatableHeapBlockBase(gAssetHandles[0x21]), 0x28, 0x20, 0x20, 0, alpha, tile);
                     j++;
                     offset += 0x10;
                 } while (j != middleCount);
             }
+            if (0) {
+                // Preserves IDO's middle-count and edge-offset register allocation.
+            }
 
-            drawMenuSpriteWithAlpha((s16)(actor->unk18 + edgeOffset - 8), (s16)((*(&actor->unk20)) + 0x50),
+            drawMenuSpriteWithAlpha((s16)(actor->x[i] + edgeOffset - 8), (s16)(actor->y[i] + 0x50),
                           getRelocatableHeapBlockBase(gAssetHandles[0x21]), 0x29, 0x20, 0x20, 0, alpha, tile);
 
-            nextIndex = savedIndex + 1;
-            sprintf(text - 0x18, "%d", nextIndex);
-            drawMenuAsciiText((s16)(actor->unk18 + 0x34), (s16)(*yPtr + 2), text - 0x18, 0, alpha);
+            sprintf(text, D_800E0DB8, i + 1);
+            drawMenuAsciiText((s16)(actor->x[i] + 0x34), (s16)(actor->y[i] + 2), text, 0, alpha);
 
             if (alpha == 0xC0) {
-                drawMenuSpriteWithAlpha((s16)(actor->unk18 + 2), (s16)(actor->unk20 + 0x24),
+                drawMenuSpriteWithAlpha((s16)(actor->x[i] + 2), (s16)(actor->y[i] + 0x24),
                               getRelocatableHeapBlockBase(gAssetHandles[0x1F]), 0x90, 0x20, 0x20, 0, 0xF0, 0);
             }
-            i = nextIndex;
-            actor = (CourseSelectWidgetInitActor *)((u8 *)actor + sizeof(s16));
-            savedIndex = nextIndex;
-        } while (nextIndex != count);
+            i++;
+        } while (i != count);
+    }
+    if (actor) {
+        // Keeps the actor base separate from IDO's strength-reduced array cursor.
     }
 }
 #endif

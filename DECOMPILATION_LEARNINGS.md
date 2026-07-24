@@ -249,6 +249,12 @@ and control flow already match and only register *names* differ.
   element size, and terminate with an unsigned pointer comparison against the
   array base. Do not assume that a target `addiu ptr, -sizeof(element)` loop
   was written with an explicit pointer.
+- **Parallel indexed fields can share one induction cursor.** When a struct
+  contains parallel arrays with the same element width, repeated
+  `actor->x[i]` and `actor->y[i]` accesses can become one pointer cursor that
+  advances by the element size while retaining the arrays' field-offset
+  difference. Prefer the typed indexed form when a target bumps one cursor but
+  loads several fixed offsets from it.
 - **Structured counted loops can get unrolled; unstructured goto loops do
   not.** IDO aggressively unrolls structured `for`/`while`/`do-while` loops
   whose trip count is computable at runtime from two address operands, using a
