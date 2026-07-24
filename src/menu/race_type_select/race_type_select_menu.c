@@ -95,7 +95,7 @@ void initRaceTypeSelectMenu(void) {
     gRaceTypeSelectCursorTarget.alpha = 0;
 }
 
-// updateRaceTypeSelectMenu best match: 97.301% (nonmatchings/updateRaceTypeSelectMenu-3885303446860889946/base_17.c)
+// updateRaceTypeSelectMenu best match: 97.990% (nonmatchings/updateRaceTypeSelectMenu-8498672362023432715/base_7.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/race_type_select/race_type_select_menu/updateRaceTypeSelectMenu.s")
 
 #ifdef NON_MATCHING
@@ -165,6 +165,7 @@ void updateRaceTypeSelectMenu(void) {
                         }
                     }
 
+                    newInput = selection;
                     if (repeatTimer != 0) {
                         gMenuInputRepeatTimers = repeatTimer + 1;
                         if (gMenuInputRepeatTimers == 0xFFFF) {
@@ -172,7 +173,7 @@ void updateRaceTypeSelectMenu(void) {
                         }
                     }
 
-                    if (selection != previousSelection) {
+                    if (newInput != previousSelection) {
                         enqueueSoundEffect(0x19, 0x32);
                         heldInput = gPlayerInputPressed;
                         gRaceCourseIndex = 9;
@@ -184,11 +185,11 @@ void updateRaceTypeSelectMenu(void) {
                         cursorTarget = &gRaceTypeSelectCursorTarget;
                         (&gRaceTypeSelectCursorTarget)->state = 2;
                         cursorTarget->alpha = 0x100;
-                        gMenuExitSelection = gMenuInputRepeatTimers * 0;
                         if (cursorTarget) {
                         }
                     }
                 }
+                gMenuExitSelection = gMenuInputRepeatTimers * 0;
             } else {
                 gMenuSelectionConfirmTimer++;
             }
