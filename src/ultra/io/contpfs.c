@@ -175,49 +175,53 @@ s32 __osCheckPackId(OSPfs* pfs, __OSPackId* temp) {
 
 s32 __osGetId(OSPfs* pfs) {
 #if BUILD_VERSION < VERSION_J
-    int k;
+    int byteIndex;
 #endif
-    u16 sum;
-    u16 isum;
-    __OSPackId packId;
-    __OSPackId repairedId;
+    u16 checksum;
+    u16 invertedChecksum;
+    __OSPackId primaryPackId;
+    __OSPackId repairedPackId;
     s32 ret;
-    __OSPackId* validId;
+    __OSPackId* packId;
 
     SET_ACTIVEBANK_TO_ZERO();
-    ERRCK(__osContRamRead(pfs->queue, pfs->channel, PFS_ID_0AREA, (u8*)&packId));
-    __osIdCheckSum((u16*)&packId, &sum, &isum);
-    validId = &packId;
+    ERRCK(__osContRamRead(pfs->queue, pfs->channel, PFS_ID_0AREA, (u8*)&primaryPackId));
+    __osIdCheckSum((u16*)&primaryPackId, &checksum, &invertedChecksum);
+    packId = &primaryPackId;
 
-    if (validId->checksum != sum || validId->inverted_checksum != isum) {
-        ret = __osCheckPackId(pfs, validId);
+    /* Recover one of the redundant ID copies, or rebuild the ID if every copy is corrupt. */
+    if (packId->checksum != checksum || packId->inverted_checksum != invertedChecksum) {
+        ret = __osCheckPackId(pfs, packId);
 
         if (ret == PFS_ERR_ID_FATAL) {
-            ERRCK(__osRepairPackId(pfs, validId, &repairedId));
-            validId = &repairedId;
+            ERRCK(__osRepairPackId(pfs, packId, &repairedPackId));
+            packId = &repairedPackId;
         } else if (ret != 0) {
             return ret;
         }
     }
 
-    if ((validId->deviceid & PFS_ID_DEVICE_ID_BIT) == 0) {
-        ERRCK(__osRepairPackId(pfs, validId, &repairedId));
-        validId = &repairedId;
+    /* Probe the accessory's banks before accepting it as a Controller Pak. */
+    if (!(packId->deviceid & PFS_ID_DEVICE_ID_BIT)) {
+        ERRCK(__osRepairPackId(pfs, packId, &repairedPackId));
+        packId = &repairedPackId;
 
-        if ((validId->deviceid & PFS_ID_DEVICE_ID_BIT) == 0) {
+        if (!(packId->deviceid & PFS_ID_DEVICE_ID_BIT)) {
             return PFS_ERR_DEVICE;
         }
     }
 
+    /* Cache the ID and derived file-system layout for subsequent PFS operations. */
 #if BUILD_VERSION >= VERSION_J
-    bcopy(validId, pfs->id, BLOCKSIZE);
+    bcopy(packId, pfs->id, BLOCKSIZE);
 #else
-    for (k = 0; k < ARRLEN(pfs->id); k++) {
-        pfs->id[k] = ((u8 *)validId)[k];
+    for (byteIndex = 0; byteIndex < ARRLEN(pfs->id); byteIndex++) {
+        pfs->id[byteIndex] = ((u8*)packId)[byteIndex];
     }
 #endif
-    pfs->version = validId->version;
-    pfs->banks = validId->banks;
+
+    pfs->version = packId->version;
+    pfs->banks = packId->banks;
     pfs->inode_start_page = 1 + DEF_DIR_PAGES + (2 * pfs->banks);
     pfs->dir_size = DEF_DIR_PAGES * PFS_ONE_PAGE;
     pfs->inode_table = PFS_ONE_PAGE;
