@@ -220,8 +220,6 @@ extern u16 D_800ECC3E;
 extern u16 D_800ECC42;
 extern void loadCurrentRaceRecordReplayData(void);
 extern void initCourseRecordBannerFadeOut(void *);
-extern void initRaceCountdownPrompt(void *);
-extern void func_80065E90(void *);
 #endif
 extern u8 gPlayerCount;
 extern u8 D_80121B57;

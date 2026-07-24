@@ -127,6 +127,8 @@ s32 startCurrentQueuedSoundEffect(void);
 s32 calculatePositionalSoundVolume(SoundPosition *pos, s32 volume);
 void updatePlayerLoopingPositionalSound(s32 soundId, s32 mode, s32 volume, f32 pitch);
 
+extern void enqueuePositionalSoundRequest(s32, SoundPosition *, s32, s32, f32, s32, s32);
+
 void initSoundManager(void) {
     PlayerCommandInit init;
     void *nullPtr;
@@ -633,7 +635,6 @@ s32 countActiveMusicSequences(void) {
 }
 
 extern PositionalSoundRequest *gPendingPositionalSoundRequests;
-extern void enqueuePositionalSoundRequest(s32, SoundPosition *, s32, s32, f32, s32, s32);
 
 void clearPendingPositionalSoundRequests(void) {
     gPendingPositionalSoundRequests = NULL;

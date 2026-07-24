@@ -6,6 +6,7 @@
 #include "game/menu/main_menu/main_menu_scene_model.h"
 #include "game/menu/main_menu/main_menu_scene_model_renderer.h"
 #include "game/race/player/race_player_model_renderer.h"
+#include "game/math/fixed_matrix_multiply.h"
 
 typedef s16 FixedMatrix3sScratch[0x10];
 typedef struct MatrixWordCopy {
@@ -43,7 +44,6 @@ extern void addRenderCallback(void *, void *, void *);
 extern s32 allocFixedTransformMatrix(void *);
 extern void makeFixedRotationX(void *, s16);
 extern void makeFixedRotationZ(void *, s16);
-extern void multiplyFixedMatrix3s(void *, void *, void *);
 extern void makeFixedRotationYX(void *, s16, s16, ...);
 extern s32 gModelRenderCallbackList;
 extern void *D_8010ADE0;

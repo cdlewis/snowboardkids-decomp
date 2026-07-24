@@ -43,6 +43,8 @@ extern MainMenuModelAssetHandles gAssetHandles;
 // compressRaceRecordReplayData best match: 99.203% (nonmatchings/compressRaceRecordReplayData-1219509448159986855/base_2.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/main_menu/main_menu_scene_model/compressRaceRecordReplayData.s")
 
+extern s32 compressRaceRecordReplayData(u8 *src, s32 srcLen, u16 *dst);
+
 #ifdef NON_MATCHING
 s32 compressRaceRecordReplayData(u8 *src, s32 srcLen, u16 *dst) {
     s32 count;
@@ -176,8 +178,6 @@ extern s16 gRaceCourseIndex;
 extern u8 D_8010B200[];
 extern u16 D_8010E180[];
 extern u8 D_800F3EF0[];
-
-extern s32 compressRaceRecordReplayData(u8 *src, s32 srcLen, u16 *dst);
 
 #define ACCUM_SLOT(courseIndex, slotIndex, maxSize, minSize) \
     if (gRaceCourseIndex != (courseIndex)) {          \

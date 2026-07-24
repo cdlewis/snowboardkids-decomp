@@ -8,6 +8,7 @@
 #include "game/menu/character_select/character_select_ui.h"
 #include "game/engine/viewport_manager.h"
 #include "game/race/player/race_player_input.h"
+#include "game/audio/sound_manager.h"
 
 #define CHARACTER_SELECT_MOVE_LEFT 1
 #define CHARACTER_SELECT_MOVE_RIGHT 2
@@ -27,9 +28,6 @@ u8 gCharacterSelectSecretCharacterUnlocked;
 
 extern void releaseMenuAssetHandles(void);
 extern void enqueueSoundEffect(s32, s32);
-extern void updateCharacterSelectMenu(void);
-extern void fadeOutCharacterSelectMenu(void);
-extern void requestMusicSequenceBank(s32);
 extern CharacterSelectMenuState *gCurrentGameTask;
 extern u16 gCharacterSelectIdOrder[];
 extern s16 gCharacterSelectVoiceSoundIds[];

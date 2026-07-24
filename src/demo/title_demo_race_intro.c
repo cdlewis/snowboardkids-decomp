@@ -41,9 +41,6 @@ extern s16 gRacePlayerAttackStartTimer;
 extern u8 gRaceResultState;
 extern u8 gFramebufferSwapHold;
 extern s32 gMenuFlowState;
-extern void updateCallbackTasksWithMinPriority(s32);
-extern void updateRemainingCallbackTasks(void);
-extern void requestMusicSequenceStop(s32);
 extern void releaseMenuAssetHandles(void);
 
 #define COURSE_REPLAY_OFFSET(course) ((((((((course) << 2) - (course)) << 5) + (course)) << 2) - (course)) << 2)

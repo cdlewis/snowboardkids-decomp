@@ -47,7 +47,6 @@ typedef struct {
 } MultiplayerCourseSelectStatus;
 
 extern void n_alSeqpDelete(void);
-extern void requestMusicSequenceBank(s32);
 extern s16 gMenuFadeAlpha;
 extern u8 D_800EC9C0;
 extern u8 gRaceSplitscreenMode;
