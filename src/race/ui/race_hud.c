@@ -346,7 +346,7 @@ void drawScoreAttackChallengeLabels(s32 arg0) {
     drawMenuAsciiTextDefaultScale(0x70, -0x48, sp18, 6);
 }
 
-// drawTargetTimeChallengeHud best match: 96.511% at nonmatchings/drawTargetTimeChallengeHud-6887713755923057488/base_18.c.
+// drawTargetTimeChallengeHud best match: 96.594% at nonmatchings/drawTargetTimeChallengeHud-5755426475870421788/base_13.c.
 #pragma GLOBAL_ASM("asm/nonmatchings/race/ui/race_hud/drawTargetTimeChallengeHud.s")
 
 #ifdef NON_MATCHING
@@ -358,7 +358,7 @@ const char gRaceHudTargetTimeChallengeSecondaryCounterFormat[] = "%d";
 void drawTargetTimeChallengeHud(s32 arg0) {
     char *bufferAlias;
     char *endPointer;
-    char buffer[0xC];
+    char buffer[4];
     s32 x;
     char *digit;
     u32 end;
