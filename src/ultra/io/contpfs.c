@@ -110,9 +110,9 @@ s32 __osRepairPackId(OSPfs* pfs, __OSPackId* oldId, __OSPackId* repairedId) {
     ERRCK(SELECT_BANK(pfs, 0));
 #endif
 
-    deviceIdBit = (bank > 0) ? 1 : 0;
+    deviceIdBit = (bank > 0) ? PFS_ID_DEVICE_ID_BIT : 0;
 
-    repairedId->deviceid = (oldId->deviceid & (u16)~1) | deviceIdBit;
+    repairedId->deviceid = (oldId->deviceid & (u16)~PFS_ID_DEVICE_ID_BIT) | deviceIdBit;
     repairedId->banks = bank;
     repairedId->version = oldId->version;
     __osIdCheckSum((u16*)repairedId, &repairedId->checksum, &repairedId->inverted_checksum);
@@ -200,11 +200,11 @@ s32 __osGetId(OSPfs* pfs) {
         }
     }
 
-    if ((validId->deviceid & 1) == 0) {
+    if ((validId->deviceid & PFS_ID_DEVICE_ID_BIT) == 0) {
         ERRCK(__osRepairPackId(pfs, validId, &repairedId));
         validId = &repairedId;
 
-        if ((validId->deviceid & 1) == 0) {
+        if ((validId->deviceid & PFS_ID_DEVICE_ID_BIT) == 0) {
             return PFS_ERR_DEVICE;
         }
     }

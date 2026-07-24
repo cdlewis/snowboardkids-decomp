@@ -37,7 +37,7 @@ s32 osPfsInitPak(OSMesgQueue* queue, OSPfs* pfs, int channel) {
         }
     }
 
-    if (!(packId->deviceid & 1)) {
+    if (!(packId->deviceid & PFS_ID_DEVICE_ID_BIT)) {
         ret = __osRepairPackId(pfs, packId, &repairedPackId);
 
         if (ret != 0) {
@@ -46,7 +46,7 @@ s32 osPfsInitPak(OSMesgQueue* queue, OSPfs* pfs, int channel) {
 
         packId = &repairedPackId;
 
-        if (!(packId->deviceid & 1)) {
+        if (!(packId->deviceid & PFS_ID_DEVICE_ID_BIT)) {
             return PFS_ERR_DEVICE;
         }
     }
