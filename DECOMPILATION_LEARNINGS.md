@@ -243,6 +243,12 @@ and control flow already match and only register *names* differ.
   (`f(base + i * STRIDE);`). IDO strength-reduces `i * STRIDE` into a pointer
   initialized with a fresh `lui`/`addiu` in the preheader, so it does not CSE
   with any base held earlier.
+- **A descending array-index loop can become a pointer walk.** For a loop such
+  as `for (i = count - 1; i >= 0; i--)`, IDO may replace the integer induction
+  variable with a pointer initialized to the last element, decrement it by the
+  element size, and terminate with an unsigned pointer comparison against the
+  array base. Do not assume that a target `addiu ptr, -sizeof(element)` loop
+  was written with an explicit pointer.
 - **Structured counted loops can get unrolled; unstructured goto loops do
   not.** IDO aggressively unrolls structured `for`/`while`/`do-while` loops
   whose trip count is computable at runtime from two address operands, using a
