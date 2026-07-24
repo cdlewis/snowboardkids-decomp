@@ -130,17 +130,6 @@ extern s16 gRacePlayerAttackStartTimer;
 extern s16 gRaceLapCount;
 extern s16 gFrameCounter;
 extern Unk8011228C gRacePlayerHudStatuses[];
-extern s8 D_80121D93;
-extern s32 D_8012207C;
-extern u16 D_8012238C;
-extern s8 D_8012239F;
-extern s32 D_80122688;
-extern u16 D_80122998;
-extern s8 D_801229AB;
-extern s32 D_80122C94;
-extern u16 D_80122FA4;
-extern s8 D_80122FB7;
-extern s32 D_801232A0;
 extern void *D_801248C8;
 extern void *D_801248EC;
 
@@ -5109,17 +5098,17 @@ s32 tryStartRacePlayerCourseObjectMode(s16 arg0) {
     }
 
     firstPlayer = players;
-    if (((D_80121D93 != 0) && (arg0 != firstPlayer->playerIndex)) && (D_8012207C & 0x20)) {
+    if (((gRacePlayers[0].isActive != 0) && (arg0 != firstPlayer->playerIndex)) && (gRacePlayers[0].stateFlags & 0x20)) {
         return 0;
     }
-    if (((D_8012239F != 0) && (arg0 != D_8012238C)) && (D_80122688 & 0x20)) {
+    if (((gRacePlayers[1].isActive != 0) && (arg0 != gRacePlayers[1].playerIndex)) && (gRacePlayers[1].stateFlags & 0x20)) {
         return 0;
     }
-    if (((D_801229AB != 0) && (arg0 != D_80122998)) && (D_80122C94 & 0x20)) {
+    if (((gRacePlayers[2].isActive != 0) && (arg0 != gRacePlayers[2].playerIndex)) && (gRacePlayers[2].stateFlags & 0x20)) {
         delta = 0;
         return delta;
     }
-    if (((D_80122FB7 != 0) && (arg0 != D_80122FA4)) && (D_801232A0 & 0x20)) {
+    if (((gRacePlayers[3].isActive != 0) && (arg0 != gRacePlayers[3].playerIndex)) && (gRacePlayers[3].stateFlags & 0x20)) {
         return 0;
     }
 

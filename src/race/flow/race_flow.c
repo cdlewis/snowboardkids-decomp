@@ -102,7 +102,7 @@ typedef struct {
     /* 0x00C */ s32 unkC;
     /* 0x010 */ u8 characterId;
     /* 0x011 */ u8 characterVariant;
-    /* 0x012 */ u8 pad12[0x13 - 0x12];
+    /* 0x012 */ u8 unk12;
     /* 0x013 */ s8 unk13;
     /* 0x014 */ s8 unk14;
     /* 0x015 */ u8 unk15;
@@ -173,7 +173,6 @@ extern s32 gRaceCameraReplayStartY;
 extern s32 gRaceCameraReplayStartZ;
 extern s32 gMenuFlowState;
 extern s32 gPlayerInputHeld;
-extern s32 D_8012207C;
 extern s32 gPlayerInputPressed[];
 extern void *gMenuRenderCallbackList;
 extern s16 gAssetHandles[];
@@ -210,9 +209,6 @@ extern u8 D_800DC5B4[];
 extern u8 D_800DC4C4[][4];
 extern RaceCourseCharacterEntry *D_800DC58C[];
 extern RacePlayerState gFrameCounter;
-extern s8 D_8012239C;
-extern s8 D_8012239D;
-extern s8 D_8012239E;
 extern u16 D_800ECC22;
 extern u16 D_800ECC26;
 extern u16 D_800ECC2A;
@@ -809,9 +805,9 @@ void initRaceSceneFlow(void) {
                 gRacePlayers[1].unk4 = 0;
                 gRacePlayers[1].unk14 = 1;
                 gRacePlayers[1].unk16 = 1;
-                D_8012239C = history->characterId;
-                D_8012239D = history->characterVariant;
-                D_8012239E = history->replayInputSource;
+                gRacePlayers[1].characterId = history->characterId;
+                gRacePlayers[1].characterVariant = history->characterVariant;
+                gRacePlayers[1].unk12 = history->replayInputSource;
                 gRacePlayerCount = 2;
             }
         }
@@ -1925,7 +1921,7 @@ s32 areRacePlayersFinished(void) {
     RacePlayerState *player;
 
     if (gRaceSplitscreenMode == 1) {
-        if (!(D_8012207C & 0x40)) {
+        if (!(gRacePlayers[0].flags & 0x40)) {
             return 0;
         }
     } else {
