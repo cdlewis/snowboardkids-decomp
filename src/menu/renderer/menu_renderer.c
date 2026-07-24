@@ -34,6 +34,8 @@
 #define MENU_CROSSFADE_LOAD_BLOCK_FLAGS 0x07000000
 #define MENU_CROSSFADE_TEXTURE_1_TILE 0x01000000
 #define MENU_CROSSFADE_SCALE_STEP 0x0400
+// Palette selectors are passed as s32 values, but only their low byte is used.
+#define MENU_GLYPH_PALETTE_INDEX(palette) (((u8 *)&(palette))[3])
 
 typedef struct MenuRenderTask MenuRenderTask;
 typedef struct RenderCallbackNode RenderCallbackNode;
@@ -1275,7 +1277,7 @@ void drawMenuGlyphScriptWithFontBank(volatile s16 x, s16 y, MenuGlyphScript *scr
 
     drawX = x;
     drawY = y;
-    if (((u8 *)&palette)[3] == 0) {
+    if (MENU_GLYPH_PALETTE_INDEX(palette) == 0) {
         glyphAdvance = MENU_GLYPH_WIDE_ADVANCE;
     } else {
         glyphAdvance = MENU_GLYPH_NARROW_ADVANCE;
@@ -1294,7 +1296,8 @@ void drawMenuGlyphScriptWithFontBank(volatile s16 x, s16 y, MenuGlyphScript *scr
             } else {
                 advance = glyphAdvance;
                 if ((glyphCode & 0xFFFF) != MENU_GLYPH_SCRIPT_SPACE) {
-                    drawMenuGlyph(drawX, drawY, glyphCode & 0xFFFF, ((u8 *)&palette)[3], scaleValue, fontBankValue);
+                    drawMenuGlyph(drawX, drawY, glyphCode & 0xFFFF, MENU_GLYPH_PALETTE_INDEX(palette), scaleValue,
+                                  fontBankValue);
                 }
                 drawX += advance;
             }
@@ -1305,43 +1308,42 @@ void drawMenuGlyphScriptWithFontBank(volatile s16 x, s16 y, MenuGlyphScript *scr
 }
 
 void drawMenuGlyphScriptDefaultFont(volatile s16 x, s16 y, MenuGlyphScript *script, s32 palette, u16 scale) {
-    u16 firstGlyph;
-    s32 glyphCode;
-    MenuGlyphScript *scriptCursor;
+    u16 initialGlyph;
+    s32 currentGlyph;
+    MenuGlyphScript *cursor;
     s32 drawX;
     u16 glyphAdvance;
     s32 drawY;
-    u16 scaleValue;
-    s32 advance;
+    u16 paletteScale;
 
     drawX = x;
     drawY = y;
-    if (((u8 *)&palette)[3] == 0) {
+    if (MENU_GLYPH_PALETTE_INDEX(palette) == 0) {
         glyphAdvance = MENU_GLYPH_WIDE_ADVANCE;
     } else {
         glyphAdvance = MENU_GLYPH_NARROW_ADVANCE;
     }
 
-    firstGlyph = *script ^ 0;
-    if (MENU_GLYPH_SCRIPT_END != firstGlyph) {
-        scriptCursor = script;
-        scaleValue = scale;
-        glyphCode = firstGlyph;
+    // The no-op preserves IDO's initial-glyph register allocation.
+    initialGlyph = *script ^ 0;
+    if (initialGlyph != MENU_GLYPH_SCRIPT_END) {
+        cursor = script;
+        paletteScale = scale;
+        currentGlyph = initialGlyph;
         do {
-            if (MENU_GLYPH_SCRIPT_NEWLINE == (glyphCode & 0xFFFF)) {
+            if ((currentGlyph & 0xFFFF) == MENU_GLYPH_SCRIPT_NEWLINE) {
                 drawX = x;
                 drawY += MENU_GLYPH_LINE_HEIGHT;
             } else {
-                advance = glyphAdvance;
-                if ((glyphCode & 0xFFFF) != MENU_GLYPH_SCRIPT_SPACE) {
-                    drawMenuGlyph(drawX, drawY, glyphCode & 0xFFFF, ((u8 *)&palette)[3], scaleValue,
+                if ((currentGlyph & 0xFFFF) != MENU_GLYPH_SCRIPT_SPACE) {
+                    drawMenuGlyph(drawX, drawY, currentGlyph & 0xFFFF, MENU_GLYPH_PALETTE_INDEX(palette), paletteScale,
                                   MENU_GLYPH_DEFAULT_FONT_BANK);
                 }
-                drawX += advance;
+                drawX += glyphAdvance;
             }
-            glyphCode = scriptCursor[1];
-            scriptCursor++;
-        } while (MENU_GLYPH_SCRIPT_END != (glyphCode & 0xFFFF));
+            cursor++;
+            currentGlyph = *cursor;
+        } while ((currentGlyph & 0xFFFF) != MENU_GLYPH_SCRIPT_END);
     }
 }
 
@@ -1471,7 +1473,7 @@ void drawMenuColoredGlyphScript(volatile s16 x, s16 y, MenuGlyphScript *script, 
 
     drawX = x;
     drawY = y;
-    if (((u8 *)&palette)[3] == 0) {
+    if (MENU_GLYPH_PALETTE_INDEX(palette) == 0) {
         glyphAdvance = MENU_GLYPH_WIDE_ADVANCE;
     } else {
         glyphAdvance = MENU_GLYPH_NARROW_ADVANCE;
@@ -1492,8 +1494,8 @@ void drawMenuColoredGlyphScript(volatile s16 x, s16 y, MenuGlyphScript *script, 
             } else {
                 advance = glyphAdvance;
                 if (spaceGlyph != (glyphCode & 0xFFFF)) {
-                    drawMenuColoredGlyph(drawX, drawY, glyphCode & 0xFFFF, ((u8 *)&palette)[3], scaleValue, colorModeValue,
-                                         fontBankValue);
+                    drawMenuColoredGlyph(drawX, drawY, glyphCode & 0xFFFF, MENU_GLYPH_PALETTE_INDEX(palette), scaleValue,
+                                         colorModeValue, fontBankValue);
                 }
                 drawX += advance;
             }
@@ -1517,7 +1519,7 @@ void drawMenuGlyphScript(volatile s16 x, s16 y, MenuGlyphScript *script, s32 pal
 
     drawX = x;
     drawY = y;
-    if (((u8 *)&palette)[3] == 0) {
+    if (MENU_GLYPH_PALETTE_INDEX(palette) == 0) {
         glyphAdvance = MENU_GLYPH_WIDE_ADVANCE;
     } else {
         glyphAdvance = MENU_GLYPH_NARROW_ADVANCE;
@@ -1544,8 +1546,8 @@ void drawMenuGlyphScript(volatile s16 x, s16 y, MenuGlyphScript *script, s32 pal
                 colorModeValue = scriptCursor[1];
                 scriptCursor++;
             } else {
-                drawMenuColoredGlyph(drawX, drawY, glyphCode & 0xFFFF, ((u8 *)&palette)[3], scaleValue, colorModeValue,
-                                     MENU_GLYPH_DEFAULT_FONT_BANK);
+                drawMenuColoredGlyph(drawX, drawY, glyphCode & 0xFFFF, MENU_GLYPH_PALETTE_INDEX(palette), scaleValue,
+                                     colorModeValue, MENU_GLYPH_DEFAULT_FONT_BANK);
                 drawX += (advance = glyphAdvance);
             }
             glyphCode = scriptCursor[1];
