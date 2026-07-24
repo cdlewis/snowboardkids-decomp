@@ -946,7 +946,6 @@ extern s32 gMenuFlowState;
 extern s32 gPlayer1Money;
 extern s32 gPlayerInputPressed;
 extern s32 isPositionNearAnyRaceViewportFocus(Vec3i *);
-extern s8 D_80122289;
 extern s8 gRacePlayerCount;
 extern u16 D_800D6520[];
 extern u32 *D_800D6400[];
@@ -1213,7 +1212,7 @@ void func_80057E60(s32 arg0) {
 }
 
 void func_80057E90(RaceUiAlpha18Actor *arg0) {
-    if (D_80122289 != 0) {
+    if (gRacePlayers[0].mode != 0) {
         if (arg0->alpha != 0xFF) {
             gDPPipeSync(gRegionAllocPtr++);
             gDPSetCombineMode(gRegionAllocPtr++, G_CC_MODULATEIA_PRIM, G_CC_MODULATEIA_PRIM);
@@ -1226,8 +1225,8 @@ void func_80057E90(RaceUiAlpha18Actor *arg0) {
             }
         }
         drawAssetTableSprite(-0x68, -0x2C, getRelocatableHeapBlockBase(ASSET_HANDLE(0x1F)), 0x4D);
-        drawAssetTableSprite(-0x42, -0xC, getRelocatableHeapBlockBase(ASSET_HANDLE(0x1F)), D_80122289 & 0xFFFF);
-        drawAssetTableSprite(-0x22, 4, getRelocatableHeapBlockBase(ASSET_HANDLE(0x1F)), (D_80122289 + 0x48) & 0xFFFF);
+        drawAssetTableSprite(-0x42, -0xC, getRelocatableHeapBlockBase(ASSET_HANDLE(0x1F)), gRacePlayers[0].mode & 0xFFFF);
+        drawAssetTableSprite(-0x22, 4, getRelocatableHeapBlockBase(ASSET_HANDLE(0x1F)), (gRacePlayers[0].mode + 0x48) & 0xFFFF);
         drawAssetTableSprite(-0x68, 6, getRelocatableHeapBlockBase(ASSET_HANDLE(0x1F)), (gRacePlayers[0].characterId + 0x91) & 0xFFFF);
         if (arg0->alpha != 0xFF) {
             gSPDisplayList(gRegionAllocPtr++, gMenuRenderModeResetDl);
@@ -1273,7 +1272,7 @@ void func_8005812C(void *arg0)
     {
         sprintf(&buffer[i], gRaceUiCoinCounterFormat, gRacePlayers[0].unk568);
         x = 0x20;
-        if (D_80122289 == 3)
+        if (gRacePlayers[0].mode == 3)
         {
  colorValue = 0xD; } else { colorValue = 0xC; } do { assets = (RaceUiAssetHandles *) (((u8 *) (&gAssetHandles)) + ((u8) i)); space = ' '; color = colorValue; if (space != 0U) { } loop: if (buffer[i] != '\0') { if (buffer[i] != space) { drawAssetTableSpriteWithExplicitPalette((s16) x, -0xF, getRelocatableHeapBlockBase(assets->popupFontHandle), (buffer[i] - 5) & ((0, 0xFFFF)), color); }
             x += 8;
@@ -1284,7 +1283,7 @@ void func_8005812C(void *arg0)
         drawAssetTableSpriteWithExplicitPalette((s16) x, -0xF, getRelocatableHeapBlockBase(assets->popupFontHandle), 0x37, color);
     }
     while (0);
-    if (D_80122289 == 3)
+    if (gRacePlayers[0].mode == 3)
     {
         drawAssetTableSprite(0x18, -0xB, getRelocatableHeapBlockBase(assets->popupFontHandle), 0x4E);
     }
@@ -1491,7 +1490,7 @@ void updateRaceUiPrizePayoutFadeIn(RaceUiPrizePayoutActor *arg0) {
 
 void initRaceUiPrizePayout(RaceUiPrizePayoutActor *arg0) {
     arg0->alpha = 0;
-    arg0->prizeAmount = gRacePrizeAmountsByCourseAndRank[0][D_80122289 + gRaceCourseIndex * 4];
+    arg0->prizeAmount = gRacePrizeAmountsByCourseAndRank[0][gRacePlayers[0].mode + gRaceCourseIndex * 4];
     setCallbackTaskCallback(arg0, updateRaceUiPrizePayoutFadeIn);
 }
 
@@ -3320,8 +3319,8 @@ void initRaceUiTrickPrizePayout(RaceUiCourseStatsActor *arg0) {
 
 void drawRaceUiResultAwardBadge(CallbackTask *task) {
     drawAssetTableSprite(-0x68, -0x2C, getRelocatableHeapBlockBase(ASSET_HANDLE(0x1F)), 0x4D);
-    drawAssetTableSprite(-0x42, -0xC, getRelocatableHeapBlockBase(ASSET_HANDLE(0x1F)), D_80122289 & 0xFFFF);
-    drawAssetTableSprite(-0x22, 4, getRelocatableHeapBlockBase(ASSET_HANDLE(0x1F)), (D_80122289 + 0x48) & 0xFFFF);
+    drawAssetTableSprite(-0x42, -0xC, getRelocatableHeapBlockBase(ASSET_HANDLE(0x1F)), gRacePlayers[0].mode & 0xFFFF);
+    drawAssetTableSprite(-0x22, 4, getRelocatableHeapBlockBase(ASSET_HANDLE(0x1F)), (gRacePlayers[0].mode + 0x48) & 0xFFFF);
     drawAssetTableSprite(-0x68, 6, getRelocatableHeapBlockBase(ASSET_HANDLE(0x1F)), (gRacePlayers[0].characterId + 0x91) & 0xFFFF);
 }
 
