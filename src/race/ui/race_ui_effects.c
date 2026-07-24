@@ -931,9 +931,6 @@ extern s8 D_80122289;
 extern s32 D_801222E8;
 extern RacePlayerByteField D_80121D94[];
 extern RacePlayerHalfwordField gPlayerHitSource[];
-extern RacePlayerHalfwordField D_8012265E[];
-extern RacePlayerHalfwordField D_80122C6A[];
-extern RacePlayerHalfwordField D_80123276[];
 extern RacePlayerByteField gRacePlayerItemTargetFlags[];
 extern s16 gFrameCounter;
 extern RaceUiAssetHandles gAssetHandles;
@@ -4392,13 +4389,13 @@ void func_80061F38(RaceUiFadingImpactActor *arg0) {
                 gPlayerHitSource[0].value = new_var->playerIndex;
             }
             if (tryApplyRacePlayerItemHit(sp24, sp2C, 0x80, 1) != 0) {
-                D_8012265E[0].value = new_var->playerIndex;
+                gPlayerHitSource[1].value = new_var->playerIndex;
             }
             if (tryApplyRacePlayerItemHit(sp24, sp2C, 0x80, 2) != 0) {
-                D_80122C6A[0].value = arg0->playerIndex;
+                gPlayerHitSource[2].value = arg0->playerIndex;
             }
             if (tryApplyRacePlayerItemHit(sp24, sp2C, 0x80, 3) != 0) {
-                D_80123276[0].value = arg0->playerIndex;
+                gPlayerHitSource[3].value = arg0->playerIndex;
             }
         }
     }
