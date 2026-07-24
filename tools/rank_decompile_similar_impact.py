@@ -1,18 +1,23 @@
 #!/usr/bin/env python3
-"""Rank unmatched functions by their potential impact on decompile-similar.
+"""Rank unmatched functions by their overall decompilation leverage.
 
-For each unmatched function, this script asks a counterfactual question: if the
-function were matched, which other unmatched functions would include it in the
-top-N similarity hints produced by task-runner/decompile-similar?
+For each unmatched function, this script asks two counterfactual questions:
 
-When an ignored.log is available, the script also detects targets whose current
-task-runner input has already failed but whose new input has not. These are
-reported as "unblocked" targets and are the primary sort key.
+* How much ROM progress would matching the function make directly?
+* How much easier would it make other unmatched functions by becoming a new
+  decompile-similar reference?
+
+The default "overall" ranking estimates value per unit of effort. Value includes
+the candidate's own instructions plus affected targets, weighted by target size
+and the improvement in similarity. Effort accounts for candidate size,
+structural difficulty, the quality of its current reference, and prior failed
+task-runner attempts.
 
 Usage:
     python3 tools/rank_decompile_similar_impact.py
     python3 tools/rank_decompile_similar_impact.py --limit 50 --show-targets 5
-    python3 tools/rank_decompile_similar_impact.py --all-candidates --json
+    python3 tools/rank_decompile_similar_impact.py --ranking reach
+    python3 tools/rank_decompile_similar_impact.py --json
 """
 
 from __future__ import annotations
@@ -49,6 +54,11 @@ class Reference:
     label: str
     score: float
 
+    @property
+    def task_label(self) -> str:
+        """Match score_functions.py's task-runner JSON representation."""
+        return f"{self.label} ({self.score:.0%})"
+
 
 @dataclass(frozen=True)
 class TargetImpact:
@@ -59,10 +69,25 @@ class TargetImpact:
     new_rank: int
     replaced_score: float
     unblocked: bool
+    instruction_count: int = 0
 
     @property
     def score_gain(self) -> float:
         return max(0.0, self.score - self.replaced_score)
+
+    @property
+    def effective_score_gain(self) -> float:
+        """Hint value newly available after matching the candidate.
+
+        A normal target gets only the improvement over its current hint. If the
+        current task input was already exhausted, the replacement creates a
+        fresh attempt, so its full similarity is useful again.
+        """
+        return self.score if self.unblocked else self.score_gain
+
+    @property
+    def value(self) -> float:
+        return self.instruction_count * self.effective_score_gain
 
 
 @dataclass
@@ -71,6 +96,8 @@ class CandidateImpact:
 
     function: ParsedFunction
     candidate_blocked: bool
+    reference_similarity: float = 0.0
+    historical_attempts: int = 0
     targets: list[TargetImpact] = field(default_factory=list)
 
     @property
@@ -103,6 +130,41 @@ class CandidateImpact:
             self.function.jump_count,
             self.function.label_count,
         )
+
+    @property
+    def direct_value(self) -> float:
+        return float(self.function.instruction_count)
+
+    @property
+    def downstream_value(self) -> float:
+        return sum(target.value for target in self.targets)
+
+    @property
+    def total_value(self) -> float:
+        return self.direct_value + self.downstream_value
+
+    @property
+    def estimated_effort(self) -> float:
+        """Estimate relative effort in instruction-equivalent units.
+
+        The fixed cost represents setup/integration overhead, while the other
+        factors deliberately have modest ranges so no single heuristic can
+        dominate the measured function size.
+        """
+        fixed_overhead = 25.0
+        difficulty_factor = 1.0 + self.difficulty
+        reference_factor = 1.25 - (0.5 * self.reference_similarity)
+        retry_factor = 1.0 + (0.25 * self.historical_attempts)
+        return fixed_overhead + (
+            max(1, self.function.instruction_count)
+            * difficulty_factor
+            * reference_factor
+            * retry_factor
+        )
+
+    @property
+    def overall_score(self) -> float:
+        return self.total_value / self.estimated_effort
 
 
 def reference_sort_key(reference: Reference) -> tuple[float, bool, str, str]:
@@ -265,7 +327,7 @@ def build_current_references(
 
 
 def task_input(target: str, references: Sequence[Reference]) -> tuple[str, ...]:
-    return target, *(reference.label for reference in references)
+    return target, *(reference.task_label for reference in references)
 
 
 def rank_candidate_impacts(
@@ -274,6 +336,7 @@ def rank_candidate_impacts(
     matched_names: set[str],
     ignored_inputs: set[tuple[str, ...]],
     top_n: int,
+    ranking: str = "overall",
     show_progress: bool = True,
 ) -> tuple[list[CandidateImpact], set[str]]:
     """Calculate recommendation changes caused by every possible new match."""
@@ -286,10 +349,22 @@ def rank_candidate_impacts(
         for name, current_input in current_inputs.items()
         if current_input in ignored_inputs
     }
+    historical_attempts: dict[str, int] = {}
+    for ignored_input in ignored_inputs:
+        if ignored_input:
+            historical_attempts[ignored_input[0]] = (
+                historical_attempts.get(ignored_input[0], 0) + 1
+            )
     impacts = [
         CandidateImpact(
             function=candidate,
             candidate_blocked=candidate.name in blocked_targets,
+            reference_similarity=(
+                current_references[candidate.name][0].score
+                if current_references[candidate.name]
+                else 0.0
+            ),
+            historical_attempts=historical_attempts.get(candidate.name, 0),
         )
         for candidate in unmatched
         if candidate.name not in matched_names
@@ -333,6 +408,7 @@ def rank_candidate_impacts(
                     unblocked=(
                         old_input in ignored_inputs and new_input not in ignored_inputs
                     ),
+                    instruction_count=target.instruction_count,
                 )
             )
 
@@ -342,17 +418,30 @@ def rank_candidate_impacts(
                 file=sys.stderr,
             )
 
-    impacts.sort(
-        key=lambda impact: (
-            -impact.unblocked_count,
-            -impact.changed_count,
-            -impact.new_best_count,
-            -impact.total_score_gain,
-            impact.difficulty,
-            impact.function.instruction_count,
-            impact.function.name,
+    if ranking == "overall":
+        impacts.sort(
+            key=lambda impact: (
+                -impact.overall_score,
+                -impact.total_value,
+                impact.estimated_effort,
+                impact.function.name,
+            )
         )
-    )
+    elif ranking == "reach":
+        impacts.sort(
+            key=lambda impact: (
+                -impact.unblocked_count,
+                -impact.changed_count,
+                -impact.new_best_count,
+                -impact.total_score_gain,
+                impact.difficulty,
+                impact.function.instruction_count,
+                impact.function.name,
+            )
+        )
+    else:
+        raise ValueError(f"unknown ranking mode: {ranking}")
+
     return impacts, blocked_targets
 
 
@@ -369,6 +458,13 @@ def impact_to_json(impact: CandidateImpact) -> dict:
     return {
         "function": impact.function.name,
         "candidate_blocked": impact.candidate_blocked,
+        "historical_attempts": impact.historical_attempts,
+        "reference_similarity": impact.reference_similarity,
+        "overall_score": impact.overall_score,
+        "direct_value": impact.direct_value,
+        "downstream_value": impact.downstream_value,
+        "total_value": impact.total_value,
+        "estimated_effort": impact.estimated_effort,
         "unblocked_targets": impact.unblocked_count,
         "changed_targets": impact.changed_count,
         "new_best_targets": impact.new_best_count,
@@ -383,6 +479,9 @@ def impact_to_json(impact: CandidateImpact) -> dict:
                 "new_rank": target.new_rank,
                 "replaced_score": target.replaced_score,
                 "score_gain": target.score_gain,
+                "effective_score_gain": target.effective_score_gain,
+                "instruction_count": target.instruction_count,
+                "value": target.value,
                 "unblocked": target.unblocked,
             }
             for target in targets
@@ -399,6 +498,7 @@ def print_human_results(
     excluded_existing_count: int,
     top_n: int,
     show_targets: int,
+    ranking: str,
 ) -> None:
     print(
         f"Analyzed {unmatched_count} unmatched functions against "
@@ -420,10 +520,19 @@ def print_human_results(
             "as matched references in another worktree."
         )
     print()
-    print(
-        f"{'#':>3}  {'FUNCTION':<42} {'STATE':<7} {'UNBLOCK':>7} {'CHANGE':>6} "
-        f"{'BEST':>4} {'INSNS':>5} {'AVG SIM':>7}  TARGET EXAMPLES"
-    )
+    if ranking == "overall":
+        print(
+            f"{'#':>3}  {'FUNCTION':<42} {'SCORE':>6} {'VALUE':>7} "
+            f"{'EFFORT':>7} {'STATE':<7} {'REF':>5} {'TRIES':>5} "
+            f"{'CHANGE':>6}  "
+            "TARGET EXAMPLES"
+        )
+    else:
+        print(
+            f"{'#':>3}  {'FUNCTION':<42} {'STATE':<7} {'UNBLOCK':>7} "
+            f"{'CHANGE':>6} {'BEST':>4} {'INSNS':>5} {'AVG SIM':>7}  "
+            "TARGET EXAMPLES"
+        )
 
     for rank, impact in enumerate(impacts, 1):
         targets = sorted(
@@ -441,14 +550,35 @@ def print_human_results(
             examples.append(
                 f"{target.target}@{target.score:.0%}/#{target.new_rank}{marker}"
             )
-        print(
-            f"{rank:>3}  {impact.function.name:<42} "
-            f"{'blocked' if impact.candidate_blocked else 'ready':<7} "
-            f"{impact.unblocked_count:>7} {impact.changed_count:>6} "
-            f"{impact.new_best_count:>4} {impact.function.instruction_count:>5} "
-            f"{impact.average_similarity:>7.1%}  {', '.join(examples)}"
-        )
+        if ranking == "overall":
+            print(
+                f"{rank:>3}  {impact.function.name:<42} "
+                f"{impact.overall_score:>6.2f} {impact.total_value:>7.1f} "
+                f"{impact.estimated_effort:>7.1f} "
+                f"{'blocked' if impact.candidate_blocked else 'ready':<7} "
+                f"{impact.reference_similarity:>5.0%} "
+                f"{impact.historical_attempts:>5} {impact.changed_count:>6}  "
+                f"{', '.join(examples)}"
+            )
+        else:
+            print(
+                f"{rank:>3}  {impact.function.name:<42} "
+                f"{'blocked' if impact.candidate_blocked else 'ready':<7} "
+                f"{impact.unblocked_count:>7} {impact.changed_count:>6} "
+                f"{impact.new_best_count:>4} "
+                f"{impact.function.instruction_count:>5} "
+                f"{impact.average_similarity:>7.1%}  {', '.join(examples)}"
+            )
 
+    if ranking == "overall":
+        print(
+            "\nScore = value / effort. Value is direct instructions plus "
+            "similarity-weighted downstream instructions."
+        )
+        print(
+            "Effort estimates setup, size, structural difficulty, current "
+            "reference quality, and prior tries."
+        )
     if any(impact.unblocked_count for impact in impacts):
         print("\n* target gets a task input that is not already in ignored.log")
 
@@ -456,8 +586,8 @@ def print_human_results(
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description=(
-            "Rank unmatched functions by how many decompile-similar hint lists "
-            "they would improve if matched."
+            "Rank unmatched functions by overall decompilation value per "
+            "estimated effort, including their impact as future references."
         )
     )
     parser.add_argument(
@@ -494,18 +624,32 @@ def parse_args() -> argparse.Namespace:
         help=f"task-runner ignore history (default: {DEFAULT_IGNORED_LOG})",
     )
     parser.add_argument(
+        "--ranking",
+        choices=("overall", "reach"),
+        default="overall",
+        help=(
+            "ranking model: overall value per estimated effort (default), or "
+            "legacy reach-first ordering"
+        ),
+    )
+    candidate_filter = parser.add_mutually_exclusive_group()
+    candidate_filter.add_argument(
+        "--blocked-candidates-only",
+        action="store_true",
+        help="show only candidates whose exact current task input was exhausted",
+    )
+    candidate_filter.add_argument(
         "--all-candidates",
         action="store_true",
-        help=(
-            "include candidates whose current task input is not ignored; by "
-            "default only functions decompile-similar has exhausted are shown "
-            "when any such functions exist"
-        ),
+        help=argparse.SUPPRESS,
     )
     parser.add_argument(
         "--include-zero-impact",
         action="store_true",
-        help="include functions that would not change any top-N hint list",
+        help=(
+            "in reach mode, include functions that would not change any top-N "
+            "hint list (overall mode always includes their direct value)"
+        ),
     )
     parser.add_argument(
         "--json",
@@ -569,14 +713,15 @@ def main() -> int:
         matched_names,
         ignored_inputs,
         args.top_n,
+        ranking=args.ranking,
     )
 
     excluded_existing_count = sum(
         function.name in matched_names for function in unmatched
     )
-    if blocked_targets and not args.all_candidates:
+    if args.blocked_candidates_only:
         impacts = [impact for impact in impacts if impact.candidate_blocked]
-    if not args.include_zero_impact:
+    if args.ranking == "reach" and not args.include_zero_impact:
         impacts = [impact for impact in impacts if impact.changed_count]
     if args.limit:
         impacts = impacts[: args.limit]
@@ -590,6 +735,7 @@ def main() -> int:
                 "ignored_inputs": len(ignored_inputs),
                 "currently_blocked_targets": len(blocked_targets),
                 "excluded_existing_references": excluded_existing_count,
+                "ranking": args.ranking,
             },
             "candidates": [impact_to_json(impact) for impact in impacts],
         }
@@ -604,6 +750,7 @@ def main() -> int:
             excluded_existing_count,
             args.top_n,
             args.show_targets,
+            args.ranking,
         )
 
     return 0
