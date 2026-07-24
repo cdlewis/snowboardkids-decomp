@@ -364,7 +364,7 @@ void requestControllerPakSaveRead(u16 arg0) {
     osRecvMesg(&gControllerSubsystemReplyQueue, &msg, OS_MESG_BLOCK);
 }
 
-// readControllerPakSave best match: 99.615% at nonmatchings/readControllerPakSave-8699393380584516020/base_51.c
+// readControllerPakSave best match: 99.679% at nonmatchings/readControllerPakSave-8498672362023432715/base_28.c
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/main_menu/controller_main_menu_flow/readControllerPakSave.s")
 
 #ifdef NON_MATCHING
@@ -425,7 +425,7 @@ checksum_loop:
         dst += src[3];
         work.offset += 4;
         src += 4;
-        if (work.offset != 0x78E0) {
+        if ((work.offset | 0) != 0x78E0) {
             goto checksum_loop;
         }
         if ((s32)dst != gGameSaveDataBuffer[controllerIndex].checksum) {
