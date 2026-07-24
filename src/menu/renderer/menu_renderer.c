@@ -690,13 +690,14 @@ void drawMenuSpriteSubrect(s16 x, s16 y, FontAsset *asset, u16 index, u8 srcX, u
 }
 #endif
 
-// drawMenuSpriteFixedScale best match: 87.000% (nonmatchings/drawMenuSpriteFixedScale-1219509448159986855/base_54.c)
+// drawMenuSpriteFixedScale best match: 87.650% (nonmatchings/drawMenuSpriteFixedScale-210831275846872038/base_5.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/renderer/menu_renderer/drawMenuSpriteFixedScale.s")
 
 #ifdef NON_MATCHING
 void drawMenuSpriteFixedScale(s16 x, s16 y, s32 assetAddress, u16 tileIndex, u16 scaleX, u16 scaleY, u8 flipMode,
                               u8 unusedPalette) {
     FontTexture *texture;
+    FontTexture *textureBase;
     u8 *paletteBase;
     s32 drawLeft;
     s32 drawTop;
@@ -733,14 +734,15 @@ void drawMenuSpriteFixedScale(s16 x, s16 y, s32 assetAddress, u16 tileIndex, u16
 
     sScale = gMenuSpriteFlipScales[flipMode & 3][0];
     tScale = gMenuSpriteFlipScales[flipMode & 3][1];
-    texture = &((FontAsset *)assetAddress)->textures[tileIndex];
-    texWidth = texture->width;
-    texHeight = texture->height;
+    textureBase = &((FontTexture *)assetAddress)[tileIndex];
+    texWidth = textureBase[1].width;
 
     drawLeft = (drawRight = x + gMenuViewportCenterX) << 2;
     texS = (y + gMenuViewportCenterY) << 2;
     drawTop = texS;
     drawRight = (((scaleX * texWidth) << 2) / 0x1000) + drawLeft;
+    texHeight = textureBase[1].height;
+    texture = &textureBase[1];
     drawBottom = (((scaleYValue * texHeight) << 2) / 0x1000) + drawTop;
     texS = 0;
     texT = 0;
