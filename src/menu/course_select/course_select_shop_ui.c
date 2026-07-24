@@ -67,6 +67,28 @@ typedef struct {
 
 typedef ShopMenuSparkleOffset ShopMenuSparklePattern[13];
 
+enum {
+    COURSE_DETAILS_PAGE_COUNT = 2,
+    COURSE_DETAILS_COURSES_PER_PAGE = 7,
+    COURSE_DETAILS_OPTION_COUNT = 10,
+    COURSE_DETAILS_ROW_SPACING = 0x13
+};
+
+typedef u16 CourseDetailsMenuEntryTilePages[COURSE_DETAILS_PAGE_COUNT][COURSE_DETAILS_COURSES_PER_PAGE];
+
+typedef u16 CourseNumberGlyphScript[5];
+
+typedef enum {
+    COURSE_DETAILS_STATE_REVEAL_LIST = 0,
+    COURSE_DETAILS_STATE_FADE_IN_CURSOR = 1,
+    COURSE_DETAILS_STATE_IDLE = 2,
+    COURSE_DETAILS_STATE_SLIDE_PAGE_OUT = 3,
+    COURSE_DETAILS_STATE_SLIDE_PAGE_IN = 4,
+    COURSE_DETAILS_STATE_EXIT = 5,
+    COURSE_DETAILS_STATE_RESET_CURSOR = 6,
+    COURSE_DETAILS_STATE_DONE = 7
+} CourseDetailsMenuState;
+
 struct ShopMenuRowActor {
     char pad0[0x18];
     /* 0x18 */ s16 rowXPositions[5];
@@ -193,7 +215,7 @@ extern ShopMenuSparkleOffset gCoursePreviewCloseSparkleOffsetsEnd[];
 extern ShopMenuSparklePattern gShopMenuSparklePatterns[];
 extern ShopDescriptionText gShopMenuModeDescriptionText[];
 extern u8 gCourseUnlockPurchasePromptText;
-extern u16 gCourseDetailsMenuEntryTiles[];
+extern CourseDetailsMenuEntryTilePages gCourseDetailsMenuEntryTiles;
 extern u8 gCourseSelectSelectedCourseId;
 extern u8 gMenuTransitionState;
 extern u8 gMenuSelectionVariant;
@@ -1234,58 +1256,60 @@ void initCourseUnlockPurchasePrompt(ShopMenuWidgetActor *arg0) {
     setCallbackTaskCallback(arg0, updateCourseUnlockPurchasePrompt);
 }
 
-void drawCourseDetailsMenu(ShopMenuWidgetActor *arg0) {
-    volatile s32 unused; /* reserves stack space, pinning `script` at sp+0x70 (load-bearing) */
-    u16 *tiles;
-    s32 i;
+void drawCourseDetailsMenu(ShopMenuWidgetActor *actor) {
+    u16 *entryTile;
+    s32 entryIndex;
     s32 yOffset;
-    u16 script[3];
-    s16 *cursor; /* walks arg0->cursorPositions; [12] reaches the first entry at offset 0x18 */
-    s32 value;
-    s32 tens;
-    s16 selectedCursorX;
+    CourseNumberGlyphScript courseNumberScript;
+    s32 courseNumber;
+    s32 tensDigit;
+    s16 selectionX;
 
- tiles = gCourseDetailsMenuEntryTiles; yOffset = 0; cursor = (s16 *) arg0; for (i = 0; i < 7; i++) {
-        drawMenuSprite(cursor[12], (s16)(arg0->targetY + yOffset),
+    /* Keeping the loop setup together preserves IDO's original scheduling. */
+    entryIndex = 0; yOffset = 0; entryTile = gCourseDetailsMenuEntryTiles[0]; do {
+        drawMenuSprite(actor->cursorPositions[entryIndex], (s16)(actor->targetY + yOffset),
                        getRelocatableHeapBlockBase(gAssetHandles[0x27]),
-                       tiles[gCourseDetailsPreviewPage * 7], 0x20, 0x20, 0, 0);
-        value = ((gCourseDetailsPreviewPage * 7) + i) + 1;
-        if (arg0 && arg0) { /* empty block preserves IDO's register allocation */ }
-        tens = value / 10;
-        if (tens == 0) {
-            script[0] = -2;
+                       entryTile[gCourseDetailsPreviewPage * COURSE_DETAILS_COURSES_PER_PAGE],
+                       0x20, 0x20, 0, 0);
+        courseNumber = ((gCourseDetailsPreviewPage * COURSE_DETAILS_COURSES_PER_PAGE) + entryIndex) + 1;
+        if (actor && actor) { /* preserves IDO's original register allocation */ }
+        tensDigit = courseNumber / 10;
+        if (tensDigit == 0) {
+            courseNumberScript[0] = -2;
         } else {
-            script[0] = tens;
+            courseNumberScript[0] = tensDigit;
         }
-        script[1] = value % 10;
-        script[2] = -1;
-        drawMenuGlyphScriptDefaultFont((s16)(cursor[12] - 0x12), (s16)(arg0->targetY + yOffset), script, 1, 0x100);
+        courseNumberScript[1] = courseNumber % 10;
+        courseNumberScript[2] = -1;
+        drawMenuGlyphScriptDefaultFont((s16)(actor->cursorPositions[entryIndex] - 0x12),
+                                       (s16)(actor->targetY + yOffset),
+                                       courseNumberScript, 1, 0x100);
 
-        yOffset += 0x13;
-        tiles++;
-        cursor++;
-    }
+        yOffset += COURSE_DETAILS_ROW_SPACING;
+        entryTile++;
+        entryIndex++;
+    } while (entryIndex < COURSE_DETAILS_COURSES_PER_PAGE);
 
-    i = 7;
-    yOffset = 0x85;
-    cursor = &((s16 *)arg0)[7];
+    entryIndex = COURSE_DETAILS_COURSES_PER_PAGE;
+    yOffset = COURSE_DETAILS_COURSES_PER_PAGE * COURSE_DETAILS_ROW_SPACING;
     do {
-        drawMenuSprite(cursor[12], (s16)(arg0->targetY + yOffset),
-                       getRelocatableHeapBlockBase(gAssetHandles[0x27]), (u16)i, 0x20, 0x20, 0, 0);
-        i++;
-        yOffset += 0x13;
-        cursor++;
-    } while (i != 10);
+        drawMenuSprite(actor->cursorPositions[entryIndex], (s16)(actor->targetY + yOffset),
+                       getRelocatableHeapBlockBase(gAssetHandles[0x27]), (u16)entryIndex,
+                       0x20, 0x20, 0, 0);
+        yOffset += COURSE_DETAILS_ROW_SPACING;
+        entryIndex++;
+    } while (entryIndex != COURSE_DETAILS_OPTION_COUNT);
 
-    if ((arg0->state != 0) && (gCourseDetailsCloseFromBack == 0)) {
-        if (arg0->state < 5) {
-            selectedCursorX = arg0->targetX;
+    if ((actor->state != COURSE_DETAILS_STATE_REVEAL_LIST) && (gCourseDetailsCloseFromBack == 0)) {
+        if (actor->state < COURSE_DETAILS_STATE_EXIT) {
+            selectionX = actor->targetX;
         } else {
-            selectedCursorX = arg0->cursorPositions[0];
+            selectionX = actor->cursorPositions[0];
         }
-        drawMenuSpriteWithAlpha((selectedCursorX << 0x10) >> 0x10, (s16)(arg0->targetY + (gCourseDetailsMenuSelection * 0x13)),
-                                getRelocatableHeapBlockBase(gAssetHandles[0x25]), 0x12, 0x20, 0x20, 0,
-                                arg0->prompt.bytes.pulseAlpha, 0);
+        drawMenuSpriteWithAlpha((selectionX << 0x10) >> 0x10,
+                                (s16)(actor->targetY + (gCourseDetailsMenuSelection * COURSE_DETAILS_ROW_SPACING)),
+                                getRelocatableHeapBlockBase(gAssetHandles[0x25]), 0x12,
+                                0x20, 0x20, 0, actor->prompt.bytes.pulseAlpha, 0);
     }
 }
 
@@ -1298,17 +1322,6 @@ void updateCourseDetailsMenu(ShopMenuWidgetActor *arg0) {
     s32 screenState;
     u16 visibleCount;
     s16 cursorX;
-
-    enum {
-        COURSE_DETAILS_STATE_REVEAL_LIST = 0,
-        COURSE_DETAILS_STATE_FADE_IN_CURSOR = 1,
-        COURSE_DETAILS_STATE_IDLE = 2,
-        COURSE_DETAILS_STATE_SLIDE_PAGE_OUT = 3,
-        COURSE_DETAILS_STATE_SLIDE_PAGE_IN = 4,
-        COURSE_DETAILS_STATE_EXIT = 5,
-        COURSE_DETAILS_STATE_RESET_CURSOR = 6,
-        COURSE_DETAILS_STATE_DONE = 7
-    };
 
     visibleActor = arg0;
     menuState = gCourseDetailsMenuState;
@@ -1341,9 +1354,9 @@ void updateCourseDetailsMenu(ShopMenuWidgetActor *arg0) {
         arg0->spawnTimer++;
         if (!(arg0->spawnTimer & 1)) {
             visibleCount = arg0->visibleCount;
-            if ((s32)visibleCount < 10) {
+            if ((s32)visibleCount < COURSE_DETAILS_OPTION_COUNT) {
                 arg0->visibleCount = visibleCount + 1;
-                if ((u16)arg0->visibleCount == 10) {
+                if ((u16)arg0->visibleCount == COURSE_DETAILS_OPTION_COUNT) {
                     createCallbackTask(initCourseDetailsPreviewTile, 0, 0x63);
                 }
             }
@@ -1362,7 +1375,7 @@ void updateCourseDetailsMenu(ShopMenuWidgetActor *arg0) {
         state = arg0->state;
         break;
     case COURSE_DETAILS_STATE_SLIDE_PAGE_OUT:
-        for (i = 0; i < 7; i++) {
+        for (i = 0; i < COURSE_DETAILS_COURSES_PER_PAGE; i++) {
             arg0->cursorPositions[i] -= 0x20;
             if (arg0->cursorPositions[i] < -0x117) {
                 arg0->cursorPositions[i] = -0x118;
@@ -1370,12 +1383,12 @@ void updateCourseDetailsMenu(ShopMenuWidgetActor *arg0) {
         }
         if (arg0->cursorPositions[0] == -0x118) {
             arg0->state = COURSE_DETAILS_STATE_SLIDE_PAGE_IN;
-            gCourseDetailsPreviewPage = (gCourseDetailsPreviewPage + 1) % 2;
+            gCourseDetailsPreviewPage = (gCourseDetailsPreviewPage + 1) % COURSE_DETAILS_PAGE_COUNT;
         }
         state = arg0->state;
         break;
     case COURSE_DETAILS_STATE_SLIDE_PAGE_IN:
-        for (i = 0; i < 7; i++) {
+        for (i = 0; i < COURSE_DETAILS_COURSES_PER_PAGE; i++) {
             arg0->cursorPositions[i] += 0x20;
             if (arg0->cursorPositions[i] >= arg0->targetX) {
                 arg0->cursorPositions[i] = arg0->targetX;
@@ -1387,7 +1400,7 @@ void updateCourseDetailsMenu(ShopMenuWidgetActor *arg0) {
         state = arg0->state;
         break;
     case COURSE_DETAILS_STATE_EXIT:
-        for (i = 0; i < 10; i++) {
+        for (i = 0; i < COURSE_DETAILS_OPTION_COUNT; i++) {
             arg0->cursorPositions[i] -= 0x20;
         }
         if (arg0->cursorPositions[0] < -0x117) {
@@ -1425,7 +1438,7 @@ void updateCourseDetailsMenu(ShopMenuWidgetActor *arg0) {
 void initCourseDetailsMenu(ShopMenuWidgetActor *arg0) {
     s32 i;
 
-    for (i = 0; i < 10; i++) {
+    for (i = 0; i < COURSE_DETAILS_OPTION_COUNT; i++) {
         arg0->cursorPositions[i] = -0xFC;
     }
 
@@ -1443,10 +1456,12 @@ void drawCourseDetailsPreviewTile(ShopMenuWidgetActor *arg0) {
     s32 unused;
     u16 tileIndex;
 
-    if (gCourseDetailsMenuSelection < 7) {
-        tileIndex = gCourseDetailsPreviewCourseTiles[gCourseDetailsPreviewPage * 7 + gCourseDetailsMenuSelection];
+    if (gCourseDetailsMenuSelection < COURSE_DETAILS_COURSES_PER_PAGE) {
+        tileIndex = gCourseDetailsPreviewCourseTiles[
+            gCourseDetailsPreviewPage * COURSE_DETAILS_COURSES_PER_PAGE + gCourseDetailsMenuSelection];
     } else {
-        tileIndex = gCourseDetailsPreviewExtraTiles[gCourseDetailsPreviewPage * 7];
+        tileIndex = gCourseDetailsPreviewExtraTiles[
+            gCourseDetailsPreviewPage * COURSE_DETAILS_COURSES_PER_PAGE];
     }
 
     drawMenuSpriteSubrect(arg0->x, arg0->y, getRelocatableHeapBlockBase(gAssetHandles[0xD]), tileIndex, 0, 0, 0x40, 0x1C, 0x20, 0x20);
