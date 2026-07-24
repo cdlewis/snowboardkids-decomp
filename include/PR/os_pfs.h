@@ -143,6 +143,7 @@ typedef struct {
 #define PFS_ID_3AREA            6
 #define PFS_LABEL_AREA          7
 #define PFS_ID_PAGE             PFS_ONE_PAGE * 0
+#define PFS_ID_DEVICE_ID_BIT    1
 
 #define PFS_BANK_LAPPED_BY  8   /* => u8 */
 #define PFS_SECTOR_PER_BANK 32
