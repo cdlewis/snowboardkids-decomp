@@ -204,7 +204,7 @@ void initCourseSelectMenu(void) {
     gCourseDetailsCloseFromBack = 0;
     gRacePlayers.unk8 = 0;
     gRacePlayers.unk6 = 0;
-    gCharacterSelectHudState.playerSelections[0] = 0;
+    gCharacterSelectHudState.highlightedRosterIndices[0] = 0;
     gActiveMenuTask = 0;
     gCurrentGameTask->timer = 0;
     gMenuExitSelection = 0;
