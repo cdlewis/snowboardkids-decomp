@@ -217,13 +217,12 @@ void initMainMenuModeSelectGrid(MenuPanelActor *arg0) {
     setCallbackTaskCallback(arg0, updateMainMenuModeSelectGrid);
 }
 
-// drawMainMenuModeDescriptionPanel best match: 99.067% (nonmatchings/drawMainMenuModeDescriptionPanel-8129558366194613874/base_8.c)
+// drawMainMenuModeDescriptionPanel best match: 99.184% (nonmatchings/drawMainMenuModeDescriptionPanel-8498672362023432715/base_17.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/main_menu/main_menu_panel_ui/drawMainMenuModeDescriptionPanel.s")
 
 #ifdef NON_MATCHING
 void drawMainMenuModeDescriptionPanel(MenuPanelActor *arg0) {
     s32 i;
-    u16 *scan;
 
     drawMenuSprite((s16)(arg0->x - 4), (s16)(arg0->y + 0x14), getRelocatableHeapBlockBase(gAssetHandles.textureHandle),
                   2, 0x20, 0x20, 0, 0);
@@ -254,14 +253,15 @@ void drawMainMenuModeDescriptionPanel(MenuPanelActor *arg0) {
     } while (i < 0x30);
 
     {
-        u16 *text;
+        u16 glyph;
         register u16 lineY;
         s32 visibleIndex;
         s32 streamIndex;
         u16 glyphText[2];
-        u16 glyph;
-        s32 lineX;
         s32 color;
+        u16 *text;
+        s32 lineX;
+        u16 *scan;
 
         glyphText[1] = 0xFFFF;
         visibleIndex = 0;
@@ -277,6 +277,8 @@ void drawMainMenuModeDescriptionPanel(MenuPanelActor *arg0) {
             }
 
             glyph = arg0->tileList[streamIndex++];
+            if (glyph) {
+            }
             glyphText[0] = glyph;
 
             switch (glyph & 0xFFFF) {
