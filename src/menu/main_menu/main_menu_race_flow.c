@@ -364,13 +364,15 @@ void queueTrainingCourseRaceInit(void) {
     setCurrentGameTaskCallback(&initTrainingCourseRace, 0);
 }
 
-// initTrainingCourseRace best match: 99.668% (asm-differ score 340, nonmatchings/initTrainingCourseRace-5512657642801906896)
+// initTrainingCourseRace best match: asm-differ score 200 (nonmatchings/initTrainingCourseRace-3885303446860889946/base_38.c)
 
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/main_menu/main_menu_race_flow/initTrainingCourseRace.s")
 
 #ifdef NON_MATCHING
 void initTrainingCourseRace(void) {
     u64 characterId;
+    unsigned int new_var;
+    unsigned int new_var2;
 
     switch (gTrainingCourseLesson) {
         case 1:
@@ -389,6 +391,7 @@ void initTrainingCourseRace(void) {
     gRaceUpdatePaused = 0;
     gRaceCameraModeChangeDisabled = 0;
     gRaceResultState = 0;
+    characterId = 1;
     gRaceDemoPlaybackEnabled = 0;
     gMainMenuModeSelection = 0;
     gRaceSplitscreenMode = 0;
@@ -396,27 +399,29 @@ void initTrainingCourseRace(void) {
 
     gRacePlayers[0].unk4 = 0;
     gRacePlayers[1].unk4 = 1;
-    gRacePlayers[2].unk4 = 1;
+    gRacePlayers[2].unk4 = characterId;
     gRacePlayers[3].unk4 = 1;
-    gRacePlayers[0].characterId = (gRacePlayers[0].unk11 = 0);
-    gRacePlayers[1].characterId = 1;
+    new_var2 = 0;
+    new_var = (unsigned int) (new_var = (gRacePlayers[new_var2].unk11 = new_var2));
+    gRacePlayers[new_var2].characterId = new_var;
     characterId = 2;
     gRacePlayers[2].characterId = characterId;
     gRacePlayers[3].characterId = 3;
+    gRacePlayers[1].characterId = 1;
     gRacePlayers[1].unk11 = 0;
     gRacePlayers[2].unk11 = 0;
     gRacePlayers[3].unk11 = 0;
     gRacePlayers[0].unk12 = 3;
     gRacePlayers[0].isActive = 1;
-    gRacePlayers[1].unk12 = 5;
     gRacePlayers[2].unk12 = 6;
-    if (!gTrainingCourseLesson) {
+    gRacePlayers[1].unk12 = 5;
+    if (gTrainingCourseLesson == 0) {
     }
     gRacePlayers[3].unk12 = 7;
-    gRacePlayers[0].unk17 = 0;
     gRacePlayers[1].unk17 = 1;
     gRacePlayers[2].unk17 = 2;
     gRacePlayers[3].unk17 = 3;
+    gRacePlayers[0].unk17 = 0;
     gPlayerCount = 1;
 
     switch (gTrainingCourseLesson) {
@@ -435,7 +440,11 @@ void initTrainingCourseRace(void) {
             break;
         default:
             gRacePlayers[0].isActive = 1;
+            do {
+            } while (0);
             gRacePlayers[1].isActive = 1;
+            if (new_var) {
+            }
             gRacePlayers[2].isActive = 1;
             gRacePlayers[3].isActive = 1;
             gRacePlayerCount = 4;
