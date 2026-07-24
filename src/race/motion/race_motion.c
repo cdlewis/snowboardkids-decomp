@@ -755,7 +755,7 @@ void resolveRaceCourseSurfaceCollision(s32 surfaceIndex, s32 x, s32 z, s32 radiu
 #undef CLAMP_RACE_COURSE_SURFACE_COLLISION_TO_ENDPOINT
 #undef PUSH_RACE_COURSE_SURFACE_COLLISION_FROM_EDGE
 
-// getRaceCourseSurfaceHeight best match: 99.786% (nonmatchings/getRaceCourseSurfaceHeight-6934502587000073416/base_28.c)
+// getRaceCourseSurfaceHeight best match: 99.821% (nonmatchings/getRaceCourseSurfaceHeight-8129558366194613874/base_10.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race/motion/race_motion/getRaceCourseSurfaceHeight.s")
 
 #ifdef NON_MATCHING
@@ -810,8 +810,9 @@ s32 getRaceCourseSurfaceHeight(s32 arg0, s32 arg1, s32 arg2) {
                 register RaceMotionCoord *coord2;
                 register s32 numeratorA;
                 register s32 xDelta;
-                register s32 zDelta;
                 register s32 height;
+                register s32 unused;
+                register s32 zDelta;
 
                 face = (RaceMotionFace *)((s32)gRaceCourseSurfaceFaces + faceOffset);
                 coords = gRaceCourseSurfaceCoords;

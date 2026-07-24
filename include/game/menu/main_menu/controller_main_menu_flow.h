@@ -13,7 +13,7 @@ void requestRumbleMotorStart(u16 arg0);
 void requestControllerPakProbe(u16 arg0);
 void probeControllerPak(u16 arg0);
 void requestControllerPakSaveStatus(u16 arg0);
-void checkControllerPakSaveStatus(s32 arg0);
+void checkControllerPakSaveStatus(u16 arg0);
 void requestControllerPakSaveRead(u16 arg0);
 void readControllerPakSave(u16 arg0);
 void requestControllerPakSaveWrite(u16 arg0);

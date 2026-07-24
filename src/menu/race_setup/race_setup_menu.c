@@ -639,7 +639,7 @@ void updateRaceSetupSaveMenu(void) {
 void raceSetupMenuNoop(void) {
 }
 
-// updateRaceSetupRumblePrompt best match: 99.154% (nonmatchings/updateRaceSetupRumblePrompt-2188069624939011928/base_21.c)
+// updateRaceSetupRumblePrompt best match: 99.684% (nonmatchings/updateRaceSetupRumblePrompt-1645024839200431810/base_24.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/race_setup/race_setup_menu/updateRaceSetupRumblePrompt.s")
 
 #ifdef NON_MATCHING
@@ -779,14 +779,16 @@ void updateRaceSetupRumblePrompt(void) {
             if ((gPlayerInputPressed & A_BUTTON) || (gPlayerInputPressed & START_BUTTON)) {
                 enqueueSoundEffect(1, 0x32);
                 statusIndex = 1;
-                if ((((((((((gControllerPakRumbleCheckPromptConfirmSelection & 0xFFu) & 0xFFu) & 0xFFu) & 0xFFu) &
-                           0xFFu) &
+                if (((((((((((gControllerPakRumbleCheckPromptConfirmSelection & 0xFFu) & 0xFFu) & 0xFFu) & 0xFFu) &
+                             0xFFu) &
+                            0xFFu) &
+                           0xFFFF) &
                           0xFFu) &
                          0xFFu) &
-                        0xFFu) &
-                       0xFFu) == 1) {
+                        0xFFu) == 1) {
                     gRaceSetupRumblePromptStateCase9Yes.state = statusIndex;
-                    gRaceSetupRumblePromptStateCase9Yes.targetScale = 0;
+                    gRaceSetupRumblePromptStateCase9Yes.targetScale =
+                        (gControllerPakRumbleCheckPromptTransition.confirmSelection != 1) * 0;
                 } else {
                     connectedCount = 0;
                     i = 0;
