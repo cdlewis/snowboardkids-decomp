@@ -8,7 +8,7 @@ void initAudioSynthesizer(SchedulerState *scheduler, ALSynConfig *config, s32 th
     u32 i;
     f32 targetFrameSamples;
 
-    gAudioSchedulerState = (s32)scheduler;
+    gAudioSchedulerState = scheduler;
     gAudioDmaBufferSize = dmaBufferSize;
     gAudioDmaState.initialized = 0;
     config->dmaproc = initAudioDmaCallback;
@@ -69,7 +69,7 @@ void audioThreadMain(s32 arg0) {
     u32 done;
 
     done = 0;
-    addSchedulerClient((SchedulerState *)gAudioSchedulerState, &locals.client, &gAudioThreadQueue);
+    addSchedulerClient(gAudioSchedulerState, &locals.client, &gAudioThreadQueue);
     do {
         osRecvMesg(&gAudioThreadQueue, &locals.msg, 1);
         switch (((AudioFrameMessage *)locals.msg)->type) {
