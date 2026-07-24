@@ -1398,7 +1398,6 @@ void drawMenuGlyph(s16 x, s16 y, u16 glyph, u8 palette, u16 scale, u16 fontBank)
                 if (y1 >= gMenuViewportCenterY + (gMenuViewportHeight / 2)) {
                     y1 = (gMenuViewportCenterY + (gMenuViewportHeight / 2)) - 1;
                 }
-
                 drawY0 = i;
                 glyphTexture = fontAsset->entries;
                 glyphTexture += glyph;
