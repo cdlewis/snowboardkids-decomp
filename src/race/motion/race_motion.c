@@ -43,6 +43,14 @@ typedef struct RaceMotionPackedJointRotation {
     s16 zAndFlags;
 } RaceMotionPackedJointRotation;
 
+typedef struct RaceMotionAnimationHeader {
+    s16 frameCount;
+} RaceMotionAnimationHeader;
+
+typedef struct RaceMotionAnimationAsset {
+    u16 animationOffsets[1];
+} RaceMotionAnimationAsset;
+
 #define RACE_MOTION_JOINT_COUNT 12
 #define RACE_MOTION_PARTIAL_ANIMATION_START_JOINT 6
 #define RACE_MOTION_PACKED_JOINT_ROTATION_SKIP_BYTES 0x24
@@ -106,8 +114,8 @@ struct RaceMotionState {
     s16 nextModelJointY;
     s16 nextModelJointZ;
     char pad444[0xE];
-    s16 animIndex;
-    s32 animStartOffset;
+    s16 animationIndex;
+    s32 animationStartOffset;
     s32 frameDataOffset;
     s16 frameCount;
     s16 framesRemaining;
@@ -1028,27 +1036,25 @@ s16 getRaceCourseNextSurface(s32 arg0) {
     return gRaceCourseSurfaces[arg0].nextFaceIndices[1];
 }
 
-void setRaceMotionAnimation(RaceMotionState *state, s32 animIndex) {
-    s16 *frameData;
+void setRaceMotionAnimation(RaceMotionState *state, s32 animationIndex) {
+    RaceMotionAnimationHeader *animationHeader;
     s16 frameCount;
     s32 frameDataOffset;
-    s32 animationBase;
+    s32 assetBase;
 
-    // The animation asset begins with a table of u16 offsets (one per
-    // animation), each in units of u16. Indexing it yields a pointer to the
-    // requested animation, whose first entry is its frame count.
-    animationBase = getRelocatableHeapBlockBase(gAssetHandles[0x16 + state->modelId]);
-    frameData = (s16 *)(animationBase + (((u16 *)animationBase)[animIndex] * sizeof(u16)));
-    frameCount = *frameData;
+    assetBase = getRelocatableHeapBlockBase(gAssetHandles[0x16 + state->modelId]);
+    animationHeader = (RaceMotionAnimationHeader *)(assetBase +
+        ((RaceMotionAnimationAsset *)assetBase)->animationOffsets[animationIndex] * sizeof(u16));
+    frameCount = animationHeader->frameCount;
     state->framesRemaining = frameCount;
     state->framesRemaining++;
     state->frameCount = frameCount;
-    frameData++;
-    frameDataOffset = (s32)frameData - getRelocatableHeapBlockBase(gAssetHandles[0x16 + state->modelId]);
-    state->animStartOffset = frameDataOffset;
+    animationHeader++;
+    frameDataOffset = (s32)animationHeader - getRelocatableHeapBlockBase(gAssetHandles[0x16 + state->modelId]);
+    state->animationStartOffset = frameDataOffset;
     state->frameDataOffset = frameDataOffset;
     state->frameTimer = 0;
-    state->animIndex = animIndex;
+    state->animationIndex = animationIndex;
 }
 
 void loadRaceMotionAnimationFrame(RaceMotionState *state) {
@@ -1540,7 +1546,7 @@ void stepRaceMotionLoopingAnimation(RaceMotionState *state) {
         state->framesRemaining--;
         if (state->framesRemaining <= 0) {
             state->framesRemaining = state->frameCount;
-            state->frameDataOffset = state->animStartOffset;
+            state->frameDataOffset = state->animationStartOffset;
         }
         loadRaceMotionAnimationFrame(state);
         frameTimer = state->frameTimer;
@@ -1559,7 +1565,7 @@ void stepRaceMotionLoopingJointAnimation(RaceMotionState *state) {
         state->framesRemaining--;
         if (state->framesRemaining <= 0) {
             state->framesRemaining = state->frameCount;
-            state->frameDataOffset = state->animStartOffset;
+            state->frameDataOffset = state->animationStartOffset;
         }
         loadRaceMotionJointAnimationFrame(state);
         frameTimer = state->frameTimer;
