@@ -2926,56 +2926,55 @@ void initCharacterSelectCourseExitPopup(CharacterSelectCourseWidgetActor *arg0) 
     setCallbackTaskCallback(arg0, updateCharacterSelectCourseExitPopup);
 }
 
-// drawCharacterSelectCourseRecordTime best match: 97.948% (nonmatchings/drawCharacterSelectCourseRecordTime-6934502587000073416/base_12.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/menu/character_select/character_select_course_ui/drawCharacterSelectCourseRecordTime.s")
+const char D_800E0B98[] = "%2.2d";
+const char D_800E0BA0[] = "%2.2d";
+const char D_800E0BA8[] = "%2.2d";
 
-#ifdef NON_MATCHING
-extern char D_800E0B98[];
-extern char D_800E0BA0[];
-extern char D_800E0BA8[];
+void drawCharacterSelectCourseRecordTime(CharacterSelectCourseRecordTime *arg0, s32 x, s32 arg2, s32 arg3) {
+    char buffer[0x58];
+    CharacterSelectCourseRecordTime *record;
+    s16 y;
+    u16 color;
+    s32 i;
 
-void drawCharacterSelectCourseRecordTime(CharacterSelectCourseRecordTime *arg0, s32 x, s32 y, s32 alpha) {
-    char *end;
-    s16 raceType;
-    volatile u8 padding[0x58];
-    char buffer[8];
-    char *ptr;
+    record = arg0;
+    y = arg2;
+    color = arg3;
+    sprintf(&buffer[-0x10], D_800E0B98, record->minutes);
+    i = -0x10;
+    do {
+        do {
+        } while (0);
+        drawAssetTableSpriteWithExplicitPalette((s16)x, y, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
+                                                ((u8)buffer[i] - 5) & 0xFFFF, color);
+        i++;
+        x += 8;
+    } while (i < -0xE);
+    drawAssetTableSpriteWithExplicitPalette((s16)x, y, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x36, color);
 
-    sprintf(buffer, D_800E0B98, arg0->minutes);
-    alpha &= 0xFFFF;
-    if ((!alpha) && (!alpha)) {
-    }
-    ptr = buffer; end = buffer + 2; do { drawAssetTableSpriteWithExplicitPalette((s16)x, (s16)y, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), ((u8)*ptr - 5) & 0xFFFF, alpha); ptr++; x += 8; } while (ptr < end); drawAssetTableSpriteWithExplicitPalette((s16)x, (s16)y, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x36, alpha);
-
-    if ((gRaceSplitscreenMode == 2) || ((gRaceSplitscreenMode == 1) && ((raceType = gRaceTypeSelection) == 0))) {
+    if ((gRaceSplitscreenMode == 2) || ((gRaceSplitscreenMode == 1) && (gRaceTypeSelection == 0))) {
         x += 6;
     } else {
         x += 8;
     }
 
-    sprintf(buffer, D_800E0BA0, arg0->seconds);
-    ptr = buffer;
-    end = buffer + 2;
-    end += 0;
+    sprintf(&buffer[-0x10], D_800E0BA0, record->seconds);
+    i = -0x10;
     do {
-        drawAssetTableSpriteWithExplicitPalette((s16)x, (s16)y, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
-                      ((u8)*ptr - 5) & 0xFFFF, alpha);
-        ptr++;
+        drawAssetTableSpriteWithExplicitPalette((s16)x, y, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
+                                                ((u8)buffer[i] - 5) & 0xFFFF, color);
+        i++;
         x += 8;
-    } while (ptr < end);
-    drawAssetTableSpriteWithExplicitPalette((s16)x, (s16)y, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x35, alpha);
+    } while (i < -0xE);
+    drawAssetTableSpriteWithExplicitPalette((s16)x, y, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x35, color);
 
     x += 8;
-    sprintf(buffer, D_800E0BA8, arg0->centiseconds >> 8);
-    ptr = buffer;
-    end = buffer + 2;
+    sprintf(&buffer[-0x10], D_800E0BA8, record->centiseconds >> 8);
+    i = -0x10;
     do {
-    } while (0);
-    do {
-        drawAssetTableSpriteWithExplicitPalette((s16)x, (s16)y, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
-                      ((u8)*ptr - 5) & 0xFFFF, alpha);
-        ptr++;
+        drawAssetTableSpriteWithExplicitPalette((s16)x, y, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
+                                                ((u8)buffer[i] - 5) & 0xFFFF, color);
+        i++;
         x += 8;
-    } while (ptr != end);
+    } while (i != -0xE);
 }
-#endif
