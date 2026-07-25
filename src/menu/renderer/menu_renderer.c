@@ -162,24 +162,18 @@ extern s16 gMenuViewportCenterX;
 extern s16 gMenuViewportCenterY;
 extern u16 D_800B51D0[];
 
-// drawMenuAssetRegion best match: 99.808% (nonmatchings/drawMenuAssetRegion-1645024839200431810/base_3.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/menu/renderer/menu_renderer/drawMenuAssetRegion.s")
-
-#ifdef NON_MATCHING
 void drawMenuAssetRegion(s16 x, s16 y, s32 tableAddress, u16 entryIndex, u16 scaleX, u16 scaleY,
                          u8 startS, u8 startT, u8 width, u8 height) {
     MenuRenderAssetTableEntry *entry;
-    s32 minY;
     s32 minX;
-    s32 left;
     u8 *paletteBase;
+    s32 left;
     s32 top;
-    s32 halfY;
     s32 right;
     s32 bottom;
     s32 texS;
     s32 texT;
-    s32 halfX;
+    s32 minY;
     u16 scaleXValue;
     u16 scaleYValue;
     s16 maxX;
@@ -197,8 +191,8 @@ void drawMenuAssetRegion(s16 x, s16 y, s32 tableAddress, u16 entryIndex, u16 sca
     bottom *= scaleYValue;
     bottom = ((bottom << 2) >> 5) + top;
     // Keeping these assignments on one source line preserves IDO's instruction scheduling.
-    texS = startS << 5; texT = startT << 5; halfY = gMenuViewportHeight / 2; minY = (s16)((gMenuViewportCenterY - halfY) << 2); maxY = (gMenuViewportCenterY + halfY) << 2; halfX = gMenuViewportWidth / 2; minX = (s16)((gMenuViewportCenterX - halfX) << 2);
-    maxX = (gMenuViewportCenterX + halfX) << 2;
+    texS = startS << 5; texT = startT << 5; minY = (s16)((gMenuViewportCenterY - (gMenuViewportHeight / 2)) << 2); maxY = (gMenuViewportCenterY + (gMenuViewportHeight / 2)) << 2; minX = (s16)((gMenuViewportCenterX - (gMenuViewportWidth / 2)) << 2);
+    maxX = (gMenuViewportCenterX + (gMenuViewportWidth / 2)) << 2;
 
     if ((left < maxX) && (top < maxY) && (right >= minX) && (bottom >= minY)) {
         if (left < minX) {
@@ -226,7 +220,6 @@ void drawMenuAssetRegion(s16 x, s16 y, s32 tableAddress, u16 entryIndex, u16 sca
                             (u16)(0x8000 / scaleXValue), (u16)(0x8000 / scaleYValue));
     }
 }
-#endif
 
 void drawMenuSprite(s16 arg0, s16 arg1, s32 arg2, u16 arg3, u16 arg4, u16 arg5, u8 arg6, u8 arg7) {
     s32 temp_v0;
