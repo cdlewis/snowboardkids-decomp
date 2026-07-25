@@ -806,7 +806,7 @@ void drawMenuSpriteTile(s16 arg0, s16 arg1, s32 arg2, u16 arg3, u16 arg4, u16 ar
     drawMenuSpriteTileClipped(arg0, arg1, arg2, arg3, arg4, arg5, gMenuViewportWidth / 2, gMenuViewportHeight / 2);
 }
 
-// drawMenuSpriteTileClipped best match: 96.142% (nonmatchings/drawMenuSpriteTileClipped-8909410381742387388/base_34.c)
+// drawMenuSpriteTileClipped best match: 96.240% (nonmatchings/drawMenuSpriteTileClipped-14/output-1415-1/source.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/renderer/menu_renderer/drawMenuSpriteTileClipped.s")
 
 #ifdef NON_MATCHING
@@ -815,32 +815,34 @@ void drawMenuSpriteTileClipped(s16 x, s16 y, MenuFontAssetTable *table, u16 entr
     MenuFontAssetEntry *entry;
     volatile s32 padBefore[1];
     u8 *paletteBase;
-    volatile s32 padAfter[3];
-    s16 minX;
-    s16 minY;
-    s32 x0;
-    volatile s16 clipBottomValue;
+    volatile s32 padAfter[6];
     s32 y0;
     s32 x1;
     s32 y1;
     s32 clipS;
     s32 clipT;
-    volatile s32 padAfterClip[3];
+    s16 minY;
+    s32 x0;
+    s16 minX;
     s32 halfWidth;
     s16 maxX;
     s16 maxY;
     s32 halfHeight;
 
-    entry = (MenuFontAssetEntry *)table + entryIndex;
     paletteBase = (table->entryCount * sizeof(MenuFontAssetEntry)) + (u8 *)table + sizeof(MenuFontAssetEntry);
-    x0 = x + gMenuViewportCenterX; x1 = entry[1].width; x1 = x0 + x1; y0 = y + gMenuViewportCenterY; y1 = entry[1].height; y1 = y0 + y1;
-    clipBottomValue = clipBottom;
-    minX = gMenuViewportCenterX - clipRight;
-    minY = gMenuViewportCenterY - clipBottomValue;
-    maxX = gMenuViewportCenterX + clipRight;
+    entry = &table->entries[entryIndex];
+    x0 = x + gMenuViewportCenterX;
+    entry += 0;
+    x1 = entry->width;
+    x1 = (((x0 & 0xFFFFFFFFFFFFFFFFu) & 0xFFFFFFFFFFFFFFFFu) & 0xFFFFFFFFFFFFFFFFu) + x1; y0 = y + gMenuViewportCenterY;
+    y1 = entry->height;
+    y1 = y0 + y1;
     maxY = gMenuViewportCenterY + clipBottom;
     clipS = 0;
     clipT = 0;
+    minX = gMenuViewportCenterX - clipRight;
+    minY = gMenuViewportCenterY - clipBottom;
+    maxX = gMenuViewportCenterX + clipRight;
 
     halfWidth = gMenuViewportWidth / 2;
     if (minX < gMenuViewportCenterX - halfWidth) {
