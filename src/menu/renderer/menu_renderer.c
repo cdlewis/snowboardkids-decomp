@@ -633,31 +633,26 @@ void drawMenuSpriteWithPaletteScale(s16 x, s16 y, FontAsset *asset, u16 index, u
 }
 #endif
 
-// drawMenuSpriteSubrect best match: 99.808% (nonmatchings/drawMenuSpriteSubrect-1219509448159986855/base.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/menu/renderer/menu_renderer/drawMenuSpriteSubrect.s")
-
-#ifdef NON_MATCHING
-void drawMenuSpriteSubrect(s16 x, s16 y, FontAsset *asset, u16 index, u8 srcX, u8 srcY, u8 width, u8 height, s32 scaleX,
+void drawMenuSpriteSubrect(s16 x, s16 y, s32 assetAddress, u16 index, u8 srcX, u8 srcY, u8 width, u8 height, s32 scaleX,
                            s32 scaleY) {
     FontTexture *texture;
-    s32 minY;
     s32 minX;
-    s32 left;
     u8 *paletteBase;
+    s32 left;
     s32 top;
-    s32 halfY;
     s32 right;
     s32 bottom;
     s32 texS;
     s32 texT;
-    s32 halfX;
+    s32 minY;
     u16 scaleXValue;
     u16 scaleYValue;
     s16 maxX;
     s16 maxY;
 
-    texture = &asset->textures[index];
-    paletteBase = (asset->header.entryCount * sizeof(FontTexture)) + (u8 *)asset + sizeof(FontAssetHeader);
+    texture = &((FontAsset *)assetAddress)->textures[index];
+    paletteBase = (((FontAsset *)assetAddress)->header.entryCount * sizeof(FontTexture)) + (u8 *)assetAddress +
+                  sizeof(FontAssetHeader);
     scaleXValue = scaleX;
     scaleYValue = scaleY;
     left = (x + gMenuViewportCenterX) << 2;
@@ -667,8 +662,8 @@ void drawMenuSpriteSubrect(s16 x, s16 y, FontAsset *asset, u16 index, u8 srcX, u
     bottom *= scaleYValue;
     bottom = ((bottom << 2) >> 5) + top;
     // Keeping these assignments on one source line preserves IDO's instruction scheduling.
-    texS = srcX << 5; texT = srcY << 5; halfY = gMenuViewportHeight / 2; minY = (s16)((gMenuViewportCenterY - halfY) << 2); maxY = (gMenuViewportCenterY + halfY) << 2; halfX = gMenuViewportWidth / 2; minX = (s16)((gMenuViewportCenterX - halfX) << 2);
-    maxX = (gMenuViewportCenterX + halfX) << 2;
+    texS = srcX << 5; texT = srcY << 5; minY = (s16)((gMenuViewportCenterY - (gMenuViewportHeight / 2)) << 2); maxY = (gMenuViewportCenterY + (gMenuViewportHeight / 2)) << 2; minX = (s16)((gMenuViewportCenterX - (gMenuViewportWidth / 2)) << 2);
+    maxX = (gMenuViewportCenterX + (gMenuViewportWidth / 2)) << 2;
 
     if ((left < maxX) && (top < maxY) && (right >= minX) && (bottom >= minY)) {
         if (left < minX) {
@@ -688,7 +683,7 @@ void drawMenuSpriteSubrect(s16 x, s16 y, FontAsset *asset, u16 index, u8 srcX, u
             bottom = maxY - 4;
         }
 
-        gDPLoadTextureTile_4b(gRegionAllocPtr++, texture->imageOffset + (u8 *)asset + 0x80000000, G_IM_FMT_CI, texture->width,
+        gDPLoadTextureTile_4b(gRegionAllocPtr++, texture->imageOffset + (u8 *)assetAddress + 0x80000000, G_IM_FMT_CI, texture->width,
                               texture->height, 0, 0, texture->width, texture->height, 0, G_TX_CLAMP, G_TX_CLAMP,
                               G_TX_NOMASK, G_TX_NOMASK, G_TX_NOLOD, G_TX_NOLOD);
         gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, paletteBase + (texture->paletteIndex << 5) + 0x80000000);
@@ -696,7 +691,6 @@ void drawMenuSpriteSubrect(s16 x, s16 y, FontAsset *asset, u16 index, u8 srcX, u
                             (u16)(0x8000 / scaleXValue), (u16)(0x8000 / scaleYValue));
     }
 }
-#endif
 
 // drawMenuSpriteFixedScale best match: 87.650% (nonmatchings/drawMenuSpriteFixedScale-210831275846872038/base_5.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/renderer/menu_renderer/drawMenuSpriteFixedScale.s")
