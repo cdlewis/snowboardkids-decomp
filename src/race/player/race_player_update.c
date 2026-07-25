@@ -130,6 +130,8 @@ extern s16 gRacePlayerAttackStartTimer;
 extern s16 gRaceLapCount;
 extern s16 gFrameCounter;
 extern Unk8011228C gRacePlayerHudStatuses[];
+extern RacePlayerSoundPosition D_80121D9C[];
+extern RacePlayerSoundPosition D_80121DA8[];
 extern void *D_801248C8;
 extern void *D_801248EC;
 
@@ -5520,10 +5522,6 @@ void updateRacePlayerMode35Character5(RacePlayer *player) {
     }
 }
 
-// updateRacePlayersPostUpdate best match: 99.055% (nonmatchings/updateRacePlayersPostUpdate-6182772958467082306/base_12.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race/player/race_player_update/updateRacePlayersPostUpdate.s")
-
-#ifdef NON_MATCHING
 void updateRacePlayersPostUpdate(void) {
     RacePlayer *player;
     RacePlayerSoundPosition *soundPos;
@@ -5551,8 +5549,12 @@ void updateRacePlayersPostUpdate(void) {
         i = 0;
     }
 
+    i = 0;
     if (gRacePlayerCount > 0) {
-        player = gRacePlayers; soundPos = (RacePlayerSoundPosition *)&gRacePlayers[0].pos; nextSoundPos = (RacePlayerSoundPosition *)&gRacePlayers[0].unk28.y; do {
+        do {
+            player = &gRacePlayers[i];
+            soundPos = &D_80121D9C[i];
+            nextSoundPos = &D_80121DA8[i];
             if (player->soundDisabled == 0) {
                 enqueuePlayerLoopingPositionalSoundRequest(player->unk584, &soundPos->pos, player->unk582, 0x46, player->unk588, i);
             } else {
@@ -5568,13 +5570,9 @@ void updateRacePlayersPostUpdate(void) {
                 addRenderCallback(&D_801248EC, (void (*)(void *))drawRaceGhostPlayerModel, (RacePlayerModelRenderState *)player);
             }
             i++;
-            player++;
-            soundPos++;
-            nextSoundPos++;
         } while (i < gRacePlayerCount);
     }
 }
-#endif
 
 void updateRacePlayerPostUpdate(RacePlayer *player) {
     unsigned long long random;

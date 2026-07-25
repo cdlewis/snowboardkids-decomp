@@ -243,6 +243,12 @@ and control flow already match and only register *names* differ.
   (`f(base + i * STRIDE);`). IDO strength-reduces `i * STRIDE` into a pointer
   initialized with a fresh `lui`/`addiu` in the preheader, so it does not CSE
   with any base held earlier.
+- **Repeat a logically redundant zero index before parallel indexed walks.**
+  When an index is already zero through preceding control flow but IDO still
+  emits a multiply to initialize several strided array cursors, assigning zero
+  again immediately before the loop can make the optimizer prove the initial
+  value and collapse every cursor to its array base. The redundant assignment
+  itself is then folded away.
 - **A descending array-index loop can become a pointer walk.** For a loop such
   as `for (i = count - 1; i >= 0; i--)`, IDO may replace the integer induction
   variable with a pointer initialized to the last element, decrement it by the
