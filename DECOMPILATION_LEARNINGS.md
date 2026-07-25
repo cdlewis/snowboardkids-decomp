@@ -227,6 +227,58 @@ and control flow already match and only register *names* differ.
   `dst->x = f(src->x); dst->y = f(src->y); ...` can emit load-use nops.
   Loading each source field into named locals first can reproduce IDO's batched
   loads followed by arithmetic and stores.
+- **A parameter's local alias and its declared pointer type are both inert for
+  register choice.** Whether a parameter is copied into a separate local
+  (`actor = arg0;`) or used directly, and whether it's declared `void *` with
+  an internal cast or as its real struct pointer type, made no difference in
+  testing — same instructions, same register. If a saved-register argument is
+  already correctly homed to *some* `s`-register (see "a local alias of an
+  argument forces a callee-saved register" above) but the whole function is
+  wrong only in *which* saved register two such locals land in relative to
+  each other, don't spend time on the parameter's type or its copy structure;
+  neither is the lever.
+- **Open problem: two locally-aliased pointers can land in the wrong saved
+  registers relative to each other, resisting every source-order nudge
+  tried.** Case: two independent pointer locals (each a simple, single-
+  assignment alias — one of the incoming argument, one of a computed buffer
+  address), both read repeatedly across several near-identical `if` blocks,
+  with no other diff against the target besides every occurrence of one
+  swapped for the other (e.g. every `$s0` the target uses is `$s1` in the
+  candidate and vice versa, uniformly, function-wide). Tried and confirmed
+  inert or actively harmful: reordering the two assignment statements
+  relative to each other; reordering their declarations (this one is actively
+  harmful — it shifts an unrelated stack slot without touching the register
+  swap); adding/removing an `if (!x) {}` liveness-forcing dummy for either
+  variable; removing an apparently-redundant second dereference of the
+  aliased pointer inside the blocks. None of it moved the register choice.
+  Unlike most entries in this section, this is a recorded dead end, not a
+  fix — if you hit the same uniform whole-function two-register-swap shape,
+  the techniques above are worth trying first since they're untested against
+  *this specific* variant of the problem, but don't expect the source-order
+  tricks that solve single-register homing to generalize to picking between
+  two already-homed registers.
+- **Open problem: a genuinely dead register-zero can survive in a `jal` delay
+  slot next to a variadic call, and no dead-store shape reproduces it.**
+  Observed in three sibling functions in the same file, all otherwise >98%
+  matched: the target has `or $vN,$zero,$zero` (a real, scheduled instruction)
+  in the delay slot of a `jal` to a varargs function (`sprintf`), where `$vN`
+  is never read again anywhere in the function — provably dead by inspection
+  of the whole function body. Every literal "assign a variable to 0 then
+  overwrite/never use it" construct tried (reusing the call's own pointer
+  argument, a fresh unused local, self-XOR, placement before vs. after an
+  intervening call or loop) gets fully eliminated by IDO with byte-identical
+  output regardless of variant — i.e. dead-store elimination here is
+  thorough and construct-independent, so "assign 0 to something dead" is not
+  the right shape to keep trying. In two of the three sibling functions, the
+  closest approach found lands the analogous "0" in a *live, real* register
+  instead (e.g. the call's own pointer-typed trailing argument, when that
+  argument is a literal `0` rather than a pointer) — real content, plausibly
+  the right general idea, but the wrong register (`$a3` or a temp instead of
+  the target's `$vN`), and this has never been resolved to the exact right
+  register in any of the three functions across many attempts each. If you
+  hit this exact symptom (a dead `or $vN,$zero,$zero` you can't eliminate or
+  reproduce), it is not a quick nudge — treat it as a genuinely open
+  scheduling question, not an oversight in the candidate C.
 
 ## IDO codegen: loop shape and strength reduction
 
