@@ -317,7 +317,9 @@ void updateCharacterSelectMenu(void) {
 }
 #endif
 
-// updateCharacterSelectConfirmationMenu best match: 91.299% (nonmatchings/updateCharacterSelectConfirmationMenu-2188069624939011928/base_15.c)
+// updateCharacterSelectConfirmationMenu best match: 99.573% (nonmatchings/updateCharacterSelectConfirmationMenu-8498672362023432715/base_25.c)
+// The higher-scoring isolated attempt still relies on a synthetic symbol alias
+// and a folded empty pointer condition, so the readable attempt remains below.
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/character_select/character_select_menu/updateCharacterSelectConfirmationMenu.s")
 
 #ifdef NON_MATCHING
