@@ -91,7 +91,7 @@ void initRaceSplitscreenSelectMenu(void) {
     updateCallbackTasks();
 }
 
-// updateRaceSplitscreenSelectMenu best match: 98.876% (nonmatchings/updateRaceSplitscreenSelectMenu-1645024839200431810/base_9.c)
+// updateRaceSplitscreenSelectMenu best match: 99.535% (nonmatchings/updateRaceSplitscreenSelectMenu-8498672362023432715/base_18.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/splitscreen_select/race_splitscreen_select_menu/updateRaceSplitscreenSelectMenu.s")
 
 #ifdef NON_MATCHING
@@ -147,7 +147,8 @@ void updateRaceSplitscreenSelectMenu(void) {
                             ((newInput & (STICK_DOWN | D_JPAD)) && (repeatTimer >= 0xB) && ((repeatTimer % 3) == 0))) {
                             if (repeatTimerCopy == 0) {
                                 gMenuInputRepeatTimers = repeatTimerCopy + 1;
-                                repeatTimer = gMenuInputRepeatTimers;
+                                repeatTimer =
+                                    (((((gMenuInputRepeatTimers & 0xFF) & 0xFF) & 0xFF) & 0xFF) & 0xFF) & 0xFF;
                             }
                             if (selection < 4) {
                                 gRaceSplitscreenMode = selection + 1;
@@ -164,12 +165,14 @@ void updateRaceSplitscreenSelectMenu(void) {
                         }
                     }
 
+                    newInput = selection;
                     if (repeatTimer != 0) {
                         gMenuInputRepeatTimers = repeatTimer + 1;
                         if (gMenuInputRepeatTimers == 0xFFFF) {
                             gMenuInputRepeatTimers = 0xC;
                         }
                     }
+                    selection = newInput;
 
                     if (selection != previousSelection) {
                         enqueueSoundEffect(0x19, 0x32);
