@@ -159,7 +159,7 @@ void removeHuffmanQueueNode(s16 arg0) {
     }
 }
 
-// decompressHuffmanAssetPayload best match: 97.023% (nonmatchings/decompressHuffmanAssetPayload-210831275846872038/base_22.c)
+// decompressHuffmanAssetPayload best match: 97.912% (nonmatchings/decompressHuffmanAssetPayload-8498672362023432715/base_22.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/engine/asset_manager/decompressHuffmanAssetPayload.s")
 
 #ifdef NON_MATCHING
