@@ -2798,7 +2798,7 @@ void func_8005CE4C(RaceUiDualCounterActor *arg0) {
     setCallbackTaskCallback(arg0, func_8005CDB0);
 }
 
-// func_8005CF60 best match: 98.510% (nonmatchings/func_8005CF60/base_24.c)
+// func_8005CF60 best match: 98.840% (nonmatchings/func_8005CF60-8498672362023432715/base_9.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race/ui/race_ui_effects/func_8005CF60.s")
 
 #ifdef NON_MATCHING
@@ -2877,7 +2877,9 @@ done2:
     }
     if (arg0->alpha18 != 0xFF) {
         gRaceTrickAttackPointTotal += 0;
-        gSPDisplayList(gRegionAllocPtr++, x);
+        if (gfxp != NULL) {
+            gSPDisplayList(gRegionAllocPtr++, gMenuRenderModeResetDl);
+        }
     }
 }
 #endif
