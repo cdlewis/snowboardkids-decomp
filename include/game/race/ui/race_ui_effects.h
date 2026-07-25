@@ -2,6 +2,7 @@
 #define RACE_UI_EFFECTS_H
 
 #include "common.h"
+#include "game/race/ui/race_hud.h"
 
 struct CallbackTask;
 struct RaceUiAlpha18Actor;
@@ -83,7 +84,7 @@ void updateRaceUiResultsBannerConfirmed(struct RaceUiResultsBannerActor *arg0);
 void updateRaceUiResultsBannerWaitForInput(struct RaceUiResultsBannerActor *arg0);
 void updateRaceUiResultsBannerFadeIn(struct RaceUiResultsBannerActor *arg0);
 void initRaceUiResultsBanner(struct RaceUiResultsBannerActor *arg0);
-void func_80059A04(void *arg0, s32 arg1, s32 arg2, s32 arg3);
+void func_80059A04(RaceTimer *arg0, s32 x, s32 y, s32 color);
 void func_80059C34(struct RaceUiCourseStatsActor *arg0);
 void func_80059E5C(struct RaceUiAlpha1AActor *arg0);
 void func_80059F6C(struct RaceUiAlpha18Actor *arg0);
