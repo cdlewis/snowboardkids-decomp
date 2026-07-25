@@ -121,7 +121,8 @@ void initGameTaskScheduler(void) {
     resetRenderCallbackQueues();
 }
 
-// updateGameTaskScheduler best match: 95.344% (nonmatchings/updateGameTaskScheduler/base_4.c)
+// updateGameTaskScheduler best match: 94.081% with the current scorer, improved from 93.474%
+// (legacy annotation: 95.344%; nonmatchings/updateGameTaskScheduler-8498672362023432715/base_30.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/engine/game_task_scheduler/updateGameTaskScheduler.s")
 
 #ifdef NON_MATCHING
@@ -136,7 +137,6 @@ void updateGameTaskScheduler(void) {
     s32 *repeatInput;
     s8 *responseCurve;
     GameTask *task;
-    GameTask *nextTask;
     GameTaskCallback callback;
     GameTaskCallback *callbackArray;
     s32 oldInput;
@@ -268,10 +268,8 @@ positiveStickX:
                 task->state = 0;
                 task = gCurrentGameTask;
             }
-            nextTask = task->next;
-            gCurrentGameTask = nextTask;
-            task = nextTask;
-        } while (nextTask != NULL);
+            task = (gCurrentGameTask = task->next);
+        } while (task != NULL);
         gCurrentGameTask = gActiveGameTaskListHead;
     }
 
@@ -296,10 +294,8 @@ positiveStickX:
                     task = gCurrentGameTask;
                 }
             }
-            nextTask = task->next;
-            gCurrentGameTask = nextTask;
-            task = nextTask;
-        } while (nextTask != NULL);
+            task = (gCurrentGameTask = task->next);
+        } while (task != NULL);
     }
 
     updateFramebufferRenderScheduler();
