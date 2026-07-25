@@ -332,7 +332,7 @@ s32 saveRaceRecordReplayData(void) {
 #undef RACE_INPUT_HISTORY_LENGTH
 #endif
 
-// loadCurrentRaceRecordReplayData best match: 97.083% (nonmatchings/loadCurrentRaceRecordReplayData-6934502587000073416/base_46.c)
+// loadCurrentRaceRecordReplayData best match: 98.946% (nonmatchings/loadCurrentRaceRecordReplayData-8498672362023432715/base_19.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/main_menu/main_menu_scene_model/loadCurrentRaceRecordReplayData.s")
 
 #ifdef NON_MATCHING
@@ -358,6 +358,7 @@ void loadCurrentRaceRecordReplayData(void) {
     s32 copied;
     s32 code;
     s32 length;
+    u8 *copyStart;
     s32 offset;
     s32 remainder;
     u8 *copy;
@@ -419,12 +420,14 @@ loop:
 
 compressed:
     offset = outPos - (code & 0x3FF);
-    if (length > 0) {
+    {
+        copied = 0;
         remainder = length & 3;
+        copyStart = offset + dst;
         if (remainder == 0) {
             goto copy4;
         }
-        copy = offset + dst;
+        copy = copyStart;
 copy1:
         dst[outPos] = *copy;
         copied++;
@@ -472,7 +475,7 @@ done:
     history->pad9[3] = 0;
 
     i = 0;
-    if (copied <= 0) {
+    if ((copied <= 0) != 0) {
         return;
     }
 write_loop:
@@ -480,7 +483,8 @@ write_loop:
     history->stickY[i] = *(s8 *)&D_8010B200[5 + (i * 3)];
     history->buttons[i] = D_8010B200[6 + (i * 3)];
     i++;
-    if (i < history->lastWriteIndex) {
+    length = i < history->lastWriteIndex;
+    if (length) {
         goto write_loop;
     }
 }
