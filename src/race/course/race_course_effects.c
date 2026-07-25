@@ -784,7 +784,7 @@ void renderPatrolCourseObject(PatrolCourseObjectEffect *arg0) {
     }
 }
 
-// updatePatrolCourseObject best match: 99.086% at nonmatchings/updatePatrolCourseObject-8699393380584516020/base_18.c.
+// updatePatrolCourseObject best match: 99.462% at nonmatchings/updatePatrolCourseObject-8498672362023432715/base_23.c.
 #pragma GLOBAL_ASM("asm/nonmatchings/race/course/race_course_effects/updatePatrolCourseObject.s")
 
 #ifdef NON_MATCHING
@@ -806,7 +806,7 @@ void updatePatrolCourseObject(PatrolCourseObjectEffect *arg0) {
                 targetAngle = calculateFixedAngleBetweenXZPoints(arg0->pos.x, arg0->pos.z, arg0->endX, arg0->endZ);
             }
             temp_a1 = arg0->angle;
-            var_v1 = ((targetAngle & 0xFFFFu) - temp_a1) & 0xFFF;
+            var_v1 = (((((targetAngle & 0xFFFFu) & 0xFFFFu) & 0xFFFFu) & 0xFFFFu) - temp_a1) & 0xFFF;
             targetAngle = -targetAngle;
             var_v1 = (s16)var_v1;
             if (var_v1 >= 0x801) {
@@ -819,7 +819,7 @@ void updatePatrolCourseObject(PatrolCourseObjectEffect *arg0) {
             if (var_v1 < -temp_v0) {
                 var_v1 = (s16)-temp_v0;
             }
-            arg0->angle = (u64)(temp_a1 + var_v1);
+            arg0->angle = (u64)((((((((temp_a1 + var_v1) & 0xFFFFu) & 0xFFFFu) & 0xFFFFu) & 0xFFFFu) & 0xFFFFu) & 0xFFFFu) & 0xFFFFu);
             arg0->pos.x += fixedSine(arg0->angle) * ((s32)-arg0->unk50 / 4096);
             local.dz =
                 (arg0->pos.z = arg0->pos.z + (fixedCosine(arg0->angle) * ((s32)-arg0->unk50 / 4096)));
