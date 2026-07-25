@@ -76,7 +76,6 @@ isolation rather than importing a whole batch, since some of its output (e.g.
   register, model the source as a single accumulator starting at the first
   call's value and increment it between calls. IDO can fold the initial use to
   a literal while keeping the incremented value live for the later calls.
-
 ## IDO codegen: parameter homing and narrowing
 
 - **Narrow parameters (`u8`/`s8`/`u16`/`s16`) are homed to their stack slot at
@@ -243,12 +242,14 @@ and control flow already match and only register *names* differ.
   (`f(base + i * STRIDE);`). IDO strength-reduces `i * STRIDE` into a pointer
   initialized with a fresh `lui`/`addiu` in the preheader, so it does not CSE
   with any base held earlier.
-- **Repeat a logically redundant zero index before parallel indexed walks.**
+- **Repeat a logically redundant zero index before indexed pointer walks.**
   When an index is already zero through preceding control flow but IDO still
-  emits a multiply to initialize several strided array cursors, assigning zero
-  again immediately before the loop can make the optimizer prove the initial
-  value and collapse every cursor to its array base. The redundant assignment
-  itself is then folded away.
+  emits a multiply to initialize strided array cursors, assigning zero again
+  immediately before the loop can make the optimizer prove the initial value
+  and collapse every cursor to its array base. With two equivalent assignments
+  around unrelated setup, IDO may fold one into a strength-reduced cursor while
+  retaining the other as a dead `move reg, zero` in a preceding call's delay
+  slot.
 - **A descending array-index loop can become a pointer walk.** For a loop such
   as `for (i = count - 1; i >= 0; i--)`, IDO may replace the integer induction
   variable with a pointer initialized to the last element, decrement it by the
