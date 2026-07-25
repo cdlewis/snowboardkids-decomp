@@ -2345,10 +2345,6 @@ void func_8005B8E8(RaceUiAlphaActor *arg0) {
     do { if (arg0->alpha != 0xFF) { gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w1 = 0; gfx->words.w0 = 0xE7000000; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = 0xFF2FFFFF; w0 = 0xFC119623; gfx->words.w0 = w0; gfx->words.w1 = w1; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = 0x00504240; w0 = 0xB900031D; gfx->words.w0 = w0; gfx->words.w1 = w1; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w0 = 0xFA000000; gfx->words.w1 = (arg0->alpha & 0xFF) | (~0xFF); } func_80059A04(&gRaceElapsedTimer, -0x68, -0x37, 0xC); if (arg0->alpha != 0xFF) { gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = (s32) gMenuRenderModeResetDl; w0 = 0x06000000; gfx->words.w0 = w0; gfx->words.w1 = w1; } } while (0);
 }
 
-// func_8005B9F8 best match: 99.930% at nonmatchings/func_8005B9F8/base.c.
-#pragma GLOBAL_ASM("asm/nonmatchings/race/ui/race_ui_effects/func_8005B9F8.s")
-
-#ifdef NON_MATCHING
 const char gRaceUiTargetTimeChallengePrizeCounterFormat[] = "%5d";
 const char gRaceUiTargetTimeChallengeSpeedFanGetCounterFormat[] = "%5d";
 const char gRaceUiTargetTimeChallengePerfectGetCounterFormat[] = "%5d";
@@ -2358,22 +2354,22 @@ const char gRaceUiTargetTimeChallengeMoneyCounterFormat[] = "%6d";
 void func_8005B9F8(RaceUiDualCounterActor *arg0) {
     volatile u8 pad[4];
     SplitWord y;
-    char buf[0x1C];
     s32 i;
     s32 x;
+    char buffer[0x20];
     s16 tempY;
 
     y.word = -0x47;
     if (arg0->state >= 0) {
         x = 0x20;
-        sprintf(buf - 0xC, gRaceUiTargetTimeChallengePrizeCounterFormat, arg0->leftValue);
-        i = -0xC; while (1) {
-            if (buf[i] == 0) {
+        sprintf(buffer, gRaceUiTargetTimeChallengePrizeCounterFormat, arg0->leftValue);
+        i = 0; while (1) {
+            if (buffer[i] == 0) {
                 break;
             }
-            if (buf[i] != ' ') {
+            if (buffer[i] != ' ') {
                 drawAssetTableSprite((s16)x, -0x47, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
-                              (((u8)buf[i]) - 5) & 0xFFFF);
+                              (((u8)buffer[i]) - 5) & 0xFFFF);
             }
             x += 8;
             i++;
@@ -2384,17 +2380,16 @@ void func_8005B9F8(RaceUiDualCounterActor *arg0) {
 
     if (arg0->state > 0) {
         x = 0x20;
-        i = 0;
-        sprintf(buf - 0xC, gRaceUiTargetTimeChallengeSpeedFanGetCounterFormat, arg0->rightValue, 0);
+        sprintf(buffer, gRaceUiTargetTimeChallengeSpeedFanGetCounterFormat, arg0->rightValue); i = 0;
         tempY = y.half.lo;
-        i = -0xC;
+        i = 0;
         while (1) {
-            if (buf[i] == 0) {
+            if (buffer[i] == 0) {
                 break;
             }
-            if (buf[i] != ' ') {
+            if (buffer[i] != ' ') {
                 drawAssetTableSprite((s16)x, tempY, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
-                              (((u8)buf[i]) - 5) & 0xFFFF);
+                              (((u8)buffer[i]) - 5) & 0xFFFF);
             }
             x += 8;
             i++;
@@ -2406,17 +2401,16 @@ void func_8005B9F8(RaceUiDualCounterActor *arg0) {
     if (arg0->state >= 2) {
         x = 0x20;
         if (arg0->flag != 0) {
-            i = 0;
-            sprintf(buf - 0xC, gRaceUiTargetTimeChallengePerfectGetCounterFormat, arg0->bonus, 0);
+            sprintf(buffer, gRaceUiTargetTimeChallengePerfectGetCounterFormat, arg0->bonus); i = 0;
             tempY = y.half.lo;
-            i = -0xC;
+            i = 0;
             while (1) {
-                if (buf[i] == 0) {
+                if (buffer[i] == 0) {
                     break;
                 }
-                if (buf[i] != ' ') {
+                if (buffer[i] != ' ') {
                     drawAssetTableSprite((s16)x, tempY, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
-                                  (((u8)buf[i]) - 5) & 0xFFFF);
+                                  (((u8)buffer[i]) - 5) & 0xFFFF);
                 }
                 x += 8;
                 i++;
@@ -2428,17 +2422,16 @@ void func_8005B9F8(RaceUiDualCounterActor *arg0) {
 
     if (arg0->state >= 3) {
         x = 0x20;
-        i = 0;
-        sprintf(buf - 0xC, gRaceUiTargetTimeChallengeCompleteBonusCounterFormat, arg0->leftTarget, 0);
+        sprintf(buffer, gRaceUiTargetTimeChallengeCompleteBonusCounterFormat, arg0->leftTarget); i = 0;
         tempY = y.half.lo;
-        i = -0xC;
+        i = 0;
         while (1) {
-            if (buf[i] == 0) {
+            if (buffer[i] == 0) {
                 break;
             }
-            if (buf[i] != ' ') {
+            if (buffer[i] != ' ') {
                 drawAssetTableSprite((s16)x, tempY, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
-                              (((u8)buf[i]) - 5) & 0xFFFF);
+                              (((u8)buffer[i]) - 5) & 0xFFFF);
             }
             x += 8;
             i++;
@@ -2449,17 +2442,16 @@ void func_8005B9F8(RaceUiDualCounterActor *arg0) {
 
     if (arg0->state >= 4) {
         x = 0x18;
-        i = 0;
-        sprintf(buf - 0xC, gRaceUiTargetTimeChallengeMoneyCounterFormat, gPlayer1Money, 0);
+        sprintf(buffer, gRaceUiTargetTimeChallengeMoneyCounterFormat, gPlayer1Money); i = 0;
         tempY = y.half.lo;
-        i = -0xC;
+        i = 0;
         while (1) {
-            if (buf[i] == 0) {
+            if (buffer[i] == 0) {
                 break;
             }
-            if (buf[i] != ' ') {
+            if (buffer[i] != ' ') {
                 drawAssetTableSprite((s16)x, tempY, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
-                              (((u8)buf[i]) - 5) & 0xFFFF);
+                              (((u8)buffer[i]) - 5) & 0xFFFF);
             }
             x += 8;
             i++;
@@ -2467,7 +2459,6 @@ void func_8005B9F8(RaceUiDualCounterActor *arg0) {
         drawAssetTableSprite((s16)x, tempY, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x37);
     }
 }
-#endif
 
 void func_8005BE68(RaceUiPopupActor *arg0) {
     s32 y;
