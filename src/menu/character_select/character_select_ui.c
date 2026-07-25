@@ -557,7 +557,7 @@ void initCharacterSelectPlayerCursorMarkers(CharacterSelectUiPlayerCursorActor *
     setCallbackTaskCallback(arg0, updateCharacterSelectPlayerCursorMarkers);
 }
 
-// drawCharacterSelectPlayerStatsPanels best match: 98.422% (nonmatchings/drawCharacterSelectPlayerStatsPanels-8498672362023432715/base_4.c)
+// drawCharacterSelectPlayerStatsPanels best match: 98.663% (nonmatchings/drawCharacterSelectPlayerStatsPanels-8498672362023432715/base_5.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/character_select/character_select_ui/drawCharacterSelectPlayerStatsPanels.s")
 
 #ifdef NON_MATCHING
@@ -677,8 +677,8 @@ void drawCharacterSelectPlayerStatsPanels(CharacterSelectUiPanelActor *statsPane
                                    getRelocatableHeapBlockBase(assetHandles[0x21]), 0x26, 0x20, 0x20, 0, 0);
                 }
 
-                playerIndex++;
                 player++;
+                playerIndex++;
             } while (playerIndex < (s32)gPlayerCount);
         }
     }
