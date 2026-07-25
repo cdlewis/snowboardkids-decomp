@@ -38,8 +38,6 @@
 #define RACE_PLAYER_STATE_SIZE 0x60C
 #define RACE_PLAYER_READY_FLAG 0x40
 #ifdef NON_MATCHING
-#define RACE_PLAYER_RESULT_VALUE(index) (*(s8 *)((u8 *)gRacePlayers + ((((((((index) << 2) - (index)) << 5) + (index)) << 2) - (index)) << 2) + 0x509))
-#define CURRENT_RACE_FLOW_TASK ((volatile RaceFlowState *)gCurrentGameTask)
 #define RACE_PLAYER_OFFSET(index) (((((((((index) << 2) - (index)) << 5) + (index)) << 2) - (index)) << 2))
 #define RACE_PLAYER_OFFSET_ALT(index) ((((((((((index) << 1) << 1) - (index)) << 5) + (index)) << 2) - (index)) << 2))
 #define RACE_INPUT_HISTORY_LENGTH 0x1194
@@ -184,6 +182,7 @@ extern s8 gMenuFadeOverlayActive;
 extern u8 gRaceRumbleEnabled;
 extern RaceFlowInitScratch gGameSaveDataBuffer;
 extern u8 gRaceTypeSelection;
+extern u8 D_8011233C;
 extern s8 gRacePlayerCount;
 extern s16 gRacePlayerAttackStartTimer;
 extern u8 gRacePlayerHudStatuses;
@@ -201,7 +200,6 @@ extern s8 D_80122FB8;
 extern s8 D_80122FB9;
 extern s8 D_80122FBA;
 #ifdef NON_MATCHING
-extern u8 D_8011233C;
 extern u8 gRaceDemoPlaybackEnabled;
 extern u8 gTrainingCourseLesson;
 extern u8 gMainMenuModeSelection;
@@ -1048,79 +1046,56 @@ void updateRaceGameplayFlow(void) {
     }
 }
 
-// waitRaceFinishResultsFlow best match: 91.968% (nonmatchings/waitRaceFinishResultsFlow-6887713755923057488/base_5.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race/flow/race_flow/waitRaceFinishResultsFlow.s")
-
-#ifdef NON_MATCHING
 void waitRaceFinishResultsFlow(void) {
-    s32 bestPlayer;
-    s8 fixedValue;
-    s8 value;
-
     D_80121B57 = 0;
     updateRaceFlowFrameWithCourseEffects();
-    CURRENT_RACE_FLOW_TASK->fadeTimer--;
-    if (CURRENT_RACE_FLOW_TASK->fadeTimer == 0) {
+    gCurrentGameTask->fadeTimer--;
+    if (gCurrentGameTask->fadeTimer == 0) {
         gMenuFlowState |= 8;
         switch (gPlayerCount) {
         case 3:
-            CURRENT_RACE_FLOW_TASK->unk1C = 0;
-            bestPlayer = CURRENT_RACE_FLOW_TASK->unk1C;
-            fixedValue = RACE_PLAYER_RESULT_VALUE(1);
-            value = RACE_PLAYER_RESULT_VALUE(bestPlayer);
-            if (fixedValue < value) {
-                CURRENT_RACE_FLOW_TASK->unk1C = 1;
-                bestPlayer = CURRENT_RACE_FLOW_TASK->unk1C;
-                value = RACE_PLAYER_RESULT_VALUE(bestPlayer);
+            gCurrentGameTask->unk1C = 0;
+            if (gRacePlayers[1].result < gRacePlayers[gCurrentGameTask->unk1C].result) {
+                gCurrentGameTask->unk1C = 1;
             }
-            if (RACE_PLAYER_RESULT_VALUE(2) < value) {
-                CURRENT_RACE_FLOW_TASK->unk1C = 2;
-                bestPlayer = CURRENT_RACE_FLOW_TASK->unk1C;
+            if (gRacePlayers[2].result < gRacePlayers[gCurrentGameTask->unk1C].result) {
+                gCurrentGameTask->unk1C = 2;
             }
-            CURRENT_RACE_FLOW_TASK->unk1C = bestPlayer + 2;
+            gCurrentGameTask->unk1C += 2;
             setCurrentGameTaskCallback(zoomRaceWinnerViewport, 0);
             break;
         case 4:
-            CURRENT_RACE_FLOW_TASK->unk1C = 0;
-            bestPlayer = CURRENT_RACE_FLOW_TASK->unk1C;
-            fixedValue = RACE_PLAYER_RESULT_VALUE(1);
-            value = RACE_PLAYER_RESULT_VALUE(bestPlayer);
-            if (fixedValue < value) {
-                CURRENT_RACE_FLOW_TASK->unk1C = 1;
-                bestPlayer = CURRENT_RACE_FLOW_TASK->unk1C;
-                value = RACE_PLAYER_RESULT_VALUE(bestPlayer);
+            gCurrentGameTask->unk1C = 0;
+            if (gRacePlayers[1].result < gRacePlayers[gCurrentGameTask->unk1C].result) {
+                gCurrentGameTask->unk1C = 1;
             }
-            if (RACE_PLAYER_RESULT_VALUE(2) < value) {
-                CURRENT_RACE_FLOW_TASK->unk1C = 2;
-                bestPlayer = CURRENT_RACE_FLOW_TASK->unk1C;
-                value = RACE_PLAYER_RESULT_VALUE(bestPlayer);
+            if (gRacePlayers[2].result < gRacePlayers[gCurrentGameTask->unk1C].result) {
+                gCurrentGameTask->unk1C = 2;
             }
-            if (RACE_PLAYER_RESULT_VALUE(3) < value) {
-                CURRENT_RACE_FLOW_TASK->unk1C = 3;
-                bestPlayer = CURRENT_RACE_FLOW_TASK->unk1C;
+            if (gRacePlayers[3].result < gRacePlayers[gCurrentGameTask->unk1C].result) {
+                gCurrentGameTask->unk1C = 3;
             }
-            CURRENT_RACE_FLOW_TASK->unk1C = bestPlayer + 5;
+            gCurrentGameTask->unk1C += 5;
             setCurrentGameTaskCallback(zoomRaceWinnerViewport, 0);
             break;
         case 2:
-            if (RACE_PLAYER_RESULT_VALUE(0) < RACE_PLAYER_RESULT_VALUE(1)) {
-                CURRENT_RACE_FLOW_TASK->unk1C = 0;
+            if (gRacePlayers[0].result < gRacePlayers[1].result) {
+                gCurrentGameTask->unk1C = 0;
                 D_8011233C = 0;
             } else {
-                CURRENT_RACE_FLOW_TASK->unk1C = 1;
+                gCurrentGameTask->unk1C = 1;
                 gRacePlayerHudStatuses = 0;
             }
-            CURRENT_RACE_FLOW_TASK->fadeTimer = 0;
+            gCurrentGameTask->fadeTimer = 0;
             setCurrentGameTaskCallback(zoomRaceWinnerViewport, 0);
             break;
         case 1:
-            CURRENT_RACE_FLOW_TASK->fadeTimer = 0;
+            gCurrentGameTask->fadeTimer = 0;
             setCurrentGameTaskCallback(prepareRaceResultsFlow, 0);
             break;
         }
     }
 }
-#endif
 
 void interpolateRaceViewport(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5, s32 arg6,
                   f32 arg7, s32 arg8, s32 arg9, s32 arg10, s32 arg11, s32 arg12, s32 arg13,
