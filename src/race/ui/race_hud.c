@@ -897,12 +897,12 @@ void drawRaceCourseProgressMeter(s32 arg0) {
 }
 #endif
 
-// updateRaceCourseProgressMeter best match: 98.708% at nonmatchings/updateRaceCourseProgressMeter-1936695454966205676/base_8.c.
+// updateRaceCourseProgressMeter best match: 99.551% at nonmatchings/updateRaceCourseProgressMeter-8498672362023432715/base_2.c.
 #pragma GLOBAL_ASM("asm/nonmatchings/race/ui/race_hud/updateRaceCourseProgressMeter.s")
 
 #ifdef NON_MATCHING
 void updateRaceCourseProgressMeter(void) {
-    s32 pathIndex;
+    s32 meterPosition;
     s32 slots[2];
     RacePlayer *player;
     s32 i;
@@ -912,9 +912,11 @@ void updateRaceCourseProgressMeter(void) {
         if (progress < 0) {
             progress = 0;
         }
-        pathIndex = gRaceCourseStartEntries[gRaceCourseIndex].pathIndex;
+        meterPosition =
+            (progress << 7) /
+            (gRaceCourseStartEntries[gRaceCourseIndex].pathIndex * 8);
         slots[1] = progress;
-        player->unk57E = (progress << 7) / (pathIndex * 8);
+        player->unk57E = meterPosition;
         if (player->unk57E >= 0x81) {
             player->unk57E = 0x80;
         }
