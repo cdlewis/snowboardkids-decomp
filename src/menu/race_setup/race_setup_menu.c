@@ -240,7 +240,7 @@ void initRaceSetupSaveMenu(void) {
 }
 #endif
 
-// updateRaceSetupSaveMenu best match: 99.101% (nonmatchings/updateRaceSetupSaveMenu-3/base_78.c)
+// updateRaceSetupSaveMenu best match: 99.498% (nonmatchings/updateRaceSetupSaveMenu-11/base.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/race_setup/race_setup_menu/updateRaceSetupSaveMenu.s")
 
 #ifdef NON_MATCHING
@@ -610,14 +610,15 @@ void updateRaceSetupSaveMenu(void) {
 #endif
 
 void updateRaceSetupSaveMenu(void) {
-    s64 stackTemp;
+    u8 stackTemp[0x4];
+    s32 button;
     s32 allPlayersReady = 0;
     s16 allControllerPakOpsComplete = 0;
     s16 statusCode;
     CallbackTask *saveStatusTask = D_8010ADE8;
     CallbackTask * volatile savePanelTask;
     s32 i;
-    register s32 controllerIndex;
+    s32 controllerIndex;
 
     savePanelTask = D_8010ADE0;
 
@@ -649,27 +650,24 @@ void updateRaceSetupSaveMenu(void) {
                         }
                         switch (statusCode) {
                             case CONTROLLER_PAK_STATUS_PROBE: {
-                                controllerIndex = (u16)i;
-
                                 gRumblePakConnectedByController[i] = 0;
-                                requestRumbleMotorInit((u16)controllerIndex, gPlayerCount,
-                                                       *(&gMenuChoicePromptState[i]));
+                                requestRumbleMotorInit(i);
                                 if ((gRumbleMotorStatuses[i] != 1) && (gRumbleMotorStatuses[i] != 0xB) &&
                                     (gRumbleMotorStatuses[i] != 4)) {
                                     gRumblePakConnectedByController[i] = 1;
                                 } else {
                                     gRumblePakConnectedByController[i] = 0;
                                 }
-                                requestControllerPakProbe((u16)controllerIndex);
+                                requestControllerPakProbe(i);
                                 break;
                             }
 
                             case CONTROLLER_PAK_STATUS_SAVE_STATUS:
-                                requestControllerPakSaveStatus((u16)i, gPlayerCount, *(&gMenuChoicePromptState[i]));
+                                requestControllerPakSaveStatus(i);
                                 break;
 
                             case CONTROLLER_PAK_STATUS_SAVE_READ: {
-                                requestControllerPakSaveRead((u16)i, gPlayerCount, *(&gMenuChoicePromptState[i]));
+                                requestControllerPakSaveRead(i);
                                 if (gControllerPakRetryCounts[i] == 0) {
                                     gRacePlayers[i].unkC = D_800EC9F4[i].money;
                                     gRacePlayers[i].unk568 = 0;
@@ -690,7 +688,7 @@ void updateRaceSetupSaveMenu(void) {
                             }
 
                             case CONTROLLER_PAK_STATUS_REPAIR: {
-                                requestControllerPakRepair((u16)i, gPlayerCount, *(&gMenuChoicePromptState[i]));
+                                requestControllerPakRepair(i);
                                 if (gControllerPakRetryCounts[i] == 0) {
                                     if (saveStatusTask != NULL) {
                                         gRaceSetupMenuSubState.statusTransitionStates[i] =
@@ -746,12 +744,11 @@ void updateRaceSetupSaveMenu(void) {
                                     }
                                     if (gPlayerInputPressed[i] & (STICK_DOWN | D_JPAD)) {
                                         if (*(&gMenuChoicePromptState[i]) != SAVE_CHOICE_SKIP_PAK) {
-                                            *(&gMenuChoicePromptState[i]) = *(&gMenuChoicePromptState[i]) + 1;
+                                            *(&gMenuChoicePromptState[i]) = *(&gMenuChoicePromptState[i]) - -1;
                                             enqueueSoundEffect(0x19, 0x32);
                                         }
                                     }
-                                    if ((gPlayerInputPressed[i] & A_BUTTON) ||
-                                        (gPlayerInputPressed[i] & START_BUTTON)) {
+                                    if ((gPlayerInputPressed[i] & A_BUTTON) || (gPlayerInputPressed[i] & START_BUTTON)) {
                                         enqueueSoundEffect(1, 0x32);
                                         if (*(&gMenuChoicePromptState[i]) == SAVE_CHOICE_SKIP_PAK) {
                                             if (gControllerPakStatusCodes[i] == CONTROLLER_PAK_STATUS_SAVE_FOUND) {
@@ -759,8 +756,7 @@ void updateRaceSetupSaveMenu(void) {
                                                 gRacePlayers[i].unkC = (&gGameSaveDataBuffer[i])->money;
                                                 gRaceSetupMenuSubState.pendingStatusCodes[i] =
                                                     CONTROLLER_PAK_STATUS_READY;
-                                            } else if (gControllerPakStatusCodes[i] ==
-                                                       CONTROLLER_PAK_STATUS_NO_PAK) {
+                                            } else if (gControllerPakStatusCodes[i] == CONTROLLER_PAK_STATUS_NO_PAK) {
                                                 gRaceSetupMenuSubState.pendingStatusCodes[i] =
                                                     CONTROLLER_PAK_STATUS_REPAIR;
                                             } else {
@@ -771,8 +767,7 @@ void updateRaceSetupSaveMenu(void) {
                                             if (gControllerPakStatusCodes[i] == CONTROLLER_PAK_STATUS_SAVE_FOUND) {
                                                 gRaceSetupMenuSubState.pendingStatusCodes[i] =
                                                     CONTROLLER_PAK_STATUS_USE_EXISTING_SAVE;
-                                            } else if (gControllerPakStatusCodes[i] ==
-                                                       CONTROLLER_PAK_STATUS_NO_PAK) {
+                                            } else if (gControllerPakStatusCodes[i] == CONTROLLER_PAK_STATUS_NO_PAK) {
                                                 gRaceSetupMenuSubState.pendingStatusCodes[i] =
                                                     CONTROLLER_PAK_STATUS_RETRY;
                                             } else {
@@ -822,12 +817,13 @@ void updateRaceSetupSaveMenu(void) {
                                             CONTROLLER_PAK_STATUS_PROBE;
                                     } else {
                                         gControllerPakStatusCodes[i] = CONTROLLER_PAK_STATUS_PROBE;
+                                        break;
                                     }
                                 }
                                 break;
 
                             case CONTROLLER_PAK_STATUS_REPAIR_CONFIRM:
-                                if ((gPlayerInputPressed[i] & A_BUTTON) || (gPlayerInputPressed[i] & START_BUTTON)) {
+                                if (gPlayerInputPressed[i] & A_BUTTON || gPlayerInputPressed[i] & START_BUTTON) {
                                     enqueueSoundEffect(1, 0x32);
                                     gRaceSetupMenuSubState.statusTransitionStates[i] =
                                         SAVE_STATUS_TRANSITION_FADE_OUT;
@@ -840,7 +836,6 @@ void updateRaceSetupSaveMenu(void) {
                                 if (gRacePlayers[i].menuState == 0) {
                                     gRacePlayers[i].menuState = 1;
                                 }
-                                break;
                         }
                     }
                     allPlayersReady &= gRacePlayers[i].menuState;
@@ -864,7 +859,8 @@ void updateRaceSetupSaveMenu(void) {
                 D_8010ADE4 =
                     createCallbackTask((void (*)(CallbackTask *))initRaceSetupSaveChoicePrompts, 0, 0x63);
 
-                for (controllerIndex = 0; controllerIndex < gPlayerCount; controllerIndex++) {
+                for (controllerIndex = 0; controllerIndex < gPlayerCount;
+                     controllerIndex++) {
                     gControllerPakOperationCounts[controllerIndex]++;
                 }
             }
