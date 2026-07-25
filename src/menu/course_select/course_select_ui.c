@@ -1981,7 +1981,7 @@ void updateCourseSelectExtraCourseIconListClose(CourseSelectWidgetActor *arg0) {
     addRenderCallback(&gMenuRenderCallbackList, drawCourseSelectExtraCourseIconList, temp_a2);
 }
 
-// updateCourseSelectExtraCourseIconList best match: 97.858% (nonmatchings/updateCourseSelectExtraCourseIconList-8699393380584516020/base_27.c)
+// updateCourseSelectExtraCourseIconList best match: 98.298% (nonmatchings/updateCourseSelectExtraCourseIconList-8498672362023432715/base_6.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/course_select/course_select_ui/updateCourseSelectExtraCourseIconList.s")
 
 #ifdef NON_MATCHING
@@ -1994,6 +1994,7 @@ void updateCourseSelectExtraCourseIconList(CourseSelectWidgetActor *arg0) {
     s32 iconIndex;
     s16 direction;
     s32 layoutIndex;
+    u8 itemCountByte;
     s32 itemCount;
     s32 nextItemCount;
 
@@ -2014,8 +2015,7 @@ void updateCourseSelectExtraCourseIconList(CourseSelectWidgetActor *arg0) {
     } else {
         playerIndex = 0;
         if ((s32)gPlayerCount > 0) {
-            player = gRacePlayers;
-            do {
+            player = gRacePlayers; do {
                 if (player->menuState != 2) {
                     promptState = &gMenuChoicePromptState[playerIndex];
                     if ((*promptState == 1) || ((*promptState >= 5) && (*promptState < 9))) {
@@ -2052,10 +2052,10 @@ void updateCourseSelectExtraCourseIconList(CourseSelectWidgetActor *arg0) {
                                                 itemCount = actor->itemCounts[playerIndex] + 1;
                                                 actor->itemCounts[playerIndex] = itemCount;
                                                 if (gPlayerCount == 1) {
-                                                    actor->tileIndices[playerIndex][itemCount - 1] = iconIndex + 0xC;
+                                                    actor->tileIndices[playerIndex][(((itemCount & 0xFF) & 0xFF) & 0xFF) - 1] = iconIndex + 0xC;
                                                 } else {
-                                                    actor->tileIndices[playerIndex][actor->itemCounts[playerIndex] - 1] =
-                                                        iconIndex + 0x1F;
+                                                    itemCountByte = actor->itemCounts[playerIndex];
+                                                    actor->tileIndices[playerIndex][itemCountByte - 1] = iconIndex + 0x1F;
                                                 }
                                             }
                                         }
