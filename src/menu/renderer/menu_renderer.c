@@ -1562,7 +1562,7 @@ void drawMenuGlyphScript(volatile s16 x, s16 y, MenuGlyphScript *script, s32 pal
     }
 }
 
-// drawMenuColoredGlyph best match: 98.062% (nonmatchings/drawMenuColoredGlyph-3885303446860889946/base_26.c)
+// drawMenuColoredGlyph best match: 98.107% (nonmatchings/drawMenuColoredGlyph-8498672362023432715/base_34.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/renderer/menu_renderer/drawMenuColoredGlyph.s")
 
 #ifdef NON_MATCHING
@@ -1600,7 +1600,7 @@ void drawMenuColoredGlyph(s16 x, s16 y, u16 glyph, u8 palette, u16 paletteScale,
         font = (MenuFontAssetTable *)getRelocatableHeapBlockBase(gAssetHandles[(u16)fontBank + 1]);
         glyphWidth = MENU_GLYPH_NARROW_WIDTH;
     }
-    paletteBase = (u16 *)&font->entries[font->entryCount];
+    paletteBase = (u16 *)(font->entryCount + font->entries);
 
     x0 = x + gMenuViewportCenterX;
     i = y + gMenuViewportCenterY;
@@ -1642,7 +1642,7 @@ paletteLoop:
                 i += 2;
                 do {
                     color = paletteColor & 0xFFFF;
-                    do { if (color & MENU_RGBA5551_ALPHA_BIT) { red = (color >> 11) & MENU_RGBA5551_CHANNEL_MASK; green = (color >> 6) & MENU_RGBA5551_CHANNEL_MASK; blue = (color >> 1) & MENU_RGBA5551_CHANNEL_MASK; red = (red * paletteScale) / MENU_RGBA5551_SCALE_BASE; green = (green * paletteScale) / MENU_RGBA5551_SCALE_BASE; color = green; blue = (blue * paletteScale) / MENU_RGBA5551_SCALE_BASE; if (blue && blue) { } *dstPalette = (red << 11) | (color << 6) | (blue << 1) | MENU_RGBA5551_ALPHA_BIT; } } while (0);
+                    do { if (color & MENU_RGBA5551_ALPHA_BIT) { red = (color >> 11) & MENU_RGBA5551_CHANNEL_MASK; green = (color >> 6) & MENU_RGBA5551_CHANNEL_MASK; blue = (color >> 1) & MENU_RGBA5551_CHANNEL_MASK; red *= paletteScale; red /= MENU_RGBA5551_SCALE_BASE; green = (green * paletteScale) / MENU_RGBA5551_SCALE_BASE; color = green; blue = (blue * paletteScale) / MENU_RGBA5551_SCALE_BASE; if (blue && blue) { } *dstPalette = (red << 11) | (color << 6) | (blue << 1) | MENU_RGBA5551_ALPHA_BIT; } } while (0);
                     dstPalette++;
                     if (i != MENU_PALETTE_SIZE_BYTES) {
                         goto paletteLoop;
