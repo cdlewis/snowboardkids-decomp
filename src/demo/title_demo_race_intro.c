@@ -148,7 +148,7 @@ void waitForTitleDemoRaceIntroStart(void) {
     }
 }
 
-// updateTitleDemoRaceIntro best match: 90.643% (nonmatchings/updateTitleDemoRaceIntro-1219509448159986855/base_19.c)
+// updateTitleDemoRaceIntro best match: 91.178% (nonmatchings/updateTitleDemoRaceIntro-8498672362023432715/base_9.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/demo/title_demo_race_intro/updateTitleDemoRaceIntro.s")
 
 #ifdef NON_MATCHING
