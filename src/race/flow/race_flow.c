@@ -1362,7 +1362,8 @@ void prepareRaceResultsFlow(void) {
     updateRaceFlowFrame();
 }
 
-// updateRaceResultsFlow best match: 93.039% at nonmatchings/updateRaceResultsFlow-731940616440357983/base_1.c.
+// updateRaceResultsFlow best match: 93.827% at
+// nonmatchings/updateRaceResultsFlow-8498672362023432715/base_30.c.
 #pragma GLOBAL_ASM("asm/nonmatchings/race/flow/race_flow/updateRaceResultsFlow.s")
 
 #ifdef NON_MATCHING
@@ -1412,18 +1413,25 @@ void updateRaceResultsFlow(void) {
             if (D_80121B55 == 1) {
                 task = func_80071408((void (*)(EffectTask *))initRaceUiPrizePayout, 6, 0x64);
                 if (task != NULL) {
-                    if (gRacePlayers[0].result != 3) {
-                        i = gRacePlayers[0].result + 1;
+                    register RacePlayerState *resultPlayer;
+                    s32 result;
+                    s32 highScore;
+
+                    resultPlayer = gRacePlayers;
+                    result = resultPlayer->result;
+                    if (result != 3) {
+                        i = result + 1;
                         if (D_800EC9F0.cupPlacements[gRaceCourseIndex.s] == 0) {
                             D_800EC9F0.cupPlacements[gRaceCourseIndex.s] = i;
                         } else if (i < D_800EC9F0.cupPlacements[gRaceCourseIndex.s]) {
                             D_800EC9F0.cupPlacements[gRaceCourseIndex.s] = i;
                         }
-                        if (D_800EC9F0.highScores[gRaceCourseIndex.s + 1] < gRacePlayers[0].unk56C) {
-                            D_800EC9F0.highScores[gRaceCourseIndex.s + 1] = gRacePlayers[0].unk56C;
+                        highScore = resultPlayer->unk56C;
+                        if (D_800EC9F0.highScores[gRaceCourseIndex.s + 1] < highScore) {
+                            D_800EC9F0.highScores[gRaceCourseIndex.s + 1] = highScore;
                         }
                     }
-                    if (gRacePlayers[0].result == 0) {
+                    if (result == 0) {
                         if (gRaceCourseIndex.s == 8) {
                             gPendingEndingCreditsFlow = 1;
                             D_800EC9F0.unlockFlags |= 1;
@@ -1447,7 +1455,7 @@ void updateRaceResultsFlow(void) {
                             }
                         }
                         player++;
-                    } while ((u32)player < (u32)&gRacePlayers[4]);
+                    } while ((u32)player < (u32)&gFrameCounter);
 
                     j = 0;
                     if (D_80121B55 > 0) {
@@ -1471,6 +1479,7 @@ void updateRaceResultsFlow(void) {
         case 2:
             task = func_80071408((void (*)(EffectTask *))func_8005A2F0, 6, 0x64);
             if (task != NULL) {
+                player = gRacePlayers;
                 currentTime = gRaceElapsedTimer.fraction + (gRaceElapsedTimer.seconds * COURSE_TIME_SECOND) +
                               (gRaceElapsedTimer.minutes * COURSE_TIME_MINUTE);
                 i = 0;
@@ -1493,7 +1502,7 @@ void updateRaceResultsFlow(void) {
                     }
                     D_800EC9F0.timeTrialRecords[gRaceCourseIndex.s][i] = gRaceElapsedTimer;
                     D_800EC9F0.timeTrialCharacterIds[gRaceCourseIndex.s][i] =
-                        (gRacePlayers[0].characterVariant * 8) + gRacePlayers[0].characterId;
+                        (player->characterVariant * 8) + player->characterId;
                     if (i == 0) {
                         D_800EC9F0.bestLapRecords[gRaceCourseIndex.s] = *(RaceTime *)&gRaceTimeTrialFinishTime;
                     }
@@ -1514,6 +1523,7 @@ void updateRaceResultsFlow(void) {
             case 2:
                 task = func_80071408((void (*)(EffectTask *))initRaceUiTrickPrizePayout, 6, 0x64);
                 if (task != NULL) {
+                    player = gRacePlayers;
                     i = 0;
                     do {
                         if (D_800EC9F0.trickAttackScores[gRaceCourseIndex.s][i] < gRaceTrickAttackPointTotal) {
@@ -1530,11 +1540,11 @@ void updateRaceResultsFlow(void) {
                             D_800EC9F0.trickAttackScores[gRaceCourseIndex.s][j + 1] = D_800EC9F0.trickAttackScores[gRaceCourseIndex.s][j];
                             D_800EC9F0.trickAttackCharacterIds[gRaceCourseIndex.s][j + 1] = D_800EC9F0.trickAttackCharacterIds[gRaceCourseIndex.s][j];
                         }
-                        D_800EC9F0.trickAttackScores[gRaceCourseIndex.s][i] = gRacePlayers[0].unk2C0;
+                        D_800EC9F0.trickAttackScores[gRaceCourseIndex.s][i] = player->unk2C0;
                         D_800EC9F0.trickAttackCharacterIds[gRaceCourseIndex.s][i] =
-                            (gRacePlayers[0].characterVariant * 8) + gRacePlayers[0].characterId;
+                            (player->characterVariant * 8) + player->characterId;
                     }
-                    if (gRacePlayers[0].unk2C0 >= 0x7D0) {
+                    if (player->unk2C0 >= 0x7D0) {
                         D_800EC9F0.unlockFlags |= 2;
                     }
                     if (i < 5) {
@@ -1551,6 +1561,7 @@ void updateRaceResultsFlow(void) {
             case 1:
                 task = func_80071408((void (*)(EffectTask *))initRaceUiHitPrizePayout, 6, 0x64);
                 if (task != NULL) {
+                    player = gRacePlayers;
                     i = 0;
                     do {
                         if (D_800EC9F0.scoreAttackScores[gRaceCourseIndex.s][i] < gRaceScoreAttackPointTotal) {
@@ -1567,9 +1578,9 @@ void updateRaceResultsFlow(void) {
                             D_800EC9F0.scoreAttackScores[gRaceCourseIndex.s][j + 1] = D_800EC9F0.scoreAttackScores[gRaceCourseIndex.s][j];
                             D_800EC9F0.scoreAttackCharacterIds[gRaceCourseIndex.s][j + 1] = D_800EC9F0.scoreAttackCharacterIds[gRaceCourseIndex.s][j];
                         }
-                        D_800EC9F0.scoreAttackScores[gRaceCourseIndex.s][i] = gRacePlayers[0].unk574;
+                        D_800EC9F0.scoreAttackScores[gRaceCourseIndex.s][i] = player->unk574;
                         D_800EC9F0.scoreAttackCharacterIds[gRaceCourseIndex.s][i] =
-                            (gRacePlayers[0].characterVariant * 8) + gRacePlayers[0].characterId;
+                            (player->characterVariant * 8) + player->characterId;
                     }
                     if (i < 5) {
                         gRaceResultState = 1;
@@ -1585,6 +1596,7 @@ void updateRaceResultsFlow(void) {
             case 0:
                 task = func_80071408((void (*)(EffectTask *))func_8005CE4C, 6, 0x64);
                 if (task != NULL) {
+                    player = gRacePlayers;
                     currentTime = gRaceElapsedTimer.fraction + (gRaceElapsedTimer.seconds * COURSE_TIME_SECOND) +
                                   (gRaceElapsedTimer.minutes * COURSE_TIME_MINUTE);
                     i = 0;
@@ -1608,7 +1620,7 @@ void updateRaceResultsFlow(void) {
                         }
                         D_800EC9F0.raceRecords[gRaceCourseIndex.s][i] = gRaceElapsedTimer;
                         D_800EC9F0.raceRecordCharacterIds[gRaceCourseIndex.s][i] =
-                            (gRacePlayers[0].characterVariant * 8) + gRacePlayers[0].characterId;
+                            (player->characterVariant * 8) + player->characterId;
                     }
                     if (i < 5) {
                         gRaceResultState = 1;
