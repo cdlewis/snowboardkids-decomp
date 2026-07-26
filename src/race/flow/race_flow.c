@@ -597,7 +597,7 @@ void openRaceStartTransitionFlow(void) {
     suspendGameTask(2);
 }
 
-// initRaceSceneFlow best match: 90.876% (nonmatchings/initRaceSceneFlow-1219509448159986855/base_1.c)
+// initRaceSceneFlow best match: 91.720% (nonmatchings/initRaceSceneFlow-8498672362023432715/base_47.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race/flow/race_flow/initRaceSceneFlow.s")
 
 #ifdef NON_MATCHING
@@ -610,7 +610,6 @@ void initRaceSceneFlow(void) {
     RaceCourseCharacterEntry *courseCharacters;
     u8 *courseCharacterIds;
     u16 *replayRecordFlag;
-    u8 characterId;
     s32 duplicate;
     s32 playerCount;
     s32 courseIndex;
@@ -632,15 +631,14 @@ void initRaceSceneFlow(void) {
     gRacePlayers[3].unk4 = 1;
 
     courseIndex = gRaceCourseIndex.s;
-    characterId = D_800DC5B4[courseIndex];
-    gRacePlayers[0].pad1A[0] = characterId;
-    gRacePlayers[1].pad1A[0] = characterId;
-    gRacePlayers[2].pad1A[0] = characterId;
-    gRacePlayers[3].pad1A[0] = characterId;
-    gRacePlayers[0].pad1A[1] = characterId;
-    gRacePlayers[1].pad1A[1] = characterId;
-    gRacePlayers[2].pad1A[1] = characterId;
-    gRacePlayers[3].pad1A[1] = characterId;
+    gRacePlayers[0].pad1A[0] = D_800DC5B4[courseIndex];
+    gRacePlayers[1].pad1A[0] = D_800DC5B4[courseIndex];
+    gRacePlayers[2].pad1A[0] = D_800DC5B4[courseIndex];
+    gRacePlayers[3].pad1A[0] = D_800DC5B4[courseIndex];
+    gRacePlayers[0].pad1A[1] = D_800DC5B4[courseIndex];
+    gRacePlayers[1].pad1A[1] = D_800DC5B4[courseIndex];
+    gRacePlayers[2].pad1A[1] = D_800DC5B4[courseIndex];
+    gRacePlayers[3].pad1A[1] = D_800DC5B4[courseIndex];
     playerCount = gPlayerCount;
     if (playerCount != 1) {
         gRacePlayers[0].pad1A[0] = 0;
@@ -664,7 +662,7 @@ void initRaceSceneFlow(void) {
         do {
             player->unk4 = 0;
             player++;
-        } while (player < end);
+        } while (player < (RacePlayerState *)((u8 *)gRacePlayers + RACE_PLAYER_OFFSET(playerCount)));
     }
 
     gRacePlayers[0].characterId = gRacePlayers[0].unk5;
@@ -688,13 +686,12 @@ void initRaceSceneFlow(void) {
             duplicate = 0;
             while (duplicate == 0) {
                 duplicate = 1;
-                characterId = *courseCharacterIds++;
-                player->characterId = characterId;
+                player->characterId = *courseCharacterIds++;
                 if (playerCount > 0) {
                     other = gRacePlayers;
                     end = (RacePlayerState *)((u8 *)gRacePlayers + RACE_PLAYER_OFFSET(playerCount));
                     do {
-                        if (characterId == other->characterId) {
+                        if (player->characterId == other->characterId) {
                             duplicate = 0;
                         }
                         other++;
