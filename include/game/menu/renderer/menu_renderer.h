@@ -92,7 +92,11 @@ void drawMenuAssetRegion(s16 x, s16 y, s32 texture, s32 tileIndex, s32 scaleX, s
 void drawMenuSprite(s16 x, s16 y, s32 texture, s32 tileIndex, s32 width, s32 height, s32 palette, s32 flip);
 void drawMenuSpriteClipped(s16 x, s16 y, s32 texture, u16 tileIndex, u16 width, u16 height, u8 flip, u8 palette,
                    s32 clipLeft, s32 clipTop, s32 clipRight, s32 clipBottom);
+#ifdef MENU_RENDERER_U32_FLIP_PROTOTYPE
+void drawMenuSpriteWithAlpha(s32 x, s32 y, s32 texture, s32 tileIndex, s32 width, s32 height, s32 palette, s32 alpha, u32 flip);
+#else
 void drawMenuSpriteWithAlpha(s32 x, s32 y, s32 texture, s32 tileIndex, s32 width, s32 height, s32 palette, s32 alpha, s32 flip);
+#endif
 void drawMenuSpriteWithAlphaClipped(s16 x, s16 y, s32 texture, u16 tileIndex, u16 width, u16 height, u8 palette, u16 alpha, u8 flip,
                    s32 clipLeft, s32 clipTop, s32 clipRight, s32 clipBottom);
 void drawMenuSpriteWithPaletteScale(s16 x, s16 y, s32 texture, u16 tileIndex, s32 alpha);
