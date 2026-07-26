@@ -1152,7 +1152,7 @@ s32 updateRacePlayerSurfaceContact(RacePlayer *player) {
 }
 #endif
 
-// updateRacePlayerGroundAlignment best match: 98.150% (nonmatchings/updateRacePlayerGroundAlignment-210831275846872038/base_30.c)
+// updateRacePlayerGroundAlignment best match: 99.304% (nonmatchings/updateRacePlayerGroundAlignment-8498672362023432715/base_39.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race/player/race_player_movement/updateRacePlayerGroundAlignment.s")
 
 #ifdef NON_MATCHING
@@ -1188,8 +1188,7 @@ s32 updateRacePlayerGroundAlignment(RacePlayer *player) {
     transformVec3iByFixedMatrix(mtxScratch.values, &D_800DE810, points);
     rollSpan = points[0].z;
 
-    probeScratch.baseY = temp_s2->posY;
-    probeScratch.baseY -= 0x30000;
+    probeScratch.baseY = temp_s2->posY - 0x30000;
     makeFixedRotationXY(mtxScratch.values, temp_s2->pitchAngle, temp_s2->facingAngle);
 
     i = 0;
@@ -1204,7 +1203,7 @@ s32 updateRacePlayerGroundAlignment(RacePlayer *player) {
         pointY = point->y;
         groundHeights[i] = heights[i];
         heightDiffs[i] = heights[i] - pointY;
-        if (heightDiffs[i] < 0) {
+        if ((heightDiffs[i] < 0) != 0) {
             groundHeights[i] = pointY;
         }
         i++;
@@ -1234,7 +1233,7 @@ s32 updateRacePlayerGroundAlignment(RacePlayer *player) {
         if (!(temp_s2->stateFlags & 4)) {
             temp_s2->pitchAngle = calculateFixedAngleFromDeltaXZ(-(groundHeights[0] - groundHeights[2]), -rollSpan * 2);
         }
-        probeScratch.baseY = ((s64)groundHeights[2] + groundHeights[0]) / 2;
+        probeScratch.baseY = (groundHeights[0] + (s64)groundHeights[2]) / 2;
     } else {
         heightDiffs[0] = frontHeightDiff;
         if (frontHeightDiff >= 0) {
@@ -1258,18 +1257,19 @@ s32 updateRacePlayerGroundAlignment(RacePlayer *player) {
     i = 0;
     do {
         point = &points[i];
-        transformVec3iByFixedMatrix(mtxScratch.values, &gRacePlayerGroundProbeOffsets[i + 2], point);
+        transformVec3iByFixedMatrix(mtxScratch.values, &gRacePlayerGroundProbeOffsets[i + 2], &points[i]);
         pointX = point->x + temp_s2->posX;
-        point->x = pointX;
+        (&points[i])->x = pointX;
         point->z += temp_s2->posZ;
-        point->y += probeScratch.baseY + temp_s2->unk64;
-        groundHeights[i] = getRaceCourseSurfaceHeight(terrainId, pointX, point->z);
+        frontHeightDiff = (&points[i])->z;
+        (&points[i])->y += probeScratch.baseY + temp_s2->unk64;
+        groundHeights[i] = getRaceCourseSurfaceHeight(terrainId, pointX, frontHeightDiff);
         pointY = point->y;
         if (pointY < groundHeights[i]) {
             temp_s2->unk64 += groundHeights[i] - pointY;
         }
         i++;
-    } while (i < 4);
+    } while ((i < 4) != 0);
 
     pointX = probeScratch.baseY;
     if (temp_s2->posY < pointX + 0x30000) {
