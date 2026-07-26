@@ -1231,7 +1231,7 @@ void updateRacePlayerAirborneLaunch(RacePlayer *player) {
     }
 }
 
-// updateRacePlayerAirborneCruise best match: 99.550% (nonmatchings/updateRacePlayerAirborneCruise-3379532139742180785/base_10.c)
+// updateRacePlayerAirborneCruise best match: 99.696% (nonmatchings/updateRacePlayerAirborneCruise-8498672362023432715/base.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race/player/race_player_update/updateRacePlayerAirborneCruise.s")
 
 #ifdef NON_MATCHING
@@ -1240,7 +1240,6 @@ void updateRacePlayerAirborneCruise(RacePlayer *player)
   s32 sp2C;
   s32 var_a2;
   s32 var_v1;
-  s8 turnTimer;
 
   sp2C = 0;
   if (player->unk4 == 0)
@@ -1293,11 +1292,9 @@ void updateRacePlayerAirborneCruise(RacePlayer *player)
     }
   }
 
-  turnTimer = player->unk93;
-  if (turnTimer != 0)
+  if (player->unk93 != 0)
   {
-    player->unk93 = turnTimer - 1;
-    setRaceMotionAnimation(player, player->unk93 + 8);
+    setRaceMotionAnimation(player, player->unk93-- + 7);
   }
   else if (player->animationId != 5)
   {
