@@ -21,8 +21,8 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Iterable
 
+from nonmatching_match_log import certified_attempt_path, parse_match_log_line
 
-MATCH_LINE_RE = re.compile(r"(?P<filename>[A-Za-z0-9_./-]+\.c)\s+(?P<percent>\d+(?:\.\d+)?)\s*%")
 ASM_LABEL_RE = re.compile(r"^\s*(?:glabel|dlabel)\s+(?P<name>[A-Za-z_][A-Za-z0-9_]*)\b", re.MULTILINE)
 ASM_LABEL_LINE_RE = re.compile(r"^\s*(?:glabel|dlabel)\s+(?P<name>[A-Za-z_][A-Za-z0-9_]*)\b")
 ASM_ADDRESS_RE = re.compile(r"/\*\s+[0-9A-Fa-f]+\s+(?P<addr>[0-9A-Fa-f]{8})\s+[0-9A-Fa-f]{8}\s+\*/")
@@ -195,24 +195,21 @@ def parse_match_log(log_path: Path, repo_root: Path, aliases: dict[str, str]) ->
         return
 
     for line in lines:
-        match = MATCH_LINE_RE.search(line)
-        if match is None:
+        entry = parse_match_log_line(line)
+        if entry is None:
             continue
 
-        attempt = (workspace / match.group("filename")).resolve()
+        attempt = certified_attempt_path(entry, workspace)
+        if attempt is None:
+            continue
 
         # Ignore stale log entries and accidental paths outside nonmatchings.
         if not attempt.is_file() or nonmatchings_dir not in attempt.parents:
             continue
 
-        try:
-            percent = float(match.group("percent"))
-        except ValueError:
-            continue
-
         yield MatchResult(
             function=function,
-            percent=percent,
+            percent=entry.percent,
             attempt=str(attempt),
             source_root=repo_root,
             workspace=workspace,

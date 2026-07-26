@@ -179,7 +179,10 @@ def build_matches(tmpdir: Path, candidate: Path, timeout: int) -> bool:
         return False
     if result.returncode != 0:
         return False
-    return re.search(r"Score:\s+100\.000%\s+\(0 differences\)", result.stdout) is not None
+    return (
+        re.search(r"Score:\s+100\.000%\s+\(0 differences\)", result.stdout) is not None
+        and re.search(r"^Verified exact match:\s+yes$", result.stdout, re.MULTILINE) is not None
+    )
 
 
 def strip_candidate_for_inline(candidate_text: str) -> str:
