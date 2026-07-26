@@ -240,7 +240,7 @@ void initRaceSetupSaveMenu(void) {
 }
 #endif
 
-// updateRaceSetupSaveMenu best match: 99.498% (nonmatchings/updateRaceSetupSaveMenu-11/base.c)
+// updateRaceSetupSaveMenu best match: 99.498% (nonmatchings/updateRaceSetupSaveMenu-8498672362023432715/base_18.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/race_setup/race_setup_menu/updateRaceSetupSaveMenu.s")
 
 #ifdef NON_MATCHING
@@ -610,8 +610,8 @@ void updateRaceSetupSaveMenu(void) {
 #endif
 
 void updateRaceSetupSaveMenu(void) {
-    u8 stackTemp[0x4];
-    s32 button;
+    void (*saveChoicePromptInitializer)(CallbackTask *);
+    s16 *choiceState;
     s32 allPlayersReady = 0;
     s16 allControllerPakOpsComplete = 0;
     s16 statusCode;
@@ -641,6 +641,7 @@ void updateRaceSetupSaveMenu(void) {
             allPlayersReady = 1;
             allControllerPakOpsComplete = 1;
             for (i = 0; i < gPlayerCount; i++) {
+                choiceState = &gMenuChoicePromptState[i];
                 if (gControllerPakOperationCounts[i] != 1) {
                     if ((saveStatusTask == NULL) || (gRaceSetupMenuSubState.statusTransitionStates[i] == 0)) {
                         if (*(&gMenuChoicePromptState[i]) != 0) {
@@ -650,24 +651,26 @@ void updateRaceSetupSaveMenu(void) {
                         }
                         switch (statusCode) {
                             case CONTROLLER_PAK_STATUS_PROBE: {
+                                s32 currentControllerIndex = i & 0xFFFF;
+
                                 gRumblePakConnectedByController[i] = 0;
-                                requestRumbleMotorInit(i);
+                                requestRumbleMotorInit((u16)currentControllerIndex);
                                 if ((gRumbleMotorStatuses[i] != 1) && (gRumbleMotorStatuses[i] != 0xB) &&
                                     (gRumbleMotorStatuses[i] != 4)) {
                                     gRumblePakConnectedByController[i] = 1;
                                 } else {
                                     gRumblePakConnectedByController[i] = 0;
                                 }
-                                requestControllerPakProbe(i);
+                                requestControllerPakProbe((u16)currentControllerIndex);
                                 break;
                             }
 
                             case CONTROLLER_PAK_STATUS_SAVE_STATUS:
-                                requestControllerPakSaveStatus(i);
+                                requestControllerPakSaveStatus((u16)i);
                                 break;
 
                             case CONTROLLER_PAK_STATUS_SAVE_READ: {
-                                requestControllerPakSaveRead(i);
+                                requestControllerPakSaveRead((u16)i);
                                 if (gControllerPakRetryCounts[i] == 0) {
                                     gRacePlayers[i].unkC = D_800EC9F4[i].money;
                                     gRacePlayers[i].unk568 = 0;
@@ -688,7 +691,7 @@ void updateRaceSetupSaveMenu(void) {
                             }
 
                             case CONTROLLER_PAK_STATUS_REPAIR: {
-                                requestControllerPakRepair(i);
+                                requestControllerPakRepair((u16)i);
                                 if (gControllerPakRetryCounts[i] == 0) {
                                     if (saveStatusTask != NULL) {
                                         gRaceSetupMenuSubState.statusTransitionStates[i] =
@@ -777,7 +780,7 @@ void updateRaceSetupSaveMenu(void) {
                                                 gRacePlayers[i].unkC = gGameSaveDataBuffer[i].money;
                                             }
                                         }
-                                        *(&gMenuChoicePromptState[i]) += 2;
+                                        *choiceState += 2;
                                     }
                                 }
                                 break;
@@ -849,6 +852,7 @@ void updateRaceSetupSaveMenu(void) {
     if (allControllerPakOpsComplete) {
         if (savePanelTask == NULL) {
             D_800EC9E4++;
+            saveChoicePromptInitializer = (void (*)(CallbackTask *))initRaceSetupSaveChoicePrompts;
             if (D_800EC9E4 >= SAVE_PANEL_CREATE_DELAY) {
                 D_800EC9E4 = 0;
                 D_8010ADE8 =
@@ -856,8 +860,7 @@ void updateRaceSetupSaveMenu(void) {
                 createCallbackTask((void (*)(CallbackTask *))initRaceSetupSavePanelIcons, 0, 0x63);
                 D_8010ADE0 =
                     createCallbackTask((void (*)(CallbackTask *))initRaceSetupSavePanelFrame, 0, 0x63);
-                D_8010ADE4 =
-                    createCallbackTask((void (*)(CallbackTask *))initRaceSetupSaveChoicePrompts, 0, 0x63);
+                D_8010ADE4 = createCallbackTask(saveChoicePromptInitializer, 0, 0x63);
 
                 for (controllerIndex = 0; controllerIndex < gPlayerCount;
                      controllerIndex++) {
