@@ -499,7 +499,7 @@ void initControllerPakFileDeleteFreeSpaceInfo(ControllerPakTwoPointActor *arg0) 
     setCallbackTaskCallback(arg0, updateControllerPakFileDeleteFreeSpaceInfo);
 }
 
-// drawControllerPakFileDeleteFileList best match: 91.344% (nonmatchings/drawControllerPakFileDeleteFileList-1219509448159986855/base_20.c)
+// drawControllerPakFileDeleteFileList best match: 94.081% (nonmatchings/drawControllerPakFileDeleteFileList-8498672362023432715/base_31.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/controller_pak/controller_pak_ui/drawControllerPakFileDeleteFileList.s")
 
 #ifdef NON_MATCHING
@@ -541,6 +541,8 @@ void drawControllerPakFileDeleteFileList(ControllerPakFileListActor *arg0) {
         if ((s32)state <= 0) {
         } else {
             alpha = 0xE0;
+            if (1) {
+            }
             if (fileIndex == gControllerPakMenuState.fileIndex) {
                 alpha = 0x100;
             }
@@ -557,7 +559,7 @@ void drawControllerPakFileDeleteFileList(ControllerPakFileListActor *arg0) {
         drawMenuGlyphScript((s16)(arg0->positions[0].x + i), (s16)(arg0->positions[0].y + rowY), (u8 *)textB0, 1, alpha, 8);
 
         if (gControllerPakFileStates[fileIndex].company_code != 0) {
-            i = gControllerPakVisibleFileIndex * 0;
+            i = 0;
             insertIndex = 0;
             do {
                 if ((gControllerPakFileStates[fileIndex].game_name[i] == 0) && (insertIndex == 0)) {
@@ -602,7 +604,8 @@ void drawControllerPakFileDeleteFileList(ControllerPakFileListActor *arg0) {
 
             i = 0;
             do {
-                insertIndex = (gControllerPakFileStates[fileIndex].company_code >> ((1 - i) * 8)) & 0xFF;
+                state = (gControllerPakFileStates[fileIndex].company_code >> ((1 - i) * 8)) & 0xFF;
+                insertIndex = state;
                 if ((insertIndex < 0x30) || (insertIndex >= 0x5B)) {
                     text7C[i] = 0xFFFE;
                 } else if (insertIndex >= 0x41) {
@@ -610,7 +613,8 @@ void drawControllerPakFileDeleteFileList(ControllerPakFileListActor *arg0) {
                 } else if (insertIndex >= 0x3A) {
                     text7C[i] = 0xFFFE;
                 } else {
-                    text7C[i] = insertIndex - 0x30;
+                    text7C[i] = insertIndex;
+                    text7C[i] = text7C[i] - 0x30;
                 }
                 i++;
             } while (i < 2);
@@ -640,7 +644,8 @@ void drawControllerPakFileDeleteFileList(ControllerPakFileListActor *arg0) {
     if (gControllerPakMenuCursorState != 0) {
         drawMenuSpriteWithAlpha(arg0->positions[5].x, (s16)(arg0->positions[5].y + (gControllerPakVisibleFileIndex * 0x10)), getRelocatableHeapBlockBase(gAssetHandles[0x21]), 6,
                       0x20, 0x20, 0, arg0->cursorScale, 0);
-        drawMenuSpriteWithAlpha((s16)(arg0->positions[5].x + 0x80), (s16)(arg0->positions[5].y + (gControllerPakVisibleFileIndex * 0x10)),
+        drawMenuSpriteWithAlpha((s16)(arg0->positions[5].x + 0x80),
+                      (s16)(arg0->positions[5].y + (((((gControllerPakVisibleFileIndex & 0xFFFF) & 0xFFFF) & 0xFFFF)) * 0x10)),
                       getRelocatableHeapBlockBase(gAssetHandles[0x21]), 7, 0x20, 0x20, 0, arg0->cursorScale, 0);
     }
 }
