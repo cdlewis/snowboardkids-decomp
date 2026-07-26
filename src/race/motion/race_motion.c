@@ -1066,7 +1066,7 @@ void setRaceMotionAnimation(RaceMotionState *state, s32 animationIndex) {
     RaceMotionAnimationHeader *animationHeader;
     s16 frameCount;
     s32 frameDataOffset;
-    s32 assetBase;
+    u8 *assetBase;
 
     assetBase = getRelocatableHeapBlockBase(gAssetHandles[0x16 + state->modelId]);
     animationHeader = (RaceMotionAnimationHeader *)(assetBase +
@@ -1076,7 +1076,8 @@ void setRaceMotionAnimation(RaceMotionState *state, s32 animationIndex) {
     state->framesRemaining++;
     state->frameCount = frameCount;
     animationHeader++;
-    frameDataOffset = (s32)animationHeader - getRelocatableHeapBlockBase(gAssetHandles[0x16 + state->modelId]);
+    frameDataOffset = (u8 *)animationHeader -
+        (u8 *)getRelocatableHeapBlockBase(gAssetHandles[0x16 + state->modelId]);
     state->animationStartOffset = frameDataOffset;
     state->frameDataOffset = frameDataOffset;
     state->frameTimer = 0;
@@ -1088,13 +1089,14 @@ void loadRaceMotionAnimationFrame(RaceMotionState *state) {
     RaceMotionState *cursor;
     s32 one;
     s32 jointOffset;
-    s32 base;
+    u8 *base;
     s16 value0;
     s16 value1;
     s16 angle;
 
     base = getRelocatableHeapBlockBase(gAssetHandles[0x16 + state->modelId]);
-    frameData = (s16 *)(((one = base) & 0xFFFFFFFFu) + state->frameDataOffset);
+    one = (s32)base;
+    frameData = (s16 *)(((u32)one) + state->frameDataOffset);
     state->frameTimerReset = 1;
     state->frameTimer = state->frameTimerReset;
 
@@ -1130,7 +1132,8 @@ void loadRaceMotionAnimationFrame(RaceMotionState *state) {
         jointOffset += sizeof(RaceMotionStateJoint);
     } while (jointOffset != RACE_MOTION_JOINT_COUNT * sizeof(RaceMotionStateJoint));
 
-    state->frameDataOffset = (s32)frameData - getRelocatableHeapBlockBase(gAssetHandles[0x16 + state->modelId]);
+    state->frameDataOffset = (u8 *)frameData -
+        (u8 *)getRelocatableHeapBlockBase(gAssetHandles[0x16 + state->modelId]);
     angle = state->animation.joints[0].rotationX;
     state->nextModelJointX = angle;
     state->modelJointX = angle;
@@ -1144,14 +1147,14 @@ void loadRaceMotionAnimationFrame(RaceMotionState *state) {
 
 void loadRaceMotionJointAnimationFrame(RaceMotionState *state) {
     RaceMotionPackedJointRotation *packedRotation;
-    s32 base;
+    u8 *base;
     RaceMotionPartialJointCursor *jointCursor;
     s32 one;
     s32 jointOffset;
 
     base = getRelocatableHeapBlockBase(gAssetHandles[0x16 + state->modelId]);
-    packedRotation =
-        (RaceMotionPackedJointRotation *)(((one = base) + state->frameDataOffset) + RACE_MOTION_PACKED_JOINT_ROTATION_SKIP_BYTES);
+    packedRotation = (RaceMotionPackedJointRotation *)((one = (s32)base) + state->frameDataOffset +
+        RACE_MOTION_PACKED_JOINT_ROTATION_SKIP_BYTES);
     state->frameTimerReset = 1;
     jointOffset = RACE_MOTION_PARTIAL_ANIMATION_START_JOINT * sizeof(RaceMotionStateJoint);
     jointCursor = (RaceMotionPartialJointCursor *)((u8 *)state + jointOffset);
@@ -1180,7 +1183,8 @@ void loadRaceMotionJointAnimationFrame(RaceMotionState *state) {
         jointCursor = (RaceMotionPartialJointCursor *)((u8 *)jointCursor + sizeof(RaceMotionStateJoint));
     } while (jointOffset != RACE_MOTION_JOINT_COUNT * sizeof(RaceMotionStateJoint));
 
-    state->frameDataOffset = (s32)packedRotation - getRelocatableHeapBlockBase(gAssetHandles[0x16 + state->modelId]);
+    state->frameDataOffset = (u8 *)packedRotation -
+        (u8 *)getRelocatableHeapBlockBase(gAssetHandles[0x16 + state->modelId]);
 }
 
 // interpolateRaceMotionAnimationFrame best match: 98.013% (nonmatchings/interpolateRaceMotionAnimationFrame-3885303446860889946/base_23.c)

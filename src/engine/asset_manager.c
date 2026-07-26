@@ -303,15 +303,15 @@ void decompressHuffmanAssetPayload(u8 flags, u8 *compressedPayload, u8 *output, 
 
 void loadCompressedRomAsset(void *arg0, void *arg1, s32 arg2) {
     s16 *sp28;
-    s32 sp30;
+    u8 *sp30;
 
     dmaReadRom((u32)arg0, &gCompressedAssetHeader, 8);
     gAssetHandles.assetHandles[arg2] = allocRelocatableHeapBlock(gCompressedAssetHeader.compressedSize);
     gAssetHandles.compressedAssetHandle = allocRelocatableHeapBlock((s32)arg1 - (s32)arg0);
     dmaReadRom((u32)arg0, (void *)getRelocatableHeapBlockBase(gAssetHandles.compressedAssetHandle), (s32)arg1 - (s32)arg0);
-    sp30 = getRelocatableHeapBlockBase(gAssetHandles.compressedAssetHandle) + 5;
+    sp30 = (u8 *)getRelocatableHeapBlockBase(gAssetHandles.compressedAssetHandle) + 5;
     sp28 = &gAssetHandles.assetHandles[arg2];
-    decompressHuffmanAssetPayload(gCompressedAssetHeader.flags, (u8 *)sp30, (u8 *)getRelocatableHeapBlockBase(*sp28),
+    decompressHuffmanAssetPayload(gCompressedAssetHeader.flags, sp30, getRelocatableHeapBlockBase(*sp28),
                                   gCompressedAssetHeader.compressedSize);
     getRelocatableHeapBlockBase(*sp28);
     gAssetHandles.compressedAssetHandle = freeRelocatableHeapBlock(gAssetHandles.compressedAssetHandle);

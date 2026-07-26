@@ -2,6 +2,7 @@
 #define RACE_SETUP_UI_H
 
 #include "common.h"
+#include "game/menu/renderer/menu_renderer.h"
 
 typedef struct {
     /* 0x00 */ u8 pad0[0x18];
@@ -26,7 +27,10 @@ typedef struct {
     /* 0x00 */ u8 pad0[0x18];
     /* 0x18 */ s16 x;
     /* 0x1A */ s16 y;
-    /* 0x1C */ s16 alpha;
+    union {
+        /* 0x1C */ s16 alpha;
+        /* 0x1C */ u16 uAlpha;
+    };
 } FadeItemActor;
 
 typedef struct {
@@ -98,20 +102,7 @@ typedef struct {
 } MenuTilemapSpriteAsset;
 
 typedef struct {
-    /* 0x00 */ s16 unk0;
-    /* 0x02 */ s16 unk2;
-    /* 0x04 */ s16 unk4;
-    /* 0x06 */ s16 unk6;
-    /* 0x08 */ s16 unk8;
-    /* 0x0A */ s16 unkA;
-    /* 0x0C */ s16 unkC;
-    /* 0x0E */ s16 unkE;
-    /* 0x10 */ s16 unk10;
-    /* 0x12 */ s16 unk12;
-    /* 0x14 */ u8 *unk14;
-    /* 0x18 */ u8 *unk18;
-    /* 0x1C */ u8 *unk1C;
-    /* 0x20 */ u8 *unk20;
+    /* 0x00 */ MenuRenderSprite render;
     /* 0x24 */ s16 unk24;
 } MenuTilemapSprite;
 
@@ -155,7 +146,7 @@ void initRaceSetupSaveChoicePrompts(RectListActor *arg0);
 void drawMenuIconTilemapSpriteActor(void *arg0);
 void updateMenuIconTilemapSpriteActor(SpriteActor *arg0);
 void initMenuIconTilemapSpriteActor(SpriteActor *arg0);
-void initMenuTilemapSprite(MenuTilemapSprite *arg0, s32 arg1);
+void initMenuTilemapSprite(MenuTilemapSprite *sprite, MenuTilemapSpriteAsset *asset);
 void n_alSynFreeFX(s32 arg0);
 
 #endif

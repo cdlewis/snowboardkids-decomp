@@ -7,33 +7,33 @@ s32 FrandNote(PlayerCommandState *arg0, u8 *arg1) {
 
     range = *arg1;
     arg1++;
-    arg0->pitchOffset = __MusIntRandom(range, arg1, arg0);
+    arg0->pitchOffset = __MusIntRandom(range);
     arg0->pitchOffset += *arg1;
     return (s32)(arg1 + 1);
 }
 
-s32 FrandVolume(PlayerCommandState *arg0, u8 *arg1) {
-    u8 temp_a0;
-    s32 temp_v0;
+u8 *FrandVolume(PlayerCommandState *arg0, u8 *arg1) {
+    u8 randomRange;
+    s32 randomValue;
 
-    temp_a0 = *arg1;
+    randomRange = *arg1;
     arg1++;
-    temp_v0 = __MusIntRandom(temp_a0, arg1, arg0);
-    arg0->unkEF = temp_v0;
-    arg0->unkEF = *arg1 + (temp_a0 = temp_v0);
-    return (s32)(arg1 + 1);
+    randomValue = __MusIntRandomWithContext(randomRange, arg1, arg0);
+    arg0->unkEF = randomValue;
+    arg0->unkEF = *arg1 + (randomRange = randomValue);
+    return arg1 + 1;
 }
 
-s32 FrandPan(PlayerCommandState *arg0, u8 *arg1) {
-    u8 temp_a0;
-    s8 temp_v0;
+u8 *FrandPan(PlayerCommandState *arg0, u8 *arg1) {
+    u8 randomRange;
+    s8 randomValue;
 
-    temp_a0 = *arg1;
+    randomRange = *arg1;
     arg1++;
-    temp_v0 = __MusIntRandom(temp_a0, arg1, arg0);
-    arg0->unkF2 = temp_v0;
-    arg0->unkF2 = *arg1 + (temp_a0 = temp_v0);
-    return (s32)(arg1 + 1);
+    randomValue = __MusIntRandomWithContext(randomRange, arg1, arg0);
+    arg0->unkF2 = randomValue;
+    arg0->unkF2 = *arg1 + (randomRange = randomValue);
+    return arg1 + 1;
 }
 
 s32 Fvolume(PlayerCommandState *arg0, u8 *arg1) {

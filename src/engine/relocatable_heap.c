@@ -228,8 +228,8 @@ void compactRelocatableHeap(void) {
     updateRelocatableHeapNextFreeAddress();
 }
 
-s32 getRelocatableHeapBlockBase(s32 handle) {
-    return (s32) gRelocatableHeapBlockStartAliases[handle].start;
+void *getRelocatableHeapBlockBase(s32 handle) {
+    return gRelocatableHeapBlockStartAliases[handle].start;
 }
 
 void lockRelocatableHeapBlock(s32 handle) {

@@ -42,7 +42,7 @@ void initControllerPakContinuePromptFlow(void) {
     LOAD_ASSET(_59AAA0, 0x24);
     LOAD_ASSET(_60F1A0, 0x29);
     initCallbackTaskScheduler(0);
-    createCallbackTask(initControllerPakContinuePrompt, 0, 0x64);
+    createCallbackTask((CallbackTaskCallback)initControllerPakContinuePrompt, 0, 0x64);
     gMenuFadeAlpha = gCurrentGameTask->fade;
     setCurrentGameTaskCallback(updateControllerPakContinuePromptFlow, 0);
     updateCallbackTasks();

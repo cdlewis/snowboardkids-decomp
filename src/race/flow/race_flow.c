@@ -1,4 +1,7 @@
 #include "common.h"
+#include "game/menu/renderer/menu_renderer.h"
+#include "game/menu/renderer/menu_render_utils.h"
+#include "game/engine/render_callback.h"
 #include "assets.h"
 #include "game/audio/sound_manager.h"
 #include "game/engine/callback_task_scheduler.h"
@@ -172,7 +175,6 @@ extern s32 gRaceCameraReplayStartZ;
 extern s32 gMenuFlowState;
 extern s32 gPlayerInputHeld;
 extern s32 gPlayerInputPressed[];
-extern void *gMenuRenderCallbackList;
 extern s16 gAssetHandles[];
 extern SignedUnsignedShort gRaceCourseIndex;
 extern s16 gRaceLapCount;
@@ -241,9 +243,6 @@ extern s16 gRaceScoreAttackPointTotal;
 
 extern s32 saveRaceRecordReplayData(void);
 extern void releaseMenuAssetHandles(void);
-extern void drawAssetTableSprite(s32, s32, s32, s32);
-extern void drawAssetTableSpriteWithExplicitPalette(s32, s32, s32, s32, s32);
-extern void addRenderCallback(void *, void (*)(s32), s32);
 extern void enqueueSoundEffect(s32, s32);
 
 void initStartupControllerPakFlow(void) {
@@ -830,11 +829,11 @@ void initRaceSceneFlow(void) {
         gCurrentGameTask->fadeTimer = 0;
         gCurrentGameTask->unk1C = 0;
         gCurrentGameTask->countdown = 0x1E;
-        createCallbackTask((void (*)(CallbackTask *))initCourseRecordBannerFadeOut, 0, 0x64);
+        createCallbackTask((CallbackTaskCallback)initCourseRecordBannerFadeOut, 0, 0x64);
         setCurrentGameTaskCallback(fadeOutRaceStartTransitionFlow, 0);
     } else {
-        createCallbackTask(initRaceCountdownPrompt, 6, 0x64);
-        createCallbackTask((void (*)(CallbackTask *))func_80065E90, 6, 0x64);
+        createCallbackTask((CallbackTaskCallback)initRaceCountdownPrompt, 6, 0x64);
+        createCallbackTask((CallbackTaskCallback)func_80065E90, 6, 0x64);
         setCurrentGameTaskCallback(startRaceGameplayFlow, 0);
     }
 
@@ -876,8 +875,8 @@ void fadeInRaceGameplayViewports(void) {
         if (gMenuFadeAlpha >= 0x100) {
             setRaceCameraMode(0, 1);
             gMenuFadeAlpha = 0xFF;
-            createCallbackTask(initRaceCountdownPrompt, 6, 0x64);
-            createCallbackTask((void (*)(CallbackTask *))func_80065E90, 6, 0x64);
+            createCallbackTask((CallbackTaskCallback)initRaceCountdownPrompt, 6, 0x64);
+            createCallbackTask((CallbackTaskCallback)func_80065E90, 6, 0x64);
             switch (gPlayerCount & 0xFFFFFFFF) {
             case 1:
                 if (gRaceCourseIndex.s != 6) {
@@ -961,7 +960,7 @@ void startRaceGameplayFlow(void) {
     }
 }
 
-void drawRacePauseMenu(s32 arg0) {
+void drawRacePauseMenu(void *arg0) {
     s32 color;
 
     drawAssetTableSprite(-0x14, -0x10, getRelocatableHeapBlockBase(gAssetHandles[0x1F]), 0x57);
@@ -1356,9 +1355,9 @@ void prepareRaceResultsFlow(void) {
     if (D_80121B60 != 0) {
         requestMusicSequenceBank(6);
         if ((gPlayerCount == 1) && (gRaceSplitscreenMode == 0)) {
-            createCallbackTaskWithUserId((void (*)(CallbackTask *))updateRaceUiResultAwardBadgeDelay, 6, 0x64, 0xA9);
+            createCallbackTaskWithUserId((CallbackTaskCallback)updateRaceUiResultAwardBadgeDelay, 6, 0x64, 0xA9);
         }
-        createCallbackTaskWithUserId(initFallingMenuSnowflake, 5, 0x64, D_80121B60 - 1);
+        createCallbackTaskWithUserId((CallbackTaskCallback)initFallingMenuSnowflake, 5, 0x64, D_80121B60 - 1);
     }
     updateRaceFlowFrame();
 }
@@ -1640,7 +1639,7 @@ void updateRaceResultsMusicFlow(void) {
         gMenuFlowState |= 0x20;
     }
     if (D_80121B60 != 0) {
-        createCallbackTaskWithUserId(&initFallingMenuSnowflake, 5, 0x64, D_80121B60 - 1);
+        createCallbackTaskWithUserId((CallbackTaskCallback)&initFallingMenuSnowflake, 5, 0x64, D_80121B60 - 1);
     }
     updateRaceFlowFrame();
     if (gMenuFlowState & 0x10) {
@@ -1656,7 +1655,7 @@ void updateRaceResultsMusicFlow(void) {
 void fadeOutRaceResultsFlow(void) {
     gFramebufferSwapDelay = 0;
     if (D_80121B60 != 0) {
-        createCallbackTaskWithUserId(initFallingMenuSnowflake, 5, 0x64, D_80121B60 - 1);
+        createCallbackTaskWithUserId((CallbackTaskCallback)initFallingMenuSnowflake, 5, 0x64, D_80121B60 - 1);
     }
     updateRaceFlowFrame();
     gRaceRumbleEnabled = 0;
@@ -1781,9 +1780,9 @@ void initRaceGhostReplayFlow(void) {
     requestMusicSequenceBank(0);
     gCurrentGameTask->fadeTimer = 0;
     gCurrentGameTask->unk1C = 0;
-    createCallbackTask((void (*)(CallbackTask *))func_80057E60, 6, 0x64);
+    createCallbackTask((CallbackTaskCallback)func_80057E60, 6, 0x64);
     if (D_80121B61 == -1) {
-        createCallbackTask((void (*)(CallbackTask *))updateRaceGhostUnavailableMessage, 6, 0x64);
+        createCallbackTask((CallbackTaskCallback)updateRaceGhostUnavailableMessage, 6, 0x64);
     }
     setCurrentGameTaskCallback(updateRaceGhostReplayFlow, 0);
 }
@@ -1965,8 +1964,8 @@ void initRaceRecordSettingsFlow(void) {
     LOAD_ASSET(_1E74E0, 0x1C);
     initCallbackTaskScheduler(0);
     gMenuFlowState = 0;
-    createCallbackTaskWithUserId(initRaceRecordSettingsPanel, 0, 0x64, 0);
-    createCallbackTask((void (*)(CallbackTask *))initMenuIconTilemapSpriteActor, 0, 0x5E);
+    createCallbackTaskWithUserId((CallbackTaskCallback)initRaceRecordSettingsPanel, 0, 0x64, 0);
+    createCallbackTask((CallbackTaskCallback)initMenuIconTilemapSpriteActor, 0, 0x5E);
     setCurrentGameTaskCallback(updateRaceRecordSettingsFlow, 0);
     requestMusicSequenceBank(7);
 }

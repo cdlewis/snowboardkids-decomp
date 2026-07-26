@@ -17,7 +17,6 @@
 #include "game/demo/main_menu_demo_race_intro.h"
 #include "game/demo/title_demo_race_intro.h"
 #include "game/engine/viewport_manager.h"
-#define MENU_RENDERER_S16_STEP_PROTOTYPE
 #include "game/menu/renderer/menu_renderer.h"
 
 #define OS_MESG_BLOCK 1
@@ -220,6 +219,9 @@ void requestRumbleMotorInit(u16 arg0) {
     osRecvMesg(&gControllerSubsystemReplyQueue, &msg, OS_MESG_BLOCK);
 }
 
+extern void requestRumbleMotorInitWithContext(u16 controllerIndex, s32 playerCount, s32 choiceValue);
+#pragma weak requestRumbleMotorInitWithContext = requestRumbleMotorInit
+
 void serviceRumbleMotorRequest(u16 arg0) {
     if (gRumbleMotorStatuses[arg0] == RUMBLE_MOTOR_NO_PAK) {
         gRumbleMotorRequestStates[arg0] = 0;
@@ -306,6 +308,9 @@ void requestControllerPakSaveStatus(u16 arg0) {
     osRecvMesg(&gControllerSubsystemReplyQueue, &msg, OS_MESG_BLOCK);
 }
 
+extern void requestControllerPakSaveStatusWithContext(u16 controllerIndex, s32 playerCount, s32 choiceValue);
+#pragma weak requestControllerPakSaveStatusWithContext = requestControllerPakSaveStatus
+
 void checkControllerPakSaveStatus(u16 arg0) {
     s32 ret;
     s32 maxFiles;
@@ -364,6 +369,9 @@ void requestControllerPakSaveRead(u16 arg0) {
     osSendMesg(&gControllerSubsystemRequestQueue, (OSMesg)(arg0 + CONTROLLER_REQUEST_READ_SAVE), OS_MESG_BLOCK);
     osRecvMesg(&gControllerSubsystemReplyQueue, &msg, OS_MESG_BLOCK);
 }
+
+extern void requestControllerPakSaveReadWithContext(u16 controllerIndex, s32 playerCount, s32 choiceValue);
+#pragma weak requestControllerPakSaveReadWithContext = requestControllerPakSaveRead
 
 // readControllerPakSave best match: 99.679% at nonmatchings/readControllerPakSave-8498672362023432715/base_28.c
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/main_menu/controller_main_menu_flow/readControllerPakSave.s")
@@ -545,6 +553,9 @@ void requestControllerPakRepair(u16 arg0) {
     osSendMesg(&gControllerSubsystemRequestQueue, (OSMesg)(arg0 + CONTROLLER_REQUEST_REPAIR_PAK), OS_MESG_BLOCK);
     osRecvMesg(&gControllerSubsystemReplyQueue, &msg, OS_MESG_BLOCK);
 }
+
+extern void requestControllerPakRepairWithContext(u16 controllerIndex, s32 playerCount, s32 choiceValue);
+#pragma weak requestControllerPakRepairWithContext = requestControllerPakRepair
 
 void repairControllerPakId(u16 arg0) {
     OSPfs **sp18;
@@ -854,14 +865,14 @@ void initMainMenu(void) {
     gCurrentGameTask->timer = 0x4B0;
     initCallbackTaskScheduler(0);
     if (gConnectedControllerCount != 0) {
-        createCallbackTask(&initMainMenuTitleCursor, 0, 0x64);
+        createCallbackTask((CallbackTaskCallback)&initMainMenuTitleCursor, 0, 0x64);
     } else {
-        createCallbackTask(&updateTitleScreenStartPrompt, 0, 0x64);
+        createCallbackTask((CallbackTaskCallback)&updateTitleScreenStartPrompt, 0, 0x64);
     }
-    createCallbackTask(&initMainMenuTitleOptions, 0, 0x64);
-    createCallbackTask(&initMainMenuTitleLogo, 0, 0x64);
-    createCallbackTaskWithUserId(&initTitleMenuSparkle, 0, 0x64, 0);
-    createCallbackTaskWithUserId(initMainMenuBoardModels, 0, 0x64, 0);
+    createCallbackTask((CallbackTaskCallback)&initMainMenuTitleOptions, 0, 0x64);
+    createCallbackTask((CallbackTaskCallback)&initMainMenuTitleLogo, 0, 0x64);
+    createCallbackTaskWithUserId((CallbackTaskCallback)&initTitleMenuSparkle, 0, 0x64, 0);
+    createCallbackTaskWithUserId((CallbackTaskCallback)initMainMenuBoardModels, 0, 0x64, 0);
     setBootFadeColor(0x20, 0x40, 0x50);
     loadMainMenuSceneModelAnimationBank();
     initMainMenuSceneModel(0, 0);
@@ -1031,10 +1042,10 @@ void initMainMenuModeSelect(void) {
     resetRaceCameras();
     setRaceCameraMode(0, 0x1F);
     initCallbackTaskScheduler(0);
-    createCallbackTaskWithUserId(initMainMenuBoardModels, 0, 0x64, 0);
+    createCallbackTaskWithUserId((CallbackTaskCallback)initMainMenuBoardModels, 0, 0x64, 0);
     gMenuFlowState = 0;
     gMainMenuSelectionResult = 0;
-    createCallbackTaskWithUserId(&initMainMenuModeSelectMenuOptions, 0, 0x64, 0);
+    createCallbackTaskWithUserId((CallbackTaskCallback)&initMainMenuModeSelectMenuOptions, 0, 0x64, 0);
     setBootFadeColor(0x20, 0x40, 0x50);
     loadMainMenuSceneModelAnimationBank();
     initMainMenuSceneModel(4, 4);
@@ -1128,8 +1139,8 @@ void initMainMenuSettings(void) {
     initCallbackTaskScheduler(0);
     gMenuFlowState = 0;
     gMainMenuSelectionResult = 0;
-    createCallbackTaskWithUserId(&initMainMenuSettingsPanel, 0, 0x64, 0);
-    createCallbackTaskWithUserId(&initMainMenuBoardModels, 0, 0x64, 0);
+    createCallbackTaskWithUserId((CallbackTaskCallback)&initMainMenuSettingsPanel, 0, 0x64, 0);
+    createCallbackTaskWithUserId((CallbackTaskCallback)&initMainMenuBoardModels, 0, 0x64, 0);
     setBootFadeColor(0x20, 0x40, 0x50);
     setCurrentGameTaskCallback(&updateMainMenuSettings, 0);
     requestMusicSequenceBank(7);

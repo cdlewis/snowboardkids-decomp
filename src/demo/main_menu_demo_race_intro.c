@@ -201,7 +201,7 @@ void waitForMainMenuDemoRaceIntroStart(void) {
     gCurrentGameTask->startDelay--;
     if (gCurrentGameTask->startDelay == 0) {
         requestCourseMusicSequence();
-        createCallbackTask(updateTitleScreenStartPrompt, 0, 0x64);
+        createCallbackTask((CallbackTaskCallback)updateTitleScreenStartPrompt, 0, 0x64);
         setCurrentGameTaskCallback(updateMainMenuDemoRaceIntro, 0);
     }
 }

@@ -1,4 +1,7 @@
 #include "common.h"
+#include "game/menu/renderer/menu_renderer.h"
+#include "game/menu/renderer/menu_render_utils.h"
+#include "game/engine/render_callback.h"
 #include "game/engine/relocatable_heap.h"
 #include "game/engine/callback_task_scheduler.h"
 #include "game/engine/asset_manager.h"
@@ -66,8 +69,6 @@ struct MenuScreenEffectActor {
     /* 0x36 */ s16 alpha;
 };
 
-typedef s16 FixedMatrix3sScratch[0x10];
-
 typedef struct {
     /* 0x00 */ FixedMatrix3s rotation;
     /* 0x12 */ s16 pad12;
@@ -101,13 +102,6 @@ typedef struct {
 } GfxCommandDest;
 
 extern Gfx *gRegionAllocPtr;
-extern void *gMenuRenderCallbackList;
-extern u8 gMenuForegroundRenderCallbackList[];
-extern u8 gRaceOverlayRenderCallbackList[];
-extern u8 gRaceObjectRenderCallbackList[];
-extern u8 gRaceModelEffectRenderCallbackList;
-extern u8 gEffectRenderCallbackList[];
-extern u8 gBackdropRenderCallbackList[];
 extern s16 raceSetupCharacterFocusSoundIds[];
 extern u8 raceSetupCharacterFocusAnimationIds[];
 extern u8 raceSetupOpponentFocusAnimationIds[];
@@ -140,17 +134,12 @@ extern u32 D_2000E48[];
 extern u32 D_2000E70[];
 extern u32 D_20058A8[];
 
-void drawMenuSprite(s32, s32, s32, s32, s32, s32, s32, s32);
-void drawAssetTableSprite(s16, s16, s32, u16);
-void drawAssetTableSpriteWithExplicitPalette(s32, s32, s32, s32, s32);
-void getAssetTableImageAndPalette(void *, u16, void **, void **);
 void drawMenuAsciiTextDefaultScale(s32, s32, void *, s32);
-void addRenderCallback(void *, void *, s32);
 GfxCommandDest *allocFixedTransformMatrix(GfxCommandSource *);
 void drawRaceSetupBackdropModels(MenuScreenEffectActor *);
 void drawRaceSetupCourseBackdrop(void *);
-void renderRaceSetupBackdrop(s32);
-void stopRaceSetupCharacterFocus(s32);
+void renderRaceSetupBackdrop(MenuScreenEffectActor *);
+void stopRaceSetupCharacterFocus(MenuScreenEffectActor *);
 void drawTitleScreenStartPrompt(MenuScreenEffectActor *);
 void drawRaceStartPlayerEffectSprite(MenuScreenEffectActor *);
 void updateRaceStartPlayerEffectActive(MenuScreenEffectActor *);
@@ -172,9 +161,15 @@ void drawMainMenuStaticBoardModel(void *);
 void enqueueSoundEffect(s16, s32, void *);
 
 void drawFallingMenuSnowflake(MenuScreenEffectActor *arg0) {
+    void *texture;
+
     if (gCurrentViewportIndex == arg0->index) {
-        drawMenuSprite((s16)(arg0->unk18.half.hi >> 4), (s16)(arg0->unk18.half.lo >> 4), getRelocatableHeapBlockBase(gAssetHandles[42]), (arg0->unk1C.half.hi + 2) & 0xFFFF,
-                      arg0->timer, arg0->timer, 0, arg0->unk2A + 2);
+        texture = getRelocatableHeapBlockBase(gAssetHandles[42]);
+        drawMenuSprite(
+            (s16)(arg0->unk18.half.hi >> 4),
+            (s16)(arg0->unk18.half.lo >> 4), texture,
+            arg0->unk1C.half.hi + 2, arg0->timer, arg0->timer, 0,
+            arg0->unk2A + 2);
     }
 }
 
@@ -217,7 +212,7 @@ void updateFallingMenuSnowflakeDrift(MenuScreenEffectActor *arg0) {
         removeCallbackTask(arg0);
         return;
     }
-    addRenderCallback(gRaceOverlayRenderCallbackList, drawFallingMenuSnowflake, (s32)arg0);
+    addRenderCallback(&gRaceOverlayRenderCallbackList, (RenderCallback)drawFallingMenuSnowflake, (void *)arg0);
 }
 
 void updateFallingMenuSnowflakeSway(MenuScreenEffectActor *arg0) {
@@ -232,7 +227,7 @@ void updateFallingMenuSnowflakeSway(MenuScreenEffectActor *arg0) {
         removeCallbackTask(arg0);
         return;
     }
-    addRenderCallback(gRaceOverlayRenderCallbackList, drawFallingMenuSnowflake, (s32)arg0);
+    addRenderCallback(&gRaceOverlayRenderCallbackList, (RenderCallback)drawFallingMenuSnowflake, (void *)arg0);
 }
 
 void initFallingMenuSnowflake(MenuScreenEffectActor *arg0) {
@@ -255,7 +250,7 @@ void initFallingMenuSnowflake(MenuScreenEffectActor *arg0) {
             arg0->unk20.half.lo = (randomNextMain() & 7) + 0x20;
         }
         arg0->unk2A = randomNextMain() % 5;
-        setCallbackTaskCallback(arg0, updateFallingMenuSnowflakeSway);
+        setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateFallingMenuSnowflakeSway);
         return;
     case 1:
         arg0->unk18.half.hi = (randomNextMain() - 0x80) << 4;
@@ -278,7 +273,7 @@ void initFallingMenuSnowflake(MenuScreenEffectActor *arg0) {
             arg0->unk20.half.hi = (randomNextMain() * -8) & 0xF;
         }
         arg0->unk24.half.lo = randomNextMain() & 0xF;
-        setCallbackTaskCallback(arg0, updateFallingMenuSnowflakeDrift);
+        setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateFallingMenuSnowflakeDrift);
         return;
     }
 }
@@ -320,16 +315,16 @@ void drawRaceSetupCourseBackdrop(void *arg0) {
     }
 }
 
-void renderRaceSetupBackdrop(s32 arg0) {
-    addRenderCallback(gBackdropRenderCallbackList, drawRaceSetupCourseBackdrop, arg0);
-    addRenderCallback(gRaceObjectRenderCallbackList, drawRaceSetupBackdropModels, arg0);
+void renderRaceSetupBackdrop(MenuScreenEffectActor *arg0) {
+    addRenderCallback(&gBackdropRenderCallbackList, (RenderCallback)drawRaceSetupCourseBackdrop, arg0);
+    addRenderCallback(&gRaceObjectRenderCallbackList, (RenderCallback)drawRaceSetupBackdropModels, arg0);
 }
 
 void initRaceSetupBackdrop(MenuScreenEffectActor *arg0) {
-    setCallbackTaskCallback(arg0, renderRaceSetupBackdrop);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)renderRaceSetupBackdrop);
 }
 
-void stopRaceSetupCharacterFocus(s32 arg0) {
+void stopRaceSetupCharacterFocus(MenuScreenEffectActor *arg0) {
     loopMainMenuSceneModelAnimation(0);
     addMainMenuSceneModelDrawCallbackForViewport0(0);
 }
@@ -341,7 +336,7 @@ void updateRaceSetupCharacterFocus(MenuScreenEffectActor *arg0) {
             arg0->unk18.byte.b0 = 0;
         }
         loopMainMenuSceneModelAnimation(0);
-        setCallbackTaskCallback(arg0, stopRaceSetupCharacterFocus);
+        setCallbackTaskCallback(arg0, (CallbackTaskCallback)stopRaceSetupCharacterFocus);
         addMainMenuSceneModelDrawCallbackForViewport0(0);
         return;
     }
@@ -355,7 +350,7 @@ void initRaceSetupCharacterFocus(MenuScreenEffectActor *arg0) {
     loopMainMenuSceneModelAnimation(0);
     setMainMenuSceneModelPosition(0, 0, 0, 0);
     setMainMenuSceneModelRotation(0, 0, 0, 0);
-    setCallbackTaskCallback(arg0, updateRaceSetupCharacterFocus);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceSetupCharacterFocus);
 }
 
 void updateRaceSetupOpponentFocus(MenuScreenEffectActor *arg0) {
@@ -380,11 +375,11 @@ void initRaceSetupOpponentFocus(MenuScreenEffectActor *arg0) {
         setMainMenuSceneModelPosition(b, raceSetupOpponentFocusXPositions[b], 0xFFB50000, 0xA00000);
     }
     setMainMenuSceneModelRotation(arg0->unk18.word, 0, 0x800, 0);
-    setCallbackTaskCallback(arg0, updateRaceSetupOpponentFocus);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceSetupOpponentFocus);
 }
 
 void createRaceSetupOpponentFocus(s32 arg0, s32 arg1) {
-    MenuScreenEffectActor *p = createCallbackTaskWithUserId(initRaceSetupOpponentFocus, 0, 0x64, arg1);
+    MenuScreenEffectActor *p = createCallbackTaskWithUserId((CallbackTaskCallback)initRaceSetupOpponentFocus, 0, 0x64, arg1);
     if (p != NULL) {
         p->unk18.word = arg0;
     }
@@ -400,7 +395,7 @@ void drawTitleScreenStartPrompt(MenuScreenEffectActor *arg0) {
 
 void updateTitleScreenStartPrompt(void *arg0) {
     if (gFrameCounter & 8) {
-        addRenderCallback(gMenuForegroundRenderCallbackList, drawTitleScreenStartPrompt, 0);
+        addRenderCallback(&gMenuForegroundRenderCallbackList, (RenderCallback)drawTitleScreenStartPrompt, 0);
     }
 }
 
@@ -454,7 +449,7 @@ void updateRaceStartPlayerEffectActive(MenuScreenEffectActor *arg0) {
 
     player = &gRacePlayers[arg0->index];
     if (player->flags & 0x2000) {
-        setCallbackTaskCallback(arg0, waitForRaceStartPlayerEffect);
+        setCallbackTaskCallback(arg0, (CallbackTaskCallback)waitForRaceStartPlayerEffect);
         return;
     }
 
@@ -462,7 +457,7 @@ void updateRaceStartPlayerEffectActive(MenuScreenEffectActor *arg0) {
     if (temp != 5) {
         arg0->unk2E = temp + 1;
     } else if (player->unk51A == 0) {
-        setCallbackTaskCallback(arg0, waitForRaceStartPlayerEffect);
+        setCallbackTaskCallback(arg0, (CallbackTaskCallback)waitForRaceStartPlayerEffect);
     }
 
     sp2C.x = 0x40000;
@@ -478,7 +473,7 @@ void updateRaceStartPlayerEffectActive(MenuScreenEffectActor *arg0) {
     arg0->unk1C.word += player->pos28.y;
     arg0->unk20.word += player->pos28.z;
 
-    addRenderCallback(&gRaceModelEffectRenderCallbackList, drawRaceStartPlayerEffectSprite, (s32)arg0);
+    addRenderCallback(&gRaceModelEffectRenderCallbackList, (RenderCallback)drawRaceStartPlayerEffectSprite, (void *)arg0);
 }
 
 void waitForRaceStartPlayerEffect(MenuScreenEffectActor *arg0) {
@@ -486,7 +481,7 @@ void waitForRaceStartPlayerEffect(MenuScreenEffectActor *arg0) {
     if (!(player->flags & 0x2000)) {
         if (player->unk51A != 0) {
             arg0->unk2E = 0xFF;
-            setCallbackTaskCallback(arg0, updateRaceStartPlayerEffectActive);
+            setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceStartPlayerEffectActive);
         }
     }
 }
@@ -499,8 +494,8 @@ void drawTitleMenuSparkle(MenuScreenEffectActor *arg0) {
     }
 }
 
-void renderTitleMenuSparkle(s32 arg0) {
-    addRenderCallback(&gMenuRenderCallbackList, drawTitleMenuSparkle, arg0);
+void renderTitleMenuSparkle(MenuScreenEffectActor *arg0) {
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawTitleMenuSparkle, arg0);
 }
 
 void initTitleMenuSparkle(MenuScreenEffectActor *arg0) {
@@ -508,7 +503,7 @@ void initTitleMenuSparkle(MenuScreenEffectActor *arg0) {
 
     arg0->unk18.half.hi = temp[0];
     arg0->unk18.half.lo = temp[1];
-    setCallbackTaskCallback(arg0, renderTitleMenuSparkle);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)renderTitleMenuSparkle);
 }
 
 void drawCourseRecordBanner(MenuScreenEffectActor *arg0) {
@@ -517,7 +512,7 @@ void drawCourseRecordBanner(MenuScreenEffectActor *arg0) {
     gfx = gRegionAllocPtr;
     gRegionAllocPtr = gfx + 1;
     /* IDO scheduling for this function depends on this block staying on one line. */
-    do { gfx->words.w0 = 0xE7000000; gfx->words.w1 = 0; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w0 = 0xFC119623; gfx->words.w1 = 0xFF2FFFFF; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w0 = 0xB900031D; gfx->words.w1 = 0x00504240; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w0 = 0xFA000000; gfx->words.w1 = (arg0->unk18.half.lo & 0xFF) | (~0xFF); drawAssetTableSprite(-0x54, -0x10, getRelocatableHeapBlockBase(gAssetHandles[28]), 0x5D); drawAssetTableSprite(4, -0x10, getRelocatableHeapBlockBase(gAssetHandles[28]), 0x5E); if (arg0) { } drawAssetTableSprite(-0x4C, -0xC, getRelocatableHeapBlockBase(gAssetHandles[29]), courseRecordDigitTileOffsets[gRaceCourseIndex]); drawAssetTableSprite(4, -0xC, getRelocatableHeapBlockBase(gAssetHandles[29]), courseRecordDigitTileOffsets[gRaceCourseIndex] + 1); gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w0 = 0x06000000; gfx->words.w1 = (u32) gMenuRenderModeResetDl; } while (0);
+    do { gfx->words.w0 = 0xE7000000; gfx->words.w1 = 0; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w0 = 0xFC119623; gfx->words.w1 = 0xFF2FFFFF; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w0 = 0xB900031D; gfx->words.w1 = 0x00504240; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w0 = 0xFA000000; gfx->words.w1 = (arg0->unk18.half.lo & 0xFF) | (~0xFF); drawAssetTableSprite(-0x54, -0x10, getRelocatableHeapBlockBase(gAssetHandles[28]), 0x5D); drawAssetTableSprite(4, -0x10, getRelocatableHeapBlockBase(gAssetHandles[28]), 0x5E); if (arg0) { } drawAssetTableSprite(-0x4C, -0xC, getRelocatableHeapBlockBase(gAssetHandles[29]), (u16)courseRecordDigitTileOffsets[gRaceCourseIndex]); drawAssetTableSprite(4, -0xC, getRelocatableHeapBlockBase(gAssetHandles[29]), courseRecordDigitTileOffsets[gRaceCourseIndex] + 1); gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w0 = 0x06000000; gfx->words.w1 = (u32) gMenuRenderModeResetDl; } while (0);
 }
 
 void updateCourseRecordBannerFadeOut(MenuScreenEffectActor *arg0) {
@@ -531,13 +526,13 @@ void updateCourseRecordBannerFadeOut(MenuScreenEffectActor *arg0) {
             return;
         }
     }
-    addRenderCallback(&gMenuRenderCallbackList, drawCourseRecordBanner, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawCourseRecordBanner, arg0);
 }
 
 void initCourseRecordBannerFadeOut(MenuScreenEffectActor *arg0) {
     arg0->unk18.half.hi = 0x3E;
     arg0->unk18.half.lo = 0xFF;
-    setCallbackTaskCallback(arg0, updateCourseRecordBannerFadeOut);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateCourseRecordBannerFadeOut);
 }
 
 void drawRaceSetupNamePlate(MenuScreenEffectActor *arg0) {
@@ -558,7 +553,7 @@ void updateRaceSetupNamePlateSlideOut(MenuScreenEffectActor *arg0) {
     if (temp_t8 == 0x38) {
         removeCallbackTask(arg0);
     } else {
-        addRenderCallback(gRaceOverlayRenderCallbackList, drawRaceSetupNamePlate, (s32)arg0);
+        addRenderCallback(&gRaceOverlayRenderCallbackList, (RenderCallback)drawRaceSetupNamePlate, (void *)arg0);
     }
 }
 
@@ -568,11 +563,11 @@ void holdRaceSetupNamePlate(MenuScreenEffectActor *arg0) {
     arg0->timer = temp;
     temp += 0;
     if (temp == 0) {
-        setCallbackTaskCallback(arg0, updateRaceSetupNamePlateSlideOut);
+        setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceSetupNamePlateSlideOut);
     }
     if (1) {
     }
-    addRenderCallback(gRaceOverlayRenderCallbackList, drawRaceSetupNamePlate, (s32)arg0);
+    addRenderCallback(&gRaceOverlayRenderCallbackList, (RenderCallback)drawRaceSetupNamePlate, (void *)arg0);
 }
 
 void updateRaceSetupNamePlateSlideIn(MenuScreenEffectActor *arg0) {
@@ -580,16 +575,16 @@ void updateRaceSetupNamePlateSlideIn(MenuScreenEffectActor *arg0) {
     arg0->unk24.word -= 4;
     if (arg0->unk24.word == 0) {
         arg0->timer = 0x1E;
-        setCallbackTaskCallback(arg0, holdRaceSetupNamePlate);
+        setCallbackTaskCallback(arg0, (CallbackTaskCallback)holdRaceSetupNamePlate);
     }
-    addRenderCallback(gRaceOverlayRenderCallbackList, drawRaceSetupNamePlate, (s32)arg0);
+    addRenderCallback(&gRaceOverlayRenderCallbackList, (RenderCallback)drawRaceSetupNamePlate, (void *)arg0);
 }
 
 void waitForRaceSetupNamePlate(MenuScreenEffectActor *arg0) {
     if (gViewportStates[arg0->index].active != 0) {
         arg0->unk24.word = 0x38;
         arg0->unk18.word = -0x1A4;
-        setCallbackTaskCallback(arg0, updateRaceSetupNamePlateSlideIn);
+        setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceSetupNamePlateSlideIn);
         return;
     }
     removeCallbackTask(arg0);
@@ -638,7 +633,7 @@ void updateMainMenuModeBoardAfterimage(MenuScreenEffectActor *arg0) {
         removeCallbackTask(arg0);
         return;
     }
-    addRenderCallback(gEffectRenderCallbackList, drawMainMenuModeBoardTransition, (s32)arg0);
+    addRenderCallback(&gEffectRenderCallbackList, (RenderCallback)drawMainMenuModeBoardTransition, (void *)arg0);
 }
 
 void updateMainMenuModeBoardTransition(MenuScreenEffectActor *arg0) {
@@ -648,17 +643,17 @@ void updateMainMenuModeBoardTransition(MenuScreenEffectActor *arg0) {
     arg0->unk20.word = ((-0x9F0000LL * arg0->unk30.word) / 0x400) + 0xEC0000;
     arg0->spriteIndex = (0x5000LL * fixedSine(arg0->unk30.half.lo)) / 0x1000;
     if (arg0->unk30.word < 0x3F0) {
-        actor = createCallbackTask(updateMainMenuModeBoardAfterimage, 0, 0x65);
+        actor = createCallbackTask((CallbackTaskCallback)updateMainMenuModeBoardAfterimage, 0, 0x65);
         *(OverlayActorTransform *)&actor->unk18 = *(OverlayActorTransform *)&arg0->unk18;
         actor->spriteIndex = arg0->spriteIndex;
         actor->alpha = 0xC0;
         arg0->unk30.word += 0x10;
     } else {
-        createCallbackTask(updateMainMenuModeIconFlash, 0, 0x63);
+        createCallbackTask((CallbackTaskCallback)updateMainMenuModeIconFlash, 0, 0x63);
         removeCallbackTask(arg0);
         return;
     }
-    addRenderCallback(gEffectRenderCallbackList, drawMainMenuModeBoardTransition, (s32)arg0);
+    addRenderCallback(&gEffectRenderCallbackList, (RenderCallback)drawMainMenuModeBoardTransition, (void *)arg0);
 }
 
 void initMainMenuModeBoardTransition(MenuScreenEffectActor *arg0) {
@@ -668,7 +663,7 @@ void initMainMenuModeBoardTransition(MenuScreenEffectActor *arg0) {
     arg0->unk1C.word = 0x300000;
     arg0->unk20.word = 0xEC0000;
     arg0->spriteIndex = 0;
-    setCallbackTaskCallback(arg0, updateMainMenuModeBoardTransition);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateMainMenuModeBoardTransition);
 }
 
 void drawMainMenuModeIconFlash(MenuScreenEffectActor *arg0) {
@@ -690,7 +685,7 @@ void updateMainMenuModeIconFlash(MenuScreenEffectActor *arg0) {
     } else {
         arg0->unk18.half.lo = 0;
     }
-    addRenderCallback(gRaceOverlayRenderCallbackList, drawMainMenuModeIconFlash, arg0);
+    addRenderCallback(&gRaceOverlayRenderCallbackList, (RenderCallback)drawMainMenuModeIconFlash, arg0);
 }
 
 void drawMainMenuModeLabel(MenuScreenEffectActor *arg0) {
@@ -730,13 +725,13 @@ void updateMainMenuModeLabelFadeIn(MenuScreenEffectActor *arg0) {
     if (arg0->unk18.half.lo >= 0x100) {
         arg0->unk18.half.lo = 0xFF;
     }
-    addRenderCallback(&gMenuRenderCallbackList, drawMainMenuModeLabel, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawMainMenuModeLabel, arg0);
 }
 
 void initMainMenuModeLabelFadeIn(MenuScreenEffectActor *arg0) {
     arg0->unk18.half.hi = 0x50;
     arg0->unk18.half.lo = 0;
-    setCallbackTaskCallback(arg0, updateMainMenuModeLabelFadeIn);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateMainMenuModeLabelFadeIn);
 }
 
 void drawMainMenuRotatingBoardModel(MenuScreenEffectActor *arg0) {
@@ -775,12 +770,12 @@ void drawMainMenuStaticBoardModel(void *arg0) {
     }
 }
 
-void renderMainMenuBoardModels(s32 arg0) {
-    addRenderCallback(gBackdropRenderCallbackList, drawMainMenuStaticBoardModel, arg0);
-    addRenderCallback(gRaceObjectRenderCallbackList, drawMainMenuRotatingBoardModel, arg0);
+void renderMainMenuBoardModels(MenuScreenEffectActor *arg0) {
+    addRenderCallback(&gBackdropRenderCallbackList, (RenderCallback)drawMainMenuStaticBoardModel, arg0);
+    addRenderCallback(&gRaceObjectRenderCallbackList, (RenderCallback)drawMainMenuRotatingBoardModel, arg0);
 }
 
 void initMainMenuBoardModels(MenuScreenEffectActor *arg0) {
     arg0->unk18.half.hi = 0x360;
-    setCallbackTaskCallback(arg0, renderMainMenuBoardModels);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)renderMainMenuBoardModels);
 }

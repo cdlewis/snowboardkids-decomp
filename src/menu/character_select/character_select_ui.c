@@ -1,4 +1,5 @@
 #include "common.h"
+#include "game/engine/render_callback.h"
 #include "game/engine/relocatable_heap.h"
 #include "game/engine/callback_task_scheduler.h"
 #include "game/menu/renderer/menu_renderer.h"
@@ -38,20 +39,17 @@ typedef struct {
     /* 0x2 */ u8 trick;
 } CharacterSelectUiCharacterStats;
 
-extern void addRenderCallback(void *, void *, void *);
 extern s8 D_8010AE52;
 extern u8 D_8010AE52_state;
 extern u8 D_8010AE51;
 extern CharacterSelectUiPlayerPanelFrameController *D_8010ADE0;
 extern CharacterSelectUiPanelActor *D_8010ADE4;
-extern CharacterSelectUiPlayerCursorActor *D_8010ADE8;
 extern s16 D_8010AE58;
 extern s32 gMenuFlowState;
-extern void *gMenuRenderCallbackList;
 extern u8 gPlayerCount;
 extern s8 D_8010AE64[];
 extern s16 gAssetHandles[];
-extern u8 gCharacterSelectConfirmationBannerText[];
+extern MenuGlyphScript gCharacterSelectConfirmationBannerText[][0x1C];
 extern CharacterSelectUiCharacterStats gCharacterSelectCharacterStats[];
 extern u16 gCharacterSelectCharacterStatLabels[];
 extern const char gCharacterSelectPlayerNumberFormat[];
@@ -106,7 +104,7 @@ void drawCharacterSelectConfirmationBanner(CharacterSelectUiBannerActor *arg0) {
         } else {
             selected = 1;
         }
-        drawMenuGlyphScript(actor->x, actor->y, &gCharacterSelectConfirmationBannerText[selected * 0x38], 0, actor->alpha, 0);
+        drawMenuGlyphScript(actor->x, actor->y, gCharacterSelectConfirmationBannerText[selected], 0, actor->alpha, 0);
         if (actor->state == 4) {
             if (actor->alpha != 0x100) {
                 alpha = actor->alpha & 0xFFFF;
@@ -141,7 +139,7 @@ void drawCharacterSelectConfirmationBanner(CharacterSelectUiBannerActor *arg0) {
         }
         if (actor->state == 1) {
             drawMenuSprite((s16)(actor->x + 0xD0), (s16)(actor->y + 0x20),
-                          getRelocatableHeapBlockBase(CHARACTER_SELECT_UI_PLAYER_FRAME_HANDLE), ((actor->frame >= 8) + 5) & 0xFFFF, 0x20,
+                          getRelocatableHeapBlockBase(CHARACTER_SELECT_UI_PLAYER_FRAME_HANDLE), (actor->frame >= 8) + 5, 0x20,
                           0x20, 0, 0);
         }
     }
@@ -209,7 +207,7 @@ void updateCharacterSelectConfirmationBanner(CharacterSelectUiBannerActor *arg0)
     gCharacterSelectHudState.phase = actor->state;
     D_8010AE58 = actor->alpha;
     if (actor->state != 8) {
-        addRenderCallback(&gMenuRenderCallbackList, drawCharacterSelectConfirmationBanner, actor);
+        addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawCharacterSelectConfirmationBanner, actor);
     }
 }
 
@@ -218,7 +216,7 @@ void initCharacterSelectConfirmationBanner(CharacterSelectUiBannerActor *arg0) {
     arg0->y = -0x1C;
     arg0->alpha = 0;
     arg0->state = 0;
-    setCallbackTaskCallback(arg0, updateCharacterSelectConfirmationBanner);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateCharacterSelectConfirmationBanner);
 }
 
 // drawCharacterSelectPlayerPanelFrames best match: 99.232% (nonmatchings/drawCharacterSelectPlayerPanelFrames-4033633224288138541/base_12.c)
@@ -304,7 +302,7 @@ void updateCharacterSelectPlayerPanelFrames(CharacterSelectUiPanelActor *arg0) {
     }
 
     D_8010AE51 = var_v0;
-    addRenderCallback(&gMenuRenderCallbackList, drawCharacterSelectPlayerPanelFrames, actor);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawCharacterSelectPlayerPanelFrames, actor);
 }
 
 void initCharacterSelectPlayerPanelFrames(CharacterSelectUiPanelActor *arg0) {
@@ -319,7 +317,7 @@ void initCharacterSelectPlayerPanelFrames(CharacterSelectUiPanelActor *arg0) {
     arg0->targetX.target[0] = 0x8C;
     arg0->targetX.target[1] = 0x44;
     arg0->targetY.mode = 0;
-    setCallbackTaskCallback(arg0, updateCharacterSelectPlayerPanelFrames);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateCharacterSelectPlayerPanelFrames);
 }
 
 void drawCharacterSelectRosterIcons(CharacterSelectUiRosterIconActor *arg0) {
@@ -415,7 +413,7 @@ void updateCharacterSelectRosterIcons(CharacterSelectUiRosterIconActor *arg0) {
     if (var_v1) {
         arg0->timer = (arg0->timer + new_var) % 20;
     }
-    addRenderCallback(&gMenuRenderCallbackList, drawCharacterSelectRosterIcons, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawCharacterSelectRosterIcons, arg0);
 }
 
 void initCharacterSelectRosterIcons(CharacterSelectUiRosterIconActor *arg0) {
@@ -454,7 +452,7 @@ void initCharacterSelectRosterIcons(CharacterSelectUiRosterIconActor *arg0) {
     } else {
         actor->targetX = targetX;
     }
-    setCallbackTaskCallback(actor, updateCharacterSelectRosterIcons);
+    setCallbackTaskCallback(actor, (CallbackTaskCallback)updateCharacterSelectRosterIcons);
 }
 
 void drawCharacterSelectPlayerCursorMarkers(CharacterSelectUiPlayerCursorActor *arg0) {
@@ -506,7 +504,7 @@ void updateCharacterSelectPlayerCursorMarkers(CharacterSelectUiPlayerCursorActor
     }
 
     D_8010AE52_state = mode;
-    addRenderCallback(&gMenuRenderCallbackList, drawCharacterSelectPlayerCursorMarkers, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawCharacterSelectPlayerCursorMarkers, arg0);
 }
 
 void initCharacterSelectPlayerCursorMarkers(CharacterSelectUiPlayerCursorActor *arg0) {
@@ -554,7 +552,7 @@ void initCharacterSelectPlayerCursorMarkers(CharacterSelectUiPlayerCursorActor *
     arg0->y = -0x18;
     arg0->mode = 0;
     arg0->scale = 0x100;
-    setCallbackTaskCallback(arg0, updateCharacterSelectPlayerCursorMarkers);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateCharacterSelectPlayerCursorMarkers);
 }
 
 // drawCharacterSelectPlayerStatsPanels best match: 98.770% (nonmatchings/drawCharacterSelectPlayerStatsPanels-4/output-460-1/source.c)
@@ -695,7 +693,7 @@ void updateCharacterSelectPlayerStatsPanels(CharacterSelectUiPanelActor *arg0) {
             statsPanels->targetX.statsBlinkTimer[i] = (statsPanels->targetX.statsBlinkTimer[i] + 1) % 20;
         }
     }
-    addRenderCallback(&gMenuRenderCallbackList, drawCharacterSelectPlayerStatsPanels, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawCharacterSelectPlayerStatsPanels, arg0);
 }
 
 void initCharacterSelectPlayerStatsPanels(CharacterSelectUiPanelActor *arg0) {
@@ -707,13 +705,13 @@ void initCharacterSelectPlayerStatsPanels(CharacterSelectUiPanelActor *arg0) {
     arg0->y[2] = -0x60;
     arg0->x[3] = 4;
     arg0->y[3] = 0x24;
-    setCallbackTaskCallback(arg0, updateCharacterSelectPlayerStatsPanels);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateCharacterSelectPlayerStatsPanels);
 }
 
 void drawCharacterSelectSelectedCharacterTokens(CharacterSelectUiSelectedCharacterTokenActor *arg0) {
     CharacterSelectUiSelectedCharacterTokenActor *tokens;
     s32 i;
-    s32 color;
+    void *texture;
     u16 tileSize;
 
     tokens = arg0;
@@ -721,9 +719,9 @@ void drawCharacterSelectSelectedCharacterTokens(CharacterSelectUiSelectedCharact
     if (gPlayerCount > 0) {
         do {
             if (gRacePlayers[i].menuState != 0) {
-                color = getRelocatableHeapBlockBase(CHARACTER_SELECT_UI_PLAYER_FRAME_HANDLE);
+                texture = getRelocatableHeapBlockBase(CHARACTER_SELECT_UI_PLAYER_FRAME_HANDLE);
                 tileSize = tokens->tileSize[i];
-                drawMenuSprite(tokens->x[i], tokens->y[i], color, 0xD, tileSize, tileSize, 0, 0);
+                drawMenuSprite(tokens->x[i], tokens->y[i], texture, 0xD, tileSize, tileSize, 0, 0);
             }
             i++;
         } while (i < gPlayerCount);
@@ -894,10 +892,10 @@ void updateCharacterSelectSelectedCharacterTokens(CharacterSelectUiSelectedChara
         } while (step != 0x10);
     }
 
-    addRenderCallback(&gMenuRenderCallbackList, drawCharacterSelectSelectedCharacterTokens, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawCharacterSelectSelectedCharacterTokens, arg0);
 }
 #endif
 
 void initCharacterSelectSelectedCharacterTokens(CharacterSelectUiSelectedCharacterTokenActor *arg0) {
-    setCallbackTaskCallback(arg0, updateCharacterSelectSelectedCharacterTokens);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateCharacterSelectSelectedCharacterTokens);
 }

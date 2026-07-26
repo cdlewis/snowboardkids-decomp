@@ -1,7 +1,7 @@
 #include "common.h"
+#include "game/engine/render_callback.h"
 #include "game/engine/relocatable_heap.h"
 #include "game/engine/callback_task_scheduler.h"
-#define MENU_RENDERER_U32_FLIP_PROTOTYPE
 #include "game/menu/renderer/menu_renderer.h"
 #include "game/menu/course_select/course_select_ui.h"
 #include "game/menu/course_select/course_select_shop_ui.h"
@@ -179,17 +179,17 @@ typedef struct {
     /* 0x24 */ u8 pad24[0x14];
 } CourseSelectStatusOverlay;
 
-extern void addRenderCallback(void *, void (*)(CourseSelectWidgetActor *), CourseSelectWidgetActor *);
+extern void drawCourseSelectPlayerPanels(CourseSelectWidgetActor *);
+extern void drawMenuSpriteWithAlphaWideArgs(s32 x, s32 y, void *texture, s32 tileIndex, s32 width, s32 height,
+                                            s32 palette, s32 alpha, u32 flip);
 extern s32 allocFixedTransformMatrix(FixedTransform *);
 extern u8 D_800E0DB8[];
 extern s8 gCourseUnlockSaveSlots[][0x78F8];
 extern u8 D_800EC9C0;
 extern u8 gRaceSplitscreenMode;
 extern u8 gCourseSelectModeSelection;
-extern s32 gActiveMenuTask;
 extern CallbackTask *D_8010ADE0;
 extern CallbackTask *D_8010ADE4;
-extern s32 D_8010ADE8;
 extern s8 D_8010AE64[];
 extern u8 D_8010AECC[];
 extern u16 D_8010AED0;
@@ -203,7 +203,7 @@ extern u8 gCourseSelectStatus[];
 extern u8 D_8010AEAC[];
 extern u8 D_8010AF1C;
 extern s16 gMenuChoicePromptState[];
-extern u8 gCourseSelectCompleteText[];
+extern MenuGlyphScript gCourseSelectCompleteText[];
 extern u8 gCourseSelectCourseSpeedRatings[];
 extern u8 gCourseSelectCourseHandlingRatings[];
 extern u8 gCourseSelectCourseTrickRatings[];
@@ -218,8 +218,6 @@ extern u8 gCourseSelectSelectedCourseId[][sizeof(CourseSelectRacePlayer)];
 extern u8 gMenuTransitionState;
 extern s32 gMenuFlowState;
 extern CourseSelectState *gCurrentGameTask;
-extern s32 gMenuRenderCallbackList;
-extern s32 gModelRenderCallbackList;
 extern u8 gCurrentViewportIndex;
 extern u8 gGameSaveDataBuffer[][0x78F8];
 
@@ -442,7 +440,7 @@ void updateCourseSelectPreviewModelIn(void *arg0) {
         finishCourseSelectUiTask(1);
         D_8010ADE0 = 0;
     } else {
-        addRenderCallback(&gModelRenderCallbackList, (void (*)(CourseSelectWidgetActor *))drawCourseSelectPreviewModel, actor);
+        addRenderCallback(&gModelRenderCallbackList, (RenderCallback)(void (*)(CourseSelectWidgetActor *))drawCourseSelectPreviewModel, actor);
     }
 }
 #endif
@@ -472,7 +470,7 @@ void initCourseSelectPreviewModelIn(void *arg0) {
     actor->sourceTransform.translation.y = 0;
     actor->sourceTransform.translation.z = 0;
     makeFixedRotationYX(actor->sourceTransform.rotation, 0x400, 0x280);
-    setCallbackTaskCallback(actor, updateCourseSelectPreviewModelIn);
+    setCallbackTaskCallback(actor, (CallbackTaskCallback)updateCourseSelectPreviewModelIn);
 }
 
 void drawCourseSelectPreviewModelClose(CourseSelectCoursePreviewActor *arg0) {
@@ -661,7 +659,7 @@ void updateCourseSelectPreviewModelOut(CourseSelectAnimatedActor *arg0)
         finishCourseSelectUiTask(2);
         D_8010ADE4 = 0;
     } else {
-        addRenderCallback(&gModelRenderCallbackList, (void (*)(CourseSelectWidgetActor *))drawCourseSelectPreviewModelClose,
+        addRenderCallback(&gModelRenderCallbackList, (RenderCallback)(void (*)(CourseSelectWidgetActor *))drawCourseSelectPreviewModelClose,
                           (CourseSelectWidgetActor *)actor);
     }
 }
@@ -695,7 +693,7 @@ void initCourseSelectPreviewModelOut(void *arg0) {
     actor->sourceTransform.translation.y = 0;
     actor->sourceTransform.translation.z = 0;
     makeFixedRotationYX(actor->sourceTransform.rotation, 0x400, 0x280);
-    setCallbackTaskCallback(actor, updateCourseSelectPreviewModelOut);
+    setCallbackTaskCallback(actor, (CallbackTaskCallback)updateCourseSelectPreviewModelOut);
 }
 
 void drawCourseSelectCourseIconList(CourseSelectIconListActor *iconList) {
@@ -871,12 +869,12 @@ void updateCourseSelectCourseIconList(CourseSelectIconListActor *iconList) {
                 if (movingIconCount == 0) {
                     iconList->state[playerIndex] = COURSE_ICON_LIST_IDLE;
                     if (gPlayerCount == 1) {
-                        D_8010ADE0 = createCallbackTask(initCourseSelectPreviewModelIn, 0, 0x63);
-                        D_8010ADE4 = createCallbackTask(initCourseSelectPreviewModelOut, 0, 0x62);
-                        createCallbackTask(initCourseSelectCourseListBackdrop, 0, 0x60);
+                        D_8010ADE0 = createCallbackTask((CallbackTaskCallback)initCourseSelectPreviewModelIn, 0, 0x63);
+                        D_8010ADE4 = createCallbackTask((CallbackTaskCallback)initCourseSelectPreviewModelOut, 0, 0x62);
+                        createCallbackTask((CallbackTaskCallback)initCourseSelectCourseListBackdrop, 0, 0x60);
                     } else if (playerIndex == 0) {
-                        createCallbackTask(initCourseSelectCourseStats, 0, 0x62);
-                        gActiveMenuTask = createCallbackTask(initCourseSelectCourseCursors, 0, 0x64);
+                        createCallbackTask((CallbackTaskCallback)initCourseSelectCourseStats, 0, 0x62);
+                        gActiveMenuTask = createCallbackTask((CallbackTaskCallback)initCourseSelectCourseCursors, 0, 0x64);
                     }
                 }
                 break;
@@ -1014,7 +1012,7 @@ void updateCourseSelectCourseIconList(CourseSelectIconListActor *iconList) {
         finishCourseSelectUiTask(3);
         return;
     }
-    addRenderCallback(&gMenuRenderCallbackList, (void (*)(CourseSelectWidgetActor *))drawCourseSelectCourseIconList,
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)(void (*)(CourseSelectWidgetActor *))drawCourseSelectCourseIconList,
                       (CourseSelectWidgetActor *)iconList);
 }
 #endif
@@ -1042,7 +1040,7 @@ void initCourseSelectCourseIconList(CourseSelectIconListActor *arg0) {
     }
 
     do { playerIndex = 0; if ((s32)gPlayerCount > 0) { courseUnlocked = D_8010AEA0; yLayout = gCourseSelectIconListYLayout[layoutIndex]; xLayout = gCourseSelectIconListXLayout[layoutIndex]; do { if (*courseUnlocked != 0) { isCharacterFive = gRacePlayers[playerIndex].selectedCharacterId == 5; hasExtraCourse = 1; if (isCharacterFive) { hasExtraCourse = 0; } } else { hasExtraCourse = 0; } actor->speed[playerIndex] = yLayout[hasExtraCourse]; actor->baseX[playerIndex] = yLayout[((playerIndex & 1) * 2) + hasExtraCourse + 2]; actor->targetX[playerIndex] = yLayout[((playerIndex & 1) * 2) + 2]; actor->targetY[playerIndex] = xLayout[((playerIndex >= 2) * 2) + 1]; actor->startY[playerIndex] = xLayout[(playerIndex >= 2) * 2]; actor->clipBottom = 0x78; actor->clipRight = 0xA0; actor->clipTop = 0x78; if (gPlayerCount == 1) { actor->clipLeft = 0xA0; } else if (gPlayerCount == 2) { actor->clipLeft = 0x7E; } else { actor->clipLeft = 0x88; } iconIndex = 0; do { actor->y[playerIndex][iconIndex] = actor->startY[playerIndex]; actor->x[playerIndex][iconIndex] = actor->baseX[playerIndex] + (actor->speed[playerIndex] * iconIndex); iconIndex++; } while (iconIndex < 5); actor->state[playerIndex] = 0; actor->itemCounts[playerIndex] = 1; actor->timer[playerIndex] = 0; courseUnlocked++; playerIndex++; } while (playerIndex < (s32)gPlayerCount); } } while (0);
-    setCallbackTaskCallback(arg0, updateCourseSelectCourseIconList);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateCourseSelectCourseIconList);
 }
 #endif
 
@@ -1084,7 +1082,7 @@ void drawCourseSelectCourseCursors(CourseSelectWidgetActor *arg0) {
                         handleIndex = 0x21;
                     }
                     drawMenuSpriteWithAlpha(posPtr[0xC], (s16)((drawPosPtr = posPtr)[0x10] + ((*directionPtr) * statePtr[0x38])),
-                                            getRelocatableHeapBlockBase(handles[handleIndex]), tileIndex & (0xFFFF ^ 0),
+                                            getRelocatableHeapBlockBase(handles[handleIndex]), tileIndex,
                                             0x20, 0x20, 0, drawPosPtr[0x14], (short)0);
                 }
                 i++;
@@ -1157,7 +1155,7 @@ void updateCourseSelectCourseCursors(CourseSelectWidgetActor *arg0) {
     if (actor->courseCursorState[0] == 4) {
         removeCallbackTask(actor);
     } else {
-        addRenderCallback(&gMenuRenderCallbackList, drawCourseSelectCourseCursors, actor);
+        addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawCourseSelectCourseCursors, actor);
     }
 }
 
@@ -1210,7 +1208,7 @@ void initCourseSelectCourseCursors(CourseSelectWidgetActor *arg0) {
             i++;
         } while (i < (s32) gPlayerCount);
     }
-    setCallbackTaskCallback(actor, updateCourseSelectCourseCursors);
+    setCallbackTaskCallback(actor, (CallbackTaskCallback)updateCourseSelectCourseCursors);
 }
 #endif
 
@@ -1241,12 +1239,12 @@ void updateCourseSelectCourseListBackdrop(CourseSelectWidgetActor *arg0) {
         if (arg0->x >= -0x88) {
             arg0->x = -0x88;
             arg0->pad18[4] = 1;
-            gActiveMenuTask = createCallbackTask(initCourseSelectCourseCursors, 0, 0x64);
-            createCallbackTask(initCourseSelectExtraCourseBadge, 0, 0x63);
-            createCallbackTask(initCourseSelectCourseDescription, 0, 0x61);
-            createCallbackTask(initCourseSelectCourseStats, 0, 0x64);
+            gActiveMenuTask = createCallbackTask((CallbackTaskCallback)initCourseSelectCourseCursors, 0, 0x64);
+            createCallbackTask((CallbackTaskCallback)initCourseSelectExtraCourseBadge, 0, 0x63);
+            createCallbackTask((CallbackTaskCallback)initCourseSelectCourseDescription, 0, 0x61);
+            createCallbackTask((CallbackTaskCallback)initCourseSelectCourseStats, 0, 0x64);
             if ((gRaceSplitscreenMode == 3) && (gCourseSelectModeSelection == 0)) {
-                createCallbackTask(initShopMenuMoneyPanelForCourseSelectReturn, 0, 0x63);
+                createCallbackTask((CallbackTaskCallback)initShopMenuMoneyPanelForCourseSelectReturn, 0, 0x63);
             }
         }
         break;
@@ -1294,13 +1292,13 @@ void updateCourseSelectCourseListBackdrop(CourseSelectWidgetActor *arg0) {
         return;
     }
 
-    addRenderCallback(&gMenuRenderCallbackList, drawCourseSelectCourseListBackdrop, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawCourseSelectCourseListBackdrop, arg0);
 }
 
 void initCourseSelectCourseListBackdrop(CourseSelectWidgetActor *arg0) {
     arg0->x = -0x108;
     arg0->y = 8;
-    setCallbackTaskCallback(arg0, updateCourseSelectCourseListBackdrop);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateCourseSelectCourseListBackdrop);
 }
 
 // drawCourseSelectCourseStats best match: 98.966% (nonmatchings/drawCourseSelectCourseStats-2188069624939011928/base_8.c)
@@ -1499,7 +1497,7 @@ void updateCourseSelectCourseStats(CourseSelectWidgetActor *arg0) {
         return;
     }
 
-    addRenderCallback(&gMenuRenderCallbackList, drawCourseSelectCourseStats, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawCourseSelectCourseStats, arg0);
 }
 
 void initCourseSelectCourseStats(CourseSelectWidgetActor *arg0) {
@@ -1527,7 +1525,7 @@ void initCourseSelectCourseStats(CourseSelectWidgetActor *arg0) {
 
     temp_a3->transitionOffset = 0;
     temp_a3->transitionState = 0;
-    setCallbackTaskCallback(temp_a3, updateCourseSelectCourseStats);
+    setCallbackTaskCallback(temp_a3, (CallbackTaskCallback)updateCourseSelectCourseStats);
 }
 
 // drawCourseSelectCourseDescription best match: 93.701% (nonmatchings/drawCourseSelectCourseDescription-3379532139742180785/base_28.c)
@@ -1548,24 +1546,24 @@ typedef struct {
 } CourseSelectStatus26C4C;
 
 extern u32 gCourseUnlockPrices[];
-extern u8 gCourseSelectModeDescriptionText[];
-extern u8 gCourseSelectBoardLevelText[];
-extern u8 gCourseSelectBoardLevelByCourseText[];
-extern u8 gCourseSelectExtraCourseBoardLevelText[];
-extern u8 gCourseSelectPurchaseMessageText[];
+extern MenuGlyphScript gCourseSelectModeDescriptionText[];
+extern MenuGlyphScript gCourseSelectBoardLevelText[];
+extern MenuGlyphScript gCourseSelectBoardLevelByCourseText[];
+extern MenuGlyphScript gCourseSelectExtraCourseBoardLevelText[];
+extern MenuGlyphScript gCourseSelectPurchaseMessageText[];
 extern u8 gUnlockedExtraCourseFlags;
 extern u8 gCourseSelectExtraCourseIds[];
 
 void drawCourseSelectCourseDescription(CourseSelectWidgetActor *arg0) {
     volatile CourseSelectStatus26C4C *status = (CourseSelectStatus26C4C *)gCourseSelectStatus;
-    u8 *volatile text;
+    MenuGlyphScript *volatile text;
     volatile CourseSelectSelection26C4C *selection;
-    s16 buffer[8];
+    MenuGlyphScript buffer[8];
     s32 value;
     s32 courseId;
     s32 digitCount;
     u32 price;
-    s16 *digits;
+    MenuGlyphScript *digits;
     u16 selectedIndex;
     u16 splitMode;
 
@@ -1608,9 +1606,9 @@ void drawCourseSelectCourseDescription(CourseSelectWidgetActor *arg0) {
             }
 
             if ((gRaceSplitscreenMode == 3) && ((courseId = selection->courseId) <= 8)) {
-                text = gCourseSelectBoardLevelByCourseText + ((courseId % 3) * 0x30);
+                text = gCourseSelectBoardLevelByCourseText + ((courseId % 3) * 0x18);
             } else if (((courseId = selection->courseId) >= 9) && (courseId < 12)) {
-                text = gCourseSelectExtraCourseBoardLevelText + ((gCourseSelectExtraCourseIds[selectedIndex] % 3) * 0x60);
+                text = gCourseSelectExtraCourseBoardLevelText + ((gCourseSelectExtraCourseIds[selectedIndex] % 3) * 0x30);
             } else {
                 text = gCourseSelectBoardLevelText;
             }
@@ -1624,7 +1622,7 @@ void drawCourseSelectCourseDescription(CourseSelectWidgetActor *arg0) {
                 buffer[1] = 6;
                 buffer[2] = selectedIndex;
                 buffer[3] = -1;
-                drawMenuGlyphScript((s16)(arg0->x + 0x48), (s16)(arg0->y + 0x10), (u8 *)buffer, 1, arg0->spriteIndex, 0);
+                drawMenuGlyphScript((s16)(arg0->x + 0x48), (s16)(arg0->y + 0x10), buffer, 1, arg0->spriteIndex, 0);
             }
 
             splitMode = gCourseSelectModeSelection;
@@ -1675,7 +1673,7 @@ void drawCourseSelectCourseDescription(CourseSelectWidgetActor *arg0) {
                     digits[3] = 0x2B;
                     buffer[7] = -1;
                 }
-                drawMenuGlyphScript((s16)(arg0->x + 0x20), (s16)(arg0->y + 0x20), (u8 *)buffer, 1, arg0->spriteIndex, 0);
+                drawMenuGlyphScript((s16)(arg0->x + 0x20), (s16)(arg0->y + 0x20), buffer, 1, arg0->spriteIndex, 0);
             }
         }
     } else {
@@ -1751,7 +1749,7 @@ void updateCourseSelectCourseDescription(CourseSelectWidgetActor *arg0) {
         finishCourseSelectUiTask(6);
         return;
     }
-    addRenderCallback(&gMenuRenderCallbackList, drawCourseSelectCourseDescription, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawCourseSelectCourseDescription, arg0);
 }
 
 void initCourseSelectCourseDescription(CourseSelectWidgetActor *arg0) {
@@ -1761,15 +1759,14 @@ void initCourseSelectCourseDescription(CourseSelectWidgetActor *arg0) {
     arg0->state = 0;
     arg0->subState = 0;
     arg0->timer = 0;
-    setCallbackTaskCallback(arg0, updateCourseSelectCourseDescription);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateCourseSelectCourseDescription);
 }
 
 void drawCourseSelectExtraCourseBadge(CourseSelectWidgetActor *arg0) {
-    u16 tileIndexSpill;
+    u16 renderTileIndex;
     s32 handleIndex;
-    u16 unusedPadding;
+    s16 assetHandle;
     u16 tileIndex;
-    u32 promotedTileIndex;
 
     if (gCourseSelectModeSelection == 1) {
         tileIndex = 1;
@@ -1779,10 +1776,12 @@ void drawCourseSelectExtraCourseBadge(CourseSelectWidgetActor *arg0) {
         handleIndex = 0x21;
     }
 
-    tileIndexSpill = tileIndex;
-    promotedTileIndex = tileIndexSpill;
-    drawMenuSpriteWithAlpha((*arg0).coordinates[0], arg0->coordinates[1], getRelocatableHeapBlockBase(gAssetHandles[handleIndex]),
-                  promotedTileIndex, 0x20, 0x20, 0, arg0->coordinates[2], 0);
+    renderTileIndex = tileIndex;
+    assetHandle = gAssetHandles[handleIndex];
+    drawMenuSpriteWithAlpha(
+        arg0->coordinates[0], arg0->coordinates[1],
+        getRelocatableHeapBlockBase(assetHandle),
+        renderTileIndex, 0x20, 0x20, 0, arg0->coordinates[2], 0);
 }
 
 void updateCourseSelectExtraCourseBadge(CourseSelectWidgetActor *arg0) {
@@ -1812,7 +1811,7 @@ void updateCourseSelectExtraCourseBadge(CourseSelectWidgetActor *arg0) {
         finishCourseSelectUiTask(7);
         return;
     }
-    addRenderCallback(&gMenuRenderCallbackList, drawCourseSelectExtraCourseBadge, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawCourseSelectExtraCourseBadge, arg0);
 }
 
 void initCourseSelectExtraCourseBadge(CourseSelectWidgetActor *arg0) {
@@ -1820,7 +1819,7 @@ void initCourseSelectExtraCourseBadge(CourseSelectWidgetActor *arg0) {
     arg0->y = -0x5C;
     arg0->spriteIndex = 0;
     arg0->state = 0;
-    setCallbackTaskCallback(arg0, updateCourseSelectExtraCourseBadge);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateCourseSelectExtraCourseBadge);
 }
 
 // drawCourseSelectExtraCourseIconList best match: 99.742% (nonmatchings/drawCourseSelectExtraCourseIconList-6934502587000073416/base_14.c)
@@ -1907,9 +1906,9 @@ void updateCourseSelectExtraCourseIconListIn(CourseSelectWidgetActor *arg0) {
             } while (var_v1 < (s32)temp_a1->itemCount);
         }
     } else if (gCurrentGameTask->screenState == 4) {
-        setCallbackTaskCallback(temp_a2, updateCourseSelectExtraCourseIconList);
+        setCallbackTaskCallback(temp_a2, (CallbackTaskCallback)updateCourseSelectExtraCourseIconList);
     }
-    addRenderCallback(&gMenuRenderCallbackList, drawCourseSelectExtraCourseIconList, temp_a2);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawCourseSelectExtraCourseIconList, temp_a2);
 }
 
 void updateCourseSelectExtraCourseIconListOut(CourseSelectWidgetActor *arg0) {
@@ -1937,7 +1936,7 @@ void updateCourseSelectExtraCourseIconListOut(CourseSelectWidgetActor *arg0) {
     } else {
         var_v0_3 = gCurrentGameTask->screenState;
         if (var_v0_3 == 3) {
-            setCallbackTaskCallback(arg0, updateCourseSelectExtraCourseIconListIn);
+            setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateCourseSelectExtraCourseIconListIn);
             var_v0_3 = gCurrentGameTask->screenState;
         }
     }
@@ -1945,7 +1944,7 @@ void updateCourseSelectExtraCourseIconListOut(CourseSelectWidgetActor *arg0) {
         removeCallbackTask(arg0);
         return;
     }
-    addRenderCallback(&gMenuRenderCallbackList, drawCourseSelectExtraCourseIconList, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawCourseSelectExtraCourseIconList, arg0);
 }
 
 void updateCourseSelectExtraCourseIconListClose(CourseSelectWidgetActor *arg0) {
@@ -1979,7 +1978,7 @@ void updateCourseSelectExtraCourseIconListClose(CourseSelectWidgetActor *arg0) {
         return;
     }
 
-    addRenderCallback(&gMenuRenderCallbackList, drawCourseSelectExtraCourseIconList, temp_a2);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawCourseSelectExtraCourseIconList, temp_a2);
 }
 
 // updateCourseSelectExtraCourseIconList best match: 98.298% (nonmatchings/updateCourseSelectExtraCourseIconList-8498672362023432715/base_6.c)
@@ -2001,7 +2000,7 @@ void updateCourseSelectExtraCourseIconList(CourseSelectWidgetActor *arg0) {
 
     actor = (CourseSelectExtraCourseIconListActor *)arg0;
     if (gMenuTransitionState == 3) {
-        setCallbackTaskCallback(arg0, updateCourseSelectExtraCourseIconListClose);
+        setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateCourseSelectExtraCourseIconListClose);
         playerIndex = 0;
         if ((s32)gPlayerCount > 0) {
             do {
@@ -2010,7 +2009,7 @@ void updateCourseSelectExtraCourseIconList(CourseSelectWidgetActor *arg0) {
             } while (playerIndex < (s32)gPlayerCount);
         }
     } else if (gCurrentGameTask->screenState == 1) {
-        setCallbackTaskCallback(arg0, updateCourseSelectExtraCourseIconListOut);
+        setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateCourseSelectExtraCourseIconListOut);
         ((CourseSelectExtraCourseIconListActor *)arg0)->alpha[0] = 0x100;
         actor->pulseTimer[0] = 0;
     } else {
@@ -2151,7 +2150,7 @@ void updateCourseSelectExtraCourseIconList(CourseSelectWidgetActor *arg0) {
             } while (playerIndex < (s32)gPlayerCount);
         }
     }
-    addRenderCallback(&gMenuRenderCallbackList, drawCourseSelectExtraCourseIconList, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawCourseSelectExtraCourseIconList, arg0);
 }
 #endif
 
@@ -2219,7 +2218,7 @@ void initCourseSelectExtraCourseIconList(CourseSelectWidgetActor *arg0) {
     } else {
         actor->clipLeft = 0x88;
     }
-    setCallbackTaskCallback(arg0, updateCourseSelectExtraCourseIconList);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateCourseSelectExtraCourseIconList);
 }
 #endif
 
@@ -2255,7 +2254,7 @@ void drawCourseSelectPlayerPanels(CourseSelectWidgetActor *arg0) {
             tile = i + 5;
         }
 
-        drawMenuSpriteWithAlpha(
+        drawMenuSpriteWithAlphaWideArgs(
             actor->x[i],
             actor->y[i],
             getRelocatableHeapBlockBase(gAssetHandles[0x21]),
@@ -2274,7 +2273,7 @@ void drawCourseSelectPlayerPanels(CourseSelectWidgetActor *arg0) {
         }
 
         for (j = 0, offset = 0x38; j < middleCount; j++, offset += 0x10) {
-            drawMenuSpriteWithAlpha(
+            drawMenuSpriteWithAlphaWideArgs(
                 (s16)(actor->x[i] + offset),
                 actor->y[i],
                 getRelocatableHeapBlockBase(gAssetHandles[0x21]),
@@ -2287,7 +2286,7 @@ void drawCourseSelectPlayerPanels(CourseSelectWidgetActor *arg0) {
             );
         }
 
-        drawMenuSpriteWithAlpha(
+        drawMenuSpriteWithAlphaWideArgs(
             (s16)(actor->x[i] + offset),
             actor->y[i],
             getRelocatableHeapBlockBase(gAssetHandles[0x21]),
@@ -2306,7 +2305,7 @@ void drawCourseSelectPlayerPanels(CourseSelectWidgetActor *arg0) {
         }
 
         for (j = 0; j < 4; j++) {
-            drawMenuSpriteWithAlpha(
+            drawMenuSpriteWithAlphaWideArgs(
                 actor->x[i],
                 (s16)(actor->y[i] + j * 0x10 + 0x10),
                 getRelocatableHeapBlockBase(gAssetHandles[0x21]),
@@ -2318,7 +2317,7 @@ void drawCourseSelectPlayerPanels(CourseSelectWidgetActor *arg0) {
                 tile
             );
 
-            drawMenuSpriteWithAlpha(
+            drawMenuSpriteWithAlphaWideArgs(
                 (s16)(actor->x[i] + offset),
                 (s16)(actor->y[i] + j * 0x10 + 0x10),
                 getRelocatableHeapBlockBase(gAssetHandles[0x21]),
@@ -2331,7 +2330,7 @@ void drawCourseSelectPlayerPanels(CourseSelectWidgetActor *arg0) {
             );
         }
 
-        drawMenuSpriteWithAlpha(
+        drawMenuSpriteWithAlphaWideArgs(
             actor->x[i],
             (s16)(actor->y[i] + 0x50),
             getRelocatableHeapBlockBase(gAssetHandles[0x21]),
@@ -2350,7 +2349,7 @@ void drawCourseSelectPlayerPanels(CourseSelectWidgetActor *arg0) {
         }
 
         for (j = 0; j < middleCount; j++) {
-            drawMenuSpriteWithAlpha(
+            drawMenuSpriteWithAlphaWideArgs(
                 (s16)(actor->x[i] + j * 0x10 + 0x10),
                 (s16)(actor->y[i] + 0x50),
                 getRelocatableHeapBlockBase(gAssetHandles[0x21]),
@@ -2363,7 +2362,7 @@ void drawCourseSelectPlayerPanels(CourseSelectWidgetActor *arg0) {
             );
         }
 
-        drawMenuSpriteWithAlpha(
+        drawMenuSpriteWithAlphaWideArgs(
             (s16)(actor->x[i] + offset - 8),
             (s16)(actor->y[i] + 0x50),
             getRelocatableHeapBlockBase(gAssetHandles[0x21]),
@@ -2385,7 +2384,7 @@ void drawCourseSelectPlayerPanels(CourseSelectWidgetActor *arg0) {
         );
 
         if (alpha == 0xC0) {
-            drawMenuSpriteWithAlpha(
+            drawMenuSpriteWithAlphaWideArgs(
                 (s16)(actor->x[i] + 2),
                 (s16)(actor->y[i] + 0x24),
                 getRelocatableHeapBlockBase(gAssetHandles[0x1F]),
@@ -2440,9 +2439,9 @@ void updateCourseSelectPlayerPanels(CourseSelectWidgetActor *arg0) {
                         if (actor->x[i] == actor->targetX[i]) {
                             ((CourseSelectWidgetInitActor *)statePtr)->state[0] = 1;
                             if (count == next) {
-                                D_8010ADE0 = createCallbackTask(initCourseSelectPreviewModelIn, 0, 0x62);
-                                D_8010ADE4 = createCallbackTask(initCourseSelectPreviewModelOut, 0, 0x62);
-                                createCallbackTask(initCourseSelectCourseIconList, 0, 0x62);
+                                D_8010ADE0 = createCallbackTask((CallbackTaskCallback)initCourseSelectPreviewModelIn, 0, 0x62);
+                                D_8010ADE4 = createCallbackTask((CallbackTaskCallback)initCourseSelectPreviewModelOut, 0, 0x62);
+                                createCallbackTask((CallbackTaskCallback)initCourseSelectCourseIconList, 0, 0x62);
                             }
                             break;
                         }
@@ -2489,7 +2488,7 @@ void updateCourseSelectPlayerPanels(CourseSelectWidgetActor *arg0) {
         } while (i != count);
     }
 
-    addRenderCallback(&gMenuRenderCallbackList, drawCourseSelectPlayerPanels, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawCourseSelectPlayerPanels, arg0);
 }
 
 void initCourseSelectPlayerPanels(CourseSelectWidgetInitActor *arg0) {
@@ -2548,7 +2547,7 @@ void initCourseSelectPlayerPanels(CourseSelectWidgetInitActor *arg0) {
     arg0->state[3] = 0;
     arg0->timer[0] = 0;
     arg0->state[0] = 0;
-    setCallbackTaskCallback(arg0, updateCourseSelectPlayerPanels);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateCourseSelectPlayerPanels);
 }
 
 void drawCourseSelectCompletePanels(CourseSelectPlayerPanelsActor *actor) {
@@ -2646,12 +2645,12 @@ void updateCourseSelectCompletePanels(CourseSelectWidgetActor *arg0) {
     }
 
     if ((s32)D_800EC9C0 == 0x10) {
-        ((void (*)())removeCallbackTask)(base, 0);
+        ((CallbackTaskCallback)removeCallbackTask)(base, 0);
         for (j = 0; j < (s32)gPlayerCount; j++) {
             gRacePlayers[j].menuState = 3;
         }
     } else {
-        addRenderCallback(&gMenuRenderCallbackList, (void (*)(CourseSelectWidgetActor *))drawCourseSelectCompletePanels,
+        addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)(void (*)(CourseSelectWidgetActor *))drawCourseSelectCompletePanels,
                           (CourseSelectWidgetActor *)base);
     }
 }
@@ -2677,7 +2676,7 @@ void initCourseSelectCompletePanels(CourseSelectWidgetActor *arg0) {
             var_v1 = (CourseSelectWidgetActor *)((u8 *)var_v1 + sizeof(s16));
         } while (var_v0 < (s32)gPlayerCount);
     }
-    setCallbackTaskCallback(arg0, updateCourseSelectCompletePanels);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateCourseSelectCompletePanels);
 }
 
 void finishCourseSelectUiTask(s32 arg0) {

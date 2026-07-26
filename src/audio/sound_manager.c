@@ -32,7 +32,7 @@ typedef struct SoundQueueEntry {
 
 typedef struct PositionalSoundRequest {
     struct PositionalSoundRequest *next;
-    SoundPosition pos;
+    Vec3i pos;
     s16 soundId;
     s16 volume;
     s16 minVolume;
@@ -43,7 +43,7 @@ typedef struct PositionalSoundRequest {
 
 typedef struct AudioCamera {
     u8 pad0[0x94];
-    SoundPosition prevPos;
+    Vec3i prevPos;
     u8 padA0[0xAC - 0xA0];
     s8 initialized;
     u8 padAD[3];
@@ -76,7 +76,7 @@ extern u8 gRaceDemoPlaybackEnabled;
 extern u8 D_27E290[];
 extern u8 D_800DABB0[];
 extern f32 D_800DACAC[];
-extern s32 D_800DB8FC[];
+extern u8 *D_800DB8FC[];
 extern s32 D_800DBAAC[];
 extern s32 gPendingMusicCommand;
 extern s32 gCurrentMusicSequenceHandle;
@@ -124,10 +124,10 @@ void *allocRenderCallbackScratch(s32 arg0);
 void requestMusicSequenceBank(s32 arg0);
 s32 reserveSoundEffectQueueWriteIndex(void);
 s32 startCurrentQueuedSoundEffect(void);
-s32 calculatePositionalSoundVolume(SoundPosition *pos, s32 volume);
+s32 calculatePositionalSoundVolume(Vec3i *pos, s32 volume);
 void updatePlayerLoopingPositionalSound(s32 soundId, s32 mode, s32 volume, f32 pitch);
 
-extern void enqueuePositionalSoundRequest(s32, SoundPosition *, s32, s32, f32, s32, s32);
+extern void enqueuePositionalSoundRequest(s32, Vec3i *, s32, s32, f32, s32, s32);
 
 void initSoundManager(void) {
     PlayerCommandInit init;
@@ -174,7 +174,7 @@ void initSoundManager(void) {
     init.heapBase = (u8 *)getRelocatableHeapBlockBase(gAssetHandles.unk6);
     init.heapLen = 0x80000;
     init.soundBank = (PlayerCommandBank *)getRelocatableHeapBlockBase(gAssetHandles.unk8);
-    init.sampleBaseOffset = D_27E290;
+    init.sampleBaseOffset = (s32)D_27E290;
     init.tuningTable = D_800DABB0;
     init.pitchOffsetTable = D_800DACAC;
     init.fxHeader = D_800DB8FC;
@@ -490,7 +490,7 @@ void fadeOutAllMusicSequences(void) {
     osStartThread(&gAudioThread);
 }
 
-s32 calculatePositionalSoundVolume(SoundPosition *pos, s32 volume) {
+s32 calculatePositionalSoundVolume(Vec3i *pos, s32 volume) {
     AudioCamera *camera;
     s32 distance;
     s32 dx;
@@ -606,7 +606,7 @@ void playPlayerPositionalSound(s32 soundId, s32 playerIndex, s32 volume, s32 min
     }
 }
 
-void updateSingleLoopingPositionalSound(s16 soundId, SoundPosition *pos, s16 volume) {
+void updateSingleLoopingPositionalSound(s16 soundId, Vec3i *pos, s16 volume) {
     s32 adjustedVolume;
 
     adjustedVolume = calculatePositionalSoundVolume(pos, volume);
@@ -631,7 +631,7 @@ void countActiveSoundPlayers(void) {
 }
 
 s32 countActiveMusicSequences(void) {
-    MusAsk(2);
+    return MusAsk(2);
 }
 
 extern PositionalSoundRequest *gPendingPositionalSoundRequests;
@@ -640,7 +640,7 @@ void clearPendingPositionalSoundRequests(void) {
     gPendingPositionalSoundRequests = NULL;
 }
 
-void enqueuePositionalSoundRequest(s32 soundId, SoundPosition *pos, s32 volume, s32 priority, f32 pitch, s32 mode,
+void enqueuePositionalSoundRequest(s32 soundId, Vec3i *pos, s32 volume, s32 priority, f32 pitch, s32 mode,
                                    s32 minVolume) {
     PositionalSoundRequest *node;
 
@@ -658,7 +658,7 @@ void enqueuePositionalSoundRequest(s32 soundId, SoundPosition *pos, s32 volume, 
     }
 }
 
-void enqueuePlayerLoopingPositionalSoundRequest(s32 arg0, SoundPosition *arg1, s32 arg2, s32 arg3, f32 arg4, s16 mode) {
+void enqueuePlayerLoopingPositionalSoundRequest(s32 arg0, Vec3i *arg1, s32 arg2, s32 arg3, f32 arg4, s16 mode) {
     s32 temp_a0 = arg0 << 16;
     s32 temp_a2 = arg2 << 16;
     s32 temp_a3 = arg3 << 16;
@@ -666,11 +666,11 @@ void enqueuePlayerLoopingPositionalSoundRequest(s32 arg0, SoundPosition *arg1, s
     enqueuePositionalSoundRequest(temp_a0 >> 16, arg1, temp_a2 >> 16, temp_a3 >> 16, arg4, mode, 0);
 }
 
-void enqueuePositionalSoundEffect(s16 arg0, SoundPosition *arg1, s16 arg2, s16 arg3) {
+void enqueuePositionalSoundEffect(s16 arg0, Vec3i *arg1, s16 arg2, s16 arg3) {
     enqueuePositionalSoundRequest(arg0, arg1, arg2, arg3, 0.0f, -1, 0);
 }
 
-void enqueuePlayerPositionalSoundEffect(s16 arg0, SoundPosition *arg1, s16 arg2, s16 arg3, s16 arg4, s16 minVolume) {
+void enqueuePlayerPositionalSoundEffect(s16 arg0, Vec3i *arg1, s16 arg2, s16 arg3, s16 arg4, s16 minVolume) {
     enqueuePositionalSoundRequest(arg0, arg1, arg2, arg3, 0.0f, arg4 + 4, minVolume);
 }
 

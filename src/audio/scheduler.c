@@ -1,5 +1,7 @@
 #include "game/audio/audio_engine_internal.h"
 
+#pragma weak schedulerThreadEntry = schedulerThreadMain
+
 void initScheduler(SchedulerState *arg0, u8 arg1, u8 arg2) {
     arg0->curRSPTask = 0;
     arg0->curRDPTask = 0;
@@ -25,7 +27,7 @@ void initScheduler(SchedulerState *arg0, u8 arg1, u8 arg2) {
     osSetEventMesg(4, &arg0->retraceQueue, (OSMesg)0x29B);
     osSetEventMesg(0xE, &arg0->retraceQueue, (OSMesg)0x29D);
     osSetEventMesg(9, &arg0->queue1A4, (OSMesg)0x29C);
-    osCreateThread(&arg0->thread258, 6, schedulerThreadMain, arg0, gSchedulerThreadStack, 0x78);
+    osCreateThread(&arg0->thread258, 6, schedulerThreadEntry, arg0, gSchedulerThreadStack, 0x78);
     osStartThread(&arg0->thread258);
     osCreateThread(&arg0->thread408, 5, schedulerSwapBufferThreadMain, arg0, &gSchedulerRspTaskState, 0x64);
     osStartThread(&arg0->thread408);
@@ -164,7 +166,8 @@ typedef struct SchedulerSwapLocals {
     OSMesg msg;
 } SchedulerSwapLocals;
 
-void schedulerSwapBufferThreadMain(SchedulerState *arg0) {
+void schedulerSwapBufferThreadMain(void *arg) {
+    SchedulerState *arg0 = arg;
     OSMesg *msgPtr;
     s16 retrace;
     void *framebuffer;

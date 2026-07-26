@@ -92,8 +92,8 @@ void initMainMenuModePreviewRaceSelectionMenu(void) {
     configureMenuViewport(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.3333334f);
     resetRaceCameras();
     setRaceCameraMode(0, 0x1F);
-    createCallbackTaskWithUserId(&initMainMenuBoardModels, 0, 0x64, 0);
-    createCallbackTask(&initMainMenuModeSelectGrid, 0, 0x64);
+    createCallbackTaskWithUserId((CallbackTaskCallback)&initMainMenuBoardModels, 0, 0x64, 0);
+    createCallbackTask((CallbackTaskCallback)&initMainMenuModeSelectGrid, 0, 0x64);
     setCurrentGameTaskCallback(&fadeInMainMenuModePreviewRaceSelectionMenu, 0);
     requestMusicSequenceBank(7);
 }
@@ -247,8 +247,8 @@ void initMainMenuModePreviewRace(void) {
     LOAD_ASSET(_593D10, 0x29);
     LOAD_ASSET(_60F1A0, 0x2A);
     gMainMenuSelectionResult = 0;
-    createCallbackTask(initMainMenuModeDescriptionPanel, 0, 0x64);
-    createCallbackTask(initRaceSetupCornerPrompts, 0, 0x64);
+    createCallbackTask((CallbackTaskCallback)initMainMenuModeDescriptionPanel, 0, 0x64);
+    createCallbackTask((CallbackTaskCallback)initRaceSetupCornerPrompts, 0, 0x64);
     one1++;
     one1--;
     setCurrentGameTaskCallback(fadeInMainMenuModePreviewRace, 0);
@@ -484,9 +484,9 @@ void initTrainingCourseRace(void) {
     LOAD_ASSET(_593D10, 0x29);
     LOAD_ASSET(_60F1A0, 0x2A);
     gMainMenuSelectionResult = 0;
-    createCallbackTask(initTrainingCourseOpeningDialog, 0, 0x64);
-    createCallbackTask(initTrainingCourseLessonTitlePanel, 0, 0x63);
-    createCallbackTask(initRaceSetupCornerPrompts, 0, 0x64);
+    createCallbackTask((CallbackTaskCallback)initTrainingCourseOpeningDialog, 0, 0x64);
+    createCallbackTask((CallbackTaskCallback)initTrainingCourseLessonTitlePanel, 0, 0x63);
+    createCallbackTask((CallbackTaskCallback)initRaceSetupCornerPrompts, 0, 0x64);
     setCurrentGameTaskCallback(fadeInTrainingCourseRace, 0);
     requestMusicSequenceBank(7);
 }
@@ -614,7 +614,7 @@ void fadeInTrainingCourseLessonEndMenu(void) {
     gCurrentGameTask->transitionTimer += 0x10;
     temp_v1 = gCurrentGameTask->transitionTimer;
     if (temp_v1 == 0x80) {
-        createCallbackTask(initTrainingCourseLessonEndMenu, 0, 0x64);
+        createCallbackTask((CallbackTaskCallback)initTrainingCourseLessonEndMenu, 0, 0x64);
         setCurrentGameTaskCallback(waitForTrainingCourseLessonEndMenuSelection, 0);
     }
     temp_v1 = gCurrentGameTask->transitionTimer;
@@ -684,7 +684,7 @@ void finishTrainingCourse(void) {
     gMenuFadeAlpha = 0xFF;
     resetAllViewports();
     initCallbackTaskScheduler(0);
-    createCallbackTask(&initTrainingCourseEndingDialog, 0, 0x64);
+    createCallbackTask((CallbackTaskCallback)&initTrainingCourseEndingDialog, 0, 0x64);
     setCurrentGameTaskCallback(fadeInTrainingCourseEndingDialog, 0);
 }
 

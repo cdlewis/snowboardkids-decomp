@@ -1,4 +1,6 @@
 #include "common.h"
+#include "game/menu/renderer/menu_render_utils.h"
+#include "game/engine/render_callback.h"
 #include "game/race/course/race_course_props_and_pickups.h"
 #include "game/engine/relocatable_heap.h"
 #include "game/engine/callback_task_scheduler.h"
@@ -49,14 +51,6 @@ typedef union {
     /* 0x00 */ s32 words[8];
     /* 0x00 */ s16 halfwords[0x10];
 } GfxCommandSource;
-
-typedef s16 FixedMatrix3sScratch[0x12];
-
-typedef struct {
-    s16 rotation[9];
-    s16 pad2A;
-    Vec3i basePos;
-} CourseEffectMatrixSource;
 
 typedef struct {
     /* 0x00 */ FixedTransform source;
@@ -164,13 +158,11 @@ struct PickupShardParticleActor {
     /* 0x4C */ void *palette;
 };
 
-extern void getAssetTableImageAndPalette(s32, s32, void *, void *);
-extern void packFixedTransformMatrix(CourseEffectMatrixSource *, void *);
+extern void packFixedTransformMatrix(FixedTransform *, void *);
 extern GfxCommandDest *allocFixedTransformMatrix(void *);
 extern void setPackedMatrixTranslation(GfxCommandDest *, Vec3i *);
 extern s32 isPositionNearAnyRaceViewportFocus(void *);
 extern void osWritebackDCache(void *, s32);
-extern void addRenderCallback(void *, void *, void *);
 extern void enqueuePositionalSoundEffect(s32, void *, s32, s32);
 extern u8 gItemEffectRollTable[][0x10];
 extern u8 gActionEffectRollTable[][0x10];
@@ -180,8 +172,6 @@ extern Vec3i gPickupShardInitialVelocities[];
 extern RaceCoursePropModelEntry *gRaceCoursePropModelLists[];
 extern void *gRaceCourseSceneryDisplayLists[];
 extern Gfx *gThrownPickupModelDisplayList;
-extern s32 gEffectRenderCallbackList;
-extern s32 gSceneModelRenderCallbackList;
 extern u8 gRenderMatricesDirty;
 extern u8 gRaceUpdatePaused;
 extern u8 gTrainingCourseLesson;
@@ -208,7 +198,6 @@ extern Gfx gEffectRenderModeSetupDl[];
 extern Gfx gEffectRenderModeCleanupDl[];
 extern Gfx gRaceItemPickupDisplayList[];
 extern Gfx gRaceActionPickupDisplayList[];
-extern FixedTransform gIdentityFixedTransform;
 extern GfxCommandDest gIdentityMatrix;
 extern FixedTransform gIdentityFixedTransform;
 extern Gfx *gRegionAllocPtr;
@@ -216,8 +205,8 @@ extern void *gViewportMatrix;
 extern s16 gRaceCourseIndex;
 extern s16 gFrameCounter;
 typedef struct Scratch674B4 {
-    char scratch[0x28];
-    s32 pad;
+    FixedTransform transform;
+    s32 pad[3];
 } Scratch674B4;
 
 void renderRaceCoursePropModels(CourseEffectModelListActor *arg0) {
@@ -271,7 +260,7 @@ void updateRaceCoursePropModels(CourseEffectModelListActor *arg0) {
             pos = &entry->pos;
         } while (entry->modelIndex != -1);
     }
-    addRenderCallback(&gSceneModelRenderCallbackList, renderRaceCoursePropModels, arg0);
+    addRenderCallback(&gSceneModelRenderCallbackList, (RenderCallback)renderRaceCoursePropModels, arg0);
 }
 
 void initRaceCoursePropModels(CourseEffectModelListActor *arg0) {
@@ -279,7 +268,7 @@ void initRaceCoursePropModels(CourseEffectModelListActor *arg0) {
     RaceCoursePropModelEntry *base;
     RaceCoursePropModelEntry *entry;
     s32 i;
-    CourseEffectMatrixSource transform;
+    FixedTransform transform;
     s32 count;
 
     base = gRaceCoursePropModelLists[arg0->modelListIndex];
@@ -299,17 +288,17 @@ void initRaceCoursePropModels(CourseEffectModelListActor *arg0) {
         arg0->modelBuffer = (void *)getRelocatableHeapBlockBase(gAssetHandles[0x23]);
 
         for (i = 0; i < count; i++) {
-            makeFixedRotationY(&transform, entry->assetIndex);
-            transform.basePos.x = entry->pos.x;
-            transform.basePos.y = entry->pos.y;
-            transform.basePos.z = entry->pos.z;
+            makeFixedRotationY(transform.rotation, entry->assetIndex);
+            transform.translation.x = entry->pos.x;
+            transform.translation.y = entry->pos.y;
+            transform.translation.z = entry->pos.z;
             packFixedTransformMatrix(&transform, (void *)((u32)arg0->modelBuffer + (i << 6)));
             entry++;
         }
 
         osWritebackDCache(arg0->modelBuffer, size);
     }
-    setCallbackTaskCallback(arg0, updateRaceCoursePropModels);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceCoursePropModels);
 }
 
 void renderCourseCollectibleSprites(CourseEffectModelListActor *arg0) {
@@ -332,7 +321,8 @@ void renderCourseCollectibleSprites(CourseEffectModelListActor *arg0) {
             if ((entry->enabled != 0) && (isPositionNearCurrentRaceViewportCamera(&entry->transform) != 0)) {
                 if (modelIndex != entry->modelIndex + actor->modelIndexOffset) {
                     modelIndex = entry->modelIndex + actor->modelIndexOffset;
-                    getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gAssetHandles[0x1C]), (modelIndex + 4) & 0xFFFF, &spA0, &sp9C);
+                    getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gAssetHandles[0x1C]),
+                                                 modelIndex + 4, &spA0, &sp9C);
 
                     gDPLoadTextureBlock_4b(gRegionAllocPtr++, spA0, G_IM_FMT_CI, 16, 16, 0, G_TX_CLAMP,
                                            G_TX_CLAMP, 0, 0, 0, 0);
@@ -422,7 +412,7 @@ next:
     }
 
 done:
-    addRenderCallback(&gEffectRenderCallbackList, renderCourseCollectibleSprites, actor);
+    addRenderCallback(&gEffectRenderCallbackList, (RenderCallback)renderCourseCollectibleSprites, actor);
 }
 
 void initCourseCollectibleSpriteMatrices(CourseEffectModelListActor *arg0) {
@@ -472,12 +462,12 @@ void initCourseCollectibleSprites(CourseEffectModelListActor *arg0) {
         RACE_MODEL_BUFFER_HANDLE = allocRelocatableHeapBlock(new_var->modelCount << 6);
         new_var->modelBuffer = (void *) getRelocatableHeapBlockBase(RACE_MODEL_BUFFER_HANDLE);
         initCourseCollectibleSpriteMatrices(new_var);
-        setCallbackTaskCallback(new_var, updateCourseCollectibleSprites);
+        setCallbackTaskCallback(new_var, (CallbackTaskCallback)updateCourseCollectibleSprites);
     }
 }
 
 void renderThrownPickupModel(ThrownPickupRenderActor *arg0) {
-    FixedMatrix3sScratch scratch;
+    FixedMatrix3sWideScratch scratch;
 
     if (gRenderMatricesDirty != 0) {
         arg0->matrixDirty = 1;
@@ -542,7 +532,7 @@ void updateThrownPickupModel(ThrownPickupModelActor *arg0) {
         return;
     }
 
-    addRenderCallback(&gSceneModelRenderCallbackList, renderThrownPickupModel, arg0);
+    addRenderCallback(&gSceneModelRenderCallbackList, (RenderCallback)renderThrownPickupModel, arg0);
 }
 
 void initThrownPickupModel(ThrownPickupModelActor *arg0) {
@@ -550,18 +540,18 @@ void initThrownPickupModel(ThrownPickupModelActor *arg0) {
     ThrownPickupModelActor *temp_a3 = arg0;
 
     if (gRaceUpdatePaused == 0) {
-        makeFixedRotationY(sp1C.scratch, temp_a3->modelIndex);
+        makeFixedRotationY(sp1C.transform.rotation, temp_a3->modelIndex);
         temp_a3->timer = 0x32;
         temp_a3->velocity.x = 0;
         temp_a3->velocity.y = 0xB0000;
         temp_a3->velocity.z = 0xFFF90000;
-        transformVec3iByFixedMatrix(sp1C.scratch, &temp_a3->velocity, &temp_a3->transformedPos);
-        setCallbackTaskCallback(temp_a3, updateThrownPickupModel);
+        transformVec3iByFixedMatrix(sp1C.transform.rotation, &temp_a3->velocity, &temp_a3->transformedPos);
+        setCallbackTaskCallback(temp_a3, (CallbackTaskCallback)updateThrownPickupModel);
     }
 }
 
 void spawnThrownPickupModel(s32 arg0, s32 arg1, s32 arg2, s16 arg3, s16 arg4) {
-    ThrownPickupModelActor *temp = createCallbackTask(initThrownPickupModel, 0, 0x64);
+    ThrownPickupModelActor *temp = createCallbackTask((CallbackTaskCallback)initThrownPickupModel, 0, 0x64);
 
     if (temp != NULL) {
         temp->pos.x = arg0;
@@ -587,7 +577,7 @@ void updateThrownPickupSpawner(ThrownPickupSpawnerActor *arg0) {
 
     if (gRaceUpdatePaused == 0) {
         if (arg0->timer == 0) {
-            arg0->timer = 0x20; entry = gThrownPickupSpawnLists[arg0->spawnIndex]; found = FALSE; if (gRaceSplitscreenMode != 2) { if (D_80121D93 != 0) { diffZ = D_80121D9C - entry->pos.x; if ((diffZ < SPAWN_RANGE_MAX) && (diffZ >= SPAWN_RANGE_MIN)) { diffX = D_80121DA4 - entry->pos.z; if ((diffX < SPAWN_RANGE_MAX) && (diffX >= SPAWN_RANGE_MIN)) { found = TRUE; } } } if (D_8012239F != 0) { diffX = D_801223A8 - entry->pos.x; diffZ = D_801223B0 - entry->pos.z; if ((((diffX < SPAWN_RANGE_MAX) && (diffX >= SPAWN_RANGE_MIN)) && (diffZ < SPAWN_RANGE_MAX)) && (diffZ >= SPAWN_RANGE_MIN)) { found = TRUE; } } if (D_801229AB != 0) { diffX = D_801229B4 - entry->pos.x; diffZ = D_801229BC - entry->pos.z; if ((((diffX < SPAWN_RANGE_MAX) && (diffX >= SPAWN_RANGE_MIN)) && (diffZ < SPAWN_RANGE_MAX)) && (diffZ >= SPAWN_RANGE_MIN)) { found = TRUE; } } if (D_80122FB7 != 0) { diffX = D_80122FC0 - entry->pos.x; diffZ = D_80122FC8 - entry->pos.z; if ((((diffX < SPAWN_RANGE_MAX) && (diffX >= SPAWN_RANGE_MIN)) && (diffZ < SPAWN_RANGE_MAX)) && (diffZ >= SPAWN_RANGE_MIN)) { found = TRUE; } } } else { found = TRUE; } if (found != 0) { spawned = createCallbackTask(initThrownPickupModel, 0, 0x64); if (spawned != NULL) { savedSpawned = spawned; rand = randomNextSecondary() & 3;
+            arg0->timer = 0x20; entry = gThrownPickupSpawnLists[arg0->spawnIndex]; found = FALSE; if (gRaceSplitscreenMode != 2) { if (D_80121D93 != 0) { diffZ = D_80121D9C - entry->pos.x; if ((diffZ < SPAWN_RANGE_MAX) && (diffZ >= SPAWN_RANGE_MIN)) { diffX = D_80121DA4 - entry->pos.z; if ((diffX < SPAWN_RANGE_MAX) && (diffX >= SPAWN_RANGE_MIN)) { found = TRUE; } } } if (D_8012239F != 0) { diffX = D_801223A8 - entry->pos.x; diffZ = D_801223B0 - entry->pos.z; if ((((diffX < SPAWN_RANGE_MAX) && (diffX >= SPAWN_RANGE_MIN)) && (diffZ < SPAWN_RANGE_MAX)) && (diffZ >= SPAWN_RANGE_MIN)) { found = TRUE; } } if (D_801229AB != 0) { diffX = D_801229B4 - entry->pos.x; diffZ = D_801229BC - entry->pos.z; if ((((diffX < SPAWN_RANGE_MAX) && (diffX >= SPAWN_RANGE_MIN)) && (diffZ < SPAWN_RANGE_MAX)) && (diffZ >= SPAWN_RANGE_MIN)) { found = TRUE; } } if (D_80122FB7 != 0) { diffX = D_80122FC0 - entry->pos.x; diffZ = D_80122FC8 - entry->pos.z; if ((((diffX < SPAWN_RANGE_MAX) && (diffX >= SPAWN_RANGE_MIN)) && (diffZ < SPAWN_RANGE_MAX)) && (diffZ >= SPAWN_RANGE_MIN)) { found = TRUE; } } } else { found = TRUE; } if (found != 0) { spawned = createCallbackTask((CallbackTaskCallback)initThrownPickupModel, 0, 0x64); if (spawned != NULL) { savedSpawned = spawned; rand = randomNextSecondary() & 3;
                     spawned = savedSpawned;
                     if (rand != arg0->lastVariant) {
                     } else {
@@ -776,7 +766,7 @@ void updateRacePickupRespawn(RacePickupActor *arg0) {
         arg0->drawPos.y = temp_v1 + 0x140000;
         arg0->spawnPos.y = temp_v1;
         if (temp_v0 == 0) {
-            setCallbackTaskCallback(arg0, updateRacePickupIdle);
+            setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRacePickupIdle);
         }
         temp_s1 = &temp_s0->pos;
         pushRacePlayerOutOfCylinder(temp_s1, 0xC0000, 0x180000, 0);
@@ -784,7 +774,7 @@ void updateRacePickupRespawn(RacePickupActor *arg0) {
         pushRacePlayerOutOfCylinder(temp_s1, 0xC0000, 0x180000, 2);
         pushRacePlayerOutOfCylinder(temp_s1, 0xC0000, 0x180000, 3);
     }
-    addRenderCallback(&gEffectRenderCallbackList, renderRacePickupRespawn, temp_s0);
+    addRenderCallback(&gEffectRenderCallbackList, (RenderCallback)renderRacePickupRespawn, temp_s0);
 }
 
 void updateRacePickupBounce(RacePickupActor *arg0) {
@@ -795,7 +785,7 @@ void updateRacePickupBounce(RacePickupActor *arg0) {
         if (arg0->drawPos.y < arg0->pos.y) {
             arg0->drawPos.y = arg0->pos.y;
             arg0->timer = 0x10;
-            setCallbackTaskCallback(arg0, updateRacePickupRespawn);
+            setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRacePickupRespawn);
         }
 
         pushRacePlayerOutOfCylinder(&arg0->pos, 0xC0000, 0x180000, 0);
@@ -803,7 +793,7 @@ void updateRacePickupBounce(RacePickupActor *arg0) {
         pushRacePlayerOutOfCylinder(&arg0->pos, 0xC0000, 0x180000, 2);
         pushRacePlayerOutOfCylinder(&arg0->pos, 0xC0000, 0x180000, 3);
     }
-    addRenderCallback(&gEffectRenderCallbackList, renderRacePickupBase, arg0);
+    addRenderCallback(&gEffectRenderCallbackList, (RenderCallback)renderRacePickupBase, arg0);
 }
 
 void updateRacePickupCollected(RacePickupActor *arg0) {
@@ -820,7 +810,7 @@ void updateRacePickupCollected(RacePickupActor *arg0) {
         if (var_v1 < temp_a2) {
             arg0->drawPos.y = temp_a2;
             arg0->velY = 0x30000;
-            setCallbackTaskCallback(arg0, updateRacePickupBounce);
+            setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRacePickupBounce);
             var_v1 = arg0->drawPos.y;
         }
         temp_s1 = &arg0->drawPos;
@@ -831,7 +821,7 @@ void updateRacePickupCollected(RacePickupActor *arg0) {
             pushRacePlayerOutOfCylinder(temp_s1, 0xC0000, 0x180000, 3);
         }
     }
-    addRenderCallback(&gEffectRenderCallbackList, renderRacePickupBase, arg0);
+    addRenderCallback(&gEffectRenderCallbackList, (RenderCallback)renderRacePickupBase, arg0);
 }
 
 void updateRacePickupIdle(RacePickupActor *arg0) {
@@ -891,7 +881,7 @@ void updateRacePickupIdle(RacePickupActor *arg0) {
                 player->actionEffectPalette = 4;
             }
 
-            setCallbackTaskCallback(arg0, updateRacePickupCollected);
+            setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRacePickupCollected);
             spawnPickupShardParticle(arg0->pos.x, arg0->pos.y, arg0->pos.z, arg0->rotation, 0);
             spawnPickupShardParticle(arg0->pos.x, arg0->pos.y, arg0->pos.z, arg0->rotation, 1);
             spawnPickupShardParticle(arg0->pos.x, arg0->pos.y, arg0->pos.z, arg0->rotation, 2);
@@ -911,7 +901,7 @@ void updateRacePickupIdle(RacePickupActor *arg0) {
     }
 
 done:
-    addRenderCallback(&gEffectRenderCallbackList, renderRacePickupIdle, arg0);
+    addRenderCallback(&gEffectRenderCallbackList, (RenderCallback)renderRacePickupIdle, arg0);
 }
 
 void initRacePickup(RacePickupActor *arg0) {
@@ -943,12 +933,12 @@ void initRacePickup(RacePickupActor *arg0) {
         getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gAssetHandles[0x1C]), 0x21, &arg0->image1, &arg0->palette1);
     }
     getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gAssetHandles[0x1C]), 0x22, &arg0->image2, &arg0->palette2);
-    setCallbackTaskCallback(arg0, updateRacePickupIdle);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRacePickupIdle);
 }
 
 void renderPickupShardParticle(PickupShardParticleActor *arg0) {
     volatile s32 pad;
-    CourseEffectMatrixSource transform;
+    FixedTransform transform;
     Gfx *temp_v0;
     Gfx *temp_v0_10;
     Gfx *temp_v0_11;
@@ -977,10 +967,10 @@ void renderPickupShardParticle(PickupShardParticleActor *arg0) {
         if (arg0->transformDirty != 0) {
             arg0->transformDirty = 0;
             makeFixedRotationXYZ(transform.rotation, arg0->rotX, arg0->rotY, arg0->rotZ);
-            transform.basePos.x = arg0->pos.x;
-            transform.basePos.y = arg0->pos.y;
-            transform.basePos.z = arg0->pos.z;
-            arg0->displayList = allocFixedTransformMatrix((GfxCommandSource *)&transform);
+            transform.translation.x = arg0->pos.x;
+            transform.translation.y = arg0->pos.y;
+            transform.translation.z = arg0->pos.z;
+            arg0->displayList = allocFixedTransformMatrix(&transform);
         }
         if (arg0->displayList != NULL) {
             temp_v0 = gRegionAllocPtr++;
@@ -1025,27 +1015,28 @@ void updatePickupShardParticle(PickupShardParticleActor *arg0) {
             temp_a2->rotY += temp_a2->rotVelY;
             temp_a2->rotZ += temp_a2->rotVelZ;
         }
-        addRenderCallback(&gEffectRenderCallbackList, renderPickupShardParticle, temp_a2);
+        addRenderCallback(&gEffectRenderCallbackList, (RenderCallback)renderPickupShardParticle, temp_a2);
         return;
     }
     removeCallbackTask(temp_a2);
 }
 
 void initPickupShardParticle(PickupShardParticleActor *arg0) {
-    char sp28[0x20];
+    FixedTransform transform;
 
     arg0->timer = 0xA;
     arg0->rotVelX = randomNextMain() - 0x80;
     arg0->rotVelY = randomNextMain() - 0x80;
     arg0->rotVelZ = randomNextMain() - 0x80;
-    makeFixedRotationY(sp28, arg0->rotY);
-    transformVec3iByFixedMatrix(sp28, &gPickupShardInitialVelocities[arg0->spawnOffsetIndex], &arg0->velocity);
+    makeFixedRotationY(transform.rotation, arg0->rotY);
+    transformVec3iByFixedMatrix(transform.rotation, &gPickupShardInitialVelocities[arg0->spawnOffsetIndex],
+                               &arg0->velocity);
     getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gAssetHandles[0x1C]), 0x22, &arg0->palette, &arg0->image);
-    setCallbackTaskCallback(arg0, updatePickupShardParticle);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updatePickupShardParticle);
 }
 
 void spawnPickupShardParticle(s32 arg0, s32 arg1, s32 arg2, s16 arg3, s16 arg4) {
-    PickupShardParticleActor *temp = createCallbackTaskPreservingArgs(initPickupShardParticle, 5, 0x3B);
+    PickupShardParticleActor *temp = createCallbackTaskPreservingArgs((CallbackTaskCallback)initPickupShardParticle, 5, 0x3B);
 
     if (temp != NULL) {
         temp->spawnOffsetIndex = arg4;

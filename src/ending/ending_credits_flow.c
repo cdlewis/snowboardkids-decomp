@@ -17,7 +17,6 @@
 #include "game/ending/ending_credits_tommy.h"
 #include "game/menu/main_menu/main_menu_scene_model.h"
 #include "game/engine/viewport_manager.h"
-#define MENU_RENDERER_S16_STEP_PROTOTYPE
 #include "game/menu/renderer/menu_renderer.h"
 
 typedef struct {
@@ -34,14 +33,6 @@ typedef struct {
     /* 0x28 */ u8 pad28[0x4];
     /* 0x2C */ void (*update)(void);
 } MenuCameraObject;
-
-typedef struct {
-    /* 0x00 */ s32 x;
-    /* 0x04 */ s32 y;
-    /* 0x08 */ s32 z;
-} Vec3i;
-
-typedef void (*CallbackTaskCallback)(void *);
 
 /* These globals form the original 0x10-byte ending_credits_flow BSS contribution. */
 s16 gEndingCreditsUnusedValue;
@@ -105,9 +96,9 @@ void initEndingCreditsFlow(void) {
             LOAD_ASSET(_1EF530, 0xD);
             loadMainMenuSceneModelAssets();
             initCallbackTaskScheduler(0);
-            createCallbackTask(initEndingCreditsTransitionSnowboardIcon, 0, 0x64);
-            createCallbackTask(initEndingCreditsTransitionLogoWipe, 0, 0x64);
-            createCallbackTask(initEndingCreditsTransitionSnowflakeIcon, 0, 0x64);
+            createCallbackTask((CallbackTaskCallback)initEndingCreditsTransitionSnowboardIcon, 0, 0x64);
+            createCallbackTask((CallbackTaskCallback)initEndingCreditsTransitionLogoWipe, 0, 0x64);
+            createCallbackTask((CallbackTaskCallback)initEndingCreditsTransitionSnowflakeIcon, 0, 0x64);
         }
         gCurrentGameTask->fade = 0xFF;
     }
@@ -122,7 +113,7 @@ void fadeInEndingCreditsFlow(void) {
         gCurrentGameTask->timer--;
     } else {
         if (gCurrentGameTask->fade != 0) {
-            gCurrentGameTask->fade = stepMenuFadeAlpha(gCurrentGameTask->fade, 0x10, 0);
+            gCurrentGameTask->fade = stepMenuFadeAlpha((s16)gCurrentGameTask->fade, 0x10, 0);
         } else {
             setCurrentGameTaskCallback(updateEndingCreditsFlow, 0);
             createCallbackTask((CallbackTaskCallback) initEndingCreditsPageTextActor, 0, 0x64);
@@ -152,7 +143,7 @@ void updateEndingCreditsFlow(void) {
 
 void fadeOutEndingCreditsFlow(void) {
     if (gCurrentGameTask->fade != 0xFF) {
-        gCurrentGameTask->fade = stepMenuFadeAlpha(gCurrentGameTask->fade, 0x10, 1);
+        gCurrentGameTask->fade = stepMenuFadeAlpha((s16)gCurrentGameTask->fade, 0x10, 1);
         if (gCurrentGameTask->fade == 0xFF) {
             gFramebufferSwapHold = 1;
         } else {

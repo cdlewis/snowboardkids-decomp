@@ -64,7 +64,7 @@ void initAudioSynthesizer(SchedulerState *scheduler, ALSynConfig *config, s32 th
     gAudioThreadStarted = 1;
 }
 
-void audioThreadMain(s32 arg0) {
+void audioThreadMain(void *arg0) {
     AudioThreadLocals locals;
     u32 done;
 

@@ -31,11 +31,10 @@ extern CallbackTaskGroup D_801129B0;
 extern CallbackTaskGroup D_80112AC8;
 extern CallbackTaskGroup D_80112BE0;
 extern CallbackTaskGroup D_80121820;
+void *createCallbackTaskPreservingArgsS32(CallbackTaskCallback callback, s32 type, s32 priority);
+void *createCallbackTaskS32(CallbackTaskCallback callback, s32 type, s32 priority);
 #pragma weak createCallbackTaskPreservingArgsS32 = createCallbackTaskPreservingArgs
-void *createCallbackTaskPreservingArgsS32(void (*callback)(), s32 type, s32 priority);
 #pragma weak createCallbackTaskS32 = createCallbackTask
-void *createCallbackTaskS32(void (*callback)(), s32 type, s32 priority);
-
 // The empty condition steers IDO's instruction scheduler to advance task3
 // immediately after storing it while leaving task0's advance after its store.
 void initCallbackTaskScheduler(s32 arg0) {
@@ -161,7 +160,7 @@ void updateRemainingCallbackTasks(void) {
 void noopCallbackTask(void) {
 }
 
-void *createCallbackTaskPreservingArgs(void (*callback)(), u16 type, s32 priority) {
+void *createCallbackTaskPreservingArgs(CallbackTaskCallback callback, u16 type, s32 priority) {
     CallbackTask *task;
     CallbackTask *prev;
     CallbackTask *next;
@@ -246,13 +245,13 @@ void *createCallbackTaskPreservingArgs(void (*callback)(), u16 type, s32 priorit
     }
     prev->next = task;
     task->isActive = 1;
-    task->callback = (void (*)(CallbackTask *))callback;
+    task->callback = callback;
     task->type = type;
     task->priority = priority;
     return task;
 }
 
-void *createCallbackTask(void (*callback)(), u16 type, s32 priority) {
+void *createCallbackTask(CallbackTaskCallback callback, u16 type, s32 priority) {
     CallbackTask *task;
     CallbackTask *prev;
     CallbackTask *next;
@@ -338,7 +337,7 @@ void *createCallbackTask(void (*callback)(), u16 type, s32 priority) {
         next->prev = task;
     }
     prev->next = task;
-    task->callback = (void (*)(CallbackTask *))callback;
+    task->callback = callback;
     task->type = type;
     task->priority = priority;
     task->isActive = 1;
@@ -348,9 +347,9 @@ void *createCallbackTask(void (*callback)(), u16 type, s32 priority) {
     return task;
 }
 
-void *createCallbackTaskWithUserId(void (*callback)(), s32 type, s32 priority, s32 userId){ CallbackTask *t=createCallbackTaskS32(callback,type&0xFFFF,priority); if(t!=NULL){t->userId=userId;} return t;}
+void *createCallbackTaskWithUserId(CallbackTaskCallback callback, s32 type, s32 priority, s32 userId){ CallbackTask *t=createCallbackTaskS32(callback,type&0xFFFF,priority); if(t!=NULL){t->userId=userId;} return t;}
 
-void *createCallbackTaskWithUserIdPreservingArgs(void (*callback)(), s32 type, s32 priority, s32 userId){ CallbackTask *t=createCallbackTaskPreservingArgsS32(callback,type&0xFFFF,priority); if(t!=NULL){t->userId=userId;} return t;}
+void *createCallbackTaskWithUserIdPreservingArgs(CallbackTaskCallback callback, s32 type, s32 priority, s32 userId){ CallbackTask *t=createCallbackTaskPreservingArgsS32(callback,type&0xFFFF,priority); if(t!=NULL){t->userId=userId;} return t;}
 
 void removeCallbackTask(void *taskPtr) {
     CallbackTask *task = taskPtr;
@@ -401,6 +400,6 @@ void removeCallbackTask(void *taskPtr) {
     }
 }
 
-void setCallbackTaskCallback(void *task, void (*callback)()) {
-    ((CallbackTask *)task)->callback = (void (*)(CallbackTask *))callback;
+void setCallbackTaskCallback(void *task, CallbackTaskCallback callback) {
+    ((CallbackTask *)task)->callback = callback;
 }

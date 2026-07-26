@@ -39,10 +39,8 @@ extern s16 gControllerPakStatusCodes;
 extern s16 gMenuChoicePromptState;
 extern u8 gControllerPakRetryCounts;
 extern s8 gMenuSelectionConfirmTimer;
-extern s32 gActiveMenuTask;
 extern s32 D_8010ADE0;
 extern s32 D_8010ADE4;
-extern s32 D_8010ADE8;
 extern s16 gMenuFadeAlpha;
 extern s32 D_800EC9F4;
 
@@ -71,8 +69,8 @@ void initControllerPakRaceRecordSaveFlow(void) {
     LOAD_ASSET(_598A70, 0x23);
     LOAD_ASSET(_60F1A0, 0x29);
     initCallbackTaskScheduler(0);
-    gActiveMenuTask = createCallbackTask(&initControllerPakRaceRecordSaveScorePanel, 0, 0x61);
-    D_8010ADE8 = createCallbackTask(&initControllerPakRaceRecordSaveStatusChoicePrompt, 0, 0x60);
+    gActiveMenuTask = createCallbackTask((CallbackTaskCallback)&initControllerPakRaceRecordSaveScorePanel, 0, 0x61);
+    D_8010ADE8 = createCallbackTask((CallbackTaskCallback)&initControllerPakRaceRecordSaveStatusChoicePrompt, 0, 0x60);
     gControllerPakRaceRecordSaveStatusTransition.step = 0;
     gControllerPakRaceRecordSaveStatusTransition.alpha = 0;
     gControllerPakRaceRecordSaveStatusTransition.targetStatus = 0;
@@ -118,7 +116,7 @@ void updateControllerPakRaceRecordSaveFlow(void)
     {
       gControllerPakMenuState.state = 3;
       gControllerPakMenuState.confirmChoice = 1;
-      createCallbackTask(initControllerPakDeleteConfirmPrompt, 0, 0x64);
+      createCallbackTask((CallbackTaskCallback)initControllerPakDeleteConfirmPrompt, 0, 0x64);
       setCurrentGameTaskCallback(updateControllerPakRaceRecordSaveOverwritePrompt, 0);
     }
   }

@@ -7,7 +7,7 @@ typedef struct RaceIntroEffectActor RaceIntroEffectActor;
 typedef struct RaceIntroMeshActor RaceIntroMeshActor;
 
 void drawRaceIntroModelMeshes(RaceIntroMeshActor *arg0);
-void enqueueDrawRaceIntroModelMeshes(s32 arg0);
+void enqueueDrawRaceIntroModelMeshes(RaceIntroMeshActor *arg0);
 void initRaceIntroModelMeshes(RaceIntroMeshActor *arg0);
 void drawRaceIntroBillboard(RaceIntroEffectActor *arg0);
 void updateRaceIntroBillboard(RaceIntroEffectActor *arg0);
@@ -36,7 +36,7 @@ void waitRaceIntroFlyoverShortPanSecond(RaceIntroEffectActor *arg0);
 void initRaceIntroFlyoverShortPan(RaceIntroEffectActor *arg0);
 void initRaceIntroFlyoverActor(RaceIntroEffectActor *arg0);
 void drawRaceIntroAnimatedBillboards(RaceIntroMeshActor *arg0);
-void enqueueDrawRaceIntroAnimatedBillboards(s32 arg0);
+void enqueueDrawRaceIntroAnimatedBillboards(RaceIntroMeshActor *arg0);
 void initRaceIntroAnimatedBillboards(RaceIntroMeshActor *arg0);
 
 #endif

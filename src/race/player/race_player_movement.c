@@ -8,8 +8,8 @@
 #include "game/race/player/race_player_movement.h"
 
 typedef struct {
-    RaceVec3i worldPos;
-    RaceVec3i localPos;
+    Vec3i worldPos;
+    Vec3i localPos;
     Matrix4s rotationMtx;
 } TransformScratch;
 
@@ -73,7 +73,7 @@ extern void makeFixedRotationZX(Matrix4s, s16, s16);
 extern void makeFixedRotationXZ(Matrix4s, s16, s16);
 extern void makeFixedRotationZXY(Matrix4s, s16, s16, s16);
 extern void makeFixedRotationZYX(Matrix4s, s16, s16, s16);
-extern void transformVec3iByFixedMatrix(Matrix4s, RaceVec3i *, RaceVec3i *);
+extern void transformVec3iByFixedMatrix(Matrix4s, Vec3i *, Vec3i *);
 extern s16 fixedSine(s16);
 extern s16 fixedCosine(s16);
 extern s32 integerSquareRoot64(s64);
@@ -82,7 +82,7 @@ extern s8 gRacePlayerCount;
 extern s8 gRaceOrderPlayerIds[];
 extern RacePlayer gFrameCounter;
 extern s32 gMenuFlowState;
-extern RaceVec3i gRacePlayerGroundProbeOffsets[];
+extern Vec3i gRacePlayerGroundProbeOffsets[];
 extern s16 gRacePlayerVoiceSoundIds0[];
 extern s16 gRacePlayerVoiceSoundIds1[];
 extern s16 gRacePlayerVoiceSoundIds2[];
@@ -351,7 +351,7 @@ void updateRacePlayerFinalLapStatus(RacePlayer *player) {
             (player->unk502 == gRaceCourseStartEntries[gRaceCourseIndex].unk0) && !(flags & 0x1000)) {
         player->stateFlags = flags | 0x40;
         if ((gRaceCameraModeChangeDisabled == 0) && (gRacePlayerHudStatuses[player->playerIndexU16].active != 0)) {
-            task = createCallbackTask(initFinalLapPrompt, 6, 0x64);
+            task = createCallbackTask((CallbackTaskCallback)initFinalLapPrompt, 6, 0x64);
             if (task != NULL) {
                 task->userId = player->playerIndexU16;
             }
@@ -433,7 +433,7 @@ void resolveRacePlayerBodyCollisions(void) {
 #pragma GLOBAL_ASM("asm/nonmatchings/race/player/race_player_movement/pushRacePlayersOutOfCylinderAndApplyItemHit.s")
 
 #ifdef NON_MATCHING
-void pushRacePlayersOutOfCylinderAndApplyItemHit(RaceVec3i *pos, s32 xzSize, s32 ySize, u16 flag) {
+void pushRacePlayersOutOfCylinderAndApplyItemHit(Vec3i *pos, s32 xzSize, s32 ySize, u16 flag) {
     volatile u8 pad[8];
     RacePlayer *player;
     s32 temp;
@@ -505,7 +505,7 @@ void pushRacePlayersOutOfCylinderAndApplyItemHit(RaceVec3i *pos, s32 xzSize, s32
 #pragma GLOBAL_ASM("asm/nonmatchings/race/player/race_player_movement/pushRacePlayerOutOfCylinderAndApplyItemHit.s")
 
 #ifdef NON_MATCHING
-void pushRacePlayerOutOfCylinderAndApplyItemHit(RaceVec3i *pos, s32 xzSize, s32 ySize, u16 flag, s16 playerIndex) {
+void pushRacePlayerOutOfCylinderAndApplyItemHit(Vec3i *pos, s32 xzSize, s32 ySize, u16 flag, s16 playerIndex) {
     volatile int pad;
     s32 temp;
     RacePlayer *player;
@@ -570,7 +570,7 @@ void pushRacePlayerOutOfCylinderAndApplyItemHit(RaceVec3i *pos, s32 xzSize, s32 
 }
 #endif
 
-void pushRacePlayersOutOfCylinderOrApplyItemHit(RaceVec3i *pos, s32 xzSize, s32 ySize, s32 arg3, s16 arg4) {
+void pushRacePlayersOutOfCylinderOrApplyItemHit(Vec3i *pos, s32 xzSize, s32 ySize, s32 arg3, s16 arg4) {
     volatile u8 pad[16];
     RacePlayer *player;
     s32 temp;
@@ -632,7 +632,7 @@ void pushRacePlayersOutOfCylinderOrApplyItemHit(RaceVec3i *pos, s32 xzSize, s32 
 #pragma GLOBAL_ASM("asm/nonmatchings/race/player/race_player_movement/pushRacePlayerOutOfCylinder.s")
 
 #ifdef NON_MATCHING
-void pushRacePlayerOutOfCylinder(RaceVec3i *pos, s32 xzSize, s32 ySize, s16 playerIndex) {
+void pushRacePlayerOutOfCylinder(Vec3i *pos, s32 xzSize, s32 ySize, s16 playerIndex) {
     s32 temp;
     RacePlayer *player;
     s32 xzLimit;
@@ -685,7 +685,7 @@ void pushRacePlayerOutOfCylinder(RaceVec3i *pos, s32 xzSize, s32 ySize, s16 play
 }
 #endif
 
-s32 isRacePlayerInsideCylinder(RaceVec3i *pos, s32 xzSize, s32 ySize, s16 playerIndex) {
+s32 isRacePlayerInsideCylinder(Vec3i *pos, s32 xzSize, s32 ySize, s16 playerIndex) {
     RacePlayer *player;
     s32 yDiff;
     s32 newLimit;
@@ -731,7 +731,7 @@ s32 isRacePlayerInsideCylinder(RaceVec3i *pos, s32 xzSize, s32 ySize, s16 player
     return result[2];
 }
 
-void applyItemHitToRacePlayersInsideSphere(RaceVec3i *pos, s32 xzSize, s16 flag) {
+void applyItemHitToRacePlayersInsideSphere(Vec3i *pos, s32 xzSize, s16 flag) {
     volatile u8 pad[16];
     RacePlayer *player;
     RacePlayer *end;
@@ -769,7 +769,7 @@ void applyItemHitToRacePlayersInsideSphere(RaceVec3i *pos, s32 xzSize, s16 flag)
     } while (player != end);
 }
 
-s32 tryApplyRacePlayerItemHit(RaceVec3i *pos, s32 xzSize, s16 flag, s16 playerIndex) {
+s32 tryApplyRacePlayerItemHit(Vec3i *pos, s32 xzSize, s16 flag, s16 playerIndex) {
     volatile u8 pad[8];
     s32 radius;
     s32 dx;
@@ -820,7 +820,7 @@ s32 updateRacePlayerSurfaceContact(RacePlayer *player) {
     Matrix4s effectMtx;
     Matrix4s tiltMtx;
     Matrix4s baseMtx;
-    RaceVec3i collisionPoints[2];
+    Vec3i collisionPoints[2];
     s32 pushX;
     s32 outVelX;
     s32 outVelZ;
@@ -963,7 +963,7 @@ s32 updateRacePlayerSurfaceContact(RacePlayer *player) {
     }
 
     {
-        RaceVec3i points[6];
+        Vec3i points[6];
 
         sin = fixedSine(player->unk2EE);
         cos = fixedCosine(player->unk2EE);
@@ -1168,7 +1168,7 @@ s32 updateRacePlayerGroundAlignment(RacePlayer *player) {
     MatrixScratch tiltScratch;
     MatrixScratch baseScratch;
     EffectMatrixScratch effectScratch;
-    RaceVec3i points[6];
+    Vec3i points[6];
     GroundProbeScratch probeScratch;
     s32 groundHeights[6];
     s32 heights[6];
@@ -1181,7 +1181,7 @@ s32 updateRacePlayerGroundAlignment(RacePlayer *player) {
     s16 i;
     s16 terrainId;
     RacePlayer *temp_s2;
-    RaceVec3i *point;
+    Vec3i *point;
 
     temp_s2 = player;
     temp_s2->unk500 = 0;
@@ -1392,7 +1392,7 @@ s32 updateRacePlayerLeanAngle(RacePlayer *player, s32 arg1, s16 arg2) {
     return temp_v0;
 }
 
-void clampRacePlayerVectorXZSpeed(RaceVec3i *vec, RacePlayer *player) {
+void clampRacePlayerVectorXZSpeed(Vec3i *vec, RacePlayer *player) {
     s32 magnitude;
 
     magnitude = integerSquareRoot64((s64)vec->x * vec->x + (s64)vec->z * vec->z);
@@ -1402,7 +1402,7 @@ void clampRacePlayerVectorXZSpeed(RaceVec3i *vec, RacePlayer *player) {
     }
 }
 
-void clampRacePlayerVectorXZHalfSpeed(RaceVec3i *vec, RacePlayer *player) {
+void clampRacePlayerVectorXZHalfSpeed(Vec3i *vec, RacePlayer *player) {
     s32 magnitude;
 
     magnitude = integerSquareRoot64((s64)vec->x * vec->x + (s64)vec->z * vec->z);
@@ -1522,34 +1522,34 @@ void enqueueRacePlayerVoiceSound(RacePlayer *player, s16 soundType) {
         switch (soundType) {
         case 0:
             enqueuePlayerPositionalSoundEffect(gRacePlayerVoiceSoundIds0[(randomNextMain() & 1) + (player->characterId * 2)],
-                          (SoundPosition *)&player->posX, 0x7F, 0x5A, (u16)player->playerIndex, 0);
+                          (Vec3i *)&player->posX, 0x7F, 0x5A, (u16)player->playerIndex, 0);
             return;
         case 1:
             enqueuePlayerPositionalSoundEffect(gRacePlayerVoiceSoundIds1[(randomNextMain() & 1) + (player->characterId * 2)],
-                          (SoundPosition *)&player->posX, 0x7F, 0x5A, (u16)player->playerIndex, 0);
+                          (Vec3i *)&player->posX, 0x7F, 0x5A, (u16)player->playerIndex, 0);
             return;
         case 2:
             enqueuePlayerPositionalSoundEffect(gRacePlayerVoiceSoundIds2[(randomNextMain() & 1) + (player->characterId * 2)],
-                          (SoundPosition *)&player->posX, 0x7F, 0x5A, (u16)player->playerIndex, 0);
+                          (Vec3i *)&player->posX, 0x7F, 0x5A, (u16)player->playerIndex, 0);
             return;
         case 3:
             enqueuePlayerPositionalSoundEffect(gRacePlayerVoiceSoundIds2[(randomNextMain() & 1) + (player->characterId * 2)],
-                          (SoundPosition *)&player->posX, 0x7F, 0x5A, (u16)player->playerIndex, 0x60);
+                          (Vec3i *)&player->posX, 0x7F, 0x5A, (u16)player->playerIndex, 0x60);
             return;
         case 4:
-            enqueuePlayerPositionalSoundEffect(gRacePlayerVoiceSoundIds4[player->characterId], (SoundPosition *)&player->posX, 0x7F, 0x5A,
+            enqueuePlayerPositionalSoundEffect(gRacePlayerVoiceSoundIds4[player->characterId], (Vec3i *)&player->posX, 0x7F, 0x5A,
                           (u16)player->playerIndex, 0);
             return;
         case 5:
-            enqueuePlayerPositionalSoundEffect(gRacePlayerVoiceSoundIds5[player->characterId], (SoundPosition *)&player->posX, 0x7F, 0x5A,
+            enqueuePlayerPositionalSoundEffect(gRacePlayerVoiceSoundIds5[player->characterId], (Vec3i *)&player->posX, 0x7F, 0x5A,
                           (u16)player->playerIndex, 0);
             return;
         case 6:
-            enqueuePlayerPositionalSoundEffect(gRacePlayerVoiceSoundIds6[player->characterId], (SoundPosition *)&player->posX, 0x7F, 0x5A,
+            enqueuePlayerPositionalSoundEffect(gRacePlayerVoiceSoundIds6[player->characterId], (Vec3i *)&player->posX, 0x7F, 0x5A,
                           (u16)player->playerIndex, 0);
             return;
         case 7:
-            enqueuePlayerPositionalSoundEffect(gRacePlayerVoiceSoundIds7[player->characterId], (SoundPosition *)&player->posX, 0x7F, 0x5A,
+            enqueuePlayerPositionalSoundEffect(gRacePlayerVoiceSoundIds7[player->characterId], (Vec3i *)&player->posX, 0x7F, 0x5A,
                           (u16)player->playerIndex, 0);
             break;
         }

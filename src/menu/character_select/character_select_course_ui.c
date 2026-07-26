@@ -1,16 +1,16 @@
 #include "common.h"
+#include "game/engine/render_callback.h"
 #include "game/engine/relocatable_heap.h"
 #include "game/engine/callback_task_scheduler.h"
 #include "game/menu/character_select/character_select_course_ui.h"
 #include "game/menu/splitscreen_select/race_splitscreen_select_ui.h"
-#define MENU_RENDERER_BROAD_PROTOTYPES
-#define MENU_RENDERER_U32_TILE_INDEX_PROTOTYPE
 #include "game/menu/renderer/menu_renderer.h"
+#include "game/menu/renderer/menu_render_utils.h"
 
 #define CHARACTER_SELECT_FRAME_TEXTURE_HANDLE (gAssetHandles.textureHandle)
 #define ASSET_HANDLE(index) (((s16 *)&gAssetHandles)[index])
 
-typedef u8 CharacterSelectCourseText[0x94];
+typedef MenuGlyphScript CharacterSelectCourseText[0x4A];
 
 typedef struct {
     /* 0x000 */ u8 pad0[0x18];
@@ -89,8 +89,9 @@ enum {
     COURSE_LIST_SLIDE_SELECTED_OUT
 };
 
-extern void drawAssetTableSpriteWithExplicitPalette(s16, s16, s32, s32, s32);
 extern int sprintf(char *, const char *, ...);
+extern void drawAssetTableSpriteWithExplicitPaletteWideIndex(s16 x, s16 y, AssetTable *table, s32 entryIndex,
+                                                             u16 paletteIndex);
 extern CharacterSelectCourseAssetHandles gAssetHandles;
 extern s16 gCharacterSelectCourseOptionsByUnlock[][11];
 extern CharacterSelectCourseFrameTileMap gCharacterSelectCoursePreviewFrameTileMaps[];
@@ -101,16 +102,15 @@ extern s16 gCharacterSelectSingleCourseOption[];
 extern u16 gCharacterSelectCourseStatsScoreValues[];
 extern u8 gCharacterSelectCourseDifficultyRatings[];
 extern u8 gCharacterSelectCourseMedalScoreThresholds[];
-extern u8 gCharacterSelectCourseStartGameText[];
+extern MenuGlyphScript gCharacterSelectCourseStartGameText[];
 extern CharacterSelectCourseText gCharacterSelectCourseNameText[];
-extern u8 gCharacterSelectBeginnerCourseDescriptionText[][0x74];
-extern u8 gCharacterSelectAdvancedCourseDescriptionText[][0x60];
-extern u8 gCharacterSelectExpertCourseDescriptionText[][0x70];
-extern u8 gCharacterSelectCourseReturnDescriptionText[];
+extern MenuGlyphScript gCharacterSelectBeginnerCourseDescriptionText[][0x3A];
+extern MenuGlyphScript gCharacterSelectAdvancedCourseDescriptionText[][0x30];
+extern MenuGlyphScript gCharacterSelectExpertCourseDescriptionText[][0x38];
+extern MenuGlyphScript gCharacterSelectCourseReturnDescriptionText[];
 extern u8 D_800ECA24[];
 extern s32 D_800EC9F8[];
 extern s16 gRaceCourseIndex;
-extern s32 gActiveMenuTask;
 extern u16 gCharacterSelectCourseExitOptionIndex;
 extern void *D_8010ADE0;
 extern void *D_8010ADE4;
@@ -126,8 +126,6 @@ extern s16 gMenuChoicePromptState;
 extern u8 gCourseSelectFromRaceTypeMenu;
 extern u8 gRaceSplitscreenMode;
 extern u8 gRaceTypeSelection;
-extern void *gMenuRenderCallbackList;
-extern void addRenderCallback(void *, void *, void *);
 extern u8 gPlayerCount;
 extern CharacterSelectCourseRaceState gRacePlayers[];
 extern CharacterSelectCoursePlayerRecord gFrameCounter;
@@ -170,14 +168,19 @@ void drawCharacterSelectCourseListOptions(CharacterSelectCourseMenuFrameActor *a
                 if ((i == gRaceCourseIndex) && (gMenuSelectionConfirmTimer > 0) && (gMenuSelectionConfirmTimer < 8) && (gMenuSelectionConfirmTimer & 1)) {
                     alpha = 0xFF;
                 }
-                drawMenuSprite(actor->x[i], actor->y[i], getRelocatableHeapBlockBase(gAssetHandles.textureHandle), (i + 0x12) & 0xFFFF, 0x20, 0x20, 0, alpha);
+                drawMenuSprite(actor->x[i], actor->y[i], getRelocatableHeapBlockBase(gAssetHandles.textureHandle), i + 0x12,
+                               0x20, 0x20, 0, alpha);
             }
 
             if (i != gCharacterSelectCourseExitOptionIndex) {
                 if (((gPlayerCount - 1) == 0) && (D_800ECA24[characterIds[i]] != 0)) {
-                    drawMenuSprite((s16)(actor->x[i] - 0x10), actor->y[i], getRelocatableHeapBlockBase(gAssetHandles.iconTextureHandle), (i + 0x1A) & 0xFFFF, 0x20, 0x20, 0, D_800ECA24[characterIds[i]] + 6);
+                    drawMenuSprite((s16)(actor->x[i] - 0x10), actor->y[i],
+                                   getRelocatableHeapBlockBase(gAssetHandles.iconTextureHandle), i + 0x1A, 0x20, 0x20,
+                                   0, D_800ECA24[characterIds[i]] + 6);
                 } else {
-                    drawMenuSprite((s16)(actor->x[i] - 0x10), actor->y[i], getRelocatableHeapBlockBase(gAssetHandles.textureHandle), (i + 0x29) & 0xFFFF, 0x20, 0x20, 0, 0);
+                    drawMenuSprite((s16)(actor->x[i] - 0x10), actor->y[i],
+                                   getRelocatableHeapBlockBase(gAssetHandles.textureHandle), i + 0x29, 0x20, 0x20, 0,
+                                   0);
                 }
             }
             i++;
@@ -210,22 +213,22 @@ void updateCharacterSelectUnlockedCourseList(CharacterSelectCourseMenuFrameActor
             if (arg0->itemCount < (gCharacterSelectCourseExitOptionIndex + 1)) {
                 arg0->itemCount++;
                 if (arg0->itemCount == (gCharacterSelectCourseExitOptionIndex + 1)) {
-                    D_8010ADE4 = createCallbackTask(initCharacterSelectCoursePreviewFrame, 0, 0x58);
-                    createCallbackTask(initCharacterSelectCoursePreviewPanel1, 0, 0x59);
-                    createCallbackTask(initCharacterSelectCoursePreviewPanel2, 0, 0x5A);
-                    createCallbackTask(initCharacterSelectCoursePreviewPanel3, 0, 0x5B);
-                    createCallbackTask(initCharacterSelectCoursePreviewPanel4, 0, 0x5C);
-                    createCallbackTask(initCharacterSelectCoursePreviewPanel5, 0, 0x5D);
+                    D_8010ADE4 = createCallbackTask((CallbackTaskCallback)initCharacterSelectCoursePreviewFrame, 0, 0x58);
+                    createCallbackTask((CallbackTaskCallback)initCharacterSelectCoursePreviewPanel1, 0, 0x59);
+                    createCallbackTask((CallbackTaskCallback)initCharacterSelectCoursePreviewPanel2, 0, 0x5A);
+                    createCallbackTask((CallbackTaskCallback)initCharacterSelectCoursePreviewPanel3, 0, 0x5B);
+                    createCallbackTask((CallbackTaskCallback)initCharacterSelectCoursePreviewPanel4, 0, 0x5C);
+                    createCallbackTask((CallbackTaskCallback)initCharacterSelectCoursePreviewPanel5, 0, 0x5D);
                     if (gHighestUnlockedCourse != 0) {
-                        createCallbackTask(initCharacterSelectCoursePreviewPanel6, 0, 0x5E);
+                        createCallbackTask((CallbackTaskCallback)initCharacterSelectCoursePreviewPanel6, 0, 0x5E);
                         if (gHighestUnlockedCourse >= 2) {
-                            createCallbackTask(initCharacterSelectCoursePreviewPanel7, 0, 0x5F);
+                            createCallbackTask((CallbackTaskCallback)initCharacterSelectCoursePreviewPanel7, 0, 0x5F);
                             if (gHighestUnlockedCourse >= 3) {
-                                createCallbackTask(initCharacterSelectCoursePreviewPanel8, 0, 0x60);
+                                createCallbackTask((CallbackTaskCallback)initCharacterSelectCoursePreviewPanel8, 0, 0x60);
                             }
                         }
                     }
-                    createCallbackTask(initCharacterSelectCourseExitPreviewPanel, 0, 0x61);
+                    createCallbackTask((CallbackTaskCallback)initCharacterSelectCourseExitPreviewPanel, 0, 0x61);
                 }
             }
         }
@@ -265,11 +268,11 @@ void updateCharacterSelectUnlockedCourseList(CharacterSelectCourseMenuFrameActor
             arg0->y[gRaceCourseIndex] = -0x60;
             arg0->state = COURSE_LIST_SUBMENU_OPEN;
             if (gRaceSplitscreenMode == 2) {
-                D_8010ADE0 = createCallbackTask(initCharacterSelectCourseExitPopup, 0, 0x62);
-                createCallbackTask(initCharacterSelectCourseRecordsPopup, 0, 0x63);
+                D_8010ADE0 = createCallbackTask((CallbackTaskCallback)initCharacterSelectCourseExitPopup, 0, 0x62);
+                createCallbackTask((CallbackTaskCallback)initCharacterSelectCourseRecordsPopup, 0, 0x63);
             } else {
-                createCallbackTask(initCharacterSelectCoursePlayerStatsPanel, 0, 0x61);
-                createCallbackTask(initCharacterSelectCourseSubmenuFrame, 0, 0x62);
+                createCallbackTask((CallbackTaskCallback)initCharacterSelectCoursePlayerStatsPanel, 0, 0x61);
+                createCallbackTask((CallbackTaskCallback)initCharacterSelectCourseSubmenuFrame, 0, 0x62);
             }
         }
         break;
@@ -324,7 +327,7 @@ void updateCharacterSelectUnlockedCourseList(CharacterSelectCourseMenuFrameActor
         return;
     }
 
-    addRenderCallback(&gMenuRenderCallbackList, drawCharacterSelectCourseListOptions, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawCharacterSelectCourseListOptions, arg0);
 }
 
 void initCharacterSelectUnlockedCourseList(CharacterSelectCourseMenuFrameActor *arg0) {
@@ -360,12 +363,12 @@ void initCharacterSelectUnlockedCourseList(CharacterSelectCourseMenuFrameActor *
     arg0->timer = 0;
     arg0->itemCount = 1;
     arg0->state = 0;
-    setCallbackTaskCallback(arg0, updateCharacterSelectUnlockedCourseList);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateCharacterSelectUnlockedCourseList);
 }
 
 void drawCharacterSelectLimitedCourseListOptions(CharacterSelectCourseMenuFrameActor *arg0) {
     register CharacterSelectCourseMenuFrameActor *actor;
-    s32 arrowTexture;
+    void *arrowTexture;
     volatile u8 pad;
     u16 tile;
     s32 arrowBase;
@@ -395,12 +398,14 @@ void drawCharacterSelectLimitedCourseListOptions(CharacterSelectCourseMenuFrameA
                 if ((i == gRaceCourseIndex) && (gMenuSelectionConfirmTimer > 0) && (gMenuSelectionConfirmTimer < 8) && (gMenuSelectionConfirmTimer & 1)) {
                     alpha = 0xFF;
                 }
-                drawMenuSprite(actor->x[i], actor->y[i], getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE), (i + 0x12) & 0xFFFF, 0x20, 0x20, 0, alpha);
+                tile = i + 0x12;
+                drawMenuSprite(actor->x[i], actor->y[i], getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE), tile, 0x20, 0x20, 0, alpha);
             }
 
             if (i != lastArrowIndex) {
                 arrowTexture = getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE);
-                drawMenuSprite((s16)(actor->x[i] - 0x10), actor->y[i], arrowTexture, (i + 0x29) & 0xFFFF, 0x20, 0x20, 0, 0);
+                tile = i + 0x29;
+                drawMenuSprite((s16)(actor->x[i] - 0x10), actor->y[i], arrowTexture, tile, 0x20, 0x20, 0, 0);
             }
             i++;
         } while (i < actor->itemCount);
@@ -437,13 +442,13 @@ void updateCharacterSelectLimitedCourseList(CharacterSelectCourseMenuFrameActor 
             if (arg0->itemCount < visibleOptionCount) {
                 arg0->itemCount++;
                 if (visibleOptionCount == arg0->itemCount) {
-                    D_8010ADE4 = createCallbackTask(initCharacterSelectCoursePreviewFrame, 0, 0x59);
+                    D_8010ADE4 = createCallbackTask((CallbackTaskCallback)initCharacterSelectCoursePreviewFrame, 0, 0x59);
                     if (gRaceTypeSelection < 2) {
-                        createCallbackTask(initCharacterSelectCoursePreviewPanel1, 0, 0x5A);
-                        createCallbackTask(initCharacterSelectCoursePreviewPanel2, 0, 0x5B);
+                        createCallbackTask((CallbackTaskCallback)initCharacterSelectCoursePreviewPanel1, 0, 0x5A);
+                        createCallbackTask((CallbackTaskCallback)initCharacterSelectCoursePreviewPanel2, 0, 0x5B);
                     }
-                    createCallbackTask(initCharacterSelectCourseExitPreviewPanel, 0, 0x5C);
-                    createCallbackTask(initCharacterSelectCourseRecordsFrame, 0, 0x62);
+                    createCallbackTask((CallbackTaskCallback)initCharacterSelectCourseExitPreviewPanel, 0, 0x5C);
+                    createCallbackTask((CallbackTaskCallback)initCharacterSelectCourseRecordsFrame, 0, 0x62);
                 }
             }
         }
@@ -483,8 +488,8 @@ void updateCharacterSelectLimitedCourseList(CharacterSelectCourseMenuFrameActor 
         if (arg0->y[gRaceCourseIndex] < -0x57) {
             arg0->y[gRaceCourseIndex] = -0x58;
             arg0->state = COURSE_LIST_SUBMENU_OPEN;
-            createCallbackTask(initCharacterSelectCourseRecordsPopup, 0, 0x62);
-            D_8010ADE0 = createCallbackTask(initCharacterSelectCourseExitPopup, 0, 0x63);
+            createCallbackTask((CallbackTaskCallback)initCharacterSelectCourseRecordsPopup, 0, 0x62);
+            D_8010ADE0 = createCallbackTask((CallbackTaskCallback)initCharacterSelectCourseExitPopup, 0, 0x63);
         }
         break;
 
@@ -552,7 +557,7 @@ void updateCharacterSelectLimitedCourseList(CharacterSelectCourseMenuFrameActor 
     if (arg0->state == COURSE_LIST_REMOVE) {
         removeCallbackTask((CallbackTask *)arg0);
     } else {
-        addRenderCallback(&gMenuRenderCallbackList, drawCharacterSelectLimitedCourseListOptions, arg0);
+        addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawCharacterSelectLimitedCourseListOptions, arg0);
     }
 }
 
@@ -603,36 +608,39 @@ void initCharacterSelectLimitedCourseList(CharacterSelectCourseMenuFrameActor *a
     arg0->timer = 0;
     arg0->itemCount = spacing1;
     arg0->state = 0;
-    setCallbackTaskCallback(arg0, updateCharacterSelectLimitedCourseList);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateCharacterSelectLimitedCourseList);
 }
 #endif
 
 void drawCharacterSelectCoursePreviewFrame(CharacterSelectCourseWidgetActor *arg0) {
-    s32 i;
+    union {
+        s32 index;
+        void *textureBase;
+    } i;
     s32 borderOffset;
     u16 frameIndex;
 
     if ((gRaceSplitscreenMode == 1) && (gRaceTypeSelection == 2)) {
-        if (i) {
+        if (i.index) {
         }
         frameIndex = 9;
     } else {
         frameIndex = arg0->sprite.unsignedIndex;
     }
 
-    for (i = 0; i < 16; i++) {
-        drawMenuSpriteTile((s16)(arg0->x + ((i & 3) << 5)), (s16)(arg0->y + ((i / 4) << 5)),
+    for (i.index = 0; i.index < 16; i.index++) {
+        drawMenuSpriteTile((s16)(arg0->x + ((i.index & 3) << 5)), (s16)(arg0->y + ((i.index / 4) << 5)),
                            getRelocatableHeapBlockBase(gAssetHandles.textureHandle),
-                           gCharacterSelectCoursePreviewFrameTileMaps[frameIndex].center[i], 0, 0x100);
+                           gCharacterSelectCoursePreviewFrameTileMaps[frameIndex].center[i.index], 0, 0x100);
     }
 
-    for (i = 0; i < 2; i++) {
-        drawMenuSpriteTile((s16)(arg0->x + 0x80), (s16)(arg0->y + (i * 0x40)),
+    for (i.index = 0; i.index < 2; i.index++) {
+        drawMenuSpriteTile((s16)(arg0->x + 0x80), (s16)(arg0->y + (i.index * 0x40)),
                            getRelocatableHeapBlockBase(gAssetHandles.textureHandle),
-                           gCharacterSelectCoursePreviewFrameTileMaps[frameIndex].right[i], 0, 0x100);
-        drawMenuSpriteTile((s16)(arg0->x + (i * 0x40)), (s16)(arg0->y + 0x80),
+                           gCharacterSelectCoursePreviewFrameTileMaps[frameIndex].right[i.index], 0, 0x100);
+        drawMenuSpriteTile((s16)(arg0->x + (i.index * 0x40)), (s16)(arg0->y + 0x80),
                            getRelocatableHeapBlockBase(gAssetHandles.textureHandle),
-                           gCharacterSelectCoursePreviewFrameTileMaps[frameIndex].bottom[i], 0, 0x100);
+                           gCharacterSelectCoursePreviewFrameTileMaps[frameIndex].bottom[i.index], 0, 0x100);
     }
 
     drawMenuSpriteTile((s16)(arg0->x + 0x80), (s16)(arg0->y + 0x80),
@@ -642,8 +650,8 @@ void drawCharacterSelectCoursePreviewFrame(CharacterSelectCourseWidgetActor *arg
                    0x33, 0x20, 0x20, 0, 0);
     drawMenuSprite((s16)(arg0->x - 4), (s16)(arg0->y + 0x8C), getRelocatableHeapBlockBase(gAssetHandles.textureHandle),
                    0x38, 0x20, 0x20, 0, 0);
-    i = getRelocatableHeapBlockBase(gAssetHandles.textureHandle);
-    drawMenuSprite((s16)(arg0->x + 0x8C), (s16)(arg0->y - 4), i, 0x35, 0x20, 0x20, 0, 0);
+    i.textureBase = getRelocatableHeapBlockBase(gAssetHandles.textureHandle);
+    drawMenuSprite((s16)(arg0->x + 0x8C), (s16)(arg0->y - 4), i.textureBase, 0x35, 0x20, 0x20, 0, 0);
     drawMenuSprite((s16)(arg0->x + 0x8C), (s16)(arg0->y + 0x8C), getRelocatableHeapBlockBase(gAssetHandles.textureHandle),
                    0x3A, 0x20, 0x20, 0, 0);
 
@@ -693,9 +701,9 @@ void updateCharacterSelectCoursePreviewFrame(CharacterSelectCourseWidgetActor *a
         if (arg0->x < -7) {
             arg0->x = -8;
             arg0->transition.bytes.state = 3;
-            gActiveMenuTask = (s32)createCallbackTask(initCharacterSelectCourseListCursor, 0, 0x64);
-            createCallbackTask(initCharacterSelectCourseTitleCursor, 0, 0x62);
-            createCallbackTask(initCharacterSelectCourseStatsBadge, 0, 0x62);
+            gActiveMenuTask = createCallbackTask((CallbackTaskCallback)initCharacterSelectCourseListCursor, 0, 0x64);
+            createCallbackTask((CallbackTaskCallback)initCharacterSelectCourseTitleCursor, 0, 0x62);
+            createCallbackTask((CallbackTaskCallback)initCharacterSelectCourseStatsBadge, 0, 0x62);
         }
         state = arg0->transition.bytes.state;
         break;
@@ -757,7 +765,7 @@ void updateCharacterSelectCoursePreviewFrame(CharacterSelectCourseWidgetActor *a
         removeCallbackTask(arg0);
         return;
     }
-    addRenderCallback(&gMenuRenderCallbackList, drawCharacterSelectCoursePreviewFrame, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawCharacterSelectCoursePreviewFrame, arg0);
 }
 
 void initCharacterSelectCoursePreviewFrame(CharacterSelectCourseWidgetActor *arg0) {
@@ -766,7 +774,7 @@ void initCharacterSelectCoursePreviewFrame(CharacterSelectCourseWidgetActor *arg
     arg0->sprite.index = 0;
     arg0->transition.bytes.timer = 0;
     arg0->transition.bytes.state = 0;
-    setCallbackTaskCallback(arg0, updateCharacterSelectCoursePreviewFrame);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateCharacterSelectCoursePreviewFrame);
 }
 
 void drawCharacterSelectCoursePreviewPanel1(CharacterSelectCourseWidgetActor *arg0) {
@@ -872,7 +880,7 @@ void updateCharacterSelectCoursePreviewPanel1(CharacterSelectCourseWidgetActor *
         removeCallbackTask(arg0);
         return;
     }
-    addRenderCallback(&gMenuRenderCallbackList, drawCharacterSelectCoursePreviewPanel1, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawCharacterSelectCoursePreviewPanel1, arg0);
 }
 
 void initCharacterSelectCoursePreviewPanel1(CharacterSelectCourseWidgetActor *arg0) {
@@ -881,7 +889,7 @@ void initCharacterSelectCoursePreviewPanel1(CharacterSelectCourseWidgetActor *ar
     arg0->sprite.index = 0x1;
     arg0->transition.bytes.timer = 0;
     arg0->transition.bytes.state = 0;
-    setCallbackTaskCallback(arg0, updateCharacterSelectCoursePreviewPanel1);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateCharacterSelectCoursePreviewPanel1);
 }
 
 void drawCharacterSelectCoursePreviewPanel2(CharacterSelectCourseWidgetActor *arg0) {
@@ -981,7 +989,7 @@ void updateCharacterSelectCoursePreviewPanel2(CharacterSelectCourseWidgetActor *
         removeCallbackTask(arg0);
         return;
     }
-    addRenderCallback(&gMenuRenderCallbackList, drawCharacterSelectCoursePreviewPanel2, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawCharacterSelectCoursePreviewPanel2, arg0);
 }
 
 void initCharacterSelectCoursePreviewPanel2(CharacterSelectCourseWidgetActor *arg0) {
@@ -990,7 +998,7 @@ void initCharacterSelectCoursePreviewPanel2(CharacterSelectCourseWidgetActor *ar
     arg0->sprite.index = 0x2;
     arg0->transition.bytes.timer = 0;
     arg0->transition.bytes.state = 0;
-    setCallbackTaskCallback(arg0, updateCharacterSelectCoursePreviewPanel2);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateCharacterSelectCoursePreviewPanel2);
 }
 
 void drawCharacterSelectCoursePreviewPanel3(CharacterSelectCourseWidgetActor *arg0) {
@@ -1079,7 +1087,7 @@ void updateCharacterSelectCoursePreviewPanel3(CharacterSelectCourseWidgetActor *
         removeCallbackTask(arg0);
         return;
     }
-    addRenderCallback(&gMenuRenderCallbackList, drawCharacterSelectCoursePreviewPanel3, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawCharacterSelectCoursePreviewPanel3, arg0);
 }
 
 void initCharacterSelectCoursePreviewPanel3(CharacterSelectCourseWidgetActor *arg0) {
@@ -1088,7 +1096,7 @@ void initCharacterSelectCoursePreviewPanel3(CharacterSelectCourseWidgetActor *ar
     arg0->sprite.index = 0x3;
     arg0->transition.bytes.timer = 0;
     arg0->transition.bytes.state = 0;
-    setCallbackTaskCallback(arg0, updateCharacterSelectCoursePreviewPanel3);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateCharacterSelectCoursePreviewPanel3);
 }
 
 void drawCharacterSelectCoursePreviewPanel4(CharacterSelectCourseWidgetActor *arg0) {
@@ -1191,7 +1199,7 @@ void updateCharacterSelectCoursePreviewPanel4(CharacterSelectCourseWidgetActor *
         removeCallbackTask(arg0);
         return;
     }
-    addRenderCallback(&gMenuRenderCallbackList, drawCharacterSelectCoursePreviewPanel4, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawCharacterSelectCoursePreviewPanel4, arg0);
 }
 
 void initCharacterSelectCoursePreviewPanel4(CharacterSelectCourseWidgetActor *arg0) {
@@ -1200,7 +1208,7 @@ void initCharacterSelectCoursePreviewPanel4(CharacterSelectCourseWidgetActor *ar
     arg0->sprite.index = 0x4;
     arg0->transition.bytes.timer = 0;
     arg0->transition.bytes.state = 0;
-    setCallbackTaskCallback(arg0, updateCharacterSelectCoursePreviewPanel4);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateCharacterSelectCoursePreviewPanel4);
 }
 
 void drawCharacterSelectCoursePreviewPanel5(CharacterSelectCourseWidgetActor *arg0) {
@@ -1300,7 +1308,7 @@ void updateCharacterSelectCoursePreviewPanel5(CharacterSelectCourseWidgetActor *
         removeCallbackTask(arg0);
         return;
     }
-    addRenderCallback(&gMenuRenderCallbackList, drawCharacterSelectCoursePreviewPanel5, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawCharacterSelectCoursePreviewPanel5, arg0);
 }
 
 void initCharacterSelectCoursePreviewPanel5(CharacterSelectCourseWidgetActor *arg0) {
@@ -1309,7 +1317,7 @@ void initCharacterSelectCoursePreviewPanel5(CharacterSelectCourseWidgetActor *ar
     arg0->sprite.index = 0x5;
     arg0->transition.bytes.timer = 0;
     arg0->transition.bytes.state = 0;
-    setCallbackTaskCallback(arg0, updateCharacterSelectCoursePreviewPanel5);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateCharacterSelectCoursePreviewPanel5);
 }
 
 void drawCharacterSelectCoursePreviewPanel6(CharacterSelectCourseWidgetActor *arg0) {
@@ -1412,7 +1420,7 @@ void updateCharacterSelectCoursePreviewPanel6(CharacterSelectCourseWidgetActor *
         removeCallbackTask(arg0);
         return;
     }
-    addRenderCallback(&gMenuRenderCallbackList, drawCharacterSelectCoursePreviewPanel6, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawCharacterSelectCoursePreviewPanel6, arg0);
 }
 
 void initCharacterSelectCoursePreviewPanel6(CharacterSelectCourseWidgetActor *arg0) {
@@ -1421,7 +1429,7 @@ void initCharacterSelectCoursePreviewPanel6(CharacterSelectCourseWidgetActor *ar
     arg0->sprite.index = 0x6;
     arg0->transition.bytes.timer = 0;
     arg0->transition.bytes.state = 0;
-    setCallbackTaskCallback(arg0, updateCharacterSelectCoursePreviewPanel6);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateCharacterSelectCoursePreviewPanel6);
 }
 
 void drawCharacterSelectCoursePreviewPanel7(CharacterSelectCourseWidgetActor *arg0) {
@@ -1521,7 +1529,7 @@ void updateCharacterSelectCoursePreviewPanel7(CharacterSelectCourseWidgetActor *
         removeCallbackTask(arg0);
         return;
     }
-    addRenderCallback(&gMenuRenderCallbackList, drawCharacterSelectCoursePreviewPanel7, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawCharacterSelectCoursePreviewPanel7, arg0);
 }
 
 void initCharacterSelectCoursePreviewPanel7(CharacterSelectCourseWidgetActor *arg0) {
@@ -1530,7 +1538,7 @@ void initCharacterSelectCoursePreviewPanel7(CharacterSelectCourseWidgetActor *ar
     arg0->sprite.index = 0x7;
     arg0->transition.bytes.timer = 0;
     arg0->transition.bytes.state = 0;
-    setCallbackTaskCallback(arg0, updateCharacterSelectCoursePreviewPanel7);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateCharacterSelectCoursePreviewPanel7);
 }
 
 void drawCharacterSelectCoursePreviewPanel8(CharacterSelectCourseWidgetActor *arg0) {
@@ -1631,7 +1639,7 @@ void updateCharacterSelectCoursePreviewPanel8(CharacterSelectCourseWidgetActor *
         removeCallbackTask(arg0);
         return;
     }
-    addRenderCallback(&gMenuRenderCallbackList, drawCharacterSelectCoursePreviewPanel8, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawCharacterSelectCoursePreviewPanel8, arg0);
 }
 
 void initCharacterSelectCoursePreviewPanel8(CharacterSelectCourseWidgetActor *arg0) {
@@ -1640,7 +1648,7 @@ void initCharacterSelectCoursePreviewPanel8(CharacterSelectCourseWidgetActor *ar
     arg0->sprite.index = 0x8;
     arg0->transition.bytes.timer = 0;
     arg0->transition.bytes.state = 0;
-    setCallbackTaskCallback(arg0, updateCharacterSelectCoursePreviewPanel8);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateCharacterSelectCoursePreviewPanel8);
 }
 
 void drawCharacterSelectCoursePreviewPanel9(CharacterSelectCourseWidgetActor *arg0) {
@@ -1740,7 +1748,7 @@ void updateCharacterSelectCoursePreviewPanel9(CharacterSelectCourseWidgetActor *
         removeCallbackTask(arg0);
         return;
     }
-    addRenderCallback(&gMenuRenderCallbackList, drawCharacterSelectCoursePreviewPanel9, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawCharacterSelectCoursePreviewPanel9, arg0);
 }
 
 void initCharacterSelectCoursePreviewPanel9(CharacterSelectCourseWidgetActor *arg0) {
@@ -1749,7 +1757,7 @@ void initCharacterSelectCoursePreviewPanel9(CharacterSelectCourseWidgetActor *ar
     arg0->sprite.index = 0x9;
     arg0->transition.bytes.timer = 0;
     arg0->transition.bytes.state = 0;
-    setCallbackTaskCallback(arg0, updateCharacterSelectCoursePreviewPanel9);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateCharacterSelectCoursePreviewPanel9);
 }
 
 void drawCharacterSelectCourseExitPreviewPanel(CharacterSelectCourseWidgetActor *arg0) {
@@ -1861,7 +1869,7 @@ void updateCharacterSelectCourseExitPreviewPanel(CharacterSelectCourseWidgetActo
         removeCallbackTask(arg0);
         return;
     }
-    addRenderCallback(&gMenuRenderCallbackList, drawCharacterSelectCourseExitPreviewPanel, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawCharacterSelectCourseExitPreviewPanel, arg0);
 }
 
 void initCharacterSelectCourseExitPreviewPanel(CharacterSelectCourseWidgetActor *arg0) {
@@ -1870,7 +1878,7 @@ void initCharacterSelectCourseExitPreviewPanel(CharacterSelectCourseWidgetActor 
     arg0->sprite.index = 0;
     arg0->row.bytes.subTimer = 0;
     arg0->row.bytes.subState = 0;
-    setCallbackTaskCallback(arg0, updateCharacterSelectCourseExitPreviewPanel);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateCharacterSelectCourseExitPreviewPanel);
 }
 
 void drawCharacterSelectCourseListCursor(CharacterSelectCourseWidgetActor *arg0) {
@@ -1933,7 +1941,7 @@ void updateCharacterSelectCourseListCursor(CharacterSelectCourseWidgetActor *arg
         removeCallbackTask(arg0);
         return;
     }
-    addRenderCallback(&gMenuRenderCallbackList, drawCharacterSelectCourseListCursor, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawCharacterSelectCourseListCursor, arg0);
 }
 
 void initCharacterSelectCourseListCursor(CharacterSelectCourseWidgetActor *arg0) {
@@ -1968,7 +1976,7 @@ void initCharacterSelectCourseListCursor(CharacterSelectCourseWidgetActor *arg0)
     arg0->sprite.index = 0;
     arg0->transition.bytes.state = 0;
     arg0->transition.bytes.timer = 0;
-    setCallbackTaskCallback(arg0, updateCharacterSelectCourseListCursor);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateCharacterSelectCourseListCursor);
 }
 
 void drawCharacterSelectCourseTitleCursor(CharacterSelectCourseWidgetActor *arg0) {
@@ -2017,7 +2025,7 @@ void updateCharacterSelectCourseTitleCursor(CharacterSelectCourseWidgetActor *ar
         removeCallbackTask(arg0);
         return;
     }
-    addRenderCallback(&gMenuRenderCallbackList, drawCharacterSelectCourseTitleCursor, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawCharacterSelectCourseTitleCursor, arg0);
 }
 
 void initCharacterSelectCourseTitleCursor(CharacterSelectCourseWidgetActor *arg0) {
@@ -2025,7 +2033,7 @@ void initCharacterSelectCourseTitleCursor(CharacterSelectCourseWidgetActor *arg0
     arg0->y = -0x5C;
     arg0->sprite.index = 0;
     arg0->transition.bytes.state = 0;
-    setCallbackTaskCallback(arg0, updateCharacterSelectCourseTitleCursor);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateCharacterSelectCourseTitleCursor);
 }
 
 const char gCharacterSelectCourseStatsScoreFormat[] = "%4d";
@@ -2114,7 +2122,7 @@ void updateCharacterSelectCourseStatsBadge(CharacterSelectCourseWidgetActor *arg
         removeCallbackTask(arg0);
         return;
     }
-    addRenderCallback(&gMenuRenderCallbackList, drawCharacterSelectCourseStatsBadge, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawCharacterSelectCourseStatsBadge, arg0);
 }
 
 void initCharacterSelectCourseStatsBadge(CharacterSelectCourseWidgetActor *arg0) {
@@ -2122,7 +2130,7 @@ void initCharacterSelectCourseStatsBadge(CharacterSelectCourseWidgetActor *arg0)
     arg0->y = 0x34;
     arg0->sprite.index = 0;
     arg0->transition.bytes.state = 0;
-    setCallbackTaskCallback(arg0, updateCharacterSelectCourseStatsBadge);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateCharacterSelectCourseStatsBadge);
 }
 
 const char gCharacterSelectCourseBestScoreFormat[] = "%5d";
@@ -2178,7 +2186,7 @@ void updateCharacterSelectCoursePlayerStatsPanel(CharacterSelectCourseWidgetActo
             gRacePlayers[0].unk8 = 4;
         }
     } else {
-        addRenderCallback(&gMenuRenderCallbackList, drawCharacterSelectCoursePlayerStatsPanel, arg0);
+        addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawCharacterSelectCoursePlayerStatsPanel, arg0);
     }
 }
 
@@ -2186,7 +2194,7 @@ void initCharacterSelectCoursePlayerStatsPanel(CharacterSelectCourseWidgetActor 
     arg0->x = -0x108;
     arg0->y = -0x50;
     arg0->sprite.bytes.state = 0;
-    setCallbackTaskCallback(arg0, updateCharacterSelectCoursePlayerStatsPanel);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateCharacterSelectCoursePlayerStatsPanel);
 }
 
 void drawCharacterSelectCourseSubmenuFrame(CharacterSelectCourseWidgetActor *arg0) {
@@ -2206,7 +2214,7 @@ void updateCharacterSelectCourseSubmenuFrame(CharacterSelectCourseWidgetActor *a
         if (arg0->x >= -0x88) {
             arg0->x = -0x88;
             arg0->sprite.bytes.state = 1;
-            D_8010ADE0 = createCallbackTask(initCharacterSelectCourseNamePopup, 0, 0x63);
+            D_8010ADE0 = createCallbackTask((CallbackTaskCallback)initCharacterSelectCourseNamePopup, 0, 0x63);
         }
         state = arg0->sprite.bytes.state;
         break;
@@ -2231,14 +2239,14 @@ void updateCharacterSelectCourseSubmenuFrame(CharacterSelectCourseWidgetActor *a
         removeCallbackTask(arg0);
         return;
     }
-    addRenderCallback(&gMenuRenderCallbackList, drawCharacterSelectCourseSubmenuFrame, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawCharacterSelectCourseSubmenuFrame, arg0);
 }
 
 void initCharacterSelectCourseSubmenuFrame(CharacterSelectCourseWidgetActor *arg0) {
     arg0->x = -0x108;
     arg0->y = -0x18;
     arg0->sprite.bytes.state = 0;
-    setCallbackTaskCallback(arg0, updateCharacterSelectCourseSubmenuFrame);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateCharacterSelectCourseSubmenuFrame);
 }
 
 void drawCharacterSelectCourseRecordsFrame(CharacterSelectCourseWidgetActor *arg0) {
@@ -2257,7 +2265,7 @@ void updateCharacterSelectCourseRecordsFrame(CharacterSelectCourseWidgetActor *a
         if (arg0->x >= -0x88) {
             arg0->x = -0x88;
             arg0->sprite.bytes.state = 1;
-            createCallbackTask(initCharacterSelectCourseDescriptionPopup, 0, 0x63);
+            createCallbackTask((CallbackTaskCallback)initCharacterSelectCourseDescriptionPopup, 0, 0x63);
         }
         state = arg0->sprite.bytes.state;
         break;
@@ -2306,19 +2314,19 @@ void updateCharacterSelectCourseRecordsFrame(CharacterSelectCourseWidgetActor *a
         removeCallbackTask(arg0);
         return;
     }
-    addRenderCallback(&gMenuRenderCallbackList, drawCharacterSelectCourseRecordsFrame, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawCharacterSelectCourseRecordsFrame, arg0);
 }
 
 void initCharacterSelectCourseRecordsFrame(CharacterSelectCourseWidgetActor *arg0) {
     arg0->x = -0x128;
     arg0->y = 0x8;
     arg0->sprite.bytes.state = 0;
-    setCallbackTaskCallback(arg0, updateCharacterSelectCourseRecordsFrame);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateCharacterSelectCourseRecordsFrame);
 }
 
 void drawCharacterSelectCourseNamePopup(CharacterSelectCourseWidgetActor *arg0) {
     CharacterSelectCourseText *texts;
-    u8 *text;
+    MenuGlyphScript *text;
 
     texts = gCharacterSelectCourseNameText;
     text = texts[gRaceCourseIndex];
@@ -2328,7 +2336,7 @@ void drawCharacterSelectCourseNamePopup(CharacterSelectCourseWidgetActor *arg0) 
             (s16)(arg0->x + 0x60),
             (s16)(arg0->y + 0x40),
             getRelocatableHeapBlockBase(ASSET_HANDLE(0x24)),
-            (((s32)arg0->transition.bytes.timer >= 8) + 5) & 0xFFFF,
+            ((s32)arg0->transition.bytes.timer >= 8) + 5,
             0x20,
             0x20,
             0,
@@ -2402,7 +2410,7 @@ void updateCharacterSelectCourseNamePopup(CharacterSelectCourseWidgetActor *arg0
         gCharacterSelectCourseCursorState.bytes[7] = 0;
         return;
     }
-    addRenderCallback(&gMenuRenderCallbackList, drawCharacterSelectCourseNamePopup, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawCharacterSelectCourseNamePopup, arg0);
 }
 
 void initCharacterSelectCourseNamePopup(CharacterSelectCourseWidgetActor *arg0) {
@@ -2410,11 +2418,11 @@ void initCharacterSelectCourseNamePopup(CharacterSelectCourseWidgetActor *arg0) 
     arg0->y = -0x14;
     arg0->sprite.index = 0;
     arg0->transition.bytes.state = 0;
-    setCallbackTaskCallback(arg0, updateCharacterSelectCourseNamePopup);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateCharacterSelectCourseNamePopup);
 }
 
 void drawCharacterSelectCourseDescriptionPopup(CharacterSelectCourseWidgetActor *arg0) {
-    u8 *text;
+    MenuGlyphScript *text;
     s32 threshold;
     u16 idx;
 
@@ -2502,7 +2510,7 @@ void updateCharacterSelectCourseDescriptionPopup(CharacterSelectCourseWidgetActo
         removeCallbackTask(arg0);
         return;
     }
-    addRenderCallback(&gMenuRenderCallbackList, drawCharacterSelectCourseDescriptionPopup, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawCharacterSelectCourseDescriptionPopup, arg0);
 }
 
 void initCharacterSelectCourseDescriptionPopup(CharacterSelectCourseWidgetActor *arg0) {
@@ -2510,7 +2518,7 @@ void initCharacterSelectCourseDescriptionPopup(CharacterSelectCourseWidgetActor 
     arg0->y = 0xC;
     arg0->sprite.index = 0;
     arg0->transition.bytes.state = 0;
-    setCallbackTaskCallback(arg0, updateCharacterSelectCourseDescriptionPopup);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateCharacterSelectCourseDescriptionPopup);
 }
 
 void drawCharacterSelectCourseConfirmCursor(CharacterSelectCourseWidgetActor *arg0) {
@@ -2542,7 +2550,7 @@ void drawCharacterSelectCourseConfirmCursor(CharacterSelectCourseWidgetActor *ar
         state = gMenuChoicePromptState;
         if ((state == 3) || (state == 4)) {
             drawMenuSpriteWithAlpha(arg0->x, (s16)(((gMenuChoicePromptState * 0x10) + arg0->y) - 0x30), getRelocatableHeapBlockBase(ASSET_HANDLE(0x24)), 0x12,
-                          0x20, 0x20, 0, (u16)arg0->selection.counter, 0);
+                          0x20, 0x20, 0, arg0->selection.unsignedCounter, 0);
             state = gMenuChoicePromptState;
         }
     }
@@ -2586,14 +2594,14 @@ void updateCharacterSelectCourseConfirmCursor(CharacterSelectCourseWidgetActor *
         arg0->row.value = ((u16)arg0->row.value + 1) & 0x1F;
     }
 
-    addRenderCallback(&gMenuRenderCallbackList, drawCharacterSelectCourseConfirmCursor, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawCharacterSelectCourseConfirmCursor, arg0);
 }
 
 void initCharacterSelectCourseConfirmCursor(CharacterSelectCourseWidgetActor *arg0) {
     arg0->x = -0x74;
     arg0->y = 0x2F;
     arg0->sprite.index = 0x2F;
-    setCallbackTaskCallback(arg0, updateCharacterSelectCourseConfirmCursor);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateCharacterSelectCourseConfirmCursor);
 }
 
 // drawCharacterSelectCourseRecordsPopup best match: 97.003% (nonmatchings/drawCharacterSelectCourseRecordsPopup-3379532139742180785/base_20.c)
@@ -2827,14 +2835,14 @@ void updateCharacterSelectCourseRecordsPopup(CharacterSelectCourseWidgetActor *a
         gMenuTransitionState = 4;
         return;
     }
-    addRenderCallback(&gMenuRenderCallbackList, drawCharacterSelectCourseRecordsPopup, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawCharacterSelectCourseRecordsPopup, arg0);
 }
 
 void initCharacterSelectCourseRecordsPopup(CharacterSelectCourseWidgetActor *arg0) {
     arg0->x = -0xF0;
     arg0->y = -0x40;
     arg0->sprite.bytes.state = 0;
-    setCallbackTaskCallback(arg0, updateCharacterSelectCourseRecordsPopup);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateCharacterSelectCourseRecordsPopup);
 }
 
 void drawCharacterSelectCourseExitPopup(CharacterSelectCourseWidgetActor *arg0) {
@@ -2916,14 +2924,14 @@ void updateCharacterSelectCourseExitPopup(CharacterSelectCourseWidgetActor *arg0
         gCharacterSelectCourseCursorState.bytes[7] = 0;
         return;
     }
-    addRenderCallback(&gMenuRenderCallbackList, drawCharacterSelectCourseExitPopup, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawCharacterSelectCourseExitPopup, arg0);
 }
 
 void initCharacterSelectCourseExitPopup(CharacterSelectCourseWidgetActor *arg0) {
     arg0->x = -0x108;
     arg0->y = 0x28;
     arg0->transition.bytes.state = 0;
-    setCallbackTaskCallback(arg0, updateCharacterSelectCourseExitPopup);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateCharacterSelectCourseExitPopup);
 }
 
 const char D_800E0B98[] = "%2.2d";
@@ -2945,12 +2953,14 @@ void drawCharacterSelectCourseRecordTime(CharacterSelectCourseRecordTime *arg0, 
     do {
         do {
         } while (0);
-        drawAssetTableSpriteWithExplicitPalette((s16)x, y, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
-                                                ((u8)buffer[i] - 5) & 0xFFFF, color);
+        drawAssetTableSpriteWithExplicitPaletteWideIndex(
+            (s16)x, y, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
+            ((u8)buffer[i] - 5) & 0xFFFF, color);
         i++;
         x += 8;
     } while (i < -0xE);
-    drawAssetTableSpriteWithExplicitPalette((s16)x, y, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x36, color);
+    drawAssetTableSpriteWithExplicitPaletteWideIndex(
+        (s16)x, y, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x36, color);
 
     if ((gRaceSplitscreenMode == 2) || ((gRaceSplitscreenMode == 1) && (gRaceTypeSelection == 0))) {
         x += 6;
@@ -2961,19 +2971,22 @@ void drawCharacterSelectCourseRecordTime(CharacterSelectCourseRecordTime *arg0, 
     sprintf(&buffer[-0x10], D_800E0BA0, record->seconds);
     i = -0x10;
     do {
-        drawAssetTableSpriteWithExplicitPalette((s16)x, y, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
-                                                ((u8)buffer[i] - 5) & 0xFFFF, color);
+        drawAssetTableSpriteWithExplicitPaletteWideIndex(
+            (s16)x, y, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
+            ((u8)buffer[i] - 5) & 0xFFFF, color);
         i++;
         x += 8;
     } while (i < -0xE);
-    drawAssetTableSpriteWithExplicitPalette((s16)x, y, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x35, color);
+    drawAssetTableSpriteWithExplicitPaletteWideIndex(
+        (s16)x, y, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x35, color);
 
     x += 8;
     sprintf(&buffer[-0x10], D_800E0BA8, record->centiseconds >> 8);
     i = -0x10;
     do {
-        drawAssetTableSpriteWithExplicitPalette((s16)x, y, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
-                                                ((u8)buffer[i] - 5) & 0xFFFF, color);
+        drawAssetTableSpriteWithExplicitPaletteWideIndex(
+            (s16)x, y, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
+            ((u8)buffer[i] - 5) & 0xFFFF, color);
         i++;
         x += 8;
     } while (i != -0xE);

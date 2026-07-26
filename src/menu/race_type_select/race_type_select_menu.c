@@ -24,7 +24,6 @@ extern CharacterSelectFlowState *gCurrentGameTask;
 extern RaceTypeSelectCursorState gRaceTypeSelectCursorTarget;
 extern u8 gMenuSelectionConfirmTimer;
 extern u8 gMenuTransitionState;
-extern s32 gActiveMenuTask;
 extern u8 gMenuExitSelection;
 extern u16 gMenuInputRepeatTimers;
 extern u8 gRaceTypeSelectCursorAnimState;
@@ -75,7 +74,7 @@ void initRaceTypeSelectMenu(void) {
     LOAD_ASSET(_5CCD40, 0x25);
     LOAD_ASSET(_245A80, 0x1F);
     initCallbackTaskScheduler(0);
-    createCallbackTask((void (*)(CallbackTask *))initMenuIconTilemapSpriteActor, 0, 0x5E);
+    createCallbackTask((CallbackTaskCallback)initMenuIconTilemapSpriteActor, 0, 0x5E);
     gMenuSelectionConfirmTimer = 0;
     gMenuTransitionState = 0;
     gActiveMenuTask = 0;
@@ -116,7 +115,7 @@ void updateRaceTypeSelectMenu(void) {
     if (gCurrentGameTask->fade != 0) {
         gCurrentGameTask->fade = stepMenuFadeAlpha((s16) gCurrentGameTask->fade, 0x24, 0);
         if (gCurrentGameTask->fade == 0) {
-            createCallbackTask(initRaceTypeSelectOptionIcons, 0, 0x62);
+            createCallbackTask((CallbackTaskCallback)initRaceTypeSelectOptionIcons, 0, 0x62);
         }
     } else {
         if (gMenuTransitionState == 0) {

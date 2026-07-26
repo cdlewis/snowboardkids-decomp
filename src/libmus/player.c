@@ -4,7 +4,7 @@
 
 #include "player_commands.c"
 
-s32 Fgoto(PlayerCommandState *arg0, u8 *arg1) {
+u8 *Fgoto(PlayerCommandState *arg0, u8 *arg1) {
     s32 offset;
     s32 sequenceOffset;
 
@@ -24,6 +24,7 @@ s32 Fgoto(PlayerCommandState *arg0, u8 *arg1) {
     return arg0->restartPos + sequenceOffset;
 }
 
+#pragma weak __MusIntRandomWithContext = __MusIntRandom
 #include "player_commands_tail.c"
 #include "player_api.c"
 
@@ -117,16 +118,16 @@ void __MusIntGetNewNote(PlayerCommandState *arg0, s32 arg1) {
             cmd = seq[0];
         }
     }
-    arg0->sequencePos = (s32)seq;
+    arg0->sequencePos = seq;
 
     if (seq != NULL) {
         arg0->portamentoStartPitch = arg0->currentNotePitch;
         cmd = (*seq) ^ 0;
-        arg0->sequencePos = (s32)(seq + 1);
+        arg0->sequencePos = seq + 1;
         arg0->unkFE = cmd;
 
         if (arg0->unkED != 0) {
-            arg0->unk108 = mus_default_velocities[*((u8 *)arg0->sequencePos++)];
+            arg0->unk108 = mus_default_velocities[*arg0->sequencePos++];
         } else {
             arg0->unk108 = mus_default_velocities[arg0->unkEE];
         }
@@ -142,7 +143,7 @@ void __MusIntGetNewNote(PlayerCommandState *arg0, s32 arg1) {
         zero = 0;
         if ((arg0->flagE6 != zero) || (baseDuration == 0)) {
             arg0->flagE6 = 0;
-            cmd = *((u8 *)arg0->sequencePos++);
+            cmd = *arg0->sequencePos++;
             if (cmd < 0x80) {
                 arg0->unkBC = cmd;
                 arg0->unk28 = (f32)cmd;
@@ -153,7 +154,7 @@ void __MusIntGetNewNote(PlayerCommandState *arg0, s32 arg1) {
                 duration += *durationPos;
                 arg0->unkBC = duration;
                 arg0->unk28 = (duration & 0xFFFF) & 0xFFFFu;
-                arg0->sequencePos = (s32)(durationPos + 1);
+                arg0->sequencePos = durationPos + 1;
             }
         }
 
@@ -677,7 +678,7 @@ s32 __MusIntFindChannel(s32 arg0, s32 arg1) {
     return -1;
 }
 
-void __MusIntMemSet(u8 *p, unsigned char c, s32 n) {
+void __MusIntMemSet(void *p, unsigned char c, s32 n) {
     u8 *q = p;
 
     while (n--) {
@@ -686,7 +687,7 @@ void __MusIntMemSet(u8 *p, unsigned char c, s32 n) {
 }
 
 s32 __MusIntStartEffect(PlayerCommandState *arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4) {
-    s32 temp_v1;
+    u8 *temp_v1;
 
     __MusIntInitialiseChannel(arg0);
     arg0->soundId = arg1;

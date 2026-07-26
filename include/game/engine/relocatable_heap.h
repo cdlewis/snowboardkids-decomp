@@ -15,7 +15,7 @@ void updateRelocatableHeap(void);
 void initRelocatableHeap(void);
 s16 allocRelocatableHeapBlock(s32 size);
 s32 freeRelocatableHeapBlock(s32 handle);
-s32 getRelocatableHeapBlockBase(s32 handle);
+void *getRelocatableHeapBlockBase(s32 handle);
 void lockRelocatableHeapBlock(s32 handle);
 
 #endif

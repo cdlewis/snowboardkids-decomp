@@ -1,10 +1,19 @@
 #include "common.h"
+#include "game/engine/render_callback.h"
 #include "game/engine/relocatable_heap.h"
 #include "game/engine/callback_task_scheduler.h"
 #include "game/ending/ending_credits_ui.h"
 #include "game/ending/ending_credits_flow.h"
-#define MENU_RENDERER_BROAD_PROTOTYPES
+/*
+ * drawEndingCreditsPageText only matches when this call is compiled against
+ * the original promoted argument types. Suppress the narrow prototype here so
+ * the legacy declaration below remains local to this translation unit.
+ */
+#define MENU_RENDERER_OMIT_DRAW_MENU_GLYPH_SCRIPT
 #include "game/menu/renderer/menu_renderer.h"
+#undef MENU_RENDERER_OMIT_DRAW_MENU_GLYPH_SCRIPT
+
+extern void drawMenuGlyphScript(s32 x, s32 y, u8 *text, s32 palette, s32 scale, s32 colorMode);
 
 #define ENDING_CREDITS_TEXT_FADE_MAX 0x100
 #define ENDING_CREDITS_PAGE_FADE_STEP 0xA
@@ -45,12 +54,10 @@ typedef struct {
 } EndingCreditsPageTextLineLayout;
 
 extern s16 gAssetHandles[];
-extern void *gMenuRenderCallbackList;
 extern s32 gPlayerInputHeld;
 extern s32 gPlayerInputPressed[];
 extern u16 gEndingCreditsPageTextScripts[][0x5A];
 extern EndingCreditsPageTextLineLayout gEndingCreditsPageTextLineLayouts[];
-extern void addRenderCallback(void *, void *, void *);
 extern int rmonPrintf(const char *, ...);
 extern int sprintf(char *, const char *, ...);
 
@@ -59,6 +66,8 @@ void updateEndingCreditsTheEndTextFadeIn(EndingCreditsPageTextActor *arg0);
 void updateEndingCreditsPageText(EndingCreditsPageTextActor *arg0);
 void updateEndingObjectSpriteDebugViewer(EndingObjectSpriteDebugViewerActor *arg0);
 
+CLANG_DIAGNOSTIC_PUSH
+CLANG_DIAGNOSTIC_IGNORE_UNINITIALIZED
 void drawEndingCreditsPageText(EndingCreditsPageTextActor *arg0) {
     register s32 lineCount;
     s32 lineIndex;
@@ -118,6 +127,7 @@ void drawEndingCreditsPageText(EndingCreditsPageTextActor *arg0) {
         }
     }
 }
+CLANG_DIAGNOSTIC_POP
 
 void drawEndingCreditsTheEndText(EndingCreditsPageTextActor *arg0) {
     drawMenuSpriteWithAlpha(arg0->x, arg0->y, getRelocatableHeapBlockBase(gAssetHandles[0x21]), 0x35, 0x20, 0x20, 0,
@@ -138,7 +148,7 @@ void updateEndingCreditsTheEndTextFadeIn(EndingCreditsPageTextActor *arg0) {
                 arg0->alpha = v1;
             }
         }
-        addRenderCallback(&gMenuRenderCallbackList, drawEndingCreditsTheEndText, arg0);
+        addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawEndingCreditsTheEndText, arg0);
     }
 }
 
@@ -167,7 +177,7 @@ void updateEndingCreditsPageText(EndingCreditsPageTextActor *arg0) {
             arg0->pageIndex = arg0->pageIndex + 1;
             if (arg0->pageIndex == ENDING_CREDITS_PAGE_COUNT) {
                 arg0->pageIndex = 0;
-                setCallbackTaskCallback(arg0, updateEndingCreditsTheEndTextFadeIn);
+                setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateEndingCreditsTheEndTextFadeIn);
             }
             if (gEndingCreditsSequencePhase == 0) {
                 gEndingCreditsSequencePhase = 1;
@@ -182,7 +192,7 @@ void updateEndingCreditsPageText(EndingCreditsPageTextActor *arg0) {
         }
         break;
     }
-    addRenderCallback(&gMenuRenderCallbackList, drawEndingCreditsPageText, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawEndingCreditsPageText, arg0);
 }
 
 void initEndingCreditsPageTextActor(EndingCreditsPageTextActor *arg0) {
@@ -191,7 +201,7 @@ void initEndingCreditsPageTextActor(EndingCreditsPageTextActor *arg0) {
     arg0->x = -0x40;
     arg0->y = 0x10;
     arg0->alpha = 0;
-    setCallbackTaskCallback(arg0, updateEndingCreditsPageText);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateEndingCreditsPageText);
 }
 
 void drawEndingObjectSpriteDebugViewer(EndingObjectSpriteDebugViewerActor *arg0) {
@@ -260,7 +270,7 @@ void updateEndingObjectSpriteDebugViewer(EndingObjectSpriteDebugViewerActor *arg
             rmonPrintf("x = %d  y = %d \n", arg0->x, temp_a2);
         }
     }
-    addRenderCallback(&gMenuRenderCallbackList, drawEndingObjectSpriteDebugViewer, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawEndingObjectSpriteDebugViewer, arg0);
 }
 
 void initEndingObjectSpriteDebugViewerActor(EndingObjectSpriteDebugViewerActor *arg0) {
@@ -269,5 +279,5 @@ void initEndingObjectSpriteDebugViewerActor(EndingObjectSpriteDebugViewerActor *
     arg0->spriteId = 0;
     arg0->enabled = 0;
     arg0->palette = 0;
-    setCallbackTaskCallback(arg0, updateEndingObjectSpriteDebugViewer);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateEndingObjectSpriteDebugViewer);
 }

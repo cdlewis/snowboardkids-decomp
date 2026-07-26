@@ -1,4 +1,6 @@
 #include "common.h"
+#include "game/menu/renderer/menu_renderer.h"
+#include "game/menu/renderer/menu_render_utils.h"
 #include "game/engine/relocatable_heap.h"
 #include "game/math/spatial_math.h"
 #include "game/race/player/race_player_model_renderer.h"
@@ -52,8 +54,7 @@ struct RacePlayerModelRenderState {
 };
 
 extern void *allocMenuRenderScratch(s32 size);
-extern s32 allocFixedTransformMatrix(void *source);
-extern void getAssetTableImageAndPalette(void *asset, u16 index, void **image, void **palette);
+extern void *allocFixedTransformMatrix(void *source);
 
 extern u8 gRenderMatricesDirty;
 extern s16 gUiBlinkTimer;

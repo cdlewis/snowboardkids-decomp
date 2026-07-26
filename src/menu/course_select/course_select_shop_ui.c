@@ -1,10 +1,10 @@
 #include "common.h"
+#include "game/engine/render_callback.h"
 #include "game/engine/relocatable_heap.h"
 #include "game/engine/callback_task_scheduler.h"
 #include "game/engine/asset_manager.h"
 #include "game/menu/splitscreen_select/race_splitscreen_select_ui.h"
 #include "game/menu/course_select/course_select_shop_ui.h"
-#define MENU_RENDERER_BROAD_PROTOTYPES
 #include "game/menu/renderer/menu_renderer.h"
 
 typedef struct {
@@ -51,7 +51,7 @@ typedef struct {
     /* 0x2F */ u8 unk2F[9];
 } CourseSelectStatus;
 
-typedef u8 ShopDescriptionText[0x8C];
+typedef MenuGlyphScript ShopDescriptionText[0x46];
 
 typedef struct {
     /* 0x00 */ u16 center[16];
@@ -169,7 +169,6 @@ struct ShopMenuWidgetActor {
     };
 };
 
-extern void addRenderCallback(void *, void *, void *);
 extern s16 gAssetHandles[];
 extern u8 gCourseDetailsMenuState;
 extern u8 gCourseSelectModeSelection;
@@ -214,13 +213,12 @@ extern ShopMenuSparkleOffset gCoursePreviewCloseSparkleMirrorStart[];
 extern ShopMenuSparkleOffset gCoursePreviewCloseSparkleOffsetsEnd[];
 extern ShopMenuSparklePattern gShopMenuSparklePatterns[];
 extern ShopDescriptionText gShopMenuModeDescriptionText[];
-extern u8 gCourseUnlockPurchasePromptText;
+extern MenuGlyphScript gCourseUnlockPurchasePromptText[];
 extern CourseDetailsMenuEntryTilePages gCourseDetailsMenuEntryTiles;
 extern u8 gCourseSelectSelectedCourseId;
 extern u8 gMenuTransitionState;
 extern u8 gMenuSelectionVariant;
 extern CourseSelectStatus gCourseSelectStatus;
-extern s32 gActiveMenuTask;
 extern u8 gShopMenuModeCursorState;
 extern u8 gShopMenuDescriptionSeen;
 extern u8 gShopMenuShowNewCoursesMessage;
@@ -235,7 +233,6 @@ extern MainMenuState *gCurrentGameTask;
 extern s16 gMenuChoicePromptState;
 extern u8 gCourseUnlockSaveSlots[];
 extern s32 gPlayerInputHeld;
-extern u8 gMenuRenderCallbackList;
 
 const char gShopMenuMoneyFormat[] = "%6dG";
 const char gCourseUnlockPriceFormat6[] = "%6dG";
@@ -276,8 +273,8 @@ void updateShopMenuModeChoiceRows(ShopMenuRowActor *arg0) {
         }
         if (moved == 0) {
             spawnRow->state = 1;
-            createCallbackTask(initShopMenuSelectedModePanel, 0, 0x5F);
-            createCallbackTask(initShopMenuCourseListPanel, 0, 0x61);
+            createCallbackTask((CallbackTaskCallback)initShopMenuSelectedModePanel, 0, 0x5F);
+            createCallbackTask((CallbackTaskCallback)initShopMenuCourseListPanel, 0, 0x61);
         }
         state = arg0->state;
         break;
@@ -302,7 +299,7 @@ void updateShopMenuModeChoiceRows(ShopMenuRowActor *arg0) {
         removeCallbackTask(arg0);
         return;
     }
-    addRenderCallback(&gMenuRenderCallbackList, drawShopMenuModeChoiceRows, actor);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawShopMenuModeChoiceRows, actor);
 }
 
 void initShopMenuModeChoiceRows(ShopMenuRowActor *arg0) {
@@ -315,7 +312,7 @@ void initShopMenuModeChoiceRows(ShopMenuRowActor *arg0) {
     arg0->visibleRowCount = 1;
     arg0->state = 0;
 
-    setCallbackTaskCallback(arg0, updateShopMenuModeChoiceRows);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateShopMenuModeChoiceRows);
 }
 
 void drawShopMenuSidePanel(ShopMenuWidgetActor *arg0) {
@@ -356,13 +353,13 @@ void updateShopMenuSidePanel(ShopMenuWidgetActor *arg0) {
         removeCallbackTask(arg0);
         return;
     }
-    addRenderCallback(&gMenuRenderCallbackList, drawShopMenuSidePanel, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawShopMenuSidePanel, arg0);
 }
 
 void initShopMenuSidePanel(ShopMenuWidgetActor *arg0) {
     arg0->x = -0x108;
     arg0->y = 8;
-    setCallbackTaskCallback(arg0, updateShopMenuSidePanel);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateShopMenuSidePanel);
 }
 
 void drawShopMenuSelectedModePanel(ShopMenuWidgetActor *arg0) {
@@ -435,17 +432,17 @@ void updateShopMenuSelectedModePanel(ShopMenuWidgetActor *arg0) {
     case 0:
         arg0->x -= 0x20;
         if (arg0->item.bytes.subTimer == 0) {
-            createCallbackTask(initShopMenuSidePanel, 0, 0x63);
+            createCallbackTask((CallbackTaskCallback)initShopMenuSidePanel, 0, 0x63);
         }
         arg0->item.bytes.subTimer++;
         if (arg0->x < -7) {
             arg0->x = -8;
             arg0->item.bytes.subState = 3;
-            createCallbackTask(initShopMenuDescriptionText, 0, 0x64);
-            gActiveMenuTask = (s32) createCallbackTask(initShopMenuModeCursor, 0, 0x64);
-            createCallbackTask(initShopMenuPromptPanel, 0, 0x64);
-            createCallbackTask(initShopMenuSparkles, 0, 0x60);
-            createCallbackTask(initShopMenuMoneyPanel, 0, 0x64);
+            createCallbackTask((CallbackTaskCallback)initShopMenuDescriptionText, 0, 0x64);
+            gActiveMenuTask = createCallbackTask((CallbackTaskCallback)initShopMenuModeCursor, 0, 0x64);
+            createCallbackTask((CallbackTaskCallback)initShopMenuPromptPanel, 0, 0x64);
+            createCallbackTask((CallbackTaskCallback)initShopMenuSparkles, 0, 0x60);
+            createCallbackTask((CallbackTaskCallback)initShopMenuMoneyPanel, 0, 0x64);
         }
         state = arg0->item.bytes.subState;
         break;
@@ -489,7 +486,7 @@ void updateShopMenuSelectedModePanel(ShopMenuWidgetActor *arg0) {
         removeCallbackTask(arg0);
         return;
     }
-    addRenderCallback(&gMenuRenderCallbackList, drawShopMenuSelectedModePanel, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawShopMenuSelectedModePanel, arg0);
 }
 
 void initShopMenuSelectedModePanel(ShopMenuWidgetActor *arg0) {
@@ -500,7 +497,7 @@ void initShopMenuSelectedModePanel(ShopMenuWidgetActor *arg0) {
     arg0->item.counter = 0;
     arg0->item.bytes.subTimer = 0;
     arg0->item.bytes.subState = 0;
-    setCallbackTaskCallback(arg0, updateShopMenuSelectedModePanel);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateShopMenuSelectedModePanel);
 }
 
 void drawShopMenuUnselectedModePanel(ShopMenuWidgetActor *arg0) {
@@ -595,7 +592,7 @@ void updateShopMenuUnselectedModePanel(ShopMenuWidgetActor *arg0) {
         removeCallbackTask(arg0);
         return;
     }
-    addRenderCallback(&gMenuRenderCallbackList, drawShopMenuUnselectedModePanel, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawShopMenuUnselectedModePanel, arg0);
 }
 
 void initShopMenuUnselectedModePanel(ShopMenuWidgetActor *arg0) {
@@ -604,7 +601,7 @@ void initShopMenuUnselectedModePanel(ShopMenuWidgetActor *arg0) {
     arg0->sprite.index = 1;
     arg0->item.bytes.timer = 0;
     arg0->item.bytes.state = 0;
-    setCallbackTaskCallback(arg0, updateShopMenuUnselectedModePanel);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateShopMenuUnselectedModePanel);
 }
 
 void drawShopMenuCourseListPanel(ShopMenuWidgetActor *arg0) {
@@ -711,7 +708,7 @@ void updateShopMenuCourseListPanel(ShopMenuWidgetActor *arg0) {
         removeCallbackTask(arg0);
         return;
     }
-    addRenderCallback(&gMenuRenderCallbackList, drawShopMenuCourseListPanel, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawShopMenuCourseListPanel, arg0);
 }
 
 void initShopMenuCourseListPanel(ShopMenuWidgetActor *arg0) {
@@ -720,7 +717,7 @@ void initShopMenuCourseListPanel(ShopMenuWidgetActor *arg0) {
     arg0->sprite.index = 2;
     arg0->item.bytes.timer = 0;
     arg0->item.bytes.state = 0;
-    setCallbackTaskCallback(arg0, updateShopMenuCourseListPanel);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateShopMenuCourseListPanel);
 }
 
 void drawShopMenuModeCursor(ShopMenuWidgetActor *arg0) {
@@ -787,7 +784,7 @@ void updateShopMenuModeCursor(ShopMenuWidgetActor *arg0) {
         removeCallbackTask(arg0);
         return;
     }
-    addRenderCallback(&gMenuRenderCallbackList, drawShopMenuModeCursor, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawShopMenuModeCursor, arg0);
 }
 
 void initShopMenuModeCursor(ShopMenuWidgetActor *arg0) {
@@ -796,7 +793,7 @@ void initShopMenuModeCursor(ShopMenuWidgetActor *arg0) {
     arg0->sprite.index = 0;
     arg0->transition.bytes.state = 0;
     arg0->transition.bytes.timer = 0;
-    setCallbackTaskCallback(arg0, updateShopMenuModeCursor);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateShopMenuModeCursor);
 }
 
 void drawShopMenuDescriptionText(ShopMenuWidgetActor *arg0) {
@@ -849,7 +846,7 @@ void updateShopMenuDescriptionText(ShopMenuWidgetActor *arg0) {
         }
         return;
     }
-    addRenderCallback(&gMenuRenderCallbackList, drawShopMenuDescriptionText, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawShopMenuDescriptionText, arg0);
 }
 
 void initShopMenuDescriptionText(ShopMenuWidgetActor *arg0) {
@@ -857,7 +854,7 @@ void initShopMenuDescriptionText(ShopMenuWidgetActor *arg0) {
     arg0->y = 0xC;
     arg0->sprite.index = 0;
     arg0->transition.bytes.state = 0;
-    setCallbackTaskCallback(arg0, updateShopMenuDescriptionText);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateShopMenuDescriptionText);
 }
 
 void drawShopMenuPromptPanel(ShopMenuWidgetActor *arg0) {
@@ -895,7 +892,7 @@ void updateShopMenuPromptPanel(ShopMenuWidgetActor *arg0) {
         removeCallbackTask(arg0);
         return;
     }
-    addRenderCallback(&gMenuRenderCallbackList, drawShopMenuPromptPanel, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawShopMenuPromptPanel, arg0);
 }
 
 void initShopMenuPromptPanel(ShopMenuWidgetActor *arg0) {
@@ -903,7 +900,7 @@ void initShopMenuPromptPanel(ShopMenuWidgetActor *arg0) {
     arg0->y = -0x5C;
     arg0->sprite.index = 0;
     arg0->transition.bytes.state = 0;
-    setCallbackTaskCallback(arg0, updateShopMenuPromptPanel);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateShopMenuPromptPanel);
 }
 
 void drawShopMenuMoneyPanel(ShopMenuWidgetActor *arg0) {
@@ -946,7 +943,7 @@ void updateShopMenuMoneyPanel(ShopMenuWidgetActor *arg0) {
         removeCallbackTask(arg0);
         return;
     }
-    addRenderCallback(&gMenuRenderCallbackList, drawShopMenuMoneyPanel, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawShopMenuMoneyPanel, arg0);
 }
 
 void initShopMenuMoneyPanel(ShopMenuWidgetActor *arg0) {
@@ -954,7 +951,7 @@ void initShopMenuMoneyPanel(ShopMenuWidgetActor *arg0) {
     arg0->y = 0x40;
     arg0->sprite.index = 0;
     arg0->transition.bytes.state = 0;
-    setCallbackTaskCallback(arg0, updateShopMenuMoneyPanel);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateShopMenuMoneyPanel);
 }
 
 void updateShopMenuMoneyPanelForCourseSelectReturn(ShopMenuWidgetActor *arg0) {
@@ -988,7 +985,7 @@ void updateShopMenuMoneyPanelForCourseSelectReturn(ShopMenuWidgetActor *arg0) {
         removeCallbackTask(arg0);
         return;
     }
-    addRenderCallback(&gMenuRenderCallbackList, drawShopMenuMoneyPanel, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawShopMenuMoneyPanel, arg0);
 }
 
 void initShopMenuMoneyPanelForCourseSelectReturn(ShopMenuWidgetActor *arg0) {
@@ -996,7 +993,7 @@ void initShopMenuMoneyPanelForCourseSelectReturn(ShopMenuWidgetActor *arg0) {
     arg0->y = 0x40;
     arg0->sprite.index = 0;
     arg0->transition.bytes.state = 0;
-    setCallbackTaskCallback(arg0, updateShopMenuMoneyPanelForCourseSelectReturn);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateShopMenuMoneyPanelForCourseSelectReturn);
 }
 
 void drawShopMenuSparkles(ShopMenuWidgetActor *arg0) {
@@ -1048,7 +1045,7 @@ void updateShopMenuSparkles(ShopMenuWidgetActor *arg0) {
         removeCallbackTask(arg0);
         return;
     }
-    addRenderCallback(&gMenuRenderCallbackList, drawShopMenuSparkles, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawShopMenuSparkles, arg0);
 }
 
 // initShopMenuSparkles best match: 99.655% (nonmatchings/initShopMenuSparkles-5755426475870421788/base_21.c)
@@ -1068,7 +1065,7 @@ void initShopMenuSparkles(ShopMenuWidgetActor *arg0) {
     arg0->sparkle.tileBase = entry[2];
     arg0->sparkle.alpha = 0x100;
     arg0->slide.slideState = 0;
-    setCallbackTaskCallback(arg0, updateShopMenuSparkles);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateShopMenuSparkles);
 }
 #endif
 
@@ -1108,7 +1105,7 @@ void drawCourseUnlockPricePanel(ShopMenuWidgetActor *arg0) {
             palette = 0;
         }
 
-        drawMenuAsciiText((s16)(arg0->x + sp48 + 4), (s16)(arg0->y + 4), sp4C, palette & 0xFF, arg0->sprite.index);
+        drawMenuAsciiText((s16)(arg0->x + sp48 + 4), (s16)(arg0->y + 4), sp4C, (u8)palette, arg0->sprite.index);
         return;
     }
 
@@ -1183,7 +1180,7 @@ void updateCourseUnlockPricePanel(ShopMenuWidgetActor *arg0) {
         removeCallbackTask(arg0);
         return;
     }
-    addRenderCallback(&gMenuRenderCallbackList, drawCourseUnlockPricePanel, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawCourseUnlockPricePanel, arg0);
 }
 
 void initCourseUnlockPricePanel(ShopMenuWidgetActor *arg0) {
@@ -1192,7 +1189,7 @@ void initCourseUnlockPricePanel(ShopMenuWidgetActor *arg0) {
     arg0->item.price = gCourseUnlockPrices[gCourseSelectSelectedCourseId];
     arg0->sprite.index = 0;
     arg0->slide.bytes.state = 0;
-    setCallbackTaskCallback(arg0, updateCourseUnlockPricePanel);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateCourseUnlockPricePanel);
 }
 
 void drawCourseUnlockPurchasePrompt(ShopMenuWidgetActor *arg0) {
@@ -1204,7 +1201,7 @@ void drawCourseUnlockPurchasePrompt(ShopMenuWidgetActor *arg0) {
     drawMenuSprite((s16)(arg0->x + 0x40), arg0->y, getRelocatableHeapBlockBase(gAssetHandles[0x24]), 1, 0x20, 0x20, 0, 0);
     drawMenuSprite((s16)(arg0->x + 0x78), arg0->y, getRelocatableHeapBlockBase(gAssetHandles[0x24]), 1, 0x20, 0x20, 0, 0);
     drawMenuSprite((s16)(arg0->x + 0xB0), arg0->y, getRelocatableHeapBlockBase(gAssetHandles[0x24]), 2, 0x20, 0x20, 0, 0);
-    drawMenuGlyphScript((s16)(arg0->x + 0x30), (s16)(arg0->y + 4), &gCourseUnlockPurchasePromptText, 0, 0x100, 0);
+    drawMenuGlyphScript((s16)(arg0->x + 0x30), (s16)(arg0->y + 4), gCourseUnlockPurchasePromptText, 0, 0x100, 0);
 
     if (arg0->item.price == 0) {
         alpha = 0x100;
@@ -1243,7 +1240,7 @@ void updateCourseUnlockPurchasePrompt(ShopMenuWidgetActor *arg0) {
         removeCallbackTask(temp_a2);
         gMenuFlowState = 0;
     } else {
-        addRenderCallback(&gMenuRenderCallbackList, drawCourseUnlockPurchasePrompt, temp_a2);
+        addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawCourseUnlockPurchasePrompt, temp_a2);
     }
 }
 
@@ -1253,7 +1250,7 @@ void initCourseUnlockPurchasePrompt(ShopMenuWidgetActor *arg0) {
     arg0->item.price = 0;
     arg0->sprite.index = 0x100;
     arg0->transition.counter = 0;
-    setCallbackTaskCallback(arg0, updateCourseUnlockPurchasePrompt);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateCourseUnlockPurchasePrompt);
 }
 
 void drawCourseDetailsMenu(ShopMenuWidgetActor *actor) {
@@ -1264,6 +1261,7 @@ void drawCourseDetailsMenu(ShopMenuWidgetActor *actor) {
     s32 courseNumber;
     s32 tensDigit;
     s16 selectionX;
+    s16 drawX;
 
     /* Keeping the loop setup together preserves IDO's original scheduling. */
     entryIndex = 0; yOffset = 0; entryTile = gCourseDetailsMenuEntryTiles[0]; do {
@@ -1306,7 +1304,8 @@ void drawCourseDetailsMenu(ShopMenuWidgetActor *actor) {
         } else {
             selectionX = actor->cursorPositions[0];
         }
-        drawMenuSpriteWithAlpha((selectionX << 0x10) >> 0x10,
+        drawX = selectionX;
+        drawMenuSpriteWithAlpha(drawX,
                                 (s16)(actor->targetY + (gCourseDetailsMenuSelection * COURSE_DETAILS_ROW_SPACING)),
                                 getRelocatableHeapBlockBase(gAssetHandles[0x25]), 0x12,
                                 0x20, 0x20, 0, actor->prompt.bytes.pulseAlpha, 0);
@@ -1357,7 +1356,7 @@ void updateCourseDetailsMenu(ShopMenuWidgetActor *arg0) {
             if ((s32)visibleCount < COURSE_DETAILS_OPTION_COUNT) {
                 arg0->visibleCount = visibleCount + 1;
                 if ((u16)arg0->visibleCount == COURSE_DETAILS_OPTION_COUNT) {
-                    createCallbackTask(initCourseDetailsPreviewTile, 0, 0x63);
+                    createCallbackTask((CallbackTaskCallback)initCourseDetailsPreviewTile, 0, 0x63);
                 }
             }
         }
@@ -1432,7 +1431,7 @@ void updateCourseDetailsMenu(ShopMenuWidgetActor *arg0) {
         removeCallbackTask((CallbackTask *)arg0);
         return;
     }
-    addRenderCallback(&gMenuRenderCallbackList, drawCourseDetailsMenu, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawCourseDetailsMenu, arg0);
 }
 
 void initCourseDetailsMenu(ShopMenuWidgetActor *arg0) {
@@ -1449,7 +1448,7 @@ void initCourseDetailsMenu(ShopMenuWidgetActor *arg0) {
     arg0->visibleCount = 1;
     arg0->prompt.bytes.pulseAlpha = 0;
     arg0->state = 0;
-    setCallbackTaskCallback(arg0, updateCourseDetailsMenu);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateCourseDetailsMenu);
 }
 
 void drawCourseDetailsPreviewTile(ShopMenuWidgetActor *arg0) {
@@ -1504,29 +1503,32 @@ void updateCourseDetailsPreviewTile(ShopMenuWidgetActor *arg0) {
         removeCallbackTask(arg0);
         return;
     }
-    addRenderCallback(&gMenuRenderCallbackList, drawCourseDetailsPreviewTile, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawCourseDetailsPreviewTile, arg0);
 }
 
 void initCourseDetailsPreviewTile(ShopMenuWidgetActor *arg0) {
     arg0->x = 0x90;
     arg0->y = 0x44;
     arg0->sprite.bytes.state = 0;
-    setCallbackTaskCallback(arg0, updateCourseDetailsPreviewTile);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateCourseDetailsPreviewTile);
 }
 
 void drawCoursePreviewCloseSparkles(ShopMenuWidgetActor *arg0) {
     ShopMenuSparkleOffset *offset;
     ShopMenuWidgetActor *actor;
     ShopMenuWidgetActor *counterActor;
+    void *texture;
 
     actor = arg0; offset = gCoursePreviewCloseSparkleOffsets; counterActor = arg0; do {
         if (offset < gCoursePreviewCloseSparkleMirrorStart) {
+            texture = getRelocatableHeapBlockBase(gAssetHandles[0x1C]);
             drawMenuSprite((s16)(offset->x + actor->x), (s16)(offset->y + actor->sprite.index - 8),
-                          getRelocatableHeapBlockBase(gAssetHandles[0x1C]), (counterActor->transition.counter + 0x39) & 0xFFFF,
+                          texture, counterActor->transition.counter + 0x39,
                           0x20, 0x20, 0, 0);
         } else {
+            texture = getRelocatableHeapBlockBase(gAssetHandles[0x1C]);
             drawMenuSprite((s16)(offset[-6].x + actor->y), (s16)((offset[-6].y + actor->sprite.index) * -1 - 8),
-                          getRelocatableHeapBlockBase(gAssetHandles[0x1C]), (counterActor->transition.counter + 0x39) & 0xFFFF,
+                          texture, counterActor->transition.counter + 0x39,
                           0x20, 0x20, 0, 0);
         }
         offset++;
@@ -1552,7 +1554,7 @@ void updateCoursePreviewCloseSparkles(ShopMenuWidgetActor *arg0) {
         removeCallbackTask(arg0);
         return;
     }
-    addRenderCallback(&gMenuRenderCallbackList, drawCoursePreviewCloseSparkles, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawCoursePreviewCloseSparkles, arg0);
 }
 
 void initCoursePreviewCloseSparkles(ShopMenuWidgetActor *arg0) {
@@ -1568,5 +1570,5 @@ void initCoursePreviewCloseSparkles(ShopMenuWidgetActor *arg0) {
         new_var->randomValues[i + 3] = randomNextMain() % 6;
     }
 
-    setCallbackTaskCallback(new_var, updateCoursePreviewCloseSparkles);
+    setCallbackTaskCallback(new_var, (CallbackTaskCallback)updateCoursePreviewCloseSparkles);
 }

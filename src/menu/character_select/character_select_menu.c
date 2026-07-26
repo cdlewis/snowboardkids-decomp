@@ -31,10 +31,8 @@ extern void enqueueSoundEffect(s32, s32);
 extern CharacterSelectMenuState *gCurrentGameTask;
 extern u16 gCharacterSelectIdOrder[];
 extern s16 gCharacterSelectVoiceSoundIds[];
-extern CallbackTask *gActiveMenuTask;
 extern CallbackTask *D_8010ADE0;
 extern CallbackTask *D_8010ADE4;
-extern CallbackTask *D_8010ADE8;
 extern CallbackTask *D_8010ADEC;
 extern s16 gMenuFadeAlpha;
 extern s16 gMenuInputRepeatTimers[];
@@ -99,12 +97,12 @@ void initCharacterSelectMenu(void) {
         }
     }
 
-    gActiveMenuTask = createCallbackTask(initCharacterSelectConfirmationBanner, 0, 0x64);
-    D_8010ADEC = createCallbackTask(initCharacterSelectSelectedCharacterTokens, 0, 0x64);
-    D_8010ADE8 = createCallbackTask(initCharacterSelectPlayerCursorMarkers, 0, 0x64);
-    D_8010ADE0 = createCallbackTask(initCharacterSelectRosterIcons, 0, 0x64);
-    createCallbackTask(initCharacterSelectPlayerStatsPanels, 0, 0x64);
-    D_8010ADE4 = createCallbackTask(initCharacterSelectPlayerPanelFrames, 0, 0x63);
+    gActiveMenuTask = createCallbackTask((CallbackTaskCallback)initCharacterSelectConfirmationBanner, 0, 0x64);
+    D_8010ADEC = createCallbackTask((CallbackTaskCallback)initCharacterSelectSelectedCharacterTokens, 0, 0x64);
+    D_8010ADE8 = createCallbackTask((CallbackTaskCallback)initCharacterSelectPlayerCursorMarkers, 0, 0x64);
+    D_8010ADE0 = createCallbackTask((CallbackTaskCallback)initCharacterSelectRosterIcons, 0, 0x64);
+    createCallbackTask((CallbackTaskCallback)initCharacterSelectPlayerStatsPanels, 0, 0x64);
+    D_8010ADE4 = createCallbackTask((CallbackTaskCallback)initCharacterSelectPlayerPanelFrames, 0, 0x63);
 
     setCurrentGameTaskCallback(updateCharacterSelectMenu, 0);
 

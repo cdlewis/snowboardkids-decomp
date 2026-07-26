@@ -89,8 +89,6 @@ extern u8 gGameSaveDataBuffer[];
 extern s8 D_800EC9F1;
 extern s8 D_800EC9F9;
 extern s8 gCourseUnlockSaveSlots[];
-extern s32 gActiveMenuTask;
-extern CallbackTask *D_8010ADE8;
 extern s8 D_8010AE64;
 extern u8 D_8010AEA0[];
 extern s8 D_8010AEA4;
@@ -196,7 +194,7 @@ void initCourseSelectMenu(void) {
     LOAD_ASSET(_1EF530, 0xD);
     LOAD_ASSET(_1E74E0, 0x1C);
     initCallbackTaskScheduler(0);
-    createCallbackTask((void (*)(CallbackTask *))initMenuIconTilemapSpriteActor, 0, 0x5E);
+    createCallbackTask((CallbackTaskCallback)initMenuIconTilemapSpriteActor, 0, 0x5E);
 
     gMenuSelectionConfirmTimer = 0;
     D_800EC9C0 = 0;
@@ -284,7 +282,7 @@ void updateCourseSelectModeMenu(void) {
     if (gCurrentGameTask->fade != zero) {
         gCurrentGameTask->fade = stepMenuFadeAlpha((s16) gCurrentGameTask->fade, 0x24, 0);
         if (gCurrentGameTask->fade == 0) {
-            createCallbackTask(initShopMenuModeChoiceRows, 0, 0x63);
+            createCallbackTask((CallbackTaskCallback)initShopMenuModeChoiceRows, 0, 0x63);
             if (gShopMenuDescriptionSeen == 0) {
                 enqueueSoundEffect(0x44, 0x32);
             }
@@ -435,8 +433,8 @@ void initCourseSelectCourseList(void) {
     D_8010AEA0[0] = 0;
     gMenuSelectionConfirmTimer = 0;
     gMenuInputRepeatTimers = 0;
-    createCallbackTask(initCourseSelectCourseIconList, 0, 0x63);
-    D_8010ADE8 = createCallbackTask(initCourseSelectExtraCourseIconList, 0, 0x61);
+    createCallbackTask((CallbackTaskCallback)initCourseSelectCourseIconList, 0, 0x63);
+    D_8010ADE8 = createCallbackTask((CallbackTaskCallback)initCourseSelectExtraCourseIconList, 0, 0x61);
     loadedCourseFlags = gUnlockedExtraCourseFlags;
     courseFlags = loadedCourseFlags;
     if (courseFlags & 7) {
@@ -637,7 +635,7 @@ void updateCourseSelectCourseList(void) {
                         gMenuInputRepeatTimers = 0;
                         gMenuTransitionState = 1;
                         if (gCourseSelectModeSelection == 0) {
-                            createCallbackTask(initCourseUnlockPricePanel, 0, 0x62);
+                            createCallbackTask((CallbackTaskCallback)initCourseUnlockPricePanel, 0, 0x62);
                             var_a3 = 0;
                         }
                     }
@@ -751,7 +749,7 @@ void updateCourseSelectCourseList(void) {
         if ((D_8010AF1C == 7) || (D_8010AF20 == 7)) {
             gCurrentGameTask->timer = 0;
             setCurrentGameTaskCallback(updateCourseSelectPurchasePrompt, 0);
-            createCallbackTask(initCourseUnlockPurchasePrompt, 0, 0x64);
+            createCallbackTask((CallbackTaskCallback)initCourseUnlockPurchasePrompt, 0, 0x64);
         }
         var_v0_3 = (u8) D_800EC9C0;
     } else {
@@ -1045,7 +1043,7 @@ void initCourseSelectCourseDetailsMenu(void) {
     s8 temp_v0;
 
     if (gCurrentGameTask->screenState == 2) {
-        createCallbackTask(initCourseDetailsMenu, 0, 0x63);
+        createCallbackTask((CallbackTaskCallback)initCourseDetailsMenu, 0, 0x63);
         temp_v0 = gCourseUnlockSaveSlots[gCourseSelectSelectedCourseId];
         gCourseDetailsMenuSelection = temp_v0 % 7;
         gCourseDetailsPreviewPage = temp_v0 / 7;
@@ -1258,7 +1256,7 @@ void initCourseSelectPreview(void) {
     D_8010AED0 = temp[0x3F] + 1;
     temp[0x3F] = gCourseDetailsPreviewCourseTiles[(u8) gCourseDetailsPreviewPage * 7 + (u8) gCourseDetailsMenuSelection];
     gCourseSelectStatus.transitionState = 6;
-    createCallbackTask(&initCoursePreviewCloseSparkles, 0, 0x64);
+    createCallbackTask((CallbackTaskCallback)&initCoursePreviewCloseSparkles, 0, 0x64);
     setCurrentGameTaskCallback(updateCourseSelectPreviewClose, 0); var_s0 = D_801121E0; do { gCurrentMenuCameraObject = var_s0; var_s0->update();
         var_s0 += 1;
     } while (var_s0 != &D_80112340);

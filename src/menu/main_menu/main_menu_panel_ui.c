@@ -1,9 +1,10 @@
 #include "common.h"
+#include "game/engine/render_callback.h"
 #include "game/engine/relocatable_heap.h"
 #include "game/engine/callback_task_scheduler.h"
 #include "game/menu/main_menu/main_menu_panel_ui.h"
-#define MENU_RENDERER_BROAD_PROTOTYPES
 #include "game/menu/renderer/menu_renderer.h"
+#include "game/menu/renderer/menu_render_utils.h"
 
 #define MENU_PANEL_SCROLL_STEP 0x10
 #define MENU_PANEL_SCROLL_LIMIT 0x79
@@ -15,8 +16,6 @@
 
 typedef void (*MenuPanelActorCallback)(MenuPanelActor *);
 
-typedef struct RenderCallbackNode RenderCallbackNode;
-typedef void (*RenderCallback)(s32);
 
 typedef struct MenuPanelAssetHandles {
     /* 0x00 */ char pad0[0x0C];
@@ -43,9 +42,8 @@ struct MenuPanelActor {
     /* 0x2B */ u8 selectionState;
 };
 
-extern RenderCallbackNode *gMenuRenderCallbackList;
 extern u8 gMainMenuSelectionResult;
-extern u8 mainMenuModeSelectTitleText[];
+extern MenuGlyphScript mainMenuModeSelectTitleText[];
 extern u8 mainMenuModeSelectPrimaryIconTiles[];
 extern u8 mainMenuModeSelectTopRowIconTiles[];
 extern u8 mainMenuModeSelectSecondaryIconTiles[];
@@ -54,9 +52,9 @@ extern u8 mainMenuModeSelectUpTargets[];
 extern u8 mainMenuModeSelectDownTargets[];
 extern u8 mainMenuModeSelectLeftTargets[];
 extern u8 mainMenuModeSelectRightTargets[];
-extern u8 raceGhostUnavailableText[];
-extern u8 mainMenuSettingsTitleText[];
-extern u8 raceRecordSettingsTitleText[];
+extern MenuGlyphScript raceGhostUnavailableText[];
+extern MenuGlyphScript mainMenuSettingsTitleText[];
+extern MenuGlyphScript raceRecordSettingsTitleText[];
 extern u16 *raceRecordLapCountTexts[];
 extern s16 courseRecordDigitTileOffsets[];
 extern u16 *mainMenuModeDescriptionTexts[];
@@ -74,15 +72,10 @@ extern u8 gRaceCourseModelEffectsDisabled;
 extern u8 gRaceCourseOverlayEffectsDisabled;
 extern s16 gUiBlinkTimer;
 
-extern void addRenderCallback(RenderCallbackNode **, RenderCallback, s32);
-extern void drawAssetTableSprite(s16, s16, s32, u16);
-extern void drawPulsingAssetTableSprite(s16, s16, s32, s32);
-extern void drawAssetTableSpriteWithDefaultPalette(s32, s32, s32, s32);
 extern void drawMenuFillRectangle(s16, s16, s16, s16, u8, u8, u8);
-extern void drawAssetTableSpriteWithExplicitPalette(s16, s16, s32, s32, s32);
 extern void enqueueSoundEffect(s16, s16);
 
-void drawMainMenuModeSelectFrame(s32 arg0) {
+void drawMainMenuModeSelectFrame(void *arg0) {
     s32 edgeX;
     s32 edgeY;
     s32 y;
@@ -209,12 +202,12 @@ void updateMainMenuModeSelectGrid(MenuPanelActor *arg0) {
         arg0->x = 0xFF;
     }
 
-    addRenderCallback(&gMenuRenderCallbackList, drawMainMenuModeSelectFrame, (s32)arg0);
-    addRenderCallback(&gMenuRenderCallbackList, (void (*)(s32))drawMainMenuModeSelectIcons, (s32)arg0);
+    addRenderCallback(&gMenuRenderCallbackList, drawMainMenuModeSelectFrame, arg0);
+    addRenderCallback(&gMenuRenderCallbackList,(RenderCallback)drawMainMenuModeSelectIcons, (void *)arg0);
 }
 
 void initMainMenuModeSelectGrid(MenuPanelActor *arg0) {
-    setCallbackTaskCallback(arg0, updateMainMenuModeSelectGrid);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateMainMenuModeSelectGrid);
 }
 
 // drawMainMenuModeDescriptionPanel best match: 99.184% (nonmatchings/drawMainMenuModeDescriptionPanel-8498672362023432715/base_17.c)
@@ -330,7 +323,7 @@ void drawMainMenuModeDescriptionPanel(MenuPanelActor *arg0) {
         visibleIndex *= 0x10;
         visibleIndex = -(visibleIndex / 2);
         drawMenuColoredGlyphScript((s16)visibleIndex, (s16)((-0x48) - arg0->y),
-                      (u8 *)text, 0, 0x100, 4, 0x29);
+                      text, 0, 0x100, 4, 0x29);
     }
 
     if (gMainMenuModeSelection < 6) {
@@ -350,7 +343,7 @@ void scrollMainMenuModeDescriptionPanelOut(MenuPanelActor *arg0) {
         removeCallbackTask(arg0);
         return;
     }
-    addRenderCallback(&gMenuRenderCallbackList, drawMainMenuModeDescriptionPanel, (s32) arg0);
+    addRenderCallback(&gMenuRenderCallbackList, drawMainMenuModeDescriptionPanel, arg0);
 }
 
 void updateMainMenuModeDescriptionPanel(MenuPanelActor *arg0) {
@@ -375,7 +368,7 @@ void updateMainMenuModeDescriptionPanel(MenuPanelActor *arg0) {
             break;
         case 1:
             gMainMenuSelectionResult = 1;
-            setCallbackTaskCallback(arg0, scrollMainMenuModeDescriptionPanelOut);
+            setCallbackTaskCallback(arg0, (CallbackTaskCallback)scrollMainMenuModeDescriptionPanelOut);
             break;
         case 2:
             arg0->selectedTile = 0;
@@ -387,7 +380,7 @@ void updateMainMenuModeDescriptionPanel(MenuPanelActor *arg0) {
         enqueueSoundEffect(MENU_PANEL_ACCEPT_SOUND, MENU_PANEL_SOUND_VOLUME);
     }
 
-    addRenderCallback(&gMenuRenderCallbackList, drawMainMenuModeDescriptionPanel, (s32)arg0);
+    addRenderCallback(&gMenuRenderCallbackList, drawMainMenuModeDescriptionPanel, arg0);
 }
 
 void initMainMenuModeDescriptionPanel(MenuPanelActor *arg0) {
@@ -396,10 +389,10 @@ void initMainMenuModeDescriptionPanel(MenuPanelActor *arg0) {
     arg0->selectionState = 0;
     arg0->inputRepeatTimer = 0;
     arg0->tileList = mainMenuModeDescriptionTexts[gMainMenuModeSelection];
-    setCallbackTaskCallback(arg0, updateMainMenuModeDescriptionPanel);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateMainMenuModeDescriptionPanel);
 }
 
-void drawMainMenuModeSelectMenuOptions(s32 arg0) {
+void drawMainMenuModeSelectMenuOptions(void *arg0) {
     if (gMenuFlowState == 0) {
         if ((gMainMenuSelectionResult == 0) || (gFrameCounter & 1)) {
             drawAssetTableSprite(-0x30, -0x20, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 0);
@@ -439,14 +432,14 @@ void drawMainMenuModeSelectMenuOptions(s32 arg0) {
 }
 
 void updateMainMenuModeSelectMenuOptions(MenuPanelActor *arg0) {
-    addRenderCallback(&gMenuRenderCallbackList, drawMainMenuModeSelectMenuOptions, (s32) arg0);
+    addRenderCallback(&gMenuRenderCallbackList, drawMainMenuModeSelectMenuOptions, arg0);
 }
 
 void initMainMenuModeSelectMenuOptions(MenuPanelActor *arg0) {
-    setCallbackTaskCallback(arg0, updateMainMenuModeSelectMenuOptions);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateMainMenuModeSelectMenuOptions);
 }
 
-void drawRaceSetupCornerPrompts(s32 arg0) {
+void drawRaceSetupCornerPrompts(void *arg0) {
     drawAssetTableSpriteWithDefaultPalette(-0x84, -0x64, getRelocatableHeapBlockBase(gAssetHandles.raceSetupPromptHandle), 6);
     drawAssetTableSpriteWithDefaultPalette(0x74, -0x64, getRelocatableHeapBlockBase(gAssetHandles.raceSetupPromptHandle), 7);
     drawAssetTableSpriteWithDefaultPalette(-0x84, 4, getRelocatableHeapBlockBase(gAssetHandles.raceSetupPromptHandle), 8);
@@ -455,25 +448,25 @@ void drawRaceSetupCornerPrompts(s32 arg0) {
 
 void updateRaceSetupCornerPrompts(MenuPanelActor *arg0) {
     if (gMainMenuSelectionResult == 0) {
-        addRenderCallback(&gMenuRenderCallbackList, drawRaceSetupCornerPrompts, (s32) arg0);
+        addRenderCallback(&gMenuRenderCallbackList, drawRaceSetupCornerPrompts, arg0);
         return;
     }
     removeCallbackTask(arg0);
 }
 
 void initRaceSetupCornerPrompts(MenuPanelActor *arg0) {
-    setCallbackTaskCallback(arg0, updateRaceSetupCornerPrompts);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceSetupCornerPrompts);
 }
 
-void drawRaceGhostUnavailableMessage(s32 arg0) {
+void drawRaceGhostUnavailableMessage(void *arg0) {
     drawMenuColoredGlyphScript(-0x78, -0x58, raceGhostUnavailableText, 1, 0x100, 5, 0x28);
 }
 
-void updateRaceGhostUnavailableMessage(s32 arg0) {
-    addRenderCallback(&gMenuRenderCallbackList, drawRaceGhostUnavailableMessage, arg0);
+void updateRaceGhostUnavailableMessage(void *arg0) {
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawRaceGhostUnavailableMessage, arg0);
 }
 
-void drawMainMenuSettingsPanel(s32 arg0) {
+void drawMainMenuSettingsPanel(void *arg0) {
     s32 y;
     s32 edgeX;
     s32 edgeY;
@@ -514,7 +507,7 @@ void drawMainMenuSettingsPanel(s32 arg0) {
     drawMenuColoredGlyphScript(-0x76, -0x58, mainMenuSettingsTitleText, 0, 0x100, 5, 0x29);
 }
 
-void drawMainMenuSettingsOptions(s32 arg0) {
+void drawMainMenuSettingsOptions(void *arg0) {
     s32 var_v0;
     s32 sp28;
 
@@ -594,15 +587,15 @@ void drawMainMenuSettingsOptions(s32 arg0) {
 }
 
 void updateMainMenuSettingsPanel(MenuPanelActor *arg0) {
-    addRenderCallback(&gMenuRenderCallbackList, drawMainMenuSettingsPanel, (s32) arg0);
-    addRenderCallback(&gMenuRenderCallbackList, drawMainMenuSettingsOptions, (s32) arg0);
+    addRenderCallback(&gMenuRenderCallbackList, drawMainMenuSettingsPanel, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, drawMainMenuSettingsOptions, arg0);
 }
 
 void initMainMenuSettingsPanel(MenuPanelActor *arg0) {
-    setCallbackTaskCallback(arg0, updateMainMenuSettingsPanel);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateMainMenuSettingsPanel);
 }
 
-void drawRaceRecordSettingsPanel(s32 arg0) {
+void drawRaceRecordSettingsPanel(void *arg0) {
     s32 x;
     s32 x2;
     s16 xStart;
@@ -672,14 +665,16 @@ void drawRaceRecordSettingsPanel(s32 arg0) {
     }
     drawAssetTableSprite(-0x54, -0x60, getRelocatableHeapBlockBase(gAssetHandles.courseRecordIconHandle), 0x5D);
     drawAssetTableSprite(4, -0x60, getRelocatableHeapBlockBase(gAssetHandles.courseRecordIconHandle), 0x5E);
-    drawAssetTableSprite(-0x4C, -0x5C, getRelocatableHeapBlockBase(gAssetHandles.courseRecordDigitHandle), courseRecordDigitTileOffsets[gRaceCourseIndex]);
-    drawAssetTableSprite(4, -0x5C, getRelocatableHeapBlockBase(gAssetHandles.courseRecordDigitHandle), courseRecordDigitTileOffsets[gRaceCourseIndex] + 1);
+    drawAssetTableSprite(-0x4C, -0x5C, getRelocatableHeapBlockBase(gAssetHandles.courseRecordDigitHandle),
+                         (u16)courseRecordDigitTileOffsets[gRaceCourseIndex]);
+    drawAssetTableSprite(4, -0x5C, getRelocatableHeapBlockBase(gAssetHandles.courseRecordDigitHandle),
+                         courseRecordDigitTileOffsets[gRaceCourseIndex] + 1);
 }
 
 void updateRaceRecordSettingsPanel(MenuPanelActor *arg0) {
-    addRenderCallback(&gMenuRenderCallbackList, drawRaceRecordSettingsPanel, (s32) arg0);
+    addRenderCallback(&gMenuRenderCallbackList, drawRaceRecordSettingsPanel, arg0);
 }
 
 void initRaceRecordSettingsPanel(MenuPanelActor *arg0) {
-    setCallbackTaskCallback(arg0, updateRaceRecordSettingsPanel);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceRecordSettingsPanel);
 }

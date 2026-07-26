@@ -1,8 +1,9 @@
 #include "common.h"
+#include "game/engine/render_callback.h"
 #include "game/engine/callback_task_scheduler.h"
 #include "game/engine/relocatable_heap.h"
-#define MENU_RENDERER_C
 #include "game/menu/renderer/menu_renderer.h"
+#include "game/menu/renderer/menu_render_utils.h"
 
 #define FONT_GFX_CMD(pkt, cmd0, cmd1) \
 { \
@@ -38,7 +39,6 @@
 #define MENU_GLYPH_PALETTE_INDEX(palette) (((u8 *)&(palette))[3])
 
 typedef struct MenuRenderTask MenuRenderTask;
-typedef struct RenderCallbackNode RenderCallbackNode;
 typedef struct MenuRenderAssetTableHeader MenuRenderAssetTableHeader;
 typedef struct MenuRenderAssetTableEntry MenuRenderAssetTableEntry;
 typedef struct FontAssetHeader FontAssetHeader;
@@ -57,23 +57,6 @@ struct MenuRenderTask {
     /* 0x12 */ s16 unk12;
     /* 0x14 */ s16 callbackTimer;
     /* 0x16 */ s16 isActive;
-};
-
-struct MenuRenderSprite {
-    /* 0x00 */ s16 x;
-    /* 0x02 */ s16 y;
-    /* 0x04 */ s16 tileSize;
-    /* 0x06 */ s16 tileXStep;
-    /* 0x08 */ s16 tileYStep;
-    /* 0x0A */ s16 padA;
-    /* 0x0C */ s16 clipX;
-    /* 0x0E */ s16 clipY;
-    /* 0x10 */ s16 width;
-    /* 0x12 */ s16 height;
-    /* 0x14 */ u16 *image;
-    /* 0x18 */ u16 *tilemap;
-    /* 0x1C */ u8 *tileInfo;
-    /* 0x20 */ u16 *palette;
 };
 
 typedef struct MenuRenderTileInfo {
@@ -138,19 +121,16 @@ union MenuGlyphPalette {
 typedef void (*MenuRenderSpriteActorCallback)(MenuRenderSpriteActor *);
 typedef void (*MenuRenderCallback)(MenuRenderSprite *);
 
-extern void addRenderCallback(RenderCallbackNode **queue, MenuRenderCallback callback, MenuRenderSprite *sprite);
 extern void *allocMenuRenderScratch(s32 size);
-void getAssetTableImageAndPalette(void *asset, u16 index, void **image, void **palette);
 s32 drawMenuTilemapSprite(MenuRenderSprite *sprite, s32 arg1, s16 x, s16 y);
-void drawMenuSpriteTileClipped(s16 arg0, s16 arg1, s32 arg2, u16 arg3, u16 arg4, u16 arg5, s32 arg6, s32 arg7);
-void drawMenuSpriteClipped(s16 arg0, s16 arg1, s32 arg2, u16 arg3, u16 arg4, u16 arg5, u8 arg6, u8 arg7, s32 arg8, s32 arg9,
+void drawMenuSpriteTileClipped(s16 arg0, s16 arg1, void *arg2, u16 arg3, u16 arg4, u16 arg5, s32 arg6, s32 arg7);
+void drawMenuSpriteClipped(s16 arg0, s16 arg1, void *arg2, u16 arg3, u16 arg4, u16 arg5, u8 arg6, u8 arg7, s32 arg8, s32 arg9,
                    s32 argA, s32 argB);
-void drawMenuSpriteWithAlphaClipped(s16 arg0, s16 arg1, s32 arg2, u16 arg3, u16 arg4, u16 arg5, u8 arg6, u16 arg7, u8 arg8,
+void drawMenuSpriteWithAlphaClipped(s16 arg0, s16 arg1, void *arg2, u16 arg3, u16 arg4, u16 arg5, u8 arg6, u16 arg7, u8 arg8,
                    s32 arg9, s32 argA, s32 argB, s32 argC);
 void drawMenuGlyph(s16 x, s16 y, u16 glyphIndex, u8 paletteIndex, u16 intensity, u16 fontBank);
 void drawMenuColoredGlyph(s16 x, s16 y, u16 glyph, u8 palette, u16 scale, u16 colorMode, s32 arg6);
 extern Gfx gMenuRenderModeResetDl[];
-extern RenderCallbackNode *gMenuRenderCallbackList;
 extern Gfx *gRegionAllocPtr;
 extern s16 gAssetHandles[];
 extern u32 gPlayerInputHeld;
@@ -162,7 +142,7 @@ extern s16 gMenuViewportCenterX;
 extern s16 gMenuViewportCenterY;
 extern u16 gMenuTransparentPalette[];
 
-void drawMenuAssetRegion(s16 x, s16 y, s32 tableAddress, u16 entryIndex, u16 scaleX, u16 scaleY,
+void drawMenuAssetRegion(s16 x, s16 y, void *tableAddress, u16 entryIndex, u16 scaleX, u16 scaleY,
                          u8 startS, u8 startT, u8 width, u8 height) {
     MenuRenderAssetTableEntry *entry;
     s32 minX;
@@ -221,7 +201,7 @@ void drawMenuAssetRegion(s16 x, s16 y, s32 tableAddress, u16 entryIndex, u16 sca
     }
 }
 
-void drawMenuSprite(s16 arg0, s16 arg1, s32 arg2, u16 arg3, u16 arg4, u16 arg5, u8 arg6, u8 arg7) {
+void drawMenuSprite(s16 arg0, s16 arg1, void *arg2, u16 arg3, u16 arg4, u16 arg5, u8 arg6, u8 arg7) {
     s32 temp_v0;
     s32 temp_v1;
 
@@ -355,13 +335,28 @@ void drawMenuSpriteClipped(s16 x, s16 y, MenuFontAssetTable *table, u16 imageInd
 }
 #endif
 
-void drawMenuSpriteWithAlpha(s16 arg0, s16 arg1, s32 arg2, u16 arg3, u16 arg4, u16 arg5, u8 arg6, u16 arg7, u8 arg8) {
+void drawMenuSpriteWithAlpha(s16 arg0, s16 arg1, void *arg2, u16 arg3, u16 arg4, u16 arg5, u8 arg6, u16 arg7, u8 arg8) {
     s32 temp_v0;
     s32 temp_v1;
 
     drawMenuSpriteWithAlphaClipped(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, temp_v0 = (s16)(gMenuViewportWidth / 2),
                   temp_v1 = (s16)(gMenuViewportHeight / 2), temp_v0, temp_v1);
 }
+
+/*
+ * One matched caller predates this function's narrow prototype. Preserve its
+ * original argument promotions without weakening the canonical declaration.
+ */
+#ifdef __clang__
+void drawMenuSpriteWithAlphaWideArgs(s32 x, s32 y, void *texture, s32 tileIndex, s32 width, s32 height,
+                                     s32 palette, s32 alpha, u32 flip) {
+    drawMenuSpriteWithAlpha(x, y, texture, tileIndex, width, height, palette, alpha, flip);
+}
+#else
+#pragma weak drawMenuSpriteWithAlphaWideArgs = drawMenuSpriteWithAlpha
+extern void drawMenuSpriteWithAlphaWideArgs(s32 x, s32 y, void *texture, s32 tileIndex, s32 width, s32 height,
+                                            s32 palette, s32 alpha, u32 flip);
+#endif
 
 // drawMenuSpriteWithAlphaClipped best match: 91.212% (nonmatchings/drawMenuSpriteWithAlphaClipped-1219509448159986855/base_35.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/renderer/menu_renderer/drawMenuSpriteWithAlphaClipped.s")
@@ -619,7 +614,7 @@ void drawMenuSpriteWithPaletteScale(s16 x, s16 y, FontAsset *asset, u16 index, u
 }
 #endif
 
-void drawMenuSpriteSubrect(s16 x, s16 y, s32 assetAddress, u16 index, u8 srcX, u8 srcY, u8 width, u8 height, s32 scaleX,
+void drawMenuSpriteSubrect(s16 x, s16 y, void *assetAddress, u16 index, u8 srcX, u8 srcY, u8 width, u8 height, s32 scaleX,
                            s32 scaleY) {
     FontTexture *texture;
     s32 minX;
@@ -682,7 +677,7 @@ void drawMenuSpriteSubrect(s16 x, s16 y, s32 assetAddress, u16 index, u8 srcX, u
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/renderer/menu_renderer/drawMenuSpriteFixedScale.s")
 
 #ifdef NON_MATCHING
-void drawMenuSpriteFixedScale(s16 x, s16 y, s32 assetAddress, u16 tileIndex, u16 scaleX, u16 scaleY, u8 flipMode,
+void drawMenuSpriteFixedScale(s16 x, s16 y, void *assetAddress, u16 tileIndex, u16 scaleX, u16 scaleY, u8 flipMode,
                               u8 unusedPalette) {
     FontTexture *texture;
     FontTexture *textureBase;
@@ -782,7 +777,7 @@ void drawMenuSpriteFixedScale(s16 x, s16 y, s32 assetAddress, u16 tileIndex, u16
 }
 #endif
 
-void drawMenuSpriteTile(s16 arg0, s16 arg1, s32 arg2, u16 arg3, u16 arg4, u16 arg5) {
+void drawMenuSpriteTile(s16 arg0, s16 arg1, void *arg2, u16 arg3, u16 arg4, u16 arg5) {
     drawMenuSpriteTileClipped(arg0, arg1, arg2, arg3, arg4, arg5, gMenuViewportWidth / 2, gMenuViewportHeight / 2);
 }
 
@@ -889,7 +884,7 @@ void drawMenuSpriteTileClipped(s16 x, s16 y, MenuFontAssetTable *table, u16 entr
 void func_80011854(void) {
 }
 
-void drawMenuTextureByAssetId(s16 x, s16 y, s32 texture, u16 assetId, u16 width, u16 height) {
+void drawMenuTextureByAssetId(s16 x, s16 y, void *texture, u16 assetId, u16 width, u16 height) {
     s32 x0;
     s32 y0;
     s32 x1;
@@ -963,7 +958,7 @@ void drawMenuTextureByAssetId(s16 x, s16 y, s32 texture, u16 assetId, u16 width,
 }
 
 void func_80011C18(MenuRenderSpriteActor *arg0) {
-    setCallbackTaskCallback(arg0, updateMenuSpriteActorDebugControls);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateMenuSpriteActorDebugControls);
 }
 
 void updateMenuSpriteActorDebugControls(MenuRenderSpriteActor *actor) {
@@ -993,7 +988,7 @@ void updateMenuSpriteActorDebugControls(MenuRenderSpriteActor *actor) {
         actor->sprite.y = 0x9BF;
     }
 
-    addRenderCallback(&gMenuRenderCallbackList, drawMenuTilemapSpriteCallback, &actor->sprite);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawMenuTilemapSpriteCallback, &actor->sprite);
 }
 
 void drawMenuTilemapSpriteCallback(MenuRenderSprite *arg0) {
@@ -1485,7 +1480,8 @@ void drawMenuColoredGlyphScript(volatile s16 x, s16 y, MenuGlyphScript *script, 
     }
 }
 
-void drawMenuGlyphScript(volatile s16 x, s16 y, MenuGlyphScript *script, s32 palette, u16 scale, volatile u16 colorMode) {
+void drawMenuGlyphScript(volatile s16 x, s16 y, MenuGlyphScript *script,
+                         s32 palette, u16 scale, volatile u16 colorMode) {
     u16 firstGlyph;
     s32 glyphCode;
     MenuGlyphScript *scriptCursor;
@@ -1824,11 +1820,7 @@ void drawMenuSolidRect(s16 x0, s16 y0, s16 x1, s16 y1, s16 r, s16 g, s16 b) {
     }
 }
 
-s32 stepMenuFadeAlpha(value, step, increase)
-s32 value;
-s16 step;
-u8 increase;
-{
+s32 stepMenuFadeAlpha(s32 value, s16 step, u8 increase) {
     if (increase) {
     } else {
         step = step * -1;
