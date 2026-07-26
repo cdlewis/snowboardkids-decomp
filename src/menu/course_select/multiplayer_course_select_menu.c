@@ -92,7 +92,7 @@ extern void (*D_8011241C)(void);
 extern u8 gPlayerCount;
 extern s32 gMenuFlowState;
 
-// initMultiplayerCourseSelectMenu best match: 98.238% (nonmatchings/initMultiplayerCourseSelectMenu-4/base_69.c)
+// initMultiplayerCourseSelectMenu best match: 98.643% (nonmatchings/initMultiplayerCourseSelectMenu-8498672362023432715/base_2.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/course_select/multiplayer_course_select_menu/initMultiplayerCourseSelectMenu.s")
 
 #ifdef NON_MATCHING
@@ -335,6 +335,7 @@ void initMultiplayerCourseSelectMenu(void) {
             }
 
             D_8010AE64[playerIndex] = j;
+            k = gCourseSelectStatus.unk2E;
             if (k == one) {
                 j--;
             }
