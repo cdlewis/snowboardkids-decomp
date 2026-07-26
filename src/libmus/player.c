@@ -80,7 +80,7 @@ ALMicroTime __MusIntMain(void *arg0) {
     return 1000000 / mus_vsyncs_per_second;
 }
 
-// __MusIntGetNewNote best match: 99.389% (nonmatchings/__MusIntGetNewNote-5787290371232622032/base_31.c)
+// __MusIntGetNewNote best match: 99.962% (nonmatchings/__MusIntGetNewNote-8498672362023432715/base_13.c)
 
 #pragma GLOBAL_ASM("asm/nonmatchings/libmus/player/__MusIntGetNewNote.s")
 
@@ -96,10 +96,12 @@ void __MusIntGetNewNote(PlayerCommandState *arg0, s32 arg1) {
     u8 velocity;
     u8 cmd;
     u8 fxMix;
-    u32 duration;
     u32 durationValue;
     u16 baseDuration;
+    int zero;
+    u32 duration;
     int instrumentIndex;
+    int velocityIndex;
     s32 soundIndex;
 
     seq = arg0->sequencePos;
@@ -119,18 +121,14 @@ void __MusIntGetNewNote(PlayerCommandState *arg0, s32 arg1) {
 
     if (seq != NULL) {
         arg0->portamentoStartPitch = arg0->currentNotePitch;
-        cmd = *seq;
-        seq++;
-        arg0->sequencePos = (s32)seq;
+        cmd = (*seq) ^ 0;
+        arg0->sequencePos = (s32)(seq + 1);
         arg0->unkFE = cmd;
 
         if (arg0->unkED != 0) {
-            velocity = mus_default_velocities[*seq];
-            arg0->unk108 = velocity;
-            seq++;
-            arg0->sequencePos = (s32)seq;
+            arg0->unk108 = mus_default_velocities[*((u8 *)arg0->sequencePos++)];
         } else {
-            arg0->unk108 = mus_default_velocities[((((((arg0->unkEE & 0xFFFFu) & 0xFFFFu) & 0xFFFFu) & 0xFFFFu) & 0xFFFFu) & 0xFFFFu) & 0xFFFFu];
+            arg0->unk108 = mus_default_velocities[arg0->unkEE];
         }
 
         baseDuration = (u16)arg0->unkC0;
@@ -141,21 +139,20 @@ void __MusIntGetNewNote(PlayerCommandState *arg0, s32 arg1) {
             arg0->unk28 = (f32)durationValue;
         }
 
-        if ((arg0->flagE6 != 0) || (baseDuration == 0)) {
+        zero = 0;
+        if ((arg0->flagE6 != zero) || (baseDuration == 0)) {
             arg0->flagE6 = 0;
-            durationPos = (u8 *)arg0->sequencePos;
-            cmd = *durationPos;
-            durationPos++;
-            arg0->sequencePos = (s32)durationPos;
+            cmd = *((u8 *)arg0->sequencePos++);
             if (cmd < 0x80) {
                 arg0->unkBC = cmd;
                 arg0->unk28 = (f32)cmd;
             } else {
-                duration = (cmd & 0x7F) << 8;
+                durationPos = (u8 *)arg0->sequencePos;
+                duration = (((cmd & 0x7F) << 5) << 1) << 2;
                 arg0->unkBC = duration;
                 duration += *durationPos;
                 arg0->unkBC = duration;
-                arg0->unk28 = (f32)((duration & 0xFFFF) & 0xFFFFu);
+                arg0->unk28 = (duration & 0xFFFF) & 0xFFFFu;
                 arg0->sequencePos = (s32)(durationPos + 1);
             }
         }
@@ -197,8 +194,8 @@ void __MusIntGetNewNote(PlayerCommandState *arg0, s32 arg1) {
 
             arg0->notePitch = gSoundPlayerTuningTable[soundIndex] + arg0->unkFE - 5;
             if (arg0->flagE8 == 0) {
-                arg0->padF4[4] = 0;
-                arg0->padF4[5] = arg0->padF4[1];
+                arg0->unkF8 = 0;
+                arg0->unkF9 = arg0->unkF5;
                 __MusIntInitEnvelope(arg0);
             }
             __MusIntSetPitch(arg0, arg1);
@@ -208,11 +205,11 @@ void __MusIntGetNewNote(PlayerCommandState *arg0, s32 arg1) {
                 arg0->unkE2 = fxMix;
                 alSynSetFXMix(&gAudioSynthesizer, &mus_voices[arg1], fxMix);
             }
-        } else if (arg0->padF4[4] < 4) {
-            arg0->padF4[4] = 4;
+        } else if (arg0->unkF8 < 4) {
+            arg0->unkF8 = 4;
             arg0->unk100 = arg0->unk0;
-            arg0->padF4[6] = 1;
-            arg0->unk104 = arg0->padF4[5];
+            arg0->unkFA = 1;
+            arg0->unk104 = arg0->unkF9;
         }
     } else if (arg0->unkE4 != 0) {
         arg0->unkE4 = 0;
