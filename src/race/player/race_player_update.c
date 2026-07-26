@@ -154,18 +154,12 @@ void initRacePlayers(void) {
     }
 }
 
-// applyRacePlayerTuning best match: 99.747% (base_13.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race/player/race_player_update/applyRacePlayerTuning.s")
-
-#ifdef NON_MATCHING
 void applyRacePlayerTuning(RacePlayer *arg0) {
     RacePlayer *player;
     PlayerTuningRow *var_v0;
-    s32 new_var;
     PlayerTuningRow *var_v1;
     PlayerTuningRow *temp_a1;
     PlayerTuningRow *temp_a2;
-    s32 temp_t5;
 
     player = arg0;
     var_v0 = gRacePlayerCharacterTuningRows;
@@ -177,21 +171,17 @@ void applyRacePlayerTuning(RacePlayer *arg0) {
     }
     temp_a1 = (PlayerTuningRow *)((u8 *)var_v1 + (player->characterId * sizeof(PlayerTuningRow)));
     temp_a2 = (PlayerTuningRow *)((u8 *)var_v0 + (player->unk11 * sizeof(PlayerTuningRow)));
-    if (1) {
-        temp_t5 = ((temp_a1->unk0 + temp_a2->unk0) << 3) << 5;
-        player->unk25C = temp_t5;
-        player->unk314 = temp_t5;
-        player->unk264 = (new_var = (((temp_a1->unk4 + temp_a2->unk4) << 2) << 1) << 1);
-        player->unk260 = (temp_a1->unk2 + temp_a2->unk2) << 4;
-        player->unk268 = temp_a1->unk6 + temp_a2->unk6;
-    }
+    player->unk25C = (temp_a1->unk0 + temp_a2->unk0) << 8;
+    player->unk314 = player->unk25C;
+    player->unk260 = (temp_a1->unk2 + temp_a2->unk2) << 4;
+    player->unk264 = (temp_a1->unk4 + temp_a2->unk4) << 4;
+    player->unk268 = (temp_a1->unk6 + temp_a2->unk6);
     player->unk274 = (temp_a1->unk8 + temp_a2->unk8) << 4;
     player->unk26C = (temp_a1->unkA + temp_a2->unkA) << 4;
     player->unk270 = (temp_a1->unkC + temp_a2->unkC) << 4;
     player->unk278 = (temp_a1->unkE + temp_a2->unkE) << 4;
     player->unk27C = (temp_a1->unk10 + temp_a2->unk10) << 4;
 }
-#endif
 
 // initRacePlayer best match: 98.796% (nonmatchings/initRacePlayer-3379532139742180785/base_31.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race/player/race_player_update/initRacePlayer.s")
