@@ -1,6 +1,7 @@
 #include "common.h"
 #include "game/engine/relocatable_heap.h"
 #include "game/engine/callback_task_scheduler.h"
+#define MENU_RENDERER_U32_FLIP_PROTOTYPE
 #include "game/menu/renderer/menu_renderer.h"
 #include "game/menu/course_select/course_select_ui.h"
 #include "game/menu/course_select/course_select_shop_ui.h"
@@ -179,8 +180,8 @@ typedef struct {
 } CourseSelectStatusOverlay;
 
 extern void addRenderCallback(void *, void (*)(CourseSelectWidgetActor *), CourseSelectWidgetActor *);
-extern void drawCourseSelectPlayerPanels(CourseSelectWidgetActor *);
 extern s32 allocFixedTransformMatrix(FixedTransform *);
+extern u8 D_800E0DB8[];
 extern s8 gCourseUnlockSaveSlots[][0x78F8];
 extern u8 D_800EC9C0;
 extern u8 gRaceSplitscreenMode;
@@ -2222,122 +2223,182 @@ void initCourseSelectExtraCourseIconList(CourseSelectWidgetActor *arg0) {
 }
 #endif
 
-// drawCourseSelectPlayerPanels best match: 99.966% (nonmatchings/drawCourseSelectPlayerPanels-8498672362023432715/base_15.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/menu/course_select/course_select_ui/drawCourseSelectPlayerPanels.s")
-
-#ifdef NON_MATCHING
-extern u8 D_800E0DB8[];
+#pragma GLOBAL_ASM("src/menu/course_select/D_800E0DB8.s")
 
 void drawCourseSelectPlayerPanels(CourseSelectWidgetActor *arg0) {
-    s32 offset;
     s32 j;
-    CourseSelectWidgetInitActor *actor;
     s32 i;
     s32 middleCount;
-    s32 tile;
+    u8 tile;
     s32 alpha;
     s32 count;
     u8 text[4];
-    s32 edgeOffset;
+    s32 offset;
+    CourseSelectWidgetInitActor *actor = (CourseSelectWidgetInitActor *)arg0;
 
-    actor = (CourseSelectWidgetInitActor *)arg0;
     if (gPlayerCount == 2) {
         count = 2;
     } else {
         count = 4;
     }
 
-    i = 0;
-    if (count > 0) {
-        do {
-            j = 0;
-            if (i == gPlayerCount) {
-                alpha = 0xC0;
-            } else {
-                alpha = 0x100;
-            }
-            if (i == 0) {
-                tile = 2;
-            } else {
-                tile = (i + 5) & 0xFF;
-            }
+    for (i = 0; i < count; i++) {
+        if (i == gPlayerCount) {
+            alpha = 0xC0;
+        } else {
+            alpha = 0x100;
+        }
 
-            drawMenuSpriteWithAlpha(actor->x[i], actor->y[i], getRelocatableHeapBlockBase(gAssetHandles[0x21]), 0x22, 0x20, 0x20, 0,
-                          alpha, tile);
+        if (i == 0) {
+            tile = 2;
+        } else {
+            tile = i + 5;
+        }
 
-            if (gPlayerCount == 2) {
-                middleCount = 0xB;
-            } else {
-                middleCount = 3;
-            }
-            edgeOffset = 0x38;
-            if (middleCount > 0) {
-                do {
-                    drawMenuSpriteWithAlpha((s16)(actor->x[i] + edgeOffset), actor->y[i], getRelocatableHeapBlockBase(gAssetHandles[0x21]),
-                                  0x23, 0x20, 0x20, 0, alpha, tile);
-                    j++;
-                    edgeOffset += 0x10;
-                } while (j != middleCount);
-            }
+        drawMenuSpriteWithAlpha(
+            actor->x[i],
+            actor->y[i],
+            getRelocatableHeapBlockBase(gAssetHandles[0x21]),
+            0x22,
+            0x20,
+            0x20,
+            0,
+            alpha,
+            tile
+        );
 
-            j = getRelocatableHeapBlockBase(gAssetHandles[0x21]);
-            drawMenuSpriteWithAlpha((s16)(actor->x[i] + edgeOffset), actor->y[i], j, 0x24,
-                          0x20, 0x20, 0, alpha, tile);
+        if (gPlayerCount == 2) {
+            middleCount = 0xB;
+        } else {
+            middleCount = 3;
+        }
 
-            offset = 0;
-            if (gPlayerCount == 2) {
-                edgeOffset = 0xF8;
-            } else {
-                edgeOffset = 0x78;
-            }
-            do {
-                drawMenuSpriteWithAlpha(actor->x[i], (s16)(actor->y[i] + offset + 0x10), getRelocatableHeapBlockBase(gAssetHandles[0x21]),
-                              0x25, 0x20, 0x20, 0, alpha, tile);
-                drawMenuSpriteWithAlpha((s16)(actor->x[i] + edgeOffset), (s16)(actor->y[i] + offset + 0x10),
-                              getRelocatableHeapBlockBase(gAssetHandles[0x21]), 0x26, 0x20, 0x20, 0, alpha, tile);
-                offset += 0x10;
-            } while (offset < 0x40);
+        for (j = 0, offset = 0x38; j < middleCount; j++, offset += 0x10) {
+            drawMenuSpriteWithAlpha(
+                (s16)(actor->x[i] + offset),
+                actor->y[i],
+                getRelocatableHeapBlockBase(gAssetHandles[0x21]),
+                0x23,
+                0x20,
+                0x20,
+                0,
+                alpha,
+                tile
+            );
+        }
 
-            drawMenuSpriteWithAlpha(actor->x[i], (s16)(actor->y[i] + 0x50), getRelocatableHeapBlockBase(gAssetHandles[0x21]), 0x27, 0x20,
-                          0x20, 0, alpha, tile);
+        drawMenuSpriteWithAlpha(
+            (s16)(actor->x[i] + offset),
+            actor->y[i],
+            getRelocatableHeapBlockBase(gAssetHandles[0x21]),
+            0x24,
+            0x20,
+            0x20,
+            0,
+            alpha,
+            tile
+        );
 
-            if (gPlayerCount == 2) {
-                middleCount = 0xE;
-            } else {
-                middleCount = 6;
-            }
-            j = 0;
-            if (middleCount > 0) {
-                offset = 0;
-                do {
-                    drawMenuSpriteWithAlpha((s16)(actor->x[i] + offset + 0x10), (s16)(actor->y[i] + 0x50),
-                                  getRelocatableHeapBlockBase(gAssetHandles[0x21]), 0x28, 0x20, 0x20, 0, alpha, tile);
-                    j++;
-                    offset += 0x10;
-                } while (j != middleCount);
-            }
-            if (0) {
-                // Preserves IDO's middle-count and edge-offset register allocation.
-            }
+        if (gPlayerCount == 2) {
+            offset = 0xF8;
+        } else {
+            offset = 0x78;
+        }
 
-            drawMenuSpriteWithAlpha((s16)(actor->x[i] + edgeOffset - 8), (s16)(actor->y[i] + 0x50),
-                          getRelocatableHeapBlockBase(gAssetHandles[0x21]), 0x29, 0x20, 0x20, 0, alpha, tile);
+        for (j = 0; j < 4; j++) {
+            drawMenuSpriteWithAlpha(
+                actor->x[i],
+                (s16)(actor->y[i] + j * 0x10 + 0x10),
+                getRelocatableHeapBlockBase(gAssetHandles[0x21]),
+                0x25,
+                0x20,
+                0x20,
+                0,
+                alpha,
+                tile
+            );
 
-            sprintf(text, D_800E0DB8, i + 1);
-            drawMenuAsciiText((s16)(actor->x[i] + 0x34), (s16)(actor->y[i] + 2), text, 0, alpha);
+            drawMenuSpriteWithAlpha(
+                (s16)(actor->x[i] + offset),
+                (s16)(actor->y[i] + j * 0x10 + 0x10),
+                getRelocatableHeapBlockBase(gAssetHandles[0x21]),
+                0x26,
+                0x20,
+                0x20,
+                0,
+                alpha,
+                tile
+            );
+        }
 
-            if (alpha == 0xC0) {
-                drawMenuSpriteWithAlpha((s16)(actor->x[i] + 2), (s16)(actor->y[i] + 0x24),
-                              getRelocatableHeapBlockBase(gAssetHandles[0x1F]), 0x90, 0x20, 0x20, 0, 0xF0, 0);
-            }
-            i++;
-        } while (i != count);
-    }
-    if (actor) {
-        // Keeps the actor base separate from IDO's strength-reduced array cursor.
+        drawMenuSpriteWithAlpha(
+            actor->x[i],
+            (s16)(actor->y[i] + 0x50),
+            getRelocatableHeapBlockBase(gAssetHandles[0x21]),
+            0x27,
+            0x20,
+            0x20,
+            0,
+            alpha,
+            tile
+        );
+
+        if (gPlayerCount == 2) {
+            middleCount = 0xE;
+        } else {
+            middleCount = 6;
+        }
+
+        for (j = 0; j < middleCount; j++) {
+            drawMenuSpriteWithAlpha(
+                (s16)(actor->x[i] + j * 0x10 + 0x10),
+                (s16)(actor->y[i] + 0x50),
+                getRelocatableHeapBlockBase(gAssetHandles[0x21]),
+                0x28,
+                0x20,
+                0x20,
+                0,
+                alpha,
+                tile
+            );
+        }
+
+        drawMenuSpriteWithAlpha(
+            (s16)(actor->x[i] + offset - 8),
+            (s16)(actor->y[i] + 0x50),
+            getRelocatableHeapBlockBase(gAssetHandles[0x21]),
+            0x29,
+            0x20,
+            0x20,
+            0,
+            alpha,
+            tile
+        );
+
+        sprintf(text, D_800E0DB8, i + 1);
+        drawMenuAsciiText(
+            (s16)(actor->x[i] + 0x34),
+            (s16)(actor->y[i] + 2),
+            text,
+            0,
+            alpha
+        );
+
+        if (alpha == 0xC0) {
+            drawMenuSpriteWithAlpha(
+                (s16)(actor->x[i] + 2),
+                (s16)(actor->y[i] + 0x24),
+                getRelocatableHeapBlockBase(gAssetHandles[0x1F]),
+                0x90,
+                0x20,
+                0x20,
+                0,
+                0xF0,
+                0
+            );
+        }
     }
 }
-#endif
 
 void updateCourseSelectPlayerPanels(CourseSelectWidgetActor *arg0) {
     volatile u8 pad[8];

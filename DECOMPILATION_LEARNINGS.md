@@ -101,6 +101,12 @@ isolation rather than importing a whole batch, since some of its output (e.g.
   translation unit can change the callers' argument setup even if the callee
   itself matches. Sometimes the callee must read the low halfword from the
   homed promoted argument to keep sibling callers matching.
+- **Same-width prototype signedness can also steer caller allocation.** Even
+  when both parameter types use the same ABI width, changing a caller-facing
+  prototype from signed to unsigned can alter IDO's internal conversions,
+  register coloring, and stack homes without adding an explicit conversion
+  instruction. Verify the declaration visible in the original translation
+  unit rather than treating `s32` and `u32` as interchangeable.
 - **Stale `$a3` at a call is not a 4th argument.** IDO simply leaves an
   incoming `arg0` in `$a3` and never clears it; the callee only consumes
   `$a0`-`$a2`. A dead argument register at a callsite is not evidence of an
