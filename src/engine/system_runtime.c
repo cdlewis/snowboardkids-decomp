@@ -2,6 +2,7 @@
 #include "game/audio/sound_manager.h"
 #include "game/engine/system_runtime.h"
 #include "game/engine/game_task_scheduler.h"
+#include "game/engine/render_callback.h"
 #include "game/menu/main_menu/controller_main_menu_flow.h"
 #include "game/engine/relocatable_heap.h"
 #include "game/race/flow/race_flow.h"
@@ -89,12 +90,6 @@ typedef struct {
     /* 0x3C */ s32 unk3C;
 } GfxCommandDest;
 
-typedef struct RenderCallbackNode {
-    struct RenderCallbackNode *next;
-    void (*callback)(s32);
-    s32 arg;
-} RenderCallbackNode;
-
 typedef struct {
     RenderCallbackNode entry0;
     RenderCallbackNode entry1;
@@ -141,14 +136,6 @@ extern Gfx *gRegionAllocPtr;
 extern s8 gRaceRecordSettingsEnabled;
 extern s8 gRaceCourseModelEffectsDisabled;
 extern s8 gRaceCourseOverlayEffectsDisabled;
-extern RenderCallbackNode *gMenuOverlayRenderCallbackList;
-extern RenderCallbackNode *D_80124848;
-extern RenderCallbackNode *gMenuForegroundRenderCallbackList;
-extern RenderCallbackNode *gMenuRenderCallbackList;
-extern RenderCallbackNode *gRaceOverlayRenderCallbackList;
-extern RenderCallbackNode *gRaceForegroundRenderCallbackList;
-extern RenderCallbackNode *gModelRenderCallbackList;
-extern RenderCallbackNode *gBackdropRenderCallbackList;
 extern u8 gPendingFramebufferSwapCount;
 extern u8 gFramebufferRenderTask0Statuses;
 extern u8 gRaceRumbleEnabled;
@@ -427,7 +414,6 @@ extern Gfx D_800DEF28[];
 extern Gfx D_800DEF90[];
 extern Gfx D_800DF098[];
 extern Gfx gMenuRenderModeResetDl[];
-extern RenderCallbackNode *gEffectRenderCallbackList;
 extern s16 gUiBlinkTimer;
 extern s16 gMenuViewportWidth;
 extern s16 gMenuViewportHeight;

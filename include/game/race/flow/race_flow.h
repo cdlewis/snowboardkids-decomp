@@ -38,7 +38,7 @@ void initRaceSceneFlow(void);
 void fadeOutRaceStartTransitionFlow(void);
 void fadeInRaceGameplayViewports(void);
 void startRaceGameplayFlow(void);
-void drawRacePauseMenu(s32 arg0);
+void drawRacePauseMenu(void *arg0);
 void updateRaceGameplayFlow(void);
 void waitRaceFinishResultsFlow(void);
 void interpolateRaceViewport(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5, s32 arg6,

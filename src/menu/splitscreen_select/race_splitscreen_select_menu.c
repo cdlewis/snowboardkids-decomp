@@ -35,7 +35,6 @@ extern u8 gMenuSelectionConfirmTimer;
 extern u8 gRaceSplitscreenMode;
 extern u8 gCourseSelectFromRaceTypeMenu;
 extern u8 gMenuTransitionState;
-extern s32 gActiveMenuTask;
 extern s32 gMenuFlowState;
 extern u8 gMenuExitSelection;
 extern u16 gMenuInputRepeatTimers;
@@ -77,7 +76,7 @@ void initRaceSplitscreenSelectMenu(void) {
     LOAD_ASSET(_245A80, 0x1F);
     LOAD_ASSET(_59AAA0, 0x24);
     initCallbackTaskScheduler(0);
-    createCallbackTask((void (*)(CallbackTask *))initMenuIconTilemapSpriteActor, 0, 0x5E);
+    createCallbackTask((CallbackTaskCallback)initMenuIconTilemapSpriteActor, 0, 0x5E);
     gMenuSelectionConfirmTimer = 0;
     gMenuTransitionState = 0;
     gActiveMenuTask = 0;
@@ -110,7 +109,7 @@ void updateRaceSplitscreenSelectMenu(void) {
     if (gCurrentGameTask->fade != 0) {
         gCurrentGameTask->fade = stepMenuFadeAlpha((s16) gCurrentGameTask->fade, 0x24, 0);
         if (gCurrentGameTask->fade == 0) {
-            createCallbackTask(initRaceSplitscreenSelectPlayerCountIcons, 0, 0x63);
+            createCallbackTask((CallbackTaskCallback)initRaceSplitscreenSelectPlayerCountIcons, 0, 0x63);
         }
     } else {
         if ((gRaceSplitscreenSelectCursorTarget.portraitAlpha == 0x100) && (gMenuTransitionState == 0)) {

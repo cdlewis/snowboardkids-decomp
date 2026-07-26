@@ -1,4 +1,7 @@
 #include "common.h"
+#include "game/menu/renderer/menu_renderer.h"
+#include "game/menu/renderer/menu_render_utils.h"
+#include "game/engine/render_callback.h"
 #define calculateFixedAngleBetweenXZPoints calculateFixedAngleBetweenXZPoints_s32
 #include "game/race/items/race_item_projectiles.h"
 #undef calculateFixedAngleBetweenXZPoints
@@ -7,18 +10,12 @@
 #include "game/engine/callback_task_scheduler.h"
 #include "game/race/items/race_item_effects.h"
 #include "game/race/player/race_player_movement.h"
+#include "game/math/fixed_point_math.h"
 
 #define RACE_PLAYER_STATE_SIZE 0x60C
 
-typedef s16 FixedMatrix3s[10];
-
 typedef struct {
-    /* 0x00 */ FixedMatrix3s rotation;
-    /* 0x14 */ Vec3i translation;
-} RaceEffectMatrixSource;
-
-typedef struct {
-    /* 0x00 */ RaceEffectMatrixSource source;
+    /* 0x00 */ FixedTransform source;
     /* 0x20 */ s32 pad20;
 } RaceEffectMatrixScratch;
 
@@ -40,7 +37,7 @@ typedef struct {
     /* 0x048 */ u8 pad48[0x5C - 0x48];
     /* 0x05C */ s32 unk5C;
     /* 0x060 */ u8 pad60[0x94 - 0x60];
-    /* 0x094 */ FixedMatrix3s transform;
+    /* 0x094 */ FixedMatrix3sPadded transform;
     union {
         /* 0x0A8 */ Vec3i posA8;
         /* 0x0A8 */ Vec3i velocity;
@@ -112,7 +109,7 @@ struct RaceItemProjectileActor {
     /* 0x58 */ s8 matrixDirty2;
 };
 
-extern RaceEffectMatrixSource gIdentityFixedTransform;
+extern FixedTransform gIdentityFixedTransform;
 extern s16 gAssetHandles[];
 extern Gfx gRaceItemProjectileQuadVertices[];
 extern Gfx gFallingActionProjectileQuadVertices[];
@@ -127,18 +124,13 @@ extern RacePlayerState gRacePlayers[];
 extern RacePlayerHalfwordField gPlayerHitSource[];
 extern RacePlayerSurfaceState gRacePlayerSurfaceAngleByPlayer[];
 extern RacePlayerByteField gRacePlayerItemTargetFlags[];
-extern s32 gRaceObjectRenderCallbackList;
 
-Mtx *allocFixedTransformMatrix(RaceEffectMatrixSource *);
-void addRenderCallback(void *, void *, void *);
-void getAssetTableImageAndPalette(s32, s32, void **, void **);
+Mtx *allocFixedTransformMatrix(FixedTransform *);
 void spawnRaceUiFadingImpact(s32, s32, s32, u16);
 void enqueuePositionalSoundEffect(s32, void *, s32, s32);
 s16 calculateFixedAngleBetweenXZPoints(s32, s32, s32, s32);
-s32 integerSquareRoot64(s64);
 s16 fixedSine(s16);
 s16 fixedCosine(s16);
-void transformVec3iByFixedMatrix(s16 *, Vec3i *, void *);
 s64 __ll_mul(s64, s64);
 
 s32 findRaceItemProjectileHomingTarget(Vec3i *pos, s32 radius, s16 angle, s16 playerIndex, s16 *outAngle) {
@@ -314,15 +306,13 @@ void updateWideHomingItemProjectile(RaceItemProjectileActor *arg0) {
         spawnRaceItemProjectileTrailEffect(arg0->pos.x, arg0->pos.y, arg0->pos.z, 0);
     }
 
-    addRenderCallback(&gRaceObjectRenderCallbackList, renderWideHomingItemProjectile, arg0);
+    addRenderCallback(&gRaceObjectRenderCallbackList, (RenderCallback)renderWideHomingItemProjectile, arg0);
 }
 
 void initWideHomingItemProjectile(RaceItemProjectileActor *arg0) {
     volatile s32 pad0;
     Vec3i source;
-    s32 sp54;
-    s32 sp50;
-    s32 sp4C;
+    Vec3i transformed;
     s32 magnitude;
     s32 var_a0;
     s64 product;
@@ -333,8 +323,8 @@ void initWideHomingItemProjectile(RaceItemProjectileActor *arg0) {
     source.z = 0;
     source.y = 0;
     source.x = 0x1000;
-    if (gRacePlayers[arg0->playerIndex].flags & 0x400) { source.x = -0x1000; } transformVec3iByFixedMatrix(gRacePlayers[arg0->playerIndex].transform, &source, &sp4C); product = __ll_mul((s64) sp4C, (s64) sp4C); magnitude = integerSquareRoot64(product + __ll_mul((s64) sp54, (s64) sp54)); if (magnitude != 0) {
-        arg0->accelerationY = (((s64) arg0->velocityY) * sp50) / magnitude;
+    if (gRacePlayers[arg0->playerIndex].flags & 0x400) { source.x = -0x1000; } transformVec3iByFixedMatrix(gRacePlayers[arg0->playerIndex].transform, &source, &transformed); product = __ll_mul((s64) transformed.x, (s64) transformed.x); magnitude = integerSquareRoot64(product + __ll_mul((s64) transformed.z, (s64) transformed.z)); if (magnitude != 0) {
+        arg0->accelerationY = (((s64) arg0->velocityY) * transformed.y) / magnitude;
         var_a0 = -arg0->velocityY;
     } else {
         var_a0 = -arg0->velocityY;
@@ -350,14 +340,14 @@ void initWideHomingItemProjectile(RaceItemProjectileActor *arg0) {
         source.x = 0xFFF00000;
         arg0->targetAngle += 0x800;
     }
-    transformVec3iByFixedMatrix(gRacePlayers[arg0->playerIndex].transform, &source, &arg0->pos.x);
+    transformVec3iByFixedMatrix(gRacePlayers[arg0->playerIndex].transform, &source, &arg0->pos);
     arg0->pos.x += gRacePlayers[arg0->playerIndex].velocity.x;
     arg0->pos.y += gRacePlayers[arg0->playerIndex].velocity.y;
     arg0->pos.z += gRacePlayers[arg0->playerIndex].velocity.z;
     arg0->startAngle = gRacePlayers[arg0->playerIndex].surfaceAngle;
     getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gAssetHandles[0x1E]), 0, &arg0->image, &arg0->palette);
     updateWideHomingItemProjectile(arg0);
-    setCallbackTaskCallback(arg0, updateWideHomingItemProjectile);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateWideHomingItemProjectile);
 }
 
 void renderCloseRangeHomingItemProjectile(RaceItemProjectileActor *arg0) {
@@ -487,15 +477,13 @@ void updateCloseRangeHomingItemProjectile(RaceItemProjectileActor *arg0) {
         spawnRaceItemProjectileTrailEffect(arg0->pos.x, arg0->pos.y, arg0->pos.z, 2);
     }
 
-    addRenderCallback(&gRaceObjectRenderCallbackList, renderCloseRangeHomingItemProjectile, arg0);
+    addRenderCallback(&gRaceObjectRenderCallbackList, (RenderCallback)renderCloseRangeHomingItemProjectile, arg0);
 }
 
 void initCloseRangeHomingItemProjectile(RaceItemProjectileActor *arg0) {
     volatile s32 pad0;
     Vec3i source;
-    s32 sp54;
-    s32 sp50;
-    s32 sp4C;
+    Vec3i transformed;
     s32 magnitude;
     s32 var_a0;
     s64 product;
@@ -506,8 +494,8 @@ void initCloseRangeHomingItemProjectile(RaceItemProjectileActor *arg0) {
     source.z = 0;
     source.y = 0;
     source.x = 0x1000;
-    if (gRacePlayers[arg0->playerIndex].flags & 0x400) { source.x = -0x1000; } transformVec3iByFixedMatrix(gRacePlayers[arg0->playerIndex].transform, &source, &sp4C); product = __ll_mul((s64) sp4C, (s64) sp4C); magnitude = integerSquareRoot64(product + __ll_mul((s64) sp54, (s64) sp54)); if (magnitude != 0) {
-        arg0->accelerationY = (((s64) arg0->velocityY) * sp50) / magnitude;
+    if (gRacePlayers[arg0->playerIndex].flags & 0x400) { source.x = -0x1000; } transformVec3iByFixedMatrix(gRacePlayers[arg0->playerIndex].transform, &source, &transformed); product = __ll_mul((s64) transformed.x, (s64) transformed.x); magnitude = integerSquareRoot64(product + __ll_mul((s64) transformed.z, (s64) transformed.z)); if (magnitude != 0) {
+        arg0->accelerationY = (((s64) arg0->velocityY) * transformed.y) / magnitude;
         var_a0 = -arg0->velocityY;
     } else {
         var_a0 = -arg0->velocityY;
@@ -523,14 +511,14 @@ void initCloseRangeHomingItemProjectile(RaceItemProjectileActor *arg0) {
         source.x = 0xFFF00000;
         arg0->targetAngle += 0x800;
     }
-    transformVec3iByFixedMatrix(gRacePlayers[arg0->playerIndex].transform, &source, &arg0->pos.x);
+    transformVec3iByFixedMatrix(gRacePlayers[arg0->playerIndex].transform, &source, &arg0->pos);
     arg0->pos.x += gRacePlayers[arg0->playerIndex].velocity.x;
     arg0->pos.y += gRacePlayers[arg0->playerIndex].velocity.y;
     arg0->pos.z += gRacePlayers[arg0->playerIndex].velocity.z;
     arg0->startAngle = gRacePlayers[arg0->playerIndex].surfaceAngle;
     getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gAssetHandles[0x1E]), 2, &arg0->image, &arg0->palette);
     updateCloseRangeHomingItemProjectile(arg0);
-    setCallbackTaskCallback(arg0, updateCloseRangeHomingItemProjectile);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateCloseRangeHomingItemProjectile);
 }
 
 void renderBouncingItemProjectile(RaceItemProjectileActor *arg0) {
@@ -655,15 +643,13 @@ void updateBouncingItemProjectile(RaceItemProjectileActor *arg0) {
         spawnRaceItemProjectileTrailEffect(arg0->pos.x, arg0->pos.y, arg0->pos.z, 3);
     }
 
-    addRenderCallback(&gRaceObjectRenderCallbackList, renderBouncingItemProjectile, arg0);
+    addRenderCallback(&gRaceObjectRenderCallbackList, (RenderCallback)renderBouncingItemProjectile, arg0);
 }
 
 void initBouncingItemProjectile(RaceItemProjectileActor *arg0) {
     volatile s32 pad0;
     Vec3i source;
-    s32 sp54;
-    s32 sp50;
-    s32 sp4C;
+    Vec3i transformed;
     s32 magnitude;
     s32 var_a0;
     s64 product;
@@ -674,8 +660,8 @@ void initBouncingItemProjectile(RaceItemProjectileActor *arg0) {
     source.z = 0;
     source.y = 0;
     source.x = 0x1000;
-    if (gRacePlayers[arg0->playerIndex].flags & 0x400) { source.x = -0x1000; } transformVec3iByFixedMatrix(gRacePlayers[arg0->playerIndex].transform, &source, &sp4C); product = __ll_mul((s64) sp4C, (s64) sp4C); magnitude = integerSquareRoot64(product + __ll_mul((s64) sp54, (s64) sp54)); if (magnitude != 0) {
-        arg0->accelerationY = (((s64) arg0->velocityY) * sp50) / magnitude;
+    if (gRacePlayers[arg0->playerIndex].flags & 0x400) { source.x = -0x1000; } transformVec3iByFixedMatrix(gRacePlayers[arg0->playerIndex].transform, &source, &transformed); product = __ll_mul((s64) transformed.x, (s64) transformed.x); magnitude = integerSquareRoot64(product + __ll_mul((s64) transformed.z, (s64) transformed.z)); if (magnitude != 0) {
+        arg0->accelerationY = (((s64) arg0->velocityY) * transformed.y) / magnitude;
         var_a0 = -arg0->velocityY;
     } else {
         var_a0 = -arg0->velocityY;
@@ -691,14 +677,14 @@ void initBouncingItemProjectile(RaceItemProjectileActor *arg0) {
         source.x = 0xFFF00000;
         arg0->targetAngle += 0x800;
     }
-    transformVec3iByFixedMatrix(gRacePlayers[arg0->playerIndex].transform, &source, &arg0->pos.x);
+    transformVec3iByFixedMatrix(gRacePlayers[arg0->playerIndex].transform, &source, &arg0->pos);
     arg0->pos.x += gRacePlayers[arg0->playerIndex].velocity.x;
     arg0->pos.y += gRacePlayers[arg0->playerIndex].velocity.y;
     arg0->pos.z += gRacePlayers[arg0->playerIndex].velocity.z;
     arg0->startAngle = gRacePlayers[arg0->playerIndex].surfaceAngle;
     getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gAssetHandles[0x1E]), 3, &arg0->image, &arg0->palette);
     updateBouncingItemProjectile(arg0);
-    setCallbackTaskCallback(arg0, updateBouncingItemProjectile);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateBouncingItemProjectile);
 }
 
 void renderThrownTrailImpactProjectile(RaceItemProjectileActor *arg0) {
@@ -797,7 +783,7 @@ void updateThrownTrailImpactProjectile(RaceItemProjectileActor *arg0) {
         spawnRaceItemProjectileTrailEffect(arg0->pos.x, arg0->pos.y, arg0->pos.z, 3);
     }
 
-    addRenderCallback(&gRaceObjectRenderCallbackList, renderThrownTrailImpactProjectile, arg0);
+    addRenderCallback(&gRaceObjectRenderCallbackList, (RenderCallback)renderThrownTrailImpactProjectile, arg0);
 }
 
 void initThrownTrailImpactProjectile(RaceItemProjectileActor *arg0) {
@@ -807,11 +793,11 @@ void initThrownTrailImpactProjectile(RaceItemProjectileActor *arg0) {
     arg0->accelerationY = 0;
     getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gAssetHandles[0x1E]), 3, &arg0->image, &arg0->palette);
     updateThrownTrailImpactProjectile(arg0);
-    setCallbackTaskCallback(arg0, updateThrownTrailImpactProjectile);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateThrownTrailImpactProjectile);
 }
 
 void createThrownTrailImpactProjectile(s32 arg0, s32 arg1, s32 arg2, s16 arg3, s16 arg4) {
-    RaceItemProjectileActor *obj = createCallbackTask(initThrownTrailImpactProjectile, 0, 0x1E);
+    RaceItemProjectileActor *obj = createCallbackTask((CallbackTaskCallback)initThrownTrailImpactProjectile, 0, 0x1E);
 
     if (obj != NULL) {
         obj->pos.x = arg0;
@@ -943,15 +929,13 @@ void updateAreaBlastItemProjectile(RaceItemProjectileActor *arg0) {
         spawnRaceItemProjectileTrailEffect(arg0->pos.x, arg0->pos.y, arg0->pos.z, 4);
     }
 
-    addRenderCallback(&gRaceObjectRenderCallbackList, renderAreaBlastItemProjectile, arg0);
+    addRenderCallback(&gRaceObjectRenderCallbackList, (RenderCallback)renderAreaBlastItemProjectile, arg0);
 }
 
 void initAreaBlastItemProjectile(RaceItemProjectileActor *arg0) {
     volatile s32 pad0;
     Vec3i sp58;
-    s32 sp54;
-    s32 sp50;
-    s32 sp4C;
+    Vec3i transformed;
     s32 magnitude;
     s32 velocityY;
     RaceItemProjectileActor *actor;
@@ -969,7 +953,7 @@ void initAreaBlastItemProjectile(RaceItemProjectileActor *arg0) {
         }
     }
 
-    actor = arg0; transformVec3iByFixedMatrix(gRacePlayers[arg0->playerIndex].transform, &sp58, &sp4C); product = __ll_mul((s64) sp4C, (s64) sp4C); magnitude = integerSquareRoot64(product + __ll_mul((s64) sp54, (s64) sp54)); if (magnitude != 0) { actor->accelerationY = (s64)actor->velocityY * sp50 / magnitude; velocityY = -actor->velocityY; } else { velocityY = -actor->velocityY; actor->accelerationY = velocityY; } actor->accelerationY += gRacePlayers[actor->playerIndex].unk44; actor->velocityY = velocityY; actor->targetAngle = gRacePlayers[actor->playerIndex].yaw; sp58.z = 0; sp58.x = 0xFFF00000;
+    actor = arg0; transformVec3iByFixedMatrix(gRacePlayers[arg0->playerIndex].transform, &sp58, &transformed); product = __ll_mul((s64) transformed.x, (s64) transformed.x); magnitude = integerSquareRoot64(product + __ll_mul((s64) transformed.z, (s64) transformed.z)); if (magnitude != 0) { actor->accelerationY = (s64)actor->velocityY * transformed.y / magnitude; velocityY = -actor->velocityY; } else { velocityY = -actor->velocityY; actor->accelerationY = velocityY; } actor->accelerationY += gRacePlayers[actor->playerIndex].unk44; actor->velocityY = velocityY; actor->targetAngle = gRacePlayers[actor->playerIndex].yaw; sp58.z = 0; sp58.x = 0xFFF00000;
     sp58.y = 0x280000;
     sp58.x = 0x100000;
 
@@ -985,7 +969,7 @@ void initAreaBlastItemProjectile(RaceItemProjectileActor *arg0) {
     actor->startAngle = gRacePlayers[actor->playerIndex].surfaceAngle;
     getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gAssetHandles[0x1E]), 4, &actor->image, &actor->palette);
     updateAreaBlastItemProjectile(actor);
-    setCallbackTaskCallback(actor, updateAreaBlastItemProjectile);
+    setCallbackTaskCallback(actor, (CallbackTaskCallback)updateAreaBlastItemProjectile);
 }
 
 void renderLongRangeHomingItemProjectile(RaceItemProjectileActor *arg0) {
@@ -1107,15 +1091,13 @@ void updateLongRangeHomingItemProjectile(RaceItemProjectileActor *arg0) {
         spawnRaceItemProjectileTrailEffect(arg0->pos.x, arg0->pos.y, arg0->pos.z, 1);
     }
 
-    addRenderCallback(&gRaceObjectRenderCallbackList, renderLongRangeHomingItemProjectile, arg0);
+    addRenderCallback(&gRaceObjectRenderCallbackList, (RenderCallback)renderLongRangeHomingItemProjectile, arg0);
 }
 
 void initLongRangeHomingItemProjectile(RaceItemProjectileActor *arg0) {
     Vec3i *new_var;
     Vec3i sp58;
-    s32 sp54;
-    s32 sp50;
-    s32 sp4C;
+    Vec3i transformed;
     s32 magnitude;
     s32 velocityY;
     RaceItemProjectileActor *actor;
@@ -1133,7 +1115,7 @@ void initLongRangeHomingItemProjectile(RaceItemProjectileActor *arg0) {
         }
     }
 
-    actor = arg0; transformVec3iByFixedMatrix(gRacePlayers[arg0->playerIndex].transform, &sp58, &sp4C); product = __ll_mul((s64) sp4C, (s64) sp4C); magnitude = integerSquareRoot64(product + __ll_mul((s64) sp54, (s64) sp54)); if (magnitude != 0) { actor->accelerationY = (s64)actor->velocityY * sp50 / magnitude; velocityY = -actor->velocityY; } else { velocityY = -actor->velocityY; actor->accelerationY = velocityY; } actor->accelerationY += gRacePlayers[actor->playerIndex].unk44; actor->velocityY = velocityY; actor->targetAngle = gRacePlayers[actor->playerIndex].yaw; sp58.z = 0;
+    actor = arg0; transformVec3iByFixedMatrix(gRacePlayers[arg0->playerIndex].transform, &sp58, &transformed); product = __ll_mul((s64) transformed.x, (s64) transformed.x); magnitude = integerSquareRoot64(product + __ll_mul((s64) transformed.z, (s64) transformed.z)); if (magnitude != 0) { actor->accelerationY = (s64)actor->velocityY * transformed.y / magnitude; velocityY = -actor->velocityY; } else { velocityY = -actor->velocityY; actor->accelerationY = velocityY; } actor->accelerationY += gRacePlayers[actor->playerIndex].unk44; actor->velocityY = velocityY; actor->targetAngle = gRacePlayers[actor->playerIndex].yaw; sp58.z = 0;
     new_var = &sp58;
     sp58.y = 0x280000;
     sp58.x = 0x100000;
@@ -1150,7 +1132,7 @@ void initLongRangeHomingItemProjectile(RaceItemProjectileActor *arg0) {
     actor->startAngle = gRacePlayers[actor->playerIndex].surfaceAngle;
     getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gAssetHandles[0x1E]), 1, &actor->image, &actor->palette);
     updateLongRangeHomingItemProjectile(actor);
-    setCallbackTaskCallback(actor, updateLongRangeHomingItemProjectile);
+    setCallbackTaskCallback(actor, (CallbackTaskCallback)updateLongRangeHomingItemProjectile);
 }
 
 void renderFallingActionProjectile(RaceItemProjectileActor *arg0) {
@@ -1222,7 +1204,7 @@ void updateFallingActionProjectileLanded(RaceItemProjectileActor *arg0) {
         i++;
     } while (i != 4);
 
-    addRenderCallback(&gRaceObjectRenderCallbackList, renderFallingActionProjectile, actor);
+    addRenderCallback(&gRaceObjectRenderCallbackList, (RenderCallback)renderFallingActionProjectile, actor);
 }
 
 void updateFallingActionProjectile(RaceItemProjectileActor *arg0) {
@@ -1240,7 +1222,7 @@ void updateFallingActionProjectile(RaceItemProjectileActor *arg0) {
         groundY = getRaceCourseSurfaceHeight(arg0->angle, arg0->pos.x, arg0->pos.z);
         if (arg0->pos.y < groundY + 0x30000) {
             arg0->pos.y = groundY + 0x30000;
-            setCallbackTaskCallback(arg0, updateFallingActionProjectileLanded);
+            setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateFallingActionProjectileLanded);
         }
 
         for (i = 0; i != 4; i++) {
@@ -1258,7 +1240,7 @@ void updateFallingActionProjectile(RaceItemProjectileActor *arg0) {
         }
     }
 
-    addRenderCallback(&gRaceObjectRenderCallbackList, renderFallingActionProjectile, arg0);
+    addRenderCallback(&gRaceObjectRenderCallbackList, (RenderCallback)renderFallingActionProjectile, arg0);
 }
 
 void initFallingActionProjectile(RaceItemProjectileActor *arg0) {
@@ -1275,7 +1257,7 @@ void initFallingActionProjectile(RaceItemProjectileActor *arg0) {
     arg0->angle = gRacePlayerSurfaceAngleByPlayer[arg0->playerIndex].surfaceAngle;
     getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gAssetHandles[0x1C]), 2, &arg0->image, &arg0->palette);
     updateFallingActionProjectile(arg0);
-    setCallbackTaskCallback(arg0, updateFallingActionProjectile);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateFallingActionProjectile);
 }
 
 void renderShieldProjectile(RaceItemProjectileActor *arg0) {
@@ -1379,15 +1361,13 @@ void updateShieldProjectile(RaceItemProjectileActor *arg0) {
         player->unk50C = (s16 *)&arg0->anglePtr;
     }
 
-    addRenderCallback(&gRaceObjectRenderCallbackList, renderShieldProjectile, arg0);
+    addRenderCallback(&gRaceObjectRenderCallbackList, (RenderCallback)renderShieldProjectile, arg0);
 }
 
 void initShieldProjectile(RaceItemProjectileActor *arg0) {
     volatile s32 pad;
     Vec3i source;
-    s32 sp54;
-    s32 sp50;
-    s32 sp4C;
+    Vec3i transformed;
     s32 magnitude;
     s32 newVelocity;
     s64 product;
@@ -1399,8 +1379,8 @@ void initShieldProjectile(RaceItemProjectileActor *arg0) {
     source.z = 0;
     source.y = 0;
     source.x = 0x1000;
-    if (gRacePlayers[arg0->playerIndex].flags & 0x400) { source.x = -0x1000; } transformVec3iByFixedMatrix(gRacePlayers[arg0->playerIndex].transform, &source, &sp4C); product = __ll_mul((s64) sp4C, (s64) sp4C); magnitude = integerSquareRoot64(product + __ll_mul((s64) sp54, (s64) sp54)); if (magnitude != 0) {
-        arg0->accelerationY = (s64)arg0->velocityY * sp50 / magnitude;
+    if (gRacePlayers[arg0->playerIndex].flags & 0x400) { source.x = -0x1000; } transformVec3iByFixedMatrix(gRacePlayers[arg0->playerIndex].transform, &source, &transformed); product = __ll_mul((s64) transformed.x, (s64) transformed.x); magnitude = integerSquareRoot64(product + __ll_mul((s64) transformed.z, (s64) transformed.z)); if (magnitude != 0) {
+        arg0->accelerationY = (s64)arg0->velocityY * transformed.y / magnitude;
         newVelocity = -arg0->velocityY;
     } else {
         newVelocity = -arg0->velocityY;
@@ -1429,5 +1409,5 @@ void initShieldProjectile(RaceItemProjectileActor *arg0) {
     getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gAssetHandles[0x1E]), 5, &arg0->image, &arg0->palette);
     arg0->unk54 = 0;
     updateShieldProjectile(arg0);
-    setCallbackTaskCallback(arg0, updateShieldProjectile);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateShieldProjectile);
 }

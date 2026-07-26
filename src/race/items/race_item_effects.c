@@ -1,4 +1,7 @@
 #include "common.h"
+#include "game/menu/renderer/menu_renderer.h"
+#include "game/menu/renderer/menu_render_utils.h"
+#include "game/engine/render_callback.h"
 #include "game/engine/relocatable_heap.h"
 #include "game/engine/callback_task_scheduler.h"
 #include "game/engine/asset_manager.h"
@@ -21,24 +24,6 @@ typedef struct {
     /* 0x2 */ s16 y;
 } Vec2s;
 
-typedef s16 FixedMatrix3sScratch[0x10];
-
-typedef struct {
-    /* 0x00 */ s16 unk0;
-    /* 0x02 */ s16 unk2;
-    /* 0x04 */ s16 unk4;
-    /* 0x06 */ s16 unk6;
-    /* 0x08 */ s16 unk8;
-    /* 0x0A */ s16 unkA;
-    /* 0x0C */ s16 unkC;
-    /* 0x0E */ s16 unkE;
-    /* 0x10 */ s16 unk10;
-    /* 0x12 */ char pad12[2];
-    /* 0x14 */ s32 x;
-    /* 0x18 */ s32 y;
-    /* 0x1C */ s32 z;
-} RaceItemGfxCommandSource;
-
 typedef union {
     Vec3i vec;
     struct {
@@ -54,6 +39,7 @@ typedef union {
 
 typedef union {
     s32 word;
+    void *palette;
     struct {
         /* 0x28 */ s8 unk28;
         /* 0x29 */ s8 phase;
@@ -61,6 +47,25 @@ typedef union {
         /* 0x2B */ s8 unk2B;
     } bytes;
 } RaceItemEffectWord28;
+
+typedef union {
+    s32 word;
+    void *image;
+} RaceItemEffectWord2C;
+
+typedef union {
+    s32 velocityX;
+    s16 timer;
+} RaceItemEffectWord24;
+
+typedef union {
+    Vec3i vec;
+    struct {
+        RaceItemEffectWord24 word24;
+        RaceItemEffectWord28 word28;
+        RaceItemEffectWord2C word2C;
+    } fields;
+} RaceItemEffectVector24;
 
 typedef union {
     s16 halfword;
@@ -71,11 +76,6 @@ typedef union {
         /* 0x35 */ s8 matrixDirty;
     } bytes;
 } RaceItemEffectState;
-
-typedef union {
-    s32 velocityX;
-    s16 timer;
-} RaceItemEffectWord24;
 
 typedef union {
     struct {
@@ -112,9 +112,7 @@ struct RaceItemEffectActor {
     /* 0x10 */ u16 playerIndex;
     /* 0x12 */ u8 pad12[6];
     /* 0x18 */ RaceItemEffectPayload payload;
-    /* 0x24 */ RaceItemEffectWord24 unk24;
-    /* 0x28 */ RaceItemEffectWord28 unk28;
-    /* 0x2C */ s32 unk2C;
+    /* 0x24 */ RaceItemEffectVector24 vector24;
     /* 0x30 */ RaceItemEffectShorts30 unk30;
     /* 0x34 */ RaceItemEffectWord34 unk34;
     /* 0x38 */ RaceItemEffectHalf38 unk38;
@@ -173,7 +171,8 @@ typedef struct {
     /* 0x01C */ Vec3i pos1C;
     /* 0x028 */ Vec3i pos;
     /* 0x034 */ u8 pad34[0x94 - 0x34];
-    /* 0x094 */ u8 transform[0x14];
+    /* 0x094 */ FixedMatrix3s transform;
+    /* 0x0A6 */ s16 padA6;
     /* 0x0A8 */ Vec3i posA8;
     /* 0x0B4 */ u8 padB4[0x2FC - 0xB4];
     /* 0x2FC */ s32 flags2FC;
@@ -213,35 +212,27 @@ extern Gfx gRaceItemBreakParticleQuadVertices[];
 extern u32 gRacePlayerLandingSnowSprayQuadVertices[];
 extern Vec2s gRaceItemBreakParticleAngles[];
 extern u32 gRacePlayerSnowSprayQuadVertices[];
-extern s32 gRaceItemBreakParticleSpawnOffset[];
-extern s32 gRaceItemBreakParticleInitialVelocity[];
+extern Vec3i gRaceItemBreakParticleSpawnOffset;
+extern Vec3i gRaceItemBreakParticleInitialVelocity;
 extern u32 gRacePlayerRecoverySparkleQuadVertices[];
 extern u32 gAlphaSpriteRenderModeDl[];
 extern Gfx gEffectRenderModeSetupDl[];
 extern Gfx gEffectRenderModeCleanupDl[];
-extern RaceItemGfxCommandSource gIdentityFixedTransform;
+extern FixedTransform gIdentityFixedTransform;
 extern RaceItemEffectAssetHandles gAssetHandles;
-extern s32 D_801248E0;
 RaceItemDrawNode *gRaceItemTextureEffectDrawLists[4];
 extern RaceItemDrawLists D_801121E0;
 extern s16 gRaceCourseIndex;
 extern u8 gRaceUpdatePaused;
 extern RaceItemFollowPlayer gRacePlayers[];
 extern RaceItemEffectPlayerState D_80121EE8[];
-extern s32 gRaceOverlayRenderCallbackList;
-extern s32 D_801248C8;
-extern s32 D_801248EC;
 extern u8 gCurrentViewportIndex;
 extern u8 gRenderMatricesDirty;
 extern void *gViewportMatrix;
 extern Gfx *gRegionAllocPtr;
 
 void getAssetTableImageAndExplicitPalette(u8 *, u16, u16, void **, void **);
-void getAssetTableImageAndPalette(s32, u16, void *, void *);
-void drawAssetTableSpriteWithExplicitPalette(s16, s16, s32, s32, s32);
-void drawScaledAssetTableSpriteWithExplicitPalette(s16, s16, s32, s32, s32, s32);
-void addRenderCallback(void *, void *, void *);
-void *allocFixedTransformMatrix(RaceItemGfxCommandSource *);
+void *allocFixedTransformMatrix(FixedTransform *);
 /* Local 4-arg declaration; see note in callback_task_scheduler.h. */
 RaceItemEffectActor *createCallbackTaskWithUserIdPreservingArgs(void *, s32, s32, s32);
 
@@ -307,7 +298,7 @@ void updateRaceItemSparkBurst(RaceItemEffectActor *arg0) {
 void initRaceItemSparkBurst(RaceItemEffectActor *arg0) {
     arg0->unk64 = 0;
     updateRaceItemSparkBurst(arg0);
-    setCallbackTaskCallback(arg0, updateRaceItemSparkBurst);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceItemSparkBurst);
 }
 
 // spawnRaceItemTrackSparkBurst best match: 94.291% (nonmatchings/spawnRaceItemTrackSparkBurst-1645024839200431810/base_11.c)
@@ -384,52 +375,52 @@ mediumDone:
 #endif
 
 void renderRacePlayerHitEffect(RaceItemEffectActor *arg0) {
-    RaceItemGfxCommandSource sp88;
+    FixedTransform sp88;
     void *sp84;
     void *sp80;
     s32 frame;
 
- do { if (gRenderMatricesDirty) { sp88 = gIdentityFixedTransform; sp88.x = arg0->payload.vec.x; sp88.y = arg0->payload.vec.y; sp88.z = arg0->payload.vec.z; arg0->unk30.matrix = allocFixedTransformMatrix(&sp88); } if (arg0->unk30.matrix != NULL) { if (isPositionNearCurrentRaceViewportCamera(&arg0->payload.vec) != 0) { { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xBB000001; _g->words.w1 = 0xFFFFFFFF; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xFC121824; _g->words.w1 = 0xFF33FFFF; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xB900031D; _g->words.w1 = 0x005049D8; } ; getAssetTableImageAndPalette(getRelocatableHeapBlockBase(ASSET_HANDLE(0x1C)), (frame = gRacePlayerHitEffectSpriteOffsets[arg0->playerIndex] + (arg0->unk24.timer >> 1), 0xFFFF & frame), &sp84, &sp80); { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xFD500000; _g->words.w1 = (u32) sp84; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xF5500000; _g->words.w1 = 0x07080200; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xE6000000; _g->words.w1 = gRacePlayerHitEffectSpriteOffsets[arg0->playerIndex] * 0; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xF3000000; _g->words.w1 = 0x070FF400; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xE7000000; _g->words.w1 = 0; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xF5400400; _g->words.w1 = 0x80200; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xF2000000; _g->words.w1 = 0x7C07C; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xFD100000; _g->words.w1 = (u32) sp80; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xE8000000; _g->words.w1 = 0; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xF5000100; _g->words.w1 = 0x07000000; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xE6000000; _g->words.w1 = 0; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xF0000000; _g->words.w1 = 0x0703C000; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xE7000000; _g->words.w1 = 0; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0x01020040; _g->words.w1 = (u32) arg0->unk30.matrix; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0x01000040; _g->words.w1 = (u32) gViewportMatrix; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0x0400103F; _g->words.w1 = (u32) gRacePlayerHitEffectQuadVertices; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xB1060402; _g->words.w1 = 0x60200; } ; } } } while (0);
+ do { if (gRenderMatricesDirty) { sp88 = gIdentityFixedTransform; sp88.translation.x = arg0->payload.vec.x; sp88.translation.y = arg0->payload.vec.y; sp88.translation.z = arg0->payload.vec.z; arg0->unk30.matrix = allocFixedTransformMatrix(&sp88); } if (arg0->unk30.matrix != NULL) { if (isPositionNearCurrentRaceViewportCamera(&arg0->payload.vec) != 0) { { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xBB000001; _g->words.w1 = 0xFFFFFFFF; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xFC121824; _g->words.w1 = 0xFF33FFFF; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xB900031D; _g->words.w1 = 0x005049D8; } ; getAssetTableImageAndPalette(getRelocatableHeapBlockBase(ASSET_HANDLE(0x1C)), (frame = gRacePlayerHitEffectSpriteOffsets[arg0->playerIndex] + (arg0->vector24.fields.word24.timer >> 1), 0xFFFF & frame), &sp84, &sp80); { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xFD500000; _g->words.w1 = (u32) sp84; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xF5500000; _g->words.w1 = 0x07080200; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xE6000000; _g->words.w1 = gRacePlayerHitEffectSpriteOffsets[arg0->playerIndex] * 0; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xF3000000; _g->words.w1 = 0x070FF400; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xE7000000; _g->words.w1 = 0; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xF5400400; _g->words.w1 = 0x80200; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xF2000000; _g->words.w1 = 0x7C07C; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xFD100000; _g->words.w1 = (u32) sp80; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xE8000000; _g->words.w1 = 0; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xF5000100; _g->words.w1 = 0x07000000; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xE6000000; _g->words.w1 = 0; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xF0000000; _g->words.w1 = 0x0703C000; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xE7000000; _g->words.w1 = 0; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0x01020040; _g->words.w1 = (u32) arg0->unk30.matrix; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0x01000040; _g->words.w1 = (u32) gViewportMatrix; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0x0400103F; _g->words.w1 = (u32) gRacePlayerHitEffectQuadVertices; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = 0xB1060402; _g->words.w1 = 0x60200; } ; } } } while (0);
 }
 
 void updateRacePlayerHitEffect(RaceItemEffectActor *arg0) {
     s16 temp_v0;
 
     if (gRaceUpdatePaused == 0) {
-        arg0->unk24.timer++;
-        if (arg0->unk24.timer == 8) {
+        arg0->vector24.fields.word24.timer++;
+        if (arg0->vector24.fields.word24.timer == 8) {
             removeCallbackTask(arg0);
             return;
         }
     }
-    temp_v0 = arg0->unk24.timer;
+    temp_v0 = arg0->vector24.fields.word24.timer;
     if (temp_v0 < 0) {
-        arg0->unk24.timer = temp_v0 + 1;
+        arg0->vector24.fields.word24.timer = temp_v0 + 1;
     }
-    addRenderCallback(&D_801248E0, renderRacePlayerHitEffect, arg0);
+    addRenderCallback(&D_801248E0, (RenderCallback)renderRacePlayerHitEffect, arg0);
 }
 
 void initRacePlayerHitEffect(RaceItemEffectActor *arg0) {
     char pad2C[4];
     RaceItemFollowPlayer *sp58;
     char pad50[8];
-    char sp30[0x20];
-    s32 sp24[3];
+    FixedTransform sp30;
+    Vec3i sp24;
 
-    arg0->unk24.timer = -1;
+    arg0->vector24.fields.word24.timer = -1;
     if (arg0->unk34.shorts.state.halfword == 0) {
         sp58 = &gRacePlayers[arg0->unk38.width];
-        makeFixedRotationY(sp30, arg0->unk34.shorts.height.halfword);
-        sp24[0] = 0;
-        sp24[1] = arg0->unk28.word;
-        sp24[2] = arg0->unk2C;
-        transformVec3iByFixedMatrix(sp30, sp24, &arg0->payload);
+        makeFixedRotationY(sp30.rotation, arg0->unk34.shorts.height.halfword);
+        sp24.x = 0;
+        sp24.y = arg0->vector24.fields.word28.word;
+        sp24.z = arg0->vector24.fields.word2C.word;
+        transformVec3iByFixedMatrix(sp30.rotation, &sp24, &arg0->payload.vec);
         arg0->payload.vec.x += sp58->pos1C.x;
         arg0->payload.vec.y += sp58->pos1C.y;
         arg0->payload.vec.z += sp58->pos1C.z;
     }
     updateRacePlayerHitEffect(arg0);
-    setCallbackTaskCallback(arg0, updateRacePlayerHitEffect);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRacePlayerHitEffect);
 }
 
 void spawnRacePlayerHitEffect(s16 arg0, s16 arg1, s16 arg2, s32 arg3, s32 arg4) {
@@ -439,8 +430,8 @@ void spawnRacePlayerHitEffect(s16 arg0, s16 arg1, s16 arg2, s32 arg3, s32 arg4) 
         p->unk34.shorts.state.halfword = 0;
         p->unk34.shorts.height.halfword = arg1;
         p->unk38.width = arg0;
-        p->unk28.word = arg3;
-        p->unk2C = arg4;
+        p->vector24.fields.word28.word = arg3;
+        p->vector24.fields.word2C.word = arg4;
     }
 }
 
@@ -457,7 +448,7 @@ void spawnRaceItemImpactEffect(s32 arg0, s32 arg1, s32 arg2, s16 arg3) {
 
 void renderRaceItemProjectileTrailEffect(RaceItemEffectActor *arg0) {
     volatile u8 padding[4];
-    RaceItemGfxCommandSource sp64;
+    FixedTransform sp64;
     Gfx *temp_v0_2;
 
     if (gRenderMatricesDirty != 0) {
@@ -467,24 +458,24 @@ void renderRaceItemProjectileTrailEffect(RaceItemEffectActor *arg0) {
     if ((u8)arg0->unk34.shorts.state.bytes.matrixDirty != 0) {
         arg0->unk34.shorts.state.bytes.matrixDirty = 0;
         sp64 = gIdentityFixedTransform;
-        sp64.unk0 = arg0->unk30.screen.y << 8;
-        sp64.unk8 = arg0->unk30.screen.y << 8;
-        sp64.unk10 = arg0->unk30.screen.y << 8;
-        sp64.x = arg0->payload.vec.x;
-        sp64.y = arg0->payload.vec.y;
-        sp64.z = arg0->payload.vec.z;
-        arg0->unk24.velocityX = (s32)allocFixedTransformMatrix(&sp64);
+        sp64.rotation[MTX_XX] = arg0->unk30.screen.y << 8;
+        sp64.rotation[MTX_YY] = arg0->unk30.screen.y << 8;
+        sp64.rotation[MTX_ZZ] = arg0->unk30.screen.y << 8;
+        sp64.translation.x = arg0->payload.vec.x;
+        sp64.translation.y = arg0->payload.vec.y;
+        sp64.translation.z = arg0->payload.vec.z;
+        arg0->vector24.fields.word24.velocityX = (s32)allocFixedTransformMatrix(&sp64);
     }
 
-    if (arg0->unk24.velocityX != 0) {
+    if (arg0->vector24.fields.word24.velocityX != 0) {
         gSPDisplayList(gRegionAllocPtr++, gRaceItemEffectTranslucentRenderSetupDl);
         temp_v0_2 = gRegionAllocPtr++;
         temp_v0_2->words.w0 = 0xFA000000;
         temp_v0_2->words.w1 = (arg0->unk30.screen.x & 0xFF) | ~0xFF;
-        gDPLoadTextureBlock_4b(gRegionAllocPtr++, arg0->unk2C, G_IM_FMT_CI, 16, 16, 0, G_TX_CLAMP,
+        gDPLoadTextureBlock_4b(gRegionAllocPtr++, arg0->vector24.fields.word2C.image, G_IM_FMT_CI, 16, 16, 0, G_TX_CLAMP,
                                G_TX_CLAMP, 0, 0, 0, 0);
-        gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, arg0->unk28.word);
-        gSPMatrix(gRegionAllocPtr++, (Mtx *)arg0->unk24.velocityX,
+        gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, arg0->vector24.fields.word28.palette);
+        gSPMatrix(gRegionAllocPtr++, (Mtx *)arg0->vector24.fields.word24.velocityX,
                   G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
         gSPMatrix(gRegionAllocPtr++, gViewportMatrix, G_MTX_NOPUSH | G_MTX_MUL | G_MTX_MODELVIEW);
         gSPVertex(gRegionAllocPtr++, (Vtx *)gRaceItemProjectileQuadVertices, 4, 0);
@@ -501,18 +492,19 @@ void updateRaceItemProjectileTrailEffect(RaceItemEffectActor *arg0) {
             return;
         }
     }
-    addRenderCallback(&D_801248EC, renderRaceItemProjectileTrailEffect, arg0);
+    addRenderCallback(&D_801248EC, (RenderCallback)renderRaceItemProjectileTrailEffect, arg0);
 }
 
 void initRaceItemProjectileTrailEffect(RaceItemEffectActor *arg0) {
     arg0->unk30.screen.x = 0xF0;
     arg0->unk30.screen.y = 0x10;
-    getAssetTableImageAndPalette(getRelocatableHeapBlockBase(ASSET_HANDLE(0x1E)), arg0->unk34.shorts.state.ubyte, &arg0->unk2C, &arg0->unk28.word);
-    setCallbackTaskCallback(arg0, updateRaceItemProjectileTrailEffect);
+    getAssetTableImageAndPalette(getRelocatableHeapBlockBase(ASSET_HANDLE(0x1E)), arg0->unk34.shorts.state.ubyte,
+                                 &arg0->vector24.fields.word2C.image, &arg0->vector24.fields.word28.palette);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceItemProjectileTrailEffect);
 }
 
 void spawnRaceItemProjectileTrailEffect(s32 arg0, s32 arg1, s32 arg2, s16 arg3) {
-    RaceItemEffectActor *p = createCallbackTaskPreservingArgs(initRaceItemProjectileTrailEffect, 0, 2);
+    RaceItemEffectActor *p = createCallbackTaskPreservingArgs((CallbackTaskCallback)initRaceItemProjectileTrailEffect, 0, 2);
 
     if (p != NULL) {
         p->unk34.shorts.state.byte = arg3;
@@ -523,7 +515,7 @@ void spawnRaceItemProjectileTrailEffect(s32 arg0, s32 arg1, s32 arg2, s16 arg3) 
 }
 
 void renderRacePlayerShockEffect(RaceItemEffectActor *arg0) {
-    RaceItemGfxCommandSource sp80;
+    FixedTransform sp80;
     void *sp7C;
     void *sp78;
     volatile s32 pad[2];
@@ -536,9 +528,9 @@ void renderRacePlayerShockEffect(RaceItemEffectActor *arg0) {
         if (arg0->unk34.shorts.state.bytes.matrixDirty != 0) {
             arg0->unk34.shorts.state.bytes.matrixDirty = 0;
             sp80 = gIdentityFixedTransform;
-            sp80.x = arg0->payload.vec.x;
-            sp80.y = arg0->payload.vec.y;
-            sp80.z = arg0->payload.vec.z;
+            sp80.translation.x = arg0->payload.vec.x;
+            sp80.translation.y = arg0->payload.vec.y;
+            sp80.translation.z = arg0->payload.vec.z;
             arg0->unk30.matrix = allocFixedTransformMatrix(&sp80);
         }
 
@@ -586,34 +578,35 @@ void updateRacePlayerShockEffect(RaceItemEffectActor *arg0) {
     if (actor->unk34.shorts.height.byte < 0) {
         actor->unk34.shorts.height.byte = 0;
     }
-    transformVec3iByFixedMatrix(gRacePlayers[actor->playerIndex].transform, &actor->unk24.velocityX, &actor->payload);
+    transformVec3iByFixedMatrix(gRacePlayers[actor->playerIndex].transform, &actor->vector24.vec,
+                                &actor->payload.vec);
     player = &gRacePlayers[actor->playerIndex];
     actor->payload.vec.x += player->posA8.x;
     actor->payload.vec.y += player->posA8.y;
     actor->payload.vec.z += player->posA8.z;
-    addRenderCallback(&D_801248C8, renderRacePlayerShockEffect, actor);
+    addRenderCallback(&D_801248C8, (RenderCallback)renderRacePlayerShockEffect, actor);
 }
 
 void initRacePlayerShockEffect(RaceItemEffectActor *arg0) {
     RaceItemFollowPlayer *player;
 
     arg0->unk34.shorts.height.byte = -1;
-    arg0->unk2C = 0;
-    arg0->unk28.word = 0x280000;
-    arg0->unk24.velocityX = 0x400000;
+    arg0->vector24.fields.word2C.word = 0;
+    arg0->vector24.fields.word28.word = 0x280000;
+    arg0->vector24.fields.word24.velocityX = 0x400000;
     player = &gRacePlayers[arg0->playerIndex];
     if (player->flags2FC & 0x400) {
-        arg0->unk24.velocityX = -arg0->unk24.velocityX;
+        arg0->vector24.fields.word24.velocityX = -arg0->vector24.fields.word24.velocityX;
     }
     player = &gRacePlayers[arg0->playerIndex];
-    enqueuePositionalSoundEffect(9, (SoundPosition *) &player->pos1C, 0x7F, 0x32);
+    enqueuePositionalSoundEffect(9, (Vec3i *) &player->pos1C, 0x7F, 0x32);
     updateRacePlayerShockEffect(arg0);
-    setCallbackTaskCallback(arg0, updateRacePlayerShockEffect);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRacePlayerShockEffect);
 }
 
 void renderRaceItemBreakParticle(RaceItemEffectActor *arg0) {
     volatile s32 pad0;
-    RaceItemGfxCommandSource sp74;
+    FixedTransform sp74;
     volatile u8 padding[0x14];
     Gfx *temp_v0_2;
     Gfx *temp_v0_3;
@@ -639,9 +632,9 @@ void renderRaceItemBreakParticle(RaceItemEffectActor *arg0) {
         if (arg0->pad4E != 0) {
             arg0->pad4E = 0;
             sp74 = gIdentityFixedTransform;
-            sp74.x = arg0->payload.vec.x;
-            sp74.y = arg0->payload.vec.y;
-            sp74.z = arg0->payload.vec.z;
+            sp74.translation.x = arg0->payload.vec.x;
+            sp74.translation.y = arg0->payload.vec.y;
+            sp74.translation.z = arg0->payload.vec.z;
             arg0->unk34.matrix = allocFixedTransformMatrix(&sp74);
         }
 
@@ -659,10 +652,10 @@ void updateRaceItemBreakParticle(RaceItemEffectActor *arg0) {
             return;
         }
 
-        arg0->payload.vec.x += arg0->unk24.velocityX;
-        arg0->payload.vec.y += arg0->unk28.word;
-        arg0->payload.vec.z += arg0->unk2C;
-        arg0->unk28.word -= 0x4000;
+        arg0->payload.vec.x += arg0->vector24.fields.word24.velocityX;
+        arg0->payload.vec.y += arg0->vector24.fields.word28.word;
+        arg0->payload.vec.z += arg0->vector24.fields.word2C.word;
+        arg0->vector24.fields.word28.word -= 0x4000;
         arg0->unk38.alpha -= 0x10;
         if (arg0->unk38.alpha <= 0) {
             removeCallbackTask(arg0);
@@ -673,14 +666,14 @@ void updateRaceItemBreakParticle(RaceItemEffectActor *arg0) {
     if (arg0->unk30.particle.drawInitialized == 0) {
         arg0->unk30.particle.drawInitialized++;
     }
-    addRenderCallback(&D_801248EC, renderRaceItemBreakParticle, arg0);
+    addRenderCallback(&D_801248EC, (RenderCallback)renderRaceItemBreakParticle, arg0);
 }
 
 void initRaceItemBreakParticle(RaceItemEffectActor *arg0) {
     char padTail[8];
     volatile s32 pad0[1];
     FixedMatrix3sScratch sp3C;
-    RaceItemEffectPayload sp30;
+    Vec3i sp30;
     volatile s32 pad1[1];
     RaceItemFollowPlayer *player;
     Vec2s *angles;
@@ -696,19 +689,19 @@ void initRaceItemBreakParticle(RaceItemEffectActor *arg0) {
 
     angles = &gRaceItemBreakParticleAngles[arg0->angleIndex & 0xFF];
     makeFixedRotationXY(sp3C, angles->x, angles->y);
-    transformVec3iByFixedMatrix(sp3C, gRaceItemBreakParticleSpawnOffset, &sp30);
+    transformVec3iByFixedMatrix(sp3C, &gRaceItemBreakParticleSpawnOffset, &sp30);
 
-    arg0->payload.vec.x += sp30.vec.x;
-    arg0->payload.vec.y += sp30.vec.y;
-    arg0->payload.vec.z += sp30.vec.z;
+    arg0->payload.vec.x += sp30.x;
+    arg0->payload.vec.y += sp30.y;
+    arg0->payload.vec.z += sp30.z;
 
-    transformVec3iByFixedMatrix(sp3C, gRaceItemBreakParticleInitialVelocity, (RaceItemEffectPayload *) &arg0->unk24);
+    transformVec3iByFixedMatrix(sp3C, &gRaceItemBreakParticleInitialVelocity, &arg0->vector24.vec);
     if (arg0->playerIndex == 0) {
         arg0->payload.vec.y += 0x60000;
     }
 
     updateRaceItemBreakParticle(arg0);
-    setCallbackTaskCallback(arg0, updateRaceItemBreakParticle);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceItemBreakParticle);
 }
 
 void spawnRaceItemBreakParticles(s16 playerIndex, s16 itemIndex) {
@@ -720,9 +713,9 @@ void spawnRaceItemBreakParticles(s16 playerIndex, s16 itemIndex) {
     itemType = getRaceItemEffectType(itemIndex);
     if (itemType != 4) {
         if (itemType == 1) {
-            enqueuePositionalSoundEffect(0x12, (SoundPosition *) &gRacePlayers[playerIndex].pos1C, 0x7F, 0x32);
+            enqueuePositionalSoundEffect(0x12, (Vec3i *) &gRacePlayers[playerIndex].pos1C, 0x7F, 0x32);
         } else {
-            enqueuePositionalSoundEffect(0x11, (SoundPosition *) &gRacePlayers[playerIndex].pos1C, 0x7F, 0x32);
+            enqueuePositionalSoundEffect(0x11, (Vec3i *) &gRacePlayers[playerIndex].pos1C, 0x7F, 0x32);
         }
 
         callback = initRaceItemBreakParticle;
@@ -737,27 +730,27 @@ void spawnRaceItemBreakParticles(s16 playerIndex, s16 itemIndex) {
 }
 
 void renderRacePlayerRecoverySparkle(RaceItemEffectActor *arg0) {
-    RaceItemGfxCommandSource sp78;
+    FixedTransform sp78;
     void *sp74;
     void *sp70;
 
     if (gRenderMatricesDirty != 0) {
-        arg0->unk28.bytes.unk28 = 1;
+        arg0->vector24.fields.word28.bytes.unk28 = 1;
     }
 
     if (isPositionNearCurrentRaceViewportCamera(&arg0->payload.vec) != 0) {
-        if (arg0->unk28.bytes.unk28 != 0) {
-            arg0->unk28.bytes.unk28 = 0;
+        if (arg0->vector24.fields.word28.bytes.unk28 != 0) {
+            arg0->vector24.fields.word28.bytes.unk28 = 0;
             sp78 = gIdentityFixedTransform;
-            sp78.x = arg0->payload.vec.x;
-            sp78.y = arg0->payload.vec.y;
-            sp78.z = arg0->payload.vec.z;
-            arg0->unk24.velocityX = (s32)allocFixedTransformMatrix(&sp78);
+            sp78.translation.x = arg0->payload.vec.x;
+            sp78.translation.y = arg0->payload.vec.y;
+            sp78.translation.z = arg0->payload.vec.z;
+            arg0->vector24.fields.word24.velocityX = (s32)allocFixedTransformMatrix(&sp78);
         }
 
-        if (arg0->unk24.velocityX != 0) {
+        if (arg0->vector24.fields.word24.velocityX != 0) {
             getAssetTableImageAndPalette(getRelocatableHeapBlockBase(ASSET_HANDLE(0x1C)),
-                          ((s8)arg0->unk28.bytes.phase >> 1) + 0x2F,
+                          ((s8)arg0->vector24.fields.word28.bytes.phase >> 1) + 0x2F,
                           &sp74, &sp70);
 
             RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0x06000000, (u32)gAlphaSpriteRenderModeDl);
@@ -774,8 +767,8 @@ void renderRacePlayerRecoverySparkle(RaceItemEffectActor *arg0) {
             RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0xE6000000, 0);
             RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0xF0000000, 0x0703C000);
             RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0xE7000000, 0);
-            RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0x01020040, arg0->unk24.velocityX);
-            RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0x01000040, gViewportMatrix);
+            RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0x01020040, arg0->vector24.fields.word24.velocityX);
+            RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0x01000040, (u32)gViewportMatrix);
             RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0x0400103F, (u32)gRacePlayerRecoverySparkleQuadVertices);
             RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0xB1060402, 0x60200);
         }
@@ -784,29 +777,29 @@ void renderRacePlayerRecoverySparkle(RaceItemEffectActor *arg0) {
 
 void updateRacePlayerRecoverySparkle(RaceItemEffectActor *arg0) {
     if (gRaceUpdatePaused == 0) {
-        arg0->unk28.bytes.phase++;
-        if (arg0->unk28.bytes.phase == 0xC) {
+        arg0->vector24.fields.word28.bytes.phase++;
+        if (arg0->vector24.fields.word28.bytes.phase == 0xC) {
             removeCallbackTask(arg0);
             return;
         }
     }
-    if (arg0->unk28.bytes.phase < 0) {
-        arg0->unk28.bytes.phase = 0;
+    if (arg0->vector24.fields.word28.bytes.phase < 0) {
+        arg0->vector24.fields.word28.bytes.phase = 0;
     }
-    addRenderCallback(&D_801248C8, renderRacePlayerRecoverySparkle, arg0);
+    addRenderCallback(&D_801248C8, (RenderCallback)renderRacePlayerRecoverySparkle, arg0);
 }
 
 void initRacePlayerRecoverySparkle(RaceItemEffectActor *arg0) {
-    arg0->unk28.bytes.phase = -1;
+    arg0->vector24.fields.word28.bytes.phase = -1;
     arg0->payload.vec.x = D_80121EE8[arg0->playerIndex].pos.x + ((randomNextMain() - 0x80) << 10);
     arg0->payload.vec.y = D_80121EE8[arg0->playerIndex].pos.y + ((randomNextMain() - 0x80) << 10);
     arg0->payload.vec.z = D_80121EE8[arg0->playerIndex].pos.z + ((randomNextMain() - 0x80) << 10);
     updateRacePlayerRecoverySparkle(arg0);
-    setCallbackTaskCallback(arg0, updateRacePlayerRecoverySparkle);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRacePlayerRecoverySparkle);
 }
 
 void renderRacePlayerSnowSpray(RaceItemFollowActor *arg0) {
-    RaceItemGfxCommandSource sp90;
+    FixedTransform sp90;
     void *sp8C;
     void *sp88;
     volatile s32 pad[2];
@@ -818,13 +811,13 @@ void renderRacePlayerSnowSpray(RaceItemFollowActor *arg0) {
         if (arg0->dirty != 0) {
             arg0->dirty = 0;
             sp90 = gIdentityFixedTransform;
-            sp90.x = arg0->pos1.x;
-            sp90.y = arg0->pos1.y;
-            sp90.z = arg0->pos1.z;
+            sp90.translation.x = arg0->pos1.x;
+            sp90.translation.y = arg0->pos1.y;
+            sp90.translation.z = arg0->pos1.z;
             arg0->matrix1 = allocFixedTransformMatrix(&sp90);
-            sp90.x = arg0->pos2.x;
-            sp90.y = arg0->pos2.y;
-            sp90.z = arg0->pos2.z;
+            sp90.translation.x = arg0->pos2.x;
+            sp90.translation.y = arg0->pos2.y;
+            sp90.translation.z = arg0->pos2.z;
             arg0->matrix2 = allocFixedTransformMatrix(&sp90);
         }
         if (arg0->matrix2 != NULL) {
@@ -877,7 +870,7 @@ void updateRacePlayerSnowSpray(RaceItemFollowActor *arg0) {
     if (temp_a2->timer < 0) {
         temp_a2->timer = 0;
     }
-    addRenderCallback(&D_801248C8, renderRacePlayerSnowSpray, temp_a2);
+    addRenderCallback(&D_801248C8, (RenderCallback)renderRacePlayerSnowSpray, temp_a2);
 }
 
 void initRacePlayerSnowSpray(RaceItemFollowActor *arg0) {
@@ -901,7 +894,7 @@ void initRacePlayerSnowSpray(RaceItemFollowActor *arg0) {
         arg0->offset2.z = player->unk4C4.z - player->pos.z;
     }
     updateRacePlayerSnowSpray(arg0);
-    setCallbackTaskCallback(arg0, updateRacePlayerSnowSpray);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRacePlayerSnowSpray);
 }
 
 void renderRaceUiSparkle(RaceItemEffectActor *arg0) {
@@ -909,18 +902,20 @@ void renderRaceUiSparkle(RaceItemEffectActor *arg0) {
         if ((u8)arg0->payload.sprite.colorG == 0) {
             if ((u8)arg0->payload.sprite.colorB == 0) {
                 drawAssetTableSpriteWithExplicitPalette(arg0->payload.sprite.x, arg0->payload.sprite.y, getRelocatableHeapBlockBase(ASSET_HANDLE(0x1F)),
-                              ((arg0->payload.sprite.frame >> 1) + 0x5C) & 0xFFFF, 0x1D);
+                              (arg0->payload.sprite.frame >> 1) + 0x5C, 0x1D);
             } else {
                 drawAssetTableSpriteWithExplicitPalette(arg0->payload.sprite.x, arg0->payload.sprite.y, getRelocatableHeapBlockBase(ASSET_HANDLE(0x1F)),
-                              ((arg0->payload.sprite.frame >> 1) + 0x5C) & 0xFFFF, 0x1E);
+                              (arg0->payload.sprite.frame >> 1) + 0x5C, 0x1E);
             }
         } else if ((u8)arg0->payload.sprite.colorB == 0) {
             drawScaledAssetTableSpriteWithExplicitPalette((s16)(arg0->payload.sprite.x - 8), (s16)(arg0->payload.sprite.y - 8),
-                          getRelocatableHeapBlockBase(ASSET_HANDLE(0x1F)), ((arg0->payload.sprite.frame >> 1) + 0x5C) & 0xFFFF,
+                          getRelocatableHeapBlockBase(ASSET_HANDLE(0x1F)),
+                          (arg0->payload.sprite.frame >> 1) + 0x5C,
                           0x1D, 1);
         } else {
             drawScaledAssetTableSpriteWithExplicitPalette((s16)(arg0->payload.sprite.x - 8), (s16)(arg0->payload.sprite.y - 8),
-                          getRelocatableHeapBlockBase(ASSET_HANDLE(0x1F)), ((arg0->payload.sprite.frame >> 1) + 0x5C) & 0xFFFF,
+                          getRelocatableHeapBlockBase(ASSET_HANDLE(0x1F)),
+                          (arg0->payload.sprite.frame >> 1) + 0x5C,
                           0x1E, 1);
         }
     }
@@ -933,20 +928,20 @@ void updateRaceUiSparkle(RaceItemEffectActor *arg0) {
     if ((((arg0->payload.sprite.frame) + 1) - 1) >= 0x10) {
         removeCallbackTask(arg0);
     } else {
-        addRenderCallback(&gRaceOverlayRenderCallbackList, renderRaceUiSparkle, arg0);
+        addRenderCallback(&gRaceOverlayRenderCallbackList, (RenderCallback)renderRaceUiSparkle, arg0);
     }
 }
 
 void initRaceUiSparkle(RaceItemEffectActor *arg0) {
     arg0->payload.sprite.frame = 0xFFFF;
     updateRaceUiSparkle(arg0);
-    setCallbackTaskCallback(arg0, updateRaceUiSparkle);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceUiSparkle);
 }
 
 void spawnRaceUiSparkle(s32 arg0, s32 arg1, s16 arg2, s16 arg3, s16 arg4) {
     RaceItemEffectActor *temp_v0;
 
-    temp_v0 = createCallbackTaskPreservingArgs(initRaceUiSparkle, 5, 3);
+    temp_v0 = createCallbackTaskPreservingArgs((CallbackTaskCallback)initRaceUiSparkle, 5, 3);
     if (temp_v0 != NULL) {
         temp_v0->payload.sprite.x = arg0 - 8;
         temp_v0->payload.sprite.y = arg1 - 8;
@@ -960,7 +955,7 @@ void renderRaceItemTextureEffects(RaceItemTextureActor *arg0) {
     register RaceItemTextureActor *actor;
     s32 i;
     RaceItemDrawNode *node;
-    RaceItemGfxCommandSource transform;
+    FixedTransform transform;
 
     actor = arg0;
     transform = gIdentityFixedTransform;
@@ -992,9 +987,9 @@ void renderRaceItemTextureEffects(RaceItemTextureActor *arg0) {
                     if (isPositionNearCurrentRaceViewportCamera(node->pos) != 0) {
                         if (node->matrixDirty != 0) {
                             node->matrixDirty = 0;
-                            transform.x = node->pos->x;
-                            transform.y = node->pos->y;
-                            transform.z = node->pos->z;
+                            transform.translation.x = node->pos->x;
+                            transform.translation.y = node->pos->y;
+                            transform.translation.z = node->pos->z;
                             node->matrix = allocFixedTransformMatrix(&transform);
                         }
                         gSPMatrix(gRegionAllocPtr++, node->matrix,
@@ -1013,39 +1008,42 @@ void renderRaceItemTextureEffects(RaceItemTextureActor *arg0) {
     } while (0);
 }
 
-void updateRaceItemTextureEffects(RaceItemEffectActor *arg0) {
+void updateRaceItemTextureEffects(RaceItemTextureActor *arg0) {
     s32 i;
 
     for (i = 0; i < 4; i++) gRaceItemTextureEffectDrawLists[i] = NULL;
 
-    addRenderCallback(&D_801248E0, renderRaceItemTextureEffects, arg0);
+    addRenderCallback(&D_801248E0, (RenderCallback)renderRaceItemTextureEffects, arg0);
 }
 
-void initRaceItemTextureEffects(RaceItemEffectActor *arg0) {
+CLANG_DIAGNOSTIC_PUSH
+CLANG_DIAGNOSTIC_IGNORE_SELF_ASSIGN
+void initRaceItemTextureEffects(RaceItemTextureActor *arg0) {
     u16 *var_s0;
-    RaceItemEffectActor *callbackActor;
+    RaceItemTextureActor *callbackActor;
     s32 var_s1;
     volatile short pad;
-    s32 *var_s2;
+    void **var_s2;
     volatile RaceItemEffectAssetHandles *new_var2;
-    s32 *var_s3;
+    void **var_s3;
     volatile RaceItemEffectAssetHandles *var_s4;
     s32 var_s5;
-    RaceItemEffectActor *actor;
-    void (*new_var)(RaceItemEffectActor *);
-    RaceItemEffectActor *var_s6;
+    RaceItemTextureActor *actor;
+    void (*new_var)(RaceItemTextureActor *);
+    RaceItemTextureActor *var_s6;
 
     var_s4 = &gAssetHandles;
     if (1 != 0) {
     }
-    do { var_s0 = gRaceItemEffectSpriteIds; if (1) { } var_s6 = arg0; actor = var_s6; { } var_s1 = 0; var_s2 = &actor->payload.vec.x; var_s3 = &actor->unk28.word; if (1) { } arg0 = arg0; if (arg0 && arg0) { } var_s5 = 0x10; if (1) { } new_var = updateRaceItemTextureEffects; callbackActor = actor; do { getAssetTableImageAndPalette((0, getRelocatableHeapBlockBase((new_var2 = var_s4)->itemTextureHandle)), *var_s0, var_s2, var_s3); var_s1 += 4; var_s0++; var_s2++; var_s3++; } while (var_s1 != var_s5); } while (0);
+    do { var_s0 = gRaceItemEffectSpriteIds; if (1) { } var_s6 = arg0; actor = var_s6; { } var_s1 = 0; var_s2 = actor->images; var_s3 = actor->palettes; if (1) { } arg0 = arg0; if (arg0 && arg0) { } var_s5 = 0x10; if (1) { } new_var = updateRaceItemTextureEffects; callbackActor = actor; do { getAssetTableImageAndPalette((0, getRelocatableHeapBlockBase((new_var2 = var_s4)->itemTextureHandle)), *var_s0, var_s2, var_s3); var_s1 += 4; var_s0++; var_s2++; var_s3++; } while (var_s1 != var_s5); } while (0);
 
     updateRaceItemTextureEffects(callbackActor);
-    setCallbackTaskCallback(callbackActor, new_var);
+    setCallbackTaskCallback(callbackActor, (CallbackTaskCallback)new_var);
 }
+CLANG_DIAGNOSTIC_POP
 
 void renderRacePlayerLandingSnowSpray(RaceItemFollowActor *arg0) {
-    RaceItemGfxCommandSource sp98;
+    FixedTransform sp98;
     void *sp94;
     void *sp90;
     volatile s32 pad[2];
@@ -1057,13 +1055,13 @@ void renderRacePlayerLandingSnowSpray(RaceItemFollowActor *arg0) {
         if (arg0->dirty != 0) {
             arg0->dirty = 0;
             sp98 = gIdentityFixedTransform;
-            sp98.x = arg0->pos1.x;
-            sp98.y = arg0->pos1.y;
-            sp98.z = arg0->pos1.z;
+            sp98.translation.x = arg0->pos1.x;
+            sp98.translation.y = arg0->pos1.y;
+            sp98.translation.z = arg0->pos1.z;
             arg0->matrix1 = allocFixedTransformMatrix(&sp98);
-            sp98.x = arg0->pos2.x;
-            sp98.y = arg0->pos2.y;
-            sp98.z = arg0->pos2.z;
+            sp98.translation.x = arg0->pos2.x;
+            sp98.translation.y = arg0->pos2.y;
+            sp98.translation.z = arg0->pos2.z;
             arg0->matrix2 = allocFixedTransformMatrix(&sp98);
         }
         if (arg0->matrix2 != NULL) {
@@ -1116,7 +1114,7 @@ void updateRacePlayerLandingSnowSpray(RaceItemFollowActor *arg0) {
     if (temp_a2->timer < 0) {
         temp_a2->timer = 0;
     }
-    addRenderCallback(&D_801248C8, renderRacePlayerLandingSnowSpray, temp_a2);
+    addRenderCallback(&D_801248C8, (RenderCallback)renderRacePlayerLandingSnowSpray, temp_a2);
 }
 
 void initRacePlayerLandingSnowSpray(RaceItemFollowActor *arg0) {
@@ -1140,5 +1138,5 @@ void initRacePlayerLandingSnowSpray(RaceItemFollowActor *arg0) {
         arg0->offset2.z = player->unk4C4.z - player->pos.z;
     }
     updateRacePlayerLandingSnowSpray(arg0);
-    setCallbackTaskCallback(arg0, updateRacePlayerLandingSnowSpray);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRacePlayerLandingSnowSpray);
 }

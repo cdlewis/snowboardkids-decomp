@@ -4,7 +4,7 @@
 #include "common.h"
 
 void initRaceMotionAnimationDebugViewer(void);
-void drawRaceMotionAnimationDebugViewerMotionNumber(s32 unused);
+void drawRaceMotionAnimationDebugViewerMotionNumber(void *unused);
 void updateRaceMotionAnimationDebugViewer(void);
 
 #endif

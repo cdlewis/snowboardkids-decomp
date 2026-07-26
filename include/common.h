@@ -2,6 +2,7 @@
 #define COMMON_H
 
 #include "include_asm.h"
+#include "compiler_diagnostics.h"
 
 /*
  * Pull in the libultra headers project-wide so every translation unit has the
@@ -11,6 +12,14 @@
  * resolves cleanly without any per-file guards.
  */
 #include <PR/mbi.h>
+
+typedef struct Vec3i {
+    s32 x;
+    s32 y;
+    s32 z;
+} Vec3i;
+
+int sprintf(char *buffer, const char *format, ...);
 
 #define STICK_RIGHT 0x40000
 #define STICK_LEFT 0x80000

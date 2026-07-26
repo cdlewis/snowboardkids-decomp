@@ -1,4 +1,5 @@
 #include "common.h"
+#include "game/engine/render_callback.h"
 #include "game/engine/relocatable_heap.h"
 #include "game/engine/callback_task_scheduler.h"
 #include "game/menu/character_select/character_select_course_menu.h"
@@ -24,9 +25,6 @@ typedef struct {
     u8 confirmSelection;
 } ControllerPakRumbleCheckPromptTransition;
 
-extern void addRenderCallback(void *, void *, s32);
-extern s32 gMenuRenderCallbackList;
-extern s32 gMenuOverlayRenderCallbackList;
 extern CharacterSelectFlowState *gCurrentGameTask;
 extern ControllerPakPromptTransition gControllerPakContinuePromptTransition;
 extern ControllerPakRumbleCheckPromptTransition gControllerPakRumbleCheckPromptTransition;
@@ -41,18 +39,18 @@ extern u8 gControllerPakMenuCursorState;
 extern u8 gControllerPakDeletePromptState;
 extern s32 gControllerPakFreeBytes;
 extern s32 gControllerPakFreeFileCount;
-extern u8 gControllerPakContinuePromptText[];
-extern u8 gControllerPakAreYouSureText[];
-extern u8 gControllerPakCouldNotEraseNoteText[];
-extern u8 gControllerPakRumbleCheckPromptText[];
-extern u8 gControllerPakRumbleCheckNotUsedText[];
-extern u8 gControllerPakRumbleCheckNoEntryText[];
-extern u8 gControllerPakRumblePakText[];
+extern MenuGlyphScript gControllerPakContinuePromptText[];
+extern MenuGlyphScript gControllerPakAreYouSureText[];
+extern MenuGlyphScript gControllerPakCouldNotEraseNoteText[];
+extern MenuGlyphScript gControllerPakRumbleCheckPromptText[][0x34];
+extern MenuGlyphScript gControllerPakRumbleCheckNotUsedText[];
+extern MenuGlyphScript gControllerPakRumbleCheckNoEntryText[];
+extern MenuGlyphScript gControllerPakRumblePakText[];
 
 void drawControllerPakContinuePrompt(ControllerPakOptionsActor *arg0) {
     s32 i;
     s32 j;
-    s32 alpha;
+    u16 alpha;
 
     drawMenuSprite((s16)(arg0->common.x - 4), (s16)(arg0->common.y - 4), getRelocatableHeapBlockBase(gAssetHandles[0x29]), 2, 0x20, 0x20, 0, 0);
     drawMenuSprite((s16)(arg0->common.x + 0xD4), (s16)(arg0->common.y - 4), getRelocatableHeapBlockBase(gAssetHandles[0x29]), 4, 0x20, 0x20, 0, 0);
@@ -137,7 +135,7 @@ void updateControllerPakContinuePrompt(ControllerPakOptionsActor *arg0) {
         removeCallbackTask(temp_a2);
         return;
     }
-    addRenderCallback(&gMenuRenderCallbackList, drawControllerPakContinuePrompt, (s32)temp_a2);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawControllerPakContinuePrompt, (void *)temp_a2);
 }
 
 void initControllerPakContinuePrompt(ControllerPakOptionsActor *arg0) {
@@ -147,7 +145,7 @@ void initControllerPakContinuePrompt(ControllerPakOptionsActor *arg0) {
     arg0->blinkState = 0;
     arg0->scale = 0x100;
     arg0->timer = 0;
-    setCallbackTaskCallback(arg0, updateControllerPakContinuePrompt);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateControllerPakContinuePrompt);
 }
 
 void drawControllerPakRumbleCheckPrompt(ControllerPakRumbleCheckPromptActor *actor) {
@@ -155,9 +153,9 @@ void drawControllerPakRumbleCheckPrompt(ControllerPakRumbleCheckPromptActor *act
     s32 j;
     s32 playerIndex;
     s32 yAdjust;
-    s32 alpha;
-    u16 playerNumberText[5];
-    u8 *message;
+    MenuGlyphScript *message;
+    u16 alpha;
+    MenuGlyphScript playerNumberText[5];
 
     if (actor->state == 8) {
         yAdjust = 8;
@@ -214,12 +212,13 @@ void drawControllerPakRumbleCheckPrompt(ControllerPakRumbleCheckPromptActor *act
                 alpha = 0x60;
             }
             drawMenuGlyphScript((s16)(actor->common.x + 0x10), (s16)(actor->common.y - yAdjust + playerIndex * 0x10),
-                          (u8 *)playerNumberText, 0, alpha, 0);
+                          playerNumberText, 0, alpha, 0);
             drawMenuGlyphScript((s16)(actor->common.x + 0x40), (s16)(actor->common.y - yAdjust + playerIndex * 0x10), message, 0, alpha,
                           0);
         }
     } else {
-        drawMenuGlyphScript(actor->common.x, actor->common.y, &gControllerPakRumbleCheckPromptText[(u16)actor->targetScale * 0x68], 0, actor->scale, 0);
+        drawMenuGlyphScript(actor->common.x, actor->common.y, gControllerPakRumbleCheckPromptText[actor->targetScale], 0,
+                            actor->scale, 0);
     }
 
     if (actor->state == 9) {
@@ -239,8 +238,9 @@ void drawControllerPakRumbleCheckPrompt(ControllerPakRumbleCheckPromptActor *act
     }
 
     if ((actor->state == 1) || (actor->state == 3) || (actor->state == 8)) {
-        drawMenuSprite((s16)(actor->common.x + 0xD0), (s16)(actor->common.y + yAdjust + 0x20), getRelocatableHeapBlockBase(gAssetHandles[0x21]),
-                      ((actor->timer >= 8) + 5) & 0xFFFF, 0x20, 0x20, 0, 0);
+        drawMenuSprite((s16)(actor->common.x + 0xD0), (s16)(actor->common.y + yAdjust + 0x20),
+                       getRelocatableHeapBlockBase(gAssetHandles[0x21]),
+                       (actor->timer >= 8) + 5, 0x20, 0x20, 0, 0);
     }
 }
 
@@ -321,7 +321,7 @@ void updateControllerPakRumbleCheckPrompt(ControllerPakRumbleCheckPromptActor *a
         removeCallbackTask(arg0);
         return;
     }
-    addRenderCallback(&gMenuRenderCallbackList, drawControllerPakRumbleCheckPrompt, (s32)arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawControllerPakRumbleCheckPrompt, (void *)arg0);
 }
 
 void initControllerPakRumbleCheckPrompt(ControllerPakRumbleCheckPromptActor *arg0) {
@@ -331,7 +331,7 @@ void initControllerPakRumbleCheckPrompt(ControllerPakRumbleCheckPromptActor *arg
     arg0->scale = 0;
     arg0->timer = 0;
     arg0->targetScale = 0;
-    setCallbackTaskCallback(arg0, updateControllerPakRumbleCheckPrompt);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateControllerPakRumbleCheckPrompt);
 }
 
 void drawControllerPakFileDeleteMainOptions(ControllerPakOptionsActor *arg0) {
@@ -375,7 +375,7 @@ void updateControllerPakFileDeleteMainOptionsUi(ControllerPakOptionsActor *arg0)
             arg0->timer = 0;
             break;
     }
-    addRenderCallback(&gMenuRenderCallbackList, drawControllerPakFileDeleteMainOptions, (s32)arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawControllerPakFileDeleteMainOptions, (void *)arg0);
 }
 
 void initControllerPakFileDeleteMainOptions(ControllerPakOptionsActor *arg0) {
@@ -383,7 +383,7 @@ void initControllerPakFileDeleteMainOptions(ControllerPakOptionsActor *arg0) {
     arg0->common.y = -0x44;
     arg0->scale = 0x100;
     arg0->timer = 0;
-    setCallbackTaskCallback(arg0, updateControllerPakFileDeleteMainOptionsUi);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateControllerPakFileDeleteMainOptionsUi);
 }
 
 void drawControllerPakFileDeleteConfirmOptions(ControllerPakOptionsActor *arg0) {
@@ -432,7 +432,7 @@ void updateControllerPakFileDeleteConfirmOptionsUi(ControllerPakOptionsActor *ar
             arg0->timer = (arg0->timer + 1) & 0x1F;
             break;
     }
-    addRenderCallback(&gMenuRenderCallbackList, drawControllerPakFileDeleteConfirmOptions, (s32)arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawControllerPakFileDeleteConfirmOptions, (void *)arg0);
 }
 
 void initControllerPakFileDeleteConfirmOptions(ControllerPakOptionsActor *arg0) {
@@ -440,7 +440,7 @@ void initControllerPakFileDeleteConfirmOptions(ControllerPakOptionsActor *arg0) 
     arg0->common.y = 0x48;
     arg0->scale = 0x100;
     arg0->timer = 0;
-    setCallbackTaskCallback(arg0, updateControllerPakFileDeleteConfirmOptionsUi);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateControllerPakFileDeleteConfirmOptionsUi);
 }
 
 void drawControllerPakFileDeleteFreeSpaceInfo(ControllerPakTwoPointActor *arg0) {
@@ -466,7 +466,7 @@ void drawControllerPakFileDeleteFreeSpaceInfo(ControllerPakTwoPointActor *arg0) 
             i++;
         } while (value != 0);
         text[2] = 0xFFFF;
-        drawMenuGlyphScript(arg0->common.x, arg0->common.y, (u8 *)text, 1, 0x100, 8);
+        drawMenuGlyphScript(arg0->common.x, arg0->common.y, text, 1, 0x100, 8);
         i = 0;
     }
     do {
@@ -482,11 +482,11 @@ void drawControllerPakFileDeleteFreeSpaceInfo(ControllerPakTwoPointActor *arg0) 
         i++;
     } while (value != 0);
     text[3] = 0xFFFF;
-    drawMenuGlyphScript(arg0->x2, arg0->y2, (u8 *)text, 1, 0x100, 8);
+    drawMenuGlyphScript(arg0->x2, arg0->y2, text, 1, 0x100, 8);
 }
 
-void updateControllerPakFileDeleteFreeSpaceInfo(s32 arg0) {
-    addRenderCallback(&gMenuRenderCallbackList, drawControllerPakFileDeleteFreeSpaceInfo, arg0);
+void updateControllerPakFileDeleteFreeSpaceInfo(ControllerPakTwoPointActor *arg0) {
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawControllerPakFileDeleteFreeSpaceInfo, arg0);
 }
 
 void initControllerPakFileDeleteFreeSpaceInfo(ControllerPakTwoPointActor *arg0) {
@@ -496,7 +496,7 @@ void initControllerPakFileDeleteFreeSpaceInfo(ControllerPakTwoPointActor *arg0) 
     arg0->common.y = temp_v0;
     arg0->x2 = 0x5C;
     arg0->y2 = temp_v0;
-    setCallbackTaskCallback(arg0, updateControllerPakFileDeleteFreeSpaceInfo);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateControllerPakFileDeleteFreeSpaceInfo);
 }
 
 // drawControllerPakFileDeleteFileList best match: 94.081% (nonmatchings/drawControllerPakFileDeleteFileList-8498672362023432715/base_31.c)
@@ -556,7 +556,7 @@ void drawControllerPakFileDeleteFileList(ControllerPakFileListActor *arg0) {
         }
         textB0[2] = 0xFFFF;
         textB0[1] = (fileIndex + 1) % 10;
-        drawMenuGlyphScript((s16)(arg0->positions[0].x + i), (s16)(arg0->positions[0].y + rowY), (u8 *)textB0, 1, alpha, 8);
+        drawMenuGlyphScript((s16)(arg0->positions[0].x + i), (s16)(arg0->positions[0].y + rowY), textB0, 1, alpha, 8);
 
         if (gControllerPakFileStates[fileIndex].company_code != 0) {
             i = 0;
@@ -583,7 +583,7 @@ void drawControllerPakFileDeleteFileList(ControllerPakFileListActor *arg0) {
                 fileNameText[insertIndex + 1] = gControllerPakFileStates[fileIndex].ext_name[0] - 0x10;
             }
             fileNameText[18] = 0xFFFF;
-            drawMenuGlyphScript(arg0->positions[1].x, (s16)(arg0->positions[1].y + rowY), (u8 *)fileNameText, 1, alpha, 8);
+            drawMenuGlyphScript(arg0->positions[1].x, (s16)(arg0->positions[1].y + rowY), fileNameText, 1, alpha, 8);
 
             i = 0;
             do {
@@ -600,7 +600,7 @@ void drawControllerPakFileDeleteFileList(ControllerPakFileListActor *arg0) {
                 i++;
             } while (i < 4);
             text7C[4] = 0xFFFF;
-            drawMenuGlyphScript(arg0->positions[2].x, (s16)(arg0->positions[2].y + rowY), (u8 *)text7C, 1, alpha, 8);
+            drawMenuGlyphScript(arg0->positions[2].x, (s16)(arg0->positions[2].y + rowY), text7C, 1, alpha, 8);
 
             i = 0;
             do {
@@ -619,7 +619,7 @@ void drawControllerPakFileDeleteFileList(ControllerPakFileListActor *arg0) {
                 i++;
             } while (i < 2);
             text7C[2] = 0xFFFF;
-            drawMenuGlyphScript(arg0->positions[3].x, (s16)(arg0->positions[3].y + rowY), (u8 *)text7C, 1, alpha, 8);
+            drawMenuGlyphScript(arg0->positions[3].x, (s16)(arg0->positions[3].y + rowY), text7C, 1, alpha, 8);
 
             i = 0;
             do {
@@ -634,7 +634,7 @@ void drawControllerPakFileDeleteFileList(ControllerPakFileListActor *arg0) {
                 i--;
             } while (insertIndex != 0);
             textB0[3] = 0xFFFF;
-            drawMenuGlyphScript(arg0->positions[4].x, (s16)(arg0->positions[4].y + rowY), (u8 *)textB0, 1, alpha, 8);
+            drawMenuGlyphScript(arg0->positions[4].x, (s16)(arg0->positions[4].y + rowY), textB0, 1, alpha, 8);
         }
 
         rowY += 0x10;
@@ -663,7 +663,7 @@ void updateControllerPakFileDeleteFileListUi(ControllerPakFileListActor *arg0) {
         arg0->cursorScale = 0x100;
         arg0->cursorTimer = 0;
     }
-    addRenderCallback(&gMenuRenderCallbackList, drawControllerPakFileDeleteFileList, (s32)arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawControllerPakFileDeleteFileList, (void *)arg0);
 }
 
 void initControllerPakFileDeleteFileList(ControllerPakFileListActor *arg0) {
@@ -684,15 +684,15 @@ void initControllerPakFileDeleteFileList(ControllerPakFileListActor *arg0) {
     arg0->positions[5].y = -0x1F;
     arg0->cursorScale = 0x100;
     arg0->cursorTimer = 0;
-    setCallbackTaskCallback(arg0, updateControllerPakFileDeleteFileListUi);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateControllerPakFileDeleteFileListUi);
 }
 
 void drawControllerPakFileDeleteIcon(ControllerPakSpriteActor *arg0) {
     drawMenuTilemapSprite((MenuRenderSprite *)&arg0->sprite, 0, arg0->common.x, arg0->common.y);
 }
 
-void updateControllerPakFileDeleteIcon(s32 arg0) {
-    addRenderCallback(&gMenuOverlayRenderCallbackList, drawControllerPakFileDeleteIcon, arg0);
+void updateControllerPakFileDeleteIcon(ControllerPakSpriteActor *arg0) {
+    addRenderCallback(&gMenuOverlayRenderCallbackList, (RenderCallback)drawControllerPakFileDeleteIcon, arg0);
 }
 
 void initControllerPakFileDeleteIcon(ControllerPakSpriteActor *arg0) {
@@ -701,15 +701,15 @@ void initControllerPakFileDeleteIcon(ControllerPakSpriteActor *arg0) {
     arg0->sprite.y = 0x10;
     arg0->common.x = arg0->startX;
     arg0->common.y = arg0->startY;
-    setCallbackTaskCallback(arg0, updateControllerPakFileDeleteIcon);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateControllerPakFileDeleteIcon);
 }
 
 void drawControllerPakMessageIcon(ControllerPakSpriteActor *arg0) {
     drawMenuTilemapSprite((MenuRenderSprite *)&arg0->sprite, 1, arg0->common.x, arg0->common.y);
 }
 
-void updateControllerPakMessageIcon(s32 arg0) {
-    addRenderCallback(&gMenuOverlayRenderCallbackList, drawControllerPakMessageIcon, arg0);
+void updateControllerPakMessageIcon(ControllerPakSpriteActor *arg0) {
+    addRenderCallback(&gMenuOverlayRenderCallbackList, (RenderCallback)drawControllerPakMessageIcon, arg0);
 }
 
 void initControllerPakMessageIcon(ControllerPakSpriteActor *arg0) {
@@ -718,18 +718,21 @@ void initControllerPakMessageIcon(ControllerPakSpriteActor *arg0) {
     arg0->sprite.y = 0x20;
     arg0->common.x = arg0->startX;
     arg0->common.y = arg0->startY;
-    setCallbackTaskCallback(arg0, updateControllerPakMessageIcon);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateControllerPakMessageIcon);
 }
 
 void drawControllerPakFileDeleteErrorPrompt(ControllerPakWindowActor *arg0) {
+    void *texture;
+
     drawMenuSpriteWithAlpha(arg0->common.x, arg0->common.y, getRelocatableHeapBlockBase(gAssetHandles[0x24]), 0, 0x20, 0x20, 0, arg0->scale, 0);
     drawMenuSpriteWithAlpha((s16)(arg0->common.x + 0x40), arg0->common.y, getRelocatableHeapBlockBase(gAssetHandles[0x24]), 1, 0x20, 0x20, 0, arg0->scale, 0);
     drawMenuSpriteWithAlpha((s16)(arg0->common.x + 0x78), arg0->common.y, getRelocatableHeapBlockBase(gAssetHandles[0x24]), 1, 0x20, 0x20, 0, arg0->scale, 0);
     drawMenuSpriteWithAlpha((s16)(arg0->common.x + 0xB0), arg0->common.y, getRelocatableHeapBlockBase(gAssetHandles[0x24]), 2, 0x20, 0x20, 0, arg0->scale, 0);
     drawMenuGlyphScript((s16)(arg0->common.x + 4), (s16)(arg0->common.y + 4), gControllerPakCouldNotEraseNoteText, 0, arg0->scale, 0);
     if (arg0->selectedOption == 1) {
-        drawMenuSprite((s16)(arg0->common.x + 0xD4), (s16)(arg0->common.y + 0x24), getRelocatableHeapBlockBase(gAssetHandles[0x24]),
-                      ((arg0->timer >= 8) + 5) & 0xFFFF, 0x20, 0x20, 0, 0);
+        texture = getRelocatableHeapBlockBase(gAssetHandles[0x24]);
+        drawMenuSprite((s16)(arg0->common.x + 0xD4), (s16)(arg0->common.y + 0x24), texture,
+                       (arg0->timer >= 8) + 5, 0x20, 0x20, 0, 0);
     }
 }
 
@@ -778,7 +781,7 @@ void updateControllerPakFileDeleteErrorPromptUi(ControllerPakDeletePromptActor *
         return;
     }
 
-    addRenderCallback(&gMenuRenderCallbackList, drawControllerPakFileDeleteErrorPrompt, (s32)arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawControllerPakFileDeleteErrorPrompt, (void *)arg0);
 }
 
 void initControllerPakFileDeleteErrorPrompt(ControllerPakDeletePromptActor *arg0) {
@@ -787,7 +790,7 @@ void initControllerPakFileDeleteErrorPrompt(ControllerPakDeletePromptActor *arg0
     arg0->timer = 0;
     arg0->scale = 0;
     arg0->selectedOption = 0;
-    setCallbackTaskCallback(arg0, updateControllerPakFileDeleteErrorPromptUi);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateControllerPakFileDeleteErrorPromptUi);
 }
 
 void drawControllerPakDeleteConfirmPrompt(ControllerPakDeletePromptActor *arg0) {
@@ -855,7 +858,7 @@ void updateControllerPakDeleteConfirmPrompt(ControllerPakDeletePromptActor *arg0
     if (gControllerPakMenuState.state != 3) {
         removeCallbackTask(arg0);
     } else {
-        addRenderCallback(&gMenuRenderCallbackList, drawControllerPakDeleteConfirmPrompt, (s32)arg0);
+        addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawControllerPakDeleteConfirmPrompt, (void *)arg0);
     }
 }
 
@@ -865,5 +868,5 @@ void initControllerPakDeleteConfirmPrompt(ControllerPakDeletePromptActor *arg0) 
     arg0->scale = 0x100;
     arg0->selectedOption = 1;
     arg0->timer = 0;
-    setCallbackTaskCallback(arg0, updateControllerPakDeleteConfirmPrompt);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateControllerPakDeleteConfirmPrompt);
 }

@@ -1,14 +1,9 @@
 #include "common.h"
+#include "game/engine/render_callback.h"
 #include "game/race/camera/race_camera.h"
 #include "game/race/motion/race_motion_animation_debug_viewer.h"
 #include "game/race/motion/race_motion.h"
 #include "game/race/player/race_player_model_renderer.h"
-
-typedef struct {
-    /* 0x0 */ s32 x;
-    /* 0x4 */ s32 y;
-    /* 0x8 */ s32 z;
-} Vec3i;
 
 typedef struct {
     /* 0x000 */ s16 modelId;
@@ -32,11 +27,7 @@ typedef struct {
 extern RaceMotionAnimationDebugViewerState gRacePlayers;
 extern s32 gPlayerInputHeld;
 extern s32 gPlayerInputPressed;
-extern void *gMenuForegroundRenderCallbackList;
-extern void *gModelRenderCallbackList;
-extern void sprintf(char *, const char *, ...);
 extern void drawMenuAsciiTextDefaultScale(s32, s32, char *, s32);
-extern void addRenderCallback(void *, void *, void *);
 
 #define gRaceMotionAnimationDebugViewerState gRacePlayers
 
@@ -63,7 +54,7 @@ void initRaceMotionAnimationDebugViewer(void) {
     initRaceMotionModelParts((RaceMotionInitState *)state);
 }
 
-void drawRaceMotionAnimationDebugViewerMotionNumber(s32 unused) {
+void drawRaceMotionAnimationDebugViewerMotionNumber(void *unused) {
     char buf[0x64];
 
     sprintf(buf, gRaceMotionAnimationDebugViewerMotionNumberFormat,
@@ -104,7 +95,7 @@ void updateRaceMotionAnimationDebugViewer(void) {
             stepRaceMotionLoopingAnimation((RaceMotionState *)&gRaceMotionAnimationDebugViewerState);
         }
     }
-    addRenderCallback(&gModelRenderCallbackList, drawRacePlayerModel,
+    addRenderCallback(&gModelRenderCallbackList, (RenderCallback)drawRacePlayerModel,
                       (RacePlayerModelRenderState *)&gRaceMotionAnimationDebugViewerState);
     addRenderCallback(&gMenuForegroundRenderCallbackList,
                       drawRaceMotionAnimationDebugViewerMotionNumber, NULL);

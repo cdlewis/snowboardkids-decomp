@@ -89,13 +89,9 @@ typedef struct {
 
 
 typedef struct StackD7D4 {
-    char sp28[0x20];
-    s32 sp48;
-    s32 sp4C;
-    s32 sp50;
-    s32 sp54;
-    s32 sp58;
-    s32 sp5C;
+    FixedTransform transform;
+    Vec3i transformed;
+    Vec3i offset;
 } StackD7D4;
 
 extern void packFixedTransformMatrix(void *, void *);
@@ -181,15 +177,15 @@ void updateRaceCameraTransformFromAngles(void) {
     StackD7D4 stack;
 
     makeFixedRotationYX(D_801124A0->rotationMatrix, -D_801124A0->pitch, -D_801124A0->yaw);
-    stack.sp54 = 0;
-    stack.sp58 = 0;
-    stack.sp5C = -D_801124A0->distance;
-    makeFixedRotationXY(stack.sp28, D_801124A0->pitch, D_801124A0->yaw);
-    transformVec3iByFixedMatrix(stack.sp28, &stack.sp54, &stack.sp48);
-    D_801124A0->transformOffset.x = stack.sp48 - D_801124A0->pos.x;
-    D_801124A0->transformOffset.y = stack.sp4C - D_801124A0->pos.y;
-    D_801124A0->transformOffset.z = stack.sp50 - D_801124A0->pos.z;
-    packFixedTransformMatrix(stack.sp28, D_801124A0->transform);
+    stack.offset.x = 0;
+    stack.offset.y = 0;
+    stack.offset.z = -D_801124A0->distance;
+    makeFixedRotationXY(stack.transform.rotation, D_801124A0->pitch, D_801124A0->yaw);
+    transformVec3iByFixedMatrix(stack.transform.rotation, &stack.offset, &stack.transformed);
+    D_801124A0->transformOffset.x = stack.transformed.x - D_801124A0->pos.x;
+    D_801124A0->transformOffset.y = stack.transformed.y - D_801124A0->pos.y;
+    D_801124A0->transformOffset.z = stack.transformed.z - D_801124A0->pos.z;
+    packFixedTransformMatrix(&stack.transform, D_801124A0->transform);
 }
 
 void updateRaceCameraLookAtTransform(void) {

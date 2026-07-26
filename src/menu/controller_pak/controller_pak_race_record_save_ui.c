@@ -1,9 +1,8 @@
 #include "common.h"
+#include "game/engine/render_callback.h"
 #include "game/engine/relocatable_heap.h"
 #include "game/engine/callback_task_scheduler.h"
 #include "game/menu/controller_pak/controller_pak_race_record_save_ui.h"
-#define MENU_RENDERER_BROAD_PROTOTYPES
-#define MENU_RENDERER_F8AC_U16_ALPHA_PROTOTYPE
 #include "game/menu/renderer/menu_renderer.h"
 
 typedef struct {
@@ -21,17 +20,15 @@ typedef struct {
     /* 0x6 */ s16 nextStatus;
 } ControllerPakRaceRecordSaveStatusTransition;
 
-extern void addRenderCallback(void *, void *, void *);
-extern u8 gControllerPakRaceRecordSaveStatusMessages[][0x4C];
+extern MenuGlyphScript gControllerPakRaceRecordSaveStatusMessages[][0x26];
 extern u8 gControllerPakRaceRecordSaveChoicePromptTopSprites[];
 extern u8 gControllerPakRaceRecordSaveChoicePromptBottomSprites[];
-extern u8 gControllerPakRaceRecordSaveExitMessage[];
+extern MenuGlyphScript gControllerPakRaceRecordSaveExitMessage[];
 extern s16 gControllerPakRaceRecordSaveStatusTransitionAlpha;
 extern ControllerPakRaceRecordSaveStatusTransition gControllerPakRaceRecordSaveStatusTransition;
 extern u16 gControllerPakRaceRecordSaveStatusTransitionTargetStatus;
 extern u16 gControllerPakRaceRecordSaveStatusTransitionNextStatus;
 extern u8 gControllerPakRaceRecordSaveStatusTransitionStep;
-extern void *gMenuRenderCallbackList;
 extern void *D_8010ADE0;
 extern void *D_8010ADE4;
 extern s16 gControllerPakStatusCodes;
@@ -163,7 +160,7 @@ void drawControllerPakRaceRecordSaveScorePanel(ControllerPakRaceRecordSaveActor 
                 }
             }
             drawMenuSpriteWithAlpha((s16)(arg0->x + xOffset + 4), (s16)(arg0->y + 0x27),
-                          getRelocatableHeapBlockBase(CONTROLLER_PAK_RACE_RECORD_SAVE_SCORE_TEXTURE_HANDLE), (i + 0x1A) & 0xFFFF, 0x20, 0x20, 0,
+                          getRelocatableHeapBlockBase(CONTROLLER_PAK_RACE_RECORD_SAVE_SCORE_TEXTURE_HANDLE), i + 0x1A, 0x20, 0x20, 0,
                           alpha, tile);
             i++;
             xOffset += 0xE;
@@ -181,8 +178,8 @@ void updateControllerPakRaceRecordSaveScorePanel(ControllerPakRaceRecordSaveActo
         if (arg0->x < -0x43) {
             arg0->x = -0x44;
             arg0->unk1C.state = 1;
-            D_8010ADE0 = createCallbackTask(initControllerPakRaceRecordSavePromptFrame, 0, 0x62);
-            createCallbackTask(initControllerPakRaceRecordSaveExitMessage, 0, 0x63);
+            D_8010ADE0 = createCallbackTask((CallbackTaskCallback)initControllerPakRaceRecordSavePromptFrame, 0, 0x62);
+            createCallbackTask((CallbackTaskCallback)initControllerPakRaceRecordSaveExitMessage, 0, 0x63);
         }
         state = arg0->unk1C.state;
         break;
@@ -208,14 +205,14 @@ void updateControllerPakRaceRecordSaveScorePanel(ControllerPakRaceRecordSaveActo
         removeCallbackTask(arg0);
         return;
     }
-    addRenderCallback(&gMenuRenderCallbackList, drawControllerPakRaceRecordSaveScorePanel, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawControllerPakRaceRecordSaveScorePanel, arg0);
 }
 
 void initControllerPakRaceRecordSaveScorePanel(ControllerPakRaceRecordSaveActor *arg0) {
     arg0->x = 0x90;
     arg0->y = -0x20;
     arg0->unk1C.state = 0;
-    setCallbackTaskCallback(arg0, updateControllerPakRaceRecordSaveScorePanel);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateControllerPakRaceRecordSaveScorePanel);
 }
 
 void drawControllerPakRaceRecordSavePromptFrame(ControllerPakRaceRecordSaveActor *arg0) {
@@ -240,7 +237,7 @@ void updateControllerPakRaceRecordSavePromptFrame(ControllerPakRaceRecordSaveAct
         if (arg0->unk1C.scale >= 0x100) {
             arg0->unk1C.scale = 0x100;
             arg0->state.b.unk1F = 1;
-            D_8010ADE4 = createCallbackTask(initControllerPakRaceRecordSaveStatusMessage, 0, 0x63);
+            D_8010ADE4 = createCallbackTask((CallbackTaskCallback)initControllerPakRaceRecordSaveStatusMessage, 0, 0x63);
         }
         state = arg0->state.b.unk1F;
         break;
@@ -266,7 +263,7 @@ void updateControllerPakRaceRecordSavePromptFrame(ControllerPakRaceRecordSaveAct
         removeCallbackTask(arg0);
         return;
     }
-    addRenderCallback(&gMenuRenderCallbackList, drawControllerPakRaceRecordSavePromptFrame, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawControllerPakRaceRecordSavePromptFrame, arg0);
 }
 
 void initControllerPakRaceRecordSavePromptFrame(ControllerPakRaceRecordSaveActor *arg0) {
@@ -274,19 +271,21 @@ void initControllerPakRaceRecordSavePromptFrame(ControllerPakRaceRecordSaveActor
     arg0->y = -0x1E;
     arg0->unk1C.scale = 0;
     arg0->state.b.unk1F = 0;
-    setCallbackTaskCallback(arg0, updateControllerPakRaceRecordSavePromptFrame);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateControllerPakRaceRecordSavePromptFrame);
 }
 
 void drawControllerPakRaceRecordSaveStatusMessage(ControllerPakRaceRecordSaveActor *arg0) {
-    u8 *text;
+    MenuGlyphScript *text;
+    void *texture;
 
     if (gControllerPakStatusCodes != 8) {
         text = gControllerPakRaceRecordSaveStatusMessages[gControllerPakStatusCodes];
         drawMenuGlyphScript(arg0->x, arg0->y, text, 1, arg0->unk1C.scale, 0);
         if (((gControllerPakStatusCodes == 4) || (gControllerPakStatusCodes >= 7)) && (gMenuChoicePromptState == 0)) {
             if (arg0->unk1C.scale == 0x100) {
-                drawMenuSprite((s16)(arg0->x + 0x70), (s16)(arg0->y + 0x10), getRelocatableHeapBlockBase(gAssetHandles[0x21]),
-                              (((s32)arg0->state.b.frame >= 8) + 5) & 0xFFFF, 0x20, 0x20, 0, 0);
+                texture = getRelocatableHeapBlockBase(gAssetHandles[0x21]);
+                drawMenuSprite((s16)(arg0->x + 0x70), (s16)(arg0->y + 0x10), texture,
+                               ((s32)arg0->state.b.frame >= 8) + 5, 0x20, 0x20, 0, 0);
             }
         }
     }
@@ -348,7 +347,7 @@ void updateControllerPakRaceRecordSaveStatusMessage(ControllerPakRaceRecordSaveA
         removeCallbackTask(arg0);
         return;
     }
-    addRenderCallback(&gMenuRenderCallbackList, drawControllerPakRaceRecordSaveStatusMessage, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawControllerPakRaceRecordSaveStatusMessage, arg0);
 }
 
 void initControllerPakRaceRecordSaveStatusMessage(ControllerPakRaceRecordSaveActor *arg0) {
@@ -357,7 +356,7 @@ void initControllerPakRaceRecordSaveStatusMessage(ControllerPakRaceRecordSaveAct
     arg0->unk1C.scale = 0x100;
     gControllerPakRaceRecordSaveStatusTransitionAlpha = 0x100;
     arg0->state.b.unk20 = 0;
-    setCallbackTaskCallback(arg0, updateControllerPakRaceRecordSaveStatusMessage);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateControllerPakRaceRecordSaveStatusMessage);
 }
 
 void drawControllerPakRaceRecordSaveStatusChoicePrompt(ControllerPakRaceRecordSaveActor *arg0) {
@@ -447,14 +446,14 @@ void updateControllerPakRaceRecordSaveStatusChoicePrompt(ControllerPakRaceRecord
         }
         arg0->state.b.alphaTimer = (arg0->state.b.alphaTimer + 1) & 0x1F;
     }
-    addRenderCallback(&gMenuRenderCallbackList, drawControllerPakRaceRecordSaveStatusChoicePrompt, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawControllerPakRaceRecordSaveStatusChoicePrompt, arg0);
 }
 
 void initControllerPakRaceRecordSaveStatusChoicePrompt(ControllerPakRaceRecordSaveActor *arg0) {
     arg0->x = -0x28;
     arg0->y = 0xC;
     arg0->unk1C.scale = 0xC;
-    setCallbackTaskCallback(arg0, updateControllerPakRaceRecordSaveStatusChoicePrompt);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateControllerPakRaceRecordSaveStatusChoicePrompt);
 }
 
 void drawControllerPakRaceRecordSaveExitMessage(ControllerPakRaceRecordSaveActor *arg0) {
@@ -490,7 +489,7 @@ void updateControllerPakRaceRecordSaveExitMessage(ControllerPakRaceRecordSaveAct
         removeCallbackTask(arg0);
         return;
     }
-    addRenderCallback(&gMenuRenderCallbackList, drawControllerPakRaceRecordSaveExitMessage, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawControllerPakRaceRecordSaveExitMessage, arg0);
 }
 
 void initControllerPakRaceRecordSaveExitMessage(ControllerPakRaceRecordSaveActor *arg0) {
@@ -498,5 +497,5 @@ void initControllerPakRaceRecordSaveExitMessage(ControllerPakRaceRecordSaveActor
     arg0->y = -0x38;
     arg0->unk1C.scale = 0;
     arg0->state.b.unk1E = 0;
-    setCallbackTaskCallback(arg0, updateControllerPakRaceRecordSaveExitMessage);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateControllerPakRaceRecordSaveExitMessage);
 }

@@ -15,7 +15,7 @@
 #define MAIN_MENU_SCENE_MODEL_MATRIX_AXES 3
 
 
-typedef s32 RomAssetAddress;
+typedef void *RomAssetAddress;
 
 typedef struct MainMenuModelAssetHandles {
     u8 pad0[0x40];

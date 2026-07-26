@@ -26,7 +26,7 @@ void initControllerPakReplaySaveMessageFlow(void) {
     gMenuFadeAlpha = gCurrentGameTask->fade;
     LOAD_ASSET(_5E26E0, 0x26);
     initCallbackTaskScheduler(0);
-    createCallbackTask(initControllerPakMessageIcon, 0, 0x5E);
+    createCallbackTask((CallbackTaskCallback)initControllerPakMessageIcon, 0, 0x5E);
     setCurrentGameTaskCallback(updateControllerPakReplaySaveMessageFirstPageFadeIn, 0);
     updateCallbackTasks();
 }

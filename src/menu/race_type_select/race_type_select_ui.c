@@ -1,14 +1,14 @@
 #include "common.h"
+#include "game/engine/render_callback.h"
 #include "game/engine/relocatable_heap.h"
 #include "game/engine/callback_task_scheduler.h"
 #include "game/menu/race_type_select/race_type_select_ui.h"
 #include "game/menu/splitscreen_select/race_splitscreen_select_ui.h"
-#define MENU_RENDERER_BROAD_PROTOTYPES
 #include "game/menu/renderer/menu_renderer.h"
 
 #define ASSET_HANDLE(index) (((s16 *)&gAssetHandles)[(index)])
 
-typedef u8 RaceTypeSelectPortrait[0x8C];
+typedef MenuGlyphScript RaceTypeSelectPortrait[0x46];
 
 typedef struct {
     s16 alpha;
@@ -43,7 +43,6 @@ typedef struct {
     /* 0x4A */ s16 frameTextureHandle;
 } RaceTypeSelectAssetHandles;
 
-extern void addRenderCallback(void *, void *, void *);
 extern int sprintf(char *, const char *, ...);
 extern u8 gMenuSelectionConfirmTimer;
 extern RaceTypeSelectFrameTileMapTable gRaceTypeSelectFrameTileMaps;
@@ -52,13 +51,11 @@ extern RaceTypeSelectPortrait gRaceTypeSelectPortraitScripts[];
 extern RaceTypeSelectAssetHandles gAssetHandles;
 extern RaceTypeSelectCursorState gRaceTypeSelectCursorTarget;
 extern u8 gRaceTypeSelectCursorAnimState;
-extern s32 gActiveMenuTask;
 extern u8 gMenuExitSelection;
 extern u8 gRaceTypeSelection;
 extern u8 gMenuTransitionState;
 extern s32 gPlayer1Money;
 extern s32 gMenuFlowState;
-extern void *gMenuRenderCallbackList;
 
 const char gRaceTypeSelectEntryFeeFormat[] = "%6dG";
 
@@ -68,9 +65,10 @@ void drawRaceTypeSelectOptionIcons(RaceTypeSelectRowActor *arg0) {
     s32 alpha;
     s32 yOffset;
     RaceTypeSelectRowActor *row;
+    u16 tileIndex;
 
     savedArg = arg0;
- do { i = 0; if (arg0->playerCount > 0) { yOffset = 0; row = arg0; do { alpha = 0; if (((((gMenuSelectionConfirmTimer > 0) && (gMenuSelectionConfirmTimer < 8)) && (gMenuExitSelection == 0)) && (i == gRaceTypeSelection)) && (gMenuSelectionConfirmTimer & 1)) { if ((!savedArg->playerCount) && (!savedArg->playerCount)) { } alpha = 0xFF; } drawMenuSprite(row->iconX[0], (s16) (arg0->iconY + yOffset), getRelocatableHeapBlockBase(gAssetHandles.textureHandle), (i + 0xD) & 0xFFFF, 0x20, 0x20, 0, alpha); i++; yOffset += 0x18; row = (RaceTypeSelectRowActor *) (((u8 *) row) + 2); } while (i < savedArg->playerCount); } } while (0);
+ do { i = 0; if (arg0->playerCount > 0) { yOffset = 0; row = arg0; do { alpha = 0; if (((((gMenuSelectionConfirmTimer > 0) && (gMenuSelectionConfirmTimer < 8)) && (gMenuExitSelection == 0)) && (i == gRaceTypeSelection)) && (gMenuSelectionConfirmTimer & 1)) { if ((!savedArg->playerCount) && (!savedArg->playerCount)) { } alpha = 0xFF; } tileIndex = i + 0xD; drawMenuSprite(row->iconX[0], (s16) (arg0->iconY + yOffset), getRelocatableHeapBlockBase(gAssetHandles.textureHandle), tileIndex, 0x20, 0x20, 0, alpha); i++; yOffset += 0x18; row = (RaceTypeSelectRowActor *) (((u8 *) row) + 2); } while (i < savedArg->playerCount); } } while (0);
 }
 
 void updateRaceTypeSelectOptionIcons(RaceTypeSelectRowActor *arg0) {
@@ -107,10 +105,10 @@ void updateRaceTypeSelectOptionIcons(RaceTypeSelectRowActor *arg0) {
 
         if (moved == 0) {
             row->state = 1;
-            createCallbackTask(initRaceTypeSelectOption0Frame, 0, 0x5F);
-            createCallbackTask(initRaceTypeSelectOption1Frame, 0, 0x60);
-            createCallbackTask(initRaceTypeSelectOption2Frame, 0, 0x61);
-            createCallbackTask(initRaceTypeSelectOption3Frame, 0, 0x63);
+            createCallbackTask((CallbackTaskCallback)initRaceTypeSelectOption0Frame, 0, 0x5F);
+            createCallbackTask((CallbackTaskCallback)initRaceTypeSelectOption1Frame, 0, 0x60);
+            createCallbackTask((CallbackTaskCallback)initRaceTypeSelectOption2Frame, 0, 0x61);
+            createCallbackTask((CallbackTaskCallback)initRaceTypeSelectOption3Frame, 0, 0x63);
         }
         state = arg0->state;
         break;
@@ -135,7 +133,7 @@ void updateRaceTypeSelectOptionIcons(RaceTypeSelectRowActor *arg0) {
         removeCallbackTask(arg0);
         return;
     }
-    addRenderCallback(&gMenuRenderCallbackList, drawRaceTypeSelectOptionIcons, actor);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawRaceTypeSelectOptionIcons, actor);
 }
 
 void initRaceTypeSelectOptionIcons(RaceTypeSelectRowActor *arg0) {
@@ -153,7 +151,7 @@ void initRaceTypeSelectOptionIcons(RaceTypeSelectRowActor *arg0) {
     arg0->spawnTimer = zero;
     arg0->playerCount = temp_t7;
     arg0->state = zero;
-    setCallbackTaskCallback(arg0, updateRaceTypeSelectOptionIcons);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceTypeSelectOptionIcons);
 }
 
 void drawRaceTypeSelectCornerSprites(RaceTypeSelectWidgetActor *arg0) {
@@ -194,13 +192,13 @@ void updateRaceTypeSelectCornerSprites(RaceTypeSelectWidgetActor *arg0) {
         removeCallbackTask(arg0);
         return;
     }
-    addRenderCallback(&gMenuRenderCallbackList, drawRaceTypeSelectCornerSprites, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawRaceTypeSelectCornerSprites, arg0);
 }
 
 void initRaceTypeSelectCornerSprites(RaceTypeSelectWidgetActor *arg0) {
     arg0->x = -0x108;
     arg0->y = 8;
-    setCallbackTaskCallback(arg0, updateRaceTypeSelectCornerSprites);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceTypeSelectCornerSprites);
 }
 
 void drawRaceTypeSelectOption0Frame(RaceTypeSelectWidgetActor *arg0) {
@@ -285,16 +283,16 @@ void updateRaceTypeSelectOption0Frame(RaceTypeSelectWidgetActor *arg0) {
     case 0:
         arg0->x -= 0x20;
         if (arg0->row.bytes.subTimer == 0) {
-            createCallbackTask(initRaceTypeSelectCornerSprites, 0, 0x63);
+            createCallbackTask((CallbackTaskCallback)initRaceTypeSelectCornerSprites, 0, 0x63);
         }
         arg0->row.bytes.subTimer++;
         if (arg0->x < -7) {
             arg0->x = -8;
             arg0->row.bytes.subState = 3;
-            gActiveMenuTask = (s32) createCallbackTask(initRaceTypeSelectCursor, 0, 0x64);
-            createCallbackTask(initRaceTypeSelectPortrait, 0, 0x64);
-            createCallbackTask(initRaceTypeSelectArrowPrompt, 0, 0x64);
-            createCallbackTask(initRaceTypeSelectEntryFee, 0, 0x64);
+            gActiveMenuTask = createCallbackTask((CallbackTaskCallback)initRaceTypeSelectCursor, 0, 0x64);
+            createCallbackTask((CallbackTaskCallback)initRaceTypeSelectPortrait, 0, 0x64);
+            createCallbackTask((CallbackTaskCallback)initRaceTypeSelectArrowPrompt, 0, 0x64);
+            createCallbackTask((CallbackTaskCallback)initRaceTypeSelectEntryFee, 0, 0x64);
         }
         state = arg0->row.bytes.subState;
         break;
@@ -338,7 +336,7 @@ void updateRaceTypeSelectOption0Frame(RaceTypeSelectWidgetActor *arg0) {
         removeCallbackTask(arg0);
         return;
     }
-    addRenderCallback(&gMenuRenderCallbackList, drawRaceTypeSelectOption0Frame, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawRaceTypeSelectOption0Frame, arg0);
 }
 
 void initRaceTypeSelectOption0Frame(RaceTypeSelectWidgetActor *arg0) {
@@ -349,7 +347,7 @@ void initRaceTypeSelectOption0Frame(RaceTypeSelectWidgetActor *arg0) {
     arg0->widget.counter = 0;
     arg0->row.bytes.subTimer = 0;
     arg0->row.bytes.subState = 0;
-    setCallbackTaskCallback(arg0, updateRaceTypeSelectOption0Frame);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceTypeSelectOption0Frame);
 }
 
 void drawRaceTypeSelectOption1Frame(RaceTypeSelectWidgetActor *arg0) {
@@ -445,7 +443,7 @@ void updateRaceTypeSelectOption1Frame(RaceTypeSelectWidgetActor *arg0) {
         removeCallbackTask(arg0);
         return;
     }
-    addRenderCallback(&gMenuRenderCallbackList, drawRaceTypeSelectOption1Frame, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawRaceTypeSelectOption1Frame, arg0);
 }
 
 void initRaceTypeSelectOption1Frame(RaceTypeSelectWidgetActor *arg0) {
@@ -454,7 +452,7 @@ void initRaceTypeSelectOption1Frame(RaceTypeSelectWidgetActor *arg0) {
     arg0->sprite.spriteIndex = 1;
     arg0->transition.bytes.timer = 0;
     arg0->transition.bytes.state = 0;
-    setCallbackTaskCallback(arg0, updateRaceTypeSelectOption1Frame);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceTypeSelectOption1Frame);
 }
 
 void drawRaceTypeSelectOption2Frame(RaceTypeSelectWidgetActor *arg0) {
@@ -556,7 +554,7 @@ void updateRaceTypeSelectOption2Frame(RaceTypeSelectWidgetActor *arg0) {
         removeCallbackTask(arg0);
         return;
     }
-    addRenderCallback(&gMenuRenderCallbackList, drawRaceTypeSelectOption2Frame, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawRaceTypeSelectOption2Frame, arg0);
 }
 
 void initRaceTypeSelectOption2Frame(RaceTypeSelectWidgetActor *arg0) {
@@ -565,7 +563,7 @@ void initRaceTypeSelectOption2Frame(RaceTypeSelectWidgetActor *arg0) {
     arg0->sprite.spriteIndex = 2;
     arg0->transition.bytes.timer = 0;
     arg0->transition.bytes.state = 0;
-    setCallbackTaskCallback(arg0, updateRaceTypeSelectOption2Frame);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceTypeSelectOption2Frame);
 }
 
 void drawRaceTypeSelectOption3Frame(RaceTypeSelectWidgetActor *arg0) {
@@ -674,7 +672,7 @@ void updateRaceTypeSelectOption3Frame(RaceTypeSelectWidgetActor *arg0) {
         removeCallbackTask(arg0);
         return;
     }
-    addRenderCallback(&gMenuRenderCallbackList, drawRaceTypeSelectOption3Frame, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawRaceTypeSelectOption3Frame, arg0);
 }
 
 void initRaceTypeSelectOption3Frame(RaceTypeSelectWidgetActor *arg0) {
@@ -683,7 +681,7 @@ void initRaceTypeSelectOption3Frame(RaceTypeSelectWidgetActor *arg0) {
     arg0->sprite.spriteIndex = 2;
     arg0->widget.bytes.timer = 0;
     arg0->widget.bytes.state = 0;
-    setCallbackTaskCallback(arg0, updateRaceTypeSelectOption3Frame);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceTypeSelectOption3Frame);
 }
 
 void drawRaceTypeSelectCursor(RaceTypeSelectWidgetActor *arg0) {
@@ -746,7 +744,7 @@ void updateRaceTypeSelectCursor(RaceTypeSelectWidgetActor *arg0) {
         removeCallbackTask(arg0);
         return;
     }
-    addRenderCallback(&gMenuRenderCallbackList, drawRaceTypeSelectCursor, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawRaceTypeSelectCursor, arg0);
 }
 
 void initRaceTypeSelectCursor(RaceTypeSelectWidgetActor *arg0) {
@@ -755,7 +753,7 @@ void initRaceTypeSelectCursor(RaceTypeSelectWidgetActor *arg0) {
     arg0->sprite.spriteIndex = 0;
     arg0->transition.bytes.state = 0;
     arg0->transition.bytes.timer = 0;
-    setCallbackTaskCallback(arg0, updateRaceTypeSelectCursor);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceTypeSelectCursor);
 }
 
 void drawRaceTypeSelectPortrait(RaceTypeSelectWidgetActor *arg0) {
@@ -795,7 +793,7 @@ void updateRaceTypeSelectPortrait(RaceTypeSelectWidgetActor *arg0) {
         removeCallbackTask(arg0);
         return;
     }
-    addRenderCallback(&gMenuRenderCallbackList, drawRaceTypeSelectPortrait, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawRaceTypeSelectPortrait, arg0);
 }
 
 void initRaceTypeSelectPortrait(RaceTypeSelectWidgetActor *arg0) {
@@ -803,7 +801,7 @@ void initRaceTypeSelectPortrait(RaceTypeSelectWidgetActor *arg0) {
     arg0->y = 0xC;
     arg0->sprite.spriteIndex = 0;
     arg0->transition.bytes.state = 0;
-    setCallbackTaskCallback(arg0, updateRaceTypeSelectPortrait);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceTypeSelectPortrait);
 }
 
 void drawRaceTypeSelectArrowPrompt(RaceTypeSelectWidgetActor *arg0) {
@@ -841,7 +839,7 @@ void updateRaceTypeSelectArrowPrompt(RaceTypeSelectWidgetActor *arg0) {
         removeCallbackTask(arg0);
         return;
     }
-    addRenderCallback(&gMenuRenderCallbackList, drawRaceTypeSelectArrowPrompt, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawRaceTypeSelectArrowPrompt, arg0);
 }
 
 void initRaceTypeSelectArrowPrompt(RaceTypeSelectWidgetActor *arg0) {
@@ -849,7 +847,7 @@ void initRaceTypeSelectArrowPrompt(RaceTypeSelectWidgetActor *arg0) {
     arg0->y = -0x5C;
     arg0->sprite.spriteIndex = 0;
     arg0->transition.bytes.state = 0;
-    setCallbackTaskCallback(arg0, updateRaceTypeSelectArrowPrompt);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceTypeSelectArrowPrompt);
 }
 
 void drawRaceTypeSelectEntryFee(RaceTypeSelectWidgetActor *arg0) {
@@ -894,7 +892,7 @@ void updateRaceTypeSelectEntryFee(RaceTypeSelectWidgetActor *arg0) {
         removeCallbackTask(arg0);
         return;
     }
-    addRenderCallback(&gMenuRenderCallbackList, drawRaceTypeSelectEntryFee, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawRaceTypeSelectEntryFee, arg0);
 }
 
 void initRaceTypeSelectEntryFee(RaceTypeSelectWidgetActor *arg0) {
@@ -902,5 +900,5 @@ void initRaceTypeSelectEntryFee(RaceTypeSelectWidgetActor *arg0) {
     arg0->y = 0x40;
     arg0->sprite.spriteIndex = 0;
     arg0->transition.bytes.state = 0;
-    setCallbackTaskCallback(arg0, updateRaceTypeSelectEntryFee);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceTypeSelectEntryFee);
 }

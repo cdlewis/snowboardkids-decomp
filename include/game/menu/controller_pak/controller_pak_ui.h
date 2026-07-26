@@ -29,7 +29,7 @@ typedef struct {
     /* 0x20 */ u16 timer;
     /* 0x22 */ u8 state;
     /* 0x23 */ u8 selectedOption;
-    /* 0x24 */ s16 targetScale;
+    /* 0x24 */ u16 targetScale;
 } ControllerPakRumbleCheckPromptActor;
 
 typedef struct {
@@ -85,16 +85,16 @@ void drawControllerPakFileDeleteConfirmOptions(ControllerPakOptionsActor *arg0);
 void updateControllerPakFileDeleteConfirmOptionsUi(ControllerPakOptionsActor *arg0);
 void initControllerPakFileDeleteConfirmOptions(ControllerPakOptionsActor *arg0);
 void drawControllerPakFileDeleteFreeSpaceInfo(ControllerPakTwoPointActor *arg0);
-void updateControllerPakFileDeleteFreeSpaceInfo(s32 arg0);
+void updateControllerPakFileDeleteFreeSpaceInfo(ControllerPakTwoPointActor *arg0);
 void initControllerPakFileDeleteFreeSpaceInfo(ControllerPakTwoPointActor *arg0);
 void drawControllerPakFileDeleteFileList(ControllerPakFileListActor *arg0);
 void updateControllerPakFileDeleteFileListUi(ControllerPakFileListActor *arg0);
 void initControllerPakFileDeleteFileList(ControllerPakFileListActor *arg0);
 void drawControllerPakFileDeleteIcon(ControllerPakSpriteActor *arg0);
-void updateControllerPakFileDeleteIcon(s32 arg0);
+void updateControllerPakFileDeleteIcon(ControllerPakSpriteActor *arg0);
 void initControllerPakFileDeleteIcon(ControllerPakSpriteActor *arg0);
 void drawControllerPakMessageIcon(ControllerPakSpriteActor *arg0);
-void updateControllerPakMessageIcon(s32 arg0);
+void updateControllerPakMessageIcon(ControllerPakSpriteActor *arg0);
 void initControllerPakMessageIcon(ControllerPakSpriteActor *arg0);
 void drawControllerPakFileDeleteErrorPrompt(ControllerPakWindowActor *arg0);
 void updateControllerPakFileDeleteErrorPromptUi(ControllerPakDeletePromptActor *arg0);

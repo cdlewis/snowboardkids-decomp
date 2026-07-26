@@ -5,8 +5,6 @@
 
 extern s16 gSineTable[];
 
-typedef s16 FixedMatrix3sScratch[0x10];
-
 extern FixedTransform gIdentityFixedTransform;
 
 void initFixedTransform(FixedTransform *transform) {

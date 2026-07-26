@@ -82,6 +82,7 @@ s32 MusStartSong(PlayerCommandData *arg0) {
     s32 index;
     s32 *ptr;
     PlayerCommandState *state;
+    u8 *position;
     s32 free;
     s32 trackCount;
 
@@ -132,15 +133,15 @@ s32 MusStartSong(PlayerCommandData *arg0) {
             state = &mus_channels[index];
             __MusIntInitialiseChannel(state);
             state->data = arg0;
-            value = arg0->unk8[i];
-            state->unk64 = value;
-            state->unk60 = value;
-            value = arg0->unkC[i];
-            state->unk6C = value;
-            state->unk68 = value;
-            value = arg0->sequenceOffsets[i];
-            state->restartPos = value;
-            state->sequencePos = value;
+            position = arg0->unk8[i];
+            state->unk64 = position;
+            state->unk60 = position;
+            position = arg0->unkC[i];
+            state->unk6C = position;
+            state->unk68 = position;
+            position = arg0->sequenceOffsets[i];
+            state->restartPos = position;
+            state->sequencePos = position;
             state->id = handle;
         }
     }

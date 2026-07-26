@@ -179,7 +179,7 @@ void updateTitleDemoRaceIntro(void) {
         temp += 0x10;
         gTitleDemoRaceIntroViewportHeight = temp;
         if ((temp & 0xFF) == 0xB0) {
-            createCallbackTask(updateTitleScreenStartPrompt, 0, 0x64);
+            createCallbackTask((CallbackTaskCallback)updateTitleScreenStartPrompt, 0, 0x64);
         }
     }
 

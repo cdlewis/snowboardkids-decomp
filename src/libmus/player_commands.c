@@ -1,6 +1,6 @@
 const char D_800E1A60[16] = "NG Channel\n";
 
-s32 Fstop(PlayerCommandState *arg0, s32 arg1) {
+u8 *Fstop(PlayerCommandState *arg0, u8 *arg1) {
     arg0->unk60 = 0;
     arg0->unk68 = 0;
     arg0->data = 0;
@@ -315,7 +315,7 @@ s32 Fveloff(PlayerCommandState *arg0, s32 arg1) {
 s32 Fvelocity(PlayerCommandState *arg0, u8 *arg1) {
     s32 ret;
 
-    ret = arg1 + 1;
+    ret = (s32)(arg1 + 1);
     arg0->unkEE = arg1[0];
     if (ret) {
     }

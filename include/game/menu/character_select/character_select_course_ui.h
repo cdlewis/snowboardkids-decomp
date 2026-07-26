@@ -29,6 +29,7 @@ typedef struct CharacterSelectCourseWidgetActor {
             /* 0x21 */ u8 pad21;
         } bytes;
         /* 0x20 */ s16 counter;
+        /* 0x20 */ u16 unsignedCounter;
     } selection;
     union {
         struct {

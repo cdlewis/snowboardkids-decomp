@@ -9,6 +9,7 @@
 #include "game/engine/viewport_manager.h"
 #include "game/race/player/race_player_input.h"
 #include "game/menu/character_select/character_select_menu.h"
+#include "game/menu/main_menu/controller_main_menu_flow.h"
 
 typedef struct {
     /* 0x00 */ u8 pad0[0x18];
@@ -58,7 +59,6 @@ extern u8 gRumblePakConnectedByController[];
 extern u8 gMenuSelectionConfirmTimer;
 extern char D_800EC9E5;
 extern s8 gCourseSelectModeSelection;
-extern CallbackTask *gActiveMenuTask;
 extern u16 gMenuInputRepeatTimers;
 extern u8 gHighestUnlockedCourse;
 extern s16 gRaceCourseIndex;
@@ -97,7 +97,7 @@ void initRaceSetupMenu(void) {
     LOAD_ASSET(_60F1A0, 0x29);
 
     initCallbackTaskScheduler(0);
-    gActiveMenuTask = createCallbackTask(initRaceSetupPlayerCountPrompt, 0, 0x64);
+    gActiveMenuTask = createCallbackTask((CallbackTaskCallback)initRaceSetupPlayerCountPrompt, 0, 0x64);
 
     gRaceSetupMenuSubState.state = 0;
     gRaceSetupMenuSubState.timer = 0;
@@ -205,7 +205,6 @@ extern u8 gControllerPakOperationCounts[];
 extern u8 D_800EC9E4;
 extern s32 D_8010ADE0;
 extern s32 D_8010ADE4;
-extern s32 D_8010ADE8;
 extern s16 gRaceSetupSavePanelRect1X0;
 extern s16 gRaceSetupSavePanelRect1Y0;
 extern s16 gRaceSetupSavePanelRect1X1;
@@ -280,11 +279,10 @@ typedef struct {
     /* 0x0004 */ u8 pad4[0x78F4];
 } RaceSetupSaveMoney;
 
-extern void requestControllerPakProbe();
-extern void requestControllerPakSaveStatus();
-extern void requestControllerPakSaveRead();
-extern void requestControllerPakRepair();
-extern void requestRumbleMotorInit();
+extern void requestRumbleMotorInitWithContext(u16 controllerIndex, s32 playerCount, s32 choiceValue);
+extern void requestControllerPakSaveStatusWithContext(u16 controllerIndex, s32 playerCount, s32 choiceValue);
+extern void requestControllerPakSaveReadWithContext(u16 controllerIndex, s32 playerCount, s32 choiceValue);
+extern void requestControllerPakRepairWithContext(u16 controllerIndex, s32 playerCount, s32 choiceValue);
 extern void initControllerPakRumbleCheckPrompt(CallbackTask *);
 
 extern u8 D_800B3199[];
@@ -299,7 +297,6 @@ extern RaceSetupSaveMoney D_800EC9F4[];
 extern ControllerPakRumbleCheckPromptTransition gControllerPakRumbleCheckPromptTransition;
 extern CallbackTask *D_8010ADE0;
 extern CallbackTask *D_8010ADE4;
-extern CallbackTask *D_8010ADE8;
 extern RacePlayer gRacePlayers[];
 
 #if 0
@@ -358,7 +355,7 @@ void updateRaceSetupSaveMenu(void) {
                                     u16 controllerIndex = playerIndex;
 
                                     gRumblePakConnectedByController[playerIndex] = 0;
-                                    requestRumbleMotorInit(controllerIndex, gPlayerCount, choiceValue);
+                                    requestRumbleMotorInitWithContext(controllerIndex, gPlayerCount, choiceValue);
                                     pakState = gRumbleMotorStatuses[playerIndex];
                                     if ((pakState != 1) && (pakState != 0xB) && (pakState != 4)) {
                                         gRumblePakConnectedByController[playerIndex] = 1;
@@ -370,13 +367,13 @@ void updateRaceSetupSaveMenu(void) {
                                 }
 
                                 case CONTROLLER_PAK_STATUS_SAVE_STATUS:
-                                    requestControllerPakSaveStatus((u16)playerIndex, gPlayerCount, choiceValue);
+                                    requestControllerPakSaveStatusWithContext((u16)playerIndex, gPlayerCount, choiceValue);
                                     break;
 
                                 case CONTROLLER_PAK_STATUS_SAVE_READ: {
                                     u8 result;
 
-                                    requestControllerPakSaveRead((u16)playerIndex, gPlayerCount, choiceValue);
+                                    requestControllerPakSaveReadWithContext((u16)playerIndex, gPlayerCount, choiceValue);
                                     result = gControllerPakRetryCounts[playerIndex];
                                     if (result == 0) {
                                         player->unk568 = 0;
@@ -398,7 +395,7 @@ void updateRaceSetupSaveMenu(void) {
                                 case CONTROLLER_PAK_STATUS_REPAIR: {
                                     u8 result;
 
-                                    requestControllerPakRepair((u16)playerIndex, gPlayerCount, choiceValue);
+                                    requestControllerPakRepairWithContext((u16)playerIndex, gPlayerCount, choiceValue);
                                     result = gControllerPakRetryCounts[playerIndex];
                                     if (result == 0) {
                                         if (saveStatusTask != NULL) {
@@ -559,10 +556,10 @@ void updateRaceSetupSaveMenu(void) {
                 u8 *operationCountEnd;
 
                 D_800EC9E4 = 0;
-                D_8010ADE8 = createCallbackTask((void (*)(CallbackTask *))initRaceSetupSaveStatusWidgets, 0, 0x63);
-                createCallbackTask((void (*)(CallbackTask *))initRaceSetupSavePanelIcons, 0, 0x63);
-                D_8010ADE0 = createCallbackTask((void (*)(CallbackTask *))initRaceSetupSavePanelFrame, 0, 0x63);
-                D_8010ADE4 = createCallbackTask((void (*)(CallbackTask *))initRaceSetupSaveChoicePrompts, 0, 0x63);
+                D_8010ADE8 = createCallbackTask((CallbackTaskCallback)initRaceSetupSaveStatusWidgets, 0, 0x63);
+                createCallbackTask((CallbackTaskCallback)initRaceSetupSavePanelIcons, 0, 0x63);
+                D_8010ADE0 = createCallbackTask((CallbackTaskCallback)initRaceSetupSavePanelFrame, 0, 0x63);
+                D_8010ADE4 = createCallbackTask((CallbackTaskCallback)initRaceSetupSaveChoicePrompts, 0, 0x63);
                 if (gPlayerCount > 0) {
                     operationCount = gControllerPakOperationCounts;
                     operationCountEnd = &gControllerPakOperationCounts[gPlayerCount];
@@ -583,7 +580,7 @@ void updateRaceSetupSaveMenu(void) {
             RaceSetupSaveData *end;
 
             setCurrentGameTaskCallback(updateRaceSetupRumblePrompt, 0);
-            createCallbackTask(initControllerPakRumbleCheckPrompt, 0, 0x64);
+            createCallbackTask((CallbackTaskCallback)initControllerPakRumbleCheckPrompt, 0, 0x64);
             gControllerPakRumbleCheckPromptTransition.state = 6;
             gControllerPakRumbleCheckPromptTransition.selectedOption = 0;
             gControllerPakRumbleCheckPromptTransition.targetScale = 2;
@@ -610,7 +607,7 @@ void updateRaceSetupSaveMenu(void) {
 #endif
 
 void updateRaceSetupSaveMenu(void) {
-    void (*saveChoicePromptInitializer)(CallbackTask *);
+    CallbackTaskCallback saveChoicePromptInitializer;
     s16 *choiceState;
     s32 allPlayersReady = 0;
     s16 allControllerPakOpsComplete = 0;
@@ -852,14 +849,14 @@ void updateRaceSetupSaveMenu(void) {
     if (allControllerPakOpsComplete) {
         if (savePanelTask == NULL) {
             D_800EC9E4++;
-            saveChoicePromptInitializer = (void (*)(CallbackTask *))initRaceSetupSaveChoicePrompts;
+            saveChoicePromptInitializer = (CallbackTaskCallback)initRaceSetupSaveChoicePrompts;
             if (D_800EC9E4 >= SAVE_PANEL_CREATE_DELAY) {
                 D_800EC9E4 = 0;
                 D_8010ADE8 =
-                    createCallbackTask((void (*)(CallbackTask *))initRaceSetupSaveStatusWidgets, 0, 0x63);
-                createCallbackTask((void (*)(CallbackTask *))initRaceSetupSavePanelIcons, 0, 0x63);
+                    createCallbackTask((CallbackTaskCallback)initRaceSetupSaveStatusWidgets, 0, 0x63);
+                createCallbackTask((CallbackTaskCallback)initRaceSetupSavePanelIcons, 0, 0x63);
                 D_8010ADE0 =
-                    createCallbackTask((void (*)(CallbackTask *))initRaceSetupSavePanelFrame, 0, 0x63);
+                    createCallbackTask((CallbackTaskCallback)initRaceSetupSavePanelFrame, 0, 0x63);
                 D_8010ADE4 = createCallbackTask(saveChoicePromptInitializer, 0, 0x63);
 
                 for (controllerIndex = 0; controllerIndex < gPlayerCount;
@@ -874,7 +871,7 @@ void updateRaceSetupSaveMenu(void) {
         gMenuSelectionConfirmTimer++;
         if (gMenuSelectionConfirmTimer == SAVE_READY_CONFIRM_DELAY) {
             setCurrentGameTaskCallback(updateRaceSetupRumblePrompt, 0);
-            createCallbackTask(initControllerPakRumbleCheckPrompt, 0, 0x64);
+            createCallbackTask((CallbackTaskCallback)initControllerPakRumbleCheckPrompt, 0, 0x64);
             gControllerPakRumbleCheckPromptTransition.state = 6;
             gControllerPakRumbleCheckPromptTransition.selectedOption = 0;
             gControllerPakRumbleCheckPromptTransition.targetScale = 2;

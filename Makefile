@@ -11,6 +11,8 @@ ifeq ($(VERBOSE),0)
   V := @
 endif
 
+WERROR ?= 0
+
 # Colours
 
 NO_COL  := \033[0m
@@ -57,6 +59,7 @@ endif
 
 AS      = $(CROSS)as
 CC      = $(TOOLS_DIR)/ido-recomp/linux/cc
+CC_CHECK = clang
 LD      = $(CROSS)ld
 OBJDUMP = $(CROSS)objdump
 OBJCOPY = $(CROSS)objcopy
@@ -81,6 +84,33 @@ ULTRA_AS_OPT = -O1
 ULTRA_AS_POST =
 C_DEFINES    = -DLANGUAGE_C -D_LANGUAGE_C -D_MIPS_SZLONG=32 -DNDEBUG \
                -DCOMPILING_LIBULTRA -DBUILD_VERSION=VERSION_I -DF3DEX_GBI
+CC_CHECK_MIPS_DEFINES = -DMIPSEB -D_MIPS_FPSET=16 -D_MIPS_ISA_MIPS2=2 \
+                        -D_MIPS_ISA=_MIPS_ISA_MIPS2 -D_ABIO32=1 \
+                        -D_MIPS_SIM=_ABIO32 -D_MIPS_SZINT=32 \
+                        -D_MIPS_SZPTR=32 -D__sgi=1
+CC_CHECK_INCLUDES = -I. -Iinclude -Iinclude/PR -Isrc/ultra/audio -Isrc/ultra/libc
+CC_CHECK_FLAGS = -fsyntax-only -ffreestanding -fno-builtin -funsigned-char \
+                 -fdiagnostics-color -std=gnu89 -m32 \
+                 '-D__builtin_classof(type)=0' \
+                 '-D__builtin_alignof(type)=__alignof__(type)'
+CC_CHECK_WARNINGS = -Wall -Wextra -Wno-unknown-pragmas \
+                    -Wno-unused-parameter -Wno-unused-variable \
+                    -Wno-unused-but-set-variable -Wno-unused-value \
+                    -Wno-unused-label -Wno-missing-braces -Wno-sign-compare \
+                    -Wno-tautological-compare -Wno-pointer-bool-conversion \
+                    -Wno-array-bounds -Wno-unsequenced -Wno-pointer-sign \
+                    -Wno-constant-conversion -Wno-multichar \
+                    -Werror=implicit-int \
+                    -Werror=implicit-function-declaration \
+                    -Werror=int-conversion \
+                    -Werror=incompatible-pointer-types \
+                    -Werror=incompatible-function-pointer-types \
+                    -Werror=strict-prototypes \
+                    -Werror=deprecated-non-prototype \
+                    -Werror=return-type
+ifneq ($(WERROR),0)
+  CC_CHECK_WARNINGS += -Werror
+endif
 C_MIPS       = -mips1
 C_OPT        = -O2
 CFLAGS       = -c $(C_MIPS) -G 0 -non_shared -fullwarn -Xcpluscomm \
@@ -218,6 +248,8 @@ $(BUILD_DIR)/%.o: %.s
 $(BUILD_DIR)/%.o: %.c
 	@mkdir -p $(dir $@)
 	$(PRINTF) "[$(GREEN)   c    $(NO_COL)]  $<\n"
+	$(V)$(CC_CHECK) $(CC_CHECK_FLAGS) $(CC_CHECK_WARNINGS) \
+		$(CC_CHECK_INCLUDES) $(C_DEFINES) $(CC_CHECK_MIPS_DEFINES) $<
 	$(V)$(IDO_CC) $(CFLAGS) $(C_OPT) -o $@ $<
 	$(V)$(RM_MDEBUG)
 
@@ -225,6 +257,8 @@ $(BUILD_DIR)/%.o: %.c
 $(BUILD_DIR)/src/ultra/libc/ll.o: src/ultra/libc/ll.c
 	@mkdir -p $(dir $@)
 	$(PRINTF) "[$(GREEN)   c    $(NO_COL)]  $<\n"
+	$(V)$(CC_CHECK) $(CC_CHECK_FLAGS) $(CC_CHECK_WARNINGS) \
+		$(CC_CHECK_INCLUDES) $(C_DEFINES) $(CC_CHECK_MIPS_DEFINES) $<
 	$(V)$(IDO_CC) $(CFLAGS) $(C_OPT) -o $@ $<
 	$(V)$(PYTHON) $(TOOLS_DIR)/set_o32abi_bit.py $@
 	$(V)$(RM_MDEBUG)

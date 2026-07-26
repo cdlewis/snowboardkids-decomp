@@ -55,11 +55,11 @@ void initControllerPakFileDeleteFlow(void) {
     LOAD_ASSET(_5E0350, 0x26);
     LOAD_ASSET(_60F1A0, 0x29);
     initCallbackTaskScheduler(0);
-    createCallbackTask(&initControllerPakFileDeleteMainOptions, 0, 0x63);
-    createCallbackTask(&initControllerPakFileDeleteConfirmOptions, 0, 0x63);
-    createCallbackTask(&initControllerPakFileDeleteFreeSpaceInfo, 0, 0x63);
-    createCallbackTask(&initControllerPakFileDeleteFileList, 0, 0x63);
-    createCallbackTask(&initControllerPakFileDeleteIcon, 0, 0x5E);
+    createCallbackTask((CallbackTaskCallback)&initControllerPakFileDeleteMainOptions, 0, 0x63);
+    createCallbackTask((CallbackTaskCallback)&initControllerPakFileDeleteConfirmOptions, 0, 0x63);
+    createCallbackTask((CallbackTaskCallback)&initControllerPakFileDeleteFreeSpaceInfo, 0, 0x63);
+    createCallbackTask((CallbackTaskCallback)&initControllerPakFileDeleteFileList, 0, 0x63);
+    createCallbackTask((CallbackTaskCallback)&initControllerPakFileDeleteIcon, 0, 0x5E);
     gControllerPakMenuState.mainChoice = 0;
     gControllerPakMenuState.fileIndex = 0;
     gControllerPakMenuState.confirmChoice = 0;
@@ -152,7 +152,7 @@ void updateControllerPakFileDeleteConfirm(void) {
     if ((gPlayerInputPressed & A_BUTTON) || (gPlayerInputPressed & START_BUTTON)) {
         enqueueSoundEffect(0x18, 0x32);
         if (gControllerPakMenuState.confirmChoice == 0) {
-            createCallbackTask(&initControllerPakDeleteConfirmPrompt, 0, 0x64);
+            createCallbackTask((CallbackTaskCallback)&initControllerPakDeleteConfirmPrompt, 0, 0x64);
             setCurrentGameTaskCallback(updateControllerPakFileDeletePrompt, 0);
             gControllerPakMenuState.state = 3;
             gControllerPakMenuState.confirmChoice = 1;
@@ -187,7 +187,7 @@ void updateControllerPakFileDeletePrompt(void) {
                 setCurrentGameTaskCallback(updateControllerPakFileDeleteFileList, 0);
                 gControllerPakMenuState.state = 1;
             } else {
-                createCallbackTask(initControllerPakFileDeleteErrorPrompt, 0, 0x64);
+                createCallbackTask((CallbackTaskCallback)initControllerPakFileDeleteErrorPrompt, 0, 0x64);
                 gControllerPakMenuState.unk6 = 0;
                 gControllerPakMenuState.state = 4;
                 setCurrentGameTaskCallback(updateControllerPakFileDeleteErrorPrompt, 0);

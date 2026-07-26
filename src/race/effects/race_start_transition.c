@@ -15,8 +15,6 @@ typedef struct {
     s32 y;
 } Vec2i;
 
-typedef s16 Matrix4s[0x10];
-
 typedef struct {
     char pad[0x18];
     s32 fade;
@@ -35,12 +33,13 @@ typedef struct {
     Vec3i pos;
     s32 depth;
     char pad28[0x8];
-    char rotationMtx[0x14];
+    FixedMatrix3s rotationMtx;
+    s16 pad44;
     Vec3i cameraDelta;
 } MenuCameraObject;
 
 typedef struct {
-    Matrix4s rotationMtx;
+    FixedTransform transform;
     Vec3i worldPos;
     Vec3i localPos;
 } TransformScratch;
@@ -65,8 +64,8 @@ void updateMenuCameraObjectLookAtOrigin(void) {
     scratch.localPos.x = 0;
     scratch.localPos.y = 0;
     scratch.localPos.z = -obj->depth;
-    makeFixedRotationXY(scratch.rotationMtx, obj->pitch, obj->yaw);
-    transformVec3iByFixedMatrix(scratch.rotationMtx, &scratch.localPos.x, &scratch.worldPos.x);
+    makeFixedRotationXY(scratch.transform.rotation, obj->pitch, obj->yaw);
+    transformVec3iByFixedMatrix(scratch.transform.rotation, &scratch.localPos, &scratch.worldPos);
     obj = gCurrentMenuCameraObject;
     obj->cameraDelta.x = scratch.worldPos.x - obj->pos.x;
     obj = gCurrentMenuCameraObject;
@@ -89,8 +88,8 @@ void updateMenuCameraObjectWithTargetOffset(void) {
     scratch.localPos.x = gMenuCameraTargetOffset.x;
     scratch.localPos.y = gMenuCameraTargetOffset.y;
     scratch.localPos.z = -obj->depth;
-    makeFixedRotationXY(scratch.rotationMtx, obj->pitch, obj->yaw);
-    transformVec3iByFixedMatrix(scratch.rotationMtx, &scratch.localPos.x, &scratch.worldPos.x);
+    makeFixedRotationXY(scratch.transform.rotation, obj->pitch, obj->yaw);
+    transformVec3iByFixedMatrix(scratch.transform.rotation, &scratch.localPos, &scratch.worldPos);
     obj = gCurrentMenuCameraObject;
     obj->cameraDelta.x = scratch.worldPos.x - obj->pos.x;
     obj = gCurrentMenuCameraObject;
@@ -107,7 +106,7 @@ void updateMenuCameraObjectWithTargetOffsetCallback(void) {
 #pragma GLOBAL_ASM("asm/nonmatchings/race/effects/race_start_transition/initRaceStartTransition.s")
 
 #ifdef NON_MATCHING
-extern void loadMainMenuSceneModelAnimationBank();
+extern void loadMainMenuSceneModelAnimationBank(void);
 extern u8 gRaceSetupOpponentFocusCharacterIds[][4];
 extern u8 gPendingEndingCreditsFlow;
 extern u8 gRaceSplitscreenMode;
@@ -200,10 +199,10 @@ void initRaceStartTransition(void) {
     ;
     gCurrentGameTask->fade = 5;
     effectArg = transition - 1;
-    createCallbackTaskWithUserId(initRaceSetupBackdrop, 0, 0x64, effectArg);
-    createCallbackTask(initMainMenuModeBoardTransition, 0, 0x64);
-    createCallbackTaskWithUserId(initMainMenuModeLabelFadeIn, 0, 0x64, effectArg);
-    createCallbackTaskWithUserId(initRaceSetupCharacterFocus, 0, 0x64, D_80121D90);
+    createCallbackTaskWithUserId((CallbackTaskCallback)initRaceSetupBackdrop, 0, 0x64, effectArg);
+    createCallbackTask((CallbackTaskCallback)initMainMenuModeBoardTransition, 0, 0x64);
+    createCallbackTaskWithUserId((CallbackTaskCallback)initMainMenuModeLabelFadeIn, 0, 0x64, effectArg);
+    createCallbackTaskWithUserId((CallbackTaskCallback)initRaceSetupCharacterFocus, 0, 0x64, D_80121D90);
     createRaceSetupOpponentFocus(1, gRaceSetupOpponentFocusCharacterIds[D_80121D90][0]);
     createRaceSetupOpponentFocus(2, gRaceSetupOpponentFocusCharacterIds[D_80121D90][1]);
     createRaceSetupOpponentFocus(3, gRaceSetupOpponentFocusCharacterIds[D_80121D90][2]);
@@ -220,7 +219,7 @@ void updateRaceStartTransitionIntroDelay(void) {
         gCurrentGameTask->fade = 0x12C;
         setCurrentGameTaskCallback(updateRaceStartTransitionFadeIn, 0);
     }
-    createCallbackTaskWithUserId(initFallingMenuSnowflake, 5, 0x64, 0);
+    createCallbackTaskWithUserId((CallbackTaskCallback)initFallingMenuSnowflake, 5, 0x64, 0);
     updateRaceCamera(0);
     updateRaceCamera(1);
     updateRaceCamera(2);
@@ -242,7 +241,7 @@ void updateRaceStartTransitionFadeIn(void) {
         requestMusicSequenceStop(0x7E);
         setCurrentGameTaskCallback(updateRaceStartTransitionFadeOut, 0);
     }
-    createCallbackTaskWithUserId(initFallingMenuSnowflake, 5, 0x64, 0);
+    createCallbackTaskWithUserId((CallbackTaskCallback)initFallingMenuSnowflake, 5, 0x64, 0);
     updateRaceCamera(0);
     updateRaceCamera(1);
     updateCallbackTasks();
@@ -255,7 +254,7 @@ void updateRaceStartTransitionFadeOut(void) {
         gFramebufferSwapHold = 1;
         setCurrentGameTaskCallback(finishRaceStartTransition, 0);
     }
-    createCallbackTaskWithUserId(initFallingMenuSnowflake, 5, 0x64, 0);
+    createCallbackTaskWithUserId((CallbackTaskCallback)initFallingMenuSnowflake, 5, 0x64, 0);
     updateRaceCamera(0);
     updateRaceCamera(1);
     updateCallbackTasks();

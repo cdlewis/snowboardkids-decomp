@@ -1,4 +1,6 @@
 #include "common.h"
+#include "game/menu/renderer/menu_render_utils.h"
+#include "game/engine/render_callback.h"
 #include "assets.h"
 #include "game/race/ui/race_ui_effects.h"
 #include "game/race/effects/snowboard_trail_effects.h"
@@ -16,6 +18,9 @@
 
 /* Local 3-arg declaration; see note in callback_task_scheduler.h. */
 extern void *createCallbackTaskWithUserIdPreservingArgs(void *, s32, s32);
+extern void drawAssetTableSpriteWideIndex(s16 x, s16 y, AssetTable *table, s32 entryIndex);
+extern void drawAssetTableSpriteWithExplicitPaletteWideIndex(s16 x, s16 y, AssetTable *table, s32 entryIndex,
+                                                             u16 paletteIndex);
 
 #define RACE_UI_TRAIL_GFX_ALLOC_PTR (*(RaceUiDisplayCommand **)&gRegionAllocPtr)
 #define ASSET_HANDLE(index) (((s16 *)&gAssetHandles)[index])
@@ -88,8 +93,6 @@ typedef struct {
     u8 b6;
     u8 b7;
 } RaceUiSpriteInit;
-
-typedef s16 FixedMatrix3sScratch[0x12];
 
 typedef union {
     /* 0x00 */ s32 words[8];
@@ -956,8 +959,6 @@ extern Vec3i D_800D6324;
 extern Vec3i D_800D6330[];
 extern Vec3i D_800D6340[];
 extern Vtx D_800D6350[];
-extern void *D_801248C8;
-extern void *D_801248EC;
 extern u32 gAlphaSpriteRenderModeDl[];
 extern u32 gMenuRenderModeResetDl[];
 extern u32 gSnowboardTrailBackDisplayList[];
@@ -972,24 +973,13 @@ extern u8 gRaceUpdatePaused;
 extern u8 gRenderMatricesDirty;
 extern Vec3i gIceCourseBumperPositions[];
 
-extern void *gEffectRenderCallbackList;
-extern void *gMenuForegroundRenderCallbackList;
-extern void *gMenuRenderCallbackList;
-extern void *gRaceForegroundRenderCallbackList;
-extern void *gRaceModelEffectRenderCallbackList;
-extern void *gRaceObjectRenderCallbackList;
-extern void *gRaceOverlayRenderCallbackList;
-extern void *gSceneModelRenderCallbackList;
-extern void addRenderCallback(void *, void *, s32);
-extern void drawAssetTableSprite(s16, s16, s32, s32);
-extern void drawAssetTableSprite8bpp(s16, s16, s32, s32);
-extern void drawAssetTableSpriteWithExplicitPalette(s16, s16, s32, s32, volatile u16);
+extern void drawAssetTableSprite8bpp(s16, s16, void *, s32);
 extern void drawMenuAsciiTextDefaultScale(s32, s32, const void *, s32);
 extern void enqueuePlayerLoopingPositionalSoundRequest(s32, void *, s32, s32, f32, s32);
 extern void enqueuePositionalSoundEffect(s32, void *, s32, s32);
 extern void enqueueSoundEffect(s32, s32);
-extern void getAssetTableImageAndPalette(s32, s32, void *, void *);
 extern void osWritebackDCache(void *, s32);
+extern void *allocMenuRenderScratch(s32 size);
 extern void packFixedTransformMatrix(void *, void *);
 extern void setPackedMatrixTranslation(RaceUiGfxCommandDest *, Vec3i *);
 
@@ -1029,10 +1019,10 @@ void updateRaceCourseSlideSprite(RaceUiSlideActor *arg0) {
         enqueuePlayerLoopingPositionalSoundRequest(0xE, &D_800D6030[temp_v0], 0x7F, 0x32, 0.0f, 0xA);
     }
     if (arg0->velocity != 0) {
-        addRenderCallback(&D_801248EC, renderRaceCourseSlideSprite, arg0);
+        addRenderCallback(&D_801248EC, (RenderCallback)renderRaceCourseSlideSprite, arg0);
         return;
     }
-    addRenderCallback(&gRaceObjectRenderCallbackList, renderRaceCourseSlideSprite, arg0);
+    addRenderCallback(&gRaceObjectRenderCallbackList, (RenderCallback)renderRaceCourseSlideSprite, arg0);
 }
 
 void initRaceCourseSlideSprite(RaceUiSlideActor *arg0) {
@@ -1041,7 +1031,7 @@ void initRaceCourseSlideSprite(RaceUiSlideActor *arg0) {
     arg0->displayList = (Gfx *) D_800D5FF0[arg0->index].word;
     arg0->velocity = D_800D5FF0[arg0->index].b6;
     arg0->soundIndex = D_800D5FF0[arg0->index].b7;
-    setCallbackTaskCallback(arg0, updateRaceCourseSlideSprite);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceCourseSlideSprite);
 }
 
 void drawRaceUiBoardReversePrompt(RaceUiPromptActor *arg0) {
@@ -1066,7 +1056,7 @@ void updateRaceUiBoardReversePrompt(RaceUiPromptActor *arg0) {
         arg0->timer = 0;
     }
     if (arg0->timer >= 0x1E) {
-        addRenderCallback(&gRaceForegroundRenderCallbackList, drawRaceUiBoardReversePrompt, (s32) arg0);
+        addRenderCallback(&gRaceForegroundRenderCallbackList, (RenderCallback)drawRaceUiBoardReversePrompt, (void *)arg0);
     }
 }
 
@@ -1076,7 +1066,7 @@ void initRaceUiBoardReversePrompt(RaceUiPromptActor *arg0) {
     if (gPlayerCount != 1) {
         arg0->y = -8;
     }
-    setCallbackTaskCallback(arg0, updateRaceUiBoardReversePrompt);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceUiBoardReversePrompt);
 }
 
 void drawRaceUiTrickScorePopup(RaceUiPopupActor *arg0) {
@@ -1091,7 +1081,8 @@ void drawRaceUiTrickScorePopup(RaceUiPopupActor *arg0) {
         for (i = 0; i < 2; i++) {
             if (buffer[i] != ' ') {
                 drawAssetTableSpriteWithExplicitPalette((s16)(arg0->x + (i * 8) + 4), arg0->y.half.lo,
-                              getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), (buffer[i] - 5) & 0xFFFF, 0xE);
+                              getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
+                              buffer[i] - 5, 0xE);
             }
         }
 
@@ -1104,7 +1095,8 @@ void drawRaceUiTrickScorePopup(RaceUiPopupActor *arg0) {
             for (i = 0; i != 3; i++) {
                 if (buffer[i] != ' ') {
                     drawAssetTableSpriteWithExplicitPalette((s16)(arg0->x + (i * 8) + 8), (s16)(arg0->y.word + 0x12),
-                                  getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), (buffer[i] - 5) & 0xFFFF, 0xE);
+                                  getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
+                                  buffer[i] - 5, 0xE);
                 }
             }
         }
@@ -1117,16 +1109,16 @@ void updateRaceUiTrickScorePopupSlideOut(RaceUiPopupActor *arg0) {
     if (arg0->velocity == 0x38) {
         removeCallbackTask(arg0);
     } else {
-        addRenderCallback(&gRaceOverlayRenderCallbackList, drawRaceUiTrickScorePopup, arg0);
+        addRenderCallback(&gRaceOverlayRenderCallbackList, (RenderCallback)drawRaceUiTrickScorePopup, arg0);
     }
 }
 
 void updateRaceUiTrickScorePopupHold(RaceUiPopupActor *arg0) {
     arg0->timer--;
     if (arg0->timer == 0) {
-        setCallbackTaskCallback(arg0, updateRaceUiTrickScorePopupSlideOut);
+        setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceUiTrickScorePopupSlideOut);
     }
-    addRenderCallback(&gRaceOverlayRenderCallbackList, drawRaceUiTrickScorePopup, arg0);
+    addRenderCallback(&gRaceOverlayRenderCallbackList, (RenderCallback)drawRaceUiTrickScorePopup, arg0);
 }
 
 void updateRaceUiTrickScorePopupSlideIn(RaceUiPopupActor *arg0) {
@@ -1134,20 +1126,20 @@ void updateRaceUiTrickScorePopupSlideIn(RaceUiPopupActor *arg0) {
     arg0->velocity -= 4;
     if (arg0->velocity == 0) {
         arg0->timer = 0x2D;
-        setCallbackTaskCallback(arg0, updateRaceUiTrickScorePopupHold);
+        setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceUiTrickScorePopupHold);
     }
-    addRenderCallback(&gRaceOverlayRenderCallbackList, drawRaceUiTrickScorePopup, arg0);
+    addRenderCallback(&gRaceOverlayRenderCallbackList, (RenderCallback)drawRaceUiTrickScorePopup, arg0);
 }
 
 void initRaceUiTrickScorePopup(RaceUiPopupActor *arg0) {
     arg0->y.word = -0x2C;
     arg0->velocity = 0x38;
     arg0->x = 0x1A4;
-    setCallbackTaskCallback(arg0, updateRaceUiTrickScorePopupSlideIn);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceUiTrickScorePopupSlideIn);
 }
 
 void spawnRaceUiTrickScorePopup(void *arg0, s16 arg1) {
-    RaceUiPopupActor *temp = createCallbackTask(initRaceUiTrickScorePopup, 0, 0x64);
+    RaceUiPopupActor *temp = createCallbackTask((CallbackTaskCallback)initRaceUiTrickScorePopup, 0, 0x64);
     if (temp != NULL) {
         temp->parent = arg0;
         temp->playerIndex = arg1;
@@ -1166,16 +1158,16 @@ void updateRaceUiCrashScorePopupSlideOut(RaceUiPopupActor *arg0) {
     if (arg0->velocity == 0x38) {
         removeCallbackTask(arg0);
     } else {
-        addRenderCallback(&gRaceOverlayRenderCallbackList, drawRaceUiCrashScorePopup, arg0);
+        addRenderCallback(&gRaceOverlayRenderCallbackList, (RenderCallback)drawRaceUiCrashScorePopup, arg0);
     }
 }
 
 void updateRaceUiCrashScorePopupHold(RaceUiPopupActor *arg0) {
     arg0->timer--;
     if (arg0->timer == 0) {
-        setCallbackTaskCallback(arg0, updateRaceUiCrashScorePopupSlideOut);
+        setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceUiCrashScorePopupSlideOut);
     }
-    addRenderCallback(&gRaceOverlayRenderCallbackList, drawRaceUiCrashScorePopup, arg0);
+    addRenderCallback(&gRaceOverlayRenderCallbackList, (RenderCallback)drawRaceUiCrashScorePopup, arg0);
 }
 
 void updateRaceUiCrashScorePopupSlideIn(RaceUiPopupActor *arg0) {
@@ -1183,16 +1175,16 @@ void updateRaceUiCrashScorePopupSlideIn(RaceUiPopupActor *arg0) {
     arg0->velocity -= 4;
     if (arg0->velocity == 0) {
         arg0->timer = 0x2D;
-        setCallbackTaskCallback(arg0, updateRaceUiCrashScorePopupHold);
+        setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceUiCrashScorePopupHold);
     }
-    addRenderCallback(&gRaceOverlayRenderCallbackList, drawRaceUiCrashScorePopup, arg0);
+    addRenderCallback(&gRaceOverlayRenderCallbackList, (RenderCallback)drawRaceUiCrashScorePopup, arg0);
 }
 
 void initRaceUiCrashScorePopup(RaceUiPopupActor *arg0) {
     arg0->y.word = 0xC;
     arg0->velocity = 0x38;
     arg0->x = 0x1A4;
-    setCallbackTaskCallback(arg0, updateRaceUiCrashScorePopupSlideIn);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceUiCrashScorePopupSlideIn);
 }
 
 void func_80057E10(void *arg0) {
@@ -1201,7 +1193,7 @@ void func_80057E10(void *arg0) {
     }
 }
 
-void func_80057E60(s32 arg0) {
+void func_80057E60(void *arg0) {
     addRenderCallback(&gMenuRenderCallbackList, func_80057E10, arg0);
 }
 
@@ -1219,9 +1211,12 @@ void func_80057E90(RaceUiAlpha18Actor *arg0) {
             }
         }
         drawAssetTableSprite(-0x68, -0x2C, getRelocatableHeapBlockBase(ASSET_HANDLE(0x1F)), 0x4D);
-        drawAssetTableSprite(-0x42, -0xC, getRelocatableHeapBlockBase(ASSET_HANDLE(0x1F)), gRacePlayers[0].mode & 0xFFFF);
-        drawAssetTableSprite(-0x22, 4, getRelocatableHeapBlockBase(ASSET_HANDLE(0x1F)), (gRacePlayers[0].mode + 0x48) & 0xFFFF);
-        drawAssetTableSprite(-0x68, 6, getRelocatableHeapBlockBase(ASSET_HANDLE(0x1F)), (gRacePlayers[0].characterId + 0x91) & 0xFFFF);
+        drawAssetTableSprite(-0x42, -0xC, getRelocatableHeapBlockBase(ASSET_HANDLE(0x1F)),
+                             gRacePlayers[0].mode);
+        drawAssetTableSprite(-0x22, 4, getRelocatableHeapBlockBase(ASSET_HANDLE(0x1F)),
+                             gRacePlayers[0].mode + 0x48);
+        drawAssetTableSprite(-0x68, 6, getRelocatableHeapBlockBase(ASSET_HANDLE(0x1F)),
+                             gRacePlayers[0].characterId + 0x91);
         if (arg0->alpha != 0xFF) {
             gSPDisplayList(gRegionAllocPtr++, gMenuRenderModeResetDl);
         }
@@ -1241,7 +1236,8 @@ void func_8005804C(RaceUiAlpha18Actor *arg0) {
     handles = &gAssetHandles;
  ptr = (u8 *) (((s32) padding) - 0x10); if (!ptr) { } space = ' '; loop: if ((*ptr) != 0) {
         if (space != *ptr) {
-            drawAssetTableSprite(x, -0x3F, getRelocatableHeapBlockBase(handles->popupFontHandle), (*ptr - 5) & 0xFFFF);
+            drawAssetTableSprite(x, -0x3F, getRelocatableHeapBlockBase(handles->popupFontHandle),
+                                 *ptr - 5);
         }
         x += 8;
         ptr++;
@@ -1268,7 +1264,7 @@ void func_8005812C(void *arg0)
         x = 0x20;
         if (gRacePlayers[0].mode == 3)
         {
- colorValue = 0xD; } else { colorValue = 0xC; } do { assets = (RaceUiAssetHandles *) (((u8 *) (&gAssetHandles)) + ((u8) i)); space = ' '; color = colorValue; if (space != 0U) { } loop: if (buffer[i] != '\0') { if (buffer[i] != space) { drawAssetTableSpriteWithExplicitPalette((s16) x, -0xF, getRelocatableHeapBlockBase(assets->popupFontHandle), (buffer[i] - 5) & ((0, 0xFFFF)), color); }
+ colorValue = 0xD; } else { colorValue = 0xC; } do { assets = (RaceUiAssetHandles *) (((u8 *) (&gAssetHandles)) + ((u8) i)); space = ' '; color = colorValue; if (space != 0U) { } loop: if (buffer[i] != '\0') { if (buffer[i] != space) { drawAssetTableSpriteWithExplicitPalette((s16) x, -0xF, getRelocatableHeapBlockBase(assets->popupFontHandle), buffer[i] - 5, color); }
             x += 8;
             i++;
             goto loop;
@@ -1301,7 +1297,8 @@ void func_8005827C(void *arg0) {
     handles = &gAssetHandles;
  ptr = (u8 *) (((s32) padding) - 0x10); if (!ptr) { } space = ' '; loop: if ((*ptr) != 0) {
         if (space != *ptr) {
-            drawAssetTableSprite(x, 0x21, getRelocatableHeapBlockBase(handles->popupFontHandle), (*ptr - 5) & 0xFFFF);
+            drawAssetTableSprite(x, 0x21, getRelocatableHeapBlockBase(handles->popupFontHandle),
+                                 *ptr - 5);
         }
         x += 8;
         ptr++;
@@ -1327,24 +1324,24 @@ void func_80058360(RaceUiAlpha18Actor *arg0) {
 }
 
 void func_800584A0(void *arg0) {
-    addRenderCallback(&gMenuRenderCallbackList, func_80057E90, arg0);
-    addRenderCallback(&gMenuRenderCallbackList, func_8005804C, arg0);
-    addRenderCallback(&gMenuRenderCallbackList, func_8005812C, arg0);
-    addRenderCallback(&gMenuRenderCallbackList, func_8005827C, arg0);
-    addRenderCallback(&gMenuForegroundRenderCallbackList, func_80058360, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)func_80057E90, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)func_8005804C, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)func_8005812C, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)func_8005827C, arg0);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, (RenderCallback)func_80058360, arg0);
 }
 
 void func_80058538(void *arg0) {
     if (gPlayerInputPressed & A_BUTTON) {
         enqueueSoundEffect(0x18, 0x32);
         gMenuFlowState |= 0x10;
-        setCallbackTaskCallback(arg0, func_800584A0);
+        setCallbackTaskCallback(arg0, (CallbackTaskCallback)func_800584A0);
     }
-    addRenderCallback(&gMenuRenderCallbackList, func_80057E90, (s32)arg0);
-    addRenderCallback(&gMenuRenderCallbackList, func_8005804C, (s32)arg0);
-    addRenderCallback(&gMenuRenderCallbackList, func_8005812C, (s32)arg0);
-    addRenderCallback(&gMenuRenderCallbackList, func_8005827C, (s32)arg0);
-    addRenderCallback(&gMenuForegroundRenderCallbackList, func_80058360, (s32)arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)func_80057E90, (void *)arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)func_8005804C, (void *)arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)func_8005812C, (void *)arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)func_8005827C, (void *)arg0);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, (RenderCallback)func_80058360, (void *)arg0);
 }
 
 void func_80058610(RaceUiAlpha18Actor *arg0) {
@@ -1397,12 +1394,12 @@ void func_80058610(RaceUiAlpha18Actor *arg0) {
     if (player->mode != 3) {
         if ((arg0->score == 0) && (player->unk568 == 0)) {
             enqueueSoundEffect(2, 0x32);
-            setCallbackTaskCallback(arg0, func_80058538);
+            setCallbackTaskCallback(arg0, (CallbackTaskCallback)func_80058538);
         }
     } else if (arg0->score == 0) {
         shouldPlaySound = 0;
         enqueueSoundEffect(2, 0x32);
-        setCallbackTaskCallback(arg0, func_80058538);
+        setCallbackTaskCallback(arg0, (CallbackTaskCallback)func_80058538);
     }
 
     if (shouldPlaySound != 0) {
@@ -1415,24 +1412,24 @@ void func_80058610(RaceUiAlpha18Actor *arg0) {
         }
     }
 
-    addRenderCallback(&gMenuRenderCallbackList, func_80057E90, (s32)arg0);
-    addRenderCallback(&gMenuRenderCallbackList, func_8005804C, (s32)arg0);
-    addRenderCallback(&gMenuRenderCallbackList, func_8005812C, (s32)arg0);
-    addRenderCallback(&gMenuRenderCallbackList, func_8005827C, (s32)arg0);
-    addRenderCallback(&gMenuForegroundRenderCallbackList, func_80058360, (s32)arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)func_80057E90, (void *)arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)func_8005804C, (void *)arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)func_8005812C, (void *)arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)func_8005827C, (void *)arg0);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, (RenderCallback)func_80058360, (void *)arg0);
 }
 
 void updateRaceUiPrizePayoutWaitBeforeMoneyCount(RaceUiPrizePayoutActor *actor) {
     actor->timer = actor->timer - 1;
     if (actor->timer == 0) {
         actor->timer = 0;
-        setCallbackTaskCallback(actor, func_80058610);
+        setCallbackTaskCallback(actor, (CallbackTaskCallback)func_80058610);
     }
-    addRenderCallback(&gMenuRenderCallbackList, func_80057E90, actor);
-    addRenderCallback(&gMenuRenderCallbackList, func_8005804C, actor);
-    addRenderCallback(&gMenuRenderCallbackList, func_8005812C, actor);
-    addRenderCallback(&gMenuRenderCallbackList, func_8005827C, actor);
-    addRenderCallback(&gMenuForegroundRenderCallbackList, func_80058360, actor);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)func_80057E90, actor);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)func_8005804C, actor);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)func_8005812C, actor);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)func_8005827C, actor);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, (RenderCallback)func_80058360, actor);
 }
 
 void updateRaceUiPrizePayoutRevealGetCoin(RaceUiPrizePayoutActor *actor) {
@@ -1440,12 +1437,12 @@ void updateRaceUiPrizePayoutRevealGetCoin(RaceUiPrizePayoutActor *actor) {
     if (actor->timer == 0) {
         actor->timer = RACE_UI_PRIZE_PAYOUT_REVEAL_TIMER;
         enqueueSoundEffect(0x1A, 0x32);
-        setCallbackTaskCallback(actor, updateRaceUiPrizePayoutWaitBeforeMoneyCount);
+        setCallbackTaskCallback(actor, (CallbackTaskCallback)updateRaceUiPrizePayoutWaitBeforeMoneyCount);
     }
-    addRenderCallback(&gMenuRenderCallbackList, func_80057E90, actor);
-    addRenderCallback(&gMenuRenderCallbackList, func_8005804C, actor);
-    addRenderCallback(&gMenuRenderCallbackList, func_8005812C, actor);
-    addRenderCallback(&gMenuForegroundRenderCallbackList, func_80058360, actor);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)func_80057E90, actor);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)func_8005804C, actor);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)func_8005812C, actor);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, (RenderCallback)func_80058360, actor);
 }
 
 void updateRaceUiPrizePayoutRevealRankPrize(RaceUiPrizePayoutActor *arg0) {
@@ -1453,11 +1450,11 @@ void updateRaceUiPrizePayoutRevealRankPrize(RaceUiPrizePayoutActor *arg0) {
     if (arg0->timer == 0) {
         enqueueSoundEffect(0x1A, 0x32);
         arg0->timer = RACE_UI_PRIZE_PAYOUT_REVEAL_TIMER;
-        setCallbackTaskCallback(arg0, updateRaceUiPrizePayoutRevealGetCoin);
+        setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceUiPrizePayoutRevealGetCoin);
     }
-    addRenderCallback(&gMenuRenderCallbackList, func_80057E90, arg0);
-    addRenderCallback(&gMenuRenderCallbackList, func_8005804C, arg0);
-    addRenderCallback(&gMenuForegroundRenderCallbackList, func_80058360, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)func_80057E90, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)func_8005804C, arg0);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, (RenderCallback)func_80058360, arg0);
 }
 
 void updateRaceUiPrizePayoutShowRankPrize(RaceUiPrizePayoutActor *arg0) {
@@ -1465,10 +1462,10 @@ void updateRaceUiPrizePayoutShowRankPrize(RaceUiPrizePayoutActor *arg0) {
     if (arg0->timer == 0) {
         arg0->timer = RACE_UI_PRIZE_PAYOUT_REVEAL_TIMER;
         enqueueSoundEffect(0x1A, 0x32);
-        setCallbackTaskCallback(arg0, updateRaceUiPrizePayoutRevealRankPrize);
+        setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceUiPrizePayoutRevealRankPrize);
     }
-    addRenderCallback(&gMenuRenderCallbackList, func_80057E90, arg0);
-    addRenderCallback(&gMenuForegroundRenderCallbackList, func_80058360, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)func_80057E90, arg0);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, (RenderCallback)func_80058360, arg0);
 }
 
 void updateRaceUiPrizePayoutFadeIn(RaceUiPrizePayoutActor *arg0) {
@@ -1476,16 +1473,16 @@ void updateRaceUiPrizePayoutFadeIn(RaceUiPrizePayoutActor *arg0) {
     if (arg0->alpha >= 0x100) {
         arg0->timer = RACE_UI_PRIZE_PAYOUT_REVEAL_TIMER;
         arg0->alpha = 0xFF;
-        setCallbackTaskCallback(arg0, updateRaceUiPrizePayoutShowRankPrize);
+        setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceUiPrizePayoutShowRankPrize);
     }
-    addRenderCallback(&gMenuRenderCallbackList, func_80057E90, arg0);
-    addRenderCallback(&gMenuForegroundRenderCallbackList, func_80058360, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)func_80057E90, arg0);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, (RenderCallback)func_80058360, arg0);
 }
 
 void initRaceUiPrizePayout(RaceUiPrizePayoutActor *arg0) {
     arg0->alpha = 0;
     arg0->prizeAmount = gRacePrizeAmountsByCourseAndRank[0][gRacePlayers[0].mode + gRaceCourseIndex * 4];
-    setCallbackTaskCallback(arg0, updateRaceUiPrizePayoutFadeIn);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceUiPrizePayoutFadeIn);
 }
 
 void func_80058C00(RaceUiResultsBannerActor *arg0) {
@@ -1660,8 +1657,8 @@ void func_80059518(RaceUiResultsBannerActor *arg0) {
 
 void updateRaceUiResultsBannerConfirmed(RaceUiResultsBannerActor *actor) {
     func_80059518(actor);
-    addRenderCallback(&gMenuRenderCallbackList, func_80058C00, (s32)actor);
-    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005905C, (s32)actor);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)func_80058C00, (void *)actor);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, (RenderCallback)func_8005905C, (void *)actor);
 }
 
 void updateRaceUiResultsBannerWaitForInput(RaceUiResultsBannerActor *arg0) {
@@ -1676,15 +1673,15 @@ void updateRaceUiResultsBannerWaitForInput(RaceUiResultsBannerActor *arg0) {
             if ((*input & A_BUTTON) && !(gMenuFlowState & 0x10)) {
                 gMenuFlowState |= 0x10;
                 enqueueSoundEffect(0x18, 0x32);
-                setCallbackTaskCallback(actor, updateRaceUiResultsBannerConfirmed);
+                setCallbackTaskCallback(actor, (CallbackTaskCallback)updateRaceUiResultsBannerConfirmed);
             }
             i++;
             input++;
         } while (i < (s32)gPlayerCount);
     }
     func_80059518(actor);
-    addRenderCallback(&gMenuRenderCallbackList, func_80058C00, (s32)actor);
-    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005905C, (s32)actor);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)func_80058C00, (void *)actor);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, (RenderCallback)func_8005905C, (void *)actor);
 }
 
 void updateRaceUiResultsBannerFadeIn(RaceUiResultsBannerActor *actor) {
@@ -1692,16 +1689,16 @@ void updateRaceUiResultsBannerFadeIn(RaceUiResultsBannerActor *actor) {
     if (actor->alpha >= 0x100) {
         actor->timer = 0x96;
         actor->alpha = 0xFF;
-        setCallbackTaskCallback(actor, updateRaceUiResultsBannerWaitForInput);
+        setCallbackTaskCallback(actor, (CallbackTaskCallback)updateRaceUiResultsBannerWaitForInput);
     }
     func_80059518(actor);
-    addRenderCallback(&gMenuRenderCallbackList, func_80058C00, actor);
-    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005905C, actor);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)func_80058C00, actor);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, (RenderCallback)func_8005905C, actor);
 }
 
 void initRaceUiResultsBanner(RaceUiResultsBannerActor *actor) {
     actor->alpha = 0;
-    setCallbackTaskCallback(actor, updateRaceUiResultsBannerFadeIn);
+    setCallbackTaskCallback(actor, (CallbackTaskCallback)updateRaceUiResultsBannerFadeIn);
 }
 
 const char gRaceUiPackedTimeMinutesFormat[] = "%2.2d";
@@ -1725,29 +1722,29 @@ void func_80059A04(RaceTimer *arg0, s32 x, s32 arg2, s32 arg3)
   {
     /* IDO register allocation for this function depends on this empty loop. */
     do { } while (0);
-    drawAssetTableSpriteWithExplicitPalette((s16) x, y, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), (((u8) buffer[i]) - 5) & 0xFFFF, color);
+    drawAssetTableSpriteWithExplicitPaletteWideIndex((s16) x, y, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), (((u8) buffer[i]) - 5) & 0xFFFF, color);
     i++;
     x += 8;
   }
   while (i < (-0xE));
-  drawAssetTableSpriteWithExplicitPalette((s16) x, y, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x36, color);
+  drawAssetTableSpriteWithExplicitPaletteWideIndex((s16) x, y, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x36, color);
   x += 8;
   sprintf(&buffer[-0x10], gRaceUiPackedTimeSecondsFormat, record->seconds);
   i = -0x10;
   do
   {
-    drawAssetTableSpriteWithExplicitPalette((s16) x, y, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), (((u8) buffer[i]) - 5) & 0xFFFF, color);
+    drawAssetTableSpriteWithExplicitPaletteWideIndex((s16) x, y, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), (((u8) buffer[i]) - 5) & 0xFFFF, color);
     i++;
     x += 8;
   }
   while (i < (-0xE));
-  drawAssetTableSpriteWithExplicitPalette((s16) x, y, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x35, color);
+  drawAssetTableSpriteWithExplicitPaletteWideIndex((s16) x, y, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x35, color);
   x += 8;
   sprintf(&buffer[-0x10], gRaceUiPackedTimeFractionFormat, record->fraction >> 8);
   i = -0x10;
   do
   {
-    drawAssetTableSpriteWithExplicitPalette((s16) x, y, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), (((u8) buffer[i]) - 5) & 0xFFFF, color);
+    drawAssetTableSpriteWithExplicitPaletteWideIndex((s16) x, y, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), (((u8) buffer[i]) - 5) & 0xFFFF, color);
     i++;
     x += 8;
   }
@@ -1763,7 +1760,8 @@ void func_80059C34(RaceUiCourseStatsActor *arg0) {
     actor = arg0;
     y = -0x50;
     for (row = 0, offset = 0; row != 5; row++, offset += 4, y += 0x20) {
-        drawAssetTableSprite(-8, (s16)y, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), (row + 0x77) & 0xFFFF);
+        drawAssetTableSprite(-8, (s16)y, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
+                             row + 0x77);
         if ((row == actor->index) && (gUiBlinkTimer & 1)) {
             func_80059A04(&((RaceUiCourseStatsNameData *)gGameSaveDataBuffer)->courseStatsNames[gRaceCourseIndex][row],
                           0x10, y, 0x10);
@@ -1776,13 +1774,15 @@ void func_80059C34(RaceUiCourseStatsActor *arg0) {
         }
 
         drawAssetTableSprite(0x58, (s16)y, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
-                      ((((RaceUiCourseStatsIconData *)gGameSaveDataBuffer)->courseStatsIcons[gRaceCourseIndex][row] & 7) +
-                       0x51) &
-                          0xFFFF);
+                      ((((RaceUiCourseStatsIconData *)gGameSaveDataBuffer)
+                            ->courseStatsIcons[gRaceCourseIndex][row] &
+                        7) +
+                       0x51));
         drawAssetTableSprite(0x6C, (s16)y, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
-                      (((*((RaceUiCourseStatsIconData *)gGameSaveDataBuffer)).courseStatsIcons[gRaceCourseIndex][row] >> 3) +
-                       0x7C) &
-                          0xFFFF);
+                      (((*((RaceUiCourseStatsIconData *)gGameSaveDataBuffer))
+                             .courseStatsIcons[gRaceCourseIndex][row] >>
+                         3) +
+                        0x7C));
     }
 }
 
@@ -1807,29 +1807,29 @@ void func_80059F6C(RaceUiAlpha18Actor *arg0) {
 }
 
 void func_8005A07C(RaceUiCourseStatsActor *arg0) {
-    addRenderCallback(&gMenuRenderCallbackList, func_80059E5C, arg0);
-    addRenderCallback(&gMenuRenderCallbackList, func_80059C34, arg0);
-    addRenderCallback(&gMenuForegroundRenderCallbackList, func_80059F6C, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)func_80059E5C, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)func_80059C34, arg0);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, (RenderCallback)func_80059F6C, arg0);
 }
 
 void func_8005A0E0(RaceUiCourseStatsActor *arg0) {
     if (gPlayerInputPressed & A_BUTTON) {
         gMenuFlowState |= 0x10;
         enqueueSoundEffect(0x18, 0x32);
-        setCallbackTaskCallback(arg0, func_8005A07C);
+        setCallbackTaskCallback(arg0, (CallbackTaskCallback)func_8005A07C);
     }
-    addRenderCallback(&gMenuRenderCallbackList, func_80059E5C, arg0);
-    addRenderCallback(&gMenuRenderCallbackList, func_80059C34, arg0);
-    addRenderCallback(&gMenuForegroundRenderCallbackList, func_80059F6C, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)func_80059E5C, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)func_80059C34, arg0);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, (RenderCallback)func_80059F6C, arg0);
 }
 
 void func_8005A184(RaceUiCourseStatsActor *arg0) {
     arg0->holdTimer--;
     if (arg0->holdTimer == 0) {
-        setCallbackTaskCallback(arg0, func_8005A0E0);
+        setCallbackTaskCallback(arg0, (CallbackTaskCallback)func_8005A0E0);
     }
-    addRenderCallback(&gMenuRenderCallbackList, func_80059E5C, arg0);
-    addRenderCallback(&gMenuForegroundRenderCallbackList, func_80059F6C, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)func_80059E5C, arg0);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, (RenderCallback)func_80059F6C, arg0);
 }
 
 void func_8005A1FC(RaceUiCourseStatsActor *arg0) {
@@ -1837,25 +1837,25 @@ void func_8005A1FC(RaceUiCourseStatsActor *arg0) {
     if (arg0->statsAlpha >= 0x100) {
         arg0->holdTimer = 0x1E;
         arg0->statsAlpha = 0xFF;
-        setCallbackTaskCallback(arg0, func_8005A184);
+        setCallbackTaskCallback(arg0, (CallbackTaskCallback)func_8005A184);
     }
-    addRenderCallback(&gMenuRenderCallbackList, func_80059E5C, arg0);
-    addRenderCallback(&gMenuForegroundRenderCallbackList, func_80059F6C, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)func_80059E5C, arg0);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, (RenderCallback)func_80059F6C, arg0);
 }
 
 void func_8005A288(RaceUiCourseStatsActor *arg0) {
     arg0->titleAlpha += 0x10;
     if (arg0->titleAlpha >= 0x100) {
         arg0->titleAlpha = 0xFF;
-        setCallbackTaskCallback(arg0, func_8005A1FC);
+        setCallbackTaskCallback(arg0, (CallbackTaskCallback)func_8005A1FC);
     }
-    addRenderCallback(&gMenuForegroundRenderCallbackList, func_80059F6C, arg0);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, (RenderCallback)func_80059F6C, arg0);
 }
 
 void func_8005A2F0(RaceUiCourseStatsActor *arg0) {
     arg0->titleAlpha = 0;
     arg0->statsAlpha = 0;
-    setCallbackTaskCallback(arg0, func_8005A288);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)func_8005A288);
 }
 
 const char gRaceUiScoreAttackPointTotalFormat[4] = "%2d";
@@ -1877,11 +1877,11 @@ void func_8005A31C(RaceUiAlpha18Actor *arg0) {
     sprintf(buffer + -8, gRaceUiScoreAttackPointTotalFormat, gRaceScoreAttackPointTotal);
 
     if (buffer[-8] != ' ') {
-        drawAssetTableSprite(-0x4C, -0x1C, getRelocatableHeapBlockBase(ASSET_HANDLE(0x1F)), (buffer[-8] - 5) & 0xFFFF);
+        drawAssetTableSprite(-0x4C, -0x1C, getRelocatableHeapBlockBase(ASSET_HANDLE(0x1F)), buffer[-8] - 5);
     }
 
     x = -0x44;
-    drawAssetTableSprite(((SplitWord *)&x)->half.lo, -0x1C, getRelocatableHeapBlockBase(ASSET_HANDLE(0x1F)), (buffer[-7] - 5) & 0xFFFF);
+    drawAssetTableSprite(((SplitWord *)&x)->half.lo, -0x1C, getRelocatableHeapBlockBase(ASSET_HANDLE(0x1F)), buffer[-7] - 5);
 
     if (actor->alpha != 0xFF) {
         gSPDisplayList(gRegionAllocPtr++, gMenuRenderModeResetDl);
@@ -1916,14 +1916,14 @@ void func_8005A4BC(RaceUiCounterActor *arg0)
 loop1:
         if (buffer[i] != 0) {
             if (buffer[i] != ' ') {
-                drawAssetTableSprite(x, rowY, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
+                drawAssetTableSpriteWideIndex(x, rowY, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
                                      ((u8)buffer[i] - 5) & 0xFFFF);
             }
             x += 8;
             i++;
             goto loop1;
         }
-        drawAssetTableSprite(x, rowY, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x37);
+        drawAssetTableSpriteWideIndex(x, rowY, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x37);
         y.word += 0x28;
         visibleRows = arg0->state;
     }
@@ -1937,14 +1937,14 @@ loop1:
 loop2:
             if (buffer[i] != 0) {
                 if (buffer[i] != ' ') {
-                    drawAssetTableSprite(x, rowY, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
+                    drawAssetTableSpriteWideIndex(x, rowY, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
                                          ((u8)buffer[i] - 5) & 0xFFFF);
                 }
                 x += 8;
                 i++;
                 goto loop2;
             }
-            drawAssetTableSprite(x, rowY, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x37);
+            drawAssetTableSpriteWideIndex(x, rowY, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x37);
             y.word += 0x28;
             visibleRows = arg0->state;
         }
@@ -1958,14 +1958,14 @@ loop2:
 loop3:
         if (buffer[i] != 0) {
             if (buffer[i] != ' ') {
-                drawAssetTableSprite(x, rowY, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
+                drawAssetTableSpriteWideIndex(x, rowY, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
                                      ((u8)buffer[i] - 5) & 0xFFFF);
             }
             x += 8;
             i++;
             goto loop3;
         }
-        drawAssetTableSprite(x, rowY, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x37);
+        drawAssetTableSpriteWideIndex(x, rowY, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x37);
         y.word += 0x28;
         visibleRows = arg0->state;
     }
@@ -1979,14 +1979,14 @@ loop3:
 loop4:
         if (buffer[i] != 0) {
             if (buffer[i] != ' ') {
-                drawAssetTableSprite(x, rowY, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
+                drawAssetTableSpriteWideIndex(x, rowY, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
                                      ((u8)buffer[i] - 5) & 0xFFFF);
             }
             x += 8;
             i++;
             goto loop4;
         }
-        drawAssetTableSprite(x, rowY, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x37);
+        drawAssetTableSpriteWideIndex(x, rowY, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x37);
     }
 }
 
@@ -2004,7 +2004,7 @@ void func_8005A884(RaceUiPopupActor *arg0) {
     /* IDO scheduling for this function depends on these statements staying on one line. */
     i = 0; space = ' '; do { char buffer[8];
 
-        drawAssetTableSprite(-8, (s16)y, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), (i + 0x77) & 0xFFFF);
+        drawAssetTableSprite(-8, (s16)y, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), i + 0x77);
 
         if ((i == arg0->index) && (gUiBlinkTimer & 1)) {
             color = 0x10;
@@ -2018,19 +2018,19 @@ void func_8005A884(RaceUiPopupActor *arg0) {
 
         if ((u8)buffer[0] != space) {
             drawAssetTableSpriteWithExplicitPalette(0x10, (s16)y, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
-                          (buffer[0] - 5) & 0xFFFF, color);
+                          buffer[0] - 5, color);
             do { } while (0);
         }
 
         if ((u8)buffer[1] != space) {
             drawAssetTableSpriteWithExplicitPalette(0x18, (s16)y, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
-                          (buffer[1] - 5) & 0xFFFF, (u16)color);
+                          buffer[1] - 5, (u16)color);
         }
 
         drawAssetTableSprite(0x46, (s16)y, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
-                      ((((RaceUiCourseValueData *)gGameSaveDataBuffer)->icons[gRaceCourseIndex][i] & 7) + 0x51) & 0xFFFF);
+                      (((RaceUiCourseValueData *)gGameSaveDataBuffer)->icons[gRaceCourseIndex][i] & 7) + 0x51);
         drawAssetTableSprite(0x58, (s16)y, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
-                      ((((RaceUiCourseValueData *)gGameSaveDataBuffer)->icons[gRaceCourseIndex][i] >> 3) + 0x7C) & 0xFFFF);
+                      (((RaceUiCourseValueData *)gGameSaveDataBuffer)->icons[gRaceCourseIndex][i] >> 3) + 0x7C);
 
         i++;
         y += 0x20;
@@ -2110,45 +2110,45 @@ void func_8005AE1C(void *arg0) {
 }
 
 void func_8005AEB0(void *arg0) {
-    addRenderCallback(&gMenuRenderCallbackList, func_8005A31C, arg0);
-    addRenderCallback(&gMenuRenderCallbackList, func_8005A884, arg0);
-    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005AAE4, arg0);
-    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005AE1C, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)func_8005A31C, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)func_8005A884, arg0);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, (RenderCallback)func_8005AAE4, arg0);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, (RenderCallback)func_8005AE1C, arg0);
 }
 
 void func_8005AF2C(void *arg0) {
     if (gPlayerInputPressed & A_BUTTON) {
         enqueueSoundEffect(0x18, 0x32);
         gMenuFlowState |= 0x10;
-        setCallbackTaskCallback(arg0, func_8005AEB0);
+        setCallbackTaskCallback(arg0, (CallbackTaskCallback)func_8005AEB0);
     }
-    addRenderCallback(&gMenuRenderCallbackList, func_8005A31C, arg0);
-    addRenderCallback(&gMenuRenderCallbackList, func_8005A884, arg0);
-    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005AAE4, arg0);
-    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005AE1C, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)func_8005A31C, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)func_8005A884, arg0);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, (RenderCallback)func_8005AAE4, arg0);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, (RenderCallback)func_8005AE1C, arg0);
 }
 
 void func_8005AFEC(void *arg0) {
-    addRenderCallback(&gMenuRenderCallbackList, func_8005A31C, arg0);
-    addRenderCallback(&gMenuRenderCallbackList, func_8005A4BC, arg0);
-    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005AAE4, arg0);
-    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005AC44, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)func_8005A31C, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)func_8005A4BC, arg0);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, (RenderCallback)func_8005AAE4, arg0);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, (RenderCallback)func_8005AC44, arg0);
 }
 
 void func_8005B068(RaceUiCounterActor *actor) {
     if (gPlayerInputPressed & A_BUTTON) {
         enqueueSoundEffect(0x18, 0x32);
         if (actor->index < 5) {
-            setCallbackTaskCallback(actor, func_8005AF2C);
+            setCallbackTaskCallback(actor, (CallbackTaskCallback)func_8005AF2C);
         } else {
             gMenuFlowState |= 0x10;
-            setCallbackTaskCallback(actor, func_8005AFEC);
+            setCallbackTaskCallback(actor, (CallbackTaskCallback)func_8005AFEC);
         }
     }
-    addRenderCallback(&gMenuRenderCallbackList, func_8005A31C, actor);
-    addRenderCallback(&gMenuRenderCallbackList, func_8005A4BC, actor);
-    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005AAE4, actor);
-    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005AC44, actor);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)func_8005A31C, actor);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)func_8005A4BC, actor);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, (RenderCallback)func_8005AAE4, actor);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, (RenderCallback)func_8005AC44, actor);
 }
 
 void func_8005B14C(RaceUiCounterActor *arg0) {
@@ -2190,25 +2190,25 @@ void func_8005B14C(RaceUiCounterActor *arg0) {
     if ((arg0->value == 0) && (arg0->bonus == 0) && (arg0->target == 0)) {
         enqueueSoundEffect(2, 0x32);
         arg0->timer = 0x14;
-        setCallbackTaskCallback(arg0, func_8005B068);
+        setCallbackTaskCallback(arg0, (CallbackTaskCallback)func_8005B068);
     }
 
-    addRenderCallback(&gMenuRenderCallbackList, func_8005A31C, (s32)arg0);
-    addRenderCallback(&gMenuRenderCallbackList, func_8005A4BC, (s32)arg0);
-    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005AAE4, (s32)arg0);
-    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005AC44, (s32)arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)func_8005A31C, (void *)arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)func_8005A4BC, (void *)arg0);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, (RenderCallback)func_8005AAE4, (void *)arg0);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, (RenderCallback)func_8005AC44, (void *)arg0);
 }
 
 void updateRaceUiHitPrizeWaitBeforePayout(RaceUiCounterActor *arg0) {
     arg0->state = RACE_UI_HIT_PRIZE_SHOW_TOTAL_MONEY;
     arg0->timer--;
     if (arg0->timer == 0) {
-        setCallbackTaskCallback(arg0, func_8005B14C);
+        setCallbackTaskCallback(arg0, (CallbackTaskCallback)func_8005B14C);
     }
-    addRenderCallback(&gMenuRenderCallbackList, func_8005A31C, arg0);
-    addRenderCallback(&gMenuRenderCallbackList, func_8005A4BC, arg0);
-    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005AAE4, arg0);
-    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005AC44, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)func_8005A31C, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)func_8005A4BC, arg0);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, (RenderCallback)func_8005AAE4, arg0);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, (RenderCallback)func_8005AC44, arg0);
 }
 
 void updateRaceUiHitPrizeRevealTotalMoney(RaceUiCounterActor *arg0) {
@@ -2216,12 +2216,12 @@ void updateRaceUiHitPrizeRevealTotalMoney(RaceUiCounterActor *arg0) {
     arg0->timer--;
     if (arg0->timer == 0) {
         arg0->timer = 0xA;
-        setCallbackTaskCallback(arg0, updateRaceUiHitPrizeWaitBeforePayout);
+        setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceUiHitPrizeWaitBeforePayout);
     }
-    addRenderCallback(&gMenuRenderCallbackList, func_8005A31C, arg0);
-    addRenderCallback(&gMenuRenderCallbackList, func_8005A4BC, arg0);
-    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005AAE4, arg0);
-    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005AC44, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)func_8005A31C, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)func_8005A4BC, arg0);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, (RenderCallback)func_8005AAE4, arg0);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, (RenderCallback)func_8005AC44, arg0);
 }
 
 void func_8005B49C(RaceUiCounterActor *arg0) {
@@ -2230,12 +2230,12 @@ void func_8005B49C(RaceUiCounterActor *arg0) {
     if (arg0->timer == 0) {
         enqueueSoundEffect(0x1A, 0x32);
         arg0->timer = RACE_UI_RESULTS_REVEAL_TIMER;
-        setCallbackTaskCallback(arg0, updateRaceUiHitPrizeRevealTotalMoney);
+        setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceUiHitPrizeRevealTotalMoney);
     }
-    addRenderCallback(&gMenuRenderCallbackList, func_8005A31C, arg0);
-    addRenderCallback(&gMenuRenderCallbackList, func_8005A4BC, arg0);
-    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005AAE4, arg0);
-    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005AC44, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)func_8005A31C, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)func_8005A4BC, arg0);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, (RenderCallback)func_8005AAE4, arg0);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, (RenderCallback)func_8005AC44, arg0);
 }
 
 void updateRaceUiHitPrizeRevealPerfectHit(RaceUiCounterActor *arg0) {
@@ -2244,12 +2244,12 @@ void updateRaceUiHitPrizeRevealPerfectHit(RaceUiCounterActor *arg0) {
     if (arg0->timer == 0) {
         enqueueSoundEffect(0x1A, 0x32);
         arg0->timer = RACE_UI_RESULTS_REVEAL_TIMER;
-        setCallbackTaskCallback(arg0, func_8005B49C);
+        setCallbackTaskCallback(arg0, (CallbackTaskCallback)func_8005B49C);
     }
-    addRenderCallback(&gMenuRenderCallbackList, func_8005A31C, arg0);
-    addRenderCallback(&gMenuRenderCallbackList, func_8005A4BC, arg0);
-    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005AAE4, arg0);
-    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005AC44, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)func_8005A31C, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)func_8005A4BC, arg0);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, (RenderCallback)func_8005AAE4, arg0);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, (RenderCallback)func_8005AC44, arg0);
 }
 
 void updateRaceUiHitPrizeHoldHitPrize(RaceUiCounterActor *arg0) {
@@ -2259,15 +2259,15 @@ void updateRaceUiHitPrizeHoldHitPrize(RaceUiCounterActor *arg0) {
         enqueueSoundEffect(0x1A, 0x32);
         arg0->timer = RACE_UI_RESULTS_REVEAL_TIMER;
         if (arg0->hasPerfectHitBonus != 0) {
-            setCallbackTaskCallback(arg0, updateRaceUiHitPrizeRevealPerfectHit);
+            setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceUiHitPrizeRevealPerfectHit);
         } else {
-            setCallbackTaskCallback(arg0, func_8005B49C);
+            setCallbackTaskCallback(arg0, (CallbackTaskCallback)func_8005B49C);
         }
     }
-    addRenderCallback(&gMenuRenderCallbackList, func_8005A31C, arg0);
-    addRenderCallback(&gMenuRenderCallbackList, func_8005A4BC, arg0);
-    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005AAE4, arg0);
-    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005AC44, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)func_8005A31C, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)func_8005A4BC, arg0);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, (RenderCallback)func_8005AAE4, arg0);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, (RenderCallback)func_8005AC44, arg0);
 }
 
 void updateRaceUiHitPrizeWaitBeforeHitPrize(RaceUiCounterActor *arg0) {
@@ -2275,11 +2275,11 @@ void updateRaceUiHitPrizeWaitBeforeHitPrize(RaceUiCounterActor *arg0) {
     if (arg0->timer == 0) {
         arg0->timer = RACE_UI_RESULTS_REVEAL_TIMER;
         enqueueSoundEffect(0x1A, 0x32);
-        setCallbackTaskCallback(arg0, updateRaceUiHitPrizeHoldHitPrize);
+        setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceUiHitPrizeHoldHitPrize);
     }
-    addRenderCallback(&gMenuRenderCallbackList, func_8005A31C, arg0);
-    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005AAE4, arg0);
-    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005AC44, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)func_8005A31C, arg0);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, (RenderCallback)func_8005AAE4, arg0);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, (RenderCallback)func_8005AC44, arg0);
 }
 
 void updateRaceUiHitPrizeFadeIn(RaceUiCounterActor *arg0) {
@@ -2287,11 +2287,11 @@ void updateRaceUiHitPrizeFadeIn(RaceUiCounterActor *arg0) {
     if (arg0->alpha >= 0x100) {
         arg0->timer = RACE_UI_RESULTS_REVEAL_TIMER;
         arg0->alpha = RACE_UI_RESULTS_FULL_ALPHA;
-        setCallbackTaskCallback(arg0, updateRaceUiHitPrizeWaitBeforeHitPrize);
+        setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceUiHitPrizeWaitBeforeHitPrize);
     }
-    addRenderCallback(&gMenuRenderCallbackList, func_8005A31C, arg0);
-    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005AAE4, arg0);
-    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005AC44, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)func_8005A31C, arg0);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, (RenderCallback)func_8005AAE4, arg0);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, (RenderCallback)func_8005AC44, arg0);
 }
 
 void initRaceUiHitPrizePayout(RaceUiCounterActor *arg0) {
@@ -2311,7 +2311,7 @@ void initRaceUiHitPrizePayout(RaceUiCounterActor *arg0) {
             arg0->pendingPerfectHitBonus = RACE_UI_HIT_PRIZE_PERFECT_HIT_BONUS;
         }
     }
-    setCallbackTaskCallback(arg0, updateRaceUiHitPrizeFadeIn);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceUiHitPrizeFadeIn);
 }
 
 void func_8005B8E8(RaceUiAlphaActor *arg0) {
@@ -2346,13 +2346,13 @@ void func_8005B9F8(RaceUiDualCounterActor *arg0) {
                 break;
             }
             if (buffer[i] != ' ') {
-                drawAssetTableSprite((s16)x, -0x47, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
+                drawAssetTableSpriteWideIndex((s16)x, -0x47, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
                               (((u8)buffer[i]) - 5) & 0xFFFF);
             }
             x += 8;
             i++;
         }
-        drawAssetTableSprite((s16)x, -0x47, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x37);
+        drawAssetTableSpriteWideIndex((s16)x, -0x47, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x37);
         y.word = -0x27;
     }
 
@@ -2366,13 +2366,13 @@ void func_8005B9F8(RaceUiDualCounterActor *arg0) {
                 break;
             }
             if (buffer[i] != ' ') {
-                drawAssetTableSprite((s16)x, tempY, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
+                drawAssetTableSpriteWideIndex((s16)x, tempY, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
                               (((u8)buffer[i]) - 5) & 0xFFFF);
             }
             x += 8;
             i++;
         }
-        drawAssetTableSprite((s16)x, tempY, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x37);
+        drawAssetTableSpriteWideIndex((s16)x, tempY, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x37);
         y.word += 0x20;
     }
 
@@ -2387,13 +2387,13 @@ void func_8005B9F8(RaceUiDualCounterActor *arg0) {
                     break;
                 }
                 if (buffer[i] != ' ') {
-                    drawAssetTableSprite((s16)x, tempY, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
+                    drawAssetTableSpriteWideIndex((s16)x, tempY, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
                                   (((u8)buffer[i]) - 5) & 0xFFFF);
                 }
                 x += 8;
                 i++;
             }
-            drawAssetTableSprite((s16)x, tempY, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x37);
+            drawAssetTableSpriteWideIndex((s16)x, tempY, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x37);
             y.word += 0x20;
         }
     }
@@ -2408,13 +2408,13 @@ void func_8005B9F8(RaceUiDualCounterActor *arg0) {
                 break;
             }
             if (buffer[i] != ' ') {
-                drawAssetTableSprite((s16)x, tempY, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
+                drawAssetTableSpriteWideIndex((s16)x, tempY, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
                               (((u8)buffer[i]) - 5) & 0xFFFF);
             }
             x += 8;
             i++;
         }
-        drawAssetTableSprite((s16)x, tempY, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x37);
+        drawAssetTableSpriteWideIndex((s16)x, tempY, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x37);
         y.word += 0x20;
     }
 
@@ -2428,13 +2428,13 @@ void func_8005B9F8(RaceUiDualCounterActor *arg0) {
                 break;
             }
             if (buffer[i] != ' ') {
-                drawAssetTableSprite((s16)x, tempY, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
+                drawAssetTableSpriteWideIndex((s16)x, tempY, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
                               (((u8)buffer[i]) - 5) & 0xFFFF);
             }
             x += 8;
             i++;
         }
-        drawAssetTableSprite((s16)x, tempY, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x37);
+        drawAssetTableSpriteWideIndex((s16)x, tempY, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x37);
     }
 }
 
@@ -2447,7 +2447,7 @@ void func_8005BE68(RaceUiPopupActor *arg0) {
     y = -0x50;
     /* IDO scheduling for this function depends on this initialization staying on one line. */
     i = 0; offset = 0; while (1) {
-        drawAssetTableSprite(-8, (s16)y, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), (i + 0x77) & 0xFFFF);
+        drawAssetTableSprite(-8, (s16)y, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), i + 0x77);
         if ((i == arg0->index) && (gUiBlinkTimer & 1)) {
             color = 0x10;
         } else if (i < 3) {
@@ -2457,9 +2457,9 @@ void func_8005BE68(RaceUiPopupActor *arg0) {
         }
         func_80059A04(&((RaceUiResultNameData *)gGameSaveDataBuffer)->resultNames[gRaceCourseIndex][i], 0x10, y, color);
         drawAssetTableSprite(0x58, (s16)y, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
-                      ((((RaceUiResultIconData *)gGameSaveDataBuffer)->resultIcons[gRaceCourseIndex][i] & 7) + 0x51) & 0xFFFF);
+                      (((RaceUiResultIconData *)gGameSaveDataBuffer)->resultIcons[gRaceCourseIndex][i] & 7) + 0x51);
         drawAssetTableSprite(0x6C, (s16)y, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
-                      (((*((RaceUiResultIconData *)gGameSaveDataBuffer)).resultIcons[gRaceCourseIndex][i] >> 3) + 0x7C) & 0xFFFF);
+                      ((*((RaceUiResultIconData *)gGameSaveDataBuffer)).resultIcons[gRaceCourseIndex][i] >> 3) + 0x7C);
         i++;
         offset += 4;
         y += 0x20;
@@ -2538,43 +2538,43 @@ void func_8005C14C(RaceUiDualCounterActor *arg0) {
 }
 
 void func_8005C3E4(void *arg0) {
-    addRenderCallback(&gMenuRenderCallbackList, func_8005B8E8, arg0);
-    addRenderCallback(&gMenuRenderCallbackList, func_8005BE68, arg0);
-    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005C03C, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)func_8005B8E8, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)func_8005BE68, arg0);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, (RenderCallback)func_8005C03C, arg0);
 }
 
 void func_8005C448(void *arg0) {
     if (gPlayerInputPressed & A_BUTTON) {
         enqueueSoundEffect(0x18, 0x32);
         gMenuFlowState |= 0x10;
-        setCallbackTaskCallback(arg0, func_8005C3E4);
+        setCallbackTaskCallback(arg0, (CallbackTaskCallback)func_8005C3E4);
     }
-    addRenderCallback(&gMenuRenderCallbackList, func_8005B8E8, arg0);
-    addRenderCallback(&gMenuRenderCallbackList, func_8005BE68, arg0);
-    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005C03C, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)func_8005B8E8, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)func_8005BE68, arg0);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, (RenderCallback)func_8005C03C, arg0);
 }
 
 void func_8005C4EC(void *arg0) {
-    addRenderCallback(&gMenuRenderCallbackList, func_8005B8E8, arg0);
-    addRenderCallback(&gMenuRenderCallbackList, func_8005B9F8, arg0);
-    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005C03C, arg0);
-    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005C14C, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)func_8005B8E8, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)func_8005B9F8, arg0);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, (RenderCallback)func_8005C03C, arg0);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, (RenderCallback)func_8005C14C, arg0);
 }
 
 void func_8005C568(RaceUiDualCounterActor *actor) {
     if (gPlayerInputPressed & A_BUTTON) {
         enqueueSoundEffect(0x18, 0x32);
         if (actor->index < 5) {
-            setCallbackTaskCallback(actor, func_8005C448);
+            setCallbackTaskCallback(actor, (CallbackTaskCallback)func_8005C448);
         } else {
             gMenuFlowState |= 0x10;
-            setCallbackTaskCallback(actor, func_8005C4EC);
+            setCallbackTaskCallback(actor, (CallbackTaskCallback)func_8005C4EC);
         }
     }
-    addRenderCallback(&gMenuRenderCallbackList, func_8005B8E8, actor);
-    addRenderCallback(&gMenuRenderCallbackList, func_8005B9F8, actor);
-    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005C03C, actor);
-    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005C14C, actor);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)func_8005B8E8, actor);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)func_8005B9F8, actor);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, (RenderCallback)func_8005C03C, actor);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, (RenderCallback)func_8005C14C, actor);
 }
 
 void func_8005C64C(RaceUiDualCounterActor *arg0) {
@@ -2623,25 +2623,25 @@ void func_8005C64C(RaceUiDualCounterActor *arg0) {
     if ((arg0->rightValue == 0) && (arg0->leftValue == 0) && (arg0->bonus == 0) && (arg0->leftTarget == 0)) {
         enqueueSoundEffect(2, 0x32);
         arg0->timer = 0x14;
-        setCallbackTaskCallback(arg0, func_8005C568);
+        setCallbackTaskCallback(arg0, (CallbackTaskCallback)func_8005C568);
     }
 
-    addRenderCallback(&gMenuRenderCallbackList, func_8005B8E8, (s32)arg0);
-    addRenderCallback(&gMenuRenderCallbackList, func_8005B9F8, (s32)arg0);
-    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005C03C, (s32)arg0);
-    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005C14C, (s32)arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)func_8005B8E8, (void *)arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)func_8005B9F8, (void *)arg0);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, (RenderCallback)func_8005C03C, (void *)arg0);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, (RenderCallback)func_8005C14C, (void *)arg0);
 }
 
 void func_8005C89C(RaceUiDualCounterActor *actor) {
     actor->state = RACE_UI_COURSE_RECORD_HOLD_FINAL_MONEY_STATE;
     actor->timer--;
     if (actor->timer == 0) {
-        setCallbackTaskCallback(actor, func_8005C64C);
+        setCallbackTaskCallback(actor, (CallbackTaskCallback)func_8005C64C);
     }
-    addRenderCallback(&gMenuRenderCallbackList, func_8005B8E8, actor);
-    addRenderCallback(&gMenuRenderCallbackList, func_8005B9F8, actor);
-    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005C03C, actor);
-    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005C14C, actor);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)func_8005B8E8, actor);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)func_8005B9F8, actor);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, (RenderCallback)func_8005C03C, actor);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, (RenderCallback)func_8005C14C, actor);
 }
 
 void updateRaceUiCourseRecordHoldFinalMoney(RaceUiDualCounterActor *actor) {
@@ -2649,12 +2649,12 @@ void updateRaceUiCourseRecordHoldFinalMoney(RaceUiDualCounterActor *actor) {
     actor->timer--;
     if (actor->timer == 0) {
         actor->timer = 0xA;
-        setCallbackTaskCallback(actor, func_8005C89C);
+        setCallbackTaskCallback(actor, (CallbackTaskCallback)func_8005C89C);
     }
-    addRenderCallback(&gMenuRenderCallbackList, func_8005B8E8, actor);
-    addRenderCallback(&gMenuRenderCallbackList, func_8005B9F8, actor);
-    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005C03C, actor);
-    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005C14C, actor);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)func_8005B8E8, actor);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)func_8005B9F8, actor);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, (RenderCallback)func_8005C03C, actor);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, (RenderCallback)func_8005C14C, actor);
 }
 
 void updateRaceUiCourseRecordRevealFinalMoney(RaceUiDualCounterActor *actor) {
@@ -2663,12 +2663,12 @@ void updateRaceUiCourseRecordRevealFinalMoney(RaceUiDualCounterActor *actor) {
     if (actor->timer == 0) {
         enqueueSoundEffect(0x1A, 0x32);
         actor->timer = RACE_UI_RESULTS_REVEAL_TIMER;
-        setCallbackTaskCallback(actor, updateRaceUiCourseRecordHoldFinalMoney);
+        setCallbackTaskCallback(actor, (CallbackTaskCallback)updateRaceUiCourseRecordHoldFinalMoney);
     }
-    addRenderCallback(&gMenuRenderCallbackList, func_8005B8E8, actor);
-    addRenderCallback(&gMenuRenderCallbackList, func_8005B9F8, actor);
-    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005C03C, actor);
-    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005C14C, actor);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)func_8005B8E8, actor);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)func_8005B9F8, actor);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, (RenderCallback)func_8005C03C, actor);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, (RenderCallback)func_8005C14C, actor);
 }
 
 void updateRaceUiCourseRecordRevealPerfectGet(RaceUiDualCounterActor *actor) {
@@ -2677,12 +2677,12 @@ void updateRaceUiCourseRecordRevealPerfectGet(RaceUiDualCounterActor *actor) {
     if (actor->timer == 0) {
         enqueueSoundEffect(0x1A, 0x32);
         actor->timer = RACE_UI_RESULTS_REVEAL_TIMER;
-        setCallbackTaskCallback(actor, updateRaceUiCourseRecordRevealFinalMoney);
+        setCallbackTaskCallback(actor, (CallbackTaskCallback)updateRaceUiCourseRecordRevealFinalMoney);
     }
-    addRenderCallback(&gMenuRenderCallbackList, func_8005B8E8, actor);
-    addRenderCallback(&gMenuRenderCallbackList, func_8005B9F8, actor);
-    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005C03C, actor);
-    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005C14C, actor);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)func_8005B8E8, actor);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)func_8005B9F8, actor);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, (RenderCallback)func_8005C03C, actor);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, (RenderCallback)func_8005C14C, actor);
 }
 
 void func_8005CB74(RaceUiDualCounterActor *actor) {
@@ -2692,15 +2692,15 @@ void func_8005CB74(RaceUiDualCounterActor *actor) {
         enqueueSoundEffect(0x1A, 0x32);
         actor->timer = RACE_UI_RESULTS_REVEAL_TIMER;
         if (actor->flag != 0) {
-            setCallbackTaskCallback(actor, updateRaceUiCourseRecordRevealPerfectGet);
+            setCallbackTaskCallback(actor, (CallbackTaskCallback)updateRaceUiCourseRecordRevealPerfectGet);
         } else {
-            setCallbackTaskCallback(actor, updateRaceUiCourseRecordRevealFinalMoney);
+            setCallbackTaskCallback(actor, (CallbackTaskCallback)updateRaceUiCourseRecordRevealFinalMoney);
         }
     }
-    addRenderCallback(&gMenuRenderCallbackList, func_8005B8E8, actor);
-    addRenderCallback(&gMenuRenderCallbackList, func_8005B9F8, actor);
-    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005C03C, actor);
-    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005C14C, actor);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)func_8005B8E8, actor);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)func_8005B9F8, actor);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, (RenderCallback)func_8005C03C, actor);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, (RenderCallback)func_8005C14C, actor);
 }
 
 void func_8005CC54(RaceUiDualCounterActor *actor) {
@@ -2709,12 +2709,12 @@ void func_8005CC54(RaceUiDualCounterActor *actor) {
     if (actor->timer == 0) {
         enqueueSoundEffect(0x1A, 0x32);
         actor->timer = RACE_UI_RESULTS_REVEAL_TIMER;
-        setCallbackTaskCallback(actor, func_8005CB74);
+        setCallbackTaskCallback(actor, (CallbackTaskCallback)func_8005CB74);
     }
-    addRenderCallback(&gMenuRenderCallbackList, func_8005B8E8, actor);
-    addRenderCallback(&gMenuRenderCallbackList, func_8005B9F8, actor);
-    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005C03C, actor);
-    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005C14C, actor);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)func_8005B8E8, actor);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)func_8005B9F8, actor);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, (RenderCallback)func_8005C03C, actor);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, (RenderCallback)func_8005C14C, actor);
 }
 
 void func_8005CD10(RaceUiDualCounterActor *actor) {
@@ -2722,11 +2722,11 @@ void func_8005CD10(RaceUiDualCounterActor *actor) {
     if (actor->timer == 0) {
         actor->timer = RACE_UI_RESULTS_REVEAL_TIMER;
         enqueueSoundEffect(0x1A, 0x32);
-        setCallbackTaskCallback(actor, func_8005CC54);
+        setCallbackTaskCallback(actor, (CallbackTaskCallback)func_8005CC54);
     }
-    addRenderCallback(&gMenuRenderCallbackList, func_8005B8E8, actor);
-    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005C03C, actor);
-    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005C14C, actor);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)func_8005B8E8, actor);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, (RenderCallback)func_8005C03C, actor);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, (RenderCallback)func_8005C14C, actor);
 }
 
 void func_8005CDB0(RaceUiDualCounterActor *arg0) {
@@ -2734,11 +2734,11 @@ void func_8005CDB0(RaceUiDualCounterActor *arg0) {
     if (arg0->alpha >= 0x100) {
         arg0->timer = RACE_UI_RESULTS_REVEAL_TIMER;
         arg0->alpha = RACE_UI_RESULTS_FULL_ALPHA;
-        setCallbackTaskCallback(arg0, func_8005CD10);
+        setCallbackTaskCallback(arg0, (CallbackTaskCallback)func_8005CD10);
     }
-    addRenderCallback(&gMenuRenderCallbackList, func_8005B8E8, arg0);
-    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005C03C, arg0);
-    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005C14C, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)func_8005B8E8, arg0);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, (RenderCallback)func_8005C03C, arg0);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, (RenderCallback)func_8005C14C, arg0);
 }
 
 void func_8005CE4C(RaceUiDualCounterActor *arg0) {
@@ -2764,7 +2764,7 @@ void func_8005CE4C(RaceUiDualCounterActor *arg0) {
         }
     }
     arg0->rightValue = temp_v0 * 0xA;
-    setCallbackTaskCallback(arg0, func_8005CDB0);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)func_8005CDB0);
 }
 
 // func_8005CF60 best match: 98.840% (nonmatchings/func_8005CF60-8498672362023432715/base_9.c)
@@ -2812,7 +2812,7 @@ loop1:
 
 body1:
     if (*ptr != ' ') {
-        drawAssetTableSprite(x, -0x37, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), (*ptr - 5) & 0xFFFF);
+        drawAssetTableSprite(x, -0x37, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), *ptr - 5);
     }
     ptr++;
     x += 8;
@@ -2834,7 +2834,7 @@ loop2:
 
 body2:
     if (*ptr2 != ' ') {
-        drawAssetTableSpriteWithExplicitPalette(x, -0x13, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), (*ptr2 - 5) & 0xFFFF, 0xE);
+        drawAssetTableSpriteWithExplicitPalette(x, -0x13, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), *ptr2 - 5, 0xE);
     }
     ptr2++;
     x += 8;
@@ -2876,14 +2876,14 @@ void func_8005D1CC(RaceUiCourseStatsActor *arg0) {
 loop1:
         if (buffer[i] != 0) {
             if (buffer[i] != ' ') {
-                drawAssetTableSprite(x, -0x47, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
+                drawAssetTableSpriteWideIndex(x, -0x47, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
                                      ((u8)buffer[i] - 5) & 0xFFFF);
             }
             x += 8;
             i++;
             goto loop1;
         }
-        drawAssetTableSprite(x, -0x47, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x37);
+        drawAssetTableSpriteWideIndex(x, -0x47, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x37);
         y.word = -0x1F;
         visibleRows = arg0->visibleRows;
     }
@@ -2896,14 +2896,14 @@ loop1:
 loop2:
         if (buffer[i] != 0) {
             if (buffer[i] != ' ') {
-                drawAssetTableSprite(x, rowY, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
+                drawAssetTableSpriteWideIndex(x, rowY, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
                                      ((u8)buffer[i] - 5) & 0xFFFF);
             }
             x += 8;
             i++;
             goto loop2;
         }
-        drawAssetTableSprite(x, rowY, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x37);
+        drawAssetTableSpriteWideIndex(x, rowY, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x37);
         y.word += 0x28;
         visibleRows = arg0->visibleRows;
     }
@@ -2916,14 +2916,14 @@ loop2:
 loop3:
         if (buffer[i] != 0) {
             if (buffer[i] != ' ') {
-                drawAssetTableSprite(x, rowY, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
+                drawAssetTableSpriteWideIndex(x, rowY, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
                                      ((u8)buffer[i] - 5) & 0xFFFF);
             }
             x += 8;
             i++;
             goto loop3;
         }
-        drawAssetTableSprite(x, rowY, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x37);
+        drawAssetTableSpriteWideIndex(x, rowY, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x37);
         y.word += 0x28;
         visibleRows = arg0->visibleRows;
     }
@@ -2936,14 +2936,14 @@ loop3:
 loop4:
         if (buffer[i] != 0) {
             if (buffer[i] != ' ') {
-                drawAssetTableSprite(x, rowY, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
+                drawAssetTableSpriteWideIndex(x, rowY, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
                                      ((u8)buffer[i] - 5) & 0xFFFF);
             }
             x += 8;
             i++;
             goto loop4;
         }
-        drawAssetTableSprite(x, rowY, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x37);
+        drawAssetTableSpriteWideIndex(x, rowY, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x37);
     }
 }
 
@@ -2958,7 +2958,7 @@ void func_8005D558(RaceUiCourseStatsActor *arg0) {
     s32 space;
 
     y = -0x50;
-    i = 0; space = ' '; do { char buffer[8]; drawAssetTableSprite(-8, (s16)y, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), (i + 0x77) & 0xFFFF); if ((i == arg0->index) && (gUiBlinkTimer & 1)) { color = 0x10; } else if (i < 3) { color = 0xC; } else {
+    i = 0; space = ' '; do { char buffer[8]; drawAssetTableSprite(-8, (s16)y, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), i + 0x77); if ((i == arg0->index) && (gUiBlinkTimer & 1)) { color = 0x10; } else if (i < 3) { color = 0xC; } else {
             color = 0xD;
         }
 
@@ -2966,26 +2966,26 @@ void func_8005D558(RaceUiCourseStatsActor *arg0) {
 
         if ((u8)buffer[0] != space) {
             drawAssetTableSpriteWithExplicitPalette(0x10, (s16)y, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
-                          (buffer[0] - 5) & 0xFFFF, color);
+                          buffer[0] - 5, color);
             do { } while (0);
         }
         if ((u8)buffer[1] != space) {
             drawAssetTableSpriteWithExplicitPalette(0x18, (s16)y, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
-                          (buffer[1] - 5) & 0xFFFF, (u16)color);
+                          buffer[1] - 5, (u16)color);
         }
         if ((u8)buffer[2] != space) {
             drawAssetTableSpriteWithExplicitPalette(0x20, (s16)y, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
-                          (buffer[2] - 5) & 0xFFFF, (u16)color);
+                          buffer[2] - 5, (u16)color);
         }
         if ((u8)buffer[3] != space) {
             drawAssetTableSpriteWithExplicitPalette(0x28, (s16)y, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
-                          (buffer[3] - 5) & 0xFFFF, (u16)color);
+                          buffer[3] - 5, (u16)color);
         }
 
         drawAssetTableSprite(0x40, (s16)y, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
-                      ((((RaceUiTrickIconData *)gGameSaveDataBuffer)->icons[gRaceCourseIndex][i] & 7) + 0x51) & 0xFFFF);
+                      (((RaceUiTrickIconData *)gGameSaveDataBuffer)->icons[gRaceCourseIndex][i] & 7) + 0x51);
         drawAssetTableSprite(0x54, (s16)y, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
-                      ((((RaceUiTrickIconData *)gGameSaveDataBuffer)->icons[gRaceCourseIndex][i] >> 3) + 0x7C) & 0xFFFF);
+                      (((RaceUiTrickIconData *)gGameSaveDataBuffer)->icons[gRaceCourseIndex][i] >> 3) + 0x7C);
 
         i++;
         y += 0x20;
@@ -3002,13 +3002,13 @@ const char gRaceUiPendingMoneyLabel[0x10] = "  -Total Money-";
 
 void func_8005D860(RaceUiAlpha18Actor *arg0) {
     Gfx *gfx;
-    void **new_var2;
+    const char *new_var2;
     s32 w0;
     s32 w1;
     s32 new_var;
 
     /* IDO scheduling for this function depends on this block staying on one line. */
-    do { if (arg0->alpha != 0xFF) { gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w1 = 0; gfx->words.w0 = 0xE7000000; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = 0xFF2FFFFF; w0 = 0xFC119623; gfx->words.w0 = w0; gfx->words.w1 = w1; if (!gfx) { } gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = 0x00504240; if ((gRegionAllocPtr && gRegionAllocPtr) && gRegionAllocPtr) { } w0 = 0xB900031D; gfx->words.w0 = w0; gfx->words.w1 = w1; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w0 = 0xFA000000; gfx->words.w1 = (arg0->alpha & 0xFF) | (~0xFF); } drawMenuAsciiTextDefaultScale(-0x68, -0x40, new_var2 = &gRaceUiTrickAttackResultsTrickLabel, 6); drawMenuAsciiTextDefaultScale(-0x64, -0x1C, &gRaceUiTrickAttackResultsMakeLabel, 5); w0 = 8; if (gRaceChallengeFailed != 0) { new_var = w0; drawMenuAsciiTextDefaultScale(-0x6C, new_var, &gRaceUiTrickAttackResultsTimeOutLabel, 4); } if (arg0->alpha != 0xFF) { gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = (s32) gMenuRenderModeResetDl; w0 = 0x06000000; gfx->words.w0 = w0; gfx->words.w1 = w1; } } while (0);
+    do { if (arg0->alpha != 0xFF) { gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w1 = 0; gfx->words.w0 = 0xE7000000; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = 0xFF2FFFFF; w0 = 0xFC119623; gfx->words.w0 = w0; gfx->words.w1 = w1; if (!gfx) { } gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = 0x00504240; if ((gRegionAllocPtr && gRegionAllocPtr) && gRegionAllocPtr) { } w0 = 0xB900031D; gfx->words.w0 = w0; gfx->words.w1 = w1; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w0 = 0xFA000000; gfx->words.w1 = (arg0->alpha & 0xFF) | (~0xFF); } drawMenuAsciiTextDefaultScale(-0x68, -0x40, new_var2 = gRaceUiTrickAttackResultsTrickLabel, 6); drawMenuAsciiTextDefaultScale(-0x64, -0x1C, gRaceUiTrickAttackResultsMakeLabel, 5); w0 = 8; if (gRaceChallengeFailed != 0) { new_var = w0; drawMenuAsciiTextDefaultScale(-0x6C, new_var, gRaceUiTrickAttackResultsTimeOutLabel, 4); } if (arg0->alpha != 0xFF) { gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = (s32) gMenuRenderModeResetDl; w0 = 0x06000000; gfx->words.w0 = w0; gfx->words.w1 = w1; } } while (0);
 }
 
 void func_8005D9B4(RaceUiAlpha18Actor *arg0) {
@@ -3063,45 +3063,45 @@ void func_8005DB3C(void *arg0) {
 }
 
 void func_8005DBD0(void *arg0) {
-    addRenderCallback(&gMenuRenderCallbackList, func_8005CF60, arg0);
-    addRenderCallback(&gMenuRenderCallbackList, func_8005D558, arg0);
-    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005D860, arg0);
-    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005DB3C, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)func_8005CF60, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)func_8005D558, arg0);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, (RenderCallback)func_8005D860, arg0);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, (RenderCallback)func_8005DB3C, arg0);
 }
 
 void func_8005DC4C(void *arg0) {
     if (gPlayerInputPressed & A_BUTTON) {
         enqueueSoundEffect(0x18, 0x32);
         gMenuFlowState |= 0x10;
-        setCallbackTaskCallback(arg0, func_8005DBD0);
+        setCallbackTaskCallback(arg0, (CallbackTaskCallback)func_8005DBD0);
     }
-    addRenderCallback(&gMenuRenderCallbackList, func_8005CF60, arg0);
-    addRenderCallback(&gMenuRenderCallbackList, func_8005D558, arg0);
-    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005D860, arg0);
-    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005DB3C, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)func_8005CF60, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)func_8005D558, arg0);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, (RenderCallback)func_8005D860, arg0);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, (RenderCallback)func_8005DB3C, arg0);
 }
 
 void func_8005DD0C(void *arg0) {
-    addRenderCallback(&gMenuRenderCallbackList, func_8005CF60, arg0);
-    addRenderCallback(&gMenuRenderCallbackList, func_8005D1CC, arg0);
-    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005D860, arg0);
-    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005D9B4, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)func_8005CF60, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)func_8005D1CC, arg0);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, (RenderCallback)func_8005D860, arg0);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, (RenderCallback)func_8005D9B4, arg0);
 }
 
 void updateRaceUiTrickPrizePayoutWaitForConfirm(RaceUiCourseStatsActor *actor) {
     if (gPlayerInputPressed & A_BUTTON) {
         enqueueSoundEffect(0x18, 0x32);
         if (actor->index < 5) {
-            setCallbackTaskCallback(actor, func_8005DC4C);
+            setCallbackTaskCallback(actor, (CallbackTaskCallback)func_8005DC4C);
         } else {
             gMenuFlowState |= 0x10;
-            setCallbackTaskCallback(actor, func_8005DD0C);
+            setCallbackTaskCallback(actor, (CallbackTaskCallback)func_8005DD0C);
         }
     }
-    addRenderCallback(&gMenuRenderCallbackList, func_8005CF60, actor);
-    addRenderCallback(&gMenuRenderCallbackList, func_8005D1CC, actor);
-    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005D860, actor);
-    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005D9B4, actor);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)func_8005CF60, actor);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)func_8005D1CC, actor);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, (RenderCallback)func_8005D860, actor);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, (RenderCallback)func_8005D9B4, actor);
 }
 
 void func_8005DE6C(RaceUiCourseStatsActor *arg0) {
@@ -3143,25 +3143,25 @@ void func_8005DE6C(RaceUiCourseStatsActor *arg0) {
     if ((arg0->pendingTrickPrize == 0) && (arg0->pendingMakeBonus == 0) && (arg0->pendingCompleteBonus == 0)) {
         enqueueSoundEffect(2, 0x32);
         arg0->timer = 0x14;
-        setCallbackTaskCallback(arg0, updateRaceUiTrickPrizePayoutWaitForConfirm);
+        setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceUiTrickPrizePayoutWaitForConfirm);
     }
 
-    addRenderCallback(&gMenuRenderCallbackList, func_8005CF60, (s32)arg0);
-    addRenderCallback(&gMenuRenderCallbackList, func_8005D1CC, (s32)arg0);
-    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005D860, (s32)arg0);
-    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005D9B4, (s32)arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)func_8005CF60, (void *)arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)func_8005D1CC, (void *)arg0);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, (RenderCallback)func_8005D860, (void *)arg0);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, (RenderCallback)func_8005D9B4, (void *)arg0);
 }
 
 void updateRaceUiTrickPrizePayoutHoldMoneyRow(RaceUiCourseStatsActor *arg0) {
     arg0->visibleRows = RACE_UI_TRICK_PRIZE_SHOW_TOTAL_MONEY;
     arg0->timer--;
     if (arg0->timer == 0) {
-        setCallbackTaskCallback(arg0, func_8005DE6C);
+        setCallbackTaskCallback(arg0, (CallbackTaskCallback)func_8005DE6C);
     }
-    addRenderCallback(&gMenuRenderCallbackList, func_8005CF60, arg0);
-    addRenderCallback(&gMenuRenderCallbackList, func_8005D1CC, arg0);
-    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005D860, arg0);
-    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005D9B4, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)func_8005CF60, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)func_8005D1CC, arg0);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, (RenderCallback)func_8005D860, arg0);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, (RenderCallback)func_8005D9B4, arg0);
 }
 
 void updateRaceUiTrickPrizePayoutRevealMoneyRow(RaceUiCourseStatsActor *arg0) {
@@ -3169,12 +3169,12 @@ void updateRaceUiTrickPrizePayoutRevealMoneyRow(RaceUiCourseStatsActor *arg0) {
     arg0->timer--;
     if (arg0->timer == 0) {
         arg0->timer = 0xA;
-        setCallbackTaskCallback(arg0, updateRaceUiTrickPrizePayoutHoldMoneyRow);
+        setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceUiTrickPrizePayoutHoldMoneyRow);
     }
-    addRenderCallback(&gMenuRenderCallbackList, func_8005CF60, arg0);
-    addRenderCallback(&gMenuRenderCallbackList, func_8005D1CC, arg0);
-    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005D860, arg0);
-    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005D9B4, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)func_8005CF60, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)func_8005D1CC, arg0);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, (RenderCallback)func_8005D860, arg0);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, (RenderCallback)func_8005D9B4, arg0);
 }
 
 void updateRaceUiTrickPrizePayoutRevealCompleteBonus(RaceUiCourseStatsActor *arg0) {
@@ -3183,12 +3183,12 @@ void updateRaceUiTrickPrizePayoutRevealCompleteBonus(RaceUiCourseStatsActor *arg
     if (arg0->timer == 0) {
         enqueueSoundEffect(0x1A, 0x32);
         arg0->timer = RACE_UI_TRICK_PRIZE_REVEAL_DELAY;
-        setCallbackTaskCallback(arg0, updateRaceUiTrickPrizePayoutRevealMoneyRow);
+        setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceUiTrickPrizePayoutRevealMoneyRow);
     }
-    addRenderCallback(&gMenuRenderCallbackList, func_8005CF60, arg0);
-    addRenderCallback(&gMenuRenderCallbackList, func_8005D1CC, arg0);
-    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005D860, arg0);
-    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005D9B4, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)func_8005CF60, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)func_8005D1CC, arg0);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, (RenderCallback)func_8005D860, arg0);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, (RenderCallback)func_8005D9B4, arg0);
 }
 
 void updateRaceUiTrickPrizePayoutRevealMakeBonus(RaceUiCourseStatsActor *arg0) {
@@ -3197,12 +3197,12 @@ void updateRaceUiTrickPrizePayoutRevealMakeBonus(RaceUiCourseStatsActor *arg0) {
     if (arg0->timer == 0) {
         enqueueSoundEffect(0x1A, 0x32);
         arg0->timer = RACE_UI_TRICK_PRIZE_REVEAL_DELAY;
-        setCallbackTaskCallback(arg0, updateRaceUiTrickPrizePayoutRevealCompleteBonus);
+        setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceUiTrickPrizePayoutRevealCompleteBonus);
     }
-    addRenderCallback(&gMenuRenderCallbackList, func_8005CF60, arg0);
-    addRenderCallback(&gMenuRenderCallbackList, func_8005D1CC, arg0);
-    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005D860, arg0);
-    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005D9B4, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)func_8005CF60, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)func_8005D1CC, arg0);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, (RenderCallback)func_8005D860, arg0);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, (RenderCallback)func_8005D9B4, arg0);
 }
 
 void updateRaceUiTrickPrizePayoutRevealTrickPrize(RaceUiCourseStatsActor *arg0) {
@@ -3211,12 +3211,12 @@ void updateRaceUiTrickPrizePayoutRevealTrickPrize(RaceUiCourseStatsActor *arg0) 
     if (arg0->timer == 0) {
         enqueueSoundEffect(0x1A, 0x32);
         arg0->timer = RACE_UI_TRICK_PRIZE_REVEAL_DELAY;
-        setCallbackTaskCallback(arg0, updateRaceUiTrickPrizePayoutRevealMakeBonus);
+        setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceUiTrickPrizePayoutRevealMakeBonus);
     }
-    addRenderCallback(&gMenuRenderCallbackList, func_8005CF60, arg0);
-    addRenderCallback(&gMenuRenderCallbackList, func_8005D1CC, arg0);
-    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005D860, arg0);
-    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005D9B4, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)func_8005CF60, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)func_8005D1CC, arg0);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, (RenderCallback)func_8005D860, arg0);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, (RenderCallback)func_8005D9B4, arg0);
 }
 
 void updateRaceUiTrickPrizePayoutWaitBeforeReveal(RaceUiCourseStatsActor *arg0) {
@@ -3224,11 +3224,11 @@ void updateRaceUiTrickPrizePayoutWaitBeforeReveal(RaceUiCourseStatsActor *arg0) 
     if (arg0->timer == 0) {
         arg0->timer = RACE_UI_TRICK_PRIZE_REVEAL_DELAY;
         enqueueSoundEffect(0x1A, 0x32);
-        setCallbackTaskCallback(arg0, updateRaceUiTrickPrizePayoutRevealTrickPrize);
+        setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceUiTrickPrizePayoutRevealTrickPrize);
     }
-    addRenderCallback(&gMenuRenderCallbackList, func_8005CF60, arg0);
-    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005D860, arg0);
-    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005D9B4, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)func_8005CF60, arg0);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, (RenderCallback)func_8005D860, arg0);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, (RenderCallback)func_8005D9B4, arg0);
 }
 
 void updateRaceUiTrickPrizePayoutFadeIn(RaceUiCourseStatsActor *arg0) {
@@ -3236,11 +3236,11 @@ void updateRaceUiTrickPrizePayoutFadeIn(RaceUiCourseStatsActor *arg0) {
     if (arg0->titleAlpha >= 0x100) {
         arg0->timer = 0x14;
         arg0->titleAlpha = 0xFF;
-        setCallbackTaskCallback(arg0, updateRaceUiTrickPrizePayoutWaitBeforeReveal);
+        setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceUiTrickPrizePayoutWaitBeforeReveal);
     }
-    addRenderCallback(&gMenuRenderCallbackList, func_8005CF60, arg0);
-    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005D860, arg0);
-    addRenderCallback(&gMenuForegroundRenderCallbackList, func_8005D9B4, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)func_8005CF60, arg0);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, (RenderCallback)func_8005D860, arg0);
+    addRenderCallback(&gMenuForegroundRenderCallbackList, (RenderCallback)func_8005D9B4, arg0);
 }
 
 void initRaceUiTrickPrizePayout(RaceUiCourseStatsActor *arg0) {
@@ -3254,21 +3254,21 @@ void initRaceUiTrickPrizePayout(RaceUiCourseStatsActor *arg0) {
         arg0->pendingTrickPrize = gRacePlayers[0].unk2C0 * 3;
         arg0->pendingMakeBonus = gRacePlayers[0].unk2C3 * 10;
     }
-    setCallbackTaskCallback(arg0, updateRaceUiTrickPrizePayoutFadeIn);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceUiTrickPrizePayoutFadeIn);
 }
 
 void drawRaceUiResultAwardBadge(CallbackTask *task) {
     drawAssetTableSprite(-0x68, -0x2C, getRelocatableHeapBlockBase(ASSET_HANDLE(0x1F)), 0x4D);
-    drawAssetTableSprite(-0x42, -0xC, getRelocatableHeapBlockBase(ASSET_HANDLE(0x1F)), gRacePlayers[0].mode & 0xFFFF);
-    drawAssetTableSprite(-0x22, 4, getRelocatableHeapBlockBase(ASSET_HANDLE(0x1F)), (gRacePlayers[0].mode + 0x48) & 0xFFFF);
-    drawAssetTableSprite(-0x68, 6, getRelocatableHeapBlockBase(ASSET_HANDLE(0x1F)), (gRacePlayers[0].characterId + 0x91) & 0xFFFF);
+    drawAssetTableSprite(-0x42, -0xC, getRelocatableHeapBlockBase(ASSET_HANDLE(0x1F)), gRacePlayers[0].mode);
+    drawAssetTableSprite(-0x22, 4, getRelocatableHeapBlockBase(ASSET_HANDLE(0x1F)), gRacePlayers[0].mode + 0x48);
+    drawAssetTableSprite(-0x68, 6, getRelocatableHeapBlockBase(ASSET_HANDLE(0x1F)), gRacePlayers[0].characterId + 0x91);
 }
 
 void updateRaceUiResultAwardBadgeDelay(CallbackTask *task) {
     if ((u16)task->userId != 0) {
         task->userId = (u16)task->userId - 1;
     } else {
-        addRenderCallback(&gMenuRenderCallbackList, drawRaceUiResultAwardBadge, (s32)task);
+        addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawRaceUiResultAwardBadge, (void *)task);
     }
 }
 
@@ -3360,7 +3360,7 @@ void func_8005EA4C(RaceUiSparkleActor *arg0) {
         arg0->pos.z += player->pos28.z;
     }
 
-    addRenderCallback(&D_801248EC, func_8005E6D0, (s32) arg0);
+    addRenderCallback(&D_801248EC, (RenderCallback)func_8005E6D0, (void *)arg0);
 }
 
 void func_8005ECA8(RaceUiSparkleActor *arg0) {
@@ -3430,14 +3430,14 @@ void func_8005ECA8(RaceUiSparkleActor *arg0) {
                 }
                 enqueuePositionalSoundEffect(0x10, &gRacePlayers[arg0->playerIndex].pos1C, 0x7F, 0x32);
                 arg0->timer = 0x12C;
-                setCallbackTaskCallback(arg0, func_8005EA4C);
+                setCallbackTaskCallback(arg0, (CallbackTaskCallback)func_8005EA4C);
             }
         } else {
             arg0->timer = timer - 1;
         }
     }
 
-    addRenderCallback(&D_801248EC, func_8005E6D0, (s32) arg0);
+    addRenderCallback(&D_801248EC, (RenderCallback)func_8005E6D0, (void *)arg0);
 }
 
 void func_8005EFFC(RaceUiSparkleActor *arg0) {
@@ -3467,12 +3467,12 @@ void func_8005EFFC(RaceUiSparkleActor *arg0) {
             arg0->alpha = 0xFF;
             arg0->alphaStep = -0x20;
             arg0->timer = 0x14;
-            setCallbackTaskCallback(arg0, func_8005ECA8);
+            setCallbackTaskCallback(arg0, (CallbackTaskCallback)func_8005ECA8);
         }
         arg0->zOffset += 0x20000;
     }
 
-    addRenderCallback(&D_801248EC, func_8005E6D0, arg0);
+    addRenderCallback(&D_801248EC, (RenderCallback)func_8005E6D0, arg0);
 }
 
 void func_8005F174(RaceUiSparkleActor *arg0) {
@@ -3488,11 +3488,11 @@ void func_8005F174(RaceUiSparkleActor *arg0) {
     getAssetTableImageAndPalette(getRelocatableHeapBlockBase(ASSET_HANDLE(0x1C)), 0x25, &arg0->images[2], &arg0->palettes[2]);
     getAssetTableImageAndPalette(getRelocatableHeapBlockBase(ASSET_HANDLE(0x1C)), 0x26, &arg0->images[3], &arg0->palettes[3]);
     enqueuePositionalSoundEffect(0x10, &gRacePlayers[arg0->playerIndex].pos1C, 0x7F, 0x32);
-    setCallbackTaskCallback(arg0, func_8005EFFC);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)func_8005EFFC);
 }
 
 void spawnRacePlayerSparkleEffect(s16 arg0) {
-    RaceUiSparkleActor *temp = createCallbackTaskPreservingArgs(func_8005F174, 0, 0x62);
+    RaceUiSparkleActor *temp = createCallbackTaskPreservingArgs((CallbackTaskCallback)func_8005F174, 0, 0x62);
     if (temp != NULL) {
         temp->playerIndex = arg0;
     }
@@ -3552,7 +3552,7 @@ void updateRaceUiSnowboardTrailEffect(RaceUiSnowboardTrailActor *arg0) {
     }
 
     if (gRacePlayers[actor->playerIndex].soundDisabled == 0) {
-        addRenderCallback(&gSceneModelRenderCallbackList, renderRaceUiSnowboardTrailEffect, arg0);
+        addRenderCallback(&gSceneModelRenderCallbackList, (RenderCallback)renderRaceUiSnowboardTrailEffect, arg0);
     }
 }
 
@@ -3564,11 +3564,11 @@ void initRaceUiSnowboardTrailEffect(RaceUiSnowboardTrailActor *actor) {
     actor->timer = RACE_UI_SNOWBOARD_TRAIL_TIMER;
     actor->velocityY = RACE_UI_SNOWBOARD_TRAIL_INITIAL_VELOCITY_Y;
     updateRaceUiSnowboardTrailEffect(actor);
-    setCallbackTaskCallback(actor, updateRaceUiSnowboardTrailEffect);
+    setCallbackTaskCallback(actor, (CallbackTaskCallback)updateRaceUiSnowboardTrailEffect);
 }
 
 void spawnRaceUiSnowboardTrailEffect(RaceUiSnowboardTrailPlayer *player) {
-    RaceUiSnowboardTrailActor *actor = createCallbackTaskPreservingArgs(initRaceUiSnowboardTrailEffect, 0, 0x62);
+    RaceUiSnowboardTrailActor *actor = createCallbackTaskPreservingArgs((CallbackTaskCallback)initRaceUiSnowboardTrailEffect, 0, 0x62);
 
     if (actor != NULL) {
         actor->playerIndex = player->playerIndex;
@@ -3637,7 +3637,7 @@ void func_8005F828(RaceUiRankTrailActor *arg0) {
     }
 
     if (gRacePlayers[arg0->playerIndex].flags & 0x100000) {
-        addRenderCallback(&D_801248EC, func_8005F6A4, (s32)arg0);
+        addRenderCallback(&D_801248EC, (RenderCallback)func_8005F6A4, (void *)arg0);
         return;
     }
 
@@ -3652,7 +3652,7 @@ void func_8005F828(RaceUiRankTrailActor *arg0) {
 void initRaceUiItemStealTrailEffect(RaceUiRankTrailActor *arg0) {
     arg0->scale = 2;
     enqueuePositionalSoundEffect(0xF, &gRacePlayers[arg0->playerIndex].pos1C, 0x7F, 0x32);
-    setCallbackTaskCallback(arg0, func_8005F828);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)func_8005F828);
 }
 
 void func_8005FBA8(RaceUiAnimatedTextActor *arg0) {
@@ -3729,10 +3729,10 @@ void updateRaceUiBurstTextParticle(RaceUiTextParticleActor *arg0) {
         }
     }
     if (arg0->useAltTextures == 0) {
-        addRenderCallback(&D_801248EC, func_8005FBA8, arg0);
+        addRenderCallback(&D_801248EC, (RenderCallback)func_8005FBA8, arg0);
         return;
     }
-    addRenderCallback(&gSceneModelRenderCallbackList, func_8005FED0, arg0);
+    addRenderCallback(&gSceneModelRenderCallbackList, (RenderCallback)func_8005FED0, arg0);
 }
 
 void initRaceUiBurstTextParticle(RaceUiTextParticleActor *arg0) {
@@ -3750,11 +3750,11 @@ void initRaceUiBurstTextParticle(RaceUiTextParticleActor *arg0) {
         getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gAssetHandles.mainFontHandle), 0x2E, &arg0->images[3], &arg0->palettes[3]);
     }
     updateRaceUiBurstTextParticle(arg0);
-    setCallbackTaskCallback(arg0, updateRaceUiBurstTextParticle);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceUiBurstTextParticle);
 }
 
 void spawnRaceUiBurstTextParticle(void *arg0, void *arg1, void *arg2, s16 arg3) {
-    RaceUiTextParticleActor *actor = createCallbackTaskPreservingArgs(initRaceUiBurstTextParticle, 5, 0x1E);
+    RaceUiTextParticleActor *actor = createCallbackTaskPreservingArgs((CallbackTaskCallback)initRaceUiBurstTextParticle, 5, 0x1E);
     if (actor != NULL) {
         actor->useAltTextures = 0;
         actor->index = arg3;
@@ -3765,7 +3765,7 @@ void spawnRaceUiBurstTextParticle(void *arg0, void *arg1, void *arg2, s16 arg3) 
 }
 
 void spawnRaceUiAltBurstTextParticle(void *arg0, void *arg1, void *arg2, s16 arg3) {
-    RaceUiTextParticleActor *actor = createCallbackTaskPreservingArgs(initRaceUiBurstTextParticle, 5, 0x1E);
+    RaceUiTextParticleActor *actor = createCallbackTaskPreservingArgs((CallbackTaskCallback)initRaceUiBurstTextParticle, 5, 0x1E);
     if (actor != NULL) {
         actor->useAltTextures = 1;
         actor->index = arg3;
@@ -3812,7 +3812,7 @@ void updateGhostSlowdownDriftAway(RaceUiPodiumTrailActor *arg0) {
     if (arg0->timer == 0) {
         removeCallbackTask(arg0);
     } else {
-        addRenderCallback(&gSceneModelRenderCallbackList, func_80060544, arg0);
+        addRenderCallback(&gSceneModelRenderCallbackList, (RenderCallback)func_80060544, arg0);
     }
 }
 
@@ -3835,7 +3835,7 @@ void updateGhostSlowdownImpact(RaceUiPodiumTrailActor *arg0) {
         if (height < 0x100000) {
             arg0->timer = 0x14;
             arg0->velocity = 0x80000;
-            setCallbackTaskCallback(arg0, updateGhostSlowdownDriftAway);
+            setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateGhostSlowdownDriftAway);
             height = arg0->height;
         }
 
@@ -3846,7 +3846,7 @@ void updateGhostSlowdownImpact(RaceUiPodiumTrailActor *arg0) {
     }
 
     gRacePlayerItemTargetFlags[arg0->targetPlayerIndex].value = 1;
-    addRenderCallback(&gRaceModelEffectRenderCallbackList, func_80060544, arg0);
+    addRenderCallback(&gRaceModelEffectRenderCallbackList, (RenderCallback)func_80060544, arg0);
 }
 
 void updateGhostSlowdownRise(RaceUiPodiumTrailActor *arg0) {
@@ -3880,11 +3880,11 @@ void updateGhostSlowdownRise(RaceUiPodiumTrailActor *arg0) {
 
             if (arg0->height >= 0xA00001) {
                 arg0->velocity = -0x10000;
-                setCallbackTaskCallback(arg0, updateGhostSlowdownImpact);
+                setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateGhostSlowdownImpact);
             }
         }
         gRacePlayerItemTargetFlags[arg0->targetPlayerIndex].value = 1;
-        addRenderCallback(&gRaceModelEffectRenderCallbackList, func_80060544, (s32)arg0);
+        addRenderCallback(&gRaceModelEffectRenderCallbackList, (RenderCallback)func_80060544, (void *)arg0);
     } else if (gRaceUpdatePaused == 0) {
         arg0->timer--;
     }
@@ -3896,7 +3896,7 @@ void initGhostSlowdownActor(RaceUiPodiumTrailActor *arg0) {
     arg0->velocity = 0;
     arg0->playImpactSound = 1;
     enqueuePositionalSoundEffect(0xD, &gRacePlayers[arg0->playerIndex].pos1C, 0x7F, 0x32);
-    setCallbackTaskCallback(arg0, updateGhostSlowdownRise);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateGhostSlowdownRise);
 }
 
 void spawnGhostSlowdownTargets(s16 arg0) {
@@ -3909,7 +3909,7 @@ void spawnGhostSlowdownTargets(s16 arg0) {
     if (gRacePlayerCount > 0) {
         do {
             if (arg0 != playerIndex) {
-                actor = createCallbackTaskPreservingArgs(initGhostSlowdownActor, 0, 0x1E);
+                actor = createCallbackTaskPreservingArgs((CallbackTaskCallback)initGhostSlowdownActor, 0, 0x1E);
                 if (actor != NULL) {
                     actor->playerIndex = arg0;
                     actor->targetPlayerIndex = playerIndex;
@@ -3935,7 +3935,8 @@ void drawRaceUiScorePopup(RaceUiPopupActor *arg0) {
         for (i = 0; i != 4; i++) {
             if (buffer[i] != ' ') {
                 drawAssetTableSpriteWithExplicitPalette((s16)(arg0->x + (i * 8) + 4), (s16)(arg0->y.word - 8),
-                              getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), (buffer[i] - 5) & 0xFFFF, 0xE);
+                              getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
+                              buffer[i] - 5, 0xE);
             }
         }
         drawAssetTableSpriteWithExplicitPalette((s16)(arg0->x + (i * 8) + 4), (s16)(arg0->y.word - 8),
@@ -3949,16 +3950,16 @@ void updateRaceUiScorePopupSlideOut(RaceUiPopupActor *arg0) {
     if (arg0->velocity == 0x38) {
         removeCallbackTask(arg0);
     } else {
-        addRenderCallback(&gRaceOverlayRenderCallbackList, drawRaceUiScorePopup, arg0);
+        addRenderCallback(&gRaceOverlayRenderCallbackList, (RenderCallback)drawRaceUiScorePopup, arg0);
     }
 }
 
 void updateRaceUiScorePopupHold(RaceUiPopupActor *arg0) {
     arg0->timer--;
     if (arg0->timer == 0) {
-        setCallbackTaskCallback(arg0, updateRaceUiScorePopupSlideOut);
+        setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceUiScorePopupSlideOut);
     }
-    addRenderCallback(&gRaceOverlayRenderCallbackList, drawRaceUiScorePopup, arg0);
+    addRenderCallback(&gRaceOverlayRenderCallbackList, (RenderCallback)drawRaceUiScorePopup, arg0);
 }
 
 void updateRaceUiScorePopupSlideIn(RaceUiPopupActor *arg0) {
@@ -3966,9 +3967,9 @@ void updateRaceUiScorePopupSlideIn(RaceUiPopupActor *arg0) {
     arg0->velocity -= 4;
     if (arg0->velocity == 0) {
         arg0->timer = 0x2D;
-        setCallbackTaskCallback(arg0, updateRaceUiScorePopupHold);
+        setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceUiScorePopupHold);
     }
-    addRenderCallback(&gRaceOverlayRenderCallbackList, drawRaceUiScorePopup, arg0);
+    addRenderCallback(&gRaceOverlayRenderCallbackList, (RenderCallback)drawRaceUiScorePopup, arg0);
 }
 
 void initRaceUiScorePopup(RaceUiPopupActor *arg0) {
@@ -3980,14 +3981,14 @@ void initRaceUiScorePopup(RaceUiPopupActor *arg0) {
         }
         arg0->velocity = 0x38;
         arg0->x = 0x1A4;
-        setCallbackTaskCallback(arg0, updateRaceUiScorePopupSlideIn);
+        setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceUiScorePopupSlideIn);
     } else {
         removeCallbackTask(arg0);
     }
 }
 
 void spawnRaceUiScorePopup(void *arg0, s16 arg1) {
-    RaceUiPopupActor *temp = createCallbackTask(initRaceUiScorePopup, 0, 0x64);
+    RaceUiPopupActor *temp = createCallbackTask((CallbackTaskCallback)initRaceUiScorePopup, 0, 0x64);
     if (temp != NULL) {
         temp->parent = arg0;
         temp->playerIndex = arg1;
@@ -4040,13 +4041,13 @@ void renderRaceCourseTripleParticle(RaceUiTripleParticleActor *arg0) {
 
 void updateRaceCourseTripleParticle(RaceUiTripleParticleActor *actor) {
     actor->rotY += 4;
-    addRenderCallback(&gSceneModelRenderCallbackList, renderRaceCourseTripleParticle, (s32)actor);
+    addRenderCallback(&gSceneModelRenderCallbackList, (RenderCallback)renderRaceCourseTripleParticle, (void *)actor);
 }
 
 void initRaceCourseTripleParticle(RaceUiTripleParticleActor *actor) {
     actor->rotY = 0;
     actor->pos = D_800D6220[actor->index];
-    setCallbackTaskCallback(actor, updateRaceCourseTripleParticle);
+    setCallbackTaskCallback(actor, (CallbackTaskCallback)updateRaceCourseTripleParticle);
 }
 
 void func_80061484(RaceUiRankTrailActor *arg0) {
@@ -4088,7 +4089,7 @@ void func_800615BC(RaceUiRankTrailActor *arg0) {
 
     player = &gRacePlayers[arg0->playerIndex];
     if (player->flags & 0x400000) {
-        addRenderCallback(&gRaceModelEffectRenderCallbackList, func_80061484, (s32)arg0);
+        addRenderCallback(&gRaceModelEffectRenderCallbackList, (RenderCallback)func_80061484, (void *)arg0);
         return;
     }
 
@@ -4103,7 +4104,7 @@ void func_800615BC(RaceUiRankTrailActor *arg0) {
 }
 
 void initRaceUiHeavyKnockdownTrailEffect(void *arg0) {
-    setCallbackTaskCallback(arg0, func_800615BC);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)func_800615BC);
 }
 
 void func_800617EC(RaceUiRisingTrailActor *arg0) {
@@ -4120,11 +4121,11 @@ void func_800617EC(RaceUiRisingTrailActor *arg0) {
         if (arg0->matrixDirty != 0) {
             arg0->matrixDirty = 0;
             sine = fixedSine(arg0->sineAngle);
-            makeFixedRotationY(&sp80, (s16)(arg0->angle + 0x800));
+            makeFixedRotationY(sp80.halfwords, (s16)(arg0->angle + 0x800));
             sp80.words[5] = arg0->pos.x;
             sp80.words[6] = arg0->pos.y + ((sine + 0x1000) << 5) + 0x10000;
             sp80.words[7] = arg0->pos.z;
-            scaleFixedMatrix3sByQuarter(&sp80);
+            scaleFixedMatrix3sByQuarter(sp80.halfwords);
             arg0->matrix = allocFixedTransformMatrix(&sp80);
         }
 
@@ -4166,7 +4167,7 @@ void func_80061984(RaceUiThrownTrailActor *arg0) {
         }
         arg0->spin += 0x40;
     }
-    addRenderCallback(&gRaceObjectRenderCallbackList, func_800617EC, (s32)arg0);
+    addRenderCallback(&gRaceObjectRenderCallbackList, (RenderCallback)func_800617EC, (void *)arg0);
 }
 
 void func_80061A98(RaceUiThrownTrailActor *arg0) {
@@ -4174,11 +4175,11 @@ void func_80061A98(RaceUiThrownTrailActor *arg0) {
     arg0->pos.y = getRaceCourseSurfaceHeight(arg0->surface, arg0->pos.x, arg0->pos.z);
     arg0->angleStep = 8;
     arg0->angle = arg0->angleStep;
-    setCallbackTaskCallback(arg0, func_80061984);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)func_80061984);
 }
 
 void func_80061AF4(s16 arg0, void *arg1, void *arg2, s16 arg3) {
-    RaceUiThrownTrailActor *temp = createCallbackTask(func_80061A98, 0, 0x64);
+    RaceUiThrownTrailActor *temp = createCallbackTask((CallbackTaskCallback)func_80061A98, 0, 0x64);
     if (temp != NULL) {
         temp->pos.x = (s32)arg1;
         temp->pos.z = (s32)arg2;
@@ -4224,7 +4225,7 @@ void updateRaceUiSingleTrailEffect(RaceUiSingleTrailActor *arg0) {
         return;
     }
 
-    addRenderCallback(&gRaceModelEffectRenderCallbackList, renderRaceUiSingleTrailEffect, (s32)arg0);
+    addRenderCallback(&gRaceModelEffectRenderCallbackList, (RenderCallback)renderRaceUiSingleTrailEffect, (void *)arg0);
 }
 
 void initRaceUiSingleTrailEffect(RaceUiSingleTrailActor *arg0) {
@@ -4233,7 +4234,7 @@ void initRaceUiSingleTrailEffect(RaceUiSingleTrailActor *arg0) {
     arg0->localTransform.translation.x = RACE_UI_SINGLE_TRAIL_LOCAL_X;
     arg0->localTransform.translation.y = RACE_UI_SINGLE_TRAIL_LOCAL_Y;
     arg0->localTransform.translation.z = RACE_UI_SINGLE_TRAIL_LOCAL_Z;
-    setCallbackTaskCallback(arg0, updateRaceUiSingleTrailEffect);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceUiSingleTrailEffect);
 }
 
 void func_80061DE8(RaceUiFadingTrailActor *arg0) {
@@ -4268,7 +4269,7 @@ void func_80061F38(RaceUiFadingImpactActor *arg0) {
 
     if (gRaceUpdatePaused == 0) {
         arg0->angle += 0x100;
-        makeFixedRotationY(&arg0->copyBlock, arg0->angle);
+        makeFixedRotationY(arg0->copyBlock.halfwords, arg0->angle);
 
         scale = arg0->scale;
         arg0->copyBlock.halfwords[0] = (arg0->copyBlock.halfwords[0] * scale) / 64;
@@ -4312,7 +4313,7 @@ void func_80061F38(RaceUiFadingImpactActor *arg0) {
     if (arg0->alpha <= 0) {
         removeCallbackTask(arg0);
     } else {
-        addRenderCallback(&D_801248EC, func_80061DE8, (s32)arg0);
+        addRenderCallback(&D_801248EC, (RenderCallback)func_80061DE8, (void *)arg0);
     }
 }
 
@@ -4324,7 +4325,7 @@ void initRaceUiFadingImpact(RaceUiFadingImpactActor *actor) {
     actor->copyBlock.words[6] = actor->pos.y;
     actor->copyBlock.words[7] = actor->pos.z;
     enqueuePositionalSoundEffect(0x13, &actor->pos, 0x7F, 0x32);
-    setCallbackTaskCallback(actor, func_80061F38);
+    setCallbackTaskCallback(actor, (CallbackTaskCallback)func_80061F38);
 }
 
 void spawnRaceUiFadingImpact(void *x, void *y, void *z) {
@@ -4388,7 +4389,7 @@ void func_800623E8(RaceUiTransitionActor *arg0) {
             arg0->transformSource.source.halfwords[7] = temp_a0 - (temp_a0 / 16);
         }
     }
-    addRenderCallback(&gRaceModelEffectRenderCallbackList, func_800622B0, arg0);
+    addRenderCallback(&gRaceModelEffectRenderCallbackList, (RenderCallback)func_800622B0, arg0);
 }
 
 void initRaceUiSpinHitTransitionEffect(RaceUiTransitionActor *arg0) {
@@ -4402,7 +4403,7 @@ void initRaceUiSpinHitTransitionEffect(RaceUiTransitionActor *arg0) {
     arg0->unk6E = 0xF;
     enqueuePositionalSoundEffect(0xB, &gRacePlayers[arg0->index].pos1C, 0x7F, 0x32);
     func_800623E8(arg0);
-    setCallbackTaskCallback(arg0, func_800623E8);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)func_800623E8);
 }
 
 void func_800625D8(RaceUiOrbitingSpriteActor *arg0) {
@@ -4460,28 +4461,28 @@ void func_800628DC(RaceUiOrbitingSpriteActor *arg0) {
     arg0->angle += 0xC0;
     arg0->pos.x -= fixedSine(arg0->angle) << 7;
     arg0->pos.z += fixedCosine(arg0->angle) << 7;
-    addRenderCallback(&D_801248EC, func_800625D8, (s32)arg0);
+    addRenderCallback(&D_801248EC, (RenderCallback)func_800625D8, (void *)arg0);
 }
 
 void func_80062A10(RaceUiOrbitingSpriteActor *arg0) {
     getAssetTableImageAndPalette(getRelocatableHeapBlockBase(ASSET_HANDLE(0x1C)), 0x35, &arg0->image, &arg0->palette);
-    setCallbackTaskCallback(arg0, func_800628DC);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)func_800628DC);
 }
 
 void spawnRaceUiStunOrbitingIcons(s16 playerIndex) {
     RaceUiOrbitingSpriteActor *icon;
 
-    icon = createCallbackTaskPreservingArgs(func_80062A10, 0, 4);
+    icon = createCallbackTaskPreservingArgs((CallbackTaskCallback)func_80062A10, 0, 4);
     if (icon != NULL) {
         icon->playerIndex = playerIndex;
         icon->angle = RACE_UI_STUN_ORBIT_ANGLE_0;
     }
-    icon = createCallbackTaskPreservingArgs(func_80062A10, 0, 4);
+    icon = createCallbackTaskPreservingArgs((CallbackTaskCallback)func_80062A10, 0, 4);
     if (icon != NULL) {
         icon->playerIndex = playerIndex;
         icon->angle = RACE_UI_STUN_ORBIT_ANGLE_1;
     }
-    icon = createCallbackTaskPreservingArgs(func_80062A10, 0, 4);
+    icon = createCallbackTaskPreservingArgs((CallbackTaskCallback)func_80062A10, 0, 4);
     if (icon != NULL) {
         icon->playerIndex = playerIndex;
         icon->angle = RACE_UI_STUN_ORBIT_ANGLE_2;
@@ -4489,7 +4490,7 @@ void spawnRaceUiStunOrbitingIcons(s16 playerIndex) {
 }
 
 void renderIceCourseBumper(RaceUiScaledParticleActor *arg0) {
-    FixedMatrix3sScratch scratch;
+    FixedMatrix3sWideScratch scratch;
 
     if (gRenderMatricesDirty != 0) {
         arg0->matrixDirty = 1;
@@ -4559,7 +4560,7 @@ void updateIceCourseBumper(RaceUiScaledParticleActor *arg0) {
             }
         }
     }
-    addRenderCallback(&gRaceModelEffectRenderCallbackList, renderIceCourseBumper, actor);
+    addRenderCallback(&gRaceModelEffectRenderCallbackList, (RenderCallback)renderIceCourseBumper, actor);
 }
 
 void initIceCourseBumper(RaceUiScaledParticleActor *bumper) {
@@ -4571,11 +4572,11 @@ void initIceCourseBumper(RaceUiScaledParticleActor *bumper) {
     }
     bumper->scale = ICE_COURSE_BUMPER_BASE_SCALE;
     bumper->pos = gIceCourseBumperPositions[bumper->index];
-    setCallbackTaskCallback(bumper, updateIceCourseBumper);
+    setCallbackTaskCallback(bumper, (CallbackTaskCallback)updateIceCourseBumper);
 }
 
 void func_80062F6C(RaceUiTrailingParticleActor *arg0) {
-    FixedMatrix3sScratch scratch;
+    FixedMatrix3sWideScratch scratch;
     Vec3i transformedOffset;
 
     if (gRenderMatricesDirty != 0) {
@@ -4615,17 +4616,17 @@ void func_80063164(RaceUiTrailingParticleActor *arg0) {
     if (gRaceUpdatePaused == 0) {
         arg0->rotX += 8;
     }
-    addRenderCallback(&gRaceModelEffectRenderCallbackList, func_80062F6C, (s32)arg0);
+    addRenderCallback(&gRaceModelEffectRenderCallbackList, (RenderCallback)func_80062F6C, (void *)arg0);
 }
 
 void func_800631B0(RaceUiTrailingParticleActor *arg0) {
     arg0->pos = D_800D6330[arg0->index];
     arg0->rotY = D_800D633C[arg0->index];
-    setCallbackTaskCallback(arg0, func_80063164);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)func_80063164);
 }
 
 void renderRaceCourseSpinningObject(RaceUiSpinningParticleActor *arg0) {
-    FixedMatrix3sScratch scratch;
+    FixedMatrix3sWideScratch scratch;
     s32 temp2;
     s32 pad;
     s32 pad2;
@@ -4671,12 +4672,12 @@ void updateRaceCourseSpinningObject(RaceUiSpinningParticleActor *arg0) {
         arg0->rotX += 0x10;
         arg0->rotX2 += 4;
     }
-    addRenderCallback(&gRaceModelEffectRenderCallbackList, renderRaceCourseSpinningObject, arg0);
+    addRenderCallback(&gRaceModelEffectRenderCallbackList, (RenderCallback)renderRaceCourseSpinningObject, arg0);
 }
 
 void initRaceCourseSpinningObject(RaceUiSpinningParticleActor *arg0) {
     arg0->pos = D_800D6340[arg0->index];
-    setCallbackTaskCallback(arg0, updateRaceCourseSpinningObject);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceCourseSpinningObject);
 }
 
 void renderCourseStartFinishSprite(RaceUiCourseSpriteActor *arg0) {
@@ -4728,7 +4729,7 @@ void updateCourseStartFinishSprite(RaceUiCourseSpriteActor *actor) {
     if ((gFrameCounter & COURSE_START_FINISH_SCROLL_FRAME_MASK) == 0) {
         actor->angle = (actor->angle + COURSE_START_FINISH_SCROLL_STEP) & COURSE_START_FINISH_SCROLL_MASK;
     }
-    addRenderCallback(&D_801248C8, renderCourseStartFinishSprite, actor);
+    addRenderCallback(&D_801248C8, (RenderCallback)renderCourseStartFinishSprite, actor);
 }
 
 void initCourseStartFinishSprite(RaceUiCourseSpriteActor *actor) {
@@ -4749,7 +4750,7 @@ void initCourseStartFinishSprite(RaceUiCourseSpriteActor *actor) {
             break;
     }
     unused = 0;
-    setCallbackTaskCallback(actor, updateCourseStartFinishSprite);
+    setCallbackTaskCallback(actor, (CallbackTaskCallback)updateCourseStartFinishSprite);
 }
 
 void func_80063A9C(RaceUiEffectParticleActor *arg0) {
@@ -4809,7 +4810,7 @@ void func_80063E70(RaceUiEffectParticleActor *arg0) {
         actor->particles[i].unk4 += 0xFFFD0000;
         actor->particles[i].unk4 &= 0xFFFFFF;
     }
-    addRenderCallback(&gEffectRenderCallbackList, func_80063A9C, (s32)actor);
+    addRenderCallback(&gEffectRenderCallbackList, (RenderCallback)func_80063A9C, (void *)actor);
 }
 
 void func_80063FC0(RaceUiEffectParticleActor *actor) {
@@ -4831,7 +4832,7 @@ void func_80063FC0(RaceUiEffectParticleActor *actor) {
         actor->particles[i].unk8 = randomNextMain() << 0x10;
     }
 
-    setCallbackTaskCallback(actor, func_80063E70);
+    setCallbackTaskCallback(actor, (CallbackTaskCallback)func_80063E70);
 }
 
 void renderRaceCourseRankModel(RaceUiRankParticleActor *arg0) {
@@ -4863,8 +4864,8 @@ void renderRaceCourseRankModel(RaceUiRankParticleActor *arg0) {
     }
 }
 
-void updateRaceCourseRankModel(s32 arg0) {
-    addRenderCallback(&D_801248C8, renderRaceCourseRankModel, arg0);
+void updateRaceCourseRankModel(RaceUiRankParticleActor *arg0) {
+    addRenderCallback(&D_801248C8, (RenderCallback)renderRaceCourseRankModel, arg0);
 }
 
 void initRaceCourseRankModel(RaceUiRankParticleActor *actor) {
@@ -4889,7 +4890,7 @@ void initRaceCourseRankModel(RaceUiRankParticleActor *actor) {
     actor->copyBlock.transform.translation.z = actor->pos.z;
     actor->displayLists[0] = D_800D6400[(actor->index * 2) + (gRaceCourseIndex * 4)];
     actor->displayLists[1] = D_800D6400[(actor->index * 2) + (gRaceCourseIndex * 4) + 1];
-    setCallbackTaskCallback(actor, updateRaceCourseRankModel);
+    setCallbackTaskCallback(actor, (CallbackTaskCallback)updateRaceCourseRankModel);
 }
 
 void func_800643B4(RaceUiProjectileActor *arg0, u16 *arg1) {
@@ -4988,7 +4989,7 @@ void func_800647E0(RaceUiProjectileActor *arg0) {
             return;
         }
     }
-    addRenderCallback(&D_801248C8, func_80064470, actor);
+    addRenderCallback(&D_801248C8, (RenderCallback)func_80064470, actor);
 }
 
 void func_80064914(RaceUiProjectileActor *arg0) {
@@ -5018,7 +5019,7 @@ void func_80064914(RaceUiProjectileActor *arg0) {
                 value = otherPlayer->unk568;
                 amount = (value >= 0xA6) ? 0xA6 : value;
                 otherPlayer->unk568 = value - amount;
-                addRacePlayerScore(&gRacePlayers[arg0->index], amount);
+                addRacePlayerScore((struct RacePlayer *)&gRacePlayers[arg0->index], amount);
             }
             i++;
         } while ((RacePlayerState *)&gFrameCounter != &gRacePlayers[i]);
@@ -5035,15 +5036,15 @@ void func_80064914(RaceUiProjectileActor *arg0) {
             arg0->verticalAcceleration = 0;
             arg0->verticalVelocity = 0;
             enqueuePositionalSoundEffect(0x6A, &gRacePlayers[arg0->index].pos28, 0x7F, 0x32);
-            setCallbackTaskCallback(arg0, func_800647E0);
+            setCallbackTaskCallback(arg0, (CallbackTaskCallback)func_800647E0);
         }
     }
 
-    addRenderCallback(&D_801248C8, func_80064470, arg0);
+    addRenderCallback(&D_801248C8, (RenderCallback)func_80064470, arg0);
 }
 
 void func_80064B28(RaceUiProjectileActor *arg0) {
-    FixedMatrix3sScratch sp2C;
+    FixedMatrix3sWideScratch sp2C;
     RacePlayerState *player;
     RaceUiProjectileActor *actor;
 
@@ -5067,14 +5068,14 @@ void func_80064B28(RaceUiProjectileActor *arg0) {
             actor->verticalVelocity = 0;
             enqueuePositionalSoundEffect(0x68, &player->pos28, 0x7F, 0x32);
             func_80064414(actor);
-            setCallbackTaskCallback(actor, func_80064914);
+            setCallbackTaskCallback(actor, (CallbackTaskCallback)func_80064914);
         }
     }
-    addRenderCallback(&D_801248C8, func_80064470, actor);
+    addRenderCallback(&D_801248C8, (RenderCallback)func_80064470, actor);
 }
 
 void func_80064C68(RaceUiProjectileActor *arg0) {
-    FixedMatrix3sScratch sp2C;
+    FixedMatrix3sWideScratch sp2C;
     RacePlayerState *player;
     RaceUiProjectileActor *actor;
 
@@ -5089,16 +5090,16 @@ void func_80064C68(RaceUiProjectileActor *arg0) {
         actor->pos.z += player->pos28.z;
         func_80064414(actor);
         if (actor->flags != 0) {
-            setCallbackTaskCallback(actor, func_80064B28);
+            setCallbackTaskCallback(actor, (CallbackTaskCallback)func_80064B28);
             actor->verticalAcceleration = 0x50000;
             actor->verticalVelocity += 0x50000;
         }
     }
-    addRenderCallback(&D_801248C8, func_80064470, actor);
+    addRenderCallback(&D_801248C8, (RenderCallback)func_80064470, actor);
 }
 
 void func_80064D88(RaceUiProjectileActor *arg0) {
-    FixedMatrix3sScratch sp2C;
+    FixedMatrix3sWideScratch sp2C;
     RacePlayerState *player;
     RaceUiProjectileActor *actor;
 
@@ -5115,10 +5116,10 @@ void func_80064D88(RaceUiProjectileActor *arg0) {
         actor->verticalAcceleration += 0xFFFF0000;
         if (actor->verticalVelocity <= 0) {
             actor->verticalVelocity = 0;
-            setCallbackTaskCallback(actor, func_80064C68);
+            setCallbackTaskCallback(actor, (CallbackTaskCallback)func_80064C68);
         }
     }
-    addRenderCallback(&D_801248C8, func_80064470, actor);
+    addRenderCallback(&D_801248C8, (RenderCallback)func_80064470, actor);
 }
 
 void initForwardActionProjectileEffect(RaceUiProjectileActor *arg0) {
@@ -5131,7 +5132,7 @@ void initForwardActionProjectileEffect(RaceUiProjectileActor *arg0) {
     arg0->verticalAcceleration = 0;
     func_800643B4(arg0, D_800D6520);
     enqueuePositionalSoundEffect(0x66, &gRacePlayers[arg0->index].pos28, 0x7F, 0x32);
-    setCallbackTaskCallback(arg0, func_80064D88);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)func_80064D88);
 }
 
 void drawTimeTrialRecordDeltaPopup(RaceUiTimeTrialRecordDeltaPopupActor *arg0) {
@@ -5152,16 +5153,16 @@ void updateTimeTrialRecordDeltaPopupSlideOut(RaceUiTimeTrialRecordDeltaPopupActo
     if (arg0->velocity == 0x38) {
         removeCallbackTask(arg0);
     } else {
-        addRenderCallback(&gRaceOverlayRenderCallbackList, drawTimeTrialRecordDeltaPopup, arg0);
+        addRenderCallback(&gRaceOverlayRenderCallbackList, (RenderCallback)drawTimeTrialRecordDeltaPopup, arg0);
     }
 }
 
 void updateTimeTrialRecordDeltaPopupHold(RaceUiTimeTrialRecordDeltaPopupActor *arg0) {
     arg0->timer--;
     if (arg0->timer == 0) {
-        setCallbackTaskCallback(arg0, updateTimeTrialRecordDeltaPopupSlideOut);
+        setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateTimeTrialRecordDeltaPopupSlideOut);
     }
-    addRenderCallback(&gRaceOverlayRenderCallbackList, drawTimeTrialRecordDeltaPopup, arg0);
+    addRenderCallback(&gRaceOverlayRenderCallbackList, (RenderCallback)drawTimeTrialRecordDeltaPopup, arg0);
 }
 
 void updateTimeTrialRecordDeltaPopupSlideIn(RaceUiTimeTrialRecordDeltaPopupActor *arg0) {
@@ -5169,9 +5170,9 @@ void updateTimeTrialRecordDeltaPopupSlideIn(RaceUiTimeTrialRecordDeltaPopupActor
     arg0->velocity -= 4;
     if (arg0->velocity == 0) {
         arg0->timer = TIME_TRIAL_RECORD_DELTA_POPUP_HOLD_TIMER;
-        setCallbackTaskCallback(arg0, updateTimeTrialRecordDeltaPopupHold);
+        setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateTimeTrialRecordDeltaPopupHold);
     }
-    addRenderCallback(&gRaceOverlayRenderCallbackList, drawTimeTrialRecordDeltaPopup, arg0);
+    addRenderCallback(&gRaceOverlayRenderCallbackList, (RenderCallback)drawTimeTrialRecordDeltaPopup, arg0);
 }
 
 void initTimeTrialRecordDeltaPopup(RaceUiTimeTrialRecordDeltaPopupActor *popup) {
@@ -5180,7 +5181,7 @@ void initTimeTrialRecordDeltaPopup(RaceUiTimeTrialRecordDeltaPopupActor *popup) 
     popup->velocity = TIME_TRIAL_RECORD_DELTA_POPUP_START_VELOCITY;
     popup->isSlowerThanRecord =
         calculateRaceTimerDelta(&gRaceElapsedTimer, &RACE_UI_TIME_TRIAL_SAVE_DATA->timeTrialRecordSplitTimes[gRaceCourseIndex], &popup->delta);
-    setCallbackTaskCallback(popup, updateTimeTrialRecordDeltaPopupSlideIn);
+    setCallbackTaskCallback(popup, (CallbackTaskCallback)updateTimeTrialRecordDeltaPopupSlideIn);
 }
 
 void func_800651BC(RaceUiGfxCommandActor *arg0) {
@@ -5273,7 +5274,7 @@ loop:
     }
 
 done:
-    addRenderCallback(&gEffectRenderCallbackList, func_800651BC, actor);
+    addRenderCallback(&gEffectRenderCallbackList, (RenderCallback)func_800651BC, actor);
 }
 
 void initRaceCourseCoinMarkerMatrices(RaceUiGfxCommandActor *arg0) {
@@ -5324,7 +5325,7 @@ void initRaceCourseCoinMarkers(RaceUiGfxCommandActor *actor) {
         gAssetHandles.resultTextHandle = allocRelocatableHeapBlock(markerCount * sizeof(RaceUiGfxCommandDest));
         actor->particles = getRelocatableHeapBlockBase(gAssetHandles.resultTextHandle);
         initRaceCourseCoinMarkerMatrices(actor);
-        setCallbackTaskCallback(actor, updateRaceCourseCoinMarkers);
+        setCallbackTaskCallback(actor, (CallbackTaskCallback)updateRaceCourseCoinMarkers);
     }
 }
 
@@ -5396,13 +5397,12 @@ void updateRaceStartOverlayFallOut(RaceUiOverlayActor *arg0) {
         removeCallbackTask(actor);
         return;
     }
-    addRenderCallback(&gRaceModelEffectRenderCallbackList, func_80065808, actor);
+    addRenderCallback(&gRaceModelEffectRenderCallbackList, (RenderCallback)func_80065808, actor);
 }
 
 void func_80065D24(RaceUiOverlayActor *arg0) {
     s16 temp_v0;
     s32 temp_v0_2;
-    s32 temp_a1;
     void *temp_v0_3;
     RaceUiOverlayActor *temp_s0;
 
@@ -5413,14 +5413,12 @@ void func_80065D24(RaceUiOverlayActor *arg0) {
             enqueuePositionalSoundEffect(9, &temp_s0->x, 0x7F, 0x32);
         }
         temp_v0_3 = getRelocatableHeapBlockBase(ASSET_HANDLE(0x1F));
-        temp_a1 = temp_s0->assetTimer;
-        temp_a1 = (temp_a1 >> 1) + 0x3B;
-        temp_a1 = (u16)temp_a1;
-        getAssetTableImageAndPalette(temp_v0_3, temp_a1, &temp_s0->palette3B, &temp_s0->image3B);
+        getAssetTableImageAndPalette(temp_v0_3, (temp_s0->assetTimer >> 1) + 0x3B,
+                                     &temp_s0->palette3B, &temp_s0->image3B);
         temp_s0->assetTimer++;
         if (temp_s0->assetTimer >= 0xB) {
             temp_s0->timer = 0x3C;
-            setCallbackTaskCallback(temp_s0, updateRaceStartOverlayFallOut);
+            setCallbackTaskCallback(temp_s0, (CallbackTaskCallback)updateRaceStartOverlayFallOut);
         }
     } else {
         temp_s0->timer = temp_v0 - 1;
@@ -5429,7 +5427,7 @@ void func_80065D24(RaceUiOverlayActor *arg0) {
     temp_v0_2 = temp_s0->velocity;
     temp_s0->y += temp_v0_2;
     temp_s0->velocity = temp_v0_2 + 0xC00;
-    addRenderCallback(&gRaceModelEffectRenderCallbackList, func_80065808, temp_s0);
+    addRenderCallback(&gRaceModelEffectRenderCallbackList, (RenderCallback)func_80065808, temp_s0);
 }
 
 void func_80065E0C(RaceUiOverlayActor *arg0) {
@@ -5442,10 +5440,10 @@ void func_80065E0C(RaceUiOverlayActor *arg0) {
     } else {
         arg0->timer = 0x14;
         arg0->assetTimer = 0;
-        setCallbackTaskCallback(arg0, func_80065D24);
+        setCallbackTaskCallback(arg0, (CallbackTaskCallback)func_80065D24);
     }
 
-    addRenderCallback(&gRaceModelEffectRenderCallbackList, func_80065808, arg0);
+    addRenderCallback(&gRaceModelEffectRenderCallbackList, (RenderCallback)func_80065808, arg0);
 }
 
 void func_80065E90(RaceUiOverlayActor *arg0) {
@@ -5464,7 +5462,7 @@ void func_80065E90(RaceUiOverlayActor *arg0) {
 
     getAssetTableImageAndPalette(getRelocatableHeapBlockBase(ASSET_HANDLE(0x1F)), 0x3A, &arg0->palette3A, &arg0->image3A);
     getAssetTableImageAndPalette(getRelocatableHeapBlockBase(ASSET_HANDLE(0x1F)), 0x3B, &arg0->palette3B, &arg0->image3B);
-    setCallbackTaskCallback(arg0, func_80065E0C);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)func_80065E0C);
 }
 
 void renderRaceScoreAttackRings(RaceUiRankTextRenderActor *arg0) {
@@ -5554,7 +5552,7 @@ void updateRaceScoreAttackRings(void *arg0) {
         } while (entry->active != -1);
     }
 
-    addRenderCallback(&gSceneModelRenderCallbackList, renderRaceScoreAttackRings, arg0);
+    addRenderCallback(&gSceneModelRenderCallbackList, (RenderCallback)renderRaceScoreAttackRings, arg0);
 }
 
 void initRaceScoreAttackRingMatrices(RaceUiRankTextRenderActor *arg0) {
@@ -5617,6 +5615,6 @@ void initRaceScoreAttackRings(RaceUiRankTextRenderActor *arg0) {
         gAssetHandles.rankTextHandle = allocRelocatableHeapBlock(var_v1 << 6);
         arg0->matrices = (void *)getRelocatableHeapBlockBase(gAssetHandles.rankTextHandle);
         initRaceScoreAttackRingMatrices(arg0);
-        setCallbackTaskCallback(arg0, updateRaceScoreAttackRings);
+        setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceScoreAttackRings);
     }
 }

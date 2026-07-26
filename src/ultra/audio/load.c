@@ -22,6 +22,7 @@
 #include "synthInternals.h"
 #include <os.h>
 #include <R4300.h>
+#include "compiler_diagnostics.h"
 
 #ifndef MIN
 #   define MIN(a,b) (((a)<(b))?(a):(b))
@@ -350,6 +351,8 @@ Acmd *alRaw16Pull(void *filter, s16 *outp, s32 outCount, s32 sampleOffset, Acmd 
 }
 
 
+CLANG_DIAGNOSTIC_PUSH
+CLANG_DIAGNOSTIC_IGNORE_RETURN_TYPE
 s32
 alLoadParam(void *filter, s32 paramID, void *param)
 {
@@ -433,7 +436,9 @@ alLoadParam(void *filter, s32 paramID, void *param)
         default:
             break;
     }
+
 }
+CLANG_DIAGNOSTIC_POP
 
 Acmd *_decodeChunk(Acmd *ptr, ALLoadFilter *f, s32 tsam, s32 nbytes, s16 outp, s16 inp, u32 flags)
 
@@ -466,6 +471,3 @@ Acmd *_decodeChunk(Acmd *ptr, ALLoadFilter *f, s32 tsam, s32 nbytes, s16 outp, s
 
     return ptr;
 }
-
-
-

@@ -1,4 +1,6 @@
 #include "common.h"
+#include "game/menu/renderer/menu_renderer.h"
+#include "game/engine/render_callback.h"
 #include "game/engine/relocatable_heap.h"
 #include "game/math/fixed_point_math.h"
 #include "game/engine/viewport_manager.h"
@@ -17,11 +19,13 @@ typedef struct {
     /* 0x7 */ u8 height;
 } AssetTableEntry;
 
-typedef struct {
+typedef struct AssetTable AssetTable;
+
+struct AssetTable {
     /* 0x0 */ s32 unk0;
     /* 0x4 */ s32 entryCount;
     /* 0x8 */ AssetTableEntry entries[1];
-} AssetTable;
+};
 
 typedef struct {
     /* 0x00 */ u8 pad0[8];
@@ -30,12 +34,6 @@ typedef struct {
     /* 0x0E */ u8 width;
     /* 0x0F */ u8 height;
 } FontTexture;
-
-typedef struct RenderCallbackNode {
-    struct RenderCallbackNode *next;
-    void (*callback)(s32);
-    s32 arg;
-} RenderCallbackNode;
 
 typedef struct {
     s32 words[16];
@@ -132,10 +130,11 @@ void *resolveAssetTableRelativePointer(void *arg0, u32 arg1) {
     return (void *)((u8 *)arg0 + (arg1 & 0xFFFFFF));
 }
 
-void getAssetTableImageAndPalette(u8 *arg0, u16 arg1, void **arg2, void **arg3) {
+void getAssetTableImageAndPalette(void *asset, u16 arg1, void **arg2, void **arg3) {
     AssetTableEntry *temp_v1;
     u8 *temp_v0;
     short idx;
+    u8 *arg0 = asset;
 
     temp_v1 = (AssetTableEntry *)((s32)arg0 + (arg1 * sizeof(AssetTableEntry)));
     temp_v0 = arg0 + (((AssetTable *)arg0)->entryCount * sizeof(AssetTableEntry));
@@ -240,6 +239,19 @@ void drawAssetTableSprite(s16 x, s16 y, AssetTable *table, u16 entryIndex) {
     gSPTextureRectangle(gRegionAllocPtr++, x0 << 2, y0 << 2, x1 << 2, y1 << 2,
                         G_TX_RENDERTILE, clipS << 5, clipT << 5, 0x400, 0x400);
 }
+
+/*
+ * Some matched callers were compiled with a pre-prototype s32 entry index.
+ * Keep that source-level promotion isolated from the canonical u16 definition.
+ */
+#ifdef __clang__
+void drawAssetTableSpriteWideIndex(s16 x, s16 y, AssetTable *table, s32 entryIndex) {
+    drawAssetTableSprite(x, y, table, entryIndex);
+}
+#else
+#pragma weak drawAssetTableSpriteWideIndex = drawAssetTableSprite
+extern void drawAssetTableSpriteWideIndex(s16 x, s16 y, AssetTable *table, s32 entryIndex);
+#endif
 
 void drawPulsingAssetTableSprite(s16 x, s16 y, AssetTable *table, u16 entryIndex) {
     AssetTableEntry *entry;
@@ -587,6 +599,21 @@ void drawAssetTableSpriteWithExplicitPalette(s16 x, s16 y, AssetTable *table, u1
                         G_TX_RENDERTILE, clipS << 5, clipT << 5, 0x400, 0x400);
 }
 
+/*
+ * Some matched callers were compiled with a pre-prototype s32 entry index.
+ * Keep that source-level promotion isolated from the canonical u16 definition.
+ */
+#ifdef __clang__
+void drawAssetTableSpriteWithExplicitPaletteWideIndex(s16 x, s16 y, AssetTable *table, s32 entryIndex,
+                                                      u16 paletteIndex) {
+    drawAssetTableSpriteWithExplicitPalette(x, y, table, entryIndex, paletteIndex);
+}
+#else
+#pragma weak drawAssetTableSpriteWithExplicitPaletteWideIndex = drawAssetTableSpriteWithExplicitPalette
+extern void drawAssetTableSpriteWithExplicitPaletteWideIndex(s16 x, s16 y, AssetTable *table, s32 entryIndex,
+                                                             u16 paletteIndex);
+#endif
+
 // drawScaledAssetTableSprite best match: 96.102% (nonmatchings/drawScaledAssetTableSprite-3885303446860889946/base.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/renderer/menu_render_utils/drawScaledAssetTableSprite.s")
 
@@ -791,6 +818,8 @@ void drawScaledAssetTableSpriteWithExplicitPalette(s16 x, s16 y, AssetTable *ass
 }
 #endif
 
+CLANG_DIAGNOSTIC_PUSH
+CLANG_DIAGNOSTIC_IGNORE_DEPRECATED_NON_PROTOTYPE
 void drawMenuAsciiFontTile(x, y, s, t, paletteIndex)
 s16 x;
 s16 y;
@@ -863,15 +892,14 @@ u16 paletteIndex;
 extern s16 gMenuAsciiFontTextureNeedsLoad;
 
 void initMenuAsciiFontTexture(void) {
-    s32 v0 = getRelocatableHeapBlockBase(gAssetHandles[6]);
-    AssetTable *assetTable = (AssetTable *)v0;
+    AssetTable *assetTable = getRelocatableHeapBlockBase(gAssetHandles[6]);
 
     gMenuAsciiFontPaletteBase = (void *)((assetTable->entryCount * sizeof(AssetTableEntry)) + (u8 *)assetTable + sizeof(AssetTableEntry));
     gMenuAsciiFontTextureNeedsLoad = -1;
     gMenuAsciiFontPaletteIndex = -1;
 }
 
-void drawMenuAsciiChar(s16 x, s16 y, u8 ch, u16 arg3) {
+void drawMenuAsciiCharImpl(s16 x, s16 y, u8 ch, u16 arg3) {
     char pad[8];
     u32 tile;
     u16 s;
@@ -909,10 +937,21 @@ void drawMenuAsciiChar(s16 x, s16 y, u8 ch, u16 arg3) {
         }
     }
 }
+CLANG_DIAGNOSTIC_POP
 
-#pragma weak drawMenuAsciiCharLegacy = drawMenuAsciiChar
+#pragma weak drawMenuAsciiChar = drawMenuAsciiCharImpl
+extern void drawMenuAsciiChar(s16 x, s16 y, u8 ch, u16 arg3);
+#ifdef __clang__
+void drawMenuAsciiCharLegacy(s16 x, s16 y, volatile s32 ch, u16 arg3) {
+    drawMenuAsciiCharImpl(x, y, ch, arg3);
+}
+#else
+#pragma weak drawMenuAsciiCharLegacy = drawMenuAsciiCharImpl
 extern void drawMenuAsciiCharLegacy(s16 x, s16 y, volatile s32 ch, u16 arg3);
+#endif
 
+CLANG_DIAGNOSTIC_PUSH
+CLANG_DIAGNOSTIC_IGNORE_SELF_ASSIGN
 void drawMenuAsciiTextDefaultScale(s16 arg0, s16 arg1, u8 *arg2, u16 arg3) {
     s32 var_s0;
     u8 *var_s1;
@@ -946,8 +985,9 @@ void drawMenuAsciiTextDefaultScale(s16 arg0, s16 arg1, u8 *arg2, u16 arg3) {
         } while (var_a2 != 0);
     }
 }
+CLANG_DIAGNOSTIC_POP
 
-extern s32 gRenderCallbackScratchPtr;
+extern u8 *gRenderCallbackScratchPtr;
 
 void allocRenderCallbackScratchBuffer(void) {
     gAssetHandles[0] = allocRelocatableHeapBlock(0x4000);
@@ -964,19 +1004,19 @@ void *allocRenderCallbackScratch(s32 arg0) {
     s32 base;
     s32 temp_a0;
 
-    sp1C = gRenderCallbackScratchPtr;
-    base = getRelocatableHeapBlockBase(gAssetHandles[0]);
+    sp1C = (s32)gRenderCallbackScratchPtr;
+    base = (s32)getRelocatableHeapBlockBase(gAssetHandles[0]);
     new_var2 = &temp_a0;
-    temp_a0 = gRenderCallbackScratchPtr + ((((u32)(arg0 + 3)) >> 2) * 4);
+    temp_a0 = (s32)gRenderCallbackScratchPtr + ((((u32)(arg0 + 3)) >> 2) * 4);
     new_var = (u32)(*new_var2 - base);
     if (new_var >= 0x4001U) {
         return NULL;
     }
-    gRenderCallbackScratchPtr = *new_var2;
+    gRenderCallbackScratchPtr = (u8 *)*new_var2;
     return (void *)sp1C;
 }
 
-void addRenderCallback(RenderCallbackNode **arg0, void (*arg1)(s32), s32 arg2) {
+void addRenderCallback(RenderCallbackNode **arg0, RenderCallback arg1, void *arg2) {
     RenderCallbackNode *temp_v0 = allocRenderCallbackScratch(sizeof(RenderCallbackNode));
 
     if (temp_v0 != NULL) {

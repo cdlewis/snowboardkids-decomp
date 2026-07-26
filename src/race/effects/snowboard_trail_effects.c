@@ -1,20 +1,15 @@
 #include "common.h"
+#include "game/engine/render_callback.h"
 #include "game/engine/relocatable_heap.h"
 #include "game/race/ui/race_ui_effects.h"
 #include "game/math/spatial_math.h"
+#include "game/math/fixed_point_math.h"
 
 #define SNOWBOARD_TRAIL_TIMER 0xF0
 #define SNOWBOARD_TRAIL_FLAG_FACING_BACKWARD 0x400
 #define SNOWBOARD_TRAIL_FLAG_CANCEL 0x3040
 
 struct RacePlayer;
-
-typedef s16 FixedMatrix3s[10];
-
-typedef struct {
-    FixedMatrix3s rotation;
-    Vec3i translation;
-} FixedTransform;
 
 typedef struct SnowboardTrailState {
     /* 0x00 */ s16 state;
@@ -46,7 +41,7 @@ typedef struct SnowboardTrailPlayer {
     /* 0x074 */ u8 pad074[0x076 - 0x074];
     /* 0x076 */ u8 trailDisplayListsDirty;
     /* 0x077 */ u8 pad077[0x094 - 0x077];
-    /* 0x094 */ s16 modelTransform[10];
+    /* 0x094 */ FixedMatrix3sPadded modelTransform;
     /* 0x0A8 */ Vec3i velocity;
     /* 0x0B4 */ u8 pad0B4[0x2DA - 0x0B4];
     /* 0x2DA */ s16 trailTimer;
@@ -57,20 +52,12 @@ typedef struct SnowboardTrailPlayer {
     /* 0x58C */ SnowboardTrailState trail;
 } SnowboardTrailPlayer;
 
-extern void addRenderCallback(void *queue, void (*callback)(SnowboardTrailState *), SnowboardTrailState *trail);
 extern void *allocFixedTransformMatrix(u8 *source);
-extern void makeFixedRotationX(s16 *rotation, s16 angle);
-extern void makeFixedRotationY(s16 *rotation, s16 angle);
-extern void transformVec3iByFixedMatrix(s16 *rotation, Vec3i *source, Vec3i *dest);
-extern void multiplyFixedMatrix3s(s16 *rotation, FixedMatrix3s source, FixedMatrix3s dest);
-extern void composeFixedTransforms(FixedTransform *scratch, FixedTransform *source, FixedTransform *dest);
-
 extern s16 gAssetHandles[];
 extern u8 gRaceUpdatePaused;
 extern u32 gSnowboardTrailFrontDisplayList[];
 extern u32 gSnowboardTrailBackDisplayList[];
 extern Gfx *gRegionAllocPtr;
-extern void *gRaceModelEffectRenderCallbackList;
 extern u8 gRenderMatricesDirty;
 
 void renderSnowboardTrailEffect(SnowboardTrailState *trail) {
@@ -137,7 +124,7 @@ void func_8008393C(SnowboardTrailPlayer *player) {
             trail->state = 2;
         }
         if (player->disabled == 0) {
-            addRenderCallback(&gRaceModelEffectRenderCallbackList, renderSnowboardTrailEffect, trail);
+            addRenderCallback(&gRaceModelEffectRenderCallbackList, (RenderCallback)renderSnowboardTrailEffect, trail);
         }
         return;
     case 2:
@@ -170,7 +157,7 @@ void func_8008393C(SnowboardTrailPlayer *player) {
             return;
         }
         if (player->disabled == 0) {
-            addRenderCallback(&gRaceModelEffectRenderCallbackList, renderSnowboardTrailEffect, trail);
+            addRenderCallback(&gRaceModelEffectRenderCallbackList, (RenderCallback)renderSnowboardTrailEffect, trail);
         }
         return;
     default:

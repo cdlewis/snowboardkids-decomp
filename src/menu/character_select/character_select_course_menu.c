@@ -48,7 +48,6 @@ extern u8 gPlayerCount;
 extern u8 gRaceTypeSelection;
 extern s16 gRaceCourseIndex;
 extern CharacterSelectOptionList *gCharacterSelectActiveCourseOptions;
-extern s32 gActiveMenuTask;
 extern s32 D_8010ADE0;
 extern s32 D_8010ADE4;
 extern s32 gMenuFlowState;
@@ -80,7 +79,7 @@ void initCharacterSelectCourseMenuFromRaceTypeSelect(void) {
 
     gCurrentGameTask->fade = 0;
     requestMusicSequenceBank(2);
-    createCallbackTask((void (*)(CallbackTask *)) initCharacterSelectLimitedCourseList, 0, 0x63);
+    createCallbackTask((CallbackTaskCallback) initCharacterSelectLimitedCourseList, 0, 0x63);
     gCurrentGameTask->timer = 0;
     gMenuSelectionConfirmTimer = 0;
     gMenuExitSelection = 0;
@@ -101,7 +100,8 @@ void initCharacterSelectCourseMenuFromRaceTypeSelect(void) {
         var_v1--;
     }
 
-    gActiveMenuTask = var_v1 = 0;
+    var_v1 = 0;
+    gActiveMenuTask = NULL;
     D_8010ADE0 = 0;
     D_8010ADE4 = 0;
     setCurrentGameTaskCallback(updateCharacterSelectCourseMenu, 0);
@@ -194,10 +194,10 @@ void initCharacterSelectCourseMenuFromRace(void)
   LOAD_ASSET(_59DFE0, 0x26);
   LOAD_ASSET(_245A80, 0x1F);
   initCallbackTaskScheduler(0);
-  createCallbackTask((void (*)(CallbackTask *)) initMenuIconTilemapSpriteActor, 0, 0x5E);
+  createCallbackTask((CallbackTaskCallback) initMenuIconTilemapSpriteActor, 0, 0x5E);
   if (gRaceSplitscreenMode == 1)
   {
- LOAD_ASSET(_5CCD40, 0x25); createCallbackTask((void (*)(CallbackTask *)) initCharacterSelectLimitedCourseList, 0, 0x63); gCurrentGameTask->fade = 0; } else { gCurrentGameTask->fade = 0xFF; } gCurrentGameTask->timer = 0; gMenuSelectionConfirmTimer = 0; gMenuExitSelection = 0; gMenuFlowState = 0; gMenuTransitionState = 0; gMenuInputRepeatTimers = 0; gMenuChoicePromptState = 0; gMenuFadeAlpha = gCurrentGameTask->fade; var_v1 = 0; if (gPlayerCount > var_v1) { var_v0 = gGameSaveDataBuffer; do { temp_v1 = var_v0->highestCourse; var_v0 += 1; if (gHighestUnlockedCourse < temp_v1) { gHighestUnlockedCourse = temp_v1; } } while (var_v0 < (&gGameSaveDataBuffer[gPlayerCount]));
+ LOAD_ASSET(_5CCD40, 0x25); createCallbackTask((CallbackTaskCallback) initCharacterSelectLimitedCourseList, 0, 0x63); gCurrentGameTask->fade = 0; } else { gCurrentGameTask->fade = 0xFF; } gCurrentGameTask->timer = 0; gMenuSelectionConfirmTimer = 0; gMenuExitSelection = 0; gMenuFlowState = 0; gMenuTransitionState = 0; gMenuInputRepeatTimers = 0; gMenuChoicePromptState = 0; gMenuFadeAlpha = gCurrentGameTask->fade; var_v1 = 0; if (gPlayerCount > var_v1) { var_v0 = gGameSaveDataBuffer; do { temp_v1 = var_v0->highestCourse; var_v0 += 1; if (gHighestUnlockedCourse < temp_v1) { gHighestUnlockedCourse = temp_v1; } } while (var_v0 < (&gGameSaveDataBuffer[gPlayerCount]));
     var_v1 *= 0;
   }
   gActiveMenuTask = 0;
@@ -293,11 +293,11 @@ void initCharacterSelectCourseMenuFromPlayerSelect(void) {
         LOAD_ASSET(_59DFE0, 0x26);
         LOAD_ASSET(_245A80, 0x1F);
         initCallbackTaskScheduler(0);
-        createCallbackTask((void (*)(CallbackTask *))initMenuIconTilemapSpriteActor, 0, 0x5E);
+        createCallbackTask((CallbackTaskCallback)initMenuIconTilemapSpriteActor, 0, 0x5E);
         gCurrentGameTask->fade = 0xFF;
     } else {
         gCurrentGameTask->fade = 0;
-        createCallbackTask((void (*)())initCharacterSelectUnlockedCourseList, 0, 0x63);
+        createCallbackTask((CallbackTaskCallback)initCharacterSelectUnlockedCourseList, 0, 0x63);
     }
 
     gCurrentGameTask->timer = 0;
@@ -382,7 +382,7 @@ void updateCharacterSelectCourseMenu(void) {
     if (gCurrentGameTask->fade != 0) {
         gCurrentGameTask->fade = stepMenuFadeAlpha((s16) gCurrentGameTask->fade, 0x24, 0);
         if (gCurrentGameTask->fade == 0) {
-            createCallbackTask(&initCharacterSelectUnlockedCourseList, 0, 0x63);
+            createCallbackTask((CallbackTaskCallback)&initCharacterSelectUnlockedCourseList, 0, 0x63);
         }
     } else {
         if (gMenuTransitionState == 0) {
@@ -499,7 +499,7 @@ void updateCharacterSelectCourseSubmenu(void) {
                 enqueueSoundEffect(1, 0x32);
                 gMenuChoicePromptState = 1;
                 gCharacterSelectCourseCursorState.fields.otherState = 3;
-                createCallbackTask(initCharacterSelectCourseConfirmCursor, 0, 0x61);
+                createCallbackTask((CallbackTaskCallback)initCharacterSelectCourseConfirmCursor, 0, 0x61);
             }
             break;
         case 3:

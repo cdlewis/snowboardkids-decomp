@@ -1,4 +1,5 @@
 #include "common.h"
+#include "game/engine/render_callback.h"
 #include "game/engine/relocatable_heap.h"
 #include "game/engine/callback_task_scheduler.h"
 #include "game/menu/splitscreen_select/race_splitscreen_select_ui.h"
@@ -17,7 +18,7 @@ typedef struct {
     s16 nextState;
 } RaceSplitscreenSelectCursorState;
 
-typedef u8 RaceSplitscreenSelectPortrait[0x8C];
+typedef MenuGlyphScript RaceSplitscreenSelectPortrait[0x46];
 
 typedef struct {
     /* 0x00 */ u16 centerTiles[16];
@@ -26,7 +27,6 @@ typedef struct {
     /* 0x28 */ u16 cornerTile;
 } RaceSplitscreenSelectFrameTiles;
 
-extern void addRenderCallback(void *, void *, void *);
 extern int sprintf(char *, const char *, ...);
 extern RaceSplitscreenSelectFrameTiles gRaceSplitscreenSelectFrameTiles[];
 extern RaceSplitscreenSelectPortrait gRaceSplitscreenSelectPortraitScripts[];
@@ -34,7 +34,6 @@ extern u8 gMenuSelectionConfirmTimer;
 extern u8 gRaceSplitscreenMode;
 extern u8 gMenuSelectionVariant;
 extern u8 gMenuTransitionState;
-extern void *gMenuRenderCallbackList;
 extern RaceSplitscreenSelectAssetHandles gAssetHandles;
 extern RaceSplitscreenSelectCursorState gRaceSplitscreenSelectCursorTarget;
 extern u8 gRaceSplitscreenSelectCursorAnimState;
@@ -42,7 +41,6 @@ extern s16 gRaceSplitscreenSelectPortraitAlpha;
 extern u32 gMenuPanelBackdropTexture[];
 extern Gfx gMenuRenderModeResetDl[];
 extern Gfx *gRegionAllocPtr;
-extern s32 gActiveMenuTask;
 extern u8 gMenuExitSelection;
 extern s16 gMenuViewportCenterX;
 extern s16 gMenuViewportCenterY;
@@ -56,6 +54,7 @@ void drawRaceSplitscreenSelectPlayerCountIcons(RaceSplitscreenSelectRowActor *ic
     s32 iconIndex;
     s32 blinkAlpha;
     s32 yOffset;
+    u16 tileIndex;
 
     savedIcons = icons;
     iconIndex = 0;
@@ -74,9 +73,10 @@ void drawRaceSplitscreenSelectPlayerCountIcons(RaceSplitscreenSelectRowActor *ic
                 (gMenuSelectionConfirmTimer & 1)) {
                 blinkAlpha = 0xFF;
             }
+            tileIndex = iconIndex + 8;
             drawMenuSprite(icons->iconX[iconIndex], (s16)(icons->iconY + yOffset),
                            getRelocatableHeapBlockBase(gAssetHandles.textureHandle),
-                           (iconIndex + 8) & 0xFFFF, 0x20, 0x20, 0, blinkAlpha);
+                           tileIndex, 0x20, 0x20, 0, blinkAlpha);
             yOffset += 0x14; iconIndex++;
             if (icons->playerCount) {}
         } while (iconIndex < ((s32) savedIcons->playerCount)); } while (0);
@@ -118,12 +118,12 @@ void updateRaceSplitscreenSelectPlayerCountIcons(RaceSplitscreenSelectRowActor *
 
         if (moved == 0) {
             row->state = 1;
-            createCallbackTask(initRaceSplitscreenSelectOption0Frame, 0, 0x5F);
+            createCallbackTask((CallbackTaskCallback)initRaceSplitscreenSelectOption0Frame, 0, 0x5F);
             callback = initRaceSplitscreenSelectOption1Frame;
-            createCallbackTask(callback, 0, 0x60);
-            createCallbackTask(initRaceSplitscreenSelectOption2Frame, 0, 0x61);
-            createCallbackTask(initRaceSplitscreenSelectOption3Frame, 0, 0x62);
-            createCallbackTask(initRaceSplitscreenSelectOption4Frame, 0, 0x63);
+            createCallbackTask((CallbackTaskCallback)callback, 0, 0x60);
+            createCallbackTask((CallbackTaskCallback)initRaceSplitscreenSelectOption2Frame, 0, 0x61);
+            createCallbackTask((CallbackTaskCallback)initRaceSplitscreenSelectOption3Frame, 0, 0x62);
+            createCallbackTask((CallbackTaskCallback)initRaceSplitscreenSelectOption4Frame, 0, 0x63);
             state++;
             state--;
         }
@@ -150,7 +150,7 @@ void updateRaceSplitscreenSelectPlayerCountIcons(RaceSplitscreenSelectRowActor *
         removeCallbackTask(arg0);
         return;
     }
-    addRenderCallback(&gMenuRenderCallbackList, drawRaceSplitscreenSelectPlayerCountIcons, actor);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawRaceSplitscreenSelectPlayerCountIcons, actor);
 }
 
 void initRaceSplitscreenSelectPlayerCountIcons(RaceSplitscreenSelectRowActor *arg0) {
@@ -163,7 +163,7 @@ void initRaceSplitscreenSelectPlayerCountIcons(RaceSplitscreenSelectRowActor *ar
     arg0->playerCount = 1;
     arg0->state = 0;
 
-    setCallbackTaskCallback(arg0, updateRaceSplitscreenSelectPlayerCountIcons);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceSplitscreenSelectPlayerCountIcons);
 }
 
 void drawRaceSplitscreenSelectCornerSprites(RaceSplitscreenSelectWidgetActor *arg0) {
@@ -204,13 +204,13 @@ void updateRaceSplitscreenSelectCornerSprites(RaceSplitscreenSelectWidgetActor *
         removeCallbackTask(arg0);
         return;
     }
-    addRenderCallback(&gMenuRenderCallbackList, drawRaceSplitscreenSelectCornerSprites, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawRaceSplitscreenSelectCornerSprites, arg0);
 }
 
 void initRaceSplitscreenSelectCornerSprites(RaceSplitscreenSelectWidgetActor *arg0) {
     arg0->x = -0x108;
     arg0->y = 8;
-    setCallbackTaskCallback(arg0, updateRaceSplitscreenSelectCornerSprites);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceSplitscreenSelectCornerSprites);
 }
 
 void drawRaceSplitscreenSelectOption0Frame(RaceSplitscreenSelectWidgetActor *arg0) {
@@ -292,16 +292,16 @@ void updateRaceSplitscreenSelectOption0Frame(RaceSplitscreenSelectWidgetActor *a
     case 0:
         arg0->x -= 0x20;
         if (arg0->row.bytes.subTimer == 0) {
-            createCallbackTask(initRaceSplitscreenSelectCornerSprites, 0, 0x63);
+            createCallbackTask((CallbackTaskCallback)initRaceSplitscreenSelectCornerSprites, 0, 0x63);
         }
         arg0->row.bytes.subTimer++;
         if (arg0->x < -7) {
             arg0->x = -8;
             arg0->row.bytes.subState = 3;
-            gActiveMenuTask = (s32) createCallbackTask(initRaceSplitscreenSelectCursor, 0, 0x64);
-            createCallbackTask(initRaceSplitscreenSelectPortrait, 0, 0x64);
-            createCallbackTask(initRaceSplitscreenSelectArrowPrompt, 0, 0x64);
-            createCallbackTask(initRaceSplitscreenSelectEntryFee, 0, 0x64);
+            gActiveMenuTask = createCallbackTask((CallbackTaskCallback)initRaceSplitscreenSelectCursor, 0, 0x64);
+            createCallbackTask((CallbackTaskCallback)initRaceSplitscreenSelectPortrait, 0, 0x64);
+            createCallbackTask((CallbackTaskCallback)initRaceSplitscreenSelectArrowPrompt, 0, 0x64);
+            createCallbackTask((CallbackTaskCallback)initRaceSplitscreenSelectEntryFee, 0, 0x64);
         }
         state = arg0->row.bytes.subState;
         break;
@@ -345,7 +345,7 @@ void updateRaceSplitscreenSelectOption0Frame(RaceSplitscreenSelectWidgetActor *a
         removeCallbackTask(arg0);
         return;
     }
-    addRenderCallback(&gMenuRenderCallbackList, drawRaceSplitscreenSelectOption0Frame, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawRaceSplitscreenSelectOption0Frame, arg0);
 }
 
 void initRaceSplitscreenSelectOption0Frame(RaceSplitscreenSelectWidgetActor *arg0) {
@@ -356,7 +356,7 @@ void initRaceSplitscreenSelectOption0Frame(RaceSplitscreenSelectWidgetActor *arg
     arg0->counter = 0;
     arg0->row.bytes.subTimer = 0;
     arg0->row.bytes.subState = 0;
-    setCallbackTaskCallback(arg0, updateRaceSplitscreenSelectOption0Frame);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceSplitscreenSelectOption0Frame);
 }
 
 void drawRaceSplitscreenSelectOption1Frame(RaceSplitscreenSelectWidgetActor *arg0) {
@@ -454,7 +454,7 @@ void updateRaceSplitscreenSelectOption1Frame(RaceSplitscreenSelectWidgetActor *a
         removeCallbackTask(arg0);
         return;
     }
-    addRenderCallback(&gMenuRenderCallbackList, drawRaceSplitscreenSelectOption1Frame, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawRaceSplitscreenSelectOption1Frame, arg0);
 }
 
 void initRaceSplitscreenSelectOption1Frame(RaceSplitscreenSelectWidgetActor *arg0) {
@@ -463,7 +463,7 @@ void initRaceSplitscreenSelectOption1Frame(RaceSplitscreenSelectWidgetActor *arg
     arg0->sprite.spriteIndex = 1;
     arg0->transition.bytes.timer = 0;
     arg0->transition.bytes.state = 0;
-    setCallbackTaskCallback(arg0, updateRaceSplitscreenSelectOption1Frame);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceSplitscreenSelectOption1Frame);
 }
 
 void drawRaceSplitscreenSelectOption2Frame(RaceSplitscreenSelectWidgetActor *arg0) {
@@ -559,7 +559,7 @@ void updateRaceSplitscreenSelectOption2Frame(RaceSplitscreenSelectWidgetActor *a
         removeCallbackTask(arg0);
         return;
     }
-    addRenderCallback(&gMenuRenderCallbackList, drawRaceSplitscreenSelectOption2Frame, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawRaceSplitscreenSelectOption2Frame, arg0);
 }
 
 void initRaceSplitscreenSelectOption2Frame(RaceSplitscreenSelectWidgetActor *arg0) {
@@ -568,7 +568,7 @@ void initRaceSplitscreenSelectOption2Frame(RaceSplitscreenSelectWidgetActor *arg
     arg0->sprite.spriteIndex = 2;
     arg0->transition.bytes.timer = 0;
     arg0->transition.bytes.state = 0;
-    setCallbackTaskCallback(arg0, updateRaceSplitscreenSelectOption2Frame);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceSplitscreenSelectOption2Frame);
 }
 
 void drawRaceSplitscreenSelectOption3Frame(RaceSplitscreenSelectWidgetActor *arg0) {
@@ -666,7 +666,7 @@ void updateRaceSplitscreenSelectOption3Frame(RaceSplitscreenSelectWidgetActor *a
         removeCallbackTask(arg0);
         return;
     }
-    addRenderCallback(&gMenuRenderCallbackList, drawRaceSplitscreenSelectOption3Frame, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawRaceSplitscreenSelectOption3Frame, arg0);
 }
 
 void initRaceSplitscreenSelectOption3Frame(RaceSplitscreenSelectWidgetActor *arg0) {
@@ -675,7 +675,7 @@ void initRaceSplitscreenSelectOption3Frame(RaceSplitscreenSelectWidgetActor *arg
     arg0->sprite.spriteIndex = 3;
     arg0->transition.bytes.timer = 0;
     arg0->transition.bytes.state = 0;
-    setCallbackTaskCallback(arg0, updateRaceSplitscreenSelectOption3Frame);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceSplitscreenSelectOption3Frame);
 }
 
 void drawRaceSplitscreenSelectOption4Frame(RaceSplitscreenSelectWidgetActor *arg0) {
@@ -772,7 +772,7 @@ void updateRaceSplitscreenSelectOption4Frame(RaceSplitscreenSelectWidgetActor *a
         removeCallbackTask(arg0);
         return;
     }
-    addRenderCallback(&gMenuRenderCallbackList, drawRaceSplitscreenSelectOption4Frame, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawRaceSplitscreenSelectOption4Frame, arg0);
 }
 
 void initRaceSplitscreenSelectOption4Frame(RaceSplitscreenSelectWidgetActor *arg0) {
@@ -781,7 +781,7 @@ void initRaceSplitscreenSelectOption4Frame(RaceSplitscreenSelectWidgetActor *arg
     arg0->sprite.spriteIndex = 4;
     arg0->transition.bytes.timer = 0;
     arg0->transition.bytes.state = 0;
-    setCallbackTaskCallback(arg0, updateRaceSplitscreenSelectOption4Frame);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceSplitscreenSelectOption4Frame);
 }
 
 void drawRaceSplitscreenSelectCursor(RaceSplitscreenSelectWidgetActor *arg0) {
@@ -843,7 +843,7 @@ void updateRaceSplitscreenSelectCursor(RaceSplitscreenSelectWidgetActor *arg0) {
         removeCallbackTask(arg0);
         return;
     }
-    addRenderCallback(&gMenuRenderCallbackList, drawRaceSplitscreenSelectCursor, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawRaceSplitscreenSelectCursor, arg0);
 }
 
 void initRaceSplitscreenSelectCursor(RaceSplitscreenSelectWidgetActor *arg0) {
@@ -852,7 +852,7 @@ void initRaceSplitscreenSelectCursor(RaceSplitscreenSelectWidgetActor *arg0) {
     arg0->sprite.spriteIndex = 0;
     arg0->transition.bytes.state = 0;
     arg0->transition.bytes.timer = 0;
-    setCallbackTaskCallback(arg0, updateRaceSplitscreenSelectCursor);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceSplitscreenSelectCursor);
 }
 
 void drawRaceSplitscreenSelectPortrait(RaceSplitscreenSelectWidgetActor *arg0) {
@@ -899,7 +899,7 @@ void updateRaceSplitscreenSelectPortrait(RaceSplitscreenSelectWidgetActor *arg0)
         removeCallbackTask(arg0);
         return;
     }
-    addRenderCallback(&gMenuRenderCallbackList, drawRaceSplitscreenSelectPortrait, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawRaceSplitscreenSelectPortrait, arg0);
 }
 
 void initRaceSplitscreenSelectPortrait(RaceSplitscreenSelectWidgetActor *arg0) {
@@ -907,7 +907,7 @@ void initRaceSplitscreenSelectPortrait(RaceSplitscreenSelectWidgetActor *arg0) {
     arg0->y = 0xC;
     arg0->sprite.spriteIndex = 0;
     arg0->transition.bytes.state = 0;
-    setCallbackTaskCallback(arg0, updateRaceSplitscreenSelectPortrait);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceSplitscreenSelectPortrait);
 }
 
 void drawRaceSplitscreenSelectArrowPrompt(RaceSplitscreenSelectWidgetActor *arg0) {
@@ -945,7 +945,7 @@ void updateRaceSplitscreenSelectArrowPrompt(RaceSplitscreenSelectWidgetActor *ar
         removeCallbackTask(arg0);
         return;
     }
-    addRenderCallback(&gMenuRenderCallbackList, drawRaceSplitscreenSelectArrowPrompt, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawRaceSplitscreenSelectArrowPrompt, arg0);
 }
 
 void initRaceSplitscreenSelectArrowPrompt(RaceSplitscreenSelectWidgetActor *arg0) {
@@ -953,7 +953,7 @@ void initRaceSplitscreenSelectArrowPrompt(RaceSplitscreenSelectWidgetActor *arg0
     arg0->y = -0x5C;
     arg0->sprite.spriteIndex = 0;
     arg0->transition.bytes.state = 0;
-    setCallbackTaskCallback(arg0, updateRaceSplitscreenSelectArrowPrompt);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceSplitscreenSelectArrowPrompt);
 }
 
 void drawRaceSplitscreenSelectEntryFee(RaceSplitscreenSelectWidgetActor *arg0) {
@@ -996,7 +996,7 @@ void updateRaceSplitscreenSelectEntryFee(RaceSplitscreenSelectWidgetActor *arg0)
         removeCallbackTask(arg0);
         return;
     }
-    addRenderCallback(&gMenuRenderCallbackList, drawRaceSplitscreenSelectEntryFee, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawRaceSplitscreenSelectEntryFee, arg0);
 }
 
 void initRaceSplitscreenSelectEntryFee(RaceSplitscreenSelectWidgetActor *arg0) {
@@ -1004,7 +1004,7 @@ void initRaceSplitscreenSelectEntryFee(RaceSplitscreenSelectWidgetActor *arg0) {
     arg0->y = 0x40;
     arg0->sprite.spriteIndex = 0;
     arg0->transition.bytes.state = 0;
-    setCallbackTaskCallback(arg0, updateRaceSplitscreenSelectEntryFee);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceSplitscreenSelectEntryFee);
 }
 
 void drawMenuPanelBackdrop(s32 x, s32 y, s32 width, s32 height) {

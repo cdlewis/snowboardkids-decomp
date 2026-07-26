@@ -188,7 +188,7 @@ void _Genld(_Pft *px, char code, unsigned char *p, short nsig, short xexp) {
         nsig = 1, p = "0";
     }
 
-    if (code == 'f' || (code == 'g' || code == 'G') && xexp >= -4 && xexp < px->prec) {
+    if (code == 'f' || ((code == 'g' || code == 'G') && xexp >= -4 && xexp < px->prec)) {
         xexp++;
         if (code != 'f') {
             if (((px->flags & 8) == 0) && nsig < px->prec) {

@@ -387,7 +387,7 @@ void resolveRacePlayerHitReactions(RacePlayer *arg0) {
             arg0->unk2E0 = arg0->unk2C8;
             arg0->unk2E4 = arg0->unk2CC;
             if (arg0->soundDisabled == 0) {
-                enqueuePositionalSoundEffect(0x14, &arg0->posX, 0x7F, 0x32);
+                enqueuePositionalSoundEffect(0x14, &arg0->pos, 0x7F, 0x32);
                 spawnRacePlayerHitEffect((s16) arg0->playerIndexU16, arg0->unk2DE, 0, arg0->unk284 / 2, arg0->unk280);
             }
             break;
@@ -397,7 +397,7 @@ void resolveRacePlayerHitReactions(RacePlayer *arg0) {
             arg0->updateState = 0;
             arg0->updateTimer = 0;
             if (arg0->soundDisabled == 0) {
-                enqueuePositionalSoundEffect(0x14, &arg0->posX, 0x7F, 0x32);
+                enqueuePositionalSoundEffect(0x14, &arg0->pos, 0x7F, 0x32);
                 spawnRacePlayerHitEffect((s16) arg0->playerIndexU16, gRacePlayerHitEffectAngle, 0, arg0->unk284 / 2, arg0->unk280);
             }
             break;
@@ -419,7 +419,7 @@ void resolveRacePlayerHitReactions(RacePlayer *arg0) {
             arg0->unk2E0 = arg0->unk2C8;
             arg0->unk2E4 = arg0->unk2CC;
             if (arg0->soundDisabled == 0) {
-                enqueuePositionalSoundEffect(0x14, &arg0->posX, 0x7F, 0x32);
+                enqueuePositionalSoundEffect(0x14, &arg0->pos, 0x7F, 0x32);
                 spawnRacePlayerHitEffect((s16) arg0->playerIndexU16, arg0->unk2DE, 1, arg0->unk284 / 2, arg0->unk280);
             }
             break;
@@ -428,7 +428,7 @@ void resolveRacePlayerHitReactions(RacePlayer *arg0) {
             break;
         case 7:
             if (arg0->soundDisabled == 0) {
-                enqueuePositionalSoundEffect(0x14, &arg0->posX, 0x7F, 0x32);
+                enqueuePositionalSoundEffect(0x14, &arg0->pos, 0x7F, 0x32);
                 spawnRacePlayerHitEffect((s16) arg0->playerIndexU16, 0, 1, arg0->unk284 / 2, 0);
             }
             /* fallthrough */

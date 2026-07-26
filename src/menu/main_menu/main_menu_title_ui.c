@@ -1,8 +1,8 @@
 #include "common.h"
+#include "game/engine/render_callback.h"
 #include "game/engine/relocatable_heap.h"
 #include "game/engine/callback_task_scheduler.h"
 #include "game/menu/main_menu/main_menu_title_ui.h"
-#define MENU_RENDERER_BROAD_PROTOTYPES
 #include "game/menu/renderer/menu_renderer.h"
 #include "game/menu/race_setup/race_setup_ui.h"
 
@@ -16,17 +16,18 @@ typedef struct {
     /* 0x1A */ s16 y;
 } MainMenuTitleActor;
 
-typedef struct {
-    s16 width;
-    s16 height;
-} MainMenuTitleSprite;
-
 struct MainMenuTitleLogoActor {
     MainMenuTitleActor common;
-    /* 0x1C */ MainMenuTitleSprite sprite;
-    /* 0x20 */ char pad20[4];
-    /* 0x24 */ s16 startX;
-    /* 0x26 */ s16 startY;
+    union {
+        /* 0x1C */ MenuTilemapSprite tilemapSprite;
+        struct {
+            /* 0x1C */ s16 width;
+            /* 0x1E */ s16 height;
+            /* 0x20 */ char pad20[4];
+            /* 0x24 */ s16 startX;
+            /* 0x26 */ s16 startY;
+        };
+    };
 };
 
 struct MainMenuTitleOptionsActor {
@@ -56,27 +57,25 @@ typedef struct {
 } MainMenuTitleAssetHandles;
 
 extern MainMenuState *gCurrentGameTask;
-extern s32 gMenuRenderCallbackList;
 extern MainMenuTitleAssetHandles gAssetHandles;
 extern u8 gConnectedControllerCount;
 
-extern void addRenderCallback(void *, void *, void *);
 
 void drawMainMenuTitleLogo(MainMenuTitleLogoActor *arg0) {
-    drawMenuTilemapSprite(&arg0->sprite, 1, arg0->common.x, arg0->common.y);
+    drawMenuTilemapSprite(&arg0->tilemapSprite.render, 1, arg0->common.x, arg0->common.y);
 }
 
 void updateMainMenuTitleLogo(MainMenuTitleLogoActor *arg0) {
-    addRenderCallback(&gMenuRenderCallbackList, drawMainMenuTitleLogo, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawMainMenuTitleLogo, arg0);
 }
 
 void initMainMenuTitleLogo(MainMenuTitleLogoActor *arg0) {
-    initMenuTilemapSprite((MenuTilemapSprite *)&arg0->sprite, getRelocatableHeapBlockBase(TITLE_SCREEN_LOGO_SPRITE_HANDLE));
-    arg0->sprite.width = 0x10;
-    arg0->sprite.height = 0x10;
+    initMenuTilemapSprite(&arg0->tilemapSprite, getRelocatableHeapBlockBase(TITLE_SCREEN_LOGO_SPRITE_HANDLE));
+    arg0->width = 0x10;
+    arg0->height = 0x10;
     arg0->common.x = arg0->startX;
     arg0->common.y = arg0->startY;
-    setCallbackTaskCallback(arg0, updateMainMenuTitleLogo);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateMainMenuTitleLogo);
 }
 
 void drawMainMenuTitleOptions(MainMenuTitleOptionsActor *arg0) {
@@ -95,7 +94,7 @@ void drawMainMenuTitleOptions(MainMenuTitleOptionsActor *arg0) {
             }
             drawMenuSpriteWithAlpha(arg0->common.x, (s16)(arg0->labelY + (i * 0x10)),
                           getRelocatableHeapBlockBase(TITLE_SCREEN_TEXTURE_HANDLE),
-                          tile & 0xFFFF, 0x20, 0x20, 0, 0x100, palette + 1);
+                          tile, 0x20, 0x20, 0, 0x100, palette + 1);
         }
     }
 
@@ -116,7 +115,7 @@ void updateMainMenuTitleOptions(MainMenuTitleOptionsActor *arg0) {
         arg0->blinkAlpha += 9;
     }
     arg0->blinkTimer = ((u16)arg0->blinkTimer + 1) & 0x1F;
-    addRenderCallback(&gMenuRenderCallbackList, drawMainMenuTitleOptions, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawMainMenuTitleOptions, arg0);
 }
 
 void initMainMenuTitleOptions(MainMenuTitleOptionsActor *arg0) {
@@ -127,11 +126,11 @@ void initMainMenuTitleOptions(MainMenuTitleOptionsActor *arg0) {
     arg0->selectedOption = 0;
     arg0->blinkTimer = 0;
     arg0->blinkAlpha = 0x100;
-    setCallbackTaskCallback(arg0, updateMainMenuTitleOptions);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateMainMenuTitleOptions);
 }
 
 void drawMainMenuTitleCursor(MainMenuTitleCursorActor *arg0) {
-    s32 temp = getRelocatableHeapBlockBase(ASSET_HANDLE(33));
+    void *temp = getRelocatableHeapBlockBase(ASSET_HANDLE(33));
 
     drawMenuSprite(arg0->common.x, arg0->common.y, temp, 3, 0x20, 0x20, 0, 0);
 }
@@ -143,10 +142,10 @@ void updateMainMenuTitleCursor(MainMenuTitleCursorActor *arg0) {
         arg0->common.x = -0x3C;
     }
     arg0->common.y = (gCurrentGameTask->selection << 4) + 0x20;
-    addRenderCallback(&gMenuRenderCallbackList, drawMainMenuTitleCursor, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawMainMenuTitleCursor, arg0);
 }
 
 void initMainMenuTitleCursor(MainMenuTitleCursorActor *arg0) {
     arg0->common.y = 0x20;
-    setCallbackTaskCallback(arg0, updateMainMenuTitleCursor);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateMainMenuTitleCursor);
 }

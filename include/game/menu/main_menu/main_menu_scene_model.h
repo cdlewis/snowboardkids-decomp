@@ -9,12 +9,6 @@ typedef struct MainMenuModelVec3s {
     s16 z;
 } MainMenuModelVec3s;
 
-typedef struct MainMenuModelVec3i {
-    s32 x;
-    s32 y;
-    s32 z;
-} MainMenuModelVec3i;
-
 typedef union MainMenuModelAnimationBank {
     s32 frameOffsets[1];
     s16 frameData[1];
@@ -32,7 +26,7 @@ typedef struct MainMenuModelPart {
 typedef struct MainMenuModelTransform {
     s16 rotation[9];
     s16 pad12;
-    MainMenuModelVec3i translation;
+    Vec3i translation;
 } MainMenuModelTransform;
 
 typedef struct MainMenuSceneModel {
@@ -48,7 +42,7 @@ typedef struct MainMenuSceneModel {
     s16 frameDuration;
     MainMenuModelPart parts[14];
     s32 lastPartOffsetZ;
-    MainMenuModelVec3i pos;
+    Vec3i pos;
     MainMenuModelVec3s rot;
     s16 unk146;
     MainMenuModelTransform displayObjects[14];

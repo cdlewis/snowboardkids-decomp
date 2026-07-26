@@ -6,7 +6,7 @@
 typedef struct EndingCreditsLinda EndingCreditsLinda;
 typedef struct EndingCreditsTumblingSnowboard EndingCreditsTumblingSnowboard;
 
-void updateEndingLindaFinalPose(s32 arg0);
+void updateEndingLindaFinalPose(EndingCreditsLinda *arg0);
 void updateEndingLindaStartFinalPose(EndingCreditsLinda *arg0);
 void updateEndingLindaPhase40Prep(EndingCreditsLinda *arg0);
 void updateEndingLindaWaitBeforePhase40Prep(EndingCreditsLinda *arg0);

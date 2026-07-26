@@ -1,4 +1,6 @@
 #include "common.h"
+#include "game/menu/renderer/menu_render_utils.h"
+#include "game/engine/render_callback.h"
 #include "game/engine/relocatable_heap.h"
 #include "game/engine/callback_task_scheduler.h"
 #include "game/engine/asset_manager.h"
@@ -13,8 +15,6 @@
     _g->words.w0 = (cmd0); \
     _g->words.w1 = (cmd1); \
 }
-
-typedef s16 FixedMatrix3sScratch[0x10];
 
 typedef struct {
     /* 0x00 */ s32 unk0;
@@ -38,7 +38,7 @@ typedef struct {
 typedef struct {
     /* 0x00 */ s8 textureIndex;
     /* 0x01 */ u8 pad1[3];
-    /* 0x04 */ s32 command[3];
+    /* 0x04 */ Vec3i position;
 } RaceIntroRenderCommandEntry;
 
 struct RaceIntroMeshActor {
@@ -46,7 +46,6 @@ struct RaceIntroMeshActor {
     /* 0x18 */ GfxCommandDest *matrices;
 };
 
-typedef struct RaceIntroEffectActor RaceIntroEffectActor;
 typedef void (*RaceIntroEffectCallback)(RaceIntroEffectActor *);
 
 typedef union {
@@ -75,8 +74,8 @@ struct RaceIntroEffectActor {
             /* 0x36 */ s16 spinVelocity;
         };
         struct {
-            /* 0x30 */ u32 image;
-            /* 0x34 */ u32 palette;
+            /* 0x30 */ void *image;
+            /* 0x34 */ void *palette;
         };
     };
     /* 0x38 */ s16 timer;
@@ -95,8 +94,6 @@ typedef struct {
     /* 0x50 */ s16 matrixHandle2;
 } RaceIntroAssetHandles;
 
-extern void *gEffectRenderCallbackList;
-extern void addRenderCallback(void *, void *, s32);
 extern void osWritebackDCache(void *, s32);
 extern RaceIntroAssetHandles gAssetHandles;
 extern u8 gRenderMatricesDirty;
@@ -104,7 +101,6 @@ extern Gfx *gRegionAllocPtr;
 extern Gfx D_20028F0[];
 extern Gfx D_2002DB8[];
 extern Gfx *allocFixedTransformMatrix(FixedTransform *arg0);
-extern void getAssetTableImageAndPalette(s32 arg0, s32 arg1, s16 *arg2, s16 *arg3);
 extern Vec3i gRaceIntroBillboardPositions[];
 extern Vtx *gRaceIntroModelVerticesByCourse[];
 extern RaceIntroRenderCommandEntry *gRaceIntroModelCommandsByCourse[];
@@ -116,7 +112,7 @@ extern Gfx gEffectRenderModeSetupDl[];
 extern Gfx gEffectRenderModeCleanupDl[];
 extern GfxCommandDest gIdentityMatrix;
 extern FixedTransform gIdentityFixedTransform;
-extern void setPackedMatrixTranslation(GfxCommandDest *, s32 *);
+extern void setPackedMatrixTranslation(GfxCommandDest *, Vec3i *);
 extern void getAssetTableImagePaletteAndSize(u8 *, s32, u32 *, u32 *, s16 *, s16 *);
 
 extern s8 D_80122288;
@@ -145,7 +141,7 @@ void drawRaceIntroModelMeshes(RaceIntroMeshActor *arg0) {
 
     if (entry->textureIndex != -1) {
         do {
-            if (isPositionNearCurrentRaceViewportCamera(entry->command) != 0) {
+            if (isPositionNearCurrentRaceViewportCamera(&entry->position) != 0) {
                 if (textureIndex != entry->textureIndex) {
                     textureIndex = entry->textureIndex;
                     getAssetTableImagePaletteAndSize((u8 *)getRelocatableHeapBlockBase((s32)ASSET_HANDLE(0x1D)), (u16)textureIndex, &image, &palette,
@@ -170,8 +166,8 @@ void drawRaceIntroModelMeshes(RaceIntroMeshActor *arg0) {
     gSPDisplayList(gRegionAllocPtr++, gEffectRenderModeCleanupDl);
 }
 
-void enqueueDrawRaceIntroModelMeshes(s32 arg0) {
-    addRenderCallback(&gEffectRenderCallbackList, drawRaceIntroModelMeshes, arg0);
+void enqueueDrawRaceIntroModelMeshes(RaceIntroMeshActor *arg0) {
+    addRenderCallback(&gEffectRenderCallbackList, (RenderCallback)drawRaceIntroModelMeshes, arg0);
 }
 
 void initRaceIntroModelMeshes(RaceIntroMeshActor *arg0) {
@@ -199,7 +195,7 @@ void initRaceIntroModelMeshes(RaceIntroMeshActor *arg0) {
         if (count > 0) {
             do {
                 arg0->matrices[i] = gIdentityMatrix;
-                setPackedMatrixTranslation(&arg0->matrices[i], entry->command);
+                setPackedMatrixTranslation(&arg0->matrices[i], &entry->position);
                 i++;
                 entry++;
             } while (i != count);
@@ -207,7 +203,7 @@ void initRaceIntroModelMeshes(RaceIntroMeshActor *arg0) {
         osWritebackDCache(arg0->matrices, allocSize);
     }
 
-    setCallbackTaskCallback(arg0, enqueueDrawRaceIntroModelMeshes);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)enqueueDrawRaceIntroModelMeshes);
 }
 
 void drawRaceIntroBillboard(RaceIntroEffectActor *arg0) {
@@ -228,14 +224,14 @@ void drawRaceIntroBillboard(RaceIntroEffectActor *arg0) {
 
         if (arg0->displayList0 != NULL) {
             RACE_INTRO_EFFECTS_GFX_CMD(gRegionAllocPtr++, 0x06000000, (u32)gEffectRenderModeSetupDl);
-            RACE_INTRO_EFFECTS_GFX_CMD(gRegionAllocPtr++, 0xFD500000, arg0->image);
+            RACE_INTRO_EFFECTS_GFX_CMD(gRegionAllocPtr++, 0xFD500000, (u32)arg0->image);
             RACE_INTRO_EFFECTS_GFX_CMD(gRegionAllocPtr++, 0xF5500000, 0x07080200);
             RACE_INTRO_EFFECTS_GFX_CMD(gRegionAllocPtr++, 0xE6000000, 0);
             RACE_INTRO_EFFECTS_GFX_CMD(gRegionAllocPtr++, 0xF3000000, 0x070FF400);
             RACE_INTRO_EFFECTS_GFX_CMD(gRegionAllocPtr++, 0xE7000000, 0);
             RACE_INTRO_EFFECTS_GFX_CMD(gRegionAllocPtr++, 0xF5400400, 0x00080200);
             RACE_INTRO_EFFECTS_GFX_CMD(gRegionAllocPtr++, 0xF2000000, 0x0007C07C);
-            RACE_INTRO_EFFECTS_GFX_CMD(gRegionAllocPtr++, 0xFD100000, arg0->palette);
+            RACE_INTRO_EFFECTS_GFX_CMD(gRegionAllocPtr++, 0xFD100000, (u32)arg0->palette);
             RACE_INTRO_EFFECTS_GFX_CMD(gRegionAllocPtr++, 0xE8000000, 0);
             RACE_INTRO_EFFECTS_GFX_CMD(gRegionAllocPtr++, 0xF5000100, 0x07000000);
             RACE_INTRO_EFFECTS_GFX_CMD(gRegionAllocPtr++, 0xE6000000, 0);
@@ -252,21 +248,21 @@ void drawRaceIntroBillboard(RaceIntroEffectActor *arg0) {
 
 void updateRaceIntroBillboard(RaceIntroEffectActor *arg0) {
     Vec3i sp44;
-    FixedMatrix3sScratch sp24;
+    FixedTransform transform;
     RaceIntroEffectActor *temp_s0 = arg0;
 
     arg0->timer--;
     if (arg0->timer == 0) {
         arg0->timer = randomNextMain() + 0x1E;
-        setCallbackTaskCallback(arg0, waitRaceIntroBillboardSpawn);
+        setCallbackTaskCallback(arg0, (CallbackTaskCallback)waitRaceIntroBillboardSpawn);
     }
-    makeFixedRotationY(sp24, 0x6D0);
-    transformVec3iByFixedMatrix(sp24, (Vec3i *)&temp_s0->velocityY, &sp44);
+    makeFixedRotationY(transform.rotation, 0x6D0);
+    transformVec3iByFixedMatrix(transform.rotation, (Vec3i *)&temp_s0->velocityY, &sp44);
     temp_s0->position.x += sp44.x;
     temp_s0->position.y += sp44.y;
     temp_s0->position.z += sp44.z;
     temp_s0->radius -= 0x4000;
-    addRenderCallback(&gEffectRenderCallbackList, drawRaceIntroBillboard, (s32) temp_s0);
+    addRenderCallback(&gEffectRenderCallbackList, (RenderCallback)drawRaceIntroBillboard, (void *)temp_s0);
 }
 
 void waitRaceIntroBillboardSpawn(RaceIntroEffectActor *arg0) {
@@ -280,14 +276,16 @@ void waitRaceIntroBillboardSpawn(RaceIntroEffectActor *arg0) {
         arg0->velocityY = 0;
         arg0->radius = 0;
         arg0->angle.word = 0xFFF00000;
-        setCallbackTaskCallback(arg0, updateRaceIntroBillboard);
+        setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceIntroBillboard);
     }
 }
 
 void initRaceIntroBillboard(RaceIntroEffectActor *arg0) {
     arg0->timer = (arg0->index * 0x1E) + 0x1E;
-    getAssetTableImageAndPalette(getRelocatableHeapBlockBase(ASSET_HANDLE(0x1D)), (arg0->index + 3) & 0xFFFF, &arg0->scale, &arg0->pitchVelocity);
-    setCallbackTaskCallback(arg0, waitRaceIntroBillboardSpawn);
+    getAssetTableImageAndPalette(getRelocatableHeapBlockBase(ASSET_HANDLE(0x1D)),
+                                 arg0->index + 3,
+                                 &arg0->image, &arg0->palette);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)waitRaceIntroBillboardSpawn);
 }
 
 void drawRaceIntroFlyoverActor(RaceIntroEffectActor *arg0) {
@@ -402,7 +400,7 @@ void updateRaceIntroFlyoverActor(RaceIntroEffectActor *arg0) {
     arg0->position.z += ((s64) -arg0->radius * cosine) / 0x1000;
     arg0->scale = 0x80 - ((fixedSine(arg0->tilt + 0x400) + 0x1000) / 0x40);
 
-    addRenderCallback(&gEffectRenderCallbackList, drawRaceIntroFlyoverActor, (s32) arg0);
+    addRenderCallback(&gEffectRenderCallbackList, (RenderCallback)drawRaceIntroFlyoverActor, (void *)arg0);
 }
 
 void updateRaceIntroFlyoverIdle(RaceIntroEffectActor *arg0) {
@@ -426,7 +424,7 @@ void initRaceIntroFlyoverIdle(RaceIntroEffectActor *arg0) {
     arg0->radius = 0x100000;
     arg0->stateTimer = 0;
     if (D_80122288 == 2) {
-        setCallbackTaskCallback(arg0, updateRaceIntroFlyoverIdle);
+        setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceIntroFlyoverIdle);
     }
 }
 
@@ -438,7 +436,7 @@ void updateRaceIntroFlyoverLongPanReturn(RaceIntroEffectActor *arg0) {
     updateRaceIntroFlyoverActor(arg0);
     arg0->stateTimer--;
     if (arg0->stateTimer == 0) {
-        setCallbackTaskCallback(arg0, initRaceIntroFlyoverIdle);
+        setCallbackTaskCallback(arg0, (CallbackTaskCallback)initRaceIntroFlyoverIdle);
     }
 }
 
@@ -455,7 +453,7 @@ void initRaceIntroFlyoverLongPanReturn(RaceIntroEffectActor *arg0) {
     arg0->radius = 0x100000;
     arg0->stateTimer = 0x154;
     if (D_80122288 == 1) {
-        setCallbackTaskCallback(arg0, updateRaceIntroFlyoverLongPanReturn);
+        setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceIntroFlyoverLongPanReturn);
     }
 }
 
@@ -467,7 +465,7 @@ void updateRaceIntroFlyoverLongPanHold(RaceIntroEffectActor *arg0) {
     updateRaceIntroFlyoverActor(arg0);
     arg0->stateTimer--;
     if (arg0->stateTimer == 0) {
-        setCallbackTaskCallback(arg0, initRaceIntroFlyoverLongPanReturn);
+        setCallbackTaskCallback(arg0, (CallbackTaskCallback)initRaceIntroFlyoverLongPanReturn);
     }
 }
 
@@ -480,7 +478,7 @@ void updateRaceIntroFlyoverLongPanPitchUp(RaceIntroEffectActor *arg0) {
     arg0->stateTimer--;
     if (arg0->stateTimer == 0) {
         arg0->stateTimer = 0x96;
-        setCallbackTaskCallback(arg0, updateRaceIntroFlyoverLongPanHold);
+        setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceIntroFlyoverLongPanHold);
     }
 }
 
@@ -493,7 +491,7 @@ void updateRaceIntroFlyoverLongPanRise(RaceIntroEffectActor *arg0) {
     updateRaceIntroFlyoverActor(arg0);
     if (arg0->stateTimer == 0) {
         arg0->stateTimer = 0x2A;
-        setCallbackTaskCallback(arg0, updateRaceIntroFlyoverLongPanPitchUp);
+        setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceIntroFlyoverLongPanPitchUp);
     }
 }
 
@@ -502,7 +500,7 @@ void waitRaceIntroFlyoverLongPanTrigger(RaceIntroEffectActor *arg0) {
     updateRaceIntroFlyoverActor(arg0);
     if (gRacePlayerSurfaceAngleByPlayer == 0x35) {
         arg0->stateTimer = 0x6A;
-        setCallbackTaskCallback(arg0, updateRaceIntroFlyoverLongPanRise);
+        setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceIntroFlyoverLongPanRise);
     }
 }
 
@@ -517,7 +515,7 @@ void initRaceIntroFlyoverLongPan(RaceIntroEffectActor *arg0) {
     arg0->pitchVelocity = 0;
     arg0->velocityY = 0;
     arg0->stateTimer = 0x1E;
-    setCallbackTaskCallback(arg0, waitRaceIntroFlyoverLongPanTrigger);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)waitRaceIntroFlyoverLongPanTrigger);
 }
 
 void updateRaceIntroFlyoverShortPanFinal(RaceIntroEffectActor *arg0) {
@@ -540,14 +538,14 @@ void initRaceIntroFlyoverShortPanFinal(RaceIntroEffectActor *arg0) {
     arg0->velocityY = 0;
     arg0->radius = 0x100000;
     arg0->stateTimer = 0x1E;
-    setCallbackTaskCallback(arg0, updateRaceIntroFlyoverShortPanFinal);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceIntroFlyoverShortPanFinal);
 }
 
 void waitRaceIntroFlyoverShortPanFinal(RaceIntroEffectActor *arg0) {
     approachRaceIntroFlyoverSpinStep(arg0, 0x130);
     updateRaceIntroFlyoverActor(arg0);
     if (D_80122288 == 2) {
-        setCallbackTaskCallback(arg0, initRaceIntroFlyoverShortPanFinal);
+        setCallbackTaskCallback(arg0, (CallbackTaskCallback)initRaceIntroFlyoverShortPanFinal);
     }
 }
 
@@ -562,14 +560,14 @@ void initRaceIntroFlyoverShortPanSecond(RaceIntroEffectActor *arg0) {
     arg0->pitchVelocity = 0;
     arg0->velocityY = 0;
     arg0->stateTimer = 0x1E;
-    setCallbackTaskCallback(arg0, waitRaceIntroFlyoverShortPanFinal);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)waitRaceIntroFlyoverShortPanFinal);
 }
 
 void waitRaceIntroFlyoverShortPanSecond(RaceIntroEffectActor *arg0) {
     approachRaceIntroFlyoverSpinStep(arg0, 0x30);
     updateRaceIntroFlyoverActor(arg0);
     if (D_80122288 == 1) {
-        setCallbackTaskCallback(arg0, initRaceIntroFlyoverShortPanSecond);
+        setCallbackTaskCallback(arg0, (CallbackTaskCallback)initRaceIntroFlyoverShortPanSecond);
     }
 }
 
@@ -584,18 +582,18 @@ void initRaceIntroFlyoverShortPan(RaceIntroEffectActor *arg0) {
     arg0->pitchVelocity = 0;
     arg0->velocityY = 0;
     arg0->stateTimer = 0x1E;
-    setCallbackTaskCallback(arg0, waitRaceIntroFlyoverShortPanSecond);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)waitRaceIntroFlyoverShortPanSecond);
 }
 
 void initRaceIntroFlyoverActor(RaceIntroEffectActor *arg0) {
     s16 temp_v0 = gRaceCourseIndex;
 
     if (temp_v0 == 3) {
-        setCallbackTaskCallback(arg0, initRaceIntroFlyoverLongPan);
+        setCallbackTaskCallback(arg0, (CallbackTaskCallback)initRaceIntroFlyoverLongPan);
         temp_v0 = gRaceCourseIndex;
     }
     if (temp_v0 == 6) {
-        setCallbackTaskCallback(arg0, initRaceIntroFlyoverShortPan);
+        setCallbackTaskCallback(arg0, (CallbackTaskCallback)initRaceIntroFlyoverShortPan);
     }
 }
 
@@ -617,7 +615,7 @@ void drawRaceIntroAnimatedBillboards(RaceIntroMeshActor *arg0) {
     i = 0;
     if (entry->textureIndex != -1) {
         do {
-            if (isPositionNearCurrentRaceViewportCamera(entry->command) != 0) {
+            if (isPositionNearCurrentRaceViewportCamera(&entry->position) != 0) {
                 textureIndex = gRaceIntroAnimatedBillboardTextureIds[entry->textureIndex] + ((s32)(gFrameCounter & 4) / 4);
                 if (textureIndex != loadedTextureIndex) {
                     loadedTextureIndex = textureIndex;
@@ -641,8 +639,8 @@ void drawRaceIntroAnimatedBillboards(RaceIntroMeshActor *arg0) {
     gSPDisplayList(gRegionAllocPtr++, gEffectRenderModeCleanupDl);
 }
 
-void enqueueDrawRaceIntroAnimatedBillboards(s32 arg0) {
-    addRenderCallback(&gEffectRenderCallbackList, drawRaceIntroAnimatedBillboards, arg0);
+void enqueueDrawRaceIntroAnimatedBillboards(RaceIntroMeshActor *arg0) {
+    addRenderCallback(&gEffectRenderCallbackList, (RenderCallback)drawRaceIntroAnimatedBillboards, arg0);
 }
 
 void initRaceIntroAnimatedBillboards(RaceIntroMeshActor *arg0) {
@@ -670,7 +668,7 @@ void initRaceIntroAnimatedBillboards(RaceIntroMeshActor *arg0) {
         if (count > 0) {
             do {
                 arg0->matrices[i] = gIdentityMatrix;
-                setPackedMatrixTranslation(&arg0->matrices[i], entry->command);
+                setPackedMatrixTranslation(&arg0->matrices[i], &entry->position);
                 i++;
                 entry++;
             } while (i != count);
@@ -678,5 +676,5 @@ void initRaceIntroAnimatedBillboards(RaceIntroMeshActor *arg0) {
         osWritebackDCache(arg0->matrices, allocSize);
     }
 
-    setCallbackTaskCallback(arg0, enqueueDrawRaceIntroAnimatedBillboards);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)enqueueDrawRaceIntroAnimatedBillboards);
 }

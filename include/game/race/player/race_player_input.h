@@ -7,12 +7,6 @@
 
 typedef s16 Matrix4s[0x10];
 
-typedef struct RaceVec3i {
-    /* 0x0 */ s32 x;
-    /* 0x4 */ s32 y;
-    /* 0x8 */ s32 z;
-} RaceVec3i;
-
 typedef struct RacePlayerCollisionVolume {
     /* 0x00 */ s16 axis[9];
     /* 0x12 */ s16 pad12;
@@ -61,18 +55,18 @@ typedef struct RacePlayer {
     /* 0x01A */ u8 actionTriggerChance;
     /* 0x01B */ u8 itemTriggerChance;
     /* 0x01C */ union {
-        RaceVec3i pos;
+        Vec3i pos;
         struct {
             s32 posX;
             s32 posY;
             s32 posZ;
         };
     };
-    /* 0x028 */ RaceVec3i unk28;
-    /* 0x034 */ RaceVec3i unk34;
+    /* 0x028 */ Vec3i unk28;
+    /* 0x034 */ Vec3i unk34;
     /* 0x040 */ union {
-        RaceVec3i unk40;
-        RaceVec3i velocity;
+        Vec3i unk40;
+        Vec3i velocity;
         struct {
             s32 unk40_x;
             s32 unk44;
@@ -128,7 +122,7 @@ typedef struct RacePlayer {
     /* 0x28A */ s16 unk28A;
     /* 0x28C */ s16 unk28C;
     /* 0x28E */ char pad28E[2];
-    /* 0x290 */ RaceVec3i projectedPos;
+    /* 0x290 */ Vec3i projectedPos;
     /* 0x29C */ s32 unk29C;
     /* 0x2A0 */ s16 unk2A0;
     /* 0x2A2 */ s16 unk2A2;
@@ -189,16 +183,16 @@ typedef struct RacePlayer {
     /* 0x450 */ s16 collisionVolumeCount;
     /* 0x452 */ s16 animationId;
     /* 0x454 */ char pad454[0x14];
-    /* 0x468 */ RaceVec3i markerPoints[RACE_PLAYER_COUNT];
+    /* 0x468 */ Vec3i markerPoints[RACE_PLAYER_COUNT];
     /* 0x498 */ char pad498[8];
-    /* 0x4A0 */ RaceVec3i unk4A0;
-    /* 0x4AC */ RaceVec3i unk4AC;
-    /* 0x4B8 */ RaceVec3i unk4B8;
-    /* 0x4C4 */ RaceVec3i unk4C4;
-    /* 0x4D0 */ RaceVec3i unk4D0;
-    /* 0x4DC */ RaceVec3i unk4DC;
-    /* 0x4E8 */ RaceVec3i unk4E8;
-    /* 0x4F4 */ RaceVec3i unk4F4;
+    /* 0x4A0 */ Vec3i unk4A0;
+    /* 0x4AC */ Vec3i unk4AC;
+    /* 0x4B8 */ Vec3i unk4B8;
+    /* 0x4C4 */ Vec3i unk4C4;
+    /* 0x4D0 */ Vec3i unk4D0;
+    /* 0x4DC */ Vec3i unk4DC;
+    /* 0x4E8 */ Vec3i unk4E8;
+    /* 0x4F4 */ Vec3i unk4F4;
     /* 0x500 */ u8 unk500;
     /* 0x501 */ char pad501[1];
     /* 0x502 */ s16 unk502;

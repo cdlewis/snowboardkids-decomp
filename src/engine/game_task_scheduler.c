@@ -73,11 +73,7 @@ extern s32 gPlayerInputRepeat;
 extern u8 gPlayerInputRepeatTimer;
 extern FramebufferState gFramebufferRenderTask0Statuses[];
 
-#ifdef NON_MATCHING
-void resetRenderScratchAllocator();
-#else
 void resetRenderScratchAllocator(void *, void *);
-#endif
 void clearPendingPositionalSoundRequests(void);
 GameTask *allocateGameTask(s32);
 s32 updateFramebufferRenderScheduler(void);

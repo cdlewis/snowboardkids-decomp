@@ -54,7 +54,6 @@ extern s16 gMenuChoicePromptState[];
 extern s8 D_800EC9E5;
 extern s8 gCourseSelectModeSelection;
 extern MultiplayerCourseSelectSaveData gGameSaveDataBuffer[];
-extern s32 gActiveMenuTask;
 extern s32 D_8010ADE0;
 extern s32 D_8010ADE4;
 extern u16 gMenuInputRepeatTimers[];
@@ -171,7 +170,7 @@ void initMultiplayerCourseSelectMenu(void) {
     LOAD_ASSET(_1EF530, 0xD);
     LOAD_ASSET(_245A80, 0x1F);
     initCallbackTaskScheduler(0);
-    createCallbackTask((void (*)(CallbackTask *))initMenuIconTilemapSpriteActor, 0, 0x63);
+    createCallbackTask((CallbackTaskCallback)initMenuIconTilemapSpriteActor, 0, 0x63);
 
     D_800EC9C0 = 0;
     gActiveMenuTask = 0;
@@ -391,7 +390,6 @@ extern void initCourseSelectPlayerPanels(CallbackTask *);
 extern void initCourseSelectCompletePanels(CallbackTask *);
 extern s32 enqueueSoundEffect(s16, s16);
 
-extern void *D_8010ADE8;
 extern u8 D_8010AF06[];
 extern u8 gCourseSelectExtraCourseColumnState;
 extern s16 gCourseSelectColumnSoundEffects[];
@@ -432,12 +430,12 @@ void updateMultiplayerCourseSelectMenu(void) {
         gCurrentGameTask->fade = stepMenuFadeAlpha((s16) gCurrentGameTask->fade, 0x24, 0);
         if (gCurrentGameTask->fade == 0) {
             if (gPlayerCount == 1) {
-                createCallbackTask(initCourseSelectCourseIconList, 0, 0x63);
+                createCallbackTask((CallbackTaskCallback)initCourseSelectCourseIconList, 0, 0x63);
             } else {
-                createCallbackTask(initCourseSelectPlayerPanels, 0, 0x62);
-                createCallbackTask(initCourseSelectCompletePanels, 0, 0x63);
+                createCallbackTask((CallbackTaskCallback)initCourseSelectPlayerPanels, 0, 0x62);
+                createCallbackTask((CallbackTaskCallback)initCourseSelectCompletePanels, 0, 0x63);
             }
-            D_8010ADE8 = createCallbackTask(initCourseSelectExtraCourseIconList, 0, 0x61);
+            D_8010ADE8 = createCallbackTask((CallbackTaskCallback)initCourseSelectExtraCourseIconList, 0, 0x61);
         }
     } else {
         playerCount = gPlayerCount;

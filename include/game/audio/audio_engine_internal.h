@@ -86,7 +86,7 @@ extern SchedulerState *gAudioSchedulerState;
 extern OSIoMesg *gAudioDmaMessages;
 extern OSMesg *gAudioDmaMessageBuffer;
 extern s32 gAudioDmaBufferSize;
-extern s32 *libmus_fxheader_current;
+extern u8 **libmus_fxheader_current;
 extern ALPlayer plr_player;
 extern ALHeap gSoundPlayerHeap;
 extern u8 *gSoundPlayerHeapEnd;
