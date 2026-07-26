@@ -10,14 +10,13 @@ whose best attempt is below 100%.
 from __future__ import annotations
 
 import argparse
-import re
 import sys
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Iterable
 
+from nonmatching_match_log import certified_attempt_path, parse_match_log_line
 
-MATCH_LINE_RE = re.compile(r"(?P<filename>[A-Za-z0-9_./-]+\.c)\s+(?P<percent>\d+(?:\.\d+)?)\s*%")
 FULL_MATCH_PERCENT = 100.0
 
 
@@ -50,11 +49,13 @@ def parse_match_log(log_path: Path, repo_root: Path) -> list[Attempt]:
         return attempts
 
     for line in lines:
-        match = MATCH_LINE_RE.search(line)
-        if match is None:
+        entry = parse_match_log_line(line)
+        if entry is None:
             continue
 
-        attempt_path = (workspace / match.group("filename")).resolve()
+        attempt_path = certified_attempt_path(entry, workspace)
+        if attempt_path is None:
+            continue
 
         # Ignore stale or accidental paths outside nonmatchings.
         if not attempt_path.exists() or not attempt_path.is_file():
@@ -62,12 +63,7 @@ def parse_match_log(log_path: Path, repo_root: Path) -> list[Attempt]:
         if nonmatchings_dir not in attempt_path.parents:
             continue
 
-        try:
-            percent = float(match.group("percent"))
-        except ValueError:
-            continue
-
-        attempts.append(Attempt(attempt_path, percent))
+        attempts.append(Attempt(attempt_path, entry.percent))
 
     return attempts
 

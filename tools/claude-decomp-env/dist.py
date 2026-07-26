@@ -127,7 +127,9 @@ def field_matches_any_symbol(field: str, arch: MipsArchitecture) -> bool:
         return "." in field
     return False
 
-def score_files(target_lines: List[str], cand_lines: List[str], *, debug_mode: bool = False) -> Tuple[int, str, float]:
+def score_files(
+    target_lines: List[str], cand_lines: List[str], *, debug_mode: bool = False
+) -> Tuple[int, str, float, bool]:
     """Score the differences between target and candidate assembly lines using the permuter's algorithm"""
     # Normalize jump table references before creating Line objects
     normalized_target_lines = [normalize_jumptable_references(line) for line in target_lines]
@@ -290,8 +292,14 @@ def score_files(target_lines: List[str], cand_lines: List[str], *, debug_mode: b
     else:
         lines_matched_percentage = 0
         
-    # Calculate match score as a percentage (100% means no differences)
-    match_percentage = 100.0 if final_score == 0 else max(0, 100.0 - (final_score / total_lines))
+    exact_match = normalized_target_lines == normalized_cand_lines
+
+    # Keep the weighted progress score, but reserve displayed 100% for exact
+    # normalized instruction equality.
+    if exact_match and final_score == 0:
+        match_percentage = 100.0
+    else:
+        match_percentage = min(99.999, max(0, 100.0 - (final_score / total_lines)))
 
     if debug_mode:
         print("\nPenalty Breakdown:")
@@ -301,11 +309,17 @@ def score_files(target_lines: List[str], cand_lines: List[str], *, debug_mode: b
         print(f" Reorderings: {num_reordering_penalties} x {PENALTY_REORDERING}")
         print(f" Insertions: {num_insertion_penalties} x {PENALTY_INSERTION}")
         print(f" Deletions: {num_deletion_penalties} x {PENALTY_DELETION}")
-        print(f" Lines Matched: {total_equal_lines}/{total_lines} ({match_percentage:.1f}%)")
+        print(f" Lines Matched: {total_equal_lines}/{total_lines} ({match_percentage:.3f}%)")
         print(f" FINAL SCORE: {final_score}")
+        print(f" EXACT MATCH: {'yes' if exact_match else 'no'}")
 
     joined_cand = "\n".join(c.row for c in cand_seq)
-    return final_score, hashlib.sha256(joined_cand.encode()).hexdigest(), match_percentage
+    return (
+        final_score,
+        hashlib.sha256(joined_cand.encode()).hexdigest(),
+        match_percentage,
+        exact_match,
+    )
 
 def main():
     parser = argparse.ArgumentParser(description="Score the difference between two assembly files.")
@@ -330,10 +344,13 @@ def main():
     if assertions:
         check_assertions(target_lines, cand_lines, assertions)
 
-    score, sha256_hash, match_percentage = score_files(target_lines, cand_lines, debug_mode=args.debug)
+    score, sha256_hash, match_percentage, exact_match = score_files(
+        target_lines, cand_lines, debug_mode=args.debug
+    )
     
     # Use the raw score directly as the differences value
     print(f"Score: {match_percentage:.3f}% ({score} differences)")
+    print(f"Exact match: {'yes' if exact_match and score == 0 else 'no'}")
 
 if __name__ == "__main__":
     main()
