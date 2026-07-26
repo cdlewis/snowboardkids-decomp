@@ -1329,113 +1329,108 @@ void drawMenuGlyphScriptDefaultFont(volatile s16 x, s16 y, MenuGlyphScript *scri
     }
 }
 
-// drawMenuGlyph best match: 97.827% (nonmatchings/drawMenuGlyph-210831275846872038/base_33.c)
+// drawMenuGlyph best match: 98.589% (nonmatchings/drawMenuGlyph-8498672362023432715/base_22.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/renderer/menu_renderer/drawMenuGlyph.s")
 
 #ifdef NON_MATCHING
-void drawMenuGlyph(s16 x, s16 y, u16 glyphIndex, u8 paletteIndex, u16 intensity, u16 fontBank) {
-    s32 left;
-    volatile s32 drawTop;
-    s32 right;
-    s32 bottom;
-    s32 sourceS;
-    s32 sourceT;
-    // Reused as the palette-loop byte counter to preserve IDO's register allocation.
-    s32 topOrPaletteBytes;
-    FontTexture *glyphTexture;
+void drawMenuGlyph(s16 x, s16 y, u16 glyph, u8 palette, u16 scale, u16 fontBank) {
+    s32 x0;
+    volatile s32 drawY0;
+    s32 x1;
+    s32 y1;
+    s32 clipS;
+    s32 clipT;
+    s32 i;
+    MenuFontAssetEntry *glyphTexture;
     u16 *scaledPalette;
-    u16 *scaledColor;
-    FontAsset *fontAsset;
-    u16 *sourceColor;
+    u16 *dstPalette;
+    MenuFontAssetTable *fontAsset;
+    u16 *glyphPalette;
     u16 paletteColor;
-    s32 glyphPaletteIndex;
-    // Reused for palette colors after the glyph width is no longer needed.
-    s32 glyphWidthOrColor;
+    int textureIndex;
+    s32 color;
     s32 red;
     u16 green;
     u16 blue;
 
-    if (paletteIndex == 0) {
-        fontAsset = (FontAsset *)getRelocatableHeapBlockBase(gAssetHandles[fontBank]);
-        glyphWidthOrColor = MENU_GLYPH_WIDE_WIDTH;
+    if (palette == 0) {
+        fontAsset = (MenuFontAssetTable *)getRelocatableHeapBlockBase(gAssetHandles[fontBank]);
+        color = MENU_GLYPH_WIDE_WIDTH;
     } else {
-        fontAsset = (FontAsset *)getRelocatableHeapBlockBase(gAssetHandles[fontBank + 1]);
-        glyphWidthOrColor = MENU_GLYPH_NARROW_WIDTH;
+        fontAsset = (MenuFontAssetTable *)getRelocatableHeapBlockBase(gAssetHandles[fontBank + 1]);
+        color = MENU_GLYPH_NARROW_WIDTH;
     }
 
-    sourceColor = (u16 *)&fontAsset->textures[fontAsset->header.entryCount];
-    left = x + gMenuViewportCenterX;
-    topOrPaletteBytes = y + gMenuViewportCenterY;
-    right = left + glyphWidthOrColor;
-    bottom = topOrPaletteBytes + MENU_GLYPH_TALL_HEIGHT;
-    sourceS = 0;
-    sourceT = 0;
+    glyphPalette = (u16 *)(fontAsset->entryCount + fontAsset->entries);
+    x0 = x + gMenuViewportCenterX;
+    i = y + gMenuViewportCenterY;
+    x1 = color + x0;
+    y1 = i + MENU_GLYPH_TALL_HEIGHT;
+    clipS = 0;
+    clipT = 0;
 
-    if (left < gMenuViewportCenterX + (gMenuViewportWidth / 2)) {
-        if ((topOrPaletteBytes < gMenuViewportCenterY + (gMenuViewportHeight / 2)) &&
-            (right >= gMenuViewportCenterX - (gMenuViewportWidth / 2))) {
-            if (bottom >= gMenuViewportCenterY - (gMenuViewportHeight / 2)) {
-                if (left < gMenuViewportCenterX - (gMenuViewportWidth / 2)) {
-                    sourceS = (gMenuViewportCenterX - (gMenuViewportWidth / 2)) - left;
-                    left = gMenuViewportCenterX - (gMenuViewportWidth / 2);
+    if (x0 < gMenuViewportCenterX + (gMenuViewportWidth / 2)) {
+        if ((i < gMenuViewportCenterY + (gMenuViewportHeight / 2)) &&
+            (x1 >= gMenuViewportCenterX - (gMenuViewportWidth / 2))) {
+            if (y1 >= gMenuViewportCenterY - (gMenuViewportHeight / 2)) {
+                if (x0 < gMenuViewportCenterX - (gMenuViewportWidth / 2)) {
+                    clipS = (gMenuViewportCenterX - (gMenuViewportWidth / 2)) - x0;
+                    x0 = gMenuViewportCenterX - (gMenuViewportWidth / 2);
                 }
-                if (topOrPaletteBytes < gMenuViewportCenterY - (gMenuViewportHeight / 2)) {
-                    sourceT = (gMenuViewportCenterY - (gMenuViewportHeight / 2)) - topOrPaletteBytes;
-                    topOrPaletteBytes = gMenuViewportCenterY - (gMenuViewportHeight / 2);
+                if (i < gMenuViewportCenterY - (gMenuViewportHeight / 2)) {
+                    clipT = (gMenuViewportCenterY - (gMenuViewportHeight / 2)) - i;
+                    i = gMenuViewportCenterY - (gMenuViewportHeight / 2);
                 }
-                if (right >= gMenuViewportCenterX + (gMenuViewportWidth / 2)) {
-                    right = gMenuViewportCenterX + (gMenuViewportWidth / 2);
-                    right = right - 1;
+                if (x1 >= gMenuViewportCenterX + (gMenuViewportWidth / 2)) {
+                    x1 = gMenuViewportCenterX + (gMenuViewportWidth / 2);
+                    x1 = x1 - 1;
                 }
-                if (bottom >= gMenuViewportCenterY + (gMenuViewportHeight / 2)) {
-                    bottom = (gMenuViewportCenterY + (gMenuViewportHeight / 2)) - 1;
+                if (y1 >= gMenuViewportCenterY + (gMenuViewportHeight / 2)) {
+                    y1 = (gMenuViewportCenterY + (gMenuViewportHeight / 2)) - 1;
                 }
-                // Volatile preserves IDO's display-list rectangle register allocation.
-                drawTop = topOrPaletteBytes;
-                glyphTexture = fontAsset->textures;
-                glyphTexture += glyphIndex;
-                glyphPaletteIndex = (u16)glyphTexture->paletteIndex;
-                sourceColor += glyphPaletteIndex * MENU_PALETTE_COLOR_COUNT;
-                scaledPalette = allocMenuRenderScratch(MENU_PALETTE_SIZE_BYTES);
-                topOrPaletteBytes = 0;
-                scaledColor = scaledPalette;
+                glyphTexture = fontAsset->entries;
+                glyphTexture += glyph;
+                textureIndex = (u16)glyphTexture->textureIndex;
+                glyphPalette += textureIndex * MENU_PALETTE_COLOR_COUNT;
+                drawY0 = i; scaledPalette = allocMenuRenderScratch(MENU_PALETTE_SIZE_BYTES);
+                i = 0;
+                dstPalette = scaledPalette;
 paletteLoop:
-                *scaledColor = (paletteColor = *sourceColor);
-                topOrPaletteBytes += sizeof(u16);
-                glyphWidthOrColor = paletteColor & 0xFFFF;
-                if (glyphWidthOrColor & MENU_RGBA5551_ALPHA_BIT) {
-                    red = (glyphWidthOrColor >> 11) & MENU_RGBA5551_CHANNEL_MASK;
-                    green = (glyphWidthOrColor >> 6) & MENU_RGBA5551_CHANNEL_MASK;
-                    blue = (glyphWidthOrColor >> 1) & MENU_RGBA5551_CHANNEL_MASK;
-                    // This assignment preserves IDO's palette-loop register allocation.
-                    glyphWidthOrColor = paletteColor & 0xFFFF;
-                    red = (red * intensity) / MENU_RGBA5551_SCALE_BASE;
-                    green = (green * intensity) / MENU_RGBA5551_SCALE_BASE;
-                    blue = (blue * intensity) / MENU_RGBA5551_SCALE_BASE;
-                    *scaledColor = (red << 11) | (green << 6) | (blue << 1) |
+                *dstPalette = (paletteColor = *glyphPalette);
+                i += sizeof(u16);
+                color = paletteColor & 0xFFFF;
+                if (color & MENU_RGBA5551_ALPHA_BIT) {
+                    red = (color >> 11) & MENU_RGBA5551_CHANNEL_MASK;
+                    green = (color >> 6) & MENU_RGBA5551_CHANNEL_MASK;
+                    blue = (color >> 1) & MENU_RGBA5551_CHANNEL_MASK;
+                    color = paletteColor & 0xFFFF;
+                    red = (red * scale) / MENU_RGBA5551_SCALE_BASE;
+                    green = (green * scale) / MENU_RGBA5551_SCALE_BASE;
+                    blue = (blue * scale) / MENU_RGBA5551_SCALE_BASE;
+                    *dstPalette = (red << 11) | (green << 6) | (blue << 1) |
                         MENU_RGBA5551_ALPHA_BIT;
                 }
-                sourceColor++;
-                scaledColor++;
-                if (topOrPaletteBytes != MENU_PALETTE_SIZE_BYTES) {
+                glyphPalette++;
+                dstPalette++;
+                if (i != MENU_PALETTE_SIZE_BYTES) {
                     goto paletteLoop;
                 }
 
                 gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, scaledPalette);
                 gDPLoadTextureTile_4b(gRegionAllocPtr++,
-                                      (u8 *)fontAsset + glyphTexture->imageOffset,
+                                      glyphTexture->imageOffset + (u8 *)fontAsset,
                                       G_IM_FMT_CI, glyphTexture->width, glyphTexture->height,
                                       0, 0, glyphTexture->width, glyphTexture->height, 0,
                                       G_TX_CLAMP, G_TX_CLAMP, G_TX_NOMASK, G_TX_NOMASK,
                                       G_TX_NOLOD, G_TX_NOLOD);
                 gSPTextureRectangle(gRegionAllocPtr++,
-                                    left << MENU_GLYPH_RECT_FRAC_BITS,
-                                    drawTop << MENU_GLYPH_RECT_FRAC_BITS,
-                                    right << MENU_GLYPH_RECT_FRAC_BITS,
-                                    bottom << MENU_GLYPH_RECT_FRAC_BITS,
+                                    x0 << MENU_GLYPH_RECT_FRAC_BITS,
+                                    drawY0 << MENU_GLYPH_RECT_FRAC_BITS,
+                                    x1 << MENU_GLYPH_RECT_FRAC_BITS,
+                                    y1 << MENU_GLYPH_RECT_FRAC_BITS,
                                     G_TX_RENDERTILE,
-                                    sourceS << MENU_GLYPH_TEXEL_FRAC_BITS,
-                                    sourceT << MENU_GLYPH_TEXEL_FRAC_BITS,
+                                    clipS << MENU_GLYPH_TEXEL_FRAC_BITS,
+                                    clipT << MENU_GLYPH_TEXEL_FRAC_BITS,
                                     MENU_GLYPH_TEXTURE_STEP, MENU_GLYPH_TEXTURE_STEP);
             }
         }
