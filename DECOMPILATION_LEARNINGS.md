@@ -226,6 +226,12 @@ and control flow already match and only register *names* differ.
   `dst->x = f(src->x); dst->y = f(src->y); ...` can emit load-use nops.
   Loading each source field into named locals first can reproduce IDO's batched
   loads followed by arithmetic and stores.
+- **Use two-stage array indexing when the target adds offsets in stages.**
+  Equivalent expressions can give IDO different temporary-register orders.
+  When the target forms `table + frame` before adding a scaled index, write
+  `(&table[frame])[index * stride]` instead of
+  `table[frame + (index * stride)]`. This remains typed array indexing while
+  preserving the target's address-construction order.
 
 ## IDO codegen: loop shape and strength reduction
 

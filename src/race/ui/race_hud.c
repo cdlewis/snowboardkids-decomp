@@ -800,17 +800,10 @@ void decrementRaceChallengeTimeLimit(void) {
     }
 }
 
-// drawRaceCourseProgressMeter best match: 99.769% at nonmatchings/drawRaceCourseProgressMeter-210831275846872038/base_21.c.
-#pragma GLOBAL_ASM("asm/nonmatchings/race/ui/race_hud/drawRaceCourseProgressMeter.s")
-
-#ifdef NON_MATCHING
 void drawRaceCourseProgressMeter(s32 arg0) {
     s32 i;
     s32 j;
     s32 temp;
-    RacePlayer *player;
-    s16 x;
-    u8 characterId;
     s32 order[4];
     s16 xBase;
     s16 yBase;
@@ -848,54 +841,50 @@ void drawRaceCourseProgressMeter(s32 arg0) {
 
     i = 3;
     do {
-        player = &gRacePlayers[order[i]];
-        x = xBase - 8;
+        if (((gRacePlayers[order[i]].stateFlags & 0x200000) != 0) ||
+            (gRacePlayers[order[i]].unk580 != 0)) {
+            gRacePlayers[order[i]].unk580++;
+        }
+        if (((gRacePlayers[order[i]].stateFlags & 0x200000) != 0) &&
+            (gRacePlayers[order[i]].unk580 >= 5)) {
+            gRacePlayers[order[i]].unk580 = 4;
+        }
+        if (gRacePlayers[order[i]].unk580 >= 6) {
+            gRacePlayers[order[i]].unk580 = 0;
+        }
 
-        if (((player->stateFlags & 0x200000) != 0) || (player->unk580 != 0)) {
-            player->unk580++;
-        }
-        if (((player->stateFlags & 0x200000) != 0) && (player->unk580 >= 5)) {
-            player->unk580 = 4;
-        }
-        if (player->unk580 >= 6) {
-            player->unk580 = 0;
-        }
-
-        if (player->unk580 != 0) {
-            if (player->unk2D8 != 0) {
+        if (gRacePlayers[order[i]].unk580 != 0) {
+            if (gRacePlayers[order[i]].unk2D8 != 0) {
                 temp = getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle);
-                player = &gRacePlayers[order[i]];
-                characterId = player->characterId;
                 drawAssetTableSpriteWithExplicitPalette(
-                    x, (s16)(player->unk57E + yBase), temp,
-                    gRaceProgressMeterIconTiles[player->unk580 + (characterId * 6)],
-                    gRaceProgressMeterIconPalettes[characterId]);
+                    (s16)(xBase - 8), (s16)(gRacePlayers[order[i]].unk57E + yBase), temp,
+                    (&gRaceProgressMeterIconTiles[gRacePlayers[order[i]].unk580])
+                        [gRacePlayers[order[i]].characterId * 6],
+                    gRaceProgressMeterIconPalettes[gRacePlayers[order[i]].characterId]);
             } else {
                 temp = getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle);
-                player = &gRacePlayers[order[i]];
                 drawAssetTableSprite(
-                    x, (s16)(gRacePlayers[order[i]].unk57E + yBase), temp,
-                    gRaceProgressMeterIconTiles[gRacePlayers[order[i]].unk580 + (player->characterId * 6)]);
+                    (s16)(xBase - 8), (s16)(gRacePlayers[order[i]].unk57E + yBase), temp,
+                    (&gRaceProgressMeterIconTiles[gRacePlayers[order[i]].unk580])
+                        [gRacePlayers[order[i]].characterId * 6]);
             }
-        } else if (player->unk2D8 != 0) {
+        } else if (gRacePlayers[order[i]].unk2D8 != 0) {
             temp = getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle);
-            player = &gRacePlayers[order[i]];
-            characterId = player->characterId;
             drawAssetTableSpriteWithExplicitPalette(
-                xBase, (s16)(player->unk57E + yBase), temp,
-                gRaceProgressMeterIconTiles[player->unk580 + (characterId * 6)],
-                gRaceProgressMeterIconPalettes[characterId]);
+                xBase, (s16)(gRacePlayers[order[i]].unk57E + yBase), temp,
+                (&gRaceProgressMeterIconTiles[gRacePlayers[order[i]].unk580])
+                    [gRacePlayers[order[i]].characterId * 6],
+                gRaceProgressMeterIconPalettes[gRacePlayers[order[i]].characterId]);
         } else {
             temp = getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle);
-            player = &gRacePlayers[order[i]];
             drawAssetTableSprite(
                 xBase, (s16)(gRacePlayers[order[i]].unk57E + yBase), temp,
-                gRaceProgressMeterIconTiles[gRacePlayers[order[i]].unk580 + (player->characterId * 6)]);
+                (&gRaceProgressMeterIconTiles[gRacePlayers[order[i]].unk580])
+                    [gRacePlayers[order[i]].characterId * 6]);
         }
         i--;
     } while (i >= 0);
 }
-#endif
 
 // updateRaceCourseProgressMeter best match: 99.551% at nonmatchings/updateRaceCourseProgressMeter-8498672362023432715/base_2.c.
 #pragma GLOBAL_ASM("asm/nonmatchings/race/ui/race_hud/updateRaceCourseProgressMeter.s")
