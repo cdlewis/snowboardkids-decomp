@@ -998,20 +998,13 @@ void drawMenuTilemapSpriteCallback(MenuRenderSprite *arg0) {
 void func_80011D6C(void) {
 }
 
-// drawMenuTilemapSprite best match: 76.761% (nonmatchings/drawMenuTilemapSprite-5802343343535905907/base_13.c)
+// drawMenuTilemapSprite best match: 84.412% (nonmatchings/drawMenuTilemapSprite-8498672362023432715/base_36.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/renderer/menu_renderer/drawMenuTilemapSprite.s")
 
 #ifdef NON_MATCHING
-#define MENU_RENDER_SPRITE_EMIT_GFX(cmd0, cmd1) \
-{ \
-    Gfx *_g = gRegionAllocPtr++; \
-    _g->words.w0 = (cmd0); \
-    _g->words.w1 = (cmd1); \
-}
-
 s32 drawMenuTilemapSprite(MenuRenderSprite *sprite, s32 useLargeTiles, s16 xDivisor, s16 yDivisor) {
-    s16 minX;
-    s16 minY;
+    s32 minX;
+    s32 minY;
     s16 maxX;
     s16 maxY;
     s16 x;
@@ -1020,8 +1013,8 @@ s32 drawMenuTilemapSprite(MenuRenderSprite *sprite, s32 useLargeTiles, s16 xDivi
     s16 clipY;
     s16 clipRight;
     s16 clipBottom;
-    s16 tileMask;
-    s16 tileShift;
+    u16 tileMask;
+    u16 tileShift;
     s16 cols;
     s16 rows;
     s16 xStart;
@@ -1038,12 +1031,12 @@ s32 drawMenuTilemapSprite(MenuRenderSprite *sprite, s32 useLargeTiles, s16 xDivi
     s16 drawY1;
     s16 texS;
     s16 texT;
-    s32 sScale;
-    s32 tScale;
+    s16 sScale;
+    s16 tScale;
     s16 tileIndex;
-    s32 imageIndex;
-    s32 paletteIndex;
-    s32 flip;
+    s16 imageIndex;
+    u8 paletteIndex;
+    u8 flip;
     s16 screenX;
     s16 screenY;
     u16 *tilemap;
@@ -1054,14 +1047,14 @@ s32 drawMenuTilemapSprite(MenuRenderSprite *sprite, s32 useLargeTiles, s16 xDivi
     tileInfo = (MenuRenderTileInfo *)sprite->tileInfo;
     palette = sprite->palette;
 
-    minX = -gMenuViewportWidth / 2;
     x = sprite->x;
     clipX = sprite->clipX;
-    if (clipX < minX) {
+    if (clipX < (minX = -gMenuViewportWidth / 2)) {
         x = x + minX - clipX;
         clipX = minX;
     }
 
+    maxX = sprite->clipX + sprite->width;
     minY = -gMenuViewportHeight / 2;
     y = sprite->y;
     clipY = sprite->clipY;
@@ -1070,7 +1063,6 @@ s32 drawMenuTilemapSprite(MenuRenderSprite *sprite, s32 useLargeTiles, s16 xDivi
         clipY = minY;
     }
 
-    maxX = sprite->clipX + sprite->width;
     if ((gMenuViewportWidth / 2) < maxX) {
         maxX = gMenuViewportWidth / 2;
     }
@@ -1108,10 +1100,9 @@ s32 drawMenuTilemapSprite(MenuRenderSprite *sprite, s32 useLargeTiles, s16 xDivi
     xStart -= x & tileMask;
     yStart -= y & tileMask;
     xRemainder = (x >> tileShift) % xDivisor;
-    yRemainder = (y >> tileShift) % yDivisor;
+    yRemainder = tilemapY = (y >> tileShift) % yDivisor;
 
     row = 0;
-    tilemapY = yRemainder;
     if (rows > 0) {
         do {
             col = 0;
@@ -1120,10 +1111,10 @@ s32 drawMenuTilemapSprite(MenuRenderSprite *sprite, s32 useLargeTiles, s16 xDivi
             if (cols > 0) {
                 do {
                     tileIndex = tilemap[tilemapX + (tilemapY * sprite->tileYStep)];
-                    imageIndex = tileInfo[tileIndex].imageIndex;
                     paletteIndex = tileInfo[tileIndex].paletteIndex;
                     if (tileIndex != 0) {
                         flip = tileInfo[tileIndex].flip;
+                        imageIndex = tileInfo[tileIndex].imageIndex;
                         sScale = gMenuSpriteFlipScales[flip][0];
                         tScale = gMenuSpriteFlipScales[flip][1];
                         drawX0 = screenX;
@@ -1143,7 +1134,9 @@ s32 drawMenuTilemapSprite(MenuRenderSprite *sprite, s32 useLargeTiles, s16 xDivi
                                 drawX0 = clipX;
                                 texS = clipX - screenX;
                                 if (sScale == -1) {
-                                    texS = sprite->tileSize - (clipX - screenX) - 1;
+                                    s32 flippedTexS;
+                                    flippedTexS = sprite->tileSize - (clipX - screenX) - 1;
+                                    texS = flippedTexS;
                                 }
                             }
                             if (yStart < clipY) {
@@ -1160,70 +1153,27 @@ s32 drawMenuTilemapSprite(MenuRenderSprite *sprite, s32 useLargeTiles, s16 xDivi
                                 drawY1 = clipBottom - 1;
                             }
 
-                            if (useLargeTiles == 0) {
-                                MENU_RENDER_SPRITE_EMIT_GFX(0xFD100000, (u32)(palette + (paletteIndex << 4)));
-                                MENU_RENDER_SPRITE_EMIT_GFX(0xE8000000, 0);
-                                MENU_RENDER_SPRITE_EMIT_GFX(0xF5000000 | ((((paletteIndex & 0xF) << 4) + 0x100) & 0x1FF),
-                                                            0x07000000);
-                                MENU_RENDER_SPRITE_EMIT_GFX(0xE6000000, 0);
-                                MENU_RENDER_SPRITE_EMIT_GFX(0xF0000000, 0x0703C000);
-                                MENU_RENDER_SPRITE_EMIT_GFX(0xE7000000, 0);
-                                MENU_RENDER_SPRITE_EMIT_GFX(0xFD480000 | (((sprite->tileSize >> 1) - 1) & 0xFFF),
-                                                            (u32)(sprite->image +
-                                                                  ((((imageIndex - 1) * sprite->tileSize *
-                                                                     sprite->tileXStep) /
-                                                                    4) *
-                                                                   2)));
-                                MENU_RENDER_SPRITE_EMIT_GFX(0xF5480000 |
-                                                                (((((sprite->tileSize + 1) >> 1) + 7) >> 3) & 0x1FF)
-                                                                    << 9,
-                                                            0x07080200);
-                                MENU_RENDER_SPRITE_EMIT_GFX(0xE6000000, 0);
-                                MENU_RENDER_SPRITE_EMIT_GFX(0xF4000000,
-                                                            0x07000000 | (((sprite->tileSize * 2) & 0xFFF) << 12) |
-                                                                ((sprite->tileXStep * 4) & 0xFFF));
-                                MENU_RENDER_SPRITE_EMIT_GFX(0xE7000000, 0);
-                                MENU_RENDER_SPRITE_EMIT_GFX(0xF5400000 |
-                                                                (((((sprite->tileSize + 1) >> 1) + 7) >> 3) & 0x1FF)
-                                                                    << 9,
-                                                            ((paletteIndex & 0xF) << 20) | 0x00080200);
-                                MENU_RENDER_SPRITE_EMIT_GFX(0xF2000000,
-                                                            (((sprite->tileSize * 4) & 0xFFF) << 12) |
-                                                                ((sprite->tileXStep * 4) & 0xFFF));
+                            if ((u8)useLargeTiles == 0) {
+                                gDPLoadTLUT_pal16(gRegionAllocPtr++, paletteIndex,
+                                                 sprite->palette + (paletteIndex << 4));
+                                gDPLoadTextureTile_4b(
+                                    gRegionAllocPtr++,
+                                    sprite->image + (((imageIndex - 1) * sprite->tileSize * sprite->tileXStep) / 4),
+                                    G_IM_FMT_CI, sprite->tileSize, sprite->tileXStep, 0, 0, sprite->tileSize,
+                                    sprite->tileXStep, paletteIndex, G_TX_CLAMP, G_TX_CLAMP, G_TX_NOMASK,
+                                    G_TX_NOMASK, G_TX_NOLOD, G_TX_NOLOD);
                             } else {
-                                MENU_RENDER_SPRITE_EMIT_GFX(0xFD100000, (u32)(palette + (paletteIndex << 4)));
-                                MENU_RENDER_SPRITE_EMIT_GFX(0xE8000000, 0);
-                                MENU_RENDER_SPRITE_EMIT_GFX(0xF5000100, 0x07000000);
-                                MENU_RENDER_SPRITE_EMIT_GFX(0xE6000000, 0);
-                                MENU_RENDER_SPRITE_EMIT_GFX(0xF0000000, 0x073FC000);
-                                MENU_RENDER_SPRITE_EMIT_GFX(0xE7000000, 0);
-                                MENU_RENDER_SPRITE_EMIT_GFX(0xFD480000 | ((sprite->tileSize - 1) & 0xFFF),
-                                                            (u32)(sprite->image +
-                                                                  ((((imageIndex - 1) * sprite->tileSize *
-                                                                     sprite->tileXStep) /
-                                                                    2) *
-                                                                   2)));
-                                MENU_RENDER_SPRITE_EMIT_GFX(0xF5480000 |
-                                                                ((((sprite->tileSize + 8) >> 3) & 0x1FF) << 9),
-                                                            0x07080200);
-                                MENU_RENDER_SPRITE_EMIT_GFX(0xE6000000, 0);
-                                MENU_RENDER_SPRITE_EMIT_GFX(0xF4000000,
-                                                            0x07000000 | (((sprite->tileSize * 4) & 0xFFF) << 12) |
-                                                                ((sprite->tileXStep * 4) & 0xFFF));
-                                MENU_RENDER_SPRITE_EMIT_GFX(0xE7000000, 0);
-                                MENU_RENDER_SPRITE_EMIT_GFX(0xF5480000 |
-                                                                ((((sprite->tileSize + 8) >> 3) & 0x1FF) << 9),
-                                                            0x00080200);
-                                MENU_RENDER_SPRITE_EMIT_GFX(0xF2000000,
-                                                            (((sprite->tileSize * 4) & 0xFFF) << 12) |
-                                                                ((sprite->tileXStep * 4) & 0xFFF));
+                                gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, palette + (paletteIndex << 4));
+                                gDPLoadTextureTile(
+                                    gRegionAllocPtr++,
+                                    sprite->image + (((imageIndex - 1) * sprite->tileSize * sprite->tileXStep) / 2),
+                                    G_IM_FMT_CI, G_IM_SIZ_8b, sprite->tileSize, sprite->tileXStep, 0, 0,
+                                    sprite->tileSize, sprite->tileXStep, 0, G_TX_CLAMP, G_TX_CLAMP, G_TX_NOMASK,
+                                    G_TX_NOMASK, G_TX_NOLOD, G_TX_NOLOD);
                             }
 
-                            MENU_RENDER_SPRITE_EMIT_GFX(0xE4000000 | (((drawX1 * 4) & 0xFFF) << 12) |
-                                                            ((drawY1 * 4) & 0xFFF),
-                                                        (((drawX0 * 4) & 0xFFF) << 12) | ((drawY0 * 4) & 0xFFF));
-                            MENU_RENDER_SPRITE_EMIT_GFX(0xB4000000, ((texS << 21) | ((texT << 5) & 0xFFFF)));
-                            MENU_RENDER_SPRITE_EMIT_GFX(0xB3000000, (sScale << 26) | ((tScale << 10) & 0xFFFF));
+                            gSPTextureRectangle(gRegionAllocPtr++, drawX0 * 4, drawY0 * 4, drawX1 * 4, drawY1 * 4,
+                                                G_TX_RENDERTILE, texS << 5, texT << 5, sScale << 10, tScale << 10);
                         }
                     }
                     screenX += sprite->tileSize;
@@ -1238,7 +1188,6 @@ s32 drawMenuTilemapSprite(MenuRenderSprite *sprite, s32 useLargeTiles, s16 xDivi
     }
 }
 
-#undef MENU_RENDER_SPRITE_EMIT_GFX
 #endif
 
 void drawMenuGlyphScriptWithFontBank(volatile s16 x, s16 y, MenuGlyphScript *script, s32 palette, u16 scale, u16 fontBank) {
