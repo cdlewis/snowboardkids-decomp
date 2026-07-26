@@ -6,6 +6,7 @@
 
 void resolveRacePlayerCollisionVolumes(RacePlayer *player) {
     Matrix4s localRotations[14];
+    s16 parentAxisY;
     FixedMatrix3s yawAdjustedPlayerRotation;
     FixedMatrix3s playerRotation;
     s32 volumeIndex;
@@ -165,9 +166,10 @@ void resolveRacePlayerCollisionVolumes(RacePlayer *player) {
         do {
             parent = &player->collisionVolumes[source->parentIndex];
             for (axisColumn = 0; axisColumn != 3; axisColumn++) {
+                parentAxisY = parent->axis[axisColumn + 3];
                 volume->point[axisColumn] =
                     COLLISION_POINT(parent->axis[axisColumn],
-                                    parent->axis[axisColumn + 3],
+                                    parentAxisY,
                                     parent->axis[axisColumn + 6],
                                     source->sizeX,
                                     source->sizeY,
