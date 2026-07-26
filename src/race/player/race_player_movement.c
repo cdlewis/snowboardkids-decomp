@@ -811,33 +811,30 @@ s32 tryApplyRacePlayerItemHit(Vec3i *pos, s32 xzSize, s16 flag, s16 playerIndex)
     return 0;
 }
 
-// updateRacePlayerSurfaceContact best match: 92.270% (nonmatchings/updateRacePlayerSurfaceContact-3379532139742180785/base_9.c)
+// updateRacePlayerSurfaceContact best match: 93.424% (nonmatchings/updateRacePlayerSurfaceContact-8498672362023432715/base_10.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race/player/race_player_movement/updateRacePlayerSurfaceContact.s")
 
 #ifdef NON_MATCHING
 s32 updateRacePlayerSurfaceContact(RacePlayer *player) {
     Matrix4s mtx;
-    Matrix4s effectMtx;
     Matrix4s tiltMtx;
     Matrix4s baseMtx;
+    EffectMatrixScratch effectScratch;
     Vec3i collisionPoints[2];
-    s32 pushX;
-    s32 outVelX;
-    s32 outVelZ;
     s32 diffs[6];
     s32 heights[6];
     s32 clamped[6];
-    s32 transformedX;
-    s32 transformedY;
-    s32 transformedZ;
     s32 frontSpan;
     s32 sideSpan;
     s32 probeBaseY;
     volatile s32 baseY;
     s32 frontDiff;
     s32 backDiff;
-    s32 pushZ;
     s32 sideDiff;
+    s32 pushX;
+    s32 pushZ;
+    s32 outVelX;
+    s32 outVelZ;
     s32 verticalDiff;
     s32 terrainId;
     s32 sin;
@@ -1078,18 +1075,18 @@ s32 updateRacePlayerSurfaceContact(RacePlayer *player) {
         player->unk58 += heightAdjust;
         player->posY = terrainId + heightAdjust;
 
-        transformedX = (s64)mtx[3] * player->unk68 / 0x1000;
-        transformedY = (s64)mtx[4] * player->unk68 / 0x1000;
-        transformedZ = (s64)mtx[5] * player->unk68 / 0x1000;
+        effectScratch.transformedX = (s64)mtx[3] * player->unk68 / 0x1000;
+        effectScratch.transformedY = (s64)mtx[4] * player->unk68 / 0x1000;
+        effectScratch.transformedZ = (s64)mtx[5] * player->unk68 / 0x1000;
 
         if (player->stateFlags & 0x400) {
-            makeFixedRotationZYX(effectMtx, player->unk6C, -player->unk6E, -player->unk70);
-            multiplyFixedMatrix3s(effectMtx, mtx, baseMtx);
+            makeFixedRotationZYX(effectScratch.values, player->unk6C, -player->unk6E, -player->unk70);
+            multiplyFixedMatrix3s(effectScratch.values, mtx, baseMtx);
         } else {
-            makeFixedRotationZYX(effectMtx, player->unk6C, player->unk6E, player->unk70);
+            makeFixedRotationZYX(effectScratch.values, player->unk6C, player->unk6E, player->unk70);
             makeFixedRotationY(baseMtx, 0x800);
             multiplyFixedMatrix3s(baseMtx, mtx, tiltMtx);
-            multiplyFixedMatrix3s(effectMtx, tiltMtx, baseMtx);
+            multiplyFixedMatrix3s(effectScratch.values, tiltMtx, baseMtx);
         }
 
         stateFlags = player->stateFlags;
@@ -1117,9 +1114,10 @@ s32 updateRacePlayerSurfaceContact(RacePlayer *player) {
             makeFixedRotationXYZ(tiltMtx, player->unk33A, player->unk33C, player->unk33E);
         }
 
-        sideDiff += player->posX + transformedX;
-        terrainId = ((verticalDiff + player->posY) - player->unk58) + player->unk64 + transformedY + 0xA000;
-        backDiff += player->posZ + transformedZ;
+        sideDiff += player->posX + effectScratch.transformedX;
+        terrainId =
+            ((verticalDiff + player->posY) - player->unk58) + player->unk64 + effectScratch.transformedY + 0xA000;
+        backDiff += player->posZ + effectScratch.transformedZ;
         multiplyFixedMatrix3s(tiltMtx, baseMtx, mtx);
 
         i = 0;
