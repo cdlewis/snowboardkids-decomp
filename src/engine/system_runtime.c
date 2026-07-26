@@ -356,7 +356,7 @@ void dmaReadRom(u32 romOffset, void *ramAddress, s32 size) {
     }
 }
 
-// appendViewportDisplayLists best match: 98.436% (nonmatchings/appendViewportDisplayLists-3379532139742180785/base_18.c)
+// appendViewportDisplayLists best match: 98.839% (nonmatchings/appendViewportDisplayLists-8498672362023432715/base_28.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/engine/system_runtime/appendViewportDisplayLists.s")
 
 #ifdef NON_MATCHING
@@ -433,6 +433,7 @@ void appendViewportDisplayLists(u8 frameIndex) {
     s32 anyModels;
     s32 new_var2;
     s16 left;
+    RenderCallbackNode **queueEnd;
     s64 new_var;
     s32 color;
     s16 top;
@@ -478,6 +479,7 @@ void appendViewportDisplayLists(u8 frameIndex) {
                 gDPPipeSync(gRegionAllocPtr++);
                 do {
                 } while (0);
+                anyModels = 0;
                 gDPSetScissor(gRegionAllocPtr++, G_SC_NON_INTERLACE,
                               runtimeViewportStates[gCurrentViewportIndex].left,
                               runtimeViewportStates[gCurrentViewportIndex].top,
@@ -543,22 +545,21 @@ void appendViewportDisplayLists(u8 frameIndex) {
                     ((D_801121E0[gCurrentViewportIndex].transformOffset[1] >> 16) & 0xFFFF);
                 runtimeDisplayListData->translations[gCurrentViewportIndex].m[1][3] =
                     (D_801121E0[gCurrentViewportIndex].transformOffset[2] & 0xFFFF0000) | 1;
-                anyModels = 20;
                 runtimeDisplayListData->rotations[gCurrentViewportIndex].m[2][0] =
-                    ((D_801121E0[gCurrentViewportIndex].rotation[0] << anyModels) & 0xFFFF0000) |
+                    ((D_801121E0[gCurrentViewportIndex].rotation[0] << 20) & 0xFFFF0000) |
                     ((D_801121E0[gCurrentViewportIndex].rotation[1] << 4) & 0xFFFF);
                 runtimeDisplayListData->rotations[gCurrentViewportIndex].m[2][1] =
-                    (D_801121E0[gCurrentViewportIndex].rotation[2] << anyModels) & 0xFFFF0000;
+                    (D_801121E0[gCurrentViewportIndex].rotation[2] << 20) & 0xFFFF0000;
                 runtimeDisplayListData->rotations[gCurrentViewportIndex].m[2][2] =
                     ((D_801121E0[gCurrentViewportIndex].rotation[3] << 20) & 0xFFFF0000) |
                     ((D_801121E0[gCurrentViewportIndex].rotation[4] << 4) & 0xFFFF);
                 runtimeDisplayListData->rotations[gCurrentViewportIndex].m[2][3] =
-                    (D_801121E0[gCurrentViewportIndex].rotation[5] << anyModels) & 0xFFFF0000;
+                    (D_801121E0[gCurrentViewportIndex].rotation[5] << 20) & 0xFFFF0000;
                 runtimeDisplayListData->rotations[gCurrentViewportIndex].m[3][0] =
-                    ((D_801121E0[gCurrentViewportIndex].rotation[6] << anyModels) & 0xFFFF0000) |
+                    ((D_801121E0[gCurrentViewportIndex].rotation[6] << 20) & 0xFFFF0000) |
                     (0xFFFF & (D_801121E0[gCurrentViewportIndex].rotation[7] << 4));
                 runtimeDisplayListData->rotations[gCurrentViewportIndex].m[3][1] =
-                    (D_801121E0[gCurrentViewportIndex].rotation[8] << anyModels) & 0xFFFF0000;
+                    (D_801121E0[gCurrentViewportIndex].rotation[8] << 20) & 0xFFFF0000;
                 runtimeDisplayListData->translations[gCurrentViewportIndex].m[3][2] =
                     ((D_801121E0[gCurrentViewportIndex].transformOffset[0] << 16) & 0xFFFF0000) |
                     (D_801121E0[gCurrentViewportIndex].transformOffset[1] & 0xFFFF);
@@ -580,14 +581,14 @@ void appendViewportDisplayLists(u8 frameIndex) {
                     gSPDisplayList(gRegionAllocPtr++, D_800DEF90);
                     runRenderCallbacks(&gBackdropRenderCallbackList);
                 }
-                anyModels = 0;
                 queue = &gModelRenderCallbackList;
+                queueEnd = &gBackdropRenderCallbackList;
                 do {
                     if (*queue != NULL) {
                         anyModels = 1;
                     }
-                    queue += 3;
-                } while (((u32)queue + 1) < ((u32)&gBackdropRenderCallbackList + 1));
+                    queue = queue + 3;
+                } while (((u32)queue + 1) < ((u32)queueEnd + 1));
                 if (anyModels != 0) {
                     gSPPerspNormalize(gRegionAllocPtr++,
                                       runtimeViewportStates[gCurrentViewportIndex].perspectiveNorm);
@@ -613,7 +614,7 @@ void appendViewportDisplayLists(u8 frameIndex) {
                             runRenderCallbacks(queue);
                         }
                         queue += 3;
-                    } while (queue != &gBackdropRenderCallbackList);
+                    } while (&gBackdropRenderCallbackList != queue);
                 }
                 if ((gRaceForegroundRenderCallbackList != NULL) ||
                     (gRaceOverlayRenderCallbackList != NULL)) {
@@ -666,7 +667,8 @@ void appendViewportDisplayLists(u8 frameIndex) {
             gDPSetPrimColor(gRegionAllocPtr++, 0, 0, 255, 255, 255,
                             new_var2 = gMenuFadeAlpha & 0xFF);
         } else {
-            gDPSetPrimColor(gRegionAllocPtr++, 0, 0, 0, 0, 0, gMenuFadeAlpha & new_var);
+            gDPSetPrimColor(gRegionAllocPtr++, 0, 0, 0, 0, 0,
+                            (gMenuFadeAlpha & new_var) & 0xFFFFFFFF);
         }
         gSPTextureRectangle(gRegionAllocPtr++,
                             (gMenuViewportCenterX - gMenuViewportWidth / 2) * 4,
