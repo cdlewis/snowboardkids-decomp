@@ -1084,7 +1084,7 @@ void updateRaceSetupRumblePrompt(void) {
 }
 #endif
 
-// initRaceSetupPlayerSaveData best match: 74.849% (nonmatchings/initRaceSetupPlayerSaveData-1219509448159986855/base_50.c)
+// initRaceSetupPlayerSaveData best match: 78.654% (nonmatchings/initRaceSetupPlayerSaveData-8498672362023432715/base_4.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/race_setup/race_setup_menu/initRaceSetupPlayerSaveData.s")
 
 #ifdef NON_MATCHING
@@ -1107,6 +1107,7 @@ extern u8 gMainMenuSecretCodeUnlocked;
 #define RACE_SETUP_SAVE_WORD_045D8(ptr, offset) (*(s32 *)((ptr) + (offset)))
 #define RACE_SETUP_SAVE_HALF_045D8(ptr, offset) (*(s16 *)((ptr) + (offset)))
 #define RACE_SETUP_SAVE_BYTE_045D8(ptr, offset) (*((s8 *)(ptr) + (offset)))
+#define RACE_SETUP_SAVE_UBYTE_045D8(ptr, offset) (*((u8 *)(ptr) + (offset)))
 
 void initRaceSetupPlayerSaveData(s32 arg0) {
     u8 *sp30;
@@ -1198,17 +1199,20 @@ void initRaceSetupPlayerSaveData(s32 arg0) {
             RACE_SETUP_SAVE_HALF_045D8(byteCursor, 0x50) = ((RaceSetupSaveTriplet045D8 *)wordCursor)->unk2 << 8;
             RACE_SETUP_SAVE_BYTE_045D8(byteCursor, 0x4E) = ((RaceSetupSaveTriplet045D8 *)wordCursor)->unk0;
             RACE_SETUP_SAVE_BYTE_045D8(base, 0x77FB) = 0x10;
-            RACE_SETUP_SAVE_BYTE_045D8(base, 0x77FB) = i + 0x10;
+            RACE_SETUP_SAVE_UBYTE_045D8(base, 0x77FB) += i;
             if (course == 9) {
                 record = (RaceSetupSaveTriplet045D8 *)((u8 *)specialRecords + recordOffset);
+                RACE_SETUP_SAVE_HALF_045D8(byteCursor, 0x158) = record->unk2 << 8;
+                RACE_SETUP_SAVE_BYTE_045D8(byteCursor, 0x156) = record->unk0;
+                RACE_SETUP_SAVE_BYTE_045D8(byteCursor, 0x157) = record->unk1;
             } else {
                 record = (RaceSetupSaveTriplet045D8 *)((u8 *)records + recordOffset + ((course & 1) * 0xF));
+                RACE_SETUP_SAVE_HALF_045D8(byteCursor, 0x158) = record->unk2 << 8;
+                RACE_SETUP_SAVE_BYTE_045D8(byteCursor, 0x156) = record->unk0;
+                RACE_SETUP_SAVE_BYTE_045D8(byteCursor, 0x157) = record->unk1;
             }
-            RACE_SETUP_SAVE_HALF_045D8(byteCursor, 0x158) = record->unk2 << 8;
-            RACE_SETUP_SAVE_BYTE_045D8(byteCursor, 0x156) = record->unk0;
-            RACE_SETUP_SAVE_BYTE_045D8(byteCursor, 0x157) = record->unk1;
             RACE_SETUP_SAVE_BYTE_045D8(base, 0x78A0) = 0x10;
-            RACE_SETUP_SAVE_BYTE_045D8(base, 0x78A0) = i + 0x10;
+            RACE_SETUP_SAVE_UBYTE_045D8(base, 0x78A0) += i;
             if (course == 9) {
                 RACE_SETUP_SAVE_BYTE_045D8(base, 0x7832) = rankIcons[0];
             } else {
@@ -1301,4 +1305,5 @@ secret_copy_loop:
 #undef RACE_SETUP_SAVE_WORD_045D8
 #undef RACE_SETUP_SAVE_HALF_045D8
 #undef RACE_SETUP_SAVE_BYTE_045D8
+#undef RACE_SETUP_SAVE_UBYTE_045D8
 #endif
