@@ -619,7 +619,9 @@ void setMainMenuSceneModelRotation(s32 modelIndex, s16 x, s16 y, s16 z) {
     model->rot.z = z;
 }
 
-// A readable NON_MATCHING implementation is kept below; the production build uses the matching assembly.
+// updateMainMenuSceneModelTransforms best match: 93.560%
+// (nonmatchings/updateMainMenuSceneModelTransforms-8498672362023432715/base_20.c)
+// A readable equivalent is kept below; the production build uses the matching assembly.
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/main_menu/main_menu_scene_model/updateMainMenuSceneModelTransforms.s")
 
 #ifdef NON_MATCHING
@@ -706,7 +708,7 @@ void updateMainMenuSceneModelTransforms(MainMenuSceneModel *model) {
             rootAxis = rootTransform.rotation;
             do {
                 dot = (rootAxis[6] * localAxis[2]) + (rootAxis[0] * localAxis[0]) +
-                      (rootAxis[2] * localAxis[1]);
+                      (rootAxis[3] * localAxis[1]);
                 *worldAxis++ = dot / FIXED_MATRIX_ONE;
                 rootAxis++;
             } while (rootAxis != &rootTransform.rotation[MAIN_MENU_SCENE_MODEL_MATRIX_AXES]);
