@@ -52,11 +52,12 @@ extern s16 gAssetHandles[];
 extern MenuGlyphScript gCharacterSelectConfirmationBannerText[][0x1C];
 extern CharacterSelectUiCharacterStats gCharacterSelectCharacterStats[];
 extern u16 gCharacterSelectCharacterStatLabels[];
-extern const char gCharacterSelectPlayerNumberFormat[];
 extern RacePlayerState gGameSaveDataBuffer[];
 extern u8 D_8010AE5E;
 extern u8 D_8010AE5F;
 extern u16 gCharacterSelectPlayerMarkerTiles[];
+
+const char gCharacterSelectPlayerNumberFormat[] = "%d";
 
 void drawCharacterSelectConfirmationBanner(CharacterSelectUiBannerActor *arg0) {
     s32 i;
@@ -219,49 +220,45 @@ void initCharacterSelectConfirmationBanner(CharacterSelectUiBannerActor *arg0) {
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateCharacterSelectConfirmationBanner);
 }
 
-// drawCharacterSelectPlayerPanelFrames best match: 99.232% (nonmatchings/drawCharacterSelectPlayerPanelFrames-4033633224288138541/base_12.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/menu/character_select/character_select_ui/drawCharacterSelectPlayerPanelFrames.s")
-
-#ifdef NON_MATCHING
-void drawCharacterSelectPlayerPanelFrames(CharacterSelectUiPlayerPanelFrameActor *arg0) {
-    char playerNumberBuffer[0x10];
-    u8 *playerNumberText;
-    s32 palette;
-    s32 alpha;
-    s32 playerIndex;
+void drawCharacterSelectPlayerPanelFrames(CharacterSelectUiPlayerPanelFrameActor *actor) {
+    s32 i;
+    u16 alpha;
+    register CharacterSelectUiPlayerPanelFrameActor *panel;
     s32 playerNumber;
-    s32 texture;
-    CharacterSelectUiPlayerPanelFrameActor *panel;
+    volatile s32 unusedStackPadding;
+    char text[8];
 
-    playerNumberText = playerNumberBuffer - 0xC;
-    panel = arg0; playerIndex = 0; do {
-        if ((gPlayerCount - 1) < playerIndex) {
+    for (i = 0; i < 4; i++) {
+        if ((gPlayerCount - 1) < i) {
             alpha = 0x50;
         } else {
             alpha = 0x100;
         }
 
-        texture = getRelocatableHeapBlockBase(CHARACTER_SELECT_UI_PLAYER_FRAME_HANDLE);
-        playerNumber = playerIndex + 1;
-        palette = playerNumber & 0xFF;
-        drawMenuSpriteWithAlpha(panel->x, panel->y, texture, 0x23, 0x20, 0x20, 0, alpha, palette);
-        texture = getRelocatableHeapBlockBase(CHARACTER_SELECT_UI_PLAYER_FRAME_HANDLE);
-        drawMenuSpriteWithAlpha((s16)(panel->x + 0x40), panel->y, texture, 0x24, 0x20, 0x20, 0, alpha, palette);
-        texture = getRelocatableHeapBlockBase(CHARACTER_SELECT_UI_PLAYER_FRAME_HANDLE);
-        playerIndex = 2;
-        drawMenuSpriteWithAlpha((s16)(panel->x + 0x80), panel->y, texture, 0xC, 0x20, 0x20, 0, alpha, palette);
-        sprintf(playerNumberText, gCharacterSelectPlayerNumberFormat, playerNumber);
-        drawMenuAsciiText((s16)(panel->x + 0x32), (s16)(panel->y + 2), playerNumberText, 0, alpha);
-        if (alpha != 0x100) {
-            texture = getRelocatableHeapBlockBase(CHARACTER_SELECT_UI_UNUSED_HANDLE);
-            drawMenuSpriteWithAlpha((s16)(panel->x + playerIndex), (s16)(panel->y + 0x14), texture, 0x90, 0x20, 0x20, 0, 0xF0, 0);
-        }
+        panel = actor;
+        playerNumber = i + 1;
+        drawMenuSpriteWithAlpha(actor->panelX[i], actor->panelY[i],
+                                getRelocatableHeapBlockBase(CHARACTER_SELECT_UI_PLAYER_FRAME_HANDLE), 0x23, 0x20, 0x20,
+                                0, alpha, playerNumber);
+        drawMenuSpriteWithAlpha((s16)(actor->panelX[i] + 0x40), actor->panelY[i],
+                                getRelocatableHeapBlockBase(CHARACTER_SELECT_UI_PLAYER_FRAME_HANDLE), 0x24, 0x20, 0x20,
+                                0, alpha, playerNumber);
+        drawMenuSpriteWithAlpha((s16)(panel->panelX[i] + 0x80), panel->panelY[i],
+                                getRelocatableHeapBlockBase(CHARACTER_SELECT_UI_PLAYER_FRAME_HANDLE), 0xC, 0x20, 0x20, 0,
+                                alpha, playerNumber);
 
-        playerIndex = playerNumber;
-        panel = (CharacterSelectUiPlayerPanelFrameActor *)((u8 *)panel + 2);
-    } while (playerNumber != 4);
+        sprintf(text, gCharacterSelectPlayerNumberFormat, playerNumber);
+        drawMenuAsciiText((s16)(actor->panelX[i] + 0x32), (s16)(panel->panelY[i] + 2), (u8 *)text, 0, alpha);
+
+        if (alpha != 0x100) {
+            if ((!actor) && (!actor)) {
+            }
+            drawMenuSpriteWithAlpha((s16)(actor->panelX[i] + 2), (s16)(actor->panelY[i] + 0x14),
+                                    getRelocatableHeapBlockBase(CHARACTER_SELECT_UI_UNUSED_HANDLE), 0x90, 0x20, 0x20, 0,
+                                    0xF0, 0);
+        }
+    }
 }
-#endif
 
 void updateCharacterSelectPlayerPanelFrames(CharacterSelectUiPanelActor *arg0) {
     u8 var_v0;
