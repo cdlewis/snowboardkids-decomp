@@ -40,6 +40,7 @@ extern void osCreateViManager(s32);
 extern void osSetEventMesg(s32, OSMesgQueue *, OSMesg);
 extern void osStartThread(SchedulerThread *);
 extern void osViBlack(u8);
+extern void osViSwapBuffer(void *);
 extern void osViSetEvent(OSMesgQueue *, OSMesg, u32);
 extern void osViSetMode(SchedulerViMode *);
 extern void *osViGetCurrentFramebuffer(void);
