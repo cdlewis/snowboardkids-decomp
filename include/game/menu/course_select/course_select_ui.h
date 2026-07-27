@@ -57,7 +57,7 @@ typedef struct {
 typedef struct CourseSelectIconListActor CourseSelectIconListActor;
 typedef struct CourseSelectAnimatedActor CourseSelectAnimatedActor;
 
-void updateCourseSelectPreviewModelIn(void *arg0);
+void updateCourseSelectPreviewModelIn(CourseSelectAnimatedActor *arg0);
 void initCourseSelectPreviewModelIn(void *arg0);
 void updateCourseSelectPreviewModelOut(CourseSelectAnimatedActor *arg0);
 void initCourseSelectPreviewModelOut(void *arg0);
