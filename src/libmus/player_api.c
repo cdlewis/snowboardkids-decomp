@@ -52,7 +52,7 @@ s32 MusInitialize(PlayerCommandInit *arg0) {
     alSynAddPlayer(&gAudioSynthesizer, &plr_player);
 
     for (i = 0; i < max_channels; i++) {
-        mus_channels[i].unkE4 = 0;
+        mus_channels[i].playing = 0;
         __MusIntInitialiseChannel(&mus_channels[i]);
         vc.unityPitch = 0;
         vc.priority = arg0->outputRate;
@@ -110,7 +110,7 @@ s32 MusStartSong(PlayerCommandData *arg0) {
     free = 0;
     state = mus_channels;
     for (i = 0; i < max_channels; i++) {
-        if (state->sequencePos == 0) {
+        if (state->pdata == 0) {
             free++;
         }
         state++;
@@ -132,7 +132,7 @@ s32 MusStartSong(PlayerCommandData *arg0) {
             }
             state = &mus_channels[index];
             __MusIntInitialiseChannel(state);
-            state->data = arg0;
+            state->song_addr = arg0;
             position = arg0->unk8[i];
             state->unk64 = position;
             state->unk60 = position;
@@ -141,7 +141,7 @@ s32 MusStartSong(PlayerCommandData *arg0) {
             state->unk68 = position;
             position = arg0->sequenceOffsets[i];
             state->restartPos = position;
-            state->sequencePos = position;
+            state->pdata = position;
             state->id = handle;
         }
     }
@@ -160,7 +160,7 @@ s32 MusStartEffect(s32 arg0) {
     if (max_channels > 0) {
         do {
             i++;
-            if (entry->sequencePos == 0) {
+            if (entry->pdata == 0) {
                 return __MusIntStartEffect(entry, arg0, 0x80, 0x80, value);
             }
             entry++;
@@ -196,7 +196,7 @@ s32 MusStartEffect2(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4) {
     if (max_channels > 0) {
         do {
             i++;
-            if (entry->sequencePos == 0) {
+            if (entry->pdata == 0) {
                 return __MusIntStartEffect(entry, arg0, arg1, arg2, arg4);
             }
             entry++;
@@ -246,7 +246,7 @@ s32 MusAsk(s32 arg0) {
     if (max_channels > 0) {
         do {
             i++;
-            if (entry->sequencePos != 0) {
+            if (entry->pdata != 0) {
                 temp_a0 = entry->soundId;
                 if (((temp_a0 != 0) && (arg0 & 1)) || ((((unsigned long) temp_a0) == 0) && (arg0 & 2))) {
                     matches++;
