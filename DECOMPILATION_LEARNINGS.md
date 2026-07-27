@@ -327,6 +327,12 @@ and control flow already match and only register *names* differ.
   `register` local immediately after a value that crosses calls can then shift
   that value's spill slot within the smaller frame; test the two changes
   together because either one alone may choose a different frame size.
+- **Named CSE temporaries can enlarge a frame without changing instructions.**
+  IDO may give explicit intermediate locals stack homes even when optimization
+  keeps their values entirely in registers. Repeating the clean expression and
+  letting IDO perform common-subexpression elimination can preserve the exact
+  arithmetic and registers while removing an otherwise unexplained rounded
+  frame-size increment.
 - **The `struct { s32 v; s32 pad; }` idiom for a spilled call result.** When a
   single spilled `s32` lands at `0x24(sp)` but the target uses `0x20(sp)`,
   declaring it as a two-word struct with a trailing pad shifts IDO's

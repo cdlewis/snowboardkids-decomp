@@ -26,7 +26,7 @@ typedef struct MainMenuModelPart {
 typedef struct MainMenuModelTransform {
     s16 rotation[9];
     s16 pad12;
-    Vec3i translation;
+    s32 translation[3];
 } MainMenuModelTransform;
 
 typedef struct MainMenuSceneModel {
