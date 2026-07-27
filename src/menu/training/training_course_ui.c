@@ -38,7 +38,7 @@ struct TrainingCourseUiActor {
             /* 0x25 */ u8 pad25;
         } script;
     } state;
-    /* 0x26 */ s16 glyphPalette;
+    /* 0x26 */ u16 glyphPalette;
     /* 0x28 */ u16 glyphTimer;
     /* 0x2A */ u8 scriptState;
     /* 0x2B */ u8 confirmBlinkTimer;
@@ -204,118 +204,125 @@ void initTrainingCourseLessonEndMenu(TrainingCourseUiActor *arg0) {
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateTrainingCourseLessonEndMenu);
 }
 
-// drawTrainingCourseDialog best match: 96.113% (nonmatchings/drawTrainingCourseDialog-8699393380584516020/base_28.c)
+// drawTrainingCourseDialog best match: 98.791% (nonmatchings/drawTrainingCourseDialog-6219302648079029720/base_50.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/training/training_course_ui/drawTrainingCourseDialog.s")
 
 #ifdef NON_MATCHING
 void drawTrainingCourseDialog(TrainingCourseUiActor *arg0) {
-    TrainingCourseUiScript *script;
-    u16 xOffset;
-    unsigned short stopped;
-    int i;
-    unsigned int new_var;
-    TrainingCourseUiScript glyph[2];
-    u16 token;
-    u16 drawToken;
-    s32 glyphIndex;
-    s32 scriptOffset;
-    s32 lineOffset;
-    unsigned int pad;
+    register TrainingCourseUiActor *dialog;
+    s32 i;
+    u16 lineY;
+    s32 visibleIndex;
+    s32 scriptIndex;
+    u16 reachedEnd;
+    u16 lineX;
+    register TrainingCourseUiScript firstToken;
+    register TrainingCourseUiScript currentToken;
+    register TrainingCourseUiScript nextToken;
+    TrainingCourseUiScript glyphText[2];
+    register TrainingCourseUiScript token;
+    register TrainingCourseUiActor *actor;
 
-    drawMenuSprite((s16)(arg0->x - 4), (s16)(arg0->y + 0x14), getRelocatableHeapBlockBase(TRAINING_COURSE_UI_TEXTURE_HANDLE), 2, 0x20, 0x20, 0, 0);
-    drawMenuSprite((s16)(arg0->x + 0xF8), (s16)((*arg0).y + 0x14), getRelocatableHeapBlockBase(TRAINING_COURSE_UI_TEXTURE_HANDLE), 4, 0x20, 0x20, 0, 0);
+    dialog = arg0;
+    actor = arg0;
+
+    drawMenuSprite((s16)(dialog->x - 4), (s16)(dialog->y + 0x14),
+                   getRelocatableHeapBlockBase(gAssetHandles.textureHandle), 2, 0x20, 0x20, 0, 0);
+    drawMenuSprite((s16)(dialog->x + 0xF8), (s16)(dialog->y + 0x14),
+                   getRelocatableHeapBlockBase(gAssetHandles.textureHandle), 4, 0x20, 0x20, 0, 0);
 
     i = 0;
-    new_var = 0;
     do {
-        drawMenuSprite((s16)(arg0->x + i + 0xC), (s16)(arg0->y + 0x14), getRelocatableHeapBlockBase(TRAINING_COURSE_UI_TEXTURE_HANDLE), 3, 0x20, 0x20, new_var, new_var);
-        drawMenuSprite((s16)(arg0->x + i + 0xC), (s16)(arg0->y + 0x4C), getRelocatableHeapBlockBase(TRAINING_COURSE_UI_TEXTURE_HANDLE), 8, 0x20, 0x20, 0, new_var);
+        drawMenuSprite((s16)(dialog->x + i + 0xC), (s16)(dialog->y + 0x14),
+                       getRelocatableHeapBlockBase(gAssetHandles.textureHandle), 3, 0x20, 0x20, 0, 0);
+        drawMenuSprite((s16)(dialog->x + i + 0xC), (s16)(dialog->y + 0x4C),
+                       getRelocatableHeapBlockBase(gAssetHandles.textureHandle), 8, 0x20, 0x20, 0, 0);
         i += 0x10;
     } while (i < 0xF0);
 
-    drawMenuSprite((s16)(arg0->x - 4), (s16)(arg0->y + 0x4C), getRelocatableHeapBlockBase(TRAINING_COURSE_UI_TEXTURE_HANDLE), 7, 0x20, 0x20, 0, new_var);
-    drawMenuSprite((s16)(arg0->x + 0xF8), (s16)(arg0->y + 0x4C), getRelocatableHeapBlockBase(TRAINING_COURSE_UI_TEXTURE_HANDLE), 9, 0x20, 0x20, new_var, 0);
+    drawMenuSprite((s16)(dialog->x - 4), (s16)(dialog->y + 0x4C),
+                   getRelocatableHeapBlockBase(gAssetHandles.textureHandle), 7, 0x20, 0x20, 0, 0);
+    drawMenuSprite((s16)(dialog->x + 0xF8), (s16)(dialog->y + 0x4C),
+                   getRelocatableHeapBlockBase(gAssetHandles.textureHandle), 9, 0x20, 0x20, 0, 0);
 
-    i = new_var;
+    i = (dialog->scriptState == 4) * 0;
     do {
-        drawMenuSprite((s16)(arg0->x - 4), (s16)(arg0->y + i + 0x24), getRelocatableHeapBlockBase(TRAINING_COURSE_UI_TEXTURE_HANDLE), 5, 0x20, 0x20, new_var, 0);
-        drawMenuSprite((s16)(arg0->x + 0xF8), (s16)(arg0->y + i + 0x24), getRelocatableHeapBlockBase(TRAINING_COURSE_UI_TEXTURE_HANDLE), 6, 0x20, 0x20, new_var, 0);
+        drawMenuSprite((s16)(dialog->x - 4), (s16)(dialog->y + i + 0x24),
+                       getRelocatableHeapBlockBase(gAssetHandles.textureHandle), 5, 0x20, 0x20, 0, 0);
+        drawMenuSprite((s16)(dialog->x + 0xF8), (s16)(dialog->y + i + 0x24),
+                       getRelocatableHeapBlockBase(gAssetHandles.textureHandle), 6, 0x20, 0x20, 0, 0);
         i += 0x10;
     } while (i < 0x30);
 
-    arg0->glyphPalette = 7;
-    glyph[1] = 0xFFFF;
-    stopped = 0;
-    xOffset = 0;
-    glyphIndex = new_var;
-    if ((s32)arg0->state.script.visibleGlyphCount > ((arg0->scriptState == 1) * 0)) {
-        scriptOffset = 0;
-        lineOffset = 0;
+    dialog->glyphPalette = 7;
+    glyphText[1] = 0xFFFF;
+    visibleIndex = 0;
+    reachedEnd = 0;
+    lineX = 0;
+
+    if (dialog->state.script.visibleGlyphCount > 0) {
+        scriptIndex = 0;
+        lineY = 0;
         do {
-            scriptOffset += 0;
-            script = (TrainingCourseUiScript *)((u8 *)arg0->layout.script + scriptOffset);
-            token = script[new_var];
-            if ((token >= 0xFF01) && (token != 0xFFFE)) {
-                drawToken = token;
+            currentToken = dialog->layout.script[scriptIndex];
+            firstToken = currentToken;
+            nextToken = firstToken;
+            if ((firstToken >= 0xFF01) && ((token = firstToken), (currentToken != 0xFFFE))) {
                 do {
                     if (token == 0xFFFF) {
-                        arg0->scriptState = 1;
-                        drawToken++;
-                        drawToken--;
-                        stopped = 1;
+                        dialog->scriptState = 1;
+                        reachedEnd = 1;
                         break;
                     }
                     if (token == 0xFFFD) {
-                        token = script[1];
-                        xOffset = 0;
-                        scriptOffset += 2;
-                        script++;
-                        lineOffset = (lineOffset + 0x10) & 0xFFFF;
-                        drawToken = token;
+                        currentToken = dialog->layout.script[scriptIndex + 1];
+                        lineY += 0x10;
+                        lineX = 0;
+                        scriptIndex++;
+                        nextToken = currentToken;
                     } else if (token == 0xFFFC) {
-                        arg0->glyphPalette = script[1];
-                        token = script[2];
-                        scriptOffset += 4;
-                        script += 2;
-                        drawToken = token;
+                        dialog->glyphPalette = dialog->layout.script[scriptIndex + 1];
+                        currentToken = dialog->layout.script[scriptIndex + 2];
+                        scriptIndex += 2;
+                        nextToken = currentToken;
                     } else if (token == 0xFFFB) {
-                        arg0->scriptState = 2;
- do { if (1) { do { } while (0); do { stopped = 1; break; } while (new_var); } } while (0);
-                    }
-                    if (drawToken < 0xFF01) {
+                        dialog->scriptState = 2;
+                        reachedEnd = 1;
                         break;
                     }
-                    if (((TrainingCourseUiScript *)((u8 *)arg0->layout.script + scriptOffset))[0] == 0xFFFE) {
-                        break;
-                    }
-                    token = drawToken;
-                } while (1);
+                    token = currentToken;
+                } while ((nextToken >= 0xFF01) && (actor->layout.script[scriptIndex] != 0xFFFE));
             }
 
-            if (stopped == 1) {
-                glyph[0] = 0xFFFE;
+            if (1 == reachedEnd) {
+                glyphText[0] = 0xFFFE;
             } else {
-                glyph[0] = *((TrainingCourseUiScript *)((u8 *)arg0->layout.script + scriptOffset));
+                glyphText[0] = dialog->layout.script[scriptIndex];
             }
-            drawMenuColoredGlyphScript((s16)(arg0->x + xOffset), (s16)(arg0->y + lineOffset + 0x18), glyph, 0, 0x100, ((u16)arg0->glyphPalette) ^ 0, 0x29);
-            if (stopped != 1) {
-                scriptOffset += 2;
-                xOffset = xOffset + 0x10;
+
+            drawMenuColoredGlyphScript((s16)(dialog->x + lineX), (s16)(dialog->y + lineY + 0x18), glyphText, 0,
+                                       0x100, (u16)dialog->glyphPalette, 0x29);
+
+            if (1 != reachedEnd) {
+                scriptIndex++;
+                lineX += 0x10;
             }
-            glyphIndex++;
-        } while (glyphIndex < (s32)arg0->state.script.visibleGlyphCount);
+            visibleIndex++;
+        } while (visibleIndex < actor->state.script.visibleGlyphCount);
     }
 
-    arg0->glyphTimer++;
-    if ((u16)(*arg0).glyphTimer == 4) {
-        arg0->glyphTimer = 0;
-        if (stopped != 1) {
-            arg0->state.script.visibleGlyphCount++;
+    dialog->glyphTimer++;
+    if (dialog->glyphTimer == 4) {
+        dialog->glyphTimer = 0;
+        if (1 != reachedEnd) {
+            dialog->state.script.visibleGlyphCount++;
         }
     }
 
-    if (((arg0->scriptState == 1) || (arg0->scriptState == 2)) && (gMainMenuSelectionResult == new_var)) {
-        drawMenuSprite((s16)(arg0->x + 0xF4), (s16)(arg0->y + 0x48), getRelocatableHeapBlockBase(TRAINING_COURSE_UI_TEXTURE_HANDLE), ((s32)arg0->confirmBlinkTimer >= 8) & 0xFFFF, 0x20, 0x20, 0, 0);
+    if (((dialog->scriptState == 1) || (dialog->scriptState == 2)) && (gMainMenuSelectionResult == 0)) {
+        drawMenuSprite((s16)(dialog->x + 0xF4), (s16)(dialog->y + 0x48),
+                       getRelocatableHeapBlockBase(gAssetHandles.textureHandle), dialog->confirmBlinkTimer >= 8, 0x20,
+                       0x20, 0, 0);
     }
 }
 #endif
