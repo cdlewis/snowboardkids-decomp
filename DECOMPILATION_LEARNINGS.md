@@ -418,6 +418,11 @@ and control flow already match and only register *names* differ.
   code for globals defined in the current TU (can keep base addresses in
   registers across adjacent stores) versus globals declared `extern` (can
   force extra address reloads and worse delay-slot scheduling).
+- **Try a fixed-trip array loop before adding interior-symbol aliases.** For
+  small `extern` multidimensional arrays, IDO can fully unroll the loop while
+  still emitting a fresh address load for each interleaved row access. The
+  equivalent straight-line field assignments may instead cache the aggregate
+  base, even though both forms perform the same copies.
 - **Explicitly zero-initialized globals (`static u8 x = 0`) may land in
   `.data`, not `.bss`.** Account for this when splitting raw data/BSS
   segments.

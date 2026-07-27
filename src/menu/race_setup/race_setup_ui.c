@@ -87,19 +87,6 @@ extern u8 gRaceSetupSavePanelFrameState;
 extern s32 gMenuFlowState;
 extern Struct801235B8 *gCurrentGameTask;
 
-/*
- * Referencing the aggregate directly makes IDO cache its base address. These
- * non-owning aliases preserve the original independent address loads.
- */
-extern s16 gRaceSetupSavePanelRect0X0Codegen;
-extern s16 gRaceSetupSavePanelRect0Y0Codegen;
-extern s16 gRaceSetupSavePanelRect0X1Codegen;
-extern s16 gRaceSetupSavePanelRect0Y1Codegen;
-extern s16 gRaceSetupSavePanelRect1X0Codegen;
-extern s16 gRaceSetupSavePanelRect1Y0Codegen;
-extern s16 gRaceSetupSavePanelRect1X1Codegen;
-extern s16 gRaceSetupSavePanelRect1Y1Codegen;
-
 void drawRaceSetupPlayerCountPrompt(MenuIntroActor *arg0) {
     s32 i;
     s32 j;
@@ -784,14 +771,10 @@ void updateRaceSetupSavePanelFrame(RectListActor *arg0) {
     }
 
     gRaceSetupMenuSubState.savePanelFrameState = state;
-    gRaceSetupSavePanelRect0X0Codegen = arg0->rects[0].x0;
-    gRaceSetupSavePanelRect1X0Codegen = arg0->rects[1].x0;
-    gRaceSetupSavePanelRect0Y0Codegen = arg0->rects[0].y0;
-    gRaceSetupSavePanelRect1Y0Codegen = arg0->rects[1].y0;
-    gRaceSetupSavePanelRect0X1Codegen = arg0->rects[0].x1;
-    gRaceSetupSavePanelRect1X1Codegen = arg0->rects[1].x1;
-    gRaceSetupSavePanelRect0Y1Codegen = arg0->rects[0].y1;
-    gRaceSetupSavePanelRect1Y1Codegen = arg0->rects[1].y1;
+    for (i = 0; i < 4; i++) {
+        gRaceSetupSavePanelRects[0][i] = arg0->rectCoords[i];
+        gRaceSetupSavePanelRects[1][i] = arg0->rectCoords[i + 4];
+    }
 
     if (gMenuFlowState == 0x63) {
         removeCallbackTask(arg0);
@@ -918,16 +901,13 @@ void drawRaceSetupSavePanelIcons(TitleMenuIconStripActor *actor) {
 void updateRaceSetupSavePanelIcons(void *arg0) {
     RectListActor *temp_a2;
     RectListActor *actor = arg0;
+    s32 i;
 
-    actor->rects[0].x0 = gRaceSetupSavePanelRect0X0Codegen;
-    actor->rects[1].x0 = gRaceSetupSavePanelRect1X0Codegen;
-    actor->rects[0].y0 = gRaceSetupSavePanelRect0Y0Codegen;
-    actor->rects[1].y0 = gRaceSetupSavePanelRect1Y0Codegen;
-    actor->rects[0].x1 = gRaceSetupSavePanelRect0X1Codegen;
-    actor->rects[1].x1 = gRaceSetupSavePanelRect1X1Codegen;
-    actor->rects[0].y1 = gRaceSetupSavePanelRect0Y1Codegen;
+    for (i = 0; i < 4; i++) {
+        actor->rectCoords[i] = gRaceSetupSavePanelRects[0][i];
+        actor->rectCoords[i + 4] = gRaceSetupSavePanelRects[1][i];
+    }
     temp_a2 = actor;
-    actor->rects[1].y1 = gRaceSetupSavePanelRect1Y1Codegen;
     addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawRaceSetupSavePanelIcons, (void *)temp_a2);
 }
 

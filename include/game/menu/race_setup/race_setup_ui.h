@@ -40,7 +40,7 @@ typedef struct {
     /* 0x06 */ s16 y1;
 } Rect;
 
-extern Rect gRaceSetupSavePanelRects[2];
+extern s16 gRaceSetupSavePanelRects[2][4];
 
 typedef struct {
     /* 0x00 */ u8 pad0[0x18];
