@@ -1142,58 +1142,32 @@ void updateCourseSelectCourseCursors(CourseSelectWidgetActor *arg0) {
     }
 }
 
-// initCourseSelectCourseCursors best match: 97.456% (nonmatchings/initCourseSelectCourseCursors-3549320994361659932/base_18.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/menu/course_select/course_select_ui/initCourseSelectCourseCursors.s")
-
-#ifdef NON_MATCHING
 void initCourseSelectCourseCursors(CourseSelectWidgetActor *arg0) {
-    CourseSelectWidgetActor *actor = arg0;
-    s32 layoutIndex;
-    s32 idx;
-    s32 i;
+    CourseSelectWidgetActor *actor;
     u8 *courseUnlocked;
+    s16 *yLayout;
     s16 *xLayout;
     char mask;
     s32 unlockState;
+    s32 hasExtraCourse;
+    s32 playerIndex;
+    s32 layoutIndex;
 
-    mask = 0xFFFFFFFFFFFFFFFFu;
-    if (actor && actor) {
-    }
-    if (gPlayerCount < 3) {
-        idx = gPlayerCount - 1;
-    } else {
-        idx = 2;
-    }
-    i = 0;
-    layoutIndex = idx;
-    if ((s32) gPlayerCount > 0) {
-        s16 *yLayout;
-        yLayout = gCourseSelectIconListYLayout[layoutIndex];
-        xLayout = gCourseSelectIconListXLayout[layoutIndex]; courseUnlocked = D_8010AEA0; do {
-            unlockState = *courseUnlocked & mask;
-            courseUnlocked++;
-            if ((0, unlockState) != 0) {
-                idx = 1;
-                if (gRacePlayers[i].selectedCharacterId == 5) {
-                    idx = 0;
-                }
-            } else {
-                idx = 0;
-            }
-            if ((i && i) && i) {
-            }
-            actor->courseCursorBobOffset[i] = yLayout[idx];
-            actor->courseCursorY[i] = yLayout[((i & 1) * 2) + idx + 2];
-            actor->courseCursorX[i] = xLayout[((i >= 2) * 2) + 1];
-            actor->courseCursorAlpha[i] = 0;
-            actor->courseCursorState[i] = 0;
-            actor->courseCursorTimer[i] = 0;
-            i++;
-        } while (i < (s32) gPlayerCount);
+    actor = arg0;
+    mask = 0xFFFFFFFFFFFFFFFFu; if ((s32)gPlayerCount < 3) { layoutIndex = gPlayerCount - 1; } else { layoutIndex = 2; } playerIndex = 0; if ((s32)gPlayerCount > 0) { courseUnlocked = D_8010AEA0; yLayout = gCourseSelectIconListYLayout[layoutIndex]; xLayout = gCourseSelectIconListXLayout[layoutIndex]; do { unlockState = *courseUnlocked & mask; courseUnlocked++; hasExtraCourse = (((0, unlockState) == 0) || (gRacePlayers[playerIndex].selectedCharacterId == 5)) ? 0 : 1;
+            actor->courseCursorBobOffset[playerIndex] = yLayout[hasExtraCourse];
+            actor->courseCursorY[playerIndex] =
+                yLayout[((playerIndex & 1) * 2) + hasExtraCourse + 2];
+            actor->courseCursorX[playerIndex] = xLayout[((playerIndex >= 2) * 2) + 1];
+            actor->courseCursorAlpha[playerIndex] = 0;
+            actor->courseCursorState[playerIndex] = 0;
+            actor->courseCursorTimer[playerIndex] = 0;
+            playerIndex++;
+        } while (playerIndex < (s32)gPlayerCount);
     }
     setCallbackTaskCallback(actor, (CallbackTaskCallback)updateCourseSelectCourseCursors);
 }
-#endif
+
 
 void drawCourseSelectCourseListBackdrop(CourseSelectWidgetActor *arg0) {
     drawMenuSprite(arg0->x, arg0->y, getRelocatableHeapBlockBase(gAssetHandles[0x25]), 3, 0x20, 0x20, 0, 0);
