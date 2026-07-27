@@ -281,6 +281,12 @@ and control flow already match and only register *names* differ.
   `& (factor-1)` idiom as memset). If the target shipped a plain `bne p,end`
   do-while, write the loop as an unstructured goto loop (label +
   `if (p != end) goto label;`) — IDO's unroller only runs on structured loops.
+- **A symbolic pointer bound can keep an indexed loop structured without
+  unrolling it.** When a constant bound such as `i < 16` makes IDO unroll an
+  otherwise-correct byte copy, compare `&source[i]` against a separate end
+  symbol instead. For incomplete external arrays, IDO cannot fold the trip
+  count, but it can still strength-reduce the typed source and destination
+  indexing into the target's simple pointer walk.
 - **Prefer a plain multiply literal over a hand-decomposed shift.** When a
   multiply by a non-power-of-2 appears, writing `x * 0x60000` gives IDO the
   freedom to emit its strength-reduced `sll`/`subu`/`sll` chain in the target's
