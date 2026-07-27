@@ -166,7 +166,8 @@ $(BUILD_DIR)/src/ultra/os/exceptasm.o: ULTRA_AS_POST = $(PYTHON) $(TOOLS_DIR)/se
 LD_SCRIPT      = $(BASENAME).ld
 LINKER_SCRIPTS = linker_scripts/hardware_regs.ld linker_scripts/libultra_syms.ld \
                  linker_scripts/race_setup_menu_syms.ld \
-                 linker_scripts/controller_subsystem_syms.ld
+                 linker_scripts/controller_subsystem_syms.ld \
+                 linker_scripts/race_player_syms.ld
 LDFLAGS        = -T $(LD_SCRIPT) -Map $(TARGET).map \
                  -T undefined_syms_auto.txt \
                  $(foreach ld,$(LINKER_SCRIPTS),-T $(ld)) \

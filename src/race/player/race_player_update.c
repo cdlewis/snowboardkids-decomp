@@ -5068,29 +5068,33 @@ s32 tryStartRacePlayerCourseObjectMode(s16 arg0) {
     Struct800955C0 *courseEntry;
     s32 deltaOrFlags;
     s32 delta;
-    RacePlayer *firstPlayer;
-    RacePlayer *players;
     u32 stateFlags;
 
     player = &gRacePlayers[arg0];
     stateFlags = player->stateFlags;
-    players = gRacePlayers;
     if (stateFlags & 0x40) {
         return 0;
     }
 
-    firstPlayer = players;
-    if (((gRacePlayers[0].isActive != 0) && (arg0 != firstPlayer->playerIndex)) && (gRacePlayers[0].stateFlags & 0x20)) {
+    if ((gRacePlayers[0].isActive != 0) &&
+        (arg0 != (u16)gRacePlayers[0].playerIndex) &&
+        (gRacePlayers[0].stateFlags & 0x20)) {
         return 0;
     }
-    if (((gRacePlayers[1].isActive != 0) && (arg0 != gRacePlayers[1].playerIndex)) && (gRacePlayers[1].stateFlags & 0x20)) {
+    if ((gRacePlayers[1].isActive != 0) &&
+        (arg0 != (u16)gRacePlayers[1].playerIndex) &&
+        (gRacePlayers[1].stateFlags & 0x20)) {
         return 0;
     }
-    if (((gRacePlayers[2].isActive != 0) && (arg0 != gRacePlayers[2].playerIndex)) && (gRacePlayers[2].stateFlags & 0x20)) {
+    if ((gRacePlayers[2].isActive != 0) &&
+        (arg0 != (u16)gRacePlayers[2].playerIndex) &&
+        (gRacePlayers[2].stateFlags & 0x20)) {
         delta = 0;
         return delta;
     }
-    if (((gRacePlayers[3].isActive != 0) && (arg0 != gRacePlayers[3].playerIndex)) && (gRacePlayers[3].stateFlags & 0x20)) {
+    if ((gRacePlayers[3].isActive != 0) &&
+        (arg0 != (u16)gRacePlayers[3].playerIndex) &&
+        (gRacePlayers[3].stateFlags & 0x20)) {
         return 0;
     }
 

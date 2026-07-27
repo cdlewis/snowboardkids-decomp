@@ -176,7 +176,7 @@ extern u8 gRenderMatricesDirty;
 extern u8 gRaceUpdatePaused;
 extern u8 gTrainingCourseLesson;
 extern u8 gRaceSplitscreenMode;
-/* updateThrownPickupSpawner needs these interior labels to preserve matching codegen. */
+/* updateThrownPickupSpawner needs these interior aliases to preserve matching codegen. */
 extern s8 D_80121D93;
 extern s32 D_80121D9C;
 extern s32 D_80121DA4;
