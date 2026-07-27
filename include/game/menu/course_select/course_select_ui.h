@@ -61,6 +61,7 @@ void updateCourseSelectPreviewModelIn(CourseSelectAnimatedActor *arg0);
 void initCourseSelectPreviewModelIn(void *arg0);
 void updateCourseSelectPreviewModelOut(CourseSelectAnimatedActor *arg0);
 void initCourseSelectPreviewModelOut(void *arg0);
+void updateCourseSelectCourseIconList(CourseSelectIconListActor *arg0);
 void initCourseSelectCourseIconList(CourseSelectIconListActor *arg0);
 void initCourseSelectExtraCourseIconList(CourseSelectWidgetActor *arg0);
 void updateCourseSelectCourseCursors(CourseSelectWidgetActor *arg0);
