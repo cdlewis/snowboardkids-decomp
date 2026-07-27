@@ -3,7 +3,7 @@ const char D_800E1A60[16] = "NG Channel\n";
 u8 *Fstop(PlayerCommandState *arg0, u8 *arg1) {
     arg0->unk60 = 0;
     arg0->unk68 = 0;
-    arg0->data = 0;
+    arg0->song_addr = 0;
     arg0->soundId = 0;
     arg0->id = 0;
     return 0;
@@ -19,7 +19,7 @@ void *Fwave(PlayerCommandState *arg0, u8 *arg1) {
         v |= *(new_var = arg1);
         arg1++;
     }
-    arg0->instrumentIndex = v;
+    arg0->wave = v;
     return arg1;
 }
 
@@ -41,7 +41,7 @@ s32 Fdefa(PlayerCommandState *arg0, u8 *arg1) {
         value = 1;
     }
     arg0->unkF4 = value;
-    arg0->unkF5 = arg1[0];
+    arg0->env_init_vol = arg1[0];
     value = arg1[1];
     arg1 += 2;
     if (value == 0) {
@@ -91,7 +91,7 @@ s32 Ftempo(PlayerCommandState *arg0, u8 *arg1) {
         if (max_channels > 0) {
             do {
                 i++;
-                if (entry->data == arg0->data) {
+                if (entry->song_addr == arg0->song_addr) {
                     entry->unkBA = value;
                     entry->unkB8 = scaled;
                 }
@@ -172,20 +172,20 @@ s32 Flength(PlayerCommandState *arg0, u8 *arg1) {
     b = arg1[0];
     arg1++;
     if (b < 0x80) {
-        arg0->unkC0 = b;
+        arg0->fixed_length = b;
     } else {
         value = ((b & 0x7F) << 6) << 2;
-        arg0->unkC0 = value;
+        arg0->fixed_length = value;
         new_var = arg1[0];
         b = new_var;
-        arg0->unkC0 = value + b;
+        arg0->fixed_length = value + b;
         arg1++;
     }
     return (s32)arg1;
 }
 
 s32 Fignore(PlayerCommandState *arg0, s32 arg1) {
-    arg0->flagE6 = 1;
+    arg0->ignore = 1;
     return arg1;
 }
 
@@ -221,27 +221,27 @@ s32 Fenvelope(PlayerCommandState *arg0, u8 *arg1) {
         var_v0 = arg1[0] | ((0, (var_v0 & 0x7F) << 8));
         arg1 += 1;
     }
-    Fdefa(arg0, arg0->data->commands + (var_v0 * 7));
+    Fdefa(arg0, arg0->song_addr->commands + (var_v0 * 7));
     return (s32)arg1;
 }
 
 s32 Fenvoff(PlayerCommandState *arg0, s32 arg1) {
-    arg0->flagE8 = 1;
+    arg0->env_trigger_off = 1;
     return arg1;
 }
 
 s32 Fenvon(PlayerCommandState *arg0, s32 arg1) {
-    arg0->flagE8 = 0;
+    arg0->env_trigger_off = 0;
     return arg1;
 }
 
 s32 Ftroff(PlayerCommandState *arg0, s32 arg1) {
-    arg0->flagE5 = 1;
+    arg0->trigger_off = 1;
     return arg1;
 }
 
 s32 Ftron(PlayerCommandState *arg0, s32 arg1) {
-    arg0->flagE5 = 0;
+    arg0->trigger_off = 0;
     return arg1;
 }
 
@@ -293,7 +293,7 @@ s32 Fnext(PlayerCommandState *arg0, s32 arg1) {
 s32 Fwobble(PlayerCommandState *arg0, u8 *arg1) {
     arg0->unk119 = arg1[0];
     arg0->unkEB = arg1[1];
-    arg0->unk106 = arg1[2];
+    arg0->wobble_off_speed = arg1[2];
     return (s32)(arg1 + 3);
 }
 
@@ -303,12 +303,12 @@ s32 Fwobbleoff(PlayerCommandState *arg0, s32 arg1) {
 }
 
 s32 Fvelon(PlayerCommandState *arg0, s32 arg1) {
-    arg0->unkED = 1;
+    arg0->velocity_on = 1;
     return arg1;
 }
 
 s32 Fveloff(PlayerCommandState *arg0, s32 arg1) {
-    arg0->unkED = 0;
+    arg0->velocity_on = 0;
     return arg1;
 }
 
@@ -316,15 +316,15 @@ s32 Fvelocity(PlayerCommandState *arg0, u8 *arg1) {
     s32 ret;
 
     ret = (s32)(arg1 + 1);
-    arg0->unkEE = arg1[0];
+    arg0->default_velocity = arg1[0];
     if (ret) {
     }
-    arg0->unkED = 0;
+    arg0->velocity_on = 0;
     return ret;
 }
 
 s32 Fpan(PlayerCommandState *arg0, u8 *arg1) {
-    arg0->unkF2 = (s32)(u8)*arg1 / 2;
+    arg0->pan = (s32)(u8)*arg1 / 2;
     return (s32)(arg1 + 1);
 }
 
@@ -343,7 +343,7 @@ void *Fdrums(void *arg0, u8 *arg1) {
 }
 
 s32 Fdrumsoff(PlayerCommandState *arg0, s32 arg1) {
-    arg0->jumpTarget = 0;
+    arg0->pdrums = 0;
     return arg1;
 }
 

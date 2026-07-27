@@ -33,17 +33,17 @@ ALMicroTime __MusIntMain(void *arg0) {
     PlayerCommandState *channel;
 
     for (i = 0, channel = mus_channels; i < max_channels; i++, channel++) {
-        if (channel->sequencePos == 0) {
+        if (channel->pdata == 0) {
             continue;
         }
 
-        channel->unk0 += (u16)channel->unkB8;
-        if (channel->unkBC != 0x7FFF) {
-            while ((u32)channel->unkC < (u32)channel->unk0 && channel->sequencePos != 0) {
+        channel->channel_frame += (u16)channel->unkB8;
+        if (channel->length != 0x7FFF) {
+            while ((u32)channel->note_end_frame < (u32)channel->channel_frame && channel->pdata != 0) {
                 __MusIntGetNewNote(channel, i);
             }
         }
-        if (channel->sequencePos == 0) {
+        if (channel->pdata == 0) {
             continue;
         }
 
@@ -57,15 +57,15 @@ ALMicroTime __MusIntMain(void *arg0) {
         if (channel->fadeTarget != -1) {
             channel->fadeTarget--;
             if (channel->fadeTarget == -1) {
-                channel->sequencePos = Fstop(channel, 0);
-                if (channel->unkE4 != 0) {
-                    channel->unkE4 = 0;
+                channel->pdata = Fstop(channel, 0);
+                if (channel->playing != 0) {
+                    channel->playing = 0;
                     alSynStopVoice(&gAudioSynthesizer, &mus_voices[i]);
                 }
             }
         }
 
-        if (channel->unkE4 != 0) {
+        if (channel->playing != 0) {
             __MusIntProcessEnvelope(channel);
             __MusIntProcessVibrato(channel);
             __MusIntProcessWobble(channel);
@@ -73,28 +73,27 @@ ALMicroTime __MusIntMain(void *arg0) {
             __MusIntSetVolumeAndPan(channel, i);
         }
 
-        channel->noteAgeTicks = (u32)(channel->unk0 - channel->unk10) >> 8;
-        channel->noteAgeTicksF = channel->noteAgeTicks;
+        channel->count = (u32)(channel->channel_frame - channel->note_start_frame) >> 8;
+        channel->count_float = channel->count;
     }
 
     mus_next_frame_time++;
     return 1000000 / mus_vsyncs_per_second;
 }
 
-// __MusIntGetNewNote best match: 99.962% (nonmatchings/__MusIntGetNewNote-8498672362023432715/base_13.c)
+// __MusIntGetNewNote best match: 99.962% (nonmatchings/__MusIntGetNewNote/base_7.c)
 
 #pragma GLOBAL_ASM("asm/nonmatchings/libmus/player/__MusIntGetNewNote.s")
 
 #ifdef NON_MATCHING
-typedef u8 *(*PlayerCommandHandler)(PlayerCommandState *, u8 *, s32);
+typedef u8 *(*PlayerCommandHandler)(PlayerCommandState *, u8 *);
 
 extern PlayerCommandHandler jumptable[];
 extern u8 mus_default_velocities[];
 
-void __MusIntGetNewNote(PlayerCommandState *arg0, s32 arg1) {
+void __MusIntGetNewNote(PlayerCommandState *cp, s32 x) {
     u8 *seq;
     u8 *durationPos;
-    u8 velocity;
     u8 cmd;
     u8 fxMix;
     u32 durationValue;
@@ -102,14 +101,13 @@ void __MusIntGetNewNote(PlayerCommandState *arg0, s32 arg1) {
     int zero;
     u32 duration;
     int instrumentIndex;
-    int velocityIndex;
     s32 soundIndex;
 
-    seq = arg0->sequencePos;
+    seq = cp->pdata;
     if (seq != NULL) {
         cmd = seq[0];
         while (cmd >= 0x80) {
-            seq = jumptable[cmd & 0x7F](arg0, seq + 1, cmd);
+            seq = jumptable[cmd & 0x7F](cp, seq + 1);
             if (seq == NULL) {
                 if (1) {
                 }
@@ -118,103 +116,103 @@ void __MusIntGetNewNote(PlayerCommandState *arg0, s32 arg1) {
             cmd = seq[0];
         }
     }
-    arg0->sequencePos = seq;
+    cp->pdata = seq;
 
     if (seq != NULL) {
-        arg0->portamentoStartPitch = arg0->currentNotePitch;
+        cp->last_note = cp->port_base;
         cmd = (*seq) ^ 0;
-        arg0->sequencePos = seq + 1;
-        arg0->unkFE = cmd;
+        cp->pdata = seq + 1;
+        cp->note = cmd;
 
-        if (arg0->unkED != 0) {
-            arg0->unk108 = mus_default_velocities[*arg0->sequencePos++];
+        if (cp->velocity_on != 0) {
+            cp->velocity = mus_default_velocities[*cp->pdata++];
         } else {
-            arg0->unk108 = mus_default_velocities[arg0->unkEE];
+            cp->velocity = mus_default_velocities[cp->default_velocity];
         }
 
-        baseDuration = (u16)arg0->unkC0;
+        baseDuration = cp->fixed_length;
         if (baseDuration != 0) {
             durationValue = baseDuration;
             durationValue = durationValue & 0xFFFF;
-            arg0->unkBC = durationValue;
-            arg0->unk28 = (f32)durationValue;
+            cp->length = durationValue;
+            cp->length_float = (f32)durationValue;
         }
 
         zero = 0;
-        if ((arg0->flagE6 != zero) || (baseDuration == 0)) {
-            arg0->flagE6 = 0;
-            cmd = *arg0->sequencePos++;
+        if ((cp->ignore != zero) || (baseDuration == 0)) {
+            cp->ignore = 0;
+            cmd = *cp->pdata++;
             if (cmd < 0x80) {
-                arg0->unkBC = cmd;
-                arg0->unk28 = (f32)cmd;
+                cp->length = cmd;
+                cp->length_float = (f32)cmd;
             } else {
-                durationPos = (u8 *)arg0->sequencePos;
+                durationPos = cp->pdata;
                 duration = (((cmd & 0x7F) << 5) << 1) << 2;
-                arg0->unkBC = duration;
+                cp->length = duration;
                 duration += *durationPos;
-                arg0->unkBC = duration;
-                arg0->unk28 = (duration & 0xFFFF) & 0xFFFFu;
-                arg0->sequencePos = durationPos + 1;
+                cp->length = duration;
+                cp->length_float = (duration & 0xFFFF) & 0xFFFFu;
+                cp->pdata = durationPos + 1;
             }
         }
 
-        duration = arg0->unkC;
-        arg0->unkC += arg0->unkBC << 8;
-        arg0->noteAgeTicks = 0;
-        arg0->pitchPulseOffset = 0;
-        arg0->unk10 = duration;
-        arg0->noteAgeTicksF = 0.f;
-        arg0->unk107 = arg0->unk106;
+        duration = cp->note_end_frame;
+        cp->note_end_frame += cp->length << 8;
+        cp->count = 0;
+        cp->wobble_current = 0;
+        cp->note_start_frame = duration;
+        cp->count_float = 0.f;
+        cp->wobble_count = cp->wobble_off_speed;
 
-        if (arg0->unkFE != 0) {
-            if (arg0->jumpTarget != 0) {
-                u8 *entry = (u8 *)arg0->jumpTarget + (arg0->unkFE * 4);
+        if (cp->note != 0) {
+            if (cp->pdrums != NULL) {
+                DrumEntry *drum = &cp->pdrums[cp->note - 12];
 
-                arg0->instrumentIndex = entry[-0x30];
-                arg0->unkF2 = entry[-0x2E] / 2;
-                Fdefa(arg0, arg0->data->commands + (entry[-0x2F] * 7));
-                arg0->unkFE = ((u8 *)arg0->jumpTarget + (arg0->unkFE * 4))[-0x2D];
+                cp->wave = drum->wave;
+                cp->pan = drum->pan / 2;
+                Fdefa(cp, cp->song_addr->commands + (drum->envelope * 7));
+                cp->note = drum->pitch;
             }
 
-            if (gSoundBankEntryCount <= (instrumentIndex = arg0->instrumentIndex)) {
+            if (gSoundBankEntryCount <= (instrumentIndex = cp->wave)) {
                 soundIndex = 0;
             } else {
                 soundIndex = instrumentIndex;
             }
 
-            if (arg0->flagE5 == 0) {
-                if (arg0->unkE4 != 0) {
-                    alSynStopVoice(&gAudioSynthesizer, &mus_voices[arg1]);
+            if (cp->trigger_off == 0) {
+                if (cp->playing != 0) {
+                    alSynStopVoice(&gAudioSynthesizer, &mus_voices[x]);
                 }
-                arg0->unkE4 = 1;
-                arg0->unkB6 = 0xFFFF;
-                arg0->unkE3 = 0xFF;
-                alSynStartVoice(&gAudioSynthesizer, &mus_voices[arg1],
+                cp->playing = 1;
+                cp->old_volume = 0xFFFF;
+                cp->old_pan = 0xFF;
+                alSynStartVoice(&gAudioSynthesizer, &mus_voices[x],
                                 gSoundWaveTable[soundIndex]);
             }
 
-            arg0->notePitch = gSoundPlayerTuningTable[soundIndex] + arg0->unkFE - 5;
-            if (arg0->flagE8 == 0) {
-                arg0->unkF8 = 0;
-                arg0->unkF9 = arg0->unkF5;
-                __MusIntInitEnvelope(arg0);
+            cp->base_note = gSoundPlayerTuningTable[soundIndex] + cp->note - 5;
+            if (cp->env_trigger_off == 0) {
+                cp->env_phase = 0;
+                cp->env_current = cp->env_init_vol;
+                __MusIntInitEnvelope(cp);
             }
-            __MusIntSetPitch(arg0, arg1);
-            __MusIntSetVolumeAndPan(arg0, arg1);
-            fxMix = arg0->unkF3;
-            if (fxMix != arg0->unkE2) {
-                arg0->unkE2 = fxMix;
-                alSynSetFXMix(&gAudioSynthesizer, &mus_voices[arg1], fxMix);
+            __MusIntSetPitch(cp, x);
+            __MusIntSetVolumeAndPan(cp, x);
+            fxMix = cp->reverb;
+            if (fxMix != cp->old_reverb) {
+                cp->old_reverb = fxMix;
+                alSynSetFXMix(&gAudioSynthesizer, &mus_voices[x], fxMix);
             }
-        } else if (arg0->unkF8 < 4) {
-            arg0->unkF8 = 4;
-            arg0->unk100 = arg0->unk0;
-            arg0->unkFA = 1;
-            arg0->unk104 = arg0->unkF9;
+        } else if (cp->env_phase < 4) {
+            cp->env_phase = 4;
+            cp->release_frame = cp->channel_frame;
+            cp->env_count = 1;
+            cp->release_start_vol = cp->env_current;
         }
-    } else if (arg0->unkE4 != 0) {
-        arg0->unkE4 = 0;
-        alSynStopVoice(&gAudioSynthesizer, &mus_voices[arg1]);
+    } else if (cp->playing != 0) {
+        cp->playing = 0;
+        alSynStopVoice(&gAudioSynthesizer, &mus_voices[x]);
     }
 }
 #endif
@@ -225,7 +223,7 @@ void __MusIntSetVolumeAndPan(PlayerCommandState *arg0, s32 arg1) {
     int pan;
     u8 oldPan;
 
-    volume = (u32)(arg0->unkF9 * (*arg0).unkEF * arg0->unk108 * arg0->unkB0) >> 13;
+    volume = (u32)(arg0->env_current * (*arg0).unkEF * arg0->velocity * arg0->unkB0) >> 13;
     if (volume >= 0x8000U) {
         volume = 0x7FFF;
     }
@@ -243,16 +241,16 @@ void __MusIntSetVolumeAndPan(PlayerCommandState *arg0, s32 arg1) {
         volume = (stopping * volume) / arg0->fadeTime;
     }
 
-    if (volume != arg0->unkB6) {
-        arg0->unkB6 = volume;
+    if (volume != arg0->old_volume) {
+        arg0->old_volume = volume;
         alSynSetVol(&gAudioSynthesizer, &mus_voices[arg1], (s16)volume, 0xF4240 / mus_vsyncs_per_second);
     }
 
-    stopping = arg0->unkE3;
+    stopping = arg0->old_pan;
     oldPan = stopping;
-    pan = (((*(u8 *)&arg0->unkF2) * arg0->unkB2) >> 7) & 0x7F;
+    pan = (((*(u8 *)&arg0->pan) * arg0->unkB2) >> 7) & 0x7F;
     if (pan != oldPan) {
-        arg0->unkE3 = pan;
+        arg0->old_pan = pan;
         alSynSetPan(&gAudioSynthesizer, &mus_voices[arg1], pan & 0xFF);
     }
 }
@@ -261,21 +259,21 @@ void __MusIntSetPitch(PlayerCommandState *arg0, s32 arg1) {
     f32 frequency;
     f32 temp;
 
-    frequency = U8_TO_FLOAT(arg0->notePitch);
+    frequency = U8_TO_FLOAT(arg0->base_note);
     if (arg0->portamentoTime != 0) {
-        if (arg0->noteAgeTicks <= arg0->portamentoTime) {
-            temp = (frequency - arg0->portamentoStartPitch) / (f32)arg0->portamentoTime;
-            temp *= arg0->noteAgeTicksF;
-            frequency = arg0->portamentoStartPitch + temp;
+        if (arg0->count <= arg0->portamentoTime) {
+            temp = (frequency - arg0->last_note) / (f32)arg0->portamentoTime;
+            temp *= arg0->count_float;
+            frequency = arg0->last_note + temp;
         }
     }
-    arg0->currentNotePitch = frequency;
+    arg0->port_base = frequency;
     frequency += arg0->vibratoPitchOffset +
                  (((f32)arg0->pitchOffset) * (1 - arg0->skipPitchOffsetOnce)) +
                  arg0->finePitchOffset +
-                 ((f32)arg0->pitchPulseOffset);
+                 ((f32)arg0->wobble_current);
     arg0->skipPitchOffsetOnce = 0;
-    frequency += gSoundPlayerPitchOffsets[arg0->instrumentIndex];
+    frequency += gSoundPlayerPitchOffsets[arg0->wave];
     frequency += (f32)arg0->pitchBendDepth * (1.0 / 64.0) *
                  ((f32)arg0->pitchBendValue - 64.0);
     frequency += arg0->handlePitchOffset;
@@ -289,7 +287,7 @@ void __MusIntSetPitch(PlayerCommandState *arg0, s32 arg1) {
     }
     if (frequency > 2.0) {
         frequency = 2.0;
-        arg0->unk108 = 0;
+        arg0->velocity = 0;
     }
     alSynSetPitch(&gAudioSynthesizer, &mus_voices[arg1], frequency);
 }
@@ -297,20 +295,20 @@ void __MusIntSetPitch(PlayerCommandState *arg0, s32 arg1) {
 void __MusIntInitEnvelope(PlayerCommandState *arg0) {
     u16 temp_v0;
 
-    if (arg0->unkBC != 0x7FFF) {
+    if (arg0->length != 0x7FFF) {
         temp_v0 = arg0->unkC2;
         if (temp_v0 != 0) {
-            arg0->unk100 = arg0->unk10 + (temp_v0 << 8);
+            arg0->release_frame = arg0->note_start_frame + (temp_v0 << 8);
         } else {
-            arg0->unk100 = arg0->unkC - (arg0->unkC4 << 8);
+            arg0->release_frame = arg0->note_end_frame - (arg0->unkC4 << 8);
         }
     } else {
-        arg0->unk100 = 0x7FFFFFFF;
+        arg0->release_frame = 0x7FFFFFFF;
     }
 
-    arg0->unkF9 = arg0->unkF5;
-    arg0->unkFA = arg0->unkF4;
-    arg0->unkF8 = 1;
+    arg0->env_current = arg0->env_init_vol;
+    arg0->env_count = arg0->unkF4;
+    arg0->env_phase = 1;
 }
 
 void __MusIntProcessEnvelope(PlayerCommandState *arg0) {
@@ -322,66 +320,66 @@ void __MusIntProcessEnvelope(PlayerCommandState *arg0) {
     u8 start_level;
     f32 release_amount;
 
-    if (!arg0->unkF8) {
+    if (!arg0->env_phase) {
         return;
     }
 
-    if ((arg0->unk0 >= arg0->unk100) && (arg0->unkF8 < 4)) {
-        arg0->unkF8 = 4;
-        arg0->unkFA = 1;
-        arg0->unk104 = arg0->unkF9;
+    if ((arg0->channel_frame >= arg0->release_frame) && (arg0->env_phase < 4)) {
+        arg0->env_phase = 4;
+        arg0->env_count = 1;
+        arg0->release_start_vol = arg0->env_current;
     }
 
-    arg0->unkFA--;
-    if (!arg0->unkFA) {
+    arg0->env_count--;
+    if (!arg0->env_count) {
         rate = arg0->unkF4;
-        phase = arg0->unkF8;
-        arg0->unkFA = rate;
-        switch (arg0->unkF8) {
+        phase = arg0->env_phase;
+        arg0->env_count = rate;
+        switch (arg0->env_phase) {
             case 1:
-                env_phase_count = (u32)(arg0->unk0 - arg0->unk10) >> 8;
+                env_phase_count = (u32)(arg0->channel_frame - arg0->note_start_frame) >> 8;
                 env_phase_count = env_phase_count / rate;
                 if (env_phase_count < arg0->unkFB) {
-                    start_level = arg0->unkF5;
+                    start_level = arg0->env_init_vol;
                     envelope_value = arg0->unkF6 - start_level;
                     envelope_value *= arg0->unk30;
                     envelope_value *= (f32)env_phase_count;
                     initial_level = (f32)start_level;
-                    arg0->unkF9 = (s32)(initial_level + envelope_value);
+                    arg0->env_current = (s32)(initial_level + envelope_value);
                     return;
                 } else {
-                    arg0->unkF8 = arg0->unkF8 + 1;
-                    arg0->unkF9 = arg0->unkF6;
+                    arg0->env_phase = arg0->env_phase + 1;
+                    arg0->env_current = arg0->unkF6;
                     return;
                 }
             case 2:
-                env_phase_count = ((u32)(arg0->unk0 - arg0->unk10) >> 8) - arg0->unkFB;
+                env_phase_count = ((u32)(arg0->channel_frame - arg0->note_start_frame) >> 8) - arg0->unkFB;
                 env_phase_count = env_phase_count / rate;
                 if (env_phase_count < arg0->unkFC) {
                     envelope_value = arg0->unkF7 - arg0->unkF6;
                     envelope_value *= arg0->unk34;
                     envelope_value *= (f32)env_phase_count;
-                    arg0->unkF9 = (s32)((f32)arg0->unkF6 + envelope_value);
+                    arg0->env_current = (s32)((f32)arg0->unkF6 + envelope_value);
                     return;
                 } else {
-                    arg0->unkF8 = arg0->unkF8 + 1;
-                    arg0->unkF9 = arg0->unkF7;
+                    arg0->env_phase = arg0->env_phase + 1;
+                    arg0->env_current = arg0->unkF7;
                     return;
                 }
             case 3:
                 return;
             case 4:
-                env_phase_count = (u32)(arg0->unk0 - arg0->unk100) >> 8;
+                env_phase_count = (u32)(arg0->channel_frame - arg0->release_frame) >> 8;
                 env_phase_count = env_phase_count / rate;
                 if (env_phase_count < arg0->unkFD) {
-                    release_amount = arg0->unk104;
+                    release_amount = arg0->release_start_vol;
                     release_amount *= arg0->unk38;
                     release_amount *= (f32)env_phase_count;
-                    arg0->unkF9 = (s32)((f32)arg0->unk104 - release_amount);
+                    arg0->env_current = (s32)((f32)arg0->release_start_vol - release_amount);
                     return;
                 } else {
-                    arg0->unkF8 = arg0->unkF8 + 1;
-                    arg0->unkF9 = 0;
+                    arg0->env_phase = arg0->env_phase + 1;
+                    arg0->env_current = 0;
                     return;
                 }
         }
@@ -393,19 +391,19 @@ void __MusIntProcessWobble(PlayerCommandState *arg0) {
     u8 temp_v0;
 
     if (1) {
-        temp_t7 = (arg0->unk107 & 0xFFFFU) - 1;
+        temp_t7 = (arg0->wobble_count & 0xFFFFU) - 1;
     }
-    arg0->unk107 = temp_t7;
+    arg0->wobble_count = temp_t7;
     if ((temp_t7 & 0xFF) == 0) {
         temp_v0 = arg0->unkEB;
         if (temp_v0 != 0) {
-            if (arg0->pitchPulseOffset == 0) {
-                arg0->unk107 = temp_v0;
-                arg0->pitchPulseOffset = arg0->unk119;
+            if (arg0->wobble_current == 0) {
+                arg0->wobble_count = temp_v0;
+                arg0->wobble_current = arg0->unk119;
                 return;
             }
-            arg0->pitchPulseOffset = 0;
-            arg0->unk107 = arg0->unk106;
+            arg0->wobble_current = 0;
+            arg0->wobble_count = arg0->wobble_off_speed;
         }
     }
 }
@@ -417,7 +415,7 @@ void __MusIntProcessVibrato(PlayerCommandState *arg0) {
 
     temp_v0 = arg0->unkE9;
     if (temp_v0 != 0) {
-        temp_v1 = arg0->noteAgeTicks - arg0->unk105;
+        temp_v1 = arg0->count - arg0->unk105;
         if (temp_v1 > 0) {
             temp_fv1 = sinf((f32)((f64)((temp_v1 / (f32)temp_v0) * ((float)2.0)) * 3.1415926000000001)) * arg0->vibratoDepth;
             arg0->vibratoPitchOffset = temp_fv1;
@@ -437,7 +435,7 @@ void __MusIntProcessContinuousVolume(PlayerCommandState *arg0) {
     register int temp_t9;
     register u16 temp_t0;
 
-    if ((u32)arg0->unk4 < (u32)arg0->unk0) {
+    if ((u32)arg0->unk4 < (u32)arg0->channel_frame) {
         do {
             temp_t9 = (short)(temp_c8 = arg0->unkC8) - one;
             arg0->unk4 = arg0->unk4 + 0x100;
@@ -464,7 +462,7 @@ void __MusIntProcessContinuousVolume(PlayerCommandState *arg0) {
                     arg0->unkC8 = one;
                 }
             }
-        } while ((u32)arg0->unk4 < (u32)arg0->unk0);
+        } while ((u32)arg0->unk4 < (u32)arg0->channel_frame);
     }
 }
 
@@ -480,7 +478,7 @@ void __MusIntProcessContinuousPitchBend(PlayerCommandState *arg0) {
     register int temp_t9;
     register u16 temp_t0;
 
-    if ((u32)arg0->unk8 < (u32)arg0->unk0) {
+    if ((u32)arg0->unk8 < (u32)arg0->channel_frame) {
         do {
             temp_t9 = (short)(temp_ca = arg0->unkCA) - one;
             arg0->unk8 = arg0->unk8 + 0x100;
@@ -507,7 +505,7 @@ void __MusIntProcessContinuousPitchBend(PlayerCommandState *arg0) {
                     arg0->unkCA = one;
                 }
             }
-        } while ((u32)arg0->unk8 < (u32)arg0->unk0);
+        } while ((u32)arg0->unk8 < (u32)arg0->channel_frame);
     }
 }
 
@@ -620,8 +618,8 @@ void __MusIntInitialiseChannel(PlayerCommandState *arg0) {
     s32 var_a1;
     u16 temp_t9;
 
-    temp_v0 = arg0->unkE4;
-    arg0->sequencePos = 0;
+    temp_v0 = arg0->playing;
+    arg0->pdata = 0;
 
     var_v1 = (PlayerCommandClearBlock *)arg0;
     var_a1 = 0;
@@ -636,18 +634,18 @@ loop:
         goto loop;
     }
 
-    arg0->unkB6 = 0xFFFF;
-    arg0->unkE2 = 0xFF;
-    arg0->unkE3 = 0xFF;
+    arg0->old_volume = 0xFFFF;
+    arg0->old_reverb = 0xFF;
+    arg0->old_pan = 0xFF;
     arg0->cachedPitch = 99.9f;
     temp_t9 = 0x6000 / mus_vsyncs_per_second;
-    arg0->unkBC = 1;
-    arg0->unkED = 0;
-    arg0->unkEE = 0x7F;
+    arg0->length = 1;
+    arg0->velocity_on = 0;
+    arg0->default_velocity = 0x7F;
     arg0->unkEF = 0x7F;
     arg0->pitchBendValue = 0x40;
     arg0->pitchBendDepth = 2;
-    *(u8 *)&arg0->unkF2 = 0x40;
+    *(u8 *)&arg0->pan = 0x40;
     arg0->unkC8 = 1;
     arg0->unkCA = 1;
     arg0->fadeTarget = -1;
@@ -656,7 +654,7 @@ loop:
     arg0->unkB8 = temp_t9;
     arg0->unkB2 = 0x80;
     arg0->unkB4 = 0x80;
-    arg0->unkE4 = temp_v0;
+    arg0->playing = temp_v0;
     arg0->soundId = 0;
 }
 
@@ -668,7 +666,7 @@ s32 __MusIntFindChannel(s32 arg0, s32 arg1) {
     i = 0;
     if (max_channels > 0) {
         do {
-            if (entry->sequencePos == 0) {
+            if (entry->pdata == 0) {
                 return i;
             }
             i++;
@@ -698,6 +696,6 @@ s32 __MusIntStartEffect(PlayerCommandState *arg0, s32 arg1, s32 arg2, s32 arg3, 
     arg0->unk20 = arg4;
     temp_v1 = libmus_fxheader_current[arg1];
     arg0->restartPos = temp_v1;
-    arg0->sequencePos = temp_v1;
+    arg0->pdata = temp_v1;
     return arg0->id;
 }

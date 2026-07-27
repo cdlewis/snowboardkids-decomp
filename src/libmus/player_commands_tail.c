@@ -1,5 +1,5 @@
 s32 Freverb(PlayerCommandState *arg0, u8 *arg1) {
-    arg0->unkF3 = *arg1;
+    arg0->reverb = *arg1;
     return (s32)(arg1 + 1);
 }
 s32 FrandNote(PlayerCommandState *arg0, u8 *arg1) {
@@ -31,8 +31,8 @@ u8 *FrandPan(PlayerCommandState *arg0, u8 *arg1) {
     randomRange = *arg1;
     arg1++;
     randomValue = __MusIntRandomWithContext(randomRange, arg1, arg0);
-    arg0->unkF2 = randomValue;
-    arg0->unkF2 = *arg1 + (randomRange = randomValue);
+    arg0->pan = randomValue;
+    arg0->pan = *arg1 + (randomRange = randomValue);
     return arg1 + 1;
 }
 
@@ -54,7 +54,7 @@ s32 Fstartfx(PlayerCommandState *arg0, u8 *arg1) {
         arg1++;
     }
 
-    newId = MusStartEffect2(soundId, arg0->unkEF, (u8)arg0->unkF2, 0, arg0->unk20++);
+    newId = MusStartEffect2(soundId, arg0->unkEF, (u8)arg0->pan, 0, arg0->unk20++);
     arg0->unk20--;
     if (newId == 0) {
         return (s32)arg1;
