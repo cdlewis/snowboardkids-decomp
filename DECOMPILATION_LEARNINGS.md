@@ -65,6 +65,12 @@ isolation rather than importing a whole batch, since some of its output (e.g.
   stores it should follow, even though the scheduler ultimately interleaves
   them. Reordering just the constant assignment can fix a pure
   scheduling/register diff.
+- **Physical source-line grouping can affect scheduling.** With otherwise
+  identical statements and control flow, putting a run of setup statements on
+  one source line can change how IDO interleaves independent address
+  materialization instructions. This is a last-mile option when the remaining
+  diff is instruction order only and ordinary statement reordering has no
+  effect.
 - **A folded empty pointer condition can steer induction-update scheduling.**
   Once loop control, registers, and memory accesses already match, a repeated
   empty test such as `if (((!p) && (!p)) && (!p)) {}` can change which of two
