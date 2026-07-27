@@ -561,56 +561,20 @@ void updateCharacterSelectLimitedCourseList(CharacterSelectCourseMenuFrameActor 
     }
 }
 
-// initCharacterSelectLimitedCourseList best match: 83.158% (nonmatchings/initCharacterSelectLimitedCourseList-2188069624939011928/base_11.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/menu/character_select/character_select_course_ui/initCharacterSelectLimitedCourseList.s")
-
-#ifdef NON_MATCHING
 void initCharacterSelectLimitedCourseList(CharacterSelectCourseMenuFrameActor *arg0) {
-    s32 baseY;
-    u8 spacing;
-    s32 firstBase;
-    s32 secondBase;
-    u8 spacing1;
-    u8 spacing2;
-    s32 thirdBase;
-    s32 fourthBase;
-    s32 tripleSpacing;
-    s32 doubleSpacing;
-    s32 y1;
-    s32 y2;
-    s32 y3;
-    s32 x;
+    s32 i;
 
-    baseY = -0x58;
-    spacing = 0x18;
-    arg0->baseY = baseY;
-    firstBase = *(volatile s16 *)&arg0->baseY;
-    secondBase = *(volatile s16 *)&arg0->baseY;
-    spacing = spacing2 = spacing1 = (arg0->itemSpacing = spacing);
-    *(volatile s16 *)&arg0->y[0] = firstBase;
-    thirdBase = *(volatile s16 *)&arg0->baseY;
-    fourthBase = *(volatile s16 *)&arg0->baseY;
-    tripleSpacing = spacing << 2;
-    x = -0x104;
-    y1 = secondBase + spacing1;
-    tripleSpacing -= spacing;
-    doubleSpacing = spacing2 << 1;
-    spacing1 = 1;
-    y2 = thirdBase + doubleSpacing;
-    y3 = fourthBase + tripleSpacing;
-    arg0->y[3] = y3;
-    arg0->y[2] = y2;
-    arg0->y[1] = y1;
-    arg0->x[1] = x;
-    arg0->x[2] = x;
-    arg0->x[3] = x;
-    arg0->x[0] = x;
+    arg0->baseY = -0x58;
+    arg0->itemSpacing = 0x18;
+    for (i = 0; i < 4; i++) {
+        arg0->x[i] = -0x104;
+        arg0->y[i] = arg0->baseY + (i * arg0->itemSpacing);
+    }
     arg0->timer = 0;
-    arg0->itemCount = spacing1;
+    arg0->itemCount = 1;
     arg0->state = 0;
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateCharacterSelectLimitedCourseList);
 }
-#endif
 
 void drawCharacterSelectCoursePreviewFrame(CharacterSelectCourseWidgetActor *arg0) {
     union {
