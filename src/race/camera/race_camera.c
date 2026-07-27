@@ -38,6 +38,11 @@ typedef union {
 } RacePlayerSlot;
 
 typedef struct {
+    s32 value;
+    u8 pad[RACE_PLAYER_STATE_SIZE - sizeof(s32)];
+} PlayerCameraComponentAlias;
+
+typedef struct {
     /* 0x00 */ u8 pad0[0x2C];
     /* 0x2C */ Vec3i cameraPos;
     /* 0x38 */ u8 pad38[0x48 - 0x38];
@@ -99,6 +104,9 @@ extern s16 calculateFixedAngleBetweenXZPoints(s32, s32, s32, s32);
 extern RaceCamera D_801121E0[RACE_CAMERA_COUNT];
 extern RaceCamera *D_801124A0;
 extern RacePlayerSlot gRacePlayers[];
+extern PlayerCameraComponentAlias D_80122010[];
+extern PlayerCameraComponentAlias D_80122014[];
+extern PlayerCameraComponentAlias D_80122018[];
 extern CourseSpawnEntry gRaceCourseStartEntries[];
 extern u8 gRaceCameraRotationTransitions[];
 extern s16 gRaceCameraChaseYawOffsets[];
@@ -383,130 +391,129 @@ void initRaceCameraFollowPlayer(void) {
     D_801124A0->update();
 }
 
-// updateRaceCameraFollowPlayer best match: 99.978% (nonmatchings/updateRaceCameraFollowPlayer-8498672362023432715/base_4.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race/camera/race_camera/updateRaceCameraFollowPlayer.s")
-
-#ifdef NON_MATCHING
 void updateRaceCameraFollowPlayer(void) {
-    s32 diff;
-    register s32 new_var;
-    register s32 new_var2;
+    s32 delta;
     s32 dx;
     s32 dy;
     s32 dz;
     s32 x;
     s32 y;
     s32 z;
-    s32 dist;
+    s32 distance;
 
     if (gRaceUpdatePaused == 0) {
-        D_801124A0->focus.x += (gRacePlayers[D_801124A0->playerIndex].state.cameraPos.x - D_801124A0->focus.x) >> 1;
-        D_801124A0->focus.y += (gRacePlayers[D_801124A0->playerIndex].state.cameraPos.y - D_801124A0->focus.y) >> 1;
-        D_801124A0->focus.z += (gRacePlayers[D_801124A0->playerIndex].state.cameraPos.z - D_801124A0->focus.z) >> 1;
+        D_801124A0->focus.x +=
+            (D_80122010[D_801124A0->playerIndex].value - D_801124A0->focus.x) >> 1;
+        D_801124A0->focus.y +=
+            (D_80122014[D_801124A0->playerIndex].value - D_801124A0->focus.y) >> 1;
+        D_801124A0->focus.z +=
+            (D_80122018[D_801124A0->playerIndex].value - D_801124A0->focus.z) >> 1;
 
         x = D_801124A0->pos.x;
-        new_var2 = D_801124A0->pos.y;
-        diff = D_801124A0->pos.x;
-        dist = new_var2;
-        y = dist;
-        new_var = D_801124A0->pos.z;
-        z = new_var;
+        y = D_801124A0->pos.y;
+        z = D_801124A0->pos.z;
 
-        dx = D_801124A0->focus.x - x;
-        dy = D_801124A0->focus.y - y;
-        dz = D_801124A0->focus.z - z;
+        dx = D_801124A0->focus.x - D_801124A0->pos.x;
+        dy = D_801124A0->focus.y - D_801124A0->pos.y;
+        dz = D_801124A0->focus.z - D_801124A0->pos.z;
 
-        dist = integerSquareRoot64((s64) dx * dx + (s64) dz * dz);
-        if (dist == 0) {
-            dist = 1;
+        distance = integerSquareRoot64(((s64) dx * dx) + ((s64) dz * dz));
+
+        if (distance == 0) {
+            distance = 1;
             dz = 1;
         }
 
-        if (dist < 0x400000) {
-            dx = ((s64) dx * 0x400000) / dist;
-            dz = ((s64) dz * 0x400000) / dist;
+        if (distance < 0x400000) {
+            dx = ((s64) dx * 0x400000) / distance;
+            dz = ((s64) dz * 0x400000) / distance;
+
             x = D_801124A0->focus.x - dx;
             z = D_801124A0->focus.z - dz;
         }
 
-        dist = integerSquareRoot64((s64) dx * dx + (s64) dy * dy + (s64) dz * dz);
+        if (gRacePlayers) {
+        }
 
-        if (dist > (0x460000 - D_801124A0->distance)) {
-            dx = ((s64) dx * (0x460000 - D_801124A0->distance)) / dist;
-            dy = ((s64) dy * (0x460000 - D_801124A0->distance)) / dist;
-            dz = ((s64) dz * (0x460000 - D_801124A0->distance)) / dist;
+        distance = integerSquareRoot64((((s64) dx * dx) + ((s64) dy * dy)) + ((s64) dz * dz));
+
+        if (distance > (0x460000 - D_801124A0->distance)) {
+            dx = ((s64) dx * (0x460000 - D_801124A0->distance)) / distance;
+            dy = ((s64) dy * (0x460000 - D_801124A0->distance)) / distance;
+            dz = ((s64) dz * (0x460000 - D_801124A0->distance)) / distance;
+
             x = D_801124A0->focus.x - dx;
             y = D_801124A0->focus.y - dy;
             z = D_801124A0->focus.z - dz;
-        } else {
-            if (dist < (0x458000 - D_801124A0->distance)) {
-                dx = ((s64) dx * (0x458000 - D_801124A0->distance)) / dist;
-                if (!gRacePlayers) {
-                }
-                dy = ((s64) dy * (0x458000 - D_801124A0->distance)) / dist;
-                dz = ((s64) dz * (0x458000 - D_801124A0->distance)) / dist;
-                x = D_801124A0->focus.x - dx;
-                y = D_801124A0->focus.y - dy;
-                z = D_801124A0->focus.z - dz;
+        } else if (distance < (0x458000 - D_801124A0->distance)) {
+            dx = ((s64) dx * (0x458000 - D_801124A0->distance)) / distance;
+            dy = ((s64) dy * (0x458000 - D_801124A0->distance)) / distance;
+            dz = ((s64) dz * (0x458000 - D_801124A0->distance)) / distance;
+
+            x = D_801124A0->focus.x - dx;
+            y = D_801124A0->focus.y - dy;
+            z = D_801124A0->focus.z - dz;
+        }
+
+        if (!(gRacePlayers[D_801124A0->playerIndex].state.flags2FC & 0x1000)) {
+            delta = getRaceCourseSurfaceHeight(
+                        (s16) findRaceCourseSurfaceFromHint(
+                            gRacePlayers[D_801124A0->playerIndex].state.surfaceHint, x, z),
+                        x, z) -
+                    0x40000;
+
+            if (y < delta) {
+                y = delta;
             }
         }
 
-        {
-            if (!(gRacePlayers[D_801124A0->playerIndex].state.flags2FC & 0x1000)) {
-                diff = getRaceCourseSurfaceHeight(
-                           (s16) findRaceCourseSurfaceFromHint(
-                               gRacePlayers[D_801124A0->playerIndex].state.surfaceHint, x, z),
-                           x, z) -
-                       0x40000;
-                if (y < diff) {
-                    y = diff;
-                }
-            }
+        D_801124A0->pos.x = (D_801124A0->pos.x + x) - D_801124A0->pos.x;
+        D_801124A0->pos.y = (D_801124A0->pos.y + y) - D_801124A0->pos.y;
+        D_801124A0->pos.z = (D_801124A0->pos.z + z) - D_801124A0->pos.z;
 
-            diff = D_801124A0->pos.x;
-            D_801124A0->pos.x = (D_801124A0->pos.x + x) - diff;
-            new_var2 = D_801124A0->pos.y;
-            diff = new_var2;
-            D_801124A0->pos.y = (diff + y) - diff;
-            new_var = D_801124A0->pos.z;
-            diff = new_var;
-            D_801124A0->pos.z = (diff + z) - diff;
+        delta = 0x12C0000;
 
-            diff = 0x12C0000;
-            if (gRacePlayers[D_801124A0->playerIndex].state.flags2FC & 0x800) {
-                diff = 0;
-            }
-            diff -= D_801124A0->unk28;
-            if (diff >= 0x96001) {
-                diff = 0x96000;
-            }
-            if (diff < 0) {
-                diff /= 6;
-            }
-            D_801124A0->unk28 += diff;
-
-            diff = 0;
-            if (gRacePlayers[D_801124A0->playerIndex].state.flags2FC & 0x800) {
-                diff = 0x280000;
-            }
-            diff -= D_801124A0->distance;
-            if (diff < -0x14000) {
-                diff = -0x14000;
-            }
-            if (diff > 0) {
-                diff /= 6;
-            }
-            new_var2 = diff;
-            D_801124A0->distance += new_var2;
+        if (gRacePlayers[D_801124A0->playerIndex].state.flags2FC & 0x800) {
+            delta = 0;
         }
+
+        delta -= D_801124A0->unk28;
+
+        if (delta > 0x96000) {
+            delta = 0x96000;
+        }
+
+        if (delta < 0) {
+            delta /= 6;
+        }
+
+        D_801124A0->unk28 += delta;
+
+        delta = 0;
+
+        if (gRacePlayers[D_801124A0->playerIndex].state.flags2FC & 0x800) {
+            delta = 0x280000;
+        }
+
+        delta -= D_801124A0->distance;
+
+        if (delta < -0x14000) {
+            delta = -0x14000;
+        }
+
+        if (delta > 0) {
+            delta /= 6;
+        }
+
+        D_801124A0->distance += delta;
     }
 
-    D_801124A0->prevPos.x = gRacePlayers[(*D_801124A0).playerIndex].state.pos.x;
+    D_801124A0->prevPos.x = gRacePlayers[D_801124A0->playerIndex].state.pos.x;
     D_801124A0->prevPos.y = gRacePlayers[D_801124A0->playerIndex].state.pos.y;
     D_801124A0->prevPos.z = gRacePlayers[D_801124A0->playerIndex].state.pos.z;
+
     updateRaceCameraAlternateLookAtTransform();
 }
-#endif
 
 void noopRaceCameraDebugUpdate(void) {
 }
