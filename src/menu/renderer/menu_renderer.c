@@ -123,7 +123,6 @@ typedef void (*MenuRenderCallback)(MenuRenderSprite *);
 
 extern void *allocMenuRenderScratch(s32 size);
 s32 drawMenuTilemapSprite(MenuRenderSprite *sprite, s32 arg1, s16 x, s16 y);
-void drawMenuSpriteTileClipped(s16 arg0, s16 arg1, void *arg2, u16 arg3, u16 arg4, u16 arg5, s32 arg6, s32 arg7);
 void drawMenuSpriteClipped(s16 arg0, s16 arg1, void *arg2, u16 arg3, u16 arg4, u16 arg5, u8 arg6, u8 arg7, s32 arg8, s32 arg9,
                    s32 argA, s32 argB);
 void drawMenuSpriteWithAlphaClipped(s16 arg0, s16 arg1, void *arg2, u16 arg3, u16 arg4, u16 arg5, u8 arg6, u16 arg7, u8 arg8,
@@ -781,57 +780,50 @@ void drawMenuSpriteTile(s16 arg0, s16 arg1, void *arg2, u16 arg3, u16 arg4, u16 
     drawMenuSpriteTileClipped(arg0, arg1, arg2, arg3, arg4, arg5, gMenuViewportWidth / 2, gMenuViewportHeight / 2);
 }
 
-// drawMenuSpriteTileClipped best match: 96.240% (nonmatchings/drawMenuSpriteTileClipped-14/output-1415-1/source.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/menu/renderer/menu_renderer/drawMenuSpriteTileClipped.s")
-
-#ifdef NON_MATCHING
-void drawMenuSpriteTileClipped(s16 x, s16 y, MenuFontAssetTable *table, u16 entryIndex, u16 unused, u16 alpha, s16 clipRight,
-                   s16 clipBottom) {
+void drawMenuSpriteTileClipped(s16 x, s16 y, MenuFontAssetTable *table, u16 entryIndex, u16 unused, u16 intensity,
+                               s16 clipX, s16 clipY) {
     MenuFontAssetEntry *entry;
-    volatile s32 padBefore[1];
+    volatile s32 padding2;
     u8 *paletteBase;
-    volatile s32 padAfter[6];
+    volatile u8 padding0[0x18];
     s32 y0;
     s32 x1;
     s32 y1;
     s32 clipS;
     s32 clipT;
-    s16 minY;
+    volatile u8 padding1[8];
     s32 x0;
     s16 minX;
-    s32 halfWidth;
+    s16 minY;
     s16 maxX;
     s16 maxY;
-    s32 halfHeight;
 
-    paletteBase = (table->entryCount * sizeof(MenuFontAssetEntry)) + (u8 *)table + sizeof(MenuFontAssetEntry);
+    paletteBase = (u8 *)(table->entryCount + table->entries);
     entry = &table->entries[entryIndex];
-    x0 = x + gMenuViewportCenterX;
     entry += 0;
-    x1 = entry->width;
-    x1 = (((x0 & 0xFFFFFFFFFFFFFFFFu) & 0xFFFFFFFFFFFFFFFFu) & 0xFFFFFFFFFFFFFFFFu) + x1; y0 = y + gMenuViewportCenterY;
-    y1 = entry->height;
-    y1 = y0 + y1;
-    maxY = gMenuViewportCenterY + clipBottom;
+    clipS = entry->width;
+    x1 = x0 = x + gMenuViewportCenterX;
+    y0 = y + gMenuViewportCenterY;
+    x1 += clipS;
+    y1 = y0 + entry->height;
     clipS = 0;
     clipT = 0;
-    minX = gMenuViewportCenterX - clipRight;
-    minY = gMenuViewportCenterY - clipBottom;
-    maxX = gMenuViewportCenterX + clipRight;
+    minX = gMenuViewportCenterX - clipX;
+    maxX = gMenuViewportCenterX + clipX;
+    minY = gMenuViewportCenterY - clipY;
+    maxY = gMenuViewportCenterY + clipY;
 
-    halfWidth = gMenuViewportWidth / 2;
-    if (minX < gMenuViewportCenterX - halfWidth) {
-        minX = gMenuViewportCenterX - halfWidth;
+    if (minX < gMenuViewportCenterX - (gMenuViewportWidth / 2)) {
+        minX = gMenuViewportCenterX - (gMenuViewportWidth / 2);
     }
-    if (gMenuViewportCenterX + halfWidth < maxX) {
-        maxX = gMenuViewportCenterX + halfWidth;
+    if (gMenuViewportCenterX + (gMenuViewportWidth / 2) < maxX) {
+        maxX = gMenuViewportCenterX + (gMenuViewportWidth / 2);
     }
-    halfHeight = gMenuViewportHeight / 2;
-    if (minY < gMenuViewportCenterY - halfHeight) {
-        minY = gMenuViewportCenterY - halfHeight;
+    if (minY < gMenuViewportCenterY - (gMenuViewportHeight / 2)) {
+        minY = gMenuViewportCenterY - (gMenuViewportHeight / 2);
     }
-    if (gMenuViewportCenterY + halfHeight < maxY) {
-        maxY = gMenuViewportCenterY + halfHeight;
+    if (gMenuViewportCenterY + (gMenuViewportHeight / 2) < maxY) {
+        maxY = gMenuViewportCenterY + (gMenuViewportHeight / 2);
     }
 
     if (x0 >= maxX) {
@@ -862,24 +854,21 @@ void drawMenuSpriteTileClipped(s16 x, s16 y, MenuFontAssetTable *table, u16 entr
         y1 = maxY - 1;
     }
 
-    gDPLoadTextureTile(gRegionAllocPtr++, entry->imageOffset + (u8 *)table,
-                       G_IM_FMT_CI, G_IM_SIZ_8b, entry->width, entry->height,
-                       0, 0, entry->width, entry->height, 0,
-                       G_TX_CLAMP, G_TX_CLAMP, G_TX_NOMASK, G_TX_NOMASK,
-                       G_TX_NOLOD, G_TX_NOLOD);
-    if (alpha != 0x100) {
+    gDPLoadTextureTile(gRegionAllocPtr++, entry->imageOffset + (u8 *)table, G_IM_FMT_CI, G_IM_SIZ_8b,
+                       entry->width, entry->height, 0, 0, entry->width, entry->height, 0, G_TX_CLAMP,
+                       G_TX_CLAMP, G_TX_NOMASK, G_TX_NOMASK, G_TX_NOLOD, G_TX_NOLOD);
+    if (intensity != 0x100) {
         gDPPipeSync(gRegionAllocPtr++);
         gDPSetCombineMode(gRegionAllocPtr++, G_CC_MODULATEIA_PRIM, G_CC_MODULATEIA_PRIM);
-        gDPSetPrimColor(gRegionAllocPtr++, 0, 0, alpha, alpha, alpha, 0xFF);
+        gDPSetPrimColor(gRegionAllocPtr++, 0, 0, intensity, intensity, intensity, 0xFF);
     }
     gDPLoadTLUT_pal256(gRegionAllocPtr++, paletteBase + (entry->textureIndex << 5));
-    gSPTextureRectangle(gRegionAllocPtr++, x0 << 2, y0 << 2, x1 << 2, y1 << 2,
-                        G_TX_RENDERTILE, clipS << 5, clipT << 5, 0x400, 0x400);
-    if (alpha != 0x100) {
+    gSPTextureRectangle(gRegionAllocPtr++, x0 << 2, y0 << 2, x1 << 2, y1 << 2, G_TX_RENDERTILE,
+                        clipS << 5, clipT << 5, 0x400, 0x400);
+    if (intensity != 0x100) {
         gSPDisplayList(gRegionAllocPtr++, gMenuRenderModeResetDl);
     }
 }
-#endif
 
 void func_80011854(void) {
 }

@@ -38,8 +38,8 @@ void drawMenuSpriteSubrect(s16 x, s16 y, void *texture, u16 tileIndex, u8 srcX, 
 void drawMenuSpriteFixedScale(s16 x, s16 y, void *texture, u16 tileIndex, u16 scaleX, u16 scaleY, u8 flip,
                               u8 unusedPalette);
 void drawMenuSpriteTile(s16 x, s16 y, void *texture, u16 tileIndex, u16 width, u16 height);
-void drawMenuSpriteTileClipped(s16 x, s16 y, void *texture, u16 tileIndex, u16 width, u16 height, s32 clipRight,
-                               s32 clipBottom);
+void drawMenuSpriteTileClipped(s16 x, s16 y, MenuFontAssetTable *table, u16 entryIndex, u16 unused, u16 intensity,
+                               s16 clipX, s16 clipY);
 void noopMenuRenderCallback(void);
 void drawMenuTextureByAssetId(s16 x, s16 y, void *texture, u16 assetId, u16 width, u16 height);
 void setMenuSpriteActorDebugUpdate(MenuRenderSpriteActor *actor);
