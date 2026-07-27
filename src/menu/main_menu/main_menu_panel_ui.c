@@ -210,132 +210,115 @@ void initMainMenuModeSelectGrid(MenuPanelActor *arg0) {
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateMainMenuModeSelectGrid);
 }
 
-// drawMainMenuModeDescriptionPanel best match: 99.184% (nonmatchings/drawMainMenuModeDescriptionPanel-8498672362023432715/base_17.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/menu/main_menu/main_menu_panel_ui/drawMainMenuModeDescriptionPanel.s")
-
-#ifdef NON_MATCHING
 void drawMainMenuModeDescriptionPanel(MenuPanelActor *arg0) {
     s32 i;
+    u16 unused;
+    u16 lineY;
+    s32 visibleIndex;
+    s32 scriptIndex;
+    MenuGlyphScript glyphText[2];
+    u16 lineX;
+    u16 colorMode;
+    MenuGlyphScript *title;
+    MenuGlyphScript *titleCursor;
 
-    drawMenuSprite((s16)(arg0->x - 4), (s16)(arg0->y + 0x14), getRelocatableHeapBlockBase(gAssetHandles.textureHandle),
-                  2, 0x20, 0x20, 0, 0);
-    drawMenuSprite((s16)(arg0->x + 0xF8), (s16)(arg0->y + 0x14), getRelocatableHeapBlockBase(gAssetHandles.textureHandle),
-                  4, 0x20, 0x20, 0, 0);
+    drawMenuSprite((s16)(arg0->x - 4), (s16)(arg0->y + 0x14),
+                   getRelocatableHeapBlockBase(gAssetHandles.textureHandle), 2, 0x20, 0x20, 0, 0);
+    drawMenuSprite((s16)(arg0->x + 0xF8), (s16)(arg0->y + 0x14),
+                   getRelocatableHeapBlockBase(gAssetHandles.textureHandle), 4, 0x20, 0x20, 0, 0);
 
     i = 0;
     do {
-        drawMenuSprite((s16)((arg0->x + i) + 0xC), (s16)(arg0->y + 0x14),
-                      getRelocatableHeapBlockBase(gAssetHandles.textureHandle), 3, 0x20, 0x20, 0, 0);
-        drawMenuSprite((s16)((arg0->x + i) + 0xC), (s16)(arg0->y + 0x4C),
-                      getRelocatableHeapBlockBase(gAssetHandles.textureHandle), 8, 0x20, 0x20, 0, 0);
+        drawMenuSprite((s16)(arg0->x + i + 0xC), (s16)(arg0->y + 0x14),
+                       getRelocatableHeapBlockBase(gAssetHandles.textureHandle), 3, 0x20, 0x20, 0, 0);
+        drawMenuSprite((s16)(arg0->x + i + 0xC), (s16)(arg0->y + 0x4C),
+                       getRelocatableHeapBlockBase(gAssetHandles.textureHandle), 8, 0x20, 0x20, 0, 0);
         i += 0x10;
     } while (i < 0xF0);
 
-    drawMenuSprite((s16)(arg0->x - 4), (s16)(arg0->y + 0x4C), getRelocatableHeapBlockBase(gAssetHandles.textureHandle),
-                  7, 0x20, 0x20, 0, 0);
-    drawMenuSprite((s16)(arg0->x + 0xF8), (s16)(arg0->y + 0x4C), getRelocatableHeapBlockBase(gAssetHandles.textureHandle),
-                  9, 0x20, 0x20, 0, 0);
+    drawMenuSprite((s16)(arg0->x - 4), (s16)(arg0->y + 0x4C),
+                   getRelocatableHeapBlockBase(gAssetHandles.textureHandle), 7, 0x20, 0x20, 0, 0);
+    drawMenuSprite((s16)(arg0->x + 0xF8), (s16)(arg0->y + 0x4C),
+                   getRelocatableHeapBlockBase(gAssetHandles.textureHandle), 9, 0x20, 0x20, 0, 0);
 
-    i = 0;
+    i = (arg0->selectionState == 4) * 0;
     do {
-        drawMenuSprite((s16)(arg0->x - 4), (s16)((arg0->y + i) + 0x24),
-                      getRelocatableHeapBlockBase(gAssetHandles.textureHandle), 5, 0x20, 0x20, 0, 0);
-        drawMenuSprite((s16)(arg0->x + 0xF8), (s16)((arg0->y + i) + 0x24),
-                      getRelocatableHeapBlockBase(gAssetHandles.textureHandle), 6, 0x20, 0x20, 0, 0);
+        drawMenuSprite((s16)(arg0->x - 4), (s16)(arg0->y + i + 0x24),
+                       getRelocatableHeapBlockBase(gAssetHandles.textureHandle), 5, 0x20, 0x20, 0, 0);
+        drawMenuSprite((s16)(arg0->x + 0xF8), (s16)(arg0->y + i + 0x24),
+                       getRelocatableHeapBlockBase(gAssetHandles.textureHandle), 6, 0x20, 0x20, 0, 0);
         i += 0x10;
-    } while (i < 0x30);
+    } while (i <= 0x2F);
 
-    {
-        u16 glyph;
-        register u16 lineY;
-        s32 visibleIndex;
-        s32 streamIndex;
-        u16 glyphText[2];
-        s32 color;
-        u16 *text;
-        s32 lineX;
-        u16 *scan;
+    glyphText[1] = 0xFFFF;
+    visibleIndex = 0;
+    scriptIndex = 0;
+    lineX = 0;
+    lineY = 0;
+    colorMode = 7;
 
-        glyphText[1] = 0xFFFF;
-        visibleIndex = 0;
-        streamIndex = 0;
-        lineX = 0;
-        i = 7;
-        lineY = 0;
-        color = i;
-
-        while (1) {
-            if (visibleIndex == arg0->selectedTile) {
-                break;
-            }
-
-            glyph = arg0->tileList[streamIndex++];
-            if (glyph) {
-            }
-            glyphText[0] = glyph;
-
-            switch (glyph & 0xFFFF) {
-            case 0xFFFF:
-                arg0->selectionState = 1;
-                visibleIndex = arg0->selectedTile;
-                break;
-
-            case 0xFFFD:
-                lineY = lineY + 0x10;
-                lineX = 0;
-                break;
-
-            case 0xFFFB:
-                arg0->selectionState = 2;
-                arg0->tileListStart = &arg0->tileList[streamIndex];
-                visibleIndex = arg0->selectedTile;
-                break;
-
-            case 0xFFFC:
-                color = arg0->tileList[streamIndex++];
-                break;
-
-            default:
-                i = lineX; drawMenuColoredGlyphScript((s16)(arg0->x + lineX), (s16)((arg0->y + lineY) + 0x18), (u8 *)glyphText, 0,
-                              0x100, color, 0x29);
-                lineX = (i + 0x10) & 0xFFFF;
-                visibleIndex++;
-                break;
-            }
-        }
-        visibleIndex = 0;
-
-        if ((arg0->selectionState != 0) && (gMainMenuSelectionResult == 0)) {
-            drawMenuSprite(((s16)(arg0->x + 0xF4)) & 0xFFFFFFFF, (s16)(arg0->y + 0x48),
-                          getRelocatableHeapBlockBase(gAssetHandles.textureHandle), (gFrameCounter >> 4) & 1, 0x20, 0x20, 0,
-                          0);
+    for (;;) {
+        if (visibleIndex == arg0->selectedTile) {
+            visibleIndex = 0;
+            break;
         }
 
-        text = mainMenuModeDescriptionTitles[gMainMenuModeSelection];
-        scan = text;
-        if (*text != 0xFFFF) {
-            do {
-                visibleIndex++;
-                scan++;
-            } while (*scan != 0xFFFF);
+        glyphText[0] = arg0->tileList[scriptIndex++];
+        switch (glyphText[0]) {
+        case 0xFFFF:
+            arg0->selectionState = 1;
+            visibleIndex = arg0->selectedTile;
+            continue;
+        case 0xFFFD:
+            lineY = lineY + 0x10;
+            lineX = 0;
+            continue;
+        case 0xFFFB:
+            arg0->selectionState = 2;
+            arg0->tileListStart = &arg0->tileList[scriptIndex];
+            visibleIndex = arg0->selectedTile;
+            continue;
+        case 0xFFFC:
+            colorMode = arg0->tileList[scriptIndex++];
+            continue;
+        default:
+            drawMenuColoredGlyphScript((s16)(arg0->x + lineX), (s16)(arg0->y + lineY + 0x18), glyphText, 0,
+                                       0x100, colorMode, 0x29);
+            lineX = lineX + 0x10;
+            visibleIndex++;
+            continue;
         }
-
-        visibleIndex *= 0x10;
-        visibleIndex = -(visibleIndex / 2);
-        drawMenuColoredGlyphScript((s16)visibleIndex, (s16)((-0x48) - arg0->y),
-                      text, 0, 0x100, 4, 0x29);
     }
 
-    if (gMainMenuModeSelection < 6) {
-        drawAssetTableSprite(-0x10, (s16)((-0x30) - arg0->y), getRelocatableHeapBlockBase(gAssetHandles.fontHandle),
-                      mainMenuModeSelectPrimaryIconTiles[gMainMenuModeSelection]);
+    if ((arg0->selectionState != 0) && (gMainMenuSelectionResult == 0)) {
+        drawMenuSprite((s16)(arg0->x + 0xF4), (s16)(arg0->y + 0x48),
+                       getRelocatableHeapBlockBase(gAssetHandles.textureHandle), (gFrameCounter >> 4) & 1, 0x20,
+                       0x20, 0, 0);
+    }
+
+    title = mainMenuModeDescriptionTitles[gMainMenuModeSelection];
+    titleCursor = title;
+    if (*title != 0xFFFF) {
+        do {
+            visibleIndex++;
+            titleCursor++;
+        } while (*titleCursor != 0xFFFF);
+    }
+    visibleIndex *= 0x10;
+    visibleIndex = -(visibleIndex / 2);
+
+    drawMenuColoredGlyphScript((s16)visibleIndex, (s16)(-0x48 - arg0->y), title, 0, 0x100, 4, 0x29);
+
+    if ((s32)gMainMenuModeSelection < 6) {
+        drawAssetTableSprite(-0x10, (s16)(-0x30 - arg0->y),
+                             getRelocatableHeapBlockBase(gAssetHandles.fontHandle),
+                             mainMenuModeSelectPrimaryIconTiles[gMainMenuModeSelection]);
         return;
     }
 
-    drawAssetTableSprite(-0x10, (s16)((-0x30) - arg0->y), getRelocatableHeapBlockBase(gAssetHandles.fontHandle),
-                  mainMenuModeSelectSecondaryIconTiles[gMainMenuModeSelection]);
+    drawAssetTableSprite(-0x10, (s16)(-0x30 - arg0->y), getRelocatableHeapBlockBase(gAssetHandles.fontHandle),
+                         mainMenuModeSelectSecondaryIconTiles[gMainMenuModeSelection]);
 }
-#endif
 
 void scrollMainMenuModeDescriptionPanelOut(MenuPanelActor *arg0) {
     arg0->y += MENU_PANEL_SCROLL_STEP;
@@ -343,7 +326,7 @@ void scrollMainMenuModeDescriptionPanelOut(MenuPanelActor *arg0) {
         removeCallbackTask(arg0);
         return;
     }
-    addRenderCallback(&gMenuRenderCallbackList, drawMainMenuModeDescriptionPanel, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawMainMenuModeDescriptionPanel, arg0);
 }
 
 void updateMainMenuModeDescriptionPanel(MenuPanelActor *arg0) {
@@ -380,7 +363,7 @@ void updateMainMenuModeDescriptionPanel(MenuPanelActor *arg0) {
         enqueueSoundEffect(MENU_PANEL_ACCEPT_SOUND, MENU_PANEL_SOUND_VOLUME);
     }
 
-    addRenderCallback(&gMenuRenderCallbackList, drawMainMenuModeDescriptionPanel, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawMainMenuModeDescriptionPanel, arg0);
 }
 
 void initMainMenuModeDescriptionPanel(MenuPanelActor *arg0) {
