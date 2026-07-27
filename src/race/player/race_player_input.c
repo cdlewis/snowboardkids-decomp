@@ -28,6 +28,7 @@ typedef struct {
     /* 0x2335 */ u8 buttons[RACE_INPUT_HISTORY_LENGTH];
 } RaceInputHistoryBuffer;
 
+RacePlayer gRacePlayers[RACE_PLAYER_COUNT];
 
 extern s16 gAssetHandles[];
 extern s32 gMenuFlowState;
