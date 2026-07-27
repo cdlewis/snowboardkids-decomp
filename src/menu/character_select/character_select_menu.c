@@ -315,33 +315,24 @@ void updateCharacterSelectMenu(void) {
 }
 #endif
 
-// updateCharacterSelectConfirmationMenu best match: 99.573% (nonmatchings/updateCharacterSelectConfirmationMenu-8498672362023432715/base_25.c)
-// The higher-scoring isolated attempt still relies on a synthetic symbol alias
-// and a folded empty pointer condition, so the readable attempt remains below.
-#pragma GLOBAL_ASM("asm/nonmatchings/menu/character_select/character_select_menu/updateCharacterSelectConfirmationMenu.s")
-
-#ifdef NON_MATCHING
 void updateCharacterSelectConfirmationMenu(void) {
-    CharacterSelectState *state;
-    RacePlayer *player;
-    u8 *readyPtr;
-    u8 *readyEnd;
-    s32 oldSelection;
+    s32 i;
     s32 buttons;
-    s32 keepGoing;
-    u8 playerCount;
+    u32 selection;
+    u8 oldSelection;
 
     if (gCharacterSelectHudState.bannerAlpha == 0x100) {
         buttons = gPlayerInputPressed[0];
-        oldSelection = gCharacterSelectHudState.confirmationChoice;
+        selection = gCharacterSelectHudState.confirmationChoice;
+        oldSelection = selection;
 
-        if ((buttons & (STICK_UP | U_JPAD)) && (oldSelection != 0)) {
-            gCharacterSelectHudState.confirmationChoice = oldSelection - 1;
-        } else if ((buttons & (STICK_DOWN | D_JPAD)) && (oldSelection == 0)) {
-            gCharacterSelectHudState.confirmationChoice = oldSelection + 1;
+        if ((buttons & (STICK_UP | U_JPAD)) && (selection != 0)) {
+            selection = (gCharacterSelectHudState.confirmationChoice = selection - 1);
+        } else if ((buttons & (STICK_DOWN | D_JPAD)) && (selection == 0)) {
+            selection = (gCharacterSelectHudState.confirmationChoice = selection + 1);
         }
 
-        if (gCharacterSelectHudState.confirmationChoice != oldSelection) {
+        if (selection != oldSelection) {
             enqueueSoundEffect(0x19, 0x32);
             buttons = gPlayerInputPressed[0];
         }
@@ -354,18 +345,9 @@ void updateCharacterSelectConfirmationMenu(void) {
                 gCharacterSelectHudState.cursorY = 0x44;
                 gCharacterSelectHudState.exitMode = 3;
             } else {
-                playerCount = gPlayerCount;
-                player = gRacePlayers;
-                if ((s32) playerCount > 0) {
-                    readyPtr = (u8 *) &gCharacterSelectHudState;
-                    readyEnd = playerCount + readyPtr;
-                    do {
-                        readyPtr++;
-                        keepGoing = (u32) readyPtr < (u32) readyEnd;
-                        player++;
-                        player[-1].menuState = 0;
-                        readyPtr[2] = 0;
-                    } while (keepGoing);
+                for (i = 0; i < gPlayerCount; i++) {
+                    gRacePlayers[i].menuState = 0;
+                    gCharacterSelectHudState.selectedTokenState[i] = 0;
                 }
                 setCurrentGameTaskCallback(updateCharacterSelectMenu, 0);
                 gCharacterSelectHudState.phase = CHARACTER_SELECT_PHASE_ROSTER;
@@ -373,28 +355,17 @@ void updateCharacterSelectConfirmationMenu(void) {
             }
         } else if (buttons & B_BUTTON) {
             enqueueSoundEffect(0x18, 0x32);
-            playerCount = gPlayerCount;
-            player = gRacePlayers;
-            if ((s32) playerCount > 0) {
-                readyPtr = (u8 *) &gCharacterSelectHudState;
-                readyEnd = playerCount + readyPtr;
-                do {
-                    readyPtr++;
-                    keepGoing = (u32) readyPtr < (u32) readyEnd;
-                    player++;
-                    player[-1].menuState = 0;
-                    readyPtr[2] = 0;
-                } while (keepGoing);
+            for (i = 0; i < gPlayerCount; i++) {
+                gRacePlayers[i].menuState = 0;
+                gCharacterSelectHudState.selectedTokenState[i] = 0;
             }
             setCurrentGameTaskCallback(updateCharacterSelectMenu, 0);
-            state = &gCharacterSelectHudState;
-            state->phase = CHARACTER_SELECT_PHASE_ROSTER;
-            state->bannerAlpha = 0;
+            gCharacterSelectHudState.phase = CHARACTER_SELECT_PHASE_ROSTER;
+            gCharacterSelectHudState.bannerAlpha = 0;
         }
     }
     updateCallbackTasks();
 }
-#endif
 
 void fadeOutCharacterSelectMenu(void) {
     if (gCurrentGameTask->fade != 0xFF) {
