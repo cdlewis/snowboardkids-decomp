@@ -45,7 +45,7 @@ typedef struct {
 } ControllerPakRumbleCheckPromptTransition;
 
 RaceSetupMenuSubState gRaceSetupMenuSubState;
-Rect gRaceSetupSavePanelRects[2];
+s16 gRaceSetupSavePanelRects[2][4];
 
 extern u8 gConnectedControllerCount;
 extern s32 enqueueSoundEffect(s16 soundId, s16 priority);
@@ -219,12 +219,12 @@ void initRaceSetupSaveMenu(void) {
     } while (&gControllerPakOperationCounts[i] < &D_800EC9E4);
 
     count = gConnectedControllerCount;
-    do { D_800EC9E4 = zero; i = zero; if (count > zero) { player = gRacePlayers; do { player++; player[-1].menuState = 0; i++; } while (player < (&gRacePlayers[count])); i = 0; } do { initRaceSetupPlayerSaveData(i); i++; } while (i < 4); D_8010ADE0 = 0; D_8010ADE4 = zero; D_8010ADE8 = 0; gMenuSelectionConfirmTimer = 0; gMenuFlowState = zero; gRaceRumbleEnabled = 0; gRaceSetupSavePanelRects[0].x0 = D_800B31B8; gRaceSetupSavePanelRects[1].x0 = D_800B31BA; gRaceSetupSavePanelRects[0].y0 = D_800B31BC; } while (0);
-    gRaceSetupSavePanelRects[1].y0 = D_800B31BE;
-    gRaceSetupSavePanelRects[0].x1 = D_800B31C0;
-    gRaceSetupSavePanelRects[1].x1 = D_800B31C2;
-    gRaceSetupSavePanelRects[0].y1 = D_800B31C4;
-    gRaceSetupSavePanelRects[1].y1 = D_800B31C6;
+    do { D_800EC9E4 = zero; i = zero; if (count > zero) { player = gRacePlayers; do { player++; player[-1].menuState = 0; i++; } while (player < (&gRacePlayers[count])); i = 0; } do { initRaceSetupPlayerSaveData(i); i++; } while (i < 4); D_8010ADE0 = 0; D_8010ADE4 = zero; D_8010ADE8 = 0; gMenuSelectionConfirmTimer = 0; gMenuFlowState = zero; gRaceRumbleEnabled = 0; gRaceSetupSavePanelRects[0][0] = D_800B31B8; gRaceSetupSavePanelRects[1][0] = D_800B31BA; gRaceSetupSavePanelRects[0][1] = D_800B31BC; } while (0);
+    gRaceSetupSavePanelRects[1][1] = D_800B31BE;
+    gRaceSetupSavePanelRects[0][2] = D_800B31C0;
+    gRaceSetupSavePanelRects[1][2] = D_800B31C2;
+    gRaceSetupSavePanelRects[0][3] = D_800B31C4;
+    gRaceSetupSavePanelRects[1][3] = D_800B31C6;
 
     setCurrentGameTaskCallback(updateRaceSetupSaveMenu, zero);
     updateCallbackTasks();
