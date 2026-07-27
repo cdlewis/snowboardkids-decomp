@@ -85,6 +85,7 @@ extern u8 gPlayerCount;
 extern u8 gRaceSetupSaveChoicePromptBottomSprites[];
 extern u8 gRaceSetupSaveChoicePromptTopSprites[];
 extern u8 gMenuSelectionConfirmTimer;
+extern u8 gRaceSetupSavePanelFrameState;
 extern s32 gMenuFlowState;
 extern Struct801235B8 *gCurrentGameTask;
 
@@ -688,21 +689,16 @@ void drawRaceSetupSavePlayerPanels(TitleMenuWidgetItemView *arg0) {
 }
 #endif
 
-// updateRaceSetupSavePanelFrame best match: 99.944% (nonmatchings/updateRaceSetupSavePanelFrame-2/base.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/menu/race_setup/race_setup_ui/updateRaceSetupSavePanelFrame.s")
-
-#ifdef NON_MATCHING
 void updateRaceSetupSavePanelFrame(RectListActor *arg0) {
     u8 state;
     s32 outer;
     s32 i;
     s16 delta0;
     s16 delta1;
-    s16 *coords;
 
-    outer = gRaceSetupMenuSubState.savePanelFrameState;
+    outer = gRaceSetupSavePanelFrameState;
     state = arg0->frame;
-    if (gRaceSetupMenuSubState.savePanelFrameState != state) {
+    if (gRaceSetupSavePanelFrameState != state) {
         state = outer;
         arg0->frame = outer;
     }
@@ -712,7 +708,6 @@ void updateRaceSetupSavePanelFrame(RectListActor *arg0) {
         outer = 0;
         do {
             i = 0;
-            coords = &arg0->rects[0].x0;
             do {
                 if (i < 2) {
                     delta0 = 1;
@@ -725,13 +720,13 @@ void updateRaceSetupSavePanelFrame(RectListActor *arg0) {
                     delta1 = 1;
                 }
 
-                (&arg0->rects[0].x0)[i] += delta0;
+                arg0->rectCoords[i] += delta0;
 
                 if (i == 0) {
                     arg0->stepAccumulator += arg0->stepIncrement;
                 }
                 if (arg0->stepAccumulator >= arg0->stepLimit) {
-                    (&arg0->rects[0].x0)[i + 4] += delta1;
+                    arg0->rectCoords[i + 4] += delta1;
                     if (i == 3) {
                         arg0->stepAccumulator -= arg0->stepLimit;
                     }
@@ -748,31 +743,27 @@ void updateRaceSetupSavePanelFrame(RectListActor *arg0) {
                     delta1 = 1;
                 }
 
-                (&arg0->rects[0].x0)[i + 1] += delta0;
+                arg0->rectCoords[i + 1] += delta0;
 
                 if (i == -1) {
                     arg0->stepAccumulator += arg0->stepIncrement;
                 }
                 if (arg0->stepAccumulator >= arg0->stepLimit) {
-                    (&arg0->rects[0].x0)[i + 5] += delta1;
+                    arg0->rectCoords[i + 5] += delta1;
                     if (i == 2) {
                         arg0->stepAccumulator -= arg0->stepLimit;
                     }
                 }
 
                 i += 2;
-                coords += 2;
             } while (i != 4);
 
             outer++;
-            if (arg0->rects[(arg0->rects[0].x0 == -0x88) * 0].x0 == -0x88) {
+            if (arg0->rects[0].x0 == -0x88) {
                 arg0->frame = 1;
                 break;
             }
-            if (outer == 0x10) {
-                break;
-            }
-        } while (1);
+        } while (outer != 0x10);
         state = arg0->frame;
         break;
     case 2:
@@ -790,14 +781,14 @@ void updateRaceSetupSavePanelFrame(RectListActor *arg0) {
     }
 
     gRaceSetupMenuSubState.savePanelFrameState = state;
-    gRaceSetupSavePanelRects[0].x0 = arg0->rects[0].x0;
-    gRaceSetupSavePanelRects[1].x0 = arg0->rects[1].x0;
-    gRaceSetupSavePanelRects[0].y0 = arg0->rects[0].y0;
-    gRaceSetupSavePanelRects[1].y0 = arg0->rects[1].y0;
-    gRaceSetupSavePanelRects[0].x1 = arg0->rects[0].x1;
-    gRaceSetupSavePanelRects[1].x1 = arg0->rects[1].x1;
-    gRaceSetupSavePanelRects[0].y1 = arg0->rects[0].y1;
-    gRaceSetupSavePanelRects[1].y1 = arg0->rects[1].y1;
+    gRaceSetupSavePanelRect0X0Codegen = arg0->rects[0].x0;
+    gRaceSetupSavePanelRect1X0Codegen = arg0->rects[1].x0;
+    gRaceSetupSavePanelRect0Y0Codegen = arg0->rects[0].y0;
+    gRaceSetupSavePanelRect1Y0Codegen = arg0->rects[1].y0;
+    gRaceSetupSavePanelRect0X1Codegen = arg0->rects[0].x1;
+    gRaceSetupSavePanelRect1X1Codegen = arg0->rects[1].x1;
+    gRaceSetupSavePanelRect0Y1Codegen = arg0->rects[0].y1;
+    gRaceSetupSavePanelRect1Y1Codegen = arg0->rects[1].y1;
 
     if (gMenuFlowState == 0x63) {
         removeCallbackTask(arg0);
@@ -807,7 +798,6 @@ void updateRaceSetupSavePanelFrame(RectListActor *arg0) {
 
     addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawRaceSetupSavePlayerPanels, (void *)arg0);
 }
-#endif
 
 void initRaceSetupSavePanelFrame(RectListActor *arg0) {
     RectListActor *actor = arg0;

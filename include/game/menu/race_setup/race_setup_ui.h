@@ -44,7 +44,10 @@ extern Rect gRaceSetupSavePanelRects[2];
 
 typedef struct {
     /* 0x00 */ u8 pad0[0x18];
-    /* 0x18 */ Rect rects[2];
+    union {
+        /* 0x18 */ Rect rects[2];
+        /* 0x18 */ s16 rectCoords[8];
+    };
     /* 0x28 */ u16 stepLimit;
     /* 0x2A */ u16 stepIncrement;
     /* 0x2C */ u16 stepAccumulator;
