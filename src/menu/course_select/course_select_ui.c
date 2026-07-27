@@ -149,6 +149,19 @@ typedef union {
     u8 bytes[0x80];
 } CourseSelectExtraCourseIconListActor;
 
+typedef struct {
+    /* 0x0000 */ u8 pad0[0x3F];
+    /* 0x003F */ s8 courseUnlockStates[12];
+    /* 0x004B */ u8 pad4B[0x788C];
+    /* 0x78D7 */ u8 extraCourseUnlockFlags;
+    /* 0x78D8 */ u8 pad78D8[0x20];
+} CourseSelectExtraCourseSaveData;
+
+typedef struct {
+    /* 0x00 */ u8 pad0[0x24];
+    /* 0x24 */ u8 extraCourseCounts[4];
+} CourseSelectExtraCourseStatus;
+
 struct CourseSelectAnimatedActor {
     /* 0x000 */ u8 pad0[0x18];
     /* 0x018 */ s32 matrix;
@@ -215,6 +228,7 @@ extern s16 gCourseSelectStatsPlayerMarkerLayout[][2];
 extern u8 gPlayerCount;
 extern CourseSelectRacePlayer gRacePlayers[];
 extern CourseSelectRacePlayer D_80121D80[];
+extern u8 D_80121D88;
 extern u8 gCourseSelectSelectedCourseId[][sizeof(CourseSelectRacePlayer)];
 extern u8 gMenuTransitionState;
 extern s32 gMenuFlowState;
@@ -1931,10 +1945,188 @@ void updateCourseSelectExtraCourseIconListClose(CourseSelectWidgetActor *arg0) {
     addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawCourseSelectExtraCourseIconList, temp_a2);
 }
 
-// updateCourseSelectExtraCourseIconList best match: 98.298% (nonmatchings/updateCourseSelectExtraCourseIconList-8498672362023432715/base_6.c)
+// updateCourseSelectExtraCourseIconList best match: 99.929% (nonmatchings/updateCourseSelectExtraCourseIconList-6219302648079029720/base_21.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/course_select/course_select_ui/updateCourseSelectExtraCourseIconList.s")
 
 #ifdef NON_MATCHING
+void updateCourseSelectExtraCourseIconList(CourseSelectWidgetActor *arg0) {
+    CourseSelectExtraCourseIconListActor *actor;
+    s16 *promptState;
+    s32 playerIndex;
+    s32 iconIndex;
+    s32 layoutIndex;
+    s32 iconMask;
+    s32 newCount;
+    s16 direction;
+    s16 state;
+    u8 splitscreenMode;
+    u8 count;
+
+    actor = (CourseSelectExtraCourseIconListActor *)arg0;
+    if (D_80121D88 == 3) {
+        setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateCourseSelectExtraCourseIconListClose);
+        playerIndex = 0;
+        if ((s32)gPlayerCount > 0) {
+            do {
+                actor->alpha[playerIndex] = 0x100;
+                playerIndex++;
+            } while (playerIndex < (s32)gPlayerCount);
+        }
+    } else if (gCurrentGameTask->screenState == 1) {
+        setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateCourseSelectExtraCourseIconListOut);
+        actor->alpha[0] = 0x100;
+        actor->pulseTimer[0] = 0;
+    } else {
+        playerIndex = 0;
+        if ((s32)gPlayerCount > 0) {
+            do {
+                if (D_80121D80[playerIndex].menuState != 2) {
+                    promptState = &gMenuChoicePromptState[playerIndex];
+                    if ((*promptState == 1) || ((*promptState >= 5) && (*promptState < 9))) {
+                        if ((*promptState == 1) && (actor->itemCounts[playerIndex] == 0)) {
+                            iconMask = 1;
+                            if (D_80121D80[playerIndex].selectedCharacterId == 5) {
+                                actor->itemCounts[playerIndex] = 1;
+                                if (gPlayerCount == 1) {
+                                    actor->tileIndices[playerIndex][0] = 9;
+                                } else {
+                                    actor->tileIndices[playerIndex][0] = 0x1C;
+                                }
+                            } else {
+                                iconIndex = 0;
+                                do {
+                                    if (D_80121D80[playerIndex].courseIndex >= 9) {
+                                        if (gRaceSplitscreenMode == 3) {
+                                            if (((CourseSelectExtraCourseSaveData *)gGameSaveDataBuffer)[playerIndex]
+                                                    .extraCourseUnlockFlags &
+                                                iconMask) {
+                                                actor->itemCounts[playerIndex]++;
+                                                if (gPlayerCount == 1) {
+                                                    actor->tileIndices[playerIndex]
+                                                                      [actor->itemCounts[playerIndex] - 1] =
+                                                        iconIndex + 0xC;
+                                                } else {
+                                                    actor->tileIndices[playerIndex]
+                                                                      [actor->itemCounts[playerIndex] - 1] =
+                                                        iconIndex + 0x1F;
+                                                }
+                                            }
+                                            iconMask *= 2;
+                                        } else if (((CourseSelectExtraCourseSaveData *)gGameSaveDataBuffer)[playerIndex]
+                                                       .courseUnlockStates[iconIndex + 9] != -1) {
+                                            actor->itemCounts[playerIndex]++;
+                                            if (gPlayerCount == 1) {
+                                                actor->tileIndices[playerIndex]
+                                                                  [actor->itemCounts[playerIndex] - 1] =
+                                                    iconIndex + 0xC;
+                                            } else {
+                                                actor->tileIndices[playerIndex]
+                                                                  [actor->itemCounts[playerIndex] - 1] =
+                                                    iconIndex + 0x1F;
+                                            }
+                                        }
+                                    } else if (((CourseSelectExtraCourseSaveData *)gGameSaveDataBuffer)[playerIndex]
+                                                   .courseUnlockStates[(D_80121D80[playerIndex].courseIndex % 3) +
+                                                                       (iconIndex * 3)] != -1) {
+                                        actor->itemCounts[playerIndex]++;
+                                        if (gPlayerCount == 1) {
+                                            actor->tileIndices[playerIndex][iconIndex] = iconIndex + 9;
+                                        } else {
+                                            actor->tileIndices[playerIndex][iconIndex] = iconIndex + 0x1C;
+                                        }
+                                    }
+                                    iconIndex++;
+                                } while (iconIndex != 3);
+
+                                splitscreenMode = gRaceSplitscreenMode;
+                                count = splitscreenMode;
+                                if ((count == 3) && (gCourseSelectModeSelection == 0)) {
+                                    count = actor->itemCounts[playerIndex];
+                                    newCount = count + 1;
+                                    if (D_80121D80[playerIndex].courseIndex < 9) {
+                                        actor->itemCounts[playerIndex] = newCount;
+                                        count = newCount & 0xFF;
+                                    }
+                                    if (count >= 4) {
+                                        actor->itemCounts[playerIndex] = 3;
+                                    }
+                                    if (D_80121D80[playerIndex].courseIndex < 9) {
+                                        count = actor->itemCounts[playerIndex];
+                                        actor->tileIndices[playerIndex][count - 1] = count + 8;
+                                    }
+                                }
+                            }
+                        }
+
+                        iconIndex = 0;
+                        if (*promptState == 1) {
+                            direction = 1;
+                        } else {
+                            direction = -1;
+                        }
+                        if ((s32)actor->itemCounts[playerIndex] > 0) {
+                            do {
+                                if (direction == 1) {
+                                    if ((s32)actor->revealTimer[playerIndex] < (iconIndex * 3) + 3) {
+                                        actor->iconY[playerIndex][iconIndex] +=
+                                            (s32)actor->rowSpacing[playerIndex] / 3;
+                                    }
+                                } else if ((iconIndex * 2) + 2 >= (s32)actor->revealTimer[playerIndex]) {
+                                    actor->iconY[playerIndex][iconIndex] -=
+                                        (s32)actor->rowSpacing[playerIndex] / 2;
+                                }
+                                iconIndex++;
+                            } while (iconIndex < (s32)actor->itemCounts[playerIndex]);
+                        }
+
+                        if (direction == 1) {
+                            actor->revealTimer[playerIndex]++;
+                        } else {
+                            actor->revealTimer[playerIndex]--;
+                        }
+                        if (direction == 1) {
+                            if (actor->revealTimer[playerIndex] == (actor->itemCounts[playerIndex] * 3)) {
+                                *promptState = D_8010AEAC[playerIndex] + 2;
+                            }
+                        } else if (actor->revealTimer[playerIndex] == 0) {
+                            *promptState = 0;
+                            actor->itemCounts[playerIndex] = 0;
+                            if ((s32)gPlayerCount < 3) {
+                                layoutIndex = gPlayerCount - 1;
+                            } else {
+                                layoutIndex = 2;
+                            }
+                            iconIndex = 0;
+                            do {
+                                actor->iconY[playerIndex][iconIndex] =
+                                    gCourseSelectIconListYLayout[layoutIndex][((playerIndex & 1) * 2) + 2];
+                                iconIndex++;
+                            } while (iconIndex != 3);
+                        }
+                    }
+
+                    state = *promptState;
+                    if ((state >= 2) && (state < 5)) {
+                        if ((s32)actor->pulseTimer[playerIndex] < 0x10) {
+                            actor->alpha[playerIndex] -= 9;
+                        } else {
+                            actor->alpha[playerIndex] += 9;
+                        }
+                        actor->pulseTimer[playerIndex] = (actor->pulseTimer[playerIndex] + 1) & 0x1F;
+                    }
+                }
+
+                ((CourseSelectExtraCourseStatus *)gCourseSelectStatus)->extraCourseCounts[playerIndex] =
+                    actor->itemCounts[playerIndex];
+                playerIndex++;
+            } while (playerIndex < (s32)gPlayerCount);
+        }
+    }
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawCourseSelectExtraCourseIconList, arg0);
+}
+#endif
+
+#if 0
 void updateCourseSelectExtraCourseIconList(CourseSelectWidgetActor *arg0) {
     CourseSelectExtraCourseIconListActor *actor;
     s32 unlockMask;
