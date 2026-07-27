@@ -78,7 +78,7 @@ void updateRaceUiPrizePayoutShowRankPrize(struct RaceUiPrizePayoutActor *arg0);
 void updateRaceUiPrizePayoutFadeIn(struct RaceUiPrizePayoutActor *arg0);
 void initRaceUiPrizePayout(struct RaceUiPrizePayoutActor *arg0);
 void func_80058C00(struct RaceUiResultsBannerActor *arg0);
-void func_8005905C(void *arg0);
+void func_8005905C(struct RaceUiResultsBannerActor *arg0);
 void func_80059518(struct RaceUiResultsBannerActor *arg0);
 void updateRaceUiResultsBannerConfirmed(struct RaceUiResultsBannerActor *arg0);
 void updateRaceUiResultsBannerWaitForInput(struct RaceUiResultsBannerActor *arg0);

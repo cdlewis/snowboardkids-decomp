@@ -120,7 +120,9 @@ typedef struct {
 
 typedef struct {
     /* 0x000 */ u16 playerIndex;
-    /* 0x002 */ u8 pad002[0x0C - 0x02];
+    /* 0x002 */ u8 pad002[0x04 - 0x02];
+    /* 0x004 */ u8 isCpu;
+    /* 0x005 */ u8 pad005[0x0C - 0x05];
     /* 0x00C */ s32 unk00C;
     /* 0x010 */ u8 characterId;
     /* 0x011 */ u8 pad011[0x13 - 0x11];
@@ -882,18 +884,6 @@ typedef struct RaceUiCourseSpriteActor {
     /* 0x62 */ u8 matrixDirty;
 } RaceUiCourseSpriteActor;
 
-extern char D_800E128C[];
-extern char D_800E1290[];
-extern char D_800E1294[];
-extern char D_800E1298[];
-extern char D_800E129C[];
-extern char D_800E12A0[];
-extern char D_800E12A4[];
-extern char D_800E12A8[];
-extern char D_800E12AC[];
-extern char D_800E12B0[];
-extern char D_800E12B4[];
-extern char D_800E12B8[];
 extern const char gRaceUiPendingTrickPrizeLabel[];
 extern const char gRaceUiPendingMakeBonusLabel[];
 extern const char gRaceUiPendingCompleteBonusLabel[];
@@ -1530,20 +1520,24 @@ void func_80058C00(RaceUiResultsBannerActor *arg0) {
     }
 }
 
-// func_8005905C best match: 99.488% (nonmatchings/func_8005905C-2785870559185086986/base_11.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race/ui/race_ui_effects/func_8005905C.s")
+const char D_800E128C[4] = "*%d";
+const char D_800E1290[4] = "%dP";
+const char D_800E1294[4] = "COM";
+const char D_800E1298[4] = "*%d";
+const char D_800E129C[4] = "%dP";
+const char D_800E12A0[4] = "COM";
+const char D_800E12A4[4] = "*%d";
+const char D_800E12A8[4] = "%dP";
+const char D_800E12AC[4] = "COM";
+const char D_800E12B0[4] = "*%d";
+const char D_800E12B4[4] = "%dP";
+const char D_800E12B8[4] = "COM";
 
-#ifdef NON_MATCHING
-void func_8005905C(void *arg0) {
-    char buffer[0x58];
-    RacePlayerState *player;
-    s8 playerIndex;
+void func_8005905C(RaceUiResultsBannerActor *arg0) {
     RaceUiResultsBannerActor *actor;
-    char *text;
+    char text[0x64];
 
     actor = arg0;
-    text = buffer - 0x10;
-    if (!actor) {}
     if (actor->alpha != 0xFF) {
         gDPPipeSync(gRegionAllocPtr++);
         gDPSetCombineMode(gRegionAllocPtr++, G_CC_MODULATEIA_PRIM, G_CC_MODULATEIA_PRIM);
@@ -1551,60 +1545,48 @@ void func_8005905C(void *arg0) {
         gDPSetPrimColor(gRegionAllocPtr++, 0, 0, 0xFF, 0xFF, 0xFF, actor->alpha);
     }
 
-    playerIndex = actor->player0;
-    if (playerIndex != -1) {
-        sprintf(text, D_800E128C, gRacePlayers[playerIndex].unk18);
+    if (actor->player0 != -1) {
+        sprintf(text, D_800E128C, gRacePlayers[actor->player0].unk18);
         if (gUiBlinkTimer & 1) {
             drawMenuAsciiTextDefaultScale(-0x20, -0x38, text, 6);
         } else {
             drawMenuAsciiTextDefaultScale(-0x20, -0x38, text, 0);
         }
-
-        player = &gRacePlayers[actor->player0];
-        if (player->pad002[2] == 0) {
-            sprintf(text, D_800E1290, player->playerIndex + 1);
+        if (gRacePlayers[actor->player0].isCpu == 0) {
+            sprintf(text, D_800E1290, gRacePlayers[actor->player0].playerIndex + 1);
             drawMenuAsciiTextDefaultScale(-0x30, -0x48, text, 5);
         } else {
             drawMenuAsciiTextDefaultScale(-0x30, -0x48, D_800E1294, 4);
         }
     }
 
-    playerIndex = actor->player1;
-    if (playerIndex != -1) {
-        sprintf(text, D_800E1298, gRacePlayers[playerIndex].unk18);
+    if (actor->player1 != -1) {
+        sprintf(text, D_800E1298, gRacePlayers[actor->player1].unk18);
         drawMenuAsciiTextDefaultScale(0x70, -0x18, text, 6);
-
-        player = &gRacePlayers[actor->player1];
-        if (player->pad002[2] == 0) {
-            sprintf(text, D_800E129C, player->playerIndex + 1);
+        if (gRacePlayers[actor->player1].isCpu == 0) {
+            sprintf(text, D_800E129C, gRacePlayers[actor->player1].playerIndex + 1);
             drawMenuAsciiTextDefaultScale(0x60, -0x28, text, 5);
         } else {
             drawMenuAsciiTextDefaultScale(0x60, -0x28, D_800E12A0, 4);
         }
     }
 
-    playerIndex = actor->player2;
-    if (playerIndex != -1) {
-        sprintf(text, D_800E12A4, gRacePlayers[playerIndex].unk18);
+    if (actor->player2 != -1) {
+        sprintf(text, D_800E12A4, gRacePlayers[actor->player2].unk18);
         drawMenuAsciiTextDefaultScale(-0x20, 8, text, 6);
-
-        player = &gRacePlayers[actor->player2];
-        if (player->pad002[2] == 0) {
-            sprintf(text, D_800E12A8, player->playerIndex + 1);
+        if (gRacePlayers[actor->player2].isCpu == 0) {
+            sprintf(text, D_800E12A8, gRacePlayers[actor->player2].playerIndex + 1);
             drawMenuAsciiTextDefaultScale(-0x30, -8, text, 5);
         } else {
             drawMenuAsciiTextDefaultScale(-0x30, -8, D_800E12AC, 4);
         }
     }
 
-    playerIndex = actor->player3;
-    if (playerIndex != -1) {
-        sprintf(text, D_800E12B0, gRacePlayers[playerIndex].unk18);
+    if (actor->player3 != -1) {
+        sprintf(text, D_800E12B0, gRacePlayers[actor->player3].unk18);
         drawMenuAsciiTextDefaultScale(0x70, 0x28, text, 6);
-
-        player = &gRacePlayers[actor->player3];
-        if (player->pad002[2] == 0) {
-            sprintf(text, D_800E12B4, player->playerIndex + 1);
+        if (gRacePlayers[actor->player3].isCpu == 0) {
+            sprintf(text, D_800E12B4, gRacePlayers[actor->player3].playerIndex + 1);
             drawMenuAsciiTextDefaultScale(0x60, 0x18, text, 5);
         } else {
             drawMenuAsciiTextDefaultScale(0x60, 0x18, D_800E12B8, 4);
@@ -1615,7 +1597,6 @@ void func_8005905C(void *arg0) {
         gSPDisplayList(gRegionAllocPtr++, gMenuRenderModeResetDl);
     }
 }
-#endif
 
 void func_80059518(RaceUiResultsBannerActor *arg0) {
     RaceUiResultsBannerActor *actor;
