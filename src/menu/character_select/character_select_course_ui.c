@@ -6,7 +6,14 @@
 #include "game/menu/character_select/character_select_course_menu.h"
 #include "game/menu/character_select/character_select_course_ui.h"
 #include "game/menu/splitscreen_select/race_splitscreen_select_ui.h"
+#ifdef NON_MATCHING
+#define drawMenuSprite drawMenuSpriteWithUnsignedTileIndex
+#endif
 #include "game/menu/renderer/menu_renderer.h"
+#ifdef NON_MATCHING
+#undef drawMenuSprite
+void drawMenuSprite(s16 x, s16 y, void *texture, s32 tileIndex, u16 width, u16 height, u8 palette, u8 flip);
+#endif
 #include "game/menu/renderer/menu_render_utils.h"
 
 #define CHARACTER_SELECT_FRAME_TEXTURE_HANDLE (gAssetHandles[0x21])
@@ -2546,8 +2553,11 @@ void initCharacterSelectCourseConfirmCursor(CharacterSelectCourseWidgetActor *ar
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateCharacterSelectCourseConfirmCursor);
 }
 
-// drawCharacterSelectCourseRecordsPopup best match: 97.003% (nonmatchings/drawCharacterSelectCourseRecordsPopup-3379532139742180785/base_20.c)
+// drawCharacterSelectCourseRecordsPopup best match: 97.322% (nonmatchings/drawCharacterSelectCourseRecordsPopup-6219302648079029720/base_52.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/character_select/character_select_course_ui/drawCharacterSelectCourseRecordsPopup.s")
+#ifdef NON_MATCHING
+#define drawCharacterSelectCourseRecordsPopup drawCharacterSelectCourseRecordsPopupPreviousAttempt
+#endif
 
 #ifdef NON_MATCHING
 typedef struct {
@@ -2730,6 +2740,11 @@ void drawCharacterSelectCourseRecordsPopup(CharacterSelectCourseWidgetActor *arg
         var_s5 += 0x14;
     } while (var_s7 != 5);
 }
+#endif
+
+#ifdef NON_MATCHING
+#undef drawCharacterSelectCourseRecordsPopup
+#include "character_select_course_records_popup.inc.c"
 #endif
 
 void updateCharacterSelectCourseRecordsPopup(CharacterSelectCourseWidgetActor *arg0) {
