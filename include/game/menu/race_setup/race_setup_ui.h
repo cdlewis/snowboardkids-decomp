@@ -89,9 +89,8 @@ typedef struct {
 
 typedef struct {
     /* 0x00 */ u8 pad0[0x18];
-    /* 0x18 */ s16 x;
-    /* 0x1A */ u8 pad1A[0x6];
-    /* 0x20 */ s16 y;
+    /* 0x18 */ s16 x[4];
+    /* 0x20 */ s16 y[4];
 } TitleMenuWidgetItemView;
 
 typedef struct {
