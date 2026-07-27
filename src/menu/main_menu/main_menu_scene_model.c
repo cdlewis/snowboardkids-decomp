@@ -413,11 +413,24 @@ s32 saveRaceRecordReplayData(void) {
 #undef RACE_INPUT_HISTORY_LENGTH
 #endif
 
-// loadCurrentRaceRecordReplayData best match: 98.946% (nonmatchings/loadCurrentRaceRecordReplayData-8498672362023432715/base_19.c)
+// loadCurrentRaceRecordReplayData best match: 99.673% (nonmatchings/loadCurrentRaceRecordReplayData-6219302648079029720/base_26.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/main_menu/main_menu_scene_model/loadCurrentRaceRecordReplayData.s")
 
 #ifdef NON_MATCHING
-extern u16 D_800ECC24;
+#define RACE_INPUT_HISTORY_LENGTH 0x1194
+
+#define PACKED_RACE_RECORD_REPLAY (*(PackedRaceRecordReplay *)D_8010B200)
+
+typedef union PackedRaceRecordReplay {
+    u8 bytes[0x3000];
+    struct {
+        s16 frameCount;
+        s8 characterId;
+        s8 characterVariant;
+        u8 inputs[1];
+    } fields;
+} PackedRaceRecordReplay;
+
 extern u16 D_800ECC28;
 extern u16 D_800ECC2C;
 extern u16 D_800ECC30;
@@ -427,148 +440,102 @@ extern u16 D_800ECC3C;
 extern u16 D_800ECC40;
 extern u16 D_800ECC44;
 extern u16 D_800ECC46;
-extern u8 D_8010B200[];
-extern s16 gRaceCourseIndex;
 
 void loadCurrentRaceRecordReplayData(void) {
-    u16 *srcBase;
-    u16 *src;
-    u8 *dst;
-    s32 outPos;
-    s32 count;
-    s32 copied;
-    s32 code;
-    s32 length;
-    u8 *copyStart;
-    s32 offset;
-    s32 remainder;
-    u8 *copy;
+    u16 *compressed;
+    u8 *decompressed;
+    u16 backReference;
     RaceInputHistoryBuffer *history;
+    s32 decompressedLength;
+    s32 outputIndex;
+    s32 runLength;
+    s32 sourceIndex;
+    s32 copyIndex;
+    s32 frameCount;
     s32 i;
-    volatile u8 *read;
-    s32 copyMore;
 
-    srcBase = &D_800ECC46;
-    outPos = 0;
-    src = srcBase;
-    switch (gRaceCourseIndex) {
+    outputIndex = 0;
+    compressed = &D_800ECC46;
+    switch (*(u16 *)&gRaceCourseIndex) {
     case 0:
-        src = (u16 *)((u8 *)srcBase + (D_800ECC24 * 2));
+        compressed += D_800ECC24;
         break;
     case 1:
-        src = (u16 *)((u8 *)srcBase + (D_800ECC28 * 2));
+        compressed += D_800ECC28;
         break;
     case 2:
-        src = (u16 *)((u8 *)srcBase + (D_800ECC2C * 2));
+        compressed += D_800ECC2C;
         break;
     case 3:
-        src = (u16 *)((u8 *)srcBase + (D_800ECC30 * 2));
+        compressed += D_800ECC30;
         break;
     case 4:
-        src = (u16 *)((u8 *)srcBase + (D_800ECC34 * 2));
+        compressed += D_800ECC34;
         break;
     case 5:
-        src = (u16 *)((u8 *)srcBase + (D_800ECC38 * 2));
+        compressed += D_800ECC38;
         break;
     case 6:
-        src = (u16 *)((u8 *)srcBase + (D_800ECC3C * 2));
+        compressed += D_800ECC3C;
         break;
     case 8:
-        src = (u16 *)((u8 *)srcBase + (D_800ECC40 * 2));
+        compressed += D_800ECC40;
         break;
     case 9:
-        src = (u16 *)((u8 *)srcBase + (D_800ECC44 * 2));
+        compressed += D_800ECC44;
         break;
     }
 
-    dst = D_8010B200;
-    count = *src;
-    src++;
-
-loop:
-    if (outPos >= count) {
-        goto done;
-    }
-    copied = 0;
-    code = *src;
-    length = (code >> 10) & 0x3F;
-    if (length != 0) {
-        goto compressed;
-    }
-    dst[outPos] = (u16)code;
-    outPos++;
-    goto next;
-
-compressed:
-    offset = outPos - (code & 0x3FF);
-    {
-        copied = 0;
-        remainder = length & 3;
-        copyStart = offset + dst;
-        if (remainder == 0) {
-            goto copy4;
+    decompressed = PACKED_RACE_RECORD_REPLAY.bytes;
+    decompressedLength = *compressed++;
+    for (;;) {
+        copyIndex = 0;
+        if (outputIndex >= decompressedLength) {
+            break;
         }
-        copy = copyStart;
-copy1:
-        dst[outPos] = *copy;
-        copied++;
-        outPos++;
-        copy++;
-        if (remainder != copied) {
-            goto copy1;
-        }
-        if (copied == length) {
-            goto next;
-        }
-
-copy4:
-        copy = offset + copied + dst;
-copy4_loop:
-        dst[outPos] = copy[0];
-        outPos++;
-        dst[outPos] = copy[1];
-        outPos++;
-        dst[outPos] = copy[2];
-        outPos++;
-        dst[outPos] = copy[3];
-        copied += 4;
-        copyMore = copied != length;
-        outPos++;
-        copy += 4;
-        if (copyMore) {
-            goto copy4_loop;
+        runLength = 0x3F;
+        runLength = (*compressed >> 10) & runLength;
+        if (runLength == 0) {
+            PACKED_RACE_RECORD_REPLAY.bytes[outputIndex] = *compressed;
+            outputIndex++;
+            compressed++;
+        } else {
+            backReference = *compressed;
+            sourceIndex = outputIndex - (backReference & 0x3FF);
+            for (copyIndex = 0; copyIndex < runLength; copyIndex++) {
+                decompressed[outputIndex] = decompressed[sourceIndex + copyIndex];
+                outputIndex++;
+            }
+            compressed++;
         }
     }
-next:
-    src++;
-    goto loop;
 
-done:
-    read = dst;
-    history = (RaceInputHistoryBuffer *)getRelocatableHeapBlockBase(ASSET_HANDLE(7));
+    copyIndex = ASSET_HANDLE(7);
+    history = getRelocatableHeapBlockBase(copyIndex);
     history->writeIndex = 0;
-    copied = *(volatile s16 *)&read[0];
-    history->lastWriteIndex = copied;
+    sourceIndex = PACKED_RACE_RECORD_REPLAY.fields.frameCount;
+    frameCount = sourceIndex;
+    history->lastWriteIndex = frameCount;
     history->enabled = 1;
-    history->pad9[0] = gRaceCourseIndex;
-    history->pad9[1] = *(volatile s8 *)&read[2];
-    history->pad9[2] = *(volatile s8 *)&read[3];
+    history->pad9[0] = ((s16)gRaceCourseIndex) & 0xFFFFu;
+    history->pad9[1] = PACKED_RACE_RECORD_REPLAY.fields.characterId;
+    history->pad9[2] = PACKED_RACE_RECORD_REPLAY.fields.characterVariant;
     history->pad9[3] = 0;
 
     i = 0;
-    if ((copied <= 0) != 0) {
-        return;
-    }
-write_loop:
-    history->stickX[i] = *(s8 *)&D_8010B200[4 + (i * 3)];
-    history->stickY[i] = *(s8 *)&D_8010B200[5 + (i * 3)];
-    history->buttons[i] = D_8010B200[6 + (i * 3)];
-    i++;
-    length = i < history->lastWriteIndex;
-    if (length) {
-        goto write_loop;
+    if (frameCount > 0) {
+        do {
+            history->stickX[i] = (*(s8 *)&PACKED_RACE_RECORD_REPLAY.bytes[4 + (i * 3)]) & 0xFF;
+            backReference = *(s8 *)&PACKED_RACE_RECORD_REPLAY.bytes[5 + (i * 3)];
+            history->stickY[i] = backReference;
+            history->buttons[i] = PACKED_RACE_RECORD_REPLAY.bytes[6 + (i * 3)];
+            i++;
+        } while (i < history->lastWriteIndex);
     }
 }
+
+#undef PACKED_RACE_RECORD_REPLAY
+#undef RACE_INPUT_HISTORY_LENGTH
 #endif
 
 void loadMainMenuSceneModelAssets(void) {
