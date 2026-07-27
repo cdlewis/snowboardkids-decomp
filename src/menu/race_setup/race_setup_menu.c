@@ -187,14 +187,7 @@ void updateRaceSetupPlayerCountMenu(void) {
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/race_setup/race_setup_menu/initRaceSetupSaveMenu.s")
 
 #ifdef NON_MATCHING
-extern s16 D_800B31B8;
-extern s16 D_800B31BA;
-extern s16 D_800B31BC;
-extern s16 D_800B31BE;
-extern s16 D_800B31C0;
-extern s16 D_800B31C2;
-extern s16 D_800B31C4;
-extern s16 D_800B31C6;
+extern s16 gRaceSetupSavePanelInitialRects[4][2];
 extern s16 gControllerPakStatusCodes[];
 extern s16 gMenuChoicePromptState[];
 extern u8 gControllerPakRetryCounts[];
@@ -219,12 +212,12 @@ void initRaceSetupSaveMenu(void) {
     } while (&gControllerPakOperationCounts[i] < &D_800EC9E4);
 
     count = gConnectedControllerCount;
-    do { D_800EC9E4 = zero; i = zero; if (count > zero) { player = gRacePlayers; do { player++; player[-1].menuState = 0; i++; } while (player < (&gRacePlayers[count])); i = 0; } do { initRaceSetupPlayerSaveData(i); i++; } while (i < 4); D_8010ADE0 = 0; D_8010ADE4 = zero; D_8010ADE8 = 0; gMenuSelectionConfirmTimer = 0; gMenuFlowState = zero; gRaceRumbleEnabled = 0; gRaceSetupSavePanelRects[0][0] = D_800B31B8; gRaceSetupSavePanelRects[1][0] = D_800B31BA; gRaceSetupSavePanelRects[0][1] = D_800B31BC; } while (0);
-    gRaceSetupSavePanelRects[1][1] = D_800B31BE;
-    gRaceSetupSavePanelRects[0][2] = D_800B31C0;
-    gRaceSetupSavePanelRects[1][2] = D_800B31C2;
-    gRaceSetupSavePanelRects[0][3] = D_800B31C4;
-    gRaceSetupSavePanelRects[1][3] = D_800B31C6;
+    do { D_800EC9E4 = zero; i = zero; if (count > zero) { player = gRacePlayers; do { player++; player[-1].menuState = 0; i++; } while (player < (&gRacePlayers[count])); i = 0; } do { initRaceSetupPlayerSaveData(i); i++; } while (i < 4); D_8010ADE0 = 0; D_8010ADE4 = zero; D_8010ADE8 = 0; gMenuSelectionConfirmTimer = 0; gMenuFlowState = zero; gRaceRumbleEnabled = 0; gRaceSetupSavePanelRects[0][0] = gRaceSetupSavePanelInitialRects[0][0]; gRaceSetupSavePanelRects[1][0] = gRaceSetupSavePanelInitialRects[0][1]; gRaceSetupSavePanelRects[0][1] = gRaceSetupSavePanelInitialRects[1][0]; } while (0);
+    gRaceSetupSavePanelRects[1][1] = gRaceSetupSavePanelInitialRects[1][1];
+    gRaceSetupSavePanelRects[0][2] = gRaceSetupSavePanelInitialRects[2][0];
+    gRaceSetupSavePanelRects[1][2] = gRaceSetupSavePanelInitialRects[2][1];
+    gRaceSetupSavePanelRects[0][3] = gRaceSetupSavePanelInitialRects[3][0];
+    gRaceSetupSavePanelRects[1][3] = gRaceSetupSavePanelInitialRects[3][1];
 
     setCurrentGameTaskCallback(updateRaceSetupSaveMenu, zero);
     updateCallbackTasks();
