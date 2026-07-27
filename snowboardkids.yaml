@@ -107,11 +107,6 @@ segments:
       - [0x3F900, c, demo/title_demo_race_intro]
       - [0x40120, c, menu/main_menu/main_menu_race_flow]
       - [0x41880, c, menu/main_menu/main_menu_scene_model]
-      - start: 0x43160
-        type: asm
-        name: menu/main_menu/updateMainMenuSceneModelTransformsReturnDelay
-        linker_section_order: .text
-        linker_section: .text.rd
       - [0x43164, c, menu/main_menu/main_menu_scene_model_renderer]
       - start: 0x436B4
         type: asm

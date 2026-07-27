@@ -119,6 +119,7 @@ CFLAGS       = -c $(C_MIPS) -G 0 -non_shared -fullwarn -Xcpluscomm \
                $(C_DEFINES)
 OBJCOPYFLAGS = -O binary
 RM_MDEBUG    = $(OBJCOPY) --remove-section .mdebug $@
+C_OBJ_POSTPROCESS = :
 
 $(BUILD_DIR)/src/ultra/io/%.o: C_OPT = -O1
 $(BUILD_DIR)/src/ultra/io/%.o: C_MIPS = -mips2
@@ -162,6 +163,10 @@ $(BUILD_DIR)/src/ultra/libc/xldtob.o: C_OPT = -O3
 $(BUILD_DIR)/src/ultra/libc/xldtob.o: IDO_CC = $(IDO_DIRECT)
 $(BUILD_DIR)/src/ultra/os/exceptasm.o: ULTRA_AS_ISA = mips3
 $(BUILD_DIR)/src/ultra/os/exceptasm.o: ULTRA_AS_POST = $(PYTHON) $(TOOLS_DIR)/set_o32abi_bit.py $@
+# The final C function owns a delay slot previously split into a four-byte
+# assembly segment. Remove only IDO's verified trailing section padding.
+$(BUILD_DIR)/src/menu/main_menu/main_menu_scene_model.o: C_OBJ_POSTPROCESS = \
+	$(PYTHON) $(TOOLS_DIR)/trim_elf_section_tail.py $@ .text 12
 
 LD_SCRIPT      = $(BASENAME).ld
 LINKER_SCRIPTS = linker_scripts/hardware_regs.ld linker_scripts/libultra_syms.ld \
@@ -253,6 +258,7 @@ $(BUILD_DIR)/%.o: %.c
 		$(CC_CHECK_INCLUDES) $(C_DEFINES) $(CC_CHECK_MIPS_DEFINES) $<
 	$(V)$(IDO_CC) $(CFLAGS) $(C_OPT) -o $@ $<
 	$(V)$(RM_MDEBUG)
+	$(V)$(C_OBJ_POSTPROCESS)
 
 # Patch ll.o for modern binutils, matching the upstream libultra build.
 $(BUILD_DIR)/src/ultra/libc/ll.o: src/ultra/libc/ll.c
