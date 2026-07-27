@@ -9,7 +9,7 @@ void drawMainMenuModeSelectFrame(void *arg0);
 void drawMainMenuModeSelectIcons(MenuPanelActor *arg0);
 void updateMainMenuModeSelectGrid(MenuPanelActor *arg0);
 void initMainMenuModeSelectGrid(MenuPanelActor *arg0);
-void drawMainMenuModeDescriptionPanel(void *arg0);
+void drawMainMenuModeDescriptionPanel(MenuPanelActor *arg0);
 void scrollMainMenuModeDescriptionPanelOut(MenuPanelActor *arg0);
 void updateMainMenuModeDescriptionPanel(MenuPanelActor *arg0);
 void initMainMenuModeDescriptionPanel(MenuPanelActor *arg0);
