@@ -289,7 +289,7 @@ void schedulerThreadEntry(void *arg);
 void tryStartPendingRdpTask(SchedulerState *arg0);
 void startCurrentRdpTask(SchedulerState *arg0);
 void finishCurrentRdpTask(SchedulerState *arg0);
-void schedulerSwapBufferThreadMain(void *arg);
+void schedulerSwapBufferThreadMain(SchedulerState *scheduler);
 void addSchedulerClient(SchedulerState *arg0, SchedulerClient *arg1, OSMesgQueue *arg2);
 void removeSchedulerClient(SchedulerState *arg0, SchedulerClient *arg1);
 void notifySchedulerClients(SchedulerState *arg0, s32 arg1);

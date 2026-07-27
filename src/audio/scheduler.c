@@ -29,7 +29,8 @@ void initScheduler(SchedulerState *arg0, u8 arg1, u8 arg2) {
     osSetEventMesg(9, &arg0->queue1A4, (OSMesg)0x29C);
     osCreateThread(&arg0->thread258, 6, schedulerThreadEntry, arg0, gSchedulerThreadStack, 0x78);
     osStartThread(&arg0->thread258);
-    osCreateThread(&arg0->thread408, 5, schedulerSwapBufferThreadMain, arg0, &gSchedulerRspTaskState, 0x64);
+    osCreateThread(&arg0->thread408, 5, (void (*)(void *))schedulerSwapBufferThreadMain, arg0,
+                   &gSchedulerRspTaskState, 0x64);
     osStartThread(&arg0->thread408);
 }
 
@@ -156,56 +157,36 @@ void finishCurrentRdpTask(SchedulerState *arg0) {
     gSchedulerRdpTaskActive = 0;
 }
 
-// schedulerSwapBufferThreadMain best match: 96.250% (nonmatchings/schedulerSwapBufferThreadMain-1936695454966205676/base_24.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/audio/scheduler/schedulerSwapBufferThreadMain.s")
-
-#ifdef NON_MATCHING
-typedef struct SchedulerSwapLocals {
-    OSMesgQueue *queue1A4;
-    u8 pad4[4];
+void schedulerSwapBufferThreadMain(SchedulerState *scheduler) {
     OSMesg msg;
-} SchedulerSwapLocals;
-
-void schedulerSwapBufferThreadMain(void *arg) {
-    SchedulerState *arg0 = arg;
-    OSMesg *msgPtr;
-    s16 retrace;
-    void *framebuffer;
-    OSMesg sentMsg;
     SchedulerTask *task;
-    SchedulerSwapLocals locals;
+    void *framebuffer;
+    s16 retrace;
 
-    msgPtr = &locals.msg;
-    locals.msg = NULL;
-    locals.queue1A4 = &arg0->queue1A4; loop: do { osRecvMesg(&arg0->eventQueue, (OSMesg *)(&arg0->curRSPTask), 1); waitForFramebufferAvailable(arg0, arg0->curRSPTask);
-        osSendMesg(&arg0->retraceQueue, (OSMesg)1, 1);
-        osRecvMesg(&arg0->queue14C, msgPtr, 1);
-        if (framebuffer) {
-        }
-        osRecvMesg(locals.queue1A4, msgPtr, 1);
-        if (!gRetraceCounter) {
-        }
-        task = arg0->curRSPTask; } while (!(task->flags & 0x40));
+    msg = NULL;
+    while (1) {
+        osRecvMesg(&scheduler->eventQueue, (OSMesg *)&scheduler->curRSPTask, 1);
+        waitForFramebufferAvailable(scheduler, scheduler->curRSPTask);
+        osSendMesg(&scheduler->retraceQueue, (OSMesg)1, 1);
+        osRecvMesg(&scheduler->queue14C, &msg, 1);
+        osRecvMesg(&scheduler->queue1A4, &msg, 1);
 
-    framebuffer = task->framebuffer;
-    retrace = task->retrace;
-    osSendMesg(task->doneQueue, sentMsg = task->doneMsg, 1);
-    if ((0xFFF & (gRetraceCounter - retrace)) >= 0x801) {
-        do {
-            if ((retrace && retrace) && retrace) {
+        task = scheduler->curRSPTask;
+        if (task->flags & 0x40) {
+            framebuffer = task->framebuffer;
+            retrace = task->retrace;
+            osSendMesg(task->doneQueue, task->doneMsg, 1);
+            while (((gRetraceCounter - retrace) & 0xFFF) > 0x800) {
+                waitForNextFramebufferEvent(scheduler);
             }
-            waitForNextFramebufferEvent(arg0);
-        } while (((gRetraceCounter - retrace) & 0xFFF) >= 0x801);
+            if (scheduler->doAudio != 0) {
+                osViBlack(0);
+                scheduler->doAudio = 0;
+            }
+            osViSwapBuffer(framebuffer);
+        }
     }
-    if (arg0->doAudio != 0) {
-        osViBlack(0);
-        arg0->doAudio = 0;
-    }
-    osViSwapBuffer(framebuffer);
-    goto loop;
 }
-#endif
-
 void addSchedulerClient(SchedulerState *arg0, SchedulerClient *arg1, OSMesgQueue *arg2) {
     s32 prev = osSetIntMask(1);
     arg1->queue = arg2;
