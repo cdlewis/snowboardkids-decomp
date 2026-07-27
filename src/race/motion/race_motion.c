@@ -119,6 +119,11 @@ typedef struct RaceMotionStateJoint {
     s32 unk10;
 } RaceMotionStateJoint;
 
+typedef struct RaceMotionPartialAnimationState {
+    char pad0[0x334];
+    RaceMotionStateJoint joints[RACE_MOTION_JOINT_COUNT];
+} RaceMotionPartialAnimationState;
+
 struct RaceMotionState {
     u16 modelId;
     char pad2[0x332];
@@ -1307,122 +1312,145 @@ void interpolateRaceMotionAnimationFrame(RaceMotionState *state, s32 animationIn
 
 #endif
 
-// interpolateRaceMotionJointAnimationFrame best match: 98.123% (nonmatchings/interpolateRaceMotionJointAnimationFrame-3885303446860889946/base_11.c)
+// interpolateRaceMotionJointAnimationFrame best match: 98.644% (nonmatchings/interpolateRaceMotionJointAnimationFrame-5176680205357669729/base_13.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race/motion/race_motion/interpolateRaceMotionJointAnimationFrame.s")
 
 #ifdef NON_MATCHING
+extern RaceMotionRotation gRaceMotionJointFrameBufferReload[];
+extern volatile s32 gRaceMotionRotationFrameBufferReload[];
+
 void interpolateRaceMotionJointAnimationFrame(RaceMotionState *state, s32 animationIndex,
                                               s32 frameTimer, s32 frameTimerReset) {
     RaceMotionAnimationAsset *animationAsset;
-    RaceMotionAnimationHeader *animationHeader;
-    RaceMotionPackedAnimationFrame *packedFrames;
-    RaceMotionDecodedRootFrame *decodedRootFrames;
-    RaceMotionDecodedJointFrame *decodedJointFrames;
-    RaceMotionRotation *firstJointFrame;
-    RaceMotionRotation *secondJointFrame;
-    RaceMotionDecodedRootFrame *firstRootFrame;
-    RaceMotionDecodedRootFrame *secondRootFrame;
-    RaceMotionRootMotion *interpolatedRootMotion;
-    RaceMotionStateJoint *interpolatedJoints;
-    s32 assetBase;
-    s32 frameIndex;
+    s16 *packedData;
+    RaceMotionDecodedRootFrame *decodedRootFrame;
+    RaceMotionDecodedJointFrame *decodedJointFrame;
+    RaceMotionDecodedJointFrame *decodedJointFrameEnd;
+    RaceMotionRotation *decodedRoot;
+    RaceMotionRotation *decodedJoint;
+    RaceMotionPartialAnimationState *partialState;
+    RaceMotionRootMotion *rootMotion;
+    s32 *jointData;
+    s32 *rootData;
     s32 jointIndex;
-    s32 startAngle;
+    s32 startX;
+    s32 startY;
+    s32 startZ;
     s32 angleDelta;
+    s32 interpolationOffset;
     s16 packedXY;
     s16 packedZAndFlags;
     s16 rootJointAngle;
 
-    assetBase = getRelocatableHeapBlockBase(gAssetHandles[0x16 + state->modelId]);
-    animationAsset = (RaceMotionAnimationAsset *)assetBase;
-    animationHeader = (RaceMotionAnimationHeader *)((u16 *)animationAsset +
-        animationAsset->animationOffsets[animationIndex]);
-    packedFrames = (RaceMotionPackedAnimationFrame *)(animationHeader + 1);
-    decodedRootFrames = (RaceMotionDecodedRootFrame *)gRaceMotionRotationFrameBuffer;
-    decodedJointFrames = (RaceMotionDecodedJointFrame *)gRaceMotionJointFrameBuffer;
+    animationAsset = getRelocatableHeapBlockBase(gAssetHandles[0x16 + state->modelId]);
+    decodedRootFrame = (RaceMotionDecodedRootFrame *)gRaceMotionRotationFrameBuffer;
+    packedData = (s16 *)((u16 *)animationAsset +
+        animationAsset->animationOffsets[animationIndex] + 1);
+    decodedJointFrame = (RaceMotionDecodedJointFrame *)gRaceMotionJointFrameBuffer;
+    decodedJointFrameEnd = (RaceMotionDecodedJointFrame *)&gRacePlayerHitCueId;
 
-    for (frameIndex = 0; frameIndex < RACE_MOTION_FRAME_SAMPLE_COUNT; frameIndex++) {
-        decodedRootFrames[frameIndex].position.x = packedFrames[frameIndex].rootMotion.position.x << 14;
-        decodedRootFrames[frameIndex].position.y = packedFrames[frameIndex].rootMotion.position.y << 14;
-        decodedRootFrames[frameIndex].position.z = packedFrames[frameIndex].rootMotion.position.z << 14;
-        decodedRootFrames[frameIndex].rotation.x = packedFrames[frameIndex].rootMotion.rotation.x << 14;
-        decodedRootFrames[frameIndex].rotation.y = packedFrames[frameIndex].rootMotion.rotation.y << 14;
-        decodedRootFrames[frameIndex].rotation.z = packedFrames[frameIndex].rootMotion.rotation.z << 14;
-
-        for (jointIndex = 0; jointIndex < RACE_MOTION_PARTIAL_ANIMATION_JOINT_COUNT; jointIndex++) {
-            RaceMotionRotation *decodedJoint = &decodedJointFrames[frameIndex].joints[jointIndex];
-
-            packedXY = packedFrames[frameIndex].joints[jointIndex].xy;
-            packedZAndFlags = packedFrames[frameIndex].joints[jointIndex].zAndFlags;
-            decodedJoint->x = (packedXY >> 4) & 0xFF0;
-            decodedJoint->y = (packedXY << 4) & 0xFF0;
-            decodedJoint->z = (packedZAndFlags >> 4) & 0xFF0;
-            if (packedZAndFlags & 1) {
-                decodedJoint->x += 8;
-            }
-            if (packedZAndFlags & 2) {
-                decodedJoint->y += 8;
-            }
-            if (packedZAndFlags & 4) {
-                decodedJoint->z += 8;
-            }
-        }
+decode_frame:
+    jointIndex = 0;
+    decodedRoot = (RaceMotionRotation *)decodedRootFrame;
+    for (; jointIndex < RACE_MOTION_FRAME_SAMPLE_COUNT; jointIndex++) {
+        decodedRoot->x = packedData[0] << RACE_MOTION_MODEL_POSITION_FRAC_BITS;
+        decodedRoot->y = packedData[1] << RACE_MOTION_MODEL_POSITION_FRAC_BITS;
+        decodedRoot->z = packedData[2] << RACE_MOTION_MODEL_POSITION_FRAC_BITS;
+        decodedRoot++;
+        packedData += 3;
     }
 
-    firstJointFrame = decodedJointFrames[0].joints;
-    secondJointFrame = decodedJointFrames[1].joints;
-    interpolatedJoints = state->animation.joints;
     for (jointIndex = 0; jointIndex < RACE_MOTION_PARTIAL_ANIMATION_JOINT_COUNT; jointIndex++) {
-        startAngle = firstJointFrame[jointIndex].x;
-        angleDelta = (secondJointFrame[jointIndex].x - startAngle) & 0xFFF;
-        if (angleDelta >= 0x801) {
-            angleDelta -= 0x1000;
+        decodedJoint = &decodedJointFrame->joints[jointIndex];
+        packedXY = packedData[0];
+        packedZAndFlags = packedData[1];
+        packedData += 2;
+        goto decode_packed_rotation;
+decode_packed_rotation:
+        decodedJoint->x = (packedXY >> 4) & 0xFF0;
+        decodedJoint->y = (packedXY << 4) & 0xFF0;
+        decodedJoint->z = (packedZAndFlags >> 4) & 0xFF0;
+        if (packedZAndFlags & 1) {
+            decodedJoint->x += 8;
         }
-        interpolatedJoints[jointIndex].rotationX =
-            startAngle + (angleDelta * frameTimer) / frameTimerReset;
-
-        startAngle = firstJointFrame[jointIndex].y;
-        angleDelta = (secondJointFrame[jointIndex].y - startAngle) & 0xFFF;
-        if (angleDelta >= 0x801) {
-            angleDelta -= 0x1000;
+        if (packedZAndFlags & 2) {
+            decodedJoint->y += 8;
         }
-        interpolatedJoints[jointIndex].rotationY =
-            startAngle + (angleDelta * frameTimer) / frameTimerReset;
-
-        startAngle = firstJointFrame[jointIndex].z;
-        angleDelta = (secondJointFrame[jointIndex].z - startAngle) & 0xFFF;
-        if (angleDelta >= 0x801) {
-            angleDelta -= 0x1000;
+        if (packedZAndFlags & 4) {
+            decodedJoint->z += 8;
         }
-        interpolatedJoints[jointIndex].rotationZ =
-            startAngle + (angleDelta * frameTimer) / frameTimerReset;
     }
 
-    firstRootFrame = &decodedRootFrames[0];
-    secondRootFrame = &decodedRootFrames[1];
-    interpolatedRootMotion = &state->animation.motion.rootMotion;
-    interpolatedRootMotion->position.x = firstRootFrame->position.x +
-        ((secondRootFrame->position.x - firstRootFrame->position.x) * frameTimer) / frameTimerReset;
-    interpolatedRootMotion->position.y = firstRootFrame->position.y +
-        ((secondRootFrame->position.y - firstRootFrame->position.y) * frameTimer) / frameTimerReset;
-    interpolatedRootMotion->position.z = firstRootFrame->position.z +
-        ((secondRootFrame->position.z - firstRootFrame->position.z) * frameTimer) / frameTimerReset;
-    interpolatedRootMotion->rotation.x = firstRootFrame->rotation.x +
-        ((secondRootFrame->rotation.x - firstRootFrame->rotation.x) * frameTimer) / frameTimerReset;
-    interpolatedRootMotion->rotation.y = firstRootFrame->rotation.y +
-        ((secondRootFrame->rotation.y - firstRootFrame->rotation.y) * frameTimer) / frameTimerReset;
-    interpolatedRootMotion->rotation.z = firstRootFrame->rotation.z +
-        ((secondRootFrame->rotation.z - firstRootFrame->rotation.z) * frameTimer) / frameTimerReset;
+    jointIndex = RACE_MOTION_PARTIAL_ANIMATION_JOINT_COUNT;
+skip_joint:
+    jointIndex++;
+    packedData += 2;
+    if (jointIndex < RACE_MOTION_JOINT_COUNT) {
+        goto skip_joint;
+    }
+
+    decodedJointFrame++;
+    decodedRootFrame++;
+    if ((u32)decodedJointFrame < (u32)decodedJointFrameEnd) {
+        goto decode_frame;
+    }
+
+    jointData = (s32 *)gRaceMotionJointFrameBufferReload;
+    jointIndex = 0;
+    partialState = (RaceMotionPartialAnimationState *)state;
+interpolate_joint:
+    startX = jointData[0];
+    angleDelta = (jointData[42] - startX) & 0xFFF;
+    if (angleDelta >= 0x801) {
+        angleDelta -= 0x1000;
+    }
+    interpolationOffset = (angleDelta * frameTimer) / frameTimerReset;
+    partialState->joints[jointIndex].rotationX = startX + interpolationOffset;
+
+    angleDelta = (jointData[43] - (startY = jointData[1])) & 0xFFF;
+    if (angleDelta >= 0x801) {
+        angleDelta -= 0x1000;
+    }
+    interpolationOffset = (angleDelta * frameTimer) / frameTimerReset;
+    partialState->joints[jointIndex].rotationY = startY + interpolationOffset;
+
+    angleDelta = (jointData[44] - (startZ = jointData[2])) & 0xFFF;
+    if (angleDelta >= 0x801) {
+        angleDelta -= 0x1000;
+    }
+    interpolationOffset = (angleDelta * frameTimer) / frameTimerReset;
+    partialState->joints[jointIndex].rotationZ = startZ + interpolationOffset;
+
+    jointIndex++;
+    jointData += 3;
+    if (jointIndex != RACE_MOTION_PARTIAL_ANIMATION_JOINT_COUNT) {
+        goto interpolate_joint;
+    }
+
+    rootData = (s32 *)gRaceMotionRotationFrameBufferReload;
+    rootMotion = &state->animation.motion.rootMotion;
+    rootMotion->position.x =
+        ((rootData[6] - rootData[0]) * frameTimer) / frameTimerReset + rootData[0];
+    rootMotion->position.y =
+        ((rootData[7] - rootData[1]) * frameTimer) / frameTimerReset + rootData[1];
+    rootMotion->position.z =
+        ((rootData[8] - rootData[2]) * frameTimer) / frameTimerReset + rootData[2];
+    rootMotion->rotation.x =
+        ((rootData[9] - rootData[3]) * frameTimer) / frameTimerReset + rootData[3];
+    rootMotion->rotation.y =
+        ((rootData[10] - rootData[4]) * frameTimer) / frameTimerReset + rootData[4];
+    rootMotion->rotation.z =
+        ((rootData[11] - rootData[5]) * frameTimer) / frameTimerReset + rootData[5];
 
     rootJointAngle = state->animation.joints[0].rotationX;
     state->modelJointX = rootJointAngle;
     state->nextModelJointX = rootJointAngle;
     rootJointAngle = state->animation.joints[0].rotationY;
-    state->modelJointY = rootJointAngle;
     state->nextModelJointY = rootJointAngle;
+    state->modelJointY = rootJointAngle;
     rootJointAngle = state->animation.joints[0].rotationZ;
-    state->modelJointZ = rootJointAngle;
     state->nextModelJointZ = rootJointAngle;
+    state->modelJointZ = rootJointAngle;
 }
 #endif
 
