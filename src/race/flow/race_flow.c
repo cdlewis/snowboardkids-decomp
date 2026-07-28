@@ -130,7 +130,6 @@ extern u8 gRaceTypeSelection;
 extern u8 D_80121B60;
 extern s8 D_80121B61;
 extern u8 gRaceChallengeFailed;
-extern u8 gRaceRecordSettingsEnabled;
 extern u8 gPendingFramebufferSwapCount;
 extern u8 gFramebufferSwapHold;
 extern u8 gRaceSplitscreenMode;

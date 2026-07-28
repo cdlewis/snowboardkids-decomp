@@ -120,7 +120,6 @@ extern SchedulerState gSchedulerState;
 extern SchedulerClient gMainSchedulerClient;
 extern u16 gLastSchedulerRetraceCounter;
 extern Gfx *gRegionAllocPtr;
-extern s8 gRaceRecordSettingsEnabled;
 extern u8 gPendingFramebufferSwapCount;
 extern u8 gRaceRumbleEnabled;
 extern u8 gRumblePakConnectedMask;
