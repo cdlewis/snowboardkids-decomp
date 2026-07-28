@@ -3,6 +3,7 @@
 #include "game/engine/render_callback.h"
 #include "game/engine/relocatable_heap.h"
 #include "game/engine/callback_task_scheduler.h"
+#include "game/engine/game_task_scheduler.h"
 #include "game/menu/main_menu/main_menu_title_ui.h"
 #include "game/menu/renderer/menu_renderer.h"
 #include "game/menu/race_setup/race_setup_ui.h"
@@ -44,15 +45,6 @@ struct MainMenuTitleCursorActor {
     MainMenuTitleActor common;
 };
 
-typedef struct {
-    char pad0[0x18];
-    s32 fade;
-    s32 selection;
-    s32 delay;
-    s32 timer;
-} MainMenuState;
-
-extern MainMenuState *gCurrentGameTask;
 extern u8 gConnectedControllerCount;
 
 

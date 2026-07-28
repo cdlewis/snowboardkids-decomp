@@ -3,18 +3,7 @@
 #include "game/engine/system_runtime.h"
 #include "game/menu/main_menu/controller_main_menu_flow.h"
 
-#define GAME_TASK_CALLBACK_COUNT 3
 #define GAME_TASK_COUNT 8
-
-typedef struct GameTask {
-    struct GameTask *prev;
-    struct GameTask *next;
-    GameTaskCallback callbacks[GAME_TASK_CALLBACK_COUNT];
-    u8 priority;
-    u8 id;
-    u16 state;
-    u8 pad18[0x10];
-} GameTask;
 
 typedef struct GameTaskScheduler {
     u8 pad0[4];
@@ -32,7 +21,6 @@ extern s8 gAnalogStickResponseCurve;
 extern u8 gFramebufferSwapDelayTimer;
 extern u8 gFramebufferSwapDelay;
 extern s16 gFrameCounter;
-extern GameTask *gCurrentGameTask;
 extern GameTask gGameTaskPool[GAME_TASK_COUNT];
 extern u8 gGameTaskCount;
 extern GameTaskScheduler gGameTaskScheduler;

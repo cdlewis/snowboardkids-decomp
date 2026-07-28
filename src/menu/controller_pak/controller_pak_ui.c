@@ -3,6 +3,7 @@
 #include "game/engine/render_callback.h"
 #include "game/engine/relocatable_heap.h"
 #include "game/engine/callback_task_scheduler.h"
+#include "game/engine/game_task_scheduler.h"
 #include "game/menu/character_select/character_select_course_menu.h"
 #include "game/menu/controller_pak/controller_pak_continue_prompt_flow.h"
 #include "game/menu/controller_pak/controller_pak_menu.h"
@@ -22,7 +23,6 @@ typedef struct {
     u8 confirmSelection;
 } ControllerPakRumbleCheckPromptTransition;
 
-extern CharacterSelectFlowState *gCurrentGameTask;
 extern ControllerPakRumbleCheckPromptTransition gControllerPakRumbleCheckPromptTransition;
 extern u8 gPlayerCount;
 extern u8 gRumblePakConnectedByController[];

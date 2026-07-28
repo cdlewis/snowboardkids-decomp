@@ -16,13 +16,6 @@
 #include "game/audio/sound_manager.h"
 #include "game/race/player/race_player_input.h"
 
-typedef struct {
-    /* 0x00 */ u8 pad0[0x18];
-    /* 0x18 */ s32 fade;
-    /* 0x1C */ s32 timer;
-    /* 0x20 */ s32 screenState;
-} CourseSelectMenuState;
-
 typedef struct MenuCameraObject {
     /* 0x00 */ u8 pad0[0x24];
     /* 0x24 */ s32 depth;
@@ -99,7 +92,6 @@ extern MenuCameraObject D_801121E0[];
 extern MenuCameraObject D_80112340;
 extern u8 gPlayerCount;
 extern s8 gCourseSelectSelectedCourseSavedSlot;
-extern CourseSelectMenuState *gCurrentGameTask;
 extern s32 gMenuFlowState;
 extern u8 gPendingFramebufferSwapCount;
 extern u8 gFramebufferSwapHold;

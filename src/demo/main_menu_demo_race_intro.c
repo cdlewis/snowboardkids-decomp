@@ -30,7 +30,6 @@ typedef struct {
     /* 0xAD */ char padAD[3];
 } RaceIntroCamera;
 
-extern RaceIntroTransitionState *gCurrentGameTask;
 extern RaceIntroCamera D_801121E0[];
 extern MainMenuDemoRaceIntroEntry gMainMenuDemoRaceIntroEntries[];
 extern u8 gMainMenuDemoRaceIntroLoadCourseAssetsFlags[];
@@ -195,7 +194,7 @@ void waitForMainMenuDemoRaceIntroStart(void) {
 }
 
 void updateMainMenuDemoRaceIntro(void) {
-    RaceIntroTransitionState *state;
+    GameTask *state;
     s32 fadeStep;
 
     if (gCurrentGameTask->fadeStep == 0) {

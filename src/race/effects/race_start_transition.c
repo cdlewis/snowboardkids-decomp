@@ -17,11 +17,6 @@ typedef struct {
 } Vec2i;
 
 typedef struct {
-    char pad[0x18];
-    s32 fade;
-} RaceStartTransitionState;
-
-typedef struct {
     u8 pad0[0x34];
     u8 cupPlacements[0x1A];
 } RaceSetupSaveData;
@@ -51,7 +46,6 @@ extern u8 gPendingFramebufferSwapCount;
 extern u8 gFramebufferSwapHold;
 extern s16 gMenuFadeAlpha;
 
-extern RaceStartTransitionState *gCurrentGameTask;
 extern MenuCameraObject *gCurrentMenuCameraObject;
 extern Vec2i gMenuCameraTargetOffset;
 
@@ -227,8 +221,8 @@ void updateRaceStartTransitionIntroDelay(void) {
 }
 
 void updateRaceStartTransitionFadeIn(void) {
-    RaceStartTransitionState **state;
-    RaceStartTransitionState *currentState;
+    GameTask **state;
+    GameTask *currentState;
 
     gMenuFadeAlpha -= 8;
     if (gMenuFadeAlpha < 0) {

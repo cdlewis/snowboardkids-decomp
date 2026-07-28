@@ -2,18 +2,13 @@
 #include "game/engine/render_callback.h"
 #include "game/engine/relocatable_heap.h"
 #include "game/engine/callback_task_scheduler.h"
+#include "game/engine/game_task_scheduler.h"
 #include "game/engine/asset_manager.h"
 #include "game/menu/splitscreen_select/race_splitscreen_select_ui.h"
 #include "game/menu/course_select/course_select_menu.h"
 #include "game/menu/course_select/course_select_shop_ui.h"
 #include "game/menu/renderer/menu_renderer.h"
 #include "game/race/player/race_player_input.h"
-
-typedef struct {
-    char pad[0x1C];
-    s32 shopItemPrice;
-    s32 unk20;
-} MainMenuState;
 
 typedef MenuGlyphScript ShopDescriptionText[0x46];
 
@@ -180,7 +175,6 @@ extern u8 gShopMenuDescriptionSeen;
 extern u8 gShopMenuShowNewCoursesMessage;
 extern s16 gCoursePreviewViewportHeight;
 extern s32 gMenuFlowState;
-extern MainMenuState *gCurrentGameTask;
 extern s16 gMenuChoicePromptState;
 extern s32 gPlayerInputHeld;
 

@@ -14,7 +14,6 @@
 extern s32 enqueueSoundEffect(s32, s32);
 extern void releaseMenuAssetHandles(void);
 
-extern CharacterSelectFlowState *gCurrentGameTask;
 extern s8 gFramebufferSwapDelay;
 extern u8 gControllerPakMenuCursorState;
 extern u8 gControllerPakDeletePromptState;

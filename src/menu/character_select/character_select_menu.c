@@ -18,18 +18,11 @@
 #define CONTROLLER_PAK_STATUS_USE_EXISTING_SAVE 0x12
 #define CONTROLLER_PAK_STATUS_MENU_COMPLETE 0x13
 
-typedef struct {
-    char pad[0x18];
-    s32 fade;
-    s32 timer;
-} CharacterSelectMenuState;
-
 CharacterSelectState gCharacterSelectHudState;
 u8 gCharacterSelectSecretCharacterUnlocked;
 
 extern void releaseMenuAssetHandles(void);
 extern s32 enqueueSoundEffect(s16, s16);
-extern CharacterSelectMenuState *gCurrentGameTask;
 extern u16 gCharacterSelectIdOrder[];
 extern s16 gCharacterSelectVoiceSoundIds[];
 extern CallbackTask *D_8010ADE0;

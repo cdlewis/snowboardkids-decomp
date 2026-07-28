@@ -14,12 +14,6 @@
 #include "game/menu/main_menu/controller_main_menu_flow.h"
 
 typedef struct {
-    /* 0x00 */ u8 pad0[0x18];
-    /* 0x18 */ s32 fade;
-    /* 0x1C */ s32 timer;
-} RaceSetupMenuState;
-
-typedef struct {
     /* 0x00 */ u8 state;
     /* 0x01 */ u8 timer;
     /* 0x02 */ s16 alpha;
@@ -56,7 +50,6 @@ extern u16 gMenuInputRepeatTimers;
 extern u8 gHighestUnlockedCourse;
 extern s16 gRaceCourseIndex;
 extern u8 gPlayerCount;
-extern RaceSetupMenuState *gCurrentGameTask;
 extern s32 gMenuFlowState;
 extern s32 gPlayerInputHeld;
 extern s32 gPlayerInputPressed[];

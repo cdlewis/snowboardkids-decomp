@@ -75,14 +75,6 @@ typedef struct ControllerPakSaveData {
 #define CONTROLLER_PAK_U8_AT(cursor, field) (*(u8 *)((cursor) + CONTROLLER_PAK_SAVE_FIELD_OFFSET(field)))
 #define CONTROLLER_PAK_U16_AT(cursor, field) (*(u16 *)((cursor) + CONTROLLER_PAK_SAVE_FIELD_OFFSET(field)))
 
-typedef struct MainMenuState {
-    char pad[0x18];
-    s32 fade;
-    s32 selection;
-    s32 delay;
-    s32 timer;
-} MainMenuState;
-
 extern s32 gRumbleMotorStatuses[4];
 extern s16 gRumbleMotorRequestStates[4];
 
@@ -102,7 +94,6 @@ extern OSPfs gRumblePakHandles[];
 extern SaveFileIdentity gControllerPakSaveFileIdentity;
 extern u8 gControllerPakGameName[];
 extern u8 gControllerPakExtName[];
-extern MainMenuState *gCurrentGameTask;
 extern u8 gConnectedControllerBitmask;
 extern u8 gControllerPakSaveGameNameBytes[];
 extern u8 gControllerPakSaveGameNameBytesEnd[];
@@ -797,7 +788,7 @@ void initMainMenu(void) {
     gCurrentGameTask->fade = 0xFF;
     gCurrentGameTask->selection = 0;
     gCurrentGameTask->delay = 0x32;
-    gCurrentGameTask->timer = 0x4B0;
+    gCurrentGameTask->mainMenuTimer = 0x4B0;
     initCallbackTaskScheduler(0);
     if (gConnectedControllerCount != 0) {
         createCallbackTask((CallbackTaskCallback)&initMainMenuTitleCursor, 0, 0x64);
@@ -882,8 +873,8 @@ void updateMainMenu(void) {
             enqueueSoundEffect(1, 0x32);
         }
         if (flag == 0) {
-            gCurrentGameTask->timer -= 1;
-            if (gCurrentGameTask->timer == 0) {
+            gCurrentGameTask->mainMenuTimer -= 1;
+            if (gCurrentGameTask->mainMenuTimer == 0) {
                 flag = 1;
             }
         }
@@ -945,7 +936,7 @@ void fadeOutMainMenu(void) {
         releaseMenuAssetHandles();
         gFramebufferSwapHold = 0;
         gFramebufferSwapDelay = 0;
-        if (gCurrentGameTask->timer != 0) {
+        if (gCurrentGameTask->mainMenuTimer != 0) {
             temp_v1 = gCurrentGameTask->selection;
             if (temp_v1 == 0) {
                 createGameTask(2, initNewGameSaveData, 0x64);
