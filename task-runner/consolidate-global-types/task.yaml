@@ -1,0 +1,5 @@
+candidate_source: python3 tools/find_inconsistent_global_types.py
+prompt: "Consolidate all declarations and definitions of the global symbol $INPUT so they use one correct type. Investigate how the symbol is defined and used across src and include, merge or relocate related structs and declarations when appropriate, and use a shared header instead of adding redundant source-local extern declarations. Do not use void pointers or manual pointer arithmetic to hide type conflicts. Run ./tools/build-and-verify.sh and commit the completed consolidation."
+claude_command: codex
+success_command: 'git add -A && git commit -m "consolidate global type: $CANDIDATE"'
+timeout: 30m
