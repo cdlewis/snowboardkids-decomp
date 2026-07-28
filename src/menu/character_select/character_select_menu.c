@@ -6,6 +6,7 @@
 #include "game/engine/game_task_scheduler.h"
 #include "game/menu/renderer/menu_renderer.h"
 #include "game/menu/character_select/character_select_ui.h"
+#include "game/menu/main_menu/controller_main_menu_flow.h"
 #include "game/engine/viewport_manager.h"
 #include "game/race/player/race_player_input.h"
 #include "game/audio/sound_manager.h"
@@ -49,7 +50,6 @@ extern s8 D_8010AE64[];
 extern s32 gMenuFlowState;
 extern u32 gPlayerInputHeld[];
 extern u32 gPlayerInputPressed[];
-extern s16 gControllerPakStatusCodes[];
 extern u8 D_60F1A0[];
 extern u8 gMainMenuSecretCodeUnlocked;
 extern u8 D_800EC9E5;

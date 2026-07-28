@@ -4,6 +4,7 @@
 #include "game/engine/relocatable_heap.h"
 #include "game/engine/callback_task_scheduler.h"
 #include "game/menu/renderer/menu_renderer.h"
+#include "game/menu/main_menu/controller_main_menu_flow.h"
 #include "game/menu/race_setup/race_setup_ui.h"
 #include "game/race/player/race_player_input.h"
 
@@ -64,7 +65,6 @@ extern u8 gRaceSetupNoControllerPakMessage[];
 const char D_800E0A80[] = "%d";
 const char D_800E0A84[] = "%6d";
 extern TitleMenuWidgetActor *D_8010ADE0;
-extern s16 gControllerPakStatusCodes[];
 extern s16 gMenuChoicePromptState[];
 extern s16 gPlayerBadgeDisplayOrder[];
 extern RaceSetupSavePanelPlayerData gGameSaveDataBuffer[];

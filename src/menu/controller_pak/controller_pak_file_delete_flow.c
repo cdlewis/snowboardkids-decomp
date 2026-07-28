@@ -22,7 +22,6 @@ extern s32 gPlayerInputPressed;
 extern u8 gPendingFramebufferSwapCount;
 extern u8 gFramebufferSwapHold;
 extern s16 gMenuFadeAlpha;
-extern s16 gControllerPakStatusCodes;
 extern u8 gRaceRumbleEnabled;
 extern s32 gControllerPakFreeBytes;
 extern s32 gControllerPakFreeFileCount;
@@ -30,7 +29,7 @@ extern s32 gMenuFlowState;
 
 void initControllerPakFileDeleteFlow(void) {
     requestControllerPakProbe(0);
-    if (gControllerPakStatusCodes != 1) {
+    if (gControllerPakStatusCodes[0] != 1) {
         setCurrentGameTaskCallback(fadeOutControllerPakFileDeleteFlow, 0);
         return;
     }
