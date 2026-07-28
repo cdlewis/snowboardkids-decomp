@@ -27,12 +27,6 @@ extern u8 gFramebufferSwapHold;
 
 #define MULTIPLAYER_COURSE_SELECT_PLAYER_RECORD_COUNT 4
 
-typedef struct {
-    char pad0[0x3F];
-    s8 characterState[12];
-    char pad4B[0x78AD];
-} MultiplayerCourseSelectSaveData;
-
 typedef struct MultiplayerCourseSelectObject {
     u8 pad0[0x2C];
     void (*update)(void);
@@ -46,7 +40,7 @@ extern u8 D_800EC9C0;
 extern u8 gRaceSplitscreenMode;
 extern s16 gMenuChoicePromptState[];
 extern s8 D_800EC9E5;
-extern MultiplayerCourseSelectSaveData gGameSaveDataBuffer[];
+extern CourseSelectSaveData gGameSaveDataBuffer[];
 extern s32 D_8010ADE0;
 extern s32 D_8010ADE4;
 extern u16 gMenuInputRepeatTimers[];
@@ -73,7 +67,6 @@ extern s8 D_8010AEFB[];
 extern u8 D_8010AF08[][3];
 extern u8 D_8010AF06[][3];
 extern s8 gCourseSelectExtraCourseColumnState;
-extern s8 gCourseUnlockSaveSlots[][0x78F8];
 extern s32 gPlayerInputHeld[];
 extern s32 gPlayerInputPressed[];
 extern MultiplayerCourseSelectObject *gCurrentMenuCameraObject;
@@ -191,7 +184,7 @@ void initMultiplayerCourseSelectMenu(void) {
     one = 1;
     {
         s32 extraOffset;
-        MultiplayerCourseSelectSaveData *save;
+        CourseSelectSaveData *save;
         u8 *stateA;
         u8 *stateC;
         u8 *stateB;
@@ -236,7 +229,7 @@ void initMultiplayerCourseSelectMenu(void) {
                     sum = 0;
                     k = 0;
                     do {
-                        sum += save->characterState[k * 3 + j];
+                        sum += save->courseUnlockStates[k * 3 + j];
                         k++;
                     } while ((k < 3) & 0xFF);
                     j++;
@@ -251,7 +244,7 @@ void initMultiplayerCourseSelectMenu(void) {
                 sum = 0;
                 j = 9;
                 do {
-                    sum += save->characterState[j];
+                    sum += save->courseUnlockStates[j];
                     j++;
                 } while (j < 12);
                 stateA++;
@@ -276,7 +269,7 @@ void initMultiplayerCourseSelectMenu(void) {
                 if (*unlocked == one) {
                     j = 9;
                     while (j < 12) {
-                        if (save->characterState[j] != -one) {
+                        if (save->courseUnlockStates[j] != -one) {
                             D_8010AEFB[extraOffset] = j;
                             break;
                         }
@@ -287,7 +280,7 @@ void initMultiplayerCourseSelectMenu(void) {
                     extraCourse = D_8010AF08[i];
                     do {
                         *extraCourse = 0;
-                        if (save->characterState[j] != -one) {
+                        if (save->courseUnlockStates[j] != -one) {
                             *extraCourse = j;
                             extraCourse++;
                         }
@@ -392,7 +385,6 @@ extern s32 enqueueSoundEffect(s16, s16);
 
 extern u8 D_8010AF06[];
 extern u8 gCourseSelectExtraCourseColumnState;
-extern s8 gCourseUnlockSaveSlots[][0x78F8];
 extern s32 gPlayerInputHeld[];
 extern s32 gPlayerInputPressed[];
 extern s32 D_8010AEE8[];
@@ -653,7 +645,8 @@ void updateMultiplayerCourseSelectMenu(void) {
                                 if (player->menuSelection >= 9) {
                                     player->selectionUnlockState = 0;
                                 } else {
-                                    player->selectionUnlockState = gCourseUnlockSaveSlots[i][player->menuSelection];
+                                    player->selectionUnlockState =
+                                        gCourseUnlockSaveSlots[i].courseUnlockStates[player->menuSelection];
                                 }
                                 gMenuChoicePromptState[i] = row + 3;
                                 if ((u8) D_8010AECC[i] == 0) {
@@ -1019,7 +1012,7 @@ void updateMultiplayerCourseSelectMenu(void) {
                                     } else {
                                         player->selectionUnlockState =
                                             gCourseUnlockSaveSlots[playerIndex]
-                                                                  [player->menuSelection];
+                                                .courseUnlockStates[player->menuSelection];
                                     }
 
                                     gMenuChoicePromptState[playerIndex] += 3;

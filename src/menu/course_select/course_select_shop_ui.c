@@ -182,7 +182,6 @@ extern s16 gCoursePreviewViewportHeight;
 extern s32 gMenuFlowState;
 extern MainMenuState *gCurrentGameTask;
 extern s16 gMenuChoicePromptState;
-extern u8 gCourseUnlockSaveSlots[];
 extern s32 gPlayerInputHeld;
 
 const char gShopMenuMoneyFormat[] = "%6dG";
@@ -1028,7 +1027,7 @@ void drawCourseUnlockPricePanel(ShopMenuWidgetActor *arg0) {
     u16 sp48;
     s32 palette;
 
-    if ((s8)gCourseUnlockSaveSlots[gRacePlayers[0].menuSelection] == -1) {
+    if (gCourseUnlockSaveSlots[0].courseUnlockStates[gRacePlayers[0].menuSelection] == -1) {
         new_var = 0x3000;
         temp = gCourseUnlockPrices[gRacePlayers[0].menuSelection];
         if ((u32)temp >= 0x186A0U) {
@@ -1104,7 +1103,7 @@ void updateCourseUnlockPricePanel(ShopMenuWidgetActor *arg0) {
         }
         if (arg0->item.price == 0) {
             arg0->slide.bytes.state = 3;
-            gCourseUnlockSaveSlots[gRacePlayers[0].menuSelection] = 9;
+            gCourseUnlockSaveSlots[0].courseUnlockStates[gRacePlayers[0].menuSelection] = 9;
         }
         break;
     case 3:

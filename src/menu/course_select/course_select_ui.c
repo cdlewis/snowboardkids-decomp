@@ -140,14 +140,6 @@ typedef union {
     u8 bytes[0x80];
 } CourseSelectExtraCourseIconListActor;
 
-typedef struct {
-    /* 0x0000 */ u8 pad0[0x3F];
-    /* 0x003F */ s8 courseUnlockStates[12];
-    /* 0x004B */ u8 pad4B[0x788C];
-    /* 0x78D7 */ u8 extraCourseUnlockFlags;
-    /* 0x78D8 */ u8 pad78D8[0x20];
-} CourseSelectExtraCourseSaveData;
-
 struct CourseSelectAnimatedActor {
     /* 0x000 */ u8 pad0[0x18];
     /* 0x018 */ s32 matrix;
@@ -170,7 +162,6 @@ extern void drawMenuSpriteWithAlphaWideArgs(s32 x, s32 y, void *texture, s32 til
                                             s32 palette, s32 alpha, u32 flip);
 extern s32 allocFixedTransformMatrix(FixedTransform *);
 extern u8 D_800E0DB8[];
-extern s8 gCourseUnlockSaveSlots[][0x78F8];
 extern u8 D_800EC9C0;
 extern u8 gRaceSplitscreenMode;
 extern CallbackTask *D_8010ADE0;
@@ -225,7 +216,7 @@ void drawCourseSelectPreviewModel(CourseSelectCoursePreviewActor *arg0) {
             } else {
                 var_a3 = gRacePlayers[var_t0].menuSelection;
             }
-            temp_v0_2 = gCourseUnlockSaveSlots[var_t0][var_a3];
+            temp_v0_2 = gCourseUnlockSaveSlots[var_t0].courseUnlockStates[var_a3];
             if (temp_v0_2 == -1) {
                 var_v1 = 9;
             } else {
@@ -457,7 +448,7 @@ void drawCourseSelectPreviewModelClose(CourseSelectCoursePreviewActor *arg0) {
             } else {
                 var_a3 = gRacePlayers[var_t0].menuSelection;
             }
-            temp_v0_2 = gCourseUnlockSaveSlots[var_t0][var_a3];
+            temp_v0_2 = gCourseUnlockSaveSlots[var_t0].courseUnlockStates[var_a3];
             if (temp_v0_2 == -1) {
                 var_v1 = 9;
             } else {
@@ -2177,7 +2168,7 @@ void updateCourseSelectExtraCourseIconList(CourseSelectWidgetActor *arg0) {
                             for (iconIndex = 0; iconIndex < 3; iconIndex++) {
                                 if (gRacePlayers[playerIndex].menuSelection >= 9) {
                                     if (gRaceSplitscreenMode == 3) {
-                                        if (((CourseSelectExtraCourseSaveData *)gGameSaveDataBuffer)[playerIndex]
+                                        if (((CourseSelectSaveData *)gGameSaveDataBuffer)[playerIndex]
                                                 .extraCourseUnlockFlags &
                                             iconMask) {
                                             actor->itemCounts[playerIndex]++;
@@ -2190,7 +2181,7 @@ void updateCourseSelectExtraCourseIconList(CourseSelectWidgetActor *arg0) {
                                             }
                                         }
                                         iconMask *= 2;
-                                    } else if (((CourseSelectExtraCourseSaveData *)gGameSaveDataBuffer)[playerIndex]
+                                    } else if (((CourseSelectSaveData *)gGameSaveDataBuffer)[playerIndex]
                                                    .courseUnlockStates[iconIndex + 9] != -1) {
                                         actor->itemCounts[playerIndex]++;
                                         if (gPlayerCount == 1) {
@@ -2201,7 +2192,7 @@ void updateCourseSelectExtraCourseIconList(CourseSelectWidgetActor *arg0) {
                                                 iconIndex + 0x1F;
                                         }
                                     }
-                                } else if (((CourseSelectExtraCourseSaveData *)gGameSaveDataBuffer)[playerIndex]
+                                } else if (((CourseSelectSaveData *)gGameSaveDataBuffer)[playerIndex]
                                                .courseUnlockStates[(gRacePlayers[playerIndex].menuSelection % 3) +
                                                                    (iconIndex * 3)] != -1) {
                                     actor->itemCounts[playerIndex]++;
