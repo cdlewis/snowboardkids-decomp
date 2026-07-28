@@ -100,11 +100,11 @@ typedef struct RaceMotionPartialJointCursor {
     s16 rotationZ;
 } RaceMotionPartialJointCursor;
 
-typedef struct RaceMotionPartialAnimationState {
+typedef struct RaceMotionBlendAnimationState {
     u16 modelId;
     char pad2[0x76];
     RaceMotionPartialJointCursor jointCursor;
-} RaceMotionPartialAnimationState;
+} RaceMotionBlendAnimationState;
 
 typedef struct RaceMotionModelPart {
     u8 partId;
@@ -1503,7 +1503,7 @@ void blendRaceMotionJointAnimation(RaceMotionState *state, s32 animIndex, s32 ti
 
     blendData = gRaceMotionJointBlendBuffer;
     jointIndex = RACE_MOTION_PARTIAL_ANIMATION_START_JOINT;
-    jointCursor = &((RaceMotionPartialAnimationState *)state)->jointCursor;
+    jointCursor = &((RaceMotionBlendAnimationState *)state)->jointCursor;
 blend_joint:
     startX = blendData[0];
     angleDelta = (blendData[42] - startX) & 0xFFF;
