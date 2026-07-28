@@ -25,7 +25,6 @@
 #define FRAMEBUFFER_TASK_COUNT 2
 #define FRAMEBUFFER_TASK_INDEX_MASK (FRAMEBUFFER_TASK_COUNT - 1)
 #define FRAMEBUFFER_SIZE 0x25800
-#define FRAMEBUFFER_RENDER_TASK_STRIDE 0x18620
 #define FRAMEBUFFER_CLEAR_TASK_STRIDE 0x860
 #define FRAMEBUFFER_DISPLAY_LIST_OFFSET 0x620
 #define FRAMEBUFFER_FRAME_DATA_SIZE (FRAMEBUFFER_DISPLAY_LIST_OFFSET - 0x68)
@@ -143,10 +142,8 @@ extern s8 gRaceRecordSettingsEnabled;
 extern s8 gRaceCourseModelEffectsDisabled;
 extern s8 gRaceCourseOverlayEffectsDisabled;
 extern u8 gPendingFramebufferSwapCount;
-extern u8 gFramebufferRenderTask0Statuses;
 extern u8 gRaceRumbleEnabled;
 extern u8 gRumblePakConnectedMask;
-extern u8 gFramebufferRenderTask1Statuses;
 extern s32 gClearFramebufferOnNextTask;
 extern u8 gMenuFadeOverlayActive;
 extern Gfx *gCurrentTaskDisplayListStart;
@@ -274,11 +271,11 @@ void gameThreadMain(void *arg0) {
             break;
         case 5:
             gPendingFramebufferSwapCount++;
-            gFramebufferRenderTask0[0].status = gFramebufferRenderTask0Statuses & 0xFFFE;
+            gFramebufferRenderTask0[0].status = gFramebufferRenderTask0Statuses[0].status & 0xFFFE;
             break;
         case 6:
             gPendingFramebufferSwapCount++;
-            gFramebufferRenderTask0[1].status = gFramebufferRenderTask1Statuses & 0xFFFE;
+            gFramebufferRenderTask0[1].status = gFramebufferRenderTask1Statuses[0].status & 0xFFFE;
             break;
         case 3:
             done = 1;
@@ -728,8 +725,8 @@ void initFramebufferRenderTaskState(void) {
         gFramebufferRenderTask0[1].framebuffer = D_803B4000;
     }
     osViSetSpecialFeatures(0x6A);
-    gFramebufferRenderTask0Statuses = 0;
-    gFramebufferRenderTask1Statuses = 0;
+    gFramebufferRenderTask0Statuses[0].status = 0;
+    gFramebufferRenderTask1Statuses[0].status = 0;
     gFramebufferColorBufferIndex = 0;
     D_80124C28 = gIdentityMatrix;
     D_80124C68 = gIdentityMatrix;
