@@ -27,13 +27,6 @@ typedef struct OSContPad {
     u8 errno;
 } OSContPad;
 
-typedef struct ControllerInputState {
-    u16 buttons;
-    s8 stickX;
-    s8 stickY;
-    u8 pad4[2];
-} ControllerInputState;
-
 typedef struct OSPfs {
     s32 status;
     OSMesgQueue *queue;

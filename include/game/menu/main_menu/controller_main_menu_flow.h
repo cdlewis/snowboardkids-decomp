@@ -27,6 +27,15 @@ typedef enum ControllerSubsystemRequest {
     CONTROLLER_REQUEST_RETRY_RUMBLE_INIT = 0xD0
 } ControllerSubsystemRequest;
 
+typedef struct ControllerInputState {
+    u16 buttons;
+    s8 stickX;
+    s8 stickY;
+    u8 pad4[2];
+} ControllerInputState;
+
+extern ControllerInputState gControllerInputState[4];
+
 void initControllerSubsystem(void);
 void controllerSubsystemThreadMain(void *threadArg);
 void requestControllerRead(void);
