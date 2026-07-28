@@ -1622,7 +1622,6 @@ typedef struct {
 extern u32 gCourseUnlockPrices[];
 extern MenuGlyphScript gCourseSelectModeDescriptionText[];
 extern MenuGlyphScript gCourseSelectBoardLevelText[];
-extern MenuGlyphScript gCourseSelectExtraCourseBoardLevelText[];
 extern MenuGlyphScript gCourseSelectPurchaseMessageText[];
 extern u8 gUnlockedExtraCourseFlags;
 extern u8 gCourseSelectExtraCourseIds[];
@@ -1681,7 +1680,7 @@ void drawCourseSelectCourseDescription(CourseSelectWidgetActor *arg0) {
             if ((gRaceSplitscreenMode == 3) && ((courseId = selection->menuSelection) <= 8)) {
                 text = gCourseSelectBoardLevelByCourseText[courseId % 3].text;
             } else if (((courseId = selection->menuSelection) >= 9) && (courseId < 12)) {
-                text = gCourseSelectExtraCourseBoardLevelText + ((gCourseSelectExtraCourseIds[selectedIndex] % 3) * 0x30);
+                text = gCourseSelectExtraCourseBoardLevelText[gCourseSelectExtraCourseIds[selectedIndex] % 3].text;
             } else {
                 text = gCourseSelectBoardLevelText;
             }
@@ -1764,15 +1763,10 @@ typedef struct {
 } CourseModeDescriptionText;
 
 typedef struct {
-    MenuGlyphScript text[0x30];
-} CourseExtraBoardLevelText;
-
-typedef struct {
     MenuGlyphScript text[0x19];
 } CoursePurchaseMessageText;
 
 extern MenuGlyphScript gCourseSelectBoardLevelText[];
-extern CourseExtraBoardLevelText gCourseSelectExtraCourseBoardLevelText[];
 extern u8 gCourseSelectExtraCourseIds[];
 extern CourseModeDescriptionText gCourseSelectModeDescriptionText[];
 extern CoursePurchaseMessageText gCourseSelectPurchaseMessageText[];
