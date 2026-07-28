@@ -4,6 +4,7 @@
 #include "game/engine/relocatable_heap.h"
 #include "game/engine/callback_task_scheduler.h"
 #include "game/menu/renderer/menu_renderer.h"
+#include "game/menu/character_select/character_select_menu.h"
 #include "game/menu/course_select/course_select_ui.h"
 #include "game/menu/course_select/course_select_shop_ui.h"
 #include "game/math/fixed_point_math.h"
@@ -177,6 +178,15 @@ typedef struct {
     /* 0x24 */ u8 pad24[0x14];
 } CourseSelectStatusOverlay;
 
+typedef union {
+    struct {
+        /* 0x00 */ u8 pad0[0x2C];
+        /* 0x2C */ u16 purchaseMessage;
+        /* 0x2E */ u8 descriptionMode;
+    };
+    u8 bytes[0x30];
+} CourseSelectDescriptionStatus;
+
 extern void drawCourseSelectPlayerPanels(CourseSelectWidgetActor *);
 extern void drawMenuSpriteWithAlphaWideArgs(s32 x, s32 y, void *texture, s32 tileIndex, s32 width, s32 height,
                                             s32 palette, s32 alpha, u32 flip);
@@ -197,7 +207,7 @@ extern u8 D_8010AEA4[];
 extern u8 D_8010AEB0;
 extern u8 D_8010AEA0[];
 extern u8 gCourseSelectExtraCourseColumnState;
-extern u8 gCourseSelectStatus[];
+extern CourseSelectDescriptionStatus gCourseSelectStatus[];
 extern u8 D_8010AEAC[];
 extern u8 D_8010AF1C;
 extern s16 gMenuChoicePromptState[];
@@ -1117,7 +1127,7 @@ void updateCourseSelectCourseCursors(CourseSelectWidgetActor *arg0) {
                 break;
             }
             i++;
-            gCourseSelectStatus[i - 1] = state;
+            gCourseSelectStatus->bytes[i - 1] = state;
         } while (i < (s32) gPlayerCount);
     }
 
@@ -1471,9 +1481,10 @@ void initCourseSelectCourseStats(CourseSelectWidgetActor *arg0) {
     setCallbackTaskCallback(temp_a3, (CallbackTaskCallback)updateCourseSelectCourseStats);
 }
 
-// drawCourseSelectCourseDescription best match: 93.701% (nonmatchings/drawCourseSelectCourseDescription-3379532139742180785/base_28.c)
+// drawCourseSelectCourseDescription best match: 95.254% (nonmatchings/drawCourseSelectCourseDescription-4777730848216765513/base_18.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/course_select/course_select_ui/drawCourseSelectCourseDescription.s")
 
+#if 0
 #ifdef NON_MATCHING
 typedef struct {
     /* 0x00 */ u8 pad0[0x2C];
@@ -1616,6 +1627,153 @@ void drawCourseSelectCourseDescription(CourseSelectWidgetActor *arg0) {
         digitCount = arg0->spriteIndex;
         drawMenuGlyphScript(arg0->x, arg0->y, gCourseSelectPurchaseMessageText + ((value * 0x32) - 0x32), 1,
                             digitCount, 0);
+    }
+}
+#endif
+#endif
+
+#ifdef NON_MATCHING
+typedef struct {
+    MenuGlyphScript text[0x23];
+} CourseModeDescriptionText;
+
+typedef struct {
+    MenuGlyphScript text[0x18];
+} CourseBoardLevelByCourseText;
+
+typedef struct {
+    MenuGlyphScript text[0x30];
+} CourseExtraBoardLevelText;
+
+typedef struct {
+    MenuGlyphScript text[0x19];
+} CoursePurchaseMessageText;
+
+extern CourseBoardLevelByCourseText gCourseSelectBoardLevelByCourseText[];
+extern MenuGlyphScript gCourseSelectBoardLevelText[];
+extern CourseExtraBoardLevelText gCourseSelectExtraCourseBoardLevelText[];
+extern u8 gCourseSelectExtraCourseIds[];
+extern CourseModeDescriptionText gCourseSelectModeDescriptionText[];
+extern CoursePurchaseMessageText gCourseSelectPurchaseMessageText[];
+extern u32 gCourseUnlockPrices[];
+extern u8 gUnlockedExtraCourseFlags;
+
+void drawCourseSelectCourseDescription(CourseSelectWidgetActor *arg0) {
+    u8 unused[4];
+    MenuGlyphScript *volatile text;
+    MenuGlyphScript *boardText;
+    MenuGlyphScript script[8];
+    u32 descriptionIndex;
+    s32 pricedCourseId;
+    u32 price;
+    s32 digitCount;
+    MenuGlyphScript *digit;
+    u16 selectedIndex;
+
+    if (gCourseSelectStatus->purchaseMessage == 0) {
+        if ((D_8010AEA8 == 0) &&
+            ((D_80121D80->menuState == 0) || (D_80121D80->menuState == 3) ||
+             (D_80121D80->menuState == 9))) {
+            if (gCourseSelectStatus->descriptionMode == 1) {
+                descriptionIndex = 3;
+            } else if (gCourseSelectStatus->descriptionMode == 2) {
+                descriptionIndex = 4;
+            } else if ((D_80121D80->courseIndex >= 9) && (D_80121D80->courseIndex < 12)) {
+                descriptionIndex = 5;
+            } else {
+                descriptionIndex = (D_80121D80->courseIndex % 3) & 0xFFFF;
+            }
+            text = gCourseSelectModeDescriptionText[descriptionIndex].text;
+        } else {
+            if ((gMenuChoicePromptState[0] < 2) || (gMenuChoicePromptState[0] == 9)) {
+                selectedIndex = 1;
+            } else if (gMenuChoicePromptState[0] < 5) {
+                selectedIndex = gMenuChoicePromptState[0] - 1;
+            }
+            if ((gMenuChoicePromptState[0] >= 5) && (gMenuChoicePromptState[0] != 9)) {
+                arg0->pad18_2[8] = 1;
+            }
+            if (arg0->pad18_2[8] == 0) {
+                arg0->pad18_2[7] = selectedIndex;
+            } else {
+                selectedIndex = arg0->pad18_2[7];
+            }
+            if ((gRaceSplitscreenMode == 3) && (D_80121D80->courseIndex < 9)) {
+                text = gCourseSelectBoardLevelByCourseText[D_80121D80->courseIndex % 3].text;
+            } else {
+                if ((D_80121D80->courseIndex >= 9) && (D_80121D80->courseIndex < 12)) {
+                    descriptionIndex = gCourseSelectExtraCourseIds[selectedIndex] % 3;
+                    boardText = gCourseSelectExtraCourseBoardLevelText[descriptionIndex].text;
+                    text = boardText;
+                } else {
+                    boardText = gCourseSelectBoardLevelText;
+                }
+                text = boardText;
+            }
+        }
+
+        drawMenuGlyphScript(arg0->x, arg0->y, text, 1, (u16)(s32)arg0->spriteIndex, 0);
+
+        if ((gRaceSplitscreenMode == 3) &&
+            ((D_80121D80->menuState == 1) || (D_80121D80->menuState == 2))) {
+            if ((gCharacterSelectHudState.highlightedRosterIndices[0] != 3) ||
+                ((gUnlockedExtraCourseFlags & 7) == 0)) {
+                script[0] = 0xFFFC;
+                script[1] = 6;
+                script[2] = selectedIndex;
+                script[3] = 0xFFFF;
+                drawMenuGlyphScript(arg0->x + 0x48, arg0->y + 0x10, script, 1,
+                                    (u16)(s32)arg0->spriteIndex, 0);
+            }
+
+            if (gCourseSelectModeSelection == 0) {
+                script[0] = 0xFFFC;
+                script[1] = 6;
+                if ((selectedIndex >= 2) || (D_80121D80->courseIndex >= 9)) {
+                    if (D_80121D80->courseIndex >= 9) {
+                        pricedCourseId = gCourseSelectExtraCourseIds[selectedIndex];
+                    } else {
+                        pricedCourseId =
+                            (D_80121D80->courseIndex % 3) + (selectedIndex * 3) - 3;
+                    }
+                    price = gCourseUnlockPrices[pricedCourseId];
+                    if (price < 10000) {
+                        digitCount = 5;
+                    } else if (price < 100000) {
+                        digitCount = 6;
+                    } else {
+                        digitCount = 7;
+                    }
+                    pricedCourseId = D_80121D80->courseIndex;
+                    if (price != 0) {
+                        digit = &script[digitCount];
+                        do {
+                            digit--;
+                            digit[1] = price % 10;
+                            price /= 10;
+                        } while (price != 0);
+                    }
+                    script[digitCount + 1] = 0x10;
+                    script[digitCount + 2] = 0xFFFF;
+                    if (pricedCourseId >= 9) {
+                    }
+                } else {
+                    digitCount = 3;
+                    script[2] = 0x2B;
+                    digit = &script[digitCount];
+                    digit[3] = digit[2] = digit[1] = digit[0] = 0x2B;
+                    script[7] = 0xFFFF;
+                }
+                descriptionIndex = arg0->y;
+                drawMenuGlyphScript(arg0->x + 0x20, descriptionIndex + 0x20, script, 1,
+                                    (u16)(s32)arg0->spriteIndex, 0);
+            }
+        }
+    } else {
+        digitCount = gCourseSelectStatus->purchaseMessage;
+        drawMenuGlyphScript(arg0->x, arg0->y,
+                            gCourseSelectPurchaseMessageText[digitCount - 1U].text,
+                            1, (u16)(s32)arg0->spriteIndex, 0);
     }
 }
 #endif
