@@ -21,7 +21,6 @@ extern void releaseMenuAssetHandles(void);
 extern s32 enqueueSoundEffect(s16, s16);
 
 
-extern CharacterSelectFlowState *gCurrentGameTask;
 extern RaceTypeSelectCursorState gRaceTypeSelectCursorTarget;
 extern u8 gMenuSelectionConfirmTimer;
 extern u8 gMenuExitSelection;

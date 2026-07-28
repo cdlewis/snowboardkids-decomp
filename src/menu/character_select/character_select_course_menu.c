@@ -25,7 +25,6 @@ extern void enqueueSoundEffect(s32, s32);
 extern void releaseMenuAssetHandles(void);
 extern s16 gCharacterSelectShortCourseOptions[];
 extern s16 gCharacterSelectSingleCourseOption[];
-extern CharacterSelectFlowState *gCurrentGameTask;
 extern s8 gFramebufferSwapDelay;
 extern s16 gMenuFadeAlpha;
 extern CharacterSelectSaveData gGameSaveDataBuffer[];

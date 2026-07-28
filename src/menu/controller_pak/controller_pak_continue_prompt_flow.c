@@ -13,7 +13,6 @@
 extern u64 enqueueSoundEffect(s32, s32);
 extern void releaseMenuAssetHandles(void);
 
-extern CharacterSelectFlowState *gCurrentGameTask;
 extern s8 gFramebufferSwapDelay;
 extern s16 gMenuFadeAlpha;
 extern s32 gMenuFlowState;

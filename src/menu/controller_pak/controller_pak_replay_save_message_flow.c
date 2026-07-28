@@ -11,7 +11,6 @@
 
 extern void releaseMenuAssetHandles(void);
 
-extern CharacterSelectFlowState *gCurrentGameTask;
 extern s8 gFramebufferSwapDelay;
 extern s16 gMenuFadeAlpha;
 extern u8 gPendingFramebufferSwapCount;

@@ -20,7 +20,6 @@ typedef struct {
     /* 0x6 */ s16 nextStatus;
 } ControllerPakRaceRecordSaveStatusTransition;
 
-extern CharacterSelectFlowState *gCurrentGameTask;
 extern ControllerPakMenuState gControllerPakMenuState;
 extern ControllerPakRaceRecordSaveStatusTransition gControllerPakRaceRecordSaveStatusTransition;
 extern u8 gPendingFramebufferSwapCount;

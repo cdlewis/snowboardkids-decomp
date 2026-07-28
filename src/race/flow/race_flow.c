@@ -92,13 +92,6 @@ typedef struct {
 } RaceFlowInitScratch;
 
 typedef struct {
-    /* 0x00 */ u8 pad0[0x18];
-    /* 0x18 */ s32 fadeTimer;
-    /* 0x1C */ s32 unk1C;
-    /* 0x20 */ s32 countdown;
-} RaceFlowState;
-
-typedef struct {
     /* 0x00 */ u8 pad0[0xAC];
     /* 0xAC */ u8 active;
     /* 0xAD */ u8 padAD[0xB0 - 0xAD];
@@ -133,7 +126,6 @@ typedef struct {
 extern CourseGridEntry *D_800DC490[];
 extern u16 D_800DC5C0[];
 extern CourseSelectTableEntry D_800B9542[];
-extern RaceFlowState *gCurrentGameTask;
 extern s32 gRaceCameraReplayStartX;
 extern s32 gRaceCameraReplayStartY;
 extern s32 gRaceCameraReplayStartZ;
@@ -814,7 +806,7 @@ void fadeOutRaceStartTransitionFlow(void) {
 
 void fadeInRaceGameplayViewports(void) {
     s32 temp_a0;
-    RaceFlowState *state;
+    GameTask *state;
 
     state = gCurrentGameTask;
     temp_a0 = state->unk1C;

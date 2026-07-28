@@ -3,6 +3,7 @@
 #include "game/engine/render_callback.h"
 #include "game/engine/relocatable_heap.h"
 #include "game/engine/callback_task_scheduler.h"
+#include "game/engine/game_task_scheduler.h"
 #include "game/menu/renderer/menu_renderer.h"
 #include "game/menu/character_select/character_select_menu.h"
 #include "game/menu/course_select/course_select_menu.h"
@@ -11,11 +12,6 @@
 #include "game/math/fixed_point_math.h"
 #include "game/race/player/race_player_model_renderer.h"
 #include "game/race/player/race_player_input.h"
-
-typedef struct {
-    u8 pad0[0x20];
-    /* 0x20 */ s32 screenState;
-} CourseSelectState;
 
 typedef struct {
     /* 0x000 */ u8 menuState;
@@ -188,7 +184,6 @@ extern s16 gCourseSelectStatsPanelLayout[][4];
 extern s16 gCourseSelectStatsPlayerMarkerLayout[][2][2];
 extern u8 gPlayerCount;
 extern s32 gMenuFlowState;
-extern CourseSelectState *gCurrentGameTask;
 extern u8 gCurrentViewportIndex;
 extern u8 gGameSaveDataBuffer[][0x78F8];
 

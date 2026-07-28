@@ -20,12 +20,6 @@
 #include "game/menu/renderer/menu_renderer.h"
 
 typedef struct {
-    /* 0x00 */ u8 pad0[0x18];
-    /* 0x18 */ s32 fade;
-    /* 0x1C */ s32 timer;
-} EndingCreditsFlowState;
-
-typedef struct {
     /* 0x00 */ u8 pad0[0x4];
     /* 0x04 */ s16 yaw;
     /* 0x06 */ u8 pad6[0x1E];
@@ -49,7 +43,6 @@ extern s16 gMenuFadeAlpha;
 extern Vec3i gMenuCameraTargetOffset;
 extern MenuCameraObject D_801121E0;
 extern MenuCameraObject *gCurrentMenuCameraObject;
-extern EndingCreditsFlowState *gCurrentGameTask;
 extern u8 gPendingFramebufferSwapCount;
 extern u8 gFramebufferSwapHold;
 
@@ -58,7 +51,7 @@ const f32 gEndingCreditsViewportAspectRatio[4] = { 1.333333373f, 0.0f, 0.0f, 0.0
 void initEndingCreditsFlow(void) {
     s32 sp34;
     s32 temp_v0;
-    volatile EndingCreditsFlowState *state;
+    volatile GameTask *state;
 
     resetRaceCameras();
     D_801121E0.update = updateMenuCameraObjectWithTargetOffsetCallback;

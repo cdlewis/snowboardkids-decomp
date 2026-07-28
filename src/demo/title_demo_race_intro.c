@@ -18,7 +18,6 @@ typedef union {
     u8 bytes[sizeof(RacePlayer)];
 } RacePlayerReplaySnapshot;
 
-extern RaceIntroTransitionState *gCurrentGameTask;
 extern s16 gMenuFadeAlpha;
 extern s8 gMenuFadeOverlayActive;
 extern f32 D_800E10C8;

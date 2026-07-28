@@ -3,6 +3,7 @@
 #include "game/engine/render_callback.h"
 #include "game/engine/relocatable_heap.h"
 #include "game/engine/callback_task_scheduler.h"
+#include "game/engine/game_task_scheduler.h"
 #include "game/menu/renderer/menu_renderer.h"
 #include "game/menu/main_menu/controller_main_menu_flow.h"
 #include "game/menu/race_setup/race_setup_ui.h"
@@ -27,12 +28,6 @@
 #define SAVE_STATUS_TRANSITION_FADE_IN 1
 #define SAVE_STATUS_TRANSITION_FADE_OUT 2
 #define SAVE_STATUS_TRANSITION_DONE 3
-
-typedef struct {
-    /* 0x00 */ u8 pad0[0x18];
-    /* 0x18 */ s32 unk18;
-    /* 0x1C */ s32 unk1C;
-} Struct801235B8;
 
 typedef struct {
     /* 0x00 */ u8 state;
@@ -80,8 +75,6 @@ extern u8 gRaceSetupSaveChoicePromptTopSprites[];
 extern u8 gMenuSelectionConfirmTimer;
 extern u8 gRaceSetupSavePanelFrameState;
 extern s32 gMenuFlowState;
-extern Struct801235B8 *gCurrentGameTask;
-
 void drawRaceSetupPlayerCountPrompt(MenuIntroActor *arg0) {
     s32 i;
     s32 j;

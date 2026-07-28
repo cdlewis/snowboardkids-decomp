@@ -18,12 +18,6 @@
 #define MAIN_MENU_MODE_PREVIEW_RACE_VIEWPORT_ZOOM_FRAMES 0x10
 
 typedef struct {
-    /* 0x00 */ char pad[0x18];
-    /* 0x18 */ s32 transitionTimer;
-    /* 0x1C */ s32 unk1C;
-} MainMenuRaceFlowTask;
-
-typedef struct {
     /* 0x0 */ u8 courseIndex;
     /* 0x1 */ u8 pad1[3];
     /* 0x4 */ u8 *romStart;
@@ -31,7 +25,6 @@ typedef struct {
 } MainMenuModePreviewRaceCourseAsset;
 
 
-extern MainMenuRaceFlowTask *gCurrentGameTask;
 extern u8 gMainMenuSelectionResult;
 extern s8 gRacePlayerHudStatuses;
 extern s16 gRaceCourseIndex;

@@ -13,12 +13,6 @@
 #include "game/race/player/race_player_input.h"
 
 typedef struct {
-    char pad[0x18];
-    s32 fade;
-    s32 timer;
-} RaceSplitscreenSelectMenuState;
-
-typedef struct {
     u8 state;
     char pad1[1];
     s16 nextState;
@@ -30,7 +24,6 @@ extern s32 enqueueSoundEffect(s16, s16);
 
 extern u8 D_800EC9DC;
 
-extern RaceSplitscreenSelectMenuState *gCurrentGameTask;
 extern RaceSplitscreenSelectCursorTarget gRaceSplitscreenSelectCursorTarget;
 extern u8 gMenuSelectionConfirmTimer;
 extern u8 gRaceSplitscreenMode;
