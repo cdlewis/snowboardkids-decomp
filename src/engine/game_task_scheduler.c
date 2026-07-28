@@ -24,10 +24,6 @@ extern GameTask *gFreeGameTaskStack[];
 extern u8 gPendingFramebufferSwapCount;
 extern u8 gFramebufferSwapHold;
 extern u8 gNextFramebufferRenderTaskIndex;
-extern s32 gPlayerInputHeld;
-extern s32 gPlayer2InputHeld;
-extern s32 gPlayer3InputHeld;
-extern s32 gPlayer4InputHeld;
 extern s32 gPlayerInputPrevious;
 extern s32 gPlayer2InputPrevious;
 extern s32 gPlayer3InputPrevious;
@@ -67,7 +63,7 @@ void initGameTaskScheduler(void) {
     gFramebufferSwapHold = 0;
     zero = 0;
     gNextFramebufferRenderTaskIndex = zero;
-    gPlayerInputHeld = zero;
+    gPlayerInputHeld[0] = zero;
     gPlayerInputPrevious = zero;
     gPlayerInputPressed = 0;
     gPlayerStickX = zero;
@@ -130,7 +126,7 @@ void updateGameTaskScheduler(void) {
     stickYOut = &gPlayerStickY;
     stickXOut = &gPlayerStickX;
     controller = gControllerInputState;
-    input = &gPlayerInputHeld;
+    input = gPlayerInputHeld;
     previousInput = &gPlayerInputPrevious;
 
     do {

@@ -107,7 +107,7 @@ void updateRaceSplitscreenSelectMenu(void) {
             if (gMenuSelectionConfirmTimer == 0) {
                 if (gRaceSplitscreenSelectCursorTarget.state == 1) {
                     selection = gRaceSplitscreenMode;
-                    newInputCopy = gPlayerInputHeld;
+                    newInputCopy = gPlayerInputHeld[0];
                     newInput = newInputCopy;
                     pressedUp = newInput & (STICK_UP | U_JPAD);
                     previousSelection = selection;

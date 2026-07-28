@@ -28,7 +28,6 @@ extern CharacterSelectOptionList *gCharacterSelectActiveCourseOptions;
 extern s32 D_8010ADE0;
 extern s32 D_8010ADE4;
 extern s32 gMenuFlowState;
-extern s32 gPlayerInputHeld;
 extern s32 gPlayerInputPressed;
 extern u16 gCharacterSelectCourseExitOptionIndex;
 extern u8 gCharacterSelectCourseSubmenuState;
@@ -358,7 +357,7 @@ void updateCharacterSelectCourseMenu(void) {
             if (gMenuSelectionConfirmTimer == 0) {
                 if (gCharacterSelectCourseCursorState.fields.state == 1) {
                     previousSelection = gRaceCourseIndex;
-                    input = gPlayerInputHeld;
+                    input = gPlayerInputHeld[0];
                     upInput = input & (STICK_UP | U_JPAD);
                     if ((upInput == 0) && ((input & (STICK_DOWN | D_JPAD)) == 0)) {
                         gMenuInputRepeatTimers[0] = 0;

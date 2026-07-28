@@ -3,6 +3,7 @@
 #include "game/engine/render_callback.h"
 #include "game/engine/relocatable_heap.h"
 #include "game/engine/callback_task_scheduler.h"
+#include "game/engine/controller_input.h"
 #include "game/ending/ending_credits_ui.h"
 #include "game/ending/ending_credits_flow.h"
 /*
@@ -54,7 +55,6 @@ typedef struct {
     /* 0x16 */ s16 pad;
 } EndingCreditsPageTextLineLayout;
 
-extern s32 gPlayerInputHeld;
 extern s32 gPlayerInputPressed[];
 extern u16 gEndingCreditsPageTextScripts[][0x5A];
 extern EndingCreditsPageTextLineLayout gEndingCreditsPageTextLineLayouts[];
@@ -231,21 +231,21 @@ void updateEndingObjectSpriteDebugViewer(EndingObjectSpriteDebugViewerActor *arg
         temp_a2 = arg0->y;
         temp_a1 = arg0->x;
         oldY = temp_a2;
-        if ((gPlayerInputHeld & (STICK_UP | U_JPAD)) && (temp_a2 >= -0x73)) {
+        if ((gPlayerInputHeld[0] & (STICK_UP | U_JPAD)) && (temp_a2 >= -0x73)) {
             arg0->y = temp_a2 - 1;
         }
-        if (gPlayerInputHeld & (STICK_DOWN | D_JPAD)) {
+        if (gPlayerInputHeld[0] & (STICK_DOWN | D_JPAD)) {
             temp_a2 = arg0->y;
             if (temp_a2 < 0x68) {
                 arg0->y = temp_a2 + 1;
             }
         }
-        if (gPlayerInputHeld & (STICK_LEFT | L_JPAD)) {
+        if (gPlayerInputHeld[0] & (STICK_LEFT | L_JPAD)) {
             if (arg0->x >= -0x67) {
                 arg0->x = arg0->x - 1;
             }
         }
-        if (gPlayerInputHeld & (STICK_RIGHT | R_JPAD)) {
+        if (gPlayerInputHeld[0] & (STICK_RIGHT | R_JPAD)) {
             if (arg0->x < 0x68) {
                 arg0->x = arg0->x + 1;
             }

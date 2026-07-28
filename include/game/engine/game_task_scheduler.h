@@ -2,6 +2,7 @@
 #define GAME_TASK_SCHEDULER_H
 
 #include "common.h"
+#include "game/engine/controller_input.h"
 
 #define GAME_TASK_CALLBACK_COUNT 3
 

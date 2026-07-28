@@ -2,6 +2,7 @@
 #include "game/engine/asset_manager.h"
 #include "game/engine/render_callback.h"
 #include "game/engine/callback_task_scheduler.h"
+#include "game/engine/controller_input.h"
 #include "game/engine/relocatable_heap.h"
 #include "game/engine/system_runtime.h"
 #include "game/menu/renderer/menu_renderer.h"
@@ -132,7 +133,6 @@ void drawMenuSpriteWithAlphaClipped(s16 arg0, s16 arg1, void *arg2, u16 arg3, u1
 void drawMenuGlyph(s16 x, s16 y, u16 glyphIndex, u8 paletteIndex, u16 intensity, u16 fontBank);
 void drawMenuColoredGlyph(s16 x, s16 y, u16 glyph, u8 palette, u16 scale, u16 colorMode, s32 arg6);
 extern Gfx *gRegionAllocPtr;
-extern u32 gPlayerInputHeld;
 extern s16 gMenuSpriteFlipScales[][2];
 extern s16 gMenuFadeAlpha;
 extern s16 gMenuViewportWidth;
@@ -951,16 +951,16 @@ void func_80011C18(MenuRenderSpriteActor *arg0) {
 }
 
 void updateMenuSpriteActorDebugControls(MenuRenderSpriteActor *actor) {
-    if (gPlayerInputHeld & U_CBUTTONS) {
+    if (gPlayerInputHeld[0] & U_CBUTTONS) {
         actor->sprite.y++;
     }
-    if (gPlayerInputHeld & D_CBUTTONS) {
+    if (gPlayerInputHeld[0] & D_CBUTTONS) {
         actor->sprite.y--;
     }
-    if (gPlayerInputHeld & R_CBUTTONS) {
+    if (gPlayerInputHeld[0] & R_CBUTTONS) {
         actor->sprite.x++;
     }
-    if (gPlayerInputHeld & L_CBUTTONS) {
+    if (gPlayerInputHeld[0] & L_CBUTTONS) {
         actor->sprite.x--;
     }
 

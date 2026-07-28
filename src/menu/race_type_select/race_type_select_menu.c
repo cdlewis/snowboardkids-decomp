@@ -30,7 +30,6 @@ extern s16 gMenuFadeAlpha;
 extern u8 gRaceTypeSelection;
 extern u8 gCourseSelectFromRaceTypeMenu;
 extern s32 gMenuFlowState;
-extern s32 gPlayerInputHeld;
 extern s32 gPlayerInputPressed;
 extern u8 gPendingFramebufferSwapCount;
 extern u8 gFramebufferSwapHold;
@@ -119,7 +118,7 @@ void updateRaceTypeSelectMenu(void) {
             if (gMenuSelectionConfirmTimer == 0) {
                 if (gRaceTypeSelectCursorAnimState == 1) {
                     selection = gRaceTypeSelection;
-                    newInput = gPlayerInputHeld;
+                    newInput = gPlayerInputHeld[0];
                     pressedUp = newInput & (STICK_UP | U_JPAD);
                     sp18[0] = 3;
                     previousSelection = selection;

@@ -175,7 +175,6 @@ extern u8 gShopMenuDescriptionSeen;
 extern u8 gShopMenuShowNewCoursesMessage;
 extern s16 gCoursePreviewViewportHeight;
 extern s32 gMenuFlowState;
-extern s32 gPlayerInputHeld;
 
 const char gShopMenuMoneyFormat[] = "%6dG";
 const char gCourseUnlockPriceFormat6[] = "%6dG";
@@ -1079,7 +1078,7 @@ void updateCourseUnlockPricePanel(ShopMenuWidgetActor *arg0) {
             amount = 0xFFFF;
             amount = price & amount;
         } else {
-            if (gPlayerInputHeld & A_BUTTON) {
+            if (gPlayerInputHeld[0] & A_BUTTON) {
                 if ((u32)price < 5000U) {
                     amount = price & 0xFFFF;
                 } else {

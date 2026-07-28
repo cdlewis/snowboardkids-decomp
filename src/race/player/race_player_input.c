@@ -1,4 +1,5 @@
 #include "common.h"
+#include "game/engine/controller_input.h"
 #include "game/engine/relocatable_heap.h"
 #include "game/engine/asset_manager.h"
 #include "game/race/player/race_player_input.h"
@@ -31,7 +32,6 @@ typedef struct {
 RacePlayer gRacePlayers[RACE_PLAYER_COUNT];
 
 extern s32 gMenuFlowState;
-extern u32 gPlayerInputHeld[];
 extern s8 gPlayerStickX[];
 extern s8 gPlayerStickY[];
 
