@@ -2,6 +2,7 @@
 #define CONTROLLER_PAK_MENU_H
 
 #include "common.h"
+#include <PR/os_pfs.h>
 
 typedef struct {
     /* 0x0 */ u8 mainChoice;
@@ -17,5 +18,9 @@ typedef struct {
     /* 0x00 */ u16 exists;
     /* 0x02 */ char pad2[0x1E];
 } ControllerPakFileEntry; /* size = 0x20 */
+
+extern ControllerPakMenuState gControllerPakMenuState;
+extern OSPfsState gControllerPakFileStates[];
+extern ControllerPakFileEntry gControllerPakFileEntries[];
 
 #endif
