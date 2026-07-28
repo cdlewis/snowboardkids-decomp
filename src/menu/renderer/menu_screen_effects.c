@@ -1,3 +1,4 @@
+#include "game/race/race_state.h"
 #include "common.h"
 #include "game/menu/renderer/menu_renderer.h"
 #include "game/menu/renderer/menu_render_utils.h"
@@ -78,7 +79,6 @@ extern u32 raceStartPlayerEffectVertices[];
 extern u32 gAlphaSpriteRenderModeDl[];
 extern u32 gTranslucentSpriteRenderModeDl[];
 extern s16 gMenuFadeAlpha;
-extern s16 gRaceCourseIndex;
 extern s16 gFrameCounter;
 extern u8 gCurrentViewportIndex;
 extern u8 gRenderMatricesDirty;
@@ -469,7 +469,7 @@ void drawCourseRecordBanner(MenuScreenEffectActor *arg0) {
     gfx = gRegionAllocPtr;
     gRegionAllocPtr = gfx + 1;
     /* IDO scheduling for this function depends on this block staying on one line. */
-    do { gfx->words.w0 = 0xE7000000; gfx->words.w1 = 0; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w0 = 0xFC119623; gfx->words.w1 = 0xFF2FFFFF; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w0 = 0xB900031D; gfx->words.w1 = 0x00504240; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w0 = 0xFA000000; gfx->words.w1 = (arg0->unk18.half.lo & 0xFF) | (~0xFF); drawAssetTableSprite(-0x54, -0x10, getRelocatableHeapBlockBase(gAssetHandles[28]), 0x5D); drawAssetTableSprite(4, -0x10, getRelocatableHeapBlockBase(gAssetHandles[28]), 0x5E); if (arg0) { } drawAssetTableSprite(-0x4C, -0xC, getRelocatableHeapBlockBase(gAssetHandles[29]), (u16)courseRecordDigitTileOffsets[gRaceCourseIndex]); drawAssetTableSprite(4, -0xC, getRelocatableHeapBlockBase(gAssetHandles[29]), courseRecordDigitTileOffsets[gRaceCourseIndex] + 1); gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w0 = 0x06000000; gfx->words.w1 = (u32) gMenuRenderModeResetDl; } while (0);
+    do { gfx->words.w0 = 0xE7000000; gfx->words.w1 = 0; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w0 = 0xFC119623; gfx->words.w1 = 0xFF2FFFFF; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w0 = 0xB900031D; gfx->words.w1 = 0x00504240; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w0 = 0xFA000000; gfx->words.w1 = (arg0->unk18.half.lo & 0xFF) | (~0xFF); drawAssetTableSprite(-0x54, -0x10, getRelocatableHeapBlockBase(gAssetHandles[28]), 0x5D); drawAssetTableSprite(4, -0x10, getRelocatableHeapBlockBase(gAssetHandles[28]), 0x5E); if (arg0) { } drawAssetTableSprite(-0x4C, -0xC, getRelocatableHeapBlockBase(gAssetHandles[29]), (u16)courseRecordDigitTileOffsets[gRaceCourseIndex.signedValue]); drawAssetTableSprite(4, -0xC, getRelocatableHeapBlockBase(gAssetHandles[29]), courseRecordDigitTileOffsets[gRaceCourseIndex.signedValue] + 1); gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w0 = 0x06000000; gfx->words.w1 = (u32) gMenuRenderModeResetDl; } while (0);
 }
 
 void updateCourseRecordBannerFadeOut(MenuScreenEffectActor *arg0) {

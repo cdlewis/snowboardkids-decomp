@@ -26,6 +26,7 @@
 #include "game/race/camera/race_camera.h"
 #include "game/race/course/race_course_effects.h"
 #include "game/race/flow/race_flow.h"
+#include "game/race/race_state.h"
 #include "game/race/player/race_player_update.h"
 #include "game/race/scene/race_scene_setup.h"
 #include "game/race/effects/race_start_transition.h"
@@ -64,11 +65,6 @@ typedef struct {
     /* 0x01 */ s8 seconds;
     /* 0x02 */ s16 fraction;
 } RaceTime;
-
-typedef union {
-    s16 s;
-    u16 u;
-} SignedUnsignedShort;
 
 typedef struct {
     /* 0x00 */ u8 pad0[0xAC];
@@ -109,7 +105,6 @@ extern s32 gRaceCameraReplayStartX;
 extern s32 gRaceCameraReplayStartY;
 extern s32 gRaceCameraReplayStartZ;
 extern s32 gMenuFlowState;
-extern SignedUnsignedShort gRaceCourseIndex;
 extern s16 gRaceLapCount;
 extern s32 gRaceTimeTrialFinishTime;
 extern s16 gMenuFadeAlpha;
@@ -202,7 +197,7 @@ void enterMainMenuAfterStartupControllerPakFlow(void) {
 }
 
 void clearRaceReplayCourseGrid(void) {
-    CourseGridEntry *entry = D_800DC490[gRaceCourseIndex.s];
+    CourseGridEntry *entry = D_800DC490[gRaceCourseIndex.signedValue];
     s32 count = 0;
 loop:
     if (entry->status != COURSE_GRID_ENTRY_END) {
@@ -217,7 +212,7 @@ loop:
 }
 
 void saveRaceReplayCourseGridEntry(void) {
-    CourseGridEntry *entry = D_800DC490[gRaceCourseIndex.s];
+    CourseGridEntry *entry = D_800DC490[gRaceCourseIndex.signedValue];
     s32 i = 0;
 
 loop:
@@ -239,7 +234,7 @@ s32 loadNextRaceReplayCourseGridEntry(void) {
     s32 count;
     CourseGridEntry *entry;
 
-    entry = D_800DC490[gRaceCourseIndex.s];
+    entry = D_800DC490[gRaceCourseIndex.signedValue];
     count = 0;
 loop:
     if (entry->status != COURSE_GRID_ENTRY_END) {
@@ -261,7 +256,7 @@ loop:
 }
 
 s32 hasPendingRaceReplayCourseGridEntry(void) {
-    CourseGridEntry *entry = D_800DC490[gRaceCourseIndex.s];
+    CourseGridEntry *entry = D_800DC490[gRaceCourseIndex.signedValue];
 
 loop:
     if (entry->status != COURSE_GRID_ENTRY_END) {
@@ -332,7 +327,7 @@ void initNewGameSaveData(void) {
     gRacePlayers[1].unk18 = 0;
     gRacePlayers[2].unk18 = 0;
     gRacePlayers[3].unk18 = 0;
-    gRaceCourseIndex.s = 0;
+    gRaceCourseIndex.signedValue = 0;
     gRaceSplitscreenMode = 0;
     gRaceCameraModeChangeDisabled = 0;
     setCurrentGameTaskCallback(openRaceSetupMenuFlow, 0);
@@ -542,7 +537,7 @@ void initRaceSceneFlow(void) {
     gRacePlayers[2].unk4 = 1;
     gRacePlayers[3].unk4 = 1;
 
-    courseIndex = gRaceCourseIndex.s;
+    courseIndex = gRaceCourseIndex.signedValue;
     gRacePlayers[0].actionTriggerChance = D_800DC5B4[courseIndex];
     gRacePlayers[1].actionTriggerChance = D_800DC5B4[courseIndex];
     gRacePlayers[2].actionTriggerChance = D_800DC5B4[courseIndex];
@@ -650,7 +645,7 @@ void initRaceSceneFlow(void) {
         history = getRelocatableHeapBlockBase(gAssetHandles[0x2B]);
         history->writeIndex = 0;
         history->enabled = 1;
-        history->courseId = gRaceCourseIndex.s;
+        history->courseId = gRaceCourseIndex.signedValue;
         history->characterId = gRacePlayers[0].characterId;
         history->characterVariant = gRacePlayers[0].characterVariant;
         history->replayInputSource = gRacePlayers[0].unk12;
@@ -671,7 +666,7 @@ void initRaceSceneFlow(void) {
             history->buttons[i - 4] = 0;
         } while (i != RACE_INPUT_HISTORY_LENGTH);
 
-        switch (gRaceCourseIndex.s) {
+        switch (gRaceCourseIndex.signedValue) {
         case 0:
             replayRecordFlag = &D_800ECC22;
             break;
@@ -700,7 +695,7 @@ void initRaceSceneFlow(void) {
             replayRecordFlag = &D_800ECC42;
             break;
         }
-        if ((gRaceCourseIndex.s != 7) && (*replayRecordFlag != 0)) {
+        if ((gRaceCourseIndex.signedValue != 7) && (*replayRecordFlag != 0)) {
             gAssetHandles[0x7] = allocRelocatableHeapBlock(0x34CC);
             loadCurrentRaceRecordReplayData();
             history = getRelocatableHeapBlockBase(gAssetHandles[0x7]);
@@ -723,7 +718,7 @@ void initRaceSceneFlow(void) {
     gMenuFlowState = 1;
     resetRaceCameras();
     resetAllViewports();
-    if (gRaceCourseIndex.s != 6) {
+    if (gRaceCourseIndex.signedValue != 6) {
         configureViewport(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.3333334f);
     } else {
         configureRaceViewport(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.3333334f);
@@ -792,7 +787,7 @@ void fadeInRaceGameplayViewports(void) {
             createCallbackTask((CallbackTaskCallback)func_80065E90, 6, 0x64);
             switch (gPlayerCount & 0xFFFFFFFF) {
             case 1:
-                if (gRaceCourseIndex.s != 6) {
+                if (gRaceCourseIndex.signedValue != 6) {
                     configureViewport(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.3333334f);
                 } else {
                     configureRaceViewport(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.3333334f);
@@ -801,7 +796,7 @@ void fadeInRaceGameplayViewports(void) {
                 gFramebufferSwapDelay.value = 0;
                 break;
             case 2:
-                if (gRaceCourseIndex.s != 6) {
+                if (gRaceCourseIndex.signedValue != 6) {
                     configureViewport(0, 0xA0, 0x43, 0x120, 0x68, 0x140, 0x78, 2.6666667f);
                     configureViewport(1, 0xA0, 0xAD, 0x120, 0x68, 0x140, 0x78, 2.6666667f);
                 } else {
@@ -813,7 +808,7 @@ void fadeInRaceGameplayViewports(void) {
                 gFramebufferSwapDelay.value = 1;
                 break;
             case 3:
-                if (gRaceCourseIndex.s != 6) {
+                if (gRaceCourseIndex.signedValue != 6) {
                     configureViewport(0, 0x57, 0x43, 0x90, 0x68, 0xA0, 0x78, 1.3333334f);
                     configureViewport(1, 0x57, 0xAD, 0x90, 0x68, 0xA0, 0x78, 1.3333334f);
                     configureViewport(2, 0xE9, 0x43, 0x90, 0x68, 0xA0, 0x78, 1.3333334f);
@@ -828,7 +823,7 @@ void fadeInRaceGameplayViewports(void) {
                 gFramebufferSwapDelay.value = 1;
                 break;
             case 4:
-                if (gRaceCourseIndex.s != 6) {
+                if (gRaceCourseIndex.signedValue != 6) {
                     configureViewport(0, 0x57, 0x43, 0x90, 0x68, 0xA0, 0x78, 1.3333334f);
                     configureViewport(1, 0x57, 0xAD, 0x90, 0x68, 0xA0, 0x78, 1.3333334f);
                     configureViewport(2, 0xE9, 0x43, 0x90, 0x68, 0xA0, 0x78, 1.3333334f);
@@ -1024,7 +1019,7 @@ void interpolateRaceViewport(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s
     temp_t2 = (((arg12 - arg5) * gCurrentGameTask->fadeTimer) / 15) + arg5;
     temp_t3 = (((arg13 - arg6) * gCurrentGameTask->fadeTimer) / 15) + arg6;
     temp_fv0 = (((arg14 - arg7) * (f32)gCurrentGameTask->fadeTimer) / 15.0f) + arg7;
-    if (gRaceCourseIndex.s != 6) {
+    if (gRaceCourseIndex.signedValue != 6) {
         configureViewport(arg0, sp2C, sp28, temp_t0, temp_t1, temp_t2, temp_t3, temp_fv0);
     } else {
         configureRaceViewport(arg0, sp2C, sp28, temp_t0, temp_t1, temp_t2, temp_t3, temp_fv0);
@@ -1178,9 +1173,9 @@ void prepareRaceResultsFlow(void) {
                       (gRaceElapsedTimer.minutes * COURSE_TIME_MINUTE);
         i = 0;
         do {
-            recordTime = gGameSaveDataBuffer.timeTrialRecords[gRaceCourseIndex.s][i].fraction +
-                         (gGameSaveDataBuffer.timeTrialRecords[gRaceCourseIndex.s][i].seconds * COURSE_TIME_SECOND) +
-                         (gGameSaveDataBuffer.timeTrialRecords[gRaceCourseIndex.s][i].minutes * COURSE_TIME_MINUTE);
+            recordTime = gGameSaveDataBuffer.timeTrialRecords[gRaceCourseIndex.signedValue][i].fraction +
+                         (gGameSaveDataBuffer.timeTrialRecords[gRaceCourseIndex.signedValue][i].seconds * COURSE_TIME_SECOND) +
+                         (gGameSaveDataBuffer.timeTrialRecords[gRaceCourseIndex.signedValue][i].minutes * COURSE_TIME_MINUTE);
             if (currentTime < recordTime) {
                 break;
             }
@@ -1204,7 +1199,7 @@ void prepareRaceResultsFlow(void) {
                 if (gRaceTypeSelection == 2) {
                     i = 0;
                     do {
-                        if (gGameSaveDataBuffer.trickAttackScores[gRaceCourseIndex.s][i] < gRacePlayers[0].trickAttackPointTotal) {
+                        if (gGameSaveDataBuffer.trickAttackScores[gRaceCourseIndex.signedValue][i] < gRacePlayers[0].trickAttackPointTotal) {
                             break;
                         }
                         i++;
@@ -1222,7 +1217,7 @@ void prepareRaceResultsFlow(void) {
             } else {
                 i = 0;
                 do {
-                    if (gGameSaveDataBuffer.scoreAttackScores[gRaceCourseIndex.s][i] < gRacePlayers[0].scoreAttackPointTotal) {
+                    if (gGameSaveDataBuffer.scoreAttackScores[gRaceCourseIndex.signedValue][i] < gRacePlayers[0].scoreAttackPointTotal) {
                         break;
                     }
                     i++;
@@ -1242,9 +1237,9 @@ void prepareRaceResultsFlow(void) {
                           (gRaceElapsedTimer.minutes * COURSE_TIME_MINUTE);
             i = 0;
             do {
-                recordTime = gGameSaveDataBuffer.raceRecords[gRaceCourseIndex.s][i].fraction +
-                             (gGameSaveDataBuffer.raceRecords[gRaceCourseIndex.s][i].seconds * COURSE_TIME_SECOND) +
-                             (gGameSaveDataBuffer.raceRecords[gRaceCourseIndex.s][i].minutes * COURSE_TIME_MINUTE);
+                recordTime = gGameSaveDataBuffer.raceRecords[gRaceCourseIndex.signedValue][i].fraction +
+                             (gGameSaveDataBuffer.raceRecords[gRaceCourseIndex.signedValue][i].seconds * COURSE_TIME_SECOND) +
+                             (gGameSaveDataBuffer.raceRecords[gRaceCourseIndex.signedValue][i].minutes * COURSE_TIME_MINUTE);
                 if (currentTime < recordTime) {
                     break;
                 }
@@ -1334,18 +1329,18 @@ void updateRaceResultsFlow(void) {
                     result = resultPlayer->rankIndex;
                     if (result != 3) {
                         i = result + 1;
-                        if (D_800EC9F0.cupPlacements[gRaceCourseIndex.s] == 0) {
-                            D_800EC9F0.cupPlacements[gRaceCourseIndex.s] = i;
-                        } else if (i < D_800EC9F0.cupPlacements[gRaceCourseIndex.s]) {
-                            D_800EC9F0.cupPlacements[gRaceCourseIndex.s] = i;
+                        if (D_800EC9F0.cupPlacements[gRaceCourseIndex.signedValue] == 0) {
+                            D_800EC9F0.cupPlacements[gRaceCourseIndex.signedValue] = i;
+                        } else if (i < D_800EC9F0.cupPlacements[gRaceCourseIndex.signedValue]) {
+                            D_800EC9F0.cupPlacements[gRaceCourseIndex.signedValue] = i;
                         }
                         highScore = resultPlayer->unk56C;
-                        if (D_800EC9F0.highScores[gRaceCourseIndex.s + 1] < highScore) {
-                            D_800EC9F0.highScores[gRaceCourseIndex.s + 1] = highScore;
+                        if (D_800EC9F0.highScores[gRaceCourseIndex.signedValue + 1] < highScore) {
+                            D_800EC9F0.highScores[gRaceCourseIndex.signedValue + 1] = highScore;
                         }
                     }
                     if (result == 0) {
-                        if (gRaceCourseIndex.s == 8) {
+                        if (gRaceCourseIndex.signedValue == 8) {
                             gPendingEndingCreditsFlow = 1;
                             D_800EC9F0.unlockFlags |= 1;
                             D_800EC9F0.cupPlacements[0x17] |= 1;
@@ -1398,9 +1393,9 @@ void updateRaceResultsFlow(void) {
                 i = 0;
                 j = 0;
                 do {
-                    recordTime = (D_800EC9F0.timeTrialRecords[gRaceCourseIndex.s][i].minutes * COURSE_TIME_MINUTE) +
-                                 (D_800EC9F0.timeTrialRecords[gRaceCourseIndex.s][i].seconds * COURSE_TIME_SECOND) +
-                                 D_800EC9F0.timeTrialRecords[gRaceCourseIndex.s][i].fraction;
+                    recordTime = (D_800EC9F0.timeTrialRecords[gRaceCourseIndex.signedValue][i].minutes * COURSE_TIME_MINUTE) +
+                                 (D_800EC9F0.timeTrialRecords[gRaceCourseIndex.signedValue][i].seconds * COURSE_TIME_SECOND) +
+                                 D_800EC9F0.timeTrialRecords[gRaceCourseIndex.signedValue][i].fraction;
                     if (currentTime < recordTime) {
                         break;
                     }
@@ -1410,14 +1405,14 @@ void updateRaceResultsFlow(void) {
                 task->unk10 = i;
                 if (i < 5) {
                     for (j = 3; j >= i; j--) {
-                        D_800EC9F0.timeTrialRecords[gRaceCourseIndex.s][j + 1] = D_800EC9F0.timeTrialRecords[gRaceCourseIndex.s][j];
-                        D_800EC9F0.timeTrialCharacterIds[gRaceCourseIndex.s][j + 1] = D_800EC9F0.timeTrialCharacterIds[gRaceCourseIndex.s][j];
+                        D_800EC9F0.timeTrialRecords[gRaceCourseIndex.signedValue][j + 1] = D_800EC9F0.timeTrialRecords[gRaceCourseIndex.signedValue][j];
+                        D_800EC9F0.timeTrialCharacterIds[gRaceCourseIndex.signedValue][j + 1] = D_800EC9F0.timeTrialCharacterIds[gRaceCourseIndex.signedValue][j];
                     }
-                    D_800EC9F0.timeTrialRecords[gRaceCourseIndex.s][i] = gRaceElapsedTimer;
-                    D_800EC9F0.timeTrialCharacterIds[gRaceCourseIndex.s][i] =
+                    D_800EC9F0.timeTrialRecords[gRaceCourseIndex.signedValue][i] = gRaceElapsedTimer;
+                    D_800EC9F0.timeTrialCharacterIds[gRaceCourseIndex.signedValue][i] =
                         (player->characterVariant * 8) + player->characterId;
                     if (i == 0) {
-                        D_800EC9F0.bestLapRecords[gRaceCourseIndex.s] = *(RaceTime *)&gRaceTimeTrialFinishTime;
+                        D_800EC9F0.bestLapRecords[gRaceCourseIndex.signedValue] = *(RaceTime *)&gRaceTimeTrialFinishTime;
                     }
                 }
                 if (i < 5) {
@@ -1439,7 +1434,7 @@ void updateRaceResultsFlow(void) {
                     player = gRacePlayers;
                     i = 0;
                     do {
-                        if (D_800EC9F0.trickAttackScores[gRaceCourseIndex.s][i] < gRacePlayers[0].trickAttackPointTotal) {
+                        if (D_800EC9F0.trickAttackScores[gRaceCourseIndex.signedValue][i] < gRacePlayers[0].trickAttackPointTotal) {
                             break;
                         }
                         i++;
@@ -1450,11 +1445,11 @@ void updateRaceResultsFlow(void) {
                     task->unk10 = i;
                     if (i < 5) {
                         for (j = 3; j >= i; j--) {
-                            D_800EC9F0.trickAttackScores[gRaceCourseIndex.s][j + 1] = D_800EC9F0.trickAttackScores[gRaceCourseIndex.s][j];
-                            D_800EC9F0.trickAttackCharacterIds[gRaceCourseIndex.s][j + 1] = D_800EC9F0.trickAttackCharacterIds[gRaceCourseIndex.s][j];
+                            D_800EC9F0.trickAttackScores[gRaceCourseIndex.signedValue][j + 1] = D_800EC9F0.trickAttackScores[gRaceCourseIndex.signedValue][j];
+                            D_800EC9F0.trickAttackCharacterIds[gRaceCourseIndex.signedValue][j + 1] = D_800EC9F0.trickAttackCharacterIds[gRaceCourseIndex.signedValue][j];
                         }
-                        D_800EC9F0.trickAttackScores[gRaceCourseIndex.s][i] = player->unk2C0;
-                        D_800EC9F0.trickAttackCharacterIds[gRaceCourseIndex.s][i] =
+                        D_800EC9F0.trickAttackScores[gRaceCourseIndex.signedValue][i] = player->unk2C0;
+                        D_800EC9F0.trickAttackCharacterIds[gRaceCourseIndex.signedValue][i] =
                             (player->characterVariant * 8) + player->characterId;
                     }
                     if (player->unk2C0 >= 0x7D0) {
@@ -1477,7 +1472,7 @@ void updateRaceResultsFlow(void) {
                     player = gRacePlayers;
                     i = 0;
                     do {
-                        if (D_800EC9F0.scoreAttackScores[gRaceCourseIndex.s][i] < gRacePlayers[0].scoreAttackPointTotal) {
+                        if (D_800EC9F0.scoreAttackScores[gRaceCourseIndex.signedValue][i] < gRacePlayers[0].scoreAttackPointTotal) {
                             break;
                         }
                         i++;
@@ -1488,11 +1483,11 @@ void updateRaceResultsFlow(void) {
                     task->unk10 = i;
                     if (i < 5) {
                         for (j = 3; j >= i; j--) {
-                            D_800EC9F0.scoreAttackScores[gRaceCourseIndex.s][j + 1] = D_800EC9F0.scoreAttackScores[gRaceCourseIndex.s][j];
-                            D_800EC9F0.scoreAttackCharacterIds[gRaceCourseIndex.s][j + 1] = D_800EC9F0.scoreAttackCharacterIds[gRaceCourseIndex.s][j];
+                            D_800EC9F0.scoreAttackScores[gRaceCourseIndex.signedValue][j + 1] = D_800EC9F0.scoreAttackScores[gRaceCourseIndex.signedValue][j];
+                            D_800EC9F0.scoreAttackCharacterIds[gRaceCourseIndex.signedValue][j + 1] = D_800EC9F0.scoreAttackCharacterIds[gRaceCourseIndex.signedValue][j];
                         }
-                        D_800EC9F0.scoreAttackScores[gRaceCourseIndex.s][i] = player->unk574;
-                        D_800EC9F0.scoreAttackCharacterIds[gRaceCourseIndex.s][i] =
+                        D_800EC9F0.scoreAttackScores[gRaceCourseIndex.signedValue][i] = player->unk574;
+                        D_800EC9F0.scoreAttackCharacterIds[gRaceCourseIndex.signedValue][i] =
                             (player->characterVariant * 8) + player->characterId;
                     }
                     if (i < 5) {
@@ -1514,9 +1509,9 @@ void updateRaceResultsFlow(void) {
                                   (gRaceElapsedTimer.minutes * COURSE_TIME_MINUTE);
                     i = 0;
                     do {
-                        recordTime = (D_800EC9F0.raceRecords[gRaceCourseIndex.s][i].minutes * COURSE_TIME_MINUTE) +
-                                     (D_800EC9F0.raceRecords[gRaceCourseIndex.s][i].seconds * COURSE_TIME_SECOND) +
-                                     D_800EC9F0.raceRecords[gRaceCourseIndex.s][i].fraction;
+                        recordTime = (D_800EC9F0.raceRecords[gRaceCourseIndex.signedValue][i].minutes * COURSE_TIME_MINUTE) +
+                                     (D_800EC9F0.raceRecords[gRaceCourseIndex.signedValue][i].seconds * COURSE_TIME_SECOND) +
+                                     D_800EC9F0.raceRecords[gRaceCourseIndex.signedValue][i].fraction;
                         if (currentTime < recordTime) {
                             break;
                         }
@@ -1528,11 +1523,11 @@ void updateRaceResultsFlow(void) {
                     task->unk10 = i;
                     if (i < 5) {
                         for (j = 3; j >= i; j--) {
-                            D_800EC9F0.raceRecords[gRaceCourseIndex.s][j + 1] = D_800EC9F0.raceRecords[gRaceCourseIndex.s][j];
-                            D_800EC9F0.raceRecordCharacterIds[gRaceCourseIndex.s][j + 1] = D_800EC9F0.raceRecordCharacterIds[gRaceCourseIndex.s][j];
+                            D_800EC9F0.raceRecords[gRaceCourseIndex.signedValue][j + 1] = D_800EC9F0.raceRecords[gRaceCourseIndex.signedValue][j];
+                            D_800EC9F0.raceRecordCharacterIds[gRaceCourseIndex.signedValue][j + 1] = D_800EC9F0.raceRecordCharacterIds[gRaceCourseIndex.signedValue][j];
                         }
-                        D_800EC9F0.raceRecords[gRaceCourseIndex.s][i] = gRaceElapsedTimer;
-                        D_800EC9F0.raceRecordCharacterIds[gRaceCourseIndex.s][i] =
+                        D_800EC9F0.raceRecords[gRaceCourseIndex.signedValue][i] = gRaceElapsedTimer;
+                        D_800EC9F0.raceRecordCharacterIds[gRaceCourseIndex.signedValue][i] =
                             (player->characterVariant * 8) + player->characterId;
                     }
                     if (i < 5) {
@@ -1681,7 +1676,7 @@ void initRaceGhostReplayFlow(void) {
     gMenuFlowState = 0;
     resetRaceCameras();
     resetAllViewports();
-    if (gRaceCourseIndex.s != 6) {
+    if (gRaceCourseIndex.signedValue != 6) {
         configureViewport(0, 0xA0, 0x78, 0x100, 0xB0, 0x120, 0xD0, 1.3333334f);
     } else {
         configureRaceViewport(0, 0xA0, 0x78, 0x100, 0xB0, 0x120, 0xD0, 1.3333334f);
@@ -1831,7 +1826,7 @@ loop:
 }
 
 void initRaceRecordSettingsFlow(void) {
-    gRaceLapCount = D_800B9542[gRaceCourseIndex.s].unk0;
+    gRaceLapCount = D_800B9542[gRaceCourseIndex.signedValue].unk0;
     if (gRaceSplitscreenMode != 0) {
         setCurrentGameTaskCallback(initRaceSceneFlow, 0);
         return;
@@ -1850,7 +1845,7 @@ void initRaceRecordSettingsFlow(void) {
     LOAD_ASSET(_60F1A0, 0x2A);
     LOAD_ASSET(_59DFE0, 0x26);
     LOAD_ASSET(_1F1A90, 0x28);
-    switch (gRaceCourseIndex.u) {
+    switch (gRaceCourseIndex.unsignedValue) {
     case 0:
         LOAD_ASSET(LEVEL_BIG_SNOWMAN_SPRITES, 0x1D);
         break;

@@ -1,3 +1,4 @@
+#include "game/race/race_state.h"
 #include "common.h"
 #include "game/engine/asset_manager.h"
 #include "game/engine/callback_task_scheduler.h"
@@ -103,7 +104,6 @@ extern s16 gRacePlayerVoiceSoundIds6[];
 extern s16 gRacePlayerVoiceSoundIds7[];
 extern RaceCourseStartEntry gRaceCourseStartEntries[];
 extern Unk8011228C gRacePlayerHudStatuses[];
-extern s16 gRaceCourseIndex;
 extern s16 gRaceLapCount;
 
 void getRacePlayerRankingProgress(s32 arg0, s32 *arg1, s32 *arg2) {
@@ -114,7 +114,7 @@ void getRacePlayerRankingProgress(s32 arg0, s32 *arg1, s32 *arg2) {
     *arg1 = player->unk502 * 8;
     *arg2 = player->unk504;
 
-    switch (gRaceCourseIndex) {
+    switch (gRaceCourseIndex.signedValue) {
     case 0:
         temp = *arg1;
         if (temp >= 0x580) {
@@ -476,7 +476,7 @@ void updateRacePlayerFinalLapStatus(RacePlayer *player) {
 
     flags = player->stateFlags;
     if (!(flags & 0x40) && (player->unk508 >= (gRaceLapCount - 1)) &&
-            (player->unk502 == gRaceCourseStartEntries[gRaceCourseIndex].unk0) && !(flags & 0x1000)) {
+            (player->unk502 == gRaceCourseStartEntries[gRaceCourseIndex.signedValue].unk0) && !(flags & 0x1000)) {
         player->stateFlags = flags | 0x40;
         if ((gRaceCameraModeChangeDisabled == 0) && (gRacePlayerHudStatuses[player->playerIndexU16].active != 0)) {
             task = createCallbackTask((CallbackTaskCallback)initFinalLapPrompt, 6, 0x64);

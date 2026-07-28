@@ -1,3 +1,4 @@
+#include "game/race/race_state.h"
 #include "common.h"
 #include "game/save_data.h"
 #include "game/menu/renderer/menu_render_utils.h"
@@ -60,7 +61,6 @@ extern RaceUiCoursePosition gRaceCourseTargetTimes[];
 extern s16 gRaceLapCount;
 extern s16 gRaceHudSpinnerFrame;
 extern s16 gRaceHudMode;
-extern s16 gRaceCourseIndex;
 extern u8 gRaceUpdatePaused;
 extern u8 gTrainingCourseLesson;
 extern u8 gMainMenuModeSelection;
@@ -92,7 +92,7 @@ void initRaceHud(void) {
             }
             if (gRaceTypeSelection == 1) {
                 gRaceHudMode = 6;
-                gRaceChallengeTimeLimit = D_800DC928[gRaceCourseIndex];
+                gRaceChallengeTimeLimit = D_800DC928[gRaceCourseIndex.signedValue];
             }
             if (gRaceTypeSelection == 2) {
                 gRaceHudMode = 7;
@@ -417,7 +417,7 @@ void drawTargetTimeChallengeLabels(void *arg0) {
 
     drawMenuAsciiTextDefaultScale(0x48, 0x47, (char *)gRaceHudTargetTimeChallengeLapTimeLabel, 5);
     drawMenuAsciiTextDefaultScale(0x32, -0x60, (char *)gRaceHudTargetTimeChallengeTargetTimeLabel, 7);
-    pos = &gRaceCourseTargetTimes[gRaceCourseIndex];
+    pos = &gRaceCourseTargetTimes[gRaceCourseIndex.signedValue];
     sprintf(sp28, gRaceHudTargetTimeChallengeTargetTimeFormat, pos->x, pos->y, pos->z >> 8);
     drawMenuAsciiTextDefaultScale(0x48, -0x57, sp28, 7);
     sprintf(sp28, gRaceHudTargetTimeChallengeLapProgressFormat, gRacePlayers[0].unk570, gRacePlayers[0].unk572);
@@ -493,7 +493,7 @@ void drawTimeTrialLabels(void *arg0) {
 
     drawMenuAsciiTextDefaultScale(0x48, 0x47, (char *)gRaceHudTimeTrialLapTimeLabel, 5);
     drawMenuAsciiTextDefaultScale(0x48, -0x61, (char *)gRaceHudTimeTrialBestLapLabel, 7);
-    course = (CourseBestLapView *)&((CourseDataStride *)&gGameSaveDataBuffer)[gRaceCourseIndex];
+    course = (CourseBestLapView *)&((CourseDataStride *)&gGameSaveDataBuffer)[gRaceCourseIndex.signedValue];
     sprintf(sp28, gRaceHudTimeTrialBestLapFormat, course->bestLapMinutes, course->bestLapSeconds, course->bestLapFraction >> 8);
     drawMenuAsciiTextDefaultScale(0x48, -0x58, sp28, 7);
 }
@@ -885,7 +885,7 @@ void updateRaceCourseProgressMeter(void) {
         }
         meterPosition =
             (progress << 7) /
-            (gRaceCourseStartEntries[gRaceCourseIndex].pathIndex * 8);
+            (gRaceCourseStartEntries[gRaceCourseIndex.signedValue].pathIndex * 8);
         slots[1] = progress;
         player->unk57E = meterPosition;
         if (player->unk57E >= 0x81) {
@@ -991,7 +991,7 @@ void updateRaceHud(void) {
             incrementRaceElapsedTimer();
             if (gRaceTimeTrialFinishRecorded == 0) {
                 getRacePlayerRankingProgress(0, &sp40, &sp3C);
-                if ((gRaceCourseFinishLineData[gRaceCourseIndex].finishLinePathIndex * 8) < sp40) {
+                if ((gRaceCourseFinishLineData[gRaceCourseIndex.signedValue].finishLinePathIndex * 8) < sp40) {
                     gRaceTimeTrialFinishTime = *(s32 *)&gRaceElapsedTimer;
                     gRaceTimeTrialFinishRecorded = 1;
                     createCallbackTask((CallbackTaskCallback)initTimeTrialRecordDeltaPopup, 0, 0);
@@ -1009,7 +1009,7 @@ void updateRaceHud(void) {
         if (!(gMenuFlowState & 3)) {
             incrementRaceElapsedTimer();
         }
-        if (calculateRaceTimerDelta((RaceTimer *)&gRaceCourseTargetTimes[gRaceCourseIndex], &gRaceElapsedTimer, &sp38) != 0) {
+        if (calculateRaceTimerDelta((RaceTimer *)&gRaceCourseTargetTimes[gRaceCourseIndex.signedValue], &gRaceElapsedTimer, &sp38) != 0) {
             gRaceChallengeFailed = 1;
         }
         addRenderCallback(&gRaceOverlayRenderCallbackList, drawTargetTimeChallengeHud, 0);

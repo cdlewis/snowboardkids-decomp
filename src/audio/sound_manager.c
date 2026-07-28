@@ -1,3 +1,4 @@
+#include "game/race/race_state.h"
 #include "common.h"
 #include "assets.h"
 #include "game/engine/asset_manager.h"
@@ -61,7 +62,6 @@ typedef union SoundHalfArg {
     } half;
 } SoundHalfArg;
 
-extern s16 gRaceCourseIndex;
 extern u8 gRaceDemoPlaybackEnabled;
 extern u8 D_27E290[];
 extern u8 D_800DABB0[];
@@ -613,7 +613,7 @@ void updateSingleLoopingPositionalSound(s16 soundId, Vec3i *pos, s16 volume) {
 }
 
 void requestCourseMusicSequence(void) {
-    requestMusicSequenceBank(gCourseMusicSequenceBanks[gRaceCourseIndex]);
+    requestMusicSequenceBank(gCourseMusicSequenceBanks[gRaceCourseIndex.signedValue]);
 }
 
 void countActiveSoundPlayers(void) {

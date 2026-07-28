@@ -1,3 +1,4 @@
+#include "game/race/race_state.h"
 #include "common.h"
 #include "game/menu/renderer/menu_render_utils.h"
 #include "game/engine/render_callback.h"
@@ -88,7 +89,6 @@ extern Gfx gEffectRenderModeCleanupDl[];
 extern void setPackedMatrixTranslation(Mtx *, Vec3i *);
 extern void getAssetTableImagePaletteAndSize(u8 *, s32, u32 *, u32 *, s16 *, s16 *);
 
-extern s16 gRaceCourseIndex;
 extern s16 gFrameCounter;
 extern u32 gViewportMatrix;
 
@@ -105,8 +105,8 @@ void drawRaceIntroModelMeshes(RaceIntroMeshActor *arg0) {
     s32 i;
 
     gSPDisplayList(gRegionAllocPtr++, gEffectRenderModeSetupDl);
-    entry = gRaceIntroModelCommandsByCourse[gRaceCourseIndex];
-    vertices = gRaceIntroModelVerticesByCourse[gRaceCourseIndex];
+    entry = gRaceIntroModelCommandsByCourse[gRaceCourseIndex.signedValue];
+    vertices = gRaceIntroModelVerticesByCourse[gRaceCourseIndex.signedValue];
     textureIndex = -1;
     i = 0;
 
@@ -147,7 +147,7 @@ void initRaceIntroModelMeshes(RaceIntroMeshActor *arg0) {
     s32 allocSize;
     s32 i;
 
-    entry = gRaceIntroModelCommandsByCourse[gRaceCourseIndex];
+    entry = gRaceIntroModelCommandsByCourse[gRaceCourseIndex.signedValue];
     count = 0;
     if (entry->textureIndex != -1) {
         do {
@@ -157,7 +157,7 @@ void initRaceIntroModelMeshes(RaceIntroMeshActor *arg0) {
     }
 
     if (count != 0) {
-        entry = gRaceIntroModelCommandsByCourse[gRaceCourseIndex];
+        entry = gRaceIntroModelCommandsByCourse[gRaceCourseIndex.signedValue];
         allocSize = count * sizeof(Mtx);
         gAssetHandles[0x27] = allocRelocatableHeapBlock(allocSize);
         arg0->matrices = getRelocatableHeapBlockBase(gAssetHandles[0x27]);
@@ -557,11 +557,11 @@ void initRaceIntroFlyoverShortPan(RaceIntroEffectActor *arg0) {
 }
 
 void initRaceIntroFlyoverActor(RaceIntroEffectActor *arg0) {
-    s16 temp_v0 = gRaceCourseIndex;
+    s16 temp_v0 = gRaceCourseIndex.signedValue;
 
     if (temp_v0 == 3) {
         setCallbackTaskCallback(arg0, (CallbackTaskCallback)initRaceIntroFlyoverLongPan);
-        temp_v0 = gRaceCourseIndex;
+        temp_v0 = gRaceCourseIndex.signedValue;
     }
     if (temp_v0 == 6) {
         setCallbackTaskCallback(arg0, (CallbackTaskCallback)initRaceIntroFlyoverShortPan);
@@ -581,7 +581,7 @@ void drawRaceIntroAnimatedBillboards(RaceIntroMeshActor *arg0) {
     s32 i;
 
     gSPDisplayList(gRegionAllocPtr++, gEffectRenderModeSetupDl);
-    entry = gRaceIntroAnimatedBillboardCommandsByCourse[gRaceCourseIndex];
+    entry = gRaceIntroAnimatedBillboardCommandsByCourse[gRaceCourseIndex.signedValue];
     loadedTextureIndex = -1;
     i = 0;
     if (entry->textureIndex != -1) {
@@ -620,7 +620,7 @@ void initRaceIntroAnimatedBillboards(RaceIntroMeshActor *arg0) {
     s32 allocSize;
     s32 i;
 
-    entry = gRaceIntroAnimatedBillboardCommandsByCourse[gRaceCourseIndex];
+    entry = gRaceIntroAnimatedBillboardCommandsByCourse[gRaceCourseIndex.signedValue];
     count = 0;
     if (entry->textureIndex != -1) {
         do {
@@ -630,7 +630,7 @@ void initRaceIntroAnimatedBillboards(RaceIntroMeshActor *arg0) {
     }
 
     if (count != 0) {
-        entry = gRaceIntroAnimatedBillboardCommandsByCourse[gRaceCourseIndex];
+        entry = gRaceIntroAnimatedBillboardCommandsByCourse[gRaceCourseIndex.signedValue];
         allocSize = count * sizeof(Mtx);
         gAssetHandles[0x28] = allocRelocatableHeapBlock(allocSize);
         arg0->matrices = getRelocatableHeapBlockBase(gAssetHandles[0x28]);

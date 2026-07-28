@@ -1,3 +1,4 @@
+#include "game/race/race_state.h"
 #include "common.h"
 #include "game/math/fixed_point_math.h"
 #include "game/race/motion/race_motion.h"
@@ -16,7 +17,6 @@ extern u8 gSinglePlayerRankDisplayPatternSecond[];
 extern u8 gSinglePlayerRankDisplayPatternThird[];
 extern u8 gSinglePlayerRankDisplayPatternFourth[];
 extern u8 gRaceSplitscreenMode;
-extern s16 gRaceCourseIndex;
 
 // updateRacePlayerRankDisplay best match: 55.599% (nonmatchings/updateRacePlayerRankDisplay-3357475854818838508/base_11.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race/player/race_player_progress/updateRacePlayerRankDisplay.s")
@@ -333,7 +333,7 @@ void updateRacePlayerCheckpointEvents(RacePlayer *player) {
     }
 
     player->checkpointHit = 0;
-    eventList = gRaceCourseCheckpointEventLists[gRaceCourseIndex];
+    eventList = gRaceCourseCheckpointEventLists[gRaceCourseIndex.signedValue];
     event = eventList;
     eventIndex = 0;
 
@@ -380,7 +380,7 @@ s32 updateRacePlayerSmoothedPathOffset(s32 playerIndex, s32 pathIndex, s32 rankS
     s32 pathIndexCopy;
     s8 *entry;
 
-    courseIndex = gRaceCourseIndex;
+    courseIndex = gRaceCourseIndex.signedValue;
     entry = gRaceCoursePlayerPathOffsetTables[(courseIndex * RACE_PLAYER_COUNT) + playerIndex];
     pathIndexCopy = pathIndex;
     if (courseIndex == 7) {
@@ -416,7 +416,7 @@ s32 updateRacePlayerSmoothedPathOffset(s32 playerIndex, s32 pathIndex, s32 rankS
 s32 getRacePlayerPathOffset(s32 playerIndex, s32 pathIndex) {
     s8 *entry;
 
-    if (gRaceCourseIndex == 7) {
+    if (gRaceCourseIndex.signedValue == 7) {
         if (playerIndex == 0) {
             return 0xFFF40000;
         }
@@ -431,6 +431,6 @@ s32 getRacePlayerPathOffset(s32 playerIndex, s32 pathIndex) {
         }
     }
 
-    entry = gRaceCoursePlayerPathOffsetTables[(gRaceCourseIndex * RACE_PLAYER_COUNT) + playerIndex];
+    entry = gRaceCoursePlayerPathOffsetTables[(gRaceCourseIndex.signedValue * RACE_PLAYER_COUNT) + playerIndex];
     return entry[pathIndex] << 0x12;
 }

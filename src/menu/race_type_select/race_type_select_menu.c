@@ -1,3 +1,4 @@
+#include "game/race/race_state.h"
 #include "common.h"
 #include "assets.h"
 #include "game/audio/sound_manager.h"
@@ -25,7 +26,6 @@ extern s32 enqueueSoundEffect(s16, s16);
 extern RaceTypeSelectCursorState gRaceTypeSelectCursorTarget;
 extern u8 gMenuExitSelection;
 extern u8 gRaceTypeSelectCursorAnimState;
-extern s16 gRaceCourseIndex;
 extern s16 gMenuFadeAlpha;
 extern u8 gRaceTypeSelection;
 extern u8 gCourseSelectFromRaceTypeMenu;
@@ -42,8 +42,8 @@ void returnToRaceTypeSelectMenu(void) {
     gCurrentGameTask->timer = 0;
     gMenuExitSelection = 0;
     gMenuInputRepeatTimers[0] = 0;
-    if (gRaceCourseIndex == 7) {
-        gRaceCourseIndex = 9;
+    if (gRaceCourseIndex.signedValue == 7) {
+        gRaceCourseIndex.signedValue = 9;
     }
     gMenuFadeAlpha = gCurrentGameTask->fade;
     if (gRaceTypeSelection == 3) {
@@ -76,8 +76,8 @@ void initRaceTypeSelectMenu(void) {
     gCurrentGameTask->timer = 0;
     gMenuExitSelection = 0;
     gMenuInputRepeatTimers[0] = 0;
-    if (gRaceCourseIndex == 7) {
-        gRaceCourseIndex = 9;
+    if (gRaceCourseIndex.signedValue == 7) {
+        gRaceCourseIndex.signedValue = 9;
     }
     gMenuFadeAlpha = gCurrentGameTask->fade;
     if (gRaceTypeSelection == 3) {
@@ -170,7 +170,7 @@ void updateRaceTypeSelectMenu(void) {
                     if (newInput != previousSelection) {
                         enqueueSoundEffect(0x19, 0x32);
                         heldInput = gPlayerInputPressed[0];
-                        gRaceCourseIndex = 9;
+                        gRaceCourseIndex.signedValue = 9;
                     }
 
                     if ((heldInput & START_BUTTON) || ((heldInput & A_BUTTON) && (gMenuFlowState == 4))) {

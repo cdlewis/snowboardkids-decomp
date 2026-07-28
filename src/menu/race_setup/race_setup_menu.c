@@ -1,3 +1,4 @@
+#include "game/race/race_state.h"
 #include "common.h"
 #include "game/save_data.h"
 #include "assets.h"
@@ -46,7 +47,6 @@ extern u8 gRaceRumbleEnabled;
 extern u8 gRumblePakConnectedByController[];
 extern char D_800EC9E5;
 extern u8 gHighestUnlockedCourse;
-extern s16 gRaceCourseIndex;
 extern s32 gMenuFlowState;
 
 void initRaceSetupMenu(void) {
@@ -64,7 +64,7 @@ void initRaceSetupMenu(void) {
     gCourseSelectModeSelection = 0;
     gHighestUnlockedCourse = 0;
     gRaceRumbleEnabled = 0;
-    gRaceCourseIndex = 9;
+    gRaceCourseIndex.signedValue = 9;
     gMenuFlowState = 0;
     gMenuInputRepeatTimers[0] = 0;
     gPlayerCount = 1;

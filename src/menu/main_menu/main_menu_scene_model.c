@@ -1,3 +1,4 @@
+#include "game/race/race_state.h"
 #include "assets.h"
 #include "game/save_data.h"
 #include "game/menu/main_menu/main_menu_scene_model.h"
@@ -160,7 +161,6 @@ typedef struct {
 
 #define GAME_SAVE_REPLAY_BUFFER (*(RaceRecordReplaySave *)&gGameSaveDataBuffer)
 
-extern s16 gRaceCourseIndex;
 extern u8 D_8010B200[];
 extern u16 D_8010E180[];
 extern u8 D_800F3EF0[];
@@ -303,7 +303,7 @@ s32 saveRaceRecordReplayData(void) {
         return 1;
     }
 
-    course = gRaceCourseIndex;
+    course = gRaceCourseIndex.signedValue;
     totalLength = 0;
     if (course != 0) {
         totalLength = GAME_SAVE_REPLAY_BUFFER.slots[0].length;
@@ -347,7 +347,7 @@ s32 saveRaceRecordReplayData(void) {
         dst++;
     } while ((u32)src < (u32)D_800F3EF0);
 
-    course = gRaceCourseIndex;
+    course = gRaceCourseIndex.signedValue;
     writeIndex = 0;
     COPY_SLOT(0, 0);
     COPY_SLOT(1, 1);
@@ -459,7 +459,7 @@ void loadCurrentRaceRecordReplayData(void) {
 
     outputIndex = 0;
     compressed = &D_800ECC46;
-    switch (*(u16 *)&gRaceCourseIndex) {
+    switch (gRaceCourseIndex.unsignedValue) {
     case 0:
         compressed += D_800ECC24;
         break;
@@ -520,7 +520,7 @@ void loadCurrentRaceRecordReplayData(void) {
     frameCount = sourceIndex;
     history->lastWriteIndex = frameCount;
     history->enabled = 1;
-    history->pad9[0] = ((s16)gRaceCourseIndex) & 0xFFFFu;
+    history->pad9[0] = ((s16)gRaceCourseIndex.signedValue) & 0xFFFFu;
     history->pad9[1] = PACKED_RACE_RECORD_REPLAY.fields.characterId;
     history->pad9[2] = PACKED_RACE_RECORD_REPLAY.fields.characterVariant;
     history->pad9[3] = 0;
