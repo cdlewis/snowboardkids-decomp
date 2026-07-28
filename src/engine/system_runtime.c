@@ -182,7 +182,6 @@ extern void initMenuAssetHandles(void);
 extern void allocRenderCallbackScratchBuffer(void);
 extern void allocMenuRenderScratchBuffers(void);
 extern void selectMenuRenderScratchBuffer(s32);
-extern void appendViewportDisplayLists(u8);
 extern s32 osSendMesg(void *, void *, s32);
 extern void updateGameTaskScheduler(void);
 extern void initFramebufferRenderTaskState(void);
@@ -356,7 +355,7 @@ void dmaReadRom(u32 romOffset, void *ramAddress, s32 size) {
     }
 }
 
-// appendViewportDisplayLists best match: 98.839% (nonmatchings/appendViewportDisplayLists-8498672362023432715/base_28.c)
+// appendViewportDisplayLists best match: 99.972% (nonmatchings/appendViewportDisplayLists-2167615756788266096/base_26.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/engine/system_runtime/appendViewportDisplayLists.s")
 
 #ifdef NON_MATCHING
@@ -426,6 +425,7 @@ extern Mtx *gViewportMatrix;
 
 #define runtimeViewportStates ((RuntimeViewportState *)gViewportStates)
 #define runtimeDisplayListData ((RuntimeViewportDisplayListData *)gCurrentTaskDisplayListStart)
+#define runtimeModelRenderCallbackLists ((RenderCallbackNode **)&gModelRenderCallbackList)
 
 void appendViewportDisplayLists(u8 frameIndex) {
     RuntimeViewportState *viewport;
@@ -433,7 +433,6 @@ void appendViewportDisplayLists(u8 frameIndex) {
     s32 anyModels;
     s32 new_var2;
     s16 left;
-    RenderCallbackNode **queueEnd;
     s64 new_var;
     s32 color;
     s16 top;
@@ -581,14 +580,13 @@ void appendViewportDisplayLists(u8 frameIndex) {
                     gSPDisplayList(gRegionAllocPtr++, D_800DEF90);
                     runRenderCallbacks(&gBackdropRenderCallbackList);
                 }
-                queue = &gModelRenderCallbackList;
-                queueEnd = &gBackdropRenderCallbackList;
+                queue = runtimeModelRenderCallbackLists;
                 do {
                     if (*queue != NULL) {
                         anyModels = 1;
                     }
                     queue = queue + 3;
-                } while (((u32)queue + 1) < ((u32)queueEnd + 1));
+                } while (queue < &runtimeModelRenderCallbackLists[24]);
                 if (anyModels != 0) {
                     gSPPerspNormalize(gRegionAllocPtr++,
                                       runtimeViewportStates[gCurrentViewportIndex].perspectiveNorm);
@@ -602,7 +600,7 @@ void appendViewportDisplayLists(u8 frameIndex) {
                               &runtimeDisplayListData->translations[gCurrentViewportIndex],
                               G_MTX_NOPUSH | G_MTX_MUL | G_MTX_PROJECTION);
                     gSPDisplayList(gRegionAllocPtr++, D_800DEF28);
-                    queue = &gModelRenderCallbackList;
+                    queue = runtimeModelRenderCallbackLists;
                     do {
                         if (*queue != NULL) {
                             if ((queue == &gEffectRenderCallbackList) != 0) {
@@ -681,6 +679,7 @@ void appendViewportDisplayLists(u8 frameIndex) {
 
 #undef runtimeViewportStates
 #undef runtimeDisplayListData
+#undef runtimeModelRenderCallbackLists
 #endif
 
 void resetRenderCallbackQueues(void) {
