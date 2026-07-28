@@ -3,6 +3,7 @@
 #include "game/engine/render_callback.h"
 #include "game/engine/relocatable_heap.h"
 #include "game/engine/callback_task_scheduler.h"
+#include "game/menu/character_select/character_select_course_menu.h"
 #include "game/menu/character_select/character_select_course_ui.h"
 #include "game/menu/splitscreen_select/race_splitscreen_select_ui.h"
 #include "game/menu/renderer/menu_renderer.h"
@@ -64,7 +65,6 @@ enum {
 extern int sprintf(char *, const char *, ...);
 extern void drawAssetTableSpriteWithExplicitPaletteWideIndex(s16 x, s16 y, AssetTable *table, s32 entryIndex,
                                                              u16 paletteIndex);
-extern s16 gCharacterSelectCourseOptionsByUnlock[][11];
 extern CharacterSelectCourseFrameTileMap gCharacterSelectCoursePreviewFrameTileMaps[];
 extern CharacterSelectCourseFrameCornerTileMap gCharacterSelectCoursePreviewFrameCornerTileMaps[];
 extern u16 gCharacterSelectCourseExitPreviewCornerTile;
