@@ -2,6 +2,11 @@
 #define COURSE_SELECT_UI_H
 
 #include "common.h"
+#include "game/menu/renderer/menu_renderer.h"
+
+typedef struct {
+    MenuGlyphScript text[0x18];
+} CourseBoardLevelByCourseText;
 
 typedef struct {
     /* 0x00 */ u8 pad0[0x18];
@@ -61,6 +66,8 @@ typedef struct {
 
 typedef struct CourseSelectIconListActor CourseSelectIconListActor;
 typedef struct CourseSelectAnimatedActor CourseSelectAnimatedActor;
+
+extern CourseBoardLevelByCourseText gCourseSelectBoardLevelByCourseText[4];
 
 void updateCourseSelectPreviewModelIn(CourseSelectAnimatedActor *arg0);
 void initCourseSelectPreviewModelIn(void *arg0);
