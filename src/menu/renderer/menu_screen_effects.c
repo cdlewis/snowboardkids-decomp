@@ -80,7 +80,6 @@ extern u32 gAlphaSpriteRenderModeDl[];
 extern s16 gMenuFadeAlpha;
 extern s16 gFrameCounter;
 extern u8 gCurrentViewportIndex;
-extern Mtx *gViewportMatrix;
 extern u8 gConnectedControllerCount;
 extern u32 D_2000000[];
 extern u32 D_20006C8[];

@@ -166,7 +166,6 @@ extern Gfx gEffectRenderModeCleanupDl[];
 extern Gfx gRaceItemPickupDisplayList[];
 extern Gfx gRaceActionPickupDisplayList[];
 extern Gfx *gRegionAllocPtr;
-extern void *gViewportMatrix;
 extern s16 gFrameCounter;
 typedef struct Scratch674B4 {
     FixedTransform transform;

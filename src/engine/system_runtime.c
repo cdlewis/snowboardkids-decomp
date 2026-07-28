@@ -363,7 +363,7 @@ typedef struct {
     s16 rotation[9];
     s16 pad42;
     s32 transformOffset[3];
-    RuntimeMtx transform;
+    Mtx transform;
     u8 pad90[0x20];
 } RuntimeViewportCamera;
 
@@ -374,7 +374,7 @@ typedef struct {
     RuntimeMtx overlayProjections[4];
     RuntimeMtx rotations[4];
     RuntimeMtx translations[4];
-    RuntimeMtx viewportMatrices[4];
+    Mtx viewportMatrices[4];
 } RuntimeViewportDisplayListData;
 
 typedef struct {
@@ -395,7 +395,6 @@ extern s16 gMenuViewportCenterX;
 extern s16 gMenuViewportCenterY;
 extern s16 gMenuFadeAlpha;
 extern u8 gCurrentViewportIndex;
-extern Mtx *gViewportMatrix;
 
 #define runtimeDisplayListData ((RuntimeViewportDisplayListData *)gCurrentTaskDisplayListStart)
 #define runtimeViewportStates ((RuntimeViewportState *)gViewportStates)
@@ -448,11 +447,11 @@ void appendViewportDisplayLists(u8 frameIndex) {
 
         runtimeDisplayListData->viewportMatrices[gCurrentViewportIndex] =
             D_801121E0[gCurrentViewportIndex].transform;
-        runtimeDisplayListData->viewportMatrices[gCurrentViewportIndex].words[6] = 0;
-        runtimeDisplayListData->viewportMatrices[gCurrentViewportIndex].words[7] = 1;
-        runtimeDisplayListData->viewportMatrices[gCurrentViewportIndex].words[14] = 0;
-        runtimeDisplayListData->viewportMatrices[gCurrentViewportIndex].words[15] = 0;
-        gViewportMatrix = (Mtx *)&runtimeDisplayListData->viewportMatrices[gCurrentViewportIndex];
+        runtimeDisplayListData->viewportMatrices[gCurrentViewportIndex].m[1][2] = 0;
+        runtimeDisplayListData->viewportMatrices[gCurrentViewportIndex].m[1][3] = 1;
+        runtimeDisplayListData->viewportMatrices[gCurrentViewportIndex].m[3][2] = 0;
+        runtimeDisplayListData->viewportMatrices[gCurrentViewportIndex].m[3][3] = 0;
+        gViewportMatrix = &runtimeDisplayListData->viewportMatrices[gCurrentViewportIndex];
 
         gDPPipeSync(gRegionAllocPtr++);
         gDPSetScissor(gRegionAllocPtr++, G_SC_NON_INTERLACE,
