@@ -3,6 +3,8 @@
 
 #include "common.h"
 
+#define COURSE_UNLOCK_PRICE_COUNT 12
+
 typedef union {
     struct {
         union {
@@ -56,6 +58,7 @@ typedef union {
 } CourseSelectStatus;
 
 extern CourseSelectStatus gCourseSelectStatus;
+extern u32 gCourseUnlockPrices[COURSE_UNLOCK_PRICE_COUNT];
 extern u8 gCourseSelectModeSelection;
 extern u8 gCourseDetailsMenuState;
 extern u8 gCourseDetailsMenuSelection;
