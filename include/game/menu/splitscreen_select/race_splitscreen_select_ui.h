@@ -4,6 +4,12 @@
 #include "common.h"
 
 typedef struct {
+    /* 0x0 */ u8 state;
+    /* 0x1 */ u8 pad1;
+    /* 0x2 */ s16 nextState;
+} RaceSplitscreenSelectCursorTarget;
+
+typedef struct {
     char pad0[0x18];
     /* 0x18 */ s16 x;
     /* 0x1A */ s16 y;
@@ -39,6 +45,9 @@ typedef struct {
     /* 0x25 */ u8 spawnTimer;
     /* 0x26 */ u8 playerCount;
 } RaceSplitscreenSelectRowActor;
+
+extern RaceSplitscreenSelectCursorTarget gRaceSplitscreenSelectCursorTarget;
+extern s16 gRaceSplitscreenSelectPortraitAlpha;
 
 void drawRaceSplitscreenSelectPlayerCountIcons(RaceSplitscreenSelectRowActor *arg0);
 void updateRaceSplitscreenSelectPlayerCountIcons(RaceSplitscreenSelectRowActor *arg0);

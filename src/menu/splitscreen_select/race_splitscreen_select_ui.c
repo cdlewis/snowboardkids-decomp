@@ -13,12 +13,6 @@
 #define ASSET_HANDLE(index) (gAssetHandles[(index)])
 #define RACE_SPLITSCREEN_SELECT_TEXTURE_HANDLE (gAssetHandles[0x21])
 
-typedef struct {
-    u8 state;
-    char pad1[1];
-    s16 nextState;
-} RaceSplitscreenSelectCursorState;
-
 typedef MenuGlyphScript RaceSplitscreenSelectPortrait[0x46];
 
 typedef struct {
@@ -31,9 +25,7 @@ typedef struct {
 extern int sprintf(char *, const char *, ...);
 extern RaceSplitscreenSelectFrameTiles gRaceSplitscreenSelectFrameTiles[];
 extern RaceSplitscreenSelectPortrait gRaceSplitscreenSelectPortraitScripts[];
-extern RaceSplitscreenSelectCursorState gRaceSplitscreenSelectCursorTarget;
 extern u8 gRaceSplitscreenSelectCursorAnimState;
-extern s16 gRaceSplitscreenSelectPortraitAlpha;
 extern u32 gMenuPanelBackdropTexture[];
 extern Gfx *gRegionAllocPtr;
 extern u8 gMenuExitSelection;

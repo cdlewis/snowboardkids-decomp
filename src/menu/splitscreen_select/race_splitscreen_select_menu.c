@@ -14,19 +14,11 @@
 #include "game/engine/viewport_manager.h"
 #include "game/race/player/race_player_input.h"
 
-typedef struct {
-    u8 state;
-    char pad1[1];
-    s16 nextState;
-    s16 portraitAlpha;
-} RaceSplitscreenSelectCursorTarget;
-
 extern void releaseMenuAssetHandles(void);
 extern s32 enqueueSoundEffect(s16, s16);
 
 extern u8 D_800EC9DC;
 
-extern RaceSplitscreenSelectCursorTarget gRaceSplitscreenSelectCursorTarget;
 extern u8 gCourseSelectFromRaceTypeMenu;
 extern s32 gMenuFlowState;
 extern u8 gMenuExitSelection;
@@ -103,7 +95,7 @@ void updateRaceSplitscreenSelectMenu(void) {
             createCallbackTask((CallbackTaskCallback)initRaceSplitscreenSelectPlayerCountIcons, 0, 0x63);
         }
     } else {
-        if ((gRaceSplitscreenSelectCursorTarget.portraitAlpha == 0x100) && (gRacePlayers[0].menuState == 0)) {
+        if ((gRaceSplitscreenSelectPortraitAlpha == 0x100) && (gRacePlayers[0].menuState == 0)) {
             if (gMenuSelectionConfirmTimer == 0) {
                 if (gRaceSplitscreenSelectCursorTarget.state == 1) {
                     selection = gRaceSplitscreenMode;
