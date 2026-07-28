@@ -15,6 +15,7 @@ extern FramebufferRenderTaskStatus gFramebufferRenderTask1Statuses[];
 extern Gfx gMenuRenderModeResetDl[];
 extern u8 gMenuFadeOverlayActive;
 extern u8 gRaceCourseModelEffectsDisabled;
+extern u8 gRaceCourseOverlayEffectsDisabled;
 
 void main(void *arg);
 void bootThreadMain(void *arg);
