@@ -800,7 +800,6 @@ extern Gfx gEffectRenderModeSetupDl[];
 extern Gfx gTranslucentSpriteRenderModeDl[];
 extern int sprintf(char *, const char *, ...);
 extern RacePlayerHudStatus gRacePlayerHudStatuses[];
-extern RaceTimer gRaceElapsedTimer;
 extern RaceUiAssetEntry D_800D5FF4[];
 extern RaceUiCameraTransformSource D_801121E0[];
 extern RaceUiGfxCommandDest *allocFixedTransformMatrix(RaceUiTrailCopyBlock *);

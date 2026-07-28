@@ -52,7 +52,6 @@ extern u8 gMainMenuModeSelection;
 extern u8 gRaceTypeSelection;
 extern u8 gCurrentViewportIndex;
 extern s16 gUiBlinkTimer;
-extern RaceTimer gRaceElapsedTimer;
 extern RaceTimer gRaceChallengeTimeLimit;
 extern u8 gRaceTimeTrialFinishRecorded;
 extern u8 gRaceChallengeFailed;
