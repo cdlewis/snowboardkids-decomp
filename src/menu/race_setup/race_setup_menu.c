@@ -48,7 +48,6 @@ extern char D_800EC9E5;
 extern u8 gHighestUnlockedCourse;
 extern s16 gRaceCourseIndex;
 extern s32 gMenuFlowState;
-extern s32 gPlayerInputHeld;
 extern s32 gPlayerInputPressed[];
 
 void initRaceSetupMenu(void) {
@@ -120,8 +119,8 @@ void updateRaceSetupPlayerCountMenu(void) {
         temp_v0 = temp_v1;
         if (temp_v1 == 0) {
             temp_a3 = gPlayerInputPressed[0];
-            temp_v0 = gPlayerInputHeld & 0x10800;
-            if ((temp_v0 == 0) && !(gPlayerInputHeld & 0x20400)) {
+            temp_v0 = gPlayerInputHeld[0] & 0x10800;
+            if ((temp_v0 == 0) && !(gPlayerInputHeld[0] & 0x20400)) {
                 gMenuInputRepeatTimers[0] = 0;
             }
             if ((temp_a3 & 0x10800) ||
@@ -135,7 +134,7 @@ void updateRaceSetupPlayerCountMenu(void) {
                     enqueueSoundEffect(0x19, 0x32);
                 }
             } else if ((temp_a3 & 0x20400) ||
-                       ((gPlayerInputHeld & 0x20400) && ((s32)gMenuInputRepeatTimers[0] >= 9) &&
+                       ((gPlayerInputHeld[0] & 0x20400) && ((s32)gMenuInputRepeatTimers[0] >= 9) &&
                         (((s32)gMenuInputRepeatTimers[0] % 3) == 0))) {
                 if (gMenuInputRepeatTimers[0] == 0) {
                     gMenuInputRepeatTimers[0] += 1;

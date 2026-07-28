@@ -375,7 +375,6 @@ extern s32 enqueueSoundEffect(s16, s16);
 
 extern u8 D_8010AF06[];
 extern u8 gCourseSelectExtraCourseColumnState;
-extern s32 gPlayerInputHeld[];
 extern s32 gPlayerInputPressed[];
 extern s32 D_8010AEE8[];
 extern RaceCamera D_801121E0[];

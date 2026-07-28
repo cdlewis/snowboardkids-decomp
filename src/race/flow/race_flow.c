@@ -109,7 +109,6 @@ extern s32 gRaceCameraReplayStartX;
 extern s32 gRaceCameraReplayStartY;
 extern s32 gRaceCameraReplayStartZ;
 extern s32 gMenuFlowState;
-extern s32 gPlayerInputHeld;
 extern s32 gPlayerInputPressed[];
 extern SignedUnsignedShort gRaceCourseIndex;
 extern s16 gRaceLapCount;
@@ -180,7 +179,7 @@ void waitStartupRumbleInit(void) {
 }
 
 void routeStartupControllerPakFlow(void) {
-    if (gPlayerInputHeld & START_BUTTON) {
+    if (gPlayerInputHeld[0] & START_BUTTON) {
         setCurrentGameTaskCallback(&openStartupControllerPakFileDeleteFlow, 0);
     } else {
         setCurrentGameTaskCallback(&openStartupReplaySaveMessageFlow, 0);

@@ -2,6 +2,7 @@
 #define CONTROLLER_MAIN_MENU_FLOW_H
 
 #include "common.h"
+#include "game/engine/controller_input.h"
 
 #define CONTROLLER_REQUEST_TYPE_MASK 0xF0
 #define CONTROLLER_REQUEST_CHANNEL_MASK 0x3
@@ -27,14 +28,6 @@ typedef enum ControllerSubsystemRequest {
     CONTROLLER_REQUEST_RETRY_RUMBLE_INIT = 0xD0
 } ControllerSubsystemRequest;
 
-typedef struct ControllerInputState {
-    u16 buttons;
-    s8 stickX;
-    s8 stickY;
-    u8 pad4[2];
-} ControllerInputState;
-
-extern ControllerInputState gControllerInputState[4];
 extern s16 gControllerPakStatusCodes[4];
 extern s16 gMenuChoicePromptState[4];
 extern u16 gMenuInputRepeatTimers[4];
