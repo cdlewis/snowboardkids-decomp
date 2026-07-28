@@ -1,4 +1,5 @@
 #include "common.h"
+#include "game/engine/asset_manager.h"
 #include "game/engine/render_callback.h"
 #include "game/engine/relocatable_heap.h"
 #include "game/engine/callback_task_scheduler.h"
@@ -29,7 +30,6 @@ extern CharacterSelectFlowState *gCurrentGameTask;
 extern ControllerPakPromptTransition gControllerPakContinuePromptTransition;
 extern ControllerPakRumbleCheckPromptTransition gControllerPakRumbleCheckPromptTransition;
 extern ControllerPakMenuState gControllerPakMenuState;
-extern s16 gAssetHandles[];
 extern u8 gPlayerCount;
 extern u8 gRumblePakConnectedByController[];
 extern u8 gControllerPakRumbleCheckPromptState;

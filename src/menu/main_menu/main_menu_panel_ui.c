@@ -1,4 +1,5 @@
 #include "common.h"
+#include "game/engine/asset_manager.h"
 #include "game/engine/render_callback.h"
 #include "game/engine/relocatable_heap.h"
 #include "game/engine/callback_task_scheduler.h"
@@ -12,24 +13,10 @@
 #define MENU_PANEL_INPUT_REPEAT_FRAMES 4
 #define MENU_PANEL_ACCEPT_SOUND 0x18
 #define MENU_PANEL_SOUND_VOLUME 0x32
-#define MENU_PANEL_TEXTURE_HANDLE (gAssetHandles.textureHandle)
+#define MENU_PANEL_TEXTURE_HANDLE (gAssetHandles[0x2A])
 
 typedef void (*MenuPanelActorCallback)(MenuPanelActor *);
 
-
-typedef struct MenuPanelAssetHandles {
-    /* 0x00 */ char pad0[0x0C];
-    /* 0x0C */ s16 raceSetupPromptHandle;
-    /* 0x0E */ char padE[0x2A];
-    /* 0x38 */ s16 courseRecordIconHandle;
-    /* 0x3A */ s16 courseRecordDigitHandle;
-    /* 0x3C */ char pad3C[2];
-    /* 0x3E */ s16 fontHandle;
-    /* 0x40 */ char pad40[0x10];
-    /* 0x50 */ s16 cancelHandle;
-    /* 0x52 */ char pad52[2];
-    /* 0x54 */ s16 textureHandle;
-} MenuPanelAssetHandles;
 
 struct MenuPanelActor {
     /* 0x00 */ char pad0[0x18];
@@ -59,7 +46,6 @@ extern u16 *raceRecordLapCountTexts[];
 extern s16 courseRecordDigitTileOffsets[];
 extern u16 *mainMenuModeDescriptionTexts[];
 extern u16 *mainMenuModeDescriptionTitles[];
-extern MenuPanelAssetHandles gAssetHandles;
 extern u8 gMainMenuModeSelection;
 extern s16 gRaceCourseIndex;
 extern s16 gRaceLapCount;
@@ -137,7 +123,7 @@ void drawMainMenuModeSelectIcons(MenuPanelActor *arg0) {
 
         drawMenuFillRectangle((s16)(x + 0xA), -0x16, 0x22, 0x22, 0x40, alpha / 4, 0);
         drawMenuFillRectangle((s16)(x + 4), -0x1C, 0x22, 0x22, 0xFF, alpha, 0);
-        drawAssetTableSprite((s16)(x + 5), -0x1B, getRelocatableHeapBlockBase(gAssetHandles.fontHandle), *tile);
+        drawAssetTableSprite((s16)(x + 5), -0x1B, getRelocatableHeapBlockBase(gAssetHandles[0x1F]), *tile);
         i = next;
         tile++;
         x += 0x2C;
@@ -154,7 +140,7 @@ void drawMainMenuModeSelectIcons(MenuPanelActor *arg0) {
 
         drawMenuFillRectangle((s16)(x + 0xA), 0x1E, 0x22, 0x22, 0, alpha / 4, 0x40);
         drawMenuFillRectangle((s16)(x + 4), 0x18, 0x22, 0x22, arg0->x * 0, alpha, 0xFF);
-        drawAssetTableSprite((s16)(x + 5), 0x19, getRelocatableHeapBlockBase(gAssetHandles.fontHandle), *tile);
+        drawAssetTableSprite((s16)(x + 5), 0x19, getRelocatableHeapBlockBase(gAssetHandles[0x1F]), *tile);
         i++;
         tile++;
         x += 0x2C;
@@ -162,16 +148,16 @@ void drawMainMenuModeSelectIcons(MenuPanelActor *arg0) {
 
     if (gMainMenuModeSelection == 0xC) {
         if (arg0->x != 0) {
-            drawAssetTableSprite(-0x30, 0x4D, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 2);
-            drawPulsingAssetTableSprite(-0x30, 0x4D, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 3);
+            drawAssetTableSprite(-0x30, 0x4D, getRelocatableHeapBlockBase(gAssetHandles[0x28]), 2);
+            drawPulsingAssetTableSprite(-0x30, 0x4D, getRelocatableHeapBlockBase(gAssetHandles[0x28]), 3);
             return;
         }
-        drawAssetTableSpriteWithExplicitPalette(-0x30, 0x4D, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 2, 1);
-        drawPulsingAssetTableSprite(-0x30, 0x4D, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 3);
+        drawAssetTableSpriteWithExplicitPalette(-0x30, 0x4D, getRelocatableHeapBlockBase(gAssetHandles[0x28]), 2, 1);
+        drawPulsingAssetTableSprite(-0x30, 0x4D, getRelocatableHeapBlockBase(gAssetHandles[0x28]), 3);
         return;
     }
 
-    drawAssetTableSpriteWithExplicitPalette(-0x30, 0x4D, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 2, 1);
+    drawAssetTableSpriteWithExplicitPalette(-0x30, 0x4D, getRelocatableHeapBlockBase(gAssetHandles[0x28]), 2, 1);
 }
 
 void updateMainMenuModeSelectGrid(MenuPanelActor *arg0) {
@@ -223,30 +209,30 @@ void drawMainMenuModeDescriptionPanel(MenuPanelActor *arg0) {
     MenuGlyphScript *titleCursor;
 
     drawMenuSprite((s16)(arg0->x - 4), (s16)(arg0->y + 0x14),
-                   getRelocatableHeapBlockBase(gAssetHandles.textureHandle), 2, 0x20, 0x20, 0, 0);
+                   getRelocatableHeapBlockBase(gAssetHandles[0x2A]), 2, 0x20, 0x20, 0, 0);
     drawMenuSprite((s16)(arg0->x + 0xF8), (s16)(arg0->y + 0x14),
-                   getRelocatableHeapBlockBase(gAssetHandles.textureHandle), 4, 0x20, 0x20, 0, 0);
+                   getRelocatableHeapBlockBase(gAssetHandles[0x2A]), 4, 0x20, 0x20, 0, 0);
 
     i = 0;
     do {
         drawMenuSprite((s16)(arg0->x + i + 0xC), (s16)(arg0->y + 0x14),
-                       getRelocatableHeapBlockBase(gAssetHandles.textureHandle), 3, 0x20, 0x20, 0, 0);
+                       getRelocatableHeapBlockBase(gAssetHandles[0x2A]), 3, 0x20, 0x20, 0, 0);
         drawMenuSprite((s16)(arg0->x + i + 0xC), (s16)(arg0->y + 0x4C),
-                       getRelocatableHeapBlockBase(gAssetHandles.textureHandle), 8, 0x20, 0x20, 0, 0);
+                       getRelocatableHeapBlockBase(gAssetHandles[0x2A]), 8, 0x20, 0x20, 0, 0);
         i += 0x10;
     } while (i < 0xF0);
 
     drawMenuSprite((s16)(arg0->x - 4), (s16)(arg0->y + 0x4C),
-                   getRelocatableHeapBlockBase(gAssetHandles.textureHandle), 7, 0x20, 0x20, 0, 0);
+                   getRelocatableHeapBlockBase(gAssetHandles[0x2A]), 7, 0x20, 0x20, 0, 0);
     drawMenuSprite((s16)(arg0->x + 0xF8), (s16)(arg0->y + 0x4C),
-                   getRelocatableHeapBlockBase(gAssetHandles.textureHandle), 9, 0x20, 0x20, 0, 0);
+                   getRelocatableHeapBlockBase(gAssetHandles[0x2A]), 9, 0x20, 0x20, 0, 0);
 
     i = (arg0->selectionState == 4) * 0;
     do {
         drawMenuSprite((s16)(arg0->x - 4), (s16)(arg0->y + i + 0x24),
-                       getRelocatableHeapBlockBase(gAssetHandles.textureHandle), 5, 0x20, 0x20, 0, 0);
+                       getRelocatableHeapBlockBase(gAssetHandles[0x2A]), 5, 0x20, 0x20, 0, 0);
         drawMenuSprite((s16)(arg0->x + 0xF8), (s16)(arg0->y + i + 0x24),
-                       getRelocatableHeapBlockBase(gAssetHandles.textureHandle), 6, 0x20, 0x20, 0, 0);
+                       getRelocatableHeapBlockBase(gAssetHandles[0x2A]), 6, 0x20, 0x20, 0, 0);
         i += 0x10;
     } while (i <= 0x2F);
 
@@ -292,7 +278,7 @@ void drawMainMenuModeDescriptionPanel(MenuPanelActor *arg0) {
 
     if ((arg0->selectionState != 0) && (gMainMenuSelectionResult == 0)) {
         drawMenuSprite((s16)(arg0->x + 0xF4), (s16)(arg0->y + 0x48),
-                       getRelocatableHeapBlockBase(gAssetHandles.textureHandle), (gFrameCounter >> 4) & 1, 0x20,
+                       getRelocatableHeapBlockBase(gAssetHandles[0x2A]), (gFrameCounter >> 4) & 1, 0x20,
                        0x20, 0, 0);
     }
 
@@ -311,12 +297,12 @@ void drawMainMenuModeDescriptionPanel(MenuPanelActor *arg0) {
 
     if ((s32)gMainMenuModeSelection < 6) {
         drawAssetTableSprite(-0x10, (s16)(-0x30 - arg0->y),
-                             getRelocatableHeapBlockBase(gAssetHandles.fontHandle),
+                             getRelocatableHeapBlockBase(gAssetHandles[0x1F]),
                              mainMenuModeSelectPrimaryIconTiles[gMainMenuModeSelection]);
         return;
     }
 
-    drawAssetTableSprite(-0x10, (s16)(-0x30 - arg0->y), getRelocatableHeapBlockBase(gAssetHandles.fontHandle),
+    drawAssetTableSprite(-0x10, (s16)(-0x30 - arg0->y), getRelocatableHeapBlockBase(gAssetHandles[0x1F]),
                          mainMenuModeSelectSecondaryIconTiles[gMainMenuModeSelection]);
 }
 
@@ -378,40 +364,40 @@ void initMainMenuModeDescriptionPanel(MenuPanelActor *arg0) {
 void drawMainMenuModeSelectMenuOptions(void *arg0) {
     if (gMenuFlowState == 0) {
         if ((gMainMenuSelectionResult == 0) || (gFrameCounter & 1)) {
-            drawAssetTableSprite(-0x30, -0x20, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 0);
-            drawPulsingAssetTableSprite(-0x30, -0x20, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 3);
+            drawAssetTableSprite(-0x30, -0x20, getRelocatableHeapBlockBase(gAssetHandles[0x28]), 0);
+            drawPulsingAssetTableSprite(-0x30, -0x20, getRelocatableHeapBlockBase(gAssetHandles[0x28]), 3);
         } else {
-            drawAssetTableSpriteWithExplicitPalette(-0x30, -0x20, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 0, 1);
-            drawPulsingAssetTableSprite(-0x30, -0x20, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 3);
+            drawAssetTableSpriteWithExplicitPalette(-0x30, -0x20, getRelocatableHeapBlockBase(gAssetHandles[0x28]), 0, 1);
+            drawPulsingAssetTableSprite(-0x30, -0x20, getRelocatableHeapBlockBase(gAssetHandles[0x28]), 3);
         }
     } else {
-        drawAssetTableSpriteWithExplicitPalette(-0x30, -0x20, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 0, 1);
+        drawAssetTableSpriteWithExplicitPalette(-0x30, -0x20, getRelocatableHeapBlockBase(gAssetHandles[0x28]), 0, 1);
     }
 
     if (gMenuFlowState == 1) {
         if ((gMainMenuSelectionResult == 0) || (gFrameCounter & 1)) {
-            drawAssetTableSprite(-0x30, -8, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 1);
-            drawPulsingAssetTableSprite(-0x30, -8, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 3);
+            drawAssetTableSprite(-0x30, -8, getRelocatableHeapBlockBase(gAssetHandles[0x28]), 1);
+            drawPulsingAssetTableSprite(-0x30, -8, getRelocatableHeapBlockBase(gAssetHandles[0x28]), 3);
         } else {
-            drawAssetTableSpriteWithExplicitPalette(-0x30, -8, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 1, 1);
-            drawPulsingAssetTableSprite(-0x30, -8, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 3);
+            drawAssetTableSpriteWithExplicitPalette(-0x30, -8, getRelocatableHeapBlockBase(gAssetHandles[0x28]), 1, 1);
+            drawPulsingAssetTableSprite(-0x30, -8, getRelocatableHeapBlockBase(gAssetHandles[0x28]), 3);
         }
     } else {
-        drawAssetTableSpriteWithExplicitPalette(-0x30, -8, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 1, 1);
+        drawAssetTableSpriteWithExplicitPalette(-0x30, -8, getRelocatableHeapBlockBase(gAssetHandles[0x28]), 1, 1);
     }
 
     if (gMenuFlowState == 2) {
         if ((gMainMenuSelectionResult == 0) || (gFrameCounter & 1)) {
-            drawAssetTableSprite(-0x30, 0x10, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 2);
-            drawPulsingAssetTableSprite(-0x30, 0x10, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 3);
+            drawAssetTableSprite(-0x30, 0x10, getRelocatableHeapBlockBase(gAssetHandles[0x28]), 2);
+            drawPulsingAssetTableSprite(-0x30, 0x10, getRelocatableHeapBlockBase(gAssetHandles[0x28]), 3);
             return;
         }
-        drawAssetTableSpriteWithExplicitPalette(-0x30, 0x10, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 2, 1);
-        drawPulsingAssetTableSprite(-0x30, 0x10, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 3);
+        drawAssetTableSpriteWithExplicitPalette(-0x30, 0x10, getRelocatableHeapBlockBase(gAssetHandles[0x28]), 2, 1);
+        drawPulsingAssetTableSprite(-0x30, 0x10, getRelocatableHeapBlockBase(gAssetHandles[0x28]), 3);
         return;
     }
 
-    drawAssetTableSpriteWithExplicitPalette(-0x30, 0x10, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 2, 1);
+    drawAssetTableSpriteWithExplicitPalette(-0x30, 0x10, getRelocatableHeapBlockBase(gAssetHandles[0x28]), 2, 1);
 }
 
 void updateMainMenuModeSelectMenuOptions(MenuPanelActor *arg0) {
@@ -423,10 +409,10 @@ void initMainMenuModeSelectMenuOptions(MenuPanelActor *arg0) {
 }
 
 void drawRaceSetupCornerPrompts(void *arg0) {
-    drawAssetTableSpriteWithDefaultPalette(-0x84, -0x64, getRelocatableHeapBlockBase(gAssetHandles.raceSetupPromptHandle), 6);
-    drawAssetTableSpriteWithDefaultPalette(0x74, -0x64, getRelocatableHeapBlockBase(gAssetHandles.raceSetupPromptHandle), 7);
-    drawAssetTableSpriteWithDefaultPalette(-0x84, 4, getRelocatableHeapBlockBase(gAssetHandles.raceSetupPromptHandle), 8);
-    drawAssetTableSpriteWithDefaultPalette(0x74, 4, getRelocatableHeapBlockBase(gAssetHandles.raceSetupPromptHandle), 9);
+    drawAssetTableSpriteWithDefaultPalette(-0x84, -0x64, getRelocatableHeapBlockBase(gAssetHandles[6]), 6);
+    drawAssetTableSpriteWithDefaultPalette(0x74, -0x64, getRelocatableHeapBlockBase(gAssetHandles[6]), 7);
+    drawAssetTableSpriteWithDefaultPalette(-0x84, 4, getRelocatableHeapBlockBase(gAssetHandles[6]), 8);
+    drawAssetTableSpriteWithDefaultPalette(0x74, 4, getRelocatableHeapBlockBase(gAssetHandles[6]), 9);
 }
 
 void updateRaceSetupCornerPrompts(MenuPanelActor *arg0) {
@@ -500,73 +486,73 @@ void drawMainMenuSettingsOptions(void *arg0) {
         var_v0 = 2;
         sp28 = var_v0;
     }
-    drawAssetTableSpriteWithExplicitPalette(-0x78, -0x10, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 4, sp28);
+    drawAssetTableSpriteWithExplicitPalette(-0x78, -0x10, getRelocatableHeapBlockBase(gAssetHandles[0x28]), 4, sp28);
     sp28 = 1;
     if (gRaceRecordSettingsEnabled == 1) {
-        drawAssetTableSpriteWithExplicitPalette(0x10, -0x10, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 7, 2);
-        drawAssetTableSpriteWithExplicitPalette(0x48, -0x10, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 8, 1);
+        drawAssetTableSpriteWithExplicitPalette(0x10, -0x10, getRelocatableHeapBlockBase(gAssetHandles[0x28]), 7, 2);
+        drawAssetTableSpriteWithExplicitPalette(0x48, -0x10, getRelocatableHeapBlockBase(gAssetHandles[0x28]), 8, 1);
         if (gMenuFlowState == 0) {
-            drawPulsingAssetTableSprite(0x10, -0x10, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 0xB);
+            drawPulsingAssetTableSprite(0x10, -0x10, getRelocatableHeapBlockBase(gAssetHandles[0x28]), 0xB);
         } else {
-            drawAssetTableSprite(0x10, -0x10, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 0xB);
+            drawAssetTableSprite(0x10, -0x10, getRelocatableHeapBlockBase(gAssetHandles[0x28]), 0xB);
         }
     } else {
-        drawAssetTableSpriteWithExplicitPalette(0x10, -0x10, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 7, 1);
-        drawAssetTableSpriteWithExplicitPalette(0x48, -0x10, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 8, 2);
+        drawAssetTableSpriteWithExplicitPalette(0x10, -0x10, getRelocatableHeapBlockBase(gAssetHandles[0x28]), 7, 1);
+        drawAssetTableSpriteWithExplicitPalette(0x48, -0x10, getRelocatableHeapBlockBase(gAssetHandles[0x28]), 8, 2);
         if (gMenuFlowState == 0) {
-            drawPulsingAssetTableSprite(0x48, -0x10, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 0xB);
+            drawPulsingAssetTableSprite(0x48, -0x10, getRelocatableHeapBlockBase(gAssetHandles[0x28]), 0xB);
         } else {
-            drawAssetTableSprite(0x48, -0x10, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 0xB);
+            drawAssetTableSprite(0x48, -0x10, getRelocatableHeapBlockBase(gAssetHandles[0x28]), 0xB);
         }
     }
     if (gMenuFlowState == 1) {
         sp28 = 2;
     }
-    drawAssetTableSpriteWithExplicitPalette(-0x78, 8, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 5, sp28);
+    drawAssetTableSpriteWithExplicitPalette(-0x78, 8, getRelocatableHeapBlockBase(gAssetHandles[0x28]), 5, sp28);
     sp28 = 1;
     if (gRaceCourseModelEffectsDisabled == 0) {
-        drawAssetTableSpriteWithExplicitPalette(0x10, 8, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 9, 2);
-        drawAssetTableSpriteWithExplicitPalette(0x48, 8, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 0xA, 1);
+        drawAssetTableSpriteWithExplicitPalette(0x10, 8, getRelocatableHeapBlockBase(gAssetHandles[0x28]), 9, 2);
+        drawAssetTableSpriteWithExplicitPalette(0x48, 8, getRelocatableHeapBlockBase(gAssetHandles[0x28]), 0xA, 1);
         if (gMenuFlowState == 1) {
-            drawPulsingAssetTableSprite(0x10, 8, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 0xB);
+            drawPulsingAssetTableSprite(0x10, 8, getRelocatableHeapBlockBase(gAssetHandles[0x28]), 0xB);
         } else {
-            drawAssetTableSprite(0x10, 8, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 0xB);
+            drawAssetTableSprite(0x10, 8, getRelocatableHeapBlockBase(gAssetHandles[0x28]), 0xB);
         }
     } else {
-        drawAssetTableSpriteWithExplicitPalette(0x10, 8, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 9, 1);
-        drawAssetTableSpriteWithExplicitPalette(0x48, 8, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 0xA, 2);
+        drawAssetTableSpriteWithExplicitPalette(0x10, 8, getRelocatableHeapBlockBase(gAssetHandles[0x28]), 9, 1);
+        drawAssetTableSpriteWithExplicitPalette(0x48, 8, getRelocatableHeapBlockBase(gAssetHandles[0x28]), 0xA, 2);
         if (gMenuFlowState == 1) {
-            drawPulsingAssetTableSprite(0x48, 8, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 0xB);
+            drawPulsingAssetTableSprite(0x48, 8, getRelocatableHeapBlockBase(gAssetHandles[0x28]), 0xB);
         } else {
-            drawAssetTableSprite(0x48, 8, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 0xB);
+            drawAssetTableSprite(0x48, 8, getRelocatableHeapBlockBase(gAssetHandles[0x28]), 0xB);
         }
     }
     if (gMenuFlowState == 2) {
         sp28 = 2;
     }
-    drawAssetTableSpriteWithExplicitPalette(-0x78, 0x20, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 6, sp28);
+    drawAssetTableSpriteWithExplicitPalette(-0x78, 0x20, getRelocatableHeapBlockBase(gAssetHandles[0x28]), 6, sp28);
     sp28 = 1;
     if (gRaceCourseOverlayEffectsDisabled == 0) {
-        drawAssetTableSpriteWithExplicitPalette(0x10, 0x20, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 9, 2);
-        drawAssetTableSpriteWithExplicitPalette(0x48, 0x20, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 0xA, 1);
+        drawAssetTableSpriteWithExplicitPalette(0x10, 0x20, getRelocatableHeapBlockBase(gAssetHandles[0x28]), 9, 2);
+        drawAssetTableSpriteWithExplicitPalette(0x48, 0x20, getRelocatableHeapBlockBase(gAssetHandles[0x28]), 0xA, 1);
         if (gMenuFlowState == 2) {
-            drawPulsingAssetTableSprite(0x10, 0x20, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 0xB);
+            drawPulsingAssetTableSprite(0x10, 0x20, getRelocatableHeapBlockBase(gAssetHandles[0x28]), 0xB);
         } else {
-            drawAssetTableSprite(0x10, 0x20, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 0xB);
+            drawAssetTableSprite(0x10, 0x20, getRelocatableHeapBlockBase(gAssetHandles[0x28]), 0xB);
         }
     } else {
-        drawAssetTableSpriteWithExplicitPalette(0x10, 0x20, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 9, 1);
-        drawAssetTableSpriteWithExplicitPalette(0x48, 0x20, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 0xA, 2);
+        drawAssetTableSpriteWithExplicitPalette(0x10, 0x20, getRelocatableHeapBlockBase(gAssetHandles[0x28]), 9, 1);
+        drawAssetTableSpriteWithExplicitPalette(0x48, 0x20, getRelocatableHeapBlockBase(gAssetHandles[0x28]), 0xA, 2);
         if (gMenuFlowState == 2) {
-            drawPulsingAssetTableSprite(0x48, 0x20, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 0xB);
+            drawPulsingAssetTableSprite(0x48, 0x20, getRelocatableHeapBlockBase(gAssetHandles[0x28]), 0xB);
         } else {
-            drawAssetTableSprite(0x48, 0x20, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 0xB);
+            drawAssetTableSprite(0x48, 0x20, getRelocatableHeapBlockBase(gAssetHandles[0x28]), 0xB);
         }
     }
     if (gMenuFlowState == 3) {
         sp28 = 2;
     }
-    drawAssetTableSpriteWithExplicitPalette(-0x68, 0x48, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 2, sp28);
+    drawAssetTableSpriteWithExplicitPalette(-0x68, 0x48, getRelocatableHeapBlockBase(gAssetHandles[0x28]), 2, sp28);
 }
 
 void updateMainMenuSettingsPanel(MenuPanelActor *arg0) {
@@ -634,11 +620,11 @@ void drawRaceRecordSettingsPanel(void *arg0) {
     if (gMenuFlowState == 0) {
         if (gRaceLapCount != 1) {
             if (gUiBlinkTimer & 8) {
-                drawAssetTableSprite(-0x30, -0x2A, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 0xC);
+                drawAssetTableSprite(-0x30, -0x2A, getRelocatableHeapBlockBase(gAssetHandles[0x28]), 0xC);
             }
         }
         if ((gRaceLapCount != 9) && (gUiBlinkTimer & 8)) {
-            drawAssetTableSprite(-0x30, -6, getRelocatableHeapBlockBase(gAssetHandles.cancelHandle), 0xD);
+            drawAssetTableSprite(-0x30, -6, getRelocatableHeapBlockBase(gAssetHandles[0x28]), 0xD);
         }
     }
     if ((gMenuFlowState != 0) && (gUiBlinkTimer & 1)) {
@@ -646,11 +632,11 @@ void drawRaceRecordSettingsPanel(void *arg0) {
     } else {
         drawMenuColoredGlyphScript(-0x30, -0x18, raceRecordLapCountTexts[gRaceLapCount], 0, 0x100, 5, 0x29);
     }
-    drawAssetTableSprite(-0x54, -0x60, getRelocatableHeapBlockBase(gAssetHandles.courseRecordIconHandle), 0x5D);
-    drawAssetTableSprite(4, -0x60, getRelocatableHeapBlockBase(gAssetHandles.courseRecordIconHandle), 0x5E);
-    drawAssetTableSprite(-0x4C, -0x5C, getRelocatableHeapBlockBase(gAssetHandles.courseRecordDigitHandle),
+    drawAssetTableSprite(-0x54, -0x60, getRelocatableHeapBlockBase(gAssetHandles[0x1C]), 0x5D);
+    drawAssetTableSprite(4, -0x60, getRelocatableHeapBlockBase(gAssetHandles[0x1C]), 0x5E);
+    drawAssetTableSprite(-0x4C, -0x5C, getRelocatableHeapBlockBase(gAssetHandles[0x1D]),
                          (u16)courseRecordDigitTileOffsets[gRaceCourseIndex]);
-    drawAssetTableSprite(4, -0x5C, getRelocatableHeapBlockBase(gAssetHandles.courseRecordDigitHandle),
+    drawAssetTableSprite(4, -0x5C, getRelocatableHeapBlockBase(gAssetHandles[0x1D]),
                          courseRecordDigitTileOffsets[gRaceCourseIndex] + 1);
 }
 

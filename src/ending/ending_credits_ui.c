@@ -1,4 +1,5 @@
 #include "common.h"
+#include "game/engine/asset_manager.h"
 #include "game/engine/render_callback.h"
 #include "game/engine/relocatable_heap.h"
 #include "game/engine/callback_task_scheduler.h"
@@ -53,7 +54,6 @@ typedef struct {
     /* 0x16 */ s16 pad;
 } EndingCreditsPageTextLineLayout;
 
-extern s16 gAssetHandles[];
 extern s32 gPlayerInputHeld;
 extern s32 gPlayerInputPressed[];
 extern u16 gEndingCreditsPageTextScripts[][0x5A];

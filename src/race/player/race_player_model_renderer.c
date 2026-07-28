@@ -1,4 +1,5 @@
 #include "common.h"
+#include "game/engine/asset_manager.h"
 #include "game/menu/renderer/menu_renderer.h"
 #include "game/menu/renderer/menu_render_utils.h"
 #include "game/engine/relocatable_heap.h"
@@ -58,7 +59,6 @@ extern void *allocFixedTransformMatrix(void *source);
 
 extern u8 gRenderMatricesDirty;
 extern s16 gUiBlinkTimer;
-extern s16 gAssetHandles[];
 extern Gfx *gRegionAllocPtr;
 extern Gfx gRacePlayerShadowRenderSetupDisplayList[];
 extern u32 gRacePlayerShadowMatrixTemplate[];

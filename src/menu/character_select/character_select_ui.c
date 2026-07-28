@@ -1,4 +1,5 @@
 #include "common.h"
+#include "game/engine/asset_manager.h"
 #include "game/engine/render_callback.h"
 #include "game/engine/relocatable_heap.h"
 #include "game/engine/callback_task_scheduler.h"
@@ -48,7 +49,6 @@ extern s16 D_8010AE58;
 extern s32 gMenuFlowState;
 extern u8 gPlayerCount;
 extern s8 D_8010AE64[];
-extern s16 gAssetHandles[];
 extern MenuGlyphScript gCharacterSelectConfirmationBannerText[][0x1C];
 extern CharacterSelectUiCharacterStats gCharacterSelectCharacterStats[];
 extern u16 gCharacterSelectCharacterStatLabels[];

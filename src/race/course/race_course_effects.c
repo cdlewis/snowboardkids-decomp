@@ -14,7 +14,7 @@
 #include "game/race/player/race_player_movement.h"
 
 #define COURSE_INDEX_RELOAD (*(volatile s16 *)&gRaceCourseIndex)
-#define ASSET_HANDLE(index) (((s16 *)&gAssetHandles)[index])
+#define ASSET_HANDLE(index) (gAssetHandles[(index)])
 #define RACE_COURSE_EFFECTS_GFX_CMD(pkt, cmd0, cmd1) \
 { \
     Gfx *_g = (Gfx *)(pkt); \
@@ -203,21 +203,6 @@ typedef struct {
 } SoundParamAngle;
 
 typedef struct {
-    char pad0[0x14];
-    s16 courseVtxHandle;
-    s16 courseTextureHandle;
-    char pad18[0x2A];
-    s16 markerMatrixHandle;
-    s16 courseRenderBufferHandle;
-} CourseAssetHandles;
-
-typedef struct {
-    char pad0[0x10];
-    s16 courseVtxHandle;
-    s16 courseTextureHandle;
-} CourseBackdropAssetHandles;
-
-typedef struct {
     char pad0[0x44];
     Vec3i transformOffset;
     char pad50[0x60];
@@ -259,7 +244,6 @@ void renderRaceCourseSceneryObjects(RaceCourseRenderEffect *);
 void renderSpiralCourseObject(RaceMovingEffect *);
 extern u8 gRaceUpdatePaused;
 extern s16 gRaceCourseIndex;
-extern CourseAssetHandles gAssetHandles;
 extern RaceCamera D_801121E0[];
 extern FixedTransform gIdentityFixedTransform;
 extern CourseMarkerSpawnEntry *gCourseTextureMarkerSpawnEntriesByCourse[];
@@ -413,9 +397,9 @@ void renderRaceCourseBackdrop(RaceCourseBackdropEffect *arg0) {
             case 0:
                 gDPPipeSync(gRegionAllocPtr++);
                 gSPSegment(gRegionAllocPtr++, 0x02,
-                           getRelocatableHeapBlockBase(((CourseBackdropAssetHandles *)&gAssetHandles)->courseVtxHandle));
+                           getRelocatableHeapBlockBase(gAssetHandles[8]));
                 gSPSegment(gRegionAllocPtr++, 0x03,
-                           getRelocatableHeapBlockBase(((CourseBackdropAssetHandles *)&gAssetHandles)->courseTextureHandle));
+                           getRelocatableHeapBlockBase(gAssetHandles[9]));
                 gSPMatrix(gRegionAllocPtr++, arg0->matrix,
                           G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
                 gSPDisplayList(gRegionAllocPtr++, &_EBFA0_VRAM);
@@ -424,10 +408,10 @@ void renderRaceCourseBackdrop(RaceCourseBackdropEffect *arg0) {
             case 1:
                 gDPPipeSync(gRegionAllocPtr++);
                 gSPSegment(gRegionAllocPtr++, 0x02,
-                           getRelocatableHeapBlockBase(((CourseBackdropAssetHandles *)&gAssetHandles)->courseVtxHandle));
+                           getRelocatableHeapBlockBase(gAssetHandles[8]));
                 gSPSegment(gRegionAllocPtr++, 0x03,
                            textureBase = getRelocatableHeapBlockBase(
-                               ((CourseBackdropAssetHandles *)&gAssetHandles)->courseTextureHandle));
+                               gAssetHandles[9]));
                 gSPMatrix(gRegionAllocPtr++, arg0->matrix,
                           G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
                 gSPDisplayList(gRegionAllocPtr++, &_F5920_VRAM);
@@ -435,9 +419,9 @@ void renderRaceCourseBackdrop(RaceCourseBackdropEffect *arg0) {
             case 2:
                 gDPPipeSync(gRegionAllocPtr++);
                 gSPSegment(gRegionAllocPtr++, 0x02,
-                           getRelocatableHeapBlockBase(((CourseBackdropAssetHandles *)&gAssetHandles)->courseVtxHandle));
+                           getRelocatableHeapBlockBase(gAssetHandles[8]));
                 gSPSegment(gRegionAllocPtr++, 0x03,
-                           getRelocatableHeapBlockBase(((CourseBackdropAssetHandles *)&gAssetHandles)->courseTextureHandle));
+                           getRelocatableHeapBlockBase(gAssetHandles[9]));
                 gSPMatrix(gRegionAllocPtr++, arg0->matrix,
                           G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
                 gSPDisplayList(gRegionAllocPtr++, &_FE8F0_VRAM);
@@ -445,9 +429,9 @@ void renderRaceCourseBackdrop(RaceCourseBackdropEffect *arg0) {
             case 3:
                 gDPPipeSync(gRegionAllocPtr++);
                 gSPSegment(gRegionAllocPtr++, 0x02,
-                           getRelocatableHeapBlockBase(((CourseBackdropAssetHandles *)&gAssetHandles)->courseVtxHandle));
+                           getRelocatableHeapBlockBase(gAssetHandles[8]));
                 gSPSegment(gRegionAllocPtr++, 0x03,
-                           getRelocatableHeapBlockBase(((CourseBackdropAssetHandles *)&gAssetHandles)->courseTextureHandle));
+                           getRelocatableHeapBlockBase(gAssetHandles[9]));
                 gSPMatrix(gRegionAllocPtr++, arg0->matrix,
                           (G_MTX_NOPUSH | G_MTX_LOAD) | matrixFlags);
                 gSPDisplayList(gRegionAllocPtr++, &_10A280_VRAM);
@@ -455,9 +439,9 @@ void renderRaceCourseBackdrop(RaceCourseBackdropEffect *arg0) {
             case 4:
                 gDPPipeSync(gRegionAllocPtr++);
                 gSPSegment(gRegionAllocPtr++, 0x02,
-                           getRelocatableHeapBlockBase(((CourseBackdropAssetHandles *)&gAssetHandles)->courseVtxHandle));
+                           getRelocatableHeapBlockBase(gAssetHandles[8]));
                 gSPSegment(gRegionAllocPtr++, 0x03,
-                           getRelocatableHeapBlockBase(((CourseBackdropAssetHandles *)&gAssetHandles)->courseTextureHandle));
+                           getRelocatableHeapBlockBase(gAssetHandles[9]));
                 gSPMatrix(gRegionAllocPtr++, arg0->matrix,
                           (matrixFlags | G_MTX_LOAD) | matrixFlags);
                 gSPDisplayList(gRegionAllocPtr++, &_1169F0_VRAM);
@@ -465,9 +449,9 @@ void renderRaceCourseBackdrop(RaceCourseBackdropEffect *arg0) {
             case 5:
                 gDPPipeSync(gRegionAllocPtr++);
                 gSPSegment(gRegionAllocPtr++, 0x02,
-                           getRelocatableHeapBlockBase(((CourseBackdropAssetHandles *)&gAssetHandles)->courseVtxHandle));
+                           getRelocatableHeapBlockBase(gAssetHandles[8]));
                 gSPSegment(gRegionAllocPtr++, 0x03,
-                           getRelocatableHeapBlockBase(((CourseBackdropAssetHandles *)&gAssetHandles)->courseTextureHandle));
+                           getRelocatableHeapBlockBase(gAssetHandles[9]));
                 gSPMatrix(gRegionAllocPtr++, arg0->matrix,
                           (matrixFlags | G_MTX_LOAD) | matrixFlags);
                 gSPDisplayList(gRegionAllocPtr++, &_1248A8_VRAM);
@@ -476,9 +460,9 @@ void renderRaceCourseBackdrop(RaceCourseBackdropEffect *arg0) {
             case 6:
                 gDPPipeSync(gRegionAllocPtr++);
                 gSPSegment(gRegionAllocPtr++, 0x02,
-                           getRelocatableHeapBlockBase(((CourseBackdropAssetHandles *)&gAssetHandles)->courseVtxHandle));
+                           getRelocatableHeapBlockBase(gAssetHandles[8]));
                 gSPSegment(gRegionAllocPtr++, 0x03,
-                           getRelocatableHeapBlockBase(((CourseBackdropAssetHandles *)&gAssetHandles)->courseTextureHandle));
+                           getRelocatableHeapBlockBase(gAssetHandles[9]));
                 gSPMatrix(gRegionAllocPtr++, arg0->matrix,
                           (matrixFlags | G_MTX_LOAD) | matrixFlags);
                 gSPDisplayList(gRegionAllocPtr++, &_131558_VRAM);
@@ -486,9 +470,9 @@ void renderRaceCourseBackdrop(RaceCourseBackdropEffect *arg0) {
             case 7:
                 gDPPipeSync(gRegionAllocPtr++);
                 gSPSegment(gRegionAllocPtr++, 0x02,
-                           getRelocatableHeapBlockBase(((CourseBackdropAssetHandles *)&gAssetHandles)->courseVtxHandle));
+                           getRelocatableHeapBlockBase(gAssetHandles[8]));
                 gSPSegment(gRegionAllocPtr++, 0x03,
-                           getRelocatableHeapBlockBase(((CourseBackdropAssetHandles *)&gAssetHandles)->courseTextureHandle));
+                           getRelocatableHeapBlockBase(gAssetHandles[9]));
                 gSPMatrix(gRegionAllocPtr++, arg0->matrix,
                           (matrixFlags | G_MTX_LOAD) | matrixFlags);
                 gSPDisplayList(gRegionAllocPtr++, &_137FD8_VRAM);
@@ -496,9 +480,9 @@ void renderRaceCourseBackdrop(RaceCourseBackdropEffect *arg0) {
             case 8:
                 gDPPipeSync(gRegionAllocPtr++);
                 gSPSegment(gRegionAllocPtr++, 0x02,
-                           getRelocatableHeapBlockBase(((CourseBackdropAssetHandles *)&gAssetHandles)->courseVtxHandle));
+                           getRelocatableHeapBlockBase(gAssetHandles[8]));
                 gSPSegment(gRegionAllocPtr++, 0x03,
-                           getRelocatableHeapBlockBase(((CourseBackdropAssetHandles *)&gAssetHandles)->courseTextureHandle));
+                           getRelocatableHeapBlockBase(gAssetHandles[9]));
                 gSPMatrix(gRegionAllocPtr++, arg0->matrix,
                           (matrixFlags | G_MTX_LOAD) | matrixFlags);
                 gSPDisplayList(gRegionAllocPtr++, &_13ED30_VRAM);
@@ -506,9 +490,9 @@ void renderRaceCourseBackdrop(RaceCourseBackdropEffect *arg0) {
             case 9:
                 gDPPipeSync(gRegionAllocPtr++);
                 gSPSegment(gRegionAllocPtr++, 0x02,
-                           getRelocatableHeapBlockBase(((CourseBackdropAssetHandles *)&gAssetHandles)->courseVtxHandle));
+                           getRelocatableHeapBlockBase(gAssetHandles[8]));
                 gSPSegment(gRegionAllocPtr++, 0x03,
-                           getRelocatableHeapBlockBase(((CourseBackdropAssetHandles *)&gAssetHandles)->courseTextureHandle));
+                           getRelocatableHeapBlockBase(gAssetHandles[9]));
                 gSPMatrix(gRegionAllocPtr++, arg0->matrix,
                           (matrixFlags | G_MTX_LOAD) | matrixFlags);
                 gSPDisplayList(gRegionAllocPtr++, &_144C58_VRAM);
@@ -635,8 +619,8 @@ void initCourseTextureMarkers(RaceCourseRenderEffect *arg0) {
     if (count != 0) {
         entry = gCourseTextureMarkerSpawnEntriesByCourse[gRaceCourseIndex];
         allocSize = count * sizeof(CourseRenderCommand);
-        gAssetHandles.markerMatrixHandle = allocRelocatableHeapBlock(allocSize);
-        arg0->vertices = getRelocatableHeapBlockBase(gAssetHandles.markerMatrixHandle);
+        gAssetHandles[0x21] = allocRelocatableHeapBlock(allocSize);
+        arg0->vertices = getRelocatableHeapBlockBase(gAssetHandles[0x21]);
 
         i = 0;
         if (count > 0) {
@@ -671,10 +655,10 @@ void renderRaceCourseSceneryObjects(RaceCourseRenderEffect *arg0) {
                     gDPPipeSync(gRegionAllocPtr++);
                     temp_s2 = gRegionAllocPtr++;
                     var_s7 = FALSE;
-                    gSPSegment(temp_s2, 0x02, getRelocatableHeapBlockBase(gAssetHandles.courseVtxHandle));
+                    gSPSegment(temp_s2, 0x02, getRelocatableHeapBlockBase(gAssetHandles[0xA]));
 
                     temp_s3 = gRegionAllocPtr++;
-                    gSPSegment(temp_s3, 0x03, getRelocatableHeapBlockBase(gAssetHandles.courseTextureHandle));
+                    gSPSegment(temp_s3, 0x03, getRelocatableHeapBlockBase(gAssetHandles[0xB]));
                 }
 
                 temp_s0 = gRegionAllocPtr++;
@@ -714,8 +698,8 @@ void initRaceCourseSceneryObjects(RaceCourseRenderEffect *arg0) {
     if (count != 0) {
         entry = base;
         size = count << 6;
-        gAssetHandles.courseRenderBufferHandle = allocRelocatableHeapBlock(size);
-        arg0->vertices = (void *)getRelocatableHeapBlockBase(gAssetHandles.courseRenderBufferHandle);
+        gAssetHandles[0x22] = allocRelocatableHeapBlock(size);
+        arg0->vertices = (void *)getRelocatableHeapBlockBase(gAssetHandles[0x22]);
 
         for (i = 0; i < count; i++) {
             makeFixedRotationY(transform.rotation, entry->rotation);

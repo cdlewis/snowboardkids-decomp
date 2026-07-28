@@ -175,7 +175,6 @@ extern s32 gRaceCameraReplayStartZ;
 extern s32 gMenuFlowState;
 extern s32 gPlayerInputHeld;
 extern s32 gPlayerInputPressed[];
-extern s16 gAssetHandles[];
 extern SignedUnsignedShort gRaceCourseIndex;
 extern s16 gRaceLapCount;
 extern s32 gRaceTimeTrialFinishTime;

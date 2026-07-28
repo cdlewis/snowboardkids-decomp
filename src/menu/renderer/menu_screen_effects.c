@@ -119,7 +119,6 @@ extern GfxCommandSource gIdentityFixedTransform;
 extern u32 gIdentityMatrix[];
 extern s16 gMenuFadeAlpha;
 extern u32 gMenuRenderModeResetDl[];
-extern s16 gAssetHandles[];
 extern s16 gRaceCourseIndex;
 extern s16 gFrameCounter;
 extern RacePlayerState gRacePlayers[];

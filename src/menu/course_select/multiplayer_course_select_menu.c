@@ -79,7 +79,6 @@ extern u8 D_8010AEF8[][4];
 extern s8 D_8010AEFB[];
 extern u8 D_8010AF08[][3];
 extern MultiplayerCourseSelectStatus gCourseSelectStatus;
-extern s16 gAssetHandles[];
 extern s32 D_80112204;
 extern void (*D_8011220C)(void);
 extern s32 D_801122B4;

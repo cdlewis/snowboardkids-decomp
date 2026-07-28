@@ -1,4 +1,5 @@
 #include "common.h"
+#include "game/engine/asset_manager.h"
 #include "game/engine/render_callback.h"
 #include "game/engine/relocatable_heap.h"
 #include "game/engine/callback_task_scheduler.h"
@@ -34,7 +35,6 @@ extern void *D_8010ADE4;
 extern s16 gControllerPakStatusCodes;
 extern s16 gMenuChoicePromptState;
 extern u8 gMenuSelectionConfirmTimer;
-extern s16 gAssetHandles[];
 
 #define CONTROLLER_PAK_RACE_RECORD_SAVE_SCORE_TEXTURE_HANDLE (gAssetHandles[0x21])
 

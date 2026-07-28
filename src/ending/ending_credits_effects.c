@@ -1,4 +1,5 @@
 #include "common.h"
+#include "game/engine/asset_manager.h"
 #include "game/engine/render_callback.h"
 #include "game/engine/relocatable_heap.h"
 #include "game/engine/callback_task_scheduler.h"
@@ -68,7 +69,6 @@ struct EndingCreditsEffectActor {
 extern Gfx *gRegionAllocPtr;
 extern Gfx gMenuRenderModeResetDl[];
 extern s16 gMenuFadeAlpha;
-extern s16 gAssetHandles[];
 extern u16 gEndingCreditsTransitionSnowboardIconExpandFrameCounter;
 extern u16 gEndingCreditsNancyRunDustFrameOffsets[];
 extern u16 gEndingCreditsTommySnowmanEntranceFrameOffsets[];

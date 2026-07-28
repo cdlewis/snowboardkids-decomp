@@ -1,11 +1,12 @@
 #include "common.h"
+#include "game/engine/asset_manager.h"
 #include "game/engine/render_callback.h"
 #include "game/engine/relocatable_heap.h"
 #include "game/engine/callback_task_scheduler.h"
 #include "game/menu/training/training_course_ui.h"
 #include "game/menu/renderer/menu_renderer.h"
 
-#define TRAINING_COURSE_UI_TEXTURE_HANDLE (gAssetHandles.textureHandle)
+#define TRAINING_COURSE_UI_TEXTURE_HANDLE (gAssetHandles[0x2A])
 
 typedef MenuGlyphScript TrainingCourseUiScript;
 
@@ -45,13 +46,6 @@ struct TrainingCourseUiActor {
     /* 0x2C */ u8 keepVisibleAfterConfirm;
 };
 
-typedef struct TrainingCourseAssetHandles {
-    /* 0x00 */ char pad0[0x54];
-    /* 0x54 */ s16 textureHandle;
-} TrainingCourseAssetHandles;
-
-
-extern TrainingCourseAssetHandles gAssetHandles;
 extern u8 gMainMenuSelectionResult;
 extern s32 gPlayerInputPressed;
 extern TrainingCourseUiScript gTrainingCourseOpeningDialogScripts[][0x17C];
@@ -227,30 +221,30 @@ void drawTrainingCourseDialog(TrainingCourseUiActor *arg0) {
     actor = arg0;
 
     drawMenuSprite((s16)(dialog->x - 4), (s16)(dialog->y + 0x14),
-                   getRelocatableHeapBlockBase(gAssetHandles.textureHandle), 2, 0x20, 0x20, 0, 0);
+                   getRelocatableHeapBlockBase(gAssetHandles[0x2A]), 2, 0x20, 0x20, 0, 0);
     drawMenuSprite((s16)(dialog->x + 0xF8), (s16)(dialog->y + 0x14),
-                   getRelocatableHeapBlockBase(gAssetHandles.textureHandle), 4, 0x20, 0x20, 0, 0);
+                   getRelocatableHeapBlockBase(gAssetHandles[0x2A]), 4, 0x20, 0x20, 0, 0);
 
     i = 0;
     do {
         drawMenuSprite((s16)(dialog->x + i + 0xC), (s16)(dialog->y + 0x14),
-                       getRelocatableHeapBlockBase(gAssetHandles.textureHandle), 3, 0x20, 0x20, 0, 0);
+                       getRelocatableHeapBlockBase(gAssetHandles[0x2A]), 3, 0x20, 0x20, 0, 0);
         drawMenuSprite((s16)(dialog->x + i + 0xC), (s16)(dialog->y + 0x4C),
-                       getRelocatableHeapBlockBase(gAssetHandles.textureHandle), 8, 0x20, 0x20, 0, 0);
+                       getRelocatableHeapBlockBase(gAssetHandles[0x2A]), 8, 0x20, 0x20, 0, 0);
         i += 0x10;
     } while (i < 0xF0);
 
     drawMenuSprite((s16)(dialog->x - 4), (s16)(dialog->y + 0x4C),
-                   getRelocatableHeapBlockBase(gAssetHandles.textureHandle), 7, 0x20, 0x20, 0, 0);
+                   getRelocatableHeapBlockBase(gAssetHandles[0x2A]), 7, 0x20, 0x20, 0, 0);
     drawMenuSprite((s16)(dialog->x + 0xF8), (s16)(dialog->y + 0x4C),
-                   getRelocatableHeapBlockBase(gAssetHandles.textureHandle), 9, 0x20, 0x20, 0, 0);
+                   getRelocatableHeapBlockBase(gAssetHandles[0x2A]), 9, 0x20, 0x20, 0, 0);
 
     i = (dialog->scriptState == 4) * 0;
     do {
         drawMenuSprite((s16)(dialog->x - 4), (s16)(dialog->y + i + 0x24),
-                       getRelocatableHeapBlockBase(gAssetHandles.textureHandle), 5, 0x20, 0x20, 0, 0);
+                       getRelocatableHeapBlockBase(gAssetHandles[0x2A]), 5, 0x20, 0x20, 0, 0);
         drawMenuSprite((s16)(dialog->x + 0xF8), (s16)(dialog->y + i + 0x24),
-                       getRelocatableHeapBlockBase(gAssetHandles.textureHandle), 6, 0x20, 0x20, 0, 0);
+                       getRelocatableHeapBlockBase(gAssetHandles[0x2A]), 6, 0x20, 0x20, 0, 0);
         i += 0x10;
     } while (i < 0x30);
 
@@ -321,7 +315,7 @@ void drawTrainingCourseDialog(TrainingCourseUiActor *arg0) {
 
     if (((dialog->scriptState == 1) || (dialog->scriptState == 2)) && (gMainMenuSelectionResult == 0)) {
         drawMenuSprite((s16)(dialog->x + 0xF4), (s16)(dialog->y + 0x48),
-                       getRelocatableHeapBlockBase(gAssetHandles.textureHandle), dialog->confirmBlinkTimer >= 8, 0x20,
+                       getRelocatableHeapBlockBase(gAssetHandles[0x2A]), dialog->confirmBlinkTimer >= 8, 0x20,
                        0x20, 0, 0);
     }
 }

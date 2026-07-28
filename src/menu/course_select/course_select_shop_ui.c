@@ -169,7 +169,6 @@ struct ShopMenuWidgetActor {
     };
 };
 
-extern s16 gAssetHandles[];
 extern u8 gCourseDetailsMenuState;
 extern u8 gCourseSelectModeSelection;
 extern u8 gMenuSelectionConfirmTimer;

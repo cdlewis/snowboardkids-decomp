@@ -1,4 +1,5 @@
 #include "common.h"
+#include "game/engine/asset_manager.h"
 #include "game/menu/renderer/menu_renderer.h"
 #include "game/menu/renderer/menu_render_utils.h"
 #include "game/engine/render_callback.h"
@@ -110,7 +111,6 @@ struct RaceItemProjectileActor {
 };
 
 extern FixedTransform gIdentityFixedTransform;
-extern s16 gAssetHandles[];
 extern Gfx gRaceItemProjectileQuadVertices[];
 extern Gfx gFallingActionProjectileQuadVertices[];
 extern Gfx gEffectRenderModeSetupDl[];

@@ -8,7 +8,7 @@
 #include "game/math/spatial_math.h"
 #include "game/math/fixed_point_math.h"
 
-#define ASSET_HANDLE(index) (((s16 *)&gAssetHandles)[index])
+#define ASSET_HANDLE(index) (gAssetHandles[(index)])
 #define RACE_INTRO_EFFECTS_GFX_CMD(pkt, cmd0, cmd1) \
 { \
     Gfx *_g = (Gfx *)(pkt); \
@@ -88,14 +88,7 @@ struct RaceIntroEffectActor {
     /* 0x44 */ s8 displayListValid;
 };
 
-typedef struct {
-    /* 0x00 */ u8 pad0[0x4E];
-    /* 0x4E */ s16 matrixHandle;
-    /* 0x50 */ s16 matrixHandle2;
-} RaceIntroAssetHandles;
-
 extern void osWritebackDCache(void *, s32);
-extern RaceIntroAssetHandles gAssetHandles;
 extern u8 gRenderMatricesDirty;
 extern Gfx *gRegionAllocPtr;
 extern Gfx D_20028F0[];
@@ -188,8 +181,8 @@ void initRaceIntroModelMeshes(RaceIntroMeshActor *arg0) {
     if (count != 0) {
         entry = gRaceIntroModelCommandsByCourse[gRaceCourseIndex];
         allocSize = count * sizeof(GfxCommandDest);
-        gAssetHandles.matrixHandle = allocRelocatableHeapBlock(allocSize);
-        arg0->matrices = getRelocatableHeapBlockBase(gAssetHandles.matrixHandle);
+        gAssetHandles[0x27] = allocRelocatableHeapBlock(allocSize);
+        arg0->matrices = getRelocatableHeapBlockBase(gAssetHandles[0x27]);
 
         i = 0;
         if (count > 0) {
@@ -661,8 +654,8 @@ void initRaceIntroAnimatedBillboards(RaceIntroMeshActor *arg0) {
     if (count != 0) {
         entry = gRaceIntroAnimatedBillboardCommandsByCourse[gRaceCourseIndex];
         allocSize = count * sizeof(GfxCommandDest);
-        gAssetHandles.matrixHandle2 = allocRelocatableHeapBlock(allocSize);
-        arg0->matrices = getRelocatableHeapBlockBase(gAssetHandles.matrixHandle2);
+        gAssetHandles[0x28] = allocRelocatableHeapBlock(allocSize);
+        arg0->matrices = getRelocatableHeapBlockBase(gAssetHandles[0x28]);
 
         i = 0;
         if (count > 0) {

@@ -11,7 +11,7 @@
 #include "game/race/items/race_item_effects.h"
 
 #define RACE_PLAYER_STATE_SIZE 0x60C
-#define ASSET_HANDLE(index) (((s16 *)&gAssetHandles)[index])
+#define ASSET_HANDLE(index) (gAssetHandles[(index)])
 #define RACE_ITEM_GFX_CMD(pkt, cmd0, cmd1) \
 { \
     Gfx *_g = (Gfx *)(pkt); \
@@ -184,11 +184,6 @@ typedef struct {
     /* 0x4D0 */ u8 pad4D0[RACE_PLAYER_STATE_SIZE - 0x4D0];
 } RaceItemFollowPlayer;
 
-typedef struct {
-    /* 0x00 */ u8 pad0[0x38];
-    /* 0x38 */ s16 itemTextureHandle;
-} RaceItemEffectAssetHandles;
-
 typedef union {
     s64 value;
     struct {
@@ -219,7 +214,6 @@ extern u32 gAlphaSpriteRenderModeDl[];
 extern Gfx gEffectRenderModeSetupDl[];
 extern Gfx gEffectRenderModeCleanupDl[];
 extern FixedTransform gIdentityFixedTransform;
-extern RaceItemEffectAssetHandles gAssetHandles;
 RaceItemDrawNode *gRaceItemTextureEffectDrawLists[4];
 extern RaceItemDrawLists D_801121E0;
 extern s16 gRaceCourseIndex;
@@ -1024,18 +1018,18 @@ void initRaceItemTextureEffects(RaceItemTextureActor *arg0) {
     s32 var_s1;
     volatile short pad;
     void **var_s2;
-    volatile RaceItemEffectAssetHandles *new_var2;
+    volatile s16 *new_var2;
     void **var_s3;
-    volatile RaceItemEffectAssetHandles *var_s4;
+    volatile s16 *var_s4;
     s32 var_s5;
     RaceItemTextureActor *actor;
     void (*new_var)(RaceItemTextureActor *);
     RaceItemTextureActor *var_s6;
 
-    var_s4 = &gAssetHandles;
+    var_s4 = gAssetHandles;
     if (1 != 0) {
     }
-    do { var_s0 = gRaceItemEffectSpriteIds; if (1) { } var_s6 = arg0; actor = var_s6; { } var_s1 = 0; var_s2 = actor->images; var_s3 = actor->palettes; if (1) { } arg0 = arg0; if (arg0 && arg0) { } var_s5 = 0x10; if (1) { } new_var = updateRaceItemTextureEffects; callbackActor = actor; do { getAssetTableImageAndPalette((0, getRelocatableHeapBlockBase((new_var2 = var_s4)->itemTextureHandle)), *var_s0, var_s2, var_s3); var_s1 += 4; var_s0++; var_s2++; var_s3++; } while (var_s1 != var_s5); } while (0);
+    do { var_s0 = gRaceItemEffectSpriteIds; if (1) { } var_s6 = arg0; actor = var_s6; { } var_s1 = 0; var_s2 = actor->images; var_s3 = actor->palettes; if (1) { } arg0 = arg0; if (arg0 && arg0) { } var_s5 = 0x10; if (1) { } new_var = updateRaceItemTextureEffects; callbackActor = actor; do { getAssetTableImageAndPalette((0, getRelocatableHeapBlockBase((new_var2 = var_s4)[0x1C])), *var_s0, var_s2, var_s3); var_s1 += 4; var_s0++; var_s2++; var_s3++; } while (var_s1 != var_s5); } while (0);
 
     updateRaceItemTextureEffects(callbackActor);
     setCallbackTaskCallback(callbackActor, (CallbackTaskCallback)new_var);

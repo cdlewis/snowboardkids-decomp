@@ -1,4 +1,5 @@
 #include "common.h"
+#include "game/engine/asset_manager.h"
 #include "game/engine/render_callback.h"
 #include "game/engine/relocatable_heap.h"
 #include "game/engine/callback_task_scheduler.h"
@@ -6,9 +7,9 @@
 #include "game/menu/renderer/menu_renderer.h"
 #include "game/menu/race_setup/race_setup_ui.h"
 
-#define ASSET_HANDLE(index) (((s16 *)&gAssetHandles)[(index)])
+#define ASSET_HANDLE(index) (gAssetHandles[(index)])
 #define TITLE_SCREEN_LOGO_SPRITE_HANDLE ASSET_HANDLE(37)
-#define TITLE_SCREEN_TEXTURE_HANDLE (gAssetHandles.titleTextureHandle)
+#define TITLE_SCREEN_TEXTURE_HANDLE (gAssetHandles[0x21])
 
 typedef struct {
     char pad0[0x18];
@@ -51,13 +52,7 @@ typedef struct {
     s32 timer;
 } MainMenuState;
 
-typedef struct {
-    char pad0[0x42];
-    /* 0x42 */ s16 titleTextureHandle;
-} MainMenuTitleAssetHandles;
-
 extern MainMenuState *gCurrentGameTask;
-extern MainMenuTitleAssetHandles gAssetHandles;
 extern u8 gConnectedControllerCount;
 
 

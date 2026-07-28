@@ -1,4 +1,5 @@
 #include "common.h"
+#include "game/engine/asset_manager.h"
 #include "game/engine/render_callback.h"
 #include "game/engine/relocatable_heap.h"
 #include "game/engine/callback_task_scheduler.h"
@@ -6,7 +7,7 @@
 #include "game/menu/splitscreen_select/race_splitscreen_select_ui.h"
 #include "game/menu/renderer/menu_renderer.h"
 
-#define ASSET_HANDLE(index) (((s16 *)&gAssetHandles)[(index)])
+#define ASSET_HANDLE(index) (gAssetHandles[(index)])
 
 typedef MenuGlyphScript RaceTypeSelectPortrait[0x46];
 
@@ -36,19 +37,11 @@ typedef struct {
     /* 0x7E */ RaceTypeSelectFrameTileMap selected;
 } RaceTypeSelectPaddedFrameTileMapTable;
 
-typedef struct {
-    /* 0x00 */ u8 pad0[0x42];
-    /* 0x42 */ s16 textureHandle;
-    /* 0x44 */ u8 pad44[0x6];
-    /* 0x4A */ s16 frameTextureHandle;
-} RaceTypeSelectAssetHandles;
-
 extern int sprintf(char *, const char *, ...);
 extern u8 gMenuSelectionConfirmTimer;
 extern RaceTypeSelectFrameTileMapTable gRaceTypeSelectFrameTileMaps;
 extern u16 gRaceTypeSelectSpecialFrameCornerTile;
 extern RaceTypeSelectPortrait gRaceTypeSelectPortraitScripts[];
-extern RaceTypeSelectAssetHandles gAssetHandles;
 extern RaceTypeSelectCursorState gRaceTypeSelectCursorTarget;
 extern u8 gRaceTypeSelectCursorAnimState;
 extern u8 gMenuExitSelection;
@@ -68,7 +61,7 @@ void drawRaceTypeSelectOptionIcons(RaceTypeSelectRowActor *arg0) {
     u16 tileIndex;
 
     savedArg = arg0;
- do { i = 0; if (arg0->playerCount > 0) { yOffset = 0; row = arg0; do { alpha = 0; if (((((gMenuSelectionConfirmTimer > 0) && (gMenuSelectionConfirmTimer < 8)) && (gMenuExitSelection == 0)) && (i == gRaceTypeSelection)) && (gMenuSelectionConfirmTimer & 1)) { if ((!savedArg->playerCount) && (!savedArg->playerCount)) { } alpha = 0xFF; } tileIndex = i + 0xD; drawMenuSprite(row->iconX[0], (s16) (arg0->iconY + yOffset), getRelocatableHeapBlockBase(gAssetHandles.textureHandle), tileIndex, 0x20, 0x20, 0, alpha); i++; yOffset += 0x18; row = (RaceTypeSelectRowActor *) (((u8 *) row) + 2); } while (i < savedArg->playerCount); } } while (0);
+ do { i = 0; if (arg0->playerCount > 0) { yOffset = 0; row = arg0; do { alpha = 0; if (((((gMenuSelectionConfirmTimer > 0) && (gMenuSelectionConfirmTimer < 8)) && (gMenuExitSelection == 0)) && (i == gRaceTypeSelection)) && (gMenuSelectionConfirmTimer & 1)) { if ((!savedArg->playerCount) && (!savedArg->playerCount)) { } alpha = 0xFF; } tileIndex = i + 0xD; drawMenuSprite(row->iconX[0], (s16) (arg0->iconY + yOffset), getRelocatableHeapBlockBase(gAssetHandles[0x21]), tileIndex, 0x20, 0x20, 0, alpha); i++; yOffset += 0x18; row = (RaceTypeSelectRowActor *) (((u8 *) row) + 2); } while (i < savedArg->playerCount); } } while (0);
 }
 
 void updateRaceTypeSelectOptionIcons(RaceTypeSelectRowActor *arg0) {
@@ -212,7 +205,7 @@ void drawRaceTypeSelectOption0Frame(RaceTypeSelectWidgetActor *arg0) {
     shouldDraw = 1;
     for (i = 0; i < 16; i++, tileOffset++) {
         drawMenuSpriteTile((s16)(arg0->x + ((i & 3) << 5)), (s16)(arg0->y + ((i / 4) << 5)),
-                      getRelocatableHeapBlockBase(gAssetHandles.frameTextureHandle),
+                      getRelocatableHeapBlockBase(gAssetHandles[0x25]),
                       gRaceTypeSelectFrameTileMaps.frames[(u16)arg0->widget.counter].center[tileOffset], 0, 0x100);
     }
 
@@ -225,11 +218,11 @@ void drawRaceTypeSelectOption0Frame(RaceTypeSelectWidgetActor *arg0) {
     }
     do {
         drawMenuSpriteTile((s16)(arg0->x + 0x80), (s16)(arg0->y + offset),
-                      getRelocatableHeapBlockBase(gAssetHandles.frameTextureHandle),
+                      getRelocatableHeapBlockBase(gAssetHandles[0x25]),
                       gRaceTypeSelectFrameTileMaps.frames[(u16)arg0->widget.counter].right[tileOffset], 0, 0x100);
         i = 0x80;
         drawMenuSpriteTile((s16)(arg0->x + offset), (s16)(arg0->y + 0x80),
-                      getRelocatableHeapBlockBase(gAssetHandles.frameTextureHandle),
+                      getRelocatableHeapBlockBase(gAssetHandles[0x25]),
                       gRaceTypeSelectFrameTileMaps.frames[(u16)arg0->widget.counter].bottom[tileOffset], 0, 0x100);
         offset += 0x40;
         tileOffset++;
@@ -238,27 +231,27 @@ void drawRaceTypeSelectOption0Frame(RaceTypeSelectWidgetActor *arg0) {
     i--;
 
     drawMenuSpriteTile((s16)(arg0->x + 0x80), (s16)(arg0->y + 0x80),
-                  getRelocatableHeapBlockBase(gAssetHandles.frameTextureHandle),
+                  getRelocatableHeapBlockBase(gAssetHandles[0x25]),
                   gRaceTypeSelectFrameTileMaps.frames[(u16)arg0->widget.counter].corner, 0, 0x100);
 
-    drawMenuSprite((s16)(arg0->x - 4), (s16)(arg0->y - 4), getRelocatableHeapBlockBase(gAssetHandles.textureHandle), 0x33, 0x20,
+    drawMenuSprite((s16)(arg0->x - 4), (s16)(arg0->y - 4), getRelocatableHeapBlockBase(gAssetHandles[0x21]), 0x33, 0x20,
                   0x20, 0, 0);
-    drawMenuSprite((s16)(arg0->x - 4), (s16)(arg0->y + 0x8C), getRelocatableHeapBlockBase(gAssetHandles.textureHandle), 0x38, 0x20,
+    drawMenuSprite((s16)(arg0->x - 4), (s16)(arg0->y + 0x8C), getRelocatableHeapBlockBase(gAssetHandles[0x21]), 0x38, 0x20,
                   0x20, 0, 0);
-    drawMenuSprite((s16)(arg0->x + 0x8C), (s16)(arg0->y - 4), getRelocatableHeapBlockBase(gAssetHandles.textureHandle), 0x35, 0x20,
+    drawMenuSprite((s16)(arg0->x + 0x8C), (s16)(arg0->y - 4), getRelocatableHeapBlockBase(gAssetHandles[0x21]), 0x35, 0x20,
                   0x20, 0, 0);
-    drawMenuSprite((s16)(arg0->x + 0x8C), (s16)(arg0->y + 0x8C), getRelocatableHeapBlockBase(gAssetHandles.textureHandle), 0x3A, 0x20,
+    drawMenuSprite((s16)(arg0->x + 0x8C), (s16)(arg0->y + 0x8C), getRelocatableHeapBlockBase(gAssetHandles[0x21]), 0x3A, 0x20,
                   0x20, 0, 0);
 
     for (borderOffset = 0; borderOffset != 0x80; borderOffset += 0x10) {
         drawMenuSprite((s16)((arg0->x + borderOffset) + 0xC), (s16)(arg0->y - 4),
-                      getRelocatableHeapBlockBase(gAssetHandles.textureHandle), 0x34, 0x20, 0x20, 0, 0);
+                      getRelocatableHeapBlockBase(gAssetHandles[0x21]), 0x34, 0x20, 0x20, 0, 0);
         drawMenuSprite((s16)((arg0->x + borderOffset) + 0xC), (s16)(arg0->y + 0x8C),
-                      getRelocatableHeapBlockBase(gAssetHandles.textureHandle), 0x39, 0x20, 0x20, 0, 0);
+                      getRelocatableHeapBlockBase(gAssetHandles[0x21]), 0x39, 0x20, 0x20, 0, 0);
         drawMenuSprite((s16)(arg0->x - 4), (s16)((arg0->y + borderOffset) + 0xC),
-                      getRelocatableHeapBlockBase(gAssetHandles.textureHandle), 0x36, 0x20, 0x20, 0, 0);
+                      getRelocatableHeapBlockBase(gAssetHandles[0x21]), 0x36, 0x20, 0x20, 0, 0);
         drawMenuSprite((s16)(arg0->x + 0x8C), (s16)((arg0->y + borderOffset) + 0xC),
-                      getRelocatableHeapBlockBase(gAssetHandles.textureHandle), 0x37, 0x20, 0x20, 0, 0);
+                      getRelocatableHeapBlockBase(gAssetHandles[0x21]), 0x37, 0x20, 0x20, 0, 0);
     }
 }
 
@@ -360,7 +353,7 @@ void drawRaceTypeSelectOption1Frame(RaceTypeSelectWidgetActor *arg0) {
     shouldDraw = 1;
     for (i = 0; i < 16; i++, tileOffset++) {
         drawMenuSpriteTileClipped((s16)(arg0->x + ((i & 3) << 5)), (s16)(arg0->y + ((i / 4) << 5)),
-                      getRelocatableHeapBlockBase(gAssetHandles.frameTextureHandle),
+                      getRelocatableHeapBlockBase(gAssetHandles[0x25]),
                       gRaceTypeSelectFrameTileMaps.frames[(u16)arg0->sprite.spriteIndex].center[tileOffset], 0, 0x100, 0xA0, 0x49);
     }
 
@@ -370,9 +363,9 @@ void drawRaceTypeSelectOption1Frame(RaceTypeSelectWidgetActor *arg0) {
     }
     offset = 0;
     do {
-        drawMenuSpriteTileClipped((s16)(arg0->x + 0x80), (s16)(arg0->y + offset), getRelocatableHeapBlockBase(gAssetHandles.frameTextureHandle),
+        drawMenuSpriteTileClipped((s16)(arg0->x + 0x80), (s16)(arg0->y + offset), getRelocatableHeapBlockBase(gAssetHandles[0x25]),
                       gRaceTypeSelectFrameTileMaps.frames[(u16)arg0->sprite.spriteIndex].right[tileOffset], 0, 0x100, 0xA0, 0x49);
-        drawMenuSpriteTileClipped((s16)(arg0->x + offset), (s16)(arg0->y + 0x80), getRelocatableHeapBlockBase(gAssetHandles.frameTextureHandle),
+        drawMenuSpriteTileClipped((s16)(arg0->x + offset), (s16)(arg0->y + 0x80), getRelocatableHeapBlockBase(gAssetHandles[0x25]),
                       gRaceTypeSelectFrameTileMaps.frames[(u16)arg0->sprite.spriteIndex].bottom[tileOffset], 0, 0x100, 0xA0, 0x49);
         i = 0x80;
         offset += 0x40;
@@ -381,7 +374,7 @@ void drawRaceTypeSelectOption1Frame(RaceTypeSelectWidgetActor *arg0) {
     i++;
     i--;
 
-    drawMenuSpriteTileClipped((s16)(arg0->x + 0x80), (s16)(arg0->y + 0x80), getRelocatableHeapBlockBase(gAssetHandles.frameTextureHandle),
+    drawMenuSpriteTileClipped((s16)(arg0->x + 0x80), (s16)(arg0->y + 0x80), getRelocatableHeapBlockBase(gAssetHandles[0x25]),
                   gRaceTypeSelectFrameTileMaps.frames[(u16)arg0->sprite.spriteIndex].corner, 0, 0x100, 0xA0, 0x49);
 }
 
@@ -465,7 +458,7 @@ void drawRaceTypeSelectOption2Frame(RaceTypeSelectWidgetActor *arg0) {
     shouldDraw = 1;
     for (i = 0; i < 16; i++, tileOffset++) {
         drawMenuSpriteTileClipped(arg0->x + ((i & 3) << 5), arg0->y + ((i / 4) << 5),
-                      getRelocatableHeapBlockBase(gAssetHandles.frameTextureHandle),
+                      getRelocatableHeapBlockBase(gAssetHandles[0x25]),
                       gRaceTypeSelectFrameTileMaps.entries[(u16)arg0->sprite.spriteIndex].center[tileOffset], 0, 0x100, 0xA0,
                       0x49);
     }
@@ -477,11 +470,11 @@ void drawRaceTypeSelectOption2Frame(RaceTypeSelectWidgetActor *arg0) {
     offset = 0;
     do {
         drawMenuSpriteTileClipped(arg0->x + 0x80, arg0->y + offset,
-                      getRelocatableHeapBlockBase(gAssetHandles.frameTextureHandle),
+                      getRelocatableHeapBlockBase(gAssetHandles[0x25]),
                       gRaceTypeSelectFrameTileMaps.entries[(u16)arg0->sprite.spriteIndex].right[tileOffset], 0, 0x100, 0xA0,
                       0x49);
         drawMenuSpriteTileClipped(arg0->x + offset, arg0->y + 0x80,
-                      getRelocatableHeapBlockBase(gAssetHandles.frameTextureHandle),
+                      getRelocatableHeapBlockBase(gAssetHandles[0x25]),
                       gRaceTypeSelectFrameTileMaps.entries[(u16)arg0->sprite.spriteIndex].bottom[tileOffset], 0, 0x100, 0xA0,
                       0x49);
         i = 0x80;
@@ -492,7 +485,7 @@ void drawRaceTypeSelectOption2Frame(RaceTypeSelectWidgetActor *arg0) {
     i--;
 
     drawMenuSpriteTileClipped(arg0->x + 0x80, arg0->y + 0x80,
-                  getRelocatableHeapBlockBase(gAssetHandles.frameTextureHandle),
+                  getRelocatableHeapBlockBase(gAssetHandles[0x25]),
                   gRaceTypeSelectFrameTileMaps.entries[(u16)arg0->sprite.spriteIndex].corner, 0, 0x100, 0xA0, 0x49);
 }
 
@@ -575,16 +568,16 @@ void drawRaceTypeSelectOption3Frame(RaceTypeSelectWidgetActor *arg0) {
     tileMap = (RaceTypeSelectPaddedFrameTileMapTable *)&gRaceTypeSelectFrameTileMaps;
     tileOffset = 0;
     for (i = 0; i < 16; i++, tileOffset++) {
-        drawMenuSpriteTileClipped(arg0->x + ((i & 3) << 5), arg0->y + ((i / 4) << 5), getRelocatableHeapBlockBase(gAssetHandles.textureHandle),
+        drawMenuSpriteTileClipped(arg0->x + ((i & 3) << 5), arg0->y + ((i / 4) << 5), getRelocatableHeapBlockBase(gAssetHandles[0x21]),
                       tileMap->selected.center[tileOffset], 0, 0x100, 0xA0, 0x49);
     }
 
     tileMap = (RaceTypeSelectPaddedFrameTileMapTable *)&gRaceTypeSelectFrameTileMaps;
     tileOffset = 0;
     offset = 0; i = 0x80; do {
-        drawMenuSpriteTileClipped(arg0->x + 0x80, arg0->y + offset, getRelocatableHeapBlockBase(gAssetHandles.textureHandle),
+        drawMenuSpriteTileClipped(arg0->x + 0x80, arg0->y + offset, getRelocatableHeapBlockBase(gAssetHandles[0x21]),
                       tileMap->selected.right[tileOffset], 0, 0x100, 0xA0, 0x49);
-        drawMenuSpriteTileClipped(arg0->x + offset, arg0->y + 0x80, getRelocatableHeapBlockBase(gAssetHandles.textureHandle),
+        drawMenuSpriteTileClipped(arg0->x + offset, arg0->y + 0x80, getRelocatableHeapBlockBase(gAssetHandles[0x21]),
                       tileMap->selected.bottom[tileOffset], 0, 0x100, 0xA0, 0x49);
         i = 0x80;
         offset += 0x40;
@@ -593,7 +586,7 @@ void drawRaceTypeSelectOption3Frame(RaceTypeSelectWidgetActor *arg0) {
     i++;
     i--;
 
-    drawMenuSpriteTileClipped(arg0->x + 0x80, arg0->y + 0x80, getRelocatableHeapBlockBase(gAssetHandles.textureHandle),
+    drawMenuSpriteTileClipped(arg0->x + 0x80, arg0->y + 0x80, getRelocatableHeapBlockBase(gAssetHandles[0x21]),
                   gRaceTypeSelectSpecialFrameCornerTile, 0, 0x100, 0xA0, 0x49);
 }
 
