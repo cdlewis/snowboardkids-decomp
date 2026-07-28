@@ -106,7 +106,6 @@ extern u8 gRaceRumbleEnabled;
 extern u8 gRaceTypeSelection;
 extern s8 gRacePlayerCount;
 extern s16 gRacePlayerAttackStartTimer;
-extern u8 gRaceResultState;
 #ifdef NON_MATCHING
 extern u8 gTrainingCourseLesson;
 extern u8 gMainMenuModeSelection;

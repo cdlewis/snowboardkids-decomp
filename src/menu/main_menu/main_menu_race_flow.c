@@ -35,7 +35,6 @@ extern s32 gMenuFlowState;
 extern u8 gMainMenuModeSelection;
 extern s16 gRacePlayerAttackStartTimer;
 extern s8 gRaceTypeSelection;
-extern s8 gRaceResultState;
 extern s16 gMainMenuModePreviewRaceDurationBySelection[];
 
 extern void releaseMenuAssetHandles(void);
