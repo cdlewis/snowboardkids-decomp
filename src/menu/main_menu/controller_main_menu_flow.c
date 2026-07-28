@@ -114,7 +114,6 @@ extern u8 gControllerReadPending;
 extern s32 gControllerPakFileNos[];
 extern u8 gControllerPakGameName[];
 extern u8 gControllerPakExtName[];
-extern u8 gControllerPakRetryCounts;
 extern u8 gRumblePakConnectedByController[];
 extern s16 gControllerPakStatusCodes[];
 extern u8 gControllerPakOperationCounts[];
@@ -387,17 +386,17 @@ checksum_loop:
 
         if (checksumFailed == 0) {
             if (validateControllerPakSave(channel) == 0) {
-                (&gControllerPakRetryCounts)[controllerIndex] = 0;
+                gControllerPakRetryCounts[controllerIndex] = 0;
             }
         } else {
-            (&gControllerPakRetryCounts)[controllerIndex]++;
+            gControllerPakRetryCounts[controllerIndex]++;
         }
     } else {
-        (&gControllerPakRetryCounts)[controllerIndex]++;
+        gControllerPakRetryCounts[controllerIndex]++;
     }
 
-    if ((readStatus != 0) || ((&gControllerPakRetryCounts)[controllerIndex] != 0)) {
-        if ((&gControllerPakRetryCounts)[controllerIndex] != 3) {
+    if ((readStatus != 0) || (gControllerPakRetryCounts[controllerIndex] != 0)) {
+        if (gControllerPakRetryCounts[controllerIndex] != 3) {
             return;
         }
     }
@@ -475,9 +474,9 @@ void writeControllerPakSave(u16 controllerIndex) {
     (&gGameSaveDataBuffer[controllerIndex])->checksum = checksum;
 
     if (osPfsReadWriteFile(pfs, *fileNo, 1, 0, 0x78E0, (u8 *)save) == 0) {
-        (&gControllerPakRetryCounts)[controllerIndex] = 0;
+        gControllerPakRetryCounts[controllerIndex] = 0;
     } else {
-        (&gControllerPakRetryCounts)[controllerIndex]++;
+        gControllerPakRetryCounts[controllerIndex]++;
     }
 }
 #endif
@@ -504,7 +503,7 @@ void repairControllerPakId(u16 arg0) {
     osPfsInitPak(&gControllerEventQueue, *sp18, arg0);
     ret = osPfsRepairId(pfs);
     if ((ret == 4) || (ret == 0xA)) {
-        (&gControllerPakRetryCounts)[arg0] += 1;
+        gControllerPakRetryCounts[arg0] += 1;
     }
 }
 
@@ -561,10 +560,10 @@ void deleteControllerPakFile(u16 arg0) {
 
     for (i = 0; i != 3; i++) {
         if (osPfsDeleteFile(pfs, companyCode, gameCode, gameName, extName) == 0) {
-            gControllerPakRetryCounts = 0;
+            gControllerPakRetryCounts[0] = 0;
             return;
         }
-        gControllerPakRetryCounts++;
+        gControllerPakRetryCounts[0]++;
     }
 }
 

@@ -16,7 +16,6 @@ extern void releaseMenuAssetHandles(void);
 
 extern CharacterSelectFlowState *gCurrentGameTask;
 extern s8 gFramebufferSwapDelay;
-extern u8 gControllerPakRetryCounts;
 extern u8 gControllerPakMenuCursorState;
 extern u8 gControllerPakDeletePromptState;
 extern s32 gPlayerInputPressed;
@@ -41,7 +40,7 @@ void initControllerPakFileDeleteFlow(void) {
     gCurrentGameTask->fade = 0;
     gCurrentGameTask->timer = 0;
     gMenuFlowState = 0;
-    gControllerPakRetryCounts = 0;
+    gControllerPakRetryCounts[0] = 0;
     gControllerPakFreeBytes = 0;
     gControllerPakFreeFileCount = 0;
     gRaceRumbleEnabled = 0;
@@ -178,7 +177,7 @@ void updateControllerPakFileDeletePrompt(void) {
         enqueueSoundEffect(0x18, 0x32);
         if (gControllerPakMenuState.confirmChoice == 0) {
             requestControllerPakDeleteFile(gControllerPakMenuState.fileIndex);
-            if (gControllerPakRetryCounts == 0) {
+            if (gControllerPakRetryCounts[0] == 0) {
                 gControllerPakFileEntries[gControllerPakMenuState.fileIndex].exists = 0;
                 requestControllerPakFileList();
                 requestControllerPakFreeSpaceUpdate();
@@ -216,7 +215,7 @@ void updateControllerPakFileDeleteErrorPrompt(void) {
         }
     }
     if (state == 3) {
-        gControllerPakRetryCounts = 0;
+        gControllerPakRetryCounts[0] = 0;
         setCurrentGameTaskCallback(&updateControllerPakFileDeleteFileList, 0);
         gControllerPakMenuCursorState = 1;
     }
