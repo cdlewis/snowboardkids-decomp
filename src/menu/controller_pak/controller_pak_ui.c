@@ -8,6 +8,7 @@
 #include "game/menu/controller_pak/controller_pak_continue_prompt_flow.h"
 #include "game/menu/controller_pak/controller_pak_menu.h"
 #include "game/menu/controller_pak/controller_pak_ui.h"
+#include "game/menu/main_menu/controller_main_menu_flow.h"
 #include "game/menu/renderer/menu_renderer.h"
 #include "game/menu/race_setup/race_setup_ui.h"
 #include "game/race/player/race_player_input.h"
@@ -25,7 +26,6 @@ typedef struct {
 } ControllerPakRumbleCheckPromptTransition;
 
 extern ControllerPakRumbleCheckPromptTransition gControllerPakRumbleCheckPromptTransition;
-extern u8 gRumblePakConnectedByController[];
 extern u8 gControllerPakRumbleCheckPromptState;
 extern u8 gControllerPakRumbleCheckPromptConfirmSelection;
 extern u8 gControllerPakMenuConfirmChoice;
