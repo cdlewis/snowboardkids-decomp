@@ -1,4 +1,5 @@
 #include "common.h"
+#include "game/save_data.h"
 #include "game/menu/renderer/menu_renderer.h"
 #include "game/menu/renderer/menu_render_utils.h"
 #include "game/engine/render_callback.h"
@@ -69,29 +70,6 @@ typedef union {
 } SignedUnsignedShort;
 
 typedef struct {
-    /* 0x0 */ s16 unk0;
-    /* 0x2 */ s16 pad2;
-} RaceFlowResultEntry;
-
-typedef struct {
-    /* 0x0000 */ u8 pad0[0x4];
-    /* 0x0004 */ s32 highScores[12];
-    /* 0x0034 */ u8 cupPlacements[0x4E - 0x34];
-    /* 0x004E */ RaceTime timeTrialRecords[11][5];
-    /* 0x012A */ RaceTime bestLapRecords[11];
-    /* 0x0156 */ RaceTime raceRecords[11][5];
-    /* 0x0232 */ RaceFlowResultEntry unk232[9];
-    /* 0x0256 */ u8 pad256[0x7756 - 0x256];
-    /* 0x7756 */ u16 trickAttackScores[11][5];
-    /* 0x77C4 */ u8 trickAttackCharacterIds[11][5];
-    /* 0x77FB */ u8 timeTrialCharacterIds[11][5];
-    /* 0x7832 */ u8 scoreAttackScores[11][5];
-    /* 0x7869 */ u8 scoreAttackCharacterIds[11][5];
-    /* 0x78A0 */ u8 raceRecordCharacterIds[11][5];
-    /* 0x78D7 */ u8 unlockFlags;
-} RaceFlowInitScratch;
-
-typedef struct {
     /* 0x00 */ u8 pad0[0xAC];
     /* 0xAC */ u8 active;
     /* 0xAD */ u8 padAD[0xB0 - 0xAD];
@@ -138,7 +116,6 @@ extern s32 gRaceTimeTrialFinishTime;
 extern s16 gMenuFadeAlpha;
 extern s8 gMenuFadeOverlayActive;
 extern u8 gRaceRumbleEnabled;
-extern RaceFlowInitScratch gGameSaveDataBuffer;
 extern u8 gRaceTypeSelection;
 extern u8 D_8011233C;
 extern s8 gRacePlayerCount;
@@ -328,15 +305,15 @@ void initNewGameSaveData(void) {
         gGameSaveDataBuffer.highScores[course + 1] = 0;
     }
 
-    gGameSaveDataBuffer.unk232[0].unk0 = 0;
-    gGameSaveDataBuffer.unk232[1].unk0 = 0;
-    gGameSaveDataBuffer.unk232[2].unk0 = 0;
-    gGameSaveDataBuffer.unk232[3].unk0 = 0;
-    gGameSaveDataBuffer.unk232[4].unk0 = 0;
-    gGameSaveDataBuffer.unk232[5].unk0 = (u8)0;
-    gGameSaveDataBuffer.unk232[6].unk0 = 0;
-    gGameSaveDataBuffer.unk232[7].unk0 = 0;
-    gGameSaveDataBuffer.unk232[8].unk0 = 0;
+    gGameSaveDataBuffer.resultEntries[0].value = 0;
+    gGameSaveDataBuffer.resultEntries[1].value = 0;
+    gGameSaveDataBuffer.resultEntries[2].value = 0;
+    gGameSaveDataBuffer.resultEntries[3].value = 0;
+    gGameSaveDataBuffer.resultEntries[4].value = 0;
+    gGameSaveDataBuffer.resultEntries[5].value = (u8)0;
+    gGameSaveDataBuffer.resultEntries[6].value = 0;
+    gGameSaveDataBuffer.resultEntries[7].value = 0;
+    gGameSaveDataBuffer.resultEntries[8].value = 0;
     gPlayerCount = 1;
     gRaceTypeSelection = 0;
     gRacePlayers[0].selectedCharacterId = 0;

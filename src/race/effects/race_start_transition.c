@@ -1,4 +1,5 @@
 #include "common.h"
+#include "game/save_data.h"
 #include "game/race/player/race_player_input.h"
 #include "assets.h"
 #include "game/engine/asset_manager.h"
@@ -10,11 +11,6 @@
 #include "game/race/camera/race_camera.h"
 #include "game/race/effects/race_start_transition.h"
 #include "game/engine/viewport_manager.h"
-
-typedef struct {
-    u8 pad0[0x34];
-    u8 cupPlacements[0x1A];
-} RaceSetupSaveData;
 
 typedef struct {
     FixedTransform transform;
@@ -83,7 +79,6 @@ extern void loadMainMenuSceneModelAnimationBank(void);
 extern u8 gRaceSetupOpponentFocusCharacterIds[][4];
 extern u8 gPendingEndingCreditsFlow;
 extern u8 gRaceSplitscreenMode;
-extern RaceSetupSaveData gGameSaveDataBuffer;
 extern u8 D_800ECA24;
 extern u8 gPlayerCount;
 

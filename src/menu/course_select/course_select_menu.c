@@ -1,4 +1,5 @@
 #include "common.h"
+#include "game/save_data.h"
 #include "assets.h"
 #include "game/engine/asset_manager.h"
 #include "game/race/camera/race_camera.h"
@@ -26,7 +27,6 @@ extern s16 gMenuFadeAlpha;
 extern s16 gMenuChoicePromptState;
 extern s8 D_800EC9C0;
 extern u8 gMenuSelectionConfirmTimer;
-extern u8 gGameSaveDataBuffer[];
 extern s8 D_800EC9F1;
 extern s8 D_800EC9F9;
 extern s8 D_8010AE64;
@@ -155,11 +155,11 @@ void initCourseSelectMenu(void) {
 
     mask = 1;
     for (i = 0; i < 3; i++) {
-        if (((CourseSelectSaveData *)gGameSaveDataBuffer)->extraCourseUnlockFlags & mask) {
-            if (!(((CourseSelectSaveData *)gGameSaveDataBuffer)->extraCourseUnlockFlags & (mask << 3))) {
+        if (gGameSaveDataBuffer.extraCourseUnlockFlags & mask) {
+            if (!(gGameSaveDataBuffer.extraCourseUnlockFlags & (mask << 3))) {
                 gShopMenuShowNewCoursesMessage = 1;
                 gShopMenuDescriptionSeen = 1;
-                ((CourseSelectSaveData *)gGameSaveDataBuffer)->extraCourseUnlockFlags |= mask << 3;
+                gGameSaveDataBuffer.extraCourseUnlockFlags |= mask << 3;
             }
         }
         mask <<= 1;
@@ -2041,7 +2041,7 @@ void initCourseSelectPreview(void) {
     gCoursePreviewViewportHeight = 0x78;
     configureViewport(1, 0xE8, 0x78, 0x90, gCoursePreviewViewportHeight, 0xA0, 0xF0, 0.6666666865f);
     enableViewportClear(1);
-    temp = (s8 *) &gGameSaveDataBuffer[gRacePlayers[0].menuSelection];
+    temp = (s8 *)&gGameSaveDataBuffer.rawBytes[gRacePlayers[0].menuSelection];
     D_8010AED0 = temp[0x3F] + 1;
     temp[0x3F] = gCourseDetailsPreviewCourseTiles[(u8) gCourseDetailsPreviewPage * 7 + (u8) gCourseDetailsMenuSelection];
     gCourseSelectStatus.transitionState = 6;
@@ -2088,7 +2088,7 @@ void exitCourseSelectMenu(void) {
             goto loop;
         }
         if (count == 0) {
-            gGameSaveDataBuffer[0x78D7] |= 4;
+            gGameSaveDataBuffer.extraCourseUnlockFlags |= 4;
         }
     }
 }

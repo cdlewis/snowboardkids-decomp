@@ -1,4 +1,5 @@
 #include "common.h"
+#include "game/save_data.h"
 #include "game/engine/asset_manager.h"
 #include "game/engine/render_callback.h"
 #include "game/engine/relocatable_heap.h"
@@ -41,13 +42,6 @@ typedef struct {
 } TitleIntroTransitionState;
 
 typedef struct {
-    /* 0x00 */ u8 pad0[0x34];
-    /* 0x34 */ u8 cupPlacements[0x18];
-    /* 0x4C */ u8 progressionLevel;
-    /* 0x4D */ u8 pad4D[0x78F8 - 0x4D];
-} RaceSetupSavePanelPlayerData;
-
-typedef struct {
     /* 0x00 */ u8 pad0[0x18];
     /* 0x18 */ s16 x;
     /* 0x1A */ u8 pad1A[0x20 - 0x1A];
@@ -62,7 +56,6 @@ const char D_800E0A84[] = "%6d";
 extern TitleMenuWidgetActor *D_8010ADE0;
 extern s16 gMenuChoicePromptState[];
 extern s16 gPlayerBadgeDisplayOrder[];
-extern RaceSetupSavePanelPlayerData gGameSaveDataBuffer[];
 extern TitleIntroTransitionState gRaceSetupMenuSubState;
 extern u16 gRaceSetupOnePlayerOptionText[];
 extern u16 gRaceSetupTwoPlayerOptionText[];
@@ -800,13 +793,13 @@ void drawRaceSetupSavePanelIcons(TitleMenuIconStripActor *actor) {
     s32 playerCoordinateOffset;
     s16 *controllerPakStatus;
     register s16 *badgeDisplayOrderStart;
-    register RaceSetupSavePanelPlayerData *saveData;
+    register GameSaveData *saveData;
     register RaceSetupSavePanelPlayerCoordinates *coordinateCursor;
     register s32 xOffset;
     register s32 alpha;
     register s32 nextIconOrBadgeOffset;
     register s16 *badgeOrder;
-    register RaceSetupSavePanelPlayerData *badgeSaveData;
+    register GameSaveData *badgeSaveData;
     s32 iconIndex;
     s32 displayCount;
     s32 paletteIndex;
@@ -819,7 +812,7 @@ void drawRaceSetupSavePanelIcons(TitleMenuIconStripActor *actor) {
             playerCoordinateOffset = 0;
             do {
                 if (*controllerPakStatus != CONTROLLER_PAK_STATUS_UNUSED) {
-                    saveData = &gGameSaveDataBuffer[playerIndex.value];
+                    saveData = &GAME_SAVE_DATA_SLOT(playerIndex.value);
                     iconIndex = 0;
                     if (saveData->progressionLevel == SAVE_PANEL_MAX_RECORD_ICONS) {
                         displayCount = SAVE_PANEL_MAX_RECORD_ICONS;
@@ -857,7 +850,7 @@ void drawRaceSetupSavePanelIcons(TitleMenuIconStripActor *actor) {
                     }
 
                     if (displayCount > 0) {
-                        badgeSaveData = &gGameSaveDataBuffer[playerIndex.reloaded]; badgeDisplayOrderStart = gPlayerBadgeDisplayOrder; badgeOrder = badgeDisplayOrderStart; nextIconOrBadgeOffset = 0;
+                        badgeSaveData = &GAME_SAVE_DATA_SLOT(playerIndex.reloaded); badgeDisplayOrderStart = gPlayerBadgeDisplayOrder; badgeOrder = badgeDisplayOrderStart; nextIconOrBadgeOffset = 0;
                         coordinateCursor = (RaceSetupSavePanelPlayerCoordinates *)&actor->pad0[playerCoordinateOffset];
                         do {
                             paletteIndex = badgeSaveData->cupPlacements[*badgeOrder];

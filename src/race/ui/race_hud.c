@@ -1,4 +1,5 @@
 #include "common.h"
+#include "game/save_data.h"
 #include "game/menu/renderer/menu_render_utils.h"
 #include "game/engine/render_callback.h"
 #include "assets.h"
@@ -20,17 +21,17 @@ typedef struct {
 } CourseDataStride;
 
 typedef struct {
-    /* 0x00 */ s8 x;
-    /* 0x01 */ s8 y;
-    /* 0x02 */ s16 z;
-} RaceUiCoursePosition;
-
-typedef struct {
     /* 0x00 */ char pad[0x4E];
     /* 0x4E */ s8 bestLapMinutes;
     /* 0x4F */ s8 bestLapSeconds;
     /* 0x50 */ s16 bestLapFraction;
 } CourseBestLapView;
+
+typedef struct {
+    /* 0x00 */ s8 x;
+    /* 0x01 */ s8 y;
+    /* 0x02 */ s16 z;
+} RaceUiCoursePosition;
 
 typedef struct {
     /* 0x00 */ s16 pathIndex;
@@ -56,7 +57,6 @@ extern u8 gRaceTimerOnesDigitTileIds[];
 extern u16 gRaceProgressMeterIconTiles[];
 extern u16 gRaceProgressMeterIconPalettes[];
 extern RaceUiCoursePosition gRaceCourseTargetTimes[];
-extern CourseDataStride gGameSaveDataBuffer[];
 extern s16 gRaceLapCount;
 extern s16 gRaceHudSpinnerFrame;
 extern s16 gRaceHudMode;
@@ -494,7 +494,7 @@ void drawTimeTrialLabels(void *arg0) {
 
     drawMenuAsciiTextDefaultScale(0x48, 0x47, (char *)gRaceHudTimeTrialLapTimeLabel, 5);
     drawMenuAsciiTextDefaultScale(0x48, -0x61, (char *)gRaceHudTimeTrialBestLapLabel, 7);
-    course = (CourseBestLapView *)&gGameSaveDataBuffer[gRaceCourseIndex];
+    course = (CourseBestLapView *)&((CourseDataStride *)&gGameSaveDataBuffer)[gRaceCourseIndex];
     sprintf(sp28, gRaceHudTimeTrialBestLapFormat, course->bestLapMinutes, course->bestLapSeconds, course->bestLapFraction >> 8);
     drawMenuAsciiTextDefaultScale(0x48, -0x58, sp28, 7);
 }

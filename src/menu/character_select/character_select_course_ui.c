@@ -1,4 +1,5 @@
 #include "common.h"
+#include "game/save_data.h"
 #include "game/engine/asset_manager.h"
 #include "game/engine/render_callback.h"
 #include "game/engine/relocatable_heap.h"
@@ -2574,7 +2575,6 @@ typedef struct {
     /* 0x2C */ u8 pad2C[0x20];
 } CharacterSelectCourseRecordsPopupStack;
 
-extern u8 gGameSaveDataBuffer[];
 extern u8 D_800F41EB[];
 extern u8 D_800F4222[];
 extern u8 D_800F4259[];
@@ -2625,7 +2625,7 @@ void drawCharacterSelectCourseRecordsPopup(CharacterSelectCourseWidgetActor *arg
                         stack.color = 0xD;
                     }
                     drawCharacterSelectCourseRecordTime(
-                        (CharacterSelectCourseRecordTime *)((CharacterSelectResultNameData *)gGameSaveDataBuffer)
+                        (CharacterSelectCourseRecordTime *)((CharacterSelectResultNameData *)&gGameSaveDataBuffer)
                             ->resultNames[stack.courseIds[gRaceCourseIndex]][rowIndex],
                         arg0->x + 0x14, arg0->y + var_s5, stack.color);
                     drawMenuSprite((s16)(arg0->x + 0x54), (s16)(var_s5 + arg0->y),
@@ -2671,13 +2671,13 @@ void drawCharacterSelectCourseRecordsPopup(CharacterSelectCourseWidgetActor *arg
                                           0xFFFF,
                                       0x20, 0x20, 0, 0);
                     } else {
-                        stack.trickIcon = (CharacterSelectTrickIconData *)&gGameSaveDataBuffer[rowIndex];
+                        stack.trickIcon = (CharacterSelectTrickIconData *)&gGameSaveDataBuffer.bytes[rowIndex];
                         if (rowIndex < 3) {
                             var_s4 = 0xC;
                         } else {
                             var_s4 = 0xD;
                         }
-                        var_s0 = ((CharacterSelectStatsData *)gGameSaveDataBuffer)->trickValues[rowIndex ^ 0];
+                        var_s0 = ((CharacterSelectStatsData *)&gGameSaveDataBuffer)->trickValues[rowIndex ^ 0];
                         var_s1 = 0;
                         do {
                             drawMenuSprite((s16)((arg0->x - var_s1) + 0x38), (s16)(arg0->y + var_s5),
@@ -2704,7 +2704,7 @@ void drawCharacterSelectCourseRecordsPopup(CharacterSelectCourseWidgetActor *arg
                     stack.color = 0xD;
                 }
                 drawCharacterSelectCourseRecordTime(
-                    (CharacterSelectCourseRecordTime *)((CharacterSelectCourseStatsNameData *)gGameSaveDataBuffer)
+                    (CharacterSelectCourseRecordTime *)((CharacterSelectCourseStatsNameData *)&gGameSaveDataBuffer)
                         ->courseStatsNames[stack.courseIds[gRaceCourseIndex]][rowIndex],
                     arg0->x + 0x14, arg0->y + var_s5, stack.color);
                 drawMenuSprite((s16)(arg0->x + 0x54), (s16)(arg0->y + var_s5),

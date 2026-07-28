@@ -1,4 +1,5 @@
 #include "common.h"
+#include "game/save_data.h"
 #include "assets.h"
 #include "game/engine/asset_manager.h"
 #include "game/engine/callback_task_scheduler.h"
@@ -38,7 +39,6 @@ extern u8 D_800EC9C0;
 extern u8 gRaceSplitscreenMode;
 extern s16 gMenuChoicePromptState[];
 extern s8 D_800EC9E5;
-extern CourseSelectSaveData gGameSaveDataBuffer[];
 extern s32 D_8010ADE0;
 extern s32 D_8010ADE4;
 extern u16 gMenuInputRepeatTimers[];
@@ -182,7 +182,7 @@ void initMultiplayerCourseSelectMenu(void) {
     one = 1;
     {
         s32 extraOffset;
-        CourseSelectSaveData *save;
+        GameSaveData *save;
         u8 *stateA;
         u8 *stateC;
         u8 *stateB;
@@ -207,7 +207,7 @@ void initMultiplayerCourseSelectMenu(void) {
             repeatTimer = gMenuInputRepeatTimers;
             valueA = D_8010AED8;
             valueB = D_8010AEE8;
-            save = gGameSaveDataBuffer;
+            save = &gGameSaveDataBuffer;
             availableColumns = D_8010AEB8[0];
             unlocked = D_8010AEA0;
             selectionRow = D_8010AEF8[0];

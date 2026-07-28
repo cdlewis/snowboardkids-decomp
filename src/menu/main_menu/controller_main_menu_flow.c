@@ -1,4 +1,5 @@
 #include "common.h"
+#include "game/save_data.h"
 #include "assets.h"
 #include "game/audio/sound_manager.h"
 #include "game/engine/callback_task_scheduler.h"
@@ -37,41 +38,13 @@ typedef struct SaveFileIdentity {
     char gameName[16];
 } SaveFileIdentity;
 
-typedef struct SaveSlotBytes {
-    s32 checksum;
-    u8 bytes[0x78DC];
-    u8 tail[0x18];
-} SaveSlotBytes;
-
-typedef struct ControllerPakRecordTime {
-    /* 0x0 */ s8 minutes;
-    /* 0x1 */ s8 seconds;
-    /* 0x2 */ s16 fraction;
-} ControllerPakRecordTime;
-
-typedef struct ControllerPakSaveData {
-    /* 0x0000 */ s32 checksum;
-    /* 0x0004 */ u8 pad4[0x4E - 0x4];
-    /* 0x004E */ ControllerPakRecordTime timeTrialRecords[11][5];
-    /* 0x012A */ ControllerPakRecordTime courseTargetTimes[11];
-    /* 0x0156 */ ControllerPakRecordTime raceRecords[11][5];
-    /* 0x0232 */ u8 pad232[0x7756 - 0x232];
-    /* 0x7756 */ u16 trickAttackScores[11][5];
-    /* 0x77C4 */ u8 trickAttackCharacters[11][5];
-    /* 0x77FB */ u8 timeTrialCharacters[11][5];
-    /* 0x7832 */ u8 scoreAttackScores[11][5];
-    /* 0x7869 */ u8 scoreAttackCharacters[11][5];
-    /* 0x78A0 */ u8 raceCharacters[11][5];
-    /* 0x78D7 */ u8 unlockFlags;
-} ControllerPakSaveData;
-
 #define CONTROLLER_PAK_SAVE_READ_SIZE 0x78E0
 #define CONTROLLER_PAK_CHECKSUM_START_OFFSET 4
 #define CONTROLLER_PAK_MAX_READ_RETRIES 3
 
-#define CONTROLLER_PAK_SAVE_FIELD_OFFSET(field) ((u32)&(((ControllerPakSaveData *)0)->field))
+#define CONTROLLER_PAK_SAVE_FIELD_OFFSET(field) ((u32)&(((GameSaveData *)0)->field))
 #define CONTROLLER_PAK_RECORD_AT(cursor, field) \
-    (*(ControllerPakRecordTime *)((cursor) + CONTROLLER_PAK_SAVE_FIELD_OFFSET(field)))
+    (*(GameSaveRecordTime *)((cursor) + CONTROLLER_PAK_SAVE_FIELD_OFFSET(field)))
 #define CONTROLLER_PAK_U8_AT(cursor, field) (*(u8 *)((cursor) + CONTROLLER_PAK_SAVE_FIELD_OFFSET(field)))
 #define CONTROLLER_PAK_U16_AT(cursor, field) (*(u16 *)((cursor) + CONTROLLER_PAK_SAVE_FIELD_OFFSET(field)))
 
@@ -106,7 +79,6 @@ extern u8 gControllerPakGameName[];
 extern u8 gControllerPakExtName[];
 extern u8 gRumblePakConnectedByController[];
 extern u8 gControllerPakOperationCounts[];
-extern SaveSlotBytes gGameSaveDataBuffer[];
 extern s32 gPlayerInputHeld;
 extern s16 gMenuFadeAlpha;
 extern s8 gMainMenuSecretCodeUnlocked;
@@ -354,10 +326,10 @@ copy_name:
                   gControllerPakSaveFileIdentity.gameCode, gControllerPakExtName,
                   gControllerPakGameName, &gControllerPakFileNos[controllerIndex]);
     readStatus = osPfsReadWriteFile(&gControllerPakHandles[controllerIndex], gControllerPakFileNos[controllerIndex],
-                                    0, 0, 0x78E0, (u8 *)&gGameSaveDataBuffer[controllerIndex]);
+                                    0, 0, 0x78E0, (u8 *)&GAME_SAVE_DATA_SLOT(controllerIndex));
     if (readStatus == 0) {
         dst = NULL;
-        src = gGameSaveDataBuffer[controllerIndex].bytes;
+        src = GAME_SAVE_DATA_SLOT(controllerIndex).bytes;
         work.offset = 4;
 checksum_loop:
         dst += src[0];
@@ -369,7 +341,7 @@ checksum_loop:
         if ((work.offset | 0) != 0x78E0) {
             goto checksum_loop;
         }
-        if ((s32)dst != gGameSaveDataBuffer[controllerIndex].checksum) {
+        if ((s32)dst != GAME_SAVE_DATA_SLOT(controllerIndex).checksum) {
             checksumFailed = 1;
         }
 
@@ -414,7 +386,7 @@ void writeControllerPakSave(u16 controllerIndex) {
     s32 *newFileNo;
     OSPfs *volatile pfs;
     s32 *fileNo;
-    SaveSlotBytes *save;
+    GameSaveData *save;
     u8 *src;
     s32 i;
     s32 checksum;
@@ -452,7 +424,7 @@ void writeControllerPakSave(u16 controllerIndex) {
                           gControllerPakGameName, 0x7900, fileNo);
     }
 
-    save = &gGameSaveDataBuffer[controllerIndex];
+    save = &GAME_SAVE_DATA_SLOT(controllerIndex);
     checksum = 0;
     src = save->bytes;
     i = 4;
@@ -460,7 +432,7 @@ void writeControllerPakSave(u16 controllerIndex) {
         checksum += *src++;
         i++;
     } while (i != 0x78E0);
-    (&gGameSaveDataBuffer[controllerIndex])->checksum = checksum;
+    GAME_SAVE_DATA_SLOT(controllerIndex).checksum = checksum;
 
     if (osPfsReadWriteFile(pfs, *fileNo, 1, 0, 0x78E0, (u8 *)save) == 0) {
         gControllerPakRetryCounts[controllerIndex] = 0;
@@ -592,7 +564,7 @@ u16 validateControllerPakSave(volatile s32 arg0) {
     s32 secondByteStep;
     s32 count;
 
-    save = (u8 *)&gGameSaveDataBuffer[arg0 & 0xFFFFFFFFFFFFFFFF];
+    save = (u8 *)&GAME_SAVE_DATA_SLOT(arg0 & 0xFFFFFFFFFFFFFFFF);
     wordCursor = (u32 *)save;
     byteCursor = save;
     offset = 0;
@@ -658,7 +630,7 @@ s32 validateControllerPakSaveData(s32 channel) {
     s32 raceCharacter;
     s32 scoreCharacter;
 
-    saveStart = (u8 *)&gGameSaveDataBuffer[channel];
+    saveStart = (u8 *)&GAME_SAVE_DATA_SLOT(channel);
     invalidSave = 0;
     timeTrialCourseCursor = saveStart;
     scoreCourseCursor = saveStart;
@@ -686,7 +658,7 @@ loop_player:
         if ((fraction < 0) || (fraction >= 0x6301)) {
             invalidSave = 1;
         }
-        timeTrialCharacter = CONTROLLER_PAK_U8_AT(scoreAndCharacterCursor, timeTrialCharacters);
+        timeTrialCharacter = CONTROLLER_PAK_U8_AT(scoreAndCharacterCursor, timeTrialCharacterIds);
         if ((timeTrialCharacter & 7) >= 6) {
             invalidSave = 1;
         }
@@ -702,11 +674,11 @@ loop_player:
             invalidSave = 1;
         }
         raceFraction = CONTROLLER_PAK_RECORD_AT(recordCursor, raceRecords).fraction;
-        recordCursor += sizeof(ControllerPakRecordTime);
+        recordCursor += sizeof(GameSaveRecordTime);
         if ((raceFraction < 0) || (raceFraction >= 0x6301)) {
             invalidSave = 1;
         }
-        raceCharacter = CONTROLLER_PAK_U8_AT(scoreAndCharacterCursor, raceCharacters);
+        raceCharacter = CONTROLLER_PAK_U8_AT(scoreAndCharacterCursor, raceRecordCharacterIds);
         if ((raceCharacter & 7) >= 6) {
             invalidSave = 1;
         }
@@ -721,7 +693,7 @@ loop_player:
 block_32:
             invalidSave = 1;
         }
-        scoreCharacter = CONTROLLER_PAK_U8_AT(scoreAndCharacterCursor, scoreAttackCharacters);
+        scoreCharacter = CONTROLLER_PAK_U8_AT(scoreAndCharacterCursor, scoreAttackCharacterIds);
         if ((scoreCharacter & 7) >= 6) {
             invalidSave = 1;
         }
@@ -733,7 +705,7 @@ block_32:
         if ((s32)trickScore >= 0x2710) {
             invalidSave = 1;
         }
-        trickCharacter = CONTROLLER_PAK_U8_AT(scoreAndCharacterCursor, trickAttackCharacters);
+        trickCharacter = CONTROLLER_PAK_U8_AT(scoreAndCharacterCursor, trickAttackCharacterIds);
         if ((trickCharacter & 7) >= 6) {
             invalidSave = 1;
         }
@@ -744,23 +716,23 @@ block_32:
         if (playerCounter != 0xA) {
             goto loop_player;
         }
-        targetMinutes = CONTROLLER_PAK_RECORD_AT(saveStart, courseTargetTimes).minutes;
-        timeTrialCourseCursor += sizeof(ControllerPakRecordTime) * 5;
+        targetMinutes = CONTROLLER_PAK_RECORD_AT(saveStart, bestLapRecords).minutes;
+        timeTrialCourseCursor += sizeof(GameSaveRecordTime) * 5;
         scoreCourseCursor += 5;
         if ((targetMinutes < 0) || (targetMinutes >= 100)) {
             invalidSave = 1;
         }
-        targetSeconds = CONTROLLER_PAK_RECORD_AT(saveStart, courseTargetTimes).seconds;
+        targetSeconds = CONTROLLER_PAK_RECORD_AT(saveStart, bestLapRecords).seconds;
         raceCourseCursor += sizeof(u16) * 5;
         courseOffset += 4;
         if ((targetSeconds < 0) || (targetSeconds >= 60)) {
             invalidSave = 1;
         }
-        targetFraction = CONTROLLER_PAK_RECORD_AT(saveStart, courseTargetTimes).fraction;
+        targetFraction = CONTROLLER_PAK_RECORD_AT(saveStart, bestLapRecords).fraction;
         if ((targetFraction < 0) || (targetFraction >= 0x6301)) {
             invalidSave = 1;
         }
-        saveStart += sizeof(ControllerPakRecordTime);
+        saveStart += sizeof(GameSaveRecordTime);
     } while (courseOffset != 0x2C);
 
     return invalidSave;

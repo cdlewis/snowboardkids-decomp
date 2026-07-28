@@ -1,4 +1,5 @@
 #include "common.h"
+#include "game/save_data.h"
 #include "assets.h"
 #include "game/audio/sound_manager.h"
 #include "game/engine/callback_task_scheduler.h"
@@ -15,18 +16,11 @@
 
 typedef s16 CharacterSelectOptionList[10];
 
-typedef struct {
-    char pad0[0x4C];
-    u8 highestCourse;
-    char pad4D[0x78AB];
-} CharacterSelectSaveData;
-
 extern void enqueueSoundEffect(s32, s32);
 extern void releaseMenuAssetHandles(void);
 extern s16 gCharacterSelectShortCourseOptions[];
 extern s16 gCharacterSelectSingleCourseOption[];
 extern s16 gMenuFadeAlpha;
-extern CharacterSelectSaveData gGameSaveDataBuffer[];
 extern u8 gPlayerCount;
 extern u8 gRaceTypeSelection;
 extern s16 gRaceCourseIndex;
@@ -57,7 +51,7 @@ void initCharacterSelectCourseMenuFromRaceTypeSelect(void) {
     register s32 unused; /* Preserve IDO's spill layout. */
     s32 var_v0_3;
     u8 temp_v1;
-    CharacterSelectSaveData *var_v0;
+    GameSaveData *var_v0;
 
     gCurrentGameTask->fade = 0;
     requestMusicSequenceBank(2);
@@ -71,13 +65,13 @@ void initCharacterSelectCourseMenuFromRaceTypeSelect(void) {
     gMenuFadeAlpha = gCurrentGameTask->fade;
     var_v1 = 0;
     if (gPlayerCount > var_v1) {
-        var_v0 = gGameSaveDataBuffer; do {
-            temp_v1 = var_v0->highestCourse;
+        var_v0 = &gGameSaveDataBuffer; do {
+            temp_v1 = var_v0->highestUnlockedCourse;
             var_v0 += 1;
             if (gHighestUnlockedCourse < temp_v1) {
                 gHighestUnlockedCourse = temp_v1;
             }
-        } while (var_v0 < &gGameSaveDataBuffer[gPlayerCount]);
+        } while (var_v0 < &gGameSaveDataBuffer + gPlayerCount);
         var_v1++;
         var_v1--;
     }
@@ -164,7 +158,7 @@ void initCharacterSelectCourseMenuFromRace(void)
   s32 var_v0_3;
   CharacterSelectCourseUnlockList *courseOptionsByUnlock;
   u8 temp_v1;
-  CharacterSelectSaveData *var_v0;
+  GameSaveData *var_v0;
   requestMusicSequenceBank(2);
   resetAllViewports();
   configureViewport(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.333333373f);
@@ -179,7 +173,7 @@ void initCharacterSelectCourseMenuFromRace(void)
   createCallbackTask((CallbackTaskCallback) initMenuIconTilemapSpriteActor, 0, 0x5E);
   if (gRaceSplitscreenMode == 1)
   {
- LOAD_ASSET(_5CCD40, 0x25); createCallbackTask((CallbackTaskCallback) initCharacterSelectLimitedCourseList, 0, 0x63); gCurrentGameTask->fade = 0; } else { gCurrentGameTask->fade = 0xFF; } gCurrentGameTask->timer = 0; gMenuSelectionConfirmTimer = 0; gMenuExitSelection = 0; gMenuFlowState = 0; gRacePlayers[0].menuState = 0; gMenuInputRepeatTimers = 0; gMenuChoicePromptState = 0; gMenuFadeAlpha = gCurrentGameTask->fade; var_v1 = 0; if (gPlayerCount > var_v1) { var_v0 = gGameSaveDataBuffer; do { temp_v1 = var_v0->highestCourse; var_v0 += 1; if (gHighestUnlockedCourse < temp_v1) { gHighestUnlockedCourse = temp_v1; } } while (var_v0 < (&gGameSaveDataBuffer[gPlayerCount]));
+ LOAD_ASSET(_5CCD40, 0x25); createCallbackTask((CallbackTaskCallback) initCharacterSelectLimitedCourseList, 0, 0x63); gCurrentGameTask->fade = 0; } else { gCurrentGameTask->fade = 0xFF; } gCurrentGameTask->timer = 0; gMenuSelectionConfirmTimer = 0; gMenuExitSelection = 0; gMenuFlowState = 0; gRacePlayers[0].menuState = 0; gMenuInputRepeatTimers = 0; gMenuChoicePromptState = 0; gMenuFadeAlpha = gCurrentGameTask->fade; var_v1 = 0; if (gPlayerCount > var_v1) { var_v0 = &gGameSaveDataBuffer; do { temp_v1 = var_v0->highestUnlockedCourse; var_v0 += 1; if (gHighestUnlockedCourse < temp_v1) { gHighestUnlockedCourse = temp_v1; } } while (var_v0 < (&gGameSaveDataBuffer + gPlayerCount));
     var_v1 *= 0;
   }
   gActiveMenuTask = 0;
@@ -259,7 +253,7 @@ void initCharacterSelectCourseMenuFromPlayerSelect(void) {
     s16 *activeOptions;
     CharacterSelectCourseUnlockList *courseOptionsByUnlock;
     u8 temp_v1;
-    CharacterSelectSaveData *var_v0;
+    GameSaveData *var_v0;
 
     requestMusicSequenceBank(2);
     if (gPlayerCount >= 2) {
@@ -295,7 +289,7 @@ void initCharacterSelectCourseMenuFromPlayerSelect(void) {
     D_8010ADE0 = 0;
     D_8010ADE4 = 0;
     var_v1 = sp2C;
-    if (gPlayerCount > 0) { var_v0 = gGameSaveDataBuffer; do { temp_v1 = var_v0->highestCourse; var_v0 += 1; if (gHighestUnlockedCourse < temp_v1) { gHighestUnlockedCourse = temp_v1; } } while (var_v0 < &gGameSaveDataBuffer[gPlayerCount]); var_v1++; var_v1--; } setCurrentGameTaskCallback(updateCharacterSelectCourseMenu, 0); var_v1 = sp2C;
+    if (gPlayerCount > 0) { var_v0 = &gGameSaveDataBuffer; do { temp_v1 = var_v0->highestUnlockedCourse; var_v0 += 1; if (gHighestUnlockedCourse < temp_v1) { gHighestUnlockedCourse = temp_v1; } } while (var_v0 < &gGameSaveDataBuffer + gPlayerCount); var_v1++; var_v1--; } setCurrentGameTaskCallback(updateCharacterSelectCourseMenu, 0); var_v1 = sp2C;
     courseOptionsByUnlock = gCharacterSelectCourseOptionsByUnlock;
     if (gCourseSelectFromRaceTypeMenu == 1) {
         if (gRaceTypeSelection < 2) {

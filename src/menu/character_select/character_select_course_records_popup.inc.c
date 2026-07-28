@@ -29,14 +29,13 @@ typedef struct CharacterSelectCourseRecordsPopupStackCandidate {
   s16 *courseIds;
 } CharacterSelectCourseRecordsPopupStackCandidate;
 
-extern u8 gGameSaveDataBuffer[];
 extern u8 D_800F41EB[];
 extern u8 D_800F4222[];
 extern u8 D_800F4259[];
 extern u8 D_800F4290[];
 
 #define CHARACTER_SELECT_COURSE_SAVE_DATA                                      \
-  (*(CharacterSelectCourseRecordsPopupSaveBufferCandidate *)gGameSaveDataBuffer)
+  (*(CharacterSelectCourseRecordsPopupSaveBufferCandidate *)&gGameSaveDataBuffer)
 
 void drawCharacterSelectCourseRecordsPopup(
     CharacterSelectCourseWidgetActor *arg0) {
