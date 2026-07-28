@@ -8,6 +8,7 @@
 #include "game/engine/game_task_scheduler.h"
 #include "game/menu/training/training_course_ui.h"
 #include "game/menu/renderer/menu_screen_effects.h"
+#include "game/menu/main_menu/controller_main_menu_flow.h"
 #include "game/menu/main_menu/main_menu_panel_ui.h"
 #include "game/race/camera/race_camera.h"
 #include "game/menu/main_menu/main_menu_race_flow.h"
@@ -24,8 +25,6 @@ typedef struct {
     /* 0x8 */ u8 *romEnd;
 } MainMenuModePreviewRaceCourseAsset;
 
-
-extern u8 gMainMenuSelectionResult;
 extern s8 gRacePlayerHudStatuses;
 extern s16 gRaceCourseIndex;
 extern s16 gRaceLapCount;

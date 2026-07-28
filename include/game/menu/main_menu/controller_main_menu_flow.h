@@ -38,6 +38,7 @@ extern ControllerInputState gControllerInputState[4];
 extern s16 gControllerPakStatusCodes[4];
 extern u8 gControllerPakRetryCounts[4];
 extern u8 gMainMenuSecretCodeUnlocked;
+extern u8 gMainMenuSelectionResult;
 
 void initControllerSubsystem(void);
 void controllerSubsystemThreadMain(void *threadArg);

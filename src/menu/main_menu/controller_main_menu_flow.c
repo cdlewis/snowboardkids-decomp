@@ -86,7 +86,6 @@ extern s8 gMenuFadeOverlayActive;
 extern u8 gConnectedControllerCount;
 extern u8 gRaceRumbleEnabled;
 extern u8 gRumblePakConnectedMask;
-extern s8 gMainMenuSelectionResult;
 extern s32 gControllerPakFreeBytes;
 extern s32 gControllerPakFreeFileCount;
 extern OSMesgQueue gControllerInputUpdateQueue;

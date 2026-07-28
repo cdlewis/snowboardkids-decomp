@@ -3,6 +3,7 @@
 #include "game/engine/render_callback.h"
 #include "game/engine/relocatable_heap.h"
 #include "game/engine/callback_task_scheduler.h"
+#include "game/menu/main_menu/controller_main_menu_flow.h"
 #include "game/menu/training/training_course_ui.h"
 #include "game/menu/renderer/menu_renderer.h"
 
@@ -46,7 +47,6 @@ struct TrainingCourseUiActor {
     /* 0x2C */ u8 keepVisibleAfterConfirm;
 };
 
-extern u8 gMainMenuSelectionResult;
 extern s32 gPlayerInputPressed;
 extern TrainingCourseUiScript gTrainingCourseOpeningDialogScripts[][0x17C];
 extern TrainingCourseUiScript gTrainingCourseEndingDialogScript[];
