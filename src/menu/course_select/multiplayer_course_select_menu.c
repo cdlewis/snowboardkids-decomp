@@ -46,7 +46,6 @@ extern u8 D_800EC9C0;
 extern u8 gRaceSplitscreenMode;
 extern s16 gMenuChoicePromptState[];
 extern s8 D_800EC9E5;
-extern s8 gCourseSelectModeSelection;
 extern MultiplayerCourseSelectSaveData gGameSaveDataBuffer[];
 extern s32 D_8010ADE0;
 extern s32 D_8010ADE4;

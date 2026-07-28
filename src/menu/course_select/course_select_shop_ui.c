@@ -133,7 +133,6 @@ struct ShopMenuWidgetActor {
     };
 };
 
-extern u8 gCourseSelectModeSelection;
 extern u8 gMenuSelectionConfirmTimer;
 extern u8 gMenuExitSelection;
 
