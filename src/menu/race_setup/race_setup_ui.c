@@ -5,6 +5,7 @@
 #include "game/engine/callback_task_scheduler.h"
 #include "game/menu/renderer/menu_renderer.h"
 #include "game/menu/race_setup/race_setup_ui.h"
+#include "game/race/player/race_player_input.h"
 
 #define TITLE_MENU_SECONDARY_TEXTURE_HANDLE (gAssetHandles[31])
 #define TITLE_MENU_FRAME_TEXTURE_HANDLE (gAssetHandles[33])
@@ -51,11 +52,6 @@ typedef struct {
 } RaceSetupSavePanelPlayerData;
 
 typedef struct {
-    /* 0x000 */ s32 money;
-    /* 0x004 */ u8 pad4[RACE_PLAYER_STATE_SIZE - 4];
-} RaceSetupPlayerMoneyView;
-
-typedef struct {
     /* 0x00 */ u8 pad0[0x18];
     /* 0x18 */ s16 x;
     /* 0x1A */ u8 pad1A[0x20 - 0x1A];
@@ -67,7 +63,6 @@ extern MenuGlyphScript gRaceSetupSaveStatusMessages[][0x26];
 extern u8 gRaceSetupNoControllerPakMessage[];
 const char D_800E0A80[] = "%d";
 const char D_800E0A84[] = "%6d";
-extern RaceSetupPlayerMoneyView gPlayer1Money[];
 extern TitleMenuWidgetActor *D_8010ADE0;
 extern s16 gControllerPakStatusCodes[];
 extern s16 gMenuChoicePromptState[];
@@ -667,7 +662,7 @@ void drawRaceSetupSavePlayerPanels(TitleMenuWidgetItemView *actor) {
         drawMenuAsciiText((s16)(actor->x[i] + 0x32), (s16)(panel->y[i] + 2), text, 0, alpha);
 
         if (alpha == 0x100) {
-            sprintf(text, D_800E0A84, gPlayer1Money[i].money);
+            sprintf(text, D_800E0A84, gRacePlayers[i].money);
             drawMenuAsciiText((s16)(actor->x[i] + 0x44), (s16)(panel->y[i] + 0x1B), text, 0, alpha);
         } else {
             if ((!panel) && (!panel)) {

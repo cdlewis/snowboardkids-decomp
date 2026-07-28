@@ -1,4 +1,5 @@
 #include "common.h"
+#include "game/race/player/race_player_input.h"
 #include "assets.h"
 #include "game/engine/asset_manager.h"
 #include "game/audio/sound_manager.h"
@@ -113,7 +114,6 @@ extern u8 gRaceSplitscreenMode;
 extern RaceSetupSaveData gGameSaveDataBuffer;
 extern u8 D_800ECA24;
 extern u8 gPlayerCount;
-extern u8 D_80121D90;
 
 const f32 D_800E1090 = 1.333333373f;
 const f32 D_800E1094 = 1.333333373f;
@@ -202,11 +202,11 @@ void initRaceStartTransition(void) {
     createCallbackTaskWithUserId((CallbackTaskCallback)initRaceSetupBackdrop, 0, 0x64, effectArg);
     createCallbackTask((CallbackTaskCallback)initMainMenuModeBoardTransition, 0, 0x64);
     createCallbackTaskWithUserId((CallbackTaskCallback)initMainMenuModeLabelFadeIn, 0, 0x64, effectArg);
-    createCallbackTaskWithUserId((CallbackTaskCallback)initRaceSetupCharacterFocus, 0, 0x64, D_80121D90);
-    createRaceSetupOpponentFocus(1, gRaceSetupOpponentFocusCharacterIds[D_80121D90][0]);
-    createRaceSetupOpponentFocus(2, gRaceSetupOpponentFocusCharacterIds[D_80121D90][1]);
-    createRaceSetupOpponentFocus(3, gRaceSetupOpponentFocusCharacterIds[D_80121D90][2]);
-    effectArg = gRaceSetupOpponentFocusCharacterIds[D_80121D90][3];
+    createCallbackTaskWithUserId((CallbackTaskCallback)initRaceSetupCharacterFocus, 0, 0x64, gRacePlayers[0].characterId);
+    createRaceSetupOpponentFocus(1, gRaceSetupOpponentFocusCharacterIds[gRacePlayers[0].characterId][0]);
+    createRaceSetupOpponentFocus(2, gRaceSetupOpponentFocusCharacterIds[gRacePlayers[0].characterId][1]);
+    createRaceSetupOpponentFocus(3, gRaceSetupOpponentFocusCharacterIds[gRacePlayers[0].characterId][2]);
+    effectArg = gRaceSetupOpponentFocusCharacterIds[gRacePlayers[0].characterId][3];
     createRaceSetupOpponentFocus(4, effectArg);
     setCurrentGameTaskCallback(updateRaceStartTransitionIntroDelay, 0);
 }

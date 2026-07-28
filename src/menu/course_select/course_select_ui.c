@@ -8,28 +8,12 @@
 #include "game/menu/course_select/course_select_shop_ui.h"
 #include "game/math/fixed_point_math.h"
 #include "game/race/player/race_player_model_renderer.h"
+#include "game/race/player/race_player_input.h"
 
 typedef struct {
     u8 pad0[0x20];
     /* 0x20 */ s32 screenState;
 } CourseSelectState;
-
-typedef struct {
-    /* 0x000 */ u8 pad0[5];
-    /* 0x005 */ u8 selectedCharacterId;
-    union {
-        struct {
-            /* 0x006 */ u8 menuSelection;
-            /* 0x007 */ u8 selectionUnlockState;
-            /* 0x008 */ u8 menuState;
-            /* 0x009 */ u8 pad9[8];
-            /* 0x011 */ u8 characterId;
-            /* 0x012 */ u8 pad12[0x5FA];
-        };
-        /* 0x006 */ u8 courseIndex;
-        /* 0x006 */ u8 pad6[0x606];
-    };
-} CourseSelectRacePlayer;
 
 typedef struct {
     /* 0x0 */ u8 pad0;
@@ -226,11 +210,6 @@ extern s16 gCourseSelectIconListXLayout[][4];
 extern s16 gCourseSelectStatsPanelLayout[][4];
 extern s16 gCourseSelectStatsPlayerMarkerLayout[][2];
 extern u8 gPlayerCount;
-extern CourseSelectRacePlayer gRacePlayers[];
-extern CourseSelectRacePlayer D_80121D80[];
-extern u8 D_80121D88;
-extern u8 gCourseSelectSelectedCourseId[][sizeof(CourseSelectRacePlayer)];
-extern u8 gMenuTransitionState;
 extern s32 gMenuFlowState;
 extern CourseSelectState *gCurrentGameTask;
 extern u8 gCurrentViewportIndex;
@@ -241,7 +220,7 @@ void drawCourseSelectPreviewModel(CourseSelectCoursePreviewActor *arg0) {
     unsigned char sp2E;
     u8 var_t0;
     s8 temp_v0_2;
-    CourseSelectRacePlayer *temp_v0_3;
+    RacePlayer *temp_v0_3;
     FixedTransform sp30;
     u8 var_a3;
     u8 var_v1;
@@ -258,7 +237,7 @@ void drawCourseSelectPreviewModel(CourseSelectCoursePreviewActor *arg0) {
             if (D_8010AECC[var_t0] == 1) {
                 var_a3 = arg0->playerSlots[var_t0].courseIndex;
             } else {
-                var_a3 = gCourseSelectSelectedCourseId[var_t0][0];
+                var_a3 = gRacePlayers[var_t0].menuSelection;
             }
             temp_v0_2 = gCourseUnlockSaveSlots[var_t0][var_a3];
             if (temp_v0_2 == -1) {
@@ -274,7 +253,7 @@ void drawCourseSelectPreviewModel(CourseSelectCoursePreviewActor *arg0) {
                 var_v1 = 0;
                 var_a3 = (var_a3 % 3) + 0xC;
             }
-            if (temp_v0_3->courseIndex >= 9) {
+            if (temp_v0_3->menuSelection >= 9) {
                 var_v1 = 0;
             }
             sp2E = var_v1;
@@ -334,7 +313,7 @@ void updateCourseSelectPreviewModelIn(CourseSelectAnimatedActor *arg0)
         case 1:
             if (D_8010AECC[i] & 1) {
                 if (D_8010AEE8[i] < 0) {
-                    if ((s32)gRacePlayers[i].characterId >= 9) {
+                    if ((s32)gRacePlayers[i].courseSelectCharacterId >= 9) {
                         actor->targetCourse[i] = 2;
                     } else {
                         actor->targetCourse[i] = (gRacePlayers[i].menuSelection % 3) - 1;
@@ -476,7 +455,7 @@ void drawCourseSelectPreviewModelClose(CourseSelectCoursePreviewActor *arg0) {
     unsigned char sp2E;
     u8 var_t0;
     s8 temp_v0_2;
-    CourseSelectRacePlayer *temp_v0_3;
+    RacePlayer *temp_v0_3;
     FixedTransform sp30;
     u8 var_a3;
     u8 var_v1;
@@ -493,7 +472,7 @@ void drawCourseSelectPreviewModelClose(CourseSelectCoursePreviewActor *arg0) {
             if (D_8010AECC[var_t0] == 3) {
                 var_a3 = arg0->playerSlots[var_t0].courseIndex;
             } else {
-                var_a3 = gCourseSelectSelectedCourseId[var_t0][0];
+                var_a3 = gRacePlayers[var_t0].menuSelection;
             }
             temp_v0_2 = gCourseUnlockSaveSlots[var_t0][var_a3];
             if (temp_v0_2 == -1) {
@@ -509,7 +488,7 @@ void drawCourseSelectPreviewModelClose(CourseSelectCoursePreviewActor *arg0) {
                 var_v1 = 0;
                 var_a3 = (var_a3 % 3) + 0xC;
             }
-            if (temp_v0_3->courseIndex >= 9) {
+            if (temp_v0_3->menuSelection >= 9) {
                 var_v1 = 0;
             }
             sp2E = var_v1;
@@ -552,7 +531,7 @@ void updateCourseSelectPreviewModelOut(CourseSelectAnimatedActor *arg0)
         case 1:
             if (D_8010AECC[i] & 1) {
                 if (D_8010AEE8[i] < 0) {
-                    if ((s32)gRacePlayers[i].characterId >= 9) {
+                    if ((s32)gRacePlayers[i].courseSelectCharacterId >= 9) {
                         actor->targetCourse[i] = 2;
                     } else {
                         actor->targetCourse[i] = (gRacePlayers[i].menuSelection % 3) - 1;
@@ -710,7 +689,7 @@ void drawCourseSelectCourseIconList(CourseSelectIconListActor *iconList) {
     s32 selectionState;
     s32 splitScreenClipOffset;
     CourseSelectIconListActor *playerItemCountActor;
-    CourseSelectRacePlayer *player;
+    RacePlayer *player;
 
     itemCountActors[BASE_ICON_LIST_ACTOR] = iconList;
     playerIndex = 0;
@@ -744,7 +723,7 @@ void drawCourseSelectCourseIconList(CourseSelectIconListActor *iconList) {
                         selectionState = D_8010AEA4[playerIndex];
                         splitScreenClipOffset = (playerIndex >= 2) * 0x8C;
                         if ((selectionState > 0) && (selectionState < 8)) {
-                            selectedCourseId = player->courseIndex;
+                            selectedCourseId = player->menuSelection;
                             if (selectedCourseId >= 9) {
                                 if ((iconIndex == 3) && (selectionState & 1)) {
                                     highlightAlpha = 0xFF;
@@ -1085,7 +1064,7 @@ void drawCourseSelectCourseCursors(CourseSelectWidgetActor *arg0) {
 void updateCourseSelectCourseCursors(CourseSelectWidgetActor *arg0) {
     register CourseSelectWidgetActor *actor;
     s32 i;
-    CourseSelectRacePlayer *player;
+    RacePlayer *player;
     u8 state;
 
     actor = arg0;
@@ -1213,7 +1192,7 @@ void updateCourseSelectCourseListBackdrop(CourseSelectWidgetActor *arg0) {
         }
         break;
     case 1:
-        if (gMenuTransitionState == 3) {
+        if (gRacePlayers[0].menuState == 3) {
             arg0->pad18[4] = 2;
         }
         break;
@@ -1301,13 +1280,13 @@ void drawCourseSelectCourseStats(CourseSelectWidgetActor *arg0) {
     i = 0;
     if (playerCount > 0) {
         do {
-            if ((playerCount >= 2 || gRacePlayers[i].pad6[2] == 0) &&
+            if ((playerCount >= 2 || gRacePlayers[i].menuState == 0) &&
                 (playerCount >= 2 || (playerCount == 1 && gCourseSelectExtraCourseColumnState == 0))) {
                 playerWidget = (CourseSelectWidgetActor *)((u8 *)arg0 + (i * 2));
-                courseId = gRacePlayers[i].pad6[0];
+                courseId = gRacePlayers[i].menuSelection;
                 if (!playerCount) {
                 }
-                if (courseId >= 9 && gRacePlayers[i].pad6[0] < 12) {
+                if (courseId >= 9 && gRacePlayers[i].menuSelection < 12) {
                     xOffset = (u16)courseId;
                 } else {
                     xOffset = (u16)(courseId % 3);
@@ -1434,7 +1413,7 @@ void updateCourseSelectCourseStats(CourseSelectWidgetActor *arg0) {
         state = arg0->transitionState;
         break;
     case 1:
-        if (gMenuTransitionState == 3) {
+        if (gRacePlayers[0].menuState == 3) {
             arg0->transitionState = 2;
         }
         if (gCurrentGameTask->screenState == 9) {
@@ -1497,13 +1476,6 @@ void initCourseSelectCourseStats(CourseSelectWidgetActor *arg0) {
 
 #ifdef NON_MATCHING
 typedef struct {
-    /* 0x00 */ u8 pad0[6];
-    /* 0x06 */ u8 courseId;
-    /* 0x07 */ u8 unk7;
-    /* 0x08 */ u8 mode;
-} CourseSelectSelection26C4C;
-
-typedef struct {
     /* 0x00 */ u8 pad0[0x2C];
     /* 0x2C */ u16 unk2C;
     /* 0x2E */ u8 unk2E;
@@ -1521,7 +1493,7 @@ extern u8 gCourseSelectExtraCourseIds[];
 void drawCourseSelectCourseDescription(CourseSelectWidgetActor *arg0) {
     volatile CourseSelectStatus26C4C *status = (CourseSelectStatus26C4C *)gCourseSelectStatus;
     MenuGlyphScript *volatile text;
-    volatile CourseSelectSelection26C4C *selection;
+    volatile RacePlayer *selection;
     MenuGlyphScript buffer[8];
     s32 value;
     s32 courseId;
@@ -1531,7 +1503,7 @@ void drawCourseSelectCourseDescription(CourseSelectWidgetActor *arg0) {
     u16 selectedIndex;
     u16 splitMode;
 
-    selection = (CourseSelectSelection26C4C *)gRacePlayers;
+    selection = gRacePlayers;
     price = 3;
     digitCount = status->unk2C;
     value = digitCount;
@@ -1539,13 +1511,13 @@ void drawCourseSelectCourseDescription(CourseSelectWidgetActor *arg0) {
         s32 courseIndex;
         s32 selectedCourseId;
 
-        if ((D_8010AEA8 == 0) && ((value = selection->mode) == 0 || (value == 3) || (value == 9))) {
+        if ((D_8010AEA8 == 0) && ((value = selection->menuState) == 0 || (value == 3) || (value == 9))) {
             value = status->unk2E;
             if (value == 1) {
                 value = price;
             } else if (value == 2) {
                 value = 4;
-            } else if ((courseId = selection->courseId, courseId >= 9) && (courseId < 12)) {
+            } else if ((courseId = selection->menuSelection, courseId >= 9) && (courseId < 12)) {
                 value = 5;
             } else {
                 value = courseId % 3;
@@ -1569,9 +1541,9 @@ void drawCourseSelectCourseDescription(CourseSelectWidgetActor *arg0) {
                 selectedIndex = arg0->timer;
             }
 
-            if ((gRaceSplitscreenMode == 3) && ((courseId = selection->courseId) <= 8)) {
+            if ((gRaceSplitscreenMode == 3) && ((courseId = selection->menuSelection) <= 8)) {
                 text = gCourseSelectBoardLevelByCourseText + ((courseId % 3) * 0x18);
-            } else if (((courseId = selection->courseId) >= 9) && (courseId < 12)) {
+            } else if (((courseId = selection->menuSelection) >= 9) && (courseId < 12)) {
                 text = gCourseSelectExtraCourseBoardLevelText + ((gCourseSelectExtraCourseIds[selectedIndex] % 3) * 0x30);
             } else {
                 text = gCourseSelectBoardLevelText;
@@ -1580,7 +1552,7 @@ void drawCourseSelectCourseDescription(CourseSelectWidgetActor *arg0) {
 
         drawMenuGlyphScript(arg0->x, arg0->y, text, 1, arg0->spriteIndex, 0);
 
-        if ((gRaceSplitscreenMode == 3) && (((value = selection->mode) == 1) || (value == 2))) {
+        if ((gRaceSplitscreenMode == 3) && (((value = selection->menuState) == 1) || (value == 2))) {
             if ((D_8010AE64[0] != 3) || !(gUnlockedExtraCourseFlags & 7)) {
                 buffer[0] = -4;
                 buffer[1] = 6;
@@ -1593,8 +1565,8 @@ void drawCourseSelectCourseDescription(CourseSelectWidgetActor *arg0) {
             if (splitMode == 0) {
                 buffer[0] = -4;
                 buffer[1] = 6;
-                if ((selectedIndex >= 2) || (selection->courseId >= 9)) {
-                    selectedCourseId = selection->courseId;
+                if ((selectedIndex >= 2) || (selection->menuSelection >= 9)) {
+                    selectedCourseId = selection->menuSelection;
                     if (selectedCourseId >= 9) {
                         courseIndex = gCourseSelectExtraCourseIds[selectedIndex];
                     } else {
@@ -1623,7 +1595,7 @@ void drawCourseSelectCourseDescription(CourseSelectWidgetActor *arg0) {
                     digits = &buffer[digitCount];
                     digits[1] = 0x10;
                     digits[2] = -1;
-                    if (selection->courseId >= 9) {
+                    if (selection->menuSelection >= 9) {
                     }
                 } else {
                     digitCount = 3;
@@ -1671,7 +1643,7 @@ void updateCourseSelectCourseDescription(CourseSelectWidgetActor *arg0) {
         }
         break;
     case 1:
-        if (gMenuTransitionState == temp_a0) {
+        if (gRacePlayers[0].menuState == temp_a0) {
             arg0->pad18_2[6] = 2;
         }
         break;
@@ -1704,7 +1676,7 @@ void updateCourseSelectCourseDescription(CourseSelectWidgetActor *arg0) {
         break;
     }
 
-    if (gMenuTransitionState == 0) {
+    if (gRacePlayers[0].menuState == 0) {
         arg0->pad18_2[8] = 0;
     }
 
@@ -1761,7 +1733,7 @@ void updateCourseSelectExtraCourseBadge(CourseSelectWidgetActor *arg0) {
         state = arg0->state;
         break;
     case 1:
-        if ((gMenuTransitionState == 3) || (gCurrentGameTask->screenState == 9)) {
+        if ((gRacePlayers[0].menuState == 3) || (gCurrentGameTask->screenState == 9)) {
             state = (arg0->state = 2);
         }
         break;
@@ -1960,7 +1932,7 @@ void updateCourseSelectExtraCourseIconList(CourseSelectWidgetActor *arg0) {
     u8 count;
 
     actor = (CourseSelectExtraCourseIconListActor *)arg0;
-    if (D_80121D88 == 3) {
+    if (gRacePlayers[0].menuState == 3) {
         setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateCourseSelectExtraCourseIconListClose);
         for (playerIndex = 0; playerIndex < gPlayerCount; playerIndex++) {
             actor->alpha[playerIndex] = 0x100;
@@ -1971,12 +1943,12 @@ void updateCourseSelectExtraCourseIconList(CourseSelectWidgetActor *arg0) {
         actor->pulseTimer[0] = 0;
     } else {
         for (playerIndex = 0; playerIndex < gPlayerCount; playerIndex++) {
-            if (D_80121D80[playerIndex].menuState != 2) {
+            if (gRacePlayers[playerIndex].menuState != 2) {
                 promptState = &gMenuChoicePromptState[playerIndex];
                 if ((*promptState == 1) || ((*promptState >= 5) && (*promptState < 9))) {
                     if ((*promptState == 1) && (actor->itemCounts[playerIndex] == 0)) {
                         iconMask = 1;
-                        if (D_80121D80[playerIndex].selectedCharacterId == 5) {
+                        if (gRacePlayers[playerIndex].selectedCharacterId == 5) {
                             actor->itemCounts[playerIndex] = 1;
                             if (gPlayerCount == 1) {
                                 actor->tileIndices[playerIndex][0] = 9;
@@ -1985,7 +1957,7 @@ void updateCourseSelectExtraCourseIconList(CourseSelectWidgetActor *arg0) {
                             }
                         } else {
                             for (iconIndex = 0; iconIndex < 3; iconIndex++) {
-                                if (D_80121D80[playerIndex].courseIndex >= 9) {
+                                if (gRacePlayers[playerIndex].menuSelection >= 9) {
                                     if (gRaceSplitscreenMode == 3) {
                                         if (((CourseSelectExtraCourseSaveData *)gGameSaveDataBuffer)[playerIndex]
                                                 .extraCourseUnlockFlags &
@@ -2012,7 +1984,7 @@ void updateCourseSelectExtraCourseIconList(CourseSelectWidgetActor *arg0) {
                                         }
                                     }
                                 } else if (((CourseSelectExtraCourseSaveData *)gGameSaveDataBuffer)[playerIndex]
-                                               .courseUnlockStates[(D_80121D80[playerIndex].courseIndex % 3) +
+                                               .courseUnlockStates[(gRacePlayers[playerIndex].menuSelection % 3) +
                                                                    (iconIndex * 3)] != -1) {
                                     actor->itemCounts[playerIndex]++;
                                     if (gPlayerCount == 1) {
@@ -2025,13 +1997,13 @@ void updateCourseSelectExtraCourseIconList(CourseSelectWidgetActor *arg0) {
 
                             splitscreenMode = gRaceSplitscreenMode;
                             if ((gRaceSplitscreenMode == 3) && (gCourseSelectModeSelection == 0)) {
-                                if (D_80121D80[playerIndex].courseIndex < 9) {
+                                if (gRacePlayers[playerIndex].menuSelection < 9) {
                                     actor->itemCounts[playerIndex]++;
                                 }
                                 if (actor->itemCounts[playerIndex] >= 4) {
                                     actor->itemCounts[playerIndex] = 3;
                                 }
-                                if (D_80121D80[playerIndex].courseIndex < 9) {
+                                if (gRacePlayers[playerIndex].menuSelection < 9) {
                                     actor->tileIndices[playerIndex][actor->itemCounts[playerIndex] - 1] =
                                         actor->itemCounts[playerIndex] + 8;
                                 }
@@ -2100,7 +2072,7 @@ void updateCourseSelectExtraCourseIconList(CourseSelectWidgetActor *arg0) {
 void updateCourseSelectExtraCourseIconList(CourseSelectWidgetActor *arg0) {
     CourseSelectExtraCourseIconListActor *actor;
     s32 unlockMask;
-    CourseSelectRacePlayer *player;
+    RacePlayer *player;
     s16 *promptState;
     s32 playerIndex;
     s32 iconIndex;
@@ -2111,7 +2083,7 @@ void updateCourseSelectExtraCourseIconList(CourseSelectWidgetActor *arg0) {
     s32 nextItemCount;
 
     actor = (CourseSelectExtraCourseIconListActor *)arg0;
-    if (gMenuTransitionState == 3) {
+    if (gRacePlayers[0].menuState == 3) {
         setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateCourseSelectExtraCourseIconListClose);
         playerIndex = 0;
         if ((s32)gPlayerCount > 0) {
@@ -2550,7 +2522,7 @@ void updateCourseSelectPlayerPanels(CourseSelectWidgetActor *arg0) {
                     } while (step != 0x18);
                     break;
                 case 1:
-                    if (*(&gMenuTransitionState + (i * sizeof(CourseSelectRacePlayer))) == 4) {
+                    if (gRacePlayers[i].menuState == 4) {
                         ((CourseSelectWidgetInitActor *)statePtr)->state[0] = 2;
                         actor->timer[i] = 0;
                     }
@@ -2723,7 +2695,7 @@ void updateCourseSelectCompletePanels(CourseSelectPlayerPanelsActor *actor) {
                     panel->playerPanelFadeAlpha[i] = 0x100;
                 }
             }
-            if (D_80121D80[i].menuState == 1) {
+            if (gRacePlayers[i].menuState == 1) {
                 panel->playerPanelFadeAlpha[i] = 0;
             }
         }
@@ -2732,7 +2704,7 @@ void updateCourseSelectCompletePanels(CourseSelectPlayerPanelsActor *actor) {
     if (D_800EC9C0 == 0x10) {
         removeCallbackTask(task);
         for (i = 0; i < gPlayerCount; i++) {
-            D_80121D80[i].menuState = 3;
+            gRacePlayers[i].menuState = 3;
         }
     } else {
         addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawCourseSelectCompletePanels, task);

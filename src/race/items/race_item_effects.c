@@ -8,10 +8,10 @@
 #include "game/audio/sound_manager.h"
 #include "game/math/spatial_math.h"
 #include "game/math/fixed_point_math.h"
+#include "game/race/player/race_player_input.h"
 #include "game/race/items/race_item_effects.h"
 
-#define RACE_PLAYER_STATE_SIZE 0x60C
-#define ASSET_HANDLE(index) (gAssetHandles[(index)])
+#define ASSET_HANDLE(index) (((s16 *)&gAssetHandles)[index])
 #define RACE_ITEM_GFX_CMD(pkt, cmd0, cmd1) \
 { \
     Gfx *_g = (Gfx *)(pkt); \
@@ -173,29 +173,6 @@ struct RaceItemTextureActor {
     /* 0x28 */ void *palettes[4];
 };
 
-typedef struct {
-    /* 0x000 */ Vec3i pos;
-    /* 0x00C */ u8 padC[RACE_PLAYER_STATE_SIZE - 0xC];
-} RaceItemEffectPlayerState;
-
-typedef struct {
-    /* 0x000 */ u8 pad0[0x1C];
-    /* 0x01C */ Vec3i pos1C;
-    /* 0x028 */ Vec3i pos;
-    /* 0x034 */ u8 pad34[0x94 - 0x34];
-    /* 0x094 */ FixedMatrix3s transform;
-    /* 0x0A6 */ s16 padA6;
-    /* 0x0A8 */ Vec3i posA8;
-    /* 0x0B4 */ u8 padB4[0x2FC - 0xB4];
-    /* 0x2FC */ s32 flags2FC;
-    /* 0x300 */ u8 pad300[0x4A0 - 0x300];
-    /* 0x4A0 */ Vec3i unk4A0;
-    /* 0x4AC */ Vec3i unk4AC;
-    /* 0x4B8 */ Vec3i unk4B8;
-    /* 0x4C4 */ Vec3i unk4C4;
-    /* 0x4D0 */ u8 pad4D0[RACE_PLAYER_STATE_SIZE - 0x4D0];
-} RaceItemFollowPlayer;
-
 typedef union {
     s64 value;
     struct {
@@ -230,8 +207,6 @@ RaceItemDrawNode *gRaceItemTextureEffectDrawLists[4];
 extern RaceItemDrawLists D_801121E0;
 extern s16 gRaceCourseIndex;
 extern u8 gRaceUpdatePaused;
-extern RaceItemFollowPlayer gRacePlayers[];
-extern RaceItemEffectPlayerState D_80121EE8[];
 extern u8 gCurrentViewportIndex;
 extern u8 gRenderMatricesDirty;
 extern void *gViewportMatrix;
@@ -368,7 +343,7 @@ void updateRacePlayerHitEffect(RaceItemEffectActor *arg0) {
 
 void initRacePlayerHitEffect(RaceItemEffectActor *arg0) {
     char pad2C[4];
-    RaceItemFollowPlayer *sp58;
+    RacePlayer *sp58;
     char pad50[8];
     FixedTransform sp30;
     Vec3i sp24;
@@ -381,9 +356,9 @@ void initRacePlayerHitEffect(RaceItemEffectActor *arg0) {
         sp24.y = arg0->vector24.fields.word28.word;
         sp24.z = arg0->vector24.fields.word2C.word;
         transformVec3iByFixedMatrix(sp30.rotation, &sp24, &arg0->payload.vec);
-        arg0->payload.vec.x += sp58->pos1C.x;
-        arg0->payload.vec.y += sp58->pos1C.y;
-        arg0->payload.vec.z += sp58->pos1C.z;
+        arg0->payload.vec.x += sp58->pos.x;
+        arg0->payload.vec.y += sp58->pos.y;
+        arg0->payload.vec.z += sp58->pos.z;
     }
     updateRacePlayerHitEffect(arg0);
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRacePlayerHitEffect);
@@ -531,7 +506,7 @@ void renderRacePlayerShockEffect(RaceItemEffectActor *arg0) {
 }
 
 void updateRacePlayerShockEffect(RaceItemEffectActor *arg0) {
-    RaceItemFollowPlayer *player;
+    RacePlayer *player;
     RaceItemEffectActor *actor = arg0;
 
     if (gRaceUpdatePaused == 0) {
@@ -554,18 +529,18 @@ void updateRacePlayerShockEffect(RaceItemEffectActor *arg0) {
 }
 
 void initRacePlayerShockEffect(RaceItemEffectActor *arg0) {
-    RaceItemFollowPlayer *player;
+    RacePlayer *player;
 
     arg0->unk34.shorts.height.byte = -1;
     arg0->vector24.fields.word2C.word = 0;
     arg0->vector24.fields.word28.word = 0x280000;
     arg0->vector24.fields.word24.velocityX = 0x400000;
     player = &gRacePlayers[arg0->playerIndex];
-    if (player->flags2FC & 0x400) {
+    if (player->stateFlags & 0x400) {
         arg0->vector24.fields.word24.velocityX = -arg0->vector24.fields.word24.velocityX;
     }
     player = &gRacePlayers[arg0->playerIndex];
-    enqueuePositionalSoundEffect(9, (Vec3i *) &player->pos1C, 0x7F, 0x32);
+    enqueuePositionalSoundEffect(9, (Vec3i *) &player->pos, 0x7F, 0x32);
     updateRacePlayerShockEffect(arg0);
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRacePlayerShockEffect);
 }
@@ -641,7 +616,7 @@ void initRaceItemBreakParticle(RaceItemEffectActor *arg0) {
     FixedMatrix3sScratch sp3C;
     Vec3i sp30;
     volatile s32 pad1[1];
-    RaceItemFollowPlayer *player;
+    RacePlayer *player;
     Vec2s *angles;
 
     arg0->unk38.width = 0xFF;
@@ -649,9 +624,9 @@ void initRaceItemBreakParticle(RaceItemEffectActor *arg0) {
     getAssetTableImageAndPalette(getRelocatableHeapBlockBase(ASSET_HANDLE(0x1C)), gRaceItemEffectSpriteIds[arg0->playerIndex], &arg0->image, &arg0->palette);
 
     player = &gRacePlayers[arg0->followPlayerIndex];
-    arg0->payload.vec.x = player->pos.x;
-    arg0->payload.vec.y = player->pos.y;
-    arg0->payload.vec.z = player->pos.z;
+    arg0->payload.vec.x = player->unk28.x;
+    arg0->payload.vec.y = player->unk28.y;
+    arg0->payload.vec.z = player->unk28.z;
 
     angles = &gRaceItemBreakParticleAngles[arg0->angleIndex & 0xFF];
     makeFixedRotationXY(sp3C, angles->x, angles->y);
@@ -679,9 +654,9 @@ void spawnRaceItemBreakParticles(s16 playerIndex, s16 itemIndex) {
     itemType = getRaceItemEffectType(itemIndex);
     if (itemType != 4) {
         if (itemType == 1) {
-            enqueuePositionalSoundEffect(0x12, (Vec3i *) &gRacePlayers[playerIndex].pos1C, 0x7F, 0x32);
+            enqueuePositionalSoundEffect(0x12, (Vec3i *) &gRacePlayers[playerIndex].pos, 0x7F, 0x32);
         } else {
-            enqueuePositionalSoundEffect(0x11, (Vec3i *) &gRacePlayers[playerIndex].pos1C, 0x7F, 0x32);
+            enqueuePositionalSoundEffect(0x11, (Vec3i *) &gRacePlayers[playerIndex].pos, 0x7F, 0x32);
         }
 
         callback = initRaceItemBreakParticle;
@@ -757,9 +732,9 @@ void updateRacePlayerRecoverySparkle(RaceItemEffectActor *arg0) {
 
 void initRacePlayerRecoverySparkle(RaceItemEffectActor *arg0) {
     arg0->vector24.fields.word28.bytes.phase = -1;
-    arg0->payload.vec.x = D_80121EE8[arg0->playerIndex].pos.x + ((randomNextMain() - 0x80) << 10);
-    arg0->payload.vec.y = D_80121EE8[arg0->playerIndex].pos.y + ((randomNextMain() - 0x80) << 10);
-    arg0->payload.vec.z = D_80121EE8[arg0->playerIndex].pos.z + ((randomNextMain() - 0x80) << 10);
+    arg0->payload.vec.x = gRacePlayers[arg0->playerIndex].effectPos.x + ((randomNextMain() - 0x80) << 10);
+    arg0->payload.vec.y = gRacePlayers[arg0->playerIndex].effectPos.y + ((randomNextMain() - 0x80) << 10);
+    arg0->payload.vec.z = gRacePlayers[arg0->playerIndex].effectPos.z + ((randomNextMain() - 0x80) << 10);
     updateRacePlayerRecoverySparkle(arg0);
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRacePlayerRecoverySparkle);
 }
@@ -816,18 +791,18 @@ void renderRacePlayerSnowSpray(RaceItemFollowActor *arg0) {
 }
 
 void updateRacePlayerSnowSpray(RaceItemFollowActor *arg0) {
-    RaceItemFollowPlayer *player;
+    RacePlayer *player;
     RaceItemFollowActor *temp_a2 = arg0;
 
     if (gRaceUpdatePaused == 0) {
         arg0->timer++;
         player = &gRacePlayers[arg0->playerIndex];
-        arg0->pos1.x = arg0->offset1.x + player->pos.x;
-        arg0->pos1.y = arg0->offset1.y + player->pos.y;
-        arg0->pos1.z = arg0->offset1.z + player->pos.z;
-        arg0->pos2.x = arg0->offset2.x + player->pos.x;
-        arg0->pos2.y = arg0->offset2.y + player->pos.y;
-        arg0->pos2.z = arg0->offset2.z + player->pos.z;
+        arg0->pos1.x = arg0->offset1.x + player->unk28.x;
+        arg0->pos1.y = arg0->offset1.y + player->unk28.y;
+        arg0->pos1.z = arg0->offset1.z + player->unk28.z;
+        arg0->pos2.x = arg0->offset2.x + player->unk28.x;
+        arg0->pos2.y = arg0->offset2.y + player->unk28.y;
+        arg0->pos2.z = arg0->offset2.z + player->unk28.z;
         if (arg0->timer == 0x18) {
             removeCallbackTask(arg0);
             return;
@@ -840,24 +815,24 @@ void updateRacePlayerSnowSpray(RaceItemFollowActor *arg0) {
 }
 
 void initRacePlayerSnowSpray(RaceItemFollowActor *arg0) {
-    RaceItemFollowPlayer *player;
+    RacePlayer *player;
 
     arg0->timer = -1;
     player = &gRacePlayers[arg0->playerIndex];
-    if (player->flags2FC & 0x400) {
-        arg0->offset1.x = player->unk4A0.x - player->pos.x;
-        arg0->offset1.y = player->unk4A0.y - player->pos.y;
-        arg0->offset1.z = player->unk4A0.z - player->pos.z;
-        arg0->offset2.x = player->unk4B8.x - player->pos.x;
-        arg0->offset2.y = player->unk4B8.y - player->pos.y;
-        arg0->offset2.z = player->unk4B8.z - player->pos.z;
+    if (player->stateFlags & 0x400) {
+        arg0->offset1.x = player->unk4A0.x - player->unk28.x;
+        arg0->offset1.y = player->unk4A0.y - player->unk28.y;
+        arg0->offset1.z = player->unk4A0.z - player->unk28.z;
+        arg0->offset2.x = player->unk4B8.x - player->unk28.x;
+        arg0->offset2.y = player->unk4B8.y - player->unk28.y;
+        arg0->offset2.z = player->unk4B8.z - player->unk28.z;
     } else {
-        arg0->offset1.x = player->unk4AC.x - player->pos.x;
-        arg0->offset1.y = player->unk4AC.y - player->pos.y;
-        arg0->offset1.z = player->unk4AC.z - player->pos.z;
-        arg0->offset2.x = player->unk4C4.x - player->pos.x;
-        arg0->offset2.y = player->unk4C4.y - player->pos.y;
-        arg0->offset2.z = player->unk4C4.z - player->pos.z;
+        arg0->offset1.x = player->unk4AC.x - player->unk28.x;
+        arg0->offset1.y = player->unk4AC.y - player->unk28.y;
+        arg0->offset1.z = player->unk4AC.z - player->unk28.z;
+        arg0->offset2.x = player->unk4C4.x - player->unk28.x;
+        arg0->offset2.y = player->unk4C4.y - player->unk28.y;
+        arg0->offset2.z = player->unk4C4.z - player->unk28.z;
     }
     updateRacePlayerSnowSpray(arg0);
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRacePlayerSnowSpray);
@@ -1060,18 +1035,18 @@ void renderRacePlayerLandingSnowSpray(RaceItemFollowActor *arg0) {
 }
 
 void updateRacePlayerLandingSnowSpray(RaceItemFollowActor *arg0) {
-    RaceItemFollowPlayer *player;
+    RacePlayer *player;
     RaceItemFollowActor *temp_a2 = arg0;
 
     if (gRaceUpdatePaused == 0) {
         arg0->timer++;
         player = &gRacePlayers[arg0->playerIndex];
-        arg0->pos1.x = arg0->offset1.x + player->pos.x;
-        arg0->pos1.y = arg0->offset1.y + player->pos.y;
-        arg0->pos1.z = arg0->offset1.z + player->pos.z;
-        arg0->pos2.x = arg0->offset2.x + player->pos.x;
-        arg0->pos2.y = arg0->offset2.y + player->pos.y;
-        arg0->pos2.z = arg0->offset2.z + player->pos.z;
+        arg0->pos1.x = arg0->offset1.x + player->unk28.x;
+        arg0->pos1.y = arg0->offset1.y + player->unk28.y;
+        arg0->pos1.z = arg0->offset1.z + player->unk28.z;
+        arg0->pos2.x = arg0->offset2.x + player->unk28.x;
+        arg0->pos2.y = arg0->offset2.y + player->unk28.y;
+        arg0->pos2.z = arg0->offset2.z + player->unk28.z;
         if (arg0->timer == 0x18) {
             removeCallbackTask(arg0);
             return;
@@ -1084,24 +1059,24 @@ void updateRacePlayerLandingSnowSpray(RaceItemFollowActor *arg0) {
 }
 
 void initRacePlayerLandingSnowSpray(RaceItemFollowActor *arg0) {
-    RaceItemFollowPlayer *player;
+    RacePlayer *player;
 
     arg0->timer = -1;
     player = &gRacePlayers[arg0->playerIndex];
-    if (player->flags2FC & 0x400) {
-        arg0->offset1.x = player->unk4A0.x - player->pos.x;
-        arg0->offset1.y = player->unk4A0.y - player->pos.y;
-        arg0->offset1.z = player->unk4A0.z - player->pos.z;
-        arg0->offset2.x = player->unk4B8.x - player->pos.x;
-        arg0->offset2.y = player->unk4B8.y - player->pos.y;
-        arg0->offset2.z = player->unk4B8.z - player->pos.z;
+    if (player->stateFlags & 0x400) {
+        arg0->offset1.x = player->unk4A0.x - player->unk28.x;
+        arg0->offset1.y = player->unk4A0.y - player->unk28.y;
+        arg0->offset1.z = player->unk4A0.z - player->unk28.z;
+        arg0->offset2.x = player->unk4B8.x - player->unk28.x;
+        arg0->offset2.y = player->unk4B8.y - player->unk28.y;
+        arg0->offset2.z = player->unk4B8.z - player->unk28.z;
     } else {
-        arg0->offset1.x = player->unk4AC.x - player->pos.x;
-        arg0->offset1.y = player->unk4AC.y - player->pos.y;
-        arg0->offset1.z = player->unk4AC.z - player->pos.z;
-        arg0->offset2.x = player->unk4C4.x - player->pos.x;
-        arg0->offset2.y = player->unk4C4.y - player->pos.y;
-        arg0->offset2.z = player->unk4C4.z - player->pos.z;
+        arg0->offset1.x = player->unk4AC.x - player->unk28.x;
+        arg0->offset1.y = player->unk4AC.y - player->unk28.y;
+        arg0->offset1.z = player->unk4AC.z - player->unk28.z;
+        arg0->offset2.x = player->unk4C4.x - player->unk28.x;
+        arg0->offset2.y = player->unk4C4.y - player->unk28.y;
+        arg0->offset2.z = player->unk4C4.z - player->unk28.z;
     }
     updateRacePlayerLandingSnowSpray(arg0);
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRacePlayerLandingSnowSpray);

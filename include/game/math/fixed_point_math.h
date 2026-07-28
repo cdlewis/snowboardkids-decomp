@@ -22,13 +22,6 @@ typedef enum {
     MTX_ZZ
 } FixedMatrixIndex;
 
-/* Rotation transform: a 3x3 rotation followed by a translation. */
-typedef struct {
-    /* 0x00 */ FixedMatrix3s rotation;
-    /* 0x12 */ s16 pad12;
-    /* 0x14 */ Vec3i translation;
-} FixedTransform;
-
 void initFixedTransform(FixedTransform *arg0);
 s16 fixedSine(s16 arg0);
 s16 fixedCosine(s16 arg0);

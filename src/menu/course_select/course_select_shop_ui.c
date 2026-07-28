@@ -6,21 +6,13 @@
 #include "game/menu/splitscreen_select/race_splitscreen_select_ui.h"
 #include "game/menu/course_select/course_select_shop_ui.h"
 #include "game/menu/renderer/menu_renderer.h"
+#include "game/race/player/race_player_input.h"
 
 typedef struct {
     char pad[0x1C];
     s32 shopItemPrice;
     s32 unk20;
 } MainMenuState;
-
-typedef struct {
-    char pad0[0x6];
-    /* 0x06 */ u8 selectedShopItem;
-    char pad7[0x1];
-    /* 0x08 */ u8 shopMenuState;
-    char pad9[0x3];
-    /* 0x0C */ s32 money;
-} ShopMenuState;
 
 typedef struct {
     union {
@@ -214,9 +206,6 @@ extern ShopMenuSparklePattern gShopMenuSparklePatterns[];
 extern ShopDescriptionText gShopMenuModeDescriptionText[];
 extern MenuGlyphScript gCourseUnlockPurchasePromptText[];
 extern CourseDetailsMenuEntryTilePages gCourseDetailsMenuEntryTiles;
-extern u8 gCourseSelectSelectedCourseId;
-extern u8 gMenuTransitionState;
-extern u8 gMenuSelectionVariant;
 extern CourseSelectStatus gCourseSelectStatus;
 extern u8 gShopMenuModeCursorState;
 extern u8 gShopMenuDescriptionSeen;
@@ -225,8 +214,6 @@ extern u8 gCourseDetailsMenuSelection;
 extern u8 gCourseDetailsPreviewPage;
 extern u8 gCourseDetailsCloseFromBack;
 extern s16 gCoursePreviewViewportHeight;
-extern ShopMenuState gRacePlayers;
-extern s32 gPlayer1Money;
 extern s32 gMenuFlowState;
 extern MainMenuState *gCurrentGameTask;
 extern s16 gMenuChoicePromptState;
@@ -278,7 +265,7 @@ void updateShopMenuModeChoiceRows(ShopMenuRowActor *arg0) {
         state = arg0->state;
         break;
     case 1:
-        if (gMenuTransitionState == 1) {
+        if (gRacePlayers[0].menuState == 1) {
             state = (u8) (arg0->state = 2);
         }
         break;
@@ -334,7 +321,7 @@ void updateShopMenuSidePanel(ShopMenuWidgetActor *arg0) {
         state = arg0->sprite.bytes.state;
         break;
     case 1:
-        if (gMenuTransitionState == 1) {
+        if (gRacePlayers[0].menuState == 1) {
             state = arg0->sprite.bytes.state = 2;
         }
         break;
@@ -463,7 +450,7 @@ void updateShopMenuSelectedModePanel(ShopMenuWidgetActor *arg0) {
         break;
     case 3:
         gMenuFlowState += 1;
-        if (gMenuTransitionState == 1) {
+        if (gRacePlayers[0].menuState == 1) {
             arg0->item.bytes.subState = 4;
         }
         state = arg0->item.bytes.subState;
@@ -476,12 +463,12 @@ void updateShopMenuSelectedModePanel(ShopMenuWidgetActor *arg0) {
         state = arg0->item.bytes.subState;
         break;
     case 5:
-        gMenuTransitionState = 2;
+        gRacePlayers[0].menuState = 2;
         state = arg0->item.bytes.subState;
         break;
     }
 
-    if ((state == 5) && (gMenuTransitionState == 2)) {
+    if ((state == 5) && (gRacePlayers[0].menuState == 2)) {
         removeCallbackTask(arg0);
         return;
     }
@@ -569,7 +556,7 @@ void updateShopMenuUnselectedModePanel(ShopMenuWidgetActor *arg0) {
         break;
     case 3:
         gMenuFlowState += 1;
-        if (gMenuTransitionState == 1) {
+        if (gRacePlayers[0].menuState == 1) {
             if (arg0->y == -0x140) {
                 arg0->item.bytes.state = 5;
             } else {
@@ -677,7 +664,7 @@ void updateShopMenuCourseListPanel(ShopMenuWidgetActor *arg0) {
         break;
     case 3:
         gMenuFlowState += 1;
-        if (gMenuTransitionState == 1) {
+        if (gRacePlayers[0].menuState == 1) {
             arg0->item.bytes.state = 5;
         }
         state = arg0->item.bytes.state;
@@ -762,7 +749,7 @@ void updateShopMenuModeCursor(ShopMenuWidgetActor *arg0) {
         arg0->transition.bytes.timer = (arg0->transition.bytes.timer + 1) & 0x1F;
         break;
     case 2:
-        if (gMenuTransitionState == 1) {
+        if (gRacePlayers[0].menuState == 1) {
             state = arg0->transition.bytes.state = 3;
         }
         break;
@@ -821,7 +808,7 @@ void updateShopMenuDescriptionText(ShopMenuWidgetActor *arg0) {
         state = arg0->transition.bytes.state;
         break;
     case 1:
-        if (gMenuTransitionState == 1) {
+        if (gRacePlayers[0].menuState == 1) {
             state = arg0->transition.bytes.state = 2;
         }
         break;
@@ -873,7 +860,7 @@ void updateShopMenuPromptPanel(ShopMenuWidgetActor *arg0) {
         state = arg0->transition.bytes.state;
         break;
     case 1:
-        if (gMenuTransitionState == 1) {
+        if (gRacePlayers[0].menuState == 1) {
             state = arg0->transition.bytes.state = 2;
         }
         break;
@@ -907,7 +894,7 @@ void drawShopMenuMoneyPanel(ShopMenuWidgetActor *arg0) {
 
     drawMenuPanelBackdrop(arg0->x, arg0->y, 0x5000, 0x4000);
     drawMenuSpriteWithAlpha((s16)(arg0->x + 8), (s16)(arg0->y + 4), getRelocatableHeapBlockBase(gAssetHandles[0x25]), 0x11, 0x20, 0x20, 0, arg0->sprite.index, 0);
-    sprintf(sp40, gShopMenuMoneyFormat, gPlayer1Money);
+    sprintf(sp40, gShopMenuMoneyFormat, gRacePlayers[0].money);
     drawMenuAsciiText((s16)(arg0->x + 0x10), (s16)(arg0->y + 0x10), sp40, 0, arg0->sprite.index);
 }
 
@@ -924,7 +911,7 @@ void updateShopMenuMoneyPanel(ShopMenuWidgetActor *arg0) {
         state = arg0->transition.bytes.state;
         break;
     case 1:
-        if (gMenuTransitionState == 1) {
+        if (gRacePlayers[0].menuState == 1) {
             state = arg0->transition.bytes.state = 2;
         }
         break;
@@ -966,7 +953,7 @@ void updateShopMenuMoneyPanelForCourseSelectReturn(ShopMenuWidgetActor *arg0) {
         state = arg0->transition.bytes.state;
         break;
     case 1:
-        if (gMenuTransitionState == 3) {
+        if (gRacePlayers[0].menuState == 3) {
             state = arg0->transition.bytes.state = 2;
         }
         break;
@@ -1033,7 +1020,7 @@ void updateShopMenuSparkles(ShopMenuWidgetActor *arg0) {
         var_v0 = arg0->slide.slideState;
         break;
     case 1:
-        if (gMenuTransitionState == 1) {
+        if (gRacePlayers[0].menuState == 1) {
             arg0->slide.slideState = 2U;
             var_v0 = 2 & 0xFF;
         }
@@ -1055,7 +1042,7 @@ void initShopMenuSparkles(ShopMenuWidgetActor *arg0) {
     s32 index;
     s16 *entry;
 
-    index = gMenuSelectionVariant;
+    index = gRacePlayers[0].selectedCharacterId;
     entry = &gShopMenuSparkleInitTable[(0xFFFF & (u16)index) * 3];
     arg0->sparkle.patternIndex = index;
     arg0->sprite.index = entry[0] ^ 0;
@@ -1076,9 +1063,9 @@ void drawCourseUnlockPricePanel(ShopMenuWidgetActor *arg0) {
     u16 sp48;
     s32 palette;
 
-    if ((s8)gCourseUnlockSaveSlots[gCourseSelectSelectedCourseId] == -1) {
+    if ((s8)gCourseUnlockSaveSlots[gRacePlayers[0].menuSelection] == -1) {
         new_var = 0x3000;
-        temp = gCourseUnlockPrices[gCourseSelectSelectedCourseId];
+        temp = gCourseUnlockPrices[gRacePlayers[0].menuSelection];
         if ((u32)temp >= 0x186A0U) {
             sp4A = 0x4000;
             sp48 = 0;
@@ -1095,7 +1082,7 @@ void drawCourseUnlockPricePanel(ShopMenuWidgetActor *arg0) {
 
         drawMenuPanelBackdrop((s16)(arg0->x + sp48), arg0->y, sp4A, 0x2000);
 
-        if ((u32)gPlayer1Money < (u32)gCourseUnlockPrices[gCourseSelectSelectedCourseId]) {
+        if ((u32)gRacePlayers[0].money < (u32)gCourseUnlockPrices[gRacePlayers[0].menuSelection]) {
             palette = 1;
         } else {
             palette = 0;
@@ -1124,7 +1111,7 @@ void updateCourseUnlockPricePanel(ShopMenuWidgetActor *arg0) {
         }
         break;
     case 1:
-        arg0->item.price = gCourseUnlockPrices[gRacePlayers.selectedShopItem];
+        arg0->item.price = gCourseUnlockPrices[gRacePlayers[0].menuSelection];
         if (gCurrentGameTask->shopItemPrice >= 2) {
             arg0->slide.bytes.state = 2;
         }
@@ -1146,13 +1133,13 @@ void updateCourseUnlockPricePanel(ShopMenuWidgetActor *arg0) {
             }
         }
         arg0->item.price = price - amount;
-        gRacePlayers.money -= amount;
+        gRacePlayers[0].money -= amount;
         /* Required for IDO register allocation. */
         if (gCurrentGameTask && gCurrentGameTask) {
         }
         if (arg0->item.price == 0) {
             arg0->slide.bytes.state = 3;
-            gCourseUnlockSaveSlots[gRacePlayers.selectedShopItem] = 9;
+            gCourseUnlockSaveSlots[gRacePlayers[0].menuSelection] = 9;
         }
         break;
     case 3:
@@ -1164,7 +1151,7 @@ void updateCourseUnlockPricePanel(ShopMenuWidgetActor *arg0) {
         }
         break;
     case 4:
-        if (gRacePlayers.shopMenuState == 3) {
+        if (gRacePlayers[0].menuState == 3) {
             arg0->slide.bytes.state = 5;
         }
         /* fallthrough */
@@ -1185,7 +1172,7 @@ void updateCourseUnlockPricePanel(ShopMenuWidgetActor *arg0) {
 void initCourseUnlockPricePanel(ShopMenuWidgetActor *arg0) {
     arg0->x = 0x20;
     arg0->y = -8;
-    arg0->item.price = gCourseUnlockPrices[gCourseSelectSelectedCourseId];
+    arg0->item.price = gCourseUnlockPrices[gRacePlayers[0].menuSelection];
     arg0->sprite.index = 0;
     arg0->slide.bytes.state = 0;
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateCourseUnlockPricePanel);

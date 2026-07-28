@@ -10,6 +10,7 @@
 #include "game/menu/renderer/menu_screen_effects.h"
 #include "game/menu/main_menu/main_menu_scene_model.h"
 #include "game/menu/main_menu/main_menu_scene_model_renderer.h"
+#include "game/race/player/race_player_input.h"
 
 #define MAIN_MENU_GFX_CMD(pkt, cmd0, cmd1) \
 { \
@@ -17,19 +18,6 @@
     _g->words.w0 = (cmd0); \
     _g->words.w1 = (cmd1); \
 }
-
-typedef struct {
-    /* 0x000 */ u8 pad0[0x28];
-    /* 0x028 */ Vec3i pos28;
-    /* 0x034 */ u8 pad34[0x2EA - 0x34];
-    /* 0x2EA */ s16 pitch;
-    /* 0x2EC */ s16 yaw;
-    /* 0x2EE */ u8 pad2EE[0x2FC - 0x2EE];
-    /* 0x2FC */ s32 flags;
-    /* 0x300 */ u8 pad300[0x51A - 0x300];
-    /* 0x51A */ u8 unk51A;
-    /* 0x51B */ u8 pad51B[0x60C - 0x51B];
-} RacePlayerState;
 
 typedef union {
     s32 word;
@@ -121,7 +109,6 @@ extern s16 gMenuFadeAlpha;
 extern u32 gMenuRenderModeResetDl[];
 extern s16 gRaceCourseIndex;
 extern s16 gFrameCounter;
-extern RacePlayerState gRacePlayers[];
 extern u8 gCurrentViewportIndex;
 extern u8 gRenderMatricesDirty;
 extern GfxCommandDest *gViewportMatrix;
@@ -443,11 +430,11 @@ void drawRaceStartPlayerEffectSprite(MenuScreenEffectActor *arg0) {
 void updateRaceStartPlayerEffectActive(MenuScreenEffectActor *arg0) {
     FixedMatrix3sScratch sp38;
     Vec3i sp2C;
-    RacePlayerState *player;
+    RacePlayer *player;
     u8 temp;
 
     player = &gRacePlayers[arg0->index];
-    if (player->flags & 0x2000) {
+    if (player->stateFlags & 0x2000) {
         setCallbackTaskCallback(arg0, (CallbackTaskCallback)waitForRaceStartPlayerEffect);
         return;
     }
@@ -455,7 +442,7 @@ void updateRaceStartPlayerEffectActive(MenuScreenEffectActor *arg0) {
     temp = arg0->unk2E;
     if (temp != 5) {
         arg0->unk2E = temp + 1;
-    } else if (player->unk51A == 0) {
+    } else if (player->itemTargetFlag == 0) {
         setCallbackTaskCallback(arg0, (CallbackTaskCallback)waitForRaceStartPlayerEffect);
     }
 
@@ -464,21 +451,21 @@ void updateRaceStartPlayerEffectActive(MenuScreenEffectActor *arg0) {
     sp2C.z = 0;
 
     player = &gRacePlayers[arg0->index];
-    makeFixedRotationXY(sp38, player->pitch, player->yaw);
+    makeFixedRotationXY(sp38, player->pitchAngle, player->facingAngle);
     transformVec3iByFixedMatrix(sp38, &sp2C, (Vec3i *) &arg0->unk18);
 
     player = &gRacePlayers[arg0->index];
-    arg0->unk18.word += player->pos28.x;
-    arg0->unk1C.word += player->pos28.y;
-    arg0->unk20.word += player->pos28.z;
+    arg0->unk18.word += player->unk28.x;
+    arg0->unk1C.word += player->unk28.y;
+    arg0->unk20.word += player->unk28.z;
 
     addRenderCallback(&gRaceModelEffectRenderCallbackList, (RenderCallback)drawRaceStartPlayerEffectSprite, (void *)arg0);
 }
 
 void waitForRaceStartPlayerEffect(MenuScreenEffectActor *arg0) {
-    RacePlayerState *player = &gRacePlayers[arg0->index];
-    if (!(player->flags & 0x2000)) {
-        if (player->unk51A != 0) {
+    RacePlayer *player = &gRacePlayers[arg0->index];
+    if (!(player->stateFlags & 0x2000)) {
+        if (player->itemTargetFlag != 0) {
             arg0->unk2E = 0xFF;
             setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceStartPlayerEffectActive);
         }

@@ -177,18 +177,7 @@ extern u8 gRaceUpdatePaused;
 extern u8 gTrainingCourseLesson;
 extern u8 gRaceSplitscreenMode;
 /* updateThrownPickupSpawner needs these interior aliases to preserve matching codegen. */
-extern s8 D_80121D93;
-extern s32 D_80121D9C;
-extern s32 D_80121DA4;
-extern s8 D_8012239F;
-extern s32 D_801223A8;
-extern s32 D_801223B0;
-extern s8 D_801229AB;
-extern s32 D_801229B4;
-extern s32 D_801229BC;
-extern s8 D_80122FB7;
-extern s32 D_80122FC0;
-extern s32 D_80122FC8;
+extern s16 gAssetHandles[];
 extern CourseCollectibleSpriteEntry *gCourseCollectibleSpriteListsByCourse[];
 extern u32 gCourseCollectibleSpriteVertices[];
 extern Vtx gRacePickupBaseVertices[];
@@ -573,10 +562,32 @@ void updateThrownPickupSpawner(ThrownPickupSpawnerActor *arg0) {
     s32 diffX;
     s32 diffZ;
     s32 rand;
+    s32 i;
 
     if (gRaceUpdatePaused == 0) {
         if (arg0->timer == 0) {
-            arg0->timer = 0x20; entry = gThrownPickupSpawnLists[arg0->spawnIndex]; found = FALSE; if (gRaceSplitscreenMode != 2) { if (D_80121D93 != 0) { diffZ = D_80121D9C - entry->pos.x; if ((diffZ < SPAWN_RANGE_MAX) && (diffZ >= SPAWN_RANGE_MIN)) { diffX = D_80121DA4 - entry->pos.z; if ((diffX < SPAWN_RANGE_MAX) && (diffX >= SPAWN_RANGE_MIN)) { found = TRUE; } } } if (D_8012239F != 0) { diffX = D_801223A8 - entry->pos.x; diffZ = D_801223B0 - entry->pos.z; if ((((diffX < SPAWN_RANGE_MAX) && (diffX >= SPAWN_RANGE_MIN)) && (diffZ < SPAWN_RANGE_MAX)) && (diffZ >= SPAWN_RANGE_MIN)) { found = TRUE; } } if (D_801229AB != 0) { diffX = D_801229B4 - entry->pos.x; diffZ = D_801229BC - entry->pos.z; if ((((diffX < SPAWN_RANGE_MAX) && (diffX >= SPAWN_RANGE_MIN)) && (diffZ < SPAWN_RANGE_MAX)) && (diffZ >= SPAWN_RANGE_MIN)) { found = TRUE; } } if (D_80122FB7 != 0) { diffX = D_80122FC0 - entry->pos.x; diffZ = D_80122FC8 - entry->pos.z; if ((((diffX < SPAWN_RANGE_MAX) && (diffX >= SPAWN_RANGE_MIN)) && (diffZ < SPAWN_RANGE_MAX)) && (diffZ >= SPAWN_RANGE_MIN)) { found = TRUE; } } } else { found = TRUE; } if (found != 0) { spawned = createCallbackTask((CallbackTaskCallback)initThrownPickupModel, 0, 0x64); if (spawned != NULL) { savedSpawned = spawned; rand = randomNextSecondary() & 3;
+            arg0->timer = 0x20;
+            entry = gThrownPickupSpawnLists[arg0->spawnIndex];
+            found = FALSE;
+            if (gRaceSplitscreenMode != 2) {
+                for (i = 0; i < RACE_PLAYER_COUNT; i++) {
+                    if (gRacePlayers[i].isActive != 0) {
+                        diffX = gRacePlayers[i].posX - entry->pos.x;
+                        diffZ = gRacePlayers[i].posZ - entry->pos.z;
+                        if ((((diffX < SPAWN_RANGE_MAX) && (diffX >= SPAWN_RANGE_MIN)) &&
+                             (diffZ < SPAWN_RANGE_MAX)) && (diffZ >= SPAWN_RANGE_MIN)) {
+                            found = TRUE;
+                        }
+                    }
+                }
+            } else {
+                found = TRUE;
+            }
+            if (found != 0) {
+                spawned = createCallbackTask((CallbackTaskCallback)initThrownPickupModel, 0, 0x64);
+                if (spawned != NULL) {
+                    savedSpawned = spawned;
+                    rand = randomNextSecondary() & 3;
                     spawned = savedSpawned;
                     if (rand != arg0->lastVariant) {
                     } else {

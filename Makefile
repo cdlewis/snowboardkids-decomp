@@ -171,8 +171,7 @@ $(BUILD_DIR)/src/menu/main_menu/main_menu_scene_model.o: C_OBJ_POSTPROCESS = \
 LD_SCRIPT      = $(BASENAME).ld
 LINKER_SCRIPTS = linker_scripts/hardware_regs.ld linker_scripts/libultra_syms.ld \
                  linker_scripts/race_setup_menu_syms.ld \
-                 linker_scripts/controller_subsystem_syms.ld \
-                 linker_scripts/race_player_syms.ld
+                 linker_scripts/controller_subsystem_syms.ld
 LDFLAGS        = -T $(LD_SCRIPT) -Map $(TARGET).map \
                  -T undefined_syms_auto.txt \
                  $(foreach ld,$(LINKER_SCRIPTS),-T $(ld)) \

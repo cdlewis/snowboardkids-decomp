@@ -7,9 +7,9 @@
 #include "game/menu/controller_pak/controller_pak_menu.h"
 #include "game/engine/game_task_scheduler.h"
 #include "game/menu/controller_pak/controller_pak_race_record_save_ui.h"
-#include "game/menu/main_menu/controller_main_menu_flow.h"
 #include "game/menu/renderer/menu_renderer.h"
 #include "game/engine/viewport_manager.h"
+#include "game/race/player/race_player_input.h"
 
 typedef struct {
     /* 0x0 */ s8 step;
@@ -19,23 +19,9 @@ typedef struct {
     /* 0x6 */ s16 nextStatus;
 } ControllerPakRaceRecordSaveStatusTransition;
 
-typedef struct {
-    /* 0x0 */ char pad0[0x8];
-    /* 0x8 */ s8 status;
-    /* 0x9 */ char pad9[0x3];
-    /* 0xC */ s32 selectedFileInfo;
-} ControllerPakRaceRecordSaveFileContext;
-
-typedef struct {
-    s32 value;
-    s32 pad4;
-    s32 pad8;
-} ControllerPakRaceRecordSaveCompletion;
-
 extern CharacterSelectFlowState *gCurrentGameTask;
 extern ControllerPakMenuState gControllerPakMenuState;
 extern ControllerPakRaceRecordSaveStatusTransition gControllerPakRaceRecordSaveStatusTransition;
-extern ControllerPakRaceRecordSaveFileContext gRacePlayers;
 extern u8 gPendingFramebufferSwapCount;
 extern u8 gFramebufferSwapHold;
 extern s8 gFramebufferSwapDelay;
@@ -44,9 +30,10 @@ extern s32 gMenuFlowState;
 extern s32 gPlayerInputPressed;
 extern s16 gControllerPakStatusCodes;
 extern s16 gMenuChoicePromptState;
+extern u8 gControllerPakRetryCounts;
 extern s8 gMenuSelectionConfirmTimer;
 extern s32 D_8010ADE0;
-extern void *D_8010ADE4;
+extern s32 D_8010ADE4;
 extern s16 gMenuFadeAlpha;
 extern s32 D_800EC9F4;
 
@@ -59,8 +46,8 @@ void initControllerPakRaceRecordSaveFlow(void) {
     gFramebufferSwapDelay = 0;
     gControllerPakStatusCodes = 0;
     gMenuChoicePromptState = 0;
-    gControllerPakRetryCounts[0] = 0;
-    gRacePlayers.status = 0;
+    gControllerPakRetryCounts = 0;
+    gRacePlayers[0].menuState = 0;
     gMenuSelectionConfirmTimer = 0;
     gCurrentGameTask->fade = 0xFF;
     gActiveMenuTask = 0;
@@ -68,7 +55,7 @@ void initControllerPakRaceRecordSaveFlow(void) {
     D_8010ADE4 = 0;
     D_8010ADE8 = 0;
     gMenuFadeAlpha = gCurrentGameTask->fade;
-    D_800EC9F4 = gRacePlayers.selectedFileInfo;
+    D_800EC9F4 = gRacePlayers[0].money;
     LOAD_ASSET(_59AAA0, 0x21);
     LOAD_ASSET(_59AAA0, 0x24);
     LOAD_ASSET(_593D10, 0x22);
@@ -86,7 +73,7 @@ void initControllerPakRaceRecordSaveFlow(void) {
     setCurrentGameTaskCallback(updateControllerPakRaceRecordSaveFlow, 0);
 }
 
-#ifdef PREVIOUS_NON_MATCHING
+#ifdef NON_MATCHING
 extern s32 gRumbleMotorStatuses;
 extern s8 gRumblePakConnectedByController;
 extern u8 gControllerPakRaceRecordSaveStatusChoicePromptStates[];
@@ -98,10 +85,10 @@ extern void requestControllerPakRepair(u16);
 extern void initControllerPakDeleteConfirmPrompt(CallbackTask *);
 #endif
 
-// updateControllerPakRaceRecordSaveFlow best match: 98.180% (base_37.c)
+// updateControllerPakRaceRecordSaveFlow best match: 97.524% (base_16.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/controller_pak/controller_pak_race_record_save_flow/updateControllerPakRaceRecordSaveFlow.s")
 
-#ifdef PREVIOUS_NON_MATCHING
+#ifdef NON_MATCHING
 void updateControllerPakRaceRecordSaveFlow(void)
 {
   s32 sp1C;
@@ -174,14 +161,14 @@ void updateControllerPakRaceRecordSaveFlow(void)
         {
           sp1C = temp_t0;
           requestControllerPakSaveWrite(0, 3, &gControllerPakRaceRecordSaveStatusTransition, gMenuChoicePromptState);
-          if (gControllerPakRetryCounts[0] == 0)
+          if (gControllerPakRetryCounts == 0)
           {
             gControllerPakRaceRecordSaveStatusTransition.targetStatus = 5;
             gControllerPakRaceRecordSaveStatusTransition.step = 3;
             gControllerPakRaceRecordSaveStatusTransition.alpha = 0x100;
           }
           else
-            if (gControllerPakRetryCounts[0] == 3)
+            if (gControllerPakRetryCounts == 3)
           {
             if (temp_t0 != 0)
             {
@@ -193,7 +180,7 @@ void updateControllerPakRaceRecordSaveFlow(void)
             {
               gControllerPakStatusCodes = 0xD;
             }
-            gControllerPakRetryCounts[0] = 0;
+            gControllerPakRetryCounts = 0;
           }
         }
           break;
@@ -201,7 +188,7 @@ void updateControllerPakRaceRecordSaveFlow(void)
         case 3:
           sp1C = temp_t0;
           requestControllerPakRepair(0);
-          if (gControllerPakRetryCounts[0] == 0)
+          if (gControllerPakRetryCounts == 0)
         {
           if (temp_t0 != 0)
           {
@@ -214,7 +201,7 @@ void updateControllerPakRaceRecordSaveFlow(void)
           }
         }
         else
-          if (gControllerPakRetryCounts[0] == new_var)
+          if (gControllerPakRetryCounts == new_var)
         {
           if (temp_t0 != 0)
           {
@@ -225,7 +212,7 @@ void updateControllerPakRaceRecordSaveFlow(void)
           {
             gControllerPakStatusCodes = 0xE;
           }
-          gControllerPakRetryCounts[0] = 0;
+          gControllerPakRetryCounts = 0;
         }
           break;
 
@@ -249,9 +236,9 @@ void updateControllerPakRaceRecordSaveFlow(void)
           break;
 
         case 5:
-          if (((u8) gRacePlayers.status) == 0)
+          if (((u8) gRacePlayers[0].menuState) == 0)
         {
-          gRacePlayers.status = 1;
+          gRacePlayers[0].menuState = 1;
         }
           break;
 
@@ -407,7 +394,7 @@ void updateControllerPakRaceRecordSaveFlow(void)
       }
 
     }
-    sp24 = ((u8) gRacePlayers.status) & 1;
+    sp24 = ((u8) gRacePlayers[0].menuState) & 1;
   }
   else
   {
@@ -419,15 +406,6 @@ void updateControllerPakRaceRecordSaveFlow(void)
   }
   updateCallbackTasks();
 }
-#endif
-
-#ifdef NON_MATCHING
-extern s32 gRumbleMotorStatuses[4];
-extern u8 gRumblePakConnectedByController[4];
-extern u8 gControllerPakRaceRecordSaveStatusChoicePromptStates[];
-extern void initControllerPakDeleteConfirmPrompt(void *);
-
-#include "updateControllerPakRaceRecordSaveFlow.inc.c"
 #endif
 
 void fadeOutControllerPakRaceRecordSaveFlow(void) {

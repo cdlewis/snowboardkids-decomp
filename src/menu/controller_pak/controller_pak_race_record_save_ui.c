@@ -5,6 +5,7 @@
 #include "game/engine/callback_task_scheduler.h"
 #include "game/menu/controller_pak/controller_pak_race_record_save_ui.h"
 #include "game/menu/renderer/menu_renderer.h"
+#include "game/race/player/race_player_input.h"
 
 typedef struct {
     u8 state;
@@ -46,7 +47,6 @@ typedef struct {
 
 extern s16 gPlayerBadgeDisplayOrder[];
 extern ControllerPakRaceRecordSaveScoreView gGameSaveDataBuffer;
-extern s32 gPlayer1Money;
 
 struct ControllerPakRaceRecordSaveActor {
     char pad[0x18];
@@ -103,7 +103,7 @@ void drawControllerPakRaceRecordSaveScorePanel(ControllerPakRaceRecordSaveActor 
     text[1] = 0;
     drawMenuAsciiText((s16)(arg0->x + 0x32), (s16)((unsigned long)(arg0->y + 2)), text, 0, 0x100);
 
-    sprintf(text, D_800E0F30, gPlayer1Money);
+    sprintf(text, D_800E0F30, gRacePlayers[0].money);
     drawMenuAsciiText((s16)(arg0->x + 0x44), (s16)(arg0->y + 0x1B), text, 0, 0x100);
 
     if (gGameSaveDataBuffer.iconCount == 3) {

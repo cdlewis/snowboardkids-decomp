@@ -6,6 +6,7 @@
 #include "game/menu/race_type_select/race_type_select_ui.h"
 #include "game/menu/splitscreen_select/race_splitscreen_select_ui.h"
 #include "game/menu/renderer/menu_renderer.h"
+#include "game/race/player/race_player_input.h"
 
 #define ASSET_HANDLE(index) (gAssetHandles[(index)])
 
@@ -46,8 +47,6 @@ extern RaceTypeSelectCursorState gRaceTypeSelectCursorTarget;
 extern u8 gRaceTypeSelectCursorAnimState;
 extern u8 gMenuExitSelection;
 extern u8 gRaceTypeSelection;
-extern u8 gMenuTransitionState;
-extern s32 gPlayer1Money;
 extern s32 gMenuFlowState;
 
 const char gRaceTypeSelectEntryFeeFormat[] = "%6dG";
@@ -106,7 +105,7 @@ void updateRaceTypeSelectOptionIcons(RaceTypeSelectRowActor *arg0) {
         state = arg0->state;
         break;
     case 1:
-        if (gMenuTransitionState == 1) {
+        if (gRacePlayers[0].menuState == 1) {
             state = (u8) (arg0->state = 2);
         }
         break;
@@ -167,7 +166,7 @@ void updateRaceTypeSelectCornerSprites(RaceTypeSelectWidgetActor *arg0) {
         state = arg0->sprite.bytes.state;
         break;
     case 1:
-        if (gMenuTransitionState == 1) {
+        if (gRacePlayers[0].menuState == 1) {
             state = arg0->sprite.bytes.state = 2;
         }
         break;
@@ -307,7 +306,7 @@ void updateRaceTypeSelectOption0Frame(RaceTypeSelectWidgetActor *arg0) {
         break;
     case 3:
         gMenuFlowState += 1;
-        if (gMenuTransitionState == 1) {
+        if (gRacePlayers[0].menuState == 1) {
             arg0->row.bytes.subState = 4;
         }
         state = arg0->row.bytes.subState;
@@ -320,12 +319,12 @@ void updateRaceTypeSelectOption0Frame(RaceTypeSelectWidgetActor *arg0) {
         state = arg0->row.bytes.subState;
         break;
     case 5:
-        gMenuTransitionState = 2;
+        gRacePlayers[0].menuState = 2;
         state = arg0->row.bytes.subState;
         break;
     }
 
-    if ((state == 5) && (gMenuTransitionState == 2)) {
+    if ((state == 5) && (gRacePlayers[0].menuState == 2)) {
         removeCallbackTask(arg0);
         return;
     }
@@ -414,7 +413,7 @@ void updateRaceTypeSelectOption1Frame(RaceTypeSelectWidgetActor *arg0) {
         break;
     case 3:
         gMenuFlowState += 1;
-        if (gMenuTransitionState == 1) {
+        if (gRacePlayers[0].menuState == 1) {
             if (arg0->y == -0x140) {
                 arg0->transition.bytes.state = 5;
             } else {
@@ -525,7 +524,7 @@ void updateRaceTypeSelectOption2Frame(RaceTypeSelectWidgetActor *arg0) {
         break;
     case 3:
         gMenuFlowState += 1;
-        if (gMenuTransitionState == 1) {
+        if (gRacePlayers[0].menuState == 1) {
             if (arg0->y == -0x140) {
                 arg0->transition.bytes.state = 5;
             } else {
@@ -629,7 +628,7 @@ void updateRaceTypeSelectOption3Frame(RaceTypeSelectWidgetActor *arg0) {
         break;
     case 3:
         gMenuFlowState += 1;
-        if (gMenuTransitionState == 1) {
+        if (gRacePlayers[0].menuState == 1) {
             if (arg0->y == -0x140) {
                 arg0->widget.bytes.state = 5;
             } else {
@@ -717,7 +716,7 @@ void updateRaceTypeSelectCursor(RaceTypeSelectWidgetActor *arg0) {
         arg0->transition.bytes.timer = (arg0->transition.bytes.timer + 1) & 0x1F;
         break;
     case 2:
-        if (gMenuTransitionState == 1) {
+        if (gRacePlayers[0].menuState == 1) {
             state = arg0->transition.bytes.state = 3;
         }
         break;
@@ -768,7 +767,7 @@ void updateRaceTypeSelectPortrait(RaceTypeSelectWidgetActor *arg0) {
         state = arg0->transition.bytes.state;
         break;
     case 1:
-        if (gMenuTransitionState == 1) {
+        if (gRacePlayers[0].menuState == 1) {
             state = arg0->transition.bytes.state = 2;
         }
         break;
@@ -814,7 +813,7 @@ void updateRaceTypeSelectArrowPrompt(RaceTypeSelectWidgetActor *arg0) {
         state = arg0->transition.bytes.state;
         break;
     case 1:
-        if (gMenuTransitionState == 1) {
+        if (gRacePlayers[0].menuState == 1) {
             state = arg0->transition.bytes.state = 2;
         }
         break;
@@ -849,7 +848,7 @@ void drawRaceTypeSelectEntryFee(RaceTypeSelectWidgetActor *arg0) {
     if (gRaceTypeSelection != 3) {
         drawMenuPanelBackdrop(arg0->x, arg0->y, 0x5000, 0x4000);
         drawMenuSpriteWithAlpha((s16)(arg0->x + 8), (s16)(arg0->y + 4), getRelocatableHeapBlockBase(ASSET_HANDLE(33)), 0x11, 0x20, 0x20, 0, arg0->sprite.spriteIndex, 0);
-        sprintf(sp40, gRaceTypeSelectEntryFeeFormat, gPlayer1Money);
+        sprintf(sp40, gRaceTypeSelectEntryFeeFormat, gRacePlayers[0].money);
         drawMenuAsciiText((s16)(arg0->x + 0x10), (s16)(arg0->y + 0x10), sp40, 0, arg0->sprite.spriteIndex);
     }
 }
@@ -867,7 +866,7 @@ void updateRaceTypeSelectEntryFee(RaceTypeSelectWidgetActor *arg0) {
         state = arg0->transition.bytes.state;
         break;
     case 1:
-        if (gMenuTransitionState == 1) {
+        if (gRacePlayers[0].menuState == 1) {
             state = arg0->transition.bytes.state = 2;
         }
         break;

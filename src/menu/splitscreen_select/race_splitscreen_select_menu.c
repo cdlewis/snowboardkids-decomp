@@ -10,6 +10,7 @@
 #include "game/menu/splitscreen_select/race_splitscreen_select_ui.h"
 #include "game/menu/race_setup/race_setup_ui.h"
 #include "game/engine/viewport_manager.h"
+#include "game/race/player/race_player_input.h"
 
 typedef struct {
     char pad[0x18];
@@ -32,13 +33,8 @@ extern u8 D_800EC9DC;
 extern RaceSplitscreenSelectMenuState *gCurrentGameTask;
 extern RaceSplitscreenSelectCursorTarget gRaceSplitscreenSelectCursorTarget;
 extern u8 gMenuSelectionConfirmTimer;
-#ifdef NON_MATCHING
-extern volatile char gRaceSplitscreenMode;
-#else
 extern u8 gRaceSplitscreenMode;
-#endif
 extern u8 gCourseSelectFromRaceTypeMenu;
-extern u8 gMenuTransitionState;
 extern s32 gMenuFlowState;
 extern u8 gMenuExitSelection;
 extern u16 gMenuInputRepeatTimers;
@@ -46,16 +42,12 @@ extern s16 gMenuFadeAlpha;
 extern s8 gFramebufferSwapDelay;
 extern u8 gPendingFramebufferSwapCount;
 extern u8 gFramebufferSwapHold;
-extern u8 D_80121D85;
-extern u8 D_80121D88;
-extern s32 gPlayerInputHeld;
-extern s32 gPlayerInputPressed;
 
 void returnToRaceSplitscreenSelectMenu(void) {
     gCurrentGameTask->fade = 1;
     requestMusicSequenceBank(1);
     gMenuSelectionConfirmTimer = 0;
-    gMenuTransitionState = 0;
+    gRacePlayers[0].menuState = 0;
     gActiveMenuTask = 0;
     gCurrentGameTask->timer = 0;
     gMenuFlowState = 0;
@@ -86,7 +78,7 @@ void initRaceSplitscreenSelectMenu(void) {
     initCallbackTaskScheduler(0);
     createCallbackTask((CallbackTaskCallback)initMenuIconTilemapSpriteActor, 0, 0x5E);
     gMenuSelectionConfirmTimer = 0;
-    gMenuTransitionState = 0;
+    gRacePlayers[0].menuState = 0;
     gActiveMenuTask = 0;
     gCurrentGameTask->timer = 0;
     gMenuExitSelection = 0;
@@ -98,142 +90,137 @@ void initRaceSplitscreenSelectMenu(void) {
     updateCallbackTasks();
 }
 
-// updateRaceSplitscreenSelectMenu best match: 99.668% (nonmatchings/updateRaceSplitscreenSelectMenu-12/output-75-1/source.c)
+// updateRaceSplitscreenSelectMenu best match: 99.535% (nonmatchings/updateRaceSplitscreenSelectMenu-8498672362023432715/base_18.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/splitscreen_select/race_splitscreen_select_menu/updateRaceSplitscreenSelectMenu.s")
 
 #ifdef NON_MATCHING
-void updateRaceSplitscreenSelectMenu(void)
-{
-  s32 newInput;
-  s32 heldInput;
-  s32 pressedUp;
-  s32 selection;
-  s32 previousSelection;
-  s32 pressedUpCopy;
-  s32 repeatTimerCopy;
-  s32 repeatTimer;
-  u8 waitTimer;
-  if (gCurrentGameTask->fade != 0)
-  {
-    gCurrentGameTask->fade = stepMenuFadeAlpha((s16) gCurrentGameTask->fade, 0x24, 0);
-    if (gCurrentGameTask->fade == 0)
-    {
-      createCallbackTask((0, initRaceSplitscreenSelectPlayerCountIcons), 0, 0x63);
-    }
-  }
-  else
-  {
-    if ((gRaceSplitscreenSelectCursorTarget.portraitAlpha == 0x100) && (D_80121D88 == 0))
-    {
-      if (gMenuSelectionConfirmTimer == 0)
-      {
-        if (gRaceSplitscreenSelectCursorTarget.state == 1)
-        {
-          selection = gRaceSplitscreenMode;
-          newInput = gPlayerInputHeld;
-          pressedUp = newInput & 0x10800;
-          previousSelection = selection;
-          if ((pressedUp == 0) && (!(newInput & 0x20400)))
-          {
-            gMenuInputRepeatTimers = 0;
-          }
-          heldInput = gPlayerInputPressed;
-          pressedUpCopy = pressedUp;
-          if ((heldInput & 0x10800) || (((pressedUpCopy != 0) && (((s32) gMenuInputRepeatTimers) >= 0xB)) && ((((s32) gMenuInputRepeatTimers) % 3) == 0)))
-          {
-            repeatTimer = gMenuInputRepeatTimers;
-            if (repeatTimer == 0)
-            {
-              gMenuInputRepeatTimers = repeatTimer + 1;
-              repeatTimer = gMenuInputRepeatTimers;
-            }
-            if (selection > 0)
-            {
-              gRaceSplitscreenMode = selection - 1;
-              selection = (u8) (selection - 1);
-            }
-          }
-          else
-          {
-            repeatTimer = gMenuInputRepeatTimers;
-            if ((heldInput & 0x20400) || (((newInput & 0x20400) && ((repeatTimerCopy = repeatTimer & 0xFFFFFFFFFFFFFFFF) >= 0xB)) && ((repeatTimerCopy % 3) == 0)))
-            {
-              if (repeatTimer == 0)
-              {
-                gMenuInputRepeatTimers = repeatTimer + 1;
-                repeatTimer = gMenuInputRepeatTimers;
-              }
-              if (selection < 4)
-              {
-                gRaceSplitscreenMode = selection + 1;
-                selection = (u8) (selection + 1);
-              }
-            }
-          }
-          newInput = selection;
-          pressedUp = (newInput & 0xFFFFFFFF) & 0xFFFFFFFF;
-          if (repeatTimer != 0)
-          {
-            gMenuInputRepeatTimers = repeatTimer - (-1);
-            if (gMenuInputRepeatTimers == 0xFFFF)
-            {
-              gMenuInputRepeatTimers = 0xC;
-            }
-          }
-          if (pressedUp != previousSelection)
-          {
-            enqueueSoundEffect(0x19, 0x32);
-            heldInput = gPlayerInputPressed;
-          }
-          if ((heldInput & 0x1000) || ((heldInput & 0x8000) && (gMenuFlowState == 5)))
-          {
-            if ((gRaceSplitscreenMode == 3) && (D_80121D85 == 5))
-            {
-              enqueueSoundEffect(0x46, 0x32);
-            }
-            else
-            {
-              enqueueSoundEffect(0x18, 0x32);
-              gMenuSelectionConfirmTimer = 1;
-              gRaceSplitscreenSelectCursorTarget.state = 2;
-              gRaceSplitscreenSelectCursorTarget.nextState = 0x100;
-              gMenuExitSelection = 0;
-            }
-          }
+void updateRaceSplitscreenSelectMenu(void) {
+    s32 newInput;
+    s32 heldInput;
+    s32 pressedUp;
+    s32 repeatTimer;
+    s32 selection;
+    s32 newInputCopy;
+    s32 previousSelection;
+    s32 pressedUpCopy;
+    s32 repeatTimerCopy;
+    u8 waitTimer;
+
+    if (gCurrentGameTask->fade != 0) {
+        gCurrentGameTask->fade = stepMenuFadeAlpha((s16) gCurrentGameTask->fade, 0x24, 0);
+        if (gCurrentGameTask->fade == 0) {
+            createCallbackTask((CallbackTaskCallback)initRaceSplitscreenSelectPlayerCountIcons, 0, 0x63);
         }
-      }
-      else
-      {
-        gMenuSelectionConfirmTimer++;
-      }
+    } else {
+        if ((gRaceSplitscreenSelectCursorTarget.portraitAlpha == 0x100) && (gRacePlayers[0].menuState == 0)) {
+            if (gMenuSelectionConfirmTimer == 0) {
+                if (gRaceSplitscreenSelectCursorTarget.state == 1) {
+                    selection = gRaceSplitscreenMode;
+                    newInputCopy = gPlayerInputHeld;
+                    newInput = newInputCopy;
+                    pressedUp = newInput & (STICK_UP | U_JPAD);
+                    previousSelection = selection;
+
+                    if ((pressedUp == 0) && ((newInput & (STICK_DOWN | D_JPAD)) == 0)) {
+                        gMenuInputRepeatTimers = 0;
+                    }
+
+                    heldInput = gPlayerInputPressed;
+                    pressedUpCopy = pressedUp;
+                    if ((heldInput & (STICK_UP | U_JPAD)) ||
+                        ((pressedUpCopy != 0) && (gMenuInputRepeatTimers >= 0xB) &&
+                         ((gMenuInputRepeatTimers % 3) == 0))) {
+                        repeatTimer = gMenuInputRepeatTimers;
+                        if (repeatTimer == 0) {
+                            gMenuInputRepeatTimers = repeatTimer + 1;
+                            repeatTimer = gMenuInputRepeatTimers;
+                        }
+                        if (selection > 0) {
+                            gRaceSplitscreenMode = selection - 1;
+                            selection = (((selection - 1) & 0xFF) & 0xFF) & 0xFF;
+                        }
+                    } else {
+                        repeatTimer = gMenuInputRepeatTimers;
+                        repeatTimerCopy = repeatTimer;
+                        if ((heldInput & (STICK_DOWN | D_JPAD)) ||
+                            ((newInput & (STICK_DOWN | D_JPAD)) && (repeatTimer >= 0xB) && ((repeatTimer % 3) == 0))) {
+                            if (repeatTimerCopy == 0) {
+                                gMenuInputRepeatTimers = repeatTimerCopy + 1;
+                                repeatTimer =
+                                    (((((gMenuInputRepeatTimers & 0xFF) & 0xFF) & 0xFF) & 0xFF) & 0xFF) & 0xFF;
+                            }
+                            if (selection < 4) {
+                                gRaceSplitscreenMode = selection + 1;
+                                selection = (u8) (((((((((((((selection + 1) & 0xFFu) & 0xFFu) & 0xFFu) & 0xFFu) &
+                                                          0xFFu) &
+                                                         0xFFu) &
+                                                        0xFFu) &
+                                                       0xFFu) &
+                                                      0xFFu) &
+                                                     0xFFu) &
+                                                    0xFFu) &
+                                                   0xFFu);
+                            }
+                        }
+                    }
+
+                    newInput = selection;
+                    if (repeatTimer != 0) {
+                        gMenuInputRepeatTimers = repeatTimer + 1;
+                        if (gMenuInputRepeatTimers == 0xFFFF) {
+                            gMenuInputRepeatTimers = 0xC;
+                        }
+                    }
+                    selection = newInput;
+
+                    if (selection != previousSelection) {
+                        enqueueSoundEffect(0x19, 0x32);
+                        heldInput = gPlayerInputPressed;
+                    }
+
+                    if ((heldInput & START_BUTTON) || ((heldInput & A_BUTTON) && (gMenuFlowState == 5))) {
+                        if ((gRaceSplitscreenMode == 3) && (gRacePlayers[0].selectedCharacterId == 5)) {
+                            enqueueSoundEffect(0x46, 0x32);
+                        } else {
+                            enqueueSoundEffect(0x18, 0x32);
+                            gMenuSelectionConfirmTimer = 1;
+                            if (gMenuInputRepeatTimers && gMenuInputRepeatTimers) {
+                            }
+                            gRaceSplitscreenSelectCursorTarget.state = 2;
+                            gRaceSplitscreenSelectCursorTarget.nextState = 0x100;
+                            gMenuExitSelection = 0;
+                        }
+                    }
+                }
+            } else {
+                gMenuSelectionConfirmTimer++;
+            }
+        }
+
+        waitTimer = gMenuSelectionConfirmTimer;
+        if ((gPlayerInputPressed & B_BUTTON) && (gMenuFlowState == 5) && (waitTimer == 0)) {
+            enqueueSoundEffect(1, 0x32);
+            gMenuSelectionConfirmTimer = 1;
+            gRaceSplitscreenSelectCursorTarget.state = 2;
+            gRaceSplitscreenSelectCursorTarget.nextState = 0x100;
+            gMenuExitSelection = 1;
+        }
+
+        waitTimer = gMenuSelectionConfirmTimer;
+        if (waitTimer == 7) {
+            gRacePlayers[0].menuState = 1;
+            gMenuSelectionConfirmTimer++;
+        }
+
+        if (gRacePlayers[0].menuState == 2) {
+            setCurrentGameTaskCallback(handleRaceSplitscreenSelectMenuSelection, 0);
+            if (gMenuExitSelection == 0) {
+                requestMusicSequenceStop(4);
+            }
+        }
     }
-    waitTimer = gMenuSelectionConfirmTimer;
-    if (((gPlayerInputPressed & 0x4000) && (gMenuFlowState == 5)) && (waitTimer == 0))
-    {
-      enqueueSoundEffect(1, 0x32);
-      gMenuSelectionConfirmTimer = 1;
-      gRaceSplitscreenSelectCursorTarget.state = 2;
-      gRaceSplitscreenSelectCursorTarget.nextState = 0x100;
-      gMenuExitSelection = 1;
-    }
-    waitTimer = gMenuSelectionConfirmTimer;
-    if (waitTimer == 7)
-    {
-      D_80121D88 = 1;
-      gMenuSelectionConfirmTimer++;
-    }
-    if (D_80121D88 == 2)
-    {
-      setCurrentGameTaskCallback(handleRaceSplitscreenSelectMenuSelection, 0);
-      pressedUpCopy = pressedUp;
-      if (gMenuExitSelection == 0)
-      {
-        requestMusicSequenceStop(4);
-      }
-    }
-  }
-  gMenuFlowState = 0;
-  updateCallbackTasks();
+    gMenuFlowState = 0;
+    updateCallbackTasks();
 }
 #endif
 
