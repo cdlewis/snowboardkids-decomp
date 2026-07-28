@@ -288,37 +288,22 @@ void initRaceItemSparkBurst(RaceItemEffectActor *arg0) {
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceItemSparkBurst);
 }
 
-// spawnRaceItemTrackSparkBurst best match: 94.291% (nonmatchings/spawnRaceItemTrackSparkBurst-1645024839200431810/base_11.c)
-
-#pragma GLOBAL_ASM("asm/nonmatchings/race/items/race_item_effects/spawnRaceItemTrackSparkBurst.s")
-
-#ifdef NON_MATCHING
 void spawnRaceItemTrackSparkBurst(Vec3i *arg0, Vec3i *arg1, Vec3i *arg2, Vec3i *arg3, s32 arg4, s16 arg5) {
-    typedef struct {
-        /* 0x00 */ u8 pad0[0x18];
-        /* 0x18 */ Vec3i payloads[2];
-        /* 0x30 */ u8 pad30[0x38];
-        /* 0x68 */ u8 *unk68;
-    } RaceItemSparkBurstSpawnActor;
-
-    struct {
-        LongLongParts total;
-        u8 pad8[0x10];
-    } locals;
-    s64 distZ;
-    s32 midBY;
-    s32 midBZ;
-    s32 dx;
-    s32 midBX;
+    volatile u8 pad[0x10];
+    LongLongParts total;
     s32 midAX;
     s32 midAY;
     s32 midAZ;
-    s32 random;
-    s16 itemType;
+    s32 midBZ;
+    s32 midBY;
+    s32 midBX;
+    s32 delta;
     s32 i;
+    s32 random;
+    RaceItemSparkBurstActor *actor;
+    s16 itemType;
     s64 distX;
     s64 distY;
-    RaceItemSparkBurstSpawnActor *actor;
 
     itemType = getRaceItemEffectType(arg5);
     if (itemType != 4) {
@@ -328,28 +313,23 @@ void spawnRaceItemTrackSparkBurst(Vec3i *arg0, Vec3i *arg1, Vec3i *arg2, Vec3i *
         midBX = ((arg2->x - arg3->x) / 2) + arg3->x;
         midBY = ((arg2->y - arg3->y) / 2) + arg3->y;
         midBZ = ((arg2->z - arg3->z) / 2) + arg3->z;
- dx = midAY - midBY; distY = (s64) dx * dx; dx = midAX - midBX; distX = (s64) dx * dx; dx = midAZ - midBZ; distZ = (s64) dx * dx; locals.total.value = (distZ + distX) + distY; if (locals.total.word.high > 0) { { }
-            actor = (RaceItemSparkBurstSpawnActor *) createCallbackTaskWithUserIdPreservingArgs(
+
+        delta = midAY - midBY;
+        distY = (s64)delta * delta; delta = midAX - midBX; distX = (s64)delta * delta; delta = midAZ - midBZ; total.value = (((s64)delta * delta) + distX) + distY;
+
+        if (total.value >= 0x100000000LL) {
+            actor = (RaceItemSparkBurstActor *)createCallbackTaskWithUserIdPreservingArgs(
                 initRaceItemSparkBurst, 5, 0x32, itemType);
             if (actor != NULL) {
-                actor->unk68 = gRaceItemSparkBurstLargeFrameSequence;
-                if (locals.total.word.high < 0x65) {
-                    if ((locals.total.word.high >= 0x64) != 0) {
-                        arg4 = locals.total.word.high;
-                        goto mediumDone;
-                    }
-                    actor->unk68 = gRaceItemSparkBurstMediumFrameSequence;
+                actor->frameSequence = gRaceItemSparkBurstLargeFrameSequence;
+                if (total.value < 0x6400000000LL) {
+                    actor->frameSequence = gRaceItemSparkBurstMediumFrameSequence;
                 }
-                arg4 = locals.total.word.high;
-mediumDone:
-                if (locals.total.word.high < 0x25) {
-                    if (arg4 >= 0x24) {
-                    } else {
-                        actor->unk68 = gRaceItemSparkBurstSmallFrameSequence;
-                    }
+                if (total.value < 0x2400000000LL) {
+                    actor->frameSequence = gRaceItemSparkBurstSmallFrameSequence;
                 }
 
-                for (i = 0; i != 2; i++) {
+                for (i = 0; i < 2; i++) {
                     random = randomNextMain() & 0xF;
                     actor->payloads[i].x = (((arg0->x - arg1->x) * random) / 15) + arg1->x;
                     actor->payloads[i].y = (((arg0->y - arg1->y) * random) / 15) + arg1->y;
@@ -359,7 +339,6 @@ mediumDone:
         }
     }
 }
-#endif
 
 void renderRacePlayerHitEffect(RaceItemEffectActor *arg0) {
     FixedTransform sp88;
