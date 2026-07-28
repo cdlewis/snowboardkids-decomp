@@ -43,5 +43,6 @@ extern u8 gRaceDemoPlaybackEnabled;
 extern u8 gRaceResultState;
 extern u8 gRaceRumbleEnabled;
 extern u8 gRaceSplitscreenMode;
+extern u8 gRaceTypeSelection;
 
 #endif

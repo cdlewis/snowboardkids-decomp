@@ -23,7 +23,6 @@ extern void releaseMenuAssetHandles(void);
 extern s16 gCharacterSelectShortCourseOptions[];
 extern s16 gCharacterSelectSingleCourseOption[];
 extern s16 gMenuFadeAlpha;
-extern u8 gRaceTypeSelection;
 extern CharacterSelectOptionList *gCharacterSelectActiveCourseOptions;
 extern s32 D_8010ADE0;
 extern s32 D_8010ADE4;

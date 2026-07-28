@@ -94,7 +94,6 @@ extern u8 D_8010AE8A;
 extern u8 D_8010AE8F;
 extern u8 gHighestUnlockedCourse;
 extern u8 gCourseSelectFromRaceTypeMenu;
-extern u8 gRaceTypeSelection;
 extern s32 gMenuFlowState;
 
 void drawCharacterSelectCourseListOptions(CharacterSelectCourseMenuFrameActor *arg0) {

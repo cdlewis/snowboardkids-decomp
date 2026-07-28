@@ -14,20 +14,12 @@
 #include "game/engine/viewport_manager.h"
 #include "game/race/player/race_player_input.h"
 
-typedef struct {
-    s16 alpha;
-    s8 state;
-} RaceTypeSelectCursorState;
-
 extern void releaseMenuAssetHandles(void);
 extern s32 enqueueSoundEffect(s16, s16);
 
 
-extern RaceTypeSelectCursorState gRaceTypeSelectCursorTarget;
 extern u8 gMenuExitSelection;
-extern u8 gRaceTypeSelectCursorAnimState;
 extern s16 gMenuFadeAlpha;
-extern u8 gRaceTypeSelection;
 extern u8 gCourseSelectFromRaceTypeMenu;
 extern s32 gMenuFlowState;
 extern u8 gPendingFramebufferSwapCount;
