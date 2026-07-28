@@ -1319,7 +1319,7 @@ void interpolateRaceMotionAnimationFrame(RaceMotionState *state, s32 animationIn
 
 #endif
 
-// interpolateRaceMotionJointAnimationFrame best match: 98.644% (nonmatchings/interpolateRaceMotionJointAnimationFrame-5176680205357669729/base_13.c)
+// interpolateRaceMotionJointAnimationFrame best match: 98.833% (nonmatchings/interpolateRaceMotionJointAnimationFrame-5176680205357669729/independent_8.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race/motion/race_motion/interpolateRaceMotionJointAnimationFrame.s")
 
 #ifdef NON_MATCHING
