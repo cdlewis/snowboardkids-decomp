@@ -82,7 +82,6 @@ extern s8 gCourseSelectSelectedCourseSavedSlot;
 extern s32 gMenuFlowState;
 extern u8 gPendingFramebufferSwapCount;
 extern u8 gFramebufferSwapHold;
-extern s32 gPlayerInputPressed;
 extern s32 D_8010AEE8[];
 extern u8 D_8010AEF7[];
 extern u8 D_8010AF06[];
@@ -208,7 +207,7 @@ void updateCourseSelectModeMenu(void) {
     s32 *inputPtr;
 
     zero = 0;
-    inputPtr = &gPlayerInputPressed;
+    inputPtr = gPlayerInputPressed;
     if (gCurrentGameTask->fade != zero) {
         gCurrentGameTask->fade = stepMenuFadeAlpha((s16) gCurrentGameTask->fade, 0x24, 0);
         if (gCurrentGameTask->fade == 0) {
@@ -230,7 +229,7 @@ void updateCourseSelectModeMenu(void) {
                 if ((leftPressed == 0) && !(pressed & (STICK_DOWN | D_JPAD))) {
                     gMenuInputRepeatTimers[0] = 0;
                 }
-                held = (timerOriginal = gPlayerInputPressed);
+                held = (timerOriginal = gPlayerInputPressed[0]);
                 if ((held & (STICK_UP | U_JPAD)) ||
                     ((leftPressed != 0) && ((s32) (u16) gMenuInputRepeatTimers[0] >= 0xB) &&
                      (((s32) (u16) gMenuInputRepeatTimers[0] % 3) == 0))) {
@@ -503,7 +502,7 @@ void updateCourseSelectCourseList(void) {
                 if ((temp_v0_2 == 0) && !(gPlayerInputHeld[0] & 0x20400)) {
                     gMenuInputRepeatTimers[0] = 0;
                 }
-                if ((gPlayerInputPressed & 0x10800) || ((temp_v0_2 != 0) && ((s32) (u16) gMenuInputRepeatTimers[0] >= 9))) {
+                if ((gPlayerInputPressed[0] & 0x10800) || ((temp_v0_2 != 0) && ((s32) (u16) gMenuInputRepeatTimers[0] >= 9))) {
                     if ((u16) gMenuInputRepeatTimers[0] == 0) {
                         gMenuInputRepeatTimers[0] = (u16) gMenuInputRepeatTimers[0] + 1;
                     }
@@ -512,7 +511,7 @@ void updateCourseSelectCourseList(void) {
                         enqueueSoundEffect(0x19, 0x32);
                         var_a3 = 0;
                     }
-                } else if ((gPlayerInputPressed & 0x20400) || ((gPlayerInputHeld[0] & 0x20400) && ((s32) (u16) gMenuInputRepeatTimers[0] >= 9))) {
+                } else if ((gPlayerInputPressed[0] & 0x20400) || ((gPlayerInputHeld[0] & 0x20400) && ((s32) (u16) gMenuInputRepeatTimers[0] >= 9))) {
                     if ((u16) gMenuInputRepeatTimers[0] == 0) {
                         gMenuInputRepeatTimers[0] = (u16) gMenuInputRepeatTimers[0] + 1;
                     }
@@ -556,7 +555,7 @@ void updateCourseSelectCourseList(void) {
                         gRacePlayers[0].selectionUnlockState = (u8) temp_a0_2;
                     }
                 }
-                if ((D_8010AEE8[0] == 0) && ((gPlayerInputPressed & 0x1000) || (gPlayerInputPressed & 0x8000))) {
+                if ((D_8010AEE8[0] == 0) && ((gPlayerInputPressed[0] & 0x1000) || (gPlayerInputPressed[0] & 0x8000))) {
                     enqueueSoundEffect(1, 0x32);
                     var_a3 = 0;
                     if ((gPlayerCount == 1) && (var_t1 == gCharacterSelectHudState.highlightedRosterIndices[0])) {
@@ -572,7 +571,7 @@ void updateCourseSelectCourseList(void) {
                             var_a3 = 0;
                         }
                     }
-                } else if (gPlayerInputPressed & 0x4000) {
+                } else if (gPlayerInputPressed[0] & 0x4000) {
                     enqueueSoundEffect(1, 0x32);
                     gMenuInputRepeatTimers[0] = 0;
                     var_a3 = 0;
@@ -601,7 +600,7 @@ void updateCourseSelectCourseList(void) {
                 if (!(gPlayerInputHeld[0] & 0x10800) && !(gPlayerInputHeld[0] & 0x20400)) {
                     gMenuInputRepeatTimers[0] = 0;
                 }
-                temp_t4 = gPlayerInputPressed;
+                temp_t4 = gPlayerInputPressed[0];
                 if ((temp_t4 & 0x10800) || ((gPlayerInputHeld[0] & 0x10800) && ((s32) (u16) gMenuInputRepeatTimers[0] >= 9) && ((u16) gMenuInputRepeatTimers[0] & 1))) {
                     var_v1_2 = (u16) gMenuInputRepeatTimers[0];
                     if (var_v1_2 == 0) {
@@ -642,7 +641,7 @@ void updateCourseSelectCourseList(void) {
                     var_t8 = ((gMenuChoicePromptState[0] * 3) + ((s32) gRacePlayers[0].menuSelection % 3)) - 6;
                 }
                 gRacePlayers[0].menuSelection = var_t8;
-                temp_t4 = gPlayerInputPressed;
+                temp_t4 = gPlayerInputPressed[0];
                 if (temp_t4 & 0x4000) {
                     enqueueSoundEffect(0x18, 0x32);
                     D_8010AF44 = 0;
@@ -829,7 +828,7 @@ void updateCourseSelectCourseList(void) {
                     gMenuInputRepeatTimers[0] = 0;
                 }
 
-                pressed = gPlayerInputPressed;
+                pressed = gPlayerInputPressed[0];
                 if ((pressed & (STICK_UP | U_JPAD)) ||
                     ((heldUp != 0) && ((u16)gMenuInputRepeatTimers[0] >= 9))) {
                     if ((u16)gMenuInputRepeatTimers[0] == 0) {
@@ -942,7 +941,7 @@ void updateCourseSelectCourseList(void) {
                     gMenuInputRepeatTimers[0] = 0;
                 }
 
-                pressed = gPlayerInputPressed;
+                pressed = gPlayerInputPressed[0];
                 repeat = gMenuInputRepeatTimers[0];
                 if ((pressed & (STICK_UP | U_JPAD)) ||
                     ((heldUp != 0) && (repeat >= 9) && (repeat & 1))) {
@@ -953,7 +952,7 @@ void updateCourseSelectCourseList(void) {
                     if (gMenuChoicePromptState[0] >= 3) {
                         gMenuChoicePromptState[0]--;
                         enqueueSoundEffect(0x19, 0x32);
-                        pressed = gPlayerInputPressed;
+                        pressed = gPlayerInputPressed[0];
                         D_8010AF44 = 0;
                     }
                 } else if ((pressed & (STICK_DOWN | D_JPAD)) ||
@@ -966,7 +965,7 @@ void updateCourseSelectCourseList(void) {
                     if (gMenuChoicePromptState[0] < D_8010AF3C + 1) {
                         gMenuChoicePromptState[0]++;
                         enqueueSoundEffect(0x19, 0x32);
-                        pressed = gPlayerInputPressed;
+                        pressed = gPlayerInputPressed[0];
                         D_8010AF44 = 0;
                     }
                 }
@@ -1163,7 +1162,7 @@ void updateCourseSelectCourseList(void) {
                 if ((temp_v0_2 == 0) && !(gPlayerInputHeld[0] & 0x20400)) {
                     gMenuInputRepeatTimers[0] = 0;
                 }
-                if ((gPlayerInputPressed & 0x10800) ||
+                if ((gPlayerInputPressed[0] & 0x10800) ||
                     ((temp_v0_2 != 0) &&
                      ((s32)(u16)gMenuInputRepeatTimers[0] >= 9))) {
                     if ((u16)gMenuInputRepeatTimers[0] == 0) {
@@ -1178,7 +1177,7 @@ void updateCourseSelectCourseList(void) {
                         enqueueSoundEffect(0x19, 0x32);
                         var_a3 = 0;
                     }
-                } else if ((gPlayerInputPressed & 0x20400) ||
+                } else if ((gPlayerInputPressed[0] & 0x20400) ||
                            ((gPlayerInputHeld[0] & 0x20400) &&
                             ((s32)(u16)gMenuInputRepeatTimers[0] >= 9))) {
                     if ((u16)gMenuInputRepeatTimers[0] == 0) {
@@ -1233,8 +1232,8 @@ void updateCourseSelectCourseList(void) {
                     }
                 }
                 if ((*D_8010AEE8 == 0) &&
-                    ((gPlayerInputPressed & 0x1000) ||
-                     (gPlayerInputPressed & 0x8000))) {
+                    ((gPlayerInputPressed[0] & 0x1000) ||
+                     (gPlayerInputPressed[0] & 0x8000))) {
                     var_a3 = 0;
                     enqueueSoundEffect(1, 0x32);
                     var_a3 = 0;
@@ -1261,7 +1260,7 @@ void updateCourseSelectCourseList(void) {
                     RacePlayer *playerEnd;
                     s32 pressed;
 
-                    pressed = gPlayerInputPressed;
+                    pressed = gPlayerInputPressed[0];
                     if (pressed & 0x4000) {
                         var_a3 = 0;
                         enqueueSoundEffect(1, 0x32);
@@ -1301,7 +1300,7 @@ void updateCourseSelectCourseList(void) {
                     !(gPlayerInputHeld[0] & 0x20400)) {
                     gMenuInputRepeatTimers[0] = 0;
                 }
-                pressed = gPlayerInputPressed;
+                pressed = gPlayerInputPressed[0];
                 if ((pressed & 0x10800) ||
                     ((gPlayerInputHeld[0] & 0x10800) &&
                      ((s32)(u16)gMenuInputRepeatTimers[0] >= 9) &&
@@ -1317,7 +1316,7 @@ void updateCourseSelectCourseList(void) {
                         enqueueSoundEffect(0x19, 0x32);
                         var_a3 = 0;
                         promptState = gMenuChoicePromptState[0];
-                        pressed = gPlayerInputPressed;
+                        pressed = gPlayerInputPressed[0];
                         D_8010AF44 = 0;
                     }
                 } else {
@@ -1335,7 +1334,7 @@ void updateCourseSelectCourseList(void) {
                             enqueueSoundEffect(0x19, 0x32);
                             var_a3 = 0;
                             promptState = gMenuChoicePromptState[0];
-                            pressed = gPlayerInputPressed;
+                            pressed = gPlayerInputPressed[0];
                             D_8010AF44 = 0;
                         }
                     }
@@ -1494,15 +1493,15 @@ void updateCourseSelectPurchasePrompt(void) {
     s32 i;
 
     if (gCurrentGameTask->timer < 2) {
-        if ((gPlayerInputPressed & (STICK_UP | U_JPAD)) && (gCurrentGameTask->timer != 0)) {
+        if ((gPlayerInputPressed[0] & (STICK_UP | U_JPAD)) && (gCurrentGameTask->timer != 0)) {
             gCurrentGameTask->timer--;
             enqueueSoundEffect(0x19, 0x32);
-        } else if ((gPlayerInputPressed & (STICK_DOWN | D_JPAD)) && (gCurrentGameTask->timer != 1)) {
+        } else if ((gPlayerInputPressed[0] & (STICK_DOWN | D_JPAD)) && (gCurrentGameTask->timer != 1)) {
             gCurrentGameTask->timer++;
             enqueueSoundEffect(0x19, 0x32);
         }
 
-        if (gPlayerInputPressed & A_BUTTON) {
+        if (gPlayerInputPressed[0] & A_BUTTON) {
             gMenuFlowState = 1;
             if (gCurrentGameTask->timer == 1) {
                 enqueueSoundEffect(0x18, 0x32);
@@ -1516,7 +1515,7 @@ void updateCourseSelectPurchasePrompt(void) {
                 enqueueSoundEffect(0x45, 0x32);
                 gCurrentGameTask->timer += 2;
             }
-        } else if (gPlayerInputPressed & B_BUTTON) {
+        } else if (gPlayerInputPressed[0] & B_BUTTON) {
             gMenuFlowState = 1;
             enqueueSoundEffect(0x18, 0x32);
             if (D_8010AECC == 0) {
@@ -1579,7 +1578,7 @@ void updateCourseSelectUnlockCourseList(void) {
     }
 
     new_var = 0x19;
-    buttonsPressed = gPlayerInputPressed;
+    buttonsPressed = gPlayerInputPressed[0];
     repeat = gMenuInputRepeatTimers[0];
     new_var2 = &repeat;
     new_var3 = repeat;
@@ -1591,7 +1590,7 @@ void updateCourseSelectUnlockCourseList(void) {
         if (state >= 3) {
             gMenuChoicePromptState[0] = state - new_var4;
             enqueueSoundEffect(new_var, 0x32);
-            buttonsPressed = gPlayerInputPressed;
+            buttonsPressed = gPlayerInputPressed[0];
         }
         state = *new_var5;
     } else {
@@ -1628,7 +1627,7 @@ void updateCourseSelectUnlockCourseList(void) {
             gMenuChoicePromptState[0] = state + 1;
             enqueueSoundEffect(0x19, 0x32);
             state = *new_var5;
-            buttonsPressed = gPlayerInputPressed;
+            buttonsPressed = gPlayerInputPressed[0];
         }
     }
 
@@ -1734,7 +1733,7 @@ void updateCourseSelectUnlockCourseList(void) {
         }
 
         selectionPtr = &gRacePlayers[0].menuSelection;
-        pressed = (&gPlayerInputPressed)[playerIndex];
+        pressed = gPlayerInputPressed[playerIndex];
         repeatTimer = gMenuInputRepeatTimers[playerIndex];
         if ((pressed & upMask) ||
             ((heldUp != playerIndex) && (repeatTimer >= 9) && (repeatTimer & 1))) {
@@ -1745,7 +1744,7 @@ void updateCourseSelectUnlockCourseList(void) {
             if (gMenuChoicePromptState[playerIndex] >= 3) {
                 gMenuChoicePromptState[playerIndex]--;
                 enqueueSoundEffect(0x19, 0x32);
-                pressed = (&gPlayerInputPressed)[playerIndex];
+                pressed = gPlayerInputPressed[playerIndex];
             }
         } else if ((pressed & (STICK_DOWN | D_JPAD)) ||
                    ((*(volatile u16 *)&gMenuInputRepeatTimers[playerIndex] = repeatTimer,
@@ -1761,7 +1760,7 @@ void updateCourseSelectUnlockCourseList(void) {
             if (gMenuChoicePromptState[playerIndex] < D_8010AF3C + 1) {
                 gMenuChoicePromptState[playerIndex]++;
                 enqueueSoundEffect(0x19, 0x32);
-                pressed = (&gPlayerInputPressed)[playerIndex];
+                pressed = gPlayerInputPressed[playerIndex];
             }
         }
 
@@ -1871,7 +1870,7 @@ void updateCourseSelectCourseDetailsMenu(void) {
         }
         divisor = 3;
         if (1) {
-        if ((gPlayerInputPressed & (soundId | U_JPAD)) ||
+        if ((gPlayerInputPressed[0] & (soundId | U_JPAD)) ||
             (heldUp &&
              ((u16) gMenuInputRepeatTimers[0] >= 0xB) &&
             (((u16) gMenuInputRepeatTimers[0] % divisor) == ((gPlayerInputHeld[0] & (STICK_DOWN | D_JPAD)) * 0)))) {
@@ -1887,7 +1886,7 @@ void updateCourseSelectCourseDetailsMenu(void) {
             }
         } else {
             repeat = (u16) gMenuInputRepeatTimers[0];
-            if ((gPlayerInputPressed & (STICK_DOWN | D_JPAD)) ||
+            if ((gPlayerInputPressed[0] & (STICK_DOWN | D_JPAD)) ||
                 ((gPlayerInputHeld[0] & (STICK_DOWN | D_JPAD)) &&
                  (repeat >= 0xB) && ((repeat % divisor) == 0))) {
                 if (!repeat) {
@@ -1901,7 +1900,7 @@ void updateCourseSelectCourseDetailsMenu(void) {
                     gCourseDetailsMenuSelection = (u16) tempSelection;
                     selection = (u8) tempSelection;
                 }
-            } else if (gPlayerInputPressed & (STICK_LEFT | L_JPAD)) {
+            } else if (gPlayerInputPressed[0] & (STICK_LEFT | L_JPAD)) {
                 gMenuExitSelection = 1;
             }
         }
@@ -1917,12 +1916,12 @@ void updateCourseSelectCourseDetailsMenu(void) {
         if (oldSelection != selection) {
             enqueueSoundEffect(0x19, 0x32);
         }
-        if (oldSelection = gPlayerInputPressed & B_BUTTON) {
+        if (oldSelection = gPlayerInputPressed[0] & B_BUTTON) {
             gMenuExitSelection = 2;
         }
         soundId = 0x18;
         repeat = 1;
-        if ((gPlayerInputPressed & A_BUTTON) || (gPlayerInputPressed & START_BUTTON) ||
+        if ((gPlayerInputPressed[0] & A_BUTTON) || (gPlayerInputPressed[0] & START_BUTTON) ||
             ((selection = gMenuExitSelection) != 0)) {
             if (((u8) gCourseDetailsMenuSelection >= 7) || (gMenuExitSelection != 0)) {
                 enqueueSoundEffect(soundId, 0x32);

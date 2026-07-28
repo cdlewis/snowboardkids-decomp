@@ -55,7 +55,6 @@ typedef struct {
     /* 0x16 */ s16 pad;
 } EndingCreditsPageTextLineLayout;
 
-extern s32 gPlayerInputPressed[];
 extern u16 gEndingCreditsPageTextScripts[][0x5A];
 extern EndingCreditsPageTextLineLayout gEndingCreditsPageTextLineLayouts[];
 extern int rmonPrintf(const char *, ...);

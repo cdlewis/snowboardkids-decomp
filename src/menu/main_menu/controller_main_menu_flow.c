@@ -93,7 +93,6 @@ extern u8 gRaceRecordSettingsEnabled;
 extern u8 gRaceCourseModelEffectsDisabled;
 extern u8 gRaceCourseOverlayEffectsDisabled;
 extern s32 gMenuFlowState;
-extern s32 gPlayerInputPressed;
 extern u8 gControllerPakSaveGameNameBytes[];
 extern u8 gControllerPakSaveExtNameBytes[];
 extern u8 gControllerPakSaveExtNameBytesEnd[];
@@ -820,19 +819,19 @@ void updateMainMenu(void) {
                 requestMusicSequenceBank(0);
             }
         }
-        temp_a0 = gPlayerInputPressed;
+        temp_a0 = gPlayerInputPressed[0];
         if (temp_a0 & (STICK_UP | U_JPAD)) {
             if (gCurrentGameTask->selection != 0) {
                 gCurrentGameTask->selection -= 1;
                 enqueueSoundEffect(0x19, 0x32);
-                temp_a0 = gPlayerInputPressed;
+                temp_a0 = gPlayerInputPressed[0];
             }
         }
         if (temp_a0 & (STICK_DOWN | D_JPAD)) {
             if (gCurrentGameTask->selection != 2) {
                 gCurrentGameTask->selection += 1;
                 enqueueSoundEffect(0x19, 0x32);
-                temp_a0 = gPlayerInputPressed;
+                temp_a0 = gPlayerInputPressed[0];
             }
         }
         if ((temp_a0 & START_BUTTON) || (temp_a0 & A_BUTTON)) {
@@ -955,22 +954,22 @@ void updateMainMenuModeSelect(void) {
     gMenuFadeAlpha -= 0x10;
     if (gMenuFadeAlpha < 0) {
         gMenuFadeAlpha = 0;
-        temp_v0 = gPlayerInputPressed;
+        temp_v0 = gPlayerInputPressed[0];
         if (temp_v0 & (STICK_UP | U_JPAD)) {
             if (gMenuFlowState != 0) {
                 enqueueSoundEffect(0x19, 0x32);
                 gMenuFlowState -= 1;
-                temp_v0 = gPlayerInputPressed;
+                temp_v0 = gPlayerInputPressed[0];
             }
         }
         if ((temp_v0 & (STICK_DOWN | D_JPAD)) && (gMenuFlowState != 2)) {
             enqueueSoundEffect(0x19, 0x32);
             gMenuFlowState += 1;
-            temp_v0 = gPlayerInputPressed;
+            temp_v0 = gPlayerInputPressed[0];
         }
         if (temp_v0 & (A_BUTTON | B_BUTTON | START_BUTTON)) {
             enqueueSoundEffect(0x18, 0x32);
-            if (gPlayerInputPressed & B_BUTTON) {
+            if (gPlayerInputPressed[0] & B_BUTTON) {
                 gMenuFlowState = 2;
             }
             gMainMenuSelectionResult = 1;
@@ -1045,16 +1044,16 @@ void updateMainMenuSettings(void) {
     gMenuFadeAlpha -= 0x10;
     if (gMenuFadeAlpha < 0) {
         gMenuFadeAlpha = 0;
-        temp_v1 = gPlayerInputPressed;
+        temp_v1 = gPlayerInputPressed[0];
         if ((temp_v1 & (STICK_UP | U_JPAD)) && (gMenuFlowState != 0)) {
             gMenuFlowState -= 1;
             enqueueSoundEffect(0x19, 0x32);
-            temp_v1 = gPlayerInputPressed;
+            temp_v1 = gPlayerInputPressed[0];
         }
         if ((temp_v1 & (STICK_DOWN | D_JPAD)) && (gMenuFlowState != 3)) {
             gMenuFlowState += 1;
             enqueueSoundEffect(0x19, 0x32);
-            temp_v1 = gPlayerInputPressed;
+            temp_v1 = gPlayerInputPressed[0];
         }
         if (temp_v1 & B_BUTTON) {
             gMenuFlowState = 3;
@@ -1065,21 +1064,21 @@ void updateMainMenuSettings(void) {
                 if (gRaceRecordSettingsEnabled != 0) {
                     gRaceRecordSettingsEnabled -= 1;
                     enqueueSoundEffect(0x19, 0x32);
-                    temp_v1 = gPlayerInputPressed;
+                    temp_v1 = gPlayerInputPressed[0];
                 }
                 break;
             case 1:
                 if (gRaceCourseModelEffectsDisabled != 1) {
                     gRaceCourseModelEffectsDisabled += 1;
                     enqueueSoundEffect(0x19, 0x32);
-                    temp_v1 = gPlayerInputPressed;
+                    temp_v1 = gPlayerInputPressed[0];
                 }
                 break;
             case 2:
                 if (gRaceCourseOverlayEffectsDisabled != 1) {
                     gRaceCourseOverlayEffectsDisabled += 1;
                     enqueueSoundEffect(0x19, 0x32);
-                    temp_v1 = gPlayerInputPressed;
+                    temp_v1 = gPlayerInputPressed[0];
                 }
                 break;
             }
@@ -1090,21 +1089,21 @@ void updateMainMenuSettings(void) {
                 if (gRaceRecordSettingsEnabled != 1) {
                     gRaceRecordSettingsEnabled += 1;
                     enqueueSoundEffect(0x19, 0x32);
-                    temp_v1 = gPlayerInputPressed;
+                    temp_v1 = gPlayerInputPressed[0];
                 }
                 break;
             case 1:
                 if (gRaceCourseModelEffectsDisabled != 0) {
                     gRaceCourseModelEffectsDisabled -= 1;
                     enqueueSoundEffect(0x19, 0x32);
-                    temp_v1 = gPlayerInputPressed;
+                    temp_v1 = gPlayerInputPressed[0];
                 }
                 break;
             case 2:
                 if (gRaceCourseOverlayEffectsDisabled != 0) {
                     gRaceCourseOverlayEffectsDisabled -= 1;
                     enqueueSoundEffect(0x19, 0x32);
-                    temp_v1 = gPlayerInputPressed;
+                    temp_v1 = gPlayerInputPressed[0];
                 }
                 break;
             }

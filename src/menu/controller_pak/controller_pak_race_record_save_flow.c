@@ -17,7 +17,6 @@ extern u8 gPendingFramebufferSwapCount;
 extern u8 gFramebufferSwapHold;
 extern u8 gControllerPakMenuCursorState;
 extern s32 gMenuFlowState;
-extern s32 gPlayerInputPressed;
 extern s32 D_8010ADE0;
 extern s32 D_8010ADE4;
 extern s16 gMenuFadeAlpha;
@@ -203,7 +202,7 @@ void updateControllerPakRaceRecordSaveFlow(void)
           break;
 
         case 4:
-          temp_v1 = gPlayerInputPressed;
+          temp_v1 = gPlayerInputPressed[0];
           if ((temp_v1 & A_BUTTON) || (temp_v1 & START_BUTTON))
         {
           sp1C = temp_t0;
@@ -231,14 +230,14 @@ void updateControllerPakRaceRecordSaveFlow(void)
         case 6:
           if ((gMenuChoicePromptState[0] == 3) || (gMenuChoicePromptState[0] == 4))
         {
-          temp_v1 = gPlayerInputPressed;
+          temp_v1 = gPlayerInputPressed[0];
           if (temp_v1 & (STICK_UP | U_JPAD))
           {
             if (gMenuChoicePromptState[0] != (new_var & 0xFFFFFFFFu))
             {
               gMenuChoicePromptState[0] -= 1;
               enqueueSoundEffect(0x19, 0x32);
-              temp_v1 = gPlayerInputPressed;
+              temp_v1 = gPlayerInputPressed[0];
             }
           }
           var_t7 = temp_v1 & A_BUTTON;
@@ -248,7 +247,7 @@ void updateControllerPakRaceRecordSaveFlow(void)
             {
               gMenuChoicePromptState[0] += 1;
               enqueueSoundEffect(0x19, 0x32);
-              temp_v1 = gPlayerInputPressed;
+              temp_v1 = gPlayerInputPressed[0];
             }
             var_t7 = temp_v1 & A_BUTTON;
           }
@@ -315,7 +314,7 @@ void updateControllerPakRaceRecordSaveFlow(void)
         case 13:
 
         case 17:
-          temp_v1 = gPlayerInputPressed;
+          temp_v1 = gPlayerInputPressed[0];
           if ((temp_v1 & A_BUTTON) || (temp_v1 & START_BUTTON))
         {
           enqueueSoundEffect(1, 0x32);
@@ -325,7 +324,7 @@ void updateControllerPakRaceRecordSaveFlow(void)
           break;
 
         case 15:
-          temp_v1 = gPlayerInputPressed;
+          temp_v1 = gPlayerInputPressed[0];
           if ((temp_v1 & A_BUTTON) || (temp_v1 & START_BUTTON))
         {
           enqueueSoundEffect(1, 0x32);
@@ -337,7 +336,7 @@ void updateControllerPakRaceRecordSaveFlow(void)
         case 14:
 
         case 16:
-          temp_v1 = gPlayerInputPressed;
+          temp_v1 = gPlayerInputPressed[0];
           if ((temp_v1 & A_BUTTON) || (temp_v1 & START_BUTTON))
         {
           sp1C = temp_t0;
@@ -369,7 +368,7 @@ void updateControllerPakRaceRecordSaveFlow(void)
           break;
 
         case 18:
-          temp_v1 = gPlayerInputPressed;
+          temp_v1 = gPlayerInputPressed[0];
           if ((temp_v1 & A_BUTTON) || (temp_v1 & START_BUTTON))
         {
           enqueueSoundEffect(1, 0x32);
@@ -414,14 +413,14 @@ void fadeOutControllerPakRaceRecordSaveFlow(void) {
 }
 
 void updateControllerPakRaceRecordSaveOverwritePrompt(void) {
-    if ((gPlayerInputPressed & (STICK_UP | U_JPAD)) && (gControllerPakMenuState.confirmChoice != 0)) {
+    if ((gPlayerInputPressed[0] & (STICK_UP | U_JPAD)) && (gControllerPakMenuState.confirmChoice != 0)) {
         gControllerPakMenuState.confirmChoice = 0;
         enqueueSoundEffect(0x19, 0x32);
-    } else if ((gPlayerInputPressed & (STICK_DOWN | D_JPAD)) && (gControllerPakMenuState.confirmChoice != 1)) {
+    } else if ((gPlayerInputPressed[0] & (STICK_DOWN | D_JPAD)) && (gControllerPakMenuState.confirmChoice != 1)) {
         gControllerPakMenuState.confirmChoice = 1;
         enqueueSoundEffect(0x19, 0x32);
     }
-    if ((gPlayerInputPressed & A_BUTTON) || (gPlayerInputPressed & START_BUTTON)) {
+    if ((gPlayerInputPressed[0] & A_BUTTON) || (gPlayerInputPressed[0] & START_BUTTON)) {
         enqueueSoundEffect(0x18, 0x32);
         if (gControllerPakMenuState.confirmChoice == 0) {
             gControllerPakMenuCursorState = 0;
@@ -430,7 +429,7 @@ void updateControllerPakRaceRecordSaveOverwritePrompt(void) {
             gMenuFlowState = 1;
             setCurrentGameTaskCallback(fadeOutControllerPakRaceRecordSaveFlow, 0);
         }
-    } else if (gPlayerInputPressed & B_BUTTON) {
+    } else if (gPlayerInputPressed[0] & B_BUTTON) {
         enqueueSoundEffect(0x18, 0x32);
         gMenuFlowState = 1;
         setCurrentGameTaskCallback(fadeOutControllerPakRaceRecordSaveFlow, 0);

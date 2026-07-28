@@ -39,7 +39,6 @@ extern volatile char gTitleDemoRaceIntroViewportHeight;
 extern s8 gTitleDemoRaceIntroViewportHeight;
 #endif
 extern s8 gTitleDemoRaceIntroFadeStep;
-extern s32 gPlayerInputPressed;
 extern s16 gRaceCourseIndex;
 extern s16 gRaceLapCount;
 extern s8 gRacePlayerCount;
@@ -201,7 +200,7 @@ void updateTitleDemoRaceIntro(void) {
     if (fadeDelay != 0) {
         gCurrentGameTask->fadeDelay = fadeDelay - 1;
     }
-    if (gPlayerInputPressed & START_BUTTON) {
+    if (gPlayerInputPressed[0] & START_BUTTON) {
         if ((u8) gTitleDemoRaceIntroFadeStep == 0) {
             gTitleDemoRaceIntroFadeStep = 0x10;
         }

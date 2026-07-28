@@ -30,7 +30,6 @@ extern s16 gMenuFadeAlpha;
 extern u8 gRaceTypeSelection;
 extern u8 gCourseSelectFromRaceTypeMenu;
 extern s32 gMenuFlowState;
-extern s32 gPlayerInputPressed;
 extern u8 gPendingFramebufferSwapCount;
 extern u8 gFramebufferSwapHold;
 
@@ -127,7 +126,7 @@ void updateRaceTypeSelectMenu(void) {
                         gMenuInputRepeatTimers[0] = 0;
                     }
 
-                    heldInput = gPlayerInputPressed;
+                    heldInput = gPlayerInputPressed[0];
                     pressedUpCopy = pressedUp;
                     if ((heldInput & (STICK_UP | U_JPAD)) ||
                         ((pressedUpCopy != 0) && ((gMenuInputRepeatTimers[0] & 0xFFFF) >= 9) &&
@@ -170,7 +169,7 @@ void updateRaceTypeSelectMenu(void) {
 
                     if (newInput != previousSelection) {
                         enqueueSoundEffect(0x19, 0x32);
-                        heldInput = gPlayerInputPressed;
+                        heldInput = gPlayerInputPressed[0];
                         gRaceCourseIndex = 9;
                     }
 
@@ -197,7 +196,7 @@ void updateRaceTypeSelectMenu(void) {
             waitTimer = gMenuSelectionConfirmTimer;
         }
 
-        if ((waitTimer == 0) && (gPlayerInputPressed & B_BUTTON) && (gMenuFlowState == (sp18[0] + 1))) {
+        if ((waitTimer == 0) && (gPlayerInputPressed[0] & B_BUTTON) && (gMenuFlowState == (sp18[0] + 1))) {
             enqueueSoundEffect(0x18, 0x32);
             cursorTarget = &gRaceTypeSelectCursorTarget;
             cursorTarget->state = 2;

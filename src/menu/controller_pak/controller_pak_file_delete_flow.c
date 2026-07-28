@@ -16,7 +16,6 @@ extern void releaseMenuAssetHandles(void);
 
 extern u8 gControllerPakMenuCursorState;
 extern u8 gControllerPakDeletePromptState;
-extern s32 gPlayerInputPressed;
 extern u8 gPendingFramebufferSwapCount;
 extern u8 gFramebufferSwapHold;
 extern s16 gMenuFadeAlpha;
@@ -66,14 +65,14 @@ void initControllerPakFileDeleteFlow(void) {
 }
 
 void updateControllerPakFileDeleteMainOptions(void) {
-    if ((gPlayerInputPressed & (STICK_RIGHT | R_JPAD)) && (gControllerPakMenuState.mainChoice != 1)) {
+    if ((gPlayerInputPressed[0] & (STICK_RIGHT | R_JPAD)) && (gControllerPakMenuState.mainChoice != 1)) {
         gControllerPakMenuState.mainChoice = 1;
         enqueueSoundEffect(0x19, 0x32);
-    } else if ((gPlayerInputPressed & (STICK_LEFT | L_JPAD)) && (gControllerPakMenuState.mainChoice != 0)) {
+    } else if ((gPlayerInputPressed[0] & (STICK_LEFT | L_JPAD)) && (gControllerPakMenuState.mainChoice != 0)) {
         gControllerPakMenuState.mainChoice = 0;
         enqueueSoundEffect(0x19, 0x32);
     }
-    if ((gPlayerInputPressed & A_BUTTON) || (gPlayerInputPressed & START_BUTTON)) {
+    if ((gPlayerInputPressed[0] & A_BUTTON) || (gPlayerInputPressed[0] & START_BUTTON)) {
         enqueueSoundEffect(0x18, 0x32);
         if (gControllerPakMenuState.mainChoice == 1) {
             setCurrentGameTaskCallback(fadeOutControllerPakFileDeleteFlow, 0);
@@ -89,10 +88,10 @@ void updateControllerPakFileDeleteMainOptions(void) {
 void updateControllerPakFileDeleteFileList(void) {
     u8 direction = 0;
 
-    if ((gPlayerInputPressed & (STICK_UP | U_JPAD)) && (gControllerPakMenuState.fileIndex != 0)) {
+    if ((gPlayerInputPressed[0] & (STICK_UP | U_JPAD)) && (gControllerPakMenuState.fileIndex != 0)) {
         gControllerPakMenuState.fileIndex--;
         direction = 1;
-    } else if ((gPlayerInputPressed & (STICK_DOWN | D_JPAD)) && (gControllerPakMenuState.fileIndex != 0xF)) {
+    } else if ((gPlayerInputPressed[0] & (STICK_DOWN | D_JPAD)) && (gControllerPakMenuState.fileIndex != 0xF)) {
         gControllerPakMenuState.fileIndex++;
         direction = 2;
     }
@@ -121,13 +120,13 @@ void updateControllerPakFileDeleteFileList(void) {
         }
     }
 
-    if (((gPlayerInputPressed & A_BUTTON) || (gPlayerInputPressed & B_BUTTON, ((gPlayerInputPressed & START_BUTTON) != 0))) &&
-        (gPlayerInputPressed & B_BUTTON, (gControllerPakFileEntries[gControllerPakMenuState.fileIndex].exists != 0))) {
+    if (((gPlayerInputPressed[0] & A_BUTTON) || (gPlayerInputPressed[0] & B_BUTTON, ((gPlayerInputPressed[0] & START_BUTTON) != 0))) &&
+        (gPlayerInputPressed[0] & B_BUTTON, (gControllerPakFileEntries[gControllerPakMenuState.fileIndex].exists != 0))) {
         enqueueSoundEffect(0x18, 0x32);
         setCurrentGameTaskCallback(updateControllerPakFileDeleteConfirm, 0);
         gControllerPakMenuState.state = 2;
         gControllerPakMenuState.confirmChoice = 1;
-    } else if ((gPlayerInputPressed & B_BUTTON) != 0) {
+    } else if ((gPlayerInputPressed[0] & B_BUTTON) != 0) {
         enqueueSoundEffect(0x18, 0x32);
         setCurrentGameTaskCallback(updateControllerPakFileDeleteMainOptions, 0);
         gControllerPakMenuState.state = 0;
@@ -136,14 +135,14 @@ void updateControllerPakFileDeleteFileList(void) {
 }
 
 void updateControllerPakFileDeleteConfirm(void) {
-    if ((gPlayerInputPressed & (STICK_RIGHT | R_JPAD)) && (gControllerPakMenuState.confirmChoice != 1)) {
+    if ((gPlayerInputPressed[0] & (STICK_RIGHT | R_JPAD)) && (gControllerPakMenuState.confirmChoice != 1)) {
         gControllerPakMenuState.confirmChoice = 1;
         enqueueSoundEffect(0x19, 0x32);
-    } else if ((gPlayerInputPressed & (STICK_LEFT | L_JPAD)) && (gControllerPakMenuState.confirmChoice != 0)) {
+    } else if ((gPlayerInputPressed[0] & (STICK_LEFT | L_JPAD)) && (gControllerPakMenuState.confirmChoice != 0)) {
         gControllerPakMenuState.confirmChoice = 0;
         enqueueSoundEffect(0x19, 0x32);
     }
-    if ((gPlayerInputPressed & A_BUTTON) || (gPlayerInputPressed & START_BUTTON)) {
+    if ((gPlayerInputPressed[0] & A_BUTTON) || (gPlayerInputPressed[0] & START_BUTTON)) {
         enqueueSoundEffect(0x18, 0x32);
         if (gControllerPakMenuState.confirmChoice == 0) {
             createCallbackTask((CallbackTaskCallback)&initControllerPakDeleteConfirmPrompt, 0, 0x64);
@@ -154,7 +153,7 @@ void updateControllerPakFileDeleteConfirm(void) {
             setCurrentGameTaskCallback(updateControllerPakFileDeleteFileList, 0);
             gControllerPakMenuState.state = 1;
         }
-    } else if (gPlayerInputPressed & B_BUTTON) {
+    } else if (gPlayerInputPressed[0] & B_BUTTON) {
         enqueueSoundEffect(0x18, 0x32);
         setCurrentGameTaskCallback(updateControllerPakFileDeleteFileList, 0);
         gControllerPakMenuState.state = 1;
@@ -163,14 +162,14 @@ void updateControllerPakFileDeleteConfirm(void) {
 }
 
 void updateControllerPakFileDeletePrompt(void) {
-    if ((gPlayerInputPressed & (STICK_UP | U_JPAD)) && (gControllerPakMenuState.confirmChoice != 0)) {
+    if ((gPlayerInputPressed[0] & (STICK_UP | U_JPAD)) && (gControllerPakMenuState.confirmChoice != 0)) {
         gControllerPakMenuState.confirmChoice = 0;
         enqueueSoundEffect(0x19, 0x32);
-    } else if ((gPlayerInputPressed & (STICK_DOWN | D_JPAD)) && (gControllerPakMenuState.confirmChoice != 1)) {
+    } else if ((gPlayerInputPressed[0] & (STICK_DOWN | D_JPAD)) && (gControllerPakMenuState.confirmChoice != 1)) {
         gControllerPakMenuState.confirmChoice = 1;
         enqueueSoundEffect(0x19, 0x32);
     }
-    if ((gPlayerInputPressed & A_BUTTON) || (gPlayerInputPressed & START_BUTTON)) {
+    if ((gPlayerInputPressed[0] & A_BUTTON) || (gPlayerInputPressed[0] & START_BUTTON)) {
         enqueueSoundEffect(0x18, 0x32);
         if (gControllerPakMenuState.confirmChoice == 0) {
             requestControllerPakDeleteFile(gControllerPakMenuState.fileIndex);
@@ -191,7 +190,7 @@ void updateControllerPakFileDeletePrompt(void) {
             gControllerPakMenuState.state = 2;
             gControllerPakMenuState.confirmChoice = 0;
         }
-    } else if (gPlayerInputPressed & B_BUTTON) {
+    } else if (gPlayerInputPressed[0] & B_BUTTON) {
         enqueueSoundEffect(0x18, 0x32);
         setCurrentGameTaskCallback(updateControllerPakFileDeleteConfirm, 0);
         gControllerPakMenuState.state = 2;
@@ -205,7 +204,7 @@ void updateControllerPakFileDeleteErrorPrompt(void) {
 
     state = gControllerPakDeletePromptState;
     if (state == 1) {
-        if ((gPlayerInputPressed & A_BUTTON) || (gPlayerInputPressed & START_BUTTON)) {
+        if ((gPlayerInputPressed[0] & A_BUTTON) || (gPlayerInputPressed[0] & START_BUTTON)) {
             enqueueSoundEffect(0x18, 0x32);
             gControllerPakDeletePromptState = 2;
             state = 2;
