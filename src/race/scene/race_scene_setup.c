@@ -16,7 +16,6 @@
 extern u16 gRaceCourseIndex;
 
 extern u8 gRaceSplitscreenMode;
-extern u8 gPlayerCount;
 extern u8 gRaceDemoPlaybackEnabled;
 extern u8 gTrainingCourseLesson;
 extern u8 gMainMenuModeSelection;

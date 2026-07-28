@@ -47,7 +47,6 @@ extern u8 gRumblePakConnectedByController[];
 extern char D_800EC9E5;
 extern u8 gHighestUnlockedCourse;
 extern s16 gRaceCourseIndex;
-extern u8 gPlayerCount;
 extern s32 gMenuFlowState;
 extern s32 gPlayerInputHeld;
 extern s32 gPlayerInputPressed[];

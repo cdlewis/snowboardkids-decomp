@@ -80,7 +80,6 @@ extern u8 gRaceSetupOpponentFocusCharacterIds[][4];
 extern u8 gPendingEndingCreditsFlow;
 extern u8 gRaceSplitscreenMode;
 extern u8 D_800ECA24;
-extern u8 gPlayerCount;
 
 const f32 D_800E1090 = 1.333333373f;
 const f32 D_800E1094 = 1.333333373f;

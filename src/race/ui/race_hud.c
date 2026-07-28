@@ -61,7 +61,6 @@ extern s16 gRaceLapCount;
 extern s16 gRaceHudSpinnerFrame;
 extern s16 gRaceHudMode;
 extern s16 gRaceCourseIndex;
-extern u8 gPlayerCount;
 extern u8 gRaceUpdatePaused;
 extern u8 gTrainingCourseLesson;
 extern u8 gMainMenuModeSelection;

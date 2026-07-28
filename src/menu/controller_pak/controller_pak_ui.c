@@ -10,6 +10,7 @@
 #include "game/menu/controller_pak/controller_pak_ui.h"
 #include "game/menu/renderer/menu_renderer.h"
 #include "game/menu/race_setup/race_setup_ui.h"
+#include "game/race/player/race_player_input.h"
 
 #define CONTROLLER_PAK_DELETE_PANEL_HANDLE (gAssetHandles[0x29])
 
@@ -24,7 +25,6 @@ typedef struct {
 } ControllerPakRumbleCheckPromptTransition;
 
 extern ControllerPakRumbleCheckPromptTransition gControllerPakRumbleCheckPromptTransition;
-extern u8 gPlayerCount;
 extern u8 gRumblePakConnectedByController[];
 extern u8 gControllerPakRumbleCheckPromptState;
 extern u8 gControllerPakRumbleCheckPromptConfirmSelection;

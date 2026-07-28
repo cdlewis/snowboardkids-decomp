@@ -78,7 +78,6 @@ extern u8 gShopMenuShowNewCoursesMessage;
 extern s16 gCoursePreviewViewportHeight;
 extern RaceCamera D_801121E0[];
 extern RaceCamera D_80112340;
-extern u8 gPlayerCount;
 extern s8 gCourseSelectSelectedCourseSavedSlot;
 extern s32 gMenuFlowState;
 extern u8 gPendingFramebufferSwapCount;

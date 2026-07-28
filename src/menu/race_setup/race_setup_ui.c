@@ -61,7 +61,6 @@ extern u16 gRaceSetupTwoPlayerOptionText[];
 extern u16 gRaceSetupThreePlayerOptionText[];
 extern u16 gRaceSetupFourPlayerOptionText[];
 extern MenuGlyphScript gRaceSetupPlayerCountPromptText[][0x34];
-extern u8 gPlayerCount;
 extern u8 gRaceSetupSaveChoicePromptBottomSprites[];
 extern u8 gRaceSetupSaveChoicePromptTopSprites[];
 extern u8 gRaceSetupSavePanelFrameState;

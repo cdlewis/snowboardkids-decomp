@@ -77,7 +77,6 @@ extern s32 D_80112364;
 extern void (*D_8011236C)(void);
 extern s32 D_80112414;
 extern void (*D_8011241C)(void);
-extern u8 gPlayerCount;
 extern s32 gMenuFlowState;
 
 // initMultiplayerCourseSelectMenu best match: 98.643% (nonmatchings/initMultiplayerCourseSelectMenu-8498672362023432715/base_2.c)
