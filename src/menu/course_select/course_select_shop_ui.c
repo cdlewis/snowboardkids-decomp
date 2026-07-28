@@ -164,7 +164,6 @@ void drawShopMenuModeChoiceRows(ShopMenuRowActor *actor) {
 }
 
 extern int sprintf(char *, const char *, ...);
-extern s32 gCourseUnlockPrices[];
 extern u16 gCourseDetailsPreviewCourseTiles[];
 extern u16 gCourseDetailsPreviewExtraTiles[];
 extern ShopMenuFrameTileMap gShopMenuPanelFrameTilemaps[];

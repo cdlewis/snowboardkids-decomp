@@ -115,7 +115,6 @@ extern s32 D_8010AEE8[];
 extern u8 D_8010AEF7[];
 extern u8 D_8010AF06[];
 extern u16 D_8010AF44;
-extern s32 gCourseUnlockPrices[];
 extern void releaseMenuAssetHandles(void);
 extern void enqueueSoundEffect(s32, s32);
 

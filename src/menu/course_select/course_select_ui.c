@@ -1581,7 +1581,6 @@ void initCourseSelectCourseStats(CourseSelectWidgetActor *arg0) {
 
 #if 0
 #ifdef NON_MATCHING
-extern u32 gCourseUnlockPrices[];
 extern u8 gUnlockedExtraCourseFlags;
 extern u8 gCourseSelectExtraCourseIds[];
 
@@ -1717,7 +1716,6 @@ void drawCourseSelectCourseDescription(CourseSelectWidgetActor *arg0) {
 
 #ifdef NON_MATCHING
 extern u8 gCourseSelectExtraCourseIds[];
-extern u32 gCourseUnlockPrices[];
 extern u8 gUnlockedExtraCourseFlags;
 
 void drawCourseSelectCourseDescription(CourseSelectWidgetActor *arg0) {
