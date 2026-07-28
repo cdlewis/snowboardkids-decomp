@@ -24,35 +24,6 @@ typedef struct {
 } CourseSelectMenuState;
 
 typedef struct {
-    union {
-        struct {
-            /* 0x00 */ u8 unk0[4];
-            /* 0x04 */ u8 playerOneCourseDecided;
-            /* 0x05 */ u8 unk5[3];
-            /* 0x08 */ u8 playerTwoCourseDecided;
-            /* 0x09 */ u8 unk9[7];
-            /* 0x10 */ u8 unk10[4];
-        };
-        struct {
-            /* 0x00 */ u8 unk0Array[4];
-            /* 0x04 */ u8 unk4Array[4];
-            /* 0x08 */ u8 unk8Array[4];
-            /* 0x0C */ u8 unkCArray[4];
-            /* 0x10 */ u8 unk10Array[4];
-        };
-    };
-    /* 0x14 */ s16 unk14[4];
-    /* 0x1C */ s16 unk1C[4];
-    /* 0x24 */ u8 unk24[4];
-    /* 0x28 */ u8 unk28;
-    /* 0x29 */ u8 transitionState;
-    /* 0x2A */ s16 unk2A;
-    /* 0x2C */ s16 unk2C;
-    /* 0x2E */ u8 unk2E;
-    /* 0x2F */ u8 unk2F[9];
-} CourseSelectStatus;
-
-typedef struct {
     /* 0x0000 */ u8 pad0[0x78D7];
     /* 0x78D7 */ u8 courseUnlockFlags;
 } CourseSelectSaveData;
@@ -96,7 +67,6 @@ extern s16 D_8010AED0;
 extern s16 gMenuInputRepeatTimers;
 extern u8 gMenuExitSelection;
 extern u8 D_8010AECC;
-extern CourseSelectStatus gCourseSelectStatus;
 extern u8 D_8010AF19;
 extern u8 D_8010AF1A;
 extern u8 D_8010AF1B;
@@ -131,10 +101,7 @@ extern u8 D_8010AF3F;
 extern u8 gCourseSelectExtraCourseColumnState;
 extern u8 gShopMenuDescriptionSeen;
 extern u8 gShopMenuShowNewCoursesMessage;
-extern s8 gCourseDetailsMenuSelection;
-extern s8 gCourseDetailsPreviewPage;
 extern s16 gCoursePreviewViewportHeight;
-extern s8 gCourseDetailsCloseFromBack;
 extern MenuCameraObject D_801121E0[];
 extern MenuCameraObject D_80112340;
 extern u8 gPlayerCount;
