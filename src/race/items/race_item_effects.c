@@ -152,6 +152,18 @@ typedef struct RaceItemDrawNode {
 } RaceItemDrawNode;
 
 typedef struct {
+    /* 0x00 */ u8 pad0[0x10];
+    /* 0x10 */ u16 playerIndex;
+    /* 0x12 */ u8 pad12[6];
+    /* 0x18 */ Vec3i payloads[2];
+    /* 0x30 */ u8 pad30[0xC];
+    /* 0x3C */ RaceItemDrawNode drawNodes[2];
+    /* 0x64 */ s16 timer;
+    /* 0x66 */ u8 pad66[2];
+    /* 0x68 */ u8 *frameSequence;
+} RaceItemSparkBurstActor;
+
+typedef struct {
     /* 0x00 */ RaceItemDrawNode *heads[4];
 } RaceItemDrawLists;
 
@@ -235,59 +247,40 @@ s32 getRaceItemEffectType(s32 arg0) {
     return p[arg0];
 }
 
-// updateRaceItemSparkBurst best match: 95.091% (nonmatchings/updateRaceItemSparkBurst-1645024839200431810/base_2.c)
-
-#pragma GLOBAL_ASM("asm/nonmatchings/race/items/race_item_effects/updateRaceItemSparkBurst.s")
-
-#ifdef NON_MATCHING
 void updateRaceItemSparkBurst(RaceItemEffectActor *arg0) {
-    typedef struct {
-        /* 0x00 */ u8 pad0[0x10];
-        /* 0x10 */ u16 playerIndex;
-        /* 0x12 */ u8 pad12[6];
-        /* 0x18 */ RaceItemEffectPayload payloads[2];
-        /* 0x30 */ u8 pad30[0xC];
-        /* 0x3C */ RaceItemDrawNode drawNodes[2];
-        /* 0x64 */ s16 unk64;
-        /* 0x66 */ u8 pad66[2];
-        /* 0x68 */ u8 *unk68;
-    } RaceItemSparkBurstActor;
-
     RaceItemSparkBurstActor *actor;
     RaceItemDrawNode **drawList;
-    RaceItemDrawNode *node;
-    RaceItemDrawNode *fieldNode;
-    RaceItemEffectPayload *payload;
-    void *displayList;
-    s16 state;
+    s32 playerIndex;
     s32 i;
-    u16 playerIndex;
 
-    actor = (RaceItemSparkBurstActor *) arg0;
+    actor = (RaceItemSparkBurstActor *)arg0;
+
     if (gRaceUpdatePaused == 0) {
-        actor->unk64 = actor->unk64 + 1;
-        if (actor->unk64 == 5) {
+        actor->timer++;
+        if (actor->timer == 5) {
             removeCallbackTask(arg0);
             return;
         }
     }
 
-    state = actor->unk64;
-    i = 0;
-    drawList = (RaceItemDrawNode **) gRaceItemTextureEffectDrawLists;
-    if (state == 0) {
-        actor->unk64 = state + 1;
-    } node = (fieldNode = actor->drawNodes); playerIndex = actor->playerIndex; if (playerIndex >= 4) { playerIndex = 0; } drawList = &drawList[playerIndex]; payload = actor->payloads; loop: fieldNode->next = *drawList; if (((actor == NULL) && (actor == NULL)) && (actor == NULL)) { } i++; *drawList = node; displayList = &gRaceItemSparkBurstVertices[(actor->unk68[actor->unk64 - 1] * 8) * 2];
-    node++;
-    fieldNode->pos = &payload->vec;
-    payload++;
-    fieldNode++;
-    fieldNode[-1].displayList = (u32) displayList;
-    if (i != 2) {
-        goto loop;
+    if (actor->timer == 0) {
+        actor->timer++;
+    }
+
+    playerIndex = actor->playerIndex;
+    if (playerIndex >= 4) {
+        playerIndex = 0;
+    }
+    drawList = &gRaceItemTextureEffectDrawLists[playerIndex];
+
+    for (i = 0; i < 2; i++) {
+        actor->drawNodes[i].next = *drawList;
+        *drawList = &actor->drawNodes[i];
+        actor->drawNodes[i].displayList =
+            (u32)&gRaceItemSparkBurstVertices[actor->frameSequence[actor->timer - 1] * 16];
+        actor->drawNodes[i].pos = &actor->payloads[i];
     }
 }
-#endif
 
 void initRaceItemSparkBurst(RaceItemEffectActor *arg0) {
     arg0->unk64 = 0;
