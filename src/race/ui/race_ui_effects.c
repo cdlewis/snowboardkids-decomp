@@ -119,11 +119,6 @@ typedef struct {
     /* 0x02 */ u8 pad2[6];
 } RaceUiAssetEntry;
 
-typedef struct {
-    /* 0x00 */ s8 active;
-    /* 0x01 */ u8 pad1[0xB0 - 0x01];
-} RacePlayerHudStatus;
-
 typedef Mtx RaceUiGfxCommandDest;
 
 typedef struct {
@@ -799,7 +794,6 @@ extern Gfx gEffectRenderModeCleanupDl[];
 extern Gfx gEffectRenderModeSetupDl[];
 extern Gfx gTranslucentSpriteRenderModeDl[];
 extern int sprintf(char *, const char *, ...);
-extern RacePlayerHudStatus gRacePlayerHudStatuses[];
 extern RaceUiAssetEntry D_800D5FF4[];
 extern RaceUiCameraTransformSource D_801121E0[];
 extern RaceUiGfxCommandDest *allocFixedTransformMatrix(RaceUiTrailCopyBlock *);

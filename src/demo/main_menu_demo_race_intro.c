@@ -42,7 +42,6 @@ extern s8 gRacePlayerCount;
 extern u8 gMainMenuDemoRaceIntroIndex;
 extern u8 gRaceRumbleEnabled;
 extern u8 gRaceSplitscreenMode;
-extern u8 gRacePlayerHudStatuses;
 extern u8 gRaceUpdatePaused;
 extern u8 gTrainingCourseLesson;
 extern u8 gMainMenuModeSelection;
@@ -138,7 +137,7 @@ void initMainMenuDemoRaceIntro(void) {
     gMenuFlowState = 0;
     resetRaceCameras();
     resetAllViewports();
-    gRacePlayerHudStatuses = one;
+    gRacePlayerHudStatuses[0].active = one;
     gFramebufferSwapDelay.value = 0;
     initRacePlayers();
     if (!gMainMenuDemoRaceIntroLoadCourseAssetsFlags[gMainMenuDemoRaceIntroIndex * sizeof(MainMenuDemoRaceIntroEntry)]) {
@@ -150,7 +149,7 @@ void initMainMenuDemoRaceIntro(void) {
         configureViewport(0, 0xA0, 0x78, 0x120U, 0xD0U, 0x140U, 0xF0U, 1.3333334f);
         one++;
         one--;
-        gRacePlayerHudStatuses = one;
+        gRacePlayerHudStatuses[0].active = one;
         gFramebufferSwapDelay.value = 0;
     } else {
         configureViewport(0, 0x57, 0x43, 0x90U, 0x68U, 0xA0U, 0x78U, 1.3333334f);

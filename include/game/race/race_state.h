@@ -28,10 +28,17 @@ typedef struct {
     /* 0x44 */ s32 unk44;
 } RaceCourseStartEntry;
 
+typedef struct {
+    /* 0x00 */ s8 active;
+    /* 0x01 */ u8 pad1[0xB0 - 0x01];
+} RacePlayerHudStatus;
+
 typedef char RaceCourseStartEntrySizeCheck[(sizeof(RaceCourseStartEntry) == 0x48) ? 1 : -1];
+typedef char RacePlayerHudStatusSizeCheck[(sizeof(RacePlayerHudStatus) == 0xB0) ? 1 : -1];
 
 extern RaceCourseIndexValue gRaceCourseIndex;
 extern RaceCourseStartEntry gRaceCourseStartEntries[];
+extern RacePlayerHudStatus gRacePlayerHudStatuses[];
 extern u8 gRaceDemoPlaybackEnabled;
 
 #endif

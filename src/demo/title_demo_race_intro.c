@@ -33,7 +33,6 @@ extern u8 gTitleDemoReplayInputs[];
 extern u8 gPendingFramebufferSwapCount;
 extern u8 gRaceRumbleEnabled;
 extern s8 gRaceSplitscreenMode;
-extern u8 gRacePlayerHudStatuses;
 #ifdef NON_MATCHING
 extern volatile char gTitleDemoRaceIntroViewportHeight;
 #else
@@ -128,7 +127,7 @@ void initTitleDemoRaceIntro(void) {
     resetRaceCameras();
     resetAllViewports();
     configureViewport(0, 0xA0, 0x78, 0x120, 0xB0, 0x140, 0xF0, 1.333333373f);
-    gRacePlayerHudStatuses = playerOne;
+    gRacePlayerHudStatuses[0].active = playerOne;
     gFramebufferSwapDelay.value = 0;
     if ((six && six) != 0) {
         initRacePlayers();

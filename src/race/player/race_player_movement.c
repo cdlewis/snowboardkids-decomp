@@ -22,11 +22,6 @@ typedef struct {
 } TransformScratch;
 
 typedef struct {
-    s8 active;
-    char pad1[0xAF];
-} Unk8011228C;
-
-typedef struct {
     s32 pad0[2];
     s32 cos;
     s32 sin;
@@ -89,7 +84,6 @@ extern s16 gRacePlayerVoiceSoundIds4[];
 extern s16 gRacePlayerVoiceSoundIds5[];
 extern s16 gRacePlayerVoiceSoundIds6[];
 extern s16 gRacePlayerVoiceSoundIds7[];
-extern Unk8011228C gRacePlayerHudStatuses[];
 extern s16 gRaceLapCount;
 
 void getRacePlayerRankingProgress(s32 arg0, s32 *arg1, s32 *arg2) {
