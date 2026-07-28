@@ -53,6 +53,11 @@ typedef struct OSPiHandle_s OSPiHandle;
 
 #include "game/audio/audio_engine.h"
 
+typedef union {
+    u32 words[16];
+    s64 forceStructureAlignment;
+} RuntimeMtx;
+
 typedef struct {
     /* 0x00000 */ SchedulerTask schedulerTask;
     /* 0x00060 */ void *framebuffer;
@@ -108,6 +113,7 @@ extern s32 osPiStartDma(OSIoMesg *, s32, s32, u32, void *, u32, OSMesgQueue *);
 extern s32 osRecvMesg(OSMesgQueue *, OSMesg *, s32);
 extern void osViBlack(u8);
 extern void osViSetSpecialFeatures(u32);
+extern void initMenuAsciiFontTexture(void);
 
 extern s32 osTvType;
 
@@ -355,10 +361,6 @@ void dmaReadRom(u32 romOffset, void *ramAddress, s32 size) {
     }
 }
 
-// appendViewportDisplayLists best match: 99.972% (nonmatchings/appendViewportDisplayLists-2167615756788266096/base_26.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/engine/system_runtime/appendViewportDisplayLists.s")
-
-#ifdef NON_MATCHING
 typedef struct {
     s8 active;
     u8 screenBoundsValid;
@@ -374,8 +376,8 @@ typedef struct {
     u16 perspectiveNorm;
     u16 overlayPerspectiveNorm;
     u8 pad24[4];
-    Mtx projection;
-    Mtx overlayProjection;
+    RuntimeMtx projection;
+    RuntimeMtx overlayProjection;
     s16 left;
     s16 top;
     s16 right;
@@ -387,18 +389,18 @@ typedef struct {
     s16 rotation[9];
     s16 pad42;
     s32 transformOffset[3];
-    Mtx transform;
+    RuntimeMtx transform;
     u8 pad90[0x20];
 } RuntimeViewportCamera;
 
 typedef struct {
     u8 pad0[0x78];
     Vp viewports[4];
-    Mtx projections[4];
-    Mtx overlayProjections[4];
-    Mtx rotations[4];
-    Mtx translations[4];
-    Mtx viewportMatrices[4];
+    RuntimeMtx projections[4];
+    RuntimeMtx overlayProjections[4];
+    RuntimeMtx rotations[4];
+    RuntimeMtx translations[4];
+    RuntimeMtx viewportMatrices[4];
 } RuntimeViewportDisplayListData;
 
 typedef struct {
@@ -423,229 +425,246 @@ extern s8 gRenderMatricesDirty;
 extern u8 gCurrentViewportIndex;
 extern Mtx *gViewportMatrix;
 
-#define runtimeViewportStates ((RuntimeViewportState *)gViewportStates)
 #define runtimeDisplayListData ((RuntimeViewportDisplayListData *)gCurrentTaskDisplayListStart)
-#define runtimeModelRenderCallbackLists ((RenderCallbackNode **)&gModelRenderCallbackList)
+#define runtimeViewportStates ((RuntimeViewportState *)gViewportStates)
+#define runtimeModelRenderCallbackLists \
+    (*(RenderCallbackNode *(*)[24])&gModelRenderCallbackList)
+#define VIEWPORT_COUNT 4
 
 void appendViewportDisplayLists(u8 frameIndex) {
-    RuntimeViewportState *viewport;
     RenderCallbackNode **queue;
-    s32 anyModels;
-    s32 new_var2;
+    s32 hasModelCallbacks;
+    u32 upperMask;
     s16 left;
-    s64 new_var;
-    s32 color;
     s16 top;
+    s32 i;
 
     gUiBlinkTimer++;
-    gMenuViewportWidth = 0x120;
-    gMenuViewportHeight = 0xD0;
-    gMenuViewportCenterX = 0xA0;
-    gMenuViewportCenterY = 0x78;
+    gMenuViewportWidth = 288;
+    gMenuViewportHeight = 208;
+    gMenuViewportCenterX = 160;
+    gMenuViewportCenterY = 120;
+
     gDPPipeSync(gRegionAllocPtr++);
     gDPSetScissor(gRegionAllocPtr++, G_SC_NON_INTERLACE, 0, 0, 320, 240);
     gSPViewport(gRegionAllocPtr++, D_800DEF18);
+
     if (gMenuOverlayRenderCallbackList != NULL) {
         gSPDisplayList(gRegionAllocPtr++, gMenuRenderModeResetDl);
         runRenderCallbacks(&gMenuOverlayRenderCallbackList);
     }
+
     appendFadeOverlayDisplayList();
     gRenderMatricesDirty = 1;
-    gCurrentViewportIndex = 0;
-    if (gCurrentViewportIndex < 4) {
-        do {
-            viewport = &runtimeViewportStates[gCurrentViewportIndex];
-            if (viewport->screenBoundsValid != 0) {
-                runtimeDisplayListData->viewports[gCurrentViewportIndex] = viewport->viewport;
-                runtimeDisplayListData->projections[gCurrentViewportIndex] =
-                    runtimeViewportStates[gCurrentViewportIndex].projection;
-                runtimeDisplayListData->overlayProjections[gCurrentViewportIndex] =
-                    runtimeViewportStates[gCurrentViewportIndex].overlayProjection;
-                viewport = &runtimeViewportStates[gCurrentViewportIndex];
-                left = viewport->left;
-                top = viewport->top;
-                gMenuViewportWidth = viewport->right - left;
-                gMenuViewportHeight = viewport->bottom - top;
-                gMenuViewportCenterX = left + (gMenuViewportWidth / 2);
-                gMenuViewportCenterY = top + (gMenuViewportHeight / 2);
-                runtimeDisplayListData->viewportMatrices[gCurrentViewportIndex] =
-                    D_801121E0[gCurrentViewportIndex].transform;
-                runtimeDisplayListData->viewportMatrices[gCurrentViewportIndex].m[1][2] = 0;
-                runtimeDisplayListData->viewportMatrices[gCurrentViewportIndex].m[1][3] = 1;
-                runtimeDisplayListData->viewportMatrices[gCurrentViewportIndex].m[3][2] = 0;
-                runtimeDisplayListData->viewportMatrices[gCurrentViewportIndex].m[3][3] = 0;
-                gViewportMatrix = &runtimeDisplayListData->viewportMatrices[gCurrentViewportIndex];
-                gDPPipeSync(gRegionAllocPtr++);
-                do {
-                } while (0);
-                anyModels = 0;
-                gDPSetScissor(gRegionAllocPtr++, G_SC_NON_INTERLACE,
-                              runtimeViewportStates[gCurrentViewportIndex].left,
-                              runtimeViewportStates[gCurrentViewportIndex].top,
-                              runtimeViewportStates[gCurrentViewportIndex].right,
-                              runtimeViewportStates[gCurrentViewportIndex].bottom);
-                if (runtimeViewportStates[gCurrentViewportIndex].clearFramebuffer != 0) {
-                    gDPPipeSync(gRegionAllocPtr++);
-                    gDPSetCycleType(gRegionAllocPtr++, G_CYC_FILL);
-                    gDPSetRenderMode(gRegionAllocPtr++, G_RM_NOOP, G_RM_NOOP2);
-                    gDPSetColorImage(gRegionAllocPtr++, G_IM_FMT_RGBA, G_IM_SIZ_16b, 320, D_80369000);
-                    gDPSetFillColor(gRegionAllocPtr++, 0xFFFCFFFC);
-                    gDPFillRectangle(gRegionAllocPtr++,
-                                     runtimeViewportStates[gCurrentViewportIndex].left,
-                                     runtimeViewportStates[gCurrentViewportIndex].top,
-                                     runtimeViewportStates[gCurrentViewportIndex].right - 1,
-                                     runtimeViewportStates[gCurrentViewportIndex].bottom - 1);
-                    gDPPipeSync(gRegionAllocPtr++);
-                    gDPSetColorImage(gRegionAllocPtr++, G_IM_FMT_RGBA, G_IM_SIZ_16b, 320,
-                                     D_80124968[frameIndex].colorFramebuffer);
-                }
-                if (runtimeViewportStates[gCurrentViewportIndex].overlayActive != 0) {
-                    gDPPipeSync(gRegionAllocPtr++);
-                    gDPSetCycleType(gRegionAllocPtr++, (3 << 7) << 13);
-                    gDPSetRenderMode(gRegionAllocPtr++, G_RM_NOOP, G_RM_NOOP2);
-                    gDPSetColorImage(gRegionAllocPtr++, G_IM_FMT_RGBA, G_IM_SIZ_16b, 320,
-                                     D_80124968[frameIndex].colorFramebuffer);
-                    gDPSetFillColor(
-                        gRegionAllocPtr++,
-                        (color = GPACK_RGBA5551(runtimeViewportStates[gCurrentViewportIndex].overlayR,
-                                               runtimeViewportStates[gCurrentViewportIndex].overlayG,
-                                               runtimeViewportStates[gCurrentViewportIndex].overlayB, 1)) |
-                            (color << 16));
-                    if (!runtimeViewportStates[gCurrentViewportIndex].bottom) {
-                    }
-                    gDPFillRectangle(gRegionAllocPtr++,
-                                     runtimeViewportStates[gCurrentViewportIndex].left,
-                                     runtimeViewportStates[gCurrentViewportIndex].top,
-                                     runtimeViewportStates[gCurrentViewportIndex].right - 1,
-                                     runtimeViewportStates[gCurrentViewportIndex].bottom - 1);
-                }
-                if (D_80124848 != NULL) {
-                    gSPDisplayList(gRegionAllocPtr++, gMenuRenderModeResetDl);
-                    runRenderCallbacks(&D_80124848);
-                }
-                color = D_801121E0[gCurrentViewportIndex].rotation[0] << 4;
-                runtimeDisplayListData->rotations[gCurrentViewportIndex].m[0][0] =
-                    (color & 0xFFFF0000) |
-                    ((D_801121E0[gCurrentViewportIndex].rotation[1] >> 12) & 0xFFFF);
-                runtimeDisplayListData->rotations[gCurrentViewportIndex].m[0][1] =
-                    (D_801121E0[gCurrentViewportIndex].rotation[2] << 4) & 0xFFFF0000;
-                runtimeDisplayListData->rotations[gCurrentViewportIndex].m[0][2] =
-                    ((D_801121E0[gCurrentViewportIndex].rotation[3] << 4) & 0xFFFF0000) |
-                    ((D_801121E0[gCurrentViewportIndex].rotation[4] >> 12) & 0xFFFF);
-                runtimeDisplayListData->rotations[gCurrentViewportIndex].m[0][3] =
-                    (D_801121E0[gCurrentViewportIndex].rotation[5] << 4) & 0xFFFF0000;
-                runtimeDisplayListData->rotations[gCurrentViewportIndex].m[1][0] =
-                    ((D_801121E0[gCurrentViewportIndex].rotation[6] << 4) & 0xFFFF0000) |
-                    ((D_801121E0[gCurrentViewportIndex].rotation[7] >> 12) & 0xFFFF);
-                runtimeDisplayListData->rotations[gCurrentViewportIndex].m[1][1] =
-                    (D_801121E0[gCurrentViewportIndex].rotation[8] << 4) & 0xFFFF0000;
-                runtimeDisplayListData->translations[gCurrentViewportIndex].m[1][2] =
-                    (D_801121E0[gCurrentViewportIndex].transformOffset[0] & 0xFFFF0000) |
-                    ((D_801121E0[gCurrentViewportIndex].transformOffset[1] >> 16) & 0xFFFF);
-                runtimeDisplayListData->translations[gCurrentViewportIndex].m[1][3] =
-                    (D_801121E0[gCurrentViewportIndex].transformOffset[2] & 0xFFFF0000) | 1;
-                runtimeDisplayListData->rotations[gCurrentViewportIndex].m[2][0] =
-                    ((D_801121E0[gCurrentViewportIndex].rotation[0] << 20) & 0xFFFF0000) |
-                    ((D_801121E0[gCurrentViewportIndex].rotation[1] << 4) & 0xFFFF);
-                runtimeDisplayListData->rotations[gCurrentViewportIndex].m[2][1] =
-                    (D_801121E0[gCurrentViewportIndex].rotation[2] << 20) & 0xFFFF0000;
-                runtimeDisplayListData->rotations[gCurrentViewportIndex].m[2][2] =
-                    ((D_801121E0[gCurrentViewportIndex].rotation[3] << 20) & 0xFFFF0000) |
-                    ((D_801121E0[gCurrentViewportIndex].rotation[4] << 4) & 0xFFFF);
-                runtimeDisplayListData->rotations[gCurrentViewportIndex].m[2][3] =
-                    (D_801121E0[gCurrentViewportIndex].rotation[5] << 20) & 0xFFFF0000;
-                runtimeDisplayListData->rotations[gCurrentViewportIndex].m[3][0] =
-                    ((D_801121E0[gCurrentViewportIndex].rotation[6] << 20) & 0xFFFF0000) |
-                    (0xFFFF & (D_801121E0[gCurrentViewportIndex].rotation[7] << 4));
-                runtimeDisplayListData->rotations[gCurrentViewportIndex].m[3][1] =
-                    (D_801121E0[gCurrentViewportIndex].rotation[8] << 20) & 0xFFFF0000;
-                runtimeDisplayListData->translations[gCurrentViewportIndex].m[3][2] =
-                    ((D_801121E0[gCurrentViewportIndex].transformOffset[0] << 16) & 0xFFFF0000) |
-                    (D_801121E0[gCurrentViewportIndex].transformOffset[1] & 0xFFFF);
-                (runtimeDisplayListData->translations + gCurrentViewportIndex)->m[3][3] =
-                    (D_801121E0[gCurrentViewportIndex].transformOffset[2] << 16) & 0xFFFF0000;
-                if (gBackdropRenderCallbackList != NULL) {
-                    gSPPerspNormalize(gRegionAllocPtr++,
-                                      runtimeViewportStates[gCurrentViewportIndex].overlayPerspectiveNorm);
-                    gSPMatrix(gRegionAllocPtr++,
-                              &runtimeDisplayListData->overlayProjections[gCurrentViewportIndex],
-                              G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_PROJECTION);
-                    gSPViewport(gRegionAllocPtr++,
-                                &runtimeDisplayListData->viewports[gCurrentViewportIndex]);
-                    gSPMatrix(gRegionAllocPtr++, &runtimeDisplayListData->rotations[gCurrentViewportIndex],
-                              G_MTX_NOPUSH | G_MTX_MUL | G_MTX_PROJECTION);
-                    gSPMatrix(gRegionAllocPtr++,
-                              &runtimeDisplayListData->translations[gCurrentViewportIndex],
-                              G_MTX_NOPUSH | G_MTX_MUL | G_MTX_PROJECTION);
-                    gSPDisplayList(gRegionAllocPtr++, D_800DEF90);
-                    runRenderCallbacks(&gBackdropRenderCallbackList);
-                }
-                queue = runtimeModelRenderCallbackLists;
-                do {
-                    if (*queue != NULL) {
-                        anyModels = 1;
-                    }
-                    queue = queue + 3;
-                } while (queue < &runtimeModelRenderCallbackLists[24]);
-                if (anyModels != 0) {
-                    gSPPerspNormalize(gRegionAllocPtr++,
-                                      runtimeViewportStates[gCurrentViewportIndex].perspectiveNorm);
-                    gSPMatrix(gRegionAllocPtr++, &runtimeDisplayListData->projections[gCurrentViewportIndex],
-                              G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_PROJECTION);
-                    gSPViewport(gRegionAllocPtr++,
-                                &runtimeDisplayListData->viewports[gCurrentViewportIndex]);
-                    gSPMatrix(gRegionAllocPtr++, &runtimeDisplayListData->rotations[gCurrentViewportIndex],
-                              G_MTX_NOPUSH | G_MTX_MUL | G_MTX_PROJECTION);
-                    gSPMatrix(gRegionAllocPtr++,
-                              &runtimeDisplayListData->translations[gCurrentViewportIndex],
-                              G_MTX_NOPUSH | G_MTX_MUL | G_MTX_PROJECTION);
-                    gSPDisplayList(gRegionAllocPtr++, D_800DEF28);
-                    queue = runtimeModelRenderCallbackLists;
-                    do {
-                        if (*queue != NULL) {
-                            if ((queue == &gEffectRenderCallbackList) != 0) {
-                                gSPMatrix(gRegionAllocPtr++,
-                                          &runtimeDisplayListData
-                                               ->viewportMatrices[gCurrentViewportIndex],
-                                          G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
-                            }
-                            runRenderCallbacks(queue);
-                        }
-                        queue += 3;
-                    } while (&gBackdropRenderCallbackList != queue);
-                }
-                if ((gRaceForegroundRenderCallbackList != NULL) ||
-                    (gRaceOverlayRenderCallbackList != NULL)) {
-                    gSPDisplayList(gRegionAllocPtr++, gMenuRenderModeResetDl);
-                    if (gRaceOverlayRenderCallbackList != NULL) {
-                        runRenderCallbacks(&gRaceOverlayRenderCallbackList);
-                    }
-                    if ((gRaceForegroundRenderCallbackList != NULL) != 0) {
-                        initMenuAsciiFontTexture();
-                        runRenderCallbacks(&gRaceForegroundRenderCallbackList);
-                    }
-                }
-                if (runtimeViewportStates[gCurrentViewportIndex].overlayAlpha != 0) {
-                    gSPDisplayList(gRegionAllocPtr++, D_800DF098);
-                    gDPSetPrimColor(gRegionAllocPtr++, 0, 0, 0, 0, 0,
-                                    runtimeViewportStates[gCurrentViewportIndex].overlayAlpha & 0xFF);
-                    gSPTextureRectangle(gRegionAllocPtr++,
-                                        (gMenuViewportCenterX - gMenuViewportWidth / 2) * 4,
-                                        (gMenuViewportCenterY - gMenuViewportHeight / 2) * 4,
-                                        (gMenuViewportCenterX + gMenuViewportWidth / ((0, 2))) * 4,
-                                        (gMenuViewportCenterY + gMenuViewportHeight / 2) * 4,
-                                        0, 0, 0, 0x400, 0x400);
-                }
-                gRenderMatricesDirty = 0;
+
+    upperMask = 0xFFFF0000;
+    for (gCurrentViewportIndex = 0; gCurrentViewportIndex < VIEWPORT_COUNT; gCurrentViewportIndex++) {
+        if (runtimeViewportStates[gCurrentViewportIndex].screenBoundsValid != 0) {
+        runtimeDisplayListData->viewports[gCurrentViewportIndex] =
+            runtimeViewportStates[gCurrentViewportIndex].viewport;
+        runtimeDisplayListData->projections[gCurrentViewportIndex] =
+            runtimeViewportStates[gCurrentViewportIndex].projection;
+        runtimeDisplayListData->overlayProjections[gCurrentViewportIndex] =
+            runtimeViewportStates[gCurrentViewportIndex].overlayProjection;
+
+        left = runtimeViewportStates[gCurrentViewportIndex].left;
+        top = runtimeViewportStates[gCurrentViewportIndex].top;
+        gMenuViewportWidth = runtimeViewportStates[gCurrentViewportIndex].right - left;
+        gMenuViewportHeight = runtimeViewportStates[gCurrentViewportIndex].bottom - top;
+        gMenuViewportCenterX = left + (gMenuViewportWidth / 2);
+        gMenuViewportCenterY = top + (gMenuViewportHeight / 2);
+
+        runtimeDisplayListData->viewportMatrices[gCurrentViewportIndex] =
+            D_801121E0[gCurrentViewportIndex].transform;
+        runtimeDisplayListData->viewportMatrices[gCurrentViewportIndex].words[6] = 0;
+        runtimeDisplayListData->viewportMatrices[gCurrentViewportIndex].words[7] = 1;
+        runtimeDisplayListData->viewportMatrices[gCurrentViewportIndex].words[14] = 0;
+        runtimeDisplayListData->viewportMatrices[gCurrentViewportIndex].words[15] = 0;
+        gViewportMatrix = (Mtx *)&runtimeDisplayListData->viewportMatrices[gCurrentViewportIndex];
+
+        gDPPipeSync(gRegionAllocPtr++);
+        gDPSetScissor(gRegionAllocPtr++, G_SC_NON_INTERLACE,
+                      runtimeViewportStates[gCurrentViewportIndex].left,
+                      runtimeViewportStates[gCurrentViewportIndex].top,
+                      runtimeViewportStates[gCurrentViewportIndex].right,
+                      runtimeViewportStates[gCurrentViewportIndex].bottom);
+        hasModelCallbacks = 0;
+
+        if (runtimeViewportStates[gCurrentViewportIndex].clearFramebuffer != 0) {
+            gDPPipeSync(gRegionAllocPtr++);
+            gDPSetCycleType(gRegionAllocPtr++, G_CYC_FILL);
+            gDPSetRenderMode(gRegionAllocPtr++, G_RM_NOOP, G_RM_NOOP2);
+            gDPSetColorImage(gRegionAllocPtr++, G_IM_FMT_RGBA, G_IM_SIZ_16b, 320, D_80369000);
+            gDPSetFillColor(gRegionAllocPtr++, 0xFFFCFFFC);
+            gDPFillRectangle(gRegionAllocPtr++,
+                             runtimeViewportStates[gCurrentViewportIndex].left,
+                             runtimeViewportStates[gCurrentViewportIndex].top,
+                             runtimeViewportStates[gCurrentViewportIndex].right - 1,
+                             runtimeViewportStates[gCurrentViewportIndex].bottom - 1);
+            gDPPipeSync(gRegionAllocPtr++);
+            gDPSetColorImage(gRegionAllocPtr++, G_IM_FMT_RGBA, G_IM_SIZ_16b, 320,
+                             D_80124968[frameIndex].colorFramebuffer);
+        }
+
+        if (runtimeViewportStates[gCurrentViewportIndex].overlayActive != 0) {
+            gDPPipeSync(gRegionAllocPtr++);
+            gDPSetCycleType(gRegionAllocPtr++, G_CYC_FILL);
+            gDPSetRenderMode(gRegionAllocPtr++, G_RM_NOOP, G_RM_NOOP2);
+            gDPSetColorImage(gRegionAllocPtr++, G_IM_FMT_RGBA, G_IM_SIZ_16b, 320,
+                             D_80124968[frameIndex].colorFramebuffer);
+            gDPSetFillColor(
+                gRegionAllocPtr++,
+                (GPACK_RGBA5551(
+                    (u8)runtimeViewportStates[gCurrentViewportIndex].overlayR,
+                    (u8)runtimeViewportStates[gCurrentViewportIndex].overlayG,
+                    (u8)runtimeViewportStates[gCurrentViewportIndex].overlayB, 1) << 16) |
+                GPACK_RGBA5551(
+                    (u8)runtimeViewportStates[gCurrentViewportIndex].overlayR,
+                    (u8)runtimeViewportStates[gCurrentViewportIndex].overlayG,
+                    (u8)runtimeViewportStates[gCurrentViewportIndex].overlayB, 1));
+            gDPFillRectangle(gRegionAllocPtr++,
+                             runtimeViewportStates[gCurrentViewportIndex].left,
+                             runtimeViewportStates[gCurrentViewportIndex].top,
+                             runtimeViewportStates[gCurrentViewportIndex].right - 1,
+                             runtimeViewportStates[gCurrentViewportIndex].bottom - 1);
+        }
+
+        if (D_80124848 != NULL) {
+            gSPDisplayList(gRegionAllocPtr++, gMenuRenderModeResetDl);
+            runRenderCallbacks(&D_80124848);
+        }
+
+        runtimeDisplayListData->rotations[gCurrentViewportIndex].words[0] =
+            ((D_801121E0[gCurrentViewportIndex].rotation[0] << 4) & upperMask) |
+            ((D_801121E0[gCurrentViewportIndex].rotation[1] >> 12) & 0xFFFF);
+        runtimeDisplayListData->rotations[gCurrentViewportIndex].words[1] =
+            (D_801121E0[gCurrentViewportIndex].rotation[2] << 4) & upperMask;
+        runtimeDisplayListData->rotations[gCurrentViewportIndex].words[2] =
+            ((D_801121E0[gCurrentViewportIndex].rotation[3] << 4) & upperMask) |
+            ((D_801121E0[gCurrentViewportIndex].rotation[4] >> 12) & 0xFFFF);
+        runtimeDisplayListData->rotations[gCurrentViewportIndex].words[3] =
+            (D_801121E0[gCurrentViewportIndex].rotation[5] << 4) & upperMask;
+        runtimeDisplayListData->rotations[gCurrentViewportIndex].words[4] =
+            ((D_801121E0[gCurrentViewportIndex].rotation[6] << 4) & upperMask) |
+            ((D_801121E0[gCurrentViewportIndex].rotation[7] >> 12) & 0xFFFF);
+        runtimeDisplayListData->rotations[gCurrentViewportIndex].words[5] =
+            (D_801121E0[gCurrentViewportIndex].rotation[8] << 4) & upperMask;
+        runtimeDisplayListData->translations[gCurrentViewportIndex].words[6] =
+            (D_801121E0[gCurrentViewportIndex].transformOffset[0] & upperMask) |
+            ((D_801121E0[gCurrentViewportIndex].transformOffset[1] >> 16) & 0xFFFF);
+        runtimeDisplayListData->translations[gCurrentViewportIndex].words[7] =
+            (D_801121E0[gCurrentViewportIndex].transformOffset[2] & upperMask) | 1;
+
+        runtimeDisplayListData->rotations[gCurrentViewportIndex].words[8] =
+            ((D_801121E0[gCurrentViewportIndex].rotation[0] << 20) & upperMask) |
+            ((D_801121E0[gCurrentViewportIndex].rotation[1] << 4) & 0xFFFF);
+        runtimeDisplayListData->rotations[gCurrentViewportIndex].words[9] =
+            (D_801121E0[gCurrentViewportIndex].rotation[2] << 20) & upperMask;
+        runtimeDisplayListData->rotations[gCurrentViewportIndex].words[10] =
+            ((D_801121E0[gCurrentViewportIndex].rotation[3] << 20) & upperMask) |
+            ((D_801121E0[gCurrentViewportIndex].rotation[4] << 4) & 0xFFFF);
+        runtimeDisplayListData->rotations[gCurrentViewportIndex].words[11] =
+            (D_801121E0[gCurrentViewportIndex].rotation[5] << 20) & upperMask;
+        runtimeDisplayListData->rotations[gCurrentViewportIndex].words[12] =
+            ((D_801121E0[gCurrentViewportIndex].rotation[6] << 20) & upperMask) |
+            ((D_801121E0[gCurrentViewportIndex].rotation[7] << 4) & 0xFFFF);
+        runtimeDisplayListData->rotations[gCurrentViewportIndex].words[13] =
+            (D_801121E0[gCurrentViewportIndex].rotation[8] << 20) & upperMask;
+        runtimeDisplayListData->translations[gCurrentViewportIndex].words[14] =
+            ((D_801121E0[gCurrentViewportIndex].transformOffset[0] << 16) & upperMask) |
+            (D_801121E0[gCurrentViewportIndex].transformOffset[1] & 0xFFFF);
+        runtimeDisplayListData->translations[gCurrentViewportIndex].words[15] =
+            (D_801121E0[gCurrentViewportIndex].transformOffset[2] << 16) & upperMask;
+
+        if (gBackdropRenderCallbackList != NULL) {
+            gSPPerspNormalize(gRegionAllocPtr++,
+                              runtimeViewportStates[gCurrentViewportIndex].overlayPerspectiveNorm);
+            gSPMatrix(gRegionAllocPtr++,
+                      &runtimeDisplayListData->overlayProjections[gCurrentViewportIndex],
+                      G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_PROJECTION);
+            gSPViewport(gRegionAllocPtr++,
+                        &runtimeDisplayListData->viewports[gCurrentViewportIndex]);
+            gSPMatrix(gRegionAllocPtr++,
+                      &runtimeDisplayListData->rotations[gCurrentViewportIndex],
+                      G_MTX_NOPUSH | G_MTX_MUL | G_MTX_PROJECTION);
+            gSPMatrix(gRegionAllocPtr++,
+                      &runtimeDisplayListData->translations[gCurrentViewportIndex],
+                      G_MTX_NOPUSH | G_MTX_MUL | G_MTX_PROJECTION);
+            gSPDisplayList(gRegionAllocPtr++, D_800DEF90);
+            runRenderCallbacks(&gBackdropRenderCallbackList);
+        }
+
+        for (i = 0; i < 24; i += 3) {
+            if (runtimeModelRenderCallbackLists[i] != NULL) {
+                hasModelCallbacks = 1;
             }
-            gCurrentViewportIndex++;
-        } while (gCurrentViewportIndex < 4);
+        }
+
+        if (hasModelCallbacks != 0) {
+            gSPPerspNormalize(gRegionAllocPtr++,
+                              runtimeViewportStates[gCurrentViewportIndex].perspectiveNorm);
+            gSPMatrix(gRegionAllocPtr++,
+                      &runtimeDisplayListData->projections[gCurrentViewportIndex],
+                      G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_PROJECTION);
+            gSPViewport(gRegionAllocPtr++,
+                        &runtimeDisplayListData->viewports[gCurrentViewportIndex]);
+            gSPMatrix(gRegionAllocPtr++,
+                      &runtimeDisplayListData->rotations[gCurrentViewportIndex],
+                      G_MTX_NOPUSH | G_MTX_MUL | G_MTX_PROJECTION);
+            gSPMatrix(gRegionAllocPtr++,
+                      &runtimeDisplayListData->translations[gCurrentViewportIndex],
+                      G_MTX_NOPUSH | G_MTX_MUL | G_MTX_PROJECTION);
+            gSPDisplayList(gRegionAllocPtr++, D_800DEF28);
+
+            for (i = 0; i < 24; i += 3) {
+                if (runtimeModelRenderCallbackLists[i] != NULL) {
+                    queue = &runtimeModelRenderCallbackLists[i];
+                    if (queue == &gEffectRenderCallbackList) {
+                        gSPMatrix(gRegionAllocPtr++,
+                                  &runtimeDisplayListData->viewportMatrices[gCurrentViewportIndex],
+                                  G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+                    }
+                    runRenderCallbacks(queue);
+                }
+            }
+        }
+
+        if ((gRaceForegroundRenderCallbackList != NULL) ||
+            (gRaceOverlayRenderCallbackList != NULL)) {
+            gSPDisplayList(gRegionAllocPtr++, gMenuRenderModeResetDl);
+            if (gRaceOverlayRenderCallbackList != NULL) {
+                runRenderCallbacks(&gRaceOverlayRenderCallbackList);
+            }
+            if (gRaceForegroundRenderCallbackList != NULL) {
+                initMenuAsciiFontTexture();
+                runRenderCallbacks(&gRaceForegroundRenderCallbackList);
+            }
+        }
+
+        if (runtimeViewportStates[gCurrentViewportIndex].overlayAlpha != 0) {
+            gSPDisplayList(gRegionAllocPtr++, D_800DF098);
+            gDPSetPrimColor(gRegionAllocPtr++, 0, 0, 0, 0, 0,
+                            runtimeViewportStates[gCurrentViewportIndex].overlayAlpha);
+            gSPTextureRectangle(
+                gRegionAllocPtr++,
+                (gMenuViewportCenterX - (gMenuViewportWidth / 2)) << 2,
+                (gMenuViewportCenterY - (gMenuViewportHeight / 2)) << 2,
+                (gMenuViewportCenterX + (gMenuViewportWidth / 2)) << 2,
+                (gMenuViewportCenterY + (gMenuViewportHeight / 2)) << 2,
+                G_TX_RENDERTILE, 0, 0, 1 << 10, 1 << 10);
+        }
+
+            gRenderMatricesDirty = 0;
+        }
     }
-    gMenuViewportWidth = 0x120;
-    gMenuViewportHeight = 0xD0;
-    gMenuViewportCenterX = 0xA0;
-    gMenuViewportCenterY = 0x78;
-    if ((gMenuForegroundRenderCallbackList != NULL) || (gMenuRenderCallbackList != NULL)) {
+
+    gMenuViewportWidth = 288;
+    gMenuViewportHeight = 208;
+    gMenuViewportCenterX = 160;
+    gMenuViewportCenterY = 120;
+
+    if ((gMenuForegroundRenderCallbackList != NULL) ||
+        (gMenuRenderCallbackList != NULL)) {
         gDPSetScissor(gRegionAllocPtr++, G_SC_NON_INTERLACE, 0, 0, 320, 240);
         gSPDisplayList(gRegionAllocPtr++, gMenuRenderModeResetDl);
         if (gMenuRenderCallbackList != NULL) {
@@ -656,31 +675,31 @@ void appendViewportDisplayLists(u8 frameIndex) {
             runRenderCallbacks(&gMenuForegroundRenderCallbackList);
         }
     }
+
     gDPPipeSync(gRegionAllocPtr++);
     gDPSetScissor(gRegionAllocPtr++, G_SC_NON_INTERLACE, 0, 0, 320, 240);
+
     if (gMenuFadeAlpha != 0) {
         gSPDisplayList(gRegionAllocPtr++, D_800DF098);
-        new_var = 0xFF;
         if (gMenuFadeOverlayActive != 0) {
-            gDPSetPrimColor(gRegionAllocPtr++, 0, 0, 255, 255, 255,
-                            new_var2 = gMenuFadeAlpha & 0xFF);
+            gDPSetPrimColor(gRegionAllocPtr++, 0, 0, 255, 255, 255, gMenuFadeAlpha);
         } else {
-            gDPSetPrimColor(gRegionAllocPtr++, 0, 0, 0, 0, 0,
-                            (gMenuFadeAlpha & new_var) & 0xFFFFFFFF);
+            gDPSetPrimColor(gRegionAllocPtr++, 0, 0, 0, 0, 0, gMenuFadeAlpha);
         }
-        gSPTextureRectangle(gRegionAllocPtr++,
-                            (gMenuViewportCenterX - gMenuViewportWidth / 2) * 4,
-                            (gMenuViewportCenterY - gMenuViewportHeight / 2) * 4,
-                            (gMenuViewportCenterX + gMenuViewportWidth / 2) * 4,
-                            (gMenuViewportCenterY + gMenuViewportHeight / 2) * 4,
-                            0, 0, 0, 0x400, 0x400);
+        gSPTextureRectangle(
+            gRegionAllocPtr++,
+            (gMenuViewportCenterX - (gMenuViewportWidth / 2)) << 2,
+            (gMenuViewportCenterY - (gMenuViewportHeight / 2)) << 2,
+            (gMenuViewportCenterX + (gMenuViewportWidth / 2)) << 2,
+            (gMenuViewportCenterY + (gMenuViewportHeight / 2)) << 2,
+            G_TX_RENDERTILE, 0, 0, 1 << 10, 1 << 10);
     }
 }
 
-#undef runtimeViewportStates
 #undef runtimeDisplayListData
+#undef runtimeViewportStates
 #undef runtimeModelRenderCallbackLists
-#endif
+#undef VIEWPORT_COUNT
 
 void resetRenderCallbackQueues(void) {
     u32 end;
