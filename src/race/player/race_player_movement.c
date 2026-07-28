@@ -27,13 +27,6 @@ typedef struct {
 } Unk8011228C;
 
 typedef struct {
-    s8 order0;
-    s8 order1;
-    s8 order2;
-    s8 order3;
-} PlayerOrder;
-
-typedef struct {
     s32 pad0[2];
     s32 cos;
     s32 sin;
@@ -82,7 +75,6 @@ extern s16 fixedCosine(s16);
 extern s32 integerSquareRoot64(s64);
 extern u8 gRaceSplitscreenMode;
 extern s8 gRacePlayerCount;
-extern u8 gRaceOrderPlayerIds[];
 extern s32 gMenuFlowState;
 extern Vec3i gRacePlayerGroundProbeOffsets[];
 extern Vec3i D_800DE7F8;
@@ -221,15 +213,15 @@ void getRacePlayerRankingProgress(s32 arg0, s32 *arg1, s32 *arg2) {
 #ifdef NON_MATCHING
 #if 0
 void updateRacePlayerRankings(void) {
-    PlayerOrder order;
+    RacePlayerOrder order;
     s32 primary[4];
     s32 secondary[4];
     s32 playerCount;
     s32 i;
     s32 j;
     s32 lastPair;
-    s8 *orderI;
-    s8 *orderJ;
+    u8 *orderI;
+    u8 *orderJ;
     RacePlayer *player;
     s8 right;
     s8 left;
@@ -244,12 +236,12 @@ void updateRacePlayerRankings(void) {
         }
 
         playerCount = gRacePlayerCount;
-        (&order.order0)[0] = 0;
-        (&order.order0)[1] = 1;
-        (&order.order0)[2] = 2;
+        order[0] = 0;
+        order[1] = 1;
+        order[2] = 2;
         left = 1;
         right = 3;
-        (&order.order0)[3] = right;
+        order[3] = right;
         i = 0;
         if (playerCount > 0) {
             player = gRacePlayers;
@@ -270,8 +262,8 @@ void updateRacePlayerRankings(void) {
                 j = 1;
                 j = i + j;
                 if (j < playerCount) {
-                    orderJ = &(&order.order0)[j];
-                    orderI = &(&order.order0)[i];
+                    orderJ = &order[j];
+                    orderI = &order[i];
                     playerCount++;
                     playerCount--;
                     do {
@@ -282,7 +274,7 @@ void updateRacePlayerRankings(void) {
                             orderJ[0] = left;
                         }
                         orderJ++;
-                    } while (orderJ < &(&order.order0)[playerCount]);
+                    } while (orderJ < &order[playerCount]);
                 }
                 i = j;
             } while (j < lastPair);
@@ -295,10 +287,10 @@ void updateRacePlayerRankings(void) {
                     j = i + 1;
                     if (j < playerCount) {
                         j = i + 1;
-                        orderI = &(&order.order0)[i];
+                        orderI = &order[i];
                         do {
                             left = orderI[0];
-                            orderJ = &(&order.order0)[j];
+                            orderJ = &order[j];
                             if (!(gRacePlayers[left].stateFlags & 0x40)) {
                                 right = orderJ[0];
                                 if (!(gRacePlayers[right].stateFlags & 0x40)) {
@@ -331,7 +323,7 @@ void updateRacePlayerRankings(void) {
         }
 
         if (playerCount > 0) {
-            orderI = &order.order0;
+            orderI = order;
             orderJ = gRaceOrderPlayerIds;
             do {
                 right = orderI[playerCount * 0];

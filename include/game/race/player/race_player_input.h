@@ -7,6 +7,7 @@
 #define RACE_PLAYER_COUNT 4
 
 typedef s16 Matrix4s[0x10];
+typedef u8 RacePlayerOrder[RACE_PLAYER_COUNT];
 
 struct RaceUiRankTrigger;
 
@@ -362,6 +363,7 @@ typedef char RacePlayerArraySizeCheck[
 ];
 
 extern RacePlayer gRacePlayers[RACE_PLAYER_COUNT];
+extern RacePlayerOrder gRaceOrderPlayerIds;
 extern u8 gPlayerCount;
 
 #define gRacePlayersEnd (&gRacePlayers[RACE_PLAYER_COUNT])
