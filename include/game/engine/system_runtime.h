@@ -3,6 +3,16 @@
 
 #include "common.h"
 
+#define FRAMEBUFFER_RENDER_TASK_STRIDE 0x18620
+
+typedef struct FramebufferRenderTaskStatus {
+    /* 0x00000 */ u8 status;
+    /* 0x00001 */ u8 pad1[FRAMEBUFFER_RENDER_TASK_STRIDE - 1];
+} FramebufferRenderTaskStatus;
+
+extern FramebufferRenderTaskStatus gFramebufferRenderTask0Statuses[];
+extern FramebufferRenderTaskStatus gFramebufferRenderTask1Statuses[];
+
 void main(void *arg);
 void bootThreadMain(void *arg);
 void gameThreadMain(void *arg);

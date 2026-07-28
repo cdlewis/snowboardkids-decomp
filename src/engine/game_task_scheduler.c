@@ -12,11 +12,6 @@ typedef struct GameTaskScheduler {
     u8 unk14;
 } GameTaskScheduler;
 
-typedef struct FramebufferState {
-    u8 status;
-    u8 pad[0x1861F];
-} FramebufferState;
-
 extern s8 gAnalogStickResponseCurve;
 extern u8 gFramebufferSwapDelayTimer;
 extern u8 gFramebufferSwapDelay;
@@ -52,7 +47,6 @@ extern s8 gPlayer3StickY;
 extern s8 gPlayer4StickY;
 extern s32 gPlayerInputRepeat;
 extern u8 gPlayerInputRepeatTimer;
-extern FramebufferState gFramebufferRenderTask0Statuses[];
 
 void resetRenderScratchAllocator(void *, void *);
 void clearPendingPositionalSoundRequests(void);
