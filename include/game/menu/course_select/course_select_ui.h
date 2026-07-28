@@ -38,6 +38,11 @@ typedef struct {
             /* 0x34 */ u8 courseCursorTimer[4];
             /* 0x38 */ s8 courseCursorBobOffset[4];
         };
+        struct {
+            /* 0x18 */ s16 courseStatsX[4];
+            /* 0x20 */ s16 courseStatsY[4];
+            /* 0x28 */ s16 courseStatsAlpha;
+        };
         /* 0x18 */ s16 coordinates[0x22];
         /* 0x18 */ s16 coordinateRows[4][3];
     };
