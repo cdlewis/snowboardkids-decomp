@@ -792,7 +792,6 @@ extern Gfx D_800D6190[];
 extern Gfx D_800D6968[];
 extern Gfx gEffectRenderModeCleanupDl[];
 extern Gfx gEffectRenderModeSetupDl[];
-extern Gfx gTranslucentSpriteRenderModeDl[];
 extern int sprintf(char *, const char *, ...);
 extern RaceUiAssetEntry D_800D5FF4[];
 extern RaceUiCameraTransformSource D_801121E0[];

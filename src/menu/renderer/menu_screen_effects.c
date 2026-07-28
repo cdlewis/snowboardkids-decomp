@@ -77,7 +77,6 @@ extern s16 mainMenuModeIconFlashTileOffsets[];
 extern s16 mainMenuModeLabelFlashTileOffsets[];
 extern u32 raceStartPlayerEffectVertices[];
 extern u32 gAlphaSpriteRenderModeDl[];
-extern u32 gTranslucentSpriteRenderModeDl[];
 extern s16 gMenuFadeAlpha;
 extern s16 gFrameCounter;
 extern u8 gCurrentViewportIndex;

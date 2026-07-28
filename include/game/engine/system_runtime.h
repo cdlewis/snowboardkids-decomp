@@ -13,6 +13,7 @@ typedef struct FramebufferRenderTaskStatus {
 extern FramebufferRenderTaskStatus gFramebufferRenderTask0Statuses[];
 extern FramebufferRenderTaskStatus gFramebufferRenderTask1Statuses[];
 extern Gfx gMenuRenderModeResetDl[];
+extern Gfx gTranslucentSpriteRenderModeDl[];
 extern u8 gMenuFadeOverlayActive;
 extern u8 gRenderMatricesDirty;
 extern u8 gRaceRecordSettingsEnabled;
