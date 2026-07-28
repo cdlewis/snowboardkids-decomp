@@ -16,7 +16,6 @@ extern u8 gSinglePlayerRankDisplayPatternFirst[];
 extern u8 gSinglePlayerRankDisplayPatternSecond[];
 extern u8 gSinglePlayerRankDisplayPatternThird[];
 extern u8 gSinglePlayerRankDisplayPatternFourth[];
-extern u8 gRaceSplitscreenMode;
 
 // updateRacePlayerRankDisplay best match: 55.599% (nonmatchings/updateRacePlayerRankDisplay-3357475854818838508/base_11.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race/player/race_player_progress/updateRacePlayerRankDisplay.s")

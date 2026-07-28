@@ -1,3 +1,4 @@
+#include "game/race/race_state.h"
 #include "common.h"
 #include "assets.h"
 #include "game/audio/sound_manager.h"
@@ -26,7 +27,6 @@ extern s32 enqueueSoundEffect(s16, s16);
 extern u8 D_800EC9DC;
 
 extern RaceSplitscreenSelectCursorTarget gRaceSplitscreenSelectCursorTarget;
-extern u8 gRaceSplitscreenMode;
 extern u8 gCourseSelectFromRaceTypeMenu;
 extern s32 gMenuFlowState;
 extern u8 gMenuExitSelection;

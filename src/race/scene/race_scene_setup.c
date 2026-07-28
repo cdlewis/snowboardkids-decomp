@@ -15,7 +15,6 @@
 #include "game/race/player/race_player_input.h"
 
 
-extern u8 gRaceSplitscreenMode;
 extern u8 gTrainingCourseLesson;
 extern u8 gMainMenuModeSelection;
 extern u8 gRaceTypeSelection;

@@ -1,3 +1,4 @@
+#include "game/race/race_state.h"
 #include "common.h"
 #include "game/save_data.h"
 #include "game/engine/asset_manager.h"
@@ -161,7 +162,6 @@ extern void drawMenuSpriteWithAlphaWideArgs(s32 x, s32 y, void *texture, s32 til
 extern s32 allocFixedTransformMatrix(FixedTransform *);
 extern u8 D_800E0DB8[];
 extern u8 D_800EC9C0;
-extern u8 gRaceSplitscreenMode;
 extern CallbackTask *D_8010ADE0;
 extern CallbackTask *D_8010ADE4;
 extern s8 D_8010AE64[];

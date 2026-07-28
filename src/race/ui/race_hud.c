@@ -37,7 +37,6 @@ extern void drawMenuAsciiTextDefaultScale(s32, s32, char *, s32);
 extern int sprintf(char *, const char *, ...);
 extern RaceTimer D_800DC928[];
 extern RaceTimer D_800DC950;
-extern u8 gRaceSplitscreenMode;
 extern RaceFinishLinePathIndexEntry gRaceCourseFinishLineData[];
 extern u8 gRaceTimerTensDigitTileOffsets[];
 extern u8 gRaceTimerOnesDigitTileIds[];

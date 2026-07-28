@@ -40,7 +40,6 @@ extern s16 gRaceLapCount;
 extern s16 gRacePlayerAttackStartTimer;
 extern s8 gRacePlayerCount;
 extern u8 gMainMenuDemoRaceIntroIndex;
-extern u8 gRaceSplitscreenMode;
 extern u8 gRaceUpdatePaused;
 extern u8 gTrainingCourseLesson;
 extern u8 gMainMenuModeSelection;
