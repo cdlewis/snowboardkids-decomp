@@ -1,5 +1,6 @@
 #include "common.h"
 #include "game/engine/asset_manager.h"
+#include "game/engine/system_runtime.h"
 #include "game/menu/renderer/menu_renderer.h"
 #include "game/engine/render_callback.h"
 #include "game/engine/relocatable_heap.h"
@@ -97,7 +98,6 @@ extern s16 gMenuViewportCenterX;
 extern s16 gMenuViewportCenterY;
 extern s16 gFrameCounter;
 extern Gfx *gRegionAllocPtr;
-extern Gfx gMenuRenderModeResetDl[];
 extern void *gMenuAsciiFontPaletteBase;
 extern u16 D_800D40B0[];
 

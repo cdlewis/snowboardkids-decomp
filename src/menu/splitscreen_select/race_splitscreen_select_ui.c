@@ -3,6 +3,7 @@
 #include "game/engine/render_callback.h"
 #include "game/engine/relocatable_heap.h"
 #include "game/engine/callback_task_scheduler.h"
+#include "game/engine/system_runtime.h"
 #include "game/menu/splitscreen_select/race_splitscreen_select_ui.h"
 #include "game/menu/renderer/menu_renderer.h"
 #include "game/race/player/race_player_input.h"
@@ -34,7 +35,6 @@ extern RaceSplitscreenSelectCursorState gRaceSplitscreenSelectCursorTarget;
 extern u8 gRaceSplitscreenSelectCursorAnimState;
 extern s16 gRaceSplitscreenSelectPortraitAlpha;
 extern u32 gMenuPanelBackdropTexture[];
-extern Gfx gMenuRenderModeResetDl[];
 extern Gfx *gRegionAllocPtr;
 extern u8 gMenuExitSelection;
 extern s16 gMenuViewportCenterX;

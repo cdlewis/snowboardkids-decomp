@@ -12,6 +12,7 @@ typedef struct FramebufferRenderTaskStatus {
 
 extern FramebufferRenderTaskStatus gFramebufferRenderTask0Statuses[];
 extern FramebufferRenderTaskStatus gFramebufferRenderTask1Statuses[];
+extern Gfx gMenuRenderModeResetDl[];
 extern u8 gMenuFadeOverlayActive;
 
 void main(void *arg);

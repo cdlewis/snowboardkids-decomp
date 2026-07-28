@@ -2,6 +2,7 @@
 #include "game/save_data.h"
 #include "game/menu/renderer/menu_render_utils.h"
 #include "game/engine/render_callback.h"
+#include "game/engine/system_runtime.h"
 #include "assets.h"
 #include "game/race/ui/race_ui_effects.h"
 #include "game/race/effects/snowboard_trail_effects.h"
@@ -843,7 +844,6 @@ extern Vec3i D_800D6330[];
 extern Vec3i D_800D6340[];
 extern Vtx D_800D6350[];
 extern u32 gAlphaSpriteRenderModeDl[];
-extern u32 gMenuRenderModeResetDl[];
 extern u32 gSnowboardTrailBackDisplayList[];
 extern u32 gSnowboardTrailFrontDisplayList[];
 extern u32 gViewportMatrix;
