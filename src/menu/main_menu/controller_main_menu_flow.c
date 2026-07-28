@@ -75,7 +75,6 @@ extern u8 gControllerReadPending;
 extern s32 gControllerPakFileNos[];
 extern u8 gControllerPakGameName[];
 extern u8 gControllerPakExtName[];
-extern u8 gRumblePakConnectedByController[];
 extern u8 gControllerPakOperationCounts[];
 extern s16 gMenuFadeAlpha;
 extern u8 gMainMenuSecretCodeStep;
