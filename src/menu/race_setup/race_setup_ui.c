@@ -7,6 +7,7 @@
 #include "game/engine/game_task_scheduler.h"
 #include "game/menu/renderer/menu_renderer.h"
 #include "game/menu/main_menu/controller_main_menu_flow.h"
+#include "game/menu/race_setup/race_setup_menu.h"
 #include "game/menu/race_setup/race_setup_ui.h"
 #include "game/race/player/race_player_input.h"
 
@@ -31,17 +32,6 @@
 #define SAVE_STATUS_TRANSITION_DONE 3
 
 typedef struct {
-    /* 0x00 */ u8 state;
-    /* 0x01 */ u8 pad1;
-    /* 0x02 */ s16 alpha;
-    /* 0x04 */ u8 savePanelFrameState;
-    /* 0x05 */ u8 pad5;
-    /* 0x06 */ u16 selection[4];
-    /* 0x0E */ u8 saveStatusTransitionStates[4];
-    /* 0x12 */ u16 nextSelection[4];
-} TitleIntroTransitionState;
-
-typedef struct {
     /* 0x00 */ u8 pad0[0x18];
     /* 0x18 */ s16 x;
     /* 0x1A */ u8 pad1A[0x20 - 0x1A];
@@ -55,7 +45,6 @@ const char D_800E0A80[] = "%d";
 const char D_800E0A84[] = "%6d";
 extern TitleMenuWidgetActor *D_8010ADE0;
 extern s16 gPlayerBadgeDisplayOrder[];
-extern TitleIntroTransitionState gRaceSetupMenuSubState;
 extern u16 gRaceSetupOnePlayerOptionText[];
 extern u16 gRaceSetupTwoPlayerOptionText[];
 extern u16 gRaceSetupThreePlayerOptionText[];
@@ -63,7 +52,6 @@ extern u16 gRaceSetupFourPlayerOptionText[];
 extern MenuGlyphScript gRaceSetupPlayerCountPromptText[][0x34];
 extern u8 gRaceSetupSaveChoicePromptBottomSprites[];
 extern u8 gRaceSetupSaveChoicePromptTopSprites[];
-extern u8 gRaceSetupSavePanelFrameState;
 extern s32 gMenuFlowState;
 void drawRaceSetupPlayerCountPrompt(MenuIntroActor *arg0) {
     s32 i;
@@ -129,7 +117,7 @@ void drawRaceSetupPlayerCountPrompt(MenuIntroActor *arg0) {
 }
 
 void updateRaceSetupPlayerCountPrompt(MenuIntroActor *arg0) {
-    TitleIntroTransitionState *global;
+    RaceSetupMenuSubState *global;
     MenuIntroActor *actor;
     s32 globalState;
     s16 alpha;
@@ -748,7 +736,7 @@ void updateRaceSetupSavePanelFrame(RectListActor *arg0) {
         break;
     }
 
-    gRaceSetupMenuSubState.savePanelFrameState = state;
+    gRaceSetupMenuSubState.forceUpdate = state;
     for (i = 0; i < 4; i++) {
         gRaceSetupSavePanelRects[0][i] = arg0->rectCoords[i];
         gRaceSetupSavePanelRects[1][i] = arg0->rectCoords[i + 4];
@@ -973,10 +961,10 @@ void updateRaceSetupSaveStatusWidgets(TitleMenuWidgetActor *arg0) {
         actor->y[playerIndex] = panelPositions->y[playerIndex];
 
         previousTransitionState = actor->statusTransitionStates[playerIndex];
-        transitionState = gRaceSetupMenuSubState.saveStatusTransitionStates[playerIndex];
+        transitionState = gRaceSetupMenuSubState.statusTransitionStates[playerIndex];
         if (transitionState != previousTransitionState) {
             actor->statusTransitionStates[playerIndex] = transitionState;
-            actor->nextStatusCodes[playerIndex] = gRaceSetupMenuSubState.nextSelection[playerIndex];
+            actor->nextStatusCodes[playerIndex] = gRaceSetupMenuSubState.nextStatusCodes[playerIndex];
             previousTransitionState = actor->statusTransitionStates[playerIndex];
             transitionState = previousTransitionState;
         }
@@ -1006,7 +994,7 @@ void updateRaceSetupSaveStatusWidgets(TitleMenuWidgetActor *arg0) {
             break;
         }
 
-        gRaceSetupMenuSubState.saveStatusTransitionStates[playerIndex] = transitionState;
+        gRaceSetupMenuSubState.statusTransitionStates[playerIndex] = transitionState;
     }
 
     arg0->frame = (arg0->frame + 1) & 0xF;
@@ -1060,11 +1048,11 @@ void drawRaceSetupSaveChoicePrompts(TitleMenuTransitionActor *arg0) {
     new_var2 = arg0;
     if (intro->state == 8) {
         for (i = 0; i < gPlayerCount; i++) {
-            selection = gRaceSetupMenuSubState.selection[i];
+            selection = gRaceSetupMenuSubState.pendingStatusCodes[i];
             if (1) {
                 state = gMenuChoicePromptState[i];
                 if (selection != arg0->selection[i]) {
-                    arg0->selection[i] = gRaceSetupMenuSubState.selection[i];
+                    arg0->selection[i] = gRaceSetupMenuSubState.pendingStatusCodes[i];
                 }
 
                 state = gMenuChoicePromptState[i];
@@ -1106,8 +1094,8 @@ void drawRaceSetupSaveChoicePrompts(TitleMenuTransitionActor *arg0) {
             }
 
             if ((state >= 5) && (new_var2->slideOffset[i] == 0)) {
-                gRaceSetupMenuSubState.nextSelection[i] = arg0->selection[i];
-                gRaceSetupMenuSubState.saveStatusTransitionStates[i] = 2;
+                gRaceSetupMenuSubState.nextStatusCodes[i] = arg0->selection[i];
+                gRaceSetupMenuSubState.statusTransitionStates[i] = 2;
                 gMenuChoicePromptState[i] = 0;
             }
         }
@@ -1126,8 +1114,8 @@ void updateRaceSetupSaveChoicePrompts(TitleMenuTransitionActor *arg0) {
     i = 0;
     if (gPlayerCount > 0) {
         do {
-            if (gRaceSetupMenuSubState.selection[i] != actor->selection[i]) {
-                actor->selection[i] = gRaceSetupMenuSubState.selection[i];
+            if (gRaceSetupMenuSubState.pendingStatusCodes[i] != actor->selection[i]) {
+                actor->selection[i] = gRaceSetupMenuSubState.pendingStatusCodes[i];
             }
 
             state = gMenuChoicePromptState[i];
