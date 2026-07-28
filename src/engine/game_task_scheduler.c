@@ -14,7 +14,6 @@ typedef struct GameTaskScheduler {
 
 extern s8 gAnalogStickResponseCurve;
 extern u8 gFramebufferSwapDelayTimer;
-extern u8 gFramebufferSwapDelay;
 extern s16 gFrameCounter;
 extern GameTask gGameTaskPool[GAME_TASK_COUNT];
 extern u8 gGameTaskCount;
@@ -283,7 +282,7 @@ s32 updateFramebufferRenderScheduler(void) {
             if (gFramebufferRenderTask0Statuses[frameIndex].status == 0) {
                 if ((s32) gPendingFramebufferSwapCount > 0) {
                     submitFramebufferRenderTask(frameIndex);
-                    gFramebufferSwapDelayTimer = gFramebufferSwapDelay;
+                    gFramebufferSwapDelayTimer = gFramebufferSwapDelay.timerValue;
                     gPendingFramebufferSwapCount--;
                     if (gNextFramebufferRenderTaskIndex != 0) {
                         gNextFramebufferRenderTaskIndex = 0;

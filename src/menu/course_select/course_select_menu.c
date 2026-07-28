@@ -24,7 +24,6 @@ typedef union {
 extern u16 gCourseDetailsPreviewCourseTiles[];
 extern s16 gMenuFadeAlpha;
 extern s16 gMenuChoicePromptState;
-extern s8 gFramebufferSwapDelay;
 extern s8 D_800EC9C0;
 extern u8 gMenuSelectionConfirmTimer;
 extern u8 gGameSaveDataBuffer[];
@@ -113,7 +112,7 @@ void initCourseSelectMenu(void) {
         D_8010AEAC[i] = 0;
     }
 
-    gFramebufferSwapDelay = 0;
+    gFramebufferSwapDelay.value = 0;
     gCurrentGameTask->fade = 0xFF;
     LOAD_ASSET(_5CBA80, 0x21);
     LOAD_ASSET(_593D10, 0x22);
@@ -2083,7 +2082,7 @@ void exitCourseSelectMenu(void) {
     } else if (gPendingFramebufferSwapCount == 2) {
         releaseMenuAssetHandles();
         gFramebufferSwapHold = 0;
-        do { gFramebufferSwapDelay = 0; gMenuFlowState = 0; resumeGameTask(2); removeGameTask(4); count = 0; if (gCourseUnlockSaveSlots[0].courseUnlockStates[0] == (-1)) { count = 1; } ptr = &D_800EC9F1; loop: if (ptr[0x3F] == (-1)) { count++; } if (ptr[0x40] == (-1)) { count++; } if (ptr[0x41] == (-1)) { count++; } if (ptr[0x42] == (-1)) { count++; } } while (0);
+        do { gFramebufferSwapDelay.value = 0; gMenuFlowState = 0; resumeGameTask(2); removeGameTask(4); count = 0; if (gCourseUnlockSaveSlots[0].courseUnlockStates[0] == (-1)) { count = 1; } ptr = &D_800EC9F1; loop: if (ptr[0x3F] == (-1)) { count++; } if (ptr[0x40] == (-1)) { count++; } if (ptr[0x41] == (-1)) { count++; } if (ptr[0x42] == (-1)) { count++; } } while (0);
         ptr += 4;
         if (ptr != (&D_800EC9F9)) {
             goto loop;

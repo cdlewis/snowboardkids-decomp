@@ -32,7 +32,6 @@ extern s32 gMenuFlowState;
 extern u8 gMenuExitSelection;
 extern u16 gMenuInputRepeatTimers;
 extern s16 gMenuFadeAlpha;
-extern s8 gFramebufferSwapDelay;
 extern u8 gPendingFramebufferSwapCount;
 extern u8 gFramebufferSwapHold;
 
@@ -60,7 +59,7 @@ void initRaceSplitscreenSelectMenu(void) {
     gCourseSelectFromRaceTypeMenu = 0;
     resetAllViewports();
     configureViewport(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.333333373f);
-    gFramebufferSwapDelay = 0;
+    gFramebufferSwapDelay.value = 0;
     gCurrentGameTask->fade = 0xFF;
     LOAD_ASSET(_5A1ED0, 0x21);
     LOAD_ASSET(_593D10, 0x22);
@@ -242,7 +241,7 @@ void fadeOutRaceSplitscreenSelectMenu(void) {
         if (gPendingFramebufferSwapCount == 2) {
             releaseMenuAssetHandles();
             gFramebufferSwapHold = 0;
-            gFramebufferSwapDelay = 0;
+            gFramebufferSwapDelay.value = 0;
             if (gMenuExitSelection == 1) {
                 gMenuFlowState = 1;
             } else {

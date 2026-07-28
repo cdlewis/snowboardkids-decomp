@@ -30,7 +30,6 @@ extern s16 gRaceCourseIndex;
 extern s16 gMenuFadeAlpha;
 extern u8 gRaceTypeSelection;
 extern u8 gCourseSelectFromRaceTypeMenu;
-extern s8 gFramebufferSwapDelay;
 extern s32 gMenuFlowState;
 extern s32 gPlayerInputHeld;
 extern s32 gPlayerInputPressed;
@@ -63,7 +62,7 @@ void initRaceTypeSelectMenu(void) {
     requestMusicSequenceBank(4);
     resetAllViewports();
     configureViewport(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.333333373f);
-    gFramebufferSwapDelay = 0;
+    gFramebufferSwapDelay.value = 0;
     gCurrentGameTask->fade = 0xFF;
     LOAD_ASSET(_5A1ED0, 0x21);
     LOAD_ASSET(_593D10, 0x22);
@@ -243,7 +242,7 @@ void fadeOutRaceTypeSelectMenu(void) {
         if (gPendingFramebufferSwapCount == 2) {
             releaseMenuAssetHandles();
             gFramebufferSwapHold = 0;
-            gFramebufferSwapDelay = 0;
+            gFramebufferSwapDelay.value = 0;
             gMenuFlowState = 1;
             resumeGameTask(2);
             removeGameTask(4);

@@ -175,7 +175,6 @@ extern u8 gRaceChallengeFailed;
 extern u8 gRaceRecordSettingsEnabled;
 extern u8 gPendingFramebufferSwapCount;
 extern u8 gFramebufferSwapHold;
-extern s8 gFramebufferSwapDelay;
 extern u8 gRaceSplitscreenMode;
 extern u8 gRumblePakConnectedMask;
 extern u8 gPendingEndingCreditsFlow;
@@ -757,7 +756,7 @@ void initRaceSceneFlow(void) {
         configureRaceViewport(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.3333334f);
     }
     gRacePlayerHudStatuses = 1;
-    gFramebufferSwapDelay = 0;
+    gFramebufferSwapDelay.value = 0;
     initRacePlayers();
     initRaceHud();
     initRaceCourseSceneTasks();
@@ -826,7 +825,7 @@ void fadeInRaceGameplayViewports(void) {
                     configureRaceViewport(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.3333334f);
                 }
                 D_801121E0[0].active = 1;
-                gFramebufferSwapDelay = 0;
+                gFramebufferSwapDelay.value = 0;
                 break;
             case 2:
                 if (gRaceCourseIndex.s != 6) {
@@ -838,7 +837,7 @@ void fadeInRaceGameplayViewports(void) {
                 }
                 D_801121E0[0].active = 1;
                 D_801121E0[1].active = 1;
-                gFramebufferSwapDelay = 1;
+                gFramebufferSwapDelay.value = 1;
                 break;
             case 3:
                 if (gRaceCourseIndex.s != 6) {
@@ -853,7 +852,7 @@ void fadeInRaceGameplayViewports(void) {
                 D_801121E0[0].active = 1;
                 D_801121E0[1].active = 1;
                 D_801121E0[2].active = 1;
-                gFramebufferSwapDelay = 1;
+                gFramebufferSwapDelay.value = 1;
                 break;
             case 4:
                 if (gRaceCourseIndex.s != 6) {
@@ -871,7 +870,7 @@ void fadeInRaceGameplayViewports(void) {
                 D_801121E0[1].active = 1;
                 D_801121E0[2].active = 1;
                 D_801121E0[3].active = 1;
-                gFramebufferSwapDelay = 1;
+                gFramebufferSwapDelay.value = 1;
                 break;
             }
             setCurrentGameTaskCallback(startRaceGameplayFlow, 0);
@@ -1181,7 +1180,7 @@ void prepareRaceResultsFlow(void) {
     s32 currentTime;
 
     gPendingEndingCreditsFlow = 0;
-    gFramebufferSwapDelay = 0;
+    gFramebufferSwapDelay.value = 0;
     D_80121B60 = 0;
     D_80121B61 = 0;
 
@@ -1606,7 +1605,7 @@ void updateRaceResultsMusicFlow(void) {
 }
 
 void fadeOutRaceResultsFlow(void) {
-    gFramebufferSwapDelay = 0;
+    gFramebufferSwapDelay.value = 0;
     if (D_80121B60 != 0) {
         createCallbackTaskWithUserId((CallbackTaskCallback)initFallingMenuSnowflake, 5, 0x64, D_80121B60 - 1);
     }
@@ -1716,7 +1715,7 @@ void initRaceGhostReplayFlow(void) {
     }
     LOAD_ASSET(_598A70, 0x29);
     gRacePlayerHudStatuses = 1;
-    gFramebufferSwapDelay = 0;
+    gFramebufferSwapDelay.value = 0;
     resetSecondaryRng();
     initRacePlayers();
     initRaceHud();
@@ -1784,7 +1783,7 @@ void finalizeRaceExitFlow(void) {
         updateRelocatableHeap();
         releaseMenuAssetHandles();
         gFramebufferSwapHold = 0;
-        gFramebufferSwapDelay = 0;
+        gFramebufferSwapDelay.value = 0;
         stopSoundEffects();
         requestRumbleMotorInit(0);
         requestRumbleMotorInit(1);
@@ -1873,7 +1872,7 @@ void initRaceRecordSettingsFlow(void) {
         return;
     }
     resetAllViewports();
-    gFramebufferSwapDelay = 0;
+    gFramebufferSwapDelay.value = 0;
     LOAD_ASSET(_593D10, 0x29);
     LOAD_ASSET(_60F1A0, 0x2A);
     LOAD_ASSET(_59DFE0, 0x26);
@@ -1957,7 +1956,7 @@ void closeRaceRecordSettingsFlow(void) {
     if (gPendingFramebufferSwapCount == 2) {
         releaseMenuAssetHandles();
         gFramebufferSwapHold = 0;
-        gFramebufferSwapDelay = 0;
+        gFramebufferSwapDelay.value = 0;
         setCurrentGameTaskCallback(&initRaceSceneFlow, 0);
     }
 }

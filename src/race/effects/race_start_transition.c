@@ -23,7 +23,6 @@ typedef struct {
 } TransformScratch;
 
 extern void releaseMenuAssetHandles(void);
-extern s8 gFramebufferSwapDelay;
 extern u8 gPendingFramebufferSwapCount;
 extern u8 gFramebufferSwapHold;
 extern s16 gMenuFadeAlpha;
@@ -237,7 +236,7 @@ void finishRaceStartTransition(void) {
     if (gPendingFramebufferSwapCount == 2) {
         releaseMenuAssetHandles();
         gFramebufferSwapHold = 0;
-        gFramebufferSwapDelay = 0;
+        gFramebufferSwapDelay.value = 0;
         resumeGameTask(2);
         removeGameTask(4);
     }

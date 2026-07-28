@@ -40,7 +40,6 @@ extern s16 gRacePlayerAttackStartTimer;
 extern s8 gRacePlayerCount;
 extern u8 gMenuFadeOverlayActive;
 extern u8 gMainMenuDemoRaceIntroIndex;
-extern s8 gFramebufferSwapDelay;
 extern u8 gRaceRumbleEnabled;
 extern u8 gRaceSplitscreenMode;
 extern u8 gRacePlayerHudStatuses;
@@ -144,7 +143,7 @@ void initMainMenuDemoRaceIntro(void) {
     resetRaceCameras();
     resetAllViewports();
     gRacePlayerHudStatuses = one;
-    gFramebufferSwapDelay = 0;
+    gFramebufferSwapDelay.value = 0;
     initRacePlayers();
     if (!gMainMenuDemoRaceIntroLoadCourseAssetsFlags[gMainMenuDemoRaceIntroIndex * sizeof(MainMenuDemoRaceIntroEntry)]) {
         gPlayerCount = 1;
@@ -156,7 +155,7 @@ void initMainMenuDemoRaceIntro(void) {
         one++;
         one--;
         gRacePlayerHudStatuses = one;
-        gFramebufferSwapDelay = 0;
+        gFramebufferSwapDelay.value = 0;
     } else {
         configureViewport(0, 0x57, 0x43, 0x90U, 0x68U, 0xA0U, 0x78U, 1.3333334f);
         configureViewport(1, 0x57, 0xAD, 0x90U, 0x68U, 0xA0U, 0x78U, 1.3333334f);
@@ -168,7 +167,7 @@ void initMainMenuDemoRaceIntro(void) {
         D_801121E0[3].active = 1;
         one++;
         one--;
-        gFramebufferSwapDelay = one;
+        gFramebufferSwapDelay.value = one;
     }
     if (gRaceSplitscreenMode == 0) {
         gPlayerCount = 4;
@@ -249,7 +248,7 @@ void finishMainMenuDemoRaceIntro(void) {
         gRaceCameraModeChangeDisabled = 0;
         releaseMenuAssetHandles();
         gFramebufferSwapHold = 0;
-        gFramebufferSwapDelay = 0;
+        gFramebufferSwapDelay.value = 0;
         stopSoundEffects();
         gMenuFlowState = 0;
         resumeGameTask(3);

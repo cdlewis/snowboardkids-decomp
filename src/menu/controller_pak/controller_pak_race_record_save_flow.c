@@ -24,7 +24,6 @@ extern ControllerPakMenuState gControllerPakMenuState;
 extern ControllerPakRaceRecordSaveStatusTransition gControllerPakRaceRecordSaveStatusTransition;
 extern u8 gPendingFramebufferSwapCount;
 extern u8 gFramebufferSwapHold;
-extern s8 gFramebufferSwapDelay;
 extern u8 gControllerPakMenuCursorState;
 extern s32 gMenuFlowState;
 extern s32 gPlayerInputPressed;
@@ -41,7 +40,7 @@ extern s32 enqueueSoundEffect(s16, s16);
 void initControllerPakRaceRecordSaveFlow(void) {
     resetAllViewports();
     configureViewport(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.3333334f);
-    gFramebufferSwapDelay = 0;
+    gFramebufferSwapDelay.value = 0;
     gControllerPakStatusCodes[0] = 0;
     gMenuChoicePromptState = 0;
     gControllerPakRetryCounts[0] = 0;
@@ -418,7 +417,7 @@ void fadeOutControllerPakRaceRecordSaveFlow(void) {
     } else if (gPendingFramebufferSwapCount == 2) {
         releaseMenuAssetHandles();
         gFramebufferSwapHold = 0;
-        gFramebufferSwapDelay = 0;
+        gFramebufferSwapDelay.value = 0;
         resumeGameTask(2);
         removeGameTask(4);
     }

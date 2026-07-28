@@ -20,7 +20,6 @@
 
 extern void releaseMenuAssetHandles(void);
 
-extern s8 gFramebufferSwapDelay;
 extern u8 gPendingFramebufferSwapCount;
 extern u8 gFramebufferSwapHold;
 
@@ -141,7 +140,7 @@ void initMultiplayerCourseSelectMenu(void) {
     D_80112414 = screenBase;
     D_8010AEA3 = 0;
     D_8010AEAF = 0;
-    gFramebufferSwapDelay = 0;
+    gFramebufferSwapDelay.value = 0;
     D_800EC9E5 = 0;
     D_8010AEA8 = 0;
     D_8010AEB0 = 0;
@@ -1090,7 +1089,7 @@ void fadeOutMultiplayerCourseSelectMenu(void) {
         if (gPendingFramebufferSwapCount == 2) {
             releaseMenuAssetHandles();
             gFramebufferSwapHold = 0;
-            gFramebufferSwapDelay = 0;
+            gFramebufferSwapDelay.value = 0;
             resumeGameTask(2);
             removeGameTask(4);
         }
