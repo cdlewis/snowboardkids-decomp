@@ -227,7 +227,6 @@ extern void initControllerPakRumbleCheckPrompt(CallbackTask *);
 
 extern u8 D_800B3199[];
 extern u8 gControllerPakOperationCounts[];
-extern s32 gRumbleMotorStatuses[];
 extern u8 D_800EC9E4;
 extern RaceSetupSaveMoney D_800EC9F4[];
 extern ControllerPakRumbleCheckPromptTransition gControllerPakRumbleCheckPromptTransition;
@@ -868,7 +867,6 @@ extern u8 gControllerPakRumbleCheckPromptState;
 extern u8 gControllerPakRumbleCheckPromptConfirmSelection;
 extern void enqueueSoundEffect(s16 arg0, s32 arg1);
 extern void requestRumbleMotorInit(u16 arg0);
-extern s32 gRumbleMotorStatuses[];
 
 void updateRaceSetupRumblePrompt(void) {
     s32 statusIndex;

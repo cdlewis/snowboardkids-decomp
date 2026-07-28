@@ -49,9 +49,6 @@ typedef struct SaveFileIdentity {
 #define CONTROLLER_PAK_U8_AT(cursor, field) (*(u8 *)((cursor) + CONTROLLER_PAK_SAVE_FIELD_OFFSET(field)))
 #define CONTROLLER_PAK_U16_AT(cursor, field) (*(u16 *)((cursor) + CONTROLLER_PAK_SAVE_FIELD_OFFSET(field)))
 
-extern s32 gRumbleMotorStatuses[4];
-extern s16 gRumbleMotorRequestStates[4];
-
 extern s32 osMotorInit(OSMesgQueue *, OSPfs *, s32);
 extern s32 osMotorStart(OSPfs *);
 extern s32 osMotorStop(OSPfs *);
