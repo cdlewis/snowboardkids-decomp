@@ -4,6 +4,7 @@
 #include "game/engine/callback_task_scheduler.h"
 #include "game/menu/character_select/character_select_menu.h"
 #include "game/menu/character_select/character_select_course_menu.h"
+#include "game/menu/course_select/course_select_menu.h"
 #include "game/menu/course_select/course_select_ui.h"
 #include "game/menu/course_select/multiplayer_course_select_menu.h"
 #include "game/engine/game_task_scheduler.h"
@@ -31,22 +32,6 @@ typedef struct {
     s8 characterState[12];
     char pad4B[0x78AD];
 } MultiplayerCourseSelectSaveData;
-
-typedef struct {
-    u8 unk0[4];
-    u8 unk4[4];
-    u8 unk8[4];
-    u8 unkC[4];
-    u8 unk10[4];
-    s16 unk14[4];
-    s16 unk1C[4];
-    u8 unk24[4];
-    u8 unk28;
-    char pad29;
-    s16 unk2A;
-    s16 unk2C;
-    u8 unk2E;
-} MultiplayerCourseSelectStatus;
 
 typedef struct MultiplayerCourseSelectObject {
     u8 pad0[0x2C];
@@ -89,9 +74,7 @@ extern s8 D_8010AEFB[];
 extern u8 D_8010AF08[][3];
 extern u8 D_8010AF06[][3];
 extern s8 gCourseSelectExtraCourseColumnState;
-extern s16 gCourseSelectColumnSoundEffects[];
 extern s8 gCourseUnlockSaveSlots[][0x78F8];
-extern MultiplayerCourseSelectStatus gCourseSelectStatus;
 extern s32 gPlayerInputHeld[];
 extern s32 gPlayerInputPressed[];
 extern MultiplayerCourseSelectObject *gCurrentMenuCameraObject;
@@ -377,10 +360,10 @@ void initMultiplayerCourseSelectMenu(void) {
             i = D_8010AEF8[playerIndex][j];
             gRacePlayers[playerIndex].menuSelection = i;
             gCourseSelectStatus.unk0[playerIndex] = 0;
-            gCourseSelectStatus.unk4[playerIndex] = 0;
-            gCourseSelectStatus.unk8[playerIndex] = 0;
-            gCourseSelectStatus.unkC[playerIndex] = 0;
-            gCourseSelectStatus.unk10[playerIndex] = 0;
+            gCourseSelectStatus.unk4Array[playerIndex] = 0;
+            gCourseSelectStatus.unk8Array[playerIndex] = 0;
+            gCourseSelectStatus.unkCArray[playerIndex] = 0;
+            gCourseSelectStatus.unk10Array[playerIndex] = 0;
             gCourseSelectStatus.unk14[playerIndex] = 0;
             gCourseSelectStatus.unk1C[playerIndex] = 0;
             gCourseSelectStatus.unk24[playerIndex] = 0;
@@ -410,7 +393,6 @@ extern s32 enqueueSoundEffect(s16, s16);
 
 extern u8 D_8010AF06[];
 extern u8 gCourseSelectExtraCourseColumnState;
-extern s16 gCourseSelectColumnSoundEffects[];
 extern s8 gCourseUnlockSaveSlots[][0x78F8];
 extern s32 gPlayerInputHeld[];
 extern s32 gPlayerInputPressed[];
@@ -676,13 +658,13 @@ void updateMultiplayerCourseSelectMenu(void) {
                                 }
                                 gMenuChoicePromptState[i] = row + 3;
                                 if ((u8) D_8010AECC[i] == 0) {
-                                    gCourseSelectStatus.unkC[i] = 1;
+                                    gCourseSelectStatus.unkCArray[i] = 1;
                                     gCourseSelectStatus.unk14[i] = 0;
-                                    gCourseSelectStatus.unk4[i] = 3;
+                                    gCourseSelectStatus.unk4Array[i] = 3;
                                 } else {
-                                    gCourseSelectStatus.unk10[i] = 1;
+                                    gCourseSelectStatus.unk10Array[i] = 1;
                                     gCourseSelectStatus.unk1C[i] = 0;
-                                    gCourseSelectStatus.unk8[i] = 3;
+                                    gCourseSelectStatus.unk8Array[i] = 3;
                                 }
                             } else if (pressed & B_BUTTON) {
                                 enqueueSoundEffect(0x18, 0x32);
@@ -704,9 +686,9 @@ void updateMultiplayerCourseSelectMenu(void) {
                         player->menuState = 1;
                         gMenuChoicePromptState[i] -= 3;
                         if ((u8) D_8010AECC[i] == 0) {
-                            gCourseSelectStatus.unk4[i] = 1;
+                            gCourseSelectStatus.unk4Array[i] = 1;
                         } else {
-                            gCourseSelectStatus.unk8[i] = 1;
+                            gCourseSelectStatus.unk8Array[i] = 1;
                         }
                     } else {
                         count++;
