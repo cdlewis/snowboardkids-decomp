@@ -10,6 +10,7 @@
 #include "game/menu/course_select/course_select_menu.h"
 #include "game/menu/course_select/course_select_ui.h"
 #include "game/menu/course_select/course_select_shop_ui.h"
+#include "game/menu/main_menu/controller_main_menu_flow.h"
 #include "game/math/fixed_point_math.h"
 #include "game/race/player/race_player_model_renderer.h"
 #include "game/race/player/race_player_input.h"
@@ -174,7 +175,6 @@ extern u8 D_8010AEA0[];
 extern u8 gCourseSelectExtraCourseColumnState;
 extern u8 D_8010AEAC[];
 extern u8 D_8010AF1C;
-extern s16 gMenuChoicePromptState[];
 extern MenuGlyphScript gCourseSelectCompleteText[];
 extern u8 gCourseSelectCourseSpeedRatings[];
 extern u8 gCourseSelectCourseHandlingRatings[];

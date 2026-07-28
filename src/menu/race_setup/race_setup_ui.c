@@ -54,7 +54,6 @@ extern u8 gRaceSetupNoControllerPakMessage[];
 const char D_800E0A80[] = "%d";
 const char D_800E0A84[] = "%6d";
 extern TitleMenuWidgetActor *D_8010ADE0;
-extern s16 gMenuChoicePromptState[];
 extern s16 gPlayerBadgeDisplayOrder[];
 extern TitleIntroTransitionState gRaceSetupMenuSubState;
 extern u16 gRaceSetupOnePlayerOptionText[];

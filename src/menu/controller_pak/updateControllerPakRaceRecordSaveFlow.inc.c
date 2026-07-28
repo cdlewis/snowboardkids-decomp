@@ -21,7 +21,7 @@ void updateControllerPakRaceRecordSaveFlow(void) {
         transitionStep = gControllerPakRaceRecordSaveStatusTransition.step;
         if ((u8)gMenuSelectionConfirmTimer == 0) {
             if (transitionStep == 1) {
-            if (gMenuChoicePromptState != 0) {
+            if (gMenuChoicePromptState[0] != 0) {
                 statusCode = 6;
             } else {
                 statusCode = gControllerPakStatusCodes[0];
@@ -48,7 +48,7 @@ void updateControllerPakRaceRecordSaveFlow(void) {
                     requestControllerPakSaveStatus(0);
                     if ((gControllerPakStatusCodes[0] == 9) || (gControllerPakStatusCodes[0] == 2)) {
                         gControllerPakStatusCodes[0] = 8;
-                        gMenuChoicePromptState = 1;
+                        gMenuChoicePromptState[0] = 1;
                     }
                     break;
 
@@ -112,22 +112,22 @@ void updateControllerPakRaceRecordSaveFlow(void) {
                     break;
 
                 case 6:
-                    if ((gMenuChoicePromptState == retryLimit) ||
-                        (gMenuChoicePromptState == valueFour)) {
+                    if ((gMenuChoicePromptState[0] == retryLimit) ||
+                        (gMenuChoicePromptState[0] == valueFour)) {
                         valueThree = 3;
-                        if ((gPlayerInputPressed & 0x10800) && (gMenuChoicePromptState != valueThree)) {
-                            gMenuChoicePromptState--;
+                        if ((gPlayerInputPressed & 0x10800) && (gMenuChoicePromptState[0] != valueThree)) {
+                            gMenuChoicePromptState[0]--;
                             enqueueSoundEffect(0x19, 0x32);
                         }
                         if (gPlayerInputPressed & 0x20400) {
-                            if (gMenuChoicePromptState != 4) {
-                                gMenuChoicePromptState++;
+                            if (gMenuChoicePromptState[0] != 4) {
+                                gMenuChoicePromptState[0]++;
                                 enqueueSoundEffect(0x19, 0x32);
                             }
                         }
                         if ((gPlayerInputPressed & 0x8000) || (gPlayerInputPressed & 0x1000)) {
                             enqueueSoundEffect(1, 0x32);
-                            if (gMenuChoicePromptState == 4) {
+                            if (gMenuChoicePromptState[0] == 4) {
                                 if (gControllerPakStatusCodes[0] == 8) {
                                     gControllerPakRaceRecordSaveStatusTransition.nextStatus = 0xF;
                                 } else if (gControllerPakStatusCodes[0] == 7) {
@@ -149,7 +149,7 @@ void updateControllerPakRaceRecordSaveFlow(void) {
                                     gControllerPakRaceRecordSaveStatusTransition.nextStatus = 5;
                                 }
                             }
-                            gMenuChoicePromptState += retryLimit - 1;
+                            gMenuChoicePromptState[0] += retryLimit - 1;
                         }
                     }
                     break;
@@ -164,7 +164,7 @@ void updateControllerPakRaceRecordSaveFlow(void) {
                 case 17:
                     if ((gPlayerInputPressed & 0x8000) || (gPlayerInputPressed & 0x1000)) {
                         enqueueSoundEffect(1, 0x32);
-                        gMenuChoicePromptState =
+                        gMenuChoicePromptState[0] =
                             gControllerPakRaceRecordSaveStatusChoicePromptStates[gControllerPakStatusCodes[0]];
                     }
                     break;
@@ -172,7 +172,7 @@ void updateControllerPakRaceRecordSaveFlow(void) {
                 case 15:
                     if ((gPlayerInputPressed & 0x8000) || (gPlayerInputPressed & 0x1000)) {
                         enqueueSoundEffect(1, 0x32);
-                        gMenuChoicePromptState =
+                        gMenuChoicePromptState[0] =
                             gControllerPakRaceRecordSaveStatusChoicePromptStates[gControllerPakStatusCodes[0]];
                     }
                     break;

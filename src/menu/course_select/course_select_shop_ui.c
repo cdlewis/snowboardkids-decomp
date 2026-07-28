@@ -7,6 +7,7 @@
 #include "game/menu/splitscreen_select/race_splitscreen_select_ui.h"
 #include "game/menu/course_select/course_select_menu.h"
 #include "game/menu/course_select/course_select_shop_ui.h"
+#include "game/menu/main_menu/controller_main_menu_flow.h"
 #include "game/menu/renderer/menu_renderer.h"
 #include "game/race/player/race_player_input.h"
 
@@ -175,7 +176,6 @@ extern u8 gShopMenuDescriptionSeen;
 extern u8 gShopMenuShowNewCoursesMessage;
 extern s16 gCoursePreviewViewportHeight;
 extern s32 gMenuFlowState;
-extern s16 gMenuChoicePromptState;
 extern s32 gPlayerInputHeld;
 
 const char gShopMenuMoneyFormat[] = "%6dG";
@@ -1120,7 +1120,8 @@ void updateCourseUnlockPricePanel(ShopMenuWidgetActor *arg0) {
         }
         break;
     }
-    if (((gMenuChoicePromptState >= 5) && (gMenuChoicePromptState != 9)) || (arg0->slide.bytes.state == 6)) {
+    if (((gMenuChoicePromptState[0] >= 5) && (gMenuChoicePromptState[0] != 9)) ||
+        (arg0->slide.bytes.state == 6)) {
         removeCallbackTask(arg0);
         return;
     }

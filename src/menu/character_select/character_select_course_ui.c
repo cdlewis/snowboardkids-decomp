@@ -6,6 +6,7 @@
 #include "game/engine/callback_task_scheduler.h"
 #include "game/menu/character_select/character_select_course_menu.h"
 #include "game/menu/character_select/character_select_course_ui.h"
+#include "game/menu/main_menu/controller_main_menu_flow.h"
 #include "game/menu/splitscreen_select/race_splitscreen_select_ui.h"
 #include "game/menu/renderer/menu_renderer.h"
 #include "game/menu/renderer/menu_render_utils.h"
@@ -93,7 +94,6 @@ extern u8 D_8010AE8A;
 extern u8 D_8010AE8F;
 extern u8 gHighestUnlockedCourse;
 extern u8 gMenuSelectionConfirmTimer;
-extern s16 gMenuChoicePromptState;
 extern u8 gCourseSelectFromRaceTypeMenu;
 extern u8 gRaceSplitscreenMode;
 extern u8 gRaceTypeSelection;
@@ -2462,7 +2462,7 @@ void drawCharacterSelectCourseConfirmCursor(CharacterSelectCourseWidgetActor *ar
     u16 alpha;
     s16 state;
 
-    state = gMenuChoicePromptState;
+    state = gMenuChoicePromptState[0];
     if (state != 0) {
         isEvenState = !(state & 1);
         if (isEvenState) {
@@ -2482,11 +2482,11 @@ void drawCharacterSelectCourseConfirmCursor(CharacterSelectCourseWidgetActor *ar
 
         drawMenuSpriteWithAlpha(arg0->x, arg0->y, getRelocatableHeapBlockBase(ASSET_HANDLE(0x24)), 0x17, 0x20, 0x20, 0, alpha, 0);
 
-        state = gMenuChoicePromptState;
+        state = gMenuChoicePromptState[0];
         if ((state == 3) || (state == 4)) {
-            drawMenuSpriteWithAlpha(arg0->x, (s16)(((gMenuChoicePromptState * 0x10) + arg0->y) - 0x30), getRelocatableHeapBlockBase(ASSET_HANDLE(0x24)), 0x12,
+            drawMenuSpriteWithAlpha(arg0->x, (s16)(((gMenuChoicePromptState[0] * 0x10) + arg0->y) - 0x30), getRelocatableHeapBlockBase(ASSET_HANDLE(0x24)), 0x12,
                           0x20, 0x20, 0, arg0->selection.unsignedCounter, 0);
-            state = gMenuChoicePromptState;
+            state = gMenuChoicePromptState[0];
         }
     }
     if ((state >= 5) && (((s16)arg0->transition.alpha) == 0)) {
@@ -2497,12 +2497,13 @@ void drawCharacterSelectCourseConfirmCursor(CharacterSelectCourseWidgetActor *ar
 void updateCharacterSelectCourseConfirmCursor(CharacterSelectCourseWidgetActor *arg0) {
     s32 step;
 
-    if ((gMenuChoicePromptState != 0) && (gMenuChoicePromptState != 3) && (gMenuChoicePromptState != 4)) {
-        step = ((gMenuChoicePromptState < 5) ? 1 : -1) * 8;
+    if ((gMenuChoicePromptState[0] != 0) && (gMenuChoicePromptState[0] != 3) &&
+        (gMenuChoicePromptState[0] != 4)) {
+        step = ((gMenuChoicePromptState[0] < 5) ? 1 : -1) * 8;
         arg0->transition.signedAlpha += step;
 
         if (arg0->transition.signedAlpha == 0x20) {
-            gMenuChoicePromptState += 2;
+            gMenuChoicePromptState[0] += 2;
             arg0->row.value = 0;
             arg0->selection.counter = 0x100;
         }
@@ -2520,7 +2521,7 @@ void updateCharacterSelectCourseConfirmCursor(CharacterSelectCourseWidgetActor *
         }
     }
 
-    if ((gMenuChoicePromptState == 3) || (gMenuChoicePromptState == 4)) {
+    if ((gMenuChoicePromptState[0] == 3) || (gMenuChoicePromptState[0] == 4)) {
         if ((u16)arg0->row.value < 0x10) {
             arg0->selection.counter = (u16)arg0->selection.counter - 9;
         } else {
