@@ -2,6 +2,7 @@
 #include "game/audio/sound_manager.h"
 #include "game/engine/callback_task_scheduler.h"
 #include "game/engine/asset_manager.h"
+#include "game/engine/system_runtime.h"
 #include "game/race/scene/race_scene_setup.h"
 #include "game/engine/game_task_scheduler.h"
 #include "game/menu/renderer/menu_screen_effects.h"
@@ -38,7 +39,6 @@ extern s16 gRaceCourseIndex;
 extern s16 gRaceLapCount;
 extern s16 gRacePlayerAttackStartTimer;
 extern s8 gRacePlayerCount;
-extern u8 gMenuFadeOverlayActive;
 extern u8 gMainMenuDemoRaceIntroIndex;
 extern u8 gRaceRumbleEnabled;
 extern u8 gRaceSplitscreenMode;

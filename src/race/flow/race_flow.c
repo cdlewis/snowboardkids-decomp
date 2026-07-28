@@ -8,6 +8,7 @@
 #include "game/engine/callback_task_scheduler.h"
 #include "game/engine/relocatable_heap.h"
 #include "game/engine/asset_manager.h"
+#include "game/engine/system_runtime.h"
 #include "game/menu/character_select/character_select_course_menu.h"
 #include "game/menu/character_select/character_select_menu.h"
 #include "game/menu/course_select/multiplayer_course_select_menu.h"
@@ -114,7 +115,6 @@ extern SignedUnsignedShort gRaceCourseIndex;
 extern s16 gRaceLapCount;
 extern s32 gRaceTimeTrialFinishTime;
 extern s16 gMenuFadeAlpha;
-extern s8 gMenuFadeOverlayActive;
 extern u8 gRaceRumbleEnabled;
 extern u8 gRaceTypeSelection;
 extern u8 D_8011233C;

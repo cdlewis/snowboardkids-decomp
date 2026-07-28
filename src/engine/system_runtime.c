@@ -127,7 +127,6 @@ extern u8 gPendingFramebufferSwapCount;
 extern u8 gRaceRumbleEnabled;
 extern u8 gRumblePakConnectedMask;
 extern s32 gClearFramebufferOnNextTask;
-extern u8 gMenuFadeOverlayActive;
 extern Gfx *gCurrentTaskDisplayListStart;
 extern u8 gFramebufferColorBufferIndex;
 extern FramebufferRenderTask gFramebufferRenderTask0[];
