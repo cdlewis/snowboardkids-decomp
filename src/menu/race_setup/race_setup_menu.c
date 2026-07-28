@@ -178,7 +178,6 @@ void updateRaceSetupPlayerCountMenu(void) {
 }
 
 extern s16 gRaceSetupSavePanelInitialRects[4][2];
-extern s16 gControllerPakStatusCodes[];
 extern s16 gMenuChoicePromptState[];
 extern u8 gControllerPakOperationCounts[];
 extern u8 D_800EC9E4;
@@ -260,7 +259,6 @@ extern void requestControllerPakRepairWithContext(u16 controllerIndex, s32 playe
 extern void initControllerPakRumbleCheckPrompt(CallbackTask *);
 
 extern u8 D_800B3199[];
-extern s16 gControllerPakStatusCodes[];
 extern s16 gMenuChoicePromptState[];
 extern u8 gControllerPakOperationCounts[];
 extern s32 gRumbleMotorStatuses[];

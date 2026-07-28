@@ -115,7 +115,6 @@ extern s32 gControllerPakFileNos[];
 extern u8 gControllerPakGameName[];
 extern u8 gControllerPakExtName[];
 extern u8 gRumblePakConnectedByController[];
-extern s16 gControllerPakStatusCodes[];
 extern u8 gControllerPakOperationCounts[];
 extern SaveSlotBytes gGameSaveDataBuffer[];
 extern s32 gPlayerInputHeld;

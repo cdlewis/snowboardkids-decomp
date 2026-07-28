@@ -29,7 +29,6 @@ extern s8 gFramebufferSwapDelay;
 extern u8 gControllerPakMenuCursorState;
 extern s32 gMenuFlowState;
 extern s32 gPlayerInputPressed;
-extern s16 gControllerPakStatusCodes;
 extern s16 gMenuChoicePromptState;
 extern s8 gMenuSelectionConfirmTimer;
 extern s32 D_8010ADE0;
@@ -44,7 +43,7 @@ void initControllerPakRaceRecordSaveFlow(void) {
     resetAllViewports();
     configureViewport(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.3333334f);
     gFramebufferSwapDelay = 0;
-    gControllerPakStatusCodes = 0;
+    gControllerPakStatusCodes[0] = 0;
     gMenuChoicePromptState = 0;
     gControllerPakRetryCounts[0] = 0;
     gRacePlayers[0].menuState = 0;
@@ -125,7 +124,7 @@ void updateControllerPakRaceRecordSaveFlow(void)
       }
       else
       {
-        var_v0 = gControllerPakStatusCodes;
+        var_v0 = gControllerPakStatusCodes[0];
       }
       switch (var_v0)
       {
@@ -141,17 +140,17 @@ void updateControllerPakRaceRecordSaveFlow(void)
           gRumblePakConnectedByController = 0;
         }
           requestControllerPakProbe(0);
-          if (gControllerPakStatusCodes == 0x10)
+          if (gControllerPakStatusCodes[0] == 0x10)
         {
-          gControllerPakStatusCodes = 0x11;
+          gControllerPakStatusCodes[0] = 0x11;
         }
           break;
 
         case 1:
           requestControllerPakSaveStatus(0);
-          if ((gControllerPakStatusCodes == 9) || (gControllerPakStatusCodes == 2))
+          if ((gControllerPakStatusCodes[0] == 9) || (gControllerPakStatusCodes[0] == 2))
         {
-          gControllerPakStatusCodes = 8;
+          gControllerPakStatusCodes[0] = 8;
           gMenuChoicePromptState = 1;
         }
           break;
@@ -178,7 +177,7 @@ void updateControllerPakRaceRecordSaveFlow(void)
             }
             else
             {
-              gControllerPakStatusCodes = 0xD;
+              gControllerPakStatusCodes[0] = 0xD;
             }
             gControllerPakRetryCounts[0] = 0;
           }
@@ -197,7 +196,7 @@ void updateControllerPakRaceRecordSaveFlow(void)
           }
           else
           {
-            gControllerPakStatusCodes = 0x10;
+            gControllerPakStatusCodes[0] = 0x10;
           }
         }
         else
@@ -210,7 +209,7 @@ void updateControllerPakRaceRecordSaveFlow(void)
           }
           else
           {
-            gControllerPakStatusCodes = 0xE;
+            gControllerPakStatusCodes[0] = 0xE;
           }
           gControllerPakRetryCounts[0] = 0;
         }
@@ -226,11 +225,11 @@ void updateControllerPakRaceRecordSaveFlow(void)
           {
             gControllerPakRaceRecordSaveStatusTransition.step = 1;
             gControllerPakRaceRecordSaveStatusTransition.alpha = 0x100;
-            gControllerPakStatusCodes = 0;
+            gControllerPakStatusCodes[0] = 0;
           }
           else
           {
-            gControllerPakStatusCodes = 0;
+            gControllerPakStatusCodes[0] = 0;
           }
         }
           break;
@@ -271,17 +270,17 @@ void updateControllerPakRaceRecordSaveFlow(void)
             enqueueSoundEffect(1, 0x32);
             if (gMenuChoicePromptState == 4)
             {
-              if (gControllerPakStatusCodes == 8)
+              if (gControllerPakStatusCodes[0] == 8)
               {
                 gControllerPakRaceRecordSaveStatusTransition.nextStatus = 0xF;
               }
               else
-                if (gControllerPakStatusCodes == 7)
+                if (gControllerPakStatusCodes[0] == 7)
               {
                 gControllerPakRaceRecordSaveStatusTransition.nextStatus = 3;
               }
               else
-                if (gControllerPakStatusCodes == 0xF)
+                if (gControllerPakStatusCodes[0] == 0xF)
               {
                 gControllerPakRaceRecordSaveStatusTransition.nextStatus = 0;
               }
@@ -291,17 +290,17 @@ void updateControllerPakRaceRecordSaveFlow(void)
               }
             }
             else
-              if (gControllerPakStatusCodes == 8)
+              if (gControllerPakStatusCodes[0] == 8)
             {
               gControllerPakRaceRecordSaveStatusTransition.nextStatus = 2;
             }
             else
-              if ((gControllerPakStatusCodes == 0xA) || (gControllerPakStatusCodes == 0x11))
+              if ((gControllerPakStatusCodes[0] == 0xA) || (gControllerPakStatusCodes[0] == 0x11))
             {
               gControllerPakRaceRecordSaveStatusTransition.nextStatus = 0xF;
             }
             else
-              if (gControllerPakStatusCodes == 7)
+              if (gControllerPakStatusCodes[0] == 7)
             {
               gControllerPakRaceRecordSaveStatusTransition.nextStatus = 4;
             }
@@ -333,7 +332,8 @@ void updateControllerPakRaceRecordSaveFlow(void)
           if ((temp_v1 & A_BUTTON) || (temp_v1 & START_BUTTON))
         {
           enqueueSoundEffect(1, 0x32);
-          gMenuChoicePromptState = gControllerPakRaceRecordSaveStatusChoicePromptStates[(long) gControllerPakStatusCodes];
+          gMenuChoicePromptState =
+              gControllerPakRaceRecordSaveStatusChoicePromptStates[(long) gControllerPakStatusCodes[0]];
         }
           break;
 
@@ -342,7 +342,7 @@ void updateControllerPakRaceRecordSaveFlow(void)
           if ((temp_v1 & A_BUTTON) || (temp_v1 & START_BUTTON))
         {
           enqueueSoundEffect(1, 0x32);
-          gMenuChoicePromptState = gControllerPakRaceRecordSaveStatusChoicePromptStates[gControllerPakStatusCodes];
+          gMenuChoicePromptState = gControllerPakRaceRecordSaveStatusChoicePromptStates[gControllerPakStatusCodes[0]];
         }
           break;
 
@@ -354,7 +354,7 @@ void updateControllerPakRaceRecordSaveFlow(void)
         {
           sp1C = temp_t0;
           enqueueSoundEffect(1, 0x32);
-          if (gControllerPakStatusCodes == 0xE)
+          if (gControllerPakStatusCodes[0] == 0xE)
           {
             if (temp_t0 != 0)
             {
@@ -363,7 +363,7 @@ void updateControllerPakRaceRecordSaveFlow(void)
             }
             else
             {
-              gControllerPakStatusCodes = 7;
+              gControllerPakStatusCodes[0] = 7;
             }
           }
           else
@@ -371,11 +371,11 @@ void updateControllerPakRaceRecordSaveFlow(void)
           {
             gControllerPakRaceRecordSaveStatusTransition.step = 1;
             gControllerPakRaceRecordSaveStatusTransition.alpha = 0x100;
-            gControllerPakStatusCodes = 0;
+            gControllerPakStatusCodes[0] = 0;
           }
           else
           {
-            gControllerPakStatusCodes = 0;
+            gControllerPakStatusCodes[0] = 0;
           }
         }
           break;
