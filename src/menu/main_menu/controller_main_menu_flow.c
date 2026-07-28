@@ -16,6 +16,7 @@
 #include "game/menu/main_menu/main_menu_title_ui.h"
 #include "game/race/camera/race_camera.h"
 #include "game/race/flow/race_flow.h"
+#include "game/race/race_state.h"
 #include "game/demo/main_menu_demo_race_intro.h"
 #include "game/demo/title_demo_race_intro.h"
 #include "game/engine/viewport_manager.h"
@@ -82,7 +83,6 @@ extern u8 gControllerPakOperationCounts[];
 extern s16 gMenuFadeAlpha;
 extern u8 gMainMenuSecretCodeStep;
 extern u8 gConnectedControllerCount;
-extern u8 gRaceRumbleEnabled;
 extern u8 gRumblePakConnectedMask;
 extern s32 gControllerPakFreeBytes;
 extern s32 gControllerPakFreeFileCount;

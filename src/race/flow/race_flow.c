@@ -102,7 +102,6 @@ extern s32 gMenuFlowState;
 extern s16 gRaceLapCount;
 extern s32 gRaceTimeTrialFinishTime;
 extern s16 gMenuFadeAlpha;
-extern u8 gRaceRumbleEnabled;
 extern u8 gRaceTypeSelection;
 extern s8 gRacePlayerCount;
 extern s16 gRacePlayerAttackStartTimer;

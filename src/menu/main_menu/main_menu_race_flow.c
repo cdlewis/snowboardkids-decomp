@@ -40,7 +40,6 @@ extern s16 gMainMenuModePreviewRaceDurationBySelection[];
 extern void releaseMenuAssetHandles(void);
 extern u8 gPendingFramebufferSwapCount;
 extern u8 gTrainingCourseLesson;
-extern s8 gRaceRumbleEnabled;
 extern s8 gRaceSplitscreenMode;
 extern MainMenuModePreviewRaceCourseAsset gMainMenuModePreviewRaceCourseAssets[];
 
