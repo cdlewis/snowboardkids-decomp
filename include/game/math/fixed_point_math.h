@@ -22,6 +22,8 @@ typedef enum {
     MTX_ZZ
 } FixedMatrixIndex;
 
+extern FixedTransform gIdentityFixedTransform;
+
 void initFixedTransform(FixedTransform *arg0);
 s16 fixedSine(s16 arg0);
 s16 fixedCosine(s16 arg0);

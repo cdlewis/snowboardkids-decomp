@@ -31,26 +31,17 @@ struct EndingCreditsTommy {
 };
 
 typedef struct {
-    /* 0x00 */ FixedMatrix3s rotation;
-    /* 0x12 */ s16 pad12;
-    /* 0x14 */ s32 x;
-    /* 0x18 */ s32 y;
-    /* 0x1C */ s32 z;
-} GfxCommandSource;
-
-typedef struct {
     /* 0x00 */ void *palette;
     /* 0x04 */ void *image;
     /* 0x08 */ Vec3i transformed;
     /* 0x14 */ Vec3i pos;
     /* 0x20 */ s32 pad90;
-    /* 0x24 */ GfxCommandSource transform;
+    /* 0x24 */ FixedTransform transform;
 } EndingShadowStack;
 
-extern Mtx *allocFixedTransformMatrix(GfxCommandSource *arg0);
+extern Mtx *allocFixedTransformMatrix(FixedTransform *arg0);
 extern MainMenuSceneActorShadow gEndingActorShadow;
 extern Gfx *gRegionAllocPtr;
-extern GfxCommandSource gIdentityFixedTransform;
 extern u32 gAlphaSpriteRenderModeDl[];
 extern Vtx D_800B8100[];
 
@@ -414,9 +405,11 @@ void drawEndingActorShadow(MainMenuSceneActorShadow *arg0) {
     stack.pos.z = arg0->posZ;
     transformVec3iByFixedMatrix(model->displayObjects[(u8)arg0->unkC].rotation, &stack.pos, &stack.transformed);
     stack.transform = gIdentityFixedTransform;
-    stack.transform.x = model->displayObjects[(u8)arg0->unkC].translation[0] + stack.transformed.x;
-    stack.transform.y = model->displayObjects[(u8)arg0->unkC].translation[1] + stack.transformed.y;
-    stack.transform.z = model->displayObjects[(u8)arg0->unkC].translation[2];
+    stack.transform.translation.x =
+        model->displayObjects[(u8)arg0->unkC].translation[0] + stack.transformed.x;
+    stack.transform.translation.y =
+        model->displayObjects[(u8)arg0->unkC].translation[1] + stack.transformed.y;
+    stack.transform.translation.z = model->displayObjects[(u8)arg0->unkC].translation[2];
 
     ENDING_GFX_CMD(gRegionAllocPtr++, 0x06000000, (u32)gAlphaSpriteRenderModeDl);
 

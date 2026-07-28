@@ -202,7 +202,6 @@ extern u32 gRacePlayerRecoverySparkleQuadVertices[];
 extern u32 gAlphaSpriteRenderModeDl[];
 extern Gfx gEffectRenderModeSetupDl[];
 extern Gfx gEffectRenderModeCleanupDl[];
-extern FixedTransform gIdentityFixedTransform;
 RaceItemDrawNode *gRaceItemTextureEffectDrawLists[4];
 extern RaceItemDrawLists D_801121E0;
 extern s16 gRaceCourseIndex;

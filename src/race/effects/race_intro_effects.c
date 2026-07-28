@@ -105,7 +105,6 @@ extern Gfx gRaceIntroBillboardVertices[];
 extern Gfx gEffectRenderModeSetupDl[];
 extern Gfx gEffectRenderModeCleanupDl[];
 extern GfxCommandDest gIdentityMatrix;
-extern FixedTransform gIdentityFixedTransform;
 extern void setPackedMatrixTranslation(GfxCommandDest *, Vec3i *);
 extern void getAssetTableImagePaletteAndSize(u8 *, s32, u32 *, u32 *, s16 *, s16 *);
 

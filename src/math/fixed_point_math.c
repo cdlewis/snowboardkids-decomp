@@ -5,8 +5,6 @@
 
 extern s16 gSineTable[];
 
-extern FixedTransform gIdentityFixedTransform;
-
 void initFixedTransform(FixedTransform *transform) {
     *transform = gIdentityFixedTransform;
 }

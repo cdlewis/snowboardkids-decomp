@@ -185,7 +185,6 @@ extern Gfx gEffectRenderModeCleanupDl[];
 extern Gfx gRaceItemPickupDisplayList[];
 extern Gfx gRaceActionPickupDisplayList[];
 extern GfxCommandDest gIdentityMatrix;
-extern FixedTransform gIdentityFixedTransform;
 extern Gfx *gRegionAllocPtr;
 extern void *gViewportMatrix;
 extern s16 gRaceCourseIndex;

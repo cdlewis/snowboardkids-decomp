@@ -58,7 +58,6 @@ struct RaceItemProjectileActor {
     /* 0x58 */ s8 matrixDirty2;
 };
 
-extern FixedTransform gIdentityFixedTransform;
 extern Gfx gRaceItemProjectileQuadVertices[];
 extern Gfx gFallingActionProjectileQuadVertices[];
 extern Gfx gEffectRenderModeSetupDl[];
