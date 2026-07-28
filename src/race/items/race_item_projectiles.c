@@ -66,7 +66,6 @@ extern Gfx gEffectRenderModeCleanupDl[];
 extern Gfx *gRegionAllocPtr;
 extern u8 gRaceUpdatePaused;
 extern s16 gUiBlinkTimer;
-extern Mtx *gViewportMatrix;
 
 Mtx *allocFixedTransformMatrix(FixedTransform *);
 void spawnRaceUiFadingImpact(s32, s32, s32, u16);

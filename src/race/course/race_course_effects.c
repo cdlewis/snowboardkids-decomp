@@ -518,7 +518,6 @@ extern void getAssetTableImagePaletteAndSize(u8 *, s32, void **, void **, s16 *,
 extern Vtx D_800D9C40[];
 extern Gfx gEffectRenderModeSetupDl[];
 extern Gfx gEffectRenderModeCleanupDl[];
-extern u32 gViewportMatrix;
 
 void renderCourseTextureMarkers(RaceCourseRenderEffect *arg0) {
     volatile u8 pad[8];

@@ -208,7 +208,6 @@ RaceItemDrawNode *gRaceItemTextureEffectDrawLists[4];
 extern RaceItemDrawLists D_801121E0;
 extern u8 gRaceUpdatePaused;
 extern u8 gCurrentViewportIndex;
-extern void *gViewportMatrix;
 extern Gfx *gRegionAllocPtr;
 
 void getAssetTableImageAndExplicitPalette(u8 *, u16, u16, void **, void **);

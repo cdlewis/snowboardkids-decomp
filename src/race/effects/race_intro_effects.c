@@ -90,7 +90,6 @@ extern void setPackedMatrixTranslation(Mtx *, Vec3i *);
 extern void getAssetTableImagePaletteAndSize(u8 *, s32, u32 *, u32 *, s16 *, s16 *);
 
 extern s16 gFrameCounter;
-extern u32 gViewportMatrix;
 
 void drawRaceIntroModelMeshes(RaceIntroMeshActor *arg0) {
     volatile u8 pad[0xC];
@@ -209,7 +208,7 @@ void drawRaceIntroBillboard(RaceIntroEffectActor *arg0) {
             RACE_INTRO_EFFECTS_GFX_CMD(gRegionAllocPtr++, 0xF0000000, 0x0703C000);
             RACE_INTRO_EFFECTS_GFX_CMD(gRegionAllocPtr++, 0xE7000000, 0);
             RACE_INTRO_EFFECTS_GFX_CMD(gRegionAllocPtr++, 0x01020040, (u32)arg0->displayList0);
-            RACE_INTRO_EFFECTS_GFX_CMD(gRegionAllocPtr++, 0x01000040, gViewportMatrix);
+            RACE_INTRO_EFFECTS_GFX_CMD(gRegionAllocPtr++, 0x01000040, (u32)gViewportMatrix);
             RACE_INTRO_EFFECTS_GFX_CMD(gRegionAllocPtr++, 0x0400103F, (u32)gRaceIntroBillboardVertices);
             RACE_INTRO_EFFECTS_GFX_CMD(gRegionAllocPtr++, 0xB1060402, 0x00060200);
             RACE_INTRO_EFFECTS_GFX_CMD(gRegionAllocPtr++, 0x06000000, (u32)gEffectRenderModeCleanupDl);
