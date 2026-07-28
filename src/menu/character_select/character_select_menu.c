@@ -27,7 +27,7 @@ CharacterSelectState gCharacterSelectHudState;
 u8 gCharacterSelectSecretCharacterUnlocked;
 
 extern void releaseMenuAssetHandles(void);
-extern void enqueueSoundEffect(s32, s32);
+extern s32 enqueueSoundEffect(s16, s16);
 extern CharacterSelectMenuState *gCurrentGameTask;
 extern u16 gCharacterSelectIdOrder[];
 extern s16 gCharacterSelectVoiceSoundIds[];
@@ -133,8 +133,8 @@ void initCharacterSelectMenu(void) {
     updateCallbackTasks();
 }
 
-// Best compiler-matching attempt: 69.415%
-// (nonmatchings/updateCharacterSelectMenu-5787290371232622032/base_46.c).
+// updateCharacterSelectMenu best match: 82.952%
+// (nonmatchings/updateCharacterSelectMenu-4777730848216765513/base_20.c).
 // The implementation below favors readable source while the assembly include
 // above preserves the exact original code.
 // Per-frame driver for the character roster screen only. Live RAM-watch
@@ -150,159 +150,177 @@ void initCharacterSelectMenu(void) {
 void updateCharacterSelectMenu(void) {
     s32 playerIndex;
     s32 otherPlayerIndex;
-    s32 conflictingSelectionCount;
-    s32 selectionAttempts;
-    s32 selectedTokenStateTotal;
-    s32 minimumRosterIndex;
-    s32 maximumRosterIndex;
-    u32 heldButtons;
-    u32 pressedButtons;
+    s32 attempt;
+    s32 selectedCount;
+    s32 minimumIndex;
+    u16 maximumIndex;
     u16 repeatTimer;
-    s8 oldRosterIndex;
-    u8 rosterIndex;
+    u32 heldInput;
+    u32 heldRight;
+    u32 pressedInput;
+    s8 oldSelection;
+    s8 *highlightedIndex;
+    u8 selection;
     u8 moveDirection;
-    u8 lastPlayerConfirmed;
-    RacePlayer *player;
-
-    moveDirection = 0;
-    lastPlayerConfirmed = 0;
+    u8 duplicateCount;
+    u8 secretCharacterUnlocked;
+    u8 lastPlayerState;
 
     if (gCurrentGameTask->fade != 0) {
-        gCurrentGameTask->fade = stepMenuFadeAlpha((s16)gCurrentGameTask->fade, 0x24, FALSE);
+        gCurrentGameTask->fade = stepMenuFadeAlpha((s16)gCurrentGameTask->fade, 0x24, 0);
         if (gCurrentGameTask->fade == 0) {
             gCharacterSelectHudState.phase = CHARACTER_SELECT_PHASE_PROMPT;
         }
     } else if (gCharacterSelectHudState.phase < CHARACTER_SELECT_PHASE_ROSTER) {
         if ((gCharacterSelectHudState.phase == CHARACTER_SELECT_PHASE_PROMPT) &&
-            (gCharacterSelectHudState.bannerAlpha == 0x100) &&
-            (gPlayerInputPressed[0] & (A_BUTTON | START_BUTTON))) {
-            gCharacterSelectHudState.phase = CHARACTER_SELECT_PHASE_PROMPT_EXIT;
-            enqueueSoundEffect(1, 0x32);
-
-            for (playerIndex = 0; playerIndex < gPlayerCount; playerIndex++) {
-                if ((gControllerPakStatusCodes[playerIndex] == CONTROLLER_PAK_STATUS_USE_EXISTING_SAVE) ||
-                    (gControllerPakStatusCodes[playerIndex] == CONTROLLER_PAK_STATUS_READY)) {
-                    gControllerPakStatusCodes[playerIndex] = CONTROLLER_PAK_STATUS_MENU_COMPLETE;
+            (gCharacterSelectHudState.bannerAlpha == 0x100)) {
+            if ((gPlayerInputPressed[0] & A_BUTTON) || (gPlayerInputPressed[0] & START_BUTTON)) {
+                gCharacterSelectHudState.phase = CHARACTER_SELECT_PHASE_PROMPT_EXIT;
+                enqueueSoundEffect(1, 0x32);
+                for (playerIndex = 0; playerIndex < gPlayerCount; playerIndex++) {
+                    if ((gControllerPakStatusCodes[playerIndex] == CONTROLLER_PAK_STATUS_USE_EXISTING_SAVE) ||
+                        (gControllerPakStatusCodes[playerIndex] == CONTROLLER_PAK_STATUS_READY)) {
+                        gControllerPakStatusCodes[playerIndex] = CONTROLLER_PAK_STATUS_MENU_COMPLETE;
+                    }
                 }
             }
         }
     } else if (gCharacterSelectHudState.rosterReady == 1) {
-        minimumRosterIndex = 1;
-        maximumRosterIndex = 5;
+        maximumIndex = 5;
         if (gCharacterSelectHudState.leftSecretSlotUnlocked != 0) {
-            minimumRosterIndex = 0;
+            minimumIndex = 0;
+        } else {
+            minimumIndex = 1;
         }
         if (gCharacterSelectHudState.rightSecretSlotUnlocked != 0) {
-            maximumRosterIndex = 6;
+            maximumIndex = 6;
         }
 
-        for (playerIndex = 0; playerIndex < gPlayerCount; playerIndex++) {
-            player = &gRacePlayers[playerIndex];
-            pressedButtons = gPlayerInputPressed[playerIndex];
+        playerIndex = 0;
+        if (gPlayerCount > 0) {
+            do {
+                if (gRacePlayers[playerIndex].menuState == 0) {
+                    highlightedIndex = &D_8010AE64[playerIndex];
+                    oldSelection = *highlightedIndex;
+                    selection = oldSelection;
+                    heldInput = gPlayerInputHeld[playerIndex];
+                    heldRight = heldInput & (STICK_RIGHT | R_JPAD);
+                    secretCharacterUnlocked = gCharacterSelectSecretCharacterUnlocked;
 
-            if (player->menuState == 0) {
-                oldRosterIndex = gCharacterSelectHudState.highlightedRosterIndices[playerIndex];
-                rosterIndex = oldRosterIndex;
-                heldButtons = gPlayerInputHeld[playerIndex];
-                repeatTimer = gMenuInputRepeatTimers[playerIndex];
-
-                if (!(heldButtons & (STICK_LEFT | L_JPAD | STICK_RIGHT | R_JPAD))) {
-                    gMenuInputRepeatTimers[playerIndex] = 0;
-                    repeatTimer = 0;
-                }
-
-                if ((pressedButtons & (STICK_LEFT | L_JPAD)) ||
-                    ((heldButtons & (STICK_LEFT | L_JPAD)) && (repeatTimer >= 0xB) && (repeatTimer & 1))) {
-                    if (repeatTimer == 0) {
-                        gMenuInputRepeatTimers[playerIndex] = 1;
+                    if (!heldRight && !((s32)heldInput & (s32)(STICK_LEFT | L_JPAD))) {
+                        gMenuInputRepeatTimers[playerIndex] = 0;
                     }
-                    if (minimumRosterIndex < rosterIndex) {
-                        rosterIndex--;
-                        moveDirection = CHARACTER_SELECT_MOVE_LEFT;
-                    }
-                }
 
-                repeatTimer = gMenuInputRepeatTimers[playerIndex];
-                if ((pressedButtons & (STICK_RIGHT | R_JPAD)) ||
-                    ((heldButtons & (STICK_RIGHT | R_JPAD)) && (repeatTimer >= 0xB) && (repeatTimer & 1))) {
-                    if (repeatTimer == 0) {
-                        gMenuInputRepeatTimers[playerIndex] = 1;
+                    pressedInput = gPlayerInputPressed[playerIndex];
+                    if ((pressedInput & (STICK_LEFT | L_JPAD)) ||
+                        (((unsigned long)heldInput & (unsigned long)(STICK_LEFT | L_JPAD)) &&
+                         ((u16)gMenuInputRepeatTimers[playerIndex] >= 0xB) &&
+                         ((u16)gMenuInputRepeatTimers[playerIndex] & 1))) {
+                        repeatTimer = (u16)gMenuInputRepeatTimers[playerIndex];
+                        if (repeatTimer == 0) {
+                            gMenuInputRepeatTimers[playerIndex] = repeatTimer + 1;
+                        }
+                        if (minimumIndex < selection) {
+                            selection--;
+                            moveDirection = CHARACTER_SELECT_MOVE_LEFT;
+                        }
                     }
-                    if (rosterIndex < maximumRosterIndex) {
-                        rosterIndex++;
-                        moveDirection = CHARACTER_SELECT_MOVE_RIGHT;
-                    }
-                }
 
-                if (gMenuInputRepeatTimers[playerIndex] != 0) {
-                    gMenuInputRepeatTimers[playerIndex]++;
-                    if ((u16)gMenuInputRepeatTimers[playerIndex] == 0xFFFF) {
-                        gMenuInputRepeatTimers[playerIndex] = 0xC;
+                    repeatTimer = (u16)gMenuInputRepeatTimers[playerIndex];
+                    if ((pressedInput & (STICK_RIGHT | R_JPAD)) ||
+                        (heldRight && (repeatTimer >= 0xB) && (repeatTimer & 1))) {
+                        if (repeatTimer == 0) {
+                            gMenuInputRepeatTimers[playerIndex] = repeatTimer + 1;
+                            repeatTimer = (u16)gMenuInputRepeatTimers[playerIndex];
+                        }
+                        if (selection < maximumIndex) {
+                            selection++;
+                            moveDirection = CHARACTER_SELECT_MOVE_RIGHT;
+                        }
                     }
-                }
 
-                if (gCharacterSelectSecretCharacterUnlocked == 0) {
-                    selectionAttempts = 0;
-                    do {
-                        conflictingSelectionCount = 0;
-                        for (otherPlayerIndex = 0; otherPlayerIndex < gPlayerCount; otherPlayerIndex++) {
-                            if ((otherPlayerIndex != playerIndex) &&
-                                (rosterIndex ==
-                                 gCharacterSelectHudState.highlightedRosterIndices[otherPlayerIndex])) {
-                                conflictingSelectionCount++;
+                    if (repeatTimer != 0) {
+                        repeatTimer++;
+                        gMenuInputRepeatTimers[playerIndex] = repeatTimer;
+                        if (repeatTimer == 0xFFFF) {
+                            gMenuInputRepeatTimers[playerIndex] = 0xC;
+                        }
+                    }
+
+                    if (secretCharacterUnlocked == 0) {
+                        attempt = 0;
+                        do {
+                            duplicateCount = 0;
+                            otherPlayerIndex = 0;
+                            if (gPlayerCount > 0) {
+                                do {
+                                    if ((otherPlayerIndex != playerIndex) &&
+                                        (selection == D_8010AE64[otherPlayerIndex])) {
+                                        duplicateCount++;
+                                    }
+                                    otherPlayerIndex++;
+                                } while (otherPlayerIndex < gPlayerCount);
                             }
-                        }
-
-                        selectionAttempts++;
-                        if ((gCharacterSelectHudState.leftSecretSlotUnlocked == 0) && (rosterIndex == 0)) {
-                            conflictingSelectionCount++;
-                        }
-                        if ((gCharacterSelectHudState.rightSecretSlotUnlocked == 0) && (rosterIndex == 6)) {
-                            conflictingSelectionCount++;
-                        }
-
-                        if (conflictingSelectionCount != 0) {
-                            if (moveDirection == CHARACTER_SELECT_MOVE_LEFT) {
-                                rosterIndex--;
-                            } else {
-                                rosterIndex++;
+                            if ((gCharacterSelectHudState.leftSecretSlotUnlocked == 0) && (selection == 0)) {
+                                duplicateCount++;
                             }
-                            if ((rosterIndex < minimumRosterIndex) || (maximumRosterIndex < rosterIndex)) {
-                                rosterIndex = oldRosterIndex;
+                            if ((gCharacterSelectHudState.rightSecretSlotUnlocked == 0) && (selection == 6)) {
+                                duplicateCount++;
                             }
+                            if (duplicateCount != 0) {
+                                if (moveDirection == CHARACTER_SELECT_MOVE_LEFT) {
+                                    selection--;
+                                } else {
+                                    selection++;
+                                }
+                                if (selection < minimumIndex) {
+                                    selection = oldSelection;
+                                }
+                                if (maximumIndex < selection) {
+                                    selection = oldSelection;
+                                }
+                            }
+                            attempt++;
+                        } while ((duplicateCount != 0) && (attempt != 7));
+                    }
+
+                    if (selection != oldSelection) {
+                        enqueueSoundEffect(0x19, 0x32);
+                        pressedInput = gPlayerInputPressed[playerIndex];
+                    }
+                    *highlightedIndex = selection;
+                    gRacePlayers[playerIndex].selectedCharacterId =
+                        gCharacterSelectIdOrder[*highlightedIndex];
+
+                    if ((pressedInput & A_BUTTON) || (pressedInput & START_BUTTON)) {
+                        if (gRacePlayers[playerIndex].menuState == 0) {
+                            enqueueSoundEffect(gCharacterSelectVoiceSoundIds[*highlightedIndex], 0x32);
+                            gRacePlayers[playerIndex].menuState = 1;
+                            gCharacterSelectHudState.selectedTokenState[playerIndex] = CHARACTER_SELECT_TOKEN_START;
                         }
-                    } while ((conflictingSelectionCount != 0) && (selectionAttempts != 7));
+                    }
                 }
 
-                if (rosterIndex != (u8)oldRosterIndex) {
-                    enqueueSoundEffect(0x19, 0x32);
+                pressedInput = gPlayerInputPressed[playerIndex];
+                if ((pressedInput & B_BUTTON) && (gRacePlayers[playerIndex].menuState != 0)) {
+                    gRacePlayers[playerIndex].menuState = 0;
+                    gCharacterSelectHudState.selectedTokenState[playerIndex] = CHARACTER_SELECT_TOKEN_IDLE;
                 }
-
-                gCharacterSelectHudState.highlightedRosterIndices[playerIndex] = rosterIndex;
-                player->selectedCharacterId = gCharacterSelectIdOrder[(s8)rosterIndex];
-
-                if ((pressedButtons & (A_BUTTON | START_BUTTON)) && (player->menuState == 0)) {
-                    enqueueSoundEffect(gCharacterSelectVoiceSoundIds[(s8)rosterIndex], 0x32);
-                    player->menuState = 1;
-                    gCharacterSelectHudState.selectedTokenState[playerIndex] = CHARACTER_SELECT_TOKEN_START;
-                }
-            }
-
-            if ((pressedButtons & B_BUTTON) && (player->menuState != 0)) {
-                player->menuState = 0;
-                gCharacterSelectHudState.selectedTokenState[playerIndex] = CHARACTER_SELECT_TOKEN_IDLE;
-            }
-
-            lastPlayerConfirmed = player->menuState & 1;
+                lastPlayerState = gRacePlayers[playerIndex].menuState & 1;
+                playerIndex++;
+            } while (playerIndex < gPlayerCount);
         }
 
-        if (lastPlayerConfirmed != 0) {
-            selectedTokenStateTotal = 0;
-            for (playerIndex = 0; playerIndex < gPlayerCount; playerIndex++) {
-                selectedTokenStateTotal += gCharacterSelectHudState.selectedTokenState[playerIndex];
+        if (lastPlayerState != 0) {
+            selectedCount = 0;
+            playerIndex = 0;
+            if (gPlayerCount > 0) {
+                do {
+                    selectedCount += gCharacterSelectHudState.selectedTokenState[playerIndex];
+                    playerIndex++;
+                } while (playerIndex < gPlayerCount);
             }
-
-            if (selectedTokenStateTotal == (gPlayerCount * CHARACTER_SELECT_TOKEN_LANDED)) {
+            if (selectedCount == (gPlayerCount * CHARACTER_SELECT_TOKEN_LANDED)) {
                 gCharacterSelectHudState.phase = CHARACTER_SELECT_PHASE_CONFIRM;
                 gCharacterSelectHudState.confirmationChoice = 0;
                 gCharacterSelectHudState.bannerBounceTimer = 0;
@@ -311,6 +329,7 @@ void updateCharacterSelectMenu(void) {
             }
         }
     }
+
     updateCallbackTasks();
 }
 #endif
