@@ -1,3 +1,4 @@
+#include "game/race/race_state.h"
 #include "common.h"
 #include "game/engine/asset_manager.h"
 #include "game/engine/render_callback.h"
@@ -47,7 +48,6 @@ extern s16 courseRecordDigitTileOffsets[];
 extern u16 *mainMenuModeDescriptionTexts[];
 extern u16 *mainMenuModeDescriptionTitles[];
 extern u8 gMainMenuModeSelection;
-extern s16 gRaceCourseIndex;
 extern s16 gRaceLapCount;
 extern s16 gMenuFadeAlpha;
 extern s32 gMenuFlowState;
@@ -634,9 +634,9 @@ void drawRaceRecordSettingsPanel(void *arg0) {
     drawAssetTableSprite(-0x54, -0x60, getRelocatableHeapBlockBase(gAssetHandles[0x1C]), 0x5D);
     drawAssetTableSprite(4, -0x60, getRelocatableHeapBlockBase(gAssetHandles[0x1C]), 0x5E);
     drawAssetTableSprite(-0x4C, -0x5C, getRelocatableHeapBlockBase(gAssetHandles[0x1D]),
-                         (u16)courseRecordDigitTileOffsets[gRaceCourseIndex]);
+                         (u16)courseRecordDigitTileOffsets[gRaceCourseIndex.signedValue]);
     drawAssetTableSprite(4, -0x5C, getRelocatableHeapBlockBase(gAssetHandles[0x1D]),
-                         courseRecordDigitTileOffsets[gRaceCourseIndex] + 1);
+                         courseRecordDigitTileOffsets[gRaceCourseIndex.signedValue] + 1);
 }
 
 void updateRaceRecordSettingsPanel(MenuPanelActor *arg0) {

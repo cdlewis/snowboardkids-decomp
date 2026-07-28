@@ -1,3 +1,4 @@
+#include "game/race/race_state.h"
 #include "game/demo/main_menu_demo_race_intro.h"
 #include "game/audio/sound_manager.h"
 #include "game/engine/callback_task_scheduler.h"
@@ -35,7 +36,6 @@ extern RaceIntroCamera D_801121E0[];
 extern MainMenuDemoRaceIntroEntry gMainMenuDemoRaceIntroEntries[];
 extern u8 gMainMenuDemoRaceIntroLoadCourseAssetsFlags[];
 extern s16 gMenuFadeAlpha;
-extern s16 gRaceCourseIndex;
 extern s16 gRaceLapCount;
 extern s16 gRacePlayerAttackStartTimer;
 extern s8 gRacePlayerCount;
@@ -67,7 +67,7 @@ void initMainMenuDemoRaceIntro(void) {
 
     demoIndex = gMainMenuDemoRaceIntroIndex;
     temp_v1 = &gMainMenuDemoRaceIntroEntries[demoIndex];
-    gRaceCourseIndex = (s16) temp_v1->courseIndex;
+    gRaceCourseIndex.signedValue = (s16) temp_v1->courseIndex;
     gRaceUpdatePaused = 0;
     gRaceCameraModeChangeDisabled = 0;
     gRaceResultState = 0;

@@ -1,3 +1,4 @@
+#include "game/race/race_state.h"
 #include "common.h"
 #include "game/engine/asset_manager.h"
 #include "game/engine/relocatable_heap.h"
@@ -208,7 +209,6 @@ extern volatile s32 gRaceMotionRotationFrameBuffer[];
 extern RaceMotionRotation gRaceMotionJointFrameBuffer[];
 extern s32 gRaceMotionJointBlendBuffer[];
 extern s32 gRacePlayerHitCueId;
-extern s16 gRaceCourseIndex;
 extern RaceCourseSurfaceLimit gRaceCourseMaxSurfaceIndices[];
 extern CourseSpawnEntry gRaceCourseStartEntries[];
 extern u8 gRaceMotionModelPartCounts[];
@@ -292,7 +292,7 @@ s32 findRaceCourseSurfaceAtPoint(s32 x, s32 z) {
     s32 surfaceIndex;
 
     surfaceIndex = 0;
-    if (gRaceCourseMaxSurfaceIndices[gRaceCourseIndex].maxSurfaceIndex >= 0) {
+    if (gRaceCourseMaxSurfaceIndices[gRaceCourseIndex.signedValue].maxSurfaceIndex >= 0) {
         do {
             RaceMotionCoord *coords;
             s32 outsideSurface;
@@ -331,7 +331,7 @@ s32 findRaceCourseSurfaceAtPoint(s32 x, s32 z) {
                 return surfaceIndex;
             }
             surfaceIndex++;
-        } while (surfaceIndex <= gRaceCourseMaxSurfaceIndices[gRaceCourseIndex].maxSurfaceIndex);
+        } while (surfaceIndex <= gRaceCourseMaxSurfaceIndices[gRaceCourseIndex.signedValue].maxSurfaceIndex);
     }
 
     return 0;
@@ -1001,7 +1001,7 @@ void getRaceCourseTargetPositionAhead(s32 arg0, s32 arg1, s32 arg2, s32 *arg3, s
     s16 pathIndex;
     s16 upperSurfaceIndex;
 
-    if (arg0 != gRaceCourseStartEntries[gRaceCourseIndex].pathIndex) {
+    if (arg0 != gRaceCourseStartEntries[gRaceCourseIndex.signedValue].pathIndex) {
         keyframeOffset = arg0 * sizeof(RaceMotionSurface);
         deltaZ = arg0;
         gRaceCourseSurfaceAngleSin = fixedSine(gRaceCourseSurfaces[deltaZ].angle);
@@ -1012,12 +1012,12 @@ void getRaceCourseTargetPositionAhead(s32 arg0, s32 arg1, s32 arg2, s32 *arg3, s
         deltaZ = arg2 - (deltaZ << 0x11);
         projected = ((s64)-gRaceCourseSurfaceAngleSin * deltaX + (s64)gRaceCourseSurfaceAngleCos * deltaZ) / 0x1000;
 
-        if ((arg0 >= gRaceCourseStartEntries[gRaceCourseIndex].unk38) && ((upperSurfaceIndex = gRaceCourseStartEntries[gRaceCourseIndex].unk3A) >= arg0)) {
+        if ((arg0 >= gRaceCourseStartEntries[gRaceCourseIndex.signedValue].unk38) && ((upperSurfaceIndex = gRaceCourseStartEntries[gRaceCourseIndex.signedValue].unk3A) >= arg0)) {
             distance = projected + 0xC00000;
             *arg3 = ((s64)-gRaceCourseSurfaceAngleSin * distance) / 0x1000;
             deltaZ = gRaceCourseSurfaceAngleCos;
             *arg4 = ((s64)deltaZ * distance) / 0x1000;
-        } else if ((gRaceCourseIndex == 3) && ((arg0 == 0x11D) || (arg0 == 0x11E))) {
+        } else if ((gRaceCourseIndex.signedValue == 3) && ((arg0 == 0x11D) || (arg0 == 0x11E))) {
             distance = projected + 0xC00000;
             *arg3 = (distance * (s64)-gRaceCourseSurfaceAngleSin) / 0x1000;
             *arg4 = ((s64)gRaceCourseSurfaceAngleCos * distance) / 0x1000;
@@ -1046,8 +1046,8 @@ void getRaceCourseTargetPositionAhead(s32 arg0, s32 arg1, s32 arg2, s32 *arg3, s
         *arg3 += gRaceCourseSurfaceCoords[gRaceCourseSurfaces[pathIndex].positionIndex].x << 0x11;
         *arg4 += gRaceCourseSurfaceCoords[gRaceCourseSurfaces[pathIndex].positionIndex].z << 0x11;
     } else {
-        *arg3 = gRaceCourseStartEntries[gRaceCourseIndex].unk18;
-        *arg4 = gRaceCourseStartEntries[gRaceCourseIndex].unk1C;
+        *arg3 = gRaceCourseStartEntries[gRaceCourseIndex.signedValue].unk18;
+        *arg4 = gRaceCourseStartEntries[gRaceCourseIndex.signedValue].unk1C;
     }
 }
 #endif
@@ -1056,7 +1056,7 @@ void getRaceCourseProgressPosition(s32 arg0, s32 *arg1, s32 *arg2, s32 arg3) {
     s32 unused[4];
     s32 temp_v0;
 
-    if (arg0 != gRaceCourseStartEntries[gRaceCourseIndex].pathIndex) {
+    if (arg0 != gRaceCourseStartEntries[gRaceCourseIndex.signedValue].pathIndex) {
         gRaceCourseSurfaceAngleSin = fixedSine(gRaceCourseSurfaces[arg0].angle);
         gRaceCourseSurfaceAngleCos = fixedCosine(gRaceCourseSurfaces[arg0].angle);
         temp_v0 = getRacePlayerPathOffset(arg3, arg0);
@@ -1065,8 +1065,8 @@ void getRaceCourseProgressPosition(s32 arg0, s32 *arg1, s32 *arg2, s32 arg3) {
         *arg1 += gRaceCourseSurfaceCoords[gRaceCourseSurfaces[arg0].positionIndex].x << 0x11;
         *arg2 += gRaceCourseSurfaceCoords[gRaceCourseSurfaces[arg0].positionIndex].z << 0x11;
     } else {
-        *arg1 = gRaceCourseStartEntries[gRaceCourseIndex].unk40;
-        *arg2 = gRaceCourseStartEntries[gRaceCourseIndex].unk44;
+        *arg1 = gRaceCourseStartEntries[gRaceCourseIndex.signedValue].unk40;
+        *arg2 = gRaceCourseStartEntries[gRaceCourseIndex.signedValue].unk44;
     }
 }
 

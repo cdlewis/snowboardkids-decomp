@@ -1,3 +1,4 @@
+#include "game/race/race_state.h"
 #include "common.h"
 #include "game/menu/renderer/menu_renderer.h"
 #include "game/menu/renderer/menu_render_utils.h"
@@ -204,7 +205,6 @@ extern Gfx gEffectRenderModeSetupDl[];
 extern Gfx gEffectRenderModeCleanupDl[];
 RaceItemDrawNode *gRaceItemTextureEffectDrawLists[4];
 extern RaceItemDrawLists D_801121E0;
-extern s16 gRaceCourseIndex;
 extern u8 gRaceUpdatePaused;
 extern u8 gCurrentViewportIndex;
 extern u8 gRenderMatricesDirty;
@@ -217,7 +217,7 @@ void *allocFixedTransformMatrix(FixedTransform *);
 RaceItemEffectActor *createCallbackTaskWithUserIdPreservingArgs(void *, s32, s32, s32);
 
 s32 getRaceItemEffectType(s32 arg0) {
-    u8 *p = gRaceCourseItemEffectTypeTables[gRaceCourseIndex];
+    u8 *p = gRaceCourseItemEffectTypeTables[gRaceCourseIndex.signedValue];
     return p[arg0];
 }
 

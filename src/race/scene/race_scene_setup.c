@@ -1,3 +1,4 @@
+#include "game/race/race_state.h"
 #include "common.h"
 #include "assets.h"
 #include "game/engine/relocatable_heap.h"
@@ -13,7 +14,6 @@
 #include "game/race/ui/race_ui_effects.h"
 #include "game/race/player/race_player_input.h"
 
-extern u16 gRaceCourseIndex;
 
 extern u8 gRaceSplitscreenMode;
 extern u8 gRaceDemoPlaybackEnabled;
@@ -26,7 +26,7 @@ extern u8 gRaceCourseOverlayEffectsDisabled;
 void loadRaceCourseAssets(void) {
     s32 size;
 
-    switch (gRaceCourseIndex) {
+    switch (gRaceCourseIndex.unsignedValue) {
     case 0:
         size = (u8 *)&_EC400_ROM_END - (u8 *)&LEVEL_BIG_SNOWMAN_ROM_START;
         gAssetHandles[0x8] = allocRelocatableHeapBlock(size);
@@ -183,7 +183,7 @@ void initRaceCourseSceneTasks(void) {
             sp2C = 0;
         }
     }
-    switch ((u16) gRaceCourseIndex) {
+    switch (gRaceCourseIndex.unsignedValue) {
     case 0:
         createCallbackTask((CallbackTaskCallback)&initRaceCourseModelRenderTask, 0, 0x64);
         createCallbackTask((CallbackTaskCallback)&initRaceCourseSceneryObjects, 0, 0x64);

@@ -1,3 +1,4 @@
+#include "game/race/race_state.h"
 #include "common.h"
 #define calculateFixedAngleBetweenXZPoints calculateFixedAngleBetweenXZPoints_s32
 #include "game/math/fixed_point_math.h"
@@ -61,7 +62,6 @@ extern void *gRaceCameraModeUpdates[];
 extern s32 gRaceCameraReplayStartX;
 extern s32 gRaceCameraReplayStartY;
 extern s32 gRaceCameraReplayStartZ;
-extern s16 gRaceCourseIndex;
 extern s8 gRacePlayerCount;
 extern u8 gRaceUpdatePaused;
 extern s32 gMenuFlowState;
@@ -484,7 +484,7 @@ void updateRaceCameraCourseStart(void) {
         }
         D_801124A0->unk28 += diff;
 
-        diff = gRaceCourseStartEntries[gRaceCourseIndex].cameraPos.x - D_801124A0->pos.x;
+        diff = gRaceCourseStartEntries[gRaceCourseIndex.signedValue].cameraPos.x - D_801124A0->pos.x;
         if (diff >= 0xC001) {
             diff = 0xC000;
         }
@@ -493,7 +493,7 @@ void updateRaceCameraCourseStart(void) {
         }
         D_801124A0->pos.x += diff;
 
-        diff = gRaceCourseStartEntries[gRaceCourseIndex].cameraPos.y - D_801124A0->pos.y;
+        diff = gRaceCourseStartEntries[gRaceCourseIndex.signedValue].cameraPos.y - D_801124A0->pos.y;
         if (diff >= 0xC001) {
             diff = 0xC000;
         }
@@ -502,7 +502,7 @@ void updateRaceCameraCourseStart(void) {
         }
         D_801124A0->pos.y += diff;
 
-        diff = gRaceCourseStartEntries[gRaceCourseIndex].cameraPos.z - D_801124A0->pos.z;
+        diff = gRaceCourseStartEntries[gRaceCourseIndex.signedValue].cameraPos.z - D_801124A0->pos.z;
         if (diff >= 0xC001) {
             diff = 0xC000;
         }

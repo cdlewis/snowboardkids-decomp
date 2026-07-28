@@ -84,12 +84,12 @@ void drawCharacterSelectCourseRecordsPopup(
           }
           drawCharacterSelectCourseRecordTime(
               &CHARACTER_SELECT_COURSE_SAVE_DATA.records
-                   .raceRecords[stack.courseIds[gRaceCourseIndex]][row],
+                   .raceRecords[stack.courseIds[gRaceCourseIndex.signedValue]][row],
               arg0->x + 0x14, arg0->y + yOffset, (s32)stack.color);
           drawMenuSprite(
               (s16)(arg0->x + 0x54), (s16)(arg0->y + yOffset),
               getRelocatableHeapBlockBase((s32)CHARACTER_SELECT_POPUP_FONT_HANDLE),
-              ((D_800F4290[(stack.courseIds[gRaceCourseIndex] * 5) + row] & 7) +
+              ((D_800F4290[(stack.courseIds[gRaceCourseIndex.signedValue] * 5) + row] & 7) +
                0x51) &
                   0xFFFF,
               0x20U, 0x20U, 0U, 0U);
@@ -97,7 +97,7 @@ void drawCharacterSelectCourseRecordsPopup(
               (s16)(arg0->x + 0x65), (s16)(arg0->y + yOffset),
               getRelocatableHeapBlockBase((s32)CHARACTER_SELECT_POPUP_FONT_HANDLE),
               (((s32)
-                    D_800F4290[(stack.courseIds[gRaceCourseIndex] * 5) + row] >>
+                    D_800F4290[(stack.courseIds[gRaceCourseIndex.signedValue] * 5) + row] >>
                 3) +
                0x7C) &
                   0xFFFF,
@@ -108,7 +108,7 @@ void drawCharacterSelectCourseRecordsPopup(
           } else {
             color = 0xD;
           }
-          courseId = &stack.courseIds[gRaceCourseIndex];
+          courseId = &stack.courseIds[gRaceCourseIndex.signedValue];
           quotient = (s32)D_800F4222[(*courseId * 5) + row] / 10;
           stack.quotient = (u16)quotient;
           if (quotient & 0xFFFF) {
@@ -117,7 +117,7 @@ void drawCharacterSelectCourseRecordsPopup(
                 getRelocatableHeapBlockBase((s32)CHARACTER_SELECT_POPUP_FONT_HANDLE),
                 (stack.quotient + 0x2B) & 0xFFFF, 0x20U, 0x20U, 0U,
                 (u8)(color + 1));
-            courseId = &stack.courseIds[gRaceCourseIndex];
+            courseId = &stack.courseIds[gRaceCourseIndex.signedValue];
           }
           palette = color + 1;
           stack.remainder =
@@ -131,7 +131,7 @@ void drawCharacterSelectCourseRecordsPopup(
           drawMenuSprite(
               (s16)(arg0->x + 0x48), (s16)(arg0->y + yOffset),
               getRelocatableHeapBlockBase((s32)CHARACTER_SELECT_POPUP_FONT_HANDLE),
-              ((D_800F4259[(stack.courseIds[gRaceCourseIndex] * 5) + row] & 7) +
+              ((D_800F4259[(stack.courseIds[gRaceCourseIndex.signedValue] * 5) + row] & 7) +
                0x51) &
                   0xFFFF,
               0x20U, 0x20U, 0U, 0U);
@@ -139,7 +139,7 @@ void drawCharacterSelectCourseRecordsPopup(
               (s16)(arg0->x + 0x60), (s16)(arg0->y + yOffset),
               getRelocatableHeapBlockBase((s32)CHARACTER_SELECT_POPUP_FONT_HANDLE),
               (((s32)
-                    D_800F4259[(stack.courseIds[gRaceCourseIndex] * 5) + row] >>
+                    D_800F4259[(stack.courseIds[gRaceCourseIndex.signedValue] * 5) + row] >>
                 3) +
                0x7C) &
                   0xFFFF,
@@ -194,19 +194,19 @@ void drawCharacterSelectCourseRecordsPopup(
         }
         drawCharacterSelectCourseRecordTime(
             &CHARACTER_SELECT_COURSE_SAVE_DATA.records
-                 .timeTrialRecords[stack.courseIds[gRaceCourseIndex]][row],
+                 .timeTrialRecords[stack.courseIds[gRaceCourseIndex.signedValue]][row],
             arg0->x + 0x14, arg0->y + yOffset, (s32)stack.color);
         drawMenuSprite(
             (s16)(arg0->x + 0x54), (s16)(arg0->y + yOffset),
             getRelocatableHeapBlockBase((s32)CHARACTER_SELECT_POPUP_FONT_HANDLE),
-            ((D_800F41EB[(stack.courseIds[gRaceCourseIndex] * 5) + row] & 7) +
+            ((D_800F41EB[(stack.courseIds[gRaceCourseIndex.signedValue] * 5) + row] & 7) +
              0x51) &
                 0xFFFF,
             0x20U, 0x20U, 0U, 0U);
         drawMenuSprite(
             (s16)(arg0->x + 0x65), (s16)(arg0->y + yOffset),
             getRelocatableHeapBlockBase((s32)CHARACTER_SELECT_POPUP_FONT_HANDLE),
-            (((s32)D_800F41EB[(stack.courseIds[gRaceCourseIndex] * 5) + row] >>
+            (((s32)D_800F41EB[(stack.courseIds[gRaceCourseIndex.signedValue] * 5) + row] >>
               3) +
              0x7C) &
                 0xFFFF,

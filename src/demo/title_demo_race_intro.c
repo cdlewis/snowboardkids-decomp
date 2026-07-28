@@ -1,3 +1,4 @@
+#include "game/race/race_state.h"
 #include "assets.h"
 #include "game/demo/race_demo_intro.h"
 #include "game/demo/title_demo_race_intro.h"
@@ -39,7 +40,6 @@ extern volatile char gTitleDemoRaceIntroViewportHeight;
 extern s8 gTitleDemoRaceIntroViewportHeight;
 #endif
 extern s8 gTitleDemoRaceIntroFadeStep;
-extern s16 gRaceCourseIndex;
 extern s16 gRaceLapCount;
 extern s8 gRacePlayerCount;
 extern u8 gRaceUpdatePaused;
@@ -68,7 +68,7 @@ void initTitleDemoRaceIntro(void) {
     s32 five3 = 5;
     s32 playerOne;
 
-    gRaceCourseIndex = 0;
+    gRaceCourseIndex.signedValue = 0;
     playerOne = 1;
     gRaceUpdatePaused = 0;
     gRaceCameraModeChangeDisabled = 0;

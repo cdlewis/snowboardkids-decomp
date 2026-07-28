@@ -1,3 +1,4 @@
+#include "game/race/race_state.h"
 #include "common.h"
 #include "game/save_data.h"
 #include "game/menu/renderer/menu_render_utils.h"
@@ -821,7 +822,6 @@ extern RaceUiRankTextRenderEntry *D_800D761C[];
 extern RaceUiSpriteInit D_800D5FF0[];
 extern s16 D_800D633C[];
 extern s16 gFrameCounter;
-extern s16 gRaceCourseIndex;
 extern s16 gRaceLapCount;
 extern s16 gRacePrizeAmountsByCourseAndRank[][4];
 extern s16 gUiBlinkTimer;
@@ -1362,7 +1362,7 @@ void updateRaceUiPrizePayoutFadeIn(RaceUiPrizePayoutActor *arg0) {
 
 void initRaceUiPrizePayout(RaceUiPrizePayoutActor *arg0) {
     arg0->alpha = 0;
-    arg0->prizeAmount = gRacePrizeAmountsByCourseAndRank[0][gRacePlayers[0].rankIndex + gRaceCourseIndex * 4];
+    arg0->prizeAmount = gRacePrizeAmountsByCourseAndRank[0][gRacePlayers[0].rankIndex + gRaceCourseIndex.signedValue * 4];
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceUiPrizePayoutFadeIn);
 }
 
@@ -1635,24 +1635,24 @@ void func_80059C34(RaceUiCourseStatsActor *arg0) {
         drawAssetTableSprite(-8, (s16)y, getRelocatableHeapBlockBase(gAssetHandles[0x1F]),
                              row + 0x77);
         if ((row == actor->index) && (gUiBlinkTimer & 1)) {
-            func_80059A04(&((RaceUiCourseStatsNameData *)&gGameSaveDataBuffer)->courseStatsNames[gRaceCourseIndex][row],
+            func_80059A04(&((RaceUiCourseStatsNameData *)&gGameSaveDataBuffer)->courseStatsNames[gRaceCourseIndex.signedValue][row],
                           0x10, y, 0x10);
         } else if (row < 3) {
-            func_80059A04(&((RaceUiCourseStatsNameData *)&gGameSaveDataBuffer)->courseStatsNames[gRaceCourseIndex][row],
+            func_80059A04(&((RaceUiCourseStatsNameData *)&gGameSaveDataBuffer)->courseStatsNames[gRaceCourseIndex.signedValue][row],
                           0x10, y, 0xC);
         } else {
-            func_80059A04(&((RaceUiCourseStatsNameData *)&gGameSaveDataBuffer)->courseStatsNames[gRaceCourseIndex][row],
+            func_80059A04(&((RaceUiCourseStatsNameData *)&gGameSaveDataBuffer)->courseStatsNames[gRaceCourseIndex.signedValue][row],
                           0x10, y, 0xD);
         }
 
         drawAssetTableSprite(0x58, (s16)y, getRelocatableHeapBlockBase(gAssetHandles[0x1F]),
                       ((((RaceUiCourseStatsIconData *)&gGameSaveDataBuffer)
-                            ->courseStatsIcons[gRaceCourseIndex][row] &
+                            ->courseStatsIcons[gRaceCourseIndex.signedValue][row] &
                         7) +
                        0x51));
         drawAssetTableSprite(0x6C, (s16)y, getRelocatableHeapBlockBase(gAssetHandles[0x1F]),
                       (((*((RaceUiCourseStatsIconData *)&gGameSaveDataBuffer))
-                             .courseStatsIcons[gRaceCourseIndex][row] >>
+                             .courseStatsIcons[gRaceCourseIndex.signedValue][row] >>
                          3) +
                         0x7C));
     }
@@ -1886,7 +1886,7 @@ void func_8005A884(RaceUiPopupActor *arg0) {
             color = 0xD;
         }
 
-        sprintf(buffer, gRaceUiCourseValueFormat, ((RaceUiCourseValueData *)&gGameSaveDataBuffer)->values[gRaceCourseIndex][i]);
+        sprintf(buffer, gRaceUiCourseValueFormat, ((RaceUiCourseValueData *)&gGameSaveDataBuffer)->values[gRaceCourseIndex.signedValue][i]);
 
         if ((u8)buffer[0] != space) {
             drawAssetTableSpriteWithExplicitPalette(0x10, (s16)y, getRelocatableHeapBlockBase(gAssetHandles[0x1F]),
@@ -1900,9 +1900,9 @@ void func_8005A884(RaceUiPopupActor *arg0) {
         }
 
         drawAssetTableSprite(0x46, (s16)y, getRelocatableHeapBlockBase(gAssetHandles[0x1F]),
-                      (((RaceUiCourseValueData *)&gGameSaveDataBuffer)->icons[gRaceCourseIndex][i] & 7) + 0x51);
+                      (((RaceUiCourseValueData *)&gGameSaveDataBuffer)->icons[gRaceCourseIndex.signedValue][i] & 7) + 0x51);
         drawAssetTableSprite(0x58, (s16)y, getRelocatableHeapBlockBase(gAssetHandles[0x1F]),
-                      (((RaceUiCourseValueData *)&gGameSaveDataBuffer)->icons[gRaceCourseIndex][i] >> 3) + 0x7C);
+                      (((RaceUiCourseValueData *)&gGameSaveDataBuffer)->icons[gRaceCourseIndex.signedValue][i] >> 3) + 0x7C);
 
         i++;
         y += 0x20;
@@ -2171,7 +2171,7 @@ void initRaceUiHitPrizePayout(RaceUiCounterActor *arg0) {
     arg0->hasPerfectHitBonus = FALSE;
     arg0->pendingPerfectHitBonus = 0;
     arg0->pendingCompleteBonus = RACE_UI_HIT_PRIZE_SCORE_RATE;
-    if (gRaceCourseIndex == 9) {
+    if (gRaceCourseIndex.signedValue == 9) {
         arg0->pendingCompleteBonus = RACE_UI_HIT_PRIZE_QUICKSAND_VALLEY_SCORE_RATE;
     }
     if (gRaceChallengeFailed != 0) {
@@ -2327,11 +2327,11 @@ void func_8005BE68(RaceUiPopupActor *arg0) {
         } else {
             color = 0xD;
         }
-        func_80059A04(&((RaceUiResultNameData *)&gGameSaveDataBuffer)->resultNames[gRaceCourseIndex][i], 0x10, y, color);
+        func_80059A04(&((RaceUiResultNameData *)&gGameSaveDataBuffer)->resultNames[gRaceCourseIndex.signedValue][i], 0x10, y, color);
         drawAssetTableSprite(0x58, (s16)y, getRelocatableHeapBlockBase(gAssetHandles[0x1F]),
-                      (((RaceUiResultIconData *)&gGameSaveDataBuffer)->resultIcons[gRaceCourseIndex][i] & 7) + 0x51);
+                      (((RaceUiResultIconData *)&gGameSaveDataBuffer)->resultIcons[gRaceCourseIndex.signedValue][i] & 7) + 0x51);
         drawAssetTableSprite(0x6C, (s16)y, getRelocatableHeapBlockBase(gAssetHandles[0x1F]),
-                      ((*((RaceUiResultIconData *)&gGameSaveDataBuffer)).resultIcons[gRaceCourseIndex][i] >> 3) + 0x7C);
+                      ((*((RaceUiResultIconData *)&gGameSaveDataBuffer)).resultIcons[gRaceCourseIndex.signedValue][i] >> 3) + 0x7C);
         i++;
         offset += 4;
         y += 0x20;
@@ -2379,7 +2379,7 @@ void func_8005C14C(RaceUiDualCounterActor *arg0) {
 
     if (gRaceChallengeFailed == 0) {
         drawMenuAsciiTextDefaultScale(-0x68, -0x1F, gRaceUiTargetTimeChallengeTargetLabel, 7);
-        targetTime = &gRaceCourseTargetTimes[gRaceCourseIndex];
+        targetTime = &gRaceCourseTargetTimes[gRaceCourseIndex.signedValue];
         bufp = buf - 0xC;
         sprintf(bufp, gRaceUiTargetTimeChallengeTargetTimeFormat, targetTime->minutes, targetTime->seconds, targetTime->fraction >> 8);
         drawMenuAsciiTextDefaultScale(-0x68, -0x16, bufp, 7);
@@ -2621,10 +2621,10 @@ void func_8005CE4C(RaceUiDualCounterActor *arg0) {
     arg0->flag = 0;
     arg0->bonus = 0;
     arg0->leftTarget = 0x12C;
-    if (gRaceCourseIndex == 9) {
+    if (gRaceCourseIndex.signedValue == 9) {
         arg0->leftTarget = 0x64;
     }
-    calculateRaceTimerDelta((RaceTimer *)&gRaceCourseTargetTimes[gRaceCourseIndex], &gRaceElapsedTimer, (RaceTimer *)&arg0->row);
+    calculateRaceTimerDelta((RaceTimer *)&gRaceCourseTargetTimes[gRaceCourseIndex.signedValue], &gRaceElapsedTimer, (RaceTimer *)&arg0->row);
     new_var = &gRacePlayers[0].unk570;
     if (gRaceChallengeFailed != 0) {
         arg0->leftValue = 0;
@@ -2835,7 +2835,7 @@ void func_8005D558(RaceUiCourseStatsActor *arg0) {
             color = 0xD;
         }
 
-        sprintf(buffer, gRaceUiTrickValueFormat, ((RaceUiTrickValueData *)&gGameSaveDataBuffer)->values[gRaceCourseIndex][i]);
+        sprintf(buffer, gRaceUiTrickValueFormat, ((RaceUiTrickValueData *)&gGameSaveDataBuffer)->values[gRaceCourseIndex.signedValue][i]);
 
         if ((u8)buffer[0] != space) {
             drawAssetTableSpriteWithExplicitPalette(0x10, (s16)y, getRelocatableHeapBlockBase(gAssetHandles[0x1F]),
@@ -2856,9 +2856,9 @@ void func_8005D558(RaceUiCourseStatsActor *arg0) {
         }
 
         drawAssetTableSprite(0x40, (s16)y, getRelocatableHeapBlockBase(gAssetHandles[0x1F]),
-                      (((RaceUiTrickIconData *)&gGameSaveDataBuffer)->icons[gRaceCourseIndex][i] & 7) + 0x51);
+                      (((RaceUiTrickIconData *)&gGameSaveDataBuffer)->icons[gRaceCourseIndex.signedValue][i] & 7) + 0x51);
         drawAssetTableSprite(0x54, (s16)y, getRelocatableHeapBlockBase(gAssetHandles[0x1F]),
-                      (((RaceUiTrickIconData *)&gGameSaveDataBuffer)->icons[gRaceCourseIndex][i] >> 3) + 0x7C);
+                      (((RaceUiTrickIconData *)&gGameSaveDataBuffer)->icons[gRaceCourseIndex.signedValue][i] >> 3) + 0x7C);
 
         i++;
         y += 0x20;
@@ -4617,7 +4617,7 @@ void initCourseStartFinishSprite(RaceUiCourseSpriteActor *actor) {
             actor->palettes[1] = actor->palettes[0];
             break;
         case 1:
-            getRaceCourseSurfaceSpawnTransform(gRaceCourseStartEntries[gRaceCourseIndex].pathIndex, &actor->x, &actor->y, &actor->z, &angle);
+            getRaceCourseSurfaceSpawnTransform(gRaceCourseStartEntries[gRaceCourseIndex.signedValue].pathIndex, &actor->x, &actor->y, &actor->z, &angle);
             getAssetTableImageAndPalette(getRelocatableHeapBlockBase(ASSET_HANDLE(0x1D)), 1, &actor->images[0], &actor->palettes[0]);
             getAssetTableImageAndPalette(getRelocatableHeapBlockBase(ASSET_HANDLE(0x1D)), 2, &actor->images[1], &actor->palettes[1]);
             break;
@@ -4753,7 +4753,7 @@ void initRaceCourseRankModel(RaceUiRankParticleActor *actor) {
         getRaceCourseSurfaceSpawnTransform(1, &actor->pos.x, &actor->pos.y, &actor->pos.z, &local.angle);
         break;
     case 1:
-        getRaceCourseSurfaceSpawnTransform(gRaceCourseStartEntries[gRaceCourseIndex].pathIndex, &actor->pos.x, &actor->pos.y, &actor->pos.z, &local.angle);
+        getRaceCourseSurfaceSpawnTransform(gRaceCourseStartEntries[gRaceCourseIndex.signedValue].pathIndex, &actor->pos.x, &actor->pos.y, &actor->pos.z, &local.angle);
         break;
     }
 
@@ -4761,8 +4761,8 @@ void initRaceCourseRankModel(RaceUiRankParticleActor *actor) {
     actor->copyBlock.transform.translation.x = actor->pos.x;
     actor->copyBlock.transform.translation.y = actor->pos.y;
     actor->copyBlock.transform.translation.z = actor->pos.z;
-    actor->displayLists[0] = D_800D6400[(actor->index * 2) + (gRaceCourseIndex * 4)];
-    actor->displayLists[1] = D_800D6400[(actor->index * 2) + (gRaceCourseIndex * 4) + 1];
+    actor->displayLists[0] = D_800D6400[(actor->index * 2) + (gRaceCourseIndex.signedValue * 4)];
+    actor->displayLists[1] = D_800D6400[(actor->index * 2) + (gRaceCourseIndex.signedValue * 4) + 1];
     setCallbackTaskCallback(actor, (CallbackTaskCallback)updateRaceCourseRankModel);
 }
 
@@ -5053,7 +5053,7 @@ void initTimeTrialRecordDeltaPopup(RaceUiTimeTrialRecordDeltaPopupActor *popup) 
     popup->x = TIME_TRIAL_RECORD_DELTA_POPUP_START_X;
     popup->velocity = TIME_TRIAL_RECORD_DELTA_POPUP_START_VELOCITY;
     popup->isSlowerThanRecord =
-        calculateRaceTimerDelta(&gRaceElapsedTimer, &RACE_UI_TIME_TRIAL_SAVE_DATA->timeTrialRecordSplitTimes[gRaceCourseIndex], &popup->delta);
+        calculateRaceTimerDelta(&gRaceElapsedTimer, &RACE_UI_TIME_TRIAL_SAVE_DATA->timeTrialRecordSplitTimes[gRaceCourseIndex.signedValue], &popup->delta);
     setCallbackTaskCallback(popup, (CallbackTaskCallback)updateTimeTrialRecordDeltaPopupSlideIn);
 }
 
@@ -5070,7 +5070,7 @@ void func_800651BC(RaceUiGfxCommandActor *arg0) {
     actor = arg0;
     gSPDisplayList(gRegionAllocPtr++, gEffectRenderModeSetupDl);
 
-    entry = D_800D693C[gRaceCourseIndex];
+    entry = D_800D693C[gRaceCourseIndex.signedValue];
     i = 0;
     if (entry->sentinel != -1) {
         do {
@@ -5105,7 +5105,7 @@ void updateRaceCourseCoinMarkers(RaceUiGfxCommandActor *arg0) {
     register s32 ySize;
     register s32 sentinel;
 
-    entry = D_800D693C[gRaceCourseIndex];
+    entry = D_800D693C[gRaceCourseIndex.signedValue];
     actor = arg0;
     if (gFrameCounter & 1) {
         actor->textureOffset++;
@@ -5158,7 +5158,7 @@ void initRaceCourseCoinMarkerMatrices(RaceUiGfxCommandActor *arg0) {
     register s32 offset;
     register s32 one;
 
-    script = D_800D693C[gRaceCourseIndex];
+    script = D_800D693C[gRaceCourseIndex.signedValue];
     actor1 = arg0;
     actor2 = arg0;
     i = 0;
@@ -5184,7 +5184,7 @@ void initRaceCourseCoinMarkers(RaceUiGfxCommandActor *actor) {
     RaceUiGfxCommandScriptEntry *marker;
     s32 markerCount;
 
-    marker = D_800D693C[gRaceCourseIndex];
+    marker = D_800D693C[gRaceCourseIndex.signedValue];
     markerCount = 0;
     if (marker->sentinel != -1) {
         do {
@@ -5346,7 +5346,7 @@ void renderRaceScoreAttackRings(RaceUiRankTextRenderActor *arg0) {
     Gfx *temp_s2;
     Gfx *temp_s3;
 
-    var_s4 = D_800D761C[gRaceCourseIndex];
+    var_s4 = D_800D761C[gRaceCourseIndex.signedValue];
     var_fp = TRUE;
     var_s6 = 0;
     if (var_s4->active != -1) {
@@ -5385,7 +5385,7 @@ void updateRaceScoreAttackRings(void *arg0) {
     s32 dz;
     s32 i;
 
-    entry = D_800D761C[gRaceCourseIndex];
+    entry = D_800D761C[gRaceCourseIndex.signedValue];
     if (entry->active != -1) {
         do {
             if (entry->active != 0) {
@@ -5439,7 +5439,7 @@ void initRaceScoreAttackRingMatrices(RaceUiRankTextRenderActor *arg0) {
 
     actor1 = arg0;
     actor2 = arg0;
-    entry = D_800D761C[gRaceCourseIndex];
+    entry = D_800D761C[gRaceCourseIndex.signedValue];
     count = actor1->count;
     i = 0;
     if (count > 0) {
@@ -5474,7 +5474,7 @@ void initRaceScoreAttackRings(RaceUiRankTextRenderActor *arg0) {
     RaceUiRankTextRenderEntry *var_v0;
     s32 var_v1;
 
-    var_v0 = D_800D761C[gRaceCourseIndex];
+    var_v0 = D_800D761C[gRaceCourseIndex.signedValue];
     var_v1 = 0;
     if (var_v0->active != -1) {
         do {

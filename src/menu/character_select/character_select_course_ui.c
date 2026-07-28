@@ -1,3 +1,4 @@
+#include "game/race/race_state.h"
 #include "common.h"
 #include "game/save_data.h"
 #include "game/engine/asset_manager.h"
@@ -83,7 +84,6 @@ extern MenuGlyphScript gCharacterSelectExpertCourseDescriptionText[][0x38];
 extern MenuGlyphScript gCharacterSelectCourseReturnDescriptionText[];
 extern u8 D_800ECA24[];
 extern s32 D_800EC9F8[];
-extern s16 gRaceCourseIndex;
 extern u16 gCharacterSelectCourseExitOptionIndex;
 extern void *D_8010ADE0;
 extern void *D_8010ADE4;
@@ -118,12 +118,12 @@ void drawCharacterSelectCourseListOptions(CharacterSelectCourseMenuFrameActor *a
         do {
             alpha = 0;
             if (i == 0) {
-                if ((i == gRaceCourseIndex) && (gMenuSelectionConfirmTimer > 0) && (gMenuSelectionConfirmTimer < 8) && (gMenuSelectionConfirmTimer & 1)) {
+                if ((i == gRaceCourseIndex.signedValue) && (gMenuSelectionConfirmTimer > 0) && (gMenuSelectionConfirmTimer < 8) && (gMenuSelectionConfirmTimer & 1)) {
                     alpha = 0xFF;
                 }
                 drawMenuSprite(actor->x[i], actor->y[i], getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE), 0x1C, 0x20, 0x20, 0, alpha);
             } else if (i == gCharacterSelectCourseExitOptionIndex) {
-                if ((gRaceCourseIndex == gCharacterSelectCourseExitOptionIndex) && (gMenuSelectionConfirmTimer > 0) && (gMenuSelectionConfirmTimer < 8) && (gMenuSelectionConfirmTimer & 1)) {
+                if ((gRaceCourseIndex.signedValue == gCharacterSelectCourseExitOptionIndex) && (gMenuSelectionConfirmTimer > 0) && (gMenuSelectionConfirmTimer < 8) && (gMenuSelectionConfirmTimer & 1)) {
                     alpha = 0xFF;
                 }
                 if ((gPlayerCount - 1) == 0) {
@@ -132,7 +132,7 @@ void drawCharacterSelectCourseListOptions(CharacterSelectCourseMenuFrameActor *a
                     drawMenuSprite(actor->x[i], actor->y[i], getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE), 0x1E, 0x20, 0x20, 0, alpha);
                 }
             } else {
-                if ((i == gRaceCourseIndex) && (gMenuSelectionConfirmTimer > 0) && (gMenuSelectionConfirmTimer < 8) && (gMenuSelectionConfirmTimer & 1)) {
+                if ((i == gRaceCourseIndex.signedValue) && (gMenuSelectionConfirmTimer > 0) && (gMenuSelectionConfirmTimer < 8) && (gMenuSelectionConfirmTimer & 1)) {
                     alpha = 0xFF;
                 }
                 drawMenuSprite(actor->x[i], actor->y[i], getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE), i + 0x12,
@@ -215,12 +215,12 @@ void updateCharacterSelectUnlockedCourseList(CharacterSelectCourseMenuFrameActor
 
     case COURSE_LIST_SLIDE_OTHERS_OUT:
         for (index = 0; index < 11; index++) {
-            if (index != gRaceCourseIndex) {
+            if (index != gRaceCourseIndex.signedValue) {
                 arg0->x[index] -= 0x20;
             }
         }
 
-        if (gRaceCourseIndex != 0) {
+        if (gRaceCourseIndex.signedValue != 0) {
             if (arg0->x[0] < -0x103) {
                 arg0->state = COURSE_LIST_MOVE_SELECTED_UP;
             }
@@ -230,9 +230,9 @@ void updateCharacterSelectUnlockedCourseList(CharacterSelectCourseMenuFrameActor
         break;
 
     case COURSE_LIST_MOVE_SELECTED_UP:
-        arg0->y[gRaceCourseIndex] -= arg0->itemSpacing;
-        if (arg0->y[gRaceCourseIndex] < -0x5F) {
-            arg0->y[gRaceCourseIndex] = -0x60;
+        arg0->y[gRaceCourseIndex.signedValue] -= arg0->itemSpacing;
+        if (arg0->y[gRaceCourseIndex.signedValue] < -0x5F) {
+            arg0->y[gRaceCourseIndex.signedValue] = -0x60;
             arg0->state = COURSE_LIST_SUBMENU_OPEN;
             if (gRaceSplitscreenMode == 2) {
                 D_8010ADE0 = createCallbackTask((CallbackTaskCallback)initCharacterSelectCourseExitPopup, 0, 0x62);
@@ -254,23 +254,23 @@ void updateCharacterSelectUnlockedCourseList(CharacterSelectCourseMenuFrameActor
         break;
 
     case COURSE_LIST_RESTORE_SELECTED_Y:
-        arg0->y[gRaceCourseIndex] += arg0->itemSpacing;
-        if (arg0->y[gRaceCourseIndex] >= (arg0->baseY + (gRaceCourseIndex * arg0->itemSpacing))) {
-            arg0->y[gRaceCourseIndex] = arg0->baseY + (gRaceCourseIndex * arg0->itemSpacing);
+        arg0->y[gRaceCourseIndex.signedValue] += arg0->itemSpacing;
+        if (arg0->y[gRaceCourseIndex.signedValue] >= (arg0->baseY + (gRaceCourseIndex.signedValue * arg0->itemSpacing))) {
+            arg0->y[gRaceCourseIndex.signedValue] = arg0->baseY + (gRaceCourseIndex.signedValue * arg0->itemSpacing);
             arg0->state = COURSE_LIST_SLIDE_OTHERS_IN;
         }
         break;
 
     case COURSE_LIST_SLIDE_OTHERS_IN:
         visibleCourseCount = gCharacterSelectCourseExitOptionIndex + 1; index = 0; if (visibleCourseCount > 0) { do {
-            if (index != gRaceCourseIndex) {
+            if (index != gRaceCourseIndex.signedValue) {
                 arg0->x[index] += 0x20;
                 visibleCourseCount = gCharacterSelectCourseExitOptionIndex + 1;
             }
             index++;
         } while (index < (gCharacterSelectCourseExitOptionIndex + 1));
         }
-        if (gRaceCourseIndex != 0) {
+        if (gRaceCourseIndex.signedValue != 0) {
             if (arg0->x[0] >= -0x7C) {
                 arg0->state = COURSE_LIST_IDLE;
             }
@@ -352,17 +352,17 @@ void drawCharacterSelectLimitedCourseListOptions(CharacterSelectCourseMenuFrameA
             alpha = 0;
             if (i == 0) {
                 tile = (gRaceTypeSelection == 2) ? 0x1D : 0x1C;
-                if ((i == gRaceCourseIndex) && (gMenuSelectionConfirmTimer > 0) && (gMenuSelectionConfirmTimer < 8) && (gMenuSelectionConfirmTimer & 1)) {
+                if ((i == gRaceCourseIndex.signedValue) && (gMenuSelectionConfirmTimer > 0) && (gMenuSelectionConfirmTimer < 8) && (gMenuSelectionConfirmTimer & 1)) {
                     alpha = 0xFF;
                 }
                 drawMenuSprite(actor->x[i], actor->y[i], getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE), tile, 0x20, 0x20, 0, alpha);
             } else if (i == lastArrowIndex) {
-                if ((i == gRaceCourseIndex) && (gMenuSelectionConfirmTimer > 0) && (gMenuSelectionConfirmTimer < 8) && (gMenuSelectionConfirmTimer & 1)) {
+                if ((i == gRaceCourseIndex.signedValue) && (gMenuSelectionConfirmTimer > 0) && (gMenuSelectionConfirmTimer < 8) && (gMenuSelectionConfirmTimer & 1)) {
                     alpha = 0xFF;
                 }
                 drawMenuSprite(actor->x[i], actor->y[i], getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE), 0x20, 0x20, 0x20, 0, alpha);
             } else {
-                if ((i == gRaceCourseIndex) && (gMenuSelectionConfirmTimer > 0) && (gMenuSelectionConfirmTimer < 8) && (gMenuSelectionConfirmTimer & 1)) {
+                if ((i == gRaceCourseIndex.signedValue) && (gMenuSelectionConfirmTimer > 0) && (gMenuSelectionConfirmTimer < 8) && (gMenuSelectionConfirmTimer & 1)) {
                     alpha = 0xFF;
                 }
                 tile = i + 0x12;
@@ -436,12 +436,12 @@ void updateCharacterSelectLimitedCourseList(CharacterSelectCourseMenuFrameActor 
 
     case COURSE_LIST_SLIDE_OTHERS_OUT:
         for (optionIndex = 0; optionIndex < actor->itemCount; optionIndex++) {
-            if (optionIndex != gRaceCourseIndex) {
+            if (optionIndex != gRaceCourseIndex.signedValue) {
                 arg0->x[optionIndex] -= 0x20;
             }
         }
 
-        if (gRaceCourseIndex != 0) {
+        if (gRaceCourseIndex.signedValue != 0) {
             if (arg0->x[0] < -0x103) {
                 arg0->state = COURSE_LIST_MOVE_SELECTED_UP;
             }
@@ -451,9 +451,9 @@ void updateCharacterSelectLimitedCourseList(CharacterSelectCourseMenuFrameActor 
         break;
 
     case COURSE_LIST_MOVE_SELECTED_UP:
-        arg0->y[gRaceCourseIndex] -= arg0->itemSpacing;
-        if (arg0->y[gRaceCourseIndex] < -0x57) {
-            arg0->y[gRaceCourseIndex] = -0x58;
+        arg0->y[gRaceCourseIndex.signedValue] -= arg0->itemSpacing;
+        if (arg0->y[gRaceCourseIndex.signedValue] < -0x57) {
+            arg0->y[gRaceCourseIndex.signedValue] = -0x58;
             arg0->state = COURSE_LIST_SUBMENU_OPEN;
             createCallbackTask((CallbackTaskCallback)initCharacterSelectCourseRecordsPopup, 0, 0x62);
             D_8010ADE0 = createCallbackTask((CallbackTaskCallback)initCharacterSelectCourseExitPopup, 0, 0x63);
@@ -470,9 +470,9 @@ void updateCharacterSelectLimitedCourseList(CharacterSelectCourseMenuFrameActor 
         break;
 
     case COURSE_LIST_RESTORE_SELECTED_Y:
-        arg0->y[gRaceCourseIndex] += arg0->itemSpacing;
-        if (arg0->y[gRaceCourseIndex] >= (arg0->baseY + (gRaceCourseIndex * arg0->itemSpacing))) {
-            arg0->y[gRaceCourseIndex] = arg0->baseY + (gRaceCourseIndex * arg0->itemSpacing);
+        arg0->y[gRaceCourseIndex.signedValue] += arg0->itemSpacing;
+        if (arg0->y[gRaceCourseIndex.signedValue] >= (arg0->baseY + (gRaceCourseIndex.signedValue * arg0->itemSpacing))) {
+            arg0->y[gRaceCourseIndex.signedValue] = arg0->baseY + (gRaceCourseIndex.signedValue * arg0->itemSpacing);
             arg0->state = COURSE_LIST_SLIDE_OTHERS_IN;
         }
         break;
@@ -482,13 +482,13 @@ void updateCharacterSelectLimitedCourseList(CharacterSelectCourseMenuFrameActor 
         optionIndex = 0;
         if (visibleOptionCount > 0) {
             do {
-                if (optionIndex != gRaceCourseIndex) {
+                if (optionIndex != gRaceCourseIndex.signedValue) {
                     arg0->x[optionIndex] += 0x20;
                 }
                 optionIndex++;
             } while (optionIndex < (extraCourseOptionCount + 2));
         }
-        if (gRaceCourseIndex != 0) {
+        if (gRaceCourseIndex.signedValue != 0) {
             if (arg0->x[0] >= -0x7C) {
                 arg0->state = COURSE_LIST_IDLE;
             }
@@ -514,8 +514,8 @@ void updateCharacterSelectLimitedCourseList(CharacterSelectCourseMenuFrameActor 
         break;
 
     case COURSE_LIST_SLIDE_SELECTED_OUT:
-        arg0->x[gRaceCourseIndex] -= 0x20;
-        if (arg0->x[gRaceCourseIndex] < -0x103) {
+        arg0->x[gRaceCourseIndex.signedValue] -= 0x20;
+        if (arg0->x[gRaceCourseIndex.signedValue] < -0x103) {
             arg0->state = COURSE_LIST_FINISH_EXIT;
         }
         break;
@@ -607,7 +607,7 @@ void updateCharacterSelectCoursePreviewFrame(CharacterSelectCourseWidgetActor *a
     register s32 selectedIndex;
     register u16 spriteIndex;
 
-    selectedIndex = gRaceCourseIndex;
+    selectedIndex = gRaceCourseIndex.signedValue;
     spriteIndex = (u16)arg0->sprite.index;
     selectedSpriteIndex = spriteIndex;
     if ((selectedIndex >= (s32)selectedSpriteIndex) && (arg0->transition.bytes.state != 0) && (arg0->y != -0x48)) {
@@ -751,9 +751,9 @@ void updateCharacterSelectCoursePreviewPanel1(CharacterSelectCourseWidgetActor *
     int state;
     u8 *stateField = &arg0->transition.bytes.state;
 
-    if ((gRaceCourseIndex >= (s32)(u16) arg0->sprite.index) && (arg0->y != -0x48)) {
+    if ((gRaceCourseIndex.signedValue >= (s32)(u16) arg0->sprite.index) && (arg0->y != -0x48)) {
         state = arg0->transition.bytes.state = 2;
-    } else if ((gRaceCourseIndex < (s32)(u16) arg0->sprite.index) && (arg0->y != -0x140)) {
+    } else if ((gRaceCourseIndex.signedValue < (s32)(u16) arg0->sprite.index) && (arg0->y != -0x140)) {
         state = arg0->transition.bytes.state = 1;
     } else {
         state = *stateField;
@@ -863,9 +863,9 @@ void updateCharacterSelectCoursePreviewPanel2(CharacterSelectCourseWidgetActor *
     int state;
     u8 *stateField = &arg0->transition.bytes.state;
 
-    if ((gRaceCourseIndex >= (s32)(u16) arg0->sprite.index) && (arg0->y != -0x48)) {
+    if ((gRaceCourseIndex.signedValue >= (s32)(u16) arg0->sprite.index) && (arg0->y != -0x48)) {
         state = arg0->transition.bytes.state = 2;
-    } else if ((gRaceCourseIndex < (s32)(u16) arg0->sprite.index) && (arg0->y != -0x140)) {
+    } else if ((gRaceCourseIndex.signedValue < (s32)(u16) arg0->sprite.index) && (arg0->y != -0x140)) {
         state = arg0->transition.bytes.state = 1;
     } else {
         state = *stateField;
@@ -961,9 +961,9 @@ void updateCharacterSelectCoursePreviewPanel3(CharacterSelectCourseWidgetActor *
     int state;
     u8 *stateField = &arg0->transition.bytes.state;
 
-    if ((gRaceCourseIndex >= (s32)(u16) arg0->sprite.index) && (arg0->y != -0x48)) {
+    if ((gRaceCourseIndex.signedValue >= (s32)(u16) arg0->sprite.index) && (arg0->y != -0x48)) {
         state = arg0->transition.bytes.state = 2;
-    } else if ((gRaceCourseIndex < (s32)(u16) arg0->sprite.index) && (arg0->y != -0x140)) {
+    } else if ((gRaceCourseIndex.signedValue < (s32)(u16) arg0->sprite.index) && (arg0->y != -0x140)) {
         state = arg0->transition.bytes.state = 1;
     } else {
         state = *stateField;
@@ -1073,9 +1073,9 @@ void updateCharacterSelectCoursePreviewPanel4(CharacterSelectCourseWidgetActor *
     int state;
     u8 *stateField = &arg0->transition.bytes.state;
 
-    if ((gRaceCourseIndex >= (s32)(u16) arg0->sprite.index) && (arg0->y != -0x48)) {
+    if ((gRaceCourseIndex.signedValue >= (s32)(u16) arg0->sprite.index) && (arg0->y != -0x48)) {
         state = arg0->transition.bytes.state = 2;
-    } else if ((gRaceCourseIndex < (s32)(u16) arg0->sprite.index) && (arg0->y != -0x140)) {
+    } else if ((gRaceCourseIndex.signedValue < (s32)(u16) arg0->sprite.index) && (arg0->y != -0x140)) {
         state = arg0->transition.bytes.state = 1;
     } else {
         state = *stateField;
@@ -1182,9 +1182,9 @@ void updateCharacterSelectCoursePreviewPanel5(CharacterSelectCourseWidgetActor *
     int state;
     u8 *stateField = &arg0->transition.bytes.state;
 
-    if ((gRaceCourseIndex >= (s32)(u16) arg0->sprite.index) && (arg0->y != -0x48)) {
+    if ((gRaceCourseIndex.signedValue >= (s32)(u16) arg0->sprite.index) && (arg0->y != -0x48)) {
         state = arg0->transition.bytes.state = 2;
-    } else if ((gRaceCourseIndex < (s32)(u16) arg0->sprite.index) && (arg0->y != -0x140)) {
+    } else if ((gRaceCourseIndex.signedValue < (s32)(u16) arg0->sprite.index) && (arg0->y != -0x140)) {
         state = arg0->transition.bytes.state = 1;
     } else {
         state = *stateField;
@@ -1294,9 +1294,9 @@ void updateCharacterSelectCoursePreviewPanel6(CharacterSelectCourseWidgetActor *
     int state;
     u8 *stateField = &arg0->transition.bytes.state;
 
-    if ((gRaceCourseIndex >= (s32)(u16) arg0->sprite.index) && (arg0->y != -0x48)) {
+    if ((gRaceCourseIndex.signedValue >= (s32)(u16) arg0->sprite.index) && (arg0->y != -0x48)) {
         state = arg0->transition.bytes.state = 2;
-    } else if ((gRaceCourseIndex < (s32)(u16) arg0->sprite.index) && (arg0->y != -0x140)) {
+    } else if ((gRaceCourseIndex.signedValue < (s32)(u16) arg0->sprite.index) && (arg0->y != -0x140)) {
         state = arg0->transition.bytes.state = 1;
     } else {
         state = *stateField;
@@ -1403,9 +1403,9 @@ void updateCharacterSelectCoursePreviewPanel7(CharacterSelectCourseWidgetActor *
     int state;
     u8 *stateField = &arg0->transition.bytes.state;
 
-    if ((gRaceCourseIndex >= (s32)(u16) arg0->sprite.index) && (arg0->y != -0x48)) {
+    if ((gRaceCourseIndex.signedValue >= (s32)(u16) arg0->sprite.index) && (arg0->y != -0x48)) {
         state = arg0->transition.bytes.state = 2;
-    } else if ((gRaceCourseIndex < (s32)(u16) arg0->sprite.index) && (arg0->y != -0x140)) {
+    } else if ((gRaceCourseIndex.signedValue < (s32)(u16) arg0->sprite.index) && (arg0->y != -0x140)) {
         state = arg0->transition.bytes.state = 1;
     } else {
         state = *stateField;
@@ -1513,9 +1513,9 @@ void updateCharacterSelectCoursePreviewPanel8(CharacterSelectCourseWidgetActor *
     int state;
     u8 *stateField = &arg0->transition.bytes.state;
 
-    if ((gRaceCourseIndex >= (s32)(u16) arg0->sprite.index) && (arg0->y != -0x48)) {
+    if ((gRaceCourseIndex.signedValue >= (s32)(u16) arg0->sprite.index) && (arg0->y != -0x48)) {
         state = arg0->transition.bytes.state = 2;
-    } else if ((gRaceCourseIndex < (s32)(u16) arg0->sprite.index) && (arg0->y != -0x140)) {
+    } else if ((gRaceCourseIndex.signedValue < (s32)(u16) arg0->sprite.index) && (arg0->y != -0x140)) {
         state = arg0->transition.bytes.state = 1;
     } else {
         state = *stateField;
@@ -1622,9 +1622,9 @@ void updateCharacterSelectCoursePreviewPanel9(CharacterSelectCourseWidgetActor *
     int state;
     u8 *stateField = &arg0->transition.bytes.state;
 
-    if ((gRaceCourseIndex >= (s32)(u16) arg0->sprite.index) && (arg0->y != -0x48)) {
+    if ((gRaceCourseIndex.signedValue >= (s32)(u16) arg0->sprite.index) && (arg0->y != -0x48)) {
         state = arg0->transition.bytes.state = 2;
-    } else if ((gRaceCourseIndex < (s32)(u16) arg0->sprite.index) && (arg0->y != -0x140)) {
+    } else if ((gRaceCourseIndex.signedValue < (s32)(u16) arg0->sprite.index) && (arg0->y != -0x140)) {
         state = arg0->transition.bytes.state = 1;
     } else {
         state = *stateField;
@@ -1725,11 +1725,11 @@ void updateCharacterSelectCourseExitPreviewPanel(CharacterSelectCourseWidgetActo
     int state;
     u8 *stateField = &arg0->row.bytes.subState;
 
-    if ((gRaceCourseIndex == gCharacterSelectCourseExitOptionIndex) && (arg0->y != -0x48) && ((s32) arg0->row.bytes.subState < 6)) {
+    if ((gRaceCourseIndex.signedValue == gCharacterSelectCourseExitOptionIndex) && (arg0->y != -0x48) && ((s32) arg0->row.bytes.subState < 6)) {
         state = arg0->row.bytes.subState = 2;
     } else {
         state = (s32) arg0->row.bytes.subState;
-        if ((gRaceCourseIndex != gCharacterSelectCourseExitOptionIndex) && (arg0->y != -0x140) && (state < 6)) {
+        if ((gRaceCourseIndex.signedValue != gCharacterSelectCourseExitOptionIndex) && (arg0->y != -0x140) && (state < 6)) {
             state = arg0->row.bytes.subState = 1;
         } else {
             state = arg0->row.bytes.subState;
@@ -1818,7 +1818,7 @@ void drawCharacterSelectCourseListCursor(CharacterSelectCourseWidgetActor *arg0)
     if (arg0->transition.bytes.state < 3) {
         drawMenuSpriteWithAlpha(
             arg0->x,
-            (s16)(arg0->y + gRaceCourseIndex * arg0->selection.bytes.rowSpacing),
+            (s16)(arg0->y + gRaceCourseIndex.signedValue * arg0->selection.bytes.rowSpacing),
             getRelocatableHeapBlockBase(ASSET_HANDLE(0x21)),
             0x12,
             0x20,
@@ -1979,18 +1979,18 @@ void drawCharacterSelectCourseStatsBadge(CharacterSelectCourseWidgetActor *arg0)
     s32 i;
     s32 var_t8;
 
-    if (gRaceCourseIndex != gCharacterSelectCourseExitOptionIndex) {
+    if (gRaceCourseIndex.signedValue != gCharacterSelectCourseExitOptionIndex) {
         drawMenuPanelBackdrop(arg0->x, arg0->y, 0x3800, 0x5800);
         drawMenuSpriteWithAlpha((s16)(arg0->x + 4), (s16)(arg0->y + 4), getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE),
                       0x23, 0x20, 0x20, 0, arg0->sprite.index, 0);
-        sprintf(buf - 4, gCharacterSelectCourseStatsScoreFormat, gCharacterSelectCourseStatsScoreValues[gRaceCourseIndex]);
+        sprintf(buf - 4, gCharacterSelectCourseStatsScoreFormat, gCharacterSelectCourseStatsScoreValues[gRaceCourseIndex.signedValue]);
         drawMenuAsciiText((s16)(arg0->x + 8), (s16)(arg0->y + 0xC), buf - 4, 0, arg0->sprite.index);
         drawMenuSpriteWithAlpha((s16)(arg0->x + 0x28), (s16)(arg0->y + 0xC), getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE),
                       0x24, 0x20, 0x20, 0, arg0->sprite.index, 0);
         drawMenuSpriteWithAlpha(arg0->x, (s16)(arg0->y + 0x14), getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE), 0x25, 0x20,
                       0x20, 0, arg0->sprite.index, 0);
 
-        temp_v0 = gCharacterSelectCourseDifficultyRatings[gRaceCourseIndex];
+        temp_v0 = gCharacterSelectCourseDifficultyRatings[gRaceCourseIndex.signedValue];
         xOffset = 0;
         i = 0;
         var_t8 = temp_v0 & 1;
@@ -2000,7 +2000,7 @@ void drawCharacterSelectCourseStatsBadge(CharacterSelectCourseWidgetActor *arg0)
                               getRelocatableHeapBlockBase(CHARACTER_SELECT_ICON_TEXTURE_HANDLE), 0x25, 0x20, 0x20, 0,
                               arg0->sprite.index, 0);
                 i++;
-                temp_v0 = gCharacterSelectCourseDifficultyRatings[gRaceCourseIndex];
+                temp_v0 = gCharacterSelectCourseDifficultyRatings[gRaceCourseIndex.signedValue];
                 xOffset += 0xC;
             } while (i < (temp_v0 / 2));
         }
@@ -2077,7 +2077,7 @@ void drawCharacterSelectCoursePlayerStatsPanel(CharacterSelectCourseWidgetActor 
     s32 valueOffset;
     s32 three;
     register s32 i;
-    do { characterIds = gCharacterSelectCourseOptionsByUnlock[gHighestUnlockedCourse]; if (gPlayerCount == 1) { drawMenuSprite(arg0->x, arg0->y, getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE), 0x21, 0x20, 0x20, 0, 0); drawMenuSprite((s16)(arg0->x + 0x30), arg0->y, getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE), 0x22, 0x20, 0x20, 0, 0); sprintf(buf - 0x10, gCharacterSelectCourseBestScoreFormat, D_800EC9F8[characterIds[*(&gRaceCourseIndex)]]); drawMenuAsciiText((s16)(arg0->x + 0x14), (s16)(arg0->y + 0x2A), buf - 0x10, 0, 0x100); valueOffset = 0; yOffset = 0; three = 3; do { sprintf(buf - 0x10, gCharacterSelectCourseMedalScoreFormat, *((u16 *)(&gCharacterSelectCourseMedalScoreThresholds[(((*(&gRaceCourseIndex)) * three) * 2) + valueOffset]))); drawMenuAsciiText((s16)(arg0->x + 0x28), (s16)((arg0->y + yOffset) + 9), buf - 0x10, 0, 0x100); yOffset += 8; valueOffset += 2; } while (yOffset != 0x18); } else { drawMenuSprite(arg0->x, arg0->y, getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE), 0x26, 0x20, 0x20, 0, 0); drawMenuSprite(arg0->x, (s16)(arg0->y + 0x10), getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE), 0x27, 0x20, 0x20, 0, 0); yOffset = 0; for (i = 0; i < RACE_PLAYER_COUNT; i++) { sprintf(buf - 0x10, gCharacterSelectCoursePlayerRankFormat, gRacePlayers[i].unk18); drawMenuAsciiText((s16)(arg0->x + 0x40), (s16)((arg0->y + yOffset) + 0x10), buf - 0x10, 0, 0x100); yOffset += 8; } } } while (0);
+    do { characterIds = gCharacterSelectCourseOptionsByUnlock[gHighestUnlockedCourse]; if (gPlayerCount == 1) { drawMenuSprite(arg0->x, arg0->y, getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE), 0x21, 0x20, 0x20, 0, 0); drawMenuSprite((s16)(arg0->x + 0x30), arg0->y, getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE), 0x22, 0x20, 0x20, 0, 0); sprintf(buf - 0x10, gCharacterSelectCourseBestScoreFormat, D_800EC9F8[characterIds[*(&gRaceCourseIndex.signedValue)]]); drawMenuAsciiText((s16)(arg0->x + 0x14), (s16)(arg0->y + 0x2A), buf - 0x10, 0, 0x100); valueOffset = 0; yOffset = 0; three = 3; do { sprintf(buf - 0x10, gCharacterSelectCourseMedalScoreFormat, *((u16 *)(&gCharacterSelectCourseMedalScoreThresholds[(((*(&gRaceCourseIndex.signedValue)) * three) * 2) + valueOffset]))); drawMenuAsciiText((s16)(arg0->x + 0x28), (s16)((arg0->y + yOffset) + 9), buf - 0x10, 0, 0x100); yOffset += 8; valueOffset += 2; } while (yOffset != 0x18); } else { drawMenuSprite(arg0->x, arg0->y, getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE), 0x26, 0x20, 0x20, 0, 0); drawMenuSprite(arg0->x, (s16)(arg0->y + 0x10), getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE), 0x27, 0x20, 0x20, 0, 0); yOffset = 0; for (i = 0; i < RACE_PLAYER_COUNT; i++) { sprintf(buf - 0x10, gCharacterSelectCoursePlayerRankFormat, gRacePlayers[i].unk18); drawMenuAsciiText((s16)(arg0->x + 0x40), (s16)((arg0->y + yOffset) + 0x10), buf - 0x10, 0, 0x100); yOffset += 8; } } } while (0);
 }
 
 void updateCharacterSelectCoursePlayerStatsPanel(CharacterSelectCourseWidgetActor *arg0) {
@@ -2262,7 +2262,7 @@ void drawCharacterSelectCourseNamePopup(CharacterSelectCourseWidgetActor *arg0) 
     MenuGlyphScript *text;
 
     texts = gCharacterSelectCourseNameText;
-    text = texts[gRaceCourseIndex];
+    text = texts[gRaceCourseIndex.signedValue];
     drawMenuGlyphScript(arg0->x, arg0->y, text, 1, arg0->sprite.index, 0);
     if (arg0->transition.bytes.state == 2) {
         drawMenuSprite(
@@ -2364,8 +2364,8 @@ void drawCharacterSelectCourseDescriptionPopup(CharacterSelectCourseWidgetActor 
     } else {
         threshold = 0;
     }
-    if (threshold >= gRaceCourseIndex) {
-        idx = (u16)gRaceCourseIndex;
+    if (threshold >= gRaceCourseIndex.signedValue) {
+        idx = (u16)gRaceCourseIndex.signedValue;
         if (gRaceTypeSelection == 0) {
             text = gCharacterSelectBeginnerCourseDescriptionText[idx];
         } else if (gRaceTypeSelection == 1) {
@@ -2625,15 +2625,15 @@ void drawCharacterSelectCourseRecordsPopup(CharacterSelectCourseWidgetActor *arg
                     }
                     drawCharacterSelectCourseRecordTime(
                         (CharacterSelectCourseRecordTime *)((CharacterSelectResultNameData *)&gGameSaveDataBuffer)
-                            ->resultNames[stack.courseIds[gRaceCourseIndex]][rowIndex],
+                            ->resultNames[stack.courseIds[gRaceCourseIndex.signedValue]][rowIndex],
                         arg0->x + 0x14, arg0->y + var_s5, stack.color);
                     drawMenuSprite((s16)(arg0->x + 0x54), (s16)(var_s5 + arg0->y),
                                   getRelocatableHeapBlockBase(assetHandles[0x1F]),
-                                  ((D_800F4290[(stack.courseIds[gRaceCourseIndex] * 5) + rowIndex] & 7) + 0x51) & 0xFFFF,
+                                  ((D_800F4290[(stack.courseIds[gRaceCourseIndex.signedValue] * 5) + rowIndex] & 7) + 0x51) & 0xFFFF,
                                   0x20, 0x20, 0, 0);
                     drawMenuSprite((s16)(arg0->x + 0x65), (s16)(arg0->y + var_s5),
                                   getRelocatableHeapBlockBase(assetHandles[0x1F]),
-                                  ((D_800F4290[(stack.courseIds[gRaceCourseIndex] * 5) + rowIndex] >> 3) + 0x7C) & 0xFFFF,
+                                  ((D_800F4290[(stack.courseIds[gRaceCourseIndex.signedValue] * 5) + rowIndex] >> 3) + 0x7C) & 0xFFFF,
                                   0x20, 0x20, 0, 0);
                 } else {
                     s32 var_s4;
@@ -2644,14 +2644,14 @@ void drawCharacterSelectCourseRecordsPopup(CharacterSelectCourseWidgetActor *arg
                         } else {
                             var_s4 = 0xD;
                         }
-                        selectedCoursePtr = &stack.courseIds[gRaceCourseIndex];
+                        selectedCoursePtr = &stack.courseIds[gRaceCourseIndex.signedValue];
                         newQuotient = D_800F4222[((*selectedCoursePtr * 5) + rowIndex)] / 10;
                         quotient = (stack.quotient = newQuotient);
                         if (quotient & 0xFFFF) {
                             drawMenuSprite((s16)(arg0->x + 0x18), (s16)(arg0->y + var_s5),
                                           getRelocatableHeapBlockBase(assetHandles[0x1F]),
                                           (stack.quotient + 0x2B) & 0xFFFF, 0x20, 0x20, 0, var_s4 + 1);
-                            selectedCoursePtr = &stack.courseIds[gRaceCourseIndex];
+                            selectedCoursePtr = &stack.courseIds[gRaceCourseIndex.signedValue];
                         }
                         stack.remainder = D_800F4222[((*selectedCoursePtr * 5) + rowIndex)] % 10;
                         drawMenuSprite((s16)(arg0->x + 0x20), (s16)(arg0->y + var_s5),
@@ -2661,12 +2661,12 @@ void drawCharacterSelectCourseRecordsPopup(CharacterSelectCourseWidgetActor *arg
                                           stack.color, 0x100);
                         drawMenuSprite((s16)(arg0->x + 0x48), (s16)(arg0->y + var_s5),
                                       getRelocatableHeapBlockBase(assetHandles[0x1F]),
-                                      ((D_800F4259[(stack.courseIds[gRaceCourseIndex] * 5) + rowIndex] & 7) + 0x51) &
+                                      ((D_800F4259[(stack.courseIds[gRaceCourseIndex.signedValue] * 5) + rowIndex] & 7) + 0x51) &
                                           0xFFFF,
                                       0x20, 0x20, 0, 0);
                         drawMenuSprite((s16)(arg0->x + 0x60), (s16)(arg0->y + var_s5),
                                       getRelocatableHeapBlockBase(assetHandles[0x1F]),
-                                      ((D_800F4259[(stack.courseIds[gRaceCourseIndex] * 5) + rowIndex] >> 3) + 0x7C) &
+                                      ((D_800F4259[(stack.courseIds[gRaceCourseIndex.signedValue] * 5) + rowIndex] >> 3) + 0x7C) &
                                           0xFFFF,
                                       0x20, 0x20, 0, 0);
                     } else {
@@ -2704,15 +2704,15 @@ void drawCharacterSelectCourseRecordsPopup(CharacterSelectCourseWidgetActor *arg
                 }
                 drawCharacterSelectCourseRecordTime(
                     (CharacterSelectCourseRecordTime *)((CharacterSelectCourseStatsNameData *)&gGameSaveDataBuffer)
-                        ->courseStatsNames[stack.courseIds[gRaceCourseIndex]][rowIndex],
+                        ->courseStatsNames[stack.courseIds[gRaceCourseIndex.signedValue]][rowIndex],
                     arg0->x + 0x14, arg0->y + var_s5, stack.color);
                 drawMenuSprite((s16)(arg0->x + 0x54), (s16)(arg0->y + var_s5),
                               getRelocatableHeapBlockBase(assetHandles[0x1F]),
-                              ((D_800F41EB[(stack.courseIds[gRaceCourseIndex] * 5) + rowIndex] & 7) + 0x51) & 0xFFFF,
+                              ((D_800F41EB[(stack.courseIds[gRaceCourseIndex.signedValue] * 5) + rowIndex] & 7) + 0x51) & 0xFFFF,
                               0x20, 0x20, 0, 0);
                 drawMenuSprite((s16)(arg0->x + 0x65), (s16)(arg0->y + var_s5),
                               getRelocatableHeapBlockBase(assetHandles[0x1F]),
-                              ((D_800F41EB[(stack.courseIds[gRaceCourseIndex] * 5) + rowIndex] >> 3) + 0x7C) &
+                              ((D_800F41EB[(stack.courseIds[gRaceCourseIndex.signedValue] * 5) + rowIndex] >> 3) + 0x7C) &
                                   0xFFFF,
                               0x20, 0x20, 0, 0);
             }

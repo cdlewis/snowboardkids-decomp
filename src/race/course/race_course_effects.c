@@ -1,3 +1,4 @@
+#include "game/race/race_state.h"
 #include "common.h"
 #include "game/menu/renderer/menu_renderer.h"
 #include "game/menu/renderer/menu_render_utils.h"
@@ -13,7 +14,7 @@
 #include "game/race/motion/race_motion.h"
 #include "game/race/player/race_player_movement.h"
 
-#define COURSE_INDEX_RELOAD (*(volatile s16 *)&gRaceCourseIndex)
+#define COURSE_INDEX_RELOAD (*(volatile s16 *)&gRaceCourseIndex.signedValue)
 #define ASSET_HANDLE(index) (gAssetHandles[(index)])
 #define RACE_COURSE_EFFECTS_GFX_CMD(pkt, cmd0, cmd1) \
 { \
@@ -239,7 +240,6 @@ void initPatrolCourseObject(PatrolCourseObjectEffect *);
 void renderRaceCourseSceneryObjects(RaceCourseRenderEffect *);
 void renderSpiralCourseObject(RaceMovingEffect *);
 extern u8 gRaceUpdatePaused;
-extern s16 gRaceCourseIndex;
 extern RaceCamera D_801121E0[];
 extern CourseMarkerSpawnEntry *gCourseTextureMarkerSpawnEntriesByCourse[];
 extern CourseRenderEntry *gRaceCourseSceneryEntriesByCourse[];
@@ -339,7 +339,7 @@ void renderRaceCourseModel(void *arg0) {
 
     gSPMatrix(gRegionAllocPtr++, &gIdentityMatrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
 
-    switch (*(u16 *)&gRaceCourseIndex) {
+    switch (gRaceCourseIndex.unsignedValue) {
         case 0:
             gSPDisplayList(gRegionAllocPtr++, &_EBEC0_VRAM);
             break;
@@ -387,7 +387,7 @@ void renderRaceCourseBackdrop(RaceCourseBackdropEffect *arg0) {
 
     arg0->matrix = allocFixedTransformMatrix(&sp100);
     if (arg0->matrix != NULL) {
-        switch (*(u16 *)&gRaceCourseIndex) {
+        switch (gRaceCourseIndex.unsignedValue) {
             case 0:
                 gDPPipeSync(gRegionAllocPtr++);
                 gSPSegment(gRegionAllocPtr++, 0x02,
@@ -541,7 +541,7 @@ void renderCourseTextureMarkers(RaceCourseRenderEffect *arg0) {
 
     textureIndex = -1;
     gSPDisplayList(gRegionAllocPtr++, gEffectRenderModeSetupDl);
-    entry = gCourseTextureMarkerSpawnEntriesByCourse[gRaceCourseIndex];
+    entry = gCourseTextureMarkerSpawnEntriesByCourse[gRaceCourseIndex.signedValue];
     i = 0;
     if (entry->type != -1) {
         do {
@@ -575,7 +575,7 @@ void updateCourseTextureMarkers(void *arg0) {
     CourseMarkerSpawnEntry *entry;
     s8 type;
 
-    entry = gCourseTextureMarkerSpawnEntriesByCourse[gRaceCourseIndex];
+    entry = gCourseTextureMarkerSpawnEntriesByCourse[gRaceCourseIndex.signedValue];
     if (entry->type != -1) {
         do {
             switch (entry->type) {
@@ -601,7 +601,7 @@ void initCourseTextureMarkers(RaceCourseRenderEffect *arg0) {
     s32 allocSize;
     s32 i;
 
-    entry = gCourseTextureMarkerSpawnEntriesByCourse[gRaceCourseIndex];
+    entry = gCourseTextureMarkerSpawnEntriesByCourse[gRaceCourseIndex.signedValue];
     count = 0;
     if (entry->type != -1) {
         do {
@@ -611,7 +611,7 @@ void initCourseTextureMarkers(RaceCourseRenderEffect *arg0) {
     }
 
     if (count != 0) {
-        entry = gCourseTextureMarkerSpawnEntriesByCourse[gRaceCourseIndex];
+        entry = gCourseTextureMarkerSpawnEntriesByCourse[gRaceCourseIndex.signedValue];
         allocSize = count * sizeof(Mtx);
         gAssetHandles[0x21] = allocRelocatableHeapBlock(allocSize);
         arg0->vertices = getRelocatableHeapBlockBase(gAssetHandles[0x21]);
@@ -639,7 +639,7 @@ void renderRaceCourseSceneryObjects(RaceCourseRenderEffect *arg0) {
     Gfx *temp_s2;
     Gfx *temp_s3;
 
-    var_s4 = gRaceCourseSceneryEntriesByCourse[gRaceCourseIndex];
+    var_s4 = gRaceCourseSceneryEntriesByCourse[gRaceCourseIndex.signedValue];
     var_s7 = TRUE;
     var_s5 = 0;
     if (var_s4->displayListIndex != -1) {
@@ -679,7 +679,7 @@ void initRaceCourseSceneryObjects(RaceCourseRenderEffect *arg0) {
     FixedTransform transform;
     s32 count;
 
-    base = gRaceCourseSceneryEntriesByCourse[gRaceCourseIndex];
+    base = gRaceCourseSceneryEntriesByCourse[gRaceCourseIndex.signedValue];
     count = 0;
     entry = base;
     if (base->displayListIndex != -1) {
@@ -882,7 +882,7 @@ void renderLaunchRampCourseObject(RaceMovingEffect *arg0) {
     volatile s32 pad[1];
 
     if (gRenderMatricesDirty != 0) {
-        makeFixedRotationY(transform.rotation, gLaunchRampCourseObjectAngles[gRaceCourseIndex].angle + 0x400);
+        makeFixedRotationY(transform.rotation, gLaunchRampCourseObjectAngles[gRaceCourseIndex.signedValue].angle + 0x400);
         transform.translation.x = arg0->pos.x;
         transform.translation.y = arg0->pos.y;
         transform.translation.z = arg0->pos.z;
@@ -897,7 +897,7 @@ void renderLaunchRampCourseObject(RaceMovingEffect *arg0) {
             gSPSegment(gRegionAllocPtr++, 0x02, getRelocatableHeapBlockBase(ASSET_HANDLE(0xA)));
             gSPSegment(gRegionAllocPtr++, 0x03, getRelocatableHeapBlockBase(ASSET_HANDLE(0xB)));
             gSPMatrix(gRegionAllocPtr++, arg0->matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
-            if (gRaceCourseIndex != 8) {
+            if (gRaceCourseIndex.signedValue != 8) {
                 gSPDisplayList(gRegionAllocPtr++, &_148220_VRAM);
             } else {
                 gSPDisplayList(gRegionAllocPtr++, &_14AB28_VRAM);
@@ -949,7 +949,7 @@ void updateLaunchRampCourseObjectArc(RaceMovingEffect *arg0) {
 
         if (arg0->timer == 0) {
             setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateLaunchRampCourseObjectExit);
-            makeFixedRotationXY(mtx, 0x100, gLaunchRampCourseObjectAngles[gRaceCourseIndex].angle + 0x400);
+            makeFixedRotationXY(mtx, 0x100, gLaunchRampCourseObjectAngles[gRaceCourseIndex.signedValue].angle + 0x400);
             arg0->timer = 0x64;
         }
     }
@@ -963,7 +963,7 @@ void initLaunchRampCourseObject(RaceMovingEffect *arg0) {
     arg0->timer = 0x46;
     arg0->velocity.z = 0x680000;
     mtx = arg0->unk30.rotation;
-    makeFixedRotationY(mtx, gLaunchRampCourseObjectAngles[gRaceCourseIndex].angle + 0x400);
+    makeFixedRotationY(mtx, gLaunchRampCourseObjectAngles[gRaceCourseIndex.signedValue].angle + 0x400);
     transformVec3iByFixedMatrix(mtx, &arg0->velocity, &arg0->pos);
     arg0->velocity.z = 0xFFFE0000;
     arg0->pos.x += gRaceCourseStartEntries[COURSE_INDEX_RELOAD].pos.x;
@@ -991,7 +991,7 @@ void renderSpiralCourseObject(RaceMovingEffect *arg0) {
             gSPSegment(gRegionAllocPtr++, 0x02, getRelocatableHeapBlockBase(ASSET_HANDLE(0xA)));
             gSPSegment(gRegionAllocPtr++, 0x03, getRelocatableHeapBlockBase(ASSET_HANDLE(0xB)));
             gSPMatrix(gRegionAllocPtr++, arg0->matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
-            if (gRaceCourseIndex != 8) {
+            if (gRaceCourseIndex.signedValue != 8) {
                 gSPDisplayList(gRegionAllocPtr++, &_148220_VRAM);
             } else {
                 gSPDisplayList(gRegionAllocPtr++, &_14AB28_VRAM);
@@ -1073,7 +1073,7 @@ void initSpiralCourseObject(RaceMovingEffect *arg0) {
     s16 *mtx;
 
     arg0->timer = 0x28;
-    arg0->unk52 = gSpiralCourseObjectAngles[gRaceCourseIndex].angle;
+    arg0->unk52 = gSpiralCourseObjectAngles[gRaceCourseIndex.signedValue].angle;
     arg0->velocity.x = -0x200000;
     arg0->velocity.z = 0x400000;
     mtx = arg0->unk30.rotation;
@@ -1081,9 +1081,9 @@ void initSpiralCourseObject(RaceMovingEffect *arg0) {
     transformVec3iByFixedMatrix(mtx, &arg0->velocity, &arg0->pos);
     arg0->velocity.x = 0;
     arg0->velocity.z = -0x20000;
-    arg0->pos.x += gRaceCourseStartEntries[gRaceCourseIndex].unk8.x;
-    arg0->pos.y += gRaceCourseStartEntries[gRaceCourseIndex].unk8.y + 0x40000;
-    arg0->pos.z += gRaceCourseStartEntries[gRaceCourseIndex].unk8.z;
+    arg0->pos.x += gRaceCourseStartEntries[gRaceCourseIndex.signedValue].unk8.x;
+    arg0->pos.y += gRaceCourseStartEntries[gRaceCourseIndex.signedValue].unk8.y + 0x40000;
+    arg0->pos.z += gRaceCourseStartEntries[gRaceCourseIndex.signedValue].unk8.z;
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateSpiralCourseObjectLaunch);
     updateSpiralCourseObjectLaunch(arg0);
 }
@@ -1101,7 +1101,7 @@ void renderCourseGateObject(CourseGateObjectEffect *arg0) {
         temp_s0->pos2Matrix = NULL;
     }
 
-    if (isPositionNearCurrentRaceViewportCamera((Vec3i *) &gCourseGateSoundParams[gRaceCourseIndex]) == 0) {
+    if (isPositionNearCurrentRaceViewportCamera((Vec3i *) &gCourseGateSoundParams[gRaceCourseIndex.signedValue]) == 0) {
         return;
     }
 
@@ -1122,7 +1122,7 @@ void renderCourseGateObject(CourseGateObjectEffect *arg0) {
     }
 
     if (temp_s0->pos1Matrix == NULL) {
-        makeFixedRotationZY(scratch.rotation, gCourseGateAngles[gRaceCourseIndex].angle, temp_s0->unk50);
+        makeFixedRotationZY(scratch.rotation, gCourseGateAngles[gRaceCourseIndex.signedValue].angle, temp_s0->unk50);
         scratch.translation.x = temp_s0->pos1.x;
         scratch.translation.y = temp_s0->pos1.y;
         scratch.translation.z = temp_s0->pos1.z;
@@ -1176,7 +1176,7 @@ void updateCourseGateOpening(CourseGateObjectEffect *arg0) {
         }
         temp_s0->unk54--;
         if (temp_s0->unk54 == 0) {
-            enqueuePositionalSoundEffect(0x1C, &gCourseGateSoundParams[gRaceCourseIndex], 0x7F, 0x32);
+            enqueuePositionalSoundEffect(0x1C, &gCourseGateSoundParams[gRaceCourseIndex.signedValue], 0x7F, 0x32);
             setCallbackTaskCallback(temp_s0, (CallbackTaskCallback)updateCourseGateClosing);
         }
     }
@@ -1189,8 +1189,8 @@ void waitForCourseGateTrigger(CourseGateObjectEffect *arg0) {
         gMenuFlowState &= ~4;
         setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateCourseGateOpening);
         arg0->unk56 = 1;
-        enqueuePositionalSoundEffect(0x16, &gCourseGateSoundParams[gRaceCourseIndex], 0x7F, 0x32);
-        enqueuePositionalSoundEffect(0x1B, &gCourseGateSoundParams[gRaceCourseIndex], 0x7F, 0x32);
+        enqueuePositionalSoundEffect(0x16, &gCourseGateSoundParams[gRaceCourseIndex.signedValue], 0x7F, 0x32);
+        enqueuePositionalSoundEffect(0x1B, &gCourseGateSoundParams[gRaceCourseIndex.signedValue], 0x7F, 0x32);
     }
     addRenderCallback(&gRaceObjectRenderCallbackList, (RenderCallback)renderCourseGateObject, arg0);
 }
@@ -1200,10 +1200,10 @@ void initCourseGateObject(CourseGateObjectEffect *arg0) {
     Vec3i sp28;
 
     mtx = arg0->source.rotation;
-    makeFixedRotationY(mtx, gCourseGateSoundParams[gRaceCourseIndex].angle);
-    arg0->source.translation.x = gCourseGateSoundParams[gRaceCourseIndex].x;
-    arg0->source.translation.y = gCourseGateSoundParams[gRaceCourseIndex].y;
-    arg0->source.translation.z = gCourseGateSoundParams[gRaceCourseIndex].z;
+    makeFixedRotationY(mtx, gCourseGateSoundParams[gRaceCourseIndex.signedValue].angle);
+    arg0->source.translation.x = gCourseGateSoundParams[gRaceCourseIndex.signedValue].x;
+    arg0->source.translation.y = gCourseGateSoundParams[gRaceCourseIndex.signedValue].y;
+    arg0->source.translation.z = gCourseGateSoundParams[gRaceCourseIndex.signedValue].z;
     sp28.x = 0x18000;
     sp28.y = 0x120000;
     sp28.z = -0x80000;

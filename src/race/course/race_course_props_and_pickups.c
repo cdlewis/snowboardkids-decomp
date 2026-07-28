@@ -1,3 +1,4 @@
+#include "game/race/race_state.h"
 #include "common.h"
 #include "game/menu/renderer/menu_render_utils.h"
 #include "game/engine/render_callback.h"
@@ -167,7 +168,6 @@ extern Gfx gRaceItemPickupDisplayList[];
 extern Gfx gRaceActionPickupDisplayList[];
 extern Gfx *gRegionAllocPtr;
 extern void *gViewportMatrix;
-extern s16 gRaceCourseIndex;
 extern s16 gFrameCounter;
 typedef struct Scratch674B4 {
     FixedTransform transform;
@@ -279,7 +279,7 @@ void renderCourseCollectibleSprites(CourseEffectModelListActor *arg0) {
     actor = arg0;
     gSPDisplayList(gRegionAllocPtr++, gEffectRenderModeSetupDl);
 
-    entry = gCourseCollectibleSpriteListsByCourse[gRaceCourseIndex];
+    entry = gCourseCollectibleSpriteListsByCourse[gRaceCourseIndex.signedValue];
     i = 0;
     if (entry->modelIndex != -1) {
         do {
@@ -318,7 +318,7 @@ void updateCourseCollectibleSprites(CourseEffectModelListActor *arg0) {
     register s32 ySize;
     register s32 sentinel;
 
-    entry = gCourseCollectibleSpriteListsByCourse[gRaceCourseIndex];
+    entry = gCourseCollectibleSpriteListsByCourse[gRaceCourseIndex.signedValue];
     actor = arg0;
     ySize = 1;
     if (gFrameCounter & ySize) {
@@ -388,7 +388,7 @@ void initCourseCollectibleSpriteMatrices(CourseEffectModelListActor *arg0) {
     register s32 offset;
     register s32 one;
 
-    script = gCourseCollectibleSpriteListsByCourse[gRaceCourseIndex];
+    script = gCourseCollectibleSpriteListsByCourse[gRaceCourseIndex.signedValue];
     actor1 = arg0;
     actor2 = arg0;
     i = 0;
@@ -416,7 +416,7 @@ void initCourseCollectibleSprites(CourseEffectModelListActor *arg0) {
 
     new_var = arg0;
     new_var->modelCount = 0;
-    var_v0 = gCourseCollectibleSpriteListsByCourse[gRaceCourseIndex];
+    var_v0 = gCourseCollectibleSpriteListsByCourse[gRaceCourseIndex.signedValue];
     if (var_v0->modelIndex != -1) {
         do {
             new_var->modelCount += 1;
@@ -860,7 +860,7 @@ void updateRacePickupIdle(RacePickupActor *arg0) {
                 // Course index 8 special case, CPU opponents only. When a CPU's action roll
                 // lands on the common tier-4 result, there is a 255/256 chance to upgrade it
                 // to the rarer tier 6.
-                if ((gRaceCourseIndex == 8) && (player->isCpu != 0) && (player->actionEffectType == 4)) {
+                if ((gRaceCourseIndex.signedValue == 8) && (player->isCpu != 0) && (player->actionEffectType == 4)) {
                     if (randomNextMain() != 0) {
                         player->actionEffectType = 6;
                     }

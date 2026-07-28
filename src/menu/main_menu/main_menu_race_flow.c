@@ -1,3 +1,4 @@
+#include "game/race/race_state.h"
 #include "common.h"
 #include "assets.h"
 #include "game/audio/sound_manager.h"
@@ -26,7 +27,6 @@ typedef struct {
 } MainMenuModePreviewRaceCourseAsset;
 
 extern s8 gRacePlayerHudStatuses;
-extern s16 gRaceCourseIndex;
 extern s16 gRaceLapCount;
 extern s8 gRacePlayerCount;
 extern u8 gRaceUpdatePaused;
@@ -137,7 +137,7 @@ void initMainMenuModePreviewRace(void) {
     s32 i;
     RacePlayer *player;
 
-    gRaceCourseIndex = (s16) gMainMenuModePreviewRaceCourseAssets[gMainMenuModeSelection].courseIndex;
+    gRaceCourseIndex.signedValue = (s16) gMainMenuModePreviewRaceCourseAssets[gMainMenuModeSelection].courseIndex;
     gRaceUpdatePaused = 0;
     gRaceCameraModeChangeDisabled = 0;
     gRaceResultState = 0;
@@ -351,10 +351,10 @@ void initTrainingCourseRace(void) {
         case 4:
         case 5:
         case 6:
-            gRaceCourseIndex = 0;
+            gRaceCourseIndex.signedValue = 0;
             break;
         default:
-            gRaceCourseIndex = 9;
+            gRaceCourseIndex.signedValue = 9;
             break;
     }
 
