@@ -62,7 +62,6 @@ typedef union SoundHalfArg {
     } half;
 } SoundHalfArg;
 
-extern u8 gRaceDemoPlaybackEnabled;
 extern u8 D_27E290[];
 extern u8 D_800DABB0[];
 extern f32 D_800DACAC[];

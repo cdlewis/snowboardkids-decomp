@@ -43,7 +43,6 @@ extern s8 gTitleDemoRaceIntroFadeStep;
 extern s16 gRaceLapCount;
 extern s8 gRacePlayerCount;
 extern u8 gRaceUpdatePaused;
-extern u8 gRaceDemoPlaybackEnabled;
 extern u8 gTrainingCourseLesson;
 extern u8 gMainMenuModeSelection;
 extern s16 gRacePlayerAttackStartTimer;

@@ -116,7 +116,6 @@ extern s16 gRacePlayerAttackStartTimer;
 extern u8 gRacePlayerHudStatuses;
 extern u8 gRaceResultState;
 #ifdef NON_MATCHING
-extern u8 gRaceDemoPlaybackEnabled;
 extern u8 gTrainingCourseLesson;
 extern u8 gMainMenuModeSelection;
 extern u8 D_800DC5B4[];

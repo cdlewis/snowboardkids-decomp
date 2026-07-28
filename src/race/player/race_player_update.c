@@ -100,7 +100,6 @@ extern u8 gMainMenuModeSelection;
 extern u8 gRaceSplitscreenMode;
 extern s8 gRacePlayerCount;
 extern u8 gRaceUpdatePaused;
-extern u8 gRaceDemoPlaybackEnabled;
 extern u8 gRaceTypeSelection;
 extern u8 gTrainingCourseLesson;
 extern s32 gMenuFlowState;
