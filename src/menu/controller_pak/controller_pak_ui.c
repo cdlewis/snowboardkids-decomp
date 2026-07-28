@@ -4,17 +4,13 @@
 #include "game/engine/relocatable_heap.h"
 #include "game/engine/callback_task_scheduler.h"
 #include "game/menu/character_select/character_select_course_menu.h"
+#include "game/menu/controller_pak/controller_pak_continue_prompt_flow.h"
 #include "game/menu/controller_pak/controller_pak_menu.h"
 #include "game/menu/controller_pak/controller_pak_ui.h"
 #include "game/menu/renderer/menu_renderer.h"
 #include "game/menu/race_setup/race_setup_ui.h"
 
 #define CONTROLLER_PAK_DELETE_PANEL_HANDLE (gAssetHandles[0x29])
-
-typedef struct {
-    u16 x;
-    u8 state;
-} ControllerPakPromptTransition;
 
 typedef struct {
     s16 pad0;
@@ -27,7 +23,6 @@ typedef struct {
 } ControllerPakRumbleCheckPromptTransition;
 
 extern CharacterSelectFlowState *gCurrentGameTask;
-extern ControllerPakPromptTransition gControllerPakContinuePromptTransition;
 extern ControllerPakRumbleCheckPromptTransition gControllerPakRumbleCheckPromptTransition;
 extern ControllerPakMenuState gControllerPakMenuState;
 extern u8 gPlayerCount;

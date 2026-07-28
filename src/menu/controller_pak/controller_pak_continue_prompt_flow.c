@@ -10,16 +10,10 @@
 #include "game/menu/controller_pak/controller_pak_continue_prompt_flow.h"
 #include "game/engine/viewport_manager.h"
 
-typedef struct {
-    /* 0x0 */ s16 x;
-    /* 0x2 */ u8 state;
-} ControllerPakContinuePromptTransition;
-
 extern u64 enqueueSoundEffect(s32, s32);
 extern void releaseMenuAssetHandles(void);
 
 extern CharacterSelectFlowState *gCurrentGameTask;
-extern ControllerPakContinuePromptTransition gControllerPakContinuePromptTransition;
 extern s8 gFramebufferSwapDelay;
 extern s16 gMenuFadeAlpha;
 extern s32 gMenuFlowState;
