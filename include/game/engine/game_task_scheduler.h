@@ -40,7 +40,13 @@ typedef struct GameTask {
     };
 } GameTask;
 
+typedef union FramebufferSwapDelay {
+    s8 value;
+    u8 timerValue;
+} FramebufferSwapDelay;
+
 extern GameTask *gCurrentGameTask;
+extern FramebufferSwapDelay gFramebufferSwapDelay;
 
 void initGameTaskScheduler(void);
 void createGameTask(s32 taskId, GameTaskCallback callback, s32 priority);

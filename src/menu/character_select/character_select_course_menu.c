@@ -25,7 +25,6 @@ extern void enqueueSoundEffect(s32, s32);
 extern void releaseMenuAssetHandles(void);
 extern s16 gCharacterSelectShortCourseOptions[];
 extern s16 gCharacterSelectSingleCourseOption[];
-extern s8 gFramebufferSwapDelay;
 extern s16 gMenuFadeAlpha;
 extern CharacterSelectSaveData gGameSaveDataBuffer[];
 extern u8 gPlayerCount;
@@ -169,7 +168,7 @@ void initCharacterSelectCourseMenuFromRace(void)
   requestMusicSequenceBank(2);
   resetAllViewports();
   configureViewport(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.333333373f);
-  gFramebufferSwapDelay = 0;
+  gFramebufferSwapDelay.value = 0;
   LOAD_ASSET(_5A1ED0, 0x21);
   LOAD_ASSET(_593D10, 0x22);
   LOAD_ASSET(_598A70, 0x23);
@@ -266,7 +265,7 @@ void initCharacterSelectCourseMenuFromPlayerSelect(void) {
     if (gPlayerCount >= 2) {
         resetAllViewports();
         configureViewport(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.333333373f);
-        gFramebufferSwapDelay = 0;
+        gFramebufferSwapDelay.value = 0;
         if (gCharacterSelectShortCourseOptions) {
         }
         LOAD_ASSET(_5A1ED0, 0x21);
@@ -570,7 +569,7 @@ void fadeOutCharacterSelectCourseMenu(void) {
         if (gPendingFramebufferSwapCount == 2) {
             releaseMenuAssetHandles();
             gFramebufferSwapHold = 0;
-            gFramebufferSwapDelay = 0;
+            gFramebufferSwapDelay.value = 0;
             gRaceCourseIndex = (*gCharacterSelectActiveCourseOptions)[gRaceCourseIndex];
             resumeGameTask(2);
             removeGameTask(4);

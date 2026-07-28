@@ -30,7 +30,6 @@ extern CallbackTask *D_8010ADE4;
 extern CallbackTask *D_8010ADEC;
 extern s16 gMenuFadeAlpha;
 extern s16 gMenuInputRepeatTimers[];
-extern s8 gFramebufferSwapDelay;
 extern s8 gMenuSelectionConfirmTimer;
 extern s8 D_8010AE64[];
 // Per-player highlighted index. During character-roster browsing
@@ -59,7 +58,7 @@ void initCharacterSelectMenu(void) {
         requestMusicSequenceBank(1);
         resetAllViewports();
         configureViewport(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.333333373f);
-        gFramebufferSwapDelay = 0;
+        gFramebufferSwapDelay.value = 0;
         gMenuSelectionConfirmTimer = 0;
         gMenuExitSelection = 0;
         gCurrentGameTask->fade = 0xFF;
@@ -391,7 +390,7 @@ void fadeOutCharacterSelectMenu(void) {
         if (gPendingFramebufferSwapCount == 2) {
             releaseMenuAssetHandles();
             gFramebufferSwapHold = 0;
-            gFramebufferSwapDelay = 0;
+            gFramebufferSwapDelay.value = 0;
             gMenuFlowState = 0;
             resumeGameTask(2);
             removeGameTask(4);

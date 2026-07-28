@@ -29,7 +29,6 @@ u8 gEndingCreditsCharacterAuraDoneFlags[ENDING_CREDITS_CHARACTER_COUNT];
 
 extern void releaseMenuAssetHandles(void);
 
-extern s8 gFramebufferSwapDelay;
 extern s16 gMenuFadeAlpha;
 extern RaceCamera D_801121E0;
 extern u8 gPendingFramebufferSwapCount;
@@ -48,7 +47,7 @@ void initEndingCreditsFlow(void) {
     D_801121E0.pitch = 0xFC0;
     resetAllViewports();
     configureViewportWithFovAndFarClip(0, 0xA0, 0x38, 0x120, 0x50, 0x140, 0xF0, gEndingCreditsViewportAspectRatio[0], 0x14, 0xAF0);
-    gFramebufferSwapDelay = 0;
+    gFramebufferSwapDelay.value = 0;
     gMenuCameraTargetOffset.x = 0;
     if (1) {
         gMenuCameraTargetOffset.y = 0xFFB60000;
@@ -134,7 +133,7 @@ void fadeOutEndingCreditsFlow(void) {
         if (gPendingFramebufferSwapCount == 2) {
             releaseMenuAssetHandles();
             gFramebufferSwapHold = 0;
-            gFramebufferSwapDelay = 0;
+            gFramebufferSwapDelay.value = 0;
             resumeGameTask(2);
             removeGameTask(4);
         }
