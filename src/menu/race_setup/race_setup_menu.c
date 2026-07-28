@@ -9,6 +9,7 @@
 #include "game/engine/viewport_manager.h"
 #include "game/race/player/race_player_input.h"
 #include "game/menu/character_select/character_select_menu.h"
+#include "game/menu/course_select/course_select_menu.h"
 #include "game/menu/course_select/multiplayer_course_select_menu.h"
 #include "game/menu/main_menu/controller_main_menu_flow.h"
 
@@ -51,7 +52,6 @@ extern u8 gRaceRumbleEnabled;
 extern u8 gRumblePakConnectedByController[];
 extern u8 gMenuSelectionConfirmTimer;
 extern char D_800EC9E5;
-extern s8 gCourseSelectModeSelection;
 extern u16 gMenuInputRepeatTimers;
 extern u8 gHighestUnlockedCourse;
 extern s16 gRaceCourseIndex;

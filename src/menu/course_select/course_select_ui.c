@@ -5,6 +5,7 @@
 #include "game/engine/callback_task_scheduler.h"
 #include "game/menu/renderer/menu_renderer.h"
 #include "game/menu/character_select/character_select_menu.h"
+#include "game/menu/course_select/course_select_menu.h"
 #include "game/menu/course_select/course_select_ui.h"
 #include "game/menu/course_select/course_select_shop_ui.h"
 #include "game/math/fixed_point_math.h"
@@ -147,11 +148,6 @@ typedef struct {
     /* 0x78D8 */ u8 pad78D8[0x20];
 } CourseSelectExtraCourseSaveData;
 
-typedef struct {
-    /* 0x00 */ u8 pad0[0x24];
-    /* 0x24 */ u8 extraCourseCounts[4];
-} CourseSelectExtraCourseStatus;
-
 struct CourseSelectAnimatedActor {
     /* 0x000 */ u8 pad0[0x18];
     /* 0x018 */ s32 matrix;
@@ -169,29 +165,6 @@ typedef struct {
     /* 0x100 */ u8 playerStates[4];
 } CourseSelectCompletePanelSource;
 
-typedef struct {
-    /* 0x00 */ u8 previewModelState[4];
-    /* 0x04 */ u8 incomingPreviewModelState[4];
-    /* 0x08 */ u8 outgoingPreviewModelState[4];
-    /* 0x0C */ u8 incomingPreviewModelTimer[4];
-    /* 0x10 */ u8 outgoingPreviewModelTimer[4];
-    /* 0x14 */ u16 incomingPreviewModelAngle[4];
-    union {
-        /* 0x1C */ u16 outgoingPreviewModelAngle[4];
-        /* 0x1C */ u8 outgoingPreviewModelAngleBytes[8];
-    };
-    /* 0x24 */ u8 pad24[0x14];
-} CourseSelectStatusOverlay;
-
-typedef union {
-    struct {
-        /* 0x00 */ u8 pad0[0x2C];
-        /* 0x2C */ u16 purchaseMessage;
-        /* 0x2E */ u8 descriptionMode;
-    };
-    u8 bytes[0x30];
-} CourseSelectDescriptionStatus;
-
 extern void drawCourseSelectPlayerPanels(CourseSelectWidgetActor *);
 extern void drawMenuSpriteWithAlphaWideArgs(s32 x, s32 y, void *texture, s32 tileIndex, s32 width, s32 height,
                                             s32 palette, s32 alpha, u32 flip);
@@ -200,7 +173,6 @@ extern u8 D_800E0DB8[];
 extern s8 gCourseUnlockSaveSlots[][0x78F8];
 extern u8 D_800EC9C0;
 extern u8 gRaceSplitscreenMode;
-extern u8 gCourseSelectModeSelection;
 extern CallbackTask *D_8010ADE0;
 extern CallbackTask *D_8010ADE4;
 extern s8 D_8010AE64[];
@@ -212,7 +184,6 @@ extern u8 D_8010AEA4[];
 extern u8 D_8010AEB0;
 extern u8 D_8010AEA0[];
 extern u8 gCourseSelectExtraCourseColumnState;
-extern CourseSelectDescriptionStatus gCourseSelectStatus[];
 extern u8 D_8010AEAC[];
 extern u8 D_8010AF1C;
 extern s16 gMenuChoicePromptState[];
@@ -298,15 +269,13 @@ void updateCourseSelectPreviewModelIn(CourseSelectAnimatedActor *arg0)
     actor = arg0;
 
     for (i = 0; i < (s32)gPlayerCount; i++) {
-        incomingState = ((CourseSelectStatusOverlay *)gCourseSelectStatus)->incomingPreviewModelState[i];
+        incomingState = gCourseSelectStatus.incomingPreviewModelState[i];
         if (incomingState != (state = actor->state[i])) {
             actor->state[i] = incomingState;
-            actor->timer[i] =
-                ((CourseSelectStatusOverlay *)gCourseSelectStatus)->incomingPreviewModelTimer[i];
-            actor->angle[i] =
-                ((CourseSelectStatusOverlay *)gCourseSelectStatus)->incomingPreviewModelAngle[i];
-            ((CourseSelectStatusOverlay *)gCourseSelectStatus)->incomingPreviewModelTimer[i] = 0;
-            ((CourseSelectStatusOverlay *)gCourseSelectStatus)->incomingPreviewModelAngle[i] = 0;
+            actor->timer[i] = gCourseSelectStatus.incomingPreviewModelTimer[i];
+            actor->angle[i] = gCourseSelectStatus.incomingPreviewModelAngle[i];
+            gCourseSelectStatus.incomingPreviewModelTimer[i] = 0;
+            gCourseSelectStatus.incomingPreviewModelAngle[i] = 0;
             state = actor->state[i];
         }
 
@@ -422,8 +391,7 @@ void updateCourseSelectPreviewModelIn(CourseSelectAnimatedActor *arg0)
         actor->playerTransforms[i].translation.x = rotatedPosition.x;
         actor->playerTransforms[i].translation.y = rotatedPosition.y;
         actor->playerTransforms[i].translation.z = rotatedPosition.z;
-        ((CourseSelectStatusOverlay *)gCourseSelectStatus)->incomingPreviewModelState[i] =
-            actor->state[i];
+        gCourseSelectStatus.incomingPreviewModelState[i] = actor->state[i];
     }
 
     if ((gRacePlayers[0].menuState == 4) || (actor->state[0] == 9)) {
@@ -527,12 +495,12 @@ void updateCourseSelectPreviewModelOut(CourseSelectAnimatedActor *arg0)
     actor = arg0;
 
     for (i = 0; i < (s32)gPlayerCount; i++) {
-        if (((CourseSelectStatusOverlay *)gCourseSelectStatus)->outgoingPreviewModelState[i] != actor->state[i]) {
-            actor->state[i] = ((CourseSelectStatusOverlay *)gCourseSelectStatus)->outgoingPreviewModelState[i];
-            actor->timer[i] = ((CourseSelectStatusOverlay *)gCourseSelectStatus)->outgoingPreviewModelTimer[i];
-            actor->angle[i] = ((CourseSelectStatusOverlay *)gCourseSelectStatus)->outgoingPreviewModelAngle[i];
-            ((CourseSelectStatusOverlay *)gCourseSelectStatus)->outgoingPreviewModelTimer[i] = 0;
-            ((CourseSelectStatusOverlay *)gCourseSelectStatus)->outgoingPreviewModelAngle[i] = 0;
+        if (gCourseSelectStatus.outgoingPreviewModelState[i] != actor->state[i]) {
+            actor->state[i] = gCourseSelectStatus.outgoingPreviewModelState[i];
+            actor->timer[i] = gCourseSelectStatus.outgoingPreviewModelTimer[i];
+            actor->angle[i] = gCourseSelectStatus.outgoingPreviewModelAngle[i];
+            gCourseSelectStatus.outgoingPreviewModelTimer[i] = 0;
+            gCourseSelectStatus.outgoingPreviewModelAngle[i] = 0;
         }
 
         if ((gMenuFlowState != 0) && (actor->state[i] < 5)) {
@@ -643,7 +611,7 @@ void updateCourseSelectPreviewModelOut(CourseSelectAnimatedActor *arg0)
         actor->playerTransforms[i].translation.x = rotatedPosition.x;
         actor->playerTransforms[i].translation.y = rotatedPosition.y;
         actor->playerTransforms[i].translation.z = rotatedPosition.z;
-        ((CourseSelectStatusOverlay *)gCourseSelectStatus)->outgoingPreviewModelState[i] = actor->state[i];
+        gCourseSelectStatus.outgoingPreviewModelState[i] = actor->state[i];
     }
 
     if ((gRacePlayers[0].menuState == 4) || (actor->state[0] == 9)) {
@@ -663,7 +631,7 @@ void initCourseSelectPreviewModelOut(void *arg0) {
     s32 i;
 
     actor = arg0;
-    outgoingModelState = (u8 *)&gCourseSelectStatus;
+    outgoingModelState = gCourseSelectStatus.bytes;
     i = 0;
     do {
         actor->vecs[i].x = 0;
@@ -1126,7 +1094,7 @@ void updateCourseSelectCourseCursors(CourseSelectWidgetActor *arg0) {
                 break;
             }
             i++;
-            gCourseSelectStatus->bytes[i - 1] = state;
+            gCourseSelectStatus.bytes[i - 1] = state;
         } while (i < (s32) gPlayerCount);
     }
 
@@ -1613,18 +1581,12 @@ void initCourseSelectCourseStats(CourseSelectWidgetActor *arg0) {
 
 #if 0
 #ifdef NON_MATCHING
-typedef struct {
-    /* 0x00 */ u8 pad0[0x2C];
-    /* 0x2C */ u16 unk2C;
-    /* 0x2E */ u8 unk2E;
-} CourseSelectStatus26C4C;
-
 extern u32 gCourseUnlockPrices[];
 extern u8 gUnlockedExtraCourseFlags;
 extern u8 gCourseSelectExtraCourseIds[];
 
 void drawCourseSelectCourseDescription(CourseSelectWidgetActor *arg0) {
-    volatile CourseSelectStatus26C4C *status = (CourseSelectStatus26C4C *)gCourseSelectStatus;
+    volatile CourseSelectStatus *status = &gCourseSelectStatus;
     MenuGlyphScript *volatile text;
     volatile RacePlayer *selection;
     MenuGlyphScript buffer[8];
@@ -1770,13 +1732,13 @@ void drawCourseSelectCourseDescription(CourseSelectWidgetActor *arg0) {
     MenuGlyphScript *digit;
     u16 selectedIndex;
 
-    if (gCourseSelectStatus->purchaseMessage == 0) {
+    if (gCourseSelectStatus.purchaseMessage == 0) {
         if ((D_8010AEA8 == 0) &&
             ((D_80121D80->menuState == 0) || (D_80121D80->menuState == 3) ||
              (D_80121D80->menuState == 9))) {
-            if (gCourseSelectStatus->descriptionMode == 1) {
+            if (gCourseSelectStatus.descriptionMode == 1) {
                 descriptionIndex = 3;
-            } else if (gCourseSelectStatus->descriptionMode == 2) {
+            } else if (gCourseSelectStatus.descriptionMode == 2) {
                 descriptionIndex = 4;
             } else if ((D_80121D80->courseIndex >= 9) && (D_80121D80->courseIndex < 12)) {
                 descriptionIndex = 5;
@@ -1870,7 +1832,7 @@ void drawCourseSelectCourseDescription(CourseSelectWidgetActor *arg0) {
             }
         }
     } else {
-        digitCount = gCourseSelectStatus->purchaseMessage;
+        digitCount = gCourseSelectStatus.purchaseMessage;
         drawMenuGlyphScript(arg0->x, arg0->y,
                             gCourseSelectPurchaseMessageText[digitCount - 1U].text,
                             1, (u16)(s32)arg0->spriteIndex, 0);
@@ -2319,8 +2281,7 @@ void updateCourseSelectExtraCourseIconList(CourseSelectWidgetActor *arg0) {
                 }
             }
 
-            ((CourseSelectExtraCourseStatus *)gCourseSelectStatus)->extraCourseCounts[playerIndex] =
-                actor->itemCounts[playerIndex];
+            gCourseSelectStatus.extraCourseCounts[playerIndex] = actor->itemCounts[playerIndex];
         }
     }
     addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawCourseSelectExtraCourseIconList, arg0);
@@ -2486,7 +2447,7 @@ void updateCourseSelectExtraCourseIconList(CourseSelectWidgetActor *arg0) {
                     }
                 }
                 player++;
-                gCourseSelectStatus[playerIndex + 0x24] =
+                gCourseSelectStatus.extraCourseCounts[playerIndex] =
                     ((CourseSelectExtraCourseIconListActor *)arg0)->itemCounts[playerIndex];
                 playerIndex++;
             } while (playerIndex < (s32)gPlayerCount);
