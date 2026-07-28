@@ -129,7 +129,6 @@ struct ShopMenuWidgetActor {
     };
 };
 
-extern u8 gMenuSelectionConfirmTimer;
 extern u8 gMenuExitSelection;
 
 void drawShopMenuModeChoiceRows(ShopMenuRowActor *actor) {

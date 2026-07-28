@@ -41,6 +41,7 @@ extern u16 gMenuInputRepeatTimers[4];
 extern u8 gControllerPakRetryCounts[4];
 extern u8 gMainMenuSecretCodeUnlocked;
 extern u8 gMainMenuSelectionResult;
+extern u8 gMenuSelectionConfirmTimer;
 
 void initControllerSubsystem(void);
 void controllerSubsystemThreadMain(void *threadArg);

@@ -3,6 +3,7 @@
 #include "game/engine/render_callback.h"
 #include "game/engine/relocatable_heap.h"
 #include "game/engine/callback_task_scheduler.h"
+#include "game/menu/main_menu/controller_main_menu_flow.h"
 #include "game/menu/race_type_select/race_type_select_ui.h"
 #include "game/menu/splitscreen_select/race_splitscreen_select_ui.h"
 #include "game/menu/renderer/menu_renderer.h"
@@ -39,7 +40,6 @@ typedef struct {
 } RaceTypeSelectPaddedFrameTileMapTable;
 
 extern int sprintf(char *, const char *, ...);
-extern u8 gMenuSelectionConfirmTimer;
 extern RaceTypeSelectFrameTileMapTable gRaceTypeSelectFrameTileMaps;
 extern u16 gRaceTypeSelectSpecialFrameCornerTile;
 extern RaceTypeSelectPortrait gRaceTypeSelectPortraitScripts[];

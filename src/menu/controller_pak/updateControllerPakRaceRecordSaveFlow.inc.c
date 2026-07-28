@@ -19,7 +19,7 @@ void updateControllerPakRaceRecordSaveFlow(void) {
     } else {
         retryLimit = 3;
         transitionStep = gControllerPakRaceRecordSaveStatusTransition.step;
-        if ((u8)gMenuSelectionConfirmTimer == 0) {
+        if (gMenuSelectionConfirmTimer == 0) {
             if (transitionStep == 1) {
             if (gMenuChoicePromptState[0] != 0) {
                 statusCode = 6;
@@ -210,14 +210,14 @@ void updateControllerPakRaceRecordSaveFlow(void) {
         }
         flowComplete.value = (u8)gRacePlayers.status & 1;
         } else {
-            gMenuSelectionConfirmTimer = (u8)gMenuSelectionConfirmTimer + 1;
+            gMenuSelectionConfirmTimer = gMenuSelectionConfirmTimer + 1;
         }
     }
 
     if (flowComplete.value != 0) {
         gMenuSelectionConfirmTimer = 1;
     }
-    if ((u8)gMenuSelectionConfirmTimer == 0x23) {
+    if (gMenuSelectionConfirmTimer == 0x23) {
         setCurrentGameTaskCallback(fadeOutControllerPakRaceRecordSaveFlow, 0);
     }
     updateCallbackTasks();

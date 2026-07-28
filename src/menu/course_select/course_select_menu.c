@@ -26,7 +26,6 @@ typedef union {
 extern u16 gCourseDetailsPreviewCourseTiles[];
 extern s16 gMenuFadeAlpha;
 extern s8 D_800EC9C0;
-extern u8 gMenuSelectionConfirmTimer;
 extern s8 D_800EC9F1;
 extern s8 D_800EC9F9;
 extern s8 D_8010AE64;

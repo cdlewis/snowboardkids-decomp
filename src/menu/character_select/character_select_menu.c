@@ -29,7 +29,6 @@ extern CallbackTask *D_8010ADE0;
 extern CallbackTask *D_8010ADE4;
 extern CallbackTask *D_8010ADEC;
 extern s16 gMenuFadeAlpha;
-extern s8 gMenuSelectionConfirmTimer;
 extern s8 D_8010AE64[];
 // Per-player highlighted index. During character-roster browsing
 // (gCharacterSelectHudState.phase == 3), this indexes gCharacterSelectIdOrder,

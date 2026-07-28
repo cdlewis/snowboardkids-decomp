@@ -64,7 +64,6 @@ extern MenuGlyphScript gRaceSetupPlayerCountPromptText[][0x34];
 extern u8 gPlayerCount;
 extern u8 gRaceSetupSaveChoicePromptBottomSprites[];
 extern u8 gRaceSetupSaveChoicePromptTopSprites[];
-extern u8 gMenuSelectionConfirmTimer;
 extern u8 gRaceSetupSavePanelFrameState;
 extern s32 gMenuFlowState;
 void drawRaceSetupPlayerCountPrompt(MenuIntroActor *arg0) {

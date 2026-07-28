@@ -4,6 +4,7 @@
 #include "game/engine/render_callback.h"
 #include "game/engine/relocatable_heap.h"
 #include "game/engine/callback_task_scheduler.h"
+#include "game/menu/controller_pak/controller_pak_race_record_save_flow.h"
 #include "game/menu/controller_pak/controller_pak_race_record_save_ui.h"
 #include "game/menu/main_menu/controller_main_menu_flow.h"
 #include "game/menu/renderer/menu_renderer.h"
@@ -16,26 +17,16 @@ typedef struct {
     u16 slideOffset;
 } ControllerPakRaceRecordSaveUiTransition;
 
-typedef struct {
-    /* 0x0 */ u8 step;
-    /* 0x1 */ char pad1[0x1];
-    /* 0x2 */ s16 alpha;
-    /* 0x4 */ u16 targetStatus;
-    /* 0x6 */ s16 nextStatus;
-} ControllerPakRaceRecordSaveStatusTransition;
-
 extern MenuGlyphScript gControllerPakRaceRecordSaveStatusMessages[][0x26];
 extern u8 gControllerPakRaceRecordSaveChoicePromptTopSprites[];
 extern u8 gControllerPakRaceRecordSaveChoicePromptBottomSprites[];
 extern MenuGlyphScript gControllerPakRaceRecordSaveExitMessage[];
 extern s16 gControllerPakRaceRecordSaveStatusTransitionAlpha;
-extern ControllerPakRaceRecordSaveStatusTransition gControllerPakRaceRecordSaveStatusTransition;
 extern u16 gControllerPakRaceRecordSaveStatusTransitionTargetStatus;
 extern u16 gControllerPakRaceRecordSaveStatusTransitionNextStatus;
 extern u8 gControllerPakRaceRecordSaveStatusTransitionStep;
 extern void *D_8010ADE0;
 extern void *D_8010ADE4;
-extern u8 gMenuSelectionConfirmTimer;
 
 #define CONTROLLER_PAK_RACE_RECORD_SAVE_SCORE_TEXTURE_HANDLE (gAssetHandles[0x21])
 

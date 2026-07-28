@@ -44,7 +44,6 @@ extern s32 enqueueSoundEffect(s16 soundId, s16 priority);
 extern s16 gMenuFadeAlpha;
 extern u8 gRaceRumbleEnabled;
 extern u8 gRumblePakConnectedByController[];
-extern u8 gMenuSelectionConfirmTimer;
 extern char D_800EC9E5;
 extern u8 gHighestUnlockedCourse;
 extern s16 gRaceCourseIndex;
