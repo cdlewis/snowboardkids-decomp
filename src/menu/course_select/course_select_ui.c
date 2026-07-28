@@ -214,6 +214,7 @@ extern s16 gCourseSelectStatsPlayerMarkerLayout[][2];
 extern s16 gAssetHandles[];
 extern u8 gPlayerCount;
 extern CourseSelectRacePlayer gRacePlayers[];
+extern CourseSelectRacePlayer D_80121D80[];
 extern u8 gCourseSelectSelectedCourseId[][sizeof(CourseSelectRacePlayer)];
 extern u8 gMenuTransitionState;
 extern s32 gMenuFlowState;
@@ -2542,66 +2543,47 @@ void drawCourseSelectCompletePanels(CourseSelectPlayerPanelsActor *actor) {
     }
 }
 
-// updateCourseSelectCompletePanels best match: 99.574% (nonmatchings/updateCourseSelectCompletePanels-1645024839200431810/base_3.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/menu/course_select/course_select_ui/updateCourseSelectCompletePanels.s")
-
-#ifdef NON_MATCHING
-void updateCourseSelectCompletePanels(CourseSelectWidgetActor *arg0) {
-    s32 maxAlpha;
-    CourseSelectPlayerPanelsActor *base;
+void updateCourseSelectCompletePanels(CourseSelectPlayerPanelsActor *actor) {
     CourseSelectCompletePanelSource *source0;
-    CourseSelectCompletePanelSource *sourceAlias;
     CourseSelectCompletePanelSource *source1;
-    s32 i;
-    s32 j;
+    CourseSelectPlayerPanelsActor *task;
+    CourseSelectPlayerPanelsActor *panel;
     u16 alpha;
-    s16 nextAlpha;
-    u8 playerState;
-    long long fadeStep;
+    s32 i;
 
-    i = 0;
     source0 = (CourseSelectCompletePanelSource *)D_8010ADE0;
     source1 = (CourseSelectCompletePanelSource *)D_8010ADE4;
-    maxAlpha = 0x100;
-    base = (CourseSelectPlayerPanelsActor *)arg0;
-    if ((s32)gPlayerCount > 0) {
-        do {
-            fadeStep = 0x30;
-            alpha = base->playerPanelFadeAlpha[i];
-            sourceAlias = source0;
-            if (alpha == 0) {
-                if ((sourceAlias != NULL) && ((source0->playerStates[i] == 4) || (source1->playerStates[i] == 4))) {
-                    base->playerPanelFadeAlpha[i] = 1;
-                }
-            } else {
-                if (alpha != maxAlpha) {
-                    nextAlpha = fadeStep;
-                    nextAlpha = alpha + nextAlpha;
-                    base->playerPanelFadeAlpha[i] = nextAlpha;
-                    if ((u16)(alpha + fadeStep) >= maxAlpha) {
-                        base->playerPanelFadeAlpha[i] = 0x100;
-                    }
-                }
-                playerState = ((((((gRacePlayers[i].menuState & 0xFFu) & 0xFFu) & 0xFFu) & 0xFFu) & 0xFFu) & 0xFFu) & 0xFFu;
-                if (playerState == 1) {
-                    base->playerPanelFadeAlpha[i] = 0;
+    panel = actor;
+    task = panel;
+    for (i = 0; i < gPlayerCount; i++) {
+        alpha = panel->playerPanelFadeAlpha[i];
+        if (alpha == 0) {
+            if ((source0 != NULL) &&
+                ((source0->playerStates[i] == 4) || (source1->playerStates[i] == 4))) {
+                panel->playerPanelFadeAlpha[i] = 1;
+            }
+        } else {
+            if (alpha != 0x100) {
+                panel->playerPanelFadeAlpha[i] = alpha + 0x30;
+                if (panel->playerPanelFadeAlpha[i] >= 0x100) {
+                    panel->playerPanelFadeAlpha[i] = 0x100;
                 }
             }
-            i++;
-        } while (i < (s32)gPlayerCount);
+            if (D_80121D80[i].menuState == 1) {
+                panel->playerPanelFadeAlpha[i] = 0;
+            }
+        }
     }
 
-    if ((s32)D_800EC9C0 == 0x10) {
-        ((CallbackTaskCallback)removeCallbackTask)(base, 0);
-        for (j = 0; j < (s32)gPlayerCount; j++) {
-            gRacePlayers[j].menuState = 3;
+    if (D_800EC9C0 == 0x10) {
+        removeCallbackTask(task);
+        for (i = 0; i < gPlayerCount; i++) {
+            D_80121D80[i].menuState = 3;
         }
     } else {
-        addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)(void (*)(CourseSelectWidgetActor *))drawCourseSelectCompletePanels,
-                          (CourseSelectWidgetActor *)base);
+        addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawCourseSelectCompletePanels, task);
     }
 }
-#endif
 
 void initCourseSelectCompletePanels(CourseSelectWidgetActor *arg0) {
     s32 var_v0;

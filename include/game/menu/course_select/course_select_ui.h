@@ -84,7 +84,7 @@ void updateCourseSelectExtraCourseIconListClose(CourseSelectWidgetActor *arg0);
 void updateCourseSelectExtraCourseIconList(CourseSelectWidgetActor *arg0);
 void updateCourseSelectPlayerPanels(CourseSelectWidgetActor *arg0);
 void drawCourseSelectCompletePanels(CourseSelectPlayerPanelsActor *actor);
-void updateCourseSelectCompletePanels(CourseSelectWidgetActor *arg0);
+void updateCourseSelectCompletePanels(CourseSelectPlayerPanelsActor *actor);
 void initCourseSelectCompletePanels(CourseSelectWidgetActor *arg0);
 void finishCourseSelectUiTask(s32 arg0);
 
