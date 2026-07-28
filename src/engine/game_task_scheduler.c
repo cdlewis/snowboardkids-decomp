@@ -1,6 +1,7 @@
 #include "common.h"
 #include "game/engine/game_task_scheduler.h"
 #include "game/engine/system_runtime.h"
+#include "game/menu/main_menu/controller_main_menu_flow.h"
 
 #define GAME_TASK_CALLBACK_COUNT 3
 #define GAME_TASK_COUNT 8
@@ -27,17 +28,9 @@ typedef struct FramebufferState {
     u8 pad[0x1861F];
 } FramebufferState;
 
-typedef struct ControllerInputState {
-    u16 buttons;
-    s8 stickX;
-    s8 stickY;
-    u8 pad4[2];
-} ControllerInputState;
-
 extern s8 gAnalogStickResponseCurve;
 extern u8 gFramebufferSwapDelayTimer;
 extern u8 gFramebufferSwapDelay;
-extern ControllerInputState gControllerInputState;
 extern s16 gFrameCounter;
 extern GameTask *gCurrentGameTask;
 extern GameTask gGameTaskPool[GAME_TASK_COUNT];
@@ -155,7 +148,7 @@ void updateGameTaskScheduler(void) {
     newInput = &gPlayerInputPressed;
     stickYOut = &gPlayerStickY;
     stickXOut = &gPlayerStickX;
-    controller = &gControllerInputState;
+    controller = gControllerInputState;
     input = &gPlayerInputHeld;
     previousInput = &gPlayerInputPrevious;
 

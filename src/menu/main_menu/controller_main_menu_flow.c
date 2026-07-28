@@ -40,13 +40,6 @@ typedef struct OSContPad {
     u8 errno;
 } OSContPad;
 
-typedef struct ControllerInputState {
-    u16 buttons;
-    s8 stickX;
-    s8 stickY;
-    u8 pad4[2];
-} ControllerInputState;
-
 typedef struct OSPfs {
     s32 status;
     OSMesgQueue *queue;
@@ -125,7 +118,6 @@ typedef struct MainMenuState {
     s32 timer;
 } MainMenuState;
 
-extern ControllerInputState gControllerInputState[4];
 extern s32 gRumbleMotorStatuses[4];
 extern s16 gRumbleMotorRequestStates[4];
 
