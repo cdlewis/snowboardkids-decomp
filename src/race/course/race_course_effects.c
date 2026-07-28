@@ -102,14 +102,6 @@ typedef struct RaceMovingEffect {
 } RaceMovingEffect;
 
 typedef struct {
-    char pad0[8];
-    Vec3i unk8;
-    char pad14[0xC];
-    Vec3i pos;
-    char pad2C[0x1C];
-} CourseSpawnEntry;
-
-typedef struct {
     s16 angle;
     s16 unk2;
     char pad4[0x44];
@@ -245,7 +237,6 @@ extern CourseMarkerSpawnEntry *gCourseTextureMarkerSpawnEntriesByCourse[];
 extern CourseRenderEntry *gRaceCourseSceneryEntriesByCourse[];
 extern void *gRaceCourseSceneryDisplayLists[];
 extern SoundParams gCourseGateSoundParams[];
-extern CourseSpawnEntry gRaceCourseStartEntries[];
 extern CourseAngleEntry gSpiralCourseObjectAngles[];
 extern CourseAngleEntry gLaunchRampCourseObjectAngles[];
 extern CourseMarkerEntry gCourseBillboardMarkerEntries[];

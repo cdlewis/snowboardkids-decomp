@@ -326,11 +326,6 @@ typedef struct RaceUiRankParticleActor {
     /* 0x50 */ u8 matrixDirty;
 } RaceUiRankParticleActor;
 
-typedef struct {
-    /* 0x00 */ s16 pathIndex;
-    /* 0x02 */ u8 pad2[0x48 - 0x02];
-} RaceUiCourseSpawnEntry;
-
 typedef struct RaceUiPodiumTrailActor {
     /* 0x00 */ u8 pad0[0x18];
     /* 0x18 */ Vec3i pos;
@@ -772,11 +767,6 @@ typedef struct {
     /* 0x22 */ u8 pad52[4];
 } RaceUiSparkleRetargetScratch;
 
-typedef struct {
-    /* 0x00 */ s16 pathIndex;
-    /* 0x02 */ u8 pad2[0x48 - 0x2];
-} CourseSpawnEntry;
-
 typedef struct RaceUiCourseSpriteActor {
     /* 0x00 */ u8 pad0[0x10];
     /* 0x10 */ u16 index;
@@ -798,7 +788,6 @@ extern const char gRaceUiPendingTrickPrizeLabel[];
 extern const char gRaceUiPendingMakeBonusLabel[];
 extern const char gRaceUiPendingCompleteBonusLabel[];
 extern const char gRaceUiPendingMoneyLabel[];
-extern CourseSpawnEntry gRaceCourseStartEntries[];
 extern Gfx *gRegionAllocPtr;
 extern Gfx D_800D60A0[];
 extern Gfx D_800D6120[];

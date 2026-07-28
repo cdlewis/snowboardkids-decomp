@@ -35,13 +35,6 @@ typedef struct {
 } RaceUiCoursePosition;
 
 typedef struct {
-    /* 0x00 */ s16 pathIndex;
-    /* 0x02 */ u8 pad2[0x3C - 0x02];
-    /* 0x3C */ s16 finishLinePathIndex;
-    /* 0x3E */ u8 pad3E[0x48 - 0x3E];
-} RaceTimerCourseSpawnEntry;
-
-typedef struct {
     /* 0x00 */ s16 finishLinePathIndex;
     /* 0x02 */ u8 pad2[0x48 - 0x02];
 } RaceFinishLinePathIndexEntry;
@@ -51,7 +44,6 @@ extern int sprintf(char *, const char *, ...);
 extern RaceTimer D_800DC928[];
 extern RaceTimer D_800DC950;
 extern u8 gRaceSplitscreenMode;
-extern RaceTimerCourseSpawnEntry gRaceCourseStartEntries[];
 extern RaceFinishLinePathIndexEntry gRaceCourseFinishLineData[];
 extern u8 gRaceTimerTensDigitTileOffsets[];
 extern u8 gRaceTimerOnesDigitTileIds[];
