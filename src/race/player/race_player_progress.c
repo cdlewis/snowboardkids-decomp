@@ -34,13 +34,14 @@ typedef struct RacePlayerProgressState {
     /* 0x525 */ u8 pad525[2];
     /* 0x527 */ s8 checkpointEventId;
     /* 0x528 */ u8 pad528;
-    /* 0x529 */ u8 displayRank;
+    /* 0x529 */ s8 displayRank;
     /* 0x52A */ u8 rankArrow;
-    /* 0x52B */ u8 rankChangeTimer;
+    /* 0x52B */ s8 rankChangeTimer;
     /* 0x52C */ u8 pad52C[RACE_PLAYER_PROGRESS_STATE_SIZE - 0x52C];
 } RacePlayerProgressState;
 
 extern RacePlayerProgressState gRacePlayers[RACE_PLAYER_PROGRESS_COUNT];
+extern RacePlayerProgressState D_80121D80[RACE_PLAYER_PROGRESS_COUNT];
 extern RacePlayerProgressState gFrameCounter;
 extern RacePlayerCheckpointEvent *gRaceCourseCheckpointEventLists[];
 extern s8 *gRaceCoursePlayerPathOffsetTables[];
@@ -54,10 +55,185 @@ extern s16 gRaceCourseIndex;
 
 #define gRacePlayerProgressStates gRacePlayers
 
-// updateRacePlayerRankDisplay best match: 55.599% (nonmatchings/updateRacePlayerRankDisplay-3357475854818838508/base_11.c)
+// updateRacePlayerRankDisplay best match: 97.944%
 #pragma GLOBAL_ASM("asm/nonmatchings/race/player/race_player_progress/updateRacePlayerRankDisplay.s")
 
 #ifdef NON_MATCHING
+void updateRacePlayerRankDisplay(void) {
+    s32 i;
+    s32 j;
+    s32 temp;
+    s32 playerOrder[4];
+    s32 deltaZ;
+    RacePlayerProgressState *player;
+    RacePlayerProgressState *other;
+
+    if (gRaceSplitscreenMode == 0) {
+        playerOrder[0] = 0;
+        playerOrder[1] = 1;
+        playerOrder[2] = 2;
+        playerOrder[3] = 3;
+
+        for (i = 0; i < 3; i++) {
+            for (j = i; j < 4; j++) {
+                if (D_80121D80[playerOrder[j]].raceRank < D_80121D80[playerOrder[i]].raceRank) {
+                    temp = playerOrder[i];
+                    playerOrder[i] = playerOrder[j];
+                    playerOrder[j] = temp;
+                }
+            }
+        }
+
+        switch (gPlayerCount) {
+            case 1:
+                i = 0;
+                if (D_80121D80[0].raceRank == 0) {
+                    for (j = 0; j < 4; j++) {
+                        if (D_80121D80[playerOrder[j]].isActive != 0) {
+                            D_80121D80[playerOrder[j]].displayRank =
+                                gSinglePlayerRankDisplayPatternFirst[i++];
+                            D_80121D80[playerOrder[j]].rankChangeTimer = 0;
+                        }
+                    }
+                    i = 0;
+                }
+
+                if (D_80121D80[0].raceRank == 1) {
+                    for (j = 0; j < 4; j++) {
+                        if (D_80121D80[playerOrder[j]].isActive != 0) {
+                            D_80121D80[playerOrder[j]].displayRank =
+                                gSinglePlayerRankDisplayPatternSecond[i++];
+                            D_80121D80[playerOrder[j]].rankChangeTimer = 0;
+                        }
+                    }
+                    i = 0;
+                }
+
+                if (D_80121D80[0].raceRank == 2) {
+                    for (j = 0; j < 4; j++) {
+                        if (D_80121D80[playerOrder[j]].isActive != 0) {
+                            D_80121D80[playerOrder[j]].displayRank =
+                                gSinglePlayerRankDisplayPatternThird[i++];
+                            D_80121D80[playerOrder[j]].rankChangeTimer = 0;
+                        }
+                    }
+                    i = 0;
+                }
+
+                if (D_80121D80[0].raceRank == 3) {
+                    for (j = 0; j < 4; j++) {
+                        if (D_80121D80[playerOrder[j]].isActive != 0) {
+                            D_80121D80[playerOrder[j]].displayRank =
+                                gSinglePlayerRankDisplayPatternFourth[i++];
+                            D_80121D80[playerOrder[j]].rankChangeTimer = 0;
+                        }
+                    }
+                }
+                break;
+
+            case 2:
+                if (D_80121D80[1].raceRank >= D_80121D80[0].raceRank) {
+                    if (D_80121D80[1].raceRank == 3) {
+                        if (D_80121D80[3].raceRank >= D_80121D80[2].raceRank) {
+                            D_80121D80[2].displayRank = 2;
+                            D_80121D80[3].displayRank = 1;
+                        } else {
+                            D_80121D80[2].displayRank = 1;
+                            D_80121D80[3].displayRank = 2;
+                        }
+                    } else if (D_80121D80[3].raceRank >= D_80121D80[2].raceRank) {
+                        D_80121D80[2].displayRank = 1;
+                        D_80121D80[3].displayRank = 2;
+                    } else {
+                        D_80121D80[2].displayRank = 2;
+                        D_80121D80[3].displayRank = 1;
+                    }
+                    D_80121D80[2].rankChangeTimer = 1;
+                    D_80121D80[3].rankChangeTimer = 1;
+                } else {
+                    if (D_80121D80[0].raceRank == 3) {
+                        if (D_80121D80[3].raceRank >= D_80121D80[2].raceRank) {
+                            D_80121D80[2].displayRank = 2;
+                            D_80121D80[3].displayRank = 1;
+                        } else {
+                            D_80121D80[2].displayRank = 1;
+                            D_80121D80[3].displayRank = 2;
+                        }
+                    } else if (D_80121D80[3].raceRank >= D_80121D80[2].raceRank) {
+                        D_80121D80[2].displayRank = 1;
+                        D_80121D80[3].displayRank = 2;
+                    } else {
+                        D_80121D80[2].displayRank = 2;
+                        D_80121D80[3].displayRank = 1;
+                    }
+                    D_80121D80[2].rankChangeTimer = 0;
+                    D_80121D80[3].rankChangeTimer = 0;
+                }
+                break;
+
+            case 3:
+                D_80121D80[3].rankChangeTimer = 0;
+                D_80121D80[3].displayRank = 1;
+                i = D_80121D80[D_80121D80[3].rankChangeTimer].raceRank;
+                if (i < D_80121D80[1].raceRank) {
+                    D_80121D80[3].rankChangeTimer = 1;
+                    i = D_80121D80[(u32)D_80121D80[3].rankChangeTimer & 0xFFFFFFFF].raceRank;
+                }
+                if (i < D_80121D80[2].raceRank) {
+                    D_80121D80[3].rankChangeTimer = 2;
+                }
+                break;
+        }
+
+        j = 3;
+        temp = 0;
+        do {
+            player = &D_80121D80[temp];
+            if ((&D_80121D80[temp])->isActive != 0) {
+                switch ((&D_80121D80[temp])->displayRank) {
+                    case 0:
+                        (&D_80121D80[temp])->rankArrow = 0;
+                        break;
+
+                    case 1:
+                        (&D_80121D80[temp])->rankArrow = 0;
+                        other = &D_80121D80[player->rankChangeTimer];
+                        i = other->posX - player->posX;
+                        deltaZ = other->posZ - player->posZ;
+                        if ((i >= 0x3800000) || (i <= -0x3800000) || (deltaZ >= 0x3800000) ||
+                            (deltaZ <= -0x3800000)) {
+                            if (other->raceRank < (&D_80121D80[temp])->raceRank) {
+                                (&D_80121D80[temp])->rankArrow = 1;
+                            } else {
+                                (&D_80121D80[temp])->rankArrow = 2;
+                            }
+                        }
+                        break;
+
+                    case 2:
+                        if (gPlayerCount == 1) {
+                            if (D_80121D80[0].raceRank < (&D_80121D80[temp])->raceRank) {
+                                (&D_80121D80[temp])->rankArrow = 0;
+                            } else {
+                                (&D_80121D80[temp])->rankArrow = j;
+                            }
+                        } else {
+                            (&D_80121D80[temp])->rankArrow = j;
+                        }
+                        break;
+                }
+
+                if ((&D_80121D80[temp])->state == 5) {
+                    (&D_80121D80[temp])->rankArrow = 0;
+                }
+            }
+            temp++;
+        } while (temp < 4);
+    }
+}
+#endif
+
+#if 0
 #define RANK_NEAR_LIMIT 0x3800000
 #define RANK_NEAR_NEG_LIMIT ((s32)0xFC800001)
 
