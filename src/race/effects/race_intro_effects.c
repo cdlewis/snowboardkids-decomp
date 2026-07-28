@@ -2,6 +2,7 @@
 #include "common.h"
 #include "game/menu/renderer/menu_render_utils.h"
 #include "game/engine/render_callback.h"
+#include "game/engine/system_runtime.h"
 #include "game/engine/relocatable_heap.h"
 #include "game/engine/callback_task_scheduler.h"
 #include "game/engine/asset_manager.h"
@@ -72,7 +73,6 @@ struct RaceIntroEffectActor {
 };
 
 extern void osWritebackDCache(void *, s32);
-extern u8 gRenderMatricesDirty;
 extern Gfx *gRegionAllocPtr;
 extern Gfx D_20028F0[];
 extern Gfx D_2002DB8[];

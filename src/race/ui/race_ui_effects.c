@@ -831,7 +831,6 @@ extern u32 gViewportMatrix;
 extern u8 gCurrentViewportIndex;
 extern u8 gRaceChallengeFailed;
 extern u8 gRaceUpdatePaused;
-extern u8 gRenderMatricesDirty;
 extern Vec3i gIceCourseBumperPositions[];
 
 extern void drawAssetTableSprite8bpp(s16, s16, void *, s32);

@@ -1,6 +1,7 @@
 #include "common.h"
 #include "game/engine/asset_manager.h"
 #include "game/engine/render_callback.h"
+#include "game/engine/system_runtime.h"
 #include "game/engine/relocatable_heap.h"
 #include "game/race/ui/race_ui_effects.h"
 #include "game/math/spatial_math.h"
@@ -58,7 +59,6 @@ extern u8 gRaceUpdatePaused;
 extern u32 gSnowboardTrailFrontDisplayList[];
 extern u32 gSnowboardTrailBackDisplayList[];
 extern Gfx *gRegionAllocPtr;
-extern u8 gRenderMatricesDirty;
 
 void renderSnowboardTrailEffect(SnowboardTrailState *trail) {
     Gfx *unused;

@@ -3,6 +3,7 @@
 #include "game/menu/renderer/menu_renderer.h"
 #include "game/menu/renderer/menu_render_utils.h"
 #include "game/engine/render_callback.h"
+#include "game/engine/system_runtime.h"
 #include "assets.h"
 #include "game/race/course/race_course_effects.h"
 #include "game/race/player/race_player_input.h"
@@ -214,7 +215,6 @@ extern void *resolveAssetTableRelativePointer(void *, u32);
 extern void osWritebackDCache(void *, s32);
 extern s32 gMenuFlowState;
 extern u8 gCurrentViewportIndex;
-extern u8 gRenderMatricesDirty;
 extern void waitForCourseGateTrigger(CourseGateObjectEffect *);
 void renderCourseGateObject(CourseGateObjectEffect *);
 void renderCourseTriggerVolume(RaceCourseTriggerEffect *);

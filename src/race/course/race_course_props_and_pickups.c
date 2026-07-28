@@ -2,6 +2,7 @@
 #include "common.h"
 #include "game/menu/renderer/menu_render_utils.h"
 #include "game/engine/render_callback.h"
+#include "game/engine/system_runtime.h"
 #include "game/race/course/race_course_props_and_pickups.h"
 #include "game/engine/relocatable_heap.h"
 #include "game/engine/callback_task_scheduler.h"
@@ -154,7 +155,6 @@ extern Vec3i gPickupShardInitialVelocities[];
 extern RaceCoursePropModelEntry *gRaceCoursePropModelLists[];
 extern void *gRaceCourseSceneryDisplayLists[];
 extern Gfx *gThrownPickupModelDisplayList;
-extern u8 gRenderMatricesDirty;
 extern u8 gRaceUpdatePaused;
 extern u8 gTrainingCourseLesson;
 extern CourseCollectibleSpriteEntry *gCourseCollectibleSpriteListsByCourse[];
