@@ -62,25 +62,6 @@ typedef struct {
     /* 0x20 */ s32 pad20;
 } TitleMenuRotatingBoardScratch;
 
-typedef struct {
-    /* 0x00 */ s32 unk0;
-    /* 0x04 */ s32 unk4;
-    /* 0x08 */ s32 unk8;
-    /* 0x0C */ s32 unkC;
-    /* 0x10 */ s32 unk10;
-    /* 0x14 */ s32 unk14;
-    /* 0x18 */ s32 unk18;
-    /* 0x1C */ s32 unk1C;
-    /* 0x20 */ s32 unk20;
-    /* 0x24 */ s32 unk24;
-    /* 0x28 */ s32 unk28;
-    /* 0x2C */ s32 unk2C;
-    /* 0x30 */ s32 unk30;
-    /* 0x34 */ s32 unk34;
-    /* 0x38 */ s32 unk38;
-    /* 0x3C */ s32 unk3C;
-} GfxCommandDest;
-
 extern Gfx *gRegionAllocPtr;
 extern s16 raceSetupCharacterFocusSoundIds[];
 extern u8 raceSetupCharacterFocusAnimationIds[];
@@ -95,14 +76,13 @@ extern s16 mainMenuModeLabelFlashTileOffsets[];
 extern u32 raceStartPlayerEffectVertices[];
 extern u32 gAlphaSpriteRenderModeDl[];
 extern u32 gTranslucentSpriteRenderModeDl[];
-extern u32 gIdentityMatrix[];
 extern s16 gMenuFadeAlpha;
 extern u32 gMenuRenderModeResetDl[];
 extern s16 gRaceCourseIndex;
 extern s16 gFrameCounter;
 extern u8 gCurrentViewportIndex;
 extern u8 gRenderMatricesDirty;
-extern GfxCommandDest *gViewportMatrix;
+extern Mtx *gViewportMatrix;
 extern u8 gConnectedControllerCount;
 extern u32 D_2000000[];
 extern u32 D_20006C8[];
@@ -112,7 +92,7 @@ extern u32 D_2000E70[];
 extern u32 D_20058A8[];
 
 void drawMenuAsciiTextDefaultScale(s32, s32, void *, s32);
-GfxCommandDest *allocFixedTransformMatrix(FixedTransform *);
+Mtx *allocFixedTransformMatrix(FixedTransform *);
 void drawRaceSetupBackdropModels(MenuScreenEffectActor *);
 void drawRaceSetupCourseBackdrop(void *);
 void renderRaceSetupBackdrop(MenuScreenEffectActor *);
@@ -264,7 +244,7 @@ void drawRaceSetupBackdropModels(MenuScreenEffectActor *arg0) {
         gSPSegment(gRegionAllocPtr++, 0x02, getRelocatableHeapBlockBase(gAssetHandles[8]));
         gSPSegment(gRegionAllocPtr++, 0x03, getRelocatableHeapBlockBase(gAssetHandles[9]));
 
-        gSPMatrix(gRegionAllocPtr++, gIdentityMatrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+        gSPMatrix(gRegionAllocPtr++, &gIdentityMatrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
 
         if (actor->index == 0) {
             gSPDisplayList(gRegionAllocPtr++, D_2000000);
@@ -286,7 +266,7 @@ void drawRaceSetupCourseBackdrop(void *arg0) {
         gSPSegment(gRegionAllocPtr++, 0x02, getRelocatableHeapBlockBase(gAssetHandles[14]));
         gSPSegment(gRegionAllocPtr++, 0x03, getRelocatableHeapBlockBase(gAssetHandles[18]));
 
-        gSPMatrix(gRegionAllocPtr++, gIdentityMatrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+        gSPMatrix(gRegionAllocPtr++, &gIdentityMatrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
 
         gSPDisplayList(gRegionAllocPtr++, D_20058A8);
     }
@@ -571,7 +551,7 @@ void drawMainMenuModeBoardTransition(MenuScreenEffectActor *arg0) {
     void *image;
     void *palette;
     FixedTransform transform;
-    GfxCommandDest *matrix;
+    Mtx *matrix;
 
     if (gCurrentViewportIndex == 2) {
         getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gAssetHandles[34]), 0, &image, &palette);
@@ -713,7 +693,7 @@ void initMainMenuModeLabelFadeIn(MenuScreenEffectActor *arg0) {
 
 void drawMainMenuRotatingBoardModel(MenuScreenEffectActor *arg0) {
     TitleMenuRotatingBoardScratch scratch;
-    GfxCommandDest *matrix;
+    Mtx *matrix;
 
     if (gCurrentViewportIndex == 0) {
         makeFixedRotationY(scratch.source.rotation, arg0->unk18.half.hi);
@@ -741,7 +721,7 @@ void drawMainMenuStaticBoardModel(void *arg0) {
         gSPSegment(gRegionAllocPtr++, 0x02, getRelocatableHeapBlockBase(gAssetHandles[8]));
         gSPSegment(gRegionAllocPtr++, 0x03, getRelocatableHeapBlockBase(gAssetHandles[9]));
 
-        gSPMatrix(gRegionAllocPtr++, gIdentityMatrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+        gSPMatrix(gRegionAllocPtr++, &gIdentityMatrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
 
         gSPDisplayList(gRegionAllocPtr++, D_2000E70);
     }

@@ -33,13 +33,9 @@ typedef struct RacePlayerEffect {
     u16 playerIndex;
 } RacePlayerEffect;
 
-typedef struct {
-    s32 words[0x10];
-} CourseRenderCommand;
-
 typedef struct RaceCourseRenderEffect {
     char pad0[0x18];
-    CourseRenderCommand *vertices;
+    Mtx *vertices;
 } RaceCourseRenderEffect;
 
 typedef struct {
@@ -219,7 +215,7 @@ extern void osWritebackDCache(void *, s32);
 extern void *allocMenuRenderScratch(s32);
 extern void packFixedTransformMatrix(void *, void *);
 extern void *allocFixedTransformMatrix(FixedTransform *);
-extern void setPackedMatrixTranslation(CourseRenderCommand *, Vec3i *);
+extern void setPackedMatrixTranslation(Mtx *, Vec3i *);
 extern s32 isPositionNearAnyRaceViewportFocus(Vec3i *);
 extern void *resolveAssetTableRelativePointer(void *, u32);
 extern void osWritebackDCache(void *, s32);
@@ -257,7 +253,6 @@ extern CourseMarkerVertexResource gCourseBillboardMarkerVertexResources[];
 extern CourseMarkerTextureResource gCourseBillboardMarkerTextureResources[];
 extern CourseTriggerEntry gCourseTriggerEntries[];
 extern SoundParamAngle gCourseGateAngles[];
-extern CourseRenderCommand gIdentityMatrix[];
 extern Gfx *gRegionAllocPtr;
 
 void drawRaceCountdownReadyPrompt(RaceCountdownEffect *arg0) {
@@ -342,7 +337,7 @@ void renderRaceCourseModel(void *arg0) {
     gSPSegment(gRegionAllocPtr++, 0x02, getRelocatableHeapBlockBase(ASSET_HANDLE(0x8)));
     gSPSegment(gRegionAllocPtr++, 0x03, getRelocatableHeapBlockBase(ASSET_HANDLE(0x9)));
 
-    gSPMatrix(gRegionAllocPtr++, gIdentityMatrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+    gSPMatrix(gRegionAllocPtr++, &gIdentityMatrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
 
     switch (*(u16 *)&gRaceCourseIndex) {
         case 0:
@@ -617,14 +612,14 @@ void initCourseTextureMarkers(RaceCourseRenderEffect *arg0) {
 
     if (count != 0) {
         entry = gCourseTextureMarkerSpawnEntriesByCourse[gRaceCourseIndex];
-        allocSize = count * sizeof(CourseRenderCommand);
+        allocSize = count * sizeof(Mtx);
         gAssetHandles[0x21] = allocRelocatableHeapBlock(allocSize);
         arg0->vertices = getRelocatableHeapBlockBase(gAssetHandles[0x21]);
 
         i = 0;
         if (count > 0) {
             do {
-                arg0->vertices[i] = gIdentityMatrix[0];
+                arg0->vertices[i] = gIdentityMatrix;
                 setPackedMatrixTranslation(&arg0->vertices[i], &entry->pos);
                 i++;
                 entry++;
@@ -1256,7 +1251,7 @@ void renderCourseBillboardMarker(RaceCourseMarkerEffect *arg0) {
         segmentGfx = newGfx;
         segmentGfx->words.w0 = 0xBC000806;
         segmentGfx->words.w1 = (u32) getRelocatableHeapBlockBase(ASSET_HANDLE(0x8));
-        gSPMatrix(gRegionAllocPtr++, gIdentityMatrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+        gSPMatrix(gRegionAllocPtr++, &gIdentityMatrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
         gSPDisplayList(gRegionAllocPtr++, arg0->texturePtr);
         gDPLoadTextureBlock_4b(gRegionAllocPtr++, arg0->texture, G_IM_FMT_CI, 0x20, 0x40, 0, G_TX_WRAP,
                                G_TX_WRAP, 5, 6, 0, 0);

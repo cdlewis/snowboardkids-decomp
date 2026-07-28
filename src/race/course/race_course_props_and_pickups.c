@@ -28,25 +28,6 @@ typedef struct {
     /* 0x4 */ Vec3i transform;
 } CourseCollectibleSpriteEntry;
 
-typedef struct {
-    /* 0x00 */ s32 unk0;
-    /* 0x04 */ s32 unk4;
-    /* 0x08 */ s32 unk8;
-    /* 0x0C */ s32 unkC;
-    /* 0x10 */ s32 unk10;
-    /* 0x14 */ s32 unk14;
-    /* 0x18 */ s32 unk18;
-    /* 0x1C */ s32 unk1C;
-    /* 0x20 */ s32 unk20;
-    /* 0x24 */ s32 unk24;
-    /* 0x28 */ s32 unk28;
-    /* 0x2C */ s32 unk2C;
-    /* 0x30 */ s32 unk30;
-    /* 0x34 */ s32 unk34;
-    /* 0x38 */ s32 unk38;
-    /* 0x3C */ s32 unk3C;
-} GfxCommandDest;
-
 typedef union {
     /* 0x00 */ s32 words[8];
     /* 0x00 */ s16 halfwords[0x10];
@@ -83,14 +64,14 @@ struct CourseEffectModelListActor {
     char pad0[0x10];
     /* 0x10 */ u16 modelListIndex;
     char pad12[6];
-    /* 0x18 */ GfxCommandDest *modelBuffer;
+    /* 0x18 */ Mtx *modelBuffer;
     /* 0x1C */ s16 modelIndexOffset;
     /* 0x1E */ s16 modelCount;
 };
 
 struct ThrownPickupRenderActor {
     char pad0[0x18];
-    /* 0x18 */ GfxCommandDest *matrix;
+    /* 0x18 */ Mtx *matrix;
     /* 0x1C */ Vec3i pos;
     /* 0x28 */ s16 pitch;
     /* 0x2A */ s16 yaw;
@@ -159,8 +140,8 @@ struct PickupShardParticleActor {
 };
 
 extern void packFixedTransformMatrix(FixedTransform *, void *);
-extern GfxCommandDest *allocFixedTransformMatrix(void *);
-extern void setPackedMatrixTranslation(GfxCommandDest *, Vec3i *);
+extern Mtx *allocFixedTransformMatrix(void *);
+extern void setPackedMatrixTranslation(Mtx *, Vec3i *);
 extern s32 isPositionNearAnyRaceViewportFocus(void *);
 extern void osWritebackDCache(void *, s32);
 extern void enqueuePositionalSoundEffect(s32, void *, s32, s32);
@@ -184,7 +165,6 @@ extern Gfx gEffectRenderModeSetupDl[];
 extern Gfx gEffectRenderModeCleanupDl[];
 extern Gfx gRaceItemPickupDisplayList[];
 extern Gfx gRaceActionPickupDisplayList[];
-extern GfxCommandDest gIdentityMatrix;
 extern Gfx *gRegionAllocPtr;
 extern void *gViewportMatrix;
 extern s16 gRaceCourseIndex;
@@ -413,7 +393,7 @@ void initCourseCollectibleSpriteMatrices(CourseEffectModelListActor *arg0) {
     actor2 = arg0;
     i = 0;
     if (actor1->modelCount > 0) {
-        register GfxCommandDest *template;
+        register Mtx *template;
 
         template = &gIdentityMatrix;
         offset = 0;
@@ -423,11 +403,11 @@ void initCourseCollectibleSpriteMatrices(CourseEffectModelListActor *arg0) {
             actor1->modelBuffer[i] = *template;
             setPackedMatrixTranslation(&actor1->modelBuffer[i], &script->transform);
             i++;
-            offset += sizeof(GfxCommandDest);
+            offset += sizeof(Mtx);
             script++;
         } while (i < actor2->modelCount);
     }
-    osWritebackDCache(actor1->modelBuffer, actor1->modelCount * sizeof(GfxCommandDest));
+    osWritebackDCache(actor1->modelBuffer, actor1->modelCount * sizeof(Mtx));
 }
 
 void initCourseCollectibleSprites(CourseEffectModelListActor *arg0) {

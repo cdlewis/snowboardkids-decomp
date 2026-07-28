@@ -7,6 +7,7 @@
 #include "game/engine/relocatable_heap.h"
 #include "game/race/flow/race_flow.h"
 #include "game/engine/viewport_manager.h"
+#include "game/math/fixed_point_math.h"
 #include "PR/sptask.h"
 
 #define BOOT_THREAD_ID 1
@@ -74,25 +75,6 @@ typedef struct {
 
 typedef char FramebufferRenderTaskSizeCheck[(sizeof(FramebufferRenderTask) == FRAMEBUFFER_RENDER_TASK_STRIDE) ? 1 : -1];
 typedef char FramebufferClearTaskSizeCheck[(sizeof(FramebufferClearTask) == FRAMEBUFFER_CLEAR_TASK_STRIDE) ? 1 : -1];
-
-typedef struct {
-    /* 0x00 */ s32 unk0;
-    /* 0x04 */ s32 unk4;
-    /* 0x08 */ s32 unk8;
-    /* 0x0C */ s32 unkC;
-    /* 0x10 */ s32 unk10;
-    /* 0x14 */ s32 unk14;
-    /* 0x18 */ s32 unk18;
-    /* 0x1C */ s32 unk1C;
-    /* 0x20 */ s32 unk20;
-    /* 0x24 */ s32 unk24;
-    /* 0x28 */ s32 unk28;
-    /* 0x2C */ s32 unk2C;
-    /* 0x30 */ s32 unk30;
-    /* 0x34 */ s32 unk34;
-    /* 0x38 */ s32 unk38;
-    /* 0x3C */ s32 unk3C;
-} GfxCommandDest;
 
 typedef struct {
     RenderCallbackNode entry0;
@@ -163,23 +145,22 @@ extern u8 aspMainTextStart[];
 extern u8 rspbootTextStart[];
 extern u8 D_80324480[];
 extern u8 D_80328480[];
-extern GfxCommandDest gIdentityMatrix;
-extern GfxCommandDest D_80124C28;
-extern GfxCommandDest D_80124C68;
-extern GfxCommandDest D_80124CA8;
-extern GfxCommandDest D_80124CE8;
-extern GfxCommandDest D_80124D28;
-extern GfxCommandDest D_80124D68;
-extern GfxCommandDest D_80124DA8;
-extern GfxCommandDest D_80124DE8;
-extern GfxCommandDest D_8013D248;
-extern GfxCommandDest D_8013D288;
-extern GfxCommandDest D_8013D2C8;
-extern GfxCommandDest D_8013D308;
-extern GfxCommandDest D_8013D348;
-extern GfxCommandDest D_8013D388;
-extern GfxCommandDest D_8013D3C8;
-extern GfxCommandDest D_8013D408;
+extern Mtx D_80124C28;
+extern Mtx D_80124C68;
+extern Mtx D_80124CA8;
+extern Mtx D_80124CE8;
+extern Mtx D_80124D28;
+extern Mtx D_80124D68;
+extern Mtx D_80124DA8;
+extern Mtx D_80124DE8;
+extern Mtx D_8013D248;
+extern Mtx D_8013D288;
+extern Mtx D_8013D2C8;
+extern Mtx D_8013D308;
+extern Mtx D_8013D348;
+extern Mtx D_8013D388;
+extern Mtx D_8013D3C8;
+extern Mtx D_8013D408;
 
 extern void initMenuAssetHandles(void);
 extern void allocRenderCallbackScratchBuffer(void);
