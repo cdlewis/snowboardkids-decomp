@@ -23,6 +23,7 @@ typedef enum {
 } FixedMatrixIndex;
 
 extern FixedTransform gIdentityFixedTransform;
+extern Mtx gIdentityMatrix;
 
 void initFixedTransform(FixedTransform *arg0);
 s16 fixedSine(s16 arg0);

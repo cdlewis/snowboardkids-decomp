@@ -121,7 +121,7 @@ typedef struct {
     /* 0x01 */ u8 pad1[0xB0 - 0x01];
 } RacePlayerHudStatus;
 
-typedef struct RaceUiGfxCommandDest RaceUiGfxCommandDest;
+typedef Mtx RaceUiGfxCommandDest;
 
 typedef struct {
     /* 0x00 */ RaceUiTrailCopyBlock source;
@@ -278,25 +278,6 @@ typedef struct {
         u32 w1;
     } words;
 } RaceUiDisplayCommand;
-
-struct RaceUiGfxCommandDest {
-    /* 0x00 */ s32 unk0;
-    /* 0x04 */ s32 unk4;
-    /* 0x08 */ s32 unk8;
-    /* 0x0C */ s32 unkC;
-    /* 0x10 */ s32 unk10;
-    /* 0x14 */ s32 unk14;
-    /* 0x18 */ s32 unk18;
-    /* 0x1C */ s32 unk1C;
-    /* 0x20 */ s32 unk20;
-    /* 0x24 */ s32 unk24;
-    /* 0x28 */ s32 unk28;
-    /* 0x2C */ s32 unk2C;
-    /* 0x30 */ s32 unk30;
-    /* 0x34 */ s32 unk34;
-    /* 0x38 */ s32 unk38;
-    /* 0x3C */ s32 unk3C;
-};
 
 typedef struct {
     /* 0x00 */ s16 state;
@@ -831,7 +812,6 @@ extern RaceTimer gRaceElapsedTimer;
 extern RaceUiAssetEntry D_800D5FF4[];
 extern RaceUiCameraTransformSource D_801121E0[];
 extern RaceUiGfxCommandDest *allocFixedTransformMatrix(RaceUiTrailCopyBlock *);
-extern RaceUiGfxCommandDest gIdentityMatrix;
 extern RaceUiGfxCommandScriptEntry *D_800D693C[];
 extern RaceTimer gRaceCourseTargetTimes[];
 extern RaceUiProjectileVertexBlock D_800D64A0[];
