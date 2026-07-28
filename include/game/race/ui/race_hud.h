@@ -9,6 +9,8 @@ typedef struct {
     /* 0x2 */ s16 fraction;
 } RaceTimer;
 
+extern RaceTimer gRaceCourseTargetTimes[10];
+
 void initRaceHud(void);
 void drawTrickAttackChallengeHud(void *arg0);
 void drawTrickAttackChallengeLabels(void *arg0);

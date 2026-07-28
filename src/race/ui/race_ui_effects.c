@@ -805,7 +805,6 @@ extern RaceUiAssetEntry D_800D5FF4[];
 extern RaceUiCameraTransformSource D_801121E0[];
 extern RaceUiGfxCommandDest *allocFixedTransformMatrix(RaceUiTrailCopyBlock *);
 extern RaceUiGfxCommandScriptEntry *D_800D693C[];
-extern RaceTimer gRaceCourseTargetTimes[];
 extern RaceUiProjectileVertexBlock D_800D64A0[];
 extern RaceUiRankTextRenderEntry *D_800D761C[];
 extern RaceUiSpriteInit D_800D5FF0[];
@@ -2613,7 +2612,8 @@ void func_8005CE4C(RaceUiDualCounterActor *arg0) {
     if (gRaceCourseIndex.signedValue == 9) {
         arg0->leftTarget = 0x64;
     }
-    calculateRaceTimerDelta((RaceTimer *)&gRaceCourseTargetTimes[gRaceCourseIndex.signedValue], &gRaceElapsedTimer, (RaceTimer *)&arg0->row);
+    calculateRaceTimerDelta(&gRaceCourseTargetTimes[gRaceCourseIndex.signedValue], &gRaceElapsedTimer,
+                            (RaceTimer *)&arg0->row);
     new_var = &gRacePlayers[0].unk570;
     if (gRaceChallengeFailed != 0) {
         arg0->leftValue = 0;
