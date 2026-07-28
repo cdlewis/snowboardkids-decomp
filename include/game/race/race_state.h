@@ -40,5 +40,6 @@ extern RaceCourseIndexValue gRaceCourseIndex;
 extern RaceCourseStartEntry gRaceCourseStartEntries[];
 extern RacePlayerHudStatus gRacePlayerHudStatuses[];
 extern u8 gRaceDemoPlaybackEnabled;
+extern u8 gRaceResultState;
 
 #endif

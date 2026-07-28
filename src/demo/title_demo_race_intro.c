@@ -45,7 +45,6 @@ extern u8 gRaceUpdatePaused;
 extern u8 gTrainingCourseLesson;
 extern u8 gMainMenuModeSelection;
 extern s16 gRacePlayerAttackStartTimer;
-extern u8 gRaceResultState;
 extern u8 gFramebufferSwapHold;
 extern s32 gMenuFlowState;
 extern void releaseMenuAssetHandles(void);
