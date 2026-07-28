@@ -28,14 +28,6 @@ extern s32 gPlayerInputPrevious;
 extern s32 gPlayer2InputPrevious;
 extern s32 gPlayer3InputPrevious;
 extern s32 gPlayer4InputPrevious;
-extern s8 gPlayerStickX;
-extern s8 gPlayer2StickX;
-extern s8 gPlayer3StickX;
-extern s8 gPlayer4StickX;
-extern s8 gPlayerStickY;
-extern s8 gPlayer2StickY;
-extern s8 gPlayer3StickY;
-extern s8 gPlayer4StickY;
 extern s32 gPlayerInputRepeat;
 extern u8 gPlayerInputRepeatTimer;
 
@@ -62,8 +54,8 @@ void initGameTaskScheduler(void) {
     gPlayerInputHeld[0] = zero;
     gPlayerInputPrevious = zero;
     gPlayerInputPressed[0] = 0;
-    gPlayerStickX = zero;
-    gPlayerStickY = 0;
+    gPlayerStickX[0] = zero;
+    gPlayerStickY[0] = 0;
     gPlayer2InputHeld = 0;
     gPlayer2InputPrevious = zero;
     gPlayer2InputPressed = zero;
@@ -119,8 +111,8 @@ void updateGameTaskScheduler(void) {
     repeatInput = &gPlayerInputRepeat;
     repeatTimer = &gPlayerInputRepeatTimer;
     newInput = gPlayerInputPressed;
-    stickYOut = &gPlayerStickY;
-    stickXOut = &gPlayerStickX;
+    stickYOut = gPlayerStickY;
+    stickXOut = gPlayerStickX;
     controller = gControllerInputState;
     input = gPlayerInputHeld;
     previousInput = &gPlayerInputPrevious;
