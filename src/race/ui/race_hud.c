@@ -48,7 +48,6 @@ extern s16 gRaceHudMode;
 extern u8 gRaceUpdatePaused;
 extern u8 gTrainingCourseLesson;
 extern u8 gMainMenuModeSelection;
-extern u8 gRaceTypeSelection;
 extern u8 gCurrentViewportIndex;
 extern s16 gUiBlinkTimer;
 extern RaceTimer gRaceChallengeTimeLimit;

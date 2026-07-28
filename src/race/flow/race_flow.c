@@ -102,7 +102,6 @@ extern s32 gMenuFlowState;
 extern s16 gRaceLapCount;
 extern s32 gRaceTimeTrialFinishTime;
 extern s16 gMenuFadeAlpha;
-extern u8 gRaceTypeSelection;
 extern s8 gRacePlayerCount;
 extern s16 gRacePlayerAttackStartTimer;
 #ifdef NON_MATCHING
@@ -124,7 +123,6 @@ extern void loadCurrentRaceRecordReplayData(void);
 extern void initCourseRecordBannerFadeOut(void *);
 #endif
 extern u8 D_80121B57;
-extern u8 gRaceTypeSelection;
 extern u8 D_80121B60;
 extern s8 D_80121B61;
 extern u8 gRaceChallengeFailed;

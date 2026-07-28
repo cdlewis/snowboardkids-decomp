@@ -7,16 +7,12 @@
 #include "game/menu/race_type_select/race_type_select_ui.h"
 #include "game/menu/splitscreen_select/race_splitscreen_select_ui.h"
 #include "game/menu/renderer/menu_renderer.h"
+#include "game/race/race_state.h"
 #include "game/race/player/race_player_input.h"
 
 #define ASSET_HANDLE(index) (gAssetHandles[(index)])
 
 typedef MenuGlyphScript RaceTypeSelectPortrait[0x46];
-
-typedef struct {
-    s16 alpha;
-    s8 state;
-} RaceTypeSelectCursorState;
 
 typedef struct {
     /* 0x00 */ u16 center[16];
@@ -43,10 +39,7 @@ extern int sprintf(char *, const char *, ...);
 extern RaceTypeSelectFrameTileMapTable gRaceTypeSelectFrameTileMaps;
 extern u16 gRaceTypeSelectSpecialFrameCornerTile;
 extern RaceTypeSelectPortrait gRaceTypeSelectPortraitScripts[];
-extern RaceTypeSelectCursorState gRaceTypeSelectCursorTarget;
-extern u8 gRaceTypeSelectCursorAnimState;
 extern u8 gMenuExitSelection;
-extern u8 gRaceTypeSelection;
 extern s32 gMenuFlowState;
 
 const char gRaceTypeSelectEntryFeeFormat[] = "%6dG";

@@ -93,7 +93,6 @@ extern CourseAngleEntry gLaunchRampCourseObjectAngles[];
 extern u8 gMainMenuModeSelection;
 extern s8 gRacePlayerCount;
 extern u8 gRaceUpdatePaused;
-extern u8 gRaceTypeSelection;
 extern u8 gTrainingCourseLesson;
 extern s32 gMenuFlowState;
 extern s16 gRacePlayerAttackStartTimer;

@@ -43,7 +43,6 @@ extern u8 gMainMenuDemoRaceIntroIndex;
 extern u8 gRaceUpdatePaused;
 extern u8 gTrainingCourseLesson;
 extern u8 gMainMenuModeSelection;
-extern u8 gRaceTypeSelection;
 extern s32 gMenuFlowState;
 extern u8 gFramebufferSwapHold;
 extern u8 gPendingFramebufferSwapCount;

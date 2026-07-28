@@ -17,8 +17,6 @@
 
 extern u8 gTrainingCourseLesson;
 extern u8 gMainMenuModeSelection;
-extern u8 gRaceTypeSelection;
-
 void loadRaceCourseAssets(void) {
     s32 size;
 
