@@ -23,7 +23,6 @@ extern s32 enqueueSoundEffect(s16, s16);
 
 
 extern RaceTypeSelectCursorState gRaceTypeSelectCursorTarget;
-extern u8 gMenuSelectionConfirmTimer;
 extern u8 gMenuExitSelection;
 extern u8 gRaceTypeSelectCursorAnimState;
 extern s16 gRaceCourseIndex;

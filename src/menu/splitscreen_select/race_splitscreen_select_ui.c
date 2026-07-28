@@ -4,6 +4,7 @@
 #include "game/engine/relocatable_heap.h"
 #include "game/engine/callback_task_scheduler.h"
 #include "game/engine/system_runtime.h"
+#include "game/menu/main_menu/controller_main_menu_flow.h"
 #include "game/menu/splitscreen_select/race_splitscreen_select_ui.h"
 #include "game/menu/renderer/menu_renderer.h"
 #include "game/race/player/race_player_input.h"
@@ -29,7 +30,6 @@ typedef struct {
 extern int sprintf(char *, const char *, ...);
 extern RaceSplitscreenSelectFrameTiles gRaceSplitscreenSelectFrameTiles[];
 extern RaceSplitscreenSelectPortrait gRaceSplitscreenSelectPortraitScripts[];
-extern u8 gMenuSelectionConfirmTimer;
 extern u8 gRaceSplitscreenMode;
 extern RaceSplitscreenSelectCursorState gRaceSplitscreenSelectCursorTarget;
 extern u8 gRaceSplitscreenSelectCursorAnimState;

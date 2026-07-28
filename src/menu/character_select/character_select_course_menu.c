@@ -35,7 +35,6 @@ extern u16 gCharacterSelectCourseExitOptionIndex;
 extern u8 gCharacterSelectCourseSubmenuState;
 extern u8 gMenuExitSelection;
 extern u8 gHighestUnlockedCourse;
-extern u8 gMenuSelectionConfirmTimer;
 extern u8 gRaceSplitscreenMode;
 extern u8 gCourseSelectFromRaceTypeMenu;
 extern u8 gPendingFramebufferSwapCount;

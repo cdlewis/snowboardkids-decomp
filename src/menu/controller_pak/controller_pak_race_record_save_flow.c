@@ -12,22 +12,12 @@
 #include "game/engine/viewport_manager.h"
 #include "game/race/player/race_player_input.h"
 
-typedef struct {
-    /* 0x0 */ s8 step;
-    /* 0x1 */ char pad1[0x1];
-    /* 0x2 */ s16 alpha;
-    /* 0x4 */ s16 targetStatus;
-    /* 0x6 */ s16 nextStatus;
-} ControllerPakRaceRecordSaveStatusTransition;
-
 extern ControllerPakMenuState gControllerPakMenuState;
-extern ControllerPakRaceRecordSaveStatusTransition gControllerPakRaceRecordSaveStatusTransition;
 extern u8 gPendingFramebufferSwapCount;
 extern u8 gFramebufferSwapHold;
 extern u8 gControllerPakMenuCursorState;
 extern s32 gMenuFlowState;
 extern s32 gPlayerInputPressed;
-extern s8 gMenuSelectionConfirmTimer;
 extern s32 D_8010ADE0;
 extern s32 D_8010ADE4;
 extern s16 gMenuFadeAlpha;
@@ -110,7 +100,7 @@ void updateControllerPakRaceRecordSaveFlow(void)
     }
   }
   else
-    if (((u8) gMenuSelectionConfirmTimer) == 0)
+    if (gMenuSelectionConfirmTimer == 0)
   {
     new_var = 3;
     if (((u8) gControllerPakRaceRecordSaveStatusTransition.step) == 1)
@@ -396,11 +386,11 @@ void updateControllerPakRaceRecordSaveFlow(void)
   }
   else
   {
-    gMenuSelectionConfirmTimer = ((u8) gMenuSelectionConfirmTimer) + 1;
+    gMenuSelectionConfirmTimer = gMenuSelectionConfirmTimer + 1;
   }
   if (sp24 != 0)
   {
- gMenuSelectionConfirmTimer = 1; } if (((u8) gMenuSelectionConfirmTimer) == 0x23) { setCurrentGameTaskCallback(fadeOutControllerPakRaceRecordSaveFlow, 0);
+ gMenuSelectionConfirmTimer = 1; } if (gMenuSelectionConfirmTimer == 0x23) { setCurrentGameTaskCallback(fadeOutControllerPakRaceRecordSaveFlow, 0);
   }
   updateCallbackTasks();
 }
