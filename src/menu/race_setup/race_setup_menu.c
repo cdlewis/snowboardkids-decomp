@@ -9,6 +9,7 @@
 #include "game/engine/viewport_manager.h"
 #include "game/race/player/race_player_input.h"
 #include "game/menu/character_select/character_select_menu.h"
+#include "game/menu/course_select/multiplayer_course_select_menu.h"
 #include "game/menu/main_menu/controller_main_menu_flow.h"
 
 typedef struct {
@@ -1070,8 +1071,6 @@ extern RaceSetupSaveTriplet045D8 D_800B3294[];
 extern RaceSetupSaveTriplet045D8 D_800B32A4[];
 extern u8 D_800B32C4[];
 extern u16 D_800B32D0[];
-extern s8 D_800B3490[];
-extern s8 gCourseSelectColumnSoundEffects[];
 extern u8 gMainMenuSecretCodeUnlocked;
 
 #define RACE_SETUP_SAVE_WORD_045D8(ptr, offset) (*(s32 *)((ptr) + (offset)))
@@ -1086,7 +1085,7 @@ void initRaceSetupPlayerSaveData(s32 arg0) {
     s32 recordOffset;
     u8 *save = (u8 *)&gGameSaveDataBuffer[arg0 & 0xFFFFFFFFFFFFFFFF];
     u8 *base = (u8 *)&gGameSaveDataBuffer[arg0];
-    u8 *wordCursor;
+    s8 *wordCursor;
     u8 *byteCursor;
     u8 *courseCursor0;
     u8 *courseCursor1;
@@ -1247,7 +1246,7 @@ secret_unlock_loop:
             }
 
         byteCursor = sp30;
-        wordCursor = (u8 *)D_800B3490;
+        wordCursor = D_800B3490;
 secret_copy_loop:
         {
             s8 temp0 = wordCursor[0];
@@ -1261,7 +1260,7 @@ secret_copy_loop:
             RACE_SETUP_SAVE_BYTE_045D8(byteCursor, 0x3C) = temp1;
             RACE_SETUP_SAVE_BYTE_045D8(byteCursor, 0x3D) = temp2;
             RACE_SETUP_SAVE_BYTE_045D8(byteCursor, 0x3E) = temp3;
-            if (wordCursor != (u8 *)gCourseSelectColumnSoundEffects) {
+            if (wordCursor != &D_800B3490[MULTIPLAYER_COURSE_SELECT_DEFAULT_COURSE_COUNT]) {
                 goto secret_copy_loop;
             }
         }

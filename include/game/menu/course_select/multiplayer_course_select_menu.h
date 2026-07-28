@@ -3,6 +3,12 @@
 
 #include "common.h"
 
+#define MULTIPLAYER_COURSE_SELECT_DEFAULT_COURSE_COUNT 12
+#define MULTIPLAYER_COURSE_SELECT_COLUMN_COUNT 10
+
+extern s8 D_800B3490[MULTIPLAYER_COURSE_SELECT_DEFAULT_COURSE_COUNT];
+extern s16 gCourseSelectColumnSoundEffects[MULTIPLAYER_COURSE_SELECT_COLUMN_COUNT];
+
 void initMultiplayerCourseSelectMenu(void);
 void updateMultiplayerCourseSelectMenu(void);
 void fadeOutMultiplayerCourseSelectMenu(void);
