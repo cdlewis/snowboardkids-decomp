@@ -7,6 +7,7 @@
 #include "game/menu/controller_pak/controller_pak_menu.h"
 #include "game/engine/game_task_scheduler.h"
 #include "game/menu/controller_pak/controller_pak_race_record_save_ui.h"
+#include "game/menu/main_menu/controller_main_menu_flow.h"
 #include "game/menu/renderer/menu_renderer.h"
 #include "game/engine/viewport_manager.h"
 #include "game/race/player/race_player_input.h"
@@ -30,7 +31,6 @@ extern s32 gMenuFlowState;
 extern s32 gPlayerInputPressed;
 extern s16 gControllerPakStatusCodes;
 extern s16 gMenuChoicePromptState;
-extern u8 gControllerPakRetryCounts;
 extern s8 gMenuSelectionConfirmTimer;
 extern s32 D_8010ADE0;
 extern s32 D_8010ADE4;
@@ -46,7 +46,7 @@ void initControllerPakRaceRecordSaveFlow(void) {
     gFramebufferSwapDelay = 0;
     gControllerPakStatusCodes = 0;
     gMenuChoicePromptState = 0;
-    gControllerPakRetryCounts = 0;
+    gControllerPakRetryCounts[0] = 0;
     gRacePlayers[0].menuState = 0;
     gMenuSelectionConfirmTimer = 0;
     gCurrentGameTask->fade = 0xFF;
@@ -161,14 +161,14 @@ void updateControllerPakRaceRecordSaveFlow(void)
         {
           sp1C = temp_t0;
           requestControllerPakSaveWrite(0, 3, &gControllerPakRaceRecordSaveStatusTransition, gMenuChoicePromptState);
-          if (gControllerPakRetryCounts == 0)
+          if (gControllerPakRetryCounts[0] == 0)
           {
             gControllerPakRaceRecordSaveStatusTransition.targetStatus = 5;
             gControllerPakRaceRecordSaveStatusTransition.step = 3;
             gControllerPakRaceRecordSaveStatusTransition.alpha = 0x100;
           }
           else
-            if (gControllerPakRetryCounts == 3)
+            if (gControllerPakRetryCounts[0] == 3)
           {
             if (temp_t0 != 0)
             {
@@ -180,7 +180,7 @@ void updateControllerPakRaceRecordSaveFlow(void)
             {
               gControllerPakStatusCodes = 0xD;
             }
-            gControllerPakRetryCounts = 0;
+            gControllerPakRetryCounts[0] = 0;
           }
         }
           break;
@@ -188,7 +188,7 @@ void updateControllerPakRaceRecordSaveFlow(void)
         case 3:
           sp1C = temp_t0;
           requestControllerPakRepair(0);
-          if (gControllerPakRetryCounts == 0)
+          if (gControllerPakRetryCounts[0] == 0)
         {
           if (temp_t0 != 0)
           {
@@ -201,7 +201,7 @@ void updateControllerPakRaceRecordSaveFlow(void)
           }
         }
         else
-          if (gControllerPakRetryCounts == new_var)
+          if (gControllerPakRetryCounts[0] == new_var)
         {
           if (temp_t0 != 0)
           {
@@ -212,7 +212,7 @@ void updateControllerPakRaceRecordSaveFlow(void)
           {
             gControllerPakStatusCodes = 0xE;
           }
-          gControllerPakRetryCounts = 0;
+          gControllerPakRetryCounts[0] = 0;
         }
           break;
 
