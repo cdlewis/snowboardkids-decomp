@@ -29,12 +29,6 @@ typedef struct {
 } CourseBestLapView;
 
 typedef struct {
-    /* 0x00 */ s8 x;
-    /* 0x01 */ s8 y;
-    /* 0x02 */ s16 z;
-} RaceUiCoursePosition;
-
-typedef struct {
     /* 0x00 */ s16 finishLinePathIndex;
     /* 0x02 */ u8 pad2[0x48 - 0x02];
 } RaceFinishLinePathIndexEntry;
@@ -49,7 +43,6 @@ extern u8 gRaceTimerTensDigitTileOffsets[];
 extern u8 gRaceTimerOnesDigitTileIds[];
 extern u16 gRaceProgressMeterIconTiles[];
 extern u16 gRaceProgressMeterIconPalettes[];
-extern RaceUiCoursePosition gRaceCourseTargetTimes[];
 extern s16 gRaceLapCount;
 extern s16 gRaceHudSpinnerFrame;
 extern s16 gRaceHudMode;
@@ -405,12 +398,13 @@ const char gRaceHudTargetTimeChallengeLapProgressFormat[] = "*%d/%d";
 
 void drawTargetTimeChallengeLabels(void *arg0) {
     char sp28[0x20];
-    RaceUiCoursePosition *pos;
+    RaceTimer *targetTime;
 
     drawMenuAsciiTextDefaultScale(0x48, 0x47, (char *)gRaceHudTargetTimeChallengeLapTimeLabel, 5);
     drawMenuAsciiTextDefaultScale(0x32, -0x60, (char *)gRaceHudTargetTimeChallengeTargetTimeLabel, 7);
-    pos = &gRaceCourseTargetTimes[gRaceCourseIndex.signedValue];
-    sprintf(sp28, gRaceHudTargetTimeChallengeTargetTimeFormat, pos->x, pos->y, pos->z >> 8);
+    targetTime = &gRaceCourseTargetTimes[gRaceCourseIndex.signedValue];
+    sprintf(sp28, gRaceHudTargetTimeChallengeTargetTimeFormat, targetTime->minutes, targetTime->seconds,
+            targetTime->fraction >> 8);
     drawMenuAsciiTextDefaultScale(0x48, -0x57, sp28, 7);
     sprintf(sp28, gRaceHudTargetTimeChallengeLapProgressFormat, gRacePlayers[0].unk570, gRacePlayers[0].unk572);
     sp28[1] = ' ';
@@ -1001,7 +995,8 @@ void updateRaceHud(void) {
         if (!(gMenuFlowState & 3)) {
             incrementRaceElapsedTimer();
         }
-        if (calculateRaceTimerDelta((RaceTimer *)&gRaceCourseTargetTimes[gRaceCourseIndex.signedValue], &gRaceElapsedTimer, &sp38) != 0) {
+        if (calculateRaceTimerDelta(&gRaceCourseTargetTimes[gRaceCourseIndex.signedValue], &gRaceElapsedTimer, &sp38) !=
+            0) {
             gRaceChallengeFailed = 1;
         }
         addRenderCallback(&gRaceOverlayRenderCallbackList, drawTargetTimeChallengeHud, 0);
