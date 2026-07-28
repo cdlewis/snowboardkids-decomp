@@ -61,12 +61,6 @@ typedef struct {
 } CourseSelectTableEntry;
 
 typedef struct {
-    /* 0x00 */ s8 minutes;
-    /* 0x01 */ s8 seconds;
-    /* 0x02 */ s16 fraction;
-} RaceTime;
-
-typedef struct {
     /* 0x00 */ u8 pad0[0xAC];
     /* 0xAC */ u8 active;
     /* 0xAD */ u8 padAD[0xB0 - 0xAD];
@@ -137,7 +131,6 @@ extern u8 D_80121B57;
 extern u8 gRaceTypeSelection;
 extern u8 D_80121B60;
 extern s8 D_80121B61;
-extern RaceTime gRaceElapsedTimer;
 extern u8 gRaceChallengeFailed;
 extern u8 gRaceRecordSettingsEnabled;
 extern u8 gPendingFramebufferSwapCount;
@@ -1411,7 +1404,7 @@ void updateRaceResultsFlow(void) {
                     D_800EC9F0.timeTrialCharacterIds[gRaceCourseIndex.signedValue][i] =
                         (player->characterVariant * 8) + player->characterId;
                     if (i == 0) {
-                        D_800EC9F0.bestLapRecords[gRaceCourseIndex.signedValue] = *(RaceTime *)&gRaceTimeTrialFinishTime;
+                        D_800EC9F0.bestLapRecords[gRaceCourseIndex.signedValue] = *(RaceTimer *)&gRaceTimeTrialFinishTime;
                     }
                 }
                 if (i < 5) {
