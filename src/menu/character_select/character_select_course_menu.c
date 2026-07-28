@@ -21,18 +21,6 @@ typedef struct {
     char pad4D[0x78AB];
 } CharacterSelectSaveData;
 
-typedef union {
-    u8 bytes[8];
-    struct {
-        /* 0x00 */ u8 state;
-        /* 0x01 */ u8 otherState;
-        /* 0x02 */ u8 pad2[2];
-        /* 0x04 */ s16 spriteIndex;
-        /* 0x06 */ u8 timer;
-        /* 0x07 */ u8 otherTimer;
-    } fields;
-} CharacterSelectCursorState;
-
 extern void enqueueSoundEffect(s32, s32);
 extern void releaseMenuAssetHandles(void);
 extern CharacterSelectCourseUnlockList gCharacterSelectCourseOptionsByUnlock[];
@@ -59,7 +47,6 @@ extern u16 gMenuInputRepeatTimers;
 extern volatile u16 gMenuInputRepeatTimers;
 #endif
 extern u16 gCharacterSelectCourseExitOptionIndex;
-extern CharacterSelectCursorState gCharacterSelectCourseCursorState;
 extern u8 gCharacterSelectCourseSubmenuState;
 extern u8 gMenuExitSelection;
 extern u8 gHighestUnlockedCourse;

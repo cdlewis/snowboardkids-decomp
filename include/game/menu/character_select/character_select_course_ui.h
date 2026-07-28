@@ -3,6 +3,18 @@
 
 #include "common.h"
 
+typedef union CharacterSelectCourseCursorState {
+    u8 bytes[8];
+    struct {
+        /* 0x00 */ u8 state;
+        /* 0x01 */ u8 otherState;
+        /* 0x02 */ u8 pad2[2];
+        /* 0x04 */ s16 spriteIndex;
+        /* 0x06 */ u8 timer;
+        /* 0x07 */ u8 otherTimer;
+    } fields;
+} CharacterSelectCourseCursorState;
+
 typedef struct CharacterSelectCourseWidgetActor {
     /* 0x00 */ u8 pad0[0x18];
     /* 0x18 */ s16 x;
@@ -56,6 +68,8 @@ typedef struct CharacterSelectCourseRecordTime {
     /* 0x01 */ s8 seconds;
     /* 0x02 */ s16 centiseconds;
 } CharacterSelectCourseRecordTime;
+
+extern CharacterSelectCourseCursorState gCharacterSelectCourseCursorState;
 
 void drawCharacterSelectCourseListOptions(CharacterSelectCourseMenuFrameActor *arg0);
 void updateCharacterSelectUnlockedCourseList(CharacterSelectCourseMenuFrameActor *arg0);
