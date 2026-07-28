@@ -31,11 +31,6 @@ extern s32 D_8010ADE4;
 extern s32 gMenuFlowState;
 extern s32 gPlayerInputHeld;
 extern s32 gPlayerInputPressed;
-#ifndef NON_MATCHING
-extern u16 gMenuInputRepeatTimers;
-#else
-extern volatile u16 gMenuInputRepeatTimers;
-#endif
 extern u16 gCharacterSelectCourseExitOptionIndex;
 extern u8 gCharacterSelectCourseSubmenuState;
 extern u8 gMenuExitSelection;
@@ -60,7 +55,7 @@ void initCharacterSelectCourseMenuFromRaceTypeSelect(void) {
     gMenuSelectionConfirmTimer = 0;
     gMenuExitSelection = 0;
     gRacePlayers[0].menuState = 0;
-    gMenuInputRepeatTimers = 0;
+    gMenuInputRepeatTimers[0] = 0;
     gMenuChoicePromptState[0] = 0;
     gMenuFadeAlpha = gCurrentGameTask->fade;
     var_v1 = 0;
@@ -173,7 +168,7 @@ void initCharacterSelectCourseMenuFromRace(void)
   createCallbackTask((CallbackTaskCallback) initMenuIconTilemapSpriteActor, 0, 0x5E);
   if (gRaceSplitscreenMode == 1)
   {
- LOAD_ASSET(_5CCD40, 0x25); createCallbackTask((CallbackTaskCallback) initCharacterSelectLimitedCourseList, 0, 0x63); gCurrentGameTask->fade = 0; } else { gCurrentGameTask->fade = 0xFF; } gCurrentGameTask->timer = 0; gMenuSelectionConfirmTimer = 0; gMenuExitSelection = 0; gMenuFlowState = 0; gRacePlayers[0].menuState = 0; gMenuInputRepeatTimers = 0; gMenuChoicePromptState[0] = 0; gMenuFadeAlpha = gCurrentGameTask->fade; var_v1 = 0; if (gPlayerCount > var_v1) { var_v0 = &gGameSaveDataBuffer; do { temp_v1 = var_v0->highestUnlockedCourse; var_v0 += 1; if (gHighestUnlockedCourse < temp_v1) { gHighestUnlockedCourse = temp_v1; } } while (var_v0 < (&gGameSaveDataBuffer + gPlayerCount));
+ LOAD_ASSET(_5CCD40, 0x25); createCallbackTask((CallbackTaskCallback) initCharacterSelectLimitedCourseList, 0, 0x63); gCurrentGameTask->fade = 0; } else { gCurrentGameTask->fade = 0xFF; } gCurrentGameTask->timer = 0; gMenuSelectionConfirmTimer = 0; gMenuExitSelection = 0; gMenuFlowState = 0; gRacePlayers[0].menuState = 0; gMenuInputRepeatTimers[0] = 0; gMenuChoicePromptState[0] = 0; gMenuFadeAlpha = gCurrentGameTask->fade; var_v1 = 0; if (gPlayerCount > var_v1) { var_v0 = &gGameSaveDataBuffer; do { temp_v1 = var_v0->highestUnlockedCourse; var_v0 += 1; if (gHighestUnlockedCourse < temp_v1) { gHighestUnlockedCourse = temp_v1; } } while (var_v0 < (&gGameSaveDataBuffer + gPlayerCount));
     var_v1 *= 0;
   }
   gActiveMenuTask = 0;
@@ -281,7 +276,7 @@ void initCharacterSelectCourseMenuFromPlayerSelect(void) {
     gMenuExitSelection = 0;
     gMenuFlowState = 0;
     gRacePlayers[0].menuState = 0;
-    gMenuInputRepeatTimers = 0;
+    gMenuInputRepeatTimers[0] = 0;
     gMenuChoicePromptState[0] = 0;
     gMenuFadeAlpha = gCurrentGameTask->fade;
     gActiveMenuTask = 0;
@@ -368,11 +363,11 @@ void updateCharacterSelectCourseMenu(void) {
                     input = gPlayerInputHeld;
                     upInput = input & (STICK_UP | U_JPAD);
                     if ((upInput == 0) && ((input & (STICK_DOWN | D_JPAD)) == 0)) {
-                        gMenuInputRepeatTimers = 0;
+                        gMenuInputRepeatTimers[0] = 0;
                     }
 
                     pressedInput = *pressedInputPtr;
-                    repeatTimer = gMenuInputRepeatTimers;
+                    repeatTimer = gMenuInputRepeatTimers[0];
                     upMask = STICK_UP | U_JPAD;
                     if ((pressedInput & upMask) ||
                         ((upInput != 0) && ((s32) repeatTimer >= 0xB) && ((repeatTimer % 3) == 0))) {
@@ -382,25 +377,25 @@ void updateCharacterSelectCourseMenu(void) {
                         if (gRaceCourseIndex > 0) {
                             gRaceCourseIndex = gRaceCourseIndex - 1;
                         }
-                        gMenuInputRepeatTimers = repeatTimer;
+                        gMenuInputRepeatTimers[0] = repeatTimer;
                     } else if ((pressedInput & (STICK_DOWN | D_JPAD)) ||
                                ((input & (STICK_DOWN | D_JPAD)) && ((s32) repeatTimer >= 0xB) &&
                                 ((repeatTimer % 3) == 0))) {
-                        gMenuInputRepeatTimers = repeatTimer;
+                        gMenuInputRepeatTimers[0] = repeatTimer;
                         if (repeatTimer == 0) {
-                            gMenuInputRepeatTimers = repeatTimer + 1;
+                            gMenuInputRepeatTimers[0] = repeatTimer + 1;
                         }
                         if ((*gCharacterSelectActiveCourseOptions)[gRaceCourseIndex] != -1) {
                             gRaceCourseIndex = gRaceCourseIndex + 1;
                         }
                     }
 
-                    repeatTimer = gMenuInputRepeatTimers;
+                    repeatTimer = gMenuInputRepeatTimers[0];
                     if (repeatTimer != 0) {
                         repeatTimer++;
-                        gMenuInputRepeatTimers = repeatTimer;
+                        gMenuInputRepeatTimers[0] = repeatTimer;
                         if (repeatTimer == 0xFFFF) {
-                            gMenuInputRepeatTimers = 0xC;
+                            gMenuInputRepeatTimers[0] = 0xC;
                         }
                     }
 
