@@ -4,6 +4,7 @@
 #include "game/audio/sound_manager.h"
 #include "game/engine/callback_task_scheduler.h"
 #include "game/engine/asset_manager.h"
+#include "game/engine/system_runtime.h"
 #include "game/race/scene/race_scene_setup.h"
 #include "game/engine/game_task_scheduler.h"
 #include "game/race/camera/race_camera.h"
@@ -19,7 +20,6 @@ typedef union {
 } RacePlayerReplaySnapshot;
 
 extern s16 gMenuFadeAlpha;
-extern s8 gMenuFadeOverlayActive;
 extern f32 D_800E10C8;
 extern s16 gTitleDemoReplaySegmentFrames[];
 extern s16 gTitleDemoCameraModeFrames[];

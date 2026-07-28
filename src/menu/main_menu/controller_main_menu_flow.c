@@ -82,7 +82,6 @@ extern u8 gControllerPakOperationCounts[];
 extern s32 gPlayerInputHeld;
 extern s16 gMenuFadeAlpha;
 extern u8 gMainMenuSecretCodeStep;
-extern s8 gMenuFadeOverlayActive;
 extern u8 gConnectedControllerCount;
 extern u8 gRaceRumbleEnabled;
 extern u8 gRumblePakConnectedMask;
