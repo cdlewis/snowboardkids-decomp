@@ -19,15 +19,6 @@
 #include "game/engine/viewport_manager.h"
 #include "game/menu/renderer/menu_renderer.h"
 
-typedef struct {
-    /* 0x00 */ u8 pad0[0x4];
-    /* 0x04 */ s16 yaw;
-    /* 0x06 */ u8 pad6[0x1E];
-    /* 0x24 */ s32 depth;
-    /* 0x28 */ u8 pad28[0x4];
-    /* 0x2C */ void (*update)(void);
-} MenuCameraObject;
-
 /* These globals form the original 0x10-byte ending_credits_flow BSS contribution. */
 s16 gEndingCreditsUnusedValue;
 u16 gEndingCreditsSequencePhase;
@@ -40,9 +31,7 @@ extern void releaseMenuAssetHandles(void);
 
 extern s8 gFramebufferSwapDelay;
 extern s16 gMenuFadeAlpha;
-extern Vec3i gMenuCameraTargetOffset;
-extern MenuCameraObject D_801121E0;
-extern MenuCameraObject *gCurrentMenuCameraObject;
+extern RaceCamera D_801121E0;
 extern u8 gPendingFramebufferSwapCount;
 extern u8 gFramebufferSwapHold;
 
@@ -55,8 +44,8 @@ void initEndingCreditsFlow(void) {
 
     resetRaceCameras();
     D_801121E0.update = updateMenuCameraObjectWithTargetOffsetCallback;
-    D_801121E0.depth = 0x5D24000;
-    D_801121E0.yaw = 0xFC0;
+    D_801121E0.distance = 0x5D24000;
+    D_801121E0.pitch = 0xFC0;
     resetAllViewports();
     configureViewportWithFovAndFarClip(0, 0xA0, 0x38, 0x120, 0x50, 0x140, 0xF0, gEndingCreditsViewportAspectRatio[0], 0x14, 0xAF0);
     gFramebufferSwapDelay = 0;

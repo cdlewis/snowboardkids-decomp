@@ -16,20 +16,11 @@
 #include "game/audio/sound_manager.h"
 #include "game/race/player/race_player_input.h"
 
-typedef struct MenuCameraObject {
-    /* 0x00 */ u8 pad0[0x24];
-    /* 0x24 */ s32 depth;
-    /* 0x28 */ u8 pad28[4];
-    /* 0x2C */ void (*update)(void);
-    /* 0x30 */ u8 pad30[0x80];
-} MenuCameraObject;
-
 typedef union {
     RacePlayer *selection;
-    MenuCameraObject *object;
+    RaceCamera *object;
 } CourseSelectPointer;
 
-extern MenuCameraObject *gCurrentMenuCameraObject;
 extern u16 gCourseDetailsPreviewCourseTiles[];
 extern s16 gMenuFadeAlpha;
 extern s16 gMenuChoicePromptState;
@@ -88,8 +79,8 @@ extern u8 gCourseSelectExtraCourseColumnState;
 extern u8 gShopMenuDescriptionSeen;
 extern u8 gShopMenuShowNewCoursesMessage;
 extern s16 gCoursePreviewViewportHeight;
-extern MenuCameraObject D_801121E0[];
-extern MenuCameraObject D_80112340;
+extern RaceCamera D_801121E0[];
+extern RaceCamera D_80112340;
 extern u8 gPlayerCount;
 extern s8 gCourseSelectSelectedCourseSavedSlot;
 extern s32 gMenuFlowState;
@@ -117,7 +108,7 @@ void initCourseSelectMenu(void) {
 
     for (i = 0; i < 4; i++) {
         D_801121E0[i].update = updateMenuCameraObjectLookAtOriginCallback;
-        D_801121E0[i].depth = 0xA40000;
+        D_801121E0[i].distance = 0xA40000;
         D_8010AEA0[i] = 0;
         D_8010AEAC[i] = 0;
     }
@@ -1698,7 +1689,7 @@ after_input:
     }
 
     {
-        MenuCameraObject *var_s0;
+        RaceCamera *var_s0;
         s32 i;
 
         i = 0;
@@ -1728,7 +1719,7 @@ void updateCourseSelectUnlockCourseList(void) {
     u8 *selectionPtr;
     u16 repeatTimer;
     u8 selection;
-    MenuCameraObject *camera;
+    RaceCamera *camera;
 
     playerIndex = 0;
     if ((&gMenuChoicePromptState)[playerIndex] == 9) {
@@ -1837,7 +1828,7 @@ void updateCourseSelectUnlockCourseList(void) {
 #endif
 
 void initCourseSelectCourseDetailsMenu(void) {
-    MenuCameraObject *var_s1;
+    RaceCamera *var_s1;
     s32 var_s0;
     s8 temp_v0;
 
@@ -1973,7 +1964,7 @@ void updateCourseSelectCourseDetailsMenu(void) {
 #endif
 
 void waitCourseSelectRecordsClose(void) {
-    MenuCameraObject *var_s1;
+    RaceCamera *var_s1;
     s32 var_s0;
 
     if (gCourseSelectStatus.transitionState == 2) {
@@ -1987,7 +1978,7 @@ void waitCourseSelectRecordsClose(void) {
 }
 
 void returnToCourseSelectUnlockCourseList(void) {
-    MenuCameraObject *var_s1;
+    RaceCamera *var_s1;
     s32 var_s0;
 
     if (gCurrentGameTask->screenState == 5) {
@@ -2007,7 +1998,7 @@ void returnToCourseSelectUnlockCourseList(void) {
 }
 
 void returnToCourseSelectModeMenu(void) {
-    MenuCameraObject *var_s1;
+    RaceCamera *var_s1;
     s32 var_s0;
     s32 i;
 
@@ -2045,7 +2036,7 @@ void returnToCourseSelectModeMenu(void) {
 }
 
 void initCourseSelectPreview(void) {
-    MenuCameraObject *var_s0;
+    RaceCamera *var_s0;
     s8 *temp;
 
     gCoursePreviewViewportHeight = 0x78;
@@ -2064,7 +2055,7 @@ void initCourseSelectPreview(void) {
 }
 
 void updateCourseSelectPreviewClose(void) {
-    MenuCameraObject *var_s0;
+    RaceCamera *var_s0;
 
     gCoursePreviewViewportHeight -= 4;
     if (gCoursePreviewViewportHeight < 0) {
