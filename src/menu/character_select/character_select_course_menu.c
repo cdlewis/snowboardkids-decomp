@@ -28,7 +28,6 @@ extern CharacterSelectOptionList *gCharacterSelectActiveCourseOptions;
 extern s32 D_8010ADE0;
 extern s32 D_8010ADE4;
 extern s32 gMenuFlowState;
-extern s32 gPlayerInputPressed;
 extern u16 gCharacterSelectCourseExitOptionIndex;
 extern u8 gCharacterSelectCourseSubmenuState;
 extern u8 gMenuExitSelection;
@@ -346,7 +345,7 @@ void updateCharacterSelectCourseMenu(void) {
     s16 previousSelection;
     u16 repeatTimer;
 
-    pressedInputPtr = &gPlayerInputPressed;
+    pressedInputPtr = gPlayerInputPressed;
     if (gCurrentGameTask->fade != 0) {
         gCurrentGameTask->fade = stepMenuFadeAlpha((s16) gCurrentGameTask->fade, 0x24, 0);
         if (gCurrentGameTask->fade == 0) {
@@ -400,7 +399,7 @@ void updateCharacterSelectCourseMenu(void) {
                         enqueueSoundEffect(0x19, 0x32);
                     }
 
-                    input = gPlayerInputPressed;
+                    input = gPlayerInputPressed[0];
                     if (((input & START_BUTTON) || (input & A_BUTTON)) &&
                         (gMenuFlowState == (gCharacterSelectCourseExitOptionIndex + 1))) {
                         cursorState = 2;
@@ -461,7 +460,7 @@ void updateCharacterSelectCourseSubmenu(void) {
     if (state < 3) {
         switch (gCharacterSelectCourseCursorState.fields.otherState) {
         case 2:
-            input = gPlayerInputPressed;
+            input = gPlayerInputPressed[0];
             if (input & B_BUTTON) {
                 gRacePlayers[0].menuState = 3;
                 enqueueSoundEffect(1, 0x32);
@@ -474,15 +473,15 @@ void updateCharacterSelectCourseSubmenu(void) {
             break;
         case 3:
             if (gMenuChoicePromptState[0] >= 3) {
-                input = gPlayerInputPressed;
+                input = gPlayerInputPressed[0];
                 if ((input & (STICK_UP | U_JPAD)) && (gMenuChoicePromptState[0] != 3)) {
                     gMenuChoicePromptState[0]--;
                     enqueueSoundEffect(0x19, 0x32);
-                    input = gPlayerInputPressed;
+                    input = gPlayerInputPressed[0];
                 } else if ((input & (STICK_DOWN | D_JPAD)) && (gMenuChoicePromptState[0] != 4)) {
                     gMenuChoicePromptState[0]++;
                     enqueueSoundEffect(0x19, 0x32);
-                    input = gPlayerInputPressed;
+                    input = gPlayerInputPressed[0];
                 }
 
                 if ((input & A_BUTTON) || (input & START_BUTTON)) {

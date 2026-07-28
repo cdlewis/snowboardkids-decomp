@@ -7,7 +7,6 @@
 #include "game/race/player/race_player_model_renderer.h"
 #include "game/race/player/race_player_input.h"
 
-extern s32 gPlayerInputPressed;
 extern void drawMenuAsciiTextDefaultScale(s32, s32, char *, s32);
 
 const char gRaceMotionAnimationDebugViewerMotionNumberFormat[] = "MOTION NO %3.3i";
@@ -50,7 +49,7 @@ void updateRaceMotionAnimationDebugViewer(void) {
                                gRacePlayers[0].animationId);
         stepRaceMotionLoopingAnimation((RaceMotionState *)&gRacePlayers[0]);
     } else {
-        buttons = gPlayerInputPressed;
+        buttons = gPlayerInputPressed[0];
         if (buttons & Z_TRIG) {
             if (gRacePlayers[0].stateFlags != 0) {
                 gRacePlayers[0].stateFlags = 0;
@@ -68,7 +67,7 @@ void updateRaceMotionAnimationDebugViewer(void) {
         }
         if (gPlayerInputHeld[0] & L_CBUTTONS) {
             stepRaceMotionLoopingAnimation((RaceMotionState *)&gRacePlayers[0]);
-            buttons = gPlayerInputPressed;
+            buttons = gPlayerInputPressed[0];
         }
         if (buttons & R_CBUTTONS) {
             stepRaceMotionLoopingAnimation((RaceMotionState *)&gRacePlayers[0]);

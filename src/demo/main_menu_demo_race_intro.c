@@ -53,7 +53,6 @@ extern u8 gRaceResultState;
 extern s32 gMenuFlowState;
 extern u8 gFramebufferSwapHold;
 extern u8 gPendingFramebufferSwapCount;
-extern s32 gPlayerInputPressed;
 extern void releaseMenuAssetHandles(void);
 // initMainMenuDemoRaceIntro best match: 98.251% (nonmatchings/initMainMenuDemoRaceIntro-6887713755923057488/base_40.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/demo/main_menu_demo_race_intro/initMainMenuDemoRaceIntro.s")
@@ -221,7 +220,7 @@ void updateMainMenuDemoRaceIntro(void) {
             fadeStep = state->fadeStep;
         }
     }
-    if ((gPlayerInputPressed & START_BUTTON) && (fadeStep == 0)) {
+    if ((gPlayerInputPressed[0] & START_BUTTON) && (fadeStep == 0)) {
         state->fadeStep = 0x10;
         requestMusicSequenceStop(0x1E);
         state = gCurrentGameTask;

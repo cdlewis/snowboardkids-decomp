@@ -17,5 +17,9 @@ extern s32 gPlayerInputHeld[PLAYER_INPUT_COUNT];
 extern s32 gPlayer2InputHeld;
 extern s32 gPlayer3InputHeld;
 extern s32 gPlayer4InputHeld;
+extern s32 gPlayerInputPressed[PLAYER_INPUT_COUNT];
+extern s32 gPlayer2InputPressed;
+extern s32 gPlayer3InputPressed;
+extern s32 gPlayer4InputPressed;
 
 #endif

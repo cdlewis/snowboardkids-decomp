@@ -116,7 +116,7 @@ void updateRaceSplitscreenSelectMenu(void) {
                         gMenuInputRepeatTimers[0] = 0;
                     }
 
-                    heldInput = gPlayerInputPressed;
+                    heldInput = gPlayerInputPressed[0];
                     pressedUpCopy = pressedUp;
                     if ((heldInput & (STICK_UP | U_JPAD)) ||
                         ((pressedUpCopy != 0) && (gMenuInputRepeatTimers[0] >= 0xB) &&
@@ -166,7 +166,7 @@ void updateRaceSplitscreenSelectMenu(void) {
 
                     if (selection != previousSelection) {
                         enqueueSoundEffect(0x19, 0x32);
-                        heldInput = gPlayerInputPressed;
+                        heldInput = gPlayerInputPressed[0];
                     }
 
                     if ((heldInput & START_BUTTON) || ((heldInput & A_BUTTON) && (gMenuFlowState == 5))) {
@@ -189,7 +189,7 @@ void updateRaceSplitscreenSelectMenu(void) {
         }
 
         waitTimer = gMenuSelectionConfirmTimer;
-        if ((gPlayerInputPressed & B_BUTTON) && (gMenuFlowState == 5) && (waitTimer == 0)) {
+        if ((gPlayerInputPressed[0] & B_BUTTON) && (gMenuFlowState == 5) && (waitTimer == 0)) {
             enqueueSoundEffect(1, 0x32);
             gMenuSelectionConfirmTimer = 1;
             gRaceSplitscreenSelectCursorTarget.state = 2;

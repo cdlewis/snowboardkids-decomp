@@ -48,7 +48,6 @@ extern char D_800EC9E5;
 extern u8 gHighestUnlockedCourse;
 extern s16 gRaceCourseIndex;
 extern s32 gMenuFlowState;
-extern s32 gPlayerInputPressed[];
 
 void initRaceSetupMenu(void) {
     s32 i;

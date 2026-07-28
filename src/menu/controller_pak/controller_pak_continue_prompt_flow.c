@@ -17,7 +17,6 @@ extern s16 gMenuFadeAlpha;
 extern s32 gMenuFlowState;
 extern u8 gPendingFramebufferSwapCount;
 extern u8 gFramebufferSwapHold;
-extern s32 gPlayerInputPressed;
 
 void initControllerPakContinuePromptFlow(void) {
     requestMusicSequenceBank(3);
@@ -54,17 +53,17 @@ void updateControllerPakContinuePromptFlow(void) {
     } else {
         var_v0 = gCurrentGameTask->timer;
         temp_a1 = var_v0;
-        if ((gPlayerInputPressed & (STICK_UP | U_JPAD)) && (var_v0 != 0)) {
+        if ((gPlayerInputPressed[0] & (STICK_UP | U_JPAD)) && (var_v0 != 0)) {
             gCurrentGameTask->timer = var_v0 - 1;
             var_v0 = gCurrentGameTask->timer;
-        } else if ((gPlayerInputPressed & (STICK_DOWN | D_JPAD)) && (var_v0 != 1)) {
+        } else if ((gPlayerInputPressed[0] & (STICK_DOWN | D_JPAD)) && (var_v0 != 1)) {
             gCurrentGameTask->timer = var_v0 + 1;
             var_v0 = gCurrentGameTask->timer;
         }
         if (temp_a1 != var_v0) {
             enqueueSoundEffect(0x19, 0x32);
         }
-        if ((gPlayerInputPressed & A_BUTTON) || (gPlayerInputPressed & START_BUTTON)) {
+        if ((gPlayerInputPressed[0] & A_BUTTON) || (gPlayerInputPressed[0] & START_BUTTON)) {
             enqueueSoundEffect(0x18, 0x32);
             gMenuFlowState = gCurrentGameTask->timer;
             gControllerPakContinuePromptTransition.state = 2;

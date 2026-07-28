@@ -47,7 +47,6 @@ struct TrainingCourseUiActor {
     /* 0x2C */ u8 keepVisibleAfterConfirm;
 };
 
-extern s32 gPlayerInputPressed;
 extern TrainingCourseUiScript gTrainingCourseOpeningDialogScripts[][0x17C];
 extern TrainingCourseUiScript gTrainingCourseEndingDialogScript[];
 extern TrainingCourseUiScript gTrainingCourseLessonTitleLabelTemplate[];
@@ -143,7 +142,7 @@ void updateTrainingCourseLessonEndMenu(TrainingCourseUiActor *arg0) {
 
     var_v0 = (u16)arg0->state.selectedAction;
     temp_a1 = var_v0;
-    if (gPlayerInputPressed & (STICK_UP | U_JPAD)) {
+    if (gPlayerInputPressed[0] & (STICK_UP | U_JPAD)) {
         if (gTrainingCourseLesson != 9) {
             if (var_v0 != 0) {
                 arg0->state.selectedAction = var_v0 - 1;
@@ -157,7 +156,7 @@ void updateTrainingCourseLessonEndMenu(TrainingCourseUiActor *arg0) {
         }
     }
     var_a0 = var_v0;
-    if (gPlayerInputPressed & (STICK_DOWN | D_JPAD)) {
+    if (gPlayerInputPressed[0] & (STICK_DOWN | D_JPAD)) {
         if (var_v0 != 2) {
             arg0->state.selectedAction = var_v0 + 1;
             var_a0 = (u16)arg0->state.selectedAction;
@@ -172,7 +171,7 @@ void updateTrainingCourseLessonEndMenu(TrainingCourseUiActor *arg0) {
         arg0->highlightScale += 9;
     }
     arg0->highlightTimer = ((u16)arg0->highlightTimer + 1) & 0x1F;
-    if ((gPlayerInputPressed & A_BUTTON) || (gPlayerInputPressed & START_BUTTON)) {
+    if ((gPlayerInputPressed[0] & A_BUTTON) || (gPlayerInputPressed[0] & START_BUTTON)) {
         enqueueSoundEffect(1, 0x32, arg0);
         gMainMenuSelectionResult = (u16)arg0->state.selectedAction + 1;
         arg0->highlightScale = 0x100;
@@ -338,7 +337,7 @@ void updateTrainingCourseDialog(TrainingCourseUiActor *arg0) {
     switch (arg0->scriptState) {
     case 0:
         keepScanning = 1;
-        if ((gPlayerInputPressed & A_BUTTON) || (gPlayerInputPressed & START_BUTTON)) {
+        if ((gPlayerInputPressed[0] & A_BUTTON) || (gPlayerInputPressed[0] & START_BUTTON)) {
             scan = arg0->layout.script;
             arg0->state.script.visibleGlyphCount = 0;
             do {
@@ -369,7 +368,7 @@ void updateTrainingCourseDialog(TrainingCourseUiActor *arg0) {
         break;
     case 1:
         arg0->confirmBlinkTimer = (arg0->confirmBlinkTimer + 1) & 0xF;
-        if ((A_BUTTON & gPlayerInputPressed) || (gPlayerInputPressed & START_BUTTON)) {
+        if ((A_BUTTON & gPlayerInputPressed[0]) || (gPlayerInputPressed[0] & START_BUTTON)) {
             enqueueSoundEffect(1, 0x32, arg0);
             arg0->confirmBlinkTimer = 0;
             gMainMenuSelectionResult = 1;
@@ -382,7 +381,7 @@ void updateTrainingCourseDialog(TrainingCourseUiActor *arg0) {
         break;
     case 2:
         arg0->confirmBlinkTimer = (arg0->confirmBlinkTimer + 1) & 0xF;
-        if ((gPlayerInputPressed & A_BUTTON) || (gPlayerInputPressed & START_BUTTON)) {
+        if ((gPlayerInputPressed[0] & A_BUTTON) || (gPlayerInputPressed[0] & START_BUTTON)) {
             enqueueSoundEffect(1, 0x32, arg0);
             if (*arg0->layout.script != 0xFFFB) {
                 do {

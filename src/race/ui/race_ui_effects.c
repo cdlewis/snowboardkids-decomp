@@ -3,6 +3,7 @@
 #include "game/menu/renderer/menu_render_utils.h"
 #include "game/engine/render_callback.h"
 #include "game/engine/system_runtime.h"
+#include "game/engine/controller_input.h"
 #include "assets.h"
 #include "game/race/ui/race_ui_effects.h"
 #include "game/race/effects/snowboard_trail_effects.h"
@@ -825,7 +826,6 @@ extern s16 gRaceLapCount;
 extern s16 gRacePrizeAmountsByCourseAndRank[][4];
 extern s16 gUiBlinkTimer;
 extern s32 gMenuFlowState;
-extern s32 gPlayerInputPressed;
 extern s32 isPositionNearAnyRaceViewportFocus(Vec3i *);
 extern s8 gRacePlayerCount;
 extern u16 D_800D6520[];
@@ -1213,7 +1213,7 @@ void func_800584A0(void *arg0) {
 }
 
 void func_80058538(void *arg0) {
-    if (gPlayerInputPressed & A_BUTTON) {
+    if (gPlayerInputPressed[0] & A_BUTTON) {
         enqueueSoundEffect(0x18, 0x32);
         gMenuFlowState |= 0x10;
         setCallbackTaskCallback(arg0, (CallbackTaskCallback)func_800584A0);
@@ -1259,7 +1259,7 @@ void func_80058610(RaceUiAlpha18Actor *arg0) {
         }
     }
 
-    if (gPlayerInputPressed & A_BUTTON) {
+    if (gPlayerInputPressed[0] & A_BUTTON) {
         gRacePlayers[0].money = player->money + arg0->score;
         if (player->rankIndex != 3) {
             player->money += player->unk568;
@@ -1541,7 +1541,7 @@ void updateRaceUiResultsBannerWaitForInput(RaceUiResultsBannerActor *arg0) {
     actor = arg0;
     i = 0;
     if ((s32)gPlayerCount > 0) {
-        input = &gPlayerInputPressed; do {
+        input = gPlayerInputPressed; do {
             if ((*input & A_BUTTON) && !(gMenuFlowState & 0x10)) {
                 gMenuFlowState |= 0x10;
                 enqueueSoundEffect(0x18, 0x32);
@@ -1685,7 +1685,7 @@ void func_8005A07C(RaceUiCourseStatsActor *arg0) {
 }
 
 void func_8005A0E0(RaceUiCourseStatsActor *arg0) {
-    if (gPlayerInputPressed & A_BUTTON) {
+    if (gPlayerInputPressed[0] & A_BUTTON) {
         gMenuFlowState |= 0x10;
         enqueueSoundEffect(0x18, 0x32);
         setCallbackTaskCallback(arg0, (CallbackTaskCallback)func_8005A07C);
@@ -1989,7 +1989,7 @@ void func_8005AEB0(void *arg0) {
 }
 
 void func_8005AF2C(void *arg0) {
-    if (gPlayerInputPressed & A_BUTTON) {
+    if (gPlayerInputPressed[0] & A_BUTTON) {
         enqueueSoundEffect(0x18, 0x32);
         gMenuFlowState |= 0x10;
         setCallbackTaskCallback(arg0, (CallbackTaskCallback)func_8005AEB0);
@@ -2008,7 +2008,7 @@ void func_8005AFEC(void *arg0) {
 }
 
 void func_8005B068(RaceUiCounterActor *actor) {
-    if (gPlayerInputPressed & A_BUTTON) {
+    if (gPlayerInputPressed[0] & A_BUTTON) {
         enqueueSoundEffect(0x18, 0x32);
         if (actor->index < 5) {
             setCallbackTaskCallback(actor, (CallbackTaskCallback)func_8005AF2C);
@@ -2034,22 +2034,22 @@ void func_8005B14C(RaceUiCounterActor *arg0) {
     }
 
     value = arg0->value;
-    if ((value >= 8) && !(gPlayerInputPressed & A_BUTTON)) {
+    if ((value >= 8) && !(gPlayerInputPressed[0] & A_BUTTON)) {
         value = 8;
     }
     /* IDO register allocation depends on this always-zero index. */
-    gRacePlayers[gPlayerInputPressed * 0].unkC += value;
+    gRacePlayers[gPlayerInputPressed[0] * 0].unkC += value;
     arg0->value -= value;
 
     value = arg0->bonus;
-    if ((value >= 8) && !(gPlayerInputPressed & A_BUTTON)) {
+    if ((value >= 8) && !(gPlayerInputPressed[0] & A_BUTTON)) {
         value = 8;
     }
     gRacePlayers[0].unkC += value;
     arg0->bonus -= value;
 
     value = arg0->target;
-    if ((value >= 8) && !(gPlayerInputPressed & A_BUTTON)) {
+    if ((value >= 8) && !(gPlayerInputPressed[0] & A_BUTTON)) {
         value = 8;
     }
     gRacePlayers[0].unkC += value;
@@ -2416,7 +2416,7 @@ void func_8005C3E4(void *arg0) {
 }
 
 void func_8005C448(void *arg0) {
-    if (gPlayerInputPressed & A_BUTTON) {
+    if (gPlayerInputPressed[0] & A_BUTTON) {
         enqueueSoundEffect(0x18, 0x32);
         gMenuFlowState |= 0x10;
         setCallbackTaskCallback(arg0, (CallbackTaskCallback)func_8005C3E4);
@@ -2434,7 +2434,7 @@ void func_8005C4EC(void *arg0) {
 }
 
 void func_8005C568(RaceUiDualCounterActor *actor) {
-    if (gPlayerInputPressed & A_BUTTON) {
+    if (gPlayerInputPressed[0] & A_BUTTON) {
         enqueueSoundEffect(0x18, 0x32);
         if (actor->index < 5) {
             setCallbackTaskCallback(actor, (CallbackTaskCallback)func_8005C448);
@@ -2460,29 +2460,29 @@ void func_8005C64C(RaceUiDualCounterActor *arg0) {
     }
 
     value = arg0->leftValue;
-    if ((value >= 8) && !(gPlayerInputPressed & A_BUTTON)) {
+    if ((value >= 8) && !(gPlayerInputPressed[0] & A_BUTTON)) {
         value = 8;
     }
     /* IDO register allocation depends on this always-zero index. */
-    gRacePlayers[gPlayerInputPressed * 0].unkC += value;
+    gRacePlayers[gPlayerInputPressed[0] * 0].unkC += value;
     arg0->leftValue -= value;
 
     value = arg0->rightValue;
-    if ((value >= 8) && !(gPlayerInputPressed & A_BUTTON)) {
+    if ((value >= 8) && !(gPlayerInputPressed[0] & A_BUTTON)) {
         value = 8;
     }
     gRacePlayers[0].unkC += value;
     arg0->rightValue -= value;
 
     value = arg0->bonus;
-    if ((value >= 8) && !(gPlayerInputPressed & A_BUTTON)) {
+    if ((value >= 8) && !(gPlayerInputPressed[0] & A_BUTTON)) {
         value = 8;
     }
     gRacePlayers[0].unkC += value;
     arg0->bonus -= value;
 
     value = arg0->leftTarget;
-    if ((value >= 8) && !(gPlayerInputPressed & A_BUTTON)) {
+    if ((value >= 8) && !(gPlayerInputPressed[0] & A_BUTTON)) {
         value = 8;
     }
     gRacePlayers[0].unkC += value;
@@ -2943,7 +2943,7 @@ void func_8005DBD0(void *arg0) {
 }
 
 void func_8005DC4C(void *arg0) {
-    if (gPlayerInputPressed & A_BUTTON) {
+    if (gPlayerInputPressed[0] & A_BUTTON) {
         enqueueSoundEffect(0x18, 0x32);
         gMenuFlowState |= 0x10;
         setCallbackTaskCallback(arg0, (CallbackTaskCallback)func_8005DBD0);
@@ -2962,7 +2962,7 @@ void func_8005DD0C(void *arg0) {
 }
 
 void updateRaceUiTrickPrizePayoutWaitForConfirm(RaceUiCourseStatsActor *actor) {
-    if (gPlayerInputPressed & A_BUTTON) {
+    if (gPlayerInputPressed[0] & A_BUTTON) {
         enqueueSoundEffect(0x18, 0x32);
         if (actor->index < 5) {
             setCallbackTaskCallback(actor, (CallbackTaskCallback)func_8005DC4C);
@@ -2988,22 +2988,22 @@ void func_8005DE6C(RaceUiCourseStatsActor *arg0) {
     }
 
     value = arg0->pendingTrickPrize;
-    if ((value >= 8) && !(gPlayerInputPressed & A_BUTTON)) {
+    if ((value >= 8) && !(gPlayerInputPressed[0] & A_BUTTON)) {
         value = 8;
     }
     /* IDO register allocation depends on this always-zero index. */
-    gRacePlayers[gPlayerInputPressed * 0].unkC += value;
+    gRacePlayers[gPlayerInputPressed[0] * 0].unkC += value;
     arg0->pendingTrickPrize -= value;
 
     value = arg0->pendingMakeBonus;
-    if ((value >= 8) && !(gPlayerInputPressed & A_BUTTON)) {
+    if ((value >= 8) && !(gPlayerInputPressed[0] & A_BUTTON)) {
         value = 8;
     }
     gRacePlayers[0].unkC += value;
     arg0->pendingMakeBonus -= value;
 
     value = arg0->pendingCompleteBonus;
-    if ((value >= 8) && !(gPlayerInputPressed & A_BUTTON)) {
+    if ((value >= 8) && !(gPlayerInputPressed[0] & A_BUTTON)) {
         value = 8;
     }
     gRacePlayers[0].unkC += value;
