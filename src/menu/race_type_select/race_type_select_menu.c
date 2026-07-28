@@ -5,6 +5,7 @@
 #include "game/engine/asset_manager.h"
 #include "game/menu/character_select/character_select_course_menu.h"
 #include "game/engine/game_task_scheduler.h"
+#include "game/menu/main_menu/controller_main_menu_flow.h"
 #include "game/menu/renderer/menu_renderer.h"
 #include "game/menu/race_type_select/race_type_select_menu.h"
 #include "game/menu/race_type_select/race_type_select_ui.h"
@@ -24,7 +25,6 @@ extern s32 enqueueSoundEffect(s16, s16);
 extern RaceTypeSelectCursorState gRaceTypeSelectCursorTarget;
 extern u8 gMenuSelectionConfirmTimer;
 extern u8 gMenuExitSelection;
-extern u16 gMenuInputRepeatTimers;
 extern u8 gRaceTypeSelectCursorAnimState;
 extern s16 gRaceCourseIndex;
 extern s16 gMenuFadeAlpha;
@@ -44,7 +44,7 @@ void returnToRaceTypeSelectMenu(void) {
     gCurrentGameTask->fade = 1;
     gCurrentGameTask->timer = 0;
     gMenuExitSelection = 0;
-    gMenuInputRepeatTimers = 0;
+    gMenuInputRepeatTimers[0] = 0;
     if (gRaceCourseIndex == 7) {
         gRaceCourseIndex = 9;
     }
@@ -78,7 +78,7 @@ void initRaceTypeSelectMenu(void) {
     gActiveMenuTask = 0;
     gCurrentGameTask->timer = 0;
     gMenuExitSelection = 0;
-    gMenuInputRepeatTimers = 0;
+    gMenuInputRepeatTimers[0] = 0;
     if (gRaceCourseIndex == 7) {
         gRaceCourseIndex = 9;
     }
@@ -126,18 +126,18 @@ void updateRaceTypeSelectMenu(void) {
                     previousSelection = selection;
 
                     if ((pressedUp == 0) && ((newInput & (STICK_DOWN | D_JPAD)) == 0)) {
-                        gMenuInputRepeatTimers = 0;
+                        gMenuInputRepeatTimers[0] = 0;
                     }
 
                     heldInput = gPlayerInputPressed;
                     pressedUpCopy = pressedUp;
                     if ((heldInput & (STICK_UP | U_JPAD)) ||
-                        ((pressedUpCopy != 0) && ((gMenuInputRepeatTimers & 0xFFFF) >= 9) &&
-                         ((gMenuInputRepeatTimers % 3) == 0))) {
-                        repeatTimer = gMenuInputRepeatTimers;
+                        ((pressedUpCopy != 0) && ((gMenuInputRepeatTimers[0] & 0xFFFF) >= 9) &&
+                         ((gMenuInputRepeatTimers[0] % 3) == 0))) {
+                        repeatTimer = gMenuInputRepeatTimers[0];
                         if (repeatTimer == 0) {
-                            gMenuInputRepeatTimers = repeatTimer + 1;
-                            repeatTimer = (((((gMenuInputRepeatTimers & 0xFFFFu) & 0xFFFFu) & 0xFFFFu) & 0xFFFFu) &
+                            gMenuInputRepeatTimers[0] = repeatTimer + 1;
+                            repeatTimer = (((((gMenuInputRepeatTimers[0] & 0xFFFFu) & 0xFFFFu) & 0xFFFFu) & 0xFFFFu) &
                                            0xFFFFu) &
                                           0xFFFFu;
                         }
@@ -146,13 +146,13 @@ void updateRaceTypeSelectMenu(void) {
                             selection = (u8) (selection - 1);
                         }
                     } else {
-                        repeatTimer = gMenuInputRepeatTimers;
+                        repeatTimer = gMenuInputRepeatTimers[0];
                         if ((heldInput & (STICK_DOWN | D_JPAD)) ||
                             ((newInput & (STICK_DOWN | D_JPAD)) && ((repeatTimerCopy = repeatTimer) >= 9) &&
                              ((repeatTimerCopy % 3) == 0))) {
                             if (repeatTimer == 0) {
-                                gMenuInputRepeatTimers = repeatTimer + 1;
-                                repeatTimer = gMenuInputRepeatTimers;
+                                gMenuInputRepeatTimers[0] = repeatTimer + 1;
+                                repeatTimer = gMenuInputRepeatTimers[0];
                             }
                             if (selection < 3) {
                                 nextSelection = selection + 1;
@@ -164,9 +164,9 @@ void updateRaceTypeSelectMenu(void) {
 
                     newInput = selection;
                     if (repeatTimer != 0) {
-                        gMenuInputRepeatTimers = repeatTimer + 1;
-                        if (gMenuInputRepeatTimers == 0xFFFF) {
-                            gMenuInputRepeatTimers = 0xC;
+                        gMenuInputRepeatTimers[0] = repeatTimer + 1;
+                        if (gMenuInputRepeatTimers[0] == 0xFFFF) {
+                            gMenuInputRepeatTimers[0] = 0xC;
                         }
                     }
 
@@ -186,7 +186,7 @@ void updateRaceTypeSelectMenu(void) {
                         }
                     }
                 }
-                gMenuExitSelection = gMenuInputRepeatTimers * 0;
+                gMenuExitSelection = gMenuInputRepeatTimers[0] * 0;
             } else {
                 gMenuSelectionConfirmTimer++;
             }

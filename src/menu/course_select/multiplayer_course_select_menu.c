@@ -41,7 +41,6 @@ extern u8 gRaceSplitscreenMode;
 extern s8 D_800EC9E5;
 extern s32 D_8010ADE0;
 extern s32 D_8010ADE4;
-extern u16 gMenuInputRepeatTimers[];
 extern s8 D_8010AE64[];
 extern u8 D_8010AEA0[];
 extern s8 D_8010AEA1;

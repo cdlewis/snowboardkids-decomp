@@ -46,7 +46,6 @@ extern u8 gRaceRumbleEnabled;
 extern u8 gRumblePakConnectedByController[];
 extern u8 gMenuSelectionConfirmTimer;
 extern char D_800EC9E5;
-extern u16 gMenuInputRepeatTimers;
 extern u8 gHighestUnlockedCourse;
 extern s16 gRaceCourseIndex;
 extern u8 gPlayerCount;
@@ -71,7 +70,7 @@ void initRaceSetupMenu(void) {
     gRaceRumbleEnabled = 0;
     gRaceCourseIndex = 9;
     gMenuFlowState = 0;
-    gMenuInputRepeatTimers = 0;
+    gMenuInputRepeatTimers[0] = 0;
     gPlayerCount = 1;
     gMenuFadeAlpha = gCurrentGameTask->fade;
 
@@ -125,34 +124,34 @@ void updateRaceSetupPlayerCountMenu(void) {
             temp_a3 = gPlayerInputPressed[0];
             temp_v0 = gPlayerInputHeld & 0x10800;
             if ((temp_v0 == 0) && !(gPlayerInputHeld & 0x20400)) {
-                gMenuInputRepeatTimers = 0;
+                gMenuInputRepeatTimers[0] = 0;
             }
             if ((temp_a3 & 0x10800) ||
-                ((temp_v0 != 0) && ((s32)gMenuInputRepeatTimers >= 9) &&
-                 (((s32)gMenuInputRepeatTimers % 3) == 0))) {
-                if (gMenuInputRepeatTimers == 0) {
-                    gMenuInputRepeatTimers += 1;
+                ((temp_v0 != 0) && ((s32)gMenuInputRepeatTimers[0] >= 9) &&
+                 (((s32)gMenuInputRepeatTimers[0] % 3) == 0))) {
+                if (gMenuInputRepeatTimers[0] == 0) {
+                    gMenuInputRepeatTimers[0] += 1;
                 }
                 if (gPlayerCount != one) {
                     gPlayerCount -= 1;
                     enqueueSoundEffect(0x19, 0x32);
                 }
             } else if ((temp_a3 & 0x20400) ||
-                       ((gPlayerInputHeld & 0x20400) && ((s32)gMenuInputRepeatTimers >= 9) &&
-                        (((s32)gMenuInputRepeatTimers % 3) == 0))) {
-                if (gMenuInputRepeatTimers == 0) {
-                    gMenuInputRepeatTimers += 1;
+                       ((gPlayerInputHeld & 0x20400) && ((s32)gMenuInputRepeatTimers[0] >= 9) &&
+                        (((s32)gMenuInputRepeatTimers[0] % 3) == 0))) {
+                if (gMenuInputRepeatTimers[0] == 0) {
+                    gMenuInputRepeatTimers[0] += 1;
                 }
                 if (gPlayerCount != gConnectedControllerCount) {
                     gPlayerCount += 1;
                     enqueueSoundEffect(0x19, 0x32);
                 }
             }
-            repeatTimer = gMenuInputRepeatTimers;
+            repeatTimer = gMenuInputRepeatTimers[0];
             if (repeatTimer != 0) {
-                gMenuInputRepeatTimers = repeatTimer + 1;
-                if (gMenuInputRepeatTimers == 0xFFFF) {
-                    gMenuInputRepeatTimers = 0xA;
+                gMenuInputRepeatTimers[0] = repeatTimer + 1;
+                if (gMenuInputRepeatTimers[0] == 0xFFFF) {
+                    gMenuInputRepeatTimers[0] = 0xA;
                 }
             }
             if ((temp_a3 & 0x8000) || (temp_a3 & 0x1000)) {
