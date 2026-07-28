@@ -5,6 +5,7 @@
 #include "game/engine/relocatable_heap.h"
 #include "game/engine/callback_task_scheduler.h"
 #include "game/engine/asset_manager.h"
+#include "game/engine/system_runtime.h"
 #include "game/engine/viewport_manager.h"
 #include "game/math/fixed_point_math.h"
 #include "game/menu/renderer/menu_screen_effects.h"
@@ -77,7 +78,6 @@ extern u32 raceStartPlayerEffectVertices[];
 extern u32 gAlphaSpriteRenderModeDl[];
 extern u32 gTranslucentSpriteRenderModeDl[];
 extern s16 gMenuFadeAlpha;
-extern u32 gMenuRenderModeResetDl[];
 extern s16 gRaceCourseIndex;
 extern s16 gFrameCounter;
 extern u8 gCurrentViewportIndex;

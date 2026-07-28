@@ -3,6 +3,7 @@
 #include "game/engine/render_callback.h"
 #include "game/engine/callback_task_scheduler.h"
 #include "game/engine/relocatable_heap.h"
+#include "game/engine/system_runtime.h"
 #include "game/menu/renderer/menu_renderer.h"
 #include "game/menu/renderer/menu_render_utils.h"
 
@@ -130,7 +131,6 @@ void drawMenuSpriteWithAlphaClipped(s16 arg0, s16 arg1, void *arg2, u16 arg3, u1
                    s32 arg9, s32 argA, s32 argB, s32 argC);
 void drawMenuGlyph(s16 x, s16 y, u16 glyphIndex, u8 paletteIndex, u16 intensity, u16 fontBank);
 void drawMenuColoredGlyph(s16 x, s16 y, u16 glyph, u8 palette, u16 scale, u16 colorMode, s32 arg6);
-extern Gfx gMenuRenderModeResetDl[];
 extern Gfx *gRegionAllocPtr;
 extern u32 gPlayerInputHeld;
 extern s16 gMenuSpriteFlipScales[][2];

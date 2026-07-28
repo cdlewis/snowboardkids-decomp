@@ -3,6 +3,7 @@
 #include "game/engine/render_callback.h"
 #include "game/engine/relocatable_heap.h"
 #include "game/engine/callback_task_scheduler.h"
+#include "game/engine/system_runtime.h"
 #include "game/ending/ending_credits_effects.h"
 #include "game/ending/ending_credits_flow.h"
 #include "game/menu/main_menu/main_menu_scene_model.h"
@@ -67,7 +68,6 @@ struct EndingCreditsEffectActor {
 };
 
 extern Gfx *gRegionAllocPtr;
-extern Gfx gMenuRenderModeResetDl[];
 extern s16 gMenuFadeAlpha;
 extern u16 gEndingCreditsTransitionSnowboardIconExpandFrameCounter;
 extern u16 gEndingCreditsNancyRunDustFrameOffsets[];

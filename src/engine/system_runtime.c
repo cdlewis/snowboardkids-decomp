@@ -391,7 +391,6 @@ extern Vp D_800DEF18[];
 extern Gfx D_800DEF28[];
 extern Gfx D_800DEF90[];
 extern Gfx D_800DF098[];
-extern Gfx gMenuRenderModeResetDl[];
 extern s16 gUiBlinkTimer;
 extern s16 gMenuViewportWidth;
 extern s16 gMenuViewportHeight;
