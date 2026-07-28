@@ -32,8 +32,6 @@ typedef struct {
 RacePlayer gRacePlayers[RACE_PLAYER_COUNT];
 
 extern s32 gMenuFlowState;
-extern s8 gPlayerStickX[];
-extern s8 gPlayerStickY[];
 
 void recordRaceReplayInputFrame(RacePlayer *player) {
     RaceInputReplayHistory *history;
