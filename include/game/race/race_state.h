@@ -32,5 +32,6 @@ typedef char RaceCourseStartEntrySizeCheck[(sizeof(RaceCourseStartEntry) == 0x48
 
 extern RaceCourseIndexValue gRaceCourseIndex;
 extern RaceCourseStartEntry gRaceCourseStartEntries[];
+extern u8 gRaceDemoPlaybackEnabled;
 
 #endif
