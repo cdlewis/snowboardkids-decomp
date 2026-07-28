@@ -1,4 +1,5 @@
 #include "common.h"
+#include "game/save_data.h"
 #include "game/engine/asset_manager.h"
 #include "game/engine/render_callback.h"
 #include "game/engine/relocatable_heap.h"
@@ -39,14 +40,7 @@ extern u8 gMenuSelectionConfirmTimer;
 
 #define CONTROLLER_PAK_RACE_RECORD_SAVE_SCORE_TEXTURE_HANDLE (gAssetHandles[0x21])
 
-typedef struct {
-    char pad[0x34];
-    u8 badgeIds[0x18];
-    u8 iconCount;
-} ControllerPakRaceRecordSaveScoreView;
-
 extern s16 gPlayerBadgeDisplayOrder[];
-extern ControllerPakRaceRecordSaveScoreView gGameSaveDataBuffer;
 
 struct ControllerPakRaceRecordSaveActor {
     char pad[0x18];
@@ -106,10 +100,10 @@ void drawControllerPakRaceRecordSaveScorePanel(ControllerPakRaceRecordSaveActor 
     sprintf(text, D_800E0F30, gRacePlayers[0].money);
     drawMenuAsciiText((s16)(arg0->x + 0x44), (s16)(arg0->y + 0x1B), text, 0, 0x100);
 
-    if (gGameSaveDataBuffer.iconCount == 3) {
+    if (gGameSaveDataBuffer.progressionLevel == 3) {
         count = 3;
     } else {
-        count = gGameSaveDataBuffer.iconCount + 1;
+        count = gGameSaveDataBuffer.progressionLevel + 1;
     }
 
     i = 0;
@@ -118,7 +112,7 @@ void drawControllerPakRaceRecordSaveScorePanel(ControllerPakRaceRecordSaveActor 
         do {
             xOffset = 1;
             xOffset = i + xOffset;
-            if ((s32)gGameSaveDataBuffer.iconCount < xOffset) {
+            if ((s32)gGameSaveDataBuffer.progressionLevel < xOffset) {
                 alpha = 0x70;
             } else {
                 alpha = 0x100;
@@ -133,13 +127,13 @@ void drawControllerPakRaceRecordSaveScorePanel(ControllerPakRaceRecordSaveActor 
     }
 
     count = 6;
-    if (gGameSaveDataBuffer.iconCount == 1) {
+    if (gGameSaveDataBuffer.progressionLevel == 1) {
         count = 7;
-    } else if (gGameSaveDataBuffer.iconCount == 2) {
+    } else if (gGameSaveDataBuffer.progressionLevel == 2) {
         count = 8;
     } else {
         i = 0;
-        if (gGameSaveDataBuffer.iconCount == 3) {
+        if (gGameSaveDataBuffer.progressionLevel == 3) {
             count = 9;
         }
     }
@@ -149,7 +143,7 @@ void drawControllerPakRaceRecordSaveScorePanel(ControllerPakRaceRecordSaveActor 
         new_var = gPlayerBadgeDisplayOrder;
         badgeIndex = new_var;
         do {
-            tile = gGameSaveDataBuffer.badgeIds[*badgeIndex];
+            tile = gGameSaveDataBuffer.cupPlacements[*badgeIndex];
             alpha = 0x70;
             if (tile != 0) {
                 alpha = 0x100;

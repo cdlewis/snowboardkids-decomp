@@ -1,4 +1,5 @@
 #include "common.h"
+#include "game/save_data.h"
 #include "game/engine/asset_manager.h"
 #include "game/engine/render_callback.h"
 #include "game/engine/relocatable_heap.h"
@@ -12,12 +13,6 @@
 #define CHARACTER_SELECT_UI_PLAYER_FRAME_HANDLE (gAssetHandles[0x21])
 #define CHARACTER_SELECT_UI_BANNER_TEXTURE_HANDLE (gAssetHandles[0x29])
 #define CHARACTER_SELECT_UI_AVAILABLE_CHARACTER_ICON_HANDLE (gAssetHandles[0x1F])
-typedef struct {
-    u8 pad0[0x4B];
-    /* 0x4B */ u8 flags;
-    u8 pad4C[0x78F8 - 0x4C];
-} RacePlayerState;
-
 typedef struct {
     u8 pad0[0x24];
     /* 0x24 */ u8 playerFrameReady;
@@ -52,7 +47,6 @@ extern s8 D_8010AE64[];
 extern MenuGlyphScript gCharacterSelectConfirmationBannerText[][0x1C];
 extern CharacterSelectUiCharacterStats gCharacterSelectCharacterStats[];
 extern u16 gCharacterSelectCharacterStatLabels[];
-extern RacePlayerState gGameSaveDataBuffer[];
 extern u8 D_8010AE5E;
 extern u8 D_8010AE5F;
 extern u16 gCharacterSelectPlayerMarkerTiles[];
@@ -415,7 +409,7 @@ void updateCharacterSelectRosterIcons(CharacterSelectUiRosterIconActor *arg0) {
 
 void initCharacterSelectRosterIcons(CharacterSelectUiRosterIconActor *arg0) {
     s32 i;
-    RacePlayerState *player;
+    GameSaveData *player;
     CharacterSelectUiRosterIconActor *actor;
     s32 targetX;
 
@@ -434,9 +428,9 @@ void initCharacterSelectRosterIcons(CharacterSelectUiRosterIconActor *arg0) {
 
     i = 0;
     if (gPlayerCount > 0) {
-        player = gGameSaveDataBuffer;
+        player = &gGameSaveDataBuffer;
         do {
-            actor->playerFlags = actor->playerFlags | (player->flags & 1);
+            actor->playerFlags = actor->playerFlags | (player->characterFlags & 1);
             D_8010AE5E = actor->playerFlags;
             D_8010AE5F = actor->unk23;
             i++;
@@ -507,23 +501,23 @@ void updateCharacterSelectPlayerCursorMarkers(CharacterSelectUiPlayerCursorActor
 void initCharacterSelectPlayerCursorMarkers(CharacterSelectUiPlayerCursorActor *arg0) {
     /* Paired views preserve IDO's register reuse without pointer casts or byte offsets. */
     union {
-        RacePlayerState *playersEnd;
+        GameSaveData *playersEnd;
         s32 playerIndex;
     } loop;
     union {
         CharacterSelectUiPlayerCursorActor *actor;
         s16 *next;
     } marker;
-    RacePlayerState *player;
+    GameSaveData *player;
     s8 *highlightedRosterIndices;
     s32 combinedPlayerFlags;
 
     combinedPlayerFlags = 0;
     loop.playerIndex = 0;
     /* Splitting this loop header across lines changes IDO's instruction scheduling. */
-    if ((s32)gPlayerCount > 0) { player = gGameSaveDataBuffer; do {
-            combinedPlayerFlags |= player->flags;
-            loop.playersEnd = &gGameSaveDataBuffer[gPlayerCount];
+    if ((s32)gPlayerCount > 0) { player = &gGameSaveDataBuffer; do {
+            combinedPlayerFlags |= player->characterFlags;
+            loop.playersEnd = &gGameSaveDataBuffer + gPlayerCount;
             player++;
         } while (player < loop.playersEnd);
         loop.playerIndex = 0;

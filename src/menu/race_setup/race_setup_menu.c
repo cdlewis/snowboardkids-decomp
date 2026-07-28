@@ -1,4 +1,5 @@
 #include "common.h"
+#include "game/save_data.h"
 #include "assets.h"
 #include "game/engine/asset_manager.h"
 #include "game/engine/callback_task_scheduler.h"
@@ -233,14 +234,6 @@ void initRaceSetupSaveMenu(void) {
 #define SAVE_READY_CONFIRM_DELAY 0xF
 
 typedef struct {
-    /* 0x0000 */ u8 pad0[0x4];
-    /* 0x0004 */ s32 money;
-    /* 0x0008 */ u8 pad8[0x44];
-    /* 0x004C */ u8 highestUnlockedCourse;
-    /* 0x004D */ u8 pad4D[0x78AB];
-} RaceSetupSaveData;
-
-typedef struct {
     /* 0x0000 */ s32 money;
     /* 0x0004 */ u8 pad4[0x78F4];
 } RaceSetupSaveMoney;
@@ -256,7 +249,6 @@ extern s16 gMenuChoicePromptState[];
 extern u8 gControllerPakOperationCounts[];
 extern s32 gRumbleMotorStatuses[];
 extern u8 D_800EC9E4;
-extern RaceSetupSaveData gGameSaveDataBuffer[];
 extern RaceSetupSaveMoney D_800EC9F4[];
 extern ControllerPakRumbleCheckPromptTransition gControllerPakRumbleCheckPromptTransition;
 extern CallbackTask *D_8010ADE0;
@@ -340,7 +332,7 @@ void updateRaceSetupSaveMenu(void) {
                                     result = gControllerPakRetryCounts[playerIndex];
                                     if (result == 0) {
                                         player->unk568 = 0;
-                                        player->unkC = gGameSaveDataBuffer[playerIndex].money;
+                                        player->unkC = GAME_SAVE_DATA_SLOT(playerIndex).money;
                                         gControllerPakStatusCodes[playerIndex] = CONTROLLER_PAK_STATUS_SAVE_FOUND;
                                         *choiceState = 1;
                                     } else if (result == CONTROLLER_PAK_RETRY_LIMIT) {
@@ -420,7 +412,7 @@ void updateRaceSetupSaveMenu(void) {
                                             enqueueSoundEffect(1, 0x32);
                                             if (*choiceState == SAVE_CHOICE_SKIP_PAK) {
                                                 if (state == CONTROLLER_PAK_STATUS_SAVE_FOUND) {
-                                                    RaceSetupSaveData *save = &gGameSaveDataBuffer[playerIndex];
+                                                    GameSaveData *save = &GAME_SAVE_DATA_SLOT(playerIndex);
 
                                                     initRaceSetupPlayerSaveData(playerIndex);
                                                     gRaceSetupMenuSubState.pendingStatusCodes[playerIndex] = CONTROLLER_PAK_STATUS_READY;
@@ -436,7 +428,7 @@ void updateRaceSetupSaveMenu(void) {
                                                 } else if (state == CONTROLLER_PAK_STATUS_NO_PAK) {
                                                     gRaceSetupMenuSubState.pendingStatusCodes[playerIndex] = CONTROLLER_PAK_STATUS_RETRY;
                                                 } else {
-                                                    RaceSetupSaveData *save = &gGameSaveDataBuffer[playerIndex];
+                                                    GameSaveData *save = &GAME_SAVE_DATA_SLOT(playerIndex);
 
                                                     gRaceSetupMenuSubState.pendingStatusCodes[playerIndex] = CONTROLLER_PAK_STATUS_READY;
                                                     initRaceSetupPlayerSaveData(playerIndex);
@@ -539,8 +531,8 @@ void updateRaceSetupSaveMenu(void) {
         gMenuSelectionConfirmTimer++;
         if (gMenuSelectionConfirmTimer == SAVE_READY_CONFIRM_DELAY) {
             u8 *statusTransitionState;
-            RaceSetupSaveData *save;
-            RaceSetupSaveData *end;
+            GameSaveData *save;
+            GameSaveData *end;
 
             setCurrentGameTaskCallback(updateRaceSetupRumblePrompt, 0);
             createCallbackTask((CallbackTaskCallback)initControllerPakRumbleCheckPrompt, 0, 0x64);
@@ -549,8 +541,8 @@ void updateRaceSetupSaveMenu(void) {
             gControllerPakRumbleCheckPromptTransition.targetScale = 2;
             if (gPlayerCount > 0) {
                 statusTransitionState = gRaceSetupMenuSubState.statusTransitionStates;
-                save = gGameSaveDataBuffer;
-                end = &gGameSaveDataBuffer[gPlayerCount];
+                save = &gGameSaveDataBuffer;
+                end = &gGameSaveDataBuffer + gPlayerCount;
                 do {
                     u8 highestUnlockedCourse = save->highestUnlockedCourse;
 
@@ -716,7 +708,7 @@ void updateRaceSetupSaveMenu(void) {
                                         if (*(&gMenuChoicePromptState[i]) == SAVE_CHOICE_SKIP_PAK) {
                                             if (gControllerPakStatusCodes[i] == CONTROLLER_PAK_STATUS_SAVE_FOUND) {
                                                 initRaceSetupPlayerSaveData(i);
-                                                gRacePlayers[i].unkC = (&gGameSaveDataBuffer[i])->money;
+                                                gRacePlayers[i].unkC = GAME_SAVE_DATA_SLOT(i).money;
                                                 gRaceSetupMenuSubState.pendingStatusCodes[i] =
                                                     CONTROLLER_PAK_STATUS_READY;
                                             } else if (gControllerPakStatusCodes[i] == CONTROLLER_PAK_STATUS_NO_PAK) {
@@ -737,7 +729,7 @@ void updateRaceSetupSaveMenu(void) {
                                                 gRaceSetupMenuSubState.pendingStatusCodes[i] =
                                                     CONTROLLER_PAK_STATUS_READY;
                                                 initRaceSetupPlayerSaveData(i);
-                                                gRacePlayers[i].unkC = gGameSaveDataBuffer[i].money;
+                                                gRacePlayers[i].unkC = GAME_SAVE_DATA_SLOT(i).money;
                                             }
                                         }
                                         *choiceState += 2;
@@ -841,8 +833,8 @@ void updateRaceSetupSaveMenu(void) {
 
             for (i = 0; i < gPlayerCount; i++) {
                 gRaceSetupMenuSubState.statusTransitionStates[i] = SAVE_STATUS_TRANSITION_DONE;
-                if (gHighestUnlockedCourse < gGameSaveDataBuffer[i].highestUnlockedCourse) {
-                    gHighestUnlockedCourse = gGameSaveDataBuffer[i].highestUnlockedCourse;
+                if (gHighestUnlockedCourse < GAME_SAVE_DATA_SLOT(i).highestUnlockedCourse) {
+                    gHighestUnlockedCourse = GAME_SAVE_DATA_SLOT(i).highestUnlockedCourse;
                 }
             }
         }
@@ -1075,8 +1067,8 @@ void initRaceSetupPlayerSaveData(s32 arg0) {
     s32 i;
     s32 course;
     s32 recordOffset;
-    u8 *save = (u8 *)&gGameSaveDataBuffer[arg0 & 0xFFFFFFFFFFFFFFFF];
-    u8 *base = (u8 *)&gGameSaveDataBuffer[arg0];
+    u8 *save = (u8 *)&GAME_SAVE_DATA_SLOT(arg0 & 0xFFFFFFFFFFFFFFFF);
+    u8 *base = (u8 *)&GAME_SAVE_DATA_SLOT(arg0);
     s8 *wordCursor;
     u8 *byteCursor;
     u8 *courseCursor0;
