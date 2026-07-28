@@ -175,20 +175,6 @@ struct RaceMotionInitState {
     s16 partCount;
 };
 
-typedef struct CourseSpawnEntry {
-    s16 pathIndex;
-    char pad2[0x16];
-    s32 unk18;
-    s32 unk1C;
-    char pad20[0x18];
-    s16 unk38;
-    s16 unk3A;
-    char pad3C[2];
-    s16 maxSurfaceIndex;
-    s32 unk40;
-    s32 unk44;
-} CourseSpawnEntry;
-
 typedef struct RaceCourseSurfaceLimit {
     s16 maxSurfaceIndex;
     char pad2[0x46];
@@ -210,7 +196,6 @@ extern RaceMotionRotation gRaceMotionJointFrameBuffer[];
 extern s32 gRaceMotionJointBlendBuffer[];
 extern s32 gRacePlayerHitCueId;
 extern RaceCourseSurfaceLimit gRaceCourseMaxSurfaceIndices[];
-extern CourseSpawnEntry gRaceCourseStartEntries[];
 extern u8 gRaceMotionModelPartCounts[];
 extern u8 *gRaceMotionModelPartIds[];
 extern u8 *gRaceMotionModelParentPartIds[];

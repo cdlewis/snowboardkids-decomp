@@ -19,12 +19,6 @@
     (((a) * (b)) / RACE_CAMERA_FP_ONE + ((c) * (d)) / RACE_CAMERA_FP_ONE + ((e) * (f)) / RACE_CAMERA_FP_ONE)
 
 typedef struct {
-    /* 0x00 */ u8 pad0[0x2C];
-    /* 0x2C */ Vec3i cameraPos;
-    /* 0x38 */ u8 pad38[0x48 - 0x38];
-} CourseSpawnEntry;
-
-typedef struct {
     /* 0x00 */ s16 playerIndex;
     /* 0x02 */ s16 duration;
     /* 0x04 */ Vec3i startPos;
@@ -53,7 +47,6 @@ extern void packFixedTransformMatrix(void *, void *);
 extern s16 calculateFixedAngleBetweenXZPoints(s32, s32, s32, s32);
 extern RaceCamera D_801121E0[RACE_CAMERA_COUNT];
 extern RaceCamera *D_801124A0;
-extern CourseSpawnEntry gRaceCourseStartEntries[];
 extern u8 gRaceCameraRotationTransitions[];
 extern s16 gRaceCameraChaseYawOffsets[];
 extern u8 gRaceCameraChaseYawPreferenceOrder[];

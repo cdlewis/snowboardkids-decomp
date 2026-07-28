@@ -22,11 +22,6 @@ typedef struct {
 } TransformScratch;
 
 typedef struct {
-    s16 unk0;
-    char pad2[0x46];
-} RaceCourseStartEntry;
-
-typedef struct {
     s8 active;
     char pad1[0xAF];
 } Unk8011228C;
@@ -102,7 +97,6 @@ extern s16 gRacePlayerVoiceSoundIds4[];
 extern s16 gRacePlayerVoiceSoundIds5[];
 extern s16 gRacePlayerVoiceSoundIds6[];
 extern s16 gRacePlayerVoiceSoundIds7[];
-extern RaceCourseStartEntry gRaceCourseStartEntries[];
 extern Unk8011228C gRacePlayerHudStatuses[];
 extern s16 gRaceLapCount;
 
@@ -476,7 +470,7 @@ void updateRacePlayerFinalLapStatus(RacePlayer *player) {
 
     flags = player->stateFlags;
     if (!(flags & 0x40) && (player->unk508 >= (gRaceLapCount - 1)) &&
-            (player->unk502 == gRaceCourseStartEntries[gRaceCourseIndex.signedValue].unk0) && !(flags & 0x1000)) {
+            (player->unk502 == gRaceCourseStartEntries[gRaceCourseIndex.signedValue].pathIndex) && !(flags & 0x1000)) {
         player->stateFlags = flags | 0x40;
         if ((gRaceCameraModeChangeDisabled == 0) && (gRacePlayerHudStatuses[player->playerIndexU16].active != 0)) {
             task = createCallbackTask((CallbackTaskCallback)initFinalLapPrompt, 6, 0x64);
