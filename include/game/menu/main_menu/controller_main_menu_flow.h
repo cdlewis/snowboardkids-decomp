@@ -37,6 +37,7 @@ typedef struct ControllerInputState {
 extern ControllerInputState gControllerInputState[4];
 extern s16 gControllerPakStatusCodes[4];
 extern u8 gControllerPakRetryCounts[4];
+extern u8 gMainMenuSecretCodeUnlocked;
 
 void initControllerSubsystem(void);
 void controllerSubsystemThreadMain(void *threadArg);

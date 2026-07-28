@@ -81,7 +81,6 @@ extern u8 gRumblePakConnectedByController[];
 extern u8 gControllerPakOperationCounts[];
 extern s32 gPlayerInputHeld;
 extern s16 gMenuFadeAlpha;
-extern s8 gMainMenuSecretCodeUnlocked;
 extern u8 gMainMenuSecretCodeStep;
 extern s8 gMenuFadeOverlayActive;
 extern u8 gConnectedControllerCount;
