@@ -1055,7 +1055,6 @@ extern RaceSetupSaveTriplet045D8 D_800B3294[];
 extern RaceSetupSaveTriplet045D8 D_800B32A4[];
 extern u8 D_800B32C4[];
 extern u16 D_800B32D0[];
-extern u8 gMainMenuSecretCodeUnlocked;
 
 #define RACE_SETUP_SAVE_WORD_045D8(ptr, offset) (*(s32 *)((ptr) + (offset)))
 #define RACE_SETUP_SAVE_HALF_045D8(ptr, offset) (*(s16 *)((ptr) + (offset)))
