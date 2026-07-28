@@ -13,6 +13,14 @@ typedef struct {
 } CourseExtraBoardLevelText;
 
 typedef struct {
+    MenuGlyphScript text[0x23];
+} CourseModeDescriptionText;
+
+typedef struct {
+    MenuGlyphScript text[0x19];
+} CoursePurchaseMessageText;
+
+typedef struct {
     /* 0x00 */ u8 pad0[0x18];
     union {
         struct {
@@ -73,6 +81,9 @@ typedef struct CourseSelectAnimatedActor CourseSelectAnimatedActor;
 
 extern CourseBoardLevelByCourseText gCourseSelectBoardLevelByCourseText[4];
 extern CourseExtraBoardLevelText gCourseSelectExtraCourseBoardLevelText[3];
+extern CourseModeDescriptionText gCourseSelectModeDescriptionText[7];
+extern CoursePurchaseMessageText gCourseSelectPurchaseMessageText[2];
+extern MenuGlyphScript gCourseSelectBoardLevelText[];
 
 void updateCourseSelectPreviewModelIn(CourseSelectAnimatedActor *arg0);
 void initCourseSelectPreviewModelIn(void *arg0);
