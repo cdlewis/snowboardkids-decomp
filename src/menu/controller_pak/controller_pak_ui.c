@@ -24,7 +24,6 @@ typedef struct {
 
 extern CharacterSelectFlowState *gCurrentGameTask;
 extern ControllerPakRumbleCheckPromptTransition gControllerPakRumbleCheckPromptTransition;
-extern ControllerPakMenuState gControllerPakMenuState;
 extern u8 gPlayerCount;
 extern u8 gRumblePakConnectedByController[];
 extern u8 gControllerPakRumbleCheckPromptState;
@@ -498,15 +497,6 @@ void initControllerPakFileDeleteFreeSpaceInfo(ControllerPakTwoPointActor *arg0) 
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/controller_pak/controller_pak_ui/drawControllerPakFileDeleteFileList.s")
 
 #ifdef NON_MATCHING
-typedef struct {
-    /* 0x00 */ u32 file_size;
-    /* 0x04 */ u32 game_code;
-    /* 0x08 */ u16 company_code;
-    /* 0x0A */ char ext_name[4];
-    /* 0x0E */ char game_name[16];
-} ControllerPakPfsState;
-
-extern ControllerPakPfsState gControllerPakFileStates[];
 extern u8 gControllerPakVisibleFileIndex;
 void drawControllerPakFileDeleteFileList(ControllerPakFileListActor *arg0) {
     char padAfter[0x14];

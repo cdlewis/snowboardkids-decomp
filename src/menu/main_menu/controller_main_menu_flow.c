@@ -6,6 +6,7 @@
 #include "game/engine/system_runtime.h"
 #include "game/engine/game_task_scheduler.h"
 #include "game/menu/main_menu/controller_main_menu_flow.h"
+#include "game/menu/controller_pak/controller_pak_menu.h"
 #include "game/menu/renderer/menu_screen_effects.h"
 #include "game/menu/main_menu/main_menu_panel_ui.h"
 #include "game/menu/main_menu/main_menu_scene_model.h"
@@ -21,48 +22,12 @@
 
 #define OS_MESG_BLOCK 1
 
-typedef struct OSThread_s OSThread;
-typedef void *OSMesg;
-
-typedef struct OSMesgQueue_s {
-    OSThread *mtqueue;
-    OSThread *fullqueue;
-    s32 validCount;
-    s32 first;
-    s32 msgCount;
-    OSMesg *msg;
-} OSMesgQueue;
-
 typedef struct OSContPad {
     u16 button;
     s8 stick_x;
     s8 stick_y;
     u8 errno;
 } OSContPad;
-
-typedef struct OSPfs {
-    s32 status;
-    OSMesgQueue *queue;
-    s32 channel;
-    u8 id[32];
-    u8 label[32];
-    s32 version;
-    s32 dir_size;
-    s32 inode_table;
-    s32 minode_table;
-    s32 dir_table;
-    s32 inode_start_page;
-    u8 banks;
-    u8 activebank;
-} OSPfs;
-
-typedef struct OSPfsState {
-    u32 file_size;
-    u32 game_code;
-    u16 company_code;
-    char ext_name[4];
-    char game_name[16];
-} OSPfsState;
 
 typedef struct SaveFileIdentity {
     s32 size;
@@ -121,21 +86,9 @@ typedef struct MainMenuState {
 extern s32 gRumbleMotorStatuses[4];
 extern s16 gRumbleMotorRequestStates[4];
 
-extern s32 osRecvMesg(OSMesgQueue *, OSMesg *, s32);
-extern s32 osSendMesg(OSMesgQueue *, OSMesg, s32);
 extern s32 osMotorInit(OSMesgQueue *, OSPfs *, s32);
 extern s32 osMotorStart(OSPfs *);
 extern s32 osMotorStop(OSPfs *);
-extern s32 osPfsInitPak(OSMesgQueue *, OSPfs *, int);
-extern s32 osPfsRepairId(OSPfs *);
-extern s32 osPfsFindFile(OSPfs *, u16, u32, u8 *, u8 *, s32 *);
-extern s32 osPfsFreeBlocks(OSPfs *, s32 *);
-extern s32 osPfsNumFiles(OSPfs *, s32 *, s32 *);
-extern s32 osPfsFileState(OSPfs *, s32, OSPfsState *);
-extern s32 osPfsDeleteFile(OSPfs *, u16, u32, u8 *, u8 *);
-extern s32 osPfsFindFile(OSPfs *, u16, u32, u8 *, u8 *, s32 *);
-extern s32 osPfsAllocateFile(OSPfs *, u16, u32, u8 *, u8 *, int, s32 *);
-extern s32 osPfsReadWriteFile(OSPfs *, s32, u8, int, int, u8 *);
 extern void releaseMenuAssetHandles(void);
 extern void enqueueSoundEffect(s32, s32);
 extern OSMesgQueue gControllerSubsystemRequestQueue;
@@ -175,7 +128,6 @@ extern u8 gConnectedControllerCount;
 extern u8 gRaceRumbleEnabled;
 extern u8 gRumblePakConnectedMask;
 extern s8 gMainMenuSelectionResult;
-extern OSPfsState gControllerPakFileStates[];
 extern s32 gControllerPakFreeBytes;
 extern s32 gControllerPakFreeFileCount;
 extern OSMesgQueue gControllerInputUpdateQueue;
