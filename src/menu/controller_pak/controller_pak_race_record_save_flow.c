@@ -26,6 +26,12 @@ typedef struct {
     /* 0xC */ s32 selectedFileInfo;
 } ControllerPakRaceRecordSaveFileContext;
 
+typedef struct {
+    s32 value;
+    s32 pad4;
+    s32 pad8;
+} ControllerPakRaceRecordSaveCompletion;
+
 extern CharacterSelectFlowState *gCurrentGameTask;
 extern ControllerPakMenuState gControllerPakMenuState;
 extern ControllerPakRaceRecordSaveStatusTransition gControllerPakRaceRecordSaveStatusTransition;
@@ -40,7 +46,7 @@ extern s16 gControllerPakStatusCodes;
 extern s16 gMenuChoicePromptState;
 extern s8 gMenuSelectionConfirmTimer;
 extern s32 D_8010ADE0;
-extern s32 D_8010ADE4;
+extern void *D_8010ADE4;
 extern s16 gMenuFadeAlpha;
 extern s32 D_800EC9F4;
 
@@ -80,7 +86,7 @@ void initControllerPakRaceRecordSaveFlow(void) {
     setCurrentGameTaskCallback(updateControllerPakRaceRecordSaveFlow, 0);
 }
 
-#ifdef NON_MATCHING
+#ifdef PREVIOUS_NON_MATCHING
 extern s32 gRumbleMotorStatuses;
 extern s8 gRumblePakConnectedByController;
 extern u8 gControllerPakRaceRecordSaveStatusChoicePromptStates[];
@@ -92,10 +98,10 @@ extern void requestControllerPakRepair(u16);
 extern void initControllerPakDeleteConfirmPrompt(CallbackTask *);
 #endif
 
-// updateControllerPakRaceRecordSaveFlow best match: 97.524% (base_16.c)
+// updateControllerPakRaceRecordSaveFlow best match: 98.180% (base_37.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/controller_pak/controller_pak_race_record_save_flow/updateControllerPakRaceRecordSaveFlow.s")
 
-#ifdef NON_MATCHING
+#ifdef PREVIOUS_NON_MATCHING
 void updateControllerPakRaceRecordSaveFlow(void)
 {
   s32 sp1C;
@@ -413,6 +419,15 @@ void updateControllerPakRaceRecordSaveFlow(void)
   }
   updateCallbackTasks();
 }
+#endif
+
+#ifdef NON_MATCHING
+extern s32 gRumbleMotorStatuses[4];
+extern u8 gRumblePakConnectedByController[4];
+extern u8 gControllerPakRaceRecordSaveStatusChoicePromptStates[];
+extern void initControllerPakDeleteConfirmPrompt(void *);
+
+#include "updateControllerPakRaceRecordSaveFlow.inc.c"
 #endif
 
 void fadeOutControllerPakRaceRecordSaveFlow(void) {
