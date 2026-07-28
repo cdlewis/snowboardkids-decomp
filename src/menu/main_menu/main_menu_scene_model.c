@@ -3,19 +3,15 @@
 #include "game/engine/relocatable_heap.h"
 #include "game/engine/asset_manager.h"
 #include "game/math/fixed_point_math.h"
+#include "game/race/scene/race_scene_setup.h"
 
 /* Frame offsets are halfword-relative to the bank start; this form preserves target addu order. */
 #define MAIN_MENU_ANIMATION_FRAME_DATA(bank, index) \
     ((s16 *)(((bank)->frameOffsets[(index)] * sizeof(s16)) + (s32)(bank)))
 #define FIXED_MATRIX_ONE 0x1000
-#define MAIN_MENU_MODEL_ASSET_RANGE_WORDS 2
-#define MAIN_MENU_MODEL_ASSET_RANGE_START(table, index) ((table)[(index) * MAIN_MENU_MODEL_ASSET_RANGE_WORDS])
-#define MAIN_MENU_MODEL_ASSET_RANGE_END(table, index) ((table)[((index) * MAIN_MENU_MODEL_ASSET_RANGE_WORDS) + 1])
 #define MAIN_MENU_SCENE_MODEL_PART_COUNT 14
 #define MAIN_MENU_SCENE_MODEL_MATRIX_AXES 3
 
-
-typedef void *RomAssetAddress;
 
 typedef struct MainMenuAnimationWritePart {
     s32 word0;
@@ -24,9 +20,6 @@ typedef struct MainMenuAnimationWritePart {
     s32 wordC;
     s32 word10;
 } MainMenuAnimationWritePart;
-
-extern RomAssetAddress gCharacterRawAssetRanges[];
-extern RomAssetAddress gCharacterTextureAssetRanges[];
 
 #define ASSET_HANDLE(index) (gAssetHandles[(index)])
 
@@ -586,19 +579,23 @@ void loadMainMenuSceneModelAnimationBank(void) {
     LOAD_ASSET(_215BE0, 0x3F);
 }
 
+INCLUDE_ASM("asm/matchings/menu/main_menu/main_menu_scene_model", initMainMenuSceneModel);
+
+#ifdef NON_MATCHING
 void initMainMenuSceneModel(s32 actorIndex, s32 modelIndex) {
     MainMenuSceneModel *model;
 
-    loadRawRomAsset(MAIN_MENU_MODEL_ASSET_RANGE_START(gCharacterRawAssetRanges, modelIndex),
-                  MAIN_MENU_MODEL_ASSET_RANGE_END(gCharacterRawAssetRanges, modelIndex), actorIndex + 0x33);
-    loadCompressedRomAsset((void *)MAIN_MENU_MODEL_ASSET_RANGE_START(gCharacterTextureAssetRanges, modelIndex),
-                  (void *)MAIN_MENU_MODEL_ASSET_RANGE_END(gCharacterTextureAssetRanges, modelIndex), actorIndex + 0x39);
+    loadRawRomAsset(gCharacterRawAssetRanges[modelIndex].start,
+                    gCharacterRawAssetRanges[modelIndex].end, actorIndex + 0x33);
+    loadCompressedRomAsset(gCharacterTextureAssetRanges[modelIndex].start,
+                           gCharacterTextureAssetRanges[modelIndex].end, actorIndex + 0x39);
     gAssetHandles[0x2D + actorIndex] = allocRelocatableHeapBlock(sizeof(MainMenuSceneModel));
     model = (MainMenuSceneModel *)getRelocatableHeapBlockBase(gAssetHandles[0x2D + actorIndex]);
     model->actorIndex = actorIndex;
     model->modelIndex = modelIndex;
     initMainMenuSceneModelParts(model);
 }
+#endif
 
 void setMainMenuSceneModelAnimation(s32 modelIndex, s32 animationIndex) {
     MainMenuModelAnimationBank *animationBank;

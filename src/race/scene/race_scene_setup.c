@@ -13,16 +13,7 @@
 #include "game/race/ui/race_ui_effects.h"
 #include "game/race/player/race_player_input.h"
 
-typedef struct {
-    /* 0x0 */ u8 *start;
-    /* 0x4 */ u8 *end;
-} RomAssetRange;
-
 extern u16 gRaceCourseIndex;
-extern RomAssetRange gCharacterRawAssetRanges[];
-extern RomAssetRange gCharacterTextureAssetRanges[];
-extern RomAssetRange gCharacterModelAssetRanges[];
-
 
 extern u8 gRaceSplitscreenMode;
 extern u8 gPlayerCount;
