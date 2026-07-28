@@ -372,12 +372,6 @@ void initMultiplayerCourseSelectMenu(void) {
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/course_select/multiplayer_course_select_menu/updateMultiplayerCourseSelectMenu.s")
 
 #ifdef NON_MATCHING
-typedef struct MultiplayerCourseSelectObject {
-    /* 0x00 */ u8 pad0[0x2C];
-    /* 0x2C */ void (*update)(void);
-    /* 0x30 */ u8 pad30[0x80];
-} MultiplayerCourseSelectObject;
-
 extern void initCourseSelectPlayerPanels(CallbackTask *);
 extern void initCourseSelectCompletePanels(CallbackTask *);
 extern s32 enqueueSoundEffect(s16, s16);
@@ -387,9 +381,8 @@ extern u8 gCourseSelectExtraCourseColumnState;
 extern s32 gPlayerInputHeld[];
 extern s32 gPlayerInputPressed[];
 extern s32 D_8010AEE8[];
-extern MultiplayerCourseSelectObject *gCurrentMenuCameraObject;
-extern MultiplayerCourseSelectObject D_801121E0[];
-extern MultiplayerCourseSelectObject D_801124A0;
+extern RaceCamera D_801121E0[];
+extern RaceCamera D_801124A0;
 
 void updateMultiplayerCourseSelectMenu(void) {
     s32 readyCount;
@@ -413,7 +406,7 @@ void updateMultiplayerCourseSelectMenu(void) {
     s32 *momentum;
     RacePlayer *readyPlayer;
     RacePlayer *player;
-    MultiplayerCourseSelectObject *obj;
+    RaceCamera *obj;
 
     count = 0;
     if (gCurrentGameTask->fade != 0) {

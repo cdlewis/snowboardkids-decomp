@@ -3,6 +3,8 @@
 
 #include "common.h"
 
+extern Vec3i gMenuCameraTargetOffset;
+
 void updateMenuCameraObjectLookAtOrigin(void);
 void updateMenuCameraObjectLookAtOriginCallback(void);
 void updateMenuCameraObjectWithTargetOffset(void);

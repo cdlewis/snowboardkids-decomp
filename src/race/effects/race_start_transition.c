@@ -12,27 +12,9 @@
 #include "game/engine/viewport_manager.h"
 
 typedef struct {
-    s32 x;
-    s32 y;
-} Vec2i;
-
-typedef struct {
     u8 pad0[0x34];
     u8 cupPlacements[0x1A];
 } RaceSetupSaveData;
-
-typedef struct {
-    char pad0[0x4];
-    s16 pitch;
-    s16 yaw;
-    char pad8[0x10];
-    Vec3i pos;
-    s32 depth;
-    char pad28[0x8];
-    FixedMatrix3s rotationMtx;
-    s16 pad44;
-    Vec3i cameraDelta;
-} MenuCameraObject;
 
 typedef struct {
     FixedTransform transform;
@@ -46,27 +28,24 @@ extern u8 gPendingFramebufferSwapCount;
 extern u8 gFramebufferSwapHold;
 extern s16 gMenuFadeAlpha;
 
-extern MenuCameraObject *gCurrentMenuCameraObject;
-extern Vec2i gMenuCameraTargetOffset;
-
 void updateMenuCameraObjectLookAtOrigin(void) {
     TransformScratch scratch;
-    MenuCameraObject *obj;
+    RaceCamera *obj;
 
     obj = gCurrentMenuCameraObject;
-    makeFixedRotationYX(obj->rotationMtx, -obj->pitch, -obj->yaw);
+    makeFixedRotationYX(obj->rotationMatrix, -obj->pitch, -obj->yaw);
     obj = gCurrentMenuCameraObject;
     scratch.localPos.x = 0;
     scratch.localPos.y = 0;
-    scratch.localPos.z = -obj->depth;
+    scratch.localPos.z = -obj->distance;
     makeFixedRotationXY(scratch.transform.rotation, obj->pitch, obj->yaw);
     transformVec3iByFixedMatrix(scratch.transform.rotation, &scratch.localPos, &scratch.worldPos);
     obj = gCurrentMenuCameraObject;
-    obj->cameraDelta.x = scratch.worldPos.x - obj->pos.x;
+    obj->transformOffset.x = scratch.worldPos.x - obj->pos.x;
     obj = gCurrentMenuCameraObject;
-    obj->cameraDelta.y = scratch.worldPos.y - obj->pos.y;
+    obj->transformOffset.y = scratch.worldPos.y - obj->pos.y;
     obj = gCurrentMenuCameraObject;
-    obj->cameraDelta.z = scratch.worldPos.z - obj->pos.z;
+    obj->transformOffset.z = scratch.worldPos.z - obj->pos.z;
 }
 
 void updateMenuCameraObjectLookAtOriginCallback(void) {
@@ -75,22 +54,22 @@ void updateMenuCameraObjectLookAtOriginCallback(void) {
 
 void updateMenuCameraObjectWithTargetOffset(void) {
     TransformScratch scratch;
-    MenuCameraObject *obj;
+    RaceCamera *obj;
 
     obj = gCurrentMenuCameraObject;
-    makeFixedRotationYX(obj->rotationMtx, -obj->pitch, -obj->yaw);
+    makeFixedRotationYX(obj->rotationMatrix, -obj->pitch, -obj->yaw);
     obj = gCurrentMenuCameraObject;
     scratch.localPos.x = gMenuCameraTargetOffset.x;
     scratch.localPos.y = gMenuCameraTargetOffset.y;
-    scratch.localPos.z = -obj->depth;
+    scratch.localPos.z = -obj->distance;
     makeFixedRotationXY(scratch.transform.rotation, obj->pitch, obj->yaw);
     transformVec3iByFixedMatrix(scratch.transform.rotation, &scratch.localPos, &scratch.worldPos);
     obj = gCurrentMenuCameraObject;
-    obj->cameraDelta.x = scratch.worldPos.x - obj->pos.x;
+    obj->transformOffset.x = scratch.worldPos.x - obj->pos.x;
     obj = gCurrentMenuCameraObject;
-    obj->cameraDelta.y = scratch.worldPos.y - obj->pos.y;
+    obj->transformOffset.y = scratch.worldPos.y - obj->pos.y;
     obj = gCurrentMenuCameraObject;
-    obj->cameraDelta.z = scratch.worldPos.z - obj->pos.z;
+    obj->transformOffset.z = scratch.worldPos.z - obj->pos.z;
 }
 
 void updateMenuCameraObjectWithTargetOffsetCallback(void) {
