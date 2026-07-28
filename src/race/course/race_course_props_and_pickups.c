@@ -176,8 +176,6 @@ extern u8 gRenderMatricesDirty;
 extern u8 gRaceUpdatePaused;
 extern u8 gTrainingCourseLesson;
 extern u8 gRaceSplitscreenMode;
-/* updateThrownPickupSpawner needs these interior aliases to preserve matching codegen. */
-extern s16 gAssetHandles[];
 extern CourseCollectibleSpriteEntry *gCourseCollectibleSpriteListsByCourse[];
 extern u32 gCourseCollectibleSpriteVertices[];
 extern Vtx gRacePickupBaseVertices[];

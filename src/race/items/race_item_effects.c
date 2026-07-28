@@ -11,7 +11,7 @@
 #include "game/race/player/race_player_input.h"
 #include "game/race/items/race_item_effects.h"
 
-#define ASSET_HANDLE(index) (((s16 *)&gAssetHandles)[index])
+#define ASSET_HANDLE(index) (gAssetHandles[index])
 #define RACE_ITEM_GFX_CMD(pkt, cmd0, cmd1) \
 { \
     Gfx *_g = (Gfx *)(pkt); \
