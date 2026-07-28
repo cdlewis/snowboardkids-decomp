@@ -1620,9 +1620,6 @@ typedef struct {
 } CourseSelectStatus26C4C;
 
 extern u32 gCourseUnlockPrices[];
-extern MenuGlyphScript gCourseSelectModeDescriptionText[];
-extern MenuGlyphScript gCourseSelectBoardLevelText[];
-extern MenuGlyphScript gCourseSelectPurchaseMessageText[];
 extern u8 gUnlockedExtraCourseFlags;
 extern u8 gCourseSelectExtraCourseIds[];
 
@@ -1659,7 +1656,7 @@ void drawCourseSelectCourseDescription(CourseSelectWidgetActor *arg0) {
                 value = courseId % 3;
                 value &= 0xFFFFU;
             }
-            text = gCourseSelectModeDescriptionText + (value * 0x46);
+            text = gCourseSelectModeDescriptionText[value].text;
         } else {
             if ((gMenuChoicePromptState[0] < 2) || (gMenuChoicePromptState[0] == 9)) {
                 selectedIndex = 1;
@@ -1750,26 +1747,14 @@ void drawCourseSelectCourseDescription(CourseSelectWidgetActor *arg0) {
         }
     } else {
         digitCount = arg0->spriteIndex;
-        drawMenuGlyphScript(arg0->x, arg0->y, gCourseSelectPurchaseMessageText + ((value * 0x32) - 0x32), 1,
-                            digitCount, 0);
+        drawMenuGlyphScript(arg0->x, arg0->y, gCourseSelectPurchaseMessageText[value - 1].text, 1, digitCount, 0);
     }
 }
 #endif
 #endif
 
 #ifdef NON_MATCHING
-typedef struct {
-    MenuGlyphScript text[0x23];
-} CourseModeDescriptionText;
-
-typedef struct {
-    MenuGlyphScript text[0x19];
-} CoursePurchaseMessageText;
-
-extern MenuGlyphScript gCourseSelectBoardLevelText[];
 extern u8 gCourseSelectExtraCourseIds[];
-extern CourseModeDescriptionText gCourseSelectModeDescriptionText[];
-extern CoursePurchaseMessageText gCourseSelectPurchaseMessageText[];
 extern u32 gCourseUnlockPrices[];
 extern u8 gUnlockedExtraCourseFlags;
 
