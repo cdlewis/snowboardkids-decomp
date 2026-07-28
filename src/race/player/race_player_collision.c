@@ -5,6 +5,7 @@
 #undef calculateFixedAngleBetweenXZPoints
 #include "game/audio/sound_manager.h"
 #include "game/race/motion/race_motion.h"
+#include "game/race/race_state.h"
 #include "game/race/player/race_player_collision.h"
 #include "game/race/items/race_item_effects.h"
 #include "game/race/items/race_item_hit_flags.h"
@@ -17,19 +18,12 @@
 #define RACE_PLAYER_COLLISION_ANGLE_MASK 0xFFF
 #define RACE_PLAYER_COLLISION_HALF_TURN 0x800
 
-typedef struct {
-    s8 active;
-    char pad1[0xAF];
-} Unk8011228C;
-
 extern s32 gRacePlayerHitCueId;
 extern s32 gRacePlayerHitAngle;
 extern s32 gRacePlayerHitDistance;
 extern s16 gRacePlayerHitEffectAngle;
 extern s32 gRacePlayerHitDeltaX;
 extern s32 gRacePlayerHitDeltaZ;
-extern Unk8011228C gRacePlayerHudStatuses[];
-
 s32 enqueueSoundEffect(s16, s16);
 void enqueueRacePlayerVoiceSound(RacePlayer *, s32);
 

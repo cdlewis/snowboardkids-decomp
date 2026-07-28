@@ -26,7 +26,6 @@ typedef struct {
     /* 0x8 */ u8 *romEnd;
 } MainMenuModePreviewRaceCourseAsset;
 
-extern s8 gRacePlayerHudStatuses;
 extern s16 gRaceLapCount;
 extern s8 gRacePlayerCount;
 extern u8 gRaceUpdatePaused;
@@ -207,7 +206,7 @@ void initMainMenuModePreviewRace(void) {
     initRaceHud();
     gPlayerCount = 4;
     configureViewport(0, 0xA0, 0x50, 0x108, 0x78, 0x140, 0x8C, 2.285714388f);
-    gRacePlayerHudStatuses = one1;
+    gRacePlayerHudStatuses[0].active = one1;
     gFramebufferSwapDelay.value = 0;
     initRaceCourseSceneTasks();
     gMenuFadeAlpha = 0xFF;
@@ -439,12 +438,12 @@ void initTrainingCourseRace(void) {
     loadRaceCharacterAssets();
     resetRaceCameras();
     resetAllViewports();
-    gRacePlayerHudStatuses = 1;
+    gRacePlayerHudStatuses[0].active = 1;
     gFramebufferSwapDelay.value = 0;
     initRacePlayers();
     initRaceHud();
     configureViewport(0, 0xA0, 0x50, 0x108, 0x78, 0x140, 0x8C, 2.285714388f);
-    gRacePlayerHudStatuses = 1;
+    gRacePlayerHudStatuses[0].active = 1;
     gFramebufferSwapDelay.value = 0;
     initRaceCourseSceneTasks();
     gMenuFadeAlpha = 0xFF;

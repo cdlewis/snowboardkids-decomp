@@ -39,11 +39,6 @@
 #define initRaceMotionModelParts(player) initRaceMotionModelParts(RACE_MOTION_INIT_STATE(player))
 
 typedef struct {
-    /* 0x00 */ s8 active;
-    /* 0x01 */ char pad1[0xAF];
-} Unk8011228C;
-
-typedef struct {
     s16 unk0;
     s16 unk2;
     s16 unk4;
@@ -106,7 +101,6 @@ extern s32 gMenuFlowState;
 extern s16 gRacePlayerAttackStartTimer;
 extern s16 gRaceLapCount;
 extern s16 gFrameCounter;
-extern Unk8011228C gRacePlayerHudStatuses[];
 void initRacePlayers(void) {
     gRacePlayers[0].playerIndex = 0;
     gRacePlayers[1].playerIndex = 1;

@@ -104,10 +104,8 @@ extern s32 gRaceTimeTrialFinishTime;
 extern s16 gMenuFadeAlpha;
 extern u8 gRaceRumbleEnabled;
 extern u8 gRaceTypeSelection;
-extern u8 D_8011233C;
 extern s8 gRacePlayerCount;
 extern s16 gRacePlayerAttackStartTimer;
-extern u8 gRacePlayerHudStatuses;
 extern u8 gRaceResultState;
 #ifdef NON_MATCHING
 extern u8 gTrainingCourseLesson;
@@ -715,7 +713,7 @@ void initRaceSceneFlow(void) {
     } else {
         configureRaceViewport(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.3333334f);
     }
-    gRacePlayerHudStatuses = 1;
+    gRacePlayerHudStatuses[0].active = 1;
     gFramebufferSwapDelay.value = 0;
     initRacePlayers();
     initRaceHud();
@@ -977,10 +975,10 @@ void waitRaceFinishResultsFlow(void) {
         case 2:
             if (gRacePlayers[0].rankIndex < gRacePlayers[1].rankIndex) {
                 gCurrentGameTask->unk1C = 0;
-                D_8011233C = 0;
+                gRacePlayerHudStatuses[1].active = 0;
             } else {
                 gCurrentGameTask->unk1C = 1;
-                gRacePlayerHudStatuses = 0;
+                gRacePlayerHudStatuses[0].active = 0;
             }
             gCurrentGameTask->fadeTimer = 0;
             setCurrentGameTaskCallback(zoomRaceWinnerViewport, 0);
@@ -1674,7 +1672,7 @@ void initRaceGhostReplayFlow(void) {
         configureRaceViewport(0, 0xA0, 0x78, 0x100, 0xB0, 0x120, 0xD0, 1.3333334f);
     }
     LOAD_ASSET(_598A70, 0x29);
-    gRacePlayerHudStatuses = 1;
+    gRacePlayerHudStatuses[0].active = 1;
     gFramebufferSwapDelay.value = 0;
     resetSecondaryRng();
     initRacePlayers();
