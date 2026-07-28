@@ -81,7 +81,6 @@ extern u32 gTranslucentSpriteRenderModeDl[];
 extern s16 gMenuFadeAlpha;
 extern s16 gFrameCounter;
 extern u8 gCurrentViewportIndex;
-extern u8 gRenderMatricesDirty;
 extern Mtx *gViewportMatrix;
 extern u8 gConnectedControllerCount;
 extern u32 D_2000000[];

@@ -3,6 +3,7 @@
 #include "game/menu/renderer/menu_renderer.h"
 #include "game/menu/renderer/menu_render_utils.h"
 #include "game/engine/render_callback.h"
+#include "game/engine/system_runtime.h"
 #include "game/engine/relocatable_heap.h"
 #include "game/engine/callback_task_scheduler.h"
 #include "game/engine/asset_manager.h"
@@ -207,7 +208,6 @@ RaceItemDrawNode *gRaceItemTextureEffectDrawLists[4];
 extern RaceItemDrawLists D_801121E0;
 extern u8 gRaceUpdatePaused;
 extern u8 gCurrentViewportIndex;
-extern u8 gRenderMatricesDirty;
 extern void *gViewportMatrix;
 extern Gfx *gRegionAllocPtr;
 

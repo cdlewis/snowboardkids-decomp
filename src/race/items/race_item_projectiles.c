@@ -3,6 +3,7 @@
 #include "game/menu/renderer/menu_renderer.h"
 #include "game/menu/renderer/menu_render_utils.h"
 #include "game/engine/render_callback.h"
+#include "game/engine/system_runtime.h"
 #define calculateFixedAngleBetweenXZPoints calculateFixedAngleBetweenXZPoints_s32
 #include "game/race/items/race_item_projectiles.h"
 #undef calculateFixedAngleBetweenXZPoints
@@ -64,7 +65,6 @@ extern Gfx gEffectRenderModeSetupDl[];
 extern Gfx gEffectRenderModeCleanupDl[];
 extern Gfx *gRegionAllocPtr;
 extern u8 gRaceUpdatePaused;
-extern u8 gRenderMatricesDirty;
 extern s16 gUiBlinkTimer;
 extern Mtx *gViewportMatrix;
 

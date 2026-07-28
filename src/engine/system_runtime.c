@@ -394,7 +394,6 @@ extern s16 gMenuViewportHeight;
 extern s16 gMenuViewportCenterX;
 extern s16 gMenuViewportCenterY;
 extern s16 gMenuFadeAlpha;
-extern s8 gRenderMatricesDirty;
 extern u8 gCurrentViewportIndex;
 extern Mtx *gViewportMatrix;
 
