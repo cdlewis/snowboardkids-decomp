@@ -7,6 +7,7 @@
 #include "game/race/effects/race_intro_effects.h"
 #include "game/math/spatial_math.h"
 #include "game/math/fixed_point_math.h"
+#include "game/race/player/race_player_input.h"
 
 #define ASSET_HANDLE(index) (gAssetHandles[(index)])
 #define RACE_INTRO_EFFECTS_GFX_CMD(pkt, cmd0, cmd1) \
@@ -108,8 +109,6 @@ extern FixedTransform gIdentityFixedTransform;
 extern void setPackedMatrixTranslation(GfxCommandDest *, Vec3i *);
 extern void getAssetTableImagePaletteAndSize(u8 *, s32, u32 *, u32 *, s16 *, s16 *);
 
-extern s8 D_80122288;
-extern s16 gRacePlayerSurfaceAngleByPlayer;
 extern s16 gRaceCourseIndex;
 extern s16 gFrameCounter;
 extern u32 gViewportMatrix;
@@ -416,7 +415,7 @@ void initRaceIntroFlyoverIdle(RaceIntroEffectActor *arg0) {
     arg0->velocityY = 0;
     arg0->radius = 0x100000;
     arg0->stateTimer = 0;
-    if (D_80122288 == 2) {
+    if (gRacePlayers[0].unk508 == 2) {
         setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceIntroFlyoverIdle);
     }
 }
@@ -445,7 +444,7 @@ void initRaceIntroFlyoverLongPanReturn(RaceIntroEffectActor *arg0) {
     arg0->velocityY = 0;
     arg0->radius = 0x100000;
     arg0->stateTimer = 0x154;
-    if (D_80122288 == 1) {
+    if (gRacePlayers[0].unk508 == 1) {
         setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceIntroFlyoverLongPanReturn);
     }
 }
@@ -491,7 +490,7 @@ void updateRaceIntroFlyoverLongPanRise(RaceIntroEffectActor *arg0) {
 void waitRaceIntroFlyoverLongPanTrigger(RaceIntroEffectActor *arg0) {
     approachRaceIntroFlyoverSpinStep(arg0, 0x130);
     updateRaceIntroFlyoverActor(arg0);
-    if (gRacePlayerSurfaceAngleByPlayer == 0x35) {
+    if (gRacePlayers[0].surfaceAngle == 0x35) {
         arg0->stateTimer = 0x6A;
         setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceIntroFlyoverLongPanRise);
     }
@@ -537,7 +536,7 @@ void initRaceIntroFlyoverShortPanFinal(RaceIntroEffectActor *arg0) {
 void waitRaceIntroFlyoverShortPanFinal(RaceIntroEffectActor *arg0) {
     approachRaceIntroFlyoverSpinStep(arg0, 0x130);
     updateRaceIntroFlyoverActor(arg0);
-    if (D_80122288 == 2) {
+    if (gRacePlayers[0].unk508 == 2) {
         setCallbackTaskCallback(arg0, (CallbackTaskCallback)initRaceIntroFlyoverShortPanFinal);
     }
 }
@@ -559,7 +558,7 @@ void initRaceIntroFlyoverShortPanSecond(RaceIntroEffectActor *arg0) {
 void waitRaceIntroFlyoverShortPanSecond(RaceIntroEffectActor *arg0) {
     approachRaceIntroFlyoverSpinStep(arg0, 0x30);
     updateRaceIntroFlyoverActor(arg0);
-    if (D_80122288 == 1) {
+    if (gRacePlayers[0].unk508 == 1) {
         setCallbackTaskCallback(arg0, (CallbackTaskCallback)initRaceIntroFlyoverShortPanSecond);
     }
 }

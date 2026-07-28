@@ -10,6 +10,7 @@
 #include "game/menu/race_type_select/race_type_select_ui.h"
 #include "game/menu/race_setup/race_setup_ui.h"
 #include "game/engine/viewport_manager.h"
+#include "game/race/player/race_player_input.h"
 
 typedef struct {
     s16 alpha;
@@ -23,7 +24,6 @@ extern s32 enqueueSoundEffect(s16, s16);
 extern CharacterSelectFlowState *gCurrentGameTask;
 extern RaceTypeSelectCursorState gRaceTypeSelectCursorTarget;
 extern u8 gMenuSelectionConfirmTimer;
-extern u8 gMenuTransitionState;
 extern u8 gMenuExitSelection;
 extern u16 gMenuInputRepeatTimers;
 extern u8 gRaceTypeSelectCursorAnimState;
@@ -41,7 +41,7 @@ extern u8 gFramebufferSwapHold;
 void returnToRaceTypeSelectMenu(void) {
     requestMusicSequenceBank(4);
     gMenuSelectionConfirmTimer = 0;
-    gMenuTransitionState = 0;
+    gRacePlayers[0].menuState = 0;
     gActiveMenuTask = 0;
     gCurrentGameTask->fade = 1;
     gCurrentGameTask->timer = 0;
@@ -76,7 +76,7 @@ void initRaceTypeSelectMenu(void) {
     initCallbackTaskScheduler(0);
     createCallbackTask((CallbackTaskCallback)initMenuIconTilemapSpriteActor, 0, 0x5E);
     gMenuSelectionConfirmTimer = 0;
-    gMenuTransitionState = 0;
+    gRacePlayers[0].menuState = 0;
     gActiveMenuTask = 0;
     gCurrentGameTask->timer = 0;
     gMenuExitSelection = 0;
@@ -118,7 +118,7 @@ void updateRaceTypeSelectMenu(void) {
             createCallbackTask((CallbackTaskCallback)initRaceTypeSelectOptionIcons, 0, 0x62);
         }
     } else {
-        if (gMenuTransitionState == 0) {
+        if (gRacePlayers[0].menuState == 0) {
             if (gMenuSelectionConfirmTimer == 0) {
                 if (gRaceTypeSelectCursorAnimState == 1) {
                     selection = gRaceTypeSelection;
@@ -196,7 +196,7 @@ void updateRaceTypeSelectMenu(void) {
 
         waitTimer = gMenuSelectionConfirmTimer;
         if (gMenuSelectionConfirmTimer == 8) {
-            gMenuTransitionState = 1;
+            gRacePlayers[0].menuState = 1;
             gMenuSelectionConfirmTimer++;
             waitTimer = gMenuSelectionConfirmTimer;
         }
@@ -210,7 +210,7 @@ void updateRaceTypeSelectMenu(void) {
             gMenuExitSelection = 1;
         }
 
-        if (gMenuTransitionState == 2) {
+        if (gRacePlayers[0].menuState == 2) {
             setCurrentGameTaskCallback(handleRaceTypeSelectMenuSelection, 0);
             requestMusicSequenceStop(4);
         }

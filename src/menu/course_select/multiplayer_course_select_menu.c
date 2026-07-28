@@ -557,7 +557,7 @@ void updateMultiplayerCourseSelectMenu(void) {
                                     ((pressed & START_BUTTON) || (pressed & A_BUTTON))) {
                                         if ((gPlayerCount == 1) && (maxColumn == D_8010AE64[0])) {
                                             enqueueSoundEffect(0x18, 0x32);
-                                            gMenuTransitionState = 9;
+                                            gRacePlayers[0].menuState = 9;
                                             D_8010AEB0 = 1;
                                             gMenuFlowState = 1;
                                         } else if ((player->menuSelection >= 9) ||

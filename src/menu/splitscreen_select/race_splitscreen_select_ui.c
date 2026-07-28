@@ -1,12 +1,17 @@
 #include "common.h"
-#include "game/engine/asset_manager.h"
 #include "game/engine/render_callback.h"
 #include "game/engine/relocatable_heap.h"
 #include "game/engine/callback_task_scheduler.h"
 #include "game/menu/splitscreen_select/race_splitscreen_select_ui.h"
 #include "game/menu/renderer/menu_renderer.h"
+#include "game/race/player/race_player_input.h"
 
-#define ASSET_HANDLE(index) (gAssetHandles[(index)])
+#define ASSET_HANDLE(index) (((s16 *)&gAssetHandles)[(index)])
+
+typedef struct {
+    char pad0[0x42];
+    /* 0x42 */ s16 textureHandle;
+} RaceSplitscreenSelectAssetHandles;
 
 typedef struct {
     u8 state;
@@ -28,8 +33,7 @@ extern RaceSplitscreenSelectFrameTiles gRaceSplitscreenSelectFrameTiles[];
 extern RaceSplitscreenSelectPortrait gRaceSplitscreenSelectPortraitScripts[];
 extern u8 gMenuSelectionConfirmTimer;
 extern u8 gRaceSplitscreenMode;
-extern u8 gMenuSelectionVariant;
-extern u8 gMenuTransitionState;
+extern RaceSplitscreenSelectAssetHandles gAssetHandles;
 extern RaceSplitscreenSelectCursorState gRaceSplitscreenSelectCursorTarget;
 extern u8 gRaceSplitscreenSelectCursorAnimState;
 extern s16 gRaceSplitscreenSelectPortraitAlpha;
@@ -39,7 +43,6 @@ extern Gfx *gRegionAllocPtr;
 extern u8 gMenuExitSelection;
 extern s16 gMenuViewportCenterX;
 extern s16 gMenuViewportCenterY;
-extern s32 gPlayer1Money;
 extern s32 gMenuFlowState;
 
 const char gRaceSplitscreenSelectEntryFeeFormat[] = "%6dG";
@@ -70,7 +73,7 @@ void drawRaceSplitscreenSelectPlayerCountIcons(RaceSplitscreenSelectRowActor *ic
             }
             tileIndex = iconIndex + 8;
             drawMenuSprite(icons->iconX[iconIndex], (s16)(icons->iconY + yOffset),
-                           getRelocatableHeapBlockBase(gAssetHandles[0x21]),
+                           getRelocatableHeapBlockBase(gAssetHandles.textureHandle),
                            tileIndex, 0x20, 0x20, 0, blinkAlpha);
             yOffset += 0x14; iconIndex++;
             if (icons->playerCount) {}
@@ -125,7 +128,7 @@ void updateRaceSplitscreenSelectPlayerCountIcons(RaceSplitscreenSelectRowActor *
         state = arg0->state;
         break;
     case 1:
-        if (gMenuTransitionState == 1) {
+        if (gRacePlayers[0].menuState == 1) {
             state = (u8) (arg0->state = 2);
         }
         break;
@@ -181,7 +184,7 @@ void updateRaceSplitscreenSelectCornerSprites(RaceSplitscreenSelectWidgetActor *
         state = arg0->sprite.bytes.state;
         break;
     case 1:
-        if (gMenuTransitionState == 1) {
+        if (gRacePlayers[0].menuState == 1) {
             state = arg0->sprite.bytes.state = 2;
         }
         break;
@@ -219,7 +222,7 @@ void drawRaceSplitscreenSelectOption0Frame(RaceSplitscreenSelectWidgetActor *arg
     shouldDraw = 1;
     for (i = 0; i < 16; i++, tileOffset++) {
         drawMenuSpriteTile((s16)(arg0->x + ((i & 3) << 5)), (s16)(arg0->y + ((i / 4) << 5)),
-                      getRelocatableHeapBlockBase(gAssetHandles[0x21]),
+                      getRelocatableHeapBlockBase(gAssetHandles.textureHandle),
                       gRaceSplitscreenSelectFrameTiles[(u16)arg0->counter].centerTiles[tileOffset], 0, 0x100);
     }
 
@@ -231,10 +234,10 @@ void drawRaceSplitscreenSelectOption0Frame(RaceSplitscreenSelectWidgetActor *arg
     if ((i && i) && i) {
     }
     do {
-        drawMenuSpriteTile((s16)(arg0->x + 0x80), (s16)(arg0->y + offset), getRelocatableHeapBlockBase(gAssetHandles[0x21]),
+        drawMenuSpriteTile((s16)(arg0->x + 0x80), (s16)(arg0->y + offset), getRelocatableHeapBlockBase(gAssetHandles.textureHandle),
                       gRaceSplitscreenSelectFrameTiles[(u16)arg0->counter].rightEdgeTiles[tileOffset], 0, 0x100);
         i = 0x80;
-        drawMenuSpriteTile((s16)(arg0->x + offset), (s16)(arg0->y + 0x80), getRelocatableHeapBlockBase(gAssetHandles[0x21]),
+        drawMenuSpriteTile((s16)(arg0->x + offset), (s16)(arg0->y + 0x80), getRelocatableHeapBlockBase(gAssetHandles.textureHandle),
                       gRaceSplitscreenSelectFrameTiles[(u16)arg0->counter].bottomEdgeTiles[tileOffset], 0, 0x100);
         offset += 0x40;
         tileOffset++;
@@ -242,27 +245,27 @@ void drawRaceSplitscreenSelectOption0Frame(RaceSplitscreenSelectWidgetActor *arg
     i++;
     i--;
 
-    drawMenuSpriteTile((s16)(arg0->x + 0x80), (s16)(arg0->y + 0x80), getRelocatableHeapBlockBase(gAssetHandles[0x21]),
+    drawMenuSpriteTile((s16)(arg0->x + 0x80), (s16)(arg0->y + 0x80), getRelocatableHeapBlockBase(gAssetHandles.textureHandle),
                   gRaceSplitscreenSelectFrameTiles[(u16)arg0->counter].cornerTile, 0, 0x100);
 
-    drawMenuSprite(arg0->x - 4, (s16)(arg0->y - 4), getRelocatableHeapBlockBase(gAssetHandles[0x21]), 0x33, 0x20,
+    drawMenuSprite(arg0->x - 4, (s16)(arg0->y - 4), getRelocatableHeapBlockBase(gAssetHandles.textureHandle), 0x33, 0x20,
                   0x20, 0, 0);
-    drawMenuSprite((s16)(arg0->x - 4), (s16)(arg0->y + 0x8C), getRelocatableHeapBlockBase(gAssetHandles[0x21]), 0x38, 0x20,
+    drawMenuSprite((s16)(arg0->x - 4), (s16)(arg0->y + 0x8C), getRelocatableHeapBlockBase(gAssetHandles.textureHandle), 0x38, 0x20,
                   0x20, 0, 0);
-    drawMenuSprite((s16)(arg0->x + 0x8C), (s16)(arg0->y - 4), getRelocatableHeapBlockBase(gAssetHandles[0x21]), 0x35, 0x20,
+    drawMenuSprite((s16)(arg0->x + 0x8C), (s16)(arg0->y - 4), getRelocatableHeapBlockBase(gAssetHandles.textureHandle), 0x35, 0x20,
                   0x20, 0, 0);
-    drawMenuSprite((s16)(arg0->x + 0x8C), (s16)(arg0->y + 0x8C), getRelocatableHeapBlockBase(gAssetHandles[0x21]), 0x3A, 0x20,
+    drawMenuSprite((s16)(arg0->x + 0x8C), (s16)(arg0->y + 0x8C), getRelocatableHeapBlockBase(gAssetHandles.textureHandle), 0x3A, 0x20,
                   0x20, 0, 0);
 
     for (borderOffset = 0; borderOffset != 0x80; borderOffset += 0x10) {
         drawMenuSprite((s16)((arg0->x + borderOffset) + 0xC), (s16)(arg0->y - 4),
-                      getRelocatableHeapBlockBase(gAssetHandles[0x21]), 0x34, 0x20, 0x20, 0, 0);
+                      getRelocatableHeapBlockBase(gAssetHandles.textureHandle), 0x34, 0x20, 0x20, 0, 0);
         drawMenuSprite((s16)((arg0->x + borderOffset) + 0xC), (s16)(arg0->y + 0x8C),
-                      getRelocatableHeapBlockBase(gAssetHandles[0x21]), 0x39, 0x20, 0x20, 0, 0);
+                      getRelocatableHeapBlockBase(gAssetHandles.textureHandle), 0x39, 0x20, 0x20, 0, 0);
         drawMenuSprite((s16)(arg0->x - 4), (s16)((arg0->y + borderOffset) + 0xC),
-                      getRelocatableHeapBlockBase(gAssetHandles[0x21]), 0x36, 0x20, 0x20, 0, 0);
+                      getRelocatableHeapBlockBase(gAssetHandles.textureHandle), 0x36, 0x20, 0x20, 0, 0);
         drawMenuSprite((s16)(arg0->x + 0x8C), (s16)((arg0->y + borderOffset) + 0xC),
-                      getRelocatableHeapBlockBase(gAssetHandles[0x21]), 0x37, 0x20, 0x20, 0, 0);
+                      getRelocatableHeapBlockBase(gAssetHandles.textureHandle), 0x37, 0x20, 0x20, 0, 0);
     }
 }
 
@@ -318,7 +321,7 @@ void updateRaceSplitscreenSelectOption0Frame(RaceSplitscreenSelectWidgetActor *a
         break;
     case 3:
         gMenuFlowState += 1;
-        if (gMenuTransitionState == 1) {
+        if (gRacePlayers[0].menuState == 1) {
             arg0->row.bytes.subState = 4;
         }
         state = arg0->row.bytes.subState;
@@ -331,12 +334,12 @@ void updateRaceSplitscreenSelectOption0Frame(RaceSplitscreenSelectWidgetActor *a
         state = arg0->row.bytes.subState;
         break;
     case 5:
-        gMenuTransitionState = 2;
+        gRacePlayers[0].menuState = 2;
         state = arg0->row.bytes.subState;
         break;
     }
 
-    if ((state == 5) && (gMenuTransitionState == 2)) {
+    if ((state == 5) && (gRacePlayers[0].menuState == 2)) {
         removeCallbackTask(arg0);
         return;
     }
@@ -364,7 +367,7 @@ void drawRaceSplitscreenSelectOption1Frame(RaceSplitscreenSelectWidgetActor *arg
     shouldDraw = 1;
     for (i = 0; i < 16; i++, tileOffset++) {
         drawMenuSpriteTileClipped((s16)(arg0->x + ((i & 3) << 5)), (s16)(arg0->y + ((i / 4) << 5)),
-                      getRelocatableHeapBlockBase(gAssetHandles[0x21]),
+                      getRelocatableHeapBlockBase(gAssetHandles.textureHandle),
                       gRaceSplitscreenSelectFrameTiles[(u16)arg0->sprite.spriteIndex].centerTiles[tileOffset], 0, 0x100, 0xA0, 0x49);
     }
 
@@ -375,10 +378,10 @@ void drawRaceSplitscreenSelectOption1Frame(RaceSplitscreenSelectWidgetActor *arg
     offset = 0;
     do {
         drawMenuSpriteTileClipped((s16)(arg0->x + 0x80), (s16)(arg0->y + offset),
-                      getRelocatableHeapBlockBase(gAssetHandles[0x21]),
+                      getRelocatableHeapBlockBase(gAssetHandles.textureHandle),
                       gRaceSplitscreenSelectFrameTiles[(u16)arg0->sprite.spriteIndex].rightEdgeTiles[tileOffset], 0, 0x100, 0xA0, 0x49);
         drawMenuSpriteTileClipped((s16)(arg0->x + offset), (s16)(arg0->y + 0x80),
-                      getRelocatableHeapBlockBase(gAssetHandles[0x21]),
+                      getRelocatableHeapBlockBase(gAssetHandles.textureHandle),
                       gRaceSplitscreenSelectFrameTiles[(u16)arg0->sprite.spriteIndex].bottomEdgeTiles[tileOffset], 0, 0x100, 0xA0, 0x49);
         i = 0x80;
         offset += 0x40;
@@ -387,7 +390,7 @@ void drawRaceSplitscreenSelectOption1Frame(RaceSplitscreenSelectWidgetActor *arg
     i++;
     i--;
 
-    drawMenuSpriteTileClipped((s16)(arg0->x + 0x80), (s16)(arg0->y + 0x80), getRelocatableHeapBlockBase(gAssetHandles[0x21]),
+    drawMenuSpriteTileClipped((s16)(arg0->x + 0x80), (s16)(arg0->y + 0x80), getRelocatableHeapBlockBase(gAssetHandles.textureHandle),
                   gRaceSplitscreenSelectFrameTiles[(u16)arg0->sprite.spriteIndex].cornerTile, 0, 0x100, 0xA0, 0x49);
 }
 
@@ -427,7 +430,7 @@ void updateRaceSplitscreenSelectOption1Frame(RaceSplitscreenSelectWidgetActor *a
         break;
     case 3:
         gMenuFlowState += 1;
-        if (gMenuTransitionState == 1) {
+        if (gRacePlayers[0].menuState == 1) {
             if (arg0->y == -0x140) {
                 arg0->transition.bytes.state = 5;
             } else {
@@ -471,7 +474,7 @@ void drawRaceSplitscreenSelectOption2Frame(RaceSplitscreenSelectWidgetActor *arg
     shouldDraw = 1;
     for (i = 0; i < 16; i++, tileIndex++) {
         drawMenuSpriteTileClipped((s16)(arg0->x + ((i & 3) << 5)), (s16)(arg0->y + ((i / 4) << 5)),
-                      getRelocatableHeapBlockBase(gAssetHandles[0x21]),
+                      getRelocatableHeapBlockBase(gAssetHandles.textureHandle),
                       gRaceSplitscreenSelectFrameTiles[(u16)arg0->sprite.spriteIndex].centerTiles[tileIndex], 0, 0x100, 0xA0, 0x49);
     }
 
@@ -481,9 +484,9 @@ void drawRaceSplitscreenSelectOption2Frame(RaceSplitscreenSelectWidgetActor *arg
     }
     offset = 0;
     do {
-        drawMenuSpriteTileClipped((s16)(arg0->x + 0x80), (s16)(arg0->y + offset), getRelocatableHeapBlockBase(gAssetHandles[0x21]),
+        drawMenuSpriteTileClipped((s16)(arg0->x + 0x80), (s16)(arg0->y + offset), getRelocatableHeapBlockBase(gAssetHandles.textureHandle),
                       gRaceSplitscreenSelectFrameTiles[(u16)arg0->sprite.spriteIndex].rightEdgeTiles[tileIndex], 0, 0x100, 0xA0, 0x49);
-        drawMenuSpriteTileClipped((s16)(arg0->x + offset), (s16)(arg0->y + 0x80), getRelocatableHeapBlockBase(gAssetHandles[0x21]),
+        drawMenuSpriteTileClipped((s16)(arg0->x + offset), (s16)(arg0->y + 0x80), getRelocatableHeapBlockBase(gAssetHandles.textureHandle),
                       gRaceSplitscreenSelectFrameTiles[(u16)arg0->sprite.spriteIndex].bottomEdgeTiles[tileIndex], 0, 0x100, 0xA0, 0x49);
         i = 0x80;
         offset += 0x40;
@@ -492,7 +495,7 @@ void drawRaceSplitscreenSelectOption2Frame(RaceSplitscreenSelectWidgetActor *arg
     i++;
     i--;
 
-    drawMenuSpriteTileClipped((s16)(arg0->x + 0x80), (s16)(arg0->y + 0x80), getRelocatableHeapBlockBase(gAssetHandles[0x21]),
+    drawMenuSpriteTileClipped((s16)(arg0->x + 0x80), (s16)(arg0->y + 0x80), getRelocatableHeapBlockBase(gAssetHandles.textureHandle),
                   gRaceSplitscreenSelectFrameTiles[(u16)arg0->sprite.spriteIndex].cornerTile, 0, 0x100, 0xA0, 0x49);
 }
 
@@ -532,7 +535,7 @@ void updateRaceSplitscreenSelectOption2Frame(RaceSplitscreenSelectWidgetActor *a
         break;
     case 3:
         gMenuFlowState += 1;
-        if (gMenuTransitionState == 1) {
+        if (gRacePlayers[0].menuState == 1) {
             if (arg0->y == -0x140) {
                 arg0->transition.bytes.state = 5;
             } else {
@@ -576,7 +579,7 @@ void drawRaceSplitscreenSelectOption3Frame(RaceSplitscreenSelectWidgetActor *arg
     shouldDraw = 1;
     for (i = 0; i < 16; i++, tileOffset++) {
         drawMenuSpriteTileClipped((s16)(arg0->x + ((i & 3) << 5)), (s16)(arg0->y + ((i / 4) << 5)),
-                      getRelocatableHeapBlockBase(gAssetHandles[0x21]),
+                      getRelocatableHeapBlockBase(gAssetHandles.textureHandle),
                       gRaceSplitscreenSelectFrameTiles[(u16)arg0->sprite.spriteIndex].centerTiles[tileOffset], 0, 0x100, 0xA0, 0x49);
     }
 
@@ -587,10 +590,10 @@ void drawRaceSplitscreenSelectOption3Frame(RaceSplitscreenSelectWidgetActor *arg
     offset = 0;
     do {
         drawMenuSpriteTileClipped((s16)(arg0->x + 0x80), (s16)(arg0->y + offset),
-                      getRelocatableHeapBlockBase(gAssetHandles[0x21]),
+                      getRelocatableHeapBlockBase(gAssetHandles.textureHandle),
                       gRaceSplitscreenSelectFrameTiles[(u16)arg0->sprite.spriteIndex].rightEdgeTiles[tileOffset], 0, 0x100, 0xA0, 0x49);
         drawMenuSpriteTileClipped((s16)(arg0->x + offset), (s16)(arg0->y + 0x80),
-                      getRelocatableHeapBlockBase(gAssetHandles[0x21]),
+                      getRelocatableHeapBlockBase(gAssetHandles.textureHandle),
                       gRaceSplitscreenSelectFrameTiles[(u16)arg0->sprite.spriteIndex].bottomEdgeTiles[tileOffset], 0, 0x100, 0xA0, 0x49);
         i = 0x80;
         offset += 0x40;
@@ -599,7 +602,7 @@ void drawRaceSplitscreenSelectOption3Frame(RaceSplitscreenSelectWidgetActor *arg
     i++;
     i--;
 
-    drawMenuSpriteTileClipped((s16)(arg0->x + 0x80), (s16)(arg0->y + 0x80), getRelocatableHeapBlockBase(gAssetHandles[0x21]),
+    drawMenuSpriteTileClipped((s16)(arg0->x + 0x80), (s16)(arg0->y + 0x80), getRelocatableHeapBlockBase(gAssetHandles.textureHandle),
                   gRaceSplitscreenSelectFrameTiles[(u16)arg0->sprite.spriteIndex].cornerTile, 0, 0x100, 0xA0, 0x49);
 }
 
@@ -639,7 +642,7 @@ void updateRaceSplitscreenSelectOption3Frame(RaceSplitscreenSelectWidgetActor *a
         break;
     case 3:
         gMenuFlowState += 1;
-        if (gMenuTransitionState == 1) {
+        if (gRacePlayers[0].menuState == 1) {
             if (arg0->y == -0x140) {
                 arg0->transition.bytes.state = 5;
             } else {
@@ -683,7 +686,7 @@ void drawRaceSplitscreenSelectOption4Frame(RaceSplitscreenSelectWidgetActor *arg
     shouldDraw = 1;
     for (i = 0; i < 16; i++, tileIndex++) {
         drawMenuSpriteTileClipped((s16)(arg0->x + ((i & 3) << 5)), (s16)(arg0->y + ((i / 4) << 5)),
-                      getRelocatableHeapBlockBase(gAssetHandles[0x21]),
+                      getRelocatableHeapBlockBase(gAssetHandles.textureHandle),
                       gRaceSplitscreenSelectFrameTiles[(u16)arg0->sprite.spriteIndex].centerTiles[tileIndex], 0, 0x100, 0xA0, 0x49);
     }
 
@@ -693,9 +696,9 @@ void drawRaceSplitscreenSelectOption4Frame(RaceSplitscreenSelectWidgetActor *arg
     }
     offset = 0;
     do {
-        drawMenuSpriteTileClipped((s16)(arg0->x + 0x80), (s16)(arg0->y + offset), getRelocatableHeapBlockBase(gAssetHandles[0x21]),
+        drawMenuSpriteTileClipped((s16)(arg0->x + 0x80), (s16)(arg0->y + offset), getRelocatableHeapBlockBase(gAssetHandles.textureHandle),
                       gRaceSplitscreenSelectFrameTiles[(u16)arg0->sprite.spriteIndex].rightEdgeTiles[tileIndex], 0, 0x100, 0xA0, 0x49);
-        drawMenuSpriteTileClipped((s16)(arg0->x + offset), (s16)(arg0->y + 0x80), getRelocatableHeapBlockBase(gAssetHandles[0x21]),
+        drawMenuSpriteTileClipped((s16)(arg0->x + offset), (s16)(arg0->y + 0x80), getRelocatableHeapBlockBase(gAssetHandles.textureHandle),
                       gRaceSplitscreenSelectFrameTiles[(u16)arg0->sprite.spriteIndex].bottomEdgeTiles[tileIndex], 0, 0x100, 0xA0, 0x49);
         i = 0x80;
         offset += 0x40;
@@ -704,7 +707,7 @@ void drawRaceSplitscreenSelectOption4Frame(RaceSplitscreenSelectWidgetActor *arg
     i++;
     i--;
 
-    drawMenuSpriteTileClipped((s16)(arg0->x + 0x80), (s16)(arg0->y + 0x80), getRelocatableHeapBlockBase(gAssetHandles[0x21]),
+    drawMenuSpriteTileClipped((s16)(arg0->x + 0x80), (s16)(arg0->y + 0x80), getRelocatableHeapBlockBase(gAssetHandles.textureHandle),
                   gRaceSplitscreenSelectFrameTiles[(u16)arg0->sprite.spriteIndex].cornerTile, 0, 0x100, 0xA0, 0x49);
 }
 
@@ -745,7 +748,7 @@ void updateRaceSplitscreenSelectOption4Frame(RaceSplitscreenSelectWidgetActor *a
         break;
     case 3:
         gMenuFlowState += 1;
-        if (gMenuTransitionState == 1) {
+        if (gRacePlayers[0].menuState == 1) {
             if (arg0->y == -0x140) {
                 arg0->transition.bytes.state = 5;
             } else {
@@ -818,7 +821,7 @@ void updateRaceSplitscreenSelectCursor(RaceSplitscreenSelectWidgetActor *arg0) {
         arg0->transition.bytes.timer = (arg0->transition.bytes.timer + 1) & 0x1F;
         break;
     case 2:
-        if (gMenuTransitionState == 1) {
+        if (gRacePlayers[0].menuState == 1) {
             state = arg0->transition.bytes.state = 3;
         }
         break;
@@ -855,7 +858,7 @@ void drawRaceSplitscreenSelectPortrait(RaceSplitscreenSelectWidgetActor *arg0) {
 
     if (gRaceSplitscreenMode == 3) {
         portraitIndex = gRaceSplitscreenMode & 0xFF;
-        if (gMenuSelectionVariant == 5) {
+        if (gRacePlayers[0].selectedCharacterId == 5) {
             portraitIndex = 5;
         }
     } else {
@@ -876,7 +879,7 @@ void updateRaceSplitscreenSelectPortrait(RaceSplitscreenSelectWidgetActor *arg0)
         }
         break;
     case 1:
-        if (gMenuTransitionState == 1) {
+        if (gRacePlayers[0].menuState == 1) {
             arg0->transition.bytes.state = 2;
         }
         break;
@@ -922,7 +925,7 @@ void updateRaceSplitscreenSelectArrowPrompt(RaceSplitscreenSelectWidgetActor *ar
         state = arg0->transition.bytes.state;
         break;
     case 1:
-        if (gMenuTransitionState == 1) {
+        if (gRacePlayers[0].menuState == 1) {
             state = arg0->transition.bytes.state = 2;
         }
         break;
@@ -956,7 +959,7 @@ void drawRaceSplitscreenSelectEntryFee(RaceSplitscreenSelectWidgetActor *arg0) {
 
     drawMenuPanelBackdrop(arg0->x, arg0->y, 0x5000, 0x4000);
     drawMenuSpriteWithAlpha((s16)(arg0->x + 8), (s16)(arg0->y + 4), getRelocatableHeapBlockBase(ASSET_HANDLE(33)), 0x11, 0x20, 0x20, 0, arg0->sprite.spriteIndex, 0);
-    sprintf(sp40, gRaceSplitscreenSelectEntryFeeFormat, gPlayer1Money);
+    sprintf(sp40, gRaceSplitscreenSelectEntryFeeFormat, gRacePlayers[0].money);
     drawMenuAsciiText((s16)(arg0->x + 0x10), (s16)(arg0->y + 0x10), sp40, 0, arg0->sprite.spriteIndex);
 }
 
@@ -973,7 +976,7 @@ void updateRaceSplitscreenSelectEntryFee(RaceSplitscreenSelectWidgetActor *arg0)
         state = arg0->transition.bytes.state;
         break;
     case 1:
-        if (gMenuTransitionState == 1) {
+        if (gRacePlayers[0].menuState == 1) {
             state = arg0->transition.bytes.state = 2;
         }
         break;

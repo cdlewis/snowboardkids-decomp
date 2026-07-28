@@ -86,7 +86,6 @@ extern s32 integerSquareRoot64(s64);
 extern u8 gRaceSplitscreenMode;
 extern s8 gRacePlayerCount;
 extern s8 gRaceOrderPlayerIds[];
-extern RacePlayer gFrameCounter;
 extern s32 gMenuFlowState;
 extern Vec3i gRacePlayerGroundProbeOffsets[];
 extern Vec3i D_800DE7F8;
@@ -508,7 +507,7 @@ void pushRacePlayersOutOfCylinderAndApplyItemHit(Vec3i *pos, s32 xzSize, s32 ySi
             }
         }
         player++;
-    } while (player != &gFrameCounter);
+    } while (player != gRacePlayersEnd);
 }
 #endif
 
@@ -583,7 +582,6 @@ void pushRacePlayerOutOfCylinderAndApplyItemHit(Vec3i *pos, s32 xzSize, s32 ySiz
 
 void pushRacePlayersOutOfCylinderOrApplyItemHit(Vec3i *pos, s32 xzSize, s32 ySize, s32 arg3, s16 arg4) {
     volatile u8 pad[16];
-    RacePlayer *player;
     s32 temp;
     s32 xDiff;
     s32 yLimit;
@@ -593,50 +591,49 @@ void pushRacePlayersOutOfCylinderOrApplyItemHit(Vec3i *pos, s32 xzSize, s32 ySiz
     s32 cosine;
     s32 pushX;
     s32 pushZ;
+    register s32 i;
 
-    player = gRacePlayers;
-    do {
-        if (player->isActive != 0) {
+    for (i = 0; i < RACE_PLAYER_COUNT; i++) {
+        if (gRacePlayers[i].isActive != 0) {
             yLimit = ySize;
-            temp = pos->y - player->unk5C;
+            temp = pos->y - gRacePlayers[i].unk5C;
             if (temp < 0) {
                 temp = -temp;
             } else {
-                yLimit = player->unk284;
+                yLimit = gRacePlayers[i].unk284;
             }
 
             if (temp <= yLimit) {
-                xzLimit = player->unk280 + xzSize;
-                xDiff = pos->x - player->posX;
+                xzLimit = gRacePlayers[i].unk280 + xzSize;
+                xDiff = pos->x - gRacePlayers[i].posX;
                 if (xDiff < 0) {
                     xDiff = -xDiff;
                 }
                 if (xDiff < xzLimit) {
-                    temp = pos->z - player->posZ;
+                    temp = pos->z - gRacePlayers[i].posZ;
                     if (temp < 0) {
                         temp = -temp;
                     }
                     if ((temp < xzLimit) &&
                         ((temp = integerSquareRoot64((s64)((0, xDiff)) * xDiff +
                                                (((s64)temp * temp) & 0xFFFFFFFFFFFFFFFF))) < xzLimit)) {
-                        if (player->unk29C < arg3) {
-                            angle = calculateFixedAngleBetweenXZPoints(pos->x, pos->z, player->posX, player->posZ);
+                        if (gRacePlayers[i].unk29C < arg3) {
+                            angle = calculateFixedAngleBetweenXZPoints(pos->x, pos->z, gRacePlayers[i].posX, gRacePlayers[i].posZ);
                             sine = fixedSine(angle);
                             cosine = fixedCosine(angle);
                             temp = xzLimit - temp;
                             pushX = (s64)-sine * -temp / 0x1000;
                             pushZ = (s64)cosine * -temp / 0x1000;
-                            player->posX -= pushX;
-                            player->posZ += pushZ;
+                            gRacePlayers[i].posX -= pushX;
+                            gRacePlayers[i].posZ += pushZ;
                         } else {
-                            player->pendingItemHitFlags |= arg4;
+                            gRacePlayers[i].pendingItemHitFlags |= arg4;
                         }
                     }
                 }
             }
         }
-        player++;
-    } while (player != &gFrameCounter);
+    }
 }
 
 // pushRacePlayerOutOfCylinder best match: 99.925% (nonmatchings/pushRacePlayerOutOfCylinder-1189375296343516052/base_11.c)
@@ -751,7 +748,7 @@ void applyItemHitToRacePlayersInsideSphere(Vec3i *pos, s32 xzSize, s16 flag) {
     s32 dy;
     s32 dz;
 
-    end = &gFrameCounter; player = gRacePlayers;
+    end = gRacePlayersEnd; player = gRacePlayers;
     do {
         if ((player->isActive & 0xFFFFFFFF) != 0) {
             dx = player->posX - pos->x;

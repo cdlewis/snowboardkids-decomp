@@ -3,11 +3,11 @@
 
 #include "common.h"
 
-struct RacePlayerProgressState;
+struct RacePlayer;
 
 void updateRacePlayerRankDisplay(void);
 s32 updateRacePlayerSmoothedPathOffset(s32 playerIndex, s32 pathIndex, s32 rankSlot);
 s32 getRacePlayerPathOffset(s32 playerIndex, s32 pathIndex);
-void updateRacePlayerCheckpointEvents(struct RacePlayerProgressState *player);
+void updateRacePlayerCheckpointEvents(struct RacePlayer *player);
 
 #endif

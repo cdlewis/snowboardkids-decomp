@@ -49,18 +49,6 @@ extern s16 gRacePlayerAttackStartTimer;
 extern s8 gRaceTypeSelection;
 extern s8 gRaceResultState;
 extern s16 gMainMenuModePreviewRaceDurationBySelection[];
-extern s8 D_80121D94;
-extern s8 D_80121D95;
-extern s8 D_80121D96;
-extern s8 D_801223A0;
-extern s8 D_801223A1;
-extern s8 D_801223A2;
-extern s8 D_801229AC;
-extern s8 D_801229AD;
-extern s8 D_801229AE;
-extern s8 D_80122FB8;
-extern s8 D_80122FB9;
-extern s8 D_80122FBA;
 
 extern void releaseMenuAssetHandles(void);
 extern u8 gPendingFramebufferSwapCount;
@@ -69,7 +57,6 @@ extern u8 gTrainingCourseLesson;
 extern s8 gRaceRumbleEnabled;
 extern s8 gRaceSplitscreenMode;
 extern MainMenuModePreviewRaceCourseAsset gMainMenuModePreviewRaceCourseAssets[];
-extern s16 gRacePlayerSurfaceAngleByPlayer;
 
 void startMainMenuModePreviewRaceFlow(void) {
     gMainMenuModeSelection = 1;
@@ -158,6 +145,7 @@ void initMainMenuModePreviewRace(void) {
     long long two2;
     long long three0;
     s32 seven1;
+    s32 i;
     RacePlayer *player;
 
     gRaceCourseIndex = (s16) gMainMenuModePreviewRaceCourseAssets[gMainMenuModeSelection].courseIndex;
@@ -213,18 +201,11 @@ void initMainMenuModePreviewRace(void) {
     gRacePlayerAttackStartTimer = 0x64;
     initCallbackTaskScheduler(one1);
 
-    D_80121D95 = 0;
-    D_80121D94 = 0;
-    D_80121D96 = five1;
-    D_801223A1 = 0;
-    D_801223A0 = 0;
-    D_801223A2 = 5;
-    D_801229AD = 0;
-    D_801229AC = 0;
-    D_801229AE = five1;
-    D_80122FB9 = 0;
-    D_80122FB8 = 0;
-    D_80122FBA = five1;
+    for (i = 0; i < RACE_PLAYER_COUNT; i++) {
+        gRacePlayers[i].unk15 = 0;
+        gRacePlayers[i].soundDisabled = 0;
+        gRacePlayers[i].replayInputSource = five1;
+    }
 
     temp_v0 = &gMainMenuModePreviewRaceCourseAssets[gMainMenuModeSelection];
     loadCompressedRomAsset(temp_v0->romStart, temp_v0->romEnd, 0x2B);
@@ -454,18 +435,18 @@ void initTrainingCourseRace(void) {
     gRaceLapCount = 5;
     gRacePlayerAttackStartTimer = 0x64;
     initCallbackTaskScheduler(1);
-    D_80121D95 = 0;
-    D_80121D96 = 0;
-    D_80121D94 = 0;
-    D_801223A1 = 0;
-    D_801223A2 = 0;
-    D_801223A0 = 0;
-    D_801229AD = 0;
-    D_801229AE = 0;
-    D_801229AC = 0;
-    D_80122FB9 = 0;
-    D_80122FBA = 0;
-    D_80122FB8 = 0;
+    gRacePlayers[0].unk15 = 0;
+    gRacePlayers[0].replayInputSource = 0;
+    gRacePlayers[0].soundDisabled = 0;
+    gRacePlayers[1].unk15 = 0;
+    gRacePlayers[1].replayInputSource = 0;
+    gRacePlayers[1].soundDisabled = 0;
+    gRacePlayers[2].unk15 = 0;
+    gRacePlayers[2].replayInputSource = 0;
+    gRacePlayers[2].soundDisabled = 0;
+    gRacePlayers[3].unk15 = 0;
+    gRacePlayers[3].replayInputSource = 0;
+    gRacePlayers[3].soundDisabled = 0;
     loadRaceCourseAssets();
     loadRaceCharacterAssets();
     resetRaceCameras();
@@ -560,7 +541,7 @@ void runTrainingCourseUntilLessonEnd(void) {
     gCurrentGameTask->transitionTimer = 0;
     switch (gTrainingCourseLesson) {
         case 1:
-            if (gRacePlayerSurfaceAngleByPlayer == 0x50) {
+            if (gRacePlayers[0].surfaceAngle == 0x50) {
                 setCurrentGameTaskCallback(fadeInTrainingCourseLessonEndMenu, 0);
                 requestMusicSequenceStop(0x40);
                 return;
@@ -570,14 +551,14 @@ void runTrainingCourseUntilLessonEnd(void) {
         case 3:
         case 4:
         case 5:
-            if (gRacePlayerSurfaceAngleByPlayer == 0x9C) {
+            if (gRacePlayers[0].surfaceAngle == 0x9C) {
                 setCurrentGameTaskCallback(fadeInTrainingCourseLessonEndMenu, 0);
                 requestMusicSequenceStop(0x40);
                 return;
             }
             break;
         case 6:
-            if (gRacePlayerSurfaceAngleByPlayer == 0xB4) {
+            if (gRacePlayers[0].surfaceAngle == 0xB4) {
                 setCurrentGameTaskCallback(fadeInTrainingCourseLessonEndMenu, 0);
                 requestMusicSequenceStop(0x40);
                 return;
@@ -585,14 +566,14 @@ void runTrainingCourseUntilLessonEnd(void) {
             break;
         case 7:
         case 8:
-            if (gRacePlayerSurfaceAngleByPlayer == 0x16) {
+            if (gRacePlayers[0].surfaceAngle == 0x16) {
                 setCurrentGameTaskCallback(fadeInTrainingCourseLessonEndMenu, 0);
                 requestMusicSequenceStop(0x40);
                 return;
             }
             break;
         case 9:
-            if (gRacePlayerSurfaceAngleByPlayer == 0x36) {
+            if (gRacePlayers[0].surfaceAngle == 0x36) {
                 setCurrentGameTaskCallback(fadeInTrainingCourseLessonEndMenu, 0);
                 requestMusicSequenceStop(0x40);
             }

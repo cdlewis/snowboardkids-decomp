@@ -30,11 +30,6 @@ typedef struct {
 } RaceSetupMenuSubState;
 
 typedef struct {
-    /* 0x000 */ s8 selectedCourseId;
-    /* 0x001 */ u8 pad1[0x60B];
-} RaceSetupPlayerMenuState;
-
-typedef struct {
     /* 0x0 */ s16 pad0;
     /* 0x2 */ u8 state;
     /* 0x3 */ u8 pad3;
@@ -60,7 +55,6 @@ extern u16 gMenuInputRepeatTimers;
 extern u8 gHighestUnlockedCourse;
 extern s16 gRaceCourseIndex;
 extern u8 gPlayerCount;
-extern RaceSetupPlayerMenuState gCourseSelectSelectedCourseId[];
 extern RaceSetupMenuState *gCurrentGameTask;
 extern s32 gMenuFlowState;
 extern s32 gPlayerInputHeld;
@@ -105,7 +99,7 @@ void initRaceSetupMenu(void) {
         gRaceSetupMenuSubState.pendingStatusCodes[i] = 0;
         gRaceSetupMenuSubState.statusTransitionStates[i] = 0;
         gRaceSetupMenuSubState.nextStatusCodes[i] = 0;
-        gCourseSelectSelectedCourseId[i].selectedCourseId = 0;
+        gRacePlayers[i].menuSelection = 0;
     }
 
     setCurrentGameTaskCallback(updateRaceSetupPlayerCountMenu, 0);
@@ -276,7 +270,6 @@ extern RaceSetupSaveMoney D_800EC9F4[];
 extern ControllerPakRumbleCheckPromptTransition gControllerPakRumbleCheckPromptTransition;
 extern CallbackTask *D_8010ADE0;
 extern CallbackTask *D_8010ADE4;
-extern RacePlayer gRacePlayers[];
 
 #if 0
 void updateRaceSetupSaveMenu(void) {

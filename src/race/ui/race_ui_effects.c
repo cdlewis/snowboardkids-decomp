@@ -14,6 +14,7 @@
 #include "game/race/motion/race_motion.h"
 #include "game/race/items/race_item_projectiles.h"
 #include "game/race/player/race_player_movement.h"
+#include "game/race/player/race_player_input.h"
 #include "game/race/ui/race_hud.h"
 
 /* Local 3-arg declaration; see note in callback_task_scheduler.h. */
@@ -94,11 +95,7 @@ typedef struct {
     u8 b7;
 } RaceUiSpriteInit;
 
-typedef union {
-    /* 0x00 */ s32 words[8];
-    /* 0x00 */ s16 halfwords[0x10];
-    /* 0x00 */ FixedTransform transform;
-} RaceUiTrailCopyBlock;
+typedef RacePlayerTransformBlock RaceUiTrailCopyBlock;
 
 typedef union {
     /* 0x00 */ RaceUiTrailCopyBlock source;
@@ -117,54 +114,6 @@ typedef struct {
     /* 0x00 */ u16 assetId;
     /* 0x02 */ u8 pad2[6];
 } RaceUiAssetEntry;
-
-typedef struct {
-    /* 0x000 */ u16 playerIndex;
-    /* 0x002 */ u8 pad002[0x04 - 0x02];
-    /* 0x004 */ u8 isCpu;
-    /* 0x005 */ u8 pad005[0x0C - 0x05];
-    /* 0x00C */ s32 unk00C;
-    /* 0x010 */ u8 characterId;
-    /* 0x011 */ u8 pad011[0x13 - 0x11];
-    /* 0x013 */ s8 isActive;
-    /* 0x014 */ s8 soundDisabled;
-    /* 0x015 */ u8 pad015[0x18 - 0x15];
-    /* 0x018 */ s16 unk18;
-    /* 0x01A */ u8 pad01A[0x1C - 0x1A];
-    /* 0x01C */ Vec3i pos1C;
-    /* 0x028 */ Vec3i pos28;
-    /* 0x034 */ u8 pad34[0x94 - 0x34];
-    /* 0x094 */ RaceUiTrailCopyBlock copyBlock94;
-    /* 0x0B4 */ u8 padB4[0x0C8 - 0x0B4];
-    /* 0x0C8 */ Vec3i posC8;
-    /* 0x0D4 */ u8 padD4[0x174 - 0xD4];
-    /* 0x174 */ FixedTransform transform;
-    /* 0x194 */ u8 pad194[0x2C0 - 0x194];
-    /* 0x2C0 */ s16 unk2C0;
-    /* 0x2C2 */ s8 pad2C2;
-    /* 0x2C3 */ s8 unk2C3;
-    /* 0x2C4 */ u8 pad2C4[0x2C6 - 0x2C4];
-    /* 0x2C6 */ u16 pendingItemHitFlags;
-    /* 0x2C8 */ u8 pad2C8[0x2D8 - 0x2C8];
-    /* 0x2D8 */ s16 unk2D8;
-    /* 0x2DA */ s16 unk2DA;
-    /* 0x2DC */ u8 pad2DC[0x2EA - 0x2DC];
-    /* 0x2EA */ s16 pitch;
-    /* 0x2EC */ s16 yaw;
-    /* 0x2EE */ u8 pad2EE[0x2FC - 0x2EE];
-    /* 0x2FC */ s32 flags;
-    /* 0x300 */ u8 pad300[0x508 - 0x300];
-    /* 0x508 */ s8 lapDigit;
-    /* 0x509 */ s8 mode;
-    /* 0x50A */ u8 pad50A[0x568 - 0x50A];
-    /* 0x568 */ s32 unk568;
-    /* 0x56C */ u8 pad56C[0x570 - 0x56C];
-    /* 0x570 */ s16 unk570;
-    /* 0x572 */ s16 unk572;
-    /* 0x574 */ s16 score;
-    /* 0x576 */ s16 targetScore;
-    /* 0x578 */ u8 pad578[0x60C - 0x578];
-} RacePlayerState;
 
 typedef struct {
     /* 0x00 */ s8 active;
@@ -411,16 +360,6 @@ typedef struct RaceUiPodiumTrailActor {
     /* 0x58 */ u8 matrixDirty;
     /* 0x59 */ u8 playImpactSound;
 } RaceUiPodiumTrailActor;
-
-typedef struct {
-    /* 0x000 */ s16 value;
-    /* 0x002 */ u8 pad2[0x60C - 0x002];
-} RacePlayerHalfwordField;
-
-typedef struct {
-    /* 0x000 */ s8 value;
-    /* 0x001 */ u8 pad1[0x60C - 0x001];
-} RacePlayerByteField;
 
 typedef struct RaceUiRankTrailActor {
     /* 0x00 */ u8 pad0[0x10];
@@ -887,10 +826,7 @@ extern Gfx gEffectRenderModeCleanupDl[];
 extern Gfx gEffectRenderModeSetupDl[];
 extern Gfx gTranslucentSpriteRenderModeDl[];
 extern int sprintf(char *, const char *, ...);
-extern RacePlayerByteField gRacePlayerItemTargetFlags[];
-extern RacePlayerHalfwordField gPlayerHitSource[];
 extern RacePlayerHudStatus gRacePlayerHudStatuses[];
-extern RacePlayerState gRacePlayers[];
 extern RaceTimer gRaceElapsedTimer;
 extern RaceUiAssetEntry D_800D5FF4[];
 extern RaceUiCameraTransformSource D_801121E0[];
@@ -900,22 +836,14 @@ extern RaceUiGfxCommandScriptEntry *D_800D693C[];
 extern RaceTimer gRaceCourseTargetTimes[];
 extern RaceUiProjectileVertexBlock D_800D64A0[];
 extern RaceUiRankTextRenderEntry *D_800D761C[];
-extern RaceUiRankTrigger *gRaceScoreAttackRingTriggerList;
 extern RaceUiSpriteInit D_800D5FF0[];
 extern s16 D_800D633C[];
-extern s16 D_8012206C[][0x306];
-extern s16 D_801222F0;
-extern s16 gRaceCourseCoinMarkerCount;
 extern s16 gFrameCounter;
 extern s16 gRaceCourseIndex;
 extern s16 gRaceLapCount;
 extern s16 gRacePrizeAmountsByCourseAndRank[][4];
-extern s16 gRaceScoreAttackPointTarget;
-extern s16 gRaceScoreAttackPointTotal;
 extern s16 gUiBlinkTimer;
-extern s32 D_80121DA4;
 extern s32 gMenuFlowState;
-extern s32 gPlayer1Money;
 extern s32 gPlayerInputPressed;
 extern s32 isPositionNearAnyRaceViewportFocus(Vec3i *);
 extern s8 gRacePlayerCount;
@@ -1020,14 +948,14 @@ void drawRaceUiBoardReversePrompt(RaceUiPromptActor *arg0) {
 }
 
 void updateRaceUiBoardReversePrompt(RaceUiPromptActor *arg0) {
-    if (gRacePlayers[arg0->index].flags & 0x400) {
+    if (gRacePlayers[arg0->index].stateFlags & 0x400) {
         if (arg0->timer < 0x1E) {
             arg0->timer++;
         }
     } else {
         arg0->timer = 0;
     }
-    if (gRacePlayers[arg0->index].flags & 0x1040) {
+    if (gRacePlayers[arg0->index].stateFlags & 0x1040) {
         arg0->timer = 0;
     }
     if (arg0->timer >= 0x1E) {
@@ -1173,7 +1101,7 @@ void func_80057E60(void *arg0) {
 }
 
 void func_80057E90(RaceUiAlpha18Actor *arg0) {
-    if (gRacePlayers[0].mode != 0) {
+    if (gRacePlayers[0].rankIndex != 0) {
         if (arg0->alpha != 0xFF) {
             gDPPipeSync(gRegionAllocPtr++);
             gDPSetCombineMode(gRegionAllocPtr++, G_CC_MODULATEIA_PRIM, G_CC_MODULATEIA_PRIM);
@@ -1187,9 +1115,9 @@ void func_80057E90(RaceUiAlpha18Actor *arg0) {
         }
         drawAssetTableSprite(-0x68, -0x2C, getRelocatableHeapBlockBase(ASSET_HANDLE(0x1F)), 0x4D);
         drawAssetTableSprite(-0x42, -0xC, getRelocatableHeapBlockBase(ASSET_HANDLE(0x1F)),
-                             gRacePlayers[0].mode);
+                             gRacePlayers[0].rankIndex);
         drawAssetTableSprite(-0x22, 4, getRelocatableHeapBlockBase(ASSET_HANDLE(0x1F)),
-                             gRacePlayers[0].mode + 0x48);
+                             gRacePlayers[0].rankIndex + 0x48);
         drawAssetTableSprite(-0x68, 6, getRelocatableHeapBlockBase(ASSET_HANDLE(0x1F)),
                              gRacePlayers[0].characterId + 0x91);
         if (arg0->alpha != 0xFF) {
@@ -1237,7 +1165,7 @@ void func_8005812C(void *arg0)
     {
         sprintf(&buffer[i], gRaceUiCoinCounterFormat, gRacePlayers[0].unk568);
         x = 0x20;
-        if (gRacePlayers[0].mode == 3)
+        if (gRacePlayers[0].rankIndex == 3)
         {
  colorValue = 0xD; } else { colorValue = 0xC; } do { assets = &gAssetHandles[i]; space = ' '; color = colorValue; if (space != 0U) { } loop: if (buffer[i] != '\0') { if (buffer[i] != space) { drawAssetTableSpriteWithExplicitPalette((s16) x, -0xF, getRelocatableHeapBlockBase(assets[0x1F]), buffer[i] - 5, color); }
             x += 8;
@@ -1248,7 +1176,7 @@ void func_8005812C(void *arg0)
         drawAssetTableSpriteWithExplicitPalette((s16) x, -0xF, getRelocatableHeapBlockBase(assets[0x1F]), 0x37, color);
     }
     while (0);
-    if (gRacePlayers[0].mode == 3)
+    if (gRacePlayers[0].rankIndex == 3)
     {
         drawAssetTableSprite(0x18, -0xB, getRelocatableHeapBlockBase(assets[0x1F]), 0x4E);
     }
@@ -1267,7 +1195,7 @@ void func_8005827C(void *arg0) {
     volatile s16 *handles;
     s32 space;
 
-    sprintf(buffer + -8, gRaceUiTotalMoneyCounterFormat, gPlayer1Money);
+    sprintf(buffer + -8, gRaceUiTotalMoneyCounterFormat, gRacePlayers[0].money);
     x = 0x18;
     handles = gAssetHandles;
  ptr = (u8 *) (((s32) padding) - 0x10); if (!ptr) { } space = ' '; loop: if ((*ptr) != 0) {
@@ -1323,50 +1251,50 @@ void func_80058610(RaceUiAlpha18Actor *arg0) {
     s32 unused;
     s32 shouldPlaySound;
     s32 value;
-    RacePlayerState *player;
+    RacePlayer *player;
 
     shouldPlaySound = 0;
     value = arg0->score;
     if (value != 0) {
         shouldPlaySound = 1;
     }
-    player = (RacePlayerState *) (s32) gRacePlayers;
+    player = (RacePlayer *) (s32) &gRacePlayers[0];
     if (value >= 9) {
-        player->unk00C += 8;
+        player->money += 8;
         arg0->score -= 8;
     } else {
-        gPlayer1Money = player->unk00C + value;
+        gRacePlayers[0].money = player->money + value;
         arg0->score = 0;
     }
 
-    if (player->mode != 3) {
+    if (player->rankIndex != 3) {
         value = player->unk568;
         if (value != 0) {
             shouldPlaySound = 1;
         }
         if (value >= 9) {
-            player->unk00C += 8;
+            player->money += 8;
             player->unk568 = value - 8;
         } else {
             player->unk568 = 0;
-            player->unk00C += value;
+            player->money += value;
         }
     }
 
     if (gPlayerInputPressed & A_BUTTON) {
-        gPlayer1Money = player->unk00C + arg0->score;
-        if (player->mode != 3) {
-            player->unk00C += player->unk568;
+        gRacePlayers[0].money = player->money + arg0->score;
+        if (player->rankIndex != 3) {
+            player->money += player->unk568;
             player->unk568 = 0;
         }
         arg0->score = 0;
     }
 
-    if (player->unk00C >= 1000000) {
-        player->unk00C = 999999;
+    if (player->money >= 1000000) {
+        player->money = 999999;
     }
 
-    if (player->mode != 3) {
+    if (player->rankIndex != 3) {
         if ((arg0->score == 0) && (player->unk568 == 0)) {
             enqueueSoundEffect(2, 0x32);
             setCallbackTaskCallback(arg0, (CallbackTaskCallback)func_80058538);
@@ -1456,7 +1384,7 @@ void updateRaceUiPrizePayoutFadeIn(RaceUiPrizePayoutActor *arg0) {
 
 void initRaceUiPrizePayout(RaceUiPrizePayoutActor *arg0) {
     arg0->alpha = 0;
-    arg0->prizeAmount = gRacePrizeAmountsByCourseAndRank[0][gRacePlayers[0].mode + gRaceCourseIndex * 4];
+    arg0->prizeAmount = gRacePrizeAmountsByCourseAndRank[0][gRacePlayers[0].rankIndex + gRaceCourseIndex * 4];
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceUiPrizePayoutFadeIn);
 }
 
@@ -1538,7 +1466,7 @@ void func_8005905C(RaceUiResultsBannerActor *arg0) {
             drawMenuAsciiTextDefaultScale(-0x20, -0x38, text, 0);
         }
         if (gRacePlayers[actor->player0].isCpu == 0) {
-            sprintf(text, D_800E1290, gRacePlayers[actor->player0].playerIndex + 1);
+            sprintf(text, D_800E1290, gRacePlayers[actor->player0].playerIndexU + 1);
             drawMenuAsciiTextDefaultScale(-0x30, -0x48, text, 5);
         } else {
             drawMenuAsciiTextDefaultScale(-0x30, -0x48, D_800E1294, 4);
@@ -1549,7 +1477,7 @@ void func_8005905C(RaceUiResultsBannerActor *arg0) {
         sprintf(text, D_800E1298, gRacePlayers[actor->player1].unk18);
         drawMenuAsciiTextDefaultScale(0x70, -0x18, text, 6);
         if (gRacePlayers[actor->player1].isCpu == 0) {
-            sprintf(text, D_800E129C, gRacePlayers[actor->player1].playerIndex + 1);
+            sprintf(text, D_800E129C, gRacePlayers[actor->player1].playerIndexU + 1);
             drawMenuAsciiTextDefaultScale(0x60, -0x28, text, 5);
         } else {
             drawMenuAsciiTextDefaultScale(0x60, -0x28, D_800E12A0, 4);
@@ -1560,7 +1488,7 @@ void func_8005905C(RaceUiResultsBannerActor *arg0) {
         sprintf(text, D_800E12A4, gRacePlayers[actor->player2].unk18);
         drawMenuAsciiTextDefaultScale(-0x20, 8, text, 6);
         if (gRacePlayers[actor->player2].isCpu == 0) {
-            sprintf(text, D_800E12A8, gRacePlayers[actor->player2].playerIndex + 1);
+            sprintf(text, D_800E12A8, gRacePlayers[actor->player2].playerIndexU + 1);
             drawMenuAsciiTextDefaultScale(-0x30, -8, text, 5);
         } else {
             drawMenuAsciiTextDefaultScale(-0x30, -8, D_800E12AC, 4);
@@ -1571,7 +1499,7 @@ void func_8005905C(RaceUiResultsBannerActor *arg0) {
         sprintf(text, D_800E12B0, gRacePlayers[actor->player3].unk18);
         drawMenuAsciiTextDefaultScale(0x70, 0x28, text, 6);
         if (gRacePlayers[actor->player3].isCpu == 0) {
-            sprintf(text, D_800E12B4, gRacePlayers[actor->player3].playerIndex + 1);
+            sprintf(text, D_800E12B4, gRacePlayers[actor->player3].playerIndexU + 1);
             drawMenuAsciiTextDefaultScale(0x60, 0x18, text, 5);
         } else {
             drawMenuAsciiTextDefaultScale(0x60, 0x18, D_800E12B8, 4);
@@ -1600,7 +1528,7 @@ void func_80059518(RaceUiResultsBannerActor *arg0) {
     i = 0; do { next = i + 1; j = next;
         if (next < 4) {
             do {
-                if (gRacePlayers[actor->playerIndices[j]].mode < gRacePlayers[actor->playerIndices[i]].mode) {
+                if (gRacePlayers[actor->playerIndices[j]].rankIndex < gRacePlayers[actor->playerIndices[i]].rankIndex) {
                     temp = actor->playerIndices[i];
                     actor->playerIndices[i] = actor->playerIndices[j];
                     actor->playerIndices[j] = temp;
@@ -1614,7 +1542,7 @@ void func_80059518(RaceUiResultsBannerActor *arg0) {
 
     i = 0;
     do {
-        if (!(gRacePlayers[actor->playerIndices[i]].flags & 0x40)) {
+        if (!(gRacePlayers[actor->playerIndices[i]].stateFlags & 0x40)) {
             actor->playerIndices[i] = -1;
         }
         i++;
@@ -1840,7 +1768,7 @@ void func_8005A31C(RaceUiAlpha18Actor *arg0) {
     }
 
     drawAssetTableSprite(-0x6C, -0x24, getRelocatableHeapBlockBase(ASSET_HANDLE(0x1F)), 0x20);
-    sprintf(buffer + -8, gRaceUiScoreAttackPointTotalFormat, gRaceScoreAttackPointTotal);
+    sprintf(buffer + -8, gRaceUiScoreAttackPointTotalFormat, gRacePlayers[0].scoreAttackPointTotal);
 
     if (buffer[-8] != ' ') {
         drawAssetTableSprite(-0x4C, -0x1C, getRelocatableHeapBlockBase(ASSET_HANDLE(0x1F)), buffer[-8] - 5);
@@ -1939,7 +1867,7 @@ loop3:
     if (arg0) { }
     if (visibleRows >= 3) {
         x = 0x18;
-        sprintf(buffer, gRaceUiCounterMoneyFormat, gPlayer1Money); i = 0;
+        sprintf(buffer, gRaceUiCounterMoneyFormat, gRacePlayers[0].money); i = 0;
         rowY = y.half.lo;
         i = 0;
 loop4:
@@ -2016,7 +1944,7 @@ void func_8005AAE4(RaceUiAlpha18Actor *arg0) {
 
     /* IDO scheduling for this function depends on this block staying on one line. */
     do { if (arg0->alpha != 0xFF) { gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w1 = 0; gfx->words.w0 = 0xE7000000; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = 0xFF2FFFFF; w0 = 0xFC119623; gfx->words.w0 = w0; gfx->words.w1 = w1; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = 0x00504240; if ((gRegionAllocPtr && gRegionAllocPtr) && gRegionAllocPtr) { } w0 = 0xB900031D; gfx->words.w0 = w0; gfx->words.w1 = w1; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w0 = 0xFA000000; gfx->words.w1 = (arg0->alpha & 0xFF) | (~0xFF); }
-    sprintf(&sp20[0x14], gRaceUiScoreAttackTargetFormat, gRaceScoreAttackPointTarget); drawMenuAsciiTextDefaultScale(-0x54, -0x14, gRaceUiScoreAttackAsteriskLabel, 6); drawMenuAsciiTextDefaultScale(-0x3C, -0x14, &sp20[0x14], 6); if (gRaceChallengeFailed != 0) { drawMenuAsciiTextDefaultScale(-0x68, -4, gRaceUiScoreAttackTimeOutLabel, 4); } if (arg0->alpha != 0xFF) { gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = (s32) gMenuRenderModeResetDl; w0 = 0x06000000; gfx->words.w0 = w0; gfx->words.w1 = w1; } } while (0);
+    sprintf(&sp20[0x14], gRaceUiScoreAttackTargetFormat, gRacePlayers[0].scoreAttackPointTarget); drawMenuAsciiTextDefaultScale(-0x54, -0x14, gRaceUiScoreAttackAsteriskLabel, 6); drawMenuAsciiTextDefaultScale(-0x3C, -0x14, &sp20[0x14], 6); if (gRaceChallengeFailed != 0) { drawMenuAsciiTextDefaultScale(-0x68, -4, gRaceUiScoreAttackTimeOutLabel, 4); } if (arg0->alpha != 0xFF) { gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = (s32) gMenuRenderModeResetDl; w0 = 0x06000000; gfx->words.w0 = w0; gfx->words.w1 = w1; } } while (0);
 }
 
 const char gRaceUiHitPrizeX1Label[0x14] = "-Hit Prize(*1G)-";
@@ -2132,25 +2060,25 @@ void func_8005B14C(RaceUiCounterActor *arg0) {
         value = 8;
     }
     /* IDO register allocation depends on this always-zero index. */
-    gRacePlayers[gPlayerInputPressed * 0].unk00C += value;
+    gRacePlayers[gPlayerInputPressed * 0].unkC += value;
     arg0->value -= value;
 
     value = arg0->bonus;
     if ((value >= 8) && !(gPlayerInputPressed & A_BUTTON)) {
         value = 8;
     }
-    gRacePlayers[0].unk00C += value;
+    gRacePlayers[0].unkC += value;
     arg0->bonus -= value;
 
     value = arg0->target;
     if ((value >= 8) && !(gPlayerInputPressed & A_BUTTON)) {
         value = 8;
     }
-    gRacePlayers[0].unk00C += value;
+    gRacePlayers[0].unkC += value;
     arg0->target -= value;
 
-    if (gRacePlayers[0].unk00C >= 0xF4240) {
-        gRacePlayers[0].unk00C = 0xF423F;
+    if (gRacePlayers[0].unkC >= 0xF4240) {
+        gRacePlayers[0].unkC = 0xF423F;
     }
 
     if ((arg0->value == 0) && (arg0->bonus == 0) && (arg0->target == 0)) {
@@ -2269,10 +2197,10 @@ void initRaceUiHitPrizePayout(RaceUiCounterActor *arg0) {
         arg0->pendingCompleteBonus = RACE_UI_HIT_PRIZE_QUICKSAND_VALLEY_SCORE_RATE;
     }
     if (gRaceChallengeFailed != 0) {
-        arg0->pendingHitPrize = gRacePlayers[0].score;
+        arg0->pendingHitPrize = gRacePlayers[0].scoreAttackPointTotal;
     } else {
-        arg0->pendingHitPrize = gRacePlayers[0].score * 0x32;
-        if (gRacePlayers[0].score == gRacePlayers[0].targetScore) {
+        arg0->pendingHitPrize = gRacePlayers[0].scoreAttackPointTotal * 0x32;
+        if (gRacePlayers[0].scoreAttackPointTotal == gRacePlayers[0].scoreAttackPointTarget) {
             arg0->hasPerfectHitBonus = TRUE;
             arg0->pendingPerfectHitBonus = RACE_UI_HIT_PRIZE_PERFECT_HIT_BONUS;
         }
@@ -2386,7 +2314,7 @@ void func_8005B9F8(RaceUiDualCounterActor *arg0) {
 
     if (arg0->state >= 4) {
         x = 0x18;
-        sprintf(buffer, gRaceUiTargetTimeChallengeMoneyCounterFormat, gPlayer1Money); i = 0;
+        sprintf(buffer, gRaceUiTargetTimeChallengeMoneyCounterFormat, gRacePlayers[0].money); i = 0;
         tempY = y.half.lo;
         i = 0;
         while (1) {
@@ -2558,32 +2486,32 @@ void func_8005C64C(RaceUiDualCounterActor *arg0) {
         value = 8;
     }
     /* IDO register allocation depends on this always-zero index. */
-    gRacePlayers[gPlayerInputPressed * 0].unk00C += value;
+    gRacePlayers[gPlayerInputPressed * 0].unkC += value;
     arg0->leftValue -= value;
 
     value = arg0->rightValue;
     if ((value >= 8) && !(gPlayerInputPressed & A_BUTTON)) {
         value = 8;
     }
-    gRacePlayers[0].unk00C += value;
+    gRacePlayers[0].unkC += value;
     arg0->rightValue -= value;
 
     value = arg0->bonus;
     if ((value >= 8) && !(gPlayerInputPressed & A_BUTTON)) {
         value = 8;
     }
-    gRacePlayers[0].unk00C += value;
+    gRacePlayers[0].unkC += value;
     arg0->bonus -= value;
 
     value = arg0->leftTarget;
     if ((value >= 8) && !(gPlayerInputPressed & A_BUTTON)) {
         value = 8;
     }
-    gRacePlayers[0].unk00C += value;
+    gRacePlayers[0].unkC += value;
     arg0->leftTarget -= value;
 
-    if (gRacePlayers[0].unk00C >= 0xF4240) {
-        gRacePlayers[0].unk00C = 0xF423F;
+    if (gRacePlayers[0].unkC >= 0xF4240) {
+        gRacePlayers[0].unkC = 0xF423F;
     }
 
     if ((arg0->rightValue == 0) && (arg0->leftValue == 0) && (arg0->bonus == 0) && (arg0->leftTarget == 0)) {
@@ -2708,7 +2636,8 @@ void func_8005CDB0(RaceUiDualCounterActor *arg0) {
 }
 
 void func_8005CE4C(RaceUiDualCounterActor *arg0) {
-    s16 temp_v0;
+    u32 temp_v0;
+    s16 *new_var;
 
     arg0->alpha = 0;
     arg0->flag = 0;
@@ -2718,15 +2647,16 @@ void func_8005CE4C(RaceUiDualCounterActor *arg0) {
         arg0->leftTarget = 0x64;
     }
     calculateRaceTimerDelta((RaceTimer *)&gRaceCourseTargetTimes[gRaceCourseIndex], &gRaceElapsedTimer, (RaceTimer *)&arg0->row);
+    new_var = &gRacePlayers[0].unk570;
     if (gRaceChallengeFailed != 0) {
         arg0->leftValue = 0;
-        temp_v0 = D_801222F0;
+        temp_v0 = *new_var;
     } else {
         arg0->leftValue = ((arg0->row * 0x3C) + arg0->column) * 0x14;
         if (gRacePlayers[0].unk572 == (temp_v0 = gRacePlayers[0].unk570)) {
             arg0->flag = 1;
             arg0->bonus = 0x12C;
-            temp_v0 = D_801222F0;
+            temp_v0 = *new_var;
         }
     }
     arg0->rightValue = temp_v0 * 0xA;
@@ -2737,7 +2667,6 @@ void func_8005CE4C(RaceUiDualCounterActor *arg0) {
 #pragma GLOBAL_ASM("asm/nonmatchings/race/ui/race_ui_effects/func_8005CF60.s")
 
 #ifdef NON_MATCHING
-extern s16 gRaceTrickAttackPointTotal;
 
 const char gRaceUiTrickAttackPointTotalFormat[4] = "%d";
 const char gRaceUiTrickAttackSecondaryCounterFormat[4] = "%d";
@@ -2757,16 +2686,16 @@ void func_8005CF60(RaceUiDualCounterActor *arg0) {
         gDPSetPrimColor(gRegionAllocPtr++, 0, 0, 0xFF, 0xFF, 0xFF, arg0->alpha18);
     }
 
-    sprintf(buffer, gRaceUiTrickAttackPointTotalFormat, gRaceTrickAttackPointTotal);
+    sprintf(buffer, gRaceUiTrickAttackPointTotalFormat, gRacePlayers[0].trickAttackPointTotal);
     x = -0x50;
     ptr = buffer;
-    if (gRaceTrickAttackPointTotal >= 10) {
+    if (gRacePlayers[0].trickAttackPointTotal >= 10) {
         x = -0x54;
     }
-    if (gRaceTrickAttackPointTotal >= 100) {
+    if (gRacePlayers[0].trickAttackPointTotal >= 100) {
         x = -0x58;
     }
-    if (gRaceTrickAttackPointTotal >= 1000) {
+    if (gRacePlayers[0].trickAttackPointTotal >= 1000) {
         x = -0x5C;
     }
 
@@ -2811,7 +2740,7 @@ done2:
     if (gfxp == NULL) {
     }
     if (arg0->alpha18 != 0xFF) {
-        gRaceTrickAttackPointTotal += 0;
+        gRacePlayers[0].trickAttackPointTotal += 0;
         if (gfxp != NULL) {
             gSPDisplayList(gRegionAllocPtr++, gMenuRenderModeResetDl);
         }
@@ -2896,7 +2825,7 @@ loop3:
 
     if (visibleRows >= 3) {
         x = 0x18;
-        sprintf(buffer, gRaceUiPendingMoneyFormat, gPlayer1Money); i = 0;
+        sprintf(buffer, gRaceUiPendingMoneyFormat, gRacePlayers[0].money); i = 0;
         rowY = y.half.lo;
         i = 0;
 loop4:
@@ -3085,25 +3014,25 @@ void func_8005DE6C(RaceUiCourseStatsActor *arg0) {
         value = 8;
     }
     /* IDO register allocation depends on this always-zero index. */
-    gRacePlayers[gPlayerInputPressed * 0].unk00C += value;
+    gRacePlayers[gPlayerInputPressed * 0].unkC += value;
     arg0->pendingTrickPrize -= value;
 
     value = arg0->pendingMakeBonus;
     if ((value >= 8) && !(gPlayerInputPressed & A_BUTTON)) {
         value = 8;
     }
-    gRacePlayers[0].unk00C += value;
+    gRacePlayers[0].unkC += value;
     arg0->pendingMakeBonus -= value;
 
     value = arg0->pendingCompleteBonus;
     if ((value >= 8) && !(gPlayerInputPressed & A_BUTTON)) {
         value = 8;
     }
-    gRacePlayers[0].unk00C += value;
+    gRacePlayers[0].unkC += value;
     arg0->pendingCompleteBonus -= value;
 
-    if (gRacePlayers[0].unk00C >= 0xF4240) {
-        gRacePlayers[0].unk00C = 0xF423F;
+    if (gRacePlayers[0].unkC >= 0xF4240) {
+        gRacePlayers[0].unkC = 0xF423F;
     }
 
     if ((arg0->pendingTrickPrize == 0) && (arg0->pendingMakeBonus == 0) && (arg0->pendingCompleteBonus == 0)) {
@@ -3225,8 +3154,8 @@ void initRaceUiTrickPrizePayout(RaceUiCourseStatsActor *arg0) {
 
 void drawRaceUiResultAwardBadge(CallbackTask *task) {
     drawAssetTableSprite(-0x68, -0x2C, getRelocatableHeapBlockBase(ASSET_HANDLE(0x1F)), 0x4D);
-    drawAssetTableSprite(-0x42, -0xC, getRelocatableHeapBlockBase(ASSET_HANDLE(0x1F)), gRacePlayers[0].mode);
-    drawAssetTableSprite(-0x22, 4, getRelocatableHeapBlockBase(ASSET_HANDLE(0x1F)), gRacePlayers[0].mode + 0x48);
+    drawAssetTableSprite(-0x42, -0xC, getRelocatableHeapBlockBase(ASSET_HANDLE(0x1F)), gRacePlayers[0].rankIndex);
+    drawAssetTableSprite(-0x22, 4, getRelocatableHeapBlockBase(ASSET_HANDLE(0x1F)), gRacePlayers[0].rankIndex + 0x48);
     drawAssetTableSprite(-0x68, 6, getRelocatableHeapBlockBase(ASSET_HANDLE(0x1F)), gRacePlayers[0].characterId + 0x91);
 }
 
@@ -3278,7 +3207,7 @@ void func_8005E6D0(RaceUiSparkleActor *arg0) {
 
 void func_8005EA4C(RaceUiSparkleActor *arg0) {
     RaceUiSparkleTransformScratch stack;
-    RacePlayerState *player;
+    RacePlayer *player;
     s16 timer;
     s32 angle;
 
@@ -3312,25 +3241,25 @@ void func_8005EA4C(RaceUiSparkleActor *arg0) {
         }
 
         arg0->unk28 += 0x60;
-        angle = arg0->unk28 - D_8012206C[arg0->playerIndex][0];
+        angle = arg0->unk28 - gRacePlayers[arg0->playerIndex].facingAngle;
         makeFixedRotationY(stack.matrix, angle);
         transformVec3iByFixedMatrix(stack.matrix, &D_800D6110, &stack.vec);
 
         player = &gRacePlayers[arg0->playerIndex];
-        makeFixedRotationXY(stack.matrix, player->pitch, player->yaw);
+        makeFixedRotationXY(stack.matrix, player->pitchAngle, player->facingAngle);
         transformVec3iByFixedMatrix(stack.matrix, &stack.vec, &arg0->pos);
 
         player = &gRacePlayers[arg0->playerIndex];
-        arg0->pos.x += player->pos28.x;
-        arg0->pos.y += player->pos28.y;
-        arg0->pos.z += player->pos28.z;
+        arg0->pos.x += player->unk28.x;
+        arg0->pos.y += player->unk28.y;
+        arg0->pos.z += player->unk28.z;
     }
 
     addRenderCallback(&D_801248EC, (RenderCallback)func_8005E6D0, (void *)arg0);
 }
 
 void func_8005ECA8(RaceUiSparkleActor *arg0) {
-    RacePlayerState *player;
+    RacePlayer *player;
     s16 timer;
     s32 selectedPlayerIndex;
     s32 activeCount;
@@ -3348,13 +3277,13 @@ void func_8005ECA8(RaceUiSparkleActor *arg0) {
         player = &gRacePlayers[arg0->playerIndex];
         if (arg0) {
         }
-        makeFixedRotationXY(scratch.matrix, player->pitch, player->yaw);
+        makeFixedRotationXY(scratch.matrix, player->pitchAngle, player->facingAngle);
         transformVec3iByFixedMatrix(scratch.matrix, &scratch.vec, &arg0->pos);
 
         player = &gRacePlayers[arg0->playerIndex];
-        arg0->pos.x += player->pos28.x;
-        arg0->pos.y += player->pos28.y;
-        arg0->pos.z += player->pos28.z;
+        arg0->pos.x += player->unk28.x;
+        arg0->pos.y += player->unk28.y;
+        arg0->pos.z += player->unk28.z;
         selectedPlayerIndex = gRaceOrderPlayerIds[1];
 
         timer = arg0->timer;
@@ -3375,15 +3304,15 @@ void func_8005ECA8(RaceUiSparkleActor *arg0) {
                         selectedPlayerIndex = gRaceOrderPlayerIds[3];
                     }
                     if ((gRacePlayerCount >= 3) && (arg0->playerIndex != gRaceOrderPlayerIds[2]) &&
-                        (activeCount >= 2) && !(gRacePlayers[gRaceOrderPlayerIds[2]].flags & 0x40)) {
+                        (activeCount >= 2) && !(gRacePlayers[gRaceOrderPlayerIds[2]].stateFlags & 0x40)) {
                         selectedPlayerIndex = gRaceOrderPlayerIds[2];
                     }
                     if ((gRacePlayerCount >= 2) && (arg0->playerIndex != gRaceOrderPlayerIds[1]) &&
-                        (activeCount >= 3) && !(gRacePlayers[gRaceOrderPlayerIds[1]].flags & 0x40)) {
+                        (activeCount >= 3) && !(gRacePlayers[gRaceOrderPlayerIds[1]].stateFlags & 0x40)) {
                         selectedPlayerIndex = gRaceOrderPlayerIds[1];
                     }
                     if ((gRacePlayerCount > 0) && (arg0->playerIndex != gRaceOrderPlayerIds[0]) &&
-                        (activeCount >= 4) && !(gRacePlayers[gRaceOrderPlayerIds[0]].flags & 0x40)) {
+                        (activeCount >= 4) && !(gRacePlayers[gRaceOrderPlayerIds[0]].stateFlags & 0x40)) {
                         selectedPlayerIndex = gRaceOrderPlayerIds[0];
                     }
                     arg0->playerIndex = selectedPlayerIndex & 3;
@@ -3394,7 +3323,7 @@ void func_8005ECA8(RaceUiSparkleActor *arg0) {
                 if (gRacePlayerHudStatuses[arg0->playerIndex].active != 0) {
                     enqueueSoundEffect(0x53, 0x5A);
                 }
-                enqueuePositionalSoundEffect(0x10, &gRacePlayers[arg0->playerIndex].pos1C, 0x7F, 0x32);
+                enqueuePositionalSoundEffect(0x10, &gRacePlayers[arg0->playerIndex].pos, 0x7F, 0x32);
                 arg0->timer = 0x12C;
                 setCallbackTaskCallback(arg0, (CallbackTaskCallback)func_8005EA4C);
             }
@@ -3410,7 +3339,7 @@ void func_8005EFFC(RaceUiSparkleActor *arg0) {
     s16 sp38[0x10];
     Vec3i sp2C;
     volatile u8 pad[8];
-    RacePlayerState *player;
+    RacePlayer *player;
 
     if (gRaceUpdatePaused == 0) {
         if (gFrameCounter & 1) {
@@ -3421,13 +3350,13 @@ void func_8005EFFC(RaceUiSparkleActor *arg0) {
         sp2C.y = arg0->zOffset;
         sp2C.z = 0;
         player = &gRacePlayers[arg0->playerIndex];
-        makeFixedRotationXY(sp38, player->pitch, player->yaw);
+        makeFixedRotationXY(sp38, player->pitchAngle, player->facingAngle);
         transformVec3iByFixedMatrix(sp38, &sp2C, &arg0->pos);
 
         player = &gRacePlayers[arg0->playerIndex];
-        arg0->pos.x += player->pos28.x;
-        arg0->pos.y += player->pos28.y;
-        arg0->pos.z += player->pos28.z;
+        arg0->pos.x += player->unk28.x;
+        arg0->pos.y += player->unk28.y;
+        arg0->pos.z += player->unk28.z;
         arg0->alpha += arg0->alphaStep;
         if (arg0->alpha >= 0x100) {
             arg0->alpha = 0xFF;
@@ -3453,7 +3382,7 @@ void func_8005F174(RaceUiSparkleActor *arg0) {
     getAssetTableImageAndPalette(getRelocatableHeapBlockBase(ASSET_HANDLE(0x1C)), 0x24, &arg0->images[1], &arg0->palettes[1]);
     getAssetTableImageAndPalette(getRelocatableHeapBlockBase(ASSET_HANDLE(0x1C)), 0x25, &arg0->images[2], &arg0->palettes[2]);
     getAssetTableImageAndPalette(getRelocatableHeapBlockBase(ASSET_HANDLE(0x1C)), 0x26, &arg0->images[3], &arg0->palettes[3]);
-    enqueuePositionalSoundEffect(0x10, &gRacePlayers[arg0->playerIndex].pos1C, 0x7F, 0x32);
+    enqueuePositionalSoundEffect(0x10, &gRacePlayers[arg0->playerIndex].pos, 0x7F, 0x32);
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)func_8005EFFC);
 }
 
@@ -3546,7 +3475,7 @@ void spawnRaceUiSnowboardTrailEffect(RaceUiSnowboardTrailPlayer *player) {
 
 void func_8005F6A4(RaceUiRankTrailActor *arg0) {
     volatile u8 pad[0x20];
-    RacePlayerState *player;
+    RacePlayer *player;
 
     if (gRenderMatricesDirty != 0) {
         arg0->matrixDirty = 1;
@@ -3555,9 +3484,9 @@ void func_8005F6A4(RaceUiRankTrailActor *arg0) {
     if (arg0->matrixDirty != 0) {
         arg0->matrixDirty = 0;
         player = &gRacePlayers[arg0->playerIndex];
-        arg0->copyBlock.words[5] = player->pos28.x;
-        arg0->copyBlock.words[6] = player->pos28.y + 0x100000;
-        arg0->copyBlock.words[7] = player->pos28.z;
+        arg0->copyBlock.words[5] = player->unk28.x;
+        arg0->copyBlock.words[6] = player->unk28.y + 0x100000;
+        arg0->copyBlock.words[7] = player->unk28.z;
         arg0->matrix = allocFixedTransformMatrix(&arg0->copyBlock);
     }
 
@@ -3571,15 +3500,15 @@ void func_8005F6A4(RaceUiRankTrailActor *arg0) {
 }
 
 void func_8005F828(RaceUiRankTrailActor *arg0) {
-    RacePlayerState *player;
+    RacePlayer *player;
     s16 scale;
     s32 i;
 
     arg0->copyBlock.transform = gIdentityFixedTransform;
     player = &gRacePlayers[arg0->playerIndex];
-    arg0->pos.x = player->pos28.x;
-    arg0->pos.y = player->pos28.y;
-    arg0->pos.z = player->pos28.z;
+    arg0->pos.x = player->unk28.x;
+    arg0->pos.y = player->unk28.y;
+    arg0->pos.z = player->unk28.z;
 
     for (i = 0; i < 4; i++) {
         if (i != arg0->playerIndex) {
@@ -3602,7 +3531,7 @@ void func_8005F828(RaceUiRankTrailActor *arg0) {
         arg0->scale = scale + 2;
     }
 
-    if (gRacePlayers[arg0->playerIndex].flags & 0x100000) {
+    if (gRacePlayers[arg0->playerIndex].stateFlags & 0x100000) {
         addRenderCallback(&D_801248EC, (RenderCallback)func_8005F6A4, (void *)arg0);
         return;
     }
@@ -3611,13 +3540,13 @@ void func_8005F828(RaceUiRankTrailActor *arg0) {
         spawnRaceUiBurstTextParticle((void *)arg0->pos.x, (void *)arg0->pos.y, (void *)arg0->pos.z, i);
     }
 
-    enqueuePositionalSoundEffect(0x15, &gRacePlayers[arg0->playerIndex].pos1C, 0x7F, 0x32);
+    enqueuePositionalSoundEffect(0x15, &gRacePlayers[arg0->playerIndex].pos, 0x7F, 0x32);
     removeCallbackTask(arg0);
 }
 
 void initRaceUiItemStealTrailEffect(RaceUiRankTrailActor *arg0) {
     arg0->scale = 2;
-    enqueuePositionalSoundEffect(0xF, &gRacePlayers[arg0->playerIndex].pos1C, 0x7F, 0x32);
+    enqueuePositionalSoundEffect(0xF, &gRacePlayers[arg0->playerIndex].pos, 0x7F, 0x32);
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)func_8005F828);
 }
 
@@ -3783,7 +3712,7 @@ void updateGhostSlowdownDriftAway(RaceUiPodiumTrailActor *arg0) {
 }
 
 void updateGhostSlowdownImpact(RaceUiPodiumTrailActor *arg0) {
-    RacePlayerState *player;
+    RacePlayer *player;
     s32 height;
 
     if (gRaceUpdatePaused == 0) {
@@ -3791,9 +3720,9 @@ void updateGhostSlowdownImpact(RaceUiPodiumTrailActor *arg0) {
         height = arg0->height + arg0->velocity;
         arg0->height = height;
         if ((height < 0x200000) && ((arg0->playImpactSound & 0xFF) != 0)) {
-            enqueuePositionalSoundEffect(0xC, &gRacePlayers[arg0->targetPlayerIndex].pos1C, 0x7F, 0x32);
+            enqueuePositionalSoundEffect(0xC, &gRacePlayers[arg0->targetPlayerIndex].pos, 0x7F, 0x32);
             gRacePlayers[arg0->targetPlayerIndex].pendingItemHitFlags |= PLAYER_HITFLAG_GHOST_SLOWDOWN;
-            gPlayerHitSource[arg0->targetPlayerIndex].value = arg0->playerIndex;
+            gRacePlayers[arg0->targetPlayerIndex].hitSourcePlayerIndex = arg0->playerIndex;
             height = arg0->height;
             arg0->playImpactSound = 0;
         }
@@ -3806,17 +3735,17 @@ void updateGhostSlowdownImpact(RaceUiPodiumTrailActor *arg0) {
         }
 
         player = &gRacePlayers[arg0->targetPlayerIndex];
-        arg0->pos.x = player->pos28.x;
-        arg0->pos.y = player->pos28.y + height;
-        arg0->pos.z = player->pos28.z;
+        arg0->pos.x = player->unk28.x;
+        arg0->pos.y = player->unk28.y + height;
+        arg0->pos.z = player->unk28.z;
     }
 
-    gRacePlayerItemTargetFlags[arg0->targetPlayerIndex].value = 1;
+    gRacePlayers[arg0->targetPlayerIndex].itemTargetFlag = 1;
     addRenderCallback(&gRaceModelEffectRenderCallbackList, (RenderCallback)func_80060544, arg0);
 }
 
 void updateGhostSlowdownRise(RaceUiPodiumTrailActor *arg0) {
-    RacePlayerState *player;
+    RacePlayer *player;
     s16 scale;
 
     if (arg0->timer == 0) {
@@ -3825,9 +3754,9 @@ void updateGhostSlowdownRise(RaceUiPodiumTrailActor *arg0) {
             arg0->height += arg0->velocity;
             arg0->copyBlock.transform = gIdentityFixedTransform;
             player = &gRacePlayers[arg0->playerIndex];
-            arg0->pos.x = player->pos28.x;
-            arg0->pos.y = player->pos28.y + arg0->height;
-            arg0->pos.z = player->pos28.z;
+            arg0->pos.x = player->unk28.x;
+            arg0->pos.y = player->unk28.y + arg0->height;
+            arg0->pos.z = player->unk28.z;
 
             scale = arg0->state;
             arg0->copyBlock.halfwords[0] = (arg0->copyBlock.halfwords[0] * scale) / 64;
@@ -3849,7 +3778,7 @@ void updateGhostSlowdownRise(RaceUiPodiumTrailActor *arg0) {
                 setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateGhostSlowdownImpact);
             }
         }
-        gRacePlayerItemTargetFlags[arg0->targetPlayerIndex].value = 1;
+        gRacePlayers[arg0->targetPlayerIndex].itemTargetFlag = 1;
         addRenderCallback(&gRaceModelEffectRenderCallbackList, (RenderCallback)func_80060544, (void *)arg0);
     } else if (gRaceUpdatePaused == 0) {
         arg0->timer--;
@@ -3861,7 +3790,7 @@ void initGhostSlowdownActor(RaceUiPodiumTrailActor *arg0) {
     arg0->height = 0;
     arg0->velocity = 0;
     arg0->playImpactSound = 1;
-    enqueuePositionalSoundEffect(0xD, &gRacePlayers[arg0->playerIndex].pos1C, 0x7F, 0x32);
+    enqueuePositionalSoundEffect(0xD, &gRacePlayers[arg0->playerIndex].pos, 0x7F, 0x32);
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateGhostSlowdownRise);
 }
 
@@ -4039,7 +3968,7 @@ void func_80061484(RaceUiRankTrailActor *arg0) {
 }
 
 void func_800615BC(RaceUiRankTrailActor *arg0) {
-    RacePlayerState *player;
+    RacePlayer *player;
     s32 i;
 
     arg0->copyBlock = (&gRacePlayers[arg0->playerIndex])->copyBlock94;
@@ -4054,12 +3983,12 @@ void func_800615BC(RaceUiRankTrailActor *arg0) {
     arg0->copyBlock.halfwords[8] = arg0->copyBlock.halfwords[8] / 4;
 
     player = &gRacePlayers[arg0->playerIndex];
-    if (player->flags & 0x400000) {
+    if (player->stateFlags & 0x400000) {
         addRenderCallback(&gRaceModelEffectRenderCallbackList, (RenderCallback)func_80061484, (void *)arg0);
         return;
     }
 
-    enqueuePositionalSoundEffect(0x11, &player->pos1C, 0x7F, 0x32);
+    enqueuePositionalSoundEffect(0x11, &player->pos, 0x7F, 0x32);
 
     for (i = 0; i < 8; i++) {
         spawnRaceUiAltBurstTextParticle((void *)arg0->copyBlock.words[5], (void *)arg0->copyBlock.words[6],
@@ -4177,11 +4106,11 @@ void renderRaceUiSingleTrailEffect(RaceUiSingleTrailActor *arg0) {
 }
 
 void updateRaceUiSingleTrailEffect(RaceUiSingleTrailActor *arg0) {
-    composeFixedTransforms(&arg0->localTransform, &gRacePlayers[arg0->playerIndex].transform, &arg0->copyBlock.transform);
+    composeFixedTransforms(&arg0->localTransform, &gRacePlayers[arg0->playerIndex].renderTransform, &arg0->copyBlock.transform);
 
     if (gRaceUpdatePaused == 0) {
         arg0->timer--;
-        if (!(gRacePlayers[arg0->playerIndex].flags & 0x2000)) {
+        if (!(gRacePlayers[arg0->playerIndex].stateFlags & 0x2000)) {
             arg0->timer = 0;
         }
     }
@@ -4262,16 +4191,16 @@ void func_80061F38(RaceUiFadingImpactActor *arg0) {
             sp24 = &arg0->pos;
             sp2C = (new_var->scale * 0x480000) / 64;
             if (tryApplyRacePlayerItemHit(sp24, sp2C, 0x80, 0) != 0) {
-                gPlayerHitSource[0].value = new_var->playerIndex;
+                gRacePlayers[0].hitSourcePlayerIndex = new_var->playerIndex;
             }
             if (tryApplyRacePlayerItemHit(sp24, sp2C, 0x80, 1) != 0) {
-                gPlayerHitSource[1].value = new_var->playerIndex;
+                gRacePlayers[1].hitSourcePlayerIndex = new_var->playerIndex;
             }
             if (tryApplyRacePlayerItemHit(sp24, sp2C, 0x80, 2) != 0) {
-                gPlayerHitSource[2].value = arg0->playerIndex;
+                gRacePlayers[2].hitSourcePlayerIndex = arg0->playerIndex;
             }
             if (tryApplyRacePlayerItemHit(sp24, sp2C, 0x80, 3) != 0) {
-                gPlayerHitSource[3].value = arg0->playerIndex;
+                gRacePlayers[3].hitSourcePlayerIndex = arg0->playerIndex;
             }
         }
     }
@@ -4326,13 +4255,13 @@ void func_800622B0(RaceUiTransitionRenderActor *arg0) {
 }
 
 void func_800623E8(RaceUiTransitionActor *arg0) {
-    RacePlayerState *player;
+    RacePlayer *player;
     s16 temp_v0;
     s16 temp_v1;
     s16 temp_a0;
 
     if (gRaceUpdatePaused == 0) {
-        if (!(gRacePlayers[arg0->index].flags & 0x800000)) {
+        if (!(gRacePlayers[arg0->index].stateFlags & 0x800000)) {
             arg0->unk6C = 0;
         }
         if (arg0->unk6C != 0) {
@@ -4367,7 +4296,7 @@ void initRaceUiSpinHitTransitionEffect(RaceUiTransitionActor *arg0) {
     scaleFixedMatrix3sByQuarter(transform);
     arg0->unk6C = 1;
     arg0->unk6E = 0xF;
-    enqueuePositionalSoundEffect(0xB, &gRacePlayers[arg0->index].pos1C, 0x7F, 0x32);
+    enqueuePositionalSoundEffect(0xB, &gRacePlayers[arg0->index].pos, 0x7F, 0x32);
     func_800623E8(arg0);
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)func_800623E8);
 }
@@ -4411,19 +4340,19 @@ void func_800625D8(RaceUiOrbitingSpriteActor *arg0) {
 }
 
 void func_800628DC(RaceUiOrbitingSpriteActor *arg0) {
-    RacePlayerState *player;
+    RacePlayer *player;
 
     player = &gRacePlayers[arg0->playerIndex];
-    if (!(player->flags & 0x10000)) {
+    if (!(player->stateFlags & 0x10000)) {
         removeCallbackTask(arg0);
         return;
     }
 
-    transformVec3iByFixedMatrix(player->transform.rotation, &D_800D62A0, &arg0->pos);
+    transformVec3iByFixedMatrix(player->renderTransform.rotation, &D_800D62A0, &arg0->pos);
     player = &gRacePlayers[arg0->playerIndex];
-    arg0->pos.x += player->transform.translation.x;
-    arg0->pos.y += player->transform.translation.y + 0x80000;
-    arg0->pos.z += player->transform.translation.z;
+    arg0->pos.x += player->renderTransform.translation.x;
+    arg0->pos.y += player->renderTransform.translation.y + 0x80000;
+    arg0->pos.z += player->renderTransform.translation.z;
     arg0->angle += 0xC0;
     arg0->pos.x -= fixedSine(arg0->angle) << 7;
     arg0->pos.z += fixedCosine(arg0->angle) << 7;
@@ -4943,11 +4872,11 @@ void func_800647E0(RaceUiProjectileActor *arg0) {
 
     actor = arg0;
     if (!gRaceUpdatePaused) {
-        makeFixedRotationXY(sp24.mtx, gRacePlayers[actor->index].pitch, gRacePlayers[actor->index].yaw);
+        makeFixedRotationXY(sp24.mtx, gRacePlayers[actor->index].pitchAngle, gRacePlayers[actor->index].facingAngle);
         transformVec3iByFixedMatrix(sp24.mtx, &actor->velocity, &actor->pos);
-        actor->pos.x += gRacePlayers[actor->index].pos28.x;
-        actor->pos.y += gRacePlayers[actor->index].pos28.y + actor->verticalVelocity;
-        actor->pos.z += gRacePlayers[actor->index].pos28.z;
+        actor->pos.x += gRacePlayers[actor->index].unk28.x;
+        actor->pos.y += gRacePlayers[actor->index].unk28.y + actor->verticalVelocity;
+        actor->pos.z += gRacePlayers[actor->index].unk28.z;
         temp = (actor->verticalVelocity += actor->verticalAcceleration);
         actor->verticalAcceleration += 0x10000;
         if (temp >= 0x300001) {
@@ -4959,8 +4888,8 @@ void func_800647E0(RaceUiProjectileActor *arg0) {
 }
 
 void func_80064914(RaceUiProjectileActor *arg0) {
-    RacePlayerState *player;
-    RacePlayerState *otherPlayer;
+    RacePlayer *player;
+    RacePlayer *otherPlayer;
     s16 sp44[0xE];
     s32 value;
     s32 amount;
@@ -4969,31 +4898,31 @@ void func_80064914(RaceUiProjectileActor *arg0) {
 
     if (gRaceUpdatePaused == 0) {
         player = &gRacePlayers[arg0->index];
-        makeFixedRotationXY(sp44, gRacePlayers[arg0->index].pitch, gRacePlayers[arg0->index].yaw);
+        makeFixedRotationXY(sp44, gRacePlayers[arg0->index].pitchAngle, gRacePlayers[arg0->index].facingAngle);
         transformVec3iByFixedMatrix(sp44, &arg0->velocity, &arg0->pos);
 
         player = &gRacePlayers[arg0->index];
-        arg0->pos.x += player->pos28.x;
-        arg0->pos.y += player->pos28.y;
-        arg0->pos.z += player->pos28.z;
+        arg0->pos.x += player->unk28.x;
+        arg0->pos.y += player->unk28.y;
+        arg0->pos.z += player->unk28.z;
         func_80064414(arg0);
 
         i = 0;
         do {
             otherPlayer = &gRacePlayers[i];
-            if ((otherPlayer->isActive != 0) && (otherPlayer->playerIndex != arg0->index)) {
+            if ((otherPlayer->isActive != 0) && (otherPlayer->playerIndexU != arg0->index)) {
                 value = otherPlayer->unk568;
                 amount = (value >= 0xA6) ? 0xA6 : value;
                 otherPlayer->unk568 = value - amount;
-                addRacePlayerScore((struct RacePlayer *)&gRacePlayers[arg0->index], amount);
+                addRacePlayerScore(&gRacePlayers[arg0->index], amount);
             }
             i++;
-        } while ((RacePlayerState *)&gFrameCounter != &gRacePlayers[i]);
+        } while (i < RACE_PLAYER_COUNT);
 
         flags = arg0->flags;
         amount = flags & 1;
         if (flags & 8) {
-            enqueuePositionalSoundEffect(0x69, &gRacePlayers[arg0->index].pos28, 0x7F, 0x32);
+            enqueuePositionalSoundEffect(0x69, &gRacePlayers[arg0->index].unk28, 0x7F, 0x32);
             arg0->flags &= ~8;
             amount = 1;
             amount = (flags = arg0->flags) & amount;
@@ -5001,7 +4930,7 @@ void func_80064914(RaceUiProjectileActor *arg0) {
         if (amount) {
             arg0->verticalAcceleration = 0;
             arg0->verticalVelocity = 0;
-            enqueuePositionalSoundEffect(0x6A, &gRacePlayers[arg0->index].pos28, 0x7F, 0x32);
+            enqueuePositionalSoundEffect(0x6A, &gRacePlayers[arg0->index].unk28, 0x7F, 0x32);
             setCallbackTaskCallback(arg0, (CallbackTaskCallback)func_800647E0);
         }
     }
@@ -5011,7 +4940,7 @@ void func_80064914(RaceUiProjectileActor *arg0) {
 
 void func_80064B28(RaceUiProjectileActor *arg0) {
     FixedMatrix3sWideScratch sp2C;
-    RacePlayerState *player;
+    RacePlayer *player;
     RaceUiProjectileActor *actor;
 
     actor = arg0;
@@ -5021,18 +4950,18 @@ void func_80064B28(RaceUiProjectileActor *arg0) {
         if (((!actor) && (!actor)) && (!actor)) {
         }
         player = &gRacePlayers[actor->index];
-        makeFixedRotationXY(sp2C, player->pitch, player->yaw);
+        makeFixedRotationXY(sp2C, player->pitchAngle, player->facingAngle);
         transformVec3iByFixedMatrix(sp2C, &actor->velocity, &actor->pos);
 
         player = &gRacePlayers[actor->index];
-        actor->pos.x += player->pos28.x;
-        actor->pos.y += player->pos28.y + actor->verticalVelocity;
-        actor->pos.z += player->pos28.z;
+        actor->pos.x += player->unk28.x;
+        actor->pos.y += player->unk28.y + actor->verticalVelocity;
+        actor->pos.z += player->unk28.z;
         actor->verticalAcceleration += 0xFFFF0000;
         actor->verticalVelocity += actor->verticalAcceleration;
         if (actor->verticalVelocity <= 0) {
             actor->verticalVelocity = 0;
-            enqueuePositionalSoundEffect(0x68, &player->pos28, 0x7F, 0x32);
+            enqueuePositionalSoundEffect(0x68, &player->unk28, 0x7F, 0x32);
             func_80064414(actor);
             setCallbackTaskCallback(actor, (CallbackTaskCallback)func_80064914);
         }
@@ -5042,18 +4971,18 @@ void func_80064B28(RaceUiProjectileActor *arg0) {
 
 void func_80064C68(RaceUiProjectileActor *arg0) {
     FixedMatrix3sWideScratch sp2C;
-    RacePlayerState *player;
+    RacePlayer *player;
     RaceUiProjectileActor *actor;
 
     actor = arg0;
     if (gRaceUpdatePaused == 0) {
-        makeFixedRotationXY(sp2C, gRacePlayers[actor->index].pitch, gRacePlayers[actor->index].yaw);
+        makeFixedRotationXY(sp2C, gRacePlayers[actor->index].pitchAngle, gRacePlayers[actor->index].facingAngle);
         transformVec3iByFixedMatrix(sp2C, &actor->velocity, &actor->pos);
 
         player = &gRacePlayers[actor->index];
-        actor->pos.x += player->pos28.x;
-        actor->pos.y += player->pos28.y;
-        actor->pos.z += player->pos28.z;
+        actor->pos.x += player->unk28.x;
+        actor->pos.y += player->unk28.y;
+        actor->pos.z += player->unk28.z;
         func_80064414(actor);
         if (actor->flags != 0) {
             setCallbackTaskCallback(actor, (CallbackTaskCallback)func_80064B28);
@@ -5066,18 +4995,18 @@ void func_80064C68(RaceUiProjectileActor *arg0) {
 
 void func_80064D88(RaceUiProjectileActor *arg0) {
     FixedMatrix3sWideScratch sp2C;
-    RacePlayerState *player;
+    RacePlayer *player;
     RaceUiProjectileActor *actor;
 
     actor = arg0;
     if (gRaceUpdatePaused == 0) {
-        makeFixedRotationXY(sp2C, gRacePlayers[actor->index].pitch, gRacePlayers[actor->index].yaw);
+        makeFixedRotationXY(sp2C, gRacePlayers[actor->index].pitchAngle, gRacePlayers[actor->index].facingAngle);
         transformVec3iByFixedMatrix(sp2C, &actor->velocity, &actor->pos);
 
         player = &gRacePlayers[actor->index];
-        actor->pos.x += player->pos28.x;
-        actor->pos.y += player->pos28.y + actor->verticalVelocity;
-        actor->pos.z += player->pos28.z;
+        actor->pos.x += player->unk28.x;
+        actor->pos.y += player->unk28.y + actor->verticalVelocity;
+        actor->pos.z += player->unk28.z;
         actor->verticalVelocity += actor->verticalAcceleration;
         actor->verticalAcceleration += 0xFFFF0000;
         if (actor->verticalVelocity <= 0) {
@@ -5097,7 +5026,7 @@ void initForwardActionProjectileEffect(RaceUiProjectileActor *arg0) {
     arg0->verticalVelocity = 0x300000;
     arg0->verticalAcceleration = 0;
     func_800643B4(arg0, D_800D6520);
-    enqueuePositionalSoundEffect(0x66, &gRacePlayers[arg0->index].pos28, 0x7F, 0x32);
+    enqueuePositionalSoundEffect(0x66, &gRacePlayers[arg0->index].unk28, 0x7F, 0x32);
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)func_80064D88);
 }
 
@@ -5222,12 +5151,12 @@ loop:
                 entry->active = 0;
                 enqueuePositionalSoundEffect(0x18, pos, 0x7F, 0x32);
                 gRacePlayers[0].unk570++;
-                if (gRacePlayers[0].unk2DA != 0) {
-                    gRacePlayers[0].unk2DA = 0xF0;
+                if (gRacePlayers[0].trailEffectTimer != 0) {
+                    gRacePlayers[0].trailEffectTimer = 0xF0;
                 } else {
                     startSnowboardTrailEffect((struct RacePlayer *)gRacePlayers);
                 }
-                if (gRacePlayers[0].unk2DA) {
+                if (gRacePlayers[0].trailEffectTimer) {
                 }
             }
         }
@@ -5285,7 +5214,7 @@ void initRaceCourseCoinMarkers(RaceUiGfxCommandActor *actor) {
             marker++;
         } while (marker->sentinel != -1);
     }
-    gRaceCourseCoinMarkerCount = markerCount;
+    gRacePlayers[0].courseCoinMarkerCount = markerCount;
     actor->count = markerCount;
     if (markerCount != 0) {
         gAssetHandles[0x24] = allocRelocatableHeapBlock(markerCount * sizeof(RaceUiGfxCommandDest));
@@ -5416,7 +5345,7 @@ void func_80065E90(RaceUiOverlayActor *arg0) {
     s32 i;
 
     arg0->x = 0;
-    arg0->z = D_80121DA4 + 0xFF900000;
+    arg0->z = gRacePlayers[0].pos.z + 0xFF900000;
     arg0->velocity = 0;
     arg0->y = getRaceCourseSurfaceHeight(findRaceCourseSurfaceFromHint(0, 0, arg0->z), arg0->x, arg0->z) + 0x200000;
 
@@ -5483,7 +5412,7 @@ void updateRaceScoreAttackRings(void *arg0) {
         do {
             if (entry->active != 0) {
                 pushRacePlayersOutOfCylinderAndApplyItemHit(&entry->position, 0xE0000, 0x100000, 2);
-                trigger = gRaceScoreAttackRingTriggerList;
+                trigger = gRacePlayers[0].scoreAttackRingTriggerList;
                 if (trigger != NULL) {
                     do {
                         if (trigger->triggered == 0) {
@@ -5504,7 +5433,7 @@ void updateRaceScoreAttackRings(void *arg0) {
                                             i++;
                                         } while (i != 8);
                                         entry->active = 0;
-                                        gRaceScoreAttackPointTotal++;
+                                        gRacePlayers[0].scoreAttackPointTotal++;
                                         break;
                                     }
                                 }
@@ -5575,7 +5504,7 @@ void initRaceScoreAttackRings(RaceUiRankTextRenderActor *arg0) {
             var_v0++;
         } while (var_v0->active != -1);
     }
-    gRaceScoreAttackPointTarget = var_v1;
+    gRacePlayers[0].scoreAttackPointTarget = var_v1;
     arg0->count = var_v1;
     if (var_v1 != 0) {
         gAssetHandles[0x26] = allocRelocatableHeapBlock(var_v1 << 6);

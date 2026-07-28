@@ -2,10 +2,19 @@
 #define RACE_PLAYER_INPUT_H
 
 #include "common.h"
+#include "game/math/fixed_matrix_types.h"
 
 #define RACE_PLAYER_COUNT 4
 
 typedef s16 Matrix4s[0x10];
+
+struct RaceUiRankTrigger;
+
+typedef union {
+    s32 words[8];
+    s16 halfwords[0x10];
+    FixedTransform transform;
+} RacePlayerTransformBlock;
 
 typedef struct RacePlayerCollisionVolume {
     /* 0x00 */ s16 axis[9];
@@ -34,6 +43,7 @@ typedef struct RacePlayer {
     /* 0x004 */ union {
         u8 unk4;
         u8 isCpu;
+        u8 progressActive;
     };
     /* 0x005 */ u8 selectedCharacterId;
     /* 0x006 */ u8 menuSelection;
@@ -42,9 +52,19 @@ typedef struct RacePlayer {
     /* 0x009 */ u8 unk9;
     /* 0x00A */ u8 unkA;
     /* 0x00B */ u8 unkB;
-    /* 0x00C */ s32 unkC;
-    /* 0x010 */ u8 characterId;
-    /* 0x011 */ u8 unk11;
+    /* 0x00C */ union {
+        s32 unkC;
+        s32 money;
+    };
+    /* 0x010 */ union {
+        u8 characterId;
+        u8 progressState;
+    };
+    /* 0x011 */ union {
+        u8 unk11;
+        u8 courseSelectCharacterId;
+        u8 characterVariant;
+    };
     /* 0x012 */ u8 unk12;
     /* 0x013 */ s8 isActive;
     /* 0x014 */ s8 soundDisabled;
@@ -104,7 +124,28 @@ typedef struct RacePlayer {
     /* 0x091 */ s8 stickY;
     /* 0x092 */ s8 unk92;
     /* 0x093 */ s8 unk93;
-    /* 0x094 */ RacePlayerCollisionVolume collisionVolumes[14];
+    /* 0x094 */ union {
+        RacePlayerCollisionVolume collisionVolumes[14];
+        struct {
+            /* 0x094 */ FixedMatrix3sPadded transform;
+            /* 0x0A8 */ union {
+                Vec3i posA8;
+                Vec3i velocityA8;
+            };
+            /* 0x0B4 */ char padB4[0x14];
+            /* 0x0C8 */ Vec3i posC8;
+            /* 0x0D4 */ char padD4[0x94];
+            /* 0x168 */ Vec3i effectPos;
+            /* 0x174 */ FixedTransform renderTransform;
+            /* 0x194 */ char pad194[0x34];
+            /* 0x1C8 */ Vec3i projectilePos;
+            /* 0x1D4 */ char pad1D4[0x80];
+        };
+        struct {
+            /* 0x094 */ RacePlayerTransformBlock copyBlock94;
+            /* 0x0B4 */ char padB4Copy[0x1A0];
+        };
+    };
     /* 0x254 */ s32 unk254;
     /* 0x258 */ s32 unk258;
     /* 0x25C */ s32 unk25C;
@@ -130,7 +171,10 @@ typedef struct RacePlayer {
     /* 0x2A6 */ s16 unk2A6;
     /* 0x2A8 */ s16 surfaceCueState[6];
     /* 0x2B4 */ s16 surfaceCueStep[6];
-    /* 0x2C0 */ s16 unk2C0;
+    /* 0x2C0 */ union {
+        s16 unk2C0;
+        s16 trickAttackPointTotal;
+    };
     /* 0x2C2 */ s8 unk2C2;
     /* 0x2C3 */ s8 unk2C3;
     /* 0x2C4 */ u16 unk2C4;
@@ -138,7 +182,10 @@ typedef struct RacePlayer {
     /* 0x2C8 */ s32 unk2C8;
     /* 0x2CC */ s32 unk2CC;
     /* 0x2D0 */ char pad2D0[2];
-    /* 0x2D2 */ s16 unk2D2;
+    /* 0x2D2 */ union {
+        s16 unk2D2;
+        s16 hitSourcePlayerIndex;
+    };
     /* 0x2D4 */ s16 unk2D4;
     /* 0x2D6 */ s16 unk2D6;
     /* 0x2D8 */ s16 unk2D8;
@@ -195,7 +242,10 @@ typedef struct RacePlayer {
     /* 0x4F4 */ Vec3i unk4F4;
     /* 0x500 */ u8 unk500;
     /* 0x501 */ char pad501[1];
-    /* 0x502 */ s16 unk502;
+    /* 0x502 */ union {
+        s16 unk502;
+        s16 surfaceAngle;
+    };
     /* 0x504 */ s32 unk504;
     /* 0x508 */ union {
         s8 unk508;
@@ -207,7 +257,11 @@ typedef struct RacePlayer {
         s8 iconTile;
     };
     /* 0x50A */ char pad50A[2];
-    /* 0x50C */ s32 unk50C;
+    /* 0x50C */ union {
+        s32 unk50C;
+        s16 *anglePtr;
+        struct RaceUiRankTrigger *scoreAttackRingTriggerList;
+    };
     /* 0x510 */ s16 shieldEffectTimer;
     /* 0x512 */ union {
         s8 itemEffectType;
@@ -232,16 +286,30 @@ typedef struct RacePlayer {
     /* 0x517 */ s8 unk517;
     /* 0x518 */ s8 randomIndex;
     /* 0x519 */ s8 unk519;
-    /* 0x51A */ u8 actionEffectEnabled;
-    /* 0x51B */ char pad51B[9];
-    /* 0x524 */ s8 unk524;
+    /* 0x51A */ union {
+        u8 actionEffectEnabled;
+        u8 itemTargetFlag;
+    };
+    /* 0x51B */ char pad51B[1];
+    /* 0x51C */ u32 checkpointEventMask;
+    /* 0x520 */ s32 smoothedPathOffset;
+    /* 0x524 */ union {
+        s8 unk524;
+        u8 checkpointHit;
+    };
     /* 0x525 */ s8 unk525;
     /* 0x526 */ char pad526[1];
-    /* 0x527 */ s8 surfaceCueOverrideMask;
+    /* 0x527 */ union {
+        s8 surfaceCueOverrideMask;
+        s8 checkpointEventId;
+    };
     /* 0x528 */ s8 unk528;
-    /* 0x529 */ char pad529[1];
-    /* 0x52A */ s8 unk52A;
-    /* 0x52B */ char pad52B[1];
+    /* 0x529 */ u8 displayRank;
+    /* 0x52A */ union {
+        s8 unk52A;
+        u8 rankArrow;
+    };
+    /* 0x52B */ u8 rankChangeTimer;
     /* 0x52C */ s8 actionTriggerCooldown;
     /* 0x52D */ s8 itemTriggerCooldown;
     /* 0x52E */ char pad52E[0x3A];
@@ -251,9 +319,18 @@ typedef struct RacePlayer {
     };
     /* 0x56C */ s32 unk56C;
     /* 0x570 */ s16 unk570;
-    /* 0x572 */ s16 unk572;
-    /* 0x574 */ s16 unk574;
-    /* 0x576 */ s16 unk576;
+    /* 0x572 */ union {
+        s16 unk572;
+        s16 courseCoinMarkerCount;
+    };
+    /* 0x574 */ union {
+        s16 unk574;
+        s16 scoreAttackPointTotal;
+    };
+    /* 0x576 */ union {
+        s16 unk576;
+        s16 scoreAttackPointTarget;
+    };
     /* 0x578 */ s16 unk578;
     /* 0x57A */ s8 unk57A;
     /* 0x57B */ s8 unk57B;
@@ -278,6 +355,11 @@ typedef struct RacePlayer {
     /* 0x609 */ char pad609[1];
     /* 0x60A */ s16 replayFrame;
 } RacePlayer;
+
+typedef char RacePlayerSizeCheck[(sizeof(RacePlayer) == 0x60C) ? 1 : -1];
+typedef char RacePlayerArraySizeCheck[
+    ((sizeof(RacePlayer) * RACE_PLAYER_COUNT) == 0x1830) ? 1 : -1
+];
 
 extern RacePlayer gRacePlayers[RACE_PLAYER_COUNT];
 

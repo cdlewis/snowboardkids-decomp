@@ -106,8 +106,8 @@ void updateControllerPakRaceRecordSaveFlow(void) {
                     break;
 
                 case 5:
-                    if (D_80121D80.status == 0) {
-                        D_80121D80.status = 1;
+                    if (gRacePlayers[0].menuState == 0) {
+                        gRacePlayers[0].menuState = 1;
                     }
                     break;
 

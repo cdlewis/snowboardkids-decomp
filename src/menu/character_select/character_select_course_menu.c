@@ -11,6 +11,7 @@
 #include "game/menu/splitscreen_select/race_splitscreen_select_menu.h"
 #include "game/menu/race_setup/race_setup_ui.h"
 #include "game/engine/viewport_manager.h"
+#include "game/race/player/race_player_input.h"
 
 typedef s16 CharacterSelectOptionList[10];
 
@@ -28,8 +29,6 @@ extern CharacterSelectFlowState *gCurrentGameTask;
 extern s8 gFramebufferSwapDelay;
 extern s16 gMenuFadeAlpha;
 extern CharacterSelectSaveData gGameSaveDataBuffer[];
-extern u8 gRacePlayers[];
-extern u8 gMenuTransitionState;
 extern u8 gPlayerCount;
 extern u8 gRaceTypeSelection;
 extern s16 gRaceCourseIndex;
@@ -68,7 +67,7 @@ void initCharacterSelectCourseMenuFromRaceTypeSelect(void) {
     gCurrentGameTask->timer = 0;
     gMenuSelectionConfirmTimer = 0;
     gMenuExitSelection = 0;
-    gMenuTransitionState = 0;
+    gRacePlayers[0].menuState = 0;
     gMenuInputRepeatTimers = 0;
     gMenuChoicePromptState = 0;
     gMenuFadeAlpha = gCurrentGameTask->fade;
@@ -182,7 +181,7 @@ void initCharacterSelectCourseMenuFromRace(void)
   createCallbackTask((CallbackTaskCallback) initMenuIconTilemapSpriteActor, 0, 0x5E);
   if (gRaceSplitscreenMode == 1)
   {
- LOAD_ASSET(_5CCD40, 0x25); createCallbackTask((CallbackTaskCallback) initCharacterSelectLimitedCourseList, 0, 0x63); gCurrentGameTask->fade = 0; } else { gCurrentGameTask->fade = 0xFF; } gCurrentGameTask->timer = 0; gMenuSelectionConfirmTimer = 0; gMenuExitSelection = 0; gMenuFlowState = 0; gMenuTransitionState = 0; gMenuInputRepeatTimers = 0; gMenuChoicePromptState = 0; gMenuFadeAlpha = gCurrentGameTask->fade; var_v1 = 0; if (gPlayerCount > var_v1) { var_v0 = gGameSaveDataBuffer; do { temp_v1 = var_v0->highestCourse; var_v0 += 1; if (gHighestUnlockedCourse < temp_v1) { gHighestUnlockedCourse = temp_v1; } } while (var_v0 < (&gGameSaveDataBuffer[gPlayerCount]));
+ LOAD_ASSET(_5CCD40, 0x25); createCallbackTask((CallbackTaskCallback) initCharacterSelectLimitedCourseList, 0, 0x63); gCurrentGameTask->fade = 0; } else { gCurrentGameTask->fade = 0xFF; } gCurrentGameTask->timer = 0; gMenuSelectionConfirmTimer = 0; gMenuExitSelection = 0; gMenuFlowState = 0; gRacePlayers[0].menuState = 0; gMenuInputRepeatTimers = 0; gMenuChoicePromptState = 0; gMenuFadeAlpha = gCurrentGameTask->fade; var_v1 = 0; if (gPlayerCount > var_v1) { var_v0 = gGameSaveDataBuffer; do { temp_v1 = var_v0->highestCourse; var_v0 += 1; if (gHighestUnlockedCourse < temp_v1) { gHighestUnlockedCourse = temp_v1; } } while (var_v0 < (&gGameSaveDataBuffer[gPlayerCount]));
     var_v1 *= 0;
   }
   gActiveMenuTask = 0;
@@ -289,7 +288,7 @@ void initCharacterSelectCourseMenuFromPlayerSelect(void) {
     gMenuSelectionConfirmTimer = 0;
     gMenuExitSelection = 0;
     gMenuFlowState = 0;
-    gMenuTransitionState = 0;
+    gRacePlayers[0].menuState = 0;
     gMenuInputRepeatTimers = 0;
     gMenuChoicePromptState = 0;
     gMenuFadeAlpha = gCurrentGameTask->fade;
@@ -370,7 +369,7 @@ void updateCharacterSelectCourseMenu(void) {
             createCallbackTask((CallbackTaskCallback)&initCharacterSelectUnlockedCourseList, 0, 0x63);
         }
     } else {
-        if (gMenuTransitionState == 0) {
+        if (gRacePlayers[0].menuState == 0) {
             if (gMenuSelectionConfirmTimer == 0) {
                 if (gCharacterSelectCourseCursorState.fields.state == 1) {
                     previousSelection = gRaceCourseIndex;
@@ -429,7 +428,7 @@ void updateCharacterSelectCourseMenu(void) {
                         } else {
                             gCharacterSelectCourseCursorState.fields.state = cursorState;
                             gCharacterSelectCourseCursorState.fields.spriteIndex = 0x100;
-                            gMenuTransitionState = 7;
+                            gRacePlayers[0].menuState = 7;
                             setCurrentGameTaskCallback(&handleCharacterSelectCourseSelection, 0);
                             requestMusicSequenceStop(8);
                         }
@@ -438,7 +437,7 @@ void updateCharacterSelectCourseMenu(void) {
                         enqueueSoundEffect(1, 0x32);
                         gCharacterSelectCourseCursorState.fields.state = 2;
                         gCharacterSelectCourseCursorState.fields.spriteIndex = 0x100;
-                        gMenuTransitionState = 7;
+                        gRacePlayers[0].menuState = 7;
                         setCurrentGameTaskCallback(&handleCharacterSelectCourseSelection, 0);
                         requestMusicSequenceStop(8);
                     }
@@ -449,11 +448,11 @@ void updateCharacterSelectCourseMenu(void) {
 
             if (gMenuSelectionConfirmTimer == 8) {
                 if ((*gCharacterSelectActiveCourseOptions)[gRaceCourseIndex] == -1) {
-                    gMenuTransitionState = 2;
+                    gRacePlayers[0].menuState = 2;
                     setCurrentGameTaskCallback(&handleCharacterSelectCourseSelection, 0);
                     requestMusicSequenceStop(8);
                 } else {
-                    gMenuTransitionState = 1;
+                    gRacePlayers[0].menuState = 1;
                 }
             }
         }
@@ -469,16 +468,18 @@ void updateCharacterSelectCourseMenu(void) {
 #endif
 
 void updateCharacterSelectCourseSubmenu(void) {
+    u8 *menuState;
     s32 input;
     int state;
 
-    state = gRacePlayers[8];
+    state = gRacePlayers[0].menuState;
+    menuState = &gRacePlayers[0].menuState;
     if (state < 3) {
         switch (gCharacterSelectCourseCursorState.fields.otherState) {
         case 2:
             input = gPlayerInputPressed;
             if (input & B_BUTTON) {
-                gRacePlayers[8] = 3;
+                gRacePlayers[0].menuState = 3;
                 enqueueSoundEffect(1, 0x32);
             } else if ((input & A_BUTTON) || (input & START_BUTTON)) {
                 enqueueSoundEffect(1, 0x32);
@@ -514,9 +515,9 @@ void updateCharacterSelectCourseSubmenu(void) {
         case 4:
             if (gCharacterSelectCourseCursorState.fields.otherTimer == 4) {
                 if (gMenuChoicePromptState == 6) {
-                    gRacePlayers[8] = 3;
+                    gRacePlayers[0].menuState = 3;
                 } else {
-                    gRacePlayers[8] = 7;
+                    gRacePlayers[0].menuState = 7;
                 }
                 gMenuChoicePromptState = 0;
             }
@@ -524,13 +525,13 @@ void updateCharacterSelectCourseSubmenu(void) {
         }
     } else {
         if (state == 6) {
-            gRacePlayers[8] = 0;
+            gRacePlayers[0].menuState = 0;
             gMenuSelectionConfirmTimer = 0;
             setCurrentGameTaskCallback(updateCharacterSelectCourseMenu, 0);
             gCharacterSelectCourseCursorState.fields.state = 1;
             gCharacterSelectCourseCursorState.fields.spriteIndex = 0x100;
             gCharacterSelectCourseCursorState.fields.timer = 0;
-            state = gMenuTransitionState;
+            state = *menuState;
         }
         if (state == 8) {
             setCurrentGameTaskCallback(fadeOutCharacterSelectCourseMenu, 0);
@@ -540,7 +541,7 @@ void updateCharacterSelectCourseSubmenu(void) {
 }
 
 void handleCharacterSelectCourseSelection(void) {
-    if (gMenuTransitionState == 8) {
+    if (gRacePlayers[0].menuState == 8) {
         if (gPlayerCount >= 2) {
             setCurrentGameTaskCallback(&fadeOutCharacterSelectCourseMenu, 0);
             gMenuFlowState = 1;

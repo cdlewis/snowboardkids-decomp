@@ -11,9 +11,8 @@
 #include "game/engine/callback_task_scheduler.h"
 #include "game/race/items/race_item_effects.h"
 #include "game/race/player/race_player_movement.h"
+#include "game/race/player/race_player_input.h"
 #include "game/math/fixed_point_math.h"
-
-#define RACE_PLAYER_STATE_SIZE 0x60C
 
 typedef struct {
     /* 0x00 */ FixedTransform source;
@@ -25,57 +24,6 @@ typedef struct {
     Vec3i transformed;
     Vec3i offset;
 } TransformScratch;
-
-typedef struct {
-    /* 0x000 */ u8 pad0[0x13];
-    /* 0x013 */ s8 isActive;
-    /* 0x014 */ u8 pad14[0x1C - 0x14];
-    /* 0x01C */ s32 posX;
-    /* 0x020 */ s32 posY;
-    /* 0x024 */ s32 posZ;
-    /* 0x028 */ u8 pad28[0x44 - 0x28];
-    /* 0x044 */ s32 unk44;
-    /* 0x048 */ u8 pad48[0x5C - 0x48];
-    /* 0x05C */ s32 unk5C;
-    /* 0x060 */ u8 pad60[0x94 - 0x60];
-    /* 0x094 */ FixedMatrix3sPadded transform;
-    union {
-        /* 0x0A8 */ Vec3i posA8;
-        /* 0x0A8 */ Vec3i velocity;
-    };
-    /* 0x0B4 */ u8 padB4[0x1C8 - 0xB4];
-    /* 0x1C8 */ Vec3i pos;
-    /* 0x1D4 */ u8 pad1D4[0x2EC - 0x1D4];
-    union {
-        /* 0x2EC */ s16 yaw;
-        /* 0x2EC */ s16 unk2EC;
-    };
-    /* 0x2EE */ u8 pad2EE[0x2FC - 0x2EE];
-    /* 0x2FC */ s32 flags;
-    /* 0x300 */ u8 pad300[0x320 - 0x300];
-    /* 0x320 */ s16 actionSoundTimer;
-    /* 0x322 */ u8 pad322[0x502 - 0x322];
-    /* 0x502 */ s16 surfaceAngle;
-    /* 0x504 */ u8 pad504[0x50C - 0x504];
-    /* 0x50C */ s16 *unk50C;
-    /* 0x510 */ s16 unk510;
-    /* 0x512 */ u8 pad512[RACE_PLAYER_STATE_SIZE - 0x512];
-} RacePlayerState;
-
-typedef struct {
-    /* 0x000 */ s16 surfaceAngle;
-    /* 0x002 */ u8 pad2[RACE_PLAYER_STATE_SIZE - 2];
-} RacePlayerSurfaceState;
-
-typedef struct {
-    /* 0x00 */ s16 value;
-    /* 0x02 */ u8 pad2[RACE_PLAYER_STATE_SIZE - 2];
-} RacePlayerHalfwordField;
-
-typedef struct {
-    /* 0x00 */ u8 value;
-    /* 0x01 */ u8 pad1[RACE_PLAYER_STATE_SIZE - 1];
-} RacePlayerByteField;
 
 struct RaceItemProjectileActor {
     /* 0x00 */ u8 pad0[0x10];
@@ -120,10 +68,6 @@ extern u8 gRaceUpdatePaused;
 extern u8 gRenderMatricesDirty;
 extern s16 gUiBlinkTimer;
 extern Mtx *gViewportMatrix;
-extern RacePlayerState gRacePlayers[];
-extern RacePlayerHalfwordField gPlayerHitSource[];
-extern RacePlayerSurfaceState gRacePlayerSurfaceAngleByPlayer[];
-extern RacePlayerByteField gRacePlayerItemTargetFlags[];
 
 Mtx *allocFixedTransformMatrix(FixedTransform *);
 void spawnRaceUiFadingImpact(s32, s32, s32, u16);
@@ -134,7 +78,7 @@ s16 fixedCosine(s16);
 s64 __ll_mul(s64, s64);
 
 s32 findRaceItemProjectileHomingTarget(Vec3i *pos, s32 radius, s16 angle, s16 playerIndex, s16 *outAngle) {
-    RacePlayerState *player;
+    RacePlayer *player;
     s32 closest;
     s32 dx;
     s32 dz;
@@ -150,7 +94,7 @@ s32 findRaceItemProjectileHomingTarget(Vec3i *pos, s32 radius, s16 angle, s16 pl
     do {
         if (playerIndex != i) {
             player = &gRacePlayers[i];
-            if ((player->actionSoundTimer == 0) && !(player->flags & 0x402000) && (player->isActive != 0)) {
+            if ((player->actionSoundTimer == 0) && !(player->stateFlags & 0x402000) && (player->isActive != 0)) {
                 dx = player->posX - pos->x;
                 if (dx < 0) {
                     dx = -dx;
@@ -243,7 +187,7 @@ void updateWideHomingItemProjectile(RaceItemProjectileActor *arg0) {
         arg0->targetPlayerIndex = findRaceItemProjectileHomingTarget(pos, 0x1600000, arg0->targetAngle, arg0->playerIndex, &angleDiff);
 
         if (arg0->targetPlayerIndex != -1) {
-            gRacePlayerItemTargetFlags[arg0->targetPlayerIndex].value = 1;
+            gRacePlayers[arg0->targetPlayerIndex].itemTargetFlag = 1;
             angleDiff = (angleDiff - arg0->targetAngle) & 0xFFF;
             if (angleDiff >= 0x801) {
                 angleDiff -= 0x1000;
@@ -289,7 +233,7 @@ void updateWideHomingItemProjectile(RaceItemProjectileActor *arg0) {
 
         for (i = 0; i < 4; i++) {
             if (i != arg0->playerIndex && tryApplyRacePlayerItemHit(pos, 0x30000, 8, i)) {
-                gPlayerHitSource[i].value = arg0->playerIndex;
+                gRacePlayers[i].hitSourcePlayerIndex = arg0->playerIndex;
                 arg0->timer = 0;
                 i = 4;
             }
@@ -323,7 +267,7 @@ void initWideHomingItemProjectile(RaceItemProjectileActor *arg0) {
     source.z = 0;
     source.y = 0;
     source.x = 0x1000;
-    if (gRacePlayers[arg0->playerIndex].flags & 0x400) { source.x = -0x1000; } transformVec3iByFixedMatrix(gRacePlayers[arg0->playerIndex].transform, &source, &transformed); product = __ll_mul((s64) transformed.x, (s64) transformed.x); magnitude = integerSquareRoot64(product + __ll_mul((s64) transformed.z, (s64) transformed.z)); if (magnitude != 0) {
+    if (gRacePlayers[arg0->playerIndex].stateFlags & 0x400) { source.x = -0x1000; } transformVec3iByFixedMatrix(gRacePlayers[arg0->playerIndex].transform, &source, &transformed); product = __ll_mul((s64) transformed.x, (s64) transformed.x); magnitude = integerSquareRoot64(product + __ll_mul((s64) transformed.z, (s64) transformed.z)); if (magnitude != 0) {
         arg0->accelerationY = (((s64) arg0->velocityY) * transformed.y) / magnitude;
         var_a0 = -arg0->velocityY;
     } else {
@@ -332,18 +276,18 @@ void initWideHomingItemProjectile(RaceItemProjectileActor *arg0) {
     }
     arg0->accelerationY += gRacePlayers[arg0->playerIndex].unk44;
     arg0->velocityY = var_a0;
-    arg0->targetAngle = gRacePlayers[arg0->playerIndex].unk2EC;
+    arg0->targetAngle = gRacePlayers[arg0->playerIndex].facingAngle;
     source.z = 0;
     source.y = 0x280000;
     source.x = 0x100000;
-    if (gRacePlayers[arg0->playerIndex].flags & 0x400) {
+    if (gRacePlayers[arg0->playerIndex].stateFlags & 0x400) {
         source.x = 0xFFF00000;
         arg0->targetAngle += 0x800;
     }
     transformVec3iByFixedMatrix(gRacePlayers[arg0->playerIndex].transform, &source, &arg0->pos);
-    arg0->pos.x += gRacePlayers[arg0->playerIndex].velocity.x;
-    arg0->pos.y += gRacePlayers[arg0->playerIndex].velocity.y;
-    arg0->pos.z += gRacePlayers[arg0->playerIndex].velocity.z;
+    arg0->pos.x += gRacePlayers[arg0->playerIndex].velocityA8.x;
+    arg0->pos.y += gRacePlayers[arg0->playerIndex].velocityA8.y;
+    arg0->pos.z += gRacePlayers[arg0->playerIndex].velocityA8.z;
     arg0->startAngle = gRacePlayers[arg0->playerIndex].surfaceAngle;
     getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gAssetHandles[0x1E]), 0, &arg0->image, &arg0->palette);
     updateWideHomingItemProjectile(arg0);
@@ -410,7 +354,7 @@ void updateCloseRangeHomingItemProjectile(RaceItemProjectileActor *arg0) {
         arg0->targetPlayerIndex = findRaceItemProjectileHomingTarget(pos, 0xE00000, arg0->targetAngle, arg0->playerIndex, &angleDiff);
 
         if (arg0->targetPlayerIndex != -1) {
-            gRacePlayerItemTargetFlags[arg0->targetPlayerIndex].value = 1;
+            gRacePlayers[arg0->targetPlayerIndex].itemTargetFlag = 1;
             angleDiff = (angleDiff - arg0->targetAngle) & 0xFFF;
             if (angleDiff >= 0x801) {
                 angleDiff -= 0x1000;
@@ -457,7 +401,7 @@ void updateCloseRangeHomingItemProjectile(RaceItemProjectileActor *arg0) {
 
         for (i = 0; i < 4; i++) {
             if (i != arg0->playerIndex && tryApplyRacePlayerItemHit(pos, 0x30000, 0x10, i)) {
-                gPlayerHitSource[i].value = arg0->playerIndex;
+                gRacePlayers[i].hitSourcePlayerIndex = arg0->playerIndex;
                 hitPlayer = 1;
                 arg0->timer = 0;
                 i = 4;
@@ -494,7 +438,7 @@ void initCloseRangeHomingItemProjectile(RaceItemProjectileActor *arg0) {
     source.z = 0;
     source.y = 0;
     source.x = 0x1000;
-    if (gRacePlayers[arg0->playerIndex].flags & 0x400) { source.x = -0x1000; } transformVec3iByFixedMatrix(gRacePlayers[arg0->playerIndex].transform, &source, &transformed); product = __ll_mul((s64) transformed.x, (s64) transformed.x); magnitude = integerSquareRoot64(product + __ll_mul((s64) transformed.z, (s64) transformed.z)); if (magnitude != 0) {
+    if (gRacePlayers[arg0->playerIndex].stateFlags & 0x400) { source.x = -0x1000; } transformVec3iByFixedMatrix(gRacePlayers[arg0->playerIndex].transform, &source, &transformed); product = __ll_mul((s64) transformed.x, (s64) transformed.x); magnitude = integerSquareRoot64(product + __ll_mul((s64) transformed.z, (s64) transformed.z)); if (magnitude != 0) {
         arg0->accelerationY = (((s64) arg0->velocityY) * transformed.y) / magnitude;
         var_a0 = -arg0->velocityY;
     } else {
@@ -503,18 +447,18 @@ void initCloseRangeHomingItemProjectile(RaceItemProjectileActor *arg0) {
     }
     arg0->accelerationY += gRacePlayers[arg0->playerIndex].unk44;
     arg0->velocityY = var_a0;
-    arg0->targetAngle = gRacePlayers[arg0->playerIndex].unk2EC;
+    arg0->targetAngle = gRacePlayers[arg0->playerIndex].facingAngle;
     source.z = 0;
     source.y = 0x280000;
     source.x = 0x100000;
-    if (gRacePlayers[arg0->playerIndex].flags & 0x400) {
+    if (gRacePlayers[arg0->playerIndex].stateFlags & 0x400) {
         source.x = 0xFFF00000;
         arg0->targetAngle += 0x800;
     }
     transformVec3iByFixedMatrix(gRacePlayers[arg0->playerIndex].transform, &source, &arg0->pos);
-    arg0->pos.x += gRacePlayers[arg0->playerIndex].velocity.x;
-    arg0->pos.y += gRacePlayers[arg0->playerIndex].velocity.y;
-    arg0->pos.z += gRacePlayers[arg0->playerIndex].velocity.z;
+    arg0->pos.x += gRacePlayers[arg0->playerIndex].velocityA8.x;
+    arg0->pos.y += gRacePlayers[arg0->playerIndex].velocityA8.y;
+    arg0->pos.z += gRacePlayers[arg0->playerIndex].velocityA8.z;
     arg0->startAngle = gRacePlayers[arg0->playerIndex].surfaceAngle;
     getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gAssetHandles[0x1E]), 2, &arg0->image, &arg0->palette);
     updateCloseRangeHomingItemProjectile(arg0);
@@ -580,7 +524,7 @@ void updateBouncingItemProjectile(RaceItemProjectileActor *arg0) {
         projectile->targetPlayerIndex = findRaceItemProjectileHomingTarget(pos, 0x600000, projectile->targetAngle, projectile->playerIndex, angleDiffOut);
 
         if (projectile->targetPlayerIndex != -1) {
-            gRacePlayerItemTargetFlags[projectile->targetPlayerIndex].value = 1;
+            gRacePlayers[projectile->targetPlayerIndex].itemTargetFlag = 1;
             angleDiff = (angleDiff - projectile->targetAngle) & 0xFFF;
             if (angleDiff >= 0x801) {
                 angleDiff -= 0x1000;
@@ -626,7 +570,7 @@ void updateBouncingItemProjectile(RaceItemProjectileActor *arg0) {
 
         for (i = 0; i < 4; i++) {
             if ((i != arg0->playerIndex || arg0->timer < 0x4B) && tryApplyRacePlayerItemHit(pos, 0x30000, 0x40, i)) {
-                gPlayerHitSource[i].value = arg0->playerIndex;
+                gRacePlayers[i].hitSourcePlayerIndex = arg0->playerIndex;
                 arg0->timer = 0;
                 i = 4;
             }
@@ -660,7 +604,7 @@ void initBouncingItemProjectile(RaceItemProjectileActor *arg0) {
     source.z = 0;
     source.y = 0;
     source.x = 0x1000;
-    if (gRacePlayers[arg0->playerIndex].flags & 0x400) { source.x = -0x1000; } transformVec3iByFixedMatrix(gRacePlayers[arg0->playerIndex].transform, &source, &transformed); product = __ll_mul((s64) transformed.x, (s64) transformed.x); magnitude = integerSquareRoot64(product + __ll_mul((s64) transformed.z, (s64) transformed.z)); if (magnitude != 0) {
+    if (gRacePlayers[arg0->playerIndex].stateFlags & 0x400) { source.x = -0x1000; } transformVec3iByFixedMatrix(gRacePlayers[arg0->playerIndex].transform, &source, &transformed); product = __ll_mul((s64) transformed.x, (s64) transformed.x); magnitude = integerSquareRoot64(product + __ll_mul((s64) transformed.z, (s64) transformed.z)); if (magnitude != 0) {
         arg0->accelerationY = (((s64) arg0->velocityY) * transformed.y) / magnitude;
         var_a0 = -arg0->velocityY;
     } else {
@@ -669,18 +613,18 @@ void initBouncingItemProjectile(RaceItemProjectileActor *arg0) {
     }
     arg0->accelerationY += gRacePlayers[arg0->playerIndex].unk44;
     arg0->velocityY = var_a0;
-    arg0->targetAngle = gRacePlayers[arg0->playerIndex].unk2EC;
+    arg0->targetAngle = gRacePlayers[arg0->playerIndex].facingAngle;
     source.z = 0;
     source.y = 0x280000;
     source.x = 0x100000;
-    if (gRacePlayers[arg0->playerIndex].flags & 0x400) {
+    if (gRacePlayers[arg0->playerIndex].stateFlags & 0x400) {
         source.x = 0xFFF00000;
         arg0->targetAngle += 0x800;
     }
     transformVec3iByFixedMatrix(gRacePlayers[arg0->playerIndex].transform, &source, &arg0->pos);
-    arg0->pos.x += gRacePlayers[arg0->playerIndex].velocity.x;
-    arg0->pos.y += gRacePlayers[arg0->playerIndex].velocity.y;
-    arg0->pos.z += gRacePlayers[arg0->playerIndex].velocity.z;
+    arg0->pos.x += gRacePlayers[arg0->playerIndex].velocityA8.x;
+    arg0->pos.y += gRacePlayers[arg0->playerIndex].velocityA8.y;
+    arg0->pos.z += gRacePlayers[arg0->playerIndex].velocityA8.z;
     arg0->startAngle = gRacePlayers[arg0->playerIndex].surfaceAngle;
     getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gAssetHandles[0x1E]), 3, &arg0->image, &arg0->palette);
     updateBouncingItemProjectile(arg0);
@@ -864,7 +808,7 @@ void updateAreaBlastItemProjectile(RaceItemProjectileActor *arg0) {
         arg0->targetPlayerIndex = findRaceItemProjectileHomingTarget(pos, 0xA00000, arg0->targetAngle, arg0->playerIndex, &angleDiff);
 
         if (arg0->targetPlayerIndex != -1) {
-            gRacePlayerItemTargetFlags[arg0->targetPlayerIndex].value = 1;
+            gRacePlayers[arg0->targetPlayerIndex].itemTargetFlag = 1;
             angleDiff = (angleDiff - arg0->targetAngle) & 0xFFF;
             if (angleDiff >= 0x801) {
                 angleDiff -= 0x1000;
@@ -912,7 +856,7 @@ void updateAreaBlastItemProjectile(RaceItemProjectileActor *arg0) {
 
         do {
             if ((i != arg0->playerIndex) && tryApplyRacePlayerItemHit(pos, 0x30000, 0x80, i)) {
-                gPlayerHitSource[i].value = arg0->playerIndex;
+                gRacePlayers[i].hitSourcePlayerIndex = arg0->playerIndex;
                 arg0->timer = 0;
                 i = 4;
             }
@@ -947,17 +891,17 @@ void initAreaBlastItemProjectile(RaceItemProjectileActor *arg0) {
     sp58.z = (sp58.y = 0);
     sp58.x = 0x1000;
 
-    if (gRacePlayers[arg0->playerIndex].flags & 0x400) {
+    if (gRacePlayers[arg0->playerIndex].stateFlags & 0x400) {
         sp58.x = -0x1000;
         if (1) {
         }
     }
 
-    actor = arg0; transformVec3iByFixedMatrix(gRacePlayers[arg0->playerIndex].transform, &sp58, &transformed); product = __ll_mul((s64) transformed.x, (s64) transformed.x); magnitude = integerSquareRoot64(product + __ll_mul((s64) transformed.z, (s64) transformed.z)); if (magnitude != 0) { actor->accelerationY = (s64)actor->velocityY * transformed.y / magnitude; velocityY = -actor->velocityY; } else { velocityY = -actor->velocityY; actor->accelerationY = velocityY; } actor->accelerationY += gRacePlayers[actor->playerIndex].unk44; actor->velocityY = velocityY; actor->targetAngle = gRacePlayers[actor->playerIndex].yaw; sp58.z = 0; sp58.x = 0xFFF00000;
+    actor = arg0; transformVec3iByFixedMatrix(gRacePlayers[arg0->playerIndex].transform, &sp58, &transformed); product = __ll_mul((s64) transformed.x, (s64) transformed.x); magnitude = integerSquareRoot64(product + __ll_mul((s64) transformed.z, (s64) transformed.z)); if (magnitude != 0) { actor->accelerationY = (s64)actor->velocityY * transformed.y / magnitude; velocityY = -actor->velocityY; } else { velocityY = -actor->velocityY; actor->accelerationY = velocityY; } actor->accelerationY += gRacePlayers[actor->playerIndex].unk44; actor->velocityY = velocityY; actor->targetAngle = gRacePlayers[actor->playerIndex].facingAngle; sp58.z = 0; sp58.x = 0xFFF00000;
     sp58.y = 0x280000;
     sp58.x = 0x100000;
 
-    if (gRacePlayers[actor->playerIndex].flags & 0x400) {
+    if (gRacePlayers[actor->playerIndex].stateFlags & 0x400) {
         sp58.x = 0xFFF00000;
         actor->targetAngle += 0x800;
     }
@@ -1028,7 +972,7 @@ void updateLongRangeHomingItemProjectile(RaceItemProjectileActor *arg0) {
         arg0->targetPlayerIndex = findRaceItemProjectileHomingTarget(pos, 0x1200000, arg0->targetAngle, arg0->playerIndex, &angleDiff);
 
         if (arg0->targetPlayerIndex != -1) {
-            gRacePlayerItemTargetFlags[arg0->targetPlayerIndex].value = 1;
+            gRacePlayers[arg0->targetPlayerIndex].itemTargetFlag = 1;
             angleDiff = (angleDiff - arg0->targetAngle) & 0xFFF;
             if (angleDiff >= 0x801) {
                 angleDiff -= 0x1000;
@@ -1074,7 +1018,7 @@ void updateLongRangeHomingItemProjectile(RaceItemProjectileActor *arg0) {
 
         for (i = 0; i < 4; i++) {
             if ((i != arg0->playerIndex) && tryApplyRacePlayerItemHit(pos, 0x30000, 0x100, i)) {
-                gPlayerHitSource[i].value = arg0->playerIndex;
+                gRacePlayers[i].hitSourcePlayerIndex = arg0->playerIndex;
                 arg0->timer = 0;
                 i = 4;
             }
@@ -1109,18 +1053,18 @@ void initLongRangeHomingItemProjectile(RaceItemProjectileActor *arg0) {
     sp58.z = (sp58.y = 0);
     sp58.x = 0x1000;
 
-    if (gRacePlayers[arg0->playerIndex].flags & 0x400) {
+    if (gRacePlayers[arg0->playerIndex].stateFlags & 0x400) {
         sp58.x = -0x1000;
         if (1) {
         }
     }
 
-    actor = arg0; transformVec3iByFixedMatrix(gRacePlayers[arg0->playerIndex].transform, &sp58, &transformed); product = __ll_mul((s64) transformed.x, (s64) transformed.x); magnitude = integerSquareRoot64(product + __ll_mul((s64) transformed.z, (s64) transformed.z)); if (magnitude != 0) { actor->accelerationY = (s64)actor->velocityY * transformed.y / magnitude; velocityY = -actor->velocityY; } else { velocityY = -actor->velocityY; actor->accelerationY = velocityY; } actor->accelerationY += gRacePlayers[actor->playerIndex].unk44; actor->velocityY = velocityY; actor->targetAngle = gRacePlayers[actor->playerIndex].yaw; sp58.z = 0;
+    actor = arg0; transformVec3iByFixedMatrix(gRacePlayers[arg0->playerIndex].transform, &sp58, &transformed); product = __ll_mul((s64) transformed.x, (s64) transformed.x); magnitude = integerSquareRoot64(product + __ll_mul((s64) transformed.z, (s64) transformed.z)); if (magnitude != 0) { actor->accelerationY = (s64)actor->velocityY * transformed.y / magnitude; velocityY = -actor->velocityY; } else { velocityY = -actor->velocityY; actor->accelerationY = velocityY; } actor->accelerationY += gRacePlayers[actor->playerIndex].unk44; actor->velocityY = velocityY; actor->targetAngle = gRacePlayers[actor->playerIndex].facingAngle; sp58.z = 0;
     new_var = &sp58;
     sp58.y = 0x280000;
     sp58.x = 0x100000;
 
-    if (gRacePlayers[actor->playerIndex].flags & 0x400) {
+    if (gRacePlayers[actor->playerIndex].stateFlags & 0x400) {
         sp58.x = 0xFFF00000;
         actor->targetAngle += 0x800;
     }
@@ -1244,17 +1188,17 @@ void updateFallingActionProjectile(RaceItemProjectileActor *arg0) {
 }
 
 void initFallingActionProjectile(RaceItemProjectileActor *arg0) {
-    RacePlayerState *player;
+    RacePlayer *player;
 
     arg0->timer = 0x3C;
     arg0->blinkTimer = 0x708;
     arg0->accelerationY = 0x30000;
     player = &gRacePlayers[arg0->playerIndex];
-    arg0->pos.x = player->pos.x;
-    arg0->pos.y = player->pos.y;
-    arg0->pos.z = player->pos.z;
+    arg0->pos.x = player->projectilePos.x;
+    arg0->pos.y = player->projectilePos.y;
+    arg0->pos.z = player->projectilePos.z;
     enqueuePositionalSoundEffect(0x6A, &arg0->pos, 0x7F, 0x32);
-    arg0->angle = gRacePlayerSurfaceAngleByPlayer[arg0->playerIndex].surfaceAngle;
+    arg0->angle = gRacePlayers[arg0->playerIndex].surfaceAngle;
     getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gAssetHandles[0x1C]), 2, &arg0->image, &arg0->palette);
     updateFallingActionProjectile(arg0);
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateFallingActionProjectile);
@@ -1308,7 +1252,7 @@ void updateShieldProjectile(RaceItemProjectileActor *arg0) {
     u8 padding[8];
     s32 y;
     s32 groundY;
-    RacePlayerState *player;
+    RacePlayer *player;
     s32 xOffset;
     s16 startAngle;
 
@@ -1348,7 +1292,7 @@ void updateShieldProjectile(RaceItemProjectileActor *arg0) {
         if (arg0->timer == 0) {
             spawnRaceItemImpactEffect(arg0->pos.x, arg0->pos.y, arg0->pos.z, 2);
             removeCallbackTask((RaceItemProjectileActor *)arg0);
-            gRacePlayers[arg0->playerIndex].unk510++;
+            gRacePlayers[arg0->playerIndex].shieldEffectTimer++;
             return;
         }
 
@@ -1357,8 +1301,8 @@ void updateShieldProjectile(RaceItemProjectileActor *arg0) {
         arg0->prevPos = arg0->pos;
         arg0->radius = 0x30000;
         player = &gRacePlayers[arg0->playerIndex];
-        arg0->anglePtr = player->unk50C;
-        player->unk50C = (s16 *)&arg0->anglePtr;
+        arg0->anglePtr = player->anglePtr;
+        player->anglePtr = (s16 *)&arg0->anglePtr;
     }
 
     addRenderCallback(&gRaceObjectRenderCallbackList, (RenderCallback)renderShieldProjectile, arg0);
@@ -1379,7 +1323,7 @@ void initShieldProjectile(RaceItemProjectileActor *arg0) {
     source.z = 0;
     source.y = 0;
     source.x = 0x1000;
-    if (gRacePlayers[arg0->playerIndex].flags & 0x400) { source.x = -0x1000; } transformVec3iByFixedMatrix(gRacePlayers[arg0->playerIndex].transform, &source, &transformed); product = __ll_mul((s64) transformed.x, (s64) transformed.x); magnitude = integerSquareRoot64(product + __ll_mul((s64) transformed.z, (s64) transformed.z)); if (magnitude != 0) {
+    if (gRacePlayers[arg0->playerIndex].stateFlags & 0x400) { source.x = -0x1000; } transformVec3iByFixedMatrix(gRacePlayers[arg0->playerIndex].transform, &source, &transformed); product = __ll_mul((s64) transformed.x, (s64) transformed.x); magnitude = integerSquareRoot64(product + __ll_mul((s64) transformed.z, (s64) transformed.z)); if (magnitude != 0) {
         arg0->accelerationY = (s64)arg0->velocityY * transformed.y / magnitude;
         newVelocity = -arg0->velocityY;
     } else {
@@ -1389,13 +1333,13 @@ void initShieldProjectile(RaceItemProjectileActor *arg0) {
 
     arg0->accelerationY += gRacePlayers[arg0->playerIndex].unk44;
     arg0->velocityY = newVelocity;
-    arg0->targetAngle = gRacePlayers[arg0->playerIndex].yaw;
+    arg0->targetAngle = gRacePlayers[arg0->playerIndex].facingAngle;
 
     source.z = 0;
     source.y = 0x280000;
     source.x = 0x100000;
 
-    if (gRacePlayers[arg0->playerIndex].flags & 0x400) {
+    if (gRacePlayers[arg0->playerIndex].stateFlags & 0x400) {
         source.x = -0x100000;
         arg0->targetAngle += 0x800;
     }

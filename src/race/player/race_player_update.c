@@ -43,11 +43,6 @@ typedef struct {
 } Unk8011228C;
 
 typedef struct {
-    /* 0x000 */ Vec3i pos;
-    /* 0x00C */ char padC[0x600];
-} RacePlayerSoundPosition;
-
-typedef struct {
     s16 unk0;
     s16 unk2;
     s16 unk4;
@@ -130,9 +125,6 @@ extern s16 gRacePlayerAttackStartTimer;
 extern s16 gRaceLapCount;
 extern s16 gFrameCounter;
 extern Unk8011228C gRacePlayerHudStatuses[];
-extern RacePlayerSoundPosition D_80121D9C[];
-extern RacePlayerSoundPosition D_80121DA8[];
-
 void initRacePlayers(void) {
     gRacePlayers[0].playerIndex = 0;
     gRacePlayers[1].playerIndex = 1;
@@ -765,7 +757,7 @@ void updateRacePlayer(RacePlayer *player) {
     player->stateFlags &= ~0x800;
 
     if (player->unk4 != 0) {
-        updateRacePlayerCheckpointEvents((struct RacePlayerProgressState *) player);
+        updateRacePlayerCheckpointEvents(player);
     }
 
     if (player->unk578 != 0) {
@@ -5708,8 +5700,8 @@ void updateRacePlayerMode35Character5(RacePlayer *player) {
 
 void updateRacePlayersPostUpdate(void) {
     RacePlayer *player;
-    RacePlayerSoundPosition *soundPos;
-    RacePlayerSoundPosition *nextSoundPos;
+    Vec3i *soundPos;
+    Vec3i *nextSoundPos;
     s32 i;
 
     if (gRaceUpdatePaused == 0) {
@@ -5737,15 +5729,15 @@ void updateRacePlayersPostUpdate(void) {
     if (gRacePlayerCount > 0) {
         do {
             player = &gRacePlayers[i];
-            soundPos = &D_80121D9C[i];
-            nextSoundPos = &D_80121DA8[i];
+            soundPos = &gRacePlayers[i].pos;
+            nextSoundPos = &gRacePlayers[i].unk28;
             if (player->soundDisabled == 0) {
-                enqueuePlayerLoopingPositionalSoundRequest(player->unk584, &soundPos->pos, player->unk582, 0x46, player->unk588, i);
+                enqueuePlayerLoopingPositionalSoundRequest(player->unk584, soundPos, player->unk582, 0x46, player->unk588, i);
             } else {
-                enqueuePlayerLoopingPositionalSoundRequest(player->unk584, &soundPos->pos, 0, 0x46, player->unk588, i);
+                enqueuePlayerLoopingPositionalSoundRequest(player->unk584, soundPos, 0, 0x46, player->unk588, i);
             }
 
-            nextSoundPos->pos = soundPos->pos;
+            *nextSoundPos = *soundPos;
             player->unk28.y = player->unk64 + player->unk28.y - player->unk58 + 0xA000;
             if (player->soundDisabled == 0) {
                 addRenderCallback(&D_801248C8,(RenderCallback)drawRacePlayerModel, (RacePlayerModelRenderState *)player);
