@@ -90,7 +90,6 @@ extern OSMesgQueue gControllerInputUpdateQueue;
 extern u8 gPendingFramebufferSwapCount;
 extern u8 gFramebufferSwapHold;
 extern u8 gRaceRecordSettingsEnabled;
-extern u8 gRaceCourseModelEffectsDisabled;
 extern u8 gRaceCourseOverlayEffectsDisabled;
 extern s32 gMenuFlowState;
 extern u8 gControllerPakSaveGameNameBytes[];

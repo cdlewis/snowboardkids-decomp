@@ -4,6 +4,7 @@
 #include "game/engine/render_callback.h"
 #include "game/engine/relocatable_heap.h"
 #include "game/engine/callback_task_scheduler.h"
+#include "game/engine/system_runtime.h"
 #include "game/menu/main_menu/controller_main_menu_flow.h"
 #include "game/menu/main_menu/main_menu_panel_ui.h"
 #include "game/menu/renderer/menu_renderer.h"
@@ -53,7 +54,6 @@ extern s16 gMenuFadeAlpha;
 extern s32 gMenuFlowState;
 extern s16 gFrameCounter;
 extern u8 gRaceRecordSettingsEnabled;
-extern u8 gRaceCourseModelEffectsDisabled;
 extern u8 gRaceCourseOverlayEffectsDisabled;
 extern s16 gUiBlinkTimer;
 

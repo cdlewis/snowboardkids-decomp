@@ -20,7 +20,6 @@ extern u8 gRaceDemoPlaybackEnabled;
 extern u8 gTrainingCourseLesson;
 extern u8 gMainMenuModeSelection;
 extern u8 gRaceTypeSelection;
-extern u8 gRaceCourseModelEffectsDisabled;
 extern u8 gRaceCourseOverlayEffectsDisabled;
 
 void loadRaceCourseAssets(void) {
