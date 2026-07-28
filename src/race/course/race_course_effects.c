@@ -245,7 +245,6 @@ void renderSpiralCourseObject(RaceMovingEffect *);
 extern u8 gRaceUpdatePaused;
 extern s16 gRaceCourseIndex;
 extern RaceCamera D_801121E0[];
-extern FixedTransform gIdentityFixedTransform;
 extern CourseMarkerSpawnEntry *gCourseTextureMarkerSpawnEntriesByCourse[];
 extern CourseRenderEntry *gRaceCourseSceneryEntriesByCourse[];
 extern void *gRaceCourseSceneryDisplayLists[];

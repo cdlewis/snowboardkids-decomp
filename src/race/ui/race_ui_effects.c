@@ -815,7 +815,6 @@ extern const char gRaceUiPendingMakeBonusLabel[];
 extern const char gRaceUiPendingCompleteBonusLabel[];
 extern const char gRaceUiPendingMoneyLabel[];
 extern CourseSpawnEntry gRaceCourseStartEntries[];
-extern FixedTransform gIdentityFixedTransform;
 extern Gfx *gRegionAllocPtr;
 extern Gfx D_800D60A0[];
 extern Gfx D_800D6120[];

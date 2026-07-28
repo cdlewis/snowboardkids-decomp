@@ -58,15 +58,7 @@ struct MenuScreenEffectActor {
 };
 
 typedef struct {
-    /* 0x00 */ FixedMatrix3s rotation;
-    /* 0x12 */ s16 pad12;
-    /* 0x14 */ s32 x;
-    /* 0x18 */ s32 y;
-    /* 0x1C */ s32 z;
-} GfxCommandSource;
-
-typedef struct {
-    /* 0x00 */ GfxCommandSource source;
+    /* 0x00 */ FixedTransform source;
     /* 0x20 */ s32 pad20;
 } TitleMenuRotatingBoardScratch;
 
@@ -103,7 +95,6 @@ extern s16 mainMenuModeLabelFlashTileOffsets[];
 extern u32 raceStartPlayerEffectVertices[];
 extern u32 gAlphaSpriteRenderModeDl[];
 extern u32 gTranslucentSpriteRenderModeDl[];
-extern GfxCommandSource gIdentityFixedTransform;
 extern u32 gIdentityMatrix[];
 extern s16 gMenuFadeAlpha;
 extern u32 gMenuRenderModeResetDl[];
@@ -121,7 +112,7 @@ extern u32 D_2000E70[];
 extern u32 D_20058A8[];
 
 void drawMenuAsciiTextDefaultScale(s32, s32, void *, s32);
-GfxCommandDest *allocFixedTransformMatrix(GfxCommandSource *);
+GfxCommandDest *allocFixedTransformMatrix(FixedTransform *);
 void drawRaceSetupBackdropModels(MenuScreenEffectActor *);
 void drawRaceSetupCourseBackdrop(void *);
 void renderRaceSetupBackdrop(MenuScreenEffectActor *);
@@ -389,7 +380,7 @@ void drawRaceStartPlayerEffectSprite(MenuScreenEffectActor *arg0) {
     void *spA4;
     void *spA0;
     volatile u8 gap[0xC];
-    GfxCommandSource sp74;
+    FixedTransform sp74;
 
     if (gRenderMatricesDirty != 0) {
         arg0->unk2F = 1;
@@ -398,9 +389,9 @@ void drawRaceStartPlayerEffectSprite(MenuScreenEffectActor *arg0) {
     if (arg0->unk2F != 0) {
         arg0->unk2F = 0;
         sp74 = gIdentityFixedTransform;
-        sp74.x = arg0->unk18.word;
-        sp74.y = arg0->unk1C.word;
-        sp74.z = arg0->unk20.word;
+        sp74.translation.x = arg0->unk18.word;
+        sp74.translation.y = arg0->unk1C.word;
+        sp74.translation.z = arg0->unk20.word;
         arg0->unk24.word = (s32)allocFixedTransformMatrix(&sp74);
     }
 
@@ -579,15 +570,15 @@ void waitForRaceSetupNamePlate(MenuScreenEffectActor *arg0) {
 void drawMainMenuModeBoardTransition(MenuScreenEffectActor *arg0) {
     void *image;
     void *palette;
-    GfxCommandSource transform;
+    FixedTransform transform;
     GfxCommandDest *matrix;
 
     if (gCurrentViewportIndex == 2) {
         getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gAssetHandles[34]), 0, &image, &palette);
         makeFixedRotationZ(transform.rotation, arg0->spriteIndex);
-        transform.x = arg0->unk18.word;
-        transform.y = arg0->unk1C.word;
-        transform.z = arg0->unk20.word;
+        transform.translation.x = arg0->unk18.word;
+        transform.translation.y = arg0->unk1C.word;
+        transform.translation.z = arg0->unk20.word;
         matrix = allocFixedTransformMatrix(&transform);
         if (matrix != NULL) {
             MAIN_MENU_GFX_CMD(gRegionAllocPtr++, 0x06000000, (u32) gTranslucentSpriteRenderModeDl);
@@ -726,9 +717,9 @@ void drawMainMenuRotatingBoardModel(MenuScreenEffectActor *arg0) {
 
     if (gCurrentViewportIndex == 0) {
         makeFixedRotationY(scratch.source.rotation, arg0->unk18.half.hi);
-        scratch.source.x = 0;
-        scratch.source.y = 0;
-        scratch.source.z = 0;
+        scratch.source.translation.x = 0;
+        scratch.source.translation.y = 0;
+        scratch.source.translation.z = 0;
         matrix = allocFixedTransformMatrix(&scratch.source);
         if (matrix != NULL) {
             gDPPipeSync(gRegionAllocPtr++);
