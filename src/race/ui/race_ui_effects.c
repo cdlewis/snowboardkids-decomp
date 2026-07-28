@@ -836,7 +836,6 @@ extern u32 gSnowboardTrailFrontDisplayList[];
 extern u32 gViewportMatrix;
 extern u8 gCurrentViewportIndex;
 extern u8 gRaceChallengeFailed;
-extern u8 gRaceOrderPlayerIds[];
 extern u8 gRaceUpdatePaused;
 extern u8 gRenderMatricesDirty;
 extern Vec3i gIceCourseBumperPositions[];
