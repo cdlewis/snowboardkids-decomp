@@ -31,6 +31,8 @@ typedef enum ControllerSubsystemRequest {
 extern s16 gControllerPakStatusCodes[4];
 extern s16 gMenuChoicePromptState[4];
 extern u16 gMenuInputRepeatTimers[4];
+extern s32 gRumbleMotorStatuses[4];
+extern s16 gRumbleMotorRequestStates[4];
 extern u8 gControllerPakRetryCounts[4];
 extern u8 gMainMenuSecretCodeUnlocked;
 extern u8 gMainMenuSelectionResult;
