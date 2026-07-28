@@ -1,4 +1,5 @@
 #include "common.h"
+#include "game/engine/asset_manager.h"
 #include "game/menu/renderer/menu_renderer.h"
 #include "game/engine/render_callback.h"
 #include "game/engine/relocatable_heap.h"
@@ -89,7 +90,6 @@ extern s32 D_80112358;
 extern s32 D_80112360;
 extern s32 D_80112408;
 extern s32 D_80112410;
-extern s16 gAssetHandles[];
 extern s16 gMenuAsciiFontPaletteIndex;
 extern s16 gMenuViewportWidth;
 extern s16 gMenuViewportHeight;

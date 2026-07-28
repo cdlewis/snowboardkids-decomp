@@ -1,4 +1,5 @@
 #include "common.h"
+#include "game/engine/asset_manager.h"
 #include "game/engine/render_callback.h"
 #include "game/engine/callback_task_scheduler.h"
 #include "game/engine/relocatable_heap.h"
@@ -131,7 +132,6 @@ void drawMenuGlyph(s16 x, s16 y, u16 glyphIndex, u8 paletteIndex, u16 intensity,
 void drawMenuColoredGlyph(s16 x, s16 y, u16 glyph, u8 palette, u16 scale, u16 colorMode, s32 arg6);
 extern Gfx gMenuRenderModeResetDl[];
 extern Gfx *gRegionAllocPtr;
-extern s16 gAssetHandles[];
 extern u32 gPlayerInputHeld;
 extern s16 gMenuSpriteFlipScales[][2];
 extern s16 gMenuFadeAlpha;

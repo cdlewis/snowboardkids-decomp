@@ -1,4 +1,5 @@
 #include "common.h"
+#include "game/engine/asset_manager.h"
 #include "game/engine/render_callback.h"
 #include "game/engine/relocatable_heap.h"
 #include "game/engine/callback_task_scheduler.h"
@@ -7,8 +8,8 @@
 #include "game/menu/renderer/menu_renderer.h"
 #include "game/menu/renderer/menu_render_utils.h"
 
-#define CHARACTER_SELECT_FRAME_TEXTURE_HANDLE (gAssetHandles.textureHandle)
-#define ASSET_HANDLE(index) (((s16 *)&gAssetHandles)[index])
+#define CHARACTER_SELECT_FRAME_TEXTURE_HANDLE (gAssetHandles[0x21])
+#define ASSET_HANDLE(index) (gAssetHandles[(index)])
 
 typedef MenuGlyphScript CharacterSelectCourseText[0x4A];
 
@@ -17,15 +18,6 @@ typedef struct {
     /* 0x018 */ s16 value;
     /* 0x01A */ u8 pad1A[0x5F2];
 } CharacterSelectCoursePlayerRecord;
-
-typedef struct {
-    /* 0x00 */ u8 pad0[0x3E];
-    /* 0x3E */ s16 popupFontHandle;
-    /* 0x40 */ u8 pad40[2];
-    /* 0x42 */ s16 textureHandle;
-    /* 0x44 */ u8 pad44[4];
-    /* 0x48 */ s16 iconTextureHandle;
-} CharacterSelectCourseAssetHandles;
 
 typedef struct {
     /* 0x00 */ u16 center[16];
@@ -92,7 +84,6 @@ enum {
 extern int sprintf(char *, const char *, ...);
 extern void drawAssetTableSpriteWithExplicitPaletteWideIndex(s16 x, s16 y, AssetTable *table, s32 entryIndex,
                                                              u16 paletteIndex);
-extern CharacterSelectCourseAssetHandles gAssetHandles;
 extern s16 gCharacterSelectCourseOptionsByUnlock[][11];
 extern CharacterSelectCourseFrameTileMap gCharacterSelectCoursePreviewFrameTileMaps[];
 extern CharacterSelectCourseFrameCornerTileMap gCharacterSelectCoursePreviewFrameCornerTileMaps[];
@@ -154,32 +145,32 @@ void drawCharacterSelectCourseListOptions(CharacterSelectCourseMenuFrameActor *a
                 if ((i == gRaceCourseIndex) && (gMenuSelectionConfirmTimer > 0) && (gMenuSelectionConfirmTimer < 8) && (gMenuSelectionConfirmTimer & 1)) {
                     alpha = 0xFF;
                 }
-                drawMenuSprite(actor->x[i], actor->y[i], getRelocatableHeapBlockBase(gAssetHandles.textureHandle), 0x1C, 0x20, 0x20, 0, alpha);
+                drawMenuSprite(actor->x[i], actor->y[i], getRelocatableHeapBlockBase(gAssetHandles[0x21]), 0x1C, 0x20, 0x20, 0, alpha);
             } else if (i == gCharacterSelectCourseExitOptionIndex) {
                 if ((gRaceCourseIndex == gCharacterSelectCourseExitOptionIndex) && (gMenuSelectionConfirmTimer > 0) && (gMenuSelectionConfirmTimer < 8) && (gMenuSelectionConfirmTimer & 1)) {
                     alpha = 0xFF;
                 }
                 if ((gPlayerCount - 1) == 0) {
-                    drawMenuSprite(actor->x[i], actor->y[i], getRelocatableHeapBlockBase(gAssetHandles.textureHandle), 0x1B, 0x20, 0x20, 0, alpha);
+                    drawMenuSprite(actor->x[i], actor->y[i], getRelocatableHeapBlockBase(gAssetHandles[0x21]), 0x1B, 0x20, 0x20, 0, alpha);
                 } else {
-                    drawMenuSprite(actor->x[i], actor->y[i], getRelocatableHeapBlockBase(gAssetHandles.textureHandle), 0x1E, 0x20, 0x20, 0, alpha);
+                    drawMenuSprite(actor->x[i], actor->y[i], getRelocatableHeapBlockBase(gAssetHandles[0x21]), 0x1E, 0x20, 0x20, 0, alpha);
                 }
             } else {
                 if ((i == gRaceCourseIndex) && (gMenuSelectionConfirmTimer > 0) && (gMenuSelectionConfirmTimer < 8) && (gMenuSelectionConfirmTimer & 1)) {
                     alpha = 0xFF;
                 }
-                drawMenuSprite(actor->x[i], actor->y[i], getRelocatableHeapBlockBase(gAssetHandles.textureHandle), i + 0x12,
+                drawMenuSprite(actor->x[i], actor->y[i], getRelocatableHeapBlockBase(gAssetHandles[0x21]), i + 0x12,
                                0x20, 0x20, 0, alpha);
             }
 
             if (i != gCharacterSelectCourseExitOptionIndex) {
                 if (((gPlayerCount - 1) == 0) && (D_800ECA24[characterIds[i]] != 0)) {
                     drawMenuSprite((s16)(actor->x[i] - 0x10), actor->y[i],
-                                   getRelocatableHeapBlockBase(gAssetHandles.iconTextureHandle), i + 0x1A, 0x20, 0x20,
+                                   getRelocatableHeapBlockBase(gAssetHandles[0x24]), i + 0x1A, 0x20, 0x20,
                                    0, D_800ECA24[characterIds[i]] + 6);
                 } else {
                     drawMenuSprite((s16)(actor->x[i] - 0x10), actor->y[i],
-                                   getRelocatableHeapBlockBase(gAssetHandles.textureHandle), i + 0x29, 0x20, 0x20, 0,
+                                   getRelocatableHeapBlockBase(gAssetHandles[0x21]), i + 0x29, 0x20, 0x20, 0,
                                    0);
                 }
             }
@@ -594,40 +585,40 @@ void drawCharacterSelectCoursePreviewFrame(CharacterSelectCourseWidgetActor *arg
 
     for (i.index = 0; i.index < 16; i.index++) {
         drawMenuSpriteTile((s16)(arg0->x + ((i.index & 3) << 5)), (s16)(arg0->y + ((i.index / 4) << 5)),
-                           getRelocatableHeapBlockBase(gAssetHandles.textureHandle),
+                           getRelocatableHeapBlockBase(gAssetHandles[0x21]),
                            gCharacterSelectCoursePreviewFrameTileMaps[frameIndex].center[i.index], 0, 0x100);
     }
 
     for (i.index = 0; i.index < 2; i.index++) {
         drawMenuSpriteTile((s16)(arg0->x + 0x80), (s16)(arg0->y + (i.index * 0x40)),
-                           getRelocatableHeapBlockBase(gAssetHandles.textureHandle),
+                           getRelocatableHeapBlockBase(gAssetHandles[0x21]),
                            gCharacterSelectCoursePreviewFrameTileMaps[frameIndex].right[i.index], 0, 0x100);
         drawMenuSpriteTile((s16)(arg0->x + (i.index * 0x40)), (s16)(arg0->y + 0x80),
-                           getRelocatableHeapBlockBase(gAssetHandles.textureHandle),
+                           getRelocatableHeapBlockBase(gAssetHandles[0x21]),
                            gCharacterSelectCoursePreviewFrameTileMaps[frameIndex].bottom[i.index], 0, 0x100);
     }
 
     drawMenuSpriteTile((s16)(arg0->x + 0x80), (s16)(arg0->y + 0x80),
-                       getRelocatableHeapBlockBase(gAssetHandles.textureHandle),
+                       getRelocatableHeapBlockBase(gAssetHandles[0x21]),
                        gCharacterSelectCoursePreviewFrameCornerTileMaps[frameIndex].corner, 0, 0x100);
-    drawMenuSprite((s16)(arg0->x - 4), (s16)(arg0->y - 4), getRelocatableHeapBlockBase(gAssetHandles.textureHandle),
+    drawMenuSprite((s16)(arg0->x - 4), (s16)(arg0->y - 4), getRelocatableHeapBlockBase(gAssetHandles[0x21]),
                    0x33, 0x20, 0x20, 0, 0);
-    drawMenuSprite((s16)(arg0->x - 4), (s16)(arg0->y + 0x8C), getRelocatableHeapBlockBase(gAssetHandles.textureHandle),
+    drawMenuSprite((s16)(arg0->x - 4), (s16)(arg0->y + 0x8C), getRelocatableHeapBlockBase(gAssetHandles[0x21]),
                    0x38, 0x20, 0x20, 0, 0);
-    i.textureBase = getRelocatableHeapBlockBase(gAssetHandles.textureHandle);
+    i.textureBase = getRelocatableHeapBlockBase(gAssetHandles[0x21]);
     drawMenuSprite((s16)(arg0->x + 0x8C), (s16)(arg0->y - 4), i.textureBase, 0x35, 0x20, 0x20, 0, 0);
-    drawMenuSprite((s16)(arg0->x + 0x8C), (s16)(arg0->y + 0x8C), getRelocatableHeapBlockBase(gAssetHandles.textureHandle),
+    drawMenuSprite((s16)(arg0->x + 0x8C), (s16)(arg0->y + 0x8C), getRelocatableHeapBlockBase(gAssetHandles[0x21]),
                    0x3A, 0x20, 0x20, 0, 0);
 
     for (borderOffset = 0; borderOffset != 0x80; borderOffset += 0x10) {
         drawMenuSprite((s16)((arg0->x + borderOffset) + 0xC), (s16)(arg0->y - 4),
-                       getRelocatableHeapBlockBase(gAssetHandles.textureHandle), 0x34, 0x20, 0x20, 0, 0);
+                       getRelocatableHeapBlockBase(gAssetHandles[0x21]), 0x34, 0x20, 0x20, 0, 0);
         drawMenuSprite((s16)((arg0->x + borderOffset) + 0xC), (s16)(arg0->y + 0x8C),
-                       getRelocatableHeapBlockBase(gAssetHandles.textureHandle), 0x39, 0x20, 0x20, 0, 0);
+                       getRelocatableHeapBlockBase(gAssetHandles[0x21]), 0x39, 0x20, 0x20, 0, 0);
         drawMenuSprite((s16)(arg0->x - 4), (s16)((arg0->y + borderOffset) + 0xC),
-                       getRelocatableHeapBlockBase(gAssetHandles.textureHandle), 0x36, 0x20, 0x20, 0, 0);
+                       getRelocatableHeapBlockBase(gAssetHandles[0x21]), 0x36, 0x20, 0x20, 0, 0);
         drawMenuSprite((s16)(arg0->x + 0x8C), (s16)((arg0->y + borderOffset) + 0xC),
-                       getRelocatableHeapBlockBase(gAssetHandles.textureHandle), 0x37, 0x20, 0x20, 0, 0);
+                       getRelocatableHeapBlockBase(gAssetHandles[0x21]), 0x37, 0x20, 0x20, 0, 0);
     }
 }
 
@@ -751,7 +742,7 @@ void drawCharacterSelectCoursePreviewPanel1(CharacterSelectCourseWidgetActor *ar
     shouldDraw = 1;
     for (i = 0; i < 16; i++, tileOffset++) {
         drawMenuSpriteTileClipped((s16)(arg0->x + ((i & 3) << 5)), (s16)(arg0->y + ((i / 4) << 5)),
-                      getRelocatableHeapBlockBase(gAssetHandles.textureHandle),
+                      getRelocatableHeapBlockBase(gAssetHandles[0x21]),
                       gCharacterSelectCoursePreviewFrameTileMaps[(u16)arg0->sprite.index].center[tileOffset], 0, 0x100, 0xA0, 0x49);
     }
 
@@ -762,10 +753,10 @@ void drawCharacterSelectCoursePreviewPanel1(CharacterSelectCourseWidgetActor *ar
     offset = 0;
     do {
         drawMenuSpriteTileClipped((s16)(arg0->x + 0x80), (s16)(arg0->y + offset),
-                      getRelocatableHeapBlockBase(gAssetHandles.textureHandle),
+                      getRelocatableHeapBlockBase(gAssetHandles[0x21]),
                       gCharacterSelectCoursePreviewFrameTileMaps[(u16)arg0->sprite.index].right[tileOffset], 0, 0x100, 0xA0, 0x49);
         drawMenuSpriteTileClipped((s16)(arg0->x + offset), (s16)(arg0->y + 0x80),
-                      getRelocatableHeapBlockBase(gAssetHandles.textureHandle),
+                      getRelocatableHeapBlockBase(gAssetHandles[0x21]),
                       gCharacterSelectCoursePreviewFrameTileMaps[(u16)arg0->sprite.index].bottom[tileOffset], 0, 0x100, 0xA0, 0x49);
         i = 0x80;
         offset += 0x40;
@@ -774,7 +765,7 @@ void drawCharacterSelectCoursePreviewPanel1(CharacterSelectCourseWidgetActor *ar
     i++;
     i--;
 
-    drawMenuSpriteTileClipped((s16)(arg0->x + 0x80), (s16)(arg0->y + 0x80), getRelocatableHeapBlockBase(gAssetHandles.textureHandle),
+    drawMenuSpriteTileClipped((s16)(arg0->x + 0x80), (s16)(arg0->y + 0x80), getRelocatableHeapBlockBase(gAssetHandles[0x21]),
                   gCharacterSelectCoursePreviewFrameTileMaps[(u16)arg0->sprite.index].corner, 0, 0x100, 0xA0, 0x49);
 }
 
@@ -865,7 +856,7 @@ void drawCharacterSelectCoursePreviewPanel2(CharacterSelectCourseWidgetActor *ar
     tileOffset = 0;
     shouldDraw = 1;
     for (i = 0; i < 16; i++, tileOffset++) {
-        drawMenuSpriteTileClipped(arg0->x + ((i & 3) << 5), arg0->y + ((i / 4) << 5), getRelocatableHeapBlockBase(gAssetHandles.textureHandle),
+        drawMenuSpriteTileClipped(arg0->x + ((i & 3) << 5), arg0->y + ((i / 4) << 5), getRelocatableHeapBlockBase(gAssetHandles[0x21]),
                       gCharacterSelectCoursePreviewFrameTileMaps[(u16)arg0->sprite.index].center[tileOffset], 0, 0x100, 0xA0, 0x49);
     }
 
@@ -875,9 +866,9 @@ void drawCharacterSelectCoursePreviewPanel2(CharacterSelectCourseWidgetActor *ar
     }
     offset = 0;
     do {
-        drawMenuSpriteTileClipped(arg0->x + 0x80, arg0->y + offset, getRelocatableHeapBlockBase(gAssetHandles.textureHandle),
+        drawMenuSpriteTileClipped(arg0->x + 0x80, arg0->y + offset, getRelocatableHeapBlockBase(gAssetHandles[0x21]),
                       gCharacterSelectCoursePreviewFrameTileMaps[(u16)arg0->sprite.index].right[tileOffset], 0, 0x100, 0xA0, 0x49);
-        drawMenuSpriteTileClipped(arg0->x + offset, arg0->y + 0x80, getRelocatableHeapBlockBase(gAssetHandles.textureHandle),
+        drawMenuSpriteTileClipped(arg0->x + offset, arg0->y + 0x80, getRelocatableHeapBlockBase(gAssetHandles[0x21]),
                       gCharacterSelectCoursePreviewFrameTileMaps[(u16)arg0->sprite.index].bottom[tileOffset], 0, 0x100, 0xA0, 0x49);
         i = 0x80;
         offset += 0x40;
@@ -886,7 +877,7 @@ void drawCharacterSelectCoursePreviewPanel2(CharacterSelectCourseWidgetActor *ar
     i++;
     i--;
 
-    drawMenuSpriteTileClipped(arg0->x + 0x80, arg0->y + 0x80, getRelocatableHeapBlockBase(gAssetHandles.textureHandle),
+    drawMenuSpriteTileClipped(arg0->x + 0x80, arg0->y + 0x80, getRelocatableHeapBlockBase(gAssetHandles[0x21]),
                   gCharacterSelectCoursePreviewFrameTileMaps[(u16)arg0->sprite.index].corner, 0, 0x100, 0xA0, 0x49);
 }
 
@@ -971,20 +962,20 @@ void drawCharacterSelectCoursePreviewPanel3(CharacterSelectCourseWidgetActor *ar
 
     tileOffset = 0;
     for (i = 0; i < 16; i++, tileOffset++) {
-        drawMenuSpriteTileClipped(arg0->x + ((i & 3) << 5), arg0->y + ((i / 4) << 5), getRelocatableHeapBlockBase(gAssetHandles.textureHandle),
+        drawMenuSpriteTileClipped(arg0->x + ((i & 3) << 5), arg0->y + ((i / 4) << 5), getRelocatableHeapBlockBase(gAssetHandles[0x21]),
                       gCharacterSelectCoursePreviewFrameTileMaps[(u16)arg0->sprite.index].center[tileOffset], 0, 0x100, 0xA0, 0x49);
     }
 
     tileOffset = 0;
     for (i = 0; i < 2; i++) {
-        drawMenuSpriteTileClipped(arg0->x + 0x80, arg0->y + i * 0x40, getRelocatableHeapBlockBase(gAssetHandles.textureHandle),
+        drawMenuSpriteTileClipped(arg0->x + 0x80, arg0->y + i * 0x40, getRelocatableHeapBlockBase(gAssetHandles[0x21]),
                       gCharacterSelectCoursePreviewFrameTileMaps[(u16)arg0->sprite.index].right[tileOffset], 0, 0x100, 0xA0, 0x49);
-        drawMenuSpriteTileClipped(arg0->x + i * 0x40, arg0->y + 0x80, getRelocatableHeapBlockBase(gAssetHandles.textureHandle),
+        drawMenuSpriteTileClipped(arg0->x + i * 0x40, arg0->y + 0x80, getRelocatableHeapBlockBase(gAssetHandles[0x21]),
                       gCharacterSelectCoursePreviewFrameTileMaps[(u16)arg0->sprite.index].bottom[tileOffset], 0, 0x100, 0xA0, 0x49);
         tileOffset++;
     }
 
-    drawMenuSpriteTileClipped(arg0->x + 0x80, arg0->y + 0x80, getRelocatableHeapBlockBase(gAssetHandles.textureHandle),
+    drawMenuSpriteTileClipped(arg0->x + 0x80, arg0->y + 0x80, getRelocatableHeapBlockBase(gAssetHandles[0x21]),
                   gCharacterSelectCoursePreviewFrameTileMaps[(u16)arg0->sprite.index].corner, 0, 0x100, 0xA0, 0x49);
 }
 
@@ -1073,7 +1064,7 @@ void drawCharacterSelectCoursePreviewPanel4(CharacterSelectCourseWidgetActor *ar
     shouldDraw = 1;
     for (i = 0; i < 16; i++, tileOffset++) {
         drawMenuSpriteTileClipped((s16)(arg0->x + ((i & 3) << 5)), (s16)(arg0->y + ((i / 4) << 5)),
-                      getRelocatableHeapBlockBase(gAssetHandles.textureHandle),
+                      getRelocatableHeapBlockBase(gAssetHandles[0x21]),
                       gCharacterSelectCoursePreviewFrameTileMaps[(u16)arg0->sprite.index].center[tileOffset], 0, 0x100, 0xA0, 0x49);
     }
 
@@ -1084,10 +1075,10 @@ void drawCharacterSelectCoursePreviewPanel4(CharacterSelectCourseWidgetActor *ar
     offset = 0;
     do {
         drawMenuSpriteTileClipped((s16)(arg0->x + 0x80), (s16)(arg0->y + offset),
-                      getRelocatableHeapBlockBase(gAssetHandles.textureHandle),
+                      getRelocatableHeapBlockBase(gAssetHandles[0x21]),
                       gCharacterSelectCoursePreviewFrameTileMaps[(u16)arg0->sprite.index].right[tileOffset], 0, 0x100, 0xA0, 0x49);
         drawMenuSpriteTileClipped((s16)(arg0->x + offset), (s16)(arg0->y + 0x80),
-                      getRelocatableHeapBlockBase(gAssetHandles.textureHandle),
+                      getRelocatableHeapBlockBase(gAssetHandles[0x21]),
                       gCharacterSelectCoursePreviewFrameTileMaps[(u16)arg0->sprite.index].bottom[tileOffset], 0, 0x100, 0xA0, 0x49);
         i = 0x80;
         offset += 0x40;
@@ -1096,7 +1087,7 @@ void drawCharacterSelectCoursePreviewPanel4(CharacterSelectCourseWidgetActor *ar
     i++;
     i--;
 
-    drawMenuSpriteTileClipped((s16)(arg0->x + 0x80), (s16)(arg0->y + 0x80), getRelocatableHeapBlockBase(gAssetHandles.textureHandle),
+    drawMenuSpriteTileClipped((s16)(arg0->x + 0x80), (s16)(arg0->y + 0x80), getRelocatableHeapBlockBase(gAssetHandles[0x21]),
                   gCharacterSelectCoursePreviewFrameTileMaps[(u16)arg0->sprite.index].corner, 0, 0x100, 0xA0, 0x49);
 }
 
@@ -1184,7 +1175,7 @@ void drawCharacterSelectCoursePreviewPanel5(CharacterSelectCourseWidgetActor *ar
     tileOffset = 0;
     shouldDraw = 1;
     for (i = 0; i < 16; i++, tileOffset++) {
-        drawMenuSpriteTileClipped(arg0->x + ((i & 3) << 5), arg0->y + ((i / 4) << 5), getRelocatableHeapBlockBase(gAssetHandles.textureHandle),
+        drawMenuSpriteTileClipped(arg0->x + ((i & 3) << 5), arg0->y + ((i / 4) << 5), getRelocatableHeapBlockBase(gAssetHandles[0x21]),
                       gCharacterSelectCoursePreviewFrameTileMaps[(u16)arg0->sprite.index].center[tileOffset], 0, 0x100, 0xA0, 0x49);
     }
 
@@ -1194,9 +1185,9 @@ void drawCharacterSelectCoursePreviewPanel5(CharacterSelectCourseWidgetActor *ar
     }
     offset = 0;
     do {
-        drawMenuSpriteTileClipped(arg0->x + 0x80, arg0->y + offset, getRelocatableHeapBlockBase(gAssetHandles.textureHandle),
+        drawMenuSpriteTileClipped(arg0->x + 0x80, arg0->y + offset, getRelocatableHeapBlockBase(gAssetHandles[0x21]),
                       gCharacterSelectCoursePreviewFrameTileMaps[(u16)arg0->sprite.index].right[tileOffset], 0, 0x100, 0xA0, 0x49);
-        drawMenuSpriteTileClipped(arg0->x + offset, arg0->y + 0x80, getRelocatableHeapBlockBase(gAssetHandles.textureHandle),
+        drawMenuSpriteTileClipped(arg0->x + offset, arg0->y + 0x80, getRelocatableHeapBlockBase(gAssetHandles[0x21]),
                       gCharacterSelectCoursePreviewFrameTileMaps[(u16)arg0->sprite.index].bottom[tileOffset], 0, 0x100, 0xA0, 0x49);
         i = 0x80;
         offset += 0x40;
@@ -1205,7 +1196,7 @@ void drawCharacterSelectCoursePreviewPanel5(CharacterSelectCourseWidgetActor *ar
     i++;
     i--;
 
-    drawMenuSpriteTileClipped(arg0->x + 0x80, arg0->y + 0x80, getRelocatableHeapBlockBase(gAssetHandles.textureHandle),
+    drawMenuSpriteTileClipped(arg0->x + 0x80, arg0->y + 0x80, getRelocatableHeapBlockBase(gAssetHandles[0x21]),
                   gCharacterSelectCoursePreviewFrameTileMaps[(u16)arg0->sprite.index].corner, 0, 0x100, 0xA0, 0x49);
 }
 
@@ -1294,7 +1285,7 @@ void drawCharacterSelectCoursePreviewPanel6(CharacterSelectCourseWidgetActor *ar
     shouldDraw = 1;
     for (i = 0; i < 16; i++, tileOffset++) {
         drawMenuSpriteTileClipped((s16)(arg0->x + ((i & 3) << 5)), (s16)(arg0->y + ((i / 4) << 5)),
-                      getRelocatableHeapBlockBase(gAssetHandles.textureHandle),
+                      getRelocatableHeapBlockBase(gAssetHandles[0x21]),
                       gCharacterSelectCoursePreviewFrameTileMaps[(u16)arg0->sprite.index].center[tileOffset], 0, 0x100, 0xA0, 0x49);
     }
 
@@ -1305,10 +1296,10 @@ void drawCharacterSelectCoursePreviewPanel6(CharacterSelectCourseWidgetActor *ar
     offset = 0;
     do {
         drawMenuSpriteTileClipped((s16)(arg0->x + 0x80), (s16)(arg0->y + offset),
-                      getRelocatableHeapBlockBase(gAssetHandles.textureHandle),
+                      getRelocatableHeapBlockBase(gAssetHandles[0x21]),
                       gCharacterSelectCoursePreviewFrameTileMaps[(u16)arg0->sprite.index].right[tileOffset], 0, 0x100, 0xA0, 0x49);
         drawMenuSpriteTileClipped((s16)(arg0->x + offset), (s16)(arg0->y + 0x80),
-                      getRelocatableHeapBlockBase(gAssetHandles.textureHandle),
+                      getRelocatableHeapBlockBase(gAssetHandles[0x21]),
                       gCharacterSelectCoursePreviewFrameTileMaps[(u16)arg0->sprite.index].bottom[tileOffset], 0, 0x100, 0xA0, 0x49);
         i = 0x80;
         offset += 0x40;
@@ -1317,7 +1308,7 @@ void drawCharacterSelectCoursePreviewPanel6(CharacterSelectCourseWidgetActor *ar
     i++;
     i--;
 
-    drawMenuSpriteTileClipped((s16)(arg0->x + 0x80), (s16)(arg0->y + 0x80), getRelocatableHeapBlockBase(gAssetHandles.textureHandle),
+    drawMenuSpriteTileClipped((s16)(arg0->x + 0x80), (s16)(arg0->y + 0x80), getRelocatableHeapBlockBase(gAssetHandles[0x21]),
                   gCharacterSelectCoursePreviewFrameTileMaps[(u16)arg0->sprite.index].corner, 0, 0x100, 0xA0, 0x49);
 }
 
@@ -1405,7 +1396,7 @@ void drawCharacterSelectCoursePreviewPanel7(CharacterSelectCourseWidgetActor *ar
     tileOffset = 0;
     shouldDraw = 1;
     for (i = 0; i < 16; i++, tileOffset++) {
-        drawMenuSpriteTileClipped(arg0->x + ((i & 3) << 5), arg0->y + ((i / 4) << 5), getRelocatableHeapBlockBase(gAssetHandles.textureHandle),
+        drawMenuSpriteTileClipped(arg0->x + ((i & 3) << 5), arg0->y + ((i / 4) << 5), getRelocatableHeapBlockBase(gAssetHandles[0x21]),
                       gCharacterSelectCoursePreviewFrameTileMaps[(u16)arg0->sprite.index].center[tileOffset], 0, 0x100, 0xA0, 0x49);
     }
 
@@ -1415,9 +1406,9 @@ void drawCharacterSelectCoursePreviewPanel7(CharacterSelectCourseWidgetActor *ar
     }
     offset = 0;
     do {
-        drawMenuSpriteTileClipped(arg0->x + 0x80, arg0->y + offset, getRelocatableHeapBlockBase(gAssetHandles.textureHandle),
+        drawMenuSpriteTileClipped(arg0->x + 0x80, arg0->y + offset, getRelocatableHeapBlockBase(gAssetHandles[0x21]),
                       gCharacterSelectCoursePreviewFrameTileMaps[(u16)arg0->sprite.index].right[tileOffset], 0, 0x100, 0xA0, 0x49);
-        drawMenuSpriteTileClipped(arg0->x + offset, arg0->y + 0x80, getRelocatableHeapBlockBase(gAssetHandles.textureHandle),
+        drawMenuSpriteTileClipped(arg0->x + offset, arg0->y + 0x80, getRelocatableHeapBlockBase(gAssetHandles[0x21]),
                       gCharacterSelectCoursePreviewFrameTileMaps[(u16)arg0->sprite.index].bottom[tileOffset], 0, 0x100, 0xA0, 0x49);
         i = 0x80;
         offset += 0x40;
@@ -1426,7 +1417,7 @@ void drawCharacterSelectCoursePreviewPanel7(CharacterSelectCourseWidgetActor *ar
     i++;
     i--;
 
-    drawMenuSpriteTileClipped(arg0->x + 0x80, arg0->y + 0x80, getRelocatableHeapBlockBase(gAssetHandles.textureHandle),
+    drawMenuSpriteTileClipped(arg0->x + 0x80, arg0->y + 0x80, getRelocatableHeapBlockBase(gAssetHandles[0x21]),
                   gCharacterSelectCoursePreviewFrameTileMaps[(u16)arg0->sprite.index].corner, 0, 0x100, 0xA0, 0x49);
 }
 
@@ -1515,7 +1506,7 @@ void drawCharacterSelectCoursePreviewPanel8(CharacterSelectCourseWidgetActor *ar
     shouldDraw = 1;
     for (i = 0; i < 16; i++, tileIndex++) {
         drawMenuSpriteTileClipped((s16)(arg0->x + ((i & 3) << 5)), (s16)(arg0->y + ((i / 4) << 5)),
-                      getRelocatableHeapBlockBase(gAssetHandles.textureHandle),
+                      getRelocatableHeapBlockBase(gAssetHandles[0x21]),
                       gCharacterSelectCoursePreviewFrameTileMaps[(u16)arg0->sprite.index].center[tileIndex], 0, 0x100, 0xA0, 0x49);
     }
 
@@ -1525,9 +1516,9 @@ void drawCharacterSelectCoursePreviewPanel8(CharacterSelectCourseWidgetActor *ar
     }
     offset = 0;
     do {
-        drawMenuSpriteTileClipped((s16)(arg0->x + 0x80), (s16)(arg0->y + offset), getRelocatableHeapBlockBase(gAssetHandles.textureHandle),
+        drawMenuSpriteTileClipped((s16)(arg0->x + 0x80), (s16)(arg0->y + offset), getRelocatableHeapBlockBase(gAssetHandles[0x21]),
                       gCharacterSelectCoursePreviewFrameTileMaps[(u16)arg0->sprite.index].right[tileIndex], 0, 0x100, 0xA0, 0x49);
-        drawMenuSpriteTileClipped((s16)(arg0->x + offset), (s16)(arg0->y + 0x80), getRelocatableHeapBlockBase(gAssetHandles.textureHandle),
+        drawMenuSpriteTileClipped((s16)(arg0->x + offset), (s16)(arg0->y + 0x80), getRelocatableHeapBlockBase(gAssetHandles[0x21]),
                       gCharacterSelectCoursePreviewFrameTileMaps[(u16)arg0->sprite.index].bottom[tileIndex], 0, 0x100, 0xA0, 0x49);
         i = 0x80;
         offset += 0x40;
@@ -1536,7 +1527,7 @@ void drawCharacterSelectCoursePreviewPanel8(CharacterSelectCourseWidgetActor *ar
     i++;
     i--;
 
-    drawMenuSpriteTileClipped((s16)(arg0->x + 0x80), (s16)(arg0->y + 0x80), getRelocatableHeapBlockBase(gAssetHandles.textureHandle),
+    drawMenuSpriteTileClipped((s16)(arg0->x + 0x80), (s16)(arg0->y + 0x80), getRelocatableHeapBlockBase(gAssetHandles[0x21]),
                   gCharacterSelectCoursePreviewFrameTileMaps[(u16)arg0->sprite.index].corner, 0, 0x100, 0xA0, 0x49);
 }
 
@@ -1624,7 +1615,7 @@ void drawCharacterSelectCoursePreviewPanel9(CharacterSelectCourseWidgetActor *ar
     tileOffset = 0;
     shouldDraw = 1;
     for (i = 0; i < 16; i++, tileOffset++) {
-        drawMenuSpriteTileClipped(arg0->x + ((i & 3) << 5), arg0->y + ((i / 4) << 5), getRelocatableHeapBlockBase(gAssetHandles.textureHandle),
+        drawMenuSpriteTileClipped(arg0->x + ((i & 3) << 5), arg0->y + ((i / 4) << 5), getRelocatableHeapBlockBase(gAssetHandles[0x21]),
                       gCharacterSelectCoursePreviewFrameTileMaps[(u16)arg0->sprite.index].center[tileOffset], 0, 0x100, 0xA0, 0x49);
     }
 
@@ -1634,9 +1625,9 @@ void drawCharacterSelectCoursePreviewPanel9(CharacterSelectCourseWidgetActor *ar
     }
     offset = 0;
     do {
-        drawMenuSpriteTileClipped(arg0->x + 0x80, arg0->y + offset, getRelocatableHeapBlockBase(gAssetHandles.textureHandle),
+        drawMenuSpriteTileClipped(arg0->x + 0x80, arg0->y + offset, getRelocatableHeapBlockBase(gAssetHandles[0x21]),
                       gCharacterSelectCoursePreviewFrameTileMaps[(u16)arg0->sprite.index].right[tileOffset], 0, 0x100, 0xA0, 0x49);
-        drawMenuSpriteTileClipped(arg0->x + offset, arg0->y + 0x80, getRelocatableHeapBlockBase(gAssetHandles.textureHandle),
+        drawMenuSpriteTileClipped(arg0->x + offset, arg0->y + 0x80, getRelocatableHeapBlockBase(gAssetHandles[0x21]),
                       gCharacterSelectCoursePreviewFrameTileMaps[(u16)arg0->sprite.index].bottom[tileOffset], 0, 0x100, 0xA0, 0x49);
         i = 0x80;
         offset += 0x40;
@@ -1645,7 +1636,7 @@ void drawCharacterSelectCoursePreviewPanel9(CharacterSelectCourseWidgetActor *ar
     i++;
     i--;
 
-    drawMenuSpriteTileClipped(arg0->x + 0x80, arg0->y + 0x80, getRelocatableHeapBlockBase(gAssetHandles.textureHandle),
+    drawMenuSpriteTileClipped(arg0->x + 0x80, arg0->y + 0x80, getRelocatableHeapBlockBase(gAssetHandles[0x21]),
                   gCharacterSelectCoursePreviewFrameTileMaps[(u16)arg0->sprite.index].corner, 0, 0x100, 0xA0, 0x49);
 }
 
@@ -2012,13 +2003,13 @@ void drawCharacterSelectCourseStatsBadge(CharacterSelectCourseWidgetActor *arg0)
 
     if (gRaceCourseIndex != gCharacterSelectCourseExitOptionIndex) {
         drawMenuPanelBackdrop(arg0->x, arg0->y, 0x3800, 0x5800);
-        drawMenuSpriteWithAlpha((s16)(arg0->x + 4), (s16)(arg0->y + 4), getRelocatableHeapBlockBase(gAssetHandles.textureHandle),
+        drawMenuSpriteWithAlpha((s16)(arg0->x + 4), (s16)(arg0->y + 4), getRelocatableHeapBlockBase(gAssetHandles[0x21]),
                       0x23, 0x20, 0x20, 0, arg0->sprite.index, 0);
         sprintf(buf - 4, gCharacterSelectCourseStatsScoreFormat, gCharacterSelectCourseStatsScoreValues[gRaceCourseIndex]);
         drawMenuAsciiText((s16)(arg0->x + 8), (s16)(arg0->y + 0xC), buf - 4, 0, arg0->sprite.index);
-        drawMenuSpriteWithAlpha((s16)(arg0->x + 0x28), (s16)(arg0->y + 0xC), getRelocatableHeapBlockBase(gAssetHandles.textureHandle),
+        drawMenuSpriteWithAlpha((s16)(arg0->x + 0x28), (s16)(arg0->y + 0xC), getRelocatableHeapBlockBase(gAssetHandles[0x21]),
                       0x24, 0x20, 0x20, 0, arg0->sprite.index, 0);
-        drawMenuSpriteWithAlpha(arg0->x, (s16)(arg0->y + 0x14), getRelocatableHeapBlockBase(gAssetHandles.textureHandle), 0x25, 0x20,
+        drawMenuSpriteWithAlpha(arg0->x, (s16)(arg0->y + 0x14), getRelocatableHeapBlockBase(gAssetHandles[0x21]), 0x25, 0x20,
                       0x20, 0, arg0->sprite.index, 0);
 
         temp_v0 = gCharacterSelectCourseDifficultyRatings[gRaceCourseIndex];
@@ -2028,7 +2019,7 @@ void drawCharacterSelectCourseStatsBadge(CharacterSelectCourseWidgetActor *arg0)
         if ((temp_v0 / 2) > 0) {
             do {
                 drawMenuSpriteWithAlpha((s16)(arg0->x + xOffset + 4), (s16)(arg0->y + 0x1C),
-                              getRelocatableHeapBlockBase(gAssetHandles.iconTextureHandle), 0x25, 0x20, 0x20, 0,
+                              getRelocatableHeapBlockBase(gAssetHandles[0x24]), 0x25, 0x20, 0x20, 0,
                               arg0->sprite.index, 0);
                 i++;
                 temp_v0 = gCharacterSelectCourseDifficultyRatings[gRaceCourseIndex];
@@ -2038,7 +2029,7 @@ void drawCharacterSelectCourseStatsBadge(CharacterSelectCourseWidgetActor *arg0)
         var_t8 = temp_v0 & 1;
         if (var_t8 != 0) {
             drawMenuSpriteWithAlpha((s16)(arg0->x + xOffset + 4), (s16)(arg0->y + 0x1C),
-                          getRelocatableHeapBlockBase(gAssetHandles.iconTextureHandle), 0x26, 0x20, 0x20, 0, arg0->sprite.index,
+                          getRelocatableHeapBlockBase(gAssetHandles[0x24]), 0x26, 0x20, 0x20, 0, arg0->sprite.index,
                           0);
         }
     }
@@ -2108,7 +2099,7 @@ void drawCharacterSelectCoursePlayerStatsPanel(CharacterSelectCourseWidgetActor 
     s32 valueOffset;
     s32 three;
     CharacterSelectCoursePlayerRecord *player;
-    do { characterIds = gCharacterSelectCourseOptionsByUnlock[gHighestUnlockedCourse]; if (gPlayerCount == 1) { drawMenuSprite(arg0->x, arg0->y, getRelocatableHeapBlockBase(gAssetHandles.textureHandle), 0x21, 0x20, 0x20, 0, 0); drawMenuSprite((s16)(arg0->x + 0x30), arg0->y, getRelocatableHeapBlockBase(gAssetHandles.textureHandle), 0x22, 0x20, 0x20, 0, 0); sprintf(buf - 0x10, gCharacterSelectCourseBestScoreFormat, D_800EC9F8[characterIds[*(&gRaceCourseIndex)]]); drawMenuAsciiText((s16)(arg0->x + 0x14), (s16)(arg0->y + 0x2A), buf - 0x10, 0, 0x100); valueOffset = 0; yOffset = 0; three = 3; do { sprintf(buf - 0x10, gCharacterSelectCourseMedalScoreFormat, *((u16 *)(&gCharacterSelectCourseMedalScoreThresholds[(((*(&gRaceCourseIndex)) * three) * 2) + valueOffset]))); drawMenuAsciiText((s16)(arg0->x + 0x28), (s16)((arg0->y + yOffset) + 9), buf - 0x10, 0, 0x100); yOffset += 8; valueOffset += 2; } while (yOffset != 0x18); } else { drawMenuSprite(arg0->x, arg0->y, getRelocatableHeapBlockBase(gAssetHandles.textureHandle), 0x26, 0x20, 0x20, 0, 0); drawMenuSprite(arg0->x, (s16)(arg0->y + 0x10), getRelocatableHeapBlockBase(gAssetHandles.textureHandle), 0x27, 0x20, 0x20, 0, 0); player = (CharacterSelectCoursePlayerRecord *)gRacePlayers; yOffset = 0; do { sprintf(buf - 0x10, gCharacterSelectCoursePlayerRankFormat, player->value); drawMenuAsciiText((s16)(arg0->x + 0x40), (s16)((arg0->y + yOffset) + 0x10), buf - 0x10, 0, 0x100); player++; yOffset += 8; } while (player != &gFrameCounter); } } while (0);
+    do { characterIds = gCharacterSelectCourseOptionsByUnlock[gHighestUnlockedCourse]; if (gPlayerCount == 1) { drawMenuSprite(arg0->x, arg0->y, getRelocatableHeapBlockBase(gAssetHandles[0x21]), 0x21, 0x20, 0x20, 0, 0); drawMenuSprite((s16)(arg0->x + 0x30), arg0->y, getRelocatableHeapBlockBase(gAssetHandles[0x21]), 0x22, 0x20, 0x20, 0, 0); sprintf(buf - 0x10, gCharacterSelectCourseBestScoreFormat, D_800EC9F8[characterIds[*(&gRaceCourseIndex)]]); drawMenuAsciiText((s16)(arg0->x + 0x14), (s16)(arg0->y + 0x2A), buf - 0x10, 0, 0x100); valueOffset = 0; yOffset = 0; three = 3; do { sprintf(buf - 0x10, gCharacterSelectCourseMedalScoreFormat, *((u16 *)(&gCharacterSelectCourseMedalScoreThresholds[(((*(&gRaceCourseIndex)) * three) * 2) + valueOffset]))); drawMenuAsciiText((s16)(arg0->x + 0x28), (s16)((arg0->y + yOffset) + 9), buf - 0x10, 0, 0x100); yOffset += 8; valueOffset += 2; } while (yOffset != 0x18); } else { drawMenuSprite(arg0->x, arg0->y, getRelocatableHeapBlockBase(gAssetHandles[0x21]), 0x26, 0x20, 0x20, 0, 0); drawMenuSprite(arg0->x, (s16)(arg0->y + 0x10), getRelocatableHeapBlockBase(gAssetHandles[0x21]), 0x27, 0x20, 0x20, 0, 0); player = (CharacterSelectCoursePlayerRecord *)gRacePlayers; yOffset = 0; do { sprintf(buf - 0x10, gCharacterSelectCoursePlayerRankFormat, player->value); drawMenuAsciiText((s16)(arg0->x + 0x40), (s16)((arg0->y + yOffset) + 0x10), buf - 0x10, 0, 0x100); player++; yOffset += 8; } while (player != &gFrameCounter); } } while (0);
 }
 
 void updateCharacterSelectCoursePlayerStatsPanel(CharacterSelectCourseWidgetActor *arg0) {
@@ -2622,7 +2613,7 @@ void drawCharacterSelectCourseRecordsPopup(CharacterSelectCourseWidgetActor *arg
     s32 var_s5;
     s32 var_s7;
     s32 var_s0;
-    volatile CharacterSelectCourseAssetHandles *assetHandles;
+    volatile s16 *assetHandles;
 
     if (gRaceSplitscreenMode == 2) {
         stack.courseIds = gCharacterSelectCourseOptionsByUnlock[gHighestUnlockedCourse];
@@ -2632,7 +2623,7 @@ void drawCharacterSelectCourseRecordsPopup(CharacterSelectCourseWidgetActor *arg
         stack.courseIds = gCharacterSelectSingleCourseOption;
     }
 
-    assetHandles = &gAssetHandles;
+    assetHandles = gAssetHandles;
     var_s7 = 0;
     var_s5 = 0;
     do {
@@ -2643,7 +2634,7 @@ void drawCharacterSelectCourseRecordsPopup(CharacterSelectCourseWidgetActor *arg
             stack.color = 4;
         }
 
-        drawMenuSprite(arg0->x, (s16)(arg0->y + var_s5), getRelocatableHeapBlockBase(assetHandles->popupFontHandle),
+        drawMenuSprite(arg0->x, (s16)(arg0->y + var_s5), getRelocatableHeapBlockBase(assetHandles[0x1F]),
                       (rowIndex + 0x77) & 0xFFFF, 0x20, 0x20, 0, 0);
 
         if (gPlayerCount == 1) {
@@ -2918,13 +2909,13 @@ void drawCharacterSelectCourseRecordTime(CharacterSelectCourseRecordTime *arg0, 
         do {
         } while (0);
         drawAssetTableSpriteWithExplicitPaletteWideIndex(
-            (s16)x, y, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
+            (s16)x, y, getRelocatableHeapBlockBase(gAssetHandles[0x1F]),
             ((u8)buffer[i] - 5) & 0xFFFF, color);
         i++;
         x += 8;
     } while (i < -0xE);
     drawAssetTableSpriteWithExplicitPaletteWideIndex(
-        (s16)x, y, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x36, color);
+        (s16)x, y, getRelocatableHeapBlockBase(gAssetHandles[0x1F]), 0x36, color);
 
     if ((gRaceSplitscreenMode == 2) || ((gRaceSplitscreenMode == 1) && (gRaceTypeSelection == 0))) {
         x += 6;
@@ -2936,20 +2927,20 @@ void drawCharacterSelectCourseRecordTime(CharacterSelectCourseRecordTime *arg0, 
     i = -0x10;
     do {
         drawAssetTableSpriteWithExplicitPaletteWideIndex(
-            (s16)x, y, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
+            (s16)x, y, getRelocatableHeapBlockBase(gAssetHandles[0x1F]),
             ((u8)buffer[i] - 5) & 0xFFFF, color);
         i++;
         x += 8;
     } while (i < -0xE);
     drawAssetTableSpriteWithExplicitPaletteWideIndex(
-        (s16)x, y, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle), 0x35, color);
+        (s16)x, y, getRelocatableHeapBlockBase(gAssetHandles[0x1F]), 0x35, color);
 
     x += 8;
     sprintf(&buffer[-0x10], D_800E0BA8, record->centiseconds >> 8);
     i = -0x10;
     do {
         drawAssetTableSpriteWithExplicitPaletteWideIndex(
-            (s16)x, y, getRelocatableHeapBlockBase(gAssetHandles.popupFontHandle),
+            (s16)x, y, getRelocatableHeapBlockBase(gAssetHandles[0x1F]),
             ((u8)buffer[i] - 5) & 0xFFFF, color);
         i++;
         x += 8;

@@ -30,7 +30,6 @@ typedef struct {
 
 RacePlayer gRacePlayers[RACE_PLAYER_COUNT];
 
-extern s16 gAssetHandles[];
 extern s32 gMenuFlowState;
 extern u32 gPlayerInputHeld[];
 extern s8 gPlayerStickX[];

@@ -17,15 +17,6 @@
 
 typedef void *RomAssetAddress;
 
-typedef struct MainMenuModelAssetHandles {
-    u8 pad0[0x40];
-    /* 0x40 */ s16 raceRecordReplaySaveBufferHandle;
-    u8 pad42[0x5A - 0x42];
-    /* 0x5A */ s16 modelInstanceHandles[6];
-    /* 0x66 */ s16 modelAssetSlots[6];
-    /* 0x72 */ s16 animationAssetSlots[6];
-} MainMenuModelAssetHandles;
-
 typedef struct MainMenuAnimationWritePart {
     s32 word0;
     s32 word4;
@@ -36,9 +27,8 @@ typedef struct MainMenuAnimationWritePart {
 
 extern RomAssetAddress gCharacterRawAssetRanges[];
 extern RomAssetAddress gCharacterTextureAssetRanges[];
-extern MainMenuModelAssetHandles gAssetHandles;
 
-#define ASSET_HANDLE(index) (((s16 *)&gAssetHandles)[(index)])
+#define ASSET_HANDLE(index) (gAssetHandles[(index)])
 
 // compressRaceRecordReplayData best match: 99.203% (nonmatchings/compressRaceRecordReplayData-1219509448159986855/base_2.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/main_menu/main_menu_scene_model/compressRaceRecordReplayData.s")
@@ -351,8 +341,8 @@ s32 saveRaceRecordReplayData(void) {
         return 1;
     }
 
-    gAssetHandles.raceRecordReplaySaveBufferHandle = allocRelocatableHeapBlock(0x7500);
-    oldData = getRelocatableHeapBlockBase(gAssetHandles.raceRecordReplaySaveBufferHandle);
+    gAssetHandles[0x20] = allocRelocatableHeapBlock(0x7500);
+    oldData = getRelocatableHeapBlockBase(gAssetHandles[0x20]);
     src = gGameSaveDataBuffer.data;
     dst = oldData;
     do {
@@ -373,7 +363,7 @@ s32 saveRaceRecordReplayData(void) {
     COPY_SLOT(8, 7);
     COPY_SLOT(9, 8);
 
-    freeRelocatableHeapBlock(gAssetHandles.raceRecordReplaySaveBufferHandle);
+    freeRelocatableHeapBlock(gAssetHandles[0x20]);
     return 0;
 }
 
@@ -603,8 +593,8 @@ void initMainMenuSceneModel(s32 actorIndex, s32 modelIndex) {
                   MAIN_MENU_MODEL_ASSET_RANGE_END(gCharacterRawAssetRanges, modelIndex), actorIndex + 0x33);
     loadCompressedRomAsset((void *)MAIN_MENU_MODEL_ASSET_RANGE_START(gCharacterTextureAssetRanges, modelIndex),
                   (void *)MAIN_MENU_MODEL_ASSET_RANGE_END(gCharacterTextureAssetRanges, modelIndex), actorIndex + 0x39);
-    gAssetHandles.modelInstanceHandles[actorIndex] = allocRelocatableHeapBlock(sizeof(MainMenuSceneModel));
-    model = (MainMenuSceneModel *)getRelocatableHeapBlockBase(gAssetHandles.modelInstanceHandles[actorIndex]);
+    gAssetHandles[0x2D + actorIndex] = allocRelocatableHeapBlock(sizeof(MainMenuSceneModel));
+    model = (MainMenuSceneModel *)getRelocatableHeapBlockBase(gAssetHandles[0x2D + actorIndex]);
     model->actorIndex = actorIndex;
     model->modelIndex = modelIndex;
     initMainMenuSceneModelParts(model);

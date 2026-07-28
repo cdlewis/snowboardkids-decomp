@@ -18,11 +18,6 @@ typedef struct {
     /* 0x5 */ u8 pad5[3];
 } CompressedAssetHeader;
 
-typedef struct {
-    /* 0x00 */ s16 assetHandles[0x20];
-    /* 0x40 */ s16 compressedAssetHandle;
-} AssetHandleTable;
-
 struct RandomStateObject {
     u8 pad0[0x518];
     /* 0x518 */ u8 randomIndex;
@@ -37,7 +32,6 @@ extern s16 gHuffmanQueueCount;
 extern s16 gFrameCounter;
 extern CompressedAssetHeader gCompressedAssetHeader;
 extern HuffmanNode gHuffmanNodes[];
-extern AssetHandleTable gAssetHandles;
 extern s32 gHuffmanNodeCount;
 
 s32 randomNextMain(void) {
@@ -306,22 +300,22 @@ void loadCompressedRomAsset(void *arg0, void *arg1, s32 arg2) {
     u8 *sp30;
 
     dmaReadRom((u32)arg0, &gCompressedAssetHeader, 8);
-    gAssetHandles.assetHandles[arg2] = allocRelocatableHeapBlock(gCompressedAssetHeader.compressedSize);
-    gAssetHandles.compressedAssetHandle = allocRelocatableHeapBlock((s32)arg1 - (s32)arg0);
-    dmaReadRom((u32)arg0, (void *)getRelocatableHeapBlockBase(gAssetHandles.compressedAssetHandle), (s32)arg1 - (s32)arg0);
-    sp30 = (u8 *)getRelocatableHeapBlockBase(gAssetHandles.compressedAssetHandle) + 5;
-    sp28 = &gAssetHandles.assetHandles[arg2];
+    gAssetHandles[arg2] = allocRelocatableHeapBlock(gCompressedAssetHeader.compressedSize);
+    gAssetHandles[0x20] = allocRelocatableHeapBlock((s32)arg1 - (s32)arg0);
+    dmaReadRom((u32)arg0, (void *)getRelocatableHeapBlockBase(gAssetHandles[0x20]), (s32)arg1 - (s32)arg0);
+    sp30 = (u8 *)getRelocatableHeapBlockBase(gAssetHandles[0x20]) + 5;
+    sp28 = &gAssetHandles[arg2];
     decompressHuffmanAssetPayload(gCompressedAssetHeader.flags, sp30, getRelocatableHeapBlockBase(*sp28),
                                   gCompressedAssetHeader.compressedSize);
     getRelocatableHeapBlockBase(*sp28);
-    gAssetHandles.compressedAssetHandle = freeRelocatableHeapBlock(gAssetHandles.compressedAssetHandle);
+    gAssetHandles[0x20] = freeRelocatableHeapBlock(gAssetHandles[0x20]);
 }
 
 void loadRawRomAsset(void *arg0, void *arg1, s32 arg2) {
     s32 temp_a0 = (s32)arg1 - (s32)arg0;
     s16 *temp_v1;
 
-    temp_v1 = &gAssetHandles.assetHandles[arg2];
+    temp_v1 = &gAssetHandles[arg2];
     *temp_v1 = allocRelocatableHeapBlock(temp_a0);
     dmaReadRom((u32)arg0, (void *)getRelocatableHeapBlockBase(*temp_v1), temp_a0);
 }

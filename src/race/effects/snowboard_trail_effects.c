@@ -1,4 +1,5 @@
 #include "common.h"
+#include "game/engine/asset_manager.h"
 #include "game/engine/render_callback.h"
 #include "game/engine/relocatable_heap.h"
 #include "game/race/ui/race_ui_effects.h"
@@ -53,7 +54,6 @@ typedef struct SnowboardTrailPlayer {
 } SnowboardTrailPlayer;
 
 extern void *allocFixedTransformMatrix(u8 *source);
-extern s16 gAssetHandles[];
 extern u8 gRaceUpdatePaused;
 extern u32 gSnowboardTrailFrontDisplayList[];
 extern u32 gSnowboardTrailBackDisplayList[];

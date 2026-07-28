@@ -1,4 +1,5 @@
 #include "common.h"
+#include "game/engine/asset_manager.h"
 #include "game/engine/render_callback.h"
 #include "game/engine/relocatable_heap.h"
 #include "game/engine/callback_task_scheduler.h"
@@ -211,7 +212,6 @@ extern s16 gCourseSelectIconListYLayout[][6];
 extern s16 gCourseSelectIconListXLayout[][4];
 extern s16 gCourseSelectStatsPanelLayout[][4];
 extern s16 gCourseSelectStatsPlayerMarkerLayout[][2];
-extern s16 gAssetHandles[];
 extern u8 gPlayerCount;
 extern CourseSelectRacePlayer gRacePlayers[];
 extern CourseSelectRacePlayer D_80121D80[];

@@ -18,7 +18,6 @@ typedef struct {
     /* 0x4 */ u8 *end;
 } RomAssetRange;
 
-extern s16 gAssetHandles[];
 extern u16 gRaceCourseIndex;
 extern RomAssetRange gCharacterRawAssetRanges[];
 extern RomAssetRange gCharacterTextureAssetRanges[];

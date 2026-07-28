@@ -189,7 +189,6 @@ extern s32 D_801229BC;
 extern s8 D_80122FB7;
 extern s32 D_80122FC0;
 extern s32 D_80122FC8;
-extern s16 gAssetHandles[];
 extern CourseCollectibleSpriteEntry *gCourseCollectibleSpriteListsByCourse[];
 extern u32 gCourseCollectibleSpriteVertices[];
 extern Vtx gRacePickupBaseVertices[];

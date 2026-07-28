@@ -47,7 +47,6 @@ extern void releaseMenuAssetHandles(void);
 extern s8 gFramebufferSwapDelay;
 extern s16 gMenuFadeAlpha;
 extern Vec3i gMenuCameraTargetOffset;
-extern s16 gAssetHandles[];
 extern MenuCameraObject D_801121E0;
 extern MenuCameraObject *gCurrentMenuCameraObject;
 extern EndingCreditsFlowState *gCurrentGameTask;

@@ -5,6 +5,8 @@
 
 typedef struct RandomStateObject RandomStateObject;
 
+extern s16 gAssetHandles[0x40];
+
 s32 randomNextMain(void);
 s32 randomNextSecondary(void);
 void resetSecondaryRng(void);

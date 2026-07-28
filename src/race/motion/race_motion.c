@@ -1,4 +1,5 @@
 #include "common.h"
+#include "game/engine/asset_manager.h"
 #include "game/engine/relocatable_heap.h"
 #include "game/math/fixed_point_math.h"
 #include "game/race/motion/race_motion.h"
@@ -199,7 +200,6 @@ extern s32 gRaceCourseCollisionAdjustedZ;
 extern volatile s32 gRaceMotionRotationFrameBuffer[];
 extern RaceMotionRotation gRaceMotionJointFrameBuffer[];
 extern s32 gRaceMotionJointBlendBuffer[];
-extern s16 gAssetHandles[];
 extern s32 gRacePlayerHitCueId;
 extern s16 gRaceCourseIndex;
 extern RaceCourseSurfaceLimit gRaceCourseMaxSurfaceIndices[];

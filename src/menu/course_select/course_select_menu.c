@@ -142,7 +142,6 @@ extern s8 gCourseDetailsMenuSelection;
 extern s8 gCourseDetailsPreviewPage;
 extern s16 gCoursePreviewViewportHeight;
 extern s8 gCourseDetailsCloseFromBack;
-extern s16 gAssetHandles[];
 extern MenuCameraObject D_801121E0[];
 extern MenuCameraObject D_80112340;
 extern u8 gPlayerCount;

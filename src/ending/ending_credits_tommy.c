@@ -1,4 +1,5 @@
 #include "common.h"
+#include "game/engine/asset_manager.h"
 #include "game/engine/render_callback.h"
 #include "game/engine/callback_task_scheduler.h"
 #include "game/math/fixed_point_math.h"
@@ -52,7 +53,6 @@ extern Gfx *gRegionAllocPtr;
 extern GfxCommandSource gIdentityFixedTransform;
 extern u32 gAlphaSpriteRenderModeDl[];
 extern Vtx D_800B8100[];
-extern s16 gAssetHandles[];
 
 void noopEndingCreditsTommy(void) {
 }

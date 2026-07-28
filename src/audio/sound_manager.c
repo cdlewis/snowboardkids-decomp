@@ -53,15 +53,6 @@ typedef struct SoundRomRange {
     s32 words[2];
 } SoundRomRange;
 
-typedef struct SoundAssetHandles {
-    s16 unk0;
-    s16 unk2;
-    s16 unk4;
-    s16 unk6;
-    s16 unk8;
-    s16 unkA;
-} SoundAssetHandles;
-
 typedef union SoundHalfArg {
     s32 word;
     struct {
@@ -70,7 +61,6 @@ typedef union SoundHalfArg {
     } half;
 } SoundHalfArg;
 
-extern SoundAssetHandles gAssetHandles;
 extern s16 gRaceCourseIndex;
 extern u8 gRaceDemoPlaybackEnabled;
 extern u8 D_27E290[];
@@ -164,16 +154,16 @@ void initSoundManager(void) {
     gPlayerLoopingSoundId3 = 0;
     gSharedLoopingPositionalSoundHandle = 0;
 
-    gAssetHandles.unk6 = allocRelocatableHeapBlock(0x80000);
+    gAssetHandles[3] = allocRelocatableHeapBlock(0x80000);
     LOAD_ASSET(_275A90, 4);
-    gAssetHandles.unkA = allocRelocatableHeapBlock(0x10000);
+    gAssetHandles[5] = allocRelocatableHeapBlock(0x10000);
 
     init.count = 0x18;
     init.unk4 = &gSchedulerState;
     init.outputRate = 0x6E;
-    init.heapBase = (u8 *)getRelocatableHeapBlockBase(gAssetHandles.unk6);
+    init.heapBase = (u8 *)getRelocatableHeapBlockBase(gAssetHandles[3]);
     init.heapLen = 0x80000;
-    init.soundBank = (PlayerCommandBank *)getRelocatableHeapBlockBase(gAssetHandles.unk8);
+    init.soundBank = (PlayerCommandBank *)getRelocatableHeapBlockBase(gAssetHandles[4]);
     init.sampleBaseOffset = (s32)D_27E290;
     init.tuningTable = D_800DABB0;
     init.pitchOffsetTable = D_800DACAC;
@@ -205,8 +195,8 @@ s32 loadMusicSequenceBank(s32 arg0) {
     if (gCurrentMusicSequenceHandle == 0) {
         range = (SoundRomRange *)((arg0 * 2) + (s32 *)gMusicSequenceRomRanges);
         size = range->words[1] - range->words[0];
-        dmaReadRom(range->words[0], getRelocatableHeapBlockBase(gAssetHandles.unkA), size);
-        if ((gCurrentMusicSequenceHandle = MusStartSong((PlayerCommandData *)getRelocatableHeapBlockBase(gAssetHandles.unkA))) != 0) {
+        dmaReadRom(range->words[0], getRelocatableHeapBlockBase(gAssetHandles[5]), size);
+        if ((gCurrentMusicSequenceHandle = MusStartSong((PlayerCommandData *)getRelocatableHeapBlockBase(gAssetHandles[5]))) != 0) {
             gCurrentMusicSequenceBank = arg0;
             if (range == gRaceMusicSequenceRomRanges) {
                 MusSetMasterVolume(2, 0x7FFF);
