@@ -2111,20 +2111,12 @@ void updateCourseSelectExtraCourseIconList(CourseSelectWidgetActor *arg0) {
 }
 #endif
 
-// initCourseSelectExtraCourseIconList best match: 99.018% (nonmatchings/initCourseSelectExtraCourseIconList-1645024839200431810/base_9.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/menu/course_select/course_select_ui/initCourseSelectExtraCourseIconList.s")
-
-#ifdef NON_MATCHING
 void initCourseSelectExtraCourseIconList(CourseSelectWidgetActor *arg0) {
     CourseSelectExtraCourseIconListActor *actor;
-    u8 playerCount;
-    s16 *xLayout;
-    s16 *yLayout;
     s32 layoutIndex;
     s32 playerIndex;
     s32 iconIndex;
-    s32 iconX;
-    s32 iconXOffset;
+    s32 xOffset;
 
     actor = (CourseSelectExtraCourseIconListActor *)arg0;
     if ((s32)gPlayerCount < 3) {
@@ -2133,34 +2125,33 @@ void initCourseSelectExtraCourseIconList(CourseSelectWidgetActor *arg0) {
         layoutIndex = 2;
     }
 
+    playerIndex = 0;
     if ((s32)gPlayerCount > 0) {
-        xLayout = gCourseSelectIconListXLayout[layoutIndex];
-        yLayout = gCourseSelectIconListYLayout[layoutIndex];
-        playerIndex = 0;
         do {
             if ((s32)gPlayerCount >= 3) {
                 actor->rowSpacing[playerIndex] = 0xC;
             } else {
-                actor->rowSpacing[playerIndex] = yLayout[0];
+                actor->rowSpacing[playerIndex] = gCourseSelectIconListYLayout[layoutIndex][0];
             }
             actor->itemCounts[playerIndex] = 0;
             actor->alpha[playerIndex] = 0x100;
-
-            playerCount = gPlayerCount;
-            if (playerCount == 1) {
-                iconXOffset = 8;
+            if (gPlayerCount == 1) {
+                xOffset = 8;
             } else {
-                iconXOffset = 4;
+                xOffset = 4;
             }
-            iconX = xLayout[((playerIndex >= 2) * 2) + 1] + iconXOffset;
+            /* Preserve IDO's register allocation for the icon-position loop. */
+            if (0) {
+            }
 
             iconIndex = 0;
             do {
-                actor->iconX[playerIndex][iconIndex] = iconX;
-                actor->iconY[playerIndex][iconIndex] = yLayout[((playerIndex & 1) * 2) + 2];
+                actor->iconX[playerIndex][iconIndex] =
+                    gCourseSelectIconListXLayout[layoutIndex][((playerIndex >= 2) * 2) + 1] + xOffset;
+                actor->iconY[playerIndex][iconIndex] =
+                    gCourseSelectIconListYLayout[layoutIndex][((playerIndex & 1) * 2) + 2];
                 iconIndex++;
             } while (iconIndex != 3);
-
             playerIndex++;
         } while (playerIndex < (s32)gPlayerCount);
     }
@@ -2175,9 +2166,8 @@ void initCourseSelectExtraCourseIconList(CourseSelectWidgetActor *arg0) {
     } else {
         actor->clipLeft = 0x88;
     }
-    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateCourseSelectExtraCourseIconList);
+    setCallbackTaskCallback(actor, (CallbackTaskCallback)updateCourseSelectExtraCourseIconList);
 }
-#endif
 
 #pragma GLOBAL_ASM("src/menu/course_select/D_800E0DB8.s")
 
