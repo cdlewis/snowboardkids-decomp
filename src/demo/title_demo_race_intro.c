@@ -13,6 +13,11 @@
 #include "game/race/player/race_player_input.h"
 #include "game/menu/renderer/menu_screen_effects.h"
 
+typedef union {
+    RacePlayer player;
+    u8 bytes[sizeof(RacePlayer)];
+} RacePlayerReplaySnapshot;
+
 extern RaceIntroTransitionState *gCurrentGameTask;
 extern s16 gMenuFadeAlpha;
 extern s8 gMenuFadeOverlayActive;
@@ -20,14 +25,23 @@ extern f32 D_800E10C8;
 extern s16 gTitleDemoReplaySegmentFrames[];
 extern s16 gTitleDemoCameraModeFrames[];
 extern u8 gTitleDemoCameraModes[];
+#ifdef NON_MATCHING
+extern RacePlayerReplaySnapshot gTitleDemoReplayInputs[4][16];
+#else
 extern u8 gTitleDemoReplayInputs[];
+#endif
 extern u8 gPendingFramebufferSwapCount;
 extern u8 gRaceRumbleEnabled;
 extern s8 gRaceSplitscreenMode;
 extern s8 gFramebufferSwapDelay;
 extern u8 gRacePlayerHudStatuses;
+#ifdef NON_MATCHING
+extern volatile char gTitleDemoRaceIntroViewportHeight;
+#else
 extern s8 gTitleDemoRaceIntroViewportHeight;
+#endif
 extern s8 gTitleDemoRaceIntroFadeStep;
+extern s32 gPlayerInputPressed;
 extern s16 gRaceCourseIndex;
 extern s16 gRaceLapCount;
 extern s8 gRacePlayerCount;
@@ -43,7 +57,7 @@ extern u8 gFramebufferSwapHold;
 extern s32 gMenuFlowState;
 extern void releaseMenuAssetHandles(void);
 
-#define COURSE_REPLAY_OFFSET(course) ((((((((course) << 2) - (course)) << 5) + (course)) << 2) - (course)) << 2)
+#define RACE_PLAYER_REPLAY_SNAPSHOT(index) (((RacePlayerReplaySnapshot *)gRacePlayers)[index])
 
 void initTitleDemoRaceIntro(void) {
     RacePlayer *players;
@@ -148,136 +162,64 @@ void waitForTitleDemoRaceIntroStart(void) {
     }
 }
 
-// updateTitleDemoRaceIntro best match: 91.178% (nonmatchings/updateTitleDemoRaceIntro-8498672362023432715/base_9.c)
+// updateTitleDemoRaceIntro best match: 98.624% (nonmatchings/updateTitleDemoRaceIntro-5176680205357669729/base_25.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/demo/title_demo_race_intro/updateTitleDemoRaceIntro.s")
 
 #ifdef NON_MATCHING
-typedef struct {
-    u8 b0;
-    u8 b1;
-    u8 b2;
-    u8 b3;
-} FourBytes;
-
 void updateTitleDemoRaceIntro(void) {
-    RaceIntroTransitionState *state;
-    s32 prevOpen;
-    s32 i;
     s32 fadeStep;
-    s32 temp;
-    s32 offset;
-    u8 *dst;
-    u8 *src;
-    u8 value;
-    FourBytes *fourDst;
+    s32 previousPause;
+    s32 cameraIndex;
+    s32 fadeDelay;
+    s32 nextViewportHeight;
+    u32 i;
+    u8 *destination;
 
-    prevOpen = gRaceUpdatePaused;
-    configureViewport(0, 0xA0, 0x78, 0x120, gTitleDemoRaceIntroViewportHeight, 0x140, 0xF0, D_800E10C8);
-
-    temp = gTitleDemoRaceIntroViewportHeight;
-    if (temp != 0xB0) {
-        temp += 0x10;
-        gTitleDemoRaceIntroViewportHeight = temp;
-        if ((temp & 0xFF) == 0xB0) {
+    previousPause = gRaceUpdatePaused;
+    configureViewport(0, 0xA0, 0x78, 0x120, (u8) gTitleDemoRaceIntroViewportHeight, 0x140, 0xF0, D_800E10C8);
+    nextViewportHeight = (u8) gTitleDemoRaceIntroViewportHeight + 0x10;
+    if ((u8) gTitleDemoRaceIntroViewportHeight != 0xB0) {
+        gTitleDemoRaceIntroViewportHeight = nextViewportHeight;
+        if ((nextViewportHeight & 0xFF) == 0xB0) {
             createCallbackTask((CallbackTaskCallback)updateTitleScreenStartPrompt, 0, 0x64);
         }
     }
 
-    state = gCurrentGameTask;
-    fadeStep = state->fadeStep;
-    if (fadeStep == gTitleDemoReplaySegmentFrames[state->courseSegment]) {
-        i = 0;
-        do {
-            dst = (u8 *)gRacePlayers + i;
-            offset = COURSE_REPLAY_OFFSET(gCurrentGameTask->courseSegment);
-            src = gTitleDemoReplayInputs + offset + i;
-            value = *src;
-            i++;
-            *dst = value;
-        } while ((u32)i < 0x60C);
+    fadeStep = gCurrentGameTask->fadeStep; if (fadeStep == gTitleDemoReplaySegmentFrames[gCurrentGameTask->courseSegment]) { destination = RACE_PLAYER_REPLAY_SNAPSHOT(0).bytes; i = 0; do { destination[i] = gTitleDemoReplayInputs[0][gCurrentGameTask->courseSegment].bytes[i]; i++; } while (i < sizeof(RacePlayerReplaySnapshot)); destination = RACE_PLAYER_REPLAY_SNAPSHOT(1).bytes; i = 0; do { destination[i] = gTitleDemoReplayInputs[1][gCurrentGameTask->courseSegment].bytes[i]; i++; } while (i < sizeof(RacePlayerReplaySnapshot)); destination = RACE_PLAYER_REPLAY_SNAPSHOT(2).bytes; i = 0; do { destination[i] = gTitleDemoReplayInputs[2][gCurrentGameTask->courseSegment].bytes[i]; i++; } while (i < sizeof(RacePlayerReplaySnapshot)); destination = RACE_PLAYER_REPLAY_SNAPSHOT(3).bytes; i = 0; for (;;) { destination[i] = gTitleDemoReplayInputs[3][gCurrentGameTask->courseSegment].bytes[i]; destination[i + 1] = gTitleDemoReplayInputs[3][gCurrentGameTask->courseSegment].bytes[i + 1]; destination[i + 2] = gTitleDemoReplayInputs[3][gCurrentGameTask->courseSegment].bytes[i + 2]; destination[i + 3] = gTitleDemoReplayInputs[3][gCurrentGameTask->courseSegment].bytes[i + 3]; i += 4; if (i == sizeof(RacePlayerReplaySnapshot)) { break; } } gCurrentGameTask->courseSegment++; fadeStep = gCurrentGameTask->fadeStep; }
 
-        i = 0;
-        do {
-            dst = (u8 *)&gRacePlayers[1] + i;
-            offset = COURSE_REPLAY_OFFSET(gCurrentGameTask->courseSegment);
-            src = gTitleDemoReplayInputs + offset + 0x60C0 + i;
-            value = *src;
-            i++;
-            *dst = value;
-        } while ((u32)i < 0x60C);
-
-        i = 0;
-        do {
-            dst = (u8 *)&gRacePlayers[2] + i;
-            offset = COURSE_REPLAY_OFFSET(gCurrentGameTask->courseSegment);
-            src = gTitleDemoReplayInputs + offset + 0xC180 + i;
-            value = *src;
-            i++;
-            *dst = value;
-        } while ((u32)i < 0x60C);
-
-        i = 0;
-copy_player3:
-        fourDst = (FourBytes *)((u8 *)&gRacePlayers[3] + i);
-        offset = COURSE_REPLAY_OFFSET(gCurrentGameTask->courseSegment);
-        fourDst->b0 = gTitleDemoReplayInputs[offset + 0x12240 + i];
-        offset = COURSE_REPLAY_OFFSET(gCurrentGameTask->courseSegment);
-        fourDst->b1 = gTitleDemoReplayInputs[offset + 0x12241 + i];
-        offset = COURSE_REPLAY_OFFSET(gCurrentGameTask->courseSegment);
-        fourDst->b2 = gTitleDemoReplayInputs[offset + 0x12242 + i];
-        offset = COURSE_REPLAY_OFFSET(gCurrentGameTask->courseSegment);
-        fourDst->b3 = gTitleDemoReplayInputs[offset + 0x12243 + i];
-        i += 4;
-        if (i != 0x60C) {
-            goto copy_player3;
-        }
-
-        gCurrentGameTask->courseSegment++;
-        state = gCurrentGameTask;
-        fadeStep = state->fadeStep;
-    }
-
-    temp = state->startDelay;
-    if (fadeStep == gTitleDemoCameraModeFrames[temp]) {
-        setRaceCameraMode(0, gTitleDemoCameraModes[temp]);
+    cameraIndex = gCurrentGameTask->startDelay;
+    if (fadeStep == gTitleDemoCameraModeFrames[cameraIndex]) {
+        setRaceCameraMode(0, gTitleDemoCameraModes[cameraIndex]);
         gCurrentGameTask->startDelay++;
         gRaceUpdatePaused = 1;
     }
-
     updateRacePlayers();
     updateCallbackTasksWithMinPriority(0x63);
     updateRacePlayersPostUpdate();
     updateRemainingCallbackTasks();
-    gRaceUpdatePaused = prevOpen;
+    gRaceUpdatePaused = previousPause;
     updateRaceCameras();
-
     gCurrentGameTask->fadeStep++;
-    state = gCurrentGameTask;
-    temp = state->fadeDelay;
-    if (temp != 0) {
-        state->fadeDelay = temp - 1;
+    fadeDelay = gCurrentGameTask->fadeDelay;
+    if (fadeDelay != 0) {
+        gCurrentGameTask->fadeDelay = fadeDelay - 1;
     }
-
     if (gPlayerInputPressed & START_BUTTON) {
-        if (gTitleDemoRaceIntroFadeStep == 0) {
+        if ((u8) gTitleDemoRaceIntroFadeStep == 0) {
             gTitleDemoRaceIntroFadeStep = 0x10;
         }
         requestMusicSequenceStop(0x20);
     }
-
     if (gCurrentGameTask->fadeDelay < 0x41) {
-        if (gTitleDemoRaceIntroFadeStep == 0) {
+        if ((u8) gTitleDemoRaceIntroFadeStep == 0) {
             gTitleDemoRaceIntroFadeStep = 4;
         }
         requestMusicSequenceStop(0x82);
     }
-
-    temp = gTitleDemoRaceIntroFadeStep;
-    if (temp != 0) {
+    if ((u8) gTitleDemoRaceIntroFadeStep != 0) {
         gMenuFadeOverlayActive = 1;
-        gMenuFadeAlpha += temp;
+        gMenuFadeAlpha += (u8)gTitleDemoRaceIntroFadeStep;
     }
-
     if (gMenuFadeAlpha >= 0xFF) {
         gMenuFadeAlpha = 0xFF;
         gFramebufferSwapHold = 1;
