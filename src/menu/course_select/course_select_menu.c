@@ -156,6 +156,8 @@ extern u8 gPendingFramebufferSwapCount;
 extern u8 gFramebufferSwapHold;
 extern s32 gPlayerInputHeld;
 extern s32 gPlayerInputPressed;
+extern u8 D_80121D86;
+extern s8 D_80121D87;
 extern void releaseMenuAssetHandles(void);
 extern void enqueueSoundEffect(s32, s32);
 
@@ -876,11 +878,11 @@ void updateCourseSelectPurchasePrompt(void) {
     updateCallbackTasks();
 }
 
-// updateCourseSelectUnlockCourseList best match: 84.531%
-// (nonmatchings/updateCourseSelectUnlockCourseList-1645024839200431810/base_33.c)
+// updateCourseSelectUnlockCourseList best match: 90.230%
+// (nonmatchings/updateCourseSelectUnlockCourseList-5176680205357669729/base_34.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/course_select/course_select_menu/updateCourseSelectUnlockCourseList.s")
 
-#ifdef NON_MATCHING
+#if 0 /* Superseded without consulting the previous attempt. */
 void updateCourseSelectUnlockCourseList(void) {
     u16 new_var3;
     u16 *new_var2;
@@ -1034,6 +1036,126 @@ after_input:
                 var_s0++;
             } while (i < (s32) gPlayerCount);
         }
+    }
+    updateCallbackTasks();
+}
+#endif
+
+#ifdef NON_MATCHING
+void updateCourseSelectUnlockCourseList(void) {
+    s32 i;
+    int playerIndex;
+    s32 held;
+    s32 heldUp;
+    s32 pressed;
+    s32 upMask;
+    register s32 divisor;
+    u8 *selectionPtr;
+    u16 repeatTimer;
+    u8 selection;
+    MenuCameraObject *camera;
+
+    playerIndex = 0;
+    if ((&gMenuChoicePromptState)[playerIndex] == 9) {
+        D_8010AEA4 = (u8)D_8010AEA4 + 1;
+    } else {
+        D_8010AEA4 = playerIndex;
+    }
+
+    if (((&gMenuChoicePromptState)[playerIndex] >= 2) &&
+        ((&gMenuChoicePromptState)[playerIndex] < 5)) {
+        upMask = STICK_UP | U_JPAD;
+        held = (&gPlayerInputHeld)[playerIndex];
+        heldUp = held & upMask;
+        if ((heldUp == playerIndex) &&
+            !((&gPlayerInputHeld)[playerIndex] & (STICK_DOWN | D_JPAD))) {
+            (&gMenuInputRepeatTimers)[playerIndex] = playerIndex;
+        }
+
+        selectionPtr = &D_80121D86;
+        pressed = (&gPlayerInputPressed)[playerIndex];
+        repeatTimer = (&gMenuInputRepeatTimers)[playerIndex];
+        if ((pressed & upMask) ||
+            ((heldUp != playerIndex) && (repeatTimer >= 9) && (repeatTimer & 1))) {
+            if (repeatTimer == playerIndex) {
+                repeatTimer++;
+            }
+            (&gMenuInputRepeatTimers)[playerIndex] = repeatTimer;
+            if ((&gMenuChoicePromptState)[playerIndex] >= 3) {
+                (&gMenuChoicePromptState)[playerIndex]--;
+                enqueueSoundEffect(0x19, 0x32);
+                pressed = (&gPlayerInputPressed)[playerIndex];
+            }
+        } else if ((pressed & (STICK_DOWN | D_JPAD)) ||
+                   ((*(volatile s16 *)&(&gMenuInputRepeatTimers)[playerIndex] = repeatTimer,
+                     held & (STICK_DOWN | D_JPAD)) &&
+                    (*(volatile s16 *)&(&gMenuInputRepeatTimers)[playerIndex] = repeatTimer,
+                     repeatTimer >= 9) &&
+                    (*(volatile s16 *)&(&gMenuInputRepeatTimers)[playerIndex] = repeatTimer,
+                     repeatTimer & 1))) {
+            if (repeatTimer == playerIndex) {
+                repeatTimer++;
+            }
+            (&gMenuInputRepeatTimers)[playerIndex] = repeatTimer;
+            if ((&gMenuChoicePromptState)[playerIndex] < D_8010AF3C + 1) {
+                (&gMenuChoicePromptState)[playerIndex]++;
+                enqueueSoundEffect(0x19, 0x32);
+                pressed = (&gPlayerInputPressed)[playerIndex];
+            }
+        }
+
+        repeatTimer = (&gMenuInputRepeatTimers)[playerIndex];
+        if (repeatTimer != playerIndex) {
+            repeatTimer++;
+            (&gMenuInputRepeatTimers)[playerIndex] = repeatTimer;
+            if (repeatTimer == 0xFFFF) {
+                (&gMenuInputRepeatTimers)[playerIndex] = 0xA;
+            }
+        }
+
+        divisor = 3;
+        selection = ((&gMenuChoicePromptState)[playerIndex] * divisor) +
+                    (D_80121D86 % divisor) - 6;
+        *(volatile u8 *)selectionPtr = selection;
+        if (pressed & B_BUTTON) {
+            enqueueSoundEffect(0x18, 0x32);
+            (&gMenuChoicePromptState)[playerIndex] += 3;
+            *(volatile u8 *)selectionPtr = D_80121D86 % divisor;
+            (&gMenuInputRepeatTimers)[playerIndex] = playerIndex;
+        } else if ((pressed & A_BUTTON) || (pressed & START_BUTTON)) {
+            enqueueSoundEffect(0x18, 0x32);
+            selection = ((&gMenuChoicePromptState)[playerIndex] * divisor) +
+                        (D_80121D86 % divisor) - 6;
+            D_80121D87 = gCourseUnlockSaveSlots[selection];
+            *(volatile u8 *)selectionPtr = selection;
+            if (D_8010AECC == playerIndex) {
+                D_8010AF2C = playerIndex;
+                if (pressed) {
+                }
+                D_8010AF1C = 7;
+            } else {
+                D_8010AF34 = playerIndex;
+                D_8010AF20 = 7;
+            }
+        }
+    } else if ((&gMenuChoicePromptState)[playerIndex] == playerIndex) {
+        setCurrentGameTaskCallback(updateCourseSelectCourseList, playerIndex);
+    }
+
+    if ((gCourseSelectStatus.playerOneCourseDecided == 7) ||
+        (gCourseSelectStatus.playerTwoCourseDecided == 7)) {
+        gCurrentGameTask->screenState = 1;
+        setCurrentGameTaskCallback(initCourseSelectCourseDetailsMenu, playerIndex);
+    }
+
+    i = playerIndex;
+    if (gPlayerCount > playerIndex) {
+        camera = D_801121E0;
+        do {
+            (gCurrentMenuCameraObject = camera)->update();
+            i++;
+            camera++;
+        } while (i < gPlayerCount);
     }
     updateCallbackTasks();
 }
