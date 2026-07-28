@@ -72,7 +72,7 @@ void drawCharacterSelectCourseRecordsPopup(
     tile = row + 0x77;
     drawMenuSprite(
         arg0->x, (s16)(arg0->y + yOffset),
-        getRelocatableHeapBlockBase((s32)gAssetHandles.popupFontHandle), tile,
+        getRelocatableHeapBlockBase((s32)CHARACTER_SELECT_POPUP_FONT_HANDLE), tile,
         0x20U, 0x20U, 0U, 0U);
 
     if (gPlayerCount == 1) {
@@ -89,14 +89,14 @@ void drawCharacterSelectCourseRecordsPopup(
               arg0->x + 0x14, arg0->y + yOffset, (s32)stack.color);
           drawMenuSprite(
               (s16)(arg0->x + 0x54), (s16)(arg0->y + yOffset),
-              getRelocatableHeapBlockBase((s32)gAssetHandles.popupFontHandle),
+              getRelocatableHeapBlockBase((s32)CHARACTER_SELECT_POPUP_FONT_HANDLE),
               ((D_800F4290[(stack.courseIds[gRaceCourseIndex] * 5) + row] & 7) +
                0x51) &
                   0xFFFF,
               0x20U, 0x20U, 0U, 0U);
           drawMenuSprite(
               (s16)(arg0->x + 0x65), (s16)(arg0->y + yOffset),
-              getRelocatableHeapBlockBase((s32)gAssetHandles.popupFontHandle),
+              getRelocatableHeapBlockBase((s32)CHARACTER_SELECT_POPUP_FONT_HANDLE),
               (((s32)
                     D_800F4290[(stack.courseIds[gRaceCourseIndex] * 5) + row] >>
                 3) +
@@ -115,7 +115,7 @@ void drawCharacterSelectCourseRecordsPopup(
           if (quotient & 0xFFFF) {
             drawMenuSprite(
                 (s16)(arg0->x + 0x18), (s16)(arg0->y + yOffset),
-                getRelocatableHeapBlockBase((s32)gAssetHandles.popupFontHandle),
+                getRelocatableHeapBlockBase((s32)CHARACTER_SELECT_POPUP_FONT_HANDLE),
                 (stack.quotient + 0x2B) & 0xFFFF, 0x20U, 0x20U, 0U,
                 (u8)(color + 1));
             courseId = &stack.courseIds[gRaceCourseIndex];
@@ -125,20 +125,20 @@ void drawCharacterSelectCourseRecordsPopup(
               (u16)((s32)D_800F4222[(*courseId * 5) + row] % 10) ^ 0;
           drawMenuSprite(
               (s16)(arg0->x + 0x20), (s16)(arg0->y + yOffset),
-              getRelocatableHeapBlockBase((s32)gAssetHandles.popupFontHandle),
+              getRelocatableHeapBlockBase((s32)CHARACTER_SELECT_POPUP_FONT_HANDLE),
               (stack.remainder + 0x2B) & 0xFFFF, 0x20U, 0x20U, 0U, palette);
           drawMenuAsciiText((s16)(arg0->x + 0x28), (s16)(arg0->y + yOffset + 8),
                             "HIT", (u16)stack.color, 0x100U);
           drawMenuSprite(
               (s16)(arg0->x + 0x48), (s16)(arg0->y + yOffset),
-              getRelocatableHeapBlockBase((s32)gAssetHandles.popupFontHandle),
+              getRelocatableHeapBlockBase((s32)CHARACTER_SELECT_POPUP_FONT_HANDLE),
               ((D_800F4259[(stack.courseIds[gRaceCourseIndex] * 5) + row] & 7) +
                0x51) &
                   0xFFFF,
               0x20U, 0x20U, 0U, 0U);
           drawMenuSprite(
               (s16)(arg0->x + 0x60), (s16)(arg0->y + yOffset),
-              getRelocatableHeapBlockBase((s32)gAssetHandles.popupFontHandle),
+              getRelocatableHeapBlockBase((s32)CHARACTER_SELECT_POPUP_FONT_HANDLE),
               (((s32)
                     D_800F4259[(stack.courseIds[gRaceCourseIndex] * 5) + row] >>
                 3) +
@@ -159,7 +159,7 @@ void drawCharacterSelectCourseRecordsPopup(
           do {
             drawMenuSprite(
                 (s16)((arg0->x - digitOffset) + 0x38), (s16)(arg0->y + yOffset),
-                getRelocatableHeapBlockBase((s32)gAssetHandles.popupFontHandle),
+                getRelocatableHeapBlockBase((s32)CHARACTER_SELECT_POPUP_FONT_HANDLE),
                 (((s32)score % 10) + 0x2B) & 0xFFFF, 0x20U, 0x20U, 0U, palette);
             digitOffset += 8;
             score = score / 10;
@@ -168,7 +168,7 @@ void drawCharacterSelectCourseRecordsPopup(
                             "P", (u16)stack.color, 0x100U);
           drawMenuSprite(
               (s16)(arg0->x + 0x4C), (s16)(arg0->y + yOffset),
-              getRelocatableHeapBlockBase((s32)gAssetHandles.popupFontHandle),
+              getRelocatableHeapBlockBase((s32)CHARACTER_SELECT_POPUP_FONT_HANDLE),
               ((((CharacterSelectCourseRecordsPopupSaveDataCandidate *)
                      stack.trickIcon)
                     ->trickAttackCharacterIds[7][0] &
@@ -178,7 +178,7 @@ void drawCharacterSelectCourseRecordsPopup(
               0x20U, 0x20U, 0U, 0U);
           drawMenuSprite(
               (s16)(arg0->x + 0x60), (s16)(arg0->y + yOffset),
-              getRelocatableHeapBlockBase((s32)gAssetHandles.popupFontHandle),
+              getRelocatableHeapBlockBase((s32)CHARACTER_SELECT_POPUP_FONT_HANDLE),
               (((s32)((CharacterSelectCourseRecordsPopupSaveDataCandidate *)
                           stack.trickIcon)
                     ->trickAttackCharacterIds[7][0] >>
@@ -199,14 +199,14 @@ void drawCharacterSelectCourseRecordsPopup(
             arg0->x + 0x14, arg0->y + yOffset, (s32)stack.color);
         drawMenuSprite(
             (s16)(arg0->x + 0x54), (s16)(arg0->y + yOffset),
-            getRelocatableHeapBlockBase((s32)gAssetHandles.popupFontHandle),
+            getRelocatableHeapBlockBase((s32)CHARACTER_SELECT_POPUP_FONT_HANDLE),
             ((D_800F41EB[(stack.courseIds[gRaceCourseIndex] * 5) + row] & 7) +
              0x51) &
                 0xFFFF,
             0x20U, 0x20U, 0U, 0U);
         drawMenuSprite(
             (s16)(arg0->x + 0x65), (s16)(arg0->y + yOffset),
-            getRelocatableHeapBlockBase((s32)gAssetHandles.popupFontHandle),
+            getRelocatableHeapBlockBase((s32)CHARACTER_SELECT_POPUP_FONT_HANDLE),
             (((s32)D_800F41EB[(stack.courseIds[gRaceCourseIndex] * 5) + row] >>
               3) +
              0x7C) &

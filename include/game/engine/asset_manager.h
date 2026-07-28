@@ -5,7 +5,12 @@
 
 typedef struct RandomStateObject RandomStateObject;
 
-extern s16 gAssetHandles[0x40];
+#define ASSET_HANDLE_COUNT 0x40
+
+typedef s16 AssetHandle;
+typedef AssetHandle AssetHandles[ASSET_HANDLE_COUNT];
+
+extern AssetHandles gAssetHandles;
 
 s32 randomNextMain(void);
 s32 randomNextSecondary(void);
