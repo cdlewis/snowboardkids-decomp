@@ -89,7 +89,6 @@ extern s32 gControllerPakFreeFileCount;
 extern OSMesgQueue gControllerInputUpdateQueue;
 extern u8 gPendingFramebufferSwapCount;
 extern u8 gFramebufferSwapHold;
-extern u8 gRaceRecordSettingsEnabled;
 extern s32 gMenuFlowState;
 extern u8 gControllerPakSaveGameNameBytes[];
 extern u8 gControllerPakSaveExtNameBytes[];

@@ -53,7 +53,6 @@ extern s16 gRaceLapCount;
 extern s16 gMenuFadeAlpha;
 extern s32 gMenuFlowState;
 extern s16 gFrameCounter;
-extern u8 gRaceRecordSettingsEnabled;
 extern s16 gUiBlinkTimer;
 
 extern void drawMenuFillRectangle(s16, s16, s16, s16, u8, u8, u8);
