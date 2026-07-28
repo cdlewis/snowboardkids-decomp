@@ -64,7 +64,6 @@ extern s32 gRaceCameraReplayStartZ;
 extern s16 gRaceCourseIndex;
 extern s8 gRacePlayerCount;
 extern u8 gRaceUpdatePaused;
-extern u8 gRaceCameraModeChangeDisabled;
 extern s32 gMenuFlowState;
 
 void setRaceCameraMode(u16 arg0, u16 arg1) {

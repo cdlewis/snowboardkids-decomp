@@ -117,7 +117,6 @@ extern s8 gRacePlayerCount;
 extern u8 gRaceUpdatePaused;
 extern u8 gRaceDemoPlaybackEnabled;
 extern u8 gRaceTypeSelection;
-extern u8 gRaceCameraModeChangeDisabled;
 extern u8 gTrainingCourseLesson;
 extern s16 gRaceCourseIndex;
 extern s32 gMenuFlowState;
