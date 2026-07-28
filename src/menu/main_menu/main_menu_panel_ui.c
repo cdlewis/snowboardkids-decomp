@@ -3,6 +3,7 @@
 #include "game/engine/render_callback.h"
 #include "game/engine/relocatable_heap.h"
 #include "game/engine/callback_task_scheduler.h"
+#include "game/menu/main_menu/controller_main_menu_flow.h"
 #include "game/menu/main_menu/main_menu_panel_ui.h"
 #include "game/menu/renderer/menu_renderer.h"
 #include "game/menu/renderer/menu_render_utils.h"
@@ -29,7 +30,6 @@ struct MenuPanelActor {
     /* 0x2B */ u8 selectionState;
 };
 
-extern u8 gMainMenuSelectionResult;
 extern MenuGlyphScript mainMenuModeSelectTitleText[];
 extern u8 mainMenuModeSelectPrimaryIconTiles[];
 extern u8 mainMenuModeSelectTopRowIconTiles[];
