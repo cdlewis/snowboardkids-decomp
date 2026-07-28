@@ -140,7 +140,6 @@ extern void loadCurrentRaceRecordReplayData(void);
 extern void initCourseRecordBannerFadeOut(void *);
 #endif
 extern u8 D_80121B57;
-extern u8 gRaceCameraModeChangeDisabled;
 extern u8 gRaceTypeSelection;
 extern u8 D_80121B60;
 extern s8 D_80121B61;

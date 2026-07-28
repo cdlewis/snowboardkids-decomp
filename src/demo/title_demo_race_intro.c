@@ -43,7 +43,6 @@ extern s16 gRaceCourseIndex;
 extern s16 gRaceLapCount;
 extern s8 gRacePlayerCount;
 extern u8 gRaceUpdatePaused;
-extern u8 gRaceCameraModeChangeDisabled;
 extern u8 gRaceDemoPlaybackEnabled;
 extern u8 gTrainingCourseLesson;
 extern u8 gMainMenuModeSelection;

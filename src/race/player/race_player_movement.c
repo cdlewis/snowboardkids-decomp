@@ -3,6 +3,7 @@
 #include "game/engine/callback_task_scheduler.h"
 #include "game/audio/sound_manager.h"
 #include "game/race/motion/race_motion.h"
+#include "game/race/camera/race_camera.h"
 #include "game/race/course/race_course_effects.h"
 #include "game/race/player/race_player_input.h"
 #include "game/race/player/race_player_movement.h"
@@ -104,7 +105,6 @@ extern RaceCourseStartEntry gRaceCourseStartEntries[];
 extern Unk8011228C gRacePlayerHudStatuses[];
 extern s16 gRaceCourseIndex;
 extern s16 gRaceLapCount;
-extern u8 gRaceCameraModeChangeDisabled;
 
 void getRacePlayerRankingProgress(s32 arg0, s32 *arg1, s32 *arg2) {
     RacePlayer *player;

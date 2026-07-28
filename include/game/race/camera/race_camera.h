@@ -31,6 +31,7 @@ typedef struct RaceCamera {
 } RaceCamera;
 
 extern RaceCamera *gCurrentMenuCameraObject;
+extern u8 gRaceCameraModeChangeDisabled;
 
 void setRaceCameraMode(u16 arg0, u16 arg1);
 void setRaceCameraModeForced(u16 arg0, u16 arg1);
