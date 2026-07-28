@@ -1,3 +1,4 @@
+#include "game/race/race_state.h"
 #include "common.h"
 #include "game/engine/asset_manager.h"
 #include "game/engine/render_callback.h"
@@ -30,7 +31,6 @@ typedef struct {
 extern int sprintf(char *, const char *, ...);
 extern RaceSplitscreenSelectFrameTiles gRaceSplitscreenSelectFrameTiles[];
 extern RaceSplitscreenSelectPortrait gRaceSplitscreenSelectPortraitScripts[];
-extern u8 gRaceSplitscreenMode;
 extern RaceSplitscreenSelectCursorState gRaceSplitscreenSelectCursorTarget;
 extern u8 gRaceSplitscreenSelectCursorAnimState;
 extern s16 gRaceSplitscreenSelectPortraitAlpha;

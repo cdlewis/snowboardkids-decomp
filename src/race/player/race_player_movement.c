@@ -68,7 +68,6 @@ extern void transformVec3iByFixedMatrix(Matrix4s, Vec3i *, Vec3i *);
 extern s16 fixedSine(s16);
 extern s16 fixedCosine(s16);
 extern s32 integerSquareRoot64(s64);
-extern u8 gRaceSplitscreenMode;
 extern s8 gRacePlayerCount;
 extern s32 gMenuFlowState;
 extern Vec3i gRacePlayerGroundProbeOffsets[];

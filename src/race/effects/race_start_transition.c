@@ -1,3 +1,4 @@
+#include "game/race/race_state.h"
 #include "common.h"
 #include "game/save_data.h"
 #include "game/race/player/race_player_input.h"
@@ -78,7 +79,6 @@ void updateMenuCameraObjectWithTargetOffsetCallback(void) {
 extern void loadMainMenuSceneModelAnimationBank(void);
 extern u8 gRaceSetupOpponentFocusCharacterIds[][4];
 extern u8 gPendingEndingCreditsFlow;
-extern u8 gRaceSplitscreenMode;
 extern u8 D_800ECA24;
 
 const f32 D_800E1090 = 1.333333373f;

@@ -130,7 +130,6 @@ extern s8 D_80121B61;
 extern u8 gRaceChallengeFailed;
 extern u8 gPendingFramebufferSwapCount;
 extern u8 gFramebufferSwapHold;
-extern u8 gRaceSplitscreenMode;
 extern u8 gRumblePakConnectedMask;
 extern u8 gPendingEndingCreditsFlow;
 extern u8 gRaceUpdatePaused;

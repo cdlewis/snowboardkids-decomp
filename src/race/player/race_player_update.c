@@ -91,7 +91,6 @@ extern PlayerTuningRow gRacePlayerDemoCharacterTuningRows[];
 extern CourseAngleEntry gSpiralCourseObjectAngles[];
 extern CourseAngleEntry gLaunchRampCourseObjectAngles[];
 extern u8 gMainMenuModeSelection;
-extern u8 gRaceSplitscreenMode;
 extern s8 gRacePlayerCount;
 extern u8 gRaceUpdatePaused;
 extern u8 gRaceTypeSelection;

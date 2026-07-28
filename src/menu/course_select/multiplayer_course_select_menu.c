@@ -1,3 +1,4 @@
+#include "game/race/race_state.h"
 #include "common.h"
 #include "game/save_data.h"
 #include "assets.h"
@@ -37,7 +38,6 @@ extern void n_alSeqpDelete(void);
 extern s32 enqueueSoundEffect(s16 soundId, s16 volume);
 extern s16 gMenuFadeAlpha;
 extern u8 D_800EC9C0;
-extern u8 gRaceSplitscreenMode;
 extern s8 D_800EC9E5;
 extern s32 D_8010ADE0;
 extern s32 D_8010ADE4;

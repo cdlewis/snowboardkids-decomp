@@ -157,7 +157,6 @@ extern Gfx *gThrownPickupModelDisplayList;
 extern u8 gRenderMatricesDirty;
 extern u8 gRaceUpdatePaused;
 extern u8 gTrainingCourseLesson;
-extern u8 gRaceSplitscreenMode;
 extern CourseCollectibleSpriteEntry *gCourseCollectibleSpriteListsByCourse[];
 extern u32 gCourseCollectibleSpriteVertices[];
 extern Vtx gRacePickupBaseVertices[];

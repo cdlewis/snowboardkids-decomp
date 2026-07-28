@@ -31,7 +31,6 @@ extern RacePlayerReplaySnapshot gTitleDemoReplayInputs[4][16];
 extern u8 gTitleDemoReplayInputs[];
 #endif
 extern u8 gPendingFramebufferSwapCount;
-extern s8 gRaceSplitscreenMode;
 #ifdef NON_MATCHING
 extern volatile char gTitleDemoRaceIntroViewportHeight;
 #else
