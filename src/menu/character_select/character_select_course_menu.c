@@ -13,7 +13,6 @@
 #include "game/engine/viewport_manager.h"
 
 typedef s16 CharacterSelectOptionList[10];
-typedef s16 CharacterSelectCourseUnlockList[11];
 
 typedef struct {
     char pad0[0x4C];
@@ -23,7 +22,6 @@ typedef struct {
 
 extern void enqueueSoundEffect(s32, s32);
 extern void releaseMenuAssetHandles(void);
-extern CharacterSelectCourseUnlockList gCharacterSelectCourseOptionsByUnlock[];
 extern s16 gCharacterSelectShortCourseOptions[];
 extern s16 gCharacterSelectSingleCourseOption[];
 extern CharacterSelectFlowState *gCurrentGameTask;
