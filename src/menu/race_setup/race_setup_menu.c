@@ -16,18 +16,6 @@
 #include "game/menu/main_menu/controller_main_menu_flow.h"
 
 typedef struct {
-    /* 0x00 */ u8 state;
-    /* 0x01 */ u8 timer;
-    /* 0x02 */ s16 alpha;
-    /* 0x04 */ u8 forceUpdate;
-    /* 0x05 */ u8 pad5;
-    /* 0x06 */ s16 pendingStatusCodes[4];
-    /* 0x0E */ u8 statusTransitionStates[4];
-    /* 0x12 */ s16 nextStatusCodes[4];
-    /* 0x1A */ u8 pad1A[0x1E];
-} RaceSetupMenuSubState;
-
-typedef struct {
     /* 0x0 */ s16 pad0;
     /* 0x2 */ u8 state;
     /* 0x3 */ u8 pad3;
