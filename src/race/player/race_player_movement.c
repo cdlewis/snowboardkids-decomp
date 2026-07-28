@@ -83,6 +83,10 @@ extern s8 gRaceOrderPlayerIds[];
 extern RacePlayer gFrameCounter;
 extern s32 gMenuFlowState;
 extern Vec3i gRacePlayerGroundProbeOffsets[];
+extern s32 D_800DE7F8;
+extern s32 D_800DE7FC;
+extern s32 D_800DE814;
+extern s32 D_800DE818;
 extern s16 gRacePlayerVoiceSoundIds0[];
 extern s16 gRacePlayerVoiceSoundIds1[];
 extern s16 gRacePlayerVoiceSoundIds2[];
@@ -811,350 +815,372 @@ s32 tryApplyRacePlayerItemHit(Vec3i *pos, s32 xzSize, s16 flag, s16 playerIndex)
     return 0;
 }
 
-// updateRacePlayerSurfaceContact best match: 93.424% (nonmatchings/updateRacePlayerSurfaceContact-8498672362023432715/base_10.c)
+// updateRacePlayerSurfaceContact best match: 99.251% (nonmatchings/updateRacePlayerSurfaceContact-2167615756788266096/base_22.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race/player/race_player_movement/updateRacePlayerSurfaceContact.s")
 
 #ifdef NON_MATCHING
+
+#define FIXED_PRODUCT(a, b) ((s64)(a) * (b) / 0x1000)
+#define COLLISION_POINT(x, y, z, sizeX, sizeY, sizeZ) \
+    (((s64)(x) * (sizeX) + (s64)(y) * (sizeY) + (s64)(z) * (sizeZ)) / 0x1000)
+#define MIRRORED_COLLISION_POINT(x, y, z, sizeX, sizeY, sizeZ) \
+    ((-(s64)(x) * (sizeX) + (s64)(y) * (sizeY) + (s64)(z) * (sizeZ)) / 0x1000)
+
 s32 updateRacePlayerSurfaceContact(RacePlayer *player) {
-    Matrix4s mtx;
-    Matrix4s tiltMtx;
-    Matrix4s baseMtx;
-    EffectMatrixScratch effectScratch;
-    Vec3i collisionPoints[2];
-    s32 diffs[6];
-    s32 heights[6];
-    s32 clamped[6];
-    s32 frontSpan;
-    s32 sideSpan;
-    s32 probeBaseY;
-    volatile s32 baseY;
-    s32 frontDiff;
-    s32 backDiff;
-    s32 sideDiff;
+    MatrixScratch playerRotation;
+    MatrixScratch intermediateRotation;
+    MatrixScratch worldRotation;
+    EffectMatrixScratch effectRotation;
+    Vec3i points[6];
+    s32 collisionX;
     s32 pushX;
     s32 pushZ;
-    s32 outVelX;
-    s32 outVelZ;
-    s32 verticalDiff;
-    s32 terrainId;
-    s32 sin;
-    s32 cos;
-    s16 i;
+    s32 normalX;
+    s32 normalZ;
+    s32 contactHeights[6];
+    s32 surfaceHeights[6];
+    s32 heightDeltas[6];
+    s32 sideSpacing;
+    s32 longitudinalSpacing;
+    s32 probeBaseY;
+    s32 baseY;
+    s32 collisionY;
+    s32 collisionZ;
+    s32 lift;
+    s32 hadCollision;
+    s16 terrainId;
     s16 iteration;
-    s32 surfaceHit;
-    s32 heightAdjust;
-    s16 j;
-    s32 stateFlags;
+    s16 i;
+    s32 sine;
+    s32 cosine;
 
     player->unk500 = 0;
-    terrainId = findRaceCourseSurfaceFromHint(player->unk502, player->posX, player->posZ);
-    resolveRaceCourseSurfaceCollisionWithNormal(terrainId, player->posX, player->posZ, 0x60000, 2, &pushX, &pushZ, &outVelX,
-                                                &outVelZ);
+    terrainId = findRaceCourseSurfaceFromHint(player->unk502, player->pos.x, player->pos.z);
+    resolveRaceCourseSurfaceCollisionWithNormal(
+        terrainId,
+        player->pos.x, player->pos.z, 0x60000, 2, &pushX, &pushZ, &normalX, &normalZ);
     if ((pushX != 0) || (pushZ != 0)) {
-        player->posX += pushX;
-        player->posZ += pushZ;
+        player->pos.x += pushX;
+        player->pos.z += pushZ;
     }
 
     if (player->stateFlags & 0x7C000) {
-        terrainId = findRaceCourseSurfaceFromHint(player->unk502, player->posX, player->posZ);
-        resolveRaceCourseSurfaceCollisionWithNormal(terrainId, player->posX, player->posZ, 0xC0000, 1, &pushX, &pushZ,
-                                                    &player->unk2C8, &player->unk2CC);
+        terrainId = findRaceCourseSurfaceFromHint(player->unk502, player->pos.x, player->pos.z);
+        resolveRaceCourseSurfaceCollisionWithNormal(
+            terrainId, player->pos.x, player->pos.z, 0xC0000, 1, &pushX, &pushZ,
+            &player->unk2C8, &player->unk2CC);
         if ((pushX != 0) || (pushZ != 0)) {
-            player->posX += pushX;
-            player->posZ += pushZ;
+            player->pos.x += pushX;
+            player->pos.z += pushZ;
             player->pendingItemHitFlags |= 1;
         }
 
-        terrainId = findRaceCourseSurfaceFromHint(player->unk502, player->posX, player->posZ);
-        resolveRaceCourseSurfaceCollisionWithNormal(terrainId, player->posX, player->posZ, 0xC0000, 3, &pushX, &pushZ,
-                                                    &player->unk2C8, &player->unk2CC);
+        terrainId = findRaceCourseSurfaceFromHint(player->unk502, player->pos.x, player->pos.z);
+        resolveRaceCourseSurfaceCollisionWithNormal(
+            terrainId, player->pos.x, player->pos.z, 0xC0000, 3, &pushX, &pushZ,
+            &player->unk2C8, &player->unk2CC);
         if ((pushX != 0) || (pushZ != 0)) {
-            player->posX += pushX;
-            player->posZ += pushZ;
+            player->pos.x += pushX;
+            player->pos.z += pushZ;
             player->pendingItemHitFlags |= 0x200;
         }
     } else {
-        terrainId = findRaceCourseSurfaceFromHint(player->unk502, player->posX, player->posZ);
-        resolveRaceCourseSurfaceCollisionWithNormal(terrainId, player->posX, player->posZ, 0x78000, 1, &pushX, &pushZ,
-                                                    &player->unk2C8, &player->unk2CC);
+        terrainId = findRaceCourseSurfaceFromHint(player->unk502, player->pos.x, player->pos.z);
+        resolveRaceCourseSurfaceCollisionWithNormal(
+            terrainId, player->pos.x, player->pos.z, 0x78000, 1, &pushX, &pushZ,
+            &player->unk2C8, &player->unk2CC);
         if ((pushX != 0) || (pushZ != 0)) {
             player->pendingItemHitFlags |= 1;
-            player->posX += pushX;
-            player->posZ += pushZ;
+            player->pos.x += pushX;
+            player->pos.z += pushZ;
         }
 
-        terrainId = findRaceCourseSurfaceFromHint(player->unk502, player->posX, player->posZ);
-        resolveRaceCourseSurfaceCollisionWithNormal(terrainId, player->posX, player->posZ, 0x78000, 3, &pushX, &pushZ,
-                                                    &player->unk2C8, &player->unk2CC);
+        terrainId = findRaceCourseSurfaceFromHint(player->unk502, player->pos.x, player->pos.z);
+        resolveRaceCourseSurfaceCollisionWithNormal(
+            terrainId, player->pos.x, player->pos.z, 0x78000, 3, &pushX, &pushZ,
+            &player->unk2C8, &player->unk2CC);
         if ((pushX != 0) || (pushZ != 0)) {
             player->pendingItemHitFlags |= 0x200;
-            player->posX += pushX;
-            player->posZ += pushZ;
+            player->pos.x += pushX;
+            player->pos.z += pushZ;
         }
 
-        sin = fixedSine(player->facingAngle);
-        cos = fixedCosine(player->facingAngle);
-        surfaceHit = 0;
-        i = 0;
-        do {
-            collisionPoints[i].x = ((s64)gRacePlayerGroundProbeOffsets[i].x * cos +
-                           (s64)gRacePlayerGroundProbeOffsets[i].z * sin) / 0x1000;
-            collisionPoints[i].z = ((s64)gRacePlayerGroundProbeOffsets[i].x * -sin +
-                           (s64)gRacePlayerGroundProbeOffsets[i].z * cos) / 0x1000;
-            collisionPoints[i].x += player->posX;
-            collisionPoints[i].z += player->posZ;
-            terrainId = findRaceCourseSurfaceFromHint(player->unk502, collisionPoints[i].x, collisionPoints[i].z);
-            resolveRaceCourseSurfaceCollisionWithNormal(terrainId, collisionPoints[i].x, collisionPoints[i].z, 0x4C000, 1, &pushX, &pushZ,
-                                                        &player->unk2C8, &player->unk2CC);
+        sine = fixedSine(player->facingAngle);
+        cosine = fixedCosine(player->facingAngle);
+        hadCollision = 0;
+        for (i = 0; i < 2; i++) {
+            points[i].x = ((s64)gRacePlayerGroundProbeOffsets[i].x * cosine +
+                           (s64)gRacePlayerGroundProbeOffsets[i].z * sine) /
+                          0x1000;
+            points[i].z = ((s64)gRacePlayerGroundProbeOffsets[i].x * -sine +
+                           (s64)gRacePlayerGroundProbeOffsets[i].z * cosine) /
+                          0x1000;
+            points[i].x += player->pos.x;
+            points[i].z += player->pos.z;
+
+            terrainId = findRaceCourseSurfaceFromHint(player->unk502, points[i].x, points[i].z);
+            resolveRaceCourseSurfaceCollisionWithNormal(
+                terrainId, points[i].x, points[i].z, 0x4C000, 1, &pushX, &pushZ,
+                &player->unk2C8, &player->unk2CC);
             if ((pushX != 0) || (pushZ != 0)) {
-                collisionPoints[i].x += pushX;
-                collisionPoints[i].z += pushZ;
-                surfaceHit = 1;
+                points[i].x += pushX;
+                points[i].z += pushZ;
+                hadCollision = 1;
                 player->pendingItemHitFlags |= 1;
             }
-            terrainId = findRaceCourseSurfaceFromHint(player->unk502, collisionPoints[i].x, collisionPoints[i].z);
-            resolveRaceCourseSurfaceCollisionWithNormal(terrainId, collisionPoints[i].x, collisionPoints[i].z, 0x4C000, 3, &pushX, &pushZ,
-                                                        &player->unk2C8, &player->unk2CC);
+
+            terrainId = findRaceCourseSurfaceFromHint(player->unk502, points[i].x, points[i].z);
+            resolveRaceCourseSurfaceCollisionWithNormal(
+                terrainId, points[i].x, points[i].z, 0x4C000, 3, &pushX, &pushZ,
+                &player->unk2C8, &player->unk2CC);
             if ((pushX != 0) || (pushZ != 0)) {
-                collisionPoints[i].x += pushX;
-                collisionPoints[i].z += pushZ;
-                surfaceHit = 1;
+                points[i].x += pushX;
+                points[i].z += pushZ;
+                hadCollision = 1;
                 player->pendingItemHitFlags |= 0x200;
             }
-            i++;
-        } while (i < 2);
+        }
 
-        if (surfaceHit != 0) {
-            player->facingAngle = calculateFixedAngleBetweenXZPoints(collisionPoints[1].x, collisionPoints[1].z,
-                                                                     collisionPoints[0].x, collisionPoints[0].z);
-            player->posX = ((s64)collisionPoints[1].x + collisionPoints[0].x) / 2;
-            player->posZ = ((s64)collisionPoints[1].z + collisionPoints[0].z) / 2;
+        if (hadCollision != 0) {
+            player->facingAngle =
+                calculateFixedAngleBetweenXZPoints(points[1].x, points[1].z, points[0].x, points[0].z);
+            player->pos.x = ((s64)points[0].x + points[1].x) / 2;
+            player->pos.z = ((s64)points[0].z + points[1].z) / 2;
 
-            sin = fixedSine(player->facingAngle);
-            cos = fixedCosine(player->facingAngle);
-            i = 0;
-            do {
-                collisionPoints[i].x = ((s64)gRacePlayerGroundProbeOffsets[i].x * cos +
-                               (s64)gRacePlayerGroundProbeOffsets[i].z * sin) / 0x1000;
-                collisionPoints[i].z = ((s64)gRacePlayerGroundProbeOffsets[i].x * -sin +
-                               (s64)gRacePlayerGroundProbeOffsets[i].z * cos) / 0x1000;
-                collisionPoints[i].x += player->posX;
-                collisionPoints[i].z += player->posZ;
-                terrainId = findRaceCourseSurfaceFromHint(player->unk502, collisionPoints[i].x, collisionPoints[i].z);
-                resolveRaceCourseSurfaceCollisionWithNormal(terrainId, collisionPoints[i].x, collisionPoints[i].z, 0x4C000, 1, &pushX, &pushZ,
-                                                            &player->unk2C8, &player->unk2CC);
+            sine = fixedSine(player->facingAngle);
+            cosine = fixedCosine(player->facingAngle);
+            for (i = 0; i < 2; i++) {
+                points[i].x = ((s64)gRacePlayerGroundProbeOffsets[i].x * cosine +
+                               (s64)gRacePlayerGroundProbeOffsets[i].z * sine) /
+                              0x1000;
+                points[i].z = ((s64)gRacePlayerGroundProbeOffsets[i].x * -sine +
+                               (s64)gRacePlayerGroundProbeOffsets[i].z * cosine) /
+                              0x1000;
+                points[i].x += player->pos.x;
+                points[i].z += player->pos.z;
+
+                terrainId = findRaceCourseSurfaceFromHint(player->unk502, points[i].x, points[i].z);
+                resolveRaceCourseSurfaceCollisionWithNormal(
+                    terrainId, points[i].x, points[i].z, 0x4C000, 1, &pushX, &pushZ,
+                    &player->unk2C8, &player->unk2CC);
                 if ((pushX != 0) || (pushZ != 0)) {
-                    player->posX += pushX;
-                    player->posZ += pushZ;
+                    player->pos.x += pushX;
+                    player->pos.z += pushZ;
                 }
-                terrainId = findRaceCourseSurfaceFromHint(player->unk502, collisionPoints[i].x, collisionPoints[i].z);
-                resolveRaceCourseSurfaceCollisionWithNormal(terrainId, collisionPoints[i].x, collisionPoints[i].z, 0x4C000, 3, &pushX, &pushZ,
-                                                            &player->unk2C8, &player->unk2CC);
+
+                terrainId = findRaceCourseSurfaceFromHint(player->unk502, points[i].x, points[i].z);
+                resolveRaceCourseSurfaceCollisionWithNormal(
+                    terrainId, points[i].x, points[i].z, 0x4C000, 3, &pushX, &pushZ,
+                    &player->unk2C8, &player->unk2CC);
                 if ((pushX != 0) || (pushZ != 0)) {
-                    player->posX += pushX;
-                    player->posZ += pushZ;
+                    player->pos.x += pushX;
+                    player->pos.z += pushZ;
                 }
-                i++;
-            } while (i < 2);
+            }
         }
     }
 
-    {
-        Vec3i points[6];
+    sine = fixedSine(player->unk2EE);
+    cosine = fixedCosine(player->unk2EE);
+    sideSpacing = ((s64)D_800DE7F8 * cosine + (s64)D_800DE7FC * -sine) / 0x1000;
 
-        sin = fixedSine(player->unk2EE);
-        cos = fixedCosine(player->unk2EE);
-        frontSpan = ((s64)D_800DE7F8 * cos + (s64)D_800DE7FC * -sin) / 0x1000;
-
-        probeBaseY = player->unk5C;
-        player->unk502 = findRaceCourseSurfaceFromHint(player->unk502, player->posX, player->posZ);
-        terrainId = getRaceCourseSurfaceHeight(player->unk502, player->posX, player->posZ);
-        if (probeBaseY < terrainId) {
-            probeBaseY = terrainId;
-        }
-        baseY = probeBaseY;
-
-        iteration = 0;
-        do {
-            sin = fixedSine(player->pitchAngle);
-            cos = fixedCosine(player->pitchAngle);
-            sideSpan = ((s64)D_800DE814 * sin + (s64)D_800DE818 * cos) / 0x1000;
-            makeFixedRotationXY(mtx, player->pitchAngle, player->facingAngle);
-
-            j = 0;
-            do {
-                transformVec3iByFixedMatrix(mtx, &gRacePlayerGroundProbeOffsets[j + 2], &points[j]);
-                points[j].x += player->posX;
-                points[j].y += probeBaseY;
-                points[j].z += player->posZ;
-                heights[j] =
-                    getRaceCourseSurfaceHeight((s16)findRaceCourseSurfaceFromHint(player->unk502, points[j].x, points[j].z),
-                                               points[j].x, points[j].z);
-                clamped[j] = heights[j];
-                diffs[j] = heights[j] - points[j].y;
-                if (diffs[j] < 0) {
-                    clamped[j] = points[j].y;
-                }
-                j++;
-            } while (j < 6);
-
-            heights[4] = ((s64)heights[2] + heights[0]) / 2;
-            heights[5] = ((s64)heights[3] + heights[1]) / 2;
-            frontDiff = diffs[0];
-            if (frontDiff < diffs[1]) {
-                frontDiff = diffs[1];
-                clamped[0] = clamped[1];
-                heights[0] = heights[1];
-            }
-            if (diffs[2] < diffs[3]) {
-                diffs[2] = diffs[3];
-                clamped[2] = clamped[3];
-                heights[2] = heights[3];
-            }
-            if (diffs[4] < diffs[5]) {
-                diffs[4] = diffs[5];
-                clamped[4] = clamped[5];
-            }
-            if ((frontDiff >= 0) && (diffs[2] >= 0)) {
-                diffs[0] = frontDiff;
-                if (!(player->stateFlags & 4)) {
-                    player->pitchAngle = calculateFixedAngleFromDeltaXZ(-(clamped[0] - clamped[2]), -sideSpan * 2) & 0xFFF;
-                }
-                baseY = ((s64)clamped[2] + clamped[0]) / 2;
-            } else {
-                diffs[0] = frontDiff;
-                if (frontDiff >= 0) {
-                    if (!(player->stateFlags & 4)) {
-                        player->pitchAngle = calculateFixedAngleFromDeltaXZ(-(clamped[0] - clamped[4]), -sideSpan) & 0xFFF;
-                    }
-                    baseY = clamped[4];
-                } else if (diffs[2] >= 0) {
-                    if (!(player->stateFlags & 4)) {
-                        player->pitchAngle = calculateFixedAngleFromDeltaXZ(-(clamped[4] - clamped[2]), -sideSpan) & 0xFFF;
-                    }
-                    baseY = clamped[4];
-                }
-            }
-            iteration++;
-        } while (iteration < 3);
-
-        player->unk2F0 = calculateFixedAngleFromDeltaXZ(-(heights[0] - heights[2]), -sideSpan * 2);
-        player->unk2F4 = calculateFixedAngleFromDeltaXZ(-(heights[4] - heights[5]), -frontSpan * 2);
-        player->unk64 = 0;
-
-        makeFixedRotationZXY(mtx, player->pitchAngle, player->facingAngle, player->unk2EE);
-        i = 0;
-        do {
-            transformVec3iByFixedMatrix(mtx, &gRacePlayerGroundProbeOffsets[i + 2], &points[i]);
-            points[i].x += player->posX;
-            points[i].z += player->posZ;
-            points[i].y += baseY + player->unk64;
-            heights[i] =
-                getRaceCourseSurfaceHeight((s16)findRaceCourseSurfaceFromHint(player->unk502, points[i].x, points[i].z),
-                                           points[i].x, points[i].z);
-            if (points[i].y < heights[i]) {
-                player->unk64 += heights[i] - points[i].y;
-            }
-            i++;
-        } while (i < 4);
-
-        terrainId = player->posY;
-        player->unk58 = terrainId - baseY;
-        if (player->unk58 < 0) {
-            player->posY = terrainId - player->unk58;
-            terrainId = player->posY;
-            player->unk58 = 0;
-        }
-        heightAdjust = 0;
-        if (player->unk58 < player->unk60) {
-            heightAdjust = player->unk60 - player->unk58;
-            if ((player->unk260 + 0xC00) < heightAdjust) {
-                heightAdjust = player->unk260 + 0xC00;
-            }
-        }
-        player->unk58 += heightAdjust;
-        player->posY = terrainId + heightAdjust;
-
-        effectScratch.transformedX = (s64)mtx[3] * player->unk68 / 0x1000;
-        effectScratch.transformedY = (s64)mtx[4] * player->unk68 / 0x1000;
-        effectScratch.transformedZ = (s64)mtx[5] * player->unk68 / 0x1000;
-
-        if (player->stateFlags & 0x400) {
-            makeFixedRotationZYX(effectScratch.values, player->unk6C, -player->unk6E, -player->unk70);
-            multiplyFixedMatrix3s(effectScratch.values, mtx, baseMtx);
-        } else {
-            makeFixedRotationZYX(effectScratch.values, player->unk6C, player->unk6E, player->unk70);
-            makeFixedRotationY(baseMtx, 0x800);
-            multiplyFixedMatrix3s(baseMtx, mtx, tiltMtx);
-            multiplyFixedMatrix3s(effectScratch.values, tiltMtx, baseMtx);
-        }
-
-        stateFlags = player->stateFlags;
-        if (stateFlags & 0x400) {
-            sideDiff = ((s64)-baseMtx[0] * player->unk340 + (s64)baseMtx[3] * (player->unk344 - player->unk68) +
-                        (s64)baseMtx[6] * player->unk348) /
-                       0x1000;
-            verticalDiff = ((s64)-baseMtx[1] * player->unk340 + (s64)baseMtx[4] * (player->unk344 - player->unk68) +
-                            (s64)baseMtx[7] * player->unk348) /
-                           0x1000;
-            backDiff = ((s64)-baseMtx[2] * player->unk340 + (s64)baseMtx[5] * (player->unk344 - player->unk68) +
-                        (s64)baseMtx[8] * player->unk348) /
-                       0x1000;
-            makeFixedRotationXYZ(tiltMtx, player->unk33A, -player->unk33C, -player->unk33E);
-        } else {
-            sideDiff = ((s64)baseMtx[0] * player->unk340 + (s64)baseMtx[3] * (player->unk344 - player->unk68) +
-                        (s64)baseMtx[6] * player->unk348) /
-                       0x1000;
-            verticalDiff = ((s64)baseMtx[1] * player->unk340 + (s64)baseMtx[4] * (player->unk344 - player->unk68) +
-                            (s64)baseMtx[7] * player->unk348) /
-                           0x1000;
-            backDiff = ((s64)baseMtx[2] * player->unk340 + (s64)baseMtx[5] * (player->unk344 - player->unk68) +
-                        (s64)baseMtx[8] * player->unk348) /
-                       0x1000;
-            makeFixedRotationXYZ(tiltMtx, player->unk33A, player->unk33C, player->unk33E);
-        }
-
-        sideDiff += player->posX + effectScratch.transformedX;
-        terrainId =
-            ((verticalDiff + player->posY) - player->unk58) + player->unk64 + effectScratch.transformedY + 0xA000;
-        backDiff += player->posZ + effectScratch.transformedZ;
-        multiplyFixedMatrix3s(tiltMtx, baseMtx, mtx);
-
-        i = 0;
-        do {
-            transformVec3iByFixedMatrix(mtx, &gRacePlayerGroundProbeOffsets[i + 9], &player->unk4A0 + i);
-            (&player->unk4A0 + i)->x += sideDiff;
-            (&player->unk4A0 + i)->y += terrainId;
-            (&player->unk4A0 + i)->z += backDiff;
-            player->markerPoints[i].x = (&player->unk4A0 + i)->x;
-            player->markerPoints[i].y = (&player->unk4A0 + i)->y;
-            player->markerPoints[i].z = (&player->unk4A0 + i)->z;
-            player->markerPoints[i].y =
-                getRaceCourseSurfaceHeight((s16)findRaceCourseSurfaceFromHint(player->unk502, player->markerPoints[i].x,
-                                                                             player->markerPoints[i].z),
-                                           player->markerPoints[i].x, player->markerPoints[i].z);
-            if ((player->markerPoints[i].y + 0x2C000) >= (&player->unk4A0 + i)->y) {
-                player->unk500 |= 1 << i;
-            }
-            i++;
-        } while (i < 4);
-
-        updateRacePlayerProjectedPosition(player);
-        if (player->unk58 == 0x60000) {
-            player->stateFlags |= 1;
-            return 1;
-        }
-        player->stateFlags &= ~1;
-        if (player->stateFlags & 0x01000000) {
-            player->unk2EE = player->unk2F4;
-            player->unk2EE &= 0xFFF;
-            if (player->unk2EE >= 0x801) {
-                player->unk2EE -= 0x1000;
-            }
-        }
-        return 0;
+    probeBaseY = player->unk5C;
+    player->unk502 = findRaceCourseSurfaceFromHint(player->unk502, player->pos.x, player->pos.z);
+    terrainId = player->unk502;
+    collisionX = getRaceCourseSurfaceHeight(terrainId, player->pos.x, player->pos.z);
+    if (probeBaseY < collisionX) {
+        probeBaseY = collisionX;
     }
+    baseY = probeBaseY;
+
+    for (iteration = 0; iteration < 3; iteration++) {
+        sine = fixedSine(player->pitchAngle);
+        cosine = fixedCosine(player->pitchAngle);
+        longitudinalSpacing = ((s64)D_800DE814 * sine + (s64)D_800DE818 * cosine) / 0x1000;
+        makeFixedRotationXY(playerRotation.values, player->pitchAngle, player->facingAngle);
+
+        for (i = 0; i < 6; i++) {
+            transformVec3iByFixedMatrix(playerRotation.values, &gRacePlayerGroundProbeOffsets[i + 2], &points[i]);
+            points[i].x += player->pos.x;
+            points[i].y += probeBaseY;
+            points[i].z += player->pos.z;
+            terrainId = findRaceCourseSurfaceFromHint(player->unk502, points[i].x, points[i].z);
+            surfaceHeights[i] = getRaceCourseSurfaceHeight(terrainId, points[i].x, points[i].z);
+            contactHeights[i] = surfaceHeights[i];
+            heightDeltas[i] = surfaceHeights[i] - points[i].y;
+            if (heightDeltas[i] < 0) {
+                contactHeights[i] = points[i].y;
+            }
+        }
+
+        surfaceHeights[4] = ((s64)surfaceHeights[2] + surfaceHeights[0]) / 2;
+        surfaceHeights[5] = ((s64)surfaceHeights[3] + surfaceHeights[1]) / 2;
+        if (heightDeltas[0] < heightDeltas[1]) {
+            heightDeltas[0] = heightDeltas[1];
+            contactHeights[0] = contactHeights[1];
+            surfaceHeights[0] = surfaceHeights[1];
+        }
+        if (heightDeltas[2] < heightDeltas[3]) {
+            heightDeltas[2] = heightDeltas[3];
+            contactHeights[2] = contactHeights[3];
+            surfaceHeights[2] = surfaceHeights[3];
+        }
+        if (heightDeltas[4] < heightDeltas[5]) {
+            heightDeltas[4] = heightDeltas[5];
+            contactHeights[4] = contactHeights[5];
+        }
+
+        if ((heightDeltas[0] >= 0) && (heightDeltas[2] >= 0)) {
+            if (!(player->stateFlags & 4)) {
+                player->pitchAngle =
+                    calculateFixedAngleFromDeltaXZ(-(contactHeights[0] - contactHeights[2]),
+                                                    -longitudinalSpacing * 2) &
+                    0xFFF;
+            }
+            baseY = ((s64)contactHeights[2] + contactHeights[0]) / 2;
+        } else if (heightDeltas[0] >= 0) {
+            if (!(player->stateFlags & 4)) {
+                player->pitchAngle =
+                    calculateFixedAngleFromDeltaXZ(-(contactHeights[0] - contactHeights[4]),
+                                                    -longitudinalSpacing) &
+                    0xFFF;
+            }
+            baseY = contactHeights[4];
+        } else if (heightDeltas[2] >= 0) {
+            if (!(player->stateFlags & 4)) {
+                player->pitchAngle =
+                    calculateFixedAngleFromDeltaXZ(-(contactHeights[4] - contactHeights[2]),
+                                                    -longitudinalSpacing) &
+                    0xFFF;
+            }
+            baseY = contactHeights[4];
+        }
+    }
+
+    player->unk2F0 =
+        calculateFixedAngleFromDeltaXZ(-(surfaceHeights[0] - surfaceHeights[2]), -longitudinalSpacing * 2);
+    player->unk2F4 =
+        calculateFixedAngleFromDeltaXZ(-(surfaceHeights[4] - surfaceHeights[5]), -sideSpacing * 2);
+    player->unk64 = 0;
+    makeFixedRotationZXY(playerRotation.values, player->pitchAngle, player->facingAngle, player->unk2EE);
+    for (i = 0; i < 4; i++) {
+        transformVec3iByFixedMatrix(playerRotation.values, &gRacePlayerGroundProbeOffsets[i + 2], &points[i]);
+        points[i].x += player->pos.x;
+        points[i].z += player->pos.z;
+        points[i].y += baseY + player->unk64;
+        terrainId = findRaceCourseSurfaceFromHint(player->unk502, points[i].x, points[i].z);
+        collisionY = getRaceCourseSurfaceHeight(terrainId, points[i].x, points[i].z);
+        collisionZ = points[i].y;
+        contactHeights[i] = collisionY;
+        if (collisionZ < collisionY) {
+            player->unk64 = (player->unk64 + collisionY) - collisionZ;
+        }
+    }
+
+    player->unk58 = player->pos.y - baseY;
+    if (player->unk58 < 0) {
+        player->pos.y -= player->unk58;
+        player->unk58 = 0;
+    }
+
+    lift = 0;
+    if (player->unk58 < player->unk60) {
+        lift = player->unk60 - player->unk58;
+        if ((player->unk260 + 0xC00) < lift) {
+            lift = player->unk260 + 0xC00;
+        }
+    }
+    player->unk58 += lift;
+    player->pos.y += lift;
+    if (0) {
+    }
+
+    effectRotation.transformedX = FIXED_PRODUCT(playerRotation.values[3], player->unk68);
+    effectRotation.transformedY = FIXED_PRODUCT(playerRotation.values[4], player->unk68);
+    effectRotation.transformedZ = FIXED_PRODUCT(playerRotation.values[5], player->unk68);
+
+    if (player->stateFlags & 0x400) {
+        makeFixedRotationZYX(effectRotation.values, player->unk6C, -player->unk6E, -player->unk70);
+        multiplyFixedMatrix3s(effectRotation.values, playerRotation.values, worldRotation.values);
+    } else {
+        makeFixedRotationZYX(effectRotation.values, player->unk6C, player->unk6E, player->unk70);
+        makeFixedRotationY(worldRotation.values, 0x800);
+        multiplyFixedMatrix3s(worldRotation.values, playerRotation.values, intermediateRotation.values);
+        multiplyFixedMatrix3s(effectRotation.values, intermediateRotation.values, worldRotation.values);
+    }
+
+    if (player->stateFlags & 0x400) {
+        collisionX = MIRRORED_COLLISION_POINT(worldRotation.values[0], worldRotation.values[3], worldRotation.values[6],
+                                              player->collisionSources[0].sizeX,
+                                              player->collisionSources[0].sizeY - player->unk68,
+                                              player->collisionSources[0].sizeZ);
+        collisionY = MIRRORED_COLLISION_POINT(worldRotation.values[1], worldRotation.values[4], worldRotation.values[7],
+                                              player->collisionSources[0].sizeX,
+                                              player->collisionSources[0].sizeY - player->unk68,
+                                              player->collisionSources[0].sizeZ);
+        collisionZ = MIRRORED_COLLISION_POINT(worldRotation.values[2], worldRotation.values[5], worldRotation.values[8],
+                                              player->collisionSources[0].sizeX,
+                                              player->collisionSources[0].sizeY - player->unk68,
+                                              player->collisionSources[0].sizeZ);
+        makeFixedRotationXYZ(intermediateRotation.values, player->collisionSources[0].rotX,
+                             -player->collisionSources[0].rotY, -player->collisionSources[0].rotZ);
+    } else {
+        collisionX = COLLISION_POINT(worldRotation.values[0], worldRotation.values[3], worldRotation.values[6],
+                                     player->collisionSources[0].sizeX,
+                                     player->collisionSources[0].sizeY - player->unk68,
+                                     player->collisionSources[0].sizeZ);
+        collisionY = COLLISION_POINT(worldRotation.values[1], worldRotation.values[4], worldRotation.values[7],
+                                     player->collisionSources[0].sizeX,
+                                     player->collisionSources[0].sizeY - player->unk68,
+                                     player->collisionSources[0].sizeZ);
+        collisionZ = COLLISION_POINT(worldRotation.values[2], worldRotation.values[5], worldRotation.values[8],
+                                     player->collisionSources[0].sizeX,
+                                     player->collisionSources[0].sizeY - player->unk68,
+                                     player->collisionSources[0].sizeZ);
+        makeFixedRotationXYZ(intermediateRotation.values, player->collisionSources[0].rotX,
+                             player->collisionSources[0].rotY, player->collisionSources[0].rotZ);
+    }
+
+    collisionX += player->pos.x + effectRotation.transformedX;
+    collisionY += player->pos.y - player->unk58 + player->unk64 + effectRotation.transformedY + 0xA000;
+    collisionZ += player->pos.z + effectRotation.transformedZ;
+    multiplyFixedMatrix3s(intermediateRotation.values, worldRotation.values, playerRotation.values);
+    for (i = 0; i < 4; i++) {
+        transformVec3iByFixedMatrix(playerRotation.values, &gRacePlayerGroundProbeOffsets[i + 9],
+                                    &player->groundMarkerSources[i]);
+        player->groundMarkerSources[i].x += collisionX;
+        player->groundMarkerSources[i].y += collisionY;
+        player->groundMarkerSources[i].z += collisionZ;
+        player->markerPoints[i] = player->groundMarkerSources[i];
+        terrainId = findRaceCourseSurfaceFromHint(player->unk502, player->markerPoints[i].x,
+                                                  player->markerPoints[i].z);
+        player->markerPoints[i].y =
+            getRaceCourseSurfaceHeight(terrainId, player->markerPoints[i].x, player->markerPoints[i].z);
+        if ((player->markerPoints[i].y + 0x2C000) >= player->groundMarkerSources[i].y) {
+            player->unk500 |= 1 << i;
+        }
+    }
+
+    updateRacePlayerProjectedPosition(player);
+    if (player->unk58 == 0x60000) {
+        player->stateFlags |= 1;
+        return 1;
+    }
+
+    player->stateFlags &= ~1;
+    if (player->stateFlags & 0x01000000) {
+        player->unk2EE = player->unk2F4;
+        player->unk2EE &= 0xFFF;
+        if (player->unk2EE >= 0x801) {
+            player->unk2EE -= 0x1000;
+        }
+    }
+    return 0;
 }
+
+#undef FIXED_PRODUCT
+#undef COLLISION_POINT
+#undef MIRRORED_COLLISION_POINT
 #endif
 
 // updateRacePlayerGroundAlignment best match: 99.304% (nonmatchings/updateRacePlayerGroundAlignment-8498672362023432715/base_39.c)
