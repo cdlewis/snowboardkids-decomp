@@ -43,7 +43,6 @@ extern u8 gMainMenuDemoRaceIntroIndex;
 extern u8 gRaceRumbleEnabled;
 extern u8 gRaceSplitscreenMode;
 extern u8 gRacePlayerHudStatuses;
-extern u8 gPlayerCount;
 extern u8 gRaceUpdatePaused;
 extern u8 gRaceCameraModeChangeDisabled;
 extern u8 gRaceDemoPlaybackEnabled;

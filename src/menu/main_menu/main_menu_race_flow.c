@@ -29,7 +29,6 @@ extern s8 gRacePlayerHudStatuses;
 extern s16 gRaceCourseIndex;
 extern s16 gRaceLapCount;
 extern s8 gRacePlayerCount;
-extern char gPlayerCount;
 extern u8 gRaceUpdatePaused;
 extern s16 gMenuFadeAlpha;
 extern u8 gFramebufferSwapHold;

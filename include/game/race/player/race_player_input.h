@@ -362,6 +362,7 @@ typedef char RacePlayerArraySizeCheck[
 ];
 
 extern RacePlayer gRacePlayers[RACE_PLAYER_COUNT];
+extern u8 gPlayerCount;
 
 #define gRacePlayersEnd (&gRacePlayers[RACE_PLAYER_COUNT])
 

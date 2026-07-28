@@ -43,7 +43,6 @@ extern u32 gPlayerInputPressed[];
 extern u8 D_60F1A0[];
 extern u8 D_800EC9E5;
 extern u8 gMenuExitSelection;
-extern u8 gPlayerCount;
 extern u8 gPendingFramebufferSwapCount;
 extern u8 gFramebufferSwapHold;
 

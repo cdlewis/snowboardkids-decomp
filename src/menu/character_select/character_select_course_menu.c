@@ -22,7 +22,6 @@ extern void releaseMenuAssetHandles(void);
 extern s16 gCharacterSelectShortCourseOptions[];
 extern s16 gCharacterSelectSingleCourseOption[];
 extern s16 gMenuFadeAlpha;
-extern u8 gPlayerCount;
 extern u8 gRaceTypeSelection;
 extern s16 gRaceCourseIndex;
 extern CharacterSelectOptionList *gCharacterSelectActiveCourseOptions;

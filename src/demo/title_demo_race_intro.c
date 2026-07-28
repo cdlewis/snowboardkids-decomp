@@ -43,7 +43,6 @@ extern s32 gPlayerInputPressed;
 extern s16 gRaceCourseIndex;
 extern s16 gRaceLapCount;
 extern s8 gRacePlayerCount;
-extern u8 gPlayerCount;
 extern u8 gRaceUpdatePaused;
 extern u8 gRaceCameraModeChangeDisabled;
 extern u8 gRaceDemoPlaybackEnabled;

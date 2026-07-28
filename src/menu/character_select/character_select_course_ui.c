@@ -96,7 +96,6 @@ extern u8 gHighestUnlockedCourse;
 extern u8 gCourseSelectFromRaceTypeMenu;
 extern u8 gRaceSplitscreenMode;
 extern u8 gRaceTypeSelection;
-extern u8 gPlayerCount;
 extern s32 gMenuFlowState;
 
 void drawCharacterSelectCourseListOptions(CharacterSelectCourseMenuFrameActor *arg0) {

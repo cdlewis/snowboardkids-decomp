@@ -183,7 +183,6 @@ extern s16 gCourseSelectIconListYLayout[][6];
 extern s16 gCourseSelectIconListXLayout[][4];
 extern s16 gCourseSelectStatsPanelLayout[][4];
 extern s16 gCourseSelectStatsPlayerMarkerLayout[][2][2];
-extern u8 gPlayerCount;
 extern s32 gMenuFlowState;
 extern u8 gCurrentViewportIndex;
 
