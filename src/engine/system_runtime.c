@@ -6,6 +6,7 @@
 #include "game/menu/main_menu/controller_main_menu_flow.h"
 #include "game/engine/relocatable_heap.h"
 #include "game/race/flow/race_flow.h"
+#include "game/race/race_state.h"
 #include "game/engine/viewport_manager.h"
 #include "game/math/fixed_point_math.h"
 #include "PR/sptask.h"
@@ -121,7 +122,6 @@ extern SchedulerClient gMainSchedulerClient;
 extern u16 gLastSchedulerRetraceCounter;
 extern Gfx *gRegionAllocPtr;
 extern u8 gPendingFramebufferSwapCount;
-extern u8 gRaceRumbleEnabled;
 extern u8 gRumblePakConnectedMask;
 extern s32 gClearFramebufferOnNextTask;
 extern Gfx *gCurrentTaskDisplayListStart;

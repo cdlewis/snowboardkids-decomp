@@ -10,6 +10,7 @@
 #include "game/menu/main_menu/controller_main_menu_flow.h"
 #include "game/menu/renderer/menu_renderer.h"
 #include "game/engine/viewport_manager.h"
+#include "game/race/race_state.h"
 
 extern s32 enqueueSoundEffect(s32, s32);
 extern void releaseMenuAssetHandles(void);
@@ -19,7 +20,6 @@ extern u8 gControllerPakDeletePromptState;
 extern u8 gPendingFramebufferSwapCount;
 extern u8 gFramebufferSwapHold;
 extern s16 gMenuFadeAlpha;
-extern u8 gRaceRumbleEnabled;
 extern s32 gControllerPakFreeBytes;
 extern s32 gControllerPakFreeFileCount;
 extern s32 gMenuFlowState;

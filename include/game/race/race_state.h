@@ -41,5 +41,6 @@ extern RaceCourseStartEntry gRaceCourseStartEntries[];
 extern RacePlayerHudStatus gRacePlayerHudStatuses[];
 extern u8 gRaceDemoPlaybackEnabled;
 extern u8 gRaceResultState;
+extern u8 gRaceRumbleEnabled;
 
 #endif
