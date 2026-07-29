@@ -184,7 +184,7 @@ void initCourseSelectMenu(void) {
     gCourseSelectStatus.unk2E = 0;
 }
 
-// updateCourseSelectModeMenu best match: 98.071% (nonmatchings/updateCourseSelectModeMenu-3885303446860889946/base_19.c)
+// updateCourseSelectModeMenu best match: 98.620% (nonmatchings/updateCourseSelectModeMenu-2781615007300307775/base_15.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/course_select/course_select_menu/updateCourseSelectModeMenu.s")
 
 #ifdef NON_MATCHING
@@ -218,7 +218,6 @@ void updateCourseSelectModeMenu(void) {
         }
     } else {
         timer = gMenuSelectionConfirmTimer;
-        timerOriginal = timer;
         timerValue = (timerAlias3 = (timerAlias2 = (timerAlias1 = timer)));
         if (timer == 0) {
             if ((gRacePlayers[0].menuState == 0) && (gCourseSelectStatus.unk28 == 1)) {
@@ -306,7 +305,7 @@ void updateCourseSelectModeMenu(void) {
                     timerValue = timer;
                 } else {
                     timer = gMenuSelectionConfirmTimer;
-                    timerValue = (u32) timer;
+                    timerValue = ((u32) timer) ^ 0;
                     if (((*inputPtr) & B_BUTTON) && (gMenuFlowState == 2) && (timerValue == 0)) {
                         gMenuSelectionConfirmTimer = 1;
                         gCourseSelectStatus.unk28 = 2;
@@ -319,7 +318,7 @@ void updateCourseSelectModeMenu(void) {
                 }
             }
         } else {
-            timer = (timerValue = (u8) (timerOriginal + 1));
+            timer = (timerValue = (u8) (timer + 1));
             gMenuSelectionConfirmTimer = timer;
         }
         if (timerValue == 8) {
