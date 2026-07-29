@@ -942,17 +942,11 @@ void drawRaceSetupSaveStatusWidgets(TitleMenuWidgetActor *arg0) {
     }
 }
 
-// updateRaceSetupSaveStatusWidgets best match: 99.885% (nonmatchings/updateRaceSetupSaveStatusWidgets-8699393380584516020/base_18.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/menu/race_setup/race_setup_ui/updateRaceSetupSaveStatusWidgets.s")
-
-#ifdef NON_MATCHING
 void updateRaceSetupSaveStatusWidgets(TitleMenuWidgetActor *arg0) {
     s32 transitionStateSum;
-    register TitleMenuWidgetActor *actor;
+    TitleMenuWidgetActor *actor;
     s32 playerIndex;
     TitleMenuWidgetActor *panelPositions;
-    u8 transitionState;
-    u8 previousTransitionState;
 
     panelPositions = D_8010ADE0;
     actor = arg0;
@@ -960,25 +954,18 @@ void updateRaceSetupSaveStatusWidgets(TitleMenuWidgetActor *arg0) {
         actor->x[playerIndex] = panelPositions->x[playerIndex];
         actor->y[playerIndex] = panelPositions->y[playerIndex];
 
-        previousTransitionState = actor->statusTransitionStates[playerIndex];
-        transitionState = gRaceSetupMenuSubState.statusTransitionStates[playerIndex];
-        if (transitionState != previousTransitionState) {
-            actor->statusTransitionStates[playerIndex] = transitionState;
+        if (gRaceSetupMenuSubState.statusTransitionStates[playerIndex] != actor->statusTransitionStates[playerIndex]) {
+            actor->statusTransitionStates[playerIndex] = gRaceSetupMenuSubState.statusTransitionStates[playerIndex];
             actor->nextStatusCodes[playerIndex] = gRaceSetupMenuSubState.nextStatusCodes[playerIndex];
-            previousTransitionState = actor->statusTransitionStates[playerIndex];
-            transitionState = previousTransitionState;
         }
 
-        if (1) {}
-        if (1) {}
-        switch (transitionState) {
+        switch (actor->statusTransitionStates[playerIndex]) {
         case SAVE_STATUS_TRANSITION_FADE_IN:
             actor->alpha[playerIndex] += SAVE_STATUS_FADE_STEP;
             if (actor->alpha[playerIndex] >= 0x100) {
                 actor->alpha[playerIndex] = 0x100;
                 actor->statusTransitionStates[playerIndex] = SAVE_STATUS_TRANSITION_NONE;
             }
-            transitionState = actor->statusTransitionStates[playerIndex];
             break;
         case SAVE_STATUS_TRANSITION_FADE_OUT:
             actor->alpha[playerIndex] -= SAVE_STATUS_FADE_STEP;
@@ -987,14 +974,13 @@ void updateRaceSetupSaveStatusWidgets(TitleMenuWidgetActor *arg0) {
                 actor->statusTransitionStates[playerIndex] = SAVE_STATUS_TRANSITION_FADE_IN;
                 gControllerPakStatusCodes[playerIndex] = arg0->nextStatusCodes[playerIndex];
             }
-            transitionState = actor->statusTransitionStates[playerIndex];
             break;
         case SAVE_STATUS_TRANSITION_NONE:
         case SAVE_STATUS_TRANSITION_DONE:
             break;
         }
 
-        gRaceSetupMenuSubState.statusTransitionStates[playerIndex] = transitionState;
+        gRaceSetupMenuSubState.statusTransitionStates[playerIndex] = actor->statusTransitionStates[playerIndex];
     }
 
     arg0->frame = (arg0->frame + 1) & 0xF;
@@ -1009,7 +995,6 @@ void updateRaceSetupSaveStatusWidgets(TitleMenuWidgetActor *arg0) {
         addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawRaceSetupSaveStatusWidgets, (void *)arg0);
     }
 }
-#endif
 
 void initRaceSetupSaveStatusWidgets(TitleMenuWidgetActor *arg0) {
     s32 i;
