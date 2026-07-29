@@ -1611,19 +1611,19 @@ paletteLoop:
 }
 #endif
 
-// drawMenuAsciiGlyph best match: 98.369% (nonmatchings/drawMenuAsciiGlyph-3885303446860889946/base_13.c)
+// drawMenuAsciiGlyph best match: 98.399% (nonmatchings/drawMenuAsciiGlyph-8280121253171829145/base_16.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/renderer/menu_renderer/drawMenuAsciiGlyph.s")
 
 #ifdef NON_MATCHING
 void drawMenuAsciiGlyph(s16 x, s16 y, u16 tileS, s32 tileT, u16 paletteIndex, u16 paletteScale) {
-    s32 drawX0;
+    s32 x0;
     s32 drawY0;
     s32 x1;
     s32 y1;
     s32 clipS;
     s32 clipT;
-    s32 x0;
     s32 y0;
+    u16 *scaledPalette;
     FontTexture *atlasTexture;
     u16 *paletteBase;
     FontAsset *asset;
@@ -1636,7 +1636,6 @@ void drawMenuAsciiGlyph(s16 x, s16 y, u16 tileS, s32 tileT, u16 paletteIndex, u1
     s32 minX;
     s32 halfHeight;
     u16 paletteColor;
-    u16 *scaledPalette;
     s32 color;
     s32 red;
     u16 green;
@@ -1697,7 +1696,6 @@ void drawMenuAsciiGlyph(s16 x, s16 y, u16 tileS, s32 tileT, u16 paletteIndex, u1
         selectedPalette = paletteIndex;
     }
 
-    drawX0 = x0;
     drawY0 = y0;
     sourcePalette = paletteBase + (selectedPalette * 16);
     scaledPalette = allocMenuRenderScratch(0x20);
@@ -1735,7 +1733,7 @@ paletteLoop:
                           atlasTexture->height, 0, G_TX_CLAMP, G_TX_CLAMP, 0, 0, G_TX_NOLOD,
                           G_TX_NOLOD);
     gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, scaledPalette);
-    gSPTextureRectangle(gRegionAllocPtr++, drawX0 * 4, drawY0 * 4, x1 * 4, y1 * 4, 0, clipS << 5,
+    gSPTextureRectangle(gRegionAllocPtr++, x0 * 4, drawY0 * 4, x1 * 4, y1 * 4, 0, clipS << 5,
                         clipT << 5, 0x0400, 0x0400);
 }
 #endif
