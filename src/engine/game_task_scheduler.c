@@ -75,8 +75,8 @@ void initGameTaskScheduler(void) {
     resetRenderCallbackQueues();
 }
 
-// updateGameTaskScheduler best match: 94.081% with the current scorer, improved from 93.474%
-// (legacy annotation: 95.344%; nonmatchings/updateGameTaskScheduler-8498672362023432715/base_30.c)
+// updateGameTaskScheduler best match: 95.263% with the current scorer
+// (nonmatchings/updateGameTaskScheduler-2781615007300307775/base_16.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/engine/game_task_scheduler/updateGameTaskScheduler.s")
 
 #ifdef NON_MATCHING
@@ -99,7 +99,9 @@ void updateGameTaskScheduler(void) {
     s32 stickHighThreshold;
     s32 stickXTooHigh;
     s8 stickX;
-    s8 stickY;
+    s32 stickY;
+    s8 mappedStickX;
+    s8 mappedStickY;
     s32 timer;
 
     gFrameCounter = (gFrameCounter + 1) & 0xFFF;
@@ -161,33 +163,33 @@ positiveStickX:
             *stickYOut = -responseCurve[-stickY];
         }
 
-        stickX = *stickXOut;
+        mappedStickX = *stickXOut;
         stickXOut++;
-        if (stickX > 0x1B - 1) {
+        if (mappedStickX >= 0x1B) {
             *input |= 0x40000;
         }
-        if (stickX < -0x1A) {
+        if (mappedStickX < -0x1A) {
             *input |= 0x80000;
         }
 
-        stickY = *stickYOut;
+        mappedStickY = *stickYOut;
         stickYOut++;
-        if (stickY >= 0x1B) {
+        if (mappedStickY >= 0x1B) {
             *input |= 0x10000;
         }
-        if (stickY < -0x1A) {
+        if (mappedStickY < -0x1A) {
             *input |= 0x20000;
         }
-        if (stickX < 8) {
+        if (mappedStickX < 8) {
             *input &= 0xFFFBFFFF;
         }
-        if (stickX >= -7) {
+        if (mappedStickX >= -7) {
             *input &= 0xFFF7FFFF;
         }
-        if (stickY < 8) {
+        if (mappedStickY < 8) {
             *input &= 0xFFFEFFFF;
         }
-        if (stickY >= -7) {
+        if (mappedStickY >= -7) {
             *input &= 0xFFFDFFFF;
         }
 
@@ -217,13 +219,15 @@ positiveStickX:
     task = gActiveGameTaskListHead;
     gCurrentGameTask = task;
     if (task != NULL) {
-        do {
-            if (task->state == 2) {
-                task->state = 0;
-                task = gCurrentGameTask;
-            }
-            task = (gCurrentGameTask = task->next);
-        } while (task != NULL);
+        if (1) {
+            do {
+                if (task->state == 2) {
+                    task->state = 0;
+                    task = gCurrentGameTask;
+                }
+                task = (gCurrentGameTask = task->next);
+            } while (task != NULL);
+        }
         gCurrentGameTask = gActiveGameTaskListHead;
     }
 
