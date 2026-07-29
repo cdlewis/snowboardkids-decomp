@@ -78,7 +78,7 @@ void recordRaceReplayInputFrame(RacePlayer *player) {
     }
 }
 
-// playRaceReplayInputFrame best match: 95.503% (base_4.c)
+// playRaceReplayInputFrame best match: 95.566% (base_9.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race/player/race_player_input/playRaceReplayInputFrame.s")
 
 #ifdef NON_MATCHING
@@ -93,13 +93,13 @@ void playRaceReplayInputFrame(RacePlayer *player) {
     s16 replayFrame;
     u8 buttons;
     s32 replayOffset;
-    s8 stickY;
+    s8 stickX;
 
     history = (RaceReplayInputHistoryPlayer *) getRelocatableHeapBlockBase(gAssetHandles[0x2B]);
     replayFrame = player->replayFrame;
     if (replayFrame < 0x960) {
         replayOffset = (replayFrame * 4) - replayFrame;
-        player->stickX = history[(u16) player->playerIndex].bytes[replayOffset + 1]; stickY = history[(u16) player->playerIndex].bytes[replayOffset + 2]; player->inputFlags = 0; player->stickY = stickY; buttons = (u8) history[(u16) player->playerIndex].bytes[replayOffset]; if (buttons & 1) { player->inputFlags = 8; replayFrame = player->replayFrame; replayOffset = (replayFrame * 4) - replayFrame; buttons = (u8) history[PLAYER_INDEX(player)].bytes[replayOffset]; }
+        stickX = history[(u16) player->playerIndex].bytes[replayOffset + 1]; player->stickX = stickX; player->stickY = history[(u16) player->playerIndex].bytes[replayOffset + 2]; player->inputFlags = 0; buttons = (u8) history[(u16) player->playerIndex].bytes[replayOffset]; if (buttons & 1) { player->inputFlags = 8; replayFrame = player->replayFrame; replayOffset = (replayFrame * 4) - replayFrame; buttons = (u8) history[PLAYER_INDEX(player)].bytes[replayOffset]; }
         if (buttons & 2) {
             player->inputFlags |= 4;
             replayFrame = player->replayFrame;
