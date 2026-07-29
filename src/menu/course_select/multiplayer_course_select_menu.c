@@ -72,7 +72,7 @@ extern s32 D_80112414;
 extern void (*D_8011241C)(void);
 extern s32 gMenuFlowState;
 
-// initMultiplayerCourseSelectMenu best match: 98.643% (nonmatchings/initMultiplayerCourseSelectMenu-8498672362023432715/base_2.c)
+// initMultiplayerCourseSelectMenu best match: 98.712% (nonmatchings/initMultiplayerCourseSelectMenu-8280121253171829145/base_25.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/course_select/multiplayer_course_select_menu/initMultiplayerCourseSelectMenu.s")
 
 #ifdef NON_MATCHING
@@ -82,12 +82,13 @@ void initMultiplayerCourseSelectMenu(void) {
     s32 k;
     s32 sum;
     s32 selected;
+    s32 specialCharacterId;
+    u8 *selectionRow;
     s32 screenBase;
-    volatile s32 playerCount;
-    s32 one = 1;
+    u32 startPlayer;
     RacePlayer *player;
 
-    if (gRaceSplitscreenMode == one) {
+    if (gRaceSplitscreenMode == 1) {
         requestMusicSequenceBank(2);
     }
     resetRaceCameras();
@@ -125,6 +126,7 @@ void initMultiplayerCourseSelectMenu(void) {
     D_8010AEAD = 0;
     D_8011236C = updateMenuCameraObjectLookAtOriginCallback;
     D_80112364 = screenBase;
+    specialCharacterId = 5;
     D_8010AEA2 = 0;
     D_8010AEAE = 0;
     D_8011241C = updateMenuCameraObjectLookAtOriginCallback;
@@ -145,15 +147,15 @@ void initMultiplayerCourseSelectMenu(void) {
     LOAD_ASSET(_5A1ED0, 0x25);
     LOAD_ASSET(_59DFE0, 0x26);
 
-    one = ASSET_SIZE(_14B450);
-    gAssetHandles[0xC] = allocRelocatableHeapBlock(one);
-    DMA_ASSET(_14B450, (void *)getRelocatableHeapBlockBase(gAssetHandles[0xC]), one);
+    gAssetHandles[0xC] = allocRelocatableHeapBlock(ASSET_SIZE(_14B450));
+    DMA_ASSET(_14B450, (void *)getRelocatableHeapBlockBase(gAssetHandles[0xC]), ASSET_SIZE(_14B450));
     LOAD_ASSET(_1EF530, 0xD);
     LOAD_ASSET(_245A80, 0x1F);
     initCallbackTaskScheduler(0);
     createCallbackTask((CallbackTaskCallback)initMenuIconTilemapSpriteActor, 0, 0x63);
 
     D_800EC9C0 = 0;
+    startPlayer = 0;
     gActiveMenuTask = 0;
     D_8010ADE0 = 0;
     D_8010ADE4 = 0;
@@ -166,189 +168,120 @@ void initMultiplayerCourseSelectMenu(void) {
 
     player = gRacePlayers;
     do {
+        player->menuState = 0;
         player++;
-        player[-1].menuState = 0;
     } while ((u32) player < (u32) gRacePlayersEnd);
 
-    one = 1;
-    {
-        s32 extraOffset;
-        GameSaveData *save;
-        u8 *stateA;
-        u8 *stateC;
-        u8 *stateB;
-        s16 *prompt;
-        u16 *repeatTimer;
-        s32 *valueA;
-        s32 *valueB;
-        s8 *availableColumns;
-        s8 *availableColumn;
-        u8 *extraCourse;
-        u8 *selectionRow;
-        u8 *selectionPtr;
-        u8 *unlocked;
+    for (i = 0; i < gPlayerCount; i++) {
+        D_8010AEA4[i] = 0;
+        D_8010AEC8[i] = 0;
+        D_8010AECC[i] = 0;
+        gMenuChoicePromptState[i] = 0;
+        gMenuInputRepeatTimers[i] = 0;
+        D_8010AED8[i] = 0;
+        D_8010AEE8[i] = 0;
 
-        i = 0;
-        playerCount = gPlayerCount;
-        if (gPlayerCount > 0) {
-            stateA = D_8010AEA4;
-            stateC = D_8010AEC8;
-            stateB = D_8010AECC;
-            prompt = gMenuChoicePromptState;
-            repeatTimer = gMenuInputRepeatTimers;
-            valueA = D_8010AED8;
-            valueB = D_8010AEE8;
-            save = &gGameSaveDataBuffer;
-            availableColumns = D_8010AEB8[0];
-            unlocked = D_8010AEA0;
-            selectionRow = D_8010AEF8[0];
-            extraOffset = 0;
-            do {
-                *stateA = 0;
-                *stateC = 0;
-                *stateB = 0;
-                *prompt = 0;
-                *repeatTimer = 0;
-                *valueA = 0;
-                *valueB = 0;
+        for (j = 0; j < 3; j++) {
+            sum = 0;
+            for (k = 0; (k ^ 0) < 3; k++) {
+                sum += (&gGameSaveDataBuffer)[i].courseUnlockStates[(j + (k * 3)) ^ 0];
+            }
+            if (sum != -3) {
+                D_8010AEB8[i][j] = 1;
+            } else {
+                D_8010AEB8[i][j] = 0;
+            }
+        }
 
-                j = 0;
-                availableColumn = availableColumns;
-                do {
-                    sum = 0;
-                    k = 0;
-                    do {
-                        sum += save->courseUnlockStates[k * 3 + j];
-                        k++;
-                    } while ((k < 3) & 0xFF);
-                    j++;
-                    if (sum != -3) {
-                        *availableColumn = one;
-                    } else {
-                        *availableColumn = 0;
-                    }
-                    availableColumn++;
-                } while (j < 3);
+        sum = 0;
+        for (j = 9; j < 12; j++) {
+            selected = (&gGameSaveDataBuffer)[i].courseUnlockStates[j];
+            sum += selected;
+        }
+        if (sum >= -2) {
+            D_8010AEC8[i] = 4;
+        }
+        if (D_8010AEC8[i] == 4) {
+            D_8010AEA0[i] = 1;
+        }
+        for (j = 0; j < 3; j++) {
+            D_8010AEF8[i][j] = j;
+        }
 
-                sum = 0;
-                j = 9;
-                do {
-                    sum += save->courseUnlockStates[j];
-                    j++;
-                } while (j < 12);
-                stateA++;
-                if (sum >= -2) {
-                    *stateC = 4;
+        if (D_8010AEA0[i] == 1) {
+            for (j = 9; j < 12; j++) {
+                if ((&gGameSaveDataBuffer)[i].courseUnlockStates[j] != -1) {
+                    D_8010AEFB[i * 4] = j;
+                    break;
                 }
-                stateC++;
-                if (stateC[-1] == 4) {
-                    *unlocked = 1;
+            }
+
+            k = 0;
+            for (j = 9; j < 12; j++) {
+                D_8010AF08[i][k] = 0;
+                if ((&gGameSaveDataBuffer)[i].courseUnlockStates[j] != -1) {
+                    D_8010AF08[i][k] = j;
+                    k++;
                 }
-
-                selectionPtr = selectionRow;
-                j = 0;
-                do {
-                    *selectionPtr = j;
-                    j++;
-                    selectionPtr++;
-                } while (j < 3);
-
-                stateB++;
-                prompt++;
-                if (*unlocked == one) {
-                    j = 9;
-                    while (j < 12) {
-                        if (save->courseUnlockStates[j] != -one) {
-                            D_8010AEFB[extraOffset] = j;
-                            break;
-                        }
-                        j++;
-                    }
-
-                    j = 9;
-                    extraCourse = D_8010AF08[i];
-                    do {
-                        *extraCourse = 0;
-                        if (save->courseUnlockStates[j] != -one) {
-                            *extraCourse = j;
-                            extraCourse++;
-                        }
-                        j++;
-                    } while (j != 12);
-                } else {
-                    D_8010AEFB[extraOffset] = 0;
-                }
-
-                i++;
-                selectionRow += 4;
-                repeatTimer++;
-                extraOffset += 4;
-                valueA++;
-                valueB++;
-                save++;
-                availableColumns += 3;
-                unlocked++;
-            } while (i < playerCount);
+            }
+        } else {
+            D_8010AEFB[i * 4] = 0;
         }
     }
 
-    {
-        s32 playerIndex;
-
-        for (playerIndex = 0; playerIndex < playerCount; playerIndex++) {
-            selected = gRacePlayers[playerIndex].menuSelection;
-            if ((selected >= 9) && (selected < 12)) {
-                if (gRacePlayers[playerIndex].selectedCharacterId == 5) {
-                    j = 0;
-                } else {
-                    j = 3;
-                }
-                k = gCourseSelectStatus.unk2E;
+    for (i = startPlayer; i < gPlayerCount; i++) {
+        selected = gRacePlayers[i].menuSelection;
+        if ((selected >= 9) && (selected < 12)) {
+            if (gRacePlayers[i].selectedCharacterId == specialCharacterId) {
+                j = 0;
             } else {
-                k = gCourseSelectStatus.unk2E;
-                if (k == one) {
-                    j = 0;
-                    k = gCourseSelectStatus.unk2E = 0;
-                } else {
-                    j = selected % 3;
-                }
+                j = 3;
             }
-
-            D_8010AE64[playerIndex] = j;
             k = gCourseSelectStatus.unk2E;
-            if (k == one) {
-                j--;
-            }
-
-            if (gRacePlayers[playerIndex].selectedCharacterId == 5) {
-                D_8010AEAC[playerIndex] = 0;
-            } else if (selected < 9) {
-                D_8010AEAC[playerIndex] = selected / 3;
+        } else {
+            k = gCourseSelectStatus.unk2E;
+            if (k == 1) {
+                k = gCourseSelectStatus.unk2E = j = 0;
             } else {
-                if (selected >= 12) {
-                    D_8010AEAC[playerIndex] = 0;
-                }
-                if (selected >= 9 && selected < 12) {
-                    for (k = 0; k < 3; k++) {
-                        if (D_8010AF08[playerIndex][k] == selected) {
-                            D_8010AEAC[playerIndex] = k;
-                            break;
-                        }
+                j = selected % 3;
+            }
+        }
+
+        D_8010AE64[i] = j;
+        k = gCourseSelectStatus.unk2E;
+        selectionRow = (u8 *)&selected;
+        if (k == 1) {
+            j--;
+        }
+
+        if (gRacePlayers[i].selectedCharacterId == specialCharacterId) {
+            D_8010AEAC[i] = 0;
+        } else if (*(s32 *)selectionRow < 9) {
+            D_8010AEAC[i] = *(s32 *)selectionRow / 3;
+        } else {
+            if (*(s32 *)selectionRow >= 12) {
+                D_8010AEAC[i] = 0;
+            }
+            if ((*(s32 *)selectionRow >= 9) && (selected < 12)) {
+                for (k = 0; k < 3; k++) {
+                    if (D_8010AF08[i][k] == *(s32 *)selectionRow) {
+                        D_8010AEAC[i] = k;
+                        break;
                     }
                 }
             }
-
-            i = D_8010AEF8[playerIndex][j];
-            gRacePlayers[playerIndex].menuSelection = i;
-            gCourseSelectStatus.unk0[playerIndex] = 0;
-            gCourseSelectStatus.unk4Array[playerIndex] = 0;
-            gCourseSelectStatus.unk8Array[playerIndex] = 0;
-            gCourseSelectStatus.unkCArray[playerIndex] = 0;
-            gCourseSelectStatus.unk10Array[playerIndex] = 0;
-            gCourseSelectStatus.unk14[playerIndex] = 0;
-            gCourseSelectStatus.unk1C[playerIndex] = 0;
-            gCourseSelectStatus.unk24[playerIndex] = 0;
         }
+
+        selectionRow = D_8010AEF8[i];
+        gRacePlayers[i].menuSelection = selectionRow[j];
+        gCourseSelectStatus.unk0[i] = 0;
+        gCourseSelectStatus.unk4Array[i] = 0;
+        gCourseSelectStatus.unk8Array[i] = 0;
+        gCourseSelectStatus.unkCArray[i] = 0;
+        gCourseSelectStatus.unk10Array[i] = 0;
+        gCourseSelectStatus.unk14[i] = 0;
+        gCourseSelectStatus.unk1C[i] = 0;
+        gCourseSelectStatus.unk24[i] = 0;
     }
 
     *(volatile u8 *)&gCourseSelectStatus.unk28 = 0;
