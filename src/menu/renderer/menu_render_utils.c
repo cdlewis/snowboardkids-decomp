@@ -614,47 +614,44 @@ extern void drawAssetTableSpriteWithExplicitPaletteWideIndex(s16 x, s16 y, Asset
                                                              u16 paletteIndex);
 #endif
 
-// drawScaledAssetTableSprite best match: 96.102% (nonmatchings/drawScaledAssetTableSprite-3885303446860889946/base.c)
+// drawScaledAssetTableSprite best match: 96.351% (nonmatchings/drawScaledAssetTableSprite-2641000770066553983/base_27.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/renderer/menu_render_utils/drawScaledAssetTableSprite.s")
 
 #ifdef NON_MATCHING
 void drawScaledAssetTableSprite(s16 x, s16 y, AssetTable *asset, volatile u16 entryIndex, u16 scale) {
-    s32 viewHalfWidth;
-    AssetTableEntry *paletteBase;
-    s32 clipLeft;
-    s32 clipRight;
     s32 clipTop;
-    s32 clipBottom;
-    s32 clippedS;
-    s32 clippedT;
     s32 x0;
+    u16 textureScale;
     s32 y0;
+    s32 clipBottom;
+    AssetTableEntry *sprite;
+    s32 viewHalfHeight;
+    s32 clipLeft;
+    s32 viewHalfWidth;
+    s32 clipRight;
+    AssetTableEntry *paletteBase;
+    s32 spriteWidth;
+    s32 spriteHeight;
     s32 x1;
     s32 y1;
-    s32 viewHalfHeight;
-    AssetTableEntry *sprite;
-    u16 textureScale;
+    s32 clippedS;
+    s32 clippedT;
 
     textureScale = scale;
     if (textureScale >= 0) {
         paletteBase = asset->entryCount + asset->entries;
         sprite = (AssetTableEntry *)asset + (entryIndex & 0xFFFFu);
-        {
-            s32 spriteWidth;
-            s32 spriteHeight;
-
-            spriteWidth = sprite[1].width;
-            x0 = x + gMenuViewportCenterX;
-            x1 = spriteWidth >> textureScale;
-            spriteHeight = sprite[1].height;
-            y0 = y + gMenuViewportCenterY;
-            y1 = spriteHeight >> textureScale;
-            sprite++;
-            x0 = x0 + ((spriteWidth - x1) / 2);
-            y0 = y0 + ((spriteHeight - y1) / 2);
-            x1 += x0;
-            y1 += y0;
-        }
+        spriteWidth = sprite[1].width;
+        x0 = x + gMenuViewportCenterX;
+        x1 = spriteWidth >> textureScale;
+        spriteHeight = sprite[1].height;
+        y0 = y + gMenuViewportCenterY;
+        y1 = spriteHeight >> textureScale;
+        sprite++;
+        x0 = x0 + ((spriteWidth - x1) / 2);
+        y0 = y0 + ((spriteHeight - y1) / 2);
+        x1 += x0;
+        y1 += y0;
         clippedS = 0;
         clippedT = 0;
 
