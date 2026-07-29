@@ -17,11 +17,6 @@
 #include "game/race/player/race_player_input.h"
 
 typedef struct {
-    /* 0x000 */ u8 menuState;
-    /* 0x001 */ u8 pad1[0x60B];
-} CourseSelectPlayerMenuState;
-
-typedef struct {
     /* 0x0 */ u8 pad0;
     /* 0x1 */ u8 courseIndex;
 } CourseSelectWidgetPlayerSlot;
@@ -755,15 +750,11 @@ void drawCourseSelectCourseIconList(CourseSelectIconListActor *iconList) {
     }
 }
 
-// updateCourseSelectCourseIconList best match: 99.844% (nonmatchings/updateCourseSelectCourseIconList-4777730848216765513/base_33.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/menu/course_select/course_select_ui/updateCourseSelectCourseIconList.s")
-
-#ifdef NON_MATCHING
 void updateCourseSelectCourseIconList(CourseSelectIconListActor *arg0) {
     CourseSelectIconListActor *actor;
     s32 playerIndex;
-    s32 movingCount;
     s32 iconIndex;
+    s32 movingCount;
     u8 count;
     u8 state;
 
@@ -785,19 +776,19 @@ void updateCourseSelectCourseIconList(CourseSelectIconListActor *arg0) {
 
         switch (state) {
         case 0:
-            movingCount = 0;
-            for (iconIndex = 0; iconIndex < (s32)actor->itemCounts[playerIndex]; iconIndex++) {
-                if (actor->y[playerIndex][iconIndex] < actor->targetY[playerIndex]) {
-                    actor->y[playerIndex][iconIndex] += 0x10;
-                    movingCount++;
-                    if (actor->y[playerIndex][iconIndex] >= actor->targetY[playerIndex]) {
-                        actor->y[playerIndex][iconIndex] = actor->targetY[playerIndex];
+            iconIndex = 0;
+            for (movingCount = 0; movingCount < (s32)actor->itemCounts[playerIndex]; movingCount++) {
+                if (actor->y[playerIndex][movingCount] < actor->targetY[playerIndex]) {
+                    actor->y[playerIndex][movingCount] += 0x10;
+                    iconIndex++;
+                    if (actor->y[playerIndex][movingCount] >= actor->targetY[playerIndex]) {
+                        actor->y[playerIndex][movingCount] = actor->targetY[playerIndex];
                     }
                 }
             }
 
             actor->timer[playerIndex]++;
-            if ((D_80121D80[playerIndex].selectedCharacterId == 5) ||
+            if ((gRacePlayers[playerIndex].selectedCharacterId == 5) ||
                 (D_8010AEA0[playerIndex] == 0) || (gCourseSelectModeSelection == 1)) {
                 count = 4;
             } else if (D_8010AEA0[playerIndex] != 0) {
@@ -808,7 +799,7 @@ void updateCourseSelectCourseIconList(CourseSelectIconListActor *arg0) {
                 actor->itemCounts[playerIndex]++;
             }
 
-            if ((u32)movingCount == 0) {
+            if ((u32)iconIndex == 0) {
                 actor->state[playerIndex] = 1;
                 if (gPlayerCount == 1) {
                     D_8010ADE0 = createCallbackTask((CallbackTaskCallback)initCourseSelectPreviewModelIn, 0, 0x63);
@@ -823,7 +814,7 @@ void updateCourseSelectCourseIconList(CourseSelectIconListActor *arg0) {
             break;
 
         case 1:
-            if (((CourseSelectPlayerMenuState *)&D_80121D88)[playerIndex].menuState == 1) {
+            if (gRacePlayers[playerIndex].menuState == 1) {
                 actor->state[playerIndex] = 2;
             }
             break;
@@ -831,12 +822,12 @@ void updateCourseSelectCourseIconList(CourseSelectIconListActor *arg0) {
         case 2:
             if (D_8010AEA4[playerIndex] >= 9) {
                 for (iconIndex = 0; iconIndex < (s32)actor->itemCounts[playerIndex]; iconIndex++) {
-                    if (iconIndex != gCharacterSelectHudState.highlightedRosterIndices[playerIndex]) {
+                    if (iconIndex != D_8010AE64[playerIndex]) {
                         actor->y[playerIndex][iconIndex] -= 0x20;
                     }
                 }
 
-                if (gCharacterSelectHudState.highlightedRosterIndices[playerIndex] != 0) {
+                if (D_8010AE64[playerIndex] != 0) {
                     if (actor->startY[playerIndex] >= actor->y[playerIndex][0]) {
                         actor->state[playerIndex] = 3;
                     }
@@ -845,7 +836,7 @@ void updateCourseSelectCourseIconList(CourseSelectIconListActor *arg0) {
                 }
 
                 if (actor->state[playerIndex] == 3) {
-                    if (actor->x[playerIndex][gCharacterSelectHudState.highlightedRosterIndices[playerIndex]] <
+                    if (actor->x[playerIndex][D_8010AE64[playerIndex]] <
                         actor->targetX[playerIndex]) {
                         actor->direction[playerIndex] = 1;
                     } else {
@@ -856,15 +847,15 @@ void updateCourseSelectCourseIconList(CourseSelectIconListActor *arg0) {
             break;
 
         case 3:
-            actor->x[playerIndex][gCharacterSelectHudState.highlightedRosterIndices[playerIndex]] +=
+            actor->x[playerIndex][D_8010AE64[playerIndex]] +=
                 actor->speed[playerIndex] * actor->direction[playerIndex];
             if (((actor->direction[playerIndex] == 1) &&
-                 (actor->x[playerIndex][gCharacterSelectHudState.highlightedRosterIndices[playerIndex]] >=
+                 (actor->x[playerIndex][D_8010AE64[playerIndex]] >=
                   actor->targetX[playerIndex])) ||
                 ((actor->direction[playerIndex] == -1) &&
-                 (actor->x[playerIndex][gCharacterSelectHudState.highlightedRosterIndices[playerIndex]] <=
+                 (actor->x[playerIndex][D_8010AE64[playerIndex]] <=
                   actor->targetX[playerIndex]))) {
-                actor->x[playerIndex][gCharacterSelectHudState.highlightedRosterIndices[playerIndex]] =
+                actor->x[playerIndex][D_8010AE64[playerIndex]] =
                     actor->targetX[playerIndex];
                 actor->state[playerIndex] = 4;
                 gMenuChoicePromptState[playerIndex] = 1;
@@ -875,39 +866,37 @@ void updateCourseSelectCourseIconList(CourseSelectIconListActor *arg0) {
             if ((gMenuFlowState == 0) && (gMenuChoicePromptState[playerIndex] == 0)) {
                 actor->state[playerIndex] = 5;
             }
-            if (D_80121D80[playerIndex].menuState == 3) {
+            if (gRacePlayers[playerIndex].menuState == 3) {
                 actor->state[playerIndex] = 7;
             }
             break;
 
         case 5:
-            actor->x[playerIndex][gCharacterSelectHudState.highlightedRosterIndices[playerIndex]] +=
+            actor->x[playerIndex][D_8010AE64[playerIndex]] +=
                 actor->speed[playerIndex] * actor->direction[playerIndex] * -1;
             if (((actor->direction[playerIndex] == 1) &&
-                 (actor->x[playerIndex][gCharacterSelectHudState.highlightedRosterIndices[playerIndex]] <=
+                 (actor->x[playerIndex][D_8010AE64[playerIndex]] <=
                   actor->baseX[playerIndex] +
-                      (gCharacterSelectHudState.highlightedRosterIndices[playerIndex] *
-                       actor->speed[playerIndex]))) ||
+                      (actor->speed[playerIndex] * D_8010AE64[playerIndex]))) ||
                 ((actor->direction[playerIndex] == -1) &&
-                 (actor->x[playerIndex][gCharacterSelectHudState.highlightedRosterIndices[playerIndex]] >=
+                 (actor->x[playerIndex][D_8010AE64[playerIndex]] >=
                   actor->baseX[playerIndex] +
-                      (gCharacterSelectHudState.highlightedRosterIndices[playerIndex] *
-                       actor->speed[playerIndex])))) {
-                actor->x[playerIndex][gCharacterSelectHudState.highlightedRosterIndices[playerIndex]] =
+                      (actor->speed[playerIndex] * D_8010AE64[playerIndex])))) {
+                actor->x[playerIndex][D_8010AE64[playerIndex]] =
                     actor->baseX[playerIndex] +
-                    (gCharacterSelectHudState.highlightedRosterIndices[playerIndex] * actor->speed[playerIndex]);
+                    (D_8010AE64[playerIndex] * actor->speed[playerIndex]);
                 actor->state[playerIndex] = 6;
             }
             break;
 
         case 6:
             for (iconIndex = 0; iconIndex < (s32)actor->itemCounts[playerIndex]; iconIndex++) {
-                if (iconIndex != gCharacterSelectHudState.highlightedRosterIndices[playerIndex]) {
+                if (iconIndex != D_8010AE64[playerIndex]) {
                     actor->y[playerIndex][iconIndex] += 0x20;
                 }
             }
 
-            if (gCharacterSelectHudState.highlightedRosterIndices[playerIndex] != 0) {
+            if (D_8010AE64[playerIndex] != 0) {
                 if (actor->y[playerIndex][0] >= actor->targetY[playerIndex]) {
                     actor->state[playerIndex] = 1;
                 }
@@ -915,7 +904,7 @@ void updateCourseSelectCourseIconList(CourseSelectIconListActor *arg0) {
                 actor->state[playerIndex] = 1;
             }
             if (actor->state[playerIndex] == 1) {
-                ((CourseSelectPlayerMenuState *)&D_80121D88)[playerIndex].menuState = 0;
+                gRacePlayers[playerIndex].menuState = 0;
             }
             break;
 
@@ -925,27 +914,27 @@ void updateCourseSelectCourseIconList(CourseSelectIconListActor *arg0) {
                     actor->y[playerIndex][iconIndex] -= 0x20;
                 }
             } else {
-                actor->y[playerIndex][gCharacterSelectHudState.highlightedRosterIndices[playerIndex]] -= 0x20;
+                actor->y[playerIndex][D_8010AE64[playerIndex]] -= 0x20;
             }
-            if (actor->y[playerIndex][gCharacterSelectHudState.highlightedRosterIndices[playerIndex]] <=
+            if (actor->y[playerIndex][D_8010AE64[playerIndex]] <=
                 actor->startY[playerIndex]) {
                 actor->state[playerIndex] = 8;
             }
             break;
 
         case 9:
-            actor->y[playerIndex][gCharacterSelectHudState.highlightedRosterIndices[playerIndex]] -= 0x20;
-            if (actor->y[playerIndex][gCharacterSelectHudState.highlightedRosterIndices[playerIndex]] <=
+            actor->y[playerIndex][D_8010AE64[playerIndex]] -= 0x20;
+            if (actor->y[playerIndex][D_8010AE64[playerIndex]] <=
                 actor->startY[playerIndex]) {
                 actor->state[playerIndex] = 10;
             }
             break;
 
         case 11:
-            actor->y[playerIndex][gCharacterSelectHudState.highlightedRosterIndices[playerIndex]] += 0x20;
-            if (actor->y[playerIndex][gCharacterSelectHudState.highlightedRosterIndices[playerIndex]] >=
+            actor->y[playerIndex][D_8010AE64[playerIndex]] += 0x20;
+            if (actor->y[playerIndex][D_8010AE64[playerIndex]] >=
                 actor->targetY[playerIndex]) {
-                actor->y[playerIndex][gCharacterSelectHudState.highlightedRosterIndices[playerIndex]] =
+                actor->y[playerIndex][D_8010AE64[playerIndex]] =
                     actor->targetY[playerIndex];
                 actor->state[playerIndex] = 12;
             }
@@ -971,7 +960,6 @@ void updateCourseSelectCourseIconList(CourseSelectIconListActor *arg0) {
         addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawCourseSelectCourseIconList, arg0);
     }
 }
-#endif
 
 void initCourseSelectCourseIconList(CourseSelectIconListActor *arg0) {
     CourseSelectIconListActor *actor;
