@@ -1536,8 +1536,8 @@ void updateCourseSelectPurchasePrompt(void) {
     updateCallbackTasks();
 }
 
-// updateCourseSelectUnlockCourseList best match: 90.230%
-// (nonmatchings/updateCourseSelectUnlockCourseList-5176680205357669729/base_34.c)
+// updateCourseSelectUnlockCourseList best match: 91.042%
+// (nonmatchings/updateCourseSelectUnlockCourseList-2781615007300307775/base_15.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/course_select/course_select_menu/updateCourseSelectUnlockCourseList.s")
 
 #if 0 /* Superseded without consulting the previous attempt. */
@@ -1712,10 +1712,13 @@ void updateCourseSelectUnlockCourseList(void) {
     u8 *selectionPtr;
     u16 repeatTimer;
     u8 selection;
+    u8 cancelSelection;
     RaceCamera *camera;
+    s16 initialState;
 
     playerIndex = 0;
-    if (gMenuChoicePromptState[playerIndex] == 9) {
+    initialState = gMenuChoicePromptState[playerIndex];
+    if (initialState == 9) {
         D_8010AEA4 = (u8)D_8010AEA4 + 1;
     } else {
         D_8010AEA4 = playerIndex;
@@ -1736,11 +1739,12 @@ void updateCourseSelectUnlockCourseList(void) {
         repeatTimer = gMenuInputRepeatTimers[playerIndex];
         if ((pressed & upMask) ||
             ((heldUp != playerIndex) && (repeatTimer >= 9) && (repeatTimer & 1))) {
+            selection = gMenuChoicePromptState[playerIndex];
             if (repeatTimer == playerIndex) {
                 repeatTimer++;
             }
             gMenuInputRepeatTimers[playerIndex] = repeatTimer;
-            if (gMenuChoicePromptState[playerIndex] >= 3) {
+            if (selection >= 3) {
                 gMenuChoicePromptState[playerIndex]--;
                 enqueueSoundEffect(0x19, 0x32);
                 pressed = gPlayerInputPressed[playerIndex];
@@ -1779,7 +1783,8 @@ void updateCourseSelectUnlockCourseList(void) {
         if (pressed & B_BUTTON) {
             enqueueSoundEffect(0x18, 0x32);
             gMenuChoicePromptState[playerIndex] += 3;
-            *(volatile u8 *)selectionPtr = gRacePlayers[0].menuSelection % divisor;
+            cancelSelection = gRacePlayers[0].menuSelection % divisor;
+            *(volatile u8 *)selectionPtr = cancelSelection;
             gMenuInputRepeatTimers[playerIndex] = playerIndex;
         } else if ((pressed & A_BUTTON) || (pressed & START_BUTTON)) {
             enqueueSoundEffect(0x18, 0x32);
@@ -1797,7 +1802,7 @@ void updateCourseSelectUnlockCourseList(void) {
                 D_8010AF20 = 7;
             }
         }
-    } else if (gMenuChoicePromptState[playerIndex] == playerIndex) {
+    } else if (initialState == playerIndex) {
         setCurrentGameTaskCallback(updateCourseSelectCourseList, playerIndex);
     }
 
