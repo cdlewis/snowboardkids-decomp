@@ -47,7 +47,7 @@ extern s32 gMenuFlowState;
 extern u8 gFramebufferSwapHold;
 extern u8 gPendingFramebufferSwapCount;
 extern void releaseMenuAssetHandles(void);
-// initMainMenuDemoRaceIntro best match: 98.251% (nonmatchings/initMainMenuDemoRaceIntro-6887713755923057488/base_40.c)
+// initMainMenuDemoRaceIntro best match: 98.129% (nonmatchings/initMainMenuDemoRaceIntro-2781615007300307775/base_18.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/demo/main_menu_demo_race_intro/initMainMenuDemoRaceIntro.s")
 
 #ifdef NON_MATCHING
@@ -57,18 +57,20 @@ void initMainMenuDemoRaceIntro(void) {
     u8 loadCourseAssetsFlag;
     long demoIndex;
     s32 one;
+    u16 entryIndex;
     MainMenuDemoRaceIntroEntry *temp_v1_3;
 
     demoIndex = gMainMenuDemoRaceIntroIndex;
-    temp_v1 = &gMainMenuDemoRaceIntroEntries[demoIndex];
-    gRaceCourseIndex.signedValue = (s16) temp_v1->courseIndex;
+    entryIndex = demoIndex;
+    temp_v1 = &gMainMenuDemoRaceIntroEntries[entryIndex];
+    gRaceCourseIndex.signedValue = temp_v1->courseIndex;
     gRaceUpdatePaused = 0;
     gRaceCameraModeChangeDisabled = 0;
     gRaceResultState = 0;
     gRaceDemoPlaybackEnabled = 0;
     gTrainingCourseLesson = 0;
     gMainMenuModeSelection = 0;
-    gRaceSplitscreenMode = temp_v1->splitscreen;
+    gRaceSplitscreenMode = (one = temp_v1->splitscreen);
     gRaceTypeSelection = temp_v1->raceType;
     resetGameplayRng();
     gRacePlayers->unk4 = 0;
@@ -150,15 +152,17 @@ void initMainMenuDemoRaceIntro(void) {
     } else {
         configureViewport(0, 0x57, 0x43, 0x90U, 0x68U, 0xA0U, 0x78U, 1.3333334f);
         configureViewport(1, 0x57, 0xAD, 0x90U, 0x68U, 0xA0U, 0x78U, 1.3333334f);
-        configureViewport(2, 0xE9, 0x43, 0x90U, 0x68U, 0xA0U, 0x78U, 1.3333334f);
+        configureViewport(2, 0xE9, 0x43, 0x90U, 0x68U, 0xA0U, 0x78U, 1.3333334);
         configureViewport(3, 0xE9, 0xAD, 0x90U, 0x68U, 0xA0U, 0x78U, 1.3333334f);
         D_801121E0[0].active = 1;
         D_801121E0[1].active = 1;
         D_801121E0[2].active = 1;
         D_801121E0[3].active = 1;
-        one++;
-        one--;
-        gFramebufferSwapDelay.value = one;
+        do {
+            one++;
+            one--;
+            gFramebufferSwapDelay.value = one;
+        } while (0);
     }
     if (gRaceSplitscreenMode == 0) {
         gPlayerCount = 4;
