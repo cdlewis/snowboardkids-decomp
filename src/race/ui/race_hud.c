@@ -311,7 +311,7 @@ void drawScoreAttackChallengeLabels(void *arg0) {
     drawMenuAsciiTextDefaultScale(0x70, -0x48, sp18, 6);
 }
 
-// drawTargetTimeChallengeHud best match: 96.594% at nonmatchings/drawTargetTimeChallengeHud-5755426475870421788/base_13.c.
+// drawTargetTimeChallengeHud best match: 96.706% at nonmatchings/drawTargetTimeChallengeHud-2641000770066553983/base_21.c.
 #pragma GLOBAL_ASM("asm/nonmatchings/race/ui/race_hud/drawTargetTimeChallengeHud.s")
 
 #ifdef NON_MATCHING
@@ -321,11 +321,11 @@ const char gRaceHudTargetTimeChallengeFractionFormat[] = "%2.2d";
 const char gRaceHudTargetTimeChallengeSecondaryCounterFormat[] = "%d";
 
 void drawTargetTimeChallengeHud(void *arg0) {
-    char *bufferAlias;
-    char *endPointer;
-    char buffer[4];
     s32 x;
     char *digit;
+    char buffer[4];
+    char *endPointer;
+    char *bufferAlias;
     u32 end;
 
     sprintf(buffer, gRaceHudTargetTimeChallengeMinutesFormat, gRaceElapsedTimer.minutes);
@@ -356,13 +356,16 @@ void drawTargetTimeChallengeHud(void *arg0) {
     digit = buffer;
     do {
         drawAssetTableSprite((s16)x, 0x50, getRelocatableHeapBlockBase(RACE_HUD_POPUP_FONT_HANDLE),
-                             (((u8)*digit & 0xFF) - 5) & 0xFFFF);
+                             ((u8)*digit - 5) & 0xFFFF);
         do {
         } while (0);
         digit++;
         x += 8;
         end = (u32)&buffer[2];
     } while ((u32)digit != end);
+
+    if ((buffer && buffer) && buffer) {
+    }
 
     drawAssetTableSprite(0x58, 0x50, getRelocatableHeapBlockBase(RACE_HUD_POPUP_FONT_HANDLE), 0x36);
     drawAssetTableSprite(0x70, 0x50, getRelocatableHeapBlockBase(RACE_HUD_POPUP_FONT_HANDLE), 0x35);
