@@ -233,14 +233,19 @@ typedef struct RacePlayer {
     /* 0x454 */ char pad454[0x14];
     /* 0x468 */ Vec3i markerPoints[RACE_PLAYER_COUNT];
     /* 0x498 */ char pad498[8];
-    /* 0x4A0 */ Vec3i unk4A0;
-    /* 0x4AC */ Vec3i unk4AC;
-    /* 0x4B8 */ Vec3i unk4B8;
-    /* 0x4C4 */ Vec3i unk4C4;
-    /* 0x4D0 */ Vec3i unk4D0;
-    /* 0x4DC */ Vec3i unk4DC;
-    /* 0x4E8 */ Vec3i unk4E8;
-    /* 0x4F4 */ Vec3i unk4F4;
+    /* 0x4A0 */ union {
+        Vec3i groundMarkerSources[8];
+        struct {
+            /* 0x4A0 */ Vec3i unk4A0;
+            /* 0x4AC */ Vec3i unk4AC;
+            /* 0x4B8 */ Vec3i unk4B8;
+            /* 0x4C4 */ Vec3i unk4C4;
+            /* 0x4D0 */ Vec3i unk4D0;
+            /* 0x4DC */ Vec3i unk4DC;
+            /* 0x4E8 */ Vec3i unk4E8;
+            /* 0x4F4 */ Vec3i unk4F4;
+        };
+    };
     /* 0x500 */ u8 unk500;
     /* 0x501 */ char pad501[1];
     /* 0x502 */ union {
