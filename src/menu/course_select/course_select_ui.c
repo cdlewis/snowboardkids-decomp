@@ -160,7 +160,19 @@ typedef struct {
     u8 speed;
     u8 handling;
     u8 trick;
-} CourseSelectCourseRatings;
+} CourseSelectCourseRating;
+
+typedef union {
+    CourseSelectCourseRating courses[8];
+    u8 values[0x18];
+} CourseSelectCourseRatingTable;
+
+typedef enum {
+    COURSE_RATING_SPEED,
+    COURSE_RATING_HANDLING,
+    COURSE_RATING_TRICK,
+    COURSE_RATING_COUNT
+} CourseSelectCourseRatingType;
 
 extern void drawCourseSelectPlayerPanels(CourseSelectWidgetActor *);
 extern void drawMenuSpriteWithAlphaWideArgs(s32 x, s32 y, void *texture, s32 tileIndex, s32 width, s32 height,
@@ -182,7 +194,7 @@ extern u8 gCourseSelectExtraCourseColumnState;
 extern u8 D_8010AEAC[];
 extern u8 D_8010AF1C;
 extern MenuGlyphScript gCourseSelectCompleteText[];
-extern CourseSelectCourseRatings gCourseSelectCourseRatings[];
+extern CourseSelectCourseRatingTable gCourseSelectCourseRatings;
 extern s16 gCourseSelectIconListYLayout[][6];
 extern s16 gCourseSelectIconListXLayout[][4];
 extern s16 gCourseSelectStatsPanelLayout[][4];
@@ -1261,7 +1273,7 @@ void drawCourseSelectCourseStats(CourseSelectWidgetActor *arg0) {
                                                   D_800E0DA0, 0, arg0->courseStatsAlpha);
                             } else {
                                 j = 0;
-                                if (gCourseSelectCourseRatings[selectedCourseId].speed > 0) {
+                                if (gCourseSelectCourseRatings.courses[selectedCourseId].speed > 0) {
                                     k = 0;
                                     do {
                                         drawMenuSpriteWithAlpha(
@@ -1271,7 +1283,7 @@ void drawCourseSelectCourseStats(CourseSelectWidgetActor *arg0) {
                                             arg0->courseStatsAlpha, 0);
                                         j++;
                                         k += 0xC;
-                                    } while (j < gCourseSelectCourseRatings[selectedCourseId].speed);
+                                    } while (j < gCourseSelectCourseRatings.courses[selectedCourseId].speed);
                                 }
                             }
                             if (selectedCourseId >= 9) {
@@ -1280,7 +1292,7 @@ void drawCourseSelectCourseStats(CourseSelectWidgetActor *arg0) {
                                                   arg0->courseStatsAlpha);
                             } else {
                                 j = 0;
-                                if (gCourseSelectCourseRatings[selectedCourseId].handling > 0) {
+                                if (gCourseSelectCourseRatings.courses[selectedCourseId].handling > 0) {
                                     k = 0;
                                     do {
                                         drawMenuSpriteWithAlpha(
@@ -1290,7 +1302,7 @@ void drawCourseSelectCourseStats(CourseSelectWidgetActor *arg0) {
                                             arg0->courseStatsAlpha, 0);
                                         j++;
                                         k += 0xC;
-                                    } while (j < gCourseSelectCourseRatings[selectedCourseId].handling);
+                                    } while (j < gCourseSelectCourseRatings.courses[selectedCourseId].handling);
                                 }
                             }
                             if (selectedCourseId >= 9) {
@@ -1299,7 +1311,7 @@ void drawCourseSelectCourseStats(CourseSelectWidgetActor *arg0) {
                                                   arg0->courseStatsAlpha);
                             } else {
                                 j = 0;
-                                if (gCourseSelectCourseRatings[selectedCourseId].trick > 0) {
+                                if (gCourseSelectCourseRatings.courses[selectedCourseId].trick > 0) {
                                     k = 0;
                                     do {
                                         drawMenuSpriteWithAlpha(
@@ -1309,7 +1321,7 @@ void drawCourseSelectCourseStats(CourseSelectWidgetActor *arg0) {
                                             arg0->courseStatsAlpha, 0);
                                         j++;
                                         k += 0xC;
-                                    } while (j < gCourseSelectCourseRatings[selectedCourseId].trick);
+                                    } while (j < gCourseSelectCourseRatings.courses[selectedCourseId].trick);
                                 }
                             }
                         } else {
@@ -1321,9 +1333,9 @@ void drawCourseSelectCourseStats(CourseSelectWidgetActor *arg0) {
                             }
                             if (selectedCourseId < 9) {
                                 sprintf((char *)text, D_800E0DAC,
-                                        gCourseSelectCourseRatings[selectedCourseId].speed);
+                                        gCourseSelectCourseRatings.courses[selectedCourseId].speed);
                             }
- drawMenuAsciiText((s16) (arg0->courseStatsX[i] + 0x34), arg0->courseStatsY[i], text, 0, arg0->courseStatsAlpha); if (selectedCourseId < 9) { sprintf((char *)text, D_800E0DB0, gCourseSelectCourseRatings[selectedCourseId].handling); } drawMenuAsciiText((s16) (arg0->courseStatsX[i] + 0x34), (s16) (arg0->courseStatsY[i] + 8), text, 0, arg0->courseStatsAlpha); if (selectedCourseId < 9) { sprintf((char *)text, D_800E0DB4, gCourseSelectCourseRatings[selectedCourseId].trick); } drawMenuAsciiText((s16) (arg0->courseStatsX[i] + 0x34), (s16) ((unsigned short) (arg0->courseStatsY[i] + 0x10)), text, 0, arg0->courseStatsAlpha); } if (((s32) gPlayerCount) >= 2) { if (((s32) gPlayerCount) == 2) { j = 0; } else { j = 1; } drawMenuSpriteWithAlpha((s16) (gCourseSelectStatsPlayerMarkerLayout[j][i & 1][0] + ((i >= 2) * 0x8C)), gCourseSelectStatsPlayerMarkerLayout[j][i & 1][1], getRelocatableHeapBlockBase(gAssetHandles[0x21]), 0x12, 0x20, 0x20, new_var, arg0->courseStatsAlpha, 0); } } i++; } while (i < ((s32) gPlayerCount)); } } while (0);
+ drawMenuAsciiText((s16) (arg0->courseStatsX[i] + 0x34), arg0->courseStatsY[i], text, 0, arg0->courseStatsAlpha); if (selectedCourseId < 9) { sprintf((char *)text, D_800E0DB0, gCourseSelectCourseRatings.courses[selectedCourseId].handling); } drawMenuAsciiText((s16) (arg0->courseStatsX[i] + 0x34), (s16) (arg0->courseStatsY[i] + 8), text, 0, arg0->courseStatsAlpha); if (selectedCourseId < 9) { sprintf((char *)text, D_800E0DB4, gCourseSelectCourseRatings.courses[selectedCourseId].trick); } drawMenuAsciiText((s16) (arg0->courseStatsX[i] + 0x34), (s16) ((unsigned short) (arg0->courseStatsY[i] + 0x10)), text, 0, arg0->courseStatsAlpha); } if (((s32) gPlayerCount) >= 2) { if (((s32) gPlayerCount) == 2) { j = 0; } else { j = 1; } drawMenuSpriteWithAlpha((s16) (gCourseSelectStatsPlayerMarkerLayout[j][i & 1][0] + ((i >= 2) * 0x8C)), gCourseSelectStatsPlayerMarkerLayout[j][i & 1][1], getRelocatableHeapBlockBase(gAssetHandles[0x21]), 0x12, 0x20, 0x20, new_var, arg0->courseStatsAlpha, 0); } } i++; } while (i < ((s32) gPlayerCount)); } } while (0);
     } while (0);
 }
 #endif
@@ -1374,7 +1386,8 @@ void drawCourseSelectCourseStats(CourseSelectWidgetActor *arg0) {
                                       arg0->courseStatsAlpha);
                 } else {
                     j = 0;
-                    if (j < gCourseSelectCourseRatings[courseIndex].speed) {
+                    if (j < gCourseSelectCourseRatings
+                                .values[(courseIndex * COURSE_RATING_COUNT) + COURSE_RATING_SPEED]) {
                         xOffset = 0;
                         do {
                             drawMenuSpriteWithAlpha(
@@ -1384,7 +1397,8 @@ void drawCourseSelectCourseStats(CourseSelectWidgetActor *arg0) {
                                 0x25, 0x20, 0x20, 0, arg0->courseStatsAlpha, 0);
                             j++;
                             xOffset += 0xC;
-                        } while (j < gCourseSelectCourseRatings[courseIndex].speed);
+                        } while (j < gCourseSelectCourseRatings
+                                         .values[(courseIndex * COURSE_RATING_COUNT) + COURSE_RATING_SPEED]);
                     }
                 }
 
@@ -1394,7 +1408,8 @@ void drawCourseSelectCourseStats(CourseSelectWidgetActor *arg0) {
                                       (u8 *)D_800E0DA4, 0, arg0->courseStatsAlpha);
                 } else {
                     j = 0;
-                    if (j < gCourseSelectCourseRatings[courseIndex].handling) {
+                    if (j < gCourseSelectCourseRatings
+                                .values[(courseIndex * COURSE_RATING_COUNT) + COURSE_RATING_HANDLING]) {
                         xOffset = 0;
                         do {
                             drawMenuSpriteWithAlpha(
@@ -1404,7 +1419,8 @@ void drawCourseSelectCourseStats(CourseSelectWidgetActor *arg0) {
                                 0x25, 0x20, 0x20, 0, arg0->courseStatsAlpha, 0);
                             j++;
                             xOffset += 0xC;
-                        } while (j < gCourseSelectCourseRatings[courseIndex].handling);
+                        } while (j < gCourseSelectCourseRatings
+                                         .values[(courseIndex * COURSE_RATING_COUNT) + COURSE_RATING_HANDLING]);
                     }
                 }
 
@@ -1417,7 +1433,8 @@ void drawCourseSelectCourseStats(CourseSelectWidgetActor *arg0) {
                     }
                 } else {
                     j = 0;
-                    if (j < gCourseSelectCourseRatings[courseIndex].trick) {
+                    if (j < gCourseSelectCourseRatings
+                                .values[(courseIndex * COURSE_RATING_COUNT) + COURSE_RATING_TRICK]) {
                         xOffset = 0;
                         do {
                             drawMenuSpriteWithAlpha(
@@ -1427,7 +1444,8 @@ void drawCourseSelectCourseStats(CourseSelectWidgetActor *arg0) {
                                 0x25, 0x20, 0x20, 0, arg0->courseStatsAlpha, 0);
                             j++;
                             xOffset += 0xC;
-                        } while (j < gCourseSelectCourseRatings[courseIndex].trick);
+                        } while (j < gCourseSelectCourseRatings
+                                         .values[(courseIndex * COURSE_RATING_COUNT) + COURSE_RATING_TRICK]);
                     }
                 }
             } else {
@@ -1437,7 +1455,8 @@ void drawCourseSelectCourseStats(CourseSelectWidgetActor *arg0) {
                 }
                 if (courseIndex < 9) {
                     sprintf(text, D_800E0DAC,
-                            gCourseSelectCourseRatings[courseIndex].speed);
+                            gCourseSelectCourseRatings
+                                .values[(courseIndex * COURSE_RATING_COUNT) + COURSE_RATING_SPEED]);
                 }
                 drawMenuAsciiText((s16)(arg0->courseStatsX[i] + 0x34),
                                   arg0->courseStatsY[i], text, 0,
@@ -1445,7 +1464,8 @@ void drawCourseSelectCourseStats(CourseSelectWidgetActor *arg0) {
 
                 if (courseIndex < 9) {
                     sprintf(text, D_800E0DB0,
-                            gCourseSelectCourseRatings[courseIndex].handling);
+                            gCourseSelectCourseRatings
+                                .values[(courseIndex * COURSE_RATING_COUNT) + COURSE_RATING_HANDLING]);
                 }
                 drawMenuAsciiText((s16)(arg0->courseStatsX[i] + 0x34),
                                   (s16)(arg0->courseStatsY[i] + 8), text, 0,
@@ -1453,7 +1473,8 @@ void drawCourseSelectCourseStats(CourseSelectWidgetActor *arg0) {
 
                 if (courseIndex < 9) {
                     sprintf(text, D_800E0DB4,
-                            gCourseSelectCourseRatings[courseIndex].trick);
+                            gCourseSelectCourseRatings
+                                .values[(courseIndex * COURSE_RATING_COUNT) + COURSE_RATING_TRICK]);
                 }
                 drawMenuAsciiText((s16)(arg0->courseStatsX[i] + 0x34),
                                   (s16)(arg0->courseStatsY[i] + 0x10), text, 0,
