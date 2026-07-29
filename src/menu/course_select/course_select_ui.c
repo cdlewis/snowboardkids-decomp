@@ -182,7 +182,7 @@ extern u8 gCourseSelectCourseTrickRatings[];
 extern s16 gCourseSelectIconListYLayout[][6];
 extern s16 gCourseSelectIconListXLayout[][4];
 extern s16 gCourseSelectStatsPanelLayout[][4];
-extern s16 gCourseSelectStatsPlayerMarkerLayout[][2][2];
+extern s16 gCourseSelectStatsPlayerMarkerLayout[][4];
 extern s32 gMenuFlowState;
 extern u8 gCurrentViewportIndex;
 
@@ -1207,10 +1207,6 @@ void initCourseSelectCourseListBackdrop(CourseSelectWidgetActor *arg0) {
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateCourseSelectCourseListBackdrop);
 }
 
-// drawCourseSelectCourseStats best match: 99.880%
-// (nonmatchings/drawCourseSelectCourseStats-5176680205357669729/base_47.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/menu/course_select/course_select_ui/drawCourseSelectCourseStats.s")
-
 #ifdef PREVIOUS_NON_MATCHING
 extern u8 D_800E0DA0[];
 extern u8 D_800E0DA4[];
@@ -1333,7 +1329,6 @@ void drawCourseSelectCourseStats(CourseSelectWidgetActor *arg0) {
 }
 #endif
 
-#ifdef NON_MATCHING
 const char D_800E0DA0[] = "?";
 const char D_800E0DA4[] = "?";
 const char D_800E0DA8[] = "?";
@@ -1376,7 +1371,7 @@ void drawCourseSelectCourseStats(CourseSelectWidgetActor *arg0) {
                     if ((D_800E0DA8 && D_800E0DA8) && D_800E0DA8) {
                     }
                     drawMenuAsciiText((s16)(arg0->courseStatsX[i] + 0x38),
-                                      arg0->courseStatsY[i], D_800E0DA0, 0,
+                                      arg0->courseStatsY[i], (u8 *)D_800E0DA0, 0,
                                       arg0->courseStatsAlpha);
                 } else {
                     j = 0;
@@ -1398,7 +1393,7 @@ void drawCourseSelectCourseStats(CourseSelectWidgetActor *arg0) {
                 if (courseIndex >= 9) {
                     drawMenuAsciiText((s16)(arg0->courseStatsX[i] + 0x38),
                                       (s16)(arg0->courseStatsY[i] + 0xC),
-                                      D_800E0DA4, 0, arg0->courseStatsAlpha);
+                                      (u8 *)D_800E0DA4, 0, arg0->courseStatsAlpha);
                 } else {
                     j = 0;
                     if (j <
@@ -1422,7 +1417,7 @@ void drawCourseSelectCourseStats(CourseSelectWidgetActor *arg0) {
                     if (1) {
                         drawMenuAsciiText(
                             (s16)(arg0->courseStatsX[i] + 0x38),
-                            (s16)(arg0->courseStatsY[i] + 0x18), D_800E0DA8, 0,
+                            (s16)(arg0->courseStatsY[i] + 0x18), (u8 *)D_800E0DA8, 0,
                             arg0->courseStatsAlpha);
                     }
                 } else {
@@ -1469,7 +1464,7 @@ void drawCourseSelectCourseStats(CourseSelectWidgetActor *arg0) {
                             gCourseSelectCourseTrickRatings[courseIndex * 3]);
                 }
                 drawMenuAsciiText((s16)(arg0->courseStatsX[i] + 0x34),
-                                  (u16)(arg0->courseStatsY[i] + 0x10), text, 0,
+                                  (s16)(arg0->courseStatsY[i] + 0x10), text, 0,
                                   arg0->courseStatsAlpha);
             }
 
@@ -1480,16 +1475,15 @@ void drawCourseSelectCourseStats(CourseSelectWidgetActor *arg0) {
                     j = 1;
                 }
                 drawMenuSpriteWithAlpha(
-                    (s16)(gCourseSelectStatsPlayerMarkerLayout[j][i & 1][0] +
+                    (s16)(gCourseSelectStatsPlayerMarkerLayout[j][(i & 1) * 2] +
                           ((i >= 2) * 0x8C)),
-                    gCourseSelectStatsPlayerMarkerLayout[j][i & 1][1],
+                    gCourseSelectStatsPlayerMarkerLayout[j][((i & 1) * 2) + 1],
                     getRelocatableHeapBlockBase(gAssetHandles[0x21]), 0x12, 0x20,
                     0x20, 0, arg0->courseStatsAlpha, 0);
             }
         }
     }
 }
-#endif
 
 void updateCourseSelectCourseStats(CourseSelectWidgetActor *arg0) {
     s32 state = arg0->transitionState;
