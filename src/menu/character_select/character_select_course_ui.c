@@ -2536,8 +2536,12 @@ void initCharacterSelectCourseConfirmCursor(CharacterSelectCourseWidgetActor *ar
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateCharacterSelectCourseConfirmCursor);
 }
 
-// drawCharacterSelectCourseRecordsPopup best match: 97.003% (nonmatchings/drawCharacterSelectCourseRecordsPopup-3379532139742180785/base_20.c)
+// drawCharacterSelectCourseRecordsPopup best match: 97.958% (nonmatchings/drawCharacterSelectCourseRecordsPopup-8280121253171829145/base_12.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/character_select/character_select_course_ui/drawCharacterSelectCourseRecordsPopup.s")
+
+#ifdef NON_MATCHING
+#define drawCharacterSelectCourseRecordsPopup drawCharacterSelectCourseRecordsPopupPreviousAttempt
+#endif
 
 #ifdef NON_MATCHING
 typedef struct {
@@ -2719,6 +2723,11 @@ void drawCharacterSelectCourseRecordsPopup(CharacterSelectCourseWidgetActor *arg
         var_s5 += 0x14;
     } while (var_s7 != 5);
 }
+#endif
+
+#ifdef NON_MATCHING
+#undef drawCharacterSelectCourseRecordsPopup
+#include "character_select_course_records_popup.inc.c"
 #endif
 
 void updateCharacterSelectCourseRecordsPopup(CharacterSelectCourseWidgetActor *arg0) {

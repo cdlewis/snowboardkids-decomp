@@ -43,11 +43,13 @@ void drawCharacterSelectCourseRecordsPopup(
   volatile CharacterSelectCourseRecordsPopupStackCandidate stack;
   s16 *courseId;
   s32 quotient;
+  u8 *characterIds;
   s32 digitOffset;
   s32 color;
   s32 yOffset;
-  s32 row;
+  CharacterSelectCourseRecordsPopupSaveDataCandidate *saveData;
   s32 score;
+  s32 row;
   u16 tile;
   u8 palette;
 
@@ -102,89 +104,96 @@ void drawCharacterSelectCourseRecordsPopup(
                0x7C) &
                   0xFFFF,
               0x20U, 0x20U, 0U, 0U);
-        } else if (gRaceTypeSelection == 1) {
-          if (row < 3) {
-            color = 0xC;
-          } else {
-            color = 0xD;
-          }
-          courseId = &stack.courseIds[gRaceCourseIndex.signedValue];
-          quotient = (s32)D_800F4222[(*courseId * 5) + row] / 10;
-          stack.quotient = (u16)quotient;
-          if (quotient & 0xFFFF) {
-            drawMenuSprite(
-                (s16)(arg0->x + 0x18), (s16)(arg0->y + yOffset),
-                getRelocatableHeapBlockBase((s32)CHARACTER_SELECT_POPUP_FONT_HANDLE),
-                (stack.quotient + 0x2B) & 0xFFFF, 0x20U, 0x20U, 0U,
-                (u8)(color + 1));
-            courseId = &stack.courseIds[gRaceCourseIndex.signedValue];
-          }
-          palette = color + 1;
-          stack.remainder =
-              (u16)((s32)D_800F4222[(*courseId * 5) + row] % 10) ^ 0;
-          drawMenuSprite(
-              (s16)(arg0->x + 0x20), (s16)(arg0->y + yOffset),
-              getRelocatableHeapBlockBase((s32)CHARACTER_SELECT_POPUP_FONT_HANDLE),
-              (stack.remainder + 0x2B) & 0xFFFF, 0x20U, 0x20U, 0U, palette);
-          drawMenuAsciiText((s16)(arg0->x + 0x28), (s16)(arg0->y + yOffset + 8),
-                            "HIT", (u16)stack.color, 0x100U);
-          drawMenuSprite(
-              (s16)(arg0->x + 0x48), (s16)(arg0->y + yOffset),
-              getRelocatableHeapBlockBase((s32)CHARACTER_SELECT_POPUP_FONT_HANDLE),
-              ((D_800F4259[(stack.courseIds[gRaceCourseIndex.signedValue] * 5) + row] & 7) +
-               0x51) &
-                  0xFFFF,
-              0x20U, 0x20U, 0U, 0U);
-          drawMenuSprite(
-              (s16)(arg0->x + 0x60), (s16)(arg0->y + yOffset),
-              getRelocatableHeapBlockBase((s32)CHARACTER_SELECT_POPUP_FONT_HANDLE),
-              (((s32)
-                    D_800F4259[(stack.courseIds[gRaceCourseIndex.signedValue] * 5) + row] >>
-                3) +
-               0x7C) &
-                  0xFFFF,
-              0x20U, 0x20U, 0U, 0U);
         } else {
-          stack.trickIcon = &CHARACTER_SELECT_COURSE_SAVE_DATA.bytes[row];
-          if (row < 3) {
-            color = 0xC;
-          } else {
-            color = 0xD;
-          }
-          palette = color + 1;
-          score = CHARACTER_SELECT_COURSE_SAVE_DATA.records
-                      .trickAttackScores[7][row];
-          digitOffset = 0;
-          do {
+          digitOffset = gRaceTypeSelection;
+          if (digitOffset == 1) {
+            if (row < 3) {
+              color = 0xC;
+            } else {
+              color = 0xD;
+            }
+            courseId = &stack.courseIds[gRaceCourseIndex.signedValue];
+            quotient = (s32)D_800F4222[(*courseId * 5) + row] / 10;
+            stack.quotient = (u16)quotient;
+            if (quotient & 0xFFFF) {
+              drawMenuSprite(
+                  (s16)(arg0->x + 0x18), (s16)(arg0->y + yOffset),
+                  getRelocatableHeapBlockBase((s32)CHARACTER_SELECT_POPUP_FONT_HANDLE),
+                  quotient = (stack.quotient + 0x2B) & 0xFFFF, 0x20U, 0x20U,
+                  0U, (u8)(color + 1));
+              courseId = &stack.courseIds[gRaceCourseIndex.signedValue];
+            }
+            palette = color + 1;
+            stack.remainder =
+                (u16)((s32)D_800F4222[(*courseId * 5) + row] % 10) ^ 0;
             drawMenuSprite(
-                (s16)((arg0->x - digitOffset) + 0x38), (s16)(arg0->y + yOffset),
+                (s16)(arg0->x + 0x20), (s16)(arg0->y + yOffset),
                 getRelocatableHeapBlockBase((s32)CHARACTER_SELECT_POPUP_FONT_HANDLE),
-                (((s32)score % 10) + 0x2B) & 0xFFFF, 0x20U, 0x20U, 0U, palette);
-            digitOffset += 8;
-            score = score / 10;
-          } while (score != 0);
-          drawMenuAsciiText((s16)(arg0->x + 0x40), (s16)(arg0->y + yOffset + 8),
-                            "P", (u16)stack.color, 0x100U);
-          drawMenuSprite(
-              (s16)(arg0->x + 0x4C), (s16)(arg0->y + yOffset),
-              getRelocatableHeapBlockBase((s32)CHARACTER_SELECT_POPUP_FONT_HANDLE),
-              ((((CharacterSelectCourseRecordsPopupSaveDataCandidate *)
-                     stack.trickIcon)
-                    ->trickAttackCharacterIds[7][0] &
-                7) +
-               0x51) &
-                  0xFFFF,
-              0x20U, 0x20U, 0U, 0U);
-          drawMenuSprite(
-              (s16)(arg0->x + 0x60), (s16)(arg0->y + yOffset),
-              getRelocatableHeapBlockBase((s32)CHARACTER_SELECT_POPUP_FONT_HANDLE),
-              (((s32)((CharacterSelectCourseRecordsPopupSaveDataCandidate *)
-                          stack.trickIcon)
-                    ->trickAttackCharacterIds[7][0] >>
-                3) +
-               0x7C) &
-                  0xFFFF,
-              0x20U, 0x20U, 0U, 0U);
+                (stack.remainder + 0x2B) & 0xFFFF, 0x20U, 0x20U, 0U, palette);
+            drawMenuAsciiText((s16)(arg0->x + 0x28),
+                              (s16)(arg0->y + yOffset + 8), "HIT",
+                              (u16)stack.color, 0x100U);
+            drawMenuSprite(
+                (s16)(arg0->x + 0x48), (s16)(arg0->y + yOffset),
+                getRelocatableHeapBlockBase((s32)CHARACTER_SELECT_POPUP_FONT_HANDLE),
+                ((D_800F4259[(stack.courseIds[gRaceCourseIndex.signedValue] * 5) + row] & 7) +
+                 0x51) &
+                    0xFFFF,
+                0x20U, 0x20U, 0U, 0U);
+            drawMenuSprite(
+                (s16)(arg0->x + 0x60), (s16)(arg0->y + yOffset),
+                getRelocatableHeapBlockBase((s32)CHARACTER_SELECT_POPUP_FONT_HANDLE),
+                (((s32)D_800F4259[(stack.courseIds[gRaceCourseIndex.signedValue] * 5) + row] >>
+                  3) +
+                 0x7C) &
+                    0xFFFF,
+                0x20U, 0x20U, 0U, 0U);
+          } else {
+            stack.trickIcon = &CHARACTER_SELECT_COURSE_SAVE_DATA.bytes[row];
+            if (row < 3) {
+              color = 0xC;
+            } else {
+              color = 0xD;
+            }
+            palette = color + 1;
+            score = CHARACTER_SELECT_COURSE_SAVE_DATA.records
+                        .trickAttackScores[7][row];
+            digitOffset = 0; do {
+              drawMenuSprite(
+                  (s16)((arg0->x - digitOffset) + 0x38),
+                  (s16)(arg0->y + yOffset),
+                  getRelocatableHeapBlockBase((s32)CHARACTER_SELECT_POPUP_FONT_HANDLE),
+                  (((s32)score % 10) + 0x2B) & 0xFFFF, 0x20U, 0x20U, 0U,
+                  palette);
+              digitOffset += 8;
+              score = score / 10;
+            } while (score != 0);
+            drawMenuAsciiText((s16)(arg0->x + 0x40),
+                              (s16)(arg0->y + yOffset + 8), "P",
+                              (u16)stack.color, 0x100U);
+            drawMenuSprite(
+                (s16)(arg0->x + 0x4C), (s16)(arg0->y + yOffset),
+                getRelocatableHeapBlockBase((s32)CHARACTER_SELECT_POPUP_FONT_HANDLE),
+                (((characterIds =
+                       (saveData =
+                            (CharacterSelectCourseRecordsPopupSaveDataCandidate *)
+                                stack.trickIcon)
+                           ->trickAttackCharacterIds[7])[0] &
+                  7) +
+                 0x51) &
+                    0xFFFF,
+                0x20U, 0x20U, 0U, 0U);
+            drawMenuSprite(
+                (s16)(arg0->x + 0x60), (s16)(arg0->y + yOffset),
+                getRelocatableHeapBlockBase((s32)CHARACTER_SELECT_POPUP_FONT_HANDLE),
+                (((s32)((CharacterSelectCourseRecordsPopupSaveDataCandidate *)
+                            stack.trickIcon)
+                      ->trickAttackCharacterIds[7][0] >>
+                  3) +
+                 0x7C) &
+                    0xFFFF,
+                0x20U, 0x20U, 0U, 0U);
+          }
         }
       } else {
         if (row < 3) {
@@ -206,7 +215,7 @@ void drawCharacterSelectCourseRecordsPopup(
         drawMenuSprite(
             (s16)(arg0->x + 0x65), (s16)(arg0->y + yOffset),
             getRelocatableHeapBlockBase((s32)CHARACTER_SELECT_POPUP_FONT_HANDLE),
-            (((s32)D_800F41EB[(stack.courseIds[gRaceCourseIndex.signedValue] * 5) + row] >>
+            ((D_800F41EB[(stack.courseIds[gRaceCourseIndex.signedValue] * 5) + row] >>
               3) +
              0x7C) &
                 0xFFFF,
