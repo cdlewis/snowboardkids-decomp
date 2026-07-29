@@ -103,7 +103,7 @@ void updateRacePlayerMode35Character4(struct RacePlayer *player);
 void updateRacePlayerMode35Character5(struct RacePlayer *player);
 void updateRacePlayersPostUpdate(void);
 void updateRacePlayerPostUpdate(struct RacePlayer *player);
-void updateRacePlayerPostUpdateNoop(void);
+void updateRacePlayerPostUpdateNoop(struct RacePlayer *player);
 void updateRacePlayerPostUpdateCourseObject(struct RacePlayer *player);
 void updateRacePlayerPostUpdateMode00(struct RacePlayer *player);
 void updateRacePlayerVoiceSounds(struct RacePlayer *player);

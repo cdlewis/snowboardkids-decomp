@@ -17,7 +17,7 @@ void pushRacePlayerOutOfCylinder(struct Vec3i *pos, s32 xzSize, s32 ySize, s16 p
 s32 isRacePlayerInsideCylinder(struct Vec3i *pos, s32 xzSize, s32 ySize, s16 playerIndex);
 void applyItemHitToRacePlayersInsideSphere(struct Vec3i *pos, s32 xzSize, s16 flag);
 s32 tryApplyRacePlayerItemHit(struct Vec3i *pos, s32 xzSize, s16 flag, s16 playerIndex);
-s32 updateRacePlayerSurfaceContact(void);
+s32 updateRacePlayerSurfaceContact(struct RacePlayer *player);
 s32 updateRacePlayerGroundAlignment(struct RacePlayer *player);
 s32 updateRacePlayerLeanAngle(struct RacePlayer *player, s32 arg1, s16 arg2);
 void clampRacePlayerVectorXZSpeed(struct Vec3i *vec, struct RacePlayer *player);

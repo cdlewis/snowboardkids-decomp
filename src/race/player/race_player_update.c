@@ -5742,8 +5742,8 @@ void updateRacePlayerPostUpdate(RacePlayer *player) {
     updateRacePlayerRumble(player);
 }
 
-void updateRacePlayerPostUpdateNoop(void) {
-    updateRacePlayerSurfaceContact();
+void updateRacePlayerPostUpdateNoop(RacePlayer *player) {
+    updateRacePlayerSurfaceContact(player);
 }
 
 void updateRacePlayerPostUpdateCourseObject(RacePlayer *player) {
@@ -5757,7 +5757,7 @@ void updateRacePlayerPostUpdateCourseObject(RacePlayer *player) {
 }
 
 void updateRacePlayerPostUpdateMode00(RacePlayer *player) {
-    if (updateRacePlayerSurfaceContact()) {
+    if (updateRacePlayerSurfaceContact(player)) {
         player->mode = 0x16;
         player->updateState = 0;
         player->updateTimer = 0;
@@ -5904,7 +5904,7 @@ void updateRacePlayerLoopingSound(RacePlayer *player) {
 void updateRacePlayerPostUpdateMode22(RacePlayer *player) {
     u32 stateFlags;
 
-    if (updateRacePlayerSurfaceContact() == 0) {
+    if (updateRacePlayerSurfaceContact(player) == 0) {
         stateFlags = player->stateFlags;
         if (stateFlags & 8) {
             player->stateFlags = stateFlags & ~8;
@@ -5944,7 +5944,7 @@ void updateRacePlayerPostUpdateMode22(RacePlayer *player) {
 void updateRacePlayerPostUpdateAirborneTrick(RacePlayer *player) {
     u32 stateFlags;
 
-    if (updateRacePlayerSurfaceContact() == 0) {
+    if (updateRacePlayerSurfaceContact(player) == 0) {
         stateFlags = player->stateFlags;
         if (stateFlags & 8) {
             player->stateFlags = stateFlags & ~8;
@@ -5976,7 +5976,7 @@ void updateRacePlayerPostUpdateAirborneTrick(RacePlayer *player) {
 }
 
 void updateRacePlayerPostUpdateAirborneLaunch(RacePlayer *player) {
-    if (updateRacePlayerSurfaceContact()) {
+    if (updateRacePlayerSurfaceContact(player)) {
         player->mode = 0x16;
         player->updateState = 0;
         player->updateTimer = 0;
@@ -5990,7 +5990,7 @@ void updateRacePlayerPostUpdateAirborneLaunch(RacePlayer *player) {
 }
 
 void updateRacePlayerPostUpdateNudge(RacePlayer *player) {
-    if (updateRacePlayerSurfaceContact()) {
+    if (updateRacePlayerSurfaceContact(player)) {
         player->stateFlags |= 0x200;
     } else {
         player->stateFlags &= ~0x200;
@@ -6000,7 +6000,7 @@ void updateRacePlayerPostUpdateNudge(RacePlayer *player) {
 void updateRacePlayerPostUpdateMode29(RacePlayer *player) {
     u16 playerIndex;
 
-    updateRacePlayerSurfaceContact();
+    updateRacePlayerSurfaceContact(player);
     if (!(player->stateFlags & 0x02000000)) {
         player->mode = 1;
         player->updateState = 0;
@@ -6025,7 +6025,7 @@ void updateRacePlayerPostUpdateMode29(RacePlayer *player) {
 }
 
 void updateRacePlayerPostUpdateAttack(RacePlayer *player) {
-    updateRacePlayerSurfaceContact();
+    updateRacePlayerSurfaceContact(player);
     if (player->updateState < 2) {
         interpolateRaceMotionJointAnimationFrame(player, 0, (0x60000 - player->unk58) / 0x600, 0x100);
     }
