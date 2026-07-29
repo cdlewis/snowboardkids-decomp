@@ -208,16 +208,13 @@ void updateControllerPakRaceRecordSaveFlow(void) {
                     break;
             }
         }
-        flowComplete.value = (u8)gRacePlayers.status & 1;
+        flowComplete.value = gRacePlayers[0].menuState & 1;
         } else {
             gMenuSelectionConfirmTimer = gMenuSelectionConfirmTimer + 1;
         }
     }
 
-    if (flowComplete.value != 0) {
-        gMenuSelectionConfirmTimer = 1;
-    }
-    if (gMenuSelectionConfirmTimer == 0x23) {
+    if (flowComplete.value != 0) { gMenuSelectionConfirmTimer = 1; } if (gMenuSelectionConfirmTimer == 0x23) {
         setCurrentGameTaskCallback(fadeOutControllerPakRaceRecordSaveFlow, 0);
     }
     updateCallbackTasks();

@@ -12,18 +12,26 @@
 #include "game/engine/viewport_manager.h"
 #include "game/race/player/race_player_input.h"
 
+typedef struct RaceRecordSaveCompletion {
+    s32 value;
+    s32 pad4;
+    s32 pad8;
+} RaceRecordSaveCompletion;
+
 extern ControllerPakMenuState gControllerPakMenuState;
 extern u8 gPendingFramebufferSwapCount;
 extern u8 gFramebufferSwapHold;
 extern u8 gControllerPakMenuCursorState;
 extern s32 gMenuFlowState;
 extern s32 D_8010ADE0;
-extern s32 D_8010ADE4;
+extern CallbackTask *D_8010ADE4;
 extern s16 gMenuFadeAlpha;
 extern s32 D_800EC9F4;
+extern u8 gControllerPakRaceRecordSaveStatusChoicePromptStates[];
 
 extern void releaseMenuAssetHandles(void);
 extern s32 enqueueSoundEffect(s16, s16);
+extern void initControllerPakDeleteConfirmPrompt(CallbackTask *);
 
 void initControllerPakRaceRecordSaveFlow(void) {
     resetAllViewports();
@@ -58,7 +66,7 @@ void initControllerPakRaceRecordSaveFlow(void) {
     setCurrentGameTaskCallback(updateControllerPakRaceRecordSaveFlow, 0);
 }
 
-#ifdef NON_MATCHING
+#ifdef PREVIOUS_NON_MATCHING
 extern u8 gControllerPakRaceRecordSaveStatusChoicePromptStates[];
 extern void requestRumbleMotorInit(u16);
 extern void requestControllerPakProbe(u16);
@@ -68,10 +76,14 @@ extern void requestControllerPakRepair(u16);
 extern void initControllerPakDeleteConfirmPrompt(CallbackTask *);
 #endif
 
-// updateControllerPakRaceRecordSaveFlow best match: 97.524% (base_16.c)
+// updateControllerPakRaceRecordSaveFlow best match: 98.461% (base_22.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/controller_pak/controller_pak_race_record_save_flow/updateControllerPakRaceRecordSaveFlow.s")
 
 #ifdef NON_MATCHING
+#include "updateControllerPakRaceRecordSaveFlow.inc.c"
+#endif
+
+#ifdef PREVIOUS_NON_MATCHING
 void updateControllerPakRaceRecordSaveFlow(void)
 {
   s32 sp1C;
