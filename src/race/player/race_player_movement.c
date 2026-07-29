@@ -608,10 +608,6 @@ void pushRacePlayersOutOfCylinderAndApplyItemHit(Vec3i *pos, s32 xzSize, s32 ySi
 }
 #endif
 
-// pushRacePlayerOutOfCylinderAndApplyItemHit best match: 99.832% (nonmatchings/pushRacePlayerOutOfCylinderAndApplyItemHit-6887713755923057488/base_5.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race/player/race_player_movement/pushRacePlayerOutOfCylinderAndApplyItemHit.s")
-
-#ifdef NON_MATCHING
 void pushRacePlayerOutOfCylinderAndApplyItemHit(Vec3i *pos, s32 xzSize, s32 ySize, u16 flag, s16 playerIndex) {
     volatile int pad;
     s32 temp;
@@ -626,11 +622,10 @@ void pushRacePlayerOutOfCylinderAndApplyItemHit(Vec3i *pos, s32 xzSize, s32 ySiz
     s16 angle;
     s32 localX;
     s32 localZ;
+    s32 xDiff;
 
     player = &gRacePlayers[playerIndex];
     if (player->isActive != 0) {
-        s32 xDiff;
-
         yLimit = ySize;
         temp = pos->y - player->unk5C;
         if (temp < 0) {
@@ -657,8 +652,9 @@ void pushRacePlayerOutOfCylinderAndApplyItemHit(Vec3i *pos, s32 xzSize, s32 ySiz
                     sine = fixedSine(angle);
                     cosine = fixedCosine(angle);
                     temp = xzLimit - temp;
-                    pushX = (s64)-sine * -temp / 0x1000;
-                    pushZ = (s64)cosine * -temp / 0x1000;
+                    temp *= -1;
+                    pushX = (s64)-sine * temp / 0x1000;
+                    pushZ = (s64)cosine * temp / 0x1000;
                     player->posX -= pushX;
                     player->posZ += pushZ;
 
@@ -675,7 +671,6 @@ void pushRacePlayerOutOfCylinderAndApplyItemHit(Vec3i *pos, s32 xzSize, s32 ySiz
         }
     }
 }
-#endif
 
 void pushRacePlayersOutOfCylinderOrApplyItemHit(Vec3i *pos, s32 xzSize, s32 ySize, s32 arg3, s16 arg4) {
     volatile u8 pad[16];
