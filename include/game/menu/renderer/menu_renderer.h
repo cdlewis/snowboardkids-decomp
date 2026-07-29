@@ -27,8 +27,8 @@ typedef u16 MenuGlyphScript;
 void drawMenuAssetRegion(s16 x, s16 y, void *texture, u16 tileIndex, u16 scaleX, u16 scaleY, u8 startS, u8 startT,
                          u8 width, u8 height);
 void drawMenuSprite(s16 x, s16 y, void *texture, u16 tileIndex, u16 width, u16 height, u8 palette, u8 flip);
-void drawMenuSpriteClipped(s16 x, s16 y, void *texture, u16 tileIndex, u16 width, u16 height, u8 flip, u8 palette,
-                           s32 clipLeft, s32 clipTop, s32 clipRight, s32 clipBottom);
+void drawMenuSpriteClipped(s16 x, s16 y, MenuFontAssetTable *table, u16 imageIndex, u16 scaleX, u16 scaleY,
+                           u8 flipMode, u8 paletteIndex, s32 clipLeft, s32 clipTop, s32 clipRight, s32 clipBottom);
 void drawMenuSpriteWithAlpha(s16 x, s16 y, void *texture, u16 tileIndex, u16 width, u16 height, u8 palette, u16 alpha,
                              u8 flip);
 void drawMenuSpriteWithAlphaClipped(s16 x, s16 y, void *texture, u16 tileIndex, u16 width, u16 height, u8 palette,
