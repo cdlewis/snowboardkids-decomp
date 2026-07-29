@@ -1306,14 +1306,6 @@ interpolate_joint:
     state->modelJointZ = state->nextModelJointZ = state->animation.motion.jointZ;
 }
 
-// interpolateRaceMotionJointAnimationFrame best match: 98.833% (nonmatchings/interpolateRaceMotionJointAnimationFrame-5176680205357669729/independent_8.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race/motion/race_motion/interpolateRaceMotionJointAnimationFrame.s")
-
-#ifdef NON_MATCHING
-
-extern RaceMotionRotation gRaceMotionJointFrameBufferReload[];
-extern volatile s32 gRaceMotionRotationFrameBufferReload[];
-
 void interpolateRaceMotionJointAnimationFrame(RaceMotionState *state, s32 animationIndex,
                                               s32 frameTimer, s32 frameTimerReset) {
     RaceMotionAnimationAsset *animationAsset;
@@ -1323,30 +1315,24 @@ void interpolateRaceMotionJointAnimationFrame(RaceMotionState *state, s32 animat
     RaceMotionDecodedJointFrame *decodedJointFrameEnd;
     RaceMotionRotation *decodedRoot;
     RaceMotionRotation *decodedJoint;
-    RaceMotionPartialAnimationState *partialState;
-    RaceMotionRootMotion *rootMotion;
     s32 *jointData;
     s32 *rootData;
     s32 jointIndex;
+    s32 one;
     s32 startX;
     s32 startY;
     s32 startZ;
     s32 angleDelta;
-    s32 interpolationOffset;
+    s32 blendOffset;
     s16 packedXY;
     s16 packedZAndFlags;
-    s16 rootJointAngle;
 
     animationAsset = getRelocatableHeapBlockBase(gAssetHandles[0x16 + state->modelId]);
-    decodedRootFrame = (RaceMotionDecodedRootFrame *)gRaceMotionRotationFrameBuffer;
-    packedData = (s16 *)((u16 *)animationAsset +
-        animationAsset->animationOffsets[animationIndex] + 1);
-    decodedJointFrame = (RaceMotionDecodedJointFrame *)gRaceMotionJointFrameBuffer;
-    decodedJointFrameEnd = (RaceMotionDecodedJointFrame *)&gRacePlayerHitCueId;
-
-decode_frame:
+    packedData = (s16 *)animationAsset + animationAsset->animationOffsets[animationIndex] + 1;
+    decodedRootFrame = (RaceMotionDecodedRootFrame *)gRaceMotionRotationDecodeFrameBuffer; decodedJointFrameEnd = (RaceMotionDecodedJointFrame *)&gRacePlayerHitCueId; decodedJointFrame = (RaceMotionDecodedJointFrame *)gRaceMotionJointDecodeFrameBuffer; one = 1; decode_frame:
     jointIndex = 0;
     decodedRoot = (RaceMotionRotation *)decodedRootFrame;
+
     for (; jointIndex < RACE_MOTION_FRAME_SAMPLE_COUNT; jointIndex++) {
         decodedRoot->x = packedData[0] << RACE_MOTION_MODEL_POSITION_FRAC_BITS;
         decodedRoot->y = packedData[1] << RACE_MOTION_MODEL_POSITION_FRAC_BITS;
@@ -1356,19 +1342,23 @@ decode_frame:
     }
 
     for (jointIndex = 0; jointIndex < RACE_MOTION_PARTIAL_ANIMATION_JOINT_COUNT; jointIndex++) {
-        decodedJoint = &decodedJointFrame->joints[jointIndex];
         packedXY = packedData[0];
         packedZAndFlags = packedData[1];
         packedData += 2;
-        goto decode_packed_rotation;
-decode_packed_rotation:
+        decodedJoint = &decodedJointFrame->joints[jointIndex];
         decodedJoint->x = (packedXY >> 4) & 0xFF0;
-        decodedJoint->y = (packedXY << 4) & 0xFF0;
-        decodedJoint->z = (packedZAndFlags >> 4) & 0xFF0;
-        if (packedZAndFlags & 1) {
+        if (1) {
+            decodedJoint->y = (packedXY << 4) & 0xFF0;
+            decodedJoint->z = (packedZAndFlags >> 4) & 0xFF0;
+        }
+        if (packedZAndFlags & one) {
             decodedJoint->x += 8;
         }
         if (packedZAndFlags & 2) {
+            if (1) {
+            }
+            if (1) {
+            }
             decodedJoint->y += 8;
         }
         if (packedZAndFlags & 4) {
@@ -1390,64 +1380,59 @@ skip_joint:
         goto decode_frame;
     }
 
-    jointData = (s32 *)gRaceMotionJointFrameBufferReload;
+    jointData = (s32 *)gRaceMotionJointFrameBuffer;
     jointIndex = 0;
-    partialState = (RaceMotionPartialAnimationState *)state;
+
 interpolate_joint:
     startX = jointData[0];
     angleDelta = (jointData[42] - startX) & 0xFFF;
     if (angleDelta >= 0x801) {
         angleDelta -= 0x1000;
     }
-    interpolationOffset = (angleDelta * frameTimer) / frameTimerReset;
-    partialState->joints[jointIndex].rotationX = startX + interpolationOffset;
+    blendOffset = (angleDelta * frameTimer) / frameTimerReset;
+    ((RaceMotionPartialAnimationState *)state)->joints[jointIndex].rotationX =
+        startX + blendOffset;
 
     angleDelta = (jointData[43] - (startY = jointData[1])) & 0xFFF;
     if (angleDelta >= 0x801) {
         angleDelta -= 0x1000;
     }
-    interpolationOffset = (angleDelta * frameTimer) / frameTimerReset;
-    partialState->joints[jointIndex].rotationY = startY + interpolationOffset;
+    blendOffset = (angleDelta * frameTimer) / frameTimerReset;
+    ((RaceMotionPartialAnimationState *)state)->joints[jointIndex].rotationY =
+        startY + blendOffset;
 
     angleDelta = (jointData[44] - (startZ = jointData[2])) & 0xFFF;
     if (angleDelta >= 0x801) {
         angleDelta -= 0x1000;
     }
-    interpolationOffset = (angleDelta * frameTimer) / frameTimerReset;
-    partialState->joints[jointIndex].rotationZ = startZ + interpolationOffset;
+    blendOffset = (angleDelta * frameTimer) / frameTimerReset;
+    ((RaceMotionPartialAnimationState *)state)->joints[jointIndex].rotationZ =
+        startZ + blendOffset;
 
-    jointIndex++;
     jointData += 3;
+    jointIndex++;
     if (jointIndex != RACE_MOTION_PARTIAL_ANIMATION_JOINT_COUNT) {
         goto interpolate_joint;
     }
 
-    rootData = (s32 *)gRaceMotionRotationFrameBufferReload;
-    rootMotion = &state->animation.motion.rootMotion;
-    rootMotion->position.x =
+    rootData = (s32 *)gRaceMotionRotationFrameBuffer;
+    state->animation.motion.rootMotion.position.x =
         ((rootData[6] - rootData[0]) * frameTimer) / frameTimerReset + rootData[0];
-    rootMotion->position.y =
+    state->animation.motion.rootMotion.position.y =
         ((rootData[7] - rootData[1]) * frameTimer) / frameTimerReset + rootData[1];
-    rootMotion->position.z =
+    state->animation.motion.rootMotion.position.z =
         ((rootData[8] - rootData[2]) * frameTimer) / frameTimerReset + rootData[2];
-    rootMotion->rotation.x =
+    state->animation.motion.rootMotion.rotation.x =
         ((rootData[9] - rootData[3]) * frameTimer) / frameTimerReset + rootData[3];
-    rootMotion->rotation.y =
+    state->animation.motion.rootMotion.rotation.y =
         ((rootData[10] - rootData[4]) * frameTimer) / frameTimerReset + rootData[4];
-    rootMotion->rotation.z =
+    state->animation.motion.rootMotion.rotation.z =
         ((rootData[11] - rootData[5]) * frameTimer) / frameTimerReset + rootData[5];
 
-    rootJointAngle = state->animation.joints[0].rotationX;
-    state->modelJointX = rootJointAngle;
-    state->nextModelJointX = rootJointAngle;
-    rootJointAngle = state->animation.joints[0].rotationY;
-    state->nextModelJointY = rootJointAngle;
-    state->modelJointY = rootJointAngle;
-    rootJointAngle = state->animation.joints[0].rotationZ;
-    state->nextModelJointZ = rootJointAngle;
-    state->modelJointZ = rootJointAngle;
+    state->modelJointX = state->nextModelJointX = state->animation.motion.jointX;
+    state->modelJointY = state->nextModelJointY = state->animation.motion.jointY;
+    state->modelJointZ = state->nextModelJointZ = state->animation.motion.jointZ;
 }
-#endif
 
 void blendRaceMotionJointAnimation(RaceMotionState *state, s32 animIndex, s32 timer, s32 duration) {
     RaceMotionAnimationAsset *animationAsset;
