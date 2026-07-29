@@ -265,87 +265,79 @@ void requestControllerPakSaveRead(u16 arg0) {
 extern void requestControllerPakSaveReadWithContext(u16 controllerIndex, s32 playerCount, s32 choiceValue);
 #pragma weak requestControllerPakSaveReadWithContext = requestControllerPakSaveRead
 
-// readControllerPakSave best match: 99.679% at nonmatchings/readControllerPakSave-8498672362023432715/base_28.c
+// readControllerPakSave best match: 99.904% at nonmatchings/readControllerPakSave-7932770077023511983/base_48.c
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/main_menu/controller_main_menu_flow/readControllerPakSave.s")
 
 #ifdef NON_MATCHING
-extern u8 gControllerPakSaveFileIdentityExtAlias[];
-extern u8 gControllerPakSaveFileIdentityGameAlias[];
-
 void readControllerPakSave(u16 controllerIndex) {
-    union CopyOffset {
-        u8 *extSrc;
-        s32 offset;
-    } work;
-    u8 *src;
+    u8 *cursor;
+    s32 checksum;
+    s32 companyCode;
+    GameSaveData *save;
     s32 readStatus;
     u16 checksumFailed;
-    s32 channel;
-    u8 *dst;
+    s32 checksumStartOffset;
+    s32 offset;
 
     checksumFailed = 0;
-    osPfsInitPak(&gControllerEventQueue, &gControllerPakHandles[controllerIndex],
-                 (channel = controllerIndex & ((short)0xFFFF)));
+    osPfsInitPak(&gControllerEventQueue, &gControllerPakHandles[controllerIndex], controllerIndex);
 
     gControllerPakSaveFileIdentity.gameCode = 'NSKE';
-    gControllerPakSaveFileIdentity.companyCode = 'EB';
+    companyCode = 'EB';
+    gControllerPakSaveFileIdentity.companyCode = companyCode;
 
-    dst = gControllerPakSaveFileIdentityExtAlias;
-    work.extSrc = gControllerPakSaveGameNameBytesEnd;
-copy_ext:
-    dst[10] = *work.extSrc;
-    work.extSrc++;
-    dst++;
-    if (work.extSrc < gControllerPakSaveExtNameBytesEnd) {
-        goto copy_ext;
-    }
+    offset = 0;
+    do {
+        gControllerPakSaveFileIdentity.extName[offset] = gControllerPakSaveGameNameBytesEnd[offset];
+        offset++;
+    } while (&gControllerPakSaveGameNameBytesEnd[offset] < gControllerPakSaveExtNameBytesEnd);
 
-    dst = gControllerPakSaveFileIdentityGameAlias;
-    src = gControllerPakSaveGameNameBytes;
-copy_name:
-    dst[14] = *src;
-    src++;
-    dst++;
-    if (src < gControllerPakSaveExtNameBytes) {
-        goto copy_name;
-    }
+    offset = 0;
+    do {
+        gControllerPakSaveFileIdentity.gameName[offset] = gControllerPakSaveGameNameBytes[offset];
+        offset++;
+    } while (&gControllerPakSaveGameNameBytes[offset] < gControllerPakSaveGameNameBytesEnd);
 
     osPfsFindFile(&gControllerPakHandles[controllerIndex], gControllerPakSaveFileIdentity.companyCode,
-                  gControllerPakSaveFileIdentity.gameCode, gControllerPakExtName,
-                  gControllerPakGameName, &gControllerPakFileNos[controllerIndex]);
+                  gControllerPakSaveFileIdentity.gameCode, gControllerPakExtName, gControllerPakGameName,
+                  &gControllerPakFileNos[controllerIndex]);
+
+    save = &GAME_SAVE_DATA_SLOT(controllerIndex);
     readStatus = osPfsReadWriteFile(&gControllerPakHandles[controllerIndex], gControllerPakFileNos[controllerIndex],
-                                    0, 0, 0x78E0, (u8 *)&GAME_SAVE_DATA_SLOT(controllerIndex));
+                                    0, 0, CONTROLLER_PAK_SAVE_READ_SIZE, save->rawBytes);
+
     if (readStatus == 0) {
-        dst = NULL;
-        src = GAME_SAVE_DATA_SLOT(controllerIndex).bytes;
-        work.offset = 4;
-checksum_loop:
-        dst += src[0];
-        dst += src[1];
-        dst += src[2];
-        dst += src[3];
-        work.offset += 4;
-        src += 4;
-        if ((work.offset | 0) != 0x78E0) {
-            goto checksum_loop;
-        }
-        if ((s32)dst != GAME_SAVE_DATA_SLOT(controllerIndex).checksum) {
+        checksum = 0;
+        cursor = &save->rawBytes[CONTROLLER_PAK_CHECKSUM_START_OFFSET];
+        checksumStartOffset = CONTROLLER_PAK_CHECKSUM_START_OFFSET;
+        offset = checksumStartOffset;
+        do {
+            checksum += *cursor++;
+            offset++;
+        } while (offset != CONTROLLER_PAK_SAVE_READ_SIZE);
+
+        if (checksum != save->checksum) {
             checksumFailed = 1;
         }
 
+        cursor = &gControllerPakRetryCounts[controllerIndex];
         if (checksumFailed == 0) {
-            if (validateControllerPakSave(channel) == 0) {
+            if (validateControllerPakSave(controllerIndex) == 0) {
                 gControllerPakRetryCounts[controllerIndex] = 0;
             }
+            cursor = &gControllerPakRetryCounts[controllerIndex];
         } else {
-            gControllerPakRetryCounts[controllerIndex]++;
+            (*cursor)++;
         }
     } else {
-        gControllerPakRetryCounts[controllerIndex]++;
+        goto read_failed;
+    read_failed:
+        cursor = &gControllerPakRetryCounts[controllerIndex];
+        (*cursor)++;
     }
 
-    if ((readStatus != 0) || (gControllerPakRetryCounts[controllerIndex] != 0)) {
-        if (gControllerPakRetryCounts[controllerIndex] != 3) {
+    if ((readStatus != 0) || (*cursor != 0)) {
+        if (*cursor != CONTROLLER_PAK_MAX_READ_RETRIES) {
             return;
         }
     }
