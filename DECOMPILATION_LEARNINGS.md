@@ -153,6 +153,11 @@ and control flow already match and only register *names* differ.
   - Inlining the assignment *inside* the consuming expression
     (`*p = *arg1 + (temp = result);`) can flip register homes where a
     separate statement on its own line does not.
+- **Materialize a shared negation with compound assignment.** When the same
+  negative value feeds multiple later expressions, `value *= -1;` followed by
+  uses of `value` can emit the same single `negu` as repeating `-value`, while
+  changing IDO's SSA lifetimes and temporary-register allocation. This is a
+  useful last-mile form when the target clearly computes one shared negation.
 - **Compound OR after a known-zero store can fold to a direct constant store.**
   If a field is cleared earlier in the same block, `field |= MASK` may emit the
   same single `sw` of `MASK` as `field = MASK`, while giving IDO different
