@@ -108,6 +108,39 @@ return Y;  // fall-through from if-branch
 ```
 </artefact>
 
+<artefact name="unrolled-loops">
+IDO will sometimes unroll loops for 'performance' reasons but this decision is not visible to the disassembler.
+
+This code:
+```c
+for (i = 0; i < 4; i++) {
+    updatePlayer(i)
+}
+```
+
+Often compiles as:
+```c
+updatePlayer(0)
+updatePlayer(1)
+updatePlayer(2)
+updatePlayer(3)
+
+Similarly:
+```c
+for (i = 0; i < 4; i++) {
+    players[i].Coins = 0;
+}
+```
+
+Often compiles as
+```c
+players[0].Coins = 0;
+players[1].Coins = 0;
+players[2].Coins = 0;
+players[3].Coins = 0;
+```
+</artefact>
+
 ### Large Functions
 Don't be intimidated — these are often straightforward if approached methodically:
 
