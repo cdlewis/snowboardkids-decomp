@@ -28,12 +28,6 @@ extern u8 gFramebufferSwapHold;
 
 #define MULTIPLAYER_COURSE_SELECT_PLAYER_RECORD_COUNT 4
 
-typedef struct MultiplayerCourseSelectObject {
-    u8 pad0[0x2C];
-    void (*update)(void);
-    u8 pad30[0x80];
-} MultiplayerCourseSelectObject;
-
 extern void n_alSeqpDelete(void);
 extern s32 enqueueSoundEffect(s16 soundId, s16 volume);
 extern s16 gMenuFadeAlpha;
@@ -66,9 +60,8 @@ extern u8 D_8010AF06[][3];
 extern s8 gCourseSelectExtraCourseColumnState;
 extern s32 gPlayerInputHeld[];
 extern s32 gPlayerInputPressed[];
-extern MultiplayerCourseSelectObject *gCurrentMenuCameraObject;
-extern MultiplayerCourseSelectObject D_801121E0[];
-extern MultiplayerCourseSelectObject D_801124A0;
+extern RaceCamera D_801121E0[];
+extern RaceCamera D_801124A0;
 extern s32 D_80112204;
 extern void (*D_8011220C)(void);
 extern s32 D_801122B4;
@@ -724,7 +717,7 @@ void updateMultiplayerCourseSelectMenu(void) {
     s8 column;
     u16 repeatTimer;
     RacePlayer *player;
-    MultiplayerCourseSelectObject *camera;
+    RaceCamera *camera;
     s32 busyPlayerCount;
 
     busyPlayerCount = 0;
