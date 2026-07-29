@@ -146,7 +146,7 @@ void applyRacePlayerTuning(RacePlayer *arg0) {
     player->unk27C = (temp_a1->unk10 + temp_a2->unk10) << 4;
 }
 
-// initRacePlayer best match: 99.586% (nonmatchings/initRacePlayer-2167615756788266096/base_20.c)
+// initRacePlayer best match: 99.672% (nonmatchings/initRacePlayer-8280121253171829145/base_14.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race/player/race_player_update/initRacePlayer.s")
 
 #if 0
@@ -558,7 +558,8 @@ void initRacePlayer(RacePlayer *player) {
 
     if (gMainMenuModeSelection != 0) {
         *position =
-            gRacePlayerPreviewStartPositions[gMainMenuModeSelection - 1][player->playerIndexU16].pos;
+            gRacePlayerPreviewStartPositions[gMainMenuModeSelection - 1]
+                                            [player->playerIndexU16 & 0xFFFFU].pos;
         player->facingAngle =
             gRacePlayerPreviewStartPositions[(gMainMenuModeSelection & 0xFFFF) - 1]
                                             [player->playerIndexU16].angle;
