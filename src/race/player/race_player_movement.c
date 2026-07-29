@@ -85,7 +85,7 @@ extern s16 fixedCosine(s16);
 extern s32 integerSquareRoot64(s64);
 extern u8 gRaceSplitscreenMode;
 extern s8 gRacePlayerCount;
-extern s8 gRaceOrderPlayerIds[];
+extern u8 gRaceOrderPlayerIds[];
 extern s32 gMenuFlowState;
 extern Vec3i gRacePlayerGroundProbeOffsets[];
 extern Vec3i D_800DE7F8;
@@ -221,10 +221,11 @@ void getRacePlayerRankingProgress(s32 arg0, s32 *arg1, s32 *arg2) {
     }
 }
 
-// updateRacePlayerRankings best match: 96.071% (nonmatchings/updateRacePlayerRankings-8498672362023432715/base_21.c)
+// updateRacePlayerRankings best match: 96.672% (nonmatchings/updateRacePlayerRankings-5176680205357669729/base_20.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race/player/race_player_movement/updateRacePlayerRankings.s")
 
 #ifdef NON_MATCHING
+#if 0
 void updateRacePlayerRankings(void) {
     PlayerOrder order;
     s32 primary[4];
@@ -347,6 +348,123 @@ void updateRacePlayerRankings(void) {
                 i++;
                 orderJ[-1] = player->playerIndexU16;
             } while (i < playerCount);
+        }
+    }
+}
+#endif
+void updateRacePlayerRankings(void) {
+    s8 playerIds[4];
+    s32 courseProgress[4];
+    s32 *nextPtr;
+    s32 initializedPlayerId;
+    s32 pathProgress[4];
+    RacePlayer *player;
+    s32 lastPlayer;
+    s32 next;
+    s32 i;
+    s32 j;
+    s8 comparedPlayerId;
+    s8 playerId;
+    s8 otherPlayerId;
+
+    nextPtr = &next;
+    if (gRaceSplitscreenMode != 2) {
+        if (gMenuFlowState & 1) {
+            gRaceOrderPlayerIds[0] = 0;
+            gRaceOrderPlayerIds[1] = 1;
+            gRaceOrderPlayerIds[2] = 2;
+            gRaceOrderPlayerIds[3] = 3;
+        } else {
+            playerIds[0] = 0;
+            playerIds[1] = 1;
+            initializedPlayerId = 2;
+            playerIds[initializedPlayerId] = initializedPlayerId;
+            playerIds[3] = 3;
+
+            i = 0;
+            if (gRacePlayerCount > 0) {
+                player = gRacePlayers;
+                do {
+                    getRacePlayerRankingProgress(i, &courseProgress[i], &pathProgress[i]);
+                    if (player->stateFlags & 0x04000000) {
+                        courseProgress[i] = courseProgress[i] + player->unk57C;
+                    }
+                    i++;
+                    player++;
+                } while (i < gRacePlayerCount);
+                i = 0;
+            }
+
+            lastPlayer = (u32)(gRacePlayerCount - 1);
+            if (lastPlayer > 0) {
+                do {
+                    next = i + 1;
+                    j = next;
+                    if (next < gRacePlayerCount) {
+                        do {
+                            otherPlayerId = playerIds[j];
+                            playerId = playerIds[i];
+                            if (gRacePlayers[otherPlayerId].rankIndex <
+                                gRacePlayers[playerId].rankIndex) {
+                                playerIds[i] = otherPlayerId;
+                                playerIds[j] = playerId;
+                            }
+                            j++;
+                        } while (j < gRacePlayerCount);
+                    }
+                    i = *nextPtr;
+                } while (next < lastPlayer);
+                i = 0;
+            }
+
+            if (lastPlayer > 0) {
+                do {
+                    next = i + 1;
+                    j = next;
+                    if (next < gRacePlayerCount) {
+                        do {
+                            playerId = playerIds[i];
+                            if (!(gRacePlayers[playerId].stateFlags & 0x40)) {
+                                otherPlayerId = playerIds[j];
+                                if (!(gRacePlayers[otherPlayerId].stateFlags & 0x40)) {
+                                    if (gRacePlayers[playerId].lapDigit <
+                                        gRacePlayers[otherPlayerId].lapDigit) {
+                                        playerIds[i] = otherPlayerId;
+                                        playerIds[j] = playerId;
+                                    } else if (gRacePlayers[playerId].lapDigit ==
+                                               gRacePlayers[otherPlayerId].lapDigit) {
+                                        comparedPlayerId = playerId;
+                                        if (courseProgress[comparedPlayerId] <
+                                            courseProgress[otherPlayerId]) {
+                                            playerIds[i] = otherPlayerId;
+                                            playerIds[j] = comparedPlayerId;
+                                        } else if ((courseProgress[comparedPlayerId] ==
+                                                    courseProgress[otherPlayerId]) &&
+                                                   (pathProgress[comparedPlayerId] <
+                                                    pathProgress[otherPlayerId])) {
+                                            playerIds[i] = otherPlayerId;
+                                            playerIds[j] = comparedPlayerId;
+                                        }
+                                    }
+                                }
+                            }
+                            j++;
+                        } while (j < gRacePlayerCount);
+                    }
+                    i = next;
+                } while (next < lastPlayer);
+            }
+            i = 0;
+
+            if (gRacePlayerCount > 0) {
+                do {
+                    playerId = playerIds[i];
+                    player = &gRacePlayers[playerId];
+                    player->rankIndex = i;
+                    gRaceOrderPlayerIds[i] = player->playerIndex;
+                    i++;
+                } while (i < gRacePlayerCount);
+            }
         }
     }
 }
