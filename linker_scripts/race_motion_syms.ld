@@ -1,0 +1,2 @@
+gRaceMotionRotationDecodeFrameBuffer = gRaceMotionRotationFrameBuffer;
+gRaceMotionJointDecodeFrameBuffer = gRaceMotionJointFrameBuffer;
