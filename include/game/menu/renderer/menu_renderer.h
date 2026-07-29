@@ -21,6 +21,7 @@ typedef struct MenuRenderSprite {
 } MenuRenderSprite;
 typedef struct MenuRenderSpriteActor MenuRenderSpriteActor;
 typedef struct MenuFontAssetTable MenuFontAssetTable;
+typedef struct FontAsset FontAsset;
 typedef u16 MenuGlyphScript;
 
 void drawMenuAssetRegion(s16 x, s16 y, void *texture, u16 tileIndex, u16 scaleX, u16 scaleY, u8 startS, u8 startT,
@@ -35,7 +36,7 @@ void drawMenuSpriteWithAlphaClipped(s16 x, s16 y, void *texture, u16 tileIndex, 
 void drawMenuSpriteWithPaletteScale(s16 x, s16 y, void *texture, u16 tileIndex, s32 alpha);
 void drawMenuSpriteSubrect(s16 x, s16 y, void *texture, u16 tileIndex, u8 srcX, u8 srcY, u8 width, u8 height,
                            s32 scaleX, s32 scaleY);
-void drawMenuSpriteFixedScale(s16 x, s16 y, void *texture, u16 tileIndex, u16 scaleX, u16 scaleY, u8 flip,
+void drawMenuSpriteFixedScale(s16 x, s16 y, FontAsset *asset, u16 tileIndex, u16 scaleX, u16 scaleY, u8 flip,
                               u8 unusedPalette);
 void drawMenuSpriteTile(s16 x, s16 y, void *texture, u16 tileIndex, u16 width, u16 height);
 void drawMenuSpriteTileClipped(s16 x, s16 y, MenuFontAssetTable *table, u16 entryIndex, u16 unused, u16 intensity,
