@@ -238,14 +238,14 @@ void drawCourseSelectPreviewModel(CourseSelectCoursePreviewActor *arg0) {
     }
 }
 
-// updateCourseSelectPreviewModelIn best match: 99.868% (nonmatchings/updateCourseSelectPreviewModelIn-1213871690025509423/base_38.c)
+// updateCourseSelectPreviewModelIn best match: 99.921% (nonmatchings/updateCourseSelectPreviewModelIn-2641000770066553983/base_31.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/course_select/course_select_ui/updateCourseSelectPreviewModelIn.s")
 
 #ifdef NON_MATCHING
 void updateCourseSelectPreviewModelIn(CourseSelectAnimatedActor *arg0)
 {
     CourseSelectAnimatedActor *actor;
-    u8 incomingState;
+    s32 incomingState;
     s32 i;
     Vec3i rotatedPosition;
     s32 slideStep;
@@ -255,8 +255,9 @@ void updateCourseSelectPreviewModelIn(CourseSelectAnimatedActor *arg0)
 
     for (i = 0; i < (s32)gPlayerCount; i++) {
         incomingState = gCourseSelectStatus.incomingPreviewModelState[i];
-        if (incomingState != (state = actor->state[i])) {
-            actor->state[i] = incomingState;
+        state = actor->state[i];
+        if (incomingState != state) {
+            actor->state[i] = gCourseSelectStatus.incomingPreviewModelState[i];
             actor->timer[i] = gCourseSelectStatus.incomingPreviewModelTimer[i];
             actor->angle[i] = gCourseSelectStatus.incomingPreviewModelAngle[i];
             gCourseSelectStatus.incomingPreviewModelTimer[i] = 0;
