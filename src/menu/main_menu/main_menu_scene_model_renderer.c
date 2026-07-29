@@ -16,7 +16,8 @@ void initMainMenuSceneModelRenderer(void) {
 void initMainMenuSceneModelRenderer_pad(void) {
 }
 
-// drawMainMenuSceneModel best source-tree match: 99.706% at nonmatchings/drawMainMenuSceneModel-4139837607000619032/base_6.c.
+// drawMainMenuSceneModel best match: 99.706% at
+// nonmatchings/drawMainMenuSceneModel-2641000770066553983/base_15.c.
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/main_menu/main_menu_scene_model_renderer/drawMainMenuSceneModel.s")
 
 #ifdef NON_MATCHING
@@ -33,8 +34,29 @@ void drawMainMenuSceneModel(MainMenuSceneModel *arg0) {
     s32 i;
     s32 end;
     s32 stride;
+    u32 matrixParams;
 
- do { if ((u16)arg0->viewportIndex == gCurrentViewportIndex) { model = arg0; gDPPipeSync(gRegionAllocPtr++); gSPSegment(gRegionAllocPtr++, 0x02, getRelocatableHeapBlockBase(gAssetHandles[0x33 + (u16)model->actorIndex])); gSPSegment(gRegionAllocPtr++, 0x03, getRelocatableHeapBlockBase(gAssetHandles[0x39 + (u16)model->actorIndex])); i = 1; displayObject = &model->displayObjects[1]; end = 14; stride = 13; displayLists = gMainMenuSceneModelPartDisplayLists; do { matrix = allocFixedTransformMatrix(displayObject); if (matrix != NULL) { gSPMatrix(gRegionAllocPtr++, matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW); gSPDisplayList(gRegionAllocPtr++, displayLists[((u16)model->modelIndex * stride) + i - 1]); } i++; displayObject++; } while (i != end); } } while (0);
+    if ((u16)arg0->viewportIndex == gCurrentViewportIndex) {
+        model = arg0;
+        gDPPipeSync(gRegionAllocPtr++);
+        gSPSegment(gRegionAllocPtr++, 0x02,
+                   getRelocatableHeapBlockBase(ASSET_HANDLE(0x33 + (u16)model->actorIndex)));
+        gSPSegment(gRegionAllocPtr++, 0x03,
+                   getRelocatableHeapBlockBase(ASSET_HANDLE(0x39 + (u16)model->actorIndex)));
+        stride = 13;
+        matrixParams = G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW;
+        displayLists = gMainMenuSceneModelPartDisplayLists;
+        for (i = 1, displayObject = &model->displayObjects[1], end = 14;
+             i != end;
+             displayObject++, i++) {
+            matrix = allocFixedTransformMatrix(displayObject);
+            if (matrix != NULL) {
+                gDma1p(gRegionAllocPtr++, G_MTX, matrix, sizeof(Mtx), matrixParams);
+                gSPDisplayList(gRegionAllocPtr++,
+                               displayLists[((u16)model->modelIndex * stride) + i - 1]);
+            }
+        }
+    }
 }
 #endif
 
