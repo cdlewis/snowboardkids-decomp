@@ -896,13 +896,14 @@ void drawCharacterSelectSelectedCharacterTokens(CharacterSelectUiSelectedCharact
     }
 }
 
-// updateCharacterSelectSelectedCharacterTokens best match: 96.329% (nonmatchings/updateCharacterSelectSelectedCharacterTokens-5787290371232622032/base_1.c)
+// updateCharacterSelectSelectedCharacterTokens best match: 97.823% (nonmatchings/updateCharacterSelectSelectedCharacterTokens-8280121253171829145/base_20.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/character_select/character_select_ui/updateCharacterSelectSelectedCharacterTokens.s")
 
 #ifdef NON_MATCHING
 void updateCharacterSelectSelectedCharacterTokens(CharacterSelectUiSelectedCharacterTokenActor *arg0) {
     CharacterSelectUiPanelTransitionActor *panelFrames;
     CharacterSelectUiSelectedCharacterTokenActor *tokens;
+    CharacterSelectUiSelectedCharacterTokenActor *actor;
     s32 playerIndex;
     s32 menuState;
     u8 state;
@@ -911,11 +912,13 @@ void updateCharacterSelectSelectedCharacterTokens(CharacterSelectUiSelectedChara
     s32 step;
     s32 exitXStep;
     s32 exitYStep;
+    s32 panelIndex;
     s16 panelX;
     s16 panelY;
 
-    panelFrames = D_8010ADE4;
+    panelFrames = (CharacterSelectUiPanelTransitionActor *)D_8010ADE4;
     tokens = arg0;
+    actor = arg0;
     playerIndex = 0;
     if ((s32)gPlayerCount > 0) {
         do {
@@ -924,14 +927,14 @@ void updateCharacterSelectSelectedCharacterTokens(CharacterSelectUiSelectedChara
             state = tokens->state[playerIndex];
             if (state != (menuState & 0xFFFFFFFF)) {
                 state = menuState;
-                arg0->state[playerIndex] = menuState;
+                actor->state[playerIndex] = menuState;
             }
 
             switch (state) {
             case CHARACTER_SELECT_TOKEN_IDLE:
                 break;
             case CHARACTER_SELECT_TOKEN_START:
-                menuState = gRacePlayers[playerIndex].menuSelection;
+                menuState = gRacePlayers[playerIndex].selectedCharacterId;
                 if ((s32)menuState < 5) {
                     rosterX = menuState;
                     rosterX = (rosterX * 0x20) - 0x40;
@@ -943,10 +946,10 @@ void updateCharacterSelectSelectedCharacterTokens(CharacterSelectUiSelectedChara
 
                 panelX = panelFrames->x[playerIndex] + 0x38;
                 panelY = panelFrames->y[playerIndex];
-                arg0->xDistance[playerIndex] = panelX - rosterX;
-                arg0->yDistance[playerIndex] = panelY + 0x20;
-                arg0->xDirection[playerIndex] = 1;
-                if (arg0->xDistance[playerIndex] < 0) {
+                actor->xDistance[playerIndex] = panelX - rosterX;
+                actor->yDistance[playerIndex] = panelY + 0x20;
+                actor->xDirection[playerIndex] = 1;
+                if (actor->xDistance[playerIndex] < 0) {
                     tokens->xDirection[playerIndex] = -1;
                     tokens->xDistance[playerIndex] = tokens->xDistance[playerIndex] * -1;
                 }
@@ -971,46 +974,45 @@ void updateCharacterSelectSelectedCharacterTokens(CharacterSelectUiSelectedChara
                 break;
             case CHARACTER_SELECT_TOKEN_FLYING:
                 exitXStep = playerIndex;
-                if (exitXStep & 1) {
+                if (playerIndex & 1) {
                     yDirection = 1;
                     state = tokens->state[exitXStep];
                 } else {
                     yDirection = -1;
                 }
-                if (tokens->stepCount[exitXStep] > 0) {
+                if (tokens->stepCount[playerIndex] > 0) {
                     do {
-                        if (tokens->axis[exitXStep] != 0) {
-                            tokens->y[exitXStep] += yDirection;
-                            tokens->accumulator[exitXStep] += tokens->xDistance[exitXStep];
-                            if (tokens->accumulator[exitXStep] >= tokens->yDistance[exitXStep]) {
-                                tokens->accumulator[exitXStep] -= tokens->yDistance[exitXStep];
-                                arg0->x[exitXStep] += arg0->xDirection[exitXStep];
+                        if (tokens->axis[playerIndex] != 0) {
+                            tokens->y[playerIndex] += yDirection;
+                            tokens->accumulator[playerIndex] += tokens->xDistance[playerIndex];
+                            if (tokens->accumulator[playerIndex] >= tokens->yDistance[playerIndex]) {
+                                tokens->accumulator[playerIndex] -= tokens->yDistance[playerIndex];
+                                actor->x[playerIndex] += actor->xDirection[playerIndex];
                             }
                         } else {
-                            arg0->x[exitXStep] += arg0->xDirection[exitXStep];
-                            arg0->accumulator[exitXStep] += arg0->yDistance[exitXStep];
-                            if (arg0->accumulator[exitXStep] >= arg0->xDistance[exitXStep]) {
-                                arg0->y[exitXStep] += yDirection;
-                                arg0->accumulator[exitXStep] -= arg0->xDistance[exitXStep];
+                            actor->x[playerIndex] += actor->xDirection[playerIndex];
+                            actor->accumulator[playerIndex] += actor->yDistance[playerIndex];
+                            if (actor->accumulator[playerIndex] >= actor->xDistance[playerIndex]) {
+                                actor->y[playerIndex] += yDirection;
+                                actor->accumulator[playerIndex] -= actor->xDistance[playerIndex];
                             }
                         }
-                        arg0->timer[exitXStep]++;
-                        if ((arg0->timer[exitXStep] % arg0->divisor[exitXStep]) == 0) {
-                            arg0->signedTileSize[exitXStep]++;
+                        actor->timer[playerIndex]++;
+                        if ((actor->timer[playerIndex] % actor->divisor[playerIndex]) == 0) {
+                            actor->signedTileSize[playerIndex]++;
                         }
-                        if (arg0->signedTileSize[exitXStep] >= 0x21) {
-                            arg0->signedTileSize[exitXStep] = 0x20;
+                        if (actor->signedTileSize[playerIndex] >= 0x21) {
+                            actor->signedTileSize[playerIndex] = 0x20;
                         }
-                        if ((arg0->x[exitXStep] == panelFrames->x[exitXStep] + 0x38) &&
-                            (arg0->y[exitXStep] == panelFrames->y[exitXStep] + 0x18)) {
-                            arg0->state[exitXStep] = CHARACTER_SELECT_TOKEN_LANDED;
-                            arg0->signedTileSize[exitXStep] = 0x20;
-                            state = arg0->state[playerIndex];
+                        if ((actor->x[playerIndex] == panelFrames->x[playerIndex] + 0x38) &&
+                            (actor->y[playerIndex] == panelFrames->y[playerIndex] + 0x18)) {
+                            actor->state[playerIndex] = CHARACTER_SELECT_TOKEN_LANDED;
+                            actor->signedTileSize[playerIndex] = 0x20;
                             break;
                         }
                         step++;
                     } while (step < tokens->stepCount[playerIndex]);
-                    state = tokens->state[exitXStep];
+                    state = actor->state[playerIndex];
                 }
                 break;
             case CHARACTER_SELECT_TOKEN_LANDED:
@@ -1027,30 +1029,29 @@ void updateCharacterSelectSelectedCharacterTokens(CharacterSelectUiSelectedChara
     if (panelFrames->mode == 3) {
         step = 0;
         do {
-            for (playerIndex = 0; playerIndex != RACE_PLAYER_COUNT; playerIndex++) {
-                if (playerIndex < 2) {
+            for (panelIndex = 0; panelIndex != RACE_PLAYER_COUNT; panelIndex++) {
+                if (panelIndex < 2) {
                     exitXStep = -1;
                 } else {
                     exitXStep = 1;
                 }
-                if (playerIndex & 1) {
+                if (panelIndex & 1) {
                     exitYStep = 1;
                 } else {
                     exitYStep = -1;
                 }
-                panelFrames->x[playerIndex] += exitXStep;
-                if (playerIndex == 0) {
+                panelFrames->x[panelIndex] += exitXStep;
+                if (panelIndex == 0) {
                     panelFrames->frameCounter += panelFrames->frameStep;
                 }
                 if (panelFrames->frameCounter >= panelFrames->frameLimit) {
-                    panelFrames->y[playerIndex] += exitYStep;
-                    if (playerIndex == 3) {
+                    panelFrames->y[panelIndex] += exitYStep;
+                    if (panelIndex == 3) {
                         panelFrames->frameCounter -= panelFrames->frameLimit;
                     }
                 }
-                arg0->x[playerIndex] = panelFrames->x[playerIndex] + 0x38;
-                yDirection = panelFrames->y[playerIndex] + 0x18;
-                arg0->y[playerIndex] = yDirection;
+                actor->x[panelIndex] = panelFrames->x[panelIndex] + 0x38;
+                actor->y[panelIndex] = panelFrames->y[panelIndex] + 0x18;
             }
             step++;
             if (panelFrames->x[0] == -0x114) {
@@ -1060,7 +1061,7 @@ void updateCharacterSelectSelectedCharacterTokens(CharacterSelectUiSelectedChara
         } while (step != 0x10);
     }
 
-    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawCharacterSelectSelectedCharacterTokens, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawCharacterSelectSelectedCharacterTokens, actor);
 }
 #endif
 
