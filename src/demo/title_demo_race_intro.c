@@ -152,30 +152,34 @@ void waitForTitleDemoRaceIntroStart(void) {
     }
 }
 
-// updateTitleDemoRaceIntro best match: 98.624% (nonmatchings/updateTitleDemoRaceIntro-5176680205357669729/base_25.c)
+// updateTitleDemoRaceIntro best match: 98.943% (nonmatchings/updateTitleDemoRaceIntro-2781615007300307775/base_31.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/demo/title_demo_race_intro/updateTitleDemoRaceIntro.s")
 
 #ifdef NON_MATCHING
 void updateTitleDemoRaceIntro(void) {
     s32 fadeStep;
-    s32 previousPause;
+    union {
+        s32 value;
+        u8 padding[12];
+    } previousPause;
     s32 cameraIndex;
     s32 fadeDelay;
     s32 nextViewportHeight;
     u32 i;
     u8 *destination;
 
-    previousPause = gRaceUpdatePaused;
+    previousPause.value = gRaceUpdatePaused;
     configureViewport(0, 0xA0, 0x78, 0x120, (u8) gTitleDemoRaceIntroViewportHeight, 0x140, 0xF0, D_800E10C8);
     nextViewportHeight = (u8) gTitleDemoRaceIntroViewportHeight + 0x10;
     if ((u8) gTitleDemoRaceIntroViewportHeight != 0xB0) {
-        gTitleDemoRaceIntroViewportHeight = nextViewportHeight;
-        if ((nextViewportHeight & 0xFF) == 0xB0) {
-            createCallbackTask((CallbackTaskCallback)updateTitleScreenStartPrompt, 0, 0x64);
+        gTitleDemoRaceIntroViewportHeight = nextViewportHeight; if ((nextViewportHeight & 0xFF) == 0xB0) { createCallbackTask((CallbackTaskCallback)updateTitleScreenStartPrompt, 0, 0x64); } } fadeStep = gCurrentGameTask->fadeStep; if (fadeStep == gTitleDemoReplaySegmentFrames[gCurrentGameTask->courseSegment]) { destination = RACE_PLAYER_REPLAY_SNAPSHOT(0).bytes; i = 0; do { destination[i] = gTitleDemoReplayInputs[0][gCurrentGameTask->courseSegment].bytes[i]; i++; } while (i < sizeof(RacePlayerReplaySnapshot)); destination = RACE_PLAYER_REPLAY_SNAPSHOT(1).bytes; i = 0; do { destination[i] = gTitleDemoReplayInputs[1][gCurrentGameTask->courseSegment].bytes[i]; i++; if (1) { } } while (i < sizeof(RacePlayerReplaySnapshot)); destination = RACE_PLAYER_REPLAY_SNAPSHOT(2).bytes; i = 0; do { destination[i] = gTitleDemoReplayInputs[2][gCurrentGameTask->courseSegment].bytes[i]; i++; } while (i < sizeof(RacePlayerReplaySnapshot)); destination = RACE_PLAYER_REPLAY_SNAPSHOT(3).bytes; i = 0; for (;;) { destination[i] = gTitleDemoReplayInputs[3][gCurrentGameTask->courseSegment].bytes[i]; destination[i + 1] = gTitleDemoReplayInputs[3][gCurrentGameTask->courseSegment].bytes[i + 1]; destination[i + 2] = gTitleDemoReplayInputs[3][gCurrentGameTask->courseSegment].bytes[i + 2]; destination[i + 3] = gTitleDemoReplayInputs[3][gCurrentGameTask->courseSegment].bytes[i + 3]; i += 4;
+            if (i == sizeof(RacePlayerReplaySnapshot)) {
+                break;
+            }
         }
+        gCurrentGameTask->courseSegment++;
+        fadeStep = gCurrentGameTask->fadeStep;
     }
-
-    fadeStep = gCurrentGameTask->fadeStep; if (fadeStep == gTitleDemoReplaySegmentFrames[gCurrentGameTask->courseSegment]) { destination = RACE_PLAYER_REPLAY_SNAPSHOT(0).bytes; i = 0; do { destination[i] = gTitleDemoReplayInputs[0][gCurrentGameTask->courseSegment].bytes[i]; i++; } while (i < sizeof(RacePlayerReplaySnapshot)); destination = RACE_PLAYER_REPLAY_SNAPSHOT(1).bytes; i = 0; do { destination[i] = gTitleDemoReplayInputs[1][gCurrentGameTask->courseSegment].bytes[i]; i++; } while (i < sizeof(RacePlayerReplaySnapshot)); destination = RACE_PLAYER_REPLAY_SNAPSHOT(2).bytes; i = 0; do { destination[i] = gTitleDemoReplayInputs[2][gCurrentGameTask->courseSegment].bytes[i]; i++; } while (i < sizeof(RacePlayerReplaySnapshot)); destination = RACE_PLAYER_REPLAY_SNAPSHOT(3).bytes; i = 0; for (;;) { destination[i] = gTitleDemoReplayInputs[3][gCurrentGameTask->courseSegment].bytes[i]; destination[i + 1] = gTitleDemoReplayInputs[3][gCurrentGameTask->courseSegment].bytes[i + 1]; destination[i + 2] = gTitleDemoReplayInputs[3][gCurrentGameTask->courseSegment].bytes[i + 2]; destination[i + 3] = gTitleDemoReplayInputs[3][gCurrentGameTask->courseSegment].bytes[i + 3]; i += 4; if (i == sizeof(RacePlayerReplaySnapshot)) { break; } } gCurrentGameTask->courseSegment++; fadeStep = gCurrentGameTask->fadeStep; }
 
     cameraIndex = gCurrentGameTask->startDelay;
     if (fadeStep == gTitleDemoCameraModeFrames[cameraIndex]) {
@@ -187,7 +191,7 @@ void updateTitleDemoRaceIntro(void) {
     updateCallbackTasksWithMinPriority(0x63);
     updateRacePlayersPostUpdate();
     updateRemainingCallbackTasks();
-    gRaceUpdatePaused = previousPause;
+    gRaceUpdatePaused = previousPause.value;
     updateRaceCameras();
     gCurrentGameTask->fadeStep++;
     fadeDelay = gCurrentGameTask->fadeDelay;
