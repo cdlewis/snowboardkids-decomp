@@ -173,7 +173,7 @@ extern void drawCourseSelectPlayerPanels(CourseSelectWidgetActor *);
 extern void drawMenuSpriteWithAlphaWideArgs(s32 x, s32 y, void *texture, s32 tileIndex, s32 width, s32 height,
                                             s32 palette, s32 alpha, u32 flip);
 extern s32 allocFixedTransformMatrix(FixedTransform *);
-extern u8 D_800E0DB8[];
+extern const char D_800E0DB8[];
 extern u8 D_800EC9C0;
 extern CallbackTask *D_8010ADE0;
 extern CallbackTask *D_8010ADE4;
@@ -2499,7 +2499,7 @@ void initCourseSelectExtraCourseIconList(CourseSelectWidgetActor *arg0) {
     setCallbackTaskCallback(actor, (CallbackTaskCallback)updateCourseSelectExtraCourseIconList);
 }
 
-#pragma GLOBAL_ASM("src/menu/course_select/D_800E0DB8.s")
+const char D_800E0DB8[] = "%d";
 
 void drawCourseSelectPlayerPanels(CourseSelectWidgetActor *arg0) {
     s32 j;
