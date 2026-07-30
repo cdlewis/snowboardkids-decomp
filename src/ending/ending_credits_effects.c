@@ -70,8 +70,8 @@ struct EndingCreditsEffectActor {
 extern Gfx *gRegionAllocPtr;
 extern s16 gMenuFadeAlpha;
 extern u16 gEndingCreditsTransitionSnowboardIconExpandFrameCounter;
-extern u16 gEndingCreditsNancyRunDustFrameOffsets[];
-extern u16 gEndingCreditsTommySnowmanEntranceFrameOffsets[];
+u16 gEndingCreditsNancyRunDustFrameOffsets[4] = {0, 1, 2, 1};
+u16 gEndingCreditsTommySnowmanEntranceFrameOffsets[4] = {0, 1, 2, 1};
 
 void updateEndingCreditsCharacterVanishPoof(EndingCreditsEffectActor *arg0);
 void updateEndingCreditsNancySpeedLines(EndingCreditsEffectActor *arg0);
