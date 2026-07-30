@@ -732,12 +732,8 @@ void pushRacePlayersOutOfCylinderOrApplyItemHit(Vec3i *pos, s32 xzSize, s32 ySiz
     }
 }
 
-// pushRacePlayerOutOfCylinder best match: 99.925% (nonmatchings/pushRacePlayerOutOfCylinder-1189375296343516052/base_11.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race/player/race_player_movement/pushRacePlayerOutOfCylinder.s")
-
-#ifdef NON_MATCHING
 void pushRacePlayerOutOfCylinder(Vec3i *pos, s32 xzSize, s32 ySize, s16 playerIndex) {
-    s32 temp;
+    s32 distance;
     RacePlayer *player;
     s32 xzLimit;
     s32 yLimit;
@@ -753,14 +749,14 @@ void pushRacePlayerOutOfCylinder(Vec3i *pos, s32 xzSize, s32 ySize, s16 playerIn
         s32 xDiff;
 
         yLimit = ySize;
-        temp = pos->y - player->unk5C;
-        if (temp < 0) {
-            temp = -temp;
+        distance = pos->y - player->unk5C;
+        if (distance < 0) {
+            distance = -distance;
         } else {
             yLimit = player->unk284;
         }
 
-        if (temp <= yLimit) {
+        if (distance <= yLimit) {
             xzLimit = player->unk280 + xzSize;
             xDiff = pos->x - player->posX;
             if (xDiff < 0) {
@@ -772,14 +768,16 @@ void pushRacePlayerOutOfCylinder(Vec3i *pos, s32 xzSize, s32 ySize, s16 playerIn
                     zDiff = -zDiff;
                 }
                 if ((zDiff < xzLimit) &&
-                    ((temp = integerSquareRoot64((s64)((0, xDiff)) * xDiff +
-                                           (((s64)zDiff * zDiff) & 0xFFFFFFFFFFFFFFFF))) < xzLimit)) {
+                    ((distance = integerSquareRoot64((s64)((0, xDiff)) * xDiff +
+                                                    (((s64)zDiff * zDiff) & 0xFFFFFFFFFFFFFFFF))) <
+                     xzLimit)) {
                     angle = calculateFixedAngleBetweenXZPoints(pos->x, pos->z, player->posX, player->posZ);
                     sine = fixedSine(angle);
                     cosine = fixedCosine(angle);
-                    temp = xzLimit - temp;
-                    pushX = (s64)-sine * -temp / 0x1000;
-                    pushZ = (s64)cosine * -temp / 0x1000;
+                    distance = xzLimit - distance;
+                    distance *= -1;
+                    pushX = (s64)-sine * distance / 0x1000;
+                    pushZ = (s64)cosine * distance / 0x1000;
                     player->posX -= pushX;
                     (&gRacePlayers[playerIndex])->posZ += pushZ;
                 }
@@ -787,7 +785,6 @@ void pushRacePlayerOutOfCylinder(Vec3i *pos, s32 xzSize, s32 ySize, s16 playerIn
         }
     }
 }
-#endif
 
 s32 isRacePlayerInsideCylinder(Vec3i *pos, s32 xzSize, s32 ySize, s16 playerIndex) {
     RacePlayer *player;
