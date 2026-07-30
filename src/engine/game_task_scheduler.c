@@ -83,16 +83,18 @@ void initGameTaskScheduler(void) {
     resetRenderCallbackQueues();
 }
 
-// updateGameTaskScheduler best match: 95.263% with the current scorer
-// (nonmatchings/updateGameTaskScheduler-2781615007300307775/base_16.c)
+// updateGameTaskScheduler best match: 96.320% with the current scorer
+// (nonmatchings/updateGameTaskScheduler-6759517978943015823/base_7.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/engine/game_task_scheduler/updateGameTaskScheduler.s")
 
 #ifdef NON_MATCHING
 void updateGameTaskScheduler(void) {
     s32 *previousInput;
     s32 *input;
+    int new_var;
     ControllerInputState *controller;
     s8 *stickXOut;
+    s32 newInputValue;
     s8 *stickYOut;
     s32 *newInput;
     u8 *repeatTimer;
@@ -103,7 +105,7 @@ void updateGameTaskScheduler(void) {
     GameTaskCallback *callbackArray;
     s32 oldInput;
     s32 currentInput;
-    s32 newInputValue;
+    u16 new_var2;
     s32 stickHighThreshold;
     s32 stickXTooHigh;
     s8 stickX;
@@ -113,12 +115,14 @@ void updateGameTaskScheduler(void) {
     s32 timer;
 
     gFrameCounter = (gFrameCounter + 1) & 0xFFF;
+    stickYOut = &gAnalogStickResponseCurve;
+    newInput = &gPlayerInputRepeat;
     resetRenderScratchAllocator();
     resetRenderCallbackQueues();
     clearPendingPositionalSoundRequests();
 
-    responseCurve = &gAnalogStickResponseCurve;
-    repeatInput = &gPlayerInputRepeat;
+    responseCurve = stickYOut;
+    repeatInput = newInput;
     repeatTimer = &gPlayerInputRepeatTimer;
     newInput = gPlayerInputPressed;
     stickYOut = gPlayerStickY;
@@ -132,8 +136,9 @@ void updateGameTaskScheduler(void) {
         stickHighThreshold = 0x2E;
         oldInput = *input;
         currentInput = oldInput & 0xFFFF0000;
+        new_var = currentInput | controller->buttons;
         *input = currentInput;
-        *input = currentInput | controller->buttons;
+        *input = new_var;
         *previousInput = oldInput;
         do {
         } while (0);
@@ -160,7 +165,7 @@ void updateGameTaskScheduler(void) {
         if (stickX >= 0) {
             goto positiveStickX;
 positiveStickX:
-            *stickXOut = responseCurve[stickX];
+            *stickXOut = (0, responseCurve)[stickX];
         } else {
             *stickXOut = -responseCurve[-stickX];
         }
@@ -242,7 +247,8 @@ positiveStickX:
     task = gCurrentGameTask;
     if (task != NULL) {
         do {
-            if (task->state == 0) {
+            new_var2 = task->state;
+            if (new_var2 == 0) {
                 callback = task->callbacks[0];
                 if (callback != NULL) {
                     callback();
