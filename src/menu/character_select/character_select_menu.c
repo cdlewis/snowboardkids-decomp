@@ -119,8 +119,8 @@ void initCharacterSelectMenu(void) {
     updateCallbackTasks();
 }
 
-// updateCharacterSelectMenu best match: 87.216%
-// (nonmatchings/updateCharacterSelectMenu-8280121253171829145/base_31.c).
+// updateCharacterSelectMenu best match: 97.384%
+// (nonmatchings/updateCharacterSelectMenu-8742002951815950717/base_58.c).
 // The implementation below favors readable source while the assembly include
 // above preserves the exact original code.
 // Per-frame driver for the character roster screen only. Live RAM-watch
@@ -134,18 +134,18 @@ void initCharacterSelectMenu(void) {
 
 #ifdef NON_MATCHING
 void updateCharacterSelectMenu(void) {
-    s32 minimumIndex;
+    u8 minimumIndex;
     u16 maximumIndex;
     s32 playerIndex;
     s32 otherPlayerIndex;
     s32 attempt;
     s32 selectedCount;
-    u16 repeatTimer;
+    u16 leftRepeatTimer;
     u32 heldInput;
     u32 heldRight;
     u32 pressedInput;
-    s8 oldSelection;
     s8 *highlightedIndex;
+    u16 repeatTimer;
     u8 selection;
     u8 moveDirection;
     u8 duplicateCount;
@@ -173,13 +173,16 @@ void updateCharacterSelectMenu(void) {
             }
         }
     } else if (gCharacterSelectHudState.rosterReady == 1) {
-        minimumIndex = 1;
         maximumIndex = 5;
         if (gCharacterSelectHudState.leftSecretSlotUnlocked != 0) {
             minimumIndex = 0;
+        } else {
+            minimumIndex = 1;
         }
         if (gCharacterSelectHudState.rightSecretSlotUnlocked != 0) {
             maximumIndex = 6;
+        } else {
+            maximumIndex = 5;
         }
 
         for (playerIndex = 0; playerIndex < gPlayerCount; playerIndex++) {
@@ -197,11 +200,10 @@ void updateCharacterSelectMenu(void) {
                 pressedInput = gPlayerInputPressed[playerIndex];
                 if ((pressedInput & (STICK_LEFT | L_JPAD)) ||
                     (((unsigned long)heldInput & (unsigned long)(STICK_LEFT | L_JPAD)) &&
-                     ((u16)gMenuInputRepeatTimers[playerIndex] >= 0xB) &&
-                     ((u16)gMenuInputRepeatTimers[playerIndex] & 1))) {
-                    repeatTimer = (u16)gMenuInputRepeatTimers[playerIndex];
-                    if (repeatTimer == 0) {
-                        gMenuInputRepeatTimers[playerIndex] = repeatTimer + 1;
+                     ((leftRepeatTimer = gMenuInputRepeatTimers[playerIndex]) >= 0xB) &&
+                     (leftRepeatTimer & 1))) {
+                    if (gMenuInputRepeatTimers[playerIndex] == 0) {
+                        gMenuInputRepeatTimers[playerIndex] = gMenuInputRepeatTimers[playerIndex] + 1;
                     }
                     if (minimumIndex < selection) {
                         selection--;
@@ -246,7 +248,7 @@ void updateCharacterSelectMenu(void) {
                         if ((gCharacterSelectHudState.rightSecretSlotUnlocked == 0) && (selection == 6)) {
                             duplicateCount++;
                         }
-                        if (duplicateCount != 0) {
+                        if (duplicateCount) {
                             if (moveDirection == CHARACTER_SELECT_MOVE_LEFT) {
                                 selection--;
                             } else {
@@ -280,8 +282,8 @@ void updateCharacterSelectMenu(void) {
                 }
             }
 
-            pressedInput = gPlayerInputPressed[playerIndex];
-            if ((pressedInput & B_BUTTON) && (gRacePlayers[playerIndex].menuState != 0)) {
+            if ((gPlayerInputPressed[playerIndex] & B_BUTTON) &&
+                (gRacePlayers[playerIndex].menuState != 0)) {
                 gRacePlayers[playerIndex].menuState = 0;
                 gCharacterSelectHudState.selectedTokenState[playerIndex] = CHARACTER_SELECT_TOKEN_IDLE;
             }
