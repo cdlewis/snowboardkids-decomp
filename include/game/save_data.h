@@ -80,9 +80,13 @@ typedef struct GameSaveData {
     };
 } GameSaveData;
 
+#ifdef GAME_SAVE_DATA_BUFFER_AS_ARRAY
+extern GameSaveData gGameSaveDataBuffer[GAME_SAVE_SLOT_COUNT];
+#define GAME_SAVE_DATA_SLOT(index) (gGameSaveDataBuffer[index])
+#else
 extern GameSaveData gGameSaveDataBuffer;
-
 /* The symbol names the first of four contiguous save slots. */
 #define GAME_SAVE_DATA_SLOT(index) ((&gGameSaveDataBuffer)[index])
+#endif
 
 #endif

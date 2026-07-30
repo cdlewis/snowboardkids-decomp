@@ -1,4 +1,5 @@
 #include "common.h"
+#define GAME_SAVE_DATA_BUFFER_AS_ARRAY
 #include "game/save_data.h"
 #include "assets.h"
 #include "game/audio/sound_manager.h"
@@ -344,16 +345,7 @@ void requestControllerPakSaveWrite(u16 arg0) {
     osRecvMesg(&gControllerSubsystemReplyQueue, &msg, OS_MESG_BLOCK);
 }
 
-// writeControllerPakSave best match: 99.890% at nonmatchings/writeControllerPakSave-6759517978943015823/base_5.c
-#pragma GLOBAL_ASM("asm/nonmatchings/menu/main_menu/controller_main_menu_flow/writeControllerPakSave.s")
-
-#ifdef NON_MATCHING
 void writeControllerPakSave(u16 controllerIndex) {
-    union CopyOffset {
-        u8 *copy;
-        s32 offset;
-    } work;
-    s32 *newFileNo;
     s32 *fileNo;
     GameSaveData *save;
     u8 *src;
@@ -383,10 +375,9 @@ void writeControllerPakSave(u16 controllerIndex) {
     } while (&gControllerPakSaveGameNameBytes[i] <
              gControllerPakSaveExtNameBytes);
 
-    newFileNo = &gControllerPakFileNos[controllerIndex];
+    fileNo = &gControllerPakFileNos[controllerIndex];
     osPfsInitPak(&gControllerEventQueue,
                  (pfs = handle), controllerIndex);
-    fileNo = newFileNo;
 
     if (osPfsFindFile(pfs, gControllerPakSaveFileIdentity.companyCode,
                       gControllerPakSaveFileIdentity.gameCode, gControllerPakExtName,
@@ -412,7 +403,6 @@ void writeControllerPakSave(u16 controllerIndex) {
         gControllerPakRetryCounts[controllerIndex]++;
     }
 }
-#endif
 
 void requestControllerPakRepair(u16 arg0) {
     OSMesg msg;
