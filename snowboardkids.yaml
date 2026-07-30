@@ -341,7 +341,7 @@ segments:
       - [0xDFB10, data, engine/system_runtime]
       - [0xDFD50, data, audio/scheduler]
       - [0xDFD60, data, libmus/player]
-      - [0xDFE90, data, libmus/aud_thread]
+      - [0xDFE90, .data, libmus/aud_thread]
       - [0xDFEB0, .data, ultra/io/controller]
       - [0xDFEC0, .data, ultra/io/motor]
       - [0xDFED0, .data, ultra/os/initialize]

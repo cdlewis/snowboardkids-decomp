@@ -2,6 +2,13 @@
 
 #define ARRAY_COUNT(array) (sizeof(array) / sizeof((array)[0]))
 
+u32 gAudioFrameCounter = 0;
+u32 gPendingAudioDmaCount = 0;
+s32 gAudioCmdListIndex = 0;
+s32 gAudioThreadStarted = 0;
+AudioInfo *gNextAudioInfo = NULL;
+s32 gAudioUnderrunState = 1;
+
 void initAudioSynthesizer(SchedulerState *scheduler, ALSynConfig *config, s32 threadPriority,
                           AudioSynthInitConfig *initConfig, s32 dmaBufferCount, s32 dmaBufferSize,
                           s32 retraceRate) {
