@@ -345,7 +345,7 @@ void requestControllerPakSaveWrite(u16 arg0) {
     osRecvMesg(&gControllerSubsystemReplyQueue, &msg, OS_MESG_BLOCK);
 }
 
-// writeControllerPakSave best match: 99.743% at nonmatchings/writeControllerPakSave-1213871690025509423/base_34.c
+// writeControllerPakSave best match: 99.890% at nonmatchings/writeControllerPakSave-6759517978943015823/base_5.c
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/main_menu/controller_main_menu_flow/writeControllerPakSave.s")
 
 #ifdef NON_MATCHING
@@ -355,13 +355,15 @@ void writeControllerPakSave(u16 controllerIndex) {
         s32 offset;
     } work;
     s32 *newFileNo;
-    OSPfs *volatile pfs;
     s32 *fileNo;
     GameSaveData *save;
     u8 *src;
     s32 i;
     s32 checksum;
+    OSPfs *handle;
+    OSPfs *volatile pfs;
 
+    handle = &gControllerPakHandles[controllerIndex];
     gControllerPakSaveFileIdentity.size = 0x7900;
     gControllerPakSaveFileIdentity.gameCode = 'NSKE';
     gControllerPakSaveFileIdentity.companyCode = 'EB';
@@ -384,7 +386,7 @@ void writeControllerPakSave(u16 controllerIndex) {
 
     newFileNo = &gControllerPakFileNos[controllerIndex];
     osPfsInitPak(&gControllerEventQueue,
-                 (pfs = &gControllerPakHandles[controllerIndex]), controllerIndex);
+                 (pfs = handle), controllerIndex);
     fileNo = newFileNo;
 
     if (osPfsFindFile(pfs, gControllerPakSaveFileIdentity.companyCode,
