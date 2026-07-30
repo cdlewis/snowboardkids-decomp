@@ -790,101 +790,65 @@ void resolveRaceCourseSurfaceCollision(s32 surfaceIndex, s32 x, s32 z, s32 radiu
 #undef CLAMP_RACE_COURSE_SURFACE_COLLISION_TO_ENDPOINT
 #undef PUSH_RACE_COURSE_SURFACE_COLLISION_FROM_EDGE
 
-// getRaceCourseSurfaceHeight best match: 99.821% (nonmatchings/getRaceCourseSurfaceHeight-8129558366194613874/base_10.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race/motion/race_motion/getRaceCourseSurfaceHeight.s")
+s32 getRaceCourseSurfaceHeight(s32 surfaceIndex, s32 x, s32 z) {
+    s32 faceIndex;
+    s16 x20;
+    s16 y20;
+    s16 z20;
+    s16 x10;
+    s16 y10;
+    s16 z10;
+    s32 numeratorA;
+    s32 xDelta;
+    s32 height;
+    s32 pad[2];
+    s32 zDelta;
 
-#ifdef NON_MATCHING
-s32 getRaceCourseSurfaceHeight(s32 arg0, s32 arg1, s32 arg2) {
-    register s32 keyframeOffset;
-    register s32 faceIndex;
-    register s32 faceOffset;
-    register RaceMotionFace *face;
-    register RaceMotionCoord *coord0;
-    register RaceMotionCoord *coord1;
-    register RaceMotionCoord *coords;
-
-    keyframeOffset = arg0 * sizeof(RaceMotionSurface);
-    faceIndex = ((RaceMotionSurface *)((s32)gRaceCourseSurfaces + keyframeOffset))->unk14[0];
-    coord1 = gRaceCourseSurfaceCoords;
-    if (faceIndex < ((RaceMotionSurface *)((s32)gRaceCourseSurfaces + keyframeOffset))->unk14[1]) {
-        faceOffset = faceIndex * sizeof(RaceMotionFace);
-        do {
-            face = (RaceMotionFace *)((s32)gRaceCourseSurfaceFaces + faceOffset);
-            if (face->unk7 == 0) {
-                coords = gRaceCourseSurfaceCoords;
-                coord0 = (RaceMotionCoord *)((s32)coords + face->coord0 * sizeof(RaceMotionCoord));
-                if ((s64)((coords[face->coord1].x << 0x11) - (coord0->x << 0x11)) *
-                    (arg2 - (coord0->z << 0x11)) -
-                    (face = (RaceMotionFace *)((s32)gRaceCourseSurfaceFaces + faceOffset),
-                    coords = gRaceCourseSurfaceCoords,
-                    coord0 = (RaceMotionCoord *)((s32)coords + face->coord0 * sizeof(RaceMotionCoord)),
-                    (s64)((coords[face->coord1].z << 0x11) - (coord0->z << 0x11)) *
-                    (arg1 - (coord0->x << 0x11))) < 0) {
-                    goto next;
-                }
-
-                face = (RaceMotionFace *)((s32)gRaceCourseSurfaceFaces + faceOffset);
-            }
-
-            coords = gRaceCourseSurfaceCoords;
-            coord1 = (RaceMotionCoord *)((s32)coords + face->coord1 * sizeof(RaceMotionCoord));
-            coord0 = coords;
-            if ((s64)((coord0[face->coord2].x << 0x11) - (coord1->x << 0x11)) *
-                (arg2 - (coord1->z << 0x11)) -
-                (face = (RaceMotionFace *)((s32)gRaceCourseSurfaceFaces + faceOffset),
-                coords = gRaceCourseSurfaceCoords,
-                coord1 = (RaceMotionCoord *)((s32)coords + face->coord1 * sizeof(RaceMotionCoord)),
-                (s64)((coords[face->coord2].z << 0x11) - (coord1->z << 0x11)) *
-                (arg1 - (coord1->x << 0x11))) >= 0) {
-                s16 x20;
-                s16 y20;
-                s16 z20;
-                s16 x10;
-                s16 y10;
-                s16 z10;
-                register RaceMotionCoord *coord2;
-                register s32 numeratorA;
-                register s32 xDelta;
-                register s32 height;
-                register s32 unused;
-                register s32 zDelta;
-
-                face = (RaceMotionFace *)((s32)gRaceCourseSurfaceFaces + faceOffset);
-                coords = gRaceCourseSurfaceCoords;
-                coord2 = (RaceMotionCoord *)((s32)coords + face->coord2 * sizeof(RaceMotionCoord));
-                coord0 = (RaceMotionCoord *)((s32)coords + face->coord0 * sizeof(RaceMotionCoord));
-
-                x20 = (s16)(coord2->x - coord0->x);
-                y20 = (s16)(coord2->y - coord0->y);
-                z20 = (s16)(coord2->z - coord0->z);
-                coord2 = coord0;
-                coord1 = (RaceMotionCoord *)((s32)coords + face->coord1 * sizeof(RaceMotionCoord));
-                x10 = (s16)(coord1->x - coord2->x);
-                y10 = (s16)(coord1->y - coord2->y);
-                z10 = (s16)(coord1->z - coord2->z);
-                xDelta = arg1 - (coord2->x << 0x11);
-                zDelta = arg2 - (coord2->z << 0x11);
+    for (faceIndex = gRaceCourseSurfaces[surfaceIndex].unk14[0];
+         faceIndex < gRaceCourseSurfaces[surfaceIndex].unk14[1];
+         faceIndex++) {
+        if ((gRaceCourseSurfaceFaces[faceIndex].unk7 != 0) ||
+            ((s64)((gRaceCourseSurfaceCoords[gRaceCourseSurfaceFaces[faceIndex].coord1].x << 0x11) -
+                   (gRaceCourseSurfaceCoords[gRaceCourseSurfaceFaces[faceIndex].coord0].x << 0x11)) *
+                 (z - (gRaceCourseSurfaceCoords[gRaceCourseSurfaceFaces[faceIndex].coord0].z << 0x11)) -
+             (s64)((gRaceCourseSurfaceCoords[gRaceCourseSurfaceFaces[faceIndex].coord1].z << 0x11) -
+                   (gRaceCourseSurfaceCoords[gRaceCourseSurfaceFaces[faceIndex].coord0].z << 0x11)) *
+                 (x - (gRaceCourseSurfaceCoords[gRaceCourseSurfaceFaces[faceIndex].coord0].x << 0x11)) >= 0)) {
+            if ((s64)((gRaceCourseSurfaceCoords[gRaceCourseSurfaceFaces[faceIndex].coord2].x << 0x11) -
+                      (gRaceCourseSurfaceCoords[gRaceCourseSurfaceFaces[faceIndex].coord1].x << 0x11)) *
+                    (z - (gRaceCourseSurfaceCoords[gRaceCourseSurfaceFaces[faceIndex].coord1].z << 0x11)) -
+                (s64)((gRaceCourseSurfaceCoords[gRaceCourseSurfaceFaces[faceIndex].coord2].z << 0x11) -
+                      (gRaceCourseSurfaceCoords[gRaceCourseSurfaceFaces[faceIndex].coord1].z << 0x11)) *
+                    (x - (gRaceCourseSurfaceCoords[gRaceCourseSurfaceFaces[faceIndex].coord1].x << 0x11)) >= 0) {
+                x20 = (s16)(gRaceCourseSurfaceCoords[gRaceCourseSurfaceFaces[faceIndex].coord2].x -
+                            gRaceCourseSurfaceCoords[gRaceCourseSurfaceFaces[faceIndex].coord0].x);
+                y20 = (s16)(gRaceCourseSurfaceCoords[gRaceCourseSurfaceFaces[faceIndex].coord2].y -
+                            gRaceCourseSurfaceCoords[gRaceCourseSurfaceFaces[faceIndex].coord0].y);
+                z20 = (s16)(gRaceCourseSurfaceCoords[gRaceCourseSurfaceFaces[faceIndex].coord2].z -
+                            gRaceCourseSurfaceCoords[gRaceCourseSurfaceFaces[faceIndex].coord0].z);
+                x10 = (s16)(gRaceCourseSurfaceCoords[gRaceCourseSurfaceFaces[faceIndex].coord1].x -
+                            gRaceCourseSurfaceCoords[gRaceCourseSurfaceFaces[faceIndex].coord0].x);
+                y10 = (s16)(gRaceCourseSurfaceCoords[gRaceCourseSurfaceFaces[faceIndex].coord1].y -
+                            gRaceCourseSurfaceCoords[gRaceCourseSurfaceFaces[faceIndex].coord0].y);
+                z10 = (s16)(gRaceCourseSurfaceCoords[gRaceCourseSurfaceFaces[faceIndex].coord1].z -
+                            gRaceCourseSurfaceCoords[gRaceCourseSurfaceFaces[faceIndex].coord0].z);
+                xDelta =
+                    x - (gRaceCourseSurfaceCoords[gRaceCourseSurfaceFaces[faceIndex].coord0].x << 0x11);
+                zDelta =
+                    z - (gRaceCourseSurfaceCoords[gRaceCourseSurfaceFaces[faceIndex].coord0].z << 0x11);
 
                 numeratorA = (y20 * z10) - (z20 * y10);
                 height = (-((s64)numeratorA * xDelta) -
-                    ((s64)((x20 * y10) - (y20 * x10)) * zDelta)) /
-                    ((z20 * x10) - (x20 * z10));
-                height += gRaceCourseSurfaceCoords[((RaceMotionFace *)((s32)gRaceCourseSurfaceFaces + faceOffset))->coord0].y << 0x11;
+                          ((s64)((x20 * y10) - (y20 * x10)) * zDelta)) /
+                         ((z20 * x10) - (x20 * z10));
+                height += gRaceCourseSurfaceCoords[gRaceCourseSurfaceFaces[faceIndex].coord0].y << 0x11;
                 return height;
             }
-
-next:
-            faceIndex++;
-            faceOffset += sizeof(RaceMotionFace);
-        } while (faceIndex < ((RaceMotionSurface *)((s32)gRaceCourseSurfaces + (arg0 * sizeof(RaceMotionSurface))))->unk14[1]);
-    }
-
-    if (!gRaceCourseSurfaceFaces) {
+        }
     }
 
     return 0xC0000000;
 }
-#endif
 
 s32 getRaceCourseSurfaceType(s32 arg0, s32 arg1, s32 arg2) {
     s32 keyframeOffset;
