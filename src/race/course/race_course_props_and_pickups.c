@@ -144,7 +144,6 @@ struct PickupShardParticleActor {
 extern void packFixedTransformMatrix(FixedTransform *, void *);
 extern Mtx *allocFixedTransformMatrix(void *);
 extern void setPackedMatrixTranslation(Mtx *, Vec3i *);
-extern s32 isPositionNearAnyRaceViewportFocus(void *);
 extern void osWritebackDCache(void *, s32);
 extern void enqueuePositionalSoundEffect(s32, void *, s32, s32);
 extern u8 gItemEffectRollTable[][0x10];

@@ -7,6 +7,7 @@
 #include "game/engine/relocatable_heap.h"
 #include "game/math/fixed_point_math.h"
 #include "game/engine/viewport_manager.h"
+#include "game/race/camera/race_camera.h"
 
 #define FONT_GFX_CMD(pkt, cmd0, cmd1) \
 { \
@@ -83,14 +84,7 @@ typedef struct {
     /* 0x3C */ s32 unk3C;
 } GfxCommandDest;
 
-extern s32 D_801121F8;
-extern s32 D_80112200;
-extern s32 D_801122A8;
-extern s32 D_801122B0;
-extern s32 D_80112358;
-extern s32 D_80112360;
-extern s32 D_80112408;
-extern s32 D_80112410;
+extern RaceCamera D_801121E0[];
 extern s16 gMenuAsciiFontPaletteIndex;
 extern s16 gMenuViewportWidth;
 extern s16 gMenuViewportHeight;
@@ -1333,68 +1327,25 @@ void noopThreeArgs(void *arg0, void *arg1, void *arg2) {
 void noopFourArgs(void *arg0, void *arg1, void *arg2, void *arg3) {
 }
 
-// isPositionNearAnyRaceViewportFocus best match: 99.563% at nonmatchings/isPositionNearAnyRaceViewportFocus-1219509448159986855/base_1.c.
-
-#pragma GLOBAL_ASM("asm/nonmatchings/menu/renderer/menu_render_utils/isPositionNearAnyRaceViewportFocus.s")
-
-#ifdef NON_MATCHING
-extern s8 gViewportStatesViewport1Active;
-extern s8 gViewportStatesViewport2Active;
-extern s8 gViewportStatesViewport3Active;
-
-s32 isPositionNearAnyRaceViewportFocus(Vec3i *pos) {
-    Vec3i *posAlias;
-    s32 tempZ;
-    s32 *zPtr;
+s32 isPositionNearAnyRaceViewportFocus(Vec3i *position) {
+    s32 i;
     s32 diffX;
-    s32 lower;
     s32 diffZ;
 
     if (gRaceSplitscreenMode == 2) {
         return 1;
     }
 
-    if (gViewportStates[0].active != 0) {
-        diffX = D_801121F8;
-        if (((diffX - pos->x) < 0x6000000) && ((diffX - pos->x) >= (s32)0xFA000001)) {
-            zPtr = &pos->z;
-            if (D_801121F8 && D_801121F8) {
-            }
-            tempZ = D_80112200;
-            diffZ = tempZ - *zPtr;
-            if ((diffZ < 0x6000000) && (diffZ >= (s32)0xFA000001)) {
+    for (i = 0; i < 4; i++) {
+        if (gViewportStates[i].active != 0) {
+            diffX = D_801121E0[i].pos.x - position->x;
+            diffZ = D_801121E0[i].pos.z - position->z;
+            if ((diffX < 0x6000000) && (diffX >= (s32)0xFA000001) && (diffZ < 0x6000000) &&
+                (diffZ >= (s32)0xFA000001)) {
                 return 1;
             }
         }
     }
 
-    posAlias = pos;
-    if (gViewportStatesViewport1Active != 0) {
-        diffX = D_801122A8 - pos->x;
-        diffZ = D_801122B0 - posAlias->z;
-        if ((diffX < 0x6000000) && (diffX >= (s32)0xFA000001) && (diffZ < 0x6000000) &&
-            (diffZ >= (s32)0xFA000001)) {
-            return 1;
-        }
-    }
-
-    if (gViewportStatesViewport2Active != 0) {
-        diffX = D_80112358 - posAlias->x;
-        diffZ = D_80112360 - pos->z;
-        if ((diffX < 0x6000000) && (diffX >= (s32)0xFA000001) && (diffZ < 0x6000000) && (diffZ >= (s32)0xFA000001)) {
-            return 1;
-        }
-    }
-
-    if (gViewportStatesViewport3Active != 0) {
-        diffX = D_80112408 - posAlias->x;
-        diffZ = D_80112410 - posAlias->z;
-        lower = 0xFA000001;
-        if ((diffX < 0x6000000) && (diffX >= lower) && (diffZ < 0x6000000) && (diffZ >= lower)) {
-            return 1;
-        }
-    }
-
     return 0;
 }
-#endif

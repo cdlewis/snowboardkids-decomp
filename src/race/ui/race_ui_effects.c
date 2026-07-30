@@ -806,7 +806,6 @@ extern s16 gRaceLapCount;
 extern s16 gRacePrizeAmountsByCourseAndRank[][4];
 extern s16 gUiBlinkTimer;
 extern s32 gMenuFlowState;
-extern s32 isPositionNearAnyRaceViewportFocus(Vec3i *);
 extern s8 gRacePlayerCount;
 extern u16 D_800D6520[];
 extern u32 *D_800D6400[];

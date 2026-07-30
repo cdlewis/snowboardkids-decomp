@@ -210,7 +210,6 @@ extern void *allocMenuRenderScratch(s32);
 extern void packFixedTransformMatrix(void *, void *);
 extern void *allocFixedTransformMatrix(FixedTransform *);
 extern void setPackedMatrixTranslation(Mtx *, Vec3i *);
-extern s32 isPositionNearAnyRaceViewportFocus(Vec3i *);
 extern void *resolveAssetTableRelativePointer(void *, u32);
 extern void osWritebackDCache(void *, s32);
 extern s32 gMenuFlowState;
