@@ -200,7 +200,7 @@ void getRacePlayerRankingProgress(s32 arg0, s32 *arg1, s32 *arg2) {
     }
 }
 
-// updateRacePlayerRankings best match: 96.672% (nonmatchings/updateRacePlayerRankings-5176680205357669729/base_20.c)
+// updateRacePlayerRankings best match: 97.833% (nonmatchings/updateRacePlayerRankings-2781615007300307775/base_11.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race/player/race_player_movement/updateRacePlayerRankings.s")
 
 #ifdef NON_MATCHING
@@ -334,14 +334,14 @@ void updateRacePlayerRankings(void) {
 void updateRacePlayerRankings(void) {
     s8 playerIds[4];
     s32 courseProgress[4];
-    s32 *nextPtr;
-    s32 initializedPlayerId;
     s32 pathProgress[4];
-    RacePlayer *player;
     s32 lastPlayer;
     s32 next;
     s32 i;
     s32 j;
+    s32 *nextPtr;
+    s32 initializedPlayerId;
+    RacePlayer *player;
     s8 comparedPlayerId;
     s8 playerId;
     s8 otherPlayerId;
@@ -426,6 +426,8 @@ void updateRacePlayerRankings(void) {
                                         }
                                     }
                                 }
+                            }
+                            if (gRacePlayers) {
                             }
                             j++;
                         } while (j < gRacePlayerCount);
