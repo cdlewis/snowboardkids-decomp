@@ -7,10 +7,25 @@
 
 typedef u8 ControllerRumblePattern[];
 
-extern ControllerRumblePattern gRacePlayerRumblePatternSolid;
-extern ControllerRumblePattern gRacePlayerRumblePatternSlowPulse;
-extern ControllerRumblePattern gRacePlayerRumblePatternFastPulse;
-extern ControllerRumblePattern gRacePlayerRumblePatternAlternatingPulse;
+ControllerRumblePattern gRacePlayerRumblePatternSolid = {
+    1, 1, 1, 1, 1, 1, 1, 1,
+    1, 1, 1, 1, 1, 1, 1, 1,
+};
+
+ControllerRumblePattern gRacePlayerRumblePatternSlowPulse = {
+    1, 0, 0, 0, 1, 0, 0, 0,
+    1, 0, 0, 0, 1, 0, 0, 0,
+};
+
+ControllerRumblePattern gRacePlayerRumblePatternFastPulse = {
+    1, 1, 0, 0, 0, 0, 0, 0,
+};
+
+ControllerRumblePattern gRacePlayerRumblePatternAlternatingPulse = {
+    1, 0, 1, 0, 1, 0, 1, 0,
+    1, 0, 1, 0, 1, 0, 1, 0,
+    0, 0, 0, 0, 0, 0, 0, 0,
+};
 
 void updateRacePlayerRumble(RacePlayer *player) {
     s32 patternId;
