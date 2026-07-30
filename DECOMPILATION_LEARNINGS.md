@@ -503,6 +503,12 @@ and control flow already match and only register *names* differ.
   symbol in `symbol_addrs.txt` and migrate it to the following function with
   `function_owner` and `force_migration:true`. This keeps the fix reproducible
   across `make extract`; edits to generated assembly are discarded.
+- **An aligned source split can preserve orphan late-rodata padding without
+  assembly.** When a logical flow boundary is also 16-byte aligned in `.text`,
+  split the C segment there and split its `.rodata` before the next aligned
+  constant or jump table. The first object's natural section-end padding can
+  supply the required zero word while the second object's late rodata starts at
+  the original address. Confirm both object section sizes and the full checksum.
 - **Choose the C form according to the original float's section.** With IDO
   5.3, a scalar global `const f32` can land in `.data`, a global const array
   lands in early `.rodata`, and a float literal used by a function lands in
