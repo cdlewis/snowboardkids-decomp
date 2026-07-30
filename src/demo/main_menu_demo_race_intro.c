@@ -47,7 +47,7 @@ extern s32 gMenuFlowState;
 extern u8 gFramebufferSwapHold;
 extern u8 gPendingFramebufferSwapCount;
 extern void releaseMenuAssetHandles(void);
-// initMainMenuDemoRaceIntro best match: 98.129% (nonmatchings/initMainMenuDemoRaceIntro-2781615007300307775/base_18.c)
+// initMainMenuDemoRaceIntro best match: 98.216% (nonmatchings/initMainMenuDemoRaceIntro-6759517978943015823/base_19.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/demo/main_menu_demo_race_intro/initMainMenuDemoRaceIntro.s")
 
 #ifdef NON_MATCHING
@@ -86,11 +86,11 @@ void initMainMenuDemoRaceIntro(void) {
     gRacePlayers->unk12 = 1;
     gRacePlayers[1].unk12 = 2;
     gRacePlayers->characterId = temp_v1_2->player0Character;
-    gRacePlayers[2].unk12 = 3;
-    gRacePlayers[3].unk12 = 4;
     gRacePlayers[1].characterId = temp_v1_2->player1Character;
+    gRacePlayers[3].unk12 = 4;
     gRacePlayers[2].characterId = temp_v1_2->player2Character;
     gRacePlayers[3].characterId = temp_v1_2->player3Character;
+    gRacePlayers[2].unk12 = 3;
     if (gRaceSplitscreenMode == 0) {
         gRacePlayers->isActive = 1;
         gRacePlayers[1].isActive = 1;
