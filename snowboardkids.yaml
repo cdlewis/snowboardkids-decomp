@@ -333,7 +333,7 @@ segments:
       - [0xDEC70, data, race/player/race_player_model_renderer]
       - [0xDEF80, data, race/motion/race_motion]
       - [0xDF150, .data, race/player/race_player_rumble]
-      - [0xDF190, data, race/course/race_surface_cues]
+      - [0xDF190, .data, race/course/race_surface_cues]
       - [0xDF3B0, data, race/player/race_player_movement]
       - [0xDF4D0, data, race/player/race_player_update]
       - [0xDFA30, .data, math/fixed_point_math]

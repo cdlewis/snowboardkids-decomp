@@ -2,32 +2,95 @@
 #include "game/engine/asset_manager.h"
 #include "game/race/course/race_surface_cues.h"
 
-extern RaceSurfaceCue gRaceSurfaceCueSlashSequence0[];
-extern RaceSurfaceCue gRaceSurfaceCueSlashSequence1[];
-extern RaceSurfaceCue gRaceSurfaceCueSlashSequence2[];
-extern RaceSurfaceCue gRaceSurfaceCueSlashSequence3[];
-extern RaceSurfaceCue gRaceSurfaceCueNancySequence0[];
-extern RaceSurfaceCue gRaceSurfaceCueNancySequence1[];
-extern RaceSurfaceCue gRaceSurfaceCueNancySequence2[];
-extern RaceSurfaceCue gRaceSurfaceCueNancySequence3[];
-extern RaceSurfaceCue gRaceSurfaceCueNancySequence4[];
-extern RaceSurfaceCue gRaceSurfaceCueNancySequence5[];
-extern RaceSurfaceCue gRaceSurfaceCueJamSequence0[];
-extern RaceSurfaceCue gRaceSurfaceCueJamSequence1[];
-extern RaceSurfaceCue gRaceSurfaceCueJamSequence2[];
-extern RaceSurfaceCue gRaceSurfaceCueJamSequence3[];
-extern RaceSurfaceCue gRaceSurfaceCueJamSequence4[];
-extern RaceSurfaceCue gRaceSurfaceCueLindaSequence0[];
-extern RaceSurfaceCue gRaceSurfaceCueLindaSequence1[];
-extern RaceSurfaceCue gRaceSurfaceCueLindaSequence2[];
-extern RaceSurfaceCue gRaceSurfaceCueLindaSequence3[];
-extern RaceSurfaceCue gRaceSurfaceCueTommySequence0[];
-extern RaceSurfaceCue gRaceSurfaceCueTommySequence1[];
-extern RaceSurfaceCue gRaceSurfaceCueTommySequence2[];
-extern RaceSurfaceCue gRaceSurfaceCueShinobinSequence0[];
-extern RaceSurfaceCue gRaceSurfaceCueShinobinSequence1[];
-extern RaceSurfaceCue gRaceSurfaceCueShinobinSequence2[];
-extern RaceSurfaceCue gRaceSurfaceCueShinobinSequence3[];
+RaceSurfaceCue gRaceSurfaceCueSlashSequence0[] = {
+    { 4, 0 }, { 8, 0 }, { 4, 0 }, { 8, 9 },
+};
+RaceSurfaceCue gRaceSurfaceCueSlashSequence1[] = {
+    { 1, 0 }, { 2, 0 }, { 1, 0x12 },
+};
+RaceSurfaceCue gRaceSurfaceCueSlashSequence2[] = {
+    { 8, 0 }, { 4, 0x13 },
+};
+RaceSurfaceCue gRaceSurfaceCueSlashSequence3[] = {
+    { 8, 0 }, { 1, 0 }, { 4, 0x14 },
+};
+
+RaceSurfaceCue gRaceSurfaceCueNancySequence0[] = {
+    { 8, 0 }, { 4, 0 }, { 8, 0 }, { 4, 0x0A },
+};
+RaceSurfaceCue gRaceSurfaceCueNancySequence1[] = {
+    { 1, 0 }, { 2, 0 }, { 8, 0x0B },
+};
+RaceSurfaceCue gRaceSurfaceCueNancySequence2[] = {
+    { 8, 0 }, { 4, 0 }, { 1, 0 }, { 2, 0x0C },
+};
+RaceSurfaceCue gRaceSurfaceCueNancySequence3[] = {
+    { 8, 0 }, { 4, 0x15 },
+};
+RaceSurfaceCue gRaceSurfaceCueNancySequence4[] = {
+    { 9, 0 }, { 5, 0x16 },
+};
+RaceSurfaceCue gRaceSurfaceCueNancySequence5[] = {
+    { 8, 0 }, { 1, 0 }, { 4, 0 }, { 2, 0x17 },
+};
+
+RaceSurfaceCue gRaceSurfaceCueJamSequence0[] = {
+    { 8, 0 }, { 4, 0 }, { 8, 0 }, { 4, 0x0D },
+};
+RaceSurfaceCue gRaceSurfaceCueJamSequence1[] = {
+    { 2, 0 }, { 1, 0 }, { 8, 0x0E },
+};
+RaceSurfaceCue gRaceSurfaceCueJamSequence2[] = {
+    { 8, 0 }, { 4, 0x18 },
+};
+RaceSurfaceCue gRaceSurfaceCueJamSequence3[] = {
+    { 1, 0 }, { 2, 0 }, { 1, 0 }, { 2, 0x19 },
+};
+RaceSurfaceCue gRaceSurfaceCueJamSequence4[] = {
+    { 2, 0 }, { 10, 0 }, { 8, 0 }, { 9, 0 }, { 1, 0 }, { 5, 0 }, { 4, 0 }, { 6, 0 },
+    { 2, 0 }, { 10, 0 }, { 8, 0 }, { 9, 0 }, { 1, 0 }, { 5, 0 }, { 4, 0 }, { 6, 0 },
+    { 2, 0x1A },
+};
+
+RaceSurfaceCue gRaceSurfaceCueLindaSequence0[] = {
+    { 1, 0 }, { 2, 0 }, { 1, 0 }, { 2, 0 }, { 8, 0x0F },
+};
+RaceSurfaceCue gRaceSurfaceCueLindaSequence1[] = {
+    { 8, 0 }, { 4, 0x1B },
+};
+RaceSurfaceCue gRaceSurfaceCueLindaSequence2[] = {
+    { 8, 0 }, { 4, 0 }, { 1, 0 }, { 2, 0x1C },
+};
+RaceSurfaceCue gRaceSurfaceCueLindaSequence3[] = {
+    { 1, 0 }, { 2, 0 }, { 8, 0 }, { 4, 0 }, { 1, 0 }, { 2, 0x1D },
+};
+
+RaceSurfaceCue gRaceSurfaceCueTommySequence0[] = {
+    { 1, 0 }, { 5, 0 }, { 4, 0 }, { 6, 0 }, { 2, 0 }, { 10, 0 }, { 8, 0 }, { 9, 0 }, { 1, 0x10 },
+};
+RaceSurfaceCue gRaceSurfaceCueTommySequence1[] = {
+    { 4, 0 }, { 8, 0 }, { 4, 0x1E },
+};
+RaceSurfaceCue gRaceSurfaceCueTommySequence2[] = {
+    { 8, 0 }, { 4, 0 }, { 8, 0 }, { 4, 0x1F },
+};
+
+RaceSurfaceCue gRaceSurfaceCueShinobinSequence0[] = {
+    { 8, 0 }, { 1, 0 }, { 4, 0 }, { 2, 0x11 },
+};
+RaceSurfaceCue gRaceSurfaceCueShinobinSequence1[] = {
+    { 4, 0 }, { 8, 0 }, { 4, 0x20 },
+};
+RaceSurfaceCue gRaceSurfaceCueShinobinSequence2[] = {
+    { 4, 0 }, { 6, 0 }, { 2, 0 }, { 10, 0 }, { 8, 0 }, { 9, 0 }, { 1, 0 }, { 5, 0 },
+    { 4, 0 }, { 6, 0 }, { 2, 0 }, { 10, 0 }, { 8, 0 }, { 9, 0 }, { 1, 0 }, { 5, 0 },
+    { 4, 0x21 },
+};
+RaceSurfaceCue gRaceSurfaceCueShinobinSequence3[] = {
+    { 1, 0 }, { 5, 0 }, { 4, 0 }, { 6, 0 }, { 2, 0 }, { 10, 0 }, { 8, 0 }, { 9, 0 },
+    { 1, 0 }, { 5, 0 }, { 4, 0 }, { 6, 0 }, { 2, 0 }, { 10, 0 }, { 8, 0 }, { 9, 0 },
+    { 1, 0x22 }, { 0, 0 },
+};
 
 s32 advanceRaceSurfaceCueSequence(RaceSurfaceCue *cues, RacePlayer *player, s16 cueIndex) {
     RaceSurfaceCue *cue;
