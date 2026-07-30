@@ -44,6 +44,7 @@ typedef struct GameTask {
 typedef union FramebufferSwapDelay {
     s8 value;
     u8 timerValue;
+    u8 raw[4];
 } FramebufferSwapDelay;
 
 extern GameTask *gCurrentGameTask;

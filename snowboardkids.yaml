@@ -337,7 +337,7 @@ segments:
       - [0xDF3B0, data, race/player/race_player_movement]
       - [0xDF4D0, data, race/player/race_player_update]
       - [0xDFA30, .data, math/fixed_point_math]
-      - [0xDFAD0, data, engine/game_task_scheduler]
+      - [0xDFAD0, .data, engine/game_task_scheduler]
       - [0xDFB10, data, engine/system_runtime]
       - [0xDFD50, data, audio/scheduler]
       - [0xDFD60, data, libmus/player]
