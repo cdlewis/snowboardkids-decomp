@@ -6,7 +6,7 @@
 extern OSTimer __osEepromTimer;
 extern OSMesgQueue __osEepromTimerQ;
 extern OSMesg __osEepromTimerMsg;
-extern s32 __osContinitialized;
+s32 __osContinitialized = 0;
 extern s32 osRecvMesg(OSMesgQueue* mq, OSMesg* msg, s32 flag);
 
 #undef OS_USEC_TO_CYCLES
