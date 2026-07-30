@@ -12,14 +12,14 @@ Before making matching attempts, gather context for `$functionName` and make `ba
 
 MAKE THE MINIMAL SET OF CHANGES NECESSARY TO COMPILE `base.c`. This is important for getting an accurate baseline match percentage.
 
-
 Specifically, the subagent should:
 
 <subagent-instructions>
 1. Explore how $functionName is used in the codebase. Look at ../../src, ../../include as well as the unmatched code (../../asm/nonmatchings). Write a summary of what the $functionName is and how it's used to `LEARNINGS.md`.
 2. Ensure that base.c compiles successfully. Ensure that any missing types are present. base.c should only depend on "common.h". Any other missing types should be provided inline rather than via #include statements. Do not stop until base.c can be successfully built. Report status and a brief summary of your findings upon completion.
 3. Verify that the function signatures base.c relies upon have the correct number of arguments and correct types for those arguments as well as for the return type. These are frequently halucinated or otherwise decompiled incorrectly.
-4. Report back on its progress and findings
+4. Consider the purpose of the function and what it's trying to do. Does the C code reflect that purpose? Note any logical errors in the code.
+5. Report back on its progress and findings
 </subagent-instructions>
 
 ### Build Loop
