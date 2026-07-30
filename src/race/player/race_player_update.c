@@ -51,10 +51,10 @@ typedef struct {
 } PlayerTuningRow;
 
 typedef struct {
-    Vec3i pos;
-    s16 unkC;
-    s16 angle;
-} CourseStartPosition;
+    Vec3i position;
+    s16 surfaceIndex;
+    s16 facingAngle;
+} RacePlayerPreviewStart;
 
 typedef struct {
     s16 angle;
@@ -80,7 +80,7 @@ extern void (*gRacePlayerMode35CharacterHandlers[])(RacePlayer *);
 extern void (*gRacePlayerModePostUpdateHandlers[])(RacePlayer *);
 extern void (*gRacePlayerModeUpdateHandlers[])(RacePlayer *);
 extern s32 D_800DECC0[];
-extern CourseStartPosition gRacePlayerPreviewStartPositions[][4];
+extern RacePlayerPreviewStart gRacePlayerPreviewStartPositions[][4];
 extern u16 gRacePlayerVoiceBaseSoundIds;
 extern u16 gRacePlayerVoiceLeadSoundOffsets;
 extern u16 gRacePlayerVoiceSplitSoundOffsets;
@@ -149,236 +149,24 @@ void applyRacePlayerTuning(RacePlayer *arg0) {
 // initRacePlayer best match: 99.672% (nonmatchings/initRacePlayer-8280121253171829145/base_14.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race/player/race_player_update/initRacePlayer.s")
 
-#if 0
-void initRacePlayer(RacePlayer *player) {
-    Vec3i *pos;
-    Vec3i *unk34;
-    CourseStartPosition *start;
-    u32 size;
-    u32 i;
-    char *clearPtr;
-    s32 groundY;
-
-    size = (s32)(player + 1) - (s32)&player->pos;
-    i = 0;
-    if (size != 0) {
-        clearPtr = (char *)&player->pos;
-        do {
-            i++;
-            *clearPtr = 0;
-            clearPtr++;
-        } while (i < size);
-    }
-    player->unk588 = 0.0f;
-    pos = &player->pos;
-    initRaceMotionModelParts(player);
-    setRaceMotionAnimation(player, 1);
-    if (gRacePlayerCount == 4) {
-        switch (player->playerIndexU16) {
-        case 0:
-            player->posX = -0xC0000;
-            break;
-        case 1:
-            player->posX = 0xC0000;
-            break;
-        case 2:
-            player->posX = -0x240000;
-            break;
-        case 3:
-            player->posX = 0x240000;
-            break;
-        }
-    }
-    player->posZ = -0x200000;
-    unk34 = &player->unk34;
-    *unk34 = *pos;
-    player->unk60 = 0x40000;
-    player->unk280 = 0x80000;
-    player->unk284 = 0xE0000;
-    applyRacePlayerTuning(player);
-    if (player->unk4 != 0) {
-        player->unk274 = 0x10000;
-    }
-    if ((player->unk4 != 0) && (player->characterId == 5)) {
-        player->unk274 = 0xC0000;
-    }
-    if (gRaceSplitscreenMode == 2) {
-        player->actionEffectType = 1;
-    }
-    if (player->unk4 == 0) {
-        player->unk519 = 6;
-    }
-    if ((gRaceSplitscreenMode == 1) && (gRaceTypeSelection == 1)) {
-        player->shieldEffectTimer = 0xA;
-    }
-    if (gRaceCourseIndex.signedValue == 9) {
-        player->posZ = -0xBD0000;
-    }
-    player->unk68 = 0xC0000;
-    if ((player->unk4 == 0) && (player->soundDisabled == 0) && (gRaceCameraModeChangeDisabled == 0) &&
-        (player->unk278 != player->unk27C)) {
-        createCallbackTaskWithUserIdPreservingArgs(initRaceUiBoardReversePrompt, 0, 0x64, player->playerIndexU16);
-    }
-    if (gRaceDemoPlaybackEnabled == 1) {
-        if (player->playerIndexU16 == 0) {
-            player->itemEffectType = 3;
-            player->itemEffectCount = 3;
-        } else {
-            player->itemEffectType = 5;
-            player->itemEffectCount = 3;
-        }
-        player->actionEffectType = 1;
-    }
-    switch (gTrainingCourseLesson) {
-    case 1:
-        player->facingAngle = 0x57E;
-        player->posX = 0xDB870B2D;
-        player->posZ = 0xE72C26D8;
-        player->unk502 = 0x34;
-        break;
-    case 2:
-    case 3:
-    case 4:
-    case 5:
-        player->facingAngle = 0xFD5;
-        player->posX = 0xAE2B01F4;
-        player->posZ = 0xD6C4D18A;
-        player->unk502 = 0x96;
-        break;
-    case 6:
-        player->facingAngle = 0x993;
-        player->posX = 0xC183C5F9;
-        player->posZ = 0xCE51B844;
-        player->unk502 = 0xAE;
-        break;
-    case 7:
-    case 8:
-        switch (player->playerIndexU16) {
-        case 0:
-            player->facingAngle = 0xF7D;
-            player->posX = 0x8FC2BA;
-            player->posZ = 0xFC4A83D8;
-            player->unk502 = 4;
-            break;
-        case 2:
-            player->facingAngle = 0x102;
-            player->posX = 0x012FA8E0;
-            player->posZ = 0xF9850FD2;
-            player->unk502 = 8;
-            break;
-        case 3:
-            player->facingAngle = 0x8F;
-            player->posX = 0xC2C658;
-            player->posZ = 0xFA155B82;
-            player->unk502 = 7;
-            break;
-        case 1:
-            player->facingAngle = 0x8F;
-            player->posX = 0x017C2FC4;
-            player->posZ = 0xFA1B250E;
-            player->unk502 = 7;
-            break;
-        }
-        break;
-    case 9:
-        player->facingAngle = 0x235;
-        player->posX = 0xFEAFF7CD;
-        player->posZ = 0xF62C899D;
-        player->unk502 = 0xE;
-        break;
-    }
-    switch (gMainMenuModeSelection) {
-    case 1:
-        player->itemEffectType = 1;
-        player->itemEffectCount = 3;
-        break;
-    case 2:
-        player->itemEffectType = 2;
-        player->itemEffectCount = 3;
-        break;
-    case 3:
-        player->itemEffectType = 3;
-        player->itemEffectCount = 3;
-        break;
-    case 4:
-        player->itemEffectType = 4;
-        player->itemEffectCount = 3;
-        break;
-    case 5:
-        player->itemEffectType = 5;
-        player->itemEffectCount = 3;
-        break;
-    case 6:
-        player->actionEffectType = 1;
-        break;
-    case 7:
-        player->actionEffectType = 2;
-        break;
-    case 8:
-        player->actionEffectType = 3;
-        break;
-    case 9:
-        player->actionEffectType = 4;
-        break;
-    case 10:
-        player->actionEffectType = 5;
-        if (player->playerIndexU16 != 0) {
-            player->unk568 = 0x1388;
-        }
-        break;
-    case 11:
-        player->actionEffectType = 6;
-        if (player->playerIndexU16 == 2) {
-            player->actionEffectType = 3;
-        }
-        player->itemEffectType = 1;
-        player->itemEffectCount = 3;
-        break;
-    }
-    groundY = gMainMenuModeSelection;
-    if (gMainMenuModeSelection != 0) {
-        start = &gRacePlayerPreviewStartPositions[gMainMenuModeSelection - 1][player->playerIndexU16];
-        *pos = gRacePlayerPreviewStartPositions[groundY - 1][player->playerIndexU16].pos;
-        player->facingAngle =
-            gRacePlayerPreviewStartPositions[*(volatile u8 *)&gMainMenuModeSelection - 1][player->playerIndexU16]
-                .angle;
-        groundY = gMainMenuModeSelection;
-        player->unk502 = gRacePlayerPreviewStartPositions[groundY - 1][player->playerIndexU16].unkC;
-    }
-    player->unk502 = findRaceCourseSurfaceFromHint(player->unk502, player->posX, player->posZ);
-    groundY = getRaceCourseSurfaceHeight(player->unk502, player->posX, player->posZ);
-    player->posY = groundY;
-    if (gRaceDemoPlaybackEnabled == 0) {
-        player->posY = groundY + 0x40000;
-    }
-    *unk34 = *pos;
-    player->randomIndex = randomNextMain();
-    setRaceCameraMode(player->playerIndexU16, 1);
-    if (gRaceDemoPlaybackEnabled == 0) {
-        if (gRaceSplitscreenMode == 0) {
-            createCallbackTaskWithUserId((CallbackTaskCallback)waitForRaceStartPlayerEffect, 0, 1, player->playerIndexU16);
-        }
-    }
-}
-#endif
-
 #ifdef NON_MATCHING
 void initRacePlayer(RacePlayer *player) {
     Vec3i *position;
     Vec3i *previousPosition;
-    u8 *data;
-    u32 dataSize;
-    u32 i;
+    u8 *clearCursor;
+    u32 clearSize;
+    u32 clearOffset;
+    s32 groundY;
 
-    dataSize = (u8 *) (player + 1) - (u8 *) &player->pos;
-    i = 0;
-    if (dataSize != 0) {
-        data = (u8 *) &player->pos;
+    clearSize = (u8 *) (player + 1) - (u8 *) &player->pos;
+    clearOffset = 0;
+    if (clearSize != 0) {
+        clearCursor = (u8 *) &player->pos;
         do {
-            i++;
-            *data = 0;
-            data++;
-        } while (i < dataSize);
+            clearOffset++;
+            *clearCursor = 0;
+            clearCursor++;
+        } while (clearOffset < clearSize);
     }
 
     player->unk588 = 0.0f;
@@ -404,23 +192,23 @@ void initRacePlayer(RacePlayer *player) {
     }
     player->pos.z = -0x200000;
 
-    previousPosition = &player->unk34;
+    previousPosition = &player->previousPosition;
     *previousPosition = *position;
     player->unk60 = 0x40000;
-    player->unk280 = 0x80000;
-    player->unk284 = 0xE0000;
+    player->collisionRadius = 0x80000;
+    player->collisionHeight = 0xE0000;
 
     applyRacePlayerTuning(player);
-    if (player->unk4 != 0) {
+    if (player->isCpu != 0) {
         player->unk274 = 0x10000;
     }
-    if ((player->unk4 != 0) && (player->characterId == 5)) {
+    if ((player->isCpu != 0) && (player->characterId == 5)) {
         player->unk274 = 0xC0000;
     }
     if (gRaceSplitscreenMode == 2) {
         player->actionEffectType = 1;
     }
-    if (player->unk4 == 0) {
+    if (player->isCpu == 0) {
         player->unk519 = 6;
     }
     if ((gRaceSplitscreenMode == 1) && (gRaceTypeSelection == 1)) {
@@ -429,10 +217,10 @@ void initRacePlayer(RacePlayer *player) {
     if (gRaceCourseIndex.signedValue == 9) {
         player->pos.z = -0xBD0000;
     }
-    player->unk68 = 0xC0000;
+    player->collisionCenterOffset = 0xC0000;
 
-    if ((player->unk4 == 0) && (player->soundDisabled == 0) &&
-            (gRaceCameraModeChangeDisabled == 0) && (player->unk278 != player->unk27C)) {
+    if ((player->isCpu == 0) && (player->soundDisabled == 0) && (gRaceCameraModeChangeDisabled == 0) &&
+        (player->unk278 != player->unk27C)) {
         createCallbackTaskWithUserIdPreservingArgs(
             initRaceUiBoardReversePrompt, 0, 100, player->playerIndexU16);
     }
@@ -453,7 +241,7 @@ void initRacePlayer(RacePlayer *player) {
         player->facingAngle = 0x57E;
         player->pos.x = -0x2478F4D3;
         player->pos.z = -0x18D3D928;
-        player->unk502 = 0x34;
+        player->surfaceIndex = 0x34;
         break;
     case 2:
     case 3:
@@ -462,13 +250,13 @@ void initRacePlayer(RacePlayer *player) {
         player->facingAngle = 0xFD5;
         player->pos.x = 0xAE2B01F4;
         player->pos.z = -0x293B2E76;
-        player->unk502 = 0x96;
+        player->surfaceIndex = 0x96;
         break;
     case 6:
         player->facingAngle = 0x993;
         player->pos.x = -0x3E7C3A07;
         player->pos.z = -0x31AE47BC;
-        player->unk502 = 0xAE;
+        player->surfaceIndex = 0xAE;
         break;
     case 7:
     case 8:
@@ -477,25 +265,25 @@ void initRacePlayer(RacePlayer *player) {
             player->facingAngle = 0xF7D;
             player->pos.x = 0x8FC2BA;
             player->pos.z = -0x03B57C28;
-            player->unk502 = 4;
+            player->surfaceIndex = 4;
             break;
         case 2:
             player->facingAngle = 0x102;
             player->pos.x = 0x012FA8E0;
             player->pos.z = -0x067AF02E;
-            player->unk502 = 8;
+            player->surfaceIndex = 8;
             break;
         case 3:
             player->facingAngle = 0x8F;
             player->pos.x = 0xC2C658;
             player->pos.z = -0x05EAA47E;
-            player->unk502 = 7;
+            player->surfaceIndex = 7;
             break;
         case 1:
             player->facingAngle = 0x8F;
             player->pos.x = 0x017C2FC4;
             player->pos.z = -0x05E4DAF2;
-            player->unk502 = 7;
+            player->surfaceIndex = 7;
             break;
         }
         break;
@@ -503,7 +291,7 @@ void initRacePlayer(RacePlayer *player) {
         player->facingAngle = 0x235;
         player->pos.x = -0x01500833;
         player->pos.z = -0x09D37663;
-        player->unk502 = 0xE;
+        player->surfaceIndex = 0xE;
         break;
     }
 
@@ -559,21 +347,21 @@ void initRacePlayer(RacePlayer *player) {
     if (gMainMenuModeSelection != 0) {
         *position =
             gRacePlayerPreviewStartPositions[gMainMenuModeSelection - 1]
-                                            [player->playerIndexU16 & 0xFFFFU].pos;
+                                            [player->playerIndexU16 & 0xFFFFU].position;
         player->facingAngle =
             gRacePlayerPreviewStartPositions[(gMainMenuModeSelection & 0xFFFF) - 1]
-                                            [player->playerIndexU16].angle;
-        player->unk502 =
+                                            [player->playerIndexU16].facingAngle;
+        player->surfaceIndex =
             gRacePlayerPreviewStartPositions[(gMainMenuModeSelection & 0xFFFF) - 1]
-                                            [player->playerIndexU16].unkC;
+                                            [player->playerIndexU16].surfaceIndex;
     }
 
-    player->unk502 =
-        findRaceCourseSurfaceFromHint(player->unk502, player->pos.x, player->pos.z);
-    dataSize = getRaceCourseSurfaceHeight(player->unk502, player->pos.x, player->pos.z);
-    player->pos.y = dataSize;
+    player->surfaceIndex =
+        findRaceCourseSurfaceFromHint(player->surfaceIndex, player->pos.x, player->pos.z);
+    groundY = getRaceCourseSurfaceHeight(player->surfaceIndex, player->pos.x, player->pos.z);
+    player->pos.y = groundY;
     if ((gRaceDemoPlaybackEnabled & 0xFF) == 0) {
-        player->pos.y = dataSize + 0x40000;
+        player->pos.y = groundY + 0x40000;
     }
 
     *previousPosition = *position;
