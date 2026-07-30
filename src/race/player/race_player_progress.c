@@ -18,7 +18,7 @@ extern u8 gSinglePlayerRankDisplayPatternThird[];
 extern u8 gSinglePlayerRankDisplayPatternFourth[];
 extern s16 gFrameCounter;
 
-// updateRacePlayerRankDisplay best match: 73.547% (nonmatchings/updateRacePlayerRankDisplay-8280121253171829145/base_46.c)
+// updateRacePlayerRankDisplay best match: 73.923% (nonmatchings/updateRacePlayerRankDisplay-8742002951815950717/base_7.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race/player/race_player_progress/updateRacePlayerRankDisplay.s")
 
 #ifdef NON_MATCHING
@@ -51,6 +51,7 @@ extern s16 gFrameCounter;
     }
 
 void updateRacePlayerRankDisplay(void) {
+    RacePlayer *player;
     s32 dx;
     s32 dz;
     s32 i;
@@ -59,7 +60,6 @@ void updateRacePlayerRankDisplay(void) {
     s32 j;
     u8 mode;
     s8 rank;
-    RacePlayer *player;
 
     if (gRaceSplitscreenMode != 0) {
         return;
