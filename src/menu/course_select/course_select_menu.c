@@ -184,26 +184,27 @@ void initCourseSelectMenu(void) {
     gCourseSelectStatus.unk2E = 0;
 }
 
-// updateCourseSelectModeMenu best match: 98.620% (nonmatchings/updateCourseSelectModeMenu-2781615007300307775/base_15.c)
+// updateCourseSelectModeMenu best match: 99.094% (nonmatchings/updateCourseSelectModeMenu-6759517978943015823/base_10.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/course_select/course_select_menu/updateCourseSelectModeMenu.s")
 
 #ifdef NON_MATCHING
 void updateCourseSelectModeMenu(void) {
-    s32 input;
     s32 pressed;
-    s32 leftPressed;
-    s32 held;
+    s32 input;
+    s32 upInput;
+    s32 pressedInput;
     s32 timer;
     s32 selection;
     s32 zero;
     s32 oldSelection;
-    s32 tempSelection;
-    s32 timerValue;
-    s32 repeatNext;
+    register s32 nextSelection;
+    register s32 timerValue;
+    register s32 nextTimer;
     s32 timerAlias1;
     s32 timerAlias2;
     s32 timerAlias3;
-    u32 timerOriginal;
+    s32 downInput;
+    u32 pressedAlias;
     s32 *inputPtr;
 
     zero = 0;
@@ -224,47 +225,58 @@ void updateCourseSelectModeMenu(void) {
                 selection = gCourseSelectModeSelection;
                 oldSelection = selection;
                 pressed = (timerValue = gPlayerInputHeld[0]);
-                leftPressed = pressed & (STICK_UP | U_JPAD);
-                if ((leftPressed == 0) && !(pressed & (STICK_DOWN | D_JPAD))) {
+                upInput = pressed & (STICK_UP | U_JPAD);
+                downInput = pressed & (STICK_DOWN | D_JPAD);
+                if ((upInput == 0) && (downInput == 0)) {
                     gMenuInputRepeatTimers[0] = 0;
                 }
-                held = (timerOriginal = gPlayerInputPressed[0]);
-                if ((held & (STICK_UP | U_JPAD)) ||
-                    ((leftPressed != 0) && ((s32) (u16) gMenuInputRepeatTimers[0] >= 0xB) &&
+                pressedInput = (pressedAlias = gPlayerInputPressed[0]);
+                downInput = pressedInput & (STICK_DOWN | D_JPAD);
+                if ((pressedInput & (STICK_UP | U_JPAD)) ||
+                    ((upInput != 0) && ((s32) (u16) gMenuInputRepeatTimers[0] >= 0xB) &&
                      (((s32) (u16) gMenuInputRepeatTimers[0] % 3) == 0))) {
                     timer = (u16) gMenuInputRepeatTimers[0];
                     timer = (u16) gMenuInputRepeatTimers[0];
-                    tempSelection = selection - 1;
-                    timerValue = timer + 1;
+                    nextTimer = timer + (1 & 0xFFFFFFFFFFFFFFFFu);
+                    nextSelection = selection - 1;
                     if (timer == 0) {
-                        gMenuInputRepeatTimers[0] = timerValue;
-                        timer = (u16) timerValue;
+                        gMenuInputRepeatTimers[0] = nextTimer;
+                        timer = (u16) nextTimer;
                     }
                     if (selection > 0) {
-                        gCourseSelectModeSelection = tempSelection;
-                        selection = (u8) tempSelection;
+                        gCourseSelectModeSelection = nextSelection;
+                        selection = (u8) nextSelection;
                     }
                 } else {
                     timer = (u16) gMenuInputRepeatTimers[0];
-                    if ((held & (STICK_DOWN | D_JPAD)) ||
+                    nextTimer = ((u32) timer) ^ 0;
+                    if ((downInput != 0) ||
                         ((pressed & (STICK_DOWN | D_JPAD)) && (timer >= 0xB) &&
-                         ((timer % 3) == 0))) {
+                         ((nextTimer % 3) == 0))) {
                         if (timer == 0) {
-                            timerValue = timer + 1;
-                            gMenuInputRepeatTimers[0] = timerValue;
-                            timer = (u16) timerValue;
+                            nextTimer = timer + 1;
+                            gMenuInputRepeatTimers[0] = nextTimer;
+                            timer = (u16) nextTimer;
                         }
-                        if (selection < 2) {
-                            tempSelection = selection + 1;
-                            gCourseSelectModeSelection = tempSelection;
-                            selection = (u8) tempSelection;
+                        nextSelection = selection;
+                        if (nextSelection < 2) {
+                            nextSelection = nextSelection + 1;
+                            gCourseSelectModeSelection = nextSelection;
+                            selection =
+                                (u8) (((((nextSelection & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) &
+                                      0xFFFF);
                         }
                     }
                 }
                 if (timer != 0) {
-                    repeatNext = timer + 1;
-                    gMenuInputRepeatTimers[0] = repeatNext;
-                    if ((u16) repeatNext == 0xFFFF) {
+                    nextTimer =
+                        timer + ((((((1 & 0xFFFFFFFFFFFFFFFFu) & 0xFFFFFFFFFFFFFFFFu) &
+                                     0xFFFFFFFFFFFFFFFFu) &
+                                    0xFFFFFFFFFFFFFFFFu) &
+                                   0xFFFFFFFFFFFFFFFFu) &
+                                  0xFFFFFFFFFFFFFFFFu);
+                    gMenuInputRepeatTimers[0] = nextTimer;
+                    if ((((u16) nextTimer) ^ 0) == 0xFFFF) {
                         gMenuInputRepeatTimers[0] = 0xC;
                     }
                 }
