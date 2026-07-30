@@ -366,7 +366,8 @@ extern void drawMenuSpriteWithAlphaWideArgs(s32 x, s32 y, void *texture, s32 til
                                             s32 palette, s32 alpha, u32 flip);
 #endif
 
-// drawMenuSpriteWithAlphaClipped best match: 91.212% (nonmatchings/drawMenuSpriteWithAlphaClipped-1219509448159986855/base_35.c)
+// drawMenuSpriteWithAlphaClipped best match: 91.323%
+// (nonmatchings/drawMenuSpriteWithAlphaClipped-633030068925474062/base_37.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/renderer/menu_renderer/drawMenuSpriteWithAlphaClipped.s")
 
 #ifdef NON_MATCHING
@@ -379,19 +380,19 @@ void drawMenuSpriteWithAlphaClipped(s16 x, s16 y, FontAsset *asset, u16 tileInde
     s32 top;
     s32 right;
     s32 bottom;
+    s32 texS;
+    s32 texT;
     s32 minX;
     s32 minY;
     s32 maxX;
-    s32 maxY;
-    s32 texS;
     s16 flipS;
     s16 flipT;
-    s32 texT;
+    s32 maxY;
     s32 texWidth;
     s32 texHeight;
     s32 scaleXValue;
     s32 scaleYValue;
-    s32 color;
+    u16 palettePadding;
     u16 palette;
 
     paletteBase = (asset->header.entryCount * sizeof(FontTexture)) + (u8 *)asset + 8;
@@ -423,6 +424,7 @@ void drawMenuSpriteWithAlphaClipped(s16 x, s16 y, FontAsset *asset, u16 tileInde
         texS = 0;
         texT = 0;
         texT = 0;
+        texS += texture->imageOffset * 0;
         if (flipS == -1) {
             texS = (texWidth - 1) << 5;
         }
@@ -468,11 +470,12 @@ void drawMenuSpriteWithAlphaClipped(s16 x, s16 y, FontAsset *asset, u16 tileInde
             if (alpha != 0x100) {
                 gDPPipeSync(gRegionAllocPtr++);
                 FONT_GFX_CMD(gRegionAllocPtr++, 0xFC119623, 0xFF2FFFFF);
-                color = alpha & 0xFF;
-                FONT_GFX_CMD(gRegionAllocPtr++, 0xFA000000, (color << 0x18) | (color << 0x10) | (color << 8) | 0xFF);
+                FONT_GFX_CMD(gRegionAllocPtr++, 0xFA000000,
+                             ((alpha & 0xFF) << 0x18) | ((alpha & 0xFF) << 0x10) |
+                                 ((alpha & 0xFF) << 8) | 0xFF);
             }
 
-            gDPLoadTextureTile_4b(gRegionAllocPtr++, (u8 *)asset + texture->imageOffset, G_IM_FMT_CI, texture->width,
+            gDPLoadTextureTile_4b(gRegionAllocPtr++, texture->imageOffset + (u8 *)asset, G_IM_FMT_CI, texture->width,
                                   texture->height, 0, 0, texture->width, texture->height, 0, G_TX_CLAMP, G_TX_CLAMP, 0,
                                   0, 0, 0);
             gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, paletteBase + (palette * 0x20));
