@@ -84,7 +84,10 @@ typedef struct RacePlayer {
         };
     };
     /* 0x028 */ Vec3i unk28;
-    /* 0x034 */ Vec3i unk34;
+    /* 0x034 */ union {
+        Vec3i unk34;
+        Vec3i previousPosition;
+    };
     /* 0x040 */ union {
         Vec3i unk40;
         Vec3i velocity;
@@ -99,7 +102,10 @@ typedef struct RacePlayer {
     /* 0x05C */ s32 unk5C;
     /* 0x060 */ s32 unk60;
     /* 0x064 */ s32 unk64;
-    /* 0x068 */ s32 unk68;
+    /* 0x068 */ union {
+        s32 unk68;
+        s32 collisionCenterOffset;
+    };
     /* 0x06C */ s16 unk6C;
     /* 0x06E */ s16 unk6E;
     /* 0x070 */ s16 unk70;
@@ -158,8 +164,14 @@ typedef struct RacePlayer {
     /* 0x274 */ s32 unk274;
     /* 0x278 */ s32 unk278;
     /* 0x27C */ s32 unk27C;
-    /* 0x280 */ s32 unk280;
-    /* 0x284 */ s32 unk284;
+    /* 0x280 */ union {
+        s32 unk280;
+        s32 collisionRadius;
+    };
+    /* 0x284 */ union {
+        s32 unk284;
+        s32 collisionHeight;
+    };
     /* 0x288 */ s16 unk288;
     /* 0x28A */ s16 unk28A;
     /* 0x28C */ s16 unk28C;
@@ -251,6 +263,7 @@ typedef struct RacePlayer {
     /* 0x502 */ union {
         s16 unk502;
         s16 surfaceAngle;
+        s16 surfaceIndex;
     };
     /* 0x504 */ s32 unk504;
     /* 0x508 */ union {
