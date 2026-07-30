@@ -59,13 +59,44 @@ struct RaceItemProjectileActor {
     /* 0x58 */ s8 matrixDirty2;
 };
 
-extern Gfx gRaceItemProjectileQuadVertices[];
-extern Gfx gFallingActionProjectileQuadVertices[];
 extern Gfx gEffectRenderModeSetupDl[];
 extern Gfx gEffectRenderModeCleanupDl[];
 extern Gfx *gRegionAllocPtr;
 extern u8 gRaceUpdatePaused;
 extern s16 gUiBlinkTimer;
+
+Vtx gRaceItemProjectileQuadVertices[4] = {
+    {{{-6,  6, 0}, 0, {-16, -16}, {0xFF, 0xFF, 0xFF, 0xFF}}},
+    {{{ 6,  6, 0}, 0, {496, -16}, {0xFF, 0xFF, 0xFF, 0xFF}}},
+    {{{ 6, -6, 0}, 0, {496, 496}, {0xFF, 0xFF, 0xFF, 0xFF}}},
+    {{{-6, -6, 0}, 0, {-16, 496}, {0xFF, 0xFF, 0xFF, 0xFF}}},
+};
+
+Vtx gFallingActionProjectileQuadVertices[4] = {
+    {{{-3,  3, 0}, 0, {-16, -16}, {0xFF, 0xFF, 0xFF, 0xFF}}},
+    {{{ 3,  3, 0}, 0, {496, -16}, {0xFF, 0xFF, 0xFF, 0xFF}}},
+    {{{ 3, -3, 0}, 0, {496, 496}, {0xFF, 0xFF, 0xFF, 0xFF}}},
+    {{{-3, -3, 0}, 0, {-16, 496}, {0xFF, 0xFF, 0xFF, 0xFF}}},
+};
+
+u8 D_800D4660[4][28] = {
+    {
+        0, 3, 1, 3, 0, 0, 0, 1, 3, 3, 1, 4, 1, 4,
+        3, 4, 4, 3, 3, 3, 3, 3, 3, 3, 3, 0, 0, 0,
+    },
+    {
+        0, 3, 1, 3, 0, 0, 0, 1, 3, 3, 1, 4, 1, 4,
+        3, 4, 4, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0,
+    },
+    {
+        2, 3, 1, 3, 0, 0, 2, 1, 3, 3, 1, 4, 1, 4,
+        3, 4, 4, 3, 3, 3, 3, 3, 3, 3, 3, 0, 0, 0,
+    },
+    {
+        3, 3, 1, 3, 0, 0, 3, 1, 3, 3, 1, 4, 1, 4,
+        3, 4, 4, 3, 3, 3, 3, 3, 3, 3, 3, 0, 0, 0,
+    },
+};
 
 Mtx *allocFixedTransformMatrix(FixedTransform *);
 void spawnRaceUiFadingImpact(s32, s32, s32, u16);
