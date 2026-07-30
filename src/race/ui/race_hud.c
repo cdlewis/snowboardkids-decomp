@@ -18,17 +18,6 @@
 #define RACE_HUD_POPUP_FONT_HANDLE (gAssetHandles[0x1F])
 
 typedef struct {
-    /* 0x00 */ char pad[0x14];
-} CourseDataStride;
-
-typedef struct {
-    /* 0x00 */ char pad[0x4E];
-    /* 0x4E */ s8 bestLapMinutes;
-    /* 0x4F */ s8 bestLapSeconds;
-    /* 0x50 */ s16 bestLapFraction;
-} CourseBestLapView;
-
-typedef struct {
     /* 0x00 */ s16 finishLinePathIndex;
     /* 0x02 */ u8 pad2[0x48 - 0x02];
 } RaceFinishLinePathIndexEntry;
@@ -473,15 +462,16 @@ const char gRaceHudTimeTrialLapTimeLabel[] = "Lap Time";
 const char gRaceHudTimeTrialBestLapLabel[] = "Best Lap";
 const char gRaceHudTimeTrialBestLapFormat[] = "%2.2d'%2.2d\"%2.2d";
 
-void drawTimeTrialLabels(void *arg0) {
-    char sp28[0x20];
-    CourseBestLapView *course;
+void drawTimeTrialLabels(void *unused) {
+    char bestLapText[0x20];
 
     drawMenuAsciiTextDefaultScale(0x48, 0x47, (char *)gRaceHudTimeTrialLapTimeLabel, 5);
     drawMenuAsciiTextDefaultScale(0x48, -0x61, (char *)gRaceHudTimeTrialBestLapLabel, 7);
-    course = (CourseBestLapView *)&((CourseDataStride *)&gGameSaveDataBuffer)[gRaceCourseIndex.signedValue];
-    sprintf(sp28, gRaceHudTimeTrialBestLapFormat, course->bestLapMinutes, course->bestLapSeconds, course->bestLapFraction >> 8);
-    drawMenuAsciiTextDefaultScale(0x48, -0x58, sp28, 7);
+    sprintf(bestLapText, gRaceHudTimeTrialBestLapFormat,
+            gGameSaveDataBuffer.timeTrialRecords[gRaceCourseIndex.signedValue][0].minutes,
+            gGameSaveDataBuffer.timeTrialRecords[gRaceCourseIndex.signedValue][0].seconds,
+            gGameSaveDataBuffer.timeTrialRecords[gRaceCourseIndex.signedValue][0].fraction >> 8);
+    drawMenuAsciiTextDefaultScale(0x48, -0x58, bestLapText, 7);
 }
 
 const char gRaceHudSinglePlayerTimerFormat[] = "%5ld";
