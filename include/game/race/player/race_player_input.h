@@ -71,7 +71,7 @@ typedef struct RacePlayer {
     /* 0x014 */ s8 soundDisabled;
     /* 0x015 */ s8 unk15;
     /* 0x016 */ s8 replayInputSource;
-    /* 0x017 */ u8 unk17;
+    /* 0x017 */ s8 unk17;
     /* 0x018 */ s16 unk18;
     /* 0x01A */ u8 actionTriggerChance;
     /* 0x01B */ u8 itemTriggerChance;
