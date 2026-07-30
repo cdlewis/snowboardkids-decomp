@@ -489,7 +489,7 @@ void openRaceStartTransitionFlow(void) {
     suspendGameTask(2);
 }
 
-// initRaceSceneFlow best match: 91.720% (nonmatchings/initRaceSceneFlow-8498672362023432715/base_47.c)
+// initRaceSceneFlow best match: 95.527% (nonmatchings/initRaceSceneFlow-2781615007300307775/base_23.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race/flow/race_flow/initRaceSceneFlow.s")
 
 #ifdef NON_MATCHING
@@ -575,8 +575,7 @@ void initRaceSceneFlow(void) {
         courseCharacters = D_800DC58C[courseIndex];
         courseCharacterIds = D_800DC4C4[courseIndex];
         do {
-            duplicate = 0;
-            while (duplicate == 0) {
+            for (;;) {
                 duplicate = 1;
                 player->characterId = *courseCharacterIds++;
                 if (playerCount > 0) {
@@ -588,6 +587,9 @@ void initRaceSceneFlow(void) {
                         }
                         other++;
                     } while (other < end);
+                }
+                if (duplicate != 0) {
+                    break;
                 }
             }
             player->characterVariant = courseCharacters[player->characterId].stickX;
@@ -615,13 +617,11 @@ void initRaceSceneFlow(void) {
         initCallbackTaskScheduler(2);
     }
 
-    player = gRacePlayers;
-    do {
-        player->unk15 = 0;
-        player->replayInputSource = 0;
-        player->soundDisabled = 0;
-        player++;
-    } while (player < gRacePlayersEnd);
+    for (i = 0; i < RACE_PLAYER_COUNT; i++) {
+        gRacePlayers[i].unk15 = 0;
+        gRacePlayers[i].replayInputSource = 0;
+        gRacePlayers[i].soundDisabled = 0;
+    }
 
     if (gRaceSplitscreenMode == 2) {
         clearRaceReplayCourseGrid();
