@@ -1334,7 +1334,7 @@ void renderCourseTriggerVolume(RaceCourseTriggerEffect *arg0) {
     }
 }
 
-// collidePlayerWithCourseTriggerVolume best match: 95.774% at nonmatchings/collidePlayerWithCourseTriggerVolume-8498672362023432715/base_12.c.
+// collidePlayerWithCourseTriggerVolume best match: 96.057% at nonmatchings/collidePlayerWithCourseTriggerVolume-2781615007300307775/base_20.c.
 #pragma GLOBAL_ASM("asm/nonmatchings/race/course/race_course_effects/collidePlayerWithCourseTriggerVolume.s")
 
 #ifdef NON_MATCHING
@@ -1359,8 +1359,8 @@ void collidePlayerWithCourseTriggerVolume(RacePlayer *arg0, RaceCourseTriggerEff
     player = arg0;
 
     if ((gRaceUpdatePaused == 0) && (player->isActive != 0)) {
-        entry = &gCourseTriggerEntries[trigger->entryIndex];
-        makeFixedRotationYX(matrix, -entry->pitch, -entry->yaw);
+        makeFixedRotationYX(matrix, -gCourseTriggerEntries[trigger->entryIndex].pitch,
+                            -gCourseTriggerEntries[trigger->entryIndex].yaw);
 
         if ((player->stateFlags & 0x2000) == 0) {
             delta.x = player->pos.x - gCourseTriggerEntries[trigger->entryIndex].pos.x;
@@ -1401,7 +1401,7 @@ void collidePlayerWithCourseTriggerVolume(RacePlayer *arg0, RaceCourseTriggerEff
         transformVec3iByFixedMatrix(matrix, &delta, &transformed);
 
         if (transformed.y <= 0) {
-            if (transformed.y >= -0x160000) {
+            if ((transformed.y >= -0x160000) != 0) {
                 if (transformed.z >= -trigger->scaleZ) {
                     if (trigger->scaleZ >= transformed.z) {
                         scaleX = trigger->scaleX;
@@ -1412,6 +1412,8 @@ void collidePlayerWithCourseTriggerVolume(RacePlayer *arg0, RaceCourseTriggerEff
                             if (positiveLimit >= transformed.x) {
                                 push = 0;
                                 negativeLimit = -limit;
+                                if ((gRaceUpdatePaused && gRaceUpdatePaused) && gRaceUpdatePaused) {
+                                }
                                 if (transformed.x >= 0) {
                                     if (transformed.x < positiveLimit) {
                                         push = (limit - transformed.x) + 0x30000;
@@ -1421,7 +1423,7 @@ void collidePlayerWithCourseTriggerVolume(RacePlayer *arg0, RaceCourseTriggerEff
                                 }
 
                                 if (push != 0) {
-                                    savedPush = push;
+                                    savedPush = push & 0xFFFFFFFFFFFFFFFFu;
                                     makeFixedRotationY(matrix, gCourseTriggerEntries[trigger->entryIndex].yaw);
                                     delta.y = 0;
                                     delta.z = 0;
