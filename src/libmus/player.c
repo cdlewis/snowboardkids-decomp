@@ -1,6 +1,12 @@
 #include "game/audio/audio_engine_internal.h"
 
+#define FIRST_DRUM_NOTE 12
 #define U8_TO_FLOAT(c) ((c) & 128) ? -(256 - (c)) : (c)
+
+typedef u8 *(*PlayerCommandHandler)(PlayerCommandState *, u8 *);
+
+extern PlayerCommandHandler jumptable[];
+extern u8 mus_default_velocities[];
 
 #include "player_commands.c"
 
@@ -81,16 +87,6 @@ ALMicroTime __MusIntMain(void *arg0) {
     return 1000000 / mus_vsyncs_per_second;
 }
 
-// __MusIntGetNewNote best match: 99.962% (nonmatchings/__MusIntGetNewNote/base_7.c)
-
-#pragma GLOBAL_ASM("asm/nonmatchings/libmus/player/__MusIntGetNewNote.s")
-
-#ifdef NON_MATCHING
-typedef u8 *(*PlayerCommandHandler)(PlayerCommandState *, u8 *);
-
-extern PlayerCommandHandler jumptable[];
-extern u8 mus_default_velocities[];
-
 void __MusIntGetNewNote(PlayerCommandState *cp, s32 x) {
     u8 *seq;
     u8 *durationPos;
@@ -99,7 +95,7 @@ void __MusIntGetNewNote(PlayerCommandState *cp, s32 x) {
     u32 durationValue;
     u16 baseDuration;
     int zero;
-    u32 duration;
+    u32 value;
     int instrumentIndex;
     s32 soundIndex;
 
@@ -147,31 +143,31 @@ void __MusIntGetNewNote(PlayerCommandState *cp, s32 x) {
                 cp->length_float = (f32)cmd;
             } else {
                 durationPos = cp->pdata;
-                duration = (((cmd & 0x7F) << 5) << 1) << 2;
-                cp->length = duration;
-                duration += *durationPos;
-                cp->length = duration;
-                cp->length_float = (duration & 0xFFFF) & 0xFFFFu;
+                cp->length = (cmd & 0x7F) << 8;
+                cp->length += *durationPos;
+                cp->length_float = cp->length;
                 cp->pdata = durationPos + 1;
             }
         }
 
-        duration = cp->note_end_frame;
+        value = cp->note_end_frame;
         cp->note_end_frame += cp->length << 8;
         cp->count = 0;
         cp->wobble_current = 0;
-        cp->note_start_frame = duration;
+        cp->note_start_frame = value;
         cp->count_float = 0.f;
         cp->wobble_count = cp->wobble_off_speed;
 
-        if (cp->note != 0) {
+        value = cp->note;
+        if (value != 0) {
             if (cp->pdrums != NULL) {
-                DrumEntry *drum = &cp->pdrums[cp->note - 12];
+                // Fdrums stores a table pointer biased to FIRST_DRUM_NOTE.
+                DrumEntry *drum = &cp->pdrums[value];
 
-                cp->wave = drum->wave;
-                cp->pan = drum->pan / 2;
-                Fdefa(cp, cp->song_addr->commands + (drum->envelope * 7));
-                cp->note = drum->pitch;
+                cp->wave = drum[-FIRST_DRUM_NOTE].wave;
+                cp->pan = drum[-FIRST_DRUM_NOTE].pan / 2;
+                Fdefa(cp, cp->song_addr->commands + (drum[-FIRST_DRUM_NOTE].envelope * 7));
+                cp->note = (&cp->pdrums[cp->note])[-FIRST_DRUM_NOTE].pitch;
             }
 
             if (gSoundBankEntryCount <= (instrumentIndex = cp->wave)) {
@@ -215,7 +211,6 @@ void __MusIntGetNewNote(PlayerCommandState *cp, s32 x) {
         alSynStopVoice(&gAudioSynthesizer, &mus_voices[x]);
     }
 }
-#endif
 
 void __MusIntSetVolumeAndPan(PlayerCommandState *arg0, s32 arg1) {
     u32 volume;
