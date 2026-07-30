@@ -40,9 +40,13 @@ void drawMainMenuSceneModel(MainMenuSceneModel *arg0) {
         model = arg0;
         gDPPipeSync(gRegionAllocPtr++);
         gSPSegment(gRegionAllocPtr++, 0x02,
-                   getRelocatableHeapBlockBase(ASSET_HANDLE(0x33 + (u16)model->actorIndex)));
+                   getRelocatableHeapBlockBase(
+                       ASSET_HANDLE(MAIN_MENU_SCENE_MODEL_GEOMETRY_HANDLE_BASE +
+                                    (u16)model->sceneModelIndex)));
         gSPSegment(gRegionAllocPtr++, 0x03,
-                   getRelocatableHeapBlockBase(ASSET_HANDLE(0x39 + (u16)model->actorIndex)));
+                   getRelocatableHeapBlockBase(
+                       ASSET_HANDLE(MAIN_MENU_SCENE_MODEL_TEXTURE_HANDLE_BASE +
+                                    (u16)model->sceneModelIndex)));
         stride = 13;
         matrixParams = G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW;
         displayLists = gMainMenuSceneModelPartDisplayLists;
@@ -53,7 +57,7 @@ void drawMainMenuSceneModel(MainMenuSceneModel *arg0) {
             if (matrix != NULL) {
                 gDma1p(gRegionAllocPtr++, G_MTX, matrix, sizeof(Mtx), matrixParams);
                 gSPDisplayList(gRegionAllocPtr++,
-                               displayLists[((u16)model->modelIndex * stride) + i - 1]);
+                               displayLists[((u16)model->characterIndex * stride) + i - 1]);
             }
         }
     }
@@ -73,14 +77,15 @@ void drawTexturedMainMenuSceneModel(MainMenuSceneModel *arg0) {
     s32 end;
     s32 stride;
 
-    do { if ((u16)arg0->viewportIndex == gCurrentViewportIndex) { matrix = allocFixedTransformMatrix(arg0->displayObjects); model = arg0; if (matrix != NULL) { drawRacePlayerModelRootPart(matrix, model->textureId, model->paletteId); } gDPPipeSync(gRegionAllocPtr++); gSPSegment(gRegionAllocPtr++, 0x02, getRelocatableHeapBlockBase(gAssetHandles[0x33 + (u16)model->actorIndex])); gSPSegment(gRegionAllocPtr++, 0x03, getRelocatableHeapBlockBase(gAssetHandles[0x39 + (u16)model->actorIndex])); i = 1; displayObject = &model->displayObjects[1]; end = 14; stride = 13; displayLists = gMainMenuSceneModelPartDisplayLists; do { matrix = allocFixedTransformMatrix(displayObject); if (matrix != NULL) { gSPMatrix(gRegionAllocPtr++, matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW); gSPDisplayList(gRegionAllocPtr++, displayLists[((u16)model->modelIndex * stride) + i - 1]); } i++; displayObject++; } while (i != end); } } while (0);
+    do { if ((u16)arg0->viewportIndex == gCurrentViewportIndex) { matrix = allocFixedTransformMatrix(arg0->displayObjects); model = arg0; if (matrix != NULL) { drawRacePlayerModelRootPart(matrix, model->textureId, model->paletteId); } gDPPipeSync(gRegionAllocPtr++); gSPSegment(gRegionAllocPtr++, 0x02, getRelocatableHeapBlockBase(gAssetHandles[MAIN_MENU_SCENE_MODEL_GEOMETRY_HANDLE_BASE + (u16)model->sceneModelIndex])); gSPSegment(gRegionAllocPtr++, 0x03, getRelocatableHeapBlockBase(gAssetHandles[MAIN_MENU_SCENE_MODEL_TEXTURE_HANDLE_BASE + (u16)model->sceneModelIndex])); i = 1; displayObject = &model->displayObjects[1]; end = 14; stride = 13; displayLists = gMainMenuSceneModelPartDisplayLists; do { matrix = allocFixedTransformMatrix(displayObject); if (matrix != NULL) { gSPMatrix(gRegionAllocPtr++, matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW); gSPDisplayList(gRegionAllocPtr++, displayLists[((u16)model->characterIndex * stride) + i - 1]); } i++; displayObject++; } while (i != end); } } while (0);
 }
 #endif
 
 void addMainMenuSceneModelDrawCallback(s32 modelIndex) {
     MainMenuSceneModel *model;
 
-    model = (MainMenuSceneModel *)getRelocatableHeapBlockBase(ASSET_HANDLE(45 + modelIndex));
+    model = (MainMenuSceneModel *)getRelocatableHeapBlockBase(
+        ASSET_HANDLE(MAIN_MENU_SCENE_MODEL_HANDLE_BASE + modelIndex));
     updateMainMenuSceneModelTransforms(model);
     model->viewportIndex = 0;
     addRenderCallback(&gSceneModelRenderCallbackList, (RenderCallback)drawMainMenuSceneModel, model);
@@ -89,7 +94,8 @@ void addMainMenuSceneModelDrawCallback(s32 modelIndex) {
 void addMainMenuSceneModelTexturedDrawCallback(s32 modelIndex, s32 textureId, s32 paletteId) {
     MainMenuSceneModel *model;
 
-    model = (MainMenuSceneModel *)getRelocatableHeapBlockBase(ASSET_HANDLE(45 + modelIndex));
+    model = (MainMenuSceneModel *)getRelocatableHeapBlockBase(
+        ASSET_HANDLE(MAIN_MENU_SCENE_MODEL_HANDLE_BASE + modelIndex));
     updateMainMenuSceneModelTransforms(model);
     model->viewportIndex = 0;
     model->textureId = (s16)textureId;
@@ -100,7 +106,8 @@ void addMainMenuSceneModelTexturedDrawCallback(s32 modelIndex, s32 textureId, s3
 void addMainMenuSceneModelTexturedDrawCallbackWithUnusedArg(s32 modelIndex, s32 textureId, s32 paletteId, s32 unusedArg) {
     MainMenuSceneModel *model;
 
-    model = (MainMenuSceneModel *)getRelocatableHeapBlockBase(ASSET_HANDLE(45 + modelIndex));
+    model = (MainMenuSceneModel *)getRelocatableHeapBlockBase(
+        ASSET_HANDLE(MAIN_MENU_SCENE_MODEL_HANDLE_BASE + modelIndex));
     updateMainMenuSceneModelTransforms(model);
     model->viewportIndex = 0;
     model->textureId = (s16)textureId;
@@ -111,7 +118,8 @@ void addMainMenuSceneModelTexturedDrawCallbackWithUnusedArg(s32 modelIndex, s32 
 void addMainMenuSceneModelDrawCallbackForViewport0(s32 modelIndex) {
     MainMenuSceneModel *model;
 
-    model = (MainMenuSceneModel *)getRelocatableHeapBlockBase(ASSET_HANDLE(45 + modelIndex));
+    model = (MainMenuSceneModel *)getRelocatableHeapBlockBase(
+        ASSET_HANDLE(MAIN_MENU_SCENE_MODEL_HANDLE_BASE + modelIndex));
     updateMainMenuSceneModelTransforms(model);
     model->viewportIndex = 0;
     addRenderCallback(&gSceneModelRenderCallbackList, (RenderCallback)drawMainMenuSceneModel, model);
@@ -120,7 +128,8 @@ void addMainMenuSceneModelDrawCallbackForViewport0(s32 modelIndex) {
 void addMainMenuSceneModelDrawCallbackForViewport(s32 modelIndex, s32 viewportIndex) {
     MainMenuSceneModel *model;
 
-    model = (MainMenuSceneModel *)getRelocatableHeapBlockBase(ASSET_HANDLE(45 + modelIndex));
+    model = (MainMenuSceneModel *)getRelocatableHeapBlockBase(
+        ASSET_HANDLE(MAIN_MENU_SCENE_MODEL_HANDLE_BASE + modelIndex));
     updateMainMenuSceneModelTransforms(model);
     model->viewportIndex = (s16)viewportIndex;
     addRenderCallback(&gSceneModelRenderCallbackList, (RenderCallback)drawMainMenuSceneModel, model);
@@ -169,7 +178,7 @@ void initMainMenuSceneModelParts(MainMenuSceneModel *model) {
     model->parts[12].displayObjectIndex = 3;
     model->parts[13].displayObjectIndex = 5;
 
-    cursor = gMainMenuSceneModelPartInitDataByModel[(u16)model->modelIndex];
+    cursor = gMainMenuSceneModelPartInitDataByModel[(u16)model->characterIndex];
     for (end = 14, i = 0, writePart = (MainMenuInitPartPair *)model;;) {
         writePart->half22 = 0;
         zero = writePart->half22;
