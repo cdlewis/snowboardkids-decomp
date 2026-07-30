@@ -630,7 +630,7 @@ void updateMultiplayerCourseSelectMenu(void) {
 #endif
 #endif
 
-// updateMultiplayerCourseSelectMenu best match: 90.290%
+// updateMultiplayerCourseSelectMenu best match: 91.537%
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/course_select/multiplayer_course_select_menu/updateMultiplayerCourseSelectMenu.s")
 
 #ifdef NON_MATCHING
@@ -641,11 +641,12 @@ void updateMultiplayerCourseSelectMenu(void) {
     s32 selectedPlayerCount;
     u8 maxColumn;
     s32 maxColumnOriginal;
-    s32 held;
     s32 pressed;
     s32 heldUp;
     s32 menuSelection;
     s32 characterOffset;
+    s32 held;
+    s32 transitionMomentum;
     s8 oldColumn;
     s8 column;
     u16 repeatTimer;
@@ -669,13 +670,15 @@ void updateMultiplayerCourseSelectMenu(void) {
     } else {
         selectedPlayerCount = 0;
         if ((s32)gPlayerCount > 0) {
-            player = gRacePlayers;
+            RacePlayer *readyPlayer;
+
+            readyPlayer = gRacePlayers;
             do {
-                if (player->menuState == 9) {
+                if (readyPlayer->menuState == 9) {
                     selectedPlayerCount = (selectedPlayerCount + 1) & 0xFF;
                 }
-                player++;
-            } while ((u32)player < (u32)&gRacePlayers[(long)gPlayerCount]);
+                readyPlayer++;
+            } while ((u32)readyPlayer < (u32)&gRacePlayers[(long)gPlayerCount]);
         }
 
         if (gPlayerCount == selectedPlayerCount) {
@@ -725,7 +728,7 @@ void updateMultiplayerCourseSelectMenu(void) {
                                 }
                                 maxColumnOriginal = maxColumn;
                                 if ((s32)gPlayerCount >= 2) {
-                                    maxColumn = (maxColumn - 1) & 0xFF;
+                                    maxColumn = maxColumn - 1;
                                 }
 
                                 held = gPlayerInputHeld[playerIndex];
@@ -765,6 +768,7 @@ void updateMultiplayerCourseSelectMenu(void) {
                                 }
 
                                 repeatTimer = gMenuInputRepeatTimers[playerIndex];
+                                transitionMomentum = D_8010AEE8[playerIndex];
                                 if (repeatTimer != 0) {
                                     repeatTimer++;
                                     gMenuInputRepeatTimers[playerIndex] = repeatTimer;
@@ -795,7 +799,7 @@ void updateMultiplayerCourseSelectMenu(void) {
                                 }
 
                                 pressed = gPlayerInputPressed[playerIndex];
-                                if ((D_8010AEE8[playerIndex] == 0) &&
+                                if ((transitionMomentum == 0) &&
                                     ((pressed & 0x1000) || (pressed & 0x8000))) {
                                     if ((gPlayerCount == 1) &&
                                         (maxColumn ==
@@ -815,7 +819,10 @@ void updateMultiplayerCourseSelectMenu(void) {
                                                 enqueueSoundEffect(0x40, 0x32);
                                             } else {
                                                 enqueueSoundEffect(
-                                                    gCourseSelectColumnSoundEffects[column], 0x32);
+                                                    gCourseSelectColumnSoundEffects
+                                                        [gCharacterSelectHudState
+                                                             .highlightedRosterIndices[playerIndex]],
+                                                    0x32);
                                             }
                                             gMenuChoicePromptState[playerIndex] = 9;
                                             D_8010AEA4[playerIndex] = 1;
@@ -970,11 +977,11 @@ void updateMultiplayerCourseSelectMenu(void) {
                         }
                     }
 
-                    playerIndex++;
                     if (finishedPlayerCount == gPlayerCount) {
                         D_800EC9C0 = 1;
                     }
                     player++;
+                    playerIndex++;
                 } while (playerIndex < (s32)gPlayerCount);
             }
         } else {
