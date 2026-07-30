@@ -7,6 +7,7 @@ typedef struct {
     /* 0x0 */ u8 state;
     /* 0x1 */ u8 pad1;
     /* 0x2 */ s16 nextState;
+    /* 0x4 */ s16 portraitAlpha;
 } RaceSplitscreenSelectCursorTarget;
 
 typedef struct {
@@ -47,7 +48,7 @@ typedef struct {
 } RaceSplitscreenSelectRowActor;
 
 extern RaceSplitscreenSelectCursorTarget gRaceSplitscreenSelectCursorTarget;
-extern s16 gRaceSplitscreenSelectPortraitAlpha;
+#define gRaceSplitscreenSelectPortraitAlpha gRaceSplitscreenSelectCursorTarget.portraitAlpha
 
 void drawRaceSplitscreenSelectPlayerCountIcons(RaceSplitscreenSelectRowActor *arg0);
 void updateRaceSplitscreenSelectPlayerCountIcons(RaceSplitscreenSelectRowActor *arg0);
