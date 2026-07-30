@@ -33,6 +33,8 @@ extern u8 D_800F41EB[];
 extern u8 D_800F4222[];
 extern u8 D_800F4259[];
 extern u8 D_800F4290[];
+extern u8 D_800E0B90[];
+extern u8 D_800E0B94[];
 
 #define CHARACTER_SELECT_COURSE_SAVE_DATA                                      \
   (*(CharacterSelectCourseRecordsPopupSaveBufferCandidate *)&gGameSaveDataBuffer)
@@ -48,6 +50,7 @@ void drawCharacterSelectCourseRecordsPopup(
   s32 color;
   s32 yOffset;
   CharacterSelectCourseRecordsPopupSaveDataCandidate *saveData;
+  s16 **courseIdsPtr;
   s32 score;
   s32 row;
   u16 tile;
@@ -61,6 +64,8 @@ void drawCharacterSelectCourseRecordsPopup(
   } else {
     stack.courseIds = gCharacterSelectSingleCourseOption;
   }
+
+  courseIdsPtr = (s16 **)&stack.courseIds;
 
   for (row = 0, yOffset = 0; row != 5; row++, yOffset += 0x14) {
     if (row < 3) {
@@ -112,7 +117,7 @@ void drawCharacterSelectCourseRecordsPopup(
             } else {
               color = 0xD;
             }
-            courseId = &stack.courseIds[gRaceCourseIndex.signedValue];
+            courseId = &(*courseIdsPtr)[gRaceCourseIndex.signedValue];
             quotient = (s32)D_800F4222[(*courseId * 5) + row] / 10;
             stack.quotient = (u16)quotient;
             if (quotient & 0xFFFF) {
@@ -131,7 +136,7 @@ void drawCharacterSelectCourseRecordsPopup(
                 getRelocatableHeapBlockBase((s32)CHARACTER_SELECT_POPUP_FONT_HANDLE),
                 (stack.remainder + 0x2B) & 0xFFFF, 0x20U, 0x20U, 0U, palette);
             drawMenuAsciiText((s16)(arg0->x + 0x28),
-                              (s16)(arg0->y + yOffset + 8), "HIT",
+                              (s16)(arg0->y + yOffset + 8), D_800E0B90,
                               (u16)stack.color, 0x100U);
             drawMenuSprite(
                 (s16)(arg0->x + 0x48), (s16)(arg0->y + yOffset),
@@ -143,7 +148,7 @@ void drawCharacterSelectCourseRecordsPopup(
             drawMenuSprite(
                 (s16)(arg0->x + 0x60), (s16)(arg0->y + yOffset),
                 getRelocatableHeapBlockBase((s32)CHARACTER_SELECT_POPUP_FONT_HANDLE),
-                (((s32)D_800F4259[(stack.courseIds[gRaceCourseIndex.signedValue] * 5) + row] >>
+                (((s32)D_800F4259[((*courseIdsPtr)[gRaceCourseIndex.signedValue] * 5) + row] >>
                   3) +
                  0x7C) &
                     0xFFFF,
@@ -169,7 +174,7 @@ void drawCharacterSelectCourseRecordsPopup(
               score = score / 10;
             } while (score != 0);
             drawMenuAsciiText((s16)(arg0->x + 0x40),
-                              (s16)(arg0->y + yOffset + 8), "P",
+                              (s16)(arg0->y + yOffset + 8), D_800E0B94,
                               (u16)stack.color, 0x100U);
             drawMenuSprite(
                 (s16)(arg0->x + 0x4C), (s16)(arg0->y + yOffset),
@@ -203,19 +208,19 @@ void drawCharacterSelectCourseRecordsPopup(
         }
         drawCharacterSelectCourseRecordTime(
             &CHARACTER_SELECT_COURSE_SAVE_DATA.records
-                 .timeTrialRecords[stack.courseIds[gRaceCourseIndex.signedValue]][row],
-            arg0->x + 0x14, arg0->y + yOffset, (s32)stack.color);
+                 .timeTrialRecords[(*courseIdsPtr)[gRaceCourseIndex.signedValue]][row],
+            arg0->x + 0x14, arg0->y + yOffset, ((s32)stack.color) & 0xFFu);
         drawMenuSprite(
             (s16)(arg0->x + 0x54), (s16)(arg0->y + yOffset),
             getRelocatableHeapBlockBase((s32)CHARACTER_SELECT_POPUP_FONT_HANDLE),
-            ((D_800F41EB[(stack.courseIds[gRaceCourseIndex.signedValue] * 5) + row] & 7) +
+            ((D_800F41EB[((*courseIdsPtr)[gRaceCourseIndex.signedValue] * 5) + row] & 7) +
              0x51) &
                 0xFFFF,
             0x20U, 0x20U, 0U, 0U);
         drawMenuSprite(
             (s16)(arg0->x + 0x65), (s16)(arg0->y + yOffset),
             getRelocatableHeapBlockBase((s32)CHARACTER_SELECT_POPUP_FONT_HANDLE),
-            ((D_800F41EB[(stack.courseIds[gRaceCourseIndex.signedValue] * 5) + row] >>
+            ((D_800F41EB[((*courseIdsPtr)[gRaceCourseIndex.signedValue] * 5) + row] >>
               3) +
              0x7C) &
                 0xFFFF,
