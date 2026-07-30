@@ -975,7 +975,7 @@ void getRaceCourseSurfaceSpawnTransform(s32 arg0, s32 *x, s32 *y, s32 *z, s16 *a
     *angle = -((RaceMotionSurface *)((s32)gRaceCourseSurfaces + keyframeOffset))->angle;
 }
 
-// getRaceCourseTargetPositionAhead best match: 99.466% (nonmatchings/getRaceCourseTargetPositionAhead-8498672362023432715/base_13.c)
+// getRaceCourseTargetPositionAhead best match: 99.806% (nonmatchings/getRaceCourseTargetPositionAhead-46/output-80-1/source.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race/motion/race_motion/getRaceCourseTargetPositionAhead.s")
 
 #ifdef NON_MATCHING
@@ -996,7 +996,7 @@ void getRaceCourseTargetPositionAhead(s32 arg0, s32 arg1, s32 arg2, s32 *arg3, s
 
         deltaX = arg1 - (gRaceCourseSurfaceCoords[gRaceCourseSurfaces[arg0].positionIndex].x << 0x11);
         deltaZ = gRaceCourseSurfaceCoords[gRaceCourseSurfaces[arg0].positionIndex].z;
-        deltaZ = arg2 - (deltaZ << 0x11);
+        deltaZ = arg2 - ((deltaZ << 2) << 15);
         projected = ((s64)-gRaceCourseSurfaceAngleSin * deltaX + (s64)gRaceCourseSurfaceAngleCos * deltaZ) / 0x1000;
 
         if ((arg0 >= gRaceCourseStartEntries[gRaceCourseIndex.signedValue].unk38) && ((upperSurfaceIndex = gRaceCourseStartEntries[gRaceCourseIndex.signedValue].unk3A) >= arg0)) {
@@ -1006,11 +1006,12 @@ void getRaceCourseTargetPositionAhead(s32 arg0, s32 arg1, s32 arg2, s32 *arg3, s
             *arg4 = ((s64)deltaZ * distance) / 0x1000;
         } else if ((gRaceCourseIndex.signedValue == 3) && ((arg0 == 0x11D) || (arg0 == 0x11E))) {
             distance = projected + 0xC00000;
-            *arg3 = (distance * (s64)-gRaceCourseSurfaceAngleSin) / 0x1000;
+            *arg3 = ((s64)-gRaceCourseSurfaceAngleSin * distance) / 0x1000;
             *arg4 = ((s64)gRaceCourseSurfaceAngleCos * distance) / 0x1000;
         } else {
             distance = projected + 0xFF400000;
-            *arg3 = ((s64)-gRaceCourseSurfaceAngleSin * distance) / 0x1000;
+            keyframeOffset = gRaceCourseSurfaceAngleSin;
+            *arg3 = ((s64)-keyframeOffset * distance) / 0x1000;
             *arg4 = ((s64)gRaceCourseSurfaceAngleCos * distance) / 0x1000;
         }
 
