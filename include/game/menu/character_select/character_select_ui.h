@@ -93,7 +93,10 @@ typedef struct {
     /* 0x58 */ s16 stepCount[4];
     /* 0x60 */ u8 axis[4];
     /* 0x64 */ u8 divisor[4];
-    /* 0x68 */ u8 state[4];
+    union {
+        /* 0x68 */ u8 state[4];
+        /* 0x68 */ volatile u8 volatileState[4];
+    };
 } CharacterSelectUiSelectedCharacterTokenActor;
 
 typedef struct {
