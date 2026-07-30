@@ -324,19 +324,18 @@ void startTrainingCourseFlow(void) {
     setCurrentGameTaskCallback(&queueTrainingCourseRaceInit, 0);
 }
 
-void queueTrainingCourseRaceInit(void) {
-    setCurrentGameTaskCallback(&initTrainingCourseRace, 0);
-}
+#pragma GLOBAL_ASM("src/menu/main_menu/queueTrainingCourseRaceInit.s")
 
-// initTrainingCourseRace best match: asm-differ score 200 (nonmatchings/initTrainingCourseRace-3885303446860889946/base_38.c)
-
-#pragma GLOBAL_ASM("asm/nonmatchings/menu/main_menu/main_menu_race_flow/initTrainingCourseRace.s")
-
-#ifdef NON_MATCHING
 void initTrainingCourseRace(void) {
     u64 characterId;
+    long long three0;
     unsigned int new_var;
     unsigned int new_var2;
+    s32 five0;
+    s32 six0;
+    s32 seven0;
+    s32 two0;
+    s32 i;
 
     switch (gTrainingCourseLesson) {
         case 1:
@@ -355,37 +354,39 @@ void initTrainingCourseRace(void) {
     gRaceUpdatePaused = 0;
     gRaceCameraModeChangeDisabled = 0;
     gRaceResultState = 0;
-    characterId = 1;
     gRaceDemoPlaybackEnabled = 0;
     gMainMenuModeSelection = 0;
     gRaceSplitscreenMode = 0;
     gRaceTypeSelection = 0;
 
+    characterId = 2;
+    five0 = 5;
+    six0 = 6;
+    seven0 = 7;
+    two0 = 2;
+    three0 = 3;
+
     gRacePlayers[0].unk4 = 0;
     gRacePlayers[1].unk4 = 1;
-    gRacePlayers[2].unk4 = characterId;
+    gRacePlayers[2].unk4 = 1;
     gRacePlayers[3].unk4 = 1;
     new_var2 = 0;
-    new_var = (unsigned int) (new_var = (gRacePlayers[new_var2].unk11 = new_var2));
-    gRacePlayers[new_var2].characterId = new_var;
-    characterId = 2;
+    new_var = (unsigned int)(new_var = (gRacePlayers[new_var2].characterId = new_var2));
+    gRacePlayers[1].characterId = 1;
     gRacePlayers[2].characterId = characterId;
     gRacePlayers[3].characterId = 3;
-    gRacePlayers[1].characterId = 1;
+    gRacePlayers[0].unk11 = 0;
     gRacePlayers[1].unk11 = 0;
     gRacePlayers[2].unk11 = 0;
     gRacePlayers[3].unk11 = 0;
     gRacePlayers[0].unk12 = 3;
-    gRacePlayers[0].isActive = 1;
-    gRacePlayers[2].unk12 = 6;
-    gRacePlayers[1].unk12 = 5;
-    if (gTrainingCourseLesson == 0) {
-    }
-    gRacePlayers[3].unk12 = 7;
-    gRacePlayers[1].unk17 = 1;
-    gRacePlayers[2].unk17 = 2;
-    gRacePlayers[3].unk17 = 3;
+    gRacePlayers[1].unk12 = five0;
+    gRacePlayers[2].unk12 = six0;
+    gRacePlayers[3].unk12 = seven0;
     gRacePlayers[0].unk17 = 0;
+    gRacePlayers[1].unk17 = 1;
+    gRacePlayers[2].unk17 = two0;
+    gRacePlayers[3].unk17 = three0;
     gPlayerCount = 1;
 
     switch (gTrainingCourseLesson) {
@@ -404,8 +405,6 @@ void initTrainingCourseRace(void) {
             break;
         default:
             gRacePlayers[0].isActive = 1;
-            do {
-            } while (0);
             gRacePlayers[1].isActive = 1;
             if (new_var) {
             }
@@ -418,18 +417,13 @@ void initTrainingCourseRace(void) {
     gRaceLapCount = 5;
     gRacePlayerAttackStartTimer = 0x64;
     initCallbackTaskScheduler(1);
-    gRacePlayers[0].unk15 = 0;
-    gRacePlayers[0].replayInputSource = 0;
-    gRacePlayers[0].soundDisabled = 0;
-    gRacePlayers[1].unk15 = 0;
-    gRacePlayers[1].replayInputSource = 0;
-    gRacePlayers[1].soundDisabled = 0;
-    gRacePlayers[2].unk15 = 0;
-    gRacePlayers[2].replayInputSource = 0;
-    gRacePlayers[2].soundDisabled = 0;
-    gRacePlayers[3].unk15 = 0;
-    gRacePlayers[3].replayInputSource = 0;
-    gRacePlayers[3].soundDisabled = 0;
+
+    for (i = 0; i < RACE_PLAYER_COUNT; i++) {
+        gRacePlayers[i].unk15 = 0;
+        gRacePlayers[i].replayInputSource = 0;
+        gRacePlayers[i].soundDisabled = 0;
+    }
+
     loadRaceCourseAssets();
     loadRaceCharacterAssets();
     resetRaceCameras();
@@ -454,7 +448,6 @@ void initTrainingCourseRace(void) {
     setCurrentGameTaskCallback(fadeInTrainingCourseRace, 0);
     requestMusicSequenceBank(7);
 }
-#endif
 
 void fadeInTrainingCourseRace(void) {
     gMenuFadeAlpha -= 0x10;
