@@ -501,7 +501,7 @@ void initControllerPakFileDeleteFreeSpaceInfo(ControllerPakTwoPointActor *arg0) 
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateControllerPakFileDeleteFreeSpaceInfo);
 }
 
-// drawControllerPakFileDeleteFileList best match: 94.081% (nonmatchings/drawControllerPakFileDeleteFileList-8498672362023432715/base_31.c)
+// drawControllerPakFileDeleteFileList best match: 95.290% (nonmatchings/drawControllerPakFileDeleteFileList-6759517978943015823/base_35.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/controller_pak/controller_pak_ui/drawControllerPakFileDeleteFileList.s")
 
 #ifdef NON_MATCHING
@@ -513,6 +513,7 @@ void drawControllerPakFileDeleteFileList(ControllerPakFileListActor *arg0) {
     register s32 insertIndex;
     u16 textB0[4];
     u16 fileNameText[19];
+    u8 cursorState;
     u16 text7C[5];
     s32 rowY;
     u16 fileIndex;
@@ -526,6 +527,9 @@ void drawControllerPakFileDeleteFileList(ControllerPakFileListActor *arg0) {
         fileIndex = gControllerPakMenuState.fileIndex - gControllerPakMenuState.visibleFileIndex;
     }
 
+    if (!gControllerPakVisibleFileIndex) {
+    }
+
     rowY = 0;
     do {
         state = gControllerPakMenuState.state;
@@ -535,6 +539,8 @@ void drawControllerPakFileDeleteFileList(ControllerPakFileListActor *arg0) {
         } else {
             alpha = 0xE0;
             if (1) {
+            }
+            if ((arg0->positions[0].x && arg0->positions[0].x) && arg0->positions[0].x) {
             }
             if (fileIndex == gControllerPakMenuState.fileIndex) {
                 alpha = 0x100;
@@ -634,9 +640,10 @@ void drawControllerPakFileDeleteFileList(ControllerPakFileListActor *arg0) {
         fileIndex++;
     } while (rowY != 0x50);
 
-    if (gControllerPakMenuCursorState != 0) {
+    cursorState = gControllerPakMenuCursorState;
+    if (cursorState != 0) {
         drawMenuSpriteWithAlpha(arg0->positions[5].x, (s16)(arg0->positions[5].y + (gControllerPakVisibleFileIndex * 0x10)), getRelocatableHeapBlockBase(gAssetHandles[0x21]), 6,
-                      0x20, 0x20, 0, arg0->cursorScale, 0);
+                      0x20, 0x20, 0, i = arg0->cursorScale, 0);
         drawMenuSpriteWithAlpha((s16)(arg0->positions[5].x + 0x80),
                       (s16)(arg0->positions[5].y + (((((gControllerPakVisibleFileIndex & 0xFFFF) & 0xFFFF) & 0xFFFF)) * 0x10)),
                       getRelocatableHeapBlockBase(gAssetHandles[0x21]), 7, 0x20, 0x20, 0, arg0->cursorScale, 0);
