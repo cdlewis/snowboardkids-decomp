@@ -265,26 +265,19 @@ void requestControllerPakSaveRead(u16 arg0) {
 extern void requestControllerPakSaveReadWithContext(u16 controllerIndex, s32 playerCount, s32 choiceValue);
 #pragma weak requestControllerPakSaveReadWithContext = requestControllerPakSaveRead
 
-// readControllerPakSave best match: 99.904% at nonmatchings/readControllerPakSave-7932770077023511983/base_48.c
-#pragma GLOBAL_ASM("asm/nonmatchings/menu/main_menu/controller_main_menu_flow/readControllerPakSave.s")
-
-#ifdef NON_MATCHING
 void readControllerPakSave(u16 controllerIndex) {
     u8 *cursor;
-    s32 checksum;
-    s32 companyCode;
-    GameSaveData *save;
+    s32 offset;
     s32 readStatus;
     u16 checksumFailed;
-    s32 checksumStartOffset;
-    s32 offset;
+    GameSaveData *save;
+    s32 checksum;
 
     checksumFailed = 0;
     osPfsInitPak(&gControllerEventQueue, &gControllerPakHandles[controllerIndex], controllerIndex);
 
     gControllerPakSaveFileIdentity.gameCode = 'NSKE';
-    companyCode = 'EB';
-    gControllerPakSaveFileIdentity.companyCode = companyCode;
+    gControllerPakSaveFileIdentity.companyCode = 'EB';
 
     offset = 0;
     do {
@@ -309,8 +302,7 @@ void readControllerPakSave(u16 controllerIndex) {
     if (readStatus == 0) {
         checksum = 0;
         cursor = &save->rawBytes[CONTROLLER_PAK_CHECKSUM_START_OFFSET];
-        checksumStartOffset = CONTROLLER_PAK_CHECKSUM_START_OFFSET;
-        offset = checksumStartOffset;
+        offset = CONTROLLER_PAK_CHECKSUM_START_OFFSET;
         do {
             checksum += *cursor++;
             offset++;
@@ -343,7 +335,6 @@ void readControllerPakSave(u16 controllerIndex) {
     }
     gControllerPakOperationCounts[controllerIndex]++;
 }
-#endif
 
 void requestControllerPakSaveWrite(u16 arg0) {
     OSMesg msg;
