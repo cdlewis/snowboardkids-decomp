@@ -3,6 +3,11 @@
 
 #include "common.h"
 
+#define MAIN_MENU_SCENE_MODEL_HANDLE_BASE 0x2D
+#define MAIN_MENU_SCENE_MODEL_GEOMETRY_HANDLE_BASE 0x33
+#define MAIN_MENU_SCENE_MODEL_TEXTURE_HANDLE_BASE 0x39
+#define MAIN_MENU_SCENE_MODEL_ANIMATION_BANK_HANDLE 0x3F
+
 typedef struct MainMenuModelVec3s {
     s16 x;
     s16 y;
@@ -30,8 +35,8 @@ typedef struct MainMenuModelTransform {
 } MainMenuModelTransform;
 
 typedef struct MainMenuSceneModel {
-    s16 actorIndex;
-    s16 modelIndex;
+    s16 sceneModelIndex;
+    s16 characterIndex;
     s16 textureId;
     s16 paletteId;
     s16 viewportIndex;
@@ -50,7 +55,7 @@ typedef struct MainMenuSceneModel {
 
 void loadMainMenuSceneModelAssets(void);
 void loadMainMenuSceneModelAnimationBank(void);
-void initMainMenuSceneModel(s32 actorIndex, s32 modelIndex);
+void initMainMenuSceneModel(s32 sceneModelIndex, s32 characterIndex);
 void setMainMenuSceneModelAnimation(s32 modelIndex, s32 animationIndex);
 MainMenuSceneModel *getMainMenuSceneModel(s32 modelIndex);
 void applyMainMenuSceneModelAnimationFrame(MainMenuSceneModel *model);
