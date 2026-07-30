@@ -197,7 +197,7 @@ void initTrainingCourseLessonEndMenu(TrainingCourseUiActor *arg0) {
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateTrainingCourseLessonEndMenu);
 }
 
-// drawTrainingCourseDialog best match: 99.379% (nonmatchings/drawTrainingCourseDialog-8742002951815950717/base_1.c)
+// drawTrainingCourseDialog best match: 99.407% (nonmatchings/drawTrainingCourseDialog-4/output-171-1/source.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/training/training_course_ui/drawTrainingCourseDialog.s")
 
 #ifdef NON_MATCHING
@@ -207,10 +207,10 @@ void drawTrainingCourseDialog(TrainingCourseUiActor *arg0) {
     u16 lineY;
     s32 visibleIndex;
     s32 scriptIndex;
-    u16 reachedEnd;
     u16 lineX;
     register TrainingCourseUiScript firstToken;
     register TrainingCourseUiScript currentToken;
+    u16 reachedEnd;
     register TrainingCourseUiScript nextToken;
     TrainingCourseUiScript glyphText[2];
     register TrainingCourseUiScript token;
