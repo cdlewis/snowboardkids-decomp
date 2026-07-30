@@ -43,7 +43,13 @@ extern Mtx *allocFixedTransformMatrix(FixedTransform *arg0);
 extern MainMenuSceneActorShadow gEndingActorShadow;
 extern Gfx *gRegionAllocPtr;
 extern u32 gAlphaSpriteRenderModeDl[];
-extern Vtx D_800B8100[];
+Vtx D_800B8100[4] = {
+    {{{-16,  16, 0}, 0, {  0,   0}, {0xFF, 0xFF, 0xFF, 0xFF}}},
+    {{{ 16,  16, 0}, 0, {480,   0}, {0xFF, 0xFF, 0xFF, 0xFF}}},
+    {{{ 16, -16, 0}, 0, {480, 480}, {0xFF, 0xFF, 0xFF, 0xFF}}},
+    {{{-16, -16, 0}, 0, {  0, 480}, {0xFF, 0xFF, 0xFF, 0xFF}}},
+};
+extern s16 gAssetHandles[];
 
 void noopEndingCreditsTommy(void) {
 }
