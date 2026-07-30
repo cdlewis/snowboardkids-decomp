@@ -73,6 +73,11 @@ typedef struct PatrolCourseObjectEffect {
     s32 unk50;
 } PatrolCourseObjectEffect;
 
+typedef struct {
+    s32 dz;
+    Vec3i *volatile pos;
+} PatrolCourseObjectUpdateLocals;
+
 typedef struct CourseGateObjectEffect {
     char pad0[0x18];
     FixedTransform source;
@@ -732,12 +737,9 @@ void renderPatrolCourseObject(PatrolCourseObjectEffect *arg0) {
     }
 }
 
-// updatePatrolCourseObject best match: 99.946% at nonmatchings/updatePatrolCourseObject-14/base.c.
-#pragma GLOBAL_ASM("asm/nonmatchings/race/course/race_course_effects/updatePatrolCourseObject.s")
-
-#ifdef NON_MATCHING
+// Matched by queueram via decomp.me scratch WguxK.
 void updatePatrolCourseObject(PatrolCourseObjectEffect *arg0) {
-    volatile s32 padding[2];
+    PatrolCourseObjectUpdateLocals local;
     s16 rand;
     s32 targetAngle;
     s32 var_v1;
@@ -750,6 +752,7 @@ void updatePatrolCourseObject(PatrolCourseObjectEffect *arg0) {
                 targetAngle = calculateFixedAngleBetweenXZPoints(arg0->pos.x, arg0->pos.z, arg0->endX, arg0->endZ);
             }
             var_v1 = (((((targetAngle & 0xFFFFu) & 0xFFFFu) & 0xFFFFu) & 0xFFFFu) - arg0->angle) & 0xFFF;
+            targetAngle = -targetAngle;
             var_v1 = (s16)var_v1;
             if (var_v1 >= 0x801) {
                 var_v1 = (s16)(var_v1 - 0x1000);
@@ -762,11 +765,12 @@ void updatePatrolCourseObject(PatrolCourseObjectEffect *arg0) {
             }
             arg0->angle = (s16)(arg0->angle + var_v1);
             arg0->pos.x += fixedSine(arg0->angle) * ((s32)-arg0->unk50 / 4096);
-            arg0->pos.z += fixedCosine(arg0->angle) * ((s32)-arg0->unk50 / 4096);
+            local.dz = (arg0->pos.z += fixedCosine(arg0->angle) * ((s32)-arg0->unk50 / 4096));
             arg0->surfaceIndex =
-                findRaceCourseSurfaceFromHint(arg0->surfaceIndex, arg0->pos.x, arg0->pos.z) & 0xFFFF;
-            arg0->pos.y = getRaceCourseSurfaceHeight(arg0->surfaceIndex, arg0->pos.x, arg0->pos.z);
-            if ((var_v1 = arg0->pad42) != 0) {
+                findRaceCourseSurfaceFromHint(arg0->surfaceIndex, arg0->pos.x, local.dz);
+            arg0->pos.y =
+                getRaceCourseSurfaceHeight(arg0->surfaceIndex, arg0->pos.x, arg0->pos.z);
+            if (arg0->pad42 != 0) {
                 targetAngle = arg0->pos.x - arg0->startPos.x;
                 var_v1 = arg0->pos.z - arg0->startPos.z;
                 if (targetAngle < 0) {
@@ -818,7 +822,6 @@ void updatePatrolCourseObject(PatrolCourseObjectEffect *arg0) {
     }
     addRenderCallback(&gRaceObjectRenderCallbackList, (RenderCallback)renderPatrolCourseObject, arg0);
 }
-#endif
 
 void initPatrolCourseObject(PatrolCourseObjectEffect *arg0) {
     s16 angle;
