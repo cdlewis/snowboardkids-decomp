@@ -197,7 +197,7 @@ void initTrainingCourseLessonEndMenu(TrainingCourseUiActor *arg0) {
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateTrainingCourseLessonEndMenu);
 }
 
-// drawTrainingCourseDialog best match: 98.791% (nonmatchings/drawTrainingCourseDialog-6219302648079029720/base_50.c)
+// drawTrainingCourseDialog best match: 99.379% (nonmatchings/drawTrainingCourseDialog-8742002951815950717/base_1.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/training/training_course_ui/drawTrainingCourseDialog.s")
 
 #ifdef NON_MATCHING
@@ -249,9 +249,9 @@ void drawTrainingCourseDialog(TrainingCourseUiActor *arg0) {
 
     dialog->glyphPalette = 7;
     glyphText[1] = 0xFFFF;
-    visibleIndex = 0;
     reachedEnd = 0;
     lineX = 0;
+    visibleIndex = 0;
 
     if (dialog->state.script.visibleGlyphCount > 0) {
         scriptIndex = 0;
@@ -262,23 +262,23 @@ void drawTrainingCourseDialog(TrainingCourseUiActor *arg0) {
             nextToken = firstToken;
             if ((firstToken >= 0xFF01) && ((token = firstToken), (currentToken != 0xFFFE))) {
                 do {
-                    if (token == 0xFFFF) {
+                    if ((token & 0xFFFF) == 0xFFFF) {
                         dialog->scriptState = 1;
                         reachedEnd = 1;
                         break;
                     }
-                    if (token == 0xFFFD) {
+                    if ((token & 0xFFFF) == 0xFFFD) {
                         currentToken = dialog->layout.script[scriptIndex + 1];
                         lineY += 0x10;
                         lineX = 0;
                         scriptIndex++;
                         nextToken = currentToken;
-                    } else if (token == 0xFFFC) {
+                    } else if ((token & 0xFFFF) == 0xFFFC) {
                         dialog->glyphPalette = dialog->layout.script[scriptIndex + 1];
                         currentToken = dialog->layout.script[scriptIndex + 2];
                         scriptIndex += 2;
                         nextToken = currentToken;
-                    } else if (token == 0xFFFB) {
+                    } else if ((token & 0xFFFF) == 0xFFFB) {
                         dialog->scriptState = 2;
                         reachedEnd = 1;
                         break;
