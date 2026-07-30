@@ -716,87 +716,79 @@ void drawScaledAssetTableSprite(s16 x, s16 y, AssetTable *asset, volatile u16 en
 }
 #endif
 
-// drawScaledAssetTableSpriteWithExplicitPalette best match: 96.335% (nonmatchings/drawScaledAssetTableSpriteWithExplicitPalette-1213871690025509423/base_12.c)
+// drawScaledAssetTableSpriteWithExplicitPalette best match: 97.314% (nonmatchings/drawScaledAssetTableSpriteWithExplicitPalette-7812531368330432019/base_7.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/renderer/menu_render_utils/drawScaledAssetTableSpriteWithExplicitPalette.s")
 
 #ifdef NON_MATCHING
 void drawScaledAssetTableSpriteWithExplicitPalette(s16 x, s16 y, AssetTable *asset,
                                                    volatile u16 entryIndex, u16 paletteIndex,
                                                    u16 scale) {
-    s32 clipTop;
-    s32 x0;
-    u16 textureScale;
-    s32 y0;
-    s32 clipBottom;
-    AssetTableEntry *sprite;
-    s32 viewHalfHeight;
-    s32 clipLeft;
-    s32 viewHalfWidth;
-    s32 clipRight;
     AssetTableEntry *paletteBase;
+    s32 x0;
+    s32 y0;
     s32 spriteWidth;
-    s32 spriteHeight;
+    AssetTableEntry *sprite;
+    u16 textureScale;
+    s32 pad;
     s32 x1;
     s32 y1;
     s32 clippedS;
-    s32 clippedT;
 
+    if (paletteIndex && paletteIndex) {
+    }
+    x0 = x;
     textureScale = scale;
     if (textureScale >= 0) {
         paletteBase = asset->entryCount + asset->entries;
-        sprite = (AssetTableEntry *)asset + (entryIndex & 0xFFFFu);
-        spriteWidth = sprite[1].width;
-        x0 = x + gMenuViewportCenterX;
-        x1 = spriteWidth >> textureScale;
-        spriteHeight = sprite[1].height;
+        sprite = (AssetTableEntry *)asset + (0xFFFFu & entryIndex);
         y0 = y + gMenuViewportCenterY;
-        y1 = spriteHeight >> textureScale;
-        sprite++;
-        x0 = x0 + ((spriteWidth - x1) / 2);
-        y0 = y0 + ((spriteHeight - y1) / 2);
-        x1 += x0;
-        y1 += y0;
-        clippedS = 0;
-        clippedT = 0;
-
-        viewHalfWidth = gMenuViewportWidth / 2;
-        clipRight = gMenuViewportCenterX + viewHalfWidth;
-        if (x0 >= clipRight) {
-            return;
-        }
-
-        textureScale = 2;
-        viewHalfHeight = gMenuViewportHeight / textureScale;
-        clipBottom = gMenuViewportCenterY + viewHalfHeight;
-        clipLeft = gMenuViewportCenterX - viewHalfWidth;
-        if (y0 >= clipBottom) {
-            return;
-        }
-        if (x1 < clipLeft) {
-            return;
-        }
-
-        clipTop = gMenuViewportCenterY - viewHalfHeight;
-        if (clipTop > y1) {
-            return;
-        }
-        if (x0 < clipLeft) {
-            clippedS = clipLeft - x0;
-            x0 = clipLeft;
-        }
-        if (y0 < (gMenuViewportCenterY - viewHalfHeight)) {
-            clippedT = (gMenuViewportCenterY - viewHalfHeight) - y0;
-            y0 = gMenuViewportCenterY - viewHalfHeight;
-        }
-        if (x1 >= clipRight) {
-            x1 = clipRight;
-        }
-        if (y1 >= clipBottom) {
-            y1 = clipBottom;
-        }
-
         {
-            s32 textureStep;
+            s32 spriteHeight;
+
+            spriteWidth = sprite[1].width;
+            x0 = x + gMenuViewportCenterX;
+            x1 = spriteWidth >> textureScale;
+            spriteHeight = sprite[1].height;
+            y1 = spriteHeight >> textureScale;
+            sprite++;
+            x0 = x0 + ((spriteWidth - x1) / 2);
+            y0 = y0 + ((spriteHeight - y1) / 2);
+            x1 += x0;
+            y1 += y0;
+        }
+        {
+            s32 clippedT;
+
+            clippedS = 0;
+            clippedT = 0;
+
+            if (x0 >= gMenuViewportCenterX + (gMenuViewportWidth / 2)) {
+                return;
+            }
+            textureScale = 2;
+            if (y0 >= gMenuViewportCenterY + (gMenuViewportHeight / textureScale)) {
+                return;
+            }
+            if (x1 < gMenuViewportCenterX - (gMenuViewportWidth / 2)) {
+                return;
+            }
+            if (y1 < gMenuViewportCenterY - (gMenuViewportHeight / textureScale)) {
+                return;
+            }
+            if (x0 < gMenuViewportCenterX - (gMenuViewportWidth / 2)) {
+                clippedS = (gMenuViewportCenterX - (gMenuViewportWidth / 2)) - x0;
+                x0 = gMenuViewportCenterX - (gMenuViewportWidth / 2);
+            }
+            if (y0 < gMenuViewportCenterY - (gMenuViewportHeight / textureScale)) {
+                clippedT = (gMenuViewportCenterY - (gMenuViewportHeight / textureScale)) - y0;
+                y0 = gMenuViewportCenterY - (gMenuViewportHeight / textureScale);
+            }
+            if (x1 >= gMenuViewportCenterX + (gMenuViewportWidth / 2)) {
+                x1 = gMenuViewportCenterX + (gMenuViewportWidth / 2);
+            }
+            if (y1 >= gMenuViewportCenterY + (gMenuViewportHeight / textureScale)) {
+                y1 = gMenuViewportCenterY + (gMenuViewportHeight / textureScale);
+            }
 
             gDPPipeSync(gRegionAllocPtr++);
             gDPSetTextureFilter(gRegionAllocPtr++, G_TF_AVERAGE);
@@ -806,13 +798,13 @@ void drawScaledAssetTableSpriteWithExplicitPalette(s16 x, s16 y, AssetTable *ass
                                   G_TX_CLAMP, G_TX_CLAMP, G_TX_NOMASK, G_TX_NOMASK,
                                   G_TX_NOLOD, G_TX_NOLOD);
             gDPLoadTLUT_pal16(gRegionAllocPtr++, 0,
-                              (paletteIndex << 5) + (u8 *)paletteBase);
+                              (u8 *)paletteBase + ((0, paletteIndex) << 5));
             gSPTextureRectangle(gRegionAllocPtr++, x0 << textureScale, y0 << textureScale,
                                 x1 << textureScale, y1 << textureScale, G_TX_RENDERTILE,
                                 (clippedS << 5) + 0x10,
                                 (clippedT << 5) + 0x10,
-                                textureStep = 1 << (scale + 10),
-                                textureStep);
+                                spriteWidth = 1 << (scale + 10),
+                                spriteWidth);
             gDPPipeSync(gRegionAllocPtr++);
             gDPSetTextureFilter(gRegionAllocPtr++, G_TF_POINT);
             gDPPipeSync(gRegionAllocPtr++);
