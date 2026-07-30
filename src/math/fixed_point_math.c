@@ -5,6 +5,34 @@
 
 extern s16 gSineTable[];
 
+FixedTransform gIdentityFixedTransform = {
+    {
+        FIXED_MATRIX_ONE, 0, 0,
+        0, FIXED_MATRIX_ONE, 0,
+        0, 0, FIXED_MATRIX_ONE,
+    },
+    0,
+    { 0, 0, 0 },
+};
+
+/* N64 s15.16 identity matrix in the packed integer/fraction word layout. */
+Mtx gIdentityMatrix = {
+    {
+        { 0x00010000, 0x00000000, 0x00000001, 0x00000000 },
+        { 0x00000000, 0x00010000, 0x00000000, 0x00000001 },
+        { 0x00000000, 0x00000000, 0x00000000, 0x00000000 },
+        { 0x00000000, 0x00000000, 0x00000000, 0x00000000 },
+    },
+};
+
+/* Packed matrix template patched with the player's shadow translation. */
+u32 gRacePlayerShadowMatrixTemplate[16] = {
+    0x00000000, 0x00000000, 0x00000000, 0x00000000,
+    0x00000000, 0x00000000, 0x00000000, 0x00000001,
+    0x40000000, 0x00000000, 0x00004000, 0x00000000,
+    0x00000000, 0x40000000, 0x00000000, 0x00000000,
+};
+
 void initFixedTransform(FixedTransform *transform) {
     *transform = gIdentityFixedTransform;
 }
