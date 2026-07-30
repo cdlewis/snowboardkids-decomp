@@ -8,7 +8,7 @@ extern OSPifRam _MotorStopData[MAXCONTROLLERS];
 extern OSPifRam _MotorStartData[MAXCONTROLLERS];
 extern u8 _motorstopbuf[BLOCKSIZE];
 extern u8 _motorstartbuf[BLOCKSIZE];
-extern u32 __osMotorinitialized[MAXCONTROLLERS];
+u32 __osMotorinitialized[MAXCONTROLLERS] = {0, 0, 0, 0};
 
 s32 osMotorStop(OSPfs *pfs) {
     int i;
