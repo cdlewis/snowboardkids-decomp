@@ -81,7 +81,7 @@ void initRaceTypeSelectMenu(void) {
     gRaceTypeSelectCursorTarget.alpha = 0;
 }
 
-// updateRaceTypeSelectMenu best match: 97.990% (nonmatchings/updateRaceTypeSelectMenu-8498672362023432715/base_7.c)
+// updateRaceTypeSelectMenu best match: 99.164% (nonmatchings/updateRaceTypeSelectMenu-8742002951815950717/base_31.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/race_type_select/race_type_select_menu/updateRaceTypeSelectMenu.s")
 
 #ifdef NON_MATCHING
@@ -132,12 +132,22 @@ void updateRaceTypeSelectMenu(void) {
                         }
                         if (selection > 0) {
                             gRaceTypeSelection = selection - 1;
-                            selection = (u8) (selection - 1);
+                            selection =
+                                (u8) (((((((((((((selection - 1) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) &
+                                               0xFFFF) &
+                                              0xFFFF) &
+                                             0xFFFF) &
+                                            0xFFFF) &
+                                           0xFFFF) &
+                                          0xFFFF) &
+                                         0xFFFF) &
+                                        0xFFFF);
                         }
                     } else {
                         repeatTimer = gMenuInputRepeatTimers[0];
                         if ((heldInput & (STICK_DOWN | D_JPAD)) ||
-                            ((newInput & (STICK_DOWN | D_JPAD)) && ((repeatTimerCopy = repeatTimer) >= 9) &&
+                            ((newInput & (STICK_DOWN | D_JPAD)) &&
+                             ((repeatTimerCopy = repeatTimer ^ 0) >= 9) &&
                              ((repeatTimerCopy % 3) == 0))) {
                             if (repeatTimer == 0) {
                                 gMenuInputRepeatTimers[0] = repeatTimer + 1;
@@ -151,15 +161,16 @@ void updateRaceTypeSelectMenu(void) {
                         }
                     }
 
-                    newInput = selection;
+                    repeatTimerCopy = selection ^ 0;
                     if (repeatTimer != 0) {
                         gMenuInputRepeatTimers[0] = repeatTimer + 1;
-                        if (gMenuInputRepeatTimers[0] == 0xFFFF) {
-                            gMenuInputRepeatTimers[0] = 0xC;
+                        if (gMenuInputRepeatTimers[0 ^ 0] == 0xFFFF) {
+                            selection = 0;
+                            gMenuInputRepeatTimers[selection] = 0xC;
                         }
                     }
 
-                    if (newInput != previousSelection) {
+                    if (repeatTimerCopy != previousSelection) {
                         enqueueSoundEffect(0x19, 0x32);
                         heldInput = gPlayerInputPressed[0];
                         gRaceCourseIndex.signedValue = 9;
