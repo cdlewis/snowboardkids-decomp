@@ -25,9 +25,17 @@ typedef struct {
     u8 confirmSelection;
 } ControllerPakRumbleCheckPromptTransition;
 
+typedef struct {
+    u8 state;
+    u8 pad1;
+    u16 targetScale;
+    u16 timer;
+    u8 selectedOption;
+    u8 confirmSelection;
+} ControllerPakRumbleCheckPromptState;
+
 extern ControllerPakRumbleCheckPromptTransition gControllerPakRumbleCheckPromptTransition;
-extern u8 gControllerPakRumbleCheckPromptState;
-extern u8 gControllerPakRumbleCheckPromptConfirmSelection;
+extern ControllerPakRumbleCheckPromptState gControllerPakRumbleCheckPromptState;
 extern u8 gControllerPakMenuConfirmChoice;
 extern u8 gControllerPakMenuCursorState;
 extern u8 gControllerPakDeletePromptState;
@@ -310,7 +318,7 @@ void updateControllerPakRumbleCheckPrompt(ControllerPakRumbleCheckPromptActor *a
             break;
     }
 
-    gControllerPakRumbleCheckPromptState = state;
+    gControllerPakRumbleCheckPromptState.state = state;
     if (arg0->state == 5) {
         removeCallbackTask(arg0);
         return;
