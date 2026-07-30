@@ -1557,7 +1557,8 @@ void initCourseSelectCourseStats(CourseSelectWidgetActor *arg0) {
     setCallbackTaskCallback(temp_a3, (CallbackTaskCallback)updateCourseSelectCourseStats);
 }
 
-// drawCourseSelectCourseDescription best match: 95.254% (nonmatchings/drawCourseSelectCourseDescription-4777730848216765513/base_18.c)
+// drawCourseSelectCourseDescription best match: 96.009%
+// (nonmatchings/drawCourseSelectCourseDescription-8742002951815950717/base_34.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/course_select/course_select_ui/drawCourseSelectCourseDescription.s")
 
 #if 0
@@ -1743,7 +1744,8 @@ void drawCourseSelectCourseDescription(CourseSelectWidgetActor *arg0) {
                 text = gCourseSelectBoardLevelByCourseText[D_80121D80->courseIndex % 3].text;
             } else {
                 if ((D_80121D80->courseIndex >= 9) && (D_80121D80->courseIndex < 12)) {
-                    descriptionIndex = gCourseSelectExtraCourseIds[selectedIndex] % 3;
+                    pricedCourseId = gCourseSelectExtraCourseIds[selectedIndex] % 3;
+                    descriptionIndex = pricedCourseId;
                     boardText = gCourseSelectExtraCourseBoardLevelText[descriptionIndex].text;
                     text = boardText;
                 } else {
@@ -1753,6 +1755,7 @@ void drawCourseSelectCourseDescription(CourseSelectWidgetActor *arg0) {
             }
         }
 
+        digitCount = 3;
         drawMenuGlyphScript(arg0->x, arg0->y, text, 1, (u16)(s32)arg0->spriteIndex, 0);
 
         if ((gRaceSplitscreenMode == 3) &&
@@ -1787,7 +1790,8 @@ void drawCourseSelectCourseDescription(CourseSelectWidgetActor *arg0) {
                     }
                     pricedCourseId = D_80121D80->courseIndex;
                     if (price != 0) {
-                        digit = &script[digitCount];
+                        digit = script;
+                        digit += digitCount;
                         do {
                             digit--;
                             digit[1] = price % 10;
@@ -1799,15 +1803,17 @@ void drawCourseSelectCourseDescription(CourseSelectWidgetActor *arg0) {
                     if (pricedCourseId >= 9) {
                     }
                 } else {
-                    digitCount = 3;
-                    script[2] = 0x2B;
-                    digit = &script[digitCount];
-                    digit[3] = digit[2] = digit[1] = digit[0] = 0x2B;
+                    do {
+                        script[2] = 0x2B;
+                        digit = script;
+                        digit += digitCount;
+                        digit[3] = digit[2] = digit[1] = digit[0] = 0x2B;
+                    } while (0);
                     script[7] = 0xFFFF;
                 }
-                descriptionIndex = arg0->y;
-                drawMenuGlyphScript(arg0->x + 0x20, descriptionIndex + 0x20, script, 1,
-                                    (u16)(s32)arg0->spriteIndex, 0);
+                descriptionIndex = (s32)arg0->spriteIndex;
+                drawMenuGlyphScript(arg0->x + 0x20, arg0->y + 0x20, script, 1,
+                                    (u16)descriptionIndex, 0);
             }
         }
     } else {
