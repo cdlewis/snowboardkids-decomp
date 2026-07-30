@@ -1957,7 +1957,8 @@ void initCourseSelectExtraCourseBadge(CourseSelectWidgetActor *arg0) {
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateCourseSelectExtraCourseBadge);
 }
 
-// drawCourseSelectExtraCourseIconList best match: 99.742% (nonmatchings/drawCourseSelectExtraCourseIconList-6934502587000073416/base_14.c)
+// drawCourseSelectExtraCourseIconList best match: 99.742%
+// (nonmatchings/drawCourseSelectExtraCourseIconList-8742002951815950717/base_24.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/course_select/course_select_ui/drawCourseSelectExtraCourseIconList.s")
 
 #ifdef NON_MATCHING
@@ -2006,7 +2007,7 @@ void drawCourseSelectExtraCourseIconList(CourseSelectWidgetActor *arg0_in) {
                                 arg0->iconX[playerIndex][0],
                                 (s16)(arg0->iconY[playerIndex][0] +
                                       ((*promptState - 2) * arg0->rowSpacing[playerIndex])),
-                                getRelocatableHeapBlockBase(gAssetHandles[0x21]), overlayTile & 0xFFFF,
+                                getRelocatableHeapBlockBase(gAssetHandles[0x21]), overlayTile,
                                 0x20, 0x20, 0, alphaActor->alpha[0], 0);
                         }
                     }
