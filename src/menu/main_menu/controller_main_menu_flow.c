@@ -67,7 +67,6 @@ extern u8 gControllerPakGameName[];
 extern u8 gControllerPakExtName[];
 extern u8 gConnectedControllerBitmask;
 extern u8 gControllerPakSaveGameNameBytes[];
-extern u8 gControllerPakSaveGameNameBytesEnd[];
 extern u8 gControllerPakSaveExtNameBytes[];
 extern u8 gControllerPakSaveExtNameBytesEnd[];
 extern u8 gMainMenuReturnFromRace;
@@ -216,7 +215,7 @@ void checkControllerPakSaveStatus(u16 arg0) {
 
     i = 0;
     do {
-        gControllerPakSaveFileIdentity.extName[i] = gControllerPakSaveGameNameBytesEnd[i];
+        gControllerPakSaveFileIdentity.extName[i] = gControllerPakSaveExtNameBytes[i];
         i++;
     } while (i < 4);
 
@@ -281,15 +280,15 @@ void readControllerPakSave(u16 controllerIndex) {
 
     offset = 0;
     do {
-        gControllerPakSaveFileIdentity.extName[offset] = gControllerPakSaveGameNameBytesEnd[offset];
+        gControllerPakSaveFileIdentity.extName[offset] = gControllerPakSaveExtNameBytes[offset];
         offset++;
-    } while (&gControllerPakSaveGameNameBytesEnd[offset] < gControllerPakSaveExtNameBytesEnd);
+    } while (&gControllerPakSaveExtNameBytes[offset] < gControllerPakSaveExtNameBytesEnd);
 
     offset = 0;
     do {
         gControllerPakSaveFileIdentity.gameName[offset] = gControllerPakSaveGameNameBytes[offset];
         offset++;
-    } while (&gControllerPakSaveGameNameBytes[offset] < gControllerPakSaveGameNameBytesEnd);
+    } while (&gControllerPakSaveGameNameBytes[offset] < gControllerPakSaveExtNameBytes);
 
     osPfsFindFile(&gControllerPakHandles[controllerIndex], gControllerPakSaveFileIdentity.companyCode,
                   gControllerPakSaveFileIdentity.gameCode, gControllerPakExtName, gControllerPakGameName,
@@ -371,9 +370,9 @@ void writeControllerPakSave(u16 controllerIndex) {
     i = 0;
     do {
         gControllerPakSaveFileIdentity.extName[i] =
-            gControllerPakSaveGameNameBytesEnd[i];
+            gControllerPakSaveExtNameBytes[i];
         i++;
-    } while (&gControllerPakSaveGameNameBytesEnd[i] <
+    } while (&gControllerPakSaveExtNameBytes[i] <
              gControllerPakSaveExtNameBytesEnd);
 
     i = 0;
@@ -382,7 +381,7 @@ void writeControllerPakSave(u16 controllerIndex) {
             gControllerPakSaveGameNameBytes[i];
         i++;
     } while (&gControllerPakSaveGameNameBytes[i] <
-             gControllerPakSaveGameNameBytesEnd);
+             gControllerPakSaveExtNameBytes);
 
     newFileNo = &gControllerPakFileNos[controllerIndex];
     osPfsInitPak(&gControllerEventQueue,
