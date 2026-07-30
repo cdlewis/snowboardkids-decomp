@@ -68,6 +68,7 @@ extern void transformVec3iByFixedMatrix(Matrix4s, Vec3i *, Vec3i *);
 extern s16 fixedSine(s16);
 extern s16 fixedCosine(s16);
 extern s32 integerSquareRoot64(s64);
+extern s16 gFrameCounter;
 extern s8 gRacePlayerCount;
 extern s32 gMenuFlowState;
 extern Vec3i gRacePlayerGroundProbeOffsets[];
@@ -538,13 +539,9 @@ void resolveRacePlayerBodyCollisions(void) {
     }
 }
 
-// pushRacePlayersOutOfCylinderAndApplyItemHit best match: 97.776% (nonmatchings/pushRacePlayersOutOfCylinderAndApplyItemHit-2341155904261615822/base_15.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race/player/race_player_movement/pushRacePlayersOutOfCylinderAndApplyItemHit.s")
-
-#ifdef NON_MATCHING
 void pushRacePlayersOutOfCylinderAndApplyItemHit(Vec3i *pos, s32 xzSize, s32 ySize, u16 flag) {
     volatile u8 pad[8];
-    RacePlayer *player;
+    register s32 i;
     s32 temp;
     s32 xDiff;
     s32 yLimit;
@@ -557,58 +554,63 @@ void pushRacePlayersOutOfCylinderAndApplyItemHit(Vec3i *pos, s32 xzSize, s32 ySi
     s32 sine;
     s32 cosine;
 
-    player = gRacePlayers;
+    i = 0;
     do {
-        if (player->isActive != 0) {
+        if (gRacePlayers[i].isActive != 0) {
             yLimit = ySize;
-            temp = pos->y - player->unk5C;
+            temp = pos->y - gRacePlayers[i].unk5C;
             if (temp < 0) {
                 temp = -temp;
             } else {
-                yLimit = player->unk284;
+                yLimit = gRacePlayers[i].unk284;
             }
 
             if (temp <= yLimit) {
-                xzLimit = player->unk280 + xzSize;
-                xDiff = pos->x - player->posX;
+                xzLimit = gRacePlayers[i].unk280 + xzSize;
+                xDiff = pos->x - gRacePlayers[i].posX;
                 if (xDiff < 0) {
                     xDiff = -xDiff;
                 }
                 if (xDiff < xzLimit) {
-                    temp = pos->z - player->posZ;
+                    temp = pos->z - gRacePlayers[i].posZ;
                     if (temp < 0) {
                         temp = -temp;
                     }
                     if ((temp < xzLimit) &&
                         ((temp = integerSquareRoot64((s64)((0, xDiff)) * xDiff +
                                                (((s64)temp * temp) & 0xFFFFFFFFFFFFFFFF))) < xzLimit)) {
-                        angle = calculateFixedAngleBetweenXZPoints(pos->x, pos->z, player->posX, player->posZ);
+                        angle = calculateFixedAngleBetweenXZPoints(
+                            pos->x, pos->z, gRacePlayers[i].posX, gRacePlayers[i].posZ);
                         sine = fixedSine(angle);
                         cosine = fixedCosine(angle);
                         temp = xzLimit - temp;
-                        pushX = (s64)-sine * -temp / 0x1000;
-                        pushZ = (s64)cosine * -temp / 0x1000;
-                        player->posX -= pushX;
-                        player->posZ += pushZ;
+                        temp *= -1;
+                        pushX = (s64)-sine * (s64)((s64)temp & 0xFFFFFFFFFFFFFFFF) / 0x1000;
+                        pushZ = (s64)cosine * (s64)((s64)temp & 0xFFFFFFFFFFFFFFFF) / 0x1000;
+                        gRacePlayers[i].posX -= pushX;
+                        gRacePlayers[i].posZ += pushZ;
 
-                        localX = ((s64)cosine * player->unk2C8 - (s64)sine * player->unk2CC) / 0x1000;
-                        localZ = ((s64)sine * player->unk2C8 + (s64)cosine * player->unk2CC) / 0x1000;
+                        localX = ((s64)cosine * gRacePlayers[i].unk2C8 -
+                                  (s64)sine * gRacePlayers[i].unk2CC) /
+                                 0x1000;
+                        localZ = ((s64)sine * gRacePlayers[i].unk2C8 +
+                                  (s64)cosine * gRacePlayers[i].unk2CC) /
+                                 0x1000;
                         if (localZ > 0) {
                             localZ = -localZ;
                         }
-                        player->unk2C8 = ((s64)cosine * localX + (s64)sine * localZ) / 0x1000;
-                        if ((player && player) && player) {
-                        }
-                        player->unk2CC = ((s64)-sine * localX + (s64)cosine * localZ) / 0x1000;
-                        player->pendingItemHitFlags |= flag;
+                        gRacePlayers[i].unk2C8 =
+                            ((s64)cosine * localX + (s64)sine * localZ) / 0x1000;
+                        gRacePlayers[i].unk2CC =
+                            ((s64)-sine * localX + (s64)cosine * localZ) / 0x1000;
+                        gRacePlayers[i].pendingItemHitFlags |= flag;
                     }
                 }
             }
         }
-        player++;
-    } while (player != gRacePlayersEnd);
+        i++;
+    } while ((RacePlayer *)&gFrameCounter != &gRacePlayers[i]);
 }
-#endif
 
 void pushRacePlayerOutOfCylinderAndApplyItemHit(Vec3i *pos, s32 xzSize, s32 ySize, u16 flag, s16 playerIndex) {
     volatile int pad;
