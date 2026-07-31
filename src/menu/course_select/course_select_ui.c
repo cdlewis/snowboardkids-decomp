@@ -1551,8 +1551,8 @@ void initCourseSelectCourseStats(CourseSelectWidgetActor *arg0) {
     setCallbackTaskCallback(temp_a3, (CallbackTaskCallback)updateCourseSelectCourseStats);
 }
 
-// drawCourseSelectCourseDescription best match: 96.009%
-// (nonmatchings/drawCourseSelectCourseDescription-8742002951815950717/base_34.c)
+// drawCourseSelectCourseDescription best match: 96.410%
+// (nonmatchings/drawCourseSelectCourseDescription-7812531368330432019/base_13.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/course_select/course_select_ui/drawCourseSelectCourseDescription.s")
 
 #if 0
@@ -1702,22 +1702,23 @@ void drawCourseSelectCourseDescription(CourseSelectWidgetActor *arg0) {
     u32 descriptionIndex;
     s32 pricedCourseId;
     u32 price;
-    s32 digitCount;
+    register s32 digitCount;
     MenuGlyphScript *digit;
     u16 selectedIndex;
 
     if (gCourseSelectStatus.purchaseMessage == 0) {
         if ((D_8010AEA8 == 0) &&
-            ((D_80121D80->menuState == 0) || (D_80121D80->menuState == 3) ||
-             (D_80121D80->menuState == 9))) {
+            ((gRacePlayers[0].menuState == 0) || (gRacePlayers[0].menuState == 3) ||
+             (gRacePlayers[0].menuState == 9))) {
             if (gCourseSelectStatus.descriptionMode == 1) {
                 descriptionIndex = 3;
             } else if (gCourseSelectStatus.descriptionMode == 2) {
                 descriptionIndex = 4;
-            } else if ((D_80121D80->courseIndex >= 9) && (D_80121D80->courseIndex < 12)) {
+            } else if ((gRacePlayers[0].menuSelection >= 9) &&
+                       (gRacePlayers[0].menuSelection < 12)) {
                 descriptionIndex = 5;
             } else {
-                descriptionIndex = (D_80121D80->courseIndex % 3) & 0xFFFF;
+                descriptionIndex = (gRacePlayers[0].menuSelection % 3) & 0xFFFF;
             }
             text = gCourseSelectModeDescriptionText[descriptionIndex].text;
         } else {
@@ -1727,20 +1728,22 @@ void drawCourseSelectCourseDescription(CourseSelectWidgetActor *arg0) {
                 selectedIndex = gMenuChoicePromptState[0] - 1;
             }
             if ((gMenuChoicePromptState[0] >= 5) && (gMenuChoicePromptState[0] != 9)) {
-                arg0->pad18_2[8] = 1;
+                arg0->subState = 1;
             }
-            if (arg0->pad18_2[8] == 0) {
-                arg0->pad18_2[7] = selectedIndex;
+            if (arg0->subState == 0) {
+                arg0->timer = selectedIndex;
             } else {
-                selectedIndex = arg0->pad18_2[7];
+                selectedIndex = arg0->timer;
             }
-            if ((gRaceSplitscreenMode == 3) && (D_80121D80->courseIndex < 9)) {
-                text = gCourseSelectBoardLevelByCourseText[D_80121D80->courseIndex % 3].text;
+            if ((gRaceSplitscreenMode == 3) && (gRacePlayers[0].menuSelection < 9)) {
+                text = gCourseSelectBoardLevelByCourseText[gRacePlayers[0].menuSelection % 3].text;
             } else {
-                if ((D_80121D80->courseIndex >= 9) && (D_80121D80->courseIndex < 12)) {
+                if ((gRacePlayers[0].menuSelection >= 9) &&
+                    (gRacePlayers[0].menuSelection < 12)) {
                     pricedCourseId = gCourseSelectExtraCourseIds[selectedIndex] % 3;
                     descriptionIndex = pricedCourseId;
                     boardText = gCourseSelectExtraCourseBoardLevelText[descriptionIndex].text;
+                    pricedCourseId = gRacePlayers[0].menuSelection;
                     text = boardText;
                 } else {
                     boardText = gCourseSelectBoardLevelText;
@@ -1749,11 +1752,11 @@ void drawCourseSelectCourseDescription(CourseSelectWidgetActor *arg0) {
             }
         }
 
-        digitCount = 3;
-        drawMenuGlyphScript(arg0->x, arg0->y, text, 1, (u16)(s32)arg0->spriteIndex, 0);
+        boardText = text;
+        drawMenuGlyphScript(arg0->x, arg0->y, boardText, 1, (u16)(s32)arg0->spriteIndex, 0);
 
         if ((gRaceSplitscreenMode == 3) &&
-            ((D_80121D80->menuState == 1) || (D_80121D80->menuState == 2))) {
+            ((gRacePlayers[0].menuState == 1) || (gRacePlayers[0].menuState == 2))) {
             if ((gCharacterSelectHudState.highlightedRosterIndices[0] != 3) ||
                 ((gUnlockedExtraCourseFlags & 7) == 0)) {
                 script[0] = 0xFFFC;
@@ -1767,12 +1770,12 @@ void drawCourseSelectCourseDescription(CourseSelectWidgetActor *arg0) {
             if (gCourseSelectModeSelection == 0) {
                 script[0] = 0xFFFC;
                 script[1] = 6;
-                if ((selectedIndex >= 2) || (D_80121D80->courseIndex >= 9)) {
-                    if (D_80121D80->courseIndex >= 9) {
+                if ((selectedIndex >= 2) || (gRacePlayers[0].menuSelection >= 9)) {
+                    if (gRacePlayers[0].menuSelection >= 9) {
                         pricedCourseId = gCourseSelectExtraCourseIds[selectedIndex];
                     } else {
                         pricedCourseId =
-                            (D_80121D80->courseIndex % 3) + (selectedIndex * 3) - 3;
+                            (gRacePlayers[0].menuSelection % 3) + (selectedIndex * 3) - 3;
                     }
                     price = gCourseUnlockPrices[pricedCourseId];
                     if (price < 10000) {
@@ -1782,7 +1785,7 @@ void drawCourseSelectCourseDescription(CourseSelectWidgetActor *arg0) {
                     } else {
                         digitCount = 7;
                     }
-                    pricedCourseId = D_80121D80->courseIndex;
+                    pricedCourseId = gRacePlayers[0].menuSelection;
                     if (price != 0) {
                         digit = script;
                         digit += digitCount;
@@ -1797,6 +1800,7 @@ void drawCourseSelectCourseDescription(CourseSelectWidgetActor *arg0) {
                     if (pricedCourseId >= 9) {
                     }
                 } else {
+                    digitCount = 3;
                     do {
                         script[2] = 0x2B;
                         digit = script;
