@@ -546,8 +546,8 @@ void updateThrownPickupSpawner(ThrownPickupSpawnerActor *arg0) {
             if (gRaceSplitscreenMode != 2) {
                 for (i = 0; i < RACE_PLAYER_COUNT; i++) {
                     if (gRacePlayers[i].isActive != 0) {
-                        diffX = gRacePlayers[i].posX - entry->pos.x;
-                        diffZ = gRacePlayers[i].posZ - entry->pos.z;
+                        diffX = gRacePlayers[i].pos.x - entry->pos.x;
+                        diffZ = gRacePlayers[i].pos.z - entry->pos.z;
                         if ((((diffX < SPAWN_RANGE_MAX) && (diffX >= SPAWN_RANGE_MIN)) &&
                              (diffZ < SPAWN_RANGE_MAX)) && (diffZ >= SPAWN_RANGE_MIN)) {
                             found = TRUE;
@@ -824,33 +824,33 @@ void updateRacePickupIdle(RacePickupActor *arg0) {
             player = &gRacePlayers[i];
             playerInsideCylinder = 1;
 
-            if ((player->unk568 < 0x64) && (player->isCpu == 0)) {
+            if ((player->score < 0x64) && (player->isCpu == 0)) {
                 continue;
             }
 
             arg0->velY = 0x60000;
-            if (player->unk568 >= 0x64) {
-                player->unk568 -= 0x64;
+            if (player->score >= 0x64) {
+                player->score -= 0x64;
             } else {
-                player->unk568 = 0;
+                player->score = 0;
             }
 
             // arg0->variant distinguishes the two item box colors: one branch resolves a held
             // item (itemEffectType), the other an immediate action/ability (actionEffectType).
-            // Both roll tables are indexed by [racePosition][rollIndex], where rollIndex comes
+            // Both roll tables are indexed by [rankIndex][rollIndex], where rollIndex comes
             // from randomNextObject walking a per-player counter through the shared byte table.
             // Each player advances their own counter by 1 every time they draw an item/action,
-            // regardless of box color. Lower racePosition values are closer to 1st place and
+            // regardless of box color. Lower rankIndex values are closer to 1st place and
             // skew toward common/weaker tier values; higher values skew rarer/stronger.
             if (arg0->variant == 0) {
-                player->itemEffectType = gItemEffectRollTable[player->racePosition][randomNextObject((RandomStateObject *)player) & 0xF];
+                player->itemEffectType = gItemEffectRollTable[player->rankIndex][randomNextObject((RandomStateObject *)player) & 0xF];
                 if (gTrainingCourseLesson != 0) {
                     player->itemEffectType = 1;
                 }
                 player->itemEffectCount = 3;
                 player->itemEffectPalette = 4;
             } else {
-                player->actionEffectType = gActionEffectRollTable[player->racePosition][randomNextObject((RandomStateObject *)player) & 0xF];
+                player->actionEffectType = gActionEffectRollTable[player->rankIndex][randomNextObject((RandomStateObject *)player) & 0xF];
                 if (gTrainingCourseLesson != 0) {
                     player->actionEffectType = 1;
                 }

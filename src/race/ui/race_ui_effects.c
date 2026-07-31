@@ -1117,7 +1117,7 @@ void func_8005812C(void *arg0)
     i = 0;
     do
     {
-        sprintf(&buffer[i], gRaceUiCoinCounterFormat, gRacePlayers[0].unk568);
+        sprintf(&buffer[i], gRaceUiCoinCounterFormat, gRacePlayers[0].score);
         x = 0x20;
         if (gRacePlayers[0].rankIndex == 3)
         {
@@ -1222,15 +1222,15 @@ void func_80058610(RaceUiAlpha18Actor *arg0) {
     }
 
     if (player->rankIndex != 3) {
-        value = player->unk568;
+        value = player->score;
         if (value != 0) {
             shouldPlaySound = 1;
         }
         if (value >= 9) {
             player->money += 8;
-            player->unk568 = value - 8;
+            player->score = value - 8;
         } else {
-            player->unk568 = 0;
+            player->score = 0;
             player->money += value;
         }
     }
@@ -1238,8 +1238,8 @@ void func_80058610(RaceUiAlpha18Actor *arg0) {
     if (gPlayerInputPressed[0] & A_BUTTON) {
         gRacePlayers[0].money = player->money + arg0->score;
         if (player->rankIndex != 3) {
-            player->money += player->unk568;
-            player->unk568 = 0;
+            player->money += player->score;
+            player->score = 0;
         }
         arg0->score = 0;
     }
@@ -1249,7 +1249,7 @@ void func_80058610(RaceUiAlpha18Actor *arg0) {
     }
 
     if (player->rankIndex != 3) {
-        if ((arg0->score == 0) && (player->unk568 == 0)) {
+        if ((arg0->score == 0) && (player->score == 0)) {
             enqueueSoundEffect(2, 0x32);
             setCallbackTaskCallback(arg0, (CallbackTaskCallback)func_80058538);
         }
@@ -1420,7 +1420,7 @@ void func_8005905C(RaceUiResultsBannerActor *arg0) {
             drawMenuAsciiTextDefaultScale(-0x20, -0x38, text, 0);
         }
         if (gRacePlayers[actor->player0].isCpu == 0) {
-            sprintf(text, D_800E1290, gRacePlayers[actor->player0].playerIndexU + 1);
+            sprintf(text, D_800E1290, gRacePlayers[actor->player0].playerIndex + 1);
             drawMenuAsciiTextDefaultScale(-0x30, -0x48, text, 5);
         } else {
             drawMenuAsciiTextDefaultScale(-0x30, -0x48, D_800E1294, 4);
@@ -1431,7 +1431,7 @@ void func_8005905C(RaceUiResultsBannerActor *arg0) {
         sprintf(text, D_800E1298, gRacePlayers[actor->player1].unk18);
         drawMenuAsciiTextDefaultScale(0x70, -0x18, text, 6);
         if (gRacePlayers[actor->player1].isCpu == 0) {
-            sprintf(text, D_800E129C, gRacePlayers[actor->player1].playerIndexU + 1);
+            sprintf(text, D_800E129C, gRacePlayers[actor->player1].playerIndex + 1);
             drawMenuAsciiTextDefaultScale(0x60, -0x28, text, 5);
         } else {
             drawMenuAsciiTextDefaultScale(0x60, -0x28, D_800E12A0, 4);
@@ -1442,7 +1442,7 @@ void func_8005905C(RaceUiResultsBannerActor *arg0) {
         sprintf(text, D_800E12A4, gRacePlayers[actor->player2].unk18);
         drawMenuAsciiTextDefaultScale(-0x20, 8, text, 6);
         if (gRacePlayers[actor->player2].isCpu == 0) {
-            sprintf(text, D_800E12A8, gRacePlayers[actor->player2].playerIndexU + 1);
+            sprintf(text, D_800E12A8, gRacePlayers[actor->player2].playerIndex + 1);
             drawMenuAsciiTextDefaultScale(-0x30, -8, text, 5);
         } else {
             drawMenuAsciiTextDefaultScale(-0x30, -8, D_800E12AC, 4);
@@ -1453,7 +1453,7 @@ void func_8005905C(RaceUiResultsBannerActor *arg0) {
         sprintf(text, D_800E12B0, gRacePlayers[actor->player3].unk18);
         drawMenuAsciiTextDefaultScale(0x70, 0x28, text, 6);
         if (gRacePlayers[actor->player3].isCpu == 0) {
-            sprintf(text, D_800E12B4, gRacePlayers[actor->player3].playerIndexU + 1);
+            sprintf(text, D_800E12B4, gRacePlayers[actor->player3].playerIndex + 1);
             drawMenuAsciiTextDefaultScale(0x60, 0x18, text, 5);
         } else {
             drawMenuAsciiTextDefaultScale(0x60, 0x18, D_800E12B8, 4);
@@ -2014,25 +2014,25 @@ void func_8005B14C(RaceUiCounterActor *arg0) {
         value = 8;
     }
     /* IDO register allocation depends on this always-zero index. */
-    gRacePlayers[gPlayerInputPressed[0] * 0].unkC += value;
+    gRacePlayers[gPlayerInputPressed[0] * 0].money += value;
     arg0->value -= value;
 
     value = arg0->bonus;
     if ((value >= 8) && !(gPlayerInputPressed[0] & A_BUTTON)) {
         value = 8;
     }
-    gRacePlayers[0].unkC += value;
+    gRacePlayers[0].money += value;
     arg0->bonus -= value;
 
     value = arg0->target;
     if ((value >= 8) && !(gPlayerInputPressed[0] & A_BUTTON)) {
         value = 8;
     }
-    gRacePlayers[0].unkC += value;
+    gRacePlayers[0].money += value;
     arg0->target -= value;
 
-    if (gRacePlayers[0].unkC >= 0xF4240) {
-        gRacePlayers[0].unkC = 0xF423F;
+    if (gRacePlayers[0].money >= 0xF4240) {
+        gRacePlayers[0].money = 0xF423F;
     }
 
     if ((arg0->value == 0) && (arg0->bonus == 0) && (arg0->target == 0)) {
@@ -2440,32 +2440,32 @@ void func_8005C64C(RaceUiDualCounterActor *arg0) {
         value = 8;
     }
     /* IDO register allocation depends on this always-zero index. */
-    gRacePlayers[gPlayerInputPressed[0] * 0].unkC += value;
+    gRacePlayers[gPlayerInputPressed[0] * 0].money += value;
     arg0->leftValue -= value;
 
     value = arg0->rightValue;
     if ((value >= 8) && !(gPlayerInputPressed[0] & A_BUTTON)) {
         value = 8;
     }
-    gRacePlayers[0].unkC += value;
+    gRacePlayers[0].money += value;
     arg0->rightValue -= value;
 
     value = arg0->bonus;
     if ((value >= 8) && !(gPlayerInputPressed[0] & A_BUTTON)) {
         value = 8;
     }
-    gRacePlayers[0].unkC += value;
+    gRacePlayers[0].money += value;
     arg0->bonus -= value;
 
     value = arg0->leftTarget;
     if ((value >= 8) && !(gPlayerInputPressed[0] & A_BUTTON)) {
         value = 8;
     }
-    gRacePlayers[0].unkC += value;
+    gRacePlayers[0].money += value;
     arg0->leftTarget -= value;
 
-    if (gRacePlayers[0].unkC >= 0xF4240) {
-        gRacePlayers[0].unkC = 0xF423F;
+    if (gRacePlayers[0].money >= 0xF4240) {
+        gRacePlayers[0].money = 0xF423F;
     }
 
     if ((arg0->rightValue == 0) && (arg0->leftValue == 0) && (arg0->bonus == 0) && (arg0->leftTarget == 0)) {
@@ -2608,7 +2608,7 @@ void func_8005CE4C(RaceUiDualCounterActor *arg0) {
         temp_v0 = *new_var;
     } else {
         arg0->leftValue = ((arg0->row * 0x3C) + arg0->column) * 0x14;
-        if (gRacePlayers[0].unk572 == (temp_v0 = gRacePlayers[0].unk570)) {
+        if (gRacePlayers[0].courseCoinMarkerCount == (temp_v0 = gRacePlayers[0].unk570)) {
             arg0->flag = 1;
             arg0->bonus = 0x12C;
             temp_v0 = *new_var;
@@ -2969,25 +2969,25 @@ void func_8005DE6C(RaceUiCourseStatsActor *arg0) {
         value = 8;
     }
     /* IDO register allocation depends on this always-zero index. */
-    gRacePlayers[gPlayerInputPressed[0] * 0].unkC += value;
+    gRacePlayers[gPlayerInputPressed[0] * 0].money += value;
     arg0->pendingTrickPrize -= value;
 
     value = arg0->pendingMakeBonus;
     if ((value >= 8) && !(gPlayerInputPressed[0] & A_BUTTON)) {
         value = 8;
     }
-    gRacePlayers[0].unkC += value;
+    gRacePlayers[0].money += value;
     arg0->pendingMakeBonus -= value;
 
     value = arg0->pendingCompleteBonus;
     if ((value >= 8) && !(gPlayerInputPressed[0] & A_BUTTON)) {
         value = 8;
     }
-    gRacePlayers[0].unkC += value;
+    gRacePlayers[0].money += value;
     arg0->pendingCompleteBonus -= value;
 
-    if (gRacePlayers[0].unkC >= 0xF4240) {
-        gRacePlayers[0].unkC = 0xF423F;
+    if (gRacePlayers[0].money >= 0xF4240) {
+        gRacePlayers[0].money = 0xF423F;
     }
 
     if ((arg0->pendingTrickPrize == 0) && (arg0->pendingMakeBonus == 0) && (arg0->pendingCompleteBonus == 0)) {
@@ -3101,7 +3101,7 @@ void initRaceUiTrickPrizePayout(RaceUiCourseStatsActor *arg0) {
         arg0->pendingTrickPrize = 0;
         *(volatile s16 *)&arg0->pendingMakeBonus = 0;
     } else {
-        arg0->pendingTrickPrize = gRacePlayers[0].unk2C0 * 3;
+        arg0->pendingTrickPrize = gRacePlayers[0].trickAttackPointTotal * 3;
         arg0->pendingMakeBonus = gRacePlayers[0].unk2C3 * 10;
     }
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceUiTrickPrizePayoutFadeIn);
@@ -4865,10 +4865,10 @@ void func_80064914(RaceUiProjectileActor *arg0) {
         i = 0;
         do {
             otherPlayer = &gRacePlayers[i];
-            if ((otherPlayer->isActive != 0) && (otherPlayer->playerIndexU != arg0->index)) {
-                value = otherPlayer->unk568;
+            if ((otherPlayer->isActive != 0) && (otherPlayer->playerIndex != arg0->index)) {
+                value = otherPlayer->score;
                 amount = (value >= 0xA6) ? 0xA6 : value;
-                otherPlayer->unk568 = value - amount;
+                otherPlayer->score = value - amount;
                 addRacePlayerScore(&gRacePlayers[arg0->index], amount);
             }
             i++;

@@ -79,19 +79,19 @@ void initTrainingCourseRace(void) {
     two0 = 2;
     three0 = 3;
 
-    gRacePlayers[0].unk4 = 0;
-    gRacePlayers[1].unk4 = 1;
-    gRacePlayers[2].unk4 = 1;
-    gRacePlayers[3].unk4 = 1;
+    gRacePlayers[0].isCpu = 0;
+    gRacePlayers[1].isCpu = 1;
+    gRacePlayers[2].isCpu = 1;
+    gRacePlayers[3].isCpu = 1;
     new_var2 = 0;
     new_var = (unsigned int)(new_var = (gRacePlayers[new_var2].characterId = new_var2));
     gRacePlayers[1].characterId = 1;
     gRacePlayers[2].characterId = characterId;
     gRacePlayers[3].characterId = 3;
-    gRacePlayers[0].unk11 = 0;
-    gRacePlayers[1].unk11 = 0;
-    gRacePlayers[2].unk11 = 0;
-    gRacePlayers[3].unk11 = 0;
+    gRacePlayers[0].characterVariant = 0;
+    gRacePlayers[1].characterVariant = 0;
+    gRacePlayers[2].characterVariant = 0;
+    gRacePlayers[3].characterVariant = 0;
     gRacePlayers[0].unk12 = 3;
     gRacePlayers[1].unk12 = five0;
     gRacePlayers[2].unk12 = six0;
@@ -230,7 +230,7 @@ void runTrainingCourseUntilLessonEnd(void) {
     gCurrentGameTask->transitionTimer = 0;
     switch (gTrainingCourseLesson) {
         case 1:
-            if (gRacePlayers[0].surfaceAngle == 0x50) {
+            if (gRacePlayers[0].coursePathIndex == 0x50) {
                 setCurrentGameTaskCallback(fadeInTrainingCourseLessonEndMenu, 0);
                 requestMusicSequenceStop(0x40);
                 return;
@@ -240,14 +240,14 @@ void runTrainingCourseUntilLessonEnd(void) {
         case 3:
         case 4:
         case 5:
-            if (gRacePlayers[0].surfaceAngle == 0x9C) {
+            if (gRacePlayers[0].coursePathIndex == 0x9C) {
                 setCurrentGameTaskCallback(fadeInTrainingCourseLessonEndMenu, 0);
                 requestMusicSequenceStop(0x40);
                 return;
             }
             break;
         case 6:
-            if (gRacePlayers[0].surfaceAngle == 0xB4) {
+            if (gRacePlayers[0].coursePathIndex == 0xB4) {
                 setCurrentGameTaskCallback(fadeInTrainingCourseLessonEndMenu, 0);
                 requestMusicSequenceStop(0x40);
                 return;
@@ -255,14 +255,14 @@ void runTrainingCourseUntilLessonEnd(void) {
             break;
         case 7:
         case 8:
-            if (gRacePlayers[0].surfaceAngle == 0x16) {
+            if (gRacePlayers[0].coursePathIndex == 0x16) {
                 setCurrentGameTaskCallback(fadeInTrainingCourseLessonEndMenu, 0);
                 requestMusicSequenceStop(0x40);
                 return;
             }
             break;
         case 9:
-            if (gRacePlayers[0].surfaceAngle == 0x36) {
+            if (gRacePlayers[0].coursePathIndex == 0x36) {
                 setCurrentGameTaskCallback(fadeInTrainingCourseLessonEndMenu, 0);
                 requestMusicSequenceStop(0x40);
             }

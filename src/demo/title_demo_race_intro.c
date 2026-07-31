@@ -75,18 +75,18 @@ void initTitleDemoRaceIntro(void) {
     gMainMenuModeSelection = 0;
 
     players = gRacePlayers;
-    players[0].unk4 = 0;
-    players[playerOne].unk4 = 0;
-    players[2].unk4 = 0;
-    players[3].unk4 = 0;
+    players[0].isCpu = 0;
+    players[playerOne].isCpu = 0;
+    players[2].isCpu = 0;
+    players[3].isCpu = 0;
     players[0].characterId = 0;
     players[playerOne].characterId = one;
     players[2].characterId = two;
     players[3].characterId = three;
-    players[0].unk11 = six;
-    players[1].unk11 = six;
-    players[2].unk11 = six;
-    players[3].unk11 = six;
+    players[0].characterVariant = six;
+    players[1].characterVariant = six;
+    players[2].characterVariant = six;
+    players[3].characterVariant = six;
     players[0].unk12 = one;
     players[playerOne].unk12 = two;
     players[2].unk12 = three;

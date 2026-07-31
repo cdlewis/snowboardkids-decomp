@@ -1394,7 +1394,7 @@ void collidePlayerWithCourseTriggerVolume(RacePlayer *arg0, RaceCourseTriggerEff
                 if (transformed.z >= -trigger->scaleZ) {
                     if (trigger->scaleZ >= transformed.z) {
                         scaleX = trigger->scaleX;
-                        collisionRadius = player->unk280;
+                        collisionRadius = player->collisionRadius;
                         limit = scaleX + collisionRadius;
                         if (transformed.x >= ((-scaleX - collisionRadius) - 0x30000)) {
                             positiveLimit = limit + 0x30000;

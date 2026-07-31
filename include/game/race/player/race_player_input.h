@@ -35,17 +35,9 @@ typedef struct RacePlayerCollisionSource {
 } RacePlayerCollisionSource;
 
 typedef struct RacePlayer {
-    /* 0x000 */ union {
-        s16 playerIndex;
-        u16 playerIndexU16;
-        u16 playerIndexU;
-    };
+    /* 0x000 */ u16 playerIndex;
     /* 0x002 */ s16 unk2;
-    /* 0x004 */ union {
-        u8 unk4;
-        u8 isCpu;
-        u8 progressActive;
-    };
+    /* 0x004 */ u8 isCpu;
     /* 0x005 */ u8 selectedCharacterId;
     /* 0x006 */ u8 menuSelection;
     /* 0x007 */ u8 selectionUnlockState;
@@ -53,19 +45,9 @@ typedef struct RacePlayer {
     /* 0x009 */ u8 unk9;
     /* 0x00A */ u8 unkA;
     /* 0x00B */ u8 unkB;
-    /* 0x00C */ union {
-        s32 unkC;
-        s32 money;
-    };
-    /* 0x010 */ union {
-        u8 characterId;
-        u8 progressState;
-    };
-    /* 0x011 */ union {
-        u8 unk11;
-        u8 courseSelectCharacterId;
-        u8 characterVariant;
-    };
+    /* 0x00C */ s32 money;
+    /* 0x010 */ u8 characterId;
+    /* 0x011 */ u8 characterVariant;
     /* 0x012 */ u8 unk12;
     /* 0x013 */ s8 isActive;
     /* 0x014 */ s8 soundDisabled;
@@ -75,37 +57,16 @@ typedef struct RacePlayer {
     /* 0x018 */ s16 unk18;
     /* 0x01A */ u8 actionTriggerChance;
     /* 0x01B */ u8 itemTriggerChance;
-    /* 0x01C */ union {
-        Vec3i pos;
-        struct {
-            s32 posX;
-            s32 posY;
-            s32 posZ;
-        };
-    };
+    /* 0x01C */ Vec3i pos;
     /* 0x028 */ Vec3i unk28;
-    /* 0x034 */ union {
-        Vec3i unk34;
-        Vec3i previousPosition;
-    };
-    /* 0x040 */ union {
-        Vec3i unk40;
-        Vec3i velocity;
-        struct {
-            s32 unk40_x;
-            s32 unk44;
-            s32 unk48;
-        };
-    };
+    /* 0x034 */ Vec3i previousPosition;
+    /* 0x040 */ Vec3i velocity;
     /* 0x04C */ char pad4C[0xC];
     /* 0x058 */ s32 unk58;
     /* 0x05C */ s32 unk5C;
     /* 0x060 */ s32 unk60;
     /* 0x064 */ s32 unk64;
-    /* 0x068 */ union {
-        s32 unk68;
-        s32 collisionCenterOffset;
-    };
+    /* 0x068 */ s32 collisionCenterOffset;
     /* 0x06C */ s16 unk6C;
     /* 0x06E */ s16 unk6E;
     /* 0x070 */ s16 unk70;
@@ -117,10 +78,6 @@ typedef struct RacePlayer {
         struct {
             s16 stateTimerHigh;
             s16 stateTimerLow;
-        };
-        struct {
-            s16 unk7C;
-            s16 unk7E;
         };
     };
     /* 0x080 */ s32 unk80;
@@ -135,10 +92,7 @@ typedef struct RacePlayer {
         RacePlayerCollisionVolume collisionVolumes[14];
         struct {
             /* 0x094 */ FixedMatrix3sPadded transform;
-            /* 0x0A8 */ union {
-                Vec3i posA8;
-                Vec3i velocityA8;
-            };
+            /* 0x0A8 */ Vec3i itemSpawnOffset;
             /* 0x0B4 */ char padB4[0x14];
             /* 0x0C8 */ Vec3i posC8;
             /* 0x0D4 */ char padD4[0x94];
@@ -164,14 +118,8 @@ typedef struct RacePlayer {
     /* 0x274 */ s32 unk274;
     /* 0x278 */ s32 unk278;
     /* 0x27C */ s32 unk27C;
-    /* 0x280 */ union {
-        s32 unk280;
-        s32 collisionRadius;
-    };
-    /* 0x284 */ union {
-        s32 unk284;
-        s32 collisionHeight;
-    };
+    /* 0x280 */ s32 collisionRadius;
+    /* 0x284 */ s32 collisionHeight;
     /* 0x288 */ s16 unk288;
     /* 0x28A */ s16 unk28A;
     /* 0x28C */ s16 unk28C;
@@ -184,10 +132,7 @@ typedef struct RacePlayer {
     /* 0x2A6 */ s16 unk2A6;
     /* 0x2A8 */ s16 surfaceCueState[6];
     /* 0x2B4 */ s16 surfaceCueStep[6];
-    /* 0x2C0 */ union {
-        s16 unk2C0;
-        s16 trickAttackPointTotal;
-    };
+    /* 0x2C0 */ s16 trickAttackPointTotal;
     /* 0x2C2 */ s8 unk2C2;
     /* 0x2C3 */ s8 unk2C3;
     /* 0x2C4 */ u16 unk2C4;
@@ -195,10 +140,7 @@ typedef struct RacePlayer {
     /* 0x2C8 */ s32 unk2C8;
     /* 0x2CC */ s32 unk2CC;
     /* 0x2D0 */ char pad2D0[2];
-    /* 0x2D2 */ union {
-        s16 unk2D2;
-        s16 hitSourcePlayerIndex;
-    };
+    /* 0x2D2 */ s16 hitSourcePlayerIndex;
     /* 0x2D4 */ s16 unk2D4;
     /* 0x2D6 */ s16 unk2D6;
     /* 0x2D8 */ s16 unk2D8;
@@ -245,111 +187,48 @@ typedef struct RacePlayer {
     /* 0x454 */ char pad454[0x14];
     /* 0x468 */ Vec3i markerPoints[RACE_PLAYER_COUNT];
     /* 0x498 */ char pad498[8];
-    /* 0x4A0 */ union {
-        Vec3i groundMarkerSources[8];
-        struct {
-            /* 0x4A0 */ Vec3i unk4A0;
-            /* 0x4AC */ Vec3i unk4AC;
-            /* 0x4B8 */ Vec3i unk4B8;
-            /* 0x4C4 */ Vec3i unk4C4;
-            /* 0x4D0 */ Vec3i unk4D0;
-            /* 0x4DC */ Vec3i unk4DC;
-            /* 0x4E8 */ Vec3i unk4E8;
-            /* 0x4F4 */ Vec3i unk4F4;
-        };
-    };
+    /* 0x4A0 */ Vec3i groundMarkerSources[8];
     /* 0x500 */ u8 unk500;
     /* 0x501 */ char pad501[1];
-    /* 0x502 */ union {
-        s16 unk502;
-        s16 surfaceAngle;
-        s16 surfaceIndex;
-    };
+    /* 0x502 */ s16 coursePathIndex;
     /* 0x504 */ s32 unk504;
-    /* 0x508 */ union {
-        s8 unk508;
-        s8 lapDigit;
-    };
-    /* 0x509 */ union {
-        s8 rankIndex;
-        s8 racePosition;
-        s8 iconTile;
-    };
+    /* 0x508 */ s8 lapDigit;
+    /* 0x509 */ s8 rankIndex;
     /* 0x50A */ char pad50A[2];
     /* 0x50C */ union {
-        s32 unk50C;
         s16 *anglePtr;
         struct RaceUiRankTrigger *scoreAttackRingTriggerList;
     };
     /* 0x510 */ s16 shieldEffectTimer;
-    /* 0x512 */ union {
-        s8 itemEffectType;
-        s8 tensDigitTile;
-    };
-    /* 0x513 */ union {
-        s8 itemEffectPalette;
-        s8 tensDigitPalette;
-    };
-    /* 0x514 */ union {
-        s8 itemEffectCount;
-        s8 tensDigitOffset;
-    };
-    /* 0x515 */ union {
-        s8 actionEffectType;
-        s8 onesDigitTile;
-    };
-    /* 0x516 */ union {
-        s8 actionEffectPalette;
-        s8 onesDigitPalette;
-    };
+    /* 0x512 */ s8 itemEffectType;
+    /* 0x513 */ s8 itemEffectPalette;
+    /* 0x514 */ s8 itemEffectCount;
+    /* 0x515 */ s8 actionEffectType;
+    /* 0x516 */ s8 actionEffectPalette;
     /* 0x517 */ s8 unk517;
     /* 0x518 */ s8 randomIndex;
     /* 0x519 */ s8 unk519;
-    /* 0x51A */ union {
-        u8 actionEffectEnabled;
-        u8 itemTargetFlag;
-    };
+    /* 0x51A */ u8 itemTargetFlag;
     /* 0x51B */ char pad51B[1];
     /* 0x51C */ u32 checkpointEventMask;
     /* 0x520 */ s32 smoothedPathOffset;
-    /* 0x524 */ union {
-        s8 unk524;
-        u8 checkpointHit;
-    };
+    /* 0x524 */ s8 checkpointHit;
     /* 0x525 */ s8 unk525;
     /* 0x526 */ char pad526[1];
-    /* 0x527 */ union {
-        s8 surfaceCueOverrideMask;
-        s8 checkpointEventId;
-    };
+    /* 0x527 */ s8 surfaceCueOverrideMask;
     /* 0x528 */ s8 unk528;
     /* 0x529 */ u8 displayRank;
-    /* 0x52A */ union {
-        s8 unk52A;
-        u8 rankArrow;
-    };
+    /* 0x52A */ s8 rankArrow;
     /* 0x52B */ u8 rankChangeTimer;
     /* 0x52C */ s8 actionTriggerCooldown;
     /* 0x52D */ s8 itemTriggerCooldown;
     /* 0x52E */ char pad52E[0x3A];
-    /* 0x568 */ union {
-        s32 unk568;
-        s32 timerValue;
-    };
+    /* 0x568 */ s32 score;
     /* 0x56C */ s32 unk56C;
     /* 0x570 */ s16 unk570;
-    /* 0x572 */ union {
-        s16 unk572;
-        s16 courseCoinMarkerCount;
-    };
-    /* 0x574 */ union {
-        s16 unk574;
-        s16 scoreAttackPointTotal;
-    };
-    /* 0x576 */ union {
-        s16 unk576;
-        s16 scoreAttackPointTarget;
-    };
+    /* 0x572 */ s16 courseCoinMarkerCount;
+    /* 0x574 */ s16 scoreAttackPointTotal;
+    /* 0x576 */ s16 scoreAttackPointTarget;
     /* 0x578 */ s16 unk578;
     /* 0x57A */ s8 unk57A;
     /* 0x57B */ s8 unk57B;
@@ -362,15 +241,9 @@ typedef struct RacePlayer {
     /* 0x586 */ char pad586[2];
     /* 0x588 */ f32 unk588;
     /* 0x58C */ char pad58C[0x78];
-    /* 0x604 */ union {
-        s16 actionEffectLevel;
-        s16 rumbleTimer;
-    };
+    /* 0x604 */ s16 rumbleTimer;
     /* 0x606 */ s16 rumblePatternIndex;
-    /* 0x608 */ union {
-        s8 actionEffectFrame;
-        s8 rumblePatternId;
-    };
+    /* 0x608 */ s8 rumblePatternId;
     /* 0x609 */ char pad609[1];
     /* 0x60A */ s16 replayFrame;
 } RacePlayer;

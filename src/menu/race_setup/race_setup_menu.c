@@ -309,8 +309,8 @@ void updateRaceSetupSaveMenu(void) {
                                     requestControllerPakSaveReadWithContext((u16)playerIndex, gPlayerCount, choiceValue);
                                     result = gControllerPakRetryCounts[playerIndex];
                                     if (result == 0) {
-                                        player->unk568 = 0;
-                                        player->unkC = GAME_SAVE_DATA_SLOT(playerIndex).money;
+                                        player->score = 0;
+                                        player->money = GAME_SAVE_DATA_SLOT(playerIndex).money;
                                         gControllerPakStatusCodes[playerIndex] = CONTROLLER_PAK_STATUS_SAVE_FOUND;
                                         *choiceState = 1;
                                     } else if (result == CONTROLLER_PAK_RETRY_LIMIT) {
@@ -394,7 +394,7 @@ void updateRaceSetupSaveMenu(void) {
 
                                                     initRaceSetupPlayerSaveData(playerIndex);
                                                     gRaceSetupMenuSubState.pendingStatusCodes[playerIndex] = CONTROLLER_PAK_STATUS_READY;
-                                                    player->unkC = save->money;
+                                                    player->money = save->money;
                                                 } else if (state == CONTROLLER_PAK_STATUS_NO_PAK) {
                                                     gRaceSetupMenuSubState.pendingStatusCodes[playerIndex] = CONTROLLER_PAK_STATUS_REPAIR;
                                                 } else {
@@ -410,7 +410,7 @@ void updateRaceSetupSaveMenu(void) {
 
                                                     gRaceSetupMenuSubState.pendingStatusCodes[playerIndex] = CONTROLLER_PAK_STATUS_READY;
                                                     initRaceSetupPlayerSaveData(playerIndex);
-                                                    player->unkC = save->money;
+                                                    player->money = save->money;
                                                 }
                                             }
                                             *choiceState += 2;
@@ -602,8 +602,8 @@ void updateRaceSetupSaveMenu(void) {
                             case CONTROLLER_PAK_STATUS_SAVE_READ: {
                                 requestControllerPakSaveRead((u16)i);
                                 if (gControllerPakRetryCounts[i] == 0) {
-                                    gRacePlayers[i].unkC = D_800EC9F4[i].money;
-                                    gRacePlayers[i].unk568 = 0;
+                                    gRacePlayers[i].money = D_800EC9F4[i].money;
+                                    gRacePlayers[i].score = 0;
                                     gControllerPakStatusCodes[i] = CONTROLLER_PAK_STATUS_SAVE_FOUND;
                                     *(&gMenuChoicePromptState[i]) = 1;
                                 } else if (gControllerPakRetryCounts[i] == CONTROLLER_PAK_RETRY_LIMIT) {
@@ -686,7 +686,7 @@ void updateRaceSetupSaveMenu(void) {
                                         if (*(&gMenuChoicePromptState[i]) == SAVE_CHOICE_SKIP_PAK) {
                                             if (gControllerPakStatusCodes[i] == CONTROLLER_PAK_STATUS_SAVE_FOUND) {
                                                 initRaceSetupPlayerSaveData(i);
-                                                gRacePlayers[i].unkC = GAME_SAVE_DATA_SLOT(i).money;
+                                                gRacePlayers[i].money = GAME_SAVE_DATA_SLOT(i).money;
                                                 gRaceSetupMenuSubState.pendingStatusCodes[i] =
                                                     CONTROLLER_PAK_STATUS_READY;
                                             } else if (gControllerPakStatusCodes[i] == CONTROLLER_PAK_STATUS_NO_PAK) {
@@ -707,7 +707,7 @@ void updateRaceSetupSaveMenu(void) {
                                                 gRaceSetupMenuSubState.pendingStatusCodes[i] =
                                                     CONTROLLER_PAK_STATUS_READY;
                                                 initRaceSetupPlayerSaveData(i);
-                                                gRacePlayers[i].unkC = GAME_SAVE_DATA_SLOT(i).money;
+                                                gRacePlayers[i].money = GAME_SAVE_DATA_SLOT(i).money;
                                             }
                                         }
                                         *choiceState += 2;

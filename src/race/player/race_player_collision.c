@@ -297,11 +297,11 @@ void resolveRacePlayerHitReactions(RacePlayer *arg0) {
     gRacePlayerHitCueId = 0;
     temp_v0 = arg0->pendingItemHitFlags;
     if (temp_v0 != 0) {
-        if ((temp_v0 & 0x200) && (arg0->unk5C < (getRaceCourseSurfaceHeight(arg0->unk502, arg0->posX, arg0->posZ) + 0xB0000))) {
+        if ((temp_v0 & 0x200) && (arg0->unk5C < (getRaceCourseSurfaceHeight(arg0->coursePathIndex, arg0->pos.x, arg0->pos.z) + 0xB0000))) {
             arg0->pendingItemHitFlags |= 1;
         }
-        gRacePlayerHitDeltaX = arg0->unk2C8 - arg0->unk40_x;
-        gRacePlayerHitDeltaZ = arg0->unk2CC - arg0->unk48;
+        gRacePlayerHitDeltaX = arg0->unk2C8 - arg0->velocity.x;
+        gRacePlayerHitDeltaZ = arg0->unk2CC - arg0->velocity.z;
         gRacePlayerHitDistance = (u32)integerSquareRoot64((s64) gRacePlayerHitDeltaX * gRacePlayerHitDeltaX + (s64) gRacePlayerHitDeltaZ * gRacePlayerHitDeltaZ) >> 1;
         gRacePlayerHitAngle = calculateFixedAngleFromDeltaXZ(gRacePlayerHitDeltaX, gRacePlayerHitDeltaZ);
         if ((arg0->pendingItemHitFlags & 1) && (tryQueueRacePlayerHitCuePushForward(arg0) != 0) && (tryQueueRacePlayerHitCueSpinout(arg0) != 0) && (tryQueueRacePlayerHitCueNudge(arg0) != 0)) {
@@ -368,7 +368,7 @@ void resolveRacePlayerHitReactions(RacePlayer *arg0) {
         case 5:
         case 6:
             if (gRacePlayerHitCueId == 6) {
-                if (gRacePlayerHudStatuses[arg0->playerIndexU16].active != 0) {
+                if (gRacePlayerHudStatuses[arg0->playerIndex].active != 0) {
                     enqueueSoundEffect(0x47, 0x32);
                 }
             } else {
@@ -382,7 +382,7 @@ void resolveRacePlayerHitReactions(RacePlayer *arg0) {
             arg0->unk2E4 = arg0->unk2CC;
             if (arg0->soundDisabled == 0) {
                 enqueuePositionalSoundEffect(0x14, &arg0->pos, 0x7F, 0x32);
-                spawnRacePlayerHitEffect((s16) arg0->playerIndexU16, arg0->unk2DE, 0, arg0->unk284 / 2, arg0->unk280);
+                spawnRacePlayerHitEffect((s16) arg0->playerIndex, arg0->unk2DE, 0, arg0->collisionHeight / 2, arg0->collisionRadius);
             }
             break;
         case 8:
@@ -392,7 +392,7 @@ void resolveRacePlayerHitReactions(RacePlayer *arg0) {
             arg0->updateTimer = 0;
             if (arg0->soundDisabled == 0) {
                 enqueuePositionalSoundEffect(0x14, &arg0->pos, 0x7F, 0x32);
-                spawnRacePlayerHitEffect((s16) arg0->playerIndexU16, gRacePlayerHitEffectAngle, 0, arg0->unk284 / 2, arg0->unk280);
+                spawnRacePlayerHitEffect((s16) arg0->playerIndex, gRacePlayerHitEffectAngle, 0, arg0->collisionHeight / 2, arg0->collisionRadius);
             }
             break;
         case 9:
@@ -414,7 +414,7 @@ void resolveRacePlayerHitReactions(RacePlayer *arg0) {
             arg0->unk2E4 = arg0->unk2CC;
             if (arg0->soundDisabled == 0) {
                 enqueuePositionalSoundEffect(0x14, &arg0->pos, 0x7F, 0x32);
-                spawnRacePlayerHitEffect((s16) arg0->playerIndexU16, arg0->unk2DE, 1, arg0->unk284 / 2, arg0->unk280);
+                spawnRacePlayerHitEffect((s16) arg0->playerIndex, arg0->unk2DE, 1, arg0->collisionHeight / 2, arg0->collisionRadius);
             }
             break;
         case 1:
@@ -423,7 +423,7 @@ void resolveRacePlayerHitReactions(RacePlayer *arg0) {
         case 7:
             if (arg0->soundDisabled == 0) {
                 enqueuePositionalSoundEffect(0x14, &arg0->pos, 0x7F, 0x32);
-                spawnRacePlayerHitEffect((s16) arg0->playerIndexU16, 0, 1, arg0->unk284 / 2, 0);
+                spawnRacePlayerHitEffect((s16) arg0->playerIndex, 0, 1, arg0->collisionHeight / 2, 0);
             }
             /* fallthrough */
         case 10:
@@ -433,8 +433,8 @@ void resolveRacePlayerHitReactions(RacePlayer *arg0) {
             arg0->updateTimer = 0;
             break;
         case 11:
-            gRacePlayers[arg0->unk2D2 & 3].unk517 = 1;
-            if (gRacePlayers[arg0->unk2D2 & 3].unk4 != 0) {
+            gRacePlayers[arg0->hitSourcePlayerIndex & 3].unk517 = 1;
+            if (gRacePlayers[arg0->hitSourcePlayerIndex & 3].isCpu != 0) {
                 enqueueRacePlayerVoiceSound(arg0, 2);
             } else {
                 enqueueRacePlayerVoiceSound(arg0, 3);
@@ -444,8 +444,8 @@ void resolveRacePlayerHitReactions(RacePlayer *arg0) {
             arg0->updateTimer = 0;
             break;
         case 12:
-            gRacePlayers[arg0->unk2D2 & 3].unk517 = 1;
-            if (gRacePlayers[arg0->unk2D2 & 3].unk4 != 0) {
+            gRacePlayers[arg0->hitSourcePlayerIndex & 3].unk517 = 1;
+            if (gRacePlayers[arg0->hitSourcePlayerIndex & 3].isCpu != 0) {
                 enqueueRacePlayerVoiceSound(arg0, 2);
             } else {
                 enqueueRacePlayerVoiceSound(arg0, 3);
@@ -455,8 +455,8 @@ void resolveRacePlayerHitReactions(RacePlayer *arg0) {
             arg0->updateTimer = 0;
             break;
         case 13:
-            gRacePlayers[arg0->unk2D2 & 3].unk517 = 1;
-            if (gRacePlayers[arg0->unk2D2 & 3].unk4 != 0) {
+            gRacePlayers[arg0->hitSourcePlayerIndex & 3].unk517 = 1;
+            if (gRacePlayers[arg0->hitSourcePlayerIndex & 3].isCpu != 0) {
                 enqueueRacePlayerVoiceSound(arg0, 2);
             } else {
                 enqueueRacePlayerVoiceSound(arg0, 3);
@@ -472,8 +472,8 @@ void resolveRacePlayerHitReactions(RacePlayer *arg0) {
             arg0->updateTimer = 0;
             break;
         case 15:
-            gRacePlayers[arg0->unk2D2 & 3].unk517 = 1;
-            if (gRacePlayers[arg0->unk2D2 & 3].unk4 != 0) {
+            gRacePlayers[arg0->hitSourcePlayerIndex & 3].unk517 = 1;
+            if (gRacePlayers[arg0->hitSourcePlayerIndex & 3].isCpu != 0) {
                 enqueueRacePlayerVoiceSound(arg0, 2);
             } else {
                 enqueueRacePlayerVoiceSound(arg0, 3);
@@ -485,7 +485,7 @@ void resolveRacePlayerHitReactions(RacePlayer *arg0) {
         case 16:
         case 17:
             if (gRacePlayerHitCueId == 0x11) {
-                if (gRacePlayers[arg0->unk2D2 & 3].unk4 != 0) {
+                if (gRacePlayers[arg0->hitSourcePlayerIndex & 3].isCpu != 0) {
                     enqueueRacePlayerVoiceSound(arg0, 2);
                 } else {
                     enqueueRacePlayerVoiceSound(arg0, 3);
@@ -494,15 +494,15 @@ void resolveRacePlayerHitReactions(RacePlayer *arg0) {
                 enqueueRacePlayerVoiceSound(arg0, 2);
             }
             if (arg0->soundDisabled == 0) {
-                spawnRacePlayerHitEffect((s16) arg0->playerIndexU16, 0, 3, arg0->unk284 / 2, 0);
+                spawnRacePlayerHitEffect((s16) arg0->playerIndex, 0, 3, arg0->collisionHeight / 2, 0);
             }
             arg0->mode = 0x18;
             arg0->updateState = 0;
             arg0->updateTimer = 0;
             break;
         case 3:
-            gRacePlayers[arg0->unk2D2 & 3].unk517 = 1;
-            if (gRacePlayers[arg0->unk2D2 & 3].unk4 != 0) {
+            gRacePlayers[arg0->hitSourcePlayerIndex & 3].unk517 = 1;
+            if (gRacePlayers[arg0->hitSourcePlayerIndex & 3].isCpu != 0) {
                 enqueueRacePlayerVoiceSound(arg0, 2);
             } else {
                 enqueueRacePlayerVoiceSound(arg0, 3);
@@ -536,7 +536,7 @@ void resolveRacePlayerHitReactions(RacePlayer *arg0) {
 s32 isRacePlayerRespawnSurfaceValid(RacePlayer *arg0) {
     s32 temp_v0;
 
-    temp_v0 = getRaceCourseSurfaceType(arg0->unk502, arg0->posX, arg0->posZ);
+    temp_v0 = getRaceCourseSurfaceType(arg0->coursePathIndex, arg0->pos.x, arg0->pos.z);
     if (temp_v0 == 3) {
         return 0;
     }

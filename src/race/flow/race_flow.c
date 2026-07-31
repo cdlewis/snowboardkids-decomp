@@ -202,7 +202,7 @@ void saveRaceReplayCourseGridEntry(void) {
 
 loop:
     if (entry->status != COURSE_GRID_ENTRY_END) {
-        if ((entry->status == COURSE_GRID_ENTRY_FREE) && (entry->courseId == gRacePlayers[0].surfaceAngle)) {
+        if ((entry->status == COURSE_GRID_ENTRY_FREE) && (entry->courseId == gRacePlayers[0].coursePathIndex)) {
             s32 *status = (s32 *)getRelocatableHeapBlockBase(gAssetHandles[0x2B]);
             if (*status < 0x1194) {
                 entry->status = *status;
@@ -304,10 +304,10 @@ void initNewGameSaveData(void) {
     gRacePlayers[1].selectionUnlockState = 0;
     gRacePlayers[2].selectionUnlockState = 0;
     gRacePlayers[3].selectionUnlockState = 0;
-    gRacePlayers[0].unkC = 0;
-    gRacePlayers[1].unkC = 0;
-    gRacePlayers[2].unkC = 0;
-    gRacePlayers[3].unkC = 0;
+    gRacePlayers[0].money = 0;
+    gRacePlayers[1].money = 0;
+    gRacePlayers[2].money = 0;
+    gRacePlayers[3].money = 0;
     gRacePlayers[0].unk18 = 0;
     gRacePlayers[1].unk18 = 0;
     gRacePlayers[2].unk18 = 0;
@@ -517,10 +517,10 @@ void initRaceSceneFlow(void) {
     stopSoundEffects();
     requestMusicSequenceStop(0);
 
-    gRacePlayers[0].unk4 = 1;
-    gRacePlayers[1].unk4 = 1;
-    gRacePlayers[2].unk4 = 1;
-    gRacePlayers[3].unk4 = 1;
+    gRacePlayers[0].isCpu = 1;
+    gRacePlayers[1].isCpu = 1;
+    gRacePlayers[2].isCpu = 1;
+    gRacePlayers[3].isCpu = 1;
 
     courseIndex = gRaceCourseIndex.signedValue;
     gRacePlayers[0].actionTriggerChance = D_800DC5B4[courseIndex];
@@ -552,7 +552,7 @@ void initRaceSceneFlow(void) {
         player = gRacePlayers;
         end = &gRacePlayers[playerCount];
         do {
-            player->unk4 = 0;
+            player->isCpu = 0;
             player++;
         } while (player < &gRacePlayers[playerCount]);
     }
@@ -687,7 +687,7 @@ void initRaceSceneFlow(void) {
             if (history->enabled != 0) {
                 history->writeIndex = 0;
                 gRacePlayers[1].isActive = 1;
-                gRacePlayers[1].unk4 = 0;
+                gRacePlayers[1].isCpu = 0;
                 gRacePlayers[1].soundDisabled = 1;
                 gRacePlayers[1].replayInputSource = 1;
                 gRacePlayers[1].characterId = history->characterId;
@@ -1667,10 +1667,10 @@ void initRaceGhostReplayFlow(void) {
     asset->unk0 = 0;
     one = 1;
     active = 1;
-    gRacePlayers[0].unk4 = 0;
-    gRacePlayers[1].unk4 = one;
-    gRacePlayers[2].unk4 = one;
-    gRacePlayers[3].unk4 = one;
+    gRacePlayers[0].isCpu = 0;
+    gRacePlayers[1].isCpu = one;
+    gRacePlayers[2].isCpu = one;
+    gRacePlayers[3].isCpu = one;
     gRacePlayers[0].isActive = active;
     gRacePlayers[1].isActive = 0;
     gRacePlayers[2].isActive = 0;

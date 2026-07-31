@@ -430,7 +430,7 @@ void updateCourseSelectPreviewModelIn(CourseSelectAnimatedActor *arg0)
         case 1:
             if (D_8010AECC[i] & 1) {
                 if (D_8010AEE8[i] < 0) {
-                    if ((s32)gRacePlayers[i].courseSelectCharacterId >= 9) {
+                    if ((s32)gRacePlayers[i].characterVariant >= 9) {
                         actor->targetCourse[i] = 2;
                     } else {
                         actor->targetCourse[i] = (gRacePlayers[i].menuSelection % 3) - 1;
@@ -647,7 +647,7 @@ void updateCourseSelectPreviewModelOut(CourseSelectAnimatedActor *arg0)
         case 1:
             if (D_8010AECC[i] & 1) {
                 if (D_8010AEE8[i] < 0) {
-                    if ((s32)gRacePlayers[i].courseSelectCharacterId >= 9) {
+                    if ((s32)gRacePlayers[i].characterVariant >= 9) {
                         actor->targetCourse[i] = 2;
                     } else {
                         actor->targetCourse[i] = (gRacePlayers[i].menuSelection % 3) - 1;
