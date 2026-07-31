@@ -844,7 +844,7 @@ void drawRaceCourseProgressMeter(void *arg0) {
     } while (i >= 0);
 }
 
-// updateRaceCourseProgressMeter best match: 99.551% at nonmatchings/updateRaceCourseProgressMeter-8498672362023432715/base_2.c.
+// updateRaceCourseProgressMeter best match: 99.775% at nonmatchings/updateRaceCourseProgressMeter-7812531368330432019/base_7.c.
 #pragma GLOBAL_ASM("asm/nonmatchings/race/ui/race_hud/updateRaceCourseProgressMeter.s")
 
 #ifdef NON_MATCHING
@@ -855,7 +855,9 @@ void updateRaceCourseProgressMeter(void) {
     s32 i;
     s32 progress;
 
-    player = gRacePlayers; if (0) { } i = 0; do { getRacePlayerRankingProgress(i, &slots[1], &slots[0]); progress = slots[1]; i++;
+    player = gRacePlayers; i = 0; do { getRacePlayerRankingProgress(i, &slots[1], &slots[0]);
+        progress = slots[1];
+        i++;
         if (progress < 0) {
             progress = 0;
         }
@@ -868,7 +870,7 @@ void updateRaceCourseProgressMeter(void) {
             player->unk57E = 0x80;
         }
         player++;
-    } while (i != 4);
+    } while ((i != 4) != 0U);
 
     if (gRaceHudMode == 0) {
         addRenderCallback(&gRaceOverlayRenderCallbackList, drawRaceCourseProgressMeter, 0);
