@@ -73,10 +73,10 @@ void initRaceSplitscreenSelectMenu(void) {
     updateCallbackTasks();
 }
 
-// updateRaceSplitscreenSelectMenu best match: 99.668% (nonmatchings/updateRaceSplitscreenSelectMenu-6759517978943015823/base_20.c)
+// updateRaceSplitscreenSelectMenu best match: 99.867% (nonmatchings/updateRaceSplitscreenSelectMenu-612100002960107196/base_21.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/splitscreen_select/race_splitscreen_select_menu/updateRaceSplitscreenSelectMenu.s")
 
-#ifdef NON_MATCHING
+#ifdef NON_MATCHING_PREVIOUS
 void updateRaceSplitscreenSelectMenu(void) {
     s32 newInput;
     s32 heldInput;
@@ -190,6 +190,110 @@ void updateRaceSplitscreenSelectMenu(void) {
         if (gRacePlayers[0].menuState == 2) {
             setCurrentGameTaskCallback(handleRaceSplitscreenSelectMenuSelection, 0);
             pressedUpCopy = pressedUp;
+            if (gMenuExitSelection == 0) {
+                requestMusicSequenceStop(4);
+            }
+        }
+    }
+    gMenuFlowState = 0;
+    updateCallbackTasks();
+}
+#endif
+
+#ifdef NON_MATCHING
+void updateRaceSplitscreenSelectMenu(void) {
+    s32 pressed;
+    s32 heldUp;
+    u16 repeatTimer;
+    u8 oldSelection;
+    u8 confirmTimer;
+
+    if (gCurrentGameTask->fade != 0) {
+        gCurrentGameTask->fade = stepMenuFadeAlpha((s16)gCurrentGameTask->fade, 0x24, 0);
+        if (gCurrentGameTask->fade == 0) {
+            createCallbackTask((CallbackTaskCallback)initRaceSplitscreenSelectPlayerCountIcons, 0, 0x63);
+        }
+    } else {
+        if ((gRaceSplitscreenSelectCursorTarget.portraitAlpha == 0x100) &&
+            (gRacePlayers[0].menuState == 0)) {
+            if (gMenuSelectionConfirmTimer == 0) {
+                if (gRaceSplitscreenSelectCursorTarget.state == 1) {
+                    heldUp = gPlayerInputHeld[0] & 0x10800;
+                    oldSelection = gRaceSplitscreenMode;
+                    if ((heldUp == 0) && !(gPlayerInputHeld[0] & 0x20400)) {
+                        gMenuInputRepeatTimers[0] = 0;
+                    }
+                    pressed = gPlayerInputPressed[0];
+                    if ((pressed & 0x10800) ||
+                        ((heldUp != 0) && (gMenuInputRepeatTimers[0] >= 0xB) &&
+                         ((gMenuInputRepeatTimers[0] % 3) == 0))) {
+                        repeatTimer = gMenuInputRepeatTimers[0];
+                        if (!repeatTimer) {
+                            gMenuInputRepeatTimers[0] = repeatTimer + 1;
+                            repeatTimer = gMenuInputRepeatTimers[0];
+                        }
+                        if (gRaceSplitscreenMode > 0) {
+                            gRaceSplitscreenMode--;
+                        }
+                    } else {
+                        repeatTimer = gMenuInputRepeatTimers[0];
+                        if ((pressed & 0x20400) ||
+                            ((gPlayerInputHeld[0] & 0x20400) && (repeatTimer >= 0xB) &&
+                             ((repeatTimer % 3) == 0))) {
+                            if (!repeatTimer) {
+                                gMenuInputRepeatTimers[0] = repeatTimer + 1;
+                                repeatTimer = gMenuInputRepeatTimers[0];
+                            }
+                            if (gRaceSplitscreenMode < 4) {
+                                gRaceSplitscreenMode++;
+                            }
+                        }
+                    }
+                    if (repeatTimer != 0) {
+                        gMenuInputRepeatTimers[0] = repeatTimer + 1;
+                        if (gMenuInputRepeatTimers[0] == 0xFFFF) {
+                            gMenuInputRepeatTimers[0] = 0xC;
+                        }
+                    }
+                    if (oldSelection != gRaceSplitscreenMode) {
+                        enqueueSoundEffect(0x19, 0x32);
+                        pressed = gPlayerInputPressed[0];
+                    }
+                    if ((pressed & 0x1000) ||
+                        ((pressed & 0x8000) && (gMenuFlowState == 5))) {
+                        if ((gRaceSplitscreenMode == 3) &&
+                            (gRacePlayers[0].selectedCharacterId == 5)) {
+                            enqueueSoundEffect(0x46, 0x32);
+                        } else {
+                            enqueueSoundEffect(0x18, 0x32);
+                            gMenuSelectionConfirmTimer = 1;
+                            gRaceSplitscreenSelectCursorTarget.state = 2;
+                            gRaceSplitscreenSelectCursorTarget.nextState = 0x100;
+                            gMenuExitSelection = 0;
+                        }
+                    }
+                }
+            } else {
+                gMenuSelectionConfirmTimer++;
+            }
+        }
+
+        confirmTimer = gMenuSelectionConfirmTimer;
+        if ((gPlayerInputPressed[0] & 0x4000) && (gMenuFlowState == 5) &&
+            (confirmTimer == 0)) {
+            enqueueSoundEffect(1, 0x32);
+            gMenuSelectionConfirmTimer = 1;
+            gRaceSplitscreenSelectCursorTarget.state = 2;
+            gRaceSplitscreenSelectCursorTarget.nextState = 0x100;
+            gMenuExitSelection = 1;
+        }
+        confirmTimer = gMenuSelectionConfirmTimer;
+        if (confirmTimer == 7) {
+            gRacePlayers[0].menuState = 1;
+            gMenuSelectionConfirmTimer = gMenuSelectionConfirmTimer + 1;
+        }
+        if (gRacePlayers[0].menuState == 2) {
+            setCurrentGameTaskCallback(handleRaceSplitscreenSelectMenuSelection, 0);
             if (gMenuExitSelection == 0) {
                 requestMusicSequenceStop(4);
             }
