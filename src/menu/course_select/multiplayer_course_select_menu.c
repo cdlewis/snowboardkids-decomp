@@ -72,7 +72,7 @@ extern s32 D_80112414;
 extern void (*D_8011241C)(void);
 extern s32 gMenuFlowState;
 
-// initMultiplayerCourseSelectMenu best match: 98.712% (nonmatchings/initMultiplayerCourseSelectMenu-8280121253171829145/base_25.c)
+// initMultiplayerCourseSelectMenu best match: 98.729% (nonmatchings/initMultiplayerCourseSelectMenu-633030068925474062/base_4.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/course_select/multiplayer_course_select_menu/initMultiplayerCourseSelectMenu.s")
 
 #ifdef NON_MATCHING
@@ -80,7 +80,9 @@ void initMultiplayerCourseSelectMenu(void) {
     s32 i;
     s32 j;
     s32 k;
+    s32 one;
     s32 sum;
+    s32 extraCourseColumn;
     s32 selected;
     s32 specialCharacterId;
     u8 *selectionRow;
@@ -92,6 +94,7 @@ void initMultiplayerCourseSelectMenu(void) {
         requestMusicSequenceBank(2);
     }
     resetRaceCameras();
+    one = 1;
     resetAllViewports();
 
     switch (gPlayerCount) {
@@ -101,7 +104,7 @@ void initMultiplayerCourseSelectMenu(void) {
         break;
     case 2:
         configureViewport(0, 0xE4, 0x4A, 0x84, 0x54, 0xA8, 0x74, 1.448275805f);
-        configureViewport(1, 0xE4, 0xAE, 0x84, 0x54, 0xA8, 0x74, 1.448275805f);
+        configureViewport(one, 0xE4, 0xAE, 0x84, 0x54, 0xA8, 0x74, 1.448275805f);
         screenBase = 0x894000;
         break;
     case 3:
@@ -210,7 +213,7 @@ void initMultiplayerCourseSelectMenu(void) {
 
         if (D_8010AEA0[i] == 1) {
             for (j = 9; j < 12; j++) {
-                if ((&gGameSaveDataBuffer)[i].courseUnlockStates[j] != -1) {
+                if ((&gGameSaveDataBuffer)[i].courseUnlockStates[j] != -one) {
                     D_8010AEFB[i * 4] = j;
                     break;
                 }
@@ -232,15 +235,16 @@ void initMultiplayerCourseSelectMenu(void) {
     for (i = startPlayer; i < gPlayerCount; i++) {
         selected = gRacePlayers[i].menuSelection;
         if ((selected >= 9) && (selected < 12)) {
+            extraCourseColumn = 3;
             if (gRacePlayers[i].selectedCharacterId == specialCharacterId) {
                 j = 0;
             } else {
-                j = 3;
+                j = extraCourseColumn;
             }
             k = gCourseSelectStatus.unk2E;
         } else {
             k = gCourseSelectStatus.unk2E;
-            if (k == 1) {
+            if (k == one) {
                 k = gCourseSelectStatus.unk2E = j = 0;
             } else {
                 j = selected % 3;
@@ -250,7 +254,7 @@ void initMultiplayerCourseSelectMenu(void) {
         D_8010AE64[i] = j;
         k = gCourseSelectStatus.unk2E;
         selectionRow = (u8 *)&selected;
-        if (k == 1) {
+        if (k == one) {
             j--;
         }
 
