@@ -31,8 +31,8 @@ typedef struct {
                 /* 0x1C */ u16 alpha;
             };
             /* 0x1E */ s8 state;
-            /* 0x1F */ s8 timer;
-            /* 0x20 */ s8 subState;
+            /* 0x1F */ u8 timer;
+            /* 0x20 */ u8 subState;
         };
         struct {
             /* 0x18 */ u8 pad18[0x10];
