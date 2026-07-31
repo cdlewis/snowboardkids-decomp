@@ -999,7 +999,8 @@ void drawMenuTilemapSpriteCallback(MenuRenderSprite *arg0) {
 void func_80011D6C(void) {
 }
 
-// drawMenuTilemapSprite best match: 94.774% (nonmatchings/drawMenuTilemapSprite-5176680205357669729/base_39.c)
+// drawMenuTilemapSprite best match: 96.183%
+// (nonmatchings/drawMenuTilemapSprite-1980371360912070117/base_16.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/renderer/menu_renderer/drawMenuTilemapSprite.s")
 
 #ifdef NON_MATCHING
@@ -1129,11 +1130,12 @@ s32 drawMenuTilemapSprite(MenuRenderSprite *sprite, s32 imageSize, s16 tilemapWi
                         rectTop = drawY;
                         rectRight = drawX + render->tileSize;
                         rectBottom = drawY + render->tileXStep;
+                        tileMask = render->tileSize;
                         texS = 0;
                         texT = 0;
 
                         if (scaleS == -1) {
-                            texS = render->tileSize - 1;
+                            texS = tileMask - 1;
                         }
                         if (scaleT == -1) {
                             texT = render->tileXStep - 1;
@@ -1188,7 +1190,7 @@ s32 drawMenuTilemapSprite(MenuRenderSprite *sprite, s32 imageSize, s16 tilemapWi
                             gSPTextureRectangle(
                                 gRegionAllocPtr++, rectLeft << 2, rectTop << 2, rectRight << 2,
                                 rectBottom << 2, G_TX_RENDERTILE, texS << 5, texT << 5,
-                                scaleS << 10, scaleT << 10);
+                                (scaleS << 3) << 7, (scaleT << 8) << 2);
                         }
                     }
 
