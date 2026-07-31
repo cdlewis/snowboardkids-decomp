@@ -83,8 +83,8 @@ void initGameTaskScheduler(void) {
     resetRenderCallbackQueues();
 }
 
-// updateGameTaskScheduler best match: 96.320% with the current scorer
-// (nonmatchings/updateGameTaskScheduler-6759517978943015823/base_7.c)
+// updateGameTaskScheduler best match: 97.413% with the current scorer
+// (nonmatchings/updateGameTaskScheduler-633030068925474062/base_10.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/engine/game_task_scheduler/updateGameTaskScheduler.s")
 
 #ifdef NON_MATCHING
@@ -98,12 +98,12 @@ void updateGameTaskScheduler(void) {
     s8 *stickYOut;
     s32 *newInput;
     u8 *repeatTimer;
+    s32 oldInput;
     s32 *repeatInput;
     s8 *responseCurve;
     GameTask *task;
     GameTaskCallback callback;
     GameTaskCallback *callbackArray;
-    s32 oldInput;
     s32 currentInput;
     u16 new_var2;
     s32 stickHighThreshold;
@@ -132,33 +132,34 @@ void updateGameTaskScheduler(void) {
     previousInput = &gPlayerInputPrevious;
 
     do {
-        stickXTooHigh = controller->stickX >= 0x2E;
+        stickX = controller->stickX;
         stickHighThreshold = 0x2E;
         oldInput = *input;
-        currentInput = oldInput & 0xFFFF0000;
-        new_var = currentInput | controller->buttons;
-        *input = currentInput;
-        *input = new_var;
-        *previousInput = oldInput;
+        *input &= 0xFFFF0000;
         do {
+            *input |= controller->buttons;
+            *previousInput = oldInput;
+            do {
+            } while (0);
+
+            if (stickX >= 0x2E) {
+                controller->stickX = 0x2D;
+                stickX = controller->stickX;
+            }
+            if (stickX < -0x2D) {
+                controller->stickX = -0x2D;
+            }
+
+            stickY = controller->stickY;
+            if (stickY >= stickHighThreshold) {
+                controller->stickY = 0x2D;
+                stickY = controller->stickY;
+            }
+            if (stickY < -0x2D) {
+                controller->stickY = -0x2D;
+                stickY = controller->stickY;
+            }
         } while (0);
-
-        if (stickXTooHigh) {
-            controller->stickX = 0x2D;
-        }
-        if (controller->stickX < -0x2D) {
-            controller->stickX = -0x2D;
-        }
-
-        stickY = controller->stickY;
-        if (stickY >= stickHighThreshold) {
-            controller->stickY = 0x2D;
-            stickY = controller->stickY;
-        }
-        if (stickY < -0x2D) {
-            controller->stickY = -0x2D;
-            stickY = controller->stickY;
-        }
 
         stickX = controller->stickX;
         controller++;
@@ -257,6 +258,7 @@ positiveStickX:
                 callback = task->callbacks[1];
                 if (callback != NULL) {
                     callback();
+                    task = gCurrentGameTask;
                     task = gCurrentGameTask;
                 }
                 callbackArray = task->callbacks;
