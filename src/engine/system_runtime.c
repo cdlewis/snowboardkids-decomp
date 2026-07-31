@@ -14,6 +14,8 @@
 #define BOOT_THREAD_ID 1
 #define MAIN_THREAD_ID 2
 #define THREAD_PRIORITY 10
+#define BOOT_THREAD_STACK_SIZE 0x2000
+#define GAME_THREAD_STACK_SIZE 0x4000
 #define PI_MANAGER_PRIORITY 150
 #define PI_MANAGER_MSG_COUNT 200
 #define DMA_CHUNK_SIZE 0x2000
@@ -139,8 +141,8 @@ extern u8 D_8038E800[];
 extern u8 D_803B4000[];
 extern u8 aspMainTextStart[];
 extern u8 rspbootTextStart[];
-extern u8 D_80324480[];
-extern u8 D_80328480[];
+extern u8 gBootThreadStack[BOOT_THREAD_STACK_SIZE];
+extern u8 gGameThreadStack[GAME_THREAD_STACK_SIZE];
 extern Mtx D_80124C28;
 extern Mtx D_80124C68;
 extern Mtx D_80124CA8;
@@ -170,13 +172,15 @@ void appendFadeOverlayDisplayList(void);
 
 void main(void *arg) {
     osInitialize();
-    osCreateThread(&gBootThread, BOOT_THREAD_ID, bootThreadMain, arg, D_80324480, THREAD_PRIORITY);
+    osCreateThread(&gBootThread, BOOT_THREAD_ID, bootThreadMain, arg,
+                   gBootThreadStack + sizeof(gBootThreadStack), THREAD_PRIORITY);
     osStartThread(&gBootThread);
 }
 
 void bootThreadMain(void *arg) {
     osCreatePiManager(PI_MANAGER_PRIORITY, &gPiManagerQueue, gPiManagerMessages, PI_MANAGER_MSG_COUNT);
-    osCreateThread(&gGameThread, MAIN_THREAD_ID, gameThreadMain, arg, D_80328480, THREAD_PRIORITY);
+    osCreateThread(&gGameThread, MAIN_THREAD_ID, gameThreadMain, arg,
+                   gGameThreadStack + sizeof(gGameThreadStack), THREAD_PRIORITY);
     osStartThread(&gGameThread);
     osSetThreadPri(NULL, 0);
     while (1) {
