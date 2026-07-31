@@ -27,10 +27,11 @@ void initScheduler(SchedulerState *arg0, u8 arg1, u8 arg2) {
     osSetEventMesg(4, &arg0->retraceQueue, (OSMesg)0x29B);
     osSetEventMesg(0xE, &arg0->retraceQueue, (OSMesg)0x29D);
     osSetEventMesg(9, &arg0->queue1A4, (OSMesg)0x29C);
-    osCreateThread(&arg0->thread258, 6, schedulerThreadEntry, arg0, gSchedulerThreadStack, 0x78);
+    osCreateThread(&arg0->thread258, 6, schedulerThreadEntry, arg0,
+                   gSchedulerThreadStack + sizeof(gSchedulerThreadStack), 0x78);
     osStartThread(&arg0->thread258);
     osCreateThread(&arg0->thread408, 5, (void (*)(void *))schedulerSwapBufferThreadMain, arg0,
-                   &gSchedulerRspTaskState, 0x64);
+                   gSchedulerSwapBufferThreadStack + sizeof(gSchedulerSwapBufferThreadStack), 0x64);
     osStartThread(&arg0->thread408);
 }
 
