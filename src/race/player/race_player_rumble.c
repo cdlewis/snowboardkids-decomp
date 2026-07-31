@@ -32,7 +32,7 @@ void updateRacePlayerRumble(RacePlayer *player) {
     s32 fastPatternId;
     u8 *pattern;
 
-    if (player->unk4 != 0) {
+    if (player->isCpu != 0) {
         return;
     }
     if (player->soundDisabled != 0) {

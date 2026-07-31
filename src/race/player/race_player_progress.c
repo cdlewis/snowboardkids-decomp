@@ -30,22 +30,22 @@ extern s16 gFrameCounter;
 
 #define ASSIGN_DISPLAY_RANKS(pattern) \
     i = 0; \
-    if (gRacePlayers[order[0]].progressActive != 0) { \
+    if (gRacePlayers[order[0]].isCpu != 0) { \
         gRacePlayers[order[0]].displayRank = (pattern)[i]; \
         gRacePlayers[order[0]].rankChangeTimer = 0; \
         i++; \
     } \
-    if (gRacePlayers[order[1]].progressActive != 0) { \
+    if (gRacePlayers[order[1]].isCpu != 0) { \
         gRacePlayers[order[1]].displayRank = (pattern)[i]; \
         gRacePlayers[order[1]].rankChangeTimer = 0; \
         i++; \
     } \
-    if (gRacePlayers[order[2]].progressActive != 0) { \
+    if (gRacePlayers[order[2]].isCpu != 0) { \
         gRacePlayers[order[2]].displayRank = (pattern)[i]; \
         gRacePlayers[order[2]].rankChangeTimer = 0; \
         i++; \
     } \
-    if (gRacePlayers[order[3]].progressActive != 0) { \
+    if (gRacePlayers[order[3]].isCpu != 0) { \
         gRacePlayers[order[3]].displayRank = (pattern)[i]; \
         gRacePlayers[order[3]].rankChangeTimer = 0; \
     }
@@ -163,7 +163,7 @@ case2_second_display_1:
 
     player = gRacePlayers;
     do {
-        if (player->progressActive != 0) {
+        if (player->isCpu != 0) {
             rank = player->displayRank;
             switch (rank) {
             case 0:
@@ -171,8 +171,8 @@ case2_second_display_1:
                 break;
             case 1:
                 player->rankArrow = 0;
-                dx = gRacePlayers[(s8)player->rankChangeTimer].posX - player->posX;
-                dz = gRacePlayers[(s8)player->rankChangeTimer].posZ - player->posZ;
+                dx = gRacePlayers[(s8)player->rankChangeTimer].pos.x - player->pos.x;
+                dz = gRacePlayers[(s8)player->rankChangeTimer].pos.z - player->pos.z;
                 if ((dx >= RANK_NEAR_LIMIT) || (dx < RANK_NEAR_NEG_LIMIT) ||
                     (dz >= RANK_NEAR_LIMIT) || (dz < RANK_NEAR_NEG_LIMIT)) {
                     if (gRacePlayers[(s8)player->rankChangeTimer].rankIndex <
@@ -196,7 +196,7 @@ case2_second_display_1:
                 break;
             }
 
-            if (player->progressState == 5) {
+            if (player->characterId == 5) {
                 player->rankArrow = 0;
             }
         }
@@ -242,13 +242,13 @@ void updateRacePlayerCheckpointEvents(RacePlayer *player) {
 
         eventMask = 1 << eventIndex;
 
-        if (!(player->checkpointEventMask & eventMask) && (player->surfaceAngle <= pathFrame) &&
-                (player->surfaceAngle > pathFrame - 3)) {
+        if (!(player->checkpointEventMask & eventMask) && (player->coursePathIndex <= pathFrame) &&
+                (player->coursePathIndex > pathFrame - 3)) {
             getRaceCourseSurfaceSpawnTransform(pathFrame, &x, &y, &z, &angle);
 
-            x = player->posX - x;
-            y = player->posY - y;
-            z = player->posZ - z;
+            x = player->pos.x - x;
+            y = player->pos.y - y;
+            z = player->pos.z - z;
 
             sine = fixedSine(-angle);
             cosine = fixedCosine(-angle);
@@ -262,7 +262,7 @@ void updateRacePlayerCheckpointEvents(RacePlayer *player) {
             if (z < 0x600000 && z > 0) {
                 player->checkpointEventMask |= eventMask;
                 player->checkpointHit = 1;
-                player->checkpointEventId = event->eventId;
+                player->surfaceCueOverrideMask = event->eventId;
                 break;
             }
         }

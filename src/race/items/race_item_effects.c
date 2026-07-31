@@ -520,9 +520,9 @@ void updateRacePlayerShockEffect(RaceItemEffectActor *arg0) {
     transformVec3iByFixedMatrix(gRacePlayers[actor->playerIndex].transform, &actor->vector24.vec,
                                 &actor->payload.vec);
     player = &gRacePlayers[actor->playerIndex];
-    actor->payload.vec.x += player->posA8.x;
-    actor->payload.vec.y += player->posA8.y;
-    actor->payload.vec.z += player->posA8.z;
+    actor->payload.vec.x += player->itemSpawnOffset.x;
+    actor->payload.vec.y += player->itemSpawnOffset.y;
+    actor->payload.vec.z += player->itemSpawnOffset.z;
     addRenderCallback(&D_801248C8, (RenderCallback)renderRacePlayerShockEffect, actor);
 }
 
@@ -818,19 +818,19 @@ void initRacePlayerSnowSpray(RaceItemFollowActor *arg0) {
     arg0->timer = -1;
     player = &gRacePlayers[arg0->playerIndex];
     if (player->stateFlags & 0x400) {
-        arg0->offset1.x = player->unk4A0.x - player->unk28.x;
-        arg0->offset1.y = player->unk4A0.y - player->unk28.y;
-        arg0->offset1.z = player->unk4A0.z - player->unk28.z;
-        arg0->offset2.x = player->unk4B8.x - player->unk28.x;
-        arg0->offset2.y = player->unk4B8.y - player->unk28.y;
-        arg0->offset2.z = player->unk4B8.z - player->unk28.z;
+        arg0->offset1.x = player->groundMarkerSources[0].x - player->unk28.x;
+        arg0->offset1.y = player->groundMarkerSources[0].y - player->unk28.y;
+        arg0->offset1.z = player->groundMarkerSources[0].z - player->unk28.z;
+        arg0->offset2.x = player->groundMarkerSources[2].x - player->unk28.x;
+        arg0->offset2.y = player->groundMarkerSources[2].y - player->unk28.y;
+        arg0->offset2.z = player->groundMarkerSources[2].z - player->unk28.z;
     } else {
-        arg0->offset1.x = player->unk4AC.x - player->unk28.x;
-        arg0->offset1.y = player->unk4AC.y - player->unk28.y;
-        arg0->offset1.z = player->unk4AC.z - player->unk28.z;
-        arg0->offset2.x = player->unk4C4.x - player->unk28.x;
-        arg0->offset2.y = player->unk4C4.y - player->unk28.y;
-        arg0->offset2.z = player->unk4C4.z - player->unk28.z;
+        arg0->offset1.x = player->groundMarkerSources[1].x - player->unk28.x;
+        arg0->offset1.y = player->groundMarkerSources[1].y - player->unk28.y;
+        arg0->offset1.z = player->groundMarkerSources[1].z - player->unk28.z;
+        arg0->offset2.x = player->groundMarkerSources[3].x - player->unk28.x;
+        arg0->offset2.y = player->groundMarkerSources[3].y - player->unk28.y;
+        arg0->offset2.z = player->groundMarkerSources[3].z - player->unk28.z;
     }
     updateRacePlayerSnowSpray(arg0);
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRacePlayerSnowSpray);
@@ -1062,19 +1062,19 @@ void initRacePlayerLandingSnowSpray(RaceItemFollowActor *arg0) {
     arg0->timer = -1;
     player = &gRacePlayers[arg0->playerIndex];
     if (player->stateFlags & 0x400) {
-        arg0->offset1.x = player->unk4A0.x - player->unk28.x;
-        arg0->offset1.y = player->unk4A0.y - player->unk28.y;
-        arg0->offset1.z = player->unk4A0.z - player->unk28.z;
-        arg0->offset2.x = player->unk4B8.x - player->unk28.x;
-        arg0->offset2.y = player->unk4B8.y - player->unk28.y;
-        arg0->offset2.z = player->unk4B8.z - player->unk28.z;
+        arg0->offset1.x = player->groundMarkerSources[0].x - player->unk28.x;
+        arg0->offset1.y = player->groundMarkerSources[0].y - player->unk28.y;
+        arg0->offset1.z = player->groundMarkerSources[0].z - player->unk28.z;
+        arg0->offset2.x = player->groundMarkerSources[2].x - player->unk28.x;
+        arg0->offset2.y = player->groundMarkerSources[2].y - player->unk28.y;
+        arg0->offset2.z = player->groundMarkerSources[2].z - player->unk28.z;
     } else {
-        arg0->offset1.x = player->unk4AC.x - player->unk28.x;
-        arg0->offset1.y = player->unk4AC.y - player->unk28.y;
-        arg0->offset1.z = player->unk4AC.z - player->unk28.z;
-        arg0->offset2.x = player->unk4C4.x - player->unk28.x;
-        arg0->offset2.y = player->unk4C4.y - player->unk28.y;
-        arg0->offset2.z = player->unk4C4.z - player->unk28.z;
+        arg0->offset1.x = player->groundMarkerSources[1].x - player->unk28.x;
+        arg0->offset1.y = player->groundMarkerSources[1].y - player->unk28.y;
+        arg0->offset1.z = player->groundMarkerSources[1].z - player->unk28.z;
+        arg0->offset2.x = player->groundMarkerSources[3].x - player->unk28.x;
+        arg0->offset2.y = player->groundMarkerSources[3].y - player->unk28.y;
+        arg0->offset2.z = player->groundMarkerSources[3].z - player->unk28.z;
     }
     updateRacePlayerLandingSnowSpray(arg0);
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRacePlayerLandingSnowSpray);

@@ -393,7 +393,7 @@ void updateRaceCameraFollowPlayer(void) {
 
         if (!(gRacePlayers[D_801124A0->playerIndex].stateFlags & 0x1000)) {
             distance = findRaceCourseSurfaceFromHint(
-                gRacePlayers[D_801124A0->playerIndex].surfaceAngle, x, z);
+                gRacePlayers[D_801124A0->playerIndex].coursePathIndex, x, z);
             delta = getRaceCourseSurfaceHeight((s16) distance, x, z) - 0x40000;
 
             if (y < delta) {

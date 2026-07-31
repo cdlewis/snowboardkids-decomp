@@ -149,7 +149,7 @@ s32 updateRacePlayerSurfaceCue(RacePlayer *player) {
     s8 stickX;
 
     cue = 0;
-    if (player->unk4 != 0) {
+    if (player->isCpu != 0) {
         value = randomNextMain() & player->surfaceCueOverrideMask;
         cue = value;
         return cue;
