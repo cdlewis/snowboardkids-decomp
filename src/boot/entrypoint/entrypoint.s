@@ -3,7 +3,7 @@
 ABS(BOOT_STACK_SIZE, 0x2000)
 ABS(STACK_SIZE, BOOT_STACK_SIZE)
 ABS(MAIN_BSS_CLEAR_SIZE, 0x7DAC0)
-ABS(bootStackTop, D_80322480)
+ABS(bootStackTop, gBootThreadStack)
 
 .set noreorder
 
