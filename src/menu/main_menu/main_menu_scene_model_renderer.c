@@ -7,8 +7,11 @@
 
 #define ASSET_HANDLE(index) (gAssetHandles[(index)])
 
-extern void drawMainMenuSceneModel(MainMenuSceneModel *);
+extern Mtx *allocFixedTransformMatrix(MainMenuModelTransform *);
 extern void drawTexturedMainMenuSceneModel(MainMenuSceneModel *);
+extern u8 gCurrentViewportIndex;
+extern Gfx *gMainMenuSceneModelPartDisplayLists[];
+extern Gfx *gRegionAllocPtr;
 
 void initMainMenuSceneModelRenderer(void) {
 }
@@ -16,53 +19,44 @@ void initMainMenuSceneModelRenderer(void) {
 void initMainMenuSceneModelRenderer_pad(void) {
 }
 
-// drawMainMenuSceneModel best match: 99.706% at
-// nonmatchings/drawMainMenuSceneModel-2641000770066553983/base_15.c.
-#pragma GLOBAL_ASM("asm/nonmatchings/menu/main_menu/main_menu_scene_model_renderer/drawMainMenuSceneModel.s")
-
-#ifdef NON_MATCHING
-extern Mtx *allocFixedTransformMatrix(MainMenuModelTransform *);
-extern Gfx *gRegionAllocPtr;
-extern u8 gCurrentViewportIndex;
-extern Gfx *gMainMenuSceneModelPartDisplayLists[];
-
 void drawMainMenuSceneModel(MainMenuSceneModel *arg0) {
-    MainMenuSceneModel *model;
-    MainMenuModelTransform *displayObject;
-    Gfx **displayLists;
+    MainMenuModelTransform *transform;
     Mtx *matrix;
-    s32 i;
-    s32 end;
-    s32 stride;
-    u32 matrixParams;
+    s32 partIndex;
+    s32 displayListCount;
 
     if ((u16)arg0->viewportIndex == gCurrentViewportIndex) {
-        model = arg0;
         gDPPipeSync(gRegionAllocPtr++);
         gSPSegment(gRegionAllocPtr++, 0x02,
                    getRelocatableHeapBlockBase(
                        ASSET_HANDLE(MAIN_MENU_SCENE_MODEL_GEOMETRY_HANDLE_BASE +
-                                    (u16)model->sceneModelIndex)));
+                                    (u16)arg0->sceneModelIndex)));
         gSPSegment(gRegionAllocPtr++, 0x03,
                    getRelocatableHeapBlockBase(
                        ASSET_HANDLE(MAIN_MENU_SCENE_MODEL_TEXTURE_HANDLE_BASE +
-                                    (u16)model->sceneModelIndex)));
-        stride = 13;
-        matrixParams = G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW;
-        displayLists = gMainMenuSceneModelPartDisplayLists;
-        for (i = 1, displayObject = &model->displayObjects[1], end = 14;
-             i != end;
-             displayObject++, i++) {
-            matrix = allocFixedTransformMatrix(displayObject);
+                                    (u16)arg0->sceneModelIndex)));
+
+        displayListCount = 13;
+        partIndex = 1; transform = &arg0->displayObjects[1]; do {
+            matrix = allocFixedTransformMatrix(transform);
             if (matrix != NULL) {
-                gDma1p(gRegionAllocPtr++, G_MTX, matrix, sizeof(Mtx), matrixParams);
-                gSPDisplayList(gRegionAllocPtr++,
-                               displayLists[((u16)model->characterIndex * stride) + i - 1]);
+                gSPMatrix(gRegionAllocPtr++, matrix,
+                          G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+                gSPDisplayList(
+                    gRegionAllocPtr++,
+                    gMainMenuSceneModelPartDisplayLists[
+                        ((u16)arg0->characterIndex * displayListCount) +
+                        partIndex - 1]);
             }
+            partIndex++;
+            transform++;
+        } while (partIndex != 14);
+
+        /* Keep arg0 live through the loop exit for the original register allocation. */
+        if (arg0 == NULL) {
         }
     }
 }
-#endif
 
 // drawTexturedMainMenuSceneModel best match: 99.595% at nonmatchings/drawTexturedMainMenuSceneModel-4139837607000619032/base.c.
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/main_menu/main_menu_scene_model_renderer/drawTexturedMainMenuSceneModel.s")
