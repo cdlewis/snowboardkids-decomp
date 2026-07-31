@@ -47,7 +47,8 @@ extern s32 gMenuFlowState;
 extern u8 gFramebufferSwapHold;
 extern u8 gPendingFramebufferSwapCount;
 extern void releaseMenuAssetHandles(void);
-// initMainMenuDemoRaceIntro best match: 98.216% (nonmatchings/initMainMenuDemoRaceIntro-6759517978943015823/base_19.c)
+// initMainMenuDemoRaceIntro best match: 98.634%
+// (nonmatchings/initMainMenuDemoRaceIntro-633030068925474062/base_5.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/demo/main_menu_demo_race_intro/initMainMenuDemoRaceIntro.s")
 
 #ifdef NON_MATCHING
@@ -59,6 +60,7 @@ void initMainMenuDemoRaceIntro(void) {
     s32 one;
     u16 entryIndex;
     MainMenuDemoRaceIntroEntry *temp_v1_3;
+    RacePlayer *players;
 
     demoIndex = gMainMenuDemoRaceIntroIndex;
     entryIndex = demoIndex;
@@ -73,6 +75,7 @@ void initMainMenuDemoRaceIntro(void) {
     gRaceSplitscreenMode = (one = temp_v1->splitscreen);
     gRaceTypeSelection = temp_v1->raceType;
     resetGameplayRng();
+    players = gRacePlayers;
     gRacePlayers->unk4 = 0;
     gRacePlayers[1].unk4 = 0;
     gRacePlayers[2].unk4 = 0;
@@ -115,18 +118,18 @@ void initMainMenuDemoRaceIntro(void) {
     } else {
         initCallbackTaskScheduler(2);
     }
-    gRacePlayers[0].unk15 = 0;
-    gRacePlayers[0].soundDisabled = 0;
-    gRacePlayers[0].replayInputSource = demoIndex;
-    gRacePlayers[1].unk15 = 0;
-    gRacePlayers[1].soundDisabled = 0;
-    gRacePlayers[1].replayInputSource = demoIndex;
-    gRacePlayers[2].unk15 = 0;
-    gRacePlayers[2].soundDisabled = 0;
-    gRacePlayers[2].replayInputSource = demoIndex;
-    gRacePlayers[3].unk15 = 0;
-    gRacePlayers[3].soundDisabled = 0;
-    gRacePlayers[3].replayInputSource = demoIndex;
+    players[0].unk15 = 0;
+    players[0].soundDisabled = 0;
+    players[0].replayInputSource = demoIndex;
+    players[1].unk15 = 0;
+    players[1].soundDisabled = 0;
+    players[1].replayInputSource = demoIndex;
+    players[2].unk15 = 0;
+    players[2].soundDisabled = 0;
+    players[2].replayInputSource = demoIndex;
+    players[3].unk15 = 0;
+    players[3].soundDisabled = 0;
+    players[3].replayInputSource = demoIndex;
     demoIndex = gMainMenuDemoRaceIntroIndex;
     temp_v1_3 = &gMainMenuDemoRaceIntroEntries[demoIndex];
     loadCompressedRomAsset(temp_v1_3->romStart, temp_v1_3->romEnd, 0x2B);
