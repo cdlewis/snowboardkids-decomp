@@ -77,7 +77,8 @@ extern OSPfs gRumblePakHandles[];
 extern u8 gConnectedControllerBitmask;
 extern u8 gConnectedControllerCount;
 extern u8 gControllerReadPending;
-extern void *gControllerSubsystemThreadStack;
+extern u8 gControllerSubsystemThreadStack[0x2000];
+extern void *D_800EC8B8;
 
 void initControllerSubsystem(void) {
     s32 i;
@@ -111,8 +112,8 @@ loop:
         gRumbleMotorStatuses[i] = RUMBLE_MOTOR_NO_PAK;
     }
 
-    osCreateThread(&gControllerSubsystemThread, 4, controllerSubsystemThreadMain, gControllerSubsystemThreadStack,
-                   &gControllerSubsystemRequestQueue, 0x14);
+    osCreateThread(&gControllerSubsystemThread, 4, controllerSubsystemThreadMain, D_800EC8B8,
+                   gControllerSubsystemThreadStack + sizeof(gControllerSubsystemThreadStack), 0x14);
     osStartThread(&gControllerSubsystemThread);
 }
 
