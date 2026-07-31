@@ -213,7 +213,7 @@ void drawMenuSprite(s16 arg0, s16 arg1, void *arg2, u16 arg3, u16 arg4, u16 arg5
                   temp_v0 = (s16)(gMenuViewportWidth / 2), temp_v1 = (s16)(gMenuViewportHeight / 2), temp_v0, temp_v1);
 }
 
-// drawMenuSpriteClipped best match: 82.849% (nonmatchings/drawMenuSpriteClipped-2641000770066553983/base_73.c)
+// drawMenuSpriteClipped best match: 84.286% (nonmatchings/drawMenuSpriteClipped-633030068925474062/base_31.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/renderer/menu_renderer/drawMenuSpriteClipped.s")
 
 #ifdef NON_MATCHING
@@ -271,10 +271,10 @@ void drawMenuSpriteClipped(s16 x, s16 y, MenuFontAssetTable *table, u16 imageInd
             texT = (height - 1) << 5;
         }
 
-        minY = gMenuViewportCenterY - (s16)clipTop;
         minX = gMenuViewportCenterX - (s16)clipLeft;
         maxY = gMenuViewportCenterY + (s16)clipBottom;
         maxX = gMenuViewportCenterX + (s16)clipRight;
+        minY = gMenuViewportCenterY - (s16)clipTop;
         if (minX < gMenuViewportCenterX - (gMenuViewportWidth / 2)) {
             minX = gMenuViewportCenterX - (gMenuViewportWidth / 2);
         }
@@ -335,9 +335,10 @@ void drawMenuSpriteClipped(s16 x, s16 y, MenuFontAssetTable *table, u16 imageInd
             } else {
                 gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, gMenuTransparentPalette);
             }
+            palette = 0x8000 / scaleX;
             gSPTextureRectangle(gRegionAllocPtr++, left, top, right.value, bottom.value, G_TX_RENDERTILE,
-                                texS, texT, (u16)(0x8000 / scaleX) * flipS,
-                                (u16)(0x8000 / scaleY) * flipT);
+                                texS, texT, (u16)(palette * flipS),
+                                (u16)((u16)(0x8000 / scaleY) * flipT));
         }
     }
 }
