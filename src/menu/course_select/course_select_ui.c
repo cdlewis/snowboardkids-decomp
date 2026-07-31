@@ -248,10 +248,147 @@ void drawCourseSelectPreviewModel(CourseSelectCoursePreviewActor *arg0) {
     }
 }
 
-// updateCourseSelectPreviewModelIn best match: 99.921% (nonmatchings/updateCourseSelectPreviewModelIn-2641000770066553983/base_31.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/menu/course_select/course_select_ui/updateCourseSelectPreviewModelIn.s")
+void updateCourseSelectPreviewModelIn(CourseSelectAnimatedActor *arg0)
+{
+    CourseSelectAnimatedActor *actor;
+    Vec3i rotatedPosition;
+    s32 i;
+    s32 slideStep;
 
-#ifdef NON_MATCHING
+    actor = arg0;
+
+    for (i = 0; i < (s32)gPlayerCount; i++) {
+        if (gCourseSelectStatus.incomingPreviewModelState[i] != (actor->state[i] ^ 0)) {
+            actor->state[i] = gCourseSelectStatus.incomingPreviewModelState[i];
+            actor->timer[i] = gCourseSelectStatus.incomingPreviewModelTimer[i];
+            actor->angle[i] = gCourseSelectStatus.incomingPreviewModelAngle[i];
+            gCourseSelectStatus.incomingPreviewModelTimer[i] = 0;
+            gCourseSelectStatus.incomingPreviewModelAngle[i] = 0;
+        }
+
+        if ((gMenuFlowState != 0) && ((actor->state[i] ^ 0) < 5)) {
+            actor->state[i] = 4;
+            actor->angle[i] = 0;
+        }
+
+        switch (actor->state[i] ^ 0) {
+        case 0:
+            actor->vecs[i].x -= 0x200000;
+            if (actor->vecs[i].x <= 0) {
+                actor->vecs[i].x = 0;
+                actor->state[i] = 1;
+            }
+            break;
+        case 1:
+            if (D_8010AECC[i] & 1) {
+                if (D_8010AEE8[i] < 0) {
+                    if ((s32)gRacePlayers[i].courseSelectCharacterId >= 9) {
+                        actor->targetCourse[i] = 2;
+                    } else {
+                        actor->targetCourse[i] = (gRacePlayers[i].menuSelection % 3) - 1;
+                    }
+                } else {
+                    actor->targetCourse[i] = (gRacePlayers[i].menuSelection % 3) + 1;
+                }
+                if (actor->targetCourse[i] < 0) {
+                    actor->targetCourse[i] = 2;
+                }
+                if (actor->targetCourse[i] == 3) {
+                    actor->targetCourse[i] = D_8010AEFB[i * 4];
+                }
+                if (actor->targetCourse[i] == 8) {
+                    actor->targetCourse[i] = 2;
+                }
+                if (D_8010AECC[i] == 3) {
+                    actor->vecs[i].y = -D_8010AEE8[i];
+                }
+                actor->state[i] = 2;
+            } else if (gCurrentGameTask->screenState == 9) {
+                actor->state[i] = 8;
+            }
+            break;
+        case 2:
+            slideStep = 0x200000;
+            if (D_8010AEE8[i] < 0) {
+                slideStep = -0x200000;
+            }
+            actor->vecs[i].y += slideStep;
+            if ((D_8010AEE8[i] ^ slideStep) == 0) {
+                actor->state[i] = 1;
+            }
+            break;
+        case 3:
+            actor->timer[i]++;
+            if (D_800EC9C0 != 0) {
+                D_800EC9C0 = 1;
+            }
+            if (actor->timer[i] == 0xF) {
+                actor->timer[i] = 0;
+                actor->state[i] = 4;
+                if (gPlayerCount == 1) {
+                    gRacePlayers[0].menuState = 3;
+                    D_800EC9C0 = 0x10;
+                }
+            }
+            break;
+        case 4:
+            if (gRacePlayers[i].menuState == 3) {
+                actor->state[i] = 5;
+            }
+            break;
+        case 5:
+            actor->vecs[i].x += 0x200000;
+            if (actor->vecs[i].x == 0x1000000) {
+                actor->state[i] = 6;
+            }
+            break;
+        case 6:
+            gRacePlayers[i].menuState = 4;
+            if ((i == 2) && (gPlayerCount == 3)) {
+                gRacePlayers[3].menuState = 4;
+            }
+            break;
+        case 7:
+            if (gRacePlayers[i].menuState == 3) {
+                actor->state[i] = 5;
+            } else if (gCurrentGameTask->screenState == 9) {
+                actor->state[i] = 8;
+            }
+            break;
+        case 8:
+            actor->vecs[i].x += 0x200000;
+            if (actor->vecs[i].x == 0xC00000) {
+                actor->state[i] = 9;
+            }
+            break;
+        case 9:
+            break;
+        }
+
+        if ((actor->state[i] != 0) && ((s32)actor->state[i] < 3)) {
+            actor->angle[i] += 0x20;
+            actor->angle[i] &= 0xFFF;
+        }
+
+        makeFixedRotationY(actor->playerTransforms[i].rotation, (s16)actor->angle[i]);
+        transformVec3iByFixedMatrix(actor->playerTransforms[i].rotation, &actor->vecs[i], &rotatedPosition);
+        actor->playerTransforms[i].translation.x = rotatedPosition.x;
+        actor->playerTransforms[i].translation.y = rotatedPosition.y;
+        actor->playerTransforms[i].translation.z = rotatedPosition.z;
+        gCourseSelectStatus.incomingPreviewModelState[i] = actor->state[i];
+    }
+
+    if ((gRacePlayers[0].menuState == 4) || (actor->state[0] == 9)) {
+        removeCallbackTask(actor);
+        finishCourseSelectUiTask(1);
+        D_8010ADE0 = 0;
+    } else {
+        addRenderCallback(&gModelRenderCallbackList, (RenderCallback)(void (*)(CourseSelectWidgetActor *))drawCourseSelectPreviewModel,
+                          (CourseSelectWidgetActor *)actor);
+    }
+}
+
+#if 0
 void updateCourseSelectPreviewModelIn(CourseSelectAnimatedActor *arg0)
 {
     CourseSelectAnimatedActor *actor;
