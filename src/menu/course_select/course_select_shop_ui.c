@@ -990,18 +990,12 @@ void updateShopMenuSparkles(ShopMenuWidgetActor *arg0) {
     addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawShopMenuSparkles, arg0);
 }
 
-// initShopMenuSparkles best match: 99.655% (nonmatchings/initShopMenuSparkles-5755426475870421788/base_21.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/menu/course_select/course_select_shop_ui/initShopMenuSparkles.s")
-
-#ifdef NON_MATCHING
 void initShopMenuSparkles(ShopMenuWidgetActor *arg0) {
-    s32 index;
     s16 *entry;
 
-    index = gRacePlayers[0].selectedCharacterId;
-    entry = &gShopMenuSparkleInitTable[(0xFFFF & (u16)index) * 3];
-    arg0->sparkle.patternIndex = index;
-    arg0->sprite.index = entry[0] ^ 0;
+    arg0->sparkle.patternIndex = gRacePlayers[0].selectedCharacterId;
+    entry = &gShopMenuSparkleInitTable[arg0->sparkle.patternIndex * 3];
+    arg0->sprite.index = entry[0];
     arg0->x = 0x94;
     arg0->y = entry[1];
     arg0->sparkle.tileBase = entry[2];
@@ -1009,7 +1003,6 @@ void initShopMenuSparkles(ShopMenuWidgetActor *arg0) {
     arg0->slide.slideState = 0;
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateShopMenuSparkles);
 }
-#endif
 
 void drawCourseUnlockPricePanel(ShopMenuWidgetActor *arg0) {
     s16 new_var;
