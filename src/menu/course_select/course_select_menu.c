@@ -41,37 +41,6 @@ extern u8 gCourseSelectExtraCourseIds[];
 extern s16 D_8010AED0;
 extern u8 gMenuExitSelection;
 extern u8 D_8010AECC;
-extern u8 D_8010AF19;
-extern u8 D_8010AF1A;
-extern u8 D_8010AF1B;
-extern u8 D_8010AF1C;
-extern u8 D_8010AF1D;
-extern u8 D_8010AF1E;
-extern u8 D_8010AF1F;
-extern u8 D_8010AF20;
-extern u8 D_8010AF21;
-extern u8 D_8010AF22;
-extern u8 D_8010AF23;
-extern u8 D_8010AF24;
-extern u8 D_8010AF25;
-extern u8 D_8010AF26;
-extern u8 D_8010AF27;
-extern u8 D_8010AF28;
-extern u8 D_8010AF29;
-extern u8 D_8010AF2A;
-extern u8 D_8010AF2B;
-extern s16 D_8010AF2C;
-extern s16 D_8010AF2E;
-extern s16 D_8010AF30;
-extern s16 D_8010AF32;
-extern s16 D_8010AF34;
-extern s16 D_8010AF36;
-extern s16 D_8010AF38;
-extern s16 D_8010AF3A;
-extern u8 D_8010AF3C;
-extern u8 D_8010AF3D;
-extern u8 D_8010AF3E;
-extern u8 D_8010AF3F;
 extern u8 gCourseSelectExtraCourseColumnState;
 extern u8 gShopMenuDescriptionSeen;
 extern u8 gShopMenuShowNewCoursesMessage;
@@ -631,7 +600,7 @@ void updateCourseSelectCourseList(void) {
                             var_v1_2 = (var_v1_2 + 1) & 0xFFFF;
                         }
                         gMenuInputRepeatTimers[0] = (s16) var_v1_2;
-                        if (gMenuChoicePromptState[0] < (D_8010AF3C + 1)) {
+                        if (gMenuChoicePromptState[0] < (gCourseSelectStatus.unk24[0] + 1)) {
                             gMenuChoicePromptState[0] += 1;
                             enqueueSoundEffect(0x19, 0x32);
                             var_a3 = 0;
@@ -674,11 +643,11 @@ void updateCourseSelectCourseList(void) {
                                 gCourseUnlockSaveSlots[0].courseUnlockStates[var_v0_6];
                             gRacePlayers[0].menuSelection = var_v0_6;
                             if (D_8010AECC == 0) {
-                                D_8010AF2C = 0;
-                                D_8010AF1C = 7;
+                                gCourseSelectStatus.unk14[0] = 0;
+                                gCourseSelectStatus.unk4Array[0] = 7;
                             } else {
-                                D_8010AF34 = 0;
-                                D_8010AF20 = 7;
+                                gCourseSelectStatus.unk1C[0] = 0;
+                                gCourseSelectStatus.unk8Array[0] = 7;
                             }
                         } else if (D_8010AF44 == 0) {
                             enqueueSoundEffect(0x47, 0x32);
@@ -691,7 +660,7 @@ void updateCourseSelectCourseList(void) {
                 }
             }
         }
-        if ((D_8010AF1C == 7) || (D_8010AF20 == 7)) {
+        if ((gCourseSelectStatus.unk4Array[0] == 7) || (gCourseSelectStatus.unk8Array[0] == 7)) {
             gCurrentGameTask->timer = 0;
             setCurrentGameTaskCallback(updateCourseSelectPurchasePrompt, 0);
             createCallbackTask((CallbackTaskCallback)initCourseUnlockPurchasePrompt, 0, 0x64);
@@ -719,37 +688,37 @@ void updateCourseSelectCourseList(void) {
         gMenuChoicePromptState[0] = 0;
         D_8010AECC = 0;
         gCourseSelectStatus.unk0[0] = 0;
-        D_8010AF1C = 0;
-        D_8010AF20 = 0;
-        D_8010AF24 = 0;
-        D_8010AF28 = 0;
-        D_8010AF2C = 0;
-        D_8010AF34 = 0;
-        D_8010AF3C = 0;
-        D_8010AF19 = 0;
-        D_8010AF1D = 0;
-        D_8010AF21 = 0;
-        D_8010AF25 = 0;
-        D_8010AF29 = 0;
-        D_8010AF2E = 0;
-        D_8010AF36 = 0;
-        D_8010AF3D = 0;
-        D_8010AF1A = 0;
-        D_8010AF1E = 0;
-        D_8010AF22 = 0;
-        D_8010AF26 = 0;
-        D_8010AF2A = 0;
-        D_8010AF30 = 0;
-        D_8010AF38 = 0;
-        D_8010AF3E = 0;
-        D_8010AF1B = 0;
-        D_8010AF1F = 0;
-        D_8010AF23 = 0;
-        D_8010AF27 = 0;
-        D_8010AF2B = 0;
-        D_8010AF32 = 0;
-        D_8010AF3A = 0;
-        D_8010AF3F = 0;
+        gCourseSelectStatus.unk4Array[0] = 0;
+        gCourseSelectStatus.unk8Array[0] = 0;
+        gCourseSelectStatus.unkCArray[0] = 0;
+        gCourseSelectStatus.unk10Array[0] = 0;
+        gCourseSelectStatus.unk14[0] = 0;
+        gCourseSelectStatus.unk1C[0] = 0;
+        gCourseSelectStatus.unk24[0] = 0;
+        gCourseSelectStatus.unk0Array[1] = 0;
+        gCourseSelectStatus.unk4Array[1] = 0;
+        gCourseSelectStatus.unk8Array[1] = 0;
+        gCourseSelectStatus.unkCArray[1] = 0;
+        gCourseSelectStatus.unk10Array[1] = 0;
+        gCourseSelectStatus.unk14[1] = 0;
+        gCourseSelectStatus.unk1C[1] = 0;
+        gCourseSelectStatus.unk24[1] = 0;
+        gCourseSelectStatus.unk0Array[2] = 0;
+        gCourseSelectStatus.unk4Array[2] = 0;
+        gCourseSelectStatus.unk8Array[2] = 0;
+        gCourseSelectStatus.unkCArray[2] = 0;
+        gCourseSelectStatus.unk10Array[2] = 0;
+        gCourseSelectStatus.unk14[2] = 0;
+        gCourseSelectStatus.unk1C[2] = 0;
+        gCourseSelectStatus.unk24[2] = 0;
+        gCourseSelectStatus.unk0Array[3] = 0;
+        gCourseSelectStatus.unk4Array[3] = 0;
+        gCourseSelectStatus.unk8Array[3] = 0;
+        gCourseSelectStatus.unkCArray[3] = 0;
+        gCourseSelectStatus.unk10Array[3] = 0;
+        gCourseSelectStatus.unk14[3] = 0;
+        gCourseSelectStatus.unk1C[3] = 0;
+        gCourseSelectStatus.unk24[3] = 0;
         gCourseSelectStatus.transitionState = 0;
         gCourseSelectStatus.unk28 = 0;
         gCourseSelectStatus.unk2A = 0;
@@ -973,7 +942,7 @@ void updateCourseSelectCourseList(void) {
                         repeat++;
                     }
                     gMenuInputRepeatTimers[0] = repeat;
-                    if (gMenuChoicePromptState[0] < D_8010AF3C + 1) {
+                    if (gMenuChoicePromptState[0] < gCourseSelectStatus.unk24[0] + 1) {
                         gMenuChoicePromptState[0]++;
                         enqueueSoundEffect(0x19, 0x32);
                         pressed = gPlayerInputPressed[0];
@@ -1295,7 +1264,7 @@ void updateCourseSelectCourseList(void) {
                             var_v1_2 = (var_v1_2 + 1) & 0xFFFF;
                         }
                         gMenuInputRepeatTimers[0] = (s16) var_v1_2;
-                        if (gMenuChoicePromptState[0] < (D_8010AF3C + 1)) {
+                        if (gMenuChoicePromptState[0] < (gCourseSelectStatus.unk24[0] + 1)) {
                             gMenuChoicePromptState[0] += 1;
                             enqueueSoundEffect(0x19, 0x32);
                             var_a3 = 0;
@@ -1338,11 +1307,11 @@ void updateCourseSelectCourseList(void) {
                                 gCourseUnlockSaveSlots[0].courseUnlockStates[var_v0_6];
                             *(volatile u8 *)&gRacePlayers[0].menuSelection = var_v0_6;
                             if (D_8010AECC == 0) {
-                                D_8010AF2C = 0;
-                                D_8010AF1C = 7;
+                                gCourseSelectStatus.unk14[0] = 0;
+                                gCourseSelectStatus.unk4Array[0] = 7;
                             } else {
-                                D_8010AF34 = 0;
-                                D_8010AF20 = 7;
+                                gCourseSelectStatus.unk1C[0] = 0;
+                                gCourseSelectStatus.unk8Array[0] = 7;
                             }
                         } else if (D_8010AF44 == 0) {
                             enqueueSoundEffect(0x47, 0x32);
@@ -1355,7 +1324,7 @@ void updateCourseSelectCourseList(void) {
                 }
             }
         }
-        if ((D_8010AF1C == 7) || (D_8010AF20 == 7)) {
+        if ((gCourseSelectStatus.unk4Array[0] == 7) || (gCourseSelectStatus.unk8Array[0] == 7)) {
             gCurrentGameTask->timer = 0;
             setCurrentGameTaskCallback(updateCourseSelectPurchasePrompt, 0);
             createCallbackTask((CallbackTaskCallback)initCourseUnlockPurchasePrompt, 0, 0x64);
@@ -1383,37 +1352,37 @@ void updateCourseSelectCourseList(void) {
         gMenuChoicePromptState[0] = 0;
         D_8010AECC = 0;
         gCourseSelectStatus.unk0[0] = 0;
-        D_8010AF1C = 0;
-        D_8010AF20 = 0;
-        D_8010AF24 = 0;
-        D_8010AF28 = 0;
-        D_8010AF2C = 0;
-        D_8010AF34 = 0;
-        D_8010AF3C = 0;
-        D_8010AF19 = 0;
-        D_8010AF1D = 0;
-        D_8010AF21 = 0;
-        D_8010AF25 = 0;
-        D_8010AF29 = 0;
-        D_8010AF2E = 0;
-        D_8010AF36 = 0;
-        D_8010AF3D = 0;
-        D_8010AF1A = 0;
-        D_8010AF1E = 0;
-        D_8010AF22 = 0;
-        D_8010AF26 = 0;
-        D_8010AF2A = 0;
-        D_8010AF30 = 0;
-        D_8010AF38 = 0;
-        D_8010AF3E = 0;
-        D_8010AF1B = 0;
-        D_8010AF1F = 0;
-        D_8010AF23 = 0;
-        D_8010AF27 = 0;
-        D_8010AF2B = 0;
-        D_8010AF32 = 0;
-        D_8010AF3A = 0;
-        D_8010AF3F = 0;
+        gCourseSelectStatus.unk4Array[0] = 0;
+        gCourseSelectStatus.unk8Array[0] = 0;
+        gCourseSelectStatus.unkCArray[0] = 0;
+        gCourseSelectStatus.unk10Array[0] = 0;
+        gCourseSelectStatus.unk14[0] = 0;
+        gCourseSelectStatus.unk1C[0] = 0;
+        gCourseSelectStatus.unk24[0] = 0;
+        gCourseSelectStatus.unk0Array[1] = 0;
+        gCourseSelectStatus.unk4Array[1] = 0;
+        gCourseSelectStatus.unk8Array[1] = 0;
+        gCourseSelectStatus.unkCArray[1] = 0;
+        gCourseSelectStatus.unk10Array[1] = 0;
+        gCourseSelectStatus.unk14[1] = 0;
+        gCourseSelectStatus.unk1C[1] = 0;
+        gCourseSelectStatus.unk24[1] = 0;
+        gCourseSelectStatus.unk0Array[2] = 0;
+        gCourseSelectStatus.unk4Array[2] = 0;
+        gCourseSelectStatus.unk8Array[2] = 0;
+        gCourseSelectStatus.unkCArray[2] = 0;
+        gCourseSelectStatus.unk10Array[2] = 0;
+        gCourseSelectStatus.unk14[2] = 0;
+        gCourseSelectStatus.unk1C[2] = 0;
+        gCourseSelectStatus.unk24[2] = 0;
+        gCourseSelectStatus.unk0Array[3] = 0;
+        gCourseSelectStatus.unk4Array[3] = 0;
+        gCourseSelectStatus.unk8Array[3] = 0;
+        gCourseSelectStatus.unkCArray[3] = 0;
+        gCourseSelectStatus.unk10Array[3] = 0;
+        gCourseSelectStatus.unk14[3] = 0;
+        gCourseSelectStatus.unk1C[3] = 0;
+        gCourseSelectStatus.unk24[3] = 0;
         gCourseSelectStatus.transitionState = 0;
         gCourseSelectStatus.unk28 = 0;
         gCourseSelectStatus.unk2A = 0;
@@ -1451,9 +1420,9 @@ void updateCourseSelectPurchasePrompt(void) {
             if (gCurrentGameTask->timer == 1) {
                 enqueueSoundEffect(0x18, 0x32);
                 if (D_8010AECC == 0) {
-                    D_8010AF1C = 1;
+                    gCourseSelectStatus.unk4Array[0] = 1;
                 } else {
-                    D_8010AF20 = 1;
+                    gCourseSelectStatus.unk8Array[0] = 1;
                 }
                 setCurrentGameTaskCallback(updateCourseSelectCourseList, 0);
             } else {
@@ -1464,9 +1433,9 @@ void updateCourseSelectPurchasePrompt(void) {
             gMenuFlowState = 1;
             enqueueSoundEffect(0x18, 0x32);
             if (D_8010AECC == 0) {
-                D_8010AF1C = 1;
+                gCourseSelectStatus.unk4Array[0] = 1;
             } else {
-                D_8010AF20 = 1;
+                gCourseSelectStatus.unk8Array[0] = 1;
             }
             setCurrentGameTaskCallback(updateCourseSelectCourseList, 0);
         }
@@ -1568,7 +1537,7 @@ void updateCourseSelectUnlockCourseList(void) {
             repeat++;
         }
         gMenuInputRepeatTimers[0] = *new_var2;
-        if (state < D_8010AF3C + new_var4) {
+        if (state < gCourseSelectStatus.unk24[0] + new_var4) {
             gMenuChoicePromptState[0] = state + 1;
             enqueueSoundEffect(0x19, 0x32);
             state = *new_var5;
@@ -1607,11 +1576,11 @@ after_row_change:
         gCourseSelectSelectedCourseSavedSlot = gCourseUnlockSaveSlots[0].courseUnlockStates[index];
         gRacePlayers[0].menuSelection = index;
         if (D_8010AECC == 0) {
-            D_8010AF2C = 0;
-            D_8010AF1C = 7;
+            gCourseSelectStatus.unk14[0] = 0;
+            gCourseSelectStatus.unk4Array[0] = 7;
         } else {
-            D_8010AF34 = 0;
-            D_8010AF20 = 7;
+            gCourseSelectStatus.unk1C[0] = 0;
+            gCourseSelectStatus.unk8Array[0] = 7;
         }
     }
     goto after_input;
@@ -1706,7 +1675,7 @@ void updateCourseSelectUnlockCourseList(void) {
                 repeatTimer++;
             }
             gMenuInputRepeatTimers[playerIndex] = repeatTimer;
-            if (gMenuChoicePromptState[playerIndex] < D_8010AF3C + 1) {
+            if (gMenuChoicePromptState[playerIndex] < gCourseSelectStatus.unk24[0] + 1) {
                 gMenuChoicePromptState[playerIndex]++;
                 enqueueSoundEffect(0x19, 0x32);
                 pressed = gPlayerInputPressed[playerIndex];
@@ -1739,13 +1708,13 @@ void updateCourseSelectUnlockCourseList(void) {
             gRacePlayers[0].selectionUnlockState = gCourseUnlockSaveSlots[0].courseUnlockStates[selection];
             *(volatile u8 *)selectionPtr = selection;
             if (D_8010AECC == playerIndex) {
-                D_8010AF2C = playerIndex;
+                gCourseSelectStatus.unk14[0] = playerIndex;
                 if (pressed) {
                 }
-                D_8010AF1C = 7;
+                gCourseSelectStatus.unk4Array[0] = 7;
             } else {
-                D_8010AF34 = playerIndex;
-                D_8010AF20 = 7;
+                gCourseSelectStatus.unk1C[0] = playerIndex;
+                gCourseSelectStatus.unk8Array[0] = 7;
             }
         }
     } else if (initialState == playerIndex) {

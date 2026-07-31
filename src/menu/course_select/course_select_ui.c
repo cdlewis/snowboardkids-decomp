@@ -187,7 +187,6 @@ extern u8 D_8010AEB0;
 extern u8 D_8010AEA0[];
 extern u8 gCourseSelectExtraCourseColumnState;
 extern u8 D_8010AEAC[];
-extern u8 D_8010AF1C;
 extern MenuGlyphScript gCourseSelectCompleteText[];
 extern CourseSelectCourseRatingTable gCourseSelectCourseRatings;
 extern s16 gCourseSelectIconListYLayout[][6];
@@ -624,13 +623,10 @@ void updateCourseSelectPreviewModelOut(CourseSelectAnimatedActor *arg0)
 void initCourseSelectPreviewModelOut(void *arg0) {
     CourseSelectAnimatedActor *actor;
     Vec3i position;
-    u8 *outgoingModelState;
     s32 i;
 
     actor = arg0;
-    outgoingModelState = gCourseSelectStatus.bytes;
-    i = 0;
-    do {
+    for (i = 0; i < 4; i++) {
         actor->vecs[i].x = 0;
         actor->vecs[i].y = 0x800000;
         actor->vecs[i].z = 0;
@@ -641,10 +637,8 @@ void initCourseSelectPreviewModelOut(void *arg0) {
         actor->playerTransforms[i].translation.y = position.y;
         actor->playerTransforms[i].translation.z = position.z;
         actor->state[i] = 1;
-        i++;
-        outgoingModelState[8] = 1;
-        outgoingModelState += 1;
-    } while (outgoingModelState != &D_8010AF1C);
+        gCourseSelectStatus.outgoingPreviewModelState[i] = 1;
+    }
 
     actor->sourceTransform.translation.x = 0;
     actor->sourceTransform.translation.y = 0;
