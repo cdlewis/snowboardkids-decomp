@@ -1614,7 +1614,7 @@ paletteLoop:
 }
 #endif
 
-// drawMenuAsciiGlyph best match: 98.399% (nonmatchings/drawMenuAsciiGlyph-8280121253171829145/base_16.c)
+// drawMenuAsciiGlyph best match: 98.982% (nonmatchings/drawMenuAsciiGlyph-633030068925474062/base_5.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/renderer/menu_renderer/drawMenuAsciiGlyph.s")
 
 #ifdef NON_MATCHING
@@ -1643,6 +1643,7 @@ void drawMenuAsciiGlyph(s16 x, s16 y, u16 tileS, s32 tileT, u16 paletteIndex, u1
     s32 red;
     u16 green;
     u16 blue;
+    s32 scaleValue;
 
     asset = (FontAsset *)getRelocatableHeapBlockBase(gAssetHandles[6]);
     paletteBase = (u16 *)((asset->header.entryCount * sizeof(FontTexture)) + (u8 *)asset + sizeof(FontAssetHeader));
@@ -1707,29 +1708,29 @@ void drawMenuAsciiGlyph(s16 x, s16 y, u16 tileS, s32 tileT, u16 paletteIndex, u1
 paletteLoop:
     *dstPalette = (paletteColor = *(u16 *)((u8 *)sourcePalette + y0));
     y0 += 2;
-    color = paletteColor & 0xFFFF;
-    if (color && color) {
-    }
-    if (color & 1) {
-        red = (color >> 11) & 0x1F;
-        green = (color >> 6) & 0x1F;
- blue = (color >> 1) & 0x1F; red = (paletteScale * red) / 256; green = (paletteScale * green) / 256; color = green;
-        if (red && red) {
+    do {
+        color = paletteColor & 0xFFFF;
+        do {
+            if (((((color & 0xFFFFFFFFu) & 0xFFFFFFFFu) & 0xFFFFFFFFu) & 1) & 0xFFFF) {
+                red = ((color >> 11) & 0x1F) & 0xFFFF;
+                green = (color >> 6) & 0x1F;
+                color = (blue = (color >> 1) & 0x1F);
+                scaleValue = paletteScale;
+                red = red * scaleValue;
+                red /= 256;
+                green = (green * paletteScale) / 256;
+                color = green;
+                blue = (blue * paletteScale) / 256;
+                {
+                }
+                *dstPalette = (red << 11) | (color << 6) | (blue << 1) | 1;
+            }
+        } while (0);
+        dstPalette++;
+        if (y0 != 0x20) {
+            goto paletteLoop;
         }
-        blue = (blue * paletteScale) / 256;
-        if (red && red) {
-        }
-        // This empty condition preserves IDO's palette-loop register allocation.
-        if (blue && blue) {
-        }
-        *dstPalette = (((red << 11) | (color << 6)) | (blue << 1)) | 1;
-        if (dstPalette && dstPalette) {
-        }
-    }
-    dstPalette++;
-    if (y0 != 0x20) {
-        goto paletteLoop;
-    }
+    } while (0);
 
     gDPLoadTextureTile_4b(gRegionAllocPtr++, atlasTexture->imageOffset + (u8 *)asset, G_IM_FMT_CI,
                           atlasTexture->width, atlasTexture->height, 0, 0, atlasTexture->width,
