@@ -3,11 +3,6 @@
 
 #include "common.h"
 
-typedef union {
-    s16 m[4][4][2];
-    s64 force_structure_alignment;
-} ViewportMtx;
-
 typedef struct {
     /* 0x00 */ s8 active;
     /* 0x01 */ u8 screenBoundsValid;
@@ -30,8 +25,8 @@ typedef struct {
     /* 0x20 */ u16 perspectiveNorm;
     /* 0x22 */ u16 overlayPerspectiveNorm;
     /* 0x24 */ u8 pad24[4];
-    /* 0x28 */ ViewportMtx projection;
-    /* 0x68 */ ViewportMtx overlayProjection;
+    /* 0x28 */ Mtx projectionMatrix;
+    /* 0x68 */ Mtx overlayProjectionMatrix;
     /* 0xA8 */ s16 left;
     /* 0xAA */ s16 top;
     /* 0xAC */ s16 right;

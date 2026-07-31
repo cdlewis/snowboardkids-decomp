@@ -1,0 +1,6 @@
+candidate_source: python3 tools/find_struct_unions.py --json
+prompt: "Remove the unnecessary unions embedded in structs in $INPUT. Determine the actual type and purpose of each overlapping field from every use of the struct, then replace the union and its aliases with a single accurately named, strongly typed field. Update all users and shared declarations. Do not use pointer arithmetic, casts, duplicate fields, or another union to preserve a match. Check the layout and assembly of every affected function, run ./tools/build-and-verify.sh, and leave the candidate unchanged if the cleanup cannot be made to match."
+agent: codex
+agent_flags: --config model_reasoning_effort='"xhigh"'
+success_command: 'git add -A && git commit -m "remove unnecessary struct unions from $CANDIDATE"'
+timeout: 60m
