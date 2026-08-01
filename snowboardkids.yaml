@@ -453,6 +453,14 @@ segments:
       - { type: bss, name: bss_chunk_e, vram: 0x8015F2D0 }
       - { type: .bss, name: ultra/io/leointerrupt, vram: 0x8015F480 }
 
+  - name: buffers
+    type: code
+    vram: 0x80160480
+    exclusive_ram_id: memory
+    bss_size: 0x29EB80
+    subsegments:
+      - { type: .bss, vram: 0x80160480, name: engine/system_runtime_buffers }
+
   - type: bin
     start: 0xE35C0
     name: LEVEL_BIG_SNOWMAN

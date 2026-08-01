@@ -26,7 +26,7 @@ typedef struct RelocatableHeapBlockStartAlias {
 extern RelocatableHeapBlockStartAlias gRelocatableHeapBlockStartAliases[];
 extern RelocatableHeapBlock *gRelocatableHeapFreeBlockStack[];
 extern u16 gRelocatableHeapUsedBlockCount;
-extern u8 gRelocatableHeapStart;
+extern u8 gRelocatableHeapStart[];
 
 extern RelocatableHeapBlock gRelocatableHeapBlockPool[];
 extern RelocatableHeapBlock *gFirstAllocatedRelocatableHeapBlock;
@@ -37,7 +37,7 @@ void updateRelocatableHeapNextFreeAddress(void) {
     RelocatableHeapBlock *next;
 
     if (node == NULL) {
-        gRelocatableHeapNextFreeAddress = &gRelocatableHeapStart;
+        gRelocatableHeapNextFreeAddress = gRelocatableHeapStart;
         return;
     }
     next = node->next;
@@ -129,7 +129,7 @@ s16 allocRelocatableHeapBlock(s32 size) {
     }
 
     /* No suitable gap was found, so append at the current heap end. */
-    available = (gRelocatableHeapNextFreeAddress + alignedSize) - &gRelocatableHeapStart;
+    available = (gRelocatableHeapNextFreeAddress + alignedSize) - gRelocatableHeapStart;
     if (available > 0x1C0000) {
         return -1;
     }
@@ -195,7 +195,7 @@ void compactRelocatableHeap(void) {
     u32 blockStart;
 
     block = gFirstAllocatedRelocatableHeapBlock;
-    nextFree = &gRelocatableHeapStart;
+    nextFree = gRelocatableHeapStart;
     if (block != NULL) {
         do {
             blockStart = (u32) block->start;
