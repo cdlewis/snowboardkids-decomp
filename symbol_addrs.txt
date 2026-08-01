@@ -1114,7 +1114,6 @@ updateRaceStartTransitionFadeOut = 0x8003E514; // type:func
 finishRaceStartTransition = 0x8003E5A8; // type:func
 gMainMenuDemoRaceIntroIndex = 0x800BB830; // rom:0xBC430
 gMainMenuDemoRaceIntroEntries = 0x800BB834; // rom:0xBC434
-gMainMenuDemoRaceIntroLoadCourseAssetsFlags = 0x800BB837; // rom:0xBC437
 gTitleDemoReplaySegmentFrames = 0x800BB890; // rom:0xBC490
 gTitleDemoCameraModeFrames = 0x800BB8B0; // rom:0xBC4B0
 gTitleDemoCameraModes = 0x800BB8DC; // rom:0xBC4DC
