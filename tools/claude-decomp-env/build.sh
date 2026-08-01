@@ -148,7 +148,7 @@ if [[ $1 =~ base_[0-9]+ ]] && [ -n "$MATCH_PERCENT" ]; then
     }
     END {
         since = total - best_at
-        if (since >= 20) {
+        if (since >= 40) {
             printf "%d %s %.1f\n", since, best_file, best
         }
     }' match_log.txt)

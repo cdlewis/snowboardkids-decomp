@@ -31,7 +31,7 @@ After `base.c` builds successfully, repeat the following steps:
 3. Come up with a plan to improve the match. Consider what the original developers intended to write given the function's broader purpose.
 4. Create a new file (`base_n.c` where `n` is your attempt number) with changes you expect to improve the match. Start small and work incrementally — if you test multiple changes at once they may interact poorly.
 5. Record useful observations in `LEARNINGS.md`.
-6. Stop when a 100% match is reached, when the build script tells you to stop, or when you are unable to make progress (20 attempts without any improvement to the match percentage).
+6. Stop when a 100% match is reached, when the build script tells you to stop, or when you are unable to make progress (40 attempts without any improvement to the match percentage).
 
 ## Tools
 
