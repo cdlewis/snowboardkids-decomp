@@ -1512,7 +1512,7 @@ void drawMenuGlyphScript(volatile s16 x, s16 y, MenuGlyphScript *script,
     }
 }
 
-// drawMenuColoredGlyph best match: 99.161% (nonmatchings/drawMenuColoredGlyph-6759517978943015823/base_22.c)
+// drawMenuColoredGlyph best match: 99.473% (nonmatchings/drawMenuColoredGlyph-7181144369148334388/base_37.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/renderer/menu_renderer/drawMenuColoredGlyph.s")
 
 #ifdef NON_MATCHING
@@ -1543,6 +1543,8 @@ void drawMenuColoredGlyph(s16 x, s16 y, u16 glyph, u8 palette, u16 paletteScale,
     s32 minY;
     s32 viewHalfHeightValue;
     s32 maxY;
+    u16 paletteIndexValue;
+    u16 paletteScaleValue;
 
     if (palette == 0) {
         font = (MenuFontAssetTable *)getRelocatableHeapBlockBase(gAssetHandles[(u16)fontBank]);
@@ -1565,11 +1567,13 @@ void drawMenuColoredGlyph(s16 x, s16 y, u16 glyph, u8 palette, u16 paletteScale,
     if (x0 < maxX) {
         viewHalfHeightValue = gMenuViewportHeight / 2;
         minX = gMenuViewportCenterX - viewHalfWidth;
+        paletteScaleValue = paletteScale;
         viewHalfHeight = viewHalfHeightValue;
         maxY = (gMenuViewportCenterY ^ 0) + viewHalfHeight;
         if ((i < maxY) && (viewHalfWidth = x1 >= minX)) {
             minY = gMenuViewportCenterY - viewHalfHeight;
             if (y1 >= minY) {
+                paletteIndexValue = (u16)paletteIndex;
                 if (x0 < minX) {
                     clipS = minX - x0;
                     x0 = minX;
@@ -1587,15 +1591,17 @@ void drawMenuColoredGlyph(s16 x, s16 y, u16 glyph, u8 palette, u16 paletteScale,
                 }
                 drawY0 = i;
                 scaledPalette = allocMenuRenderScratch(MENU_PALETTE_SIZE_BYTES);
-                srcPalette = &paletteBase[(u16)paletteIndex * MENU_PALETTE_COLOR_COUNT];
+                srcPalette = &paletteBase[paletteIndexValue * MENU_PALETTE_COLOR_COUNT];
                 i = 0;
                 dstPalette = scaledPalette;
 paletteLoop:
-                *dstPalette = (paletteColor = *(u16 *)&((MenuGlyphPalette *)srcPalette)->bytes[i]);
+                *dstPalette = (paletteColor = *(u16 *)&((MenuGlyphPalette *)srcPalette)->bytes[i] & 0xFFFFFFFFFFFFFFFF);
                 i += sizeof(u16);
                 do {
                     color = paletteColor & 0xFFFF;
-                    do { if (((((color & 0xFFFFFFFFu) & 0xFFFFFFFFu) & 0xFFFFFFFFu) & MENU_RGBA5551_ALPHA_BIT) & 0xFFFF) { red = ((color >> 11) & MENU_RGBA5551_CHANNEL_MASK) & 0xFFFF; green = (color >> 6) & MENU_RGBA5551_CHANNEL_MASK; color = (blue = (color >> 1) & MENU_RGBA5551_CHANNEL_MASK); glyphWidth = paletteScale; red = red * glyphWidth; red /= MENU_RGBA5551_SCALE_BASE; green = (green * paletteScale) / MENU_RGBA5551_SCALE_BASE; color = green; blue = (blue * paletteScale) / MENU_RGBA5551_SCALE_BASE; { } *dstPalette = (red << 11) | (color << 6) | (blue << 1) | MENU_RGBA5551_ALPHA_BIT; } } while (0);
+                    do { if (((((color & 0xFFFFFFFFu) & 0xFFFFFFFFu) & 0xFFFFFFFFu) & MENU_RGBA5551_ALPHA_BIT) & 0xFFFF) { red = ((color >> 11) & MENU_RGBA5551_CHANNEL_MASK) & 0xFFFF; green = color >> 6; green = green & MENU_RGBA5551_CHANNEL_MASK; color = (blue = (color >> 1) & MENU_RGBA5551_CHANNEL_MASK); glyphWidth = paletteScaleValue; red = red * glyphWidth; red /= MENU_RGBA5551_SCALE_BASE; green = (green * paletteScaleValue) / MENU_RGBA5551_SCALE_BASE; color = green; blue = (blue * paletteScaleValue) / MENU_RGBA5551_SCALE_BASE; { } *dstPalette = (red << 11) | (color << 6) | (blue << 1) | MENU_RGBA5551_ALPHA_BIT; } } while (0);
+                    dstPalette++;
+                    dstPalette--;
                     dstPalette++;
                     if (i != MENU_PALETTE_SIZE_BYTES) {
                         goto paletteLoop;
