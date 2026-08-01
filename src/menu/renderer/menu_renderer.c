@@ -367,8 +367,8 @@ extern void drawMenuSpriteWithAlphaWideArgs(s32 x, s32 y, void *texture, s32 til
                                             s32 palette, s32 alpha, u32 flip);
 #endif
 
-// drawMenuSpriteWithAlphaClipped best match: 91.323%
-// (nonmatchings/drawMenuSpriteWithAlphaClipped-633030068925474062/base_37.c)
+// drawMenuSpriteWithAlphaClipped best match: 91.539%
+// (nonmatchings/drawMenuSpriteWithAlphaClipped-7181144369148334388/base_35.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/renderer/menu_renderer/drawMenuSpriteWithAlphaClipped.s")
 
 #ifdef NON_MATCHING
@@ -388,6 +388,7 @@ void drawMenuSpriteWithAlphaClipped(s16 x, s16 y, FontAsset *asset, u16 tileInde
     s32 maxX;
     s16 flipS;
     s16 flipT;
+    s16 *flipScale;
     s32 maxY;
     s32 texWidth;
     s32 texHeight;
@@ -397,6 +398,7 @@ void drawMenuSpriteWithAlphaClipped(s16 x, s16 y, FontAsset *asset, u16 tileInde
     u16 palette;
 
     paletteBase = (asset->header.entryCount * sizeof(FontTexture)) + (u8 *)asset + 8;
+    flipScale = gMenuSpriteFlipScales[flipMode & 3];
 
     if (scaleX >= 0x201) {
         return;
@@ -411,8 +413,8 @@ void drawMenuSpriteWithAlphaClipped(s16 x, s16 y, FontAsset *asset, u16 tileInde
         return;
     }
     {
-        flipS = gMenuSpriteFlipScales[flipMode & 3][0];
-        flipT = gMenuSpriteFlipScales[flipMode & 3][1];
+        flipS = flipScale[0];
+        flipT = flipScale[1];
         texture = &asset->textures[tileIndex];
         texT = x + gMenuViewportCenterX;
         texWidth = texture->width;
@@ -429,11 +431,12 @@ void drawMenuSpriteWithAlphaClipped(s16 x, s16 y, FontAsset *asset, u16 tileInde
         if (flipS == -1) {
             texS = (texWidth - 1) << 5;
         }
+        minX = gMenuViewportCenterY;
         if (flipT == -1) {
             texT = (texHeight - 1) << 5;
         }
 
-        minY = (s16)((gMenuViewportCenterY - clipTop) << 2);
+        minY = (s16)((minX - clipTop) << 2);
         maxY = (s16)((gMenuViewportCenterY + clipBottom) << 2);
         minX = (s16)((gMenuViewportCenterX - clipLeft) << 2);
         maxX = (s16)((gMenuViewportCenterX + clipRight) << 2);
@@ -470,10 +473,12 @@ void drawMenuSpriteWithAlphaClipped(s16 x, s16 y, FontAsset *asset, u16 tileInde
 
             if (alpha != 0x100) {
                 gDPPipeSync(gRegionAllocPtr++);
-                FONT_GFX_CMD(gRegionAllocPtr++, 0xFC119623, 0xFF2FFFFF);
-                FONT_GFX_CMD(gRegionAllocPtr++, 0xFA000000,
-                             ((alpha & 0xFF) << 0x18) | ((alpha & 0xFF) << 0x10) |
-                                 ((alpha & 0xFF) << 8) | 0xFF);
+                do {
+                    FONT_GFX_CMD(gRegionAllocPtr++, 0xFC119623, 0xFF2FFFFF);
+                    FONT_GFX_CMD(gRegionAllocPtr++, 0xFA000000,
+                                 ((alpha & 0xFF) << 0x18) | ((alpha & 0xFF) << 0x10) |
+                                     ((alpha & 0xFF) << 8) | 0xFF);
+                } while (0);
             }
 
             gDPLoadTextureTile_4b(gRegionAllocPtr++, texture->imageOffset + (u8 *)asset, G_IM_FMT_CI, texture->width,
