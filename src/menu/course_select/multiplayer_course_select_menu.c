@@ -37,15 +37,9 @@ extern s32 D_8010ADE0;
 extern s32 D_8010ADE4;
 extern s8 D_8010AE64[];
 extern u8 D_8010AEA0[];
-extern s8 D_8010AEA1;
-extern s8 D_8010AEA2;
-extern s8 D_8010AEA3;
 extern u8 D_8010AEA4[];
 extern s8 D_8010AEA8;
 extern s8 D_8010AEAC[];
-extern s8 D_8010AEAD;
-extern s8 D_8010AEAE;
-extern s8 D_8010AEAF;
 extern u8 D_8010AEB0;
 extern s8 D_8010AEB8[][3];
 extern u8 D_8010AEC8[];
@@ -55,57 +49,38 @@ extern s32 D_8010AED8[];
 extern s32 D_8010AEE8[];
 extern u8 D_8010AEF8[][4];
 extern s8 D_8010AEFB[];
-extern u8 D_8010AF08[][3];
 extern u8 D_8010AF06[][3];
+extern u8 gMultiplayerCourseSelectExtraCourseIds[RACE_PLAYER_COUNT][3];
 extern s8 gCourseSelectExtraCourseColumnState;
 extern s32 gPlayerInputHeld[];
 extern s32 gPlayerInputPressed[];
 extern RaceCamera D_801121E0[];
 extern RaceCamera D_801124A0;
-extern s32 D_80112204;
-extern void (*D_8011220C)(void);
-extern s32 D_801122B4;
-extern void (*D_801122BC)(void);
-extern s32 D_80112364;
-extern void (*D_8011236C)(void);
-extern s32 D_80112414;
-extern void (*D_8011241C)(void);
 extern s32 gMenuFlowState;
 
-// initMultiplayerCourseSelectMenu best match: 98.729% (nonmatchings/initMultiplayerCourseSelectMenu-633030068925474062/base_4.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/menu/course_select/multiplayer_course_select_menu/initMultiplayerCourseSelectMenu.s")
-
-#ifdef NON_MATCHING
 void initMultiplayerCourseSelectMenu(void) {
-    s32 i;
     s32 j;
     s32 k;
-    s32 one;
+    s32 l;
+    s32 i;
+    s32 m;
     s32 sum;
-    s32 extraCourseColumn;
-    s32 selected;
-    s32 specialCharacterId;
-    u8 *selectionRow;
-    s32 screenBase;
-    u32 startPlayer;
-    RacePlayer *player;
 
     if (gRaceSplitscreenMode == 1) {
         requestMusicSequenceBank(2);
     }
     resetRaceCameras();
-    one = 1;
     resetAllViewports();
 
     switch (gPlayerCount) {
     case 1:
         configureViewport(0, 0xE8, 0x78, 0x90, 0xD0, 0xA0, 0xF0, 0.6666666865f);
-        screenBase = 0xA40000;
+        i = 0xA40000;
         break;
     case 2:
         configureViewport(0, 0xE4, 0x4A, 0x84, 0x54, 0xA8, 0x74, 1.448275805f);
-        configureViewport(one, 0xE4, 0xAE, 0x84, 0x54, 0xA8, 0x74, 1.448275805f);
-        screenBase = 0x894000;
+        configureViewport(1, 0xE4, 0xAE, 0x84, 0x54, 0xA8, 0x74, 1.448275805f);
+        i = 0x894000;
         break;
     case 3:
     case 4:
@@ -113,29 +88,18 @@ void initMultiplayerCourseSelectMenu(void) {
         configureViewport(1, 0x78, 0xA8, 0x44, 0x40, 0x60, 0x60, 1.333333373f);
         configureViewport(2, 0x104, 0x44, 0x44, 0x40, 0x60, 0x60, 1.333333373f);
         configureViewport(3, 0x104, 0xA8, 0x44, 0x40, 0x60, 0x60, 1.333333373f);
-        screenBase = 0x894000;
+        i = 0x894000;
         break;
     default:
         break;
     }
 
-    D_8011220C = updateMenuCameraObjectLookAtOriginCallback;
-    D_80112204 = screenBase;
-    D_8010AEA0[0] = 0;
-    D_8010AEAC[0] = 0;
-    D_801122BC = updateMenuCameraObjectLookAtOriginCallback;
-    D_801122B4 = screenBase;
-    D_8010AEA1 = 0;
-    D_8010AEAD = 0;
-    D_8011236C = updateMenuCameraObjectLookAtOriginCallback;
-    D_80112364 = screenBase;
-    specialCharacterId = 5;
-    D_8010AEA2 = 0;
-    D_8010AEAE = 0;
-    D_8011241C = updateMenuCameraObjectLookAtOriginCallback;
-    D_80112414 = screenBase;
-    D_8010AEA3 = 0;
-    D_8010AEAF = 0;
+    for (l = 0; l < 4; l++) {
+        D_801121E0[l].update = updateMenuCameraObjectLookAtOriginCallback;
+        D_801121E0[l].distance = i;
+        D_8010AEA0[l] = 0;
+        D_8010AEAC[l] = 0;
+    }
     gFramebufferSwapDelay.value = 0;
     D_800EC9E5 = 0;
     D_8010AEA8 = 0;
@@ -158,7 +122,6 @@ void initMultiplayerCourseSelectMenu(void) {
     createCallbackTask((CallbackTaskCallback)initMenuIconTilemapSpriteActor, 0, 0x63);
 
     D_800EC9C0 = 0;
-    startPlayer = 0;
     gActiveMenuTask = 0;
     D_8010ADE0 = 0;
     D_8010ADE4 = 0;
@@ -169,11 +132,9 @@ void initMultiplayerCourseSelectMenu(void) {
     gCurrentGameTask->unk20 = 0;
     setCurrentGameTaskCallback(updateMultiplayerCourseSelectMenu, 0);
 
-    player = gRacePlayers;
-    do {
-        player->menuState = 0;
-        player++;
-    } while ((u32) player < (u32) gRacePlayersEnd);
+    for (i = 0; i < 4; i++) {
+        gRacePlayers[i].menuState = 0;
+    }
 
     for (i = 0; i < gPlayerCount; i++) {
         D_8010AEA4[i] = 0;
@@ -186,8 +147,8 @@ void initMultiplayerCourseSelectMenu(void) {
 
         for (j = 0; j < 3; j++) {
             sum = 0;
-            for (k = 0; (k ^ 0) < 3; k++) {
-                sum += (&gGameSaveDataBuffer)[i].courseUnlockStates[(j + (k * 3)) ^ 0];
+            for (k = 0; k < 3; k++) {
+                sum += GAME_SAVE_DATA_SLOT(i).courseUnlockStates[k * 3 + j];
             }
             if (sum != -3) {
                 D_8010AEB8[i][j] = 1;
@@ -196,12 +157,11 @@ void initMultiplayerCourseSelectMenu(void) {
             }
         }
 
-        sum = 0;
+        k = 0;
         for (j = 9; j < 12; j++) {
-            selected = (&gGameSaveDataBuffer)[i].courseUnlockStates[j];
-            sum += selected;
+            k += GAME_SAVE_DATA_SLOT(i).courseUnlockStates[j];
         }
-        if (sum >= -2) {
+        if (k >= -2) {
             D_8010AEC8[i] = 4;
         }
         if (D_8010AEC8[i] == 4) {
@@ -213,7 +173,7 @@ void initMultiplayerCourseSelectMenu(void) {
 
         if (D_8010AEA0[i] == 1) {
             for (j = 9; j < 12; j++) {
-                if ((&gGameSaveDataBuffer)[i].courseUnlockStates[j] != -one) {
+                if (GAME_SAVE_DATA_SLOT(i).courseUnlockStates[j] != -1) {
                     D_8010AEFB[i * 4] = j;
                     break;
                 }
@@ -221,9 +181,9 @@ void initMultiplayerCourseSelectMenu(void) {
 
             k = 0;
             for (j = 9; j < 12; j++) {
-                D_8010AF08[i][k] = 0;
-                if ((&gGameSaveDataBuffer)[i].courseUnlockStates[j] != -1) {
-                    D_8010AF08[i][k] = j;
+                gMultiplayerCourseSelectExtraCourseIds[i][k] = 0;
+                if (GAME_SAVE_DATA_SLOT(i).courseUnlockStates[j] != -1) {
+                    gMultiplayerCourseSelectExtraCourseIds[i][k] = j;
                     k++;
                 }
             }
@@ -232,67 +192,63 @@ void initMultiplayerCourseSelectMenu(void) {
         }
     }
 
-    for (i = startPlayer; i < gPlayerCount; i++) {
-        selected = gRacePlayers[i].menuSelection;
-        if ((selected >= 9) && (selected < 12)) {
-            extraCourseColumn = 3;
-            if (gRacePlayers[i].selectedCharacterId == specialCharacterId) {
-                j = 0;
+    for (j = 0; j < gPlayerCount; j++) {
+        if ((gRacePlayers[j].menuSelection >= 9) && (gRacePlayers[j].menuSelection < 12)) {
+            if (gRacePlayers[j].selectedCharacterId == 5) {
+                k = 0;
             } else {
-                j = extraCourseColumn;
+                k = 3;
             }
-            k = gCourseSelectStatus.unk2E;
         } else {
-            k = gCourseSelectStatus.unk2E;
-            if (k == one) {
-                k = gCourseSelectStatus.unk2E = j = 0;
+            if (gCourseSelectStatus.unk2E == 1) {
+                k = 0;
+                gCourseSelectStatus.unk2E = 0;
             } else {
-                j = selected % 3;
+                k = gRacePlayers[j].menuSelection % 3;
             }
         }
 
-        D_8010AE64[i] = j;
-        k = gCourseSelectStatus.unk2E;
-        selectionRow = (u8 *)&selected;
-        if (k == one) {
-            j--;
+        D_8010AE64[j] = k;
+
+        if (gCourseSelectStatus.unk2E == 1) {
+            k--;
         }
 
-        if (gRacePlayers[i].selectedCharacterId == specialCharacterId) {
-            D_8010AEAC[i] = 0;
-        } else if (*(s32 *)selectionRow < 9) {
-            D_8010AEAC[i] = *(s32 *)selectionRow / 3;
+        if (gRacePlayers[j].selectedCharacterId == 5) {
+            D_8010AEAC[j] = 0;
+        } else if (gRacePlayers[j].menuSelection < 9) {
+            D_8010AEAC[j] = gRacePlayers[j].menuSelection / 3;
         } else {
-            if (*(s32 *)selectionRow >= 12) {
-                D_8010AEAC[i] = 0;
+            if (gRacePlayers[j].menuSelection >= 12) {
+                D_8010AEAC[j] = 0;
             }
-            if ((*(s32 *)selectionRow >= 9) && (selected < 12)) {
-                for (k = 0; k < 3; k++) {
-                    if (D_8010AF08[i][k] == *(s32 *)selectionRow) {
-                        D_8010AEAC[i] = k;
+
+            if ((gRacePlayers[j].menuSelection >= 9) && (gRacePlayers[j].menuSelection < 12)) {
+                for (m = 0; m < 3; m++) {
+                    if (gMultiplayerCourseSelectExtraCourseIds[j][m] == gRacePlayers[j].menuSelection) {
+                        D_8010AEAC[j] = m;
                         break;
                     }
                 }
             }
         }
 
-        selectionRow = D_8010AEF8[i];
-        gRacePlayers[i].menuSelection = selectionRow[j];
-        gCourseSelectStatus.unk0[i] = 0;
-        gCourseSelectStatus.unk4Array[i] = 0;
-        gCourseSelectStatus.unk8Array[i] = 0;
-        gCourseSelectStatus.unkCArray[i] = 0;
-        gCourseSelectStatus.unk10Array[i] = 0;
-        gCourseSelectStatus.unk14[i] = 0;
-        gCourseSelectStatus.unk1C[i] = 0;
-        gCourseSelectStatus.unk24[i] = 0;
+        gRacePlayers[j].menuSelection = D_8010AEF8[j][k];
+
+        gCourseSelectStatus.unk0[j] = 0;
+        gCourseSelectStatus.unk4Array[j] = 0;
+        gCourseSelectStatus.unk8Array[j] = 0;
+        gCourseSelectStatus.unkCArray[j] = 0;
+        gCourseSelectStatus.unk10Array[j] = 0;
+        gCourseSelectStatus.unk14[j] = 0;
+        gCourseSelectStatus.unk1C[j] = 0;
+        gCourseSelectStatus.unk24[j] = 0;
     }
 
-    *(volatile u8 *)&gCourseSelectStatus.unk28 = 0;
-    *(volatile s16 *)&gCourseSelectStatus.unk2A = 0;
-    *(volatile s16 *)&gCourseSelectStatus.unk2C = 0;
+    gCourseSelectStatus.unk28 = 0;
+    gCourseSelectStatus.unk2A = 0;
+    gCourseSelectStatus.unk2C = 0;
 }
-#endif
 
 #if 0 /* Superseded without consulting the previous attempt. */
 // updateMultiplayerCourseSelectMenu best match: 89.714% (nonmatchings/updateMultiplayerCourseSelectMenu-8498672362023432715/base_52.c)
