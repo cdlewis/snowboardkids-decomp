@@ -716,23 +716,24 @@ void drawScaledAssetTableSprite(s16 x, s16 y, AssetTable *asset, volatile u16 en
 }
 #endif
 
-// drawScaledAssetTableSpriteWithExplicitPalette best match: 97.314% (nonmatchings/drawScaledAssetTableSpriteWithExplicitPalette-7812531368330432019/base_7.c)
+// drawScaledAssetTableSpriteWithExplicitPalette best match: 97.391% (nonmatchings/drawScaledAssetTableSpriteWithExplicitPalette-7181144369148334388/base_17.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/renderer/menu_render_utils/drawScaledAssetTableSpriteWithExplicitPalette.s")
 
 #ifdef NON_MATCHING
 void drawScaledAssetTableSpriteWithExplicitPalette(s16 x, s16 y, AssetTable *asset,
                                                    volatile u16 entryIndex, u16 paletteIndex,
                                                    u16 scale) {
-    AssetTableEntry *paletteBase;
     s32 x0;
     s32 y0;
     s32 spriteWidth;
     AssetTableEntry *sprite;
+    AssetTableEntry *paletteBase;
     u16 textureScale;
     s32 pad;
     s32 x1;
     s32 y1;
     s32 clippedS;
+    s32 clippedT;
 
     if (paletteIndex && paletteIndex) {
     }
@@ -757,8 +758,6 @@ void drawScaledAssetTableSpriteWithExplicitPalette(s16 x, s16 y, AssetTable *ass
             y1 += y0;
         }
         {
-            s32 clippedT;
-
             clippedS = 0;
             clippedT = 0;
 
@@ -785,6 +784,8 @@ void drawScaledAssetTableSpriteWithExplicitPalette(s16 x, s16 y, AssetTable *ass
             }
             if (x1 >= gMenuViewportCenterX + (gMenuViewportWidth / 2)) {
                 x1 = gMenuViewportCenterX + (gMenuViewportWidth / 2);
+                if (1) {
+                }
             }
             if (y1 >= gMenuViewportCenterY + (gMenuViewportHeight / textureScale)) {
                 y1 = gMenuViewportCenterY + (gMenuViewportHeight / textureScale);
