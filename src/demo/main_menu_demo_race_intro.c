@@ -1,3 +1,4 @@
+#include "assets.h"
 #include "game/race/race_state.h"
 #include "game/demo/main_menu_demo_race_intro.h"
 #include "game/audio/sound_manager.h"
@@ -32,15 +33,13 @@ typedef struct {
     /* 0xAD */ char padAD[3];
 } RaceIntroCamera;
 
-extern u8 D_24DBE0[];
-
 u8 gMainMenuDemoRaceIntroIndex = 0;
 MainMenuDemoRaceIntroEntry gMainMenuDemoRaceIntroEntries[] = {
-    { 9, 0, 0, 0, D_24DBE0, (void *)0x250260, 0, 1, 2, 3 },
-    { 0, 1, 0, 0, (void *)0x250260, (void *)0x2521F0, 4, 1, 2, 3 },
-    { 1, 1, 1, 0, (void *)0x2521F0, (void *)0x254380, 2, 0, 1, 3 },
-    { 7, 1, 2, 0, (void *)0x254380, (void *)0x256420, 1, 0, 1, 3 },
-    { 3, 0, 0, 1, (void *)0x256420, (void *)0x258C80, 3, 1, 4, 2 },
+    { 9, 0, 0, 0, (void *)&_24DBE0_ROM_START, (void *)&_24DBE0_ROM_END, 0, 1, 2, 3 },
+    { 0, 1, 0, 0, (void *)&_250260_ROM_START, (void *)&_250260_ROM_END, 4, 1, 2, 3 },
+    { 1, 1, 1, 0, (void *)&_2521F0_ROM_START, (void *)&_2521F0_ROM_END, 2, 0, 1, 3 },
+    { 7, 1, 2, 0, (void *)&_254380_ROM_START, (void *)&_254380_ROM_END, 1, 0, 1, 3 },
+    { 3, 0, 0, 1, (void *)&_256420_ROM_START, (void *)&_256420_ROM_END, 3, 1, 4, 2 },
 };
 
 extern RaceIntroCamera D_801121E0[];
