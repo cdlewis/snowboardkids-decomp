@@ -329,10 +329,12 @@ void initCharacterSelectCourseMenuFromPlayerSelect(void) {
     updateCallbackTasks();
 }
 
-// updateCharacterSelectCourseMenu best match: 95.445%
+// updateCharacterSelectCourseMenu best match: 98.359% (nonmatchings/updateCharacterSelectCourseMenu-7181144369148334388/base_15.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/character_select/character_select_course_menu/updateCharacterSelectCourseMenu.s")
 
 #ifdef NON_MATCHING
+CharacterSelectCourseCursorState gCharacterSelectCourseCursorState;
+
 void updateCharacterSelectCourseMenu(void) {
     u8 cursorState;
     s32 *pressedInputPtr;
@@ -340,6 +342,7 @@ void updateCharacterSelectCourseMenu(void) {
     s32 input;
     s16 *selectionPtr;
     s32 pressedInput;
+    s32 heldInputValue;
     s32 spriteIndex;
     s32 upInput;
     s32 heldInput;
@@ -360,7 +363,8 @@ void updateCharacterSelectCourseMenu(void) {
                 cursorState = gCharacterSelectCourseCursorState.fields.state;
                 repeatTimerPtr = gMenuInputRepeatTimers;
                 if (cursorState == 1) {
-                    heldInput = gPlayerInputHeld[0];
+                    heldInputValue = gPlayerInputHeld[0];
+                    heldInput = heldInputValue;
                     do {
                         selection = *selectionPtr;
                         previousSelection = (s16) selection;
