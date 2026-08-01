@@ -44,7 +44,6 @@ MainMenuDemoRaceIntroEntry gMainMenuDemoRaceIntroEntries[] = {
 };
 
 extern RaceIntroCamera D_801121E0[];
-extern u8 gMainMenuDemoRaceIntroLoadCourseAssetsFlags[];
 extern s16 gMenuFadeAlpha;
 extern s16 gRaceLapCount;
 extern s16 gRacePlayerAttackStartTimer;
@@ -150,7 +149,7 @@ void initMainMenuDemoRaceIntro(void) {
     gRacePlayerHudStatuses[0].active = one;
     gFramebufferSwapDelay.value = 0;
     initRacePlayers();
-    if (!gMainMenuDemoRaceIntroLoadCourseAssetsFlags[gMainMenuDemoRaceIntroIndex * sizeof(MainMenuDemoRaceIntroEntry)]) {
+    if (!gMainMenuDemoRaceIntroEntries[gMainMenuDemoRaceIntroIndex].loadCourseAssets) {
         gPlayerCount = 1;
     }
     initRaceHud();
