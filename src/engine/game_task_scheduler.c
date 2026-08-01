@@ -83,8 +83,8 @@ void initGameTaskScheduler(void) {
     resetRenderCallbackQueues();
 }
 
-// updateGameTaskScheduler best match: 97.413% with the current scorer
-// (nonmatchings/updateGameTaskScheduler-633030068925474062/base_10.c)
+// updateGameTaskScheduler best match: 99.109% with the current scorer
+// (nonmatchings/updateGameTaskScheduler-7181144369148334388/base_2.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/engine/game_task_scheduler/updateGameTaskScheduler.s")
 
 #ifdef NON_MATCHING
@@ -113,6 +113,7 @@ void updateGameTaskScheduler(void) {
     s8 mappedStickX;
     s8 mappedStickY;
     s32 timer;
+    register u32 heldButtonMask;
 
     gFrameCounter = (gFrameCounter + 1) & 0xFFF;
     stickYOut = &gAnalogStickResponseCurve;
@@ -126,16 +127,27 @@ void updateGameTaskScheduler(void) {
     repeatTimer = &gPlayerInputRepeatTimer;
     newInput = gPlayerInputPressed;
     stickYOut = gPlayerStickY;
+    do {
+    } while (0);
+    do {
+    } while (0);
+    do {
+    } while (0);
     stickXOut = gPlayerStickX;
     controller = gControllerInputState;
     input = gPlayerInputHeld;
     previousInput = &gPlayerInputPrevious;
+    heldButtonMask = 0xFFFF0000;
+    stickY = 0;
 
     do {
+        stickY++;
+        stickY--;
         stickX = controller->stickX;
         stickHighThreshold = 0x2E;
         oldInput = *input;
-        *input &= 0xFFFF0000;
+        currentInput = oldInput & heldButtonMask;
+        *input = currentInput;
         do {
             *input |= controller->buttons;
             *previousInput = oldInput;
@@ -177,7 +189,7 @@ positiveStickX:
             *stickYOut = -responseCurve[-stickY];
         }
 
-        mappedStickX = *stickXOut;
+        mappedStickX = (int) *stickXOut;
         stickXOut++;
         if (mappedStickX >= 0x1B) {
             *input |= 0x40000;
@@ -214,7 +226,7 @@ positiveStickX:
             *repeatInput = currentInput;
         } else {
             timer = *repeatTimer;
-            if (timer >= 9) {
+            if ((u8) timer >= 9) {
                 *repeatInput = currentInput;
             } else {
                 newInputValue = *newInput;
@@ -230,46 +242,34 @@ positiveStickX:
         repeatTimer++;
     } while (repeatInput != (s32 *)&gPlayerInputRepeatTimer);
 
-    task = gActiveGameTaskListHead;
-    gCurrentGameTask = task;
-    if (task != NULL) {
-        if (1) {
-            do {
-                if (task->state == 2) {
-                    task->state = 0;
-                    task = gCurrentGameTask;
-                }
-                task = (gCurrentGameTask = task->next);
-            } while (task != NULL);
+    do {
+    } while (0);
+    do {
+    } while (0);
+    do {
+    } while (0);
+    gCurrentGameTask = gActiveGameTaskListHead;
+    while (gCurrentGameTask != NULL) {
+        if (gCurrentGameTask->state == 2) {
+            gCurrentGameTask->state = 0;
         }
-        gCurrentGameTask = gActiveGameTaskListHead;
+        gCurrentGameTask = gCurrentGameTask->next;
     }
 
-    task = gCurrentGameTask;
-    if (task != NULL) {
-        do {
-            new_var2 = task->state;
-            if (new_var2 == 0) {
-                callback = task->callbacks[0];
-                if (callback != NULL) {
-                    callback();
-                    task = gCurrentGameTask;
-                }
-                callback = task->callbacks[1];
-                if (callback != NULL) {
-                    callback();
-                    task = gCurrentGameTask;
-                    task = gCurrentGameTask;
-                }
-                callbackArray = task->callbacks;
-                callback = callbackArray[2];
-                if (callback != NULL) {
-                    callback();
-                    task = gCurrentGameTask;
-                }
+    gCurrentGameTask = gActiveGameTaskListHead;
+    while (gCurrentGameTask != NULL) {
+        if (gCurrentGameTask->state == 0) {
+            if (gCurrentGameTask->callbacks[0] != NULL) {
+                gCurrentGameTask->callbacks[0]();
             }
-            task = (gCurrentGameTask = task->next);
-        } while (task != NULL);
+            if (gCurrentGameTask->callbacks[1] != NULL) {
+                gCurrentGameTask->callbacks[1]();
+            }
+            if (gCurrentGameTask->callbacks[2] != NULL) {
+                gCurrentGameTask->callbacks[2]();
+            }
+        }
+        gCurrentGameTask = gCurrentGameTask->next;
     }
 
     updateFramebufferRenderScheduler();
