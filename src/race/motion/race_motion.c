@@ -939,68 +939,66 @@ void getRaceCourseSurfaceSpawnTransform(s32 arg0, s32 *x, s32 *y, s32 *z, s16 *a
     *angle = -((RaceMotionSurface *)((s32)gRaceCourseSurfaces + keyframeOffset))->angle;
 }
 
-// getRaceCourseTargetPositionAhead best match: 99.806% (nonmatchings/getRaceCourseTargetPositionAhead-46/output-80-1/source.c)
+// getRaceCourseTargetPositionAhead best match: 99.903% (nonmatchings/getRaceCourseTargetPositionAhead-7181144369148334388/base_19.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race/motion/race_motion/getRaceCourseTargetPositionAhead.s")
 
 #ifdef NON_MATCHING
-void getRaceCourseTargetPositionAhead(s32 arg0, s32 arg1, s32 arg2, s32 *arg3, s32 *arg4, s32 arg5, s32 arg6) {
-    s32 keyframeOffset;
-    s32 deltaX;
-    s32 deltaZ;
-    s32 projected;
-    s32 distance;
-    s16 pathIndex;
-    s16 upperSurfaceIndex;
-
-    if (arg0 != gRaceCourseStartEntries[gRaceCourseIndex.signedValue].pathIndex) {
-        keyframeOffset = arg0 * sizeof(RaceMotionSurface);
-        deltaZ = arg0;
-        gRaceCourseSurfaceAngleSin = fixedSine(gRaceCourseSurfaces[deltaZ].angle);
-        gRaceCourseSurfaceAngleCos = fixedCosine(gRaceCourseSurfaces[arg0].angle);
-
-        deltaX = arg1 - (gRaceCourseSurfaceCoords[gRaceCourseSurfaces[arg0].positionIndex].x << 0x11);
-        deltaZ = gRaceCourseSurfaceCoords[gRaceCourseSurfaces[arg0].positionIndex].z;
-        deltaZ = arg2 - ((deltaZ << 2) << 15);
-        projected = ((s64)-gRaceCourseSurfaceAngleSin * deltaX + (s64)gRaceCourseSurfaceAngleCos * deltaZ) / 0x1000;
-
-        if ((arg0 >= gRaceCourseStartEntries[gRaceCourseIndex.signedValue].unk38) && ((upperSurfaceIndex = gRaceCourseStartEntries[gRaceCourseIndex.signedValue].unk3A) >= arg0)) {
-            distance = projected + 0xC00000;
-            *arg3 = ((s64)-gRaceCourseSurfaceAngleSin * distance) / 0x1000;
-            deltaZ = gRaceCourseSurfaceAngleCos;
-            *arg4 = ((s64)deltaZ * distance) / 0x1000;
-        } else if ((gRaceCourseIndex.signedValue == 3) && ((arg0 == 0x11D) || (arg0 == 0x11E))) {
-            distance = projected + 0xC00000;
-            *arg3 = ((s64)-gRaceCourseSurfaceAngleSin * distance) / 0x1000;
-            *arg4 = ((s64)gRaceCourseSurfaceAngleCos * distance) / 0x1000;
-        } else {
-            distance = projected + 0xFF400000;
-            keyframeOffset = gRaceCourseSurfaceAngleSin;
-            *arg3 = ((s64)-keyframeOffset * distance) / 0x1000;
-            *arg4 = ((s64)gRaceCourseSurfaceAngleCos * distance) / 0x1000;
-        }
-
-        *arg3 += gRaceCourseSurfaceCoords[gRaceCourseSurfaces[arg0].positionIndex].x << 0x11;
-        *arg4 += gRaceCourseSurfaceCoords[gRaceCourseSurfaces[arg0].positionIndex].z << 0x11;
-
-        projected = *arg4 ^ 0;
-        pathIndex = findRaceCourseSurfaceFromHint(arg0, *arg3, projected);
-        gRaceCourseSurfaceAngleSin = fixedSine(gRaceCourseSurfaces[(s32)pathIndex].angle);
-        keyframeOffset = pathIndex * sizeof(RaceMotionSurface);
-        gRaceCourseSurfaceAngleCos = fixedCosine(gRaceCourseSurfaces[pathIndex].angle);
-
-        deltaX = *arg3 - (gRaceCourseSurfaceCoords[gRaceCourseSurfaces[pathIndex].positionIndex].x << 0x11);
-        deltaZ = *arg4 - (gRaceCourseSurfaceCoords[gRaceCourseSurfaces[pathIndex].positionIndex].z << 0x11);
-        distance = updateRacePlayerSmoothedPathOffset(arg5, pathIndex, arg6);
-        projected = ((s64)-gRaceCourseSurfaceAngleSin * deltaX + (s64)gRaceCourseSurfaceAngleCos * deltaZ) / 0x1000;
-
-        *arg3 = ((s64)gRaceCourseSurfaceAngleCos * distance + (s64)-gRaceCourseSurfaceAngleSin * projected) / 0x1000;
-        *arg4 = ((s64)gRaceCourseSurfaceAngleSin * distance + (s64)gRaceCourseSurfaceAngleCos * projected) / 0x1000;
-        *arg3 += gRaceCourseSurfaceCoords[gRaceCourseSurfaces[pathIndex].positionIndex].x << 0x11;
-        *arg4 += gRaceCourseSurfaceCoords[gRaceCourseSurfaces[pathIndex].positionIndex].z << 0x11;
-    } else {
-        *arg3 = gRaceCourseStartEntries[gRaceCourseIndex.signedValue].unk18;
-        *arg4 = gRaceCourseStartEntries[gRaceCourseIndex.signedValue].unk1C;
+void getRaceCourseTargetPositionAhead(s32 arg0, s32 arg1, s32 arg2, s32 *arg3, s32 *arg4, s32 arg5, s32 arg6)
+{
+  s32 deltaX;
+  s32 temp;
+  s32 deltaZ;
+  s32 projected;
+  s32 distance;
+  s16 pathIndex;
+  if (arg0 != gRaceCourseStartEntries[gRaceCourseIndex.signedValue].pathIndex)
+  {
+    gRaceCourseSurfaceAngleSin = fixedSine(gRaceCourseSurfaces[arg0].angle);
+    gRaceCourseSurfaceAngleCos = fixedCosine(gRaceCourseSurfaces[arg0].angle);
+    deltaX = (distance = arg1 - (gRaceCourseSurfaceCoords[gRaceCourseSurfaces[arg0].positionIndex].x << 0x11));
+    deltaZ = gRaceCourseSurfaceCoords[gRaceCourseSurfaces[arg0].positionIndex].z;
+    deltaZ = arg2 - ((deltaZ << 2) << 15);
+    projected = ((((s64) (-gRaceCourseSurfaceAngleSin)) * deltaX) + (((s64) gRaceCourseSurfaceAngleCos) * deltaZ)) / 0x1000;
+    if ((arg0 >= gRaceCourseStartEntries[gRaceCourseIndex.signedValue].unk38) && (gRaceCourseStartEntries[gRaceCourseIndex.signedValue].unk3A >= arg0))
+    {
+      projected += 0xC00000;
+      *arg3 = (((s64) (-gRaceCourseSurfaceAngleSin)) * (projected ^ 0)) / 0x1000;
+      *arg4 = (((s64) gRaceCourseSurfaceAngleCos) * (projected ^ 0)) / 0x1000;
     }
+    else
+      if ((gRaceCourseIndex.signedValue == 3) && ((arg0 == 0x11D) || (arg0 == 0x11E)))
+    {
+      distance = projected + 0xC00000;
+      *arg3 = (((s64) (-gRaceCourseSurfaceAngleSin)) * distance) / 0x1000;
+      *arg4 = (((s64) gRaceCourseSurfaceAngleCos) * distance) / 0x1000;
+    }
+    else
+    {
+      distance = projected + 0xFF400000;
+      temp = -gRaceCourseSurfaceAngleSin;
+      *arg3 = (((s64) temp) * distance) / 0x1000;
+      *arg4 = (((s64) gRaceCourseSurfaceAngleCos) * distance) / 0x1000;
+    }
+    *arg3 += gRaceCourseSurfaceCoords[gRaceCourseSurfaces[arg0].positionIndex].x << 0x11;
+    *arg4 += gRaceCourseSurfaceCoords[gRaceCourseSurfaces[arg0].positionIndex].z << 0x11;
+    projected = *arg4;
+    pathIndex = findRaceCourseSurfaceFromHint(arg0, *arg3, projected);
+    gRaceCourseSurfaceAngleSin = fixedSine(gRaceCourseSurfaces[(s32) pathIndex].angle);
+    gRaceCourseSurfaceAngleCos = fixedCosine(gRaceCourseSurfaces[pathIndex].angle);
+    temp = (*arg3) - (gRaceCourseSurfaceCoords[gRaceCourseSurfaces[pathIndex].positionIndex].x << 0x11);
+    deltaZ = (*arg4) - (gRaceCourseSurfaceCoords[gRaceCourseSurfaces[pathIndex].positionIndex].z << 0x11);
+    distance = updateRacePlayerSmoothedPathOffset(arg5, pathIndex, arg6);
+    projected = ((((s64) (-gRaceCourseSurfaceAngleSin)) * temp) + (((s64) gRaceCourseSurfaceAngleCos) * deltaZ)) / 0x1000;
+    *arg3 = ((((s64) gRaceCourseSurfaceAngleCos) * distance) + (((s64) (-gRaceCourseSurfaceAngleSin)) * projected)) / 0x1000;
+    *arg4 = ((((s64) gRaceCourseSurfaceAngleSin) * distance) + (((s64) gRaceCourseSurfaceAngleCos) * projected)) / 0x1000;
+    *arg3 += gRaceCourseSurfaceCoords[gRaceCourseSurfaces[pathIndex].positionIndex].x << 0x11;
+    *arg4 += gRaceCourseSurfaceCoords[gRaceCourseSurfaces[pathIndex].positionIndex].z << 0x11;
+  }
+  else
+  {
+    *arg3 = gRaceCourseStartEntries[gRaceCourseIndex.signedValue].unk18;
+    *arg4 = gRaceCourseStartEntries[gRaceCourseIndex.signedValue].unk1C;
+  }
 }
 #endif
 
