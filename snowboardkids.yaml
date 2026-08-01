@@ -852,7 +852,12 @@ segments:
     start: 0x24C8E0
     name: _24C8E0
     vram: 0
-  - [0x24DBE0, bin]
+  - { start: 0x24DBE0, type: bin, name: _24DBE0, vram: 0 }
+  - { start: 0x250260, type: bin, name: _250260, vram: 0 }
+  - { start: 0x2521F0, type: bin, name: _2521F0, vram: 0 }
+  - { start: 0x254380, type: bin, name: _254380, vram: 0 }
+  - { start: 0x256420, type: bin, name: _256420, vram: 0 }
+  - [0x258C80, bin]
   - type: bin
     start: 0x275A90
     name: _275A90
