@@ -1,5 +1,5 @@
 candidate_source: python3 tools/score_functions.py asm/nonmatchings --json --by-similarity --top-n 3
-prompt: "decompile the function: $INPUT[0]. These similar functions have been matched and might provide useful references: $INPUT[1:]. If a function is only available on one worktree, that worktree will be indicated in parentheses, e.g. `myFunction (../sbk-a)`. When creating your claude environment use --id $TASK_ID. Do not look at other match attempts for this function in the project, they represent local optima. Come up with your own match by carefully considering the purpose of the function (and therefore what it must / must not logically do) and comparing it with the provided references."
+prompt: "decompile the function: $INPUT[0]. These similar functions have been matched and might provide useful references: $INPUT[1:]. If a function is only available on one worktree, that worktree will be indicated in parentheses, e.g. `myFunction (../sbk-a)`. When creating your claude environment use --id $TASK_ID. Come up with your own match by carefully considering the purpose of the function (and therefore what it must / must not logically do) and comparing it with the provided references."
 agent: codex
 agent_flags: --config model_reasoning_effort='"xhigh"'
 success_command: 'git add -u && git commit -m "matched $CANDIDATE"'
