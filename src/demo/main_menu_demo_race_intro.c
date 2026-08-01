@@ -32,14 +32,23 @@ typedef struct {
     /* 0xAD */ char padAD[3];
 } RaceIntroCamera;
 
+extern u8 D_24DBE0[];
+
+u8 gMainMenuDemoRaceIntroIndex = 0;
+MainMenuDemoRaceIntroEntry gMainMenuDemoRaceIntroEntries[] = {
+    { 9, 0, 0, 0, D_24DBE0, (void *)0x250260, 0, 1, 2, 3 },
+    { 0, 1, 0, 0, (void *)0x250260, (void *)0x2521F0, 4, 1, 2, 3 },
+    { 1, 1, 1, 0, (void *)0x2521F0, (void *)0x254380, 2, 0, 1, 3 },
+    { 7, 1, 2, 0, (void *)0x254380, (void *)0x256420, 1, 0, 1, 3 },
+    { 3, 0, 0, 1, (void *)0x256420, (void *)0x258C80, 3, 1, 4, 2 },
+};
+
 extern RaceIntroCamera D_801121E0[];
-extern MainMenuDemoRaceIntroEntry gMainMenuDemoRaceIntroEntries[];
 extern u8 gMainMenuDemoRaceIntroLoadCourseAssetsFlags[];
 extern s16 gMenuFadeAlpha;
 extern s16 gRaceLapCount;
 extern s16 gRacePlayerAttackStartTimer;
 extern s8 gRacePlayerCount;
-extern u8 gMainMenuDemoRaceIntroIndex;
 extern u8 gRaceUpdatePaused;
 extern u8 gTrainingCourseLesson;
 extern u8 gMainMenuModeSelection;
