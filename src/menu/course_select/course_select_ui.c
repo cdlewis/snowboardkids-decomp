@@ -1688,8 +1688,8 @@ void initCourseSelectCourseStats(CourseSelectWidgetActor *arg0) {
     setCallbackTaskCallback(temp_a3, (CallbackTaskCallback)updateCourseSelectCourseStats);
 }
 
-// drawCourseSelectCourseDescription best match: 96.410%
-// (nonmatchings/drawCourseSelectCourseDescription-7812531368330432019/base_13.c)
+// drawCourseSelectCourseDescription best match: 96.923%
+// (nonmatchings/drawCourseSelectCourseDescription-7181144369148334388/base_35.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/course_select/course_select_ui/drawCourseSelectCourseDescription.s")
 
 #if 0
@@ -1828,6 +1828,7 @@ void drawCourseSelectCourseDescription(CourseSelectWidgetActor *arg0) {
 #endif
 
 #ifdef NON_MATCHING
+extern u8 D_8010AEA8;
 extern u8 gCourseSelectExtraCourseIds[];
 extern u8 gUnlockedExtraCourseFlags;
 
@@ -1877,7 +1878,7 @@ void drawCourseSelectCourseDescription(CourseSelectWidgetActor *arg0) {
             } else {
                 if ((gRacePlayers[0].menuSelection >= 9) &&
                     (gRacePlayers[0].menuSelection < 12)) {
-                    pricedCourseId = gCourseSelectExtraCourseIds[selectedIndex] % 3;
+                    pricedCourseId = gCourseSelectExtraCourseIds[selectedIndex + 1] % 3;
                     descriptionIndex = pricedCourseId;
                     boardText = gCourseSelectExtraCourseBoardLevelText[descriptionIndex].text;
                     pricedCourseId = gRacePlayers[0].menuSelection;
@@ -1909,7 +1910,7 @@ void drawCourseSelectCourseDescription(CourseSelectWidgetActor *arg0) {
                 script[1] = 6;
                 if ((selectedIndex >= 2) || (gRacePlayers[0].menuSelection >= 9)) {
                     if (gRacePlayers[0].menuSelection >= 9) {
-                        pricedCourseId = gCourseSelectExtraCourseIds[selectedIndex];
+                        pricedCourseId = gCourseSelectExtraCourseIds[(selectedIndex + 1) ^ 0];
                     } else {
                         pricedCourseId =
                             (gRacePlayers[0].menuSelection % 3) + (selectedIndex * 3) - 3;
@@ -1943,7 +1944,7 @@ void drawCourseSelectCourseDescription(CourseSelectWidgetActor *arg0) {
                         digit = script;
                         digit += digitCount;
                         digit[3] = digit[2] = digit[1] = digit[0] = 0x2B;
-                    } while (0);
+                    } while (0 != 0);
                     script[7] = 0xFFFF;
                 }
                 descriptionIndex = (s32)arg0->spriteIndex;
