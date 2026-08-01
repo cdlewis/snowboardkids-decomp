@@ -28,6 +28,13 @@ extern u8 gFramebufferSwapHold;
 
 #define MULTIPLAYER_COURSE_SELECT_PLAYER_RECORD_COUNT 4
 
+s8 D_800B3490[MULTIPLAYER_COURSE_SELECT_DEFAULT_COURSE_COUNT] = {
+    0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11,
+};
+s16 gCourseSelectColumnSoundEffects[MULTIPLAYER_COURSE_SELECT_COLUMN_COUNT] = {
+    0x56, 0x55, 0x54, 0x51, 0, 0, 0, 0, 0, 0,
+};
+
 extern void n_alSeqpDelete(void);
 extern s32 enqueueSoundEffect(s16 soundId, s16 volume);
 extern s16 gMenuFadeAlpha;

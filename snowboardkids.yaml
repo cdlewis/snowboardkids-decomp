@@ -292,7 +292,7 @@ segments:
       - [0xB3D90, data, menu/race_setup/race_setup_menu]
       - [0xB4000, data, menu/character_select/character_select_menu]
       - [0xB4020, data, menu/character_select/character_select_course_menu]
-      - [0xB4090, data, menu/course_select/multiplayer_course_select_menu]
+      - [0xB4090, .data, menu/course_select/multiplayer_course_select_menu]
       - [0xB40B0, data, menu/course_select/course_select_menu]
       - [0xB4100, data, menu/training/training_course_ui]
       - [0xB5DD0, data, menu/renderer/menu_renderer]
