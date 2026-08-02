@@ -10,12 +10,12 @@ typedef union {
 
 typedef struct {
     /* 0x00 */ s16 pathIndex;
-    /* 0x02 */ u8 pad2[2];
+    /* 0x02 */ s16 lapCount;
     /* 0x04 */ s16 unk4;
     /* 0x06 */ u8 pad6[2];
     /* 0x08 */ Vec3i unk8;
-    /* 0x14 */ s16 unk14;
-    /* 0x16 */ u8 pad16[2];
+    /* 0x14 */ s16 spiralCourseObjectAngle;
+    /* 0x16 */ s16 launchRampCourseObjectAngle;
     /* 0x18 */ s32 unk18;
     /* 0x1C */ s32 unk1C;
     /* 0x20 */ Vec3i pos;
@@ -37,7 +37,7 @@ typedef char RaceCourseStartEntrySizeCheck[(sizeof(RaceCourseStartEntry) == 0x48
 typedef char RacePlayerHudStatusSizeCheck[(sizeof(RacePlayerHudStatus) == 0xB0) ? 1 : -1];
 
 extern RaceCourseIndexValue gRaceCourseIndex;
-extern RaceCourseStartEntry gRaceCourseStartEntries[];
+extern RaceCourseStartEntry gRaceCourseStartEntries[10];
 extern RacePlayerHudStatus gRacePlayerHudStatuses[];
 extern u8 gRaceDemoPlaybackEnabled;
 extern u8 gRaceResultState;

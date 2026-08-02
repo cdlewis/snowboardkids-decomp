@@ -175,11 +175,6 @@ struct RaceMotionInitState {
     s16 partCount;
 };
 
-typedef struct RaceCourseSurfaceLimit {
-    s16 maxSurfaceIndex;
-    char pad2[0x46];
-} RaceCourseSurfaceLimit;
-
 extern RaceMotionCoord *gRaceCourseSurfaceCoords;
 extern RaceMotionFace *gRaceCourseSurfaceFaces;
 extern RaceMotionSurface *gRaceCourseSurfaces;
@@ -197,7 +192,6 @@ extern RaceMotionRotation gRaceMotionJointFrameBuffer[];
 extern RaceMotionRotation gRaceMotionJointDecodeFrameBuffer[];
 extern s32 gRaceMotionJointBlendBuffer[];
 extern s32 gRacePlayerHitCueId;
-extern RaceCourseSurfaceLimit gRaceCourseMaxSurfaceIndices[];
 extern u8 gRaceMotionModelPartCounts[];
 extern u8 *gRaceMotionModelPartIds[];
 extern u8 *gRaceMotionModelParentPartIds[];
@@ -279,7 +273,7 @@ s32 findRaceCourseSurfaceAtPoint(s32 x, s32 z) {
     s32 surfaceIndex;
 
     surfaceIndex = 0;
-    if (gRaceCourseMaxSurfaceIndices[gRaceCourseIndex.signedValue].maxSurfaceIndex >= 0) {
+    if (gRaceCourseStartEntries[gRaceCourseIndex.signedValue].maxSurfaceIndex >= 0) {
         do {
             RaceMotionCoord *coords;
             s32 outsideSurface;
@@ -318,7 +312,7 @@ s32 findRaceCourseSurfaceAtPoint(s32 x, s32 z) {
                 return surfaceIndex;
             }
             surfaceIndex++;
-        } while (surfaceIndex <= gRaceCourseMaxSurfaceIndices[gRaceCourseIndex.signedValue].maxSurfaceIndex);
+        } while (surfaceIndex <= gRaceCourseStartEntries[gRaceCourseIndex.signedValue].maxSurfaceIndex);
     }
 
     return 0;

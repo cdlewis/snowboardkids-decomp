@@ -54,11 +54,6 @@ typedef struct {
 } CourseGridEntry;
 
 typedef struct {
-    /* 0x00 */ s16 unk0;
-    /* 0x02 */ u8 pad2[0x48 - 0x2];
-} CourseSelectTableEntry;
-
-typedef struct {
     /* 0x00 */ u8 pad0[0xAC];
     /* 0xAC */ u8 active;
     /* 0xAD */ u8 padAD[0xB0 - 0xAD];
@@ -85,7 +80,6 @@ typedef struct {
 
 extern CourseGridEntry *D_800DC490[];
 extern u16 D_800DC5C0[];
-extern CourseSelectTableEntry D_800B9542[];
 extern s32 gRaceCameraReplayStartX;
 extern s32 gRaceCameraReplayStartY;
 extern s32 gRaceCameraReplayStartZ;
@@ -1804,7 +1798,7 @@ loop:
 }
 
 void initRaceRecordSettingsFlow(void) {
-    gRaceLapCount = D_800B9542[gRaceCourseIndex.signedValue].unk0;
+    gRaceLapCount = gRaceCourseStartEntries[gRaceCourseIndex.signedValue].lapCount;
     if (gRaceSplitscreenMode != 0) {
         setCurrentGameTaskCallback(initRaceSceneFlow, 0);
         return;
