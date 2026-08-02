@@ -427,7 +427,7 @@ void initCharacterSelectRosterIcons(CharacterSelectUiRosterIconActor *arg0) {
 
     i = 0;
     if (gPlayerCount > 0) {
-        player = &gGameSaveDataBuffer;
+        player = &gGameSaveDataBuffer[0];
         do {
             actor->playerFlags = actor->playerFlags | (player->characterFlags & 1);
             D_8010AE5E = actor->playerFlags;
@@ -514,9 +514,9 @@ void initCharacterSelectPlayerCursorMarkers(CharacterSelectUiPlayerCursorActor *
     combinedPlayerFlags = 0;
     loop.playerIndex = 0;
     /* Splitting this loop header across lines changes IDO's instruction scheduling. */
-    if ((s32)gPlayerCount > 0) { player = &gGameSaveDataBuffer; do {
+    if ((s32)gPlayerCount > 0) { player = &gGameSaveDataBuffer[0]; do {
             combinedPlayerFlags |= player->characterFlags;
-            loop.playersEnd = &gGameSaveDataBuffer + gPlayerCount;
+            loop.playersEnd = &gGameSaveDataBuffer[0] + gPlayerCount;
             player++;
         } while (player < loop.playersEnd);
         loop.playerIndex = 0;

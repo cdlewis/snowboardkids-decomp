@@ -79,7 +79,6 @@ void updateMenuCameraObjectWithTargetOffsetCallback(void) {
 extern void loadMainMenuSceneModelAnimationBank(void);
 extern u8 gRaceSetupOpponentFocusCharacterIds[][4];
 extern u8 gPendingEndingCreditsFlow;
-extern u8 D_800ECA24;
 
 const f32 D_800E1090 = 1.333333373f;
 const f32 D_800E1094 = 1.333333373f;
@@ -94,40 +93,40 @@ void initRaceStartTransition(void) {
     if (gRaceSplitscreenMode == 0) {
         effectArg = gPlayerCount;
         if (((effectArg ^ 0) == 1) != 0) {
-            if ((gGameSaveDataBuffer.cupPlacements[0x18] == 2) && (gGameSaveDataBuffer.cupPlacements[6] == 1)) {
-                gGameSaveDataBuffer.cupPlacements[0x18] = 3;
+            if ((gGameSaveDataBuffer[0].cupPlacements[0x18] == 2) && (gGameSaveDataBuffer[0].cupPlacements[6] == 1)) {
+                gGameSaveDataBuffer[0].cupPlacements[0x18] = 3;
                 gPendingEndingCreditsFlow = 1;
                 transition = 3;
             }
-            if ((gGameSaveDataBuffer.cupPlacements[0x18] == 1) && (gGameSaveDataBuffer.cupPlacements[5] == 1)) {
+            if ((gGameSaveDataBuffer[0].cupPlacements[0x18] == 1) && (gGameSaveDataBuffer[0].cupPlacements[5] == 1)) {
                 transition = 2;
-                gGameSaveDataBuffer.cupPlacements[0x18] = 2;
+                gGameSaveDataBuffer[0].cupPlacements[0x18] = 2;
             }
-            if (gGameSaveDataBuffer.cupPlacements[0x18] == 0) {
-                if (gGameSaveDataBuffer.cupPlacements[9] == 1) {
+            if (gGameSaveDataBuffer[0].cupPlacements[0x18] == 0) {
+                if (gGameSaveDataBuffer[0].cupPlacements[9] == 1) {
                     allReady = 1;
-                    if (D_800ECA24 != 1) {
+                    if (gGameSaveDataBuffer[0].cupPlacements[0] != 1) {
                         allReady = 0;
                     }
                     if (1) {
                     }
                     if (1) {
                     }
-                    if (gGameSaveDataBuffer.cupPlacements[effectArg] != 1) {
+                    if (gGameSaveDataBuffer[0].cupPlacements[effectArg] != 1) {
                         allReady = 0;
                     }
-                    if (gGameSaveDataBuffer.cupPlacements[effectArg + 1] != 1) {
+                    if (gGameSaveDataBuffer[0].cupPlacements[effectArg + 1] != 1) {
                         allReady = 0;
                     }
-                    if (gGameSaveDataBuffer.cupPlacements[effectArg + 2] != 1) {
+                    if (gGameSaveDataBuffer[0].cupPlacements[effectArg + 2] != 1) {
                         allReady = 0;
                     }
-                    if (gGameSaveDataBuffer.cupPlacements[effectArg + 3] != 1) {
+                    if (gGameSaveDataBuffer[0].cupPlacements[effectArg + 3] != 1) {
                         allReady = 0;
                     }
                     if (allReady != 0) {
                         transition = 1;
-                        gGameSaveDataBuffer.cupPlacements[0x18] = 1;
+                        gGameSaveDataBuffer[0].cupPlacements[0x18] = 1;
                     }
                 }
             }

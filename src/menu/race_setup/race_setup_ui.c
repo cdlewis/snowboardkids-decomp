@@ -797,7 +797,7 @@ void drawRaceSetupSavePanelIcons(TitleMenuIconStripActor *actor) {
             playerCoordinateOffset = 0;
             do {
                 if (*controllerPakStatus != CONTROLLER_PAK_STATUS_UNUSED) {
-                    saveData = &GAME_SAVE_DATA_SLOT(playerIndex.value);
+                    saveData = &gGameSaveDataBuffer[playerIndex.value];
                     iconIndex = 0;
                     if (saveData->progressionLevel == SAVE_PANEL_MAX_RECORD_ICONS) {
                         displayCount = SAVE_PANEL_MAX_RECORD_ICONS;
@@ -835,7 +835,7 @@ void drawRaceSetupSavePanelIcons(TitleMenuIconStripActor *actor) {
                     }
 
                     if (displayCount > 0) {
-                        badgeSaveData = &GAME_SAVE_DATA_SLOT(playerIndex.reloaded); badgeDisplayOrderStart = gPlayerBadgeDisplayOrder; badgeOrder = badgeDisplayOrderStart; nextIconOrBadgeOffset = 0;
+                        badgeSaveData = &gGameSaveDataBuffer[playerIndex.reloaded]; badgeDisplayOrderStart = gPlayerBadgeDisplayOrder; badgeOrder = badgeDisplayOrderStart; nextIconOrBadgeOffset = 0;
                         coordinateCursor = (RaceSetupSavePanelPlayerCoordinates *)&actor->pad0[playerCoordinateOffset];
                         do {
                             paletteIndex = badgeSaveData->cupPlacements[*badgeOrder];

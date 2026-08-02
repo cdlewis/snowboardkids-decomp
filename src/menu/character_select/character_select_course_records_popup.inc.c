@@ -29,15 +29,11 @@ typedef struct CharacterSelectCourseRecordsPopupStackCandidate {
   s16 *courseIds;
 } CharacterSelectCourseRecordsPopupStackCandidate;
 
-extern u8 D_800F41EB[];
-extern u8 D_800F4222[];
-extern u8 D_800F4259[];
-extern u8 D_800F4290[];
 extern u8 D_800E0B90[];
 extern u8 D_800E0B94[];
 
 #define CHARACTER_SELECT_COURSE_SAVE_DATA                                      \
-  (*(CharacterSelectCourseRecordsPopupSaveBufferCandidate *)&gGameSaveDataBuffer)
+  (*(CharacterSelectCourseRecordsPopupSaveBufferCandidate *)&gGameSaveDataBuffer[0])
 
 void drawCharacterSelectCourseRecordsPopup(
     CharacterSelectCourseWidgetActor *arg0) {
@@ -96,7 +92,7 @@ void drawCharacterSelectCourseRecordsPopup(
           drawMenuSprite(
               (s16)(arg0->x + 0x54), (s16)(arg0->y + yOffset),
               getRelocatableHeapBlockBase((s32)CHARACTER_SELECT_POPUP_FONT_HANDLE),
-              ((D_800F4290[(stack.courseIds[gRaceCourseIndex.signedValue] * 5) + row] & 7) +
+              (((&gGameSaveDataBuffer[0].raceRecordCharacterIds[0][0])[(stack.courseIds[gRaceCourseIndex.signedValue] * 5) + row] & 7) +
                0x51) &
                   0xFFFF,
               0x20U, 0x20U, 0U, 0U);
@@ -104,7 +100,7 @@ void drawCharacterSelectCourseRecordsPopup(
               (s16)(arg0->x + 0x65), (s16)(arg0->y + yOffset),
               getRelocatableHeapBlockBase((s32)CHARACTER_SELECT_POPUP_FONT_HANDLE),
               (((s32)
-                    D_800F4290[(stack.courseIds[gRaceCourseIndex.signedValue] * 5) + row] >>
+                    (&gGameSaveDataBuffer[0].raceRecordCharacterIds[0][0])[(stack.courseIds[gRaceCourseIndex.signedValue] * 5) + row] >>
                 3) +
                0x7C) &
                   0xFFFF,
@@ -118,7 +114,7 @@ void drawCharacterSelectCourseRecordsPopup(
               color = 0xD;
             }
             courseId = &(*courseIdsPtr)[gRaceCourseIndex.signedValue];
-            quotient = (s32)D_800F4222[(*courseId * 5) + row] / 10;
+            quotient = (s32)(&gGameSaveDataBuffer[0].scoreAttackScores[0][0])[(*courseId * 5) + row] / 10;
             stack.quotient = (u16)quotient;
             if (quotient & 0xFFFF) {
               drawMenuSprite(
@@ -130,7 +126,7 @@ void drawCharacterSelectCourseRecordsPopup(
             }
             palette = color + 1;
             stack.remainder =
-                (u16)((s32)D_800F4222[(*courseId * 5) + row] % 10) ^ 0;
+                (u16)((s32)(&gGameSaveDataBuffer[0].scoreAttackScores[0][0])[(*courseId * 5) + row] % 10) ^ 0;
             drawMenuSprite(
                 (s16)(arg0->x + 0x20), (s16)(arg0->y + yOffset),
                 getRelocatableHeapBlockBase((s32)CHARACTER_SELECT_POPUP_FONT_HANDLE),
@@ -141,14 +137,14 @@ void drawCharacterSelectCourseRecordsPopup(
             drawMenuSprite(
                 (s16)(arg0->x + 0x48), (s16)(arg0->y + yOffset),
                 getRelocatableHeapBlockBase((s32)CHARACTER_SELECT_POPUP_FONT_HANDLE),
-                ((D_800F4259[(stack.courseIds[gRaceCourseIndex.signedValue] * 5) + row] & 7) +
+                (((&gGameSaveDataBuffer[0].scoreAttackCharacterIds[0][0])[(stack.courseIds[gRaceCourseIndex.signedValue] * 5) + row] & 7) +
                  0x51) &
                     0xFFFF,
                 0x20U, 0x20U, 0U, 0U);
             drawMenuSprite(
                 (s16)(arg0->x + 0x60), (s16)(arg0->y + yOffset),
                 getRelocatableHeapBlockBase((s32)CHARACTER_SELECT_POPUP_FONT_HANDLE),
-                (((s32)D_800F4259[((*courseIdsPtr)[gRaceCourseIndex.signedValue] * 5) + row] >>
+                (((s32)(&gGameSaveDataBuffer[0].scoreAttackCharacterIds[0][0])[((*courseIdsPtr)[gRaceCourseIndex.signedValue] * 5) + row] >>
                   3) +
                  0x7C) &
                     0xFFFF,
@@ -213,14 +209,14 @@ void drawCharacterSelectCourseRecordsPopup(
         drawMenuSprite(
             (s16)(arg0->x + 0x54), (s16)(arg0->y + yOffset),
             getRelocatableHeapBlockBase((s32)CHARACTER_SELECT_POPUP_FONT_HANDLE),
-            ((D_800F41EB[((*courseIdsPtr)[gRaceCourseIndex.signedValue] * 5) + row] & 7) +
+            (((&gGameSaveDataBuffer[0].timeTrialCharacterIds[0][0])[((*courseIdsPtr)[gRaceCourseIndex.signedValue] * 5) + row] & 7) +
              0x51) &
                 0xFFFF,
             0x20U, 0x20U, 0U, 0U);
         drawMenuSprite(
             (s16)(arg0->x + 0x65), (s16)(arg0->y + yOffset),
             getRelocatableHeapBlockBase((s32)CHARACTER_SELECT_POPUP_FONT_HANDLE),
-            ((D_800F41EB[((*courseIdsPtr)[gRaceCourseIndex.signedValue] * 5) + row] >>
+            (((&gGameSaveDataBuffer[0].timeTrialCharacterIds[0][0])[((*courseIdsPtr)[gRaceCourseIndex.signedValue] * 5) + row] >>
               3) +
              0x7C) &
                 0xFFFF,

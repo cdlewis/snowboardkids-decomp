@@ -26,8 +26,6 @@ typedef union {
 extern u16 gCourseDetailsPreviewCourseTiles[];
 extern s16 gMenuFadeAlpha;
 extern s8 D_800EC9C0;
-extern s8 D_800EC9F1;
-extern s8 D_800EC9F9;
 extern s8 D_8010AE64;
 extern u8 D_8010AEA0[];
 #ifdef NON_MATCHING
@@ -123,11 +121,11 @@ void initCourseSelectMenu(void) {
 
     mask = 1;
     for (i = 0; i < 3; i++) {
-        if (gGameSaveDataBuffer.extraCourseUnlockFlags & mask) {
-            if (!(gGameSaveDataBuffer.extraCourseUnlockFlags & (mask << 3))) {
+        if (gGameSaveDataBuffer[0].extraCourseUnlockFlags & mask) {
+            if (!(gGameSaveDataBuffer[0].extraCourseUnlockFlags & (mask << 3))) {
                 gShopMenuShowNewCoursesMessage = 1;
                 gShopMenuDescriptionSeen = 1;
-                gGameSaveDataBuffer.extraCourseUnlockFlags |= mask << 3;
+                gGameSaveDataBuffer[0].extraCourseUnlockFlags |= mask << 3;
             }
         }
         mask <<= 1;
@@ -354,7 +352,7 @@ void initCourseSelectCourseList(void) {
     gMenuInputRepeatTimers[0] = 0;
     createCallbackTask((CallbackTaskCallback)initCourseSelectCourseIconList, 0, 0x63);
     D_8010ADE8 = createCallbackTask((CallbackTaskCallback)initCourseSelectExtraCourseIconList, 0, 0x61);
-    loadedCourseFlags = gUnlockedExtraCourseFlags;
+    loadedCourseFlags = gGameSaveDataBuffer[0].extraCourseUnlockFlags;
     courseFlags = loadedCourseFlags;
     if (courseFlags & 7) {
         D_8010AEA0[0] = 1;
@@ -538,7 +536,7 @@ void updateCourseSelectCourseList(void) {
                 if ((s32) gRacePlayers[0].menuSelection >= 9) {
                     gRacePlayers[0].selectionUnlockState = 0;
                 } else {
-                    temp_a0_2 = gCourseUnlockSaveSlots[0].courseUnlockStates[gRacePlayers[0].menuSelection];
+                    temp_a0_2 = gGameSaveDataBuffer[0].courseUnlockStates[gRacePlayers[0].menuSelection];
                     if (temp_a0_2 == -1) {
                         gRacePlayers[0].selectionUnlockState = (u8) ((s32) gRacePlayers[0].menuSelection % 3);
                     } else {
@@ -640,7 +638,7 @@ void updateCourseSelectCourseList(void) {
                     var_a3 = 0;
                     gMenuChoicePromptState[0] += 3;
                 } else if ((temp_t4 & 0x8000) || (temp_t4 & 0x1000)) {
-                    if (gCourseUnlockSaveSlots[0].courseUnlockStates[gRacePlayers[0].menuSelection] == -1) {
+                    if (gGameSaveDataBuffer[0].courseUnlockStates[gRacePlayers[0].menuSelection] == -1) {
                         if ((u32) gRacePlayers[0].money >= (u32) gCourseUnlockPrices[gRacePlayers[0].menuSelection]) {
                             enqueueSoundEffect(0x49, 0x32);
                             var_a3 = 0;
@@ -650,7 +648,7 @@ void updateCourseSelectCourseList(void) {
                                 var_v0_6 = (((gMenuChoicePromptState[0] * 3) + ((s32) gRacePlayers[0].menuSelection % 3)) - 6) & 0xFF;
                             }
                             gCourseSelectSelectedCourseSavedSlot =
-                                gCourseUnlockSaveSlots[0].courseUnlockStates[var_v0_6];
+                                gGameSaveDataBuffer[0].courseUnlockStates[var_v0_6];
                             gRacePlayers[0].menuSelection = var_v0_6;
                             if (D_8010AECC == 0) {
                                 gCourseSelectStatus.unk14[0] = 0;
@@ -873,7 +871,7 @@ void updateCourseSelectCourseList(void) {
                 if (courseId >= 9) {
                     gCourseSelectSelectedCourseSavedSlot = 0;
                 } else {
-                    gCourseSelectSelectedCourseSavedSlot = gCourseUnlockSaveSlots[0].courseUnlockStates[courseId];
+                    gCourseSelectSelectedCourseSavedSlot = gGameSaveDataBuffer[0].courseUnlockStates[courseId];
                     if (gCourseSelectSelectedCourseSavedSlot == -1) {
                         gCourseSelectSelectedCourseSavedSlot = courseId % 3;
                     }
@@ -987,7 +985,7 @@ void updateCourseSelectCourseList(void) {
                     gMenuInputRepeatTimers[0] = 0;
                     gMenuChoicePromptState[0] += 3;
                 } else if ((pressed & A_BUTTON) || (pressed & START_BUTTON)) {
-                    if (gCourseUnlockSaveSlots[0].courseUnlockStates[gRacePlayers[0].menuSelection] == -1) {
+                    if (gGameSaveDataBuffer[0].courseUnlockStates[gRacePlayers[0].menuSelection] == -1) {
                         if ((u32)gRacePlayers[0].money >=
                             (u32)gCourseUnlockPrices[gRacePlayers[0].menuSelection]) {
                             enqueueSoundEffect(0x49, 0x32);
@@ -1000,7 +998,7 @@ void updateCourseSelectCourseList(void) {
                                     (row * 3) + (gRacePlayers[0].menuSelection % 3) - 6;
                             }
                             gCourseSelectSelectedCourseSavedSlot =
-                                gCourseUnlockSaveSlots[0].courseUnlockStates[courseId];
+                                gGameSaveDataBuffer[0].courseUnlockStates[courseId];
                             gRacePlayers[0].menuSelection = courseId;
                             if (D_8010AECC == 0) {
                                 gCourseSelectStatus.unk14[0] = 0;
@@ -1202,7 +1200,7 @@ void updateCourseSelectCourseList(void) {
                 if ((s32) gRacePlayers[0].menuSelection >= 9) {
                     gRacePlayers[0].selectionUnlockState = 0;
                 } else {
-                    temp_a0_2 = gCourseUnlockSaveSlots[0].courseUnlockStates[gRacePlayers[0].menuSelection];
+                    temp_a0_2 = gGameSaveDataBuffer[0].courseUnlockStates[gRacePlayers[0].menuSelection];
                     if (temp_a0_2 == -1) {
                         gRacePlayers[0].selectionUnlockState = (u8) ((s32) gRacePlayers[0].menuSelection % 3);
                     } else {
@@ -1304,7 +1302,7 @@ void updateCourseSelectCourseList(void) {
                     var_a3 = 0;
                     gMenuChoicePromptState[0] += 3;
                 } else if ((temp_t4 & 0x8000) || (temp_t4 & 0x1000)) {
-                    if (gCourseUnlockSaveSlots[0].courseUnlockStates[gRacePlayers[0].menuSelection] == -1) {
+                    if (gGameSaveDataBuffer[0].courseUnlockStates[gRacePlayers[0].menuSelection] == -1) {
                         if ((u32) gRacePlayers[0].money >= (u32) gCourseUnlockPrices[gRacePlayers[0].menuSelection]) {
                             enqueueSoundEffect(0x49, 0x32);
                             var_a3 = 0;
@@ -1314,7 +1312,7 @@ void updateCourseSelectCourseList(void) {
                                 var_v0_6 = (((gMenuChoicePromptState[0] * 3) + ((s32) gRacePlayers[0].menuSelection % 3)) - 6) & 0xFF;
                             }
                             *(volatile u8 *)&gRacePlayers[0].selectionUnlockState =
-                                gCourseUnlockSaveSlots[0].courseUnlockStates[var_v0_6];
+                                gGameSaveDataBuffer[0].courseUnlockStates[var_v0_6];
                             *(volatile u8 *)&gRacePlayers[0].menuSelection = var_v0_6;
                             if (D_8010AECC == 0) {
                                 gCourseSelectStatus.unk14[0] = 0;
@@ -1561,7 +1559,7 @@ void updateCourseSelectUnlockCourseList(void)
       rowOffset = columnCount;
       rowOffset = gMenuChoicePromptState[playerIndex] * rowOffset;
       selection = (rowOffset + (((s32) gRacePlayers[playerIndex & 0xFFFFFFFF].menuSelection) % columnCount)) - 6;
-      gRacePlayers[playerIndex].selectionUnlockState = gCourseUnlockSaveSlots[playerIndex].courseUnlockStates[selection];
+      gRacePlayers[playerIndex].selectionUnlockState = gGameSaveDataBuffer[playerIndex].courseUnlockStates[selection];
       gRacePlayers[playerIndex].menuSelection = selection;
       if (D_8010AECC == playerIndex)
       {
@@ -1712,7 +1710,7 @@ after_row_change:
 
         enqueueSoundEffect(0x18, 0x32);
         index = ((gMenuChoicePromptState[0] * divisor) + (gRacePlayers[0].menuSelection % divisor) - 6) & 0xFF;
-        gCourseSelectSelectedCourseSavedSlot = gCourseUnlockSaveSlots[0].courseUnlockStates[index];
+        gCourseSelectSelectedCourseSavedSlot = gGameSaveDataBuffer[0].courseUnlockStates[index];
         gRacePlayers[0].menuSelection = index;
         if (D_8010AECC == 0) {
             gCourseSelectStatus.unk14[0] = 0;
@@ -1844,7 +1842,7 @@ void updateCourseSelectUnlockCourseList(void) {
             enqueueSoundEffect(0x18, 0x32);
             selection = (gMenuChoicePromptState[playerIndex] * divisor) +
                         (gRacePlayers[0].menuSelection % divisor) - 6;
-            gRacePlayers[0].selectionUnlockState = gCourseUnlockSaveSlots[0].courseUnlockStates[selection];
+            gRacePlayers[0].selectionUnlockState = gGameSaveDataBuffer[0].courseUnlockStates[selection];
             *(volatile u8 *)selectionPtr = selection;
             if (D_8010AECC == playerIndex) {
                 gCourseSelectStatus.unk14[0] = playerIndex;
@@ -1886,7 +1884,7 @@ void initCourseSelectCourseDetailsMenu(void) {
 
     if (gCurrentGameTask->screenState == 2) {
         createCallbackTask((CallbackTaskCallback)initCourseDetailsMenu, 0, 0x63);
-        temp_v0 = gCourseUnlockSaveSlots[0].courseUnlockStates[gRacePlayers[0].menuSelection];
+        temp_v0 = gGameSaveDataBuffer[0].courseUnlockStates[gRacePlayers[0].menuSelection];
         gCourseDetailsMenuSelection = temp_v0 % 7;
         gCourseDetailsPreviewPage = temp_v0 / 7;
         gMenuInputRepeatTimers[0] = 0;
@@ -2094,7 +2092,7 @@ void initCourseSelectPreview(void) {
     gCoursePreviewViewportHeight = 0x78;
     configureViewport(1, 0xE8, 0x78, 0x90, gCoursePreviewViewportHeight, 0xA0, 0xF0, 0.6666666865f);
     enableViewportClear(1);
-    temp = (s8 *)&gGameSaveDataBuffer.rawBytes[gRacePlayers[0].menuSelection];
+    temp = (s8 *)&gGameSaveDataBuffer[0].rawBytes[gRacePlayers[0].menuSelection];
     D_8010AED0 = temp[0x3F] + 1;
     temp[0x3F] = gCourseDetailsPreviewCourseTiles[(u8) gCourseDetailsPreviewPage * 7 + (u8) gCourseDetailsMenuSelection];
     gCourseSelectStatus.transitionState = 6;
@@ -2135,13 +2133,13 @@ void exitCourseSelectMenu(void) {
     } else if (gPendingFramebufferSwapCount == 2) {
         releaseMenuAssetHandles();
         gFramebufferSwapHold = 0;
-        do { gFramebufferSwapDelay.value = 0; gMenuFlowState = 0; resumeGameTask(2); removeGameTask(4); count = 0; if (gCourseUnlockSaveSlots[0].courseUnlockStates[0] == (-1)) { count = 1; } ptr = &D_800EC9F1; loop: if (ptr[0x3F] == (-1)) { count++; } if (ptr[0x40] == (-1)) { count++; } if (ptr[0x41] == (-1)) { count++; } if (ptr[0x42] == (-1)) { count++; } } while (0);
+        do { gFramebufferSwapDelay.value = 0; gMenuFlowState = 0; resumeGameTask(2); removeGameTask(4); count = 0; if (gPrimaryCourseUnlockStates.values[0] == (-1)) { count = 1; } ptr = &gCourseUnlockScanStart.value; loop: if (ptr[0x3F] == (-1)) { count++; } if (ptr[0x40] == (-1)) { count++; } if (ptr[0x41] == (-1)) { count++; } if (ptr[0x42] == (-1)) { count++; } } while (0);
         ptr += 4;
-        if (ptr != (&D_800EC9F9)) {
+        if (ptr != &gCourseUnlockScanEnd.value) {
             goto loop;
         }
         if (count == 0) {
-            gGameSaveDataBuffer.extraCourseUnlockFlags |= 4;
+            gGameSaveDataBuffer[0].extraCourseUnlockFlags |= 4;
         }
     }
 }

@@ -4,12 +4,6 @@
 #include "common.h"
 
 #define COURSE_UNLOCK_PRICE_COUNT 12
-#define COURSE_SELECT_SAVE_SLOT_SIZE 0x78F8
-
-typedef struct {
-    /* 0x0000 */ s8 courseUnlockStates[COURSE_UNLOCK_PRICE_COUNT];
-    /* 0x000C */ u8 padC[COURSE_SELECT_SAVE_SLOT_SIZE - COURSE_UNLOCK_PRICE_COUNT];
-} CourseUnlockSaveSlot;
 
 typedef union {
     struct {
@@ -64,7 +58,6 @@ typedef union {
 } CourseSelectStatus;
 
 extern CourseSelectStatus gCourseSelectStatus;
-extern CourseUnlockSaveSlot gCourseUnlockSaveSlots[];
 extern u32 gCourseUnlockPrices[COURSE_UNLOCK_PRICE_COUNT];
 extern u8 gCourseSelectModeSelection;
 extern u8 gCourseDetailsMenuState;

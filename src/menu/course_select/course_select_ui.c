@@ -220,7 +220,7 @@ void drawCourseSelectPreviewModel(CourseSelectCoursePreviewActor *arg0) {
             } else {
                 var_a3 = gRacePlayers[var_t0].menuSelection;
             }
-            temp_v0_2 = gCourseUnlockSaveSlots[var_t0].courseUnlockStates[var_a3];
+            temp_v0_2 = gGameSaveDataBuffer[var_t0].courseUnlockStates[var_a3];
             if (temp_v0_2 == -1) {
                 var_v1 = 9;
             } else {
@@ -590,7 +590,7 @@ void drawCourseSelectPreviewModelClose(CourseSelectCoursePreviewActor *arg0) {
             } else {
                 var_a3 = gRacePlayers[var_t0].menuSelection;
             }
-            temp_v0_2 = gCourseUnlockSaveSlots[var_t0].courseUnlockStates[var_a3];
+            temp_v0_2 = gGameSaveDataBuffer[var_t0].courseUnlockStates[var_a3];
             if (temp_v0_2 == -1) {
                 var_v1 = 9;
             } else {
@@ -1694,7 +1694,7 @@ void initCourseSelectCourseStats(CourseSelectWidgetActor *arg0) {
 
 #if 0
 #ifdef NON_MATCHING
-extern u8 gUnlockedExtraCourseFlags;
+extern u8 gGameSaveDataBuffer[0].extraCourseUnlockFlags;
 extern u8 gCourseSelectExtraCourseIds[];
 
 void drawCourseSelectCourseDescription(CourseSelectWidgetActor *arg0) {
@@ -1760,7 +1760,7 @@ void drawCourseSelectCourseDescription(CourseSelectWidgetActor *arg0) {
         drawMenuGlyphScript(arg0->x, arg0->y, text, 1, arg0->spriteIndex, 0);
 
         if ((gRaceSplitscreenMode == 3) && (((value = selection->menuState) == 1) || (value == 2))) {
-            if ((D_8010AE64[0] != 3) || !(gUnlockedExtraCourseFlags & 7)) {
+            if ((D_8010AE64[0] != 3) || !(gGameSaveDataBuffer[0].extraCourseUnlockFlags & 7)) {
                 buffer[0] = -4;
                 buffer[1] = 6;
                 buffer[2] = selectedIndex;
@@ -1830,7 +1830,7 @@ void drawCourseSelectCourseDescription(CourseSelectWidgetActor *arg0) {
 #ifdef NON_MATCHING
 extern u8 D_8010AEA8;
 extern u8 gCourseSelectExtraCourseIds[];
-extern u8 gUnlockedExtraCourseFlags;
+extern u8 gGameSaveDataBuffer[0].extraCourseUnlockFlags;
 
 void drawCourseSelectCourseDescription(CourseSelectWidgetActor *arg0) {
     u8 unused[4];
@@ -1896,7 +1896,7 @@ void drawCourseSelectCourseDescription(CourseSelectWidgetActor *arg0) {
         if ((gRaceSplitscreenMode == 3) &&
             ((gRacePlayers[0].menuState == 1) || (gRacePlayers[0].menuState == 2))) {
             if ((gCharacterSelectHudState.highlightedRosterIndices[0] != 3) ||
-                ((gUnlockedExtraCourseFlags & 7) == 0)) {
+                ((gGameSaveDataBuffer[0].extraCourseUnlockFlags & 7) == 0)) {
                 script[0] = 0xFFFC;
                 script[1] = 6;
                 script[2] = selectedIndex;
@@ -2301,7 +2301,7 @@ void updateCourseSelectExtraCourseIconList(CourseSelectWidgetActor *arg0) {
                             for (iconIndex = 0; iconIndex < 3; iconIndex++) {
                                 if (gRacePlayers[playerIndex].menuSelection >= 9) {
                                     if (gRaceSplitscreenMode == 3) {
-                                        if (GAME_SAVE_DATA_SLOT(playerIndex).extraCourseUnlockFlags &
+                                        if (gGameSaveDataBuffer[playerIndex].extraCourseUnlockFlags &
                                             iconMask) {
                                             actor->itemCounts[playerIndex]++;
                                             if (gPlayerCount == 1) {
@@ -2313,7 +2313,7 @@ void updateCourseSelectExtraCourseIconList(CourseSelectWidgetActor *arg0) {
                                             }
                                         }
                                         iconMask *= 2;
-                                    } else if (GAME_SAVE_DATA_SLOT(playerIndex).courseUnlockStates[iconIndex + 9] != -1) {
+                                    } else if (gGameSaveDataBuffer[playerIndex].courseUnlockStates[iconIndex + 9] != -1) {
                                         actor->itemCounts[playerIndex]++;
                                         if (gPlayerCount == 1) {
                                             actor->tileIndices[playerIndex][actor->itemCounts[playerIndex] - 1] =
@@ -2323,7 +2323,7 @@ void updateCourseSelectExtraCourseIconList(CourseSelectWidgetActor *arg0) {
                                                 iconIndex + 0x1F;
                                         }
                                     }
-                                } else if (GAME_SAVE_DATA_SLOT(playerIndex)
+                                } else if (gGameSaveDataBuffer[playerIndex]
                                                .courseUnlockStates[(gRacePlayers[playerIndex].menuSelection % 3) +
                                                                    (iconIndex * 3)] != -1) {
                                     actor->itemCounts[playerIndex]++;
@@ -2456,7 +2456,7 @@ void updateCourseSelectExtraCourseIconList(CourseSelectWidgetActor *arg0) {
                                 do {
                                     if ((s32)player->courseIndex >= 9) {
                                         if (gRaceSplitscreenMode == 3) {
-                                            if (GAME_SAVE_DATA_SLOT(playerIndex).extraCourseUnlockFlags & unlockMask) {
+                                            if (gGameSaveDataBuffer[playerIndex].extraCourseUnlockFlags & unlockMask) {
                                                 itemCount = actor->itemCounts[playerIndex] + 1;
                                                 actor->itemCounts[playerIndex] = itemCount;
                                                 if (gPlayerCount == 1) {
@@ -2471,7 +2471,7 @@ void updateCourseSelectExtraCourseIconList(CourseSelectWidgetActor *arg0) {
                                             if (!gRaceSplitscreenMode) {
                                                 /* Empty block preserves IDO's register allocation. */
                                             }
-                                            if (GAME_SAVE_DATA_SLOT(playerIndex).courseUnlockStates[iconIndex + 9] != -1) {
+                                            if (gGameSaveDataBuffer[playerIndex].courseUnlockStates[iconIndex + 9] != -1) {
                                                 itemCount = actor->itemCounts[playerIndex] + 1;
                                                 actor->itemCounts[playerIndex] = itemCount;
                                                 if (gPlayerCount == 1) {
@@ -2482,7 +2482,7 @@ void updateCourseSelectExtraCourseIconList(CourseSelectWidgetActor *arg0) {
                                                 }
                                             }
                                         }
-                                    } else if (GAME_SAVE_DATA_SLOT(playerIndex)
+                                    } else if (gGameSaveDataBuffer[playerIndex]
                                                    .courseUnlockStates[(player->courseIndex % 3) + (iconIndex * 3)] != -1) {
                                         actor->itemCounts[playerIndex]++;
                                         if (gPlayerCount == 1) {

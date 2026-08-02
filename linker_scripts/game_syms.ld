@@ -50,3 +50,8 @@ D_20058A8 = _144C58_VRAM;
 
 /* Fixed virtual addresses encoded in original data. */
 D_80000000 = 0x80000000;
+
+/* Typed slot-zero subobject views used where IDO must retain distinct relocations. */
+gPrimaryCourseUnlockStates = gGameSaveDataBuffer + 0x3F;
+gCourseUnlockScanStart = gGameSaveDataBuffer + 0x1;
+gCourseUnlockScanEnd = gGameSaveDataBuffer + 0x9;
