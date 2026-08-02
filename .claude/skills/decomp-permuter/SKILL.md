@@ -1,9 +1,16 @@
 ---
 name: decomp-permuter
-description: Decomp-Permuter is a tool that automatically permutes C files to better match a target binary. Use this skill when you are decompiling a function and it is almost matching except for some register differences (i.e. 95%+). Or if you are otherwise unable to make progress on a function decompilation. Do not use it when there are control flow or functional differences; it's often easy to resolve those by hand, and neither the scorer nor the randomizer tends to play well with them.
+description: Decomp-Permuter is a tool that automatically permutes C files to better match a target binary. Use this skill when you are decompiling a function and it is almost matching except for some register differences (i.e. 95%+).
 ---
 
 # Permute a Function
+
+## Sanity Check
+
+Stop! Before proceeding with the permuter, make sure you have already done the following:
+
+* There are significant control flow or functional differences between your C code and the target binary. The Permuter will not alter the control flow so you will not be able to match by running it. Worse, you risk entering a local optima by trying.
+* Improved the function yourself. If you have been handed a 95%+ match, you should assume that the function has already been permuted. The task is being given to you *because* the Permuter did not work. There's no point in running the permuter again if you haven't already tried to improve the function yourself.
 
 ## Instructions
 
