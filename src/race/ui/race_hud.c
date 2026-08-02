@@ -17,16 +17,10 @@
 #define RACE_HUD_MAIN_FONT_HANDLE (gAssetHandles[0x1C])
 #define RACE_HUD_POPUP_FONT_HANDLE (gAssetHandles[0x1F])
 
-typedef struct {
-    /* 0x00 */ s16 finishLinePathIndex;
-    /* 0x02 */ u8 pad2[0x48 - 0x02];
-} RaceFinishLinePathIndexEntry;
-
 extern void drawMenuAsciiTextDefaultScale(s32, s32, char *, s32);
 extern int sprintf(char *, const char *, ...);
 extern RaceTimer D_800DC928[];
 extern RaceTimer D_800DC950;
-extern RaceFinishLinePathIndexEntry gRaceCourseFinishLineData[];
 extern u8 gRaceTimerTensDigitTileOffsets[];
 extern u8 gRaceTimerOnesDigitTileIds[];
 extern u16 gRaceProgressMeterIconTiles[];
@@ -958,7 +952,7 @@ void updateRaceHud(void) {
             incrementRaceElapsedTimer();
             if (gRaceTimeTrialFinishRecorded == 0) {
                 getRacePlayerRankingProgress(0, &sp40, &sp3C);
-                if ((gRaceCourseFinishLineData[gRaceCourseIndex.signedValue].finishLinePathIndex * 8) < sp40) {
+                if ((gRaceCourseStartEntries[gRaceCourseIndex.signedValue].finishLinePathIndex * 8) < sp40) {
                     gRaceTimeTrialFinishTime = *(s32 *)&gRaceElapsedTimer;
                     gRaceTimeTrialFinishRecorded = 1;
                     createCallbackTask((CallbackTaskCallback)initTimeTrialRecordDeltaPopup, 0, 0);

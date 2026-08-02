@@ -102,12 +102,6 @@ typedef struct RaceMovingEffect {
     void *matrix;
 } RaceMovingEffect;
 
-typedef struct {
-    s16 angle;
-    s16 unk2;
-    char pad4[0x44];
-} CourseAngleEntry;
-
 typedef struct RaceCourseMarkerEffect {
     char pad0[0x10];
     u16 entryIndex;
@@ -236,8 +230,6 @@ extern CourseMarkerSpawnEntry *gCourseTextureMarkerSpawnEntriesByCourse[];
 extern CourseRenderEntry *gRaceCourseSceneryEntriesByCourse[];
 extern void *gRaceCourseSceneryDisplayLists[];
 extern SoundParams gCourseGateSoundParams[];
-extern CourseAngleEntry gSpiralCourseObjectAngles[];
-extern CourseAngleEntry gLaunchRampCourseObjectAngles[];
 extern CourseMarkerEntry gCourseBillboardMarkerEntries[];
 extern CourseMarkerVertexResource gCourseBillboardMarkerVertexResources[];
 extern CourseMarkerTextureResource gCourseBillboardMarkerTextureResources[];
@@ -861,7 +853,8 @@ void renderLaunchRampCourseObject(RaceMovingEffect *arg0) {
     volatile s32 pad[1];
 
     if (gRenderMatricesDirty != 0) {
-        makeFixedRotationY(transform.rotation, gLaunchRampCourseObjectAngles[gRaceCourseIndex.signedValue].angle + 0x400);
+        makeFixedRotationY(transform.rotation,
+                           gRaceCourseStartEntries[gRaceCourseIndex.signedValue].launchRampCourseObjectAngle + 0x400);
         transform.translation.x = arg0->pos.x;
         transform.translation.y = arg0->pos.y;
         transform.translation.z = arg0->pos.z;
@@ -928,7 +921,8 @@ void updateLaunchRampCourseObjectArc(RaceMovingEffect *arg0) {
 
         if (arg0->timer == 0) {
             setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateLaunchRampCourseObjectExit);
-            makeFixedRotationXY(mtx, 0x100, gLaunchRampCourseObjectAngles[gRaceCourseIndex.signedValue].angle + 0x400);
+            makeFixedRotationXY(mtx, 0x100,
+                                gRaceCourseStartEntries[gRaceCourseIndex.signedValue].launchRampCourseObjectAngle + 0x400);
             arg0->timer = 0x64;
         }
     }
@@ -942,7 +936,8 @@ void initLaunchRampCourseObject(RaceMovingEffect *arg0) {
     arg0->timer = 0x46;
     arg0->velocity.z = 0x680000;
     mtx = arg0->unk30.rotation;
-    makeFixedRotationY(mtx, gLaunchRampCourseObjectAngles[gRaceCourseIndex.signedValue].angle + 0x400);
+    makeFixedRotationY(mtx,
+                       gRaceCourseStartEntries[gRaceCourseIndex.signedValue].launchRampCourseObjectAngle + 0x400);
     transformVec3iByFixedMatrix(mtx, &arg0->velocity, &arg0->pos);
     arg0->velocity.z = 0xFFFE0000;
     arg0->pos.x += gRaceCourseStartEntries[COURSE_INDEX_RELOAD].pos.x;
@@ -1052,7 +1047,7 @@ void initSpiralCourseObject(RaceMovingEffect *arg0) {
     s16 *mtx;
 
     arg0->timer = 0x28;
-    arg0->unk52 = gSpiralCourseObjectAngles[gRaceCourseIndex.signedValue].angle;
+    arg0->unk52 = gRaceCourseStartEntries[gRaceCourseIndex.signedValue].spiralCourseObjectAngle;
     arg0->velocity.x = -0x200000;
     arg0->velocity.z = 0x400000;
     mtx = arg0->unk30.rotation;

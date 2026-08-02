@@ -56,12 +56,6 @@ typedef struct {
     s16 facingAngle;
 } RacePlayerPreviewStart;
 
-typedef struct {
-    s16 angle;
-    s16 unk2;
-    char pad4[0x44];
-} CourseAngleEntry;
-
 typedef union {
     s32 value;
     u64 align;
@@ -88,8 +82,6 @@ extern PlayerTuningRow gRacePlayerBoardTuningRows[];
 extern PlayerTuningRow gRacePlayerCharacterTuningRows[];
 extern PlayerTuningRow gRacePlayerDemoBoardTuningRows[];
 extern PlayerTuningRow gRacePlayerDemoCharacterTuningRows[];
-extern CourseAngleEntry gSpiralCourseObjectAngles[];
-extern CourseAngleEntry gLaunchRampCourseObjectAngles[];
 extern u8 gMainMenuModeSelection;
 extern s8 gRacePlayerCount;
 extern u8 gRaceUpdatePaused;
@@ -4706,7 +4698,7 @@ void updateRacePlayerMode07AlignToLaunchRamp(RacePlayer *player) {
         player->updateTimer = updateTimer + 1;
         player->stateTimer = 0x14;
         player->unk80 = 0xA;
-        player->unk2FA = gLaunchRampCourseObjectAngles[gRaceCourseIndex.signedValue].angle;
+        player->unk2FA = gRaceCourseStartEntries[gRaceCourseIndex.signedValue].launchRampCourseObjectAngle;
         if (player->stateFlags & 0x400) {
             player->unk2FA += 0x800;
         }
@@ -4977,7 +4969,8 @@ void updateRacePlayerMode07SpiralExit(RacePlayer *player) {
         scratch.sourceX = -0x200000;
         scratch.sourceY = 0;
         scratch.sourceZ = 0x400000;
-        makeFixedRotationY((s16 *)scratch.matrix, gSpiralCourseObjectAngles[gRaceCourseIndex.signedValue].angle);
+        makeFixedRotationY((s16 *)scratch.matrix,
+                           gRaceCourseStartEntries[gRaceCourseIndex.signedValue].spiralCourseObjectAngle);
         transformVec3iByFixedMatrix((s16 *)scratch.matrix, (Vec3i *) &scratch.sourceX, (Vec3i *) &player->pos);
         player->pos.x += gRaceCourseStartEntries[gRaceCourseIndex.signedValue].unk8.x;
         player->pos.y += gRaceCourseStartEntries[gRaceCourseIndex.signedValue].unk8.y + 0x80000;
@@ -4987,7 +4980,7 @@ void updateRacePlayerMode07SpiralExit(RacePlayer *player) {
         player->previousPosition = player->pos;
         player->stateTimer = 0x28;
         player->stateFlags &= 0xFBFFFBFF;
-        player->facingAngle = gRaceCourseStartEntries[gRaceCourseIndex.signedValue].unk14;
+        player->facingAngle = gRaceCourseStartEntries[gRaceCourseIndex.signedValue].spiralCourseObjectAngle;
         player->unk504 = -projectRaceCourseSurfaceProgress(player->coursePathIndex, player->pos.x, player->pos.z);
         setRaceCameraMode(player->playerIndex, 1);
         D_801121E0[player->playerIndex].unk94 = player->pos.x;
@@ -5003,7 +4996,8 @@ void updateRacePlayerMode07SpiralExit(RacePlayer *player) {
     scratch.sourceX = 0;
     scratch.sourceY = 0;
     scratch.sourceZ = -0x40000;
-    makeFixedRotationY((s16 *)scratch.matrix, gSpiralCourseObjectAngles[gRaceCourseIndex.signedValue].angle);
+    makeFixedRotationY((s16 *)scratch.matrix,
+                       gRaceCourseStartEntries[gRaceCourseIndex.signedValue].spiralCourseObjectAngle);
     transformVec3iByFixedMatrix((s16 *)scratch.matrix, (Vec3i *) &scratch.sourceX, (Vec3i *) &scratch.transformedX);
     player->pos.x += scratch.transformedX;
     player->pos.z += scratch.transformedZ;
