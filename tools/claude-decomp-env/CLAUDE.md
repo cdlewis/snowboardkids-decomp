@@ -47,6 +47,7 @@ After `base.c` builds successfully, repeat the following steps:
 - Keep variable declarations at the start of each function or block as required by C89.
 - Do not add comments to candidate C code unless they are already needed for project style.
 - Do not use `GLOBAL_ASM`, `INCLUDE_ASM`, or inline assembly as a matching shortcut.
+- Only use #define for constants, do not abuse it to hack around struct access issues or to try different permutations.
 
 ## Decompilation Strategy
 Learnings from past decompilations can be found at `DECOMPILATION_LEARNINGS.md`.
@@ -155,3 +156,7 @@ gRegionAllocPtr is indicative of dynamic display list construction. Use the deco
 The permuter may sometimes be helpful but it is not aware of the macros in gbi.h and will often try to replace them with their underlying commands. This is not what you want. Do not use its results if it requires you to remove gbi.h macros.
 
 You can use the --preserve-f3dex argument when calling the permuter to explicitly prevent it from expanding maros. This can be useful for fixing register assignment issues on very close matches.
+
+### Data Layout
+
+Think carefully about how data is used by your function. The symbols (data/rodata/bss) used by your function may not reflect the true data layout. Often this will show up as many contiguous/adjacent symbols that are accessed sequentially (array). Or data that otherwise looks like it rolls up into a common struct. In such cases, you should update symbol_addrs to reflect the true layout even if this means wider project refactors.
