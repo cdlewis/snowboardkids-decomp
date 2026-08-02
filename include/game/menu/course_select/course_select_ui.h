@@ -78,6 +78,7 @@ typedef struct {
 
 typedef struct CourseSelectIconListActor CourseSelectIconListActor;
 typedef struct CourseSelectAnimatedActor CourseSelectAnimatedActor;
+typedef union CourseSelectExtraCourseIconListActor CourseSelectExtraCourseIconListActor;
 
 extern CourseBoardLevelByCourseText gCourseSelectBoardLevelByCourseText[4];
 extern CourseExtraBoardLevelText gCourseSelectExtraCourseBoardLevelText[3];
@@ -106,7 +107,7 @@ void initCourseSelectCourseDescription(CourseSelectWidgetActor *arg0);
 void drawCourseSelectExtraCourseBadge(CourseSelectWidgetActor *arg0);
 void updateCourseSelectExtraCourseBadge(CourseSelectWidgetActor *arg0);
 void initCourseSelectExtraCourseBadge(CourseSelectWidgetActor *arg0);
-void drawCourseSelectExtraCourseIconList(CourseSelectWidgetActor *arg0);
+void drawCourseSelectExtraCourseIconList(CourseSelectExtraCourseIconListActor *arg0);
 void updateCourseSelectExtraCourseIconListIn(CourseSelectWidgetActor *arg0);
 void updateCourseSelectExtraCourseIconListOut(CourseSelectWidgetActor *arg0);
 void updateCourseSelectExtraCourseIconListClose(CourseSelectWidgetActor *arg0);
