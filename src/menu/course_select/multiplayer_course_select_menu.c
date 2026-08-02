@@ -155,7 +155,7 @@ void initMultiplayerCourseSelectMenu(void) {
         for (j = 0; j < 3; j++) {
             sum = 0;
             for (k = 0; k < 3; k++) {
-                sum += GAME_SAVE_DATA_SLOT(i).courseUnlockStates[k * 3 + j];
+                sum += gGameSaveDataBuffer[i].courseUnlockStates[k * 3 + j];
             }
             if (sum != -3) {
                 D_8010AEB8[i][j] = 1;
@@ -166,7 +166,7 @@ void initMultiplayerCourseSelectMenu(void) {
 
         k = 0;
         for (j = 9; j < 12; j++) {
-            k += GAME_SAVE_DATA_SLOT(i).courseUnlockStates[j];
+            k += gGameSaveDataBuffer[i].courseUnlockStates[j];
         }
         if (k >= -2) {
             D_8010AEC8[i] = 4;
@@ -180,7 +180,7 @@ void initMultiplayerCourseSelectMenu(void) {
 
         if (D_8010AEA0[i] == 1) {
             for (j = 9; j < 12; j++) {
-                if (GAME_SAVE_DATA_SLOT(i).courseUnlockStates[j] != -1) {
+                if (gGameSaveDataBuffer[i].courseUnlockStates[j] != -1) {
                     D_8010AEFB[i * 4] = j;
                     break;
                 }
@@ -189,7 +189,7 @@ void initMultiplayerCourseSelectMenu(void) {
             k = 0;
             for (j = 9; j < 12; j++) {
                 gMultiplayerCourseSelectExtraCourseIds[i][k] = 0;
-                if (GAME_SAVE_DATA_SLOT(i).courseUnlockStates[j] != -1) {
+                if (gGameSaveDataBuffer[i].courseUnlockStates[j] != -1) {
                     gMultiplayerCourseSelectExtraCourseIds[i][k] = j;
                     k++;
                 }
@@ -526,7 +526,7 @@ void updateMultiplayerCourseSelectMenu(void) {
                                     player->selectionUnlockState = 0;
                                 } else {
                                     player->selectionUnlockState =
-                                        gCourseUnlockSaveSlots[i].courseUnlockStates[player->menuSelection];
+                                        gGameSaveDataBuffer[i].courseUnlockStates[player->menuSelection];
                                 }
                                 gMenuChoicePromptState[i] = row + 3;
                                 if ((u8) D_8010AECC[i] == 0) {
@@ -898,8 +898,7 @@ void updateMultiplayerCourseSelectMenu(void) {
                                         player->selectionUnlockState = 0;
                                     } else {
                                         player->selectionUnlockState =
-                                            gCourseUnlockSaveSlots[playerIndex]
-                                                .courseUnlockStates[player->menuSelection];
+                                            gGameSaveDataBuffer[playerIndex].courseUnlockStates[player->menuSelection];
                                     }
 
                                     gMenuChoicePromptState[playerIndex] += 3;

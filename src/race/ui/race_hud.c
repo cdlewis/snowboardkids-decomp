@@ -468,9 +468,9 @@ void drawTimeTrialLabels(void *unused) {
     drawMenuAsciiTextDefaultScale(0x48, 0x47, (char *)gRaceHudTimeTrialLapTimeLabel, 5);
     drawMenuAsciiTextDefaultScale(0x48, -0x61, (char *)gRaceHudTimeTrialBestLapLabel, 7);
     sprintf(bestLapText, gRaceHudTimeTrialBestLapFormat,
-            gGameSaveDataBuffer.timeTrialRecords[gRaceCourseIndex.signedValue][0].minutes,
-            gGameSaveDataBuffer.timeTrialRecords[gRaceCourseIndex.signedValue][0].seconds,
-            gGameSaveDataBuffer.timeTrialRecords[gRaceCourseIndex.signedValue][0].fraction >> 8);
+            gGameSaveDataBuffer[0].timeTrialRecords[gRaceCourseIndex.signedValue][0].minutes,
+            gGameSaveDataBuffer[0].timeTrialRecords[gRaceCourseIndex.signedValue][0].seconds,
+            gGameSaveDataBuffer[0].timeTrialRecords[gRaceCourseIndex.signedValue][0].fraction >> 8);
     drawMenuAsciiTextDefaultScale(0x48, -0x58, bestLapText, 7);
 }
 

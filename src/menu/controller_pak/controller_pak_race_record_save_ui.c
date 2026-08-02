@@ -90,10 +90,10 @@ void drawControllerPakRaceRecordSaveScorePanel(ControllerPakRaceRecordSaveActor 
     sprintf(text, D_800E0F30, gRacePlayers[0].money);
     drawMenuAsciiText((s16)(arg0->x + 0x44), (s16)(arg0->y + 0x1B), text, 0, 0x100);
 
-    if (gGameSaveDataBuffer.progressionLevel == 3) {
+    if (gGameSaveDataBuffer[0].progressionLevel == 3) {
         count = 3;
     } else {
-        count = gGameSaveDataBuffer.progressionLevel + 1;
+        count = gGameSaveDataBuffer[0].progressionLevel + 1;
     }
 
     i = 0;
@@ -102,7 +102,7 @@ void drawControllerPakRaceRecordSaveScorePanel(ControllerPakRaceRecordSaveActor 
         do {
             xOffset = 1;
             xOffset = i + xOffset;
-            if ((s32)gGameSaveDataBuffer.progressionLevel < xOffset) {
+            if ((s32)gGameSaveDataBuffer[0].progressionLevel < xOffset) {
                 alpha = 0x70;
             } else {
                 alpha = 0x100;
@@ -117,13 +117,13 @@ void drawControllerPakRaceRecordSaveScorePanel(ControllerPakRaceRecordSaveActor 
     }
 
     count = 6;
-    if (gGameSaveDataBuffer.progressionLevel == 1) {
+    if (gGameSaveDataBuffer[0].progressionLevel == 1) {
         count = 7;
-    } else if (gGameSaveDataBuffer.progressionLevel == 2) {
+    } else if (gGameSaveDataBuffer[0].progressionLevel == 2) {
         count = 8;
     } else {
         i = 0;
-        if (gGameSaveDataBuffer.progressionLevel == 3) {
+        if (gGameSaveDataBuffer[0].progressionLevel == 3) {
             count = 9;
         }
     }
@@ -133,7 +133,7 @@ void drawControllerPakRaceRecordSaveScorePanel(ControllerPakRaceRecordSaveActor 
         new_var = gPlayerBadgeDisplayOrder;
         badgeIndex = new_var;
         do {
-            tile = gGameSaveDataBuffer.cupPlacements[*badgeIndex];
+            tile = gGameSaveDataBuffer[0].cupPlacements[*badgeIndex];
             alpha = 0x70;
             if (tile != 0) {
                 alpha = 0x100;

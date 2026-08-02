@@ -1,4 +1,5 @@
 #include "common.h"
+#include "game/save_data.h"
 #include "assets.h"
 #include "game/engine/callback_task_scheduler.h"
 #include "game/engine/asset_manager.h"
@@ -26,7 +27,6 @@ extern s32 gMenuFlowState;
 extern s32 D_8010ADE0;
 extern CallbackTask *D_8010ADE4;
 extern s16 gMenuFadeAlpha;
-extern s32 D_800EC9F4;
 extern u8 gControllerPakRaceRecordSaveStatusChoicePromptStates[];
 
 extern void releaseMenuAssetHandles(void);
@@ -48,7 +48,7 @@ void initControllerPakRaceRecordSaveFlow(void) {
     D_8010ADE4 = 0;
     D_8010ADE8 = 0;
     gMenuFadeAlpha = gCurrentGameTask->fade;
-    D_800EC9F4 = gRacePlayers[0].money;
+    gGameSaveDataBuffer[0].money = gRacePlayers[0].money;
     LOAD_ASSET(_59AAA0, 0x21);
     LOAD_ASSET(_59AAA0, 0x24);
     LOAD_ASSET(_593D10, 0x22);

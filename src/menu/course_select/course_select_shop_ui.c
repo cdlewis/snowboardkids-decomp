@@ -1,4 +1,5 @@
 #include "common.h"
+#include "game/save_data.h"
 #include "game/engine/render_callback.h"
 #include "game/engine/relocatable_heap.h"
 #include "game/engine/callback_task_scheduler.h"
@@ -1012,7 +1013,7 @@ void drawCourseUnlockPricePanel(ShopMenuWidgetActor *arg0) {
     u16 sp48;
     s32 palette;
 
-    if (gCourseUnlockSaveSlots[0].courseUnlockStates[gRacePlayers[0].menuSelection] == -1) {
+    if (gGameSaveDataBuffer[0].courseUnlockStates[gRacePlayers[0].menuSelection] == -1) {
         new_var = 0x3000;
         temp = gCourseUnlockPrices[gRacePlayers[0].menuSelection];
         if ((u32)temp >= 0x186A0U) {
@@ -1088,7 +1089,7 @@ void updateCourseUnlockPricePanel(ShopMenuWidgetActor *arg0) {
         }
         if (arg0->item.price == 0) {
             arg0->slide.bytes.state = 3;
-            gCourseUnlockSaveSlots[0].courseUnlockStates[gRacePlayers[0].menuSelection] = 9;
+            gGameSaveDataBuffer[0].courseUnlockStates[gRacePlayers[0].menuSelection] = 9;
         }
         break;
     case 3:

@@ -3,8 +3,8 @@
 #include "game/engine/relocatable_heap.h"
 #include "game/engine/asset_manager.h"
 #include "game/race/player/race_player_input.h"
+#include "game/race/race_replay.h"
 
-#define RACE_INPUT_HISTORY_LENGTH 0x1194
 #define RACE_INPUT_REPLAY_FRAME_COUNT 0x960
 #define INPUT_MASK_HARD_STEER_X 0xF0000
 #define INPUT_MASK_HARD_STEER_Y 0xC000
@@ -18,16 +18,6 @@ typedef struct {
 typedef struct {
     /* 0x0000 */ RaceInputReplayFrame inputs[RACE_INPUT_REPLAY_FRAME_COUNT];
 } RaceInputReplayHistory;
-
-typedef struct {
-    /* 0x0000 */ s32 writeIndex;
-    /* 0x0004 */ s32 lastWriteIndex;
-    /* 0x0008 */ s8 enabled;
-    /* 0x0009 */ char pad9[4];
-    /* 0x000D */ s8 stickX[RACE_INPUT_HISTORY_LENGTH];
-    /* 0x11A1 */ s8 stickY[RACE_INPUT_HISTORY_LENGTH];
-    /* 0x2335 */ u8 buttons[RACE_INPUT_HISTORY_LENGTH];
-} RaceInputHistoryBuffer;
 
 RacePlayer gRacePlayers[RACE_PLAYER_COUNT];
 

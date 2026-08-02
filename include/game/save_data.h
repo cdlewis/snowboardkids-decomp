@@ -5,6 +5,12 @@
 
 #define GAME_SAVE_SLOT_COUNT 4
 #define GAME_SAVE_SLOT_SIZE 0x78F8
+#define GAME_SAVE_REPLAY_SLOT_COUNT 9
+#define GAME_SAVE_REPLAY_DATA_SIZE 0x7500
+#define GAME_SAVE_REPLAY_DATA_HALFWORD_COUNT (GAME_SAVE_REPLAY_DATA_SIZE / sizeof(u16))
+#define GAME_SAVE_REPLAY_COPY_SIZE 0x72AA
+#define GAME_SAVE_REPLAY_COPY_HALFWORD_COUNT (GAME_SAVE_REPLAY_COPY_SIZE / sizeof(u16))
+#define GAME_SAVE_REPLAY_DATA_TAIL_SIZE (GAME_SAVE_REPLAY_DATA_SIZE - GAME_SAVE_REPLAY_COPY_SIZE)
 
 typedef struct GameSaveRecordTime {
     /* 0x0 */ s8 minutes;
@@ -58,10 +64,17 @@ typedef struct GameSaveData {
             /* 0x012A */ GameSaveRecordTime bestLapRecords[11];
             /* 0x0156 */ GameSaveRecordTime raceRecords[11][5];
             union {
-                /* 0x0232 */ GameSaveReplaySlot replaySlots[9];
-                /* 0x0232 */ GameSaveResultEntry resultEntries[9];
+                /* 0x0232 */ GameSaveReplaySlot replaySlots[GAME_SAVE_REPLAY_SLOT_COUNT];
+                /* 0x0232 */ GameSaveResultEntry resultEntries[GAME_SAVE_REPLAY_SLOT_COUNT];
             };
-            /* 0x0256 */ u8 replayDataAndPadding[0x7756 - 0x256];
+            union {
+                /* 0x0256 */ u8 replayDataAndPadding[GAME_SAVE_REPLAY_DATA_SIZE];
+                /* 0x0256 */ u16 replayData[GAME_SAVE_REPLAY_DATA_HALFWORD_COUNT];
+                struct {
+                    /* 0x0256 */ u16 replayCopyData[GAME_SAVE_REPLAY_COPY_HALFWORD_COUNT];
+                    /* 0x7500 */ u8 replayDataTail[GAME_SAVE_REPLAY_DATA_TAIL_SIZE];
+                };
+            };
             /* 0x7756 */ u16 trickAttackScores[11][5];
             /* 0x77C4 */ u8 trickAttackCharacterIds[11][5];
             /* 0x77FB */ u8 timeTrialCharacterIds[11][5];
@@ -80,13 +93,25 @@ typedef struct GameSaveData {
     };
 } GameSaveData;
 
-#ifdef GAME_SAVE_DATA_BUFFER_AS_ARRAY
-extern GameSaveData gGameSaveDataBuffer[GAME_SAVE_SLOT_COUNT];
-#define GAME_SAVE_DATA_SLOT(index) (gGameSaveDataBuffer[index])
-#else
-extern GameSaveData gGameSaveDataBuffer;
-/* The symbol names the first of four contiguous save slots. */
-#define GAME_SAVE_DATA_SLOT(index) ((&gGameSaveDataBuffer)[index])
-#endif
+typedef GameSaveData GameSaveDataBuffer[GAME_SAVE_SLOT_COUNT];
+
+typedef struct GameSaveCourseUnlockStates {
+    s8 values[12];
+} GameSaveCourseUnlockStates;
+
+typedef struct GameSaveRawByte {
+    s8 value;
+} GameSaveRawByte;
+
+typedef char GameSaveReplaySlotSizeCheck[(sizeof(GameSaveReplaySlot) == 0x4) ? 1 : -1];
+typedef char GameSaveDataSizeCheck[(sizeof(GameSaveData) == GAME_SAVE_SLOT_SIZE) ? 1 : -1];
+typedef char GameSaveDataBufferSizeCheck[
+    (sizeof(GameSaveDataBuffer) == (GAME_SAVE_SLOT_COUNT * GAME_SAVE_SLOT_SIZE)) ? 1 : -1
+];
+
+extern GameSaveDataBuffer gGameSaveDataBuffer;
+extern GameSaveCourseUnlockStates gPrimaryCourseUnlockStates;
+extern GameSaveRawByte gCourseUnlockScanStart;
+extern GameSaveRawByte gCourseUnlockScanEnd;
 
 #endif

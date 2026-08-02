@@ -1,5 +1,4 @@
 #include "common.h"
-#define GAME_SAVE_DATA_BUFFER_AS_ARRAY
 #include "game/save_data.h"
 #include "assets.h"
 #include "game/audio/sound_manager.h"
@@ -295,7 +294,7 @@ void readControllerPakSave(u16 controllerIndex) {
                   gControllerPakSaveFileIdentity.gameCode, gControllerPakExtName, gControllerPakGameName,
                   &gControllerPakFileNos[controllerIndex]);
 
-    save = &GAME_SAVE_DATA_SLOT(controllerIndex);
+    save = &gGameSaveDataBuffer[controllerIndex];
     readStatus = osPfsReadWriteFile(&gControllerPakHandles[controllerIndex], gControllerPakFileNos[controllerIndex],
                                     0, 0, CONTROLLER_PAK_SAVE_READ_SIZE, save->rawBytes);
 
@@ -387,7 +386,7 @@ void writeControllerPakSave(u16 controllerIndex) {
                           gControllerPakGameName, 0x7900, fileNo);
     }
 
-    save = &GAME_SAVE_DATA_SLOT(controllerIndex);
+    save = &gGameSaveDataBuffer[controllerIndex];
     checksum = 0;
     src = save->bytes;
     i = 4;
@@ -395,7 +394,7 @@ void writeControllerPakSave(u16 controllerIndex) {
         checksum += *src++;
         i++;
     } while (i != 0x78E0);
-    GAME_SAVE_DATA_SLOT(controllerIndex).checksum = checksum;
+    gGameSaveDataBuffer[controllerIndex].checksum = checksum;
 
     if (osPfsReadWriteFile(pfs, *fileNo, 1, 0, 0x78E0, (u8 *)save) == 0) {
         gControllerPakRetryCounts[controllerIndex] = 0;
@@ -526,7 +525,7 @@ u16 validateControllerPakSave(volatile s32 arg0) {
     s32 secondByteStep;
     s32 count;
 
-    save = (u8 *)&GAME_SAVE_DATA_SLOT(arg0 & 0xFFFFFFFFFFFFFFFF);
+    save = (u8 *)&gGameSaveDataBuffer[arg0 & 0xFFFFFFFFFFFFFFFF];
     wordCursor = (u32 *)save;
     byteCursor = save;
     offset = 0;
@@ -592,7 +591,7 @@ s32 validateControllerPakSaveData(s32 channel) {
     s32 raceCharacter;
     s32 scoreCharacter;
 
-    saveStart = (u8 *)&GAME_SAVE_DATA_SLOT(channel);
+    saveStart = (u8 *)&gGameSaveDataBuffer[channel];
     invalidSave = 0;
     timeTrialCourseCursor = saveStart;
     scoreCourseCursor = saveStart;
