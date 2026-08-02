@@ -1,0 +1,5 @@
+candidate_source: python3 tools/find_oversized_symbols.py
+prompt: "Fix the memory-footprint mismatch for the global symbol $INPUT. Its compiled ELF object size exceeds the size recorded in symbol_addrs.txt. Investigate the symbol's definition, declarations, assembly data or BSS, neighboring symbols, and every use to determine the original layout. Correct the C types and/or symbol metadata so the declared objects accurately represent that layout; do not merely enlarge a size if that would swallow neighboring symbols, and do not use void pointers, manual pointer arithmetic, casts, or unions to hide a bad type. Do not use aliases or alias types. Fix the actual underlying problem even if that requires significant refactoring. Consolidate declarations in a shared header where appropriate, verify all affected functions still match, run ./tools/build-and-verify.sh, and commit the completed fix."
+agent: codex
+success_command: 'git add -A && git commit -m "fix symbol footprint: $CANDIDATE"'
+timeout: 60m
