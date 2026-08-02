@@ -389,21 +389,15 @@ s32 saveRaceRecordReplayData(void) {
 #undef REPLAY_SAVE_MAX_NORMAL
 #endif
 
-// loadCurrentRaceRecordReplayData best match: 99.673% (nonmatchings/loadCurrentRaceRecordReplayData-6219302648079029720/base_26.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/menu/main_menu/main_menu_scene_model/loadCurrentRaceRecordReplayData.s")
-
-#ifdef NON_MATCHING
 void loadCurrentRaceRecordReplayData(void) {
     u16 *compressed;
     u8 *decompressed;
-    u16 backReference;
+    s32 token;
     RaceInputHistoryBuffer *history;
     s32 decompressedLength;
     s32 outputIndex;
-    s32 runLength;
     s32 sourceIndex;
     s32 copyIndex;
-    s32 frameCount;
     s32 i;
 
     outputIndex = 0;
@@ -441,52 +435,43 @@ void loadCurrentRaceRecordReplayData(void) {
     decompressed = gPackedRaceRecordReplayBuffer.bytes;
     decompressedLength = *compressed++;
     for (;;) {
-        copyIndex = 0;
         if (outputIndex >= decompressedLength) {
             break;
         }
-        runLength = 0x3F;
-        runLength = (*compressed >> 10) & runLength;
-        if (runLength == 0) {
-            gPackedRaceRecordReplayBuffer.bytes[outputIndex] = *compressed;
+        sourceIndex = token = *compressed;
+        if (((token >> 10) & 0x3F) == 0) {
+            decompressed[outputIndex] = token & 0xFFFF;
             outputIndex++;
-            compressed++;
         } else {
-            backReference = *compressed;
-            sourceIndex = outputIndex - (backReference & 0x3FF);
-            for (copyIndex = 0; copyIndex < runLength; copyIndex++) {
+            sourceIndex &= 0x3FF;
+            sourceIndex = outputIndex - sourceIndex;
+            for (copyIndex = 0; copyIndex < ((token >> 10) & 0x3F); copyIndex++) {
                 decompressed[outputIndex] = decompressed[sourceIndex + copyIndex];
                 outputIndex++;
             }
-            compressed++;
         }
+        compressed++;
     }
 
-    copyIndex = ASSET_HANDLE(7);
-    history = getRelocatableHeapBlockBase(copyIndex);
+    history = getRelocatableHeapBlockBase(ASSET_HANDLE(7));
     history->writeIndex = 0;
-    sourceIndex = gPackedRaceRecordReplayBuffer.fields.frameCount;
-    frameCount = sourceIndex;
-    history->lastWriteIndex = frameCount;
+    history->lastWriteIndex = gPackedRaceRecordReplayBuffer.fields.frameCount;
     history->enabled = 1;
-    history->courseId = ((s16)gRaceCourseIndex.signedValue) & 0xFFFFu;
+    history->courseId = gRaceCourseIndex.signedValue;
     history->characterId = gPackedRaceRecordReplayBuffer.fields.characterId;
     history->characterVariant = gPackedRaceRecordReplayBuffer.fields.characterVariant;
     history->unkC = 0;
 
-    i = 0;
-    if (frameCount > 0) {
-        do {
-            history->stickX[i] = gPackedRaceRecordReplayBuffer.fields.inputs[i].stickX & 0xFF;
-            backReference = gPackedRaceRecordReplayBuffer.fields.inputs[i].stickY;
-            history->stickY[i] = backReference;
-            history->buttons[i] = gPackedRaceRecordReplayBuffer.fields.inputs[i].buttons;
-            i++;
-        } while (i < history->lastWriteIndex);
+    for (i = 0; i < history->lastWriteIndex; i++) {
+        /* Optimized away by IDO; preserves the target loop-counter register allocation. */
+        if ((!gGameSaveDataBuffer[0].replaySlots[1].offset) &&
+            (!gGameSaveDataBuffer[0].replaySlots[1].offset)) {
+        }
+        history->stickX[i] = gPackedRaceRecordReplayBuffer.fields.inputs[i].stickX;
+        history->stickY[i] = gPackedRaceRecordReplayBuffer.fields.inputs[i].stickY;
+        history->buttons[i] = gPackedRaceRecordReplayBuffer.fields.inputs[i].buttons;
     }
 }
-
-#endif
 
 void loadMainMenuSceneModelAssets(void) {
     LOAD_ASSET(_5E34A0, 0x3F);
