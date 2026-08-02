@@ -15,7 +15,7 @@ import sys
 import re
 import subprocess
 from pathlib import Path
-from typing import List, Tuple, Dict, NamedTuple
+from typing import List, Tuple, Dict, NamedTuple, Optional
 from collections import defaultdict
 
 
@@ -30,6 +30,79 @@ class FunctionStats(NamedTuple):
         return self.violations / max(self.lines, 1)
 
 
+class ConditionalFrame(NamedTuple):
+    """State for a preprocessor conditional relevant to candidate selection."""
+    parent_excluded: bool
+    condition: Optional[bool]
+    branch_excluded: bool
+
+
+def update_preprocessor_state(
+    line: str, stack: List[ConditionalFrame]
+) -> bool:
+    """Track code excluded from a normal (NON_MATCHING-disabled) build.
+
+    Unknown build conditions are left visible because this detector does not
+    have the compiler's complete macro environment.  NON_MATCHING and literal
+    ``#if 0`` blocks are unambiguous and must not produce cleanup candidates.
+    """
+    directive = re.match(r'^\s*#\s*(if|ifdef|ifndef|elif|else|endif)\b(.*)', line)
+    if not directive:
+        return stack[-1].branch_excluded if stack else False
+
+    kind, expression = directive.groups()
+    expression = expression.strip()
+
+    if kind in ('if', 'ifdef', 'ifndef'):
+        condition = None
+        if kind == 'ifdef' and expression == 'NON_MATCHING':
+            condition = False
+        elif kind == 'ifndef' and expression == 'NON_MATCHING':
+            condition = True
+        elif kind == 'if':
+            compact = re.sub(r'\s+', '', expression)
+            if compact == '0':
+                condition = False
+            elif compact in ('defined(NON_MATCHING)', 'definedNON_MATCHING'):
+                condition = False
+            elif compact in ('!defined(NON_MATCHING)', '!definedNON_MATCHING'):
+                condition = True
+
+        parent_excluded = stack[-1].branch_excluded if stack else False
+        branch_excluded = parent_excluded or condition is False
+        stack.append(ConditionalFrame(parent_excluded, condition, branch_excluded))
+    elif kind == 'else' and stack:
+        frame = stack[-1]
+        branch_excluded = frame.parent_excluded
+        if frame.condition is not None:
+            branch_excluded = branch_excluded or frame.condition
+        stack[-1] = ConditionalFrame(
+            frame.parent_excluded, frame.condition, branch_excluded
+        )
+    elif kind == 'elif' and stack:
+        # Handle the useful, unambiguous cases. Unknown elif expressions stay
+        # visible so configuration-specific production code is not lost.
+        frame = stack[-1]
+        compact = re.sub(r'\s+', '', expression)
+        condition = None
+        if compact == '0' or compact in (
+            'defined(NON_MATCHING)', 'definedNON_MATCHING'
+        ):
+            condition = False
+        elif compact in (
+            '!defined(NON_MATCHING)', '!definedNON_MATCHING'
+        ):
+            condition = True
+        branch_excluded = frame.parent_excluded or condition is False
+        stack[-1] = ConditionalFrame(
+            frame.parent_excluded, condition, branch_excluded
+        )
+    elif kind == 'endif' and stack:
+        stack.pop()
+
+    return stack[-1].branch_excluded if stack else False
+
+
 def analyze_file_for_violations(filepath: str) -> Dict[str, FunctionStats]:
     """
     Analyze a C file and count violations per function.
@@ -42,6 +115,7 @@ def analyze_file_for_violations(filepath: str) -> Dict[str, FunctionStats]:
     current_violations = 0
     current_lines = 0
     brace_depth = 0
+    conditional_stack: List[ConditionalFrame] = []
 
     # Patterns to detect
     patterns = [
@@ -60,6 +134,10 @@ def analyze_file_for_violations(filepath: str) -> Dict[str, FunctionStats]:
     with open(filepath, 'r') as f:
         for line in f:
             stripped = line.strip()
+
+            excluded = update_preprocessor_state(line, conditional_stack)
+            if stripped.startswith('#') or excluded:
+                continue
 
             # Track current function
             func_match = re.match(r'^(\w+\s+)+(\w+)\s*\([^)]*\)\s*\{', line)
