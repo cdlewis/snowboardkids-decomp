@@ -1303,112 +1303,130 @@ void drawMenuGlyphScriptDefaultFont(volatile s16 x, s16 y, MenuGlyphScript *scri
     }
 }
 
-// drawMenuGlyph best match: 98.604% (nonmatchings/drawMenuGlyph-633030068925474062/base_5.c)
+// drawMenuGlyph best match: 98.704% (nonmatchings/drawMenuGlyph-5865927172505257320/base_34.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/renderer/menu_renderer/drawMenuGlyph.s")
 
 #ifdef NON_MATCHING
-void drawMenuGlyph(s16 x, s16 y, u16 glyph, u8 palette, u16 scale, u16 fontBank) {
+void drawMenuGlyph(s16 x, s16 y, u16 glyphIndex, u8 paletteIndex, u16 intensity, u16 fontBank) {
+    u16 *src;
+    u16 *dstPalette;
     s32 x0;
-    volatile s32 drawY0;
+    s32 y0;
     s32 x1;
     s32 y1;
     s32 clipS;
     s32 clipT;
+    s32 glyphWidth;
     s32 i;
-    MenuFontAssetEntry *glyphTexture;
-    u16 *scaledPalette;
-    u16 *dstPalette;
-    MenuFontAssetTable *fontAsset;
-    u16 *glyphPalette;
     u16 paletteColor;
-    int textureIndex;
+    u16 *paletteBase;
+    FontAsset *font;
+    u16 *srcPalette;
+    u16 *scaledPalette;
+    u16 *dst;
+    FontTexture *entry;
     s32 color;
     s32 red;
     u16 green;
     u16 blue;
+    s32 halfWidth;
+    s32 halfHeight;
+    s32 minX;
+    s32 maxX;
+    s32 minY;
+    s32 maxY;
 
-    if (palette == 0) {
-        fontAsset = (MenuFontAssetTable *)getRelocatableHeapBlockBase(gAssetHandles[fontBank]);
-        color = MENU_GLYPH_WIDE_WIDTH;
+    if (paletteIndex == 0) {
+        font = getRelocatableHeapBlockBase(gAssetHandles[fontBank]);
+        glyphWidth = 0x10;
     } else {
-        fontAsset = (MenuFontAssetTable *)getRelocatableHeapBlockBase(gAssetHandles[fontBank + 1]);
-        color = MENU_GLYPH_NARROW_WIDTH;
+        font = getRelocatableHeapBlockBase(gAssetHandles[fontBank + 1]);
+        glyphWidth = 8;
     }
 
-    glyphPalette = (u16 *)(fontAsset->entryCount + fontAsset->entries);
-    x0 = x + gMenuViewportCenterX;
-    i = y + gMenuViewportCenterY;
-    x1 = color + x0;
-    y1 = i + MENU_GLYPH_TALL_HEIGHT;
+    paletteBase = (u16 *)(font->header.entryCount + font->textures);
+    x1 = x0 = x + gMenuViewportCenterX;
+    y0 = y + gMenuViewportCenterY;
+    x1 = glyphWidth + x0;
+    y1 = y0 + 0x10;
     clipS = 0;
     clipT = 0;
 
-    if (x0 < gMenuViewportCenterX + (gMenuViewportWidth / 2)) {
-        if ((i < gMenuViewportCenterY + (gMenuViewportHeight / 2)) &&
-            (x1 >= gMenuViewportCenterX - (gMenuViewportWidth / 2))) {
-            if (y1 >= gMenuViewportCenterY - (gMenuViewportHeight / 2)) {
-                if (x0 < gMenuViewportCenterX - (gMenuViewportWidth / 2)) {
-                    clipS = (gMenuViewportCenterX - (gMenuViewportWidth / 2)) - x0;
-                    x0 = gMenuViewportCenterX - (gMenuViewportWidth / 2);
-                }
-                if (i < gMenuViewportCenterY - (gMenuViewportHeight / 2)) {
-                    clipT = (gMenuViewportCenterY - (gMenuViewportHeight / 2)) - i;
-                    i = gMenuViewportCenterY - (gMenuViewportHeight / 2);
-                }
-                if (x1 >= gMenuViewportCenterX + (gMenuViewportWidth / 2)) {
-                    x1 = gMenuViewportCenterX + (gMenuViewportWidth / 2);
-                    x1 = x1 - 1;
-                }
-                if (y1 >= gMenuViewportCenterY + (gMenuViewportHeight / 2)) {
-                    y1 = (gMenuViewportCenterY + (gMenuViewportHeight / 2)) - 1;
-                }
-                glyphTexture = fontAsset->entries;
-                glyphTexture += glyph;
-                textureIndex = (u16)glyphTexture->textureIndex;
-                glyphPalette = (textureIndex * MENU_PALETTE_COLOR_COUNT) + glyphPalette;
-                drawY0 = i; scaledPalette = allocMenuRenderScratch(MENU_PALETTE_SIZE_BYTES);
-                i = 0;
-                dstPalette = scaledPalette;
-paletteLoop:
-                *dstPalette = (paletteColor = *glyphPalette);
-                i += sizeof(u16);
-                color = paletteColor & 0xFFFF;
-                if (color & MENU_RGBA5551_ALPHA_BIT) {
-                    red = (color >> 11) & MENU_RGBA5551_CHANNEL_MASK;
-                    green = (color >> 6) & MENU_RGBA5551_CHANNEL_MASK;
-                    blue = (color >> 1) & MENU_RGBA5551_CHANNEL_MASK;
-                    color = paletteColor & 0xFFFF;
-                    red = (red * scale) / MENU_RGBA5551_SCALE_BASE;
-                    green = (green * scale) / MENU_RGBA5551_SCALE_BASE;
-                    blue = (blue * scale) / MENU_RGBA5551_SCALE_BASE;
-                    *dstPalette = (red << 11) | (green << 6) | (blue << 1) |
-                        MENU_RGBA5551_ALPHA_BIT;
-                }
-                glyphPalette++;
-                dstPalette++;
-                if (i != MENU_PALETTE_SIZE_BYTES) {
-                    goto paletteLoop;
-                }
-
-                gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, scaledPalette);
-                gDPLoadTextureTile_4b(gRegionAllocPtr++,
-                                      glyphTexture->imageOffset + (u8 *)fontAsset,
-                                      G_IM_FMT_CI, glyphTexture->width, glyphTexture->height,
-                                      0, 0, glyphTexture->width, glyphTexture->height, 0,
-                                      G_TX_CLAMP, G_TX_CLAMP, G_TX_NOMASK, G_TX_NOMASK,
-                                      G_TX_NOLOD, G_TX_NOLOD);
-                gSPTextureRectangle(gRegionAllocPtr++,
-                                    x0 << MENU_GLYPH_RECT_FRAC_BITS,
-                                    drawY0 << MENU_GLYPH_RECT_FRAC_BITS,
-                                    x1 << MENU_GLYPH_RECT_FRAC_BITS,
-                                    y1 << MENU_GLYPH_RECT_FRAC_BITS,
-                                    G_TX_RENDERTILE,
-                                    clipS << MENU_GLYPH_TEXEL_FRAC_BITS,
-                                    clipT << MENU_GLYPH_TEXEL_FRAC_BITS,
-                                    MENU_GLYPH_TEXTURE_STEP, MENU_GLYPH_TEXTURE_STEP);
-            }
-        }
+    halfWidth = gMenuViewportWidth / 2;
+    maxX = gMenuViewportCenterX + halfWidth;
+    if (x0 >= maxX) {
+        return;
     }
+
+    halfHeight = gMenuViewportHeight / 2;
+    minX = gMenuViewportCenterX - halfWidth;
+    maxY = gMenuViewportCenterY + halfHeight;
+    if (y0 >= maxY) {
+        return;
+    }
+    if (x1 < minX) {
+        return;
+    }
+
+    minY = gMenuViewportCenterY - halfHeight;
+    if (y1 < minY) {
+        return;
+    }
+
+    if (x0 < minX) {
+        clipS = minX - x0;
+        x0 = minX;
+    }
+    if (y0 < minY) {
+        clipT = minY - y0;
+        y0 = minY;
+    }
+    if (x1 >= maxX) {
+        x1 = maxX - 1;
+    }
+    if (y1 >= maxY) {
+        y1 = maxY - 1;
+    }
+
+    entry = font->textures;
+    entry += glyphIndex;
+    srcPalette = &paletteBase[entry->paletteIndex * 0x10];
+    scaledPalette = allocMenuRenderScratch(0x20);
+    i = 0;
+    dstPalette = scaledPalette;
+    src = &*srcPalette;
+    dst = &*dstPalette;
+paletteLoop:
+    paletteColor = *src;
+        i += 2;
+        color = paletteColor & 0xFFFF;
+        *dst = paletteColor;
+        if (color & 1) {
+            red = ((color >> 11) & 0x1F) & 0xFFFF;
+            green = color >> 6;
+            green = green & 0x1F;
+            color = (blue = (color >> 1) & 0x1F);
+            glyphWidth = intensity;
+            red = red * glyphWidth;
+            red /= 0x100;
+            green = (green * intensity) / 0x100;
+            color = green;
+            blue = (blue * intensity) / 0x100;
+            *dst = (red << 11) | (color << 6) | (blue << 1) | 1;
+        }
+    src++;
+    dst++;
+    if (i != 0x20) {
+        goto paletteLoop;
+    }
+
+    gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, scaledPalette);
+    gDPLoadTextureTile_4b(gRegionAllocPtr++, entry->imageOffset + (u8 *)font, G_IM_FMT_CI,
+                          entry->width, entry->height, 0, 0, entry->width, entry->height, 0,
+                          G_TX_CLAMP, G_TX_CLAMP, G_TX_NOMASK, G_TX_NOMASK, G_TX_NOLOD,
+                          G_TX_NOLOD);
+    gSPTextureRectangle(gRegionAllocPtr++, x0 << 2, y0 << 2, x1 << 2, y1 << 2,
+                        G_TX_RENDERTILE, clipS << 5, clipT << 5, 0x400, 0x400);
 }
 #endif
 
