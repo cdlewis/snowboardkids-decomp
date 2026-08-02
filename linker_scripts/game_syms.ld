@@ -55,3 +55,4 @@ D_80000000 = 0x80000000;
 gPrimaryCourseUnlockStates = gGameSaveDataBuffer + 0x3F;
 gCourseUnlockScanStart = gGameSaveDataBuffer + 0x1;
 gCourseUnlockScanEnd = gGameSaveDataBuffer + 0x9;
+gPrimaryGameSaveRawData = gGameSaveDataBuffer;

@@ -256,15 +256,15 @@ void initNewGameSaveData(void) {
         gGameSaveDataBuffer[0].highScores[course + 1] = 0;
     }
 
-    gGameSaveDataBuffer[0].resultEntries[0].value = 0;
-    gGameSaveDataBuffer[0].resultEntries[1].value = 0;
-    gGameSaveDataBuffer[0].resultEntries[2].value = 0;
-    gGameSaveDataBuffer[0].resultEntries[3].value = 0;
-    gGameSaveDataBuffer[0].resultEntries[4].value = 0;
-    gGameSaveDataBuffer[0].resultEntries[5].value = (u8)0;
-    gGameSaveDataBuffer[0].resultEntries[6].value = 0;
-    gGameSaveDataBuffer[0].resultEntries[7].value = 0;
-    gGameSaveDataBuffer[0].resultEntries[8].value = 0;
+    gGameSaveDataBuffer[0].replaySlots[0].length = 0;
+    gGameSaveDataBuffer[0].replaySlots[1].length = 0;
+    gGameSaveDataBuffer[0].replaySlots[2].length = 0;
+    gGameSaveDataBuffer[0].replaySlots[3].length = 0;
+    gGameSaveDataBuffer[0].replaySlots[4].length = 0;
+    gGameSaveDataBuffer[0].replaySlots[5].length = (u8)0;
+    gGameSaveDataBuffer[0].replaySlots[6].length = 0;
+    gGameSaveDataBuffer[0].replaySlots[7].length = 0;
+    gGameSaveDataBuffer[0].replaySlots[8].length = 0;
     gPlayerCount = 1;
     gRaceTypeSelection = 0;
     gRacePlayers[0].selectedCharacterId = 0;

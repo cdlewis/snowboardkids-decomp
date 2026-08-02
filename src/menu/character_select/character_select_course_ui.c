@@ -2667,7 +2667,8 @@ void drawCharacterSelectCourseRecordsPopup(CharacterSelectCourseWidgetActor *arg
                                           0xFFFF,
                                       0x20, 0x20, 0, 0);
                     } else {
-                        stack.trickIcon = (CharacterSelectTrickIconData *)&gGameSaveDataBuffer[0].bytes[rowIndex];
+                        stack.trickIcon =
+                            (CharacterSelectTrickIconData *)&((u8 *)gGameSaveDataBuffer[0].highScores)[rowIndex];
                         if (rowIndex < 3) {
                             var_s4 = 0xC;
                         } else {

@@ -296,11 +296,11 @@ void readControllerPakSave(u16 controllerIndex) {
 
     save = &gGameSaveDataBuffer[controllerIndex];
     readStatus = osPfsReadWriteFile(&gControllerPakHandles[controllerIndex], gControllerPakFileNos[controllerIndex],
-                                    0, 0, CONTROLLER_PAK_SAVE_READ_SIZE, save->rawBytes);
+                                    0, 0, CONTROLLER_PAK_SAVE_READ_SIZE, (u8 *)save);
 
     if (readStatus == 0) {
         checksum = 0;
-        cursor = &save->rawBytes[CONTROLLER_PAK_CHECKSUM_START_OFFSET];
+        cursor = (u8 *)save->highScores;
         offset = CONTROLLER_PAK_CHECKSUM_START_OFFSET;
         do {
             checksum += *cursor++;
@@ -388,7 +388,7 @@ void writeControllerPakSave(u16 controllerIndex) {
 
     save = &gGameSaveDataBuffer[controllerIndex];
     checksum = 0;
-    src = save->bytes;
+    src = (u8 *)save->highScores;
     i = 4;
     do {
         checksum += *src++;

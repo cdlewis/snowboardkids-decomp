@@ -516,11 +516,11 @@ void updateRaceSetupSaveMenu(void) {
                 save = &gGameSaveDataBuffer[0];
                 end = &gGameSaveDataBuffer[0] + gPlayerCount;
                 do {
-                    u8 highestUnlockedCourse = save->highestUnlockedCourse;
+                    u8 progressionLevel = save->progressionLevel;
 
                     *statusTransitionState = SAVE_STATUS_TRANSITION_DONE;
-                    if (gHighestUnlockedCourse < highestUnlockedCourse) {
-                        gHighestUnlockedCourse = highestUnlockedCourse;
+                    if (gHighestUnlockedCourse < progressionLevel) {
+                        gHighestUnlockedCourse = progressionLevel;
                     }
                     save++;
                     statusTransitionState++;
@@ -805,8 +805,8 @@ void updateRaceSetupSaveMenu(void) {
 
             for (i = 0; i < gPlayerCount; i++) {
                 gRaceSetupMenuSubState.statusTransitionStates[i] = SAVE_STATUS_TRANSITION_DONE;
-                if (gHighestUnlockedCourse < gGameSaveDataBuffer[i].highestUnlockedCourse) {
-                    gHighestUnlockedCourse = gGameSaveDataBuffer[i].highestUnlockedCourse;
+                if (gHighestUnlockedCourse < gGameSaveDataBuffer[i].progressionLevel) {
+                    gHighestUnlockedCourse = gGameSaveDataBuffer[i].progressionLevel;
                 }
             }
         }
