@@ -1694,7 +1694,6 @@ void initCourseSelectCourseStats(CourseSelectWidgetActor *arg0) {
 
 #if 0
 #ifdef NON_MATCHING
-extern u8 gGameSaveDataBuffer[0].extraCourseUnlockFlags;
 extern u8 gCourseSelectExtraCourseIds[];
 
 void drawCourseSelectCourseDescription(CourseSelectWidgetActor *arg0) {
@@ -1830,7 +1829,6 @@ void drawCourseSelectCourseDescription(CourseSelectWidgetActor *arg0) {
 #ifdef NON_MATCHING
 extern u8 D_8010AEA8;
 extern u8 gCourseSelectExtraCourseIds[];
-extern u8 gGameSaveDataBuffer[0].extraCourseUnlockFlags;
 
 void drawCourseSelectCourseDescription(CourseSelectWidgetActor *arg0) {
     u8 unused[4];

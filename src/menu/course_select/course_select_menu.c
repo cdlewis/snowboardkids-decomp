@@ -2092,7 +2092,7 @@ void initCourseSelectPreview(void) {
     gCoursePreviewViewportHeight = 0x78;
     configureViewport(1, 0xE8, 0x78, 0x90, gCoursePreviewViewportHeight, 0xA0, 0xF0, 0.6666666865f);
     enableViewportClear(1);
-    temp = (s8 *)&gGameSaveDataBuffer[0].rawBytes[gRacePlayers[0].menuSelection];
+    temp = &gPrimaryGameSaveRawData.values[gRacePlayers[0].menuSelection];
     D_8010AED0 = temp[0x3F] + 1;
     temp[0x3F] = gCourseDetailsPreviewCourseTiles[(u8) gCourseDetailsPreviewPage * 7 + (u8) gCourseDetailsMenuSelection];
     gCourseSelectStatus.transitionState = 6;

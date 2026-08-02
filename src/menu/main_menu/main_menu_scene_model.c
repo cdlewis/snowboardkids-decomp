@@ -318,7 +318,8 @@ s32 saveRaceRecordReplayData(void) {
         *dst = *src;
         src++;
         dst++;
-    } while ((u32)src < (u32)&gGameSaveDataBuffer[0].replayDataTail[0]);
+    } while ((u32)src <
+             (u32)&gGameSaveDataBuffer[0].replayData[GAME_SAVE_REPLAY_COPY_HALFWORD_COUNT]);
 
     course = gRaceCourseIndex.signedValue;
     writeIndex = 0;
