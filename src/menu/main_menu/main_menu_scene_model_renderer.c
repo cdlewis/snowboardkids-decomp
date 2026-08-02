@@ -8,7 +8,6 @@
 #define ASSET_HANDLE(index) (gAssetHandles[(index)])
 
 extern Mtx *allocFixedTransformMatrix(MainMenuModelTransform *);
-extern void drawTexturedMainMenuSceneModel(MainMenuSceneModel *);
 extern u8 gCurrentViewportIndex;
 extern Gfx *gMainMenuSceneModelPartDisplayLists[];
 extern Gfx *gRegionAllocPtr;
@@ -58,22 +57,49 @@ void drawMainMenuSceneModel(MainMenuSceneModel *arg0) {
     }
 }
 
-// drawTexturedMainMenuSceneModel best match: 99.595% at nonmatchings/drawTexturedMainMenuSceneModel-4139837607000619032/base.c.
-#pragma GLOBAL_ASM("asm/nonmatchings/menu/main_menu/main_menu_scene_model_renderer/drawTexturedMainMenuSceneModel.s")
-
-#ifdef NON_MATCHING
 void drawTexturedMainMenuSceneModel(MainMenuSceneModel *arg0) {
     MainMenuSceneModel *model;
-    MainMenuModelTransform *displayObject;
     Gfx **displayLists;
     Mtx *matrix;
     s32 i;
-    s32 end;
     s32 stride;
 
-    do { if ((u16)arg0->viewportIndex == gCurrentViewportIndex) { matrix = allocFixedTransformMatrix(arg0->displayObjects); model = arg0; if (matrix != NULL) { drawRacePlayerModelRootPart(matrix, model->textureId, model->paletteId); } gDPPipeSync(gRegionAllocPtr++); gSPSegment(gRegionAllocPtr++, 0x02, getRelocatableHeapBlockBase(gAssetHandles[MAIN_MENU_SCENE_MODEL_GEOMETRY_HANDLE_BASE + (u16)model->sceneModelIndex])); gSPSegment(gRegionAllocPtr++, 0x03, getRelocatableHeapBlockBase(gAssetHandles[MAIN_MENU_SCENE_MODEL_TEXTURE_HANDLE_BASE + (u16)model->sceneModelIndex])); i = 1; displayObject = &model->displayObjects[1]; end = 14; stride = 13; displayLists = gMainMenuSceneModelPartDisplayLists; do { matrix = allocFixedTransformMatrix(displayObject); if (matrix != NULL) { gSPMatrix(gRegionAllocPtr++, matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW); gSPDisplayList(gRegionAllocPtr++, displayLists[((u16)model->characterIndex * stride) + i - 1]); } i++; displayObject++; } while (i != end); } } while (0);
+    do {
+        if ((u16)arg0->viewportIndex == gCurrentViewportIndex) {
+            matrix = allocFixedTransformMatrix(arg0->displayObjects);
+            model = arg0;
+            if (matrix != NULL) {
+                drawRacePlayerModelRootPart(matrix, model->textureId, model->paletteId);
+            }
+
+            gDPPipeSync(gRegionAllocPtr++);
+            gSPSegment(
+                gRegionAllocPtr++, 0x02,
+                getRelocatableHeapBlockBase(
+                    gAssetHandles[MAIN_MENU_SCENE_MODEL_GEOMETRY_HANDLE_BASE +
+                                  (u16)model->sceneModelIndex]));
+            gSPSegment(
+                gRegionAllocPtr++, 0x03,
+                getRelocatableHeapBlockBase(
+                    gAssetHandles[MAIN_MENU_SCENE_MODEL_TEXTURE_HANDLE_BASE +
+                                  (u16)model->sceneModelIndex]));
+
+            stride = 13;
+            displayLists = gMainMenuSceneModelPartDisplayLists;
+            for (i = 1; i < 14; i++) {
+                matrix = allocFixedTransformMatrix(&model->displayObjects[i]);
+                if (matrix != NULL) {
+                    gSPMatrix(gRegionAllocPtr++, matrix,
+                              G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+                    gSPDisplayList(
+                        gRegionAllocPtr++,
+                        displayLists[
+                            ((u16)model->characterIndex * stride) + i - 1]);
+                }
+            }
+        }
+    } while (0);
 }
-#endif
 
 void addMainMenuSceneModelDrawCallback(s32 modelIndex) {
     MainMenuSceneModel *model;
