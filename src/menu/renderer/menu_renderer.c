@@ -213,6 +213,18 @@ void drawMenuSprite(s16 arg0, s16 arg1, void *arg2, u16 arg3, u16 arg4, u16 arg5
                   temp_v0 = (s16)(gMenuViewportWidth / 2), temp_v1 = (s16)(gMenuViewportHeight / 2), temp_v0, temp_v1);
 }
 
+/* Preserve the promoted tile-index argument used by an older caller. */
+#ifdef __clang__
+void drawMenuSpriteWideIndex(s16 x, s16 y, void *texture, s32 tileIndex, u16 width, u16 height, u8 palette,
+                             u8 flip) {
+    drawMenuSprite(x, y, texture, tileIndex, width, height, palette, flip);
+}
+#else
+#pragma weak drawMenuSpriteWideIndex = drawMenuSprite
+extern void drawMenuSpriteWideIndex(s16 x, s16 y, void *texture, s32 tileIndex, u16 width, u16 height, u8 palette,
+                                    u8 flip);
+#endif
+
 // drawMenuSpriteClipped best match: 84.286% (nonmatchings/drawMenuSpriteClipped-633030068925474062/base_31.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/renderer/menu_renderer/drawMenuSpriteClipped.s")
 
