@@ -217,9 +217,9 @@ typedef struct RacePlayer {
     /* 0x526 */ char pad526[1];
     /* 0x527 */ s8 surfaceCueOverrideMask;
     /* 0x528 */ s8 unk528;
-    /* 0x529 */ u8 displayRank;
+    /* 0x529 */ s8 displayRank;
     /* 0x52A */ s8 rankArrow;
-    /* 0x52B */ u8 rankChangeTimer;
+    /* 0x52B */ s8 rankTargetPlayer;
     /* 0x52C */ s8 actionTriggerCooldown;
     /* 0x52D */ s8 itemTriggerCooldown;
     /* 0x52E */ char pad52E[0x3A];
