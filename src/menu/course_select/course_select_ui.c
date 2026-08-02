@@ -115,7 +115,7 @@ struct CourseSelectIconListActor {
     /* 0xA6 */ s16 clipBottom;
 };
 
-typedef union {
+union CourseSelectExtraCourseIconListActor {
     struct {
         /* 0x00 */ u8 pad0[0x18];
         /* 0x18 */ s16 iconX[4][3];
@@ -132,7 +132,7 @@ typedef union {
         /* 0x68 */ u16 tileIndices[4][3];
     };
     u8 bytes[0x80];
-} CourseSelectExtraCourseIconListActor;
+};
 
 struct CourseSelectAnimatedActor {
     /* 0x000 */ u8 pad0[0x18];
@@ -2097,69 +2097,63 @@ void initCourseSelectExtraCourseBadge(CourseSelectWidgetActor *arg0) {
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateCourseSelectExtraCourseBadge);
 }
 
-// drawCourseSelectExtraCourseIconList best match: 99.742%
-// (nonmatchings/drawCourseSelectExtraCourseIconList-8742002951815950717/base_24.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/menu/course_select/course_select_ui/drawCourseSelectExtraCourseIconList.s")
-
-#ifdef NON_MATCHING
-void drawCourseSelectExtraCourseIconList(CourseSelectWidgetActor *arg0_in) {
-    CourseSelectExtraCourseIconListActor *arg0 = (CourseSelectExtraCourseIconListActor *)arg0_in;
-    CourseSelectExtraCourseIconListActor *alphaActor;
+void drawCourseSelectExtraCourseIconList(CourseSelectExtraCourseIconListActor *arg0) {
     s32 overlayTile;
-    s16 *promptState;
     s32 iconAlpha;
     s32 playerIndex;
     s32 iconIndex;
-    s32 alphaOffset;
 
-    playerIndex = 0;
-    if ((s32)gPlayerCount > 0) { promptState = gMenuChoicePromptState; alphaOffset = 0; do {
-            if (*promptState != 0) {
-                if (*promptState != 9) {
-                    iconIndex = arg0->itemCounts[playerIndex] - 1;
-                    if (iconIndex >= 0) {
-                        do {
-                            if (*promptState == 1) {
-                                iconAlpha = 0x100;
-                            } else if ((iconIndex + 2) == *promptState) {
-                                iconAlpha = 0x100;
-                            } else {
-                                iconAlpha = 0x60;
-                            }
-                            drawMenuSpriteWithAlphaClipped(
-                                arg0->iconX[playerIndex][iconIndex], arg0->iconY[playerIndex][iconIndex],
-                                getRelocatableHeapBlockBase(gAssetHandles[0x21]),
-                                arg0->tileIndices[playerIndex][iconIndex], 0x20, 0x20, 0, iconAlpha, 0,
-                                arg0->clipLeft - ((playerIndex >= 2) * 0x8C), arg0->clipTop,
-                                arg0->clipRight, arg0->clipBottom);
-                            iconIndex -= 1;
-                        } while (iconIndex >= 0);
+    for (playerIndex = 0; playerIndex < gPlayerCount; playerIndex++) {
+        if (gMenuChoicePromptState[playerIndex] != 0) {
+            if (gMenuChoicePromptState[playerIndex] != 9) {
+                overlayTile = (playerIndex >= 2) * 0x8C;
+                for (iconIndex = arg0->itemCounts[playerIndex] - 1; iconIndex >= 0; iconIndex--) {
+                    if (gMenuChoicePromptState[playerIndex] == 1) {
+                        iconAlpha = 0x100;
+                    } else if ((iconIndex + 2) == gMenuChoicePromptState[playerIndex]) {
+                        iconAlpha = 0x100;
+                    } else {
+                        iconAlpha = 0x60;
                     }
-                    if (D_8010AEB0 == 0) {
-                        if ((*promptState >= 2) && (*promptState < 5)) {
-                            alphaActor = (CourseSelectExtraCourseIconListActor *)&arg0->bytes[alphaOffset];
-                            if ((s32)gPlayerCount == 1) {
-                                overlayTile = 0xF;
-                            } else {
-                                overlayTile = 0x1B;
-                            }
-                            drawMenuSpriteWithAlpha(
-                                arg0->iconX[playerIndex][0],
-                                (s16)(arg0->iconY[playerIndex][0] +
-                                      ((*promptState - 2) * arg0->rowSpacing[playerIndex])),
-                                getRelocatableHeapBlockBase(gAssetHandles[0x21]), overlayTile,
-                                0x20, 0x20, 0, alphaActor->alpha[0], 0);
+                    drawMenuSpriteWithAlphaClipped(
+                        arg0->iconX[playerIndex][iconIndex],
+                        arg0->iconY[playerIndex][iconIndex],
+                        getRelocatableHeapBlockBase(gAssetHandles[0x21]),
+                        arg0->tileIndices[playerIndex][iconIndex],
+                        0x20,
+                        0x20,
+                        0,
+                        iconAlpha,
+                        0,
+                        arg0->clipLeft - overlayTile,
+                        arg0->clipTop,
+                        arg0->clipRight,
+                        arg0->clipBottom);
+                }
+                if (D_8010AEB0 == 0) {
+                    if ((gMenuChoicePromptState[playerIndex] >= 2) && (gMenuChoicePromptState[playerIndex] < 5)) {
+                        if (gPlayerCount == 1) {
+                            overlayTile = 0xF;
+                        } else {
+                            overlayTile = 0x1B;
                         }
+                        drawMenuSpriteWithAlpha(
+                            arg0->iconX[playerIndex][0],
+                            (s16)(arg0->iconY[playerIndex][0] +
+                                  ((gMenuChoicePromptState[playerIndex] - 2) * arg0->rowSpacing[playerIndex])),
+                            getRelocatableHeapBlockBase(gAssetHandles[0x21]),
+                            overlayTile,
+                            0x20,
+                            0x20,
+                            0,
+                            ((CourseSelectExtraCourseIconListActor *)&arg0->bytes[playerIndex * 2])->alpha[0],
+                            0);
                     }
                 }
             }
-            playerIndex += 1;
-            alphaOffset += 2;
-            promptState += 1;
-        } while (playerIndex < (s32)gPlayerCount);
+        }
     }
 }
-#endif
 
 void updateCourseSelectExtraCourseIconListIn(CourseSelectWidgetActor *arg0) {
     s32 var_v1;
