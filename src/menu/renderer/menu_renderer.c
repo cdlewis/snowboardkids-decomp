@@ -518,7 +518,9 @@ void drawMenuSpriteWithAlphaClipped(s16 x, s16 y, FontAsset *asset, u16 tileInde
 }
 #endif
 
-// drawMenuSpriteWithPaletteScale best match: 98.504% (nonmatchings/drawMenuSpriteWithPaletteScale-8498672362023432715/base_28.c)
+// drawMenuSpriteWithPaletteScale best logical match: 98.532%
+// (nonmatchings/drawMenuSpriteWithPaletteScale-8101714008744796594/base_27.c)
+// base_52.c scores 98.837% but relies on redundant channel masks and is retained only as a compiler diagnostic.
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/renderer/menu_renderer/drawMenuSpriteWithPaletteScale.s")
 
 #ifdef NON_MATCHING
@@ -597,7 +599,7 @@ void drawMenuSpriteWithPaletteScale(s16 x, s16 y, FontAsset *asset, u16 index, u
         u16 blue;
 
         gDPPipeSync(gRegionAllocPtr++);
-        FONT_GFX_CMD(gRegionAllocPtr++, 0xBA000C02, 0x3000);
+        gDPSetTextureFilter(gRegionAllocPtr++, G_TF_AVERAGE);
 
         srcPalette = (u16 *)(paletteBase + (texture->paletteIndex * MENU_PALETTE_SIZE_BYTES));
         palette = allocMenuRenderScratch(MENU_PALETTE_SIZE_BYTES);
@@ -611,43 +613,22 @@ void drawMenuSpriteWithPaletteScale(s16 x, s16 y, FontAsset *asset, u16 index, u
                 blue = (color >> 1) & MENU_RGBA5551_CHANNEL_MASK;
                 // This assignment preserves IDO's palette-loop register allocation.
                 color = blue;
-                red = (red * intensity) / MENU_RGBA5551_SCALE_BASE;
+                red *= intensity;
+                red /= MENU_RGBA5551_SCALE_BASE;
                 green = (green * intensity) / MENU_RGBA5551_SCALE_BASE;
                 blue = (blue * intensity) / MENU_RGBA5551_SCALE_BASE;
                 palette[i] = (red << 11) | (green << 6) | (blue << 1) | MENU_RGBA5551_ALPHA_BIT;
             }
         }
 
-        FONT_GFX_CMD(gRegionAllocPtr++, 0xFD100000, (u32)palette);
-        FONT_GFX_CMD(gRegionAllocPtr++, 0xE8000000, 0);
-        FONT_GFX_CMD(gRegionAllocPtr++, 0xF5000100, 0x07000000);
-        FONT_GFX_CMD(gRegionAllocPtr++, 0xE6000000, 0);
-        FONT_GFX_CMD(gRegionAllocPtr++, 0xF0000000, 0x0703C000);
-        FONT_GFX_CMD(gRegionAllocPtr++, 0xE7000000, 0);
-
-        FONT_GFX_CMD(gRegionAllocPtr++, (((texture->width >> 1) - 1) & 0xFFF) | 0xFD480000,
-                     (u32)(texture->imageOffset + (u8 *)asset));
-        FONT_GFX_CMD(gRegionAllocPtr++,
-                     ((((((s32)(texture->width + 1) >> 1) + 7) >> 3) & 0x1FF) << 9) | 0xF5480000,
-                     0x07080200);
-        FONT_GFX_CMD(gRegionAllocPtr++, 0xE6000000, 0);
-        FONT_GFX_CMD(gRegionAllocPtr++, 0xF4000000,
-                     (((texture->width * 2) & 0xFFF) << 12) | loadBlockFlags |
-                         ((texture->height * 4) & 0xFFF));
-        FONT_GFX_CMD(gRegionAllocPtr++, 0xE7000000, 0);
-        FONT_GFX_CMD(gRegionAllocPtr++,
-                     ((((((s32)(texture->width + 1) >> 1) + 7) >> 3) & 0x1FF) << 9) | 0xF5400000,
-                     0x00080200);
-        FONT_GFX_CMD(gRegionAllocPtr++, 0xF2000000,
-                     (((texture->width * 4) & 0xFFF) << 12) | ((texture->height * 4) & 0xFFF));
-        FONT_GFX_CMD(gRegionAllocPtr++,
-                     0xE4000000 | (((right << 2) & 0xFFF) << 12) | ((bottom << 2) & 0xFFF),
-                     (((left << 2) & 0xFFF) << 12) | ((top << 2) & 0xFFF));
-        FONT_GFX_CMD(gRegionAllocPtr++, 0xB4000000,
-                     ((((srcX << 5) + 0x10) << 14) << 2) | (((srcY << 5) + 0x10) & 0xFFFF));
-        FONT_GFX_CMD(gRegionAllocPtr++, 0xB3000000, (MENU_HALF_SCALE_STEP << 16) | MENU_HALF_SCALE_STEP);
+        gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, palette);
+        gDPLoadTextureTile_4b(gRegionAllocPtr++, texture->imageOffset + (u8 *)asset, G_IM_FMT_CI, texture->width,
+                              texture->height, 0, 0, texture->width, texture->height, 0, G_TX_CLAMP, G_TX_CLAMP,
+                              G_TX_NOMASK, G_TX_NOMASK, G_TX_NOLOD, G_TX_NOLOD);
+        gSPTextureRectangle(gRegionAllocPtr++, left << 2, top << 2, right << 2, bottom << 2, G_TX_RENDERTILE,
+                            (srcX << 5) + 0x10, (srcY << 5) + 0x10, MENU_HALF_SCALE_STEP, MENU_HALF_SCALE_STEP);
         gDPPipeSync(gRegionAllocPtr++);
-        FONT_GFX_CMD(gRegionAllocPtr++, 0xBA000C02, 0);
+        gDPSetTextureFilter(gRegionAllocPtr++, G_TF_POINT);
         gDPPipeSync(gRegionAllocPtr++);
     }
 }
