@@ -35,6 +35,11 @@ typedef struct {
     /* 0x2 */ u8 trick;
 } CharacterSelectUiCharacterStats;
 
+typedef struct {
+    MenuGlyphScript confirmationText[2][0x1C];
+    MenuGlyphScript unusedText[0x14];
+} CharacterSelectUiConfirmationBannerText;
+
 extern s8 D_8010AE52;
 extern u8 D_8010AE52_state;
 extern u8 D_8010AE51;
@@ -43,12 +48,52 @@ extern CharacterSelectUiPanelActor *D_8010ADE4;
 extern s16 D_8010AE58;
 extern s32 gMenuFlowState;
 extern s8 D_8010AE64[];
-extern MenuGlyphScript gCharacterSelectConfirmationBannerText[][0x1C];
-extern CharacterSelectUiCharacterStats gCharacterSelectCharacterStats[];
-extern u16 gCharacterSelectCharacterStatLabels[];
 extern u8 D_8010AE5E;
 extern u8 D_8010AE5F;
-extern u16 gCharacterSelectPlayerMarkerTiles[];
+
+CharacterSelectUiConfirmationBannerText gCharacterSelectConfirmationBannerText = {
+    {
+        {
+            0xFFFC, 0x0007, 0x001C, 0x000E, 0x0015, 0x000E, 0x000C, 0x001D,
+            0xFFFE, 0x0022, 0x0018, 0x001E, 0x001B, 0xFFFD, 0x000C, 0x0011,
+            0x000A, 0x001B, 0x000A, 0x000C, 0x001D, 0x000E, 0x001B, 0x002C,
+            0xFFFF, 0x0000, 0x0000, 0x0000,
+        },
+        {
+            0xFFFC, 0x0007, 0x0012, 0x001C, 0xFFFE, 0x001D, 0x0011, 0x0012,
+            0x001C, 0xFFFE, 0x0018, 0x0014, 0x0030, 0xFFFF, 0x0000, 0x0000,
+            0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
+            0x0000, 0x0000, 0x0000, 0x0000,
+        },
+    },
+    {
+        0x0028, 0x0028, 0x004D, 0x0069, 0x0047, 0x0053, 0xFFFE, 0x000A,
+        0x00C9, 0x0026, 0x0026, 0xFFFE, 0x000B, 0x00C9, 0x0046, 0x003B,
+        0x003F, 0x004D, 0x0068, 0xFFFF,
+    },
+};
+
+CharacterSelectUiCharacterStats gCharacterSelectCharacterStats[] = {
+    { 4, 4, 4 },
+    { 2, 6, 6 },
+    { 3, 5, 5 },
+    { 5, 3, 3 },
+    { 6, 2, 2 },
+    { 5, 5, 5 },
+    { 4, 4, 4 },
+    { 0, 0, 0 },
+};
+
+u16 gCharacterSelectCharacterStatLabels[] = {
+    0x000A, 0x000A, 0x000A, 0x000B, 0x000A, 0x000B, 0x0002, 0x0000,
+};
+
+u16 gCharacterSelectPlayerMarkerTiles[] = {
+    0x0027, 0x0033, 0x002B, 0x002F,
+    0x0028, 0x002C, 0x0034, 0x0030,
+    0x0029, 0x0035, 0x002D, 0x0031,
+    0x002A, 0x002E, 0x0036, 0x0032,
+};
 
 const char gCharacterSelectPlayerNumberFormat[] = "%d";
 
@@ -98,7 +143,8 @@ void drawCharacterSelectConfirmationBanner(CharacterSelectUiBannerActor *arg0) {
         } else {
             selected = 1;
         }
-        drawMenuGlyphScript(actor->x, actor->y, gCharacterSelectConfirmationBannerText[selected], 0, actor->alpha, 0);
+        drawMenuGlyphScript(actor->x, actor->y, gCharacterSelectConfirmationBannerText.confirmationText[selected], 0,
+                            actor->alpha, 0);
         if (actor->state == 4) {
             if (actor->alpha != 0x100) {
                 alpha = actor->alpha & 0xFFFF;
