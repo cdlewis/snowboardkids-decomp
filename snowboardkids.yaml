@@ -317,7 +317,7 @@ segments:
       - [0xD4CB0, .data, menu/renderer/menu_render_utils]
       - [0xD4CD0, .data, math/spatial_math]
       - [0xD51E0, .data, race/items/race_item_projectiles]
-      - [0xD52D0, data, race/items/race_item_effects]
+      - [0xD52D0, .data, race/items/race_item_effects]
       - [0xD5640, data, menu/main_menu/main_menu_panel_ui]
       - [0xD6330, data, menu/renderer/menu_screen_effects]
       - [0xD6850, data, race/effects/race_intro_effects]
