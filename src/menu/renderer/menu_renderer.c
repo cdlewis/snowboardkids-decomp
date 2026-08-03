@@ -379,8 +379,8 @@ extern void drawMenuSpriteWithAlphaWideArgs(s32 x, s32 y, void *texture, s32 til
                                             s32 palette, s32 alpha, u32 flip);
 #endif
 
-// drawMenuSpriteWithAlphaClipped best match: 91.539%
-// (nonmatchings/drawMenuSpriteWithAlphaClipped-7181144369148334388/base_35.c)
+// drawMenuSpriteWithAlphaClipped best match: 91.884%
+// (nonmatchings/drawMenuSpriteWithAlphaClipped-1846960929180867216/base_1.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/renderer/menu_renderer/drawMenuSpriteWithAlphaClipped.s")
 
 #ifdef NON_MATCHING
@@ -485,12 +485,12 @@ void drawMenuSpriteWithAlphaClipped(s16 x, s16 y, FontAsset *asset, u16 tileInde
 
             if (alpha != 0x100) {
                 gDPPipeSync(gRegionAllocPtr++);
-                do {
-                    FONT_GFX_CMD(gRegionAllocPtr++, 0xFC119623, 0xFF2FFFFF);
-                    FONT_GFX_CMD(gRegionAllocPtr++, 0xFA000000,
-                                 ((alpha & 0xFF) << 0x18) | ((alpha & 0xFF) << 0x10) |
-                                     ((alpha & 0xFF) << 8) | 0xFF);
-                } while (0);
+                FONT_GFX_CMD(gRegionAllocPtr++, 0xFC119623, 0xFF2FFFFF);
+                FONT_GFX_CMD(gRegionAllocPtr++, 0xFA000000,
+                             ((alpha & 0xFF) << 0x18) | ((alpha & 0xFF) << 0x10) |
+                                 ((alpha & 0xFF) << 8) | 0xFF);
+                if ((texT && texT) && texT) {
+                }
             }
 
             gDPLoadTextureTile_4b(gRegionAllocPtr++, texture->imageOffset + (u8 *)asset, G_IM_FMT_CI, texture->width,
