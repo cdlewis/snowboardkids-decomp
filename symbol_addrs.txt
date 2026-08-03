@@ -2089,6 +2089,7 @@ gControllerPakSaveExtNameBytesEnd = 0x800B3108; // rom:0xB3D08
 gMainMenuReturnFromRace = 0x800B318C;
 gMainMenuSecretCodeUnlocked = 0x800B3190;
 gMainMenuSecretCodeStep = 0x800B3194;
+gRaceSetupMenuPackedData = 0x800B3198;
 gControllerReadPending = 0x800E4BEE;
 gControllerPads = 0x800E4C00;
 gControllerInputState = 0x800E4C18;

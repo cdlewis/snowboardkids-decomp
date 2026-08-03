@@ -25,6 +25,88 @@ typedef struct {
     /* 0x9 */ u8 confirmSelection;
 } ControllerPakRumbleCheckPromptTransition;
 
+typedef struct RaceSetupSaveDefaultTime {
+    s8 minutes;
+    s8 seconds;
+    s8 fraction;
+} RaceSetupSaveDefaultTime;
+
+typedef union RaceSetupSaveDefaultTimeRow {
+    u8 bytes[sizeof(RaceSetupSaveDefaultTime) * 5];
+    RaceSetupSaveDefaultTime records[5];
+} RaceSetupSaveDefaultTimeRow;
+
+typedef union RaceSetupSaveDefaultTimeTable {
+    u8 bytes[sizeof(RaceSetupSaveDefaultTimeRow) * 2];
+    RaceSetupSaveDefaultTimeRow rows[2];
+} RaceSetupSaveDefaultTimeTable;
+
+typedef struct RaceSetupMenuPackedData {
+    u8 alignmentPadding;
+    u8 choicePromptStates[12];
+    u8 raceRecordChoicePromptStates[19];
+} RaceSetupMenuPackedData;
+
+u8 gMainMenuSecretCodeUnlocked = 0;
+u8 gMainMenuSecretCodeStep = 0;
+RaceSetupMenuPackedData gRaceSetupMenuPackedData = {
+    0,
+    { 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1 },
+    { 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 0 },
+};
+s16 gRaceSetupSavePanelInitialRects[4][2] = {
+    { -0x114, -0xA4 },
+    { -0x114, 0x48 },
+    { 0x90, -0xA4 },
+    { 0x90, 0x48 },
+};
+RaceSetupSaveDefaultTime D_800B31C8[11][5] = {
+    { { 0x02, 0x0F, 0 }, { 0x02, 0x14, 0 }, { 0x02, 0x1E, 0 }, { 0x02, 0x28, 0 }, { 0x02, 0x32, 0 } },
+    { { 0x02, 0x0C, 0 }, { 0x02, 0x0F, 0 }, { 0x02, 0x14, 0 }, { 0x02, 0x1E, 0 }, { 0x02, 0x26, 0 } },
+    { { 0x01, 0x2F, 0 }, { 0x01, 0x32, 0 }, { 0x01, 0x38, 0 }, { 0x02, 0x00, 0 }, { 0x02, 0x08, 0 } },
+    { { 0x01, 0x38, 0 }, { 0x02, 0x00, 0 }, { 0x02, 0x0C, 0 }, { 0x02, 0x15, 0 }, { 0x02, 0x19, 0 } },
+    { { 0x01, 0x34, 0 }, { 0x02, 0x00, 0 }, { 0x02, 0x05, 0 }, { 0x02, 0x09, 0 }, { 0x02, 0x0D, 0 } },
+    { { 0x01, 0x35, 0 }, { 0x01, 0x38, 0 }, { 0x02, 0x00, 0 }, { 0x02, 0x04, 0 }, { 0x02, 0x0A, 0 } },
+    { { 0x01, 0x3B, 0 }, { 0x02, 0x02, 0 }, { 0x02, 0x0B, 0 }, { 0x02, 0x11, 0 }, { 0x02, 0x14, 0 } },
+    { { 0, 0, 0 }, { 0, 0, 0 }, { 0, 0, 0 }, { 0, 0, 0 }, { 0, 0, 0 } },
+    { { 0, 0x1C, 0 }, { 0, 0x21, 0 }, { 0, 0x24, 0 }, { 0, 0x28, 0 }, { 0, 0x2A, 0 } },
+    { { 0, 0x24, 0 }, { 0, 0x28, 0 }, { 0, 0x2D, 0 }, { 0, 0x32, 0 }, { 0, 0x37, 0 } },
+    { { 0, 0, 0 }, { 0, 0, 0 }, { 0, 0, 0 }, { 0, 0, 0 }, { 0, 0, 0 } },
+};
+RaceSetupSaveDefaultTime D_800B3270[11] = {
+    { 1, 0x0E, 0 }, { 1, 0x03, 0 }, { 0, 0x31, 0 }, { 1, 0x14, 0 }, { 1, 0x06, 0 },
+    { 0, 0x31, 0 }, { 0, 0x37, 0 }, { 0, 0, 0 }, { 0, 0x11, 0 }, { 0, 0x13, 0 }, { 0, 0, 0 },
+};
+RaceSetupSaveDefaultTimeRow D_800B3294[1] = {
+    { { 0, 0x24, 0, 0, 0x2A, 0, 0, 0x2C, 0, 0, 0x30, 0, 0, 0x35, 0 } },
+};
+RaceSetupSaveDefaultTimeTable D_800B32A4 = {
+    { 1, 0x3A, 0, 2, 0x03, 0, 2, 0x0B, 0, 2, 0x0D, 0, 2, 0x15, 0,
+      2, 0x01, 0, 2, 0x06, 0, 2, 0x0D, 0, 2, 0x12, 0, 2, 0x16, 0 },
+};
+u8 D_800B32C4[10] = { 0x14, 0x0F, 0x0A, 0x05, 0, 0x28, 0x1E, 0x14, 0x0A, 0 };
+u16 D_800B32D0[152] = {
+    0x0190, 0x00C8, 0x0064, 0x0032, 0x0000, 0x0000, 0x000B, 0x000E,
+    0x0010, 0x0012, 0x001C, 0x0017, 0x0018, 0x0020, 0xFFFF, 0x0000,
+    0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
+    0x001D, 0x001B, 0x000A, 0x0019, 0x000E, 0x000D, 0xFFFF, 0x0000,
+    0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
+    0x0000, 0x0000, 0x0017, 0x0012, 0x0010, 0x0011, 0x001D, 0xFFFE,
+    0x0011, 0x0012, 0x0010, 0x0011, 0x0020, 0x000A, 0x0022, 0xFFFF,
+    0x0000, 0x0000, 0x0000, 0x0000, 0x0010, 0x001B, 0x000A, 0x001C,
+    0x001C, 0xFFFE, 0x001F, 0x000A, 0x0015, 0x0015, 0x000E, 0x0022,
+    0xFFFF, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x001C, 0x0017,
+    0x0018, 0x0020, 0xFFFE, 0x0010, 0x000A, 0x001B, 0x000D, 0x000E,
+    0x0017, 0xFFFF, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
+    0x001A, 0x001E, 0x0012, 0x000C, 0x0014, 0x001C, 0x000A, 0x0017,
+    0x000D, 0xFFFE, 0x001F, 0x000A, 0x0015, 0x0015, 0x000E, 0x0022,
+    0xFFFF, 0x0000, 0x001C, 0x0012, 0x0015, 0x001F, 0x000E, 0x001B,
+    0xFFFE, 0x0016, 0x0018, 0x001E, 0x0017, 0x001D, 0x000A, 0x0012,
+    0x0017, 0xFFFF, 0x0000, 0x0000, 0x0023, 0x0012, 0x0019, 0x000A,
+    0x0017, 0x0010, 0x001E, 0xFFFF, 0x0000, 0x0000, 0x0000, 0x0000,
+    0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
+};
+
 RaceSetupMenuSubState gRaceSetupMenuSubState;
 s16 gRaceSetupSavePanelRects[2][4];
 
@@ -152,7 +234,6 @@ void updateRaceSetupPlayerCountMenu(void) {
     updateCallbackTasks();
 }
 
-extern s16 gRaceSetupSavePanelInitialRects[4][2];
 extern u8 gControllerPakOperationCounts[];
 extern u8 D_800EC9E4;
 extern s32 D_8010ADE0;
@@ -219,7 +300,6 @@ extern void requestControllerPakSaveReadWithContext(u16 controllerIndex, s32 pla
 extern void requestControllerPakRepairWithContext(u16 controllerIndex, s32 playerCount, s32 choiceValue);
 extern void initControllerPakRumbleCheckPrompt(CallbackTask *);
 
-extern u8 D_800B3199[];
 extern u8 gControllerPakOperationCounts[];
 extern u8 D_800EC9E4;
 extern ControllerPakRumbleCheckPromptTransition gControllerPakRumbleCheckPromptTransition;
@@ -423,7 +503,9 @@ void updateRaceSetupSaveMenu(void) {
                                     input = gPlayerInputPressed[playerIndex];
                                     if ((input & A_BUTTON) || (input & START_BUTTON)) {
                                         enqueueSoundEffect(1, 0x32);
-                                        *choiceState = D_800B3199[gControllerPakStatusCodes[playerIndex]];
+                                        *choiceState = gRaceSetupMenuPackedData.choicePromptStates[
+                                            gControllerPakStatusCodes[playerIndex]
+                                        ];
                                     }
                                     break;
 
@@ -719,7 +801,8 @@ void updateRaceSetupSaveMenu(void) {
                             case 16:
                                 if ((gPlayerInputPressed[i] & A_BUTTON) || (gPlayerInputPressed[i] & START_BUTTON)) {
                                     enqueueSoundEffect(1, 0x32);
-                                    *(&gMenuChoicePromptState[i]) = D_800B3199[gControllerPakStatusCodes[i]];
+                                    *(&gMenuChoicePromptState[i]) =
+                                        gRaceSetupMenuPackedData.choicePromptStates[gControllerPakStatusCodes[i]];
                                 }
                                 break;
 
@@ -1011,22 +1094,6 @@ void updateRaceSetupRumblePrompt(void) {
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/race_setup/race_setup_menu/initRaceSetupPlayerSaveData.s")
 
 #ifdef NON_MATCHING
-typedef struct RaceSetupSaveDefaultTime {
-    s8 minutes;
-    s8 seconds;
-    s8 fraction;
-} RaceSetupSaveDefaultTime;
-
-typedef union RaceSetupSaveDefaultTimeRow {
-    RaceSetupSaveDefaultTime records[5];
-    u8 bytes[sizeof(RaceSetupSaveDefaultTime) * 5];
-} RaceSetupSaveDefaultTimeRow;
-
-typedef union RaceSetupSaveDefaultTimeTable {
-    RaceSetupSaveDefaultTimeRow rows[2];
-    u8 bytes[sizeof(RaceSetupSaveDefaultTimeRow) * 2];
-} RaceSetupSaveDefaultTimeTable;
-
 typedef struct RaceSetupSaveByteCursor {
     u8 value;
 } RaceSetupSaveByteCursor;
@@ -1094,13 +1161,6 @@ typedef struct RaceSetupSaveReservedCursorView {
     u8 pad[0x78D7];
     u8 value;
 } RaceSetupSaveReservedCursorView;
-
-extern const RaceSetupSaveDefaultTime D_800B31C8[11][5];
-extern const RaceSetupSaveDefaultTime D_800B3270[11];
-extern const RaceSetupSaveDefaultTimeRow D_800B3294[1];
-extern const RaceSetupSaveDefaultTimeTable D_800B32A4;
-extern const u8 D_800B32C4[10];
-extern const u16 D_800B32D0[5];
 
 void initRaceSetupPlayerSaveData(s32 arg0) {
     GameSaveData *base;
