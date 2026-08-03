@@ -7,9 +7,69 @@
 
 #define ASSET_HANDLE(index) (gAssetHandles[(index)])
 
+Gfx *gMainMenuSceneModelPartDisplayLists[] = {
+    (Gfx *)0x02000000, (Gfx *)0x02000068, (Gfx *)0x020000D8,
+    (Gfx *)0x02000168, (Gfx *)0x020001D8, (Gfx *)0x02000268,
+    (Gfx *)0x02000540, (Gfx *)0x02000A28, (Gfx *)0x02000AA0,
+    (Gfx *)0x02000C48, (Gfx *)0x02000CC0, (Gfx *)0x02000E68,
+    (Gfx *)0x020010C0,
+    (Gfx *)0x02000000, (Gfx *)0x02000128, (Gfx *)0x02000218,
+    (Gfx *)0x02000308, (Gfx *)0x020003F8, (Gfx *)0x020004F0,
+    (Gfx *)0x02000850, (Gfx *)0x02000BE8, (Gfx *)0x02000D10,
+    (Gfx *)0x02000FD0, (Gfx *)0x02001128, (Gfx *)0x020013E8,
+    (Gfx *)0x02001630,
+    (Gfx *)0x02000000, (Gfx *)0x020000E0, (Gfx *)0x020001D0,
+    (Gfx *)0x02000338, (Gfx *)0x02000428, (Gfx *)0x020004F0,
+    (Gfx *)0x020008A0, (Gfx *)0x02000DD8, (Gfx *)0x02000F50,
+    (Gfx *)0x02001178, (Gfx *)0x020012F0, (Gfx *)0x02001508,
+    (Gfx *)0x02001760,
+    (Gfx *)0x02000000, (Gfx *)0x020001C8, (Gfx *)0x02000378,
+    (Gfx *)0x02000528, (Gfx *)0x020006D8, (Gfx *)0x02000888,
+    (Gfx *)0x02000CD8, (Gfx *)0x02001148, (Gfx *)0x02001210,
+    (Gfx *)0x020014D0, (Gfx *)0x02001590, (Gfx *)0x02001850,
+    (Gfx *)0x02001A98,
+    (Gfx *)0x02000000, (Gfx *)0x020000E0, (Gfx *)0x020002D0,
+    (Gfx *)0x020004E0, (Gfx *)0x020006B0, (Gfx *)0x020008C0,
+    (Gfx *)0x02000CE0, (Gfx *)0x02001298, (Gfx *)0x02001408,
+    (Gfx *)0x02001608, (Gfx *)0x02001778, (Gfx *)0x02001978,
+    (Gfx *)0x02001BA0,
+    (Gfx *)0x02000000, (Gfx *)0x020002A0, (Gfx *)0x02000330,
+    (Gfx *)0x02000518, (Gfx *)0x020005B8, (Gfx *)0x020007B0,
+    (Gfx *)0x02000CF0, (Gfx *)0x020010E8, (Gfx *)0x02001170,
+    (Gfx *)0x02001410, (Gfx *)0x02001498, (Gfx *)0x02001738,
+    (Gfx *)0x020017C8,
+};
+
+s16 gMainMenuSceneModelPartInitDataA[] = {
+    0, 0, 0, 0, 0x25, 0, -6, -2, 0, 0, -12, 0, 6, -2,
+    0, 0, -12, 0, 0, 0, 0, 0, 0x10, 0, -10, 0xE, 0, -8, -15, 0,
+    0xA, 0xE, 0, 8, -15, 0, 0, -12, -5, 0, -12, -5,
+};
+
+s16 gMainMenuSceneModelPartInitDataB[] = {
+    0, 0, 0, 0, 0x2B, 0, -6, -5, 0, 0, -16, 0, 6, -5,
+    0, 0, -16, 0, 0, 0, 0, 0, 9, 0, -10, 8, 0, -10, -16, 0,
+    0xA, 8, 0, 0xA, -16, 0, 0, -10, -3, 0, -10, -3,
+};
+
+s16 gMainMenuSceneModelPartInitDataC[] = {
+    0, 0, 0, 0, 0x33, 0, -8, -3, 0, 0, -18, -1, 8, -3,
+    0, 1, -18, -1, 0, 5, -5, 0, 0x20, 2, -23, 0x17, 5, -11,
+    -21, 0, 0x17, 0x17, 5, 0xB, -21, 0, -1, -19, -7, 2, -19, -7,
+};
+
+s16 *gMainMenuSceneModelPartInitDataByModel[] = {
+    gMainMenuSceneModelPartInitDataA,
+    gMainMenuSceneModelPartInitDataB,
+    gMainMenuSceneModelPartInitDataA,
+    gMainMenuSceneModelPartInitDataB,
+    gMainMenuSceneModelPartInitDataC,
+    gMainMenuSceneModelPartInitDataA,
+    NULL,
+};
+
 extern Mtx *allocFixedTransformMatrix(MainMenuModelTransform *);
 extern u8 gCurrentViewportIndex;
-extern Gfx *gMainMenuSceneModelPartDisplayLists[];
 extern Gfx *gRegionAllocPtr;
 
 void initMainMenuSceneModelRenderer(void) {
@@ -173,8 +233,6 @@ typedef struct MainMenuInitPartPair {
     s16 half22;
     s32 word24;
 } MainMenuInitPartPair;
-
-extern s16 *gMainMenuSceneModelPartInitDataByModel[];
 
 void initMainMenuSceneModelParts(MainMenuSceneModel *model) {
     s16 *cursor;
