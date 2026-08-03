@@ -175,6 +175,63 @@ struct RaceMotionInitState {
     s16 partCount;
 };
 
+u8 gRaceMotionModelPartCounts[] = {
+    14, 14, 14, 14, 14, 14, 14, 0, 0xFF, 0, 1, 2, 1, 4, 1, 6, 6, 8, 6, 10, 0, 0, 0, 0,
+};
+u8 gRaceMotionModelParentPartIdData[] = { 0, 1, 4, 5, 2, 3, 6, 7, 10, 11, 8, 9, 0, 0, 0, 0 };
+u8 *gRaceMotionModelPartIds[] = {
+    &gRaceMotionModelPartCounts[8],
+    &gRaceMotionModelPartCounts[8],
+    &gRaceMotionModelPartCounts[8],
+    &gRaceMotionModelPartCounts[8],
+    &gRaceMotionModelPartCounts[8],
+    &gRaceMotionModelPartCounts[8],
+    &gRaceMotionModelPartCounts[8],
+};
+u8 *gRaceMotionModelParentPartIds[] = {
+    gRaceMotionModelParentPartIdData,
+    gRaceMotionModelParentPartIdData,
+    gRaceMotionModelParentPartIdData,
+    gRaceMotionModelParentPartIdData,
+    gRaceMotionModelParentPartIdData,
+    gRaceMotionModelParentPartIdData,
+    gRaceMotionModelParentPartIdData,
+};
+RaceMotionCoord gRaceMotionModelPartPositionsShort[] = {
+    { 0, 0, 0 },       { 0, 37, 0 },      { -6, -2, 0 },     { 0, -12, 0 },
+    { 6, -2, 0 },      { 0, -12, 0 },     { 0, 0, 0 },       { 0, 16, 0 },
+    { -10, 14, 0 },    { -8, -15, 0 },    { 10, 14, 0 },     { 8, -15, 0 },
+    { -14, 10, 0 },    { 14, 10, 0 },
+};
+RaceMotionCoord gRaceMotionModelPartPositionsTall[] = {
+    { 0, 0, 0 },       { 0, 44, 0 },      { -6, -5, 0 },     { 0, -16, 0 },
+    { 6, -5, 0 },      { 0, -16, 0 },     { 0, 0, 0 },       { 0, 9, 0 },
+    { -10, 8, 0 },     { -10, -16, 0 },   { 10, 8, 0 },      { 10, -16, 0 },
+    { -12, 12, -3 },   { 12, 12, -3 },
+};
+RaceMotionCoord gRaceMotionModelPartPositionsWide[] = {
+    { 0, 0, 0 },       { 0, 51, 0 },      { -8, -3, 0 },     { 0, -18, -1 },
+    { 8, -3, 0 },      { 1, -18, -1 },    { 0, 5, -5 },      { 0, 32, 2 },
+    { -23, 23, 5 },    { -11, -21, 0 },   { 23, 23, 5 },     { 11, -21, 0 },
+    { -17, 12, -8 },   { 17, 12, -8 },
+};
+RaceMotionCoord gRaceMotionModelPartPositionsCompact[] = {
+    { 0, 0, 0 },       { 0, 40, 0 },      { -5, -7, 0 },     { -1, -8, 0 },
+    { 5, -7, 0 },      { 1, -8, 0 },      { 0, 0, 0 },       { 0, 14, 0 },
+    { -13, 8, -2 },    { -7, -9, -3 },    { 13, 8, -2 },     { 7, -9, -3 },
+    { -6, 10, 0 },     { 6, 10, 0 },
+};
+RaceMotionCoord *gRaceMotionModelPartPositions[] = {
+    gRaceMotionModelPartPositionsShort,
+    gRaceMotionModelPartPositionsTall,
+    gRaceMotionModelPartPositionsShort,
+    gRaceMotionModelPartPositionsTall,
+    gRaceMotionModelPartPositionsWide,
+    gRaceMotionModelPartPositionsCompact,
+    NULL,
+    NULL,
+};
+
 extern RaceMotionCoord *gRaceCourseSurfaceCoords;
 extern RaceMotionFace *gRaceCourseSurfaceFaces;
 extern RaceMotionSurface *gRaceCourseSurfaces;
@@ -192,10 +249,6 @@ extern RaceMotionRotation gRaceMotionJointFrameBuffer[];
 extern RaceMotionRotation gRaceMotionJointDecodeFrameBuffer[];
 extern s32 gRaceMotionJointBlendBuffer[];
 extern s32 gRacePlayerHitCueId;
-extern u8 gRaceMotionModelPartCounts[];
-extern u8 *gRaceMotionModelPartIds[];
-extern u8 *gRaceMotionModelParentPartIds[];
-extern RaceMotionCoord *gRaceMotionModelPartPositions[];
 
 void initRaceCourseSurfaceData(void) {
     RaceMotionCountedTable *coordTable;
