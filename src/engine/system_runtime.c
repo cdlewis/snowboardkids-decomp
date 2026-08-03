@@ -10,6 +10,7 @@
 #include "game/engine/viewport_manager.h"
 #include "game/math/fixed_point_math.h"
 #include "PR/sptask.h"
+#include "PR/ucode.h"
 
 #define BOOT_THREAD_ID 1
 #define MAIN_THREAD_ID 2
@@ -131,7 +132,6 @@ extern u8 gFramebufferColorBufferIndex;
 extern FramebufferRenderTask gFramebufferRenderTask0[];
 extern FramebufferClearTask gFramebufferClearTasks[];
 extern u8 D_369000[];
-extern u8 D_800B1CC0[];
 extern u8 D_800E21C0[];
 extern u8 D_80360000[];
 extern u8 D_80368000[];
@@ -139,8 +139,6 @@ extern u8 D_80368C00[];
 extern u8 D_80369000[];
 extern u8 D_8038E800[];
 extern u8 D_803B4000[];
-extern u8 aspMainTextStart[];
-extern u8 rspbootTextStart[];
 extern u8 gBootThreadStack[BOOT_THREAD_STACK_SIZE];
 extern u8 gGameThreadStack[GAME_THREAD_STACK_SIZE];
 extern Mtx D_80124C28;
@@ -850,7 +848,7 @@ void submitFramebufferRenderTask(u8 frameIndex) {
 
     renderTask->schedulerTask.rspTask.t.data_ptr = (u64 *)renderTask->displayList;
     renderTask->schedulerTask.rspTask.t.data_size = (u8 *)gRegionAllocPtr - (u8 *)renderTask->displayList;
-    renderTask->schedulerTask.rspTask.t.ucode = (u64 *)D_800B1CC0;
+    renderTask->schedulerTask.rspTask.t.ucode = (u64 *)gspF3DLX_fifoTextStart;
     renderTask->schedulerTask.rspTask.t.type = M_GFXTASK;
     ucodeBootSize = aspMainTextStart - rspbootTextStart;
     rdpOutputBuffer = D_80360000;
@@ -915,7 +913,7 @@ void submitFramebufferRenderTask(u8 frameIndex) {
     clearTask->schedulerTask.rspTask.t.ucode_boot = (u64 *)rspbootTextStart;
     clearTask->schedulerTask.rspTask.t.ucode_boot_size = ucodeBootSize;
     clearTask->schedulerTask.rspTask.t.ucode_data = (u64 *)D_800E21C0;
-    clearTask->schedulerTask.rspTask.t.ucode = (u64 *)D_800B1CC0;
+    clearTask->schedulerTask.rspTask.t.ucode = (u64 *)gspF3DLX_fifoTextStart;
     clearTask->schedulerTask.rspTask.t.ucode_data_size = RSP_UCODE_DATA_SIZE;
     clearTask->schedulerTask.rspTask.t.dram_stack = (u64 *)D_80368C00;
     clearTask->schedulerTask.rspTask.t.dram_stack_size = RSP_DRAM_STACK_SIZE;
