@@ -2,12 +2,9 @@
 #define RACE_HUD_H
 
 #include "common.h"
+#include "game/save_data.h"
 
-typedef struct {
-    /* 0x0 */ s8 minutes;
-    /* 0x1 */ s8 seconds;
-    /* 0x2 */ s16 fraction;
-} RaceTimer;
+typedef GameSaveRecordTime RaceTimer;
 
 extern RaceTimer gRaceElapsedTimer;
 extern RaceTimer gRaceCourseTargetTimes[10];
