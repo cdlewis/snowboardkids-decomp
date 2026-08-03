@@ -1,0 +1,5 @@
+candidate_source: "sed -nE 's/^[[:space:]]*-[[:space:]]*\\[[^,]+,[[:space:]]*data,[[:space:]]*([^]]+)\\][[:space:]]*$/\\1/p' snowboardkids.yaml"
+prompt: "Use the match-data-segment skill to match the unmatched data segment `$INPUT`. Match only this candidate: change its `data` entry in snowboardkids.yaml to `.data`, replace the corresponding extern declarations with correctly typed definitions in source order, and resolve all build or checksum mismatches. Follow the skill and repository instructions, including stopping immediately if the build script tells you to stop. Run ./tools/build-and-verify.sh before finishing."
+agent: codex
+success_command: 'git add -A && git commit -m "task-runner($TASK_NAME): match data segment $CANDIDATE"'
+timeout: 60m
