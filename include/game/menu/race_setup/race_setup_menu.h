@@ -15,8 +15,18 @@ typedef struct {
     /* 0x1A */ u8 pad1A[0x1E];
 } RaceSetupMenuSubState;
 
+typedef struct RaceSetupMenuPackedData {
+    u8 alignmentPadding;
+    u8 choicePromptStates[12];
+    u8 raceRecordChoicePromptStates[19];
+} RaceSetupMenuPackedData;
+
 extern RaceSetupMenuSubState gRaceSetupMenuSubState;
+extern RaceSetupMenuPackedData gRaceSetupMenuPackedData;
 extern u8 gRaceSetupSavePanelFrameState;
+
+#define gControllerPakRaceRecordSaveStatusChoicePromptStates \
+    gRaceSetupMenuPackedData.raceRecordChoicePromptStates
 
 void initRaceSetupMenu(void);
 void updateRaceSetupPlayerCountMenu(void);

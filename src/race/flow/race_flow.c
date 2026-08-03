@@ -70,7 +70,6 @@ typedef union {
     u8 padding[12];
 } RaceResultsReadyState;
 
-#ifdef NON_MATCHING
 typedef struct {
     /* 0x00 */ u8 stickX;
     /* 0x01 */ u8 stickY;
