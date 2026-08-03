@@ -76,12 +76,7 @@ extern void requestControllerPakRepair(u16);
 extern void initControllerPakDeleteConfirmPrompt(CallbackTask *);
 #endif
 
-// updateControllerPakRaceRecordSaveFlow best match: 99.672% (base_27.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/menu/controller_pak/controller_pak_race_record_save_flow/updateControllerPakRaceRecordSaveFlow.s")
-
-#ifdef NON_MATCHING
 #include "updateControllerPakRaceRecordSaveFlow.inc.c"
-#endif
 
 #ifdef PREVIOUS_NON_MATCHING
 void updateControllerPakRaceRecordSaveFlow(void)
