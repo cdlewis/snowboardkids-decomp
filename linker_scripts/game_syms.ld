@@ -56,3 +56,9 @@ gPrimaryCourseUnlockStates = gGameSaveDataBuffer + 0x3F;
 gCourseUnlockScanStart = gGameSaveDataBuffer + 0x1;
 gCourseUnlockScanEnd = gGameSaveDataBuffer + 0x9;
 gPrimaryGameSaveRawData = gGameSaveDataBuffer;
+
+/* Character-select course-menu data subobjects. */
+gCharacterSelectCourseOptionsByUnlock = gCharacterSelectCourseMenuData;
+gPlayerBadgeDisplayOrder = gCharacterSelectCourseMenuData + 0x42;
+gCharacterSelectShortCourseOptions = gCharacterSelectCourseMenuData + 0x58;
+gCharacterSelectSingleCourseOption = gCharacterSelectCourseMenuData + 0x60;

@@ -5,7 +5,19 @@
 
 typedef s16 CharacterSelectCourseUnlockList[11];
 
-extern CharacterSelectCourseUnlockList gCharacterSelectCourseOptionsByUnlock[3];
+typedef struct {
+    CharacterSelectCourseUnlockList courseOptionsByUnlock[3];
+    s16 playerBadgeDisplayOrder[11];
+    s16 shortCourseOptions[4];
+    s16 singleCourseOption[8];
+} CharacterSelectCourseMenuData;
+
+extern CharacterSelectCourseMenuData gCharacterSelectCourseMenuData;
+
+#define gCharacterSelectCourseOptionsByUnlock (gCharacterSelectCourseMenuData.courseOptionsByUnlock)
+#define gPlayerBadgeDisplayOrder (gCharacterSelectCourseMenuData.playerBadgeDisplayOrder)
+#define gCharacterSelectShortCourseOptions (gCharacterSelectCourseMenuData.shortCourseOptions)
+#define gCharacterSelectSingleCourseOption (gCharacterSelectCourseMenuData.singleCourseOption)
 
 void initCharacterSelectCourseMenuFromRaceTypeSelect(void);
 void initCharacterSelectCourseMenuFromRace(void);

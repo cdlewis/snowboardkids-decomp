@@ -71,8 +71,6 @@ extern void drawAssetTableSpriteWithExplicitPaletteWideIndex(s16 x, s16 y, Asset
 extern CharacterSelectCourseFrameTileMap gCharacterSelectCoursePreviewFrameTileMaps[];
 extern CharacterSelectCourseFrameCornerTileMap gCharacterSelectCoursePreviewFrameCornerTileMaps[];
 extern u16 gCharacterSelectCourseExitPreviewCornerTile;
-extern s16 gCharacterSelectShortCourseOptions[];
-extern s16 gCharacterSelectSingleCourseOption[];
 extern u16 gCharacterSelectCourseStatsScoreValues[];
 extern u8 gCharacterSelectCourseDifficultyRatings[];
 extern u8 gCharacterSelectCourseMedalScoreThresholds[];
