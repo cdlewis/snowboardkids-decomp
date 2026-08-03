@@ -4,6 +4,8 @@
 #include "game/math/fixed_matrix_multiply.h"
 #include "game/math/spatial_math.h"
 
+extern s16 gSineTable[];
+
 /*
  * Fixed-point (4.12) trig, 3x3 rotation matrix, transform, and integer math
  * helpers used by the race / menu effect and camera systems. FIXED_MATRIX_ONE
