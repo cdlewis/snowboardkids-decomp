@@ -286,8 +286,7 @@ segments:
       - [0xB1840, c, ultra/libc/ldiv]
       - { start: 0xB19D0, type: textbin, use_src_path: True, name: rsp/rspboot }
       - { start: 0xB1AA0, type: textbin, use_src_path: True, name: rsp/aspMain }
-      - [0xB1C00, data, rsp/graphics_ucode_block_0]
-      - [0xB28C0, data, rsp/graphics_ucode_block_1]
+      - { start: 0xB28C0, type: textbin, use_src_path: True, name: rsp/f3dlx }
       - [0xB3CF0, data, menu/main_menu/controller_main_menu_flow]
       - [0xB3D90, data, menu/race_setup/race_setup_menu]
       - [0xB4000, data, menu/character_select/character_select_menu]
