@@ -183,27 +183,105 @@ typedef union {
     } word;
 } LongLongParts;
 
-extern u8 *gRaceCourseItemEffectTypeTables[];
-extern u8 gRaceItemSparkBurstVertices[];
-extern u16 gRaceItemEffectSpriteIds[];
+extern u8 D_800D4660[4][28];
 extern Gfx gRaceItemProjectileQuadVertices[];
-extern u8 gRaceItemSparkBurstSmallFrameSequence[];
-extern u8 gRaceItemSparkBurstMediumFrameSequence[];
-extern u8 gRaceItemSparkBurstLargeFrameSequence[];
-extern u32 gRacePlayerHitEffectQuadVertices[];
-extern s16 gRacePlayerHitEffectSpriteOffsets[];
-extern Gfx gRaceItemEffectTranslucentRenderSetupDl[];
-extern u32 gRacePlayerShockEffectQuadVertices[];
-extern Gfx gRaceItemBreakParticleQuadVertices[];
-extern u32 gRacePlayerLandingSnowSprayQuadVertices[];
-extern Vec2s gRaceItemBreakParticleAngles[];
-extern u32 gRacePlayerSnowSprayQuadVertices[];
-extern Vec3i gRaceItemBreakParticleSpawnOffset;
-extern Vec3i gRaceItemBreakParticleInitialVelocity;
-extern u32 gRacePlayerRecoverySparkleQuadVertices[];
 extern u32 gAlphaSpriteRenderModeDl[];
 extern Gfx gEffectRenderModeSetupDl[];
 extern Gfx gEffectRenderModeCleanupDl[];
+
+u8 *gRaceCourseItemEffectTypeTables[10] = {
+    D_800D4660[0], D_800D4660[0], D_800D4660[0], D_800D4660[2], D_800D4660[1],
+    D_800D4660[3], D_800D4660[0], D_800D4660[0], D_800D4660[0], D_800D4660[0],
+};
+
+u16 gRaceItemEffectSpriteIds[8] = {10, 11, 12, 13, 10, 0, 0, 0};
+
+Vtx gRaceItemSparkBurstVertices[16] = {
+    {{{-1,  2, 0}, 0, {-16, -16}, {0xE6, 0xE6, 0xE6, 0xFF}}},
+    {{{ 1,  2, 0}, 0, {496, -16}, {0xE6, 0xE6, 0xE6, 0xFF}}},
+    {{{ 1,  0, 0}, 0, {496, 496}, {0xE6, 0xE6, 0xE6, 0xFF}}},
+    {{{-1,  0, 0}, 0, {-16, 496}, {0xE6, 0xE6, 0xE6, 0xFF}}},
+    {{{-2,  4, 0}, 0, {-16, -16}, {0xE6, 0xE6, 0xE6, 0xFF}}},
+    {{{ 2,  4, 0}, 0, {496, -16}, {0xE6, 0xE6, 0xE6, 0xFF}}},
+    {{{ 2,  0, 0}, 0, {496, 496}, {0xE6, 0xE6, 0xE6, 0xFF}}},
+    {{{-2,  0, 0}, 0, {-16, 496}, {0xE6, 0xE6, 0xE6, 0xFF}}},
+    {{{-3,  6, 0}, 0, {-16, -16}, {0xE6, 0xE6, 0xE6, 0xFF}}},
+    {{{ 3,  6, 0}, 0, {496, -16}, {0xE6, 0xE6, 0xE6, 0xFF}}},
+    {{{ 3,  0, 0}, 0, {496, 496}, {0xE6, 0xE6, 0xE6, 0xFF}}},
+    {{{-3,  0, 0}, 0, {-16, 496}, {0xE6, 0xE6, 0xE6, 0xFF}}},
+    {{{-4,  8, 0}, 0, {-16, -16}, {0xE6, 0xE6, 0xE6, 0xFF}}},
+    {{{ 4,  8, 0}, 0, {496, -16}, {0xE6, 0xE6, 0xE6, 0xFF}}},
+    {{{ 4,  0, 0}, 0, {496, 496}, {0xE6, 0xE6, 0xE6, 0xFF}}},
+    {{{-4,  0, 0}, 0, {-16, 496}, {0xE6, 0xE6, 0xE6, 0xFF}}},
+};
+
+u8 gRaceItemSparkBurstSmallFrameSequence[12] = {0};
+u8 gRaceItemSparkBurstMediumFrameSequence[12] = {0, 0, 4, 4, 4, 4, 4, 4, 4, 4, 0, 0};
+u8 gRaceItemSparkBurstLargeFrameSequence[16] = {0, 4, 4, 4, 4, 4, 4, 4, 4, 4, 0, 0, 0, 0, 0, 0};
+
+Vtx gRacePlayerHitEffectQuadVertices[4] = {
+    {{{-14,  17, 5}, 0, {  0,   0}, {0xFF, 0xFF, 0xFF, 0xFF}}},
+    {{{ 14,  17, 5}, 0, {1024,   0}, {0xFF, 0xFF, 0xFF, 0xFF}}},
+    {{{ 14, -11, 5}, 0, {1024, 1024}, {0xFF, 0xFF, 0xFF, 0xFF}}},
+    {{{-14, -11, 5}, 0, {  0, 1024}, {0xFF, 0xFF, 0xFF, 0xFF}}},
+};
+
+s16 gRacePlayerHitEffectSpriteOffsets[4] = {14, 18, 22, 26};
+
+Gfx gRaceItemEffectTranslucentRenderSetupDl[6] = {
+    {{0xE7000000, 0x00000000}},
+    {{0xBB000001, 0xFFFFFFFF}},
+    {{0xFC119623, 0xFF2FFFFF}},
+    {{0xB900031D, 0x005049D8}},
+    {{0xB6000000, 0x00020000}},
+    {{0xB8000000, 0x00000000}},
+};
+
+Vtx gRacePlayerShockEffectQuadVertices[4] = {
+    {{{-12,  12, 0}, 0, {-16, -16}, {0xFF, 0xFF, 0xFF, 0xFF}}},
+    {{{ 12,  12, 0}, 0, {496, -16}, {0xFF, 0xFF, 0xFF, 0xFF}}},
+    {{{ 12, -12, 0}, 0, {496, 496}, {0xFF, 0xFF, 0xFF, 0xFF}}},
+    {{{-12, -12, 0}, 0, {-16, 496}, {0xFF, 0xFF, 0xFF, 0xFF}}},
+};
+
+Vtx gRaceItemBreakParticleQuadVertices[4] = {
+    {{{-7, 14, 0}, 0, {-16, -16}, {0xE6, 0xE6, 0xE6, 0xFF}}},
+    {{{ 7, 14, 0}, 0, {496, -16}, {0xE6, 0xE6, 0xE6, 0xFF}}},
+    {{{ 7,  0, 0}, 0, {496, 496}, {0xE6, 0xE6, 0xE6, 0xFF}}},
+    {{{-7,  0, 0}, 0, {-16, 496}, {0xE6, 0xE6, 0xE6, 0xFF}}},
+};
+
+Vec2s gRaceItemBreakParticleAngles[16] = {
+    {0x155, 0x000}, {0x155, 0x200}, {0x155, 0x400}, {0x155, 0x600},
+    {0x155, 0x800}, {0x155, 0xA00}, {0x155, 0xC00}, {0x155, 0xE00},
+    {0x2AA, 0x000}, {0x2AA, 0x200}, {0x2AA, 0x400}, {0x2AA, 0x600},
+    {0x2AA, 0x800}, {0x2AA, 0xA00}, {0x2AA, 0xC00}, {0x2AA, 0xE00},
+};
+
+Vec3i gRaceItemBreakParticleSpawnOffset = {0, 0, -0x40000};
+Vec3i gRaceItemBreakParticleInitialVelocity = {0, 0, -0x20000};
+
+Vtx gRacePlayerRecoverySparkleQuadVertices[4] = {
+    {{{-5,  5, 0}, 0, {-16, -16}, {0xFF, 0xFF, 0xFF, 0xFF}}},
+    {{{ 5,  5, 0}, 0, {1008, -16}, {0xFF, 0xFF, 0xFF, 0xFF}}},
+    {{{ 5, -5, 0}, 0, {1008, 1008}, {0xFF, 0xFF, 0xFF, 0xFF}}},
+    {{{-5, -5, 0}, 0, {-16, 1008}, {0xFF, 0xFF, 0xFF, 0xFF}}},
+};
+
+Vtx gRacePlayerSnowSprayQuadVertices[4] = {
+    {{{-4,  4, 0}, 0, {-16, -16}, {0xFF, 0xFF, 0xFF, 0xFF}}},
+    {{{ 4,  4, 0}, 0, {496, -16}, {0xFF, 0xFF, 0xFF, 0xFF}}},
+    {{{ 4, -4, 0}, 0, {496, 496}, {0xFF, 0xFF, 0xFF, 0xFF}}},
+    {{{-4, -4, 0}, 0, {-16, 496}, {0xFF, 0xFF, 0xFF, 0xFF}}},
+};
+
+Vtx gRacePlayerLandingSnowSprayQuadVertices[4] = {
+    {{{-4,  4, 0}, 0, {-16, -16}, {0xFF, 0xFF, 0xFF, 0xFF}}},
+    {{{ 4,  4, 0}, 0, {496, -16}, {0xFF, 0xFF, 0xFF, 0xFF}}},
+    {{{ 4, -4, 0}, 0, {496, 496}, {0xFF, 0xFF, 0xFF, 0xFF}}},
+    {{{-4, -4, 0}, 0, {-16, 496}, {0xFF, 0xFF, 0xFF, 0xFF}}},
+};
+
 RaceItemDrawNode *gRaceItemTextureEffectDrawLists[4];
 extern RaceItemDrawLists D_801121E0;
 extern u8 gRaceUpdatePaused;
@@ -250,7 +328,7 @@ void updateRaceItemSparkBurst(RaceItemEffectActor *arg0) {
         actor->drawNodes[i].next = *drawList;
         *drawList = &actor->drawNodes[i];
         actor->drawNodes[i].displayList =
-            (u32)&gRaceItemSparkBurstVertices[actor->frameSequence[actor->timer - 1] * 16];
+            (u32)&gRaceItemSparkBurstVertices[actor->frameSequence[actor->timer - 1]];
         actor->drawNodes[i].pos = &actor->payloads[i];
     }
 }
