@@ -312,7 +312,7 @@ segments:
       - [0xBC490, .data, demo/title_demo_race_intro]
       - [0xD4800, .data, menu/main_menu/main_menu_race_flow]
       - [0xD48B0, .data, menu/main_menu/main_menu_scene_model_renderer]
-      - [0xD4B00, data, engine/asset_manager]
+      - [0xD4B00, .data, engine/asset_manager]
       - [0xD4C20, .data, race/scene/race_scene_setup]
       - [0xD4CB0, .data, menu/renderer/menu_render_utils]
       - [0xD4CD0, data, math/spatial_math]
