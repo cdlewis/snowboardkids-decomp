@@ -1459,8 +1459,8 @@ void updateCourseSelectPurchasePrompt(void) {
     updateCallbackTasks();
 }
 
-// updateCourseSelectUnlockCourseList best match: 99.366%
-// (nonmatchings/updateCourseSelectUnlockCourseList-47/base.c)
+// updateCourseSelectUnlockCourseList best match: 99.454%
+// (nonmatchings/updateCourseSelectUnlockCourseList-1846960929180867216/base_105.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/course_select/course_select_menu/updateCourseSelectUnlockCourseList.s")
 
 #ifdef NON_MATCHING
@@ -1469,8 +1469,10 @@ void updateCourseSelectUnlockCourseList(void)
   register s32 i;
   u16 new_var5;
   u32 new_var4;
+  GameSaveData *saveData;
   s32 rowOffset;
   u8 selection;
+  s32 promptRow;
   u32 repeatTimer;
   int new_var3;
   s32 playerIndex;
@@ -1487,6 +1489,7 @@ void updateCourseSelectUnlockCourseList(void)
   {
     D_8010AEA4 = playerIndex;
   }
+  saveData = &gGameSaveDataBuffer[playerIndex];
   if ((gMenuChoicePromptState[playerIndex] >= 2) && (gMenuChoicePromptState[playerIndex] < 5))
   {
     held = gPlayerInputHeld[playerIndex];
@@ -1522,7 +1525,7 @@ void updateCourseSelectUnlockCourseList(void)
         repeatTimer = gMenuInputRepeatTimers[playerIndex];
         if (repeatTimer == playerIndex)
         {
-          gMenuInputRepeatTimers[playerIndex] += 1;
+          gMenuInputRepeatTimers[playerIndex] = gMenuInputRepeatTimers[playerIndex] + 1;
         }
         if (gMenuChoicePromptState[playerIndex] < (gCourseSelectStatus.unk24[playerIndex] + 1))
         {
@@ -1542,7 +1545,7 @@ void updateCourseSelectUnlockCourseList(void)
       }
     }
     rowOffset = (i = gMenuChoicePromptState[playerIndex] * columnCount);
-    selection = (gRacePlayers[playerIndex].menuSelection = (rowOffset + (((s32) gRacePlayers[playerIndex].menuSelection) % columnCount)) - 6);
+    selection = (gRacePlayers[playerIndex].menuSelection = (rowOffset + (((s32) gRacePlayers[playerIndex].menuSelection) % columnCount)) - (new_var3 = 6));
     new_var4 = gPlayerInputPressed[playerIndex] & 0x4000;
     if (new_var4)
     {
@@ -1556,9 +1559,11 @@ void updateCourseSelectUnlockCourseList(void)
     {
       enqueueSoundEffect(0x18, 0x32);
       rowOffset = columnCount;
-      rowOffset = gMenuChoicePromptState[playerIndex] * rowOffset;
-      selection = (rowOffset + (((s32) gRacePlayers[playerIndex & 0xFFFFFFFF].menuSelection) % columnCount)) - 6;
-      gRacePlayers[playerIndex].selectionUnlockState = gGameSaveDataBuffer[playerIndex].courseUnlockStates[selection];
+      promptRow = gMenuChoicePromptState[playerIndex];
+      rowOffset = promptRow * rowOffset;
+      selection = (s32) gRacePlayers[playerIndex & 0xFFFFFFFF].menuSelection;
+      selection = (rowOffset + (selection % columnCount)) - (0, new_var3);
+      gRacePlayers[playerIndex].selectionUnlockState = saveData->courseUnlockStates[selection];
       gRacePlayers[playerIndex].menuSelection = selection;
       if (D_8010AECC == playerIndex)
       {
