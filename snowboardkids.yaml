@@ -299,7 +299,7 @@ segments:
       - [0xB6670, .data, menu/character_select/character_select_ui]
       - [0xB6750, .data, menu/splitscreen_select/race_splitscreen_select_ui]
       - [0xB6BC0, .data, menu/character_select/character_select_course_ui]
-      - [0xB77E0, data, menu/course_select/course_select_ui]
+      - [0xB77E0, .data, menu/course_select/course_select_ui]
       - [0xB7CF0, data, menu/race_type_select/race_type_select_ui]
       - [0xB7FF0, data, menu/controller_pak/controller_pak_race_record_save_ui]
       - [0xB85C0, data, menu/course_select/course_select_shop_ui]
