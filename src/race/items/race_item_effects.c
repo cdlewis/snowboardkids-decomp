@@ -229,12 +229,12 @@ Vtx gRacePlayerHitEffectQuadVertices[4] = {
 s16 gRacePlayerHitEffectSpriteOffsets[4] = {14, 18, 22, 26};
 
 Gfx gRaceItemEffectTranslucentRenderSetupDl[6] = {
-    {{0xE7000000, 0x00000000}},
-    {{0xBB000001, 0xFFFFFFFF}},
-    {{0xFC119623, 0xFF2FFFFF}},
-    {{0xB900031D, 0x005049D8}},
-    {{0xB6000000, 0x00020000}},
-    {{0xB8000000, 0x00000000}},
+    gsDPPipeSync(),
+    gsSPTexture(0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_ON),
+    gsDPSetCombineMode(G_CC_MODULATEIA_PRIM, G_CC_MODULATEIA_PRIM),
+    gsDPSetRenderMode(G_RM_AA_ZB_XLU_SURF, G_RM_AA_ZB_XLU_SURF2),
+    gsSPClearGeometryMode(G_LIGHTING),
+    gsSPEndDisplayList(),
 };
 
 Vtx gRacePlayerShockEffectQuadVertices[4] = {
