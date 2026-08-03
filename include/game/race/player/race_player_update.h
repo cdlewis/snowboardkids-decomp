@@ -39,7 +39,7 @@ void updateRacePlayerTrickSubstate(struct RacePlayer *player);
 void updateRacePlayerTrickSubstateStart(struct RacePlayer *player);
 void updateRacePlayerTrickSubstateHold(struct RacePlayer *player);
 void updateRacePlayerTrickSubstateFinish(struct RacePlayer *player);
-void updateRacePlayerTrickSubstateNoop(s32 arg0);
+void updateRacePlayerTrickSubstateNoop(struct RacePlayer *player);
 void updateRacePlayerMode13AerialTrick(struct RacePlayer *player);
 void updateRacePlayerMode15AerialTrick(struct RacePlayer *player);
 void updateRacePlayerMode16AerialTrick(struct RacePlayer *player);
