@@ -1656,131 +1656,111 @@ paletteLoop:
 }
 #endif
 
-// drawMenuAsciiGlyph best match: 98.982% (nonmatchings/drawMenuAsciiGlyph-633030068925474062/base_5.c)
+// drawMenuAsciiGlyph best match: 99.473% (nonmatchings/drawMenuAsciiGlyph-1846960929180867216/base_67.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/renderer/menu_renderer/drawMenuAsciiGlyph.s")
 
 #ifdef NON_MATCHING
-void drawMenuAsciiGlyph(s16 x, s16 y, u16 tileS, s32 tileT, u16 paletteIndex, u16 paletteScale) {
+void drawMenuAsciiGlyph(s16 x, s16 y, u16 tileS, s32 tileT, u16 palette, u16 paletteScale) {
     s32 x0;
-    s32 drawY0;
+    s32 storedY;
     s32 x1;
     s32 y1;
     s32 clipS;
     s32 clipT;
-    s32 y0;
-    u16 *scaledPalette;
-    FontTexture *atlasTexture;
-    u16 *paletteBase;
-    FontAsset *asset;
-    u16 *sourcePalette;
-    u16 *dstPalette;
-    s16 selectedPalette;
     s32 maxX;
+    volatile u16 *dst;
+    FontTexture *texture;
+    MenuGlyphPalette *palettes;
+    FontAsset *font;
     s32 maxY;
-    s32 minY;
-    s32 minX;
-    s32 halfHeight;
-    u16 paletteColor;
-    s32 color;
-    s32 red;
-    u16 green;
-    u16 blue;
-    s32 scaleValue;
+    s32 i;
+    s16 paletteIndex;
 
-    asset = (FontAsset *)getRelocatableHeapBlockBase(gAssetHandles[6]);
-    paletteBase = (u16 *)((asset->header.entryCount * sizeof(FontTexture)) + (u8 *)asset + sizeof(FontAssetHeader));
-    atlasTexture = &asset->textures[0];
-    selectedPalette = atlasTexture->paletteIndex;
+    font = getRelocatableHeapBlockBase(gAssetHandles[6]);
+    palettes = (MenuGlyphPalette *)(font->entryCount + font->textures);
+    paletteIndex = font->textures[0].paletteIndex;
     x0 = x + gMenuViewportCenterX;
-    y0 = y + gMenuViewportCenterY;
+    i = y + gMenuViewportCenterY;
+    texture = &font->textures[0];
     x1 = x0 + 8;
-    y1 = y0 + 8;
+    y1 = i + 8;
     clipS = 0;
     clipT = 0;
 
-    maxX = gMenuViewportCenterX + (gMenuViewportWidth / 2);
-    if (x0 >= maxX) {
-        return;
-    }
+    {
+        s32 minX;
+        s32 minY;
+        s32 halfHeight;
 
-    halfHeight = gMenuViewportHeight / 2;
-    maxY = gMenuViewportCenterY + halfHeight;
-    // The constant branch preserves IDO's register allocation for the clipping bounds.
-    if (1) {
-        minX = gMenuViewportCenterX - (gMenuViewportWidth / 2);
-        if (y0 >= maxY) {
-            return;
-        }
-        if (x1 < minX) {
-            return;
-        }
-    }
+        maxX = gMenuViewportCenterX + (gMenuViewportWidth / 2);
+        if (x0 < maxX) {
+            halfHeight = gMenuViewportHeight / 2;
+            maxY = gMenuViewportCenterY + halfHeight;
+            minX = gMenuViewportCenterX - (gMenuViewportWidth / 2);
+            if (i < maxY) {
+                minY = gMenuViewportCenterY - halfHeight;
+                if ((x1 >= minX) && (y1 >= minY)) {
+                    s32 colorValue;
+                    MenuGlyphPalette *scratch;
+                    MenuGlyphPalette *source;
+                    u16 color;
+                    s32 red;
+                    u16 green;
+                    u16 blue;
+                    s32 scaleValue;
 
-    minY = gMenuViewportCenterY - halfHeight;
-    if (y1 < minY) {
-        return;
-    }
+                    if (x0 < minX) {
+                        clipS = minX - x0;
+                        x0 = minX;
+                    }
+                    if (i < minY) {
+                        clipT = minY - i;
+                        i = minY;
+                    }
+                    if (x1 >= maxX) {
+                        x1 = maxX - 1;
+                    }
+                    if (y1 >= maxY) {
+                        y1 = maxY - 1;
+                    }
+                    clipS += tileS;
+                    clipT += (u16)tileT;
 
-    if (x0 < minX) {
-        clipS = minX - x0;
-        x0 = minX;
-    }
-    if (y0 < minY) {
-        clipT = minY - y0;
-        y0 = minY;
-    }
-    if (x1 >= maxX) {
-        x1 = maxX - 1;
-    }
-    if (y1 >= maxY) {
-        y1 = maxY - 1;
-    }
+                    if (paletteIndex != palette) {
+                        paletteIndex = palette;
+                    }
+                    storedY = i;
+                    if (1) {
+                    scratch = allocMenuRenderScratch(sizeof(MenuGlyphPalette)); i = 0; source = &palettes[paletteIndex]; dst = scratch->colors; palette_loop: *dst = (color = (*(u16 *)&source->bytes[i]) & 0xFFFFu); i += sizeof(color); if ((colorValue = color & 0xFFFF) & 1) { red = ((colorValue >> 11) & 0x1F) & 0xFFFF;
+                        green = (colorValue >> 6) & 0x1F;
+                        colorValue = (blue = (colorValue >> 1) & 0x1F);
+                        scaleValue = paletteScale;
+                        red = red * scaleValue;
+                        red /= 0x100;
+                        green = (green * paletteScale) / 0x100;
+                        colorValue = green;
+                        blue = (blue * paletteScale) / 0x100;
+                        *dst = (red << 11) | (colorValue << 6) | (blue << 1) | 1;
+                    }
+                    dst += 2;
+                    dst--;
+                    if (i != sizeof(MenuGlyphPalette)) {
+                        goto palette_loop;
+                    }
 
-    clipS += tileS;
-    clipT += (u16)tileT;
-    if (selectedPalette != paletteIndex) {
-        selectedPalette = paletteIndex;
-    }
-
-    drawY0 = y0;
-    sourcePalette = paletteBase + (selectedPalette * 16);
-    scaledPalette = allocMenuRenderScratch(0x20);
-    y0 = 0;
-    dstPalette = scaledPalette;
-paletteLoop:
-    *dstPalette = (paletteColor = *(u16 *)((u8 *)sourcePalette + y0));
-    y0 += 2;
-    do {
-        color = paletteColor & 0xFFFF;
-        do {
-            if (((((color & 0xFFFFFFFFu) & 0xFFFFFFFFu) & 0xFFFFFFFFu) & 1) & 0xFFFF) {
-                red = ((color >> 11) & 0x1F) & 0xFFFF;
-                green = (color >> 6) & 0x1F;
-                color = (blue = (color >> 1) & 0x1F);
-                scaleValue = paletteScale;
-                red = red * scaleValue;
-                red /= 256;
-                green = (green * paletteScale) / 256;
-                color = green;
-                blue = (blue * paletteScale) / 256;
-                {
+                    gDPLoadTextureTile_4b(gRegionAllocPtr++, texture->imageOffset + (u8 *)font,
+                                          G_IM_FMT_CI, texture->width, texture->height,
+                                          0, 0, texture->width, texture->height, 0,
+                                          G_TX_CLAMP, G_TX_CLAMP, G_TX_NOMASK, G_TX_NOMASK,
+                                          G_TX_NOLOD, G_TX_NOLOD);
+                    gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, scratch);
+                    gSPTextureRectangle(gRegionAllocPtr++, x0 << 2, storedY << 2, x1 << 2, y1 << 2,
+                                        G_TX_RENDERTILE, clipS << 5, clipT << 5, 0x400, 0x400);
+                    }
                 }
-                *dstPalette = (red << 11) | (color << 6) | (blue << 1) | 1;
             }
-        } while (0);
-        dstPalette++;
-        if (y0 != 0x20) {
-            goto paletteLoop;
         }
-    } while (0);
-
-    gDPLoadTextureTile_4b(gRegionAllocPtr++, atlasTexture->imageOffset + (u8 *)asset, G_IM_FMT_CI,
-                          atlasTexture->width, atlasTexture->height, 0, 0, atlasTexture->width,
-                          atlasTexture->height, 0, G_TX_CLAMP, G_TX_CLAMP, 0, 0, G_TX_NOLOD,
-                          G_TX_NOLOD);
-    gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, scaledPalette);
-    gSPTextureRectangle(gRegionAllocPtr++, x0 * 4, drawY0 * 4, x1 * 4, y1 * 4, 0, clipS << 5,
-                        clipT << 5, 0x0400, 0x0400);
+    }
 }
 #endif
 
