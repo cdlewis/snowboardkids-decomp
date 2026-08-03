@@ -43,15 +43,88 @@ typedef struct StackD7D4 {
     Vec3i offset;
 } StackD7D4;
 
+void (*gRaceCameraModeUpdates[])(void) = {
+    noopRaceCameraUpdate,
+    initRaceCameraFollowPlayer,
+    noopRaceCameraDebugUpdate,
+    initRaceCameraCourseStart,
+    initRaceCameraFixedPositionFollow,
+    initRaceCameraChase,
+    noopRaceCameraReplayUpdate,
+    initRaceCameraReplayPosition,
+    initRaceCameraRotationTransition,
+    initRaceCameraRotationTransition,
+    initRaceCameraRotationTransition,
+    initRaceCameraRotationTransition,
+    initRaceCameraRotationTransition,
+    initRaceCameraRotationTransition,
+    initRaceCameraRotationTransition,
+    initRaceCameraRotationTransition,
+    initRaceCameraPositionTransition,
+    initRaceCameraPositionTransition,
+    initRaceCameraPositionTransition,
+    initRaceCameraPositionTransition,
+    initRaceCameraPositionTransition,
+    initRaceCameraPositionTransition,
+    initRaceCameraPositionTransition,
+    initRaceCameraPositionTransition,
+    initRaceCameraPositionTransition,
+    initRaceCameraPositionTransition,
+    initRaceCameraPositionTransition,
+    initRaceCameraPositionTransition,
+    initRaceCameraPositionTransition,
+    initRaceCameraStaticFollow,
+    initRaceCameraIntroPan,
+    initRaceCameraMenuPreview,
+};
+
+s16 gRaceCameraChaseYawOffsets[] = {
+    0x0000, 0x0200, 0x0E00, 0x0400, 0x0C00, 0x0600, 0x0A00, 0x0800, 0x0000, 0x0000,
+};
+
+u8 gRaceCameraChaseYawPreferenceOrder[] = {
+    0, 1, 7, 2, 6, 3, 5, 4,
+};
+
+RaceCameraRotationTransition gRaceCameraRotationTransitions[] = {
+    { 0x38, 0, { 0x00EA5501, 0xFE950245, 0xF6D81077 }, 0x0000, 0x05C6,
+      { 0xFF5795ED, 0xFDE30245, 0xF4AB048D }, 0x0000, 0x0605 },
+    { 0x32, 0, { 0xFFBA05F5, 0xFE1C2666, 0xF509F544 }, 0x0EA5, 0x05B6,
+      { 0xFE2A501B, 0xFD742666, 0xF3213D8E }, 0x0FBD, 0x06BC },
+    { 0x34, 0, { 0xF60AE4E1, 0xF885A3BB, 0xEA1B898C }, 0x0F9D, 0x0E59,
+      { 0xF4B76D11, 0xF785C3BB, 0xE80CAB6E }, 0x0FE2, 0x0CDC },
+    { 0x30, 0, { 0xF5457AAF, 0xF7C00949, 0xE87C4914 }, 0x007C, 0x0556,
+      { 0xF3C6BE35, 0xF6EB4949, 0xE6B604A6 }, 0x002F, 0x067B },
+    { 0x24, 0, { 0xDC78FF4D, 0xE882BDA6, 0xE74E451E }, 0x0028, 0x0163,
+      { 0xDB1C7AC3, 0xE8459DA6, 0xE887C3DC }, 0x0F11, 0x021B },
+    { 0x13, 0, { 0xD617111A, 0xE7402278, 0xEBA1D9F7 }, 0x0FFF, 0x0C2E,
+      { 0xD5A3CB94, 0xE710884A, 0xEC8A99AA }, 0x001D, 0x0CFC },
+    { 0x1D, 0, { 0xD5B494BC, 0xE7124CD0, 0xEC877DEE }, 0x0F78, 0x05DD,
+      { 0xD45AB7A2, 0xE6AF8CD0, 0xEDCE829A }, 0x0EF0, 0x05DA },
+    { 0x2C, 0, { 0xD4C0433C, 0xE6B3540D, 0xEDDE8529 }, 0x0EE3, 0x06CC,
+      { 0xD314E96C, 0xE558D40D, 0xF1602719 }, 0x0F5C, 0x06CC },
+};
+
+RaceCameraTransition gRaceCameraPositionTransitions[] = {
+    { 0, 0x34, { 0xF2D97CE2, 0xF67DD3B6, 0xE5BDA99D }, { 0xF205259E, 0xF60253B6, 0xE447B7FD } },
+    { 1, 0x30, { 0xFCB5285D, 0xFD17E274, 0xF129A024 }, { 0xFBEF8C11, 0xFCDD2274, 0xF0541664 } },
+    { 2, 0x60, { 0xDA58478E, 0xE82482BE, 0xE8D93289 }, { 0xD698BBC8, 0xE78122BE, 0xEAF102B3 } },
+    { 0, 0x11, { 0xD2E8C6B6, 0xE5349196, 0xF2192B16 }, { 0xD2D3E0DE, 0xE51BF196, 0xF245BB32 } },
+    { 1, 0x34, { 0xD4B9ADC6, 0xE704FD7E, 0xEFF512C0 }, { 0xD3777B24, 0xE5DA5D7E, 0xF2082C88 } },
+    { 3, 0x30, { 0xD3257B4F, 0xE61DCBD2, 0xEF04C065 }, { 0xD230D197, 0xE580CBD2, 0xF0CEB75F } },
+    { 2, 0x33, { 0xF8607235, 0xFBC2AF59, 0xED508CA1 }, { 0xF8607235, 0xFBC2AF59, 0xED508CA1 } },
+    { 1, 0x31, { 0xF8F7A953, 0xFC3490A8, 0xEE024FE0 }, { 0xF7B0D353, 0xFACDB0A8, 0xEC1E9F12 } },
+    { 0, 0x34, { 0xEED72CC9, 0xF43C7D0E, 0xDFB9A879 }, { 0xED2A8B23, 0xF3B11D0E, 0xDF6E175D } },
+    { 2, 0x31, { 0xEA3CF1A5, 0xF290C452, 0xDF241B6E }, { 0xE95F2D03, 0xF2516452, 0xDF65BEC8 } },
+    { 1, 0x33, { 0xEF6F618E, 0xF467FB39, 0xDFDBBE9C }, { 0xEE6188E0, 0xF40E5B39, 0xDF7491B6 } },
+    { 3, 0x3E, { 0xEEED56A1, 0xF451496A, 0xE00D77B0 }, { 0xECC6D0D7, 0xF405096A, 0xDF21D656 } },
+    { 0, 0x0F, { 0xE21D1637, 0xED2A73FF, 0xE3E16721 }, { 0xE21D1637, 0xED3BB3FF, 0xE3E16721 } },
+};
+
 extern void packFixedTransformMatrix(void *, void *);
 extern s16 calculateFixedAngleBetweenXZPoints(s32, s32, s32, s32);
 extern RaceCamera D_801121E0[RACE_CAMERA_COUNT];
 extern RaceCamera *D_801124A0;
-extern u8 gRaceCameraRotationTransitions[];
-extern s16 gRaceCameraChaseYawOffsets[];
-extern u8 gRaceCameraChaseYawPreferenceOrder[];
-extern RaceCameraTransition gRaceCameraPositionTransitions[];
-extern void *gRaceCameraModeUpdates[];
 extern s32 gRaceCameraReplayStartX;
 extern s32 gRaceCameraReplayStartY;
 extern s32 gRaceCameraReplayStartZ;
