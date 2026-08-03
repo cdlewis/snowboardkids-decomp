@@ -23,7 +23,43 @@ typedef union {
     RaceCamera *object;
 } CourseSelectPointer;
 
-extern u16 gCourseDetailsPreviewCourseTiles[];
+u32 gCourseUnlockPrices[COURSE_UNLOCK_PRICE_COUNT] = {
+    3000,
+    2000,
+    1000,
+    12000,
+    10000,
+    11000,
+    24000,
+    20000,
+    22000,
+    80000,
+    100000,
+    1000,
+};
+
+u16 gCourseDetailsPreviewCourseTiles[] = {
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+};
+
+u16 gCourseDetailsPreviewExtraTiles[] = {
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    0,
+    0,
+};
+
 extern s16 gMenuFadeAlpha;
 extern s8 D_800EC9C0;
 extern s8 D_8010AE64;
