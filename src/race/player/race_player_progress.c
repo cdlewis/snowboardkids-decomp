@@ -13,13 +13,83 @@ typedef struct RacePlayerCheckpointEvent {
     /* 0x02 */ s16 eventId;
 } RacePlayerCheckpointEvent;
 
-extern RacePlayerCheckpointEvent *gRaceCourseCheckpointEventLists[];
-extern s8 *gRaceCoursePlayerPathOffsetTables[];
-extern u8 gSinglePlayerRankDisplayPatternFirst[];
-extern u8 gSinglePlayerRankDisplayPatternSecond[];
-extern u8 gSinglePlayerRankDisplayPatternThird[];
-extern u8 gSinglePlayerRankDisplayPatternFourth[];
+extern u32 D_800DC9A8[];
 extern s16 gFrameCounter;
+
+char D_800DDE70[4] = "\t\t\t";
+
+s8 *gRaceCoursePlayerPathOffsetTables[40] = {
+    (s8 *)&D_800DC9A8[0x002], (s8 *)&D_800DC9A8[0x002], (s8 *)&D_800DC9A8[0x030],
+    (s8 *)&D_800DC9A8[0x05E], (s8 *)&D_800DC9A8[0x08C], (s8 *)&D_800DC9A8[0x08C],
+    (s8 *)&D_800DC9A8[0x0B4], (s8 *)&D_800DC9A8[0x0DC], (s8 *)&D_800DC9A8[0x104],
+    (s8 *)&D_800DC9A8[0x104], (s8 *)&D_800DC9A8[0x136], (s8 *)&D_800DC9A8[0x168],
+    (s8 *)&D_800DC9A8[0x19A], (s8 *)&D_800DC9A8[0x19A], (s8 *)&D_800DC9A8[0x1E4],
+    (s8 *)&D_800DC9A8[0x22E], (s8 *)&D_800DC9A8[0x278], (s8 *)&D_800DC9A8[0x278],
+    (s8 *)&D_800DC9A8[0x2AD], (s8 *)&D_800DC9A8[0x2E2], (s8 *)&D_800DC9A8[0x317],
+    (s8 *)&D_800DC9A8[0x317], (s8 *)&D_800DC9A8[0x369], (s8 *)&D_800DC9A8[0x3BB],
+    (s8 *)&D_800DC9A8[0x40D], (s8 *)&D_800DC9A8[0x40D], (s8 *)&D_800DC9A8[0x44D],
+    (s8 *)&D_800DC9A8[0x48D], (s8 *)&D_800DC9A8[0x002], (s8 *)&D_800DC9A8[0x002],
+    (s8 *)&D_800DC9A8[0x030], (s8 *)&D_800DC9A8[0x05E], (s8 *)&D_800DC9A8[0x4CD],
+    (s8 *)&D_800DC9A8[0x4CD], (s8 *)&D_800DC9A8[0x4DE], (s8 *)&D_800DC9A8[0x4EF],
+    (s8 *)&D_800DC9A8[0x500], (s8 *)&D_800DC9A8[0x500], (s8 *)&D_800DC9A8[0x511],
+    (s8 *)&D_800DC9A8[0x522],
+};
+
+RacePlayerCheckpointEvent D_800DDF14[8] = {
+    { 0x31, 7 }, { 0x52, 7 }, { 0x66, 3 }, { 0x8B, 1 },
+    { 0x8E, 7 }, { 0x99, 7 }, { 0xA6, 7 }, { -1, 0 },
+};
+
+RacePlayerCheckpointEvent D_800DDF34[4] = {
+    { 0x27, 7 }, { 0x34, 7 }, { 0x67, 7 }, { -1, 0 },
+};
+
+RacePlayerCheckpointEvent D_800DDF44[10] = {
+    { 0x06, 7 }, { 0x21, 1 }, { 0x2C, 1 }, { 0x42, 1 }, { 0x4F, 1 },
+    { 0x6A, 1 }, { 0x79, 1 }, { 0x88, 1 }, { 0x8C, 1 }, { -1, 0 },
+};
+
+RacePlayerCheckpointEvent D_800DDF6C[14] = {
+    { 0x10, 7 }, { 0x13, 7 }, { 0x22, 3 }, { 0x48, 1 }, { 0x81, 3 },
+    { 0x8C, 1 }, { 0x9D, 1 }, { 0xB7, 3 }, { 0x110, 0 }, { 0x101, 0 },
+    { 0xF6, 1 }, { 0xEA, 1 }, { 0xE2, 0 }, { -1, 7 },
+};
+
+RacePlayerCheckpointEvent D_800DDFA4[9] = {
+    { 0x22, 1 }, { 0x46, 1 }, { 0x56, 2 }, { 0x69, 2 }, { 0x89, 3 },
+    { 0x96, 0 }, { 0x9C, 3 }, { 0xBA, 3 }, { -1, 7 },
+};
+
+RacePlayerCheckpointEvent D_800DDFC8[10] = {
+    { 0x1E, 3 }, { 0x2E, 3 }, { 0x77, 0 }, { 0x91, 0 }, { 0xB4, 3 },
+    { 0xB7, 3 }, { 0x105, 3 }, { 0x126, 3 }, { 0x12F, 3 }, { -1, 7 },
+};
+
+RacePlayerCheckpointEvent D_800DDFF0[8] = {
+    { 0x1A, 3 }, { 0x29, 0 }, { 0x4C, 3 }, { 0x61, 7 },
+    { 0x84, 3 }, { 0xAF, 3 }, { 0xE0, 3 }, { -1, 7 },
+};
+
+RacePlayerCheckpointEvent D_800DE010[4] = {
+    { 0x15, 7 }, { 0x1F, 7 }, { 0x32, 0 }, { -1, 7 },
+};
+
+RacePlayerCheckpointEvent D_800DE020[3] = {
+    { 0x17, 7 }, { 0x38, 7 }, { -1, 7 },
+};
+
+RacePlayerCheckpointEvent D_800DE02C[1] = { { -1, 7 } };
+
+RacePlayerCheckpointEvent *gRaceCourseCheckpointEventLists[10] = {
+    D_800DDF14, D_800DDF34, D_800DDF44, D_800DDF6C, D_800DDFA4,
+    D_800DDFC8, D_800DDFF0, D_800DE02C, D_800DE010, D_800DE020,
+};
+
+u8 gSinglePlayerRankDisplayPatternFirst[4] = { 1, 0, 2, 0 };
+u8 gSinglePlayerRankDisplayPatternSecond[4] = { 0, 1, 2, 0 };
+u8 gSinglePlayerRankDisplayPatternThird[4] = { 0, 1, 2, 0 };
+u8 gSinglePlayerRankDisplayPatternFourth[12] = { 0, 2, 1, 0 };
+
 
 // updateRacePlayerRankDisplay best match: 81.165% (nonmatchings/updateRacePlayerRankDisplay-5793478266135801235/base_30.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race/player/race_player_progress/updateRacePlayerRankDisplay.s")
