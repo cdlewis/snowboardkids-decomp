@@ -202,6 +202,14 @@ and control flow already match and only register *names* differ.
   value between `$v0` and `$v1` under `-O2`; a plain compound block does not
   necessarily have the same effect. Reserve this for a final register-only
   mismatch after confirming that the condition emits no branch.
+- **A one-time forward-goto initialization block can reorder register
+  allocation without changing the emitted CFG.** When an invariant local takes
+  the first temp register but a loop-local value needs it instead, branch to an
+  initialization label placed textually between the loop locals whose order the
+  target implies, then branch back to the loop header. IDO can fold the one-time
+  path into the prologue while retaining the label's source/IR ordering for
+  register coloring. Use this only for a final register-only mismatch and
+  verify that the compiled branches disappear completely.
 - **Fold a pointer-global assignment into its first field access.** Writing
   `(current = ptr)->field` can emit the same store and field load as two
   statements while giving IDO a distinct internal temporary for the assigned
