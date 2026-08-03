@@ -20,11 +20,11 @@
 
 CharacterSelectState gCharacterSelectHudState;
 u8 gCharacterSelectSecretCharacterUnlocked;
+u16 gCharacterSelectIdOrder[] = { 5, 0, 1, 2, 3, 4 };
+s16 gCharacterSelectVoiceSoundIds[] = { 0x5D, 0x57, 0x58, 0x5A, 0x59, 0x5B, 0, 0, 0, 0 };
 
 extern void releaseMenuAssetHandles(void);
 extern s32 enqueueSoundEffect(s16, s16);
-extern u16 gCharacterSelectIdOrder[];
-extern s16 gCharacterSelectVoiceSoundIds[];
 extern CallbackTask *D_8010ADE0;
 extern CallbackTask *D_8010ADE4;
 extern CallbackTask *D_8010ADEC;
