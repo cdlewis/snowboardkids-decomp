@@ -3,8 +3,6 @@
 #define FIXED_MATRIX_ONE 0x1000
 #define FIXED_MATRIX_ROWS(matrix) ((s16(*)[3])(matrix))
 
-extern s16 gSineTable[];
-
 FixedTransform gIdentityFixedTransform = {
     {
         FIXED_MATRIX_ONE, 0, 0,
