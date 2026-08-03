@@ -172,7 +172,7 @@ void removeHuffmanQueueNode(s16 arg0) {
     }
 }
 
-// decompressHuffmanAssetPayload best match: 99.313% (nonmatchings/decompressHuffmanAssetPayload-7181144369148334388/base_42.c)
+// decompressHuffmanAssetPayload best match: 99.427% (nonmatchings/decompressHuffmanAssetPayload-8101714008744796594/base_26.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/engine/asset_manager/decompressHuffmanAssetPayload.s")
 
 #ifdef NON_MATCHING
@@ -197,6 +197,7 @@ void decompressHuffmanAssetPayload(u8 arg0, u8 *arg1, u8 *arg2, s32 arg3) {
     s32 rangeStart;
     s32 rangeEnd;
     s32 leafNodeIndexCopy;
+    s32 weightCopy;
     u8 weight;
     s32 end;
     u8 copiedByte;
@@ -212,15 +213,15 @@ void decompressHuffmanAssetPayload(u8 arg0, u8 *arg1, u8 *arg2, s32 arg3) {
     input = arg1; end = -1; read_range: rangeStart = *input; tableBytesRead += 1; input += 1; if (tableBytesRead != 1) { if (rangeStart == 0) { goto build_tree; } }
     rangeEnd = *input;
     tableBytesRead += 1;
-    bit = rangeEnd < rangeStart;
     input += 1;
     currentNodeIndex = rangeStart;
-    if (bit == 0) {
+    if (rangeEnd >= rangeStart) {
         rangeStart = rangeEnd + 1;
         do {
             leafNodeIndexCopy = gHuffmanNodeCount;
             rootNodeIndex = leafNodeIndexCopy;
-            weight = *input;
+            weightCopy = *input;
+            weight = weightCopy;
             tableBytesRead += 1;
             input += 1;
             node = &gHuffmanNodes[rootNodeIndex];
