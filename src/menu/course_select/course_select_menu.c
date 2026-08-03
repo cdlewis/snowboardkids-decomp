@@ -29,7 +29,7 @@ extern s8 D_800EC9C0;
 extern s8 D_8010AE64;
 extern u8 D_8010AEA0[];
 #ifdef NON_MATCHING
-extern volatile s8 D_8010AEA4;
+extern volatile char D_8010AEA4;
 #else
 extern s8 D_8010AEA4;
 #endif
@@ -1459,25 +1459,25 @@ void updateCourseSelectPurchasePrompt(void) {
     updateCallbackTasks();
 }
 
-// updateCourseSelectUnlockCourseList best match: 98.684%
-// (nonmatchings/updateCourseSelectUnlockCourseList-7181144369148334388/base_19.c)
+// updateCourseSelectUnlockCourseList best match: 99.366%
+// (nonmatchings/updateCourseSelectUnlockCourseList-47/base.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/course_select/course_select_menu/updateCourseSelectUnlockCourseList.s")
 
 #ifdef NON_MATCHING
 void updateCourseSelectUnlockCourseList(void)
 {
-  int new_var3;
-  s32 playerIndex;
-  register s32 columnCount;
-  s32 i;
-  s32 held;
-  s32 new_var;
-  s32 heldUp;
-  s32 new_var2;
-  int new_var4;
+  register s32 i;
+  u16 new_var5;
+  u32 new_var4;
   s32 rowOffset;
   u8 selection;
   u32 repeatTimer;
+  int new_var3;
+  s32 playerIndex;
+  register s32 columnCount;
+  s32 held;
+  s32 new_var;
+  s32 heldUp;
   playerIndex = 0;
   if (gMenuChoicePromptState[playerIndex] == 9)
   {
@@ -1514,8 +1514,7 @@ void updateCourseSelectUnlockCourseList(void)
     else
     {
       i = 0x20000 | 0x0400;
-      new_var2 = playerIndex;
-      new_var = gPlayerInputPressed[new_var2];
+      new_var = gPlayerInputPressed[playerIndex];
       i = new_var & i;
       new_var3 = 9;
       if (i || (((held & (0x20000 | 0x0400)) && (gMenuInputRepeatTimers[playerIndex] >= new_var3)) && (gMenuInputRepeatTimers[playerIndex] & 1)))
@@ -1533,7 +1532,8 @@ void updateCourseSelectUnlockCourseList(void)
       }
     }
     columnCount = 3;
-    if (gMenuInputRepeatTimers[playerIndex] != playerIndex)
+    new_var5 = gMenuInputRepeatTimers[playerIndex];
+    if (new_var5 != playerIndex)
     {
       gMenuInputRepeatTimers[playerIndex] += 1;
       if (gMenuInputRepeatTimers[playerIndex] == 0xFFFF)
@@ -1541,9 +1541,8 @@ void updateCourseSelectUnlockCourseList(void)
         gMenuInputRepeatTimers[playerIndex] = 0xA;
       }
     }
-    rowOffset = gMenuChoicePromptState[playerIndex] * columnCount;
-    selection = (rowOffset + (((s32) gRacePlayers[playerIndex].menuSelection) % columnCount)) - 6;
-    gRacePlayers[playerIndex].menuSelection = selection;
+    rowOffset = (i = gMenuChoicePromptState[playerIndex] * columnCount);
+    selection = (gRacePlayers[playerIndex].menuSelection = (rowOffset + (((s32) gRacePlayers[playerIndex].menuSelection) % columnCount)) - 6);
     new_var4 = gPlayerInputPressed[playerIndex] & 0x4000;
     if (new_var4)
     {
