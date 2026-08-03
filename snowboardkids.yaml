@@ -319,7 +319,7 @@ segments:
       - [0xD51E0, .data, race/items/race_item_projectiles]
       - [0xD52D0, .data, race/items/race_item_effects]
       - [0xD5640, .data, menu/main_menu/main_menu_panel_ui]
-      - [0xD6330, data, menu/renderer/menu_screen_effects]
+      - [0xD6330, .data, menu/renderer/menu_screen_effects]
       - [0xD6850, data, race/effects/race_intro_effects]
       - [0xD6BF0, data, race/ui/race_ui_effects]
       - [0xD8350, data, race/course/race_course_props_and_pickups]
