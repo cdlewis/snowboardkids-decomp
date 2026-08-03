@@ -18,10 +18,19 @@
 
 typedef s16 CharacterSelectOptionList[10];
 
+CharacterSelectCourseMenuData gCharacterSelectCourseMenuData = {
+    {
+        { 9, 0, 1, 2, 3, 4, -1, 0, 0, 0, 0 },
+        { 9, 0, 1, 2, 3, 4, 5, -1, 0, 0, 0 },
+        { 9, 0, 1, 2, 3, 4, 5, 6, -1, 0, 0 },
+    },
+    { 9, 0, 1, 2, 3, 4, 5, 6, 8, -1, 0 },
+    { 9, 0, 1, -1 },
+    { 7, -1, 0, 0, 0, 0, 0, 0 },
+};
+
 extern void enqueueSoundEffect(s32, s32);
 extern void releaseMenuAssetHandles(void);
-extern s16 gCharacterSelectShortCourseOptions[];
-extern s16 gCharacterSelectSingleCourseOption[];
 extern s16 gMenuFadeAlpha;
 extern CharacterSelectOptionList *gCharacterSelectActiveCourseOptions;
 extern s32 D_8010ADE0;

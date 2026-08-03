@@ -6,6 +6,7 @@
 #include "game/engine/callback_task_scheduler.h"
 #include "game/menu/controller_pak/controller_pak_race_record_save_flow.h"
 #include "game/menu/controller_pak/controller_pak_race_record_save_ui.h"
+#include "game/menu/character_select/character_select_course_menu.h"
 #include "game/menu/main_menu/controller_main_menu_flow.h"
 #include "game/menu/renderer/menu_renderer.h"
 #include "game/race/player/race_player_input.h"
@@ -29,8 +30,6 @@ extern void *D_8010ADE0;
 extern void *D_8010ADE4;
 
 #define CONTROLLER_PAK_RACE_RECORD_SAVE_SCORE_TEXTURE_HANDLE (gAssetHandles[0x21])
-
-extern s16 gPlayerBadgeDisplayOrder[];
 
 struct ControllerPakRaceRecordSaveActor {
     char pad[0x18];
