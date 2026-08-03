@@ -65,3 +65,9 @@ gCharacterSelectSingleCourseOption = gCharacterSelectCourseMenuData + 0x60;
 
 /* Race-course effect data subobject used by extracted collision assembly. */
 D_800DA856 = gCourseTriggerEntries + 0x16;
+
+/* Race-player ground probe subobjects used by extracted movement assembly. */
+D_800DE7F8 = gRacePlayerGroundProbeOffsets + 0x48;
+D_800DE7FC = gRacePlayerGroundProbeOffsets + 0x4C;
+D_800DE814 = gRacePlayerGroundProbeOffsets + 0x64;
+D_800DE818 = gRacePlayerGroundProbeOffsets + 0x68;

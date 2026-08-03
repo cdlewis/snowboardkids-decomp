@@ -52,6 +52,39 @@ typedef struct {
     s32 collisionZ;
 } GroundProbeScratch;
 
+Vec3i gRacePlayerGroundProbeOffsets[] = {
+    { 0, 0, -0x80000 },
+    { 0, 0, 0x80000 },
+    { 0x46000, 0, -0xC6000 },
+    { -0x46000, 0, -0xC6000 },
+    { 0x46000, 0, 0xC6000 },
+    { -0x46000, 0, 0xC6000 },
+    { 0x46000, 0, 0 },
+    { -0x46000, 0, 0 },
+    { 0, 0, 0xC6000 },
+    { 0xA6000, 0, -0x46000 },
+    { -0xA6000, 0, -0x46000 },
+    { 0xA6000, 0, 0x46000 },
+    { -0xA6000, 0, 0x46000 },
+};
+
+s16 gRacePlayerVoiceSoundIds0[] = {
+    0x22, 0x22, 0x28, 0x28, 0x35, 0x35, 0x2E, 0x2E, 0x3B, 0x3B, 0x40, 0x40,
+};
+
+s16 gRacePlayerVoiceSoundIds1[] = {
+    0x23, 0x23, 0x60, 0x29, 0x36, 0x36, 0x63, 0x2F, 0x3C, 0x3C, 0x40, 0x40,
+};
+
+s16 gRacePlayerVoiceSoundIds2[] = {
+    0x24, 0x5F, 0x62, 0x2A, 0x65, 0x37, 0x64, 0x30, 0x3D, 0x3D, 0x41, 0x41,
+};
+
+s16 gRacePlayerVoiceSoundIds4[] = { 0x27, 0x2D, 0x3A, 0x33, 0x3F, 0x43 };
+s16 gRacePlayerVoiceSoundIds5[] = { 0x25, 0x2C, 0x38, 0x32, 0x3E, 0x42 };
+s16 gRacePlayerVoiceSoundIds6[] = { 0x26, 0x2B, 0x39, 0x31, 0x3E, 0x42 };
+s16 gRacePlayerVoiceSoundIds7[] = { 0x26, 0x2B, 0x38, 0x32, 0x3E, 0x42, 0, 0, 0, 0, 0, 0 };
+
 extern s32 calculateFixedAngleBetweenXZPoints(s32, s32, s32, s32);
 extern s16 calculateFixedAngleFromDeltaXZ(s32, s32);
 extern void makeFixedRotationX(Matrix4s, s16);
@@ -71,19 +104,6 @@ extern s32 integerSquareRoot64(s64);
 extern s16 gFrameCounter;
 extern s8 gRacePlayerCount;
 extern s32 gMenuFlowState;
-extern Vec3i gRacePlayerGroundProbeOffsets[];
-extern Vec3i D_800DE7F8;
-extern s32 D_800DE7FC;
-extern Vec3i D_800DE810;
-extern s32 D_800DE814;
-extern s32 D_800DE818;
-extern s16 gRacePlayerVoiceSoundIds0[];
-extern s16 gRacePlayerVoiceSoundIds1[];
-extern s16 gRacePlayerVoiceSoundIds2[];
-extern s16 gRacePlayerVoiceSoundIds4[];
-extern s16 gRacePlayerVoiceSoundIds5[];
-extern s16 gRacePlayerVoiceSoundIds6[];
-extern s16 gRacePlayerVoiceSoundIds7[];
 extern s16 gRaceLapCount;
 
 void getRacePlayerRankingProgress(s32 arg0, s32 *arg1, s32 *arg2) {
@@ -1029,6 +1049,7 @@ s32 tryApplyRacePlayerItemHit(Vec3i *pos, s32 xzSize, s16 flag, s16 playerIndex)
 }
 
 // updateRacePlayerSurfaceContact best match: 99.828% (nonmatchings/updateRacePlayerSurfaceContact-8280121253171829145/base_17.c)
+// The assembly references interior elements of gRacePlayerGroundProbeOffsets by fixed offsets.
 #pragma GLOBAL_ASM("asm/nonmatchings/race/player/race_player_movement/updateRacePlayerSurfaceContact.s")
 
 #ifdef NON_MATCHING
@@ -1190,7 +1211,9 @@ s32 updateRacePlayerSurfaceContact(RacePlayer *player) {
 
     sine = fixedSine(player->unk2EE);
     cosine = fixedCosine(player->unk2EE);
-    sideSpacing = ((s64)D_800DE7F8.x * cosine + (s64)D_800DE7FC * -sine) / 0x1000;
+    sideSpacing = ((s64)gRacePlayerGroundProbeOffsets[6].x * cosine +
+                   (s64)gRacePlayerGroundProbeOffsets[6].y * -sine) /
+                  0x1000;
 
     verticalOffset = player->unk5C;
     player->coursePathIndex = findRaceCourseSurfaceFromHint(player->coursePathIndex, player->pos.x, player->pos.z);
@@ -1204,7 +1227,9 @@ s32 updateRacePlayerSurfaceContact(RacePlayer *player) {
     for (iteration = 0; iteration < 3; iteration++) {
         sine = fixedSine(player->pitchAngle);
         cosine = fixedCosine(player->pitchAngle);
-        longitudinalSpacing = ((s64)D_800DE814 * sine + (s64)D_800DE818 * cosine) / 0x1000;
+        longitudinalSpacing = ((s64)gRacePlayerGroundProbeOffsets[8].y * sine +
+                               (s64)gRacePlayerGroundProbeOffsets[8].z * cosine) /
+                              0x1000;
         makeFixedRotationXY(playerRotation.values, player->pitchAngle, player->facingAngle);
 
         for (i = 0; i < 6; i++) {
@@ -1405,11 +1430,11 @@ s32 updateRacePlayerGroundAlignment(RacePlayer *player) {
     terrainId = player->coursePathIndex;
 
     makeFixedRotationZ(playerRotation.values, player->unk2EE);
-    transformVec3iByFixedMatrix(playerRotation.values, &D_800DE7F8, points);
+    transformVec3iByFixedMatrix(playerRotation.values, &gRacePlayerGroundProbeOffsets[6], points);
     sideSpacing = points[0].x;
 
     makeFixedRotationX(playerRotation.values, player->pitchAngle);
-    transformVec3iByFixedMatrix(playerRotation.values, &D_800DE810, points);
+    transformVec3iByFixedMatrix(playerRotation.values, &gRacePlayerGroundProbeOffsets[8], points);
     longitudinalSpacing = points[0].z;
 
     probeScratch.baseY = player->pos.y - 0x30000;
