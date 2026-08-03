@@ -568,7 +568,7 @@ void initControllerPakFileDeleteFreeSpaceInfo(ControllerPakTwoPointActor *arg0) 
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateControllerPakFileDeleteFreeSpaceInfo);
 }
 
-// drawControllerPakFileDeleteFileList best match: 95.290% (nonmatchings/drawControllerPakFileDeleteFileList-6759517978943015823/base_35.c)
+// drawControllerPakFileDeleteFileList best match: 96.069% (nonmatchings/drawControllerPakFileDeleteFileList-8101714008744796594/base_90.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/controller_pak/controller_pak_ui/drawControllerPakFileDeleteFileList.s")
 
 #ifdef NON_MATCHING
@@ -628,13 +628,14 @@ void drawControllerPakFileDeleteFileList(ControllerPakFileListActor *arg0) {
             i = 0;
             insertIndex = 0;
             do {
-                if ((gControllerPakFileStates[fileIndex].game_name[i] == 0) && (insertIndex == 0)) {
+                state = gControllerPakFileStates[fileIndex].game_name[i];
+                if ((state == 0) && (insertIndex == 0)) {
                     insertIndex = i;
                 }
-                if (gControllerPakFileStates[fileIndex].game_name[i] < 0x10) {
+                if (state < 0x10) {
                     fileNameText[i] = 0xFFFE;
                 } else {
-                    fileNameText[i] = gControllerPakFileStates[fileIndex].game_name[i] - 0x10;
+                    fileNameText[i] = state - 0x10;
                 }
                 i++;
             } while (i < 0x10);
@@ -670,17 +671,27 @@ void drawControllerPakFileDeleteFileList(ControllerPakFileListActor *arg0) {
 
             i = 0;
             do {
+                // IDO register allocation nudges.
+                if ((gControllerPakFileStates[fileIndex].company_code &&
+                     gControllerPakFileStates[fileIndex].company_code) &&
+                    gControllerPakFileStates[fileIndex].company_code) {
+                }
+                if (gControllerPakFileStates[fileIndex].company_code) {
+                }
                 state = (gControllerPakFileStates[fileIndex].company_code >> ((1 - i) * 8)) & 0xFF;
                 insertIndex = state;
                 if ((insertIndex < 0x30) || (insertIndex >= 0x5B)) {
                     text7C[i] = 0xFFFE;
-                } else if (insertIndex >= 0x41) {
-                    text7C[i] = insertIndex - 0x37;
-                } else if (insertIndex >= 0x3A) {
-                    text7C[i] = 0xFFFE;
                 } else {
-                    text7C[i] = insertIndex;
-                    text7C[i] = text7C[i] - 0x30;
+                    state = i;
+                    if (insertIndex >= 0x41) {
+                        text7C[state] = insertIndex - 0x37;
+                    } else if (insertIndex >= 0x3A) {
+                        text7C[state] = 0xFFFE;
+                    } else {
+                        text7C[state] = insertIndex;
+                        text7C[state] = text7C[state] - 0x30;
+                    }
                 }
                 i++;
             } while (i < 2);
@@ -693,11 +704,11 @@ void drawControllerPakFileDeleteFileList(ControllerPakFileListActor *arg0) {
                 i++;
             } while (i < 3);
             insertIndex = gControllerPakFileStates[fileIndex].file_size >> 8;
-            i = 2;
+            i = 0;
             do {
-                textB0[i] = insertIndex % 10;
+                textB0[2 - i] = insertIndex % 10;
                 insertIndex = insertIndex / 10;
-                i--;
+                i++;
             } while (insertIndex != 0);
             textB0[3] = 0xFFFF;
             drawMenuGlyphScript(arg0->positions[4].x, (s16)(arg0->positions[4].y + rowY), textB0, 1, alpha, 8);
