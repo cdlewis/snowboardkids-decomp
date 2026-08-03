@@ -305,7 +305,7 @@ segments:
       - [0xB85C0, .data, menu/course_select/course_select_shop_ui]
       - [0xB8A60, .data, menu/controller_pak/controller_pak_ui]
       - [0xB8D00, .data, ending/ending_credits_tommy]
-      - [0xB8D40, data, ending/ending_credits_ui]
+      - [0xB8D40, .data, ending/ending_credits_ui]
       - [0xBA130, .data, ending/ending_credits_effects]
       - [0xBA140, data, race/effects/race_start_transition]
       - [0xBC430, .data, demo/main_menu_demo_race_intro]
