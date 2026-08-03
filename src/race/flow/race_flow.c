@@ -76,10 +76,84 @@ typedef struct {
     /* 0x01 */ u8 stickY;
 } RaceCourseCharacterEntry;
 
-#endif
+extern CourseGridEntry D_800DBD10[];
 
-extern CourseGridEntry *D_800DC490[];
-extern u16 D_800DC5C0[];
+CourseGridEntry *D_800DC490[12] = {
+    D_800DBD10,
+    &D_800DBD10[12],
+    &D_800DBD10[24],
+    &D_800DBD10[39],
+    &D_800DBD10[54],
+    &D_800DBD10[67],
+    &D_800DBD10[83],
+    &D_800DBD10[119],
+    &D_800DBD10[107],
+    &D_800DBD10[95],
+    NULL,
+    NULL,
+};
+
+u8 gPendingEndingCreditsFlow = 0;
+u8 D_800DC4C4[10][4] = {
+    {2, 3, 4, 0},
+    {0, 1, 2, 3},
+    {1, 2, 3, 4},
+    {0, 3, 4, 1},
+    {0, 2, 3, 4},
+    {0, 1, 2, 3},
+    {1, 3, 4, 0},
+    {0, 1, 2, 3},
+    {5, 0, 1, 3},
+    {0, 1, 4, 2},
+};
+RaceCourseCharacterEntry D_800DC4EC[8] = {
+    {1, 0}, {1, 1}, {1, 2}, {1, 3}, {1, 4}, {14, 5}, {1, 6}, {0, 0},
+};
+RaceCourseCharacterEntry D_800DC4FC[8] = {
+    {1, 0}, {1, 1}, {1, 2}, {1, 3}, {1, 4}, {1, 5}, {1, 6}, {0, 0},
+};
+RaceCourseCharacterEntry D_800DC50C[8] = {
+    {4, 0}, {4, 1}, {4, 2}, {4, 3}, {4, 4}, {4, 5}, {4, 6}, {0, 0},
+};
+RaceCourseCharacterEntry D_800DC51C[8] = {
+    {4, 0}, {4, 1}, {4, 2}, {4, 3}, {4, 4}, {4, 5}, {4, 6}, {0, 0},
+};
+RaceCourseCharacterEntry D_800DC52C[8] = {
+    {7, 0}, {7, 1}, {7, 2}, {7, 3}, {7, 4}, {7, 5}, {7, 6}, {0, 0},
+};
+RaceCourseCharacterEntry D_800DC53C[8] = {
+    {8, 0}, {8, 1}, {8, 2}, {8, 3}, {8, 4}, {8, 5}, {8, 6}, {0, 0},
+};
+RaceCourseCharacterEntry D_800DC54C[8] = {
+    {8, 0}, {8, 1}, {8, 2}, {8, 3}, {8, 4}, {8, 5}, {8, 6}, {0, 0},
+};
+RaceCourseCharacterEntry D_800DC55C[8] = {
+    {0, 0}, {0, 1}, {0, 2}, {0, 3}, {0, 4}, {0, 5}, {0, 6}, {0, 0},
+};
+RaceCourseCharacterEntry D_800DC56C[8] = {
+    {8, 0}, {8, 1}, {8, 2}, {8, 3}, {8, 4}, {14, 5}, {8, 6}, {0, 0},
+};
+RaceCourseCharacterEntry D_800DC57C[8] = {
+    {1, 0}, {1, 1}, {1, 2}, {1, 3}, {1, 4}, {1, 5}, {1, 6}, {0, 0},
+};
+RaceCourseCharacterEntry *D_800DC58C[10] = {
+    D_800DC4EC,
+    D_800DC4FC,
+    D_800DC50C,
+    D_800DC51C,
+    D_800DC52C,
+    D_800DC53C,
+    D_800DC54C,
+    D_800DC55C,
+    D_800DC56C,
+    D_800DC57C,
+};
+u8 D_800DC5B4[12] = {100, 100, 100, 100, 100, 100, 100, 100, 100, 10, 0, 0};
+u16 D_800DC5C0[16] = {
+    0x0000, 0x0068, 0x00CD, 0x0135, 0x019C, 0x0203, 0x0268, 0x02CE,
+    0x0335, 0x03A0, 0x040C, 0x0466, 0x7FFF, 0x0000, 0x0000, 0x0000,
+};
+
 extern s32 gRaceCameraReplayStartX;
 extern s32 gRaceCameraReplayStartY;
 extern s32 gRaceCameraReplayStartZ;
@@ -92,9 +166,6 @@ extern s16 gRacePlayerAttackStartTimer;
 #ifdef NON_MATCHING
 extern u8 gTrainingCourseLesson;
 extern u8 gMainMenuModeSelection;
-extern u8 D_800DC5B4[];
-extern u8 D_800DC4C4[][4];
-extern RaceCourseCharacterEntry *D_800DC58C[];
 extern void initCourseRecordBannerFadeOut(void *);
 #endif
 extern u8 D_80121B57;
@@ -104,7 +175,6 @@ extern u8 gRaceChallengeFailed;
 extern u8 gPendingFramebufferSwapCount;
 extern u8 gFramebufferSwapHold;
 extern u8 gRumblePakConnectedMask;
-extern u8 gPendingEndingCreditsFlow;
 extern u8 gRaceUpdatePaused;
 extern s16 gFrameCounter;
 extern ViewportSlot D_801121E0[];
