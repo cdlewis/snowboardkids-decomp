@@ -27,10 +27,6 @@ typedef struct MainMenuAnimationWritePart {
 
 #define ASSET_HANDLE(index) (gAssetHandles[(index)])
 
-// compressRaceRecordReplayData best match: 99.203% (nonmatchings/compressRaceRecordReplayData-1219509448159986855/base_2.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/menu/main_menu/main_menu_scene_model/compressRaceRecordReplayData.s")
-
-#ifdef NON_MATCHING
 s32 compressRaceRecordReplayData(u8 *src, s32 srcLen, u16 *dst) {
     s32 count;
     s32 srcPos;
@@ -53,7 +49,7 @@ s32 compressRaceRecordReplayData(u8 *src, s32 srcLen, u16 *dst) {
     bestDistance = 0;
     bestLength = 0;
     distance = 1;
-    out = 1 + dst;
+    goto initialize_out;
 
 loop:
     maxLength = remaining;
@@ -68,8 +64,15 @@ search_loop:
     }
 
     length = 0;
-    cur = src;
     count = 0;
+    cur = src;
+    goto after_initialize_out;
+
+initialize_out:
+    out = 1 + dst;
+    goto loop;
+
+after_initialize_out:
     if (maxLength > 0) {
         cur += srcPos;
         prev = src;
@@ -125,7 +128,6 @@ search_done:
     }
     return outCount;
 }
-#endif
 
 // saveRaceRecordReplayData best match: 96.493% (nonmatchings/saveRaceRecordReplayData-8498672362023432715/base_18.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/main_menu/main_menu_scene_model/saveRaceRecordReplayData.s")
