@@ -294,7 +294,7 @@ segments:
       - [0xB4090, .data, menu/course_select/multiplayer_course_select_menu]
       - [0xB40B0, .data, menu/course_select/course_select_menu]
       - [0xB4100, .data, menu/training/training_course_ui]
-      - [0xB5DD0, data, menu/renderer/menu_renderer]
+      - [0xB5DD0, .data, menu/renderer/menu_renderer]
       - [0xB5E00, data, menu/race_setup/race_setup_ui]
       - [0xB6670, data, menu/character_select/character_select_ui]
       - [0xB6750, data, menu/splitscreen_select/race_splitscreen_select_ui]

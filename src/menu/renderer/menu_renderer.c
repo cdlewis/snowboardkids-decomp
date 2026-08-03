@@ -129,6 +129,17 @@ union MenuRenderCoordinate {
 typedef void (*MenuRenderSpriteActorCallback)(MenuRenderSpriteActor *);
 typedef void (*MenuRenderCallback)(MenuRenderSprite *);
 
+u16 gMenuTransparentPalette[MENU_PALETTE_COLOR_COUNT] = {
+    0x0000, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF,
+    0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF,
+};
+s16 gMenuSpriteFlipScales[4][2] = {
+    { 1, 1 },
+    { -1, 1 },
+    { 1, -1 },
+    { -1, -1 },
+};
+
 extern void *allocMenuRenderScratch(s32 size);
 s32 drawMenuTilemapSprite(MenuRenderSprite *sprite, s32 arg1, s16 x, s16 y);
 void drawMenuSpriteClipped(s16 x, s16 y, MenuFontAssetTable *table, u16 imageIndex, u16 scaleX, u16 scaleY,
@@ -138,13 +149,11 @@ void drawMenuSpriteWithAlphaClipped(s16 arg0, s16 arg1, void *arg2, u16 arg3, u1
 void drawMenuGlyph(s16 x, s16 y, u16 glyphIndex, u8 paletteIndex, u16 intensity, u16 fontBank);
 void drawMenuColoredGlyph(s16 x, s16 y, u16 glyph, u8 palette, u16 scale, u16 colorMode, s32 arg6);
 extern Gfx *gRegionAllocPtr;
-extern s16 gMenuSpriteFlipScales[][2];
 extern s16 gMenuFadeAlpha;
 extern s16 gMenuViewportWidth;
 extern s16 gMenuViewportHeight;
 extern s16 gMenuViewportCenterX;
 extern s16 gMenuViewportCenterY;
-extern u16 gMenuTransparentPalette[];
 
 void drawMenuAssetRegion(s16 x, s16 y, void *tableAddress, u16 entryIndex, u16 scaleX, u16 scaleY,
                          u8 startS, u8 startT, u8 width, u8 height) {
