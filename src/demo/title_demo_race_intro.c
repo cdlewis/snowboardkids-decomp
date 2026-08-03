@@ -16,20 +16,34 @@
 #include "game/menu/renderer/menu_screen_effects.h"
 
 typedef union {
+    u32 words[sizeof(RacePlayer) / sizeof(u32)];
     RacePlayer player;
     u8 bytes[sizeof(RacePlayer)];
 } RacePlayerReplaySnapshot;
 
+s16 gTitleDemoReplaySegmentFrames[16] = {
+    0x0000, 0x0039, 0x006C, 0x00A1, 0x00D2, 0x0107, 0x0138, 0x026C,
+    0x02A2, 0x02D3, 0x0307, 0x0339, 0x036E, 0x03A0, 0x03D4, 0x0413,
+};
+
+s16 gTitleDemoCameraModeFrames[22] = {
+    0x0000, 0x0039, 0x006C, 0x00A1, 0x00D2, 0x0107, 0x0138, 0x015D,
+    0x01BE, 0x01D2, 0x01FE, 0x023A, 0x026C, 0x02A2, 0x02D3, 0x0307,
+    0x0339, 0x036E, 0x03A0, 0x03D4, 0x0413, 0x0000,
+};
+
+u8 gTitleDemoCameraModes[24] = {
+    0x08, 0x09, 0x0A, 0x0B, 0x10, 0x11, 0x0C, 0x12,
+    0x0D, 0x0E, 0x0F, 0x13, 0x14, 0x15, 0x16, 0x17,
+    0x18, 0x19, 0x1A, 0x1B, 0x1C, 0x00, 0x00, 0x00,
+};
+
+RacePlayerReplaySnapshot gTitleDemoReplayInputs[4][16] = {
+#include "title_demo_replay_inputs.inc.c"
+};
+
 extern s16 gMenuFadeAlpha;
 extern f32 D_800E10C8;
-extern s16 gTitleDemoReplaySegmentFrames[];
-extern s16 gTitleDemoCameraModeFrames[];
-extern u8 gTitleDemoCameraModes[];
-#ifdef NON_MATCHING
-extern RacePlayerReplaySnapshot gTitleDemoReplayInputs[4][16];
-#else
-extern u8 gTitleDemoReplayInputs[];
-#endif
 extern u8 gPendingFramebufferSwapCount;
 #ifdef NON_MATCHING
 extern volatile char gTitleDemoRaceIntroViewportHeight;
