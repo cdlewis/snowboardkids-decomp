@@ -87,6 +87,98 @@ typedef struct {
     RenderCallbackNode entry3;
 } CallbackQueueGroup;
 
+u8 gMenuFadeOverlayActive = 0;
+
+s16 gMenuFadeAlpha = 0;
+
+Vp D_800DEF18[] = {
+    {{{640, 480, 511, 0}, {640, 480, 511, 0}}},
+};
+
+Gfx D_800DEF28[] = {
+    {{0xE7000000, 0x00000000}},
+    {{0xBA000602, 0x00000040}},
+    {{0xBA001402, 0x00000000}},
+    {{0xB6000000, 0x00033205}},
+    {{0xB7000000, 0x00002205}},
+    {{0xBA001102, 0x00000000}},
+    {{0xBA001301, 0x00080000}},
+    {{0xBA000903, 0x00000C00}},
+    {{0xBA000C02, 0x00002000}},
+    {{0xBA001001, 0x00000000}},
+    {{0xBA000E02, 0x00008000}},
+    {{0xB9000201, 0x00000000}},
+    {{0xB8000000, 0x00000000}},
+};
+
+Gfx D_800DEF90[] = {
+    {{0xE7000000, 0x00000000}},
+    {{0xBA000602, 0x00000040}},
+    {{0xBA001402, 0x00000000}},
+    {{0xB6000000, 0x00033205}},
+    {{0xB7000000, 0x00002204}},
+    {{0xBA001102, 0x00000000}},
+    {{0xBA001301, 0x00080000}},
+    {{0xBA000903, 0x00000C00}},
+    {{0xBA000C02, 0x00002000}},
+    {{0xBA001001, 0x00000000}},
+    {{0xBA000E02, 0x00008000}},
+    {{0xB9000201, 0x00000000}},
+    {{0xB8000000, 0x00000000}},
+};
+
+Gfx gMenuRenderModeResetDl[] = {
+    {{0xE7000000, 0x00000000}},
+    {{0xBA000602, 0x000000C0}},
+    {{0xBA001402, 0x00000000}},
+    {{0xBB000001, 0x80008000}},
+    {{0xB6000000, 0x00033205}},
+    {{0xBA001301, 0x00000000}},
+    {{0xBA001001, 0x00000000}},
+    {{0xBA001102, 0x00000000}},
+    {{0xBA000903, 0x00000C00}},
+    {{0xBA000C02, 0x00000000}},
+    {{0xBA000E02, 0x00008000}},
+    {{0xFA000000, 0xFFFFFFFF}},
+    {{0xFC119623, 0xFF2FFFFF}},
+    {{0xB900031D, 0x00553048}},
+    {{0xB9000201, 0x00000000}},
+    {{0xB8000000, 0x00000000}},
+};
+
+u32 D_800DF078[] = {
+    0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
+    0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
+};
+
+Gfx D_800DF098[] = {
+    {{0xE7000000, 0x00000000}},
+    {{0xBA000602, 0x000000C0}},
+    {{0xBA001402, 0x00000000}},
+    {{0xBB000001, 0x80008000}},
+    {{0xB6000000, 0x00033205}},
+    {{0xBA001301, 0x00000000}},
+    {{0xBA001001, 0x00000000}},
+    {{0xBA001102, 0x00000000}},
+    {{0xBA000903, 0x00000C00}},
+    {{0xBA000C02, 0x00000000}},
+    {{0xBA000E02, 0x00000000}},
+    {{0xFC11FE23, 0xFFFFF7FB}},
+    {{0xB900031D, 0x005041C8}},
+    {{0xFD880007, (u32) D_800DF078}},
+    {{0xF5880200, 0x07008040}},
+    {{0xE6000000, 0x00000000}},
+    {{0xF4000000, 0x07020010}},
+    {{0xE7000000, 0x00000000}},
+    {{0xF5800200, 0x00008040}},
+    {{0xF2000000, 0x00040010}},
+    {{0xB8000000, 0x00000000}},
+};
+
+s16 gFadeTimer = BOOT_FADE_TIMER;
+
+s32 gClearFramebufferOnNextTask = 1;
+
 extern void osInitialize(void);
 extern void osCreatePiManager(OSPri, OSMesgQueue *, OSMesg *, s32);
 extern void osCreateThread(OSThread *, OSId, void (*)(void *), void *, void *, OSPri);
@@ -105,7 +197,6 @@ extern s32 osTvType;
 extern u8 gFadeColorRed;
 extern u8 gFadeColorGreen;
 extern u8 gFadeColorBlue;
-extern s16 gFadeTimer;
 extern u16 gRetraceCounter;
 
 extern OSThread gBootThread;
@@ -126,7 +217,6 @@ extern u16 gLastSchedulerRetraceCounter;
 extern Gfx *gRegionAllocPtr;
 extern u8 gPendingFramebufferSwapCount;
 extern u8 gRumblePakConnectedMask;
-extern s32 gClearFramebufferOnNextTask;
 extern Gfx *gCurrentTaskDisplayListStart;
 extern u8 gFramebufferColorBufferIndex;
 extern FramebufferRenderTask gFramebufferRenderTask0[];
@@ -386,16 +476,11 @@ typedef struct {
 
 extern RuntimeViewportCamera D_801121E0[4];
 extern RuntimeFramebufferColorTarget D_80124968[];
-extern Vp D_800DEF18[];
-extern Gfx D_800DEF28[];
-extern Gfx D_800DEF90[];
-extern Gfx D_800DF098[];
 extern s16 gUiBlinkTimer;
 extern s16 gMenuViewportWidth;
 extern s16 gMenuViewportHeight;
 extern s16 gMenuViewportCenterX;
 extern s16 gMenuViewportCenterY;
-extern s16 gMenuFadeAlpha;
 extern u8 gCurrentViewportIndex;
 
 #define runtimeDisplayListData ((RuntimeViewportDisplayListData *)gCurrentTaskDisplayListStart)
