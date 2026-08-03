@@ -1552,7 +1552,7 @@ void drawMenuGlyphScript(volatile s16 x, s16 y, MenuGlyphScript *script,
     }
 }
 
-// drawMenuColoredGlyph best match: 99.473% (nonmatchings/drawMenuColoredGlyph-7181144369148334388/base_37.c)
+// drawMenuColoredGlyph best match: 99.970% (nonmatchings/drawMenuColoredGlyph-8101714008744796594/base_29.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/renderer/menu_renderer/drawMenuColoredGlyph.s")
 
 #ifdef NON_MATCHING
@@ -1573,7 +1573,7 @@ void drawMenuColoredGlyph(s16 x, s16 y, u16 glyph, u8 palette, u16 paletteScale,
     u16 *dstPalette;
     MenuFontAssetEntry *entry;
     s32 color;
-    s32 red;
+    u16 red;
     u16 green;
     u16 blue;
     s32 viewHalfWidth;
@@ -1613,7 +1613,7 @@ void drawMenuColoredGlyph(s16 x, s16 y, u16 glyph, u8 palette, u16 paletteScale,
         if ((i < maxY) && (viewHalfWidth = x1 >= minX)) {
             minY = gMenuViewportCenterY - viewHalfHeight;
             if (y1 >= minY) {
-                paletteIndexValue = (u16)paletteIndex;
+                paletteIndexValue = (u16)((paletteIndex & 0xFFFFu) & 0xFFFFu);
                 if (x0 < minX) {
                     clipS = minX - x0;
                     x0 = minX;
@@ -1639,7 +1639,26 @@ paletteLoop:
                 i += sizeof(u16);
                 do {
                     color = paletteColor & 0xFFFF;
-                    do { if (((((color & 0xFFFFFFFFu) & 0xFFFFFFFFu) & 0xFFFFFFFFu) & MENU_RGBA5551_ALPHA_BIT) & 0xFFFF) { red = ((color >> 11) & MENU_RGBA5551_CHANNEL_MASK) & 0xFFFF; green = color >> 6; green = green & MENU_RGBA5551_CHANNEL_MASK; color = (blue = (color >> 1) & MENU_RGBA5551_CHANNEL_MASK); glyphWidth = paletteScaleValue; red = red * glyphWidth; red /= MENU_RGBA5551_SCALE_BASE; green = (green * paletteScaleValue) / MENU_RGBA5551_SCALE_BASE; color = green; blue = (blue * paletteScaleValue) / MENU_RGBA5551_SCALE_BASE; { } *dstPalette = (red << 11) | (color << 6) | (blue << 1) | MENU_RGBA5551_ALPHA_BIT; } } while (0);
+                    do {
+                        if (((((color & 0xFFFFFFFFu) & 0xFFFFFFFFu) & 0xFFFFFFFFu) & MENU_RGBA5551_ALPHA_BIT) &
+                            0xFFFF) {
+                            red = ((((((((color >> 11) & MENU_RGBA5551_CHANNEL_MASK) & 0xFFFF) & 0xFFFF) &
+                                       0xFFFF) &
+                                      0xFFFF) &
+                                     0xFFFF) &
+                                    0xFFFF) &
+                                   0xFFFF;
+                            green = color >> 6;
+                            green = green & MENU_RGBA5551_CHANNEL_MASK;
+                            color = (blue = (color >> 1) & MENU_RGBA5551_CHANNEL_MASK);
+                            glyphWidth = paletteScaleValue;
+                            red = (red * glyphWidth) / MENU_RGBA5551_SCALE_BASE;
+                            green = (green * paletteScaleValue) / MENU_RGBA5551_SCALE_BASE;
+                            color = green;
+                            blue = (blue * paletteScaleValue) / MENU_RGBA5551_SCALE_BASE;
+                            *dstPalette = (red << 11) | (color << 6) | (blue << 1) | MENU_RGBA5551_ALPHA_BIT;
+                        }
+                    } while (0);
                     dstPalette++;
                     dstPalette--;
                     dstPalette++;
@@ -1650,7 +1669,7 @@ paletteLoop:
                 } while (0);
 
                 gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, scaledPalette);
-                gDPLoadTextureTile_4b(gRegionAllocPtr++, (u8 *)font + (*entry).imageOffset, G_IM_FMT_CI,
+                gDPLoadTextureTile_4b(gRegionAllocPtr++, (*entry).imageOffset + (u8 *)font, G_IM_FMT_CI,
                                       entry->width, (*entry).height, 0, 0, entry->width, entry->height, 0,
                                       G_TX_CLAMP, G_TX_CLAMP, G_TX_NOMASK, G_TX_NOMASK, G_TX_NOLOD,
                                       G_TX_NOLOD);
