@@ -65,19 +65,6 @@ extern s32 enqueueSoundEffect(s32, s32);
 extern s16 calculateFixedAngleBetweenXZPoints(s32, s32, s32, s32);
 extern void enqueuePlayerLoopingPositionalSoundRequest(s32, Vec3i *, s32, s32, f32, s16);
 extern void *createCallbackTaskWithUserIdPreservingArgs(void *, s32, s32, s32);
-extern void (*gRacePlayerAirborneUpdateHandlers[])(RacePlayer *);
-extern void (*gRacePlayerTrickSubstateHandlers[])(RacePlayer *);
-extern void (*gRacePlayerMode07StateHandlers[])(RacePlayer *);
-extern void (*gRacePlayerMode30StateHandlers[])(RacePlayer *);
-extern void (*gRacePlayerMode32CharacterHandlers[])(RacePlayer *);
-extern void (*gRacePlayerMode35CharacterHandlers[])(RacePlayer *);
-extern void (*gRacePlayerModePostUpdateHandlers[])(RacePlayer *);
-extern void (*gRacePlayerModeUpdateHandlers[])(RacePlayer *);
-extern s32 D_800DECC0[];
-extern RacePlayerPreviewStart gRacePlayerPreviewStartPositions[][4];
-extern u16 gRacePlayerVoiceBaseSoundIds;
-extern u16 gRacePlayerVoiceLeadSoundOffsets;
-extern u16 gRacePlayerVoiceSplitSoundOffsets;
 extern u8 gMainMenuModeSelection;
 extern s8 gRacePlayerCount;
 extern u8 gRaceUpdatePaused;
@@ -86,6 +73,233 @@ extern s32 gMenuFlowState;
 extern s16 gRacePlayerAttackStartTimer;
 extern s16 gRaceLapCount;
 extern s16 gFrameCounter;
+
+u16 gRacePlayerVoiceBaseSoundIds[] = {
+    0, 100, 100, 120, 120, 150, 150, 150, 150, 220, 250, 300, 350, 400, 500, 0,
+};
+
+u16 gRacePlayerVoiceLeadSoundOffsets[] = { 0, 20, 20, 30, 30, 20, 20, 30, 30, 0 };
+
+u16 gRacePlayerVoiceSplitSoundOffsets[] = { 0, 10, 20, 20, 30, 10, 20, 20, 30, 0 };
+
+RacePlayerPreviewStart gRacePlayerPreviewStartPositions[][4] = {
+    { { { 0xB368C3F4, 0xCB46B624, 0xEA08A3AE }, 0x0086, 0x0219 },
+      { { 0xB2E0A118, 0xCB1BF934, 0xE976F80E }, 0x0087, 0x0219 },
+      { { 0xB3DCC2C0, 0xCB76CBC7, 0xEAC479D2 }, 0x0085, 0x0219 },
+      { { 0xB4588A34, 0xCB7BBDC0, 0xEA907F46 }, 0x0085, 0x0219 } },
+    { { { 0xD063FFEB, 0xE3CDAB7F, 0xF6122B47 }, 0x0047, 0x039D },
+      { { 0xCDF310C7, 0xE3196BA9, 0xF5ABF799 }, 0x004A, 0x00CB },
+      { { 0xD213A6C5, 0xE447FE19, 0xF536149D }, 0x0045, 0x057C },
+      { { 0xD2F7EC75, 0xE543D9F6, 0xF17E596D }, 0x0042, 0x07A6 } },
+    { { { 0xFF006C53, 0xFE018275, 0xF6D9F959 }, 0x000E, 0x01BB },
+      { { 0x00312A27, 0xFE6222E8, 0xF7E100F5 }, 0x000C, 0x01BB },
+      { { 0x009D334B, 0xFEA97BBA, 0xF94BA899 }, 0x0008, 0x014F },
+      { { 0x0122D61D, 0xFEF0BF18, 0xFB0C2767 }, 0x0005, 0x0007 } },
+    { { { 0xF3146D96, 0xF65FD87C, 0xE594B2A7 }, 0x001C, 0x0112 },
+      { { 0xF3DE014E, 0xF6F48DE5, 0xE6F87AAB }, 0x001B, 0x0112 },
+      { { 0xF50C3D28, 0xF79DEC47, 0xE85C0A69 }, 0x001B, 0x018C },
+      { { 0xF4FD20BA, 0xF7BF24E1, 0xE8D66707 }, 0x001B, 0x018C } },
+    { { { 0xF6BC6F6A, 0xF9282D2F, 0xEAC9A71E }, 0x0019, 0x0185 },
+      { { 0xF51BF890, 0xF7B512C2, 0xE89EBBC2 }, 0x001B, 0x0185 },
+      { { 0xF51C3792, 0xF7A94134, 0xE876D4B8 }, 0x001B, 0x0185 },
+      { { 0xF4EF8D12, 0xF7A8E16E, 0xE8952A98 }, 0x001B, 0x0185 } },
+    { { { 0x03658EEB, 0xFDB008F5, 0xF347D9C3 }, 0x000E, 0x007A },
+      { { 0x032C7FE7, 0xFDD2BA88, 0xF3B1B53B }, 0x000E, 0x00A6 },
+      { { 0x039BF323, 0xFDBA013C, 0xF3FAB937 }, 0x000E, 0x00A6 },
+      { { 0x03561369, 0xFDD1D31D, 0xF455FCC1 }, 0x000E, 0x00A6 } },
+    { { { 0x152F51DA, 0xDB57148A, 0xD9C5DE9A }, 0x003D, 0xFFDA },
+      { { 0x1574E1FA, 0xDA904D40, 0xD8767BDE }, 0x003E, 0xFFDA },
+      { { 0x15945DC0, 0xDAFF0927, 0xD93EE950 }, 0x003D, 0xFFDA },
+      { { 0x15223A28, 0xDBD20087, 0xDA9BC6D4 }, 0x003C, 0xFED2 } },
+    { { { 0xDD2EE8D5, 0xE28F8DD8, 0xB0BE962E }, 0x007B, 0x0225 },
+      { { 0xDB2A07EF, 0xE1D64190, 0xAF8EF0AA }, 0x007D, 0x0137 },
+      { { 0xDB738683, 0xE1EB39CB, 0xAFA37ADA }, 0x007D, 0x0137 },
+      { { 0xDBDF1787, 0xE21B7F22, 0xAFB2168E }, 0x007C, 0x01CA } },
+    { { { 0xF72554A7, 0xEF95A3F6, 0xDDAF853E }, 0x0033, 0x0319 },
+      { { 0xF430DCC7, 0xEF3B35CA, 0xDC2D95AE }, 0x0037, 0x0319 },
+      { { 0xF8142BD3, 0xEFC226B6, 0xDDDB5064 }, 0x0032, 0x039D },
+      { { 0xF968B2D9, 0xF01A652D, 0xDDEDE22C }, 0x0031, 0x039D } },
+    { { { 0xFCC9F88C, 0xFC00DC7E, 0xF2167F01 }, 0x0014, 0xFE57 },
+      { { 0xFE07ACCC, 0xFAC04712, 0xEFE1D5D3 }, 0x0016, 0xFE57 },
+      { { 0xFFFB7EC8, 0xF9110ACA, 0xEE25DD1F }, 0x0018, 0xFE57 },
+      { { 0x010B8D34, 0xF84E86C9, 0xEB0C423D }, 0x001C, 0xFD9B } },
+    { { { 0xB14D4F91, 0xB636FD06, 0xC6EEE2EB }, 0x009F, 0xFC80 },
+      { { 0xB28B6B3D, 0xB58C9448, 0xC7013571 }, 0x00A0, 0xFC80 },
+      { { 0xB2A97AB1, 0xB5714EA4, 0xC686D82B }, 0x00A0, 0xFB70 },
+      { { 0xAF715C51, 0xB7453607, 0xC8C47837 }, 0x009D, 0xFE95 } },
+};
+
+void (*gRacePlayerModeUpdateHandlers[])(RacePlayer *) = {
+    updateRacePlayerMode00Grounded,
+    updateRacePlayerMode01JumpStart,
+    dispatchRacePlayerAirborneMode,
+    updateRacePlayerMode03Nudge,
+    updateRacePlayerMode04Spinout,
+    updateRacePlayerMode05SpinoutStun,
+    updateRacePlayerMode06TerrainFall,
+    dispatchRacePlayerMode07CourseObject,
+    updateRacePlayerMode08SpinoutRecover,
+    updateRacePlayerMode09TerrainCrash,
+    updateRacePlayerMode10TerrainCrashSlide,
+    updateRacePlayerMode11LaunchHit,
+    updateRacePlayerMode12LaunchRecover,
+    updateRacePlayerMode13AerialTrick,
+    updateRacePlayerMode14PushHit,
+    updateRacePlayerMode15AerialTrick,
+    updateRacePlayerMode16AerialTrick,
+    updateRacePlayerMode17AerialTrick,
+    updateRacePlayerMode18AerialTrick,
+    updateRacePlayerMode19AerialTrick,
+    updateRacePlayerMode20AerialTrick,
+    updateRacePlayerMode21AerialTrick,
+    updateRacePlayerMode22Airborne,
+    updateRacePlayerMode23ItemSteal,
+    updateRacePlayerMode24HeavyKnockdown,
+    updateRacePlayerMode25SpinHit,
+    updateRacePlayerMode26Tumble,
+    updateRacePlayerMode27Slide,
+    updateRacePlayerMode28TerrainFallWithItemEffect,
+    updateRacePlayerMode29Crash,
+    dispatchRacePlayerMode30Attack,
+    updateRacePlayerMode31AerialTrick,
+    updateRacePlayerMode32AerialTrick,
+    updateRacePlayerMode33AerialTrick,
+    updateRacePlayerMode34AerialTrick,
+    updateRacePlayerMode35AerialTrick,
+    updateRacePlayerMode36AerialTrick,
+    updateRacePlayerMode37AerialTrick,
+    updateRacePlayerMode38AerialTrick,
+    updateRacePlayerMode39AerialTrick,
+    updateRacePlayerMode40Stun,
+    updateRacePlayerMode41AerialTrick,
+    updateRacePlayerMode42AerialTrick,
+    updateRacePlayerMode43AerialTrick,
+    updateRacePlayerMode44AerialTrick,
+    updateRacePlayerMode45AerialTrick,
+    updateRacePlayerMode46AerialTrick,
+    updateRacePlayerMode47AerialTrick,
+    updateRacePlayerMode48AerialTrick,
+    updateRacePlayerMode49AerialTrick,
+    updateRacePlayerMode50AerialTrick,
+    updateRacePlayerMode51AerialTrick,
+    updateRacePlayerMode52AerialTrick,
+    updateRacePlayerMode53AerialTrick,
+    updateRacePlayerMode54AerialTrick,
+    updateRacePlayerMode55AerialTrick,
+    updateRacePlayerMode56AerialTrick,
+    updateRacePlayerMode57AerialTrick,
+};
+
+s32 D_800DECC0[] = { 0, 0x8000, 0x10000, 0x20000 };
+
+void (*gRacePlayerAirborneUpdateHandlers[])(RacePlayer *) = {
+    updateRacePlayerAirborneLaunch,
+    updateRacePlayerAirborneCruise,
+};
+
+void (*gRacePlayerTrickSubstateHandlers[])(RacePlayer *) = {
+    updateRacePlayerTrickSubstateStart,
+    updateRacePlayerTrickSubstateHold,
+    updateRacePlayerTrickSubstateFinish,
+    updateRacePlayerTrickSubstateNoop,
+};
+
+void (*gRacePlayerMode07StateHandlers[])(RacePlayer *) = {
+    updateRacePlayerMode07AlignToLaunchRamp,
+    updateRacePlayerMode07StartLaunchRamp,
+    updateRacePlayerMode07LaunchRampTakeoff,
+    updateRacePlayerMode07LaunchRampSpin,
+    updateRacePlayerMode07LaunchRampPose,
+    updateRacePlayerMode07LaunchRampDrift,
+    updateRacePlayerMode07LaunchRampClimb,
+    updateRacePlayerMode07SpiralExit,
+};
+
+void (*gRacePlayerMode30StateHandlers[])(RacePlayer *) = {
+    updateRacePlayerMode30AttackApproach,
+    updateRacePlayerMode30AttackResolve,
+    dispatchRacePlayerMode32Character,
+    dispatchRacePlayerMode35Character,
+};
+
+void (*gRacePlayerMode32CharacterHandlers[])(RacePlayer *) = {
+    updateRacePlayerMode32Character0,
+    updateRacePlayerMode32Character1,
+    updateRacePlayerMode32Character2,
+    updateRacePlayerMode32Character3,
+    updateRacePlayerMode32Character4,
+    updateRacePlayerMode32Character5,
+};
+
+void (*gRacePlayerMode35CharacterHandlers[])(RacePlayer *) = {
+    updateRacePlayerMode35Character0,
+    updateRacePlayerMode35Character1,
+    updateRacePlayerMode35Character2,
+    updateRacePlayerMode35Character3,
+    updateRacePlayerMode35Character4,
+    updateRacePlayerMode35Character5,
+};
+
+void (*gRacePlayerModePostUpdateHandlers[])(RacePlayer *) = {
+    updateRacePlayerPostUpdateMode00,
+    updateRacePlayerPostUpdateAirborneTrick,
+    updateRacePlayerPostUpdateAirborneLaunch,
+    updateRacePlayerPostUpdateNudge,
+    updateRacePlayerPostUpdateNoop,
+    updateRacePlayerPostUpdateNoop,
+    updateRacePlayerPostUpdateNoop,
+    updateRacePlayerPostUpdateCourseObject,
+    updateRacePlayerPostUpdateNoop,
+    updateRacePlayerPostUpdateNoop,
+    updateRacePlayerPostUpdateNoop,
+    updateRacePlayerPostUpdateNoop,
+    updateRacePlayerPostUpdateNoop,
+    updateRacePlayerPostUpdateAirborneTrick,
+    updateRacePlayerPostUpdateNoop,
+    updateRacePlayerPostUpdateAirborneTrick,
+    updateRacePlayerPostUpdateAirborneTrick,
+    updateRacePlayerPostUpdateAirborneTrick,
+    updateRacePlayerPostUpdateAirborneTrick,
+    updateRacePlayerPostUpdateAirborneTrick,
+    updateRacePlayerPostUpdateAirborneTrick,
+    updateRacePlayerPostUpdateAirborneTrick,
+    updateRacePlayerPostUpdateMode22,
+    updateRacePlayerPostUpdateNoop,
+    updateRacePlayerPostUpdateNoop,
+    updateRacePlayerPostUpdateNoop,
+    updateRacePlayerPostUpdateNoop,
+    updateRacePlayerPostUpdateNoop,
+    updateRacePlayerPostUpdateNoop,
+    updateRacePlayerPostUpdateMode29,
+    updateRacePlayerPostUpdateAttack,
+    updateRacePlayerPostUpdateAirborneTrick,
+    updateRacePlayerPostUpdateAirborneTrick,
+    updateRacePlayerPostUpdateAirborneTrick,
+    updateRacePlayerPostUpdateAirborneTrick,
+    updateRacePlayerPostUpdateAirborneTrick,
+    updateRacePlayerPostUpdateAirborneTrick,
+    updateRacePlayerPostUpdateAirborneTrick,
+    updateRacePlayerPostUpdateAirborneTrick,
+    updateRacePlayerPostUpdateAirborneTrick,
+    updateRacePlayerPostUpdateNoop,
+    updateRacePlayerPostUpdateAirborneTrick,
+    updateRacePlayerPostUpdateAirborneTrick,
+    updateRacePlayerPostUpdateAirborneTrick,
+    updateRacePlayerPostUpdateAirborneTrick,
+    updateRacePlayerPostUpdateAirborneTrick,
+    updateRacePlayerPostUpdateAirborneTrick,
+    updateRacePlayerPostUpdateAirborneTrick,
+    updateRacePlayerPostUpdateAirborneTrick,
+    updateRacePlayerPostUpdateAirborneTrick,
+    updateRacePlayerPostUpdateAirborneTrick,
+    updateRacePlayerPostUpdateAirborneTrick,
+    updateRacePlayerPostUpdateAirborneTrick,
+    updateRacePlayerPostUpdateAirborneTrick,
+    updateRacePlayerPostUpdateAirborneTrick,
+    updateRacePlayerPostUpdateAirborneTrick,
+    updateRacePlayerPostUpdateAirborneTrick,
+    updateRacePlayerPostUpdateAirborneTrick,
+};
 void initRacePlayers(void) {
     gRacePlayers[0].playerIndex = 0;
     gRacePlayers[1].playerIndex = 1;
@@ -1869,7 +2083,7 @@ void updateRacePlayerTrickSubstateFinish(RacePlayer *player) {
     player->stateFlags |= 0x800;
 }
 
-void updateRacePlayerTrickSubstateNoop(s32 arg0) {
+void updateRacePlayerTrickSubstateNoop(RacePlayer *player) {
 
 }
 
@@ -5568,7 +5782,7 @@ void updateRacePlayerVoiceSounds(RacePlayer *player) {
         voiceType = player2->unk2A6;
     }
     if (voiceType != 0) {
-        soundId = (&gRacePlayerVoiceBaseSoundIds)[voiceType];
+        soundId = gRacePlayerVoiceBaseSoundIds[voiceType];
         score = voiceType < 9 ? 0xA : 0x28;
         bitIndex = voiceType;
         if ((s32)(u32)bitIndex >= 0xA) {
@@ -5579,7 +5793,7 @@ void updateRacePlayerVoiceSounds(RacePlayer *player) {
     splitType = player2->unk2A2;
     if (splitType != 0) {
         if (player->unk2A6 != 0) {
-            soundId += (&gRacePlayerVoiceSplitSoundOffsets)[splitType];
+            soundId += gRacePlayerVoiceSplitSoundOffsets[splitType];
             if (splitType & 1) {
                 score += 5;
             } else {
@@ -5587,7 +5801,7 @@ void updateRacePlayerVoiceSounds(RacePlayer *player) {
             }
         } else {
             score += 1;
-            soundId += (&gRacePlayerVoiceLeadSoundOffsets)[splitType];
+            soundId += gRacePlayerVoiceLeadSoundOffsets[splitType];
         }
         soundId += player2->unk2A4;
     }
