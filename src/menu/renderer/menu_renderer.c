@@ -225,7 +225,7 @@ extern void drawMenuSpriteWideIndex(s16 x, s16 y, void *texture, s32 tileIndex, 
                                     u8 flip);
 #endif
 
-// drawMenuSpriteClipped best match: 84.286% (nonmatchings/drawMenuSpriteClipped-633030068925474062/base_31.c)
+// drawMenuSpriteClipped best match: 84.639% (nonmatchings/drawMenuSpriteClipped-1846960929180867216/base_33.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/renderer/menu_renderer/drawMenuSpriteClipped.s")
 
 #ifdef NON_MATCHING
@@ -244,6 +244,7 @@ void drawMenuSpriteClipped(s16 x, s16 y, MenuFontAssetTable *table, u16 imageInd
     s16 minX;
     s16 maxX;
     s16 maxY;
+    volatile s16 padding;
     s16 flipS;
     s16 flipT;
     s16 width;
@@ -266,8 +267,8 @@ void drawMenuSpriteClipped(s16 x, s16 y, MenuFontAssetTable *table, u16 imageInd
         return;
     }
     {
-        flipS = gMenuSpriteFlipScales[flipMode & 3][0];
         flipT = gMenuSpriteFlipScales[flipMode & 3][1];
+        flipS = gMenuSpriteFlipScales[flipMode & 3][0];
         texture = &table->entries[entryIndex];
         width = texture->width;
         height = texture->height;
