@@ -77,19 +77,96 @@ extern Gfx *gRegionAllocPtr;
 extern Gfx D_20028F0[];
 extern Gfx D_2002DB8[];
 extern Gfx *allocFixedTransformMatrix(FixedTransform *arg0);
-extern Vec3i gRaceIntroBillboardPositions[];
-extern Vtx *gRaceIntroModelVerticesByCourse[];
-extern RaceIntroRenderCommandEntry *gRaceIntroModelCommandsByCourse[];
-extern RaceIntroRenderCommandEntry *gRaceIntroAnimatedBillboardCommandsByCourse[];
-extern u16 gRaceIntroAnimatedBillboardTextureIds[];
-extern Gfx gRaceIntroAnimatedBillboardVertices[];
-extern Gfx gRaceIntroBillboardVertices[];
 extern Gfx gEffectRenderModeSetupDl[];
 extern Gfx gEffectRenderModeCleanupDl[];
 extern void setPackedMatrixTranslation(Mtx *, Vec3i *);
 extern void getAssetTableImagePaletteAndSize(u8 *, s32, u32 *, u32 *, s16 *, s16 *);
 
 extern s16 gFrameCounter;
+
+Vtx *gRaceIntroModelVerticesByCourse[7] = {
+    (Vtx *)0x800D5840, (Vtx *)0x800D5840, (Vtx *)0x800D5840, (Vtx *)0x800D5840,
+    (Vtx *)0x800D5840, (Vtx *)0x800D5840, (Vtx *)0x800D59C0,
+};
+
+RaceIntroRenderCommandEntry *gRaceIntroModelCommandsByCourse[7] = {
+    (RaceIntroRenderCommandEntry *)0x800D5A80, (RaceIntroRenderCommandEntry *)0x800D5A80,
+    (RaceIntroRenderCommandEntry *)0x800D5A80, (RaceIntroRenderCommandEntry *)0x800D5A80,
+    (RaceIntroRenderCommandEntry *)0x800D5A80, (RaceIntroRenderCommandEntry *)0x800D5A80,
+    (RaceIntroRenderCommandEntry *)0x800D5C00,
+};
+
+Vtx gRaceIntroBillboardVertices[4] = {
+    {{{-16, 32,  0}, 0, { -16,  -16}, {0xE4, 0xE4, 0xE4, 0xFF}}},
+    {{{ 16, 32,  0}, 0, {1008,  -16}, {0xE4, 0xE4, 0xE4, 0xFF}}},
+    {{{ 16, -1,  0}, 0, {1008, 1008}, {0xE4, 0xE4, 0xE4, 0xFF}}},
+    {{{-16, -1,  0}, 0, { -16, 1008}, {0xE4, 0xE4, 0xE4, 0xFF}}},
+};
+
+Vec3i gRaceIntroBillboardPositions[3] = {
+    {0xB29E5757, 0xE406DB30, 0xD7D68D9C},
+    {0xB1D33B16, 0xE3DBBF86, 0xD6BD089B},
+    {0xB0C8FFC2, 0xE3835F86, 0xD6562A87},
+};
+
+Vtx gRaceIntroAnimatedBillboardVertices[4] = {
+    {{{-16, 33, 0}, 0, { -16,  -16}, {0xE4, 0xE4, 0xE4, 0xFF}}},
+    {{{ 16, 33, 0}, 0, {1008,  -16}, {0xE4, 0xE4, 0xE4, 0xFF}}},
+    {{{ 16,  1, 0}, 0, {1008, 1008}, {0xE4, 0xE4, 0xE4, 0xFF}}},
+    {{{-16,  1, 0}, 0, { -16, 1008}, {0xE4, 0xE4, 0xE4, 0xFF}}},
+};
+
+u16 gRaceIntroAnimatedBillboardTextureIds[12] = {
+    0x45, 0x51, 0x4B, 0x57, 0x4D, 0x47, 0x53, 0x59, 0x49, 0x4F, 0x5B, 0x55,
+};
+
+RaceIntroRenderCommandEntry D_800D5D48[40] = {
+    { 0, {0}, {0x02018F32, 0xFF105B2A, 0xFAB1BA41}},
+    { 0, {0}, {0x00335A8F, 0xF883B028, 0xEAC6E0F8}},
+    { 0, {0}, {0x0FD64911, 0xEF69D218, 0xF22FBB2C}},
+    { 0, {0}, {0x131DFBA1, 0xEEC99480, 0xF3FAB742}},
+    { 1, {0}, {0x02567CB6, 0xFF0BBB2A, 0xF9FD2DF9}},
+    { 1, {0}, {0x0115DA8F, 0xF8545028, 0xE9C6A0F8}},
+    { 1, {0}, {0x113BC8C9, 0xEF00D218, 0xF309A02C}},
+    { 1, {0}, {0x148D3CA1, 0xEEC7F704, 0xF3264652}},
+    { 2, {0}, {0x02224DAE, 0xFF037B2A, 0xF9AD91A9}},
+    { 2, {0}, {0x13A6D835, 0xEEC71127, 0xF27F94EA}},
+    { 2, {0}, {0x02377A8F, 0xF8227028, 0xE8FE00F8}},
+    { 2, {0}, {0x12E652ED, 0xEEC6665A, 0xF22D412E}},
+    { 3, {0}, {0x0180D088, 0xFEC7FB2A, 0xF825DD55}},
+    { 3, {0}, {0x047AB9EB, 0xF73A9028, 0xE85ADE0E}},
+    { 3, {0}, {0x1391F2ED, 0xEEC6D085, 0xF1FB412E}},
+    { 4, {0}, {0x013A9960, 0xFEA9DB2A, 0xF7E43E61}},
+    { 4, {0}, {0x0581A121, 0xF6F75028, 0xE7B1FE00}},
+    { 4, {0}, {0x138B72ED, 0xEEC706C4, 0xF299212E}},
+    { 5, {0}, {0xFB55E30D, 0xFC8ADC8E, 0xF2F8F907}},
+    { 5, {0}, {0x07B826FB, 0xF60BD028, 0xE551F89C}},
+    { 5, {0}, {0x13ECB2ED, 0xEEC76A6A, 0xF2E6812E}},
+    { 6, {0}, {0xFB3EC3EB, 0xFC9CDC8E, 0xF367DCFD}},
+    { 6, {0}, {0x08D1E93D, 0xF5D91028, 0xE408E49E}},
+    { 6, {0}, {0x150A12ED, 0xEEC84037, 0xF2F7212E}},
+    { 7, {0}, {0xFB76D1D7, 0xFCB8DC8E, 0xF418F2E7}},
+    { 7, {0}, {0x0C855B5F, 0xF51ED028, 0xE447E6BA}},
+    { 7, {0}, {0x141E4FA9, 0xEEC87BB2, 0xF46E498A}},
+    { 8, {0}, {0xFC062A21, 0xFCA19C8E, 0xF48AD36B}},
+    { 8, {0}, {0x0D9DD341, 0xF4DA7028, 0xE4FC30AC}},
+    { 8, {0}, {0x13816DF5, 0xEEC936E5, 0xF42C404E}},
+    { 9, {0}, {0xFB84BB47, 0xFCAD9C8E, 0xF46D53A5}},
+    { 9, {0}, {0x0DFCAC4B, 0xF4613028, 0xE7307CF8}},
+    { 9, {0}, {0x12E50EC1, 0xEECA0FC7, 0xF3F3B566}},
+    {10, {0}, {0xFFB93A8F, 0xF8DAB028, 0xECE4A0F8}},
+    {10, {0}, {0x0DC3F595, 0xF4133028, 0xE8813D02}},
+    {10, {0}, {0x124A5171, 0xEECA931B, 0xF3A23E56}},
+    {11, {0}, {0x003F3A8F, 0xF894B028, 0xEBD600F8}},
+    {11, {0}, {0x0F1502E5, 0xEFB7F218, 0xF12B8FE0}},
+    {11, {0}, {0x1284EDA9, 0xEEC9EEDC, 0xF39E06CE}},
+    {-1, {0}, {0, 0, 0}},
+};
+
+RaceIntroRenderCommandEntry *gRaceIntroAnimatedBillboardCommandsByCourse[10] = {
+    D_800D5D48, D_800D5D48, D_800D5D48, D_800D5D48, D_800D5D48,
+    D_800D5D48, D_800D5D48, D_800D5D48, D_800D5D48, D_800D5D48,
+};
 
 void drawRaceIntroModelMeshes(RaceIntroMeshActor *arg0) {
     volatile u8 pad[0xC];
