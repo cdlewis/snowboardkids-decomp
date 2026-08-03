@@ -2,6 +2,11 @@
 
 #pragma weak schedulerThreadEntry = schedulerThreadMain
 
+u16 gRetraceCounter = 0;
+s32 gSchedulerYieldResult = 0;
+s32 gSchedulerYieldRequested = 0;
+s32 gSchedulerStartupRetraceCount = 0;
+
 void initScheduler(SchedulerState *arg0, u8 arg1, u8 arg2) {
     arg0->curRSPTask = 0;
     arg0->curRDPTask = 0;
