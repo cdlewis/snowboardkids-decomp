@@ -26,6 +26,25 @@ typedef struct {
     /* 0x8 */ u8 *romEnd;
 } MainMenuModePreviewRaceCourseAsset;
 
+MainMenuModePreviewRaceCourseAsset gMainMenuModePreviewRaceCourseAssets[] = {
+    { 0, { 0, 0, 0 }, NULL, NULL },
+    { 0, { 0, 0, 0 }, (u8 *)0x258C80, (u8 *)0x25B410 },
+    { 0, { 0, 0, 0 }, (u8 *)0x25B410, (u8 *)0x25DF80 },
+    { 9, { 0, 0, 0 }, (u8 *)0x25DF80, (u8 *)0x260A30 },
+    { 0, { 0, 0, 0 }, (u8 *)0x260A30, (u8 *)0x263520 },
+    { 0, { 0, 0, 0 }, (u8 *)0x263520, (u8 *)0x265D30 },
+    { 4, { 0, 0, 0 }, (u8 *)0x265D30, (u8 *)0x2688C0 },
+    { 1, { 0, 0, 0 }, (u8 *)0x2688C0, (u8 *)0x26B1D0 },
+    { 3, { 0, 0, 0 }, (u8 *)0x26B1D0, (u8 *)0x26DE60 },
+    { 2, { 0, 0, 0 }, (u8 *)0x26DE60, (u8 *)0x270730 },
+    { 9, { 0, 0, 0 }, (u8 *)0x270730, (u8 *)0x2732E0 },
+    { 0, { 0, 0, 0 }, (u8 *)0x2732E0, (u8 *)0x275A90 },
+};
+s16 gMainMenuModePreviewRaceDurationBySelection[] = {
+    0x384, 0x287, 0x2BB, 0x33B, 0x23F, 0x2B2, 0x2C7, 0x138,
+    0x1AF, 0x1FD, 0x16A, 0x1E2, 0,     0,     0,     0,
+};
+
 extern s16 gRaceLapCount;
 extern s8 gRacePlayerCount;
 extern u8 gRaceUpdatePaused;
@@ -34,12 +53,10 @@ extern u8 gFramebufferSwapHold;
 extern s32 gMenuFlowState;
 extern u8 gMainMenuModeSelection;
 extern s16 gRacePlayerAttackStartTimer;
-extern s16 gMainMenuModePreviewRaceDurationBySelection[];
 
 extern void releaseMenuAssetHandles(void);
 extern u8 gPendingFramebufferSwapCount;
 extern u8 gTrainingCourseLesson;
-extern MainMenuModePreviewRaceCourseAsset gMainMenuModePreviewRaceCourseAssets[];
 
 void startMainMenuModePreviewRaceFlow(void) {
     gMainMenuModeSelection = 1;
