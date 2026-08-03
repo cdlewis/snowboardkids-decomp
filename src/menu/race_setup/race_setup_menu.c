@@ -41,12 +41,6 @@ typedef union RaceSetupSaveDefaultTimeTable {
     RaceSetupSaveDefaultTimeRow rows[2];
 } RaceSetupSaveDefaultTimeTable;
 
-typedef struct RaceSetupMenuPackedData {
-    u8 alignmentPadding;
-    u8 choicePromptStates[12];
-    u8 raceRecordChoicePromptStates[19];
-} RaceSetupMenuPackedData;
-
 u8 gMainMenuSecretCodeUnlocked = 0;
 u8 gMainMenuSecretCodeStep = 0;
 RaceSetupMenuPackedData gRaceSetupMenuPackedData = {
