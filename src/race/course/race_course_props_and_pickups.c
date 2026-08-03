@@ -806,7 +806,7 @@ extern void setPackedMatrixTranslation(Mtx *, Vec3i *);
 extern void osWritebackDCache(void *, s32);
 extern void enqueuePositionalSoundEffect(s32, void *, s32, s32);
 extern void *gRaceCourseSceneryDisplayLists[];
-extern Gfx *gThrownPickupModelDisplayList;
+extern Gfx *gThrownPickupModelDisplayList[];
 extern u8 gRaceUpdatePaused;
 extern u8 gTrainingCourseLesson;
 extern Gfx gEffectRenderModeSetupDl[];
@@ -1099,7 +1099,7 @@ void renderThrownPickupModel(ThrownPickupRenderActor *arg0) {
             gSPSegment(gRegionAllocPtr++, 0x02, getRelocatableHeapBlockBase(gAssetHandles[0xA]));
             gSPSegment(gRegionAllocPtr++, 0x03, getRelocatableHeapBlockBase(gAssetHandles[0xB]));
             gSPMatrix(gRegionAllocPtr++, arg0->matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
-            gSPDisplayList(gRegionAllocPtr++, gThrownPickupModelDisplayList);
+            gSPDisplayList(gRegionAllocPtr++, gThrownPickupModelDisplayList[0]);
         }
     }
 }

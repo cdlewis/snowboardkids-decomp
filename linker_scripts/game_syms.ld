@@ -62,3 +62,6 @@ gCharacterSelectCourseOptionsByUnlock = gCharacterSelectCourseMenuData;
 gPlayerBadgeDisplayOrder = gCharacterSelectCourseMenuData + 0x42;
 gCharacterSelectShortCourseOptions = gCharacterSelectCourseMenuData + 0x58;
 gCharacterSelectSingleCourseOption = gCharacterSelectCourseMenuData + 0x60;
+
+/* Race-course effect data subobject used by extracted collision assembly. */
+D_800DA856 = gCourseTriggerEntries + 0x16;
