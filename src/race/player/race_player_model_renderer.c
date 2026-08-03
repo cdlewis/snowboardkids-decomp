@@ -58,11 +58,11 @@ struct RacePlayerModelRenderState {
 extern u32 gRacePlayerShadowMatrixTemplate[];
 
 Gfx gRacePlayerShadowRenderSetupDisplayList[] = {
-    {{ 0xE7000000, 0x00000000 }},
-    {{ 0xBB000000, 0xFFFFFFFF }},
-    {{ 0xFCFFFFFF, 0xFFFE793C }},
-    {{ 0xB900031D, 0x005049D8 }},
-    {{ 0xB8000000, 0x00000000 }},
+    gsDPPipeSync(),
+    gsSPTexture(0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_OFF),
+    gsDPSetCombineMode(G_CC_SHADE, G_CC_SHADE),
+    gsDPSetRenderMode(G_RM_AA_ZB_XLU_SURF, G_RM_AA_ZB_XLU_SURF2),
+    gsSPEndDisplayList(),
 };
 
 Gfx *gRacePlayerModelRootPartDisplayLists[RACE_PLAYER_MODEL_RENDERER_PART_COUNT + 2] = {

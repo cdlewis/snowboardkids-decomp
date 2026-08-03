@@ -203,22 +203,22 @@ Vtx D_800D9C40[] = {
 };
 
 Gfx gEffectRenderModeSetupDl[] = {
-    {{0xE7000000, 0x00000000}},
-    {{0xBB000001, 0xFFFFFFFF}},
-    {{0xFC127FFF, 0xFFFFF238}},
-    {{0xB900031D, 0xC8113078}},
-    {{0xB6000000, 0x00020000}},
-    {{0xBA001402, 0x00100000}},
-    {{0xB7000000, 0x00010000}},
-    {{0xB8000000, 0x00000000}},
+    gsDPPipeSync(),
+    gsSPTexture(0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_ON),
+    gsDPSetCombineMode(G_CC_MODULATEIDECALA, G_CC_PASS2),
+    gsDPSetRenderMode(G_RM_FOG_SHADE_A, G_RM_AA_ZB_TEX_EDGE2),
+    gsSPClearGeometryMode(G_LIGHTING),
+    gsDPSetCycleType(G_CYC_2CYCLE),
+    gsSPSetGeometryMode(G_FOG),
+    gsSPEndDisplayList(),
 };
 
 Gfx gEffectRenderModeCleanupDl[] = {
-    {{0xE7000000, 0x00000000}},
-    {{0xB900031D, 0x00552038}},
-    {{0xBA001402, 0x00000000}},
-    {{0xB6000000, 0x00010000}},
-    {{0xB8000000, 0x00000000}},
+    gsDPPipeSync(),
+    gsDPSetRenderMode(G_RM_RA_ZB_OPA_SURF, G_RM_RA_ZB_OPA_SURF2),
+    gsDPSetCycleType(G_CYC_1CYCLE),
+    gsSPClearGeometryMode(G_FOG),
+    gsSPEndDisplayList(),
 };
 
 CourseMarkerSpawnEntry D_800D9D68[] = {
@@ -296,22 +296,22 @@ Vtx D_800DA0C0[] = {
 };
 
 Gfx D_800DA140[] = {
-    {{0xE7000000, 0x00000000}},
-    {{0xBA001402, 0x00100000}},
-    {{0xB7000000, 0x00010000}},
-    {{0xBB000000, 0xFFFFFFFF}},
-    {{0xFCFFFFFF, 0xFFFE793C}},
-    {{0xB900031D, 0xC8112078}},
-    {{0x0400207F, (u32) D_800DA0C0}},
-    {{0xB1020406, 0x00020600}},
-    {{0xB1060402, 0x00060200}},
-    {{0xB10A0C0E, 0x000A0E08}},
-    {{0xB10E0C0A, 0x000E0A08}},
-    {{0xE7000000, 0x00000000}},
-    {{0xB900031D, 0x00552038}},
-    {{0xBA001402, 0x00000000}},
-    {{0xB6000000, 0x00010000}},
-    {{0xB8000000, 0x00000000}},
+    gsDPPipeSync(),
+    gsDPSetCycleType(G_CYC_2CYCLE),
+    gsSPSetGeometryMode(G_FOG),
+    gsSPTexture(0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_OFF),
+    gsDPSetCombineMode(G_CC_SHADE, G_CC_SHADE),
+    gsDPSetRenderMode(G_RM_FOG_SHADE_A, G_RM_AA_ZB_OPA_SURF2),
+    gsSPVertex(D_800DA0C0, 8, 0),
+    gsSP1Quadrangle(1, 2, 3, 0, 0),
+    gsSP1Quadrangle(3, 2, 1, 0, 0),
+    gsSP1Quadrangle(5, 6, 7, 4, 0),
+    gsSP1Quadrangle(7, 6, 5, 4, 0),
+    gsDPPipeSync(),
+    gsDPSetRenderMode(G_RM_RA_ZB_OPA_SURF, G_RM_RA_ZB_OPA_SURF2),
+    gsDPSetCycleType(G_CYC_1CYCLE),
+    gsSPClearGeometryMode(G_FOG),
+    gsSPEndDisplayList(),
 };
 
 void *gRaceCourseSceneryDisplayLists[] = {

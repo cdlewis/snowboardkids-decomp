@@ -823,12 +823,12 @@ Vtx D_800D60A0[] = {
 };
 
 Gfx gTranslucentSpriteRenderModeDl[] = {
-    {{0xE7000000, 0x00000000}},
-    {{0xBB000001, 0xFFFFFFFF}},
-    {{0xFC119623, 0xFF2FFFFF}},
-    {{0xB900031D, 0x005049D8}},
-    {{0xB6000000, 0x00020000}},
-    {{0xB8000000, 0x00000000}},
+    gsDPPipeSync(),
+    gsSPTexture(0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_ON),
+    gsDPSetCombineMode(G_CC_MODULATEIA_PRIM, G_CC_MODULATEIA_PRIM),
+    gsDPSetRenderMode(G_RM_AA_ZB_XLU_SURF, G_RM_AA_ZB_XLU_SURF2),
+    gsSPClearGeometryMode(G_LIGHTING),
+    gsSPEndDisplayList(),
 };
 
 Vec3i D_800D6110 = {
@@ -845,21 +845,21 @@ Vtx D_800D6120[] = {
 };
 
 Gfx D_800D6160[] = {
-    {{0xE7000000, 0x00000000}},
-    {{0xBB000001, 0xFFFFFFFF}},
-    {{0xFC121824, 0xFF33FFFF}},
-    {{0xB900031D, 0x005049D8}},
-    {{0xB6000000, 0x00020000}},
-    {{0xB8000000, 0x00000000}},
+    gsDPPipeSync(),
+    gsSPTexture(0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_ON),
+    gsDPSetCombineMode(G_CC_MODULATEIA, G_CC_MODULATEIA),
+    gsDPSetRenderMode(G_RM_AA_ZB_XLU_SURF, G_RM_AA_ZB_XLU_SURF2),
+    gsSPClearGeometryMode(G_LIGHTING),
+    gsSPEndDisplayList(),
 };
 
 Gfx D_800D6190[] = {
-    {{0xE7000000, 0x00000000}},
-    {{0xBB000001, 0xFFFFFFFF}},
-    {{0xFC127E24, 0xFFFFF3F9}},
-    {{0xB900031D, 0x00553078}},
-    {{0xB6000000, 0x00020000}},
-    {{0xB8000000, 0x00000000}},
+    gsDPPipeSync(),
+    gsSPTexture(0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_ON),
+    gsDPSetCombineMode(G_CC_MODULATEIDECALA, G_CC_MODULATEIDECALA),
+    gsDPSetRenderMode(G_RM_AA_ZB_TEX_EDGE, G_RM_AA_ZB_TEX_EDGE2),
+    gsSPClearGeometryMode(G_LIGHTING),
+    gsSPEndDisplayList(),
 };
 
 Vec3i D_800D61C0[] = {
@@ -887,12 +887,12 @@ Vtx D_800D6230[] = {
 };
 
 Gfx gAlphaSpriteRenderModeDl[] = {
-    {{0xE7000000, 0x00000000}},
-    {{0xBB000001, 0xFFFFFFFF}},
-    {{0xFC127E24, 0xFFFFF3F9}},
-    {{0xB900031D, 0x00553078}},
-    {{0xB6000000, 0x00020000}},
-    {{0xB8000000, 0x00000000}},
+    gsDPPipeSync(),
+    gsSPTexture(0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_ON),
+    gsDPSetCombineMode(G_CC_MODULATEIDECALA, G_CC_MODULATEIDECALA),
+    gsDPSetRenderMode(G_RM_AA_ZB_TEX_EDGE, G_RM_AA_ZB_TEX_EDGE2),
+    gsSPClearGeometryMode(G_LIGHTING),
+    gsSPEndDisplayList(),
 };
 
 Vec3i D_800D62A0 = {
