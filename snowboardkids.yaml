@@ -327,7 +327,7 @@ segments:
       - [0xDB480, .data, race/camera/race_camera]
       - [0xDB7B0, .data, audio/sound_manager]
       - [0xDD090, .data, race/flow/race_flow]
-      - [0xDD1E0, data, race/motion/race_motion_animation_debug_viewer]
+      - [0xDD1E0, .data, race/motion/race_motion_animation_debug_viewer]
       - [0xDD4F0, data, race/ui/race_hud]
       - [0xDEA70, data, race/player/race_player_progress]
       - [0xDEC70, data, race/player/race_player_model_renderer]

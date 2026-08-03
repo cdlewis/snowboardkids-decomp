@@ -39,18 +39,6 @@
 #define initRaceMotionModelParts(player) initRaceMotionModelParts(RACE_MOTION_INIT_STATE(player))
 
 typedef struct {
-    s16 unk0;
-    s16 unk2;
-    s16 unk4;
-    s16 unk6;
-    s16 unk8;
-    s16 unkA;
-    s16 unkC;
-    s16 unkE;
-    s16 unk10;
-} PlayerTuningRow;
-
-typedef struct {
     Vec3i position;
     s16 surfaceHint;
     s16 facingAngle;
@@ -90,10 +78,6 @@ extern RacePlayerPreviewStart gRacePlayerPreviewStartPositions[][4];
 extern u16 gRacePlayerVoiceBaseSoundIds;
 extern u16 gRacePlayerVoiceLeadSoundOffsets;
 extern u16 gRacePlayerVoiceSplitSoundOffsets;
-extern PlayerTuningRow gRacePlayerBoardTuningRows[];
-extern PlayerTuningRow gRacePlayerCharacterTuningRows[];
-extern PlayerTuningRow gRacePlayerDemoBoardTuningRows[];
-extern PlayerTuningRow gRacePlayerDemoCharacterTuningRows[];
 extern u8 gMainMenuModeSelection;
 extern s8 gRacePlayerCount;
 extern u8 gRaceUpdatePaused;

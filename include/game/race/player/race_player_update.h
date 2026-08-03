@@ -4,6 +4,23 @@
 #include "common.h"
 struct RacePlayer;
 
+typedef struct {
+    s16 unk0;
+    s16 unk2;
+    s16 unk4;
+    s16 unk6;
+    s16 unk8;
+    s16 unkA;
+    s16 unkC;
+    s16 unkE;
+    s16 unk10;
+} PlayerTuningRow;
+
+extern PlayerTuningRow gRacePlayerBoardTuningRows[];
+extern PlayerTuningRow gRacePlayerCharacterTuningRows[];
+extern PlayerTuningRow gRacePlayerDemoBoardTuningRows[];
+extern PlayerTuningRow gRacePlayerDemoCharacterTuningRows[];
+
 void initRacePlayers(void);
 void applyRacePlayerTuning(struct RacePlayer *player);
 void initRacePlayer(struct RacePlayer *player);
