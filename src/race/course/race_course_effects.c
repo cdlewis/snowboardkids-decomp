@@ -131,16 +131,6 @@ typedef struct {
 } CourseMarkerEntry;
 
 typedef struct {
-    void *baseVerticesInput;
-    char pad4[0x10];
-} CourseMarkerVertexResource;
-
-typedef struct {
-    u16 textureIndex;
-    char pad2[0x12];
-} CourseMarkerTextureResource;
-
-typedef struct {
     s16 scaleX;
     s16 scaleY;
     s16 scaleZ;
@@ -150,6 +140,11 @@ typedef struct {
     s16 yaw;
     s32 displayList;
 } CourseTriggerEntry;
+
+typedef union {
+    u16 raw[32];
+    CourseTriggerEntry entries[2];
+} CourseTriggerEntryData;
 
 typedef struct {
     Vec3i dest;
@@ -182,11 +177,6 @@ typedef struct {
 } SoundParams;
 
 typedef struct {
-    s16 angle;
-    char pad2[0xE];
-} SoundParamAngle;
-
-typedef struct {
     char pad0[0x44];
     Vec3i transformOffset;
     char pad50[0x60];
@@ -196,6 +186,300 @@ typedef struct RaceCourseBackdropEffect {
     char pad0[0x44];
     void *matrix;
 } RaceCourseBackdropEffect;
+
+Vtx D_800D9C40[] = {
+    {{{-36, 144, 0}, 0x0000, {-16, -16}, {228, 228, 228, 255}}},
+    {{{36, 144, 0}, 0x0000, {1008, -16}, {228, 228, 228, 255}}},
+    {{{36, -8, 0}, 0x0000, {1008, 2032}, {228, 228, 228, 255}}},
+    {{{-36, -8, 0}, 0x0000, {-16, 2032}, {228, 228, 228, 255}}},
+    {{{-36, 144, 0}, 0x0000, {-16, -16}, {228, 228, 228, 255}}},
+    {{{36, 144, 0}, 0x0000, {1008, -16}, {228, 228, 228, 255}}},
+    {{{36, -8, 0}, 0x0000, {1008, 2032}, {228, 228, 228, 255}}},
+    {{{-36, -8, 0}, 0x0000, {-16, 2032}, {228, 228, 228, 255}}},
+    {{{-4, 8, 0}, 0x0000, {-16, -16}, {228, 228, 228, 255}}},
+    {{{4, 8, 0}, 0x0000, {496, -16}, {228, 228, 228, 255}}},
+    {{{4, 0, 0}, 0x0000, {496, 496}, {228, 228, 228, 255}}},
+    {{{-4, 0, 0}, 0x0000, {-16, 496}, {228, 228, 228, 255}}},
+};
+
+Gfx gEffectRenderModeSetupDl[] = {
+    {{0xE7000000, 0x00000000}},
+    {{0xBB000001, 0xFFFFFFFF}},
+    {{0xFC127FFF, 0xFFFFF238}},
+    {{0xB900031D, 0xC8113078}},
+    {{0xB6000000, 0x00020000}},
+    {{0xBA001402, 0x00100000}},
+    {{0xB7000000, 0x00010000}},
+    {{0xB8000000, 0x00000000}},
+};
+
+Gfx gEffectRenderModeCleanupDl[] = {
+    {{0xE7000000, 0x00000000}},
+    {{0xB900031D, 0x00552038}},
+    {{0xBA001402, 0x00000000}},
+    {{0xB6000000, 0x00010000}},
+    {{0xB8000000, 0x00000000}},
+};
+
+CourseMarkerSpawnEntry D_800D9D68[] = {
+    {0, {0}, {0xDA6797E0, 0xE8120000, 0xE8618D80}},
+    {0, {0}, {0xDA5596C0, 0xE8050000, 0xE8E23CA8}},
+    {0, {0}, {0xD95E35E8, 0xE7DF8000, 0xE8D1E9E8}},
+    {0, {0}, {0xD953F118, 0xE7CF0000, 0xE98828D8}},
+    {0, {0}, {0xD87ED180, 0xE7B28000, 0xE96589B8}},
+    {0, {0}, {0xD84BAD48, 0xE7980000, 0xEA4D1788}},
+    {0, {0}, {0xD73764B0, 0xE7708000, 0xEA46A970}},
+    {0, {0}, {0xD6D24718, 0xE7460000, 0xEBBB5D50}},
+    {0, {0}, {0xD57CF2F0, 0xE7050000, 0xEC279070}},
+    {0, {0}, {0xD577DA48, 0xE6CF8000, 0xED718F20}},
+    {0, {0}, {0xD4B5F828, 0xE6A18000, 0xEDB78D18}},
+    {0, {0}, {0xD4DDCE30, 0xE66A0000, 0xEEB211B0}},
+    {0, {0}, {0xD3CA7C40, 0xE61A0000, 0xEF1E5DB8}},
+    {0, {0}, {0xD481C800, 0xE5BC0000, 0xF0859FC0}},
+    {0, {0}, {0xD3CC9528, 0xE5828000, 0xF0E0F508}},
+    {0, {0}, {0xD409A090, 0xE52E8000, 0xF2195078}},
+    {0, {0}, {0xD3866C60, 0xE4FA0000, 0xF2BE3BE0}},
+    {0, {0}, {0xD96B6500, 0xE7FB8000, 0xE7D9E7E0}},
+    {0, {0}, {0xD859CD08, 0xE7D48000, 0xE7F9B050}},
+    {0, {0}, {0xD7C2DDF0, 0xE7A58000, 0xE8FA3A88}},
+    {0, {0}, {0xD6E1B258, 0xE7858000, 0xE92060E8}},
+    {0, {0}, {0xD6A9CBB0, 0xE7668000, 0xEA017B70}},
+    {0, {0}, {0xD5C498C0, 0xE7490000, 0xEA290DE0}},
+    {0, {0}, {0xD56CE800, 0xE7220000, 0xEB391100}},
+    {0, {0}, {0xD4870878, 0xE6F98000, 0xEBB56870}},
+    {0, {0}, {0xD450CCE8, 0xE6C28000, 0xECD082E8}},
+    {0, {0}, {0xD3807520, 0xE6908000, 0xED524948}},
+    {0, {0}, {0xD3A568E8, 0xE6588000, 0xEE3907D8}},
+    {0, {0}, {0xD2F6A828, 0xE6240000, 0xEEB42968}},
+    {0, {0}, {0xD2EBB590, 0xE5C00000, 0xEFE3BC10}},
+    {0, {0}, {0xD28E09F0, 0xE5400000, 0xF170DE80}},
+    {0, {0}, {0xCD7E5688, 0xE3048000, 0xF5BE8888}},
+    {0, {0}, {0xB041CA10, 0xC4418000, 0xDE974048}},
+    {0, {0}, {0xAFE7E4D8, 0xB75D0000, 0xC9182EF0}},
+    {0, {0}, {0xB00F6BB8, 0xB7400000, 0xC8C59428}},
+    {0, {0}, {0xB034A4F0, 0xB71E8000, 0xC86E5ED8}},
+    {0, {0}, {0xB0DF41B8, 0xB6A90000, 0xC7B85530}},
+    {0, {0}, {0xB21C3F10, 0xB5E58000, 0xC72DAF10}},
+    {0, {0}, {0xB3B42628, 0xB4EA0000, 0xC751B0F0}},
+    {0, {0}, {0xB401A730, 0xB4CD0000, 0xC753E9F8}},
+    {1, {0}, {0xCD361418, 0xE2EE8000, 0xF57850C0}},
+    {1, {0}, {0xCCEE6A70, 0xE2B78000, 0xF4B062D0}},
+    {1, {0}, {0xB7162340, 0xCC288000, 0xEC76E730}},
+    {1, {0}, {0xB5EFCAD0, 0xCBF68000, 0xEC39E9A0}},
+    {1, {0}, {0xB56C12F8, 0xCBE08000, 0xEC0BDFB0}},
+    {1, {0}, {0xB0C36918, 0xC4C08000, 0xDF47EDD8}},
+    {-1, {0}, {0x00000000, 0x00000000, 0x00000000}},
+};
+
+CourseMarkerSpawnEntry D_800DA058[] = {
+    {2, {0}, {0x28C8B179, 0xD113BFA6, 0xC9F84D48}},
+    {2, {0}, {0x29477435, 0xD084A801, 0xCC351004}},
+    {2, {0}, {0x2A2C03A7, 0xD0016D55, 0xCE225B3E}},
+    {2, {0}, {0x2AC2EC87, 0xCFF28C55, 0xCDE30266}},
+    {2, {0}, {0x2CBF0511, 0xCF49D858, 0xCEDEA806}},
+    {-1, {0}, {0x00000000, 0x00000000, 0x00000000}},
+};
+
+CourseMarkerSpawnEntry *gCourseTextureMarkerSpawnEntriesByCourse[] = {
+    D_800D9D68, D_800DA058,
+};
+
+Vtx D_800DA0C0[] = {
+    {{{-40, 80, -136}, 0x0000, {0, 0}, {30, 25, 35, 255}}},
+    {{{-42, 82, -136}, 0x0000, {0, 0}, {30, 25, 35, 255}}},
+    {{{-42, 742, -1736}, 0x0000, {0, 0}, {0, 0, 0, 255}}},
+    {{{-40, 740, -1736}, 0x0000, {0, 0}, {0, 0, 0, 255}}},
+    {{{40, 80, -136}, 0x0000, {0, 0}, {30, 25, 35, 255}}},
+    {{{42, 82, -136}, 0x0000, {0, 0}, {30, 25, 35, 255}}},
+    {{{42, 742, -1736}, 0x0000, {0, 0}, {0, 0, 0, 255}}},
+    {{{40, 740, -1736}, 0x0000, {0, 0}, {0, 0, 0, 255}}},
+};
+
+Gfx D_800DA140[] = {
+    {{0xE7000000, 0x00000000}},
+    {{0xBA001402, 0x00100000}},
+    {{0xB7000000, 0x00010000}},
+    {{0xBB000000, 0xFFFFFFFF}},
+    {{0xFCFFFFFF, 0xFFFE793C}},
+    {{0xB900031D, 0xC8112078}},
+    {{0x0400207F, (u32) D_800DA0C0}},
+    {{0xB1020406, 0x00020600}},
+    {{0xB1060402, 0x00060200}},
+    {{0xB10A0C0E, 0x000A0E08}},
+    {{0xB10E0C0A, 0x000E0A08}},
+    {{0xE7000000, 0x00000000}},
+    {{0xB900031D, 0x00552038}},
+    {{0xBA001402, 0x00000000}},
+    {{0xB6000000, 0x00010000}},
+    {{0xB8000000, 0x00000000}},
+};
+
+void *gRaceCourseSceneryDisplayLists[] = {
+    (void *) 0x02000000,
+    (void *) 0x02000160,
+    (void *) 0x02000000,
+    (void *) 0x020002C0,
+    (void *) 0x02000410,
+    (void *) 0x020028F0,
+    (void *) 0x02002DB8,
+    (void *) 0x02000000,
+    (void *) 0x02000568,
+    (void *) 0x02000910,
+    (void *) 0x02000B30,
+    (void *) 0x02001350,
+};
+Gfx *gThrownPickupModelDisplayList[] = {
+    (Gfx *) 0x02001548,
+    (Gfx *) 0x02001678,
+    (Gfx *) 0x02001730,
+    (Gfx *) 0x02001810,
+    (Gfx *) 0x020018E8,
+    (Gfx *) 0x020019C0,
+    (Gfx *) 0x02001D00,
+    (Gfx *) D_800DA140,
+    (Gfx *) 0x020020A8,
+    (Gfx *) 0x02002208,
+    (Gfx *) 0x020023A8,
+    (Gfx *) 0x02002490,
+    (Gfx *) 0x02002660,
+    (Gfx *) 0x02002ED0,
+};
+
+CourseRenderEntry D_800DA228[] = {
+    {0, 0, {0x01D014A8, 0xFF6C4D78, 0xFB9EA3E0}, 608, 0},
+    {0, 0, {0x0240BB14, 0xFF6C4D78, 0xFA935474}, 608, 0},
+    {1, 0, {0xD23466CE, 0xE42B18E0, 0xF5EA0624}, 2304, 0},
+    {4, 0, {0xCFB74EEE, 0xDE1498E0, 0xEAC21300}, 2304, 0},
+    {8, 0, {0xF97016E4, 0x00DBFC9A, 0xFD0C374C}, 3632, 0},
+    {8, 0, {0xC2E81822, 0xAC908000, 0xD1AD9DFC}, 2608, 0},
+    {19, 0, {0xC2E81822, 0xAC908000, 0xD1AD9DFC}, 2608, 0},
+    {17, 0, {0xCFAB11F8, 0xE3673C32, 0xF4590B3E}, 1216, 0},
+    {17, 0, {0xC14A2B73, 0xACD9B80F, 0xCC23BA7C}, 2992, 0},
+    {25, 0, {0xFFEC52BC, 0x0005AEED, 0x00953930}, 2608, 0},
+    {25, 0, {0xC48EF729, 0xAC960000, 0xD0CC2D2F}, 5152, 0},
+    {25, 0, {0xC4D7BE2D, 0xAC960000, 0xD06F5859}, 5152, 0},
+    {10, 0, {0xC46056B3, 0xAC960000, 0xCE3C5977}, 3664, 0},
+    {-1, 0, {0x00000000, 0x00000000, 0x00000000}, 0, 0},
+};
+
+CourseRenderEntry D_800DA340[] = {
+    {8, 0, {0xF88F8010, 0x01B3C704, 0x08B7C216}, 3952, 0},
+    {8, 0, {0x25AB1286, 0xB99EAFDE, 0xA418BB3C}, 736, 0},
+    {19, 0, {0x25AB1286, 0xB99EAFDE, 0xA418BB3C}, 736, 0},
+    {10, 0, {0xFC683074, 0x00117426, 0xFCE0F666}, 672, 0},
+    {11, 0, {0xF271CB3A, 0xF24BC074, 0xE9E7C75E}, 1392, 0},
+    {18, 0, {0xF5186325, 0xF35DB06F, 0xEC2A2C50}, 1424, 0},
+    {18, 0, {0xF3CB2861, 0xF332306F, 0xEB1AD400}, 1424, 0},
+    {-1, 0, {0x00000000, 0x00000000, 0x00000000}, 0, 0},
+};
+
+CourseRenderEntry D_800DA3E0[] = {
+    {8, 0, {0xFB3C1234, 0x0166050E, 0x02974782}, 0, 0},
+    {8, 0, {0x1678D7C8, 0xD0575952, 0xC957E20F}, 2192, 0},
+    {19, 0, {0x1678D7C8, 0xD0575952, 0xC957E20F}, 2192, 0},
+    {-1, 0, {0x00000000, 0x00000000, 0x00000000}, 0, 0},
+};
+
+CourseRenderEntry D_800DA430[] = {
+    {8, 0, {0x053E07E6, 0x00874833, 0xFA36E885}, 1808, 0},
+    {8, 0, {0xB3F31DAE, 0xD0500000, 0x9B0A372B}, 2000, 0},
+    {19, 0, {0xB3F31DAE, 0xD0500000, 0x9B0A372B}, 2000, 0},
+    {-1, 0, {0x00000000, 0x00000000, 0x00000000}, 0, 0},
+};
+
+CourseRenderEntry D_800DA480[] = {
+    {11, 0, {0x05A47A7A, 0xD7FCE5DB, 0xAFF3326D}, 3712, 0},
+    {11, 0, {0x040EFAF2, 0xD8D2DC67, 0xB3E951AB}, 1120, 0},
+    {11, 0, {0x095DF1CC, 0xD9C54381, 0xB2FF5E19}, 4080, 0},
+    {8, 0, {0x01A91FD6, 0xD2600000, 0xA317F7BF}, 1536, 0},
+    {19, 0, {0x01A91FD6, 0xD2600000, 0xA317F7BF}, 1536, 0},
+    {8, 0, {0xFB2519B1, 0x018E6620, 0x03090886}, 4064, 0},
+    {18, 0, {0x0452B064, 0xF5C87EA5, 0xE0367FE4}, 832, 0},
+    {18, 0, {0x03D5887A, 0xF66BDEA5, 0xE1592132}, 832, 0},
+    {18, 0, {0x059C3BB0, 0xF65E9EA5, 0xE1E2E754}, 2912, 0},
+    {18, 0, {0x05ECAF34, 0xF5C69EA5, 0xE0AD1F0E}, 2912, 0},
+    {18, 0, {0x13B2B871, 0xEB826EEA, 0xDE2EA200}, 3376, 0},
+    {18, 0, {0x147006D7, 0xEB860EEA, 0xDF91B288}, 3360, 0},
+    {18, 0, {0x163EB5B3, 0xEA584EEA, 0xDE76D2D8}, 2352, 0},
+    {18, 0, {0x15935139, 0xEA504EEA, 0xDD1127D0}, 304, 0},
+    {18, 0, {0x17187BE1, 0xEA044EEA, 0xDC43F6B2}, 1312, 0},
+    {18, 0, {0x17D35A51, 0xEA072EEA, 0xDD93D6BA}, 1312, 0},
+    {-1, 0, {0x00000000, 0x00000000, 0x00000000}, 0, 0},
+};
+
+CourseRenderEntry D_800DA5D4[] = {
+    {8, 0, {0xFCA42745, 0x0169B6DA, 0xF7136E88}, 3008, 0},
+    {8, 0, {0x46B6BF2E, 0xD8100000, 0x04CBF586}, 2704, 0},
+    {19, 0, {0x46B6BF2E, 0xD8100000, 0x04CBF586}, 2704, 0},
+    {-1, 0, {0x00000000, 0x00000000, 0x00000000}, 0, 0},
+};
+
+CourseRenderEntry D_800DA624[] = {
+    {8, 0, {0x9F401566, 0xDD5C0000, 0xE785C37D}, 3296, 0},
+    {19, 0, {0x9F401566, 0xDD5C0000, 0xE785C37D}, 3296, 0},
+    {8, 0, {0xF61512AA, 0x00011DE4, 0xF93B37B9}, 3264, 0},
+    {-1, 0, {0x00000000, 0x00000000, 0x00000000}, 0, 0},
+};
+
+CourseRenderEntry D_800DA674[] = {
+    {11, 0, {0xF3C2296E, 0xF2A20000, 0xEE5E0129}, 1792, 0},
+    {-1, 0, {0x00000000, 0x00000000, 0x00000000}, 0, 0},
+};
+
+CourseRenderEntry D_800DA69C[] = {
+    {19, 0, {0x19B8F477, 0xF2F60000, 0xE965AC2E}, 2432, 0},
+    {8, 0, {0xFB2EE4C4, 0x013F685D, 0x035893BA}, 3968, 0},
+    {-1, 0, {0x00000000, 0x00000000, 0x00000000}, 0, 0},
+};
+
+CourseRenderEntry D_800DA6D8[] = {
+    {8, 0, {0x14DA6C89, 0xEEC47C98, 0xF4485684}, 3792, 0},
+    {19, 0, {0x14DA6C89, 0xEEC47C98, 0xF4485684}, 3792, 0},
+    {8, 0, {0x00000000, 0xFFFDFDD7, 0x0003AEE6}, 0, 0},
+    {10, 0, {0x1470B7EE, 0xEECD0856, 0xF615DFCF}, 2832, 0},
+    {-1, 0, {0x00000000, 0x00000000, 0x00000000}, 0, 0},
+};
+
+CourseRenderEntry *gRaceCourseSceneryEntriesByCourse[] = {
+    D_800DA228,
+    D_800DA340,
+    D_800DA3E0,
+    D_800DA430,
+    D_800DA480,
+    D_800DA5D4,
+    D_800DA624,
+    D_800DA674,
+    D_800DA69C,
+    D_800DA6D8,
+};
+
+SoundParams gCourseGateSoundParams[] = {
+    {0xC3623C28, 0xAC940000, 0xD129BAB2, 1584, 0},
+    {0x253CC0AA, 0xB9A9E000, 0xA4A99C5C, 3824, 0},
+    {0x1720C991, 0xD05E70EE, 0xC940D8EA, 1168, 0},
+    {0xB4967EF1, 0xD0530400, 0x9B1C046F, 928, 0},
+    {0x021EC3FF, 0xD2640000, 0xA39AFD40, 512, 0},
+    {0x471CC8AB, 0xD8140000, 0x044C759E, 1728, 0},
+    {0x9F10F80F, 0xDD600000, 0xE6DD4687, 2288, 0},
+    {0x00000000, 0x00000000, 0x00000000, 0, 0},
+    {0x1A4B7210, 0xF2FA0000, 0xE9069D8E, 1408, 0},
+    {0x1442F7DC, 0xEEC80E50, 0xF3F545C2, 2768, 0},
+};
+
+CourseMarkerEntry gCourseBillboardMarkerEntries[] = {
+    {0x02000060, 0x02000088, (void *) 0x02000000, 6, 1, 3, 0},
+    {0x0200BB90, 0x0200BBB8, (void *) 0x0200BA10, 24, 1, 3, 0},
+    {0x0200BCC0, 0x0200BCE8, (void *) 0x0200BC00, 12, 1, 3, 0},
+};
+
+CourseTriggerEntryData gCourseTriggerEntries = {{
+    0x0002, 0x0001, 0x0186, 0x0000, 0x14CB, 0x79E2, 0xD852, 0x20A4,
+    0xD28E, 0xDA6A, 0x0F90, 0x0070, 0x0200, 0x9148, 0x0004, 0x0006,
+    0x0122, 0x0000, 0xF7B4, 0x2249, 0xF305, 0xD31B, 0xEB76, 0x22AF,
+    0x0FBA, 0x0400, 0x0200, 0x6988, 0x0000, 0x0000, 0x0000, 0x0000,
+}};
+
+#define gCourseTriggerEntries (gCourseTriggerEntries.entries)
 
 extern void enqueueSoundEffect(s32, s32);
 extern void enqueuePositionalSoundEffect(s32, void *, s32, s32);
@@ -226,15 +510,6 @@ void renderRaceCourseSceneryObjects(RaceCourseRenderEffect *);
 void renderSpiralCourseObject(RaceMovingEffect *);
 extern u8 gRaceUpdatePaused;
 extern RaceCamera D_801121E0[];
-extern CourseMarkerSpawnEntry *gCourseTextureMarkerSpawnEntriesByCourse[];
-extern CourseRenderEntry *gRaceCourseSceneryEntriesByCourse[];
-extern void *gRaceCourseSceneryDisplayLists[];
-extern SoundParams gCourseGateSoundParams[];
-extern CourseMarkerEntry gCourseBillboardMarkerEntries[];
-extern CourseMarkerVertexResource gCourseBillboardMarkerVertexResources[];
-extern CourseMarkerTextureResource gCourseBillboardMarkerTextureResources[];
-extern CourseTriggerEntry gCourseTriggerEntries[];
-extern SoundParamAngle gCourseGateAngles[];
 extern Gfx *gRegionAllocPtr;
 
 void drawRaceCountdownReadyPrompt(RaceCountdownEffect *arg0) {
@@ -506,10 +781,6 @@ void initFinalLapPrompt(void *arg0) {
 }
 
 extern void getAssetTableImagePaletteAndSize(u8 *, s32, void **, void **, s16 *, s16 *);
-extern Vtx D_800D9C40[];
-extern Gfx gEffectRenderModeSetupDl[];
-extern Gfx gEffectRenderModeCleanupDl[];
-
 void renderCourseTextureMarkers(RaceCourseRenderEffect *arg0) {
     volatile u8 pad[8];
     void *image;
@@ -1096,7 +1367,7 @@ void renderCourseGateObject(CourseGateObjectEffect *arg0) {
     }
 
     if (temp_s0->pos1Matrix == NULL) {
-        makeFixedRotationZY(scratch.rotation, gCourseGateAngles[gRaceCourseIndex.signedValue].angle, temp_s0->unk50);
+        makeFixedRotationZY(scratch.rotation, gCourseGateSoundParams[gRaceCourseIndex.signedValue].angle, temp_s0->unk50);
         scratch.translation.x = temp_s0->pos1.x;
         scratch.translation.y = temp_s0->pos1.y;
         scratch.translation.z = temp_s0->pos1.z;
@@ -1250,10 +1521,10 @@ void updateCourseBillboardMarker(RaceCourseMarkerEffect *arg0) {
 
 void initCourseBillboardMarker(RaceCourseMarkerEffect *arg0) {
     getAssetTableImageAndPalette(getRelocatableHeapBlockBase(ASSET_HANDLE(0x1C)),
-                  gCourseBillboardMarkerTextureResources[arg0->entryIndex].textureIndex,
+                  gCourseBillboardMarkerEntries[arg0->entryIndex].textureIndex,
                   &arg0->texture, &arg0->palette);
     arg0->baseVertices =
-        (Vtx *) resolveAssetTableRelativePointer(getRelocatableHeapBlockBase(ASSET_HANDLE(0x8)), (s32) gCourseBillboardMarkerVertexResources[arg0->entryIndex].baseVerticesInput);
+        (Vtx *) resolveAssetTableRelativePointer(getRelocatableHeapBlockBase(ASSET_HANDLE(0x8)), (s32) gCourseBillboardMarkerEntries[arg0->entryIndex].baseVerticesInput);
 
     {
         CourseMarkerEntry *entry = &gCourseBillboardMarkerEntries[arg0->entryIndex];

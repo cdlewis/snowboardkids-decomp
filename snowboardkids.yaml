@@ -323,7 +323,7 @@ segments:
       - [0xD6850, .data, race/effects/race_intro_effects]
       - [0xD6BF0, .data, race/ui/race_ui_effects]
       - [0xD8350, .data, race/course/race_course_props_and_pickups]
-      - [0xDA840, data, race/course/race_course_effects]
+      - [0xDA840, .data, race/course/race_course_effects]
       - [0xDB480, data, race/camera/race_camera]
       - [0xDB7B0, data, audio/sound_manager]
       - [0xDD090, data, race/flow/race_flow]
