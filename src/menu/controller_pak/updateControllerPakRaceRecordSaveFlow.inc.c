@@ -4,7 +4,6 @@ void updateControllerPakRaceRecordSaveFlow(void) {
     CallbackTask *temp_t0;
     s16 statusCode;
     s32 fade;
-    s32 transitionStep;
 
     completion = &sp24;
     completion->value = 0;
@@ -18,9 +17,9 @@ void updateControllerPakRaceRecordSaveFlow(void) {
             createCallbackTask((CallbackTaskCallback)initControllerPakDeleteConfirmPrompt, 0, 0x64);
             setCurrentGameTaskCallback(updateControllerPakRaceRecordSaveOverwritePrompt, 0);
         }
-    } else if ((transitionStep = gControllerPakRaceRecordSaveStatusTransition.step,
-                gMenuSelectionConfirmTimer == 0)) {
-        if (transitionStep == 1) {
+    } else {
+        if (gMenuSelectionConfirmTimer == 0) {
+            if (gControllerPakRaceRecordSaveStatusTransition.step == 1) {
             if (gMenuChoicePromptState[0] != 0) {
                 statusCode = 6;
             } else {
@@ -49,7 +48,7 @@ void updateControllerPakRaceRecordSaveFlow(void) {
                 }
                 break;
             case 2:
-                if (transitionStep != 3) {
+                if (gControllerPakRaceRecordSaveStatusTransition.step != 3) {
                     requestControllerPakSaveWrite(0U);
                     if (gControllerPakRetryCounts[0] == 0) {
                         gControllerPakRaceRecordSaveStatusTransition.targetStatus = 5;
@@ -193,15 +192,12 @@ void updateControllerPakRaceRecordSaveFlow(void) {
                 }
                 break;
             }
+            }
+            completion->value = gRacePlayers[0].menuState & 1;
+        } else {
+            gMenuSelectionConfirmTimer++;
         }
-        completion->value = gRacePlayers[0].menuState & 1;
-    } else {
-        gMenuSelectionConfirmTimer++;
-    }
-    if (completion->value != 0) {
-        gMenuSelectionConfirmTimer = 1;
-    }
-    if (gMenuSelectionConfirmTimer == 0x23) {
+    } if (completion->value != 0) { gMenuSelectionConfirmTimer = 1; } if (gMenuSelectionConfirmTimer == 0x23) {
         setCurrentGameTaskCallback(fadeOutControllerPakRaceRecordSaveFlow, 0);
     }
     updateCallbackTasks();
