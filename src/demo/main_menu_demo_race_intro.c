@@ -53,9 +53,14 @@ extern u8 gMainMenuModeSelection;
 extern s32 gMenuFlowState;
 extern u8 gFramebufferSwapHold;
 extern u8 gPendingFramebufferSwapCount;
+extern f32 D_800E10A0;
+extern f32 D_800E10A4;
+extern f32 D_800E10A8;
+extern f32 D_800E10AC;
+extern f32 D_800E10B0;
 extern void releaseMenuAssetHandles(void);
-// initMainMenuDemoRaceIntro best match: 98.634%
-// (nonmatchings/initMainMenuDemoRaceIntro-633030068925474062/base_5.c)
+// initMainMenuDemoRaceIntro best match: 98.808%
+// (nonmatchings/initMainMenuDemoRaceIntro-1846960929180867216/base_3.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/demo/main_menu_demo_race_intro/initMainMenuDemoRaceIntro.s")
 
 #ifdef NON_MATCHING
@@ -154,16 +159,16 @@ void initMainMenuDemoRaceIntro(void) {
     initRaceHud();
     loadCourseAssetsFlag = gPlayerCount;
     if (loadCourseAssetsFlag == one) {
-        configureViewport(0, 0xA0, 0x78, 0x120U, 0xD0U, 0x140U, 0xF0U, 1.3333334f);
+        configureViewport(0, 0xA0, 0x78, 0x120U, 0xD0U, 0x140U, 0xF0U, D_800E10A0);
         one++;
         one--;
         gRacePlayerHudStatuses[0].active = one;
         gFramebufferSwapDelay.value = 0;
     } else {
-        configureViewport(0, 0x57, 0x43, 0x90U, 0x68U, 0xA0U, 0x78U, 1.3333334f);
-        configureViewport(1, 0x57, 0xAD, 0x90U, 0x68U, 0xA0U, 0x78U, 1.3333334f);
-        configureViewport(2, 0xE9, 0x43, 0x90U, 0x68U, 0xA0U, 0x78U, 1.3333334);
-        configureViewport(3, 0xE9, 0xAD, 0x90U, 0x68U, 0xA0U, 0x78U, 1.3333334f);
+        configureViewport(0, 0x57, 0x43, 0x90U, 0x68U, 0xA0U, 0x78U, D_800E10A4);
+        configureViewport(1, 0x57, 0xAD, 0x90U, 0x68U, 0xA0U, 0x78U, D_800E10A8);
+        configureViewport(2, 0xE9, 0x43, 0x90U, 0x68U, 0xA0U, 0x78U, D_800E10AC);
+        configureViewport(3, 0xE9, 0xAD, 0x90U, 0x68U, 0xA0U, 0x78U, D_800E10B0);
         D_801121E0[0].active = 1;
         D_801121E0[1].active = 1;
         D_801121E0[2].active = 1;
