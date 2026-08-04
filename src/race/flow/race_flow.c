@@ -532,7 +532,7 @@ void openRaceStartTransitionFlow(void) {
     suspendGameTask(2);
 }
 
-// initRaceSceneFlow best match: 95.527% (nonmatchings/initRaceSceneFlow-2781615007300307775/base_23.c)
+// initRaceSceneFlow best match: 95.540% (nonmatchings/initRaceSceneFlow-8101714008744796594/base_99.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race/flow/race_flow/initRaceSceneFlow.s")
 
 #ifdef NON_MATCHING
@@ -617,7 +617,8 @@ void initRaceSceneFlow(void) {
         player = &gRacePlayers[playerCount];
         courseCharacters = D_800DC58C[courseIndex];
         courseCharacterIds = D_800DC4C4[courseIndex];
-        do {
+        i = 1;
+        while (i != 0) {
             for (;;) {
                 duplicate = 1;
                 player->characterId = *courseCharacterIds++;
@@ -638,10 +639,12 @@ void initRaceSceneFlow(void) {
             player->characterVariant = courseCharacters[player->characterId].stickX;
             player->unk12 = courseCharacters[player->characterId].stickY;
             player++;
-        } while (player < gRacePlayersEnd);
+            i = player < gRacePlayersEnd;
+        }
     }
 
-    if (gRaceSplitscreenMode == 0) {
+    playerCount = gRaceSplitscreenMode;
+    if (playerCount == 0) {
         gRacePlayers[0].isActive = 1;
         gRacePlayers[1].isActive = 1;
         gRacePlayers[2].isActive = 1;
