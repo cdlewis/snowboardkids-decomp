@@ -129,7 +129,7 @@ search_done:
     return outCount;
 }
 
-// saveRaceRecordReplayData best match: 96.493% (nonmatchings/saveRaceRecordReplayData-8498672362023432715/base_18.c)
+// saveRaceRecordReplayData best match: 96.823% (nonmatchings/saveRaceRecordReplayData-8101714008744796594/base_36.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/main_menu/main_menu_scene_model/saveRaceRecordReplayData.s")
 
 #ifdef NON_MATCHING
@@ -137,6 +137,20 @@ search_done:
 #define REPLAY_SAVE_MIN_NORMAL 0x581
 #define REPLAY_SAVE_MAX_EXTRA 0x300
 #define REPLAY_SAVE_MIN_EXTRA 0x301
+
+#define COPY_REPLAY_BACKUP(source, destination, backup)                              \
+    (source) = gGameSaveDataBuffer[0].replayData;                                    \
+    (destination) = (backup);                                                        \
+    while (1) {                                                                      \
+        *(destination) = *(source);                                                  \
+        (source)++;                                                                  \
+        (destination)++;                                                             \
+        if ((u32)(source) >=                                                         \
+            (u32)&gGameSaveDataBuffer[0]                                             \
+                .replayData[GAME_SAVE_REPLAY_COPY_HALFWORD_COUNT]) {                 \
+            break;                                                                   \
+        }                                                                            \
+    }
 
 #define ACCUM_SLOT(courseIndex, slotIndex, maxSize, minSize)      \
     if (course != (courseIndex)) {                                \
@@ -209,27 +223,23 @@ search_done:
             oldOffset = REPLAY_SLOT_OFFSET(slotIndex);                         \
             SET_REPLAY_SLOT_OFFSET(slotIndex, writeIndex);                     \
             copied = 0;                                                        \
-            if (count > 0) {                                                   \
-                do {                                                           \
-                    gGameSaveDataBuffer[0].replayData[writeIndex] =               \
-                        oldData[oldOffset + copied];                            \
-                    copied++;                                                  \
-                    AFTER_OLD_COPY(slotIndex);                                 \
-                    writeIndex++;                                              \
-                } while (copied < gGameSaveDataBuffer[0].replaySlots[(slotIndex)].length); \
+            while (copied < gGameSaveDataBuffer[0].replaySlots[(slotIndex)].length) { \
+                gGameSaveDataBuffer[0].replayData[writeIndex] =                \
+                    oldData[oldOffset + copied];                               \
+                copied++;                                                     \
+                AFTER_OLD_COPY(slotIndex);                                    \
+                writeIndex++;                                                 \
             }                                                                  \
         }                                                                      \
     } else {                                                                   \
         SET_REPLAY_SLOT_OFFSET(slotIndex, writeIndex);                         \
         gGameSaveDataBuffer[0].replaySlots[(slotIndex)].length = compressedLength; \
         copied = 0;                                                            \
-        if (compressedLength > 0) {                                            \
-            do {                                                               \
-                gGameSaveDataBuffer[0].replayData[writeIndex] =                   \
-                    gCompressedRaceRecordReplayBuffer[copied];                    \
-                copied++;                                                      \
-                writeIndex++;                                                  \
-            } while (copied < compressedLength);                              \
+        while (copied < compressedLength) {                                    \
+            gGameSaveDataBuffer[0].replayData[writeIndex] =                    \
+                gCompressedRaceRecordReplayBuffer[copied];                    \
+            copied++;                                                         \
+            writeIndex++;                                                     \
         }                                                                      \
     }
 
@@ -260,16 +270,20 @@ s32 saveRaceRecordReplayData(void) {
     gPackedRaceRecordReplayBuffer.fields.characterVariant = history->characterVariant;
 
     i = 0;
-    if (history->lastWriteIndex > 0) {
-        do {
-            packed[4 + (i * 3)] = history->stickX[i];
-            packed[5 + (i * 3)] = history->stickY[i];
-            buttons = history->buttons[i];
-            ((volatile u8 *)packed)[6 + (i * 3)] = buttons;
-            packed[6 + (i * 3)] = buttons & ~0x40;
-            i++;
-        } while (copied = i < history->lastWriteIndex);
+    if (history->lastWriteIndex <= 0) {
+        goto packed_inputs_done;
     }
+packed_inputs_loop:
+    packed[4 + (i * 3)] = history->stickX[i];
+    packed[5 + (i * 3)] = history->stickY[i];
+    buttons = history->buttons[i];
+    ((volatile u8 *)packed)[6 + (i * 3)] = buttons;
+    packed[6 + (i * 3)] = buttons & ~0x40;
+    i++;
+    if (i < history->lastWriteIndex) {
+        goto packed_inputs_loop;
+    }
+packed_inputs_done:
 
     compressedLength = compressRaceRecordReplayData(gPackedRaceRecordReplayBuffer.bytes,
                                                     (history->lastWriteIndex * 3) + 4,
@@ -314,14 +328,7 @@ s32 saveRaceRecordReplayData(void) {
 
     gAssetHandles[0x20] = allocRelocatableHeapBlock(0x7500);
     oldData = getRelocatableHeapBlockBase(gAssetHandles[0x20]);
-    src = gGameSaveDataBuffer[0].replayData;
-    dst = oldData;
-    do {
-        *dst = *src;
-        src++;
-        dst++;
-    } while ((u32)src <
-             (u32)&gGameSaveDataBuffer[0].replayData[GAME_SAVE_REPLAY_COPY_HALFWORD_COUNT]);
+    COPY_REPLAY_BACKUP(src, dst, oldData);
 
     course = gRaceCourseIndex.signedValue;
     writeIndex = 0;
@@ -340,6 +347,7 @@ s32 saveRaceRecordReplayData(void) {
 }
 
 #undef COPY_SLOT
+#undef COPY_REPLAY_BACKUP
 #undef SET_REPLAY_SLOT_OFFSET
 #undef SET_REPLAY_SLOT_OFFSET_I
 #undef SET_REPLAY_SLOT_OFFSET_8
