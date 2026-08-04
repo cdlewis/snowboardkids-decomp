@@ -1084,35 +1084,13 @@ void updateRaceSetupRumblePrompt(void) {
 }
 #endif
 
-// initRaceSetupPlayerSaveData best match: 82.544% (nonmatchings/initRaceSetupPlayerSaveData-5793478266135801235/base_123.c)
+// initRaceSetupPlayerSaveData best match: 83.095% (nonmatchings/initRaceSetupPlayerSaveData-8101714008744796594/base_1.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/race_setup/race_setup_menu/initRaceSetupPlayerSaveData.s")
 
 #ifdef NON_MATCHING
 typedef struct RaceSetupSaveByteCursor {
     u8 value;
 } RaceSetupSaveByteCursor;
-
-typedef struct RaceSetupSaveHalfCursor {
-    u16 value;
-} RaceSetupSaveHalfCursor;
-
-typedef struct RaceSetupSaveWordCursor {
-    u32 value;
-} RaceSetupSaveWordCursor;
-
-typedef struct RaceSetupSaveEightByteCursor {
-    u8 bytes[8];
-} RaceSetupSaveEightByteCursor;
-
-typedef struct RaceSetupSaveHighScoreCursorView {
-    u8 pad[8];
-    s32 value;
-} RaceSetupSaveHighScoreCursorView;
-
-typedef struct RaceSetupSaveCupCursorView {
-    u8 pad[0x33];
-    u8 value;
-} RaceSetupSaveCupCursorView;
 
 typedef struct RaceSetupSaveSecretCupCursorView {
     u8 pad[0x34];
@@ -1139,243 +1117,168 @@ typedef struct RaceSetupSaveUnlockCopyView {
     s8 values[4];
 } RaceSetupSaveUnlockCopyView;
 
-typedef struct RaceSetupSaveRecordCursorView {
-    u8 pad0[0x4E];
-    GameSaveRecordTime timeTrial;
-    u8 pad1[0x156 - 0x52];
-    GameSaveRecordTime race;
-} RaceSetupSaveRecordCursorView;
-
-typedef struct RaceSetupSaveBestLapCursorView {
-    u8 pad[0x126];
-    GameSaveRecordTime bestLap;
-} RaceSetupSaveBestLapCursorView;
-
 typedef struct RaceSetupSaveReservedCursorView {
     u8 pad[0x78D7];
     u8 value;
 } RaceSetupSaveReservedCursorView;
 
 void initRaceSetupPlayerSaveData(s32 arg0) {
-    GameSaveData *base;
-    GameSaveData *sp30;
+    GameSaveData *header;
     GameSaveData *save;
-    s32 i;
-    s8 timeFraction;
+    RaceSetupSaveByteCursor *destination;
+    s32 fifteen;
+    const s8 *courseStateSource;
+    s32 course;
+    s32 player;
 
+    header = &gGameSaveDataBuffer[arg0 & 0xFFFFFFFFFFFFFFFF];
     save = &gGameSaveDataBuffer[arg0];
-    base = (GameSaveData *)&((RaceSetupSaveEightByteCursor *)&gGameSaveDataBuffer)[arg0 * 0xF1F];
-    save->checksum = 0;
-    save->money = 0;
+    header->checksum = 0;
+    header->money = 0;
 
-    {
-        RaceSetupSaveWordCursor *wordCursor;
-        RaceSetupSaveByteCursor *byteCursor;
-
-        wordCursor = (RaceSetupSaveWordCursor *)base;
-        byteCursor = (RaceSetupSaveByteCursor *)base;
-        i = 0;
-        do {
-            i++;
-            ((RaceSetupSaveHighScoreCursorView *)wordCursor)->value = 0;
-            wordCursor++;
-            byteCursor++;
-            ((RaceSetupSaveCupCursorView *)byteCursor)->value = 0;
-        } while (i < 11);
-
-        i = 0;
-        byteCursor = (RaceSetupSaveByteCursor *)base;
-        do {
-            ((RaceSetupSaveUnlockCursorView *)byteCursor)->values[0] = i;
-            i++;
-            byteCursor++;
-        } while (i < 3);
-
-        ((RaceSetupSaveUnlockCursorView *)base)->values[3] = -1;
-        i = 4;
-        byteCursor = (RaceSetupSaveByteCursor *)base + 4;
-        do {
-            i += 4;
-            ((RaceSetupSaveUnlockForwardView *)byteCursor)->values[0] = -1;
-            ((RaceSetupSaveUnlockForwardView *)byteCursor)->values[1] = -1;
-            ((RaceSetupSaveUnlockForwardView *)byteCursor)->values[2] = -1;
-            byteCursor += 4;
-            ((RaceSetupSaveUnlockPreviousView *)byteCursor)->value = -1;
-        } while (i != 12);
+    for (player = 0; player < 11; player++) {
+        save->highScores[player + 1] = 0;
+        save->cupPlacements[player] = 0;
     }
 
-    save->characterFlags = 0;
-    save->progressionLevel = 0;
-    save->extraCourseUnlockFlags = 0;
+    player = 0;
+    destination = (RaceSetupSaveByteCursor *)save;
+    while (player < 3) {
+        ((RaceSetupSaveUnlockCursorView *)destination)->values[0] = player;
+        player++;
+        destination++;
+    }
 
     {
-        RaceSetupSaveByteCursor *courseByteCursor;
-        RaceSetupSaveHalfCursor *courseHalfCursor;
-        RaceSetupSaveWordCursor *courseRecordCursor;
-        RaceSetupSaveWordCursor *bestLapCursor;
-        const RaceSetupSaveDefaultTime *courseTimes;
-        const RaceSetupSaveDefaultTime *bestLapRows;
-        const RaceSetupSaveDefaultTimeRow *specialRecords;
-        const RaceSetupSaveDefaultTimeTable *standardRecords;
-        s32 course;
+        register s32 negativeOne;
 
-        do {
-            specialRecords = D_800B3294;
-            standardRecords = &D_800B32A4;
-            bestLapRows = D_800B3270;
-            courseTimes = &D_800B31C8[0][0];
-            course = 0;
-            courseRecordCursor = (RaceSetupSaveWordCursor *)base;
-            courseByteCursor = (RaceSetupSaveByteCursor *)base;
-            courseHalfCursor = (RaceSetupSaveHalfCursor *)base;
-            bestLapCursor = (RaceSetupSaveWordCursor *)base;
-        } while (0);
-        sp30 = base;
+        negativeOne = -1;
+        save->courseUnlockStates[3] = negativeOne;
+        player = 4;
+        destination = (RaceSetupSaveByteCursor *)save + 4;
+        while (player != 12) {
+            player += 4;
+            ((RaceSetupSaveUnlockForwardView *)destination)->values[0] = negativeOne;
+            ((RaceSetupSaveUnlockForwardView *)destination)->values[1] = negativeOne;
+            ((RaceSetupSaveUnlockForwardView *)destination)->values[2] = negativeOne;
+            destination += 4;
+            ((RaceSetupSaveUnlockPreviousView *)destination)->value = negativeOne;
+        }
+    }
 
-        do {
-            RaceSetupSaveByteCursor *recordByteCursor;
-            RaceSetupSaveHalfCursor *recordHalfCursor;
-            RaceSetupSaveWordCursor *recordCursor;
-            const RaceSetupSaveDefaultTime *timeCursor;
-            RaceSetupSaveRecordCursorView *recordView;
-            const u8 *rankIcons;
-            const u16 *recordText;
-            s32 recordOffset;
+    header->characterFlags = 0;
+    header->progressionLevel = 0;
+    header->extraCourseUnlockFlags = 0;
 
-            rankIcons = D_800B32C4;
-            recordText = D_800B32D0;
-            i = 0;
-            recordCursor = courseRecordCursor;
-            recordOffset = 0;
-            timeCursor = courseTimes;
-            recordByteCursor = courseByteCursor;
-            recordHalfCursor = courseHalfCursor;
-            do {
-                timeFraction = timeCursor->fraction;
-                recordView = (RaceSetupSaveRecordCursorView *)recordCursor;
-                recordView->timeTrial.seconds = timeCursor->seconds;
-                recordView->timeTrial.fraction = timeFraction << 8;
-                recordView->timeTrial.minutes = timeCursor->minutes;
+    fifteen = sizeof(RaceSetupSaveDefaultTimeRow);
+    for (course = 0; course < 11; course++) {
+        for (player = 0; player < 5; player++) {
+            const RaceSetupSaveDefaultTime *raceDefaults;
 
-                ((GameSaveData *)recordByteCursor)->timeTrialCharacterIds[0][0] = 0x10;
-                ((GameSaveData *)recordByteCursor)->timeTrialCharacterIds[0][0] += i;
+            save->timeTrialRecords[course][player].seconds = D_800B31C8[course][player].seconds;
+            save->timeTrialRecords[course][player].fraction =
+                D_800B31C8[course][player].fraction << 8;
+            save->timeTrialRecords[course][player].minutes = D_800B31C8[course][player].minutes;
 
-                if (course == 9) {
-                    const RaceSetupSaveDefaultTime *raceRecord;
+            save->timeTrialCharacterIds[course][player] = 0x10;
+            save->timeTrialCharacterIds[course][player] += player;
 
-                    raceRecord = (const RaceSetupSaveDefaultTime *)&specialRecords[0].bytes[recordOffset];
-                    recordView->race.fraction = raceRecord->fraction << 8;
-                    recordView->race.minutes = raceRecord->minutes;
-                    recordView->race.seconds = raceRecord->seconds;
-                } else {
-                    const RaceSetupSaveDefaultTime *raceRecord;
-
-                    raceRecord = (const RaceSetupSaveDefaultTime *)&standardRecords->bytes[
-                        ((course & 1) * sizeof(RaceSetupSaveDefaultTimeRow)) + recordOffset
-                    ];
-                    recordView->race.fraction = raceRecord->fraction << 8;
-                    recordView->race.minutes = raceRecord->minutes;
-                    recordView->race.seconds = raceRecord->seconds;
-                }
-
-                ((GameSaveData *)recordByteCursor)->raceRecordCharacterIds[0][0] = 0x10;
-                ((GameSaveData *)recordByteCursor)->raceRecordCharacterIds[0][0] += i;
-                if (course == 9) {
-                    ((GameSaveData *)recordByteCursor)->scoreAttackScores[0][0] = rankIcons[0];
-                } else {
-                    ((GameSaveData *)recordByteCursor)->scoreAttackScores[0][0] = rankIcons[5];
-                }
-                ((GameSaveData *)recordByteCursor)->scoreAttackCharacterIds[0][0] = i;
-                ((GameSaveData *)recordHalfCursor)->trickAttackScores[0][0] = *recordText;
-                ((GameSaveData *)recordByteCursor)->trickAttackCharacterIds[0][0] = i;
-
-                i++;
-                recordCursor++;
-                recordOffset += sizeof(RaceSetupSaveDefaultTime);
-                recordByteCursor++;
-                timeCursor++;
-                rankIcons++;
-                recordHalfCursor++;
-                recordText++;
-            } while (i < 5);
-
-            {
-                s8 row0;
-                s8 row1;
-                s8 row2;
-
-                row0 = bestLapRows->minutes;
-                row1 = bestLapRows->seconds;
-                row2 = bestLapRows->fraction;
-                course++;
-                courseByteCursor += 5;
-                courseRecordCursor += 5;
-                courseTimes += 5;
-                courseHalfCursor += 5;
-                bestLapCursor++;
-                bestLapRows++;
-                ((RaceSetupSaveBestLapCursorView *)bestLapCursor)->bestLap.minutes = row0;
-                ((RaceSetupSaveBestLapCursorView *)bestLapCursor)->bestLap.seconds = row1;
-                ((RaceSetupSaveBestLapCursorView *)bestLapCursor)->bestLap.fraction = row2;
+            if (course == 9) {
+                raceDefaults = D_800B3294[0].records;
+            } else {
+                raceDefaults = (const RaceSetupSaveDefaultTime *)&D_800B32A4.bytes[
+                    (course & 1) * fifteen
+                ];
             }
-        } while (course < 11);
+            save->raceRecords[course][player].fraction = raceDefaults[player].fraction << 8;
+            save->raceRecords[course][player].minutes = raceDefaults[player].minutes;
+            save->raceRecords[course][player].seconds = raceDefaults[player].seconds;
+
+            save->raceRecordCharacterIds[course][player] = 0x10;
+            save->raceRecordCharacterIds[course][player] += player;
+
+            if (course == 9) {
+                save->scoreAttackScores[course][player] = D_800B32C4[player];
+            } else {
+                save->scoreAttackScores[course][player] = D_800B32C4[player + 5];
+            }
+            save->scoreAttackCharacterIds[course][player] = player;
+            save->trickAttackScores[course][player] = D_800B32D0[player];
+            save->trickAttackCharacterIds[course][player] = player;
+        }
+
+        {
+            register s8 bestMinutes;
+            register s8 bestSeconds;
+            register s8 bestFraction;
+
+            bestMinutes = D_800B3270[course].minutes;
+            bestSeconds = D_800B3270[course].seconds;
+            bestFraction = D_800B3270[course].fraction;
+            save->bestLapRecords[course].minutes = bestMinutes;
+            save->bestLapRecords[course].seconds = bestSeconds;
+            save->bestLapRecords[course].fraction = bestFraction;
+        }
     }
 
-    save->replaySlots[0].length = 0;
-    save->replaySlots[1].length = 0;
-    save->replaySlots[2].length = 0;
-    save->replaySlots[3].length = 0;
-    save->replaySlots[4].length = 0;
-    save->replaySlots[5].length = 0;
-    save->replaySlots[6].length = 0;
-    save->replaySlots[7].length = 0;
-    save->replaySlots[8].length = 0;
+    header->replaySlots[0].length = 0;
+    header->replaySlots[1].length = 0;
+    header->replaySlots[2].length = 0;
+    header->replaySlots[3].length = 0;
+    header->replaySlots[4].length = 0;
+    header->replaySlots[5].length = 0;
+    header->replaySlots[6].length = 0;
+    header->replaySlots[7].length = 0;
+    header->replaySlots[8].length = 0;
 
-    {
-        RaceSetupSaveByteCursor *byteCursor;
-
-        i = 0;
-        byteCursor = (RaceSetupSaveByteCursor *)sp30;
-        do {
-            i++;
-            byteCursor++;
-            ((RaceSetupSaveReservedCursorView *)byteCursor)->value = 0;
-        } while (i < 0x20);
+    player = 0;
+    destination = (RaceSetupSaveByteCursor *)save;
+compact_tail_loop:
+    player++;
+    destination++;
+    ((RaceSetupSaveReservedCursorView *)destination)->value = 0;
+    if (player < 0x20) {
+        goto compact_tail_loop;
     }
 
-    i = 0;
     if (gMainMenuSecretCodeUnlocked == 1) {
-        RaceSetupSaveByteCursor *byteCursor;
-        s8 temp0;
-        s8 temp1;
-        s8 temp2;
-        s8 temp3;
+        player = 0;
+        destination = (RaceSetupSaveByteCursor *)save;
+compact_cup_loop:
+        player++;
+        ((RaceSetupSaveSecretCupCursorView *)destination)->value = 1;
+        destination++;
+        if (player < 11) {
+            goto compact_cup_loop;
+        }
 
-        byteCursor = (RaceSetupSaveByteCursor *)sp30;
-        do {
-            i++;
-            ((RaceSetupSaveSecretCupCursorView *)byteCursor)->value = 1;
-            byteCursor++;
-        } while (i < 11);
+        courseStateSource = D_800B3490;
+        destination = (RaceSetupSaveByteCursor *)save;
+        {
+            register s8 state0;
+            register s8 state1;
+            register s8 state2;
+            register s8 state3;
 
-        byteCursor = (RaceSetupSaveByteCursor *)sp30;
-        i = 0;
-        do {
-            temp0 = D_800B3490[i];
-            temp1 = D_800B3490[i + 1];
-            temp2 = D_800B3490[i + 2];
-            temp3 = D_800B3490[i + 3];
-            i += 4;
-            byteCursor += 4;
-            ((RaceSetupSaveUnlockCopyView *)byteCursor)->values[0] = temp0;
-            ((RaceSetupSaveUnlockCopyView *)byteCursor)->values[1] = temp1;
-            ((RaceSetupSaveUnlockCopyView *)byteCursor)->values[2] = temp2;
-            ((RaceSetupSaveUnlockCopyView *)byteCursor)->values[3] = temp3;
-        } while (&D_800B3490[i] != (s8 *)gCourseSelectColumnSoundEffects);
+compact_state_loop:
+            state0 = courseStateSource[0];
+            state1 = courseStateSource[1];
+            state2 = courseStateSource[2];
+            state3 = courseStateSource[3];
+            courseStateSource += 4;
+            destination += 4;
+            ((RaceSetupSaveUnlockCopyView *)destination)->values[0] = state0;
+            ((RaceSetupSaveUnlockCopyView *)destination)->values[1] = state1;
+            ((RaceSetupSaveUnlockCopyView *)destination)->values[2] = state2;
+            ((RaceSetupSaveUnlockCopyView *)destination)->values[3] = state3;
+            if (courseStateSource != (s8 *)gCourseSelectColumnSoundEffects) {
+                goto compact_state_loop;
+            }
+        }
 
-        save->characterFlags = 1;
-        save->progressionLevel = 3;
-        save->extraCourseUnlockFlags = 0x3F;
+        header->characterFlags = 1;
+        header->progressionLevel = 3;
+        header->extraCourseUnlockFlags = 0x3F;
     }
 }
 #endif
