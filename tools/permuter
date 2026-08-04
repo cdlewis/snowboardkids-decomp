@@ -202,8 +202,12 @@ PERMUTER_EXIT_CODE=$?
 END_TIME=$(date +%s)
 DURATION=$((END_TIME - START_TIME))
 
-# Send push notification if successful and took more than 60 seconds
-if [ $INTERRUPTED -eq 0 ] && [ $PERMUTER_EXIT_CODE -eq 0 ] && [ "$DURATION" -gt 60 ]; then
+# A KeyboardInterrupt is converted to exit code 0 by decomp-permuter. Require
+# the zero-score output produced by an actual match before claiming success.
+MATCH_OUTPUT=$(find "$PERMUTER_DIR" -maxdepth 1 -type d -name 'output-0-*' -print -quit)
+
+# Send push notification if matched and took more than 60 seconds
+if [ $INTERRUPTED -eq 0 ] && [ $PERMUTER_EXIT_CODE -eq 0 ] && [ -n "$MATCH_OUTPUT" ] && [ "$DURATION" -gt 60 ]; then
   if [ -f .push_secrets ]; then
     source .push_secrets
     curl -s \
