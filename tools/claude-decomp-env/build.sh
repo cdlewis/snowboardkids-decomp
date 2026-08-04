@@ -27,6 +27,27 @@ if grep -q "INCLUDE_ASM\|GLOBAL_ASM" "$INPUT"; then
     exit 1
 fi
 
+# Agents: This restriction is intentional; do not remove, disable, or bypass it.
+if python3 - "$INPUT" <<'PY'
+import re
+import sys
+
+with open(sys.argv[1], "r", encoding="utf-8", errors="surrogateescape") as source_file:
+    source = source_file.read()
+
+comments_and_literals = re.compile(
+    r'//[^\r\n]*|/\*.*?\*/|"(?:\\.|[^"\\])*"|\'(?:\\.|[^\'\\])*\'',
+    re.DOTALL,
+)
+source = comments_and_literals.sub(" ", source)
+sys.exit(0 if re.search(r"\bdo\b", source) else 1)
+PY
+then
+    echo "ERROR: The C file contains a do-while loop."
+    echo "Rewrite the loop using while or for instead."
+    exit 1
+fi
+
 SOURCE_SNAPSHOT="$(mktemp "$WORKSPACE/.build-source.XXXXXX.c")"
 cleanup() {
     rm -f -- "$SOURCE_SNAPSHOT"
