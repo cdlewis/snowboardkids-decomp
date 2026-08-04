@@ -15,11 +15,12 @@ MAKE THE MINIMAL SET OF CHANGES NECESSARY TO COMPILE `base.c`. This is important
 Specifically, the subagent should:
 
 <subagent-instructions>
-1. Explore how $functionName is used in the codebase. Look at ../../src, ../../include as well as the unmatched code (../../asm/nonmatchings). Write a summary of what the $functionName is and how it's used to `LEARNINGS.md`.
-2. Ensure that base.c compiles successfully. Ensure that any missing types are present. base.c should only depend on "common.h". Any other missing types should be provided inline rather than via #include statements. Do not stop until base.c can be successfully built. Report status and a brief summary of your findings upon completion.
-3. Verify that the function signatures base.c relies upon have the correct number of arguments and correct types for those arguments as well as for the return type. These are frequently halucinated or otherwise decompiled incorrectly.
-4. Consider the purpose of the function and what it's trying to do. Does the C code reflect that purpose? Note any logical errors in the code.
-5. Report back on its progress and findings
+1. Consult `DECOMPILATION_LEARNINGS.md`. Use its headings and the patterns visible in `base.c` and `target.s` to select the sections relevant to this function. Record a compact digest in `LEARNINGS.md` that names each relevant section, explains why it applies, and states the concrete matching technique to try. Include this digest in your report. Do not copy unrelated sections or merely say that the file was read.
+2. Explore how $functionName is used in the codebase. Look at ../../src, ../../include as well as the unmatched code (../../asm/nonmatchings). Write a summary of what the $functionName is and how it's used to `LEARNINGS.md`.
+3. Ensure that base.c compiles successfully. Ensure that any missing types are present. base.c should only depend on "common.h". Any other missing types should be provided inline rather than via #include statements. Do not stop until base.c can be successfully built. Report status and a brief summary of your findings upon completion.
+4. Verify that the function signatures base.c relies upon have the correct number of arguments and correct types for those arguments as well as for the return type. These are frequently halucinated or otherwise decompiled incorrectly.
+5. Consider the purpose of the function and what it's trying to do. Does the C code reflect that purpose? Note any logical errors in the code.
+6. Report back on its progress and findings, including the relevant `DECOMPILATION_LEARNINGS.md` guidance selected in step 1.
 </subagent-instructions>
 
 ### Build Loop
@@ -29,7 +30,7 @@ After `base.c` builds successfully, repeat the following steps:
 1. Run `./build.sh <attempt>.c` to build and get a diff against the target assembly. A score of 100% indicates a perfect match.
 2. Inspect `base_diff`, `target.s`, and generated object dumps. Look for areas where the control flow and instructions do not match.
 3. Come up with a plan to improve the match. Consider what the original developers intended to write given the function's broader purpose.
-4. Create a new file (`base_n.c` where `n` is your attempt number) with changes you expect to improve the match. Start small and work incrementally — if you test multiple changes at once they may interact poorly.
+4. Create a new self-contained file (`base_n.c` where `n` is your attempt number) with changes you expect to improve the match. Do not make an attempt include another mutable candidate file: later edits would invalidate its recorded score and diff. Start small and work incrementally — if you test multiple changes at once they may interact poorly.
 5. Record useful observations in `LEARNINGS.md`.
 6. Stop when a 100% match is reached, when the build script tells you to stop, or when you are unable to make progress (40 attempts without any improvement to the match percentage).
 
@@ -54,14 +55,51 @@ Learnings from past decompilations can be found at `DECOMPILATION_LEARNINGS.md`.
 
 ### General Approach
 - Think about what the function is *doing* within the game. What is its purpose? Structure the code to fulfill that purpose — this is the surest path to a 100% match.
-- Focus on control flow differences over register or stack differences. Register and stack issues are easy to fix later.
+- Prioritize control flow and data modeling early. Once opcodes and branches align, treat stack and register differences as evidence about source types, local lifetimes, aliases, and expression structure rather than as noise.
 - Look for clues in how the function is called and how it calls other functions.
+
+### Matching Phases
+
+#### 1. Reconstruct the Simplest Plausible Source
+
+Before attempting compiler-shaping tricks:
+
+- Resolve every referenced address to its enclosing typed object, including fields inside arrays or larger symbols. Compare relocations and byte offsets against known structs and inspect neighboring users rather than trusting the nearest symbol name.
+- Model repeated fixed-stride data with typed arrays or records. Use a union when one buffer has both raw and structured views. When a callee receives pointers to adjacent stack words, consider whether the source used one array or struct in the observed address order.
+- Inspect structurally paired functions such as In/Out, Open/Close, or Init/Update and identify their shared types and control-flow skeleton.
+- Prefer natural `for` loops, `switch` statements, direct field access, and the fewest live temporaries.
+- Do not infer source pointer walkers, bottom-tested loops, or manual unrolling merely because the optimized assembly contains those forms. IDO commonly creates them from ordinary indexed fixed-bound loops.
+
+#### 2. Escape Plateaus with a Clean Rewrite
+
+If several consecutive attempts produce the same score or mismatch region, preserve the current best and create an independent attempt directly from the function's behavior.
+
+Remove decompiler-created pointers, copied loop bounds, cached selectors, redundant casts and masks, `volatile` or `register` hints, fake unions, identity arithmetic, and manual unrolling. Re-establish the candidate using canonical typed C before doing more register-allocation tuning. A high score is not evidence that compiler-coercion artifacts are historically plausible source.
+
+#### 3. Classify Very Close Matches
+
+At 99% or better, classify every normalized difference before editing:
+
+- control flow
+- instruction selection
+- memory offset or type
+- stack layout
+- register allocation
+- relocation-label-only noise
+
+Ignore relocation and local-symbol naming differences that do not change emitted instructions. Treat a stack-frame mismatch as evidence of extra locals, spills, or incorrect lifetimes. Use target load/store patterns to decide whether a source value was cached: repeated target loads usually favor direct global or field access, while a value held in one register may favor a local.
+
+If only registers differ, freeze the matched algorithm and map each target register to its logical value and live range. First remove redundant aliases and temporaries, use original parameters or destination fields directly, and inline copied constants or bounds. Test one localized equivalent expression at a time.
+
+Only as a documented last resort may a compiler-neutral expression, harmless late reference, XOR comparison, assignment expression, or bounded permuter run be used to alter IDO's allocation. Keep it only when it addresses a specific observed difference, preserves behavior, emits no unwanted instructions, and passes both the object diff and the full project build.
 
 ### Cleaning Up Decompilation Artefacts
 Literal decompilation often produces artefacts. Watch for these common patterns:
 
 <artefact name="for-loops">
 m2c struggles with `for` loops. The compiler often pulls out the condition so it can bail early if it's never met. Note that the comparison operator may also change (e.g. `<` becomes `<=`).
+
+Assembly pointer induction does not imply that the source used a pointer variable. Test the fully natural indexed form first: keep the semantic index, use `array[i]`, put the initialization, condition, and increment in the `for` header, and use the source-level count. IDO may synthesize the pointer increment, end pointer, copied loop bound, and bottom-tested branch itself. Merely moving explicit pointer and end locals into a `for` header is not the same experiment.
 
 This code:
 ```c
@@ -111,6 +149,8 @@ return Y;  // fall-through from if-branch
 
 <artefact name="unrolled-loops">
 IDO will sometimes unroll loops for 'performance' reasons but this decision is not visible to the disassembler.
+
+When the target repeats the same operation over contiguous fields or a small fixed number of objects, try a natural typed loop with the inferred constant bound before manually expanding it.
 
 This code:
 ```c
