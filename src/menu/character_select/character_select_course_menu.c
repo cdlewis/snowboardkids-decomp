@@ -338,7 +338,7 @@ void initCharacterSelectCourseMenuFromPlayerSelect(void) {
     updateCallbackTasks();
 }
 
-// updateCharacterSelectCourseMenu best match: 98.359% (nonmatchings/updateCharacterSelectCourseMenu-7181144369148334388/base_15.c)
+// updateCharacterSelectCourseMenu best match: 98.359% (nonmatchings/updateCharacterSelectCourseMenu-2163214805492048867/base_7.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/character_select/character_select_course_menu/updateCharacterSelectCourseMenu.s")
 
 #ifdef NON_MATCHING
@@ -349,12 +349,12 @@ void updateCharacterSelectCourseMenu(void) {
     s32 *pressedInputPtr;
     u16 *repeatTimerPtr;
     s32 input;
+    s32 heldInput;
     s16 *selectionPtr;
     s32 pressedInput;
     s32 heldInputValue;
     s32 spriteIndex;
     s32 upInput;
-    s32 heldInput;
     s16 previousSelection;
     u16 repeatTimer;
     s32 selection;
@@ -373,16 +373,13 @@ void updateCharacterSelectCourseMenu(void) {
                 repeatTimerPtr = gMenuInputRepeatTimers;
                 if (cursorState == 1) {
                     heldInputValue = gPlayerInputHeld[0];
-                    heldInput = heldInputValue;
-                    do {
+                    for (heldInput = heldInputValue; ; ) {
                         selection = *selectionPtr;
                         previousSelection = (s16) selection;
                         input = heldInput;
                         upInput = input & (STICK_UP | U_JPAD);
                         if ((upInput == 0) && ((input & (STICK_DOWN | D_JPAD)) == 0)) {
-                            *repeatTimerPtr = 0; } pressedInput = *pressedInputPtr; } while (0); repeatTimer = *repeatTimerPtr; if ((pressedInput & (STICK_UP | U_JPAD)) || ((upInput != 0) && ((s32) repeatTimer >= 0xB) && ((repeatTimer % 3) == 0))) {
-                        if (!repeatTimer) {
-                            repeatTimer += 1;
+                            *repeatTimerPtr = 0; } pressedInput = *pressedInputPtr; break; } repeatTimer = *repeatTimerPtr; if ((pressedInput & (STICK_UP | U_JPAD)) || ((upInput != 0) && ((s32) repeatTimer >= 0xB) && ((repeatTimer % 3) == 0))) { if (!repeatTimer) { repeatTimer += 1;
                         }
                         if (selection > 0) {
                             gRaceCourseIndex.signedValue = selection - 1;
