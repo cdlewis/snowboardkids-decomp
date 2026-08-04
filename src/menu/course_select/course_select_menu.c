@@ -7,6 +7,7 @@
 #include "game/engine/relocatable_heap.h"
 #include "game/menu/character_select/character_select_menu.h"
 #include "game/menu/course_select/course_select_menu.h"
+#include "game/menu/course_select/course_select_ui.h"
 #include "game/menu/main_menu/controller_main_menu_flow.h"
 #include "game/engine/game_task_scheduler.h"
 #include "game/menu/renderer/menu_renderer.h"
@@ -78,8 +79,8 @@ extern u8 D_8010AEAC[];
 extern s8 D_8010AEB0;
 extern u8 D_8010AEF8[];
 extern u8 D_8010AEFB[];
-extern u8 D_8010AF08[];
 extern u8 gCourseSelectExtraCourseIds[];
+extern u8 gMultiplayerCourseSelectExtraCourseIds[RACE_PLAYER_COUNT][3];
 extern s16 D_8010AED0;
 extern u8 gMenuExitSelection;
 extern u8 D_8010AECC;
@@ -371,20 +372,12 @@ void updateCourseSelectModeMenu(void) {
 }
 #endif
 
-// initCourseSelectCourseList best match: 99.737% (nonmatchings/initCourseSelectCourseList-7998791169205557824/base_8.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/menu/course_select/course_select_menu/initCourseSelectCourseList.s")
-
-#ifdef NON_MATCHING
 void initCourseSelectCourseList(void) {
-    u8 courseFlags;
     s32 i;
-    s32 mask;
     s32 listMask;
-    s32 one;
     s32 column;
-    u8 *extraCourse;
     s32 selected;
-    u8 loadedCourseFlags;
+    s32 one;
 
     gRacePlayers[0].menuState = 0;
     D_8010AEA0[0] = 0;
@@ -392,9 +385,8 @@ void initCourseSelectCourseList(void) {
     gMenuInputRepeatTimers[0] = 0;
     createCallbackTask((CallbackTaskCallback)initCourseSelectCourseIconList, 0, 0x63);
     D_8010ADE8 = createCallbackTask((CallbackTaskCallback)initCourseSelectExtraCourseIconList, 0, 0x61);
-    loadedCourseFlags = gGameSaveDataBuffer[0].extraCourseUnlockFlags;
-    courseFlags = loadedCourseFlags;
-    if (courseFlags & 7) {
+
+    if (gGameSaveDataBuffer[0].extraCourseUnlockFlags & 7) {
         D_8010AEA0[0] = 1;
     }
 
@@ -404,47 +396,42 @@ void initCourseSelectCourseList(void) {
 
     one = 1;
     if (D_8010AEA0[0] == one) {
-        mask = one;
+        column = one;
         for (i = 9; i < 0xC; i++) {
-            if (courseFlags & mask) {
+            if (gGameSaveDataBuffer[0].extraCourseUnlockFlags & column) {
                 D_8010AEFB[0] = i;
                 break;
             }
-            mask *= 2;
+            column <<= 1;
         }
 
         listMask = one;
-        extraCourse = gCourseSelectExtraCourseIds + 1;
-        for (i = 9; i != 0xC; i++) {
-            *extraCourse = 0;
-            if (courseFlags & listMask) {
-                *extraCourse = i;
-                extraCourse++;
+        for (i = 9, column = 0; i < 0xC; i++) {
+            gMultiplayerCourseSelectExtraCourseIds[0][column] = 0;
+            if (gGameSaveDataBuffer[0].extraCourseUnlockFlags & listMask) {
+                gMultiplayerCourseSelectExtraCourseIds[0][column] = i;
+                column++;
             }
-            listMask *= 2;
+            listMask <<= 1;
         }
     } else {
         D_8010AEFB[0] = 0;
     }
 
-    if (((s32) gRacePlayers[0].menuSelection >= 9) && ((s32) gRacePlayers[0].menuSelection < 0xC)) {
+    if ((gRacePlayers[0].menuSelection >= 9) && (gRacePlayers[0].menuSelection < 0xC)) {
         selected = gCourseSelectExtraCourseColumnState;
         column = 3;
     } else {
         selected = gCourseSelectStatus.unk2E;
         column = 0;
         if (one == selected) {
-            /* Preserve IDO's selected-course register allocation. */
-            if (column) {
-                do { } while (0);
-            }
             selected = (gCourseSelectStatus.unk2E = 0);
         } else {
-            column = (s32) gRacePlayers[0].menuSelection % 3;
+            column = gRacePlayers[0].menuSelection % 3;
         }
     }
 
-    D_8010AE64 = column;
+    gCharacterSelectHudState.highlightedRosterIndices[0] = column;
     if (one == selected) {
         column--;
     }
@@ -453,7 +440,6 @@ void initCourseSelectCourseList(void) {
     setCurrentGameTaskCallback(updateCourseSelectCourseList, 0);
     updateCallbackTasks();
 }
-#endif
 
 // updateCourseSelectCourseList best match: 76.223%
 // (nonmatchings/updateCourseSelectCourseList-8101714008744796594/base_42.c)
