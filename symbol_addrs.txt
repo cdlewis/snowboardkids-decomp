@@ -1698,6 +1698,7 @@ gCharacterSelectVoiceSoundIds = 0x800B340C; // rom:0xB400C size:0x14
 gCharacterSelectCourseOptionsByUnlock = 0x800B3420; // rom:0xB4020 size:0x42
 gCharacterSelectShortCourseOptions = 0x800B3478; // rom:0xB4078 size:0x8
 gCharacterSelectSingleCourseOption = 0x800B3480; // rom:0xB4080 size:0x10
+gMultiplayerCourseSelectDefaultCourseIds = 0x800B3490; // rom:0xB4090 size:0xC
 gCharacterSelectConfirmationBannerText = 0x800B5A70; // rom:0xB6670 size:0x98
 gCharacterSelectCharacterStats = 0x800B5B08; // rom:0xB6708 size:0x18
 gCharacterSelectCharacterStatLabels = 0x800B5B20; // rom:0xB6720 size:0x10

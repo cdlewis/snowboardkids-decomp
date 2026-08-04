@@ -1112,11 +1112,6 @@ typedef struct RaceSetupSaveUnlockPreviousView {
     s8 value;
 } RaceSetupSaveUnlockPreviousView;
 
-typedef struct RaceSetupSaveUnlockCopyView {
-    u8 pad[0x3B];
-    s8 values[4];
-} RaceSetupSaveUnlockCopyView;
-
 typedef struct RaceSetupSaveReservedCursorView {
     u8 pad[0x78D7];
     u8 value;
@@ -1252,7 +1247,7 @@ compact_cup_loop:
             goto compact_cup_loop;
         }
 
-        courseStateSource = D_800B3490;
+        courseStateSource = gMultiplayerCourseSelectDefaultCourseIds;
         destination = (RaceSetupSaveByteCursor *)save;
         {
             register s8 state0;
@@ -1266,12 +1261,14 @@ compact_state_loop:
             state2 = courseStateSource[2];
             state3 = courseStateSource[3];
             courseStateSource += 4;
+            ((GameSaveData *)destination)->courseUnlockStates[0] = state0;
+            ((GameSaveData *)destination)->courseUnlockStates[1] = state1;
+            ((GameSaveData *)destination)->courseUnlockStates[2] = state2;
+            ((GameSaveData *)destination)->courseUnlockStates[3] = state3;
             destination += 4;
-            ((RaceSetupSaveUnlockCopyView *)destination)->values[0] = state0;
-            ((RaceSetupSaveUnlockCopyView *)destination)->values[1] = state1;
-            ((RaceSetupSaveUnlockCopyView *)destination)->values[2] = state2;
-            ((RaceSetupSaveUnlockCopyView *)destination)->values[3] = state3;
-            if (courseStateSource != (s8 *)gCourseSelectColumnSoundEffects) {
+            if (courseStateSource != &gMultiplayerCourseSelectDefaultCourseIds[
+                    MULTIPLAYER_COURSE_SELECT_DEFAULT_COURSE_COUNT
+                ]) {
                 goto compact_state_loop;
             }
         }
