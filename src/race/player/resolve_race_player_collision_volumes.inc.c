@@ -71,13 +71,13 @@ void resolveRacePlayerCollisionVolumes(RacePlayer *player) {
         centerOffset[2] = (s64)playerRotation[5] * player->collisionCenterOffset / 0x1000;
         multiplyFixedMatrix3s(effectRotation, playerRotation, worldRotation);
 
-        for (volumeIndex = 0; volumeIndex < player->collisionVolumeCount; volumeIndex++) {
-            for (axisRow = 0; axisRow != 9; axisRow += 3) {
-                for (axisColumn = 0; axisColumn != 3; axisColumn++) {
-                    player->collisionVolumes[volumeIndex].axis[axisRow + axisColumn] =
-                        (worldRotation[axisColumn + 6] * localRotations[volumeIndex][axisRow + 2] +
-                         worldRotation[axisColumn] * localRotations[volumeIndex][axisRow] +
-                         worldRotation[axisColumn + 3] * localRotations[volumeIndex][axisRow + 1]) /
+        for (sinX = 0; sinX < player->collisionVolumeCount; sinX++) {
+            for (sinY = 0; sinY != 9; sinY += 3) {
+                for (axisRow = 0; axisRow != 3; axisRow++) {
+                    player->collisionVolumes[sinX].axis[sinY + axisRow] =
+                        (localRotations[sinX][sinY] * worldRotation[axisRow] +
+                         localRotations[sinX][sinY + 1] * worldRotation[axisRow + 3] +
+                         localRotations[sinX][sinY + 2] * worldRotation[axisRow + 6]) /
                         0x1000;
                 }
             }
@@ -131,13 +131,13 @@ void resolveRacePlayerCollisionVolumes(RacePlayer *player) {
         multiplyFixedMatrix3s(worldRotation, playerRotation, yawAdjustedPlayerRotation);
         multiplyFixedMatrix3s(effectRotation, yawAdjustedPlayerRotation, worldRotation);
 
-        for (volumeIndex = 0; volumeIndex < player->collisionVolumeCount; volumeIndex++) {
-            for (axisRow = 0; axisRow != 9; axisRow += 3) {
-                for (axisColumn = 0; axisColumn != 3; axisColumn++) {
-                    player->collisionVolumes[volumeIndex].axis[axisRow + axisColumn] =
-                        (worldRotation[axisColumn + 6] * localRotations[volumeIndex][axisRow + 2] +
-                         worldRotation[axisColumn] * localRotations[volumeIndex][axisRow] +
-                         worldRotation[axisColumn + 3] * localRotations[volumeIndex][axisRow + 1]) /
+        for (sinX = 0; sinX < player->collisionVolumeCount; sinX++) {
+            for (sinY = 0; sinY != 9; sinY += 3) {
+                for (axisRow = 0; axisRow != 3; axisRow++) {
+                    player->collisionVolumes[sinX].axis[sinY + axisRow] =
+                        (localRotations[sinX][sinY] * worldRotation[axisRow] +
+                         localRotations[sinX][sinY + 1] * worldRotation[axisRow + 3] +
+                         localRotations[sinX][sinY + 2] * worldRotation[axisRow + 6]) /
                         0x1000;
                 }
             }
@@ -165,16 +165,16 @@ void resolveRacePlayerCollisionVolumes(RacePlayer *player) {
         source = &player->collisionSources[2];
         do {
             parent = &player->collisionVolumes[source->parentIndex];
-            for (axisColumn = 0; axisColumn != 3; axisColumn++) {
-                parentAxisY = parent->axis[axisColumn + 3];
-                volume->point[axisColumn] =
-                    COLLISION_POINT(parent->axis[axisColumn],
+            for (sinY = 0; sinY != 3; sinY++) {
+                parentAxisY = parent->axis[sinY + 3];
+                volume->point[sinY] =
+                    COLLISION_POINT(parent->axis[sinY],
                                     parentAxisY,
-                                    parent->axis[axisColumn + 6],
+                                    parent->axis[sinY + 6],
                                     source->sizeX,
                                     source->sizeY,
                                     source->sizeZ);
-                volume->point[axisColumn] += parent->point[axisColumn];
+                volume->point[sinY] += parent->point[sinY];
             }
             volumeIndex++;
             volume++;
