@@ -1306,7 +1306,7 @@ void drawMenuGlyphScriptDefaultFont(volatile s16 x, s16 y, MenuGlyphScript *scri
     }
 }
 
-// drawMenuGlyph best match: 98.704% (nonmatchings/drawMenuGlyph-5865927172505257320/base_34.c)
+// drawMenuGlyph best match: 99.026% (nonmatchings/drawMenuGlyph-8101714008744796594/base_38.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/renderer/menu_renderer/drawMenuGlyph.s")
 
 #ifdef NON_MATCHING
@@ -1319,76 +1319,63 @@ void drawMenuGlyph(s16 x, s16 y, u16 glyphIndex, u8 paletteIndex, u16 intensity,
     s32 y1;
     s32 clipS;
     s32 clipT;
-    s32 glyphWidth;
     s32 i;
     u16 paletteColor;
     u16 *paletteBase;
+    u16 *dst;
     FontAsset *font;
     u16 *srcPalette;
     u16 *scaledPalette;
-    u16 *dst;
     FontTexture *entry;
     s32 color;
     s32 red;
     u16 green;
     u16 blue;
-    s32 halfWidth;
-    s32 halfHeight;
-    s32 minX;
-    s32 maxX;
-    s32 minY;
-    s32 maxY;
 
     if (paletteIndex == 0) {
         font = getRelocatableHeapBlockBase(gAssetHandles[fontBank]);
-        glyphWidth = 0x10;
+        color = 0x10;
     } else {
         font = getRelocatableHeapBlockBase(gAssetHandles[fontBank + 1]);
-        glyphWidth = 8;
+        color = 8;
     }
 
     paletteBase = (u16 *)(font->header.entryCount + font->textures);
     x1 = x0 = x + gMenuViewportCenterX;
     y0 = y + gMenuViewportCenterY;
-    x1 = glyphWidth + x0;
+    x1 = color + x0;
     y1 = y0 + 0x10;
     clipS = 0;
     clipT = 0;
 
-    halfWidth = gMenuViewportWidth / 2;
-    maxX = gMenuViewportCenterX + halfWidth;
-    if (x0 >= maxX) {
+    if (x0 >= gMenuViewportCenterX + (gMenuViewportWidth / 2)) {
         return;
     }
 
-    halfHeight = gMenuViewportHeight / 2;
-    minX = gMenuViewportCenterX - halfWidth;
-    maxY = gMenuViewportCenterY + halfHeight;
-    if (y0 >= maxY) {
+    if (y0 >= gMenuViewportCenterY + (gMenuViewportHeight / 2)) {
         return;
     }
-    if (x1 < minX) {
+    if (x1 < gMenuViewportCenterX - (gMenuViewportWidth / 2)) {
         return;
     }
 
-    minY = gMenuViewportCenterY - halfHeight;
-    if (y1 < minY) {
+    if (y1 < gMenuViewportCenterY - (gMenuViewportHeight / 2)) {
         return;
     }
 
-    if (x0 < minX) {
-        clipS = minX - x0;
-        x0 = minX;
+    if (x0 < gMenuViewportCenterX - (gMenuViewportWidth / 2)) {
+        clipS = (gMenuViewportCenterX - (gMenuViewportWidth / 2)) - x0;
+        x0 = gMenuViewportCenterX - (gMenuViewportWidth / 2);
     }
-    if (y0 < minY) {
-        clipT = minY - y0;
-        y0 = minY;
+    if (y0 < gMenuViewportCenterY - (gMenuViewportHeight / 2)) {
+        clipT = (gMenuViewportCenterY - (gMenuViewportHeight / 2)) - y0;
+        y0 = gMenuViewportCenterY - (gMenuViewportHeight / 2);
     }
-    if (x1 >= maxX) {
-        x1 = maxX - 1;
+    if (x1 >= gMenuViewportCenterX + (gMenuViewportWidth / 2)) {
+        x1 = (gMenuViewportCenterX + (gMenuViewportWidth / 2)) - 1;
     }
-    if (y1 >= maxY) {
-        y1 = maxY - 1;
+    if (y1 >= gMenuViewportCenterY + (gMenuViewportHeight / 2)) {
+        y1 = (gMenuViewportCenterY + (gMenuViewportHeight / 2)) - 1;
     }
 
     entry = font->textures;
@@ -1401,7 +1388,8 @@ void drawMenuGlyph(s16 x, s16 y, u16 glyphIndex, u8 paletteIndex, u16 intensity,
     dst = &*dstPalette;
 paletteLoop:
     paletteColor = *src;
-        i += 2;
+        i++;
+        i++;
         color = paletteColor & 0xFFFF;
         *dst = paletteColor;
         if (color & 1) {
@@ -1409,8 +1397,7 @@ paletteLoop:
             green = color >> 6;
             green = green & 0x1F;
             color = (blue = (color >> 1) & 0x1F);
-            glyphWidth = intensity;
-            red = red * glyphWidth;
+            red *= intensity;
             red /= 0x100;
             green = (green * intensity) / 0x100;
             color = green;
