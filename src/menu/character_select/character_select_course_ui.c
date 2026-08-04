@@ -2811,7 +2811,10 @@ void initCharacterSelectCourseConfirmCursor(CharacterSelectCourseWidgetActor *ar
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateCharacterSelectCourseConfirmCursor);
 }
 
-// drawCharacterSelectCourseRecordsPopup best match: 99.173% (nonmatchings/drawCharacterSelectCourseRecordsPopup-5793478266135801235/base_120.c)
+// drawCharacterSelectCourseRecordsPopup standalone best match: 99.619%
+// (nonmatchings/drawCharacterSelectCourseRecordsPopup-19/output-200-1/source.c)
+// Integrated NON_MATCHING source: 99.491%
+// (nonmatchings/drawCharacterSelectCourseRecordsPopup-8101714008744796594/integrated_candidate.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/character_select/character_select_course_ui/drawCharacterSelectCourseRecordsPopup.s")
 
 #ifdef NON_MATCHING

@@ -123,96 +123,9 @@ void drawCharacterSelectCourseRecordsPopup(CharacterSelectCourseWidgetActor *arg
                             (stack.remainder + 0x2B) & 0xFFFF, 0x20U, 0x20U, 0U, secondaryColor);
                         drawMenuAsciiText((s16)(arg0->x + 0x28), (s16)(arg0->y + yOffset + 8), D_800E0B90,
                                           (u16)stack.textColor, 0x100U);
-                        drawMenuSpriteWideIndex(
-                            (s16)(arg0->x + 0x48), (s16)(arg0->y + yOffset),
-                            getRelocatableHeapBlockBase(RECORD_POPUP_ASSET_HANDLES[0x1F]),
-                            ((gGameSaveDataBuffer->scoreAttackCharacterIds[0]
-                                  [(stack.courseIds[gRaceCourseIndex.signedValue] * 5) + rowIndex] &
-                              7) +
-                             0x51) &
-                                0xFFFF,
-                            0x20U, 0x20U, 0U, 0U);
-                        drawMenuSpriteWideIndex(
-                            (s16)(arg0->x + 0x60), (s16)(arg0->y + yOffset),
-                            getRelocatableHeapBlockBase(RECORD_POPUP_ASSET_HANDLES[0x1F]),
-                            (((s32)gGameSaveDataBuffer->scoreAttackCharacterIds[0]
-                                   [(stack.courseIds[gRaceCourseIndex.signedValue] * 5) + rowIndex] >>
-                               3) +
-                             0x7C) &
-                                0xFFFF,
-                            0x20U, 0x20U, 0U, 0U);
-                    } else {
-                        if (1) {
-                            stack.trickIconRowBase = &RECORD_POPUP_SAVE_BYTES[rowIndex];
-                            if (rowIndex < 3) {
-                                recordColor = 0xC;
-                            } else {
-                                recordColor = 0xD;
-                            }
-
-                            secondaryColor = recordColor + 1;
-                            trickScore = gGameSaveDataBuffer->trickAttackScores[7][rowIndex];
-                            digitOffset = 0;
-                            do {
-                                drawMenuSpriteWideIndex(
-                                    (s16)((arg0->x - digitOffset) + 0x38), (s16)(arg0->y + yOffset),
-                                    getRelocatableHeapBlockBase(RECORD_POPUP_ASSET_HANDLES[0x1F]),
-                                    (((s32)trickScore % 10) + 0x2B) & 0xFFFF, 0x20U, 0x20U, 0U,
-                                    secondaryColor);
-                                digitOffset += 8;
-                                trickScore /= 10;
-                            } while (trickScore != 0);
-                        }
-
-                        drawMenuAsciiText((s16)(arg0->x + 0x40), (s16)(arg0->y + yOffset + 8), D_800E0B94,
-                                          (u16)stack.textColor, 0x100U);
-                        drawMenuSpriteWideIndex(
-                            (s16)(arg0->x + 0x4C), (s16)(arg0->y + yOffset),
-                            getRelocatableHeapBlockBase(RECORD_POPUP_ASSET_HANDLES[0x1F]),
-                            ((((CharacterSelectTrickIconRowView *)stack.trickIconRowBase)->characterBoardId & 7) +
-                             0x51) &
-                                0xFFFF,
-                            0x20U, 0x20U, 0U, 0U);
-                        drawMenuSpriteWideIndex(
-                            (s16)(arg0->x + 0x60), (s16)(arg0->y + yOffset),
-                            getRelocatableHeapBlockBase(RECORD_POPUP_ASSET_HANDLES[0x1F]),
-                            (((s32)((CharacterSelectTrickIconRowView *)stack.trickIconRowBase)->characterBoardId >>
-                              3) +
-                             0x7C) &
-                                0xFFFF,
-                            0x20U, 0x20U, 0U, 0U);
-                    }
-                }
-            } else {
-                if (rowIndex < 3) {
-                    stack.textColor = 0xC;
-                } else {
-                    stack.textColor = 0xD;
-                }
-
-                drawCharacterSelectCourseRecordTime(
-                    (CharacterSelectCourseRecordTime *)&gGameSaveDataBuffer[0]
-                        .timeTrialRecords[stack.courseIds[gRaceCourseIndex.signedValue]][rowIndex],
-                    arg0->x + 0x14, arg0->y + yOffset, (s32)stack.textColor);
-                drawMenuSpriteWideIndex(
-                    (s16)(arg0->x + 0x54), (s16)(arg0->y + yOffset),
-                    getRelocatableHeapBlockBase(RECORD_POPUP_ASSET_HANDLES[0x1F]),
-                    ((gGameSaveDataBuffer->timeTrialCharacterIds[0]
-                          [(stack.courseIds[gRaceCourseIndex.signedValue] * 5) + rowIndex] &
-                      7) +
-                     0x51) &
-                        0xFFFF,
-                    0x20U, 0x20U, 0U, 0U);
-                drawMenuSpriteWideIndex(
-                    (s16)(arg0->x + 0x65), (s16)(arg0->y + yOffset),
-                    getRelocatableHeapBlockBase(RECORD_POPUP_ASSET_HANDLES[0x1F]),
-                    (((s32)gGameSaveDataBuffer->timeTrialCharacterIds[0]
-                           [(stack.courseIds[gRaceCourseIndex.signedValue] * 5) + rowIndex] >>
-                       3) +
-                     0x7C) &
-                        0xFFFF,
-                    0x20U, 0x20U, 0U, 0U);
-            }
+                        drawMenuSpriteWideIndex((s16)(arg0->x + 0x48), (s16)(arg0->y + yOffset), getRelocatableHeapBlockBase(RECORD_POPUP_ASSET_HANDLES[0x1F]), ((gGameSaveDataBuffer->scoreAttackCharacterIds[0][(stack.courseIds[gRaceCourseIndex.signedValue] * 5) + rowIndex] & 7) + 0x51) & 0xFFFF, 0x20U, 0x20U, 0U, 0U); drawMenuSpriteWideIndex((s16)(arg0->x + 0x60), (s16)(arg0->y + yOffset), getRelocatableHeapBlockBase(RECORD_POPUP_ASSET_HANDLES[0x1F]), (((s32)gGameSaveDataBuffer->scoreAttackCharacterIds[0][(stack.courseIds[gRaceCourseIndex.signedValue] * 5) + rowIndex] >> 3) + 0x7C) & 0xFFFF, 0x20U, 0x20U, 0U, 0U); } else { if (1) { stack.trickIconRowBase = &RECORD_POPUP_SAVE_BYTES[rowIndex]; if (rowIndex < 3) { recordColor = 0xC; } else { recordColor = 0xD; } secondaryColor = recordColor + 1; trickScore = gGameSaveDataBuffer->trickAttackScores[7][rowIndex]; digitOffset = 0;
+                        do { drawMenuSpriteWideIndex((s16)((arg0->x - digitOffset) + 0x38), (s16)(arg0->y + yOffset), getRelocatableHeapBlockBase(RECORD_POPUP_ASSET_HANDLES[0x1F]), (((s32)trickScore % 10) + 0x2B) & 0xFFFF, 0x20U, 0x20U, 0U, secondaryColor); digitOffset += 8; trickScore /= 10; } while (trickScore != 0); } drawMenuAsciiText((s16)(arg0->x + 0x40), (s16)(arg0->y + yOffset + 8), D_800E0B94, (u16)stack.textColor, 0x100U); drawMenuSpriteWideIndex((s16)(arg0->x + 0x4C), (s16)(arg0->y + yOffset), getRelocatableHeapBlockBase(RECORD_POPUP_ASSET_HANDLES[0x1F]), ((((CharacterSelectTrickIconRowView *)stack.trickIconRowBase)->characterBoardId & 7) + 0x51) & 0xFFFF, 0x20U, 0x20U, 0U, 0U); drawMenuSpriteWideIndex((s16)(arg0->x + 0x60), (s16)(arg0->y + yOffset), getRelocatableHeapBlockBase(RECORD_POPUP_ASSET_HANDLES[0x1F]), (((s32)((CharacterSelectTrickIconRowView *)stack.trickIconRowBase)->characterBoardId >> 3) + 0x7C) & 0xFFFF, 0x20U, 0x20U, 0U, 0U); } }
+            } else { if (rowIndex < 3) { stack.textColor = 0xC; } else { stack.textColor = 0xD; } drawCharacterSelectCourseRecordTime((CharacterSelectCourseRecordTime *)&gGameSaveDataBuffer[0].timeTrialRecords[stack.courseIds[gRaceCourseIndex.signedValue]][rowIndex], arg0->x + 0x14, arg0->y + yOffset, (s32)stack.textColor); drawMenuSpriteWideIndex((s16)(arg0->x + 0x54), (s16)(arg0->y + yOffset), getRelocatableHeapBlockBase(RECORD_POPUP_ASSET_HANDLES[0x1F]), ((gGameSaveDataBuffer->timeTrialCharacterIds[0][(stack.courseIds[gRaceCourseIndex.signedValue] * 5) + rowIndex] & 7) + 0x51) & 0xFFFF, 0x20U, 0x20U, 0U, 0U); drawMenuSpriteWideIndex((s16)(arg0->x + 0x65), (s16)(arg0->y + yOffset), getRelocatableHeapBlockBase(RECORD_POPUP_ASSET_HANDLES[0x1F]), (((s32)gGameSaveDataBuffer->timeTrialCharacterIds[0][(stack.courseIds[gRaceCourseIndex.signedValue] * 5) + rowIndex] >> 3) + 0x7C) & 0xFFFF, 0x20U, 0x20U, 0U, 0U); }
         }
 
         rowIndex += 1;
