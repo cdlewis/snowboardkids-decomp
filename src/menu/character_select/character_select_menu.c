@@ -119,10 +119,9 @@ void initCharacterSelectMenu(void) {
     updateCallbackTasks();
 }
 
-// updateCharacterSelectMenu best match: 97.384%
-// (nonmatchings/updateCharacterSelectMenu-8742002951815950717/base_58.c).
-// The implementation below favors readable source while the assembly include
-// above preserves the exact original code.
+// updateCharacterSelectMenu best match: 98.916%
+// (nonmatchings/updateCharacterSelectMenu-2163214805492048867/base_42.c).
+// The assembly include below preserves the exact original code.
 // Per-frame driver for the character roster screen only. Live RAM-watch
 // testing observed gCharacterSelectHudState.phase as:
 //   0 = transient init value
@@ -138,9 +137,10 @@ void updateCharacterSelectMenu(void) {
     u16 maximumIndex;
     s32 playerIndex;
     s32 otherPlayerIndex;
-    s32 attempt;
+    u32 attempt;
     s32 selectedCount;
     u16 leftRepeatTimer;
+    u16 nextRepeatTimer;
     u32 heldInput;
     u32 heldRight;
     u32 pressedInput;
@@ -151,7 +151,6 @@ void updateCharacterSelectMenu(void) {
     u8 duplicateCount;
     u8 secretCharacterUnlocked;
     u8 lastPlayerState;
-    s8 storedSelection;
 
     if (gCurrentGameTask->fade != 0) {
         gCurrentGameTask->fade = stepMenuFadeAlpha((s16)gCurrentGameTask->fade, 0x24, 0);
@@ -191,49 +190,20 @@ void updateCharacterSelectMenu(void) {
                 selection = *highlightedIndex;
                 heldInput = gPlayerInputHeld[playerIndex];
                 heldRight = heldInput & (STICK_RIGHT | R_JPAD);
-                secretCharacterUnlocked = gCharacterSelectSecretCharacterUnlocked;
+                if (1) { secretCharacterUnlocked = gCharacterSelectSecretCharacterUnlocked; if (!heldRight && !((s32)heldInput & (s32)(STICK_LEFT | L_JPAD))) { gMenuInputRepeatTimers[playerIndex] = 0; } pressedInput = gPlayerInputPressed[playerIndex]; if ((pressedInput & (STICK_LEFT | L_JPAD)) || ((heldInput & (STICK_LEFT | L_JPAD)) && ((leftRepeatTimer = gMenuInputRepeatTimers[playerIndex]) >= 0xB) && (leftRepeatTimer & 1))) { if (gMenuInputRepeatTimers[playerIndex] == 0) { gMenuInputRepeatTimers[playerIndex] = gMenuInputRepeatTimers[playerIndex] + 1; } if (minimumIndex < selection) { selection--; moveDirection = CHARACTER_SELECT_MOVE_LEFT; } } repeatTimer = (u16)gMenuInputRepeatTimers[playerIndex]; if ((pressedInput & (STICK_RIGHT | R_JPAD)) || (heldRight && (repeatTimer >= 0xB) && (repeatTimer & 1))) { if (repeatTimer == 0) { gMenuInputRepeatTimers[playerIndex] = repeatTimer + 1; repeatTimer = (u16)gMenuInputRepeatTimers[playerIndex]; } if (selection < maximumIndex) { selection++; moveDirection = CHARACTER_SELECT_MOVE_RIGHT; } } }
 
-                if (!heldRight && !((s32)heldInput & (s32)(STICK_LEFT | L_JPAD))) {
-                    gMenuInputRepeatTimers[playerIndex] = 0;
-                }
-
-                pressedInput = gPlayerInputPressed[playerIndex];
-                if ((pressedInput & (STICK_LEFT | L_JPAD)) ||
-                    (((unsigned long)heldInput & (unsigned long)(STICK_LEFT | L_JPAD)) &&
-                     ((leftRepeatTimer = gMenuInputRepeatTimers[playerIndex]) >= 0xB) &&
-                     (leftRepeatTimer & 1))) {
-                    if (gMenuInputRepeatTimers[playerIndex] == 0) {
-                        gMenuInputRepeatTimers[playerIndex] = gMenuInputRepeatTimers[playerIndex] + 1;
-                    }
-                    if (minimumIndex < selection) {
-                        selection--;
-                        moveDirection = CHARACTER_SELECT_MOVE_LEFT;
-                    }
-                }
-
-                repeatTimer = (u16)gMenuInputRepeatTimers[playerIndex];
-                if ((pressedInput & (STICK_RIGHT | R_JPAD)) ||
-                    (heldRight && (repeatTimer >= 0xB) && (repeatTimer & 1))) {
-                    if (repeatTimer == 0) {
-                        gMenuInputRepeatTimers[playerIndex] = repeatTimer + 1;
-                        repeatTimer = (u16)gMenuInputRepeatTimers[playerIndex];
-                    }
-                    if (selection < maximumIndex) {
-                        selection++;
-                        moveDirection = CHARACTER_SELECT_MOVE_RIGHT;
-                    }
-                }
-
+                nextRepeatTimer = repeatTimer + 1;
                 if (repeatTimer != 0) {
-                    gMenuInputRepeatTimers[playerIndex] = repeatTimer + 1;
-                    if ((u16)(repeatTimer + 1) == 0xFFFF) {
+                    gMenuInputRepeatTimers[playerIndex] = nextRepeatTimer;
+                    if ((nextRepeatTimer & 0xFFFF) == 0xFFFF) {
                         gMenuInputRepeatTimers[playerIndex] = 0xC;
                     }
                 }
 
                 if (secretCharacterUnlocked == 0) {
                     attempt = 0;
-                    do {
+                    duplicateCount = 1;
+                    while ((duplicateCount != 0) && (attempt != 7)) {
                         duplicateCount = 0;
                         for (otherPlayerIndex = 0; otherPlayerIndex < gPlayerCount; otherPlayerIndex++) {
                             if ((otherPlayerIndex != playerIndex) &&
@@ -261,7 +231,7 @@ void updateCharacterSelectMenu(void) {
                                 selection = *highlightedIndex;
                             }
                         }
-                    } while ((duplicateCount != 0) && (attempt != 7));
+                    }
                 }
 
                 if (selection != *highlightedIndex) {
@@ -269,13 +239,11 @@ void updateCharacterSelectMenu(void) {
                     pressedInput = gPlayerInputPressed[playerIndex];
                 }
                 *highlightedIndex = selection;
-                storedSelection = *highlightedIndex;
-                gRacePlayers[playerIndex].selectedCharacterId =
-                    gCharacterSelectIdOrder[storedSelection];
+                gRacePlayers[playerIndex].selectedCharacterId = gCharacterSelectIdOrder[D_8010AE64[playerIndex]];
 
                 if ((pressedInput & A_BUTTON) || (pressedInput & START_BUTTON)) {
                     if (gRacePlayers[playerIndex].menuState == 0) {
-                        enqueueSoundEffect(gCharacterSelectVoiceSoundIds[storedSelection], 0x32);
+                        enqueueSoundEffect(gCharacterSelectVoiceSoundIds[D_8010AE64[playerIndex]], 0x32);
                         gRacePlayers[playerIndex].menuState = 1;
                         gCharacterSelectHudState.selectedTokenState[playerIndex] = CHARACTER_SELECT_TOKEN_START;
                     }
