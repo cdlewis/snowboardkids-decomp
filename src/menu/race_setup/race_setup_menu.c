@@ -1072,7 +1072,7 @@ void updateRaceSetupRumblePrompt(void) {
     updateCallbackTasks();
 }
 
-// initRaceSetupPlayerSaveData best match: 83.095% (nonmatchings/initRaceSetupPlayerSaveData-8101714008744796594/base_1.c)
+// initRaceSetupPlayerSaveData best match: 88.603% (nonmatchings/initRaceSetupPlayerSaveData-2163214805492048867/base_97.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/race_setup/race_setup_menu/initRaceSetupPlayerSaveData.s")
 
 #ifdef NON_MATCHING
@@ -1100,22 +1100,25 @@ typedef struct RaceSetupSaveUnlockPreviousView {
     s8 value;
 } RaceSetupSaveUnlockPreviousView;
 
+typedef struct RaceSetupSaveUnlockCopyView {
+    u8 pad[0x3B];
+    s8 values[4];
+} RaceSetupSaveUnlockCopyView;
+
 typedef struct RaceSetupSaveReservedCursorView {
     u8 pad[0x78D7];
     u8 value;
 } RaceSetupSaveReservedCursorView;
 
-void initRaceSetupPlayerSaveData(s32 arg0) {
+void initRaceSetupPlayerSaveData(s32 playerIndex) {
     GameSaveData *header;
     GameSaveData *save;
     RaceSetupSaveByteCursor *destination;
-    s32 fifteen;
-    const s8 *courseStateSource;
     s32 course;
     s32 player;
 
-    header = &gGameSaveDataBuffer[arg0 & 0xFFFFFFFFFFFFFFFF];
-    save = &gGameSaveDataBuffer[arg0];
+    header = &gGameSaveDataBuffer[playerIndex & 0xFFFFFFFFFFFFFFFF];
+    save = &gGameSaveDataBuffer[playerIndex];
     header->checksum = 0;
     header->money = 0;
 
@@ -1133,7 +1136,7 @@ void initRaceSetupPlayerSaveData(s32 arg0) {
     }
 
     {
-        register s32 negativeOne;
+        s32 negativeOne;
 
         negativeOne = -1;
         save->courseUnlockStates[3] = negativeOne;
@@ -1153,29 +1156,42 @@ void initRaceSetupPlayerSaveData(s32 arg0) {
     header->progressionLevel = 0;
     header->extraCourseUnlockFlags = 0;
 
-    fifteen = sizeof(RaceSetupSaveDefaultTimeRow);
     for (course = 0; course < 11; course++) {
         for (player = 0; player < 5; player++) {
-            const RaceSetupSaveDefaultTime *raceDefaults;
-
-            save->timeTrialRecords[course][player].seconds = D_800B31C8[course][player].seconds;
-            save->timeTrialRecords[course][player].fraction =
+            gGameSaveDataBuffer[playerIndex].timeTrialRecords[course][player].minutes =
+                D_800B31C8[course][player].minutes;
+            gGameSaveDataBuffer[playerIndex].timeTrialRecords[course][player].seconds =
+                D_800B31C8[course][player].seconds;
+            gGameSaveDataBuffer[playerIndex].timeTrialRecords[course][player].fraction =
                 D_800B31C8[course][player].fraction << 8;
-            save->timeTrialRecords[course][player].minutes = D_800B31C8[course][player].minutes;
 
             save->timeTrialCharacterIds[course][player] = 0x10;
             save->timeTrialCharacterIds[course][player] += player;
 
             if (course == 9) {
-                raceDefaults = D_800B3294[0].records;
+                gGameSaveDataBuffer[playerIndex].raceRecords[course][player].minutes =
+                    D_800B3294[0].records[player].minutes;
+                gGameSaveDataBuffer[playerIndex].raceRecords[course][player].fraction =
+                    D_800B3294[0].records[player].fraction << 8;
+                gGameSaveDataBuffer[playerIndex].raceRecords[course][player].seconds =
+                    D_800B3294[0].records[player].seconds;
             } else {
-                raceDefaults = (const RaceSetupSaveDefaultTime *)&D_800B32A4.bytes[
-                    (course & 1) * fifteen
-                ];
+                gGameSaveDataBuffer[playerIndex].raceRecords[course][player].fraction =
+                    ((RaceSetupSaveDefaultTime *)&D_800B32A4.bytes[
+                        (player * sizeof(RaceSetupSaveDefaultTime)) +
+                        ((course & 1) * sizeof(RaceSetupSaveDefaultTimeRow))
+                    ])->fraction << 8;
+                gGameSaveDataBuffer[playerIndex].raceRecords[course][player].minutes =
+                    ((RaceSetupSaveDefaultTime *)&D_800B32A4.bytes[
+                        (player * sizeof(RaceSetupSaveDefaultTime)) +
+                        ((course & 1) * sizeof(RaceSetupSaveDefaultTimeRow))
+                    ])->minutes;
+                gGameSaveDataBuffer[playerIndex].raceRecords[course][player].seconds =
+                    ((RaceSetupSaveDefaultTime *)&D_800B32A4.bytes[
+                        (player * sizeof(RaceSetupSaveDefaultTime)) +
+                        ((course & 1) * sizeof(RaceSetupSaveDefaultTimeRow))
+                    ])->seconds;
             }
-            save->raceRecords[course][player].fraction = raceDefaults[player].fraction << 8;
-            save->raceRecords[course][player].minutes = raceDefaults[player].minutes;
-            save->raceRecords[course][player].seconds = raceDefaults[player].seconds;
 
             save->raceRecordCharacterIds[course][player] = 0x10;
             save->raceRecordCharacterIds[course][player] += player;
@@ -1185,23 +1201,17 @@ void initRaceSetupPlayerSaveData(s32 arg0) {
             } else {
                 save->scoreAttackScores[course][player] = D_800B32C4[player + 5];
             }
-            save->scoreAttackCharacterIds[course][player] = player;
             save->trickAttackScores[course][player] = D_800B32D0.trickAttackScores[player];
+            save->scoreAttackCharacterIds[course][player] = player;
             save->trickAttackCharacterIds[course][player] = player;
         }
 
-        {
-            register s8 bestMinutes;
-            register s8 bestSeconds;
-            register s8 bestFraction;
-
-            bestMinutes = D_800B3270[course].minutes;
-            bestSeconds = D_800B3270[course].seconds;
-            bestFraction = D_800B3270[course].fraction;
-            save->bestLapRecords[course].minutes = bestMinutes;
-            save->bestLapRecords[course].seconds = bestSeconds;
-            save->bestLapRecords[course].fraction = bestFraction;
-        }
+        gGameSaveDataBuffer[playerIndex].bestLapRecords[course].minutes =
+            D_800B3270[course].minutes;
+        gGameSaveDataBuffer[playerIndex].bestLapRecords[course].seconds =
+            D_800B3270[course].seconds;
+        gGameSaveDataBuffer[playerIndex].bestLapRecords[course].fraction =
+            D_800B3270[course].fraction;
     }
 
     header->replaySlots[0].length = 0;
@@ -1216,48 +1226,48 @@ void initRaceSetupPlayerSaveData(s32 arg0) {
 
     player = 0;
     destination = (RaceSetupSaveByteCursor *)save;
-compact_tail_loop:
+clear_reserved:
     player++;
     destination++;
     ((RaceSetupSaveReservedCursorView *)destination)->value = 0;
     if (player < 0x20) {
-        goto compact_tail_loop;
+        goto clear_reserved;
     }
 
     if (gMainMenuSecretCodeUnlocked == 1) {
+        s8 *courseStateSource;
+
         player = 0;
         destination = (RaceSetupSaveByteCursor *)save;
-compact_cup_loop:
+complete_cups:
         player++;
         ((RaceSetupSaveSecretCupCursorView *)destination)->value = 1;
         destination++;
         if (player < 11) {
-            goto compact_cup_loop;
+            goto complete_cups;
         }
 
         courseStateSource = gMultiplayerCourseSelectDefaultCourseIds;
         destination = (RaceSetupSaveByteCursor *)save;
         {
-            register s8 state0;
-            register s8 state1;
-            register s8 state2;
-            register s8 state3;
+            s8 state0;
+            s8 state1;
+            s8 state2;
+            s8 state3;
 
-compact_state_loop:
+copy_unlock_states:
             state0 = courseStateSource[0];
             state1 = courseStateSource[1];
             state2 = courseStateSource[2];
             state3 = courseStateSource[3];
             courseStateSource += 4;
-            ((GameSaveData *)destination)->courseUnlockStates[0] = state0;
-            ((GameSaveData *)destination)->courseUnlockStates[1] = state1;
-            ((GameSaveData *)destination)->courseUnlockStates[2] = state2;
-            ((GameSaveData *)destination)->courseUnlockStates[3] = state3;
             destination += 4;
-            if (courseStateSource != &gMultiplayerCourseSelectDefaultCourseIds[
-                    MULTIPLAYER_COURSE_SELECT_DEFAULT_COURSE_COUNT
-                ]) {
-                goto compact_state_loop;
+            ((RaceSetupSaveUnlockCopyView *)destination)->values[0] = state0;
+            ((RaceSetupSaveUnlockCopyView *)destination)->values[1] = state1;
+            ((RaceSetupSaveUnlockCopyView *)destination)->values[2] = state2;
+            ((RaceSetupSaveUnlockCopyView *)destination)->values[3] = state3;
+            if (courseStateSource != gCourseSelectColumnSoundEffects) {
+                goto copy_unlock_states;
             }
         }
 
@@ -1266,4 +1276,5 @@ compact_state_loop:
         header->extraCourseUnlockFlags = 0x3F;
     }
 }
+
 #endif
