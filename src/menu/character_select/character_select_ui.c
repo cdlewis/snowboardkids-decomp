@@ -1,4 +1,5 @@
 #include "common.h"
+#include "font_encoding.h"
 #include "game/save_data.h"
 #include "game/engine/asset_manager.h"
 #include "game/engine/render_callback.h"
@@ -37,7 +38,7 @@ typedef struct {
 
 typedef struct {
     MenuGlyphScript confirmationText[2][0x1C];
-    MenuGlyphScript unusedText[0x14];
+    u16 unusedData[0x14];
 } CharacterSelectUiConfirmationBannerText;
 
 extern s8 D_8010AE52;
@@ -54,16 +55,10 @@ extern u8 D_8010AE5F;
 CharacterSelectUiConfirmationBannerText gCharacterSelectConfirmationBannerText = {
     {
         {
-            0xFFFC, 0x0007, 0x001C, 0x000E, 0x0015, 0x000E, 0x000C, 0x001D,
-            0xFFFE, 0x0022, 0x0018, 0x001E, 0x001B, 0xFFFD, 0x000C, 0x0011,
-            0x000A, 0x001B, 0x000A, 0x000C, 0x001D, 0x000E, 0x001B, 0x002C,
-            0xFFFF, 0x0000, 0x0000, 0x0000,
+            _("{COLOR:7}SELECT YOUR\nCHARACTER."),
         },
         {
-            0xFFFC, 0x0007, 0x0012, 0x001C, 0xFFFE, 0x001D, 0x0011, 0x0012,
-            0x001C, 0xFFFE, 0x0018, 0x0014, 0x0030, 0xFFFF, 0x0000, 0x0000,
-            0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
-            0x0000, 0x0000, 0x0000, 0x0000,
+            _("{COLOR:7}IS THIS OK?"),
         },
     },
     {

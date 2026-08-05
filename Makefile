@@ -195,6 +195,10 @@ ASM_O_FILES := $(patsubst %.s,$(BUILD_DIR)/%.o,$(ASM_S_FILES))
 C_FILES     := $(foreach dir,$(SRC_DIRS),$(call rwildcard,$(dir),*.c))
 C_O_FILES   := $(patsubst %.c,$(BUILD_DIR)/%.o,$(C_FILES))
 
+TEXTCONV = $(PYTHON) $(TOOLS_DIR)/textconv.py
+CHARMAP = $(TOOLS_DIR)/charmap.txt
+TEXTCONV_DIR = $(BUILD_DIR)/textconv
+
 BIN_FILES   := $(foreach dir,$(BIN_DIRS),$(wildcard $(dir)/*.bin))
 BIN_O_FILES := $(patsubst %.bin,$(BUILD_DIR)/%.o,$(BIN_FILES))
 
@@ -258,12 +262,16 @@ $(BUILD_DIR)/%.o: %.s
 	$(PRINTF) "[$(GREEN)   as   $(NO_COL)]  $<\n"
 	$(V)$(CPP) $(CPPFLAGS) -I include $< | $(AS) $(ASFLAGS) -o $@
 
-$(BUILD_DIR)/%.o: %.c
+$(TEXTCONV_DIR)/%.c: %.c $(TOOLS_DIR)/textconv.py $(CHARMAP)
 	@mkdir -p $(dir $@)
-	$(PRINTF) "[$(GREEN)   c    $(NO_COL)]  $<\n"
+	$(V)$(TEXTCONV) $(CHARMAP) $< $@
+
+$(BUILD_DIR)/%.o: $(TEXTCONV_DIR)/%.c
+	@mkdir -p $(dir $@)
+	$(PRINTF) "[$(GREEN)   c    $(NO_COL)]  $*.c\n"
 	$(V)$(CC_CHECK) $(CC_CHECK_FLAGS) $(CC_CHECK_WARNINGS) \
-		$(CC_CHECK_INCLUDES) $(C_DEFINES) $(CC_CHECK_MIPS_DEFINES) $<
-	$(V)$(IDO_CC) $(CFLAGS) $(C_OPT) -o $@ $<
+		$(CC_CHECK_INCLUDES) $(C_DEFINES) $(CC_CHECK_MIPS_DEFINES) -iquote $(dir $*) $<
+	$(V)$(IDO_CC) $(CFLAGS) $(C_OPT) -I$(dir $*) -o $@ $<
 	$(V)$(RM_MDEBUG)
 	$(V)$(C_OBJ_POSTPROCESS)
 

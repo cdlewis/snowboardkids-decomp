@@ -48,6 +48,11 @@ then
     exit 1
 fi
 
+SCRIPT_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_ROOT="$(cd "$SCRIPT_PATH/../.." && pwd)"
+TEXTCONV="$PROJECT_ROOT/tools/textconv.py"
+CHARMAP="$PROJECT_ROOT/tools/charmap.txt"
+
 SOURCE_SNAPSHOT="$(mktemp "$WORKSPACE/.build-source.XXXXXX.c")"
 cleanup() {
     rm -f -- "$SOURCE_SNAPSHOT"
@@ -56,10 +61,7 @@ cleanup() {
     fi
 }
 trap cleanup EXIT
-cp -- "$INPUT" "$SOURCE_SNAPSHOT"
-
-SCRIPT_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-PROJECT_ROOT="$(cd "$SCRIPT_PATH/../.." && pwd)"
+python3 "$TEXTCONV" "$CHARMAP" "$INPUT" "$SOURCE_SNAPSHOT"
 
 CROSS="mips-linux-gnu-"
 if ! command -v "${CROSS}as" >/dev/null 2>&1; then
