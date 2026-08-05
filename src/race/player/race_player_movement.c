@@ -14,6 +14,12 @@
     (((s64)(x) * (sizeX) + (s64)(y) * (sizeY) + (s64)(z) * (sizeZ)) / 0x1000)
 #define MIRRORED_COLLISION_POINT(x, y, z, sizeX, sizeY, sizeZ) \
     ((-(s64)(x) * (sizeX) + (s64)(y) * (sizeY) + (s64)(z) * (sizeZ)) / 0x1000)
+#define RACE_PLAYER_SURFACE_DOT2(a, b, c, d) \
+    ((product = (s64)(a) * (b)), ((product + (s64)(c) * (d)) / 0x1000))
+#define RACE_PLAYER_SURFACE_COLLISION_POINT(x, y, z, sizeX, sizeY, sizeZ) \
+    ((product = (s64)(y) * (sizeY)), ((product + (s64)(x) * (sizeX) + (s64)(z) * (sizeZ)) / 0x1000))
+#define RACE_PLAYER_SURFACE_MIRRORED_COLLISION_POINT(x, y, z, sizeX, sizeY, sizeZ) \
+    ((product = (s64)(y) * (sizeY)), ((product + -(s64)(x) * (sizeX) + (s64)(z) * (sizeZ)) / 0x1000))
 
 typedef struct {
     Vec3i worldPos;
@@ -1064,7 +1070,7 @@ s32 tryApplyRacePlayerItemHit(Vec3i *pos, s32 xzSize, s16 flag, s16 playerIndex)
     return 0;
 }
 
-// updateRacePlayerSurfaceContact best match: 99.828% (nonmatchings/updateRacePlayerSurfaceContact-8280121253171829145/base_17.c)
+// updateRacePlayerSurfaceContact best match: 99.914% (nonmatchings/updateRacePlayerSurfaceContact-2163214805492048867/base_22.c)
 // The assembly references interior elements of gRacePlayerGroundProbeOffsets by fixed offsets.
 #pragma GLOBAL_ASM("asm/nonmatchings/race/player/race_player_movement/updateRacePlayerSurfaceContact.s")
 
@@ -1098,6 +1104,7 @@ s32 updateRacePlayerSurfaceContact(RacePlayer *player) {
     s16 i;
     s32 sine;
     s32 cosine;
+    s64 product;
 
     player->unk500 = 0;
     terrainId = findRaceCourseSurfaceFromHint(player->coursePathIndex, player->pos.x, player->pos.z);
@@ -1154,12 +1161,8 @@ s32 updateRacePlayerSurfaceContact(RacePlayer *player) {
         cosine = fixedCosine(player->facingAngle);
         hadCollision = 0;
         for (i = 0; i < 2; i++) {
-            points[i].x = ((s64)gRacePlayerGroundProbeOffsets[i].x * cosine +
-                           (s64)gRacePlayerGroundProbeOffsets[i].z * sine) /
-                          0x1000;
-            points[i].z = ((s64)gRacePlayerGroundProbeOffsets[i].x * -sine +
-                           (s64)gRacePlayerGroundProbeOffsets[i].z * cosine) /
-                          0x1000;
+            points[i].x = RACE_PLAYER_SURFACE_DOT2(gRacePlayerGroundProbeOffsets[i].x, cosine, gRacePlayerGroundProbeOffsets[i].z, sine);
+            points[i].z = RACE_PLAYER_SURFACE_DOT2(gRacePlayerGroundProbeOffsets[i].x, -sine, gRacePlayerGroundProbeOffsets[i].z, cosine);
             points[i].x += player->pos.x;
             points[i].z += player->pos.z;
 
@@ -1195,12 +1198,8 @@ s32 updateRacePlayerSurfaceContact(RacePlayer *player) {
             sine = fixedSine(player->facingAngle);
             cosine = fixedCosine(player->facingAngle);
             for (i = 0; i < 2; i++) {
-                points[i].x = ((s64)gRacePlayerGroundProbeOffsets[i].x * cosine +
-                               (s64)gRacePlayerGroundProbeOffsets[i].z * sine) /
-                              0x1000;
-                points[i].z = ((s64)gRacePlayerGroundProbeOffsets[i].x * -sine +
-                               (s64)gRacePlayerGroundProbeOffsets[i].z * cosine) /
-                              0x1000;
+                points[i].x = RACE_PLAYER_SURFACE_DOT2(gRacePlayerGroundProbeOffsets[i].x, cosine, gRacePlayerGroundProbeOffsets[i].z, sine);
+                points[i].z = RACE_PLAYER_SURFACE_DOT2(gRacePlayerGroundProbeOffsets[i].x, -sine, gRacePlayerGroundProbeOffsets[i].z, cosine);
                 points[i].x += player->pos.x;
                 points[i].z += player->pos.z;
 
@@ -1227,9 +1226,7 @@ s32 updateRacePlayerSurfaceContact(RacePlayer *player) {
 
     sine = fixedSine(player->unk2EE);
     cosine = fixedCosine(player->unk2EE);
-    sideSpacing = ((s64)gRacePlayerGroundProbeOffsets[6].x * cosine +
-                   (s64)gRacePlayerGroundProbeOffsets[6].y * -sine) /
-                  0x1000;
+    sideSpacing = RACE_PLAYER_SURFACE_DOT2(gRacePlayerGroundProbeOffsets[6].x, cosine, gRacePlayerGroundProbeOffsets[6].y, -sine);
 
     verticalOffset = player->unk5C;
     player->coursePathIndex = findRaceCourseSurfaceFromHint(player->coursePathIndex, player->pos.x, player->pos.z);
@@ -1243,9 +1240,7 @@ s32 updateRacePlayerSurfaceContact(RacePlayer *player) {
     for (iteration = 0; iteration < 3; iteration++) {
         sine = fixedSine(player->pitchAngle);
         cosine = fixedCosine(player->pitchAngle);
-        longitudinalSpacing = ((s64)gRacePlayerGroundProbeOffsets[8].y * sine +
-                               (s64)gRacePlayerGroundProbeOffsets[8].z * cosine) /
-                              0x1000;
+        longitudinalSpacing = RACE_PLAYER_SURFACE_DOT2(gRacePlayerGroundProbeOffsets[8].y, sine, gRacePlayerGroundProbeOffsets[8].z, cosine);
         makeFixedRotationXY(playerRotation.values, player->pitchAngle, player->facingAngle);
 
         for (i = 0; i < 6; i++) {
@@ -1356,33 +1351,39 @@ s32 updateRacePlayerSurfaceContact(RacePlayer *player) {
     }
 
     if (player->stateFlags & 0x400) {
-        collisionX = MIRRORED_COLLISION_POINT(worldRotation.values[0], worldRotation.values[3], worldRotation.values[6],
-                                              player->collisionSources[0].sizeX,
-                                              player->collisionSources[0].sizeY - player->collisionCenterOffset,
-                                              player->collisionSources[0].sizeZ);
-        collisionY = MIRRORED_COLLISION_POINT(worldRotation.values[1], worldRotation.values[4], worldRotation.values[7],
-                                              player->collisionSources[0].sizeX,
-                                              player->collisionSources[0].sizeY - player->collisionCenterOffset,
-                                              player->collisionSources[0].sizeZ);
-        collisionZ = MIRRORED_COLLISION_POINT(worldRotation.values[2], worldRotation.values[5], worldRotation.values[8],
-                                              player->collisionSources[0].sizeX,
-                                              player->collisionSources[0].sizeY - player->collisionCenterOffset,
-                                              player->collisionSources[0].sizeZ);
+        collisionX = RACE_PLAYER_SURFACE_MIRRORED_COLLISION_POINT(
+            worldRotation.values[0], worldRotation.values[3], worldRotation.values[6],
+            player->collisionSources[0].sizeX,
+            player->collisionSources[0].sizeY - player->collisionCenterOffset,
+            player->collisionSources[0].sizeZ);
+        collisionY = RACE_PLAYER_SURFACE_MIRRORED_COLLISION_POINT(
+            worldRotation.values[1], worldRotation.values[4], worldRotation.values[7],
+            player->collisionSources[0].sizeX,
+            player->collisionSources[0].sizeY - player->collisionCenterOffset,
+            player->collisionSources[0].sizeZ);
+        collisionZ = RACE_PLAYER_SURFACE_MIRRORED_COLLISION_POINT(
+            worldRotation.values[2], worldRotation.values[5], worldRotation.values[8],
+            player->collisionSources[0].sizeX,
+            player->collisionSources[0].sizeY - player->collisionCenterOffset,
+            player->collisionSources[0].sizeZ);
         makeFixedRotationXYZ(intermediateRotation.values, player->collisionSources[0].rotX,
                              -player->collisionSources[0].rotY, -player->collisionSources[0].rotZ);
     } else {
-        collisionX = COLLISION_POINT(worldRotation.values[0], worldRotation.values[3], worldRotation.values[6],
-                                     player->collisionSources[0].sizeX,
-                                     player->collisionSources[0].sizeY - player->collisionCenterOffset,
-                                     player->collisionSources[0].sizeZ);
-        collisionY = COLLISION_POINT(worldRotation.values[1], worldRotation.values[4], worldRotation.values[7],
-                                     player->collisionSources[0].sizeX,
-                                     player->collisionSources[0].sizeY - player->collisionCenterOffset,
-                                     player->collisionSources[0].sizeZ);
-        collisionZ = COLLISION_POINT(worldRotation.values[2], worldRotation.values[5], worldRotation.values[8],
-                                     player->collisionSources[0].sizeX,
-                                     player->collisionSources[0].sizeY - player->collisionCenterOffset,
-                                     player->collisionSources[0].sizeZ);
+        collisionX = RACE_PLAYER_SURFACE_COLLISION_POINT(
+            worldRotation.values[0], worldRotation.values[3], worldRotation.values[6],
+            player->collisionSources[0].sizeX,
+            player->collisionSources[0].sizeY - player->collisionCenterOffset,
+            player->collisionSources[0].sizeZ);
+        collisionY = RACE_PLAYER_SURFACE_COLLISION_POINT(
+            worldRotation.values[1], worldRotation.values[4], worldRotation.values[7],
+            player->collisionSources[0].sizeX,
+            player->collisionSources[0].sizeY - player->collisionCenterOffset,
+            player->collisionSources[0].sizeZ);
+        collisionZ = RACE_PLAYER_SURFACE_COLLISION_POINT(
+            worldRotation.values[2], worldRotation.values[5], worldRotation.values[8],
+            player->collisionSources[0].sizeX,
+            player->collisionSources[0].sizeY - player->collisionCenterOffset,
+            player->collisionSources[0].sizeZ);
         makeFixedRotationXYZ(intermediateRotation.values, player->collisionSources[0].rotX,
                              player->collisionSources[0].rotY, player->collisionSources[0].rotZ);
     }
