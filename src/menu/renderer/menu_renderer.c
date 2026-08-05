@@ -234,7 +234,7 @@ extern void drawMenuSpriteWideIndex(s16 x, s16 y, void *texture, s32 tileIndex, 
                                     u8 flip);
 #endif
 
-// drawMenuSpriteClipped best match: 84.639% (nonmatchings/drawMenuSpriteClipped-1846960929180867216/base_33.c)
+// drawMenuSpriteClipped best match: 85.877% (nonmatchings/drawMenuSpriteClipped-2163214805492048867/base_17.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/renderer/menu_renderer/drawMenuSpriteClipped.s")
 
 #ifdef NON_MATCHING
@@ -259,9 +259,6 @@ void drawMenuSpriteClipped(s16 x, s16 y, MenuFontAssetTable *table, u16 imageInd
     s16 width;
     u8 height;
     u16 palette;
-    u16 entryIndex;
-
-    entryIndex = imageIndex;
     paletteBase = (table->entryCount * sizeof(MenuFontAssetEntry)) + (u8 *)table + sizeof(MenuFontAssetEntry);
     if (scaleX >= 0x201) {
         return;
@@ -276,9 +273,9 @@ void drawMenuSpriteClipped(s16 x, s16 y, MenuFontAssetTable *table, u16 imageInd
         return;
     }
     {
-        flipT = gMenuSpriteFlipScales[flipMode & 3][1];
         flipS = gMenuSpriteFlipScales[flipMode & 3][0];
-        texture = &table->entries[entryIndex];
+        flipT = gMenuSpriteFlipScales[flipMode & 3][1];
+        texture = &table->entries[imageIndex];
         width = texture->width;
         height = texture->height;
         left = (x + gMenuViewportCenterX) << 2;
@@ -293,10 +290,10 @@ void drawMenuSpriteClipped(s16 x, s16 y, MenuFontAssetTable *table, u16 imageInd
             texT = (height - 1) << 5;
         }
 
+        minY = gMenuViewportCenterY - (s16)clipTop;
         minX = gMenuViewportCenterX - (s16)clipLeft;
         maxY = gMenuViewportCenterY + (s16)clipBottom;
         maxX = gMenuViewportCenterX + (s16)clipRight;
-        minY = gMenuViewportCenterY - (s16)clipTop;
         if (minX < gMenuViewportCenterX - (gMenuViewportWidth / 2)) {
             minX = gMenuViewportCenterX - (gMenuViewportWidth / 2);
         }
@@ -310,36 +307,33 @@ void drawMenuSpriteClipped(s16 x, s16 y, MenuFontAssetTable *table, u16 imageInd
             maxY = gMenuViewportCenterY + (gMenuViewportHeight / 2);
         }
 
-        minX <<= 2;
-        minY <<= 2;
-        maxX <<= 2;
-        maxY <<= 2;
-        if ((left < maxX) && (top < maxY) && (right.stored >= minX) && (bottom.stored >= minY)) {
-            if (left < minX) {
+        if ((left < (s16)(maxX << 2)) && (top < (s16)(maxY << 2)) &&
+            (right.stored >= (s16)(minX << 2)) && (bottom.stored >= (s16)(minY << 2))) {
+            if (left < (s16)(minX << 2)) {
                 s32 clippedTexS;
 
-                clippedTexS = (((minX - left) << 3) << 5) / scaleX;
+                clippedTexS = ((((s16)(minX << 2) - left) << 3) << 5) / scaleX;
                 texS = clippedTexS;
                 if (flipS == -1) {
                     texS = ((width - 1) << 5) - clippedTexS;
                 }
-                left = minX;
+                left = (s16)(minX << 2);
             }
-            if (top < minY) {
+            if (top < (s16)(minY << 2)) {
                 s32 clippedTexT;
 
-                clippedTexT = (((minY - top) << 3) << 5) / scaleY;
+                clippedTexT = ((((s16)(minY << 2) - top) << 3) << 5) / scaleY;
                 texT = clippedTexT;
                 if (flipT == -1) {
                     texT = ((height - 1) << 5) - clippedTexT;
                 }
-                top = minY;
+                top = (s16)(minY << 2);
             }
-            if (right.value >= maxX) {
-                right.value = maxX - 4;
+            if (right.value >= (s16)(maxX << 2)) {
+                right.value = (s16)(maxX << 2) - 4;
             }
-            if (bottom.value >= maxY) {
-                bottom.value = maxY - 4;
+            if (bottom.value >= (s16)(maxY << 2)) {
+                bottom.value = (s16)(maxY << 2) - 4;
             }
 
             if (paletteIndex == 0) {
