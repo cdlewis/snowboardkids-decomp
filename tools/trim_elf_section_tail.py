@@ -8,6 +8,9 @@ SHT_RELA = 4
 SHT_REL = 9
 SHT_SYMTAB = 2
 STT_SECTION = 3
+STT_OBJECT = 1
+STB_WEAK = 2
+SHN_UNDEF = 0
 
 
 def main():
@@ -17,6 +20,12 @@ def main():
     parser.add_argument("file", help="ELF object to update")
     parser.add_argument("section", help="section name to trim")
     parser.add_argument("byte_count", type=int, help="number of tail bytes to remove")
+    parser.add_argument(
+        "--undefine-symbol",
+        action="append",
+        default=[],
+        help="convert a weak object in the trimmed range to an undefined symbol",
+    )
     args = parser.parse_args()
 
     if args.byte_count <= 0:
@@ -85,6 +94,67 @@ def main():
         if any(padding):
             print("Error: section tail contains nonzero data", file=sys.stderr)
             return 1
+
+        symbols_to_undefine = set(args.undefine_symbol)
+        undefined_symbols = set()
+        if symbols_to_undefine:
+            for _, header, _ in sections:
+                section_type = header[1]
+                section_offset = header[4]
+                section_size = header[5]
+                linked_section = header[6]
+                entry_size = header[9]
+                if section_type != SHT_SYMTAB:
+                    continue
+                if entry_size != 0x10 or linked_section >= section_count:
+                    print("Error: unsupported ELF32 symbol table", file=sys.stderr)
+                    return 1
+
+                _, string_header, _ = sections[linked_section]
+                string_offset = string_header[4]
+                string_size = string_header[5]
+                strings = data[string_offset:string_offset + string_size]
+
+                for entry_offset in range(section_offset, section_offset + section_size, entry_size):
+                    name_offset = struct.unpack_from(endian + "I", data, entry_offset)[0]
+                    if name_offset >= len(strings):
+                        print("Error: malformed ELF symbol name", file=sys.stderr)
+                        return 1
+                    name_end = strings.find(b"\0", name_offset)
+                    if name_end < 0:
+                        print("Error: malformed ELF symbol string table", file=sys.stderr)
+                        return 1
+                    name = strings[name_offset:name_end].decode("ascii")
+                    if name not in symbols_to_undefine:
+                        continue
+
+                    symbol_info = data[entry_offset + 12]
+                    symbol_type = symbol_info & 0xF
+                    symbol_binding = symbol_info >> 4
+                    symbol_section = struct.unpack_from(endian + "H", data, entry_offset + 14)[0]
+                    if (
+                        symbol_binding != STB_WEAK
+                        or symbol_type != STT_OBJECT
+                        or symbol_section != target_index
+                    ):
+                        print(
+                            f"Error: symbol {name!r} is not a weak object in {args.section!r}",
+                            file=sys.stderr,
+                        )
+                        return 1
+
+                    struct.pack_into(endian + "I", data, entry_offset + 4, 0)
+                    struct.pack_into(endian + "I", data, entry_offset + 8, 0)
+                    struct.pack_into(endian + "H", data, entry_offset + 14, SHN_UNDEF)
+                    undefined_symbols.add(name)
+
+            missing_symbols = symbols_to_undefine - undefined_symbols
+            if missing_symbols:
+                print(
+                    "Error: weak symbol(s) not found: " + ", ".join(sorted(missing_symbols)),
+                    file=sys.stderr,
+                )
+                return 1
 
         for _, header, name in sections:
             section_type = header[1]
