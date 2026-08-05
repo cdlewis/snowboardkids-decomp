@@ -511,8 +511,8 @@ void drawMenuSpriteWithAlphaClipped(s16 x, s16 y, FontAsset *asset, u16 tileInde
 }
 #endif
 
-// drawMenuSpriteWithPaletteScale best logical match: 99.627%
-// (nonmatchings/drawMenuSpriteWithPaletteScale-2163214805492048867/base_39.c)
+// drawMenuSpriteWithPaletteScale best match: 99.669%
+// (nonmatchings/drawMenuSpriteWithPaletteScale-2163214805492048867/base_72.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/renderer/menu_renderer/drawMenuSpriteWithPaletteScale.s")
 
 #ifdef NON_MATCHING
@@ -570,7 +570,7 @@ void drawMenuSpriteWithPaletteScale(s16 x, s16 y, FontAsset *asset, u16 index, u
         scratch = allocMenuRenderScratch(sizeof(MenuGlyphPalette));
         for (i = 0; i != MENU_PALETTE_COLOR_COUNT; i++) {
             scratch->colors[i] = (color = source->colors[i]);
-            color = color & (u64)0xFFFF;
+            color = (((((((color & 0xFFFFu) & 0xFFFFu) & 0xFFFFu) & 0xFFFFu) & 0xFFFFu) & 0xFFFFu) & 0xFFFFu) & (u64)0xFFFF;
             if (color & (MENU_RGBA5551_ALPHA_BIT & (u64)0xFFFFFFFFFFFFFFFF)) {
                 red = ((color >> 11) & MENU_RGBA5551_CHANNEL_MASK) & 0xFFFF;
                 green = (color >> 6) & MENU_RGBA5551_CHANNEL_MASK;
