@@ -188,6 +188,13 @@ and control flow already match and only register *names* differ.
   `value >>= N; consume(field + value);` can preserve the target shift while
   making the field the first `addu` operand. The inline equivalent
   `consume((value >> N) + field);` often gives IDO the opposite operand order.
+- **Narrow a wide quotient through a result temporary to preserve a copy
+  move.** When a target keeps an extra `move` after strength-reducing a signed
+  division, compute the product in an `s32`, assign the quotient to a `u16`
+  result, then widen that result for later packing. If range analysis proves
+  the quotient fits, IDO emits no explicit mask but retains the assignment
+  move; keeping the entire calculation in one `s32` can coalesce it away and
+  rotate every following temporary register.
 - **Split chained arithmetic assignments on a narrow parameter.** Writing
   `arg = arg * K; arg = arg - bias;` can emit the same shift/subtract/narrow
   sequence as `arg = (arg * K) - bias`, while changing IDO's SSA coalescing

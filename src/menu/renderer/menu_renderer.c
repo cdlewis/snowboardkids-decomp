@@ -1639,10 +1639,6 @@ paletteLoop:
 }
 #endif
 
-// drawMenuAsciiGlyph best match: 99.473% (nonmatchings/drawMenuAsciiGlyph-1846960929180867216/base_67.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/menu/renderer/menu_renderer/drawMenuAsciiGlyph.s")
-
-#ifdef NON_MATCHING
 void drawMenuAsciiGlyph(s16 x, s16 y, u16 tileS, s32 tileT, u16 palette, u16 paletteScale) {
     s32 x0;
     s32 storedY;
@@ -1660,8 +1656,8 @@ void drawMenuAsciiGlyph(s16 x, s16 y, u16 tileS, s32 tileT, u16 palette, u16 pal
     s16 paletteIndex;
 
     font = getRelocatableHeapBlockBase(gAssetHandles[6]);
-    palettes = (MenuGlyphPalette *)(font->entryCount + font->textures);
-    paletteIndex = font->textures[0].paletteIndex;
+    palettes = (MenuGlyphPalette *)(font->header.entryCount + font->textures);
+    paletteIndex = *(s16 *)&font->textures[0].paletteIndex;
     x0 = x + gMenuViewportCenterX;
     i = y + gMenuViewportCenterY;
     texture = &font->textures[0];
@@ -1686,11 +1682,12 @@ void drawMenuAsciiGlyph(s16 x, s16 y, u16 tileS, s32 tileT, u16 palette, u16 pal
                     s32 colorValue;
                     MenuGlyphPalette *scratch;
                     MenuGlyphPalette *source;
-                    u16 color;
+                    s32 color;
                     s32 red;
                     u16 green;
                     u16 blue;
                     s32 scaleValue;
+                    u16 scaledRed;
 
                     if (x0 < minX) {
                         clipS = minX - x0;
@@ -1714,12 +1711,13 @@ void drawMenuAsciiGlyph(s16 x, s16 y, u16 tileS, s32 tileT, u16 palette, u16 pal
                     }
                     storedY = i;
                     if (1) {
-                    scratch = allocMenuRenderScratch(sizeof(MenuGlyphPalette)); i = 0; source = &palettes[paletteIndex]; dst = scratch->colors; palette_loop: *dst = (color = (*(u16 *)&source->bytes[i]) & 0xFFFFu); i += sizeof(color); if ((colorValue = color & 0xFFFF) & 1) { red = ((colorValue >> 11) & 0x1F) & 0xFFFF;
+                    scratch = allocMenuRenderScratch(sizeof(MenuGlyphPalette)); i = 0; source = &palettes[paletteIndex]; dst = scratch->colors; palette_loop: *dst = (color = (*(u16 *)&source->bytes[i]) & 0xFFFFu); i += sizeof(u16); if ((colorValue = color & 0xFFFF) & 1) { red = ((colorValue >> 11) & 0x1F) & 0xFFFF;
                         green = (colorValue >> 6) & 0x1F;
                         colorValue = (blue = (colorValue >> 1) & 0x1F);
                         scaleValue = paletteScale;
                         red = red * scaleValue;
-                        red /= 0x100;
+                        scaledRed = red / 0x100;
+                        red = scaledRed;
                         green = (green * paletteScale) / 0x100;
                         colorValue = green;
                         blue = (blue * paletteScale) / 0x100;
@@ -1745,7 +1743,6 @@ void drawMenuAsciiGlyph(s16 x, s16 y, u16 tileS, s32 tileT, u16 palette, u16 pal
         }
     }
 }
-#endif
 
 void drawMenuAsciiText(s16 arg0, s16 arg1, u8 *arg2, u16 arg3, u16 arg4) {
     s32 var_s0;
