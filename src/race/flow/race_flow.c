@@ -532,7 +532,7 @@ void openRaceStartTransitionFlow(void) {
     suspendGameTask(2);
 }
 
-// initRaceSceneFlow best match: 95.540% (nonmatchings/initRaceSceneFlow-8101714008744796594/base_99.c)
+// initRaceSceneFlow best match: 95.931% (nonmatchings/initRaceSceneFlow-2163214805492048867/base_9.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race/flow/race_flow/initRaceSceneFlow.s")
 
 #ifdef NON_MATCHING
