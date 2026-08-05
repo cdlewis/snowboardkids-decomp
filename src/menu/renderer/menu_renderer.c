@@ -1263,13 +1263,11 @@ void drawMenuGlyphScriptDefaultFont(volatile s16 x, s16 y, MenuGlyphScript *scri
     }
 }
 
-// drawMenuGlyph best match: 99.340% (nonmatchings/drawMenuGlyph-2163214805492048867/base_17.c)
+// drawMenuGlyph best match: 99.677% (nonmatchings/drawMenuGlyph-2163214805492048867/base_56.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/renderer/menu_renderer/drawMenuGlyph.s")
 
 #ifdef NON_MATCHING
 void drawMenuGlyph(s16 x, s16 y, u16 glyphIndex, u8 paletteIndex, u16 intensity, u16 fontBank) {
-    u16 *src;
-    u16 *dstPalette;
     s32 x0;
     s32 y0;
     s32 x1;
@@ -1278,15 +1276,16 @@ void drawMenuGlyph(s16 x, s16 y, u16 glyphIndex, u8 paletteIndex, u16 intensity,
     s32 clipT;
     s32 i;
     u16 paletteColor;
-    s32 red;
     u16 *paletteBase;
+    u16 *dst;
     FontAsset *font;
-    u16 *scaledPalette;
+    MenuGlyphPalette *source;
+    MenuGlyphPalette *scratch;
     FontTexture *entry;
     s32 color;
+    s32 red;
     u16 green;
     u16 blue;
-    u16 scaledRed;
 
     if (paletteIndex == 0) {
         font = getRelocatableHeapBlockBase(gAssetHandles[fontBank]);
@@ -1336,35 +1335,34 @@ void drawMenuGlyph(s16 x, s16 y, u16 glyphIndex, u8 paletteIndex, u16 intensity,
 
     entry = font->textures;
     entry += glyphIndex;
-    src = &paletteBase[entry->paletteIndex * 0x10];
-    scaledPalette = allocMenuRenderScratch(0x20);
+    source = (MenuGlyphPalette *)&paletteBase[entry->paletteIndex * MENU_PALETTE_COLOR_COUNT];
+    scratch = allocMenuRenderScratch(sizeof(MenuGlyphPalette));
     i = 0;
-    dstPalette = scaledPalette;
+    dst = scratch->colors;
 paletteLoop:
-    paletteColor = *src;
+    paletteColor = source->colors[0];
+    paletteColor = (*dst = paletteColor);
     i += sizeof(u16);
     color = paletteColor & 0xFFFF;
-    *dstPalette = paletteColor;
     if (color & 1) {
         red = ((color >> 11) & 0x1F) & 0xFFFF;
         green = color >> 6;
         green = green & 0x1F;
         color = (blue = (color >> 1) & 0x1F);
         red *= intensity;
-        scaledRed = red / 0x100;
-        red = scaledRed;
+        red = (u16)(red / 0x100);
         green = (green * intensity) / 0x100;
         color = green;
         blue = (blue * intensity) / 0x100;
-        *dstPalette = (red << 11) | (color << 6) | (blue << 1) | 1;
+        *dst = (red << 11) | (color << 6) | (blue << 1) | 1;
     }
-    src++;
-    dstPalette++;
-    if (i != 0x20) {
+    source = (MenuGlyphPalette *)&source->bytes[sizeof(u16)];
+    dst++;
+    if (i != sizeof(MenuGlyphPalette)) {
         goto paletteLoop;
     }
 
-    gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, scaledPalette);
+    gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, scratch);
     gDPLoadTextureTile_4b(gRegionAllocPtr++, entry->imageOffset + (u8 *)font, G_IM_FMT_CI,
                           entry->width, entry->height, 0, 0, entry->width, entry->height, 0,
                           G_TX_CLAMP, G_TX_CLAMP, G_TX_NOMASK, G_TX_NOMASK, G_TX_NOLOD,
