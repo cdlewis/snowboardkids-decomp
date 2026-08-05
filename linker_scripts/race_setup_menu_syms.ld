@@ -1,3 +1,5 @@
+gControllerPakRumbleCheckPromptConfirmSelection = gControllerPakRumbleCheckPromptState + 0x7;
+
 D_8010AE01 = gRaceSetupMenuSubState + 0x1;
 gRaceSetupPlayerCountPromptAlpha = gRaceSetupMenuSubState + 0x2;
 gRaceSetupSavePanelFrameState = gRaceSetupMenuSubState + 0x4;

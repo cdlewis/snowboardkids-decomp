@@ -167,6 +167,11 @@ $(BUILD_DIR)/src/ultra/os/exceptasm.o: ULTRA_AS_POST = $(PYTHON) $(TOOLS_DIR)/se
 # assembly segment. Remove only IDO's verified trailing section padding.
 $(BUILD_DIR)/src/menu/main_menu/main_menu_scene_model.o: C_OBJ_POSTPROCESS = \
 	$(PYTHON) $(TOOLS_DIR)/trim_elf_section_tail.py $@ .text 12
+# The weak, zero-initialized prompt state preserves IDO's original codegen;
+# raw BSS owns its storage. Remove only that verified trailing data block.
+$(BUILD_DIR)/src/menu/race_setup/race_setup_menu.o: C_OBJ_POSTPROCESS = \
+	$(PYTHON) $(TOOLS_DIR)/trim_elf_section_tail.py $@ .data 16 \
+		--undefine-symbol gControllerPakRumbleCheckPromptState
 
 LD_SCRIPT      = $(BASENAME).ld
 LINKER_SCRIPTS = linker_scripts/hardware_regs.ld linker_scripts/libultra_syms.ld \
