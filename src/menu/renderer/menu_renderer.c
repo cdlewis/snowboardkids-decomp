@@ -1264,7 +1264,7 @@ void drawMenuGlyphScriptDefaultFont(volatile s16 x, s16 y, MenuGlyphScript *scri
     }
 }
 
-// drawMenuGlyph best match: 99.026% (nonmatchings/drawMenuGlyph-8101714008744796594/base_38.c)
+// drawMenuGlyph best match: 99.340% (nonmatchings/drawMenuGlyph-2163214805492048867/base_17.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/renderer/menu_renderer/drawMenuGlyph.s")
 
 #ifdef NON_MATCHING
@@ -1279,16 +1279,15 @@ void drawMenuGlyph(s16 x, s16 y, u16 glyphIndex, u8 paletteIndex, u16 intensity,
     s32 clipT;
     s32 i;
     u16 paletteColor;
+    s32 red;
     u16 *paletteBase;
-    u16 *dst;
     FontAsset *font;
-    u16 *srcPalette;
     u16 *scaledPalette;
     FontTexture *entry;
     s32 color;
-    s32 red;
     u16 green;
     u16 blue;
+    u16 scaledRed;
 
     if (paletteIndex == 0) {
         font = getRelocatableHeapBlockBase(gAssetHandles[fontBank]);
@@ -1338,32 +1337,30 @@ void drawMenuGlyph(s16 x, s16 y, u16 glyphIndex, u8 paletteIndex, u16 intensity,
 
     entry = font->textures;
     entry += glyphIndex;
-    srcPalette = &paletteBase[entry->paletteIndex * 0x10];
+    src = &paletteBase[entry->paletteIndex * 0x10];
     scaledPalette = allocMenuRenderScratch(0x20);
     i = 0;
     dstPalette = scaledPalette;
-    src = &*srcPalette;
-    dst = &*dstPalette;
 paletteLoop:
     paletteColor = *src;
-        i++;
-        i++;
-        color = paletteColor & 0xFFFF;
-        *dst = paletteColor;
-        if (color & 1) {
-            red = ((color >> 11) & 0x1F) & 0xFFFF;
-            green = color >> 6;
-            green = green & 0x1F;
-            color = (blue = (color >> 1) & 0x1F);
-            red *= intensity;
-            red /= 0x100;
-            green = (green * intensity) / 0x100;
-            color = green;
-            blue = (blue * intensity) / 0x100;
-            *dst = (red << 11) | (color << 6) | (blue << 1) | 1;
-        }
+    i += sizeof(u16);
+    color = paletteColor & 0xFFFF;
+    *dstPalette = paletteColor;
+    if (color & 1) {
+        red = ((color >> 11) & 0x1F) & 0xFFFF;
+        green = color >> 6;
+        green = green & 0x1F;
+        color = (blue = (color >> 1) & 0x1F);
+        red *= intensity;
+        scaledRed = red / 0x100;
+        red = scaledRed;
+        green = (green * intensity) / 0x100;
+        color = green;
+        blue = (blue * intensity) / 0x100;
+        *dstPalette = (red << 11) | (color << 6) | (blue << 1) | 1;
+    }
     src++;
-    dst++;
+    dstPalette++;
     if (i != 0x20) {
         goto paletteLoop;
     }
