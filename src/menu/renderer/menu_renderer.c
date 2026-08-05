@@ -511,11 +511,6 @@ void drawMenuSpriteWithAlphaClipped(s16 x, s16 y, FontAsset *asset, u16 tileInde
 }
 #endif
 
-// drawMenuSpriteWithPaletteScale best match: 99.669%
-// (nonmatchings/drawMenuSpriteWithPaletteScale-2163214805492048867/base_72.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/menu/renderer/menu_renderer/drawMenuSpriteWithPaletteScale.s")
-
-#ifdef NON_MATCHING
 void drawMenuSpriteWithPaletteScale(s16 x, s16 y, FontAsset *asset, u16 index, u16 intensity) {
     FontTexture *texture;
     u8 *textureBase;
@@ -527,6 +522,13 @@ void drawMenuSpriteWithPaletteScale(s16 x, s16 y, FontAsset *asset, u16 index, u
     s32 srcX;
     s32 srcY;
     u16 headerSize;
+    MenuGlyphPalette *scratch;
+    MenuGlyphPalette *source;
+    u16 red;
+    u16 green;
+    u16 blue;
+    u16 scaledRed;
+    s32 i;
 
     headerSize = sizeof(FontAssetHeader);
     textureBase = (u8 *)asset + (index * sizeof(FontTexture));
@@ -554,49 +556,37 @@ void drawMenuSpriteWithPaletteScale(s16 x, s16 y, FontAsset *asset, u16 index, u
     if (right >= gMenuViewportCenterX + (gMenuViewportWidth / 2)) right = gMenuViewportCenterX + (gMenuViewportWidth / 2);
     if (bottom >= gMenuViewportCenterY + (gMenuViewportHeight / 2)) bottom = gMenuViewportCenterY + (gMenuViewportHeight / 2);
 
-    {
-        u16 color;
-        MenuGlyphPalette *scratch;
-        MenuGlyphPalette *source;
-        s32 red;
-        u16 green;
-        u16 blue;
-        u16 scaledRed;
-        s32 i;
+    gDPPipeSync(gRegionAllocPtr++);
+    gDPSetTextureFilter(gRegionAllocPtr++, G_TF_AVERAGE);
 
-        gDPPipeSync(gRegionAllocPtr++);
-        gDPSetTextureFilter(gRegionAllocPtr++, G_TF_AVERAGE);
-        source = (MenuGlyphPalette *)(paletteBase + (texture->paletteIndex * MENU_PALETTE_SIZE_BYTES));
-        scratch = allocMenuRenderScratch(sizeof(MenuGlyphPalette));
-        for (i = 0; i != MENU_PALETTE_COLOR_COUNT; i++) {
-            scratch->colors[i] = (color = source->colors[i]);
-            color = (((((((color & 0xFFFFu) & 0xFFFFu) & 0xFFFFu) & 0xFFFFu) & 0xFFFFu) & 0xFFFFu) & 0xFFFFu) & (u64)0xFFFF;
-            if (color & (MENU_RGBA5551_ALPHA_BIT & (u64)0xFFFFFFFFFFFFFFFF)) {
-                red = ((color >> 11) & MENU_RGBA5551_CHANNEL_MASK) & 0xFFFF;
-                green = (color >> 6) & MENU_RGBA5551_CHANNEL_MASK;
-                color = (blue = (color >> 1) & MENU_RGBA5551_CHANNEL_MASK);
-                red *= intensity;
-                scaledRed = red / MENU_RGBA5551_SCALE_BASE;
-                red = scaledRed;
-                green = (green * intensity) / MENU_RGBA5551_SCALE_BASE;
-                color = green;
-                blue = (blue * intensity) / MENU_RGBA5551_SCALE_BASE;
-                scratch->colors[i] = (red << 11) | (color << 6) | (blue << 1) | MENU_RGBA5551_ALPHA_BIT;
-            }
+    source = (MenuGlyphPalette *)(paletteBase + (texture->paletteIndex * MENU_PALETTE_SIZE_BYTES));
+    scratch = allocMenuRenderScratch(sizeof(MenuGlyphPalette));
+    for (i = 0; i != MENU_PALETTE_COLOR_COUNT; i++) {
+        scratch->colors[i] = source->colors[i];
+        if (scratch->colors[i] & MENU_RGBA5551_ALPHA_BIT) {
+            red = (scratch->colors[i] >> 11) & MENU_RGBA5551_CHANNEL_MASK;
+            green = (scratch->colors[i] >> 6) & MENU_RGBA5551_CHANNEL_MASK;
+            blue = (scratch->colors[i] >> 1) & MENU_RGBA5551_CHANNEL_MASK;
+            red = (red * intensity) / MENU_RGBA5551_SCALE_BASE;
+            green = (green * intensity) / MENU_RGBA5551_SCALE_BASE;
+            blue = (blue * intensity) / MENU_RGBA5551_SCALE_BASE;
+
+            scratch->colors[i] = (red << 11) | (green << 6) | (blue << 1) | MENU_RGBA5551_ALPHA_BIT;
         }
-
-        gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, scratch);
-        gDPLoadTextureTile_4b(gRegionAllocPtr++, texture->imageOffset + (u8 *)asset, G_IM_FMT_CI, texture->width,
-                              texture->height, 0, 0, texture->width, texture->height, 0, G_TX_CLAMP, G_TX_CLAMP,
-                              G_TX_NOMASK, G_TX_NOMASK, G_TX_NOLOD, G_TX_NOLOD);
-        gSPTextureRectangle(gRegionAllocPtr++, left << 2, top << 2, right << 2, bottom << 2, G_TX_RENDERTILE,
-                            (srcX << 5) + 0x10, (srcY << 5) + 0x10, MENU_HALF_SCALE_STEP, MENU_HALF_SCALE_STEP);
-        gDPPipeSync(gRegionAllocPtr++);
-        gDPSetTextureFilter(gRegionAllocPtr++, G_TF_POINT);
-        gDPPipeSync(gRegionAllocPtr++);
     }
+
+    gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, scratch);
+    gDPLoadTextureTile_4b(gRegionAllocPtr++, texture->imageOffset + (u8 *)asset, G_IM_FMT_CI,
+                          texture->width, texture->height, 0, 0, texture->width, texture->height,
+                          0, G_TX_CLAMP, G_TX_CLAMP, G_TX_NOMASK, G_TX_NOMASK, G_TX_NOLOD,
+                          G_TX_NOLOD);
+    gSPTextureRectangle(gRegionAllocPtr++, left << 2, top << 2, right << 2, bottom << 2,
+                        G_TX_RENDERTILE, (srcX << 5) + 0x10, (srcY << 5) + 0x10,
+                        MENU_HALF_SCALE_STEP, MENU_HALF_SCALE_STEP);
+    gDPPipeSync(gRegionAllocPtr++);
+    gDPSetTextureFilter(gRegionAllocPtr++, G_TF_POINT);
+    gDPPipeSync(gRegionAllocPtr++);
 }
-#endif
 
 void drawMenuSpriteSubrect(s16 x, s16 y, void *assetAddress, u16 index, u8 srcX, u8 srcY, u8 width, u8 height, s32 scaleX,
                            s32 scaleY) {

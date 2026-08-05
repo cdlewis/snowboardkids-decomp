@@ -33,7 +33,7 @@ void drawMenuSpriteWithAlpha(s16 x, s16 y, void *texture, u16 tileIndex, u16 wid
                              u8 flip);
 void drawMenuSpriteWithAlphaClipped(s16 x, s16 y, void *texture, u16 tileIndex, u16 width, u16 height, u8 palette,
                                     u16 alpha, u8 flip, s32 clipLeft, s32 clipTop, s32 clipRight, s32 clipBottom);
-void drawMenuSpriteWithPaletteScale(s16 x, s16 y, void *texture, u16 tileIndex, s32 alpha);
+void drawMenuSpriteWithPaletteScale(s16 x, s16 y, FontAsset *asset, u16 index, u16 intensity);
 void drawMenuSpriteSubrect(s16 x, s16 y, void *texture, u16 tileIndex, u8 srcX, u8 srcY, u8 width, u8 height,
                            s32 scaleX, s32 scaleY);
 void drawMenuSpriteFixedScale(s16 x, s16 y, FontAsset *asset, u16 tileIndex, u16 scaleX, u16 scaleY, u8 flip,
