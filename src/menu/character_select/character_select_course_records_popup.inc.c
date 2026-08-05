@@ -2,7 +2,7 @@
 
 typedef struct DrawCharacterSelectCourseRecordsPopupStack {
     /* 0x00 */ u8 pad0[4];
-    /* 0x04 */ u8 *trickIconRowBase;
+    /* 0x04 */ s8 *trickIconRowBase;
     /* 0x08 */ u8 pad8[0x15];
     /* 0x1D */ u8 textColor;
     /* 0x1E */ u8 pad1E[2];
@@ -24,12 +24,13 @@ extern void drawMenuSpriteWideIndex(s16 x, s16 y, void *texture, s32 tileIndex, 
                                     u8 palette, u8 flip);
 
 #define RECORD_POPUP_ASSET_HANDLES ((volatile s16 *)gAssetHandles)
-#define RECORD_POPUP_SAVE_BYTES ((u8 *)&gGameSaveDataBuffer[0])
+#define RECORD_POPUP_SAVE_BYTES (((GameSaveRawData *)&gGameSaveDataBuffer[0])->values)
 
 void drawCharacterSelectCourseRecordsPopup(CharacterSelectCourseWidgetActor *arg0) {
     volatile DrawCharacterSelectCourseRecordsPopupStack stack;
     s16 *selectedCoursePtr;
     s32 newQuotient;
+    s32 assetHandle;
     s32 digitOffset;
     s32 recordColor;
     s32 yOffset;
@@ -103,23 +104,25 @@ void drawCharacterSelectCourseRecordsPopup(CharacterSelectCourseWidgetActor *arg
                         newQuotient = (s32)gGameSaveDataBuffer->scoreAttackScores[0]
                                           [(*selectedCoursePtr * 5) + rowIndex] /
                                       10;
-                        stack.quotient = (u16)newQuotient;
-                        if ((newQuotient & 0xFFFF) & 0xFFFFU) {
+                        if (1) {}
+                        stack.quotient = newQuotient;
+                        if (newQuotient & 0xFFFF) {
                             drawMenuSpriteWideIndex(
-                                (s16)(arg0->x + 0x18), (s16)(arg0->y + yOffset),
+                                (s16)(arg0->x + 0x18), (s16)((arg0->y & 0xFFFF) + yOffset),
                                 getRelocatableHeapBlockBase(RECORD_POPUP_ASSET_HANDLES[0x1F]),
                                 (stack.quotient + 0x2B) & 0xFFFF, 0x20U, 0x20U, 0U,
                                 (u8)(recordColor + 1));
                             selectedCoursePtr = &(0, stack.courseIds)[gRaceCourseIndex.signedValue];
                         }
 
+                        assetHandle = RECORD_POPUP_ASSET_HANDLES[0x1F];
                         stack.remainder = (u16)((s32)gGameSaveDataBuffer->scoreAttackScores[0]
                                                         [(*selectedCoursePtr * 5) + rowIndex] %
                                                 10);
                         secondaryColor = recordColor + 1;
                         drawMenuSpriteWideIndex(
                             (s16)(arg0->x + 0x20), (s16)(arg0->y + yOffset),
-                            getRelocatableHeapBlockBase(RECORD_POPUP_ASSET_HANDLES[0x1F]),
+                            getRelocatableHeapBlockBase(assetHandle),
                             (stack.remainder + 0x2B) & 0xFFFF, 0x20U, 0x20U, 0U, secondaryColor);
                         drawMenuAsciiText((s16)(arg0->x + 0x28), (s16)(arg0->y + yOffset + 8), D_800E0B90,
                                           (u16)stack.textColor, 0x100U);
