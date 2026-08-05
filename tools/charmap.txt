@@ -1,0 +1,67 @@
+// Snowboard Kids menu glyph script encoding.
+// Characters and named glyphs map directly to 16-bit script values.
+// The converter also accepts {COLOR:n} and the named directives below.
+
+' ' = 0xFFFE
+'\n' = 0xFFFD
+'\0' = 0xFFFF
+
+'0' = 0x0000
+'1' = 0x0001
+'2' = 0x0002
+'3' = 0x0003
+'4' = 0x0004
+'5' = 0x0005
+'6' = 0x0006
+'7' = 0x0007
+'8' = 0x0008
+'9' = 0x0009
+
+'A' = 0x000A
+'B' = 0x000B
+'C' = 0x000C
+'D' = 0x000D
+'E' = 0x000E
+'F' = 0x000F
+'G' = 0x0010
+'H' = 0x0011
+'I' = 0x0012
+'J' = 0x0013
+'K' = 0x0014
+'L' = 0x0015
+'M' = 0x0016
+'N' = 0x0017
+'O' = 0x0018
+'P' = 0x0019
+'Q' = 0x001A
+'R' = 0x001B
+'S' = 0x001C
+'T' = 0x001D
+'U' = 0x001E
+'V' = 0x001F
+'W' = 0x0020
+'X' = 0x0021
+'Y' = 0x0022
+'Z' = 0x0023
+
+'!' = 0x0024
+'\"' = 0x0025
+'\'' = 0x0027
+',' = 0x002A
+'-' = 0x002B
+'.' = 0x002C
+'/' = 0x002D
+':' = 0x002E
+'?' = 0x0030
+
+END = 0xFFFF
+PAGE_BREAK = 0xFFFB
+TITLE_LEFT = 0x00F5
+TITLE_RIGHT = 0x00F6
+TRAINING_LABEL_BORDER = 0x00F7
+ALT_TITLE_LEFT = 0x0110
+ALT_TITLE_RIGHT = 0x0111
+CONTROL_STICK_ICON_LEFT = 0x012C
+CONTROL_STICK_ICON_RIGHT = 0x012D
+CREDITS_MANAGER_LEFT = 0x00F8
+CREDITS_MANAGER_RIGHT = 0x00F9
