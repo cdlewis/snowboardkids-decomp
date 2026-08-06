@@ -1473,9 +1473,9 @@ void drawMenuColoredGlyph(s16 x, s16 y, u16 glyph, u8 palette, u16 paletteScale,
     s32 i;
     u16 paletteColor;
     u8 new_var;
-    u16 *paletteBase;
+    MenuGlyphPalette *paletteBase;
     MenuFontAssetTable *font;
-    u16 *srcPalette;
+    MenuGlyphPalette *srcPalette;
     u16 *scaledPalette;
     MenuFontAssetEntry *entry;
     s32 color;
@@ -1499,7 +1499,8 @@ void drawMenuColoredGlyph(s16 x, s16 y, u16 glyph, u8 palette, u16 paletteScale,
         font = getRelocatableHeapBlockBase(gAssetHandles[((u16)fontBank) + 1]);
         glyphWidth = 8;
     }
-    paletteBase = (u16 *)(font->entryCount + font->entries);
+    paletteBase = (MenuGlyphPalette *)(font->entryCount + font->entries);
+    srcPalette = &paletteBase[paletteIndex];
     x0 = x + gMenuViewportCenterX;
     y0 = y + gMenuViewportCenterY;
     x1 = glyphWidth + x0;
@@ -1511,12 +1512,10 @@ void drawMenuColoredGlyph(s16 x, s16 y, u16 glyph, u8 palette, u16 paletteScale,
     if (x0 < maxX) {
         viewHalfHeightValue = gMenuViewportHeight / 2;
         minX = gMenuViewportCenterX - viewHalfWidth;
-        paletteScaleValue = paletteScale;
         maxY = gMenuViewportCenterY + viewHalfHeightValue;
         if ((y0 < maxY) && (x1 >= minX)) {
             minY = gMenuViewportCenterY - viewHalfHeightValue;
             if (y1 >= minY) {
-                paletteIndexValue = paletteIndex;
                 if (x0 < minX) {
                     clipS = minX - x0;
                     x0 = minX;
@@ -1532,31 +1531,26 @@ void drawMenuColoredGlyph(s16 x, s16 y, u16 glyph, u8 palette, u16 paletteScale,
                     y1 = maxY - 1;
                 }
                 scaledPalette = allocMenuRenderScratch(0x20);
-                srcPalette = &paletteBase[paletteIndexValue * 0x10];
                 for (i = 0; i < 0x10; i++) {
-                    scaledPalette[i] =
-                        (paletteColor = (*(u16 *)&((MenuGlyphPalette *)srcPalette)->colors[i]) & 0xFFFFFFFFFFFFFFFF);
-dummy_label_231729:;
-                    color = paletteColor & 0xFFFF;
-                    if ((color & 1) & 0xFFFF) {
-                        red = (color >> 11) & 0x1F;
-                        green = (color >> 6) & 0x1F;
-                        color = (blue = (color >> 1) & 0x1F);
-                        red = (red * paletteScaleValue) / 0x100;
-                        green = (green * paletteScaleValue) / 0x100;
-                        blue = (blue * paletteScaleValue) / 0x100;
-                        scaledPalette[i] = ((red << 11) | (green << 6) | (blue << 1)) | 1;
+                    scaledPalette[i] = srcPalette->colors[i];
+
+                    if (scaledPalette[i] & 1) {
+                        red = (scaledPalette[i] >> 11) & 0x1F;
+                        green = (scaledPalette[i] >> 6) & 0x1F;
+                        blue = (scaledPalette[i] >> 1) & 0x1F;
+                        red = (red * paletteScale) / 0x100;
+                        green = (green * paletteScale) / 0x100;
+                        blue = (blue * paletteScale) / 0x100;
+                        scaledPalette[i] = (((red << 11) | (green << 6)) | (blue << 1)) | 1;
                     }
                 }
 
                 entry = &font->entries[glyph];
-                if (paletteIndexValue) {
+                if (1) {
                 }
-                if (!i) {
-                }
-                gDPLoadTLUT_pal16(gRegionAllocPtr++, (paletteColor & 0xFFFF) * 0, scaledPalette);
-                new_var = entry->height;
-                gDPLoadTextureTile_4b(gRegionAllocPtr++, entry->imageOffset + (u8 *)font, 2, entry->width, new_var,
+
+                gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, scaledPalette);
+                gDPLoadTextureTile_4b(gRegionAllocPtr++, entry->imageOffset + (u8 *)font, 2, entry->width, entry->height,
                                       0, 0, entry->width, entry->height, 0, 0x2, 0x2, 0, 0, 0, 0);
                 gSPTextureRectangle(gRegionAllocPtr++, x0 << 2, y0 << 2, x1 << 2, y1 << 2, 0, clipS << 5,
                                     clipT << 5, 0x400, 0x400);
