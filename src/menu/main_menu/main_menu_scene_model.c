@@ -129,7 +129,7 @@ search_done:
     return outCount;
 }
 
-// saveRaceRecordReplayData best match: 96.823% (nonmatchings/saveRaceRecordReplayData-8101714008744796594/base_36.c)
+// saveRaceRecordReplayData best match: 97.782% (nonmatchings/saveRaceRecordReplayData-2163214805492048867/base_62.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/main_menu/main_menu_scene_model/saveRaceRecordReplayData.s")
 
 #ifdef NON_MATCHING
@@ -155,7 +155,7 @@ search_done:
 #define ACCUM_SLOT(courseIndex, slotIndex, maxSize, minSize)      \
     if (course != (courseIndex)) {                                \
         count = gGameSaveDataBuffer[0].replaySlots[(slotIndex)].length; \
-        if (count != 0) {                                         \
+        if (gGameSaveDataBuffer[0].replaySlots[(slotIndex)].length != 0) { \
             if (count >= (minSize)) {                             \
                 totalLength += count;                             \
             } else {                                              \
@@ -217,15 +217,17 @@ search_done:
 #define SET_REPLAY_SLOT_OFFSET(slotIndex, value) SET_REPLAY_SLOT_OFFSET_I(slotIndex, value)
 
 #define COPY_SLOT(courseIndex, slotIndex)                                      \
+    {                                                                          \
+    s32 slotOldOffset;                                                         \
     if (COPY_COURSE_DIFF(courseIndex)) {                                       \
         count = gGameSaveDataBuffer[0].replaySlots[(slotIndex)].length;          \
         if (count != 0) {                                                       \
-            oldOffset = REPLAY_SLOT_OFFSET(slotIndex);                         \
+            slotOldOffset = REPLAY_SLOT_OFFSET(slotIndex);                     \
             SET_REPLAY_SLOT_OFFSET(slotIndex, writeIndex);                     \
             copied = 0;                                                        \
             while (copied < gGameSaveDataBuffer[0].replaySlots[(slotIndex)].length) { \
                 gGameSaveDataBuffer[0].replayData[writeIndex] =                \
-                    oldData[oldOffset + copied];                               \
+                    oldData[slotOldOffset + copied];                           \
                 copied++;                                                     \
                 AFTER_OLD_COPY(slotIndex);                                    \
                 writeIndex++;                                                 \
@@ -238,9 +240,10 @@ search_done:
         while (copied < compressedLength) {                                    \
             gGameSaveDataBuffer[0].replayData[writeIndex] =                    \
                 gCompressedRaceRecordReplayBuffer[copied];                    \
-            copied++;                                                         \
             writeIndex++;                                                     \
+            copied++;                                                         \
         }                                                                      \
+    }                                                                          \
     }
 
 s32 saveRaceRecordReplayData(void) {
@@ -250,8 +253,8 @@ s32 saveRaceRecordReplayData(void) {
     u16 *dst;
     u8 *packed;
     s32 i;
-    s32 totalLength;
     s32 compressedLength;
+    s32 totalLength;
     s32 writeIndex;
     s32 oldOffset;
     s32 copied;
