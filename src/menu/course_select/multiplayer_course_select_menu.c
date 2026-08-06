@@ -57,7 +57,7 @@ extern s32 D_8010AED8[];
 extern s32 D_8010AEE8[];
 extern u8 D_8010AEF8[][4];
 extern s8 D_8010AEFB[];
-extern u8 D_8010AF06[][3];
+extern u8 gCourseSelectExtraCourseIds[RACE_PLAYER_COUNT][3];
 extern u8 gMultiplayerCourseSelectExtraCourseIds[RACE_PLAYER_COUNT][3];
 extern s8 gCourseSelectExtraCourseColumnState;
 extern s32 gPlayerInputHeld[];
@@ -258,7 +258,7 @@ void initMultiplayerCourseSelectMenu(void) {
     gCourseSelectStatus.unk2C = 0;
 }
 
-// updateMultiplayerCourseSelectMenu best match: 93.465%
+// updateMultiplayerCourseSelectMenu best match: 96.368%
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/course_select/multiplayer_course_select_menu/updateMultiplayerCourseSelectMenu.s")
 
 #ifdef NON_MATCHING
@@ -266,8 +266,11 @@ void updateMultiplayerCourseSelectMenu(void) {
     s32 input;
     s32 cancelInput;
     s32 count;
+    s32 maxVisiblePlayerCount;
     s32 playerIndex;
     s32 *waitOffset;
+    s32 *pressedInput;
+    u8 new_var;
     u8 finishedPlayerCount;
     u8 maxColumn;
     u8 extraColumn;
@@ -275,6 +278,7 @@ void updateMultiplayerCourseSelectMenu(void) {
     s16 promptState;
     s32 state;
     RaceCamera *camera;
+    volatile u8 stackPadding[1];
 
     count = 0;
     if (gCurrentGameTask->fade != 0) {
@@ -291,20 +295,19 @@ void updateMultiplayerCourseSelectMenu(void) {
     } else {
         finishedPlayerCount = 0;
         playerIndex = 0;
-        if (gPlayerCount > 0) {
-            do {
-                if (gRacePlayers[playerIndex].menuState == 9) {
-                    finishedPlayerCount++;
-                }
-                playerIndex++;
-            } while (playerIndex < gPlayerCount);
+        while (playerIndex < gPlayerCount) {
+            new_var = gRacePlayers[playerIndex].menuState;
+            if (new_var == 9) {
+                finishedPlayerCount++;
+            }
+            playerIndex++;
         }
 
         if (gPlayerCount == finishedPlayerCount) {
             playerIndex = 0;
             if (gPlayerCount > 0) {
                 waitOffset = D_8010AEE8;
-                do {
+                while (1) {
                     if ((*waitOffset != 0) ||
                         (promptState = gMenuChoicePromptState[playerIndex], promptState == 1) ||
                         (promptState == 9) || (promptState >= 5)) {
@@ -312,17 +315,20 @@ void updateMultiplayerCourseSelectMenu(void) {
                     }
                     playerIndex++;
                     waitOffset++;
-                } while (playerIndex < gPlayerCount);
+                    if (playerIndex >= gPlayerCount) {
+                        break;
+                    }
+                }
             }
 
             playerIndex = 0;
             if (count == 0) {
-                if (gPlayerCount < 3) {
-                    count = gPlayerCount;
+                if ((gPlayerCount + 1) <= 3) {
+                    maxVisiblePlayerCount = gPlayerCount;
                 } else {
-                    count = 4;
+                    maxVisiblePlayerCount = 4;
                 }
-                for (playerIndex = 0; playerIndex < count; playerIndex++) {
+                for (playerIndex = 0; playerIndex < maxVisiblePlayerCount; playerIndex++) {
                     gRacePlayers[playerIndex].menuState = 3;
                 }
                 D_800EC9C0 = 0xF;
@@ -332,6 +338,8 @@ void updateMultiplayerCourseSelectMenu(void) {
             for (playerIndex = 0; playerIndex < gPlayerCount; playerIndex++) {
                 state = gMenuChoicePromptState[playerIndex];
                 if (state == 0) {
+                    pressedInput = &gPlayerInputPressed[playerIndex];
+                    waitOffset = &gPlayerInputHeld[playerIndex];
                     if ((gCourseSelectStatus.unk0[playerIndex] == 1) &&
                         (gRacePlayers[playerIndex].menuState == 0) &&
                         !(D_8010AECC[playerIndex] & 1)) {
@@ -349,9 +357,9 @@ void updateMultiplayerCourseSelectMenu(void) {
                                 maxColumn--;
                             }
 
-                            oldColumn = D_8010AE64[playerIndex];
+                            oldColumn = gCharacterSelectHudState.highlightedRosterIndices[playerIndex];
                             if (!(gPlayerInputHeld[playerIndex] & 0x10800) &&
-                                !(gPlayerInputHeld[playerIndex] & 0x20400)) {
+                                !(*waitOffset & 0x20400)) {
                                 gMenuInputRepeatTimers[playerIndex] = 0;
                             }
                             input = gPlayerInputPressed[playerIndex];
@@ -361,11 +369,11 @@ void updateMultiplayerCourseSelectMenu(void) {
                                 if (gMenuInputRepeatTimers[playerIndex] == 0) {
                                     gMenuInputRepeatTimers[playerIndex]++;
                                 }
-                                if (D_8010AE64[playerIndex] > 0) {
-                                    D_8010AE64[playerIndex]--;
+                                if (gCharacterSelectHudState.highlightedRosterIndices[playerIndex] > 0) {
+                                    gCharacterSelectHudState.highlightedRosterIndices[playerIndex]--;
                                     enqueueSoundEffect(0x19, 0x32);
                                     D_8010AEAC[playerIndex] = 0;
-                                    input = gPlayerInputPressed[playerIndex];
+                                    input = *pressedInput;
                                 }
                             } else if ((input & 0x20400) ||
                                        ((gPlayerInputHeld[playerIndex] & 0x20400) &&
@@ -373,11 +381,11 @@ void updateMultiplayerCourseSelectMenu(void) {
                                 if (gMenuInputRepeatTimers[playerIndex] == 0) {
                                     gMenuInputRepeatTimers[playerIndex]++;
                                 }
-                                if (D_8010AE64[playerIndex] < maxColumn) {
-                                    D_8010AE64[playerIndex]++;
+                                if (gCharacterSelectHudState.highlightedRosterIndices[playerIndex] < maxColumn) {
+                                    gCharacterSelectHudState.highlightedRosterIndices[playerIndex]++;
                                     enqueueSoundEffect(0x19, 0x32);
                                     D_8010AEAC[playerIndex] = 0;
-                                    input = gPlayerInputPressed[playerIndex];
+                                    input = *pressedInput;
                                 }
                             }
 
@@ -388,23 +396,24 @@ void updateMultiplayerCourseSelectMenu(void) {
                                 }
                             }
 
-                            if ((extraColumn != D_8010AE64[playerIndex]) &&
+                            if ((extraColumn != gCharacterSelectHudState.highlightedRosterIndices[playerIndex]) &&
                                 (extraColumn != oldColumn) &&
-                                (oldColumn != D_8010AE64[playerIndex])) {
+                                (oldColumn != gCharacterSelectHudState.highlightedRosterIndices[playerIndex])) {
                                 D_8010AECC[playerIndex]++;
-                                if (oldColumn < D_8010AE64[playerIndex]) {
+                                if (oldColumn < gCharacterSelectHudState.highlightedRosterIndices[playerIndex]) {
                                     D_8010AEE8[playerIndex] = -0x800000;
                                 } else {
                                     D_8010AEE8[playerIndex] = 0x800000;
                                 }
                             }
 
-                            if (extraColumn == D_8010AE64[playerIndex]) {
+                            if (extraColumn == gCharacterSelectHudState.highlightedRosterIndices[playerIndex]) {
                                 gRacePlayers[playerIndex].menuSelection = D_8010AEF8[playerIndex][extraColumn - 1];
                                 gCourseSelectExtraCourseColumnState = 1;
                             } else {
                                 gRacePlayers[playerIndex].menuSelection =
-                                    D_8010AEF8[playerIndex][D_8010AE64[playerIndex]];
+                                    D_8010AEF8[playerIndex]
+                                                   [gCharacterSelectHudState.highlightedRosterIndices[playerIndex]];
                                 gCourseSelectExtraCourseColumnState = 0;
                             }
 
@@ -413,21 +422,25 @@ void updateMultiplayerCourseSelectMenu(void) {
                                 if ((input & 0x1000) ||
                                     (cancelInput = input & 0x8000, cancelInput != 0)) {
                                     if ((gPlayerCount == 1) &&
-                                        (maxColumn == D_8010AE64[0])) {
+                                        (maxColumn == gCharacterSelectHudState.highlightedRosterIndices[0])) {
                                         enqueueSoundEffect(0x18, 0x32);
                                         gRacePlayers[0].menuState = 9;
                                         D_8010AEB0 = 1;
                                         gMenuFlowState = 1;
                                     } else if ((gRacePlayers[playerIndex].menuSelection >= 9) ||
                                                ((gRacePlayers[playerIndex].menuSelection < 9) &&
-                                                (D_8010AEB8[playerIndex][D_8010AE64[playerIndex]] != 0))) {
+                                                (D_8010AEB8[playerIndex]
+                                                              [gCharacterSelectHudState
+                                                                   .highlightedRosterIndices[playerIndex]] != 0))) {
                                         enqueueSoundEffect(0x18, 0x32);
                                         gRacePlayers[playerIndex].menuState = 1;
                                         if (gRacePlayers[playerIndex].selectedCharacterId == 5) {
                                             enqueueSoundEffect(0x40, 0x32);
                                         } else {
                                             enqueueSoundEffect(
-                                                gCourseSelectColumnSoundEffects[D_8010AE64[playerIndex]],
+                                                gCourseSelectColumnSoundEffects
+                                                    [gCharacterSelectHudState
+                                                         .highlightedRosterIndices[playerIndex]],
                                                 0x32);
                                         }
                                         gMenuChoicePromptState[playerIndex] = 9;
@@ -435,7 +448,6 @@ void updateMultiplayerCourseSelectMenu(void) {
                                         gMenuInputRepeatTimers[playerIndex] = 0;
                                     }
                                 } else {
-                                    cancelInput = input & 0x4000;
                                     goto handle_column_cancel;
                                 }
                             } else {
@@ -500,14 +512,14 @@ handle_column_cancel:
                             }
 
                             if ((D_8010AEA0[playerIndex] == 1) &&
-                                (D_8010AE64[playerIndex] == 3)) {
+                                (gCharacterSelectHudState.highlightedRosterIndices[playerIndex] == 3)) {
                                 gRacePlayers[playerIndex].menuSelection =
-                                    gMultiplayerCourseSelectExtraCourseIds[playerIndex]
-                                                                  [gMenuChoicePromptState[playerIndex]];
+                                    gCourseSelectExtraCourseIds[playerIndex]
+                                                               [gMenuChoicePromptState[playerIndex]];
                             } else {
                                 gRacePlayers[playerIndex].menuSelection =
-                                    (gMenuChoicePromptState[playerIndex] * 3) +
-                                    (gRacePlayers[playerIndex].menuSelection % 3) - 6;
+                                    (gRacePlayers[playerIndex].menuSelection % 3) +
+                                    (gMenuChoicePromptState[playerIndex] * 3) - 6;
                             }
 
                             if ((input & 0x8000) || (input & 0x1000)) {
@@ -515,15 +527,15 @@ handle_column_cancel:
                                 gRacePlayers[playerIndex].menuState = 2;
                                 D_8010AEA8 = 1;
                                 if ((D_8010AEA0[playerIndex] == 1) &&
-                                    (D_8010AE64[playerIndex] == 3)) {
+                                    (gCharacterSelectHudState.highlightedRosterIndices[playerIndex] == 3)) {
                                     gRacePlayers[playerIndex].menuSelection =
-                                        gMultiplayerCourseSelectExtraCourseIds[playerIndex]
-                                                                      [gMenuChoicePromptState[playerIndex]];
+                                        gCourseSelectExtraCourseIds[playerIndex]
+                                                                   [gMenuChoicePromptState[playerIndex]];
                                 } else {
                                     input = (gRacePlayers[playerIndex].selectedCharacterId == 5) ? 0xC : 0;
                                     gRacePlayers[playerIndex].menuSelection =
-                                        (gMenuChoicePromptState[playerIndex] * 3) +
-                                        (gRacePlayers[playerIndex].menuSelection % 3) + input - 6;
+                                        (gRacePlayers[playerIndex].menuSelection % 3) +
+                                        (gMenuChoicePromptState[playerIndex] * 3) + input - 6;
                                 }
 
                                 if (gRacePlayers[playerIndex].menuSelection >= 9) {
@@ -549,7 +561,8 @@ handle_column_cancel:
                                 gMenuChoicePromptState[playerIndex] += 3;
                                 gRacePlayers[playerIndex].menuSelection =
                                     D_8010AEF8[playerIndex]
-                                                   [D_8010AE64[playerIndex]];
+                                                   [gCharacterSelectHudState
+                                                        .highlightedRosterIndices[playerIndex]];
                             }
                         }
                     }
@@ -591,11 +604,14 @@ handle_column_cancel:
     }
 
     camera = D_801121E0;
-    do {
+    while (1) {
         gCurrentMenuCameraObject = camera;
-        camera->update();
+        (*camera).update();
         camera++;
-    } while (camera != &D_801124A0);
+        if (camera == &D_801124A0) {
+            break;
+        }
+    }
     updateCallbackTasks();
 }
 #endif
