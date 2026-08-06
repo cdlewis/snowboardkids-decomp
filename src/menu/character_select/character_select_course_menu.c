@@ -338,14 +338,13 @@ void initCharacterSelectCourseMenuFromPlayerSelect(void) {
     updateCallbackTasks();
 }
 
-// updateCharacterSelectCourseMenu best match: 98.359% (nonmatchings/updateCharacterSelectCourseMenu-2163214805492048867/base_7.c)
+// updateCharacterSelectCourseMenu best match: 99.122% (nonmatchings/updateCharacterSelectCourseMenu-7050948565576131586/base_39.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/character_select/character_select_course_menu/updateCharacterSelectCourseMenu.s")
 
 #ifdef NON_MATCHING
 CharacterSelectCourseCursorState gCharacterSelectCourseCursorState;
 
 void updateCharacterSelectCourseMenu(void) {
-    u8 cursorState;
     s32 *pressedInputPtr;
     u16 *repeatTimerPtr;
     s32 input;
@@ -369,36 +368,14 @@ void updateCharacterSelectCourseMenu(void) {
         if (gRacePlayers[0].menuState == 0) {
             if (gMenuSelectionConfirmTimer == 0) {
                 pressedInputPtr = gPlayerInputPressed;
-                cursorState = gCharacterSelectCourseCursorState.fields.state;
                 repeatTimerPtr = gMenuInputRepeatTimers;
-                if (cursorState == 1) {
+                if (gCharacterSelectCourseCursorState.fields.state == 1) {
                     heldInputValue = gPlayerInputHeld[0];
                     for (heldInput = heldInputValue; ; ) {
                         selection = *selectionPtr;
                         previousSelection = (s16) selection;
                         input = heldInput;
-                        upInput = input & (STICK_UP | U_JPAD);
-                        if ((upInput == 0) && ((input & (STICK_DOWN | D_JPAD)) == 0)) {
-                            *repeatTimerPtr = 0; } pressedInput = *pressedInputPtr; break; } repeatTimer = *repeatTimerPtr; if ((pressedInput & (STICK_UP | U_JPAD)) || ((upInput != 0) && ((s32) repeatTimer >= 0xB) && ((repeatTimer % 3) == 0))) { if (!repeatTimer) { repeatTimer += 1;
-                        }
-                        if (selection > 0) {
-                            gRaceCourseIndex.signedValue = selection - 1;
-                            selection = gRaceCourseIndex.signedValue;
-                        }
-                        *repeatTimerPtr = repeatTimer;
-                    } else if ((pressedInput & (STICK_DOWN | D_JPAD)) ||
-                               ((*repeatTimerPtr = repeatTimer,
-                                 (input & (STICK_DOWN | D_JPAD))) &&
-                                (*repeatTimerPtr = (upInput = repeatTimer),
-                                 (s32) repeatTimer >= 0xB) &&
-                                (*repeatTimerPtr = repeatTimer,
-                                 (repeatTimer % 3) == 0))) {
-                        *repeatTimerPtr = repeatTimer;
-                        if (repeatTimer == 0) {
-                            *repeatTimerPtr = repeatTimer + 1;
-                        }
-                        if ((*gCharacterSelectActiveCourseOptions)[selection] != -1) {
-                            gRaceCourseIndex.signedValue = selection + 1;
+                        upInput = input & (STICK_UP | U_JPAD); if ((upInput == 0) && ((input & (STICK_DOWN | D_JPAD)) == 0)) { *repeatTimerPtr = 0; } pressedInput = *pressedInputPtr; break; } repeatTimer = *repeatTimerPtr; if ((pressedInput & (STICK_UP | U_JPAD)) || (((upInput != 0) && (((s32) repeatTimer) >= 0xB)) && ((repeatTimer % 3) == 0))) { if (!repeatTimer) { repeatTimer += 1; } if (selection > 0) { gRaceCourseIndex.signedValue = selection - 1; selection = gRaceCourseIndex.signedValue; } *repeatTimerPtr = repeatTimer; } else if ((pressedInput & (STICK_DOWN | D_JPAD)) || ((((*repeatTimerPtr = repeatTimer, input & (STICK_DOWN | D_JPAD))) && ((*repeatTimerPtr = (upInput = repeatTimer), ((s32) repeatTimer) >= 0xB))) && ((*repeatTimerPtr = repeatTimer, (repeatTimer % 3) == 0)))) { *repeatTimerPtr = repeatTimer; if (repeatTimer == 0) { *repeatTimerPtr = repeatTimer + 1; } if ((*gCharacterSelectActiveCourseOptions)[selection] != (-1)) { gRaceCourseIndex.signedValue = selection + 1;
                             selection = gRaceCourseIndex.signedValue;
                         }
                     }
@@ -418,7 +395,7 @@ void updateCharacterSelectCourseMenu(void) {
 
                     input = *pressedInputPtr;
                     spriteIndex = 0x100;
-                    if (((input & START_BUTTON) || (input & A_BUTTON)) &&
+                    if ((((((((((input & START_BUTTON) & 0xFFFFu) & 0xFFFFu) & 0xFFFFu) & 0xFFFFu) & 0xFFFFu) & 0xFFFFu) & 0xFFFFu) || (input & A_BUTTON)) &&
                         (gMenuFlowState == (gCharacterSelectCourseExitOptionIndex + 1))) {
                         enqueueSoundEffect(1, 0x32);
                         if ((*gCharacterSelectActiveCourseOptions)[gRaceCourseIndex.signedValue] != -1) {
