@@ -441,8 +441,8 @@ void initCourseSelectCourseList(void) {
     updateCallbackTasks();
 }
 
-// updateCourseSelectCourseList best match: 76.223%
-// (nonmatchings/updateCourseSelectCourseList-8101714008744796594/base_42.c)
+// updateCourseSelectCourseList best match: 77.347%
+// (nonmatchings/updateCourseSelectCourseList-2163214805492048867/base_49.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/course_select/course_select_menu/updateCourseSelectCourseList.s")
 
 #if 0 /* Superseded without consulting the previous attempts. */
@@ -1442,13 +1442,26 @@ void updateCourseSelectCourseList(void) {
 #define COURSE_SELECT_RACE_ARRAY ((volatile RacePlayer *)gRacePlayers)
 #define COURSE_SELECT_RACE_ZERO (*COURSE_SELECT_RACE_ARRAY)
 
+typedef struct CourseSelectRacePlayerView {
+    u16 playerIndex;
+    s16 unk2;
+    u8 isCpu;
+    u8 selectedCharacterId;
+    u8 menuSelection;
+    u8 selectionUnlockState;
+    u8 menuState;
+    u8 pad9[3];
+    s32 money;
+} CourseSelectRacePlayerView;
+
 void updateCourseSelectCourseList(void) {
     CourseSelectPointer pointer;
+    CourseSelectRacePlayerView *playerView;
+    volatile s32 padding;
     s32 readyCount;
     s32 i;
     s32 row;
     s32 held;
-    s32 pressed;
     s32 promptTwo;
     s32 limit;
     s32 promptState;
@@ -1541,16 +1554,18 @@ void updateCourseSelectCourseList(void) {
                 }
 
                 repeatTimer = gMenuInputRepeatTimers[0];
+                playerView = (CourseSelectRacePlayerView *)gRacePlayers;
                 if (repeatTimer != 0) {
-                    repeatTimer++;
-                    gMenuInputRepeatTimers[0] = repeatTimer;
-                    if (repeatTimer == 0xFFFF) {
+                    s32 repeatValue;
+                    repeatValue = repeatTimer + 1;
+                    gMenuInputRepeatTimers[0] = repeatValue;
+                    if ((repeatValue & 0xFFFF) == 0xFFFF) {
                         gMenuInputRepeatTimers[0] = 0xA;
                     }
                 }
 
                 if ((lastColumn != gCharacterSelectHudState.highlightedRosterIndices[0]) &&
-                    (lastColumn != (u8)previousColumn) &&
+                    ((u8)previousColumn != lastColumn) &&
                     ((u8)previousColumn != gCharacterSelectHudState.highlightedRosterIndices[0])) {
                     D_8010AECC++;
                     if ((u8)previousColumn < gCharacterSelectHudState.highlightedRosterIndices[0]) {
@@ -1561,24 +1576,24 @@ void updateCourseSelectCourseList(void) {
                 }
 
                 if (lastColumn == gCharacterSelectHudState.highlightedRosterIndices[0]) {
+                    gCourseSelectExtraCourseColumnState = 2;
                     COURSE_SELECT_RACE_ZERO.menuSelection =
                         D_8010AEF7[gCharacterSelectHudState.highlightedRosterIndices[0]];
-                    gCourseSelectExtraCourseColumnState = 2;
                 } else {
+                    gCourseSelectExtraCourseColumnState = 0;
                     COURSE_SELECT_RACE_ZERO.menuSelection =
                         D_8010AEF8[gCharacterSelectHudState.highlightedRosterIndices[0]];
-                    gCourseSelectExtraCourseColumnState = 0;
                 }
 
-                courseId = COURSE_SELECT_RACE_ZERO.menuSelection;
+                courseId = playerView->menuSelection;
                 if ((s32)courseId >= 9) {
-                    COURSE_SELECT_RACE_ZERO.selectionUnlockState = 0;
+                    playerView->selectionUnlockState = 0;
                 } else {
                     row = (s8)gGameSaveDataBuffer[0].cupPlacements[0xB + courseId];
                     if (row == -1) {
-                        COURSE_SELECT_RACE_ZERO.selectionUnlockState = courseId % 3;
+                        playerView->selectionUnlockState = courseId % 3;
                     } else {
-                        COURSE_SELECT_RACE_ZERO.selectionUnlockState = row;
+                        playerView->selectionUnlockState = row;
                     }
                 }
 
@@ -1635,16 +1650,14 @@ void updateCourseSelectCourseList(void) {
 
             promptState = gMenuChoicePromptState[0];
             if ((promptState >= 2) && (promptState < 5)) {
-                held = gPlayerInputHeld[0];
-                if (!(held & (STICK_UP | U_JPAD)) &&
-                    !(held & (STICK_DOWN | D_JPAD))) {
+                if (!(gPlayerInputHeld[0] & (STICK_UP | U_JPAD)) &&
+                    !(gPlayerInputHeld[0] & (STICK_DOWN | D_JPAD))) {
                     gMenuInputRepeatTimers[0] = 0;
                 }
 
-                pressed = gPlayerInputPressed[0];
                 repeatTimer = gMenuInputRepeatTimers[0];
-                if ((pressed & (STICK_UP | U_JPAD)) ||
-                    ((held & (STICK_UP | U_JPAD)) &&
+                if ((gPlayerInputPressed[0] & (STICK_UP | U_JPAD)) ||
+                    ((gPlayerInputHeld[0] & (STICK_UP | U_JPAD)) &&
                      (repeatTimer >= 9) && (repeatTimer & 1))) {
                     if (repeatTimer == 0) {
                         repeatTimer++;
@@ -1656,8 +1669,8 @@ void updateCourseSelectCourseList(void) {
                         i = 0;
                         D_8010AF44 = 0;
                     }
-                } else if ((pressed & (STICK_DOWN | D_JPAD)) ||
-                           ((held & (STICK_DOWN | D_JPAD)) &&
+                } else if ((gPlayerInputPressed[0] & (STICK_DOWN | D_JPAD)) ||
+                           ((gPlayerInputHeld[0] & (STICK_DOWN | D_JPAD)) &&
                             (repeatTimer >= 9) && (repeatTimer & 1))) {
                     if (repeatTimer == 0) {
                         repeatTimer++;
@@ -1690,7 +1703,7 @@ void updateCourseSelectCourseList(void) {
                         (row * 3) + (COURSE_SELECT_RACE_ZERO.menuSelection % 3) - 6;
                 }
 
-                if (pressed & B_BUTTON) {
+                if (gPlayerInputPressed[0] & B_BUTTON) {
                     enqueueSoundEffect(0x18, 0x32);
                     D_8010AF44 = 0;
                     COURSE_SELECT_RACE_ZERO.menuSelection =
@@ -1698,7 +1711,8 @@ void updateCourseSelectCourseList(void) {
                     gMenuInputRepeatTimers[0] = 0;
                     gMenuChoicePromptState[0] += 3;
                     i = 0;
-                } else if ((pressed & A_BUTTON) || (pressed & START_BUTTON)) {
+                } else if ((gPlayerInputPressed[0] & A_BUTTON) ||
+                           (gPlayerInputPressed[0] & START_BUTTON)) {
                     courseId = COURSE_SELECT_RACE_ZERO.menuSelection;
                     if ((s8)gGameSaveDataBuffer[0].cupPlacements[0xB + courseId] == -1) {
                         if ((u32)COURSE_SELECT_RACE_ZERO.money >=
