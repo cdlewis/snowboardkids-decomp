@@ -91,19 +91,13 @@ u8 gSinglePlayerRankDisplayPatternThird[4] = { 0, 1, 2, 0 };
 u8 gSinglePlayerRankDisplayPatternFourth[12] = { 0, 2, 1, 0 };
 
 
-// updateRacePlayerRankDisplay best match: 98.410% (nonmatchings/updateRacePlayerRankDisplay-8101714008744796594/base_57.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race/player/race_player_progress/updateRacePlayerRankDisplay.s")
-
-#ifdef NON_MATCHING
 void updateRacePlayerRankDisplay(void) {
-    RacePlayer *player;
     s32 deltaX;
     s32 deltaZ;
     s32 i;
-    s32 j;
     s32 order[RACE_PLAYER_COUNT];
+    s32 j;
     s32 temp;
-    u8 mode;
 
     if (gRaceSplitscreenMode != 0) {
         return;
@@ -124,8 +118,7 @@ void updateRacePlayerRankDisplay(void) {
         }
     }
 
-    mode = gPlayerCount;
-    switch (mode) {
+    switch (gPlayerCount) {
     case 1:
         i = 0;
         if (gRacePlayers[0].rankIndex == 0) {
@@ -226,53 +219,47 @@ void updateRacePlayerRankDisplay(void) {
         break;
     }
 
-    for (player = &gRacePlayers[0];;) {
-        if (player->isCpu != 0) {
-            switch (player->displayRank) {
+    for (i = 0; i < RACE_PLAYER_COUNT; i++) {
+        if (gRacePlayers[i].isCpu != 0) {
+            switch (gRacePlayers[i].displayRank) {
             case 0:
-                player->rankArrow = 0;
+                gRacePlayers[i].rankArrow = 0;
                 break;
 
             case 1:
-                player->rankArrow = 0;
-                deltaX = gRacePlayers[player->rankTargetPlayer].pos.x - player->pos.x;
-                deltaZ = gRacePlayers[player->rankTargetPlayer].pos.z - player->pos.z;
+                gRacePlayers[i].rankArrow = 0;
+                deltaX = gRacePlayers[gRacePlayers[i].rankTargetPlayer].pos.x - gRacePlayers[i].pos.x;
+                deltaZ = gRacePlayers[gRacePlayers[i].rankTargetPlayer].pos.z - gRacePlayers[i].pos.z;
                 if ((deltaX >= RANK_ARROW_DISTANCE) ||
                     (deltaX < RANK_ARROW_NEGATIVE_LIMIT) ||
                     (deltaZ >= RANK_ARROW_DISTANCE) ||
                     (deltaZ < RANK_ARROW_NEGATIVE_LIMIT)) {
-                    if (gRacePlayers[player->rankTargetPlayer].rankIndex < player->rankIndex) {
-                        player->rankArrow = 1;
+                    if (gRacePlayers[gRacePlayers[i].rankTargetPlayer].rankIndex < gRacePlayers[i].rankIndex) {
+                        gRacePlayers[i].rankArrow = 1;
                     } else {
-                        player->rankArrow = 2;
+                        gRacePlayers[i].rankArrow = 2;
                     }
                 }
                 break;
 
             case 2:
-                if (mode == 1) {
-                    if (gRacePlayers[0].rankIndex < player->rankIndex) {
-                        player->rankArrow = 0;
+                if (gPlayerCount == 1) {
+                    if (gRacePlayers[0].rankIndex < gRacePlayers[i].rankIndex) {
+                        gRacePlayers[i].rankArrow = 0;
                     } else {
-                        player->rankArrow = 3;
+                        gRacePlayers[i].rankArrow = 3;
                     }
                 } else {
-                    player->rankArrow = 3;
+                    gRacePlayers[i].rankArrow = 3;
                 }
                 break;
             }
-            if (player->characterId == 5) {
-                player->rankArrow = 0;
+            if (gRacePlayers[i].characterId == 5) {
+                gRacePlayers[i].rankArrow = 0;
             }
-        }
-        player++;
-        if (player == (RacePlayer *) &gFrameCounter) {
-            break;
         }
     }
 }
-
-#endif
 
 void updateRacePlayerCheckpointEvents(RacePlayer *player) {
     RacePlayerCheckpointEvent *eventList;
