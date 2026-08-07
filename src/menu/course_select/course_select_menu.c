@@ -1867,8 +1867,8 @@ void updateCourseSelectPurchasePrompt(void) {
     updateCallbackTasks();
 }
 
-// updateCourseSelectUnlockCourseList best match: 99.525%
-// (nonmatchings/updateCourseSelectUnlockCourseList-2163214805492048867/base_19.c)
+// updateCourseSelectUnlockCourseList best match: 99.806%
+// (nonmatchings/updateCourseSelectUnlockCourseList-7050948565576131586/base_41.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/course_select/course_select_menu/updateCourseSelectUnlockCourseList.s")
 
 #ifdef NON_MATCHING
@@ -1932,8 +1932,8 @@ void updateCourseSelectUnlockCourseList(void)
         gMenuInputRepeatTimers[playerIndex] = 0xA;
       }
     }
-    rowOffset = (i = gMenuChoicePromptState[playerIndex] * columnCount);
-    selection = (gRacePlayers[playerIndex].menuSelection = (rowOffset + (((s32) gRacePlayers[playerIndex].menuSelection) % columnCount)) - (new_var3 = 6));
+    selection = gRacePlayers[playerIndex].menuSelection;
+    gRacePlayers[playerIndex].menuSelection = (selection = ((gMenuChoicePromptState[playerIndex] * columnCount) + (((s32) selection) % columnCount)) - (new_var3 = 6));
     new_var4 = gPlayerInputPressed[playerIndex] & 0x4000;
     if (new_var4)
     {
