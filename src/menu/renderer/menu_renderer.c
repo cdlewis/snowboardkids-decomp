@@ -121,6 +121,8 @@ union MenuGlyphPalette {
     u16 colors[MENU_PALETTE_COLOR_COUNT];
 };
 
+typedef u16 MenuPalette[MENU_PALETTE_COLOR_COUNT];
+
 union MenuRenderCoordinate {
     s32 value;
     volatile s32 stored;
@@ -233,16 +235,17 @@ extern void drawMenuSpriteWideIndex(s16 x, s16 y, void *texture, s32 tileIndex, 
                                     u8 flip);
 #endif
 
-// drawMenuSpriteClipped best match: 85.877% (nonmatchings/drawMenuSpriteClipped-2163214805492048867/base_17.c)
+// drawMenuSpriteClipped best match: 85.877% (nonmatchings/drawMenuSpriteClipped-11/base_8.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/renderer/menu_renderer/drawMenuSpriteClipped.s")
 
 #ifdef NON_MATCHING
 void drawMenuSpriteClipped(s16 x, s16 y, MenuFontAssetTable *table, u16 imageIndex, u16 scaleX, u16 scaleY,
                            u8 flipMode, u8 paletteIndex, s32 clipLeft, s32 clipTop, s32 clipRight,
                            s32 clipBottom) {
-    MenuFontAssetEntry *texture;
+    MenuFontAssetEntry *entry;
     s16 minY;
-    u8 *paletteBase;
+    MenuPalette *palettes;
+    u16 *palette;
     s32 left;
     s32 top;
     MenuRenderCoordinate right;
@@ -252,13 +255,13 @@ void drawMenuSpriteClipped(s16 x, s16 y, MenuFontAssetTable *table, u16 imageInd
     s16 minX;
     s16 maxX;
     s16 maxY;
-    volatile s16 padding;
+    u16 textureStepS;
     s16 flipS;
     s16 flipT;
     s16 width;
     u8 height;
-    u16 palette;
-    paletteBase = (table->entryCount * sizeof(MenuFontAssetEntry)) + (u8 *)table + sizeof(MenuFontAssetEntry);
+
+    palettes = (MenuPalette *)&table->entries[table->entryCount];
     if (scaleX >= 0x201) {
         return;
     }
@@ -274,9 +277,9 @@ void drawMenuSpriteClipped(s16 x, s16 y, MenuFontAssetTable *table, u16 imageInd
     {
         flipS = gMenuSpriteFlipScales[flipMode & 3][0];
         flipT = gMenuSpriteFlipScales[flipMode & 3][1];
-        texture = &table->entries[imageIndex];
-        width = texture->width;
-        height = texture->height;
+        entry = &table->entries[imageIndex];
+        width = entry->width;
+        height = entry->height;
         left = (x + gMenuViewportCenterX) << 2;
         top = (y + gMenuViewportCenterY) << 2;
         right.value = (((scaleX * width) << 2) >> 5) + left;
@@ -336,23 +339,28 @@ void drawMenuSpriteClipped(s16 x, s16 y, MenuFontAssetTable *table, u16 imageInd
             }
 
             if (paletteIndex == 0) {
-                palette = texture->textureIndex;
+                if (entry->textureIndex == 0xFE) {
+                    palette = gMenuTransparentPalette;
+                } else {
+                    palette = palettes[entry->textureIndex];
+                }
             } else {
-                palette = paletteIndex - 1;
+                paletteIndex--;
+                if (paletteIndex == 0xFE) {
+                    palette = gMenuTransparentPalette;
+                } else {
+                    palette = palettes[paletteIndex];
+                }
             }
 
-            gDPLoadTextureTile_4b(gRegionAllocPtr++, texture->imageOffset + (u8 *)table,
-                                  G_IM_FMT_CI, texture->width, texture->height, 0, 0,
-                                  texture->width, texture->height, 0, G_TX_CLAMP, G_TX_CLAMP,
+            gDPLoadTextureTile_4b(gRegionAllocPtr++, entry->imageOffset + (u8 *)table,
+                                  G_IM_FMT_CI, entry->width, entry->height, 0, 0,
+                                  entry->width, entry->height, 0, G_TX_CLAMP, G_TX_CLAMP,
                                   G_TX_NOMASK, G_TX_NOMASK, G_TX_NOLOD, G_TX_NOLOD);
-            if (palette != 0xFE) {
-                gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, (palette << 5) + paletteBase);
-            } else {
-                gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, gMenuTransparentPalette);
-            }
-            palette = 0x8000 / scaleX;
+            gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, palette);
+            textureStepS = 0x8000 / scaleX;
             gSPTextureRectangle(gRegionAllocPtr++, left, top, right.value, bottom.value, G_TX_RENDERTILE,
-                                texS, texT, (u16)(palette * flipS),
+                                texS, texT, (u16)(textureStepS * flipS),
                                 (u16)((u16)(0x8000 / scaleY) * flipT));
         }
     }
