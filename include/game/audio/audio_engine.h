@@ -367,9 +367,15 @@ void __MusIntInitialiseChannel(PlayerCommandState *arg0);
 s32 __MusIntFindChannel(s32 arg0, s32 arg1);
 void __MusIntMemSet(void *p, unsigned char c, s32 n);
 s32 __MusIntStartEffect(PlayerCommandState *arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4);
-void initAudioSynthesizer(SchedulerState *scheduler, ALSynConfig *config, s32 threadPriority,
-                          AudioSynthInitConfig *initConfig, s32 dmaBufferCount, s32 dmaBufferSize,
-                          s32 retraceRate);
+void initAudioSynthesizer(
+    SchedulerState *scheduler,
+    ALSynConfig *config,
+    s32 threadPriority,
+    AudioSynthInitConfig *initConfig,
+    s32 dmaBufferCount,
+    s32 dmaBufferSize,
+    s32 retraceRate
+);
 void audioThreadMain(void *arg0);
 s32 buildAudioTask(AudioTask *task, AudioInfo *info);
 void updateAudioUnderrunState(s32 arg0);

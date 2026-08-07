@@ -25,8 +25,7 @@ extern RaceSetupMenuSubState gRaceSetupMenuSubState;
 extern RaceSetupMenuPackedData gRaceSetupMenuPackedData;
 extern u8 gRaceSetupSavePanelFrameState;
 
-#define gControllerPakRaceRecordSaveStatusChoicePromptStates \
-    gRaceSetupMenuPackedData.raceRecordChoicePromptStates
+#define gControllerPakRaceRecordSaveStatusChoicePromptStates gRaceSetupMenuPackedData.raceRecordChoicePromptStates
 
 void initRaceSetupMenu(void);
 void updateRaceSetupPlayerCountMenu(void);

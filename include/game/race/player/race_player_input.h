@@ -249,9 +249,7 @@ typedef struct RacePlayer {
 } RacePlayer;
 
 typedef char RacePlayerSizeCheck[(sizeof(RacePlayer) == 0x60C) ? 1 : -1];
-typedef char RacePlayerArraySizeCheck[
-    ((sizeof(RacePlayer) * RACE_PLAYER_COUNT) == 0x1830) ? 1 : -1
-];
+typedef char RacePlayerArraySizeCheck[((sizeof(RacePlayer) * RACE_PLAYER_COUNT) == 0x1830) ? 1 : -1];
 
 extern RacePlayer gRacePlayers[RACE_PLAYER_COUNT];
 extern RacePlayerOrder gRaceOrderPlayerIds;

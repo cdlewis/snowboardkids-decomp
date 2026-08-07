@@ -12,8 +12,14 @@ void drawPulsingAssetTableSprite(s16 x, s16 y, AssetTable *table, u16 entryIndex
 void drawAssetTableSpriteWithDefaultPalette(s16 x, s16 y, AssetTable *table, u16 entryIndex);
 void drawAssetTableSpriteWithExplicitPalette(s16 x, s16 y, AssetTable *table, u16 entryIndex, u16 paletteIndex);
 void drawScaledAssetTableSprite(s16 x, s16 y, AssetTable *table, u16 entryIndex, u16 scale);
-void drawScaledAssetTableSpriteWithExplicitPalette(s16 x, s16 y, AssetTable *table, u16 entryIndex,
-                                                   u16 paletteIndex, u16 scale);
+void drawScaledAssetTableSpriteWithExplicitPalette(
+    s16 x,
+    s16 y,
+    AssetTable *table,
+    u16 entryIndex,
+    u16 paletteIndex,
+    u16 scale
+);
 s32 isPositionNearAnyRaceViewportFocus(Vec3i *position);
 
 #endif

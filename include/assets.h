@@ -3,11 +3,9 @@
 
 #include "game/engine/system_runtime.h"
 
-#define LOAD_ASSET(id, handleIndex) \
-    loadCompressedRomAsset((void *)&id##_ROM_START, (void *)&id##_ROM_END, handleIndex)
-#define LOAD_RAW_ASSET(id, handleIndex) \
-    loadRawRomAsset((void *)&id##_ROM_START, (void *)&id##_ROM_END, handleIndex)
-#define DMA_ASSET(id, ramAddress, size) dmaReadRom((u32)&id##_ROM_START, ramAddress, size)
+#define LOAD_ASSET(id, handleIndex) loadCompressedRomAsset((void *)&id##_ROM_START, (void *)&id##_ROM_END, handleIndex)
+#define LOAD_RAW_ASSET(id, handleIndex) loadRawRomAsset((void *)&id##_ROM_START, (void *)&id##_ROM_END, handleIndex)
+#define DMA_ASSET(id, ramAddress, size) dmaReadRom((u32) & id##_ROM_START, ramAddress, size)
 #define ASSET_SIZE(id) ((u8 *)&id##_ROM_END - (u8 *)&id##_ROM_START)
 
 USE_ASSET(LEVEL_BIG_SNOWMAN);

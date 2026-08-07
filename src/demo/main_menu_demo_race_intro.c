@@ -101,7 +101,13 @@ void initMainMenuDemoRaceIntro(void) {
     gRacePlayers[3].characterVariant = 6;
     gRacePlayers->unk12 = 1;
     gRacePlayers[1].unk12 = 2;
-    gRacePlayers->characterId = temp_v1_2->player0Character; gRacePlayers[1].characterId = temp_v1_2->player1Character; gRacePlayers[3].unk12 = 4; gRacePlayers[2].characterId = temp_v1_2->player2Character; gRacePlayers[3].characterId = temp_v1_2->player3Character; gRacePlayers[2].unk12 = 3; if (gRaceSplitscreenMode == 0) {
+    gRacePlayers->characterId = temp_v1_2->player0Character;
+    gRacePlayers[1].characterId = temp_v1_2->player1Character;
+    gRacePlayers[3].unk12 = 4;
+    gRacePlayers[2].characterId = temp_v1_2->player2Character;
+    gRacePlayers[3].characterId = temp_v1_2->player3Character;
+    gRacePlayers[2].unk12 = 3;
+    if (gRaceSplitscreenMode == 0) {
         gRacePlayers->isActive = 1;
         gRacePlayers[1].isActive = 1;
         gRacePlayers[2].isActive = 1;

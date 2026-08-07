@@ -45,8 +45,16 @@ void resetViewport(s32 arg0) {
     viewport->unk1E = 0;
 }
 
-void configureViewport(s32 viewportIndex, s32 centerX, s32 centerY, u16 width, u16 height, u16 scaleX, u16 scaleY,
-                       f32 aspect) {
+void configureViewport(
+    s32 viewportIndex,
+    s32 centerX,
+    s32 centerY,
+    u16 width,
+    u16 height,
+    u16 scaleX,
+    u16 scaleY,
+    f32 aspect
+) {
     gViewportStates[viewportIndex].active = 1;
     gViewportStates[viewportIndex].viewportTranslateX = centerX * 4;
     gViewportStates[viewportIndex].viewportTranslateY = centerY * 4;
@@ -88,15 +96,38 @@ void configureViewport(s32 viewportIndex, s32 centerX, s32 centerY, u16 width, u
         gViewportStates[viewportIndex].bottom = 0xEF;
     }
 
-    guPerspective(&gViewportStates[viewportIndex].projectionMatrix, &gViewportStates[viewportIndex].perspectiveNorm,
-                  70.0f, aspect, 10.0f, 2800.0f, 0.5f);
-    guPerspective(&gViewportStates[viewportIndex].overlayProjectionMatrix,
-                  &gViewportStates[viewportIndex].overlayPerspectiveNorm, 70.0f, aspect, 10.0f,
-                  gDefaultViewportOverlayFarClip[0], 0.5f);
+    guPerspective(
+        &gViewportStates[viewportIndex].projectionMatrix,
+        &gViewportStates[viewportIndex].perspectiveNorm,
+        70.0f,
+        aspect,
+        10.0f,
+        2800.0f,
+        0.5f
+    );
+    guPerspective(
+        &gViewportStates[viewportIndex].overlayProjectionMatrix,
+        &gViewportStates[viewportIndex].overlayPerspectiveNorm,
+        70.0f,
+        aspect,
+        10.0f,
+        gDefaultViewportOverlayFarClip[0],
+        0.5f
+    );
 }
 
-void configureViewportWithFovAndFarClip(s32 viewportIndex, s32 centerX, s32 centerY, u16 width, u16 height, u16 scaleX,
-                                        u16 scaleY, f32 aspect, s16 fovY, s32 farClip) {
+void configureViewportWithFovAndFarClip(
+    s32 viewportIndex,
+    s32 centerX,
+    s32 centerY,
+    u16 width,
+    u16 height,
+    u16 scaleX,
+    u16 scaleY,
+    f32 aspect,
+    s16 fovY,
+    s32 farClip
+) {
     gViewportStates[viewportIndex].active = 1;
     gViewportStates[viewportIndex].viewportTranslateX = centerX * 4;
     gViewportStates[viewportIndex].viewportTranslateY = centerY * 4;
@@ -138,15 +169,36 @@ void configureViewportWithFovAndFarClip(s32 viewportIndex, s32 centerX, s32 cent
         gViewportStates[viewportIndex].bottom = 0xEF;
     }
 
-    guPerspective(&gViewportStates[viewportIndex].projectionMatrix, &gViewportStates[viewportIndex].perspectiveNorm,
-                  (f32)fovY, aspect, 10.0f, (f32)farClip, 0.5f);
-    guPerspective(&gViewportStates[viewportIndex].overlayProjectionMatrix,
-                  &gViewportStates[viewportIndex].overlayPerspectiveNorm, (f32)fovY, aspect, 10.0f,
-                  gCustomViewportOverlayFarClip[0], 0.5f);
+    guPerspective(
+        &gViewportStates[viewportIndex].projectionMatrix,
+        &gViewportStates[viewportIndex].perspectiveNorm,
+        (f32)fovY,
+        aspect,
+        10.0f,
+        (f32)farClip,
+        0.5f
+    );
+    guPerspective(
+        &gViewportStates[viewportIndex].overlayProjectionMatrix,
+        &gViewportStates[viewportIndex].overlayPerspectiveNorm,
+        (f32)fovY,
+        aspect,
+        10.0f,
+        gCustomViewportOverlayFarClip[0],
+        0.5f
+    );
 }
 
-void configureRaceViewport(s32 viewportIndex, s32 centerX, s32 centerY, u16 width, u16 height, u16 scaleX, u16 scaleY,
-                           f32 aspect) {
+void configureRaceViewport(
+    s32 viewportIndex,
+    s32 centerX,
+    s32 centerY,
+    u16 width,
+    u16 height,
+    u16 scaleX,
+    u16 scaleY,
+    f32 aspect
+) {
     gViewportStates[viewportIndex].active = 1;
     gViewportStates[viewportIndex].viewportTranslateX = centerX * 4;
     gViewportStates[viewportIndex].viewportTranslateY = centerY * 4;
@@ -188,15 +240,36 @@ void configureRaceViewport(s32 viewportIndex, s32 centerX, s32 centerY, u16 widt
         gViewportStates[viewportIndex].bottom = 0xEF;
     }
 
-    guPerspective(&gViewportStates[viewportIndex].projectionMatrix, &gViewportStates[viewportIndex].perspectiveNorm,
-                  70.0f, aspect, 10.0f, 1000.0f, 0.5f);
-    guPerspective(&gViewportStates[viewportIndex].overlayProjectionMatrix,
-                  &gViewportStates[viewportIndex].overlayPerspectiveNorm, 70.0f, aspect, 10.0f,
-                  gRaceViewportOverlayFarClip[0], 0.5f);
+    guPerspective(
+        &gViewportStates[viewportIndex].projectionMatrix,
+        &gViewportStates[viewportIndex].perspectiveNorm,
+        70.0f,
+        aspect,
+        10.0f,
+        1000.0f,
+        0.5f
+    );
+    guPerspective(
+        &gViewportStates[viewportIndex].overlayProjectionMatrix,
+        &gViewportStates[viewportIndex].overlayPerspectiveNorm,
+        70.0f,
+        aspect,
+        10.0f,
+        gRaceViewportOverlayFarClip[0],
+        0.5f
+    );
 }
 
-void configureMenuViewport(s32 viewportIndex, s32 centerX, s32 centerY, u16 width, u16 height, u16 scaleX, u16 scaleY,
-                           f32 aspect) {
+void configureMenuViewport(
+    s32 viewportIndex,
+    s32 centerX,
+    s32 centerY,
+    u16 width,
+    u16 height,
+    u16 scaleX,
+    u16 scaleY,
+    f32 aspect
+) {
     gViewportStates[viewportIndex].active = 1;
     gViewportStates[viewportIndex].viewportTranslateX = centerX * 4;
     gViewportStates[viewportIndex].viewportTranslateY = centerY * 4;
@@ -238,11 +311,24 @@ void configureMenuViewport(s32 viewportIndex, s32 centerX, s32 centerY, u16 widt
         gViewportStates[viewportIndex].bottom = 0xEF;
     }
 
-    guPerspective(&gViewportStates[viewportIndex].projectionMatrix, &gViewportStates[viewportIndex].perspectiveNorm,
-                  70.0f, aspect, 10.0f, gMenuViewportFarClip[0], 0.5f);
-    guPerspective(&gViewportStates[viewportIndex].overlayProjectionMatrix,
-                  &gViewportStates[viewportIndex].overlayPerspectiveNorm, 70.0f, aspect, 10.0f,
-                  gMenuViewportOverlayFarClip[0], 0.5f);
+    guPerspective(
+        &gViewportStates[viewportIndex].projectionMatrix,
+        &gViewportStates[viewportIndex].perspectiveNorm,
+        70.0f,
+        aspect,
+        10.0f,
+        gMenuViewportFarClip[0],
+        0.5f
+    );
+    guPerspective(
+        &gViewportStates[viewportIndex].overlayProjectionMatrix,
+        &gViewportStates[viewportIndex].overlayPerspectiveNorm,
+        70.0f,
+        aspect,
+        10.0f,
+        gMenuViewportOverlayFarClip[0],
+        0.5f
+    );
 }
 
 void setViewportOverlayColor(s32 arg0, s32 arg1, s32 arg2, s32 arg3) {

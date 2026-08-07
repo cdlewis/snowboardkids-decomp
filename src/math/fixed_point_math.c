@@ -5,10 +5,11 @@
 
 FixedTransform gIdentityFixedTransform = {
     {
-        FIXED_MATRIX_ONE, 0, 0,
-        0, FIXED_MATRIX_ONE, 0,
-        0, 0, FIXED_MATRIX_ONE,
-    },
+     FIXED_MATRIX_ONE, 0,
+     0, 0,
+     FIXED_MATRIX_ONE, 0,
+     0, 0,
+     FIXED_MATRIX_ONE, },
     0,
     { 0, 0, 0 },
 };
@@ -16,19 +17,17 @@ FixedTransform gIdentityFixedTransform = {
 /* N64 s15.16 identity matrix in the packed integer/fraction word layout. */
 Mtx gIdentityMatrix = {
     {
-        { 0x00010000, 0x00000000, 0x00000001, 0x00000000 },
-        { 0x00000000, 0x00010000, 0x00000000, 0x00000001 },
-        { 0x00000000, 0x00000000, 0x00000000, 0x00000000 },
-        { 0x00000000, 0x00000000, 0x00000000, 0x00000000 },
-    },
+     { 0x00010000, 0x00000000, 0x00000001, 0x00000000 },
+     { 0x00000000, 0x00010000, 0x00000000, 0x00000001 },
+     { 0x00000000, 0x00000000, 0x00000000, 0x00000000 },
+     { 0x00000000, 0x00000000, 0x00000000, 0x00000000 },
+     },
 };
 
 /* Packed matrix template patched with the player's shadow translation. */
 u32 gRacePlayerShadowMatrixTemplate[16] = {
-    0x00000000, 0x00000000, 0x00000000, 0x00000000,
-    0x00000000, 0x00000000, 0x00000000, 0x00000001,
-    0x40000000, 0x00000000, 0x00004000, 0x00000000,
-    0x00000000, 0x40000000, 0x00000000, 0x00000000,
+    0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000001,
+    0x40000000, 0x00000000, 0x00004000, 0x00000000, 0x00000000, 0x40000000, 0x00000000, 0x00000000,
 };
 
 void initFixedTransform(FixedTransform *transform) {
@@ -116,9 +115,10 @@ void multiplyFixedMatrix3s(FixedMatrix3s arg0, FixedMatrix3s arg1, FixedMatrix3s
     do {
         j = 0;
         do {
-            FIXED_MATRIX_ROWS(arg2)[i][j] = ((FIXED_MATRIX_ROWS(arg0)[i][0] * FIXED_MATRIX_ROWS(arg1)[0][j]) / FIXED_MATRIX_ONE) +
-                                           ((FIXED_MATRIX_ROWS(arg0)[i][1] * FIXED_MATRIX_ROWS(arg1)[1][j]) / FIXED_MATRIX_ONE) +
-                                           ((FIXED_MATRIX_ROWS(arg0)[i][2] * FIXED_MATRIX_ROWS(arg1)[2][j]) / FIXED_MATRIX_ONE);
+            FIXED_MATRIX_ROWS(arg2)
+            [i][j] = ((FIXED_MATRIX_ROWS(arg0)[i][0] * FIXED_MATRIX_ROWS(arg1)[0][j]) / FIXED_MATRIX_ONE) +
+                     ((FIXED_MATRIX_ROWS(arg0)[i][1] * FIXED_MATRIX_ROWS(arg1)[1][j]) / FIXED_MATRIX_ONE) +
+                     ((FIXED_MATRIX_ROWS(arg0)[i][2] * FIXED_MATRIX_ROWS(arg1)[2][j]) / FIXED_MATRIX_ONE);
             j++;
         } while (j != 3);
         i++;
@@ -293,27 +293,24 @@ void makeFixedRotationYX(FixedMatrix3s arg0, s16 arg1, s16 arg2) {
 }
 
 void transformVec3iByFixedMatrix(FixedMatrix3s arg0, Vec3i *source, Vec3i *dest) {
-    dest->x = (s64)arg0[MTX_XX] * source->x / FIXED_MATRIX_ONE +
-              (s64)arg0[MTX_YX] * source->y / FIXED_MATRIX_ONE +
+    dest->x = (s64)arg0[MTX_XX] * source->x / FIXED_MATRIX_ONE + (s64)arg0[MTX_YX] * source->y / FIXED_MATRIX_ONE +
               (s64)arg0[MTX_ZX] * source->z / FIXED_MATRIX_ONE;
-    dest->y = (s64)arg0[MTX_XY] * source->x / FIXED_MATRIX_ONE +
-              (s64)arg0[MTX_YY] * source->y / FIXED_MATRIX_ONE +
+    dest->y = (s64)arg0[MTX_XY] * source->x / FIXED_MATRIX_ONE + (s64)arg0[MTX_YY] * source->y / FIXED_MATRIX_ONE +
               (s64)arg0[MTX_ZY] * source->z / FIXED_MATRIX_ONE;
-    dest->z = (s64)arg0[MTX_XZ] * source->x / FIXED_MATRIX_ONE +
-              (s64)arg0[MTX_YZ] * source->y / FIXED_MATRIX_ONE +
+    dest->z = (s64)arg0[MTX_XZ] * source->x / FIXED_MATRIX_ONE + (s64)arg0[MTX_YZ] * source->y / FIXED_MATRIX_ONE +
               (s64)arg0[MTX_ZZ] * source->z / FIXED_MATRIX_ONE;
 }
 
 void composeFixedTransforms(FixedTransform *arg0, FixedTransform *arg1, FixedTransform *arg2) {
     arg2->translation.x = (s64)arg1->rotation[MTX_XX] * arg0->translation.x / FIXED_MATRIX_ONE +
-                           (s64)arg1->rotation[MTX_YX] * arg0->translation.y / FIXED_MATRIX_ONE +
-                           (s64)arg1->rotation[MTX_ZX] * arg0->translation.z / FIXED_MATRIX_ONE;
+                          (s64)arg1->rotation[MTX_YX] * arg0->translation.y / FIXED_MATRIX_ONE +
+                          (s64)arg1->rotation[MTX_ZX] * arg0->translation.z / FIXED_MATRIX_ONE;
     arg2->translation.y = (s64)arg1->rotation[MTX_XY] * arg0->translation.x / FIXED_MATRIX_ONE +
-                           (s64)arg1->rotation[MTX_YY] * arg0->translation.y / FIXED_MATRIX_ONE +
-                           (s64)arg1->rotation[MTX_ZY] * arg0->translation.z / FIXED_MATRIX_ONE;
+                          (s64)arg1->rotation[MTX_YY] * arg0->translation.y / FIXED_MATRIX_ONE +
+                          (s64)arg1->rotation[MTX_ZY] * arg0->translation.z / FIXED_MATRIX_ONE;
     arg2->translation.z = (s64)arg1->rotation[MTX_XZ] * arg0->translation.x / FIXED_MATRIX_ONE +
-                           (s64)arg1->rotation[MTX_YZ] * arg0->translation.y / FIXED_MATRIX_ONE +
-                           (s64)arg1->rotation[MTX_ZZ] * arg0->translation.z / FIXED_MATRIX_ONE;
+                          (s64)arg1->rotation[MTX_YZ] * arg0->translation.y / FIXED_MATRIX_ONE +
+                          (s64)arg1->rotation[MTX_ZZ] * arg0->translation.z / FIXED_MATRIX_ONE;
     arg2->translation.x += arg1->translation.x;
     arg2->translation.y += arg1->translation.y;
     arg2->translation.z += arg1->translation.z;
@@ -322,14 +319,14 @@ void composeFixedTransforms(FixedTransform *arg0, FixedTransform *arg1, FixedTra
 
 void composeFixedTransformTranslation(FixedTransform *arg0, FixedTransform *arg1, FixedTransform *arg2) {
     arg2->translation.x = (s64)arg1->rotation[MTX_XX] * arg0->translation.x / FIXED_MATRIX_ONE +
-                           (s64)arg1->rotation[MTX_YX] * arg0->translation.y / FIXED_MATRIX_ONE +
-                           (s64)arg1->rotation[MTX_ZX] * arg0->translation.z / FIXED_MATRIX_ONE;
+                          (s64)arg1->rotation[MTX_YX] * arg0->translation.y / FIXED_MATRIX_ONE +
+                          (s64)arg1->rotation[MTX_ZX] * arg0->translation.z / FIXED_MATRIX_ONE;
     arg2->translation.y = (s64)arg1->rotation[MTX_XY] * arg0->translation.x / FIXED_MATRIX_ONE +
-                           (s64)arg1->rotation[MTX_YY] * arg0->translation.y / FIXED_MATRIX_ONE +
-                           (s64)arg1->rotation[MTX_ZY] * arg0->translation.z / FIXED_MATRIX_ONE;
+                          (s64)arg1->rotation[MTX_YY] * arg0->translation.y / FIXED_MATRIX_ONE +
+                          (s64)arg1->rotation[MTX_ZY] * arg0->translation.z / FIXED_MATRIX_ONE;
     arg2->translation.z = (s64)arg1->rotation[MTX_XZ] * arg0->translation.x / FIXED_MATRIX_ONE +
-                           (s64)arg1->rotation[MTX_YZ] * arg0->translation.y / FIXED_MATRIX_ONE +
-                           (s64)arg1->rotation[MTX_ZZ] * arg0->translation.z / FIXED_MATRIX_ONE;
+                          (s64)arg1->rotation[MTX_YZ] * arg0->translation.y / FIXED_MATRIX_ONE +
+                          (s64)arg1->rotation[MTX_ZZ] * arg0->translation.z / FIXED_MATRIX_ONE;
     arg2->translation.x += arg1->translation.x;
     arg2->translation.y += arg1->translation.y;
     arg2->translation.z += arg1->translation.z;

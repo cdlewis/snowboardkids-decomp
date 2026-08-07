@@ -55,6 +55,8 @@ typedef struct EndingCreditsPageTextLineLayout {
 } EndingCreditsPageTextLineLayout;
 
 MenuGlyphScript gEndingCreditsPageTextScripts[ENDING_CREDITS_PAGE_COUNT][0x5A] = {
+    // textconv requires these _() invocations to retain their original line layout.
+    // clang-format off
     { _("{COLOR:0}SNOWBOARD KIDS{END}{COLOR:0}STAFF") },
     { _("{COLOR:2}VOICE ACTRESS{END}{COLOR:0}LANI MINELLA") },
     { _("{COLOR:2}VOICE ACTOR{END}{COLOR:0}JUNICHI SUWABE{END}{COLOR:0}KOUICHI TOOCHIKA") },
@@ -80,34 +82,35 @@ MenuGlyphScript gEndingCreditsPageTextScripts[ENDING_CREDITS_PAGE_COUNT][0x5A] =
     { _("{COLOR:2}DIRECTOR{END}{COLOR:0}HIDEKI YAYAMA{END}{COLOR:0}TAKESI MURATA") },
     { _("{COLOR:2}PRODUCER{END}{COLOR:0}HIROYUKI TANAKA") },
     { _("{COLOR:2}EXECUTIVE{END}{COLOR:2}  PRODUCER{END}{COLOR:0}HIDEYUKI YOKOYAMA") },
+    // clang-format on
 };
 
 EndingCreditsPageTextLineLayout gEndingCreditsPageTextLineLayouts[ENDING_CREDITS_PAGE_COUNT] = {
-    {2, {{-112, 24}, {-40, 48}, {0, 0}, {0, 0}, {0, 0}}, 0},
-    {2, {{-112, 0}, {-96, 44}, {0, 0}, {0, 0}, {0, 0}}, 0},
-    {3, {{-112, 0}, {-112, 36}, {-128, 60}, {0, 0}, {0, 0}}, 0},
-    {2, {{-112, 0}, {-112, 44}, {0, 0}, {0, 0}, {0, 0}}, 0},
-    {3, {{-112, 0}, {-112, 16}, {-112, 56}, {0, 0}, {0, 0}}, 0},
-    {2, {{-112, 0}, {-24, 44}, {0, 0}, {0, 0}, {0, 0}}, 0},
-    {3, {{-112, 0}, {-112, 16}, {-120, 52}, {0, 0}, {0, 0}}, 0},
-    {3, {{-112, 0}, {-112, 16}, {-88, 52}, {0, 0}, {0, 0}}, 0},
-    {1, {{-112, 30}, {0, 0}, {0, 0}, {0, 0}, {0, 0}}, 0},
-    {1, {{-128, 30}, {0, 0}, {0, 0}, {0, 0}, {0, 0}}, 0},
-    {2, {{-112, 0}, {-120, 44}, {0, 0}, {0, 0}, {0, 0}}, 0},
-    {3, {{-112, 0}, {-80, 36}, {-112, 60}, {0, 0}, {0, 0}}, 0},
-    {4, {{-112, 0}, {-104, 24}, {-128, 48}, {-112, 72}, {0, 0}}, 0},
-    {3, {{-80, 2}, {-112, 26}, {-112, 50}, {0, 0}, {0, 0}}, 0},
-    {3, {{-112, 0}, {-88, 52}, {-88, 68}, {0, 0}, {0, 0}}, 0},
-    {5, {{-112, 0}, {-96, 24}, {-120, 42}, {-120, 60}, {-112, 78}}, 0},
-    {4, {{-112, 0}, {-80, 24}, {-136, 48}, {-128, 72}, {0, 0}}, 0},
-    {4, {{-32, 6}, {-56, 30}, {-56, 54}, {-80, 78}, {0, 0}}, 0},
-    {4, {{-48, 6}, {-72, 30}, {-48, 54}, {-48, 78}, {0, 0}}, 0},
-    {4, {{-80, 6}, {-64, 30}, {-24, 54}, {-48, 78}, {0, 0}}, 0},
-    {4, {{-40, 6}, {-64, 30}, {-48, 54}, {-56, 78}, {0, 0}}, 0},
-    {2, {{-112, 0}, {-88, 44}, {0, 0}, {0, 0}, {0, 0}}, 0},
-    {3, {{-112, 0}, {-104, 36}, {-104, 60}, {0, 0}, {0, 0}}, 0},
-    {2, {{-112, 0}, {-120, 44}, {0, 0}, {0, 0}, {0, 0}}, 0},
-    {3, {{-112, 0}, {-112, 16}, {-136, 52}, {0, 0}, {0, 0}}, 0},
+    { 2, { { -112, 24 }, { -40, 48 }, { 0, 0 }, { 0, 0 }, { 0, 0 } },            0 },
+    { 2, { { -112, 0 }, { -96, 44 }, { 0, 0 }, { 0, 0 }, { 0, 0 } },             0 },
+    { 3, { { -112, 0 }, { -112, 36 }, { -128, 60 }, { 0, 0 }, { 0, 0 } },        0 },
+    { 2, { { -112, 0 }, { -112, 44 }, { 0, 0 }, { 0, 0 }, { 0, 0 } },            0 },
+    { 3, { { -112, 0 }, { -112, 16 }, { -112, 56 }, { 0, 0 }, { 0, 0 } },        0 },
+    { 2, { { -112, 0 }, { -24, 44 }, { 0, 0 }, { 0, 0 }, { 0, 0 } },             0 },
+    { 3, { { -112, 0 }, { -112, 16 }, { -120, 52 }, { 0, 0 }, { 0, 0 } },        0 },
+    { 3, { { -112, 0 }, { -112, 16 }, { -88, 52 }, { 0, 0 }, { 0, 0 } },         0 },
+    { 1, { { -112, 30 }, { 0, 0 }, { 0, 0 }, { 0, 0 }, { 0, 0 } },               0 },
+    { 1, { { -128, 30 }, { 0, 0 }, { 0, 0 }, { 0, 0 }, { 0, 0 } },               0 },
+    { 2, { { -112, 0 }, { -120, 44 }, { 0, 0 }, { 0, 0 }, { 0, 0 } },            0 },
+    { 3, { { -112, 0 }, { -80, 36 }, { -112, 60 }, { 0, 0 }, { 0, 0 } },         0 },
+    { 4, { { -112, 0 }, { -104, 24 }, { -128, 48 }, { -112, 72 }, { 0, 0 } },    0 },
+    { 3, { { -80, 2 }, { -112, 26 }, { -112, 50 }, { 0, 0 }, { 0, 0 } },         0 },
+    { 3, { { -112, 0 }, { -88, 52 }, { -88, 68 }, { 0, 0 }, { 0, 0 } },          0 },
+    { 5, { { -112, 0 }, { -96, 24 }, { -120, 42 }, { -120, 60 }, { -112, 78 } }, 0 },
+    { 4, { { -112, 0 }, { -80, 24 }, { -136, 48 }, { -128, 72 }, { 0, 0 } },     0 },
+    { 4, { { -32, 6 }, { -56, 30 }, { -56, 54 }, { -80, 78 }, { 0, 0 } },        0 },
+    { 4, { { -48, 6 }, { -72, 30 }, { -48, 54 }, { -48, 78 }, { 0, 0 } },        0 },
+    { 4, { { -80, 6 }, { -64, 30 }, { -24, 54 }, { -48, 78 }, { 0, 0 } },        0 },
+    { 4, { { -40, 6 }, { -64, 30 }, { -48, 54 }, { -56, 78 }, { 0, 0 } },        0 },
+    { 2, { { -112, 0 }, { -88, 44 }, { 0, 0 }, { 0, 0 }, { 0, 0 } },             0 },
+    { 3, { { -112, 0 }, { -104, 36 }, { -104, 60 }, { 0, 0 }, { 0, 0 } },        0 },
+    { 2, { { -112, 0 }, { -120, 44 }, { 0, 0 }, { 0, 0 }, { 0, 0 } },            0 },
+    { 3, { { -112, 0 }, { -112, 16 }, { -136, 52 }, { 0, 0 }, { 0, 0 } },        0 },
 };
 
 extern int rmonPrintf(const char *, ...);
@@ -138,8 +141,7 @@ void drawEndingCreditsPageText(EndingCreditsPageTextActor *arg0) {
 
     lineCount = (&gEndingCreditsPageTextLineLayouts[arg0->pageIndex])->count;
     lineIndex = 0;
-    if (!position->y) {
-    }
+    if (!position->y) {}
     if (lineCount > 0) {
         scriptIndex = 0;
         positionIndex = 0;
@@ -156,36 +158,55 @@ void drawEndingCreditsPageText(EndingCreditsPageTextActor *arg0) {
                     scriptIndex++;
                     glyph = gEndingCreditsPageTextScripts[arg0->pageIndex][scriptIndex];
                     glyph = (((((glyph & 0xFFFFu) & 0xFFFFu) & 0xFFFFu) & 0xFFFFu) & 0xFFFFu) & 0xFFFFu;
-                    if ((y && y) && y) {
-                    }
+                    if ((y && y) && y) {}
                     lineLength++;
                 } while (gEndingCreditsPageTextScripts[arg0->pageIndex][scriptIndex] != 0xFFFF);
-                if (!x) {
-                }
-                if (!lineCount) {
-                }
+                if (!x) {}
+                if (!lineCount) {}
             }
             lineText[lineLength] = 0xFFFF;
             alpha = 0xFFFF;
             scriptIndex++;
-            drawMenuGlyphScript((x << 16) >> 16, y, (u8 *)lineText,
-                                (((0 & 0xFFFFu) & 0xFFFFu) & 0xFFFFu) & 0xFFFFu, arg0->alpha, colorMode & alpha);
-            if (((!arg0) && (!arg0)) && (!arg0)) {
-            }
+            drawMenuGlyphScript(
+                (x << 16) >> 16,
+                y,
+                (u8 *)lineText,
+                (((0 & 0xFFFFu) & 0xFFFFu) & 0xFFFFu) & 0xFFFFu,
+                arg0->alpha,
+                colorMode & alpha
+            );
+            if (((!arg0) && (!arg0)) && (!arg0)) {}
             lineIndex++;
             positionIndex++;
         } while (lineIndex != lineCount);
-        if (x) {
-        }
+        if (x) {}
     }
 }
 CLANG_DIAGNOSTIC_POP
 
 void drawEndingCreditsTheEndText(EndingCreditsPageTextActor *arg0) {
-    drawMenuSpriteWithAlpha(arg0->x, arg0->y, getRelocatableHeapBlockBase(gAssetHandles[0x21]), 0x35, 0x20, 0x20, 0,
-                            arg0->alpha, 0);
-    drawMenuSpriteWithAlpha((s16)(arg0->x + 0x40), arg0->y, getRelocatableHeapBlockBase(gAssetHandles[0x21]), 0x36, 0x20,
-                            0x20, 0, arg0->alpha, 0);
+    drawMenuSpriteWithAlpha(
+        arg0->x,
+        arg0->y,
+        getRelocatableHeapBlockBase(gAssetHandles[0x21]),
+        0x35,
+        0x20,
+        0x20,
+        0,
+        arg0->alpha,
+        0
+    );
+    drawMenuSpriteWithAlpha(
+        (s16)(arg0->x + 0x40),
+        arg0->y,
+        getRelocatableHeapBlockBase(gAssetHandles[0x21]),
+        0x36,
+        0x20,
+        0x20,
+        0,
+        arg0->alpha,
+        0
+    );
 }
 
 void updateEndingCreditsTheEndTextFadeIn(EndingCreditsPageTextActor *arg0) {
@@ -206,43 +227,43 @@ void updateEndingCreditsTheEndTextFadeIn(EndingCreditsPageTextActor *arg0) {
 
 void updateEndingCreditsPageText(EndingCreditsPageTextActor *arg0) {
     switch (arg0->state) {
-    case 0:
-        arg0->alpha += ENDING_CREDITS_PAGE_FADE_STEP;
-        if (!(arg0->alpha < ENDING_CREDITS_TEXT_FADE_MAX)) {
-            arg0->alpha = ENDING_CREDITS_TEXT_FADE_MAX;
-            arg0->state = 1;
-            arg0->timer = 0;
-        }
-        break;
-    case 1:
-        arg0->timer = arg0->timer + 1;
-        if (arg0->timer == ENDING_CREDITS_PAGE_VISIBLE_FRAMES) {
-            arg0->timer = 0;
-            arg0->state = 2;
-        }
-        break;
-    case 2:
-        arg0->alpha -= ENDING_CREDITS_PAGE_FADE_STEP;
-        if (!(arg0->alpha > 0)) {
-            arg0->alpha = 0;
-            arg0->state = 3;
-            arg0->pageIndex = arg0->pageIndex + 1;
-            if (arg0->pageIndex == ENDING_CREDITS_PAGE_COUNT) {
-                arg0->pageIndex = 0;
-                setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateEndingCreditsTheEndTextFadeIn);
+        case 0:
+            arg0->alpha += ENDING_CREDITS_PAGE_FADE_STEP;
+            if (!(arg0->alpha < ENDING_CREDITS_TEXT_FADE_MAX)) {
+                arg0->alpha = ENDING_CREDITS_TEXT_FADE_MAX;
+                arg0->state = 1;
+                arg0->timer = 0;
             }
-            if (gEndingCreditsSequencePhase == 0) {
-                gEndingCreditsSequencePhase = 1;
+            break;
+        case 1:
+            arg0->timer = arg0->timer + 1;
+            if (arg0->timer == ENDING_CREDITS_PAGE_VISIBLE_FRAMES) {
+                arg0->timer = 0;
+                arg0->state = 2;
             }
-        }
-        break;
-    case 3:
-        arg0->timer = arg0->timer + 1;
-        if (!(arg0->timer < ENDING_CREDITS_PAGE_RESET_DELAY)) {
-            arg0->timer = 0;
-            arg0->state = 0;
-        }
-        break;
+            break;
+        case 2:
+            arg0->alpha -= ENDING_CREDITS_PAGE_FADE_STEP;
+            if (!(arg0->alpha > 0)) {
+                arg0->alpha = 0;
+                arg0->state = 3;
+                arg0->pageIndex = arg0->pageIndex + 1;
+                if (arg0->pageIndex == ENDING_CREDITS_PAGE_COUNT) {
+                    arg0->pageIndex = 0;
+                    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateEndingCreditsTheEndTextFadeIn);
+                }
+                if (gEndingCreditsSequencePhase == 0) {
+                    gEndingCreditsSequencePhase = 1;
+                }
+            }
+            break;
+        case 3:
+            arg0->timer = arg0->timer + 1;
+            if (!(arg0->timer < ENDING_CREDITS_PAGE_RESET_DELAY)) {
+                arg0->timer = 0;
+                arg0->state = 0;
+            }
+            break;
     }
     addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawEndingCreditsPageText, arg0);
 }
@@ -260,8 +281,16 @@ void drawEndingObjectSpriteDebugViewer(EndingObjectSpriteDebugViewerActor *arg0)
     char sp38[0x10];
 
     if (arg0->enabled == 1) {
-        drawMenuSprite(arg0->x, arg0->y, getRelocatableHeapBlockBase(gAssetHandles[0x21]), (u16)arg0->spriteId, 0x20, 0x20, arg0->palette,
-                       0);
+        drawMenuSprite(
+            arg0->x,
+            arg0->y,
+            getRelocatableHeapBlockBase(gAssetHandles[0x21]),
+            (u16)arg0->spriteId,
+            0x20,
+            0x20,
+            arg0->palette,
+            0
+        );
         sprintf(sp38, "ENDOBJ %2d \n", arg0->spriteId);
         drawMenuAsciiText(0x40, -0x66, sp38, 0, 0x100);
     }

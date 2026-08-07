@@ -6,7 +6,7 @@
 #include "game/race/player/race_player_input.h"
 
 #define RANK_ARROW_DISTANCE 0x03800000
-#define RANK_ARROW_NEGATIVE_LIMIT ((s32) 0xFC800001)
+#define RANK_ARROW_NEGATIVE_LIMIT ((s32)0xFC800001)
 
 typedef struct RacePlayerCheckpointEvent {
     /* 0x00 */ s16 pathFrame;
@@ -19,66 +19,118 @@ extern s16 gFrameCounter;
 char D_800DDE70[4] = "\t\t\t";
 
 s8 *gRaceCoursePlayerPathOffsetTables[40] = {
-    (s8 *)&D_800DC9A8[0x002], (s8 *)&D_800DC9A8[0x002], (s8 *)&D_800DC9A8[0x030],
-    (s8 *)&D_800DC9A8[0x05E], (s8 *)&D_800DC9A8[0x08C], (s8 *)&D_800DC9A8[0x08C],
-    (s8 *)&D_800DC9A8[0x0B4], (s8 *)&D_800DC9A8[0x0DC], (s8 *)&D_800DC9A8[0x104],
-    (s8 *)&D_800DC9A8[0x104], (s8 *)&D_800DC9A8[0x136], (s8 *)&D_800DC9A8[0x168],
-    (s8 *)&D_800DC9A8[0x19A], (s8 *)&D_800DC9A8[0x19A], (s8 *)&D_800DC9A8[0x1E4],
-    (s8 *)&D_800DC9A8[0x22E], (s8 *)&D_800DC9A8[0x278], (s8 *)&D_800DC9A8[0x278],
-    (s8 *)&D_800DC9A8[0x2AD], (s8 *)&D_800DC9A8[0x2E2], (s8 *)&D_800DC9A8[0x317],
-    (s8 *)&D_800DC9A8[0x317], (s8 *)&D_800DC9A8[0x369], (s8 *)&D_800DC9A8[0x3BB],
-    (s8 *)&D_800DC9A8[0x40D], (s8 *)&D_800DC9A8[0x40D], (s8 *)&D_800DC9A8[0x44D],
-    (s8 *)&D_800DC9A8[0x48D], (s8 *)&D_800DC9A8[0x002], (s8 *)&D_800DC9A8[0x002],
-    (s8 *)&D_800DC9A8[0x030], (s8 *)&D_800DC9A8[0x05E], (s8 *)&D_800DC9A8[0x4CD],
-    (s8 *)&D_800DC9A8[0x4CD], (s8 *)&D_800DC9A8[0x4DE], (s8 *)&D_800DC9A8[0x4EF],
-    (s8 *)&D_800DC9A8[0x500], (s8 *)&D_800DC9A8[0x500], (s8 *)&D_800DC9A8[0x511],
-    (s8 *)&D_800DC9A8[0x522],
+    (s8 *)&D_800DC9A8[0x002], (s8 *)&D_800DC9A8[0x002], (s8 *)&D_800DC9A8[0x030], (s8 *)&D_800DC9A8[0x05E],
+    (s8 *)&D_800DC9A8[0x08C], (s8 *)&D_800DC9A8[0x08C], (s8 *)&D_800DC9A8[0x0B4], (s8 *)&D_800DC9A8[0x0DC],
+    (s8 *)&D_800DC9A8[0x104], (s8 *)&D_800DC9A8[0x104], (s8 *)&D_800DC9A8[0x136], (s8 *)&D_800DC9A8[0x168],
+    (s8 *)&D_800DC9A8[0x19A], (s8 *)&D_800DC9A8[0x19A], (s8 *)&D_800DC9A8[0x1E4], (s8 *)&D_800DC9A8[0x22E],
+    (s8 *)&D_800DC9A8[0x278], (s8 *)&D_800DC9A8[0x278], (s8 *)&D_800DC9A8[0x2AD], (s8 *)&D_800DC9A8[0x2E2],
+    (s8 *)&D_800DC9A8[0x317], (s8 *)&D_800DC9A8[0x317], (s8 *)&D_800DC9A8[0x369], (s8 *)&D_800DC9A8[0x3BB],
+    (s8 *)&D_800DC9A8[0x40D], (s8 *)&D_800DC9A8[0x40D], (s8 *)&D_800DC9A8[0x44D], (s8 *)&D_800DC9A8[0x48D],
+    (s8 *)&D_800DC9A8[0x002], (s8 *)&D_800DC9A8[0x002], (s8 *)&D_800DC9A8[0x030], (s8 *)&D_800DC9A8[0x05E],
+    (s8 *)&D_800DC9A8[0x4CD], (s8 *)&D_800DC9A8[0x4CD], (s8 *)&D_800DC9A8[0x4DE], (s8 *)&D_800DC9A8[0x4EF],
+    (s8 *)&D_800DC9A8[0x500], (s8 *)&D_800DC9A8[0x500], (s8 *)&D_800DC9A8[0x511], (s8 *)&D_800DC9A8[0x522],
 };
 
 RacePlayerCheckpointEvent D_800DDF14[8] = {
-    { 0x31, 7 }, { 0x52, 7 }, { 0x66, 3 }, { 0x8B, 1 },
-    { 0x8E, 7 }, { 0x99, 7 }, { 0xA6, 7 }, { -1, 0 },
+    { 0x31, 7 },
+    { 0x52, 7 },
+    { 0x66, 3 },
+    { 0x8B, 1 },
+    { 0x8E, 7 },
+    { 0x99, 7 },
+    { 0xA6, 7 },
+    { -1,   0 },
 };
 
 RacePlayerCheckpointEvent D_800DDF34[4] = {
-    { 0x27, 7 }, { 0x34, 7 }, { 0x67, 7 }, { -1, 0 },
+    { 0x27, 7 },
+    { 0x34, 7 },
+    { 0x67, 7 },
+    { -1,   0 },
 };
 
 RacePlayerCheckpointEvent D_800DDF44[10] = {
-    { 0x06, 7 }, { 0x21, 1 }, { 0x2C, 1 }, { 0x42, 1 }, { 0x4F, 1 },
-    { 0x6A, 1 }, { 0x79, 1 }, { 0x88, 1 }, { 0x8C, 1 }, { -1, 0 },
+    { 0x06, 7 },
+    { 0x21, 1 },
+    { 0x2C, 1 },
+    { 0x42, 1 },
+    { 0x4F, 1 },
+    { 0x6A, 1 },
+    { 0x79, 1 },
+    { 0x88, 1 },
+    { 0x8C, 1 },
+    { -1,   0 },
 };
 
 RacePlayerCheckpointEvent D_800DDF6C[14] = {
-    { 0x10, 7 }, { 0x13, 7 }, { 0x22, 3 }, { 0x48, 1 }, { 0x81, 3 },
-    { 0x8C, 1 }, { 0x9D, 1 }, { 0xB7, 3 }, { 0x110, 0 }, { 0x101, 0 },
-    { 0xF6, 1 }, { 0xEA, 1 }, { 0xE2, 0 }, { -1, 7 },
+    { 0x10,  7 },
+    { 0x13,  7 },
+    { 0x22,  3 },
+    { 0x48,  1 },
+    { 0x81,  3 },
+    { 0x8C,  1 },
+    { 0x9D,  1 },
+    { 0xB7,  3 },
+    { 0x110, 0 },
+    { 0x101, 0 },
+    { 0xF6,  1 },
+    { 0xEA,  1 },
+    { 0xE2,  0 },
+    { -1,    7 },
 };
 
 RacePlayerCheckpointEvent D_800DDFA4[9] = {
-    { 0x22, 1 }, { 0x46, 1 }, { 0x56, 2 }, { 0x69, 2 }, { 0x89, 3 },
-    { 0x96, 0 }, { 0x9C, 3 }, { 0xBA, 3 }, { -1, 7 },
+    { 0x22, 1 },
+    { 0x46, 1 },
+    { 0x56, 2 },
+    { 0x69, 2 },
+    { 0x89, 3 },
+    { 0x96, 0 },
+    { 0x9C, 3 },
+    { 0xBA, 3 },
+    { -1,   7 },
 };
 
 RacePlayerCheckpointEvent D_800DDFC8[10] = {
-    { 0x1E, 3 }, { 0x2E, 3 }, { 0x77, 0 }, { 0x91, 0 }, { 0xB4, 3 },
-    { 0xB7, 3 }, { 0x105, 3 }, { 0x126, 3 }, { 0x12F, 3 }, { -1, 7 },
+    { 0x1E,  3 },
+    { 0x2E,  3 },
+    { 0x77,  0 },
+    { 0x91,  0 },
+    { 0xB4,  3 },
+    { 0xB7,  3 },
+    { 0x105, 3 },
+    { 0x126, 3 },
+    { 0x12F, 3 },
+    { -1,    7 },
 };
 
 RacePlayerCheckpointEvent D_800DDFF0[8] = {
-    { 0x1A, 3 }, { 0x29, 0 }, { 0x4C, 3 }, { 0x61, 7 },
-    { 0x84, 3 }, { 0xAF, 3 }, { 0xE0, 3 }, { -1, 7 },
+    { 0x1A, 3 },
+    { 0x29, 0 },
+    { 0x4C, 3 },
+    { 0x61, 7 },
+    { 0x84, 3 },
+    { 0xAF, 3 },
+    { 0xE0, 3 },
+    { -1,   7 },
 };
 
 RacePlayerCheckpointEvent D_800DE010[4] = {
-    { 0x15, 7 }, { 0x1F, 7 }, { 0x32, 0 }, { -1, 7 },
+    { 0x15, 7 },
+    { 0x1F, 7 },
+    { 0x32, 0 },
+    { -1,   7 },
 };
 
 RacePlayerCheckpointEvent D_800DE020[3] = {
-    { 0x17, 7 }, { 0x38, 7 }, { -1, 7 },
+    { 0x17, 7 },
+    { 0x38, 7 },
+    { -1,   7 },
 };
 
-RacePlayerCheckpointEvent D_800DE02C[1] = { { -1, 7 } };
+RacePlayerCheckpointEvent D_800DE02C[1] = {
+    { -1, 7 }
+};
 
 RacePlayerCheckpointEvent *gRaceCourseCheckpointEventLists[10] = {
     D_800DDF14, D_800DDF34, D_800DDF44, D_800DDF6C, D_800DDFA4,
@@ -89,7 +141,6 @@ u8 gSinglePlayerRankDisplayPatternFirst[4] = { 1, 0, 2, 0 };
 u8 gSinglePlayerRankDisplayPatternSecond[4] = { 0, 1, 2, 0 };
 u8 gSinglePlayerRankDisplayPatternThird[4] = { 0, 1, 2, 0 };
 u8 gSinglePlayerRankDisplayPatternFourth[12] = { 0, 2, 1, 0 };
-
 
 void updateRacePlayerRankDisplay(void) {
     s32 deltaX;
@@ -119,140 +170,136 @@ void updateRacePlayerRankDisplay(void) {
     }
 
     switch (gPlayerCount) {
-    case 1:
-        i = 0;
-        if (gRacePlayers[0].rankIndex == 0) {
-            for (j = 0; j < RACE_PLAYER_COUNT; j++) {
-                if (gRacePlayers[order[j]].isCpu != 0) {
-                    gRacePlayers[order[j]].displayRank = gSinglePlayerRankDisplayPatternFirst[i];
-                    gRacePlayers[order[j]].rankTargetPlayer = 0;
-                    i++;
+        case 1:
+            i = 0;
+            if (gRacePlayers[0].rankIndex == 0) {
+                for (j = 0; j < RACE_PLAYER_COUNT; j++) {
+                    if (gRacePlayers[order[j]].isCpu != 0) {
+                        gRacePlayers[order[j]].displayRank = gSinglePlayerRankDisplayPatternFirst[i];
+                        gRacePlayers[order[j]].rankTargetPlayer = 0;
+                        i++;
+                    }
                 }
             }
-        }
 
-        i = 0;
-        if (gRacePlayers[0].rankIndex == 1) {
-            for (j = 0; j < RACE_PLAYER_COUNT; j++) {
-                if (gRacePlayers[order[j]].isCpu != 0) {
-                    gRacePlayers[order[j]].displayRank = gSinglePlayerRankDisplayPatternSecond[i];
-                    gRacePlayers[order[j]].rankTargetPlayer = 0;
-                    i++;
+            i = 0;
+            if (gRacePlayers[0].rankIndex == 1) {
+                for (j = 0; j < RACE_PLAYER_COUNT; j++) {
+                    if (gRacePlayers[order[j]].isCpu != 0) {
+                        gRacePlayers[order[j]].displayRank = gSinglePlayerRankDisplayPatternSecond[i];
+                        gRacePlayers[order[j]].rankTargetPlayer = 0;
+                        i++;
+                    }
                 }
             }
-        }
 
-        i = 0;
-        if (gRacePlayers[0].rankIndex == 2) {
-            for (j = 0; j < RACE_PLAYER_COUNT; j++) {
-                if (gRacePlayers[order[j]].isCpu != 0) {
-                    gRacePlayers[order[j]].displayRank = gSinglePlayerRankDisplayPatternThird[i];
-                    gRacePlayers[order[j]].rankTargetPlayer = 0;
-                    i++;
+            i = 0;
+            if (gRacePlayers[0].rankIndex == 2) {
+                for (j = 0; j < RACE_PLAYER_COUNT; j++) {
+                    if (gRacePlayers[order[j]].isCpu != 0) {
+                        gRacePlayers[order[j]].displayRank = gSinglePlayerRankDisplayPatternThird[i];
+                        gRacePlayers[order[j]].rankTargetPlayer = 0;
+                        i++;
+                    }
                 }
             }
-        }
 
-        i = 0;
-        if (gRacePlayers[0].rankIndex == 3) {
-            for (j = 0; j < RACE_PLAYER_COUNT; j++) {
-                if (gRacePlayers[order[j]].isCpu != 0) {
-                    gRacePlayers[order[j]].displayRank = gSinglePlayerRankDisplayPatternFourth[i];
-                    gRacePlayers[order[j]].rankTargetPlayer = 0;
-                    i++;
-                }
-            }
-        }
-        break;
-
-    case 2:
-        if (gRacePlayers[1].rankIndex >= gRacePlayers[0].rankIndex) {
-            if (gRacePlayers[1].rankIndex == 3) {
-                if (gRacePlayers[3].rankIndex >= gRacePlayers[2].rankIndex) {
-                    gRacePlayers[2].displayRank = 2;
-                    gRacePlayers[3].displayRank = 1;
-                } else {
-                    gRacePlayers[2].displayRank = 1;
-                    gRacePlayers[3].displayRank = 2;
-                }
-            } else if (gRacePlayers[3].rankIndex >= gRacePlayers[2].rankIndex) {
-                gRacePlayers[2].displayRank = 1;
-                gRacePlayers[3].displayRank = 2;
-            } else {
-                gRacePlayers[2].displayRank = 2;
-                gRacePlayers[3].displayRank = 1;
-            }
-            gRacePlayers[2].rankTargetPlayer = 1;
-            gRacePlayers[3].rankTargetPlayer = 1;
-        } else {
+            i = 0;
             if (gRacePlayers[0].rankIndex == 3) {
-                if (gRacePlayers[3].rankIndex >= gRacePlayers[2].rankIndex) {
-                    gRacePlayers[2].displayRank = 2;
-                    gRacePlayers[3].displayRank = 1;
-                } else {
+                for (j = 0; j < RACE_PLAYER_COUNT; j++) {
+                    if (gRacePlayers[order[j]].isCpu != 0) {
+                        gRacePlayers[order[j]].displayRank = gSinglePlayerRankDisplayPatternFourth[i];
+                        gRacePlayers[order[j]].rankTargetPlayer = 0;
+                        i++;
+                    }
+                }
+            }
+            break;
+
+        case 2:
+            if (gRacePlayers[1].rankIndex >= gRacePlayers[0].rankIndex) {
+                if (gRacePlayers[1].rankIndex == 3) {
+                    if (gRacePlayers[3].rankIndex >= gRacePlayers[2].rankIndex) {
+                        gRacePlayers[2].displayRank = 2;
+                        gRacePlayers[3].displayRank = 1;
+                    } else {
+                        gRacePlayers[2].displayRank = 1;
+                        gRacePlayers[3].displayRank = 2;
+                    }
+                } else if (gRacePlayers[3].rankIndex >= gRacePlayers[2].rankIndex) {
                     gRacePlayers[2].displayRank = 1;
                     gRacePlayers[3].displayRank = 2;
+                } else {
+                    gRacePlayers[2].displayRank = 2;
+                    gRacePlayers[3].displayRank = 1;
                 }
-            } else if (gRacePlayers[3].rankIndex >= gRacePlayers[2].rankIndex) {
-                gRacePlayers[2].displayRank = 1;
-                gRacePlayers[3].displayRank = 2;
+                gRacePlayers[2].rankTargetPlayer = 1;
+                gRacePlayers[3].rankTargetPlayer = 1;
             } else {
-                gRacePlayers[2].displayRank = 2;
-                gRacePlayers[3].displayRank = 1;
+                if (gRacePlayers[0].rankIndex == 3) {
+                    if (gRacePlayers[3].rankIndex >= gRacePlayers[2].rankIndex) {
+                        gRacePlayers[2].displayRank = 2;
+                        gRacePlayers[3].displayRank = 1;
+                    } else {
+                        gRacePlayers[2].displayRank = 1;
+                        gRacePlayers[3].displayRank = 2;
+                    }
+                } else if (gRacePlayers[3].rankIndex >= gRacePlayers[2].rankIndex) {
+                    gRacePlayers[2].displayRank = 1;
+                    gRacePlayers[3].displayRank = 2;
+                } else {
+                    gRacePlayers[2].displayRank = 2;
+                    gRacePlayers[3].displayRank = 1;
+                }
+                gRacePlayers[2].rankTargetPlayer = 0;
+                gRacePlayers[3].rankTargetPlayer = 0;
             }
-            gRacePlayers[2].rankTargetPlayer = 0;
-            gRacePlayers[3].rankTargetPlayer = 0;
-        }
-        break;
+            break;
 
-    case 3:
-        gRacePlayers[3].rankTargetPlayer = 0;
-        gRacePlayers[3].displayRank = 1;
-        if (gRacePlayers[gRacePlayers[3].rankTargetPlayer].rankIndex <
-            gRacePlayers[1].rankIndex) {
-            gRacePlayers[3].rankTargetPlayer = 1;
-        }
-        if (gRacePlayers[gRacePlayers[3].rankTargetPlayer].rankIndex <
-            gRacePlayers[2].rankIndex) {
-            gRacePlayers[3].rankTargetPlayer = 2;
-        }
-        break;
+        case 3:
+            gRacePlayers[3].rankTargetPlayer = 0;
+            gRacePlayers[3].displayRank = 1;
+            if (gRacePlayers[gRacePlayers[3].rankTargetPlayer].rankIndex < gRacePlayers[1].rankIndex) {
+                gRacePlayers[3].rankTargetPlayer = 1;
+            }
+            if (gRacePlayers[gRacePlayers[3].rankTargetPlayer].rankIndex < gRacePlayers[2].rankIndex) {
+                gRacePlayers[3].rankTargetPlayer = 2;
+            }
+            break;
     }
 
     for (i = 0; i < RACE_PLAYER_COUNT; i++) {
         if (gRacePlayers[i].isCpu != 0) {
             switch (gRacePlayers[i].displayRank) {
-            case 0:
-                gRacePlayers[i].rankArrow = 0;
-                break;
+                case 0:
+                    gRacePlayers[i].rankArrow = 0;
+                    break;
 
-            case 1:
-                gRacePlayers[i].rankArrow = 0;
-                deltaX = gRacePlayers[gRacePlayers[i].rankTargetPlayer].pos.x - gRacePlayers[i].pos.x;
-                deltaZ = gRacePlayers[gRacePlayers[i].rankTargetPlayer].pos.z - gRacePlayers[i].pos.z;
-                if ((deltaX >= RANK_ARROW_DISTANCE) ||
-                    (deltaX < RANK_ARROW_NEGATIVE_LIMIT) ||
-                    (deltaZ >= RANK_ARROW_DISTANCE) ||
-                    (deltaZ < RANK_ARROW_NEGATIVE_LIMIT)) {
-                    if (gRacePlayers[gRacePlayers[i].rankTargetPlayer].rankIndex < gRacePlayers[i].rankIndex) {
-                        gRacePlayers[i].rankArrow = 1;
-                    } else {
-                        gRacePlayers[i].rankArrow = 2;
+                case 1:
+                    gRacePlayers[i].rankArrow = 0;
+                    deltaX = gRacePlayers[gRacePlayers[i].rankTargetPlayer].pos.x - gRacePlayers[i].pos.x;
+                    deltaZ = gRacePlayers[gRacePlayers[i].rankTargetPlayer].pos.z - gRacePlayers[i].pos.z;
+                    if ((deltaX >= RANK_ARROW_DISTANCE) || (deltaX < RANK_ARROW_NEGATIVE_LIMIT) ||
+                        (deltaZ >= RANK_ARROW_DISTANCE) || (deltaZ < RANK_ARROW_NEGATIVE_LIMIT)) {
+                        if (gRacePlayers[gRacePlayers[i].rankTargetPlayer].rankIndex < gRacePlayers[i].rankIndex) {
+                            gRacePlayers[i].rankArrow = 1;
+                        } else {
+                            gRacePlayers[i].rankArrow = 2;
+                        }
                     }
-                }
-                break;
+                    break;
 
-            case 2:
-                if (gPlayerCount == 1) {
-                    if (gRacePlayers[0].rankIndex < gRacePlayers[i].rankIndex) {
-                        gRacePlayers[i].rankArrow = 0;
+                case 2:
+                    if (gPlayerCount == 1) {
+                        if (gRacePlayers[0].rankIndex < gRacePlayers[i].rankIndex) {
+                            gRacePlayers[i].rankArrow = 0;
+                        } else {
+                            gRacePlayers[i].rankArrow = 3;
+                        }
                     } else {
                         gRacePlayers[i].rankArrow = 3;
                     }
-                } else {
-                    gRacePlayers[i].rankArrow = 3;
-                }
-                break;
+                    break;
             }
             if (gRacePlayers[i].characterId == 5) {
                 gRacePlayers[i].rankArrow = 0;
@@ -292,7 +339,7 @@ void updateRacePlayerCheckpointEvents(RacePlayer *player) {
         eventMask = 1 << eventIndex;
 
         if (!(player->checkpointEventMask & eventMask) && (player->coursePathIndex <= pathFrame) &&
-                (player->coursePathIndex > pathFrame - 3)) {
+            (player->coursePathIndex > pathFrame - 3)) {
             getRaceCourseSurfaceSpawnTransform(pathFrame, &x, &y, &z, &angle);
 
             x = player->pos.x - x;

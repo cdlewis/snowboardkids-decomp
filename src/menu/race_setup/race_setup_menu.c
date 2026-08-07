@@ -64,9 +64,9 @@ RaceSetupMenuPackedData gRaceSetupMenuPackedData = {
 };
 s16 gRaceSetupSavePanelInitialRects[4][2] = {
     { -0x114, -0xA4 },
-    { -0x114, 0x48 },
-    { 0x90, -0xA4 },
-    { 0x90, 0x48 },
+    { -0x114, 0x48  },
+    { 0x90,   -0xA4 },
+    { 0x90,   0x48  },
 };
 RaceSetupSaveDefaultTime D_800B31C8[11][5] = {
     { { 0x02, 0x0F, 0 }, { 0x02, 0x14, 0 }, { 0x02, 0x1E, 0 }, { 0x02, 0x28, 0 }, { 0x02, 0x32, 0 } },
@@ -76,27 +76,38 @@ RaceSetupSaveDefaultTime D_800B31C8[11][5] = {
     { { 0x01, 0x34, 0 }, { 0x02, 0x00, 0 }, { 0x02, 0x05, 0 }, { 0x02, 0x09, 0 }, { 0x02, 0x0D, 0 } },
     { { 0x01, 0x35, 0 }, { 0x01, 0x38, 0 }, { 0x02, 0x00, 0 }, { 0x02, 0x04, 0 }, { 0x02, 0x0A, 0 } },
     { { 0x01, 0x3B, 0 }, { 0x02, 0x02, 0 }, { 0x02, 0x0B, 0 }, { 0x02, 0x11, 0 }, { 0x02, 0x14, 0 } },
-    { { 0, 0, 0 }, { 0, 0, 0 }, { 0, 0, 0 }, { 0, 0, 0 }, { 0, 0, 0 } },
-    { { 0, 0x1C, 0 }, { 0, 0x21, 0 }, { 0, 0x24, 0 }, { 0, 0x28, 0 }, { 0, 0x2A, 0 } },
-    { { 0, 0x24, 0 }, { 0, 0x28, 0 }, { 0, 0x2D, 0 }, { 0, 0x32, 0 }, { 0, 0x37, 0 } },
-    { { 0, 0, 0 }, { 0, 0, 0 }, { 0, 0, 0 }, { 0, 0, 0 }, { 0, 0, 0 } },
+    { { 0, 0, 0 },       { 0, 0, 0 },       { 0, 0, 0 },       { 0, 0, 0 },       { 0, 0, 0 }       },
+    { { 0, 0x1C, 0 },    { 0, 0x21, 0 },    { 0, 0x24, 0 },    { 0, 0x28, 0 },    { 0, 0x2A, 0 }    },
+    { { 0, 0x24, 0 },    { 0, 0x28, 0 },    { 0, 0x2D, 0 },    { 0, 0x32, 0 },    { 0, 0x37, 0 }    },
+    { { 0, 0, 0 },       { 0, 0, 0 },       { 0, 0, 0 },       { 0, 0, 0 },       { 0, 0, 0 }       },
 };
 RaceSetupSaveDefaultTime D_800B3270[11] = {
-    { 1, 0x0E, 0 }, { 1, 0x03, 0 }, { 0, 0x31, 0 }, { 1, 0x14, 0 }, { 1, 0x06, 0 },
-    { 0, 0x31, 0 }, { 0, 0x37, 0 }, { 0, 0, 0 }, { 0, 0x11, 0 }, { 0, 0x13, 0 }, { 0, 0, 0 },
+    { 1, 0x0E, 0 },
+    { 1, 0x03, 0 },
+    { 0, 0x31, 0 },
+    { 1, 0x14, 0 },
+    { 1, 0x06, 0 },
+    { 0, 0x31, 0 },
+    { 0, 0x37, 0 },
+    { 0, 0,    0 },
+    { 0, 0x11, 0 },
+    { 0, 0x13, 0 },
+    { 0, 0,    0 },
 };
 RaceSetupSaveDefaultTimeRow D_800B3294[1] = {
     { { 0, 0x24, 0, 0, 0x2A, 0, 0, 0x2C, 0, 0, 0x30, 0, 0, 0x35, 0 } },
 };
 RaceSetupSaveDefaultTimeTable D_800B32A4 = {
     { 1, 0x3A, 0, 2, 0x03, 0, 2, 0x0B, 0, 2, 0x0D, 0, 2, 0x15, 0,
-      2, 0x01, 0, 2, 0x06, 0, 2, 0x0D, 0, 2, 0x12, 0, 2, 0x16, 0 },
+     2, 0x01, 0, 2, 0x06, 0, 2, 0x0D, 0, 2, 0x12, 0, 2, 0x16, 0 },
 };
 u8 D_800B32C4[10] = { 0x14, 0x0F, 0x0A, 0x05, 0, 0x28, 0x1E, 0x14, 0x0A, 0 };
 RaceSetupDefaultSaveData D_800B32D0 = {
     { 0x190, 0xC8, 0x64, 0x32, 0 },
     0,
     {
+     // textconv requires these _() invocations to retain their original line layout.
+        // clang-format off
         { _("BEGISNOW") },
         { _("TRAPED") },
         { _("NIGHT HIGHWAY") },
@@ -105,6 +116,7 @@ RaceSetupDefaultSaveData D_800B32D0 = {
         { _("QUICKSAND VALLEY") },
         { _("SILVER MOUNTAIN") },
         { _("ZIPANGU") },
+     // clang-format on
     },
     { 0, 0 },
 };
@@ -200,9 +212,8 @@ void updateRaceSetupPlayerCountMenu(void) {
             if ((temp_v0 == 0) && !(gPlayerInputHeld[0] & 0x20400)) {
                 gMenuInputRepeatTimers[0] = 0;
             }
-            if ((temp_a3 & 0x10800) ||
-                ((temp_v0 != 0) && ((s32)gMenuInputRepeatTimers[0] >= 9) &&
-                 (((s32)gMenuInputRepeatTimers[0] % 3) == 0))) {
+            if ((temp_a3 & 0x10800) || ((temp_v0 != 0) && ((s32)gMenuInputRepeatTimers[0] >= 9) &&
+                                        (((s32)gMenuInputRepeatTimers[0] % 3) == 0))) {
                 if (gMenuInputRepeatTimers[0] == 0) {
                     gMenuInputRepeatTimers[0] += 1;
                 }
@@ -247,6 +258,8 @@ void updateRaceSetupPlayerCountMenu(void) {
 extern u8 gControllerPakOperationCounts[];
 extern u8 D_800EC9E4;
 
+// IDO code generation for this function is sensitive to source line layout.
+// clang-format off
 void initRaceSetupSaveMenu(void) {
     s32 i;
     s32 connectedControllerCount;
@@ -274,6 +287,7 @@ void initRaceSetupSaveMenu(void) {
     setCurrentGameTaskCallback(updateRaceSetupSaveMenu, 0);
     updateCallbackTasks();
 }
+// clang-format on
 
 // updateRaceSetupSaveMenu best match: 99.498% (nonmatchings/updateRaceSetupSaveMenu-8498672362023432715/base_18.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/race_setup/race_setup_menu/updateRaceSetupSaveMenu.s")
@@ -627,14 +641,13 @@ void updateRaceSetupSaveMenu(void) {
     s16 allControllerPakOpsComplete = 0;
     s16 statusCode;
     CallbackTask *saveStatusTask = D_8010ADE8;
-    CallbackTask * volatile savePanelTask;
+    CallbackTask *volatile savePanelTask;
     s32 i;
     s32 controllerIndex;
 
     savePanelTask = D_8010ADE0;
 
-    if ((gRaceSetupMenuSubState.forceUpdate == 1) &&
-        (gRaceSetupMenuSubState.state == CONTROLLER_PAK_STATUS_READY)) {
+    if ((gRaceSetupMenuSubState.forceUpdate == 1) && (gRaceSetupMenuSubState.state == CONTROLLER_PAK_STATUS_READY)) {
         gRaceSetupMenuSubState.state = 6;
     }
 
@@ -691,8 +704,7 @@ void updateRaceSetupSaveMenu(void) {
                                     if (saveStatusTask != NULL) {
                                         gRaceSetupMenuSubState.statusTransitionStates[i] =
                                             SAVE_STATUS_TRANSITION_FADE_OUT;
-                                        gRaceSetupMenuSubState.nextStatusCodes[i] =
-                                            CONTROLLER_PAK_STATUS_READ_FAILED;
+                                        gRaceSetupMenuSubState.nextStatusCodes[i] = CONTROLLER_PAK_STATUS_READ_FAILED;
                                     } else {
                                         gControllerPakStatusCodes[i] = CONTROLLER_PAK_STATUS_READ_FAILED;
                                     }
@@ -707,8 +719,7 @@ void updateRaceSetupSaveMenu(void) {
                                     if (saveStatusTask != NULL) {
                                         gRaceSetupMenuSubState.statusTransitionStates[i] =
                                             SAVE_STATUS_TRANSITION_FADE_OUT;
-                                        gRaceSetupMenuSubState.nextStatusCodes[i] =
-                                            CONTROLLER_PAK_STATUS_REPAIRED;
+                                        gRaceSetupMenuSubState.nextStatusCodes[i] = CONTROLLER_PAK_STATUS_REPAIRED;
                                     } else {
                                         gControllerPakStatusCodes[i] = CONTROLLER_PAK_STATUS_REPAIRED;
                                     }
@@ -716,8 +727,7 @@ void updateRaceSetupSaveMenu(void) {
                                     if (saveStatusTask != NULL) {
                                         gRaceSetupMenuSubState.statusTransitionStates[i] =
                                             SAVE_STATUS_TRANSITION_FADE_OUT;
-                                        gRaceSetupMenuSubState.nextStatusCodes[i] =
-                                            CONTROLLER_PAK_STATUS_REPAIR_FAILED;
+                                        gRaceSetupMenuSubState.nextStatusCodes[i] = CONTROLLER_PAK_STATUS_REPAIR_FAILED;
                                     } else {
                                         gControllerPakStatusCodes[i] = CONTROLLER_PAK_STATUS_REPAIR_FAILED;
                                     }
@@ -732,8 +742,7 @@ void updateRaceSetupSaveMenu(void) {
                                     if (saveStatusTask != NULL) {
                                         gRaceSetupMenuSubState.statusTransitionStates[i] =
                                             SAVE_STATUS_TRANSITION_FADE_OUT;
-                                        gRaceSetupMenuSubState.nextStatusCodes[i] =
-                                            CONTROLLER_PAK_STATUS_PROBE;
+                                        gRaceSetupMenuSubState.nextStatusCodes[i] = CONTROLLER_PAK_STATUS_PROBE;
                                     } else {
                                         gControllerPakStatusCodes[i] = CONTROLLER_PAK_STATUS_PROBE;
                                     }
@@ -741,8 +750,7 @@ void updateRaceSetupSaveMenu(void) {
                                 break;
 
                             case CONTROLLER_PAK_STATUS_READY:
-                                if ((statusCode && statusCode) && statusCode) {
-                                }
+                                if ((statusCode && statusCode) && statusCode) {}
                                 if (gRacePlayers[i].menuState == 0) {
                                     gRacePlayers[i].menuState = 1;
                                 }
@@ -762,7 +770,8 @@ void updateRaceSetupSaveMenu(void) {
                                             enqueueSoundEffect(0x19, 0x32);
                                         }
                                     }
-                                    if ((gPlayerInputPressed[i] & A_BUTTON) || (gPlayerInputPressed[i] & START_BUTTON)) {
+                                    if ((gPlayerInputPressed[i] & A_BUTTON) ||
+                                        (gPlayerInputPressed[i] & START_BUTTON)) {
                                         enqueueSoundEffect(1, 0x32);
                                         if (*(&gMenuChoicePromptState[i]) == SAVE_CHOICE_SKIP_PAK) {
                                             if (gControllerPakStatusCodes[i] == CONTROLLER_PAK_STATUS_SAVE_FOUND) {
@@ -815,8 +824,7 @@ void updateRaceSetupSaveMenu(void) {
                             case CONTROLLER_PAK_STATUS_REPAIRED:
                                 if ((gPlayerInputPressed[i] & A_BUTTON) || (gPlayerInputPressed[i] & START_BUTTON)) {
                                     enqueueSoundEffect(1, 0x32);
-                                    if (gControllerPakStatusCodes[i] ==
-                                        CONTROLLER_PAK_STATUS_REPAIR_FAILED) {
+                                    if (gControllerPakStatusCodes[i] == CONTROLLER_PAK_STATUS_REPAIR_FAILED) {
                                         if (saveStatusTask != NULL) {
                                             gRaceSetupMenuSubState.statusTransitionStates[i] =
                                                 SAVE_STATUS_TRANSITION_FADE_OUT;
@@ -828,8 +836,7 @@ void updateRaceSetupSaveMenu(void) {
                                     } else if (saveStatusTask != NULL) {
                                         gRaceSetupMenuSubState.statusTransitionStates[i] =
                                             SAVE_STATUS_TRANSITION_FADE_OUT;
-                                        gRaceSetupMenuSubState.nextStatusCodes[i] =
-                                            CONTROLLER_PAK_STATUS_PROBE;
+                                        gRaceSetupMenuSubState.nextStatusCodes[i] = CONTROLLER_PAK_STATUS_PROBE;
                                     } else {
                                         gControllerPakStatusCodes[i] = CONTROLLER_PAK_STATUS_PROBE;
                                         break;
@@ -840,10 +847,8 @@ void updateRaceSetupSaveMenu(void) {
                             case CONTROLLER_PAK_STATUS_REPAIR_CONFIRM:
                                 if (gPlayerInputPressed[i] & A_BUTTON || gPlayerInputPressed[i] & START_BUTTON) {
                                     enqueueSoundEffect(1, 0x32);
-                                    gRaceSetupMenuSubState.statusTransitionStates[i] =
-                                        SAVE_STATUS_TRANSITION_FADE_OUT;
-                                    gRaceSetupMenuSubState.nextStatusCodes[i] =
-                                        CONTROLLER_PAK_STATUS_PROBE;
+                                    gRaceSetupMenuSubState.statusTransitionStates[i] = SAVE_STATUS_TRANSITION_FADE_OUT;
+                                    gRaceSetupMenuSubState.nextStatusCodes[i] = CONTROLLER_PAK_STATUS_PROBE;
                                 }
                                 break;
 
@@ -867,15 +872,12 @@ void updateRaceSetupSaveMenu(void) {
             saveChoicePromptInitializer = (CallbackTaskCallback)initRaceSetupSaveChoicePrompts;
             if (D_800EC9E4 >= SAVE_PANEL_CREATE_DELAY) {
                 D_800EC9E4 = 0;
-                D_8010ADE8 =
-                    createCallbackTask((CallbackTaskCallback)initRaceSetupSaveStatusWidgets, 0, 0x63);
+                D_8010ADE8 = createCallbackTask((CallbackTaskCallback)initRaceSetupSaveStatusWidgets, 0, 0x63);
                 createCallbackTask((CallbackTaskCallback)initRaceSetupSavePanelIcons, 0, 0x63);
-                D_8010ADE0 =
-                    createCallbackTask((CallbackTaskCallback)initRaceSetupSavePanelFrame, 0, 0x63);
+                D_8010ADE0 = createCallbackTask((CallbackTaskCallback)initRaceSetupSavePanelFrame, 0, 0x63);
                 D_8010ADE4 = createCallbackTask(saveChoicePromptInitializer, 0, 0x63);
 
-                for (controllerIndex = 0; controllerIndex < gPlayerCount;
-                     controllerIndex++) {
+                for (controllerIndex = 0; controllerIndex < gPlayerCount; controllerIndex++) {
                     gControllerPakOperationCounts[controllerIndex]++;
                 }
             }
@@ -1041,8 +1043,7 @@ void updateRaceSetupRumblePrompt(void) {
                 statusIndex = 1;
                 if (gControllerPakRumbleCheckPromptConfirmSelection == one) {
                     gControllerPakRumbleCheckPromptState.state = 1;
-                    gControllerPakRumbleCheckPromptState.targetScale =
-                        (statusIndex != 1) * 0;
+                    gControllerPakRumbleCheckPromptState.targetScale = (statusIndex != 1) * 0;
                 } else {
                     connectedCount = 0;
                     for (i = 0; i < (s32)gPlayerCount; i++) {
@@ -1094,16 +1095,22 @@ void initRaceSetupPlayerSaveData(s32 playerIndex) {
 
     for (course = 0; course < 11; course++) {
         for (record = 0; record < 5; record++) {
-            gGameSaveDataBuffer[playerIndex].timeTrialRecords[course][record].minutes = D_800B31C8[course][record].minutes;
-            gGameSaveDataBuffer[playerIndex].timeTrialRecords[course][record].seconds = D_800B31C8[course][record].seconds;
-            gGameSaveDataBuffer[playerIndex].timeTrialRecords[course][record].fraction = D_800B31C8[course][record].fraction << 8;
+            gGameSaveDataBuffer[playerIndex].timeTrialRecords[course][record].minutes =
+                D_800B31C8[course][record].minutes;
+            gGameSaveDataBuffer[playerIndex].timeTrialRecords[course][record].seconds =
+                D_800B31C8[course][record].seconds;
+            gGameSaveDataBuffer[playerIndex].timeTrialRecords[course][record].fraction =
+                D_800B31C8[course][record].fraction << 8;
             gGameSaveDataBuffer[playerIndex].timeTrialCharacterIds[course][record] = 0x10;
             gGameSaveDataBuffer[playerIndex].timeTrialCharacterIds[course][record] += record;
 
             if (course == 9) {
-                gGameSaveDataBuffer[playerIndex].raceRecords[course][record].minutes = D_800B3294[0].records[record].minutes;
-                gGameSaveDataBuffer[playerIndex].raceRecords[course][record].seconds = D_800B3294[0].records[record].seconds;
-                gGameSaveDataBuffer[playerIndex].raceRecords[course][record].fraction = D_800B3294[0].records[record].fraction << 8;
+                gGameSaveDataBuffer[playerIndex].raceRecords[course][record].minutes =
+                    D_800B3294[0].records[record].minutes;
+                gGameSaveDataBuffer[playerIndex].raceRecords[course][record].seconds =
+                    D_800B3294[0].records[record].seconds;
+                gGameSaveDataBuffer[playerIndex].raceRecords[course][record].fraction =
+                    D_800B3294[0].records[record].fraction << 8;
             } else {
                 gGameSaveDataBuffer[playerIndex].raceRecords[course][record].minutes =
                     (&D_800B32A4.bytes[record * 3])[(course & 1) * sizeof(RaceSetupSaveDefaultTimeRow)];
@@ -1150,10 +1157,14 @@ void initRaceSetupPlayerSaveData(s32 playerIndex) {
         }
         record = 0;
         for (;;) {
-            gGameSaveDataBuffer[playerIndex].courseUnlockStates[record] = gMultiplayerCourseSelectDefaultCourseIds[record];
-            gGameSaveDataBuffer[playerIndex].courseUnlockStates[record + 1] = gMultiplayerCourseSelectDefaultCourseIds[record + 1];
-            gGameSaveDataBuffer[playerIndex].courseUnlockStates[record + 2] = gMultiplayerCourseSelectDefaultCourseIds[record + 2];
-            gGameSaveDataBuffer[playerIndex].courseUnlockStates[record + 3] = gMultiplayerCourseSelectDefaultCourseIds[record + 3];
+            gGameSaveDataBuffer[playerIndex].courseUnlockStates[record] =
+                gMultiplayerCourseSelectDefaultCourseIds[record];
+            gGameSaveDataBuffer[playerIndex].courseUnlockStates[record + 1] =
+                gMultiplayerCourseSelectDefaultCourseIds[record + 1];
+            gGameSaveDataBuffer[playerIndex].courseUnlockStates[record + 2] =
+                gMultiplayerCourseSelectDefaultCourseIds[record + 2];
+            gGameSaveDataBuffer[playerIndex].courseUnlockStates[record + 3] =
+                gMultiplayerCourseSelectDefaultCourseIds[record + 3];
             record += 4;
             if ((s8 *)gCourseSelectColumnSoundEffects == &gMultiplayerCourseSelectDefaultCourseIds[record]) {
                 break;

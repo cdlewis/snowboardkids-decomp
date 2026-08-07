@@ -625,14 +625,14 @@ void updateEndingLindaHandshakeLoop(EndingCreditsLinda *arg0) {
             arg0->timer = temp_t8;
             if ((temp_t8 & 0xFFFF) < 5) {
                 if ((gEndingCreditsHandshakeState == 1) || (gEndingCreditsHandshakeState == 5)) {
-                    arg0->posX = (s32) (arg0->posX + 0x100000);
+                    arg0->posX = (s32)(arg0->posX + 0x100000);
                 } else {
-                    arg0->posX = (s32) (arg0->posX + 0xFFF00000);
+                    arg0->posX = (s32)(arg0->posX + 0xFFF00000);
                 }
-                if ((s32) arg0->timer < 3) {
-                    arg0->posY = (s32) (arg0->posY + 0x90000);
+                if ((s32)arg0->timer < 3) {
+                    arg0->posY = (s32)(arg0->posY + 0x90000);
                 } else {
-                    arg0->posY = (s32) (arg0->posY + 0xFFF70000);
+                    arg0->posY = (s32)(arg0->posY + 0xFFF70000);
                 }
                 setMainMenuSceneModelPosition(3, arg0->posX, arg0->posY, arg0->posZ);
                 var_s1 += 1;
@@ -649,7 +649,7 @@ void updateEndingLindaHandshakeLoop(EndingCreditsLinda *arg0) {
                     setMainMenuSceneModelAnimation(3, 0x3A);
                 } else {
                     setMainMenuSceneModelAnimation(3, 0x3C);
-                    arg0->animTimer = (u16) (arg0->animTimer + 1);
+                    arg0->animTimer = (u16)(arg0->animTimer + 1);
                 }
                 if (arg0->animTimer == 0xD) {
                     if (gEndingCreditsHandshakeState == 5) {
@@ -838,7 +838,14 @@ void updateEndingLindaSlideLeftSetPhase14(EndingCreditsLinda *arg0) {
 void waitEndingLindaPhase13(EndingCreditsLinda *arg0) {
     if (gEndingCreditsSequencePhase == 0x13) {
         setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateEndingLindaSlideLeftSetPhase14);
-        spawnEndingCreditsTumblingSnowboard(arg0->posX + 0x48000, 0x480000, 0xFFF70000, arg0->textureId, arg0->paletteId, 2);
+        spawnEndingCreditsTumblingSnowboard(
+            arg0->posX + 0x48000,
+            0x480000,
+            0xFFF70000,
+            arg0->textureId,
+            arg0->paletteId,
+            2
+        );
     }
 }
 
@@ -864,7 +871,8 @@ void spawnEndingCreditsTumblingSnowboard(s32 arg0, s32 arg1, s32 arg2, u16 arg3,
     EndingCreditsTumblingSnowboard *sp1C;
     EndingCreditsTumblingSnowboard *temp_v0;
 
-    temp_v0 = createCallbackTaskWithUserId((void (*)(void *))updateEndingCreditsTumblingSnowboardSlideIn, 0, 0x64, arg5);
+    temp_v0 =
+        createCallbackTaskWithUserId((void (*)(void *))updateEndingCreditsTumblingSnowboardSlideIn, 0, 0x64, arg5);
     D_8010ADE0 = temp_v0;
     temp_v0->posX = arg0;
     temp_v0->posY = arg1;
@@ -939,7 +947,7 @@ void updateEndingCreditsTumblingSnowboardBounce(EndingCreditsTumblingSnowboard *
         makeFixedRotationZ(sp28, 0xC00);
         multiplyFixedMatrix3s(sp48, sp28, sp24[0]);
         makeFixedRotationX(sp48, 0x300);
-        *(MatrixWordCopy *) sp28 = *(MatrixWordCopy *) sp24[0];
+        *(MatrixWordCopy *)sp28 = *(MatrixWordCopy *)sp24[0];
         multiplyFixedMatrix3s(sp28, sp48, sp24[0]);
     }
 
@@ -960,5 +968,5 @@ void updateEndingCreditsTumblingSnowboardSlideIn(EndingCreditsTumblingSnowboard 
         arg0->timer = 0;
         setCallbackTaskCallback(arg0, (CallbackTaskCallback)waitEndingCreditsTumblingSnowboardPhase15);
     }
-    addRenderCallback(&gModelRenderCallbackList,(RenderCallback)drawEndingCreditsTumblingSnowboard, arg0);
+    addRenderCallback(&gModelRenderCallbackList, (RenderCallback)drawEndingCreditsTumblingSnowboard, arg0);
 }

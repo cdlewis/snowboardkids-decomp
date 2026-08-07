@@ -78,9 +78,8 @@ typedef struct GameSaveRawData {
 
 typedef char GameSaveReplaySlotSizeCheck[(sizeof(GameSaveReplaySlot) == 0x4) ? 1 : -1];
 typedef char GameSaveDataSizeCheck[(sizeof(GameSaveData) == GAME_SAVE_SLOT_SIZE) ? 1 : -1];
-typedef char GameSaveDataBufferSizeCheck[
-    (sizeof(GameSaveDataBuffer) == (GAME_SAVE_SLOT_COUNT * GAME_SAVE_SLOT_SIZE)) ? 1 : -1
-];
+typedef char
+    GameSaveDataBufferSizeCheck[(sizeof(GameSaveDataBuffer) == (GAME_SAVE_SLOT_COUNT * GAME_SAVE_SLOT_SIZE)) ? 1 : -1];
 
 extern GameSaveDataBuffer gGameSaveDataBuffer;
 extern GameSaveCourseUnlockStates gPrimaryCourseUnlockStates;

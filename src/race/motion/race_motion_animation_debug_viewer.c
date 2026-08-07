@@ -91,8 +91,7 @@ void initRaceMotionAnimationDebugViewer(void) {
 void drawRaceMotionAnimationDebugViewerMotionNumber(void *unused) {
     char buf[0x64];
 
-    sprintf(buf, gRaceMotionAnimationDebugViewerMotionNumberFormat,
-            gRacePlayers[0].animationId);
+    sprintf(buf, gRaceMotionAnimationDebugViewerMotionNumberFormat, gRacePlayers[0].animationId);
     drawMenuAsciiTextDefaultScale(0x28, 0x28, buf, 1);
 }
 
@@ -101,8 +100,7 @@ void updateRaceMotionAnimationDebugViewer(void) {
 
     if (gRacePlayers[0].mode == 0) {
         gRacePlayers[0].mode = 1;
-        setRaceMotionAnimation((RaceMotionState *)&gRacePlayers[0],
-                               gRacePlayers[0].animationId);
+        setRaceMotionAnimation((RaceMotionState *)&gRacePlayers[0], gRacePlayers[0].animationId);
         stepRaceMotionLoopingAnimation((RaceMotionState *)&gRacePlayers[0]);
     } else {
         buttons = gPlayerInputPressed[0];
@@ -129,8 +127,10 @@ void updateRaceMotionAnimationDebugViewer(void) {
             stepRaceMotionLoopingAnimation((RaceMotionState *)&gRacePlayers[0]);
         }
     }
-    addRenderCallback(&gModelRenderCallbackList, (RenderCallback)drawRacePlayerModel,
-                      (RacePlayerModelRenderState *)&gRacePlayers[0]);
-    addRenderCallback(&gMenuForegroundRenderCallbackList,
-                      drawRaceMotionAnimationDebugViewerMotionNumber, NULL);
+    addRenderCallback(
+        &gModelRenderCallbackList,
+        (RenderCallback)drawRacePlayerModel,
+        (RacePlayerModelRenderState *)&gRacePlayers[0]
+    );
+    addRenderCallback(&gMenuForegroundRenderCallbackList, drawRaceMotionAnimationDebugViewerMotionNumber, NULL);
 }

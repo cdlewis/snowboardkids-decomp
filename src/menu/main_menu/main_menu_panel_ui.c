@@ -38,7 +38,6 @@ typedef struct {
     u8 rightTargets[0x10];
 } MainMenuModeSelectByteData;
 
-
 struct MenuPanelActor {
     /* 0x00 */ char pad0[0x18];
     /* 0x18 */ s32 x;
@@ -51,6 +50,8 @@ struct MenuPanelActor {
 };
 
 MenuGlyphScript mainMenuModeSelectTitleText[] = {
+    // textconv requires these _() invocations to retain their original line layout.
+    // clang-format off
     _("USE THE STICK\nAND PRESS A"),
 };
 
@@ -216,13 +217,22 @@ MenuGlyphScript gRaceRecordEightLapsText[] = {
 
 MenuGlyphScript gRaceRecordNineLapsText[] = {
     _("9LAPS."),
+    // clang-format on
 };
 
 MenuGlyphScript *raceRecordLapCountTexts[] = {
-    gRaceRecordOneLapText, gRaceRecordOneLapText, gRaceRecordTwoLapsText, gRaceRecordThreeLapsText, gRaceRecordFourLapsText, gRaceRecordFiveLapsText, gRaceRecordSixLapsText, gRaceRecordSevenLapsText,
-    gRaceRecordEightLapsText, gRaceRecordNineLapsText, NULL,
+    gRaceRecordOneLapText,
+    gRaceRecordOneLapText,
+    gRaceRecordTwoLapsText,
+    gRaceRecordThreeLapsText,
+    gRaceRecordFourLapsText,
+    gRaceRecordFiveLapsText,
+    gRaceRecordSixLapsText,
+    gRaceRecordSevenLapsText,
+    gRaceRecordEightLapsText,
+    gRaceRecordNineLapsText,
+    NULL,
 };
-
 
 extern s16 courseRecordDigitTileOffsets[];
 extern u8 gMainMenuModeSelection;
@@ -265,8 +275,7 @@ void drawMainMenuModeSelectFrame(void *arg0) {
         edgeY += 0x10;
     } while (edgeY < -0x34);
 
-    if (yOrigin) {
-    }
+    if (yOrigin) {}
 
     for (edgeX = xOrigin; edgeX != 0x7C; edgeX += 0x10) {
         for (y = -yOrigin; y != -0x34; y += 0x10) {
@@ -277,6 +286,8 @@ void drawMainMenuModeSelectFrame(void *arg0) {
     drawMenuColoredGlyphScript(-0x68, -0x58, mainMenuModeSelectTitleText, 0, 0x100, 5, 0x29);
 }
 
+// IDO code generation for this function is sensitive to source line layout.
+// clang-format off
 void drawMainMenuModeSelectIcons(MenuPanelActor *arg0) {
     s32 alpha;
     s32 i;
@@ -333,7 +344,10 @@ void drawMainMenuModeSelectIcons(MenuPanelActor *arg0) {
 
     drawAssetTableSpriteWithExplicitPalette(-0x30, 0x4D, getRelocatableHeapBlockBase(gAssetHandles[0x28]), 2, 1);
 }
+// clang-format on
 
+// IDO code generation for this function is sensitive to source line layout.
+// clang-format off
 void updateMainMenuModeSelectGrid(MenuPanelActor *arg0) {
     s32 temp_v1;
     s32 var_v0;
@@ -365,6 +379,7 @@ void updateMainMenuModeSelectGrid(MenuPanelActor *arg0) {
     addRenderCallback(&gMenuRenderCallbackList, drawMainMenuModeSelectFrame, arg0);
     addRenderCallback(&gMenuRenderCallbackList,(RenderCallback)drawMainMenuModeSelectIcons, (void *)arg0);
 }
+// clang-format on
 
 void initMainMenuModeSelectGrid(MenuPanelActor *arg0) {
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateMainMenuModeSelectGrid);
@@ -382,31 +397,95 @@ void drawMainMenuModeDescriptionPanel(MenuPanelActor *arg0) {
     MenuGlyphScript *title;
     MenuGlyphScript *titleCursor;
 
-    drawMenuSprite((s16)(arg0->x - 4), (s16)(arg0->y + 0x14),
-                   getRelocatableHeapBlockBase(gAssetHandles[0x2A]), 2, 0x20, 0x20, 0, 0);
-    drawMenuSprite((s16)(arg0->x + 0xF8), (s16)(arg0->y + 0x14),
-                   getRelocatableHeapBlockBase(gAssetHandles[0x2A]), 4, 0x20, 0x20, 0, 0);
+    drawMenuSprite(
+        (s16)(arg0->x - 4),
+        (s16)(arg0->y + 0x14),
+        getRelocatableHeapBlockBase(gAssetHandles[0x2A]),
+        2,
+        0x20,
+        0x20,
+        0,
+        0
+    );
+    drawMenuSprite(
+        (s16)(arg0->x + 0xF8),
+        (s16)(arg0->y + 0x14),
+        getRelocatableHeapBlockBase(gAssetHandles[0x2A]),
+        4,
+        0x20,
+        0x20,
+        0,
+        0
+    );
 
     i = 0;
     do {
-        drawMenuSprite((s16)(arg0->x + i + 0xC), (s16)(arg0->y + 0x14),
-                       getRelocatableHeapBlockBase(gAssetHandles[0x2A]), 3, 0x20, 0x20, 0, 0);
-        drawMenuSprite((s16)(arg0->x + i + 0xC), (s16)(arg0->y + 0x4C),
-                       getRelocatableHeapBlockBase(gAssetHandles[0x2A]), 8, 0x20, 0x20, 0, 0);
+        drawMenuSprite(
+            (s16)(arg0->x + i + 0xC),
+            (s16)(arg0->y + 0x14),
+            getRelocatableHeapBlockBase(gAssetHandles[0x2A]),
+            3,
+            0x20,
+            0x20,
+            0,
+            0
+        );
+        drawMenuSprite(
+            (s16)(arg0->x + i + 0xC),
+            (s16)(arg0->y + 0x4C),
+            getRelocatableHeapBlockBase(gAssetHandles[0x2A]),
+            8,
+            0x20,
+            0x20,
+            0,
+            0
+        );
         i += 0x10;
     } while (i < 0xF0);
 
-    drawMenuSprite((s16)(arg0->x - 4), (s16)(arg0->y + 0x4C),
-                   getRelocatableHeapBlockBase(gAssetHandles[0x2A]), 7, 0x20, 0x20, 0, 0);
-    drawMenuSprite((s16)(arg0->x + 0xF8), (s16)(arg0->y + 0x4C),
-                   getRelocatableHeapBlockBase(gAssetHandles[0x2A]), 9, 0x20, 0x20, 0, 0);
+    drawMenuSprite(
+        (s16)(arg0->x - 4),
+        (s16)(arg0->y + 0x4C),
+        getRelocatableHeapBlockBase(gAssetHandles[0x2A]),
+        7,
+        0x20,
+        0x20,
+        0,
+        0
+    );
+    drawMenuSprite(
+        (s16)(arg0->x + 0xF8),
+        (s16)(arg0->y + 0x4C),
+        getRelocatableHeapBlockBase(gAssetHandles[0x2A]),
+        9,
+        0x20,
+        0x20,
+        0,
+        0
+    );
 
     i = (arg0->selectionState == 4) * 0;
     do {
-        drawMenuSprite((s16)(arg0->x - 4), (s16)(arg0->y + i + 0x24),
-                       getRelocatableHeapBlockBase(gAssetHandles[0x2A]), 5, 0x20, 0x20, 0, 0);
-        drawMenuSprite((s16)(arg0->x + 0xF8), (s16)(arg0->y + i + 0x24),
-                       getRelocatableHeapBlockBase(gAssetHandles[0x2A]), 6, 0x20, 0x20, 0, 0);
+        drawMenuSprite(
+            (s16)(arg0->x - 4),
+            (s16)(arg0->y + i + 0x24),
+            getRelocatableHeapBlockBase(gAssetHandles[0x2A]),
+            5,
+            0x20,
+            0x20,
+            0,
+            0
+        );
+        drawMenuSprite(
+            (s16)(arg0->x + 0xF8),
+            (s16)(arg0->y + i + 0x24),
+            getRelocatableHeapBlockBase(gAssetHandles[0x2A]),
+            6,
+            0x20,
+            0x20,
+            0,
+            0
+        );
         i += 0x10;
     } while (i <= 0x2F);
 
@@ -425,35 +504,49 @@ void drawMainMenuModeDescriptionPanel(MenuPanelActor *arg0) {
 
         glyphText[0] = arg0->tileList[scriptIndex++];
         switch (glyphText[0]) {
-        case 0xFFFF:
-            arg0->selectionState = 1;
-            visibleIndex = arg0->selectedTile;
-            continue;
-        case 0xFFFD:
-            lineY = lineY + 0x10;
-            lineX = 0;
-            continue;
-        case 0xFFFB:
-            arg0->selectionState = 2;
-            arg0->tileListStart = &arg0->tileList[scriptIndex];
-            visibleIndex = arg0->selectedTile;
-            continue;
-        case 0xFFFC:
-            colorMode = arg0->tileList[scriptIndex++];
-            continue;
-        default:
-            drawMenuColoredGlyphScript((s16)(arg0->x + lineX), (s16)(arg0->y + lineY + 0x18), glyphText, 0,
-                                       0x100, colorMode, 0x29);
-            lineX = lineX + 0x10;
-            visibleIndex++;
-            continue;
+            case 0xFFFF:
+                arg0->selectionState = 1;
+                visibleIndex = arg0->selectedTile;
+                continue;
+            case 0xFFFD:
+                lineY = lineY + 0x10;
+                lineX = 0;
+                continue;
+            case 0xFFFB:
+                arg0->selectionState = 2;
+                arg0->tileListStart = &arg0->tileList[scriptIndex];
+                visibleIndex = arg0->selectedTile;
+                continue;
+            case 0xFFFC:
+                colorMode = arg0->tileList[scriptIndex++];
+                continue;
+            default:
+                drawMenuColoredGlyphScript(
+                    (s16)(arg0->x + lineX),
+                    (s16)(arg0->y + lineY + 0x18),
+                    glyphText,
+                    0,
+                    0x100,
+                    colorMode,
+                    0x29
+                );
+                lineX = lineX + 0x10;
+                visibleIndex++;
+                continue;
         }
     }
 
     if ((arg0->selectionState != 0) && (gMainMenuSelectionResult == 0)) {
-        drawMenuSprite((s16)(arg0->x + 0xF4), (s16)(arg0->y + 0x48),
-                       getRelocatableHeapBlockBase(gAssetHandles[0x2A]), (gFrameCounter >> 4) & 1, 0x20,
-                       0x20, 0, 0);
+        drawMenuSprite(
+            (s16)(arg0->x + 0xF4),
+            (s16)(arg0->y + 0x48),
+            getRelocatableHeapBlockBase(gAssetHandles[0x2A]),
+            (gFrameCounter >> 4) & 1,
+            0x20,
+            0x20,
+            0,
+            0
+        );
     }
 
     title = mainMenuModeDescriptionTitles[gMainMenuModeSelection];
@@ -470,14 +563,21 @@ void drawMainMenuModeDescriptionPanel(MenuPanelActor *arg0) {
     drawMenuColoredGlyphScript((s16)visibleIndex, (s16)(-0x48 - arg0->y), title, 0, 0x100, 4, 0x29);
 
     if ((s32)gMainMenuModeSelection < 6) {
-        drawAssetTableSprite(-0x10, (s16)(-0x30 - arg0->y),
-                             getRelocatableHeapBlockBase(gAssetHandles[0x1F]),
-                             mainMenuModeSelectPrimaryIconTiles[gMainMenuModeSelection]);
+        drawAssetTableSprite(
+            -0x10,
+            (s16)(-0x30 - arg0->y),
+            getRelocatableHeapBlockBase(gAssetHandles[0x1F]),
+            mainMenuModeSelectPrimaryIconTiles[gMainMenuModeSelection]
+        );
         return;
     }
 
-    drawAssetTableSprite(-0x10, (s16)(-0x30 - arg0->y), getRelocatableHeapBlockBase(gAssetHandles[0x1F]),
-                         mainMenuModeSelectSecondaryIconTiles[gMainMenuModeSelection]);
+    drawAssetTableSprite(
+        -0x10,
+        (s16)(-0x30 - arg0->y),
+        getRelocatableHeapBlockBase(gAssetHandles[0x1F]),
+        mainMenuModeSelectSecondaryIconTiles[gMainMenuModeSelection]
+    );
 }
 
 void scrollMainMenuModeDescriptionPanelOut(MenuPanelActor *arg0) {
@@ -506,19 +606,19 @@ void updateMainMenuModeDescriptionPanel(MenuPanelActor *arg0) {
     if (gPlayerInputPressed[0] & (A_BUTTON | START_BUTTON)) {
         state = arg0->selectionState;
         switch (state) {
-        case 0:
-            arg0->selectedTile = 0xE7;
-            break;
-        case 1:
-            gMainMenuSelectionResult = 1;
-            setCallbackTaskCallback(arg0, (CallbackTaskCallback)scrollMainMenuModeDescriptionPanelOut);
-            break;
-        case 2:
-            arg0->selectedTile = 0;
-            arg0->selectionState = 0;
-            arg0->inputRepeatTimer = 0;
-            arg0->tileList = arg0->tileListStart;
-            break;
+            case 0:
+                arg0->selectedTile = 0xE7;
+                break;
+            case 1:
+                gMainMenuSelectionResult = 1;
+                setCallbackTaskCallback(arg0, (CallbackTaskCallback)scrollMainMenuModeDescriptionPanelOut);
+                break;
+            case 2:
+                arg0->selectedTile = 0;
+                arg0->selectionState = 0;
+                arg0->inputRepeatTimer = 0;
+                arg0->tileList = arg0->tileListStart;
+                break;
         }
         enqueueSoundEffect(MENU_PANEL_ACCEPT_SOUND, MENU_PANEL_SOUND_VOLUME);
     }
@@ -541,7 +641,13 @@ void drawMainMenuModeSelectMenuOptions(void *arg0) {
             drawAssetTableSprite(-0x30, -0x20, getRelocatableHeapBlockBase(gAssetHandles[0x28]), 0);
             drawPulsingAssetTableSprite(-0x30, -0x20, getRelocatableHeapBlockBase(gAssetHandles[0x28]), 3);
         } else {
-            drawAssetTableSpriteWithExplicitPalette(-0x30, -0x20, getRelocatableHeapBlockBase(gAssetHandles[0x28]), 0, 1);
+            drawAssetTableSpriteWithExplicitPalette(
+                -0x30,
+                -0x20,
+                getRelocatableHeapBlockBase(gAssetHandles[0x28]),
+                0,
+                1
+            );
             drawPulsingAssetTableSprite(-0x30, -0x20, getRelocatableHeapBlockBase(gAssetHandles[0x28]), 3);
         }
     } else {
@@ -639,8 +745,7 @@ void drawMainMenuSettingsPanel(void *arg0) {
         edgeY += 0x10;
     } while (edgeY < -0x24);
 
-    if (yOrigin) {
-    }
+    if (yOrigin) {}
 
     for (edgeX = xOrigin; edgeX != 0x7C; edgeX += 0x10) {
         for (y = -yOrigin; y != -0x24; y += 0x10) {
@@ -766,7 +871,16 @@ void drawRaceRecordSettingsPanel(void *arg0) {
     } while (y1 < 0x5C);
     for (x = -0x74; x < 0x7C; x += 0x10) {
         for (y = 0x2C; y != 0x5C; y += 0x10) {
-            drawMenuSprite((s16)x, (s16)y, getRelocatableHeapBlockBase(MENU_PANEL_TEXTURE_HANDLE), 0xB, 0x20, 0x20, 0, 0);
+            drawMenuSprite(
+                (s16)x,
+                (s16)y,
+                getRelocatableHeapBlockBase(MENU_PANEL_TEXTURE_HANDLE),
+                0xB,
+                0x20,
+                0x20,
+                0,
+                0
+            );
         }
     }
     drawMenuColoredGlyphScript(-0x76, 0x28, raceRecordSettingsTitleText, 0, 0x100, 7, 0x29);
@@ -786,7 +900,16 @@ void drawRaceRecordSettingsPanel(void *arg0) {
     } while ((y2 - 0) < 0);
     for (x2 = -0x30; x2 != 0x30; x2 += 0x10) {
         for (y = -0x20; y != 0; y += 0x10) {
-            drawMenuSprite((s16)x2, (s16)y, getRelocatableHeapBlockBase(MENU_PANEL_TEXTURE_HANDLE), 0xB, 0x20, 0x20, 0, 0);
+            drawMenuSprite(
+                (s16)x2,
+                (s16)y,
+                getRelocatableHeapBlockBase(MENU_PANEL_TEXTURE_HANDLE),
+                0xB,
+                0x20,
+                0x20,
+                0,
+                0
+            );
         }
     }
     drawMenuSprite(-0x40, 0, getRelocatableHeapBlockBase(MENU_PANEL_TEXTURE_HANDLE), 7, 0x20, 0x20, 0, 0);
@@ -808,10 +931,18 @@ void drawRaceRecordSettingsPanel(void *arg0) {
     }
     drawAssetTableSprite(-0x54, -0x60, getRelocatableHeapBlockBase(gAssetHandles[0x1C]), 0x5D);
     drawAssetTableSprite(4, -0x60, getRelocatableHeapBlockBase(gAssetHandles[0x1C]), 0x5E);
-    drawAssetTableSprite(-0x4C, -0x5C, getRelocatableHeapBlockBase(gAssetHandles[0x1D]),
-                         (u16)courseRecordDigitTileOffsets[gRaceCourseIndex.signedValue]);
-    drawAssetTableSprite(4, -0x5C, getRelocatableHeapBlockBase(gAssetHandles[0x1D]),
-                         courseRecordDigitTileOffsets[gRaceCourseIndex.signedValue] + 1);
+    drawAssetTableSprite(
+        -0x4C,
+        -0x5C,
+        getRelocatableHeapBlockBase(gAssetHandles[0x1D]),
+        (u16)courseRecordDigitTileOffsets[gRaceCourseIndex.signedValue]
+    );
+    drawAssetTableSprite(
+        4,
+        -0x5C,
+        getRelocatableHeapBlockBase(gAssetHandles[0x1D]),
+        courseRecordDigitTileOffsets[gRaceCourseIndex.signedValue] + 1
+    );
 }
 
 void updateRaceRecordSettingsPanel(MenuPanelActor *arg0) {

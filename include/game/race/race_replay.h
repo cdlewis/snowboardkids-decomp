@@ -38,9 +38,8 @@ typedef union PackedRaceRecordReplay {
 
 typedef char RaceInputHistoryBufferSizeCheck[(sizeof(RaceInputHistoryBuffer) == 0x34CC) ? 1 : -1];
 typedef char PackedRaceRecordInputSizeCheck[(sizeof(PackedRaceRecordInput) == 0x3) ? 1 : -1];
-typedef char PackedRaceRecordReplaySizeCheck[
-    (sizeof(PackedRaceRecordReplay) == PACKED_RACE_RECORD_REPLAY_BUFFER_SIZE) ? 1 : -1
-];
+typedef char
+    PackedRaceRecordReplaySizeCheck[(sizeof(PackedRaceRecordReplay) == PACKED_RACE_RECORD_REPLAY_BUFFER_SIZE) ? 1 : -1];
 
 extern PackedRaceRecordReplay gPackedRaceRecordReplayBuffer;
 extern u16 gCompressedRaceRecordReplayBuffer[COMPRESSED_RACE_RECORD_REPLAY_HALFWORD_COUNT];

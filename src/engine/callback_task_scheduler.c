@@ -37,6 +37,8 @@ void *createCallbackTaskS32(CallbackTaskCallback callback, s32 type, s32 priorit
 #pragma weak createCallbackTaskS32 = createCallbackTask
 // The empty condition steers IDO's instruction scheduler to advance task3
 // immediately after storing it while leaving task0's advance after its store.
+// IDO code generation for this function is sensitive to source line layout.
+// clang-format off
 void initCallbackTaskScheduler(s32 arg0) {
     CallbackTask **pool;
     CallbackTaskGroup *task0;
@@ -90,6 +92,7 @@ void initCallbackTaskScheduler(s32 arg0) {
         break;
     }
 }
+// clang-format on
 
 // Mirrors the linked list head gCallbackTaskActiveListHead into the global cursor gCurrentCallbackTask,
 // then for each node clears callbackTimer and invokes its callback with a
@@ -170,51 +173,51 @@ void *createCallbackTaskPreservingArgs(CallbackTaskCallback callback, u16 type, 
     task = NULL;
     next = NULL;
     switch ((type & 0xFFFFu) & 0xFF) {
-    case 0:
-        if (gFreeCallbackTaskType0Count == 0) {
+        case 0:
+            if (gFreeCallbackTaskType0Count == 0) {
+                return NULL;
+            }
+            gFreeCallbackTaskType0Count--;
+            break;
+        case 1:
+            if (gFreeCallbackTaskType1Count == 0) {
+                return NULL;
+            }
+            gFreeCallbackTaskType1Count--;
+            break;
+        case 2:
+            if (gFreeCallbackTaskType2Count == 0) {
+                return NULL;
+            }
+            gFreeCallbackTaskType2Count--;
+            prev = next;
+            break;
+        case 3:
+            if (gFreeCallbackTaskType3Count == 0) {
+                return NULL;
+            }
+            gFreeCallbackTaskType3Count--;
+            break;
+        case 4:
+            if (gFreeCallbackTaskType4Count == 0) {
+                return NULL;
+            }
+            gFreeCallbackTaskType4Count--;
+            break;
+        case 5:
+            if (gFreeCallbackTaskType5Count == 0) {
+                return NULL;
+            }
+            gFreeCallbackTaskType5Count--;
+            break;
+        case 6:
+            if (gFreeCallbackTaskType6Count == 0) {
+                return NULL;
+            }
+            gFreeCallbackTaskType6Count--;
+            break;
+        default:
             return NULL;
-        }
-        gFreeCallbackTaskType0Count--;
-        break;
-    case 1:
-        if (gFreeCallbackTaskType1Count == 0) {
-            return NULL;
-        }
-        gFreeCallbackTaskType1Count--;
-        break;
-    case 2:
-        if (gFreeCallbackTaskType2Count == 0) {
-            return NULL;
-        }
-        gFreeCallbackTaskType2Count--;
-        prev = next;
-        break;
-    case 3:
-        if (gFreeCallbackTaskType3Count == 0) {
-            return NULL;
-        }
-        gFreeCallbackTaskType3Count--;
-        break;
-    case 4:
-        if (gFreeCallbackTaskType4Count == 0) {
-            return NULL;
-        }
-        gFreeCallbackTaskType4Count--;
-        break;
-    case 5:
-        if (gFreeCallbackTaskType5Count == 0) {
-            return NULL;
-        }
-        gFreeCallbackTaskType5Count--;
-        break;
-    case 6:
-        if (gFreeCallbackTaskType6Count == 0) {
-            return NULL;
-        }
-        gFreeCallbackTaskType6Count--;
-        break;
-    default:
-        return NULL;
     }
 
     index = gFreeCallbackTaskCount;
@@ -225,7 +228,8 @@ void *createCallbackTaskPreservingArgs(CallbackTaskCallback callback, u16 type, 
     prev = &gCallbackTaskActiveListSentinel;
     sentinel = &D_80112770.activeListSentinel;
     gFreeCallbackTaskCount = index;
-    task = gFreeCallbackTaskPool[(((((((index & 0xFFFF) & 0xFFFFu) & 0xFFFFu) & 0xFFFFu) & 0xFFFFu) & 0xFFFFu) & 0xFFFFu) & 0xFFFFu];
+    task = gFreeCallbackTaskPool
+        [(((((((index & 0xFFFF) & 0xFFFFu) & 0xFFFFu) & 0xFFFFu) & 0xFFFFu) & 0xFFFFu) & 0xFFFFu) & 0xFFFFu];
     if (prev->next != NULL) {
         next = sentinel->next;
         do {
@@ -251,6 +255,8 @@ void *createCallbackTaskPreservingArgs(CallbackTaskCallback callback, u16 type, 
     return task;
 }
 
+// IDO code generation for this function is sensitive to source line layout.
+// clang-format off
 void *createCallbackTask(CallbackTaskCallback callback, u16 type, s32 priority) {
     CallbackTask *task;
     CallbackTask *prev;
@@ -346,10 +352,17 @@ void *createCallbackTask(CallbackTaskCallback callback, u16 type, s32 priority) 
     do { task->args[i] = NULL; i = (i + 1) & 0xFFFF; } while (i < 0x40U);
     return task;
 }
+// clang-format on
 
+// IDO code generation for this function is sensitive to source line layout.
+// clang-format off
 void *createCallbackTaskWithUserId(CallbackTaskCallback callback, s32 type, s32 priority, s32 userId){ CallbackTask *t=createCallbackTaskS32(callback,type&0xFFFF,priority); if(t!=NULL){t->userId=userId;} return t;}
+// clang-format on
 
+// IDO code generation for this function is sensitive to source line layout.
+// clang-format off
 void *createCallbackTaskWithUserIdPreservingArgs(CallbackTaskCallback callback, s32 type, s32 priority, s32 userId){ CallbackTask *t=createCallbackTaskPreservingArgsS32(callback,type&0xFFFF,priority); if(t!=NULL){t->userId=userId;} return t;}
+// clang-format on
 
 void removeCallbackTask(void *taskPtr) {
     CallbackTask *task = taskPtr;
@@ -369,34 +382,34 @@ void removeCallbackTask(void *taskPtr) {
 
     type = task->type & 0xFF;
     switch (type) {
-    case 0:
-        counter = &gFreeCallbackTaskType0Count;
-        (*counter)++;
-        return;
-    case 1:
-        counter = &gFreeCallbackTaskType1Count;
-        (*counter)++;
-        return;
-    case 2:
-        counter = &gFreeCallbackTaskType2Count;
-        (*counter)++;
-        return;
-    case 3:
-        counter = &gFreeCallbackTaskType3Count;
-        (*counter)++;
-        return;
-    case 4:
-        counter = &gFreeCallbackTaskType4Count;
-        (*counter)++;
-        return;
-    case 5:
-        counter = &gFreeCallbackTaskType5Count;
-        (*counter)++;
-        return;
-    case 6:
-        counter = &gFreeCallbackTaskType6Count;
-        (*counter)++;
-        return;
+        case 0:
+            counter = &gFreeCallbackTaskType0Count;
+            (*counter)++;
+            return;
+        case 1:
+            counter = &gFreeCallbackTaskType1Count;
+            (*counter)++;
+            return;
+        case 2:
+            counter = &gFreeCallbackTaskType2Count;
+            (*counter)++;
+            return;
+        case 3:
+            counter = &gFreeCallbackTaskType3Count;
+            (*counter)++;
+            return;
+        case 4:
+            counter = &gFreeCallbackTaskType4Count;
+            (*counter)++;
+            return;
+        case 5:
+            counter = &gFreeCallbackTaskType5Count;
+            (*counter)++;
+            return;
+        case 6:
+            counter = &gFreeCallbackTaskType6Count;
+            (*counter)++;
+            return;
     }
 }
 

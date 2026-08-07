@@ -90,78 +90,86 @@ void func_8008393C(SnowboardTrailPlayer *player) {
 
     trail = &player->trail;
     switch (player->trail.state) {
-    case 0:
-        break;
-    case 1:
-        trail->spinYaw += 0x240;
-        transformVec3iByFixedMatrix(player->modelTransform, &trail->localOffset, &trail->worldPos);
-        trail->worldPos.x += player->velocity.x;
-        trail->worldPos.y += player->velocity.y;
-        trail->worldPos.z += player->velocity.z;
-        makeFixedRotationY(scratch.rotation, trail->modelYaw);
-        multiplyFixedMatrix3s(scratch.rotation, player->modelTransform, trail->rotation);
-        trail->drawPos.x = trail->worldPos.x;
-        trail->drawPos.y = trail->worldPos.y;
-        trail->drawPos.z = trail->worldPos.z;
-        trail->rotation[0] = (trail->rotation[0] * trail->scaleStep) / 16;
-        trail->rotation[1] = (trail->rotation[1] * trail->scaleStep) / 16;
-        trail->rotation[2] = (trail->rotation[2] * trail->scaleStep) / 16;
-        trail->rotation[3] = (trail->rotation[3] * trail->scaleStep) / 16;
-        trail->rotation[4] = (trail->rotation[4] * trail->scaleStep) / 16;
-        trail->rotation[5] = (trail->rotation[5] * trail->scaleStep) / 16;
-        trail->rotation[6] = (trail->rotation[6] * trail->scaleStep) / 16;
-        trail->rotation[7] = (trail->rotation[7] * trail->scaleStep) / 16;
-        trail->rotation[8] = (trail->rotation[8] * trail->scaleStep) / 16;
-        makeFixedRotationX(scratch.rotation, trail->spinYaw);
-        scratch.translation.x = trail->scale.x;
-        scratch.translation.y = trail->scale.y;
-        scratch.translation.z = trail->scale.z;
-        composeFixedTransforms(&scratch, (FixedTransform *)trail->rotation, (FixedTransform *)trail->transform);
-        if (gRaceUpdatePaused == 0) {
-            trail->scaleStep++;
-        }
-        if (trail->scaleStep == 0x10) {
-            trail->state = 2;
-        }
-        if (player->disabled == 0) {
-            addRenderCallback(&gRaceModelEffectRenderCallbackList, (RenderCallback)renderSnowboardTrailEffect, trail);
-        }
-        return;
-    case 2:
-        trail->spinYaw += 0x240;
-        transformVec3iByFixedMatrix(player->modelTransform, &trail->localOffset, &trail->worldPos);
-        trail->worldPos.x += player->velocity.x;
-        trail->worldPos.y += player->velocity.y;
-        trail->worldPos.z += player->velocity.z;
-        makeFixedRotationY(scratch.rotation, trail->modelYaw);
-        multiplyFixedMatrix3s(scratch.rotation, player->modelTransform, trail->rotation);
-        trail->drawPos.x = trail->worldPos.x;
-        trail->drawPos.y = trail->worldPos.y;
-        trail->drawPos.z = trail->worldPos.z;
-        makeFixedRotationX(scratch.rotation, trail->spinYaw);
-        scratch.translation.x = trail->scale.x;
-        scratch.translation.y = trail->scale.y;
-        scratch.translation.z = trail->scale.z;
-        composeFixedTransforms(&scratch, (FixedTransform *)trail->rotation, (FixedTransform *)trail->transform);
-        if (player->flags & SNOWBOARD_TRAIL_FLAG_CANCEL) {
-            player->trailTimer = 0;
-        }
-        if (gRaceUpdatePaused == 0) {
-            if (player->trailTimer != 0) {
-                player->trailTimer--;
+        case 0:
+            break;
+        case 1:
+            trail->spinYaw += 0x240;
+            transformVec3iByFixedMatrix(player->modelTransform, &trail->localOffset, &trail->worldPos);
+            trail->worldPos.x += player->velocity.x;
+            trail->worldPos.y += player->velocity.y;
+            trail->worldPos.z += player->velocity.z;
+            makeFixedRotationY(scratch.rotation, trail->modelYaw);
+            multiplyFixedMatrix3s(scratch.rotation, player->modelTransform, trail->rotation);
+            trail->drawPos.x = trail->worldPos.x;
+            trail->drawPos.y = trail->worldPos.y;
+            trail->drawPos.z = trail->worldPos.z;
+            trail->rotation[0] = (trail->rotation[0] * trail->scaleStep) / 16;
+            trail->rotation[1] = (trail->rotation[1] * trail->scaleStep) / 16;
+            trail->rotation[2] = (trail->rotation[2] * trail->scaleStep) / 16;
+            trail->rotation[3] = (trail->rotation[3] * trail->scaleStep) / 16;
+            trail->rotation[4] = (trail->rotation[4] * trail->scaleStep) / 16;
+            trail->rotation[5] = (trail->rotation[5] * trail->scaleStep) / 16;
+            trail->rotation[6] = (trail->rotation[6] * trail->scaleStep) / 16;
+            trail->rotation[7] = (trail->rotation[7] * trail->scaleStep) / 16;
+            trail->rotation[8] = (trail->rotation[8] * trail->scaleStep) / 16;
+            makeFixedRotationX(scratch.rotation, trail->spinYaw);
+            scratch.translation.x = trail->scale.x;
+            scratch.translation.y = trail->scale.y;
+            scratch.translation.z = trail->scale.z;
+            composeFixedTransforms(&scratch, (FixedTransform *)trail->rotation, (FixedTransform *)trail->transform);
+            if (gRaceUpdatePaused == 0) {
+                trail->scaleStep++;
             }
-        }
-        if (player->trailTimer == 0) {
-            trail->state = 0;
-            spawnRaceUiSnowboardTrailEffect((struct RaceUiSnowboardTrailPlayer *)player);
+            if (trail->scaleStep == 0x10) {
+                trail->state = 2;
+            }
+            if (player->disabled == 0) {
+                addRenderCallback(
+                    &gRaceModelEffectRenderCallbackList,
+                    (RenderCallback)renderSnowboardTrailEffect,
+                    trail
+                );
+            }
             return;
-        }
-        if (player->disabled == 0) {
-            addRenderCallback(&gRaceModelEffectRenderCallbackList, (RenderCallback)renderSnowboardTrailEffect, trail);
-        }
-        return;
-    default:
-        return;
+        case 2:
+            trail->spinYaw += 0x240;
+            transformVec3iByFixedMatrix(player->modelTransform, &trail->localOffset, &trail->worldPos);
+            trail->worldPos.x += player->velocity.x;
+            trail->worldPos.y += player->velocity.y;
+            trail->worldPos.z += player->velocity.z;
+            makeFixedRotationY(scratch.rotation, trail->modelYaw);
+            multiplyFixedMatrix3s(scratch.rotation, player->modelTransform, trail->rotation);
+            trail->drawPos.x = trail->worldPos.x;
+            trail->drawPos.y = trail->worldPos.y;
+            trail->drawPos.z = trail->worldPos.z;
+            makeFixedRotationX(scratch.rotation, trail->spinYaw);
+            scratch.translation.x = trail->scale.x;
+            scratch.translation.y = trail->scale.y;
+            scratch.translation.z = trail->scale.z;
+            composeFixedTransforms(&scratch, (FixedTransform *)trail->rotation, (FixedTransform *)trail->transform);
+            if (player->flags & SNOWBOARD_TRAIL_FLAG_CANCEL) {
+                player->trailTimer = 0;
+            }
+            if (gRaceUpdatePaused == 0) {
+                if (player->trailTimer != 0) {
+                    player->trailTimer--;
+                }
+            }
+            if (player->trailTimer == 0) {
+                trail->state = 0;
+                spawnRaceUiSnowboardTrailEffect((struct RaceUiSnowboardTrailPlayer *)player);
+                return;
+            }
+            if (player->disabled == 0) {
+                addRenderCallback(
+                    &gRaceModelEffectRenderCallbackList,
+                    (RenderCallback)renderSnowboardTrailEffect,
+                    trail
+                );
+            }
+            return;
+        default:
+            return;
     }
 }
 

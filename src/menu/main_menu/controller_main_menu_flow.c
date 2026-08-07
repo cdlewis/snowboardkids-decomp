@@ -43,7 +43,7 @@ typedef struct SaveFileIdentity {
 #define CONTROLLER_PAK_CHECKSUM_START_OFFSET 4
 #define CONTROLLER_PAK_MAX_READ_RETRIES 3
 
-#define CONTROLLER_PAK_SAVE_FIELD_OFFSET(field) ((u32)&(((GameSaveData *)0)->field))
+#define CONTROLLER_PAK_SAVE_FIELD_OFFSET(field) ((u32) & (((GameSaveData *)0)->field))
 #define CONTROLLER_PAK_RECORD_AT(cursor, field) \
     (*(GameSaveRecordTime *)((cursor) + CONTROLLER_PAK_SAVE_FIELD_OFFSET(field)))
 #define CONTROLLER_PAK_U8_AT(cursor, field) (*(u8 *)((cursor) + CONTROLLER_PAK_SAVE_FIELD_OFFSET(field)))
@@ -55,15 +55,13 @@ u8 gControllerPakSaveGameNameBytes[16] = {
 };
 u8 gControllerPakSaveExtNameBytes[4] = { 0, 0, 0, 0 };
 u8 gControllerPakSaveExtNameBytesEnd[0x84] = {
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x49, 0x00, 0x3F, 0x00, 0x53, 0x00, 0x6A,
-    0x00, 0x2B, 0x00, 0x66, 0x00, 0x2B, 0x00, 0x80, 0x00, 0x3A, 0x00, 0x47, 0x00, 0x61, 0x00, 0x55,
-    0x00, 0x3C, 0x00, 0x2B, 0xFF, 0xFF, 0x00, 0x00, 0x00, 0xA8, 0x00, 0x99, 0x00, 0xB7, 0x00, 0x83,
-    0x00, 0x2B, 0x00, 0x72, 0xFF, 0xFF, 0x00, 0x00, 0x00, 0x5E, 0x00, 0x72, 0x00, 0xC9, 0x00, 0x98,
-    0x00, 0x9C, 0xFF, 0xFF, 0x00, 0xB3, 0x00, 0xB1, 0x00, 0xB8, 0xFF, 0xFF, 0x00, 0x94, 0x00, 0xBB,
-    0x00, 0xB8, 0xFF, 0xFF, 0x00, 0x58, 0x00, 0x2B, 0x00, 0x53, 0x00, 0x8E, 0x00, 0x93, 0x00, 0xB6,
-    0x00, 0xCD, 0xFF, 0xFF, 0x00, 0x31, 0xFF, 0xFF, 0x00, 0x58, 0x00, 0x2B, 0x00, 0x53, 0x00, 0xBC,
-    0x00, 0x98, 0x00, 0x9D, 0x00, 0xAE, 0x00, 0x9D, 0x00, 0x8F, 0x00, 0xC9, 0x00, 0x9B, 0x00, 0x9F,
-    0x00, 0x32, 0xFF, 0xFF,
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x49, 0x00, 0x3F, 0x00, 0x53, 0x00, 0x6A, 0x00, 0x2B, 0x00,
+    0x66, 0x00, 0x2B, 0x00, 0x80, 0x00, 0x3A, 0x00, 0x47, 0x00, 0x61, 0x00, 0x55, 0x00, 0x3C, 0x00, 0x2B, 0xFF, 0xFF,
+    0x00, 0x00, 0x00, 0xA8, 0x00, 0x99, 0x00, 0xB7, 0x00, 0x83, 0x00, 0x2B, 0x00, 0x72, 0xFF, 0xFF, 0x00, 0x00, 0x00,
+    0x5E, 0x00, 0x72, 0x00, 0xC9, 0x00, 0x98, 0x00, 0x9C, 0xFF, 0xFF, 0x00, 0xB3, 0x00, 0xB1, 0x00, 0xB8, 0xFF, 0xFF,
+    0x00, 0x94, 0x00, 0xBB, 0x00, 0xB8, 0xFF, 0xFF, 0x00, 0x58, 0x00, 0x2B, 0x00, 0x53, 0x00, 0x8E, 0x00, 0x93, 0x00,
+    0xB6, 0x00, 0xCD, 0xFF, 0xFF, 0x00, 0x31, 0xFF, 0xFF, 0x00, 0x58, 0x00, 0x2B, 0x00, 0x53, 0x00, 0xBC, 0x00, 0x98,
+    0x00, 0x9D, 0x00, 0xAE, 0x00, 0x9D, 0x00, 0x8F, 0x00, 0xC9, 0x00, 0x9B, 0x00, 0x9F, 0x00, 0x32, 0xFF, 0xFF,
 };
 u8 gMainMenuReturnFromRace = 0;
 
@@ -106,10 +104,13 @@ void requestControllerRead(void) {
     }
 }
 
+// IDO code generation for this function is sensitive to source line layout.
+// clang-format off
 void updateControllerInputState(void) {
     u16 i;
  do { i = 0; do { if ((((s32) gConnectedControllerBitmask) >> i) & 1) { if (gControllerPads[i].errno == 0) { gControllerInputState[i] = *((ControllerInputState *) (&gControllerPads[i])); } } i++; } while (i < 4); gControllerReadPending = 0; } while (0);
 }
+// clang-format on
 
 void requestRumbleMotorInit(u16 arg0) {
     OSMesg msg;
@@ -127,28 +128,43 @@ void serviceRumbleMotorRequest(u16 arg0) {
     if (gRumbleMotorStatuses[arg0] == RUMBLE_MOTOR_NO_PAK) {
         gRumbleMotorRequestStates[arg0] = 0;
         if (gRumblePakConnectedMask & (1 << arg0)) {
-            osSendMesg(&gControllerSubsystemRequestQueue, (OSMesg)(arg0 + CONTROLLER_REQUEST_RETRY_RUMBLE_INIT),
-                       OS_MESG_BLOCK);
+            osSendMesg(
+                &gControllerSubsystemRequestQueue,
+                (OSMesg)(arg0 + CONTROLLER_REQUEST_RETRY_RUMBLE_INIT),
+                OS_MESG_BLOCK
+            );
         }
     } else if (gRumbleMotorStatuses[arg0] == RUMBLE_MOTOR_WRONG_DEVICE) {
         gRumbleMotorRequestStates[arg0] = 0;
         if (gRumblePakConnectedMask & (1 << arg0)) {
-            osSendMesg(&gControllerSubsystemRequestQueue, (OSMesg)(arg0 + CONTROLLER_REQUEST_RETRY_RUMBLE_INIT),
-                       OS_MESG_BLOCK);
+            osSendMesg(
+                &gControllerSubsystemRequestQueue,
+                (OSMesg)(arg0 + CONTROLLER_REQUEST_RETRY_RUMBLE_INIT),
+                OS_MESG_BLOCK
+            );
         }
     } else if (gRumbleMotorStatuses[arg0] == RUMBLE_MOTOR_CONTROLLER_FAILURE) {
         gRumbleMotorRequestStates[arg0] = 0;
         if (gRumblePakConnectedMask & (1 << arg0)) {
-            osSendMesg(&gControllerSubsystemRequestQueue, (OSMesg)(arg0 + CONTROLLER_REQUEST_RETRY_RUMBLE_INIT),
-                       OS_MESG_BLOCK);
+            osSendMesg(
+                &gControllerSubsystemRequestQueue,
+                (OSMesg)(arg0 + CONTROLLER_REQUEST_RETRY_RUMBLE_INIT),
+                OS_MESG_BLOCK
+            );
         }
     } else {
         if (gRumbleMotorRequestStates[arg0] == 0) {
-            osSendMesg(&gControllerSubsystemRequestQueue, (OSMesg)(arg0 + CONTROLLER_REQUEST_STOP_RUMBLE),
-                       OS_MESG_BLOCK);
+            osSendMesg(
+                &gControllerSubsystemRequestQueue,
+                (OSMesg)(arg0 + CONTROLLER_REQUEST_STOP_RUMBLE),
+                OS_MESG_BLOCK
+            );
         } else {
-            osSendMesg(&gControllerSubsystemRequestQueue, (OSMesg)(arg0 + CONTROLLER_REQUEST_START_RUMBLE),
-                       OS_MESG_BLOCK);
+            osSendMesg(
+                &gControllerSubsystemRequestQueue,
+                (OSMesg)(arg0 + CONTROLLER_REQUEST_START_RUMBLE),
+                OS_MESG_BLOCK
+            );
         }
         gRumbleMotorRequestStates[arg0] = 0;
     }
@@ -237,9 +253,14 @@ void checkControllerPakSaveStatus(u16 arg0) {
 
     osPfsInitPak(&gControllerEventQueue, &gControllerPakHandles[arg0], arg0);
 
-    ret = osPfsFindFile(&gControllerPakHandles[arg0], gControllerPakSaveFileIdentity.companyCode,
-                        gControllerPakSaveFileIdentity.gameCode, gControllerPakExtName, gControllerPakGameName,
-                        &gControllerPakFileNos[arg0]);
+    ret = osPfsFindFile(
+        &gControllerPakHandles[arg0],
+        gControllerPakSaveFileIdentity.companyCode,
+        gControllerPakSaveFileIdentity.gameCode,
+        gControllerPakExtName,
+        gControllerPakGameName,
+        &gControllerPakFileNos[arg0]
+    );
     if (ret == 0) {
         gControllerPakStatusCodes[arg0] = 2;
     } else {
@@ -300,13 +321,24 @@ void readControllerPakSave(u16 controllerIndex) {
         offset++;
     } while (&gControllerPakSaveGameNameBytes[offset] < gControllerPakSaveExtNameBytes);
 
-    osPfsFindFile(&gControllerPakHandles[controllerIndex], gControllerPakSaveFileIdentity.companyCode,
-                  gControllerPakSaveFileIdentity.gameCode, gControllerPakExtName, gControllerPakGameName,
-                  &gControllerPakFileNos[controllerIndex]);
+    osPfsFindFile(
+        &gControllerPakHandles[controllerIndex],
+        gControllerPakSaveFileIdentity.companyCode,
+        gControllerPakSaveFileIdentity.gameCode,
+        gControllerPakExtName,
+        gControllerPakGameName,
+        &gControllerPakFileNos[controllerIndex]
+    );
 
     save = &gGameSaveDataBuffer[controllerIndex];
-    readStatus = osPfsReadWriteFile(&gControllerPakHandles[controllerIndex], gControllerPakFileNos[controllerIndex],
-                                    0, 0, CONTROLLER_PAK_SAVE_READ_SIZE, (u8 *)save);
+    readStatus = osPfsReadWriteFile(
+        &gControllerPakHandles[controllerIndex],
+        gControllerPakFileNos[controllerIndex],
+        0,
+        0,
+        CONTROLLER_PAK_SAVE_READ_SIZE,
+        (u8 *)save
+    );
 
     if (readStatus == 0) {
         checksum = 0;
@@ -370,30 +402,36 @@ void writeControllerPakSave(u16 controllerIndex) {
 
     i = 0;
     do {
-        gControllerPakSaveFileIdentity.extName[i] =
-            gControllerPakSaveExtNameBytes[i];
+        gControllerPakSaveFileIdentity.extName[i] = gControllerPakSaveExtNameBytes[i];
         i++;
-    } while (&gControllerPakSaveExtNameBytes[i] <
-             gControllerPakSaveExtNameBytesEnd);
+    } while (&gControllerPakSaveExtNameBytes[i] < gControllerPakSaveExtNameBytesEnd);
 
     i = 0;
     do {
-        gControllerPakSaveFileIdentity.gameName[i] =
-            gControllerPakSaveGameNameBytes[i];
+        gControllerPakSaveFileIdentity.gameName[i] = gControllerPakSaveGameNameBytes[i];
         i++;
-    } while (&gControllerPakSaveGameNameBytes[i] <
-             gControllerPakSaveExtNameBytes);
+    } while (&gControllerPakSaveGameNameBytes[i] < gControllerPakSaveExtNameBytes);
 
     fileNo = &gControllerPakFileNos[controllerIndex];
-    osPfsInitPak(&gControllerEventQueue,
-                 (pfs = handle), controllerIndex);
+    osPfsInitPak(&gControllerEventQueue, (pfs = handle), controllerIndex);
 
-    if (osPfsFindFile(pfs, gControllerPakSaveFileIdentity.companyCode,
-                      gControllerPakSaveFileIdentity.gameCode, gControllerPakExtName,
-                      gControllerPakGameName, fileNo) == 5) {
-        osPfsAllocateFile(pfs, gControllerPakSaveFileIdentity.companyCode,
-                          gControllerPakSaveFileIdentity.gameCode, gControllerPakExtName,
-                          gControllerPakGameName, 0x7900, fileNo);
+    if (osPfsFindFile(
+            pfs,
+            gControllerPakSaveFileIdentity.companyCode,
+            gControllerPakSaveFileIdentity.gameCode,
+            gControllerPakExtName,
+            gControllerPakGameName,
+            fileNo
+        ) == 5) {
+        osPfsAllocateFile(
+            pfs,
+            gControllerPakSaveFileIdentity.companyCode,
+            gControllerPakSaveFileIdentity.gameCode,
+            gControllerPakExtName,
+            gControllerPakGameName,
+            0x7900,
+            fileNo
+        );
     }
 
     save = &gGameSaveDataBuffer[controllerIndex];
@@ -545,8 +583,7 @@ u16 validateControllerPakSave(volatile s32 arg0) {
         wordCursor++;
         byteCursor++;
         secondByteStep = firstByteStep && firstByteStep;
-        if (secondByteStep) {
-        }
+        if (secondByteStep) {}
     } while (offset < 0x2C);
 
     i = 0;
@@ -559,12 +596,9 @@ u16 validateControllerPakSave(volatile s32 arg0) {
         nextByte = byteCursor + 1;
         secondByteStep = nextByte - byteCursor;
         firstByteStep = wordCursorValid;
-        if (secondByteStep) {
-        }
-        if ((firstByteStep ^ 0) && wordCursor) {
-        }
-        if (save && save) {
-        }
+        if (secondByteStep) {}
+        if ((firstByteStep ^ 0) && wordCursor) {}
+        if (save && save) {}
         byteCursor++;
     } while (i != count);
     i += secondByteStep - 1;
@@ -615,7 +649,7 @@ s32 validateControllerPakSaveData(s32 channel) {
         scoreAndCharacterCursor = scoreCourseCursor;
         playerCounter = 0;
         trickScoreCursor = raceCourseCursor;
-loop_player:
+    loop_player:
         minutes = CONTROLLER_PAK_RECORD_AT(recordCursor, timeTrialRecords).minutes;
         playerCounter += 2;
         if ((minutes < 0) || (minutes >= 100)) {
@@ -661,7 +695,7 @@ loop_player:
                 goto block_32;
             }
         } else if (CONTROLLER_PAK_U8_AT(scoreAndCharacterCursor, scoreAttackScores) >= 0x3D) {
-block_32:
+        block_32:
             invalidSave = 1;
         }
         scoreCharacter = CONTROLLER_PAK_U8_AT(scoreAndCharacterCursor, scoreAttackCharacterIds);
@@ -765,7 +799,7 @@ void initMainMenu(void) {
     setMainMenuSceneModelRotation(4, 0, 0xDD0, 0);
     resetRaceCameras();
     setRaceCameraMode(0, 0x1F);
-    gMenuFadeAlpha = (s16) gCurrentGameTask->fade;
+    gMenuFadeAlpha = (s16)gCurrentGameTask->fade;
     gMenuFadeOverlayActive = 1;
     enqueueSoundEffect(0x4A, 0x32);
     setCurrentGameTaskCallback(&updateMainMenu, 0);
@@ -784,7 +818,7 @@ void updateMainMenu(void) {
     flag = 0;
     temp_v1 = gCurrentGameTask->fade;
     if (temp_v1 != 0) {
-        gCurrentGameTask->fade = stepMenuFadeAlpha((s16) temp_v1, 0x10, 0);
+        gCurrentGameTask->fade = stepMenuFadeAlpha((s16)temp_v1, 0x10, 0);
         if (gCurrentGameTask->fade == 0) {
             gMenuFadeOverlayActive = 0;
         }
@@ -857,7 +891,7 @@ void fadeOutMainMenu(void) {
 
     temp_v0 = gCurrentGameTask->fade;
     if (temp_v0 != 0xFF) {
-        gCurrentGameTask->fade = stepMenuFadeAlpha((s16) temp_v0, 0x28, 1);
+        gCurrentGameTask->fade = stepMenuFadeAlpha((s16)temp_v0, 0x28, 1);
         if (gCurrentGameTask->fade == 0xFF) {
             gFramebufferSwapHold = 1;
         } else {
@@ -1036,52 +1070,52 @@ void updateMainMenuSettings(void) {
         }
         if (temp_v1 & (STICK_RIGHT | R_JPAD)) {
             switch (gMenuFlowState) {
-            case 0:
-                if (gRaceRecordSettingsEnabled != 0) {
-                    gRaceRecordSettingsEnabled -= 1;
-                    enqueueSoundEffect(0x19, 0x32);
-                    temp_v1 = gPlayerInputPressed[0];
-                }
-                break;
-            case 1:
-                if (gRaceCourseModelEffectsDisabled != 1) {
-                    gRaceCourseModelEffectsDisabled += 1;
-                    enqueueSoundEffect(0x19, 0x32);
-                    temp_v1 = gPlayerInputPressed[0];
-                }
-                break;
-            case 2:
-                if (gRaceCourseOverlayEffectsDisabled != 1) {
-                    gRaceCourseOverlayEffectsDisabled += 1;
-                    enqueueSoundEffect(0x19, 0x32);
-                    temp_v1 = gPlayerInputPressed[0];
-                }
-                break;
+                case 0:
+                    if (gRaceRecordSettingsEnabled != 0) {
+                        gRaceRecordSettingsEnabled -= 1;
+                        enqueueSoundEffect(0x19, 0x32);
+                        temp_v1 = gPlayerInputPressed[0];
+                    }
+                    break;
+                case 1:
+                    if (gRaceCourseModelEffectsDisabled != 1) {
+                        gRaceCourseModelEffectsDisabled += 1;
+                        enqueueSoundEffect(0x19, 0x32);
+                        temp_v1 = gPlayerInputPressed[0];
+                    }
+                    break;
+                case 2:
+                    if (gRaceCourseOverlayEffectsDisabled != 1) {
+                        gRaceCourseOverlayEffectsDisabled += 1;
+                        enqueueSoundEffect(0x19, 0x32);
+                        temp_v1 = gPlayerInputPressed[0];
+                    }
+                    break;
             }
         }
         if (temp_v1 & (STICK_LEFT | L_JPAD)) {
             switch (gMenuFlowState) {
-            case 0:
-                if (gRaceRecordSettingsEnabled != 1) {
-                    gRaceRecordSettingsEnabled += 1;
-                    enqueueSoundEffect(0x19, 0x32);
-                    temp_v1 = gPlayerInputPressed[0];
-                }
-                break;
-            case 1:
-                if (gRaceCourseModelEffectsDisabled != 0) {
-                    gRaceCourseModelEffectsDisabled -= 1;
-                    enqueueSoundEffect(0x19, 0x32);
-                    temp_v1 = gPlayerInputPressed[0];
-                }
-                break;
-            case 2:
-                if (gRaceCourseOverlayEffectsDisabled != 0) {
-                    gRaceCourseOverlayEffectsDisabled -= 1;
-                    enqueueSoundEffect(0x19, 0x32);
-                    temp_v1 = gPlayerInputPressed[0];
-                }
-                break;
+                case 0:
+                    if (gRaceRecordSettingsEnabled != 1) {
+                        gRaceRecordSettingsEnabled += 1;
+                        enqueueSoundEffect(0x19, 0x32);
+                        temp_v1 = gPlayerInputPressed[0];
+                    }
+                    break;
+                case 1:
+                    if (gRaceCourseModelEffectsDisabled != 0) {
+                        gRaceCourseModelEffectsDisabled -= 1;
+                        enqueueSoundEffect(0x19, 0x32);
+                        temp_v1 = gPlayerInputPressed[0];
+                    }
+                    break;
+                case 2:
+                    if (gRaceCourseOverlayEffectsDisabled != 0) {
+                        gRaceCourseOverlayEffectsDisabled -= 1;
+                        enqueueSoundEffect(0x19, 0x32);
+                        temp_v1 = gPlayerInputPressed[0];
+                    }
+                    break;
             }
         }
         if ((temp_v1 & (A_BUTTON | B_BUTTON | START_BUTTON)) && (gMenuFlowState == 3)) {
@@ -1116,149 +1150,149 @@ void exitMainMenuSettings(void) {
 
 s32 checkMainMenuSecretCode(void) {
     switch (gMainMenuSecretCodeStep) {
-    case 0:
-        if (gPlayerInputHeld[0] == STICK_DOWN) {
-            gMainMenuSecretCodeStep++;
-        }
-        goto end0;
-    case 1:
-        if ((gPlayerInputHeld[0] != STICK_DOWN) && (gPlayerInputHeld[0] != 0)) {
-            if (gPlayerInputHeld[0] == STICK_UP) {
+        case 0:
+            if (gPlayerInputHeld[0] == STICK_DOWN) {
                 gMainMenuSecretCodeStep++;
-            } else {
-                gMainMenuSecretCodeStep = -1;
             }
-        }
-        goto end0;
-    case 2:
-        if ((gPlayerInputHeld[0] != STICK_UP) && (gPlayerInputHeld[0] != 0)) {
-            if (gPlayerInputHeld[0] == D_JPAD) {
-                gMainMenuSecretCodeStep++;
-            } else {
-                gMainMenuSecretCodeStep = -1;
-            }
-        }
-        goto end0;
-    case 3:
-        if ((gPlayerInputHeld[0] != D_JPAD) && (gPlayerInputHeld[0] != 0)) {
-            if (gPlayerInputHeld[0] == U_JPAD) {
-                gMainMenuSecretCodeStep++;
-            } else {
-                gMainMenuSecretCodeStep = -1;
-            }
-        }
-        goto end0;
-    case 4:
-        if ((gPlayerInputHeld[0] != U_JPAD) && (gPlayerInputHeld[0] != 0)) {
-            if (gPlayerInputHeld[0] == D_CBUTTONS) {
-                gMainMenuSecretCodeStep++;
-            } else {
-                gMainMenuSecretCodeStep = -1;
-            }
-        }
-        goto end0;
-    case 5:
-        if ((gPlayerInputHeld[0] != D_CBUTTONS) && (gPlayerInputHeld[0] != 0)) {
-            if (gPlayerInputHeld[0] == U_CBUTTONS) {
-                gMainMenuSecretCodeStep++;
-            } else {
-                gMainMenuSecretCodeStep = -1;
-            }
-        }
-        goto end0;
-    case 6:
-        if ((gPlayerInputHeld[0] != U_CBUTTONS) && (gPlayerInputHeld[0] != 0)) {
-            if (gPlayerInputHeld[0] == L_TRIG) {
-                gMainMenuSecretCodeStep++;
-            } else {
-                gMainMenuSecretCodeStep = -1;
-            }
-        }
-        goto end0;
-    case 7:
-        if ((gPlayerInputHeld[0] != L_TRIG) && (gPlayerInputHeld[0] != 0)) {
-            if (gPlayerInputHeld[0] == R_TRIG) {
-                gMainMenuSecretCodeStep++;
-            } else {
-                gMainMenuSecretCodeStep = -1;
-            }
-        }
-        goto end0;
-    case 8:
-        if ((gPlayerInputHeld[0] != R_TRIG) && (gPlayerInputHeld[0] != 0)) {
-            if (gPlayerInputHeld[0] == Z_TRIG) {
-                gMainMenuSecretCodeStep++;
-            } else {
-                gMainMenuSecretCodeStep = -1;
-            }
-        }
-        goto end0;
-    case 9:
-        if ((gPlayerInputHeld[0] != Z_TRIG) && (gPlayerInputHeld[0] != 0)) {
-            if (gPlayerInputHeld[0] == L_JPAD) {
-                gMainMenuSecretCodeStep++;
-            } else {
-                gMainMenuSecretCodeStep = -1;
-            }
-        }
-        goto end0;
-    case 10:
-        if ((gPlayerInputHeld[0] != L_JPAD) && (gPlayerInputHeld[0] != 0)) {
-            if (gPlayerInputHeld[0] == R_CBUTTONS) {
-                gMainMenuSecretCodeStep++;
-            } else {
-                gMainMenuSecretCodeStep = -1;
-            }
-        }
-        goto end0;
-    case 11:
-        if ((gPlayerInputHeld[0] != R_CBUTTONS) && (gPlayerInputHeld[0] != 0)) {
-            if (gPlayerInputHeld[0] == STICK_UP) {
-                gMainMenuSecretCodeStep++;
-            } else {
-                gMainMenuSecretCodeStep = -1;
-            }
-        }
-        goto end0;
-    case 12:
-        if ((gPlayerInputHeld[0] != STICK_UP) && (gPlayerInputHeld[0] != 0)) {
-            if (gPlayerInputHeld[0] == B_BUTTON) {
-                gMainMenuSecretCodeStep++;
-            } else {
-                gMainMenuSecretCodeStep = -1;
-            }
-        }
-        goto end0;
-    case 13:
-        if ((gPlayerInputHeld[0] != B_BUTTON) && (gPlayerInputHeld[0] != 0)) {
-            if (gPlayerInputHeld[0] == R_JPAD) {
-                gMainMenuSecretCodeStep++;
-            } else {
-                gMainMenuSecretCodeStep = -1;
-            }
-        }
-        goto end0;
-    case 14:
-        if ((gPlayerInputHeld[0] != R_JPAD) && (gPlayerInputHeld[0] != 0)) {
-            if (gPlayerInputHeld[0] == L_CBUTTONS) {
-                gMainMenuSecretCodeStep++;
-            } else {
-                gMainMenuSecretCodeStep = -1;
-            }
-        }
-        goto end0;
-    case 15:
-        if (gPlayerInputHeld[0] != L_CBUTTONS) {
-            if (gPlayerInputHeld[0] != 0) {
-                if (gPlayerInputHeld[0] == START_BUTTON) {
-                    return 1;
+            goto end0;
+        case 1:
+            if ((gPlayerInputHeld[0] != STICK_DOWN) && (gPlayerInputHeld[0] != 0)) {
+                if (gPlayerInputHeld[0] == STICK_UP) {
+                    gMainMenuSecretCodeStep++;
+                } else {
+                    gMainMenuSecretCodeStep = -1;
                 }
-                gMainMenuSecretCodeStep = -1;
             }
-        }
-        goto end0;
-    default:
-    end0:
-        return 0;
+            goto end0;
+        case 2:
+            if ((gPlayerInputHeld[0] != STICK_UP) && (gPlayerInputHeld[0] != 0)) {
+                if (gPlayerInputHeld[0] == D_JPAD) {
+                    gMainMenuSecretCodeStep++;
+                } else {
+                    gMainMenuSecretCodeStep = -1;
+                }
+            }
+            goto end0;
+        case 3:
+            if ((gPlayerInputHeld[0] != D_JPAD) && (gPlayerInputHeld[0] != 0)) {
+                if (gPlayerInputHeld[0] == U_JPAD) {
+                    gMainMenuSecretCodeStep++;
+                } else {
+                    gMainMenuSecretCodeStep = -1;
+                }
+            }
+            goto end0;
+        case 4:
+            if ((gPlayerInputHeld[0] != U_JPAD) && (gPlayerInputHeld[0] != 0)) {
+                if (gPlayerInputHeld[0] == D_CBUTTONS) {
+                    gMainMenuSecretCodeStep++;
+                } else {
+                    gMainMenuSecretCodeStep = -1;
+                }
+            }
+            goto end0;
+        case 5:
+            if ((gPlayerInputHeld[0] != D_CBUTTONS) && (gPlayerInputHeld[0] != 0)) {
+                if (gPlayerInputHeld[0] == U_CBUTTONS) {
+                    gMainMenuSecretCodeStep++;
+                } else {
+                    gMainMenuSecretCodeStep = -1;
+                }
+            }
+            goto end0;
+        case 6:
+            if ((gPlayerInputHeld[0] != U_CBUTTONS) && (gPlayerInputHeld[0] != 0)) {
+                if (gPlayerInputHeld[0] == L_TRIG) {
+                    gMainMenuSecretCodeStep++;
+                } else {
+                    gMainMenuSecretCodeStep = -1;
+                }
+            }
+            goto end0;
+        case 7:
+            if ((gPlayerInputHeld[0] != L_TRIG) && (gPlayerInputHeld[0] != 0)) {
+                if (gPlayerInputHeld[0] == R_TRIG) {
+                    gMainMenuSecretCodeStep++;
+                } else {
+                    gMainMenuSecretCodeStep = -1;
+                }
+            }
+            goto end0;
+        case 8:
+            if ((gPlayerInputHeld[0] != R_TRIG) && (gPlayerInputHeld[0] != 0)) {
+                if (gPlayerInputHeld[0] == Z_TRIG) {
+                    gMainMenuSecretCodeStep++;
+                } else {
+                    gMainMenuSecretCodeStep = -1;
+                }
+            }
+            goto end0;
+        case 9:
+            if ((gPlayerInputHeld[0] != Z_TRIG) && (gPlayerInputHeld[0] != 0)) {
+                if (gPlayerInputHeld[0] == L_JPAD) {
+                    gMainMenuSecretCodeStep++;
+                } else {
+                    gMainMenuSecretCodeStep = -1;
+                }
+            }
+            goto end0;
+        case 10:
+            if ((gPlayerInputHeld[0] != L_JPAD) && (gPlayerInputHeld[0] != 0)) {
+                if (gPlayerInputHeld[0] == R_CBUTTONS) {
+                    gMainMenuSecretCodeStep++;
+                } else {
+                    gMainMenuSecretCodeStep = -1;
+                }
+            }
+            goto end0;
+        case 11:
+            if ((gPlayerInputHeld[0] != R_CBUTTONS) && (gPlayerInputHeld[0] != 0)) {
+                if (gPlayerInputHeld[0] == STICK_UP) {
+                    gMainMenuSecretCodeStep++;
+                } else {
+                    gMainMenuSecretCodeStep = -1;
+                }
+            }
+            goto end0;
+        case 12:
+            if ((gPlayerInputHeld[0] != STICK_UP) && (gPlayerInputHeld[0] != 0)) {
+                if (gPlayerInputHeld[0] == B_BUTTON) {
+                    gMainMenuSecretCodeStep++;
+                } else {
+                    gMainMenuSecretCodeStep = -1;
+                }
+            }
+            goto end0;
+        case 13:
+            if ((gPlayerInputHeld[0] != B_BUTTON) && (gPlayerInputHeld[0] != 0)) {
+                if (gPlayerInputHeld[0] == R_JPAD) {
+                    gMainMenuSecretCodeStep++;
+                } else {
+                    gMainMenuSecretCodeStep = -1;
+                }
+            }
+            goto end0;
+        case 14:
+            if ((gPlayerInputHeld[0] != R_JPAD) && (gPlayerInputHeld[0] != 0)) {
+                if (gPlayerInputHeld[0] == L_CBUTTONS) {
+                    gMainMenuSecretCodeStep++;
+                } else {
+                    gMainMenuSecretCodeStep = -1;
+                }
+            }
+            goto end0;
+        case 15:
+            if (gPlayerInputHeld[0] != L_CBUTTONS) {
+                if (gPlayerInputHeld[0] != 0) {
+                    if (gPlayerInputHeld[0] == START_BUTTON) {
+                        return 1;
+                    }
+                    gMainMenuSecretCodeStep = -1;
+                }
+            }
+            goto end0;
+        default:
+        end0:
+            return 0;
     }
 }

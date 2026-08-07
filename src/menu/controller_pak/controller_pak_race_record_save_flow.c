@@ -77,331 +77,257 @@ extern void initControllerPakDeleteConfirmPrompt(CallbackTask *);
 #include "updateControllerPakRaceRecordSaveFlow.inc.c"
 
 #ifdef PREVIOUS_NON_MATCHING
-void updateControllerPakRaceRecordSaveFlow(void)
-{
-  s32 sp1C;
-  u32 new_var;
-  s32 sp24;
-  s16 var_v0;
-  s32 temp_t0;
-  s32 temp_v0;
-  s32 temp_v1;
-  s32 var_t7;
-  sp24 = 0;
-  temp_v0 = gCurrentGameTask->fade;
-  temp_t0 = D_8010ADE4;
-  if (temp_v0 != 0)
-  {
-    gCurrentGameTask->fade = stepMenuFadeAlpha((s32) ((s16) temp_v0), 0x24, 0);
-    if (gCurrentGameTask->fade == 0)
-    {
-      gControllerPakMenuState.state = 3;
-      gControllerPakMenuState.confirmChoice = 1;
-      createCallbackTask((CallbackTaskCallback)initControllerPakDeleteConfirmPrompt, 0, 0x64);
-      setCurrentGameTaskCallback(updateControllerPakRaceRecordSaveOverwritePrompt, 0);
+void updateControllerPakRaceRecordSaveFlow(void) {
+    s32 sp1C;
+    u32 new_var;
+    s32 sp24;
+    s16 var_v0;
+    s32 temp_t0;
+    s32 temp_v0;
+    s32 temp_v1;
+    s32 var_t7;
+    sp24 = 0;
+    temp_v0 = gCurrentGameTask->fade;
+    temp_t0 = D_8010ADE4;
+    if (temp_v0 != 0) {
+        gCurrentGameTask->fade = stepMenuFadeAlpha((s32)((s16)temp_v0), 0x24, 0);
+        if (gCurrentGameTask->fade == 0) {
+            gControllerPakMenuState.state = 3;
+            gControllerPakMenuState.confirmChoice = 1;
+            createCallbackTask((CallbackTaskCallback)initControllerPakDeleteConfirmPrompt, 0, 0x64);
+            setCurrentGameTaskCallback(updateControllerPakRaceRecordSaveOverwritePrompt, 0);
+        }
+    } else if (gMenuSelectionConfirmTimer == 0) {
+        new_var = 3;
+        if (((u8)gControllerPakRaceRecordSaveStatusTransition.step) == 1) {
+            if (gMenuChoicePromptState[0] != 0) {
+                var_v0 = 6;
+            } else {
+                var_v0 = gControllerPakStatusCodes[0];
+            }
+            switch (var_v0) {
+                case 0:
+                    gRumblePakConnectedByController[0] = 0;
+                    requestRumbleMotorInit(0);
+                    if (((gRumbleMotorStatuses[0] != 1) && (gRumbleMotorStatuses[0] != 0xB)) &&
+                        (gRumbleMotorStatuses[0] != 4)) {
+                        gRumblePakConnectedByController[0] = 1;
+                    } else {
+                        gRumblePakConnectedByController[0] = 0;
+                    }
+                    requestControllerPakProbe(0);
+                    if (gControllerPakStatusCodes[0] == 0x10) {
+                        gControllerPakStatusCodes[0] = 0x11;
+                    }
+                    break;
+
+                case 1:
+                    requestControllerPakSaveStatus(0);
+                    if ((gControllerPakStatusCodes[0] == 9) || (gControllerPakStatusCodes[0] == 2)) {
+                        gControllerPakStatusCodes[0] = 8;
+                        gMenuChoicePromptState[0] = 1;
+                    }
+                    break;
+
+                case 2:
+                    if (((u8)gControllerPakRaceRecordSaveStatusTransition.step) != 3) {
+                        sp1C = temp_t0;
+                        requestControllerPakSaveWrite(
+                            0,
+                            3,
+                            &gControllerPakRaceRecordSaveStatusTransition,
+                            gMenuChoicePromptState[0]
+                        );
+                        if (gControllerPakRetryCounts[0] == 0) {
+                            gControllerPakRaceRecordSaveStatusTransition.targetStatus = 5;
+                            gControllerPakRaceRecordSaveStatusTransition.step = 3;
+                            gControllerPakRaceRecordSaveStatusTransition.alpha = 0x100;
+                        } else if (gControllerPakRetryCounts[0] == 3) {
+                            if (temp_t0 != 0) {
+                                gControllerPakRaceRecordSaveStatusTransition.step = 3;
+                                gControllerPakRaceRecordSaveStatusTransition.targetStatus = 0xD;
+                                gControllerPakRaceRecordSaveStatusTransition.alpha = 0x100;
+                            } else {
+                                gControllerPakStatusCodes[0] = 0xD;
+                            }
+                            gControllerPakRetryCounts[0] = 0;
+                        }
+                    }
+                    break;
+
+                case 3:
+                    sp1C = temp_t0;
+                    requestControllerPakRepair(0);
+                    if (gControllerPakRetryCounts[0] == 0) {
+                        if (temp_t0 != 0) {
+                            gControllerPakRaceRecordSaveStatusTransition.step = 3;
+                            gControllerPakRaceRecordSaveStatusTransition.targetStatus = 0x10;
+                        } else {
+                            gControllerPakStatusCodes[0] = 0x10;
+                        }
+                    } else if (gControllerPakRetryCounts[0] == new_var) {
+                        if (temp_t0 != 0) {
+                            gControllerPakRaceRecordSaveStatusTransition.step = 3;
+                            gControllerPakRaceRecordSaveStatusTransition.targetStatus = 0xE;
+                        } else {
+                            gControllerPakStatusCodes[0] = 0xE;
+                        }
+                        gControllerPakRetryCounts[0] = 0;
+                    }
+                    break;
+
+                case 4:
+                    temp_v1 = gPlayerInputPressed[0];
+                    if ((temp_v1 & A_BUTTON) || (temp_v1 & START_BUTTON)) {
+                        sp1C = temp_t0;
+                        enqueueSoundEffect(1, 0x32);
+                        if (temp_t0 != 0) {
+                            gControllerPakRaceRecordSaveStatusTransition.step = 1;
+                            gControllerPakRaceRecordSaveStatusTransition.alpha = 0x100;
+                            gControllerPakStatusCodes[0] = 0;
+                        } else {
+                            gControllerPakStatusCodes[0] = 0;
+                        }
+                    }
+                    break;
+
+                case 5:
+                    if (((u8)gRacePlayers[0].menuState) == 0) {
+                        gRacePlayers[0].menuState = 1;
+                    }
+                    break;
+
+                case 6:
+                    if ((gMenuChoicePromptState[0] == 3) || (gMenuChoicePromptState[0] == 4)) {
+                        temp_v1 = gPlayerInputPressed[0];
+                        if (temp_v1 & (STICK_UP | U_JPAD)) {
+                            if (gMenuChoicePromptState[0] != (new_var & 0xFFFFFFFFu)) {
+                                gMenuChoicePromptState[0] -= 1;
+                                enqueueSoundEffect(0x19, 0x32);
+                                temp_v1 = gPlayerInputPressed[0];
+                            }
+                        }
+                        var_t7 = temp_v1 & A_BUTTON;
+                        if (temp_v1 & (STICK_DOWN | D_JPAD)) {
+                            if (gMenuChoicePromptState[0] != 4) {
+                                gMenuChoicePromptState[0] += 1;
+                                enqueueSoundEffect(0x19, 0x32);
+                                temp_v1 = gPlayerInputPressed[0];
+                            }
+                            var_t7 = temp_v1 & A_BUTTON;
+                        }
+                        if ((var_t7 != 0) || (temp_v1 & START_BUTTON)) {
+                            enqueueSoundEffect(1, 0x32);
+                            if (gMenuChoicePromptState[0] == 4) {
+                                if (gControllerPakStatusCodes[0] == 8) {
+                                    gControllerPakRaceRecordSaveStatusTransition.nextStatus = 0xF;
+                                } else if (gControllerPakStatusCodes[0] == 7) {
+                                    gControllerPakRaceRecordSaveStatusTransition.nextStatus = 3;
+                                } else if (gControllerPakStatusCodes[0] == 0xF) {
+                                    gControllerPakRaceRecordSaveStatusTransition.nextStatus = 0;
+                                } else {
+                                    gControllerPakRaceRecordSaveStatusTransition.nextStatus = 4;
+                                }
+                            } else if (gControllerPakStatusCodes[0] == 8) {
+                                gControllerPakRaceRecordSaveStatusTransition.nextStatus = 2;
+                            } else if ((gControllerPakStatusCodes[0] == 0xA) ||
+                                       (gControllerPakStatusCodes[0] == 0x11)) {
+                                gControllerPakRaceRecordSaveStatusTransition.nextStatus = 0xF;
+                            } else if (gControllerPakStatusCodes[0] == 7) {
+                                gControllerPakRaceRecordSaveStatusTransition.nextStatus = 4;
+                            } else {
+                                gControllerPakRaceRecordSaveStatusTransition.nextStatus = 5;
+                            }
+                            gMenuChoicePromptState[0] += 2;
+                        }
+                    }
+                    break;
+
+                case 7:
+
+                case 8:
+
+                case 9:
+
+                case 10:
+
+                case 11:
+
+                case 12:
+
+                case 13:
+
+                case 17:
+                    temp_v1 = gPlayerInputPressed[0];
+                    if ((temp_v1 & A_BUTTON) || (temp_v1 & START_BUTTON)) {
+                        enqueueSoundEffect(1, 0x32);
+                        gMenuChoicePromptState[0] =
+                            gControllerPakRaceRecordSaveStatusChoicePromptStates[(long)gControllerPakStatusCodes[0]];
+                    }
+                    break;
+
+                case 15:
+                    temp_v1 = gPlayerInputPressed[0];
+                    if ((temp_v1 & A_BUTTON) || (temp_v1 & START_BUTTON)) {
+                        enqueueSoundEffect(1, 0x32);
+                        gMenuChoicePromptState[0] =
+                            gControllerPakRaceRecordSaveStatusChoicePromptStates[gControllerPakStatusCodes[0]];
+                    }
+                    break;
+
+                case 14:
+
+                case 16:
+                    temp_v1 = gPlayerInputPressed[0];
+                    if ((temp_v1 & A_BUTTON) || (temp_v1 & START_BUTTON)) {
+                        sp1C = temp_t0;
+                        enqueueSoundEffect(1, 0x32);
+                        if (gControllerPakStatusCodes[0] == 0xE) {
+                            if (temp_t0 != 0) {
+                                gControllerPakRaceRecordSaveStatusTransition.step = 3;
+                                gControllerPakRaceRecordSaveStatusTransition.targetStatus = 0x12;
+                            } else {
+                                gControllerPakStatusCodes[0] = 7;
+                            }
+                        } else if (temp_t0 != 0) {
+                            gControllerPakRaceRecordSaveStatusTransition.step = 1;
+                            gControllerPakRaceRecordSaveStatusTransition.alpha = 0x100;
+                            gControllerPakStatusCodes[0] = 0;
+                        } else {
+                            gControllerPakStatusCodes[0] = 0;
+                        }
+                    }
+                    break;
+
+                case 18:
+                    temp_v1 = gPlayerInputPressed[0];
+                    if ((temp_v1 & A_BUTTON) || (temp_v1 & START_BUTTON)) {
+                        enqueueSoundEffect(1, 0x32);
+                        gControllerPakRaceRecordSaveStatusTransition.step = 3;
+                        gControllerPakRaceRecordSaveStatusTransition.alpha = 0x100;
+                        gControllerPakRaceRecordSaveStatusTransition.targetStatus = 0;
+                    }
+                    break;
+            }
+        }
+        sp24 = ((u8)gRacePlayers[0].menuState) & 1;
+    } else {
+        gMenuSelectionConfirmTimer = gMenuSelectionConfirmTimer + 1;
     }
-  }
-  else
-    if (gMenuSelectionConfirmTimer == 0)
-  {
-    new_var = 3;
-    if (((u8) gControllerPakRaceRecordSaveStatusTransition.step) == 1)
-    {
-      if (gMenuChoicePromptState[0] != 0)
-      {
-        var_v0 = 6;
-      }
-      else
-      {
-        var_v0 = gControllerPakStatusCodes[0];
-      }
-      switch (var_v0)
-      {
-        case 0:
-          gRumblePakConnectedByController[0] = 0;
-          requestRumbleMotorInit(0);
-          if (((gRumbleMotorStatuses[0] != 1) && (gRumbleMotorStatuses[0] != 0xB)) && (gRumbleMotorStatuses[0] != 4))
-        {
-          gRumblePakConnectedByController[0] = 1;
-        }
-        else
-        {
-          gRumblePakConnectedByController[0] = 0;
-        }
-          requestControllerPakProbe(0);
-          if (gControllerPakStatusCodes[0] == 0x10)
-        {
-          gControllerPakStatusCodes[0] = 0x11;
-        }
-          break;
-
-        case 1:
-          requestControllerPakSaveStatus(0);
-          if ((gControllerPakStatusCodes[0] == 9) || (gControllerPakStatusCodes[0] == 2))
-        {
-          gControllerPakStatusCodes[0] = 8;
-          gMenuChoicePromptState[0] = 1;
-        }
-          break;
-
-        case 2:
-          if (((u8) gControllerPakRaceRecordSaveStatusTransition.step) != 3)
-        {
-          sp1C = temp_t0;
-          requestControllerPakSaveWrite(0, 3, &gControllerPakRaceRecordSaveStatusTransition, gMenuChoicePromptState[0]);
-          if (gControllerPakRetryCounts[0] == 0)
-          {
-            gControllerPakRaceRecordSaveStatusTransition.targetStatus = 5;
-            gControllerPakRaceRecordSaveStatusTransition.step = 3;
-            gControllerPakRaceRecordSaveStatusTransition.alpha = 0x100;
-          }
-          else
-            if (gControllerPakRetryCounts[0] == 3)
-          {
-            if (temp_t0 != 0)
-            {
-              gControllerPakRaceRecordSaveStatusTransition.step = 3;
-              gControllerPakRaceRecordSaveStatusTransition.targetStatus = 0xD;
-              gControllerPakRaceRecordSaveStatusTransition.alpha = 0x100;
-            }
-            else
-            {
-              gControllerPakStatusCodes[0] = 0xD;
-            }
-            gControllerPakRetryCounts[0] = 0;
-          }
-        }
-          break;
-
-        case 3:
-          sp1C = temp_t0;
-          requestControllerPakRepair(0);
-          if (gControllerPakRetryCounts[0] == 0)
-        {
-          if (temp_t0 != 0)
-          {
-            gControllerPakRaceRecordSaveStatusTransition.step = 3;
-            gControllerPakRaceRecordSaveStatusTransition.targetStatus = 0x10;
-          }
-          else
-          {
-            gControllerPakStatusCodes[0] = 0x10;
-          }
-        }
-        else
-          if (gControllerPakRetryCounts[0] == new_var)
-        {
-          if (temp_t0 != 0)
-          {
-            gControllerPakRaceRecordSaveStatusTransition.step = 3;
-            gControllerPakRaceRecordSaveStatusTransition.targetStatus = 0xE;
-          }
-          else
-          {
-            gControllerPakStatusCodes[0] = 0xE;
-          }
-          gControllerPakRetryCounts[0] = 0;
-        }
-          break;
-
-        case 4:
-          temp_v1 = gPlayerInputPressed[0];
-          if ((temp_v1 & A_BUTTON) || (temp_v1 & START_BUTTON))
-        {
-          sp1C = temp_t0;
-          enqueueSoundEffect(1, 0x32);
-          if (temp_t0 != 0)
-          {
-            gControllerPakRaceRecordSaveStatusTransition.step = 1;
-            gControllerPakRaceRecordSaveStatusTransition.alpha = 0x100;
-            gControllerPakStatusCodes[0] = 0;
-          }
-          else
-          {
-            gControllerPakStatusCodes[0] = 0;
-          }
-        }
-          break;
-
-        case 5:
-          if (((u8) gRacePlayers[0].menuState) == 0)
-        {
-          gRacePlayers[0].menuState = 1;
-        }
-          break;
-
-        case 6:
-          if ((gMenuChoicePromptState[0] == 3) || (gMenuChoicePromptState[0] == 4))
-        {
-          temp_v1 = gPlayerInputPressed[0];
-          if (temp_v1 & (STICK_UP | U_JPAD))
-          {
-            if (gMenuChoicePromptState[0] != (new_var & 0xFFFFFFFFu))
-            {
-              gMenuChoicePromptState[0] -= 1;
-              enqueueSoundEffect(0x19, 0x32);
-              temp_v1 = gPlayerInputPressed[0];
-            }
-          }
-          var_t7 = temp_v1 & A_BUTTON;
-          if (temp_v1 & (STICK_DOWN | D_JPAD))
-          {
-            if (gMenuChoicePromptState[0] != 4)
-            {
-              gMenuChoicePromptState[0] += 1;
-              enqueueSoundEffect(0x19, 0x32);
-              temp_v1 = gPlayerInputPressed[0];
-            }
-            var_t7 = temp_v1 & A_BUTTON;
-          }
-          if ((var_t7 != 0) || (temp_v1 & START_BUTTON))
-          {
-            enqueueSoundEffect(1, 0x32);
-            if (gMenuChoicePromptState[0] == 4)
-            {
-              if (gControllerPakStatusCodes[0] == 8)
-              {
-                gControllerPakRaceRecordSaveStatusTransition.nextStatus = 0xF;
-              }
-              else
-                if (gControllerPakStatusCodes[0] == 7)
-              {
-                gControllerPakRaceRecordSaveStatusTransition.nextStatus = 3;
-              }
-              else
-                if (gControllerPakStatusCodes[0] == 0xF)
-              {
-                gControllerPakRaceRecordSaveStatusTransition.nextStatus = 0;
-              }
-              else
-              {
-                gControllerPakRaceRecordSaveStatusTransition.nextStatus = 4;
-              }
-            }
-            else
-              if (gControllerPakStatusCodes[0] == 8)
-            {
-              gControllerPakRaceRecordSaveStatusTransition.nextStatus = 2;
-            }
-            else
-              if ((gControllerPakStatusCodes[0] == 0xA) || (gControllerPakStatusCodes[0] == 0x11))
-            {
-              gControllerPakRaceRecordSaveStatusTransition.nextStatus = 0xF;
-            }
-            else
-              if (gControllerPakStatusCodes[0] == 7)
-            {
-              gControllerPakRaceRecordSaveStatusTransition.nextStatus = 4;
-            }
-            else
-            {
-              gControllerPakRaceRecordSaveStatusTransition.nextStatus = 5;
-            }
-            gMenuChoicePromptState[0] += 2;
-          }
-        }
-          break;
-
-        case 7:
-
-        case 8:
-
-        case 9:
-
-        case 10:
-
-        case 11:
-
-        case 12:
-
-        case 13:
-
-        case 17:
-          temp_v1 = gPlayerInputPressed[0];
-          if ((temp_v1 & A_BUTTON) || (temp_v1 & START_BUTTON))
-        {
-          enqueueSoundEffect(1, 0x32);
-          gMenuChoicePromptState[0] =
-              gControllerPakRaceRecordSaveStatusChoicePromptStates[(long) gControllerPakStatusCodes[0]];
-        }
-          break;
-
-        case 15:
-          temp_v1 = gPlayerInputPressed[0];
-          if ((temp_v1 & A_BUTTON) || (temp_v1 & START_BUTTON))
-        {
-          enqueueSoundEffect(1, 0x32);
-          gMenuChoicePromptState[0] =
-              gControllerPakRaceRecordSaveStatusChoicePromptStates[gControllerPakStatusCodes[0]];
-        }
-          break;
-
-        case 14:
-
-        case 16:
-          temp_v1 = gPlayerInputPressed[0];
-          if ((temp_v1 & A_BUTTON) || (temp_v1 & START_BUTTON))
-        {
-          sp1C = temp_t0;
-          enqueueSoundEffect(1, 0x32);
-          if (gControllerPakStatusCodes[0] == 0xE)
-          {
-            if (temp_t0 != 0)
-            {
-              gControllerPakRaceRecordSaveStatusTransition.step = 3;
-              gControllerPakRaceRecordSaveStatusTransition.targetStatus = 0x12;
-            }
-            else
-            {
-              gControllerPakStatusCodes[0] = 7;
-            }
-          }
-          else
-            if (temp_t0 != 0)
-          {
-            gControllerPakRaceRecordSaveStatusTransition.step = 1;
-            gControllerPakRaceRecordSaveStatusTransition.alpha = 0x100;
-            gControllerPakStatusCodes[0] = 0;
-          }
-          else
-          {
-            gControllerPakStatusCodes[0] = 0;
-          }
-        }
-          break;
-
-        case 18:
-          temp_v1 = gPlayerInputPressed[0];
-          if ((temp_v1 & A_BUTTON) || (temp_v1 & START_BUTTON))
-        {
-          enqueueSoundEffect(1, 0x32);
-          gControllerPakRaceRecordSaveStatusTransition.step = 3;
-          gControllerPakRaceRecordSaveStatusTransition.alpha = 0x100;
-          gControllerPakRaceRecordSaveStatusTransition.targetStatus = 0;
-        }
-          break;
-
-      }
-
+    if (sp24 != 0) {
+        gMenuSelectionConfirmTimer = 1;
     }
-    sp24 = ((u8) gRacePlayers[0].menuState) & 1;
-  }
-  else
-  {
-    gMenuSelectionConfirmTimer = gMenuSelectionConfirmTimer + 1;
-  }
-  if (sp24 != 0)
-  {
- gMenuSelectionConfirmTimer = 1; } if (gMenuSelectionConfirmTimer == 0x23) { setCurrentGameTaskCallback(fadeOutControllerPakRaceRecordSaveFlow, 0);
-  }
-  updateCallbackTasks();
+    if (gMenuSelectionConfirmTimer == 0x23) {
+        setCurrentGameTaskCallback(fadeOutControllerPakRaceRecordSaveFlow, 0);
+    }
+    updateCallbackTasks();
 }
 #endif
 
 void fadeOutControllerPakRaceRecordSaveFlow(void) {
     s32 temp_v0 = gCurrentGameTask->fade;
     if (temp_v0 != 0xFF) {
-        gCurrentGameTask->fade = stepMenuFadeAlpha((s16) temp_v0, 0x20, 1);
+        gCurrentGameTask->fade = stepMenuFadeAlpha((s16)temp_v0, 0x20, 1);
         updateCallbackTasks();
         if (gCurrentGameTask->fade == 0xFF) {
             gFramebufferSwapHold = 1;

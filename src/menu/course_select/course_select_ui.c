@@ -171,8 +171,17 @@ typedef enum {
 } CourseSelectCourseRatingType;
 
 extern void drawCourseSelectPlayerPanels(CourseSelectWidgetActor *);
-extern void drawMenuSpriteWithAlphaWideArgs(s32 x, s32 y, void *texture, s32 tileIndex, s32 width, s32 height,
-                                            s32 palette, s32 alpha, u32 flip);
+extern void drawMenuSpriteWithAlphaWideArgs(
+    s32 x,
+    s32 y,
+    void *texture,
+    s32 tileIndex,
+    s32 width,
+    s32 height,
+    s32 palette,
+    s32 alpha,
+    u32 flip
+);
 extern s32 allocFixedTransformMatrix(FixedTransform *);
 extern const char D_800E0DB8[];
 extern u8 D_800EC9C0;
@@ -192,6 +201,8 @@ extern s32 gMenuFlowState;
 extern u8 gCurrentViewportIndex;
 
 MenuGlyphScript gCourseSelectUnusedText[] = {
+    // textconv requires these _() invocations to retain their original line layout.
+    // clang-format off
     _("T"),
 };
 
@@ -264,18 +275,21 @@ CoursePurchaseMessageText gCourseSelectPurchaseMessageText[2] = {
 
 MenuGlyphScript gCourseSelectCompleteText[] = {
     _("{COLOR:7}SELECTION\nCOMPLETE."),
+    // clang-format on
 };
 
-CourseSelectCourseRatingTable gCourseSelectCourseRatings = { {
-    { 1, 3, 3 },
-    { 2, 2, 2 },
-    { 3, 1, 1 },
-    { 2, 2, 2 },
-    { 3, 1, 2 },
-    { 3, 3, 3 },
-    { 2, 2, 2 },
-    { 0, 0, 0 },
-} };
+CourseSelectCourseRatingTable gCourseSelectCourseRatings = {
+    {
+     { 1, 3, 3 },
+     { 2, 2, 2 },
+     { 3, 1, 1 },
+     { 2, 2, 2 },
+     { 3, 1, 2 },
+     { 3, 3, 3 },
+     { 2, 2, 2 },
+     { 0, 0, 0 },
+     }
+};
 
 s16 gCourseSelectIconListYLayout[][6] = {
     { 0x0018, 0x0014, 0xFFA8, 0xFFA0, 0x0000, 0x0000 },
@@ -347,14 +361,13 @@ void drawCourseSelectPreviewModel(CourseSelectCoursePreviewActor *arg0) {
             composeFixedTransforms(&arg0->sourceTransform, &arg0->playerTransforms[var_t0], &sp30);
             arg0->matrix = allocFixedTransformMatrix(&sp30);
             if (arg0->matrix != 0) {
-                drawRacePlayerModelRootPart((void *)(arg0->matrix ^ 0), (s16) sp2F, (s16) sp2E);
+                drawRacePlayerModelRootPart((void *)(arg0->matrix ^ 0), (s16)sp2F, (s16)sp2E);
             }
         }
     }
 }
 
-void updateCourseSelectPreviewModelIn(CourseSelectAnimatedActor *arg0)
-{
+void updateCourseSelectPreviewModelIn(CourseSelectAnimatedActor *arg0) {
     CourseSelectAnimatedActor *actor;
     Vec3i rotatedPosition;
     s32 i;
@@ -377,97 +390,97 @@ void updateCourseSelectPreviewModelIn(CourseSelectAnimatedActor *arg0)
         }
 
         switch (actor->state[i] ^ 0) {
-        case 0:
-            actor->vecs[i].x -= 0x200000;
-            if (actor->vecs[i].x <= 0) {
-                actor->vecs[i].x = 0;
-                actor->state[i] = 1;
-            }
-            break;
-        case 1:
-            if (D_8010AECC[i] & 1) {
-                if (D_8010AEE8[i] < 0) {
-                    if ((s32)gRacePlayers[i].characterVariant >= 9) {
-                        actor->targetCourse[i] = 2;
+            case 0:
+                actor->vecs[i].x -= 0x200000;
+                if (actor->vecs[i].x <= 0) {
+                    actor->vecs[i].x = 0;
+                    actor->state[i] = 1;
+                }
+                break;
+            case 1:
+                if (D_8010AECC[i] & 1) {
+                    if (D_8010AEE8[i] < 0) {
+                        if ((s32)gRacePlayers[i].characterVariant >= 9) {
+                            actor->targetCourse[i] = 2;
+                        } else {
+                            actor->targetCourse[i] = (gRacePlayers[i].menuSelection % 3) - 1;
+                        }
                     } else {
-                        actor->targetCourse[i] = (gRacePlayers[i].menuSelection % 3) - 1;
+                        actor->targetCourse[i] = (gRacePlayers[i].menuSelection % 3) + 1;
                     }
-                } else {
-                    actor->targetCourse[i] = (gRacePlayers[i].menuSelection % 3) + 1;
+                    if (actor->targetCourse[i] < 0) {
+                        actor->targetCourse[i] = 2;
+                    }
+                    if (actor->targetCourse[i] == 3) {
+                        actor->targetCourse[i] = D_8010AEFB[i * 4];
+                    }
+                    if (actor->targetCourse[i] == 8) {
+                        actor->targetCourse[i] = 2;
+                    }
+                    if (D_8010AECC[i] == 3) {
+                        actor->vecs[i].y = -D_8010AEE8[i];
+                    }
+                    actor->state[i] = 2;
+                } else if (gCurrentGameTask->screenState == 9) {
+                    actor->state[i] = 8;
                 }
-                if (actor->targetCourse[i] < 0) {
-                    actor->targetCourse[i] = 2;
+                break;
+            case 2:
+                slideStep = 0x200000;
+                if (D_8010AEE8[i] < 0) {
+                    slideStep = -0x200000;
                 }
-                if (actor->targetCourse[i] == 3) {
-                    actor->targetCourse[i] = D_8010AEFB[i * 4];
+                actor->vecs[i].y += slideStep;
+                if ((D_8010AEE8[i] ^ slideStep) == 0) {
+                    actor->state[i] = 1;
                 }
-                if (actor->targetCourse[i] == 8) {
-                    actor->targetCourse[i] = 2;
+                break;
+            case 3:
+                actor->timer[i]++;
+                if (D_800EC9C0 != 0) {
+                    D_800EC9C0 = 1;
                 }
-                if (D_8010AECC[i] == 3) {
-                    actor->vecs[i].y = -D_8010AEE8[i];
+                if (actor->timer[i] == 0xF) {
+                    actor->timer[i] = 0;
+                    actor->state[i] = 4;
+                    if (gPlayerCount == 1) {
+                        gRacePlayers[0].menuState = 3;
+                        D_800EC9C0 = 0x10;
+                    }
                 }
-                actor->state[i] = 2;
-            } else if (gCurrentGameTask->screenState == 9) {
-                actor->state[i] = 8;
-            }
-            break;
-        case 2:
-            slideStep = 0x200000;
-            if (D_8010AEE8[i] < 0) {
-                slideStep = -0x200000;
-            }
-            actor->vecs[i].y += slideStep;
-            if ((D_8010AEE8[i] ^ slideStep) == 0) {
-                actor->state[i] = 1;
-            }
-            break;
-        case 3:
-            actor->timer[i]++;
-            if (D_800EC9C0 != 0) {
-                D_800EC9C0 = 1;
-            }
-            if (actor->timer[i] == 0xF) {
-                actor->timer[i] = 0;
-                actor->state[i] = 4;
-                if (gPlayerCount == 1) {
-                    gRacePlayers[0].menuState = 3;
-                    D_800EC9C0 = 0x10;
+                break;
+            case 4:
+                if (gRacePlayers[i].menuState == 3) {
+                    actor->state[i] = 5;
                 }
-            }
-            break;
-        case 4:
-            if (gRacePlayers[i].menuState == 3) {
-                actor->state[i] = 5;
-            }
-            break;
-        case 5:
-            actor->vecs[i].x += 0x200000;
-            if (actor->vecs[i].x == 0x1000000) {
-                actor->state[i] = 6;
-            }
-            break;
-        case 6:
-            gRacePlayers[i].menuState = 4;
-            if ((i == 2) && (gPlayerCount == 3)) {
-                gRacePlayers[3].menuState = 4;
-            }
-            break;
-        case 7:
-            if (gRacePlayers[i].menuState == 3) {
-                actor->state[i] = 5;
-            } else if (gCurrentGameTask->screenState == 9) {
-                actor->state[i] = 8;
-            }
-            break;
-        case 8:
-            actor->vecs[i].x += 0x200000;
-            if (actor->vecs[i].x == 0xC00000) {
-                actor->state[i] = 9;
-            }
-            break;
-        case 9:
-            break;
+                break;
+            case 5:
+                actor->vecs[i].x += 0x200000;
+                if (actor->vecs[i].x == 0x1000000) {
+                    actor->state[i] = 6;
+                }
+                break;
+            case 6:
+                gRacePlayers[i].menuState = 4;
+                if ((i == 2) && (gPlayerCount == 3)) {
+                    gRacePlayers[3].menuState = 4;
+                }
+                break;
+            case 7:
+                if (gRacePlayers[i].menuState == 3) {
+                    actor->state[i] = 5;
+                } else if (gCurrentGameTask->screenState == 9) {
+                    actor->state[i] = 8;
+                }
+                break;
+            case 8:
+                actor->vecs[i].x += 0x200000;
+                if (actor->vecs[i].x == 0xC00000) {
+                    actor->state[i] = 9;
+                }
+                break;
+            case 9:
+                break;
         }
 
         if ((actor->state[i] != 0) && ((s32)actor->state[i] < 3)) {
@@ -488,8 +501,11 @@ void updateCourseSelectPreviewModelIn(CourseSelectAnimatedActor *arg0)
         finishCourseSelectUiTask(1);
         D_8010ADE0 = 0;
     } else {
-        addRenderCallback(&gModelRenderCallbackList, (RenderCallback)(void (*)(CourseSelectWidgetActor *))drawCourseSelectPreviewModel,
-                          (CourseSelectWidgetActor *)actor);
+        addRenderCallback(
+            &gModelRenderCallbackList,
+            (RenderCallback)(void (*)(CourseSelectWidgetActor *))drawCourseSelectPreviewModel,
+            (CourseSelectWidgetActor *)actor
+        );
     }
 }
 
@@ -717,14 +733,13 @@ void drawCourseSelectPreviewModelClose(CourseSelectCoursePreviewActor *arg0) {
             composeFixedTransforms(&arg0->sourceTransform, &arg0->playerTransforms[var_t0], &sp30);
             arg0->matrix = allocFixedTransformMatrix(&sp30);
             if (arg0->matrix != 0) {
-                drawRacePlayerModelRootPart((void *)(arg0->matrix ^ 0), (s16) sp2F, (s16) sp2E);
+                drawRacePlayerModelRootPart((void *)(arg0->matrix ^ 0), (s16)sp2F, (s16)sp2E);
             }
         }
     }
 }
 
-void updateCourseSelectPreviewModelOut(CourseSelectAnimatedActor *arg0)
-{
+void updateCourseSelectPreviewModelOut(CourseSelectAnimatedActor *arg0) {
     CourseSelectAnimatedActor *actor;
     Vec3i rotatedPosition;
     s32 i;
@@ -747,96 +762,96 @@ void updateCourseSelectPreviewModelOut(CourseSelectAnimatedActor *arg0)
         }
 
         switch (actor->state[i]) {
-        case 0:
-            break;
-        case 1:
-            if (D_8010AECC[i] & 1) {
-                if (D_8010AEE8[i] < 0) {
-                    if ((s32)gRacePlayers[i].characterVariant >= 9) {
-                        actor->targetCourse[i] = 2;
+            case 0:
+                break;
+            case 1:
+                if (D_8010AECC[i] & 1) {
+                    if (D_8010AEE8[i] < 0) {
+                        if ((s32)gRacePlayers[i].characterVariant >= 9) {
+                            actor->targetCourse[i] = 2;
+                        } else {
+                            actor->targetCourse[i] = (gRacePlayers[i].menuSelection % 3) - 1;
+                        }
                     } else {
-                        actor->targetCourse[i] = (gRacePlayers[i].menuSelection % 3) - 1;
+                        actor->targetCourse[i] = (gRacePlayers[i].menuSelection % 3) + 1;
                     }
-                } else {
-                    actor->targetCourse[i] = (gRacePlayers[i].menuSelection % 3) + 1;
+                    if (actor->targetCourse[i] < 0) {
+                        actor->targetCourse[i] = 2;
+                    }
+                    if (actor->targetCourse[i] == 3) {
+                        actor->targetCourse[i] = D_8010AEFB[i * 4];
+                    }
+                    if (actor->targetCourse[i] == 8) {
+                        actor->targetCourse[i] = 2;
+                    }
+                    if (D_8010AECC[i] == 1) {
+                        actor->vecs[i].y = -D_8010AEE8[i];
+                    }
+                    actor->state[i] = 2;
+                } else if (gCurrentGameTask->screenState == 9) {
+                    actor->state[i] = 8;
                 }
-                if (actor->targetCourse[i] < 0) {
-                    actor->targetCourse[i] = 2;
+                break;
+            case 2:
+                slideStep = 0x200000;
+                if (D_8010AEE8[i] < 0) {
+                    slideStep = -0x200000;
                 }
-                if (actor->targetCourse[i] == 3) {
-                    actor->targetCourse[i] = D_8010AEFB[i * 4];
+                actor->vecs[i].y += slideStep;
+                D_8010AEE8[i] -= slideStep;
+                if (D_8010AEE8[i] == 0) {
+                    actor->state[i] = 1;
+                    D_8010AECC[i]++;
+                    D_8010AECC[i] &= 3;
                 }
-                if (actor->targetCourse[i] == 8) {
-                    actor->targetCourse[i] = 2;
+                break;
+            case 3:
+                actor->timer[i]++;
+                if (D_800EC9C0 != 0) {
+                    D_800EC9C0 = 1;
                 }
-                if (D_8010AECC[i] == 1) {
-                    actor->vecs[i].y = -D_8010AEE8[i];
+                if (actor->timer[i] == 0xF) {
+                    actor->timer[i] = 0;
+                    actor->state[i] = 4;
+                    if (gPlayerCount == 1) {
+                        gRacePlayers[0].menuState = 3;
+                        D_800EC9C0 = 0x10;
+                    }
                 }
-                actor->state[i] = 2;
-            } else if (gCurrentGameTask->screenState == 9) {
-                actor->state[i] = 8;
-            }
-            break;
-        case 2:
-            slideStep = 0x200000;
-            if (D_8010AEE8[i] < 0) {
-                slideStep = -0x200000;
-            }
-            actor->vecs[i].y += slideStep;
-            D_8010AEE8[i] -= slideStep;
-            if (D_8010AEE8[i] == 0) {
-                actor->state[i] = 1;
-                D_8010AECC[i]++;
-                D_8010AECC[i] &= 3;
-            }
-            break;
-        case 3:
-            actor->timer[i]++;
-            if (D_800EC9C0 != 0) {
-                D_800EC9C0 = 1;
-            }
-            if (actor->timer[i] == 0xF) {
-                actor->timer[i] = 0;
-                actor->state[i] = 4;
-                if (gPlayerCount == 1) {
-                    gRacePlayers[0].menuState = 3;
-                    D_800EC9C0 = 0x10;
+                break;
+            case 4:
+                if (gRacePlayers[i].menuState == 3) {
+                    actor->state[i] = 5;
                 }
-            }
-            break;
-        case 4:
-            if (gRacePlayers[i].menuState == 3) {
-                actor->state[i] = 5;
-            }
-            break;
-        case 5:
-            actor->vecs[i].x += 0x200000;
-            if (actor->vecs[i].x == 0x1000000) {
-                actor->state[i] = 6;
-            }
-            break;
-        case 6:
-            gRacePlayers[i].menuState = 4;
-            if ((i == 2) && (gPlayerCount == 3)) {
-                gRacePlayers[3].menuState = 4;
-            }
-            break;
-        case 7:
-            if (gRacePlayers[i].menuState == 3) {
-                actor->state[i] = 5;
-            } else if (gCurrentGameTask->screenState == 9) {
-                actor->state[i] = 8;
-            }
-            break;
-        case 8:
-            actor->vecs[i].x += 0x200000;
-            if (actor->vecs[i].x == 0xC00000) {
-                actor->state[i] = 9;
-                gCurrentGameTask->screenState = 0xB;
-            }
-            break;
-        case 9:
-            break;
+                break;
+            case 5:
+                actor->vecs[i].x += 0x200000;
+                if (actor->vecs[i].x == 0x1000000) {
+                    actor->state[i] = 6;
+                }
+                break;
+            case 6:
+                gRacePlayers[i].menuState = 4;
+                if ((i == 2) && (gPlayerCount == 3)) {
+                    gRacePlayers[3].menuState = 4;
+                }
+                break;
+            case 7:
+                if (gRacePlayers[i].menuState == 3) {
+                    actor->state[i] = 5;
+                } else if (gCurrentGameTask->screenState == 9) {
+                    actor->state[i] = 8;
+                }
+                break;
+            case 8:
+                actor->vecs[i].x += 0x200000;
+                if (actor->vecs[i].x == 0xC00000) {
+                    actor->state[i] = 9;
+                    gCurrentGameTask->screenState = 0xB;
+                }
+                break;
+            case 9:
+                break;
         }
 
         if ((s32)actor->state[i] < 3) {
@@ -857,8 +872,11 @@ void updateCourseSelectPreviewModelOut(CourseSelectAnimatedActor *arg0)
         finishCourseSelectUiTask(2);
         D_8010ADE4 = 0;
     } else {
-        addRenderCallback(&gModelRenderCallbackList, (RenderCallback)(void (*)(CourseSelectWidgetActor *))drawCourseSelectPreviewModelClose,
-                          (CourseSelectWidgetActor *)actor);
+        addRenderCallback(
+            &gModelRenderCallbackList,
+            (RenderCallback)(void (*)(CourseSelectWidgetActor *))drawCourseSelectPreviewModelClose,
+            (CourseSelectWidgetActor *)actor
+        );
     }
 }
 
@@ -890,11 +908,7 @@ void initCourseSelectPreviewModelOut(void *arg0) {
 }
 
 void drawCourseSelectCourseIconList(CourseSelectIconListActor *iconList) {
-    enum {
-        CURRENT_ITEM_COUNT_ACTOR,
-        PLAYER_ITEM_COUNT_ACTOR = 5,
-        BASE_ICON_LIST_ACTOR = 11
-    };
+    enum { CURRENT_ITEM_COUNT_ACTOR, PLAYER_ITEM_COUNT_ACTOR = 5, BASE_ICON_LIST_ACTOR = 11 };
     CourseSelectIconListActor *itemCountActors[12];
     s32 playerIndex;
     s32 iconIndex;
@@ -950,10 +964,19 @@ void drawCourseSelectCourseIconList(CourseSelectIconListActor *iconList) {
                         }
 
                         drawMenuSpriteClipped(
-                            iconList->y[playerIndex][iconIndex], iconList->x[playerIndex][iconIndex],
-                            getRelocatableHeapBlockBase(gAssetHandles[0x21]), (u16)iconTileIndex, 0x20, 0x20, 0,
-                            highlightAlpha, iconList->clipLeft - splitScreenClipOffset, iconList->clipTop,
-                            iconList->clipRight, iconList->clipBottom);
+                            iconList->y[playerIndex][iconIndex],
+                            iconList->x[playerIndex][iconIndex],
+                            getRelocatableHeapBlockBase(gAssetHandles[0x21]),
+                            (u16)iconTileIndex,
+                            0x20,
+                            0x20,
+                            0,
+                            highlightAlpha,
+                            iconList->clipLeft - splitScreenClipOffset,
+                            iconList->clipTop,
+                            iconList->clipRight,
+                            iconList->clipBottom
+                        );
                     } else if (gPlayerCount == 1) {
                         highlightAlpha = 0;
                         leftClipOffset = (playerIndex >= 2) * 0x88;
@@ -964,16 +987,34 @@ void drawCourseSelectCourseIconList(CourseSelectIconListActor *iconList) {
 
                         if (gRaceSplitscreenMode == 3) {
                             drawMenuSpriteClipped(
-                                iconList->y[playerIndex][iconIndex], iconList->x[playerIndex][iconIndex],
-                                getRelocatableHeapBlockBase(gAssetHandles[0x27]), 5, 0x20, 0x20, 0, highlightAlpha,
-                                iconList->clipLeft - leftClipOffset, iconList->clipTop, iconList->clipRight,
-                                iconList->clipBottom);
+                                iconList->y[playerIndex][iconIndex],
+                                iconList->x[playerIndex][iconIndex],
+                                getRelocatableHeapBlockBase(gAssetHandles[0x27]),
+                                5,
+                                0x20,
+                                0x20,
+                                0,
+                                highlightAlpha,
+                                iconList->clipLeft - leftClipOffset,
+                                iconList->clipTop,
+                                iconList->clipRight,
+                                iconList->clipBottom
+                            );
                         } else {
                             drawMenuSpriteClipped(
-                                iconList->y[playerIndex][iconIndex], iconList->x[playerIndex][iconIndex],
-                                getRelocatableHeapBlockBase(gAssetHandles[0x21]), 5, 0x20, 0x20, 0, highlightAlpha,
-                                iconList->clipLeft - leftClipOffset, iconList->clipTop, iconList->clipRight,
-                                iconList->clipBottom);
+                                iconList->y[playerIndex][iconIndex],
+                                iconList->x[playerIndex][iconIndex],
+                                getRelocatableHeapBlockBase(gAssetHandles[0x21]),
+                                5,
+                                0x20,
+                                0x20,
+                                0,
+                                highlightAlpha,
+                                iconList->clipLeft - leftClipOffset,
+                                iconList->clipTop,
+                                iconList->clipRight,
+                                iconList->clipBottom
+                            );
                         }
                     }
                     iconIndex++;
@@ -1011,181 +1052,169 @@ void updateCourseSelectCourseIconList(CourseSelectIconListActor *arg0) {
         }
 
         switch (state) {
-        case 0:
-            iconIndex = 0;
-            for (movingCount = 0; movingCount < (s32)actor->itemCounts[playerIndex]; movingCount++) {
-                if (actor->y[playerIndex][movingCount] < actor->targetY[playerIndex]) {
-                    actor->y[playerIndex][movingCount] += 0x10;
-                    iconIndex++;
-                    if (actor->y[playerIndex][movingCount] >= actor->targetY[playerIndex]) {
-                        actor->y[playerIndex][movingCount] = actor->targetY[playerIndex];
+            case 0:
+                iconIndex = 0;
+                for (movingCount = 0; movingCount < (s32)actor->itemCounts[playerIndex]; movingCount++) {
+                    if (actor->y[playerIndex][movingCount] < actor->targetY[playerIndex]) {
+                        actor->y[playerIndex][movingCount] += 0x10;
+                        iconIndex++;
+                        if (actor->y[playerIndex][movingCount] >= actor->targetY[playerIndex]) {
+                            actor->y[playerIndex][movingCount] = actor->targetY[playerIndex];
+                        }
                     }
                 }
-            }
 
-            actor->timer[playerIndex]++;
-            if ((gRacePlayers[playerIndex].selectedCharacterId == 5) ||
-                (D_8010AEA0[playerIndex] == 0) || (gCourseSelectModeSelection == 1)) {
-                count = 4;
-            } else if (D_8010AEA0[playerIndex] != 0) {
-                count = 5;
-            }
-            if (((actor->timer[playerIndex] & 1) == 0) &&
-                ((s32)actor->itemCounts[playerIndex] < (s32)count)) {
-                actor->itemCounts[playerIndex]++;
-            }
-
-            if ((u32)iconIndex == 0) {
-                actor->state[playerIndex] = 1;
-                if (gPlayerCount == 1) {
-                    D_8010ADE0 = createCallbackTask((CallbackTaskCallback)initCourseSelectPreviewModelIn, 0, 0x63);
-                    D_8010ADE4 = createCallbackTask((CallbackTaskCallback)initCourseSelectPreviewModelOut, 0, 0x62);
-                    createCallbackTask((CallbackTaskCallback)initCourseSelectCourseListBackdrop, 0, 0x60);
-                } else if (playerIndex == 0) {
-                    createCallbackTask((CallbackTaskCallback)initCourseSelectCourseStats, 0, 0x62);
-                    gActiveMenuTask =
-                        createCallbackTask((CallbackTaskCallback)initCourseSelectCourseCursors, 0, 0x64);
+                actor->timer[playerIndex]++;
+                if ((gRacePlayers[playerIndex].selectedCharacterId == 5) || (D_8010AEA0[playerIndex] == 0) ||
+                    (gCourseSelectModeSelection == 1)) {
+                    count = 4;
+                } else if (D_8010AEA0[playerIndex] != 0) {
+                    count = 5;
                 }
-            }
-            break;
+                if (((actor->timer[playerIndex] & 1) == 0) && ((s32)actor->itemCounts[playerIndex] < (s32)count)) {
+                    actor->itemCounts[playerIndex]++;
+                }
 
-        case 1:
-            if (gRacePlayers[playerIndex].menuState == 1) {
-                actor->state[playerIndex] = 2;
-            }
-            break;
+                if ((u32)iconIndex == 0) {
+                    actor->state[playerIndex] = 1;
+                    if (gPlayerCount == 1) {
+                        D_8010ADE0 = createCallbackTask((CallbackTaskCallback)initCourseSelectPreviewModelIn, 0, 0x63);
+                        D_8010ADE4 = createCallbackTask((CallbackTaskCallback)initCourseSelectPreviewModelOut, 0, 0x62);
+                        createCallbackTask((CallbackTaskCallback)initCourseSelectCourseListBackdrop, 0, 0x60);
+                    } else if (playerIndex == 0) {
+                        createCallbackTask((CallbackTaskCallback)initCourseSelectCourseStats, 0, 0x62);
+                        gActiveMenuTask =
+                            createCallbackTask((CallbackTaskCallback)initCourseSelectCourseCursors, 0, 0x64);
+                    }
+                }
+                break;
 
-        case 2:
-            if (D_8010AEA4[playerIndex] >= 9) {
+            case 1:
+                if (gRacePlayers[playerIndex].menuState == 1) {
+                    actor->state[playerIndex] = 2;
+                }
+                break;
+
+            case 2:
+                if (D_8010AEA4[playerIndex] >= 9) {
+                    for (iconIndex = 0; iconIndex < (s32)actor->itemCounts[playerIndex]; iconIndex++) {
+                        if (iconIndex != D_8010AE64[playerIndex]) {
+                            actor->y[playerIndex][iconIndex] -= 0x20;
+                        }
+                    }
+
+                    if (D_8010AE64[playerIndex] != 0) {
+                        if (actor->startY[playerIndex] >= actor->y[playerIndex][0]) {
+                            actor->state[playerIndex] = 3;
+                        }
+                    } else if (actor->startY[playerIndex] >= actor->y[playerIndex][1]) {
+                        actor->state[playerIndex] = 3;
+                    }
+
+                    if (actor->state[playerIndex] == 3) {
+                        if (actor->x[playerIndex][D_8010AE64[playerIndex]] < actor->targetX[playerIndex]) {
+                            actor->direction[playerIndex] = 1;
+                        } else {
+                            actor->direction[playerIndex] = -1;
+                        }
+                    }
+                }
+                break;
+
+            case 3:
+                actor->x[playerIndex][D_8010AE64[playerIndex]] +=
+                    actor->speed[playerIndex] * actor->direction[playerIndex];
+                if (((actor->direction[playerIndex] == 1) &&
+                     (actor->x[playerIndex][D_8010AE64[playerIndex]] >= actor->targetX[playerIndex])) ||
+                    ((actor->direction[playerIndex] == -1) &&
+                     (actor->x[playerIndex][D_8010AE64[playerIndex]] <= actor->targetX[playerIndex]))) {
+                    actor->x[playerIndex][D_8010AE64[playerIndex]] = actor->targetX[playerIndex];
+                    actor->state[playerIndex] = 4;
+                    gMenuChoicePromptState[playerIndex] = 1;
+                }
+                break;
+
+            case 4:
+                if ((gMenuFlowState == 0) && (gMenuChoicePromptState[playerIndex] == 0)) {
+                    actor->state[playerIndex] = 5;
+                }
+                if (gRacePlayers[playerIndex].menuState == 3) {
+                    actor->state[playerIndex] = 7;
+                }
+                break;
+
+            case 5:
+                actor->x[playerIndex][D_8010AE64[playerIndex]] +=
+                    actor->speed[playerIndex] * actor->direction[playerIndex] * -1;
+                if (((actor->direction[playerIndex] == 1) &&
+                     (actor->x[playerIndex][D_8010AE64[playerIndex]] <=
+                      actor->baseX[playerIndex] + (actor->speed[playerIndex] * D_8010AE64[playerIndex]))) ||
+                    ((actor->direction[playerIndex] == -1) &&
+                     (actor->x[playerIndex][D_8010AE64[playerIndex]] >=
+                      actor->baseX[playerIndex] + (actor->speed[playerIndex] * D_8010AE64[playerIndex])))) {
+                    actor->x[playerIndex][D_8010AE64[playerIndex]] =
+                        actor->baseX[playerIndex] + (D_8010AE64[playerIndex] * actor->speed[playerIndex]);
+                    actor->state[playerIndex] = 6;
+                }
+                break;
+
+            case 6:
                 for (iconIndex = 0; iconIndex < (s32)actor->itemCounts[playerIndex]; iconIndex++) {
                     if (iconIndex != D_8010AE64[playerIndex]) {
-                        actor->y[playerIndex][iconIndex] -= 0x20;
+                        actor->y[playerIndex][iconIndex] += 0x20;
                     }
                 }
 
                 if (D_8010AE64[playerIndex] != 0) {
-                    if (actor->startY[playerIndex] >= actor->y[playerIndex][0]) {
-                        actor->state[playerIndex] = 3;
+                    if (actor->y[playerIndex][0] >= actor->targetY[playerIndex]) {
+                        actor->state[playerIndex] = 1;
                     }
-                } else if (actor->startY[playerIndex] >= actor->y[playerIndex][1]) {
-                    actor->state[playerIndex] = 3;
-                }
-
-                if (actor->state[playerIndex] == 3) {
-                    if (actor->x[playerIndex][D_8010AE64[playerIndex]] <
-                        actor->targetX[playerIndex]) {
-                        actor->direction[playerIndex] = 1;
-                    } else {
-                        actor->direction[playerIndex] = -1;
-                    }
-                }
-            }
-            break;
-
-        case 3:
-            actor->x[playerIndex][D_8010AE64[playerIndex]] +=
-                actor->speed[playerIndex] * actor->direction[playerIndex];
-            if (((actor->direction[playerIndex] == 1) &&
-                 (actor->x[playerIndex][D_8010AE64[playerIndex]] >=
-                  actor->targetX[playerIndex])) ||
-                ((actor->direction[playerIndex] == -1) &&
-                 (actor->x[playerIndex][D_8010AE64[playerIndex]] <=
-                  actor->targetX[playerIndex]))) {
-                actor->x[playerIndex][D_8010AE64[playerIndex]] =
-                    actor->targetX[playerIndex];
-                actor->state[playerIndex] = 4;
-                gMenuChoicePromptState[playerIndex] = 1;
-            }
-            break;
-
-        case 4:
-            if ((gMenuFlowState == 0) && (gMenuChoicePromptState[playerIndex] == 0)) {
-                actor->state[playerIndex] = 5;
-            }
-            if (gRacePlayers[playerIndex].menuState == 3) {
-                actor->state[playerIndex] = 7;
-            }
-            break;
-
-        case 5:
-            actor->x[playerIndex][D_8010AE64[playerIndex]] +=
-                actor->speed[playerIndex] * actor->direction[playerIndex] * -1;
-            if (((actor->direction[playerIndex] == 1) &&
-                 (actor->x[playerIndex][D_8010AE64[playerIndex]] <=
-                  actor->baseX[playerIndex] +
-                      (actor->speed[playerIndex] * D_8010AE64[playerIndex]))) ||
-                ((actor->direction[playerIndex] == -1) &&
-                 (actor->x[playerIndex][D_8010AE64[playerIndex]] >=
-                  actor->baseX[playerIndex] +
-                      (actor->speed[playerIndex] * D_8010AE64[playerIndex])))) {
-                actor->x[playerIndex][D_8010AE64[playerIndex]] =
-                    actor->baseX[playerIndex] +
-                    (D_8010AE64[playerIndex] * actor->speed[playerIndex]);
-                actor->state[playerIndex] = 6;
-            }
-            break;
-
-        case 6:
-            for (iconIndex = 0; iconIndex < (s32)actor->itemCounts[playerIndex]; iconIndex++) {
-                if (iconIndex != D_8010AE64[playerIndex]) {
-                    actor->y[playerIndex][iconIndex] += 0x20;
-                }
-            }
-
-            if (D_8010AE64[playerIndex] != 0) {
-                if (actor->y[playerIndex][0] >= actor->targetY[playerIndex]) {
+                } else if (actor->y[playerIndex][1] >= actor->targetY[playerIndex]) {
                     actor->state[playerIndex] = 1;
                 }
-            } else if (actor->y[playerIndex][1] >= actor->targetY[playerIndex]) {
-                actor->state[playerIndex] = 1;
-            }
-            if (actor->state[playerIndex] == 1) {
-                gRacePlayers[playerIndex].menuState = 0;
-            }
-            break;
-
-        case 7:
-            if (gMenuFlowState != 0) {
-                for (iconIndex = 0; iconIndex < (s32)actor->itemCounts[playerIndex]; iconIndex++) {
-                    actor->y[playerIndex][iconIndex] -= 0x20;
+                if (actor->state[playerIndex] == 1) {
+                    gRacePlayers[playerIndex].menuState = 0;
                 }
-            } else {
+                break;
+
+            case 7:
+                if (gMenuFlowState != 0) {
+                    for (iconIndex = 0; iconIndex < (s32)actor->itemCounts[playerIndex]; iconIndex++) {
+                        actor->y[playerIndex][iconIndex] -= 0x20;
+                    }
+                } else {
+                    actor->y[playerIndex][D_8010AE64[playerIndex]] -= 0x20;
+                }
+                if (actor->y[playerIndex][D_8010AE64[playerIndex]] <= actor->startY[playerIndex]) {
+                    actor->state[playerIndex] = 8;
+                }
+                break;
+
+            case 9:
                 actor->y[playerIndex][D_8010AE64[playerIndex]] -= 0x20;
-            }
-            if (actor->y[playerIndex][D_8010AE64[playerIndex]] <=
-                actor->startY[playerIndex]) {
-                actor->state[playerIndex] = 8;
-            }
-            break;
+                if (actor->y[playerIndex][D_8010AE64[playerIndex]] <= actor->startY[playerIndex]) {
+                    actor->state[playerIndex] = 10;
+                }
+                break;
 
-        case 9:
-            actor->y[playerIndex][D_8010AE64[playerIndex]] -= 0x20;
-            if (actor->y[playerIndex][D_8010AE64[playerIndex]] <=
-                actor->startY[playerIndex]) {
-                actor->state[playerIndex] = 10;
-            }
-            break;
+            case 11:
+                actor->y[playerIndex][D_8010AE64[playerIndex]] += 0x20;
+                if (actor->y[playerIndex][D_8010AE64[playerIndex]] >= actor->targetY[playerIndex]) {
+                    actor->y[playerIndex][D_8010AE64[playerIndex]] = actor->targetY[playerIndex];
+                    actor->state[playerIndex] = 12;
+                }
+                break;
 
-        case 11:
-            actor->y[playerIndex][D_8010AE64[playerIndex]] += 0x20;
-            if (actor->y[playerIndex][D_8010AE64[playerIndex]] >=
-                actor->targetY[playerIndex]) {
-                actor->y[playerIndex][D_8010AE64[playerIndex]] =
-                    actor->targetY[playerIndex];
-                actor->state[playerIndex] = 12;
-            }
-            break;
+            case 12:
+                if (gCurrentGameTask->screenState == 4) {
+                    actor->state[playerIndex] = 4;
+                }
+                break;
 
-        case 12:
-            if (gCurrentGameTask->screenState == 4) {
-                actor->state[playerIndex] = 4;
-            }
-            break;
-
-        case 8:
-        case 10:
-        case 13:
-            break;
+            case 8:
+            case 10:
+            case 13:
+                break;
         }
     }
 
@@ -1197,6 +1226,8 @@ void updateCourseSelectCourseIconList(CourseSelectIconListActor *arg0) {
     }
 }
 
+// IDO code generation for this function is sensitive to source line layout.
+// clang-format off
 void initCourseSelectCourseIconList(CourseSelectIconListActor *arg0) {
     CourseSelectIconListActor *actor;
     u8 *courseUnlocked;
@@ -1215,6 +1246,7 @@ void initCourseSelectCourseIconList(CourseSelectIconListActor *arg0) {
     }
     do { playerIndex = 0; if ((s32) gPlayerCount > 0) { courseUnlocked = D_8010AEA0; yLayout = gCourseSelectIconListYLayout[layoutIndex]; xLayout = gCourseSelectIconListXLayout[layoutIndex]; do { if ((*courseUnlocked == 0) || (gRacePlayers[playerIndex].selectedCharacterId == 5)) { hasExtraCourse = 0; } else { hasExtraCourse = 1; } actor->speed[playerIndex] = yLayout[hasExtraCourse]; actor->baseX[playerIndex] = yLayout[((playerIndex & 1) * 2) + hasExtraCourse + 2]; actor->targetX[playerIndex] = yLayout[((playerIndex & 1) * 2) + 2]; actor->targetY[playerIndex] = xLayout[((playerIndex >= 2) * 2) + 1]; actor->startY[playerIndex] = xLayout[(playerIndex >= 2) * 2]; actor->clipBottom = 0x78; actor->clipRight = 0xA0; actor->clipTop = 0x78; if (gPlayerCount == 1) { actor->clipLeft = 0xA0; } else if (gPlayerCount == 2) { actor->clipLeft = 0x7E; } else { actor->clipLeft = 0x88; } iconIndex = 0; do { actor->y[playerIndex][iconIndex] = actor->startY[playerIndex]; actor->x[playerIndex][iconIndex] = actor->baseX[playerIndex] + (actor->speed[playerIndex] * iconIndex); iconIndex++; } while (iconIndex < 5); actor->state[playerIndex] = 0; actor->itemCounts[playerIndex] = 1; actor->timer[playerIndex] = 0; courseUnlocked++; playerIndex++; } while (playerIndex < (s32) gPlayerCount); } setCallbackTaskCallback(actor, (CallbackTaskCallback) updateCourseSelectCourseIconList); } while (0);
 }
+// clang-format on
 
 void drawCourseSelectCourseCursors(CourseSelectWidgetActor *arg0) {
     u8 *actor;
@@ -1232,12 +1264,12 @@ void drawCourseSelectCourseCursors(CourseSelectWidgetActor *arg0) {
     s32 playerCount;
     u8 *cursorBase;
 
-    actor = (u8 *) arg0;
+    actor = (u8 *)arg0;
     if (D_8010AEB0 == 0) {
         playerCount = gPlayerCount;
         i = 0;
         if ((playerCount - 1) >= 0) {
-            statePtr = (u8 *) arg0;
+            statePtr = (u8 *)arg0;
             cursorStride = 2;
             handles = gAssetHandles;
             one = 1;
@@ -1245,7 +1277,7 @@ void drawCourseSelectCourseCursors(CourseSelectWidgetActor *arg0) {
                 directionPtr = &D_8010AE64[i];
                 if (statePtr[0x30] < cursorStride) {
                     cursorBase = actor;
-                    posPtr = (s16 *) ((cursorBytes = cursorBase) + (i * cursorStride));
+                    posPtr = (s16 *)((cursorBytes = cursorBase) + (i * cursorStride));
                     if (one == gPlayerCount) {
                         tileIndex = 7;
                         handleIndex = 0x25;
@@ -1253,9 +1285,17 @@ void drawCourseSelectCourseCursors(CourseSelectWidgetActor *arg0) {
                         tileIndex = 0x13;
                         handleIndex = 0x21;
                     }
-                    drawMenuSpriteWithAlpha(posPtr[0xC], (s16)((drawPosPtr = posPtr)[0x10] + ((*directionPtr) * statePtr[0x38])),
-                                            getRelocatableHeapBlockBase(handles[handleIndex]), tileIndex,
-                                            0x20, 0x20, 0, drawPosPtr[0x14], (short)0);
+                    drawMenuSpriteWithAlpha(
+                        posPtr[0xC],
+                        (s16)((drawPosPtr = posPtr)[0x10] + ((*directionPtr) * statePtr[0x38])),
+                        getRelocatableHeapBlockBase(handles[handleIndex]),
+                        tileIndex,
+                        0x20,
+                        0x20,
+                        0,
+                        drawPosPtr[0x14],
+                        (short)0
+                    );
                 }
                 i++;
                 statePtr++;
@@ -1272,56 +1312,56 @@ void updateCourseSelectCourseCursors(CourseSelectWidgetActor *arg0) {
 
     actor = arg0;
     i = 0;
-    if ((s32) gPlayerCount > 0) {
+    if ((s32)gPlayerCount > 0) {
         do {
             if ((gMenuFlowState != 0) && (gRaceSplitscreenMode != 3)) {
                 actor->courseCursorState[i] = 4;
             }
             state = actor->courseCursorState[i];
             switch (state) {
-            case 0:
-                actor->courseCursorAlpha[i] += 0x26;
-                if (actor->courseCursorAlpha[i] >= 0x100) {
-                    actor->courseCursorAlpha[i] = 0x100;
-                    actor->courseCursorState[i] = 1;
-                }
-                state = actor->courseCursorState[i];
-                break;
-            case 1:
-                player = &gRacePlayers[i];
-                if (actor->courseCursorTimer[i] < 0x10) {
-                    actor->courseCursorAlpha[i] -= 9;
-                } else {
-                    actor->courseCursorAlpha[i] += 9;
-                }
-                actor->courseCursorTimer[i] = (actor->courseCursorTimer[i] + 1) & 0x1F;
-                if ((player->menuState == 1) || (gRacePlayers[0].menuState == 3)) {
-                    actor->courseCursorState[i] = 2;
-                }
-                state = actor->courseCursorState[i];
-                break;
-            case 2:
-                player = &gRacePlayers[i];
-                if (player->menuState == 3) {
-                    actor->courseCursorState[i] = 4;
-                }
-                if (player->menuState == 0) {
-                    actor->courseCursorState[i] = 1;
-                    actor->courseCursorAlpha[i] = 0x100;
-                    actor->courseCursorTimer[i] = 0;
-                }
-                if (gCurrentGameTask->screenState == 9) {
-                    actor->courseCursorState[i] = 4;
-                }
-                state = actor->courseCursorState[i];
-                break;
-            case 3:
-            case 4:
-                break;
+                case 0:
+                    actor->courseCursorAlpha[i] += 0x26;
+                    if (actor->courseCursorAlpha[i] >= 0x100) {
+                        actor->courseCursorAlpha[i] = 0x100;
+                        actor->courseCursorState[i] = 1;
+                    }
+                    state = actor->courseCursorState[i];
+                    break;
+                case 1:
+                    player = &gRacePlayers[i];
+                    if (actor->courseCursorTimer[i] < 0x10) {
+                        actor->courseCursorAlpha[i] -= 9;
+                    } else {
+                        actor->courseCursorAlpha[i] += 9;
+                    }
+                    actor->courseCursorTimer[i] = (actor->courseCursorTimer[i] + 1) & 0x1F;
+                    if ((player->menuState == 1) || (gRacePlayers[0].menuState == 3)) {
+                        actor->courseCursorState[i] = 2;
+                    }
+                    state = actor->courseCursorState[i];
+                    break;
+                case 2:
+                    player = &gRacePlayers[i];
+                    if (player->menuState == 3) {
+                        actor->courseCursorState[i] = 4;
+                    }
+                    if (player->menuState == 0) {
+                        actor->courseCursorState[i] = 1;
+                        actor->courseCursorAlpha[i] = 0x100;
+                        actor->courseCursorTimer[i] = 0;
+                    }
+                    if (gCurrentGameTask->screenState == 9) {
+                        actor->courseCursorState[i] = 4;
+                    }
+                    state = actor->courseCursorState[i];
+                    break;
+                case 3:
+                case 4:
+                    break;
             }
             i++;
             gCourseSelectStatus.bytes[i - 1] = state;
-        } while (i < (s32) gPlayerCount);
+        } while (i < (s32)gPlayerCount);
     }
 
     if (actor->courseCursorState[0] == 4) {
@@ -1331,6 +1371,8 @@ void updateCourseSelectCourseCursors(CourseSelectWidgetActor *arg0) {
     }
 }
 
+// IDO code generation for this function is sensitive to source line layout.
+// clang-format off
 void initCourseSelectCourseCursors(CourseSelectWidgetActor *arg0) {
     CourseSelectWidgetActor *actor;
     u8 *courseUnlocked;
@@ -1356,13 +1398,40 @@ void initCourseSelectCourseCursors(CourseSelectWidgetActor *arg0) {
     }
     setCallbackTaskCallback(actor, (CallbackTaskCallback)updateCourseSelectCourseCursors);
 }
-
+// clang-format on
 
 void drawCourseSelectCourseListBackdrop(CourseSelectWidgetActor *arg0) {
     drawMenuSprite(arg0->x, arg0->y, getRelocatableHeapBlockBase(gAssetHandles[0x25]), 3, 0x20, 0x20, 0, 0);
-    drawMenuSprite((s16) (arg0->x + 0x40), arg0->y, getRelocatableHeapBlockBase(gAssetHandles[0x25]), 4, 0x20, 0x20, 0, 0);
-    drawMenuSprite(arg0->x, (s16) (arg0->y + 0x40), getRelocatableHeapBlockBase(gAssetHandles[0x25]), 5, 0x20, 0x20, 0, 0);
-    drawMenuSprite((s16) (arg0->x + 0x40), (s16) (arg0->y + 0x40), getRelocatableHeapBlockBase(gAssetHandles[0x25]), 6, 0x20, 0x20, 0, 0);
+    drawMenuSprite(
+        (s16)(arg0->x + 0x40),
+        arg0->y,
+        getRelocatableHeapBlockBase(gAssetHandles[0x25]),
+        4,
+        0x20,
+        0x20,
+        0,
+        0
+    );
+    drawMenuSprite(
+        arg0->x,
+        (s16)(arg0->y + 0x40),
+        getRelocatableHeapBlockBase(gAssetHandles[0x25]),
+        5,
+        0x20,
+        0x20,
+        0,
+        0
+    );
+    drawMenuSprite(
+        (s16)(arg0->x + 0x40),
+        (s16)(arg0->y + 0x40),
+        getRelocatableHeapBlockBase(gAssetHandles[0x25]),
+        6,
+        0x20,
+        0x20,
+        0,
+        0
+    );
 }
 
 void updateCourseSelectCourseListBackdrop(CourseSelectWidgetActor *arg0) {
@@ -1380,56 +1449,56 @@ void updateCourseSelectCourseListBackdrop(CourseSelectWidgetActor *arg0) {
     }
 
     switch (arg0->pad18[4]) {
-    case 0:
-        arg0->x += 0x20;
-        if (arg0->x >= -0x88) {
-            arg0->x = -0x88;
-            arg0->pad18[4] = 1;
-            gActiveMenuTask = createCallbackTask((CallbackTaskCallback)initCourseSelectCourseCursors, 0, 0x64);
-            createCallbackTask((CallbackTaskCallback)initCourseSelectExtraCourseBadge, 0, 0x63);
-            createCallbackTask((CallbackTaskCallback)initCourseSelectCourseDescription, 0, 0x61);
-            createCallbackTask((CallbackTaskCallback)initCourseSelectCourseStats, 0, 0x64);
-            if ((gRaceSplitscreenMode == 3) && (gCourseSelectModeSelection == 0)) {
-                createCallbackTask((CallbackTaskCallback)initShopMenuMoneyPanelForCourseSelectReturn, 0, 0x63);
+        case 0:
+            arg0->x += 0x20;
+            if (arg0->x >= -0x88) {
+                arg0->x = -0x88;
+                arg0->pad18[4] = 1;
+                gActiveMenuTask = createCallbackTask((CallbackTaskCallback)initCourseSelectCourseCursors, 0, 0x64);
+                createCallbackTask((CallbackTaskCallback)initCourseSelectExtraCourseBadge, 0, 0x63);
+                createCallbackTask((CallbackTaskCallback)initCourseSelectCourseDescription, 0, 0x61);
+                createCallbackTask((CallbackTaskCallback)initCourseSelectCourseStats, 0, 0x64);
+                if ((gRaceSplitscreenMode == 3) && (gCourseSelectModeSelection == 0)) {
+                    createCallbackTask((CallbackTaskCallback)initShopMenuMoneyPanelForCourseSelectReturn, 0, 0x63);
+                }
             }
-        }
-        break;
-    case 1:
-        if (gRacePlayers[0].menuState == 3) {
-            arg0->pad18[4] = 2;
-        }
-        break;
-    case 2:
-        arg0->x -= 0x20;
-        if (arg0->x < -0x10D) {
-            if (gCurrentGameTask->screenState != 0) {
-                arg0->pad18[4] = 4;
-                gCurrentGameTask->screenState = 2;
-            } else {
+            break;
+        case 1:
+            if (gRacePlayers[0].menuState == 3) {
+                arg0->pad18[4] = 2;
+            }
+            break;
+        case 2:
+            arg0->x -= 0x20;
+            if (arg0->x < -0x10D) {
+                if (gCurrentGameTask->screenState != 0) {
+                    arg0->pad18[4] = 4;
+                    gCurrentGameTask->screenState = 2;
+                } else {
+                    arg0->pad18[4] = 3;
+                }
+            }
+            break;
+        case 4:
+            if (gCurrentGameTask->screenState == 9) {
                 arg0->pad18[4] = 3;
             }
-        }
-        break;
-    case 4:
-        if (gCurrentGameTask->screenState == 9) {
-            arg0->pad18[4] = 3;
-        }
-        break;
-    case 5:
-        arg0->x += 0x20;
-        if (arg0->x >= -0x88) {
-            arg0->x = -0x88;
-            arg0->pad18[4] = 6;
-        }
-        break;
-    case 6:
-        gCurrentGameTask->screenState = 4;
-        arg0->pad18[4] = 7;
-        break;
-    case 7:
-        gCurrentGameTask->screenState = 5;
-        arg0->pad18[4] = 1;
-        break;
+            break;
+        case 5:
+            arg0->x += 0x20;
+            if (arg0->x >= -0x88) {
+                arg0->x = -0x88;
+                arg0->pad18[4] = 6;
+            }
+            break;
+        case 6:
+            gCurrentGameTask->screenState = 4;
+            arg0->pad18[4] = 7;
+            break;
+        case 7:
+            gCurrentGameTask->screenState = 5;
+            arg0->pad18[4] = 1;
+            break;
     }
 
     if (arg0->pad18[4] == 3) {
@@ -1488,13 +1557,26 @@ void drawCourseSelectCourseStats(CourseSelectWidgetActor *arg0) {
                         } else {
                             selectedCourseId = (s32)selectedCourse % 3;
                         }
-                        drawMenuSpriteWithAlpha(arg0->courseStatsX[i], arg0->courseStatsY[i],
-                                                getRelocatableHeapBlockBase(panelHandle), panelTile, 0x20, 0x20, 0,
-                                                arg0->courseStatsAlpha, 0);
+                        drawMenuSpriteWithAlpha(
+                            arg0->courseStatsX[i],
+                            arg0->courseStatsY[i],
+                            getRelocatableHeapBlockBase(panelHandle),
+                            panelTile,
+                            0x20,
+                            0x20,
+                            0,
+                            arg0->courseStatsAlpha,
+                            0
+                        );
                         if ((s32)gPlayerCount < 3) {
                             if (selectedCourseId >= 9) {
-                                drawMenuAsciiText((s16)(arg0->courseStatsX[i] + 0x38), arg0->courseStatsY[i],
-                                                  D_800E0DA0, 0, arg0->courseStatsAlpha);
+                                drawMenuAsciiText(
+                                    (s16)(arg0->courseStatsX[i] + 0x38),
+                                    arg0->courseStatsY[i],
+                                    D_800E0DA0,
+                                    0,
+                                    arg0->courseStatsAlpha
+                                );
                             } else {
                                 j = 0;
                                 if (gCourseSelectCourseRatings.courses[selectedCourseId].speed > 0) {
@@ -1503,17 +1585,27 @@ void drawCourseSelectCourseStats(CourseSelectWidgetActor *arg0) {
                                         drawMenuSpriteWithAlpha(
                                             (s16)((arg0->courseStatsX[i] + k) + 0x38),
                                             (s16)(arg0->courseStatsY[i] - 2),
-                                            getRelocatableHeapBlockBase(gAssetHandles[0x24]), 0x25, 0x20, 0x20, 0,
-                                            arg0->courseStatsAlpha, 0);
+                                            getRelocatableHeapBlockBase(gAssetHandles[0x24]),
+                                            0x25,
+                                            0x20,
+                                            0x20,
+                                            0,
+                                            arg0->courseStatsAlpha,
+                                            0
+                                        );
                                         j++;
                                         k += 0xC;
                                     } while (j < gCourseSelectCourseRatings.courses[selectedCourseId].speed);
                                 }
                             }
                             if (selectedCourseId >= 9) {
-                                drawMenuAsciiText((s16)(arg0->courseStatsX[i] + 0x38),
-                                                  (s16)(arg0->courseStatsY[i] + 0xC), D_800E0DA4, 0,
-                                                  arg0->courseStatsAlpha);
+                                drawMenuAsciiText(
+                                    (s16)(arg0->courseStatsX[i] + 0x38),
+                                    (s16)(arg0->courseStatsY[i] + 0xC),
+                                    D_800E0DA4,
+                                    0,
+                                    arg0->courseStatsAlpha
+                                );
                             } else {
                                 j = 0;
                                 if (gCourseSelectCourseRatings.courses[selectedCourseId].handling > 0) {
@@ -1522,17 +1614,27 @@ void drawCourseSelectCourseStats(CourseSelectWidgetActor *arg0) {
                                         drawMenuSpriteWithAlpha(
                                             (s16)((arg0->courseStatsX[i] + k) + 0x38),
                                             (s16)(arg0->courseStatsY[i] + 0xA),
-                                            getRelocatableHeapBlockBase(gAssetHandles[0x24]), 0x25, 0x20, 0x20, 0,
-                                            arg0->courseStatsAlpha, 0);
+                                            getRelocatableHeapBlockBase(gAssetHandles[0x24]),
+                                            0x25,
+                                            0x20,
+                                            0x20,
+                                            0,
+                                            arg0->courseStatsAlpha,
+                                            0
+                                        );
                                         j++;
                                         k += 0xC;
                                     } while (j < gCourseSelectCourseRatings.courses[selectedCourseId].handling);
                                 }
                             }
                             if (selectedCourseId >= 9) {
-                                drawMenuAsciiText((s16)(arg0->courseStatsX[i] + 0x38),
-                                                  (s16)(arg0->courseStatsY[i] + 0x18), D_800E0DA8, 0,
-                                                  arg0->courseStatsAlpha);
+                                drawMenuAsciiText(
+                                    (s16)(arg0->courseStatsX[i] + 0x38),
+                                    (s16)(arg0->courseStatsY[i] + 0x18),
+                                    D_800E0DA8,
+                                    0,
+                                    arg0->courseStatsAlpha
+                                );
                             } else {
                                 j = 0;
                                 if (gCourseSelectCourseRatings.courses[selectedCourseId].trick > 0) {
@@ -1541,8 +1643,14 @@ void drawCourseSelectCourseStats(CourseSelectWidgetActor *arg0) {
                                         drawMenuSpriteWithAlpha(
                                             (s16)((arg0->courseStatsX[i] + k) + 0x38),
                                             (s16)(arg0->courseStatsY[i] + 0x16),
-                                            getRelocatableHeapBlockBase(gAssetHandles[0x24]), 0x25, 0x20, 0x20, 0,
-                                            arg0->courseStatsAlpha, 0);
+                                            getRelocatableHeapBlockBase(gAssetHandles[0x24]),
+                                            0x25,
+                                            0x20,
+                                            0x20,
+                                            0,
+                                            arg0->courseStatsAlpha,
+                                            0
+                                        );
                                         j++;
                                         k += 0xC;
                                     } while (j < gCourseSelectCourseRatings.courses[selectedCourseId].trick);
@@ -1556,10 +1664,71 @@ void drawCourseSelectCourseStats(CourseSelectWidgetActor *arg0) {
                                 text[1] = '\0';
                             }
                             if (selectedCourseId < 9) {
-                                sprintf((char *)text, D_800E0DAC,
-                                        gCourseSelectCourseRatings.courses[selectedCourseId].speed);
+                                sprintf(
+                                    (char *)text,
+                                    D_800E0DAC,
+                                    gCourseSelectCourseRatings.courses[selectedCourseId].speed
+                                );
                             }
- drawMenuAsciiText((s16) (arg0->courseStatsX[i] + 0x34), arg0->courseStatsY[i], text, 0, arg0->courseStatsAlpha); if (selectedCourseId < 9) { sprintf((char *)text, D_800E0DB0, gCourseSelectCourseRatings.courses[selectedCourseId].handling); } drawMenuAsciiText((s16) (arg0->courseStatsX[i] + 0x34), (s16) (arg0->courseStatsY[i] + 8), text, 0, arg0->courseStatsAlpha); if (selectedCourseId < 9) { sprintf((char *)text, D_800E0DB4, gCourseSelectCourseRatings.courses[selectedCourseId].trick); } drawMenuAsciiText((s16) (arg0->courseStatsX[i] + 0x34), (s16) ((unsigned short) (arg0->courseStatsY[i] + 0x10)), text, 0, arg0->courseStatsAlpha); } if (((s32) gPlayerCount) >= 2) { if (((s32) gPlayerCount) == 2) { j = 0; } else { j = 1; } drawMenuSpriteWithAlpha((s16) (gCourseSelectStatsPlayerMarkerLayout[j][i & 1][0] + ((i >= 2) * 0x8C)), gCourseSelectStatsPlayerMarkerLayout[j][i & 1][1], getRelocatableHeapBlockBase(gAssetHandles[0x21]), 0x12, 0x20, 0x20, new_var, arg0->courseStatsAlpha, 0); } } i++; } while (i < ((s32) gPlayerCount)); } } while (0);
+                            drawMenuAsciiText(
+                                (s16)(arg0->courseStatsX[i] + 0x34),
+                                arg0->courseStatsY[i],
+                                text,
+                                0,
+                                arg0->courseStatsAlpha
+                            );
+                            if (selectedCourseId < 9) {
+                                sprintf(
+                                    (char *)text,
+                                    D_800E0DB0,
+                                    gCourseSelectCourseRatings.courses[selectedCourseId].handling
+                                );
+                            }
+                            drawMenuAsciiText(
+                                (s16)(arg0->courseStatsX[i] + 0x34),
+                                (s16)(arg0->courseStatsY[i] + 8),
+                                text,
+                                0,
+                                arg0->courseStatsAlpha
+                            );
+                            if (selectedCourseId < 9) {
+                                sprintf(
+                                    (char *)text,
+                                    D_800E0DB4,
+                                    gCourseSelectCourseRatings.courses[selectedCourseId].trick
+                                );
+                            }
+                            drawMenuAsciiText(
+                                (s16)(arg0->courseStatsX[i] + 0x34),
+                                (s16)((unsigned short)(arg0->courseStatsY[i] + 0x10)),
+                                text,
+                                0,
+                                arg0->courseStatsAlpha
+                            );
+                        }
+                        if (((s32)gPlayerCount) >= 2) {
+                            if (((s32)gPlayerCount) == 2) {
+                                j = 0;
+                            } else {
+                                j = 1;
+                            }
+                            drawMenuSpriteWithAlpha(
+                                (s16)(gCourseSelectStatsPlayerMarkerLayout[j][i & 1][0] + ((i >= 2) * 0x8C)),
+                                gCourseSelectStatsPlayerMarkerLayout[j][i & 1][1],
+                                getRelocatableHeapBlockBase(gAssetHandles[0x21]),
+                                0x12,
+                                0x20,
+                                0x20,
+                                new_var,
+                                arg0->courseStatsAlpha,
+                                0
+                            );
+                        }
+                    }
+                    i++;
+                } while (i < ((s32)gPlayerCount));
+            }
+        } while (0);
     } while (0);
 }
 #endif
@@ -1587,49 +1756,69 @@ void drawCourseSelectCourseStats(CourseSelectWidgetActor *arg0) {
 
     for (i = 0; i < (s32)gPlayerCount; i++) {
         if (((gPlayerCount >= 2) || (gRacePlayers[i].menuState == 0)) &&
-            ((gPlayerCount >= 2) ||
-             ((gPlayerCount == 1) && (gCourseSelectExtraCourseColumnState == 0)))) {
-            if ((gRacePlayers[i].menuSelection >= 9) &&
-                (gRacePlayers[i].menuSelection < 12)) {
+            ((gPlayerCount >= 2) || ((gPlayerCount == 1) && (gCourseSelectExtraCourseColumnState == 0)))) {
+            if ((gRacePlayers[i].menuSelection >= 9) && (gRacePlayers[i].menuSelection < 12)) {
                 courseIndex = gRacePlayers[i].menuSelection;
             } else {
                 courseIndex = gRacePlayers[i].menuSelection % 3;
             }
 
             drawMenuSpriteWithAlpha(
-                arg0->courseStatsX[i], arg0->courseStatsY[i],
-                getRelocatableHeapBlockBase(gAssetHandles[0x21]), panelTile, 0x20,
-                0x20, 0, arg0->courseStatsAlpha, 0);
+                arg0->courseStatsX[i],
+                arg0->courseStatsY[i],
+                getRelocatableHeapBlockBase(gAssetHandles[0x21]),
+                panelTile,
+                0x20,
+                0x20,
+                0,
+                arg0->courseStatsAlpha,
+                0
+            );
 
             if (gPlayerCount < 3) {
                 if (courseIndex >= 9) {
-                    if ((D_800E0DA8 && D_800E0DA8) && D_800E0DA8) {
-                    }
-                    drawMenuAsciiText((s16)(arg0->courseStatsX[i] + 0x38),
-                                      arg0->courseStatsY[i], (u8 *)D_800E0DA0, 0,
-                                      arg0->courseStatsAlpha);
+                    if ((D_800E0DA8 && D_800E0DA8) && D_800E0DA8) {}
+                    drawMenuAsciiText(
+                        (s16)(arg0->courseStatsX[i] + 0x38),
+                        arg0->courseStatsY[i],
+                        (u8 *)D_800E0DA0,
+                        0,
+                        arg0->courseStatsAlpha
+                    );
                 } else {
                     j = 0;
-                    if (j < gCourseSelectCourseRatings
-                                .values[(courseIndex * COURSE_RATING_COUNT) + COURSE_RATING_SPEED]) {
+                    if (j <
+                        gCourseSelectCourseRatings.values[(courseIndex * COURSE_RATING_COUNT) + COURSE_RATING_SPEED]) {
                         xOffset = 0;
                         do {
                             drawMenuSpriteWithAlpha(
                                 (s16)(arg0->courseStatsX[i] + xOffset + 0x38),
                                 (s16)(arg0->courseStatsY[i] - 2),
                                 getRelocatableHeapBlockBase(gAssetHandles[0x24]),
-                                0x25, 0x20, 0x20, 0, arg0->courseStatsAlpha, 0);
+                                0x25,
+                                0x20,
+                                0x20,
+                                0,
+                                arg0->courseStatsAlpha,
+                                0
+                            );
                             j++;
                             xOffset += 0xC;
-                        } while (j < gCourseSelectCourseRatings
-                                         .values[(courseIndex * COURSE_RATING_COUNT) + COURSE_RATING_SPEED]);
+                        } while (
+                            j <
+                            gCourseSelectCourseRatings.values[(courseIndex * COURSE_RATING_COUNT) + COURSE_RATING_SPEED]
+                        );
                     }
                 }
 
                 if (courseIndex >= 9) {
-                    drawMenuAsciiText((s16)(arg0->courseStatsX[i] + 0x38),
-                                      (s16)(arg0->courseStatsY[i] + 0xC),
-                                      (u8 *)D_800E0DA4, 0, arg0->courseStatsAlpha);
+                    drawMenuAsciiText(
+                        (s16)(arg0->courseStatsX[i] + 0x38),
+                        (s16)(arg0->courseStatsY[i] + 0xC),
+                        (u8 *)D_800E0DA4,
+                        0,
+                        arg0->courseStatsAlpha
+                    );
                 } else {
                     j = 0;
                     if (j < gCourseSelectCourseRatings
@@ -1640,7 +1829,13 @@ void drawCourseSelectCourseStats(CourseSelectWidgetActor *arg0) {
                                 (s16)(arg0->courseStatsX[i] + xOffset + 0x38),
                                 (s16)(arg0->courseStatsY[i] + 0xA),
                                 getRelocatableHeapBlockBase(gAssetHandles[0x24]),
-                                0x25, 0x20, 0x20, 0, arg0->courseStatsAlpha, 0);
+                                0x25,
+                                0x20,
+                                0x20,
+                                0,
+                                arg0->courseStatsAlpha,
+                                0
+                            );
                             j++;
                             xOffset += 0xC;
                         } while (j < gCourseSelectCourseRatings
@@ -1652,24 +1847,35 @@ void drawCourseSelectCourseStats(CourseSelectWidgetActor *arg0) {
                     if (1) {
                         drawMenuAsciiText(
                             (s16)(arg0->courseStatsX[i] + 0x38),
-                            (s16)(arg0->courseStatsY[i] + 0x18), (u8 *)D_800E0DA8, 0,
-                            arg0->courseStatsAlpha);
+                            (s16)(arg0->courseStatsY[i] + 0x18),
+                            (u8 *)D_800E0DA8,
+                            0,
+                            arg0->courseStatsAlpha
+                        );
                     }
                 } else {
                     j = 0;
-                    if (j < gCourseSelectCourseRatings
-                                .values[(courseIndex * COURSE_RATING_COUNT) + COURSE_RATING_TRICK]) {
+                    if (j <
+                        gCourseSelectCourseRatings.values[(courseIndex * COURSE_RATING_COUNT) + COURSE_RATING_TRICK]) {
                         xOffset = 0;
                         do {
                             drawMenuSpriteWithAlpha(
                                 (s16)(arg0->courseStatsX[i] + xOffset + 0x38),
                                 (s16)(arg0->courseStatsY[i] + 0x16),
                                 getRelocatableHeapBlockBase(gAssetHandles[0x24]),
-                                0x25, 0x20, 0x20, 0, arg0->courseStatsAlpha, 0);
+                                0x25,
+                                0x20,
+                                0x20,
+                                0,
+                                arg0->courseStatsAlpha,
+                                0
+                            );
                             j++;
                             xOffset += 0xC;
-                        } while (j < gCourseSelectCourseRatings
-                                         .values[(courseIndex * COURSE_RATING_COUNT) + COURSE_RATING_TRICK]);
+                        } while (
+                            j <
+                            gCourseSelectCourseRatings.values[(courseIndex * COURSE_RATING_COUNT) + COURSE_RATING_TRICK]
+                        );
                     }
                 }
             } else {
@@ -1678,31 +1884,49 @@ void drawCourseSelectCourseStats(CourseSelectWidgetActor *arg0) {
                     text[1] = '\0';
                 }
                 if (courseIndex < 9) {
-                    sprintf(text, D_800E0DAC,
-                            gCourseSelectCourseRatings
-                                .values[(courseIndex * COURSE_RATING_COUNT) + COURSE_RATING_SPEED]);
+                    sprintf(
+                        text,
+                        D_800E0DAC,
+                        gCourseSelectCourseRatings.values[(courseIndex * COURSE_RATING_COUNT) + COURSE_RATING_SPEED]
+                    );
                 }
-                drawMenuAsciiText((s16)(arg0->courseStatsX[i] + 0x34),
-                                  arg0->courseStatsY[i], text, 0,
-                                  arg0->courseStatsAlpha);
+                drawMenuAsciiText(
+                    (s16)(arg0->courseStatsX[i] + 0x34),
+                    arg0->courseStatsY[i],
+                    text,
+                    0,
+                    arg0->courseStatsAlpha
+                );
 
                 if (courseIndex < 9) {
-                    sprintf(text, D_800E0DB0,
-                            gCourseSelectCourseRatings
-                                .values[(courseIndex * COURSE_RATING_COUNT) + COURSE_RATING_HANDLING]);
+                    sprintf(
+                        text,
+                        D_800E0DB0,
+                        gCourseSelectCourseRatings.values[(courseIndex * COURSE_RATING_COUNT) + COURSE_RATING_HANDLING]
+                    );
                 }
-                drawMenuAsciiText((s16)(arg0->courseStatsX[i] + 0x34),
-                                  (s16)(arg0->courseStatsY[i] + 8), text, 0,
-                                  arg0->courseStatsAlpha);
+                drawMenuAsciiText(
+                    (s16)(arg0->courseStatsX[i] + 0x34),
+                    (s16)(arg0->courseStatsY[i] + 8),
+                    text,
+                    0,
+                    arg0->courseStatsAlpha
+                );
 
                 if (courseIndex < 9) {
-                    sprintf(text, D_800E0DB4,
-                            gCourseSelectCourseRatings
-                                .values[(courseIndex * COURSE_RATING_COUNT) + COURSE_RATING_TRICK]);
+                    sprintf(
+                        text,
+                        D_800E0DB4,
+                        gCourseSelectCourseRatings.values[(courseIndex * COURSE_RATING_COUNT) + COURSE_RATING_TRICK]
+                    );
                 }
-                drawMenuAsciiText((s16)(arg0->courseStatsX[i] + 0x34),
-                                  (s16)(arg0->courseStatsY[i] + 0x10), text, 0,
-                                  arg0->courseStatsAlpha);
+                drawMenuAsciiText(
+                    (s16)(arg0->courseStatsX[i] + 0x34),
+                    (s16)(arg0->courseStatsY[i] + 0x10),
+                    text,
+                    0,
+                    arg0->courseStatsAlpha
+                );
             }
 
             if (gPlayerCount >= 2) {
@@ -1712,11 +1936,16 @@ void drawCourseSelectCourseStats(CourseSelectWidgetActor *arg0) {
                     j = 1;
                 }
                 drawMenuSpriteWithAlpha(
-                    (s16)(gCourseSelectStatsPlayerMarkerLayout[j][(i & 1) * 2] +
-                          ((i >= 2) * 0x8C)),
+                    (s16)(gCourseSelectStatsPlayerMarkerLayout[j][(i & 1) * 2] + ((i >= 2) * 0x8C)),
                     gCourseSelectStatsPlayerMarkerLayout[j][((i & 1) * 2) + 1],
-                    getRelocatableHeapBlockBase(gAssetHandles[0x21]), 0x12, 0x20,
-                    0x20, 0, arg0->courseStatsAlpha, 0);
+                    getRelocatableHeapBlockBase(gAssetHandles[0x21]),
+                    0x12,
+                    0x20,
+                    0x20,
+                    0,
+                    arg0->courseStatsAlpha,
+                    0
+                );
             }
         }
     }
@@ -1726,34 +1955,34 @@ void updateCourseSelectCourseStats(CourseSelectWidgetActor *arg0) {
     s32 state = arg0->transitionState;
 
     switch (state ^ 0) {
-    case 0:
-        arg0->transitionOffset += 0x26;
-        if (arg0->transitionOffset >= 0x100) {
-            arg0->transitionOffset = 0x100;
-            arg0->transitionState = 1;
-        }
-        state = arg0->transitionState;
-        break;
-    case 1:
-        if (gRacePlayers[0].menuState == 3) {
-            arg0->transitionState = 2;
-        }
-        if (gCurrentGameTask->screenState == 9) {
-            arg0->transitionState = 4;
-        }
-        state = arg0->transitionState;
-        break;
-    case 2:
-        arg0->transitionOffset -= 0x40;
-        if (arg0->transitionOffset <= 0) {
-            arg0->transitionOffset = 0;
-            arg0->transitionState = 3;
-        }
-        state = arg0->transitionState;
-        break;
-    case 3:
-        state = (arg0->transitionState = 4);
-        break;
+        case 0:
+            arg0->transitionOffset += 0x26;
+            if (arg0->transitionOffset >= 0x100) {
+                arg0->transitionOffset = 0x100;
+                arg0->transitionState = 1;
+            }
+            state = arg0->transitionState;
+            break;
+        case 1:
+            if (gRacePlayers[0].menuState == 3) {
+                arg0->transitionState = 2;
+            }
+            if (gCurrentGameTask->screenState == 9) {
+                arg0->transitionState = 4;
+            }
+            state = arg0->transitionState;
+            break;
+        case 2:
+            arg0->transitionOffset -= 0x40;
+            if (arg0->transitionOffset <= 0) {
+                arg0->transitionOffset = 0;
+                arg0->transitionState = 3;
+            }
+            state = arg0->transitionState;
+            break;
+        case 3:
+            state = (arg0->transitionState = 4);
+            break;
     }
 
     if (state == 4) {
@@ -1769,7 +1998,7 @@ void initCourseSelectCourseStats(CourseSelectWidgetActor *arg0) {
     s32 row;
     s32 i;
     CourseSelectWidgetActor *temp_a3;
-    s16 (*table)[4];
+    s16(*table)[4];
 
     temp_a3 = arg0;
     if (gPlayerCount < 3) {
@@ -1948,15 +2177,13 @@ void drawCourseSelectCourseDescription(CourseSelectWidgetActor *arg0) {
     u16 selectedIndex;
 
     if (gCourseSelectStatus.purchaseMessage == 0) {
-        if ((D_8010AEA8 == 0) &&
-            ((gRacePlayers[0].menuState == 0) || (gRacePlayers[0].menuState == 3) ||
-             (gRacePlayers[0].menuState == 9))) {
+        if ((D_8010AEA8 == 0) && ((gRacePlayers[0].menuState == 0) || (gRacePlayers[0].menuState == 3) ||
+                                  (gRacePlayers[0].menuState == 9))) {
             if (gCourseSelectStatus.descriptionMode == 1) {
                 descriptionIndex = 3;
             } else if (gCourseSelectStatus.descriptionMode == 2) {
                 descriptionIndex = 4;
-            } else if ((gRacePlayers[0].menuSelection >= 9) &&
-                       (gRacePlayers[0].menuSelection < 12)) {
+            } else if ((gRacePlayers[0].menuSelection >= 9) && (gRacePlayers[0].menuSelection < 12)) {
                 descriptionIndex = 5;
             } else {
                 descriptionIndex = (gRacePlayers[0].menuSelection % 3) & 0xFFFF;
@@ -1979,8 +2206,7 @@ void drawCourseSelectCourseDescription(CourseSelectWidgetActor *arg0) {
             if ((gRaceSplitscreenMode == 3) && (gRacePlayers[0].menuSelection < 9)) {
                 text = gCourseSelectBoardLevelByCourseText[gRacePlayers[0].menuSelection % 3].text;
             } else {
-                if ((gRacePlayers[0].menuSelection >= 9) &&
-                    (gRacePlayers[0].menuSelection < 12)) {
+                if ((gRacePlayers[0].menuSelection >= 9) && (gRacePlayers[0].menuSelection < 12)) {
                     pricedCourseId = gCourseSelectExtraCourseIds[selectedIndex + 1] % 3;
                     descriptionIndex = pricedCourseId;
                     boardText = gCourseSelectExtraCourseBoardLevelText[descriptionIndex].text;
@@ -1996,16 +2222,14 @@ void drawCourseSelectCourseDescription(CourseSelectWidgetActor *arg0) {
         boardText = text;
         drawMenuGlyphScript(arg0->x, arg0->y, boardText, 1, (u16)(s32)arg0->spriteIndex, 0);
 
-        if ((gRaceSplitscreenMode == 3) &&
-            ((gRacePlayers[0].menuState == 1) || (gRacePlayers[0].menuState == 2))) {
+        if ((gRaceSplitscreenMode == 3) && ((gRacePlayers[0].menuState == 1) || (gRacePlayers[0].menuState == 2))) {
             if ((gCharacterSelectHudState.highlightedRosterIndices[0] != 3) ||
                 ((gGameSaveDataBuffer[0].extraCourseUnlockFlags & 7) == 0)) {
                 script[0] = 0xFFFC;
                 script[1] = 6;
                 script[2] = selectedIndex;
                 script[3] = 0xFFFF;
-                drawMenuGlyphScript(arg0->x + 0x48, arg0->y + 0x10, script, 1,
-                                    (u16)(s32)arg0->spriteIndex, 0);
+                drawMenuGlyphScript(arg0->x + 0x48, arg0->y + 0x10, script, 1, (u16)(s32)arg0->spriteIndex, 0);
             }
 
             if (gCourseSelectModeSelection == 0) {
@@ -2015,8 +2239,7 @@ void drawCourseSelectCourseDescription(CourseSelectWidgetActor *arg0) {
                     if (gRacePlayers[0].menuSelection >= 9) {
                         pricedCourseId = gCourseSelectExtraCourseIds[(selectedIndex + 1) ^ 0];
                     } else {
-                        pricedCourseId =
-                            (gRacePlayers[0].menuSelection % 3) + (selectedIndex * 3) - 3;
+                        pricedCourseId = (gRacePlayers[0].menuSelection % 3) + (selectedIndex * 3) - 3;
                     }
                     price = gCourseUnlockPrices[pricedCourseId];
                     if (price < 10000) {
@@ -2038,8 +2261,7 @@ void drawCourseSelectCourseDescription(CourseSelectWidgetActor *arg0) {
                     }
                     script[digitCount + 1] = 0x10;
                     script[digitCount + 2] = 0xFFFF;
-                    if (pricedCourseId >= 9) {
-                    }
+                    if (pricedCourseId >= 9) {}
                 } else {
                     digitCount = 3;
                     do {
@@ -2051,15 +2273,19 @@ void drawCourseSelectCourseDescription(CourseSelectWidgetActor *arg0) {
                     script[7] = 0xFFFF;
                 }
                 descriptionIndex = (s32)arg0->spriteIndex;
-                drawMenuGlyphScript(arg0->x + 0x20, arg0->y + 0x20, script, 1,
-                                    (u16)descriptionIndex, 0);
+                drawMenuGlyphScript(arg0->x + 0x20, arg0->y + 0x20, script, 1, (u16)descriptionIndex, 0);
             }
         }
     } else {
         digitCount = gCourseSelectStatus.purchaseMessage;
-        drawMenuGlyphScript(arg0->x, arg0->y,
-                            gCourseSelectPurchaseMessageText[digitCount - 1U].text,
-                            1, (u16)(s32)arg0->spriteIndex, 0);
+        drawMenuGlyphScript(
+            arg0->x,
+            arg0->y,
+            gCourseSelectPurchaseMessageText[digitCount - 1U].text,
+            1,
+            (u16)(s32)arg0->spriteIndex,
+            0
+        );
     }
 }
 #endif
@@ -2079,45 +2305,45 @@ void updateCourseSelectCourseDescription(CourseSelectWidgetActor *arg0) {
     }
 
     switch (arg0->pad18_2[6]) {
-    case 0:
-        arg0->coordinates[2] += 0x26;
-        if (arg0->coordinates[2] >= 0x100) {
-            arg0->coordinates[2] = 0x100;
-            arg0->pad18_2[6] = 1;
-        }
-        break;
-    case 1:
-        if (gRacePlayers[0].menuState == temp_a0) {
-            arg0->pad18_2[6] = 2;
-        }
-        break;
-    case 2:
-        arg0->coordinates[0] -= 0x20;
-        if (arg0->coordinates[0] < -0xFF) {
-            if (gCurrentGameTask->screenState != 0) {
-                arg0->pad18_2[6] = 4;
-            } else {
+        case 0:
+            arg0->coordinates[2] += 0x26;
+            if (arg0->coordinates[2] >= 0x100) {
+                arg0->coordinates[2] = 0x100;
+                arg0->pad18_2[6] = 1;
+            }
+            break;
+        case 1:
+            if (gRacePlayers[0].menuState == temp_a0) {
+                arg0->pad18_2[6] = 2;
+            }
+            break;
+        case 2:
+            arg0->coordinates[0] -= 0x20;
+            if (arg0->coordinates[0] < -0xFF) {
+                if (gCurrentGameTask->screenState != 0) {
+                    arg0->pad18_2[6] = 4;
+                } else {
+                    arg0->pad18_2[6] = 3;
+                }
+            }
+            break;
+        case 4:
+            if (gCurrentGameTask->screenState == 9) {
                 arg0->pad18_2[6] = 3;
             }
-        }
-        break;
-    case 4:
-        if (gCurrentGameTask->screenState == 9) {
-            arg0->pad18_2[6] = 3;
-        }
-        break;
-    case 5:
-        arg0->coordinates[0] += 0x20;
-        if (arg0->coordinates[0] >= -0x84) {
-            arg0->coordinates[0] = -0x84;
-            arg0->pad18_2[6] = 6;
-        }
-        break;
-    case 6:
-        if (gCurrentGameTask->screenState == 4) {
-            arg0->pad18_2[6] = 1;
-        }
-        break;
+            break;
+        case 5:
+            arg0->coordinates[0] += 0x20;
+            if (arg0->coordinates[0] >= -0x84) {
+                arg0->coordinates[0] = -0x84;
+                arg0->pad18_2[6] = 6;
+            }
+            break;
+        case 6:
+            if (gCurrentGameTask->screenState == 4) {
+                arg0->pad18_2[6] = 1;
+            }
+            break;
     }
 
     if (gRacePlayers[0].menuState == 0) {
@@ -2159,31 +2385,38 @@ void drawCourseSelectExtraCourseBadge(CourseSelectWidgetActor *arg0) {
     renderTileIndex = tileIndex;
     assetHandle = gAssetHandles[handleIndex];
     drawMenuSpriteWithAlpha(
-        arg0->coordinates[0], arg0->coordinates[1],
+        arg0->coordinates[0],
+        arg0->coordinates[1],
         getRelocatableHeapBlockBase(assetHandle),
-        renderTileIndex, 0x20, 0x20, 0, arg0->coordinates[2], 0);
+        renderTileIndex,
+        0x20,
+        0x20,
+        0,
+        arg0->coordinates[2],
+        0
+    );
 }
 
 void updateCourseSelectExtraCourseBadge(CourseSelectWidgetActor *arg0) {
     u8 state = arg0->state;
 
     switch (state) {
-    case 0:
-        arg0->spriteIndex += 0x26;
-        if (arg0->spriteIndex >= 0x100) {
-            arg0->spriteIndex = 0x100;
-            arg0->state = 1;
-        }
-        state = arg0->state;
-        break;
-    case 1:
-        if ((gRacePlayers[0].menuState == 3) || (gCurrentGameTask->screenState == 9)) {
-            state = (arg0->state = 2);
-        }
-        break;
-    case 2:
-        arg0->x += 0x20;
-        break;
+        case 0:
+            arg0->spriteIndex += 0x26;
+            if (arg0->spriteIndex >= 0x100) {
+                arg0->spriteIndex = 0x100;
+                arg0->state = 1;
+            }
+            state = arg0->state;
+            break;
+        case 1:
+            if ((gRacePlayers[0].menuState == 3) || (gCurrentGameTask->screenState == 9)) {
+                state = (arg0->state = 2);
+            }
+            break;
+        case 2:
+            arg0->x += 0x20;
+            break;
     }
     state = arg0->state;
     if ((state == 2) && (arg0->x >= 0x94)) {
@@ -2233,7 +2466,8 @@ void drawCourseSelectExtraCourseIconList(CourseSelectExtraCourseIconListActor *a
                         arg0->clipLeft - overlayTile,
                         arg0->clipTop,
                         arg0->clipRight,
-                        arg0->clipBottom);
+                        arg0->clipBottom
+                    );
                 }
                 if (D_8010AEB0 == 0) {
                     if ((gMenuChoicePromptState[playerIndex] >= 2) && (gMenuChoicePromptState[playerIndex] < 5)) {
@@ -2252,7 +2486,8 @@ void drawCourseSelectExtraCourseIconList(CourseSelectExtraCourseIconListActor *a
                             0x20,
                             0,
                             ((CourseSelectExtraCourseIconListActor *)&arg0->bytes[playerIndex * 2])->alpha[0],
-                            0);
+                            0
+                        );
                     }
                 }
             }
@@ -2398,8 +2633,7 @@ void updateCourseSelectExtraCourseIconList(CourseSelectWidgetActor *arg0) {
                             for (iconIndex = 0; iconIndex < 3; iconIndex++) {
                                 if (gRacePlayers[playerIndex].menuSelection >= 9) {
                                     if (gRaceSplitscreenMode == 3) {
-                                        if (gGameSaveDataBuffer[playerIndex].extraCourseUnlockFlags &
-                                            iconMask) {
+                                        if (gGameSaveDataBuffer[playerIndex].extraCourseUnlockFlags & iconMask) {
                                             actor->itemCounts[playerIndex]++;
                                             if (gPlayerCount == 1) {
                                                 actor->tileIndices[playerIndex][actor->itemCounts[playerIndex] - 1] =
@@ -2410,7 +2644,8 @@ void updateCourseSelectExtraCourseIconList(CourseSelectWidgetActor *arg0) {
                                             }
                                         }
                                         iconMask *= 2;
-                                    } else if (gGameSaveDataBuffer[playerIndex].courseUnlockStates[iconIndex + 9] != -1) {
+                                    } else if (gGameSaveDataBuffer[playerIndex].courseUnlockStates[iconIndex + 9] !=
+                                               -1) {
                                         actor->itemCounts[playerIndex]++;
                                         if (gPlayerCount == 1) {
                                             actor->tileIndices[playerIndex][actor->itemCounts[playerIndex] - 1] =
@@ -2420,9 +2655,9 @@ void updateCourseSelectExtraCourseIconList(CourseSelectWidgetActor *arg0) {
                                                 iconIndex + 0x1F;
                                         }
                                     }
-                                } else if (gGameSaveDataBuffer[playerIndex]
-                                               .courseUnlockStates[(gRacePlayers[playerIndex].menuSelection % 3) +
-                                                                   (iconIndex * 3)] != -1) {
+                                } else if (gGameSaveDataBuffer[playerIndex].courseUnlockStates
+                                               [(gRacePlayers[playerIndex].menuSelection % 3) + (iconIndex * 3)] !=
+                                           -1) {
                                     actor->itemCounts[playerIndex]++;
                                     if (gPlayerCount == 1) {
                                         actor->tileIndices[playerIndex][iconIndex] = iconIndex + 9;
@@ -2704,8 +2939,7 @@ void initCourseSelectExtraCourseIconList(CourseSelectWidgetActor *arg0) {
                 xOffset = 4;
             }
             /* Preserve IDO's register allocation for the icon-position loop. */
-            if (0) {
-            }
+            if (0) {}
 
             iconIndex = 0;
             do {
@@ -2885,13 +3119,7 @@ void drawCourseSelectPlayerPanels(CourseSelectWidgetActor *arg0) {
         );
 
         sprintf(text, D_800E0DB8, i + 1);
-        drawMenuAsciiText(
-            (s16)(actor->x[i] + 0x34),
-            (s16)(actor->y[i] + 2),
-            text,
-            0,
-            alpha
-        );
+        drawMenuAsciiText((s16)(actor->x[i] + 0x34), (s16)(actor->y[i] + 2), text, 0, alpha);
 
         if (alpha == 0xC0) {
             drawMenuSpriteWithAlphaWideArgs(
@@ -2949,8 +3177,10 @@ void updateCourseSelectPlayerPanels(CourseSelectWidgetActor *arg0) {
                         if (actor->x[i] == actor->targetX[i]) {
                             ((CourseSelectWidgetInitActor *)statePtr)->state[0] = 1;
                             if (count == next) {
-                                D_8010ADE0 = createCallbackTask((CallbackTaskCallback)initCourseSelectPreviewModelIn, 0, 0x62);
-                                D_8010ADE4 = createCallbackTask((CallbackTaskCallback)initCourseSelectPreviewModelOut, 0, 0x62);
+                                D_8010ADE0 =
+                                    createCallbackTask((CallbackTaskCallback)initCourseSelectPreviewModelIn, 0, 0x62);
+                                D_8010ADE4 =
+                                    createCallbackTask((CallbackTaskCallback)initCourseSelectPreviewModelOut, 0, 0x62);
                                 createCallbackTask((CallbackTaskCallback)initCourseSelectCourseIconList, 0, 0x62);
                             }
                             break;
@@ -3075,30 +3305,91 @@ void drawCourseSelectCompletePanels(CourseSelectPlayerPanelsActor *actor) {
         if (actor->playerPanelFadeAlpha[i] != 0) {
             if (two == playerCount) {
                 yOffset = i * 0x64;
-                drawMenuSpriteWithAlpha(actor->x, (s16)(actor->y + yOffset), getRelocatableHeapBlockBase(gAssetHandles[0x24]), 0, 0x20,
-                              0x20, 0, actor->playerPanelFadeAlpha[i], 0);
-                drawMenuSpriteWithAlpha((s16)(actor->x + 0x40), (s16)(actor->y + yOffset),
-                              getRelocatableHeapBlockBase(gAssetHandles[0x24]), 1, 0x20, 0x20, 0,
-                              actor->playerPanelFadeAlpha[i], 0);
-                drawMenuSpriteWithAlpha((s16)(actor->x + 0x78), (s16)(actor->y + yOffset),
-                              getRelocatableHeapBlockBase(gAssetHandles[0x24]), 1, 0x20, 0x20, 0,
-                              actor->playerPanelFadeAlpha[i], 0);
-                drawMenuSpriteWithAlpha((s16)(actor->x + 0xB0), (s16)(actor->y + yOffset),
-                              getRelocatableHeapBlockBase(gAssetHandles[0x24]), rightEdgeTile, 0x20, 0x20, 0,
-                              actor->playerPanelFadeAlpha[i], 0);
-                drawMenuGlyphScript((s16)(actor->x + 0x2E), (s16)(actor->y + yOffset + 0xC), gCourseSelectCompleteText, 0,
-                              actor->playerPanelFadeAlpha[i], 0);
+                drawMenuSpriteWithAlpha(
+                    actor->x,
+                    (s16)(actor->y + yOffset),
+                    getRelocatableHeapBlockBase(gAssetHandles[0x24]),
+                    0,
+                    0x20,
+                    0x20,
+                    0,
+                    actor->playerPanelFadeAlpha[i],
+                    0
+                );
+                drawMenuSpriteWithAlpha(
+                    (s16)(actor->x + 0x40),
+                    (s16)(actor->y + yOffset),
+                    getRelocatableHeapBlockBase(gAssetHandles[0x24]),
+                    1,
+                    0x20,
+                    0x20,
+                    0,
+                    actor->playerPanelFadeAlpha[i],
+                    0
+                );
+                drawMenuSpriteWithAlpha(
+                    (s16)(actor->x + 0x78),
+                    (s16)(actor->y + yOffset),
+                    getRelocatableHeapBlockBase(gAssetHandles[0x24]),
+                    1,
+                    0x20,
+                    0x20,
+                    0,
+                    actor->playerPanelFadeAlpha[i],
+                    0
+                );
+                drawMenuSpriteWithAlpha(
+                    (s16)(actor->x + 0xB0),
+                    (s16)(actor->y + yOffset),
+                    getRelocatableHeapBlockBase(gAssetHandles[0x24]),
+                    rightEdgeTile,
+                    0x20,
+                    0x20,
+                    0,
+                    actor->playerPanelFadeAlpha[i],
+                    0
+                );
+                drawMenuGlyphScript(
+                    (s16)(actor->x + 0x2E),
+                    (s16)(actor->y + yOffset + 0xC),
+                    gCourseSelectCompleteText,
+                    0,
+                    actor->playerPanelFadeAlpha[i],
+                    0
+                );
             } else {
                 xOffset = (i >= 2) * 0x8C;
                 yOffset = (i & 1) * 0x64;
-                drawMenuSpriteWithAlpha((s16)(actor->x + xOffset), (s16)(actor->y + yOffset),
-                              getRelocatableHeapBlockBase(gAssetHandles[0x24]), 8, 0x20, 0x20, 0,
-                              actor->playerPanelFadeAlpha[i], 0);
-                drawMenuSpriteWithAlpha((s16)(actor->x + xOffset + 0x40), (s16)(actor->y + yOffset),
-                              getRelocatableHeapBlockBase(gAssetHandles[0x24]), 9, 0x20, 0x20, 0,
-                              actor->playerPanelFadeAlpha[i], 0);
-                drawMenuGlyphScript((s16)(actor->x + xOffset + 0x24), (s16)(actor->y + yOffset + 3), gCourseSelectCompleteText, 1,
-                              actor->playerPanelFadeAlpha[i], 0);
+                drawMenuSpriteWithAlpha(
+                    (s16)(actor->x + xOffset),
+                    (s16)(actor->y + yOffset),
+                    getRelocatableHeapBlockBase(gAssetHandles[0x24]),
+                    8,
+                    0x20,
+                    0x20,
+                    0,
+                    actor->playerPanelFadeAlpha[i],
+                    0
+                );
+                drawMenuSpriteWithAlpha(
+                    (s16)(actor->x + xOffset + 0x40),
+                    (s16)(actor->y + yOffset),
+                    getRelocatableHeapBlockBase(gAssetHandles[0x24]),
+                    9,
+                    0x20,
+                    0x20,
+                    0,
+                    actor->playerPanelFadeAlpha[i],
+                    0
+                );
+                drawMenuGlyphScript(
+                    (s16)(actor->x + xOffset + 0x24),
+                    (s16)(actor->y + yOffset + 3),
+                    gCourseSelectCompleteText,
+                    1,
+                    actor->playerPanelFadeAlpha[i],
+                    0
+                );
             }
         }
         playerCount = gPlayerCount;
@@ -3120,8 +3411,7 @@ void updateCourseSelectCompletePanels(CourseSelectPlayerPanelsActor *actor) {
     for (i = 0; i < gPlayerCount; i++) {
         alpha = panel->playerPanelFadeAlpha[i];
         if (alpha == 0) {
-            if ((source0 != NULL) &&
-                ((source0->playerStates[i] == 4) || (source1->playerStates[i] == 4))) {
+            if ((source0 != NULL) && ((source0->playerStates[i] == 4) || (source1->playerStates[i] == 4))) {
                 panel->playerPanelFadeAlpha[i] = 1;
             }
         } else {
@@ -3171,5 +3461,4 @@ void initCourseSelectCompletePanels(CourseSelectWidgetActor *arg0) {
 }
 
 void finishCourseSelectUiTask(s32 arg0) {
-
 }

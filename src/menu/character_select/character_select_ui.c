@@ -54,18 +54,19 @@ extern u8 D_8010AE5F;
 
 CharacterSelectUiConfirmationBannerText gCharacterSelectConfirmationBannerText = {
     {
-        {
+     {
+            // textconv requires these _() invocations to retain their original line layout.
+            // clang-format off
             _("{COLOR:7}SELECT YOUR\nCHARACTER."),
         },
         {
             _("{COLOR:7}IS THIS OK?"),
-        },
-    },
+            // clang-format on
+        }, },
     {
-        0x0028, 0x0028, 0x004D, 0x0069, 0x0047, 0x0053, 0xFFFE, 0x000A,
-        0x00C9, 0x0026, 0x0026, 0xFFFE, 0x000B, 0x00C9, 0x0046, 0x003B,
-        0x003F, 0x004D, 0x0068, 0xFFFF,
-    },
+     0x0028, 0x0028, 0x004D, 0x0069, 0x0047, 0x0053, 0xFFFE, 0x000A, 0x00C9, 0x0026,
+     0x0026, 0xFFFE, 0x000B, 0x00C9, 0x0046, 0x003B, 0x003F, 0x004D, 0x0068, 0xFFFF,
+     },
 };
 
 CharacterSelectUiCharacterStats gCharacterSelectCharacterStats[] = {
@@ -84,10 +85,8 @@ u16 gCharacterSelectCharacterStatLabels[] = {
 };
 
 u16 gCharacterSelectPlayerMarkerTiles[] = {
-    0x0027, 0x0033, 0x002B, 0x002F,
-    0x0028, 0x002C, 0x0034, 0x0030,
-    0x0029, 0x0035, 0x002D, 0x0031,
-    0x002A, 0x002E, 0x0036, 0x0032,
+    0x0027, 0x0033, 0x002B, 0x002F, 0x0028, 0x002C, 0x0034, 0x0030,
+    0x0029, 0x0035, 0x002D, 0x0031, 0x002A, 0x002E, 0x0036, 0x0032,
 };
 
 const char gCharacterSelectPlayerNumberFormat[] = "%d";
@@ -102,33 +101,114 @@ void drawCharacterSelectConfirmationBanner(CharacterSelectUiBannerActor *arg0) {
 
     actor = arg0;
     if (actor->state != 3) {
-        drawMenuSpriteWithAlpha((s16)(actor->x - 4), (s16)(actor->y - 4), getRelocatableHeapBlockBase(CHARACTER_SELECT_UI_BANNER_TEXTURE_HANDLE), 2, 0x20,
-                      0x20, 0, actor->alpha, 0);
-        drawMenuSpriteWithAlpha((s16)(actor->x + 0xD4), (s16)(actor->y - 4), getRelocatableHeapBlockBase(CHARACTER_SELECT_UI_BANNER_TEXTURE_HANDLE),
-                      4, 0x20, 0x20, 0, actor->alpha, 0);
+        drawMenuSpriteWithAlpha(
+            (s16)(actor->x - 4),
+            (s16)(actor->y - 4),
+            getRelocatableHeapBlockBase(CHARACTER_SELECT_UI_BANNER_TEXTURE_HANDLE),
+            2,
+            0x20,
+            0x20,
+            0,
+            actor->alpha,
+            0
+        );
+        drawMenuSpriteWithAlpha(
+            (s16)(actor->x + 0xD4),
+            (s16)(actor->y - 4),
+            getRelocatableHeapBlockBase(CHARACTER_SELECT_UI_BANNER_TEXTURE_HANDLE),
+            4,
+            0x20,
+            0x20,
+            0,
+            actor->alpha,
+            0
+        );
         i = 0;
         do {
-            drawMenuSpriteWithAlpha((s16)(actor->x + i), (s16)(actor->y - 4), getRelocatableHeapBlockBase(CHARACTER_SELECT_UI_BANNER_TEXTURE_HANDLE),
-                          3, 0x20, 0x20, 0, actor->alpha, 0);
-            drawMenuSpriteWithAlpha((s16)(actor->x + i), (s16)(actor->y + 0x24), getRelocatableHeapBlockBase(CHARACTER_SELECT_UI_BANNER_TEXTURE_HANDLE),
-                          8, 0x20, 0x20, 0, actor->alpha, 0);
+            drawMenuSpriteWithAlpha(
+                (s16)(actor->x + i),
+                (s16)(actor->y - 4),
+                getRelocatableHeapBlockBase(CHARACTER_SELECT_UI_BANNER_TEXTURE_HANDLE),
+                3,
+                0x20,
+                0x20,
+                0,
+                actor->alpha,
+                0
+            );
+            drawMenuSpriteWithAlpha(
+                (s16)(actor->x + i),
+                (s16)(actor->y + 0x24),
+                getRelocatableHeapBlockBase(CHARACTER_SELECT_UI_BANNER_TEXTURE_HANDLE),
+                8,
+                0x20,
+                0x20,
+                0,
+                actor->alpha,
+                0
+            );
             i += 0x10;
         } while (i < 0xE0);
-        drawMenuSpriteWithAlpha((s16)(actor->x - 4), (s16)(actor->y + 0x24), getRelocatableHeapBlockBase(CHARACTER_SELECT_UI_BANNER_TEXTURE_HANDLE),
-                      7, 0x20, 0x20, 0, actor->alpha, 0);
-        drawMenuSpriteWithAlpha((s16)(actor->x + 0xD4), (s16)(actor->y + 0x24),
-                      getRelocatableHeapBlockBase(CHARACTER_SELECT_UI_BANNER_TEXTURE_HANDLE), 9, 0x20, 0x20, 0, actor->alpha, 0);
+        drawMenuSpriteWithAlpha(
+            (s16)(actor->x - 4),
+            (s16)(actor->y + 0x24),
+            getRelocatableHeapBlockBase(CHARACTER_SELECT_UI_BANNER_TEXTURE_HANDLE),
+            7,
+            0x20,
+            0x20,
+            0,
+            actor->alpha,
+            0
+        );
+        drawMenuSpriteWithAlpha(
+            (s16)(actor->x + 0xD4),
+            (s16)(actor->y + 0x24),
+            getRelocatableHeapBlockBase(CHARACTER_SELECT_UI_BANNER_TEXTURE_HANDLE),
+            9,
+            0x20,
+            0x20,
+            0,
+            actor->alpha,
+            0
+        );
         i = (actor->state == 4) * 0;
         limit = 0xE0;
         do {
-            drawMenuSpriteWithAlpha((s16)(actor->x - 4), (s16)(actor->y + i), getRelocatableHeapBlockBase(CHARACTER_SELECT_UI_BANNER_TEXTURE_HANDLE),
-                          5, 0x20, 0x20, 0, actor->alpha, 0);
-            drawMenuSpriteWithAlpha((s16)(actor->x + 0xD4), (s16)(actor->y + i), getRelocatableHeapBlockBase(CHARACTER_SELECT_UI_BANNER_TEXTURE_HANDLE),
-                          6, 0x20, 0x20, 0, actor->alpha, 0);
+            drawMenuSpriteWithAlpha(
+                (s16)(actor->x - 4),
+                (s16)(actor->y + i),
+                getRelocatableHeapBlockBase(CHARACTER_SELECT_UI_BANNER_TEXTURE_HANDLE),
+                5,
+                0x20,
+                0x20,
+                0,
+                actor->alpha,
+                0
+            );
+            drawMenuSpriteWithAlpha(
+                (s16)(actor->x + 0xD4),
+                (s16)(actor->y + i),
+                getRelocatableHeapBlockBase(CHARACTER_SELECT_UI_BANNER_TEXTURE_HANDLE),
+                6,
+                0x20,
+                0x20,
+                0,
+                actor->alpha,
+                0
+            );
             j = 0;
             do {
-                drawMenuSpriteWithAlpha((s16)(actor->x + j), (s16)(actor->y + i),
-                              getRelocatableHeapBlockBase(CHARACTER_SELECT_UI_BANNER_TEXTURE_HANDLE), 0xB, 0x20, 0x20, 0, actor->alpha, 0);
+                drawMenuSpriteWithAlpha(
+                    (s16)(actor->x + j),
+                    (s16)(actor->y + i),
+                    getRelocatableHeapBlockBase(CHARACTER_SELECT_UI_BANNER_TEXTURE_HANDLE),
+                    0xB,
+                    0x20,
+                    0x20,
+                    0,
+                    actor->alpha,
+                    0
+                );
                 j += 0x10;
             } while (j != limit);
             i += 0x10;
@@ -138,8 +218,14 @@ void drawCharacterSelectConfirmationBanner(CharacterSelectUiBannerActor *arg0) {
         } else {
             selected = 1;
         }
-        drawMenuGlyphScript(actor->x, actor->y, gCharacterSelectConfirmationBannerText.confirmationText[selected], 0,
-                            actor->alpha, 0);
+        drawMenuGlyphScript(
+            actor->x,
+            actor->y,
+            gCharacterSelectConfirmationBannerText.confirmationText[selected],
+            0,
+            actor->alpha,
+            0
+        );
         if (actor->state == 4) {
             if (actor->alpha != 0x100) {
                 alpha = actor->alpha & 0xFFFF;
@@ -150,8 +236,17 @@ void drawCharacterSelectConfirmationBanner(CharacterSelectUiBannerActor *arg0) {
                     alpha = 0x100;
                 }
             }
-            drawMenuSpriteWithAlpha((s16)(actor->x + 0x4C), (s16)(actor->y + 0x10),
-                          getRelocatableHeapBlockBase(CHARACTER_SELECT_UI_PLAYER_FRAME_HANDLE), 0x17, 0x20, 0x20, 0, alpha, 0);
+            drawMenuSpriteWithAlpha(
+                (s16)(actor->x + 0x4C),
+                (s16)(actor->y + 0x10),
+                getRelocatableHeapBlockBase(CHARACTER_SELECT_UI_PLAYER_FRAME_HANDLE),
+                0x17,
+                0x20,
+                0x20,
+                0,
+                alpha,
+                0
+            );
             if (actor->alpha < 0x60) {
                 alpha = actor->alpha & 0xFFFF;
             } else {
@@ -161,21 +256,46 @@ void drawCharacterSelectConfirmationBanner(CharacterSelectUiBannerActor *arg0) {
                     alpha = 0x60;
                 }
             }
-            drawMenuSpriteWithAlpha((s16)(actor->x + 0x4C), (s16)(actor->y + 0x20),
-                          getRelocatableHeapBlockBase(CHARACTER_SELECT_UI_PLAYER_FRAME_HANDLE), 0x18, 0x20, 0x20, 0, alpha, 0);
+            drawMenuSpriteWithAlpha(
+                (s16)(actor->x + 0x4C),
+                (s16)(actor->y + 0x20),
+                getRelocatableHeapBlockBase(CHARACTER_SELECT_UI_PLAYER_FRAME_HANDLE),
+                0x18,
+                0x20,
+                0x20,
+                0,
+                alpha,
+                0
+            );
             if (actor->alpha != 0x100) {
                 alpha = actor->alpha & 0xFFFF;
                 ;
             } else {
                 alpha = (u16)actor->unk1E;
             }
-            drawMenuSpriteWithAlpha((s16)(actor->x + 0x4C), (s16)((actor->y + (actor->mode * 0x10)) + 0x10),
-                          getRelocatableHeapBlockBase(CHARACTER_SELECT_UI_PLAYER_FRAME_HANDLE), 0x12, 0x20, 0x20, 0, alpha, 0);
+            drawMenuSpriteWithAlpha(
+                (s16)(actor->x + 0x4C),
+                (s16)((actor->y + (actor->mode * 0x10)) + 0x10),
+                getRelocatableHeapBlockBase(CHARACTER_SELECT_UI_PLAYER_FRAME_HANDLE),
+                0x12,
+                0x20,
+                0x20,
+                0,
+                alpha,
+                0
+            );
         }
         if (actor->state == 1) {
-            drawMenuSprite((s16)(actor->x + 0xD0), (s16)(actor->y + 0x20),
-                          getRelocatableHeapBlockBase(CHARACTER_SELECT_UI_PLAYER_FRAME_HANDLE), (actor->frame >= 8) + 5, 0x20,
-                          0x20, 0, 0);
+            drawMenuSprite(
+                (s16)(actor->x + 0xD0),
+                (s16)(actor->y + 0x20),
+                getRelocatableHeapBlockBase(CHARACTER_SELECT_UI_PLAYER_FRAME_HANDLE),
+                (actor->frame >= 8) + 5,
+                0x20,
+                0x20,
+                0,
+                0
+            );
         }
     }
 }
@@ -213,29 +333,29 @@ void updateCharacterSelectConfirmationBanner(CharacterSelectUiBannerActor *arg0)
         }
     } else {
         switch (state) {
-        case 0:
-        case 3:
-            break;
-        case 1:
-            actor->frame = (actor->frame + 1) & 0xF;
-            break;
-        case 2:
-            actor->alpha = alpha - 0x25;
-            if (actor->alpha <= 0) {
-                actor->alpha = 0;
-            }
-            actor->state = 3;
-            gCharacterSelectHudState.exitMode = 1;
-            gMenuFlowState = 0x63;
-            break;
-        case 4:
-            if (actor->bounceTimer < 0x10) {
-                actor->unk1E -= 9;
-            } else {
-                actor->unk1E += 9;
-            }
-            actor->bounceTimer = (actor->bounceTimer + 1) & 0x1F;
-            break;
+            case 0:
+            case 3:
+                break;
+            case 1:
+                actor->frame = (actor->frame + 1) & 0xF;
+                break;
+            case 2:
+                actor->alpha = alpha - 0x25;
+                if (actor->alpha <= 0) {
+                    actor->alpha = 0;
+                }
+                actor->state = 3;
+                gCharacterSelectHudState.exitMode = 1;
+                gMenuFlowState = 0x63;
+                break;
+            case 4:
+                if (actor->bounceTimer < 0x10) {
+                    actor->unk1E -= 9;
+                } else {
+                    actor->unk1E += 9;
+                }
+                actor->bounceTimer = (actor->bounceTimer + 1) & 0x1F;
+                break;
         }
     }
 
@@ -271,25 +391,56 @@ void drawCharacterSelectPlayerPanelFrames(CharacterSelectUiPlayerPanelFrameActor
 
         panel = actor;
         playerNumber = i + 1;
-        drawMenuSpriteWithAlpha(actor->panelX[i], actor->panelY[i],
-                                getRelocatableHeapBlockBase(CHARACTER_SELECT_UI_PLAYER_FRAME_HANDLE), 0x23, 0x20, 0x20,
-                                0, alpha, playerNumber);
-        drawMenuSpriteWithAlpha((s16)(actor->panelX[i] + 0x40), actor->panelY[i],
-                                getRelocatableHeapBlockBase(CHARACTER_SELECT_UI_PLAYER_FRAME_HANDLE), 0x24, 0x20, 0x20,
-                                0, alpha, playerNumber);
-        drawMenuSpriteWithAlpha((s16)(panel->panelX[i] + 0x80), panel->panelY[i],
-                                getRelocatableHeapBlockBase(CHARACTER_SELECT_UI_PLAYER_FRAME_HANDLE), 0xC, 0x20, 0x20, 0,
-                                alpha, playerNumber);
+        drawMenuSpriteWithAlpha(
+            actor->panelX[i],
+            actor->panelY[i],
+            getRelocatableHeapBlockBase(CHARACTER_SELECT_UI_PLAYER_FRAME_HANDLE),
+            0x23,
+            0x20,
+            0x20,
+            0,
+            alpha,
+            playerNumber
+        );
+        drawMenuSpriteWithAlpha(
+            (s16)(actor->panelX[i] + 0x40),
+            actor->panelY[i],
+            getRelocatableHeapBlockBase(CHARACTER_SELECT_UI_PLAYER_FRAME_HANDLE),
+            0x24,
+            0x20,
+            0x20,
+            0,
+            alpha,
+            playerNumber
+        );
+        drawMenuSpriteWithAlpha(
+            (s16)(panel->panelX[i] + 0x80),
+            panel->panelY[i],
+            getRelocatableHeapBlockBase(CHARACTER_SELECT_UI_PLAYER_FRAME_HANDLE),
+            0xC,
+            0x20,
+            0x20,
+            0,
+            alpha,
+            playerNumber
+        );
 
         sprintf(text, gCharacterSelectPlayerNumberFormat, playerNumber);
         drawMenuAsciiText((s16)(actor->panelX[i] + 0x32), (s16)(panel->panelY[i] + 2), (u8 *)text, 0, alpha);
 
         if (alpha != 0x100) {
-            if ((!actor) && (!actor)) {
-            }
-            drawMenuSpriteWithAlpha((s16)(actor->panelX[i] + 2), (s16)(actor->panelY[i] + 0x14),
-                                    getRelocatableHeapBlockBase(CHARACTER_SELECT_UI_UNUSED_HANDLE), 0x90, 0x20, 0x20, 0,
-                                    0xF0, 0);
+            if ((!actor) && (!actor)) {}
+            drawMenuSpriteWithAlpha(
+                (s16)(actor->panelX[i] + 2),
+                (s16)(actor->panelY[i] + 0x14),
+                getRelocatableHeapBlockBase(CHARACTER_SELECT_UI_UNUSED_HANDLE),
+                0x90,
+                0x20,
+                0x20,
+                0,
+                0xF0,
+                0
+            );
         }
     }
 }
@@ -316,20 +467,20 @@ void updateCharacterSelectPlayerPanelFrames(CharacterSelectUiPanelActor *arg0) {
     }
 
     switch (var_v1) {
-    case 1:
-        actor->y[1] += 8;
-        actor->y[3] += 8;
-        if (actor->y[3] == 0x24) {
-            actor->targetY.mode = 2;
-            owner->playerFrameReady = 1;
-        }
-        var_v0 = actor->targetY.mode;
-        break;
-    case 0:
-    case 2:
-    case 3:
-    case 4:
-        break;
+        case 1:
+            actor->y[1] += 8;
+            actor->y[3] += 8;
+            if (actor->y[3] == 0x24) {
+                actor->targetY.mode = 2;
+                owner->playerFrameReady = 1;
+            }
+            var_v0 = actor->targetY.mode;
+            break;
+        case 0:
+        case 2:
+        case 3:
+        case 4:
+            break;
     }
 
     D_8010AE51 = var_v0;
@@ -351,6 +502,8 @@ void initCharacterSelectPlayerPanelFrames(CharacterSelectUiPanelActor *arg0) {
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateCharacterSelectPlayerPanelFrames);
 }
 
+// IDO code generation for this function is sensitive to source line layout.
+// clang-format off
 void drawCharacterSelectRosterIcons(CharacterSelectUiRosterIconActor *arg0) {
     s16 *assetHandles;
     s32 i;
@@ -415,6 +568,7 @@ void drawCharacterSelectRosterIcons(CharacterSelectUiRosterIconActor *arg0) {
         }
     }
 }
+// clang-format on
 
 void updateCharacterSelectRosterIcons(CharacterSelectUiRosterIconActor *arg0) {
     s16 temp_v0;
@@ -424,22 +578,22 @@ void updateCharacterSelectRosterIcons(CharacterSelectUiRosterIconActor *arg0) {
     var_v1 = arg0->state;
     new_var = 1;
     switch (var_v1) {
-    case 0:
-    case 3:
-        break;
-    case 1:
-        temp_v0 = arg0->targetX;
-        arg0->x = arg0->x - 0x10;
-        if (temp_v0 >= arg0->x) {
-            arg0->state = 2;
-            arg0->x = temp_v0;
-        }
-        var_v1 = arg0->state;
-        break;
-    case 2:
-        D_8010AE52 = new_var;
-        var_v1 = arg0->state;
-        break;
+        case 0:
+        case 3:
+            break;
+        case 1:
+            temp_v0 = arg0->targetX;
+            arg0->x = arg0->x - 0x10;
+            if (temp_v0 >= arg0->x) {
+                arg0->state = 2;
+                arg0->x = temp_v0;
+            }
+            var_v1 = arg0->state;
+            break;
+        case 2:
+            D_8010AE52 = new_var;
+            var_v1 = arg0->state;
+            break;
     }
     if (var_v1) {
         arg0->timer = (arg0->timer + new_var) % 20;
@@ -486,6 +640,8 @@ void initCharacterSelectRosterIcons(CharacterSelectUiRosterIconActor *arg0) {
     setCallbackTaskCallback(actor, (CallbackTaskCallback)updateCharacterSelectRosterIcons);
 }
 
+// IDO code generation for this function is sensitive to source line layout.
+// clang-format off
 void drawCharacterSelectPlayerCursorMarkers(CharacterSelectUiPlayerCursorActor *arg0) {
     s32 i;
     s32 j;
@@ -498,7 +654,10 @@ void drawCharacterSelectPlayerCursorMarkers(CharacterSelectUiPlayerCursorActor *
 
  do { if (arg0->mode != 0) { i = 0; if (((s32) gPlayerCount) > 0) { player = gRacePlayers; tiles = gCharacterSelectPlayerMarkerTiles; actorX = arg0; do { evenMatch = 0; oddMatch = 0; j = 0; if (player->menuState != 0) { alpha = 0x100; } else { alpha = arg0->scale; } if (((s32) gPlayerCount) > 0) { do { if ((j != i) && (D_8010AE64[i] == D_8010AE64[j])) { if (!(j & 1)) { evenMatch = 1; } else { oddMatch = 2; } } j++; } while (j < ((s32) gPlayerCount)); } drawMenuSpriteWithAlpha(actorX->x[0], arg0->y, getRelocatableHeapBlockBase(gAssetHandles[0x21]), tiles[evenMatch + oddMatch], 0x20, 0x20, 0, alpha, 0); i++; player++; tiles += 4; actorX = (CharacterSelectUiPlayerCursorActor *) (((u8 *) actorX) + 2); } while (i < ((s32) gPlayerCount)); } } } while (0);
 }
+// clang-format on
 
+// IDO code generation for this function is sensitive to source line layout.
+// clang-format off
 void updateCharacterSelectPlayerCursorMarkers(CharacterSelectUiPlayerCursorActor *arg0) {
     s32 i;
     u8 mode;
@@ -537,7 +696,10 @@ void updateCharacterSelectPlayerCursorMarkers(CharacterSelectUiPlayerCursorActor
     D_8010AE52_state = mode;
     addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawCharacterSelectPlayerCursorMarkers, arg0);
 }
+// clang-format on
 
+// IDO code generation for this function is sensitive to source line layout.
+// clang-format off
 void initCharacterSelectPlayerCursorMarkers(CharacterSelectUiPlayerCursorActor *arg0) {
     /* Paired views preserve IDO's register reuse without pointer casts or byte offsets. */
     union {
@@ -585,6 +747,7 @@ void initCharacterSelectPlayerCursorMarkers(CharacterSelectUiPlayerCursorActor *
     arg0->scale = 0x100;
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateCharacterSelectPlayerCursorMarkers);
 }
+// clang-format on
 
 const char gCharacterSelectCharacterStatFormat[] = "%d";
 
@@ -618,53 +781,114 @@ void drawCharacterSelectPlayerStatsPanels(CharacterSelectUiPanelActor *arg0) {
                 tile = gRacePlayers[i].selectedCharacterId + 0x41;
             }
 
-            drawMenuSpriteTile((s16)(actor->x[i] + 6), (s16)(actor->y[i] + 0xD),
-                               getRelocatableHeapBlockBase(gAssetHandles[textureIndex]), tile, 0, 0x100);
-            drawMenuSprite((s16)(actor->x[i] + 2), (s16)(actor->y[i] + 0x28),
-                           getRelocatableHeapBlockBase(gAssetHandles[0x1F]),
-                           gRacePlayers[i].selectedCharacterId + 0x91, 0x20, 0x20, 0, 0);
+            drawMenuSpriteTile(
+                (s16)(actor->x[i] + 6),
+                (s16)(actor->y[i] + 0xD),
+                getRelocatableHeapBlockBase(gAssetHandles[textureIndex]),
+                tile,
+                0,
+                0x100
+            );
+            drawMenuSprite(
+                (s16)(actor->x[i] + 2),
+                (s16)(actor->y[i] + 0x28),
+                getRelocatableHeapBlockBase(gAssetHandles[0x1F]),
+                gRacePlayers[i].selectedCharacterId + 0x91,
+                0x20,
+                0x20,
+                0,
+                0
+            );
 
             if (gRacePlayers[i].selectedCharacterId == 5) {
                 text[0] = '?';
                 text[1] = '?';
                 text[2] = '\0';
             } else {
-                sprintf(text, gCharacterSelectCharacterStatFormat,
-                        gCharacterSelectCharacterStatLabels[gRacePlayers[i].selectedCharacterId]);
+                sprintf(
+                    text,
+                    gCharacterSelectCharacterStatFormat,
+                    gCharacterSelectCharacterStatLabels[gRacePlayers[i].selectedCharacterId]
+                );
             }
             drawMenuAsciiText((s16)(actor->x[i] + 0x70), (s16)(actor->y[i] + 0xD), text, 0, 0x100);
 
-            for (k = 0, j = 0;
-                 j < (gCharacterSelectCharacterStats[gRacePlayers[i].selectedCharacterId].speed / 2);
+            for (k = 0, j = 0; j < (gCharacterSelectCharacterStats[gRacePlayers[i].selectedCharacterId].speed / 2);
                  j++, k += 0xC) {
-                drawMenuSprite((s16)(actor->x[i] + k + 0x5D), (s16)(actor->y[i] + 0x16),
-                               getRelocatableHeapBlockBase(gAssetHandles[0x21]), 0x25, 0x20, 0x20, 0, 0);
+                drawMenuSprite(
+                    (s16)(actor->x[i] + k + 0x5D),
+                    (s16)(actor->y[i] + 0x16),
+                    getRelocatableHeapBlockBase(gAssetHandles[0x21]),
+                    0x25,
+                    0x20,
+                    0x20,
+                    0,
+                    0
+                );
             }
             if (gCharacterSelectCharacterStats[gRacePlayers[i].selectedCharacterId].speed & 1) {
-                drawMenuSprite((s16)(actor->x[i] + k + 0x5D), (s16)(actor->y[i] + 0x16),
-                               getRelocatableHeapBlockBase(gAssetHandles[0x21]), 0x26, 0x20, 0x20, 0, 0);
+                drawMenuSprite(
+                    (s16)(actor->x[i] + k + 0x5D),
+                    (s16)(actor->y[i] + 0x16),
+                    getRelocatableHeapBlockBase(gAssetHandles[0x21]),
+                    0x26,
+                    0x20,
+                    0x20,
+                    0,
+                    0
+                );
             }
 
-            for (k = 0, j = 0;
-                 j < (gCharacterSelectCharacterStats[gRacePlayers[i].selectedCharacterId].turn / 2);
+            for (k = 0, j = 0; j < (gCharacterSelectCharacterStats[gRacePlayers[i].selectedCharacterId].turn / 2);
                  j++, k += 0xC) {
-                drawMenuSprite((s16)(actor->x[i] + k + 0x5D), (s16)(actor->y[i] + 0x22),
-                               getRelocatableHeapBlockBase(gAssetHandles[0x21]), 0x25, 0x20, 0x20, 0, 0);
+                drawMenuSprite(
+                    (s16)(actor->x[i] + k + 0x5D),
+                    (s16)(actor->y[i] + 0x22),
+                    getRelocatableHeapBlockBase(gAssetHandles[0x21]),
+                    0x25,
+                    0x20,
+                    0x20,
+                    0,
+                    0
+                );
             }
             if (gCharacterSelectCharacterStats[gRacePlayers[i].selectedCharacterId].turn & 1) {
-                drawMenuSprite((s16)(actor->x[i] + k + 0x5D), (s16)(actor->y[i] + 0x22),
-                               getRelocatableHeapBlockBase(gAssetHandles[0x21]), 0x26, 0x20, 0x20, 0, 0);
+                drawMenuSprite(
+                    (s16)(actor->x[i] + k + 0x5D),
+                    (s16)(actor->y[i] + 0x22),
+                    getRelocatableHeapBlockBase(gAssetHandles[0x21]),
+                    0x26,
+                    0x20,
+                    0x20,
+                    0,
+                    0
+                );
             }
 
-            for (k = 0, j = 0;
-                 j < (gCharacterSelectCharacterStats[gRacePlayers[i].selectedCharacterId].trick / 2);
+            for (k = 0, j = 0; j < (gCharacterSelectCharacterStats[gRacePlayers[i].selectedCharacterId].trick / 2);
                  j++, k += 0xC) {
-                drawMenuSprite((s16)(actor->x[i] + k + 0x5D), (s16)(actor->y[i] + 0x2E),
-                               getRelocatableHeapBlockBase(gAssetHandles[0x21]), 0x25, 0x20, 0x20, 0, 0);
+                drawMenuSprite(
+                    (s16)(actor->x[i] + k + 0x5D),
+                    (s16)(actor->y[i] + 0x2E),
+                    getRelocatableHeapBlockBase(gAssetHandles[0x21]),
+                    0x25,
+                    0x20,
+                    0x20,
+                    0,
+                    0
+                );
             }
             if (gCharacterSelectCharacterStats[gRacePlayers[i].selectedCharacterId].trick & 1) {
-                drawMenuSprite((s16)(actor->x[i] + k + 0x5D), (s16)(actor->y[i] + 0x2E),
-                               getRelocatableHeapBlockBase(gAssetHandles[0x21]), 0x26, 0x20, 0x20, 0, 0);
+                drawMenuSprite(
+                    (s16)(actor->x[i] + k + 0x5D),
+                    (s16)(actor->y[i] + 0x2E),
+                    getRelocatableHeapBlockBase(gAssetHandles[0x21]),
+                    0x26,
+                    0x20,
+                    0x20,
+                    0,
+                    0
+                );
             }
         }
     }
@@ -718,70 +942,141 @@ void drawCharacterSelectPlayerStatsPanels(CharacterSelectUiPanelActor *statsPane
                     iconIndex = 0x1F;
                     tile = (player->selectedCharacterId + 0x41) & 0xFFFF;
                 }
-                drawMenuSpriteTile((s16)(actor->x[i] + 6), (s16)(actor->y[i] + 0xD),
-                                   getRelocatableHeapBlockBase(textureHandles[iconIndex]), tile, 0, 0x100);
-                drawMenuSprite((s16)(actor->x[i] + 2), (s16)(actor->y[i] + 0x28),
-                               getRelocatableHeapBlockBase(textureHandles[0x1F]),
-                               (player->selectedCharacterId + 0x91) & 0xFFFF, 0x20, 0x20, 0, 0);
+                drawMenuSpriteTile(
+                    (s16)(actor->x[i] + 6),
+                    (s16)(actor->y[i] + 0xD),
+                    getRelocatableHeapBlockBase(textureHandles[iconIndex]),
+                    tile,
+                    0,
+                    0x100
+                );
+                drawMenuSprite(
+                    (s16)(actor->x[i] + 2),
+                    (s16)(actor->y[i] + 0x28),
+                    getRelocatableHeapBlockBase(textureHandles[0x1F]),
+                    (player->selectedCharacterId + 0x91) & 0xFFFF,
+                    0x20,
+                    0x20,
+                    0,
+                    0
+                );
                 if (player->selectedCharacterId == 5) {
                     text[0] = 0x3F;
                     text[1] = 0x3F;
                     text[2] = 0;
                 } else {
-                    sprintf(text, gCharacterSelectCharacterStatFormat,
-                            gCharacterSelectCharacterStatLabels[player->selectedCharacterId]);
+                    sprintf(
+                        text,
+                        gCharacterSelectCharacterStatFormat,
+                        gCharacterSelectCharacterStatLabels[player->selectedCharacterId]
+                    );
                 }
                 drawMenuAsciiText((s16)(actor->x[i] + 0x70), (s16)(actor->y[i] + 0xD), (u8 *)&text[0], 0, 0x100);
                 stat =
-                    (stats = (CharacterSelectUiCharacterStats *)&(0, statsBase)[player->selectedCharacterId * stride])->speed;
+                    (stats = (CharacterSelectUiCharacterStats *)&(0, statsBase)[player->selectedCharacterId * stride])
+                        ->speed;
                 if (stat / 2 > 0) {
                     do {
-                        drawMenuSprite((s16)(actor->x[i] + xOffset + 0x5D), (s16)(actor->y[i] + 0x16),
-                                       getRelocatableHeapBlockBase(textureHandles[0x21]), 0x25, 0x20, 0x20, 0, 0);
+                        drawMenuSprite(
+                            (s16)(actor->x[i] + xOffset + 0x5D),
+                            (s16)(actor->y[i] + 0x16),
+                            getRelocatableHeapBlockBase(textureHandles[0x21]),
+                            0x25,
+                            0x20,
+                            0x20,
+                            0,
+                            0
+                        );
                         j++;
                         xOffset += 0xC;
-                        stat = (stats = (CharacterSelectUiCharacterStats *)&(0, statsBase)[player->selectedCharacterId * stride])
+                        stat = (stats = (CharacterSelectUiCharacterStats *)&(
+                                    0,
+                                    statsBase
+                                )[player->selectedCharacterId * stride])
                                    ->speed;
                     } while (j < stat / 2);
                     j = 0;
                 }
                 if (stat & 1) {
-                    drawMenuSprite((s16)(actor->x[i] + xOffset + 0x5D), (s16)(actor->y[i] + 0x16),
-                                   getRelocatableHeapBlockBase(textureHandles[0x21]), 0x26, 0x20, 0x20, 0, 0);
+                    drawMenuSprite(
+                        (s16)(actor->x[i] + xOffset + 0x5D),
+                        (s16)(actor->y[i] + 0x16),
+                        getRelocatableHeapBlockBase(textureHandles[0x21]),
+                        0x26,
+                        0x20,
+                        0x20,
+                        0,
+                        0
+                    );
                     stats = &((CharacterSelectUiCharacterStats *)(0, statsBase))[player->selectedCharacterId];
                 }
                 stat = stats->turn;
                 xOffset = 0;
                 if (stat / 2 > 0) {
                     do {
-                        drawMenuSprite((s16)(actor->x[i] + xOffset + 0x5D), (s16)(actor->y[i] + 0x22),
-                                       getRelocatableHeapBlockBase(textureHandles[0x21]), 0x25, 0x20, 0x20, 0, 0);
+                        drawMenuSprite(
+                            (s16)(actor->x[i] + xOffset + 0x5D),
+                            (s16)(actor->y[i] + 0x22),
+                            getRelocatableHeapBlockBase(textureHandles[0x21]),
+                            0x25,
+                            0x20,
+                            0x20,
+                            0,
+                            0
+                        );
                         j++;
                         xOffset += 0xC;
-                        stat =
-                            (stats = (CharacterSelectUiCharacterStats *)&(0, statsBase)[player->selectedCharacterId * stride])->turn;
+                        stat = (stats = (CharacterSelectUiCharacterStats *)&(
+                                    0,
+                                    statsBase
+                                )[player->selectedCharacterId * stride])
+                                   ->turn;
                     } while (j < stat / 2);
                     j = 0;
                 }
                 if (stat & 1) {
-                    drawMenuSprite((s16)(actor->x[i] + xOffset + 0x5D), (s16)(actor->y[i] + 0x22),
-                                   getRelocatableHeapBlockBase(textureHandles[0x21]), 0x26, 0x20, 0x20, 0, 0);
+                    drawMenuSprite(
+                        (s16)(actor->x[i] + xOffset + 0x5D),
+                        (s16)(actor->y[i] + 0x22),
+                        getRelocatableHeapBlockBase(textureHandles[0x21]),
+                        0x26,
+                        0x20,
+                        0x20,
+                        0,
+                        0
+                    );
                     stats = &((CharacterSelectUiCharacterStats *)(0, statsBase))[player->selectedCharacterId];
                 }
                 stat = stats->trick;
                 xOffset = 0;
                 if (stat / 2 > 0) {
                     do {
-                        drawMenuSprite((s16)(actor->x[i] + xOffset + 0x5D), (s16)(actor->y[i] + 0x2E),
-                                       getRelocatableHeapBlockBase(textureHandles[0x21]), 0x25, 0x20, 0x20, 0, 0);
+                        drawMenuSprite(
+                            (s16)(actor->x[i] + xOffset + 0x5D),
+                            (s16)(actor->y[i] + 0x2E),
+                            getRelocatableHeapBlockBase(textureHandles[0x21]),
+                            0x25,
+                            0x20,
+                            0x20,
+                            0,
+                            0
+                        );
                         j++;
                         xOffset += 0xC;
                         stat = (0, statsBase)[(player->selectedCharacterId * stride) + 2];
                     } while (j < stat / 2);
                 }
                 if (stat & 1) {
-                    drawMenuSprite((s16)(actor->x[i] + xOffset + 0x5D), (s16)(actor->y[i] + 0x2E),
-                                   getRelocatableHeapBlockBase(textureHandles[0x21]), 0x26, 0x20, 0x20, 0, 0);
+                    drawMenuSprite(
+                        (s16)(actor->x[i] + xOffset + 0x5D),
+                        (s16)(actor->y[i] + 0x2E),
+                        getRelocatableHeapBlockBase(textureHandles[0x21]),
+                        0x26,
+                        0x20,
+                        0x20,
+                        0,
+                        0
+                    );
                 }
                 player++;
                 i++;
@@ -804,7 +1099,11 @@ void drawCharacterSelectPlayerStatsPanels(CharacterSelectUiPanelActor *arg0) {
     CharacterSelectUiPlayerCursorActor *controller = D_8010ADE8;
     CharacterSelectUiPanelActor *actor = arg0;
 
-    if (controller->mode != 0) { i = 0; if ((s32)gPlayerCount > 0) { RacePlayer *player = gRacePlayers; do {
+    if (controller->mode != 0) {
+        i = 0;
+        if ((s32)gPlayerCount > 0) {
+            RacePlayer *player = gRacePlayers;
+            do {
                 xOffset = 0;
                 j = 0;
                 if (player->menuState == 0) {
@@ -825,59 +1124,114 @@ void drawCharacterSelectPlayerStatsPanels(CharacterSelectUiPanelActor *arg0) {
                     tile = player->selectedCharacterId + 0x41;
                 }
 
-                drawMenuSpriteTile((s16)(actor->x[i] + 6), (s16)(actor->y[i] + 0xD),
-                                   getRelocatableHeapBlockBase(gAssetHandles[textureIndex]), tile, 0, 0x100);
-                drawMenuSprite((s16)(actor->x[i] + 2), (s16)(actor->y[i] + 0x28),
-                               getRelocatableHeapBlockBase(gAssetHandles[0x1F]),
-                               player->selectedCharacterId + 0x91, 0x20, 0x20, 0, 0);
+                drawMenuSpriteTile(
+                    (s16)(actor->x[i] + 6),
+                    (s16)(actor->y[i] + 0xD),
+                    getRelocatableHeapBlockBase(gAssetHandles[textureIndex]),
+                    tile,
+                    0,
+                    0x100
+                );
+                drawMenuSprite(
+                    (s16)(actor->x[i] + 2),
+                    (s16)(actor->y[i] + 0x28),
+                    getRelocatableHeapBlockBase(gAssetHandles[0x1F]),
+                    player->selectedCharacterId + 0x91,
+                    0x20,
+                    0x20,
+                    0,
+                    0
+                );
 
                 if (player->selectedCharacterId == 5) {
                     text[0] = '?';
                     text[1] = '?';
                     text[2] = '\0';
                 } else {
-                    sprintf(text, gCharacterSelectCharacterStatFormat,
-                            gCharacterSelectCharacterStatLabels[player->selectedCharacterId]);
+                    sprintf(
+                        text,
+                        gCharacterSelectCharacterStatFormat,
+                        gCharacterSelectCharacterStatLabels[player->selectedCharacterId]
+                    );
                 }
                 drawMenuAsciiText((s16)(actor->x[i] + 0x70), (s16)(actor->y[i] + 0xD), text, 0, 0x100);
 
-                for (j = 0, xOffset = 0;
-                     j < (gCharacterSelectCharacterStats[player->selectedCharacterId].speed / 2);
+                for (j = 0, xOffset = 0; j < (gCharacterSelectCharacterStats[player->selectedCharacterId].speed / 2);
                      j++, xOffset += 0xC) {
-                    drawMenuSprite((s16)(actor->x[i] + xOffset + 0x5D), (s16)(actor->y[i] + 0x16),
-                                   getRelocatableHeapBlockBase(gAssetHandles[0x21]),
-                                   0x25, 0x20, 0x20, 0, 0);
+                    drawMenuSprite(
+                        (s16)(actor->x[i] + xOffset + 0x5D),
+                        (s16)(actor->y[i] + 0x16),
+                        getRelocatableHeapBlockBase(gAssetHandles[0x21]),
+                        0x25,
+                        0x20,
+                        0x20,
+                        0,
+                        0
+                    );
                 }
                 if (gCharacterSelectCharacterStats[player->selectedCharacterId].speed & 1) {
-                    drawMenuSprite((s16)(actor->x[i] + xOffset + 0x5D), (s16)(actor->y[i] + 0x16),
-                                   getRelocatableHeapBlockBase(gAssetHandles[0x21]),
-                                   0x26, 0x20, 0x20, 0, 0);
+                    drawMenuSprite(
+                        (s16)(actor->x[i] + xOffset + 0x5D),
+                        (s16)(actor->y[i] + 0x16),
+                        getRelocatableHeapBlockBase(gAssetHandles[0x21]),
+                        0x26,
+                        0x20,
+                        0x20,
+                        0,
+                        0
+                    );
                 }
 
-                for (j = 0, xOffset = 0;
-                     j < (gCharacterSelectCharacterStats[player->selectedCharacterId].turn / 2);
+                for (j = 0, xOffset = 0; j < (gCharacterSelectCharacterStats[player->selectedCharacterId].turn / 2);
                      j++, xOffset += 0xC) {
-                    drawMenuSprite((s16)(actor->x[i] + xOffset + 0x5D), (s16)(actor->y[i] + 0x22),
-                                   getRelocatableHeapBlockBase(gAssetHandles[0x21]),
-                                   0x25, 0x20, 0x20, 0, 0);
+                    drawMenuSprite(
+                        (s16)(actor->x[i] + xOffset + 0x5D),
+                        (s16)(actor->y[i] + 0x22),
+                        getRelocatableHeapBlockBase(gAssetHandles[0x21]),
+                        0x25,
+                        0x20,
+                        0x20,
+                        0,
+                        0
+                    );
                 }
                 if (gCharacterSelectCharacterStats[player->selectedCharacterId].turn & 1) {
-                    drawMenuSprite((s16)(actor->x[i] + xOffset + 0x5D), (s16)(actor->y[i] + 0x22),
-                                   getRelocatableHeapBlockBase(gAssetHandles[0x21]),
-                                   0x26, 0x20, 0x20, 0, 0);
+                    drawMenuSprite(
+                        (s16)(actor->x[i] + xOffset + 0x5D),
+                        (s16)(actor->y[i] + 0x22),
+                        getRelocatableHeapBlockBase(gAssetHandles[0x21]),
+                        0x26,
+                        0x20,
+                        0x20,
+                        0,
+                        0
+                    );
                 }
 
-                for (j = 0, xOffset = 0;
-                     j < (gCharacterSelectCharacterStats[player->selectedCharacterId].trick / 2);
+                for (j = 0, xOffset = 0; j < (gCharacterSelectCharacterStats[player->selectedCharacterId].trick / 2);
                      j++, xOffset += 0xC) {
-                    drawMenuSprite((s16)(actor->x[i] + xOffset + 0x5D), (s16)(actor->y[i] + 0x2E),
-                                   getRelocatableHeapBlockBase(gAssetHandles[0x21]),
-                                   0x25, 0x20, 0x20, 0, 0);
+                    drawMenuSprite(
+                        (s16)(actor->x[i] + xOffset + 0x5D),
+                        (s16)(actor->y[i] + 0x2E),
+                        getRelocatableHeapBlockBase(gAssetHandles[0x21]),
+                        0x25,
+                        0x20,
+                        0x20,
+                        0,
+                        0
+                    );
                 }
                 if (gCharacterSelectCharacterStats[player->selectedCharacterId].trick & 1) {
-                    drawMenuSprite((s16)(actor->x[i] + xOffset + 0x5D), (s16)(actor->y[i] + 0x2E),
-                                   getRelocatableHeapBlockBase(gAssetHandles[0x21]),
-                                   0x26, 0x20, 0x20, 0, 0);
+                    drawMenuSprite(
+                        (s16)(actor->x[i] + xOffset + 0x5D),
+                        (s16)(actor->y[i] + 0x2E),
+                        getRelocatableHeapBlockBase(gAssetHandles[0x21]),
+                        0x26,
+                        0x20,
+                        0x20,
+                        0,
+                        0
+                    );
                 }
 
                 player++;
@@ -966,97 +1320,96 @@ void updateCharacterSelectSelectedCharacterTokens(CharacterSelectUiSelectedChara
         }
 
         switch (state ^ 0) {
-        case CHARACTER_SELECT_TOKEN_IDLE:
-            break;
-        case CHARACTER_SELECT_TOKEN_START:
-            characterId = gRacePlayers[playerIndex].selectedCharacterId;
-            if (characterId < 5) {
-                rosterX = (characterId * 0x20) - 0x40;
-            } else if (characterId == 5) {
-                rosterX = -0x70;
-            } else {
-                rosterX = 0x50;
-            }
+            case CHARACTER_SELECT_TOKEN_IDLE:
+                break;
+            case CHARACTER_SELECT_TOKEN_START:
+                characterId = gRacePlayers[playerIndex].selectedCharacterId;
+                if (characterId < 5) {
+                    rosterX = (characterId * 0x20) - 0x40;
+                } else if (characterId == 5) {
+                    rosterX = -0x70;
+                } else {
+                    rosterX = 0x50;
+                }
 
-            panelX = panelFrames->x[playerIndex] + 0x38;
-            panelY = (panelFrames->y[playerIndex] & 0xFFFFU) & 0xFFFFU;
-            actor->xDistance[playerIndex] = panelX - rosterX;
-            actor->yDistance[playerIndex] = panelY + 0x20;
-            actor->xDirection[playerIndex] = 1;
-            if (actor->xDistance[playerIndex] < 0) {
-                tokens->xDirection[playerIndex] = -1;
-                tokens->xDistance[playerIndex] = tokens->xDistance[playerIndex] * -1;
-            }
-            if (tokens->yDistance[playerIndex] < 0) {
-                tokens->yDistance[playerIndex] = tokens->yDistance[playerIndex] * -1;
-            }
+                panelX = panelFrames->x[playerIndex] + 0x38;
+                panelY = (panelFrames->y[playerIndex] & 0xFFFFU) & 0xFFFFU;
+                actor->xDistance[playerIndex] = panelX - rosterX;
+                actor->yDistance[playerIndex] = panelY + 0x20;
+                actor->xDirection[playerIndex] = 1;
+                if (actor->xDistance[playerIndex] < 0) {
+                    tokens->xDirection[playerIndex] = -1;
+                    tokens->xDistance[playerIndex] = tokens->xDistance[playerIndex] * -1;
+                }
+                if (tokens->yDistance[playerIndex] < 0) {
+                    tokens->yDistance[playerIndex] = tokens->yDistance[playerIndex] * -1;
+                }
 
-            tokens->divisor[playerIndex] = tokens->xDistance[playerIndex] / 0x20;
-            tokens->axis[playerIndex] = 0;
-            tokens->stepCount[playerIndex] = tokens->xDistance[playerIndex] / 4;
-            if (tokens->xDistance[playerIndex] < tokens->yDistance[playerIndex]) {
-                tokens->axis[playerIndex] = 1;
-                tokens->divisor[playerIndex] = tokens->yDistance[playerIndex] / 0x20;
-                tokens->stepCount[playerIndex] = tokens->yDistance[playerIndex] / 4;
-            }
-            tokens->x[playerIndex] = rosterX;
-            tokens->y[playerIndex] = -8;
-            tokens->signedTileSize[playerIndex] = 1;
-            tokens->timer[playerIndex] = 0;
-            tokens->state[playerIndex] = CHARACTER_SELECT_TOKEN_FLYING;
-            state = tokens->state[playerIndex];
-            break;
-        case CHARACTER_SELECT_TOKEN_FLYING:
-            exitXStep = playerIndex;
-            if (playerIndex & 1) {
-                yDirection = 1;
-            } else {
-                yDirection = -1;
-            }
-            step = 0;
-            if (tokens->stepCount[playerIndex] > 0) {
-                do {
-                    if (tokens->axis[playerIndex] != 0) {
-                        actor->y[playerIndex] += yDirection;
-                        actor->accumulator[playerIndex] += actor->xDistance[playerIndex];
-                        if (actor->accumulator[playerIndex] >= actor->yDistance[playerIndex]) {
-                            actor->accumulator[playerIndex] =
-                                (actor->x[playerIndex] += actor->xDirection[playerIndex],
-                                 actor->accumulator[playerIndex] - actor->yDistance[playerIndex]);
-                        }
-                    } else {
-                        actor->x[playerIndex] += actor->xDirection[playerIndex];
-                        actor->accumulator[playerIndex] += actor->yDistance[playerIndex];
-                        if (actor->accumulator[playerIndex] >= actor->xDistance[playerIndex]) {
+                tokens->divisor[playerIndex] = tokens->xDistance[playerIndex] / 0x20;
+                tokens->axis[playerIndex] = 0;
+                tokens->stepCount[playerIndex] = tokens->xDistance[playerIndex] / 4;
+                if (tokens->xDistance[playerIndex] < tokens->yDistance[playerIndex]) {
+                    tokens->axis[playerIndex] = 1;
+                    tokens->divisor[playerIndex] = tokens->yDistance[playerIndex] / 0x20;
+                    tokens->stepCount[playerIndex] = tokens->yDistance[playerIndex] / 4;
+                }
+                tokens->x[playerIndex] = rosterX;
+                tokens->y[playerIndex] = -8;
+                tokens->signedTileSize[playerIndex] = 1;
+                tokens->timer[playerIndex] = 0;
+                tokens->state[playerIndex] = CHARACTER_SELECT_TOKEN_FLYING;
+                state = tokens->state[playerIndex];
+                break;
+            case CHARACTER_SELECT_TOKEN_FLYING:
+                exitXStep = playerIndex;
+                if (playerIndex & 1) {
+                    yDirection = 1;
+                } else {
+                    yDirection = -1;
+                }
+                step = 0;
+                if (tokens->stepCount[playerIndex] > 0) {
+                    do {
+                        if (tokens->axis[playerIndex] != 0) {
                             actor->y[playerIndex] += yDirection;
-                            actor->accumulator[playerIndex] -= actor->xDistance[playerIndex];
+                            actor->accumulator[playerIndex] += actor->xDistance[playerIndex];
+                            if (actor->accumulator[playerIndex] >= actor->yDistance[playerIndex]) {
+                                actor->accumulator[playerIndex] =
+                                    (actor->x[playerIndex] += actor->xDirection[playerIndex],
+                                     actor->accumulator[playerIndex] - actor->yDistance[playerIndex]);
+                            }
+                        } else {
+                            actor->x[playerIndex] += actor->xDirection[playerIndex];
+                            actor->accumulator[playerIndex] += actor->yDistance[playerIndex];
+                            if (actor->accumulator[playerIndex] >= actor->xDistance[playerIndex]) {
+                                actor->y[playerIndex] += yDirection;
+                                actor->accumulator[playerIndex] -= actor->xDistance[playerIndex];
+                            }
                         }
-                    }
-                    actor->timer[playerIndex]++;
-                    if ((actor->timer[playerIndex] % actor->divisor[playerIndex]) == 0) {
-                        actor->signedTileSize[playerIndex]++;
-                    }
-                    if (actor->signedTileSize[playerIndex] >= 0x21) {
-                        actor->signedTileSize[playerIndex] = 0x20;
-                    }
-                    if ((actor->x[playerIndex] == panelFrames->x[playerIndex] + 0x38) &&
-                        (actor->y[playerIndex] == panelFrames->y[playerIndex] + 0x18)) {
-                        actor->state[playerIndex] = CHARACTER_SELECT_TOKEN_LANDED;
-                        actor->signedTileSize[playerIndex] = 0x20;
-                        state = actor->volatileState[playerIndex];
-                        goto flight_done;
-                    }
-                    step++;
-                } while (step < tokens->stepCount[playerIndex]);
-                state = actor->state[playerIndex];
-flight_done:
-                ;
-            }
-            break;
-        case CHARACTER_SELECT_TOKEN_LANDED:
-            break;
-        default:
-            break;
+                        actor->timer[playerIndex]++;
+                        if ((actor->timer[playerIndex] % actor->divisor[playerIndex]) == 0) {
+                            actor->signedTileSize[playerIndex]++;
+                        }
+                        if (actor->signedTileSize[playerIndex] >= 0x21) {
+                            actor->signedTileSize[playerIndex] = 0x20;
+                        }
+                        if ((actor->x[playerIndex] == panelFrames->x[playerIndex] + 0x38) &&
+                            (actor->y[playerIndex] == panelFrames->y[playerIndex] + 0x18)) {
+                            actor->state[playerIndex] = CHARACTER_SELECT_TOKEN_LANDED;
+                            actor->signedTileSize[playerIndex] = 0x20;
+                            state = actor->volatileState[playerIndex];
+                            goto flight_done;
+                        }
+                        step++;
+                    } while (step < tokens->stepCount[playerIndex]);
+                    state = actor->state[playerIndex];
+                flight_done:;
+                }
+                break;
+            case CHARACTER_SELECT_TOKEN_LANDED:
+                break;
+            default:
+                break;
         }
 
         gCharacterSelectHudState.selectedTokenState[playerIndex] = state;

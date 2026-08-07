@@ -41,8 +41,10 @@ typedef struct {
 
 ControllerPakRaceRecordSaveUiData gControllerPakRaceRecordSaveUiData = {
     {
-        {
+     {
             {
+                // textconv requires these _() invocations to retain their original line layout.
+                // clang-format off
                 { _("{COLOR:7}CHECKING.") },
                 { _("{COLOR:7}SEARCHING FOR\nGAME NOTE.") },
                 { _("{COLOR:7}SAVING.") },
@@ -71,6 +73,7 @@ ControllerPakRaceRecordSaveUiData gControllerPakRaceRecordSaveUiData = {
         },
     },
     { _("DATA SAVE") },
+    // clang-format on
 };
 
 #define gControllerPakRaceRecordSaveStatusMessages (gControllerPakRaceRecordSaveUiData.content.typed.statusMessages)
@@ -133,11 +136,36 @@ void drawControllerPakRaceRecordSaveScorePanel(ControllerPakRaceRecordSaveActor 
     s32 next;
     s32 count;
 
-    drawMenuSprite(arg0->x, arg0->y, getRelocatableHeapBlockBase(CONTROLLER_PAK_RACE_RECORD_SAVE_SCORE_TEXTURE_HANDLE), 0xA, 0x20, 0x20, 0, 0);
-    drawMenuSprite((s16)(arg0->x + 0x40), arg0->y, getRelocatableHeapBlockBase(CONTROLLER_PAK_RACE_RECORD_SAVE_SCORE_TEXTURE_HANDLE), 0xB, 0x20,
-                  0x20, 0, 0);
-    drawMenuSprite((s16)(arg0->x + 0x80), arg0->y, getRelocatableHeapBlockBase(CONTROLLER_PAK_RACE_RECORD_SAVE_SCORE_TEXTURE_HANDLE), 0xC, 0x20,
-                  0x20, 0, 0);
+    drawMenuSprite(
+        arg0->x,
+        arg0->y,
+        getRelocatableHeapBlockBase(CONTROLLER_PAK_RACE_RECORD_SAVE_SCORE_TEXTURE_HANDLE),
+        0xA,
+        0x20,
+        0x20,
+        0,
+        0
+    );
+    drawMenuSprite(
+        (s16)(arg0->x + 0x40),
+        arg0->y,
+        getRelocatableHeapBlockBase(CONTROLLER_PAK_RACE_RECORD_SAVE_SCORE_TEXTURE_HANDLE),
+        0xB,
+        0x20,
+        0x20,
+        0,
+        0
+    );
+    drawMenuSprite(
+        (s16)(arg0->x + 0x80),
+        arg0->y,
+        getRelocatableHeapBlockBase(CONTROLLER_PAK_RACE_RECORD_SAVE_SCORE_TEXTURE_HANDLE),
+        0xC,
+        0x20,
+        0x20,
+        0,
+        0
+    );
 
     text[0] = '1';
     text[1] = 0;
@@ -164,8 +192,17 @@ void drawControllerPakRaceRecordSaveScorePanel(ControllerPakRaceRecordSaveActor 
                 alpha = 0x100;
             }
 
-            drawMenuSpriteWithAlpha((s16)(arg0->x + next + 4), (s16)(arg0->y + 0x11),
-                          getRelocatableHeapBlockBase(CONTROLLER_PAK_RACE_RECORD_SAVE_SCORE_TEXTURE_HANDLE), 0x19, 0x20, 0x20, 0, alpha, 9 - i);
+            drawMenuSpriteWithAlpha(
+                (s16)(arg0->x + next + 4),
+                (s16)(arg0->y + 0x11),
+                getRelocatableHeapBlockBase(CONTROLLER_PAK_RACE_RECORD_SAVE_SCORE_TEXTURE_HANDLE),
+                0x19,
+                0x20,
+                0x20,
+                0,
+                alpha,
+                9 - i
+            );
             i = xOffset;
             next += 0x10;
         } while (xOffset != count);
@@ -196,12 +233,19 @@ void drawControllerPakRaceRecordSaveScorePanel(ControllerPakRaceRecordSaveActor 
                 tile += 6;
             } else {
                 tile = 9;
-                if ((!i) && (!i)) {
-                }
+                if ((!i) && (!i)) {}
             }
-            drawMenuSpriteWithAlpha((s16)(arg0->x + xOffset + 4), (s16)(arg0->y + 0x27),
-                          getRelocatableHeapBlockBase(CONTROLLER_PAK_RACE_RECORD_SAVE_SCORE_TEXTURE_HANDLE), i + 0x1A, 0x20, 0x20, 0,
-                          alpha, tile);
+            drawMenuSpriteWithAlpha(
+                (s16)(arg0->x + xOffset + 4),
+                (s16)(arg0->y + 0x27),
+                getRelocatableHeapBlockBase(CONTROLLER_PAK_RACE_RECORD_SAVE_SCORE_TEXTURE_HANDLE),
+                i + 0x1A,
+                0x20,
+                0x20,
+                0,
+                alpha,
+                tile
+            );
             i++;
             xOffset += 0xE;
             badgeIndex++;
@@ -213,32 +257,33 @@ void updateControllerPakRaceRecordSaveScorePanel(ControllerPakRaceRecordSaveActo
     u8 state = arg0->unk1C.state;
 
     switch (state) {
-    case 0:
-        arg0->x -= 0x20;
-        if (arg0->x < -0x43) {
-            arg0->x = -0x44;
-            arg0->unk1C.state = 1;
-            D_8010ADE0 = createCallbackTask((CallbackTaskCallback)initControllerPakRaceRecordSavePromptFrame, 0, 0x62);
-            createCallbackTask((CallbackTaskCallback)initControllerPakRaceRecordSaveExitMessage, 0, 0x63);
-        }
-        state = arg0->unk1C.state;
-        break;
-    case 1:
-        if (gControllerPakStatusCodes[0] != 0) {
-            if (gMenuSelectionConfirmTimer == 0x14) {
-                state = arg0->unk1C.state = 2;
+        case 0:
+            arg0->x -= 0x20;
+            if (arg0->x < -0x43) {
+                arg0->x = -0x44;
+                arg0->unk1C.state = 1;
+                D_8010ADE0 =
+                    createCallbackTask((CallbackTaskCallback)initControllerPakRaceRecordSavePromptFrame, 0, 0x62);
+                createCallbackTask((CallbackTaskCallback)initControllerPakRaceRecordSaveExitMessage, 0, 0x63);
             }
-        }
-        break;
-    case 2:
-        arg0->x -= 0x20;
-        if (arg0->x < -0x117) {
-            arg0->unk1C.state = 3;
-        }
-        state = arg0->unk1C.state;
-        break;
-    case 3:
-        break;
+            state = arg0->unk1C.state;
+            break;
+        case 1:
+            if (gControllerPakStatusCodes[0] != 0) {
+                if (gMenuSelectionConfirmTimer == 0x14) {
+                    state = arg0->unk1C.state = 2;
+                }
+            }
+            break;
+        case 2:
+            arg0->x -= 0x20;
+            if (arg0->x < -0x117) {
+                arg0->unk1C.state = 3;
+            }
+            state = arg0->unk1C.state;
+            break;
+        case 3:
+            break;
     }
     state = arg0->unk1C.state;
     if (state == 3) {
@@ -261,10 +306,28 @@ void drawControllerPakRaceRecordSavePromptFrame(ControllerPakRaceRecordSaveActor
 
     if (gControllerPakStatusCodes[0] != 8) {
         alpha = arg0->unk1C.scale;
-        drawMenuSpriteWithAlpha((s16)(arg0->x - 2), (s16)(arg0->y + 0xC), getRelocatableHeapBlockBase(gAssetHandles[0x21]), 8, 0x20, 0x20,
-                      zero, alpha, zero);
-        drawMenuSpriteWithAlpha((s16)(arg0->x + 0x3E), (s16)(arg0->y + 0xC), getRelocatableHeapBlockBase(gAssetHandles[0x21]), 9, 0x20,
-                      0x20, zero, alpha, zero);
+        drawMenuSpriteWithAlpha(
+            (s16)(arg0->x - 2),
+            (s16)(arg0->y + 0xC),
+            getRelocatableHeapBlockBase(gAssetHandles[0x21]),
+            8,
+            0x20,
+            0x20,
+            zero,
+            alpha,
+            zero
+        );
+        drawMenuSpriteWithAlpha(
+            (s16)(arg0->x + 0x3E),
+            (s16)(arg0->y + 0xC),
+            getRelocatableHeapBlockBase(gAssetHandles[0x21]),
+            9,
+            0x20,
+            0x20,
+            zero,
+            alpha,
+            zero
+        );
     }
 }
 
@@ -272,32 +335,33 @@ void updateControllerPakRaceRecordSavePromptFrame(ControllerPakRaceRecordSaveAct
     u8 state = arg0->state.b.unk1F;
 
     switch (state) {
-    case 0:
-        arg0->unk1C.scale += 0x26;
-        if (arg0->unk1C.scale >= 0x100) {
-            arg0->unk1C.scale = 0x100;
-            arg0->state.b.unk1F = 1;
-            D_8010ADE4 = createCallbackTask((CallbackTaskCallback)initControllerPakRaceRecordSaveStatusMessage, 0, 0x63);
-        }
-        state = arg0->state.b.unk1F;
-        break;
-    case 1:
-        state = arg0->state.b.unk1F = 2;
-        break;
-    case 2:
-        if ((gControllerPakStatusCodes[0] == 5) && (gMenuSelectionConfirmTimer == 0x14)) {
-            state = arg0->state.b.unk1F = 3;
-        }
-        break;
-    case 3:
-        arg0->x -= 0x20;
-        if (arg0->x < -0x117) {
-            arg0->state.b.unk1F = 4;
-        }
-        state = arg0->state.b.unk1F;
-        break;
-    case 4:
-        break;
+        case 0:
+            arg0->unk1C.scale += 0x26;
+            if (arg0->unk1C.scale >= 0x100) {
+                arg0->unk1C.scale = 0x100;
+                arg0->state.b.unk1F = 1;
+                D_8010ADE4 =
+                    createCallbackTask((CallbackTaskCallback)initControllerPakRaceRecordSaveStatusMessage, 0, 0x63);
+            }
+            state = arg0->state.b.unk1F;
+            break;
+        case 1:
+            state = arg0->state.b.unk1F = 2;
+            break;
+        case 2:
+            if ((gControllerPakStatusCodes[0] == 5) && (gMenuSelectionConfirmTimer == 0x14)) {
+                state = arg0->state.b.unk1F = 3;
+            }
+            break;
+        case 3:
+            arg0->x -= 0x20;
+            if (arg0->x < -0x117) {
+                arg0->state.b.unk1F = 4;
+            }
+            state = arg0->state.b.unk1F;
+            break;
+        case 4:
+            break;
     }
     if ((unsigned int)state == 4) {
         removeCallbackTask(arg0);
@@ -325,8 +389,16 @@ void drawControllerPakRaceRecordSaveStatusMessage(ControllerPakRaceRecordSaveAct
             (gMenuChoicePromptState[0] == 0)) {
             if (arg0->unk1C.scale == 0x100) {
                 texture = getRelocatableHeapBlockBase(gAssetHandles[0x21]);
-                drawMenuSprite((s16)(arg0->x + 0x70), (s16)(arg0->y + 0x10), texture,
-                               ((s32)arg0->state.b.frame >= 8) + 5, 0x20, 0x20, 0, 0);
+                drawMenuSprite(
+                    (s16)(arg0->x + 0x70),
+                    (s16)(arg0->y + 0x10),
+                    texture,
+                    ((s32)arg0->state.b.frame >= 8) + 5,
+                    0x20,
+                    0x20,
+                    0,
+                    0
+                );
             }
         }
     }
@@ -345,41 +417,41 @@ void updateControllerPakRaceRecordSaveStatusMessage(ControllerPakRaceRecordSaveA
     }
 
     switch (state) {
-    case 0:
-        arg0->state.b.unk20 = 1;
-        state = arg0->state.b.unk20;
-        break;
-    case 1:
-        if ((gControllerPakStatusCodes[0] == 5) && (gMenuSelectionConfirmTimer == 0x14)) {
-            arg0->state.b.unk20 = 4;
-            state = arg0->state.b.unk20;
-        }
-        break;
-    case 2:
-        arg0->unk1C.scale += 0x26;
-        if (arg0->unk1C.scale >= 0x100) {
-            arg0->unk1C.scale = 0x100;
+        case 0:
             arg0->state.b.unk20 = 1;
-        }
-        state = arg0->state.b.unk20;
-        break;
-    case 3:
-        arg0->unk1C.scale -= 0x26;
-        if (arg0->unk1C.scale <= (state * 0)) {
-            arg0->unk1C.scale = 0;
-            arg0->state.b.unk20 = 2;
-            gMenuChoicePromptState[0] = 0;
-            gControllerPakStatusCodes[0] = arg0->state.wu.slideOffset;
-        }
-        state = arg0->state.b.unk20;
-        break;
-    case 4:
-        arg0->x -= 0x20;
-        if (arg0->x < -0x117) {
-            arg0->state.b.unk20 = 5;
-        }
-        state = arg0->state.b.unk20;
-        break;
+            state = arg0->state.b.unk20;
+            break;
+        case 1:
+            if ((gControllerPakStatusCodes[0] == 5) && (gMenuSelectionConfirmTimer == 0x14)) {
+                arg0->state.b.unk20 = 4;
+                state = arg0->state.b.unk20;
+            }
+            break;
+        case 2:
+            arg0->unk1C.scale += 0x26;
+            if (arg0->unk1C.scale >= 0x100) {
+                arg0->unk1C.scale = 0x100;
+                arg0->state.b.unk20 = 1;
+            }
+            state = arg0->state.b.unk20;
+            break;
+        case 3:
+            arg0->unk1C.scale -= 0x26;
+            if (arg0->unk1C.scale <= (state * 0)) {
+                arg0->unk1C.scale = 0;
+                arg0->state.b.unk20 = 2;
+                gMenuChoicePromptState[0] = 0;
+                gControllerPakStatusCodes[0] = arg0->state.wu.slideOffset;
+            }
+            state = arg0->state.b.unk20;
+            break;
+        case 4:
+            arg0->x -= 0x20;
+            if (arg0->x < -0x117) {
+                arg0->state.b.unk20 = 5;
+            }
+            state = arg0->state.b.unk20;
+            break;
     }
 
     arg0->state.b.frame = (arg0->state.b.frame + 1) & 0xF;
@@ -416,8 +488,17 @@ void drawControllerPakRaceRecordSaveStatusChoicePrompt(ControllerPakRaceRecordSa
         }
 
         drawAlpha = alpha;
-        drawMenuSpriteWithAlpha(arg0->x, arg0->unk1C.scale, getRelocatableHeapBlockBase(gAssetHandles[0x21]), gControllerPakRaceRecordSaveChoicePromptBottomSprites[gControllerPakStatusCodes[0] * 2], 0x20, 0x20,
-                      0, drawAlpha, 0);
+        drawMenuSpriteWithAlpha(
+            arg0->x,
+            arg0->unk1C.scale,
+            getRelocatableHeapBlockBase(gAssetHandles[0x21]),
+            gControllerPakRaceRecordSaveChoicePromptBottomSprites[gControllerPakStatusCodes[0] * 2],
+            0x20,
+            0x20,
+            0,
+            drawAlpha,
+            0
+        );
 
         if (drawAlpha == 0x100) {
             alpha = 0x60;
@@ -425,14 +506,32 @@ void drawControllerPakRaceRecordSaveStatusChoicePrompt(ControllerPakRaceRecordSa
             alpha = 0x100;
         }
 
-        drawMenuSpriteWithAlpha(arg0->x, arg0->y, getRelocatableHeapBlockBase(gAssetHandles[0x21]), gControllerPakRaceRecordSaveChoicePromptTopSprites[gControllerPakStatusCodes[0] * 2], 0x20, 0x20, 0, alpha,
-                      0);
+        drawMenuSpriteWithAlpha(
+            arg0->x,
+            arg0->y,
+            getRelocatableHeapBlockBase(gAssetHandles[0x21]),
+            gControllerPakRaceRecordSaveChoicePromptTopSprites[gControllerPakStatusCodes[0] * 2],
+            0x20,
+            0x20,
+            0,
+            alpha,
+            0
+        );
 
         state = gMenuChoicePromptState[0];
         if ((state == 3) || (state == 4)) {
-            drawMenuSpriteWithAlpha(arg0->x, (s16)(((gMenuChoicePromptState[0] * 0x10) + arg0->y) - 0x30), getRelocatableHeapBlockBase(gAssetHandles[0x21]), 0x12,
-                          0x20, 0x20, 0, (u16)arg0->state.w.alpha, 7);
-        state = gMenuChoicePromptState[0];
+            drawMenuSpriteWithAlpha(
+                arg0->x,
+                (s16)(((gMenuChoicePromptState[0] * 0x10) + arg0->y) - 0x30),
+                getRelocatableHeapBlockBase(gAssetHandles[0x21]),
+                0x12,
+                0x20,
+                0x20,
+                0,
+                (u16)arg0->state.w.alpha,
+                7
+            );
+            state = gMenuChoicePromptState[0];
         }
     }
     if ((state >= 5) && (arg0->state.w.slideOffset == 0)) {
@@ -454,8 +553,7 @@ void updateControllerPakRaceRecordSaveStatusChoicePrompt(ControllerPakRaceRecord
     if (gControllerPakRaceRecordSaveStatusTransitionNextStatus != arg0->state.w.selection) {
         arg0->state.w.selection = gControllerPakRaceRecordSaveStatusTransitionNextStatus;
     }
-    if ((gMenuChoicePromptState[0] != 0) && (gMenuChoicePromptState[0] != 3) &&
-        (gMenuChoicePromptState[0] != 4)) {
+    if ((gMenuChoicePromptState[0] != 0) && (gMenuChoicePromptState[0] != 3) && (gMenuChoicePromptState[0] != 4)) {
         if (gMenuChoicePromptState[0] < 5) {
             var_v1 = 1;
         } else {
@@ -488,7 +586,11 @@ void updateControllerPakRaceRecordSaveStatusChoicePrompt(ControllerPakRaceRecord
         }
         arg0->state.b.alphaTimer = (arg0->state.b.alphaTimer + 1) & 0x1F;
     }
-    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawControllerPakRaceRecordSaveStatusChoicePrompt, arg0);
+    addRenderCallback(
+        &gMenuRenderCallbackList,
+        (RenderCallback)drawControllerPakRaceRecordSaveStatusChoicePrompt,
+        arg0
+    );
 }
 
 void initControllerPakRaceRecordSaveStatusChoicePrompt(ControllerPakRaceRecordSaveActor *arg0) {
@@ -506,26 +608,26 @@ void updateControllerPakRaceRecordSaveExitMessage(ControllerPakRaceRecordSaveAct
     u8 state = arg0->state.b.unk1E;
 
     switch (state) {
-    case 0:
-        arg0->unk1C.scale += 0x26;
-        if (arg0->unk1C.scale >= 0x100) {
-            arg0->unk1C.scale = 0x100;
-            arg0->state.b.unk1E = 1;
-        }
-        state = arg0->state.b.unk1E;
-        break;
-    case 1:
-        if ((gControllerPakStatusCodes[0] == 5) && (gMenuSelectionConfirmTimer == 0x14)) {
-            state = arg0->state.b.unk1E = 2;
-        }
-        break;
-    case 2:
-        arg0->x -= 0x20;
-        if (arg0->x < -0xD7) {
-            arg0->state.b.unk1E = 4;
-        }
-        state = arg0->state.b.unk1E;
-        break;
+        case 0:
+            arg0->unk1C.scale += 0x26;
+            if (arg0->unk1C.scale >= 0x100) {
+                arg0->unk1C.scale = 0x100;
+                arg0->state.b.unk1E = 1;
+            }
+            state = arg0->state.b.unk1E;
+            break;
+        case 1:
+            if ((gControllerPakStatusCodes[0] == 5) && (gMenuSelectionConfirmTimer == 0x14)) {
+                state = arg0->state.b.unk1E = 2;
+            }
+            break;
+        case 2:
+            arg0->x -= 0x20;
+            if (arg0->x < -0xD7) {
+                arg0->state.b.unk1E = 4;
+            }
+            state = arg0->state.b.unk1E;
+            break;
     }
     if ((unsigned int)state == 4) {
         removeCallbackTask(arg0);

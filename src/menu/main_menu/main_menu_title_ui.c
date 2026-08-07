@@ -47,7 +47,6 @@ struct MainMenuTitleCursorActor {
 
 extern u8 gConnectedControllerCount;
 
-
 void drawMainMenuTitleLogo(MainMenuTitleLogoActor *arg0) {
     drawMenuTilemapSprite(&arg0->tilemapSprite.render, 1, arg0->common.x, arg0->common.y);
 }
@@ -79,9 +78,17 @@ void drawMainMenuTitleOptions(MainMenuTitleOptionsActor *arg0) {
                 tile = ((i * 2) + 5) & 0xFFFF;
                 palette = 3;
             }
-            drawMenuSpriteWithAlpha(arg0->common.x, (s16)(arg0->labelY + (i * 0x10)),
-                          getRelocatableHeapBlockBase(TITLE_SCREEN_TEXTURE_HANDLE),
-                          tile, 0x20, 0x20, 0, 0x100, palette + 1);
+            drawMenuSpriteWithAlpha(
+                arg0->common.x,
+                (s16)(arg0->labelY + (i * 0x10)),
+                getRelocatableHeapBlockBase(TITLE_SCREEN_TEXTURE_HANDLE),
+                tile,
+                0x20,
+                0x20,
+                0,
+                0x100,
+                palette + 1
+            );
         }
     }
 

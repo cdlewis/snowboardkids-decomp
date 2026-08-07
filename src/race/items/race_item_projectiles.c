@@ -66,36 +66,32 @@ extern u8 gRaceUpdatePaused;
 extern s16 gUiBlinkTimer;
 
 Vtx gRaceItemProjectileQuadVertices[4] = {
-    {{{-6,  6, 0}, 0, {-16, -16}, {0xFF, 0xFF, 0xFF, 0xFF}}},
-    {{{ 6,  6, 0}, 0, {496, -16}, {0xFF, 0xFF, 0xFF, 0xFF}}},
-    {{{ 6, -6, 0}, 0, {496, 496}, {0xFF, 0xFF, 0xFF, 0xFF}}},
-    {{{-6, -6, 0}, 0, {-16, 496}, {0xFF, 0xFF, 0xFF, 0xFF}}},
+    { { { -6, 6, 0 }, 0, { -16, -16 }, { 0xFF, 0xFF, 0xFF, 0xFF } } },
+    { { { 6, 6, 0 }, 0, { 496, -16 }, { 0xFF, 0xFF, 0xFF, 0xFF } } },
+    { { { 6, -6, 0 }, 0, { 496, 496 }, { 0xFF, 0xFF, 0xFF, 0xFF } } },
+    { { { -6, -6, 0 }, 0, { -16, 496 }, { 0xFF, 0xFF, 0xFF, 0xFF } } },
 };
 
 Vtx gFallingActionProjectileQuadVertices[4] = {
-    {{{-3,  3, 0}, 0, {-16, -16}, {0xFF, 0xFF, 0xFF, 0xFF}}},
-    {{{ 3,  3, 0}, 0, {496, -16}, {0xFF, 0xFF, 0xFF, 0xFF}}},
-    {{{ 3, -3, 0}, 0, {496, 496}, {0xFF, 0xFF, 0xFF, 0xFF}}},
-    {{{-3, -3, 0}, 0, {-16, 496}, {0xFF, 0xFF, 0xFF, 0xFF}}},
+    { { { -3, 3, 0 }, 0, { -16, -16 }, { 0xFF, 0xFF, 0xFF, 0xFF } } },
+    { { { 3, 3, 0 }, 0, { 496, -16 }, { 0xFF, 0xFF, 0xFF, 0xFF } } },
+    { { { 3, -3, 0 }, 0, { 496, 496 }, { 0xFF, 0xFF, 0xFF, 0xFF } } },
+    { { { -3, -3, 0 }, 0, { -16, 496 }, { 0xFF, 0xFF, 0xFF, 0xFF } } },
 };
 
 u8 D_800D4660[4][28] = {
     {
-        0, 3, 1, 3, 0, 0, 0, 1, 3, 3, 1, 4, 1, 4,
-        3, 4, 4, 3, 3, 3, 3, 3, 3, 3, 3, 0, 0, 0,
-    },
+     0,  3,  1, 3, 0,     0,         0,        1, 3, 3,           1,                           4,                                  1,                          4,         3,              4,                                                                                     4,                                                         3, 3,                                                                                      3,                                                                               3,                                                3,                      3,                                                                    3,                                                                                                                                                                                                            3,                                                                                                                                                                                                                                                                                                                0,                                                                                                                                                                                                                                                              0,                                                                                                                          0,
+     },
     {
-        0, 3, 1, 3, 0, 0, 0, 1, 3, 3, 1, 4, 1, 4,
-        3, 4, 4, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0,
-    },
+     0,  3,            1,         3,        0, 0, 0, 1, 3, 3,           1,                                     4,                                                                      1,                                                                                     4,                                                         3, 4, 4, 1, 1,                                                                                      1,                                                                                                                                                                    1,                                                                                                                                                                                                                   1,                                                                                                                                                   1,                                                   1,                                            1,                                                                                                                                                                                                         0,                                                                                                                                                                                                                                                                                                                                                                                                                    0,                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  0,
+     },
     {
-        2, 3, 1, 3, 0, 0, 2, 1, 3, 3, 1, 4, 1, 4,
-        3, 4, 4, 3, 3, 3, 3, 3, 3, 3, 3, 0, 0, 0,
-    },
+     2, 3, 1,         3,                  0,                   0,                           2,                                  1,                          3,         3, 1, 4, 1, 4, 3,              4,                                                                                                  4,                                                                                                                                                          3,                                                                                                                                                          3,                                                                                                                                                                                                                                               3,                                                                                                                                                                                                                                                                                                                3,                                                                                                                                                                                                                                                              3,                                                                                                                          3,                                    3, 3, 0, 0, 0,
+     },
     {
-        3, 3, 1, 3, 0, 0, 3, 1, 3, 3, 1, 4, 1, 4,
-        3, 4, 4, 3, 3, 3, 3, 3, 3, 3, 3, 0, 0, 0,
-    },
+     3, 3,  1,  3, 0,                   0,                                    3,                                        1,                                        3,                                       3,                                                1,                                                                          4,                                                                                         1,                                                                               4,                                                3,                      4,                                                                    4,                                                                             3,    3, 3, 3, 3, 3, 3,                                                                                                                                3,                                                                                                                                                                                                                                                                                                                                                                                                                                            0,                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         0,                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  0,
+     },
 };
 
 Mtx *allocFixedTransformMatrix(FixedTransform *);
@@ -139,7 +135,8 @@ s32 findRaceItemProjectileHomingTarget(Vec3i *pos, s32 radius, s16 angle, s16 pl
                             dz = -dz;
                         }
                         if (dz < radius) {
-                            playerAngle = calculateFixedAngleBetweenXZPoints(pos->x, pos->z, player->pos.x, player->pos.z);
+                            playerAngle =
+                                calculateFixedAngleBetweenXZPoints(pos->x, pos->z, player->pos.x, player->pos.z);
                             angleDiff = playerAngle - angle;
                             if ((s16)((angleDiff + 0x380) & 0xFFF) < 0x700) {
                                 dist = integerSquareRoot64((s64)dx * dx + (s64)dz * dz);
@@ -159,6 +156,8 @@ s32 findRaceItemProjectileHomingTarget(Vec3i *pos, s32 radius, s16 angle, s16 pl
     return hit;
 }
 
+// IDO code generation for this function is sensitive to source line layout.
+// clang-format off
 void renderWideHomingItemProjectile(RaceItemProjectileActor *arg0) {
     RaceEffectMatrixScratch sp6C;
     volatile u8 padding[8];
@@ -195,6 +194,7 @@ void renderWideHomingItemProjectile(RaceItemProjectileActor *arg0) {
         do { if (arg0->matrix != NULL) { { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = (((u32) ((((u32) 6) & ((0x01 << 8) - 1)) << 24)) | ((u32) ((((u32) 0x00) & ((0x01 << 8) - 1)) << 16))) | ((u32) ((((u32) 0) & ((0x01 << 16) - 1)) << 0)); _g->words.w1 = (u32) gEffectRenderModeSetupDl; } ; temp_v0_2 = gRegionAllocPtr++; temp_v0_2->words.w0 = 0xFD500000; temp_v0_2->words.w1 = (u32) arg0->image; temp_v0_3 = gRegionAllocPtr++; temp_v0_3->words.w0 = 0xF5500000; temp_v0_3->words.w1 = 0x07080200; temp_v0_4 = gRegionAllocPtr++; temp_v0_4->words.w1 = 0; temp_v0_4->words.w0 = 0xE6000000; temp_v0_5 = gRegionAllocPtr++; temp_v0_5->words.w0 = 0xF3000000; temp_v0_5->words.w1 = 0x0703F800; temp_v0_6 = gRegionAllocPtr++; temp_v0_6->words.w1 = 0; temp_v0_6->words.w0 = 0xE7000000; temp_v0_7 = gRegionAllocPtr++; temp_v0_7->words.w0 = 0xF5400200; temp_v0_7->words.w1 = 0x00080200; temp_v0_8 = gRegionAllocPtr++; temp_v0_8->words.w0 = 0xF2000000; temp_v0_8->words.w1 = 0x0003C03C; temp_v0_9 = gRegionAllocPtr++; temp_v0_9->words.w0 = 0xFD100000; temp_v0_9->words.w1 = (u32) arg0->palette; temp_v0_10 = gRegionAllocPtr++; temp_v0_10->words.w1 = 0; temp_v0_10->words.w0 = 0xE8000000; temp_v0_11 = gRegionAllocPtr++; temp_v0_11->words.w0 = 0xF5000100; temp_v0_11->words.w1 = 0x07000000; temp_v0_12 = gRegionAllocPtr++; temp_v0_12->words.w1 = 0; temp_v0_12->words.w0 = 0xE6000000; temp_v0_13 = gRegionAllocPtr++; temp_v0_13->words.w0 = 0xF0000000; temp_v0_13->words.w1 = 0x0703C000; temp_v0_14 = gRegionAllocPtr++; temp_v0_14->words.w1 = 0; temp_v0_14->words.w0 = 0xE7000000; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = (((u32) ((((u32) 1) & ((0x01 << 8) - 1)) << 24)) | ((u32) ((((u32) ((0x00 | 0x02) | 0x00)) & ((0x01 << 8) - 1)) << 16))) | ((u32) ((((u32) (sizeof(Mtx))) & ((0x01 << 16) - 1)) << 0)); _g->words.w1 = (u32) arg0->matrix; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = (((u32) ((((u32) 1) & ((0x01 << 8) - 1)) << 24)) | ((u32) ((((u32) ((0x00 | 0x00) | 0x00)) & ((0x01 << 8) - 1)) << 16))) | ((u32) ((((u32) (sizeof(Mtx))) & ((0x01 << 16) - 1)) << 0)); _g->words.w1 = (u32) gViewportMatrix; } ; temp_v0_17 = gRegionAllocPtr++; temp_v0_17->words.w0 = 0x0400103F; temp_v0_17->words.w1 = (u32) gRaceItemProjectileQuadVertices; temp_v0_18 = gRegionAllocPtr++; temp_v0_18->words.w0 = 0xB1060402; temp_v0_18->words.w1 = 0x00060200; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = (((u32) ((((u32) 6) & ((0x01 << 8) - 1)) << 24)) | ((u32) ((((u32) 0x00) & ((0x01 << 8) - 1)) << 16))) | ((u32) ((((u32) 0) & ((0x01 << 16) - 1)) << 0)); _g->words.w1 = (u32) gEffectRenderModeCleanupDl; } ; } } while (0);
     }
 }
+// clang-format on
 
 void updateWideHomingItemProjectile(RaceItemProjectileActor *arg0) {
     s32 sin;
@@ -213,7 +213,8 @@ void updateWideHomingItemProjectile(RaceItemProjectileActor *arg0) {
 
     if (gRaceUpdatePaused == 0) {
         pos = &arg0->pos;
-        arg0->targetPlayerIndex = findRaceItemProjectileHomingTarget(pos, 0x1600000, arg0->targetAngle, arg0->playerIndex, &angleDiff);
+        arg0->targetPlayerIndex =
+            findRaceItemProjectileHomingTarget(pos, 0x1600000, arg0->targetAngle, arg0->playerIndex, &angleDiff);
 
         if (arg0->targetPlayerIndex != -1) {
             gRacePlayers[arg0->targetPlayerIndex].itemTargetFlag = 1;
@@ -282,6 +283,8 @@ void updateWideHomingItemProjectile(RaceItemProjectileActor *arg0) {
     addRenderCallback(&gRaceObjectRenderCallbackList, (RenderCallback)renderWideHomingItemProjectile, arg0);
 }
 
+// IDO code generation for this function is sensitive to source line layout.
+// clang-format off
 void initWideHomingItemProjectile(RaceItemProjectileActor *arg0) {
     volatile s32 pad0;
     Vec3i source;
@@ -322,7 +325,10 @@ void initWideHomingItemProjectile(RaceItemProjectileActor *arg0) {
     updateWideHomingItemProjectile(arg0);
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateWideHomingItemProjectile);
 }
+// clang-format on
 
+// IDO code generation for this function is sensitive to source line layout.
+// clang-format off
 void renderCloseRangeHomingItemProjectile(RaceItemProjectileActor *arg0) {
     RaceEffectMatrixScratch sp64;
     volatile u8 padding[8];
@@ -359,6 +365,7 @@ void renderCloseRangeHomingItemProjectile(RaceItemProjectileActor *arg0) {
         do { if (arg0->matrix != NULL) { { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = (((u32) ((((u32) 6) & ((0x01 << 8) - 1)) << 24)) | ((u32) ((((u32) 0x00) & ((0x01 << 8) - 1)) << 16))) | ((u32) ((((u32) 0) & ((0x01 << 16) - 1)) << 0)); _g->words.w1 = (u32) gEffectRenderModeSetupDl; } ; temp_v0_2 = gRegionAllocPtr++; temp_v0_2->words.w0 = 0xFD500000; temp_v0_2->words.w1 = (u32) arg0->image; temp_v0_3 = gRegionAllocPtr++; temp_v0_3->words.w0 = 0xF5500000; temp_v0_3->words.w1 = 0x07080200; temp_v0_4 = gRegionAllocPtr++; temp_v0_4->words.w1 = 0; temp_v0_4->words.w0 = 0xE6000000; temp_v0_5 = gRegionAllocPtr++; temp_v0_5->words.w0 = 0xF3000000; temp_v0_5->words.w1 = 0x0703F800; temp_v0_6 = gRegionAllocPtr++; temp_v0_6->words.w1 = 0; temp_v0_6->words.w0 = 0xE7000000; temp_v0_7 = gRegionAllocPtr++; temp_v0_7->words.w0 = 0xF5400200; temp_v0_7->words.w1 = 0x00080200; temp_v0_8 = gRegionAllocPtr++; temp_v0_8->words.w0 = 0xF2000000; temp_v0_8->words.w1 = 0x0003C03C; temp_v0_9 = gRegionAllocPtr++; temp_v0_9->words.w0 = 0xFD100000; temp_v0_9->words.w1 = (u32) arg0->palette; temp_v0_10 = gRegionAllocPtr++; temp_v0_10->words.w1 = 0; temp_v0_10->words.w0 = 0xE8000000; temp_v0_11 = gRegionAllocPtr++; temp_v0_11->words.w0 = 0xF5000100; temp_v0_11->words.w1 = 0x07000000; temp_v0_12 = gRegionAllocPtr++; temp_v0_12->words.w1 = 0; temp_v0_12->words.w0 = 0xE6000000; temp_v0_13 = gRegionAllocPtr++; temp_v0_13->words.w0 = 0xF0000000; temp_v0_13->words.w1 = 0x0703C000; temp_v0_14 = gRegionAllocPtr++; temp_v0_14->words.w1 = 0; temp_v0_14->words.w0 = 0xE7000000; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = (((u32) ((((u32) 1) & ((0x01 << 8) - 1)) << 24)) | ((u32) ((((u32) ((0x00 | 0x02) | 0x00)) & ((0x01 << 8) - 1)) << 16))) | ((u32) ((((u32) (sizeof(Mtx))) & ((0x01 << 16) - 1)) << 0)); _g->words.w1 = (u32) arg0->matrix; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = (((u32) ((((u32) 1) & ((0x01 << 8) - 1)) << 24)) | ((u32) ((((u32) ((0x00 | 0x00) | 0x00)) & ((0x01 << 8) - 1)) << 16))) | ((u32) ((((u32) (sizeof(Mtx))) & ((0x01 << 16) - 1)) << 0)); _g->words.w1 = (u32) gViewportMatrix; } ; temp_v0_17 = gRegionAllocPtr++; temp_v0_17->words.w0 = 0x0400103F; temp_v0_17->words.w1 = (u32) gRaceItemProjectileQuadVertices; temp_v0_18 = gRegionAllocPtr++; temp_v0_18->words.w0 = 0xB1060402; temp_v0_18->words.w1 = 0x00060200; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = (((u32) ((((u32) 6) & ((0x01 << 8) - 1)) << 24)) | ((u32) ((((u32) 0x00) & ((0x01 << 8) - 1)) << 16))) | ((u32) ((((u32) 0) & ((0x01 << 16) - 1)) << 0)); _g->words.w1 = (u32) gEffectRenderModeCleanupDl; } ; } } while (0);
     }
 }
+// clang-format on
 
 void updateCloseRangeHomingItemProjectile(RaceItemProjectileActor *arg0) {
     s32 sin;
@@ -380,7 +387,8 @@ void updateCloseRangeHomingItemProjectile(RaceItemProjectileActor *arg0) {
 
     if (gRaceUpdatePaused == 0) {
         pos = &arg0->pos;
-        arg0->targetPlayerIndex = findRaceItemProjectileHomingTarget(pos, 0xE00000, arg0->targetAngle, arg0->playerIndex, &angleDiff);
+        arg0->targetPlayerIndex =
+            findRaceItemProjectileHomingTarget(pos, 0xE00000, arg0->targetAngle, arg0->playerIndex, &angleDiff);
 
         if (arg0->targetPlayerIndex != -1) {
             gRacePlayers[arg0->targetPlayerIndex].itemTargetFlag = 1;
@@ -453,6 +461,8 @@ void updateCloseRangeHomingItemProjectile(RaceItemProjectileActor *arg0) {
     addRenderCallback(&gRaceObjectRenderCallbackList, (RenderCallback)renderCloseRangeHomingItemProjectile, arg0);
 }
 
+// IDO code generation for this function is sensitive to source line layout.
+// clang-format off
 void initCloseRangeHomingItemProjectile(RaceItemProjectileActor *arg0) {
     volatile s32 pad0;
     Vec3i source;
@@ -493,7 +503,10 @@ void initCloseRangeHomingItemProjectile(RaceItemProjectileActor *arg0) {
     updateCloseRangeHomingItemProjectile(arg0);
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateCloseRangeHomingItemProjectile);
 }
+// clang-format on
 
+// IDO code generation for this function is sensitive to source line layout.
+// clang-format off
 void renderBouncingItemProjectile(RaceItemProjectileActor *arg0) {
     RaceEffectMatrixScratch sp64;
     Gfx *temp_v0_2;
@@ -529,6 +542,7 @@ void renderBouncingItemProjectile(RaceItemProjectileActor *arg0) {
         do { if (arg0->matrix != NULL) { { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = (((u32) ((((u32) 6) & ((0x01 << 8) - 1)) << 24)) | ((u32) ((((u32) 0x00) & ((0x01 << 8) - 1)) << 16))) | ((u32) ((((u32) 0) & ((0x01 << 16) - 1)) << 0)); _g->words.w1 = (u32) gEffectRenderModeSetupDl; } ; temp_v0_2 = gRegionAllocPtr++; temp_v0_2->words.w0 = 0xFD500000; temp_v0_2->words.w1 = (u32) arg0->image; temp_v0_3 = gRegionAllocPtr++; temp_v0_3->words.w0 = 0xF5500000; temp_v0_3->words.w1 = 0x07080200; temp_v0_4 = gRegionAllocPtr++; temp_v0_4->words.w1 = 0; temp_v0_4->words.w0 = 0xE6000000; temp_v0_5 = gRegionAllocPtr++; temp_v0_5->words.w0 = 0xF3000000; temp_v0_5->words.w1 = 0x0703F800; temp_v0_6 = gRegionAllocPtr++; temp_v0_6->words.w1 = 0; temp_v0_6->words.w0 = 0xE7000000; temp_v0_7 = gRegionAllocPtr++; temp_v0_7->words.w0 = 0xF5400200; temp_v0_7->words.w1 = 0x00080200; temp_v0_8 = gRegionAllocPtr++; temp_v0_8->words.w0 = 0xF2000000; temp_v0_8->words.w1 = 0x0003C03C; temp_v0_9 = gRegionAllocPtr++; temp_v0_9->words.w0 = 0xFD100000; temp_v0_9->words.w1 = (u32) arg0->palette; temp_v0_10 = gRegionAllocPtr++; temp_v0_10->words.w1 = 0; temp_v0_10->words.w0 = 0xE8000000; temp_v0_11 = gRegionAllocPtr++; temp_v0_11->words.w0 = 0xF5000100; temp_v0_11->words.w1 = 0x07000000; temp_v0_12 = gRegionAllocPtr++; temp_v0_12->words.w1 = 0; temp_v0_12->words.w0 = 0xE6000000; temp_v0_13 = gRegionAllocPtr++; temp_v0_13->words.w0 = 0xF0000000; temp_v0_13->words.w1 = 0x0703C000; temp_v0_14 = gRegionAllocPtr++; temp_v0_14->words.w1 = 0; temp_v0_14->words.w0 = 0xE7000000; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = (((u32) ((((u32) 1) & ((0x01 << 8) - 1)) << 24)) | ((u32) ((((u32) ((0x00 | 0x02) | 0x00)) & ((0x01 << 8) - 1)) << 16))) | ((u32) ((((u32) (sizeof(Mtx))) & ((0x01 << 16) - 1)) << 0)); _g->words.w1 = (u32) arg0->matrix; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = (((u32) ((((u32) 1) & ((0x01 << 8) - 1)) << 24)) | ((u32) ((((u32) ((0x00 | 0x00) | 0x00)) & ((0x01 << 8) - 1)) << 16))) | ((u32) ((((u32) (sizeof(Mtx))) & ((0x01 << 16) - 1)) << 0)); _g->words.w1 = (u32) gViewportMatrix; } ; temp_v0_17 = gRegionAllocPtr++; temp_v0_17->words.w0 = 0x0400103F; temp_v0_17->words.w1 = (u32) gRaceItemProjectileQuadVertices; temp_v0_18 = gRegionAllocPtr++; temp_v0_18->words.w0 = 0xB1060402; temp_v0_18->words.w1 = 0x00060200; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = (((u32) ((((u32) 6) & ((0x01 << 8) - 1)) << 24)) | ((u32) ((((u32) 0x00) & ((0x01 << 8) - 1)) << 16))) | ((u32) ((((u32) 0) & ((0x01 << 16) - 1)) << 0)); _g->words.w1 = (u32) gEffectRenderModeCleanupDl; } ; } } while (0);
     }
 }
+// clang-format on
 
 void updateBouncingItemProjectile(RaceItemProjectileActor *arg0) {
     s16 *angleDiffOut;
@@ -550,7 +564,13 @@ void updateBouncingItemProjectile(RaceItemProjectileActor *arg0) {
         projectile = arg0;
         pos = &projectile->pos;
         angleDiffOut = &angleDiff;
-        projectile->targetPlayerIndex = findRaceItemProjectileHomingTarget(pos, 0x600000, projectile->targetAngle, projectile->playerIndex, angleDiffOut);
+        projectile->targetPlayerIndex = findRaceItemProjectileHomingTarget(
+            pos,
+            0x600000,
+            projectile->targetAngle,
+            projectile->playerIndex,
+            angleDiffOut
+        );
 
         if (projectile->targetPlayerIndex != -1) {
             gRacePlayers[projectile->targetPlayerIndex].itemTargetFlag = 1;
@@ -571,8 +591,8 @@ void updateBouncingItemProjectile(RaceItemProjectileActor *arg0) {
 
         sin = fixedSine(arg0->targetAngle);
         cos = fixedCosine(arg0->targetAngle);
-        velocity.x = ((s64) sin * arg0->velocityY) / 0x1000;
-        velocity.z = ((s64) cos * arg0->velocityY) / 0x1000;
+        velocity.x = ((s64)sin * arg0->velocityY) / 0x1000;
+        velocity.z = ((s64)cos * arg0->velocityY) / 0x1000;
 
         prevY = arg0->pos.y;
         arg0->pos.x += velocity.x;
@@ -588,7 +608,16 @@ void updateBouncingItemProjectile(RaceItemProjectileActor *arg0) {
         }
         arg0->accelerationY = (y - prevY) - 0x20000;
 
-        resolveRaceCourseSurfaceCollisionWithVelocity(projectile->startAngle, arg0->pos.x, arg0->pos.z, 0x20000, &pushX, &pushZ, &velocity.x, &velocity.z);
+        resolveRaceCourseSurfaceCollisionWithVelocity(
+            projectile->startAngle,
+            arg0->pos.x,
+            arg0->pos.z,
+            0x20000,
+            &pushX,
+            &pushZ,
+            &velocity.x,
+            &velocity.z
+        );
         if (pushX != 0 || pushZ != 0) {
             arg0->accelerationY = 0;
             arg0->pos.x += pushX;
@@ -619,6 +648,8 @@ void updateBouncingItemProjectile(RaceItemProjectileActor *arg0) {
     addRenderCallback(&gRaceObjectRenderCallbackList, (RenderCallback)renderBouncingItemProjectile, arg0);
 }
 
+// IDO code generation for this function is sensitive to source line layout.
+// clang-format off
 void initBouncingItemProjectile(RaceItemProjectileActor *arg0) {
     volatile s32 pad0;
     Vec3i source;
@@ -659,7 +690,10 @@ void initBouncingItemProjectile(RaceItemProjectileActor *arg0) {
     updateBouncingItemProjectile(arg0);
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateBouncingItemProjectile);
 }
+// clang-format on
 
+// IDO code generation for this function is sensitive to source line layout.
+// clang-format off
 void renderThrownTrailImpactProjectile(RaceItemProjectileActor *arg0) {
     RaceEffectMatrixScratch sp64;
     Gfx *temp_v0_2;
@@ -695,6 +729,7 @@ void renderThrownTrailImpactProjectile(RaceItemProjectileActor *arg0) {
         do { if (arg0->matrix != NULL) { { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = (((u32) ((((u32) 6) & ((0x01 << 8) - 1)) << 24)) | ((u32) ((((u32) 0x00) & ((0x01 << 8) - 1)) << 16))) | ((u32) ((((u32) 0) & ((0x01 << 16) - 1)) << 0)); _g->words.w1 = (u32) gEffectRenderModeSetupDl; } ; temp_v0_2 = gRegionAllocPtr++; temp_v0_2->words.w0 = 0xFD500000; temp_v0_2->words.w1 = (u32) arg0->image; temp_v0_3 = gRegionAllocPtr++; temp_v0_3->words.w0 = 0xF5500000; temp_v0_3->words.w1 = 0x07080200; temp_v0_4 = gRegionAllocPtr++; temp_v0_4->words.w1 = 0; temp_v0_4->words.w0 = 0xE6000000; temp_v0_5 = gRegionAllocPtr++; temp_v0_5->words.w0 = 0xF3000000; temp_v0_5->words.w1 = 0x0703F800; temp_v0_6 = gRegionAllocPtr++; temp_v0_6->words.w1 = 0; temp_v0_6->words.w0 = 0xE7000000; temp_v0_7 = gRegionAllocPtr++; temp_v0_7->words.w0 = 0xF5400200; temp_v0_7->words.w1 = 0x00080200; temp_v0_8 = gRegionAllocPtr++; temp_v0_8->words.w0 = 0xF2000000; temp_v0_8->words.w1 = 0x0003C03C; temp_v0_9 = gRegionAllocPtr++; temp_v0_9->words.w0 = 0xFD100000; temp_v0_9->words.w1 = (u32) arg0->palette; temp_v0_10 = gRegionAllocPtr++; temp_v0_10->words.w1 = 0; temp_v0_10->words.w0 = 0xE8000000; temp_v0_11 = gRegionAllocPtr++; temp_v0_11->words.w0 = 0xF5000100; temp_v0_11->words.w1 = 0x07000000; temp_v0_12 = gRegionAllocPtr++; temp_v0_12->words.w1 = 0; temp_v0_12->words.w0 = 0xE6000000; temp_v0_13 = gRegionAllocPtr++; temp_v0_13->words.w0 = 0xF0000000; temp_v0_13->words.w1 = 0x0703C000; temp_v0_14 = gRegionAllocPtr++; temp_v0_14->words.w1 = 0; temp_v0_14->words.w0 = 0xE7000000; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = (((u32) ((((u32) 1) & ((0x01 << 8) - 1)) << 24)) | ((u32) ((((u32) ((0x00 | 0x02) | 0x00)) & ((0x01 << 8) - 1)) << 16))) | ((u32) ((((u32) (sizeof(Mtx))) & ((0x01 << 16) - 1)) << 0)); _g->words.w1 = (u32) arg0->matrix; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = (((u32) ((((u32) 1) & ((0x01 << 8) - 1)) << 24)) | ((u32) ((((u32) ((0x00 | 0x00) | 0x00)) & ((0x01 << 8) - 1)) << 16))) | ((u32) ((((u32) (sizeof(Mtx))) & ((0x01 << 16) - 1)) << 0)); _g->words.w1 = (u32) gViewportMatrix; } ; temp_v0_17 = gRegionAllocPtr++; temp_v0_17->words.w0 = 0x0400103F; temp_v0_17->words.w1 = (u32) gRaceItemProjectileQuadVertices; temp_v0_18 = gRegionAllocPtr++; temp_v0_18->words.w0 = 0xB1060402; temp_v0_18->words.w1 = 0x00060200; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = (((u32) ((((u32) 6) & ((0x01 << 8) - 1)) << 24)) | ((u32) ((((u32) 0x00) & ((0x01 << 8) - 1)) << 16))) | ((u32) ((((u32) 0) & ((0x01 << 16) - 1)) << 0)); _g->words.w1 = (u32) gEffectRenderModeCleanupDl; } ; } } while (0);
     }
 }
+// clang-format on
 
 void updateThrownTrailImpactProjectile(RaceItemProjectileActor *arg0) {
     s32 sin;
@@ -781,6 +816,8 @@ void createThrownTrailImpactProjectile(s32 arg0, s32 arg1, s32 arg2, s16 arg3, s
     }
 }
 
+// IDO code generation for this function is sensitive to source line layout.
+// clang-format off
 void renderAreaBlastItemProjectile(RaceItemProjectileActor *arg0) {
     RaceEffectMatrixScratch sp64;
     Gfx *temp_v0_2;
@@ -816,6 +853,7 @@ void renderAreaBlastItemProjectile(RaceItemProjectileActor *arg0) {
         do { if (arg0->matrix != NULL) { { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = (((u32) ((((u32) 6) & ((0x01 << 8) - 1)) << 24)) | ((u32) ((((u32) 0x00) & ((0x01 << 8) - 1)) << 16))) | ((u32) ((((u32) 0) & ((0x01 << 16) - 1)) << 0)); _g->words.w1 = (u32) gEffectRenderModeSetupDl; } ; temp_v0_2 = gRegionAllocPtr++; temp_v0_2->words.w0 = 0xFD500000; temp_v0_2->words.w1 = (u32) arg0->image; temp_v0_3 = gRegionAllocPtr++; temp_v0_3->words.w0 = 0xF5500000; temp_v0_3->words.w1 = 0x07080200; temp_v0_4 = gRegionAllocPtr++; temp_v0_4->words.w1 = 0; temp_v0_4->words.w0 = 0xE6000000; temp_v0_5 = gRegionAllocPtr++; temp_v0_5->words.w0 = 0xF3000000; temp_v0_5->words.w1 = 0x0703F800; temp_v0_6 = gRegionAllocPtr++; temp_v0_6->words.w1 = 0; temp_v0_6->words.w0 = 0xE7000000; temp_v0_7 = gRegionAllocPtr++; temp_v0_7->words.w0 = 0xF5400200; temp_v0_7->words.w1 = 0x00080200; temp_v0_8 = gRegionAllocPtr++; temp_v0_8->words.w0 = 0xF2000000; temp_v0_8->words.w1 = 0x0003C03C; temp_v0_9 = gRegionAllocPtr++; temp_v0_9->words.w0 = 0xFD100000; temp_v0_9->words.w1 = (u32) arg0->palette; temp_v0_10 = gRegionAllocPtr++; temp_v0_10->words.w1 = 0; temp_v0_10->words.w0 = 0xE8000000; temp_v0_11 = gRegionAllocPtr++; temp_v0_11->words.w0 = 0xF5000100; temp_v0_11->words.w1 = 0x07000000; temp_v0_12 = gRegionAllocPtr++; temp_v0_12->words.w1 = 0; temp_v0_12->words.w0 = 0xE6000000; temp_v0_13 = gRegionAllocPtr++; temp_v0_13->words.w0 = 0xF0000000; temp_v0_13->words.w1 = 0x0703C000; temp_v0_14 = gRegionAllocPtr++; temp_v0_14->words.w1 = 0; temp_v0_14->words.w0 = 0xE7000000; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = (((u32) ((((u32) 1) & ((0x01 << 8) - 1)) << 24)) | ((u32) ((((u32) ((0x00 | 0x02) | 0x00)) & ((0x01 << 8) - 1)) << 16))) | ((u32) ((((u32) (sizeof(Mtx))) & ((0x01 << 16) - 1)) << 0)); _g->words.w1 = (u32) arg0->matrix; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = (((u32) ((((u32) 1) & ((0x01 << 8) - 1)) << 24)) | ((u32) ((((u32) ((0x00 | 0x00) | 0x00)) & ((0x01 << 8) - 1)) << 16))) | ((u32) ((((u32) (sizeof(Mtx))) & ((0x01 << 16) - 1)) << 0)); _g->words.w1 = (u32) gViewportMatrix; } ; temp_v0_17 = gRegionAllocPtr++; temp_v0_17->words.w0 = 0x0400103F; temp_v0_17->words.w1 = (u32) gRaceItemProjectileQuadVertices; temp_v0_18 = gRegionAllocPtr++; temp_v0_18->words.w0 = 0xB1060402; temp_v0_18->words.w1 = 0x00060200; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = (((u32) ((((u32) 6) & ((0x01 << 8) - 1)) << 24)) | ((u32) ((((u32) 0x00) & ((0x01 << 8) - 1)) << 16))) | ((u32) ((((u32) 0) & ((0x01 << 16) - 1)) << 0)); _g->words.w1 = (u32) gEffectRenderModeCleanupDl; } ; } } while (0);
     }
 }
+// clang-format on
 
 void updateAreaBlastItemProjectile(RaceItemProjectileActor *arg0) {
     s32 sin;
@@ -834,7 +872,8 @@ void updateAreaBlastItemProjectile(RaceItemProjectileActor *arg0) {
 
     if (gRaceUpdatePaused == 0) {
         pos = &arg0->pos;
-        arg0->targetPlayerIndex = findRaceItemProjectileHomingTarget(pos, 0xA00000, arg0->targetAngle, arg0->playerIndex, &angleDiff);
+        arg0->targetPlayerIndex =
+            findRaceItemProjectileHomingTarget(pos, 0xA00000, arg0->targetAngle, arg0->playerIndex, &angleDiff);
 
         if (arg0->targetPlayerIndex != -1) {
             gRacePlayers[arg0->targetPlayerIndex].itemTargetFlag = 1;
@@ -878,8 +917,7 @@ void updateAreaBlastItemProjectile(RaceItemProjectileActor *arg0) {
         if (pushX != 0 || pushZ != 0) {
             arg0->timer = 0;
             arg0->pos.x += pushX;
-            if (arg0->targetAngle) {
-            }
+            if (arg0->targetAngle) {}
             arg0->pos.z += pushZ;
         }
 
@@ -905,6 +943,8 @@ void updateAreaBlastItemProjectile(RaceItemProjectileActor *arg0) {
     addRenderCallback(&gRaceObjectRenderCallbackList, (RenderCallback)renderAreaBlastItemProjectile, arg0);
 }
 
+// IDO code generation for this function is sensitive to source line layout.
+// clang-format off
 void initAreaBlastItemProjectile(RaceItemProjectileActor *arg0) {
     volatile s32 pad0;
     Vec3i sp58;
@@ -944,7 +984,10 @@ void initAreaBlastItemProjectile(RaceItemProjectileActor *arg0) {
     updateAreaBlastItemProjectile(actor);
     setCallbackTaskCallback(actor, (CallbackTaskCallback)updateAreaBlastItemProjectile);
 }
+// clang-format on
 
+// IDO code generation for this function is sensitive to source line layout.
+// clang-format off
 void renderLongRangeHomingItemProjectile(RaceItemProjectileActor *arg0) {
     RaceEffectMatrixScratch sp64;
     Gfx *temp_v0_2;
@@ -980,6 +1023,7 @@ void renderLongRangeHomingItemProjectile(RaceItemProjectileActor *arg0) {
         do { if (arg0->matrix != NULL) { { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = (((u32) ((((u32) 6) & ((0x01 << 8) - 1)) << 24)) | ((u32) ((((u32) 0x00) & ((0x01 << 8) - 1)) << 16))) | ((u32) ((((u32) 0) & ((0x01 << 16) - 1)) << 0)); _g->words.w1 = (u32) gEffectRenderModeSetupDl; } ; temp_v0_2 = gRegionAllocPtr++; temp_v0_2->words.w0 = 0xFD500000; temp_v0_2->words.w1 = (u32) arg0->image; temp_v0_3 = gRegionAllocPtr++; temp_v0_3->words.w0 = 0xF5500000; temp_v0_3->words.w1 = 0x07080200; temp_v0_4 = gRegionAllocPtr++; temp_v0_4->words.w1 = 0; temp_v0_4->words.w0 = 0xE6000000; temp_v0_5 = gRegionAllocPtr++; temp_v0_5->words.w0 = 0xF3000000; temp_v0_5->words.w1 = 0x0703F800; temp_v0_6 = gRegionAllocPtr++; temp_v0_6->words.w1 = 0; temp_v0_6->words.w0 = 0xE7000000; temp_v0_7 = gRegionAllocPtr++; temp_v0_7->words.w0 = 0xF5400200; temp_v0_7->words.w1 = 0x00080200; temp_v0_8 = gRegionAllocPtr++; temp_v0_8->words.w0 = 0xF2000000; temp_v0_8->words.w1 = 0x0003C03C; temp_v0_9 = gRegionAllocPtr++; temp_v0_9->words.w0 = 0xFD100000; temp_v0_9->words.w1 = (u32) arg0->palette; temp_v0_10 = gRegionAllocPtr++; temp_v0_10->words.w1 = 0; temp_v0_10->words.w0 = 0xE8000000; temp_v0_11 = gRegionAllocPtr++; temp_v0_11->words.w0 = 0xF5000100; temp_v0_11->words.w1 = 0x07000000; temp_v0_12 = gRegionAllocPtr++; temp_v0_12->words.w1 = 0; temp_v0_12->words.w0 = 0xE6000000; temp_v0_13 = gRegionAllocPtr++; temp_v0_13->words.w0 = 0xF0000000; temp_v0_13->words.w1 = 0x0703C000; temp_v0_14 = gRegionAllocPtr++; temp_v0_14->words.w1 = 0; temp_v0_14->words.w0 = 0xE7000000; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = (((u32) ((((u32) 1) & ((0x01 << 8) - 1)) << 24)) | ((u32) ((((u32) ((0x00 | 0x02) | 0x00)) & ((0x01 << 8) - 1)) << 16))) | ((u32) ((((u32) (sizeof(Mtx))) & ((0x01 << 16) - 1)) << 0)); _g->words.w1 = (u32) arg0->matrix; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = (((u32) ((((u32) 1) & ((0x01 << 8) - 1)) << 24)) | ((u32) ((((u32) ((0x00 | 0x00) | 0x00)) & ((0x01 << 8) - 1)) << 16))) | ((u32) ((((u32) (sizeof(Mtx))) & ((0x01 << 16) - 1)) << 0)); _g->words.w1 = (u32) gViewportMatrix; } ; temp_v0_17 = gRegionAllocPtr++; temp_v0_17->words.w0 = 0x0400103F; temp_v0_17->words.w1 = (u32) gRaceItemProjectileQuadVertices; temp_v0_18 = gRegionAllocPtr++; temp_v0_18->words.w0 = 0xB1060402; temp_v0_18->words.w1 = 0x00060200; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = (((u32) ((((u32) 6) & ((0x01 << 8) - 1)) << 24)) | ((u32) ((((u32) 0x00) & ((0x01 << 8) - 1)) << 16))) | ((u32) ((((u32) 0) & ((0x01 << 16) - 1)) << 0)); _g->words.w1 = (u32) gEffectRenderModeCleanupDl; } ; } } while (0);
     }
 }
+// clang-format on
 
 void updateLongRangeHomingItemProjectile(RaceItemProjectileActor *arg0) {
     s32 sin;
@@ -998,7 +1042,8 @@ void updateLongRangeHomingItemProjectile(RaceItemProjectileActor *arg0) {
 
     if (gRaceUpdatePaused == 0) {
         pos = &arg0->pos;
-        arg0->targetPlayerIndex = findRaceItemProjectileHomingTarget(pos, 0x1200000, arg0->targetAngle, arg0->playerIndex, &angleDiff);
+        arg0->targetPlayerIndex =
+            findRaceItemProjectileHomingTarget(pos, 0x1200000, arg0->targetAngle, arg0->playerIndex, &angleDiff);
 
         if (arg0->targetPlayerIndex != -1) {
             gRacePlayers[arg0->targetPlayerIndex].itemTargetFlag = 1;
@@ -1067,6 +1112,8 @@ void updateLongRangeHomingItemProjectile(RaceItemProjectileActor *arg0) {
     addRenderCallback(&gRaceObjectRenderCallbackList, (RenderCallback)renderLongRangeHomingItemProjectile, arg0);
 }
 
+// IDO code generation for this function is sensitive to source line layout.
+// clang-format off
 void initLongRangeHomingItemProjectile(RaceItemProjectileActor *arg0) {
     Vec3i *new_var;
     Vec3i sp58;
@@ -1107,7 +1154,10 @@ void initLongRangeHomingItemProjectile(RaceItemProjectileActor *arg0) {
     updateLongRangeHomingItemProjectile(actor);
     setCallbackTaskCallback(actor, (CallbackTaskCallback)updateLongRangeHomingItemProjectile);
 }
+// clang-format on
 
+// IDO code generation for this function is sensitive to source line layout.
+// clang-format off
 void renderFallingActionProjectile(RaceItemProjectileActor *arg0) {
     RaceEffectMatrixScratch sp64;
     Gfx *temp_v0_2;
@@ -1147,6 +1197,7 @@ void renderFallingActionProjectile(RaceItemProjectileActor *arg0) {
         do { if (arg0->matrix != NULL) { { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = (((u32) ((((u32) 6) & ((0x01 << 8) - 1)) << 24)) | ((u32) ((((u32) 0x00) & ((0x01 << 8) - 1)) << 16))) | ((u32) ((((u32) 0) & ((0x01 << 16) - 1)) << 0)); _g->words.w1 = (u32) gEffectRenderModeSetupDl; } ; temp_v0_2 = gRegionAllocPtr++; temp_v0_2->words.w0 = 0xFD500000; temp_v0_2->words.w1 = (u32) arg0->image; temp_v0_3 = gRegionAllocPtr++; temp_v0_3->words.w0 = 0xF5500000; temp_v0_3->words.w1 = 0x07080200; temp_v0_4 = gRegionAllocPtr++; temp_v0_4->words.w1 = 0; temp_v0_4->words.w0 = 0xE6000000; temp_v0_5 = gRegionAllocPtr++; temp_v0_5->words.w0 = 0xF3000000; temp_v0_5->words.w1 = 0x0703F800; temp_v0_6 = gRegionAllocPtr++; temp_v0_6->words.w1 = 0; temp_v0_6->words.w0 = 0xE7000000; temp_v0_7 = gRegionAllocPtr++; temp_v0_7->words.w0 = 0xF5400200; temp_v0_7->words.w1 = 0x00080200; temp_v0_8 = gRegionAllocPtr++; temp_v0_8->words.w0 = 0xF2000000; temp_v0_8->words.w1 = 0x0003C03C; temp_v0_9 = gRegionAllocPtr++; temp_v0_9->words.w0 = 0xFD100000; temp_v0_9->words.w1 = (u32) arg0->palette; temp_v0_10 = gRegionAllocPtr++; temp_v0_10->words.w1 = 0; temp_v0_10->words.w0 = 0xE8000000; temp_v0_11 = gRegionAllocPtr++; temp_v0_11->words.w0 = 0xF5000100; temp_v0_11->words.w1 = 0x07000000; temp_v0_12 = gRegionAllocPtr++; temp_v0_12->words.w1 = 0; temp_v0_12->words.w0 = 0xE6000000; temp_v0_13 = gRegionAllocPtr++; temp_v0_13->words.w0 = 0xF0000000; temp_v0_13->words.w1 = 0x0703C000; temp_v0_14 = gRegionAllocPtr++; temp_v0_14->words.w1 = 0; temp_v0_14->words.w0 = 0xE7000000; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = (((u32) ((((u32) 1) & ((0x01 << 8) - 1)) << 24)) | ((u32) ((((u32) ((0x00 | 0x02) | 0x00)) & ((0x01 << 8) - 1)) << 16))) | ((u32) ((((u32) (sizeof(Mtx))) & ((0x01 << 16) - 1)) << 0)); _g->words.w1 = (u32) arg0->matrix; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = (((u32) ((((u32) 1) & ((0x01 << 8) - 1)) << 24)) | ((u32) ((((u32) ((0x00 | 0x00) | 0x00)) & ((0x01 << 8) - 1)) << 16))) | ((u32) ((((u32) (sizeof(Mtx))) & ((0x01 << 16) - 1)) << 0)); _g->words.w1 = (u32) gViewportMatrix; } ; temp_v0_17 = gRegionAllocPtr++; temp_v0_17->words.w0 = 0x0400103F; temp_v0_17->words.w1 = (u32) gFallingActionProjectileQuadVertices; temp_v0_18 = gRegionAllocPtr++; temp_v0_18->words.w0 = 0xB1060402; temp_v0_18->words.w1 = 0x00060200; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = (((u32) ((((u32) 6) & ((0x01 << 8) - 1)) << 24)) | ((u32) ((((u32) 0x00) & ((0x01 << 8) - 1)) << 16))) | ((u32) ((((u32) 0) & ((0x01 << 16) - 1)) << 0)); _g->words.w1 = (u32) gEffectRenderModeCleanupDl; } ; } } while (0);
     }
 }
+// clang-format on
 
 void updateFallingActionProjectileLanded(RaceItemProjectileActor *arg0) {
     Vec3i *pos;
@@ -1233,6 +1284,8 @@ void initFallingActionProjectile(RaceItemProjectileActor *arg0) {
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateFallingActionProjectile);
 }
 
+// IDO code generation for this function is sensitive to source line layout.
+// clang-format off
 void renderShieldProjectile(RaceItemProjectileActor *arg0) {
     RaceEffectMatrixScratch sp64;
     volatile u8 padding[8];
@@ -1269,6 +1322,7 @@ void renderShieldProjectile(RaceItemProjectileActor *arg0) {
         do { if (arg0->matrix != NULL) { { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = (((u32) ((((u32) 6) & ((0x01 << 8) - 1)) << 24)) | ((u32) ((((u32) 0x00) & ((0x01 << 8) - 1)) << 16))) | ((u32) ((((u32) 0) & ((0x01 << 16) - 1)) << 0)); _g->words.w1 = (u32) gEffectRenderModeSetupDl; } ; temp_v0_2 = gRegionAllocPtr++; temp_v0_2->words.w0 = 0xFD500000; temp_v0_2->words.w1 = (u32) arg0->image; temp_v0_3 = gRegionAllocPtr++; temp_v0_3->words.w0 = 0xF5500000; temp_v0_3->words.w1 = 0x07080200; temp_v0_4 = gRegionAllocPtr++; temp_v0_4->words.w1 = 0; temp_v0_4->words.w0 = 0xE6000000; temp_v0_5 = gRegionAllocPtr++; temp_v0_5->words.w0 = 0xF3000000; temp_v0_5->words.w1 = 0x0703F800; temp_v0_6 = gRegionAllocPtr++; temp_v0_6->words.w1 = 0; temp_v0_6->words.w0 = 0xE7000000; temp_v0_7 = gRegionAllocPtr++; temp_v0_7->words.w0 = 0xF5400200; temp_v0_7->words.w1 = 0x00080200; temp_v0_8 = gRegionAllocPtr++; temp_v0_8->words.w0 = 0xF2000000; temp_v0_8->words.w1 = 0x0003C03C; temp_v0_9 = gRegionAllocPtr++; temp_v0_9->words.w0 = 0xFD100000; temp_v0_9->words.w1 = (u32) arg0->palette; temp_v0_10 = gRegionAllocPtr++; temp_v0_10->words.w1 = 0; temp_v0_10->words.w0 = 0xE8000000; temp_v0_11 = gRegionAllocPtr++; temp_v0_11->words.w0 = 0xF5000100; temp_v0_11->words.w1 = 0x07000000; temp_v0_12 = gRegionAllocPtr++; temp_v0_12->words.w1 = 0; temp_v0_12->words.w0 = 0xE6000000; temp_v0_13 = gRegionAllocPtr++; temp_v0_13->words.w0 = 0xF0000000; temp_v0_13->words.w1 = 0x0703C000; temp_v0_14 = gRegionAllocPtr++; temp_v0_14->words.w1 = 0; temp_v0_14->words.w0 = 0xE7000000; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = (((u32) ((((u32) 1) & ((0x01 << 8) - 1)) << 24)) | ((u32) ((((u32) ((0x00 | 0x02) | 0x00)) & ((0x01 << 8) - 1)) << 16))) | ((u32) ((((u32) (sizeof(Mtx))) & ((0x01 << 16) - 1)) << 0)); _g->words.w1 = (u32) arg0->matrix; } ; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = (((u32) ((((u32) 1) & ((0x01 << 8) - 1)) << 24)) | ((u32) ((((u32) ((0x00 | 0x00) | 0x00)) & ((0x01 << 8) - 1)) << 16))) | ((u32) ((((u32) (sizeof(Mtx))) & ((0x01 << 16) - 1)) << 0)); _g->words.w1 = (u32) gViewportMatrix; } ; temp_v0_17 = gRegionAllocPtr++; temp_v0_17->words.w0 = 0x0400103F; temp_v0_17->words.w1 = (u32) gRaceItemProjectileQuadVertices; temp_v0_18 = gRegionAllocPtr++; temp_v0_18->words.w0 = 0xB1060402; temp_v0_18->words.w1 = 0x00060200; { Gfx *_g = (Gfx *) (gRegionAllocPtr++); _g->words.w0 = (((u32) ((((u32) 6) & ((0x01 << 8) - 1)) << 24)) | ((u32) ((((u32) 0x00) & ((0x01 << 8) - 1)) << 16))) | ((u32) ((((u32) 0) & ((0x01 << 16) - 1)) << 0)); _g->words.w1 = (u32) gEffectRenderModeCleanupDl; } ; } } while (0);
     }
 }
+// clang-format on
 
 void updateShieldProjectile(RaceItemProjectileActor *arg0) {
     s32 zOffset;
@@ -1306,7 +1360,14 @@ void updateShieldProjectile(RaceItemProjectileActor *arg0) {
             }
             arg0->accelerationY = (y - prevY) - 0x20000;
 
-            resolveRaceCourseSurfaceCollision(startAngle = arg0->startAngle, arg0->pos.x, arg0->pos.z, 0x20000, &pushX, &pushZ);
+            resolveRaceCourseSurfaceCollision(
+                startAngle = arg0->startAngle,
+                arg0->pos.x,
+                arg0->pos.z,
+                0x20000,
+                &pushX,
+                &pushZ
+            );
             if (pushX != 0 || pushZ != 0) {
                 arg0->timer = 0;
                 arg0->pos.x += pushX;
@@ -1337,6 +1398,8 @@ void updateShieldProjectile(RaceItemProjectileActor *arg0) {
     addRenderCallback(&gRaceObjectRenderCallbackList, (RenderCallback)renderShieldProjectile, arg0);
 }
 
+// IDO code generation for this function is sensitive to source line layout.
+// clang-format off
 void initShieldProjectile(RaceItemProjectileActor *arg0) {
     volatile s32 pad;
     Vec3i source;
@@ -1384,3 +1447,4 @@ void initShieldProjectile(RaceItemProjectileActor *arg0) {
     updateShieldProjectile(arg0);
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateShieldProjectile);
 }
+// clang-format on
