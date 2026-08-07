@@ -823,7 +823,7 @@ void appendFadeOverlayDisplayList(void) {
     gDPSetFogColor(gRegionAllocPtr++, gFadeColorRed, gFadeColorGreen, gFadeColorBlue, 255);
 }
 
-// submitFramebufferRenderTask best GBI match: 93.437% at nonmatchings/submitFramebufferRenderTask-2163214805492048867/base_20.c.
+// submitFramebufferRenderTask best GBI match: 93.985% at nonmatchings/submitFramebufferRenderTask-7050948565576131586/base_73.c.
 #ifdef NON_MATCHING
 void submitFramebufferRenderTask(u8 frameIndex) {
     FramebufferRenderTask *renderTask;
@@ -1006,15 +1006,15 @@ void submitFramebufferRenderTask(u8 frameIndex) {
 
     clearTask->schedulerTask.rspTask.t.data_ptr = (u64 *)clearDisplayList;
     clearTask->schedulerTask.rspTask.t.data_size =
-        (((u8 *)gRegionAllocPtr - (u8 *)clearTask - 0x60) >> 3) * 8;
+        (((u8 *)gRegionAllocPtr - (u8 *)clearTask->displayList) >> 3) * 8;
     clearTask->schedulerTask.rspTask.t.type = M_GFXTASK;
     clearTask->schedulerTask.rspTask.t.ucode_boot = (u64 *)rspbootTextStart;
     clearTask->schedulerTask.rspTask.t.ucode_boot_size = ucodeBootSize;
-    clearTask->schedulerTask.rspTask.t.ucode_data = (u64 *)D_800E21C0;
     clearTask->schedulerTask.rspTask.t.ucode = (u64 *)gspF3DLX_fifoTextStart;
-    clearTask->schedulerTask.rspTask.t.ucode_data_size = RSP_UCODE_DATA_SIZE;
+    clearTask->schedulerTask.rspTask.t.ucode_data = (u64 *)D_800E21C0;
     clearTask->schedulerTask.rspTask.t.dram_stack = (u64 *)D_80368C00;
     clearTask->schedulerTask.rspTask.t.dram_stack_size = RSP_DRAM_STACK_SIZE;
+    clearTask->schedulerTask.rspTask.t.ucode_data_size = RSP_UCODE_DATA_SIZE;
     clearTask->schedulerTask.rspTask.t.output_buff = (u64 *)rdpOutputBuffer;
     clearTask->schedulerTask.rspTask.t.yield_data_ptr = (u64 *)D_80368000;
     clearTask->schedulerTask.rspTask.t.yield_data_size = RSP_YIELD_BUFFER_SIZE;
