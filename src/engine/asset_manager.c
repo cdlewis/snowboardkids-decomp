@@ -172,7 +172,7 @@ void removeHuffmanQueueNode(s16 arg0) {
     }
 }
 
-// decompressHuffmanAssetPayload best match: 99.427% (nonmatchings/decompressHuffmanAssetPayload-8101714008744796594/base_26.c)
+// decompressHuffmanAssetPayload best match: 99.695% (nonmatchings/decompressHuffmanAssetPayload-7050948565576131586/base_3.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/engine/asset_manager/decompressHuffmanAssetPayload.s")
 
 #ifdef NON_MATCHING
@@ -181,19 +181,21 @@ void decompressHuffmanAssetPayload(u8 arg0, u8 *arg1, u8 *arg2, s32 arg3) {
     u8 **unusedArg1Address;
     HuffmanNode *node;
     HuffmanNode *parentNode;
-    s32 symbol;
     s32 length;
     s32 bit;
     s32 nodeIndex;
     s32 rootNodeIndex;
     s32 bitIndex;
-    s32 work;
+    s32 lastBitIndex;
+    u8 bitsPerByte;
+    u8 *rawDestination;
+    s32 firstCodeCopy;
     s32 tableBytesRead;
     s32 outputOffset;
     s32 nodeValue;
     s32 sourceOffset;
+    s32 symbol;
     u8 *input;
-    u8 *source;
     s32 rangeStart;
     s32 rangeEnd;
     s32 leafNodeIndexCopy;
@@ -203,6 +205,7 @@ void decompressHuffmanAssetPayload(u8 arg0, u8 *arg1, u8 *arg2, s32 arg3) {
     u8 copiedByte;
     s32 currentNodeIndex;
     u8 *destination;
+    u8 *source;
 
     unusedArg1Address = &arg1;
     gHuffmanQueueHead = -1;
@@ -216,8 +219,7 @@ void decompressHuffmanAssetPayload(u8 arg0, u8 *arg1, u8 *arg2, s32 arg3) {
     input += 1;
     currentNodeIndex = rangeStart;
     if (rangeEnd >= rangeStart) {
-        rangeStart = rangeEnd + 1;
-        do {
+        rangeStart = rangeEnd + 1; goto read_leaf; while (rangeStart != currentNodeIndex) { read_leaf:
             leafNodeIndexCopy = gHuffmanNodeCount;
             rootNodeIndex = leafNodeIndexCopy;
             weightCopy = *input;
@@ -232,7 +234,7 @@ void decompressHuffmanAssetPayload(u8 arg0, u8 *arg1, u8 *arg2, s32 arg3) {
             insertHuffmanQueueNode((s16)rootNodeIndex);
             currentNodeIndex += 1;
             gHuffmanNodeCount += 1;
-        } while (rangeStart != currentNodeIndex);
+        }
     }
     goto read_range;
 
@@ -258,20 +260,26 @@ build_tree:
     one = 1;
     bitIndex = 0;
     outputOffset = 0;
+    length = 0;
+    lastBitIndex = 7;
+    bitsPerByte = 8;
     if (arg0 == 0) {
-        work = (s32)arg2;
-        do {
+        rawDestination = arg2;
+        goto decode_raw_output;
+        while (outputOffset != arg3) {
+decode_raw_output:
             currentNodeIndex = gHuffmanNodeCount - 1;
 decode_raw_symbol:
             nodeValue = gHuffmanNodes[currentNodeIndex].value;
-            if (nodeValue != end) {
-                symbol = nodeValue & 0xFF;
+            if (end != nodeValue) {
+                symbol = nodeValue;
+                symbol &= 0xFF;
             } else {
-                if (bitIndex == 8) {
+                if (bitIndex == bitsPerByte) {
                     input += 1;
                     bitIndex = 0;
                 }
-                bit = *input & (1 << (7 - bitIndex));
+                bit = *input & (1 << (lastBitIndex - bitIndex));
                 bitIndex += 1;
                 if (bit == 0) {
                     currentNodeIndex = gHuffmanNodes[currentNodeIndex].left;
@@ -280,25 +288,29 @@ decode_raw_symbol:
                 }
                 goto decode_raw_symbol;
             }
-            *(u8 *)work = (s8)symbol;
+            *rawDestination = (s8)symbol;
             outputOffset += 1;
-            work += 1;
-        } while (outputOffset != arg3);
+            rawDestination += 1;
+        }
+        if (((!end) && (!end)) && (!end)) {
+        }
     } else {
 decode_pair:
-        work = (rootNodeIndex = gHuffmanNodeCount - 1);
-        currentNodeIndex = work;
+        firstCodeCopy = (rootNodeIndex = gHuffmanNodeCount - 1);
+        currentNodeIndex = firstCodeCopy;
+        length = 0xF;
 decode_first_symbol:
         nodeValue = gHuffmanNodes[currentNodeIndex].value;
-        symbol = nodeValue & 0xFF;
-        if (nodeValue != end) {
-            currentNodeIndex = work;
+        symbol = nodeValue;
+        symbol &= 0xFF;
+        if (end != nodeValue) {
+            currentNodeIndex = firstCodeCopy;
         } else {
-            if (bitIndex == 8) {
+            if (bitIndex == bitsPerByte) {
                 input += 1;
                 bitIndex = 0;
             }
-            bit = *input & (one << (7 - bitIndex));
+            bit = *input & (one << (lastBitIndex - bitIndex));
             bitIndex += 1;
             bitIndex++;
             bitIndex--;
@@ -311,14 +323,14 @@ decode_first_symbol:
         }
 decode_second_symbol:
         nodeValue = gHuffmanNodes[currentNodeIndex].value;
-        if (nodeValue != end) {
+        if (end != nodeValue) {
             sourceOffset = nodeValue & 0xFF;
         } else {
-            if (bitIndex == 8) {
+            if (bitIndex == bitsPerByte) {
                 input += 1;
                 bitIndex = 0;
             }
-            bit = *input & (1 << (7 - bitIndex));
+            bit = *input & (1 << (lastBitIndex - bitIndex));
             bitIndex += 1;
             if (bit == 0) {
                 currentNodeIndex = gHuffmanNodes[currentNodeIndex].left;
@@ -327,28 +339,33 @@ decode_second_symbol:
             }
             goto decode_second_symbol;
         }
-        nodeValue = sourceOffset;
+        firstCodeCopy = symbol;
         if (symbol == 0) {
             if (1) {
-                arg2[outputOffset] = nodeValue & 0xFFFFFFFF;
+                destination = arg2 + outputOffset;
+                *destination = sourceOffset & 0xFFFFFFFF;
                 outputOffset += 1;
             }
         } else {
-            length = symbol;
-            length = (length >> 4) & 0xF;
-            sourceOffset = outputOffset - ((((symbol << 3) << 5) | sourceOffset) & 0xFFF);
+            symbol = (firstCodeCopy >> 4) & length;
+            sourceOffset = outputOffset - ((((firstCodeCopy << 3) << 5) | sourceOffset) & 0xFFF);
             nodeValue = 0;
-            if (length > 0) {
+            if (symbol > 0) {
                 destination = arg2 + outputOffset;
                 source = arg2 + ((0, sourceOffset));
-                do {
-                    copiedByte = *source;
-                    nodeValue += 1;
-                    outputOffset += 1;
-                    destination += 1;
-                    source += 1;
-                    destination[end] = copiedByte & 0xFFu;
-                } while (nodeValue < length);
+copy_backreference:
+                copiedByte = *source;
+                nodeValue += 1;
+                outputOffset += 1;
+                destination += 1;
+                source += 1;
+                length = nodeValue;
+                destination[end] = copiedByte & 0xFFu;
+                if (nodeValue < symbol) {
+                    goto copy_backreference;
+                }
+                if (!length) {
+                }
             }
         }
         if (outputOffset < arg3) {
@@ -356,6 +373,8 @@ decode_second_symbol:
         }
     }
     if (!symbol) {
+    }
+    if (!length) {
     }
 }
 #endif
