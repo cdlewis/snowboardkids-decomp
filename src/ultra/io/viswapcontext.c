@@ -3,8 +3,8 @@
 #include "PRinternal/viint.h"
 
 void __osViSwapContext(void) {
-    register OSViMode* vm;
-    register __OSViContext* vc;
+    register OSViMode *vm;
+    register __OSViContext *vc;
     u32 origin;
     u32 hStart;
     u32 nomValue;

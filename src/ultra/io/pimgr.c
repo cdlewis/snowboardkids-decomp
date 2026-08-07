@@ -10,13 +10,13 @@ static OSMesgQueue piEventQueue ALIGNED(0x8);
 static OSMesg piEventBuf[1];
 
 OSDevMgr __osPiDevMgr = { 0 };
-OSPiHandle* __osPiTable = NULL;
+OSPiHandle *__osPiTable = NULL;
 
 extern OSPiHandle CartRomHandle;
 extern OSPiHandle LeoDiskHandle;
-OSPiHandle* __osCurrentHandle[2] ALIGNED(0x8) = { &CartRomHandle, &LeoDiskHandle };
+OSPiHandle *__osCurrentHandle[2] ALIGNED(0x8) = { &CartRomHandle, &LeoDiskHandle };
 
-void osCreatePiManager(OSPri pri, OSMesgQueue* cmdQ, OSMesg* cmdBuf, s32 cmdMsgCnt) {
+void osCreatePiManager(OSPri pri, OSMesgQueue *cmdQ, OSMesg *cmdBuf, s32 cmdMsgCnt) {
     u32 savedMask;
     OSPri oldPri;
     OSPri myPri;
@@ -25,7 +25,7 @@ void osCreatePiManager(OSPri pri, OSMesgQueue* cmdQ, OSMesg* cmdBuf, s32 cmdMsgC
         return;
     }
     osCreateMesgQueue(cmdQ, cmdBuf, cmdMsgCnt);
-    osCreateMesgQueue(&piEventQueue, (OSMesg*)piEventBuf, 1);
+    osCreateMesgQueue(&piEventQueue, (OSMesg *)piEventBuf, 1);
 
     if (!__osPiAccessQueueEnabled) {
         __osPiCreateAccessQueue();

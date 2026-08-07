@@ -21,14 +21,14 @@
 
 /*---------------------------------------------------------------------*
         Copyright (C) 1998 Nintendo. (Originated by SGI)
-        
+
         $RCSfile: os_debug.h,v $
         $Revision: 1.4 $
         $Date: 1999/06/30 03:04:08 $
  *---------------------------------------------------------------------*/
 
 #ifndef _OS_DEBUG_H_
-#define	_OS_DEBUG_H_
+#define _OS_DEBUG_H_
 
 #ifdef _LANGUAGE_C_PLUS_PLUS
 extern "C" {
@@ -45,15 +45,14 @@ extern "C" {
  */
 
 /*
- * Structure for Profiler 
+ * Structure for Profiler
  */
 typedef struct {
-	u16	*histo_base;		/* histogram base */
-	u32	histo_size;		/* histogram size */
-	u32	*text_start;		/* start of text segment */
-	u32	*text_end;		/* end of text segment */
+    u16 *histo_base; /* histogram base */
+    u32 histo_size;  /* histogram size */
+    u32 *text_start; /* start of text segment */
+    u32 *text_end;   /* end of text segment */
 } OSProf;
-
 
 #endif /* defined(_LANGUAGE_C) || defined(_LANGUAGE_C_PLUS_PLUS) */
 
@@ -66,8 +65,7 @@ typedef struct {
 /*
  * Profiler constants
  */
-#define PROF_MIN_INTERVAL	50	/* microseconds */
-
+#define PROF_MIN_INTERVAL 50 /* microseconds */
 
 #if defined(_LANGUAGE_C) || defined(_LANGUAGE_C_PLUS_PLUS)
 
@@ -77,13 +75,11 @@ typedef struct {
  *
  */
 
-
 /**************************************************************************
  *
  * Extern variables
  *
  */
-
 
 /**************************************************************************
  *
@@ -93,22 +89,22 @@ typedef struct {
 
 /* Profiler Interface */
 
-extern void		osProfileInit(OSProf *, u32 profcnt);
-extern void		osProfileStart(u32);
-extern void		osProfileFlush(void);
-extern void		osProfileStop(void);
+extern void osProfileInit(OSProf *, u32 profcnt);
+extern void osProfileStart(u32);
+extern void osProfileFlush(void);
+extern void osProfileStop(void);
 
 /* Thread Profiler Interface */
-extern void             osThreadProfileClear(OSId);
-extern void             osThreadProfileInit(void);
-extern void             osThreadProfileStart(void);
-extern void             osThreadProfileStop(void);
-extern u32              osThreadProfileReadCount(OSId);
-extern u32              osThreadProfileReadCountTh(OSThread*);
-extern OSTime           osThreadProfileReadTime(OSId);
-extern OSTime           osThreadProfileReadTimeTh(OSThread*);
+extern void osThreadProfileClear(OSId);
+extern void osThreadProfileInit(void);
+extern void osThreadProfileStart(void);
+extern void osThreadProfileStop(void);
+extern u32 osThreadProfileReadCount(OSId);
+extern u32 osThreadProfileReadCountTh(OSThread *);
+extern OSTime osThreadProfileReadTime(OSId);
+extern OSTime osThreadProfileReadTimeTh(OSThread *);
 
-#endif  /* defined(_LANGUAGE_C) || defined(_LANGUAGE_C_PLUS_PLUS) */
+#endif /* defined(_LANGUAGE_C) || defined(_LANGUAGE_C_PLUS_PLUS) */
 
 #ifdef _LANGUAGE_C_PLUS_PLUS
 }

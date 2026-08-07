@@ -1,7 +1,7 @@
 #include "PR/os_internal.h"
 #include "PRinternal/viint.h"
 
-void osViSwapBuffer(void* frameBufPtr) {
+void osViSwapBuffer(void *frameBufPtr) {
     u32 saveMask;
 
     saveMask = __osDisableInt();

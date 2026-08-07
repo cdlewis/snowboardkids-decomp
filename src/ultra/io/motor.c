@@ -8,7 +8,7 @@ extern OSPifRam _MotorStopData[MAXCONTROLLERS];
 extern OSPifRam _MotorStartData[MAXCONTROLLERS];
 extern u8 _motorstopbuf[BLOCKSIZE];
 extern u8 _motorstartbuf[BLOCKSIZE];
-u32 __osMotorinitialized[MAXCONTROLLERS] = {0, 0, 0, 0};
+u32 __osMotorinitialized[MAXCONTROLLERS] = { 0, 0, 0, 0 };
 
 s32 osMotorStop(OSPfs *pfs) {
     int i;
@@ -40,7 +40,7 @@ s32 osMotorStop(OSPfs *pfs) {
     ramreadformat = *(__OSContRamReadFormat *)ptr;
     ret = CHNL_ERR(ramreadformat);
 
-    if (ret == 0 && __osContDataCrc((u8*)&_motorstopbuf) != ramreadformat.datacrc) {
+    if (ret == 0 && __osContDataCrc((u8 *)&_motorstopbuf) != ramreadformat.datacrc) {
         ret = PFS_ERR_CONTRFAIL;
     }
 
@@ -78,7 +78,7 @@ s32 osMotorStart(OSPfs *pfs) {
     ramreadformat = *(__OSContRamReadFormat *)ptr;
     ret = CHNL_ERR(ramreadformat);
 
-    if (ret == 0 && __osContDataCrc((u8*)&_motorstartbuf) != ramreadformat.datacrc) {
+    if (ret == 0 && __osContDataCrc((u8 *)&_motorstartbuf) != ramreadformat.datacrc) {
         ret = PFS_ERR_CONTRFAIL;
     }
 
@@ -119,7 +119,7 @@ static void _MakeMotorData(int channel, u16 address, u8 *buffer, OSPifRam *mdata
     ptr[0] = CONT_CMD_END;
 }
 
-s32 osMotorInit(OSMesgQueue* mq, OSPfs* pfs, int channel) {
+s32 osMotorInit(OSMesgQueue *mq, OSPfs *pfs, int channel) {
     int i;
     s32 ret;
     u8 temp[32];

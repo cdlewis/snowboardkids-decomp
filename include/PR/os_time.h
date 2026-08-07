@@ -21,14 +21,14 @@
 
 /*---------------------------------------------------------------------*
         Copyright (C) 1998 Nintendo. (Originated by SGI)
-        
+
         $RCSfile: os_time.h,v $
         $Revision: 1.1 $
         $Date: 1998/10/09 08:01:19 $
  *---------------------------------------------------------------------*/
 
 #ifndef _OS_TIME_H_
-#define	_OS_TIME_H_
+#define _OS_TIME_H_
 
 #ifdef _LANGUAGE_C_PLUS_PLUS
 extern "C" {
@@ -36,7 +36,6 @@ extern "C" {
 
 #include <PR/ultratypes.h>
 #include "os_message.h"
-
 
 #if defined(_LANGUAGE_C) || defined(_LANGUAGE_C_PLUS_PLUS)
 
@@ -47,23 +46,22 @@ extern "C" {
  */
 
 /*
- * Structure for time value 
+ * Structure for time value
  */
-typedef u64	OSTime;
+typedef u64 OSTime;
 
 /*
  * Structure for interval timer
  */
 typedef struct OSTimer_s {
-	struct OSTimer_s	*next;	/* point to next timer in list */
-	struct OSTimer_s	*prev;	/* point to previous timer in list */
-	OSTime			interval;	/* duration set by user */
-	OSTime			value;		/* time remaining before */
-						/* timer fires           */
-	OSMesgQueue		*mq;		/* Message Queue */
-	OSMesg			msg;		/* Message to send */
+    struct OSTimer_s *next; /* point to next timer in list */
+    struct OSTimer_s *prev; /* point to previous timer in list */
+    OSTime interval;        /* duration set by user */
+    OSTime value;           /* time remaining before */
+                            /* timer fires           */
+    OSMesgQueue *mq;        /* Message Queue */
+    OSMesg msg;             /* Message to send */
 } OSTimer;
-
 
 #endif /* defined(_LANGUAGE_C) || defined(_LANGUAGE_C_PLUS_PLUS) */
 
@@ -73,7 +71,6 @@ typedef struct OSTimer_s {
  *
  */
 
-
 #if defined(_LANGUAGE_C) || defined(_LANGUAGE_C_PLUS_PLUS)
 
 /**************************************************************************
@@ -82,13 +79,11 @@ typedef struct OSTimer_s {
  *
  */
 
-
 /**************************************************************************
  *
  * Extern variables
  *
  */
-
 
 /**************************************************************************
  *
@@ -98,14 +93,12 @@ typedef struct OSTimer_s {
 
 /* Timer interface */
 
-extern OSTime		osGetTime(void);
-extern void		osSetTime(OSTime);
-extern int		osSetTimer(OSTimer *, OSTime, OSTime,
-				   OSMesgQueue *, OSMesg);
-extern int		osStopTimer(OSTimer *);
+extern OSTime osGetTime(void);
+extern void osSetTime(OSTime);
+extern int osSetTimer(OSTimer *, OSTime, OSTime, OSMesgQueue *, OSMesg);
+extern int osStopTimer(OSTimer *);
 
-
-#endif  /* defined(_LANGUAGE_C) || defined(_LANGUAGE_C_PLUS_PLUS) */
+#endif /* defined(_LANGUAGE_C) || defined(_LANGUAGE_C_PLUS_PLUS) */
 
 #ifdef _LANGUAGE_C_PLUS_PLUS
 }

@@ -13,7 +13,7 @@ typedef struct {
     /* 0x0 */ union {
         /* 0x0 */ long long ll;
     } v;
-    /* 0x8 */ unsigned char* s;
+    /* 0x8 */ unsigned char *s;
     /* 0xC */ int n0;
     /* 0x10 */ int nz0;
     /* 0x14 */ int n1;
@@ -32,15 +32,15 @@ typedef struct lldiv_t {
     long long rem;
 } lldiv_t;
 
-void* memcpy(void*, const void*, size_t);
+void *memcpy(void *, const void *, size_t);
 lldiv_t lldiv(long long, long long);
 
 static char ldigs[] = "0123456789abcdef";
 static char udigs[] = "0123456789ABCDEF";
 
-void _Litob(_Pft* px, char code) {
+void _Litob(_Pft *px, char code) {
     char buff[BUFF_LEN];
-    const char* digs;
+    const char *digs;
     int base;
     int i;
     unsigned long long ullval;

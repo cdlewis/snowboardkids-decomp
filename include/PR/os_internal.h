@@ -12,14 +12,14 @@
 
 /*---------------------------------------------------------------------*
         Copyright (C) 1998 Nintendo. (Originated by SGI)
-        
+
         $RCSfile: os_internal.h,v $
         $Revision: 1.20 $
         $Date: 1998/10/09 08:01:09 $
  *---------------------------------------------------------------------*/
 
 #ifndef _OS_INTERNAL_H_
-#define	_OS_INTERNAL_H_
+#define _OS_INTERNAL_H_
 
 #ifdef _LANGUAGE_C_PLUS_PLUS
 extern "C" {

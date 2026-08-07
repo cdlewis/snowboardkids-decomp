@@ -1,5 +1,5 @@
 typedef char *va_list;
-#define va_start(ap, param) (ap = (va_list)&param + sizeof(param))
+#define va_start(ap, param) (ap = (va_list) & param + sizeof(param))
 #define va_end(ap)
 
 typedef unsigned int size_t;

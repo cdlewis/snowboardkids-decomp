@@ -317,8 +317,7 @@ s32 Fvelocity(PlayerCommandState *arg0, u8 *arg1) {
 
     ret = (s32)(arg1 + 1);
     arg0->default_velocity = arg1[0];
-    if (ret) {
-    }
+    if (ret) {}
     arg0->velocity_on = 0;
     return ret;
 }

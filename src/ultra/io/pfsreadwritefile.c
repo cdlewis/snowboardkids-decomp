@@ -5,7 +5,7 @@
     (((p).ipage >= pfs->inode_start_page) && ((p).inode_t.bank < pfs->banks) && ((p).inode_t.page >= 0x01) && \
      ((p).inode_t.page < 0x80))
 
-static s32 __osPfsGetNextPage(OSPfs* pfs, u8* bank, __OSInode* inode, __OSInodeUnit* page) {
+static s32 __osPfsGetNextPage(OSPfs *pfs, u8 *bank, __OSInode *inode, __OSInodeUnit *page) {
     s32 ret;
 
     if (page->inode_t.bank != *bank) {
@@ -24,14 +24,14 @@ static s32 __osPfsGetNextPage(OSPfs* pfs, u8* bank, __OSInode* inode, __OSInodeU
     return 0;
 }
 
-s32 osPfsReadWriteFile(OSPfs* pfs, s32 file_no, u8 flag, int offset, int size_in_bytes, u8* data_buffer) {
+s32 osPfsReadWriteFile(OSPfs *pfs, s32 file_no, u8 flag, int offset, int size_in_bytes, u8 *data_buffer) {
     s32 ret;
     __OSDir dir;
     __OSInode inode;
     __OSInodeUnit cur_page;
     int cur_block;
     int siz_block;
-    u8* buffer;
+    u8 *buffer;
     u8 bank;
     u16 blockno;
 
@@ -50,7 +50,7 @@ s32 osPfsReadWriteFile(OSPfs* pfs, s32 file_no, u8 flag, int offset, int size_in
     PFS_CHECK_STATUS();
     PFS_CHECK_ID();
     SET_ACTIVEBANK_TO_ZERO();
-    ERRCK(__osContRamRead(pfs->queue, pfs->channel, pfs->dir_table + file_no, (u8*)&dir));
+    ERRCK(__osContRamRead(pfs->queue, pfs->channel, pfs->dir_table + file_no, (u8 *)&dir));
 
     if (!CHECK_IPAGE(dir.start_page)) {
         if (dir.start_page.ipage == PFS_EOF) {
@@ -104,7 +104,7 @@ s32 osPfsReadWriteFile(OSPfs* pfs, s32 file_no, u8 flag, int offset, int size_in
     if (flag == PFS_WRITE && (dir.status & DIR_STATUS_OCCUPIED) == 0) {
         dir.status |= DIR_STATUS_OCCUPIED;
         ERRCK(SELECT_BANK(pfs, 0));
-        ERRCK(__osContRamWrite(pfs->queue, pfs->channel, pfs->dir_table + file_no, (u8*)&dir, FALSE));
+        ERRCK(__osContRamWrite(pfs->queue, pfs->channel, pfs->dir_table + file_no, (u8 *)&dir, FALSE));
     }
 
     return 0;

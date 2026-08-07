@@ -198,15 +198,18 @@ ASM_O_FILES := $(patsubst %.s,$(BUILD_DIR)/%.o,$(ASM_S_FILES))
 C_FILES     := $(foreach dir,$(SRC_DIRS),$(call rwildcard,$(dir),*.c))
 C_O_FILES   := $(patsubst %.c,$(BUILD_DIR)/%.o,$(C_FILES))
 
-# Formatting and tidy intentionally cover tracked, project-owned code only.
-# Imported libultra/libmus sources retain their upstream formatting. Local
-# match-sensitive functions and textconv tables use clang-format guards.
-PROJECT_C_FILES := $(filter-out src/ultra/% src/libmus/%,$(shell git ls-files 'src/**/*.c' 'src/*.c'))
+# Formatting and tidy cover all tracked C code, including libultra and libmus.
+# Local match-sensitive functions and textconv tables use clang-format guards.
+PROJECT_C_FILES := $(shell git ls-files 'src/**/*.c' 'src/*.c')
 FORMAT_C_FILES := $(PROJECT_C_FILES)
-FORMAT_H_FILES := $(shell git ls-files 'include/game/**/*.h' 'include/game/*.h') \
-	include/assets.h include/common.h include/compiler_diagnostics.h include/font_encoding.h
+PROJECT_H_FILES := $(shell git ls-files 'include/**/*.h' 'include/*.h' 'src/**/*.h')
+FORMAT_H_FILES := $(filter-out include/hasm.h include/include_asm.h include/sys/%,$(PROJECT_H_FILES))
 FORMAT_FILES := $(FORMAT_C_FILES) $(FORMAT_H_FILES)
-TIDY_C_FILES := $(filter-out %.inc.c,$(PROJECT_C_FILES))
+TIDY_C_FRAGMENT_FILES := \
+	src/libmus/player_api.c \
+	src/libmus/player_commands.c \
+	src/libmus/player_commands_tail.c
+TIDY_C_FILES := $(filter-out %.inc.c $(TIDY_C_FRAGMENT_FILES),$(PROJECT_C_FILES))
 
 TEXTCONV = $(PYTHON) $(TOOLS_DIR)/textconv.py
 CHARMAP = $(TOOLS_DIR)/charmap.txt

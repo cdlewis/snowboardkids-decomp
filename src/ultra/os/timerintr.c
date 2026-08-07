@@ -7,7 +7,7 @@ u32 __osBaseCounter;
 u32 __osViIntrCount;
 u32 __osTimerCounter;
 OSTimer __osBaseTimer;
-OSTimer * __osTimerList = &__osBaseTimer;
+OSTimer *__osTimerList = &__osBaseTimer;
 
 void __osTimerServicesInit(void) {
     __osCurrentTime = 0;

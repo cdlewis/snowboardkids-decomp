@@ -3,7 +3,7 @@
 #include "PR/ultraerror.h"
 #include "PRinternal/osint.h"
 
-void osCreateThread(OSThread* t, OSId id, void (*entry)(void*), void* arg, void* sp, OSPri p) {
+void osCreateThread(OSThread *t, OSId id, void (*entry)(void *), void *arg, void *sp, OSPri p) {
     register u32 saveMask;
     OSIntMask mask;
 

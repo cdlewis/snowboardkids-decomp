@@ -17,13 +17,13 @@
 
 /* __osHwInt struct member offsets */
 #define HWINTR_CALLBACK 0x00
-#define HWINTR_SP       0x04
+#define HWINTR_SP 0x04
 
 /* __osHwInt struct size */
 #if BUILD_VERSION >= VERSION_J
-#define HWINTR_SIZE     0x8
+#define HWINTR_SIZE 0x8
 #else
-#define HWINTR_SIZE     0x4
+#define HWINTR_SIZE 0x4
 #endif
 
 #endif

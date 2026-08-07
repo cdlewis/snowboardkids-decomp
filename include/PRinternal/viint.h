@@ -15,12 +15,13 @@
 #define VI_STATE_REPEATLINE 0x40     // repeat line?
 #define VI_STATE_FADE 0x80           // fade
 
-#define VI_SCALE_MASK 0xfff //see rcp scale_x/scale_y
+#define VI_SCALE_MASK 0xfff // see rcp scale_x/scale_y
 #define VI_2_10_FPART_MASK 0x3ff
 #define VI_SUBPIXEL_SH 0x10
 
-#define BURST(hsync_width, color_width, vsync_width, color_start) \
-    (((u32)(hsync_width) & 0xFF) | (((u32)(color_width) & 0xFF) << 8) | (((u32)(vsync_width) & 0xF) << 16) | (((u32)(color_start) & 0xFFFF) << 20))
+#define BURST(hsync_width, color_width, vsync_width, color_start)                                            \
+    (((u32)(hsync_width) & 0xFF) | (((u32)(color_width) & 0xFF) << 8) | (((u32)(vsync_width) & 0xF) << 16) | \
+     (((u32)(color_start) & 0xFFFF) << 20))
 #define WIDTH(v) (v)
 #define VSYNC(v) (v)
 #define HSYNC(duration, leap) (((u32)(leap) << 16) | ((u32)(duration) & 0xFFFF))
@@ -32,20 +33,18 @@
 #define F210(val) FTOFIX(val, 2, 10)
 #define SCALE(scaleup, off) (F210((1.0f / (f32)(scaleup))) | (F210((f32)(off)) << 16))
 
-#define VCURRENT(v) v //seemingly unused
+#define VCURRENT(v) v // seemingly unused
 #define ORIGIN(v) v
 #define VINTR(v) v
 #define HSTART START
 
-typedef struct
-{
+typedef struct {
     /* 0x0 */ f32 factor;
     /* 0x4 */ u16 offset;
     /* 0x8 */ u32 scale;
 } __OSViScale;
 
-typedef struct
-{
+typedef struct {
     /* 0x0 */ u16 state;
     /* 0x2 */ u16 retraceCount;
     /* 0x4 */ void *framep;

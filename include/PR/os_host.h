@@ -21,14 +21,14 @@
 
 /*---------------------------------------------------------------------*
         Copyright (C) 1998 Nintendo. (Originated by SGI)
-        
+
         $RCSfile: os_host.h,v $
         $Revision: 1.3 $
         $Date: 1999/06/24 09:23:06 $
  *---------------------------------------------------------------------*/
 
 #ifndef _OS_HOST_H_
-#define	_OS_HOST_H_
+#define _OS_HOST_H_
 
 #ifdef _LANGUAGE_C_PLUS_PLUS
 extern "C" {
@@ -45,7 +45,6 @@ extern "C" {
  *
  */
 
-
 #endif /* defined(_LANGUAGE_C) || defined(_LANGUAGE_C_PLUS_PLUS) */
 
 /**************************************************************************
@@ -53,7 +52,6 @@ extern "C" {
  * Global definitions
  *
  */
-
 
 #if defined(_LANGUAGE_C) || defined(_LANGUAGE_C_PLUS_PLUS)
 
@@ -76,40 +74,40 @@ extern void __osInitialize_common(void);
 extern void __osInitialize_kmc(void);
 #define osReadHost osReadHost_pt
 #define osWriteHost osWriteHost_pt
-#define osInitialize()       \
-{                            \
-    __osInitialize_common();  \
-    __osInitialize_kmc();    \
-}
+#define osInitialize()           \
+    {                            \
+        __osInitialize_common(); \
+        __osInitialize_kmc();    \
+    }
 
 /* MONEGI SMART PACK A */
 #elif defined(MWN64)
 extern void __osInitialize_msp(void);
 #define osReadHost osReadHost_pt
 #define osWriteHost osWriteHost_pt
-#define osInitialize()       \
-{                            \
-    __osInitialize_common(); \
-    __osInitialize_msp();    \
-}
+#define osInitialize()           \
+    {                            \
+        __osInitialize_common(); \
+        __osInitialize_msp();    \
+    }
 
 /* IS-Viewer(for Debugger) */
 #elif defined(ISV64)
 extern void __osInitialize_isv(void);
-#define osInitialize()       \
-{                            \
-    __osInitialize_common(); \
-    __osInitialize_isv();    \
-}
+#define osInitialize()           \
+    {                            \
+        __osInitialize_common(); \
+        __osInitialize_isv();    \
+    }
 
 /* Emulation board for INDY */
 #elif defined(EMU64)
 extern void __osInitialize_emu(void);
-#define osInitialize()       \
-{                            \
-    __osInitialize_common(); \
-    __osInitialize_emu();    \
-}
+#define osInitialize()           \
+    {                            \
+        __osInitialize_common(); \
+        __osInitialize_emu();    \
+    }
 
 #else
 /* Default (auto detect) */
@@ -118,14 +116,14 @@ extern void __osInitialize_msp(void);
 extern void __osInitialize_kmc(void);
 extern void __osInitialize_isv(void);
 extern void __osInitialize_emu(void);
-#define osInitialize()           \
-{                                \
-    __osInitialize_common();     \
-    __osInitialize_autodetect(); \
-}
+#define osInitialize()               \
+    {                                \
+        __osInitialize_common();     \
+        __osInitialize_autodetect(); \
+    }
 #endif
 
-#endif  /* _FINAL_ROM */
+#endif /* _FINAL_ROM */
 
 #if BUILD_VERSION < VERSION_K
 #undef osInitialize
@@ -137,7 +135,6 @@ extern void __osInitialize_emu(void);
  *
  */
 
-
 /**************************************************************************
  *
  * Function prototypes
@@ -146,18 +143,17 @@ extern void __osInitialize_emu(void);
 
 /* Game <> Host data transfer functions */
 
-extern s32		osTestHost(void);
-extern void		osReadHost(void *, u32);
-extern void		osWriteHost(void *, u32);
-extern void		osAckRamromRead(void);
-extern void		osAckRamromWrite(void);
+extern s32 osTestHost(void);
+extern void osReadHost(void *, u32);
+extern void osWriteHost(void *, u32);
+extern void osAckRamromRead(void);
+extern void osAckRamromWrite(void);
 
 /* RDB port operations */
 
-extern void             osInitRdb(u8 *sendBuf, u32 sendSize);
+extern void osInitRdb(u8 *sendBuf, u32 sendSize);
 
-
-#endif  /* defined(_LANGUAGE_C) || defined(_LANGUAGE_C_PLUS_PLUS) */
+#endif /* defined(_LANGUAGE_C) || defined(_LANGUAGE_C_PLUS_PLUS) */
 
 #ifdef _LANGUAGE_C_PLUS_PLUS
 }

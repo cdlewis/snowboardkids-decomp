@@ -6,9 +6,9 @@
 
 __OSEventState __osEventStateTab[OS_NUM_EVENTS] ALIGNED(0x8);
 
-void osSetEventMesg(OSEvent event, OSMesgQueue* mq, OSMesg msg) {
+void osSetEventMesg(OSEvent event, OSMesgQueue *mq, OSMesg msg) {
     register u32 saveMask;
-    __OSEventState* es;
+    __OSEventState *es;
 
 #ifdef _DEBUG
     if (event >= OS_NUM_EVENTS) {
