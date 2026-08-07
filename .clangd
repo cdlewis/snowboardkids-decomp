@@ -1,0 +1,35 @@
+Diagnostics:
+  UnusedIncludes: Strict
+  Suppress:
+    - unused-includes:*common.h
+
+CompileFlags:
+  Add:
+    - -I.
+    - -Iinclude
+    - -Iinclude/PR
+    - -Isrc
+    - -Isrc/ultra/audio
+    - -Isrc/ultra/libc
+    - -DLANGUAGE_C
+    - -D_LANGUAGE_C
+    - -D_MIPS_SZLONG=32
+    - -D_MIPS_SZINT=32
+    - -D_MIPS_SZPTR=32
+    - -DNDEBUG
+    - -DCOMPILING_LIBULTRA
+    - -DBUILD_VERSION=VERSION_I
+    - -DF3DEX_GBI
+    - -DMIPSEB
+    - -D_MIPS_FPSET=16
+    - -D_MIPS_ISA_MIPS2=2
+    - -D_MIPS_ISA=_MIPS_ISA_MIPS2
+    - -D_ABIO32=1
+    - -D_MIPS_SIM=_ABIO32
+    - -D__sgi=1
+    - -std=gnu89
+    - -m32
+    - -ffreestanding
+    - -fno-builtin
+    - '-D__builtin_classof(type)=0'
+    - '-D__builtin_alignof(type)=__alignof__(type)'

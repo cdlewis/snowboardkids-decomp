@@ -40,12 +40,12 @@ s32 tryQueueRacePlayerHitCueSpinout(RacePlayer *arg0) {
         var_v1 = gRacePlayerHitAngle - arg0->facingAngle;
         var_v1 += RACE_PLAYER_COLLISION_HALF_TURN;
         temp_t0 = var_v1 & RACE_PLAYER_COLLISION_ANGLE_MASK;
-        var_v1 = (s16) temp_t0;
+        var_v1 = (s16)temp_t0;
         if (temp_v0 & RACE_PLAYER_COLLISION_YAW_FLIPPED) {
-            var_v1 = (s16) (var_v1 + RACE_PLAYER_COLLISION_HALF_TURN);
+            var_v1 = (s16)(var_v1 + RACE_PLAYER_COLLISION_HALF_TURN);
         }
         var_v1 += 0x200;
-        var_v1 = (s16) (var_v1 & RACE_PLAYER_COLLISION_ANGLE_MASK);
+        var_v1 = (s16)(var_v1 & RACE_PLAYER_COLLISION_ANGLE_MASK);
         if ((gRacePlayerHitDistance < 0x30000) || (var_v1 >= 0x401)) {
             return 1;
         }
@@ -69,12 +69,12 @@ s32 tryQueueRacePlayerHitCueGhostSpinout(RacePlayer *arg0) {
         var_v1 = gRacePlayerHitAngle - arg0->facingAngle;
         var_v1 += RACE_PLAYER_COLLISION_HALF_TURN;
         temp_t0 = var_v1 & RACE_PLAYER_COLLISION_ANGLE_MASK;
-        var_v1 = (s16) temp_t0;
+        var_v1 = (s16)temp_t0;
         if (temp_v0 & RACE_PLAYER_COLLISION_YAW_FLIPPED) {
-            var_v1 = (s16) (var_v1 + RACE_PLAYER_COLLISION_HALF_TURN);
+            var_v1 = (s16)(var_v1 + RACE_PLAYER_COLLISION_HALF_TURN);
         }
         var_v1 += 0x200;
-        var_v1 = (s16) (var_v1 & RACE_PLAYER_COLLISION_ANGLE_MASK);
+        var_v1 = (s16)(var_v1 & RACE_PLAYER_COLLISION_ANGLE_MASK);
         if ((gRacePlayerHitDistance < 0x30000) || (var_v1 >= 0x401)) {
             return 1;
         }
@@ -177,12 +177,12 @@ s32 tryQueueRacePlayerHitCueNudge(RacePlayer *arg0) {
     var_v1 = gRacePlayerHitAngle - arg0->facingAngle;
     var_v1 += RACE_PLAYER_COLLISION_HALF_TURN;
     temp_t9 = var_v1 & RACE_PLAYER_COLLISION_ANGLE_MASK;
-    var_v1 = (s16) temp_t9;
+    var_v1 = (s16)temp_t9;
     if (temp_v0 & RACE_PLAYER_COLLISION_YAW_FLIPPED) {
-        var_v1 = (s16) (var_v1 + RACE_PLAYER_COLLISION_HALF_TURN);
+        var_v1 = (s16)(var_v1 + RACE_PLAYER_COLLISION_HALF_TURN);
     }
     var_v1 += 0x400;
-    var_v1 = (s16) (var_v1 & RACE_PLAYER_COLLISION_ANGLE_MASK);
+    var_v1 = (s16)(var_v1 & RACE_PLAYER_COLLISION_ANGLE_MASK);
     if ((gRacePlayerHitDistance < 0x14000) || (var_v1 >= 0x801)) {
         return 1;
     }
@@ -297,14 +297,20 @@ void resolveRacePlayerHitReactions(RacePlayer *arg0) {
     gRacePlayerHitCueId = 0;
     temp_v0 = arg0->pendingItemHitFlags;
     if (temp_v0 != 0) {
-        if ((temp_v0 & 0x200) && (arg0->unk5C < (getRaceCourseSurfaceHeight(arg0->coursePathIndex, arg0->pos.x, arg0->pos.z) + 0xB0000))) {
+        if ((temp_v0 & 0x200) &&
+            (arg0->unk5C < (getRaceCourseSurfaceHeight(arg0->coursePathIndex, arg0->pos.x, arg0->pos.z) + 0xB0000))) {
             arg0->pendingItemHitFlags |= 1;
         }
         gRacePlayerHitDeltaX = arg0->unk2C8 - arg0->velocity.x;
         gRacePlayerHitDeltaZ = arg0->unk2CC - arg0->velocity.z;
-        gRacePlayerHitDistance = (u32)integerSquareRoot64((s64) gRacePlayerHitDeltaX * gRacePlayerHitDeltaX + (s64) gRacePlayerHitDeltaZ * gRacePlayerHitDeltaZ) >> 1;
+        gRacePlayerHitDistance =
+            (u32)integerSquareRoot64(
+                (s64)gRacePlayerHitDeltaX * gRacePlayerHitDeltaX + (s64)gRacePlayerHitDeltaZ * gRacePlayerHitDeltaZ
+            ) >>
+            1;
         gRacePlayerHitAngle = calculateFixedAngleFromDeltaXZ(gRacePlayerHitDeltaX, gRacePlayerHitDeltaZ);
-        if ((arg0->pendingItemHitFlags & 1) && (tryQueueRacePlayerHitCuePushForward(arg0) != 0) && (tryQueueRacePlayerHitCueSpinout(arg0) != 0) && (tryQueueRacePlayerHitCueNudge(arg0) != 0)) {
+        if ((arg0->pendingItemHitFlags & 1) && (tryQueueRacePlayerHitCuePushForward(arg0) != 0) &&
+            (tryQueueRacePlayerHitCueSpinout(arg0) != 0) && (tryQueueRacePlayerHitCueNudge(arg0) != 0)) {
             tryQueueRacePlayerHitCueSlowdown(arg0);
         }
         if ((arg0->pendingItemHitFlags & 2) && (tryQueueRacePlayerHitCuePushForward(arg0) != 0)) {
@@ -365,171 +371,189 @@ void resolveRacePlayerHitReactions(RacePlayer *arg0) {
         }
         arg0->unk57A = 0;
         switch (gRacePlayerHitCueId) {
-        case 5:
-        case 6:
-            if (gRacePlayerHitCueId == 6) {
-                if (gRacePlayerHudStatuses[arg0->playerIndex].active != 0) {
-                    enqueueSoundEffect(0x47, 0x32);
+            case 5:
+            case 6:
+                if (gRacePlayerHitCueId == 6) {
+                    if (gRacePlayerHudStatuses[arg0->playerIndex].active != 0) {
+                        enqueueSoundEffect(0x47, 0x32);
+                    }
+                } else {
+                    enqueueRacePlayerVoiceSound(arg0, 2);
                 }
-            } else {
+                arg0->mode = 4;
+                arg0->updateState = 0;
+                arg0->updateTimer = 0;
+                arg0->unk2DE = (s16)gRacePlayerHitAngle;
+                arg0->unk2E0 = arg0->unk2C8;
+                arg0->unk2E4 = arg0->unk2CC;
+                if (arg0->soundDisabled == 0) {
+                    enqueuePositionalSoundEffect(0x14, &arg0->pos, 0x7F, 0x32);
+                    spawnRacePlayerHitEffect(
+                        (s16)arg0->playerIndex,
+                        arg0->unk2DE,
+                        0,
+                        arg0->collisionHeight / 2,
+                        arg0->collisionRadius
+                    );
+                }
+                break;
+            case 8:
                 enqueueRacePlayerVoiceSound(arg0, 2);
-            }
-            arg0->mode = 4;
-            arg0->updateState = 0;
-            arg0->updateTimer = 0;
-            arg0->unk2DE = (s16) gRacePlayerHitAngle;
-            arg0->unk2E0 = arg0->unk2C8;
-            arg0->unk2E4 = arg0->unk2CC;
-            if (arg0->soundDisabled == 0) {
-                enqueuePositionalSoundEffect(0x14, &arg0->pos, 0x7F, 0x32);
-                spawnRacePlayerHitEffect((s16) arg0->playerIndex, arg0->unk2DE, 0, arg0->collisionHeight / 2, arg0->collisionRadius);
-            }
-            break;
-        case 8:
-            enqueueRacePlayerVoiceSound(arg0, 2);
-            arg0->mode = 0xE;
-            arg0->updateState = 0;
-            arg0->updateTimer = 0;
-            if (arg0->soundDisabled == 0) {
-                enqueuePositionalSoundEffect(0x14, &arg0->pos, 0x7F, 0x32);
-                spawnRacePlayerHitEffect((s16) arg0->playerIndex, gRacePlayerHitEffectAngle, 0, arg0->collisionHeight / 2, arg0->collisionRadius);
-            }
-            break;
-        case 9:
-            enqueueRacePlayerVoiceSound(arg0, 2);
-            arg0->mode = 0xE;
-            arg0->updateState = 0;
-            arg0->updateTimer = 0;
-            arg0->unk2DE = (s16) gRacePlayerHitAngle;
-            arg0->unk2E0 = arg0->unk2C8;
-            arg0->unk2E4 = arg0->unk2CC;
-            break;
-        case 2:
-            enqueueRacePlayerVoiceSound(arg0, 2);
-            arg0->mode = 3;
-            arg0->updateState = 0;
-            arg0->updateTimer = 0;
-            arg0->unk2DE = (s16) gRacePlayerHitAngle;
-            arg0->unk2E0 = arg0->unk2C8;
-            arg0->unk2E4 = arg0->unk2CC;
-            if (arg0->soundDisabled == 0) {
-                enqueuePositionalSoundEffect(0x14, &arg0->pos, 0x7F, 0x32);
-                spawnRacePlayerHitEffect((s16) arg0->playerIndex, arg0->unk2DE, 1, arg0->collisionHeight / 2, arg0->collisionRadius);
-            }
-            break;
-        case 1:
-            arg0->unk310 = 0xC000;
-            break;
-        case 7:
-            if (arg0->soundDisabled == 0) {
-                enqueuePositionalSoundEffect(0x14, &arg0->pos, 0x7F, 0x32);
-                spawnRacePlayerHitEffect((s16) arg0->playerIndex, 0, 1, arg0->collisionHeight / 2, 0);
-            }
-            /* fallthrough */
-        case 10:
-            enqueueRacePlayerVoiceSound(arg0, 2);
-            arg0->mode = 0xB;
-            arg0->updateState = 0;
-            arg0->updateTimer = 0;
-            break;
-        case 11:
-            gRacePlayers[arg0->hitSourcePlayerIndex & 3].unk517 = 1;
-            if (gRacePlayers[arg0->hitSourcePlayerIndex & 3].isCpu != 0) {
+                arg0->mode = 0xE;
+                arg0->updateState = 0;
+                arg0->updateTimer = 0;
+                if (arg0->soundDisabled == 0) {
+                    enqueuePositionalSoundEffect(0x14, &arg0->pos, 0x7F, 0x32);
+                    spawnRacePlayerHitEffect(
+                        (s16)arg0->playerIndex,
+                        gRacePlayerHitEffectAngle,
+                        0,
+                        arg0->collisionHeight / 2,
+                        arg0->collisionRadius
+                    );
+                }
+                break;
+            case 9:
                 enqueueRacePlayerVoiceSound(arg0, 2);
-            } else {
-                enqueueRacePlayerVoiceSound(arg0, 3);
-            }
-            arg0->mode = 0x28;
-            arg0->updateState = 0;
-            arg0->updateTimer = 0;
-            break;
-        case 12:
-            gRacePlayers[arg0->hitSourcePlayerIndex & 3].unk517 = 1;
-            if (gRacePlayers[arg0->hitSourcePlayerIndex & 3].isCpu != 0) {
+                arg0->mode = 0xE;
+                arg0->updateState = 0;
+                arg0->updateTimer = 0;
+                arg0->unk2DE = (s16)gRacePlayerHitAngle;
+                arg0->unk2E0 = arg0->unk2C8;
+                arg0->unk2E4 = arg0->unk2CC;
+                break;
+            case 2:
                 enqueueRacePlayerVoiceSound(arg0, 2);
-            } else {
-                enqueueRacePlayerVoiceSound(arg0, 3);
-            }
-            arg0->mode = 0x1A;
-            arg0->updateState = 0;
-            arg0->updateTimer = 0;
-            break;
-        case 13:
-            gRacePlayers[arg0->hitSourcePlayerIndex & 3].unk517 = 1;
-            if (gRacePlayers[arg0->hitSourcePlayerIndex & 3].isCpu != 0) {
+                arg0->mode = 3;
+                arg0->updateState = 0;
+                arg0->updateTimer = 0;
+                arg0->unk2DE = (s16)gRacePlayerHitAngle;
+                arg0->unk2E0 = arg0->unk2C8;
+                arg0->unk2E4 = arg0->unk2CC;
+                if (arg0->soundDisabled == 0) {
+                    enqueuePositionalSoundEffect(0x14, &arg0->pos, 0x7F, 0x32);
+                    spawnRacePlayerHitEffect(
+                        (s16)arg0->playerIndex,
+                        arg0->unk2DE,
+                        1,
+                        arg0->collisionHeight / 2,
+                        arg0->collisionRadius
+                    );
+                }
+                break;
+            case 1:
+                arg0->unk310 = 0xC000;
+                break;
+            case 7:
+                if (arg0->soundDisabled == 0) {
+                    enqueuePositionalSoundEffect(0x14, &arg0->pos, 0x7F, 0x32);
+                    spawnRacePlayerHitEffect((s16)arg0->playerIndex, 0, 1, arg0->collisionHeight / 2, 0);
+                }
+                /* fallthrough */
+            case 10:
                 enqueueRacePlayerVoiceSound(arg0, 2);
-            } else {
-                enqueueRacePlayerVoiceSound(arg0, 3);
-            }
-            arg0->mode = 0x1B;
-            arg0->updateState = 0;
-            arg0->updateTimer = 0;
-            break;
-        case 14:
-            enqueueRacePlayerVoiceSound(arg0, 4);
-            arg0->mode = 0xA;
-            arg0->updateState = 0;
-            arg0->updateTimer = 0;
-            break;
-        case 15:
-            gRacePlayers[arg0->hitSourcePlayerIndex & 3].unk517 = 1;
-            if (gRacePlayers[arg0->hitSourcePlayerIndex & 3].isCpu != 0) {
-                enqueueRacePlayerVoiceSound(arg0, 2);
-            } else {
-                enqueueRacePlayerVoiceSound(arg0, 3);
-            }
-            arg0->mode = 0x17;
-            arg0->updateState = 0;
-            arg0->updateTimer = 0;
-            break;
-        case 16:
-        case 17:
-            if (gRacePlayerHitCueId == 0x11) {
+                arg0->mode = 0xB;
+                arg0->updateState = 0;
+                arg0->updateTimer = 0;
+                break;
+            case 11:
+                gRacePlayers[arg0->hitSourcePlayerIndex & 3].unk517 = 1;
                 if (gRacePlayers[arg0->hitSourcePlayerIndex & 3].isCpu != 0) {
                     enqueueRacePlayerVoiceSound(arg0, 2);
                 } else {
                     enqueueRacePlayerVoiceSound(arg0, 3);
                 }
-            } else {
+                arg0->mode = 0x28;
+                arg0->updateState = 0;
+                arg0->updateTimer = 0;
+                break;
+            case 12:
+                gRacePlayers[arg0->hitSourcePlayerIndex & 3].unk517 = 1;
+                if (gRacePlayers[arg0->hitSourcePlayerIndex & 3].isCpu != 0) {
+                    enqueueRacePlayerVoiceSound(arg0, 2);
+                } else {
+                    enqueueRacePlayerVoiceSound(arg0, 3);
+                }
+                arg0->mode = 0x1A;
+                arg0->updateState = 0;
+                arg0->updateTimer = 0;
+                break;
+            case 13:
+                gRacePlayers[arg0->hitSourcePlayerIndex & 3].unk517 = 1;
+                if (gRacePlayers[arg0->hitSourcePlayerIndex & 3].isCpu != 0) {
+                    enqueueRacePlayerVoiceSound(arg0, 2);
+                } else {
+                    enqueueRacePlayerVoiceSound(arg0, 3);
+                }
+                arg0->mode = 0x1B;
+                arg0->updateState = 0;
+                arg0->updateTimer = 0;
+                break;
+            case 14:
+                enqueueRacePlayerVoiceSound(arg0, 4);
+                arg0->mode = 0xA;
+                arg0->updateState = 0;
+                arg0->updateTimer = 0;
+                break;
+            case 15:
+                gRacePlayers[arg0->hitSourcePlayerIndex & 3].unk517 = 1;
+                if (gRacePlayers[arg0->hitSourcePlayerIndex & 3].isCpu != 0) {
+                    enqueueRacePlayerVoiceSound(arg0, 2);
+                } else {
+                    enqueueRacePlayerVoiceSound(arg0, 3);
+                }
+                arg0->mode = 0x17;
+                arg0->updateState = 0;
+                arg0->updateTimer = 0;
+                break;
+            case 16:
+            case 17:
+                if (gRacePlayerHitCueId == 0x11) {
+                    if (gRacePlayers[arg0->hitSourcePlayerIndex & 3].isCpu != 0) {
+                        enqueueRacePlayerVoiceSound(arg0, 2);
+                    } else {
+                        enqueueRacePlayerVoiceSound(arg0, 3);
+                    }
+                } else {
+                    enqueueRacePlayerVoiceSound(arg0, 2);
+                }
+                if (arg0->soundDisabled == 0) {
+                    spawnRacePlayerHitEffect((s16)arg0->playerIndex, 0, 3, arg0->collisionHeight / 2, 0);
+                }
+                arg0->mode = 0x18;
+                arg0->updateState = 0;
+                arg0->updateTimer = 0;
+                break;
+            case 3:
+                gRacePlayers[arg0->hitSourcePlayerIndex & 3].unk517 = 1;
+                if (gRacePlayers[arg0->hitSourcePlayerIndex & 3].isCpu != 0) {
+                    enqueueRacePlayerVoiceSound(arg0, 2);
+                } else {
+                    enqueueRacePlayerVoiceSound(arg0, 3);
+                }
+                arg0->mode = 0x19;
+                arg0->updateState = 0;
+                arg0->updateTimer = 0;
+                break;
+            case 4:
                 enqueueRacePlayerVoiceSound(arg0, 2);
-            }
-            if (arg0->soundDisabled == 0) {
-                spawnRacePlayerHitEffect((s16) arg0->playerIndex, 0, 3, arg0->collisionHeight / 2, 0);
-            }
-            arg0->mode = 0x18;
-            arg0->updateState = 0;
-            arg0->updateTimer = 0;
-            break;
-        case 3:
-            gRacePlayers[arg0->hitSourcePlayerIndex & 3].unk517 = 1;
-            if (gRacePlayers[arg0->hitSourcePlayerIndex & 3].isCpu != 0) {
-                enqueueRacePlayerVoiceSound(arg0, 2);
-            } else {
-                enqueueRacePlayerVoiceSound(arg0, 3);
-            }
-            arg0->mode = 0x19;
-            arg0->updateState = 0;
-            arg0->updateTimer = 0;
-            break;
-        case 4:
-            enqueueRacePlayerVoiceSound(arg0, 2);
-            arg0->mode = 0x19;
-            arg0->updateState = 0;
-            arg0->updateTimer = 0;
-            break;
-        case 18:
-            arg0->mode = 6;
-            arg0->updateState = 0;
-            arg0->updateTimer = 0;
-            if (getRaceItemEffectType(arg0->unk330) != 0) {
-                arg0->mode = 0x1C;
-            }
-            break;
-        case 19:
-            arg0->mode = 9;
-            arg0->updateState = 0;
-            arg0->updateTimer = 0;
-            break;
+                arg0->mode = 0x19;
+                arg0->updateState = 0;
+                arg0->updateTimer = 0;
+                break;
+            case 18:
+                arg0->mode = 6;
+                arg0->updateState = 0;
+                arg0->updateTimer = 0;
+                if (getRaceItemEffectType(arg0->unk330) != 0) {
+                    arg0->mode = 0x1C;
+                }
+                break;
+            case 19:
+                arg0->mode = 9;
+                arg0->updateState = 0;
+                arg0->updateTimer = 0;
+                break;
         }
     }
 }
@@ -564,7 +588,8 @@ s32 isRacePlayerRespawnSurfaceValid(RacePlayer *arg0) {
     return 1;
 }
 
-// resolveRacePlayerCollisionVolumes best match: 99.463% (nonmatchings/resolveRacePlayerCollisionVolumes-2163214805492048867/base_86.c)
+// resolveRacePlayerCollisionVolumes best match: 99.463%
+// (nonmatchings/resolveRacePlayerCollisionVolumes-2163214805492048867/base_86.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race/player/race_player_collision/resolveRacePlayerCollisionVolumes.s")
 
 #ifdef NON_MATCHING

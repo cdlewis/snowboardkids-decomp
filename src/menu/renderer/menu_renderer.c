@@ -9,11 +9,11 @@
 #include "game/menu/renderer/menu_render_utils.h"
 
 #define FONT_GFX_CMD(pkt, cmd0, cmd1) \
-{ \
-    Gfx *_g = (Gfx *)(pkt); \
-    _g->words.w0 = (cmd0); \
-    _g->words.w1 = (cmd1); \
-}
+    {                                 \
+        Gfx *_g = (Gfx *)(pkt);       \
+        _g->words.w0 = (cmd0);        \
+        _g->words.w1 = (cmd1);        \
+    }
 
 #define MENU_GLYPH_SCRIPT_NEWLINE 0xFFFD
 #define MENU_GLYPH_SCRIPT_SPACE 0xFFFE
@@ -136,18 +136,43 @@ u16 gMenuTransparentPalette[MENU_PALETTE_COLOR_COUNT] = {
     0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF,
 };
 s16 gMenuSpriteFlipScales[4][2] = {
-    { 1, 1 },
-    { -1, 1 },
-    { 1, -1 },
+    { 1,  1  },
+    { -1, 1  },
+    { 1,  -1 },
     { -1, -1 },
 };
 
 extern void *allocMenuRenderScratch(s32 size);
 s32 drawMenuTilemapSprite(MenuRenderSprite *sprite, s32 arg1, s16 x, s16 y);
-void drawMenuSpriteClipped(s16 x, s16 y, MenuFontAssetTable *table, u16 imageIndex, u16 scaleX, u16 scaleY,
-                           u8 flipMode, u8 paletteIndex, s32 clipLeft, s32 clipTop, s32 clipRight, s32 clipBottom);
-void drawMenuSpriteWithAlphaClipped(s16 arg0, s16 arg1, void *arg2, u16 arg3, u16 arg4, u16 arg5, u8 arg6, u16 arg7, u8 arg8,
-                   s32 arg9, s32 argA, s32 argB, s32 argC);
+void drawMenuSpriteClipped(
+    s16 x,
+    s16 y,
+    MenuFontAssetTable *table,
+    u16 imageIndex,
+    u16 scaleX,
+    u16 scaleY,
+    u8 flipMode,
+    u8 paletteIndex,
+    s32 clipLeft,
+    s32 clipTop,
+    s32 clipRight,
+    s32 clipBottom
+);
+void drawMenuSpriteWithAlphaClipped(
+    s16 arg0,
+    s16 arg1,
+    void *arg2,
+    u16 arg3,
+    u16 arg4,
+    u16 arg5,
+    u8 arg6,
+    u16 arg7,
+    u8 arg8,
+    s32 arg9,
+    s32 argA,
+    s32 argB,
+    s32 argC
+);
 void drawMenuGlyph(s16 x, s16 y, u16 glyphIndex, u8 paletteIndex, u16 intensity, u16 fontBank);
 extern Gfx *gRegionAllocPtr;
 extern s16 gMenuFadeAlpha;
@@ -156,8 +181,18 @@ extern s16 gMenuViewportHeight;
 extern s16 gMenuViewportCenterX;
 extern s16 gMenuViewportCenterY;
 
-void drawMenuAssetRegion(s16 x, s16 y, void *tableAddress, u16 entryIndex, u16 scaleX, u16 scaleY,
-                         u8 startS, u8 startT, u8 width, u8 height) {
+void drawMenuAssetRegion(
+    s16 x,
+    s16 y,
+    void *tableAddress,
+    u16 entryIndex,
+    u16 scaleX,
+    u16 scaleY,
+    u8 startS,
+    u8 startT,
+    u8 width,
+    u8 height
+) {
     MenuRenderAssetTableEntry *entry;
     s32 minX;
     u8 *paletteBase;
@@ -185,7 +220,11 @@ void drawMenuAssetRegion(s16 x, s16 y, void *tableAddress, u16 entryIndex, u16 s
     bottom *= scaleYValue;
     bottom = ((bottom << 2) >> 5) + top;
     // Keeping these assignments on one source line preserves IDO's instruction scheduling.
-    texS = startS << 5; texT = startT << 5; minY = (s16)((gMenuViewportCenterY - (gMenuViewportHeight / 2)) << 2); maxY = (gMenuViewportCenterY + (gMenuViewportHeight / 2)) << 2; minX = (s16)((gMenuViewportCenterX - (gMenuViewportWidth / 2)) << 2);
+    texS = startS << 5;
+    texT = startT << 5;
+    minY = (s16)((gMenuViewportCenterY - (gMenuViewportHeight / 2)) << 2);
+    maxY = (gMenuViewportCenterY + (gMenuViewportHeight / 2)) << 2;
+    minX = (s16)((gMenuViewportCenterX - (gMenuViewportWidth / 2)) << 2);
     maxX = (gMenuViewportCenterX + (gMenuViewportWidth / 2)) << 2;
 
     if ((left < maxX) && (top < maxY) && (right >= minX) && (bottom >= minY)) {
@@ -206,12 +245,37 @@ void drawMenuAssetRegion(s16 x, s16 y, void *tableAddress, u16 entryIndex, u16 s
             bottom = maxY - 4;
         }
 
-        gDPLoadTextureTile_4b(gRegionAllocPtr++, entry->imageOffset + (u8 *)tableAddress + 0x80000000, G_IM_FMT_CI, entry->width,
-                              entry->height, 0, 0, entry->width, entry->height, 0, G_TX_CLAMP, G_TX_CLAMP,
-                              G_TX_NOMASK, G_TX_NOMASK, G_TX_NOLOD, G_TX_NOLOD);
+        gDPLoadTextureTile_4b(
+            gRegionAllocPtr++,
+            entry->imageOffset + (u8 *)tableAddress + 0x80000000,
+            G_IM_FMT_CI,
+            entry->width,
+            entry->height,
+            0,
+            0,
+            entry->width,
+            entry->height,
+            0,
+            G_TX_CLAMP,
+            G_TX_CLAMP,
+            G_TX_NOMASK,
+            G_TX_NOMASK,
+            G_TX_NOLOD,
+            G_TX_NOLOD
+        );
         gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, paletteBase + (entry->textureIndex << 5) + 0x80000000);
-        gSPTextureRectangle(gRegionAllocPtr++, left, top, right, bottom, G_TX_RENDERTILE, texS, texT,
-                            (u16)(0x8000 / scaleXValue), (u16)(0x8000 / scaleYValue));
+        gSPTextureRectangle(
+            gRegionAllocPtr++,
+            left,
+            top,
+            right,
+            bottom,
+            G_TX_RENDERTILE,
+            texS,
+            texT,
+            (u16)(0x8000 / scaleXValue),
+            (u16)(0x8000 / scaleYValue)
+        );
     }
 }
 
@@ -219,29 +283,51 @@ void drawMenuSprite(s16 arg0, s16 arg1, void *arg2, u16 arg3, u16 arg4, u16 arg5
     s32 temp_v0;
     s32 temp_v1;
 
-    drawMenuSpriteClipped(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7,
-                  temp_v0 = (s16)(gMenuViewportWidth / 2), temp_v1 = (s16)(gMenuViewportHeight / 2), temp_v0, temp_v1);
+    drawMenuSpriteClipped(
+        arg0,
+        arg1,
+        arg2,
+        arg3,
+        arg4,
+        arg5,
+        arg6,
+        arg7,
+        temp_v0 = (s16)(gMenuViewportWidth / 2),
+        temp_v1 = (s16)(gMenuViewportHeight / 2),
+        temp_v0,
+        temp_v1
+    );
 }
 
 /* Preserve the promoted tile-index argument used by an older caller. */
 #ifdef __clang__
-void drawMenuSpriteWideIndex(s16 x, s16 y, void *texture, s32 tileIndex, u16 width, u16 height, u8 palette,
-                             u8 flip) {
+void drawMenuSpriteWideIndex(s16 x, s16 y, void *texture, s32 tileIndex, u16 width, u16 height, u8 palette, u8 flip) {
     drawMenuSprite(x, y, texture, tileIndex, width, height, palette, flip);
 }
 #else
 #pragma weak drawMenuSpriteWideIndex = drawMenuSprite
-extern void drawMenuSpriteWideIndex(s16 x, s16 y, void *texture, s32 tileIndex, u16 width, u16 height, u8 palette,
-                                    u8 flip);
+extern void
+drawMenuSpriteWideIndex(s16 x, s16 y, void *texture, s32 tileIndex, u16 width, u16 height, u8 palette, u8 flip);
 #endif
 
 // drawMenuSpriteClipped best match: 85.877% (nonmatchings/drawMenuSpriteClipped-11/base_8.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/renderer/menu_renderer/drawMenuSpriteClipped.s")
 
 #ifdef NON_MATCHING
-void drawMenuSpriteClipped(s16 x, s16 y, MenuFontAssetTable *table, u16 imageIndex, u16 scaleX, u16 scaleY,
-                           u8 flipMode, u8 paletteIndex, s32 clipLeft, s32 clipTop, s32 clipRight,
-                           s32 clipBottom) {
+void drawMenuSpriteClipped(
+    s16 x,
+    s16 y,
+    MenuFontAssetTable *table,
+    u16 imageIndex,
+    u16 scaleX,
+    u16 scaleY,
+    u8 flipMode,
+    u8 paletteIndex,
+    s32 clipLeft,
+    s32 clipTop,
+    s32 clipRight,
+    s32 clipBottom
+) {
     MenuFontAssetEntry *entry;
     s16 minY;
     MenuPalette *palettes;
@@ -309,8 +395,8 @@ void drawMenuSpriteClipped(s16 x, s16 y, MenuFontAssetTable *table, u16 imageInd
             maxY = gMenuViewportCenterY + (gMenuViewportHeight / 2);
         }
 
-        if ((left < (s16)(maxX << 2)) && (top < (s16)(maxY << 2)) &&
-            (right.stored >= (s16)(minX << 2)) && (bottom.stored >= (s16)(minY << 2))) {
+        if ((left < (s16)(maxX << 2)) && (top < (s16)(maxY << 2)) && (right.stored >= (s16)(minX << 2)) &&
+            (bottom.stored >= (s16)(minY << 2))) {
             if (left < (s16)(minX << 2)) {
                 s32 clippedTexS;
 
@@ -353,15 +439,38 @@ void drawMenuSpriteClipped(s16 x, s16 y, MenuFontAssetTable *table, u16 imageInd
                 }
             }
 
-            gDPLoadTextureTile_4b(gRegionAllocPtr++, entry->imageOffset + (u8 *)table,
-                                  G_IM_FMT_CI, entry->width, entry->height, 0, 0,
-                                  entry->width, entry->height, 0, G_TX_CLAMP, G_TX_CLAMP,
-                                  G_TX_NOMASK, G_TX_NOMASK, G_TX_NOLOD, G_TX_NOLOD);
+            gDPLoadTextureTile_4b(
+                gRegionAllocPtr++,
+                entry->imageOffset + (u8 *)table,
+                G_IM_FMT_CI,
+                entry->width,
+                entry->height,
+                0,
+                0,
+                entry->width,
+                entry->height,
+                0,
+                G_TX_CLAMP,
+                G_TX_CLAMP,
+                G_TX_NOMASK,
+                G_TX_NOMASK,
+                G_TX_NOLOD,
+                G_TX_NOLOD
+            );
             gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, palette);
             textureStepS = 0x8000 / scaleX;
-            gSPTextureRectangle(gRegionAllocPtr++, left, top, right.value, bottom.value, G_TX_RENDERTILE,
-                                texS, texT, (u16)(textureStepS * flipS),
-                                (u16)((u16)(0x8000 / scaleY) * flipT));
+            gSPTextureRectangle(
+                gRegionAllocPtr++,
+                left,
+                top,
+                right.value,
+                bottom.value,
+                G_TX_RENDERTILE,
+                texS,
+                texT,
+                (u16)(textureStepS * flipS),
+                (u16)((u16)(0x8000 / scaleY) * flipT)
+            );
         }
     }
 }
@@ -371,8 +480,21 @@ void drawMenuSpriteWithAlpha(s16 arg0, s16 arg1, void *arg2, u16 arg3, u16 arg4,
     s32 temp_v0;
     s32 temp_v1;
 
-    drawMenuSpriteWithAlphaClipped(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, temp_v0 = (s16)(gMenuViewportWidth / 2),
-                  temp_v1 = (s16)(gMenuViewportHeight / 2), temp_v0, temp_v1);
+    drawMenuSpriteWithAlphaClipped(
+        arg0,
+        arg1,
+        arg2,
+        arg3,
+        arg4,
+        arg5,
+        arg6,
+        arg7,
+        arg8,
+        temp_v0 = (s16)(gMenuViewportWidth / 2),
+        temp_v1 = (s16)(gMenuViewportHeight / 2),
+        temp_v0,
+        temp_v1
+    );
 }
 
 /*
@@ -380,14 +502,32 @@ void drawMenuSpriteWithAlpha(s16 arg0, s16 arg1, void *arg2, u16 arg3, u16 arg4,
  * original argument promotions without weakening the canonical declaration.
  */
 #ifdef __clang__
-void drawMenuSpriteWithAlphaWideArgs(s32 x, s32 y, void *texture, s32 tileIndex, s32 width, s32 height,
-                                     s32 palette, s32 alpha, u32 flip) {
+void drawMenuSpriteWithAlphaWideArgs(
+    s32 x,
+    s32 y,
+    void *texture,
+    s32 tileIndex,
+    s32 width,
+    s32 height,
+    s32 palette,
+    s32 alpha,
+    u32 flip
+) {
     drawMenuSpriteWithAlpha(x, y, texture, tileIndex, width, height, palette, alpha, flip);
 }
 #else
 #pragma weak drawMenuSpriteWithAlphaWideArgs = drawMenuSpriteWithAlpha
-extern void drawMenuSpriteWithAlphaWideArgs(s32 x, s32 y, void *texture, s32 tileIndex, s32 width, s32 height,
-                                            s32 palette, s32 alpha, u32 flip);
+extern void drawMenuSpriteWithAlphaWideArgs(
+    s32 x,
+    s32 y,
+    void *texture,
+    s32 tileIndex,
+    s32 width,
+    s32 height,
+    s32 palette,
+    s32 alpha,
+    u32 flip
+);
 #endif
 
 // drawMenuSpriteWithAlphaClipped best match: 92.129%
@@ -395,9 +535,21 @@ extern void drawMenuSpriteWithAlphaWideArgs(s32 x, s32 y, void *texture, s32 til
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/renderer/menu_renderer/drawMenuSpriteWithAlphaClipped.s")
 
 #ifdef NON_MATCHING
-void drawMenuSpriteWithAlphaClipped(s16 x, s16 y, FontAsset *asset, u16 tileIndex, u16 scaleX, u16 scaleY,
-                                    u8 flipMode, u16 alpha, u8 paletteArg, s32 clipLeft, s32 clipTop,
-                                    s32 clipRight, s32 clipBottom) {
+void drawMenuSpriteWithAlphaClipped(
+    s16 x,
+    s16 y,
+    FontAsset *asset,
+    u16 tileIndex,
+    u16 scaleX,
+    u16 scaleY,
+    u8 flipMode,
+    u16 alpha,
+    u8 paletteArg,
+    s32 clipLeft,
+    s32 clipTop,
+    s32 clipRight,
+    s32 clipBottom
+) {
     FontTexture *texture;
     volatile s32 pad;
     u8 *paletteBase;
@@ -456,8 +608,7 @@ void drawMenuSpriteWithAlphaClipped(s16 x, s16 y, FontAsset *asset, u16 tileInde
             texS = (texWidth - 1) << 5;
         }
         minX = gMenuViewportCenterY;
-        if ((left && left) && left) {
-        }
+        if ((left && left) && left) {}
         if (flipT == -1) {
             texT = (texHeight - 1) << 5;
         }
@@ -494,28 +645,53 @@ void drawMenuSpriteWithAlphaClipped(s16 x, s16 y, FontAsset *asset, u16 tileInde
             if (paletteArg == (texture->imageOffset * 0)) {
                 palette = texture->paletteIndex;
             } else {
-                if ((!top) && (!top)) {
-                }
+                if ((!top) && (!top)) {}
                 palette = paletteArg - 1;
             }
 
             if (alpha != 0x100) {
                 gDPPipeSync(gRegionAllocPtr++);
                 FONT_GFX_CMD(gRegionAllocPtr++, 0xFC119623, 0xFF2FFFFF);
-                FONT_GFX_CMD(gRegionAllocPtr++, 0xFA000000,
-                             ((alpha & 0xFF) << 0x18) | ((alpha & 0xFF) << 0x10) |
-                                 ((alpha & 0xFF) << 8) | 0xFF);
-                if ((texT && texT) && texT) {
-                }
+                FONT_GFX_CMD(
+                    gRegionAllocPtr++,
+                    0xFA000000,
+                    ((alpha & 0xFF) << 0x18) | ((alpha & 0xFF) << 0x10) | ((alpha & 0xFF) << 8) | 0xFF
+                );
+                if ((texT && texT) && texT) {}
             }
 
-            gDPLoadTextureTile_4b(gRegionAllocPtr++, texture->imageOffset + (u8 *)asset, G_IM_FMT_CI, texture->width,
-                                  texture->height, 0, 0, texture->width, texture->height, 0, G_TX_CLAMP, G_TX_CLAMP,
-                                  G_TX_NOMASK, G_TX_NOMASK, G_TX_NOLOD, G_TX_NOLOD);
+            gDPLoadTextureTile_4b(
+                gRegionAllocPtr++,
+                texture->imageOffset + (u8 *)asset,
+                G_IM_FMT_CI,
+                texture->width,
+                texture->height,
+                0,
+                0,
+                texture->width,
+                texture->height,
+                0,
+                G_TX_CLAMP,
+                G_TX_CLAMP,
+                G_TX_NOMASK,
+                G_TX_NOMASK,
+                G_TX_NOLOD,
+                G_TX_NOLOD
+            );
             gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, paletteBase + (palette * 0x20));
             palette = 0x8000 / scaleXValue;
-            gSPTextureRectangle(gRegionAllocPtr++, left, top, right, bottom, G_TX_RENDERTILE, texS, texT,
-                                (u16)(palette * flipS), (u16)((u16)(0x8000 / scaleYValue) * flipT));
+            gSPTextureRectangle(
+                gRegionAllocPtr++,
+                left,
+                top,
+                right,
+                bottom,
+                G_TX_RENDERTILE,
+                texS,
+                texT,
+                (u16)(palette * flipS),
+                (u16)((u16)(0x8000 / scaleYValue) * flipT)
+            );
             if (alpha != 0x100) {
                 gSPDisplayList(gRegionAllocPtr++, gMenuRenderModeResetDl);
             }
@@ -554,10 +730,14 @@ void drawMenuSpriteWithPaletteScale(s16 x, s16 y, FontAsset *asset, u16 index, u
     srcX = 0;
     srcY = 0;
 
-    if (left >= gMenuViewportCenterX + (gMenuViewportWidth / 2)) return;
-    if (top >= gMenuViewportCenterY + (gMenuViewportHeight / 2)) return;
-    if (right < gMenuViewportCenterX - (gMenuViewportWidth / 2)) return;
-    if (bottom < gMenuViewportCenterY - (gMenuViewportHeight / 2)) return;
+    if (left >= gMenuViewportCenterX + (gMenuViewportWidth / 2))
+        return;
+    if (top >= gMenuViewportCenterY + (gMenuViewportHeight / 2))
+        return;
+    if (right < gMenuViewportCenterX - (gMenuViewportWidth / 2))
+        return;
+    if (bottom < gMenuViewportCenterY - (gMenuViewportHeight / 2))
+        return;
     if (left < gMenuViewportCenterX - (gMenuViewportWidth / 2)) {
         srcX = (gMenuViewportCenterX - (gMenuViewportWidth / 2)) - left;
         left = gMenuViewportCenterX - (gMenuViewportWidth / 2);
@@ -566,8 +746,10 @@ void drawMenuSpriteWithPaletteScale(s16 x, s16 y, FontAsset *asset, u16 index, u
         srcY = (gMenuViewportCenterY - (gMenuViewportHeight / 2)) - top;
         top = gMenuViewportCenterY - (gMenuViewportHeight / 2);
     }
-    if (right >= gMenuViewportCenterX + (gMenuViewportWidth / 2)) right = gMenuViewportCenterX + (gMenuViewportWidth / 2);
-    if (bottom >= gMenuViewportCenterY + (gMenuViewportHeight / 2)) bottom = gMenuViewportCenterY + (gMenuViewportHeight / 2);
+    if (right >= gMenuViewportCenterX + (gMenuViewportWidth / 2))
+        right = gMenuViewportCenterX + (gMenuViewportWidth / 2);
+    if (bottom >= gMenuViewportCenterY + (gMenuViewportHeight / 2))
+        bottom = gMenuViewportCenterY + (gMenuViewportHeight / 2);
 
     gDPPipeSync(gRegionAllocPtr++);
     gDPSetTextureFilter(gRegionAllocPtr++, G_TF_AVERAGE);
@@ -589,20 +771,53 @@ void drawMenuSpriteWithPaletteScale(s16 x, s16 y, FontAsset *asset, u16 index, u
     }
 
     gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, scratch);
-    gDPLoadTextureTile_4b(gRegionAllocPtr++, texture->imageOffset + (u8 *)asset, G_IM_FMT_CI,
-                          texture->width, texture->height, 0, 0, texture->width, texture->height,
-                          0, G_TX_CLAMP, G_TX_CLAMP, G_TX_NOMASK, G_TX_NOMASK, G_TX_NOLOD,
-                          G_TX_NOLOD);
-    gSPTextureRectangle(gRegionAllocPtr++, left << 2, top << 2, right << 2, bottom << 2,
-                        G_TX_RENDERTILE, (srcX << 5) + 0x10, (srcY << 5) + 0x10,
-                        MENU_HALF_SCALE_STEP, MENU_HALF_SCALE_STEP);
+    gDPLoadTextureTile_4b(
+        gRegionAllocPtr++,
+        texture->imageOffset + (u8 *)asset,
+        G_IM_FMT_CI,
+        texture->width,
+        texture->height,
+        0,
+        0,
+        texture->width,
+        texture->height,
+        0,
+        G_TX_CLAMP,
+        G_TX_CLAMP,
+        G_TX_NOMASK,
+        G_TX_NOMASK,
+        G_TX_NOLOD,
+        G_TX_NOLOD
+    );
+    gSPTextureRectangle(
+        gRegionAllocPtr++,
+        left << 2,
+        top << 2,
+        right << 2,
+        bottom << 2,
+        G_TX_RENDERTILE,
+        (srcX << 5) + 0x10,
+        (srcY << 5) + 0x10,
+        MENU_HALF_SCALE_STEP,
+        MENU_HALF_SCALE_STEP
+    );
     gDPPipeSync(gRegionAllocPtr++);
     gDPSetTextureFilter(gRegionAllocPtr++, G_TF_POINT);
     gDPPipeSync(gRegionAllocPtr++);
 }
 
-void drawMenuSpriteSubrect(s16 x, s16 y, void *assetAddress, u16 index, u8 srcX, u8 srcY, u8 width, u8 height, s32 scaleX,
-                           s32 scaleY) {
+void drawMenuSpriteSubrect(
+    s16 x,
+    s16 y,
+    void *assetAddress,
+    u16 index,
+    u8 srcX,
+    u8 srcY,
+    u8 width,
+    u8 height,
+    s32 scaleX,
+    s32 scaleY
+) {
     FontTexture *texture;
     s32 minX;
     u8 *paletteBase;
@@ -630,7 +845,11 @@ void drawMenuSpriteSubrect(s16 x, s16 y, void *assetAddress, u16 index, u8 srcX,
     bottom *= scaleYValue;
     bottom = ((bottom << 2) >> 5) + top;
     // Keeping these assignments on one source line preserves IDO's instruction scheduling.
-    texS = srcX << 5; texT = srcY << 5; minY = (s16)((gMenuViewportCenterY - (gMenuViewportHeight / 2)) << 2); maxY = (gMenuViewportCenterY + (gMenuViewportHeight / 2)) << 2; minX = (s16)((gMenuViewportCenterX - (gMenuViewportWidth / 2)) << 2);
+    texS = srcX << 5;
+    texT = srcY << 5;
+    minY = (s16)((gMenuViewportCenterY - (gMenuViewportHeight / 2)) << 2);
+    maxY = (gMenuViewportCenterY + (gMenuViewportHeight / 2)) << 2;
+    minX = (s16)((gMenuViewportCenterX - (gMenuViewportWidth / 2)) << 2);
     maxX = (gMenuViewportCenterX + (gMenuViewportWidth / 2)) << 2;
 
     if ((left < maxX) && (top < maxY) && (right >= minX) && (bottom >= minY)) {
@@ -651,12 +870,37 @@ void drawMenuSpriteSubrect(s16 x, s16 y, void *assetAddress, u16 index, u8 srcX,
             bottom = maxY - 4;
         }
 
-        gDPLoadTextureTile_4b(gRegionAllocPtr++, texture->imageOffset + (u8 *)assetAddress + 0x80000000, G_IM_FMT_CI, texture->width,
-                              texture->height, 0, 0, texture->width, texture->height, 0, G_TX_CLAMP, G_TX_CLAMP,
-                              G_TX_NOMASK, G_TX_NOMASK, G_TX_NOLOD, G_TX_NOLOD);
+        gDPLoadTextureTile_4b(
+            gRegionAllocPtr++,
+            texture->imageOffset + (u8 *)assetAddress + 0x80000000,
+            G_IM_FMT_CI,
+            texture->width,
+            texture->height,
+            0,
+            0,
+            texture->width,
+            texture->height,
+            0,
+            G_TX_CLAMP,
+            G_TX_CLAMP,
+            G_TX_NOMASK,
+            G_TX_NOMASK,
+            G_TX_NOLOD,
+            G_TX_NOLOD
+        );
         gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, paletteBase + (texture->paletteIndex << 5) + 0x80000000);
-        gSPTextureRectangle(gRegionAllocPtr++, left, top, right, bottom, G_TX_RENDERTILE, texS, texT,
-                            (u16)(0x8000 / scaleXValue), (u16)(0x8000 / scaleYValue));
+        gSPTextureRectangle(
+            gRegionAllocPtr++,
+            left,
+            top,
+            right,
+            bottom,
+            G_TX_RENDERTILE,
+            texS,
+            texT,
+            (u16)(0x8000 / scaleXValue),
+            (u16)(0x8000 / scaleYValue)
+        );
     }
 }
 
@@ -665,8 +909,16 @@ void drawMenuSpriteSubrect(s16 x, s16 y, void *assetAddress, u16 index, u8 srcX,
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/renderer/menu_renderer/drawMenuSpriteFixedScale.s")
 
 #ifdef NON_MATCHING
-void drawMenuSpriteFixedScale(s16 x, s16 y, FontAsset *assetAddress, u16 tileIndex, u16 scaleX, u16 scaleY, u8 flipMode,
-                              u8 unusedPalette) {
+void drawMenuSpriteFixedScale(
+    s16 x,
+    s16 y,
+    FontAsset *assetAddress,
+    u16 tileIndex,
+    u16 scaleX,
+    u16 scaleY,
+    u8 flipMode,
+    u8 unusedPalette
+) {
     FontTexture *texture;
     u8 *textureBase;
     u8 *paletteBase;
@@ -687,8 +939,7 @@ void drawMenuSpriteFixedScale(s16 x, s16 y, FontAsset *assetAddress, u16 tileInd
     u16 scaleYValue;
     u16 scaleYStep;
 
-    paletteBase = (s32)assetAddress + sizeof(FontAssetHeader) +
-                  (assetAddress->header.entryCount * sizeof(FontTexture));
+    paletteBase = (s32)assetAddress + sizeof(FontAssetHeader) + (assetAddress->header.entryCount * sizeof(FontTexture));
     scaleYValue = scaleY;
 
     if (scaleX >= 0xF001) {
@@ -706,11 +957,17 @@ void drawMenuSpriteFixedScale(s16 x, s16 y, FontAsset *assetAddress, u16 tileInd
 
     sScale = gMenuSpriteFlipScales[flipMode & 3][0];
     tScale = gMenuSpriteFlipScales[flipMode & 3][1];
-    textureBase = (u8 *)(s32)assetAddress + (tileIndex * sizeof(FontTexture)); textureBase += sizeof(FontAssetHeader); texture = (FontTexture *)textureBase; texWidth = texture->width;
+    textureBase = (u8 *)(s32)assetAddress + (tileIndex * sizeof(FontTexture));
+    textureBase += sizeof(FontAssetHeader);
+    texture = (FontTexture *)textureBase;
+    texWidth = texture->width;
 
-    clipRight = x; drawLeft = (drawRight = clipRight + gMenuViewportCenterX) << 2;
-    texS = (y + gMenuViewportCenterY) << 2; drawTop = texS;
-    drawRight = (((scaleX * texWidth) << 2) / 0x1000) + drawLeft; texHeight = texture->height;
+    clipRight = x;
+    drawLeft = (drawRight = clipRight + gMenuViewportCenterX) << 2;
+    texS = (y + gMenuViewportCenterY) << 2;
+    drawTop = texS;
+    drawRight = (((scaleX * texWidth) << 2) / 0x1000) + drawLeft;
+    texHeight = texture->height;
     drawBottom = (((scaleYValue * texHeight) << 2) / 0x1000) + drawTop;
     texS = 0;
     texT = 0;
@@ -737,7 +994,8 @@ void drawMenuSpriteFixedScale(s16 x, s16 y, FontAsset *assetAddress, u16 tileInd
         }
         if (drawTop < clipTop) {
             texT = (((((clipTop - drawTop) << 2) << 1) << 12) / scaleYValue);
-            if (tScale == -1) texT = ((texHeight - 1) << 5) - texT;
+            if (tScale == -1)
+                texT = ((texHeight - 1) << 5) - texT;
             drawTop = clipTop;
         }
         if (drawRight >= clipRight) {
@@ -747,15 +1005,39 @@ void drawMenuSpriteFixedScale(s16 x, s16 y, FontAsset *assetAddress, u16 tileInd
             drawBottom = clipBottom - 4;
         }
 
-        gDPLoadTextureTile_4b(gRegionAllocPtr++,
-                              (u8 *)((s32)assetAddress + texture->imageOffset + 0x80000000), G_IM_FMT_CI,
-                              texture->width, texture->height, 0, 0, texture->width, texture->height, 0, G_TX_CLAMP,
-                              G_TX_CLAMP, G_TX_NOMASK, G_TX_NOMASK, G_TX_NOLOD, G_TX_NOLOD);
-        gDPLoadTLUT_pal16(gRegionAllocPtr++, 0,
-                          (u8 *)((u32)paletteBase + (texture->paletteIndex << 5) + 0x80000000));
-        scaleYValue = 0x400000 / scaleX; scaleYStep = scaleY;
-        gSPTextureRectangle(gRegionAllocPtr++, drawLeft, drawTop, drawRight, drawBottom, G_TX_RENDERTILE, texS, texT,
-                            (u16)(scaleYValue * sScale), (u16)((u16)(0x400000 / scaleYStep) * tScale));
+        gDPLoadTextureTile_4b(
+            gRegionAllocPtr++,
+            (u8 *)((s32)assetAddress + texture->imageOffset + 0x80000000),
+            G_IM_FMT_CI,
+            texture->width,
+            texture->height,
+            0,
+            0,
+            texture->width,
+            texture->height,
+            0,
+            G_TX_CLAMP,
+            G_TX_CLAMP,
+            G_TX_NOMASK,
+            G_TX_NOMASK,
+            G_TX_NOLOD,
+            G_TX_NOLOD
+        );
+        gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, (u8 *)((u32)paletteBase + (texture->paletteIndex << 5) + 0x80000000));
+        scaleYValue = 0x400000 / scaleX;
+        scaleYStep = scaleY;
+        gSPTextureRectangle(
+            gRegionAllocPtr++,
+            drawLeft,
+            drawTop,
+            drawRight,
+            drawBottom,
+            G_TX_RENDERTILE,
+            texS,
+            texT,
+            (u16)(scaleYValue * sScale),
+            (u16)((u16)(0x400000 / scaleYStep) * tScale)
+        );
     }
 }
 #endif
@@ -764,8 +1046,16 @@ void drawMenuSpriteTile(s16 arg0, s16 arg1, void *arg2, u16 arg3, u16 arg4, u16 
     drawMenuSpriteTileClipped(arg0, arg1, arg2, arg3, arg4, arg5, gMenuViewportWidth / 2, gMenuViewportHeight / 2);
 }
 
-void drawMenuSpriteTileClipped(s16 x, s16 y, MenuFontAssetTable *table, u16 entryIndex, u16 unused, u16 intensity,
-                               s16 clipX, s16 clipY) {
+void drawMenuSpriteTileClipped(
+    s16 x,
+    s16 y,
+    MenuFontAssetTable *table,
+    u16 entryIndex,
+    u16 unused,
+    u16 intensity,
+    s16 clipX,
+    s16 clipY
+) {
     MenuFontAssetEntry *entry;
     volatile s32 padding2;
     u8 *paletteBase;
@@ -838,17 +1128,43 @@ void drawMenuSpriteTileClipped(s16 x, s16 y, MenuFontAssetTable *table, u16 entr
         y1 = maxY - 1;
     }
 
-    gDPLoadTextureTile(gRegionAllocPtr++, entry->imageOffset + (u8 *)table, G_IM_FMT_CI, G_IM_SIZ_8b,
-                       entry->width, entry->height, 0, 0, entry->width, entry->height, 0, G_TX_CLAMP,
-                       G_TX_CLAMP, G_TX_NOMASK, G_TX_NOMASK, G_TX_NOLOD, G_TX_NOLOD);
+    gDPLoadTextureTile(
+        gRegionAllocPtr++,
+        entry->imageOffset + (u8 *)table,
+        G_IM_FMT_CI,
+        G_IM_SIZ_8b,
+        entry->width,
+        entry->height,
+        0,
+        0,
+        entry->width,
+        entry->height,
+        0,
+        G_TX_CLAMP,
+        G_TX_CLAMP,
+        G_TX_NOMASK,
+        G_TX_NOMASK,
+        G_TX_NOLOD,
+        G_TX_NOLOD
+    );
     if (intensity != 0x100) {
         gDPPipeSync(gRegionAllocPtr++);
         gDPSetCombineMode(gRegionAllocPtr++, G_CC_MODULATEIA_PRIM, G_CC_MODULATEIA_PRIM);
         gDPSetPrimColor(gRegionAllocPtr++, 0, 0, intensity, intensity, intensity, 0xFF);
     }
     gDPLoadTLUT_pal256(gRegionAllocPtr++, paletteBase + (entry->textureIndex << 5));
-    gSPTextureRectangle(gRegionAllocPtr++, x0 << 2, y0 << 2, x1 << 2, y1 << 2, G_TX_RENDERTILE,
-                        clipS << 5, clipT << 5, 0x400, 0x400);
+    gSPTextureRectangle(
+        gRegionAllocPtr++,
+        x0 << 2,
+        y0 << 2,
+        x1 << 2,
+        y1 << 2,
+        G_TX_RENDERTILE,
+        clipS << 5,
+        clipT << 5,
+        0x400,
+        0x400
+    );
     if (intensity != 0x100) {
         gSPDisplayList(gRegionAllocPtr++, gMenuRenderModeResetDl);
     }
@@ -924,8 +1240,11 @@ void drawMenuTextureByAssetId(s16 x, s16 y, void *texture, u16 assetId, u16 widt
     FONT_GFX_CMD(gRegionAllocPtr++, 0xE6000000, 0);
     FONT_GFX_CMD(gRegionAllocPtr++, 0xF0000000, 0x0703C000);
     FONT_GFX_CMD(gRegionAllocPtr++, 0xE7000000, 0);
-    FONT_GFX_CMD(gRegionAllocPtr++, 0xE4000000 | ((x1 & 0xFFF) << 12) | (y1 & 0xFFF),
-                 ((x0 & 0xFFF) << 12) | (y0 & 0xFFF));
+    FONT_GFX_CMD(
+        gRegionAllocPtr++,
+        0xE4000000 | ((x1 & 0xFFF) << 12) | (y1 & 0xFFF),
+        ((x0 & 0xFFF) << 12) | (y0 & 0xFFF)
+    );
     FONT_GFX_CMD(gRegionAllocPtr++, 0xB4000000, 0);
     FONT_GFX_CMD(gRegionAllocPtr++, 0xB3000000, 0x04000400);
 }
@@ -1057,8 +1376,7 @@ s32 drawMenuTilemapSprite(MenuRenderSprite *sprite, s32 imageSize, s16 tilemapWi
     if (render->tileSize == 0x10) {
         tileShift = 4;
     } else {
-        if (0) {
-        }
+        if (0) {}
         tileShift = 5;
     }
 
@@ -1077,103 +1395,139 @@ s32 drawMenuTilemapSprite(MenuRenderSprite *sprite, s32 imageSize, s16 tilemapWi
     firstDrawX = clipLeft - sourceOffsetX;
     drawY = clipTop - sourceOffsetY;
     tileY = (sourceY >> tileShift) % tilemapHeight;
-    while (0) {
-    }
+    while (0) {}
     for (row = 0; row < rowCount; row++) {
-            drawX = firstDrawX;
-            tileX = (sourceX >> tileShift) % tilemapWidth;
+        drawX = firstDrawX;
+        tileX = (sourceX >> tileShift) % tilemapWidth;
 
-            for (column = 0; column < columnCount; column++) {
-                    tileId = tilemap[(s16)(tileX + (tileY * render->tileYStep))];
-                    info = &tileInfo[tileId];
-                    paletteIndex = info->paletteIndex;
-                    imageIndex = info->imageIndex;
-                    paletteValue = paletteIndex;
+        for (column = 0; column < columnCount; column++) {
+            tileId = tilemap[(s16)(tileX + (tileY * render->tileYStep))];
+            info = &tileInfo[tileId];
+            paletteIndex = info->paletteIndex;
+            imageIndex = info->imageIndex;
+            paletteValue = paletteIndex;
 
-                    if (tileId != 0) {
-                        scaleS = gMenuSpriteFlipScales[info->flip][0];
-                        scaleT = gMenuSpriteFlipScales[info->flip][1];
-                        rectLeft = drawX;
-                        rectTop = drawY;
-                        rectRight = drawX + render->tileSize;
-                        rectBottom = drawY + render->tileXStep;
-                        tileMask = render->tileSize;
-                        texS = 0;
-                        texT = 0;
+            if (tileId != 0) {
+                scaleS = gMenuSpriteFlipScales[info->flip][0];
+                scaleT = gMenuSpriteFlipScales[info->flip][1];
+                rectLeft = drawX;
+                rectTop = drawY;
+                rectRight = drawX + render->tileSize;
+                rectBottom = drawY + render->tileXStep;
+                tileMask = render->tileSize;
+                texS = 0;
+                texT = 0;
 
+                if (scaleS == -1) {
+                    texS = tileMask - 1;
+                }
+                if (scaleT == -1) {
+                    texT = render->tileXStep - 1;
+                }
+
+                if ((drawX < clipRight) && (drawY < clipBottom) && (rectRight >= clipLeft) && (rectBottom >= clipTop)) {
+                    if (drawX < clipLeft) {
+                        texS = clipLeft - drawX;
                         if (scaleS == -1) {
-                            texS = tileMask - 1;
+                            texS = (render->tileSize - texS) - 1;
                         }
-                        if (scaleT == -1) {
-                            texT = render->tileXStep - 1;
-                        }
-
-                        if ((drawX < clipRight) && (drawY < clipBottom) && (rectRight >= clipLeft) &&
-                            (rectBottom >= clipTop)) {
-                            if (drawX < clipLeft) {
-                                texS = clipLeft - drawX;
-                                if (scaleS == -1) {
-                                    texS = (render->tileSize - texS) - 1;
-                                }
-                                rectLeft = clipLeft;
-                            }
-
-                            if (drawY < clipTop) {
-                                texT = clipTop - drawY;
-                                if (scaleT == -1) {
-                                    texT = (render->tileXStep - texT) - 1;
-                                }
-                                rectTop = clipTop;
-                            }
-
-                            if (rectRight >= clipRight) {
-                                rectRight = clipRight - 1;
-                            }
-                            paletteBank = paletteValue;
-                            if (rectBottom >= clipBottom) {
-                                rectBottom = clipBottom - 1;
-                            }
-
-                            if ((u8)imageSize == 0) {
-                                gDPLoadTLUT_pal16(gRegionAllocPtr++, paletteValue,
-                                                palette + (paletteBank << 4));
-                                gDPLoadTextureTile_4b(
-                                    gRegionAllocPtr++,
-                                    &image[((imageIndex - 1) * render->tileSize * render->tileXStep) / 4],
-                                    textureFormat, render->tileSize, render->tileXStep, 0, 0,
-                                    render->tileSize, render->tileXStep, paletteValue & 0xF,
-                                    G_TX_CLAMP, G_TX_CLAMP, G_TX_NOMASK, G_TX_NOMASK, G_TX_NOLOD,
-                                    G_TX_NOLOD);
-                            } else {
-                                gDPLoadTLUT_pal256(gRegionAllocPtr++, palette + (paletteValue << 4));
-                                gDPLoadTextureTile(
-                                    gRegionAllocPtr++,
-                                    &image[((imageIndex - 1) * render->tileSize * render->tileXStep) / 2],
-                                    textureFormat, G_IM_SIZ_8b, render->tileSize, render->tileXStep,
-                                    0, 0, render->tileSize, render->tileXStep, 0, G_TX_CLAMP,
-                                    G_TX_CLAMP, G_TX_NOMASK, G_TX_NOMASK, G_TX_NOLOD, G_TX_NOLOD);
-                            }
-
-                            gSPTextureRectangle(
-                                gRegionAllocPtr++, rectLeft << 2, rectTop << 2, rectRight << 2,
-                                rectBottom << 2, G_TX_RENDERTILE, texS << 5, texT << 5,
-                                (scaleS << 3) << 7, (scaleT << 8) << 2);
-                        }
+                        rectLeft = clipLeft;
                     }
 
-                    drawX += render->tileSize;
-                    tileX = (tileX + 1) % tilemapWidth;
+                    if (drawY < clipTop) {
+                        texT = clipTop - drawY;
+                        if (scaleT == -1) {
+                            texT = (render->tileXStep - texT) - 1;
+                        }
+                        rectTop = clipTop;
+                    }
+
+                    if (rectRight >= clipRight) {
+                        rectRight = clipRight - 1;
+                    }
+                    paletteBank = paletteValue;
+                    if (rectBottom >= clipBottom) {
+                        rectBottom = clipBottom - 1;
+                    }
+
+                    if ((u8)imageSize == 0) {
+                        gDPLoadTLUT_pal16(gRegionAllocPtr++, paletteValue, palette + (paletteBank << 4));
+                        gDPLoadTextureTile_4b(
+                            gRegionAllocPtr++,
+                            &image[((imageIndex - 1) * render->tileSize * render->tileXStep) / 4],
+                            textureFormat,
+                            render->tileSize,
+                            render->tileXStep,
+                            0,
+                            0,
+                            render->tileSize,
+                            render->tileXStep,
+                            paletteValue & 0xF,
+                            G_TX_CLAMP,
+                            G_TX_CLAMP,
+                            G_TX_NOMASK,
+                            G_TX_NOMASK,
+                            G_TX_NOLOD,
+                            G_TX_NOLOD
+                        );
+                    } else {
+                        gDPLoadTLUT_pal256(gRegionAllocPtr++, palette + (paletteValue << 4));
+                        gDPLoadTextureTile(
+                            gRegionAllocPtr++,
+                            &image[((imageIndex - 1) * render->tileSize * render->tileXStep) / 2],
+                            textureFormat,
+                            G_IM_SIZ_8b,
+                            render->tileSize,
+                            render->tileXStep,
+                            0,
+                            0,
+                            render->tileSize,
+                            render->tileXStep,
+                            0,
+                            G_TX_CLAMP,
+                            G_TX_CLAMP,
+                            G_TX_NOMASK,
+                            G_TX_NOMASK,
+                            G_TX_NOLOD,
+                            G_TX_NOLOD
+                        );
+                    }
+
+                    gSPTextureRectangle(
+                        gRegionAllocPtr++,
+                        rectLeft << 2,
+                        rectTop << 2,
+                        rectRight << 2,
+                        rectBottom << 2,
+                        G_TX_RENDERTILE,
+                        texS << 5,
+                        texT << 5,
+                        (scaleS << 3) << 7,
+                        (scaleT << 8) << 2
+                    );
+                }
             }
 
-            drawY += render->tileXStep;
-            tileY = (tileY + 1) % tilemapHeight;
+            drawX += render->tileSize;
+            tileX = (tileX + 1) % tilemapWidth;
+        }
+
+        drawY += render->tileXStep;
+        tileY = (tileY + 1) % tilemapHeight;
     }
 
     return row;
 }
 #endif
 
-void drawMenuGlyphScriptWithFontBank(volatile s16 x, s16 y, MenuGlyphScript *script, s32 palette, u16 scale, u16 fontBank) {
+void drawMenuGlyphScriptWithFontBank(
+    volatile s16 x,
+    s16 y,
+    MenuGlyphScript *script,
+    s32 palette,
+    u16 scale,
+    u16 fontBank
+) {
     u16 firstGlyph;
     s32 glyphCode;
     MenuGlyphScript *scriptCursor;
@@ -1205,8 +1559,14 @@ void drawMenuGlyphScriptWithFontBank(volatile s16 x, s16 y, MenuGlyphScript *scr
             } else {
                 advance = glyphAdvance;
                 if ((glyphCode & 0xFFFF) != MENU_GLYPH_SCRIPT_SPACE) {
-                    drawMenuGlyph(drawX, drawY, glyphCode & 0xFFFF, MENU_GLYPH_PALETTE_INDEX(palette), scaleValue,
-                                  fontBankValue);
+                    drawMenuGlyph(
+                        drawX,
+                        drawY,
+                        glyphCode & 0xFFFF,
+                        MENU_GLYPH_PALETTE_INDEX(palette),
+                        scaleValue,
+                        fontBankValue
+                    );
                 }
                 drawX += advance;
             }
@@ -1245,8 +1605,14 @@ void drawMenuGlyphScriptDefaultFont(volatile s16 x, s16 y, MenuGlyphScript *scri
                 drawY += MENU_GLYPH_LINE_HEIGHT;
             } else {
                 if ((currentGlyph & 0xFFFF) != MENU_GLYPH_SCRIPT_SPACE) {
-                    drawMenuGlyph(drawX, drawY, currentGlyph & 0xFFFF, MENU_GLYPH_PALETTE_INDEX(palette), paletteScale,
-                                  MENU_GLYPH_DEFAULT_FONT_BANK);
+                    drawMenuGlyph(
+                        drawX,
+                        drawY,
+                        currentGlyph & 0xFFFF,
+                        MENU_GLYPH_PALETTE_INDEX(palette),
+                        paletteScale,
+                        MENU_GLYPH_DEFAULT_FONT_BANK
+                    );
                 }
                 drawX += glyphAdvance;
             }
@@ -1341,15 +1707,47 @@ void drawMenuGlyph(s16 x, s16 y, u16 glyphIndex, u8 paletteIndex, u16 intensity,
     }
 
     gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, scaledPalette);
-    gDPLoadTextureTile_4b(gRegionAllocPtr++, entry->imageOffset + (u8 *)font, G_IM_FMT_CI,
-                          entry->width, entry->height, 0, 0, entry->width, entry->height, 0,
-                          G_TX_CLAMP, G_TX_CLAMP, G_TX_NOMASK, G_TX_NOMASK, G_TX_NOLOD,
-                          G_TX_NOLOD);
-    gSPTextureRectangle(gRegionAllocPtr++, x0 << 2, y0 << 2, x1 << 2, y1 << 2,
-                        G_TX_RENDERTILE, clipS << 5, clipT << 5, 0x400, 0x400);
+    gDPLoadTextureTile_4b(
+        gRegionAllocPtr++,
+        entry->imageOffset + (u8 *)font,
+        G_IM_FMT_CI,
+        entry->width,
+        entry->height,
+        0,
+        0,
+        entry->width,
+        entry->height,
+        0,
+        G_TX_CLAMP,
+        G_TX_CLAMP,
+        G_TX_NOMASK,
+        G_TX_NOMASK,
+        G_TX_NOLOD,
+        G_TX_NOLOD
+    );
+    gSPTextureRectangle(
+        gRegionAllocPtr++,
+        x0 << 2,
+        y0 << 2,
+        x1 << 2,
+        y1 << 2,
+        G_TX_RENDERTILE,
+        clipS << 5,
+        clipT << 5,
+        0x400,
+        0x400
+    );
 }
 
-void drawMenuColoredGlyphScript(volatile s16 x, s16 y, MenuGlyphScript *script, s32 palette, u16 scale, u16 colorMode, u16 fontBank) {
+void drawMenuColoredGlyphScript(
+    volatile s16 x,
+    s16 y,
+    MenuGlyphScript *script,
+    s32 palette,
+    u16 scale,
+    u16 colorMode,
+    u16 fontBank
+) {
     u16 firstGlyph;
     s32 glyphCode;
     MenuGlyphScript *scriptCursor;
@@ -1385,8 +1783,15 @@ void drawMenuColoredGlyphScript(volatile s16 x, s16 y, MenuGlyphScript *script, 
             } else {
                 advance = glyphAdvance;
                 if (spaceGlyph != (glyphCode & 0xFFFF)) {
-                    drawMenuColoredGlyph(drawX, drawY, glyphCode & 0xFFFF, MENU_GLYPH_PALETTE_INDEX(palette), scaleValue,
-                                         colorModeValue, fontBankValue);
+                    drawMenuColoredGlyph(
+                        drawX,
+                        drawY,
+                        glyphCode & 0xFFFF,
+                        MENU_GLYPH_PALETTE_INDEX(palette),
+                        scaleValue,
+                        colorModeValue,
+                        fontBankValue
+                    );
                 }
                 drawX += advance;
             }
@@ -1396,8 +1801,14 @@ void drawMenuColoredGlyphScript(volatile s16 x, s16 y, MenuGlyphScript *script, 
     }
 }
 
-void drawMenuGlyphScript(volatile s16 x, s16 y, MenuGlyphScript *script,
-                         s32 palette, u16 scale, volatile u16 colorMode) {
+void drawMenuGlyphScript(
+    volatile s16 x,
+    s16 y,
+    MenuGlyphScript *script,
+    s32 palette,
+    u16 scale,
+    volatile u16 colorMode
+) {
     u16 firstGlyph;
     s32 glyphCode;
     MenuGlyphScript *scriptCursor;
@@ -1423,8 +1834,7 @@ void drawMenuGlyphScript(volatile s16 x, s16 y, MenuGlyphScript *script,
         scaleValue = scale;
         glyphCode = firstGlyph;
         colorModeValue = colorMode;
-        if (scale) {
-        }
+        if (scale) {}
         do {
             spaceGlyph = MENU_GLYPH_SCRIPT_SPACE;
             if (MENU_GLYPH_SCRIPT_NEWLINE == (glyphCode & 0xFFFF)) {
@@ -1432,14 +1842,20 @@ void drawMenuGlyphScript(volatile s16 x, s16 y, MenuGlyphScript *script,
                 drawY += MENU_GLYPH_LINE_HEIGHT;
             } else if (spaceGlyph == (glyphCode & 0xFFFF)) {
                 drawX += glyphAdvance;
-                if (0) {
-                }
+                if (0) {}
             } else if ((glyphCode & 0xFFFF) == MENU_GLYPH_SCRIPT_COLOR) {
                 colorModeValue = scriptCursor[1];
                 scriptCursor++;
             } else {
-                drawMenuColoredGlyph(drawX, drawY, glyphCode & 0xFFFF, MENU_GLYPH_PALETTE_INDEX(palette), scaleValue,
-                                     colorModeValue, MENU_GLYPH_DEFAULT_FONT_BANK);
+                drawMenuColoredGlyph(
+                    drawX,
+                    drawY,
+                    glyphCode & 0xFFFF,
+                    MENU_GLYPH_PALETTE_INDEX(palette),
+                    scaleValue,
+                    colorModeValue,
+                    MENU_GLYPH_DEFAULT_FONT_BANK
+                );
                 drawX += (advance = glyphAdvance);
             }
             glyphCode = scriptCursor[1];
@@ -1533,19 +1949,46 @@ void drawMenuColoredGlyph(s16 x, s16 y, u16 glyph, u8 palette, u16 paletteScale,
                 }
 
                 entry = &font->entries[glyph];
-                if (1) {
-                }
+                if (1) {}
 
                 gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, scaledPalette);
-                gDPLoadTextureTile_4b(gRegionAllocPtr++, entry->imageOffset + (u8 *)font, 2, entry->width, entry->height,
-                                      0, 0, entry->width, entry->height, 0, 0x2, 0x2, 0, 0, 0, 0);
-                gSPTextureRectangle(gRegionAllocPtr++, x0 << 2, y0 << 2, x1 << 2, y1 << 2, 0, clipS << 5,
-                                    clipT << 5, 0x400, 0x400);
+                gDPLoadTextureTile_4b(
+                    gRegionAllocPtr++,
+                    entry->imageOffset + (u8 *)font,
+                    2,
+                    entry->width,
+                    entry->height,
+                    0,
+                    0,
+                    entry->width,
+                    entry->height,
+                    0,
+                    0x2,
+                    0x2,
+                    0,
+                    0,
+                    0,
+                    0
+                );
+                gSPTextureRectangle(
+                    gRegionAllocPtr++,
+                    x0 << 2,
+                    y0 << 2,
+                    x1 << 2,
+                    y1 << 2,
+                    0,
+                    clipS << 5,
+                    clipT << 5,
+                    0x400,
+                    0x400
+                );
             }
         }
     }
 }
 
+// IDO code generation for this function is sensitive to source line layout.
+// clang-format off
 void drawMenuAsciiGlyph(s16 x, s16 y, u16 tileS, s32 tileT, u16 palette, u16 paletteScale) {
     s32 x0;
     s32 storedY;
@@ -1650,6 +2093,7 @@ void drawMenuAsciiGlyph(s16 x, s16 y, u16 tileS, s32 tileT, u16 palette, u16 pal
         }
     }
 }
+// clang-format on
 
 void drawMenuAsciiText(s16 arg0, s16 arg1, u8 *arg2, u16 arg3, u16 arg4) {
     s32 var_s0;
@@ -1681,8 +2125,7 @@ void drawMenuAsciiText(s16 arg0, s16 arg1, u8 *arg2, u16 arg3, u16 arg4) {
                 var_v0 = var_v1 - 0x20;
                 if ((u32)var_v0 < 0x40) {
                     var_a2 = var_v0 & 7;
-                    drawMenuAsciiGlyph(var_s0, var_s2, ((var_a2 << 3) & 0xFFFF) & 0xFFFF, var_v0 & 0x38, arg3,
-                                  arg4);
+                    drawMenuAsciiGlyph(var_s0, var_s2, ((var_a2 << 3) & 0xFFFF) & 0xFFFF, var_v0 & 0x38, arg3, arg4);
                 }
                 var_s0 += 8;
             }
@@ -1693,13 +2136,11 @@ void drawMenuAsciiText(s16 arg0, s16 arg1, u8 *arg2, u16 arg3, u16 arg4) {
 }
 
 void drawMenuSolidRect(s16 x0, s16 y0, s16 x1, s16 y1, s16 r, s16 g, s16 b) {
-    if ((x0 >= 0) && (x0 < 321) && (x1 >= 0) && (x1 < 321) &&
-        (y0 >= 0) && (y0 < 241) && (y1 >= 0) && (y1 < 241)) {
+    if ((x0 >= 0) && (x0 < 321) && (x1 >= 0) && (x1 < 321) && (y0 >= 0) && (y0 < 241) && (y1 >= 0) && (y1 < 241)) {
         gDPPipeSync(gRegionAllocPtr++);
         gDPSetCycleType(gRegionAllocPtr++, G_CYC_FILL);
         gDPSetRenderMode(gRegionAllocPtr++, G_RM_NOOP, G_RM_NOOP2);
-        gDPSetFillColor(gRegionAllocPtr++,
-                        (GPACK_RGBA5551(r, g, b, 1) << 16) | GPACK_RGBA5551(r, g, b, 1));
+        gDPSetFillColor(gRegionAllocPtr++, (GPACK_RGBA5551(r, g, b, 1) << 16) | GPACK_RGBA5551(r, g, b, 1));
         gDPFillRectangle(gRegionAllocPtr++, x0, y0, x1, y1);
         gSPDisplayList(gRegionAllocPtr++, gMenuRenderModeResetDl);
     }
@@ -1778,7 +2219,9 @@ void drawMenuSpriteCrossfade(s16 x, s16 y, MenuFontAssetTable *table, u16 imageI
     }
 
     if (x0 < minX) {
-        do { clipS = minX - x0; } while (0);
+        do {
+            clipS = minX - x0;
+        } while (0);
         x0 = minX;
     }
     if (y0 < minY) {
@@ -1796,19 +2239,78 @@ void drawMenuSpriteCrossfade(s16 x, s16 y, MenuFontAssetTable *table, u16 imageI
     gDPSetCycleType(gRegionAllocPtr++, G_CYC_2CYCLE);
     gDPSetTextureLOD(gRegionAllocPtr++, G_TL_TILE);
     gDPSetPrimColor(gRegionAllocPtr++, 0, 0, 0, 0, 0, alpha);
-    gDPSetCombineLERP(gRegionAllocPtr++, TEXEL1, TEXEL0, PRIMITIVE_ALPHA, TEXEL0, TEXEL1, TEXEL0,
-                      PRIMITIVE, TEXEL0, 0, 0, 0, COMBINED, 0, 0, 0, COMBINED);
+    gDPSetCombineLERP(
+        gRegionAllocPtr++,
+        TEXEL1,
+        TEXEL0,
+        PRIMITIVE_ALPHA,
+        TEXEL0,
+        TEXEL1,
+        TEXEL0,
+        PRIMITIVE,
+        TEXEL0,
+        0,
+        0,
+        0,
+        COMBINED,
+        0,
+        0,
+        0,
+        COMBINED
+    );
 
-    gDPLoadTextureTile(gRegionAllocPtr++, (u8 *)table + (0, entry0->imageOffset), G_IM_FMT_RGBA,
-                       G_IM_SIZ_8b, entry0->width, entry0->height, 0, 0, entry0->width,
-                       entry0->height, 0, G_TX_WRAP, G_TX_WRAP, G_TX_NOMASK, G_TX_NOMASK,
-                       G_TX_NOLOD, G_TX_NOLOD);
-    gDPLoadMultiTile(gRegionAllocPtr++, (u8 *)table + (0, entry1->imageOffset), 0x100,
-                     G_TX_RENDERTILE + 1, G_IM_FMT_RGBA, G_IM_SIZ_8b, entry1->width, entry1->height,
-                     0, 0, entry1->width, entry1->height, 0, G_TX_WRAP, G_TX_WRAP, G_TX_NOMASK,
-                     G_TX_NOMASK, G_TX_NOLOD, G_TX_NOLOD);
-    gDPLoadTLUT_pal256(gRegionAllocPtr++, (entry1->textureIndex << 5) + (u8*)paletteBase);
-    gSPTextureRectangle(gRegionAllocPtr++, x0 << 2, y0 << 2, x1 << 2, y1 << 2,
-                        G_TX_RENDERTILE, clipS << 5, clipT << 5, 0x400, 0x400);
+    gDPLoadTextureTile(
+        gRegionAllocPtr++,
+        (u8 *)table + (0, entry0->imageOffset),
+        G_IM_FMT_RGBA,
+        G_IM_SIZ_8b,
+        entry0->width,
+        entry0->height,
+        0,
+        0,
+        entry0->width,
+        entry0->height,
+        0,
+        G_TX_WRAP,
+        G_TX_WRAP,
+        G_TX_NOMASK,
+        G_TX_NOMASK,
+        G_TX_NOLOD,
+        G_TX_NOLOD
+    );
+    gDPLoadMultiTile(
+        gRegionAllocPtr++,
+        (u8 *)table + (0, entry1->imageOffset),
+        0x100,
+        G_TX_RENDERTILE + 1,
+        G_IM_FMT_RGBA,
+        G_IM_SIZ_8b,
+        entry1->width,
+        entry1->height,
+        0,
+        0,
+        entry1->width,
+        entry1->height,
+        0,
+        G_TX_WRAP,
+        G_TX_WRAP,
+        G_TX_NOMASK,
+        G_TX_NOMASK,
+        G_TX_NOLOD,
+        G_TX_NOLOD
+    );
+    gDPLoadTLUT_pal256(gRegionAllocPtr++, (entry1->textureIndex << 5) + (u8 *)paletteBase);
+    gSPTextureRectangle(
+        gRegionAllocPtr++,
+        x0 << 2,
+        y0 << 2,
+        x1 << 2,
+        y1 << 2,
+        G_TX_RENDERTILE,
+        clipS << 5,
+        clipT << 5,
+        0x400,
+        0x400
+    );
     gSPDisplayList(gRegionAllocPtr++, gMenuRenderModeResetDl);
 }

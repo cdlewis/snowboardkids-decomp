@@ -43,10 +43,18 @@ void updateRacePlayerItemEffectUse(RacePlayer *player) {
                 if (gRacePlayers[i].isCpu == 0) {
                     deltaX = gRacePlayers[i].pos.x - player->pos.x;
                     deltaZ = gRacePlayers[i].pos.z - player->pos.z;
-                    if ((deltaX < 0x6000000) && (deltaX >= -0x5FFFFFF) &&
-                        (deltaZ < 0x6000000) && (deltaZ >= -0x5FFFFFF)) {
-                        angle = (s16) ((calculateFixedAngleFromDeltaXZ(deltaX, deltaZ) - (s16) (player->facingAngle & 0xFFFFu)) & 0xFFF);
-                        if ((angle >= 0xE01) || (angle < (((((((((((0x200 & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF))) {
+                    if ((deltaX < 0x6000000) && (deltaX >= -0x5FFFFFF) && (deltaZ < 0x6000000) &&
+                        (deltaZ >= -0x5FFFFFF)) {
+                        angle = (s16)((calculateFixedAngleFromDeltaXZ(deltaX, deltaZ) -
+                                       (s16)(player->facingAngle & 0xFFFFu)) &
+                                      0xFFF);
+                        if ((angle >= 0xE01) ||
+                            (angle <
+                             (((((((((((0x200 & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) &
+                                 0xFFFF) &
+                                0xFFFF) &
+                               0xFFFF) &
+                              0xFFFF))) {
                             trigger = 1;
                             player->itemTriggerCooldown = -0x3E;
                         }
@@ -59,31 +67,56 @@ void updateRacePlayerItemEffectUse(RacePlayer *player) {
     if (trigger != 0) {
         if (player->itemEffectCount != 0) {
             if (player->itemEffectType == 1) {
-                if (createCallbackTaskWithUserIdPreservingArgs(initWideHomingItemProjectile, (u16) (player->playerIndex + 1), 0x3C, player->playerIndex) != NULL) {
+                if (createCallbackTaskWithUserIdPreservingArgs(
+                        initWideHomingItemProjectile,
+                        (u16)(player->playerIndex + 1),
+                        0x3C,
+                        player->playerIndex
+                    ) != NULL) {
                     createCallbackTaskWithUserIdPreservingArgs(initRacePlayerShockEffect, 5, 4, player->playerIndex);
                     player->itemEffectCount--;
                 }
             }
             if (player->itemEffectType == 2) {
-                if (createCallbackTaskWithUserIdPreservingArgs(initLongRangeHomingItemProjectile, (u16) (player->playerIndex + 1), 0x3C, player->playerIndex) != NULL) {
+                if (createCallbackTaskWithUserIdPreservingArgs(
+                        initLongRangeHomingItemProjectile,
+                        (u16)(player->playerIndex + 1),
+                        0x3C,
+                        player->playerIndex
+                    ) != NULL) {
                     createCallbackTaskWithUserIdPreservingArgs(initRacePlayerShockEffect, 5, 4, player->playerIndex);
                     player->itemEffectCount--;
                 }
             }
             if (player->itemEffectType == 3) {
-                if (createCallbackTaskWithUserIdPreservingArgs(initCloseRangeHomingItemProjectile, (u16) (player->playerIndex + 1), 0x3C, player->playerIndex) != NULL) {
+                if (createCallbackTaskWithUserIdPreservingArgs(
+                        initCloseRangeHomingItemProjectile,
+                        (u16)(player->playerIndex + 1),
+                        0x3C,
+                        player->playerIndex
+                    ) != NULL) {
                     createCallbackTaskWithUserIdPreservingArgs(initRacePlayerShockEffect, 5, 4, player->playerIndex);
                     player->itemEffectCount--;
                 }
             }
             if (player->itemEffectType == 4) {
-                if (createCallbackTaskWithUserIdPreservingArgs(initBouncingItemProjectile, (u16) (player->playerIndex + 1), 0x3C, player->playerIndex) != NULL) {
+                if (createCallbackTaskWithUserIdPreservingArgs(
+                        initBouncingItemProjectile,
+                        (u16)(player->playerIndex + 1),
+                        0x3C,
+                        player->playerIndex
+                    ) != NULL) {
                     createCallbackTaskWithUserIdPreservingArgs(initRacePlayerShockEffect, 5, 4, player->playerIndex);
                     player->itemEffectCount--;
                 }
             }
             if (player->itemEffectType == 5) {
-                if (createCallbackTaskWithUserIdPreservingArgs(initAreaBlastItemProjectile, (u16) (player->playerIndex + 1), 0x3C, player->playerIndex) != NULL) {
+                if (createCallbackTaskWithUserIdPreservingArgs(
+                        initAreaBlastItemProjectile,
+                        (u16)(player->playerIndex + 1),
+                        0x3C,
+                        player->playerIndex
+                    ) != NULL) {
                     createCallbackTaskWithUserIdPreservingArgs(initRacePlayerShockEffect, 5, 4, player->playerIndex);
                     player->itemEffectCount--;
                 }
@@ -94,7 +127,12 @@ void updateRacePlayerItemEffectUse(RacePlayer *player) {
         }
 
         if (player->shieldEffectTimer != 0) {
-            if (createCallbackTaskWithUserIdPreservingArgs(initShieldProjectile, (u16) (player->playerIndex + 1), 0x3C, player->playerIndex) != NULL) {
+            if (createCallbackTaskWithUserIdPreservingArgs(
+                    initShieldProjectile,
+                    (u16)(player->playerIndex + 1),
+                    0x3C,
+                    player->playerIndex
+                ) != NULL) {
                 createCallbackTaskWithUserIdPreservingArgs(initRacePlayerShockEffect, 5, 4, player->playerIndex);
                 player->shieldEffectTimer--;
             }
@@ -153,14 +191,24 @@ void updateRacePlayerActionEffectUse(RacePlayer *player) {
             }
 
             if (type == 4) {
-                createCallbackTaskWithUserIdPreservingArgs(initFallingActionProjectile, 0, 0x3C, (u16) player->playerIndex);
+                createCallbackTaskWithUserIdPreservingArgs(
+                    initFallingActionProjectile,
+                    0,
+                    0x3C,
+                    (u16)player->playerIndex
+                );
                 player->actionEffectType = 0;
                 type = player->actionEffectType;
             }
 
             if (type == 5) {
                 if (player->isCpu == 0) {
-                    createCallbackTaskWithUserIdPreservingArgs(initForwardActionProjectileEffect, 0, 3, (u16) player->playerIndex);
+                    createCallbackTaskWithUserIdPreservingArgs(
+                        initForwardActionProjectileEffect,
+                        0,
+                        3,
+                        (u16)player->playerIndex
+                    );
                 }
                 player->actionEffectType = 0;
                 type = player->actionEffectType;

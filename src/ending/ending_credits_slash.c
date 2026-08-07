@@ -84,7 +84,10 @@ void updateEndingSlashPhase40Prep(EndingCreditsSlash *arg0) {
 }
 
 void updateEndingSlashWaitPhase3FAnim(EndingCreditsSlash *arg0) {
-    struct { s32 ret; s32 pad; } l;
+    struct {
+        s32 ret;
+        s32 pad;
+    } l;
     l.ret = stepMainMenuSceneModelAnimation(0);
     addMainMenuSceneModelDrawCallback(0);
     if (l.ret == 1) {
@@ -847,7 +850,7 @@ void updateEndingSlashVanishBeforeExitRight(EndingCreditsSlash *arg0) {
 
     if (stepMainMenuSceneModelAnimation(0) == 1) {
         temp = ++arg0->timer;
-        if ((u32) temp == 0x19) {
+        if ((u32)temp == 0x19) {
             arg0->timer = 0;
             setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateEndingSlashExitRightSetPhase0E);
             setMainMenuSceneModelAnimation(0, 0x1B);
@@ -986,7 +989,6 @@ void updateEndingSlashSlideLeftToAura(EndingCreditsSlash *arg0) {
     addMainMenuSceneModelDrawCallback(0);
 }
 
-
 void updateEndingSlashWaitPhase5To7(EndingCreditsSlash *arg0) {
     if (stepMainMenuSceneModelAnimation(0) == 1) {
         if (gEndingCreditsSequencePhase == 5) {
@@ -1036,8 +1038,7 @@ void updateEndingSlashEnterFromRight(EndingCreditsSlash *arg0) {
         setMainMenuSceneModelAnimation(0, 1);
         spawnEndingCreditsPhaseAdvanceSparkle(0x50, -0x68);
     } else {
-        if (!temp_a1) {
-        }
+        if (!temp_a1) {}
         setMainMenuSceneModelPosition(0, temp_a1, arg0->posY, arg0->posZ);
         loopMainMenuSceneModelAnimation(0);
     }

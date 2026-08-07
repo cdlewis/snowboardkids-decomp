@@ -16,7 +16,6 @@
 #define MAIN_MENU_SCENE_MODEL_MATRIX_AXES 3
 #define FIXED_MATRIX_ROWS(matrix) ((s16(*)[MAIN_MENU_SCENE_MODEL_MATRIX_AXES])(matrix))
 
-
 typedef struct MainMenuAnimationWritePart {
     s32 word0;
     s32 word4;
@@ -77,7 +76,7 @@ after_initialize_out:
         cur += srcPos;
         prev = src;
         prev = searchPos + prev;
-match_loop:
+    match_loop:
         count += 1;
         if (*cur != *prev) {
             goto compare_best;
@@ -138,32 +137,30 @@ search_done:
 #define REPLAY_SAVE_MAX_EXTRA 0x300
 #define REPLAY_SAVE_MIN_EXTRA 0x301
 
-#define COPY_REPLAY_BACKUP(source, destination, backup)                              \
-    (source) = gGameSaveDataBuffer[0].replayData;                                    \
-    (destination) = (backup);                                                        \
-    while (1) {                                                                      \
-        *(destination) = *(source);                                                  \
-        (source)++;                                                                  \
-        (destination)++;                                                             \
-        if ((u32)(source) >=                                                         \
-            (u32)&gGameSaveDataBuffer[0]                                             \
-                .replayData[GAME_SAVE_REPLAY_COPY_HALFWORD_COUNT]) {                 \
-            break;                                                                   \
-        }                                                                            \
+#define COPY_REPLAY_BACKUP(source, destination, backup)                                                         \
+    (source) = gGameSaveDataBuffer[0].replayData;                                                               \
+    (destination) = (backup);                                                                                   \
+    while (1) {                                                                                                 \
+        *(destination) = *(source);                                                                             \
+        (source)++;                                                                                             \
+        (destination)++;                                                                                        \
+        if ((u32)(source) >= (u32) & gGameSaveDataBuffer[0].replayData[GAME_SAVE_REPLAY_COPY_HALFWORD_COUNT]) { \
+            break;                                                                                              \
+        }                                                                                                       \
     }
 
-#define ACCUM_SLOT(courseIndex, slotIndex, maxSize, minSize)      \
-    if (course != (courseIndex)) {                                \
-        count = gGameSaveDataBuffer[0].replaySlots[(slotIndex)].length; \
+#define ACCUM_SLOT(courseIndex, slotIndex, maxSize, minSize)               \
+    if (course != (courseIndex)) {                                         \
+        count = gGameSaveDataBuffer[0].replaySlots[(slotIndex)].length;    \
         if (gGameSaveDataBuffer[0].replaySlots[(slotIndex)].length != 0) { \
-            if (count >= (minSize)) {                             \
-                totalLength += count;                             \
-            } else {                                              \
-                totalLength += (maxSize);                         \
-            }                                                     \
-        } else {                                                  \
-            totalLength += (maxSize);                             \
-        }                                                         \
+            if (count >= (minSize)) {                                      \
+                totalLength += count;                                      \
+            } else {                                                       \
+                totalLength += (maxSize);                                  \
+            }                                                              \
+        } else {                                                           \
+            totalLength += (maxSize);                                      \
+        }                                                                  \
     }
 
 #define COPY_COURSE_DIFF_0 (((course & 0xFFFFu) & 0xFFFFu) != 0)
@@ -184,8 +181,7 @@ search_done:
 #define AFTER_OLD_COPY_3()
 #define AFTER_OLD_COPY_4()
 #define AFTER_OLD_COPY_5() \
-    if (!count) {          \
-    }
+    if (!count) {}
 #define AFTER_OLD_COPY_6()
 #define AFTER_OLD_COPY_7()
 #define AFTER_OLD_COPY_8()
@@ -216,34 +212,32 @@ search_done:
 #define SET_REPLAY_SLOT_OFFSET_I(slotIndex, value) SET_REPLAY_SLOT_OFFSET_##slotIndex(value)
 #define SET_REPLAY_SLOT_OFFSET(slotIndex, value) SET_REPLAY_SLOT_OFFSET_I(slotIndex, value)
 
-#define COPY_SLOT(courseIndex, slotIndex)                                      \
-    {                                                                          \
-    s32 slotOldOffset;                                                         \
-    if (COPY_COURSE_DIFF(courseIndex)) {                                       \
-        count = gGameSaveDataBuffer[0].replaySlots[(slotIndex)].length;          \
-        if (count != 0) {                                                       \
-            slotOldOffset = REPLAY_SLOT_OFFSET(slotIndex);                     \
-            SET_REPLAY_SLOT_OFFSET(slotIndex, writeIndex);                     \
-            copied = 0;                                                        \
-            while (copied < gGameSaveDataBuffer[0].replaySlots[(slotIndex)].length) { \
-                gGameSaveDataBuffer[0].replayData[writeIndex] =                \
-                    oldData[slotOldOffset + copied];                           \
-                copied++;                                                     \
-                AFTER_OLD_COPY(slotIndex);                                    \
-                writeIndex++;                                                 \
-            }                                                                  \
-        }                                                                      \
-    } else {                                                                   \
-        SET_REPLAY_SLOT_OFFSET(slotIndex, writeIndex);                         \
-        gGameSaveDataBuffer[0].replaySlots[(slotIndex)].length = compressedLength; \
-        copied = 0;                                                            \
-        while (copied < compressedLength) {                                    \
-            gGameSaveDataBuffer[0].replayData[writeIndex] =                    \
-                gCompressedRaceRecordReplayBuffer[copied];                    \
-            writeIndex++;                                                     \
-            copied++;                                                         \
-        }                                                                      \
-    }                                                                          \
+#define COPY_SLOT(courseIndex, slotIndex)                                                                  \
+    {                                                                                                      \
+        s32 slotOldOffset;                                                                                 \
+        if (COPY_COURSE_DIFF(courseIndex)) {                                                               \
+            count = gGameSaveDataBuffer[0].replaySlots[(slotIndex)].length;                                \
+            if (count != 0) {                                                                              \
+                slotOldOffset = REPLAY_SLOT_OFFSET(slotIndex);                                             \
+                SET_REPLAY_SLOT_OFFSET(slotIndex, writeIndex);                                             \
+                copied = 0;                                                                                \
+                while (copied < gGameSaveDataBuffer[0].replaySlots[(slotIndex)].length) {                  \
+                    gGameSaveDataBuffer[0].replayData[writeIndex] = oldData[slotOldOffset + copied];       \
+                    copied++;                                                                              \
+                    AFTER_OLD_COPY(slotIndex);                                                             \
+                    writeIndex++;                                                                          \
+                }                                                                                          \
+            }                                                                                              \
+        } else {                                                                                           \
+            SET_REPLAY_SLOT_OFFSET(slotIndex, writeIndex);                                                 \
+            gGameSaveDataBuffer[0].replaySlots[(slotIndex)].length = compressedLength;                     \
+            copied = 0;                                                                                    \
+            while (copied < compressedLength) {                                                            \
+                gGameSaveDataBuffer[0].replayData[writeIndex] = gCompressedRaceRecordReplayBuffer[copied]; \
+                writeIndex++;                                                                              \
+                copied++;                                                                                  \
+            }                                                                                              \
+        }                                                                                                  \
     }
 
 s32 saveRaceRecordReplayData(void) {
@@ -288,9 +282,11 @@ packed_inputs_loop:
     }
 packed_inputs_done:
 
-    compressedLength = compressRaceRecordReplayData(gPackedRaceRecordReplayBuffer.bytes,
-                                                    (history->lastWriteIndex * 3) + 4,
-                                                    gCompressedRaceRecordReplayBuffer);
+    compressedLength = compressRaceRecordReplayData(
+        gPackedRaceRecordReplayBuffer.bytes,
+        (history->lastWriteIndex * 3) + 4,
+        gCompressedRaceRecordReplayBuffer
+    );
     if (compressedLength < 0) {
         return 1;
     }
@@ -416,33 +412,33 @@ void loadCurrentRaceRecordReplayData(void) {
     outputIndex = 0;
     compressed = gGameSaveDataBuffer[0].replayData;
     switch (gRaceCourseIndex.unsignedValue) {
-    case 0:
-        compressed += gGameSaveDataBuffer[0].replaySlots[0].offset;
-        break;
-    case 1:
-        compressed += gGameSaveDataBuffer[0].replaySlots[1].offset;
-        break;
-    case 2:
-        compressed += gGameSaveDataBuffer[0].replaySlots[2].offset;
-        break;
-    case 3:
-        compressed += gGameSaveDataBuffer[0].replaySlots[3].offset;
-        break;
-    case 4:
-        compressed += gGameSaveDataBuffer[0].replaySlots[4].offset;
-        break;
-    case 5:
-        compressed += gGameSaveDataBuffer[0].replaySlots[5].offset;
-        break;
-    case 6:
-        compressed += gGameSaveDataBuffer[0].replaySlots[6].offset;
-        break;
-    case 8:
-        compressed += gGameSaveDataBuffer[0].replaySlots[7].offset;
-        break;
-    case 9:
-        compressed += gGameSaveDataBuffer[0].replaySlots[8].offset;
-        break;
+        case 0:
+            compressed += gGameSaveDataBuffer[0].replaySlots[0].offset;
+            break;
+        case 1:
+            compressed += gGameSaveDataBuffer[0].replaySlots[1].offset;
+            break;
+        case 2:
+            compressed += gGameSaveDataBuffer[0].replaySlots[2].offset;
+            break;
+        case 3:
+            compressed += gGameSaveDataBuffer[0].replaySlots[3].offset;
+            break;
+        case 4:
+            compressed += gGameSaveDataBuffer[0].replaySlots[4].offset;
+            break;
+        case 5:
+            compressed += gGameSaveDataBuffer[0].replaySlots[5].offset;
+            break;
+        case 6:
+            compressed += gGameSaveDataBuffer[0].replaySlots[6].offset;
+            break;
+        case 8:
+            compressed += gGameSaveDataBuffer[0].replaySlots[7].offset;
+            break;
+        case 9:
+            compressed += gGameSaveDataBuffer[0].replaySlots[8].offset;
+            break;
     }
 
     decompressed = gPackedRaceRecordReplayBuffer.bytes;
@@ -477,9 +473,7 @@ void loadCurrentRaceRecordReplayData(void) {
 
     for (i = 0; i < history->lastWriteIndex; i++) {
         /* Optimized away by IDO; preserves the target loop-counter register allocation. */
-        if ((!gGameSaveDataBuffer[0].replaySlots[1].offset) &&
-            (!gGameSaveDataBuffer[0].replaySlots[1].offset)) {
-        }
+        if ((!gGameSaveDataBuffer[0].replaySlots[1].offset) && (!gGameSaveDataBuffer[0].replaySlots[1].offset)) {}
         history->stickX[i] = gPackedRaceRecordReplayBuffer.fields.inputs[i].stickX;
         history->stickY[i] = gPackedRaceRecordReplayBuffer.fields.inputs[i].stickY;
         history->buttons[i] = gPackedRaceRecordReplayBuffer.fields.inputs[i].buttons;
@@ -500,16 +494,19 @@ INCLUDE_ASM("asm/matchings/menu/main_menu/main_menu_scene_model", initMainMenuSc
 void initMainMenuSceneModel(s32 sceneModelIndex, s32 characterIndex) {
     MainMenuSceneModel *model;
 
-    loadRawRomAsset(gCharacterRawAssetRanges[characterIndex].start,
-                    gCharacterRawAssetRanges[characterIndex].end,
-                    MAIN_MENU_SCENE_MODEL_GEOMETRY_HANDLE_BASE + sceneModelIndex);
-    loadCompressedRomAsset(gCharacterTextureAssetRanges[characterIndex].start,
-                           gCharacterTextureAssetRanges[characterIndex].end,
-                           MAIN_MENU_SCENE_MODEL_TEXTURE_HANDLE_BASE + sceneModelIndex);
+    loadRawRomAsset(
+        gCharacterRawAssetRanges[characterIndex].start,
+        gCharacterRawAssetRanges[characterIndex].end,
+        MAIN_MENU_SCENE_MODEL_GEOMETRY_HANDLE_BASE + sceneModelIndex
+    );
+    loadCompressedRomAsset(
+        gCharacterTextureAssetRanges[characterIndex].start,
+        gCharacterTextureAssetRanges[characterIndex].end,
+        MAIN_MENU_SCENE_MODEL_TEXTURE_HANDLE_BASE + sceneModelIndex
+    );
     ASSET_HANDLE(MAIN_MENU_SCENE_MODEL_HANDLE_BASE + sceneModelIndex) =
         allocRelocatableHeapBlock(sizeof(MainMenuSceneModel));
-    model = getRelocatableHeapBlockBase(
-        ASSET_HANDLE(MAIN_MENU_SCENE_MODEL_HANDLE_BASE + sceneModelIndex));
+    model = getRelocatableHeapBlockBase(ASSET_HANDLE(MAIN_MENU_SCENE_MODEL_HANDLE_BASE + sceneModelIndex));
     model->sceneModelIndex = sceneModelIndex;
     model->characterIndex = characterIndex;
     initMainMenuSceneModelParts(model);
@@ -523,10 +520,11 @@ void setMainMenuSceneModelAnimation(s32 modelIndex, s32 animationIndex) {
     s16 frameDuration;
 
     animationBank = (MainMenuModelAnimationBank *)getRelocatableHeapBlockBase(
-        ASSET_HANDLE(MAIN_MENU_SCENE_MODEL_ANIMATION_BANK_HANDLE));
+        ASSET_HANDLE(MAIN_MENU_SCENE_MODEL_ANIMATION_BANK_HANDLE)
+    );
     frameData = MAIN_MENU_ANIMATION_FRAME_DATA(animationBank, animationIndex);
-    model = (MainMenuSceneModel *)getRelocatableHeapBlockBase(
-        ASSET_HANDLE(MAIN_MENU_SCENE_MODEL_HANDLE_BASE + modelIndex));
+    model =
+        (MainMenuSceneModel *)getRelocatableHeapBlockBase(ASSET_HANDLE(MAIN_MENU_SCENE_MODEL_HANDLE_BASE + modelIndex));
     frameDuration = *frameData++;
     model->framesRemaining = frameDuration;
     model->animationStart = frameData;
@@ -537,7 +535,8 @@ void setMainMenuSceneModelAnimation(s32 modelIndex, s32 animationIndex) {
 
 MainMenuSceneModel *getMainMenuSceneModel(s32 modelIndex) {
     return (MainMenuSceneModel *)getRelocatableHeapBlockBase(
-        ASSET_HANDLE(MAIN_MENU_SCENE_MODEL_HANDLE_BASE + modelIndex));
+        ASSET_HANDLE(MAIN_MENU_SCENE_MODEL_HANDLE_BASE + modelIndex)
+    );
 }
 
 void applyMainMenuSceneModelAnimationFrame(MainMenuSceneModel *model) {
@@ -573,8 +572,8 @@ s32 stepMainMenuSceneModelAnimation(s32 modelIndex) {
     MainMenuSceneModel *new_var;
     MainMenuSceneModel *model;
 
-    model = (MainMenuSceneModel *)getRelocatableHeapBlockBase(
-        ASSET_HANDLE(MAIN_MENU_SCENE_MODEL_HANDLE_BASE + modelIndex));
+    model =
+        (MainMenuSceneModel *)getRelocatableHeapBlockBase(ASSET_HANDLE(MAIN_MENU_SCENE_MODEL_HANDLE_BASE + modelIndex));
     if (model->framesRemaining == 1) {
         goto ret1_initial;
     }
@@ -600,8 +599,8 @@ ret0:
 void loopMainMenuSceneModelAnimation(s32 modelIndex) {
     MainMenuSceneModel *model;
 
-    model = (MainMenuSceneModel *)getRelocatableHeapBlockBase(
-        ASSET_HANDLE(MAIN_MENU_SCENE_MODEL_HANDLE_BASE + modelIndex));
+    model =
+        (MainMenuSceneModel *)getRelocatableHeapBlockBase(ASSET_HANDLE(MAIN_MENU_SCENE_MODEL_HANDLE_BASE + modelIndex));
     model->framesRemaining--;
     if (model->framesRemaining <= 0) {
         model->framesRemaining = model->frameDuration;
@@ -613,8 +612,8 @@ void loopMainMenuSceneModelAnimation(s32 modelIndex) {
 void setMainMenuSceneModelPosition(s32 modelIndex, s32 x, s32 y, s32 z) {
     MainMenuSceneModel *model;
 
-    model = (MainMenuSceneModel *)getRelocatableHeapBlockBase(
-        ASSET_HANDLE(MAIN_MENU_SCENE_MODEL_HANDLE_BASE + modelIndex));
+    model =
+        (MainMenuSceneModel *)getRelocatableHeapBlockBase(ASSET_HANDLE(MAIN_MENU_SCENE_MODEL_HANDLE_BASE + modelIndex));
     model->pos.x = x;
     model->pos.y = y;
     model->pos.z = z;
@@ -623,8 +622,8 @@ void setMainMenuSceneModelPosition(s32 modelIndex, s32 x, s32 y, s32 z) {
 void setMainMenuSceneModelRotation(s32 modelIndex, s16 x, s16 y, s16 z) {
     MainMenuSceneModel *model;
 
-    model = (MainMenuSceneModel *)getRelocatableHeapBlockBase(
-        ASSET_HANDLE(MAIN_MENU_SCENE_MODEL_HANDLE_BASE + modelIndex));
+    model =
+        (MainMenuSceneModel *)getRelocatableHeapBlockBase(ASSET_HANDLE(MAIN_MENU_SCENE_MODEL_HANDLE_BASE + modelIndex));
     model->rot.x = x;
     model->rot.y = y;
     model->rot.z = z;
@@ -685,14 +684,14 @@ void updateMainMenuSceneModelTransforms(MainMenuSceneModel *model) {
         for (i = 0; i < MAIN_MENU_SCENE_MODEL_PART_COUNT; i++) {
             for (j = 0; j < MAIN_MENU_SCENE_MODEL_MATRIX_AXES; j++) {
                 for (k = 0; k < MAIN_MENU_SCENE_MODEL_MATRIX_AXES; k++) {
-                    FIXED_MATRIX_ROWS(model->displayObjects[i].rotation)[j][k] =
-                        ((FIXED_MATRIX_ROWS(partTransforms[i].rotation)[j][0] *
-                          FIXED_MATRIX_ROWS(modelTransform.rotation)[0][k]) +
-                         (FIXED_MATRIX_ROWS(partTransforms[i].rotation)[j][1] *
-                          FIXED_MATRIX_ROWS(modelTransform.rotation)[1][k]) +
-                         (FIXED_MATRIX_ROWS(partTransforms[i].rotation)[j][2] *
-                          FIXED_MATRIX_ROWS(modelTransform.rotation)[2][k])) /
-                        FIXED_MATRIX_ONE;
+                    FIXED_MATRIX_ROWS(model->displayObjects[i].rotation)
+                    [j][k] = ((FIXED_MATRIX_ROWS(partTransforms[i].rotation)[j][0] *
+                               FIXED_MATRIX_ROWS(modelTransform.rotation)[0][k]) +
+                              (FIXED_MATRIX_ROWS(partTransforms[i].rotation)[j][1] *
+                               FIXED_MATRIX_ROWS(modelTransform.rotation)[1][k]) +
+                              (FIXED_MATRIX_ROWS(partTransforms[i].rotation)[j][2] *
+                               FIXED_MATRIX_ROWS(modelTransform.rotation)[2][k])) /
+                             FIXED_MATRIX_ONE;
                 }
             }
         }
@@ -701,8 +700,7 @@ void updateMainMenuSceneModelTransforms(MainMenuSceneModel *model) {
             for (j = 0; j < MAIN_MENU_SCENE_MODEL_MATRIX_AXES; j++) {
                 model->displayObjects[i].translation[j] =
                     ((s64)modelTransform.rotation[j] * model->parts[i].offsetX +
-                     (s64)modelTransform.rotation[j + MAIN_MENU_SCENE_MODEL_MATRIX_AXES] *
-                         model->parts[i].offsetY +
+                     (s64)modelTransform.rotation[j + MAIN_MENU_SCENE_MODEL_MATRIX_AXES] * model->parts[i].offsetY +
                      (s64)modelTransform.rotation[j + (MAIN_MENU_SCENE_MODEL_MATRIX_AXES * 2)] *
                          model->parts[i + 1].previousPartOffsetZ) /
                     FIXED_MATRIX_ONE;

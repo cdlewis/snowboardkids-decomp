@@ -24,23 +24,93 @@ typedef struct MenuFontAssetTable MenuFontAssetTable;
 typedef struct FontAsset FontAsset;
 typedef u16 MenuGlyphScript;
 
-void drawMenuAssetRegion(s16 x, s16 y, void *texture, u16 tileIndex, u16 scaleX, u16 scaleY, u8 startS, u8 startT,
-                         u8 width, u8 height);
+void drawMenuAssetRegion(
+    s16 x,
+    s16 y,
+    void *texture,
+    u16 tileIndex,
+    u16 scaleX,
+    u16 scaleY,
+    u8 startS,
+    u8 startT,
+    u8 width,
+    u8 height
+);
 void drawMenuSprite(s16 x, s16 y, void *texture, u16 tileIndex, u16 width, u16 height, u8 palette, u8 flip);
-void drawMenuSpriteClipped(s16 x, s16 y, MenuFontAssetTable *table, u16 imageIndex, u16 scaleX, u16 scaleY,
-                           u8 flipMode, u8 paletteIndex, s32 clipLeft, s32 clipTop, s32 clipRight, s32 clipBottom);
-void drawMenuSpriteWithAlpha(s16 x, s16 y, void *texture, u16 tileIndex, u16 width, u16 height, u8 palette, u16 alpha,
-                             u8 flip);
-void drawMenuSpriteWithAlphaClipped(s16 x, s16 y, void *texture, u16 tileIndex, u16 width, u16 height, u8 palette,
-                                    u16 alpha, u8 flip, s32 clipLeft, s32 clipTop, s32 clipRight, s32 clipBottom);
+void drawMenuSpriteClipped(
+    s16 x,
+    s16 y,
+    MenuFontAssetTable *table,
+    u16 imageIndex,
+    u16 scaleX,
+    u16 scaleY,
+    u8 flipMode,
+    u8 paletteIndex,
+    s32 clipLeft,
+    s32 clipTop,
+    s32 clipRight,
+    s32 clipBottom
+);
+void drawMenuSpriteWithAlpha(
+    s16 x,
+    s16 y,
+    void *texture,
+    u16 tileIndex,
+    u16 width,
+    u16 height,
+    u8 palette,
+    u16 alpha,
+    u8 flip
+);
+void drawMenuSpriteWithAlphaClipped(
+    s16 x,
+    s16 y,
+    void *texture,
+    u16 tileIndex,
+    u16 width,
+    u16 height,
+    u8 palette,
+    u16 alpha,
+    u8 flip,
+    s32 clipLeft,
+    s32 clipTop,
+    s32 clipRight,
+    s32 clipBottom
+);
 void drawMenuSpriteWithPaletteScale(s16 x, s16 y, FontAsset *asset, u16 index, u16 intensity);
-void drawMenuSpriteSubrect(s16 x, s16 y, void *texture, u16 tileIndex, u8 srcX, u8 srcY, u8 width, u8 height,
-                           s32 scaleX, s32 scaleY);
-void drawMenuSpriteFixedScale(s16 x, s16 y, FontAsset *asset, u16 tileIndex, u16 scaleX, u16 scaleY, u8 flip,
-                              u8 unusedPalette);
+void drawMenuSpriteSubrect(
+    s16 x,
+    s16 y,
+    void *texture,
+    u16 tileIndex,
+    u8 srcX,
+    u8 srcY,
+    u8 width,
+    u8 height,
+    s32 scaleX,
+    s32 scaleY
+);
+void drawMenuSpriteFixedScale(
+    s16 x,
+    s16 y,
+    FontAsset *asset,
+    u16 tileIndex,
+    u16 scaleX,
+    u16 scaleY,
+    u8 flip,
+    u8 unusedPalette
+);
 void drawMenuSpriteTile(s16 x, s16 y, void *texture, u16 tileIndex, u16 width, u16 height);
-void drawMenuSpriteTileClipped(s16 x, s16 y, MenuFontAssetTable *table, u16 entryIndex, u16 unused, u16 intensity,
-                               s16 clipX, s16 clipY);
+void drawMenuSpriteTileClipped(
+    s16 x,
+    s16 y,
+    MenuFontAssetTable *table,
+    u16 entryIndex,
+    u16 unused,
+    u16 intensity,
+    s16 clipX,
+    s16 clipY
+);
 void noopMenuRenderCallback(void);
 void drawMenuTextureByAssetId(s16 x, s16 y, void *texture, u16 assetId, u16 width, u16 height);
 void setMenuSpriteActorDebugUpdate(MenuRenderSpriteActor *actor);
@@ -48,15 +118,34 @@ void updateMenuSpriteActorDebugControls(MenuRenderSpriteActor *actor);
 void drawMenuTilemapSpriteCallback(MenuRenderSprite *sprite);
 s32 drawMenuTilemapSprite(MenuRenderSprite *sprite, s32 arg1, s16 x, s16 y);
 void noopMenuSpriteCallback(void);
-void drawMenuGlyphScriptWithFontBank(volatile s16 x, s16 y, MenuGlyphScript *script, s32 palette, u16 scale,
-                                     u16 fontBank);
+void drawMenuGlyphScriptWithFontBank(
+    volatile s16 x,
+    s16 y,
+    MenuGlyphScript *script,
+    s32 palette,
+    u16 scale,
+    u16 fontBank
+);
 void drawMenuGlyphScriptDefaultFont(volatile s16 x, s16 y, MenuGlyphScript *script, s32 palette, u16 scale);
 void drawMenuGlyph(s16 x, s16 y, u16 glyphIndex, u8 paletteIndex, u16 intensity, u16 fontBank);
-void drawMenuColoredGlyphScript(volatile s16 x, s16 y, MenuGlyphScript *script, s32 palette, u16 scale, u16 colorMode,
-                                u16 fontBank);
+void drawMenuColoredGlyphScript(
+    volatile s16 x,
+    s16 y,
+    MenuGlyphScript *script,
+    s32 palette,
+    u16 scale,
+    u16 colorMode,
+    u16 fontBank
+);
 #ifndef MENU_RENDERER_OMIT_DRAW_MENU_GLYPH_SCRIPT
-void drawMenuGlyphScript(volatile s16 x, s16 y, MenuGlyphScript *script, s32 palette, u16 scale,
-                         volatile u16 colorMode);
+void drawMenuGlyphScript(
+    volatile s16 x,
+    s16 y,
+    MenuGlyphScript *script,
+    s32 palette,
+    u16 scale,
+    volatile u16 colorMode
+);
 #endif
 void drawMenuColoredGlyph(s16 x, s16 y, u16 glyph, u8 palette, u16 scale, u16 colorMode, s32 fontBank);
 void drawMenuAsciiGlyph(s16 x, s16 y, u16 tileX, s32 tileY, u16 palette, u16 scale);

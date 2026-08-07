@@ -198,10 +198,10 @@ void compactRelocatableHeap(void) {
     nextFree = gRelocatableHeapStart;
     if (block != NULL) {
         do {
-            blockStart = (u32) block->start;
-            src = (u8 *) blockStart;
-            count = blockStart - (u32) nextFree;
-            blockStart = (u32) nextFree;
+            blockStart = (u32)block->start;
+            src = (u8 *)blockStart;
+            count = blockStart - (u32)nextFree;
+            blockStart = (u32)nextFree;
             if ((block->status != RELOCATABLE_HEAP_BLOCK_LOCKED) && (count != 0)) {
                 count = 0;
                 dest = nextFree;
@@ -211,18 +211,16 @@ void compactRelocatableHeap(void) {
                         count++;
                         src++;
                         dest++;
-                    } while (count < (u32) block->size);
+                    } while (count < (u32)block->size);
                 }
-                block->start = (u8 *) blockStart;
+                block->start = (u8 *)blockStart;
                 src = nextFree;
-                if ((!dest) && (!dest)) {
-                }
+                if ((!dest) && (!dest)) {}
             }
             size = block->size & 0xFFFFFFFFFFFFFFFF;
             block = block->next;
             nextFree = src + size;
-            if ((!blockStart) && (!blockStart)) {
-            }
+            if ((!blockStart) && (!blockStart)) {}
         } while (block != NULL);
     }
     updateRelocatableHeapNextFreeAddress();

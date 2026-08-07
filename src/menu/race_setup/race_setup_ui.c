@@ -53,6 +53,8 @@ typedef struct {
 extern s32 enqueueSoundEffect(s32, s32);
 MenuGlyphScript gRaceSetupPlayerCountPromptText[5][0x34] = {
     {
+        // textconv requires these _() invocations to retain their original line layout.
+        // clang-format off
         _("{COLOR:7}PLEASE SELECT\nTHE NUMBER OF\nPLAYERS."),
     },
     {
@@ -141,24 +143,16 @@ MenuGlyphScript gRaceSetupSaveStatusMessages[0x13][0x26] = {
 };
 MenuGlyphScript gRaceSetupUnusedStatusMessage[12] = {
     _("-NO ENTRY-"),
+    // clang-format on
 };
 RaceSetupSavePromptData gRaceSetupSavePromptData = {
-    {
-        0x4E, 0x4F, 0x20, 0x43, 0x4F, 0x4E, 0x54, 0x52, 0x4F, 0x4C, 0x4C, 0x45,
-        0x52, 0x0A, 0x50, 0x41, 0x4B, 0x20, 0x46, 0x4F, 0x55, 0x4E, 0x44, 0x2E,
-        0x0A, 0x43
-    },
-    {
-        0x41
-    },
-    {
-        0x4E, 0x4E, 0x4F, 0x54, 0x20, 0x53, 0x41, 0x56, 0x45, 0x2E, 0x00, 0x00,
-        0x00, 0x15, 0x16, 0x10, 0x11, 0x13, 0x15, 0x13, 0x14, 0x13, 0x15, 0x13,
-        0x15, 0x17, 0x18, 0x17, 0x18, 0x17, 0x18, 0x13, 0x14, 0x13, 0x14, 0x00,
-        0x00, 0x15, 0x16, 0x0E, 0x0F, 0x15, 0x16, 0x0F, 0x14, 0x0F, 0x15, 0x0F,
-        0x15, 0x17, 0x18, 0x17, 0x18, 0x17, 0x18, 0x00, 0x00, 0x00, 0x00, 0x00,
-        0x00, 0x00, 0x00, 0x00, 0x00
-    }
+    { 0x4E, 0x4F, 0x20, 0x43, 0x4F, 0x4E, 0x54, 0x52, 0x4F, 0x4C, 0x4C, 0x45, 0x52,
+      0x0A, 0x50, 0x41, 0x4B, 0x20, 0x46, 0x4F, 0x55, 0x4E, 0x44, 0x2E, 0x0A, 0x43 },
+    { 0x41 },
+    { 0x4E, 0x4E, 0x4F, 0x54, 0x20, 0x53, 0x41, 0x56, 0x45, 0x2E, 0x00, 0x00, 0x00, 0x15, 0x16, 0x10, 0x11,
+      0x13, 0x15, 0x13, 0x14, 0x13, 0x15, 0x13, 0x15, 0x17, 0x18, 0x17, 0x18, 0x17, 0x18, 0x13, 0x14, 0x13,
+      0x14, 0x00, 0x00, 0x15, 0x16, 0x0E, 0x0F, 0x15, 0x16, 0x0F, 0x14, 0x0F, 0x15, 0x0F, 0x15, 0x17, 0x18,
+      0x17, 0x18, 0x17, 0x18, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 }
 };
 const char D_800E0A80[] = "%d";
 const char D_800E0A84[] = "%6d";
@@ -172,33 +166,114 @@ void drawRaceSetupPlayerCountPrompt(MenuIntroActor *arg0) {
     MenuIntroActor *actor;
 
     actor = arg0;
-    drawMenuSpriteWithAlpha((s16)(actor->x - 4), (s16)(actor->y - 4), getRelocatableHeapBlockBase(TITLE_MENU_BANNER_TEXTURE_HANDLE), 2,
-                  0x20, 0x20, 0, actor->alpha, 0);
-    drawMenuSpriteWithAlpha((s16)(actor->x + 0xD4), (s16)(actor->y - 4), getRelocatableHeapBlockBase(TITLE_MENU_BANNER_TEXTURE_HANDLE), 4,
-                  0x20, 0x20, 0, actor->alpha, 0);
+    drawMenuSpriteWithAlpha(
+        (s16)(actor->x - 4),
+        (s16)(actor->y - 4),
+        getRelocatableHeapBlockBase(TITLE_MENU_BANNER_TEXTURE_HANDLE),
+        2,
+        0x20,
+        0x20,
+        0,
+        actor->alpha,
+        0
+    );
+    drawMenuSpriteWithAlpha(
+        (s16)(actor->x + 0xD4),
+        (s16)(actor->y - 4),
+        getRelocatableHeapBlockBase(TITLE_MENU_BANNER_TEXTURE_HANDLE),
+        4,
+        0x20,
+        0x20,
+        0,
+        actor->alpha,
+        0
+    );
     i = 0;
     do {
-        drawMenuSpriteWithAlpha((s16)(actor->x + i), (s16)(actor->y - 4), getRelocatableHeapBlockBase(TITLE_MENU_BANNER_TEXTURE_HANDLE),
-                      3, 0x20, 0x20, 0, actor->alpha, 0);
-        drawMenuSpriteWithAlpha((s16)(actor->x + i), (s16)(actor->y + 0x24), getRelocatableHeapBlockBase(TITLE_MENU_BANNER_TEXTURE_HANDLE),
-                      8, 0x20, 0x20, 0, actor->alpha, 0);
+        drawMenuSpriteWithAlpha(
+            (s16)(actor->x + i),
+            (s16)(actor->y - 4),
+            getRelocatableHeapBlockBase(TITLE_MENU_BANNER_TEXTURE_HANDLE),
+            3,
+            0x20,
+            0x20,
+            0,
+            actor->alpha,
+            0
+        );
+        drawMenuSpriteWithAlpha(
+            (s16)(actor->x + i),
+            (s16)(actor->y + 0x24),
+            getRelocatableHeapBlockBase(TITLE_MENU_BANNER_TEXTURE_HANDLE),
+            8,
+            0x20,
+            0x20,
+            0,
+            actor->alpha,
+            0
+        );
         i += 0x10;
     } while (i < 0xE0);
-    drawMenuSpriteWithAlpha((s16)(actor->x - 4), (s16)(actor->y + 0x24), getRelocatableHeapBlockBase(TITLE_MENU_BANNER_TEXTURE_HANDLE),
-                  7, 0x20, 0x20, 0, actor->alpha, 0);
-    drawMenuSpriteWithAlpha((s16)(actor->x + 0xD4), (s16)(actor->y + 0x24),
-                  getRelocatableHeapBlockBase(TITLE_MENU_BANNER_TEXTURE_HANDLE), 9, 0x20, 0x20, 0, actor->alpha, 0);
+    drawMenuSpriteWithAlpha(
+        (s16)(actor->x - 4),
+        (s16)(actor->y + 0x24),
+        getRelocatableHeapBlockBase(TITLE_MENU_BANNER_TEXTURE_HANDLE),
+        7,
+        0x20,
+        0x20,
+        0,
+        actor->alpha,
+        0
+    );
+    drawMenuSpriteWithAlpha(
+        (s16)(actor->x + 0xD4),
+        (s16)(actor->y + 0x24),
+        getRelocatableHeapBlockBase(TITLE_MENU_BANNER_TEXTURE_HANDLE),
+        9,
+        0x20,
+        0x20,
+        0,
+        actor->alpha,
+        0
+    );
     i = (actor->state == 4) * 0;
     limit = 0xE0;
     do {
-        drawMenuSpriteWithAlpha((s16)(actor->x - 4), (s16)(actor->y + i), getRelocatableHeapBlockBase(TITLE_MENU_BANNER_TEXTURE_HANDLE),
-                      5, 0x20, 0x20, 0, actor->alpha, 0);
-        drawMenuSpriteWithAlpha((s16)(actor->x + 0xD4), (s16)(actor->y + i), getRelocatableHeapBlockBase(TITLE_MENU_BANNER_TEXTURE_HANDLE),
-                      6, 0x20, 0x20, 0, actor->alpha, 0);
+        drawMenuSpriteWithAlpha(
+            (s16)(actor->x - 4),
+            (s16)(actor->y + i),
+            getRelocatableHeapBlockBase(TITLE_MENU_BANNER_TEXTURE_HANDLE),
+            5,
+            0x20,
+            0x20,
+            0,
+            actor->alpha,
+            0
+        );
+        drawMenuSpriteWithAlpha(
+            (s16)(actor->x + 0xD4),
+            (s16)(actor->y + i),
+            getRelocatableHeapBlockBase(TITLE_MENU_BANNER_TEXTURE_HANDLE),
+            6,
+            0x20,
+            0x20,
+            0,
+            actor->alpha,
+            0
+        );
         j = 0;
         do {
-            drawMenuSpriteWithAlpha((s16)(actor->x + j), (s16)(actor->y + i),
-                          getRelocatableHeapBlockBase(TITLE_MENU_BANNER_TEXTURE_HANDLE), 0xB, 0x20, 0x20, 0, actor->alpha, 0);
+            drawMenuSpriteWithAlpha(
+                (s16)(actor->x + j),
+                (s16)(actor->y + i),
+                getRelocatableHeapBlockBase(TITLE_MENU_BANNER_TEXTURE_HANDLE),
+                0xB,
+                0x20,
+                0x20,
+                0,
+                actor->alpha,
+                0
+            );
             j += 0x10;
         } while (j != limit);
         i += 0x10;
@@ -221,9 +296,16 @@ void drawRaceSetupPlayerCountPrompt(MenuIntroActor *arg0) {
     drawMenuGlyphScript(actor->x, actor->y, gRaceSetupPlayerCountPromptText[selected], 0, actor->alpha, 0);
 
     if ((actor->state == 1) || (actor->state == 6)) {
-        drawMenuSprite((s16)(actor->x + 0xD0), (s16)(actor->y + 0x20),
-                      getRelocatableHeapBlockBase(TITLE_MENU_FRAME_TEXTURE_HANDLE), (actor->timer >= 8) + 5,
-                      0x20, 0x20, 0, 0);
+        drawMenuSprite(
+            (s16)(actor->x + 0xD0),
+            (s16)(actor->y + 0x20),
+            getRelocatableHeapBlockBase(TITLE_MENU_FRAME_TEXTURE_HANDLE),
+            (actor->timer >= 8) + 5,
+            0x20,
+            0x20,
+            0,
+            0
+        );
     }
 }
 
@@ -267,37 +349,37 @@ void updateRaceSetupPlayerCountPrompt(MenuIntroActor *arg0) {
         }
     } else {
         switch (state) {
-        case 1:
-        case 6:
-            alpha = ((volatile MenuIntroActor *)actor)->alpha;
-            actor->timer = (actor->timer + 1) & 0xF;
-            break;
-        case 2:
-            actor->y -= 0x10;
-            if (actor->y == -0x5C) {
-                actor->child = createCallbackTask((CallbackTaskCallback)initRaceSetupOnePlayerOption, 0, 0x63);
-                enqueueSoundEffect(1, 0x32);
-                actor->state = 3;
-            }
-            alpha = actor->alpha;
-            break;
-        case 3:
-            if (gCurrentGameTask->unk1C == 2) {
+            case 1:
+            case 6:
                 alpha = ((volatile MenuIntroActor *)actor)->alpha;
-                actor->state = 4;
-            }
-            break;
-        case 4:
-            actor->y += step;
-            if (actor->y == -0x1C) {
-                actor->state = 5;
-            }
-            alpha = actor->alpha;
-            break;
-        case 5:
-        case 7:
-        case 8:
-            break;
+                actor->timer = (actor->timer + 1) & 0xF;
+                break;
+            case 2:
+                actor->y -= 0x10;
+                if (actor->y == -0x5C) {
+                    actor->child = createCallbackTask((CallbackTaskCallback)initRaceSetupOnePlayerOption, 0, 0x63);
+                    enqueueSoundEffect(1, 0x32);
+                    actor->state = 3;
+                }
+                alpha = actor->alpha;
+                break;
+            case 3:
+                if (gCurrentGameTask->unk1C == 2) {
+                    alpha = ((volatile MenuIntroActor *)actor)->alpha;
+                    actor->state = 4;
+                }
+                break;
+            case 4:
+                actor->y += step;
+                if (actor->y == -0x1C) {
+                    actor->state = 5;
+                }
+                alpha = actor->alpha;
+                break;
+            case 5:
+            case 7:
+            case 8:
+                break;
         }
     }
 
@@ -347,52 +429,94 @@ void drawRaceSetupOnePlayerOption(void *arg0) {
     }
 
     if ((gMenuSelectionConfirmTimer == 0) || (gMenuSelectionConfirmTimer & 1) || (gPlayerCount != 1)) {
-        drawMenuSpriteWithAlpha(actor->x, actor->y, getRelocatableHeapBlockBase(gAssetHandles[33]), 3, 0x20, 0x20, 0, alpha, 0);
+        drawMenuSpriteWithAlpha(
+            actor->x,
+            actor->y,
+            getRelocatableHeapBlockBase(gAssetHandles[33]),
+            3,
+            0x20,
+            0x20,
+            0,
+            alpha,
+            0
+        );
         if (width == 0x20) {
-            drawMenuSpriteWithAlpha((s16)(actor->x + xOffset), (s16)(actor->y - yOffset), getRelocatableHeapBlockBase(gAssetHandles[31]), 0, width, width, 0, alpha, 0);
+            drawMenuSpriteWithAlpha(
+                (s16)(actor->x + xOffset),
+                (s16)(actor->y - yOffset),
+                getRelocatableHeapBlockBase(gAssetHandles[31]),
+                0,
+                width,
+                width,
+                0,
+                alpha,
+                0
+            );
         } else {
-            drawMenuSpriteWithPaletteScale((s16)(actor->x + xOffset), (s16)(actor->y - yOffset), getRelocatableHeapBlockBase(gAssetHandles[31]), 0, alpha);
+            drawMenuSpriteWithPaletteScale(
+                (s16)(actor->x + xOffset),
+                (s16)(actor->y - yOffset),
+                getRelocatableHeapBlockBase(gAssetHandles[31]),
+                0,
+                alpha
+            );
         }
-        drawMenuGlyphScriptDefaultFont((s16)(actor->x + 0x30), (s16)(actor->y + 4), gRaceSetupOnePlayerOptionText, 1, alpha);
+        drawMenuGlyphScriptDefaultFont(
+            (s16)(actor->x + 0x30),
+            (s16)(actor->y + 4),
+            gRaceSetupOnePlayerOptionText,
+            1,
+            alpha
+        );
     }
 
-    drawMenuSpriteWithAlpha((s16)(actor->x + 0x80), actor->y, getRelocatableHeapBlockBase(gAssetHandles[33]), 7, 0x20, 0x20, 0, alpha, 0);
+    drawMenuSpriteWithAlpha(
+        (s16)(actor->x + 0x80),
+        actor->y,
+        getRelocatableHeapBlockBase(gAssetHandles[33]),
+        7,
+        0x20,
+        0x20,
+        0,
+        alpha,
+        0
+    );
 }
 
 void updateRaceSetupOnePlayerOption(MenuItemActor *arg0) {
     MenuItemActor *child;
 
     switch (arg0->state) {
-    case 0:
-        arg0->x -= 0x20;
-        if (arg0->x == 0x70) {
-            arg0->child = createCallbackTask((CallbackTaskCallback)initRaceSetupTwoPlayerOption, 0, 0x63);
-            enqueueSoundEffect(1, 0x32);
-        }
-        if (arg0->x == -0x50) {
-            arg0->state = 1;
-        }
-        break;
-    case 1:
-        if (gMenuSelectionConfirmTimer == 0x13) {
-            arg0->state = 2;
-            if (gPlayerCount == 1) {
-                gMenuFlowState = 1;
+        case 0:
+            arg0->x -= 0x20;
+            if (arg0->x == 0x70) {
+                arg0->child = createCallbackTask((CallbackTaskCallback)initRaceSetupTwoPlayerOption, 0, 0x63);
+                enqueueSoundEffect(1, 0x32);
             }
-        }
-        break;
-    case 2:
-        arg0->x -= 0x20;
-        if (arg0->x == -0x70) {
-            child = arg0->child;
-            child->state = 2;
-            if (gPlayerCount == 2) {
-                gMenuFlowState = 1;
+            if (arg0->x == -0x50) {
+                arg0->state = 1;
             }
-        }
-        break;
-    default:
-        break;
+            break;
+        case 1:
+            if (gMenuSelectionConfirmTimer == 0x13) {
+                arg0->state = 2;
+                if (gPlayerCount == 1) {
+                    gMenuFlowState = 1;
+                }
+            }
+            break;
+        case 2:
+            arg0->x -= 0x20;
+            if (arg0->x == -0x70) {
+                child = arg0->child;
+                child->state = 2;
+                if (gPlayerCount == 2) {
+                    gMenuFlowState = 1;
+                }
+            }
+            break;
+        default:
+            break;
     }
     if (arg0->x < -0x108) {
         removeCallbackTask(arg0);
@@ -437,17 +561,59 @@ void drawRaceSetupTwoPlayerOption(MenuItemActor *arg0) {
     }
 
     if ((gMenuSelectionConfirmTimer == 0) || (gMenuSelectionConfirmTimer & 1) || (gPlayerCount != 2)) {
-        drawMenuSpriteWithAlpha(actor->x, actor->y, getRelocatableHeapBlockBase(TITLE_MENU_FRAME_TEXTURE_HANDLE), 3, 0x20, 0x20, 0, alpha, 2);
+        drawMenuSpriteWithAlpha(
+            actor->x,
+            actor->y,
+            getRelocatableHeapBlockBase(TITLE_MENU_FRAME_TEXTURE_HANDLE),
+            3,
+            0x20,
+            0x20,
+            0,
+            alpha,
+            2
+        );
         if (width == 0x20) {
-            drawMenuSpriteWithAlpha((s16)(actor->x + xOffset), (s16)(actor->y - yOffset), getRelocatableHeapBlockBase(TITLE_MENU_SECONDARY_TEXTURE_HANDLE), 1, width, width, 0, alpha, 0);
+            drawMenuSpriteWithAlpha(
+                (s16)(actor->x + xOffset),
+                (s16)(actor->y - yOffset),
+                getRelocatableHeapBlockBase(TITLE_MENU_SECONDARY_TEXTURE_HANDLE),
+                1,
+                width,
+                width,
+                0,
+                alpha,
+                0
+            );
         } else {
-            drawMenuSpriteWithPaletteScale((s16)(actor->x + xOffset), (s16)(actor->y - yOffset), getRelocatableHeapBlockBase(TITLE_MENU_SECONDARY_TEXTURE_HANDLE), 1, alpha);
+            drawMenuSpriteWithPaletteScale(
+                (s16)(actor->x + xOffset),
+                (s16)(actor->y - yOffset),
+                getRelocatableHeapBlockBase(TITLE_MENU_SECONDARY_TEXTURE_HANDLE),
+                1,
+                alpha
+            );
         }
-        drawMenuGlyphScriptDefaultFont((s16)(actor->x + 0x30), (s16)(actor->y + 4), gRaceSetupTwoPlayerOptionText, 1, alpha);
+        drawMenuGlyphScriptDefaultFont(
+            (s16)(actor->x + 0x30),
+            (s16)(actor->y + 4),
+            gRaceSetupTwoPlayerOptionText,
+            1,
+            alpha
+        );
     }
 
     for (i = 0; i != 0x28; i += 0x14) {
-        drawMenuSpriteWithAlpha((s16)(actor->x + i + 0x80), actor->y, getRelocatableHeapBlockBase(TITLE_MENU_FRAME_TEXTURE_HANDLE), 7, 0x20, 0x20, 0, alpha, 0);
+        drawMenuSpriteWithAlpha(
+            (s16)(actor->x + i + 0x80),
+            actor->y,
+            getRelocatableHeapBlockBase(TITLE_MENU_FRAME_TEXTURE_HANDLE),
+            7,
+            0x20,
+            0x20,
+            0,
+            alpha,
+            0
+        );
     }
 }
 
@@ -455,30 +621,30 @@ void updateRaceSetupTwoPlayerOption(MenuItemActor *arg0) {
     MenuItemActor *child;
 
     switch (arg0->state) {
-    case 0:
-        arg0->x -= 0x20;
-        if (arg0->x == 0x70) {
-            arg0->child = createCallbackTask((CallbackTaskCallback)initRaceSetupThreePlayerOption, 0, 0x63);
-            enqueueSoundEffect(1, 0x32);
-        }
-        if (arg0->x == -0x50) {
-            arg0->state = 1;
-        }
-        break;
-    case 1:
-        break;
-    case 2:
-        arg0->x -= 0x20;
-        if (arg0->x == -0x70) {
-            child = arg0->child;
-            child->state = 2;
-            if (gPlayerCount == 3) {
-                gMenuFlowState = 1;
+        case 0:
+            arg0->x -= 0x20;
+            if (arg0->x == 0x70) {
+                arg0->child = createCallbackTask((CallbackTaskCallback)initRaceSetupThreePlayerOption, 0, 0x63);
+                enqueueSoundEffect(1, 0x32);
             }
-        }
-        break;
-    default:
-        break;
+            if (arg0->x == -0x50) {
+                arg0->state = 1;
+            }
+            break;
+        case 1:
+            break;
+        case 2:
+            arg0->x -= 0x20;
+            if (arg0->x == -0x70) {
+                child = arg0->child;
+                child->state = 2;
+                if (gPlayerCount == 3) {
+                    gMenuFlowState = 1;
+                }
+            }
+            break;
+        default:
+            break;
     }
     if (arg0->x < -0x108) {
         removeCallbackTask(arg0);
@@ -523,17 +689,59 @@ void drawRaceSetupThreePlayerOption(void *arg0) {
     }
 
     if ((gMenuSelectionConfirmTimer == 0) || (gMenuSelectionConfirmTimer & 1) || (gPlayerCount != 3)) {
-        drawMenuSpriteWithAlpha(actor->x, actor->y, getRelocatableHeapBlockBase(TITLE_MENU_FRAME_TEXTURE_HANDLE), 3, 0x20, 0x20, 0, alpha, 3);
+        drawMenuSpriteWithAlpha(
+            actor->x,
+            actor->y,
+            getRelocatableHeapBlockBase(TITLE_MENU_FRAME_TEXTURE_HANDLE),
+            3,
+            0x20,
+            0x20,
+            0,
+            alpha,
+            3
+        );
         if (width == 0x20) {
-            drawMenuSpriteWithAlpha((s16)(actor->x + xOffset), (s16)(actor->y - yOffset), getRelocatableHeapBlockBase(TITLE_MENU_SECONDARY_TEXTURE_HANDLE), 2, width, width, 0, alpha, 0);
+            drawMenuSpriteWithAlpha(
+                (s16)(actor->x + xOffset),
+                (s16)(actor->y - yOffset),
+                getRelocatableHeapBlockBase(TITLE_MENU_SECONDARY_TEXTURE_HANDLE),
+                2,
+                width,
+                width,
+                0,
+                alpha,
+                0
+            );
         } else {
-            drawMenuSpriteWithPaletteScale((s16)(actor->x + xOffset), (s16)(actor->y - yOffset), getRelocatableHeapBlockBase(TITLE_MENU_SECONDARY_TEXTURE_HANDLE), 2, alpha);
+            drawMenuSpriteWithPaletteScale(
+                (s16)(actor->x + xOffset),
+                (s16)(actor->y - yOffset),
+                getRelocatableHeapBlockBase(TITLE_MENU_SECONDARY_TEXTURE_HANDLE),
+                2,
+                alpha
+            );
         }
-        drawMenuGlyphScriptDefaultFont((s16)(actor->x + 0x30), (s16)(actor->y + 4), gRaceSetupThreePlayerOptionText, 1, alpha);
+        drawMenuGlyphScriptDefaultFont(
+            (s16)(actor->x + 0x30),
+            (s16)(actor->y + 4),
+            gRaceSetupThreePlayerOptionText,
+            1,
+            alpha
+        );
     }
 
     for (i = 0; i != 0x3C; i += 0x14) {
-        drawMenuSpriteWithAlpha((s16)(actor->x + i + 0x80), actor->y, getRelocatableHeapBlockBase(TITLE_MENU_FRAME_TEXTURE_HANDLE), 7, 0x20, 0x20, 0, alpha, 0);
+        drawMenuSpriteWithAlpha(
+            (s16)(actor->x + i + 0x80),
+            actor->y,
+            getRelocatableHeapBlockBase(TITLE_MENU_FRAME_TEXTURE_HANDLE),
+            7,
+            0x20,
+            0x20,
+            0,
+            alpha,
+            0
+        );
     }
 }
 
@@ -541,30 +749,30 @@ void updateRaceSetupThreePlayerOption(MenuItemActor *arg0) {
     MenuItemActor *child;
 
     switch (arg0->state) {
-    case 0:
-        arg0->x -= 0x20;
-        if (arg0->x == 0x70) {
-            arg0->child = createCallbackTask((CallbackTaskCallback)initRaceSetupFourPlayerOption, 0, 0x63);
-            enqueueSoundEffect(1, 0x32);
-        }
-        if (arg0->x == -0x50) {
-            arg0->state = 1;
-        }
-        break;
-    case 1:
-        break;
-    case 2:
-        arg0->x -= 0x20;
-        if (arg0->x == -0x70) {
-            child = arg0->child;
-            child->state = 2;
-            if (gPlayerCount == 4) {
-                gMenuFlowState = 1;
+        case 0:
+            arg0->x -= 0x20;
+            if (arg0->x == 0x70) {
+                arg0->child = createCallbackTask((CallbackTaskCallback)initRaceSetupFourPlayerOption, 0, 0x63);
+                enqueueSoundEffect(1, 0x32);
             }
-        }
-        break;
-    default:
-        break;
+            if (arg0->x == -0x50) {
+                arg0->state = 1;
+            }
+            break;
+        case 1:
+            break;
+        case 2:
+            arg0->x -= 0x20;
+            if (arg0->x == -0x70) {
+                child = arg0->child;
+                child->state = 2;
+                if (gPlayerCount == 4) {
+                    gMenuFlowState = 1;
+                }
+            }
+            break;
+        default:
+            break;
     }
     if (arg0->x < -0x108) {
         removeCallbackTask(arg0);
@@ -609,17 +817,59 @@ void drawRaceSetupFourPlayerOption(void *arg0) {
     }
 
     if ((gMenuSelectionConfirmTimer == 0) || (gMenuSelectionConfirmTimer & 1) || (gPlayerCount != 4)) {
-        drawMenuSpriteWithAlpha(actor->x, actor->y, getRelocatableHeapBlockBase(TITLE_MENU_FRAME_TEXTURE_HANDLE), 3, 0x20, 0x20, 0, alpha, 4);
+        drawMenuSpriteWithAlpha(
+            actor->x,
+            actor->y,
+            getRelocatableHeapBlockBase(TITLE_MENU_FRAME_TEXTURE_HANDLE),
+            3,
+            0x20,
+            0x20,
+            0,
+            alpha,
+            4
+        );
         if (width == 0x20) {
-            drawMenuSpriteWithAlpha((s16)(actor->x + xOffset), (s16)(actor->y - yOffset), getRelocatableHeapBlockBase(TITLE_MENU_SECONDARY_TEXTURE_HANDLE), 3, width, width, 0, alpha, 0);
+            drawMenuSpriteWithAlpha(
+                (s16)(actor->x + xOffset),
+                (s16)(actor->y - yOffset),
+                getRelocatableHeapBlockBase(TITLE_MENU_SECONDARY_TEXTURE_HANDLE),
+                3,
+                width,
+                width,
+                0,
+                alpha,
+                0
+            );
         } else {
-            drawMenuSpriteWithPaletteScale((s16)(actor->x + xOffset), (s16)(actor->y - yOffset), getRelocatableHeapBlockBase(TITLE_MENU_SECONDARY_TEXTURE_HANDLE), 3, alpha);
+            drawMenuSpriteWithPaletteScale(
+                (s16)(actor->x + xOffset),
+                (s16)(actor->y - yOffset),
+                getRelocatableHeapBlockBase(TITLE_MENU_SECONDARY_TEXTURE_HANDLE),
+                3,
+                alpha
+            );
         }
-        drawMenuGlyphScriptDefaultFont((s16)(actor->x + 0x30), (s16)(actor->y + 4), gRaceSetupFourPlayerOptionText, 1, alpha);
+        drawMenuGlyphScriptDefaultFont(
+            (s16)(actor->x + 0x30),
+            (s16)(actor->y + 4),
+            gRaceSetupFourPlayerOptionText,
+            1,
+            alpha
+        );
     }
 
     for (i = 0; i != 0x50; i += 0x14) {
-        drawMenuSpriteWithAlpha((s16)(actor->x + i + 0x80), actor->y, getRelocatableHeapBlockBase(TITLE_MENU_FRAME_TEXTURE_HANDLE), 7, 0x20, 0x20, 0, alpha, 0);
+        drawMenuSpriteWithAlpha(
+            (s16)(actor->x + i + 0x80),
+            actor->y,
+            getRelocatableHeapBlockBase(TITLE_MENU_FRAME_TEXTURE_HANDLE),
+            7,
+            0x20,
+            0x20,
+            0,
+            alpha,
+            0
+        );
     }
 }
 
@@ -628,25 +878,25 @@ void updateRaceSetupFourPlayerOption(MenuItemActor *arg0) {
     s16 x;
 
     switch (actor->state) {
-    case 0:
-        actor->x -= 0x20;
-        x = actor->x;
-        if (x == -0x50) {
-            actor->state = 1;
-            createCallbackTask((CallbackTaskCallback)initRaceSetupPlayerCountCursor, 0, 0x63);
+        case 0:
+            actor->x -= 0x20;
             x = actor->x;
-        }
-        break;
-    case 1:
-        x = actor->x;
-        break;
-    case 2:
-        actor->x -= 0x20;
-        x = actor->x;
-        break;
-    default:
-        x = actor->x;
-        break;
+            if (x == -0x50) {
+                actor->state = 1;
+                createCallbackTask((CallbackTaskCallback)initRaceSetupPlayerCountCursor, 0, 0x63);
+                x = actor->x;
+            }
+            break;
+        case 1:
+            x = actor->x;
+            break;
+        case 2:
+            actor->x -= 0x20;
+            x = actor->x;
+            break;
+        default:
+            x = actor->x;
+            break;
     }
     if (x < -0x108) {
         removeCallbackTask(actor);
@@ -677,7 +927,8 @@ void drawRaceSetupPlayerCountCursor(void *arg0) {
         0x20,
         0,
         actor->uAlpha,
-        0);
+        0
+    );
 }
 
 void updateRaceSetupPlayerCountCursor(FadeItemActor *arg0) {
@@ -688,7 +939,8 @@ void updateRaceSetupPlayerCountCursor(FadeItemActor *arg0) {
 
     temp_v0 = actor->alpha;
     temp_a2 = actor;
-    if ((((((((((temp_v0 & 0xFFFFu) & 0xFFFFu) & 0xFFFFu) & 0xFFFFu) & 0xFFFFu) & 0xFFFFu) & 0xFFFFu) & 0xFFFFu) & 0xFFFFu) != 0x100) {
+    if ((((((((((temp_v0 & 0xFFFFu) & 0xFFFFu) & 0xFFFFu) & 0xFFFFu) & 0xFFFFu) & 0xFFFFu) & 0xFFFFu) & 0xFFFFu) &
+         0xFFFFu) != 0x100) {
         temp_t6 = temp_v0 + 0x28;
         actor->alpha = temp_t6;
         if ((temp_t6 & 0xFFFF) >= 0x100) {
@@ -731,14 +983,39 @@ void drawRaceSetupSavePlayerPanels(TitleMenuWidgetItemView *actor) {
 
         panel = actor;
         playerNumber = i + 1;
-        drawMenuSpriteWithAlpha(actor->x[i], actor->y[i], getRelocatableHeapBlockBase(TITLE_MENU_FRAME_TEXTURE_HANDLE),
-                                0xA, 0x20, 0x20, 0, alpha, playerNumber);
-        drawMenuSpriteWithAlpha((s16)(actor->x[i] + 0x40), actor->y[i],
-                                getRelocatableHeapBlockBase(TITLE_MENU_FRAME_TEXTURE_HANDLE), 0xB, 0x20, 0x20, 0, alpha,
-                                playerNumber);
-        drawMenuSpriteWithAlpha((s16)(panel->x[i] + 0x80), panel->y[i],
-                                getRelocatableHeapBlockBase(TITLE_MENU_FRAME_TEXTURE_HANDLE), 0xC, 0x20, 0x20, 0, alpha,
-                                playerNumber);
+        drawMenuSpriteWithAlpha(
+            actor->x[i],
+            actor->y[i],
+            getRelocatableHeapBlockBase(TITLE_MENU_FRAME_TEXTURE_HANDLE),
+            0xA,
+            0x20,
+            0x20,
+            0,
+            alpha,
+            playerNumber
+        );
+        drawMenuSpriteWithAlpha(
+            (s16)(actor->x[i] + 0x40),
+            actor->y[i],
+            getRelocatableHeapBlockBase(TITLE_MENU_FRAME_TEXTURE_HANDLE),
+            0xB,
+            0x20,
+            0x20,
+            0,
+            alpha,
+            playerNumber
+        );
+        drawMenuSpriteWithAlpha(
+            (s16)(panel->x[i] + 0x80),
+            panel->y[i],
+            getRelocatableHeapBlockBase(TITLE_MENU_FRAME_TEXTURE_HANDLE),
+            0xC,
+            0x20,
+            0x20,
+            0,
+            alpha,
+            playerNumber
+        );
 
         sprintf(text, D_800E0A80, playerNumber);
         drawMenuAsciiText((s16)(actor->x[i] + 0x32), (s16)(panel->y[i] + 2), text, 0, alpha);
@@ -747,11 +1024,18 @@ void drawRaceSetupSavePlayerPanels(TitleMenuWidgetItemView *actor) {
             sprintf(text, D_800E0A84, gRacePlayers[i].money);
             drawMenuAsciiText((s16)(actor->x[i] + 0x44), (s16)(panel->y[i] + 0x1B), text, 0, alpha);
         } else {
-            if ((!panel) && (!panel)) {
-            }
-            drawMenuSpriteWithAlpha((s16)(actor->x[i] + 2), (s16)(panel->y[i] + 0x14),
-                                    getRelocatableHeapBlockBase(TITLE_MENU_SECONDARY_TEXTURE_HANDLE), 0x90, 0x20, 0x20,
-                                    0, 0xF0, 0);
+            if ((!panel) && (!panel)) {}
+            drawMenuSpriteWithAlpha(
+                (s16)(actor->x[i] + 2),
+                (s16)(panel->y[i] + 0x14),
+                getRelocatableHeapBlockBase(TITLE_MENU_SECONDARY_TEXTURE_HANDLE),
+                0x90,
+                0x20,
+                0x20,
+                0,
+                0xF0,
+                0
+            );
         }
     }
 }
@@ -771,80 +1055,80 @@ void updateRaceSetupSavePanelFrame(RectListActor *arg0) {
     }
 
     switch (state) {
-    case 0:
-        outer = 0;
-        do {
-            i = 0;
+        case 0:
+            outer = 0;
             do {
-                if (i < 2) {
-                    delta0 = 1;
-                } else {
-                    delta0 = -1;
-                }
-                if (i & 1) {
-                    delta1 = -1;
-                } else {
-                    delta1 = 1;
-                }
-
-                arg0->rectCoords[i] += delta0;
-
-                if (i == 0) {
-                    arg0->stepAccumulator += arg0->stepIncrement;
-                }
-                if (arg0->stepAccumulator >= arg0->stepLimit) {
-                    arg0->rectCoords[i + 4] += delta1;
-                    if (i == 3) {
-                        arg0->stepAccumulator -= arg0->stepLimit;
+                i = 0;
+                do {
+                    if (i < 2) {
+                        delta0 = 1;
+                    } else {
+                        delta0 = -1;
                     }
-                }
-
-                if (i <= 0) {
-                    delta0 = 1;
-                } else {
-                    delta0 = -1;
-                }
-                if ((i + 1) & 1) {
-                    delta1 = -1;
-                } else {
-                    delta1 = 1;
-                }
-
-                arg0->rectCoords[i + 1] += delta0;
-
-                if (i == -1) {
-                    arg0->stepAccumulator += arg0->stepIncrement;
-                }
-                if (arg0->stepAccumulator >= arg0->stepLimit) {
-                    arg0->rectCoords[i + 5] += delta1;
-                    if (i == 2) {
-                        arg0->stepAccumulator -= arg0->stepLimit;
+                    if (i & 1) {
+                        delta1 = -1;
+                    } else {
+                        delta1 = 1;
                     }
+
+                    arg0->rectCoords[i] += delta0;
+
+                    if (i == 0) {
+                        arg0->stepAccumulator += arg0->stepIncrement;
+                    }
+                    if (arg0->stepAccumulator >= arg0->stepLimit) {
+                        arg0->rectCoords[i + 4] += delta1;
+                        if (i == 3) {
+                            arg0->stepAccumulator -= arg0->stepLimit;
+                        }
+                    }
+
+                    if (i <= 0) {
+                        delta0 = 1;
+                    } else {
+                        delta0 = -1;
+                    }
+                    if ((i + 1) & 1) {
+                        delta1 = -1;
+                    } else {
+                        delta1 = 1;
+                    }
+
+                    arg0->rectCoords[i + 1] += delta0;
+
+                    if (i == -1) {
+                        arg0->stepAccumulator += arg0->stepIncrement;
+                    }
+                    if (arg0->stepAccumulator >= arg0->stepLimit) {
+                        arg0->rectCoords[i + 5] += delta1;
+                        if (i == 2) {
+                            arg0->stepAccumulator -= arg0->stepLimit;
+                        }
+                    }
+
+                    i += 2;
+                } while (i != 4);
+
+                outer++;
+                if (arg0->rects[0].x0 == -0x88) {
+                    arg0->frame = 1;
+                    break;
                 }
-
-                i += 2;
-            } while (i != 4);
-
-            outer++;
-            if (arg0->rects[0].x0 == -0x88) {
-                arg0->frame = 1;
-                break;
+            } while (outer != 0x10);
+            state = arg0->frame;
+            break;
+        case 2:
+            arg0->rects[1].y0 += 0x10;
+            arg0->rects[1].y1 += 0x10;
+            if (arg0->rects[1].y0 == 0x24) {
+                arg0->frame = 3;
             }
-        } while (outer != 0x10);
-        state = arg0->frame;
-        break;
-    case 2:
-        arg0->rects[1].y0 += 0x10;
-        arg0->rects[1].y1 += 0x10;
-        if (arg0->rects[1].y0 == 0x24) {
-            arg0->frame = 3;
-        }
-        state = arg0->frame;
-        break;
-    case 1:
-    case 3:
-    default:
-        break;
+            state = arg0->frame;
+            break;
+        case 1:
+        case 3:
+        default:
+            break;
     }
 
     gRaceSetupMenuSubState.forceUpdate = state;
@@ -879,6 +1163,8 @@ void initRaceSetupSavePanelFrame(RectListActor *arg0) {
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceSetupSavePanelFrame);
 }
 
+// IDO code generation for this function is sensitive to source line layout.
+// clang-format off
 void drawRaceSetupSavePanelIcons(TitleMenuIconStripActor *actor) {
     volatile s32 unusedStackPadding;
     union {
@@ -974,6 +1260,7 @@ void drawRaceSetupSavePanelIcons(TitleMenuIconStripActor *actor) {
         }
     } while (0);
 }
+// clang-format on
 
 void updateRaceSetupSavePanelIcons(void *arg0) {
     RectListActor *temp_a2;
@@ -1028,14 +1315,38 @@ void drawRaceSetupSaveStatusWidgets(TitleMenuWidgetActor *arg0) {
             }
 
             tile = 8;
-            drawMenuSpriteWithAlpha((s16)(actor->x[i] - 2), (s16)(actor->y[i] + 0xC), getRelocatableHeapBlockBase(TITLE_MENU_FRAME_TEXTURE_HANDLE), tile,
-                          0x20, 0x20, 0, alpha, 0);
-            drawMenuSpriteWithAlpha((s16)(actor->x[i] + 0x3E), (s16)(actor->y[i] + 0xC), getRelocatableHeapBlockBase(TITLE_MENU_FRAME_TEXTURE_HANDLE), 9,
-                          0x20, 0x20, 0, alpha, 0);
+            drawMenuSpriteWithAlpha(
+                (s16)(actor->x[i] - 2),
+                (s16)(actor->y[i] + 0xC),
+                getRelocatableHeapBlockBase(TITLE_MENU_FRAME_TEXTURE_HANDLE),
+                tile,
+                0x20,
+                0x20,
+                0,
+                alpha,
+                0
+            );
+            drawMenuSpriteWithAlpha(
+                (s16)(actor->x[i] + 0x3E),
+                (s16)(actor->y[i] + 0xC),
+                getRelocatableHeapBlockBase(TITLE_MENU_FRAME_TEXTURE_HANDLE),
+                9,
+                0x20,
+                0x20,
+                0,
+                alpha,
+                0
+            );
 
             state = gControllerPakStatusCodes[i];
             if (state == 0xA) {
-                drawMenuAsciiText((s16)(actor->x[i] + 2), (s16)(actor->y[i] + 0x10), gRaceSetupNoControllerPakMessage, 7, actor->alpha[i]);
+                drawMenuAsciiText(
+                    (s16)(actor->x[i] + 2),
+                    (s16)(actor->y[i] + 0x10),
+                    gRaceSetupNoControllerPakMessage,
+                    7,
+                    actor->alpha[i]
+                );
             } else {
                 text = gRaceSetupSaveStatusMessages[state];
                 state = 2;
@@ -1045,8 +1356,16 @@ void drawRaceSetupSaveStatusWidgets(TitleMenuWidgetActor *arg0) {
             if ((actor->alpha[i] == 0x100) && (intro->state == 8)) {
                 state = gControllerPakStatusCodes[i];
                 if ((state == 4) || ((state >= 7) && (state != 0x12) && (gMenuChoicePromptState[i] == 0))) {
-                    drawMenuSprite((s16)(actor->x[i] + 0x70), (s16)(actor->y[i] + 0x20), getRelocatableHeapBlockBase(TITLE_MENU_FRAME_TEXTURE_HANDLE),
-                                  ((s32)actor->frame >= 8) + 5, 0x20, 0x20, 0, 0);
+                    drawMenuSprite(
+                        (s16)(actor->x[i] + 0x70),
+                        (s16)(actor->y[i] + 0x20),
+                        getRelocatableHeapBlockBase(TITLE_MENU_FRAME_TEXTURE_HANDLE),
+                        ((s32)actor->frame >= 8) + 5,
+                        0x20,
+                        0x20,
+                        0,
+                        0
+                    );
                 }
             }
         }
@@ -1061,7 +1380,7 @@ void updateRaceSetupSaveStatusWidgets(TitleMenuWidgetActor *arg0) {
 
     panelPositions = D_8010ADE0;
     actor = arg0;
-    for (playerIndex = 0; playerIndex < (s32) gPlayerCount; playerIndex++) {
+    for (playerIndex = 0; playerIndex < (s32)gPlayerCount; playerIndex++) {
         actor->x[playerIndex] = panelPositions->x[playerIndex];
         actor->y[playerIndex] = panelPositions->y[playerIndex];
 
@@ -1071,24 +1390,24 @@ void updateRaceSetupSaveStatusWidgets(TitleMenuWidgetActor *arg0) {
         }
 
         switch (actor->statusTransitionStates[playerIndex]) {
-        case SAVE_STATUS_TRANSITION_FADE_IN:
-            actor->alpha[playerIndex] += SAVE_STATUS_FADE_STEP;
-            if (actor->alpha[playerIndex] >= 0x100) {
-                actor->alpha[playerIndex] = 0x100;
-                actor->statusTransitionStates[playerIndex] = SAVE_STATUS_TRANSITION_NONE;
-            }
-            break;
-        case SAVE_STATUS_TRANSITION_FADE_OUT:
-            actor->alpha[playerIndex] -= SAVE_STATUS_FADE_STEP;
-            if (actor->alpha[playerIndex] <= 0) {
-                actor->alpha[playerIndex] = 0;
-                actor->statusTransitionStates[playerIndex] = SAVE_STATUS_TRANSITION_FADE_IN;
-                gControllerPakStatusCodes[playerIndex] = arg0->nextStatusCodes[playerIndex];
-            }
-            break;
-        case SAVE_STATUS_TRANSITION_NONE:
-        case SAVE_STATUS_TRANSITION_DONE:
-            break;
+            case SAVE_STATUS_TRANSITION_FADE_IN:
+                actor->alpha[playerIndex] += SAVE_STATUS_FADE_STEP;
+                if (actor->alpha[playerIndex] >= 0x100) {
+                    actor->alpha[playerIndex] = 0x100;
+                    actor->statusTransitionStates[playerIndex] = SAVE_STATUS_TRANSITION_NONE;
+                }
+                break;
+            case SAVE_STATUS_TRANSITION_FADE_OUT:
+                actor->alpha[playerIndex] -= SAVE_STATUS_FADE_STEP;
+                if (actor->alpha[playerIndex] <= 0) {
+                    actor->alpha[playerIndex] = 0;
+                    actor->statusTransitionStates[playerIndex] = SAVE_STATUS_TRANSITION_FADE_IN;
+                    gControllerPakStatusCodes[playerIndex] = arg0->nextStatusCodes[playerIndex];
+                }
+                break;
+            case SAVE_STATUS_TRANSITION_NONE:
+            case SAVE_STATUS_TRANSITION_DONE:
+                break;
         }
 
         gRaceSetupMenuSubState.statusTransitionStates[playerIndex] = actor->statusTransitionStates[playerIndex];
@@ -1096,7 +1415,7 @@ void updateRaceSetupSaveStatusWidgets(TitleMenuWidgetActor *arg0) {
 
     arg0->frame = (arg0->frame + 1) & 0xF;
     transitionStateSum = 0;
-    for (playerIndex = 0; playerIndex < (s32) gPlayerCount; playerIndex++) {
+    for (playerIndex = 0; playerIndex < (s32)gPlayerCount; playerIndex++) {
         transitionStateSum += actor->statusTransitionStates[playerIndex];
     }
 
@@ -1160,8 +1479,17 @@ void drawRaceSetupSaveChoicePrompts(TitleMenuTransitionActor *arg0) {
                         alpha = 0x60;
                     }
 
-                    drawMenuSpriteWithAlpha(new_var4->x[i], arg0->topY[i], getRelocatableHeapBlockBase(TITLE_MENU_FRAME_TEXTURE_HANDLE),
-                                  gRaceSetupSaveChoicePromptTopSprites[gControllerPakStatusCodes[i] * 2], 0x20, 0x20, 0, alpha, 0);
+                    drawMenuSpriteWithAlpha(
+                        new_var4->x[i],
+                        arg0->topY[i],
+                        getRelocatableHeapBlockBase(TITLE_MENU_FRAME_TEXTURE_HANDLE),
+                        gRaceSetupSaveChoicePromptTopSprites[gControllerPakStatusCodes[i] * 2],
+                        0x20,
+                        0x20,
+                        0,
+                        alpha,
+                        0
+                    );
 
                     if (alpha == 0x100) {
                         alpha = 0x60;
@@ -1170,20 +1498,35 @@ void drawRaceSetupSaveChoicePrompts(TitleMenuTransitionActor *arg0) {
                     }
 
                     new_var = arg0;
-                    drawMenuSpriteWithAlpha(arg0->x[i], new_var->y[i], getRelocatableHeapBlockBase(TITLE_MENU_FRAME_TEXTURE_HANDLE),
-                                  gRaceSetupSaveChoicePromptBottomSprites[gControllerPakStatusCodes[i] * 2], 0x20, 0x20, 0, alpha, 0);
+                    drawMenuSpriteWithAlpha(
+                        arg0->x[i],
+                        new_var->y[i],
+                        getRelocatableHeapBlockBase(TITLE_MENU_FRAME_TEXTURE_HANDLE),
+                        gRaceSetupSaveChoicePromptBottomSprites[gControllerPakStatusCodes[i] * 2],
+                        0x20,
+                        0x20,
+                        0,
+                        alpha,
+                        0
+                    );
 
-                    if (new_var->alpha == 0) {
-                    }
+                    if (new_var->alpha == 0) {}
 
-                    if (!arg0) {
-                    }
+                    if (!arg0) {}
 
                     state = gMenuChoicePromptState[i];
                     if ((state == 3) || (state == 4)) {
-                        drawMenuSpriteWithAlpha(new_var2->x[i], (s16)(((gMenuChoicePromptState[i] * 0x10) + new_var->y[i]) - (new_var3 = 0x30)),
-                                      getRelocatableHeapBlockBase(TITLE_MENU_FRAME_TEXTURE_HANDLE), 0x12, 0x20, 0x20, 0, new_var->alpha[i],
-                                      i + 7);
+                        drawMenuSpriteWithAlpha(
+                            new_var2->x[i],
+                            (s16)(((gMenuChoicePromptState[i] * 0x10) + new_var->y[i]) - (new_var3 = 0x30)),
+                            getRelocatableHeapBlockBase(TITLE_MENU_FRAME_TEXTURE_HANDLE),
+                            0x12,
+                            0x20,
+                            0x20,
+                            0,
+                            new_var->alpha[i],
+                            i + 7
+                        );
                         state = gMenuChoicePromptState[i];
                     }
                 }
@@ -1261,8 +1604,7 @@ void updateRaceSetupSaveChoicePrompts(TitleMenuTransitionActor *arg0) {
             i++;
         } while (i < gPlayerCount);
 
-        if (((!state) && (!state)) && (!state)) {
-        }
+        if (((!state) && (!state)) && (!state)) {}
     }
 
     addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawRaceSetupSaveChoicePrompts, (void *)arg0);
@@ -1338,5 +1680,4 @@ void initMenuTilemapSprite(MenuTilemapSprite *arg0, MenuTilemapSpriteAsset *arg1
 }
 
 void n_alSynFreeFX(s32 arg0) {
-
 }

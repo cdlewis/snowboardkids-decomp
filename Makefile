@@ -60,6 +60,9 @@ endif
 AS      = $(CROSS)as
 CC      = $(TOOLS_DIR)/ido-recomp/linux/cc
 CC_CHECK = clang
+CLANG_FORMAT ?= clang-format
+CLANG_TIDY ?= clang-tidy
+LLVM_MAJOR_VERSION := 20
 LD      = $(CROSS)ld
 OBJDUMP = $(CROSS)objdump
 OBJCOPY = $(CROSS)objcopy
@@ -195,6 +198,16 @@ ASM_O_FILES := $(patsubst %.s,$(BUILD_DIR)/%.o,$(ASM_S_FILES))
 C_FILES     := $(foreach dir,$(SRC_DIRS),$(call rwildcard,$(dir),*.c))
 C_O_FILES   := $(patsubst %.c,$(BUILD_DIR)/%.o,$(C_FILES))
 
+# Formatting and tidy intentionally cover tracked, project-owned code only.
+# Imported libultra/libmus sources retain their upstream formatting. Local
+# match-sensitive functions and textconv tables use clang-format guards.
+PROJECT_C_FILES := $(filter-out src/ultra/% src/libmus/%,$(shell git ls-files 'src/**/*.c' 'src/*.c'))
+FORMAT_C_FILES := $(PROJECT_C_FILES)
+FORMAT_H_FILES := $(shell git ls-files 'include/game/**/*.h' 'include/game/*.h') \
+	include/assets.h include/common.h include/compiler_diagnostics.h include/font_encoding.h
+FORMAT_FILES := $(FORMAT_C_FILES) $(FORMAT_H_FILES)
+TIDY_C_FILES := $(filter-out %.inc.c,$(PROJECT_C_FILES))
+
 TEXTCONV = $(PYTHON) $(TOOLS_DIR)/textconv.py
 CHARMAP = $(TOOLS_DIR)/charmap.txt
 TEXTCONV_DIR = $(BUILD_DIR)/textconv
@@ -318,6 +331,32 @@ verify: $(TARGET).z64
 check:
 	@if [ ! -f $(BASENAME).z64 ]; then echo "Error: $(BASENAME).z64 not found" >&2; exit 1; fi
 
+check-clang-format-version:
+	@command -v $(CLANG_FORMAT) >/dev/null 2>&1 || { echo "Error: $(CLANG_FORMAT) was not found" >&2; exit 1; }
+	@version=`$(CLANG_FORMAT) --version | sed -n 's/.*version \([0-9][0-9]*\).*/\1/p' | head -n 1`; \
+		if [ "$$version" != "$(LLVM_MAJOR_VERSION)" ]; then \
+			echo "Error: clang-format $(LLVM_MAJOR_VERSION) is required (found major version $${version:-unknown})" >&2; \
+			exit 1; \
+		fi
+
+check-clang-tidy-version:
+	@command -v $(CLANG_TIDY) >/dev/null 2>&1 || { echo "Error: $(CLANG_TIDY) was not found" >&2; exit 1; }
+	@version=`$(CLANG_TIDY) --version | sed -n 's/.*version \([0-9][0-9]*\).*/\1/p' | head -n 1`; \
+		if [ "$$version" != "$(LLVM_MAJOR_VERSION)" ]; then \
+			echo "Error: clang-tidy $(LLVM_MAJOR_VERSION) is required (found major version $${version:-unknown})" >&2; \
+			exit 1; \
+		fi
+
+format: check-clang-format-version
+	$(CLANG_FORMAT) -i -style=file $(FORMAT_FILES)
+
+format-check: check-clang-format-version
+	$(CLANG_FORMAT) --dry-run --Werror -style=file $(FORMAT_FILES)
+
+# Tidy is diagnostic-only: automatic fixes can alter matching code generation.
+tidy: check-clang-tidy-version
+	$(CLANG_TIDY) $(TIDY_C_FILES) -- $(CC_CHECK_FLAGS) $(CC_CHECK_INCLUDES) $(C_DEFINES) $(CC_CHECK_MIPS_DEFINES)
+
 ###########
 ## CLEAN ##
 ###########
@@ -331,4 +370,5 @@ clean:
 
 ### Settings
 .SECONDARY:
-.PHONY: all clean default extract nonmatching verify check
+.PHONY: all clean default extract nonmatching verify check \
+	check-clang-format-version check-clang-tidy-version format format-check tidy

@@ -60,6 +60,8 @@ typedef union {
 
 TrainingCourseUiScript gTrainingCourseOpeningDialogScripts[9][0x17C] = {
     {
+        // textconv requires these _() invocations to retain their original line layout.
+        // clang-format off
         _("{COLOR:6}SNOWBOARD KIDS{COLOR:7}\nIS A RACING\nGAME WITHOUT\nBRAKES.{PAGE_BREAK}WHEN MOVING\nTHE {COLOR:6}JOYSTICK{COLOR:7},\nTHE PLAYER WILL\n{COLOR:6}MOVE THERE{COLOR:7}.{PAGE_BREAK}{COLOR:6}BOTTOM LEFT\n{COLOR:7}AND {COLOR:6}BOTTOM\nRIGHT {COLOR:7}ALLOW\n{COLOR:6}SHARP TURNS{COLOR:7}.{PAGE_BREAK}NOW, USE THE\n{COLOR:6}CONTROL STICK\n{COLOR:7}AND GO AROUND\nTHE CORNER."),
     },
     {
@@ -100,10 +102,22 @@ TrainingCourseLessonTitleData gTrainingCourseLessonTitleText = {
     {
         {
                 _("{TITLE_LEFT}CORNERING{TITLE_RIGHT}"), 0, 0, 0, 0, 0, 0, 0, 0, _("{TITLE_LEFT}JUMP{TITLE_RIGHT}"), 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, _("{TITLE_LEFT}TRICKS PT1{TITLE_RIGHT}"), 0, 0, 0, 0, 0, 0, 0, _("{TITLE_LEFT}TRICKS PT2{TITLE_RIGHT}"), 0, 0, 0, 0, 0, 0, 0, _("{TITLE_LEFT}TRICKS PT3{TITLE_RIGHT}"), 0, 0, 0, 0, 0, 0, 0, _("{TITLE_LEFT}GOING ON LIFT{TITLE_RIGHT}"), 0, 0, 0, 0, _("{TITLE_LEFT}ITEM{TITLE_RIGHT}"), 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, _("{TITLE_LEFT}SHOT WEAPON{TITLE_RIGHT}"), 0, 0, 0, 0, 0, 0, _("{TITLE_LEFT}HIGH TECHNIQUE{TITLE_RIGHT}"),
+            // clang-format on
         },
         {
-    0x0000, 0xFFA8, 0xFFD0, 0xFFA0, 0xFFA0, 0xFFA0, 0xFF88, 0xFFD0,
-    0xFF98, 0xFF80, 0x0000, 0x0000, 0x0000,
+            0x0000,
+            0xFFA8,
+            0xFFD0,
+            0xFFA0,
+            0xFFA0,
+            0xFFA0,
+            0xFF88,
+            0xFFD0,
+            0xFF98,
+            0xFF80,
+            0x0000,
+            0x0000,
+            0x0000,
         },
     },
 };
@@ -128,33 +142,123 @@ void drawTrainingCourseLessonEndMenu(TrainingCourseUiActor *arg0) {
     u16 tileIndex;
     void *texture;
 
-    drawMenuSprite(arg0->x, arg0->y, getRelocatableHeapBlockBase(TRAINING_COURSE_UI_TEXTURE_HANDLE), 2, 0x20, 0x20, 0, 0);
-    drawMenuSprite((s16)(arg0->x + 0x50), arg0->y, getRelocatableHeapBlockBase(TRAINING_COURSE_UI_TEXTURE_HANDLE), 4, 0x20, 0x20, 0, 0);
+    drawMenuSprite(
+        arg0->x,
+        arg0->y,
+        getRelocatableHeapBlockBase(TRAINING_COURSE_UI_TEXTURE_HANDLE),
+        2,
+        0x20,
+        0x20,
+        0,
+        0
+    );
+    drawMenuSprite(
+        (s16)(arg0->x + 0x50),
+        arg0->y,
+        getRelocatableHeapBlockBase(TRAINING_COURSE_UI_TEXTURE_HANDLE),
+        4,
+        0x20,
+        0x20,
+        0,
+        0
+    );
 
     i = 0;
     do {
-        drawMenuSprite((s16)(arg0->x + i + 0x10), arg0->y, getRelocatableHeapBlockBase(TRAINING_COURSE_UI_TEXTURE_HANDLE), 3, 0x20, 0x20, 0, 0);
-        drawMenuSprite((s16)(arg0->x + i + 0x10), (s16)(arg0->y + 0x40), getRelocatableHeapBlockBase(TRAINING_COURSE_UI_TEXTURE_HANDLE), 8, 0x20, 0x20, 0, 0);
+        drawMenuSprite(
+            (s16)(arg0->x + i + 0x10),
+            arg0->y,
+            getRelocatableHeapBlockBase(TRAINING_COURSE_UI_TEXTURE_HANDLE),
+            3,
+            0x20,
+            0x20,
+            0,
+            0
+        );
+        drawMenuSprite(
+            (s16)(arg0->x + i + 0x10),
+            (s16)(arg0->y + 0x40),
+            getRelocatableHeapBlockBase(TRAINING_COURSE_UI_TEXTURE_HANDLE),
+            8,
+            0x20,
+            0x20,
+            0,
+            0
+        );
         i += 0x10;
     } while (i < 0x40);
 
-    drawMenuSprite(arg0->x, (s16)(arg0->y + 0x40), getRelocatableHeapBlockBase(TRAINING_COURSE_UI_TEXTURE_HANDLE), 7, 0x20, 0x20, 0, 0);
-    drawMenuSprite((s16)(arg0->x + 0x50), (s16)(arg0->y + 0x40), getRelocatableHeapBlockBase(TRAINING_COURSE_UI_TEXTURE_HANDLE), 9, 0x20, 0x20, 0, 0);
+    drawMenuSprite(
+        arg0->x,
+        (s16)(arg0->y + 0x40),
+        getRelocatableHeapBlockBase(TRAINING_COURSE_UI_TEXTURE_HANDLE),
+        7,
+        0x20,
+        0x20,
+        0,
+        0
+    );
+    drawMenuSprite(
+        (s16)(arg0->x + 0x50),
+        (s16)(arg0->y + 0x40),
+        getRelocatableHeapBlockBase(TRAINING_COURSE_UI_TEXTURE_HANDLE),
+        9,
+        0x20,
+        0x20,
+        0,
+        0
+    );
 
     i = 0;
     limit = 0x40;
     do {
-        drawMenuSprite(arg0->x, (s16)(arg0->y + i + 0x10), getRelocatableHeapBlockBase(TRAINING_COURSE_UI_TEXTURE_HANDLE), 5, 0x20, 0x20, 0, 0);
-        drawMenuSprite((s16)(arg0->x + 0x50), (s16)(arg0->y + i + 0x10), getRelocatableHeapBlockBase(TRAINING_COURSE_UI_TEXTURE_HANDLE), 6, 0x20, 0x20, 0, 0);
+        drawMenuSprite(
+            arg0->x,
+            (s16)(arg0->y + i + 0x10),
+            getRelocatableHeapBlockBase(TRAINING_COURSE_UI_TEXTURE_HANDLE),
+            5,
+            0x20,
+            0x20,
+            0,
+            0
+        );
+        drawMenuSprite(
+            (s16)(arg0->x + 0x50),
+            (s16)(arg0->y + i + 0x10),
+            getRelocatableHeapBlockBase(TRAINING_COURSE_UI_TEXTURE_HANDLE),
+            6,
+            0x20,
+            0x20,
+            0,
+            0
+        );
         j = 0;
         do {
-            drawMenuSprite((s16)(arg0->x + j + 0x10), (s16)(arg0->y + i + 0x10), getRelocatableHeapBlockBase(TRAINING_COURSE_UI_TEXTURE_HANDLE), 0xB, 0x20, 0x20, 0, 0);
+            drawMenuSprite(
+                (s16)(arg0->x + j + 0x10),
+                (s16)(arg0->y + i + 0x10),
+                getRelocatableHeapBlockBase(TRAINING_COURSE_UI_TEXTURE_HANDLE),
+                0xB,
+                0x20,
+                0x20,
+                0,
+                0
+            );
             j += 0x10;
         } while (j != limit);
         i += 0x10;
     } while (i < 0x30);
 
-    drawMenuSprite((s16)(arg0->x + 8), (s16)(arg0->y + 4), getRelocatableHeapBlockBase(TRAINING_COURSE_UI_TEXTURE_HANDLE), 0x15, 0x20, 0x20, 0, 0);
+    drawMenuSprite(
+        (s16)(arg0->x + 8),
+        (s16)(arg0->y + 4),
+        getRelocatableHeapBlockBase(TRAINING_COURSE_UI_TEXTURE_HANDLE),
+        0x15,
+        0x20,
+        0x20,
+        0,
+        0
+    );
     texture = getRelocatableHeapBlockBase(TRAINING_COURSE_UI_TEXTURE_HANDLE);
     drawMenuSprite(arg0->x + 0x44, arg0->y + 4, texture, gTrainingCourseLesson + 0xB, 0x20, 0x20, 0, 0);
 
@@ -164,7 +268,17 @@ void drawTrainingCourseLessonEndMenu(TrainingCourseUiActor *arg0) {
         do {
             alpha = (j == (u16)arg0->state.selectedAction) ? 0x100 : 0x60;
             tileIndex = j + 0x16;
-            drawMenuSpriteWithAlpha((s16)(arg0->x + 8), (s16)(arg0->y + i + 0x18), getRelocatableHeapBlockBase(TRAINING_COURSE_UI_TEXTURE_HANDLE), tileIndex, 0x20, 0x20, 0, alpha, 0);
+            drawMenuSpriteWithAlpha(
+                (s16)(arg0->x + 8),
+                (s16)(arg0->y + i + 0x18),
+                getRelocatableHeapBlockBase(TRAINING_COURSE_UI_TEXTURE_HANDLE),
+                tileIndex,
+                0x20,
+                0x20,
+                0,
+                alpha,
+                0
+            );
             j++;
             i += 0x10;
         } while (j != 3);
@@ -174,7 +288,17 @@ void drawTrainingCourseLessonEndMenu(TrainingCourseUiActor *arg0) {
         do {
             alpha = ((j + 1) == (u16)arg0->state.selectedAction) ? 0x100 : 0x60;
             tileIndex = j + 0x17;
-            drawMenuSpriteWithAlpha((s16)(arg0->x + 8), (s16)(arg0->y + i + 0x20), getRelocatableHeapBlockBase(TRAINING_COURSE_UI_TEXTURE_HANDLE), tileIndex, 0x20, 0x20, 0, alpha, 0);
+            drawMenuSpriteWithAlpha(
+                (s16)(arg0->x + 8),
+                (s16)(arg0->y + i + 0x20),
+                getRelocatableHeapBlockBase(TRAINING_COURSE_UI_TEXTURE_HANDLE),
+                tileIndex,
+                0x20,
+                0x20,
+                0,
+                alpha,
+                0
+            );
             j++;
             i += 0x10;
         } while (j != 2);
@@ -185,11 +309,21 @@ void drawTrainingCourseLessonEndMenu(TrainingCourseUiActor *arg0) {
     } else {
         selected = (u16)arg0->state.selectedAction - 1;
     }
-    drawMenuSpriteWithAlpha(arg0->layout.textOffset.x, (s16)(arg0->layout.textOffset.y + (selected * 0x10)), getRelocatableHeapBlockBase(TRAINING_COURSE_UI_TEXTURE_HANDLE), 0xA, 0x20, 0x20, 0, arg0->highlightScale, 0);
+    drawMenuSpriteWithAlpha(
+        arg0->layout.textOffset.x,
+        (s16)(arg0->layout.textOffset.y + (selected * 0x10)),
+        getRelocatableHeapBlockBase(TRAINING_COURSE_UI_TEXTURE_HANDLE),
+        0xA,
+        0x20,
+        0x20,
+        0,
+        arg0->highlightScale,
+        0
+    );
 }
 
 void redrawTrainingCourseLessonEndMenu(TrainingCourseUiActor *arg0) {
-    addRenderCallback(&gMenuRenderCallbackList,(RenderCallback)redrawTrainingCourseLessonEndMenu, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)redrawTrainingCourseLessonEndMenu, arg0);
 }
 
 void updateTrainingCourseLessonEndMenu(TrainingCourseUiActor *arg0) {
@@ -235,7 +369,7 @@ void updateTrainingCourseLessonEndMenu(TrainingCourseUiActor *arg0) {
         arg0->highlightTimer = 0;
         setCallbackTaskCallback(arg0, (CallbackTaskCallback)redrawTrainingCourseLessonEndMenu);
     }
-    addRenderCallback(&gMenuRenderCallbackList,(RenderCallback)drawTrainingCourseLessonEndMenu, (void *)arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawTrainingCourseLessonEndMenu, (void *)arg0);
 }
 
 void initTrainingCourseLessonEndMenu(TrainingCourseUiActor *arg0) {
@@ -277,30 +411,94 @@ void drawTrainingCourseDialog(TrainingCourseUiActor *arg0) {
     dialog = arg0;
     actor = arg0;
 
-    drawMenuSprite((s16)(dialog->x - 4), (s16)(dialog->y + 0x14),
-                   getRelocatableHeapBlockBase(gAssetHandles[0x2A]), 2, 0x20, 0x20, 0, 0);
-    drawMenuSprite((s16)(dialog->x + 0xF8), (s16)(dialog->y + 0x14),
-                   getRelocatableHeapBlockBase(gAssetHandles[0x2A]), 4, 0x20, 0x20, 0, 0);
+    drawMenuSprite(
+        (s16)(dialog->x - 4),
+        (s16)(dialog->y + 0x14),
+        getRelocatableHeapBlockBase(gAssetHandles[0x2A]),
+        2,
+        0x20,
+        0x20,
+        0,
+        0
+    );
+    drawMenuSprite(
+        (s16)(dialog->x + 0xF8),
+        (s16)(dialog->y + 0x14),
+        getRelocatableHeapBlockBase(gAssetHandles[0x2A]),
+        4,
+        0x20,
+        0x20,
+        0,
+        0
+    );
 
     for (i = 0; i < 0xF0; i += 0x10) {
-        drawMenuSprite((s16)(dialog->x + i + 0xC), (s16)(dialog->y + 0x14),
-                       getRelocatableHeapBlockBase(gAssetHandles[0x2A]), 3, 0x20, 0x20, 0, 0);
-        drawMenuSprite((s16)(dialog->x + i + 0xC), (s16)(dialog->y + 0x4C),
-                       getRelocatableHeapBlockBase(gAssetHandles[0x2A]), 8, 0x20, 0x20, 0, 0);
+        drawMenuSprite(
+            (s16)(dialog->x + i + 0xC),
+            (s16)(dialog->y + 0x14),
+            getRelocatableHeapBlockBase(gAssetHandles[0x2A]),
+            3,
+            0x20,
+            0x20,
+            0,
+            0
+        );
+        drawMenuSprite(
+            (s16)(dialog->x + i + 0xC),
+            (s16)(dialog->y + 0x4C),
+            getRelocatableHeapBlockBase(gAssetHandles[0x2A]),
+            8,
+            0x20,
+            0x20,
+            0,
+            0
+        );
     }
 
     currentToken = 0xF8;
-    drawMenuSprite((s16)(dialog->x - 4), (s16)(dialog->y + 0x4C),
-                   getRelocatableHeapBlockBase(gAssetHandles[0x2A]), 7, 0x20, 0x20, 0, 0);
-    drawMenuSprite((s16)(dialog->x + currentToken), (s16)(dialog->y + 0x4C),
-                   getRelocatableHeapBlockBase(gAssetHandles[0x2A]), 9, 0x20, 0x20, 0, 0);
+    drawMenuSprite(
+        (s16)(dialog->x - 4),
+        (s16)(dialog->y + 0x4C),
+        getRelocatableHeapBlockBase(gAssetHandles[0x2A]),
+        7,
+        0x20,
+        0x20,
+        0,
+        0
+    );
+    drawMenuSprite(
+        (s16)(dialog->x + currentToken),
+        (s16)(dialog->y + 0x4C),
+        getRelocatableHeapBlockBase(gAssetHandles[0x2A]),
+        9,
+        0x20,
+        0x20,
+        0,
+        0
+    );
 
     i = (dialog->scriptState == 4) * 0;
     for (;;) {
-        drawMenuSprite((s16)(dialog->x - 4), (s16)(dialog->y + i + 0x24),
-                       getRelocatableHeapBlockBase(gAssetHandles[0x2A]), 5, 0x20, 0x20, 0, 0);
-        drawMenuSprite((s16)(dialog->x + currentToken), (s16)(dialog->y + i + 0x24),
-                       getRelocatableHeapBlockBase(gAssetHandles[0x2A]), 6, 0x20, 0x20, 0, 0);
+        drawMenuSprite(
+            (s16)(dialog->x - 4),
+            (s16)(dialog->y + i + 0x24),
+            getRelocatableHeapBlockBase(gAssetHandles[0x2A]),
+            5,
+            0x20,
+            0x20,
+            0,
+            0
+        );
+        drawMenuSprite(
+            (s16)(dialog->x + currentToken),
+            (s16)(dialog->y + i + 0x24),
+            getRelocatableHeapBlockBase(gAssetHandles[0x2A]),
+            6,
+            0x20,
+            0x20,
+            0,
+            0
+        );
         i += 0x10;
         if (i >= 0x30) {
             break;
@@ -321,8 +519,7 @@ void drawTrainingCourseDialog(TrainingCourseUiActor *arg0) {
             currentToken = dialog->layout.script[scriptIndex];
             firstToken = currentToken;
             nextToken = firstToken;
-            while ((nextToken >= 0xFF01) &&
-                   ((token = currentToken), actor->layout.script[scriptIndex] != 0xFFFE)) {
+            while ((nextToken >= 0xFF01) && ((token = currentToken), actor->layout.script[scriptIndex] != 0xFFFE)) {
                 if ((currentToken & 0xFFFF) == 0xFFFF) {
                     dialog->scriptState = 1;
                     reachedEnd = 1;
@@ -334,8 +531,7 @@ void drawTrainingCourseDialog(TrainingCourseUiActor *arg0) {
                     lineY += 0x10;
                     lineX = 0;
                     scriptIndex++;
-                    if ((!dialogY) && (!dialogY)) {
-                    }
+                    if ((!dialogY) && (!dialogY)) {}
                     nextToken = currentToken;
                 } else if ((currentToken & 0xFFFF) == 0xFFFC) {
                     dialog->glyphPalette = dialog->layout.script[scriptIndex + 1];
@@ -355,8 +551,15 @@ void drawTrainingCourseDialog(TrainingCourseUiActor *arg0) {
                 glyphText[0] = dialog->layout.script[scriptIndex];
             }
 
-            drawMenuColoredGlyphScript((s16)(dialog->x + lineX), (s16)(dialog->y + lineY + 0x18), glyphText, 0,
-                                       0x100, (u16)dialog->glyphPalette, 0x29);
+            drawMenuColoredGlyphScript(
+                (s16)(dialog->x + lineX),
+                (s16)(dialog->y + lineY + 0x18),
+                glyphText,
+                0,
+                0x100,
+                (u16)dialog->glyphPalette,
+                0x29
+            );
 
             if (1 != reachedEnd) {
                 scriptIndex++;
@@ -378,9 +581,16 @@ void drawTrainingCourseDialog(TrainingCourseUiActor *arg0) {
     }
 
     if (((dialog->scriptState == 1) || (dialog->scriptState == 2)) && (gMainMenuSelectionResult == 0)) {
-        drawMenuSprite((s16)(dialog->x + 0xF4), (s16)(dialog->y + 0x48),
-                       getRelocatableHeapBlockBase(gAssetHandles[0x2A]), dialog->confirmBlinkTimer >= 8, 0x20,
-                       0x20, 0, 0);
+        drawMenuSprite(
+            (s16)(dialog->x + 0xF4),
+            (s16)(dialog->y + 0x48),
+            getRelocatableHeapBlockBase(gAssetHandles[0x2A]),
+            dialog->confirmBlinkTimer >= 8,
+            0x20,
+            0x20,
+            0,
+            0
+        );
     }
 }
 #endif
@@ -390,7 +600,7 @@ void updateTrainingCourseDialogScrollOut(TrainingCourseUiActor *arg0) {
     if (arg0->y >= 0x79) {
         removeCallbackTask(arg0);
     } else {
-        addRenderCallback(&gMenuRenderCallbackList,(RenderCallback)drawTrainingCourseDialog, (void *)arg0);
+        addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawTrainingCourseDialog, (void *)arg0);
     }
 }
 
@@ -400,69 +610,69 @@ void updateTrainingCourseDialog(TrainingCourseUiActor *arg0) {
     u16 token;
 
     switch (arg0->scriptState) {
-    case 0:
-        keepScanning = 1;
-        if ((gPlayerInputPressed[0] & A_BUTTON) || (gPlayerInputPressed[0] & START_BUTTON)) {
-            scan = arg0->layout.script;
-            arg0->state.script.visibleGlyphCount = 0;
-            do {
-                token = *scan;
-                if (token < 0xFF00) {
-                    scan++;
-                    arg0->state.script.visibleGlyphCount++;
-                } else {
-                    if (token == 0xFFFD) {
-                        scan++;
-                    }
-                    if (token == 0xFFFE) {
+        case 0:
+            keepScanning = 1;
+            if ((gPlayerInputPressed[0] & A_BUTTON) || (gPlayerInputPressed[0] & START_BUTTON)) {
+                scan = arg0->layout.script;
+                arg0->state.script.visibleGlyphCount = 0;
+                do {
+                    token = *scan;
+                    if (token < 0xFF00) {
                         scan++;
                         arg0->state.script.visibleGlyphCount++;
+                    } else {
+                        if (token == 0xFFFD) {
+                            scan++;
+                        }
+                        if (token == 0xFFFE) {
+                            scan++;
+                            arg0->state.script.visibleGlyphCount++;
+                        }
+                        if (token == 0xFFFC) {
+                            scan += 2;
+                        }
+                        if (token == 0xFFFB) {
+                            keepScanning = 0;
+                        }
+                        if (token == 0xFFFF) {
+                            keepScanning = 0;
+                        }
                     }
-                    if (token == 0xFFFC) {
-                        scan += 2;
-                    }
-                    if (token == 0xFFFB) {
-                        keepScanning = 0;
-                    }
-                    if (token == 0xFFFF) {
-                        keepScanning = 0;
-                    }
+                } while (keepScanning);
+            }
+            break;
+        case 1:
+            arg0->confirmBlinkTimer = (arg0->confirmBlinkTimer + 1) & 0xF;
+            if ((A_BUTTON & gPlayerInputPressed[0]) || (gPlayerInputPressed[0] & START_BUTTON)) {
+                enqueueSoundEffect(1, 0x32, arg0);
+                arg0->confirmBlinkTimer = 0;
+                gMainMenuSelectionResult = 1;
+                if (arg0->keepVisibleAfterConfirm == 0) {
+                    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateTrainingCourseDialogScrollOut);
+                } else {
+                    setCallbackTaskCallback(arg0, (CallbackTaskCallback)redrawTrainingCourseDialog);
                 }
-            } while (keepScanning);
-        }
-        break;
-    case 1:
-        arg0->confirmBlinkTimer = (arg0->confirmBlinkTimer + 1) & 0xF;
-        if ((A_BUTTON & gPlayerInputPressed[0]) || (gPlayerInputPressed[0] & START_BUTTON)) {
-            enqueueSoundEffect(1, 0x32, arg0);
-            arg0->confirmBlinkTimer = 0;
-            gMainMenuSelectionResult = 1;
-            if (arg0->keepVisibleAfterConfirm == 0) {
-                setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateTrainingCourseDialogScrollOut);
-            } else {
-                setCallbackTaskCallback(arg0, (CallbackTaskCallback)redrawTrainingCourseDialog);
             }
-        }
-        break;
-    case 2:
-        arg0->confirmBlinkTimer = (arg0->confirmBlinkTimer + 1) & 0xF;
-        if ((gPlayerInputPressed[0] & A_BUTTON) || (gPlayerInputPressed[0] & START_BUTTON)) {
-            enqueueSoundEffect(1, 0x32, arg0);
-            if (*arg0->layout.script != 0xFFFB) {
-                do {
-                    arg0->layout.script++;
-                } while (*arg0->layout.script != 0xFFFB);
+            break;
+        case 2:
+            arg0->confirmBlinkTimer = (arg0->confirmBlinkTimer + 1) & 0xF;
+            if ((gPlayerInputPressed[0] & A_BUTTON) || (gPlayerInputPressed[0] & START_BUTTON)) {
+                enqueueSoundEffect(1, 0x32, arg0);
+                if (*arg0->layout.script != 0xFFFB) {
+                    do {
+                        arg0->layout.script++;
+                    } while (*arg0->layout.script != 0xFFFB);
+                }
+                arg0->layout.script++;
+                arg0->scriptState = 0;
+                arg0->state.script.visibleGlyphCount = 1;
+                arg0->glyphTimer = 0;
+                arg0->confirmBlinkTimer = 0;
             }
-            arg0->layout.script++;
-            arg0->scriptState = 0;
-            arg0->state.script.visibleGlyphCount = 1;
-            arg0->glyphTimer = 0;
-            arg0->confirmBlinkTimer = 0;
-        }
-        break;
+            break;
     }
 
-    addRenderCallback(&gMenuRenderCallbackList,(RenderCallback)drawTrainingCourseDialog, (void *)arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawTrainingCourseDialog, (void *)arg0);
 }
 
 void initTrainingCourseOpeningDialog(TrainingCourseUiActor *arg0) {
@@ -477,7 +687,7 @@ void initTrainingCourseOpeningDialog(TrainingCourseUiActor *arg0) {
 }
 
 void redrawTrainingCourseDialog(TrainingCourseUiActor *arg0) {
-    addRenderCallback(&gMenuRenderCallbackList,(RenderCallback)drawTrainingCourseDialog, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawTrainingCourseDialog, arg0);
 }
 
 void initTrainingCourseEndingDialog(TrainingCourseUiActor *arg0) {
@@ -493,8 +703,24 @@ void initTrainingCourseEndingDialog(TrainingCourseUiActor *arg0) {
 
 void drawTrainingCourseLessonTitlePanel(TrainingCourseUiActor *arg0) {
     gTrainingCourseLessonTitleLabelTemplate[9] = gTrainingCourseLesson;
-    drawMenuColoredGlyphScript((s16)(arg0->x - 0x10), arg0->y, gTrainingCourseLessonTitleLabelTemplate, 0, 0x100, 5, 0x29);
-    drawMenuColoredGlyphScript(gTrainingCourseLessonTitleXPositions[gTrainingCourseLesson], (s16)(arg0->y + 0x18), gTrainingCourseLessonTitleText.lessonTitleText[gTrainingCourseLesson - 1], 0, 0x100, 4, 0x29);
+    drawMenuColoredGlyphScript(
+        (s16)(arg0->x - 0x10),
+        arg0->y,
+        gTrainingCourseLessonTitleLabelTemplate,
+        0,
+        0x100,
+        5,
+        0x29
+    );
+    drawMenuColoredGlyphScript(
+        gTrainingCourseLessonTitleXPositions[gTrainingCourseLesson],
+        (s16)(arg0->y + 0x18),
+        gTrainingCourseLessonTitleText.lessonTitleText[gTrainingCourseLesson - 1],
+        0,
+        0x100,
+        4,
+        0x29
+    );
 }
 
 void updateTrainingCourseLessonTitlePanelScrollOut(TrainingCourseUiActor *arg0) {
@@ -502,7 +728,7 @@ void updateTrainingCourseLessonTitlePanelScrollOut(TrainingCourseUiActor *arg0) 
     if (arg0->y < -0xC7) {
         removeCallbackTask(arg0);
     } else {
-        addRenderCallback(&gMenuRenderCallbackList,(RenderCallback)drawTrainingCourseLessonTitlePanel, (void *)arg0);
+        addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawTrainingCourseLessonTitlePanel, (void *)arg0);
     }
 }
 
@@ -510,7 +736,7 @@ void updateTrainingCourseLessonTitlePanel(TrainingCourseUiActor *arg0) {
     if (gMainMenuSelectionResult == 1) {
         setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateTrainingCourseLessonTitlePanelScrollOut);
     }
-    addRenderCallback(&gMenuRenderCallbackList,(RenderCallback)drawTrainingCourseLessonTitlePanel, (void *)arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawTrainingCourseLessonTitlePanel, (void *)arg0);
 }
 
 void initTrainingCourseLessonTitlePanel(TrainingCourseUiActor *arg0) {

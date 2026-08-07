@@ -8,54 +8,34 @@
 #define ASSET_HANDLE(index) (gAssetHandles[(index)])
 
 Gfx *gMainMenuSceneModelPartDisplayLists[] = {
-    (Gfx *)0x02000000, (Gfx *)0x02000068, (Gfx *)0x020000D8,
-    (Gfx *)0x02000168, (Gfx *)0x020001D8, (Gfx *)0x02000268,
-    (Gfx *)0x02000540, (Gfx *)0x02000A28, (Gfx *)0x02000AA0,
-    (Gfx *)0x02000C48, (Gfx *)0x02000CC0, (Gfx *)0x02000E68,
-    (Gfx *)0x020010C0,
-    (Gfx *)0x02000000, (Gfx *)0x02000128, (Gfx *)0x02000218,
-    (Gfx *)0x02000308, (Gfx *)0x020003F8, (Gfx *)0x020004F0,
-    (Gfx *)0x02000850, (Gfx *)0x02000BE8, (Gfx *)0x02000D10,
-    (Gfx *)0x02000FD0, (Gfx *)0x02001128, (Gfx *)0x020013E8,
-    (Gfx *)0x02001630,
-    (Gfx *)0x02000000, (Gfx *)0x020000E0, (Gfx *)0x020001D0,
-    (Gfx *)0x02000338, (Gfx *)0x02000428, (Gfx *)0x020004F0,
-    (Gfx *)0x020008A0, (Gfx *)0x02000DD8, (Gfx *)0x02000F50,
-    (Gfx *)0x02001178, (Gfx *)0x020012F0, (Gfx *)0x02001508,
-    (Gfx *)0x02001760,
-    (Gfx *)0x02000000, (Gfx *)0x020001C8, (Gfx *)0x02000378,
-    (Gfx *)0x02000528, (Gfx *)0x020006D8, (Gfx *)0x02000888,
-    (Gfx *)0x02000CD8, (Gfx *)0x02001148, (Gfx *)0x02001210,
-    (Gfx *)0x020014D0, (Gfx *)0x02001590, (Gfx *)0x02001850,
-    (Gfx *)0x02001A98,
-    (Gfx *)0x02000000, (Gfx *)0x020000E0, (Gfx *)0x020002D0,
-    (Gfx *)0x020004E0, (Gfx *)0x020006B0, (Gfx *)0x020008C0,
-    (Gfx *)0x02000CE0, (Gfx *)0x02001298, (Gfx *)0x02001408,
-    (Gfx *)0x02001608, (Gfx *)0x02001778, (Gfx *)0x02001978,
-    (Gfx *)0x02001BA0,
-    (Gfx *)0x02000000, (Gfx *)0x020002A0, (Gfx *)0x02000330,
-    (Gfx *)0x02000518, (Gfx *)0x020005B8, (Gfx *)0x020007B0,
-    (Gfx *)0x02000CF0, (Gfx *)0x020010E8, (Gfx *)0x02001170,
-    (Gfx *)0x02001410, (Gfx *)0x02001498, (Gfx *)0x02001738,
-    (Gfx *)0x020017C8,
+    (Gfx *)0x02000000, (Gfx *)0x02000068, (Gfx *)0x020000D8, (Gfx *)0x02000168, (Gfx *)0x020001D8, (Gfx *)0x02000268,
+    (Gfx *)0x02000540, (Gfx *)0x02000A28, (Gfx *)0x02000AA0, (Gfx *)0x02000C48, (Gfx *)0x02000CC0, (Gfx *)0x02000E68,
+    (Gfx *)0x020010C0, (Gfx *)0x02000000, (Gfx *)0x02000128, (Gfx *)0x02000218, (Gfx *)0x02000308, (Gfx *)0x020003F8,
+    (Gfx *)0x020004F0, (Gfx *)0x02000850, (Gfx *)0x02000BE8, (Gfx *)0x02000D10, (Gfx *)0x02000FD0, (Gfx *)0x02001128,
+    (Gfx *)0x020013E8, (Gfx *)0x02001630, (Gfx *)0x02000000, (Gfx *)0x020000E0, (Gfx *)0x020001D0, (Gfx *)0x02000338,
+    (Gfx *)0x02000428, (Gfx *)0x020004F0, (Gfx *)0x020008A0, (Gfx *)0x02000DD8, (Gfx *)0x02000F50, (Gfx *)0x02001178,
+    (Gfx *)0x020012F0, (Gfx *)0x02001508, (Gfx *)0x02001760, (Gfx *)0x02000000, (Gfx *)0x020001C8, (Gfx *)0x02000378,
+    (Gfx *)0x02000528, (Gfx *)0x020006D8, (Gfx *)0x02000888, (Gfx *)0x02000CD8, (Gfx *)0x02001148, (Gfx *)0x02001210,
+    (Gfx *)0x020014D0, (Gfx *)0x02001590, (Gfx *)0x02001850, (Gfx *)0x02001A98, (Gfx *)0x02000000, (Gfx *)0x020000E0,
+    (Gfx *)0x020002D0, (Gfx *)0x020004E0, (Gfx *)0x020006B0, (Gfx *)0x020008C0, (Gfx *)0x02000CE0, (Gfx *)0x02001298,
+    (Gfx *)0x02001408, (Gfx *)0x02001608, (Gfx *)0x02001778, (Gfx *)0x02001978, (Gfx *)0x02001BA0, (Gfx *)0x02000000,
+    (Gfx *)0x020002A0, (Gfx *)0x02000330, (Gfx *)0x02000518, (Gfx *)0x020005B8, (Gfx *)0x020007B0, (Gfx *)0x02000CF0,
+    (Gfx *)0x020010E8, (Gfx *)0x02001170, (Gfx *)0x02001410, (Gfx *)0x02001498, (Gfx *)0x02001738, (Gfx *)0x020017C8,
 };
 
 s16 gMainMenuSceneModelPartInitDataA[] = {
-    0, 0, 0, 0, 0x25, 0, -6, -2, 0, 0, -12, 0, 6, -2,
-    0, 0, -12, 0, 0, 0, 0, 0, 0x10, 0, -10, 0xE, 0, -8, -15, 0,
-    0xA, 0xE, 0, 8, -15, 0, 0, -12, -5, 0, -12, -5,
+    0, 0,    0, 0,   0x25, 0, -6, -2,  0, 0,   -12, 0, 6, -2,  0, 0, -12, 0,  0, 0,   0,
+    0, 0x10, 0, -10, 0xE,  0, -8, -15, 0, 0xA, 0xE, 0, 8, -15, 0, 0, -12, -5, 0, -12, -5,
 };
 
 s16 gMainMenuSceneModelPartInitDataB[] = {
-    0, 0, 0, 0, 0x2B, 0, -6, -5, 0, 0, -16, 0, 6, -5,
-    0, 0, -16, 0, 0, 0, 0, 0, 9, 0, -10, 8, 0, -10, -16, 0,
-    0xA, 8, 0, 0xA, -16, 0, 0, -10, -3, 0, -10, -3,
+    0, 0, 0, 0,   0x2B, 0, -6,  -5,  0, 0,   -16, 0, 6,   -5,  0, 0, -16, 0,  0, 0,   0,
+    0, 9, 0, -10, 8,    0, -10, -16, 0, 0xA, 8,   0, 0xA, -16, 0, 0, -10, -3, 0, -10, -3,
 };
 
 s16 gMainMenuSceneModelPartInitDataC[] = {
-    0, 0, 0, 0, 0x33, 0, -8, -3, 0, 0, -18, -1, 8, -3,
-    0, 1, -18, -1, 0, 5, -5, 0, 0x20, 2, -23, 0x17, 5, -11,
-    -21, 0, 0x17, 0x17, 5, 0xB, -21, 0, -1, -19, -7, 2, -19, -7,
+    0, 0,    0, 0,   0x33, 0, -8,  -3,  0, 0,    -18,  -1, 8,   -3,  0, 1,  -18, -1, 0, 5,   -5,
+    0, 0x20, 2, -23, 0x17, 5, -11, -21, 0, 0x17, 0x17, 5,  0xB, -21, 0, -1, -19, -7, 2, -19, -7,
 };
 
 s16 *gMainMenuSceneModelPartInitDataByModel[] = {
@@ -78,6 +58,8 @@ void initMainMenuSceneModelRenderer(void) {
 void initMainMenuSceneModelRenderer_pad(void) {
 }
 
+// IDO code generation for this function is sensitive to source line layout.
+// clang-format off
 void drawMainMenuSceneModel(MainMenuSceneModel *arg0) {
     MainMenuModelTransform *transform;
     Mtx *matrix;
@@ -116,6 +98,7 @@ void drawMainMenuSceneModel(MainMenuSceneModel *arg0) {
         }
     }
 }
+// clang-format on
 
 void drawTexturedMainMenuSceneModel(MainMenuSceneModel *arg0) {
     MainMenuSceneModel *model;
@@ -134,27 +117,27 @@ void drawTexturedMainMenuSceneModel(MainMenuSceneModel *arg0) {
 
             gDPPipeSync(gRegionAllocPtr++);
             gSPSegment(
-                gRegionAllocPtr++, 0x02,
+                gRegionAllocPtr++,
+                0x02,
                 getRelocatableHeapBlockBase(
-                    gAssetHandles[MAIN_MENU_SCENE_MODEL_GEOMETRY_HANDLE_BASE +
-                                  (u16)model->sceneModelIndex]));
+                    gAssetHandles[MAIN_MENU_SCENE_MODEL_GEOMETRY_HANDLE_BASE + (u16)model->sceneModelIndex]
+                )
+            );
             gSPSegment(
-                gRegionAllocPtr++, 0x03,
+                gRegionAllocPtr++,
+                0x03,
                 getRelocatableHeapBlockBase(
-                    gAssetHandles[MAIN_MENU_SCENE_MODEL_TEXTURE_HANDLE_BASE +
-                                  (u16)model->sceneModelIndex]));
+                    gAssetHandles[MAIN_MENU_SCENE_MODEL_TEXTURE_HANDLE_BASE + (u16)model->sceneModelIndex]
+                )
+            );
 
             stride = 13;
             displayLists = gMainMenuSceneModelPartDisplayLists;
             for (i = 1; i < 14; i++) {
                 matrix = allocFixedTransformMatrix(&model->displayObjects[i]);
                 if (matrix != NULL) {
-                    gSPMatrix(gRegionAllocPtr++, matrix,
-                              G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
-                    gSPDisplayList(
-                        gRegionAllocPtr++,
-                        displayLists[
-                            ((u16)model->characterIndex * stride) + i - 1]);
+                    gSPMatrix(gRegionAllocPtr++, matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+                    gSPDisplayList(gRegionAllocPtr++, displayLists[((u16)model->characterIndex * stride) + i - 1]);
                 }
             }
         }
@@ -164,8 +147,8 @@ void drawTexturedMainMenuSceneModel(MainMenuSceneModel *arg0) {
 void addMainMenuSceneModelDrawCallback(s32 modelIndex) {
     MainMenuSceneModel *model;
 
-    model = (MainMenuSceneModel *)getRelocatableHeapBlockBase(
-        ASSET_HANDLE(MAIN_MENU_SCENE_MODEL_HANDLE_BASE + modelIndex));
+    model =
+        (MainMenuSceneModel *)getRelocatableHeapBlockBase(ASSET_HANDLE(MAIN_MENU_SCENE_MODEL_HANDLE_BASE + modelIndex));
     updateMainMenuSceneModelTransforms(model);
     model->viewportIndex = 0;
     addRenderCallback(&gSceneModelRenderCallbackList, (RenderCallback)drawMainMenuSceneModel, model);
@@ -174,8 +157,8 @@ void addMainMenuSceneModelDrawCallback(s32 modelIndex) {
 void addMainMenuSceneModelTexturedDrawCallback(s32 modelIndex, s32 textureId, s32 paletteId) {
     MainMenuSceneModel *model;
 
-    model = (MainMenuSceneModel *)getRelocatableHeapBlockBase(
-        ASSET_HANDLE(MAIN_MENU_SCENE_MODEL_HANDLE_BASE + modelIndex));
+    model =
+        (MainMenuSceneModel *)getRelocatableHeapBlockBase(ASSET_HANDLE(MAIN_MENU_SCENE_MODEL_HANDLE_BASE + modelIndex));
     updateMainMenuSceneModelTransforms(model);
     model->viewportIndex = 0;
     model->textureId = (s16)textureId;
@@ -183,11 +166,16 @@ void addMainMenuSceneModelTexturedDrawCallback(s32 modelIndex, s32 textureId, s3
     addRenderCallback(&gSceneModelRenderCallbackList, (RenderCallback)drawTexturedMainMenuSceneModel, model);
 }
 
-void addMainMenuSceneModelTexturedDrawCallbackWithUnusedArg(s32 modelIndex, s32 textureId, s32 paletteId, s32 unusedArg) {
+void addMainMenuSceneModelTexturedDrawCallbackWithUnusedArg(
+    s32 modelIndex,
+    s32 textureId,
+    s32 paletteId,
+    s32 unusedArg
+) {
     MainMenuSceneModel *model;
 
-    model = (MainMenuSceneModel *)getRelocatableHeapBlockBase(
-        ASSET_HANDLE(MAIN_MENU_SCENE_MODEL_HANDLE_BASE + modelIndex));
+    model =
+        (MainMenuSceneModel *)getRelocatableHeapBlockBase(ASSET_HANDLE(MAIN_MENU_SCENE_MODEL_HANDLE_BASE + modelIndex));
     updateMainMenuSceneModelTransforms(model);
     model->viewportIndex = 0;
     model->textureId = (s16)textureId;
@@ -198,8 +186,8 @@ void addMainMenuSceneModelTexturedDrawCallbackWithUnusedArg(s32 modelIndex, s32 
 void addMainMenuSceneModelDrawCallbackForViewport0(s32 modelIndex) {
     MainMenuSceneModel *model;
 
-    model = (MainMenuSceneModel *)getRelocatableHeapBlockBase(
-        ASSET_HANDLE(MAIN_MENU_SCENE_MODEL_HANDLE_BASE + modelIndex));
+    model =
+        (MainMenuSceneModel *)getRelocatableHeapBlockBase(ASSET_HANDLE(MAIN_MENU_SCENE_MODEL_HANDLE_BASE + modelIndex));
     updateMainMenuSceneModelTransforms(model);
     model->viewportIndex = 0;
     addRenderCallback(&gSceneModelRenderCallbackList, (RenderCallback)drawMainMenuSceneModel, model);
@@ -208,14 +196,15 @@ void addMainMenuSceneModelDrawCallbackForViewport0(s32 modelIndex) {
 void addMainMenuSceneModelDrawCallbackForViewport(s32 modelIndex, s32 viewportIndex) {
     MainMenuSceneModel *model;
 
-    model = (MainMenuSceneModel *)getRelocatableHeapBlockBase(
-        ASSET_HANDLE(MAIN_MENU_SCENE_MODEL_HANDLE_BASE + modelIndex));
+    model =
+        (MainMenuSceneModel *)getRelocatableHeapBlockBase(ASSET_HANDLE(MAIN_MENU_SCENE_MODEL_HANDLE_BASE + modelIndex));
     updateMainMenuSceneModelTransforms(model);
     model->viewportIndex = (s16)viewportIndex;
     addRenderCallback(&gSceneModelRenderCallbackList, (RenderCallback)drawMainMenuSceneModel, model);
 }
 
-// initMainMenuSceneModelParts best match: 99.077% at nonmatchings/initMainMenuSceneModelParts-5802343343535905907/base_4.c.
+// initMainMenuSceneModelParts best match: 99.077% at
+// nonmatchings/initMainMenuSceneModelParts-5802343343535905907/base_4.c.
 #ifdef NON_MATCHING
 typedef struct MainMenuInitPartPair {
     s32 word0;

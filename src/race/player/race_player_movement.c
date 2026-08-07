@@ -14,8 +14,7 @@
     (((s64)(x) * (sizeX) + (s64)(y) * (sizeY) + (s64)(z) * (sizeZ)) / 0x1000)
 #define MIRRORED_COLLISION_POINT(x, y, z, sizeX, sizeY, sizeZ) \
     ((-(s64)(x) * (sizeX) + (s64)(y) * (sizeY) + (s64)(z) * (sizeZ)) / 0x1000)
-#define RACE_PLAYER_SURFACE_DOT2(a, b, c, d) \
-    ((product = (s64)(a) * (b)), ((product + (s64)(c) * (d)) / 0x1000))
+#define RACE_PLAYER_SURFACE_DOT2(a, b, c, d) ((product = (s64)(a) * (b)), ((product + (s64)(c) * (d)) / 0x1000))
 #define RACE_PLAYER_SURFACE_COLLISION_POINT(x, y, z, sizeX, sizeY, sizeZ) \
     ((product = (s64)(y) * (sizeY)), ((product + (s64)(x) * (sizeX) + (s64)(z) * (sizeZ)) / 0x1000))
 #define RACE_PLAYER_SURFACE_MIRRORED_COLLISION_POINT(x, y, z, sizeX, sizeY, sizeZ) \
@@ -59,19 +58,19 @@ typedef struct {
 } GroundProbeScratch;
 
 Vec3i gRacePlayerGroundProbeOffsets[] = {
-    { 0, 0, -0x80000 },
-    { 0, 0, 0x80000 },
-    { 0x46000, 0, -0xC6000 },
+    { 0,        0, -0x80000 },
+    { 0,        0, 0x80000  },
+    { 0x46000,  0, -0xC6000 },
     { -0x46000, 0, -0xC6000 },
-    { 0x46000, 0, 0xC6000 },
-    { -0x46000, 0, 0xC6000 },
-    { 0x46000, 0, 0 },
-    { -0x46000, 0, 0 },
-    { 0, 0, 0xC6000 },
-    { 0xA6000, 0, -0x46000 },
+    { 0x46000,  0, 0xC6000  },
+    { -0x46000, 0, 0xC6000  },
+    { 0x46000,  0, 0        },
+    { -0x46000, 0, 0        },
+    { 0,        0, 0xC6000  },
+    { 0xA6000,  0, -0x46000 },
     { -0xA6000, 0, -0x46000 },
-    { 0xA6000, 0, 0x46000 },
-    { -0xA6000, 0, 0x46000 },
+    { 0xA6000,  0, 0x46000  },
+    { -0xA6000, 0, 0x46000  },
 };
 
 s16 gRacePlayerVoiceSoundIds0[] = {
@@ -121,109 +120,109 @@ void getRacePlayerRankingProgress(s32 arg0, s32 *arg1, s32 *arg2) {
     *arg2 = player->unk504;
 
     switch (gRaceCourseIndex.signedValue) {
-    case 0:
-        temp = *arg1;
-        if (temp >= 0x580) {
-            *arg1 = 0x598 - temp;
-            *arg2 = -*arg2;
-            return;
-        }
-        break;
-    case 1:
-        temp = *arg1;
-        if (temp >= 0x4A8) {
-            *arg1 = 0x4A8 - temp;
-            *arg2 = -*arg2;
-            return;
-        }
-        break;
-    case 2:
-        temp = *arg1;
-        if ((temp >= 0x490) && (temp < 0x4B9)) {
-            *arg1 = 0x490 - temp;
-            *arg2 = -*arg2;
-            return;
-        }
-        if ((temp >= 0x4C0) && (temp < 0x4D1)) {
-            *arg1 = ((temp * 0x38) - 0x10A00) / 0x10 + 0x80;
-            return;
-        }
-        if ((temp >= 0x4D8) && (temp < 0x5C1)) {
-            *arg1 = ((temp * 0x120) - 0x57300) / 0xE8 + 0x188;
-            return;
-        }
-        if ((temp >= 0x5C8) && (temp < 0x621)) {
-            *arg1 = ((temp * 0x58) - 0x1FCC0) / 0x58 + 0x290;
-            return;
-        }
-        break;
-    case 3:
-        temp = *arg1;
-        if ((temp >= 0x628) && (temp < 0x649)) {
-            *arg1 = 0x628 - temp;
-            *arg2 = -*arg2;
-            return;
-        }
-        if ((temp >= 0x650) && (temp < 0x7D1)) {
-            *arg1 = ((temp * 0x138) - 0x7B180) / 0x180 + 0x60;
-            return;
-        }
-        if ((temp >= 0x7D8) && (temp < 0x8E1)) {
-            *arg1 = ((temp * 0xB8) - 0x5A340) / 0x108 + 0x2F0;
-            return;
-        }
-        if ((temp >= 0x8E8) && (temp < 0x921)) {
-            *arg1 = ((temp * 0x68) - 0x39E40) / 0x38 + 0x520;
-            return;
-        }
-        break;
-    case 4:
-        temp = *arg1;
-        if ((temp >= 0x618) && (temp < 0x641)) {
-            *arg1 = 0x618 - temp;
-            *arg2 = -*arg2;
+        case 0:
             temp = *arg1;
-        }
-        if ((temp >= 0x648) && (temp < 0x699)) {
-            *arg1 = ((temp * 0x70) - 0x2BF80) / 0x50 + 0x380;
-            return;
-        }
-        break;
-    case 5:
-        temp = *arg1;
-        if ((temp >= 0x6D0) && (temp < 0x6F9)) {
-            *arg1 = 0x6F8 - temp;
-            *arg2 = -*arg2;
+            if (temp >= 0x580) {
+                *arg1 = 0x598 - temp;
+                *arg2 = -*arg2;
+                return;
+            }
+            break;
+        case 1:
             temp = *arg1;
-        }
-        if ((temp >= 0x700) && (temp < 0x7E9)) {
-            *arg1 = ((temp * 0xD0) - 0x5B000) / 0xE8 + 0x1A0;
-            return;
-        }
-        if ((temp >= 0x7F0) && (temp < 0xA01)) {
-            *arg1 = ((temp * 0x280) - 0x13D800) / 0x210 + 0x2C8;
-            return;
-        }
-        if ((temp >= 0xA08) && (temp < 0xA39)) {
-            *arg1 = ((temp * 0x48) - 0x2D240) / 0x30 + 0x550;
-            return;
-        }
-        break;
-    case 6:
-        temp = *arg1;
-        if ((temp >= 0x7B8) && (temp < 0x7E1)) {
-            *arg1 = 0x7F8 - temp;
-            *arg2 = -*arg2;
-            return;
-        }
-        break;
-    case 8:
-        temp = *arg1;
-        if ((temp >= 0x1F0) && (temp < 0x219)) {
-            *arg1 = 0x1F0 - temp;
-            *arg2 = -*arg2;
-        }
-        break;
+            if (temp >= 0x4A8) {
+                *arg1 = 0x4A8 - temp;
+                *arg2 = -*arg2;
+                return;
+            }
+            break;
+        case 2:
+            temp = *arg1;
+            if ((temp >= 0x490) && (temp < 0x4B9)) {
+                *arg1 = 0x490 - temp;
+                *arg2 = -*arg2;
+                return;
+            }
+            if ((temp >= 0x4C0) && (temp < 0x4D1)) {
+                *arg1 = ((temp * 0x38) - 0x10A00) / 0x10 + 0x80;
+                return;
+            }
+            if ((temp >= 0x4D8) && (temp < 0x5C1)) {
+                *arg1 = ((temp * 0x120) - 0x57300) / 0xE8 + 0x188;
+                return;
+            }
+            if ((temp >= 0x5C8) && (temp < 0x621)) {
+                *arg1 = ((temp * 0x58) - 0x1FCC0) / 0x58 + 0x290;
+                return;
+            }
+            break;
+        case 3:
+            temp = *arg1;
+            if ((temp >= 0x628) && (temp < 0x649)) {
+                *arg1 = 0x628 - temp;
+                *arg2 = -*arg2;
+                return;
+            }
+            if ((temp >= 0x650) && (temp < 0x7D1)) {
+                *arg1 = ((temp * 0x138) - 0x7B180) / 0x180 + 0x60;
+                return;
+            }
+            if ((temp >= 0x7D8) && (temp < 0x8E1)) {
+                *arg1 = ((temp * 0xB8) - 0x5A340) / 0x108 + 0x2F0;
+                return;
+            }
+            if ((temp >= 0x8E8) && (temp < 0x921)) {
+                *arg1 = ((temp * 0x68) - 0x39E40) / 0x38 + 0x520;
+                return;
+            }
+            break;
+        case 4:
+            temp = *arg1;
+            if ((temp >= 0x618) && (temp < 0x641)) {
+                *arg1 = 0x618 - temp;
+                *arg2 = -*arg2;
+                temp = *arg1;
+            }
+            if ((temp >= 0x648) && (temp < 0x699)) {
+                *arg1 = ((temp * 0x70) - 0x2BF80) / 0x50 + 0x380;
+                return;
+            }
+            break;
+        case 5:
+            temp = *arg1;
+            if ((temp >= 0x6D0) && (temp < 0x6F9)) {
+                *arg1 = 0x6F8 - temp;
+                *arg2 = -*arg2;
+                temp = *arg1;
+            }
+            if ((temp >= 0x700) && (temp < 0x7E9)) {
+                *arg1 = ((temp * 0xD0) - 0x5B000) / 0xE8 + 0x1A0;
+                return;
+            }
+            if ((temp >= 0x7F0) && (temp < 0xA01)) {
+                *arg1 = ((temp * 0x280) - 0x13D800) / 0x210 + 0x2C8;
+                return;
+            }
+            if ((temp >= 0xA08) && (temp < 0xA39)) {
+                *arg1 = ((temp * 0x48) - 0x2D240) / 0x30 + 0x550;
+                return;
+            }
+            break;
+        case 6:
+            temp = *arg1;
+            if ((temp >= 0x7B8) && (temp < 0x7E1)) {
+                *arg1 = 0x7F8 - temp;
+                *arg2 = -*arg2;
+                return;
+            }
+            break;
+        case 8:
+            temp = *arg1;
+            if ((temp >= 0x1F0) && (temp < 0x219)) {
+                *arg1 = 0x1F0 - temp;
+                *arg2 = -*arg2;
+            }
+            break;
     }
 }
 
@@ -250,8 +249,7 @@ void updateRacePlayerRankings(void) {
             gRaceOrderPlayerIds[2] = 2;
             gRaceOrderPlayerIds[3] = 3;
         } else {
-            if (gRaceOrderPlayerIds) {
-            }
+            if (gRaceOrderPlayerIds) {}
             playerCount = gRacePlayerCount;
             order[0] = 0;
             order[1] = 1;
@@ -265,12 +263,9 @@ void updateRacePlayerRankings(void) {
                         progress[i] += gRacePlayers[i].unk57C;
                     }
                     i++;
-                    if (1) {
-                    }
-                    if (1) {
-                    }
-                    if (1) {
-                    }
+                    if (1) {}
+                    if (1) {}
+                    if (1) {}
                     playerCount = gRacePlayerCount;
                 }
                 i = 0;
@@ -281,8 +276,7 @@ void updateRacePlayerRankings(void) {
                 for (playerIndex = 1; playerIndex; playerIndex = next < lastPlayerIndex) {
                     next = (j = i - -1);
                     if (next < playerCount) {
-                        if (((!i) && (!i)) && (!i)) {
-                        }
+                        if (((!i) && (!i)) && (!i)) {}
                         for (otherPlayerIndex = 1; otherPlayerIndex;
                              otherPlayerIndex = &order[j] < &order[playerCount]) {
                             otherPlayerIndex = order[j];
@@ -618,7 +612,8 @@ void updateRacePlayerFinalLapStatus(RacePlayer *player) {
 
     flags = player->stateFlags;
     if (!(flags & 0x40) && (player->lapDigit >= (gRaceLapCount - 1)) &&
-            (player->coursePathIndex == gRaceCourseStartEntries[gRaceCourseIndex.signedValue].pathIndex) && !(flags & 0x1000)) {
+        (player->coursePathIndex == gRaceCourseStartEntries[gRaceCourseIndex.signedValue].pathIndex) &&
+        !(flags & 0x1000)) {
         player->stateFlags = flags | 0x40;
         if ((gRaceCameraModeChangeDisabled == 0) && (gRacePlayerHudStatuses[player->playerIndex].active != 0)) {
             task = createCallbackTask((CallbackTaskCallback)initFinalLapPrompt, 6, 0x64);
@@ -649,9 +644,8 @@ void resolveRacePlayerBodyCollisions(void) {
             do {
                 if (playerA->isActive != 0) {
                     playerB = &gRacePlayers[j];
-                    if ((playerB->isActive != 0) && (playerA->soundDisabled == 0) &&
-                        (playerB->soundDisabled == 0) && !(playerA->stateFlags & 0x200000) &&
-                        !(playerB->stateFlags & 0x200000)) {
+                    if ((playerB->isActive != 0) && (playerA->soundDisabled == 0) && (playerB->soundDisabled == 0) &&
+                        !(playerA->stateFlags & 0x200000) && !(playerB->stateFlags & 0x200000)) {
                         temp = playerA->unk5C - playerB->unk5C;
                         if ((temp < 0 ? (temp = -temp, playerA->collisionHeight) : playerB->collisionHeight) >= temp) {
                             radius = playerB->collisionRadius + playerA->collisionRadius;
@@ -665,11 +659,16 @@ void resolveRacePlayerBodyCollisions(void) {
                                     temp *= -1;
                                 }
                                 if ((temp < radius) &&
-                                    ((temp = integerSquareRoot64((s64)((0, xDiff)) * xDiff +
-                                                           (((s64)temp * temp) & 0xFFFFFFFFFFFFFFFF))) < radius)) {
+                                    ((temp = integerSquareRoot64(
+                                          (s64)((0, xDiff)) * xDiff + (((s64)temp * temp) & 0xFFFFFFFFFFFFFFFF)
+                                      )) < radius)) {
                                     temp = ((radius - temp) * -1) / 2;
-                                    angle = calculateFixedAngleBetweenXZPoints(playerA->pos.x, playerA->pos.z,
-                                                          playerB->pos.x, playerB->pos.z);
+                                    angle = calculateFixedAngleBetweenXZPoints(
+                                        playerA->pos.x,
+                                        playerA->pos.z,
+                                        playerB->pos.x,
+                                        playerB->pos.z
+                                    );
                                     sine = fixedSine(angle);
                                     cosine = fixedCosine(angle);
                                     pushX = (s64)-sine * temp / 0x1000;
@@ -736,11 +735,15 @@ void pushRacePlayersOutOfCylinderAndApplyItemHit(Vec3i *pos, s32 xzSize, s32 ySi
                     if (temp < 0) {
                         temp = -temp;
                     }
-                    if ((temp < xzLimit) &&
-                        ((temp = integerSquareRoot64((s64)((0, xDiff)) * xDiff +
-                                               (((s64)temp * temp) & 0xFFFFFFFFFFFFFFFF))) < xzLimit)) {
+                    if ((temp < xzLimit) && ((temp = integerSquareRoot64(
+                                                  (s64)((0, xDiff)) * xDiff + (((s64)temp * temp) & 0xFFFFFFFFFFFFFFFF)
+                                              )) < xzLimit)) {
                         angle = calculateFixedAngleBetweenXZPoints(
-                            pos->x, pos->z, gRacePlayers[i].pos.x, gRacePlayers[i].pos.z);
+                            pos->x,
+                            pos->z,
+                            gRacePlayers[i].pos.x,
+                            gRacePlayers[i].pos.z
+                        );
                         sine = fixedSine(angle);
                         cosine = fixedCosine(angle);
                         temp = xzLimit - temp;
@@ -750,19 +753,13 @@ void pushRacePlayersOutOfCylinderAndApplyItemHit(Vec3i *pos, s32 xzSize, s32 ySi
                         gRacePlayers[i].pos.x -= pushX;
                         gRacePlayers[i].pos.z += pushZ;
 
-                        localX = ((s64)cosine * gRacePlayers[i].unk2C8 -
-                                  (s64)sine * gRacePlayers[i].unk2CC) /
-                                 0x1000;
-                        localZ = ((s64)sine * gRacePlayers[i].unk2C8 +
-                                  (s64)cosine * gRacePlayers[i].unk2CC) /
-                                 0x1000;
+                        localX = ((s64)cosine * gRacePlayers[i].unk2C8 - (s64)sine * gRacePlayers[i].unk2CC) / 0x1000;
+                        localZ = ((s64)sine * gRacePlayers[i].unk2C8 + (s64)cosine * gRacePlayers[i].unk2CC) / 0x1000;
                         if (localZ > 0) {
                             localZ = -localZ;
                         }
-                        gRacePlayers[i].unk2C8 =
-                            ((s64)cosine * localX + (s64)sine * localZ) / 0x1000;
-                        gRacePlayers[i].unk2CC =
-                            ((s64)-sine * localX + (s64)cosine * localZ) / 0x1000;
+                        gRacePlayers[i].unk2C8 = ((s64)cosine * localX + (s64)sine * localZ) / 0x1000;
+                        gRacePlayers[i].unk2CC = ((s64)-sine * localX + (s64)cosine * localZ) / 0x1000;
                         gRacePlayers[i].pendingItemHitFlags |= flag;
                     }
                 }
@@ -809,9 +806,9 @@ void pushRacePlayerOutOfCylinderAndApplyItemHit(Vec3i *pos, s32 xzSize, s32 ySiz
                 if (zDiff < 0) {
                     zDiff = -zDiff;
                 }
-                if ((zDiff < xzLimit) &&
-                    ((temp = integerSquareRoot64((s64)((0, xDiff)) * xDiff +
-                                           (((s64)zDiff * zDiff) & 0xFFFFFFFFFFFFFFFF))) < xzLimit)) {
+                if ((zDiff < xzLimit) && ((temp = integerSquareRoot64(
+                                               (s64)((0, xDiff)) * xDiff + (((s64)zDiff * zDiff) & 0xFFFFFFFFFFFFFFFF)
+                                           )) < xzLimit)) {
                     angle = calculateFixedAngleBetweenXZPoints(pos->x, pos->z, player->pos.x, player->pos.z);
                     sine = fixedSine(angle);
                     cosine = fixedCosine(angle);
@@ -870,11 +867,16 @@ void pushRacePlayersOutOfCylinderOrApplyItemHit(Vec3i *pos, s32 xzSize, s32 ySiz
                     if (temp < 0) {
                         temp = -temp;
                     }
-                    if ((temp < xzLimit) &&
-                        ((temp = integerSquareRoot64((s64)((0, xDiff)) * xDiff +
-                                               (((s64)temp * temp) & 0xFFFFFFFFFFFFFFFF))) < xzLimit)) {
+                    if ((temp < xzLimit) && ((temp = integerSquareRoot64(
+                                                  (s64)((0, xDiff)) * xDiff + (((s64)temp * temp) & 0xFFFFFFFFFFFFFFFF)
+                                              )) < xzLimit)) {
                         if (gRacePlayers[i].unk29C < arg3) {
-                            angle = calculateFixedAngleBetweenXZPoints(pos->x, pos->z, gRacePlayers[i].pos.x, gRacePlayers[i].pos.z);
+                            angle = calculateFixedAngleBetweenXZPoints(
+                                pos->x,
+                                pos->z,
+                                gRacePlayers[i].pos.x,
+                                gRacePlayers[i].pos.z
+                            );
                             sine = fixedSine(angle);
                             cosine = fixedCosine(angle);
                             temp = xzLimit - temp;
@@ -927,10 +929,9 @@ void pushRacePlayerOutOfCylinder(Vec3i *pos, s32 xzSize, s32 ySize, s16 playerIn
                 if (zDiff < 0) {
                     zDiff = -zDiff;
                 }
-                if ((zDiff < xzLimit) &&
-                    ((distance = integerSquareRoot64((s64)((0, xDiff)) * xDiff +
-                                                    (((s64)zDiff * zDiff) & 0xFFFFFFFFFFFFFFFF))) <
-                     xzLimit)) {
+                if ((zDiff < xzLimit) && ((distance = integerSquareRoot64(
+                                               (s64)((0, xDiff)) * xDiff + (((s64)zDiff * zDiff) & 0xFFFFFFFFFFFFFFFF)
+                                           )) < xzLimit)) {
                     angle = calculateFixedAngleBetweenXZPoints(pos->x, pos->z, player->pos.x, player->pos.z);
                     sine = fixedSine(angle);
                     cosine = fixedCosine(angle);
@@ -992,6 +993,8 @@ s32 isRacePlayerInsideCylinder(Vec3i *pos, s32 xzSize, s32 ySize, s16 playerInde
     return result[2];
 }
 
+// IDO code generation for this function is sensitive to source line layout.
+// clang-format off
 void applyItemHitToRacePlayersInsideSphere(Vec3i *pos, s32 xzSize, s16 flag) {
     volatile u8 pad[16];
     RacePlayer *player;
@@ -1029,6 +1032,7 @@ void applyItemHitToRacePlayersInsideSphere(Vec3i *pos, s32 xzSize, s16 flag) {
         player++;
     } while (player != end);
 }
+// clang-format on
 
 s32 tryApplyRacePlayerItemHit(Vec3i *pos, s32 xzSize, s16 flag, s16 playerIndex) {
     volatile u8 pad[8];
@@ -1061,8 +1065,7 @@ s32 tryApplyRacePlayerItemHit(Vec3i *pos, s32 xzSize, s16 flag, s16 playerIndex)
             if (dz < 0) {
                 dz = -dz;
             }
-            if ((dz < radius) &&
-                (integerSquareRoot64((s64)dx * dx + (s64)dy * dy + (s64)dz * dz) < radius)) {
+            if ((dz < radius) && (integerSquareRoot64((s64)dx * dx + (s64)dy * dy + (s64)dz * dz) < radius)) {
                 player->pendingItemHitFlags |= flag;
                 return 1;
             }
@@ -1072,8 +1075,9 @@ s32 tryApplyRacePlayerItemHit(Vec3i *pos, s32 xzSize, s16 flag, s16 playerIndex)
     return 0;
 }
 
-// updateRacePlayerSurfaceContact best match: 99.914% (nonmatchings/updateRacePlayerSurfaceContact-2163214805492048867/base_22.c)
-// The assembly references interior elements of gRacePlayerGroundProbeOffsets by fixed offsets.
+// updateRacePlayerSurfaceContact best match: 99.914%
+// (nonmatchings/updateRacePlayerSurfaceContact-2163214805492048867/base_22.c) The assembly references interior elements
+// of gRacePlayerGroundProbeOffsets by fixed offsets.
 #pragma GLOBAL_ASM("asm/nonmatchings/race/player/race_player_movement/updateRacePlayerSurfaceContact.s")
 
 #ifdef NON_MATCHING
@@ -1112,7 +1116,15 @@ s32 updateRacePlayerSurfaceContact(RacePlayer *player) {
     terrainId = findRaceCourseSurfaceFromHint(player->coursePathIndex, player->pos.x, player->pos.z);
     resolveRaceCourseSurfaceCollisionWithNormal(
         terrainId,
-        player->pos.x, player->pos.z, 0x60000, 2, &pushX, &pushZ, &normalX, &normalZ);
+        player->pos.x,
+        player->pos.z,
+        0x60000,
+        2,
+        &pushX,
+        &pushZ,
+        &normalX,
+        &normalZ
+    );
     if ((pushX != 0) || (pushZ != 0)) {
         player->pos.x += pushX;
         player->pos.z += pushZ;
@@ -1121,8 +1133,16 @@ s32 updateRacePlayerSurfaceContact(RacePlayer *player) {
     if (player->stateFlags & 0x7C000) {
         terrainId = findRaceCourseSurfaceFromHint(player->coursePathIndex, player->pos.x, player->pos.z);
         resolveRaceCourseSurfaceCollisionWithNormal(
-            terrainId, player->pos.x, player->pos.z, 0xC0000, 1, &pushX, &pushZ,
-            &player->unk2C8, &player->unk2CC);
+            terrainId,
+            player->pos.x,
+            player->pos.z,
+            0xC0000,
+            1,
+            &pushX,
+            &pushZ,
+            &player->unk2C8,
+            &player->unk2CC
+        );
         if ((pushX != 0) || (pushZ != 0)) {
             player->pos.x += pushX;
             player->pos.z += pushZ;
@@ -1131,8 +1151,16 @@ s32 updateRacePlayerSurfaceContact(RacePlayer *player) {
 
         terrainId = findRaceCourseSurfaceFromHint(player->coursePathIndex, player->pos.x, player->pos.z);
         resolveRaceCourseSurfaceCollisionWithNormal(
-            terrainId, player->pos.x, player->pos.z, 0xC0000, 3, &pushX, &pushZ,
-            &player->unk2C8, &player->unk2CC);
+            terrainId,
+            player->pos.x,
+            player->pos.z,
+            0xC0000,
+            3,
+            &pushX,
+            &pushZ,
+            &player->unk2C8,
+            &player->unk2CC
+        );
         if ((pushX != 0) || (pushZ != 0)) {
             player->pos.x += pushX;
             player->pos.z += pushZ;
@@ -1141,8 +1169,16 @@ s32 updateRacePlayerSurfaceContact(RacePlayer *player) {
     } else {
         terrainId = findRaceCourseSurfaceFromHint(player->coursePathIndex, player->pos.x, player->pos.z);
         resolveRaceCourseSurfaceCollisionWithNormal(
-            terrainId, player->pos.x, player->pos.z, 0x78000, 1, &pushX, &pushZ,
-            &player->unk2C8, &player->unk2CC);
+            terrainId,
+            player->pos.x,
+            player->pos.z,
+            0x78000,
+            1,
+            &pushX,
+            &pushZ,
+            &player->unk2C8,
+            &player->unk2CC
+        );
         if ((pushX != 0) || (pushZ != 0)) {
             player->pendingItemHitFlags |= 1;
             player->pos.x += pushX;
@@ -1151,8 +1187,16 @@ s32 updateRacePlayerSurfaceContact(RacePlayer *player) {
 
         terrainId = findRaceCourseSurfaceFromHint(player->coursePathIndex, player->pos.x, player->pos.z);
         resolveRaceCourseSurfaceCollisionWithNormal(
-            terrainId, player->pos.x, player->pos.z, 0x78000, 3, &pushX, &pushZ,
-            &player->unk2C8, &player->unk2CC);
+            terrainId,
+            player->pos.x,
+            player->pos.z,
+            0x78000,
+            3,
+            &pushX,
+            &pushZ,
+            &player->unk2C8,
+            &player->unk2CC
+        );
         if ((pushX != 0) || (pushZ != 0)) {
             player->pendingItemHitFlags |= 0x200;
             player->pos.x += pushX;
@@ -1163,15 +1207,33 @@ s32 updateRacePlayerSurfaceContact(RacePlayer *player) {
         cosine = fixedCosine(player->facingAngle);
         hadCollision = 0;
         for (i = 0; i < 2; i++) {
-            points[i].x = RACE_PLAYER_SURFACE_DOT2(gRacePlayerGroundProbeOffsets[i].x, cosine, gRacePlayerGroundProbeOffsets[i].z, sine);
-            points[i].z = RACE_PLAYER_SURFACE_DOT2(gRacePlayerGroundProbeOffsets[i].x, -sine, gRacePlayerGroundProbeOffsets[i].z, cosine);
+            points[i].x = RACE_PLAYER_SURFACE_DOT2(
+                gRacePlayerGroundProbeOffsets[i].x,
+                cosine,
+                gRacePlayerGroundProbeOffsets[i].z,
+                sine
+            );
+            points[i].z = RACE_PLAYER_SURFACE_DOT2(
+                gRacePlayerGroundProbeOffsets[i].x,
+                -sine,
+                gRacePlayerGroundProbeOffsets[i].z,
+                cosine
+            );
             points[i].x += player->pos.x;
             points[i].z += player->pos.z;
 
             terrainId = findRaceCourseSurfaceFromHint(player->coursePathIndex, points[i].x, points[i].z);
             resolveRaceCourseSurfaceCollisionWithNormal(
-                terrainId, points[i].x, points[i].z, 0x4C000, 1, &pushX, &pushZ,
-                &player->unk2C8, &player->unk2CC);
+                terrainId,
+                points[i].x,
+                points[i].z,
+                0x4C000,
+                1,
+                &pushX,
+                &pushZ,
+                &player->unk2C8,
+                &player->unk2CC
+            );
             if ((pushX != 0) || (pushZ != 0)) {
                 points[i].x += pushX;
                 points[i].z += pushZ;
@@ -1181,8 +1243,16 @@ s32 updateRacePlayerSurfaceContact(RacePlayer *player) {
 
             terrainId = findRaceCourseSurfaceFromHint(player->coursePathIndex, points[i].x, points[i].z);
             resolveRaceCourseSurfaceCollisionWithNormal(
-                terrainId, points[i].x, points[i].z, 0x4C000, 3, &pushX, &pushZ,
-                &player->unk2C8, &player->unk2CC);
+                terrainId,
+                points[i].x,
+                points[i].z,
+                0x4C000,
+                3,
+                &pushX,
+                &pushZ,
+                &player->unk2C8,
+                &player->unk2CC
+            );
             if ((pushX != 0) || (pushZ != 0)) {
                 points[i].x += pushX;
                 points[i].z += pushZ;
@@ -1200,15 +1270,33 @@ s32 updateRacePlayerSurfaceContact(RacePlayer *player) {
             sine = fixedSine(player->facingAngle);
             cosine = fixedCosine(player->facingAngle);
             for (i = 0; i < 2; i++) {
-                points[i].x = RACE_PLAYER_SURFACE_DOT2(gRacePlayerGroundProbeOffsets[i].x, cosine, gRacePlayerGroundProbeOffsets[i].z, sine);
-                points[i].z = RACE_PLAYER_SURFACE_DOT2(gRacePlayerGroundProbeOffsets[i].x, -sine, gRacePlayerGroundProbeOffsets[i].z, cosine);
+                points[i].x = RACE_PLAYER_SURFACE_DOT2(
+                    gRacePlayerGroundProbeOffsets[i].x,
+                    cosine,
+                    gRacePlayerGroundProbeOffsets[i].z,
+                    sine
+                );
+                points[i].z = RACE_PLAYER_SURFACE_DOT2(
+                    gRacePlayerGroundProbeOffsets[i].x,
+                    -sine,
+                    gRacePlayerGroundProbeOffsets[i].z,
+                    cosine
+                );
                 points[i].x += player->pos.x;
                 points[i].z += player->pos.z;
 
                 terrainId = findRaceCourseSurfaceFromHint(player->coursePathIndex, points[i].x, points[i].z);
                 resolveRaceCourseSurfaceCollisionWithNormal(
-                    terrainId, points[i].x, points[i].z, 0x4C000, 1, &pushX, &pushZ,
-                    &player->unk2C8, &player->unk2CC);
+                    terrainId,
+                    points[i].x,
+                    points[i].z,
+                    0x4C000,
+                    1,
+                    &pushX,
+                    &pushZ,
+                    &player->unk2C8,
+                    &player->unk2CC
+                );
                 if ((pushX != 0) || (pushZ != 0)) {
                     player->pos.x += pushX;
                     player->pos.z += pushZ;
@@ -1216,8 +1304,16 @@ s32 updateRacePlayerSurfaceContact(RacePlayer *player) {
 
                 terrainId = findRaceCourseSurfaceFromHint(player->coursePathIndex, points[i].x, points[i].z);
                 resolveRaceCourseSurfaceCollisionWithNormal(
-                    terrainId, points[i].x, points[i].z, 0x4C000, 3, &pushX, &pushZ,
-                    &player->unk2C8, &player->unk2CC);
+                    terrainId,
+                    points[i].x,
+                    points[i].z,
+                    0x4C000,
+                    3,
+                    &pushX,
+                    &pushZ,
+                    &player->unk2C8,
+                    &player->unk2CC
+                );
                 if ((pushX != 0) || (pushZ != 0)) {
                     player->pos.x += pushX;
                     player->pos.z += pushZ;
@@ -1228,7 +1324,8 @@ s32 updateRacePlayerSurfaceContact(RacePlayer *player) {
 
     sine = fixedSine(player->unk2EE);
     cosine = fixedCosine(player->unk2EE);
-    sideSpacing = RACE_PLAYER_SURFACE_DOT2(gRacePlayerGroundProbeOffsets[6].x, cosine, gRacePlayerGroundProbeOffsets[6].y, -sine);
+    sideSpacing =
+        RACE_PLAYER_SURFACE_DOT2(gRacePlayerGroundProbeOffsets[6].x, cosine, gRacePlayerGroundProbeOffsets[6].y, -sine);
 
     verticalOffset = player->unk5C;
     player->coursePathIndex = findRaceCourseSurfaceFromHint(player->coursePathIndex, player->pos.x, player->pos.z);
@@ -1242,7 +1339,12 @@ s32 updateRacePlayerSurfaceContact(RacePlayer *player) {
     for (iteration = 0; iteration < 3; iteration++) {
         sine = fixedSine(player->pitchAngle);
         cosine = fixedCosine(player->pitchAngle);
-        longitudinalSpacing = RACE_PLAYER_SURFACE_DOT2(gRacePlayerGroundProbeOffsets[8].y, sine, gRacePlayerGroundProbeOffsets[8].z, cosine);
+        longitudinalSpacing = RACE_PLAYER_SURFACE_DOT2(
+            gRacePlayerGroundProbeOffsets[8].y,
+            sine,
+            gRacePlayerGroundProbeOffsets[8].z,
+            cosine
+        );
         makeFixedRotationXY(playerRotation.values, player->pitchAngle, player->facingAngle);
 
         for (i = 0; i < 6; i++) {
@@ -1279,34 +1381,29 @@ s32 updateRacePlayerSurfaceContact(RacePlayer *player) {
         if ((heightDeltas[0] >= 0) && (heightDeltas[2] >= 0)) {
             if (!(player->stateFlags & 4)) {
                 player->pitchAngle =
-                    calculateFixedAngleFromDeltaXZ(-(contactHeights[0] - contactHeights[2]),
-                                                    -longitudinalSpacing * 2) &
+                    calculateFixedAngleFromDeltaXZ(-(contactHeights[0] - contactHeights[2]), -longitudinalSpacing * 2) &
                     0xFFF;
             }
             baseY = (contactHeights[0] + (s64)contactHeights[2]) / 2;
         } else if (heightDeltas[0] >= 0) {
             if (!(player->stateFlags & 4)) {
                 player->pitchAngle =
-                    calculateFixedAngleFromDeltaXZ(-(contactHeights[0] - contactHeights[4]),
-                                                    -longitudinalSpacing) &
+                    calculateFixedAngleFromDeltaXZ(-(contactHeights[0] - contactHeights[4]), -longitudinalSpacing) &
                     0xFFF;
             }
             baseY = contactHeights[4];
         } else if (heightDeltas[2] >= 0) {
             if (!(player->stateFlags & 4)) {
                 player->pitchAngle =
-                    calculateFixedAngleFromDeltaXZ(-(contactHeights[4] - contactHeights[2]),
-                                                    -longitudinalSpacing) &
+                    calculateFixedAngleFromDeltaXZ(-(contactHeights[4] - contactHeights[2]), -longitudinalSpacing) &
                     0xFFF;
             }
             baseY = contactHeights[4];
         }
     }
 
-    player->unk2F0 =
-        calculateFixedAngleFromDeltaXZ(-(surfaceHeights[0] - surfaceHeights[2]), -longitudinalSpacing * 2);
-    player->unk2F4 =
-        calculateFixedAngleFromDeltaXZ(-(surfaceHeights[4] - surfaceHeights[5]), -sideSpacing * 2);
+    player->unk2F0 = calculateFixedAngleFromDeltaXZ(-(surfaceHeights[0] - surfaceHeights[2]), -longitudinalSpacing * 2);
+    player->unk2F4 = calculateFixedAngleFromDeltaXZ(-(surfaceHeights[4] - surfaceHeights[5]), -sideSpacing * 2);
     player->unk64 = 0;
     makeFixedRotationZXY(playerRotation.values, player->pitchAngle, player->facingAngle, player->unk2EE);
     for (i = 0; i < 4; i++) {
@@ -1354,40 +1451,66 @@ s32 updateRacePlayerSurfaceContact(RacePlayer *player) {
 
     if (player->stateFlags & 0x400) {
         collisionX = RACE_PLAYER_SURFACE_MIRRORED_COLLISION_POINT(
-            worldRotation.values[0], worldRotation.values[3], worldRotation.values[6],
+            worldRotation.values[0],
+            worldRotation.values[3],
+            worldRotation.values[6],
             player->collisionSources[0].sizeX,
             player->collisionSources[0].sizeY - player->collisionCenterOffset,
-            player->collisionSources[0].sizeZ);
+            player->collisionSources[0].sizeZ
+        );
         collisionY = RACE_PLAYER_SURFACE_MIRRORED_COLLISION_POINT(
-            worldRotation.values[1], worldRotation.values[4], worldRotation.values[7],
+            worldRotation.values[1],
+            worldRotation.values[4],
+            worldRotation.values[7],
             player->collisionSources[0].sizeX,
             player->collisionSources[0].sizeY - player->collisionCenterOffset,
-            player->collisionSources[0].sizeZ);
+            player->collisionSources[0].sizeZ
+        );
         collisionZ = RACE_PLAYER_SURFACE_MIRRORED_COLLISION_POINT(
-            worldRotation.values[2], worldRotation.values[5], worldRotation.values[8],
+            worldRotation.values[2],
+            worldRotation.values[5],
+            worldRotation.values[8],
             player->collisionSources[0].sizeX,
             player->collisionSources[0].sizeY - player->collisionCenterOffset,
-            player->collisionSources[0].sizeZ);
-        makeFixedRotationXYZ(intermediateRotation.values, player->collisionSources[0].rotX,
-                             -player->collisionSources[0].rotY, -player->collisionSources[0].rotZ);
+            player->collisionSources[0].sizeZ
+        );
+        makeFixedRotationXYZ(
+            intermediateRotation.values,
+            player->collisionSources[0].rotX,
+            -player->collisionSources[0].rotY,
+            -player->collisionSources[0].rotZ
+        );
     } else {
         collisionX = RACE_PLAYER_SURFACE_COLLISION_POINT(
-            worldRotation.values[0], worldRotation.values[3], worldRotation.values[6],
+            worldRotation.values[0],
+            worldRotation.values[3],
+            worldRotation.values[6],
             player->collisionSources[0].sizeX,
             player->collisionSources[0].sizeY - player->collisionCenterOffset,
-            player->collisionSources[0].sizeZ);
+            player->collisionSources[0].sizeZ
+        );
         collisionY = RACE_PLAYER_SURFACE_COLLISION_POINT(
-            worldRotation.values[1], worldRotation.values[4], worldRotation.values[7],
+            worldRotation.values[1],
+            worldRotation.values[4],
+            worldRotation.values[7],
             player->collisionSources[0].sizeX,
             player->collisionSources[0].sizeY - player->collisionCenterOffset,
-            player->collisionSources[0].sizeZ);
+            player->collisionSources[0].sizeZ
+        );
         collisionZ = RACE_PLAYER_SURFACE_COLLISION_POINT(
-            worldRotation.values[2], worldRotation.values[5], worldRotation.values[8],
+            worldRotation.values[2],
+            worldRotation.values[5],
+            worldRotation.values[8],
             player->collisionSources[0].sizeX,
             player->collisionSources[0].sizeY - player->collisionCenterOffset,
-            player->collisionSources[0].sizeZ);
-        makeFixedRotationXYZ(intermediateRotation.values, player->collisionSources[0].rotX,
-                             player->collisionSources[0].rotY, player->collisionSources[0].rotZ);
+            player->collisionSources[0].sizeZ
+        );
+        makeFixedRotationXYZ(
+            intermediateRotation.values,
+            player->collisionSources[0].rotX,
+            player->collisionSources[0].rotY,
+            player->collisionSources[0].rotZ
+        );
     }
 
     collisionX += player->pos.x + effectRotation.transformedX;
@@ -1395,14 +1518,20 @@ s32 updateRacePlayerSurfaceContact(RacePlayer *player) {
     collisionZ += player->pos.z + effectRotation.transformedZ;
     multiplyFixedMatrix3s(intermediateRotation.values, worldRotation.values, playerRotation.values);
     for (i = 0; i < 4; i++) {
-        transformVec3iByFixedMatrix(playerRotation.values, &gRacePlayerGroundProbeOffsets[i + 9],
-                                    &player->groundMarkerSources[i]);
+        transformVec3iByFixedMatrix(
+            playerRotation.values,
+            &gRacePlayerGroundProbeOffsets[i + 9],
+            &player->groundMarkerSources[i]
+        );
         player->groundMarkerSources[i].x += collisionX;
         player->groundMarkerSources[i].y += collisionY;
         player->groundMarkerSources[i].z += collisionZ;
         player->markerPoints[i] = player->groundMarkerSources[i];
-        terrainId = findRaceCourseSurfaceFromHint(player->coursePathIndex, player->markerPoints[i].x,
-                                                  player->markerPoints[i].z);
+        terrainId = findRaceCourseSurfaceFromHint(
+            player->coursePathIndex,
+            player->markerPoints[i].x,
+            player->markerPoints[i].z
+        );
         player->markerPoints[i].y =
             getRaceCourseSurfaceHeight(terrainId, player->markerPoints[i].x, player->markerPoints[i].z);
         if ((player->markerPoints[i].y + 0x2C000) >= player->groundMarkerSources[i].y) {
@@ -1493,30 +1622,25 @@ s32 updateRacePlayerGroundAlignment(RacePlayer *player) {
     if ((heightDeltas[0] >= 0) && (heightDeltas[2] >= 0)) {
         if (!(player->stateFlags & 4)) {
             player->pitchAngle =
-                calculateFixedAngleFromDeltaXZ(-(contactHeights[0] - contactHeights[2]),
-                                                -longitudinalSpacing * 2);
+                calculateFixedAngleFromDeltaXZ(-(contactHeights[0] - contactHeights[2]), -longitudinalSpacing * 2);
         }
         probeScratch.baseY = (contactHeights[0] + (s64)contactHeights[2]) / 2;
     } else if (heightDeltas[0] >= 0) {
         if (!(player->stateFlags & 4)) {
             player->pitchAngle =
-                calculateFixedAngleFromDeltaXZ(-(contactHeights[0] - contactHeights[4]),
-                                                -longitudinalSpacing);
+                calculateFixedAngleFromDeltaXZ(-(contactHeights[0] - contactHeights[4]), -longitudinalSpacing);
         }
         probeScratch.baseY = contactHeights[4];
     } else if (heightDeltas[2] >= 0) {
         if (!(player->stateFlags & 4)) {
             player->pitchAngle =
-                calculateFixedAngleFromDeltaXZ(-(contactHeights[4] - contactHeights[2]),
-                                                -longitudinalSpacing);
+                calculateFixedAngleFromDeltaXZ(-(contactHeights[4] - contactHeights[2]), -longitudinalSpacing);
         }
         probeScratch.baseY = contactHeights[4];
     }
 
-    player->unk2F0 =
-        calculateFixedAngleFromDeltaXZ(-(surfaceHeights[0] - surfaceHeights[2]), -longitudinalSpacing * 2);
-    player->unk2F4 =
-        calculateFixedAngleFromDeltaXZ(-(surfaceHeights[4] - surfaceHeights[5]), -sideSpacing * 2);
+    player->unk2F0 = calculateFixedAngleFromDeltaXZ(-(surfaceHeights[0] - surfaceHeights[2]), -longitudinalSpacing * 2);
+    player->unk2F4 = calculateFixedAngleFromDeltaXZ(-(surfaceHeights[4] - surfaceHeights[5]), -sideSpacing * 2);
 
     player->unk64 = 0;
     makeFixedRotationZXY(playerRotation.values, player->pitchAngle, player->facingAngle, player->unk2EE);
@@ -1554,38 +1678,67 @@ s32 updateRacePlayerGroundAlignment(RacePlayer *player) {
     }
 
     if (player->stateFlags & 0x400) {
-        probeScratch.collisionX =
-            MIRRORED_COLLISION_POINT(worldRotation.values[0], worldRotation.values[3], worldRotation.values[6],
-                                     player->collisionSources[0].sizeX,
-                                     player->collisionSources[0].sizeY - player->collisionCenterOffset,
-                                     player->collisionSources[0].sizeZ);
-        collisionPoint.y =
-            MIRRORED_COLLISION_POINT(worldRotation.values[1], worldRotation.values[4], worldRotation.values[7],
-                                     player->collisionSources[0].sizeX,
-                                     player->collisionSources[0].sizeY - player->collisionCenterOffset,
-                                     player->collisionSources[0].sizeZ);
-        probeScratch.collisionZ =
-            MIRRORED_COLLISION_POINT(worldRotation.values[2], worldRotation.values[5], worldRotation.values[8],
-                                     player->collisionSources[0].sizeX,
-                                     player->collisionSources[0].sizeY - player->collisionCenterOffset,
-                                     player->collisionSources[0].sizeZ);
-        makeFixedRotationXYZ(intermediateRotation.values, player->collisionSources[0].rotX,
-                             -player->collisionSources[0].rotY, -player->collisionSources[0].rotZ);
+        probeScratch.collisionX = MIRRORED_COLLISION_POINT(
+            worldRotation.values[0],
+            worldRotation.values[3],
+            worldRotation.values[6],
+            player->collisionSources[0].sizeX,
+            player->collisionSources[0].sizeY - player->collisionCenterOffset,
+            player->collisionSources[0].sizeZ
+        );
+        collisionPoint.y = MIRRORED_COLLISION_POINT(
+            worldRotation.values[1],
+            worldRotation.values[4],
+            worldRotation.values[7],
+            player->collisionSources[0].sizeX,
+            player->collisionSources[0].sizeY - player->collisionCenterOffset,
+            player->collisionSources[0].sizeZ
+        );
+        probeScratch.collisionZ = MIRRORED_COLLISION_POINT(
+            worldRotation.values[2],
+            worldRotation.values[5],
+            worldRotation.values[8],
+            player->collisionSources[0].sizeX,
+            player->collisionSources[0].sizeY - player->collisionCenterOffset,
+            player->collisionSources[0].sizeZ
+        );
+        makeFixedRotationXYZ(
+            intermediateRotation.values,
+            player->collisionSources[0].rotX,
+            -player->collisionSources[0].rotY,
+            -player->collisionSources[0].rotZ
+        );
     } else {
-        probeScratch.collisionX =
-            COLLISION_POINT(worldRotation.values[0], worldRotation.values[3], worldRotation.values[6],
-                            player->collisionSources[0].sizeX, player->collisionSources[0].sizeY - player->collisionCenterOffset,
-                            player->collisionSources[0].sizeZ);
-        collisionPoint.y =
-            COLLISION_POINT(worldRotation.values[1], worldRotation.values[4], worldRotation.values[7],
-                            player->collisionSources[0].sizeX, player->collisionSources[0].sizeY - player->collisionCenterOffset,
-                            player->collisionSources[0].sizeZ);
-        probeScratch.collisionZ =
-            COLLISION_POINT(worldRotation.values[2], worldRotation.values[5], worldRotation.values[8],
-                            player->collisionSources[0].sizeX, player->collisionSources[0].sizeY - player->collisionCenterOffset,
-                            player->collisionSources[0].sizeZ);
-        makeFixedRotationXYZ(intermediateRotation.values, player->collisionSources[0].rotX,
-                             player->collisionSources[0].rotY, player->collisionSources[0].rotZ);
+        probeScratch.collisionX = COLLISION_POINT(
+            worldRotation.values[0],
+            worldRotation.values[3],
+            worldRotation.values[6],
+            player->collisionSources[0].sizeX,
+            player->collisionSources[0].sizeY - player->collisionCenterOffset,
+            player->collisionSources[0].sizeZ
+        );
+        collisionPoint.y = COLLISION_POINT(
+            worldRotation.values[1],
+            worldRotation.values[4],
+            worldRotation.values[7],
+            player->collisionSources[0].sizeX,
+            player->collisionSources[0].sizeY - player->collisionCenterOffset,
+            player->collisionSources[0].sizeZ
+        );
+        probeScratch.collisionZ = COLLISION_POINT(
+            worldRotation.values[2],
+            worldRotation.values[5],
+            worldRotation.values[8],
+            player->collisionSources[0].sizeX,
+            player->collisionSources[0].sizeY - player->collisionCenterOffset,
+            player->collisionSources[0].sizeZ
+        );
+        makeFixedRotationXYZ(
+            intermediateRotation.values,
+            player->collisionSources[0].rotX,
+            player->collisionSources[0].rotY,
+            player->collisionSources[0].rotZ
+        );
     }
 
     probeScratch.collisionX += player->pos.x + effectRotation.transformedX;
@@ -1593,8 +1746,11 @@ s32 updateRacePlayerGroundAlignment(RacePlayer *player) {
     multiplyFixedMatrix3s(intermediateRotation.values, worldRotation.values, playerRotation.values);
 
     for (i = 0; i < 4; i++) {
-        transformVec3iByFixedMatrix(playerRotation.values, &gRacePlayerGroundProbeOffsets[i + 9],
-                                    &player->markerPoints[i]);
+        transformVec3iByFixedMatrix(
+            playerRotation.values,
+            &gRacePlayerGroundProbeOffsets[i + 9],
+            &player->markerPoints[i]
+        );
         player->markerPoints[i].x += probeScratch.collisionX;
         player->markerPoints[i].z += probeScratch.collisionZ;
         player->markerPoints[i].y =
@@ -1671,8 +1827,10 @@ void updateRacePlayerLocalVelocity(RacePlayer *player, s32 arg1, s32 arg2, s32 a
     speedScratch.sin = fixedSine(-player->facingAngle);
     speedScratch.cos = fixedCosine(-player->facingAngle);
 
-    scratch.localPos.x = ((s64)player->velocity.x * speedScratch.cos + (s64)player->velocity.z * speedScratch.sin) / 0x1000;
-    scratch.localPos.z = ((s64)player->velocity.x * -speedScratch.sin + (s64)player->velocity.z * speedScratch.cos) / 0x1000;
+    scratch.localPos.x =
+        ((s64)player->velocity.x * speedScratch.cos + (s64)player->velocity.z * speedScratch.sin) / 0x1000;
+    scratch.localPos.z =
+        ((s64)player->velocity.x * -speedScratch.sin + (s64)player->velocity.z * speedScratch.cos) / 0x1000;
     scratch.localPos.y = player->velocity.y;
 
     makeFixedRotationXZ(scratch.rotationMtx, -player->unk2F0, -player->unk2F4);
@@ -1744,8 +1902,10 @@ void updateRacePlayerLocalVelocity(RacePlayer *player, s32 arg1, s32 arg2, s32 a
     speedScratch.sin = fixedSine(player->facingAngle);
     speedScratch.cos = fixedCosine(player->facingAngle);
 
-    player->velocity.x = ((s64)scratch.localPos.x * speedScratch.cos + (s64)scratch.localPos.z * speedScratch.sin) / 0x1000;
-    player->velocity.z = ((s64)scratch.localPos.x * -speedScratch.sin + (s64)scratch.localPos.z * speedScratch.cos) / 0x1000;
+    player->velocity.x =
+        ((s64)scratch.localPos.x * speedScratch.cos + (s64)scratch.localPos.z * speedScratch.sin) / 0x1000;
+    player->velocity.z =
+        ((s64)scratch.localPos.x * -speedScratch.sin + (s64)scratch.localPos.z * speedScratch.cos) / 0x1000;
     player->velocity.y = scratch.localPos.y;
 }
 
@@ -1769,38 +1929,86 @@ void addRacePlayerScore(RacePlayer *arg0, s32 arg1) {
 void enqueueRacePlayerVoiceSound(RacePlayer *player, s16 soundType) {
     if (player->soundDisabled == 0) {
         switch (soundType) {
-        case 0:
-            enqueuePlayerPositionalSoundEffect(gRacePlayerVoiceSoundIds0[(randomNextMain() & 1) + (player->characterId * 2)],
-                          (Vec3i *)&player->pos.x, 0x7F, 0x5A, (u16)player->playerIndex, 0);
-            return;
-        case 1:
-            enqueuePlayerPositionalSoundEffect(gRacePlayerVoiceSoundIds1[(randomNextMain() & 1) + (player->characterId * 2)],
-                          (Vec3i *)&player->pos.x, 0x7F, 0x5A, (u16)player->playerIndex, 0);
-            return;
-        case 2:
-            enqueuePlayerPositionalSoundEffect(gRacePlayerVoiceSoundIds2[(randomNextMain() & 1) + (player->characterId * 2)],
-                          (Vec3i *)&player->pos.x, 0x7F, 0x5A, (u16)player->playerIndex, 0);
-            return;
-        case 3:
-            enqueuePlayerPositionalSoundEffect(gRacePlayerVoiceSoundIds2[(randomNextMain() & 1) + (player->characterId * 2)],
-                          (Vec3i *)&player->pos.x, 0x7F, 0x5A, (u16)player->playerIndex, 0x60);
-            return;
-        case 4:
-            enqueuePlayerPositionalSoundEffect(gRacePlayerVoiceSoundIds4[player->characterId], (Vec3i *)&player->pos.x, 0x7F, 0x5A,
-                          (u16)player->playerIndex, 0);
-            return;
-        case 5:
-            enqueuePlayerPositionalSoundEffect(gRacePlayerVoiceSoundIds5[player->characterId], (Vec3i *)&player->pos.x, 0x7F, 0x5A,
-                          (u16)player->playerIndex, 0);
-            return;
-        case 6:
-            enqueuePlayerPositionalSoundEffect(gRacePlayerVoiceSoundIds6[player->characterId], (Vec3i *)&player->pos.x, 0x7F, 0x5A,
-                          (u16)player->playerIndex, 0);
-            return;
-        case 7:
-            enqueuePlayerPositionalSoundEffect(gRacePlayerVoiceSoundIds7[player->characterId], (Vec3i *)&player->pos.x, 0x7F, 0x5A,
-                          (u16)player->playerIndex, 0);
-            break;
+            case 0:
+                enqueuePlayerPositionalSoundEffect(
+                    gRacePlayerVoiceSoundIds0[(randomNextMain() & 1) + (player->characterId * 2)],
+                    (Vec3i *)&player->pos.x,
+                    0x7F,
+                    0x5A,
+                    (u16)player->playerIndex,
+                    0
+                );
+                return;
+            case 1:
+                enqueuePlayerPositionalSoundEffect(
+                    gRacePlayerVoiceSoundIds1[(randomNextMain() & 1) + (player->characterId * 2)],
+                    (Vec3i *)&player->pos.x,
+                    0x7F,
+                    0x5A,
+                    (u16)player->playerIndex,
+                    0
+                );
+                return;
+            case 2:
+                enqueuePlayerPositionalSoundEffect(
+                    gRacePlayerVoiceSoundIds2[(randomNextMain() & 1) + (player->characterId * 2)],
+                    (Vec3i *)&player->pos.x,
+                    0x7F,
+                    0x5A,
+                    (u16)player->playerIndex,
+                    0
+                );
+                return;
+            case 3:
+                enqueuePlayerPositionalSoundEffect(
+                    gRacePlayerVoiceSoundIds2[(randomNextMain() & 1) + (player->characterId * 2)],
+                    (Vec3i *)&player->pos.x,
+                    0x7F,
+                    0x5A,
+                    (u16)player->playerIndex,
+                    0x60
+                );
+                return;
+            case 4:
+                enqueuePlayerPositionalSoundEffect(
+                    gRacePlayerVoiceSoundIds4[player->characterId],
+                    (Vec3i *)&player->pos.x,
+                    0x7F,
+                    0x5A,
+                    (u16)player->playerIndex,
+                    0
+                );
+                return;
+            case 5:
+                enqueuePlayerPositionalSoundEffect(
+                    gRacePlayerVoiceSoundIds5[player->characterId],
+                    (Vec3i *)&player->pos.x,
+                    0x7F,
+                    0x5A,
+                    (u16)player->playerIndex,
+                    0
+                );
+                return;
+            case 6:
+                enqueuePlayerPositionalSoundEffect(
+                    gRacePlayerVoiceSoundIds6[player->characterId],
+                    (Vec3i *)&player->pos.x,
+                    0x7F,
+                    0x5A,
+                    (u16)player->playerIndex,
+                    0
+                );
+                return;
+            case 7:
+                enqueuePlayerPositionalSoundEffect(
+                    gRacePlayerVoiceSoundIds7[player->characterId],
+                    (Vec3i *)&player->pos.x,
+                    0x7F,
+                    0x5A,
+                    (u16)player->playerIndex,
+                    0
+                );
+                break;
         }
     }
 }

@@ -37,13 +37,48 @@ extern ViewportState gViewportStates[];
 
 void resetAllViewports(void);
 void resetViewport(s32 arg0);
-void configureViewport(s32 viewportIndex, s32 centerX, s32 centerY, u16 width, u16 height, u16 scaleX, u16 scaleY, f32 aspect);
-void configureViewportWithFovAndFarClip(s32 viewportIndex, s32 centerX, s32 centerY, u16 width, u16 height, u16 scaleX,
-                                        u16 scaleY, f32 aspect, s16 fovY, s32 farClip);
-void configureRaceViewport(s32 viewportIndex, s32 centerX, s32 centerY, u16 width, u16 height, u16 scaleX, u16 scaleY,
-                           f32 aspect);
-void configureMenuViewport(s32 viewportIndex, s32 centerX, s32 centerY, u16 width, u16 height, u16 scaleX, u16 scaleY,
-                           f32 aspect);
+void configureViewport(
+    s32 viewportIndex,
+    s32 centerX,
+    s32 centerY,
+    u16 width,
+    u16 height,
+    u16 scaleX,
+    u16 scaleY,
+    f32 aspect
+);
+void configureViewportWithFovAndFarClip(
+    s32 viewportIndex,
+    s32 centerX,
+    s32 centerY,
+    u16 width,
+    u16 height,
+    u16 scaleX,
+    u16 scaleY,
+    f32 aspect,
+    s16 fovY,
+    s32 farClip
+);
+void configureRaceViewport(
+    s32 viewportIndex,
+    s32 centerX,
+    s32 centerY,
+    u16 width,
+    u16 height,
+    u16 scaleX,
+    u16 scaleY,
+    f32 aspect
+);
+void configureMenuViewport(
+    s32 viewportIndex,
+    s32 centerX,
+    s32 centerY,
+    u16 width,
+    u16 height,
+    u16 scaleX,
+    u16 scaleY,
+    f32 aspect
+);
 void setViewportOverlayColor(s32 viewportIndex, s32 r, s32 g, s32 b);
 void enableViewportClear(s32 viewportIndex);
 

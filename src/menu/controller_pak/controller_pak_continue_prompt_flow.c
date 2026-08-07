@@ -46,7 +46,7 @@ void updateControllerPakContinuePromptFlow(void) {
 
     temp_v0 = gCurrentGameTask->fade;
     if (temp_v0 != 0) {
-        gCurrentGameTask->fade = stepMenuFadeAlpha((s32) (s16) temp_v0, 0x24, 0);
+        gCurrentGameTask->fade = stepMenuFadeAlpha((s32)(s16)temp_v0, 0x24, 0);
         if (gCurrentGameTask->fade == 0) {
             gControllerPakContinuePromptTransition.state = 1;
         }
@@ -72,13 +72,12 @@ void updateControllerPakContinuePromptFlow(void) {
         }
     }
     updateCallbackTasks();
-    if (gCurrentGameTask) {
-    }
+    if (gCurrentGameTask) {}
 }
 
 void closeControllerPakContinuePromptFlow(void) {
     if (gCurrentGameTask->fade != 0xFF) {
-        gCurrentGameTask->fade = stepMenuFadeAlpha((s16) gCurrentGameTask->fade, 0x24, 1);
+        gCurrentGameTask->fade = stepMenuFadeAlpha((s16)gCurrentGameTask->fade, 0x24, 1);
         if (gCurrentGameTask->fade == 0xFF) {
             gFramebufferSwapHold = 1;
             gControllerPakContinuePromptTransition.state = 3;

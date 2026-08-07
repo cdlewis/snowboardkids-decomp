@@ -27,7 +27,7 @@ typedef struct {
 } MainMenuModePreviewRaceCourseAsset;
 
 MainMenuModePreviewRaceCourseAsset gMainMenuModePreviewRaceCourseAssets[] = {
-    { 0, { 0, 0, 0 }, NULL, NULL },
+    { 0, { 0, 0, 0 }, NULL,           NULL           },
     { 0, { 0, 0, 0 }, (u8 *)0x258C80, (u8 *)0x25B410 },
     { 0, { 0, 0, 0 }, (u8 *)0x25B410, (u8 *)0x25DF80 },
     { 9, { 0, 0, 0 }, (u8 *)0x25DF80, (u8 *)0x260A30 },
@@ -41,8 +41,7 @@ MainMenuModePreviewRaceCourseAsset gMainMenuModePreviewRaceCourseAssets[] = {
     { 0, { 0, 0, 0 }, (u8 *)0x2732E0, (u8 *)0x275A90 },
 };
 s16 gMainMenuModePreviewRaceDurationBySelection[] = {
-    0x384, 0x287, 0x2BB, 0x33B, 0x23F, 0x2B2, 0x2C7, 0x138,
-    0x1AF, 0x1FD, 0x16A, 0x1E2, 0,     0,     0,     0,
+    0x384, 0x287, 0x2BB, 0x33B, 0x23F, 0x2B2, 0x2C7, 0x138, 0x1AF, 0x1FD, 0x16A, 0x1E2, 0, 0, 0, 0,
 };
 
 extern s16 gRaceLapCount;
@@ -148,7 +147,7 @@ void initMainMenuModePreviewRace(void) {
     s32 i;
     RacePlayer *player;
 
-    gRaceCourseIndex.signedValue = (s16) gMainMenuModePreviewRaceCourseAssets[gMainMenuModeSelection].courseIndex;
+    gRaceCourseIndex.signedValue = (s16)gMainMenuModePreviewRaceCourseAssets[gMainMenuModeSelection].courseIndex;
     gRaceUpdatePaused = 0;
     gRaceCameraModeChangeDisabled = 0;
     gRaceResultState = 0;
@@ -274,11 +273,11 @@ void zoomMainMenuModePreviewRaceViewport(void) {
 
     gCurrentGameTask->transitionTimer += 1;
     timer = gCurrentGameTask->transitionTimer;
-    width = (s16) (((timer * 0x18) / 16) + 0x108);
-    centerY = (s16) (((timer * 0x28) / 16) + 0x50);
-    height = (s16) (((((0, timer)) * 0x58) / 16) + 0x78);
-    scaleY = (s16) (((timer * 0x64) / 16) + 0x8C);
-    aspect = (f32) ((((f64) timer * -0.9523809523809523) / 0x10) + 2.2857142857142856);
+    width = (s16)(((timer * 0x18) / 16) + 0x108);
+    centerY = (s16)(((timer * 0x28) / 16) + 0x50);
+    height = (s16)(((((0, timer)) * 0x58) / 16) + 0x78);
+    scaleY = (s16)(((timer * 0x64) / 16) + 0x8C);
+    aspect = (f32)((((f64)timer * -0.9523809523809523) / 0x10) + 2.2857142857142856);
     timer = 0x140;
     configureViewport(width * 0, 0xA0, centerY, width, height, timer, scaleY, aspect);
     if (gCurrentGameTask->transitionTimer == MAIN_MENU_MODE_PREVIEW_RACE_VIEWPORT_ZOOM_FRAMES) {

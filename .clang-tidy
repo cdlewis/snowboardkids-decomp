@@ -1,0 +1,19 @@
+Checks: >
+  -*,
+  readability-redundant-declaration,
+  readability-redundant-casting,
+  readability-redundant-parentheses,
+  misc-include-cleaner,
+WarningsAsErrors: ""
+HeaderFilterRegex: '^(include/game/|include/(assets|common|compiler_diagnostics|font_encoding)\.h$)'
+ExcludeHeaderFilterRegex: '^include/(PR|PRinternal|libmus|sys)/|^include/(assert|hasm|include_asm|initfx|synthInternals)\.h$'
+FormatStyle: "file"
+CheckOptions:
+  # Require argument names to match exactly (instead of allowing a name to be a prefix/suffix of another).
+  # '1' remains compatible with older clang-tidy versions that may read this file through an editor.
+  - key: readability-inconsistent-declaration-parameter-name.Strict
+    value: 1
+  - key: readability-redundant-casting.IgnoreHeaders
+    value: 'common\.h'
+  - key: misc-include-cleaner.IgnoreHeaders
+    value: 'common\.h;ultratypes\.h;include_asm\.h;libmus\.h;PR/.*;PRinternal/.*;h>'

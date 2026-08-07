@@ -119,8 +119,7 @@ void initTrainingCourseRace(void) {
         default:
             gRacePlayers[0].isActive = 1;
             gRacePlayers[1].isActive = 1;
-            if (new_var) {
-            }
+            if (new_var) {}
             gRacePlayers[2].isActive = 1;
             gRacePlayers[3].isActive = 1;
             gRacePlayerCount = 4;
@@ -200,11 +199,11 @@ void zoomTrainingCourseRaceViewport(void) {
 
     gCurrentGameTask->transitionTimer += 1;
     timer = gCurrentGameTask->transitionTimer;
-    width = (s16) (((timer * 0x18) / 16) + 0x108);
-    centerY = (s16) (((timer * 0x28) / 16) + 0x50);
-    height = (s16) (((((0, timer)) * 0x58) / 16) + 0x78);
-    scaleY = (s16) (((timer * 0x64) / 16) + 0x8C);
-    aspect = (f32) ((((f64) timer * -0.9523809523809523) / 0x10) + 2.2857142857142856);
+    width = (s16)(((timer * 0x18) / 16) + 0x108);
+    centerY = (s16)(((timer * 0x28) / 16) + 0x50);
+    height = (s16)(((((0, timer)) * 0x58) / 16) + 0x78);
+    scaleY = (s16)(((timer * 0x64) / 16) + 0x8C);
+    aspect = (f32)((((f64)timer * -0.9523809523809523) / 0x10) + 2.2857142857142856);
     timer = 0x140;
     configureViewport(width * 0, 0xA0, centerY, width, height, timer, scaleY, aspect);
     if (gCurrentGameTask->transitionTimer == 0x10) {

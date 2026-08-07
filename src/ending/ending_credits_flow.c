@@ -46,7 +46,18 @@ void initEndingCreditsFlow(void) {
     D_801121E0.distance = 0x5D24000;
     D_801121E0.pitch = 0xFC0;
     resetAllViewports();
-    configureViewportWithFovAndFarClip(0, 0xA0, 0x38, 0x120, 0x50, 0x140, 0xF0, gEndingCreditsViewportAspectRatio[0], 0x14, 0xAF0);
+    configureViewportWithFovAndFarClip(
+        0,
+        0xA0,
+        0x38,
+        0x120,
+        0x50,
+        0x140,
+        0xF0,
+        gEndingCreditsViewportAspectRatio[0],
+        0x14,
+        0xAF0
+    );
     gFramebufferSwapDelay.value = 0;
     gMenuCameraTargetOffset.x = 0;
     if (1) {
@@ -71,7 +82,7 @@ void initEndingCreditsFlow(void) {
             LOAD_ASSET(_60ECB0, 0x27);
             temp_v0 = ASSET_SIZE(_14B450);
             sp34 = temp_v0;
-            gAssetHandles[0xC] = allocRelocatableHeapBlock((unsigned long) temp_v0);
+            gAssetHandles[0xC] = allocRelocatableHeapBlock((unsigned long)temp_v0);
             DMA_ASSET(_14B450, getRelocatableHeapBlockBase(gAssetHandles[0xC]), sp34);
             LOAD_ASSET(_1EF530, 0xD);
             loadMainMenuSceneModelAssets();
@@ -96,12 +107,12 @@ void fadeInEndingCreditsFlow(void) {
             gCurrentGameTask->fade = stepMenuFadeAlpha((s16)gCurrentGameTask->fade, 0x10, 0);
         } else {
             setCurrentGameTaskCallback(updateEndingCreditsFlow, 0);
-            createCallbackTask((CallbackTaskCallback) initEndingCreditsPageTextActor, 0, 0x64);
-            createCallbackTask((CallbackTaskCallback) initEndingCreditsSlash, 0, 0x64);
-            createCallbackTask((CallbackTaskCallback) initEndingCreditsNancy, 0, 0x64);
-            createCallbackTask((CallbackTaskCallback) initEndingCreditsTommy, 0, 0x64);
-            createCallbackTask((CallbackTaskCallback) initEndingCreditsJam, 0, 0x64);
-            createCallbackTask((CallbackTaskCallback) initEndingCreditsLinda, 0, 0x64);
+            createCallbackTask((CallbackTaskCallback)initEndingCreditsPageTextActor, 0, 0x64);
+            createCallbackTask((CallbackTaskCallback)initEndingCreditsSlash, 0, 0x64);
+            createCallbackTask((CallbackTaskCallback)initEndingCreditsNancy, 0, 0x64);
+            createCallbackTask((CallbackTaskCallback)initEndingCreditsTommy, 0, 0x64);
+            createCallbackTask((CallbackTaskCallback)initEndingCreditsJam, 0, 0x64);
+            createCallbackTask((CallbackTaskCallback)initEndingCreditsLinda, 0, 0x64);
             requestMusicSequenceBank(0xA);
         }
     }

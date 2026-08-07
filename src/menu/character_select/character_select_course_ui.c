@@ -73,47 +73,36 @@ enum {
 };
 
 extern int sprintf(char *, const char *, ...);
-extern void drawAssetTableSpriteWithExplicitPaletteWideIndex(s16 x, s16 y, AssetTable *table, s32 entryIndex,
-                                                             u16 paletteIndex);
+extern void
+drawAssetTableSpriteWithExplicitPaletteWideIndex(s16 x, s16 y, AssetTable *table, s32 entryIndex, u16 paletteIndex);
 u16 gCharacterSelectCoursePreviewFrameTileMaps[20] = {
-    0x0161, 0x0162, 0x0163, 0x0164, 0x0166, 0x0167, 0x0168, 0x0169,
-    0x016A, 0x016B, 0x016C, 0x016D, 0x016F, 0x0170, 0x0171, 0x0172,
-    0x0165, 0x016E, 0x0173, 0x0174, 
+    0x0161, 0x0162, 0x0163, 0x0164, 0x0166, 0x0167, 0x0168, 0x0169, 0x016A, 0x016B,
+    0x016C, 0x016D, 0x016F, 0x0170, 0x0171, 0x0172, 0x0165, 0x016E, 0x0173, 0x0174,
 };
 
 u16 gCharacterSelectCoursePreviewFrameCornerTileMaps[210] = {
-    0x0175, 0x00B9, 0x00BA, 0x00BB, 0x00BC, 0x00BE, 0x00BF, 0x00C0,
-    0x00C1, 0x00C2, 0x00C3, 0x00C4, 0x00C5, 0x00C7, 0x00C8, 0x00C9,
-    0x00CA, 0x00BD, 0x00C6, 0x00CB, 0x00CC, 0x00CD, 0x00CE, 0x00CF,
-    0x00D0, 0x00D1, 0x00D3, 0x00D4, 0x00D5, 0x00D6, 0x00D7, 0x00D8,
-    0x00D9, 0x00DA, 0x00DC, 0x00DD, 0x00DE, 0x00DF, 0x00D2, 0x00DB,
-    0x00E0, 0x00E1, 0x00E2, 0x00E3, 0x00E4, 0x00E5, 0x00E6, 0x00E8,
-    0x00E9, 0x00EA, 0x00EB, 0x00EC, 0x00ED, 0x00EE, 0x00EF, 0x00F1,
-    0x00F2, 0x00F3, 0x00F4, 0x00E7, 0x00F0, 0x00F5, 0x00F6, 0x00F7,
-    0x00F8, 0x00F9, 0x00FA, 0x00FB, 0x00FD, 0x00FE, 0x00FF, 0x0100,
-    0x0101, 0x0102, 0x0103, 0x0104, 0x0106, 0x0107, 0x0108, 0x0109,
-    0x00FC, 0x0105, 0x010A, 0x010B, 0x010C, 0x010D, 0x010E, 0x010F,
-    0x0110, 0x0112, 0x0113, 0x0114, 0x0115, 0x0116, 0x0117, 0x0118,
-    0x0119, 0x011B, 0x011C, 0x011D, 0x011E, 0x0111, 0x011A, 0x011F,
-    0x0120, 0x0121, 0x0122, 0x0123, 0x0124, 0x0125, 0x0127, 0x0128,
-    0x0129, 0x012A, 0x012B, 0x012C, 0x012D, 0x012E, 0x0130, 0x0131,
-    0x0132, 0x0133, 0x0126, 0x012F, 0x0134, 0x0135, 0x0136, 0x0137,
-    0x0138, 0x0139, 0x013A, 0x013C, 0x013D, 0x013E, 0x013F, 0x0140,
-    0x0141, 0x0142, 0x0143, 0x0145, 0x0146, 0x0147, 0x0148, 0x013B,
-    0x0144, 0x0149, 0x014A, 0x014B, 0x014C, 0x014D, 0x014E, 0x014F,
-    0x0151, 0x0152, 0x0153, 0x0154, 0x0155, 0x0156, 0x0157, 0x0158,
-    0x015A, 0x015B, 0x015C, 0x015D, 0x0150, 0x0159, 0x015E, 0x015F,
-    0x0160, 0x0176, 0x0177, 0x0178, 0x0179, 0x017B, 0x017C, 0x017D,
-    0x017E, 0x017F, 0x0180, 0x0181, 0x0182, 0x0184, 0x0185, 0x0186,
-    0x0187, 0x017A, 0x0183, 0x0188, 0x0189, 0x018A, 0x00A4, 0x00A5,
-    0x00A6, 0x00A7, 0x00A9, 0x00AA, 0x00AB, 0x00AC, 0x00AD, 0x00AE,
-    0x00AF, 0x00B0, 0x00B2, 0x00B3, 0x00B4, 0x00B5, 0x00A8, 0x00B1,
-    0x00B6, 0x00B7, 
+    0x0175, 0x00B9, 0x00BA, 0x00BB, 0x00BC, 0x00BE, 0x00BF, 0x00C0, 0x00C1, 0x00C2, 0x00C3, 0x00C4, 0x00C5, 0x00C7,
+    0x00C8, 0x00C9, 0x00CA, 0x00BD, 0x00C6, 0x00CB, 0x00CC, 0x00CD, 0x00CE, 0x00CF, 0x00D0, 0x00D1, 0x00D3, 0x00D4,
+    0x00D5, 0x00D6, 0x00D7, 0x00D8, 0x00D9, 0x00DA, 0x00DC, 0x00DD, 0x00DE, 0x00DF, 0x00D2, 0x00DB, 0x00E0, 0x00E1,
+    0x00E2, 0x00E3, 0x00E4, 0x00E5, 0x00E6, 0x00E8, 0x00E9, 0x00EA, 0x00EB, 0x00EC, 0x00ED, 0x00EE, 0x00EF, 0x00F1,
+    0x00F2, 0x00F3, 0x00F4, 0x00E7, 0x00F0, 0x00F5, 0x00F6, 0x00F7, 0x00F8, 0x00F9, 0x00FA, 0x00FB, 0x00FD, 0x00FE,
+    0x00FF, 0x0100, 0x0101, 0x0102, 0x0103, 0x0104, 0x0106, 0x0107, 0x0108, 0x0109, 0x00FC, 0x0105, 0x010A, 0x010B,
+    0x010C, 0x010D, 0x010E, 0x010F, 0x0110, 0x0112, 0x0113, 0x0114, 0x0115, 0x0116, 0x0117, 0x0118, 0x0119, 0x011B,
+    0x011C, 0x011D, 0x011E, 0x0111, 0x011A, 0x011F, 0x0120, 0x0121, 0x0122, 0x0123, 0x0124, 0x0125, 0x0127, 0x0128,
+    0x0129, 0x012A, 0x012B, 0x012C, 0x012D, 0x012E, 0x0130, 0x0131, 0x0132, 0x0133, 0x0126, 0x012F, 0x0134, 0x0135,
+    0x0136, 0x0137, 0x0138, 0x0139, 0x013A, 0x013C, 0x013D, 0x013E, 0x013F, 0x0140, 0x0141, 0x0142, 0x0143, 0x0145,
+    0x0146, 0x0147, 0x0148, 0x013B, 0x0144, 0x0149, 0x014A, 0x014B, 0x014C, 0x014D, 0x014E, 0x014F, 0x0151, 0x0152,
+    0x0153, 0x0154, 0x0155, 0x0156, 0x0157, 0x0158, 0x015A, 0x015B, 0x015C, 0x015D, 0x0150, 0x0159, 0x015E, 0x015F,
+    0x0160, 0x0176, 0x0177, 0x0178, 0x0179, 0x017B, 0x017C, 0x017D, 0x017E, 0x017F, 0x0180, 0x0181, 0x0182, 0x0184,
+    0x0185, 0x0186, 0x0187, 0x017A, 0x0183, 0x0188, 0x0189, 0x018A, 0x00A4, 0x00A5, 0x00A6, 0x00A7, 0x00A9, 0x00AA,
+    0x00AB, 0x00AC, 0x00AD, 0x00AE, 0x00AF, 0x00B0, 0x00B2, 0x00B3, 0x00B4, 0x00B5, 0x00A8, 0x00B1, 0x00B6, 0x00B7,
 };
 
 CharacterSelectCourseExitPreviewData gCharacterSelectCourseExitPreviewData = {
     0xB8,
     0,
+    // textconv requires these _() invocations to retain their original line layout.
+    // clang-format off
     { _("COURSE SELECT") },
 };
 
@@ -213,6 +202,7 @@ MenuGlyphScript gCharacterSelectCourseStartGameText[44] = {
     _("{COLOR:7}START GAME"),
     0, 0, 0, 0, 0, 0, 0,
     _("BOARD SELECT"),
+    // clang-format on
     0,
     _FRAGMENT("BOARD PAIN"),
 };
@@ -254,37 +244,89 @@ void drawCharacterSelectCourseListOptions(CharacterSelectCourseMenuFrameActor *a
         do {
             alpha = 0;
             if (i == 0) {
-                if ((i == gRaceCourseIndex.signedValue) && (gMenuSelectionConfirmTimer > 0) && (gMenuSelectionConfirmTimer < 8) && (gMenuSelectionConfirmTimer & 1)) {
+                if ((i == gRaceCourseIndex.signedValue) && (gMenuSelectionConfirmTimer > 0) &&
+                    (gMenuSelectionConfirmTimer < 8) && (gMenuSelectionConfirmTimer & 1)) {
                     alpha = 0xFF;
                 }
-                drawMenuSprite(actor->x[i], actor->y[i], getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE), 0x1C, 0x20, 0x20, 0, alpha);
+                drawMenuSprite(
+                    actor->x[i],
+                    actor->y[i],
+                    getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE),
+                    0x1C,
+                    0x20,
+                    0x20,
+                    0,
+                    alpha
+                );
             } else if (i == gCharacterSelectCourseExitOptionIndex) {
-                if ((gRaceCourseIndex.signedValue == gCharacterSelectCourseExitOptionIndex) && (gMenuSelectionConfirmTimer > 0) && (gMenuSelectionConfirmTimer < 8) && (gMenuSelectionConfirmTimer & 1)) {
+                if ((gRaceCourseIndex.signedValue == gCharacterSelectCourseExitOptionIndex) &&
+                    (gMenuSelectionConfirmTimer > 0) && (gMenuSelectionConfirmTimer < 8) &&
+                    (gMenuSelectionConfirmTimer & 1)) {
                     alpha = 0xFF;
                 }
                 if ((gPlayerCount - 1) == 0) {
-                    drawMenuSprite(actor->x[i], actor->y[i], getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE), 0x1B, 0x20, 0x20, 0, alpha);
+                    drawMenuSprite(
+                        actor->x[i],
+                        actor->y[i],
+                        getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE),
+                        0x1B,
+                        0x20,
+                        0x20,
+                        0,
+                        alpha
+                    );
                 } else {
-                    drawMenuSprite(actor->x[i], actor->y[i], getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE), 0x1E, 0x20, 0x20, 0, alpha);
+                    drawMenuSprite(
+                        actor->x[i],
+                        actor->y[i],
+                        getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE),
+                        0x1E,
+                        0x20,
+                        0x20,
+                        0,
+                        alpha
+                    );
                 }
             } else {
-                if ((i == gRaceCourseIndex.signedValue) && (gMenuSelectionConfirmTimer > 0) && (gMenuSelectionConfirmTimer < 8) && (gMenuSelectionConfirmTimer & 1)) {
+                if ((i == gRaceCourseIndex.signedValue) && (gMenuSelectionConfirmTimer > 0) &&
+                    (gMenuSelectionConfirmTimer < 8) && (gMenuSelectionConfirmTimer & 1)) {
                     alpha = 0xFF;
                 }
-                drawMenuSprite(actor->x[i], actor->y[i], getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE), i + 0x12,
-                               0x20, 0x20, 0, alpha);
+                drawMenuSprite(
+                    actor->x[i],
+                    actor->y[i],
+                    getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE),
+                    i + 0x12,
+                    0x20,
+                    0x20,
+                    0,
+                    alpha
+                );
             }
 
             if (i != gCharacterSelectCourseExitOptionIndex) {
-                if (((gPlayerCount - 1) == 0) &&
-                    (gGameSaveDataBuffer[0].cupPlacements[characterIds[i]] != 0)) {
-                    drawMenuSprite((s16)(actor->x[i] - 0x10), actor->y[i],
-                                   getRelocatableHeapBlockBase(CHARACTER_SELECT_ICON_TEXTURE_HANDLE), i + 0x1A, 0x20, 0x20,
-                                   0, gGameSaveDataBuffer[0].cupPlacements[characterIds[i]] + 6);
+                if (((gPlayerCount - 1) == 0) && (gGameSaveDataBuffer[0].cupPlacements[characterIds[i]] != 0)) {
+                    drawMenuSprite(
+                        (s16)(actor->x[i] - 0x10),
+                        actor->y[i],
+                        getRelocatableHeapBlockBase(CHARACTER_SELECT_ICON_TEXTURE_HANDLE),
+                        i + 0x1A,
+                        0x20,
+                        0x20,
+                        0,
+                        gGameSaveDataBuffer[0].cupPlacements[characterIds[i]] + 6
+                    );
                 } else {
-                    drawMenuSprite((s16)(actor->x[i] - 0x10), actor->y[i],
-                                   getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE), i + 0x29, 0x20, 0x20, 0,
-                                   0);
+                    drawMenuSprite(
+                        (s16)(actor->x[i] - 0x10),
+                        actor->y[i],
+                        getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE),
+                        i + 0x29,
+                        0x20,
+                        0x20,
+                        0,
+                        0
+                    );
                 }
             }
             i++;
@@ -292,6 +334,8 @@ void drawCharacterSelectCourseListOptions(CharacterSelectCourseMenuFrameActor *a
     }
 }
 
+// IDO code generation for this function is sensitive to source line layout.
+// clang-format off
 void updateCharacterSelectUnlockedCourseList(CharacterSelectCourseMenuFrameActor *arg0) {
     s32 index;
     s32 visibleCourseCount;
@@ -433,7 +477,10 @@ void updateCharacterSelectUnlockedCourseList(CharacterSelectCourseMenuFrameActor
 
     addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawCharacterSelectCourseListOptions, arg0);
 }
+// clang-format on
 
+// IDO code generation for this function is sensitive to source line layout.
+// clang-format off
 void initCharacterSelectUnlockedCourseList(CharacterSelectCourseMenuFrameActor *arg0) {
     u8 spacing;
     s16 baseY;
@@ -469,6 +516,7 @@ void initCharacterSelectUnlockedCourseList(CharacterSelectCourseMenuFrameActor *
     arg0->state = 0;
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateCharacterSelectUnlockedCourseList);
 }
+// clang-format on
 
 void drawCharacterSelectLimitedCourseListOptions(CharacterSelectCourseMenuFrameActor *arg0) {
     register CharacterSelectCourseMenuFrameActor *actor;
@@ -489,21 +537,51 @@ void drawCharacterSelectLimitedCourseListOptions(CharacterSelectCourseMenuFrameA
             alpha = 0;
             if (i == 0) {
                 tile = (gRaceTypeSelection == 2) ? 0x1D : 0x1C;
-                if ((i == gRaceCourseIndex.signedValue) && (gMenuSelectionConfirmTimer > 0) && (gMenuSelectionConfirmTimer < 8) && (gMenuSelectionConfirmTimer & 1)) {
+                if ((i == gRaceCourseIndex.signedValue) && (gMenuSelectionConfirmTimer > 0) &&
+                    (gMenuSelectionConfirmTimer < 8) && (gMenuSelectionConfirmTimer & 1)) {
                     alpha = 0xFF;
                 }
-                drawMenuSprite(actor->x[i], actor->y[i], getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE), tile, 0x20, 0x20, 0, alpha);
+                drawMenuSprite(
+                    actor->x[i],
+                    actor->y[i],
+                    getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE),
+                    tile,
+                    0x20,
+                    0x20,
+                    0,
+                    alpha
+                );
             } else if (i == lastArrowIndex) {
-                if ((i == gRaceCourseIndex.signedValue) && (gMenuSelectionConfirmTimer > 0) && (gMenuSelectionConfirmTimer < 8) && (gMenuSelectionConfirmTimer & 1)) {
+                if ((i == gRaceCourseIndex.signedValue) && (gMenuSelectionConfirmTimer > 0) &&
+                    (gMenuSelectionConfirmTimer < 8) && (gMenuSelectionConfirmTimer & 1)) {
                     alpha = 0xFF;
                 }
-                drawMenuSprite(actor->x[i], actor->y[i], getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE), 0x20, 0x20, 0x20, 0, alpha);
+                drawMenuSprite(
+                    actor->x[i],
+                    actor->y[i],
+                    getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE),
+                    0x20,
+                    0x20,
+                    0x20,
+                    0,
+                    alpha
+                );
             } else {
-                if ((i == gRaceCourseIndex.signedValue) && (gMenuSelectionConfirmTimer > 0) && (gMenuSelectionConfirmTimer < 8) && (gMenuSelectionConfirmTimer & 1)) {
+                if ((i == gRaceCourseIndex.signedValue) && (gMenuSelectionConfirmTimer > 0) &&
+                    (gMenuSelectionConfirmTimer < 8) && (gMenuSelectionConfirmTimer & 1)) {
                     alpha = 0xFF;
                 }
                 tile = i + 0x12;
-                drawMenuSprite(actor->x[i], actor->y[i], getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE), tile, 0x20, 0x20, 0, alpha);
+                drawMenuSprite(
+                    actor->x[i],
+                    actor->y[i],
+                    getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE),
+                    tile,
+                    0x20,
+                    0x20,
+                    0,
+                    alpha
+                );
             }
 
             if (i != lastArrowIndex) {
@@ -527,135 +605,138 @@ void updateCharacterSelectLimitedCourseList(CharacterSelectCourseMenuFrameActor 
     extraCourseOptionCount = (gRaceTypeSelection < 2) ? 2 : 0;
 
     switch (arg0->state) {
-    case COURSE_LIST_SLIDE_IN:
-        movingOptionCount = 0;
-        for (optionIndex = 0; optionIndex < actor->itemCount; optionIndex++) {
-            if (arg0->x[optionIndex] < -0x7C) {
-                arg0->x[optionIndex] += 0x10;
-                movingOptionCount++;
-                if (arg0->x[optionIndex] >= -0x7C) {
-                    arg0->x[optionIndex] = -0x7C;
-                }
-            }
-        }
-
-        arg0->timer++;
-        if (!(arg0->timer & 1)) {
-            visibleOptionCount = extraCourseOptionCount;
-            visibleOptionCount += 2;
-            if (arg0->itemCount < visibleOptionCount) {
-                arg0->itemCount++;
-                if (visibleOptionCount == arg0->itemCount) {
-                    D_8010ADE4 = createCallbackTask((CallbackTaskCallback)initCharacterSelectCoursePreviewFrame, 0, 0x59);
-                    if (gRaceTypeSelection < 2) {
-                        createCallbackTask((CallbackTaskCallback)initCharacterSelectCoursePreviewPanel1, 0, 0x5A);
-                        createCallbackTask((CallbackTaskCallback)initCharacterSelectCoursePreviewPanel2, 0, 0x5B);
+        case COURSE_LIST_SLIDE_IN:
+            movingOptionCount = 0;
+            for (optionIndex = 0; optionIndex < actor->itemCount; optionIndex++) {
+                if (arg0->x[optionIndex] < -0x7C) {
+                    arg0->x[optionIndex] += 0x10;
+                    movingOptionCount++;
+                    if (arg0->x[optionIndex] >= -0x7C) {
+                        arg0->x[optionIndex] = -0x7C;
                     }
-                    createCallbackTask((CallbackTaskCallback)initCharacterSelectCourseExitPreviewPanel, 0, 0x5C);
-                    createCallbackTask((CallbackTaskCallback)initCharacterSelectCourseRecordsFrame, 0, 0x62);
                 }
             }
-        }
 
-        if (movingOptionCount == 0) {
-            arg0->state = COURSE_LIST_IDLE;
-        }
-        break;
-
-    case COURSE_LIST_IDLE:
-        if (gRacePlayers[0].menuState == 7) {
-            arg0->state = COURSE_LIST_EXIT;
-        }
-        if (gRacePlayers[0].menuState == 1) {
-            arg0->state = COURSE_LIST_SLIDE_OTHERS_OUT;
-        }
-        break;
-
-    case COURSE_LIST_SLIDE_OTHERS_OUT:
-        for (optionIndex = 0; optionIndex < actor->itemCount; optionIndex++) {
-            if (optionIndex != gRaceCourseIndex.signedValue) {
-                arg0->x[optionIndex] -= 0x20;
-            }
-        }
-
-        if (gRaceCourseIndex.signedValue != 0) {
-            if (arg0->x[0] < -0x103) {
-                arg0->state = COURSE_LIST_MOVE_SELECTED_UP;
-            }
-        } else if (arg0->x[1] < -0x103) {
-            arg0->state = COURSE_LIST_MOVE_SELECTED_UP;
-        }
-        break;
-
-    case COURSE_LIST_MOVE_SELECTED_UP:
-        arg0->y[gRaceCourseIndex.signedValue] -= arg0->itemSpacing;
-        if (arg0->y[gRaceCourseIndex.signedValue] < -0x57) {
-            arg0->y[gRaceCourseIndex.signedValue] = -0x58;
-            arg0->state = COURSE_LIST_SUBMENU_OPEN;
-            createCallbackTask((CallbackTaskCallback)initCharacterSelectCourseRecordsPopup, 0, 0x62);
-            D_8010ADE0 = createCallbackTask((CallbackTaskCallback)initCharacterSelectCourseExitPopup, 0, 0x63);
-        }
-        break;
-
-    case COURSE_LIST_SUBMENU_OPEN:
-        if (gRacePlayers[0].menuState == 4) {
-            arg0->state = COURSE_LIST_RESTORE_SELECTED_Y;
-        }
-        if (gRacePlayers[0].menuState == 7) {
-            arg0->state = COURSE_LIST_SLIDE_SELECTED_OUT;
-        }
-        break;
-
-    case COURSE_LIST_RESTORE_SELECTED_Y:
-        arg0->y[gRaceCourseIndex.signedValue] += arg0->itemSpacing;
-        if (arg0->y[gRaceCourseIndex.signedValue] >= (arg0->baseY + (gRaceCourseIndex.signedValue * arg0->itemSpacing))) {
-            arg0->y[gRaceCourseIndex.signedValue] = arg0->baseY + (gRaceCourseIndex.signedValue * arg0->itemSpacing);
-            arg0->state = COURSE_LIST_SLIDE_OTHERS_IN;
-        }
-        break;
-
-    case COURSE_LIST_SLIDE_OTHERS_IN:
-        visibleOptionCount = extraCourseOptionCount + 2;
-        optionIndex = 0;
-        if (visibleOptionCount > 0) {
-            do {
-                if (optionIndex != gRaceCourseIndex.signedValue) {
-                    arg0->x[optionIndex] += 0x20;
+            arg0->timer++;
+            if (!(arg0->timer & 1)) {
+                visibleOptionCount = extraCourseOptionCount;
+                visibleOptionCount += 2;
+                if (arg0->itemCount < visibleOptionCount) {
+                    arg0->itemCount++;
+                    if (visibleOptionCount == arg0->itemCount) {
+                        D_8010ADE4 =
+                            createCallbackTask((CallbackTaskCallback)initCharacterSelectCoursePreviewFrame, 0, 0x59);
+                        if (gRaceTypeSelection < 2) {
+                            createCallbackTask((CallbackTaskCallback)initCharacterSelectCoursePreviewPanel1, 0, 0x5A);
+                            createCallbackTask((CallbackTaskCallback)initCharacterSelectCoursePreviewPanel2, 0, 0x5B);
+                        }
+                        createCallbackTask((CallbackTaskCallback)initCharacterSelectCourseExitPreviewPanel, 0, 0x5C);
+                        createCallbackTask((CallbackTaskCallback)initCharacterSelectCourseRecordsFrame, 0, 0x62);
+                    }
                 }
-                optionIndex++;
-            } while (optionIndex < (extraCourseOptionCount + 2));
-        }
-        if (gRaceCourseIndex.signedValue != 0) {
-            if (arg0->x[0] >= -0x7C) {
+            }
+
+            if (movingOptionCount == 0) {
                 arg0->state = COURSE_LIST_IDLE;
             }
-        } else if (arg0->x[1] >= -0x7C) {
-            arg0->state = COURSE_LIST_IDLE;
-        }
-        if (arg0->state == COURSE_LIST_IDLE) {
-            gRacePlayers[0].menuState = 5;
-        }
-        break;
+            break;
 
-    case COURSE_LIST_EXIT:
-        for (optionIndex = 0; optionIndex < arg0->itemCount; optionIndex++) {
-            arg0->x[optionIndex] -= 0x20;
-        }
-        if (arg0->x[0] < -0x103) {
-            arg0->state = COURSE_LIST_FINISH_EXIT;
-        }
-        break;
+        case COURSE_LIST_IDLE:
+            if (gRacePlayers[0].menuState == 7) {
+                arg0->state = COURSE_LIST_EXIT;
+            }
+            if (gRacePlayers[0].menuState == 1) {
+                arg0->state = COURSE_LIST_SLIDE_OTHERS_OUT;
+            }
+            break;
 
-    case COURSE_LIST_FINISH_EXIT:
-        arg0->state = COURSE_LIST_REMOVE;
-        break;
+        case COURSE_LIST_SLIDE_OTHERS_OUT:
+            for (optionIndex = 0; optionIndex < actor->itemCount; optionIndex++) {
+                if (optionIndex != gRaceCourseIndex.signedValue) {
+                    arg0->x[optionIndex] -= 0x20;
+                }
+            }
 
-    case COURSE_LIST_SLIDE_SELECTED_OUT:
-        arg0->x[gRaceCourseIndex.signedValue] -= 0x20;
-        if (arg0->x[gRaceCourseIndex.signedValue] < -0x103) {
-            arg0->state = COURSE_LIST_FINISH_EXIT;
-        }
-        break;
+            if (gRaceCourseIndex.signedValue != 0) {
+                if (arg0->x[0] < -0x103) {
+                    arg0->state = COURSE_LIST_MOVE_SELECTED_UP;
+                }
+            } else if (arg0->x[1] < -0x103) {
+                arg0->state = COURSE_LIST_MOVE_SELECTED_UP;
+            }
+            break;
+
+        case COURSE_LIST_MOVE_SELECTED_UP:
+            arg0->y[gRaceCourseIndex.signedValue] -= arg0->itemSpacing;
+            if (arg0->y[gRaceCourseIndex.signedValue] < -0x57) {
+                arg0->y[gRaceCourseIndex.signedValue] = -0x58;
+                arg0->state = COURSE_LIST_SUBMENU_OPEN;
+                createCallbackTask((CallbackTaskCallback)initCharacterSelectCourseRecordsPopup, 0, 0x62);
+                D_8010ADE0 = createCallbackTask((CallbackTaskCallback)initCharacterSelectCourseExitPopup, 0, 0x63);
+            }
+            break;
+
+        case COURSE_LIST_SUBMENU_OPEN:
+            if (gRacePlayers[0].menuState == 4) {
+                arg0->state = COURSE_LIST_RESTORE_SELECTED_Y;
+            }
+            if (gRacePlayers[0].menuState == 7) {
+                arg0->state = COURSE_LIST_SLIDE_SELECTED_OUT;
+            }
+            break;
+
+        case COURSE_LIST_RESTORE_SELECTED_Y:
+            arg0->y[gRaceCourseIndex.signedValue] += arg0->itemSpacing;
+            if (arg0->y[gRaceCourseIndex.signedValue] >=
+                (arg0->baseY + (gRaceCourseIndex.signedValue * arg0->itemSpacing))) {
+                arg0->y[gRaceCourseIndex.signedValue] =
+                    arg0->baseY + (gRaceCourseIndex.signedValue * arg0->itemSpacing);
+                arg0->state = COURSE_LIST_SLIDE_OTHERS_IN;
+            }
+            break;
+
+        case COURSE_LIST_SLIDE_OTHERS_IN:
+            visibleOptionCount = extraCourseOptionCount + 2;
+            optionIndex = 0;
+            if (visibleOptionCount > 0) {
+                do {
+                    if (optionIndex != gRaceCourseIndex.signedValue) {
+                        arg0->x[optionIndex] += 0x20;
+                    }
+                    optionIndex++;
+                } while (optionIndex < (extraCourseOptionCount + 2));
+            }
+            if (gRaceCourseIndex.signedValue != 0) {
+                if (arg0->x[0] >= -0x7C) {
+                    arg0->state = COURSE_LIST_IDLE;
+                }
+            } else if (arg0->x[1] >= -0x7C) {
+                arg0->state = COURSE_LIST_IDLE;
+            }
+            if (arg0->state == COURSE_LIST_IDLE) {
+                gRacePlayers[0].menuState = 5;
+            }
+            break;
+
+        case COURSE_LIST_EXIT:
+            for (optionIndex = 0; optionIndex < arg0->itemCount; optionIndex++) {
+                arg0->x[optionIndex] -= 0x20;
+            }
+            if (arg0->x[0] < -0x103) {
+                arg0->state = COURSE_LIST_FINISH_EXIT;
+            }
+            break;
+
+        case COURSE_LIST_FINISH_EXIT:
+            arg0->state = COURSE_LIST_REMOVE;
+            break;
+
+        case COURSE_LIST_SLIDE_SELECTED_OUT:
+            arg0->x[gRaceCourseIndex.signedValue] -= 0x20;
+            if (arg0->x[gRaceCourseIndex.signedValue] < -0x103) {
+                arg0->state = COURSE_LIST_FINISH_EXIT;
+            }
+            break;
     }
 
     if (arg0->state == COURSE_LIST_REMOVE) {
@@ -689,49 +770,124 @@ void drawCharacterSelectCoursePreviewFrame(CharacterSelectCourseWidgetActor *arg
     u16 frameIndex;
 
     if ((gRaceSplitscreenMode == 1) && (gRaceTypeSelection == 2)) {
-        if (i.index) {
-        }
+        if (i.index) {}
         frameIndex = 9;
     } else {
         frameIndex = arg0->sprite.unsignedIndex;
     }
 
     for (i.index = 0; i.index < 16; i.index++) {
-        drawMenuSpriteTile((s16)(arg0->x + ((i.index & 3) << 5)), (s16)(arg0->y + ((i.index / 4) << 5)),
-                           getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE),
-                           gCharacterSelectCoursePreviewFrameTileMaps[frameIndex].center[i.index], 0, 0x100);
+        drawMenuSpriteTile(
+            (s16)(arg0->x + ((i.index & 3) << 5)),
+            (s16)(arg0->y + ((i.index / 4) << 5)),
+            getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE),
+            gCharacterSelectCoursePreviewFrameTileMaps[frameIndex].center[i.index],
+            0,
+            0x100
+        );
     }
 
     for (i.index = 0; i.index < 2; i.index++) {
-        drawMenuSpriteTile((s16)(arg0->x + 0x80), (s16)(arg0->y + (i.index * 0x40)),
-                           getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE),
-                           gCharacterSelectCoursePreviewFrameTileMaps[frameIndex].right[i.index], 0, 0x100);
-        drawMenuSpriteTile((s16)(arg0->x + (i.index * 0x40)), (s16)(arg0->y + 0x80),
-                           getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE),
-                           gCharacterSelectCoursePreviewFrameTileMaps[frameIndex].bottom[i.index], 0, 0x100);
+        drawMenuSpriteTile(
+            (s16)(arg0->x + 0x80),
+            (s16)(arg0->y + (i.index * 0x40)),
+            getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE),
+            gCharacterSelectCoursePreviewFrameTileMaps[frameIndex].right[i.index],
+            0,
+            0x100
+        );
+        drawMenuSpriteTile(
+            (s16)(arg0->x + (i.index * 0x40)),
+            (s16)(arg0->y + 0x80),
+            getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE),
+            gCharacterSelectCoursePreviewFrameTileMaps[frameIndex].bottom[i.index],
+            0,
+            0x100
+        );
     }
 
-    drawMenuSpriteTile((s16)(arg0->x + 0x80), (s16)(arg0->y + 0x80),
-                       getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE),
-                       gCharacterSelectCoursePreviewFrameCornerTileMaps[frameIndex].corner, 0, 0x100);
-    drawMenuSprite((s16)(arg0->x - 4), (s16)(arg0->y - 4), getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE),
-                   0x33, 0x20, 0x20, 0, 0);
-    drawMenuSprite((s16)(arg0->x - 4), (s16)(arg0->y + 0x8C), getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE),
-                   0x38, 0x20, 0x20, 0, 0);
+    drawMenuSpriteTile(
+        (s16)(arg0->x + 0x80),
+        (s16)(arg0->y + 0x80),
+        getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE),
+        gCharacterSelectCoursePreviewFrameCornerTileMaps[frameIndex].corner,
+        0,
+        0x100
+    );
+    drawMenuSprite(
+        (s16)(arg0->x - 4),
+        (s16)(arg0->y - 4),
+        getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE),
+        0x33,
+        0x20,
+        0x20,
+        0,
+        0
+    );
+    drawMenuSprite(
+        (s16)(arg0->x - 4),
+        (s16)(arg0->y + 0x8C),
+        getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE),
+        0x38,
+        0x20,
+        0x20,
+        0,
+        0
+    );
     i.textureBase = getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE);
     drawMenuSprite((s16)(arg0->x + 0x8C), (s16)(arg0->y - 4), i.textureBase, 0x35, 0x20, 0x20, 0, 0);
-    drawMenuSprite((s16)(arg0->x + 0x8C), (s16)(arg0->y + 0x8C), getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE),
-                   0x3A, 0x20, 0x20, 0, 0);
+    drawMenuSprite(
+        (s16)(arg0->x + 0x8C),
+        (s16)(arg0->y + 0x8C),
+        getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE),
+        0x3A,
+        0x20,
+        0x20,
+        0,
+        0
+    );
 
     for (borderOffset = 0; borderOffset != 0x80; borderOffset += 0x10) {
-        drawMenuSprite((s16)((arg0->x + borderOffset) + 0xC), (s16)(arg0->y - 4),
-                       getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE), 0x34, 0x20, 0x20, 0, 0);
-        drawMenuSprite((s16)((arg0->x + borderOffset) + 0xC), (s16)(arg0->y + 0x8C),
-                       getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE), 0x39, 0x20, 0x20, 0, 0);
-        drawMenuSprite((s16)(arg0->x - 4), (s16)((arg0->y + borderOffset) + 0xC),
-                       getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE), 0x36, 0x20, 0x20, 0, 0);
-        drawMenuSprite((s16)(arg0->x + 0x8C), (s16)((arg0->y + borderOffset) + 0xC),
-                       getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE), 0x37, 0x20, 0x20, 0, 0);
+        drawMenuSprite(
+            (s16)((arg0->x + borderOffset) + 0xC),
+            (s16)(arg0->y - 4),
+            getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE),
+            0x34,
+            0x20,
+            0x20,
+            0,
+            0
+        );
+        drawMenuSprite(
+            (s16)((arg0->x + borderOffset) + 0xC),
+            (s16)(arg0->y + 0x8C),
+            getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE),
+            0x39,
+            0x20,
+            0x20,
+            0,
+            0
+        );
+        drawMenuSprite(
+            (s16)(arg0->x - 4),
+            (s16)((arg0->y + borderOffset) + 0xC),
+            getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE),
+            0x36,
+            0x20,
+            0x20,
+            0,
+            0
+        );
+        drawMenuSprite(
+            (s16)(arg0->x + 0x8C),
+            (s16)((arg0->y + borderOffset) + 0xC),
+            getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE),
+            0x37,
+            0x20,
+            0x20,
+            0,
+            0
+        );
     }
 }
 
@@ -765,69 +921,70 @@ void updateCharacterSelectCoursePreviewFrame(CharacterSelectCourseWidgetActor *a
     }
 
     switch (switchState) {
-    case 0:
-        arg0->x -= 0x26;
-        if (arg0->x < -7) {
-            arg0->x = -8;
-            arg0->transition.bytes.state = 3;
-            gActiveMenuTask = createCallbackTask((CallbackTaskCallback)initCharacterSelectCourseListCursor, 0, 0x64);
-            createCallbackTask((CallbackTaskCallback)initCharacterSelectCourseTitleCursor, 0, 0x62);
-            createCallbackTask((CallbackTaskCallback)initCharacterSelectCourseStatsBadge, 0, 0x62);
-        }
-        state = arg0->transition.bytes.state;
-        break;
-    case 1:
-        arg0->y -= 0x24;
-        if (arg0->y < -0x13F) {
-            arg0->y = -0x140;
-            arg0->transition.bytes.state = 3;
-        }
-        state = arg0->transition.bytes.state;
-        break;
-    case 2:
-        arg0->y += 0x24;
-        if (arg0->y >= -0x48) {
-            arg0->y = -0x48;
-            arg0->transition.bytes.state = 3;
-        }
-        state = arg0->transition.bytes.state;
-        break;
-    case 3:
-        gMenuFlowState += 1;
-        menuState = gRacePlayers[0].menuState;
-        new_var = &gRacePlayers[0].menuState;
-        if (menuState == 1) {
-            arg0->transition.bytes.state = 4;
-            menuState = *new_var;
-        }
-        if (menuState == 7) {
-            arg0->transition.bytes.state = 5;
-        }
-        state = arg0->transition.bytes.state;
-        break;
-    case 4:
-        if (gRacePlayers[0].menuState == 5) {
-            arg0->transition.bytes.state = 3;
-            gRacePlayers[0].menuState = 6;
-        }
-        if (gRacePlayers[0].menuState == 7) {
-            state = 6 & 0xFF;
-            arg0->transition.bytes.state = 5;
-        }
-        state = arg0->transition.bytes.state;
-        break;
-    case 5:
-        arg0->x += 0x20;
-        if (arg0->x >= 0x94) {
-            arg0->transition.bytes.state = 6;
-        }
-        state = arg0->transition.bytes.state;
-        break;
-    case 6:
-        arg0->transition.bytes.state = 7;
-        gRacePlayers[0].menuState = 8;
-        state = arg0->transition.bytes.state;
-        break;
+        case 0:
+            arg0->x -= 0x26;
+            if (arg0->x < -7) {
+                arg0->x = -8;
+                arg0->transition.bytes.state = 3;
+                gActiveMenuTask =
+                    createCallbackTask((CallbackTaskCallback)initCharacterSelectCourseListCursor, 0, 0x64);
+                createCallbackTask((CallbackTaskCallback)initCharacterSelectCourseTitleCursor, 0, 0x62);
+                createCallbackTask((CallbackTaskCallback)initCharacterSelectCourseStatsBadge, 0, 0x62);
+            }
+            state = arg0->transition.bytes.state;
+            break;
+        case 1:
+            arg0->y -= 0x24;
+            if (arg0->y < -0x13F) {
+                arg0->y = -0x140;
+                arg0->transition.bytes.state = 3;
+            }
+            state = arg0->transition.bytes.state;
+            break;
+        case 2:
+            arg0->y += 0x24;
+            if (arg0->y >= -0x48) {
+                arg0->y = -0x48;
+                arg0->transition.bytes.state = 3;
+            }
+            state = arg0->transition.bytes.state;
+            break;
+        case 3:
+            gMenuFlowState += 1;
+            menuState = gRacePlayers[0].menuState;
+            new_var = &gRacePlayers[0].menuState;
+            if (menuState == 1) {
+                arg0->transition.bytes.state = 4;
+                menuState = *new_var;
+            }
+            if (menuState == 7) {
+                arg0->transition.bytes.state = 5;
+            }
+            state = arg0->transition.bytes.state;
+            break;
+        case 4:
+            if (gRacePlayers[0].menuState == 5) {
+                arg0->transition.bytes.state = 3;
+                gRacePlayers[0].menuState = 6;
+            }
+            if (gRacePlayers[0].menuState == 7) {
+                state = 6 & 0xFF;
+                arg0->transition.bytes.state = 5;
+            }
+            state = arg0->transition.bytes.state;
+            break;
+        case 5:
+            arg0->x += 0x20;
+            if (arg0->x >= 0x94) {
+                arg0->transition.bytes.state = 6;
+            }
+            state = arg0->transition.bytes.state;
+            break;
+        case 6:
+            arg0->transition.bytes.state = 7;
+            gRacePlayers[0].menuState = 8;
+            state = arg0->transition.bytes.state;
+            break;
     }
 
     D_8010AE8A = state;
@@ -856,9 +1013,16 @@ void drawCharacterSelectCoursePreviewPanel1(CharacterSelectCourseWidgetActor *ar
     tileOffset = 0;
     shouldDraw = 1;
     for (i = 0; i < 16; i++, tileOffset++) {
-        drawMenuSpriteTileClipped((s16)(arg0->x + ((i & 3) << 5)), (s16)(arg0->y + ((i / 4) << 5)),
-                      getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE),
-                      gCharacterSelectCoursePreviewFrameTileMaps[(u16)arg0->sprite.index].center[tileOffset], 0, 0x100, 0xA0, 0x49);
+        drawMenuSpriteTileClipped(
+            (s16)(arg0->x + ((i & 3) << 5)),
+            (s16)(arg0->y + ((i / 4) << 5)),
+            getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE),
+            gCharacterSelectCoursePreviewFrameTileMaps[(u16)arg0->sprite.index].center[tileOffset],
+            0,
+            0x100,
+            0xA0,
+            0x49
+        );
     }
 
     if (shouldDraw) {
@@ -867,12 +1031,26 @@ void drawCharacterSelectCoursePreviewPanel1(CharacterSelectCourseWidgetActor *ar
     }
     offset = 0;
     do {
-        drawMenuSpriteTileClipped((s16)(arg0->x + 0x80), (s16)(arg0->y + offset),
-                      getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE),
-                      gCharacterSelectCoursePreviewFrameTileMaps[(u16)arg0->sprite.index].right[tileOffset], 0, 0x100, 0xA0, 0x49);
-        drawMenuSpriteTileClipped((s16)(arg0->x + offset), (s16)(arg0->y + 0x80),
-                      getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE),
-                      gCharacterSelectCoursePreviewFrameTileMaps[(u16)arg0->sprite.index].bottom[tileOffset], 0, 0x100, 0xA0, 0x49);
+        drawMenuSpriteTileClipped(
+            (s16)(arg0->x + 0x80),
+            (s16)(arg0->y + offset),
+            getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE),
+            gCharacterSelectCoursePreviewFrameTileMaps[(u16)arg0->sprite.index].right[tileOffset],
+            0,
+            0x100,
+            0xA0,
+            0x49
+        );
+        drawMenuSpriteTileClipped(
+            (s16)(arg0->x + offset),
+            (s16)(arg0->y + 0x80),
+            getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE),
+            gCharacterSelectCoursePreviewFrameTileMaps[(u16)arg0->sprite.index].bottom[tileOffset],
+            0,
+            0x100,
+            0xA0,
+            0x49
+        );
         i = 0x80;
         offset += 0x40;
         tileOffset++;
@@ -880,17 +1058,25 @@ void drawCharacterSelectCoursePreviewPanel1(CharacterSelectCourseWidgetActor *ar
     i++;
     i--;
 
-    drawMenuSpriteTileClipped((s16)(arg0->x + 0x80), (s16)(arg0->y + 0x80), getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE),
-                  gCharacterSelectCoursePreviewFrameTileMaps[(u16)arg0->sprite.index].corner, 0, 0x100, 0xA0, 0x49);
+    drawMenuSpriteTileClipped(
+        (s16)(arg0->x + 0x80),
+        (s16)(arg0->y + 0x80),
+        getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE),
+        gCharacterSelectCoursePreviewFrameTileMaps[(u16)arg0->sprite.index].corner,
+        0,
+        0x100,
+        0xA0,
+        0x49
+    );
 }
 
 void updateCharacterSelectCoursePreviewPanel1(CharacterSelectCourseWidgetActor *arg0) {
     int state;
     u8 *stateField = &arg0->transition.bytes.state;
 
-    if ((gRaceCourseIndex.signedValue >= (s32)(u16) arg0->sprite.index) && (arg0->y != -0x48)) {
+    if ((gRaceCourseIndex.signedValue >= (s32)(u16)arg0->sprite.index) && (arg0->y != -0x48)) {
         state = arg0->transition.bytes.state = 2;
-    } else if ((gRaceCourseIndex.signedValue < (s32)(u16) arg0->sprite.index) && (arg0->y != -0x140)) {
+    } else if ((gRaceCourseIndex.signedValue < (s32)(u16)arg0->sprite.index) && (arg0->y != -0x140)) {
         state = arg0->transition.bytes.state = 1;
     } else {
         state = *stateField;
@@ -900,50 +1086,50 @@ void updateCharacterSelectCoursePreviewPanel1(CharacterSelectCourseWidgetActor *
     }
 
     switch (state) {
-    case 0:
-        break;
-    case 1:
-        arg0->y -= 0x24;
-        if (arg0->y < -0x13F) {
-            arg0->y = -0x140;
-            arg0->transition.bytes.state = 3;
-        }
-        state = arg0->transition.bytes.state;
-        break;
-    case 2:
-        arg0->y += 0x24;
-        if (arg0->y >= -0x48) {
-            arg0->y = -0x48;
-            arg0->transition.bytes.state = 3;
-        }
-        state = arg0->transition.bytes.state;
-        break;
-    case 3:
-        gMenuFlowState += 1;
-        if (gRacePlayers[0].menuState == 1) {
-            arg0->transition.bytes.state = 4;
-        }
-        if (gRacePlayers[0].menuState == 7) {
-            arg0->transition.bytes.state = 5;
-        }
-        state = arg0->transition.bytes.state;
-        break;
-    case 4:
-        if (gRacePlayers[0].menuState == 5) {
-            arg0->transition.bytes.state = 3;
-        }
-        if (gRacePlayers[0].menuState == 7) {
-            arg0->transition.bytes.state = 5;
-        }
-        state = arg0->transition.bytes.state;
-        break;
-    case 5:
-        arg0->x += 0x20;
-        state = *stateField;
-        break;
-    case 6:
-        state = arg0->transition.bytes.state = 7;
-        break;
+        case 0:
+            break;
+        case 1:
+            arg0->y -= 0x24;
+            if (arg0->y < -0x13F) {
+                arg0->y = -0x140;
+                arg0->transition.bytes.state = 3;
+            }
+            state = arg0->transition.bytes.state;
+            break;
+        case 2:
+            arg0->y += 0x24;
+            if (arg0->y >= -0x48) {
+                arg0->y = -0x48;
+                arg0->transition.bytes.state = 3;
+            }
+            state = arg0->transition.bytes.state;
+            break;
+        case 3:
+            gMenuFlowState += 1;
+            if (gRacePlayers[0].menuState == 1) {
+                arg0->transition.bytes.state = 4;
+            }
+            if (gRacePlayers[0].menuState == 7) {
+                arg0->transition.bytes.state = 5;
+            }
+            state = arg0->transition.bytes.state;
+            break;
+        case 4:
+            if (gRacePlayers[0].menuState == 5) {
+                arg0->transition.bytes.state = 3;
+            }
+            if (gRacePlayers[0].menuState == 7) {
+                arg0->transition.bytes.state = 5;
+            }
+            state = arg0->transition.bytes.state;
+            break;
+        case 5:
+            arg0->x += 0x20;
+            state = *stateField;
+            break;
+        case 6:
+            state = arg0->transition.bytes.state = 7;
+            break;
     }
 
     if ((state == 5) && (arg0->x >= 0x94)) {
@@ -971,8 +1157,16 @@ void drawCharacterSelectCoursePreviewPanel2(CharacterSelectCourseWidgetActor *ar
     tileOffset = 0;
     shouldDraw = 1;
     for (i = 0; i < 16; i++, tileOffset++) {
-        drawMenuSpriteTileClipped(arg0->x + ((i & 3) << 5), arg0->y + ((i / 4) << 5), getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE),
-                      gCharacterSelectCoursePreviewFrameTileMaps[(u16)arg0->sprite.index].center[tileOffset], 0, 0x100, 0xA0, 0x49);
+        drawMenuSpriteTileClipped(
+            arg0->x + ((i & 3) << 5),
+            arg0->y + ((i / 4) << 5),
+            getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE),
+            gCharacterSelectCoursePreviewFrameTileMaps[(u16)arg0->sprite.index].center[tileOffset],
+            0,
+            0x100,
+            0xA0,
+            0x49
+        );
     }
 
     if (shouldDraw) {
@@ -981,10 +1175,26 @@ void drawCharacterSelectCoursePreviewPanel2(CharacterSelectCourseWidgetActor *ar
     }
     offset = 0;
     do {
-        drawMenuSpriteTileClipped(arg0->x + 0x80, arg0->y + offset, getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE),
-                      gCharacterSelectCoursePreviewFrameTileMaps[(u16)arg0->sprite.index].right[tileOffset], 0, 0x100, 0xA0, 0x49);
-        drawMenuSpriteTileClipped(arg0->x + offset, arg0->y + 0x80, getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE),
-                      gCharacterSelectCoursePreviewFrameTileMaps[(u16)arg0->sprite.index].bottom[tileOffset], 0, 0x100, 0xA0, 0x49);
+        drawMenuSpriteTileClipped(
+            arg0->x + 0x80,
+            arg0->y + offset,
+            getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE),
+            gCharacterSelectCoursePreviewFrameTileMaps[(u16)arg0->sprite.index].right[tileOffset],
+            0,
+            0x100,
+            0xA0,
+            0x49
+        );
+        drawMenuSpriteTileClipped(
+            arg0->x + offset,
+            arg0->y + 0x80,
+            getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE),
+            gCharacterSelectCoursePreviewFrameTileMaps[(u16)arg0->sprite.index].bottom[tileOffset],
+            0,
+            0x100,
+            0xA0,
+            0x49
+        );
         i = 0x80;
         offset += 0x40;
         tileOffset++;
@@ -992,17 +1202,25 @@ void drawCharacterSelectCoursePreviewPanel2(CharacterSelectCourseWidgetActor *ar
     i++;
     i--;
 
-    drawMenuSpriteTileClipped(arg0->x + 0x80, arg0->y + 0x80, getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE),
-                  gCharacterSelectCoursePreviewFrameTileMaps[(u16)arg0->sprite.index].corner, 0, 0x100, 0xA0, 0x49);
+    drawMenuSpriteTileClipped(
+        arg0->x + 0x80,
+        arg0->y + 0x80,
+        getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE),
+        gCharacterSelectCoursePreviewFrameTileMaps[(u16)arg0->sprite.index].corner,
+        0,
+        0x100,
+        0xA0,
+        0x49
+    );
 }
 
 void updateCharacterSelectCoursePreviewPanel2(CharacterSelectCourseWidgetActor *arg0) {
     int state;
     u8 *stateField = &arg0->transition.bytes.state;
 
-    if ((gRaceCourseIndex.signedValue >= (s32)(u16) arg0->sprite.index) && (arg0->y != -0x48)) {
+    if ((gRaceCourseIndex.signedValue >= (s32)(u16)arg0->sprite.index) && (arg0->y != -0x48)) {
         state = arg0->transition.bytes.state = 2;
-    } else if ((gRaceCourseIndex.signedValue < (s32)(u16) arg0->sprite.index) && (arg0->y != -0x140)) {
+    } else if ((gRaceCourseIndex.signedValue < (s32)(u16)arg0->sprite.index) && (arg0->y != -0x140)) {
         state = arg0->transition.bytes.state = 1;
     } else {
         state = *stateField;
@@ -1012,47 +1230,47 @@ void updateCharacterSelectCoursePreviewPanel2(CharacterSelectCourseWidgetActor *
     }
 
     switch (state) {
-    case 0:
-        break;
-    case 1:
-        arg0->y -= 0x24;
-        if (arg0->y < -0x13F) {
-            arg0->y = -0x140;
-            arg0->transition.bytes.state = 3;
-        }
-        state = arg0->transition.bytes.state;
-        break;
-    case 2:
-        arg0->y += 0x24;
-        if (arg0->y >= -0x48) {
-            arg0->y = -0x48;
-            arg0->transition.bytes.state = 3;
-        }
-        state = arg0->transition.bytes.state;
-        break;
-    case 3:
-        gMenuFlowState += 1;
-        if (gRacePlayers[0].menuState == 1) {
-            arg0->transition.bytes.state = 4;
-        }
-        if (gRacePlayers[0].menuState == 7) {
-            arg0->transition.bytes.state = 5;
-        }
-        state = arg0->transition.bytes.state;
-        break;
-    case 4:
-        if (gRacePlayers[0].menuState == 5) {
-            arg0->transition.bytes.state = 3;
-        }
-        if (gRacePlayers[0].menuState == 7) {
-            arg0->transition.bytes.state = 5;
-        }
-        state = arg0->transition.bytes.state;
-        break;
-    case 5:
-        arg0->x += 0x20;
-        state = *stateField;
-        break;
+        case 0:
+            break;
+        case 1:
+            arg0->y -= 0x24;
+            if (arg0->y < -0x13F) {
+                arg0->y = -0x140;
+                arg0->transition.bytes.state = 3;
+            }
+            state = arg0->transition.bytes.state;
+            break;
+        case 2:
+            arg0->y += 0x24;
+            if (arg0->y >= -0x48) {
+                arg0->y = -0x48;
+                arg0->transition.bytes.state = 3;
+            }
+            state = arg0->transition.bytes.state;
+            break;
+        case 3:
+            gMenuFlowState += 1;
+            if (gRacePlayers[0].menuState == 1) {
+                arg0->transition.bytes.state = 4;
+            }
+            if (gRacePlayers[0].menuState == 7) {
+                arg0->transition.bytes.state = 5;
+            }
+            state = arg0->transition.bytes.state;
+            break;
+        case 4:
+            if (gRacePlayers[0].menuState == 5) {
+                arg0->transition.bytes.state = 3;
+            }
+            if (gRacePlayers[0].menuState == 7) {
+                arg0->transition.bytes.state = 5;
+            }
+            state = arg0->transition.bytes.state;
+            break;
+        case 5:
+            arg0->x += 0x20;
+            state = *stateField;
+            break;
     }
 
     if ((state == 5) && (arg0->x >= 0x94)) {
@@ -1077,30 +1295,62 @@ void drawCharacterSelectCoursePreviewPanel3(CharacterSelectCourseWidgetActor *ar
 
     tileOffset = 0;
     for (i = 0; i < 16; i++, tileOffset++) {
-        drawMenuSpriteTileClipped(arg0->x + ((i & 3) << 5), arg0->y + ((i / 4) << 5), getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE),
-                      gCharacterSelectCoursePreviewFrameTileMaps[(u16)arg0->sprite.index].center[tileOffset], 0, 0x100, 0xA0, 0x49);
+        drawMenuSpriteTileClipped(
+            arg0->x + ((i & 3) << 5),
+            arg0->y + ((i / 4) << 5),
+            getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE),
+            gCharacterSelectCoursePreviewFrameTileMaps[(u16)arg0->sprite.index].center[tileOffset],
+            0,
+            0x100,
+            0xA0,
+            0x49
+        );
     }
 
     tileOffset = 0;
     for (i = 0; i < 2; i++) {
-        drawMenuSpriteTileClipped(arg0->x + 0x80, arg0->y + i * 0x40, getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE),
-                      gCharacterSelectCoursePreviewFrameTileMaps[(u16)arg0->sprite.index].right[tileOffset], 0, 0x100, 0xA0, 0x49);
-        drawMenuSpriteTileClipped(arg0->x + i * 0x40, arg0->y + 0x80, getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE),
-                      gCharacterSelectCoursePreviewFrameTileMaps[(u16)arg0->sprite.index].bottom[tileOffset], 0, 0x100, 0xA0, 0x49);
+        drawMenuSpriteTileClipped(
+            arg0->x + 0x80,
+            arg0->y + i * 0x40,
+            getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE),
+            gCharacterSelectCoursePreviewFrameTileMaps[(u16)arg0->sprite.index].right[tileOffset],
+            0,
+            0x100,
+            0xA0,
+            0x49
+        );
+        drawMenuSpriteTileClipped(
+            arg0->x + i * 0x40,
+            arg0->y + 0x80,
+            getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE),
+            gCharacterSelectCoursePreviewFrameTileMaps[(u16)arg0->sprite.index].bottom[tileOffset],
+            0,
+            0x100,
+            0xA0,
+            0x49
+        );
         tileOffset++;
     }
 
-    drawMenuSpriteTileClipped(arg0->x + 0x80, arg0->y + 0x80, getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE),
-                  gCharacterSelectCoursePreviewFrameTileMaps[(u16)arg0->sprite.index].corner, 0, 0x100, 0xA0, 0x49);
+    drawMenuSpriteTileClipped(
+        arg0->x + 0x80,
+        arg0->y + 0x80,
+        getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE),
+        gCharacterSelectCoursePreviewFrameTileMaps[(u16)arg0->sprite.index].corner,
+        0,
+        0x100,
+        0xA0,
+        0x49
+    );
 }
 
 void updateCharacterSelectCoursePreviewPanel3(CharacterSelectCourseWidgetActor *arg0) {
     int state;
     u8 *stateField = &arg0->transition.bytes.state;
 
-    if ((gRaceCourseIndex.signedValue >= (s32)(u16) arg0->sprite.index) && (arg0->y != -0x48)) {
+    if ((gRaceCourseIndex.signedValue >= (s32)(u16)arg0->sprite.index) && (arg0->y != -0x48)) {
         state = arg0->transition.bytes.state = 2;
-    } else if ((gRaceCourseIndex.signedValue < (s32)(u16) arg0->sprite.index) && (arg0->y != -0x140)) {
+    } else if ((gRaceCourseIndex.signedValue < (s32)(u16)arg0->sprite.index) && (arg0->y != -0x140)) {
         state = arg0->transition.bytes.state = 1;
     } else {
         state = *stateField;
@@ -1110,47 +1360,47 @@ void updateCharacterSelectCoursePreviewPanel3(CharacterSelectCourseWidgetActor *
     }
 
     switch (state) {
-    case 0:
-        break;
-    case 1:
-        arg0->y -= 0x24;
-        if (arg0->y < -0x13F) {
-            arg0->y = -0x140;
-            arg0->transition.bytes.state = 3;
-        }
-        state = arg0->transition.bytes.state;
-        break;
-    case 2:
-        arg0->y += 0x24;
-        if (arg0->y >= -0x48) {
-            arg0->y = -0x48;
-            arg0->transition.bytes.state = 3;
-        }
-        state = arg0->transition.bytes.state;
-        break;
-    case 3:
-        gMenuFlowState += 1;
-        if (gRacePlayers[0].menuState == 1) {
-            arg0->transition.bytes.state = 4;
-        }
-        if (gRacePlayers[0].menuState == 7) {
-            arg0->transition.bytes.state = 5;
-        }
-        state = arg0->transition.bytes.state;
-        break;
-    case 4:
-        if (gRacePlayers[0].menuState == 5) {
-            arg0->transition.bytes.state = 3;
-        }
-        if (gRacePlayers[0].menuState == 7) {
-            arg0->transition.bytes.state = 5;
-        }
-        state = arg0->transition.bytes.state;
-        break;
-    case 5:
-        arg0->x += 0x20;
-        state = *stateField;
-        break;
+        case 0:
+            break;
+        case 1:
+            arg0->y -= 0x24;
+            if (arg0->y < -0x13F) {
+                arg0->y = -0x140;
+                arg0->transition.bytes.state = 3;
+            }
+            state = arg0->transition.bytes.state;
+            break;
+        case 2:
+            arg0->y += 0x24;
+            if (arg0->y >= -0x48) {
+                arg0->y = -0x48;
+                arg0->transition.bytes.state = 3;
+            }
+            state = arg0->transition.bytes.state;
+            break;
+        case 3:
+            gMenuFlowState += 1;
+            if (gRacePlayers[0].menuState == 1) {
+                arg0->transition.bytes.state = 4;
+            }
+            if (gRacePlayers[0].menuState == 7) {
+                arg0->transition.bytes.state = 5;
+            }
+            state = arg0->transition.bytes.state;
+            break;
+        case 4:
+            if (gRacePlayers[0].menuState == 5) {
+                arg0->transition.bytes.state = 3;
+            }
+            if (gRacePlayers[0].menuState == 7) {
+                arg0->transition.bytes.state = 5;
+            }
+            state = arg0->transition.bytes.state;
+            break;
+        case 5:
+            arg0->x += 0x20;
+            state = *stateField;
+            break;
     }
 
     if ((state == 5) && (arg0->x >= 0x94)) {
@@ -1178,9 +1428,16 @@ void drawCharacterSelectCoursePreviewPanel4(CharacterSelectCourseWidgetActor *ar
     tileOffset = 0;
     shouldDraw = 1;
     for (i = 0; i < 16; i++, tileOffset++) {
-        drawMenuSpriteTileClipped((s16)(arg0->x + ((i & 3) << 5)), (s16)(arg0->y + ((i / 4) << 5)),
-                      getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE),
-                      gCharacterSelectCoursePreviewFrameTileMaps[(u16)arg0->sprite.index].center[tileOffset], 0, 0x100, 0xA0, 0x49);
+        drawMenuSpriteTileClipped(
+            (s16)(arg0->x + ((i & 3) << 5)),
+            (s16)(arg0->y + ((i / 4) << 5)),
+            getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE),
+            gCharacterSelectCoursePreviewFrameTileMaps[(u16)arg0->sprite.index].center[tileOffset],
+            0,
+            0x100,
+            0xA0,
+            0x49
+        );
     }
 
     if (shouldDraw) {
@@ -1189,12 +1446,26 @@ void drawCharacterSelectCoursePreviewPanel4(CharacterSelectCourseWidgetActor *ar
     }
     offset = 0;
     do {
-        drawMenuSpriteTileClipped((s16)(arg0->x + 0x80), (s16)(arg0->y + offset),
-                      getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE),
-                      gCharacterSelectCoursePreviewFrameTileMaps[(u16)arg0->sprite.index].right[tileOffset], 0, 0x100, 0xA0, 0x49);
-        drawMenuSpriteTileClipped((s16)(arg0->x + offset), (s16)(arg0->y + 0x80),
-                      getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE),
-                      gCharacterSelectCoursePreviewFrameTileMaps[(u16)arg0->sprite.index].bottom[tileOffset], 0, 0x100, 0xA0, 0x49);
+        drawMenuSpriteTileClipped(
+            (s16)(arg0->x + 0x80),
+            (s16)(arg0->y + offset),
+            getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE),
+            gCharacterSelectCoursePreviewFrameTileMaps[(u16)arg0->sprite.index].right[tileOffset],
+            0,
+            0x100,
+            0xA0,
+            0x49
+        );
+        drawMenuSpriteTileClipped(
+            (s16)(arg0->x + offset),
+            (s16)(arg0->y + 0x80),
+            getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE),
+            gCharacterSelectCoursePreviewFrameTileMaps[(u16)arg0->sprite.index].bottom[tileOffset],
+            0,
+            0x100,
+            0xA0,
+            0x49
+        );
         i = 0x80;
         offset += 0x40;
         tileOffset++;
@@ -1202,17 +1473,25 @@ void drawCharacterSelectCoursePreviewPanel4(CharacterSelectCourseWidgetActor *ar
     i++;
     i--;
 
-    drawMenuSpriteTileClipped((s16)(arg0->x + 0x80), (s16)(arg0->y + 0x80), getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE),
-                  gCharacterSelectCoursePreviewFrameTileMaps[(u16)arg0->sprite.index].corner, 0, 0x100, 0xA0, 0x49);
+    drawMenuSpriteTileClipped(
+        (s16)(arg0->x + 0x80),
+        (s16)(arg0->y + 0x80),
+        getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE),
+        gCharacterSelectCoursePreviewFrameTileMaps[(u16)arg0->sprite.index].corner,
+        0,
+        0x100,
+        0xA0,
+        0x49
+    );
 }
 
 void updateCharacterSelectCoursePreviewPanel4(CharacterSelectCourseWidgetActor *arg0) {
     int state;
     u8 *stateField = &arg0->transition.bytes.state;
 
-    if ((gRaceCourseIndex.signedValue >= (s32)(u16) arg0->sprite.index) && (arg0->y != -0x48)) {
+    if ((gRaceCourseIndex.signedValue >= (s32)(u16)arg0->sprite.index) && (arg0->y != -0x48)) {
         state = arg0->transition.bytes.state = 2;
-    } else if ((gRaceCourseIndex.signedValue < (s32)(u16) arg0->sprite.index) && (arg0->y != -0x140)) {
+    } else if ((gRaceCourseIndex.signedValue < (s32)(u16)arg0->sprite.index) && (arg0->y != -0x140)) {
         state = arg0->transition.bytes.state = 1;
     } else {
         state = *stateField;
@@ -1222,47 +1501,47 @@ void updateCharacterSelectCoursePreviewPanel4(CharacterSelectCourseWidgetActor *
     }
 
     switch (state) {
-    case 0:
-        break;
-    case 1:
-        arg0->y -= 0x24;
-        if (arg0->y < -0x13F) {
-            arg0->y = -0x140;
-            arg0->transition.bytes.state = 3;
-        }
-        state = arg0->transition.bytes.state;
-        break;
-    case 2:
-        arg0->y += 0x24;
-        if (arg0->y >= -0x48) {
-            arg0->y = -0x48;
-            arg0->transition.bytes.state = 3;
-        }
-        state = arg0->transition.bytes.state;
-        break;
-    case 3:
-        gMenuFlowState += 1;
-        if (gRacePlayers[0].menuState == 1) {
-            arg0->transition.bytes.state = 4;
-        }
-        if (gRacePlayers[0].menuState == 7) {
-            arg0->transition.bytes.state = 5;
-        }
-        state = arg0->transition.bytes.state;
-        break;
-    case 4:
-        if (gRacePlayers[0].menuState == 5) {
-            arg0->transition.bytes.state = 3;
-        }
-        if (gRacePlayers[0].menuState == 7) {
-            arg0->transition.bytes.state = 5;
-        }
-        state = arg0->transition.bytes.state;
-        break;
-    case 5:
-        arg0->x += 0x20;
-        state = *stateField;
-        break;
+        case 0:
+            break;
+        case 1:
+            arg0->y -= 0x24;
+            if (arg0->y < -0x13F) {
+                arg0->y = -0x140;
+                arg0->transition.bytes.state = 3;
+            }
+            state = arg0->transition.bytes.state;
+            break;
+        case 2:
+            arg0->y += 0x24;
+            if (arg0->y >= -0x48) {
+                arg0->y = -0x48;
+                arg0->transition.bytes.state = 3;
+            }
+            state = arg0->transition.bytes.state;
+            break;
+        case 3:
+            gMenuFlowState += 1;
+            if (gRacePlayers[0].menuState == 1) {
+                arg0->transition.bytes.state = 4;
+            }
+            if (gRacePlayers[0].menuState == 7) {
+                arg0->transition.bytes.state = 5;
+            }
+            state = arg0->transition.bytes.state;
+            break;
+        case 4:
+            if (gRacePlayers[0].menuState == 5) {
+                arg0->transition.bytes.state = 3;
+            }
+            if (gRacePlayers[0].menuState == 7) {
+                arg0->transition.bytes.state = 5;
+            }
+            state = arg0->transition.bytes.state;
+            break;
+        case 5:
+            arg0->x += 0x20;
+            state = *stateField;
+            break;
     }
 
     if ((state == 5) && (arg0->x >= 0x94)) {
@@ -1290,8 +1569,16 @@ void drawCharacterSelectCoursePreviewPanel5(CharacterSelectCourseWidgetActor *ar
     tileOffset = 0;
     shouldDraw = 1;
     for (i = 0; i < 16; i++, tileOffset++) {
-        drawMenuSpriteTileClipped(arg0->x + ((i & 3) << 5), arg0->y + ((i / 4) << 5), getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE),
-                      gCharacterSelectCoursePreviewFrameTileMaps[(u16)arg0->sprite.index].center[tileOffset], 0, 0x100, 0xA0, 0x49);
+        drawMenuSpriteTileClipped(
+            arg0->x + ((i & 3) << 5),
+            arg0->y + ((i / 4) << 5),
+            getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE),
+            gCharacterSelectCoursePreviewFrameTileMaps[(u16)arg0->sprite.index].center[tileOffset],
+            0,
+            0x100,
+            0xA0,
+            0x49
+        );
     }
 
     if (shouldDraw) {
@@ -1300,10 +1587,26 @@ void drawCharacterSelectCoursePreviewPanel5(CharacterSelectCourseWidgetActor *ar
     }
     offset = 0;
     do {
-        drawMenuSpriteTileClipped(arg0->x + 0x80, arg0->y + offset, getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE),
-                      gCharacterSelectCoursePreviewFrameTileMaps[(u16)arg0->sprite.index].right[tileOffset], 0, 0x100, 0xA0, 0x49);
-        drawMenuSpriteTileClipped(arg0->x + offset, arg0->y + 0x80, getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE),
-                      gCharacterSelectCoursePreviewFrameTileMaps[(u16)arg0->sprite.index].bottom[tileOffset], 0, 0x100, 0xA0, 0x49);
+        drawMenuSpriteTileClipped(
+            arg0->x + 0x80,
+            arg0->y + offset,
+            getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE),
+            gCharacterSelectCoursePreviewFrameTileMaps[(u16)arg0->sprite.index].right[tileOffset],
+            0,
+            0x100,
+            0xA0,
+            0x49
+        );
+        drawMenuSpriteTileClipped(
+            arg0->x + offset,
+            arg0->y + 0x80,
+            getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE),
+            gCharacterSelectCoursePreviewFrameTileMaps[(u16)arg0->sprite.index].bottom[tileOffset],
+            0,
+            0x100,
+            0xA0,
+            0x49
+        );
         i = 0x80;
         offset += 0x40;
         tileOffset++;
@@ -1311,17 +1614,25 @@ void drawCharacterSelectCoursePreviewPanel5(CharacterSelectCourseWidgetActor *ar
     i++;
     i--;
 
-    drawMenuSpriteTileClipped(arg0->x + 0x80, arg0->y + 0x80, getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE),
-                  gCharacterSelectCoursePreviewFrameTileMaps[(u16)arg0->sprite.index].corner, 0, 0x100, 0xA0, 0x49);
+    drawMenuSpriteTileClipped(
+        arg0->x + 0x80,
+        arg0->y + 0x80,
+        getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE),
+        gCharacterSelectCoursePreviewFrameTileMaps[(u16)arg0->sprite.index].corner,
+        0,
+        0x100,
+        0xA0,
+        0x49
+    );
 }
 
 void updateCharacterSelectCoursePreviewPanel5(CharacterSelectCourseWidgetActor *arg0) {
     int state;
     u8 *stateField = &arg0->transition.bytes.state;
 
-    if ((gRaceCourseIndex.signedValue >= (s32)(u16) arg0->sprite.index) && (arg0->y != -0x48)) {
+    if ((gRaceCourseIndex.signedValue >= (s32)(u16)arg0->sprite.index) && (arg0->y != -0x48)) {
         state = arg0->transition.bytes.state = 2;
-    } else if ((gRaceCourseIndex.signedValue < (s32)(u16) arg0->sprite.index) && (arg0->y != -0x140)) {
+    } else if ((gRaceCourseIndex.signedValue < (s32)(u16)arg0->sprite.index) && (arg0->y != -0x140)) {
         state = arg0->transition.bytes.state = 1;
     } else {
         state = *stateField;
@@ -1331,47 +1642,47 @@ void updateCharacterSelectCoursePreviewPanel5(CharacterSelectCourseWidgetActor *
     }
 
     switch (state) {
-    case 0:
-        break;
-    case 1:
-        arg0->y -= 0x24;
-        if (arg0->y < -0x13F) {
-            arg0->y = -0x140;
-            arg0->transition.bytes.state = 3;
-        }
-        state = arg0->transition.bytes.state;
-        break;
-    case 2:
-        arg0->y += 0x24;
-        if (arg0->y >= -0x48) {
-            arg0->y = -0x48;
-            arg0->transition.bytes.state = 3;
-        }
-        state = arg0->transition.bytes.state;
-        break;
-    case 3:
-        gMenuFlowState += 1;
-        if (gRacePlayers[0].menuState == 1) {
-            arg0->transition.bytes.state = 4;
-        }
-        if (gRacePlayers[0].menuState == 7) {
-            arg0->transition.bytes.state = 5;
-        }
-        state = arg0->transition.bytes.state;
-        break;
-    case 4:
-        if (gRacePlayers[0].menuState == 5) {
-            arg0->transition.bytes.state = 3;
-        }
-        if (gRacePlayers[0].menuState == 7) {
-            arg0->transition.bytes.state = 5;
-        }
-        state = arg0->transition.bytes.state;
-        break;
-    case 5:
-        arg0->x += 0x20;
-        state = *stateField;
-        break;
+        case 0:
+            break;
+        case 1:
+            arg0->y -= 0x24;
+            if (arg0->y < -0x13F) {
+                arg0->y = -0x140;
+                arg0->transition.bytes.state = 3;
+            }
+            state = arg0->transition.bytes.state;
+            break;
+        case 2:
+            arg0->y += 0x24;
+            if (arg0->y >= -0x48) {
+                arg0->y = -0x48;
+                arg0->transition.bytes.state = 3;
+            }
+            state = arg0->transition.bytes.state;
+            break;
+        case 3:
+            gMenuFlowState += 1;
+            if (gRacePlayers[0].menuState == 1) {
+                arg0->transition.bytes.state = 4;
+            }
+            if (gRacePlayers[0].menuState == 7) {
+                arg0->transition.bytes.state = 5;
+            }
+            state = arg0->transition.bytes.state;
+            break;
+        case 4:
+            if (gRacePlayers[0].menuState == 5) {
+                arg0->transition.bytes.state = 3;
+            }
+            if (gRacePlayers[0].menuState == 7) {
+                arg0->transition.bytes.state = 5;
+            }
+            state = arg0->transition.bytes.state;
+            break;
+        case 5:
+            arg0->x += 0x20;
+            state = *stateField;
+            break;
     }
 
     if ((state == 5) && (arg0->x >= 0x94)) {
@@ -1399,9 +1710,16 @@ void drawCharacterSelectCoursePreviewPanel6(CharacterSelectCourseWidgetActor *ar
     tileOffset = 0;
     shouldDraw = 1;
     for (i = 0; i < 16; i++, tileOffset++) {
-        drawMenuSpriteTileClipped((s16)(arg0->x + ((i & 3) << 5)), (s16)(arg0->y + ((i / 4) << 5)),
-                      getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE),
-                      gCharacterSelectCoursePreviewFrameTileMaps[(u16)arg0->sprite.index].center[tileOffset], 0, 0x100, 0xA0, 0x49);
+        drawMenuSpriteTileClipped(
+            (s16)(arg0->x + ((i & 3) << 5)),
+            (s16)(arg0->y + ((i / 4) << 5)),
+            getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE),
+            gCharacterSelectCoursePreviewFrameTileMaps[(u16)arg0->sprite.index].center[tileOffset],
+            0,
+            0x100,
+            0xA0,
+            0x49
+        );
     }
 
     if (shouldDraw) {
@@ -1410,12 +1728,26 @@ void drawCharacterSelectCoursePreviewPanel6(CharacterSelectCourseWidgetActor *ar
     }
     offset = 0;
     do {
-        drawMenuSpriteTileClipped((s16)(arg0->x + 0x80), (s16)(arg0->y + offset),
-                      getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE),
-                      gCharacterSelectCoursePreviewFrameTileMaps[(u16)arg0->sprite.index].right[tileOffset], 0, 0x100, 0xA0, 0x49);
-        drawMenuSpriteTileClipped((s16)(arg0->x + offset), (s16)(arg0->y + 0x80),
-                      getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE),
-                      gCharacterSelectCoursePreviewFrameTileMaps[(u16)arg0->sprite.index].bottom[tileOffset], 0, 0x100, 0xA0, 0x49);
+        drawMenuSpriteTileClipped(
+            (s16)(arg0->x + 0x80),
+            (s16)(arg0->y + offset),
+            getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE),
+            gCharacterSelectCoursePreviewFrameTileMaps[(u16)arg0->sprite.index].right[tileOffset],
+            0,
+            0x100,
+            0xA0,
+            0x49
+        );
+        drawMenuSpriteTileClipped(
+            (s16)(arg0->x + offset),
+            (s16)(arg0->y + 0x80),
+            getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE),
+            gCharacterSelectCoursePreviewFrameTileMaps[(u16)arg0->sprite.index].bottom[tileOffset],
+            0,
+            0x100,
+            0xA0,
+            0x49
+        );
         i = 0x80;
         offset += 0x40;
         tileOffset++;
@@ -1423,17 +1755,25 @@ void drawCharacterSelectCoursePreviewPanel6(CharacterSelectCourseWidgetActor *ar
     i++;
     i--;
 
-    drawMenuSpriteTileClipped((s16)(arg0->x + 0x80), (s16)(arg0->y + 0x80), getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE),
-                  gCharacterSelectCoursePreviewFrameTileMaps[(u16)arg0->sprite.index].corner, 0, 0x100, 0xA0, 0x49);
+    drawMenuSpriteTileClipped(
+        (s16)(arg0->x + 0x80),
+        (s16)(arg0->y + 0x80),
+        getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE),
+        gCharacterSelectCoursePreviewFrameTileMaps[(u16)arg0->sprite.index].corner,
+        0,
+        0x100,
+        0xA0,
+        0x49
+    );
 }
 
 void updateCharacterSelectCoursePreviewPanel6(CharacterSelectCourseWidgetActor *arg0) {
     int state;
     u8 *stateField = &arg0->transition.bytes.state;
 
-    if ((gRaceCourseIndex.signedValue >= (s32)(u16) arg0->sprite.index) && (arg0->y != -0x48)) {
+    if ((gRaceCourseIndex.signedValue >= (s32)(u16)arg0->sprite.index) && (arg0->y != -0x48)) {
         state = arg0->transition.bytes.state = 2;
-    } else if ((gRaceCourseIndex.signedValue < (s32)(u16) arg0->sprite.index) && (arg0->y != -0x140)) {
+    } else if ((gRaceCourseIndex.signedValue < (s32)(u16)arg0->sprite.index) && (arg0->y != -0x140)) {
         state = arg0->transition.bytes.state = 1;
     } else {
         state = *stateField;
@@ -1443,47 +1783,47 @@ void updateCharacterSelectCoursePreviewPanel6(CharacterSelectCourseWidgetActor *
     }
 
     switch (state) {
-    case 0:
-        break;
-    case 1:
-        arg0->y -= 0x24;
-        if (arg0->y < -0x13F) {
-            arg0->y = -0x140;
-            arg0->transition.bytes.state = 3;
-        }
-        state = arg0->transition.bytes.state;
-        break;
-    case 2:
-        arg0->y += 0x24;
-        if (arg0->y >= -0x48) {
-            arg0->y = -0x48;
-            arg0->transition.bytes.state = 3;
-        }
-        state = arg0->transition.bytes.state;
-        break;
-    case 3:
-        gMenuFlowState += 1;
-        if (gRacePlayers[0].menuState == 1) {
-            arg0->transition.bytes.state = 4;
-        }
-        if (gRacePlayers[0].menuState == 7) {
-            arg0->transition.bytes.state = 5;
-        }
-        state = arg0->transition.bytes.state;
-        break;
-    case 4:
-        if (gRacePlayers[0].menuState == 5) {
-            arg0->transition.bytes.state = 3;
-        }
-        if (gRacePlayers[0].menuState == 7) {
-            arg0->transition.bytes.state = 5;
-        }
-        state = arg0->transition.bytes.state;
-        break;
-    case 5:
-        arg0->x += 0x20;
-        state = *stateField;
-        break;
+        case 0:
+            break;
+        case 1:
+            arg0->y -= 0x24;
+            if (arg0->y < -0x13F) {
+                arg0->y = -0x140;
+                arg0->transition.bytes.state = 3;
+            }
+            state = arg0->transition.bytes.state;
+            break;
+        case 2:
+            arg0->y += 0x24;
+            if (arg0->y >= -0x48) {
+                arg0->y = -0x48;
+                arg0->transition.bytes.state = 3;
+            }
+            state = arg0->transition.bytes.state;
+            break;
+        case 3:
+            gMenuFlowState += 1;
+            if (gRacePlayers[0].menuState == 1) {
+                arg0->transition.bytes.state = 4;
+            }
+            if (gRacePlayers[0].menuState == 7) {
+                arg0->transition.bytes.state = 5;
+            }
+            state = arg0->transition.bytes.state;
+            break;
+        case 4:
+            if (gRacePlayers[0].menuState == 5) {
+                arg0->transition.bytes.state = 3;
+            }
+            if (gRacePlayers[0].menuState == 7) {
+                arg0->transition.bytes.state = 5;
+            }
+            state = arg0->transition.bytes.state;
+            break;
+        case 5:
+            arg0->x += 0x20;
+            state = *stateField;
+            break;
     }
 
     if ((state == 5) && (arg0->x >= 0x94)) {
@@ -1511,8 +1851,16 @@ void drawCharacterSelectCoursePreviewPanel7(CharacterSelectCourseWidgetActor *ar
     tileOffset = 0;
     shouldDraw = 1;
     for (i = 0; i < 16; i++, tileOffset++) {
-        drawMenuSpriteTileClipped(arg0->x + ((i & 3) << 5), arg0->y + ((i / 4) << 5), getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE),
-                      gCharacterSelectCoursePreviewFrameTileMaps[(u16)arg0->sprite.index].center[tileOffset], 0, 0x100, 0xA0, 0x49);
+        drawMenuSpriteTileClipped(
+            arg0->x + ((i & 3) << 5),
+            arg0->y + ((i / 4) << 5),
+            getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE),
+            gCharacterSelectCoursePreviewFrameTileMaps[(u16)arg0->sprite.index].center[tileOffset],
+            0,
+            0x100,
+            0xA0,
+            0x49
+        );
     }
 
     if (shouldDraw) {
@@ -1521,10 +1869,26 @@ void drawCharacterSelectCoursePreviewPanel7(CharacterSelectCourseWidgetActor *ar
     }
     offset = 0;
     do {
-        drawMenuSpriteTileClipped(arg0->x + 0x80, arg0->y + offset, getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE),
-                      gCharacterSelectCoursePreviewFrameTileMaps[(u16)arg0->sprite.index].right[tileOffset], 0, 0x100, 0xA0, 0x49);
-        drawMenuSpriteTileClipped(arg0->x + offset, arg0->y + 0x80, getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE),
-                      gCharacterSelectCoursePreviewFrameTileMaps[(u16)arg0->sprite.index].bottom[tileOffset], 0, 0x100, 0xA0, 0x49);
+        drawMenuSpriteTileClipped(
+            arg0->x + 0x80,
+            arg0->y + offset,
+            getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE),
+            gCharacterSelectCoursePreviewFrameTileMaps[(u16)arg0->sprite.index].right[tileOffset],
+            0,
+            0x100,
+            0xA0,
+            0x49
+        );
+        drawMenuSpriteTileClipped(
+            arg0->x + offset,
+            arg0->y + 0x80,
+            getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE),
+            gCharacterSelectCoursePreviewFrameTileMaps[(u16)arg0->sprite.index].bottom[tileOffset],
+            0,
+            0x100,
+            0xA0,
+            0x49
+        );
         i = 0x80;
         offset += 0x40;
         tileOffset++;
@@ -1532,17 +1896,25 @@ void drawCharacterSelectCoursePreviewPanel7(CharacterSelectCourseWidgetActor *ar
     i++;
     i--;
 
-    drawMenuSpriteTileClipped(arg0->x + 0x80, arg0->y + 0x80, getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE),
-                  gCharacterSelectCoursePreviewFrameTileMaps[(u16)arg0->sprite.index].corner, 0, 0x100, 0xA0, 0x49);
+    drawMenuSpriteTileClipped(
+        arg0->x + 0x80,
+        arg0->y + 0x80,
+        getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE),
+        gCharacterSelectCoursePreviewFrameTileMaps[(u16)arg0->sprite.index].corner,
+        0,
+        0x100,
+        0xA0,
+        0x49
+    );
 }
 
 void updateCharacterSelectCoursePreviewPanel7(CharacterSelectCourseWidgetActor *arg0) {
     int state;
     u8 *stateField = &arg0->transition.bytes.state;
 
-    if ((gRaceCourseIndex.signedValue >= (s32)(u16) arg0->sprite.index) && (arg0->y != -0x48)) {
+    if ((gRaceCourseIndex.signedValue >= (s32)(u16)arg0->sprite.index) && (arg0->y != -0x48)) {
         state = arg0->transition.bytes.state = 2;
-    } else if ((gRaceCourseIndex.signedValue < (s32)(u16) arg0->sprite.index) && (arg0->y != -0x140)) {
+    } else if ((gRaceCourseIndex.signedValue < (s32)(u16)arg0->sprite.index) && (arg0->y != -0x140)) {
         state = arg0->transition.bytes.state = 1;
     } else {
         state = *stateField;
@@ -1552,47 +1924,47 @@ void updateCharacterSelectCoursePreviewPanel7(CharacterSelectCourseWidgetActor *
     }
 
     switch (state) {
-    case 0:
-        break;
-    case 1:
-        arg0->y -= 0x24;
-        if (arg0->y < -0x13F) {
-            arg0->y = -0x140;
-            arg0->transition.bytes.state = 3;
-        }
-        state = arg0->transition.bytes.state;
-        break;
-    case 2:
-        arg0->y += 0x24;
-        if (arg0->y >= -0x48) {
-            arg0->y = -0x48;
-            arg0->transition.bytes.state = 3;
-        }
-        state = arg0->transition.bytes.state;
-        break;
-    case 3:
-        gMenuFlowState += 1;
-        if (gRacePlayers[0].menuState == 1) {
-            arg0->transition.bytes.state = 4;
-        }
-        if (gRacePlayers[0].menuState == 7) {
-            arg0->transition.bytes.state = 5;
-        }
-        state = arg0->transition.bytes.state;
-        break;
-    case 4:
-        if (gRacePlayers[0].menuState == 5) {
-            arg0->transition.bytes.state = 3;
-        }
-        if (gRacePlayers[0].menuState == 7) {
-            arg0->transition.bytes.state = 5;
-        }
-        state = arg0->transition.bytes.state;
-        break;
-    case 5:
-        arg0->x += 0x20;
-        state = *stateField;
-        break;
+        case 0:
+            break;
+        case 1:
+            arg0->y -= 0x24;
+            if (arg0->y < -0x13F) {
+                arg0->y = -0x140;
+                arg0->transition.bytes.state = 3;
+            }
+            state = arg0->transition.bytes.state;
+            break;
+        case 2:
+            arg0->y += 0x24;
+            if (arg0->y >= -0x48) {
+                arg0->y = -0x48;
+                arg0->transition.bytes.state = 3;
+            }
+            state = arg0->transition.bytes.state;
+            break;
+        case 3:
+            gMenuFlowState += 1;
+            if (gRacePlayers[0].menuState == 1) {
+                arg0->transition.bytes.state = 4;
+            }
+            if (gRacePlayers[0].menuState == 7) {
+                arg0->transition.bytes.state = 5;
+            }
+            state = arg0->transition.bytes.state;
+            break;
+        case 4:
+            if (gRacePlayers[0].menuState == 5) {
+                arg0->transition.bytes.state = 3;
+            }
+            if (gRacePlayers[0].menuState == 7) {
+                arg0->transition.bytes.state = 5;
+            }
+            state = arg0->transition.bytes.state;
+            break;
+        case 5:
+            arg0->x += 0x20;
+            state = *stateField;
+            break;
     }
 
     if ((state == 5) && (arg0->x >= 0x94)) {
@@ -1620,9 +1992,16 @@ void drawCharacterSelectCoursePreviewPanel8(CharacterSelectCourseWidgetActor *ar
     tileIndex = 0;
     shouldDraw = 1;
     for (i = 0; i < 16; i++, tileIndex++) {
-        drawMenuSpriteTileClipped((s16)(arg0->x + ((i & 3) << 5)), (s16)(arg0->y + ((i / 4) << 5)),
-                      getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE),
-                      gCharacterSelectCoursePreviewFrameTileMaps[(u16)arg0->sprite.index].center[tileIndex], 0, 0x100, 0xA0, 0x49);
+        drawMenuSpriteTileClipped(
+            (s16)(arg0->x + ((i & 3) << 5)),
+            (s16)(arg0->y + ((i / 4) << 5)),
+            getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE),
+            gCharacterSelectCoursePreviewFrameTileMaps[(u16)arg0->sprite.index].center[tileIndex],
+            0,
+            0x100,
+            0xA0,
+            0x49
+        );
     }
 
     if (shouldDraw) {
@@ -1631,10 +2010,26 @@ void drawCharacterSelectCoursePreviewPanel8(CharacterSelectCourseWidgetActor *ar
     }
     offset = 0;
     do {
-        drawMenuSpriteTileClipped((s16)(arg0->x + 0x80), (s16)(arg0->y + offset), getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE),
-                      gCharacterSelectCoursePreviewFrameTileMaps[(u16)arg0->sprite.index].right[tileIndex], 0, 0x100, 0xA0, 0x49);
-        drawMenuSpriteTileClipped((s16)(arg0->x + offset), (s16)(arg0->y + 0x80), getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE),
-                      gCharacterSelectCoursePreviewFrameTileMaps[(u16)arg0->sprite.index].bottom[tileIndex], 0, 0x100, 0xA0, 0x49);
+        drawMenuSpriteTileClipped(
+            (s16)(arg0->x + 0x80),
+            (s16)(arg0->y + offset),
+            getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE),
+            gCharacterSelectCoursePreviewFrameTileMaps[(u16)arg0->sprite.index].right[tileIndex],
+            0,
+            0x100,
+            0xA0,
+            0x49
+        );
+        drawMenuSpriteTileClipped(
+            (s16)(arg0->x + offset),
+            (s16)(arg0->y + 0x80),
+            getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE),
+            gCharacterSelectCoursePreviewFrameTileMaps[(u16)arg0->sprite.index].bottom[tileIndex],
+            0,
+            0x100,
+            0xA0,
+            0x49
+        );
         i = 0x80;
         offset += 0x40;
         tileIndex++;
@@ -1642,17 +2037,25 @@ void drawCharacterSelectCoursePreviewPanel8(CharacterSelectCourseWidgetActor *ar
     i++;
     i--;
 
-    drawMenuSpriteTileClipped((s16)(arg0->x + 0x80), (s16)(arg0->y + 0x80), getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE),
-                  gCharacterSelectCoursePreviewFrameTileMaps[(u16)arg0->sprite.index].corner, 0, 0x100, 0xA0, 0x49);
+    drawMenuSpriteTileClipped(
+        (s16)(arg0->x + 0x80),
+        (s16)(arg0->y + 0x80),
+        getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE),
+        gCharacterSelectCoursePreviewFrameTileMaps[(u16)arg0->sprite.index].corner,
+        0,
+        0x100,
+        0xA0,
+        0x49
+    );
 }
 
 void updateCharacterSelectCoursePreviewPanel8(CharacterSelectCourseWidgetActor *arg0) {
     int state;
     u8 *stateField = &arg0->transition.bytes.state;
 
-    if ((gRaceCourseIndex.signedValue >= (s32)(u16) arg0->sprite.index) && (arg0->y != -0x48)) {
+    if ((gRaceCourseIndex.signedValue >= (s32)(u16)arg0->sprite.index) && (arg0->y != -0x48)) {
         state = arg0->transition.bytes.state = 2;
-    } else if ((gRaceCourseIndex.signedValue < (s32)(u16) arg0->sprite.index) && (arg0->y != -0x140)) {
+    } else if ((gRaceCourseIndex.signedValue < (s32)(u16)arg0->sprite.index) && (arg0->y != -0x140)) {
         state = arg0->transition.bytes.state = 1;
     } else {
         state = *stateField;
@@ -1662,47 +2065,47 @@ void updateCharacterSelectCoursePreviewPanel8(CharacterSelectCourseWidgetActor *
     }
 
     switch (state) {
-    case 0:
-        break;
-    case 1:
-        arg0->y -= 0x24;
-        if (arg0->y < -0x13F) {
-            arg0->y = -0x140;
-            arg0->transition.bytes.state = 3;
-        }
-        state = arg0->transition.bytes.state;
-        break;
-    case 2:
-        arg0->y += 0x24;
-        if (arg0->y >= -0x48) {
-            arg0->y = -0x48;
-            arg0->transition.bytes.state = 3;
-        }
-        state = arg0->transition.bytes.state;
-        break;
-    case 3:
-        gMenuFlowState += 1;
-        if (gRacePlayers[0].menuState == 1) {
-            arg0->transition.bytes.state = 4;
-        }
-        if (gRacePlayers[0].menuState == 7) {
-            arg0->transition.bytes.state = 5;
-        }
-        state = arg0->transition.bytes.state;
-        break;
-    case 4:
-        if (gRacePlayers[0].menuState == 5) {
-            arg0->transition.bytes.state = 3;
-        }
-        if (gRacePlayers[0].menuState == 7) {
-            arg0->transition.bytes.state = 5;
-        }
-        state = arg0->transition.bytes.state;
-        break;
-    case 5:
-        arg0->x += 0x20;
-        state = *stateField;
-        break;
+        case 0:
+            break;
+        case 1:
+            arg0->y -= 0x24;
+            if (arg0->y < -0x13F) {
+                arg0->y = -0x140;
+                arg0->transition.bytes.state = 3;
+            }
+            state = arg0->transition.bytes.state;
+            break;
+        case 2:
+            arg0->y += 0x24;
+            if (arg0->y >= -0x48) {
+                arg0->y = -0x48;
+                arg0->transition.bytes.state = 3;
+            }
+            state = arg0->transition.bytes.state;
+            break;
+        case 3:
+            gMenuFlowState += 1;
+            if (gRacePlayers[0].menuState == 1) {
+                arg0->transition.bytes.state = 4;
+            }
+            if (gRacePlayers[0].menuState == 7) {
+                arg0->transition.bytes.state = 5;
+            }
+            state = arg0->transition.bytes.state;
+            break;
+        case 4:
+            if (gRacePlayers[0].menuState == 5) {
+                arg0->transition.bytes.state = 3;
+            }
+            if (gRacePlayers[0].menuState == 7) {
+                arg0->transition.bytes.state = 5;
+            }
+            state = arg0->transition.bytes.state;
+            break;
+        case 5:
+            arg0->x += 0x20;
+            state = *stateField;
+            break;
     }
 
     if ((state == 5) && (arg0->x >= 0x94)) {
@@ -1730,8 +2133,16 @@ void drawCharacterSelectCoursePreviewPanel9(CharacterSelectCourseWidgetActor *ar
     tileOffset = 0;
     shouldDraw = 1;
     for (i = 0; i < 16; i++, tileOffset++) {
-        drawMenuSpriteTileClipped(arg0->x + ((i & 3) << 5), arg0->y + ((i / 4) << 5), getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE),
-                      gCharacterSelectCoursePreviewFrameTileMaps[(u16)arg0->sprite.index].center[tileOffset], 0, 0x100, 0xA0, 0x49);
+        drawMenuSpriteTileClipped(
+            arg0->x + ((i & 3) << 5),
+            arg0->y + ((i / 4) << 5),
+            getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE),
+            gCharacterSelectCoursePreviewFrameTileMaps[(u16)arg0->sprite.index].center[tileOffset],
+            0,
+            0x100,
+            0xA0,
+            0x49
+        );
     }
 
     if (shouldDraw) {
@@ -1740,10 +2151,26 @@ void drawCharacterSelectCoursePreviewPanel9(CharacterSelectCourseWidgetActor *ar
     }
     offset = 0;
     do {
-        drawMenuSpriteTileClipped(arg0->x + 0x80, arg0->y + offset, getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE),
-                      gCharacterSelectCoursePreviewFrameTileMaps[(u16)arg0->sprite.index].right[tileOffset], 0, 0x100, 0xA0, 0x49);
-        drawMenuSpriteTileClipped(arg0->x + offset, arg0->y + 0x80, getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE),
-                      gCharacterSelectCoursePreviewFrameTileMaps[(u16)arg0->sprite.index].bottom[tileOffset], 0, 0x100, 0xA0, 0x49);
+        drawMenuSpriteTileClipped(
+            arg0->x + 0x80,
+            arg0->y + offset,
+            getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE),
+            gCharacterSelectCoursePreviewFrameTileMaps[(u16)arg0->sprite.index].right[tileOffset],
+            0,
+            0x100,
+            0xA0,
+            0x49
+        );
+        drawMenuSpriteTileClipped(
+            arg0->x + offset,
+            arg0->y + 0x80,
+            getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE),
+            gCharacterSelectCoursePreviewFrameTileMaps[(u16)arg0->sprite.index].bottom[tileOffset],
+            0,
+            0x100,
+            0xA0,
+            0x49
+        );
         i = 0x80;
         offset += 0x40;
         tileOffset++;
@@ -1751,17 +2178,25 @@ void drawCharacterSelectCoursePreviewPanel9(CharacterSelectCourseWidgetActor *ar
     i++;
     i--;
 
-    drawMenuSpriteTileClipped(arg0->x + 0x80, arg0->y + 0x80, getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE),
-                  gCharacterSelectCoursePreviewFrameTileMaps[(u16)arg0->sprite.index].corner, 0, 0x100, 0xA0, 0x49);
+    drawMenuSpriteTileClipped(
+        arg0->x + 0x80,
+        arg0->y + 0x80,
+        getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE),
+        gCharacterSelectCoursePreviewFrameTileMaps[(u16)arg0->sprite.index].corner,
+        0,
+        0x100,
+        0xA0,
+        0x49
+    );
 }
 
 void updateCharacterSelectCoursePreviewPanel9(CharacterSelectCourseWidgetActor *arg0) {
     int state;
     u8 *stateField = &arg0->transition.bytes.state;
 
-    if ((gRaceCourseIndex.signedValue >= (s32)(u16) arg0->sprite.index) && (arg0->y != -0x48)) {
+    if ((gRaceCourseIndex.signedValue >= (s32)(u16)arg0->sprite.index) && (arg0->y != -0x48)) {
         state = arg0->transition.bytes.state = 2;
-    } else if ((gRaceCourseIndex.signedValue < (s32)(u16) arg0->sprite.index) && (arg0->y != -0x140)) {
+    } else if ((gRaceCourseIndex.signedValue < (s32)(u16)arg0->sprite.index) && (arg0->y != -0x140)) {
         state = arg0->transition.bytes.state = 1;
     } else {
         state = *stateField;
@@ -1771,47 +2206,47 @@ void updateCharacterSelectCoursePreviewPanel9(CharacterSelectCourseWidgetActor *
     }
 
     switch (state) {
-    case 0:
-        break;
-    case 1:
-        arg0->y -= 0x24;
-        if (arg0->y < -0x13F) {
-            arg0->y = -0x140;
-            arg0->transition.bytes.state = 3;
-        }
-        state = arg0->transition.bytes.state;
-        break;
-    case 2:
-        arg0->y += 0x24;
-        if (arg0->y >= -0x48) {
-            arg0->y = -0x48;
-            arg0->transition.bytes.state = 3;
-        }
-        state = arg0->transition.bytes.state;
-        break;
-    case 3:
-        gMenuFlowState += 1;
-        if (gRacePlayers[0].menuState == 1) {
-            arg0->transition.bytes.state = 4;
-        }
-        if (gRacePlayers[0].menuState == 7) {
-            arg0->transition.bytes.state = 5;
-        }
-        state = arg0->transition.bytes.state;
-        break;
-    case 4:
-        if (gRacePlayers[0].menuState == 5) {
-            arg0->transition.bytes.state = 3;
-        }
-        if (gRacePlayers[0].menuState == 7) {
-            arg0->transition.bytes.state = 5;
-        }
-        state = arg0->transition.bytes.state;
-        break;
-    case 5:
-        arg0->x += 0x20;
-        state = *stateField;
-        break;
+        case 0:
+            break;
+        case 1:
+            arg0->y -= 0x24;
+            if (arg0->y < -0x13F) {
+                arg0->y = -0x140;
+                arg0->transition.bytes.state = 3;
+            }
+            state = arg0->transition.bytes.state;
+            break;
+        case 2:
+            arg0->y += 0x24;
+            if (arg0->y >= -0x48) {
+                arg0->y = -0x48;
+                arg0->transition.bytes.state = 3;
+            }
+            state = arg0->transition.bytes.state;
+            break;
+        case 3:
+            gMenuFlowState += 1;
+            if (gRacePlayers[0].menuState == 1) {
+                arg0->transition.bytes.state = 4;
+            }
+            if (gRacePlayers[0].menuState == 7) {
+                arg0->transition.bytes.state = 5;
+            }
+            state = arg0->transition.bytes.state;
+            break;
+        case 4:
+            if (gRacePlayers[0].menuState == 5) {
+                arg0->transition.bytes.state = 3;
+            }
+            if (gRacePlayers[0].menuState == 7) {
+                arg0->transition.bytes.state = 5;
+            }
+            state = arg0->transition.bytes.state;
+            break;
+        case 5:
+            arg0->x += 0x20;
+            state = *stateField;
+            break;
     }
 
     if ((state == 5) && (arg0->x >= 0x94)) {
@@ -1830,6 +2265,8 @@ void initCharacterSelectCoursePreviewPanel9(CharacterSelectCourseWidgetActor *ar
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateCharacterSelectCoursePreviewPanel9);
 }
 
+// IDO code generation for this function is sensitive to source line layout.
+// clang-format off
 void drawCharacterSelectCourseExitPreviewPanel(CharacterSelectCourseWidgetActor *arg0) {
     s32 i;
     s32 tileOffset;
@@ -1857,16 +2294,19 @@ void drawCharacterSelectCourseExitPreviewPanel(CharacterSelectCourseWidgetActor 
     drawMenuSpriteTileClipped(arg0->x + 0x80, arg0->y + 0x80, getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE),
                   gCharacterSelectCourseExitPreviewCornerTile, 0, 0x100, 0xA0, 0x49);
 }
+// clang-format on
 
 void updateCharacterSelectCourseExitPreviewPanel(CharacterSelectCourseWidgetActor *arg0) {
     int state;
     u8 *stateField = &arg0->row.bytes.subState;
 
-    if ((gRaceCourseIndex.signedValue == gCharacterSelectCourseExitOptionIndex) && (arg0->y != -0x48) && ((s32) arg0->row.bytes.subState < 6)) {
+    if ((gRaceCourseIndex.signedValue == gCharacterSelectCourseExitOptionIndex) && (arg0->y != -0x48) &&
+        ((s32)arg0->row.bytes.subState < 6)) {
         state = arg0->row.bytes.subState = 2;
     } else {
-        state = (s32) arg0->row.bytes.subState;
-        if ((gRaceCourseIndex.signedValue != gCharacterSelectCourseExitOptionIndex) && (arg0->y != -0x140) && (state < 6)) {
+        state = (s32)arg0->row.bytes.subState;
+        if ((gRaceCourseIndex.signedValue != gCharacterSelectCourseExitOptionIndex) && (arg0->y != -0x140) &&
+            (state < 6)) {
             state = arg0->row.bytes.subState = 1;
         } else {
             state = arg0->row.bytes.subState;
@@ -1877,62 +2317,62 @@ void updateCharacterSelectCourseExitPreviewPanel(CharacterSelectCourseWidgetActo
     }
 
     switch (state) {
-    case 0:
-        break;
-    case 1:
-        arg0->y -= 0x24;
-        if (arg0->y < -0x13F) {
-            arg0->y = -0x140;
-            arg0->row.bytes.subState = 3;
-        }
-        state = arg0->row.bytes.subState;
-        break;
-    case 2:
-        arg0->y += 0x24;
-        if (arg0->y >= -0x48) {
-            arg0->y = -0x48;
-            arg0->row.bytes.subState = 6;
-            arg0->transition.alpha = 8;
-        }
-        state = arg0->row.bytes.subState;
-        break;
-    case 3:
-        gMenuFlowState += 1;
-        if (gRacePlayers[0].menuState == 1) {
-            arg0->row.bytes.subState = 4;
-        }
-        if (gRacePlayers[0].menuState == 7) {
-            arg0->row.bytes.subState = 5;
-        }
-        state = arg0->row.bytes.subState;
-        break;
-    case 4:
-        if (gRacePlayers[0].menuState == 5) {
-            arg0->row.bytes.subState = 3;
-        }
-        if (gRacePlayers[0].menuState == 7) {
-            arg0->row.bytes.subState = 5;
-        }
-        state = arg0->row.bytes.subState;
-        break;
-    case 5:
-        arg0->x += 0x20;
-        state = *stateField;
-        break;
-    case 6:
-        arg0->y -= arg0->transition.alpha;
-        state = arg0->row.bytes.subState = 7;
-        break;
-    case 7:
-        arg0->y += arg0->transition.alpha;
-        arg0->transition.alpha /= 2;
-        if (arg0->transition.alpha == 0) {
-            arg0->row.bytes.subState = 3;
-        } else {
-            arg0->row.bytes.subState = 6;
-        }
-        state = arg0->row.bytes.subState;
-        break;
+        case 0:
+            break;
+        case 1:
+            arg0->y -= 0x24;
+            if (arg0->y < -0x13F) {
+                arg0->y = -0x140;
+                arg0->row.bytes.subState = 3;
+            }
+            state = arg0->row.bytes.subState;
+            break;
+        case 2:
+            arg0->y += 0x24;
+            if (arg0->y >= -0x48) {
+                arg0->y = -0x48;
+                arg0->row.bytes.subState = 6;
+                arg0->transition.alpha = 8;
+            }
+            state = arg0->row.bytes.subState;
+            break;
+        case 3:
+            gMenuFlowState += 1;
+            if (gRacePlayers[0].menuState == 1) {
+                arg0->row.bytes.subState = 4;
+            }
+            if (gRacePlayers[0].menuState == 7) {
+                arg0->row.bytes.subState = 5;
+            }
+            state = arg0->row.bytes.subState;
+            break;
+        case 4:
+            if (gRacePlayers[0].menuState == 5) {
+                arg0->row.bytes.subState = 3;
+            }
+            if (gRacePlayers[0].menuState == 7) {
+                arg0->row.bytes.subState = 5;
+            }
+            state = arg0->row.bytes.subState;
+            break;
+        case 5:
+            arg0->x += 0x20;
+            state = *stateField;
+            break;
+        case 6:
+            arg0->y -= arg0->transition.alpha;
+            state = arg0->row.bytes.subState = 7;
+            break;
+        case 7:
+            arg0->y += arg0->transition.alpha;
+            arg0->transition.alpha /= 2;
+            if (arg0->transition.alpha == 0) {
+                arg0->row.bytes.subState = 3;
+            } else {
+                arg0->row.bytes.subState = 6;
+            }
+            state = arg0->row.bytes.subState;
+            break;
     }
 
     if ((state == 5) && (arg0->x >= 0x94)) {
@@ -1962,7 +2402,8 @@ void drawCharacterSelectCourseListCursor(CharacterSelectCourseWidgetActor *arg0)
             0x20,
             0,
             arg0->sprite.index,
-            0);
+            0
+        );
     }
 }
 
@@ -1980,30 +2421,30 @@ void updateCharacterSelectCourseListCursor(CharacterSelectCourseWidgetActor *arg
 
     /* Preserve IDO's state selector register allocation. */
     switch (state ^ 0) {
-    case 0:
-        arg0->sprite.index += 0x26;
-        if (arg0->sprite.index >= 0x100) {
-            arg0->sprite.index = 0x100;
-            arg0->transition.bytes.state = 1;
-        }
-        state = arg0->transition.bytes.state;
-        break;
-    case 1:
-        if ((s32) arg0->transition.bytes.timer < 0x10) {
-            arg0->sprite.index -= 9;
-        } else {
-            arg0->sprite.index += 9;
-        }
-        state = arg0->transition.bytes.state;
-        arg0->transition.bytes.timer = (arg0->transition.bytes.timer + 1) & 0x1F;
-        break;
-    case 2:
-        if (gRacePlayers[0].menuState == 1) {
-            state = arg0->transition.bytes.state = 3;
-        }
-        break;
-    case 3:
-        break;
+        case 0:
+            arg0->sprite.index += 0x26;
+            if (arg0->sprite.index >= 0x100) {
+                arg0->sprite.index = 0x100;
+                arg0->transition.bytes.state = 1;
+            }
+            state = arg0->transition.bytes.state;
+            break;
+        case 1:
+            if ((s32)arg0->transition.bytes.timer < 0x10) {
+                arg0->sprite.index -= 9;
+            } else {
+                arg0->sprite.index += 9;
+            }
+            state = arg0->transition.bytes.state;
+            arg0->transition.bytes.timer = (arg0->transition.bytes.timer + 1) & 0x1F;
+            break;
+        case 2:
+            if (gRacePlayers[0].menuState == 1) {
+                state = arg0->transition.bytes.state = 3;
+            }
+            break;
+        case 3:
+            break;
     }
 
     gCharacterSelectCourseCursorStateByte = state;
@@ -2050,46 +2491,56 @@ void initCharacterSelectCourseListCursor(CharacterSelectCourseWidgetActor *arg0)
 }
 
 void drawCharacterSelectCourseTitleCursor(CharacterSelectCourseWidgetActor *arg0) {
-    drawMenuSpriteWithAlpha(arg0->x, arg0->y, getRelocatableHeapBlockBase(ASSET_HANDLE(0x21)), 1, 0x20, 0x20, 0, arg0->sprite.index, 0);
+    drawMenuSpriteWithAlpha(
+        arg0->x,
+        arg0->y,
+        getRelocatableHeapBlockBase(ASSET_HANDLE(0x21)),
+        1,
+        0x20,
+        0x20,
+        0,
+        arg0->sprite.index,
+        0
+    );
 }
 
 void updateCharacterSelectCourseTitleCursor(CharacterSelectCourseWidgetActor *arg0) {
     u8 state = arg0->transition.bytes.state;
 
     switch (state) {
-    case 0:
-        arg0->sprite.index += 0x26;
-        if (arg0->sprite.index >= 0x100) {
-            arg0->sprite.index = 0x100;
-            arg0->transition.bytes.state = 1;
-        }
-        state = arg0->transition.bytes.state;
-        break;
-    case 1:
-        if (gRacePlayers[0].menuState == 1) {
-            arg0->transition.bytes.state = 2;
-        }
-        if (gRacePlayers[0].menuState == 7) {
-            arg0->transition.bytes.state = 3;
-        }
-        state = arg0->transition.bytes.state;
-        break;
-    case 2:
-        if (gRacePlayers[0].menuState == 5) {
-            arg0->transition.bytes.state = 1;
-        }
-        if (gRacePlayers[0].menuState == 7) {
-            arg0->transition.bytes.state = 3;
-        }
-        state = arg0->transition.bytes.state;
-        break;
-    case 3:
-        arg0->x += 0x20;
-        if (arg0->x >= 0x94) {
-            arg0->transition.bytes.state = 4;
-        }
-        state = arg0->transition.bytes.state;
-        break;
+        case 0:
+            arg0->sprite.index += 0x26;
+            if (arg0->sprite.index >= 0x100) {
+                arg0->sprite.index = 0x100;
+                arg0->transition.bytes.state = 1;
+            }
+            state = arg0->transition.bytes.state;
+            break;
+        case 1:
+            if (gRacePlayers[0].menuState == 1) {
+                arg0->transition.bytes.state = 2;
+            }
+            if (gRacePlayers[0].menuState == 7) {
+                arg0->transition.bytes.state = 3;
+            }
+            state = arg0->transition.bytes.state;
+            break;
+        case 2:
+            if (gRacePlayers[0].menuState == 5) {
+                arg0->transition.bytes.state = 1;
+            }
+            if (gRacePlayers[0].menuState == 7) {
+                arg0->transition.bytes.state = 3;
+            }
+            state = arg0->transition.bytes.state;
+            break;
+        case 3:
+            arg0->x += 0x20;
+            if (arg0->x >= 0x94) {
+                arg0->transition.bytes.state = 4;
+            }
+            state = arg0->transition.bytes.state;
+            break;
     }
     if ((unsigned int)state == 4) {
         removeCallbackTask(arg0);
@@ -2118,14 +2569,45 @@ void drawCharacterSelectCourseStatsBadge(CharacterSelectCourseWidgetActor *arg0)
 
     if (gRaceCourseIndex.signedValue != gCharacterSelectCourseExitOptionIndex) {
         drawMenuPanelBackdrop(arg0->x, arg0->y, 0x3800, 0x5800);
-        drawMenuSpriteWithAlpha((s16)(arg0->x + 4), (s16)(arg0->y + 4), getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE),
-                      0x23, 0x20, 0x20, 0, arg0->sprite.index, 0);
-        sprintf(buf - 4, gCharacterSelectCourseStatsScoreFormat, gCharacterSelectCourseStatsScoreValues[gRaceCourseIndex.signedValue]);
+        drawMenuSpriteWithAlpha(
+            (s16)(arg0->x + 4),
+            (s16)(arg0->y + 4),
+            getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE),
+            0x23,
+            0x20,
+            0x20,
+            0,
+            arg0->sprite.index,
+            0
+        );
+        sprintf(
+            buf - 4,
+            gCharacterSelectCourseStatsScoreFormat,
+            gCharacterSelectCourseStatsScoreValues[gRaceCourseIndex.signedValue]
+        );
         drawMenuAsciiText((s16)(arg0->x + 8), (s16)(arg0->y + 0xC), buf - 4, 0, arg0->sprite.index);
-        drawMenuSpriteWithAlpha((s16)(arg0->x + 0x28), (s16)(arg0->y + 0xC), getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE),
-                      0x24, 0x20, 0x20, 0, arg0->sprite.index, 0);
-        drawMenuSpriteWithAlpha(arg0->x, (s16)(arg0->y + 0x14), getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE), 0x25, 0x20,
-                      0x20, 0, arg0->sprite.index, 0);
+        drawMenuSpriteWithAlpha(
+            (s16)(arg0->x + 0x28),
+            (s16)(arg0->y + 0xC),
+            getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE),
+            0x24,
+            0x20,
+            0x20,
+            0,
+            arg0->sprite.index,
+            0
+        );
+        drawMenuSpriteWithAlpha(
+            arg0->x,
+            (s16)(arg0->y + 0x14),
+            getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE),
+            0x25,
+            0x20,
+            0x20,
+            0,
+            arg0->sprite.index,
+            0
+        );
 
         temp_v0 = gCharacterSelectCourseDifficultyRatings[gRaceCourseIndex.signedValue];
         xOffset = 0;
@@ -2133,9 +2615,17 @@ void drawCharacterSelectCourseStatsBadge(CharacterSelectCourseWidgetActor *arg0)
         var_t8 = temp_v0 & 1;
         if ((temp_v0 / 2) > 0) {
             do {
-                drawMenuSpriteWithAlpha((s16)(arg0->x + xOffset + 4), (s16)(arg0->y + 0x1C),
-                              getRelocatableHeapBlockBase(CHARACTER_SELECT_ICON_TEXTURE_HANDLE), 0x25, 0x20, 0x20, 0,
-                              arg0->sprite.index, 0);
+                drawMenuSpriteWithAlpha(
+                    (s16)(arg0->x + xOffset + 4),
+                    (s16)(arg0->y + 0x1C),
+                    getRelocatableHeapBlockBase(CHARACTER_SELECT_ICON_TEXTURE_HANDLE),
+                    0x25,
+                    0x20,
+                    0x20,
+                    0,
+                    arg0->sprite.index,
+                    0
+                );
                 i++;
                 temp_v0 = gCharacterSelectCourseDifficultyRatings[gRaceCourseIndex.signedValue];
                 xOffset += 0xC;
@@ -2143,9 +2633,17 @@ void drawCharacterSelectCourseStatsBadge(CharacterSelectCourseWidgetActor *arg0)
         }
         var_t8 = temp_v0 & 1;
         if (var_t8 != 0) {
-            drawMenuSpriteWithAlpha((s16)(arg0->x + xOffset + 4), (s16)(arg0->y + 0x1C),
-                          getRelocatableHeapBlockBase(CHARACTER_SELECT_ICON_TEXTURE_HANDLE), 0x26, 0x20, 0x20, 0, arg0->sprite.index,
-                          0);
+            drawMenuSpriteWithAlpha(
+                (s16)(arg0->x + xOffset + 4),
+                (s16)(arg0->y + 0x1C),
+                getRelocatableHeapBlockBase(CHARACTER_SELECT_ICON_TEXTURE_HANDLE),
+                0x26,
+                0x20,
+                0x20,
+                0,
+                arg0->sprite.index,
+                0
+            );
         }
     }
 }
@@ -2154,39 +2652,39 @@ void updateCharacterSelectCourseStatsBadge(CharacterSelectCourseWidgetActor *arg
     u8 state = arg0->transition.bytes.state;
 
     switch (state) {
-    case 0:
-        arg0->sprite.index += 0x26;
-        if (arg0->sprite.index >= 0x100) {
-            arg0->sprite.index = 0x100;
-            arg0->transition.bytes.state = 1;
-        }
-        state = arg0->transition.bytes.state;
-        break;
-    case 1:
-        if (gRacePlayers[0].menuState == 1) {
-            arg0->transition.bytes.state = 2;
-        }
-        if (gRacePlayers[0].menuState == 7) {
-            arg0->transition.bytes.state = 3;
-        }
-        state = arg0->transition.bytes.state;
-        break;
-    case 2:
-        if (gRacePlayers[0].menuState == 5) {
-            arg0->transition.bytes.state = 1;
-        }
-        if (gRacePlayers[0].menuState == 7) {
-            arg0->transition.bytes.state = 3;
-        }
-        state = arg0->transition.bytes.state;
-        break;
-    case 3:
-        arg0->x += 0x20;
-        if (arg0->x >= 0x94) {
-            arg0->transition.bytes.state = 4;
-        }
-        state = arg0->transition.bytes.state;
-        break;
+        case 0:
+            arg0->sprite.index += 0x26;
+            if (arg0->sprite.index >= 0x100) {
+                arg0->sprite.index = 0x100;
+                arg0->transition.bytes.state = 1;
+            }
+            state = arg0->transition.bytes.state;
+            break;
+        case 1:
+            if (gRacePlayers[0].menuState == 1) {
+                arg0->transition.bytes.state = 2;
+            }
+            if (gRacePlayers[0].menuState == 7) {
+                arg0->transition.bytes.state = 3;
+            }
+            state = arg0->transition.bytes.state;
+            break;
+        case 2:
+            if (gRacePlayers[0].menuState == 5) {
+                arg0->transition.bytes.state = 1;
+            }
+            if (gRacePlayers[0].menuState == 7) {
+                arg0->transition.bytes.state = 3;
+            }
+            state = arg0->transition.bytes.state;
+            break;
+        case 3:
+            arg0->x += 0x20;
+            if (arg0->x >= 0x94) {
+                arg0->transition.bytes.state = 4;
+            }
+            state = arg0->transition.bytes.state;
+            break;
     }
     if ((unsigned int)state == 4) {
         removeCallbackTask(arg0);
@@ -2207,6 +2705,8 @@ const char gCharacterSelectCourseBestScoreFormat[] = "%5d";
 const char gCharacterSelectCourseMedalScoreFormat[] = "%5d";
 const char gCharacterSelectCoursePlayerRankFormat[] = "%2d";
 
+// IDO code generation for this function is sensitive to source line layout.
+// clang-format off
 void drawCharacterSelectCoursePlayerStatsPanel(CharacterSelectCourseWidgetActor *arg0) {
     char buf[4];
     s16 *characterIds;
@@ -2216,39 +2716,40 @@ void drawCharacterSelectCoursePlayerStatsPanel(CharacterSelectCourseWidgetActor 
     register s32 i;
     do { characterIds = gCharacterSelectCourseOptionsByUnlock[gHighestUnlockedCourse]; if (gPlayerCount == 1) { drawMenuSprite(arg0->x, arg0->y, getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE), 0x21, 0x20, 0x20, 0, 0); drawMenuSprite((s16)(arg0->x + 0x30), arg0->y, getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE), 0x22, 0x20, 0x20, 0, 0); sprintf(buf - 0x10, gCharacterSelectCourseBestScoreFormat, (&gGameSaveDataBuffer[0].highScores[1])[characterIds[*(&gRaceCourseIndex.signedValue)]]); drawMenuAsciiText((s16)(arg0->x + 0x14), (s16)(arg0->y + 0x2A), buf - 0x10, 0, 0x100); valueOffset = 0; yOffset = 0; three = 3; do { sprintf(buf - 0x10, gCharacterSelectCourseMedalScoreFormat, *((u16 *)(&gCharacterSelectCourseMedalScoreThresholds[(((*(&gRaceCourseIndex.signedValue)) * three) * 2) + valueOffset]))); drawMenuAsciiText((s16)(arg0->x + 0x28), (s16)((arg0->y + yOffset) + 9), buf - 0x10, 0, 0x100); yOffset += 8; valueOffset += 2; } while (yOffset != 0x18); } else { drawMenuSprite(arg0->x, arg0->y, getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE), 0x26, 0x20, 0x20, 0, 0); drawMenuSprite(arg0->x, (s16)(arg0->y + 0x10), getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE), 0x27, 0x20, 0x20, 0, 0); yOffset = 0; for (i = 0; i < RACE_PLAYER_COUNT; i++) { sprintf(buf - 0x10, gCharacterSelectCoursePlayerRankFormat, gRacePlayers[i].unk18); drawMenuAsciiText((s16)(arg0->x + 0x40), (s16)((arg0->y + yOffset) + 0x10), buf - 0x10, 0, 0x100); yOffset += 8; } } } while (0);
 }
+// clang-format on
 
 void updateCharacterSelectCoursePlayerStatsPanel(CharacterSelectCourseWidgetActor *arg0) {
     u8 state = arg0->sprite.bytes.state;
     s16 target;
 
     switch (state) {
-    case 0:
-        if (gPlayerCount == 1) {
-            target = -0x78;
-        } else {
-            target = -0x80;
-        }
-        arg0->x += 0x20;
-        if (arg0->x >= target) {
-            arg0->x = target;
-            arg0->sprite.bytes.state = 1;
-        }
-        state = arg0->sprite.bytes.state;
-        break;
-    case 1:
-        if ((gRacePlayers[0].menuState == 3) || (gRacePlayers[0].menuState == 7)) {
-            state = arg0->sprite.bytes.state = 2;
-        }
-        break;
-    case 2:
-        arg0->x -= 0x20;
-        if (arg0->x < -0x107) {
-            arg0->sprite.bytes.state = 3;
-        }
-        state = arg0->sprite.bytes.state;
-        break;
-    case 3:
-        break;
+        case 0:
+            if (gPlayerCount == 1) {
+                target = -0x78;
+            } else {
+                target = -0x80;
+            }
+            arg0->x += 0x20;
+            if (arg0->x >= target) {
+                arg0->x = target;
+                arg0->sprite.bytes.state = 1;
+            }
+            state = arg0->sprite.bytes.state;
+            break;
+        case 1:
+            if ((gRacePlayers[0].menuState == 3) || (gRacePlayers[0].menuState == 7)) {
+                state = arg0->sprite.bytes.state = 2;
+            }
+            break;
+        case 2:
+            arg0->x -= 0x20;
+            if (arg0->x < -0x107) {
+                arg0->sprite.bytes.state = 3;
+            }
+            state = arg0->sprite.bytes.state;
+            break;
+        case 3:
+            break;
     }
     if ((unsigned int)state == 3) {
         removeCallbackTask(arg0);
@@ -2269,40 +2770,66 @@ void initCharacterSelectCoursePlayerStatsPanel(CharacterSelectCourseWidgetActor 
 
 void drawCharacterSelectCourseSubmenuFrame(CharacterSelectCourseWidgetActor *arg0) {
     drawMenuSprite(arg0->x, arg0->y, getRelocatableHeapBlockBase(ASSET_HANDLE(0x21)), 3, 0x20, 0x20, 0, 0);
-    drawMenuSprite((s16) (arg0->x + 0x40), arg0->y, getRelocatableHeapBlockBase(ASSET_HANDLE(0x21)), 4, 0x20, 0x20, 0, 0);
-    drawMenuSprite(arg0->x, (s16) (arg0->y + 0x40), getRelocatableHeapBlockBase(ASSET_HANDLE(0x21)), 5, 0x20, 0x20, 0, 0);
-    drawMenuSprite((s16) (arg0->x + 0x40), (s16) (arg0->y + 0x40), getRelocatableHeapBlockBase(ASSET_HANDLE(0x21)), 6, 0x20,
-                  0x20, 0, 0);
+    drawMenuSprite(
+        (s16)(arg0->x + 0x40),
+        arg0->y,
+        getRelocatableHeapBlockBase(ASSET_HANDLE(0x21)),
+        4,
+        0x20,
+        0x20,
+        0,
+        0
+    );
+    drawMenuSprite(
+        arg0->x,
+        (s16)(arg0->y + 0x40),
+        getRelocatableHeapBlockBase(ASSET_HANDLE(0x21)),
+        5,
+        0x20,
+        0x20,
+        0,
+        0
+    );
+    drawMenuSprite(
+        (s16)(arg0->x + 0x40),
+        (s16)(arg0->y + 0x40),
+        getRelocatableHeapBlockBase(ASSET_HANDLE(0x21)),
+        6,
+        0x20,
+        0x20,
+        0,
+        0
+    );
 }
 
 void updateCharacterSelectCourseSubmenuFrame(CharacterSelectCourseWidgetActor *arg0) {
     u8 state = arg0->sprite.bytes.state;
 
     switch (state) {
-    case 0:
-        arg0->x += 0x20;
-        if (arg0->x >= -0x88) {
-            arg0->x = -0x88;
-            arg0->sprite.bytes.state = 1;
-            D_8010ADE0 = createCallbackTask((CallbackTaskCallback)initCharacterSelectCourseNamePopup, 0, 0x63);
-        }
-        state = arg0->sprite.bytes.state;
-        break;
-    case 1:
-        if ((gRacePlayers[0].menuState == 3) || (gRacePlayers[0].menuState == 7)) {
-            state = arg0->sprite.bytes.state = 2;
-        }
-        break;
-    case 2:
-        arg0->x -= 0x20;
-        if (arg0->x < -0x107) {
-            arg0->sprite.bytes.state = 3;
-        }
-        state = arg0->sprite.bytes.state;
-        break;
-    case 3:
-        state = arg0->sprite.bytes.state = 4;
-        break;
+        case 0:
+            arg0->x += 0x20;
+            if (arg0->x >= -0x88) {
+                arg0->x = -0x88;
+                arg0->sprite.bytes.state = 1;
+                D_8010ADE0 = createCallbackTask((CallbackTaskCallback)initCharacterSelectCourseNamePopup, 0, 0x63);
+            }
+            state = arg0->sprite.bytes.state;
+            break;
+        case 1:
+            if ((gRacePlayers[0].menuState == 3) || (gRacePlayers[0].menuState == 7)) {
+                state = arg0->sprite.bytes.state = 2;
+            }
+            break;
+        case 2:
+            arg0->x -= 0x20;
+            if (arg0->x < -0x107) {
+                arg0->sprite.bytes.state = 3;
+            }
+            state = arg0->sprite.bytes.state;
+            break;
+        case 3:
+            state = arg0->sprite.bytes.state = 4;
+            break;
     }
     state = arg0->sprite.bytes.state;
     if (state == 4) {
@@ -2321,64 +2848,91 @@ void initCharacterSelectCourseSubmenuFrame(CharacterSelectCourseWidgetActor *arg
 
 void drawCharacterSelectCourseRecordsFrame(CharacterSelectCourseWidgetActor *arg0) {
     drawMenuSprite(arg0->x, arg0->y, getRelocatableHeapBlockBase(ASSET_HANDLE(0x21)), 3, 0x20, 0x20, 0, 0);
-    drawMenuSprite((s16) (arg0->x + 0x40), arg0->y, getRelocatableHeapBlockBase(ASSET_HANDLE(0x21)), 4, 0x20, 0x20, 0, 0);
-    drawMenuSprite(arg0->x, (s16) (arg0->y + 0x40), getRelocatableHeapBlockBase(ASSET_HANDLE(0x21)), 5, 0x20, 0x20, 0, 0);
-    drawMenuSprite((s16) (arg0->x + 0x40), (s16) (arg0->y + 0x40), getRelocatableHeapBlockBase(ASSET_HANDLE(0x21)), 6, 0x20, 0x20, 0, 0);
+    drawMenuSprite(
+        (s16)(arg0->x + 0x40),
+        arg0->y,
+        getRelocatableHeapBlockBase(ASSET_HANDLE(0x21)),
+        4,
+        0x20,
+        0x20,
+        0,
+        0
+    );
+    drawMenuSprite(
+        arg0->x,
+        (s16)(arg0->y + 0x40),
+        getRelocatableHeapBlockBase(ASSET_HANDLE(0x21)),
+        5,
+        0x20,
+        0x20,
+        0,
+        0
+    );
+    drawMenuSprite(
+        (s16)(arg0->x + 0x40),
+        (s16)(arg0->y + 0x40),
+        getRelocatableHeapBlockBase(ASSET_HANDLE(0x21)),
+        6,
+        0x20,
+        0x20,
+        0,
+        0
+    );
 }
 
 void updateCharacterSelectCourseRecordsFrame(CharacterSelectCourseWidgetActor *arg0) {
     u32 state = arg0->sprite.bytes.state;
 
     switch (state) {
-    case 0:
-        arg0->x += 0x20;
-        if (arg0->x >= -0x88) {
-            arg0->x = -0x88;
-            arg0->sprite.bytes.state = 1;
-            createCallbackTask((CallbackTaskCallback)initCharacterSelectCourseDescriptionPopup, 0, 0x63);
-        }
-        state = arg0->sprite.bytes.state;
-        break;
-    case 1:
-        if (gRacePlayers[0].menuState == 7) {
-            arg0->sprite.bytes.state = 5;
-        }
-        if (gRacePlayers[0].menuState == 1) {
-            arg0->sprite.bytes.state = 2;
-        }
-        state = arg0->sprite.bytes.state;
-        break;
-    case 2:
-        arg0->x -= 0x20;
-        if (arg0->x < -0x127) {
-            arg0->sprite.bytes.state = 3;
-            arg0->x = -0x128;
-        }
-        state = arg0->sprite.bytes.state;
-        break;
-    case 3:
-        if (gRacePlayers[0].menuState == 5) {
-            state = arg0->sprite.bytes.state = 4;
-        }
-        break;
-    case 4:
-        arg0->x += 0x20;
-        if (arg0->x >= -0x88) {
-            arg0->x = -0x88;
-            arg0->sprite.bytes.state = 1;
-        }
-        state = arg0->sprite.bytes.state;
-        break;
-    case 5:
-        arg0->x -= 0x20;
-        if (arg0->x < -0x107) {
-            arg0->sprite.bytes.state = 6;
-        }
-        state = arg0->sprite.bytes.state;
-        break;
-    case 6:
-        state = arg0->sprite.bytes.state = 7;
-        break;
+        case 0:
+            arg0->x += 0x20;
+            if (arg0->x >= -0x88) {
+                arg0->x = -0x88;
+                arg0->sprite.bytes.state = 1;
+                createCallbackTask((CallbackTaskCallback)initCharacterSelectCourseDescriptionPopup, 0, 0x63);
+            }
+            state = arg0->sprite.bytes.state;
+            break;
+        case 1:
+            if (gRacePlayers[0].menuState == 7) {
+                arg0->sprite.bytes.state = 5;
+            }
+            if (gRacePlayers[0].menuState == 1) {
+                arg0->sprite.bytes.state = 2;
+            }
+            state = arg0->sprite.bytes.state;
+            break;
+        case 2:
+            arg0->x -= 0x20;
+            if (arg0->x < -0x127) {
+                arg0->sprite.bytes.state = 3;
+                arg0->x = -0x128;
+            }
+            state = arg0->sprite.bytes.state;
+            break;
+        case 3:
+            if (gRacePlayers[0].menuState == 5) {
+                state = arg0->sprite.bytes.state = 4;
+            }
+            break;
+        case 4:
+            arg0->x += 0x20;
+            if (arg0->x >= -0x88) {
+                arg0->x = -0x88;
+                arg0->sprite.bytes.state = 1;
+            }
+            state = arg0->sprite.bytes.state;
+            break;
+        case 5:
+            arg0->x -= 0x20;
+            if (arg0->x < -0x107) {
+                arg0->sprite.bytes.state = 6;
+            }
+            state = arg0->sprite.bytes.state;
+            break;
+        case 6:
+            state = arg0->sprite.bytes.state = 7;
+            break;
     }
     if (state == 7) {
         removeCallbackTask(arg0);
@@ -2410,7 +2964,8 @@ void drawCharacterSelectCourseNamePopup(CharacterSelectCourseWidgetActor *arg0) 
             0x20,
             0x20,
             0,
-            0);
+            0
+        );
     }
 }
 
@@ -2426,48 +2981,48 @@ void updateCharacterSelectCourseNamePopup(CharacterSelectCourseWidgetActor *arg0
     }
 
     switch (state) {
-    case 0:
-        if ((++arg0->transition.bytes.timer) == 2) {
-            arg0->transition.bytes.state = 1;
-            arg0->transition.bytes.timer = state * 0;
-        }
-        state = arg0->transition.bytes.state;
-        break;
-    case 1:
-        arg0->sprite.index += 0x30;
-        if (arg0->sprite.index >= 0x100) {
-            arg0->sprite.index = 0x100;
-            arg0->transition.bytes.state = 2;
-        }
-        state = arg0->transition.bytes.state;
-        break;
-    case 2:
-        arg0->transition.bytes.timer = (arg0->transition.bytes.timer + 1) & 0xF;
-        if (gRacePlayers[0].menuState == 3) {
-            arg0->transition.bytes.state = 5;
-        }
-        state = arg0->transition.bytes.state;
-        break;
-    case 3:
-        state = arg0->transition.bytes.state;
-        arg0->transition.bytes.timer = 0;
-        break;
-    case 4:
-        arg0->transition.bytes.timer++;
-        if ((gRacePlayers[0].menuState == 3) || (gRacePlayers[0].menuState == 7)) {
-            arg0->transition.bytes.state = 5;
-        }
-        state = arg0->transition.bytes.state;
-        break;
-    case 5:
-        arg0->x -= 0x20;
-        if (arg0->x < -0xFF) {
-            arg0->transition.bytes.state = 6;
-        }
-        state = arg0->transition.bytes.state;
-        break;
-    case 6:
-        break;
+        case 0:
+            if ((++arg0->transition.bytes.timer) == 2) {
+                arg0->transition.bytes.state = 1;
+                arg0->transition.bytes.timer = state * 0;
+            }
+            state = arg0->transition.bytes.state;
+            break;
+        case 1:
+            arg0->sprite.index += 0x30;
+            if (arg0->sprite.index >= 0x100) {
+                arg0->sprite.index = 0x100;
+                arg0->transition.bytes.state = 2;
+            }
+            state = arg0->transition.bytes.state;
+            break;
+        case 2:
+            arg0->transition.bytes.timer = (arg0->transition.bytes.timer + 1) & 0xF;
+            if (gRacePlayers[0].menuState == 3) {
+                arg0->transition.bytes.state = 5;
+            }
+            state = arg0->transition.bytes.state;
+            break;
+        case 3:
+            state = arg0->transition.bytes.state;
+            arg0->transition.bytes.timer = 0;
+            break;
+        case 4:
+            arg0->transition.bytes.timer++;
+            if ((gRacePlayers[0].menuState == 3) || (gRacePlayers[0].menuState == 7)) {
+                arg0->transition.bytes.state = 5;
+            }
+            state = arg0->transition.bytes.state;
+            break;
+        case 5:
+            arg0->x -= 0x20;
+            if (arg0->x < -0xFF) {
+                arg0->transition.bytes.state = 6;
+            }
+            state = arg0->transition.bytes.state;
+            break;
+        case 6:
+            break;
     }
 
     gCharacterSelectCourseSubmenuState = state;
@@ -2520,61 +3075,61 @@ void updateCharacterSelectCourseDescriptionPopup(CharacterSelectCourseWidgetActo
     u32 state = arg0->transition.bytes.state;
 
     switch (state) {
-    case 0:
-        if (++arg0->transition.bytes.timer == 2) {
-            arg0->transition.bytes.state = 1;
-            arg0->transition.bytes.timer = 0;
-        }
-        state = arg0->transition.bytes.state;
-        break;
-    case 1:
-        arg0->sprite.index += 0x30;
-        if (arg0->sprite.index >= 0x100) {
-            arg0->sprite.index = 0x100;
-            arg0->transition.bytes.state = 2;
-        }
-        state = arg0->transition.bytes.state;
-        break;
-    case 2:
-        if ((gRacePlayers[0].menuState == 7) || (gRacePlayers[0].menuState == 1)) {
-            state = arg0->transition.bytes.state = 3;
-        }
-        break;
-    case 3:
-        arg0->x -= 0x20;
-        if (arg0->x < -0x11F) {
-            if (gRacePlayers[0].menuState == 7) {
-                arg0->transition.bytes.state = 7;
-            } else {
-                arg0->transition.bytes.state = 4;
+        case 0:
+            if (++arg0->transition.bytes.timer == 2) {
+                arg0->transition.bytes.state = 1;
+                arg0->transition.bytes.timer = 0;
             }
-        }
-        state = arg0->transition.bytes.state;
-        break;
-    case 4:
-        if (gRacePlayers[0].menuState == 5) {
-            state = arg0->transition.bytes.state = 5;
-        }
-        break;
-    case 5:
-        arg0->x += 0x20;
-        if (arg0->x >= -0x84) {
-            arg0->transition.bytes.state = 2;
-        }
-        state = arg0->transition.bytes.state;
-        break;
-    case 6:
-        if (gRacePlayers[0].menuState == 7) {
-            arg0->transition.bytes.state = 3;
-        }
-        if (gRacePlayers[0].menuState == 0) {
-            arg0->transition.bytes.state = 2;
-        }
-        state = arg0->transition.bytes.state;
-        break;
-    case 7:
-        state = arg0->transition.bytes.state = 8;
-        break;
+            state = arg0->transition.bytes.state;
+            break;
+        case 1:
+            arg0->sprite.index += 0x30;
+            if (arg0->sprite.index >= 0x100) {
+                arg0->sprite.index = 0x100;
+                arg0->transition.bytes.state = 2;
+            }
+            state = arg0->transition.bytes.state;
+            break;
+        case 2:
+            if ((gRacePlayers[0].menuState == 7) || (gRacePlayers[0].menuState == 1)) {
+                state = arg0->transition.bytes.state = 3;
+            }
+            break;
+        case 3:
+            arg0->x -= 0x20;
+            if (arg0->x < -0x11F) {
+                if (gRacePlayers[0].menuState == 7) {
+                    arg0->transition.bytes.state = 7;
+                } else {
+                    arg0->transition.bytes.state = 4;
+                }
+            }
+            state = arg0->transition.bytes.state;
+            break;
+        case 4:
+            if (gRacePlayers[0].menuState == 5) {
+                state = arg0->transition.bytes.state = 5;
+            }
+            break;
+        case 5:
+            arg0->x += 0x20;
+            if (arg0->x >= -0x84) {
+                arg0->transition.bytes.state = 2;
+            }
+            state = arg0->transition.bytes.state;
+            break;
+        case 6:
+            if (gRacePlayers[0].menuState == 7) {
+                arg0->transition.bytes.state = 3;
+            }
+            if (gRacePlayers[0].menuState == 0) {
+                arg0->transition.bytes.state = 2;
+            }
+            state = arg0->transition.bytes.state;
+            break;
+        case 7:
+            state = arg0->transition.bytes.state = 8;
+            break;
     }
     if (state == 8) {
         removeCallbackTask(arg0);
@@ -2607,7 +3162,17 @@ void drawCharacterSelectCourseConfirmCursor(CharacterSelectCourseWidgetActor *ar
         }
 
         drawAlpha = alpha;
-        drawMenuSpriteWithAlpha(arg0->x, arg0->sprite.index, getRelocatableHeapBlockBase(ASSET_HANDLE(0x24)), 0x18, 0x20, 0x20, 0, drawAlpha, 0);
+        drawMenuSpriteWithAlpha(
+            arg0->x,
+            arg0->sprite.index,
+            getRelocatableHeapBlockBase(ASSET_HANDLE(0x24)),
+            0x18,
+            0x20,
+            0x20,
+            0,
+            drawAlpha,
+            0
+        );
 
         if (drawAlpha == 0x100) {
             alpha = 0x60;
@@ -2615,12 +3180,31 @@ void drawCharacterSelectCourseConfirmCursor(CharacterSelectCourseWidgetActor *ar
             alpha = 0x100;
         }
 
-        drawMenuSpriteWithAlpha(arg0->x, arg0->y, getRelocatableHeapBlockBase(ASSET_HANDLE(0x24)), 0x17, 0x20, 0x20, 0, alpha, 0);
+        drawMenuSpriteWithAlpha(
+            arg0->x,
+            arg0->y,
+            getRelocatableHeapBlockBase(ASSET_HANDLE(0x24)),
+            0x17,
+            0x20,
+            0x20,
+            0,
+            alpha,
+            0
+        );
 
         state = gMenuChoicePromptState[0];
         if ((state == 3) || (state == 4)) {
-            drawMenuSpriteWithAlpha(arg0->x, (s16)(((gMenuChoicePromptState[0] * 0x10) + arg0->y) - 0x30), getRelocatableHeapBlockBase(ASSET_HANDLE(0x24)), 0x12,
-                          0x20, 0x20, 0, arg0->selection.unsignedCounter, 0);
+            drawMenuSpriteWithAlpha(
+                arg0->x,
+                (s16)(((gMenuChoicePromptState[0] * 0x10) + arg0->y) - 0x30),
+                getRelocatableHeapBlockBase(ASSET_HANDLE(0x24)),
+                0x12,
+                0x20,
+                0x20,
+                0,
+                arg0->selection.unsignedCounter,
+                0
+            );
             state = gMenuChoicePromptState[0];
         }
     }
@@ -2632,8 +3216,7 @@ void drawCharacterSelectCourseConfirmCursor(CharacterSelectCourseWidgetActor *ar
 void updateCharacterSelectCourseConfirmCursor(CharacterSelectCourseWidgetActor *arg0) {
     s32 step;
 
-    if ((gMenuChoicePromptState[0] != 0) && (gMenuChoicePromptState[0] != 3) &&
-        (gMenuChoicePromptState[0] != 4)) {
+    if ((gMenuChoicePromptState[0] != 0) && (gMenuChoicePromptState[0] != 3) && (gMenuChoicePromptState[0] != 4)) {
         step = ((gMenuChoicePromptState[0] < 5) ? 1 : -1) * 8;
         arg0->transition.signedAlpha += step;
 
@@ -2683,38 +3266,38 @@ void updateCharacterSelectCourseRecordsPopup(CharacterSelectCourseWidgetActor *a
     s16 target;
 
     switch (state) {
-    case 0:
-        unk = gRaceTypeSelection;
-        if ((gRaceSplitscreenMode == 2) || ((gRaceSplitscreenMode == 1) && (unk == 0))) {
-            target = -0x8A;
-        } else {
-            target = -0x88;
-        }
-        arg0->x += 0x20;
-        if (arg0->x >= target) {
-            arg0->x = target;
-            arg0->sprite.bytes.state = 1;
-        }
-        state = arg0->sprite.bytes.state;
-        break;
-    case 1:
-        if ((gRacePlayers[0].menuState == 3) || (gRacePlayers[0].menuState == 7)) {
-            state = arg0->sprite.bytes.state = 2;
-        }
-        break;
-    case 2:
-        arg0->x -= 0x20;
-        if (arg0->x < -0xEF) {
-            arg0->x = -0xF0;
-            arg0->sprite.bytes.state = 3;
-        }
-        state = arg0->sprite.bytes.state;
-        break;
-    case 3:
-        state = arg0->sprite.bytes.state = 4;
-        break;
-    case 4:
-        break;
+        case 0:
+            unk = gRaceTypeSelection;
+            if ((gRaceSplitscreenMode == 2) || ((gRaceSplitscreenMode == 1) && (unk == 0))) {
+                target = -0x8A;
+            } else {
+                target = -0x88;
+            }
+            arg0->x += 0x20;
+            if (arg0->x >= target) {
+                arg0->x = target;
+                arg0->sprite.bytes.state = 1;
+            }
+            state = arg0->sprite.bytes.state;
+            break;
+        case 1:
+            if ((gRacePlayers[0].menuState == 3) || (gRacePlayers[0].menuState == 7)) {
+                state = arg0->sprite.bytes.state = 2;
+            }
+            break;
+        case 2:
+            arg0->x -= 0x20;
+            if (arg0->x < -0xEF) {
+                arg0->x = -0xF0;
+                arg0->sprite.bytes.state = 3;
+            }
+            state = arg0->sprite.bytes.state;
+            break;
+        case 3:
+            state = arg0->sprite.bytes.state = 4;
+            break;
+        case 4:
+            break;
     }
     state = arg0->sprite.bytes.state;
     if (state == 4) {
@@ -2734,17 +3317,18 @@ void initCharacterSelectCourseRecordsPopup(CharacterSelectCourseWidgetActor *arg
 
 void drawCharacterSelectCourseExitPopup(CharacterSelectCourseWidgetActor *arg0) {
     drawMenuSprite(arg0->x, arg0->y, getRelocatableHeapBlockBase(ASSET_HANDLE(0x21)), 0x28, 0x20, 0x20, 0, 0);
-    if ((s32) arg0->transition.bytes.state > 0) {
-        drawMenuGlyphScript((s16) (arg0->x + 4), (s16) (arg0->y + 4), gCharacterSelectCourseStartGameText, 1, 0x100, 0);
+    if ((s32)arg0->transition.bytes.state > 0) {
+        drawMenuGlyphScript((s16)(arg0->x + 4), (s16)(arg0->y + 4), gCharacterSelectCourseStartGameText, 1, 0x100, 0);
         drawMenuSprite(
-            (s16) (arg0->x + 0x64),
-            (s16) (arg0->y + 4),
+            (s16)(arg0->x + 0x64),
+            (s16)(arg0->y + 4),
             getRelocatableHeapBlockBase(ASSET_HANDLE(0x24)),
-            (u16) ((arg0->transition.bytes.timer >= 8) + 5),
+            (u16)((arg0->transition.bytes.timer >= 8) + 5),
             0x20,
             0x20,
             0,
-            0);
+            0
+        );
     }
 }
 
@@ -2766,39 +3350,39 @@ void updateCharacterSelectCourseExitPopup(CharacterSelectCourseWidgetActor *arg0
     }
 
     switch (state) {
-    case 0:
-        arg0->x += 0x20;
-        if (arg0->x >= -0x88) {
-            arg0->x = -0x88;
-            arg0->transition.bytes.state = 2;
-        }
-        state = arg0->transition.bytes.state;
-        break;
-    case 2:
-        arg0->transition.bytes.timer = (arg0->transition.bytes.timer + 1) & 0xF;
-        if (gRacePlayers[0].menuState == 3) {
-            arg0->transition.bytes.state = 5;
-        }
-        state = arg0->transition.bytes.state;
-        break;
-    case 3:
-        state = arg0->transition.bytes.state;
-        arg0->transition.bytes.timer = 0;
-        break;
-    case 4:
-        arg0->transition.bytes.timer++;
-        if ((gRacePlayers[0].menuState == 3) || (gRacePlayers[0].menuState == 7)) {
-            arg0->transition.bytes.state = 5;
-        }
-        state = arg0->transition.bytes.state;
-        break;
-    case 5:
-        arg0->x -= 0x20;
-        if (arg0->x < -0x107) {
-            arg0->transition.bytes.state = 6;
-        }
-        state = arg0->transition.bytes.state;
-        break;
+        case 0:
+            arg0->x += 0x20;
+            if (arg0->x >= -0x88) {
+                arg0->x = -0x88;
+                arg0->transition.bytes.state = 2;
+            }
+            state = arg0->transition.bytes.state;
+            break;
+        case 2:
+            arg0->transition.bytes.timer = (arg0->transition.bytes.timer + 1) & 0xF;
+            if (gRacePlayers[0].menuState == 3) {
+                arg0->transition.bytes.state = 5;
+            }
+            state = arg0->transition.bytes.state;
+            break;
+        case 3:
+            state = arg0->transition.bytes.state;
+            arg0->transition.bytes.timer = 0;
+            break;
+        case 4:
+            arg0->transition.bytes.timer++;
+            if ((gRacePlayers[0].menuState == 3) || (gRacePlayers[0].menuState == 7)) {
+                arg0->transition.bytes.state = 5;
+            }
+            state = arg0->transition.bytes.state;
+            break;
+        case 5:
+            arg0->x -= 0x20;
+            if (arg0->x < -0x107) {
+                arg0->transition.bytes.state = 6;
+            }
+            state = arg0->transition.bytes.state;
+            break;
     }
 
     gCharacterSelectCourseSubmenuState = state;
@@ -2841,13 +3425,22 @@ void drawCharacterSelectCourseRecordTime(CharacterSelectCourseRecordTime *arg0, 
         do {
         } while (0);
         drawAssetTableSpriteWithExplicitPaletteWideIndex(
-            (s16)x, y, getRelocatableHeapBlockBase(CHARACTER_SELECT_POPUP_FONT_HANDLE),
-            ((u8)buffer[i] - 5) & 0xFFFF, color);
+            (s16)x,
+            y,
+            getRelocatableHeapBlockBase(CHARACTER_SELECT_POPUP_FONT_HANDLE),
+            ((u8)buffer[i] - 5) & 0xFFFF,
+            color
+        );
         i++;
         x += 8;
     } while (i < -0xE);
     drawAssetTableSpriteWithExplicitPaletteWideIndex(
-        (s16)x, y, getRelocatableHeapBlockBase(CHARACTER_SELECT_POPUP_FONT_HANDLE), 0x36, color);
+        (s16)x,
+        y,
+        getRelocatableHeapBlockBase(CHARACTER_SELECT_POPUP_FONT_HANDLE),
+        0x36,
+        color
+    );
 
     if ((gRaceSplitscreenMode == 2) || ((gRaceSplitscreenMode == 1) && (gRaceTypeSelection == 0))) {
         x += 6;
@@ -2859,21 +3452,34 @@ void drawCharacterSelectCourseRecordTime(CharacterSelectCourseRecordTime *arg0, 
     i = -0x10;
     do {
         drawAssetTableSpriteWithExplicitPaletteWideIndex(
-            (s16)x, y, getRelocatableHeapBlockBase(CHARACTER_SELECT_POPUP_FONT_HANDLE),
-            ((u8)buffer[i] - 5) & 0xFFFF, color);
+            (s16)x,
+            y,
+            getRelocatableHeapBlockBase(CHARACTER_SELECT_POPUP_FONT_HANDLE),
+            ((u8)buffer[i] - 5) & 0xFFFF,
+            color
+        );
         i++;
         x += 8;
     } while (i < -0xE);
     drawAssetTableSpriteWithExplicitPaletteWideIndex(
-        (s16)x, y, getRelocatableHeapBlockBase(CHARACTER_SELECT_POPUP_FONT_HANDLE), 0x35, color);
+        (s16)x,
+        y,
+        getRelocatableHeapBlockBase(CHARACTER_SELECT_POPUP_FONT_HANDLE),
+        0x35,
+        color
+    );
 
     x += 8;
     sprintf(&buffer[-0x10], D_800E0BA8, record->centiseconds >> 8);
     i = -0x10;
     do {
         drawAssetTableSpriteWithExplicitPaletteWideIndex(
-            (s16)x, y, getRelocatableHeapBlockBase(CHARACTER_SELECT_POPUP_FONT_HANDLE),
-            ((u8)buffer[i] - 5) & 0xFFFF, color);
+            (s16)x,
+            y,
+            getRelocatableHeapBlockBase(CHARACTER_SELECT_POPUP_FONT_HANDLE),
+            ((u8)buffer[i] - 5) & 0xFFFF,
+            color
+        );
         i++;
         x += 8;
     } while (i != -0xE);

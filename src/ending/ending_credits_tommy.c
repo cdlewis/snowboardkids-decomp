@@ -13,11 +13,11 @@
 #include "game/menu/renderer/menu_render_utils.h"
 
 #define ENDING_GFX_CMD(pkt, cmd0, cmd1) \
-{ \
-    Gfx *_g = (Gfx *)(pkt); \
-    _g->words.w0 = (cmd0); \
-    _g->words.w1 = (cmd1); \
-}
+    {                                   \
+        Gfx *_g = (Gfx *)(pkt);         \
+        _g->words.w0 = (cmd0);          \
+        _g->words.w1 = (cmd1);          \
+    }
 
 struct EndingCreditsTommy {
     /* 0x00 */ char pad0[0x18];
@@ -44,10 +44,10 @@ extern MainMenuSceneActorShadow gEndingActorShadow;
 extern Gfx *gRegionAllocPtr;
 extern u32 gAlphaSpriteRenderModeDl[];
 Vtx D_800B8100[4] = {
-    {{{-16,  16, 0}, 0, {  0,   0}, {0xFF, 0xFF, 0xFF, 0xFF}}},
-    {{{ 16,  16, 0}, 0, {480,   0}, {0xFF, 0xFF, 0xFF, 0xFF}}},
-    {{{ 16, -16, 0}, 0, {480, 480}, {0xFF, 0xFF, 0xFF, 0xFF}}},
-    {{{-16, -16, 0}, 0, {  0, 480}, {0xFF, 0xFF, 0xFF, 0xFF}}},
+    { { { -16, 16, 0 }, 0, { 0, 0 }, { 0xFF, 0xFF, 0xFF, 0xFF } } },
+    { { { 16, 16, 0 }, 0, { 480, 0 }, { 0xFF, 0xFF, 0xFF, 0xFF } } },
+    { { { 16, -16, 0 }, 0, { 480, 480 }, { 0xFF, 0xFF, 0xFF, 0xFF } } },
+    { { { -16, -16, 0 }, 0, { 0, 480 }, { 0xFF, 0xFF, 0xFF, 0xFF } } },
 };
 extern s16 gAssetHandles[];
 
@@ -411,16 +411,13 @@ void drawEndingActorShadow(MainMenuSceneActorShadow *arg0) {
     stack.pos.z = arg0->posZ;
     transformVec3iByFixedMatrix(model->displayObjects[(u8)arg0->unkC].rotation, &stack.pos, &stack.transformed);
     stack.transform = gIdentityFixedTransform;
-    stack.transform.translation.x =
-        model->displayObjects[(u8)arg0->unkC].translation[0] + stack.transformed.x;
-    stack.transform.translation.y =
-        model->displayObjects[(u8)arg0->unkC].translation[1] + stack.transformed.y;
+    stack.transform.translation.x = model->displayObjects[(u8)arg0->unkC].translation[0] + stack.transformed.x;
+    stack.transform.translation.y = model->displayObjects[(u8)arg0->unkC].translation[1] + stack.transformed.y;
     stack.transform.translation.z = model->displayObjects[(u8)arg0->unkC].translation[2];
 
     ENDING_GFX_CMD(gRegionAllocPtr++, 0x06000000, (u32)gAlphaSpriteRenderModeDl);
 
-    getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gAssetHandles[0x21]), 0x31, &stack.image,
-                                 &stack.palette);
+    getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gAssetHandles[0x21]), 0x31, &stack.image, &stack.palette);
 
     ENDING_GFX_CMD(gRegionAllocPtr++, 0xFD100000, (u32)stack.palette);
     ENDING_GFX_CMD(gRegionAllocPtr++, 0xE8000000, 0);

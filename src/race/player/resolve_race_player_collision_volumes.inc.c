@@ -32,8 +32,7 @@ void resolveRacePlayerCollisionVolumes(RacePlayer *player) {
 
     if (player->stateFlags & RACE_PLAYER_COLLISION_YAW_FLIPPED) {
         for (volumeIndex = 0; volumeIndex < player->collisionVolumeCount; volumeIndex++) {
-            source =
-                &player->collisionSources[player->collisionSources[volumeIndex].mirroredParentIndex];
+            source = &player->collisionSources[player->collisionSources[volumeIndex].mirroredParentIndex];
             sinX = fixedSine(source->rotX);
             cosX = fixedCosine(source->rotX);
             sinY = fixedSine(-source->rotY);
@@ -45,16 +44,12 @@ void resolveRacePlayerCollisionVolumes(RacePlayer *player) {
             localRotations[volumeIndex][1] = FIXED_PRODUCT(cosY, sinZ);
             localRotations[volumeIndex][2] = -sinY;
             rotationProduct = FIXED_PRODUCT(sinX, sinY);
-            localRotations[volumeIndex][3] =
-                FIXED_PRODUCT(rotationProduct, cosZ) + FIXED_PRODUCT(cosX, -sinZ);
-            localRotations[volumeIndex][4] =
-                FIXED_PRODUCT(rotationProduct, sinZ) + FIXED_PRODUCT(cosX, cosZ);
+            localRotations[volumeIndex][3] = FIXED_PRODUCT(rotationProduct, cosZ) + FIXED_PRODUCT(cosX, -sinZ);
+            localRotations[volumeIndex][4] = FIXED_PRODUCT(rotationProduct, sinZ) + FIXED_PRODUCT(cosX, cosZ);
             localRotations[volumeIndex][5] = FIXED_PRODUCT(sinX, cosY);
             rotationProduct = FIXED_PRODUCT(cosX, sinY);
-            localRotations[volumeIndex][6] =
-                FIXED_PRODUCT(rotationProduct, cosZ) + FIXED_PRODUCT(sinX, sinZ);
-            localRotations[volumeIndex][7] =
-                FIXED_PRODUCT(rotationProduct, sinZ) + FIXED_PRODUCT(-sinX, cosZ);
+            localRotations[volumeIndex][6] = FIXED_PRODUCT(rotationProduct, cosZ) + FIXED_PRODUCT(sinX, sinZ);
+            localRotations[volumeIndex][7] = FIXED_PRODUCT(rotationProduct, sinZ) + FIXED_PRODUCT(-sinX, cosZ);
             localRotations[volumeIndex][8] = FIXED_PRODUCT(cosX, cosY);
 
             if (player->stateFlags & RACE_PLAYER_COLLISION_SQUASHED) {
@@ -83,12 +78,54 @@ void resolveRacePlayerCollisionVolumes(RacePlayer *player) {
             }
         }
 
-        player->collisionVolumes[0].point[0] = MIRRORED_COLLISION_POINT(worldRotation[0], worldRotation[3], worldRotation[6], player->collisionSources[0].sizeX, player->collisionSources[0].sizeY - player->collisionCenterOffset, player->collisionSources[0].sizeZ);
-        player->collisionVolumes[0].point[1] = MIRRORED_COLLISION_POINT(worldRotation[1], worldRotation[4], worldRotation[7], player->collisionSources[0].sizeX, player->collisionSources[0].sizeY - player->collisionCenterOffset, player->collisionSources[0].sizeZ);
-        player->collisionVolumes[0].point[2] = MIRRORED_COLLISION_POINT(worldRotation[2], worldRotation[5], worldRotation[8], player->collisionSources[0].sizeX, player->collisionSources[0].sizeY - player->collisionCenterOffset, player->collisionSources[0].sizeZ);
-        player->collisionVolumes[1].point[0] = MIRRORED_COLLISION_POINT(player->collisionVolumes[0].axis[0], player->collisionVolumes[0].axis[3], player->collisionVolumes[0].axis[6], player->collisionSources[1].sizeX, player->collisionSources[1].sizeY, player->collisionSources[1].sizeZ);
-        player->collisionVolumes[1].point[1] = MIRRORED_COLLISION_POINT(player->collisionVolumes[0].axis[1], player->collisionVolumes[0].axis[4], player->collisionVolumes[0].axis[7], player->collisionSources[1].sizeX, player->collisionSources[1].sizeY, player->collisionSources[1].sizeZ);
-        player->collisionVolumes[1].point[2] = MIRRORED_COLLISION_POINT(player->collisionVolumes[0].axis[2], player->collisionVolumes[0].axis[5], player->collisionVolumes[0].axis[8], player->collisionSources[1].sizeX, player->collisionSources[1].sizeY, player->collisionSources[1].sizeZ);
+        player->collisionVolumes[0].point[0] = MIRRORED_COLLISION_POINT(
+            worldRotation[0],
+            worldRotation[3],
+            worldRotation[6],
+            player->collisionSources[0].sizeX,
+            player->collisionSources[0].sizeY - player->collisionCenterOffset,
+            player->collisionSources[0].sizeZ
+        );
+        player->collisionVolumes[0].point[1] = MIRRORED_COLLISION_POINT(
+            worldRotation[1],
+            worldRotation[4],
+            worldRotation[7],
+            player->collisionSources[0].sizeX,
+            player->collisionSources[0].sizeY - player->collisionCenterOffset,
+            player->collisionSources[0].sizeZ
+        );
+        player->collisionVolumes[0].point[2] = MIRRORED_COLLISION_POINT(
+            worldRotation[2],
+            worldRotation[5],
+            worldRotation[8],
+            player->collisionSources[0].sizeX,
+            player->collisionSources[0].sizeY - player->collisionCenterOffset,
+            player->collisionSources[0].sizeZ
+        );
+        player->collisionVolumes[1].point[0] = MIRRORED_COLLISION_POINT(
+            player->collisionVolumes[0].axis[0],
+            player->collisionVolumes[0].axis[3],
+            player->collisionVolumes[0].axis[6],
+            player->collisionSources[1].sizeX,
+            player->collisionSources[1].sizeY,
+            player->collisionSources[1].sizeZ
+        );
+        player->collisionVolumes[1].point[1] = MIRRORED_COLLISION_POINT(
+            player->collisionVolumes[0].axis[1],
+            player->collisionVolumes[0].axis[4],
+            player->collisionVolumes[0].axis[7],
+            player->collisionSources[1].sizeX,
+            player->collisionSources[1].sizeY,
+            player->collisionSources[1].sizeZ
+        );
+        player->collisionVolumes[1].point[2] = MIRRORED_COLLISION_POINT(
+            player->collisionVolumes[0].axis[2],
+            player->collisionVolumes[0].axis[5],
+            player->collisionVolumes[0].axis[8],
+            player->collisionSources[1].sizeX,
+            player->collisionSources[1].sizeY,
+            player->collisionSources[1].sizeZ
+        );
     } else {
         for (volumeIndex = 0; volumeIndex < player->collisionVolumeCount; volumeIndex++) {
             source = &player->collisionSources[volumeIndex];
@@ -103,16 +140,12 @@ void resolveRacePlayerCollisionVolumes(RacePlayer *player) {
             localRotations[volumeIndex][1] = FIXED_PRODUCT(cosY, sinZ);
             localRotations[volumeIndex][2] = -sinY;
             rotationProduct = FIXED_PRODUCT(sinX, sinY);
-            localRotations[volumeIndex][3] =
-                FIXED_PRODUCT(rotationProduct, cosZ) + FIXED_PRODUCT(cosX, -sinZ);
-            localRotations[volumeIndex][4] =
-                FIXED_PRODUCT(rotationProduct, sinZ) + FIXED_PRODUCT(cosX, cosZ);
+            localRotations[volumeIndex][3] = FIXED_PRODUCT(rotationProduct, cosZ) + FIXED_PRODUCT(cosX, -sinZ);
+            localRotations[volumeIndex][4] = FIXED_PRODUCT(rotationProduct, sinZ) + FIXED_PRODUCT(cosX, cosZ);
             localRotations[volumeIndex][5] = FIXED_PRODUCT(sinX, cosY);
             rotationProduct = FIXED_PRODUCT(cosX, sinY);
-            localRotations[volumeIndex][6] =
-                FIXED_PRODUCT(rotationProduct, cosZ) + FIXED_PRODUCT(sinX, sinZ);
-            localRotations[volumeIndex][7] =
-                FIXED_PRODUCT(rotationProduct, sinZ) + FIXED_PRODUCT(-sinX, cosZ);
+            localRotations[volumeIndex][6] = FIXED_PRODUCT(rotationProduct, cosZ) + FIXED_PRODUCT(sinX, sinZ);
+            localRotations[volumeIndex][7] = FIXED_PRODUCT(rotationProduct, sinZ) + FIXED_PRODUCT(-sinX, cosZ);
             localRotations[volumeIndex][8] = FIXED_PRODUCT(cosX, cosY);
 
             if (player->stateFlags & RACE_PLAYER_COLLISION_SQUASHED) {
@@ -143,17 +176,58 @@ void resolveRacePlayerCollisionVolumes(RacePlayer *player) {
             }
         }
 
-        player->collisionVolumes[0].point[0] = COLLISION_POINT(worldRotation[0], worldRotation[3], worldRotation[6], player->collisionSources[0].sizeX, player->collisionSources[0].sizeY - player->collisionCenterOffset, player->collisionSources[0].sizeZ);
-        player->collisionVolumes[0].point[1] = COLLISION_POINT(worldRotation[1], worldRotation[4], worldRotation[7], player->collisionSources[0].sizeX, player->collisionSources[0].sizeY - player->collisionCenterOffset, player->collisionSources[0].sizeZ);
-        player->collisionVolumes[0].point[2] = COLLISION_POINT(worldRotation[2], worldRotation[5], worldRotation[8], player->collisionSources[0].sizeX, player->collisionSources[0].sizeY - player->collisionCenterOffset, player->collisionSources[0].sizeZ);
-        player->collisionVolumes[1].point[0] = COLLISION_POINT(player->collisionVolumes[0].axis[0], player->collisionVolumes[0].axis[3], player->collisionVolumes[0].axis[6], player->collisionSources[1].sizeX, player->collisionSources[1].sizeY, player->collisionSources[1].sizeZ);
-        player->collisionVolumes[1].point[1] = COLLISION_POINT(player->collisionVolumes[0].axis[1], player->collisionVolumes[0].axis[4], player->collisionVolumes[0].axis[7], player->collisionSources[1].sizeX, player->collisionSources[1].sizeY, player->collisionSources[1].sizeZ);
-        player->collisionVolumes[1].point[2] = COLLISION_POINT(player->collisionVolumes[0].axis[2], player->collisionVolumes[0].axis[5], player->collisionVolumes[0].axis[8], player->collisionSources[1].sizeX, player->collisionSources[1].sizeY, player->collisionSources[1].sizeZ);
+        player->collisionVolumes[0].point[0] = COLLISION_POINT(
+            worldRotation[0],
+            worldRotation[3],
+            worldRotation[6],
+            player->collisionSources[0].sizeX,
+            player->collisionSources[0].sizeY - player->collisionCenterOffset,
+            player->collisionSources[0].sizeZ
+        );
+        player->collisionVolumes[0].point[1] = COLLISION_POINT(
+            worldRotation[1],
+            worldRotation[4],
+            worldRotation[7],
+            player->collisionSources[0].sizeX,
+            player->collisionSources[0].sizeY - player->collisionCenterOffset,
+            player->collisionSources[0].sizeZ
+        );
+        player->collisionVolumes[0].point[2] = COLLISION_POINT(
+            worldRotation[2],
+            worldRotation[5],
+            worldRotation[8],
+            player->collisionSources[0].sizeX,
+            player->collisionSources[0].sizeY - player->collisionCenterOffset,
+            player->collisionSources[0].sizeZ
+        );
+        player->collisionVolumes[1].point[0] = COLLISION_POINT(
+            player->collisionVolumes[0].axis[0],
+            player->collisionVolumes[0].axis[3],
+            player->collisionVolumes[0].axis[6],
+            player->collisionSources[1].sizeX,
+            player->collisionSources[1].sizeY,
+            player->collisionSources[1].sizeZ
+        );
+        player->collisionVolumes[1].point[1] = COLLISION_POINT(
+            player->collisionVolumes[0].axis[1],
+            player->collisionVolumes[0].axis[4],
+            player->collisionVolumes[0].axis[7],
+            player->collisionSources[1].sizeX,
+            player->collisionSources[1].sizeY,
+            player->collisionSources[1].sizeZ
+        );
+        player->collisionVolumes[1].point[2] = COLLISION_POINT(
+            player->collisionVolumes[0].axis[2],
+            player->collisionVolumes[0].axis[5],
+            player->collisionVolumes[0].axis[8],
+            player->collisionSources[1].sizeX,
+            player->collisionSources[1].sizeY,
+            player->collisionSources[1].sizeZ
+        );
     }
 
     player->collisionVolumes[0].point[0] += player->pos.x + centerOffset[0];
-    player->collisionVolumes[0].point[1] +=
-        player->pos.y - player->unk58 + player->unk64 + centerOffset[1] + 0xA000;
+    player->collisionVolumes[0].point[1] += player->pos.y - player->unk58 + player->unk64 + centerOffset[1] + 0xA000;
     player->collisionVolumes[0].point[2] += player->pos.z + centerOffset[2];
     player->collisionVolumes[1].point[0] += player->collisionVolumes[0].point[0];
     player->collisionVolumes[1].point[1] += player->collisionVolumes[0].point[1];
@@ -167,13 +241,14 @@ void resolveRacePlayerCollisionVolumes(RacePlayer *player) {
             parent = &player->collisionVolumes[source->parentIndex];
             for (sinY = 0; sinY != 3; sinY++) {
                 parentAxisY = parent->axis[sinY + 3];
-                volume->point[sinY] =
-                    COLLISION_POINT(parent->axis[sinY],
-                                    parentAxisY,
-                                    parent->axis[sinY + 6],
-                                    source->sizeX,
-                                    source->sizeY,
-                                    source->sizeZ);
+                volume->point[sinY] = COLLISION_POINT(
+                    parent->axis[sinY],
+                    parentAxisY,
+                    parent->axis[sinY + 6],
+                    source->sizeX,
+                    source->sizeY,
+                    source->sizeZ
+                );
                 volume->point[sinY] += parent->point[sinY];
             }
             volumeIndex++;

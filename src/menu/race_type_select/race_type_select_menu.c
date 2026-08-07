@@ -17,7 +17,6 @@
 extern void releaseMenuAssetHandles(void);
 extern s32 enqueueSoundEffect(s16, s16);
 
-
 extern u8 gMenuExitSelection;
 extern s16 gMenuFadeAlpha;
 extern u8 gCourseSelectFromRaceTypeMenu;
@@ -100,7 +99,7 @@ void updateRaceTypeSelectMenu(void) {
     RaceTypeSelectCursorState *cursorTarget;
 
     if (gCurrentGameTask->fade != 0) {
-        gCurrentGameTask->fade = stepMenuFadeAlpha((s16) gCurrentGameTask->fade, 0x24, 0);
+        gCurrentGameTask->fade = stepMenuFadeAlpha((s16)gCurrentGameTask->fade, 0x24, 0);
         if (gCurrentGameTask->fade == 0) {
             createCallbackTask((CallbackTaskCallback)initRaceTypeSelectOptionIcons, 0, 0x62);
         }
@@ -126,28 +125,26 @@ void updateRaceTypeSelectMenu(void) {
                         repeatTimer = gMenuInputRepeatTimers[0];
                         if (repeatTimer == 0) {
                             gMenuInputRepeatTimers[0] = repeatTimer + 1;
-                            repeatTimer = (((((gMenuInputRepeatTimers[0] & 0xFFFFu) & 0xFFFFu) & 0xFFFFu) & 0xFFFFu) &
-                                           0xFFFFu) &
-                                          0xFFFFu;
+                            repeatTimer =
+                                (((((gMenuInputRepeatTimers[0] & 0xFFFFu) & 0xFFFFu) & 0xFFFFu) & 0xFFFFu) & 0xFFFFu) &
+                                0xFFFFu;
                         }
                         if (selection > 0) {
                             gRaceTypeSelection = selection - 1;
                             selection =
-                                (u8) (((((((((((((selection - 1) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) &
-                                               0xFFFF) &
-                                              0xFFFF) &
-                                             0xFFFF) &
-                                            0xFFFF) &
+                                (u8)(((((((((((((selection - 1) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) &
                                            0xFFFF) &
                                           0xFFFF) &
                                          0xFFFF) &
-                                        0xFFFF);
+                                        0xFFFF) &
+                                       0xFFFF) &
+                                      0xFFFF) &
+                                     0xFFFF);
                         }
                     } else {
                         repeatTimer = gMenuInputRepeatTimers[0];
                         if ((heldInput & (STICK_DOWN | D_JPAD)) ||
-                            ((newInput & (STICK_DOWN | D_JPAD)) &&
-                             ((repeatTimerCopy = repeatTimer ^ 0) >= 9) &&
+                            ((newInput & (STICK_DOWN | D_JPAD)) && ((repeatTimerCopy = repeatTimer ^ 0) >= 9) &&
                              ((repeatTimerCopy % 3) == 0))) {
                             if (repeatTimer == 0) {
                                 gMenuInputRepeatTimers[0] = repeatTimer + 1;
@@ -156,7 +153,7 @@ void updateRaceTypeSelectMenu(void) {
                             if (selection < 3) {
                                 nextSelection = selection + 1;
                                 gRaceTypeSelection = nextSelection;
-                                selection = (u8) (selection + 1);
+                                selection = (u8)(selection + 1);
                             }
                         }
                     }
@@ -165,8 +162,7 @@ void updateRaceTypeSelectMenu(void) {
                     if (repeatTimer != 0) {
                         gMenuInputRepeatTimers[0] = repeatTimer + 1;
                         if (gMenuInputRepeatTimers[0 ^ 0] == 0xFFFF) {
-                            if (&gRaceTypeSelectCursorTarget) {
-                            }
+                            if (&gRaceTypeSelectCursorTarget) {}
                             selection = 0;
                             gMenuInputRepeatTimers[selection] = 0xC;
                         }
@@ -231,7 +227,7 @@ void handleRaceTypeSelectMenuSelection(void) {
 
 void fadeOutRaceTypeSelectMenu(void) {
     if (gCurrentGameTask->fade != 0xFF) {
-        gCurrentGameTask->fade = stepMenuFadeAlpha((s16) gCurrentGameTask->fade, 0x24, 1);
+        gCurrentGameTask->fade = stepMenuFadeAlpha((s16)gCurrentGameTask->fade, 0x24, 1);
         if (gCurrentGameTask->fade == 0xFF) {
             gFramebufferSwapHold = 1;
         } else {

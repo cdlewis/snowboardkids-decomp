@@ -112,8 +112,14 @@ loop:
         gRumbleMotorStatuses[i] = RUMBLE_MOTOR_NO_PAK;
     }
 
-    osCreateThread(&gControllerSubsystemThread, 4, controllerSubsystemThreadMain, D_800EC8B8,
-                   gControllerSubsystemThreadStack + sizeof(gControllerSubsystemThreadStack), 0x14);
+    osCreateThread(
+        &gControllerSubsystemThread,
+        4,
+        controllerSubsystemThreadMain,
+        D_800EC8B8,
+        gControllerSubsystemThreadStack + sizeof(gControllerSubsystemThreadStack),
+        0x14
+    );
     osStartThread(&gControllerSubsystemThread);
 }
 
@@ -127,82 +133,85 @@ void controllerSubsystemThreadMain(void *threadArg) {
         osRecvMesg(&gControllerSubsystemRequestQueue, &message, OS_MESG_BLOCK);
         request = (s32)message;
         switch (request & CONTROLLER_REQUEST_TYPE_MASK) {
-        case CONTROLLER_REQUEST_READ_INPUT:
-            osContStartReadData(&gControllerEventQueue);
-            /*
-             * The SI event message is discarded. Its slot is adjacent to the request message in the original
-             * stack layout; declaring another OSMesg local makes IDO unnecessarily expand the frame.
-             */
-            osRecvMesg(&gControllerEventQueue, &((ControllerThreadMessageSlots *)&threadArg)[-1].serialEvent,
-                       OS_MESG_BLOCK);
-            osContGetReadData(gControllerPads);
-            osSendMesg(&gControllerInputUpdateQueue, &gControllerEventMessage, OS_MESG_NOBLOCK);
-            break;
-        case CONTROLLER_REQUEST_PROBE_PAK:
-            probeControllerPak(request & CONTROLLER_REQUEST_CHANNEL_MASK);
-            osSendMesg(&gControllerSubsystemReplyQueue, &gControllerEventMessage, OS_MESG_NOBLOCK);
-            break;
-        case CONTROLLER_REQUEST_CHECK_SAVE:
-            checkControllerPakSaveStatus(request & CONTROLLER_REQUEST_CHANNEL_MASK);
-            osSendMesg(&gControllerSubsystemReplyQueue, &gControllerEventMessage, OS_MESG_NOBLOCK);
-            break;
-        case CONTROLLER_REQUEST_READ_SAVE:
-            readControllerPakSave(request & CONTROLLER_REQUEST_CHANNEL_MASK);
-            osSendMesg(&gControllerSubsystemReplyQueue, &gControllerEventMessage, OS_MESG_NOBLOCK);
-            break;
-        case CONTROLLER_REQUEST_WRITE_SAVE:
-            writeControllerPakSave(request & CONTROLLER_REQUEST_CHANNEL_MASK);
-            osSendMesg(&gControllerSubsystemReplyQueue, &gControllerEventMessage, OS_MESG_NOBLOCK);
-            break;
-        case CONTROLLER_REQUEST_REPAIR_PAK:
-            repairControllerPakId(request & CONTROLLER_REQUEST_CHANNEL_MASK);
-            osSendMesg(&gControllerSubsystemReplyQueue, &gControllerEventMessage, OS_MESG_NOBLOCK);
-            break;
-        case CONTROLLER_REQUEST_INIT_RUMBLE:
-            controllerIndex = request & CONTROLLER_REQUEST_CHANNEL_MASK;
-            gRumbleMotorStatuses[controllerIndex] =
-                osMotorInit(&gControllerEventQueue, &gRumblePakHandles[controllerIndex], controllerIndex);
-            osSendMesg(&gControllerSubsystemReplyQueue, &gControllerEventMessage, OS_MESG_NOBLOCK);
-            break;
-        case CONTROLLER_REQUEST_RETRY_RUMBLE_INIT:
-            controllerIndex = request & CONTROLLER_REQUEST_CHANNEL_MASK;
-            gRumbleMotorStatuses[controllerIndex] =
-                osMotorInit(&gControllerEventQueue, &gRumblePakHandles[controllerIndex], controllerIndex);
-            break;
-        case CONTROLLER_REQUEST_START_RUMBLE:
-            if ((gRumbleMotorStatuses[request & CONTROLLER_REQUEST_CHANNEL_MASK] != RUMBLE_MOTOR_NO_PAK) &&
-                (gRumbleMotorStatuses[request & CONTROLLER_REQUEST_CHANNEL_MASK] != RUMBLE_MOTOR_WRONG_DEVICE) &&
-                (gRumbleMotorStatuses[request & CONTROLLER_REQUEST_CHANNEL_MASK] !=
-                 RUMBLE_MOTOR_CONTROLLER_FAILURE)) {
+            case CONTROLLER_REQUEST_READ_INPUT:
+                osContStartReadData(&gControllerEventQueue);
+                /*
+                 * The SI event message is discarded. Its slot is adjacent to the request message in the original
+                 * stack layout; declaring another OSMesg local makes IDO unnecessarily expand the frame.
+                 */
+                osRecvMesg(
+                    &gControllerEventQueue,
+                    &((ControllerThreadMessageSlots *)&threadArg)[-1].serialEvent,
+                    OS_MESG_BLOCK
+                );
+                osContGetReadData(gControllerPads);
+                osSendMesg(&gControllerInputUpdateQueue, &gControllerEventMessage, OS_MESG_NOBLOCK);
+                break;
+            case CONTROLLER_REQUEST_PROBE_PAK:
+                probeControllerPak(request & CONTROLLER_REQUEST_CHANNEL_MASK);
+                osSendMesg(&gControllerSubsystemReplyQueue, &gControllerEventMessage, OS_MESG_NOBLOCK);
+                break;
+            case CONTROLLER_REQUEST_CHECK_SAVE:
+                checkControllerPakSaveStatus(request & CONTROLLER_REQUEST_CHANNEL_MASK);
+                osSendMesg(&gControllerSubsystemReplyQueue, &gControllerEventMessage, OS_MESG_NOBLOCK);
+                break;
+            case CONTROLLER_REQUEST_READ_SAVE:
+                readControllerPakSave(request & CONTROLLER_REQUEST_CHANNEL_MASK);
+                osSendMesg(&gControllerSubsystemReplyQueue, &gControllerEventMessage, OS_MESG_NOBLOCK);
+                break;
+            case CONTROLLER_REQUEST_WRITE_SAVE:
+                writeControllerPakSave(request & CONTROLLER_REQUEST_CHANNEL_MASK);
+                osSendMesg(&gControllerSubsystemReplyQueue, &gControllerEventMessage, OS_MESG_NOBLOCK);
+                break;
+            case CONTROLLER_REQUEST_REPAIR_PAK:
+                repairControllerPakId(request & CONTROLLER_REQUEST_CHANNEL_MASK);
+                osSendMesg(&gControllerSubsystemReplyQueue, &gControllerEventMessage, OS_MESG_NOBLOCK);
+                break;
+            case CONTROLLER_REQUEST_INIT_RUMBLE:
                 controllerIndex = request & CONTROLLER_REQUEST_CHANNEL_MASK;
-                if (osMotorStart(&gRumblePakHandles[controllerIndex]) == RUMBLE_MOTOR_CONTROLLER_FAILURE) {
-                    gRumbleMotorStatuses[controllerIndex] = RUMBLE_MOTOR_CONTROLLER_FAILURE;
-                }
-            }
-            break;
-        case CONTROLLER_REQUEST_STOP_RUMBLE:
-            if ((gRumbleMotorStatuses[request & CONTROLLER_REQUEST_CHANNEL_MASK] != RUMBLE_MOTOR_NO_PAK) &&
-                (gRumbleMotorStatuses[request & CONTROLLER_REQUEST_CHANNEL_MASK] != RUMBLE_MOTOR_WRONG_DEVICE) &&
-                (gRumbleMotorStatuses[request & CONTROLLER_REQUEST_CHANNEL_MASK] !=
-                 RUMBLE_MOTOR_CONTROLLER_FAILURE)) {
+                gRumbleMotorStatuses[controllerIndex] =
+                    osMotorInit(&gControllerEventQueue, &gRumblePakHandles[controllerIndex], controllerIndex);
+                osSendMesg(&gControllerSubsystemReplyQueue, &gControllerEventMessage, OS_MESG_NOBLOCK);
+                break;
+            case CONTROLLER_REQUEST_RETRY_RUMBLE_INIT:
                 controllerIndex = request & CONTROLLER_REQUEST_CHANNEL_MASK;
-                if (osMotorStop(&gRumblePakHandles[controllerIndex]) == RUMBLE_MOTOR_CONTROLLER_FAILURE) {
-                    gRumbleMotorStatuses[controllerIndex] = RUMBLE_MOTOR_CONTROLLER_FAILURE;
+                gRumbleMotorStatuses[controllerIndex] =
+                    osMotorInit(&gControllerEventQueue, &gRumblePakHandles[controllerIndex], controllerIndex);
+                break;
+            case CONTROLLER_REQUEST_START_RUMBLE:
+                if ((gRumbleMotorStatuses[request & CONTROLLER_REQUEST_CHANNEL_MASK] != RUMBLE_MOTOR_NO_PAK) &&
+                    (gRumbleMotorStatuses[request & CONTROLLER_REQUEST_CHANNEL_MASK] != RUMBLE_MOTOR_WRONG_DEVICE) &&
+                    (gRumbleMotorStatuses[request & CONTROLLER_REQUEST_CHANNEL_MASK] !=
+                     RUMBLE_MOTOR_CONTROLLER_FAILURE)) {
+                    controllerIndex = request & CONTROLLER_REQUEST_CHANNEL_MASK;
+                    if (osMotorStart(&gRumblePakHandles[controllerIndex]) == RUMBLE_MOTOR_CONTROLLER_FAILURE) {
+                        gRumbleMotorStatuses[controllerIndex] = RUMBLE_MOTOR_CONTROLLER_FAILURE;
+                    }
                 }
-            }
-            break;
-        case CONTROLLER_REQUEST_LIST_FILES:
-            readControllerPakFileStates();
-            osSendMesg(&gControllerSubsystemReplyQueue, &gControllerEventMessage, OS_MESG_NOBLOCK);
-            break;
-        case CONTROLLER_REQUEST_DELETE_FILE:
-            deleteControllerPakFile(request & CONTROLLER_REQUEST_FILE_INDEX_MASK);
-            osSendMesg(&gControllerSubsystemReplyQueue, &gControllerEventMessage, OS_MESG_NOBLOCK);
-            break;
-        case CONTROLLER_REQUEST_UPDATE_FREE_SPACE:
-            updateControllerPakFreeSpaceInfo();
-            osSendMesg(&gControllerSubsystemReplyQueue, &gControllerEventMessage, OS_MESG_NOBLOCK);
-            break;
+                break;
+            case CONTROLLER_REQUEST_STOP_RUMBLE:
+                if ((gRumbleMotorStatuses[request & CONTROLLER_REQUEST_CHANNEL_MASK] != RUMBLE_MOTOR_NO_PAK) &&
+                    (gRumbleMotorStatuses[request & CONTROLLER_REQUEST_CHANNEL_MASK] != RUMBLE_MOTOR_WRONG_DEVICE) &&
+                    (gRumbleMotorStatuses[request & CONTROLLER_REQUEST_CHANNEL_MASK] !=
+                     RUMBLE_MOTOR_CONTROLLER_FAILURE)) {
+                    controllerIndex = request & CONTROLLER_REQUEST_CHANNEL_MASK;
+                    if (osMotorStop(&gRumblePakHandles[controllerIndex]) == RUMBLE_MOTOR_CONTROLLER_FAILURE) {
+                        gRumbleMotorStatuses[controllerIndex] = RUMBLE_MOTOR_CONTROLLER_FAILURE;
+                    }
+                }
+                break;
+            case CONTROLLER_REQUEST_LIST_FILES:
+                readControllerPakFileStates();
+                osSendMesg(&gControllerSubsystemReplyQueue, &gControllerEventMessage, OS_MESG_NOBLOCK);
+                break;
+            case CONTROLLER_REQUEST_DELETE_FILE:
+                deleteControllerPakFile(request & CONTROLLER_REQUEST_FILE_INDEX_MASK);
+                osSendMesg(&gControllerSubsystemReplyQueue, &gControllerEventMessage, OS_MESG_NOBLOCK);
+                break;
+            case CONTROLLER_REQUEST_UPDATE_FREE_SPACE:
+                updateControllerPakFreeSpaceInfo();
+                osSendMesg(&gControllerSubsystemReplyQueue, &gControllerEventMessage, OS_MESG_NOBLOCK);
+                break;
         }
     }
 }

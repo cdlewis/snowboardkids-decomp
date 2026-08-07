@@ -31,37 +31,37 @@ void recordRaceReplayInputFrame(RacePlayer *player) {
     history = (RaceInputReplayHistory *)getRelocatableHeapBlockBase(gAssetHandles[0x2B]);
     frame = player->replayFrame;
     if (frame < RACE_INPUT_REPLAY_FRAME_COUNT) {
-        history[(u16) player->playerIndex].inputs[frame].stickX = player->stickX;
-        history[(u16) player->playerIndex].inputs[player->replayFrame].stickY = player->stickY;
-        history[(u16) player->playerIndex].inputs[player->replayFrame].buttons = 0;
+        history[(u16)player->playerIndex].inputs[frame].stickX = player->stickX;
+        history[(u16)player->playerIndex].inputs[player->replayFrame].stickY = player->stickY;
+        history[(u16)player->playerIndex].inputs[player->replayFrame].buttons = 0;
 
         inputFlags = player->inputFlags;
         if (inputFlags & 8) {
-            history[(u16) player->playerIndex].inputs[player->replayFrame].buttons |= 1;
+            history[(u16)player->playerIndex].inputs[player->replayFrame].buttons |= 1;
             inputFlags = player->inputFlags;
         }
         if (inputFlags & 4) {
-            history[(u16) player->playerIndex].inputs[player->replayFrame].buttons |= 2;
+            history[(u16)player->playerIndex].inputs[player->replayFrame].buttons |= 2;
             inputFlags = player->inputFlags;
         }
         if (inputFlags & 1) {
-            history[(u16) player->playerIndex].inputs[player->replayFrame].buttons |= 8;
+            history[(u16)player->playerIndex].inputs[player->replayFrame].buttons |= 8;
             inputFlags = player->inputFlags;
         }
         if (inputFlags & 2) {
-            history[(u16) player->playerIndex].inputs[player->replayFrame].buttons |= 4;
+            history[(u16)player->playerIndex].inputs[player->replayFrame].buttons |= 4;
             inputFlags = player->inputFlags;
         }
         if (inputFlags & 0x8000) {
-            history[(u16) player->playerIndex].inputs[player->replayFrame].buttons |= 0x10;
+            history[(u16)player->playerIndex].inputs[player->replayFrame].buttons |= 0x10;
             inputFlags = player->inputFlags;
         }
         if (inputFlags & 0x4000) {
-            history[(u16) player->playerIndex].inputs[player->replayFrame].buttons |= 0x20;
+            history[(u16)player->playerIndex].inputs[player->replayFrame].buttons |= 0x20;
             inputFlags = player->inputFlags;
         }
         if (inputFlags & 0x2000) {
-            history[(u16) player->playerIndex].inputs[player->replayFrame].buttons |= 0x40;
+            history[(u16)player->playerIndex].inputs[player->replayFrame].buttons |= 0x40;
         }
 
         player->replayFrame++;
@@ -86,28 +86,38 @@ void playRaceReplayInputFrame(RacePlayer *player) {
     s32 replayOffset;
     s8 stickX;
 
-    history = (RaceReplayInputHistoryPlayer *) getRelocatableHeapBlockBase(gAssetHandles[0x2B]);
+    history = (RaceReplayInputHistoryPlayer *)getRelocatableHeapBlockBase(gAssetHandles[0x2B]);
     replayFrame = player->replayFrame;
     if (replayFrame < 0x960) {
         replayOffset = (replayFrame * 4) - replayFrame;
-        stickX = history[(u16) player->playerIndex].bytes[replayOffset + 1]; player->stickX = stickX; player->stickY = history[(u16) player->playerIndex].bytes[replayOffset + 2]; player->inputFlags = 0; buttons = (u8) history[(u16) player->playerIndex].bytes[replayOffset]; if (buttons & 1) { player->inputFlags = 8; replayFrame = player->replayFrame; replayOffset = (replayFrame * 4) - replayFrame; buttons = (u8) history[PLAYER_INDEX(player)].bytes[replayOffset]; }
+        stickX = history[(u16)player->playerIndex].bytes[replayOffset + 1];
+        player->stickX = stickX;
+        player->stickY = history[(u16)player->playerIndex].bytes[replayOffset + 2];
+        player->inputFlags = 0;
+        buttons = (u8)history[(u16)player->playerIndex].bytes[replayOffset];
+        if (buttons & 1) {
+            player->inputFlags = 8;
+            replayFrame = player->replayFrame;
+            replayOffset = (replayFrame * 4) - replayFrame;
+            buttons = (u8)history[PLAYER_INDEX(player)].bytes[replayOffset];
+        }
         if ((((((((buttons & 2) & 0xFF) & 0xFF) & 0xFF) & 0xFF) & 0xFF) & 0xFF) & 0xFF) {
             player->inputFlags |= 4;
             replayFrame = player->replayFrame;
             replayOffset = (replayFrame * 4) - replayFrame;
-            buttons = (u8) history[PLAYER_INDEX(player)].bytes[replayOffset];
+            buttons = (u8)history[PLAYER_INDEX(player)].bytes[replayOffset];
         }
         if ((((((((buttons & 8) & 0xFF) & 0xFF) & 0xFF) & 0xFF) & 0xFF) & 0xFF) & 0xFF) {
             player->inputFlags |= 1;
             replayFrame = player->replayFrame;
             replayOffset = (replayFrame * 4) - replayFrame;
-            buttons = (u8) history[PLAYER_INDEX(player)].bytes[replayOffset];
+            buttons = (u8)history[PLAYER_INDEX(player)].bytes[replayOffset];
         }
         if ((((((((buttons & 4) & 0xFF) & 0xFF) & 0xFF) & 0xFF) & 0xFF) & 0xFF) & 0xFF) {
             player->inputFlags |= 2;
             replayFrame = player->replayFrame;
             replayOffset = (replayFrame * 4) - replayFrame;
-            buttons = (u8) history[PLAYER_INDEX(player)].bytes[replayOffset];
+            buttons = (u8)history[PLAYER_INDEX(player)].bytes[replayOffset];
             if (1) {}
             if (1) {}
             if (1) {}
@@ -119,13 +129,13 @@ void playRaceReplayInputFrame(RacePlayer *player) {
             player->inputFlags = player->inputFlags | 0x8000;
             replayFrame = player->replayFrame;
             replayOffset = (replayFrame * 4) - replayFrame;
-            buttons = (u8) history[PLAYER_INDEX(player)].bytes[replayOffset];
+            buttons = (u8)history[PLAYER_INDEX(player)].bytes[replayOffset];
         }
         if ((((((((buttons & 0x20) & 0xFF) & 0xFF) & (newVar = 0xFF)) & newVar) & 0xFF) & newVar) & newVar) {
             player->inputFlags |= 0x4000;
             replayFrame = player->replayFrame;
             replayOffset = (replayFrame * 4) - replayFrame;
-            buttons = (u8) history[PLAYER_INDEX(player)].bytes[replayOffset];
+            buttons = (u8)history[PLAYER_INDEX(player)].bytes[replayOffset];
         }
         if ((((((((buttons & 0x40) & 0xFF) & 0xFF) & newVar) & newVar) & 0xFF) & newVar) & 0xFF) {
             player->inputFlags |= 0x2000;
@@ -230,7 +240,7 @@ void playRaceInputHistoryFrame(RacePlayer *player) {
         playerAlias->stickX = history->stickX[index];
         playerAlias->stickY = history->stickY[history->writeIndex];
         goto dummy_label;
-dummy_label:
+    dummy_label:
         playerAlias->inputFlags = 0;
 
         buttons = history->buttons[history->writeIndex] ^ 0;
@@ -242,8 +252,7 @@ dummy_label:
         if (buttons & 2) {
             playerAlias->inputFlags |= 4;
             buttons = history->buttons[history->writeIndex];
-            if (history->stickY) {
-            }
+            if (history->stickY) {}
         }
         if (buttons & 8) {
             playerAlias->inputFlags |= 1;

@@ -12,17 +12,7 @@ extern s16 gSineTable[];
  * (0x1000) is the unit value; trig lookups return values scaled by it.
  */
 
-typedef enum {
-    MTX_XX,
-    MTX_XY,
-    MTX_XZ,
-    MTX_YX,
-    MTX_YY,
-    MTX_YZ,
-    MTX_ZX,
-    MTX_ZY,
-    MTX_ZZ
-} FixedMatrixIndex;
+typedef enum { MTX_XX, MTX_XY, MTX_XZ, MTX_YX, MTX_YY, MTX_YZ, MTX_ZX, MTX_ZY, MTX_ZZ } FixedMatrixIndex;
 
 extern FixedTransform gIdentityFixedTransform;
 extern Mtx gIdentityMatrix;

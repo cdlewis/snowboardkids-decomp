@@ -15,12 +15,8 @@ typedef struct GameTaskScheduler {
 u8 gFramebufferSwapDelayTimer[4] = { 0, 0, 0, 0 };
 FramebufferSwapDelay gFramebufferSwapDelay = { 0 };
 s8 gAnalogStickResponseCurve[56] = {
-     0,  0,  0,  0,  0,  0,  0,  0,  1,  1,
-     1,  2,  2,  2,  3,  3,  3,  4,  5,  6,
-     7,  8,  9, 10, 11, 12, 13, 14, 15, 16,
-    17, 18, 19, 20, 21, 22, 23, 24, 25, 26,
-    27, 28, 29, 30, 31, 31, 31, 31, 31, 31,
-     0,  0,  1,  0,  0,  0,
+    0,  0,  0,  0,  0,  0,  0,  0,  1,  1,  1,  2,  2,  2,  3,  3,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14,
+    15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 31, 31, 31, 31, 31, 0, 0,  1,  0,  0,  0,
 };
 extern s16 gFrameCounter;
 extern GameTask gGameTaskPool[GAME_TASK_COUNT];
@@ -45,6 +41,8 @@ GameTask *allocateGameTask(s32);
 s32 updateFramebufferRenderScheduler(void);
 void playPendingPositionalSoundRequests(void);
 
+// IDO code generation for this function is sensitive to source line layout.
+// clang-format off
 void initGameTaskScheduler(void) {
     GameTask **freeTask;
     GameTask *task;
@@ -82,6 +80,7 @@ void initGameTaskScheduler(void) {
     resetRenderScratchAllocator(&gGameTaskPool[GAME_TASK_COUNT], &gGameTaskScheduler);
     resetRenderCallbackQueues();
 }
+// clang-format on
 
 // updateGameTaskScheduler best match: 99.109% with the current scorer
 // (nonmatchings/updateGameTaskScheduler-7181144369148334388/base_2.c)
@@ -177,7 +176,7 @@ void updateGameTaskScheduler(void) {
         controller++;
         if (stickX >= 0) {
             goto positiveStickX;
-positiveStickX:
+        positiveStickX:
             *stickXOut = (0, responseCurve)[stickX];
         } else {
             *stickXOut = -responseCurve[-stickX];
@@ -189,7 +188,7 @@ positiveStickX:
             *stickYOut = -responseCurve[-stickY];
         }
 
-        mappedStickX = (int) *stickXOut;
+        mappedStickX = (int)*stickXOut;
         stickXOut++;
         if (mappedStickX >= 0x1B) {
             *input |= 0x40000;
@@ -226,7 +225,7 @@ positiveStickX:
             *repeatInput = currentInput;
         } else {
             timer = *repeatTimer;
-            if ((u8) timer >= 9) {
+            if ((u8)timer >= 9) {
                 *repeatInput = currentInput;
             } else {
                 newInputValue = *newInput;
@@ -284,7 +283,7 @@ s32 updateFramebufferRenderScheduler(void) {
         if (gFramebufferSwapHold == 0) {
             frameIndex = gNextFramebufferRenderTaskIndex;
             if (gFramebufferRenderTask0Statuses[frameIndex].status == 0) {
-                if ((s32) gPendingFramebufferSwapCount > 0) {
+                if ((s32)gPendingFramebufferSwapCount > 0) {
                     submitFramebufferRenderTask(frameIndex);
                     gFramebufferSwapDelayTimer[0] = gFramebufferSwapDelay.timerValue;
                     gPendingFramebufferSwapCount--;
@@ -366,7 +365,11 @@ void releaseGameTaskById(s32 taskId) {
             }
             freeTaskCount = (gGameTaskCount & 0xFFu) - 1;
             gGameTaskCount = freeTaskCount;
-            gFreeGameTaskStack[(u8) (((((((((((freeTaskCount & 0xFFu) & 0xFFu) & 0xFFu) & 0xFFu) & 0xFFu) & 0xFFu) & 0xFFu) & 0xFFu) & 0xFFu) & 0xFFu) & 0xFFu)] = task;
+            gFreeGameTaskStack
+                [(u8)(((((((((((freeTaskCount & 0xFFu) & 0xFFu) & 0xFFu) & 0xFFu) & 0xFFu) & 0xFFu) & 0xFFu) & 0xFFu) &
+                        0xFFu) &
+                       0xFFu) &
+                      0xFFu)] = task;
         }
         task = task->next;
     }
@@ -377,9 +380,9 @@ void createGameTask(s32 taskId, GameTaskCallback callback, s32 priority) {
 
     task = allocateGameTask(priority);
     if (task != NULL) {
-        task->id = (u8) taskId;
+        task->id = (u8)taskId;
         task->callbacks[0] = callback;
-        task->priority = (u8) priority;
+        task->priority = (u8)priority;
         task->state = 2;
     }
 }

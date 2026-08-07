@@ -12,7 +12,8 @@
 #define RACE_CAMERA_ANGLE_MASK 0xFFF
 #define RACE_CAMERA_FP_ONE 0x1000
 #define RACE_CAMERA_ROTATION_TRANSITION_STRIDE 0x24
-#define RACE_CAMERA_ROTATION_TRANSITION ((RaceCameraRotationTransition *)((u8 *)gRaceCameraRotationTransitions + ((u16)D_801124A0->mode * stride)))
+#define RACE_CAMERA_ROTATION_TRANSITION \
+    ((RaceCameraRotationTransition *)((u8 *)gRaceCameraRotationTransitions + ((u16)D_801124A0->mode * stride)))
 #define FIXED_MUL(a, b) (((a) * (b)) / 0x1000)
 #define FIXED_MATRIX_ROWS(matrix) ((s16(*)[3])(matrix))
 #define RACE_CAMERA_FP_DOT(a, b, c, d, e, f) \
@@ -35,7 +36,6 @@ typedef struct {
     /* 0x20 */ s16 endPitch;
     /* 0x22 */ s16 endYaw;
 } RaceCameraRotationTransition;
-
 
 typedef struct StackD7D4 {
     FixedTransform transform;
@@ -87,22 +87,46 @@ u8 gRaceCameraChaseYawPreferenceOrder[] = {
 };
 
 RaceCameraRotationTransition gRaceCameraRotationTransitions[] = {
-    { 0x38, 0, { 0x00EA5501, 0xFE950245, 0xF6D81077 }, 0x0000, 0x05C6,
-      { 0xFF5795ED, 0xFDE30245, 0xF4AB048D }, 0x0000, 0x0605 },
-    { 0x32, 0, { 0xFFBA05F5, 0xFE1C2666, 0xF509F544 }, 0x0EA5, 0x05B6,
-      { 0xFE2A501B, 0xFD742666, 0xF3213D8E }, 0x0FBD, 0x06BC },
-    { 0x34, 0, { 0xF60AE4E1, 0xF885A3BB, 0xEA1B898C }, 0x0F9D, 0x0E59,
-      { 0xF4B76D11, 0xF785C3BB, 0xE80CAB6E }, 0x0FE2, 0x0CDC },
-    { 0x30, 0, { 0xF5457AAF, 0xF7C00949, 0xE87C4914 }, 0x007C, 0x0556,
-      { 0xF3C6BE35, 0xF6EB4949, 0xE6B604A6 }, 0x002F, 0x067B },
-    { 0x24, 0, { 0xDC78FF4D, 0xE882BDA6, 0xE74E451E }, 0x0028, 0x0163,
-      { 0xDB1C7AC3, 0xE8459DA6, 0xE887C3DC }, 0x0F11, 0x021B },
-    { 0x13, 0, { 0xD617111A, 0xE7402278, 0xEBA1D9F7 }, 0x0FFF, 0x0C2E,
-      { 0xD5A3CB94, 0xE710884A, 0xEC8A99AA }, 0x001D, 0x0CFC },
-    { 0x1D, 0, { 0xD5B494BC, 0xE7124CD0, 0xEC877DEE }, 0x0F78, 0x05DD,
-      { 0xD45AB7A2, 0xE6AF8CD0, 0xEDCE829A }, 0x0EF0, 0x05DA },
-    { 0x2C, 0, { 0xD4C0433C, 0xE6B3540D, 0xEDDE8529 }, 0x0EE3, 0x06CC,
-      { 0xD314E96C, 0xE558D40D, 0xF1602719 }, 0x0F5C, 0x06CC },
+    { 0x38,
+     0, { 0x00EA5501, 0xFE950245, 0xF6D81077 },
+     0x0000, 0x05C6,
+     { 0xFF5795ED, 0xFDE30245, 0xF4AB048D },
+     0x0000, 0x0605 },
+    { 0x32,
+     0, { 0xFFBA05F5, 0xFE1C2666, 0xF509F544 },
+     0x0EA5, 0x05B6,
+     { 0xFE2A501B, 0xFD742666, 0xF3213D8E },
+     0x0FBD, 0x06BC },
+    { 0x34,
+     0, { 0xF60AE4E1, 0xF885A3BB, 0xEA1B898C },
+     0x0F9D, 0x0E59,
+     { 0xF4B76D11, 0xF785C3BB, 0xE80CAB6E },
+     0x0FE2, 0x0CDC },
+    { 0x30,
+     0, { 0xF5457AAF, 0xF7C00949, 0xE87C4914 },
+     0x007C, 0x0556,
+     { 0xF3C6BE35, 0xF6EB4949, 0xE6B604A6 },
+     0x002F, 0x067B },
+    { 0x24,
+     0, { 0xDC78FF4D, 0xE882BDA6, 0xE74E451E },
+     0x0028, 0x0163,
+     { 0xDB1C7AC3, 0xE8459DA6, 0xE887C3DC },
+     0x0F11, 0x021B },
+    { 0x13,
+     0, { 0xD617111A, 0xE7402278, 0xEBA1D9F7 },
+     0x0FFF, 0x0C2E,
+     { 0xD5A3CB94, 0xE710884A, 0xEC8A99AA },
+     0x001D, 0x0CFC },
+    { 0x1D,
+     0, { 0xD5B494BC, 0xE7124CD0, 0xEC877DEE },
+     0x0F78, 0x05DD,
+     { 0xD45AB7A2, 0xE6AF8CD0, 0xEDCE829A },
+     0x0EF0, 0x05DA },
+    { 0x2C,
+     0, { 0xD4C0433C, 0xE6B3540D, 0xEDDE8529 },
+     0x0EE3, 0x06CC,
+     { 0xD314E96C, 0xE558D40D, 0xF1602719 },
+     0x0F5C, 0x06CC },
 };
 
 RaceCameraTransition gRaceCameraPositionTransitions[] = {
@@ -172,6 +196,8 @@ void resetRaceCameras(void) {
     D_801121E0[3].playerIndex = 3;
 }
 
+// IDO code generation for this function is sensitive to source line layout.
+// clang-format off
 void updateRaceCameras(void) {
     RaceCamera *camera;
     s32 index;
@@ -185,6 +211,7 @@ void updateRaceCameras(void) {
         } while (index < gRacePlayerCount);
     }
 }
+// clang-format on
 
 void updateRaceCamera(s32 arg0) {
     D_801124A0 = &D_801121E0[arg0];
@@ -254,10 +281,10 @@ void updateRaceCameraLookAtTransform(void) {
 
     for (i = 0; i < 3; i++) {
         for (j = 0; j < 3; j++) {
-            FIXED_MATRIX_ROWS(D_801124A0->rotationMatrix)[i][j] =
-                FIXED_MUL(FIXED_MATRIX_ROWS(yawMtx.rotation)[i][0], FIXED_MATRIX_ROWS(pitchMtx.rotation)[0][j]) +
-                FIXED_MUL(FIXED_MATRIX_ROWS(yawMtx.rotation)[i][1], FIXED_MATRIX_ROWS(pitchMtx.rotation)[1][j]) +
-                FIXED_MUL(FIXED_MATRIX_ROWS(yawMtx.rotation)[i][2], FIXED_MATRIX_ROWS(pitchMtx.rotation)[2][j]);
+            FIXED_MATRIX_ROWS(D_801124A0->rotationMatrix)
+            [i][j] = FIXED_MUL(FIXED_MATRIX_ROWS(yawMtx.rotation)[i][0], FIXED_MATRIX_ROWS(pitchMtx.rotation)[0][j]) +
+                     FIXED_MUL(FIXED_MATRIX_ROWS(yawMtx.rotation)[i][1], FIXED_MATRIX_ROWS(pitchMtx.rotation)[1][j]) +
+                     FIXED_MUL(FIXED_MATRIX_ROWS(yawMtx.rotation)[i][2], FIXED_MATRIX_ROWS(pitchMtx.rotation)[2][j]);
         }
     }
 
@@ -268,19 +295,15 @@ void updateRaceCameraLookAtTransform(void) {
 
     for (i = 0; i < 3; i++) {
         for (j = 0; j < 3; j++) {
-            resultMtx[(i * 3) + j] =
-                FIXED_MUL(pitchMtx.rotation[i * 3], yawMtx.rotation[j]) +
-                FIXED_MUL(pitchMtx.rotation[(i * 3) + 1], yawMtx.rotation[j + 3]) +
-                FIXED_MUL(pitchMtx.rotation[(i * 3) + 2], yawMtx.rotation[j + 6]);
+            resultMtx[(i * 3) + j] = FIXED_MUL(pitchMtx.rotation[i * 3], yawMtx.rotation[j]) +
+                                     FIXED_MUL(pitchMtx.rotation[(i * 3) + 1], yawMtx.rotation[j + 3]) +
+                                     FIXED_MUL(pitchMtx.rotation[(i * 3) + 2], yawMtx.rotation[j + 6]);
         }
     }
 
-    D_801124A0->transformOffset.x =
-        -((((s64)resultMtx[MTX_YX] * D_801124A0->unk28) / 0x10000) + D_801124A0->pos.x);
-    D_801124A0->transformOffset.y =
-        -((((s64)resultMtx[MTX_YY] * D_801124A0->unk28) / 0x10000) + D_801124A0->pos.y);
-    D_801124A0->transformOffset.z =
-        -((((s64)resultMtx[MTX_YZ] * D_801124A0->unk28) / 0x10000) + D_801124A0->pos.z);
+    D_801124A0->transformOffset.x = -((((s64)resultMtx[MTX_YX] * D_801124A0->unk28) / 0x10000) + D_801124A0->pos.x);
+    D_801124A0->transformOffset.y = -((((s64)resultMtx[MTX_YY] * D_801124A0->unk28) / 0x10000) + D_801124A0->pos.y);
+    D_801124A0->transformOffset.z = -((((s64)resultMtx[MTX_YZ] * D_801124A0->unk28) / 0x10000) + D_801124A0->pos.z);
     packFixedTransformMatrix(resultMtx, D_801124A0->transform);
 }
 
@@ -334,10 +357,10 @@ void updateRaceCameraAlternateLookAtTransform(void) {
 
     for (i = 0; i < 3; i++) {
         for (j = 0; j < 3; j++) {
-            FIXED_MATRIX_ROWS(D_801124A0->rotationMatrix)[i][j] =
-                FIXED_MUL(FIXED_MATRIX_ROWS(yawMtx.rotation)[i][0], FIXED_MATRIX_ROWS(pitchMtx.rotation)[0][j]) +
-                FIXED_MUL(FIXED_MATRIX_ROWS(yawMtx.rotation)[i][1], FIXED_MATRIX_ROWS(pitchMtx.rotation)[1][j]) +
-                FIXED_MUL(FIXED_MATRIX_ROWS(yawMtx.rotation)[i][2], FIXED_MATRIX_ROWS(pitchMtx.rotation)[2][j]);
+            FIXED_MATRIX_ROWS(D_801124A0->rotationMatrix)
+            [i][j] = FIXED_MUL(FIXED_MATRIX_ROWS(yawMtx.rotation)[i][0], FIXED_MATRIX_ROWS(pitchMtx.rotation)[0][j]) +
+                     FIXED_MUL(FIXED_MATRIX_ROWS(yawMtx.rotation)[i][1], FIXED_MATRIX_ROWS(pitchMtx.rotation)[1][j]) +
+                     FIXED_MUL(FIXED_MATRIX_ROWS(yawMtx.rotation)[i][2], FIXED_MATRIX_ROWS(pitchMtx.rotation)[2][j]);
         }
     }
 
@@ -348,19 +371,15 @@ void updateRaceCameraAlternateLookAtTransform(void) {
 
     for (i = 0; i < 3; i++) {
         for (j = 0; j < 3; j++) {
-            resultMtx[(i * 3) + j] =
-                FIXED_MUL(pitchMtx.rotation[i * 3], yawMtx.rotation[j]) +
-                FIXED_MUL(pitchMtx.rotation[(i * 3) + 1], yawMtx.rotation[j + 3]) +
-                FIXED_MUL(pitchMtx.rotation[(i * 3) + 2], yawMtx.rotation[j + 6]);
+            resultMtx[(i * 3) + j] = FIXED_MUL(pitchMtx.rotation[i * 3], yawMtx.rotation[j]) +
+                                     FIXED_MUL(pitchMtx.rotation[(i * 3) + 1], yawMtx.rotation[j + 3]) +
+                                     FIXED_MUL(pitchMtx.rotation[(i * 3) + 2], yawMtx.rotation[j + 6]);
         }
     }
 
-    D_801124A0->transformOffset.x =
-        -((((s64)resultMtx[MTX_YX] * D_801124A0->unk28) / 0x10000) + D_801124A0->pos.x);
-    D_801124A0->transformOffset.y =
-        -((((s64)resultMtx[MTX_YY] * D_801124A0->unk28) / 0x10000) + D_801124A0->pos.y);
-    D_801124A0->transformOffset.z =
-        -((((s64)resultMtx[MTX_YZ] * D_801124A0->unk28) / 0x10000) + D_801124A0->pos.z);
+    D_801124A0->transformOffset.x = -((((s64)resultMtx[MTX_YX] * D_801124A0->unk28) / 0x10000) + D_801124A0->pos.x);
+    D_801124A0->transformOffset.y = -((((s64)resultMtx[MTX_YY] * D_801124A0->unk28) / 0x10000) + D_801124A0->pos.y);
+    D_801124A0->transformOffset.z = -((((s64)resultMtx[MTX_YZ] * D_801124A0->unk28) / 0x10000) + D_801124A0->pos.z);
     packFixedTransformMatrix(resultMtx, D_801124A0->transform);
 }
 
@@ -412,12 +431,9 @@ void updateRaceCameraFollowPlayer(void) {
     s32 distance;
 
     if (gRaceUpdatePaused == 0) {
-        D_801124A0->focus.x +=
-            (gRacePlayers[D_801124A0->playerIndex].projectedPos.x - D_801124A0->focus.x) >> 1;
-        D_801124A0->focus.y +=
-            (gRacePlayers[D_801124A0->playerIndex].projectedPos.y - D_801124A0->focus.y) >> 1;
-        D_801124A0->focus.z +=
-            (gRacePlayers[D_801124A0->playerIndex].projectedPos.z - D_801124A0->focus.z) >> 1;
+        D_801124A0->focus.x += (gRacePlayers[D_801124A0->playerIndex].projectedPos.x - D_801124A0->focus.x) >> 1;
+        D_801124A0->focus.y += (gRacePlayers[D_801124A0->playerIndex].projectedPos.y - D_801124A0->focus.y) >> 1;
+        D_801124A0->focus.z += (gRacePlayers[D_801124A0->playerIndex].projectedPos.z - D_801124A0->focus.z) >> 1;
 
         x = D_801124A0->pos.x;
         y = D_801124A0->pos.y;
@@ -427,7 +443,7 @@ void updateRaceCameraFollowPlayer(void) {
         dy = D_801124A0->focus.y - D_801124A0->pos.y;
         dz = D_801124A0->focus.z - D_801124A0->pos.z;
 
-        distance = integerSquareRoot64(((s64) dx * dx) + ((s64) dz * dz));
+        distance = integerSquareRoot64(((s64)dx * dx) + ((s64)dz * dz));
 
         if (distance == 0) {
             distance = 1;
@@ -435,29 +451,28 @@ void updateRaceCameraFollowPlayer(void) {
         }
 
         if (distance < 0x400000) {
-            dx = ((s64) dx * 0x400000) / distance;
-            dz = ((s64) dz * 0x400000) / distance;
+            dx = ((s64)dx * 0x400000) / distance;
+            dz = ((s64)dz * 0x400000) / distance;
 
             x = D_801124A0->focus.x - dx;
             z = D_801124A0->focus.z - dz;
         }
 
-        distance = integerSquareRoot64((((s64) dx * dx) + ((s64) dy * dy)) + ((s64) dz * dz));
+        distance = integerSquareRoot64((((s64)dx * dx) + ((s64)dy * dy)) + ((s64)dz * dz));
 
         if (distance > (0x460000 - D_801124A0->distance)) {
-            dx = ((s64) dx * (0x460000 - D_801124A0->distance)) / distance;
-            dy = ((s64) dy * (0x460000 - D_801124A0->distance)) / distance;
-            dz = ((s64) dz * (0x460000 - D_801124A0->distance)) / distance;
+            dx = ((s64)dx * (0x460000 - D_801124A0->distance)) / distance;
+            dy = ((s64)dy * (0x460000 - D_801124A0->distance)) / distance;
+            dz = ((s64)dz * (0x460000 - D_801124A0->distance)) / distance;
 
             x = D_801124A0->focus.x - dx;
             y = D_801124A0->focus.y - dy;
             z = D_801124A0->focus.z - dz;
         } else if (distance < (0x458000 - D_801124A0->distance)) {
-            dx = ((s64) dx * (0x458000 - D_801124A0->distance)) / distance;
-            dy = ((s64) dy * (0x458000 - D_801124A0->distance)) / distance;
-            if (gRacePlayers) {
-            }
-            dz = ((s64) dz * (0x458000 - D_801124A0->distance)) / distance;
+            dx = ((s64)dx * (0x458000 - D_801124A0->distance)) / distance;
+            dy = ((s64)dy * (0x458000 - D_801124A0->distance)) / distance;
+            if (gRacePlayers) {}
+            dz = ((s64)dz * (0x458000 - D_801124A0->distance)) / distance;
 
             x = D_801124A0->focus.x - dx;
             y = D_801124A0->focus.y - dy;
@@ -465,9 +480,8 @@ void updateRaceCameraFollowPlayer(void) {
         }
 
         if (!(gRacePlayers[D_801124A0->playerIndex].stateFlags & 0x1000)) {
-            distance = findRaceCourseSurfaceFromHint(
-                gRacePlayers[D_801124A0->playerIndex].coursePathIndex, x, z);
-            delta = getRaceCourseSurfaceHeight((s16) distance, x, z) - 0x40000;
+            distance = findRaceCourseSurfaceFromHint(gRacePlayers[D_801124A0->playerIndex].coursePathIndex, x, z);
+            delta = getRaceCourseSurfaceHeight((s16)distance, x, z) - 0x40000;
 
             if (y < delta) {
                 y = delta;
@@ -637,7 +651,7 @@ void updateRaceCameraChase(void) {
         }
 
         angleOrder = gRaceCameraChaseYawPreferenceOrder;
-loop_11:
+    loop_11:
         if ((blockedAngles & (1 << *angleOrder)) != 0) {
             i++;
             angleOrder++;
@@ -646,11 +660,16 @@ loop_11:
             }
             goto loop_11;
         }
-loop_11_done:
+    loop_11_done:
 
         targetYaw += gRaceCameraChaseYawOffsets[i];
         targetYaw = (s16)targetYaw;
-        angle = calculateFixedAngleBetweenXZPoints(D_801124A0->focus.x, D_801124A0->focus.z, D_801124A0->pos.x, D_801124A0->pos.z);
+        angle = calculateFixedAngleBetweenXZPoints(
+            D_801124A0->focus.x,
+            D_801124A0->focus.z,
+            D_801124A0->pos.x,
+            D_801124A0->pos.z
+        );
         yaw = (targetYaw - angle) & 0xFFF;
         if (yaw >= 0x801) {
             yaw -= 0x1000;
@@ -759,18 +778,48 @@ void updateRaceCameraRotationTransition(void) {
         timer = RACE_CAMERA_ROTATION_TRANSITION[-8].duration;
     }
 
-    D_801124A0->pos.x = (((s64)(RACE_CAMERA_ROTATION_TRANSITION[-8].endPos.x - RACE_CAMERA_ROTATION_TRANSITION[-8].startPos.x) * timer) / ((RaceCameraRotationTransition *)((u8 *)gRaceCameraRotationTransitions + ((u16) D_801124A0->mode * stride)))[-8].duration) + ((RaceCameraRotationTransition *)((u8 *)gRaceCameraRotationTransitions + ((u16) D_801124A0->mode * stride)))[-8].startPos.x;
-    D_801124A0->pos.y = (((s64)(((RaceCameraRotationTransition *)((u8 *)gRaceCameraRotationTransitions + ((u16) D_801124A0->mode * stride)))[-8].endPos.y - ((RaceCameraRotationTransition *)((u8 *)gRaceCameraRotationTransitions + ((u16) D_801124A0->mode * stride)))[-8].startPos.y) * timer) / ((RaceCameraRotationTransition *)((u8 *)gRaceCameraRotationTransitions + ((u16) D_801124A0->mode * stride)))[-8].duration) + ((RaceCameraRotationTransition *)((u8 *)gRaceCameraRotationTransitions + ((u16) D_801124A0->mode * stride)))[-8].startPos.y;
-    D_801124A0->pos.z = (((s64)(((RaceCameraRotationTransition *)((u8 *)gRaceCameraRotationTransitions + ((u16) D_801124A0->mode * stride)))[-8].endPos.z - ((RaceCameraRotationTransition *)((u8 *)gRaceCameraRotationTransitions + ((u16) D_801124A0->mode * stride)))[-8].startPos.z) * timer) / ((RaceCameraRotationTransition *)((u8 *)gRaceCameraRotationTransitions + ((u16) D_801124A0->mode * stride)))[-8].duration) + ((RaceCameraRotationTransition *)((u8 *)gRaceCameraRotationTransitions + ((u16) D_801124A0->mode * stride)))[-8].startPos.z;
+    D_801124A0->pos.x =
+        (((s64)(RACE_CAMERA_ROTATION_TRANSITION[-8].endPos.x - RACE_CAMERA_ROTATION_TRANSITION[-8].startPos.x) *
+          timer) /
+         ((RaceCameraRotationTransition *)((u8 *)gRaceCameraRotationTransitions + ((u16)D_801124A0->mode * stride)))[-8]
+             .duration) +
+        ((RaceCameraRotationTransition *)((u8 *)gRaceCameraRotationTransitions + ((u16)D_801124A0->mode * stride)))[-8]
+            .startPos.x;
+    D_801124A0->pos.y =
+        (((s64)(((RaceCameraRotationTransition *)((u8 *)gRaceCameraRotationTransitions +
+                                                  ((u16)D_801124A0->mode * stride)))[-8]
+                    .endPos.y -
+                ((RaceCameraRotationTransition *)((u8 *)gRaceCameraRotationTransitions +
+                                                  ((u16)D_801124A0->mode * stride)))[-8]
+                    .startPos.y) *
+          timer) /
+         ((RaceCameraRotationTransition *)((u8 *)gRaceCameraRotationTransitions + ((u16)D_801124A0->mode * stride)))[-8]
+             .duration) +
+        ((RaceCameraRotationTransition *)((u8 *)gRaceCameraRotationTransitions + ((u16)D_801124A0->mode * stride)))[-8]
+            .startPos.y;
+    D_801124A0->pos.z =
+        (((s64)(((RaceCameraRotationTransition *)((u8 *)gRaceCameraRotationTransitions +
+                                                  ((u16)D_801124A0->mode * stride)))[-8]
+                    .endPos.z -
+                ((RaceCameraRotationTransition *)((u8 *)gRaceCameraRotationTransitions +
+                                                  ((u16)D_801124A0->mode * stride)))[-8]
+                    .startPos.z) *
+          timer) /
+         ((RaceCameraRotationTransition *)((u8 *)gRaceCameraRotationTransitions + ((u16)D_801124A0->mode * stride)))[-8]
+             .duration) +
+        ((RaceCameraRotationTransition *)((u8 *)gRaceCameraRotationTransitions + ((u16)D_801124A0->mode * stride)))[-8]
+            .startPos.z;
 
-    diff = (RACE_CAMERA_ROTATION_TRANSITION[-8].endPitch - RACE_CAMERA_ROTATION_TRANSITION[-8].startPitch) & RACE_CAMERA_ANGLE_MASK;
+    diff = (RACE_CAMERA_ROTATION_TRANSITION[-8].endPitch - RACE_CAMERA_ROTATION_TRANSITION[-8].startPitch) &
+           RACE_CAMERA_ANGLE_MASK;
     if (diff >= 0x801) {
         diff -= 0x1000;
     }
     diff = (diff * timer) / RACE_CAMERA_ROTATION_TRANSITION[-8].duration;
     D_801124A0->pitch = RACE_CAMERA_ROTATION_TRANSITION[-8].startPitch + (s16)diff;
 
-    diff = (RACE_CAMERA_ROTATION_TRANSITION[-8].endYaw - RACE_CAMERA_ROTATION_TRANSITION[-8].startYaw) & RACE_CAMERA_ANGLE_MASK;
+    diff = (RACE_CAMERA_ROTATION_TRANSITION[-8].endYaw - RACE_CAMERA_ROTATION_TRANSITION[-8].startYaw) &
+           RACE_CAMERA_ANGLE_MASK;
     if (diff >= 0x801) {
         diff -= 0x1000;
     }
@@ -811,13 +860,28 @@ void updateRaceCameraPositionTransition(void) {
         timer = duration;
     }
 
-    D_801124A0->pos.x = (((s64)(gRaceCameraPositionTransitions[D_801124A0->mode - 16].endPos.x - gRaceCameraPositionTransitions[D_801124A0->mode - 16].startPos.x) * timer) / gRaceCameraPositionTransitions[D_801124A0->mode - 16].duration) + gRaceCameraPositionTransitions[D_801124A0->mode - 16].startPos.x;
-    D_801124A0->pos.y = (((s64)(gRaceCameraPositionTransitions[D_801124A0->mode - 16].endPos.y - gRaceCameraPositionTransitions[D_801124A0->mode - 16].startPos.y) * timer) / gRaceCameraPositionTransitions[D_801124A0->mode - 16].duration) + gRaceCameraPositionTransitions[D_801124A0->mode - 16].startPos.y;
-    D_801124A0->pos.z = (((s64)(gRaceCameraPositionTransitions[D_801124A0->mode - 16].endPos.z - gRaceCameraPositionTransitions[D_801124A0->mode - 16].startPos.z) * timer) / gRaceCameraPositionTransitions[D_801124A0->mode - 16].duration) + gRaceCameraPositionTransitions[D_801124A0->mode - 16].startPos.z;
+    D_801124A0->pos.x = (((s64)(gRaceCameraPositionTransitions[D_801124A0->mode - 16].endPos.x -
+                                gRaceCameraPositionTransitions[D_801124A0->mode - 16].startPos.x) *
+                          timer) /
+                         gRaceCameraPositionTransitions[D_801124A0->mode - 16].duration) +
+                        gRaceCameraPositionTransitions[D_801124A0->mode - 16].startPos.x;
+    D_801124A0->pos.y = (((s64)(gRaceCameraPositionTransitions[D_801124A0->mode - 16].endPos.y -
+                                gRaceCameraPositionTransitions[D_801124A0->mode - 16].startPos.y) *
+                          timer) /
+                         gRaceCameraPositionTransitions[D_801124A0->mode - 16].duration) +
+                        gRaceCameraPositionTransitions[D_801124A0->mode - 16].startPos.y;
+    D_801124A0->pos.z = (((s64)(gRaceCameraPositionTransitions[D_801124A0->mode - 16].endPos.z -
+                                gRaceCameraPositionTransitions[D_801124A0->mode - 16].startPos.z) *
+                          timer) /
+                         gRaceCameraPositionTransitions[D_801124A0->mode - 16].duration) +
+                        gRaceCameraPositionTransitions[D_801124A0->mode - 16].startPos.z;
 
-    D_801124A0->focus.x = gRacePlayers[gRaceCameraPositionTransitions[D_801124A0->mode - 16].playerIndex].projectedPos.x;
-    D_801124A0->focus.y = gRacePlayers[gRaceCameraPositionTransitions[D_801124A0->mode - 16].playerIndex].projectedPos.y;
-    D_801124A0->focus.z = gRacePlayers[gRaceCameraPositionTransitions[D_801124A0->mode - 16].playerIndex].projectedPos.z;
+    D_801124A0->focus.x =
+        gRacePlayers[gRaceCameraPositionTransitions[D_801124A0->mode - 16].playerIndex].projectedPos.x;
+    D_801124A0->focus.y =
+        gRacePlayers[gRaceCameraPositionTransitions[D_801124A0->mode - 16].playerIndex].projectedPos.y;
+    D_801124A0->focus.z =
+        gRacePlayers[gRaceCameraPositionTransitions[D_801124A0->mode - 16].playerIndex].projectedPos.z;
     D_801124A0->prevPos.x = D_801124A0->pos.x;
     D_801124A0->prevPos.y = D_801124A0->pos.y;
     D_801124A0->prevPos.z = D_801124A0->pos.z;
@@ -876,7 +940,12 @@ void updateRaceCameraIntroPan(void) {
     }
 
     D_801124A0->pos.z += velocity;
-    D_801124A0->pos.y = getRaceCourseSurfaceHeight((s16)findRaceCourseSurfaceFromHint(0, D_801124A0->pos.x, D_801124A0->pos.z), D_801124A0->pos.x, D_801124A0->pos.z) + D_801124A0->unkA8 + 0xE0000;
+    D_801124A0->pos.y = getRaceCourseSurfaceHeight(
+                            (s16)findRaceCourseSurfaceFromHint(0, D_801124A0->pos.x, D_801124A0->pos.z),
+                            D_801124A0->pos.x,
+                            D_801124A0->pos.z
+                        ) +
+                        D_801124A0->unkA8 + 0xE0000;
     updateRaceCameraLookAtTransform();
 }
 

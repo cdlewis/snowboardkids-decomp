@@ -7,7 +7,8 @@
 #define CLANG_DIAGNOSTIC_IGNORE_RETURN_TYPE _Pragma("clang diagnostic ignored \"-Wreturn-type\"")
 #define CLANG_DIAGNOSTIC_IGNORE_SELF_ASSIGN _Pragma("clang diagnostic ignored \"-Wself-assign\"")
 #define CLANG_DIAGNOSTIC_IGNORE_UNINITIALIZED _Pragma("clang diagnostic ignored \"-Wuninitialized\"")
-#define CLANG_DIAGNOSTIC_IGNORE_DEPRECATED_NON_PROTOTYPE _Pragma("clang diagnostic ignored \"-Wdeprecated-non-prototype\"")
+#define CLANG_DIAGNOSTIC_IGNORE_DEPRECATED_NON_PROTOTYPE \
+    _Pragma("clang diagnostic ignored \"-Wdeprecated-non-prototype\"")
 #else
 #define CLANG_DIAGNOSTIC_PUSH
 #define CLANG_DIAGNOSTIC_POP
