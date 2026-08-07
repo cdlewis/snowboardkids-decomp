@@ -1589,7 +1589,7 @@ void renderCourseTriggerVolume(RaceCourseTriggerEffect *arg0) {
     }
 }
 
-// collidePlayerWithCourseTriggerVolume best match: 97.794% at nonmatchings/collidePlayerWithCourseTriggerVolume-8101714008744796594/base_6.c.
+// collidePlayerWithCourseTriggerVolume best match: 98.574% at nonmatchings/collidePlayerWithCourseTriggerVolume-7050948565576131586/base_30.c.
 #pragma GLOBAL_ASM("asm/nonmatchings/race/course/race_course_effects/collidePlayerWithCourseTriggerVolume.s")
 
 #ifdef NON_MATCHING
@@ -1598,12 +1598,13 @@ void collidePlayerWithCourseTriggerVolume(RacePlayer *arg0, RaceCourseTriggerEff
     RacePlayer *player;
     Vec3i delta;
     Vec3i transformed;
-    s16 matrix[0x10];
+    FixedMatrix3sScratch matrix;
     s64 savedPush;
     s32 zero;
     CourseTriggerEntry *entry;
     s32 push;
     s32 scaleX;
+    u16 entryIndex;
     s32 collisionRadius;
     s32 limit;
     s32 positiveLimit;
@@ -1675,24 +1676,30 @@ void collidePlayerWithCourseTriggerVolume(RacePlayer *arg0, RaceCourseTriggerEff
                             }
                             if (positiveLimit >= transformed.x) {
                                 push = 0;
-                                negativeLimit = -limit;
-                                if ((gRaceUpdatePaused && gRaceUpdatePaused) && gRaceUpdatePaused) {
+                                savedPush = -limit;
+                                negativeLimit = savedPush;
+                                if (((gRaceUpdatePaused & 0xFFFF) && gRaceUpdatePaused) && gRaceUpdatePaused) {
                                 }
                                 if (transformed.x >= 0) {
                                     if (transformed.x < positiveLimit) {
                                         push = (limit - transformed.x) + 0x30000;
                                     }
-                                } else if ((negativeLimit - 0x30000) < transformed.x) {
-                                    push = (negativeLimit - transformed.x) - 0x30000;
+                                } else {
+                                    entry = &gCourseTriggerEntries[trigger->entryIndex];
+                                    if (1) {
+                                        if ((negativeLimit - 0x30000) < transformed.x) {
+                                            push = (negativeLimit - transformed.x) - 0x30000;
+                                        }
+                                    }
                                 }
 
                                 if (push != 0) {
-                                    savedPush = push;
-                                    makeFixedRotationY(matrix, gCourseTriggerEntries[trigger->entryIndex].yaw);
-                                    zero = 0;
+                                    entryIndex = trigger->entryIndex;
+                                    makeFixedRotationY(matrix, gCourseTriggerEntries[entryIndex].yaw);
+                                    zero = transformed.x * 0;
                                     delta.y = zero;
                                     delta.z = 0;
-                                    delta.x = savedPush;
+                                    delta.x = push;
                                     transformVec3iByFixedMatrix(matrix, &delta, &transformed);
                                     player->pos.x += transformed.x;
                                     player->pos.z += transformed.z;
