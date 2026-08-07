@@ -119,8 +119,8 @@ void initCharacterSelectMenu(void) {
     updateCallbackTasks();
 }
 
-// updateCharacterSelectMenu best match: 98.916%
-// (nonmatchings/updateCharacterSelectMenu-2163214805492048867/base_42.c).
+// updateCharacterSelectMenu best match: 99.730%
+// (nonmatchings/updateCharacterSelectMenu-7050948565576131586/base_79.c).
 // The assembly include below preserves the exact original code.
 // Per-frame driver for the character roster screen only. Live RAM-watch
 // testing observed gCharacterSelectHudState.phase as:
@@ -147,6 +147,7 @@ void updateCharacterSelectMenu(void) {
     s8 *highlightedIndex;
     u16 repeatTimer;
     u8 selection;
+    u8 unused;
     u8 moveDirection;
     u8 duplicateCount;
     u8 secretCharacterUnlocked;
@@ -190,7 +191,7 @@ void updateCharacterSelectMenu(void) {
                 selection = *highlightedIndex;
                 heldInput = gPlayerInputHeld[playerIndex];
                 heldRight = heldInput & (STICK_RIGHT | R_JPAD);
-                if (1) { secretCharacterUnlocked = gCharacterSelectSecretCharacterUnlocked; if (!heldRight && !((s32)heldInput & (s32)(STICK_LEFT | L_JPAD))) { gMenuInputRepeatTimers[playerIndex] = 0; } pressedInput = gPlayerInputPressed[playerIndex]; if ((pressedInput & (STICK_LEFT | L_JPAD)) || ((heldInput & (STICK_LEFT | L_JPAD)) && ((leftRepeatTimer = gMenuInputRepeatTimers[playerIndex]) >= 0xB) && (leftRepeatTimer & 1))) { if (gMenuInputRepeatTimers[playerIndex] == 0) { gMenuInputRepeatTimers[playerIndex] = gMenuInputRepeatTimers[playerIndex] + 1; } if (minimumIndex < selection) { selection--; moveDirection = CHARACTER_SELECT_MOVE_LEFT; } } repeatTimer = (u16)gMenuInputRepeatTimers[playerIndex]; if ((pressedInput & (STICK_RIGHT | R_JPAD)) || (heldRight && (repeatTimer >= 0xB) && (repeatTimer & 1))) { if (repeatTimer == 0) { gMenuInputRepeatTimers[playerIndex] = repeatTimer + 1; repeatTimer = (u16)gMenuInputRepeatTimers[playerIndex]; } if (selection < maximumIndex) { selection++; moveDirection = CHARACTER_SELECT_MOVE_RIGHT; } } }
+                if (1) { secretCharacterUnlocked = gCharacterSelectSecretCharacterUnlocked; if (!heldRight && !((s32)heldInput & (s32)(STICK_LEFT | L_JPAD))) { gMenuInputRepeatTimers[playerIndex] = 0; } pressedInput = gPlayerInputPressed[playerIndex]; if ((pressedInput & (STICK_LEFT | L_JPAD)) || ((heldInput & (STICK_LEFT | L_JPAD)) && ((leftRepeatTimer = gMenuInputRepeatTimers[playerIndex]) >= 0xB) && (leftRepeatTimer & 1))) { if (gMenuInputRepeatTimers[playerIndex] == 0) { gMenuInputRepeatTimers[playerIndex] = gMenuInputRepeatTimers[playerIndex] + 1; } if (minimumIndex < selection) { selection--; moveDirection = CHARACTER_SELECT_MOVE_LEFT; } } repeatTimer = (u16)gMenuInputRepeatTimers[playerIndex]; if ((pressedInput & (STICK_RIGHT | R_JPAD)) || (heldRight && (repeatTimer >= 0xB) && (repeatTimer & 1))) { if ((u32)repeatTimer == 0) { gMenuInputRepeatTimers[playerIndex] = repeatTimer + 1; repeatTimer = (u16)gMenuInputRepeatTimers[playerIndex]; } if (selection < maximumIndex) { selection++; moveDirection = CHARACTER_SELECT_MOVE_RIGHT; } } }
 
                 nextRepeatTimer = repeatTimer + 1;
                 if (repeatTimer != 0) {
@@ -229,6 +230,8 @@ void updateCharacterSelectMenu(void) {
                             }
                             if (maximumIndex < selection) {
                                 selection = *highlightedIndex;
+                            }
+                            if (1) {
                             }
                         }
                     }
