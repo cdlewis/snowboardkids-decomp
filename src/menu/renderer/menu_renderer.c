@@ -971,24 +971,20 @@ void drawMenuTilemapSpriteCallback(MenuRenderSprite *arg0) {
 void func_80011D6C(void) {
 }
 
-// drawMenuTilemapSprite best match: 96.183%
-// (nonmatchings/drawMenuTilemapSprite-1980371360912070117/base_16.c)
+// drawMenuTilemapSprite best match: 96.316%
+// (nonmatchings/drawMenuTilemapSprite-7050948565576131586/base_35.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/renderer/menu_renderer/drawMenuTilemapSprite.s")
 
 #ifdef NON_MATCHING
 s32 drawMenuTilemapSprite(MenuRenderSprite *sprite, s32 imageSize, s16 tilemapWidth, s16 tilemapHeight) {
     MenuRenderSprite *render;
-    s16 *tilemap;
-    u16 *image;
-    MenuRenderTileInfo *tileInfo;
-    u16 *palette;
     s16 clipLeft;
     s16 clipTop;
     s16 clipRight;
     s16 clipBottom;
     s16 sourceX;
     s16 sourceY;
-    s32 tileMask;
+    u16 tileMask;
     s32 tileShift;
     s32 textureFormat;
     s32 sourceOffsetX;
@@ -998,26 +994,28 @@ s32 drawMenuTilemapSprite(MenuRenderSprite *sprite, s32 imageSize, s16 tilemapWi
     s16 firstDrawX;
     s16 drawX;
     s16 drawY;
-    s32 firstTileX;
-    s16 tileX;
     s16 tileY;
     s16 column;
     s16 row;
     s16 tileId;
     MenuRenderTileInfo *info;
     s32 paletteIndex;
-    s16 imageIndex;
     s16 scaleS;
     s16 scaleT;
     s16 rectLeft;
     s16 rectTop;
+    s16 tileX;
     s16 rectRight;
     s16 rectBottom;
     s16 texS;
     s16 texT;
     s32 paletteValue;
     s16 paletteBank;
-    s16 savedRow;
+    s16 imageIndex;
+    s16 *tilemap;
+    u16 *image;
+    MenuRenderTileInfo *tileInfo;
+    u16 *palette;
 
     render = sprite;
     tilemap = (s16 *)render->tilemap;
@@ -1055,10 +1053,12 @@ s32 drawMenuTilemapSprite(MenuRenderSprite *sprite, s32 imageSize, s16 tilemapWi
     clipTop += gMenuViewportCenterY;
     clipBottom += gMenuViewportCenterY;
 
-    tileMask = (render->tileSize - 1) & 0xFFFF;
+    tileMask = render->tileSize - 1;
     if (render->tileSize == 0x10) {
         tileShift = 4;
     } else {
+        if (0) {
+        }
         tileShift = 5;
     }
 
@@ -1077,18 +1077,13 @@ s32 drawMenuTilemapSprite(MenuRenderSprite *sprite, s32 imageSize, s16 tilemapWi
     firstDrawX = clipLeft - sourceOffsetX;
     drawY = clipTop - sourceOffsetY;
     tileY = (sourceY >> tileShift) % tilemapHeight;
-    row = 0;
-
-    if (rowCount > 0) {
-        firstTileX = (sourceX >> tileShift) % tilemapWidth;
-        do {
+    while (0) {
+    }
+    for (row = 0; row < rowCount; row++) {
             drawX = firstDrawX;
-            tileX = firstTileX;
-            column = 0;
+            tileX = (sourceX >> tileShift) % tilemapWidth;
 
-            if (columnCount > 0) {
-                savedRow = row;
-                do {
+            for (column = 0; column < columnCount; column++) {
                     tileId = tilemap[(s16)(tileX + (tileY * render->tileYStep))];
                     info = &tileInfo[tileId];
                     paletteIndex = info->paletteIndex;
@@ -1168,15 +1163,10 @@ s32 drawMenuTilemapSprite(MenuRenderSprite *sprite, s32 imageSize, s16 tilemapWi
 
                     drawX += render->tileSize;
                     tileX = (tileX + 1) % tilemapWidth;
-                    column++;
-                } while (column < columnCount);
-                row = savedRow;
             }
 
             drawY += render->tileXStep;
             tileY = (tileY + 1) % tilemapHeight;
-            row++;
-        } while (row < rowCount);
     }
 
     return row;
