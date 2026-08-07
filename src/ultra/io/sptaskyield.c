@@ -6,7 +6,7 @@ void osSpTaskYield(void) {
     __osSpSetStatus(SP_SET_YIELD);
 }
 
-OSYieldResult osSpTaskYielded(OSTask* tp) {
+OSYieldResult osSpTaskYielded(OSTask *tp) {
     u32 status;
     OSYieldResult result;
 

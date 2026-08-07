@@ -4,10 +4,11 @@
 #include "PR/rcp.h"
 #include "PRinternal/osint.h"
 
-#define _osVirtualToPhysical(ptr)              \
-    if (ptr != NULL) {                         \
+#define _osVirtualToPhysical(ptr)               \
+    if (ptr != NULL) {                          \
         ptr = (void *)osVirtualToPhysical(ptr); \
-    } (void)0
+    }                                           \
+    (void)0
 
 extern OSTask tmp_task;
 extern void _bcopy(const void *, void *, int);

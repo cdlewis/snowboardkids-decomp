@@ -12,8 +12,8 @@ s32 osPfsRepairId(OSPfs *pfs) {
     __OSPackId *validPackId;
 
     SET_ACTIVEBANK_TO_ZERO();
-    ERRCK(__osContRamRead(pfs->queue, pfs->channel, PFS_ID_0AREA, (u8*)&initialPackId));
-    __osIdCheckSum((u16*)&initialPackId, &checksum, &invertedChecksum);
+    ERRCK(__osContRamRead(pfs->queue, pfs->channel, PFS_ID_0AREA, (u8 *)&initialPackId));
+    __osIdCheckSum((u16 *)&initialPackId, &checksum, &invertedChecksum);
     validPackId = &initialPackId;
 
     /* Recover another redundant ID copy, or rebuild the ID if every copy is corrupt. */
@@ -40,7 +40,7 @@ s32 osPfsRepairId(OSPfs *pfs) {
 
     /* Refresh the file-system geometry cached in the public handle. */
     for (byteIndex = 0; byteIndex < ARRLEN(pfs->id); byteIndex++) {
-        pfs->id[byteIndex] = ((u8*)validPackId)[byteIndex];
+        pfs->id[byteIndex] = ((u8 *)validPackId)[byteIndex];
     }
 
     pfs->version = validPackId->version;

@@ -1,7 +1,7 @@
 #include "PR/libaudio.h"
 #include "synthInternals.h"
 
-void alFilterNew(ALFilter* f, ALCmdHandler h, ALSetParam s, s32 type) {
+void alFilterNew(ALFilter *f, ALCmdHandler h, ALSetParam s, s32 type) {
     f->source = 0;
     f->handler = h;
     f->setParam = s;

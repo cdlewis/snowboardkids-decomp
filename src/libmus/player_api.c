@@ -37,8 +37,15 @@ s32 MusInitialize(PlayerCommandInit *arg0) {
     synthConfig.frameRate = arg0->unk38;
     synthConfig.commandListSize = arg0->unk34;
 
-    initAudioSynthesizer(arg0->unk4, &synConfig, arg0->outputRate, &synthConfig,
-                  arg0->unk3C, arg0->unk40, mus_vsyncs_per_second);
+    initAudioSynthesizer(
+        arg0->unk4,
+        &synConfig,
+        arg0->outputRate,
+        &synthConfig,
+        arg0->unk3C,
+        arg0->unk40,
+        mus_vsyncs_per_second
+    );
     __MusIntRemapPtrBank(arg0->soundBank, arg0->sampleBaseOffset);
     MusSetMasterVolume(3, 0x7FFF);
 
@@ -222,8 +229,7 @@ void MusStop(s32 arg0, s32 arg1) {
         do {
             ;
             i++;
-            if (((entry->soundId != 0) && (arg0 & 1)) ||
-                ((entry->soundId == 0) && (arg0 & 2))) {
+            if (((entry->soundId != 0) && (arg0 & 1)) || ((entry->soundId == 0) && (arg0 & 2))) {
                 entry->fadeTarget = arg1;
                 entry->fadeTime = value;
             }
@@ -248,7 +254,7 @@ s32 MusAsk(s32 arg0) {
             i++;
             if (entry->pdata != 0) {
                 temp_a0 = entry->soundId;
-                if (((temp_a0 != 0) && (arg0 & 1)) || ((((unsigned long) temp_a0) == 0) && (arg0 & 2))) {
+                if (((temp_a0 != 0) && (arg0 & 1)) || ((((unsigned long)temp_a0) == 0) && (arg0 & 2))) {
                     matches++;
                 }
             }

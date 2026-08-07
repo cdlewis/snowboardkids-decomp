@@ -12,14 +12,14 @@
 
 /*---------------------------------------------------------------------*
         Copyright (C) 1998 Nintendo. (Originated by SGI)
-        
+
         $RCSfile: os_internal_tlb.h,v $
         $Revision: 1.1 $
         $Date: 1998/10/09 08:01:14 $
  *---------------------------------------------------------------------*/
 
 #ifndef _OS_INTERNAL_TLB_H_
-#define	_OS_INTERNAL_TLB_H_
+#define _OS_INTERNAL_TLB_H_
 
 #ifdef _LANGUAGE_C_PLUS_PLUS
 extern "C" {
@@ -31,12 +31,11 @@ extern "C" {
 
 /* Routines for fetch TLB info */
 
-extern u32		__osGetTLBASID(void);
-extern u32		__osGetTLBPageMask(s32);
-extern u32		__osGetTLBHi(s32);
-extern u32		__osGetTLBLo0(s32);
-extern u32		__osGetTLBLo1(s32);
-
+extern u32 __osGetTLBASID(void);
+extern u32 __osGetTLBPageMask(s32);
+extern u32 __osGetTLBHi(s32);
+extern u32 __osGetTLBLo0(s32);
+extern u32 __osGetTLBLo1(s32);
 
 #endif /* _LANGUAGE_C */
 

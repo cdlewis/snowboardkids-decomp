@@ -3,7 +3,7 @@
 
 #ident "$Revision: 1.17 $"
 
-s32 __osEPiRawStartDma(OSPiHandle* pihandle, s32 direction, u32 devAddr, void* dramAddr, u32 size) {
+s32 __osEPiRawStartDma(OSPiHandle *pihandle, s32 direction, u32 devAddr, void *dramAddr, u32 size) {
     u32 stat;
     u32 domain;
 

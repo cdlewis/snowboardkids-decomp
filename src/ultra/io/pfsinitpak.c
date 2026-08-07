@@ -2,13 +2,13 @@
 #include "PRinternal/siint.h"
 #include "PRinternal/controller.h"
 
-s32 osPfsInitPak(OSMesgQueue* queue, OSPfs* pfs, int channel) {
+s32 osPfsInitPak(OSMesgQueue *queue, OSPfs *pfs, int channel) {
     int byteIndex;
     s32 ret = 0;
     u16 checksum;
     u16 invertedChecksum;
     u8 initialPackIdBlock[BLOCKSIZE];
-    __OSPackId* validPackId;
+    __OSPackId *validPackId;
     __OSPackId repairedPackId;
 
     __osSiGetAccess();
@@ -26,8 +26,8 @@ s32 osPfsInitPak(OSMesgQueue* queue, OSPfs* pfs, int channel) {
     pfs->status = 0;
 
     ERRCK(SELECT_BANK(pfs, 0));
-    __osIdCheckSum((u16*)initialPackIdBlock, &checksum, &invertedChecksum);
-    validPackId = (__OSPackId*)initialPackIdBlock;
+    __osIdCheckSum((u16 *)initialPackIdBlock, &checksum, &invertedChecksum);
+    validPackId = (__OSPackId *)initialPackIdBlock;
 
     /* Recover a valid ID from one of the Controller Pak's redundant ID blocks. */
     if ((validPackId->checksum != checksum) || (validPackId->inverted_checksum != invertedChecksum)) {
@@ -55,7 +55,7 @@ s32 osPfsInitPak(OSMesgQueue* queue, OSPfs* pfs, int channel) {
 
     /* Cache the ID and derived file-system layout for subsequent PFS operations. */
     for (byteIndex = 0; byteIndex < ARRLEN(pfs->id); byteIndex++) {
-        pfs->id[byteIndex] = ((u8*)validPackId)[byteIndex];
+        pfs->id[byteIndex] = ((u8 *)validPackId)[byteIndex];
     }
 
     pfs->version = validPackId->version;

@@ -4,11 +4,11 @@
 #include "PR/rcp.h"
 #include "PRinternal/viint.h"
 
-extern void _bzero(void*, int);
+extern void _bzero(void *, int);
 
 static __OSViContext vi[2] ALIGNED(0x8) = { 0 };
-__OSViContext* __osViCurr = &vi[0];
-__OSViContext* __osViNext = &vi[1];
+__OSViContext *__osViCurr = &vi[0];
+__OSViContext *__osViNext = &vi[1];
 
 void __osViInit(void) {
     _bzero(vi, sizeof(vi));
@@ -16,8 +16,8 @@ void __osViInit(void) {
     __osViNext = &vi[1];
     __osViNext->retraceCount = 1;
     __osViCurr->retraceCount = 1;
-    __osViNext->framep = (void*)K0BASE;
-    __osViCurr->framep = (void*)K0BASE;
+    __osViNext->framep = (void *)K0BASE;
+    __osViCurr->framep = (void *)K0BASE;
 
     if (osTvType == OS_TV_TYPE_PAL) {
         __osViNext->modep = &osViModePalLan1;
@@ -30,8 +30,7 @@ void __osViInit(void) {
     __osViNext->state = VI_STATE_BLACK;
     __osViNext->control = __osViNext->modep->comRegs.ctrl;
 
-    while (IO_READ(VI_CURRENT_REG) > 10) {
-    }
+    while (IO_READ(VI_CURRENT_REG) > 10) {}
 
     IO_WRITE(VI_CONTROL_REG, 0);
     __osViSwapContext();

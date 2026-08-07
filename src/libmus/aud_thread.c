@@ -9,9 +9,15 @@ s32 gAudioThreadStarted = 0;
 AudioInfo *gNextAudioInfo = NULL;
 s32 gAudioUnderrunState = 1;
 
-void initAudioSynthesizer(SchedulerState *scheduler, ALSynConfig *config, s32 threadPriority,
-                          AudioSynthInitConfig *initConfig, s32 dmaBufferCount, s32 dmaBufferSize,
-                          s32 retraceRate) {
+void initAudioSynthesizer(
+    SchedulerState *scheduler,
+    ALSynConfig *config,
+    s32 threadPriority,
+    AudioSynthInitConfig *initConfig,
+    s32 dmaBufferCount,
+    s32 dmaBufferSize,
+    s32 retraceRate
+) {
     u32 i;
     f32 targetFrameSamples;
 
@@ -56,16 +62,21 @@ void initAudioSynthesizer(SchedulerState *scheduler, ALSynConfig *config, s32 th
         gAudioWorkBuffers.tasks[i] = alHeapDBAlloc(0, 0, config->heap, 1, sizeof(AudioInitTask));
         gAudioWorkBuffers.tasks[i]->type = 2;
         gAudioWorkBuffers.tasks[i]->msg = gAudioWorkBuffers.tasks[i];
-        gAudioWorkBuffers.tasks[i]->outBuf =
-            alHeapDBAlloc(0, 0, config->heap, 1, gMaxAudioTaskOutputLen * sizeof(s32));
+        gAudioWorkBuffers.tasks[i]->outBuf = alHeapDBAlloc(0, 0, config->heap, 1, gMaxAudioTaskOutputLen * sizeof(s32));
     }
 
     osCreateMesgQueue((OSMesgQueue *)gAudioTaskDoneQueue, gAudioTaskDoneMessages, 8);
     osCreateMesgQueue(&gAudioThreadQueue, gAudioThreadMessages, 8);
     osCreateMesgQueue(&gAudioDmaQueue, gAudioDmaMessageBuffer, dmaBufferCount * 2);
     if (gAudioThreadStarted == 0) {
-        osCreateThread(&gAudioThread, 3, audioThreadMain, NULL,
-                       gAudioThreadStack + sizeof(gAudioThreadStack), threadPriority);
+        osCreateThread(
+            &gAudioThread,
+            3,
+            audioThreadMain,
+            NULL,
+            gAudioThreadStack + sizeof(gAudioThreadStack),
+            threadPriority
+        );
     }
     osStartThread(&gAudioThread);
     gAudioThreadStarted = 1;
@@ -80,18 +91,18 @@ void audioThreadMain(void *arg0) {
     do {
         osRecvMesg(&gAudioThreadQueue, &locals.msg, 1);
         switch (((AudioFrameMessage *)locals.msg)->type) {
-        case 3:
-            break;
-        case 1:
-            if (buildAudioTask((AudioTask *)gAudioWorkBuffers.tasks[gAudioFrameCounter % 3], gNextAudioInfo) != 0) {
-                osRecvMesg((OSMesgQueue *)gAudioTaskDoneQueue, &locals.msg, 1);
-                updateAudioUnderrunState((s32)((AudioFrameMessage *)locals.msg)->info);
-                gNextAudioInfo = ((AudioFrameMessage *)locals.msg)->info;
-            }
-            break;
-        case 10:
-            done = 1;
-            break;
+            case 3:
+                break;
+            case 1:
+                if (buildAudioTask((AudioTask *)gAudioWorkBuffers.tasks[gAudioFrameCounter % 3], gNextAudioInfo) != 0) {
+                    osRecvMesg((OSMesgQueue *)gAudioTaskDoneQueue, &locals.msg, 1);
+                    updateAudioUnderrunState((s32)((AudioFrameMessage *)locals.msg)->info);
+                    gNextAudioInfo = ((AudioFrameMessage *)locals.msg)->info;
+                }
+                break;
+            case 10:
+                done = 1;
+                break;
         }
     } while (done == 0);
     alClose((ALGlobals *)&gAudioSynthesizer);
@@ -108,8 +119,7 @@ s32 buildAudioTask(AudioTask *task, AudioInfo *info) {
     outBuf = osVirtualToPhysical(task->outBuf);
 
     if (info != NULL) {
-        if (!aspMainTextStart) {
-        }
+        if (!aspMainTextStart) {}
         osAiSetNextBuffer(info->buf, info->len * 4);
     }
 
@@ -118,8 +128,8 @@ s32 buildAudioTask(AudioTask *task, AudioInfo *info) {
         task->outLen = gMinAudioTaskOutputLen;
     }
 
-    cmdListEnd = alAudioFrame(gAudioWorkBuffers.commandLists[gAudioCmdListIndex], &cmdLen[2], (s16 *)outBuf,
-                              task->outLen);
+    cmdListEnd =
+        alAudioFrame(gAudioWorkBuffers.commandLists[gAudioCmdListIndex], &cmdLen[2], (s16 *)outBuf, task->outLen);
     if (cmdLen[2] == 0) {
         return 0;
     }

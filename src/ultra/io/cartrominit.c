@@ -5,11 +5,11 @@
 #include "PR/rcp.h"
 #include "PRinternal/piint.h"
 
-extern void _bzero(void*, int);
+extern void _bzero(void *, int);
 
 #if BUILD_VERSION >= VERSION_J
 OSPiHandle __CartRomHandle ALIGNED(0x8);
-OSPiHandle* osCartRomInit(void) {
+OSPiHandle *osCartRomInit(void) {
     u32 value = 0;
     u32 saveMask;
     static int first = 1;
@@ -67,7 +67,7 @@ OSPiHandle* osCartRomInit(void) {
 #else
 
 OSPiHandle CartRomHandle ALIGNED(0x8);
-OSPiHandle* osCartRomInit(void) {
+OSPiHandle *osCartRomInit(void) {
     u32 domain = 0;
     u32 saveMask;
 

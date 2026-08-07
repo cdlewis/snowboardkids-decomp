@@ -3,12 +3,12 @@
 #include "PR/rcp.h"
 #include "PRinternal/macros.h"
 
-extern void _bzero(void*, int);
+extern void _bzero(void *, int);
 
 OSPiHandle LeoDiskHandle ALIGNED(0x8);
-OSPiHandle* __osDiskHandle;
+OSPiHandle *__osDiskHandle;
 
-OSPiHandle* osLeoDiskInit(void) {
+OSPiHandle *osLeoDiskInit(void) {
     u32 saveMask;
 
     LeoDiskHandle.type = DEVICE_TYPE_64DD;

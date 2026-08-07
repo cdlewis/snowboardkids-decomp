@@ -7,7 +7,7 @@
 
 #ident "$Revision: 1.17 $"
 
-s32 __osSiRawReadIo(u32 devAddr, u32* data) {
+s32 __osSiRawReadIo(u32 devAddr, u32 *data) {
     if (__osSiDeviceBusy()) {
         return -1;
     }

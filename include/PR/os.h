@@ -21,14 +21,14 @@
 
 /*---------------------------------------------------------------------*
         Copyright (C) 1998 Nintendo. (Originated by SGI)
-        
+
         $RCSfile: os.h,v $
         $Revision: 1.168 $
         $Date: 2000/06/15 06:24:52 $
  *---------------------------------------------------------------------*/
 
 #ifndef _OS_H_
-#define	_OS_H_
+#define _OS_H_
 
 #include <PR/os_thread.h>
 #include <PR/os_message.h>
@@ -76,30 +76,29 @@ extern "C" {
  *	SIM (SI Manager)
  *
  */
-#define OS_PIM_STACKSIZE	4096
-#define OS_VIM_STACKSIZE	4096
-#define OS_SIM_STACKSIZE	4096
+#define OS_PIM_STACKSIZE 4096
+#define OS_VIM_STACKSIZE 4096
+#define OS_SIM_STACKSIZE 4096
 
-#define	OS_MIN_STACKSIZE	72
+#define OS_MIN_STACKSIZE 72
 
-/* 
- * Leo Disk 
+/*
+ * Leo Disk
  */
 
 /* transfer mode */
 
-#define LEO_BLOCK_MODE	1
-#define LEO_TRACK_MODE	2
-#define LEO_SECTOR_MODE	3
+#define LEO_BLOCK_MODE 1
+#define LEO_TRACK_MODE 2
+#define LEO_SECTOR_MODE 3
 
 /*
  * Boot addresses
  */
-#define	BOOT_ADDRESS_ULTRA	0x80000400
-#define	BOOT_ADDRESS_COSIM	0x80002000
-#define	BOOT_ADDRESS_EMU	0x20010000
-#define	BOOT_ADDRESS_INDY 	0x88100000
-
+#define BOOT_ADDRESS_ULTRA 0x80000400
+#define BOOT_ADDRESS_COSIM 0x80002000
+#define BOOT_ADDRESS_EMU 0x20010000
+#define BOOT_ADDRESS_INDY 0x88100000
 
 #ifdef _LANGUAGE_C_PLUS_PLUS
 }

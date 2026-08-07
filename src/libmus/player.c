@@ -7,50 +7,28 @@
 typedef u8 *(*PlayerCommandHandler)(PlayerCommandState *, u8 *);
 
 PlayerCommandHandler jumptable[] = {
-    COMMAND_HANDLER(Fstop),      COMMAND_HANDLER(Fwave),
-    COMMAND_HANDLER(Fport),      COMMAND_HANDLER(Fportoff),
-    COMMAND_HANDLER(Fdefa),      COMMAND_HANDLER(Ftempo),
-    COMMAND_HANDLER(Fcutoff),    COMMAND_HANDLER(Fendit),
-    COMMAND_HANDLER(Fvibup),     COMMAND_HANDLER(Fvibdown),
-    COMMAND_HANDLER(Fviboff),    COMMAND_HANDLER(Flength),
-    COMMAND_HANDLER(Fignore),    COMMAND_HANDLER(Ftrans),
-    COMMAND_HANDLER(Fignore_trans), COMMAND_HANDLER(Fdistort),
-    COMMAND_HANDLER(Fenvelope),  COMMAND_HANDLER(Fenvoff),
-    COMMAND_HANDLER(Fenvon),     COMMAND_HANDLER(Ftroff),
-    COMMAND_HANDLER(Ftron),      COMMAND_HANDLER(Ffor),
-    COMMAND_HANDLER(Fnext),      COMMAND_HANDLER(Fwobble),
-    COMMAND_HANDLER(Fwobbleoff), COMMAND_HANDLER(Fvelon),
-    COMMAND_HANDLER(Fveloff),    COMMAND_HANDLER(Fvelocity),
-    COMMAND_HANDLER(Fpan),       COMMAND_HANDLER(Fstereo),
-    COMMAND_HANDLER(Fdrums),     COMMAND_HANDLER(Fdrumsoff),
-    COMMAND_HANDLER(Fprint),     COMMAND_HANDLER(Fgoto),
-    COMMAND_HANDLER(Freverb),    COMMAND_HANDLER(FrandNote),
-    COMMAND_HANDLER(FrandVolume), COMMAND_HANDLER(FrandPan),
-    COMMAND_HANDLER(Fvolume),    COMMAND_HANDLER(Fstartfx),
+    COMMAND_HANDLER(Fstop),       COMMAND_HANDLER(Fwave),    COMMAND_HANDLER(Fport),         COMMAND_HANDLER(Fportoff),
+    COMMAND_HANDLER(Fdefa),       COMMAND_HANDLER(Ftempo),   COMMAND_HANDLER(Fcutoff),       COMMAND_HANDLER(Fendit),
+    COMMAND_HANDLER(Fvibup),      COMMAND_HANDLER(Fvibdown), COMMAND_HANDLER(Fviboff),       COMMAND_HANDLER(Flength),
+    COMMAND_HANDLER(Fignore),     COMMAND_HANDLER(Ftrans),   COMMAND_HANDLER(Fignore_trans), COMMAND_HANDLER(Fdistort),
+    COMMAND_HANDLER(Fenvelope),   COMMAND_HANDLER(Fenvoff),  COMMAND_HANDLER(Fenvon),        COMMAND_HANDLER(Ftroff),
+    COMMAND_HANDLER(Ftron),       COMMAND_HANDLER(Ffor),     COMMAND_HANDLER(Fnext),         COMMAND_HANDLER(Fwobble),
+    COMMAND_HANDLER(Fwobbleoff),  COMMAND_HANDLER(Fvelon),   COMMAND_HANDLER(Fveloff),       COMMAND_HANDLER(Fvelocity),
+    COMMAND_HANDLER(Fpan),        COMMAND_HANDLER(Fstereo),  COMMAND_HANDLER(Fdrums),        COMMAND_HANDLER(Fdrumsoff),
+    COMMAND_HANDLER(Fprint),      COMMAND_HANDLER(Fgoto),    COMMAND_HANDLER(Freverb),       COMMAND_HANDLER(FrandNote),
+    COMMAND_HANDLER(FrandVolume), COMMAND_HANDLER(FrandPan), COMMAND_HANDLER(Fvolume),       COMMAND_HANDLER(Fstartfx),
     COMMAND_HANDLER(Fbendrange),
 };
 
 u8 mus_default_velocities[] = {
-    0x1E, 0x1E, 0x1E, 0x1E, 0x1E, 0x1E, 0x1E, 0x1E,
-    0x23, 0x23, 0x23, 0x23, 0x23, 0x23, 0x23, 0x23,
-    0x28, 0x28, 0x28, 0x28, 0x28, 0x28, 0x28, 0x28,
-    0x2D, 0x2D, 0x2D, 0x2D, 0x2D, 0x2D, 0x2D, 0x2D,
-    0x32, 0x32, 0x32, 0x32, 0x32, 0x32, 0x32, 0x32,
-    0x37, 0x37, 0x37, 0x37, 0x37, 0x37, 0x37, 0x37,
-    0x3C, 0x3C, 0x3C, 0x3C, 0x3C, 0x3C, 0x3C, 0x3C,
-    0x41, 0x41, 0x41, 0x41, 0x41, 0x41, 0x41, 0x41,
-    0x46, 0x46, 0x46, 0x46, 0x46, 0x46, 0x46, 0x46,
-    0x4B, 0x4B, 0x4B, 0x4B, 0x4B, 0x4B, 0x4B, 0x4B,
-    0x50, 0x50, 0x50, 0x50, 0x50, 0x50, 0x50, 0x50,
-    0x5A, 0x5A, 0x5A, 0x5A, 0x5A, 0x5A, 0x5A, 0x5A,
-    0x5F, 0x5F, 0x5F, 0x5F, 0x5F, 0x5F, 0x5F, 0x5F,
-    0x64, 0x64, 0x64, 0x64,
-    0x69, 0x69, 0x69, 0x69,
-    0x6E, 0x6E, 0x6E, 0x6E,
-    0x73, 0x73, 0x73, 0x73, 0x73, 0x73, 0x73, 0x73,
-    0x78, 0x78, 0x7C, 0x7F,
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-    0x00, 0x00, 0x00, 0x00,
+    0x1E, 0x1E, 0x1E, 0x1E, 0x1E, 0x1E, 0x1E, 0x1E, 0x23, 0x23, 0x23, 0x23, 0x23, 0x23, 0x23, 0x23, 0x28, 0x28,
+    0x28, 0x28, 0x28, 0x28, 0x28, 0x28, 0x2D, 0x2D, 0x2D, 0x2D, 0x2D, 0x2D, 0x2D, 0x2D, 0x32, 0x32, 0x32, 0x32,
+    0x32, 0x32, 0x32, 0x32, 0x37, 0x37, 0x37, 0x37, 0x37, 0x37, 0x37, 0x37, 0x3C, 0x3C, 0x3C, 0x3C, 0x3C, 0x3C,
+    0x3C, 0x3C, 0x41, 0x41, 0x41, 0x41, 0x41, 0x41, 0x41, 0x41, 0x46, 0x46, 0x46, 0x46, 0x46, 0x46, 0x46, 0x46,
+    0x4B, 0x4B, 0x4B, 0x4B, 0x4B, 0x4B, 0x4B, 0x4B, 0x50, 0x50, 0x50, 0x50, 0x50, 0x50, 0x50, 0x50, 0x5A, 0x5A,
+    0x5A, 0x5A, 0x5A, 0x5A, 0x5A, 0x5A, 0x5F, 0x5F, 0x5F, 0x5F, 0x5F, 0x5F, 0x5F, 0x5F, 0x64, 0x64, 0x64, 0x64,
+    0x69, 0x69, 0x69, 0x69, 0x6E, 0x6E, 0x6E, 0x6E, 0x73, 0x73, 0x73, 0x73, 0x73, 0x73, 0x73, 0x73, 0x78, 0x78,
+    0x7C, 0x7F, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
 };
 
 #include "player_commands.c"
@@ -150,8 +128,7 @@ void __MusIntGetNewNote(PlayerCommandState *cp, s32 x) {
         while (cmd >= 0x80) {
             seq = jumptable[cmd & 0x7F](cp, seq + 1);
             if (seq == NULL) {
-                if (1) {
-                }
+                if (1) {}
                 break;
             }
             cmd = seq[0];
@@ -228,8 +205,7 @@ void __MusIntGetNewNote(PlayerCommandState *cp, s32 x) {
                 cp->playing = 1;
                 cp->old_volume = 0xFFFF;
                 cp->old_pan = 0xFF;
-                alSynStartVoice(&gAudioSynthesizer, &mus_voices[x],
-                                gSoundWaveTable[soundIndex]);
+                alSynStartVoice(&gAudioSynthesizer, &mus_voices[x], gSoundWaveTable[soundIndex]);
             }
 
             cp->base_note = gSoundPlayerTuningTable[soundIndex] + cp->note - 5;
@@ -308,14 +284,11 @@ void __MusIntSetPitch(PlayerCommandState *arg0, s32 arg1) {
         }
     }
     arg0->port_base = frequency;
-    frequency += arg0->vibratoPitchOffset +
-                 (((f32)arg0->pitchOffset) * (1 - arg0->skipPitchOffsetOnce)) +
-                 arg0->finePitchOffset +
-                 ((f32)arg0->wobble_current);
+    frequency += arg0->vibratoPitchOffset + (((f32)arg0->pitchOffset) * (1 - arg0->skipPitchOffsetOnce)) +
+                 arg0->finePitchOffset + ((f32)arg0->wobble_current);
     arg0->skipPitchOffsetOnce = 0;
     frequency += gSoundPlayerPitchOffsets[arg0->wave];
-    frequency += (f32)arg0->pitchBendDepth * (1.0 / 64.0) *
-                 ((f32)arg0->pitchBendValue - 64.0);
+    frequency += (f32)arg0->pitchBendDepth * (1.0 / 64.0) * ((f32)arg0->pitchBendValue - 64.0);
     frequency += arg0->handlePitchOffset;
     if (frequency == arg0->cachedPitch) {
         return;
@@ -457,7 +430,8 @@ void __MusIntProcessVibrato(PlayerCommandState *arg0) {
     if (temp_v0 != 0) {
         temp_v1 = arg0->count - arg0->unk105;
         if (temp_v1 > 0) {
-            temp_fv1 = sinf((f32)((f64)((temp_v1 / (f32)temp_v0) * ((float)2.0)) * 3.1415926000000001)) * arg0->vibratoDepth;
+            temp_fv1 =
+                sinf((f32)((f64)((temp_v1 / (f32)temp_v0) * ((float)2.0)) * 3.1415926000000001)) * arg0->vibratoDepth;
             arg0->vibratoPitchOffset = temp_fv1;
         }
     }
@@ -560,23 +534,18 @@ f32 __MusIntPowerOf2(f32 arg0) {
     if (arg0 > 0.0f) {
         square = arg0 * arg0;
         fourth = square * square;
-        return (f32)(((f64)arg0 * 0.69314718055994495) + 1.0 +
-            ((f64)square * 0.240226506959101) +
-            ((f64)(square * arg0) * 0.055504108664821597) +
-            ((f64)fourth * 0.0096181291076284803) +
-            ((f64)(fourth * arg0) * 0.00133335581464284) +
-            ((f64)(fourth * square) * 0.00015403530393381601));
+        return (f32)(((f64)arg0 * 0.69314718055994495) + 1.0 + ((f64)square * 0.240226506959101) +
+                     ((f64)(square * arg0) * 0.055504108664821597) + ((f64)fourth * 0.0096181291076284803) +
+                     ((f64)(fourth * arg0) * 0.00133335581464284) + ((f64)(fourth * square) * 0.00015403530393381601));
     }
 
     arg0 = -arg0;
     square = arg0 * arg0;
     fourth = square * square;
-    return (f32)(1.0 / (((f64)arg0 * 0.69314718055994495) + 1.0 +
-        ((f64)square * 0.240226506959101) +
-        ((f64)(square * arg0) * 0.055504108664821597) +
-        ((f64)fourth * 0.0096181291076284803) +
-        ((f64)(fourth * arg0) * 0.00133335581464284) +
-        ((f64)(fourth * square) * 0.00015403530393381601)));
+    return (f32)(1.0 /
+                 (((f64)arg0 * 0.69314718055994495) + 1.0 + ((f64)square * 0.240226506959101) +
+                  ((f64)(square * arg0) * 0.055504108664821597) + ((f64)fourth * 0.0096181291076284803) +
+                  ((f64)(fourth * arg0) * 0.00133335581464284) + ((f64)(fourth * square) * 0.00015403530393381601)));
 }
 
 void __MusIntRemapPtrBank(PlayerCommandBank *bank, s32 sampleBaseOffset) {
@@ -584,14 +553,12 @@ void __MusIntRemapPtrBank(PlayerCommandBank *bank, s32 sampleBaseOffset) {
     ALWaveTable *wave;
 
     gSoundBankEntryCount = (gCurrentSoundBank = bank)->waveCount;
-    gSoundWaveTable = alHeapDBAlloc(0, 0, &gSoundPlayerHeap, 1,
-                                   gSoundBankEntryCount * sizeof(*gSoundWaveTable));
+    gSoundWaveTable = alHeapDBAlloc(0, 0, &gSoundPlayerHeap, 1, gSoundBankEntryCount * sizeof(*gSoundWaveTable));
 
     i = 0;
     if (gSoundBankEntryCount > 0) {
         do {
-            gSoundWaveTable[i] =
-                (ALWaveTable *)(gCurrentSoundBank->waveTableOffsets[i] + (s32)gCurrentSoundBank);
+            gSoundWaveTable[i] = (ALWaveTable *)(gCurrentSoundBank->waveTableOffsets[i] + (s32)gCurrentSoundBank);
             wave = gSoundWaveTable[i];
             if (wave->flags == 0) {
                 wave->base += sampleBaseOffset;
@@ -603,8 +570,7 @@ void __MusIntRemapPtrBank(PlayerCommandBank *bank, s32 sampleBaseOffset) {
                     wave = gSoundWaveTable[i];
                 }
                 if (wave->type == AL_ADPCM_WAVE) {
-                    wave->waveInfo.adpcmWave.book =
-                        (ALADPCMBook *)((s32)wave->waveInfo.adpcmWave.book + (s32)bank);
+                    wave->waveInfo.adpcmWave.book = (ALADPCMBook *)((s32)wave->waveInfo.adpcmWave.book + (s32)bank);
                 }
             }
             i++;

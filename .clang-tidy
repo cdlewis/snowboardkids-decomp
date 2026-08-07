@@ -5,8 +5,8 @@ Checks: >
   readability-redundant-parentheses,
   misc-include-cleaner,
 WarningsAsErrors: ""
-HeaderFilterRegex: '^(include/game/|include/(assets|common|compiler_diagnostics|font_encoding)\.h$)'
-ExcludeHeaderFilterRegex: '^include/(PR|PRinternal|libmus|sys)/|^include/(assert|hasm|include_asm|initfx|synthInternals)\.h$'
+HeaderFilterRegex: '^(src|include)/.*\.h$'
+ExcludeHeaderFilterRegex: '^include/(hasm|include_asm)\.h$|^include/sys/'
 FormatStyle: "file"
 CheckOptions:
   # Require argument names to match exactly (instead of allowing a name to be a prefix/suffix of another).
@@ -16,4 +16,4 @@ CheckOptions:
   - key: readability-redundant-casting.IgnoreHeaders
     value: 'common\.h'
   - key: misc-include-cleaner.IgnoreHeaders
-    value: 'common\.h;ultratypes\.h;include_asm\.h;libmus\.h;PR/.*;PRinternal/.*;h>'
+    value: 'common\.h;ultratypes\.h;include_asm\.h;h>'

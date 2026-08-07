@@ -9,6 +9,7 @@ CompileFlags:
     - -Iinclude
     - -Iinclude/PR
     - -Isrc
+    - -Isrc/libmus
     - -Isrc/ultra/audio
     - -Isrc/ultra/libc
     - -DLANGUAGE_C

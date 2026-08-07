@@ -61,8 +61,15 @@ s32 audioDmaCallback(s32 addr, s32 len, void *state) {
     dmaPtr->addr = addr;
     dmaPtr->counter = gAudioFrameCounter;
     foundBuffer = dmaPtr->buffer;
-    osPiStartDma(&gAudioDmaMessages[gPendingAudioDmaCount++], 0, 0, addr, foundBuffer, gAudioDmaBufferSize,
-                 &gAudioDmaQueue);
+    osPiStartDma(
+        &gAudioDmaMessages[gPendingAudioDmaCount++],
+        0,
+        0,
+        addr,
+        foundBuffer,
+        gAudioDmaBufferSize,
+        &gAudioDmaQueue
+    );
     return osVirtualToPhysical(foundBuffer) + delta;
 }
 ALDMAproc initAudioDmaCallback(AudioDmaState **arg0) {

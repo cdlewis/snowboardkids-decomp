@@ -8,7 +8,7 @@
 
 #ident "$Revision: 1.17 $"
 
-s32 __osSpRawStartDma(s32 direction, u32 devAddr, void* dramAddr, u32 size) {
+s32 __osSpRawStartDma(s32 direction, u32 devAddr, void *dramAddr, u32 size) {
     if (__osSpDeviceBusy()) {
         return -1;
     }

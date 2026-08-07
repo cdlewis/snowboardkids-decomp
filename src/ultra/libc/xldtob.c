@@ -44,7 +44,7 @@ ldiv_t ldiv(long, long);
 static short _Ldunscale(short *pex, ldouble *px);
 static void _Genld(_Pft *px, char code, unsigned char *p, short nsig, short xexp);
 
-static const ldouble pows[] = {10e0L, 10e1L, 10e3L, 10e7L, 10e15L, 10e31L, 10e63L, 10e127L, 10e255L};
+static const ldouble pows[] = { 10e0L, 10e1L, 10e3L, 10e7L, 10e15L, 10e31L, 10e63L, 10e127L, 10e255L };
 
 void _Ldtob(_Pft *px, char code) {
     char buff[BUFF_LEN];

@@ -21,14 +21,14 @@
 
 /*---------------------------------------------------------------------*
         Copyright (C) 1998 Nintendo. (Originated by SGI)
-        
+
         $RCSfile: os_reg.h,v $
         $Revision: 1.1 $
         $Date: 1998/10/09 08:01:17 $
  *---------------------------------------------------------------------*/
 
 #ifndef _OS_REG_H_
-#define	_OS_REG_H_
+#define _OS_REG_H_
 
 #ifdef _LANGUAGE_C_PLUS_PLUS
 extern "C" {
@@ -44,7 +44,6 @@ extern "C" {
  *
  */
 
-
 #endif /* defined(_LANGUAGE_C) || defined(_LANGUAGE_C_PLUS_PLUS) */
 
 /**************************************************************************
@@ -52,7 +51,6 @@ extern "C" {
  * Global definitions
  *
  */
-
 
 #if defined(_LANGUAGE_C) || defined(_LANGUAGE_C_PLUS_PLUS)
 
@@ -62,13 +60,11 @@ extern "C" {
  *
  */
 
-
 /**************************************************************************
  *
  * Extern variables
  *
  */
-
 
 /**************************************************************************
  *
@@ -78,10 +74,9 @@ extern "C" {
 
 /* Miscellaneous operations */
 
-extern u32		osGetCount(void);
+extern u32 osGetCount(void);
 
-
-#endif  /* defined(_LANGUAGE_C) || defined(_LANGUAGE_C_PLUS_PLUS) */
+#endif /* defined(_LANGUAGE_C) || defined(_LANGUAGE_C_PLUS_PLUS) */
 
 #ifdef _LANGUAGE_C_PLUS_PLUS
 }

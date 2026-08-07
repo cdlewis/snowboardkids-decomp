@@ -21,14 +21,14 @@
 
 /*---------------------------------------------------------------------*
         Copyright (C) 1998 Nintendo. (Originated by SGI)
-        
+
         $RCSfile: os_thread.h,v $
         $Revision: 1.3 $
         $Date: 1999/06/15 12:39:40 $
  *---------------------------------------------------------------------*/
 
 #ifndef _OS_THREAD_H_
-#define	_OS_THREAD_H_
+#define _OS_THREAD_H_
 
 #ifdef _LANGUAGE_C_PLUS_PLUS
 extern "C" {
@@ -64,7 +64,7 @@ typedef struct {
     u64 lo, hi;
     u32 sr, pc, cause, badvaddr, rcp;
     u32 fpcsr;
-    __OSfp  fp0,  fp2,  fp4,  fp6,  fp8, fp10, fp12, fp14;
+    __OSfp fp0, fp2, fp4, fp6, fp8, fp10, fp12, fp14;
     __OSfp fp16, fp18, fp20, fp22, fp24, fp26, fp28, fp30;
 } __OSThreadContext;
 
@@ -75,18 +75,17 @@ typedef struct {
 } __OSThreadprofile_s;
 
 typedef struct OSThread_s {
-    struct OSThread_s    *next;       /* run/mesg queue link */
-    OSPri                 priority;   /* run/mesg queue priority */
-    struct OSThread_s   **queue;      /* queue thread is on */
-    struct OSThread_s    *tlnext;     /* all threads queue link */
-    u16                   state;      /* OS_STATE_* */
-    u16                   flags;      /* flags for rmon */
-    OSId                  id;         /* id for debugging */
-    int                   fp;         /* thread has used fp unit */
-    __OSThreadprofile_s  *thprof;     /* workarea for thread profiler */
-    __OSThreadContext     context;    /* register/interrupt mask */
+    struct OSThread_s *next;     /* run/mesg queue link */
+    OSPri priority;              /* run/mesg queue priority */
+    struct OSThread_s **queue;   /* queue thread is on */
+    struct OSThread_s *tlnext;   /* all threads queue link */
+    u16 state;                   /* OS_STATE_* */
+    u16 flags;                   /* flags for rmon */
+    OSId id;                     /* id for debugging */
+    int fp;                      /* thread has used fp unit */
+    __OSThreadprofile_s *thprof; /* workarea for thread profiler */
+    __OSThreadContext context;   /* register/interrupt mask */
 } OSThread;
-
 
 #endif /* defined(_LANGUAGE_C) || defined(_LANGUAGE_C_PLUS_PLUS) */
 
@@ -98,25 +97,25 @@ typedef struct OSThread_s {
 
 /* Thread states */
 
-#define OS_STATE_STOPPED    (1 << 0)
-#define OS_STATE_RUNNABLE   (1 << 1)
-#define OS_STATE_RUNNING    (1 << 2)
-#define OS_STATE_WAITING    (1 << 3)
+#define OS_STATE_STOPPED (1 << 0)
+#define OS_STATE_RUNNABLE (1 << 1)
+#define OS_STATE_RUNNING (1 << 2)
+#define OS_STATE_WAITING (1 << 3)
 
 /* Recommended thread priorities for the system threads */
 
-#define OS_PRIORITY_MAX         255
-#define OS_PRIORITY_VIMGR       254
-#define OS_PRIORITY_RMON        250
-#define OS_PRIORITY_RMONSPIN    200
-#define OS_PRIORITY_PIMGR       150
-#define OS_PRIORITY_SIMGR       140
-#define OS_PRIORITY_APPMAX      127
-#define OS_PRIORITY_IDLE          0 /* Must be 0 */
+#define OS_PRIORITY_MAX 255
+#define OS_PRIORITY_VIMGR 254
+#define OS_PRIORITY_RMON 250
+#define OS_PRIORITY_RMONSPIN 200
+#define OS_PRIORITY_PIMGR 150
+#define OS_PRIORITY_SIMGR 140
+#define OS_PRIORITY_APPMAX 127
+#define OS_PRIORITY_IDLE 0 /* Must be 0 */
 
 /* For thread profiler */
-#define THPROF_IDMAX            64
-#define THPROF_STACKSIZE        256
+#define THPROF_IDMAX 64
+#define THPROF_STACKSIZE 256
 
 #if defined(_LANGUAGE_C) || defined(_LANGUAGE_C_PLUS_PLUS)
 
@@ -126,13 +125,11 @@ typedef struct OSThread_s {
  *
  */
 
-
 /**************************************************************************
  *
  * Extern variables
  *
  */
-
 
 /**************************************************************************
  *
@@ -142,17 +139,16 @@ typedef struct OSThread_s {
 
 /* Thread operations */
 
-extern void     osCreateThread(OSThread *, OSId, void (*)(void *), void *, void *, OSPri);
-extern void     osDestroyThread(OSThread *);
-extern void     osYieldThread(void);
-extern void     osStartThread(OSThread *);
-extern void     osStopThread(OSThread *);
-extern OSId     osGetThreadId(OSThread *);
-extern void     osSetThreadPri(OSThread *, OSPri);
-extern OSPri    osGetThreadPri(OSThread *);
+extern void osCreateThread(OSThread *, OSId, void (*)(void *), void *, void *, OSPri);
+extern void osDestroyThread(OSThread *);
+extern void osYieldThread(void);
+extern void osStartThread(OSThread *);
+extern void osStopThread(OSThread *);
+extern OSId osGetThreadId(OSThread *);
+extern void osSetThreadPri(OSThread *, OSPri);
+extern OSPri osGetThreadPri(OSThread *);
 
-
-#endif  /* defined(_LANGUAGE_C) || defined(_LANGUAGE_C_PLUS_PLUS) */
+#endif /* defined(_LANGUAGE_C) || defined(_LANGUAGE_C_PLUS_PLUS) */
 
 #ifdef _LANGUAGE_C_PLUS_PLUS
 }

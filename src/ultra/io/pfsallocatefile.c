@@ -1,12 +1,19 @@
 #include "PR/os_internal.h"
 #include "PRinternal/controller.h"
 
-#define ROUND_UP_DIVIDE(numerator, denominator) (((numerator) + (denominator)-1) / (denominator))
+#define ROUND_UP_DIVIDE(numerator, denominator) (((numerator) + (denominator) - 1) / (denominator))
 
 static s32 __osClearPage(OSPfs *pfs, int page_no, u8 *data, u8 bank);
 
-s32 osPfsAllocateFile(OSPfs* pfs, u16 company_code, u32 game_code, u8* game_name, u8* ext_name, int file_size_in_bytes,
-                      s32* file_no) {
+s32 osPfsAllocateFile(
+    OSPfs *pfs,
+    u16 company_code,
+    u32 game_code,
+    u8 *game_name,
+    u8 *ext_name,
+    int file_size_in_bytes,
+    s32 *file_no
+) {
     int start_page;
     int decleared;
     int last_page;
@@ -107,15 +114,22 @@ s32 osPfsAllocateFile(OSPfs* pfs, u16 company_code, u32 game_code, u8* game_name
         for (j = 0; j < ARRLEN(dir.ext_name); j++)
             dir.ext_name[j] = *ext_name++;
 
-        ERRCK(__osContRamWrite(pfs->queue, pfs->channel, pfs->dir_table + *file_no, (u8*)&dir, FALSE));
+        ERRCK(__osContRamWrite(pfs->queue, pfs->channel, pfs->dir_table + *file_no, (u8 *)&dir, FALSE));
         return ret;
     } else {
         return PFS_ERR_INVALID;
     }
 }
 
-s32 __osPfsDeclearPage(OSPfs* pfs, __OSInode* inode, int file_size_in_pages, int* first_page, u8 bank, int* decleared,
-                       int* last_page) {
+s32 __osPfsDeclearPage(
+    OSPfs *pfs,
+    __OSInode *inode,
+    int file_size_in_pages,
+    int *first_page,
+    u8 bank,
+    int *decleared,
+    int *last_page
+) {
     int j;
     int spage;
     int old_page;
@@ -148,7 +162,7 @@ s32 __osPfsDeclearPage(OSPfs* pfs, __OSInode* inode, int file_size_in_pages, int
         if (inode->inode_page[j].ipage == 3) {
             inode->inode_page[old_page].inode_t.bank = bank;
             inode->inode_page[old_page].inode_t.page = j;
-            ERRCK(__osClearPage(pfs, old_page, (u8*)tmp_data, bank));
+            ERRCK(__osClearPage(pfs, old_page, (u8 *)tmp_data, bank));
             old_page = j;
             (*decleared)++;
         }
@@ -162,14 +176,13 @@ s32 __osPfsDeclearPage(OSPfs* pfs, __OSInode* inode, int file_size_in_pages, int
         return ret;
     } else {
         inode->inode_page[old_page].ipage = 1;
-        ret = __osClearPage(pfs, old_page, (u8*)tmp_data, bank);
+        ret = __osClearPage(pfs, old_page, (u8 *)tmp_data, bank);
         *last_page = 0;
         return ret;
     }
 }
 
-static s32 __osClearPage(OSPfs *pfs, int page_no, u8 *data, u8 bank)
-{
+static s32 __osClearPage(OSPfs *pfs, int page_no, u8 *data, u8 bank) {
     int i;
     s32 ret;
     ret = 0;

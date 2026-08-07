@@ -2,8 +2,7 @@
 
 ALGlobals *alGlobals = 0;
 
-void alUnlink(ALLink *ln)
-{
+void alUnlink(ALLink *ln) {
     if (ln->next) {
         ln->next->prev = ln->prev;
     }
@@ -13,8 +12,7 @@ void alUnlink(ALLink *ln)
     }
 }
 
-void alLink(ALLink *ln, ALLink *to)
-{
+void alLink(ALLink *ln, ALLink *to) {
     ln->next = to->next;
     ln->prev = to;
 
@@ -25,16 +23,14 @@ void alLink(ALLink *ln, ALLink *to)
     to->next = ln;
 }
 
-void alClose(ALGlobals *glob)
-{
+void alClose(ALGlobals *glob) {
     if (alGlobals) {
         alSynDelete(&glob->drvr);
         alGlobals = 0;
     }
 }
 
-void alInit(ALGlobals *g, ALSynConfig *c)
-{
+void alInit(ALGlobals *g, ALSynConfig *c) {
     if (!alGlobals) {
         alGlobals = g;
         alSynNew(&alGlobals->drvr, c);

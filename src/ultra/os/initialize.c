@@ -18,7 +18,7 @@ u32 __osShutdown = 0;
 u32 __OSGlobalIntMask = OS_IM_ALL;
 u32 __osFinalrom;
 
-extern void _bzero(void*, int);
+extern void _bzero(void *, int);
 
 void osInitialize(void) {
     u32 pifdata;
@@ -35,12 +35,12 @@ void osInitialize(void) {
     while (__osSiRawWriteIo(PIF_RAM_END - 3, pifdata | 8)) {
         ;
     }
-    *(__osExceptionVector*)UT_VEC = *__osExceptionPreamble;
-    *(__osExceptionVector*)XUT_VEC = *__osExceptionPreamble;
-    *(__osExceptionVector*)ECC_VEC = *__osExceptionPreamble;
-    *(__osExceptionVector*)E_VEC = *__osExceptionPreamble;
-    osWritebackDCache((void*)UT_VEC, E_VEC - UT_VEC + sizeof(__osExceptionVector));
-    osInvalICache((void*)UT_VEC, E_VEC - UT_VEC + sizeof(__osExceptionVector));
+    *(__osExceptionVector *)UT_VEC = *__osExceptionPreamble;
+    *(__osExceptionVector *)XUT_VEC = *__osExceptionPreamble;
+    *(__osExceptionVector *)ECC_VEC = *__osExceptionPreamble;
+    *(__osExceptionVector *)E_VEC = *__osExceptionPreamble;
+    osWritebackDCache((void *)UT_VEC, E_VEC - UT_VEC + sizeof(__osExceptionVector));
+    osInvalICache((void *)UT_VEC, E_VEC - UT_VEC + sizeof(__osExceptionVector));
     osMapTLBRdb();
     osPiRawReadIo(4, &clock);
     clock &= ~0xf;

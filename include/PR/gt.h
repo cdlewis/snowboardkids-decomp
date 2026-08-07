@@ -45,15 +45,15 @@
  **************************************************************************/
 
 #ifndef _GT_H_
-#define	_GT_H_
+#define _GT_H_
 
 /* this file should be #included AFTER gbi.h */
 
 #include "sptask.h"
 
-#ifdef	_LANGUAGE_C_PLUS_PLUS
+#ifdef _LANGUAGE_C_PLUS_PLUS
 extern "C" {
-#endif	/* _LANGUAGE_C_PLUS_PLUS */
+#endif /* _LANGUAGE_C_PLUS_PLUS */
 
 #include <PR/ultratypes.h>
 
@@ -61,19 +61,19 @@ extern "C" {
  * for the microcode.
  */
 
-/* 
+/*
  * object state field: rendState
  *
  * This flag word is built up out of the bits from a
  * subset of the G_SETGEOMETRYMODE flags from gbi.h.
- * 
+ *
  * When each of these bits is '1', the comments below explain
  * the effect on the triangles.
  */
-#define GT_ZBUFFER		G_ZBUFFER
-#define GT_TEXTURE		G_TEXTURE_ENABLE	/* texture ON */
-#define GT_CULL_BACK		G_CULL_BACK		/* reject backfaces */
-#define GT_SHADING_SMOOTH	G_SHADING_SMOOTH	/* smooth shade ON */
+#define GT_ZBUFFER G_ZBUFFER
+#define GT_TEXTURE G_TEXTURE_ENABLE        /* texture ON */
+#define GT_CULL_BACK G_CULL_BACK           /* reject backfaces */
+#define GT_SHADING_SMOOTH G_SHADING_SMOOTH /* smooth shade ON */
 
 /*
  * object state field: textureState
@@ -83,43 +83,42 @@ extern "C" {
  * texture tile.
  */
 
-/* 
+/*
  * object state field: flag
  *
  * This is a group of what would be pad bits. We use them for some
  * flag bits.
  */
-#define GT_FLAG_NOMTX		0x01	/* don't load the matrix */
-#define GT_FLAG_NO_XFM		0x02	/* load vtx, use verbatim */
-#define GT_FLAG_XFM_ONLY	0x04	/* xform vtx, write to *TriN */
-
+#define GT_FLAG_NOMTX 0x01    /* don't load the matrix */
+#define GT_FLAG_NO_XFM 0x02   /* load vtx, use verbatim */
+#define GT_FLAG_XFM_ONLY 0x04 /* xform vtx, write to *TriN */
 
 #if defined(_LANGUAGE_C) || defined(_LANGUAGE_C_PLUS_PLUS)
 
 /* turbo 3D ucode: */
-extern long long int	gspTurbo3DTextStart[], gspTurbo3DTextEnd[];
-extern long long int	gspTurbo3DDataStart[], gspTurbo3DDataEnd[];
-extern long long int	gspTurbo3D_dramTextStart[], gspTurbo3D_dramTextEnd[];
-extern long long int	gspTurbo3D_dramDataStart[], gspTurbo3D_dramDataEnd[];
-extern long long int	gspTurbo3D_fifoTextStart[], gspTurbo3D_fifoTextEnd[];
-extern long long int	gspTurbo3D_fifoDataStart[], gspTurbo3D_fifoDataEnd[];
+extern long long int gspTurbo3DTextStart[], gspTurbo3DTextEnd[];
+extern long long int gspTurbo3DDataStart[], gspTurbo3DDataEnd[];
+extern long long int gspTurbo3D_dramTextStart[], gspTurbo3D_dramTextEnd[];
+extern long long int gspTurbo3D_dramDataStart[], gspTurbo3D_dramDataEnd[];
+extern long long int gspTurbo3D_fifoTextStart[], gspTurbo3D_fifoTextEnd[];
+extern long long int gspTurbo3D_fifoDataStart[], gspTurbo3D_fifoDataEnd[];
 
 /*
- * This is the global state structure. It's definition carefully 
+ * This is the global state structure. It's definition carefully
  * matches the ucode, so if this structure changes, you must also change
  * the ucode.
  */
 typedef struct {
-    u16		perspNorm;	/* persp normalization */
-    u16		pad0;
-    u32		flag;
-    Gfx		rdpOthermode;
-    u32		segBases[16];	/* table of segment base addrs (SEE NOTE!) */
-    Vp		viewport;	/* the viewport to use */
-    Gfx		*rdpCmds;	/* block of RDP data, process if !NULL
-				 * block terminated by gDPEndDisplayList()
-				 * (This is a segment address)
-				 */
+    u16 perspNorm; /* persp normalization */
+    u16 pad0;
+    u32 flag;
+    Gfx rdpOthermode;
+    u32 segBases[16]; /* table of segment base addrs (SEE NOTE!) */
+    Vp viewport;      /* the viewport to use */
+    Gfx *rdpCmds;     /* block of RDP data, process if !NULL
+                       * block terminated by gDPEndDisplayList()
+                       * (This is a segment address)
+                       */
 } gtGlobState_t;
 
 /* NOTE:
@@ -129,10 +128,9 @@ typedef struct {
  */
 
 typedef union {
-    gtGlobState_t	sp;
-    long long int	force_structure_alignment;
+    gtGlobState_t sp;
+    long long int force_structure_alignment;
 } gtGlobState;
-
 
 /*
  * This is the 'state' structure associated with each object
@@ -141,38 +139,38 @@ typedef union {
  * the gtoff.c tool and the ucode.
  */
 typedef struct {
-    u32		renderState;	/* render state */
-    u32		textureState;	/* texture state */
-    u8		vtxCount;	/* how many verts? */
-    u8		vtxV0;		/* where to load verts? */
-    u8		triCount;	/* how many tris? */
-    u8		flag;
-    Gfx		*rdpCmds;	/* ptr (segment address) to RDP DL */
-    Gfx		rdpOthermode;
-    Mtx		transform;	/* the transform matrix to use */
+    u32 renderState;  /* render state */
+    u32 textureState; /* texture state */
+    u8 vtxCount;      /* how many verts? */
+    u8 vtxV0;         /* where to load verts? */
+    u8 triCount;      /* how many tris? */
+    u8 flag;
+    Gfx *rdpCmds; /* ptr (segment address) to RDP DL */
+    Gfx rdpOthermode;
+    Mtx transform; /* the transform matrix to use */
 } gtState_t;
 
 typedef union {
-    gtState_t		sp;
-    long long int	force_structure_alignment;
+    gtState_t sp;
+    long long int force_structure_alignment;
 } gtState;
 
 /* gtStateLite : same as gtState, but no matrix (see flags below) */
 /* this structure must be identical to gtState! (bad) */
 typedef struct {
-    u32		renderState;	/* render state */
-    u32		textureState;	/* texture state */
-    u8		vtxCount;	/* how many verts? */
-    u8		vtxV0;		/* where to load verts? */
-    u8		triCount;	/* how many tris? */
-    u8		flag;
-    Gfx		*rdpCmds;	/* ptr (segment address) to RDP DL */
-    Gfx		rdpOthermode;
+    u32 renderState;  /* render state */
+    u32 textureState; /* texture state */
+    u8 vtxCount;      /* how many verts? */
+    u8 vtxV0;         /* where to load verts? */
+    u8 triCount;      /* how many tris? */
+    u8 flag;
+    Gfx *rdpCmds; /* ptr (segment address) to RDP DL */
+    Gfx rdpOthermode;
 } gtStateL_t;
 
 typedef union {
-    gtStateL_t		sp;
-    long long int	force_structure_alignment;
+    gtStateL_t sp;
+    long long int force_structure_alignment;
 } gtStateL;
 
 /*
@@ -181,22 +179,20 @@ typedef union {
  *
  */
 
-
 /*
  * This structure represents a single triangle, part of the
  * triangle list of the object to be rendered.
  *
  * NOTE: The triangle list MUST be aligned to an 8-byte boundary.
  * Since this structure is only 4 bytes, we are REQUIRING that
- * this structure only be used as an array of triangles, and we 
- * depend on the MIPS C compiler (which always aligns arrays to 
+ * this structure only be used as an array of triangles, and we
+ * depend on the MIPS C compiler (which always aligns arrays to
  * 8-byte boundaries). THIS IS DANGEROUS!!!!
  *
  */
 typedef struct {
-    u8		v0, v1, v2, flag;	/* flag is which one for flat shade */
+    u8 v0, v1, v2, flag; /* flag is which one for flat shade */
 } gtTriN;
-
 
 /*
  * This structure represents the transformed points. It is the format
@@ -214,28 +210,26 @@ typedef struct {
  *
  */
 typedef struct {
-    short int	xscrn;	/* x,y screen coordinates are SSSS10.2	*/
-    short int	yscrn;
-    int		zscrn;	/* z screen is S15.16			*/
+    short int xscrn; /* x,y screen coordinates are SSSS10.2	*/
+    short int yscrn;
+    int zscrn; /* z screen is S15.16			*/
 
-    short int	s;	/* transformed texture coord, S10.5	*/
-    short int	t;
+    short int s; /* transformed texture coord, S10.5	*/
+    short int t;
 
-    u8		r;	/* color (or normal)			*/
-    u8		g;
-    u8		b;
-    u8		a;
+    u8 r; /* color (or normal)			*/
+    u8 g;
+    u8 b;
+    u8 a;
 } gtVtxOut_t;
 
 /* see "Data Structure" comment in gbi.h for information about why
  * we use this union.
  */
 typedef union {
-    gtVtxOut_t		v;
-    long long int	force_structure_alignment;
+    gtVtxOut_t v;
+    long long int force_structure_alignment;
 } gtVtxOut;
-
-
 
 /*
  * state field: rdpOthermode
@@ -244,10 +238,10 @@ typedef union {
  * requires the RDP othermode command to be cached by the host,
  * therefore we provide a different interface in libultra to help cache
  * this in the gt state (this word is just bits, you could pack them
- * on your own). 
+ * on your own).
  *
- * gtStateSetOthermode() accomplishs this, taking as arguments 
- * the state, one of the following mode enums, and a piece of data 
+ * gtStateSetOthermode() accomplishs this, taking as arguments
+ * the state, one of the following mode enums, and a piece of data
  * (othermode parameters from gbi.h).
  *
  * By definition, the othermode word from the gt state structure is sent
@@ -255,16 +249,16 @@ typedef union {
  * othermode is *always* sent.
  *
  * Stated another way, NONE of the gbi RDP othermode commands equivalent
- * to those listed here are allowed in the rdpCmd[] field of the 
+ * to those listed here are allowed in the rdpCmd[] field of the
  * gt state structure.
  *
  * Notice also that many of these commands do not make sense for
- * the turbo ucode (they control features not supported, like mip-mapping). 
+ * the turbo ucode (they control features not supported, like mip-mapping).
  * They are only included here for completeness.
  *
  */
 typedef enum {
-    GT_CLEAR,		/* special gt mode, clears othermode state */
+    GT_CLEAR, /* special gt mode, clears othermode state */
     GT_ALPHACOMPARE,
     GT_ZSRCSEL,
     GT_RENDERMODE,
@@ -288,37 +282,34 @@ typedef enum {
  */
 extern void gtStateSetOthermode(Gfx *om, gtStateOthermode_t mode, int data);
 
-/* 
+/*
  * This call dumps a turbo display list for use with gbi2mem and RSPSIM
  */
-#define GT_DUMPTURBO_HANGAFTER           64
-#define GT_DUMPTURBO_NOTEXTURES          128
-extern void gtDumpTurbo(OSTask *tp,u8 flags);
+#define GT_DUMPTURBO_HANGAFTER 64
+#define GT_DUMPTURBO_NOTEXTURES 128
+extern void gtDumpTurbo(OSTask *tp, u8 flags);
 
 /*
  * Special macros to init othermode words to all 0's, a good default
  * value.
  */
-#define gDPClearOtherMode(pkt)						\
-{									\
-	Gfx *_g = (Gfx *)(pkt);						\
-									\
-	_g->words.w0 = _SHIFTL(G_RDPSETOTHERMODE, 24, 8);		\
-	_g->words.w1 = 0x0;						\
-}
+#define gDPClearOtherMode(pkt)                            \
+    {                                                     \
+        Gfx *_g = (Gfx *)(pkt);                           \
+                                                          \
+        _g->words.w0 = _SHIFTL(G_RDPSETOTHERMODE, 24, 8); \
+        _g->words.w1 = 0x0;                               \
+    }
 
-#define gsDPClearOtherMode()						\
-{									\
-	_SHIFTL(G_RDPSETOTHERMODE, 24, 8), 0x0				\
-}
+#define gsDPClearOtherMode() { _SHIFTL(G_RDPSETOTHERMODE, 24, 8), 0x0 }
 
 /*
  * Special macros to end DP blocks (see above). These commands
  * generate all 0's, which the turbo ucode looks for. They *aren't*
  * real DP commands!
  */
-#define gDPEndDisplayList(pkt)	gSPNoOp(pkt)
-#define gsDPEndDisplayList()	gsSPNoOp()
+#define gDPEndDisplayList(pkt) gSPNoOp(pkt)
+#define gsDPEndDisplayList() gsSPNoOp()
 
 /*
  * This structure is a turbo 'object', the turbo display list is
@@ -337,29 +328,28 @@ extern void gtDumpTurbo(OSTask *tp,u8 flags);
  *
  */
 typedef struct {
-    gtGlobState	*gstatep;	/* global state, usually NULL */
-    gtState	*statep;	/* if this is NULL, end object processing */
-    Vtx		*vtxp;		/* if this is NULL, use points in buffer */
-    gtTriN	*trip;		/* if this is NULL, use tris in buffer */
+    gtGlobState *gstatep; /* global state, usually NULL */
+    gtState *statep;      /* if this is NULL, end object processing */
+    Vtx *vtxp;            /* if this is NULL, use points in buffer */
+    gtTriN *trip;         /* if this is NULL, use tris in buffer */
 } gtGfx_t;
 
 typedef union {
-    gtGfx_t		obj;
-    long long int	force_structure_alignment;
+    gtGfx_t obj;
+    long long int force_structure_alignment;
 } gtGfx;
 
+#endif /* _LANGUAGE_C */
 
-#endif	/* _LANGUAGE_C */
-
-#ifdef	_LANGUAGE_ASSEMBLY
+#ifdef _LANGUAGE_ASSEMBLY
 #include <PR/gtoff.h>
-#endif	/* _LANGUAGE_ASSEMBLY */
+#endif /* _LANGUAGE_ASSEMBLY */
 
-#ifdef	_LANGUAGE_C_PLUS_PLUS
+#ifdef _LANGUAGE_C_PLUS_PLUS
 }
-#endif	/* _LANGUAGE_C_PLUS_PLUS */
+#endif /* _LANGUAGE_C_PLUS_PLUS */
 
-#ifdef	_LANGUAGE_MAKEROM
-#endif	/* _LANGUAGE_MAKEROM */
+#ifdef _LANGUAGE_MAKEROM
+#endif /* _LANGUAGE_MAKEROM */
 
-#endif	/* _GT_H_ */
+#endif /* _GT_H_ */

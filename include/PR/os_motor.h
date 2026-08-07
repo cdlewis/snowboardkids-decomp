@@ -1,14 +1,14 @@
 
 /*---------------------------------------------------------------------*
         Copyright (C) 1998 Nintendo.
-        
+
         $RCSfile: os_motor.h,v $
         $Revision: 1.1 $
         $Date: 1998/10/09 08:01:15 $
  *---------------------------------------------------------------------*/
 
 #ifndef _OS_MOTOR_H_
-#define	_OS_MOTOR_H_
+#define _OS_MOTOR_H_
 
 #ifdef _LANGUAGE_C_PLUS_PLUS
 extern "C" {
@@ -19,7 +19,6 @@ extern "C" {
 #include "os_pfs.h"
 #include "os_version.h"
 
-
 #if defined(_LANGUAGE_C) || defined(_LANGUAGE_C_PLUS_PLUS)
 
 /**************************************************************************
@@ -27,7 +26,6 @@ extern "C" {
  * Type definitions
  *
  */
-
 
 #endif /* defined(_LANGUAGE_C) || defined(_LANGUAGE_C_PLUS_PLUS) */
 
@@ -37,7 +35,6 @@ extern "C" {
  *
  */
 
-
 #if defined(_LANGUAGE_C) || defined(_LANGUAGE_C_PLUS_PLUS)
 
 /**************************************************************************
@@ -46,13 +43,11 @@ extern "C" {
  *
  */
 
-
 /**************************************************************************
  *
  * Extern variables
  *
  */
-
 
 /**************************************************************************
  *
@@ -64,18 +59,17 @@ extern "C" {
 
 extern s32 osMotorInit(OSMesgQueue *, OSPfs *, int);
 #if BUILD_VERSION >= VERSION_J
-#define MOTOR_START		1
-#define MOTOR_STOP		0
-#define	osMotorStart(x)		__osMotorAccess((x), MOTOR_START)
-#define	osMotorStop(x)		__osMotorAccess((x), MOTOR_STOP)
+#define MOTOR_START 1
+#define MOTOR_STOP 0
+#define osMotorStart(x) __osMotorAccess((x), MOTOR_START)
+#define osMotorStop(x) __osMotorAccess((x), MOTOR_STOP)
 extern s32 __osMotorAccess(OSPfs *, s32);
 #else
 extern s32 osMotorStop(OSPfs *);
 extern s32 osMotorStart(OSPfs *);
 #endif
 
-
-#endif  /* defined(_LANGUAGE_C) || defined(_LANGUAGE_C_PLUS_PLUS) */
+#endif /* defined(_LANGUAGE_C) || defined(_LANGUAGE_C_PLUS_PLUS) */
 
 #ifdef _LANGUAGE_C_PLUS_PLUS
 }
