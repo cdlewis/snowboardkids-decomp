@@ -226,7 +226,7 @@ void getRacePlayerRankingProgress(s32 arg0, s32 *arg1, s32 *arg2) {
     }
 }
 
-// updateRacePlayerRankings best match: 99.722% (nonmatchings/updateRacePlayerRankings-7050948565576131586/base_49.c)
+// updateRacePlayerRankings best match: 99.899% (nonmatchings/updateRacePlayerRankings/base_9.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race/player/race_player_movement/updateRacePlayerRankings.s")
 
 #ifdef NON_MATCHING
@@ -234,13 +234,11 @@ void updateRacePlayerRankings(void) {
     s8 order[4];
     s32 progress[4];
     s32 pathOffsets[4];
-    register s32 i;
-    register s32 playerCount;
-    register s32 next;
-    register s32 lastPlayerIndex;
-    register s32 j;
+    s32 i;
+    s32 j;
     s32 playerIndex;
-    s32 otherPlayerIndex;
+    char swap;
+    u8 padding[1];
 
     if (gRaceSplitscreenMode != 2) {
         if (gMenuFlowState & 1) {
@@ -249,102 +247,62 @@ void updateRacePlayerRankings(void) {
             gRaceOrderPlayerIds[2] = 2;
             gRaceOrderPlayerIds[3] = 3;
         } else {
-            if (gRaceOrderPlayerIds) {}
-            playerCount = gRacePlayerCount;
             order[0] = 0;
             order[1] = 1;
             order[2] = 2;
             order[3] = 3;
-            i = 0;
-            if (playerCount > 0) {
-                for (playerIndex = 1; playerIndex; playerIndex = i < playerCount) {
-                    getRacePlayerRankingProgress(i, &progress[i], &pathOffsets[i]);
-                    if ((s32)(gRacePlayers[i].stateFlags << 5) < 0) {
-                        progress[i] += gRacePlayers[i].unk57C;
-                    }
-                    i++;
-                    if (1) {}
-                    if (1) {}
-                    if (1) {}
-                    playerCount = gRacePlayerCount;
+
+            for (i = 0; i < gRacePlayerCount; i++) {
+                getRacePlayerRankingProgress(i, &progress[i], &pathOffsets[i]);
+                if ((s32)(gRacePlayers[i].stateFlags << 5) < 0) {
+                    progress[i] += gRacePlayers[i].unk57C;
                 }
-                i = 0;
             }
 
-            lastPlayerIndex = playerCount - 1;
-            if (lastPlayerIndex > 0) {
-                for (playerIndex = 1; playerIndex; playerIndex = next < lastPlayerIndex) {
-                    next = (j = i - -1);
-                    if (next < playerCount) {
-                        if (((!i) && (!i)) && (!i)) {}
-                        for (otherPlayerIndex = 1; otherPlayerIndex;
-                             otherPlayerIndex = &order[j] < &order[playerCount]) {
-                            otherPlayerIndex = order[j];
-                            playerIndex = order[i];
-                            if (gRacePlayers[otherPlayerIndex].rankIndex < gRacePlayers[order[i]].rankIndex) {
-                                order[i] = otherPlayerIndex;
-                                order[j] = playerIndex;
-                            }
-                            j++;
+            for (i = 0; i < gRacePlayerCount - 1; i++) {
+                for (j = i + 1; j < gRacePlayerCount; j++) {
+                    if (gRacePlayers[order[j]].rankIndex < gRacePlayers[order[i]].rankIndex) {
+                        if (1) {
+                            swap = order[i];
+                            order[i] = order[j];
+                            order[j] = swap;
                         }
                     }
-                    playerCount = gRacePlayerCount;
-                    i = next;
                 }
-                i = 0;
             }
 
-            if (lastPlayerIndex > 0) {
-                for (playerIndex = 1; playerIndex; playerIndex = next < lastPlayerIndex) {
-                    next = (j = i + 1);
-                    if (next < playerCount) {
-                        for (otherPlayerIndex = 1; otherPlayerIndex; otherPlayerIndex = j < playerCount) {
-                            if (1) {
-                                playerIndex = order[i];
-                                if (!(gRacePlayers[playerIndex].stateFlags & 0x40)) {
-                                    otherPlayerIndex = order[j];
-                                    if (!(gRacePlayers[otherPlayerIndex].stateFlags & 0x40)) {
-                                        if (gRacePlayers[playerIndex].lapDigit <
-                                            gRacePlayers[otherPlayerIndex].lapDigit) {
-                                            order[i] = otherPlayerIndex;
+            for (i = 0; i < gRacePlayerCount - 1; i++) {
+                for (j = i + 1; j < gRacePlayerCount; j++) {
+                    playerIndex = order[i];
+                    if (!(gRacePlayers[playerIndex].stateFlags & 0x40)) {
+                        ;
+                        if (!(gRacePlayers[order[j]].stateFlags & 0x40)) {
+                            if (gRacePlayers[playerIndex].lapDigit < gRacePlayers[order[j]].lapDigit) {
+                                order[i] = order[j];
+                                order[j] = playerIndex;
+                            } else {
+                                if (!gRacePlayers[playerIndex].playerIndex) {}
+                                if (gRacePlayers[playerIndex].lapDigit == gRacePlayers[order[j]].lapDigit) {
+                                    if (progress[playerIndex] < progress[order[j]]) {
+                                        order[i] = order[j];
+                                        order[j] = playerIndex;
+                                    } else if (progress[playerIndex] == progress[order[j]]) {
+                                        if (pathOffsets[order[j]] > pathOffsets[playerIndex]) {
+                                            order[i] = order[j] & 0xFFFFu;
                                             order[j] = playerIndex;
-                                        } else if (gRacePlayers[playerIndex].lapDigit ==
-                                                   gRacePlayers[otherPlayerIndex].lapDigit) {
-                                            if (progress[playerIndex] < progress[otherPlayerIndex]) {
-                                                order[i] = otherPlayerIndex;
-                                                order[j] = playerIndex;
-                                            } else if (progress[playerIndex] == progress[otherPlayerIndex]) {
-                                                if (pathOffsets[playerIndex] < pathOffsets[otherPlayerIndex]) {
-                                                    order[i] = otherPlayerIndex & 0xFF;
-                                                    playerCount = gRacePlayerCount;
-                                                    order[j] = playerIndex;
-                                                }
-                                            }
                                         }
                                     }
                                 }
-                                j++;
                             }
                         }
                     }
-                    i = next;
                 }
-                i = 0;
             }
 
-            if (playerCount > 0) {
-                u8 *finalRaceOrderPtr;
-
-                finalRaceOrderPtr = gRaceOrderPlayerIds;
-                otherPlayerIndex = 0;
-                for (playerIndex = 1; playerIndex; playerIndex = i < playerCount) {
-                    playerIndex = order[otherPlayerIndex];
-                    gRacePlayers[playerIndex].rankIndex = i;
-                    *finalRaceOrderPtr = gRacePlayers[playerIndex].playerIndex;
-                    i++;
-                    otherPlayerIndex++;
-                    finalRaceOrderPtr++;
-                }
+            for (i = 0; i < gRacePlayerCount; i++) {
+                playerIndex = order[i];
+                gRacePlayers[playerIndex].rankIndex = i;
+                gRaceOrderPlayerIds[i] = gRacePlayers[playerIndex].playerIndex;
             }
         }
     }
