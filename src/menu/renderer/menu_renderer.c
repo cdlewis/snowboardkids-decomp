@@ -310,28 +310,17 @@ extern void
 drawMenuSpriteWideIndex(s16 x, s16 y, void *texture, s32 tileIndex, u16 width, u16 height, u8 palette, u8 flip);
 #endif
 
-// drawMenuSpriteClipped best match: 85.877% (nonmatchings/drawMenuSpriteClipped-11/base_8.c)
+// drawMenuSpriteClipped best match: 86.675%
+// (nonmatchings/drawMenuSpriteClipped-6078661025080551018/base_49.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/renderer/menu_renderer/drawMenuSpriteClipped.s")
 
 #ifdef NON_MATCHING
-void drawMenuSpriteClipped(
-    s16 x,
-    s16 y,
-    MenuFontAssetTable *table,
-    u16 imageIndex,
-    u16 scaleX,
-    u16 scaleY,
-    u8 flipMode,
-    u8 paletteIndex,
-    s32 clipLeft,
-    s32 clipTop,
-    s32 clipRight,
-    s32 clipBottom
-) {
+void drawMenuSpriteClipped(s16 x, s16 y, MenuFontAssetTable *table, u16 imageIndex, u16 scaleX, u16 scaleY,
+                           u8 flipMode, u8 paletteIndex, s32 clipLeft, s32 clipTop, s32 clipRight,
+                           s32 clipBottom) {
     MenuFontAssetEntry *entry;
     s16 minY;
     MenuPalette *palettes;
-    u16 *palette;
     s32 left;
     s32 top;
     MenuRenderCoordinate right;
@@ -346,8 +335,9 @@ void drawMenuSpriteClipped(
     s16 flipT;
     s16 width;
     u8 height;
+    u16 selectedPalette;
 
-    palettes = (MenuPalette *)&table->entries[table->entryCount];
+    palettes = (MenuPalette *)(table->entryCount + table->entries);
     if (scaleX >= 0x201) {
         return;
     }
@@ -360,118 +350,89 @@ void drawMenuSpriteClipped(
     if (scaleY <= 0) {
         return;
     }
-    {
-        flipS = gMenuSpriteFlipScales[flipMode & 3][0];
-        flipT = gMenuSpriteFlipScales[flipMode & 3][1];
-        entry = &table->entries[imageIndex];
-        width = entry->width;
-        height = entry->height;
-        left = (x + gMenuViewportCenterX) << 2;
-        top = (y + gMenuViewportCenterY) << 2;
-        right.value = (((scaleX * width) << 2) >> 5) + left;
-        bottom.value = (((scaleY * height) << 2) >> 5) + top;
-        texS = texT = 0;
-        if (flipS == -1) {
-            texS = (width - 1) << 5;
-        }
-        if (flipT == -1) {
-            texT = (height - 1) << 5;
-        }
+    flipS = gMenuSpriteFlipScales[flipMode & 3][0];
+    flipT = gMenuSpriteFlipScales[flipMode & 3][1];
+    entry = &table->entries[*(volatile u16 *)&imageIndex];
+    width = entry->width;
+    height = entry->height;
+    left = (x + gMenuViewportCenterX) << 2;
+    top = (y + gMenuViewportCenterY) << 2;
+    right.value = (((scaleX * width) << 2) >> 5) + left;
+    bottom.value = (((scaleY * height) << 2) >> 5) + top;
+    texS = texT = 0;
 
-        minY = gMenuViewportCenterY - (s16)clipTop;
-        minX = gMenuViewportCenterX - (s16)clipLeft;
-        maxY = gMenuViewportCenterY + (s16)clipBottom;
-        maxX = gMenuViewportCenterX + (s16)clipRight;
-        if (minX < gMenuViewportCenterX - (gMenuViewportWidth / 2)) {
-            minX = gMenuViewportCenterX - (gMenuViewportWidth / 2);
-        }
-        if (maxX > gMenuViewportCenterX + (gMenuViewportWidth / 2)) {
-            maxX = gMenuViewportCenterX + (gMenuViewportWidth / 2);
-        }
-        if (minY < gMenuViewportCenterY - (gMenuViewportHeight / 2)) {
-            minY = gMenuViewportCenterY - (gMenuViewportHeight / 2);
-        }
-        if (maxY > gMenuViewportCenterY + (gMenuViewportHeight / 2)) {
-            maxY = gMenuViewportCenterY + (gMenuViewportHeight / 2);
-        }
+    if (flipS == -1) {
+        texS = (width - 1) << 5;
+    }
+    if (flipT == -1) {
+        texT = (height - 1) << 5;
+    }
 
-        if ((left < (s16)(maxX << 2)) && (top < (s16)(maxY << 2)) && (right.stored >= (s16)(minX << 2)) &&
-            (bottom.stored >= (s16)(minY << 2))) {
-            if (left < (s16)(minX << 2)) {
-                s32 clippedTexS;
+    minX = gMenuViewportCenterX - (s16)clipLeft;
+    maxY = gMenuViewportCenterY + (s16)clipBottom;
+    minY = gMenuViewportCenterY - (s16)clipTop;
+    maxX = gMenuViewportCenterX + (s16)clipRight;
+    if (minX < gMenuViewportCenterX - (gMenuViewportWidth / 2)) {
+        minX = gMenuViewportCenterX - (gMenuViewportWidth / 2);
+    }
+    if (maxX > gMenuViewportCenterX + (gMenuViewportWidth / 2)) {
+        maxX = gMenuViewportCenterX + (gMenuViewportWidth / 2);
+    }
+    if (minY < gMenuViewportCenterY - (gMenuViewportHeight / 2)) {
+        minY = gMenuViewportCenterY - (gMenuViewportHeight / 2);
+    }
+    if (maxY > gMenuViewportCenterY + (gMenuViewportHeight / 2)) {
+        maxY = gMenuViewportCenterY + (gMenuViewportHeight / 2);
+    }
 
-                clippedTexS = ((((s16)(minX << 2) - left) << 3) << 5) / scaleX;
-                texS = clippedTexS;
-                if (flipS == -1) {
-                    texS = ((width - 1) << 5) - clippedTexS;
-                }
-                left = (s16)(minX << 2);
+    if ((left < (s16)(maxX << 2)) && (top < (s16)(maxY << 2)) &&
+        (right.stored >= (s16)(minX << 2)) && (bottom.stored >= (s16)(minY << 2))) {
+        if (left < (s16)(minX << 2)) {
+            s32 clippedTexS;
+
+            clippedTexS = ((((s16)(minX << 2) - left) << 3) << 5) / scaleX;
+            texS = clippedTexS;
+            if (flipS == -1) {
+                texS = ((width - 1) << 5) - clippedTexS;
             }
-            if (top < (s16)(minY << 2)) {
-                s32 clippedTexT;
-
-                clippedTexT = ((((s16)(minY << 2) - top) << 3) << 5) / scaleY;
-                texT = clippedTexT;
-                if (flipT == -1) {
-                    texT = ((height - 1) << 5) - clippedTexT;
-                }
-                top = (s16)(minY << 2);
-            }
-            if (right.value >= (s16)(maxX << 2)) {
-                right.value = (s16)(maxX << 2) - 4;
-            }
-            if (bottom.value >= (s16)(maxY << 2)) {
-                bottom.value = (s16)(maxY << 2) - 4;
-            }
-
-            if (paletteIndex == 0) {
-                if (entry->textureIndex == 0xFE) {
-                    palette = gMenuTransparentPalette;
-                } else {
-                    palette = palettes[entry->textureIndex];
-                }
-            } else {
-                paletteIndex--;
-                if (paletteIndex == 0xFE) {
-                    palette = gMenuTransparentPalette;
-                } else {
-                    palette = palettes[paletteIndex];
-                }
-            }
-
-            gDPLoadTextureTile_4b(
-                gRegionAllocPtr++,
-                entry->imageOffset + (u8 *)table,
-                G_IM_FMT_CI,
-                entry->width,
-                entry->height,
-                0,
-                0,
-                entry->width,
-                entry->height,
-                0,
-                G_TX_CLAMP,
-                G_TX_CLAMP,
-                G_TX_NOMASK,
-                G_TX_NOMASK,
-                G_TX_NOLOD,
-                G_TX_NOLOD
-            );
-            gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, palette);
-            textureStepS = 0x8000 / scaleX;
-            gSPTextureRectangle(
-                gRegionAllocPtr++,
-                left,
-                top,
-                right.value,
-                bottom.value,
-                G_TX_RENDERTILE,
-                texS,
-                texT,
-                (u16)(textureStepS * flipS),
-                (u16)((u16)(0x8000 / scaleY) * flipT)
-            );
+            left = (s16)(minX << 2);
         }
+        if (top < (s16)(minY << 2)) {
+            s32 clippedTexT;
+
+            clippedTexT = ((((s16)(minY << 2) - top) << 3) << 5) / scaleY;
+            texT = clippedTexT;
+            if (flipT == -1) {
+                texT = ((height - 1) << 5) - clippedTexT;
+            }
+            top = (s16)(minY << 2);
+        }
+        if (right.value >= (s16)(maxX << 2)) {
+            right.value = (s16)(maxX << 2) - 4;
+        }
+        if (bottom.value >= (s16)(maxY << 2)) {
+            bottom.value = (s16)(maxY << 2) - 4;
+        }
+
+        if (paletteIndex == 0) {
+            selectedPalette = entry->textureIndex;
+        } else {
+            selectedPalette = paletteIndex - 1;
+        }
+
+        gDPLoadTextureTile_4b(gRegionAllocPtr++, entry->imageOffset + (u8 *)table,
+                              G_IM_FMT_CI, entry->width, entry->height, 0, 0,
+                              entry->width, entry->height, 0, G_TX_CLAMP, G_TX_CLAMP,
+                              G_TX_NOMASK, G_TX_NOMASK, G_TX_NOLOD, G_TX_NOLOD);
+        if (selectedPalette != 0xFE) {
+            gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, palettes[selectedPalette]);
+        } else {
+            gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, gMenuTransparentPalette);
+        }
+        textureStepS = 0x8000 / scaleX;
+        gSPTextureRectangle(gRegionAllocPtr++, left, top, right.value, bottom.value, G_TX_RENDERTILE,
+                            texS, texT, (u16)(textureStepS * flipS),
+                            (u16)((u16)(0x8000 / scaleY) * flipT));
     }
 }
 #endif
