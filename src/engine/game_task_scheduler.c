@@ -5,13 +5,6 @@
 
 #define GAME_TASK_COUNT 8
 
-typedef struct GameTaskScheduler {
-    u8 pad0[4];
-    GameTask *activeTask;
-    u8 pad8[0xC];
-    u8 unk14;
-} GameTaskScheduler;
-
 u8 gFramebufferSwapDelayTimer[4] = { 0, 0, 0, 0 };
 FramebufferSwapDelay gFramebufferSwapDelay = { 0 };
 s8 gAnalogStickResponseCurve[56] = {
@@ -21,9 +14,8 @@ s8 gAnalogStickResponseCurve[56] = {
 extern s16 gFrameCounter;
 extern GameTask gGameTaskPool[GAME_TASK_COUNT];
 extern u8 gGameTaskCount;
-extern GameTaskScheduler gGameTaskScheduler;
-extern GameTaskScheduler gGameTaskSchedulerView;
-extern GameTask *gActiveGameTaskListHead;
+extern GameTask gActiveGameTaskList;
+extern volatile GameTask gActiveGameTaskListView;
 extern GameTask *gFreeGameTaskStack[];
 extern u8 gPendingFramebufferSwapCount;
 extern u8 gFramebufferSwapHold;
@@ -48,8 +40,8 @@ void initGameTaskScheduler(void) {
     GameTask *task;
     s32 zero;
 
-    gGameTaskScheduler.activeTask = NULL;
-    gGameTaskScheduler.unk14 = 0;
+    gActiveGameTaskList.next = NULL;
+    gActiveGameTaskList.priority = 0;
     freeTask = gFreeGameTaskStack; task = gGameTaskPool; do { *freeTask = task; task++; freeTask++; } while (task < &gGameTaskPool[GAME_TASK_COUNT]);
     gGameTaskCount = 0;
     gFrameCounter = 0;
@@ -77,7 +69,7 @@ void initGameTaskScheduler(void) {
     gPlayer4InputPressed = 0;
     gPlayer4StickX = zero;
     gPlayer4StickY = zero;
-    resetRenderScratchAllocator(&gGameTaskPool[GAME_TASK_COUNT], &gGameTaskScheduler);
+    resetRenderScratchAllocator(&gGameTaskPool[GAME_TASK_COUNT], &gActiveGameTaskList);
     resetRenderCallbackQueues();
 }
 // clang-format on
@@ -247,7 +239,7 @@ void updateGameTaskScheduler(void) {
     } while (0);
     do {
     } while (0);
-    gCurrentGameTask = gActiveGameTaskListHead;
+    gCurrentGameTask = gActiveGameTaskList.next;
     while (gCurrentGameTask != NULL) {
         if (gCurrentGameTask->state == 2) {
             gCurrentGameTask->state = 0;
@@ -255,7 +247,7 @@ void updateGameTaskScheduler(void) {
         gCurrentGameTask = gCurrentGameTask->next;
     }
 
-    gCurrentGameTask = gActiveGameTaskListHead;
+    gCurrentGameTask = gActiveGameTaskList.next;
     while (gCurrentGameTask != NULL) {
         if (gCurrentGameTask->state == 0) {
             if (gCurrentGameTask->callbacks[0] != NULL) {
@@ -310,7 +302,7 @@ GameTask *allocateGameTask(s32 priority) {
     GameTask *task;
     GameTask *next;
     GameTask *prev;
-    volatile GameTaskScheduler *sentinel;
+    volatile GameTask *sentinel;
     u8 *clear;
     s32 i;
 
@@ -326,11 +318,11 @@ GameTask *allocateGameTask(s32 priority) {
         i++;
     } while (i != sizeof(GameTask));
 
-    prev = (GameTask *)&gGameTaskScheduler;
-    sentinel = &gGameTaskSchedulerView;
+    prev = &gActiveGameTaskList;
+    sentinel = &gActiveGameTaskListView;
     gGameTaskCount++;
     if (prev->next != NULL) {
-        next = sentinel->activeTask;
+        next = sentinel->next;
         do {
             if (next->priority < priority) {
                 break;
@@ -355,7 +347,7 @@ void releaseGameTaskById(s32 taskId) {
     GameTask *next;
     s32 freeTaskCount;
 
-    task = gActiveGameTaskListHead;
+    task = gActiveGameTaskList.next;
     while (task != NULL) {
         if (taskId == task->id) {
             task->prev->next = task->next;
@@ -420,7 +412,7 @@ void clearCurrentGameTaskCallback(s32 callbackIndex) {
 }
 
 void suspendGameTask(s32 taskId) {
-    GameTask *task = gActiveGameTaskListHead;
+    GameTask *task = gActiveGameTaskList.next;
 
     while (task != NULL) {
         if (taskId == task->id) {
@@ -432,7 +424,7 @@ void suspendGameTask(s32 taskId) {
 }
 
 void resumeGameTask(s32 taskId) {
-    GameTask *task = gActiveGameTaskListHead;
+    GameTask *task = gActiveGameTaskList.next;
 
     while (task != NULL) {
         if (taskId == task->id) {

@@ -15,4 +15,4 @@ D_8010AE5F = gCharacterSelectHudState + 0xF;
 D_8010AE64 = gCharacterSelectHudState + 0x14;
 gCharacterSelectCourseCursorStateByte = gCharacterSelectCourseCursorState;
 gControllerPakRaceRecordSaveStatusTransitionStep = gControllerPakRaceRecordSaveStatusTransition;
-gGameTaskSchedulerView = gGameTaskScheduler;
+gActiveGameTaskListView = gActiveGameTaskList;
