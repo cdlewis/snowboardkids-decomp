@@ -530,8 +530,8 @@ extern void drawMenuSpriteWithAlphaWideArgs(
 );
 #endif
 
-// drawMenuSpriteWithAlphaClipped best match: 92.129%
-// (nonmatchings/drawMenuSpriteWithAlphaClipped-7050948565576131586/base_44.c)
+// drawMenuSpriteWithAlphaClipped best match: 92.448%
+// (nonmatchings/drawMenuSpriteWithAlphaClipped-6078661025080551018/base_20.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/renderer/menu_renderer/drawMenuSpriteWithAlphaClipped.s")
 
 #ifdef NON_MATCHING
@@ -597,7 +597,7 @@ void drawMenuSpriteWithAlphaClipped(
         texHeight = texture->height;
 
         left = texT << 2;
-        top = ((y + gMenuViewportCenterY) << 1) << 1;
+        top = ((((((y & 0xFFFFu) & 0xFFFFu) & 0xFFFFu) & 0xFFFFu) + gMenuViewportCenterY) << 1) << 1;
         right = (((scaleX * texWidth) << 2) >> 5) + left;
         bottom = (((scaleY * texHeight) << 2) >> 5) + (0, top);
         texS = 0;
@@ -608,7 +608,6 @@ void drawMenuSpriteWithAlphaClipped(
             texS = (texWidth - 1) << 5;
         }
         minX = gMenuViewportCenterY;
-        if ((left && left) && left) {}
         if (flipT == -1) {
             texT = (texHeight - 1) << 5;
         }
@@ -645,7 +644,6 @@ void drawMenuSpriteWithAlphaClipped(
             if (paletteArg == (texture->imageOffset * 0)) {
                 palette = texture->paletteIndex;
             } else {
-                if ((!top) && (!top)) {}
                 palette = paletteArg - 1;
             }
 
