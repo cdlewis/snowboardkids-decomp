@@ -406,8 +406,8 @@ void initCourseSelectCourseList(void) {
     updateCallbackTasks();
 }
 
-// updateCourseSelectCourseList best match: 81.106%
-// (nonmatchings/updateCourseSelectCourseList-7050948565576131586/base_89.c)
+// updateCourseSelectCourseList best match: 81.174%
+// (nonmatchings/updateCourseSelectCourseList-6078661025080551018/base_45.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/course_select/course_select_menu/updateCourseSelectCourseList.s")
 
 #if 0 /* Superseded without consulting the previous attempts. */
@@ -1788,11 +1788,11 @@ void updateCourseSelectCourseList(void) {
                             RACE_ZERO.selectionUnlockState = gGameSaveDataBuffer[0].courseUnlockStates[var_v0_6];
                             gCourseSelectSelectedCourseId = var_v0_6;
                             if (D_8010AECC == 0) {
-                                D_8010AF2C = 0;
-                                D_8010AF1C = 7;
+                                gCourseSelectStatus.unk14[0] = 0;
+                                gCourseSelectStatus.unk4Array[0] = 7;
                             } else {
-                                D_8010AF34 = 0;
-                                D_8010AF20 = 7;
+                                gCourseSelectStatus.unk1C[0] = 0;
+                                gCourseSelectStatus.unk8Array[0] = 7;
                             }
                         } else if (D_8010AF44 == 0) {
                             enqueueSoundEffect(0x47, 0x32);
@@ -1811,7 +1811,7 @@ void updateCourseSelectCourseList(void) {
                 }
             }
         }
-        if ((D_8010AF1C == 7) || (D_8010AF20 == 7)) {
+        if ((gCourseSelectStatus.unk4Array[0] == 7) || (gCourseSelectStatus.unk8Array[0] == 7)) {
             gCurrentGameTask->timer = 0;
             setCurrentGameTaskCallback(updateCourseSelectPurchasePrompt, 0);
             createCallbackTask((void (*)(void *))initCourseUnlockPurchasePrompt, 0, 0x64);
