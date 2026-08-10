@@ -387,7 +387,7 @@ segments:
       - [0xE1C50, .rodata, menu/main_menu/main_menu_title_ui]
       - [0xE1C60, .rodata, ending/ending_credits_ui]
       - [0xE1C90, .rodata, race/effects/race_start_transition]
-      - [0xE1CA0, .rodata, demo/main_menu_demo_race_intro]
+      - [0xE1CA0, rodata]
       - [0xE1CC0, .rodata, demo/title_demo_race_intro]
       - [0xE1CD0, .rodata, menu/main_menu/main_menu_race_flow]
       - [0xE1CF0, .rodata, menu/main_menu/training_course_race_flow]
