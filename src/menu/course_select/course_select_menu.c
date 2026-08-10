@@ -406,8 +406,8 @@ void initCourseSelectCourseList(void) {
     updateCallbackTasks();
 }
 
-// updateCourseSelectCourseList best match: 81.174%
-// (nonmatchings/updateCourseSelectCourseList-6078661025080551018/base_45.c)
+// updateCourseSelectCourseList best match: 81.336%
+// (nonmatchings/updateCourseSelectCourseList-6078661025080551018/base_96.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/course_select/course_select_menu/updateCourseSelectCourseList.s")
 
 #if 0 /* Superseded without consulting the previous attempts. */
@@ -1430,7 +1430,7 @@ typedef struct CourseSelectRacePlayerView {
 } CourseSelectRacePlayerView;
 
 extern u8 gCourseSelectSelectedCourseId;
-extern u8 gMenuTransitionState;
+extern volatile u8 gMenuTransitionState;
 extern u8 D_8010AF19;
 extern u8 D_8010AF1A;
 extern u8 D_8010AF1B;
@@ -1508,7 +1508,7 @@ void updateCourseSelectCourseList(void) {
     u8 var_v0_3;
 #endif
     u8 var_v0_4;
-    u8 var_v0_6;
+    s32 var_v0_6;
 
     var_a0 = 0;
     if (RACE_ZERO.menuState == 9) {
