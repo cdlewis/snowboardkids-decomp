@@ -1,23 +1,7 @@
 #ifndef CHARACTER_SELECT_COURSE_UI_H
 #define CHARACTER_SELECT_COURSE_UI_H
 
-#include "common.h"
-
-typedef union CharacterSelectCourseCursorState {
-    u8 bytes[8];
-    struct {
-        /* 0x00 */ u8 listCursorState;
-        /* 0x01 */ u8 submenuState;
-        /* 0x02 */ u8 previewFrameState;
-        /* 0x03 */ u8 pad3;
-        /* 0x04 */ s16 listCursorSpriteIndex;
-        /* 0x06 */ u8 listCursorTimer;
-        /* 0x07 */ u8 submenuTimer;
-    } fields;
-} CharacterSelectCourseCursorState;
-
-typedef char CharacterSelectCourseCursorStateSizeCheck
-    [(sizeof(CharacterSelectCourseCursorState) == 0x8) ? 1 : -1];
+#include "game/menu/character_select/character_select_course_menu.h"
 
 typedef struct CharacterSelectCourseWidgetActor {
     /* 0x00 */ u8 pad0[0x18];
@@ -72,8 +56,6 @@ typedef struct CharacterSelectCourseRecordTime {
     /* 0x01 */ s8 seconds;
     /* 0x02 */ s16 centiseconds;
 } CharacterSelectCourseRecordTime;
-
-extern CharacterSelectCourseCursorState gCharacterSelectCourseCursorState;
 
 void drawCharacterSelectCourseListOptions(CharacterSelectCourseMenuFrameActor *arg0);
 void updateCharacterSelectUnlockedCourseList(CharacterSelectCourseMenuFrameActor *arg0);
