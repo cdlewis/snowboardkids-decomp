@@ -59,8 +59,8 @@ extern f32 D_800E10A8;
 extern f32 D_800E10AC;
 extern f32 D_800E10B0;
 extern void releaseMenuAssetHandles(void);
-// initMainMenuDemoRaceIntro best match: 98.895%
-// (nonmatchings/initMainMenuDemoRaceIntro-2163214805492048867/base_22.c)
+// initMainMenuDemoRaceIntro best match: 99.196%
+// (nonmatchings/initMainMenuDemoRaceIntro/base_10.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/demo/main_menu_demo_race_intro/initMainMenuDemoRaceIntro.s")
 
 #ifdef NON_MATCHING
@@ -74,8 +74,7 @@ void initMainMenuDemoRaceIntro(void) {
     MainMenuDemoRaceIntroEntry *temp_v1_3;
     RacePlayer *players;
 
-    entryIndex = gMainMenuDemoRaceIntroIndex;
-    demoIndex = entryIndex;
+    demoIndex = gMainMenuDemoRaceIntroIndex;
     entryIndex = demoIndex;
     temp_v1 = &gMainMenuDemoRaceIntroEntries[entryIndex];
     gRaceCourseIndex.signedValue = temp_v1->courseIndex;
@@ -101,15 +100,7 @@ void initMainMenuDemoRaceIntro(void) {
     gRacePlayers[3].characterVariant = 6;
     gRacePlayers->unk12 = 1;
     gRacePlayers[1].unk12 = 2;
-    gRacePlayers->characterId = temp_v1_2->player0Character;
-    gRacePlayers[1].characterId = temp_v1_2->player1Character;
-    gRacePlayers[3].unk12 = 4;
-    gRacePlayers[2].characterId = temp_v1_2->player2Character;
-    gRacePlayers[3].characterId = temp_v1_2->player3Character;
-    gRacePlayers[2].unk12 = 3;
-    if (gRaceSplitscreenMode == 0) {
-        gRacePlayers->isActive = 1;
-        gRacePlayers[1].isActive = 1;
+    gRacePlayers->characterId = temp_v1_2->player0Character; gRacePlayers[1].characterId = temp_v1_2->player1Character; gRacePlayers[3].unk12 = 4; gRacePlayers[2].characterId = temp_v1_2->player2Character; gRacePlayers[3].characterId = temp_v1_2->player3Character; gRacePlayers[2].unk12 = 3; if (gRaceSplitscreenMode == 0) { gRacePlayers->isActive = 1; gRacePlayers[1].isActive = 1;
         gRacePlayers[2].isActive = 1;
         gRacePlayers[3].isActive = 1;
         gRacePlayerCount = 4;
@@ -143,7 +134,6 @@ void initMainMenuDemoRaceIntro(void) {
     players[3].unk15 = 0;
     players[3].soundDisabled = 0;
     players[3].replayInputSource = demoIndex;
-    one = 1;
     demoIndex = gMainMenuDemoRaceIntroIndex;
     temp_v1_3 = &gMainMenuDemoRaceIntroEntries[demoIndex];
     loadCompressedRomAsset(temp_v1_3->romStart, temp_v1_3->romEnd, 0x2B);
@@ -161,13 +151,9 @@ void initMainMenuDemoRaceIntro(void) {
     initRaceHud();
     loadCourseAssetsFlag = gPlayerCount;
     if (loadCourseAssetsFlag == one) {
-        s32 active;
-
-        active = one;
         configureViewport(0, 0xA0, 0x78, 0x120U, 0xD0U, 0x140U, 0xF0U, D_800E10A0);
-        one++;
         one--;
-        gRacePlayerHudStatuses[0].active = active;
+        gRacePlayerHudStatuses[0].active = one;
         gFramebufferSwapDelay.value = 0;
     } else {
         configureViewport(0, 0x57, 0x43, 0x90U, 0x68U, 0xA0U, 0x78U, D_800E10A4);
@@ -178,7 +164,7 @@ void initMainMenuDemoRaceIntro(void) {
         D_801121E0[1].active = 1;
         D_801121E0[2].active = 1;
         D_801121E0[3].active = 1;
-        {
+        if (1) {
             one++;
             one--;
             gFramebufferSwapDelay.value = one;
@@ -189,6 +175,7 @@ void initMainMenuDemoRaceIntro(void) {
     }
     initRaceCourseSceneTasks();
     setCurrentGameTaskCallback(waitForMainMenuDemoRaceIntroStart, 0);
+    one++;
     gMenuFadeAlpha = 0xFF;
     gRaceRumbleEnabled = 0;
     gCurrentGameTask->fadeDelay = 0x384;
