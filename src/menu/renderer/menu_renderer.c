@@ -1249,8 +1249,8 @@ void drawMenuTilemapSpriteCallback(MenuRenderSprite *arg0) {
 void func_80011D6C(void) {
 }
 
-// drawMenuTilemapSprite best match: 96.316%
-// (nonmatchings/drawMenuTilemapSprite-7050948565576131586/base_35.c)
+// drawMenuTilemapSprite best match: 96.329%
+// (nonmatchings/drawMenuTilemapSprite-6078661025080551018/base_16.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/renderer/menu_renderer/drawMenuTilemapSprite.s")
 
 #ifdef NON_MATCHING
@@ -1264,9 +1264,6 @@ s32 drawMenuTilemapSprite(MenuRenderSprite *sprite, s32 imageSize, s16 tilemapWi
     s16 sourceY;
     u16 tileMask;
     s32 tileShift;
-    s32 textureFormat;
-    s32 sourceOffsetX;
-    s32 sourceOffsetY;
     s16 columnCount;
     s16 rowCount;
     s16 firstDrawX;
@@ -1292,6 +1289,9 @@ s32 drawMenuTilemapSprite(MenuRenderSprite *sprite, s32 imageSize, s16 tilemapWi
     s16 imageIndex;
     s16 *tilemap;
     u16 *image;
+    s32 textureFormat;
+    s32 sourceOffsetX;
+    s32 sourceOffsetY;
     MenuRenderTileInfo *tileInfo;
     u16 *palette;
 
