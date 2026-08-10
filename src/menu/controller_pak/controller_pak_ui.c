@@ -877,15 +877,15 @@ void initControllerPakFileDeleteFreeSpaceInfo(ControllerPakTwoPointActor *arg0) 
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateControllerPakFileDeleteFreeSpaceInfo);
 }
 
-// drawControllerPakFileDeleteFileList best match: 96.263%
-// (nonmatchings/drawControllerPakFileDeleteFileList-2163214805492048867/base_6.c)
+// drawControllerPakFileDeleteFileList best match: 96.563%
+// (nonmatchings/drawControllerPakFileDeleteFileList-6078661025080551018/base_41.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/controller_pak/controller_pak_ui/drawControllerPakFileDeleteFileList.s")
 
 #ifdef NON_MATCHING
 extern u8 gControllerPakVisibleFileIndex;
 void drawControllerPakFileDeleteFileList(ControllerPakFileListActor *arg0) {
     char padAfter[0x14];
-    register s32 alpha;
+    register u16 alpha;
     register s32 i;
     register s32 insertIndex;
     u16 textB0[4];
@@ -994,8 +994,7 @@ void drawControllerPakFileDeleteFileList(ControllerPakFileListActor *arg0) {
                     } else if (insertIndex >= 0x3A) {
                         text7C[state] = 0xFFFE;
                     } else {
-                        text7C[state] = insertIndex;
-                        text7C[state] = text7C[state] - 0x30;
+                        text7C[state] = (insertIndex - 0x30) & 0xFFFFU;
                     }
                 }
                 i++;
