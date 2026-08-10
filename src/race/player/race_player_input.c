@@ -68,7 +68,7 @@ void recordRaceReplayInputFrame(RacePlayer *player) {
     }
 }
 
-// playRaceReplayInputFrame best match: 97.799% (base_13.c)
+// playRaceReplayInputFrame best match: 97.956% (base_39.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race/player/race_player_input/playRaceReplayInputFrame.s")
 
 #ifdef NON_MATCHING
@@ -92,11 +92,12 @@ void playRaceReplayInputFrame(RacePlayer *player) {
         replayOffset = (replayFrame * 4) - replayFrame;
         stickX = history[(u16)player->playerIndex].bytes[replayOffset + 1];
         player->stickX = stickX;
-        player->stickY = history[(u16)player->playerIndex].bytes[replayOffset + 2];
+        player->stickY = (((((((history[(u16)player->playerIndex].bytes[replayOffset + 2] & 0xFFFFu) & 0xFFFFu) &
+                                0xFFFFu) & 0xFFFFu) & 0xFFFFu) & 0xFFFFu) & 0xFFFFu) & 0xFFFFu;
         player->inputFlags = 0;
         buttons = (u8)history[(u16)player->playerIndex].bytes[replayOffset];
         if (buttons & 1) {
-            player->inputFlags = 8;
+            player->inputFlags |= 8;
             replayFrame = player->replayFrame;
             replayOffset = (replayFrame * 4) - replayFrame;
             buttons = (u8)history[PLAYER_INDEX(player)].bytes[replayOffset];
