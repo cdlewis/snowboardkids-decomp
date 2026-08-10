@@ -1980,19 +1980,12 @@ void updateCourseSelectPurchasePrompt(void) {
     updateCallbackTasks();
 }
 
-// updateCourseSelectUnlockCourseList best match: 99.806%
-// (nonmatchings/updateCourseSelectUnlockCourseList-7050948565576131586/base_41.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/menu/course_select/course_select_menu/updateCourseSelectUnlockCourseList.s")
-
-#ifdef NON_MATCHING
 void updateCourseSelectUnlockCourseList(void) {
     s32 i;
-    u32 new_var4;
-    GameSaveData *saveData;
     s32 rowOffset;
     u8 selection;
     s32 promptRow;
-    int new_var3;
+    s32 courseGridOffset;
     s32 playerIndex;
     s32 columnCount;
     playerIndex = 0;
@@ -2002,12 +1995,12 @@ void updateCourseSelectUnlockCourseList(void) {
         D_8010AEA4 = 0;
     }
     if ((gMenuChoicePromptState[playerIndex] >= 2) && (gMenuChoicePromptState[playerIndex] < 5)) {
-        if ((!(gPlayerInputHeld[playerIndex] & (0x10000 | 0x0800))) &&
-            (!(gPlayerInputHeld[playerIndex] & (0x20000 | 0x0400)))) {
+        if ((!(gPlayerInputHeld[playerIndex] & (STICK_UP | U_JPAD))) &&
+            (!(gPlayerInputHeld[playerIndex] & (STICK_DOWN | D_JPAD)))) {
             gMenuInputRepeatTimers[playerIndex] = playerIndex;
         }
-        if ((gPlayerInputPressed[playerIndex] & (0x10000 | 0x0800)) ||
-            (((gPlayerInputHeld[playerIndex] & (0x10000 | 0x0800)) &&
+        if ((gPlayerInputPressed[playerIndex] & (STICK_UP | U_JPAD)) ||
+            (((gPlayerInputHeld[playerIndex] & (STICK_UP | U_JPAD)) &&
               (((s32)gMenuInputRepeatTimers[playerIndex]) >= 9)) &&
              (gMenuInputRepeatTimers[playerIndex] & 1))) {
             if (!gMenuInputRepeatTimers[playerIndex]) {
@@ -2017,8 +2010,8 @@ void updateCourseSelectUnlockCourseList(void) {
                 gMenuChoicePromptState[playerIndex] = gMenuChoicePromptState[playerIndex] - 1;
                 enqueueSoundEffect(0x19, 0x32);
             }
-        } else if ((gPlayerInputPressed[playerIndex] & (0x20000 | 0x0400)) ||
-                   (((gPlayerInputHeld[playerIndex] & (0x20000 | 0x0400)) &&
+        } else if ((gPlayerInputPressed[playerIndex] & (STICK_DOWN | D_JPAD)) ||
+                   (((gPlayerInputHeld[playerIndex] & (STICK_DOWN | D_JPAD)) &&
                      (gMenuInputRepeatTimers[playerIndex] >= 9)) &&
                     (gMenuInputRepeatTimers[playerIndex] & 1))) {
             if (!gMenuInputRepeatTimers[playerIndex]) {
@@ -2039,21 +2032,22 @@ void updateCourseSelectUnlockCourseList(void) {
         selection = gRacePlayers[playerIndex].menuSelection;
         gRacePlayers[playerIndex].menuSelection =
             (selection = ((gMenuChoicePromptState[playerIndex] * columnCount) + (((s32)selection) % columnCount)) -
-                         (new_var3 = 6));
-        new_var4 = gPlayerInputPressed[playerIndex] & 0x4000;
-        if (new_var4) {
+                         (courseGridOffset = 6));
+        if (gPlayerInputPressed[playerIndex] & B_BUTTON) {
             enqueueSoundEffect(0x18, 0x32);
             gMenuInputRepeatTimers[playerIndex] = 0;
             gMenuChoicePromptState[playerIndex] += 3;
-            gRacePlayers[0].menuSelection = (selection = ((s32)gRacePlayers[playerIndex].menuSelection) % columnCount);
-        } else if ((gPlayerInputPressed[playerIndex] & 0x8000) || (gPlayerInputPressed[playerIndex] & 0x1000)) {
+            selection = gRacePlayers[playerIndex].menuSelection;
+            gRacePlayers[0].menuSelection = (selection = ((s32)selection) % columnCount);
+        } else if ((gPlayerInputPressed[playerIndex] & A_BUTTON) ||
+                   (gPlayerInputPressed[playerIndex] & START_BUTTON)) {
             enqueueSoundEffect(0x18, 0x32);
             rowOffset = columnCount;
             i = gMenuChoicePromptState[playerIndex] * columnCount;
             promptRow = gMenuChoicePromptState[playerIndex];
             rowOffset = promptRow * rowOffset;
             selection = (s32)gRacePlayers[0].menuSelection;
-            selection = (rowOffset + (selection % columnCount)) - ((0, new_var3));
+            selection = (rowOffset + (selection % columnCount)) - ((0, courseGridOffset));
             gRacePlayers[0].selectionUnlockState = gGameSaveDataBuffer[playerIndex].courseUnlockStates[selection];
             gRacePlayers[playerIndex].menuSelection = selection;
             if (!D_8010AECC) {
@@ -2077,7 +2071,6 @@ void updateCourseSelectUnlockCourseList(void) {
 
     updateCallbackTasks();
 }
-#endif
 
 #if 0 /* Superseded without consulting the previous attempt. */
 void updateCourseSelectUnlockCourseList(void) {
