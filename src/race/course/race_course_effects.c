@@ -153,6 +153,18 @@ typedef struct {
     s32 pad38;
 } CourseTriggerScratch;
 
+typedef union {
+    Vec3i vec;
+    struct {
+        s32 x;
+        s32 y;
+        s32 z;
+    };
+    struct {
+        volatile s32 volatileX;
+    };
+} CourseTriggerCollisionPosition;
+
 typedef struct RaceCourseTriggerEffect {
     char pad0[0x10];
     u16 entryIndex;
@@ -1572,16 +1584,14 @@ void renderCourseTriggerVolume(RaceCourseTriggerEffect *arg0) {
     }
 }
 
-// collidePlayerWithCourseTriggerVolume best match: 98.574% at
-// nonmatchings/collidePlayerWithCourseTriggerVolume-7050948565576131586/base_30.c.
+// collidePlayerWithCourseTriggerVolume best match: 99.415% at
+// nonmatchings/collidePlayerWithCourseTriggerVolume-6078661025080551018/base_41.c.
 #pragma GLOBAL_ASM("asm/nonmatchings/race/course/race_course_effects/collidePlayerWithCourseTriggerVolume.s")
 
 #ifdef NON_MATCHING
 void collidePlayerWithCourseTriggerVolume(RacePlayer *arg0, RaceCourseTriggerEffect *arg1) {
-    RaceCourseTriggerEffect *trigger;
-    RacePlayer *player;
     Vec3i delta;
-    Vec3i transformed;
+    CourseTriggerCollisionPosition transformed;
     FixedMatrix3sScratch matrix;
     s64 savedPush;
     s32 zero;
@@ -1594,95 +1604,95 @@ void collidePlayerWithCourseTriggerVolume(RacePlayer *arg0, RaceCourseTriggerEff
     s32 positiveLimit;
     s32 negativeLimit;
 
-    trigger = arg1;
-    player = arg0;
-
-    if ((gRaceUpdatePaused == 0) && (player->isActive != 0)) {
+    if ((gRaceUpdatePaused == 0) && (arg0->isActive != 0)) {
         makeFixedRotationYX(
             matrix,
-            -gCourseTriggerEntries[trigger->entryIndex].pitch,
-            -gCourseTriggerEntries[trigger->entryIndex].yaw
+            -gCourseTriggerEntries[arg1->entryIndex].pitch,
+            -gCourseTriggerEntries[arg1->entryIndex].yaw
         );
 
-        if ((player->stateFlags & 0x2000) == 0) {
-            delta.x = player->pos.x - gCourseTriggerEntries[trigger->entryIndex].pos.x;
-            delta.y = player->unk5C - gCourseTriggerEntries[trigger->entryIndex].pos.y;
-            delta.z = player->pos.z - gCourseTriggerEntries[trigger->entryIndex].pos.z;
-            transformVec3iByFixedMatrix(matrix, &delta, &transformed);
+        if ((arg0->stateFlags & 0x2000) == 0) {
+            delta.x = arg0->pos.x - gCourseTriggerEntries[arg1->entryIndex].pos.x;
+            delta.y = arg0->unk5C - gCourseTriggerEntries[arg1->entryIndex].pos.y;
+            delta.z = arg0->pos.z - gCourseTriggerEntries[arg1->entryIndex].pos.z;
+            transformVec3iByFixedMatrix(matrix, &delta, &transformed.vec);
 
-            if ((transformed.z >= -trigger->scaleZ) && (trigger->scaleZ >= transformed.z) &&
-                (transformed.x >= (-trigger->scaleX - 0x30000)) && ((trigger->scaleX + 0x30000) >= transformed.x) &&
-                (transformed.y >= -0xFFFFF) && (trigger->scaleY >= transformed.y)) {
-                delta.y = trigger->scaleY - transformed.y;
+            if ((transformed.z >= -arg1->scaleZ) && (arg1->scaleZ >= transformed.z) &&
+                (transformed.x >= (-arg1->scaleX - 0x30000)) && ((arg1->scaleX + 0x30000) >= transformed.x) &&
+                (transformed.y >= -0xFFFFF) && (arg1->scaleY >= transformed.y)) {
+                delta.y = arg1->scaleY - transformed.y;
                 delta.x = -transformed.x;
                 delta.z = 0;
 
-                entry = &gCourseTriggerEntries[trigger->entryIndex];
+                entry = &gCourseTriggerEntries[arg1->entryIndex];
                 makeFixedRotationXY(matrix, entry->pitch, entry->yaw);
-                transformVec3iByFixedMatrix(matrix, &delta, &transformed);
+                transformVec3iByFixedMatrix(matrix, &delta, &transformed.vec);
 
-                player->pos.x += transformed.x;
-                player->unk5C += transformed.y;
-                player->pos.z += transformed.z;
-                player->stateFlags |= 0x02000000;
-                player->unk332 = gCourseTriggerEntries[trigger->entryIndex].yaw ^ 0;
-                player->unk334 = gCourseTriggerEntries[trigger->entryIndex].pitch;
+                arg0->pos.x += transformed.x;
+                arg0->unk5C += transformed.y;
+                arg0->pos.z += transformed.z;
+                arg0->stateFlags |= 0x02000000;
+                arg0->unk332 = gCourseTriggerEntries[arg1->entryIndex].yaw ^ 0;
+                arg0->unk334 = gCourseTriggerEntries[arg1->entryIndex].pitch;
                 return;
             }
         }
 
-        if (player->unk578 == 0) {
-            pushRacePlayerOutOfCylinder(&trigger->pos1, trigger->scaleX + 0x30000, 0x120000, player->playerIndex);
-            pushRacePlayerOutOfCylinder(&trigger->pos2, trigger->scaleX + 0x30000, 0x100000, player->playerIndex);
+        if (arg0->unk578 == 0) {
+            pushRacePlayerOutOfCylinder(&arg1->pos1, arg1->scaleX + 0x30000, 0x120000, arg0->playerIndex);
+            pushRacePlayerOutOfCylinder(&arg1->pos2, arg1->scaleX + 0x30000, 0x100000, arg0->playerIndex);
         }
 
-        delta.x = player->pos.x - gCourseTriggerEntries[trigger->entryIndex].pos.x;
-        delta.y = player->unk5C - gCourseTriggerEntries[trigger->entryIndex].pos.y;
-        delta.z = player->pos.z - gCourseTriggerEntries[trigger->entryIndex].pos.z;
-        transformVec3iByFixedMatrix(matrix, &delta, &transformed);
+        delta.x = arg0->pos.x - gCourseTriggerEntries[arg1->entryIndex].pos.x;
+        delta.y = arg0->unk5C - gCourseTriggerEntries[arg1->entryIndex].pos.y;
+        delta.z = arg0->pos.z - gCourseTriggerEntries[arg1->entryIndex].pos.z;
+        transformVec3iByFixedMatrix(matrix, &delta, &transformed.vec);
 
         if (transformed.y <= 0) {
             if (transformed.y >= -0x160000) {
-                if (transformed.z >= -trigger->scaleZ) {
+                if (transformed.z >= -arg1->scaleZ) {
                     if (1) {}
                     if (1) {}
                     if (1) {}
                     if (1) {}
-                    if (trigger->scaleZ >= transformed.z) {
-                        scaleX = trigger->scaleX;
-                        collisionRadius = player->collisionRadius;
+                    if (arg1->scaleZ >= transformed.z) {
+                        scaleX = arg1->scaleX;
+                        collisionRadius = arg0->collisionRadius;
                         limit = scaleX + collisionRadius;
                         if (transformed.x >= ((-scaleX - collisionRadius) - 0x30000)) {
                             positiveLimit = limit + 0x30000;
-                            if (trigger && trigger) {}
+                            if (arg1 && arg1) {}
                             if (positiveLimit >= transformed.x) {
+                                zero = transformed.volatileX;
                                 push = 0;
                                 savedPush = -limit;
                                 negativeLimit = savedPush;
-                                if (((gRaceUpdatePaused & 0xFFFF) && gRaceUpdatePaused) && gRaceUpdatePaused) {}
-                                if (transformed.x >= 0) {
-                                    if (transformed.x < positiveLimit) {
-                                        push = (limit - transformed.x) + 0x30000;
+                                if ((gRaceUpdatePaused && gRaceUpdatePaused) && gRaceUpdatePaused) {}
+                                if (zero >= 0) {
+                                    if (zero < positiveLimit) {
+                                        push = (limit - zero) + 0x30000;
                                     }
                                 } else {
-                                    entry = &gCourseTriggerEntries[trigger->entryIndex];
+                                    zero = transformed.x;
+                                    entry = &gCourseTriggerEntries[arg1->entryIndex];
                                     if (1) {
-                                        if ((negativeLimit - 0x30000) < transformed.x) {
-                                            push = (negativeLimit - transformed.x) - 0x30000;
+                                        if ((negativeLimit - 0x30000) < zero) {
+                                            if (((!arg1) && (!arg1)) && (!arg1)) {}
+                                            push = (negativeLimit - zero) - 0x30000;
                                         }
                                     }
                                 }
 
                                 if (push != 0) {
-                                    entryIndex = trigger->entryIndex;
+                                    entryIndex = arg1->entryIndex;
                                     makeFixedRotationY(matrix, gCourseTriggerEntries[entryIndex].yaw);
                                     zero = transformed.x * 0;
                                     delta.y = zero;
                                     delta.z = 0;
                                     delta.x = push;
-                                    transformVec3iByFixedMatrix(matrix, &delta, &transformed);
-                                    player->pos.x += transformed.x;
-                                    player->pos.z += transformed.z;
+                                    transformVec3iByFixedMatrix(matrix, &delta, &transformed.vec);
+                                    arg0->pos.x += transformed.x;
+                                    arg0->pos.z += transformed.z;
                                 }
                             }
                         }
