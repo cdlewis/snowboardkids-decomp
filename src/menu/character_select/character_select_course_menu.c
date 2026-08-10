@@ -18,14 +18,6 @@
 
 typedef s16 CharacterSelectOptionList[10];
 
-typedef struct CharacterSelectCourseBss {
-    /* 0x00 */ u16 exitOptionIndex;
-    /* 0x02 */ u8 pad2[6];
-    /* 0x08 */ CharacterSelectCourseCursorState cursorState;
-} CharacterSelectCourseBss;
-
-typedef char CharacterSelectCourseBssSizeCheck[(sizeof(CharacterSelectCourseBss) == 0x10) ? 1 : -1];
-
 CharacterSelectCourseMenuData gCharacterSelectCourseMenuData = {
     {
      { 9, 0, 1, 2, 3, 4, -1, 0, 0, 0, 0 },
@@ -36,8 +28,6 @@ CharacterSelectCourseMenuData gCharacterSelectCourseMenuData = {
     { 9, 0, 1, -1 },
     { 7, -1, 0, 0, 0, 0, 0, 0 },
 };
-
-CharacterSelectCourseBss gCharacterSelectCourseBss;
 
 extern void enqueueSoundEffect(s32, s32);
 extern void releaseMenuAssetHandles(void);

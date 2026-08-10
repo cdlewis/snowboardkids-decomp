@@ -214,9 +214,6 @@ MenuGlyphScript gCharacterSelectCourseStartGameText[44] = {
 #define gCharacterSelectCourseExitPreviewCornerTile (gCharacterSelectCourseExitPreviewData.cornerTile)
 extern void *D_8010ADE0;
 extern void *D_8010ADE4;
-extern u8 gCharacterSelectCourseCursorStateByte;
-extern u8 gCharacterSelectCourseSubmenuState;
-extern u8 D_8010AE8F;
 extern u8 gHighestUnlockedCourse;
 extern u8 gCourseSelectFromRaceTypeMenu;
 extern s32 gMenuFlowState;
@@ -2407,6 +2404,7 @@ void drawCharacterSelectCourseListCursor(CharacterSelectCourseWidgetActor *arg0)
 
 void updateCharacterSelectCourseListCursor(CharacterSelectCourseWidgetActor *arg0) {
     u8 state;
+    s32 primaryPlayerIndex;
     u8 globalState;
 
     state = arg0->transition.bytes.state;
@@ -2418,7 +2416,8 @@ void updateCharacterSelectCourseListCursor(CharacterSelectCourseWidgetActor *arg
     }
 
     /* Preserve IDO's state selector register allocation. */
-    switch (state ^ 0) {
+    primaryPlayerIndex = 0;
+    switch (state ^ primaryPlayerIndex) {
         case 0:
             arg0->sprite.index += 0x26;
             if (arg0->sprite.index >= 0x100) {
@@ -2437,7 +2436,7 @@ void updateCharacterSelectCourseListCursor(CharacterSelectCourseWidgetActor *arg
             arg0->transition.bytes.timer = (arg0->transition.bytes.timer + 1) & 0x1F;
             break;
         case 2:
-            if (gRacePlayers[0].menuState == 1) {
+            if (gRacePlayers[primaryPlayerIndex].menuState == 1) {
                 state = arg0->transition.bytes.state = 3;
             }
             break;
@@ -2445,8 +2444,8 @@ void updateCharacterSelectCourseListCursor(CharacterSelectCourseWidgetActor *arg
             break;
     }
 
-    gCharacterSelectCourseCursorStateByte = state;
-    if (gRacePlayers[0].menuState == 7) {
+    gCharacterSelectCourseCursorState.bytes[primaryPlayerIndex] = state;
+    if (gRacePlayers[primaryPlayerIndex].menuState == 7) {
         removeCallbackTask(arg0);
         return;
     }
@@ -3024,7 +3023,7 @@ void updateCharacterSelectCourseNamePopup(CharacterSelectCourseWidgetActor *arg0
     }
 
     gCharacterSelectCourseSubmenuState = state;
-    D_8010AE8F = arg0->transition.bytes.timer;
+    gCharacterSelectCourseSubmenuTimer = arg0->transition.bytes.timer;
 
     if (arg0->transition.bytes.state == 6) {
         removeCallbackTask(arg0);
@@ -3384,7 +3383,7 @@ void updateCharacterSelectCourseExitPopup(CharacterSelectCourseWidgetActor *arg0
     }
 
     gCharacterSelectCourseSubmenuState = state;
-    D_8010AE8F = arg0->transition.bytes.timer;
+    gCharacterSelectCourseSubmenuTimer = arg0->transition.bytes.timer;
 
     if (arg0->transition.bytes.state == 6) {
         removeCallbackTask(arg0);
