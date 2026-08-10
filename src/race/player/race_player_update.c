@@ -1382,11 +1382,6 @@ void updateRacePlayerAirborneLaunch(RacePlayer *player) {
     }
 }
 
-// updateRacePlayerAirborneCruise best match: 99.696%
-// (nonmatchings/updateRacePlayerAirborneCruise-8498672362023432715/base.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race/player/race_player_update/updateRacePlayerAirborneCruise.s")
-
-#ifdef NON_MATCHING
 void updateRacePlayerAirborneCruise(RacePlayer *player) {
     s32 sp2C;
     s32 var_a2;
@@ -1399,8 +1394,8 @@ void updateRacePlayerAirborneCruise(RacePlayer *player) {
             var_v1 = calculateFixedAngleBetweenXZPoints(
                          player->pos.x,
                          player->pos.z,
-                         gRaceCourseStartEntries[gRaceCourseIndex.signedValue].velocity,
-                         gRaceCourseStartEntries[gRaceCourseIndex.signedValue].velocity.y
+                         gRaceCourseStartEntries[gRaceCourseIndex.signedValue].unk40,
+                         gRaceCourseStartEntries[gRaceCourseIndex.signedValue].unk44
                      ) -
                      player->facingAngle + 0x400;
             if ((s16)(var_v1 & 0xFFF) < 0x800) {
@@ -1436,7 +1431,8 @@ void updateRacePlayerAirborneCruise(RacePlayer *player) {
     }
 
     if (player->unk93 != 0) {
-        setRaceMotionAnimation(player, player->unk93-- + 7);
+        player->unk93--;
+        setRaceMotionAnimation(player, player->unk93 + 8);
     } else if (player->animationId != 5) {
         setRaceMotionAnimation(player, 5);
     }
@@ -1871,7 +1867,6 @@ void updateRacePlayerAirborneCruise(RacePlayer *player) {
         enqueueRacePlayerVoiceSound(player, 5);
     }
 }
-#endif
 
 void resetRacePlayerTrickSubstate(RacePlayer *player) {
     player->subState = 0;
