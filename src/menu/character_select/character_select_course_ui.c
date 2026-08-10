@@ -212,13 +212,10 @@ MenuGlyphScript gCharacterSelectCourseStartGameText[44] = {
 #define gCharacterSelectCoursePreviewFrameCornerTileMaps \
     ((CharacterSelectCourseFrameCornerTileMap *)gCharacterSelectCoursePreviewFrameCornerTileMaps)
 #define gCharacterSelectCourseExitPreviewCornerTile (gCharacterSelectCourseExitPreviewData.cornerTile)
-extern u16 gCharacterSelectCourseExitOptionIndex;
 extern void *D_8010ADE0;
 extern void *D_8010ADE4;
-extern CharacterSelectCourseCursorState gCharacterSelectCourseCursorState;
 extern u8 gCharacterSelectCourseCursorStateByte;
 extern u8 gCharacterSelectCourseSubmenuState;
-extern u8 D_8010AE8A;
 extern u8 D_8010AE8F;
 extern u8 gHighestUnlockedCourse;
 extern u8 gCourseSelectFromRaceTypeMenu;
@@ -916,8 +913,9 @@ void updateCharacterSelectCoursePreviewFrame(CharacterSelectCourseWidgetActor *a
         }
     }
 
-    if (switchState != D_8010AE8A) {
-        switchState = state = arg0->transition.bytes.state = D_8010AE8A;
+    if (switchState != gCharacterSelectCourseCursorState.fields.previewFrameState) {
+        switchState = state = arg0->transition.bytes.state =
+            gCharacterSelectCourseCursorState.fields.previewFrameState;
     }
 
     switch (switchState) {
@@ -987,7 +985,7 @@ void updateCharacterSelectCoursePreviewFrame(CharacterSelectCourseWidgetActor *a
             break;
     }
 
-    D_8010AE8A = state;
+    gCharacterSelectCourseCursorState.fields.previewFrameState = state;
     if (arg0->transition.bytes.state == 7) {
         removeCallbackTask(arg0);
         return;
@@ -2412,11 +2410,11 @@ void updateCharacterSelectCourseListCursor(CharacterSelectCourseWidgetActor *arg
     u8 globalState;
 
     state = arg0->transition.bytes.state;
-    if (state != (globalState = gCharacterSelectCourseCursorState.fields.state)) {
+    if (state != (globalState = gCharacterSelectCourseCursorState.fields.listCursorState)) {
         arg0->transition.bytes.state = globalState;
         state = globalState;
-        arg0->sprite.index = gCharacterSelectCourseCursorState.fields.spriteIndex;
-        arg0->transition.bytes.timer = gCharacterSelectCourseCursorState.fields.timer;
+        arg0->sprite.index = gCharacterSelectCourseCursorState.fields.listCursorSpriteIndex;
+        arg0->transition.bytes.timer = gCharacterSelectCourseCursorState.fields.listCursorTimer;
     }
 
     /* Preserve IDO's state selector register allocation. */
@@ -2974,10 +2972,10 @@ void updateCharacterSelectCourseNamePopup(CharacterSelectCourseWidgetActor *arg0
     u8 globalState;
 
     state = arg0->transition.bytes.state;
-    if (state != (globalState = gCharacterSelectCourseCursorState.bytes[1])) {
+    if (state != (globalState = gCharacterSelectCourseCursorState.fields.submenuState)) {
         arg0->transition.bytes.state = globalState;
         state = globalState;
-        arg0->transition.bytes.timer = gCharacterSelectCourseCursorState.bytes[7];
+        arg0->transition.bytes.timer = gCharacterSelectCourseCursorState.fields.submenuTimer;
     }
 
     switch (state) {
@@ -3031,8 +3029,8 @@ void updateCharacterSelectCourseNamePopup(CharacterSelectCourseWidgetActor *arg0
     if (arg0->transition.bytes.state == 6) {
         removeCallbackTask(arg0);
         D_8010ADE0 = NULL;
-        gCharacterSelectCourseCursorState.bytes[1] = 0;
-        gCharacterSelectCourseCursorState.bytes[7] = 0;
+        gCharacterSelectCourseCursorState.fields.submenuState = 0;
+        gCharacterSelectCourseCursorState.fields.submenuTimer = 0;
         return;
     }
     addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawCharacterSelectCourseNamePopup, arg0);
@@ -3337,7 +3335,7 @@ void updateCharacterSelectCourseExitPopup(CharacterSelectCourseWidgetActor *arg0
     u8 globalState;
 
     state = arg0->transition.bytes.state;
-    if (state != (globalState = gCharacterSelectCourseCursorState.bytes[1])) {
+    if (state != (globalState = gCharacterSelectCourseCursorState.fields.submenuState)) {
         arg0->transition.bytes.state = globalState;
         /* Preserve IDO's state/globalState register allocation. */
         if (1) {}
@@ -3346,7 +3344,7 @@ void updateCharacterSelectCourseExitPopup(CharacterSelectCourseWidgetActor *arg0
         if (1) {}
         if (1) {}
         state = globalState;
-        arg0->transition.bytes.timer = gCharacterSelectCourseCursorState.bytes[7];
+        arg0->transition.bytes.timer = gCharacterSelectCourseCursorState.fields.submenuTimer;
     }
 
     switch (state) {
@@ -3391,8 +3389,8 @@ void updateCharacterSelectCourseExitPopup(CharacterSelectCourseWidgetActor *arg0
     if (arg0->transition.bytes.state == 6) {
         removeCallbackTask(arg0);
         D_8010ADE0 = NULL;
-        gCharacterSelectCourseCursorState.bytes[1] = 0;
-        gCharacterSelectCourseCursorState.bytes[7] = 0;
+        gCharacterSelectCourseCursorState.fields.submenuState = 0;
+        gCharacterSelectCourseCursorState.fields.submenuTimer = 0;
         return;
     }
     addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawCharacterSelectCourseExitPopup, arg0);

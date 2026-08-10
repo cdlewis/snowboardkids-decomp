@@ -6,14 +6,18 @@
 typedef union CharacterSelectCourseCursorState {
     u8 bytes[8];
     struct {
-        /* 0x00 */ u8 state;
-        /* 0x01 */ u8 otherState;
-        /* 0x02 */ u8 pad2[2];
-        /* 0x04 */ s16 spriteIndex;
-        /* 0x06 */ u8 timer;
-        /* 0x07 */ u8 otherTimer;
+        /* 0x00 */ u8 listCursorState;
+        /* 0x01 */ u8 submenuState;
+        /* 0x02 */ u8 previewFrameState;
+        /* 0x03 */ u8 pad3;
+        /* 0x04 */ s16 listCursorSpriteIndex;
+        /* 0x06 */ u8 listCursorTimer;
+        /* 0x07 */ u8 submenuTimer;
     } fields;
 } CharacterSelectCourseCursorState;
+
+typedef char CharacterSelectCourseCursorStateSizeCheck
+    [(sizeof(CharacterSelectCourseCursorState) == 0x8) ? 1 : -1];
 
 typedef struct CharacterSelectCourseWidgetActor {
     /* 0x00 */ u8 pad0[0x18];

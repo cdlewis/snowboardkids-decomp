@@ -429,6 +429,8 @@ segments:
       - { type: .bss, name: menu/race_setup/race_setup_menu, vram: 0x8010AE00 }
       - { type: .bss, name: menu/character_select/character_select_menu, vram: 0x8010AE50 }
       - { type: bss, name: bss_chunk_a_2_character_select_tail, vram: 0x8010AE70 }
+      - { type: .bss, name: menu/character_select/character_select_course_menu, vram: 0x8010AE80 }
+      - { type: bss, name: bss_chunk_a_2_character_select_course_tail, vram: 0x8010AE90 }
       - { type: .bss, name: ending/ending_credits_flow, vram: 0x8010B1A0 }
       - { type: bss, name: bss_chunk_a_2_ending_credits_flow_tail, vram: 0x8010B1B0 }
       - { type: .bss, name: race/items/race_item_effects, vram: 0x801121D0 }
