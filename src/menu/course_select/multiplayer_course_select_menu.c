@@ -258,7 +258,7 @@ void initMultiplayerCourseSelectMenu(void) {
     gCourseSelectStatus.unk2C = 0;
 }
 
-// updateMultiplayerCourseSelectMenu best match: 96.510% (base_71.c)
+// updateMultiplayerCourseSelectMenu best match: 97.310% (base_38.c)
 // asm-processor requires this pragma to remain on one line.
 // clang-format off
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/course_select/multiplayer_course_select_menu/updateMultiplayerCourseSelectMenu.s")
@@ -303,13 +303,13 @@ void updateMultiplayerCourseSelectMenu(void) {
                     finishedPlayerCount++;
                 }
                 readyPlayer++;
-                if (readyPlayer >= &gRacePlayers[gPlayerCount]) {
+                if (readyPlayer >= &gRacePlayers[(s32)gPlayerCount]) {
                     break;
                 }
             }
         }
 
-        if (gPlayerCount == finishedPlayerCount) {
+        if (finishedPlayerCount == gPlayerCount) {
             playerIndex = 0;
             if (gPlayerCount > 0) {
                 waitOffset = D_8010AEE8;
@@ -350,7 +350,7 @@ void updateMultiplayerCourseSelectMenu(void) {
                             gRacePlayers[playerIndex].menuState = 9;
                         } else {
                             if ((gRacePlayers[playerIndex].selectedCharacterId == 5) ||
-                                (D_8010AEA0[playerIndex] == 0)) {
+                                (D_8010AEA0[(u32)playerIndex] == 0)) {
                                 maxColumn = 3;
                             } else {
                                 maxColumn = 4;
@@ -481,7 +481,6 @@ void updateMultiplayerCourseSelectMenu(void) {
                                     gMenuChoicePromptState[playerIndex] = state - 1;
                                     enqueueSoundEffect(0x19, 0x32);
                                     state = gMenuChoicePromptState[playerIndex];
-                                    input = gPlayerInputPressed[playerIndex];
                                 }
                             } else if ((input & 0x20400) || ((gPlayerInputHeld[playerIndex] & 0x20400) &&
                                                              (gMenuInputRepeatTimers[playerIndex] >= 9) &&
