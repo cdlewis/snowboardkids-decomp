@@ -569,6 +569,13 @@ and control flow already match and only register *names* differ.
   preserving the original line grouping — e.g. keep an initializer on the same
   line as the `for` (`player = gRacePlayers; for (...)`) rather than on its own
   line. The decomp-permuter will surface this as a whitespace-only winning diff.
+- **Confirm last-mile scheduling in the original translation unit.** A natural
+  candidate can retain a load-delay `nop` or prepare a call argument one
+  instruction later in a single-function workspace, yet schedule exactly in
+  the real source file. Before preserving an unnatural expression solely to
+  fix a one-instruction scheduling mismatch, compile the clean candidate in its
+  original translation unit and diff it there; the full ROM verification remains
+  authoritative.
 - **The `register` storage-class specifier is usually inert in IDO 5.3 and can
   be dropped.** For a local that must already live in a callee-saved register
   (because it is live across a call), IDO selects that saved register on its
