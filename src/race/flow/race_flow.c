@@ -594,7 +594,7 @@ void openRaceStartTransitionFlow(void) {
     suspendGameTask(2);
 }
 
-// initRaceSceneFlow best match: 95.931% (nonmatchings/initRaceSceneFlow-2163214805492048867/base_9.c)
+// initRaceSceneFlow best match: 95.939% (nonmatchings/initRaceSceneFlow-6078661025080551018/base_6.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race/flow/race_flow/initRaceSceneFlow.s")
 
 #ifdef NON_MATCHING
@@ -685,8 +685,10 @@ void initRaceSceneFlow(void) {
                 duplicate = 1;
                 player->characterId = *courseCharacterIds++;
                 if (playerCount > 0) {
+                    if (1) {
+                        end = &gRacePlayers[playerCount];
+                    }
                     other = gRacePlayers;
-                    end = &gRacePlayers[playerCount];
                     do {
                         if (player->characterId == other->characterId) {
                             duplicate = 0;
