@@ -289,10 +289,6 @@ void initRaceSetupSaveMenu(void) {
 }
 // clang-format on
 
-// updateRaceSetupSaveMenu best match: 99.498% (nonmatchings/updateRaceSetupSaveMenu-8498672362023432715/base_18.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/menu/race_setup/race_setup_menu/updateRaceSetupSaveMenu.s")
-
-#ifdef NON_MATCHING
 #define CONTROLLER_PAK_STATUS_PROBE 0
 #define CONTROLLER_PAK_STATUS_SAVE_STATUS 1
 #define CONTROLLER_PAK_STATUS_SAVE_READ 2
@@ -925,8 +921,6 @@ void updateRaceSetupSaveMenu(void) {
 #undef CONTROLLER_PAK_STATUS_SAVE_READ
 #undef CONTROLLER_PAK_STATUS_SAVE_STATUS
 #undef CONTROLLER_PAK_STATUS_PROBE
-#endif
-
 void raceSetupMenuNoop(void) {
 }
 
