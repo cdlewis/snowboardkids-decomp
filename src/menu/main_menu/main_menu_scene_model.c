@@ -128,10 +128,12 @@ search_done:
     return outCount;
 }
 
-// saveRaceRecordReplayData best match: 97.947% (nonmatchings/saveRaceRecordReplayData/base_25.c)
+// saveRaceRecordReplayData best match: 98.607% (nonmatchings/saveRaceRecordReplayData-3/campaign12/generated/001-manual-slot1-u64-mask.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/main_menu/main_menu_scene_model/saveRaceRecordReplayData.s")
 
 #ifdef NON_MATCHING
+PackedRaceRecordReplay gPackedRaceRecordReplayBuffer;
+
 #define REPLAY_SAVE_MAX_NORMAL 0x580
 #define REPLAY_SAVE_MIN_NORMAL 0x581
 #define REPLAY_SAVE_MAX_EXTRA 0x300
@@ -163,7 +165,7 @@ search_done:
         }                                                                  \
     }
 
-#define COPY_COURSE_DIFF_0 (((course & 0xFFFFu) & 0xFFFFu) != 0)
+#define COPY_COURSE_DIFF_0 (course != 0)
 #define COPY_COURSE_DIFF_1 (course != 1)
 #define COPY_COURSE_DIFF_2 (course != 2)
 #define COPY_COURSE_DIFF_3 (course != 3)
@@ -305,7 +307,18 @@ packed_inputs_done:
             totalLength += REPLAY_SAVE_MAX_NORMAL;
         }
     }
-    ACCUM_SLOT(1, 1, REPLAY_SAVE_MAX_NORMAL, REPLAY_SAVE_MIN_NORMAL);
+    if (course != 1) {
+        count = gGameSaveDataBuffer[0].replaySlots[1].length & 0xFFFFFFFFFFFFFFFF;
+        if (gGameSaveDataBuffer[0].replaySlots[1].length != 0) {
+            if (count >= REPLAY_SAVE_MIN_NORMAL) {
+                totalLength += count;
+            } else {
+                totalLength += REPLAY_SAVE_MAX_NORMAL;
+            }
+        } else {
+            totalLength += REPLAY_SAVE_MAX_NORMAL;
+        }
+    }
     ACCUM_SLOT(2, 2, REPLAY_SAVE_MAX_NORMAL, REPLAY_SAVE_MIN_NORMAL);
     ACCUM_SLOT(3, 3, REPLAY_SAVE_MAX_NORMAL, REPLAY_SAVE_MIN_NORMAL);
     ACCUM_SLOT(4, 4, REPLAY_SAVE_MAX_NORMAL, REPLAY_SAVE_MIN_NORMAL);
