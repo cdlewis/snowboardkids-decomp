@@ -80,10 +80,6 @@ void initRaceTypeSelectMenu(void) {
     gRaceTypeSelectCursorTarget.alpha = 0;
 }
 
-// updateRaceTypeSelectMenu best match: 99.951% (nonmatchings/updateRaceTypeSelectMenu-7181144369148334388/base_10.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/menu/race_type_select/race_type_select_menu/updateRaceTypeSelectMenu.s")
-
-#ifdef NON_MATCHING
 void updateRaceTypeSelectMenu(void) {
     u16 sp18[4];
     u16 nextSelection;
@@ -120,10 +116,10 @@ void updateRaceTypeSelectMenu(void) {
                     heldInput = gPlayerInputPressed[0];
                     pressedUpCopy = pressedUp;
                     if ((heldInput & (STICK_UP | U_JPAD)) ||
-                        ((pressedUpCopy != 0) && ((gMenuInputRepeatTimers[0] & 0xFFFF) >= 9) &&
+                        ((pressedUpCopy != 0) && (gMenuInputRepeatTimers[0] >= 9) &&
                          ((gMenuInputRepeatTimers[0] % 3) == 0))) {
                         repeatTimer = gMenuInputRepeatTimers[0];
-                        if (repeatTimer == 0) {
+                        if ((repeatTimer & 0xFFFF) == 0) {
                             gMenuInputRepeatTimers[0] = repeatTimer + 1;
                             repeatTimer =
                                 (((((gMenuInputRepeatTimers[0] & 0xFFFFu) & 0xFFFFu) & 0xFFFFu) & 0xFFFFu) & 0xFFFFu) &
@@ -211,7 +207,6 @@ void updateRaceTypeSelectMenu(void) {
     gMenuFlowState = 0;
     updateCallbackTasks();
 }
-#endif
 
 void handleRaceTypeSelectMenuSelection(void) {
     if (gRaceTypeSelection < 3 && gMenuExitSelection == 0) {

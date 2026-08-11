@@ -168,6 +168,12 @@ and control flow already match and only register *names* differ.
   field, writing `(field & 0xFFFF) + 1` instead of `field + 1` is
   semantically a no-op (`lhu` already zero-extends) but can push IDO off a
   free-register reuse and onto the sequential temp numbering the target uses.
+- **A redundant narrow-read mask can phase-shift ugen without surviving in
+  the object.** Instrumented IDO 5.3 shows that `(u16_value & 0xFFFF)` may
+  allocate and free a temporary even when the assembler removes the redundant
+  instruction after `lhu`. Moving that mask across one expression can move a
+  single FIFO allocation to the other side of the expression, changing its
+  register while restoring the register sequence immediately afterward.
 - **Pre-increment expresses "store raw, compare masked".** For a narrow field
   both stored and compared, `++field` (or `field += 1`) makes IDO store the raw
   increment and mask separately into a fresh register for the compare. A
