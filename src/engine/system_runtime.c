@@ -853,9 +853,8 @@ void submitFramebufferRenderTask(u8 frameIndex) {
     void *rdpOutputBufferEnd;
     void *rdpOutputBuffer;
     Gfx *prepareDisplayList;
-    s32 prepOne;
     void *prepareFramebuffer;
-    s32 one;
+    void *textureImage;
 
     colorByte = gFramebufferColorBufferIndex + 1;
     framebufferIndex = colorByte & 0xFF;
@@ -865,7 +864,6 @@ void submitFramebufferRenderTask(u8 frameIndex) {
         framebufferIndex = gFramebufferColorBufferIndex = 0;
     }
 
-    one = 1;
     renderTask = &gFrameRenderTasks[taskIndex];
     nextColorIndex = 1;
     renderTask->framebuffer = D_8038E800 + framebufferIndex * FRAMEBUFFER_SIZE;
@@ -880,7 +878,8 @@ void submitFramebufferRenderTask(u8 frameIndex) {
     gSPClearGeometryMode(gRegionAllocPtr++, G_ZBUFFER | G_SHADE | G_CULL_BOTH | G_FOG | G_LIGHTING | G_SHADING_SMOOTH);
     gSPClipRatio(gRegionAllocPtr++, FRUSTRATIO_1);
     gDPPipelineMode(gRegionAllocPtr++, G_PM_NPRIMITIVE);
-    gDPSetTextureImage(gRegionAllocPtr++, G_IM_FMT_RGBA, G_IM_SIZ_16b, 320, (void *)(one = (s32)D_369000));
+    textureImage = D_369000;
+    gDPSetTextureImage(gRegionAllocPtr++, G_IM_FMT_RGBA, G_IM_SIZ_16b, 320, textureImage);
 
     if (gClearFramebufferOnNextTask != 0) {
         gClearFramebufferOnNextTask = 0;
@@ -1043,8 +1042,11 @@ void submitFramebufferRenderTask(u8 frameIndex) {
     gDPFullSync(gRegionAllocPtr++);
     gSPEndDisplayList(gRegionAllocPtr++);
 
-    renderTask->schedulerTask.rspTask.t.data_ptr = (u64 *)renderTask->displayList;
-    renderTask->schedulerTask.rspTask.t.data_size = (u8 *)gRegionAllocPtr - (u8 *)renderTask->displayList;
+    renderTask->schedulerTask.rspTask.t.data_ptr =
+        (u64 *)((RuntimeViewportDisplayListData *)gCurrentTaskDisplayListStart + 1);
+    renderTask->schedulerTask.rspTask.t.data_size =
+        (((u8 *)gRegionAllocPtr -
+          (u8 *)((RuntimeViewportDisplayListData *)gCurrentTaskDisplayListStart + 1)) >> 3) * 8;
     renderTask->schedulerTask.rspTask.t.ucode = (u64 *)gspF3DLX_fifoTextStart;
     renderTask->schedulerTask.rspTask.t.type = nextColorIndex;
     ucodeBootSize = aspMainTextStart - rspbootTextStart;
@@ -1087,7 +1089,7 @@ void submitFramebufferRenderTask(u8 frameIndex) {
     gSPClearGeometryMode(gRegionAllocPtr++, G_ZBUFFER | G_SHADE | G_CULL_BOTH | G_FOG | G_LIGHTING | G_SHADING_SMOOTH);
     gSPClipRatio(gRegionAllocPtr++, FRUSTRATIO_1);
     gDPPipelineMode(gRegionAllocPtr++, G_PM_NPRIMITIVE);
-    gDPSetTextureImage(gRegionAllocPtr++, G_IM_FMT_RGBA, G_IM_SIZ_16b, 320, (void *)one);
+    gDPSetTextureImage(gRegionAllocPtr++, G_IM_FMT_RGBA, G_IM_SIZ_16b, 320, textureImage);
     gDPSetCycleType(gRegionAllocPtr++, G_CYC_FILL);
     gDPSetRenderMode(gRegionAllocPtr++, G_RM_NOOP, G_RM_NOOP2);
     gDPSetColorImage(gRegionAllocPtr++, G_IM_FMT_RGBA, G_IM_SIZ_16b, 320, D_80369000);
@@ -1103,7 +1105,8 @@ void submitFramebufferRenderTask(u8 frameIndex) {
     gSPEndDisplayList(gRegionAllocPtr++);
 
     prepareTask->schedulerTask.rspTask.t.data_ptr = (u64 *)prepareDisplayList;
-    prepareTask->schedulerTask.rspTask.t.data_size = (u8 *)gRegionAllocPtr - (u8 *)prepareTask->displayList;
+    prepareTask->schedulerTask.rspTask.t.data_size =
+        (((u8 *)gRegionAllocPtr - (u8 *)prepareTask->displayList) >> 3) * 8;
     prepareTask->schedulerTask.rspTask.t.type = M_GFXTASK;
     prepareTask->schedulerTask.rspTask.t.ucode_boot = (u64 *)rspbootTextStart;
     prepareTask->schedulerTask.rspTask.t.ucode_boot_size = ucodeBootSize;
