@@ -1,6 +1,7 @@
 #include "common.h"
 #include "game/engine/game_task_scheduler.h"
 #include "game/engine/system_runtime.h"
+#include "game/engine/frame_render_task.h"
 #include "game/menu/main_menu/controller_main_menu_flow.h"
 
 #define GAME_TASK_COUNT 8
@@ -274,7 +275,7 @@ s32 updateFramebufferRenderScheduler(void) {
     if (gFramebufferSwapDelayTimer[0] == 0) {
         if (gFramebufferSwapHold == 0) {
             frameIndex = gNextFramebufferRenderTaskIndex;
-            if (gFramebufferRenderTask0Statuses[frameIndex].status == 0) {
+            if (gFrameRenderTaskStatuses[frameIndex].status == 0) {
                 if ((s32)gPendingFramebufferSwapCount > 0) {
                     submitFramebufferRenderTask(frameIndex);
                     gFramebufferSwapDelayTimer[0] = gFramebufferSwapDelay.timerValue;
