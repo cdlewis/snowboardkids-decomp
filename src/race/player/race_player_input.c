@@ -69,6 +69,7 @@ void recordRaceReplayInputFrame(RacePlayer *player) {
 }
 
 // playRaceReplayInputFrame best match: 97.956% (base_39.c)
+// Current campaign candidate: 50 register-only word differences, exact through instruction 32.
 #pragma GLOBAL_ASM("asm/nonmatchings/race/player/race_player_input/playRaceReplayInputFrame.s")
 
 #ifdef NON_MATCHING
@@ -81,73 +82,14 @@ typedef struct {
 void playRaceReplayInputFrame(RacePlayer *player) {
     RaceReplayInputHistoryPlayer *history;
     s16 replayFrame;
-    u64 newVar;
+    u64 newVar = 0xFF;
     u8 buttons;
     s32 replayOffset;
     s8 stickX;
 
     history = (RaceReplayInputHistoryPlayer *)getRelocatableHeapBlockBase(gAssetHandles[0x2B]);
     replayFrame = player->replayFrame;
-    if (replayFrame < 0x960) {
-        replayOffset = (replayFrame * 4) - replayFrame;
-        stickX = history[(u16)player->playerIndex].bytes[replayOffset + 1];
-        player->stickX = stickX;
-        player->stickY = (((((((history[(u16)player->playerIndex].bytes[replayOffset + 2] & 0xFFFFu) & 0xFFFFu) &
-                                0xFFFFu) & 0xFFFFu) & 0xFFFFu) & 0xFFFFu) & 0xFFFFu) & 0xFFFFu;
-        player->inputFlags = 0;
-        buttons = (u8)history[(u16)player->playerIndex].bytes[replayOffset];
-        if (buttons & 1) {
-            player->inputFlags |= 8;
-            replayFrame = player->replayFrame;
-            replayOffset = (replayFrame * 4) - replayFrame;
-            buttons = (u8)history[PLAYER_INDEX(player)].bytes[replayOffset];
-        }
-        if ((((((((buttons & 2) & 0xFF) & 0xFF) & 0xFF) & 0xFF) & 0xFF) & 0xFF) & 0xFF) {
-            player->inputFlags |= 4;
-            replayFrame = player->replayFrame;
-            replayOffset = (replayFrame * 4) - replayFrame;
-            buttons = (u8)history[PLAYER_INDEX(player)].bytes[replayOffset];
-        }
-        if ((((((((buttons & 8) & 0xFF) & 0xFF) & 0xFF) & 0xFF) & 0xFF) & 0xFF) & 0xFF) {
-            player->inputFlags |= 1;
-            replayFrame = player->replayFrame;
-            replayOffset = (replayFrame * 4) - replayFrame;
-            buttons = (u8)history[PLAYER_INDEX(player)].bytes[replayOffset];
-        }
-        if ((((((((buttons & 4) & 0xFF) & 0xFF) & 0xFF) & 0xFF) & 0xFF) & 0xFF) & 0xFF) {
-            player->inputFlags |= 2;
-            replayFrame = player->replayFrame;
-            replayOffset = (replayFrame * 4) - replayFrame;
-            buttons = (u8)history[PLAYER_INDEX(player)].bytes[replayOffset];
-            if (1) {}
-            if (1) {}
-            if (1) {}
-            if (1) {}
-            if (1) {}
-            if (1 != 0) {}
-        }
-        if (buttons & 0x10) {
-            player->inputFlags = player->inputFlags | 0x8000;
-            replayFrame = player->replayFrame;
-            replayOffset = (replayFrame * 4) - replayFrame;
-            buttons = (u8)history[PLAYER_INDEX(player)].bytes[replayOffset];
-        }
-        if ((((((((buttons & 0x20) & 0xFF) & 0xFF) & (newVar = 0xFF)) & newVar) & 0xFF) & newVar) & newVar) {
-            player->inputFlags |= 0x4000;
-            replayFrame = player->replayFrame;
-            replayOffset = (replayFrame * 4) - replayFrame;
-            buttons = (u8)history[PLAYER_INDEX(player)].bytes[replayOffset];
-        }
-        if ((((((((buttons & 0x40) & 0xFF) & 0xFF) & newVar) & newVar) & 0xFF) & newVar) & 0xFF) {
-            player->inputFlags |= 0x2000;
-            replayFrame = player->replayFrame;
-        }
-        player->replayFrame = replayFrame + 1;
-        return;
-    }
-
-    player->stickX = 0;
-    player->stickY = 0;
+    do { if (replayFrame < 0x960) { stickX = ((RaceInputReplayHistory *)history)[(u16)player->playerIndex].inputs[replayFrame].stickX; player->stickX = stickX; player->stickY = ((RaceInputReplayHistory *)history)[(u16)player->playerIndex].inputs[replayFrame].stickY; player->inputFlags = 0; buttons = ((RaceInputReplayHistory *)history)[(u16)player->playerIndex].inputs[replayFrame].buttons; if (buttons & 1) { player->inputFlags |= 8; replayFrame = player->replayFrame; replayOffset = (replayFrame * 4) - replayFrame; buttons = (u8)history[PLAYER_INDEX(player)].bytes[replayOffset]; } if ((((((((buttons & 2) & 0xFF) & 0xFF) & 0xFF) & 0xFF) & 0xFF) & 0xFF) & 0xFF) { player->inputFlags |= 4; replayFrame = player->replayFrame; replayOffset = (replayFrame * 4) - replayFrame; buttons = (u8)history[PLAYER_INDEX(player)].bytes[replayOffset]; } if ((((((((buttons & 8) & 0xFF) & 0xFF) & 0xFF) & 0xFF) & 0xFF) & 0xFF) & 0xFF) { player->inputFlags |= 1; replayFrame = player->replayFrame; replayOffset = (replayFrame * 4) - replayFrame; buttons = (u8)history[PLAYER_INDEX(player)].bytes[replayOffset]; } if ((((((((buttons & 4) & 0xFF) & 0xFF) & 0xFF) & 0xFF) & 0xFF) & 0xFF) & 0xFF) { player->inputFlags |= 2; replayFrame = player->replayFrame; replayOffset = (replayFrame * 4) - replayFrame; buttons = (u8)history[PLAYER_INDEX(player)].bytes[replayOffset]; if (1) {} if (1) {} if (1) {} if (1) {} if (1) {} if (1 != 0) {} } if (buttons & 0x10) { player->inputFlags = player->inputFlags | 0x8000; replayFrame = player->replayFrame; replayOffset = (replayFrame * 4) - replayFrame; buttons = (u8)history[PLAYER_INDEX(player)].bytes[replayOffset]; } if ((((((((buttons & 0x20) & 0xFF) & 0xFF) & 0xFF) & newVar) & 0xFF) & newVar) & newVar) { player->inputFlags |= 0x4000; replayFrame = player->replayFrame; replayOffset = (replayFrame * 4) - replayFrame; buttons = (u8)history[PLAYER_INDEX(player)].bytes[replayOffset]; } if ((((((((buttons & 0x40) & 0xFF) & 0xFF) & newVar) & newVar) & 0xFF) & newVar) & 0xFF) { player->inputFlags |= 0x2000; replayFrame = player->replayFrame; } player->replayFrame = replayFrame + 1; return; } player->stickX = 0; player->stickY = 0; } while (0);
     player->inputFlags = 0;
 }
 
