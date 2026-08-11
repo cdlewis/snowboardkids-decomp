@@ -128,7 +128,7 @@ search_done:
     return outCount;
 }
 
-// saveRaceRecordReplayData best match: 97.782% (nonmatchings/saveRaceRecordReplayData-2163214805492048867/base_62.c)
+// saveRaceRecordReplayData best match: 97.947% (nonmatchings/saveRaceRecordReplayData/base_25.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/main_menu/main_menu_scene_model/saveRaceRecordReplayData.s")
 
 #ifdef NON_MATCHING
@@ -294,14 +294,15 @@ packed_inputs_done:
     course = gRaceCourseIndex.signedValue;
     totalLength = 0;
     if (course != 0) {
-        totalLength = gGameSaveDataBuffer[0].replaySlots[0].length;
-        if (totalLength != 0) {
-            if (totalLength >= REPLAY_SAVE_MIN_NORMAL) {
+        count = gGameSaveDataBuffer[0].replaySlots[0].length;
+        if (gGameSaveDataBuffer[0].replaySlots[0].length != 0) {
+            if (count >= REPLAY_SAVE_MIN_NORMAL) {
+                totalLength += count;
             } else {
-                totalLength = REPLAY_SAVE_MAX_NORMAL;
+                totalLength += REPLAY_SAVE_MAX_NORMAL;
             }
         } else {
-            totalLength = REPLAY_SAVE_MAX_NORMAL;
+            totalLength += REPLAY_SAVE_MAX_NORMAL;
         }
     }
     ACCUM_SLOT(1, 1, REPLAY_SAVE_MAX_NORMAL, REPLAY_SAVE_MIN_NORMAL);
