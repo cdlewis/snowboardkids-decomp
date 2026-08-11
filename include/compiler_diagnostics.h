@@ -9,6 +9,8 @@
 #define CLANG_DIAGNOSTIC_IGNORE_UNINITIALIZED _Pragma("clang diagnostic ignored \"-Wuninitialized\"")
 #define CLANG_DIAGNOSTIC_IGNORE_DEPRECATED_NON_PROTOTYPE \
     _Pragma("clang diagnostic ignored \"-Wdeprecated-non-prototype\"")
+#define CLANG_DIAGNOSTIC_IGNORE_STRICT_PROTOTYPES \
+    _Pragma("clang diagnostic ignored \"-Wstrict-prototypes\"")
 #else
 #define CLANG_DIAGNOSTIC_PUSH
 #define CLANG_DIAGNOSTIC_POP
@@ -16,6 +18,7 @@
 #define CLANG_DIAGNOSTIC_IGNORE_SELF_ASSIGN
 #define CLANG_DIAGNOSTIC_IGNORE_UNINITIALIZED
 #define CLANG_DIAGNOSTIC_IGNORE_DEPRECATED_NON_PROTOTYPE
+#define CLANG_DIAGNOSTIC_IGNORE_STRICT_PROTOTYPES
 #endif
 
 #endif

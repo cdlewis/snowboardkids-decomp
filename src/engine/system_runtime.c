@@ -215,7 +215,6 @@ extern void allocRenderCallbackScratchBuffer(void);
 extern void allocMenuRenderScratchBuffers(void);
 extern void selectMenuRenderScratchBuffer(s32);
 extern s32 osSendMesg(void *, void *, s32);
-extern void updateGameTaskScheduler(void);
 extern void initFramebufferRenderTaskState(void);
 
 void appendFadeOverlayDisplayList(void);
