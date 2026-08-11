@@ -178,6 +178,6 @@ if [[ $1 =~ base_[0-9]+ ]] && [ -n "$MATCH_PERCENT" ]; then
 
     if [ -n "$STALL_INFO" ]; then
         read -r SINCE BEST_FILE BEST_SCORE <<< "$STALL_INFO"
-        echo "No progress in $SINCE attempts (best: ${BEST_SCORE}% at $BEST_FILE). STOP and report your findings."
+        echo "No progress in $SINCE attempts (best: ${BEST_SCORE}% at $BEST_FILE). Consider stopping if you have run of out improvement ideas.."
     fi
 fi
