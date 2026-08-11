@@ -1,0 +1,51 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+if [ "$#" -ne 2 ]; then
+    echo "Usage: $0 <source.c> <output.o>" >&2
+    exit 2
+fi
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+SOURCE="$(realpath "$1")"
+OUTPUT="$(realpath "$2")"
+IDO_DIR="${DECOMP_WORKBENCH_IDO_DIR:-$PROJECT_ROOT/tools/ido-recomp/linux}"
+read -r -a EXTRA_CFLAGS <<< "${DECOMP_WORKBENCH_CFLAGS:-}"
+
+CROSS="mips-linux-gnu-"
+if ! command -v "${CROSS}as" >/dev/null 2>&1; then
+    CROSS="mips64-linux-gnu-"
+fi
+if ! command -v "${CROSS}as" >/dev/null 2>&1; then
+    CROSS="mips64-elf-"
+fi
+if ! command -v "${CROSS}as" >/dev/null 2>&1; then
+    echo "ERROR: no supported MIPS binutils toolchain found" >&2
+    exit 1
+fi
+
+SOURCE_SNAPSHOT="$(mktemp "${TMPDIR:-/tmp}/decomp-workbench-source.XXXXXX.c")"
+trap 'rm -f -- "$SOURCE_SNAPSHOT"' EXIT
+
+python3 "$PROJECT_ROOT/tools/textconv.py" \
+    "$PROJECT_ROOT/tools/charmap.txt" "$SOURCE" "$SOURCE_SNAPSHOT"
+
+cd "$PROJECT_ROOT"
+CFLAGS=(
+    -c -O2 -mips1 -G 0 -non_shared -fullwarn -Xcpluscomm -nostdinc
+    -Wab,-r4300_mul -woff 649,838,712,516 -Iinclude
+    -DLANGUAGE_C -D_LANGUAGE_C -D_MIPS_SZLONG=32 -DNDEBUG
+    "${EXTRA_CFLAGS[@]}"
+)
+
+if [[ " ${EXTRA_CFLAGS[*]} " == *" -DNON_MATCHING "* ]]; then
+    "$IDO_DIR/cc" "${CFLAGS[@]}" -o "$OUTPUT" "$SOURCE_SNAPSHOT"
+else
+    python3 tools/asm-processor/build.py \
+        "$IDO_DIR/cc" -- "${CROSS}as" \
+        -G 0 -I include -mips3 -mabi=32 -- \
+        "${CFLAGS[@]}" -o "$OUTPUT" "$SOURCE_SNAPSHOT"
+fi
+
+"${CROSS}objcopy" --remove-section .mdebug "$OUTPUT"

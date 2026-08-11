@@ -17,3 +17,4 @@ cxxfilt
 
 # mips2c
 m2c @ git+https://github.com/matt-kempster/m2c.git
+n64-decomp-workbench @ git+https://github.com/akratch/n64-decomp-workbench.git
