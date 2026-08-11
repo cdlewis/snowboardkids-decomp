@@ -1,4 +1,5 @@
 candidate_source: python3 tools/score_functions.py asm/nonmatchings --json
 prompt: "decompile the function: $INPUT. When creating your decomp environment with tools/claude use --id $TASK_ID."
-claude_command: glaude
-timeout: 15m
+agent: codex
+agent_flags: --config model_reasoning_effort='"xhigh"'
+timeout: 60m
