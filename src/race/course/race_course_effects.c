@@ -1584,8 +1584,8 @@ void renderCourseTriggerVolume(RaceCourseTriggerEffect *arg0) {
     }
 }
 
-// collidePlayerWithCourseTriggerVolume best match: 99.415% at
-// nonmatchings/collidePlayerWithCourseTriggerVolume-6078661025080551018/base_41.c.
+// collidePlayerWithCourseTriggerVolume best match: 99.539% at
+// nonmatchings/collidePlayerWithCourseTriggerVolume/base_28.c.
 #pragma GLOBAL_ASM("asm/nonmatchings/race/course/race_course_effects/collidePlayerWithCourseTriggerVolume.s")
 
 #ifdef NON_MATCHING
@@ -1601,6 +1601,7 @@ void collidePlayerWithCourseTriggerVolume(RacePlayer *arg0, RaceCourseTriggerEff
     u16 entryIndex;
     s32 collisionRadius;
     s32 limit;
+    RaceCourseTriggerEffect *new_var;
     s32 positiveLimit;
     s32 negativeLimit;
 
@@ -1650,18 +1651,20 @@ void collidePlayerWithCourseTriggerVolume(RacePlayer *arg0, RaceCourseTriggerEff
 
         if (transformed.y <= 0) {
             if (transformed.y >= -0x160000) {
+                if (gRaceUpdatePaused && gRaceUpdatePaused) {}
                 if (transformed.z >= -arg1->scaleZ) {
                     if (1) {}
                     if (1) {}
                     if (1) {}
+                    new_var = arg1;
                     if (1) {}
                     if (arg1->scaleZ >= transformed.z) {
                         scaleX = arg1->scaleX;
                         collisionRadius = arg0->collisionRadius;
-                        limit = scaleX + collisionRadius;
                         if (transformed.x >= ((-scaleX - collisionRadius) - 0x30000)) {
+                            limit = (collisionRadius = scaleX + collisionRadius);
                             positiveLimit = limit + 0x30000;
-                            if (arg1 && arg1) {}
+                            if (new_var && arg1) {}
                             if (positiveLimit >= transformed.x) {
                                 zero = transformed.volatileX;
                                 push = 0;
