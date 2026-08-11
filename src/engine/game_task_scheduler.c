@@ -21,14 +21,18 @@ extern GameTask *gFreeGameTaskStack[];
 extern u8 gPendingFramebufferSwapCount;
 extern u8 gFramebufferSwapHold;
 extern u8 gNextFramebufferRenderTaskIndex;
-extern s32 gPlayerInputPrevious;
+extern s32 gPlayerInputPrevious[PLAYER_INPUT_COUNT];
 extern s32 gPlayer2InputPrevious;
 extern s32 gPlayer3InputPrevious;
 extern s32 gPlayer4InputPrevious;
-extern s32 gPlayerInputRepeat;
-extern u8 gPlayerInputRepeatTimer;
+extern s32 gPlayerInputRepeat[PLAYER_INPUT_COUNT];
+extern u8 gPlayerInputRepeatTimer[PLAYER_INPUT_COUNT];
 
-void resetRenderScratchAllocator(void *, void *);
+CLANG_DIAGNOSTIC_PUSH
+CLANG_DIAGNOSTIC_IGNORE_DEPRECATED_NON_PROTOTYPE
+CLANG_DIAGNOSTIC_IGNORE_STRICT_PROTOTYPES
+void resetRenderScratchAllocator();
+CLANG_DIAGNOSTIC_POP
 void clearPendingPositionalSoundRequests(void);
 GameTask *allocateGameTask(s32);
 s32 updateFramebufferRenderScheduler(void);
@@ -51,7 +55,7 @@ void initGameTaskScheduler(void) {
     zero = 0;
     gNextFramebufferRenderTaskIndex = zero;
     gPlayerInputHeld[0] = zero;
-    gPlayerInputPrevious = zero;
+    gPlayerInputPrevious[0] = zero;
     gPlayerInputPressed[0] = 0;
     gPlayerStickX[0] = zero;
     gPlayerStickY[0] = 0;
@@ -75,181 +79,107 @@ void initGameTaskScheduler(void) {
 }
 // clang-format on
 
-// updateGameTaskScheduler best match: 99.109% with the current scorer
-// (nonmatchings/updateGameTaskScheduler-7181144369148334388/base_2.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/engine/game_task_scheduler/updateGameTaskScheduler.s")
-
-#ifdef NON_MATCHING
 void updateGameTaskScheduler(void) {
+    s32 i;
     s32 *previousInput;
-    s32 *input;
-    int new_var;
     ControllerInputState *controller;
-    s8 *stickXOut;
-    s32 newInputValue;
-    s8 *stickYOut;
-    s32 *newInput;
-    u8 *repeatTimer;
     s32 oldInput;
-    s32 *repeatInput;
-    s8 *responseCurve;
-    GameTask *task;
-    GameTaskCallback callback;
-    GameTaskCallback *callbackArray;
     s32 currentInput;
-    u16 new_var2;
-    s32 stickHighThreshold;
-    s32 stickXTooHigh;
+    s32 mappedStickX;
+    s32 mappedStickY;
     s8 stickX;
     s32 stickY;
-    s8 mappedStickX;
-    s8 mappedStickY;
-    s32 timer;
-    register u32 heldButtonMask;
 
     gFrameCounter = (gFrameCounter + 1) & 0xFFF;
-    stickYOut = &gAnalogStickResponseCurve;
-    newInput = &gPlayerInputRepeat;
     resetRenderScratchAllocator();
     resetRenderCallbackQueues();
     clearPendingPositionalSoundRequests();
-
-    responseCurve = stickYOut;
-    repeatInput = newInput;
-    repeatTimer = &gPlayerInputRepeatTimer;
-    newInput = gPlayerInputPressed;
-    stickYOut = gPlayerStickY;
-    do {
-    } while (0);
-    do {
-    } while (0);
-    do {
-    } while (0);
-    stickXOut = gPlayerStickX;
-    controller = gControllerInputState;
-    input = gPlayerInputHeld;
-    previousInput = &gPlayerInputPrevious;
-    heldButtonMask = 0xFFFF0000;
-    stickY = 0;
-
-    do {
-        stickY++;
-        stickY--;
+    for (i = 0; i < PLAYER_INPUT_COUNT; i++) {
+        previousInput = &gPlayerInputPrevious[i];
+        oldInput = gPlayerInputHeld[i];
+        *previousInput = oldInput;
+        controller = &gControllerInputState[i];
+        currentInput = oldInput & 0xFFFF0000;
+        ((u32 *)gPlayerInputHeld)[i] = currentInput;
+        gPlayerInputHeld[i] |= controller->buttons;
         stickX = controller->stickX;
-        stickHighThreshold = 0x2E;
-        oldInput = *input;
-        currentInput = oldInput & heldButtonMask;
-        *input = currentInput;
-        do {
-            *input |= controller->buttons;
-            *previousInput = oldInput;
-            do {
-            } while (0);
-
-            if (stickX >= 0x2E) {
-                controller->stickX = 0x2D;
-                stickX = controller->stickX;
-            }
-            if (stickX < -0x2D) {
-                controller->stickX = -0x2D;
-            }
-
+        if (stickX >= 0x2E) {
+            controller->stickX = 0x2D;
+            stickX = controller->stickX;
+        }
+        if (stickX < -0x2D) {
+            controller->stickX = -0x2D;
+        }
+        stickY = controller->stickY;
+        if (stickY >= 0x2E) {
+            controller->stickY = 0x2D;
             stickY = controller->stickY;
-            if (stickY >= stickHighThreshold) {
-                controller->stickY = 0x2D;
-                stickY = controller->stickY;
-            }
-            if (stickY < -0x2D) {
-                controller->stickY = -0x2D;
-                stickY = controller->stickY;
-            }
-        } while (0);
-
+        }
+        if (stickY < -0x2D) {
+            controller->stickY = -0x2D;
+            stickY = controller->stickY;
+        }
         stickX = controller->stickX;
-        controller++;
         if (stickX >= 0) {
-            goto positiveStickX;
-        positiveStickX:
-            *stickXOut = (0, responseCurve)[stickX];
+            gPlayerStickX[i] = gAnalogStickResponseCurve[stickX];
         } else {
-            *stickXOut = -responseCurve[-stickX];
+            gPlayerStickX[i] = -gAnalogStickResponseCurve[-stickX];
         }
-
         if (stickY >= 0) {
-            *stickYOut = responseCurve[stickY];
+            gPlayerStickY[i] = gAnalogStickResponseCurve[stickY];
         } else {
-            *stickYOut = -responseCurve[-stickY];
+            gPlayerStickY[i] = -gAnalogStickResponseCurve[-stickY];
         }
-
-        mappedStickX = (int)*stickXOut;
-        stickXOut++;
+        mappedStickX = gPlayerStickX[i];
         if (mappedStickX >= 0x1B) {
-            *input |= 0x40000;
+            gPlayerInputHeld[i] |= 0x40000;
         }
         if (mappedStickX < -0x1A) {
-            *input |= 0x80000;
+            gPlayerInputHeld[i] |= 0x80000;
         }
-
-        mappedStickY = *stickYOut;
-        stickYOut++;
+        mappedStickY = gPlayerStickY[i];
         if (mappedStickY >= 0x1B) {
-            *input |= 0x10000;
+            gPlayerInputHeld[i] |= 0x10000;
         }
         if (mappedStickY < -0x1A) {
-            *input |= 0x20000;
+            gPlayerInputHeld[i] |= 0x20000;
         }
         if (mappedStickX < 8) {
-            *input &= 0xFFFBFFFF;
+            gPlayerInputHeld[i] &= 0xFFFBFFFF;
         }
         if (mappedStickX >= -7) {
-            *input &= 0xFFF7FFFF;
+            gPlayerInputHeld[i] &= 0xFFF7FFFF;
         }
         if (mappedStickY < 8) {
-            *input &= 0xFFFEFFFF;
+            gPlayerInputHeld[i] &= 0xFFFEFFFF;
         }
         if (mappedStickY >= -7) {
-            *input &= 0xFFFDFFFF;
+            gPlayerInputHeld[i] &= 0xFFFDFFFF;
         }
-
-        currentInput = *input;
-        *newInput = ~*previousInput & currentInput;
+        currentInput = gPlayerInputHeld[i];
+        gPlayerInputPressed[i] = ~*previousInput & currentInput;
         if (currentInput == 0) {
-            *repeatTimer = 0;
-            *repeatInput = currentInput;
+            gPlayerInputRepeatTimer[i] = 0;
+            gPlayerInputRepeat[i] = currentInput;
         } else {
-            timer = *repeatTimer;
-            if ((u8)timer >= 9) {
-                *repeatInput = currentInput;
+            if (gPlayerInputRepeatTimer[i] >= 9) {
+                gPlayerInputRepeat[i] = currentInput;
             } else {
-                newInputValue = *newInput;
-                *repeatTimer = timer + 1;
-                *repeatInput = newInputValue;
+                gPlayerInputRepeatTimer[i]++;
+                gPlayerInputRepeat[i] = gPlayerInputPressed[i];
             }
         }
+    }
 
-        repeatInput++;
-        previousInput++;
-        input++;
-        newInput++;
-        repeatTimer++;
-    } while (repeatInput != (s32 *)&gPlayerInputRepeatTimer);
-
-    do {
-    } while (0);
-    do {
-    } while (0);
-    do {
-    } while (0);
-    gCurrentGameTask = gActiveGameTaskList.next;
-    while (gCurrentGameTask != NULL) {
+    for (gCurrentGameTask = gActiveGameTaskList.next; gCurrentGameTask != NULL;
+         gCurrentGameTask = gCurrentGameTask->next) {
         if (gCurrentGameTask->state == 2) {
             gCurrentGameTask->state = 0;
         }
-        gCurrentGameTask = gCurrentGameTask->next;
     }
 
-    gCurrentGameTask = gActiveGameTaskList.next;
-    while (gCurrentGameTask != NULL) {
+    for (gCurrentGameTask = gActiveGameTaskList.next; gCurrentGameTask != NULL;
+         gCurrentGameTask = gCurrentGameTask->next) {
         if (gCurrentGameTask->state == 0) {
             if (gCurrentGameTask->callbacks[0] != NULL) {
                 gCurrentGameTask->callbacks[0]();
@@ -261,13 +191,11 @@ void updateGameTaskScheduler(void) {
                 gCurrentGameTask->callbacks[2]();
             }
         }
-        gCurrentGameTask = gCurrentGameTask->next;
     }
 
     updateFramebufferRenderScheduler();
     playPendingPositionalSoundRequests();
 }
-#endif
 
 s32 updateFramebufferRenderScheduler(void) {
     u8 frameIndex;

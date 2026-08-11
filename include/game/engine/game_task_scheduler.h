@@ -51,6 +51,7 @@ extern GameTask *gCurrentGameTask;
 extern FramebufferSwapDelay gFramebufferSwapDelay;
 
 void initGameTaskScheduler(void);
+void updateGameTaskScheduler(void);
 void createGameTask(s32 taskId, GameTaskCallback callback, s32 priority);
 void removeGameTask(s32 taskId);
 void setCurrentGameTaskCallback(GameTaskCallback callback, s32 callbackIndex);
