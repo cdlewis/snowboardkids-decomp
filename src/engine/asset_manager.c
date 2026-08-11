@@ -171,7 +171,7 @@ void removeHuffmanQueueNode(s16 arg0) {
 }
 
 // decompressHuffmanAssetPayload best match: 99.695%
-// (nonmatchings/decompressHuffmanAssetPayload-7050948565576131586/base_3.c)
+// Remaining mismatch: 14 register-allocation-only instruction words.
 #pragma GLOBAL_ASM("asm/nonmatchings/engine/asset_manager/decompressHuffmanAssetPayload.s")
 
 #ifdef NON_MATCHING
@@ -212,26 +212,13 @@ void decompressHuffmanAssetPayload(u8 arg0, u8 *arg1, u8 *arg2, s32 arg3) {
     gHuffmanQueueCount = 0;
     gHuffmanNodeCount = 0;
     tableBytesRead = 0;
-    input = arg1;
-    end = -1;
-read_range:
-    rangeStart = *input;
-    tableBytesRead += 1;
-    input += 1;
-    if (tableBytesRead != 1) {
-        if (rangeStart == 0) {
-            goto build_tree;
-        }
-    }
+    input = arg1; end = -1; read_range: rangeStart = *input; tableBytesRead += 1; input += 1; if (tableBytesRead != 1) { if (rangeStart == 0) { goto build_tree; } }
     rangeEnd = *input;
     tableBytesRead += 1;
     input += 1;
     currentNodeIndex = rangeStart;
     if (rangeEnd >= rangeStart) {
-        rangeStart = rangeEnd + 1;
-        goto read_leaf;
-        while (rangeStart != currentNodeIndex) {
-        read_leaf:
+        rangeStart = rangeEnd + 1; goto read_leaf; while (rangeStart != currentNodeIndex) { read_leaf:
             leafNodeIndexCopy = gHuffmanNodeCount;
             rootNodeIndex = leafNodeIndexCopy;
             weightCopy = *input;
@@ -304,7 +291,8 @@ build_tree:
             outputOffset += 1;
             rawDestination += 1;
         }
-        if (((!end) && (!end)) && (!end)) {}
+        if (((!end) && (!end)) && (!end)) {
+        }
     } else {
     decode_pair:
         firstCodeCopy = (rootNodeIndex = gHuffmanNodeCount - 1);
@@ -375,15 +363,18 @@ build_tree:
                 if (nodeValue < symbol) {
                     goto copy_backreference;
                 }
-                if (!length) {}
+                if (!length) {
+                }
             }
         }
         if (outputOffset < arg3) {
             goto decode_pair;
         }
     }
-    if (!symbol) {}
-    if (!length) {}
+    if (!symbol) {
+    }
+    if (!length) {
+    }
 }
 #endif
 
