@@ -8,12 +8,6 @@
 #define MAIN_MENU_SCENE_MODEL_TEXTURE_HANDLE_BASE 0x39
 #define MAIN_MENU_SCENE_MODEL_ANIMATION_BANK_HANDLE 0x3F
 
-typedef struct MainMenuModelVec3s {
-    s16 x;
-    s16 y;
-    s16 z;
-} MainMenuModelVec3s;
-
 typedef union MainMenuModelAnimationBank {
     s32 frameOffsets[1];
     s16 frameData[1];
@@ -23,16 +17,10 @@ typedef struct MainMenuModelPart {
     s32 previousPartOffsetZ;
     s8 displayObjectIndex;
     char pad5[0x1];
-    MainMenuModelVec3s rot;
+    Vec3s rot;
     s32 offsetX;
     s32 offsetY;
 } MainMenuModelPart;
-
-typedef struct MainMenuModelTransform {
-    s16 rotation[9];
-    s16 pad12;
-    s32 translation[3];
-} MainMenuModelTransform;
 
 typedef struct MainMenuSceneModel {
     s16 sceneModelIndex;
@@ -48,9 +36,9 @@ typedef struct MainMenuSceneModel {
     MainMenuModelPart parts[14];
     s32 lastPartOffsetZ;
     Vec3i pos;
-    MainMenuModelVec3s rot;
+    Vec3s rot;
     s16 unk146;
-    MainMenuModelTransform displayObjects[14];
+    Transform3D displayObjects[14];
 } MainMenuSceneModel;
 
 void loadMainMenuSceneModelAssets(void);

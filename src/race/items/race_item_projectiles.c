@@ -16,7 +16,7 @@
 #include "game/math/fixed_point_math.h"
 
 typedef struct {
-    /* 0x00 */ FixedTransform source;
+    /* 0x00 */ Transform3D source;
     /* 0x20 */ s32 pad20;
 } RaceEffectMatrixScratch;
 
@@ -94,7 +94,6 @@ u8 D_800D4660[4][28] = {
      },
 };
 
-Mtx *allocFixedTransformMatrix(FixedTransform *);
 void spawnRaceUiFadingImpact(s32, s32, s32, u16);
 void enqueuePositionalSoundEffect(s32, void *, s32, s32);
 s16 calculateFixedAngleBetweenXZPoints(s32, s32, s32, s32);

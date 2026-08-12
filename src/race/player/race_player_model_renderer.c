@@ -40,7 +40,7 @@ struct RacePlayerModelRenderState {
     /* 0x11 */ u8 texHeaderIndex;
     /* 0x12 */ u8 textureVariant;
     /* 0x13 */ u8 pad13[0x94 - 0x13];
-    /* 0x94 */ u8 partSources[RACE_PLAYER_MODEL_RENDERER_PLAYER_PART_CAPACITY][0x20];
+    /* 0x94 */ Transform3D partSources[RACE_PLAYER_MODEL_RENDERER_PLAYER_PART_CAPACITY];
     /* 0x254 */ u8 pad254[0x2FC - 0x254];
     /* 0x2FC */ u32 flags;
     /* 0x300 */ u8 pad300[0x320 - 0x300];
@@ -182,7 +182,6 @@ Gfx *gRaceGhostPlayerModelPart12DisplayLists[RACE_PLAYER_MODEL_RENDERER_TEXTURE_
 };
 
 extern void *allocMenuRenderScratch(s32 size);
-extern void *allocFixedTransformMatrix(void *source);
 
 extern s16 gUiBlinkTimer;
 extern Gfx *gRegionAllocPtr;
@@ -276,7 +275,7 @@ void drawRaceGhostPlayerModelRootPart(void *asset, s16 dlIndex, s16 textureIndex
 void drawRacePlayerModel(RacePlayerModelRenderState *player) {
     RacePlayerModelRenderState *countPlayer;
     RacePlayerModelRenderState *partVtxPlayer;
-    u8(*partSource)[0x20];
+    Transform3D *partSource;
     RacePlayerModelRenderState *drawPlayer;
     s32 i;
 
@@ -352,7 +351,7 @@ void drawRacePlayerModel(RacePlayerModelRenderState *player) {
 void drawRaceGhostPlayerModel(RacePlayerModelRenderState *player) {
     RacePlayerModelRenderState *countPlayer;
     RacePlayerModelRenderState *partVtxPlayer;
-    u8(*partSource)[0x20];
+    Transform3D *partSource;
     s32 i;
     s32 alphaPulse;
     Gfx *segmentGfx;

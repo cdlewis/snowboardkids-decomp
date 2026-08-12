@@ -12,12 +12,7 @@
  * resolves cleanly without any per-file guards.
  */
 #include <PR/mbi.h>
-
-typedef struct Vec3i {
-    s32 x;
-    s32 y;
-    s32 z;
-} Vec3i;
+#include "game/math/geometry.h"
 
 int sprintf(char *buffer, const char *format, ...);
 

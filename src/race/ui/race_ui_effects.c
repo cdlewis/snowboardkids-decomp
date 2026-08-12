@@ -19,10 +19,12 @@
 #include "game/race/items/race_item_projectiles.h"
 #include "game/race/player/race_player_movement.h"
 #include "game/race/player/race_player_input.h"
+#include "game/race/camera/race_camera.h"
 #include "game/race/ui/race_hud.h"
 
 /* Local 3-arg declaration; see note in callback_task_scheduler.h. */
 extern void *createCallbackTaskWithUserIdPreservingArgs(void *, s32, s32);
+extern RaceCamera D_801121E0[];
 extern void drawAssetTableSpriteWideIndex(s16 x, s16 y, AssetTable *table, s32 entryIndex);
 extern void
 drawAssetTableSpriteWithExplicitPaletteWideIndex(s16 x, s16 y, AssetTable *table, s32 entryIndex, u16 paletteIndex);
@@ -100,12 +102,6 @@ typedef struct {
     u8 b7;
 } RaceUiSpriteInit;
 
-typedef RacePlayerTransformBlock RaceUiTrailCopyBlock;
-
-typedef union {
-    /* 0x00 */ RaceUiTrailCopyBlock source;
-    /* 0x00 */ s64 forceAlignment;
-} RaceUiAlignedTrailCopyBlock;
 
 typedef union {
     s32 word;
@@ -120,20 +116,14 @@ typedef struct {
     /* 0x02 */ u8 pad2[6];
 } RaceUiAssetEntry;
 
-typedef Mtx RaceUiGfxCommandDest;
-
-typedef struct {
-    /* 0x00 */ RaceUiTrailCopyBlock source;
-    /* 0x20 */ u8 pad20[0x40 - 0x20];
-} RaceUiTransitionTransformSource;
-
 typedef struct RaceUiTransitionActor {
     /* 0x00 */ u8 pad0[0x10];
     /* 0x10 */ u16 index;
     /* 0x12 */ u8 pad12[6];
     /* 0x18 */ u8 pad18[0x24 - 0x18];
-    /* 0x24 */ RaceUiTransitionTransformSource transformSource;
-    /* 0x64 */ RaceUiGfxCommandDest *matrix;
+    /* 0x24 */ Transform3D transformSource;
+    /* 0x44 */ u8 pad44[0x64 - 0x44];
+    /* 0x64 */ Mtx *matrix;
     /* 0x68 */ s32 unk68;
     /* 0x6C */ s16 unk6C;
     /* 0x6E */ s16 unk6E;
@@ -249,7 +239,7 @@ typedef struct RaceUiProjectileActor {
     /* 0x30 */ u16 *animationScript;
     /* 0x34 */ s16 frameTimer;
     /* 0x36 */ s16 flags;
-    /* 0x38 */ RaceUiGfxCommandDest *matrix;
+    /* 0x38 */ Mtx *matrix;
     /* 0x3C */ s16 unk3C;
     /* 0x3E */ u8 pad3E[2];
     /* 0x40 */ void *palette;
@@ -282,7 +272,7 @@ typedef struct {
     /* 0x00 */ s16 state;
     /* 0x02 */ u8 pad02[0x1C - 0x02];
     /* 0x1C */ Vec3i worldPos;
-    /* 0x28 */ RaceUiTrailCopyBlock copyBlock;
+    /* 0x28 */ Transform3D copyBlock;
     /* 0x48 */ u8 pad48[0x6A - 0x48];
     /* 0x6A */ s16 spinYaw;
 } RaceUiSnowboardTrailState;
@@ -298,14 +288,14 @@ typedef struct RaceUiSnowboardTrailActor {
     /* 0x24 */ Vec3i scale;
     /* 0x30 */ Vec3i worldPos;
     /* 0x3C */ s32 velocityY;
-    /* 0x40 */ RaceUiTrailCopyBlock frontTransform;
-    /* 0x60 */ RaceUiTrailCopyBlock backTransform;
+    /* 0x40 */ Transform3D frontTransform;
+    /* 0x60 */ Transform3D backTransform;
     /* 0x80 */ s16 playerIndex;
     /* 0x82 */ u8 pad82[2];
     /* 0x84 */ s16 spinYaw;
     /* 0x86 */ u8 pad86[2];
-    /* 0x88 */ RaceUiGfxCommandDest *frontMatrix;
-    /* 0x8C */ RaceUiGfxCommandDest *backMatrix;
+    /* 0x88 */ Mtx *frontMatrix;
+    /* 0x8C */ Mtx *backMatrix;
     /* 0x90 */ s16 scaleStep;
     /* 0x92 */ s16 timer;
     /* 0x94 */ u8 matrixDirty;
@@ -316,7 +306,7 @@ typedef struct RaceUiRankParticleActor {
     /* 0x10 */ u16 index;
     /* 0x12 */ u8 pad12[0x18 - 0x12];
     /* 0x18 */ Vec3i pos;
-    /* 0x24 */ RaceUiTrailCopyBlock copyBlock;
+    /* 0x24 */ Transform3D copyBlock;
     /* 0x44 */ void *matrix;
     /* 0x48 */ u32 *displayLists[2];
     /* 0x50 */ u8 matrixDirty;
@@ -325,8 +315,8 @@ typedef struct RaceUiRankParticleActor {
 typedef struct RaceUiPodiumTrailActor {
     /* 0x00 */ u8 pad0[0x18];
     /* 0x18 */ Vec3i pos;
-    /* 0x24 */ RaceUiTrailCopyBlock copyBlock;
-    /* 0x44 */ RaceUiGfxCommandDest *matrix;
+    /* 0x24 */ Transform3D copyBlock;
+    /* 0x44 */ Mtx *matrix;
     /* 0x48 */ s32 height;
     /* 0x4C */ s32 velocity;
     /* 0x50 */ s16 playerIndex;
@@ -342,8 +332,8 @@ typedef struct RaceUiRankTrailActor {
     /* 0x10 */ u16 playerIndex;
     /* 0x12 */ u8 pad12[0x18 - 0x12];
     /* 0x18 */ Vec3i pos;
-    /* 0x24 */ RaceUiTrailCopyBlock copyBlock;
-    /* 0x44 */ RaceUiGfxCommandDest *matrix;
+    /* 0x24 */ Transform3D copyBlock;
+    /* 0x44 */ Mtx *matrix;
     /* 0x48 */ s16 scale;
     /* 0x4A */ u8 matrixDirty;
 } RaceUiRankTrailActor;
@@ -353,7 +343,7 @@ typedef struct RaceUiTextParticleActor {
     /* 0x10 */ u16 index;
     /* 0x12 */ u8 pad12[0x18 - 0x12];
     /* 0x18 */ Vec3i pos;
-    /* 0x24 */ RaceUiGfxCommandDest *matrix;
+    /* 0x24 */ Mtx *matrix;
     /* 0x28 */ void *palettes[4];
     /* 0x38 */ void *images[4];
     /* 0x48 */ Vec3i velocity;
@@ -365,7 +355,7 @@ typedef struct RaceUiTextParticleActor {
 typedef struct RaceUiAnimatedTextActor {
     /* 0x00 */ u8 pad0[0x18];
     /* 0x18 */ Vec3i pos;
-    /* 0x24 */ RaceUiGfxCommandDest *matrix;
+    /* 0x24 */ Mtx *matrix;
     /* 0x28 */ void *palettes[4];
     /* 0x38 */ void *images[4];
     /* 0x48 */ Vec3i velocity;
@@ -378,8 +368,8 @@ typedef struct RaceUiTrailingParticleActor {
     /* 0x10 */ u16 index;
     /* 0x12 */ u8 pad12[0x18 - 0x12];
     /* 0x18 */ Vec3i pos;
-    /* 0x24 */ RaceUiGfxCommandDest *matrix0;
-    /* 0x28 */ RaceUiGfxCommandDest *matrix1;
+    /* 0x24 */ Mtx *matrix0;
+    /* 0x28 */ Mtx *matrix1;
     /* 0x2C */ s16 rotY;
     /* 0x2E */ s16 rotX;
     /* 0x30 */ u8 matrixDirty;
@@ -390,9 +380,9 @@ typedef struct RaceUiTripleParticleActor {
     /* 0x10 */ u16 index;
     /* 0x12 */ u8 pad12[0x18 - 0x12];
     /* 0x18 */ Vec3i pos;
-    /* 0x24 */ RaceUiGfxCommandDest *matrix0;
-    /* 0x28 */ RaceUiGfxCommandDest *matrix1;
-    /* 0x2C */ RaceUiGfxCommandDest *matrix2;
+    /* 0x24 */ Mtx *matrix0;
+    /* 0x28 */ Mtx *matrix1;
+    /* 0x2C */ Mtx *matrix2;
     /* 0x30 */ s16 rotY;
     /* 0x32 */ u8 matrixDirty;
 } RaceUiTripleParticleActor;
@@ -402,8 +392,8 @@ typedef struct RaceUiSpinningParticleActor {
     /* 0x10 */ u16 index;
     /* 0x12 */ u8 pad12[0x18 - 0x12];
     /* 0x18 */ Vec3i pos;
-    /* 0x24 */ RaceUiGfxCommandDest *matrix0;
-    /* 0x28 */ RaceUiGfxCommandDest *matrix1;
+    /* 0x24 */ Mtx *matrix0;
+    /* 0x28 */ Mtx *matrix1;
     /* 0x2C */ s16 rotY;
     /* 0x2E */ s16 rotZ;
     /* 0x30 */ s16 rotX;
@@ -418,7 +408,7 @@ typedef struct RaceUiScaledParticleActor {
     /* 0x18 */ Vec3i pos;
     /* 0x24 */ s16 scale;
     /* 0x26 */ u8 pad26[2];
-    /* 0x28 */ RaceUiGfxCommandDest *matrix;
+    /* 0x28 */ Mtx *matrix;
     /* 0x2C */ s16 rotY;
     /* 0x2E */ s16 rotYStep;
     /* 0x30 */ u8 matrixDirty;
@@ -432,7 +422,7 @@ typedef struct RaceUiRisingTrailActor {
     /* 0x2A */ u8 pad2A[2];
     /* 0x2C */ s16 sineAngle;
     /* 0x2E */ u8 pad2E[2];
-    /* 0x30 */ RaceUiGfxCommandDest *matrix;
+    /* 0x30 */ Mtx *matrix;
     /* 0x34 */ u8 pad34[2];
     /* 0x36 */ u8 matrixDirty;
 } RaceUiRisingTrailActor;
@@ -453,18 +443,18 @@ typedef struct RaceUiSingleTrailActor {
     /* 0x00 */ u8 pad0[0x10];
     /* 0x10 */ u16 playerIndex;
     /* 0x12 */ u8 pad12[0x24 - 0x12];
-    /* 0x24 */ RaceUiTrailCopyBlock copyBlock;
-    /* 0x44 */ FixedTransform localTransform;
-    /* 0x64 */ RaceUiGfxCommandDest *matrix;
+    /* 0x24 */ Transform3D copyBlock;
+    /* 0x44 */ Transform3D localTransform;
+    /* 0x64 */ Mtx *matrix;
     /* 0x68 */ s16 timer;
     /* 0x6A */ u8 matrixDirty;
 } RaceUiSingleTrailActor;
 
 typedef struct RaceUiFadingTrailActor {
     /* 0x00 */ u8 pad0[0x18];
-    /* 0x18 */ RaceUiTrailCopyBlock copyBlock;
+    /* 0x18 */ Transform3D copyBlock;
     /* 0x38 */ Vec3i pos;
-    /* 0x44 */ RaceUiGfxCommandDest *matrix;
+    /* 0x44 */ Mtx *matrix;
     /* 0x48 */ u8 pad48[2];
     /* 0x4A */ s16 alpha;
     /* 0x4C */ u8 pad4C[2];
@@ -475,9 +465,9 @@ typedef struct RaceUiFadingImpactActor {
     /* 0x00 */ u8 pad0[0x10];
     /* 0x10 */ u16 playerIndex;
     /* 0x12 */ u8 pad12[0x18 - 0x12];
-    /* 0x18 */ RaceUiTrailCopyBlock copyBlock;
+    /* 0x18 */ Transform3D copyBlock;
     /* 0x38 */ Vec3i pos;
-    /* 0x44 */ RaceUiGfxCommandDest *matrix;
+    /* 0x44 */ Mtx *matrix;
     /* 0x48 */ s16 angle;
     /* 0x4A */ s16 alpha;
     /* 0x4C */ s16 scale;
@@ -486,18 +476,18 @@ typedef struct RaceUiFadingImpactActor {
 
 typedef struct RaceUiTransitionRenderActor {
     /* 0x00 */ u8 pad0[0x24];
-    /* 0x24 */ RaceUiTrailCopyBlock copyBlock;
+    /* 0x24 */ Transform3D copyBlock;
     /* 0x44 */ u8 pad44[0x64 - 0x44];
-    /* 0x64 */ RaceUiGfxCommandDest *matrix;
+    /* 0x64 */ Mtx *matrix;
     /* 0x68 */ u8 pad68[0x72 - 0x68];
     /* 0x72 */ u8 matrixDirty;
 } RaceUiTransitionRenderActor;
 
 typedef struct {
     /* 0x00 */ u8 pad0[0x18];
-    /* 0x18 */ RaceUiTrailCopyBlock transformSource;
+    /* 0x18 */ Transform3D transformSource;
     /* 0x38 */ Vec3i sourcePos;
-    /* 0x44 */ RaceUiGfxCommandDest *matrix;
+    /* 0x44 */ Mtx *matrix;
     /* 0x48 */ s16 angle;
     /* 0x4A */ s16 alpha;
     /* 0x4C */ s16 scale;
@@ -513,12 +503,6 @@ typedef struct RaceUiEffectParticleActor {
 } RaceUiEffectParticleActor;
 
 typedef struct {
-    /* 0x00 */ u8 pad0[0x44];
-    /* 0x44 */ Vec3i transformOffset;
-    /* 0x50 */ u8 pad50[0xB0 - 0x50];
-} RaceUiCameraTransformSource;
-
-typedef struct {
     /* 0x00 */ s16 active;
     /* 0x02 */ s16 sentinel;
     /* 0x04 */ Vec3i position;
@@ -526,14 +510,14 @@ typedef struct {
 
 typedef struct RaceUiGfxCommandActor {
     /* 0x00 */ u8 pad0[0x18];
-    /* 0x18 */ RaceUiGfxCommandDest *particles;
+    /* 0x18 */ Mtx *particles;
     /* 0x1C */ s16 textureOffset;
     /* 0x1E */ s16 count;
 } RaceUiGfxCommandActor;
 
 typedef struct RaceUiRankTextRenderActor {
     /* 0x00 */ u8 pad0[0x18];
-    /* 0x18 */ void *matrices;
+    /* 0x18 */ Mtx *matrices;
     /* 0x1C */ s16 count;
 } RaceUiRankTextRenderActor;
 
@@ -710,7 +694,7 @@ typedef struct RaceUiOverlayActor {
     /* 0x2C */ u8 pad2C[4];
     /* 0x30 */ s16 timer;
     /* 0x32 */ s16 assetTimer;
-    /* 0x34 */ RaceUiGfxCommandDest *matrix;
+    /* 0x34 */ Mtx *matrix;
     /* 0x38 */ void *image3A;
     /* 0x3C */ void *palette3A;
     /* 0x40 */ void *image3B;
@@ -721,7 +705,7 @@ typedef struct RaceUiOverlayActor {
 typedef struct RaceUiOrbitingSpriteActor {
     /* 0x00 */ u8 pad0[0x18];
     /* 0x18 */ Vec3i pos;
-    /* 0x24 */ RaceUiGfxCommandDest *matrix;
+    /* 0x24 */ Mtx *matrix;
     /* 0x28 */ s16 angle;
     /* 0x2A */ u8 pad2A[2];
     /* 0x2C */ void *palette;
@@ -733,7 +717,7 @@ typedef struct RaceUiOrbitingSpriteActor {
 typedef struct RaceUiSparkleActor {
     /* 0x00 */ u8 pad0[0x18];
     /* 0x18 */ Vec3i pos;
-    /* 0x24 */ RaceUiGfxCommandDest *matrix;
+    /* 0x24 */ Mtx *matrix;
     /* 0x28 */ s16 unk28;
     /* 0x2A */ u8 pad2A[2];
     /* 0x2C */ void *palettes[4];
@@ -751,14 +735,14 @@ typedef struct RaceUiSparkleActor {
 typedef struct {
     /* 0x00 */ u8 pad30[4];
     /* 0x04 */ Vec3i vec;
-    /* 0x10 */ FixedMatrix3s matrix;
+    /* 0x10 */ Mat3x3 matrix;
     /* 0x22 */ u8 pad52[0xC];
 } RaceUiSparkleTransformScratch;
 
 typedef struct {
     /* 0x00 */ u8 pad30[4];
     /* 0x04 */ Vec3i vec;
-    /* 0x10 */ FixedMatrix3s matrix;
+    /* 0x10 */ Mat3x3 matrix;
     /* 0x22 */ u8 pad52[4];
 } RaceUiSparkleRetargetScratch;
 
@@ -1262,8 +1246,6 @@ extern Gfx *gRegionAllocPtr;
 extern Gfx gEffectRenderModeCleanupDl[];
 extern Gfx gEffectRenderModeSetupDl[];
 extern int sprintf(char *, const char *, ...);
-extern RaceUiCameraTransformSource D_801121E0[];
-extern RaceUiGfxCommandDest *allocFixedTransformMatrix(RaceUiTrailCopyBlock *);
 extern s16 gFrameCounter;
 extern s16 gRaceLapCount;
 extern s16 gUiBlinkTimer;
@@ -1283,8 +1265,6 @@ extern void enqueuePositionalSoundEffect(s32, void *, s32, s32);
 extern void enqueueSoundEffect(s32, s32);
 extern void osWritebackDCache(void *, s32);
 extern void *allocMenuRenderScratch(s32 size);
-extern void packFixedTransformMatrix(void *, void *);
-extern void setPackedMatrixTranslation(RaceUiGfxCommandDest *, Vec3i *);
 
 const char gRaceUiBoardReversePromptLabelBlinkOn[0x10] = "Board Reverse";
 const char gRaceUiBoardReversePromptLabelBlinkOff[0x10] = "Board Reverse";
@@ -3814,7 +3794,7 @@ void func_8005E6D0(RaceUiSparkleActor *arg0) {
     RaceUiSparkleActor *arg1;
     s32 i;
     s32 j;
-    RaceUiTrailCopyBlock sp6C;
+    Transform3D sp6C;
 
     arg1 = arg0;
     if (gRenderMatricesDirty != 0) {
@@ -3823,15 +3803,15 @@ void func_8005E6D0(RaceUiSparkleActor *arg0) {
 
     if (arg1->matrixDirty != 0) {
         arg1->matrixDirty = 0;
-        sp6C.transform = gIdentityFixedTransform;
+        sp6C = gIdentityFixedTransform;
         for (i = 0; i < 3; i++) {
             for (j = 0; j < 3; j++) {
-                sp6C.halfwords[(i * 3) + j] = (sp6C.halfwords[(i * 3) + j] * arg1->scale) / 0x1000;
+                sp6C.rotation[(i * 3) + j] = (sp6C.rotation[(i * 3) + j] * arg1->scale) / 0x1000;
             }
         }
-        sp6C.transform.translation.x = arg1->pos.x;
-        sp6C.transform.translation.y = arg1->pos.y;
-        sp6C.transform.translation.z = arg1->pos.z;
+        sp6C.translation.x = arg1->pos.x;
+        sp6C.translation.y = arg1->pos.y;
+        sp6C.translation.z = arg1->pos.z;
         arg1->matrix = allocFixedTransformMatrix(&sp6C);
     }
 
@@ -4092,7 +4072,7 @@ void renderRaceUiSnowboardTrailEffect(RaceUiSnowboardTrailActor *arg0) {
 }
 
 void updateRaceUiSnowboardTrailEffect(RaceUiSnowboardTrailActor *arg0) {
-    FixedTransform sp30;
+    Transform3D sp30;
     volatile u8 pad[0x10];
     RaceUiSnowboardTrailActor *actor;
 
@@ -4103,15 +4083,15 @@ void updateRaceUiSnowboardTrailEffect(RaceUiSnowboardTrailActor *arg0) {
         actor->velocityY -= 0x8000;
     }
 
-    actor->frontTransform.transform.translation.x = actor->worldPos.x;
-    actor->frontTransform.transform.translation.y = actor->worldPos.y;
-    actor->frontTransform.transform.translation.z = actor->worldPos.z;
+    actor->frontTransform.translation.x = actor->worldPos.x;
+    actor->frontTransform.translation.y = actor->worldPos.y;
+    actor->frontTransform.translation.z = actor->worldPos.z;
 
     makeFixedRotationX(sp30.rotation, actor->spinYaw);
     sp30.translation.x = actor->scale.x;
     sp30.translation.y = actor->scale.y;
     sp30.translation.z = actor->scale.z;
-    composeFixedTransforms(&sp30, &actor->frontTransform.transform, &actor->backTransform.transform);
+    composeFixedTransforms(&sp30, &actor->frontTransform, &actor->backTransform);
 
     actor->timer--;
     if (actor->timer == 0) {
@@ -4158,9 +4138,9 @@ void func_8005F6A4(RaceUiRankTrailActor *arg0) {
     if (arg0->matrixDirty != 0) {
         arg0->matrixDirty = 0;
         player = &gRacePlayers[arg0->playerIndex];
-        arg0->copyBlock.words[5] = player->unk28.x;
-        arg0->copyBlock.words[6] = player->unk28.y + 0x100000;
-        arg0->copyBlock.words[7] = player->unk28.z;
+        arg0->copyBlock.translation.x = player->unk28.x;
+        arg0->copyBlock.translation.y = player->unk28.y + 0x100000;
+        arg0->copyBlock.translation.z = player->unk28.z;
         arg0->matrix = allocFixedTransformMatrix(&arg0->copyBlock);
     }
 
@@ -4178,7 +4158,7 @@ void func_8005F828(RaceUiRankTrailActor *arg0) {
     s16 scale;
     s32 i;
 
-    arg0->copyBlock.transform = gIdentityFixedTransform;
+    arg0->copyBlock = gIdentityFixedTransform;
     player = &gRacePlayers[arg0->playerIndex];
     arg0->pos.x = player->unk28.x;
     arg0->pos.y = player->unk28.y;
@@ -4191,15 +4171,15 @@ void func_8005F828(RaceUiRankTrailActor *arg0) {
     }
 
     scale = arg0->scale;
-    arg0->copyBlock.halfwords[0] = (arg0->copyBlock.halfwords[0] * scale) / 64;
-    arg0->copyBlock.halfwords[1] = (arg0->copyBlock.halfwords[1] * scale) / 64;
-    arg0->copyBlock.halfwords[2] = (arg0->copyBlock.halfwords[2] * scale) / 64;
-    arg0->copyBlock.halfwords[3] = (arg0->copyBlock.halfwords[3] * scale) / 64;
-    arg0->copyBlock.halfwords[4] = (arg0->copyBlock.halfwords[4] * scale) / 64;
-    arg0->copyBlock.halfwords[5] = (arg0->copyBlock.halfwords[5] * scale) / 64;
-    arg0->copyBlock.halfwords[6] = (arg0->copyBlock.halfwords[6] * scale) / 64;
-    arg0->copyBlock.halfwords[7] = (arg0->copyBlock.halfwords[7] * scale) / 64;
-    arg0->copyBlock.halfwords[8] = (arg0->copyBlock.halfwords[8] * scale) / 64;
+    arg0->copyBlock.rotation[0] = (arg0->copyBlock.rotation[0] * scale) / 64;
+    arg0->copyBlock.rotation[1] = (arg0->copyBlock.rotation[1] * scale) / 64;
+    arg0->copyBlock.rotation[2] = (arg0->copyBlock.rotation[2] * scale) / 64;
+    arg0->copyBlock.rotation[3] = (arg0->copyBlock.rotation[3] * scale) / 64;
+    arg0->copyBlock.rotation[4] = (arg0->copyBlock.rotation[4] * scale) / 64;
+    arg0->copyBlock.rotation[5] = (arg0->copyBlock.rotation[5] * scale) / 64;
+    arg0->copyBlock.rotation[6] = (arg0->copyBlock.rotation[6] * scale) / 64;
+    arg0->copyBlock.rotation[7] = (arg0->copyBlock.rotation[7] * scale) / 64;
+    arg0->copyBlock.rotation[8] = (arg0->copyBlock.rotation[8] * scale) / 64;
 
     if (scale != 0x10) {
         arg0->scale = scale + 2;
@@ -4226,7 +4206,7 @@ void initRaceUiItemStealTrailEffect(RaceUiRankTrailActor *arg0) {
 
 void func_8005FBA8(RaceUiAnimatedTextActor *arg0) {
     volatile u8 padding[4];
-    RaceUiTrailCopyBlock sp64;
+    Transform3D sp64;
 
     if (gRenderMatricesDirty != 0) {
         arg0->matrixDirty = 1;
@@ -4234,10 +4214,10 @@ void func_8005FBA8(RaceUiAnimatedTextActor *arg0) {
 
     if (arg0->matrixDirty != 0) {
         arg0->matrixDirty = 0;
-        sp64.transform = gIdentityFixedTransform;
-        sp64.transform.translation.x = arg0->pos.x;
-        sp64.transform.translation.y = arg0->pos.y;
-        sp64.transform.translation.z = arg0->pos.z;
+        sp64 = gIdentityFixedTransform;
+        sp64.translation.x = arg0->pos.x;
+        sp64.translation.y = arg0->pos.y;
+        sp64.translation.z = arg0->pos.z;
         arg0->matrix = allocFixedTransformMatrix(&sp64);
     }
 
@@ -4267,7 +4247,7 @@ void func_8005FBA8(RaceUiAnimatedTextActor *arg0) {
 
 void func_8005FED0(RaceUiTextParticleActor *arg0) {
     volatile u8 padding[4];
-    RaceUiTrailCopyBlock sp64;
+    Transform3D sp64;
 
     if (gRenderMatricesDirty != 0) {
         arg0->matrixDirty = 1;
@@ -4275,10 +4255,10 @@ void func_8005FED0(RaceUiTextParticleActor *arg0) {
 
     if (arg0->matrixDirty != 0) {
         arg0->matrixDirty = 0;
-        sp64.transform = gIdentityFixedTransform;
-        sp64.transform.translation.x = arg0->pos.x;
-        sp64.transform.translation.y = arg0->pos.y;
-        sp64.transform.translation.z = arg0->pos.z;
+        sp64 = gIdentityFixedTransform;
+        sp64.translation.x = arg0->pos.x;
+        sp64.translation.y = arg0->pos.y;
+        sp64.translation.z = arg0->pos.z;
         arg0->matrix = allocFixedTransformMatrix(&sp64);
     }
 
@@ -4420,9 +4400,9 @@ void func_80060544(RaceUiPodiumTrailActor *arg0) {
 
     if (arg0->matrixDirty != 0) {
         arg0->matrixDirty = 0;
-        arg0->copyBlock.words[5] = arg0->pos.x;
-        arg0->copyBlock.words[6] = arg0->pos.y + 0x38000;
-        arg0->copyBlock.words[7] = arg0->pos.z;
+        arg0->copyBlock.translation.x = arg0->pos.x;
+        arg0->copyBlock.translation.y = arg0->pos.y + 0x38000;
+        arg0->copyBlock.translation.z = arg0->pos.z;
         arg0->matrix = allocFixedTransformMatrix(&arg0->copyBlock);
     }
 
@@ -4492,22 +4472,22 @@ void updateGhostSlowdownRise(RaceUiPodiumTrailActor *arg0) {
         if (gRaceUpdatePaused == 0) {
             arg0->velocity += 0x10000;
             arg0->height += arg0->velocity;
-            arg0->copyBlock.transform = gIdentityFixedTransform;
+            arg0->copyBlock = gIdentityFixedTransform;
             player = &gRacePlayers[arg0->playerIndex];
             arg0->pos.x = player->unk28.x;
             arg0->pos.y = player->unk28.y + arg0->height;
             arg0->pos.z = player->unk28.z;
 
             scale = arg0->state;
-            arg0->copyBlock.halfwords[0] = (arg0->copyBlock.halfwords[0] * scale) / 64;
-            arg0->copyBlock.halfwords[1] = (arg0->copyBlock.halfwords[1] * scale) / 64;
-            arg0->copyBlock.halfwords[2] = (arg0->copyBlock.halfwords[2] * scale) / 64;
-            arg0->copyBlock.halfwords[3] = (arg0->copyBlock.halfwords[3] * scale) / 64;
-            arg0->copyBlock.halfwords[4] = (arg0->copyBlock.halfwords[4] * scale) / 64;
-            arg0->copyBlock.halfwords[5] = (arg0->copyBlock.halfwords[5] * scale) / 64;
-            arg0->copyBlock.halfwords[6] = (arg0->copyBlock.halfwords[6] * scale) / 64;
-            arg0->copyBlock.halfwords[7] = (arg0->copyBlock.halfwords[7] * scale) / 64;
-            arg0->copyBlock.halfwords[8] = (arg0->copyBlock.halfwords[8] * scale) / 64;
+            arg0->copyBlock.rotation[0] = (arg0->copyBlock.rotation[0] * scale) / 64;
+            arg0->copyBlock.rotation[1] = (arg0->copyBlock.rotation[1] * scale) / 64;
+            arg0->copyBlock.rotation[2] = (arg0->copyBlock.rotation[2] * scale) / 64;
+            arg0->copyBlock.rotation[3] = (arg0->copyBlock.rotation[3] * scale) / 64;
+            arg0->copyBlock.rotation[4] = (arg0->copyBlock.rotation[4] * scale) / 64;
+            arg0->copyBlock.rotation[5] = (arg0->copyBlock.rotation[5] * scale) / 64;
+            arg0->copyBlock.rotation[6] = (arg0->copyBlock.rotation[6] * scale) / 64;
+            arg0->copyBlock.rotation[7] = (arg0->copyBlock.rotation[7] * scale) / 64;
+            arg0->copyBlock.rotation[8] = (arg0->copyBlock.rotation[8] * scale) / 64;
 
             if (scale != 0x10) {
                 arg0->state = scale + 1;
@@ -4646,9 +4626,9 @@ void spawnRaceUiScorePopup(void *arg0, s16 arg1) {
 
 void renderRaceCourseTripleParticle(RaceUiTripleParticleActor *arg0) {
     s16 unused;
-    RaceUiTrailCopyBlock spAC;
-    RaceUiTrailCopyBlock sp8C;
-    RaceUiTrailCopyBlock sp6C;
+    Transform3D spAC;
+    Transform3D sp8C;
+    Transform3D sp6C;
     s32 sine;
 
     if (gRenderMatricesDirty != 0) {
@@ -4658,16 +4638,16 @@ void renderRaceCourseTripleParticle(RaceUiTripleParticleActor *arg0) {
     if (isPositionNearCurrentRaceViewportCamera(&arg0->pos) != 0) {
         if (arg0->matrixDirty != 0) {
             arg0->matrixDirty = 0;
-            makeFixedRotationY(spAC.halfwords, arg0->rotY);
-            spAC.words[5] = arg0->pos.x;
-            spAC.words[6] = arg0->pos.y;
-            spAC.words[7] = arg0->pos.z;
+            makeFixedRotationY(spAC.rotation, arg0->rotY);
+            spAC.translation.x = arg0->pos.x;
+            spAC.translation.y = arg0->pos.y;
+            spAC.translation.z = arg0->pos.z;
 
             sp8C = sp6C = spAC;
 
             sine = fixedSine((s16)(arg0->rotY << 4)) << 7;
-            sp8C.words[6] = (sp8C.words[6] - sine) + 0x80000;
-            sp6C.words[6] += sine + 0x80000;
+            sp8C.translation.y = (sp8C.translation.y - sine) + 0x80000;
+            sp6C.translation.y += sine + 0x80000;
 
             arg0->matrix0 = allocFixedTransformMatrix(&spAC);
             arg0->matrix1 = allocFixedTransformMatrix(&sp8C);
@@ -4726,15 +4706,15 @@ void func_800615BC(RaceUiRankTrailActor *arg0) {
     s32 i;
 
     arg0->copyBlock = (&gRacePlayers[arg0->playerIndex])->copyBlock94;
-    arg0->copyBlock.halfwords[0] = arg0->copyBlock.halfwords[0] / 4;
-    arg0->copyBlock.halfwords[1] = arg0->copyBlock.halfwords[1] / 4;
-    arg0->copyBlock.halfwords[2] = arg0->copyBlock.halfwords[2] / 4;
-    arg0->copyBlock.halfwords[3] = arg0->copyBlock.halfwords[3] / 4;
-    arg0->copyBlock.halfwords[4] = arg0->copyBlock.halfwords[4] / 4;
-    arg0->copyBlock.halfwords[5] = arg0->copyBlock.halfwords[5] / 4;
-    arg0->copyBlock.halfwords[6] = arg0->copyBlock.halfwords[6] / 4;
-    arg0->copyBlock.halfwords[7] = arg0->copyBlock.halfwords[7] / 4;
-    arg0->copyBlock.halfwords[8] = arg0->copyBlock.halfwords[8] / 4;
+    arg0->copyBlock.rotation[0] = arg0->copyBlock.rotation[0] / 4;
+    arg0->copyBlock.rotation[1] = arg0->copyBlock.rotation[1] / 4;
+    arg0->copyBlock.rotation[2] = arg0->copyBlock.rotation[2] / 4;
+    arg0->copyBlock.rotation[3] = arg0->copyBlock.rotation[3] / 4;
+    arg0->copyBlock.rotation[4] = arg0->copyBlock.rotation[4] / 4;
+    arg0->copyBlock.rotation[5] = arg0->copyBlock.rotation[5] / 4;
+    arg0->copyBlock.rotation[6] = arg0->copyBlock.rotation[6] / 4;
+    arg0->copyBlock.rotation[7] = arg0->copyBlock.rotation[7] / 4;
+    arg0->copyBlock.rotation[8] = arg0->copyBlock.rotation[8] / 4;
 
     player = &gRacePlayers[arg0->playerIndex];
     if (player->stateFlags & 0x400000) {
@@ -4746,9 +4726,9 @@ void func_800615BC(RaceUiRankTrailActor *arg0) {
 
     for (i = 0; i < 8; i++) {
         spawnRaceUiAltBurstTextParticle(
-            (void *)arg0->copyBlock.words[5],
-            (void *)arg0->copyBlock.words[6],
-            (void *)arg0->copyBlock.words[7],
+            (void *)arg0->copyBlock.translation.x,
+            (void *)arg0->copyBlock.translation.y,
+            (void *)arg0->copyBlock.translation.z,
             i
         );
     }
@@ -4763,7 +4743,7 @@ void initRaceUiHeavyKnockdownTrailEffect(void *arg0) {
 void func_800617EC(RaceUiRisingTrailActor *arg0) {
     volatile s32 padlow;
     s32 sine;
-    RaceUiTrailCopyBlock sp80;
+    Transform3D sp80;
     volatile s32 pad[0x12];
 
     if (gRenderMatricesDirty != 0) {
@@ -4774,11 +4754,11 @@ void func_800617EC(RaceUiRisingTrailActor *arg0) {
         if (arg0->matrixDirty != 0) {
             arg0->matrixDirty = 0;
             sine = fixedSine(arg0->sineAngle);
-            makeFixedRotationY(sp80.halfwords, (s16)(arg0->angle + 0x800));
-            sp80.words[5] = arg0->pos.x;
-            sp80.words[6] = arg0->pos.y + ((sine + 0x1000) << 5) + 0x10000;
-            sp80.words[7] = arg0->pos.z;
-            scaleFixedMatrix3sByQuarter(sp80.halfwords);
+            makeFixedRotationY(sp80.rotation, (s16)(arg0->angle + 0x800));
+            sp80.translation.x = arg0->pos.x;
+            sp80.translation.y = arg0->pos.y + ((sine + 0x1000) << 5) + 0x10000;
+            sp80.translation.z = arg0->pos.z;
+            scaleFixedMatrix3sByQuarter(sp80.rotation);
             arg0->matrix = allocFixedTransformMatrix(&sp80);
         }
 
@@ -4873,7 +4853,7 @@ void updateRaceUiSingleTrailEffect(RaceUiSingleTrailActor *arg0) {
     composeFixedTransforms(
         &arg0->localTransform,
         &gRacePlayers[arg0->playerIndex].renderTransform,
-        &arg0->copyBlock.transform
+        &arg0->copyBlock
     );
 
     if (gRaceUpdatePaused == 0) {
@@ -4932,19 +4912,19 @@ void func_80061F38(RaceUiFadingImpactActor *arg0) {
 
     if (gRaceUpdatePaused == 0) {
         arg0->angle += 0x100;
-        makeFixedRotationY(arg0->copyBlock.halfwords, arg0->angle);
+        makeFixedRotationY(arg0->copyBlock.rotation, arg0->angle);
 
         scale = arg0->scale;
-        arg0->copyBlock.halfwords[0] = (arg0->copyBlock.halfwords[0] * scale) / 64;
-        arg0->copyBlock.halfwords[1] = (arg0->copyBlock.halfwords[1] * scale) / 64;
-        arg0->copyBlock.halfwords[2] = (arg0->copyBlock.halfwords[2] * scale) / 64;
+        arg0->copyBlock.rotation[0] = (arg0->copyBlock.rotation[0] * scale) / 64;
+        arg0->copyBlock.rotation[1] = (arg0->copyBlock.rotation[1] * scale) / 64;
+        arg0->copyBlock.rotation[2] = (arg0->copyBlock.rotation[2] * scale) / 64;
         new_var = arg0;
-        arg0->copyBlock.halfwords[3] = (arg0->copyBlock.halfwords[3] * scale) / 64;
-        new_var->copyBlock.halfwords[4] = (new_var->copyBlock.halfwords[4] * scale) / 64;
-        arg0->copyBlock.halfwords[5] = (new_var->copyBlock.halfwords[5] * scale) / 64;
-        new_var->copyBlock.halfwords[6] = (new_var->copyBlock.halfwords[6] * scale) / 64;
-        arg0->copyBlock.halfwords[7] = (arg0->copyBlock.halfwords[7] * scale) / 64;
-        new_var->copyBlock.halfwords[8] = (arg0->copyBlock.halfwords[8] * scale) / 64;
+        arg0->copyBlock.rotation[3] = (arg0->copyBlock.rotation[3] * scale) / 64;
+        new_var->copyBlock.rotation[4] = (new_var->copyBlock.rotation[4] * scale) / 64;
+        arg0->copyBlock.rotation[5] = (new_var->copyBlock.rotation[5] * scale) / 64;
+        new_var->copyBlock.rotation[6] = (new_var->copyBlock.rotation[6] * scale) / 64;
+        arg0->copyBlock.rotation[7] = (arg0->copyBlock.rotation[7] * scale) / 64;
+        new_var->copyBlock.rotation[8] = (arg0->copyBlock.rotation[8] * scale) / 64;
 
         if (scale != 0x34) {
             new_var->scale = scale + 4;
@@ -4984,9 +4964,9 @@ void initRaceUiFadingImpact(RaceUiFadingImpactActor *actor) {
     actor->scale = 4;
     actor->alpha = 0xFF;
     actor->angle = 0;
-    actor->copyBlock.words[5] = actor->pos.x;
-    actor->copyBlock.words[6] = actor->pos.y;
-    actor->copyBlock.words[7] = actor->pos.z;
+    actor->copyBlock.translation.x = actor->pos.x;
+    actor->copyBlock.translation.y = actor->pos.y;
+    actor->copyBlock.translation.z = actor->pos.z;
     enqueuePositionalSoundEffect(0x13, &actor->pos, 0x7F, 0x32);
     setCallbackTaskCallback(actor, (CallbackTaskCallback)func_80061F38);
 }
@@ -5034,29 +5014,29 @@ void func_800623E8(RaceUiTransitionActor *arg0) {
         }
         if (arg0->unk6C != 0) {
             player = &gRacePlayers[arg0->index];
-            arg0->transformSource.source.words[5] = player->posC8.x;
-            arg0->transformSource.source.words[6] = player->posC8.y;
-            arg0->transformSource.source.words[7] = player->posC8.z;
+            arg0->transformSource.translation.x = player->posC8.x;
+            arg0->transformSource.translation.y = player->posC8.y;
+            arg0->transformSource.translation.z = player->posC8.z;
         } else {
             if (arg0->unk6E == 0) {
                 removeCallbackTask(arg0);
                 return;
             }
-            temp_v0 = arg0->transformSource.source.halfwords[1];
-            temp_v1 = arg0->transformSource.source.halfwords[4];
-            temp_a0 = arg0->transformSource.source.halfwords[7];
+            temp_v0 = arg0->transformSource.rotation[1];
+            temp_v1 = arg0->transformSource.rotation[4];
+            temp_a0 = arg0->transformSource.rotation[7];
             arg0->unk68 -= 0x1000;
-            arg0->transformSource.source.words[6] += arg0->unk68;
-            arg0->transformSource.source.halfwords[1] = temp_v0 - (temp_v0 / 16);
-            arg0->transformSource.source.halfwords[4] = temp_v1 - (temp_v1 / 16);
-            arg0->transformSource.source.halfwords[7] = temp_a0 - (temp_a0 / 16);
+            arg0->transformSource.translation.y += arg0->unk68;
+            arg0->transformSource.rotation[1] = temp_v0 - (temp_v0 / 16);
+            arg0->transformSource.rotation[4] = temp_v1 - (temp_v1 / 16);
+            arg0->transformSource.rotation[7] = temp_a0 - (temp_a0 / 16);
         }
     }
     addRenderCallback(&gRaceModelEffectRenderCallbackList, (RenderCallback)func_800622B0, arg0);
 }
 
 void initRaceUiSpinHitTransitionEffect(RaceUiTransitionActor *arg0) {
-    s16 *transform = arg0->transformSource.source.halfwords;
+    s16 *transform = arg0->transformSource.rotation;
     volatile u8 padding[0x20];
 
     arg0->unk68 = 0;
@@ -5073,7 +5053,7 @@ void initRaceUiSpinHitTransitionEffect(RaceUiTransitionActor *arg0) {
 // clang-format off
 void func_800625D8(RaceUiOrbitingSpriteActor *arg0) {
     volatile u8 padding[4];
-    RaceUiTrailCopyBlock sp64;
+    Transform3D sp64;
     Gfx *temp_v0;
     Gfx *temp_v0_2;
     Gfx *temp_v0_3;
@@ -5099,10 +5079,10 @@ void func_800625D8(RaceUiOrbitingSpriteActor *arg0) {
 
     if (arg0->matrixDirty != 0) {
         arg0->matrixDirty = 0;
-        sp64.transform = gIdentityFixedTransform;
-        sp64.transform.translation.x = arg0->pos.x;
-        sp64.transform.translation.y = arg0->pos.y;
-        sp64.transform.translation.z = arg0->pos.z;
+        sp64 = gIdentityFixedTransform;
+        sp64.translation.x = arg0->pos.x;
+        sp64.translation.y = arg0->pos.y;
+        sp64.translation.z = arg0->pos.z;
         arg0->matrix = allocFixedTransformMatrix(&sp64);
     }
 
@@ -5156,7 +5136,10 @@ void spawnRaceUiStunOrbitingIcons(s16 playerIndex) {
 }
 
 void renderIceCourseBumper(RaceUiScaledParticleActor *arg0) {
-    FixedMatrix3sWideScratch scratch;
+    struct {
+        Transform3D transform;
+        s16 unused[2];
+    } scratch;
 
     if (gRenderMatricesDirty != 0) {
         arg0->matrixDirty = 1;
@@ -5165,17 +5148,17 @@ void renderIceCourseBumper(RaceUiScaledParticleActor *arg0) {
     if (isPositionNearCurrentRaceViewportCamera(&arg0->pos) != 0) {
         if (arg0->matrixDirty != 0) {
             arg0->matrixDirty = 0;
-            makeFixedRotationY(scratch, arg0->rotY);
-            scratch[0] = SCALE_MATRIX_COMPONENT(scratch[0], arg0->scale);
-            scratch[3] = SCALE_MATRIX_COMPONENT(scratch[3], arg0->scale);
-            scratch[6] = SCALE_MATRIX_COMPONENT(scratch[6], arg0->scale);
-            scratch[2] = SCALE_MATRIX_COMPONENT(scratch[2], arg0->scale);
-            scratch[5] = SCALE_MATRIX_COMPONENT(scratch[5], arg0->scale);
-            scratch[8] = SCALE_MATRIX_COMPONENT(scratch[8], arg0->scale);
-            ((RaceUiTrailCopyBlock *)scratch)->words[5] = arg0->pos.x;
-            ((RaceUiTrailCopyBlock *)scratch)->words[6] = arg0->pos.y;
-            ((RaceUiTrailCopyBlock *)scratch)->words[7] = arg0->pos.z;
-            arg0->matrix = allocFixedTransformMatrix((RaceUiTrailCopyBlock *)scratch);
+            makeFixedRotationY(scratch.transform.rotation, arg0->rotY);
+            scratch.transform.rotation[0] = SCALE_MATRIX_COMPONENT(scratch.transform.rotation[0], arg0->scale);
+            scratch.transform.rotation[3] = SCALE_MATRIX_COMPONENT(scratch.transform.rotation[3], arg0->scale);
+            scratch.transform.rotation[6] = SCALE_MATRIX_COMPONENT(scratch.transform.rotation[6], arg0->scale);
+            scratch.transform.rotation[2] = SCALE_MATRIX_COMPONENT(scratch.transform.rotation[2], arg0->scale);
+            scratch.transform.rotation[5] = SCALE_MATRIX_COMPONENT(scratch.transform.rotation[5], arg0->scale);
+            scratch.transform.rotation[8] = SCALE_MATRIX_COMPONENT(scratch.transform.rotation[8], arg0->scale);
+            scratch.transform.translation.x = arg0->pos.x;
+            scratch.transform.translation.y = arg0->pos.y;
+            scratch.transform.translation.z = arg0->pos.z;
+            arg0->matrix = allocFixedTransformMatrix(&scratch.transform);
         }
 
         if (arg0->matrix != NULL) {
@@ -5242,7 +5225,10 @@ void initIceCourseBumper(RaceUiScaledParticleActor *bumper) {
 }
 
 void func_80062F6C(RaceUiTrailingParticleActor *arg0) {
-    FixedMatrix3sWideScratch scratch;
+    struct {
+        Transform3D transform;
+        s16 unused[2];
+    } scratch;
     Vec3i transformedOffset;
 
     if (gRenderMatricesDirty != 0) {
@@ -5252,18 +5238,18 @@ void func_80062F6C(RaceUiTrailingParticleActor *arg0) {
     if (isPositionNearCurrentRaceViewportCamera(&arg0->pos) != 0) {
         if (arg0->matrixDirty != 0) {
             arg0->matrixDirty = 0;
-            makeFixedRotationY(scratch, arg0->rotY);
-            ((RaceUiTrailCopyBlock *)scratch)->words[5] = arg0->pos.x;
-            ((RaceUiTrailCopyBlock *)scratch)->words[6] = arg0->pos.y;
-            ((RaceUiTrailCopyBlock *)scratch)->words[7] = arg0->pos.z;
-            arg0->matrix0 = allocFixedTransformMatrix((RaceUiTrailCopyBlock *)scratch);
+            makeFixedRotationY(scratch.transform.rotation, arg0->rotY);
+            scratch.transform.translation.x = arg0->pos.x;
+            scratch.transform.translation.y = arg0->pos.y;
+            scratch.transform.translation.z = arg0->pos.z;
+            arg0->matrix0 = allocFixedTransformMatrix(&scratch.transform);
 
-            transformVec3iByFixedMatrix(scratch, &D_800D6324, &transformedOffset);
-            ((RaceUiTrailCopyBlock *)scratch)->words[5] += transformedOffset.x;
-            ((RaceUiTrailCopyBlock *)scratch)->words[6] += transformedOffset.y;
-            ((RaceUiTrailCopyBlock *)scratch)->words[7] += transformedOffset.z;
-            makeFixedRotationZY(scratch, arg0->rotY, arg0->rotX);
-            arg0->matrix1 = allocFixedTransformMatrix((RaceUiTrailCopyBlock *)scratch);
+            transformVec3iByFixedMatrix(scratch.transform.rotation, &D_800D6324, &transformedOffset);
+            scratch.transform.translation.x += transformedOffset.x;
+            scratch.transform.translation.y += transformedOffset.y;
+            scratch.transform.translation.z += transformedOffset.z;
+            makeFixedRotationZY(scratch.transform.rotation, arg0->rotY, arg0->rotX);
+            arg0->matrix1 = allocFixedTransformMatrix(&scratch.transform);
         }
 
         if (arg0->matrix1 != NULL) {
@@ -5292,7 +5278,10 @@ void func_800631B0(RaceUiTrailingParticleActor *arg0) {
 }
 
 void renderRaceCourseSpinningObject(RaceUiSpinningParticleActor *arg0) {
-    FixedMatrix3sWideScratch scratch;
+    struct {
+        Transform3D transform;
+        s16 unused[2];
+    } scratch;
     s32 temp2;
     s32 pad;
     s32 pad2;
@@ -5308,17 +5297,17 @@ void renderRaceCourseSpinningObject(RaceUiSpinningParticleActor *arg0) {
 
     if (arg0->matrixDirty != 0) {
         arg0->matrixDirty = 0;
-        makeFixedRotationY(scratch, arg0->rotY);
-        ((RaceUiTrailCopyBlock *)scratch)->words[5] = arg0->pos.x;
-        ((RaceUiTrailCopyBlock *)scratch)->words[6] = arg0->pos.y;
-        ((RaceUiTrailCopyBlock *)scratch)->words[7] = arg0->pos.z;
-        arg0->matrix0 = allocFixedTransformMatrix((RaceUiTrailCopyBlock *)scratch);
+        makeFixedRotationY(scratch.transform.rotation, arg0->rotY);
+        scratch.transform.translation.x = arg0->pos.x;
+        scratch.transform.translation.y = arg0->pos.y;
+        scratch.transform.translation.z = arg0->pos.z;
+        arg0->matrix0 = allocFixedTransformMatrix(&scratch.transform);
 
-        ((RaceUiTrailCopyBlock *)scratch)->words[6] += 0x01000000;
+        scratch.transform.translation.y += 0x01000000;
         temp.half.lo = fixedSine(arg0->rotX) >> 5;
         temp2 = fixedSine(arg0->rotX2) >> 5;
-        makeFixedRotationYZX(scratch, temp.half.lo, arg0->rotZ, temp2);
-        arg0->matrix1 = allocFixedTransformMatrix((RaceUiTrailCopyBlock *)scratch);
+        makeFixedRotationYZX(scratch.transform.rotation, temp.half.lo, arg0->rotZ, temp2);
+        arg0->matrix1 = allocFixedTransformMatrix(&scratch.transform);
     }
 
     if (arg0->matrix1 != NULL) {
@@ -5457,9 +5446,12 @@ void func_80063A9C(RaceUiEffectParticleActor *arg0) {
     s32 cameraX;
     s32 cameraY;
     s32 cameraZ;
-    RaceUiAlignedTrailCopyBlock transform;
+    union {
+        Transform3D transform;
+        s64 forceAlignment;
+    } transform;
     s32 i;
-    RaceUiGfxCommandDest *matrix;
+    Mtx *matrix;
 
     actor = arg0;
     gDPLoadTextureBlock_4b(
@@ -5479,21 +5471,21 @@ void func_80063A9C(RaceUiEffectParticleActor *arg0) {
     gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, actor->unk1C);
     gSPDisplayList(gRegionAllocPtr++, gAlphaSpriteRenderModeDl);
 
-    transform.source.transform = gIdentityFixedTransform;
-    cameraX = -D_801121E0[gCurrentViewportIndex].transformOffset.x;
-    cameraY = -D_801121E0[gCurrentViewportIndex].transformOffset.y;
-    cameraZ = -D_801121E0[gCurrentViewportIndex].transformOffset.z;
+    transform.transform = gIdentityFixedTransform;
+    cameraX = -D_801121E0[gCurrentViewportIndex].cameraTransform.translation.x;
+    cameraY = -D_801121E0[gCurrentViewportIndex].cameraTransform.translation.y;
+    cameraZ = -D_801121E0[gCurrentViewportIndex].cameraTransform.translation.z;
 
     i = 0;
     if (actor->count > 0) {
         do {
-            transform.source.transform.translation.x =
+            transform.transform.translation.x =
                 ((actor->particles[i].unk0 - (cameraX & 0xFFFFFF)) & 0xFFFFFF) + cameraX + 0xFF800000;
-            transform.source.transform.translation.y =
+            transform.transform.translation.y =
                 ((actor->particles[i].unk4 - (cameraY & 0xFFFFFF)) & 0xFFFFFF) + cameraY + 0xFF800000;
-            transform.source.transform.translation.z =
+            transform.transform.translation.z =
                 ((actor->particles[i].unk8 - (cameraZ & 0xFFFFFF)) & 0xFFFFFF) + cameraZ + 0xFF800000;
-            matrix = allocFixedTransformMatrix(&transform.source);
+            matrix = allocFixedTransformMatrix(&transform.transform);
             if (matrix != NULL) {
                 gSPMatrix(gRegionAllocPtr++, matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
                 gSPMatrix(gRegionAllocPtr++, gViewportMatrix, G_MTX_NOPUSH | G_MTX_MUL | G_MTX_MODELVIEW);
@@ -5601,10 +5593,10 @@ void initRaceCourseRankModel(RaceUiRankParticleActor *actor) {
             break;
     }
 
-    makeFixedRotationY(actor->copyBlock.halfwords, local.angle);
-    actor->copyBlock.transform.translation.x = actor->pos.x;
-    actor->copyBlock.transform.translation.y = actor->pos.y;
-    actor->copyBlock.transform.translation.z = actor->pos.z;
+    makeFixedRotationY(actor->copyBlock.rotation, local.angle);
+    actor->copyBlock.translation.x = actor->pos.x;
+    actor->copyBlock.translation.y = actor->pos.y;
+    actor->copyBlock.translation.z = actor->pos.z;
     actor->displayLists[0] = D_800D6400[(actor->index * 2) + (gRaceCourseIndex.signedValue * 4)];
     actor->displayLists[1] = D_800D6400[(actor->index * 2) + (gRaceCourseIndex.signedValue * 4) + 1];
     setCallbackTaskCallback(actor, (CallbackTaskCallback)updateRaceCourseRankModel);
@@ -5642,7 +5634,7 @@ block_5:
 // clang-format off
 void func_80064470(RaceUiProjectileActor *arg0) {
     volatile s32 pad0;
-    RaceUiTrailCopyBlock sp7C;
+    Transform3D sp7C;
     volatile u8 padding[4];
     s32 sp74;
     Gfx *temp_v0_2;
@@ -5671,10 +5663,10 @@ void func_80064470(RaceUiProjectileActor *arg0) {
 
     if (arg0->matrixDirty != 0) {
         arg0->matrixDirty = 0;
-        sp7C.transform = gIdentityFixedTransform;
-        sp7C.transform.translation.x = arg0->pos.x;
-        sp7C.transform.translation.y = arg0->pos.y;
-        sp7C.transform.translation.z = arg0->pos.z;
+        sp7C = gIdentityFixedTransform;
+        sp7C.translation.x = arg0->pos.x;
+        sp7C.translation.y = arg0->pos.y;
+        sp7C.translation.z = arg0->pos.z;
         arg0->matrix = allocFixedTransformMatrix(&sp7C);
     }
 
@@ -5769,7 +5761,7 @@ void func_80064914(RaceUiProjectileActor *arg0) {
 }
 
 void func_80064B28(RaceUiProjectileActor *arg0) {
-    FixedMatrix3sWideScratch sp2C;
+    s16 sp2C[0x12];
     RacePlayer *player;
     RaceUiProjectileActor *actor;
 
@@ -5799,7 +5791,7 @@ void func_80064B28(RaceUiProjectileActor *arg0) {
 }
 
 void func_80064C68(RaceUiProjectileActor *arg0) {
-    FixedMatrix3sWideScratch sp2C;
+    s16 sp2C[0x12];
     RacePlayer *player;
     RaceUiProjectileActor *actor;
 
@@ -5823,7 +5815,7 @@ void func_80064C68(RaceUiProjectileActor *arg0) {
 }
 
 void func_80064D88(RaceUiProjectileActor *arg0) {
-    FixedMatrix3sWideScratch sp2C;
+    s16 sp2C[0x12];
     RacePlayer *player;
     RaceUiProjectileActor *actor;
 
@@ -6043,7 +6035,7 @@ void initRaceCourseCoinMarkerMatrices(RaceUiGfxCommandActor *arg0) {
     actor2 = arg0;
     i = 0;
     if (actor1->count > 0) {
-        register RaceUiGfxCommandDest *template;
+        register Mtx *template;
 
         template = &gIdentityMatrix;
         offset = 0;
@@ -6053,11 +6045,11 @@ void initRaceCourseCoinMarkerMatrices(RaceUiGfxCommandActor *arg0) {
             actor1->particles[i] = *template;
             setPackedMatrixTranslation(&actor1->particles[i], &script->position);
             i++;
-            offset += sizeof(RaceUiGfxCommandDest);
+            offset += sizeof(Mtx);
             script++;
         } while (i < actor2->count);
     }
-    osWritebackDCache(actor1->particles, actor1->count * sizeof(RaceUiGfxCommandDest));
+    osWritebackDCache(actor1->particles, actor1->count * sizeof(Mtx));
 }
 
 void initRaceCourseCoinMarkers(RaceUiGfxCommandActor *actor) {
@@ -6075,7 +6067,7 @@ void initRaceCourseCoinMarkers(RaceUiGfxCommandActor *actor) {
     gRacePlayers[0].courseCoinMarkerCount = markerCount;
     actor->count = markerCount;
     if (markerCount != 0) {
-        gAssetHandles[0x24] = allocRelocatableHeapBlock(markerCount * sizeof(RaceUiGfxCommandDest));
+        gAssetHandles[0x24] = allocRelocatableHeapBlock(markerCount * sizeof(Mtx));
         actor->particles = getRelocatableHeapBlockBase(gAssetHandles[0x24]);
         initRaceCourseCoinMarkerMatrices(actor);
         setCallbackTaskCallback(actor, (CallbackTaskCallback)updateRaceCourseCoinMarkers);
@@ -6086,7 +6078,7 @@ void initRaceCourseCoinMarkers(RaceUiGfxCommandActor *actor) {
 // clang-format off
 void func_80065808(RaceUiOverlayActor *arg0) {
     volatile u8 pad2[0xC];
-    RaceUiTrailCopyBlock sp9C;
+    Transform3D sp9C;
     RaceUiDisplayCommand *temp_v0;
     RaceUiDisplayCommand *temp_v0_2;
     RaceUiDisplayCommand *temp_v0_3;
@@ -6126,10 +6118,10 @@ void func_80065808(RaceUiOverlayActor *arg0) {
         }
         if (arg0->matrixDirty != 0) {
             arg0->matrixDirty = 0;
-            sp9C.transform = gIdentityFixedTransform;
-            sp9C.words[5] = arg0->x;
-            sp9C.words[6] = arg0->y;
-            sp9C.words[7] = arg0->z;
+            sp9C = gIdentityFixedTransform;
+            sp9C.translation.x = arg0->x;
+            sp9C.translation.y = arg0->y;
+            sp9C.translation.z = arg0->z;
             arg0->matrix = allocFixedTransformMatrix(&sp9C);
         }
         do {
@@ -6261,7 +6253,7 @@ void renderRaceScoreAttackRings(RaceUiRankTextRenderActor *arg0) {
                 }
 
                 temp_s0 = gRegionAllocPtr++;
-                gSPMatrix(temp_s0, (u32)arg0->matrices + (var_s6 << 6), G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+                gSPMatrix(temp_s0, &arg0->matrices[var_s6], G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
 
                 temp_s0 = gRegionAllocPtr++;
                 gSPDisplayList(temp_s0, &_ADDR_20019C0_VRAM);
@@ -6329,7 +6321,7 @@ void updateRaceScoreAttackRings(void *arg0) {
 }
 
 void initRaceScoreAttackRingMatrices(RaceUiRankTextRenderActor *arg0) {
-    s16 scratch[0x10];
+    Transform3D scratch;
     RaceUiRankTextRenderEntry *entry;
     RaceUiRankTextRenderActor *actor1;
     RaceUiRankTextRenderActor *actor2;
@@ -6345,21 +6337,21 @@ void initRaceScoreAttackRingMatrices(RaceUiRankTextRenderActor *arg0) {
     if (count > 0) {
         active = 1;
         do {
-            makeFixedRotationY(scratch, entry->angle);
-            scratch[0] = scratch[0] / 12;
-            scratch[1] = scratch[1] / 12;
-            scratch[2] = scratch[2] / 12;
+            makeFixedRotationY(scratch.rotation, entry->angle);
+            scratch.rotation[0] = scratch.rotation[0] / 12;
+            scratch.rotation[1] = scratch.rotation[1] / 12;
+            scratch.rotation[2] = scratch.rotation[2] / 12;
             if ((!i) && (!i)) {}
-            scratch[3] = scratch[3] / 12;
-            scratch[4] = scratch[4] / 12;
-            scratch[5] = scratch[5] / 12;
-            scratch[6] = scratch[6] / 12;
-            scratch[7] = scratch[7] / 12;
-            scratch[8] = scratch[8] / 12;
-            ((Vec3i *)&scratch[10])->x = entry->position.x;
-            ((Vec3i *)&scratch[10])->y = entry->position.y;
-            ((Vec3i *)&scratch[10])->z = entry->position.z;
-            packFixedTransformMatrix(scratch, (void *)((u32)actor1->matrices + (i << 6)));
+            scratch.rotation[3] = scratch.rotation[3] / 12;
+            scratch.rotation[4] = scratch.rotation[4] / 12;
+            scratch.rotation[5] = scratch.rotation[5] / 12;
+            scratch.rotation[6] = scratch.rotation[6] / 12;
+            scratch.rotation[7] = scratch.rotation[7] / 12;
+            scratch.rotation[8] = scratch.rotation[8] / 12;
+            scratch.translation.x = entry->position.x;
+            scratch.translation.y = entry->position.y;
+            scratch.translation.z = entry->position.z;
+            packFixedTransformMatrix(&scratch, &actor1->matrices[i]);
             entry->active = active;
             i++;
             entry++;

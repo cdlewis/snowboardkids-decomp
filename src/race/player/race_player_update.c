@@ -565,7 +565,7 @@ void updateRacePlayer(RacePlayer *player) {
     s16 spawnAngle;
     Vec3i offset;
     Vec3i transformedOffset;
-    FixedTransform mtx;
+    Transform3D mtx;
     u8 cooldown;
 
     player->anglePtr = NULL;

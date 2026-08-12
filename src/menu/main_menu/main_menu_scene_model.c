@@ -631,8 +631,8 @@ void setMainMenuSceneModelRotation(s32 modelIndex, s16 x, s16 y, s16 z) {
 }
 
 void updateMainMenuSceneModelTransforms(MainMenuSceneModel *model) {
-    MainMenuModelTransform modelTransform;
-    MainMenuModelTransform partTransforms[MAIN_MENU_SCENE_MODEL_PART_COUNT];
+    Transform3D modelTransform;
+    Transform3D partTransforms[MAIN_MENU_SCENE_MODEL_PART_COUNT];
     {
         s32 sineX;
         s32 cosineX;
@@ -673,9 +673,9 @@ void updateMainMenuSceneModelTransforms(MainMenuSceneModel *model) {
     }
 
     makeFixedRotationZXY(modelTransform.rotation, model->rot.x, model->rot.y, model->rot.z);
-    modelTransform.translation[0] = model->pos.x;
-    modelTransform.translation[1] = model->pos.y;
-    modelTransform.translation[2] = model->pos.z;
+    modelTransform.translation.x = model->pos.x;
+    modelTransform.translation.y = model->pos.y;
+    modelTransform.translation.z = model->pos.z;
 
     {
         s32 i;
@@ -699,13 +699,13 @@ void updateMainMenuSceneModelTransforms(MainMenuSceneModel *model) {
 
         for (i = 0; i < MAIN_MENU_SCENE_MODEL_PART_COUNT; i++) {
             for (j = 0; j < MAIN_MENU_SCENE_MODEL_MATRIX_AXES; j++) {
-                model->displayObjects[i].translation[j] =
+                ((s32 *)&model->displayObjects[i].translation)[j] =
                     ((s64)modelTransform.rotation[j] * model->parts[i].offsetX +
                      (s64)modelTransform.rotation[j + MAIN_MENU_SCENE_MODEL_MATRIX_AXES] * model->parts[i].offsetY +
                      (s64)modelTransform.rotation[j + (MAIN_MENU_SCENE_MODEL_MATRIX_AXES * 2)] *
                          model->parts[i + 1].previousPartOffsetZ) /
                     FIXED_MATRIX_ONE;
-                model->displayObjects[i].translation[j] += modelTransform.translation[j];
+                ((s32 *)&model->displayObjects[i].translation)[j] += ((s32 *)&modelTransform.translation)[j];
             }
         }
     }

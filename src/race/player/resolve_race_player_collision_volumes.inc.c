@@ -5,18 +5,18 @@
     ((-(s64)(x) * (sizeX) + (s64)(y) * (sizeY) + (s64)(z) * (sizeZ)) / 0x1000)
 
 void resolveRacePlayerCollisionVolumes(RacePlayer *player) {
-    Matrix4s localRotations[14];
+    s16 localRotations[14][0x10];
     s16 parentAxisY;
-    FixedMatrix3s yawAdjustedPlayerRotation;
-    FixedMatrix3s playerRotation;
+    Mat3x3 yawAdjustedPlayerRotation;
+    Mat3x3 playerRotation;
     s32 volumeIndex;
     s32 axisRow;
     s32 axisColumn;
     s32 sinX;
     s32 cosX;
     s32 centerOffset[3];
-    FixedMatrix3s effectRotation;
-    FixedMatrix3s worldRotation;
+    Mat3x3 effectRotation;
+    Mat3x3 worldRotation;
     s32 sinY;
     s32 cosY;
     s32 sinZ;

@@ -36,10 +36,9 @@ typedef struct {
     /* 0x08 */ Vec3i transformed;
     /* 0x14 */ Vec3i pos;
     /* 0x20 */ s32 pad90;
-    /* 0x24 */ FixedTransform transform;
+    /* 0x24 */ Transform3D transform;
 } EndingShadowStack;
 
-extern Mtx *allocFixedTransformMatrix(FixedTransform *arg0);
 extern MainMenuSceneActorShadow gEndingActorShadow;
 extern Gfx *gRegionAllocPtr;
 extern u32 gAlphaSpriteRenderModeDl[];
@@ -411,9 +410,9 @@ void drawEndingActorShadow(MainMenuSceneActorShadow *arg0) {
     stack.pos.z = arg0->posZ;
     transformVec3iByFixedMatrix(model->displayObjects[(u8)arg0->unkC].rotation, &stack.pos, &stack.transformed);
     stack.transform = gIdentityFixedTransform;
-    stack.transform.translation.x = model->displayObjects[(u8)arg0->unkC].translation[0] + stack.transformed.x;
-    stack.transform.translation.y = model->displayObjects[(u8)arg0->unkC].translation[1] + stack.transformed.y;
-    stack.transform.translation.z = model->displayObjects[(u8)arg0->unkC].translation[2];
+    stack.transform.translation.x = model->displayObjects[(u8)arg0->unkC].translation.x + stack.transformed.x;
+    stack.transform.translation.y = model->displayObjects[(u8)arg0->unkC].translation.y + stack.transformed.y;
+    stack.transform.translation.z = model->displayObjects[(u8)arg0->unkC].translation.z;
 
     ENDING_GFX_CMD(gRegionAllocPtr++, 0x06000000, (u32)gAlphaSpriteRenderModeDl);
 

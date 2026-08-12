@@ -6,12 +6,9 @@
 #include "game/ending/ending_credits_linda.h"
 #include "game/menu/main_menu/main_menu_scene_model.h"
 #include "game/menu/main_menu/main_menu_scene_model_renderer.h"
+#include "game/menu/renderer/menu_render_utils.h"
 #include "game/race/player/race_player_model_renderer.h"
 #include "game/math/fixed_matrix_multiply.h"
-
-typedef struct MatrixWordCopy {
-    s32 words[8];
-} MatrixWordCopy;
 
 struct EndingCreditsLinda {
     char pad[0x18];
@@ -31,16 +28,12 @@ struct EndingCreditsTumblingSnowboard {
     char pad0[0x10];
     u16 mode;
     char pad12[0x6];
-    char displayObject[0x14];
-    s32 posX;
-    s32 posY;
-    s32 posZ;
+    Transform3D transform;
     u16 textureId;
     u16 paletteId;
     u16 timer;
 };
 
-extern s32 allocFixedTransformMatrix(void *);
 extern void makeFixedRotationX(void *, s16);
 extern void makeFixedRotationZ(void *, s16);
 extern void makeFixedRotationYX(void *, s16, s16, ...);
@@ -874,17 +867,17 @@ void spawnEndingCreditsTumblingSnowboard(s32 arg0, s32 arg1, s32 arg2, u16 arg3,
     temp_v0 =
         createCallbackTaskWithUserId((void (*)(void *))updateEndingCreditsTumblingSnowboardSlideIn, 0, 0x64, arg5);
     D_8010ADE0 = temp_v0;
-    temp_v0->posX = arg0;
-    temp_v0->posY = arg1;
-    temp_v0->posZ = arg2;
+    temp_v0->transform.translation.x = arg0;
+    temp_v0->transform.translation.y = arg1;
+    temp_v0->transform.translation.z = arg2;
     sp1C = temp_v0;
-    makeFixedRotationYX(&temp_v0->displayObject, 0x400, 0x400, &D_8010ADE0);
+    makeFixedRotationYX(temp_v0->transform.rotation, 0x400, 0x400, &D_8010ADE0);
     sp1C->textureId = arg3;
     sp1C->paletteId = arg4;
 }
 
 void drawEndingCreditsTumblingSnowboard(EndingCreditsTumblingSnowboard *arg0) {
-    s32 temp = allocFixedTransformMatrix(&arg0->displayObject);
+    Mtx *temp = allocFixedTransformMatrix(&arg0->transform);
     if (temp != 0) {
         drawRacePlayerModelRootPart((void *)temp, arg0->textureId, arg0->paletteId);
     }
@@ -900,55 +893,55 @@ void updateEndingCreditsTumblingSnowboardWaitForRemove(EndingCreditsTumblingSnow
 
 void updateEndingCreditsTumblingSnowboardBounce(EndingCreditsTumblingSnowboard *arg0) {
     volatile s32 pad[2];
-    FixedMatrix3sScratch sp48;
-    FixedMatrix3sScratch sp28;
-    void *sp24[1];
+    Transform3D sp48;
+    Transform3D sp28;
+    Transform3D *sp24[1];
     s32 timer;
 
     arg0->timer += 1;
     if (arg0->mode == 1) {
         timer = arg0->timer;
         if (timer < 6) {
-            arg0->posY = (arg0->posY - (timer * 0x15000)) + 0x80000;
+            arg0->transform.translation.y = (arg0->transform.translation.y - (timer * 0x15000)) + 0x80000;
         } else {
-            arg0->posY = (arg0->posY - (timer * 0x15000)) + 0x124000;
+            arg0->transform.translation.y = (arg0->transform.translation.y - (timer * 0x15000)) + 0x124000;
         }
-        arg0->posX += 0xC0000;
+        arg0->transform.translation.x += 0xC0000;
     } else {
         timer = arg0->timer;
         if (timer < 5) {
-            arg0->posY = (arg0->posY - (timer << 0xF)) + 0x40000;
+            arg0->transform.translation.y = (arg0->transform.translation.y - (timer << 0xF)) + 0x40000;
         } else {
-            arg0->posY = (arg0->posY - (timer * 0x3800)) + 0xFFFE8800;
+            arg0->transform.translation.y = (arg0->transform.translation.y - (timer * 0x3800)) + 0xFFFE8800;
         }
-        arg0->posX += 0x1D000;
+        arg0->transform.translation.x += 0x1D000;
     }
 
-    makeFixedRotationYX(sp48, 0x400, 0x400);
+    makeFixedRotationYX(sp48.rotation, 0x400, 0x400);
     if (arg0->mode == 1) {
-        makeFixedRotationZ(sp28, 0x1000 - (arg0->timer << 6));
+        makeFixedRotationZ(sp28.rotation, 0x1000 - (arg0->timer << 6));
     } else {
-        makeFixedRotationZ(sp28, 0x1000 - (arg0->timer * 0x28));
+        makeFixedRotationZ(sp28.rotation, 0x1000 - (arg0->timer * 0x28));
     }
 
-    sp24[0] = &arg0->displayObject;
-    multiplyFixedMatrix3s(sp48, sp28, sp24[0]);
+    sp24[0] = &arg0->transform;
+    multiplyFixedMatrix3s(sp48.rotation, sp28.rotation, sp24[0]->rotation);
 
     if (arg0->mode == 1) {
-        if (arg0->posX >= 0x1900000) {
+        if (arg0->transform.translation.x >= 0x1900000) {
             arg0->timer = 0;
             setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateEndingCreditsTumblingSnowboardWaitForRemove);
         }
     } else if (arg0->timer == 0x14) {
         arg0->timer = 0;
-        arg0->posY = 0x8BD1E;
+        arg0->transform.translation.y = 0x8BD1E;
         setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateEndingCreditsTumblingSnowboardWaitForRemove);
-        makeFixedRotationYX(sp48, 0x400, 0x400);
-        makeFixedRotationZ(sp28, 0xC00);
-        multiplyFixedMatrix3s(sp48, sp28, sp24[0]);
-        makeFixedRotationX(sp48, 0x300);
-        *(MatrixWordCopy *)sp28 = *(MatrixWordCopy *)sp24[0];
-        multiplyFixedMatrix3s(sp28, sp48, sp24[0]);
+        makeFixedRotationYX(sp48.rotation, 0x400, 0x400);
+        makeFixedRotationZ(sp28.rotation, 0xC00);
+        multiplyFixedMatrix3s(sp48.rotation, sp28.rotation, sp24[0]->rotation);
+        makeFixedRotationX(sp48.rotation, 0x300);
+        sp28 = *sp24[0];
+        multiplyFixedMatrix3s(sp28.rotation, sp48.rotation, sp24[0]->rotation);
     }
 
     addRenderCallback(&gModelRenderCallbackList, (RenderCallback)drawEndingCreditsTumblingSnowboard, arg0);
@@ -962,7 +955,7 @@ void waitEndingCreditsTumblingSnowboardPhase15(EndingCreditsTumblingSnowboard *a
 }
 
 void updateEndingCreditsTumblingSnowboardSlideIn(EndingCreditsTumblingSnowboard *arg0) {
-    arg0->posX = arg0->posX + 0xFFFB8000;
+    arg0->transform.translation.x = arg0->transform.translation.x + 0xFFFB8000;
     arg0->timer++;
     if (arg0->timer == 0xA2) {
         arg0->timer = 0;

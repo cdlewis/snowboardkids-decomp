@@ -64,9 +64,9 @@ struct RaceIntroEffectActor {
     };
     /* 0x38 */ s16 timer;
     /* 0x3A */ s16 stateTimer;
-    /* 0x3C */ Gfx *displayList0;
+    /* 0x3C */ Mtx *displayList0;
     union {
-        /* 0x40 */ Gfx *displayList1;
+        /* 0x40 */ Mtx *displayList1;
         /* 0x40 */ s8 displayList0Valid;
     };
     /* 0x44 */ s8 displayListValid;
@@ -76,10 +76,8 @@ extern void osWritebackDCache(void *, s32);
 extern Gfx *gRegionAllocPtr;
 extern Gfx D_20028F0[];
 extern Gfx D_2002DB8[];
-extern Gfx *allocFixedTransformMatrix(FixedTransform *arg0);
 extern Gfx gEffectRenderModeSetupDl[];
 extern Gfx gEffectRenderModeCleanupDl[];
-extern void setPackedMatrixTranslation(Mtx *, Vec3i *);
 extern void getAssetTableImagePaletteAndSize(u8 *, s32, u32 *, u32 *, s16 *, s16 *);
 
 extern s16 gFrameCounter;
@@ -272,7 +270,7 @@ void initRaceIntroModelMeshes(RaceIntroMeshActor *arg0) {
 }
 
 void drawRaceIntroBillboard(RaceIntroEffectActor *arg0) {
-    FixedTransform sp70;
+    Transform3D sp70;
 
     if (gRenderMatricesDirty != 0) {
         arg0->displayList0Valid = 1;
@@ -313,7 +311,7 @@ void drawRaceIntroBillboard(RaceIntroEffectActor *arg0) {
 
 void updateRaceIntroBillboard(RaceIntroEffectActor *arg0) {
     Vec3i sp44;
-    FixedTransform transform;
+    Transform3D transform;
     RaceIntroEffectActor *temp_s0 = arg0;
 
     arg0->timer--;
@@ -358,9 +356,9 @@ void initRaceIntroBillboard(RaceIntroEffectActor *arg0) {
 
 void drawRaceIntroFlyoverActor(RaceIntroEffectActor *arg0) {
     volatile s32 pad0[1];
-    FixedTransform sp84;
-    FixedTransform sp64;
-    FixedTransform sp44;
+    Transform3D sp84;
+    Transform3D sp64;
+    Transform3D sp44;
     volatile s32 pad1[1];
 
     if (gRenderMatricesDirty != 0) {

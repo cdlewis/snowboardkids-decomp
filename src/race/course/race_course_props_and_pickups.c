@@ -30,13 +30,8 @@ typedef struct {
     /* 0x4 */ Vec3i transform;
 } CourseCollectibleSpriteEntry;
 
-typedef union {
-    /* 0x00 */ s32 words[8];
-    /* 0x00 */ s16 halfwords[0x10];
-} GfxCommandSource;
-
 typedef struct {
-    /* 0x00 */ FixedTransform source;
+    /* 0x00 */ Transform3D source;
     /* 0x20 */ s32 pad20;
 } RacePickupMatrixScratch;
 
@@ -102,9 +97,7 @@ struct RacePickupActor {
     /* 0x1A */ s16 matrixDirty;
     /* 0x1C */ Vec3i pos;
     /* 0x28 */ Vec3i drawPos;
-    /* 0x34 */ FixedMatrix3s rotationMatrix;
-    char pad46[2];
-    /* 0x48 */ Vec3i spawnPos;
+    /* 0x34 */ Transform3D transform;
     /* 0x54 */ void *displayList;
     /* 0x58 */ void *rotationDisplayList;
     /* 0x5C */ void *scaleDisplayList;
@@ -799,9 +792,6 @@ Vec3i gPickupShardInitialVelocities[] = {
 
 u32 D_800D9C38[] = { 0, 0 };
 
-extern void packFixedTransformMatrix(FixedTransform *, void *);
-extern Mtx *allocFixedTransformMatrix(void *);
-extern void setPackedMatrixTranslation(Mtx *, Vec3i *);
 extern void osWritebackDCache(void *, s32);
 extern void enqueuePositionalSoundEffect(s32, void *, s32, s32);
 extern void *gRaceCourseSceneryDisplayLists[];
@@ -815,7 +805,7 @@ extern Gfx gRaceActionPickupDisplayList[];
 extern Gfx *gRegionAllocPtr;
 extern s16 gFrameCounter;
 typedef struct Scratch674B4 {
-    FixedTransform transform;
+    Transform3D transform;
     s32 pad[3];
 } Scratch674B4;
 
@@ -878,7 +868,7 @@ void initRaceCoursePropModels(CourseEffectModelListActor *arg0) {
     RaceCoursePropModelEntry *base;
     RaceCoursePropModelEntry *entry;
     s32 i;
-    FixedTransform transform;
+    Transform3D transform;
     s32 count;
 
     base = gRaceCoursePropModelLists[arg0->modelListIndex];
@@ -895,14 +885,14 @@ void initRaceCoursePropModels(CourseEffectModelListActor *arg0) {
         entry = base;
         size = count << 6;
         gAssetHandles[0x23] = allocRelocatableHeapBlock(size);
-        arg0->modelBuffer = (void *)getRelocatableHeapBlockBase(gAssetHandles[0x23]);
+        arg0->modelBuffer = getRelocatableHeapBlockBase(gAssetHandles[0x23]);
 
         for (i = 0; i < count; i++) {
             makeFixedRotationY(transform.rotation, entry->assetIndex);
             transform.translation.x = entry->pos.x;
             transform.translation.y = entry->pos.y;
             transform.translation.z = entry->pos.z;
-            packFixedTransformMatrix(&transform, (void *)((u32)arg0->modelBuffer + (i << 6)));
+            packFixedTransformMatrix(&transform, &arg0->modelBuffer[i]);
             entry++;
         }
 
@@ -1086,14 +1076,17 @@ void initCourseCollectibleSprites(CourseEffectModelListActor *arg0) {
     }
     if (new_var->modelCount != 0) {
         RACE_MODEL_BUFFER_HANDLE = allocRelocatableHeapBlock(new_var->modelCount << 6);
-        new_var->modelBuffer = (void *)getRelocatableHeapBlockBase(RACE_MODEL_BUFFER_HANDLE);
+        new_var->modelBuffer = getRelocatableHeapBlockBase(RACE_MODEL_BUFFER_HANDLE);
         initCourseCollectibleSpriteMatrices(new_var);
         setCallbackTaskCallback(new_var, (CallbackTaskCallback)updateCourseCollectibleSprites);
     }
 }
 
 void renderThrownPickupModel(ThrownPickupRenderActor *arg0) {
-    FixedMatrix3sWideScratch scratch;
+    struct {
+        Transform3D transform;
+        s16 unused[2];
+    } scratch;
 
     if (gRenderMatricesDirty != 0) {
         arg0->matrixDirty = 1;
@@ -1101,11 +1094,11 @@ void renderThrownPickupModel(ThrownPickupRenderActor *arg0) {
 
     if (isPositionNearCurrentRaceViewportCamera(&arg0->pos) != 0) {
         if (arg0->matrixDirty != 0) {
-            makeFixedRotationXY(scratch, arg0->pitch, arg0->yaw);
-            ((GfxCommandSource *)scratch)->words[5] = arg0->pos.x;
-            ((GfxCommandSource *)scratch)->words[6] = arg0->pos.y + 0x190000;
-            ((GfxCommandSource *)scratch)->words[7] = arg0->pos.z;
-            arg0->matrix = allocFixedTransformMatrix((GfxCommandSource *)scratch);
+            makeFixedRotationXY(scratch.transform.rotation, arg0->pitch, arg0->yaw);
+            scratch.transform.translation.x = arg0->pos.x;
+            scratch.transform.translation.y = arg0->pos.y + 0x190000;
+            scratch.transform.translation.z = arg0->pos.z;
+            arg0->matrix = allocFixedTransformMatrix(&scratch.transform);
             arg0->matrixDirty = 0;
         }
 
@@ -1263,8 +1256,8 @@ void renderRacePickupIdle(RacePickupActor *arg0) {
             spF4.source.translation.y = arg0->drawPos.y;
             spF4.source.translation.z = arg0->drawPos.z;
             arg0->displayList = allocFixedTransformMatrix(&spF4.source);
-            arg0->rotationDisplayList = allocFixedTransformMatrix(arg0->rotationMatrix);
-            spF4.source = *(FixedTransform *)arg0->rotationMatrix;
+            arg0->rotationDisplayList = allocFixedTransformMatrix(&arg0->transform);
+            spF4.source = arg0->transform;
             spF4.source.rotation[0] /= 2;
             spF4.source.rotation[1] /= 2;
             spF4.source.rotation[2] /= 2;
@@ -1406,7 +1399,7 @@ void renderRacePickupRespawn(RacePickupActor *arg0) {
             spF4.source.translation.y = arg0->drawPos.y;
             spF4.source.translation.z = arg0->drawPos.z;
             arg0->displayList = allocFixedTransformMatrix(&spF4.source);
-            arg0->rotationDisplayList = allocFixedTransformMatrix((GfxCommandSource *)arg0->rotationMatrix);
+            arg0->rotationDisplayList = allocFixedTransformMatrix(&arg0->transform);
         }
         if (arg0->displayList != NULL) {
             if (arg0->rotationDisplayList != NULL) {
@@ -1484,7 +1477,7 @@ void updateRacePickupRespawn(RacePickupActor *arg0) {
         temp_v0 = arg0->timer;
         temp_v1 = arg0->pos.y - (temp_v0 * 0x14000);
         arg0->drawPos.y = temp_v1 + 0x140000;
-        arg0->spawnPos.y = temp_v1;
+        arg0->transform.translation.y = temp_v1;
         if (temp_v0 == 0) {
             setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRacePickupIdle);
         }
@@ -1643,11 +1636,11 @@ void initRacePickup(RacePickupActor *arg0) {
 
     arg0->drawPos = arg0->pos;
     arg0->drawPos.y += 0x140000;
-    makeFixedRotationY(arg0->rotationMatrix, arg0->rotation);
+    makeFixedRotationY(arg0->transform.rotation, arg0->rotation);
 
-    arg0->spawnPos.x = arg0->pos.x;
-    arg0->spawnPos.y = arg0->pos.y;
-    arg0->spawnPos.z = arg0->pos.z;
+    arg0->transform.translation.x = arg0->pos.x;
+    arg0->transform.translation.y = arg0->pos.y;
+    arg0->transform.translation.z = arg0->pos.z;
     getAssetTableImageAndPalette(
         getRelocatableHeapBlockBase(gAssetHandles[0x1C]),
         0x1E,
@@ -1682,7 +1675,7 @@ void initRacePickup(RacePickupActor *arg0) {
 // clang-format off
 void renderPickupShardParticle(PickupShardParticleActor *arg0) {
     volatile s32 pad;
-    FixedTransform transform;
+    Transform3D transform;
     Gfx *temp_v0;
     Gfx *temp_v0_10;
     Gfx *temp_v0_11;
@@ -1767,7 +1760,7 @@ void updatePickupShardParticle(PickupShardParticleActor *arg0) {
 }
 
 void initPickupShardParticle(PickupShardParticleActor *arg0) {
-    FixedTransform transform;
+    Transform3D transform;
 
     arg0->timer = 0xA;
     arg0->rotVelX = randomNextMain() - 0x80;

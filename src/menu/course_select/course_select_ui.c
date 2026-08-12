@@ -8,6 +8,7 @@
 #include "game/engine/callback_task_scheduler.h"
 #include "game/engine/game_task_scheduler.h"
 #include "game/menu/renderer/menu_renderer.h"
+#include "game/menu/renderer/menu_render_utils.h"
 #include "game/menu/character_select/character_select_menu.h"
 #include "game/menu/course_select/course_select_menu.h"
 #include "game/menu/course_select/course_select_ui.h"
@@ -24,9 +25,9 @@ typedef struct {
 
 typedef struct {
     /* 0x000 */ u8 pad0[0x18];
-    /* 0x018 */ s32 matrix;
-    /* 0x01C */ FixedTransform sourceTransform;
-    /* 0x03C */ FixedTransform playerTransforms[4];
+    /* 0x018 */ Mtx *matrix;
+    /* 0x01C */ Transform3D sourceTransform;
+    /* 0x03C */ Transform3D playerTransforms[4];
     /* 0x0BC */ u8 padBC[0x38];
     /* 0x0F4 */ CourseSelectWidgetPlayerSlot playerSlots[4];
     /* 0x0FC */ u8 playerFlags[4];
@@ -137,9 +138,9 @@ union CourseSelectExtraCourseIconListActor {
 
 struct CourseSelectAnimatedActor {
     /* 0x000 */ u8 pad0[0x18];
-    /* 0x018 */ s32 matrix;
-    /* 0x01C */ FixedTransform sourceTransform;
-    /* 0x03C */ FixedTransform playerTransforms[4];
+    /* 0x018 */ Mtx *matrix;
+    /* 0x01C */ Transform3D sourceTransform;
+    /* 0x03C */ Transform3D playerTransforms[4];
     /* 0x0BC */ Vec3i vecs[4];
     /* 0x0EC */ u16 angle[4];
     /* 0x0F4 */ s16 targetCourse[4];
@@ -182,7 +183,6 @@ extern void drawMenuSpriteWithAlphaWideArgs(
     s32 alpha,
     u32 flip
 );
-extern s32 allocFixedTransformMatrix(FixedTransform *);
 extern const char D_800E0DB8[];
 extern u8 D_800EC9C0;
 extern CallbackTask *D_8010ADE0;
@@ -321,7 +321,7 @@ void drawCourseSelectPreviewModel(CourseSelectCoursePreviewActor *arg0) {
     u8 var_t0;
     s8 temp_v0_2;
     RacePlayer *temp_v0_3;
-    FixedTransform sp30;
+    Transform3D sp30;
     u8 var_a3;
     u8 var_v1;
     int temp_v0;
@@ -361,7 +361,7 @@ void drawCourseSelectPreviewModel(CourseSelectCoursePreviewActor *arg0) {
             composeFixedTransforms(&arg0->sourceTransform, &arg0->playerTransforms[var_t0], &sp30);
             arg0->matrix = allocFixedTransformMatrix(&sp30);
             if (arg0->matrix != 0) {
-                drawRacePlayerModelRootPart((void *)(arg0->matrix ^ 0), (s16)sp2F, (s16)sp2E);
+                drawRacePlayerModelRootPart(arg0->matrix, (s16)sp2F, (s16)sp2E);
             }
         }
     }
@@ -693,7 +693,7 @@ void drawCourseSelectPreviewModelClose(CourseSelectCoursePreviewActor *arg0) {
     u8 var_t0;
     s8 temp_v0_2;
     RacePlayer *temp_v0_3;
-    FixedTransform sp30;
+    Transform3D sp30;
     u8 var_a3;
     u8 var_v1;
     int temp_v0;
@@ -733,7 +733,7 @@ void drawCourseSelectPreviewModelClose(CourseSelectCoursePreviewActor *arg0) {
             composeFixedTransforms(&arg0->sourceTransform, &arg0->playerTransforms[var_t0], &sp30);
             arg0->matrix = allocFixedTransformMatrix(&sp30);
             if (arg0->matrix != 0) {
-                drawRacePlayerModelRootPart((void *)(arg0->matrix ^ 0), (s16)sp2F, (s16)sp2E);
+                drawRacePlayerModelRootPart(arg0->matrix, (s16)sp2F, (s16)sp2E);
             }
         }
     }

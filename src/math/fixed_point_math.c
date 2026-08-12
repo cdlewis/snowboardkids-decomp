@@ -3,7 +3,7 @@
 #define FIXED_MATRIX_ONE 0x1000
 #define FIXED_MATRIX_ROWS(matrix) ((s16(*)[3])(matrix))
 
-FixedTransform gIdentityFixedTransform = {
+Transform3D gIdentityFixedTransform = {
     {
      FIXED_MATRIX_ONE, 0,
      0, 0,
@@ -30,7 +30,7 @@ u32 gRacePlayerShadowMatrixTemplate[16] = {
     0x40000000, 0x00000000, 0x00004000, 0x00000000, 0x00000000, 0x40000000, 0x00000000, 0x00000000,
 };
 
-void initFixedTransform(FixedTransform *transform) {
+void initFixedTransform(Transform3D *transform) {
     *transform = gIdentityFixedTransform;
 }
 
@@ -62,7 +62,7 @@ s16 fixedCosine(s16 arg0) {
     return temp;
 }
 
-void makeFixedRotationX(FixedMatrix3s arg0, s16 arg1) {
+void makeFixedRotationX(Mat3x3 arg0, s16 arg1) {
     s32 sine = fixedSine(arg1);
     s16 cosine = fixedCosine(arg1);
 
@@ -77,7 +77,7 @@ void makeFixedRotationX(FixedMatrix3s arg0, s16 arg1) {
     arg0[MTX_ZZ] = cosine;
 }
 
-void makeFixedRotationY(FixedMatrix3s arg0, s16 arg1) {
+void makeFixedRotationY(Mat3x3 arg0, s16 arg1) {
     s32 sine = fixedSine(arg1);
     s16 cosine = fixedCosine(arg1);
 
@@ -92,7 +92,7 @@ void makeFixedRotationY(FixedMatrix3s arg0, s16 arg1) {
     arg0[MTX_ZZ] = cosine;
 }
 
-void makeFixedRotationZ(FixedMatrix3s arg0, s16 arg1) {
+void makeFixedRotationZ(Mat3x3 arg0, s16 arg1) {
     s32 sine = fixedSine(arg1);
     s16 cosine = fixedCosine(arg1);
 
@@ -107,7 +107,7 @@ void makeFixedRotationZ(FixedMatrix3s arg0, s16 arg1) {
     arg0[MTX_ZZ] = FIXED_MATRIX_ONE;
 }
 
-void multiplyFixedMatrix3s(FixedMatrix3s arg0, FixedMatrix3s arg1, FixedMatrix3s arg2) {
+void multiplyFixedMatrix3s(Mat3x3 arg0, Mat3x3 arg1, Mat3x3 arg2) {
     s32 i;
     s32 j;
 
@@ -125,7 +125,7 @@ void multiplyFixedMatrix3s(FixedMatrix3s arg0, FixedMatrix3s arg1, FixedMatrix3s
     } while (i != 3);
 }
 
-void makeFixedRotationXYZ(FixedMatrix3s arg0, s16 arg1, s16 arg2, s16 arg3) {
+void makeFixedRotationXYZ(Mat3x3 arg0, s16 arg1, s16 arg2, s16 arg3) {
     s32 sineX;
     s32 cosineX;
     s32 sineY;
@@ -159,7 +159,7 @@ void makeFixedRotationXYZ(FixedMatrix3s arg0, s16 arg1, s16 arg2, s16 arg3) {
     arg0[MTX_ZZ] = (cosineX * cosineY) / FIXED_MATRIX_ONE;
 }
 
-void makeFixedRotationXY(FixedMatrix3s arg0, s16 arg1, s16 arg2) {
+void makeFixedRotationXY(Mat3x3 arg0, s16 arg1, s16 arg2) {
     s32 sineX;
     s32 cosineX;
     s32 sineY;
@@ -186,34 +186,34 @@ void makeFixedRotationXY(FixedMatrix3s arg0, s16 arg1, s16 arg2) {
     arg0[MTX_ZZ] = (cosineX * cosineY) / FIXED_MATRIX_ONE;
 }
 
-void makeFixedRotationZX(FixedMatrix3s arg0, s16 arg1, s16 arg2) {
-    FixedMatrix3sScratch sp38;
-    FixedMatrix3sScratch sp18;
+void makeFixedRotationZX(Mat3x3 arg0, s16 arg1, s16 arg2) {
+    s16 sp38[0x10];
+    s16 sp18[0x10];
 
     makeFixedRotationZ(sp38, arg2);
     makeFixedRotationX(sp18, arg1);
     multiplyFixedMatrix3s(sp38, sp18, arg0);
 }
 
-void makeFixedRotationXZ(FixedMatrix3s arg0, s16 arg1, s16 arg2) {
-    FixedMatrix3sScratch sp38;
-    FixedMatrix3sScratch sp18;
+void makeFixedRotationXZ(Mat3x3 arg0, s16 arg1, s16 arg2) {
+    s16 sp38[0x10];
+    s16 sp18[0x10];
 
     makeFixedRotationX(sp38, arg1);
     makeFixedRotationZ(sp18, arg2);
     multiplyFixedMatrix3s(sp38, sp18, arg0);
 }
 
-void makeFixedRotationZY(FixedMatrix3s arg0, s16 arg1, s16 arg2) {
-    FixedMatrix3sScratch sp38;
-    FixedMatrix3sScratch sp18;
+void makeFixedRotationZY(Mat3x3 arg0, s16 arg1, s16 arg2) {
+    s16 sp38[0x10];
+    s16 sp18[0x10];
 
     makeFixedRotationZ(sp38, arg2);
     makeFixedRotationY(sp18, arg1);
     multiplyFixedMatrix3s(sp38, sp18, arg0);
 }
 
-void makeFixedRotationZXY(FixedMatrix3s arg0, s16 arg1, s16 arg2, s16 arg3) {
+void makeFixedRotationZXY(Mat3x3 arg0, s16 arg1, s16 arg2, s16 arg3) {
     s32 sineX;
     s32 cosineX;
     s32 sineY;
@@ -247,10 +247,10 @@ void makeFixedRotationZXY(FixedMatrix3s arg0, s16 arg1, s16 arg2, s16 arg3) {
     arg0[MTX_ZZ] = (cosineX * cosineY) / FIXED_MATRIX_ONE;
 }
 
-void makeFixedRotationYZX(FixedMatrix3s arg0, s16 arg1, s16 arg2, s16 arg3) {
-    FixedMatrix3sScratch sp58;
-    FixedMatrix3sScratch sp38;
-    FixedMatrix3sScratch sp18;
+void makeFixedRotationYZX(Mat3x3 arg0, s16 arg1, s16 arg2, s16 arg3) {
+    s16 sp58[0x10];
+    s16 sp38[0x10];
+    s16 sp18[0x10];
 
     makeFixedRotationY(sp58, arg2);
     makeFixedRotationZ(sp38, arg3);
@@ -259,10 +259,10 @@ void makeFixedRotationYZX(FixedMatrix3s arg0, s16 arg1, s16 arg2, s16 arg3) {
     multiplyFixedMatrix3s(sp18, sp38, arg0);
 }
 
-void makeFixedRotationZYX(FixedMatrix3s arg0, s16 arg1, s16 arg2, s16 arg3) {
-    FixedMatrix3sScratch sp58;
-    FixedMatrix3sScratch sp38;
-    FixedMatrix3sScratch sp18;
+void makeFixedRotationZYX(Mat3x3 arg0, s16 arg1, s16 arg2, s16 arg3) {
+    s16 sp58[0x10];
+    s16 sp38[0x10];
+    s16 sp18[0x10];
 
     makeFixedRotationY(sp58, arg2);
     makeFixedRotationZ(sp38, arg3);
@@ -271,10 +271,10 @@ void makeFixedRotationZYX(FixedMatrix3s arg0, s16 arg1, s16 arg2, s16 arg3) {
     multiplyFixedMatrix3s(sp18, sp38, arg0);
 }
 
-void makeFixedRotationXZY(FixedMatrix3s arg0, s16 arg1, s16 arg2, s16 arg3) {
-    FixedMatrix3sScratch sp58;
-    FixedMatrix3sScratch sp38;
-    FixedMatrix3sScratch sp18;
+void makeFixedRotationXZY(Mat3x3 arg0, s16 arg1, s16 arg2, s16 arg3) {
+    s16 sp58[0x10];
+    s16 sp38[0x10];
+    s16 sp18[0x10];
 
     makeFixedRotationX(sp58, arg1);
     makeFixedRotationZ(sp38, arg3);
@@ -283,16 +283,16 @@ void makeFixedRotationXZY(FixedMatrix3s arg0, s16 arg1, s16 arg2, s16 arg3) {
     multiplyFixedMatrix3s(sp18, sp38, arg0);
 }
 
-void makeFixedRotationYX(FixedMatrix3s arg0, s16 arg1, s16 arg2) {
-    FixedMatrix3sScratch sp38;
-    FixedMatrix3sScratch sp18;
+void makeFixedRotationYX(Mat3x3 arg0, s16 arg1, s16 arg2) {
+    s16 sp38[0x10];
+    s16 sp18[0x10];
 
     makeFixedRotationY(sp38, arg2);
     makeFixedRotationX(sp18, arg1);
     multiplyFixedMatrix3s(sp38, sp18, arg0);
 }
 
-void transformVec3iByFixedMatrix(FixedMatrix3s arg0, Vec3i *source, Vec3i *dest) {
+void transformVec3iByFixedMatrix(Mat3x3 arg0, Vec3i *source, Vec3i *dest) {
     dest->x = (s64)arg0[MTX_XX] * source->x / FIXED_MATRIX_ONE + (s64)arg0[MTX_YX] * source->y / FIXED_MATRIX_ONE +
               (s64)arg0[MTX_ZX] * source->z / FIXED_MATRIX_ONE;
     dest->y = (s64)arg0[MTX_XY] * source->x / FIXED_MATRIX_ONE + (s64)arg0[MTX_YY] * source->y / FIXED_MATRIX_ONE +
@@ -301,7 +301,7 @@ void transformVec3iByFixedMatrix(FixedMatrix3s arg0, Vec3i *source, Vec3i *dest)
               (s64)arg0[MTX_ZZ] * source->z / FIXED_MATRIX_ONE;
 }
 
-void composeFixedTransforms(FixedTransform *arg0, FixedTransform *arg1, FixedTransform *arg2) {
+void composeFixedTransforms(Transform3D *arg0, Transform3D *arg1, Transform3D *arg2) {
     arg2->translation.x = (s64)arg1->rotation[MTX_XX] * arg0->translation.x / FIXED_MATRIX_ONE +
                           (s64)arg1->rotation[MTX_YX] * arg0->translation.y / FIXED_MATRIX_ONE +
                           (s64)arg1->rotation[MTX_ZX] * arg0->translation.z / FIXED_MATRIX_ONE;
@@ -317,7 +317,7 @@ void composeFixedTransforms(FixedTransform *arg0, FixedTransform *arg1, FixedTra
     multiplyFixedMatrix3s(arg0->rotation, arg1->rotation, arg2->rotation);
 }
 
-void composeFixedTransformTranslation(FixedTransform *arg0, FixedTransform *arg1, FixedTransform *arg2) {
+void composeFixedTransformTranslation(Transform3D *arg0, Transform3D *arg1, Transform3D *arg2) {
     arg2->translation.x = (s64)arg1->rotation[MTX_XX] * arg0->translation.x / FIXED_MATRIX_ONE +
                           (s64)arg1->rotation[MTX_YX] * arg0->translation.y / FIXED_MATRIX_ONE +
                           (s64)arg1->rotation[MTX_ZX] * arg0->translation.z / FIXED_MATRIX_ONE;

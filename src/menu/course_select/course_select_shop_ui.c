@@ -22,12 +22,7 @@ typedef struct {
     /* 0x28 */ u16 corner;
 } ShopMenuFrameTileMap;
 
-typedef struct {
-    /* 0x00 */ s16 x;
-    /* 0x02 */ s16 y;
-} ShopMenuSparkleOffset;
-
-typedef ShopMenuSparkleOffset ShopMenuSparklePattern[13];
+typedef Vec2s ShopMenuSparklePattern[13];
 
 enum {
     COURSE_DETAILS_PAGE_COUNT = 2,
@@ -185,11 +180,11 @@ s16 gShopMenuSparkleInitTable[16] = {
 
 };
 
-ShopMenuSparkleOffset gCoursePreviewCloseSparkleOffsets[6] = {
+Vec2s gCoursePreviewCloseSparkleOffsets[6] = {
     0x0003, 0xFFFC, 0x000C, 0xFFFE, 0x0013, 0xFFFD, 0x001D, 0xFFFD, 0x0023, 0xFFFF, 0x002A, 0xFFFB,
 };
 
-ShopMenuSparkleOffset gCoursePreviewCloseSparkleMirrorStart[2] = {
+Vec2s gCoursePreviewCloseSparkleMirrorStart[2] = {
     0x0000,
     0x0000,
     0x0000,
@@ -231,7 +226,7 @@ void drawShopMenuModeChoiceRows(ShopMenuRowActor *actor) {
 extern int sprintf(char *, const char *, ...);
 extern u16 gCourseDetailsPreviewCourseTiles[];
 extern u16 gCourseDetailsPreviewExtraTiles[];
-extern ShopMenuSparkleOffset gCoursePreviewCloseSparkleOffsetsEnd[];
+extern Vec2s gCoursePreviewCloseSparkleOffsetsEnd[];
 extern u8 gShopMenuModeCursorState;
 extern u8 gShopMenuDescriptionSeen;
 extern u8 gShopMenuShowNewCoursesMessage;
@@ -1843,7 +1838,7 @@ void initCourseDetailsPreviewTile(ShopMenuWidgetActor *arg0) {
 // IDO code generation for this function is sensitive to source line layout.
 // clang-format off
 void drawCoursePreviewCloseSparkles(ShopMenuWidgetActor *arg0) {
-    ShopMenuSparkleOffset *offset;
+    Vec2s *offset;
     ShopMenuWidgetActor *actor;
     ShopMenuWidgetActor *counterActor;
     void *texture;

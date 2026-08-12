@@ -39,50 +39,27 @@ typedef struct {
     /* 0x0F */ u8 height;
 } FontTexture;
 
+#define PACKED_MTX_WORD(matrix, index) ((matrix)->m[(index) / 4][(index) % 4])
+
+/* Named components preserve IDO's operand scheduling in the matrix packers. */
 typedef struct {
-    s32 words[16];
-} GfxCommandBlock;
+    s16 xx;
+    s16 xy;
+    s16 xz;
+    s16 yx;
+    s16 yy;
+    s16 yz;
+    s16 zx;
+    s16 zy;
+    s16 zz;
+    s16 pad12;
+    Vec3i translation;
+} Transform3DComponents;
 
 typedef struct {
-    s32 unk0;
-    s32 unk4;
-    s32 unk8;
-} GfxCommandTriple;
-
-typedef struct {
-    /* 0x00 */ s16 unk0;
-    /* 0x02 */ s16 unk2;
-    /* 0x04 */ s16 unk4;
-    /* 0x06 */ s16 unk6;
-    /* 0x08 */ s16 unk8;
-    /* 0x0A */ s16 unkA;
-    /* 0x0C */ s16 unkC;
-    /* 0x0E */ s16 unkE;
-    /* 0x10 */ s16 unk10;
-    /* 0x12 */ char pad12[2];
-    /* 0x14 */ s32 unk14;
-    /* 0x18 */ s32 unk18;
-    /* 0x1C */ s32 unk1C;
-} GfxCommandSource;
-
-typedef struct {
-    /* 0x00 */ s32 unk0;
-    /* 0x04 */ s32 unk4;
-    /* 0x08 */ s32 unk8;
-    /* 0x0C */ s32 unkC;
-    /* 0x10 */ s32 unk10;
-    /* 0x14 */ s32 unk14;
-    /* 0x18 */ s32 unk18;
-    /* 0x1C */ s32 unk1C;
-    /* 0x20 */ s32 unk20;
-    /* 0x24 */ s32 unk24;
-    /* 0x28 */ s32 unk28;
-    /* 0x2C */ s32 unk2C;
-    /* 0x30 */ s32 unk30;
-    /* 0x34 */ s32 unk34;
-    /* 0x38 */ s32 unk38;
-    /* 0x3C */ s32 unk3C;
-} GfxCommandDest;
+    s32 w0, w1, w2, w3, w4, w5, w6, w7;
+    s32 w8, w9, w10, w11, w12, w13, w14, w15;
+} PackedMtxWords;
 
 extern RaceCamera D_801121E0[];
 extern s16 gMenuAsciiFontPaletteIndex;
@@ -1360,8 +1337,8 @@ void writebackMenuRenderScratchBuffer(s32 arg0) {
     }
 }
 
-void *copyGfxCommandBlockToScratch(GfxCommandBlock *arg0) {
-    GfxCommandBlock *p = allocMenuRenderScratch(sizeof(GfxCommandBlock));
+void *copyGfxCommandBlockToScratch(Mtx *arg0) {
+    Mtx *p = allocMenuRenderScratch(sizeof(Mtx));
     if (p == NULL) {
         return NULL;
     }
@@ -1369,121 +1346,130 @@ void *copyGfxCommandBlockToScratch(GfxCommandBlock *arg0) {
     return p;
 }
 
-void packFixedTransformMatrix(void *arg0, void *arg1) {
-    GfxCommandSource *src = arg0;
-    GfxCommandDest *dst = arg1;
+void packFixedTransformMatrix(Transform3D *source, Mtx *dest) {
+    Transform3DComponents *components = (Transform3DComponents *)source;
 
-    dst->unk0 = ((src->unk2 >> 12) & 0xFFFF) | ((src->unk0 << 4) & 0xFFFF0000);
-    dst->unk4 = (src->unk4 << 4) & 0xFFFF0000;
-    dst->unk8 = ((src->unk8 >> 12) & 0xFFFF) | ((src->unk6 << 4) & 0xFFFF0000);
-    dst->unkC = (src->unkA << 4) & 0xFFFF0000;
-    dst->unk10 = ((src->unkE >> 12) & 0xFFFF) | ((src->unkC << 4) & 0xFFFF0000);
-    dst->unk14 = (src->unk10 << 4) & 0xFFFF0000;
-    dst->unk18 = ((src->unk18 >> 16) & 0xFFFF) | (src->unk14 & 0xFFFF0000);
-    dst->unk1C = (src->unk1C & 0xFFFF0000) | 1;
-    dst->unk20 = ((src->unk2 << 4) & 0xFFFF) | ((src->unk0 << 20) & 0xFFFF0000);
-    dst->unk24 = (src->unk4 << 20) & 0xFFFF0000;
-    dst->unk28 = ((src->unk8 << 4) & 0xFFFF) | ((src->unk6 << 20) & 0xFFFF0000);
-    dst->unk2C = (src->unkA << 20) & 0xFFFF0000;
-    dst->unk30 = ((src->unkE << 4) & 0xFFFF) | ((src->unkC << 20) & 0xFFFF0000);
-    dst->unk34 = (src->unk10 << 20) & 0xFFFF0000;
-    dst->unk38 = (src->unk18 & 0xFFFF) | ((src->unk14 << 16) & 0xFFFF0000);
-    dst->unk3C = (src->unk1C << 16) & 0xFFFF0000;
+    PACKED_MTX_WORD(dest, 0) = ((components->xy >> 12) & 0xFFFF) | ((components->xx << 4) & 0xFFFF0000);
+    PACKED_MTX_WORD(dest, 1) = (components->xz << 4) & 0xFFFF0000;
+    PACKED_MTX_WORD(dest, 2) = ((components->yy >> 12) & 0xFFFF) | ((components->yx << 4) & 0xFFFF0000);
+    PACKED_MTX_WORD(dest, 3) = (components->yz << 4) & 0xFFFF0000;
+    PACKED_MTX_WORD(dest, 4) = ((components->zy >> 12) & 0xFFFF) | ((components->zx << 4) & 0xFFFF0000);
+    PACKED_MTX_WORD(dest, 5) = (components->zz << 4) & 0xFFFF0000;
+    PACKED_MTX_WORD(dest, 6) = ((components->translation.y >> 16) & 0xFFFF) | (components->translation.x & 0xFFFF0000);
+    PACKED_MTX_WORD(dest, 7) = (components->translation.z & 0xFFFF0000) | 1;
+    PACKED_MTX_WORD(dest, 8) = ((components->xy << 4) & 0xFFFF) | ((components->xx << 20) & 0xFFFF0000);
+    PACKED_MTX_WORD(dest, 9) = (components->xz << 20) & 0xFFFF0000;
+    PACKED_MTX_WORD(dest, 10) = ((components->yy << 4) & 0xFFFF) | ((components->yx << 20) & 0xFFFF0000);
+    PACKED_MTX_WORD(dest, 11) = (components->yz << 20) & 0xFFFF0000;
+    PACKED_MTX_WORD(dest, 12) = ((components->zy << 4) & 0xFFFF) | ((components->zx << 20) & 0xFFFF0000);
+    PACKED_MTX_WORD(dest, 13) = (components->zz << 20) & 0xFFFF0000;
+    PACKED_MTX_WORD(dest, 14) = (components->translation.y & 0xFFFF) | ((components->translation.x << 16) & 0xFFFF0000);
+    PACKED_MTX_WORD(dest, 15) = (components->translation.z << 16) & 0xFFFF0000;
 }
 
-GfxCommandDest *allocFixedTransformMatrix(GfxCommandSource *arg0) {
-    GfxCommandDest *dst = allocMenuRenderScratch(sizeof(GfxCommandDest));
+Mtx *allocFixedTransformMatrix(Transform3D *source) {
+    Mtx *dst = allocMenuRenderScratch(sizeof(Mtx));
+    Transform3DComponents *components = (Transform3DComponents *)source;
 
     if (dst == NULL) {
         return NULL;
     }
 
-    dst->unk0 = ((arg0->unk2 >> 12) & 0xFFFF) | ((arg0->unk0 << 4) & 0xFFFF0000);
-    dst->unk4 = (arg0->unk4 << 4) & 0xFFFF0000;
-    dst->unk8 = ((arg0->unk8 >> 12) & 0xFFFF) | ((arg0->unk6 << 4) & 0xFFFF0000);
-    dst->unkC = (arg0->unkA << 4) & 0xFFFF0000;
-    dst->unk10 = ((arg0->unkE >> 12) & 0xFFFF) | ((arg0->unkC << 4) & 0xFFFF0000);
-    dst->unk14 = (arg0->unk10 << 4) & 0xFFFF0000;
-    dst->unk18 = ((arg0->unk18 >> 16) & 0xFFFF) | (arg0->unk14 & 0xFFFF0000);
-    dst->unk1C = (arg0->unk1C & 0xFFFF0000) | 1;
-    dst->unk20 = ((arg0->unk2 << 4) & 0xFFFF) | ((arg0->unk0 << 20) & 0xFFFF0000);
-    dst->unk24 = (arg0->unk4 << 20) & 0xFFFF0000;
-    dst->unk28 = ((arg0->unk8 << 4) & 0xFFFF) | ((arg0->unk6 << 20) & 0xFFFF0000);
-    dst->unk2C = (arg0->unkA << 20) & 0xFFFF0000;
-    dst->unk30 = ((arg0->unkE << 4) & 0xFFFF) | ((arg0->unkC << 20) & 0xFFFF0000);
-    dst->unk34 = (arg0->unk10 << 20) & 0xFFFF0000;
-    dst->unk38 = (arg0->unk18 & 0xFFFF) | ((arg0->unk14 << 16) & 0xFFFF0000);
-    dst->unk3C = (arg0->unk1C << 16) & 0xFFFF0000;
+    PACKED_MTX_WORD(dst, 0) = ((components->xy >> 12) & 0xFFFF) | ((components->xx << 4) & 0xFFFF0000);
+    PACKED_MTX_WORD(dst, 1) = (components->xz << 4) & 0xFFFF0000;
+    PACKED_MTX_WORD(dst, 2) = ((components->yy >> 12) & 0xFFFF) | ((components->yx << 4) & 0xFFFF0000);
+    PACKED_MTX_WORD(dst, 3) = (components->yz << 4) & 0xFFFF0000;
+    PACKED_MTX_WORD(dst, 4) = ((components->zy >> 12) & 0xFFFF) | ((components->zx << 4) & 0xFFFF0000);
+    PACKED_MTX_WORD(dst, 5) = (components->zz << 4) & 0xFFFF0000;
+    PACKED_MTX_WORD(dst, 6) = ((source->translation.y >> 16) & 0xFFFF) | (source->translation.x & 0xFFFF0000);
+    PACKED_MTX_WORD(dst, 7) = (source->translation.z & 0xFFFF0000) | 1;
+    PACKED_MTX_WORD(dst, 8) = ((components->xy << 4) & 0xFFFF) | ((components->xx << 20) & 0xFFFF0000);
+    PACKED_MTX_WORD(dst, 9) = (components->xz << 20) & 0xFFFF0000;
+    PACKED_MTX_WORD(dst, 10) = ((components->yy << 4) & 0xFFFF) | ((components->yx << 20) & 0xFFFF0000);
+    PACKED_MTX_WORD(dst, 11) = (components->yz << 20) & 0xFFFF0000;
+    PACKED_MTX_WORD(dst, 12) = ((components->zy << 4) & 0xFFFF) | ((components->zx << 20) & 0xFFFF0000);
+    PACKED_MTX_WORD(dst, 13) = (components->zz << 20) & 0xFFFF0000;
+    PACKED_MTX_WORD(dst, 14) = (source->translation.y & 0xFFFF) | ((source->translation.x << 16) & 0xFFFF0000);
+    PACKED_MTX_WORD(dst, 15) = (source->translation.z << 16) & 0xFFFF0000;
     return dst;
 }
 
-GfxCommandDest *allocFixedRotationMatrix(GfxCommandSource *arg0) {
-    GfxCommandDest *dst = allocMenuRenderScratch(sizeof(GfxCommandDest));
+Mtx *allocFixedRotationMatrix(Mat3x3 rotation) {
+    Mtx *dst = allocMenuRenderScratch(sizeof(Mtx));
+    Transform3DComponents *components = (Transform3DComponents *)rotation;
 
     if (dst == NULL) {
         return NULL;
     }
 
-    dst->unk0 = ((arg0->unk2 >> 12) & 0xFFFF) | ((arg0->unk0 << 4) & 0xFFFF0000);
-    dst->unk4 = (arg0->unk4 << 4) & 0xFFFF0000;
-    dst->unk8 = ((arg0->unk8 >> 12) & 0xFFFF) | ((arg0->unk6 << 4) & 0xFFFF0000);
-    dst->unkC = (arg0->unkA << 4) & 0xFFFF0000;
-    dst->unk10 = ((arg0->unkE >> 12) & 0xFFFF) | ((arg0->unkC << 4) & 0xFFFF0000);
-    dst->unk14 = (arg0->unk10 << 4) & 0xFFFF0000;
-    dst->unk18 = 0;
-    dst->unk1C = 1;
-    dst->unk20 = ((arg0->unk2 << 4) & 0xFFFF) | ((arg0->unk0 << 20) & 0xFFFF0000);
-    dst->unk24 = (arg0->unk4 << 20) & 0xFFFF0000;
-    dst->unk28 = ((arg0->unk8 << 4) & 0xFFFF) | ((arg0->unk6 << 20) & 0xFFFF0000);
-    dst->unk2C = (arg0->unkA << 20) & 0xFFFF0000;
-    dst->unk30 = ((arg0->unkE << 4) & 0xFFFF) | ((arg0->unkC << 20) & 0xFFFF0000);
-    dst->unk34 = (arg0->unk10 << 20) & 0xFFFF0000;
-    dst->unk38 = 0;
-    dst->unk3C = 0;
+    PACKED_MTX_WORD(dst, 0) = ((components->xy >> 12) & 0xFFFF) | ((components->xx << 4) & 0xFFFF0000);
+    PACKED_MTX_WORD(dst, 1) = (components->xz << 4) & 0xFFFF0000;
+    PACKED_MTX_WORD(dst, 2) = ((components->yy >> 12) & 0xFFFF) | ((components->yx << 4) & 0xFFFF0000);
+    PACKED_MTX_WORD(dst, 3) = (components->yz << 4) & 0xFFFF0000;
+    PACKED_MTX_WORD(dst, 4) = ((components->zy >> 12) & 0xFFFF) | ((components->zx << 4) & 0xFFFF0000);
+    PACKED_MTX_WORD(dst, 5) = (components->zz << 4) & 0xFFFF0000;
+    PACKED_MTX_WORD(dst, 6) = 0;
+    PACKED_MTX_WORD(dst, 7) = 1;
+    PACKED_MTX_WORD(dst, 8) = ((components->xy << 4) & 0xFFFF) | ((components->xx << 20) & 0xFFFF0000);
+    PACKED_MTX_WORD(dst, 9) = (components->xz << 20) & 0xFFFF0000;
+    PACKED_MTX_WORD(dst, 10) = ((components->yy << 4) & 0xFFFF) | ((components->yx << 20) & 0xFFFF0000);
+    PACKED_MTX_WORD(dst, 11) = (components->yz << 20) & 0xFFFF0000;
+    PACKED_MTX_WORD(dst, 12) = ((components->zy << 4) & 0xFFFF) | ((components->zx << 20) & 0xFFFF0000);
+    PACKED_MTX_WORD(dst, 13) = (components->zz << 20) & 0xFFFF0000;
+    PACKED_MTX_WORD(dst, 14) = 0;
+    PACKED_MTX_WORD(dst, 15) = 0;
     return dst;
 }
 
-GfxCommandDest *allocTranslationOnlyFixedMatrix(GfxCommandDest *arg0) {
-    GfxCommandDest *dst = allocMenuRenderScratch(sizeof(GfxCommandDest));
+Mtx *allocTranslationOnlyFixedMatrix(Mtx *source) {
+    PackedMtxWords *dst = allocMenuRenderScratch(sizeof(Mtx));
+    PackedMtxWords *sourceWords = (PackedMtxWords *)source;
 
     if (dst == NULL) {
         return NULL;
     }
 
-    dst->unk0 = 0x10000;
-    dst->unk4 = 0;
-    dst->unk8 = 1;
-    dst->unkC = 0;
-    dst->unk10 = 0;
-    dst->unk14 = 0x10000;
-    dst->unk18 = ((arg0->unk18 >> 16) & 0xFFFF) | (arg0->unk14 & 0xFFFF0000);
-    dst->unk1C = (arg0->unk1C & 0xFFFF0000) | 1;
-    dst->unk20 = 0;
-    dst->unk24 = 0;
-    dst->unk28 = 0;
-    dst->unk2C = 0;
-    dst->unk30 = 0;
-    dst->unk34 = 0;
-    dst->unk38 = (arg0->unk18 & 0xFFFF) | ((arg0->unk14 << 16) & 0xFFFF0000);
-    dst->unk3C = (arg0->unk1C << 16) & 0xFFFF0000;
-    return dst;
+    dst->w0 = 0x10000;
+    dst->w1 = 0;
+    dst->w2 = 1;
+    dst->w3 = 0;
+    dst->w4 = 0;
+    dst->w5 = 0x10000;
+    dst->w6 = ((sourceWords->w6 >> 16) & 0xFFFF) | (sourceWords->w5 & 0xFFFF0000);
+    dst->w7 = (sourceWords->w7 & 0xFFFF0000) | 1;
+    dst->w8 = 0;
+    dst->w9 = 0;
+    dst->w10 = 0;
+    dst->w11 = 0;
+    dst->w12 = 0;
+    dst->w13 = 0;
+    dst->w14 = (sourceWords->w6 & 0xFFFF) | ((sourceWords->w5 << 16) & 0xFFFF0000);
+    dst->w15 = (sourceWords->w7 << 16) & 0xFFFF0000;
+    return (Mtx *)dst;
 }
 
-void setPackedMatrixTranslation(GfxCommandDest *arg0, GfxCommandTriple *arg1) {
-    arg0->unk18 = (s32)((arg1->unk0 & 0xFFFF0000) | (((s32)arg1->unk4 >> 0x10) & 0xFFFF));
-    arg0->unk1C = (s32)((arg1->unk8 & 0xFFFF0000) | 1);
-    arg0->unk38 = (s32)(((arg1->unk0 << 0x10) & 0xFFFF0000) | (arg1->unk4 & 0xFFFF));
-    arg0->unk3C = (s32)((arg1->unk8 << 0x10) & 0xFFFF0000);
+void setPackedMatrixTranslation(Mtx *matrix, Vec3i *translation) {
+    PACKED_MTX_WORD(matrix, 6) = (translation->x & 0xFFFF0000) | ((translation->y >> 16) & 0xFFFF);
+    PACKED_MTX_WORD(matrix, 7) = (translation->z & 0xFFFF0000) | 1;
+    PACKED_MTX_WORD(matrix, 14) = ((translation->x << 16) & 0xFFFF0000) | (translation->y & 0xFFFF);
+    PACKED_MTX_WORD(matrix, 15) = (translation->z << 16) & 0xFFFF0000;
 }
 
-void copyPackedMatrixTranslation(GfxCommandBlock *arg0, GfxCommandBlock *arg1) {
-    arg1->words[6] = (arg0->words[5] & 0xFFFF0000) | ((arg0->words[6] >> 0x10) & 0xFFFF);
-    arg1->words[7] = (arg0->words[7] & 0xFFFF0000) | 1;
-    arg1->words[14] = ((arg0->words[5] << 0x10) & 0xFFFF0000) | (arg0->words[6] & 0xFFFF);
-    arg1->words[15] = (arg0->words[7] << 0x10) & 0xFFFF0000;
+void copyPackedMatrixTranslation(Mtx *source, Mtx *dest) {
+    PackedMtxWords *destWords = (PackedMtxWords *)dest;
+    s32 *word6;
+    s32 *word5;
+    PackedMtxWords *sourceWords = (PackedMtxWords *)source;
+
+    word5 = &sourceWords->w5;
+    word6 = &sourceWords->w6;
+    destWords->w6 = (*word5 & 0xFFFF0000) | ((*word6 >> 16) & 0xFFFF);
+    destWords->w7 = (sourceWords->w7 & 0xFFFF0000) | 1;
+    destWords->w14 = ((*word5 << 16) & 0xFFFF0000) | (*word6 & 0xFFFF);
+    destWords->w15 = (sourceWords->w7 << 16) & 0xFFFF0000;
 }
 
-void scaleFixedMatrix3sByQuarter(FixedMatrix3s arg0) {
+void scaleFixedMatrix3sByQuarter(Mat3x3 arg0) {
     arg0[0] = arg0[0] / 4;
     arg0[1] = arg0[1] / 4;
     arg0[2] = arg0[2] / 4;

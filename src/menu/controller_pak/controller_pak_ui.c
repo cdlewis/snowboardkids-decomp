@@ -35,11 +35,6 @@ typedef struct {
     u8 confirmSelection;
 } ControllerPakRumbleCheckPromptState;
 
-typedef struct {
-    s16 x;
-    s16 y;
-} ControllerPakSparkleOffset;
-
 extern ControllerPakRumbleCheckPromptTransition gControllerPakRumbleCheckPromptTransition;
 extern ControllerPakRumbleCheckPromptState gControllerPakRumbleCheckPromptState;
 extern u8 gControllerPakMenuConfirmChoice;
@@ -53,7 +48,7 @@ MenuGlyphScript gControllerPakContinuePromptText[8] = {
     _FRAGMENT("{COLOR:7}CONTIN"),
 };
 
-ControllerPakSparkleOffset gCoursePreviewCloseSparkleOffsetsEnd[2] = {
+Vec2s gCoursePreviewCloseSparkleOffsetsEnd[2] = {
     // textconv requires these _() invocations to retain their original line layout.
     // clang-format off
     _("UE?"),

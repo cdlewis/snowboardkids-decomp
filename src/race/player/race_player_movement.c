@@ -8,6 +8,8 @@
 #include "game/race/course/race_course_effects.h"
 #include "game/race/player/race_player_input.h"
 #include "game/race/player/race_player_movement.h"
+#include "game/math/fixed_point_math.h"
+#include "game/math/spatial_math.h"
 
 #define FIXED_PRODUCT(a, b) ((s64)(a) * (b) / 0x1000)
 #define COLLISION_POINT(x, y, z, sizeX, sizeY, sizeZ) \
@@ -23,7 +25,7 @@
 typedef struct {
     Vec3i worldPos;
     Vec3i localPos;
-    Matrix4s rotationMtx;
+    s16 rotationMtx[0x10];
 } TransformScratch;
 
 typedef struct {
@@ -34,15 +36,13 @@ typedef struct {
     s32 speed;
 } MovementSpeedScratch;
 
-typedef s16 GroundAlignmentMatrix3s[9];
-
 typedef struct {
-    GroundAlignmentMatrix3s values;
+    Mat3x3 values;
     u8 pad[14];
 } MatrixScratch;
 
 typedef struct {
-    GroundAlignmentMatrix3s values;
+    Mat3x3 values;
     s16 pad;
     s32 transformedX;
     s32 transformedY;
@@ -90,22 +90,6 @@ s16 gRacePlayerVoiceSoundIds5[] = { 0x25, 0x2C, 0x38, 0x32, 0x3E, 0x42 };
 s16 gRacePlayerVoiceSoundIds6[] = { 0x26, 0x2B, 0x39, 0x31, 0x3E, 0x42 };
 s16 gRacePlayerVoiceSoundIds7[] = { 0x26, 0x2B, 0x38, 0x32, 0x3E, 0x42, 0, 0, 0, 0, 0, 0 };
 
-extern s32 calculateFixedAngleBetweenXZPoints(s32, s32, s32, s32);
-extern s16 calculateFixedAngleFromDeltaXZ(s32, s32);
-extern void makeFixedRotationX(Matrix4s, s16);
-extern void makeFixedRotationY(Matrix4s, s16);
-extern void makeFixedRotationZ(Matrix4s, s16);
-extern void multiplyFixedMatrix3s(Matrix4s, Matrix4s, Matrix4s);
-extern void makeFixedRotationXYZ(Matrix4s, s16, s16, s16);
-extern void makeFixedRotationXY(Matrix4s, s16, s16);
-extern void makeFixedRotationZX(Matrix4s, s16, s16);
-extern void makeFixedRotationXZ(Matrix4s, s16, s16);
-extern void makeFixedRotationZXY(Matrix4s, s16, s16, s16);
-extern void makeFixedRotationZYX(Matrix4s, s16, s16, s16);
-extern void transformVec3iByFixedMatrix(Matrix4s, Vec3i *, Vec3i *);
-extern s16 fixedSine(s16);
-extern s16 fixedCosine(s16);
-extern s32 integerSquareRoot64(s64);
 extern s16 gFrameCounter;
 extern s8 gRacePlayerCount;
 extern s32 gMenuFlowState;

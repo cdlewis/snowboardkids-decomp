@@ -6,6 +6,7 @@
 #include "game/race/motion/race_motion.h"
 #include "game/race/camera/race_camera.h"
 #include "game/race/player/race_player_input.h"
+#include "game/menu/renderer/menu_render_utils.h"
 
 #define RACE_CAMERA_COUNT 4
 #define RACE_CAMERA_STATE_SIZE 0xB0
@@ -38,7 +39,7 @@ typedef struct {
 } RaceCameraRotationTransition;
 
 typedef struct StackD7D4 {
-    FixedTransform transform;
+    Transform3D transform;
     Vec3i transformed;
     Vec3i offset;
 } StackD7D4;
@@ -145,7 +146,6 @@ RaceCameraTransition gRaceCameraPositionTransitions[] = {
     { 0, 0x0F, { 0xE21D1637, 0xED2A73FF, 0xE3E16721 }, { 0xE21D1637, 0xED3BB3FF, 0xE3E16721 } },
 };
 
-extern void packFixedTransformMatrix(void *, void *);
 extern s16 calculateFixedAngleBetweenXZPoints(s32, s32, s32, s32);
 extern RaceCamera D_801121E0[RACE_CAMERA_COUNT];
 extern RaceCamera *D_801124A0;
@@ -221,16 +221,16 @@ void updateRaceCamera(s32 arg0) {
 void updateRaceCameraTransformFromAngles(void) {
     StackD7D4 stack;
 
-    makeFixedRotationYX(D_801124A0->rotationMatrix, -D_801124A0->pitch, -D_801124A0->yaw);
+    makeFixedRotationYX(D_801124A0->cameraTransform.rotation, -D_801124A0->pitch, -D_801124A0->yaw);
     stack.offset.x = 0;
     stack.offset.y = 0;
     stack.offset.z = -D_801124A0->distance;
     makeFixedRotationXY(stack.transform.rotation, D_801124A0->pitch, D_801124A0->yaw);
     transformVec3iByFixedMatrix(stack.transform.rotation, &stack.offset, &stack.transformed);
-    D_801124A0->transformOffset.x = stack.transformed.x - D_801124A0->pos.x;
-    D_801124A0->transformOffset.y = stack.transformed.y - D_801124A0->pos.y;
-    D_801124A0->transformOffset.z = stack.transformed.z - D_801124A0->pos.z;
-    packFixedTransformMatrix(&stack.transform, D_801124A0->transform);
+    D_801124A0->cameraTransform.translation.x = stack.transformed.x - D_801124A0->pos.x;
+    D_801124A0->cameraTransform.translation.y = stack.transformed.y - D_801124A0->pos.y;
+    D_801124A0->cameraTransform.translation.z = stack.transformed.z - D_801124A0->pos.z;
+    packFixedTransformMatrix(&stack.transform, &D_801124A0->packedTransform);
 }
 
 void updateRaceCameraLookAtTransform(void) {
@@ -241,10 +241,10 @@ void updateRaceCameraLookAtTransform(void) {
     s32 dist;
     s32 cosine;
     s32 sine;
-    FixedTransform pitchMtx;
-    FixedTransform yawMtx;
-    s32 pad[3];
-    FixedMatrix3s resultMtx;
+    Transform3D pitchMtx;
+    Transform3D yawMtx;
+    Transform3D resultTransform;
+    s32 pad[1];
     s32 i;
     s32 j;
 
@@ -281,7 +281,7 @@ void updateRaceCameraLookAtTransform(void) {
 
     for (i = 0; i < 3; i++) {
         for (j = 0; j < 3; j++) {
-            FIXED_MATRIX_ROWS(D_801124A0->rotationMatrix)
+            FIXED_MATRIX_ROWS(D_801124A0->cameraTransform.rotation)
             [i][j] = FIXED_MUL(FIXED_MATRIX_ROWS(yawMtx.rotation)[i][0], FIXED_MATRIX_ROWS(pitchMtx.rotation)[0][j]) +
                      FIXED_MUL(FIXED_MATRIX_ROWS(yawMtx.rotation)[i][1], FIXED_MATRIX_ROWS(pitchMtx.rotation)[1][j]) +
                      FIXED_MUL(FIXED_MATRIX_ROWS(yawMtx.rotation)[i][2], FIXED_MATRIX_ROWS(pitchMtx.rotation)[2][j]);
@@ -295,16 +295,16 @@ void updateRaceCameraLookAtTransform(void) {
 
     for (i = 0; i < 3; i++) {
         for (j = 0; j < 3; j++) {
-            resultMtx[(i * 3) + j] = FIXED_MUL(pitchMtx.rotation[i * 3], yawMtx.rotation[j]) +
+            resultTransform.rotation[(i * 3) + j] = FIXED_MUL(pitchMtx.rotation[i * 3], yawMtx.rotation[j]) +
                                      FIXED_MUL(pitchMtx.rotation[(i * 3) + 1], yawMtx.rotation[j + 3]) +
                                      FIXED_MUL(pitchMtx.rotation[(i * 3) + 2], yawMtx.rotation[j + 6]);
         }
     }
 
-    D_801124A0->transformOffset.x = -((((s64)resultMtx[MTX_YX] * D_801124A0->unk28) / 0x10000) + D_801124A0->pos.x);
-    D_801124A0->transformOffset.y = -((((s64)resultMtx[MTX_YY] * D_801124A0->unk28) / 0x10000) + D_801124A0->pos.y);
-    D_801124A0->transformOffset.z = -((((s64)resultMtx[MTX_YZ] * D_801124A0->unk28) / 0x10000) + D_801124A0->pos.z);
-    packFixedTransformMatrix(resultMtx, D_801124A0->transform);
+    D_801124A0->cameraTransform.translation.x = -((((s64)resultTransform.rotation[MTX_YX] * D_801124A0->unk28) / 0x10000) + D_801124A0->pos.x);
+    D_801124A0->cameraTransform.translation.y = -((((s64)resultTransform.rotation[MTX_YY] * D_801124A0->unk28) / 0x10000) + D_801124A0->pos.y);
+    D_801124A0->cameraTransform.translation.z = -((((s64)resultTransform.rotation[MTX_YZ] * D_801124A0->unk28) / 0x10000) + D_801124A0->pos.z);
+    packFixedTransformMatrix(&resultTransform, &D_801124A0->packedTransform);
 }
 
 void updateRaceCameraAlternateLookAtTransform(void) {
@@ -316,10 +316,10 @@ void updateRaceCameraAlternateLookAtTransform(void) {
     s32 dist;
     s32 cosine;
     s32 sine;
-    FixedTransform pitchMtx;
-    FixedTransform yawMtx;
-    s32 pad[3];
-    FixedMatrix3s resultMtx;
+    Transform3D pitchMtx;
+    Transform3D yawMtx;
+    Transform3D resultTransform;
+    s32 pad[1];
     s32 i;
     s32 j;
 
@@ -357,7 +357,7 @@ void updateRaceCameraAlternateLookAtTransform(void) {
 
     for (i = 0; i < 3; i++) {
         for (j = 0; j < 3; j++) {
-            FIXED_MATRIX_ROWS(D_801124A0->rotationMatrix)
+            FIXED_MATRIX_ROWS(D_801124A0->cameraTransform.rotation)
             [i][j] = FIXED_MUL(FIXED_MATRIX_ROWS(yawMtx.rotation)[i][0], FIXED_MATRIX_ROWS(pitchMtx.rotation)[0][j]) +
                      FIXED_MUL(FIXED_MATRIX_ROWS(yawMtx.rotation)[i][1], FIXED_MATRIX_ROWS(pitchMtx.rotation)[1][j]) +
                      FIXED_MUL(FIXED_MATRIX_ROWS(yawMtx.rotation)[i][2], FIXED_MATRIX_ROWS(pitchMtx.rotation)[2][j]);
@@ -371,16 +371,16 @@ void updateRaceCameraAlternateLookAtTransform(void) {
 
     for (i = 0; i < 3; i++) {
         for (j = 0; j < 3; j++) {
-            resultMtx[(i * 3) + j] = FIXED_MUL(pitchMtx.rotation[i * 3], yawMtx.rotation[j]) +
+            resultTransform.rotation[(i * 3) + j] = FIXED_MUL(pitchMtx.rotation[i * 3], yawMtx.rotation[j]) +
                                      FIXED_MUL(pitchMtx.rotation[(i * 3) + 1], yawMtx.rotation[j + 3]) +
                                      FIXED_MUL(pitchMtx.rotation[(i * 3) + 2], yawMtx.rotation[j + 6]);
         }
     }
 
-    D_801124A0->transformOffset.x = -((((s64)resultMtx[MTX_YX] * D_801124A0->unk28) / 0x10000) + D_801124A0->pos.x);
-    D_801124A0->transformOffset.y = -((((s64)resultMtx[MTX_YY] * D_801124A0->unk28) / 0x10000) + D_801124A0->pos.y);
-    D_801124A0->transformOffset.z = -((((s64)resultMtx[MTX_YZ] * D_801124A0->unk28) / 0x10000) + D_801124A0->pos.z);
-    packFixedTransformMatrix(resultMtx, D_801124A0->transform);
+    D_801124A0->cameraTransform.translation.x = -((((s64)resultTransform.rotation[MTX_YX] * D_801124A0->unk28) / 0x10000) + D_801124A0->pos.x);
+    D_801124A0->cameraTransform.translation.y = -((((s64)resultTransform.rotation[MTX_YY] * D_801124A0->unk28) / 0x10000) + D_801124A0->pos.y);
+    D_801124A0->cameraTransform.translation.z = -((((s64)resultTransform.rotation[MTX_YZ] * D_801124A0->unk28) / 0x10000) + D_801124A0->pos.z);
+    packFixedTransformMatrix(&resultTransform, &D_801124A0->packedTransform);
 }
 
 void noopRaceCameraUpdate(void) {

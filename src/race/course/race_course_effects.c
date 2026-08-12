@@ -14,6 +14,7 @@
 #include "game/math/fixed_point_math.h"
 #include "game/race/motion/race_motion.h"
 #include "game/race/player/race_player_movement.h"
+#include "game/race/camera/race_camera.h"
 
 #define COURSE_INDEX_RELOAD (*(volatile s16 *)&gRaceCourseIndex.signedValue)
 #define ASSET_HANDLE(index) (gAssetHandles[(index)])
@@ -80,7 +81,7 @@ typedef struct {
 
 typedef struct CourseGateObjectEffect {
     char pad0[0x18];
-    FixedTransform source;
+    Transform3D source;
     Vec3i pos1;
     Vec3i pos2;
     s16 unk50;
@@ -96,7 +97,7 @@ typedef struct RaceMovingEffect {
     char pad0[0x18];
     Vec3i velocity;
     Vec3i pos;
-    FixedTransform unk30;
+    Transform3D unk30;
     s16 timer;
     s16 unk52;
     void *matrix;
@@ -149,7 +150,7 @@ typedef union {
 typedef struct {
     Vec3i dest;
     Vec3i source;
-    FixedTransform transform;
+    Transform3D transform;
     s32 pad38;
 } CourseTriggerScratch;
 
@@ -175,12 +176,6 @@ typedef struct {
     s16 angle;
     s16 unkE;
 } SoundParams;
-
-typedef struct {
-    char pad0[0x44];
-    Vec3i transformOffset;
-    char pad50[0x60];
-} RaceCamera;
 
 typedef struct RaceCourseBackdropEffect {
     char pad0[0x44];
@@ -459,9 +454,6 @@ extern void enqueueSoundEffect(s32, s32);
 extern void enqueuePositionalSoundEffect(s32, void *, s32, s32);
 extern void osWritebackDCache(void *, s32);
 extern void *allocMenuRenderScratch(s32);
-extern void packFixedTransformMatrix(void *, void *);
-extern void *allocFixedTransformMatrix(FixedTransform *);
-extern void setPackedMatrixTranslation(Mtx *, Vec3i *);
 extern void *resolveAssetTableRelativePointer(void *, u32);
 extern void osWritebackDCache(void *, s32);
 extern s32 gMenuFlowState;
@@ -607,14 +599,14 @@ void renderRaceCourseModel(void *arg0) {
 void renderRaceCourseBackdrop(RaceCourseBackdropEffect *arg0) {
     s32 matrixFlags;
     void *textureBase;
-    FixedTransform sp100;
+    Transform3D sp100;
     volatile u8 pad[8];
 
     sp100 = gIdentityFixedTransform;
-    sp100.translation.x = -D_801121E0[gCurrentViewportIndex].transformOffset.x;
-    sp100.translation.y = -D_801121E0[gCurrentViewportIndex].transformOffset.y;
+    sp100.translation.x = -D_801121E0[gCurrentViewportIndex].cameraTransform.translation.x;
+    sp100.translation.y = -D_801121E0[gCurrentViewportIndex].cameraTransform.translation.y;
     matrixFlags = G_MTX_NOPUSH;
-    sp100.translation.z = -D_801121E0[gCurrentViewportIndex].transformOffset.z;
+    sp100.translation.z = -D_801121E0[gCurrentViewportIndex].cameraTransform.translation.z;
 
     arg0->matrix = allocFixedTransformMatrix(&sp100);
     if (arg0->matrix != NULL) {
@@ -888,7 +880,7 @@ void initRaceCourseSceneryObjects(RaceCourseRenderEffect *arg0) {
     CourseRenderEntry *base;
     CourseRenderEntry *entry;
     s32 i;
-    FixedTransform transform;
+    Transform3D transform;
     s32 count;
 
     base = gRaceCourseSceneryEntriesByCourse[gRaceCourseIndex.signedValue];
@@ -912,7 +904,7 @@ void initRaceCourseSceneryObjects(RaceCourseRenderEffect *arg0) {
             transform.translation.x = entry->position.x;
             transform.translation.y = entry->position.y;
             transform.translation.z = entry->position.z;
-            packFixedTransformMatrix(&transform, (void *)((u32)arg0->vertices + (i << 6)));
+            packFixedTransformMatrix(&transform, &arg0->vertices[i]);
             entry++;
         }
 
@@ -924,7 +916,7 @@ void initRaceCourseSceneryObjects(RaceCourseRenderEffect *arg0) {
 void renderPatrolCourseObject(PatrolCourseObjectEffect *arg0) {
     s32 sine;
     s32 doubleSine;
-    FixedTransform transform;
+    Transform3D transform;
     volatile s32 pad0[18];
 
     if (gRenderMatricesDirty != 0) {
@@ -1078,7 +1070,7 @@ void spawnPatrolCourseObject(s16 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4) {
 
 void renderLaunchRampCourseObject(RaceMovingEffect *arg0) {
     volatile s32 unused;
-    FixedTransform transform;
+    Transform3D transform;
     volatile s32 pad[1];
 
     if (gRenderMatricesDirty != 0) {
@@ -1181,7 +1173,7 @@ void initLaunchRampCourseObject(RaceMovingEffect *arg0) {
 
 void renderSpiralCourseObject(RaceMovingEffect *arg0) {
     volatile s32 unused;
-    FixedTransform transform;
+    Transform3D transform;
     volatile s32 pad[2];
 
     if (gRenderMatricesDirty != 0) {
@@ -1296,7 +1288,7 @@ void initSpiralCourseObject(RaceMovingEffect *arg0) {
 }
 
 void renderCourseGateObject(CourseGateObjectEffect *arg0) {
-    FixedTransform scratch;
+    Transform3D scratch;
     volatile s32 pad[2];
     CourseGateObjectEffect *temp_s0 = arg0;
     Gfx *segment1;
@@ -1524,7 +1516,7 @@ void initCourseBillboardMarker(RaceCourseMarkerEffect *arg0) {
 
 void renderCourseTriggerVolume(RaceCourseTriggerEffect *arg0) {
     volatile s32 unused;
-    FixedTransform transform;
+    Transform3D transform;
     Gfx *gfx;
 
     if (gRenderMatricesDirty != 0) {
@@ -1575,7 +1567,7 @@ void renderCourseTriggerVolume(RaceCourseTriggerEffect *arg0) {
 void collidePlayerWithCourseTriggerVolume(RacePlayer *player, RaceCourseTriggerEffect *trigger) {
     Vec3i delta;
     Vec3i transformed;
-    FixedMatrix3sScratch matrix;
+    s16 matrix[0x10];
     s64 savedPush;
     CourseTriggerEntry *entry;
     s32 pad;

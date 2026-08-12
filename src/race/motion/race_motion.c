@@ -6,12 +6,6 @@
 #include "game/race/motion/race_motion.h"
 #include "game/race/player/race_player_progress.h"
 
-typedef struct RaceMotionCoord {
-    s16 x;
-    s16 y;
-    s16 z;
-} RaceMotionCoord;
-
 typedef struct RaceMotionFace {
     u16 coord0;
     u16 coord1;
@@ -33,12 +27,6 @@ typedef struct RaceMotionSurface {
     s16 angle;
     u16 unk14[4];
 } RaceMotionSurface;
-
-typedef struct RaceMotionRotation {
-    s32 x;
-    s32 y;
-    s32 z;
-} RaceMotionRotation;
 
 typedef struct RaceMotionPackedJointRotation {
     s16 xy;
@@ -63,20 +51,14 @@ typedef struct RaceMotionAnimationAsset {
 #define RACE_MOTION_MODEL_POSITION_FRAC_BITS 14
 
 typedef struct RaceMotionRootMotion {
-    RaceMotionRotation position;
+    Vec3i position;
     char padC[8];
-    RaceMotionRotation rotation;
+    Vec3i rotation;
 } RaceMotionRootMotion;
 
-typedef struct RaceMotionPackedVector {
-    s16 x;
-    s16 y;
-    s16 z;
-} RaceMotionPackedVector;
-
 typedef struct RaceMotionPackedRootMotion {
-    RaceMotionPackedVector position;
-    RaceMotionPackedVector rotation;
+    Vec3s position;
+    Vec3s rotation;
 } RaceMotionPackedRootMotion;
 
 typedef struct RaceMotionPackedAnimationFrame {
@@ -85,13 +67,13 @@ typedef struct RaceMotionPackedAnimationFrame {
 } RaceMotionPackedAnimationFrame;
 
 typedef struct RaceMotionDecodedRootFrame {
-    RaceMotionRotation position;
-    RaceMotionRotation rotation;
+    Vec3i position;
+    Vec3i rotation;
 } RaceMotionDecodedRootFrame;
 
 typedef struct RaceMotionDecodedJointFrame {
-    RaceMotionRotation joints[RACE_MOTION_JOINT_COUNT];
-    RaceMotionRotation stridePadding[2];
+    Vec3i joints[RACE_MOTION_JOINT_COUNT];
+    Vec3i stridePadding[2];
 } RaceMotionDecodedJointFrame;
 
 typedef struct RaceMotionPartialJointCursor {
@@ -189,7 +171,7 @@ u8 *gRaceMotionModelParentPartIds[] = {
     gRaceMotionModelParentPartIdData, gRaceMotionModelParentPartIdData, gRaceMotionModelParentPartIdData,
     gRaceMotionModelParentPartIdData,
 };
-RaceMotionCoord gRaceMotionModelPartPositionsShort[] = {
+Vec3s gRaceMotionModelPartPositionsShort[] = {
     { 0,   0,   0 },
     { 0,   37,  0 },
     { -6,  -2,  0 },
@@ -205,7 +187,7 @@ RaceMotionCoord gRaceMotionModelPartPositionsShort[] = {
     { -14, 10,  0 },
     { 14,  10,  0 },
 };
-RaceMotionCoord gRaceMotionModelPartPositionsTall[] = {
+Vec3s gRaceMotionModelPartPositionsTall[] = {
     { 0,   0,   0  },
     { 0,   44,  0  },
     { -6,  -5,  0  },
@@ -221,7 +203,7 @@ RaceMotionCoord gRaceMotionModelPartPositionsTall[] = {
     { -12, 12,  -3 },
     { 12,  12,  -3 },
 };
-RaceMotionCoord gRaceMotionModelPartPositionsWide[] = {
+Vec3s gRaceMotionModelPartPositionsWide[] = {
     { 0,   0,   0  },
     { 0,   51,  0  },
     { -8,  -3,  0  },
@@ -237,7 +219,7 @@ RaceMotionCoord gRaceMotionModelPartPositionsWide[] = {
     { -17, 12,  -8 },
     { 17,  12,  -8 },
 };
-RaceMotionCoord gRaceMotionModelPartPositionsCompact[] = {
+Vec3s gRaceMotionModelPartPositionsCompact[] = {
     { 0,   0,  0  },
     { 0,   40, 0  },
     { -5,  -7, 0  },
@@ -253,7 +235,7 @@ RaceMotionCoord gRaceMotionModelPartPositionsCompact[] = {
     { -6,  10, 0  },
     { 6,   10, 0  },
 };
-RaceMotionCoord *gRaceMotionModelPartPositions[] = {
+Vec3s *gRaceMotionModelPartPositions[] = {
     gRaceMotionModelPartPositionsShort,
     gRaceMotionModelPartPositionsTall,
     gRaceMotionModelPartPositionsShort,
@@ -264,7 +246,7 @@ RaceMotionCoord *gRaceMotionModelPartPositions[] = {
     NULL,
 };
 
-extern RaceMotionCoord *gRaceCourseSurfaceCoords;
+extern Vec3s *gRaceCourseSurfaceCoords;
 extern RaceMotionFace *gRaceCourseSurfaceFaces;
 extern RaceMotionSurface *gRaceCourseSurfaces;
 extern s32 gRaceCourseSurfaceAngleSin;
@@ -277,8 +259,8 @@ extern s32 gRaceCourseCollisionAdjustedX;
 extern s32 gRaceCourseCollisionAdjustedZ;
 extern volatile s32 gRaceMotionRotationFrameBuffer[];
 extern volatile s32 gRaceMotionRotationDecodeFrameBuffer[];
-extern RaceMotionRotation gRaceMotionJointFrameBuffer[];
-extern RaceMotionRotation gRaceMotionJointDecodeFrameBuffer[];
+extern Vec3i gRaceMotionJointFrameBuffer[];
+extern Vec3i gRaceMotionJointDecodeFrameBuffer[];
 extern s32 gRaceMotionJointBlendBuffer[];
 extern s32 gRacePlayerHitCueId;
 
@@ -287,7 +269,7 @@ void initRaceCourseSurfaceData(void) {
     RaceMotionCountedTable *faceTable;
 
     coordTable = (RaceMotionCountedTable *)getRelocatableHeapBlockBase(gAssetHandles[0x1B]);
-    gRaceCourseSurfaceCoords = (RaceMotionCoord *)coordTable->data;
+    gRaceCourseSurfaceCoords = (Vec3s *)coordTable->data;
 
     faceTable = (RaceMotionCountedTable *)&gRaceCourseSurfaceCoords[coordTable->count];
     gRaceCourseSurfaceFaces = (RaceMotionFace *)faceTable->data;
@@ -303,7 +285,7 @@ s32 findRaceCourseSurfaceFromHint(s32 surfaceIndex, s32 x, s32 z) {
     index = surfaceIndex;
 
 loop: {
-    RaceMotionCoord *coords;
+    Vec3s *coords;
     s32 x0;
     s32 x1;
     s32 z3;
@@ -359,7 +341,7 @@ s32 findRaceCourseSurfaceAtPoint(s32 x, s32 z) {
     surfaceIndex = 0;
     if (gRaceCourseStartEntries[gRaceCourseIndex.signedValue].maxSurfaceIndex >= 0) {
         do {
-            RaceMotionCoord *coords;
+            Vec3s *coords;
             s32 outsideSurface;
             s32 x0;
             s32 x1;
@@ -938,8 +920,8 @@ s32 getRaceCourseSurfaceType(s32 arg0, s32 arg1, s32 arg2) {
     s32 faceIndex;
     s32 faceOffset;
     RaceMotionFace *face;
-    RaceMotionCoord *coord;
-    RaceMotionCoord *coords;
+    Vec3s *coord;
+    Vec3s *coords;
     s64 pad;
     s64 rhs;
     s64 lhs;
@@ -952,12 +934,12 @@ s32 getRaceCourseSurfaceType(s32 arg0, s32 arg1, s32 arg2) {
             face = (RaceMotionFace *)((s32)gRaceCourseSurfaceFaces + faceOffset);
             if (face->unk7 == 0) {
                 coords = gRaceCourseSurfaceCoords;
-                coord = (RaceMotionCoord *)((s32)coords + face->coord0 * sizeof(RaceMotionCoord));
+                coord = (Vec3s *)((s32)coords + face->coord0 * sizeof(Vec3s));
                 lhs = (s64)((coords[face->coord1].x << 0x11) - (coord->x << 0x11)) * (arg2 - (coord->z << 0x11));
 
                 face = (RaceMotionFace *)((s32)gRaceCourseSurfaceFaces + faceOffset);
                 coords = gRaceCourseSurfaceCoords;
-                coord = (RaceMotionCoord *)((s32)coords + face->coord0 * sizeof(RaceMotionCoord));
+                coord = (Vec3s *)((s32)coords + face->coord0 * sizeof(Vec3s));
                 rhs = (s64)((coords[face->coord1].z << 0x11) - (coord->z << 0x11)) * (arg1 - (coord->x << 0x11));
 
                 if (lhs - rhs < 0) {
@@ -968,12 +950,12 @@ s32 getRaceCourseSurfaceType(s32 arg0, s32 arg1, s32 arg2) {
             }
 
             coords = gRaceCourseSurfaceCoords;
-            coord = (RaceMotionCoord *)((s32)coords + face->coord1 * sizeof(RaceMotionCoord));
+            coord = (Vec3s *)((s32)coords + face->coord1 * sizeof(Vec3s));
             lhs = (s64)((coords[face->coord2].x << 0x11) - (coord->x << 0x11)) * (arg2 - (coord->z << 0x11));
 
             face = (RaceMotionFace *)((s32)gRaceCourseSurfaceFaces + faceOffset);
             coords = gRaceCourseSurfaceCoords;
-            coord = (RaceMotionCoord *)((s32)coords + face->coord1 * sizeof(RaceMotionCoord));
+            coord = (Vec3s *)((s32)coords + face->coord1 * sizeof(Vec3s));
             rhs = (s64)((coords[face->coord2].z << 0x11) - (coord->z << 0x11)) * (arg1 - (coord->x << 0x11));
 
             if (lhs - rhs >= 0) {
@@ -1004,24 +986,24 @@ u32 projectRaceCourseSurfaceProgress(s32 arg0, s32 arg1, s32 arg2) {
 }
 
 void getRaceCourseSurfaceSpawnTransform(s32 arg0, s32 *x, s32 *y, s32 *z, s16 *angle) {
-    RaceMotionCoord **coordTablePtr;
+    Vec3s **coordTablePtr;
     s32 keyframeOffset;
 
     keyframeOffset = arg0 * sizeof(RaceMotionSurface);
     coordTablePtr = &gRaceCourseSurfaceCoords;
-    *x = ((RaceMotionCoord *)((s32)*coordTablePtr +
+    *x = ((Vec3s *)((s32)*coordTablePtr +
                               (((RaceMotionSurface *)((s32)gRaceCourseSurfaces + keyframeOffset))->positionIndex *
-                               sizeof(RaceMotionCoord))))
+                               sizeof(Vec3s))))
              ->x
          << 0x11;
-    *y = ((RaceMotionCoord *)((s32)*coordTablePtr +
+    *y = ((Vec3s *)((s32)*coordTablePtr +
                               (((RaceMotionSurface *)((s32)gRaceCourseSurfaces + keyframeOffset))->positionIndex *
-                               sizeof(RaceMotionCoord))))
+                               sizeof(Vec3s))))
              ->y
          << 0x11;
-    *z = ((RaceMotionCoord *)((s32)*coordTablePtr +
+    *z = ((Vec3s *)((s32)*coordTablePtr +
                               (((RaceMotionSurface *)((s32)gRaceCourseSurfaces + keyframeOffset))->positionIndex *
-                               sizeof(RaceMotionCoord))))
+                               sizeof(Vec3s))))
              ->z
          << 0x11;
     *angle = -((RaceMotionSurface *)((s32)gRaceCourseSurfaces + keyframeOffset))->angle;
@@ -1243,8 +1225,8 @@ void interpolateRaceMotionAnimationFrame(RaceMotionState *state, s32 animationIn
     RaceMotionDecodedRootFrame *decodedRootFrame;
     RaceMotionDecodedJointFrame *decodedJointFrame;
     RaceMotionDecodedJointFrame *decodedJointFrameEnd;
-    RaceMotionRotation *decodedRoot;
-    RaceMotionRotation *decodedJoint;
+    Vec3i *decodedRoot;
+    Vec3i *decodedJoint;
     RaceMotionPartialJointCursor *jointCursor;
     s32 *jointData;
     s32 *rootData;
@@ -1262,7 +1244,7 @@ void interpolateRaceMotionAnimationFrame(RaceMotionState *state, s32 animationIn
     packedData = (s16 *)animationAsset + animationAsset->animationOffsets[animationIndex] + 1;
     decodedRootFrame = (RaceMotionDecodedRootFrame *)gRaceMotionRotationDecodeFrameBuffer; decodedJointFrameEnd = (RaceMotionDecodedJointFrame *)&gRacePlayerHitCueId; decodedJointFrame = (RaceMotionDecodedJointFrame *)gRaceMotionJointDecodeFrameBuffer; one = 1; decode_frame:
     jointIndex = 0;
-    decodedRoot = (RaceMotionRotation *)decodedRootFrame;
+    decodedRoot = (Vec3i *)decodedRootFrame;
 
     for (; jointIndex < RACE_MOTION_FRAME_SAMPLE_COUNT; jointIndex++) {
         decodedRoot->x = packedData[0] << RACE_MOTION_MODEL_POSITION_FRAC_BITS;
@@ -1366,8 +1348,8 @@ void interpolateRaceMotionJointAnimationFrame(RaceMotionState *state, s32 animat
     RaceMotionDecodedRootFrame *decodedRootFrame;
     RaceMotionDecodedJointFrame *decodedJointFrame;
     RaceMotionDecodedJointFrame *decodedJointFrameEnd;
-    RaceMotionRotation *decodedRoot;
-    RaceMotionRotation *decodedJoint;
+    Vec3i *decodedRoot;
+    Vec3i *decodedJoint;
     s32 *jointData;
     s32 *rootData;
     s32 jointIndex;
@@ -1384,7 +1366,7 @@ void interpolateRaceMotionJointAnimationFrame(RaceMotionState *state, s32 animat
     packedData = (s16 *)animationAsset + animationAsset->animationOffsets[animationIndex] + 1;
     decodedRootFrame = (RaceMotionDecodedRootFrame *)gRaceMotionRotationDecodeFrameBuffer; decodedJointFrameEnd = (RaceMotionDecodedJointFrame *)&gRacePlayerHitCueId; decodedJointFrame = (RaceMotionDecodedJointFrame *)gRaceMotionJointDecodeFrameBuffer; one = 1; decode_frame:
     jointIndex = 0;
-    decodedRoot = (RaceMotionRotation *)decodedRootFrame;
+    decodedRoot = (Vec3i *)decodedRootFrame;
 
     for (; jointIndex < RACE_MOTION_FRAME_SAMPLE_COUNT; jointIndex++) {
         decodedRoot->x = packedData[0] << RACE_MOTION_MODEL_POSITION_FRAC_BITS;
@@ -1495,7 +1477,7 @@ void blendRaceMotionJointAnimation(RaceMotionState *state, s32 animIndex, s32 ti
     RaceMotionPackedJointRotation *packedRotation;
     RaceMotionDecodedJointFrame *decodedJointFrame;
     RaceMotionDecodedJointFrame *decodedJointFrameEnd;
-    RaceMotionRotation *decodedJoint;
+    Vec3i *decodedJoint;
     RaceMotionPartialJointCursor *jointCursor;
     s32 *blendData;
     s32 jointIndex;
@@ -1657,7 +1639,7 @@ void initRaceMotionModelParts(RaceMotionInitState *state) {
     s32 i;
     u8 *partIds;
     u8 *parentPartIds;
-    RaceMotionCoord *positions;
+    Vec3s *positions;
     s16 zero;
 
     state->partCount = gRaceMotionModelPartCounts[state->modelId];

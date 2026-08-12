@@ -20,6 +20,12 @@ void drawScaledAssetTableSpriteWithExplicitPalette(
     u16 paletteIndex,
     u16 scale
 );
+void packFixedTransformMatrix(Transform3D *source, Mtx *dest);
+Mtx *allocFixedTransformMatrix(Transform3D *source);
+Mtx *allocFixedRotationMatrix(Mat3x3 rotation);
+Mtx *allocTranslationOnlyFixedMatrix(Mtx *source);
+void setPackedMatrixTranslation(Mtx *matrix, Vec3i *translation);
+void copyPackedMatrixTranslation(Mtx *source, Mtx *dest);
 s32 isPositionNearAnyRaceViewportFocus(Vec3i *position);
 
 #endif
