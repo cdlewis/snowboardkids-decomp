@@ -92,7 +92,9 @@ class MatchLogTest(unittest.TestCase):
 
 
 class DistanceOutputTest(unittest.TestCase):
-    def run_dist(self, target: str, candidate: str) -> str:
+    def run_dist(
+        self, target: str, candidate: str, algorithm: str = "sequence"
+    ) -> str:
         with tempfile.TemporaryDirectory() as temp:
             temp_dir = Path(temp)
             target_path = temp_dir / "target.txt"
@@ -100,7 +102,14 @@ class DistanceOutputTest(unittest.TestCase):
             target_path.write_text(target)
             candidate_path.write_text(candidate)
             return subprocess.check_output(
-                [sys.executable, str(DIST), str(target_path), str(candidate_path)],
+                [
+                    sys.executable,
+                    str(DIST),
+                    str(target_path),
+                    str(candidate_path),
+                    "--algorithm",
+                    algorithm,
+                ],
                 text=True,
             )
 
@@ -108,6 +117,18 @@ class DistanceOutputTest(unittest.TestCase):
         output = self.run_dist("addiu v0,v0,1\n", "addiu v0,v0,1\n")
 
         self.assertIn("Score: 100.000% (0 differences)", output)
+        self.assertIn("Algorithm: sequence", output)
+        self.assertIn("Exact match: yes", output)
+
+    def test_levenshtein_algorithm_is_reported(self) -> None:
+        output = self.run_dist(
+            "addiu v0,v0,1\n",
+            "addiu v0,v0,1\n",
+            algorithm="levenshtein",
+        )
+
+        self.assertIn("Score: 100.000% (0 differences)", output)
+        self.assertIn("Algorithm: levenshtein", output)
         self.assertIn("Exact match: yes", output)
 
     def test_operand_difference_never_rounds_to_full_match(self) -> None:

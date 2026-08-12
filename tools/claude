@@ -134,6 +134,7 @@ if [[ "$ARG" =~ ^[0-9]+$ ]] || [[ "$ARG" =~ ^[a-zA-Z0-9]+$ && ${#ARG} -ge 5 && $
     # Extract diff_label and source_code from JSON response
     DIFF_LABEL=$(echo "$SCRATCH_DATA" | python3 -c "import sys, json; data = json.load(sys.stdin); print(data.get('diff_label', ''))" 2>/dev/null)
     SOURCE_CODE=$(echo "$SCRATCH_DATA" | python3 -c "import sys, json; data = json.load(sys.stdin); print(data.get('source_code', ''))" 2>/dev/null)
+    SCRATCH_DIFF_FLAGS=$(echo "$SCRATCH_DATA" | python3 -c "import sys, json; data = json.load(sys.stdin); print(' '.join(data.get('diff_flags') or []))" 2>/dev/null)
     SCRATCH_SCORE=$(echo "$SCRATCH_DATA" | python3 -c "import sys, json; data = json.load(sys.stdin); score = data.get('score', 0); max_score = data.get('max_score', 0); pct = ((max_score - score) / max_score * 100) if max_score > 0 else 0; print(f'{pct:.2f}')" 2>/dev/null)
 
     if [ -z "$DIFF_LABEL" ] || [ -z "$SOURCE_CODE" ]; then
@@ -220,6 +221,9 @@ if [ "$USE_SCRATCH_SOURCE" = true ]; then
     echo "// Imported from decomp.me scratch $ARG (${SCRATCH_SCORE}% match)" >> "$created_dir/base.c"
     echo "" >> "$created_dir/base.c"
     echo "$SOURCE_CODE" >> "$created_dir/base.c"
+    if [[ " $SCRATCH_DIFF_FLAGS " == *" -DIFFlevenshtein "* ]]; then
+        echo "levenshtein" > "$created_dir/.diff_algorithm"
+    fi
     echo "Using source code from decomp.me scratch (${SCRATCH_SCORE}% match)"
 elif [ "$BOOTSTRAP" = true ]; then
     # Use m2c to generate initial C code from assembly

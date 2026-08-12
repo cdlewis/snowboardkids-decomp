@@ -128,7 +128,11 @@ def field_matches_any_symbol(field: str, arch: MipsArchitecture) -> bool:
     return False
 
 def score_files(
-    target_lines: List[str], cand_lines: List[str], *, debug_mode: bool = False
+    target_lines: List[str],
+    cand_lines: List[str],
+    *,
+    algorithm: str = "sequence",
+    debug_mode: bool = False,
 ) -> Tuple[int, str, float, bool]:
     """Score the differences between target and candidate assembly lines using the permuter's algorithm"""
     # Normalize jump table references before creating Line objects
@@ -142,13 +146,6 @@ def score_files(
     # Use MIPS architecture for this project
     arch = MipsArchitecture()
     
-    # For diff matching based on mnemonics
-    difflib_differ = difflib.SequenceMatcher(
-        a=[line.mnemonic for line in cand_seq], 
-        b=[line.mnemonic for line in target_seq], 
-        autojunk=False
-    )
-
     num_stack_penalties = 0
     num_branch_penalties = 0
     num_regalloc_penalties = 0
@@ -158,7 +155,32 @@ def score_files(
     deletions: List[str] = []
     insertions: List[str] = []
 
-    result_diff: Sequence[Tuple[str, int, int, int, int]] = difflib_differ.get_opcodes()
+    if algorithm == "levenshtein":
+        import Levenshtein
+
+        remapping: Dict[str, str] = {}
+
+        def remap(sequence: List[str]) -> str:
+            remapped = []
+            for mnemonic in sequence:
+                value = remapping.get(mnemonic)
+                if value is None:
+                    value = chr(len(remapping))
+                    remapping[mnemonic] = value
+                remapped.append(value)
+            return "".join(remapped)
+
+        result_diff = Levenshtein.opcodes(
+            remap([line.mnemonic for line in cand_seq]),
+            remap([line.mnemonic for line in target_seq]),
+        )
+    else:
+        difflib_differ = difflib.SequenceMatcher(
+            a=[line.mnemonic for line in cand_seq],
+            b=[line.mnemonic for line in target_seq],
+            autojunk=False,
+        )
+        result_diff = difflib_differ.get_opcodes()
 
     equal_no_diff: Set[int] = set()
     total_equal_lines = 0
@@ -327,6 +349,12 @@ def main():
     parser.add_argument("cand_file", help="Candidate assembly text file or object file")
     parser.add_argument("--debug", action="store_true", help="Print debug info")
     parser.add_argument("--stack-diffs", action="store_true", help="Preserve stack differences (for .o files)")
+    parser.add_argument(
+        "--algorithm",
+        choices=("sequence", "levenshtein"),
+        default="sequence",
+        help="Mnemonic alignment algorithm (default: sequence)",
+    )
     args = parser.parse_args()
 
     # Check if we're dealing with object files
@@ -345,11 +373,15 @@ def main():
         check_assertions(target_lines, cand_lines, assertions)
 
     score, sha256_hash, match_percentage, exact_match = score_files(
-        target_lines, cand_lines, debug_mode=args.debug
+        target_lines,
+        cand_lines,
+        algorithm=args.algorithm,
+        debug_mode=args.debug,
     )
     
     # Use the raw score directly as the differences value
     print(f"Score: {match_percentage:.3f}% ({score} differences)")
+    print(f"Algorithm: {args.algorithm}")
     print(f"Exact match: {'yes' if exact_match and score == 0 else 'no'}")
 
 if __name__ == "__main__":
