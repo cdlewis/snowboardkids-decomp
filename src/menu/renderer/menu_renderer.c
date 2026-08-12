@@ -48,7 +48,6 @@ typedef struct FontAssetHeader FontAssetHeader;
 typedef struct FontTexture FontTexture;
 typedef struct MenuFontAssetEntry MenuFontAssetEntry;
 typedef union MenuGlyphPalette MenuGlyphPalette;
-typedef union MenuRenderCoordinate MenuRenderCoordinate;
 
 struct MenuRenderTask {
     /* 0x00 */ MenuRenderTask *prev;
@@ -123,11 +122,6 @@ union MenuGlyphPalette {
 
 typedef u16 MenuPalette[MENU_PALETTE_COLOR_COUNT];
 
-union MenuRenderCoordinate {
-    s32 value;
-    volatile s32 stored;
-};
-
 typedef void (*MenuRenderSpriteActorCallback)(MenuRenderSpriteActor *);
 typedef void (*MenuRenderCallback)(MenuRenderSprite *);
 
@@ -148,7 +142,7 @@ void drawMenuSpriteClipped(
     s16 x,
     s16 y,
     MenuFontAssetTable *table,
-    u16 imageIndex,
+    volatile u16 imageIndex,
     u16 scaleX,
     u16 scaleY,
     u8 flipMode,
@@ -310,12 +304,12 @@ extern void
 drawMenuSpriteWideIndex(s16 x, s16 y, void *texture, s32 tileIndex, u16 width, u16 height, u8 palette, u8 flip);
 #endif
 
-// drawMenuSpriteClipped best match: 87.258%
-// (nonmatchings/drawMenuSpriteClipped-3327344942128263994/base_21.c)
+// drawMenuSpriteClipped best match: 88.506%
+// (nonmatchings/drawMenuSpriteClipped-3/base_3.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/renderer/menu_renderer/drawMenuSpriteClipped.s")
 
 #ifdef NON_MATCHING
-void drawMenuSpriteClipped(s16 x, s16 y, MenuFontAssetTable *table, u16 imageIndex, u16 scaleX, u16 scaleY,
+void drawMenuSpriteClipped(s16 x, s16 y, MenuFontAssetTable *table, volatile u16 imageIndex, u16 scaleX, u16 scaleY,
                            u8 flipMode, u8 paletteIndex, s32 clipLeft, s32 clipTop, s32 clipRight,
                            s32 clipBottom) {
     MenuFontAssetEntry *entry;
@@ -323,8 +317,8 @@ void drawMenuSpriteClipped(s16 x, s16 y, MenuFontAssetTable *table, u16 imageInd
     MenuPalette *palettes;
     s32 left;
     s32 top;
-    MenuRenderCoordinate right;
-    MenuRenderCoordinate bottom;
+    s32 right[1];
+    s32 bottom[1];
     s32 texS;
     s32 texT;
     s16 minX;
@@ -352,13 +346,13 @@ void drawMenuSpriteClipped(s16 x, s16 y, MenuFontAssetTable *table, u16 imageInd
     }
     flipS = gMenuSpriteFlipScales[flipMode & 3][0];
     flipT = gMenuSpriteFlipScales[flipMode & 3][1];
-    entry = &table->entries[*(volatile u16 *)&imageIndex];
+    entry = &table->entries[imageIndex];
     width = entry->width;
     left = (x + gMenuViewportCenterX) << 2;
     top = (y + gMenuViewportCenterY) << 2;
     height = entry->height;
-    right.value = (((scaleX * width) << 2) >> 5) + left;
-    bottom.value = (((scaleY * height) << 2) >> 5) + top;
+    right[0] = (((scaleX * width) << 2) >> 5) + left;
+    bottom[0] = (((scaleY * height) << 2) >> 5) + top;
     texS = 0;
 
     if (flipS == -1) {
@@ -387,7 +381,7 @@ void drawMenuSpriteClipped(s16 x, s16 y, MenuFontAssetTable *table, u16 imageInd
     }
 
     if ((left < (s16)(maxX << 2)) && (top < (s16)(maxY << 2)) &&
-        (right.stored >= (s16)(minX << 2)) && (bottom.stored >= (s16)(minY << 2))) {
+        (right[0] >= (s16)(minX << 2)) && (bottom[0] >= (s16)(minY << 2))) {
         if (left < (s16)(minX << 2)) {
             s32 clippedTexS;
 
@@ -408,11 +402,11 @@ void drawMenuSpriteClipped(s16 x, s16 y, MenuFontAssetTable *table, u16 imageInd
             }
             top = (s16)(minY << 2);
         }
-        if (right.value >= (s16)(maxX << 2)) {
-            right.value = (s16)(maxX << 2) - 4;
+        if (right[0] >= (s16)(maxX << 2)) {
+            right[0] = (s16)(maxX << 2) - 4;
         }
-        if (bottom.value >= (s16)(maxY << 2)) {
-            bottom.value = (s16)(maxY << 2) - 4;
+        if (bottom[0] >= (s16)(maxY << 2)) {
+            bottom[0] = (s16)(maxY << 2) - 4;
         }
 
         if (paletteIndex == 0) {
@@ -431,7 +425,7 @@ void drawMenuSpriteClipped(s16 x, s16 y, MenuFontAssetTable *table, u16 imageInd
             gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, gMenuTransparentPalette);
         }
         textureStepS = 0x8000 / scaleX;
-        gSPTextureRectangle(gRegionAllocPtr++, left, top, right.value, bottom.value, G_TX_RENDERTILE,
+        gSPTextureRectangle(gRegionAllocPtr++, left, top, right[0], bottom[0], G_TX_RENDERTILE,
                             texS, texT, (u16)(textureStepS * flipS),
                             (u16)((u16)(0x8000 / scaleY) * flipT));
     }
