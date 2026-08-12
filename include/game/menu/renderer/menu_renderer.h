@@ -41,7 +41,7 @@ void drawMenuSpriteClipped(
     s16 x,
     s16 y,
     MenuFontAssetTable *table,
-    u16 imageIndex,
+    volatile u16 imageIndex,
     u16 scaleX,
     u16 scaleY,
     u8 flipMode,
