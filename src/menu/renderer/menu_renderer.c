@@ -893,7 +893,8 @@ void drawMenuSpriteFixedScale(
     u16 scaleYValue;
     u16 scaleYStep;
 
-    paletteBase = (s32)assetAddress + sizeof(FontAssetHeader) + (assetAddress->header.entryCount * sizeof(FontTexture));
+    paletteBase = (s32)assetAddress + sizeof(FontAssetHeader) +
+                  (assetAddress->header.entryCount * sizeof(FontTexture));
     scaleYValue = scaleY;
 
     if (scaleX >= 0xF001) {
@@ -911,17 +912,11 @@ void drawMenuSpriteFixedScale(
 
     sScale = gMenuSpriteFlipScales[flipMode & 3][0];
     tScale = gMenuSpriteFlipScales[flipMode & 3][1];
-    textureBase = (u8 *)(s32)assetAddress + (tileIndex * sizeof(FontTexture));
-    textureBase += sizeof(FontAssetHeader);
-    texture = (FontTexture *)textureBase;
-    texWidth = texture->width;
+    textureBase = (u8 *)(s32)assetAddress + (tileIndex * sizeof(FontTexture)); textureBase += sizeof(FontAssetHeader); texture = (FontTexture *)textureBase; texWidth = texture->width;
 
-    clipRight = x;
-    drawLeft = (drawRight = clipRight + gMenuViewportCenterX) << 2;
-    texS = (y + gMenuViewportCenterY) << 2;
-    drawTop = texS;
-    drawRight = (((scaleX * texWidth) << 2) / 0x1000) + drawLeft;
-    texHeight = texture->height;
+    clipRight = x; drawLeft = (drawRight = clipRight + gMenuViewportCenterX) << 2;
+    texS = (y + gMenuViewportCenterY) << 2; drawTop = texS;
+    drawRight = (((scaleX * texWidth) << 2) / 0x1000) + drawLeft; texHeight = texture->height;
     drawBottom = (((scaleYValue * texHeight) << 2) / 0x1000) + drawTop;
     texS = 0;
     texT = 0;
@@ -948,8 +943,7 @@ void drawMenuSpriteFixedScale(
         }
         if (drawTop < clipTop) {
             texT = (((((clipTop - drawTop) << 2) << 1) << 12) / scaleYValue);
-            if (tScale == -1)
-                texT = ((texHeight - 1) << 5) - texT;
+            if (tScale == -1) texT = ((texHeight - 1) << 5) - texT;
             drawTop = clipTop;
         }
         if (drawRight >= clipRight) {
@@ -978,8 +972,7 @@ void drawMenuSpriteFixedScale(
             G_TX_NOLOD
         );
         gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, (u8 *)((u32)paletteBase + (texture->paletteIndex << 5) + 0x80000000));
-        scaleYValue = 0x400000 / scaleX;
-        scaleYStep = scaleY;
+        scaleYValue = 0x400000 / scaleX; scaleYStep = scaleY;
         gSPTextureRectangle(
             gRegionAllocPtr++,
             drawLeft,
