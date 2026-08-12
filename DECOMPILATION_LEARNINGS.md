@@ -359,6 +359,14 @@ and control flow already match and only register *names* differ.
   letting IDO perform common-subexpression elimination can preserve the exact
   arithmetic and registers while removing an otherwise unexplained rounded
   frame-size increment.
+- **Repeated GBI macro expansion sites can dominate a large frame.** Dynamic
+  display-list macros declare scoped pointer temporaries. IDO's frontend can
+  reserve stack storage per source expansion even when those temporaries do not
+  survive into recognizable loads and stores. Replacing a straight run with a
+  natural counted loop leaves one macro expansion site and can therefore shrink
+  the frame substantially; use this as source-lineage evidence, then verify that
+  the optimizer reproduces the target's unrolled command stream before keeping
+  the loop.
 - **The `struct { s32 v; s32 pad; }` idiom for a spilled call result.** When a
   single spilled `s32` lands at `0x24(sp)` but the target uses `0x20(sp)`,
   declaring it as a two-word struct with a trailing pad shifts IDO's
