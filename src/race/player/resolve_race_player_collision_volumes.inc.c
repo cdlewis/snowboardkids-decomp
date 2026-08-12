@@ -69,7 +69,10 @@ void resolveRacePlayerCollisionVolumes(RacePlayer *player)
 matrix_row_mirrored:
       for (j = 0; j != 3; j++)
       {
-        player->collisionVolumes[sinX].axis[i + j] = (((localAxes[sinX][sinY] * baseMtx[j]) + (localAxes[sinX][sinY + 1] * baseMtx[j + 3])) + (localAxes[sinX][sinY + 2] * baseMtx[j + 6])) / 0x1000;
+        if (1)
+        {
+          player->collisionVolumes[sinX].axis[i + j] = (((localAxes[sinX][sinY] * baseMtx[j]) + (localAxes[sinX][sinY + 1] * baseMtx[j + 3])) + (localAxes[sinX][sinY + 2] * baseMtx[j + 6])) / 0x1000;
+        }
       }
       i += 3;
       sinY += 3;
@@ -130,7 +133,10 @@ matrix_row_mirrored:
 matrix_row_normal:
       for (j = 0; j != 3; j++)
       {
-        player->collisionVolumes[sinX].axis[i + j] = (((localAxes[sinX][sinY] * baseMtx[j]) + (localAxes[sinX][sinY + 1] * baseMtx[j + 3])) + (localAxes[sinX][sinY + 2] * baseMtx[j + 6])) / 0x1000;
+        if (1)
+        {
+          player->collisionVolumes[sinX].axis[i + j] = (((localAxes[sinX][sinY] * baseMtx[j]) + (localAxes[sinX][sinY + 1] * baseMtx[j + 3])) + (localAxes[sinX][sinY + 2] * baseMtx[j + 6])) / 0x1000;
+        }
       }
       i += 3;
       sinY += 3;
