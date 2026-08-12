@@ -829,7 +829,8 @@ void appendFadeOverlayDisplayList(void) {
     gDPSetFogColor(gRegionAllocPtr++, gFadeColorRed, gFadeColorGreen, gFadeColorBlue, 255);
 }
 
-// submitFramebufferRenderTask best match: 98.219%
+// submitFramebufferRenderTask best match: 98.219% at
+// nonmatchings/submitFramebufferRenderTask-2/base_135.c.
 #ifdef NON_MATCHING
 #line 136
 void submitFramebufferRenderTask(u8 frameIndex) {
