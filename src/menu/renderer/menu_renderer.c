@@ -304,8 +304,8 @@ extern void
 drawMenuSpriteWideIndex(s16 x, s16 y, void *texture, s32 tileIndex, u16 width, u16 height, u8 palette, u8 flip);
 #endif
 
-// drawMenuSpriteClipped best match: 88.506%
-// (nonmatchings/drawMenuSpriteClipped-3/base_3.c)
+// drawMenuSpriteClipped best match: 88.647%
+// (nonmatchings/drawMenuSpriteClipped-4542485759220937537/base_32.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/renderer/menu_renderer/drawMenuSpriteClipped.s")
 
 #ifdef NON_MATCHING
@@ -324,7 +324,6 @@ void drawMenuSpriteClipped(s16 x, s16 y, MenuFontAssetTable *table, volatile u16
     s16 minX;
     s16 maxX;
     s16 maxY;
-    u16 textureStepS;
     s16 flipS;
     s16 flipT;
     s16 width;
@@ -424,9 +423,9 @@ void drawMenuSpriteClipped(s16 x, s16 y, MenuFontAssetTable *table, volatile u16
         } else {
             gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, gMenuTransparentPalette);
         }
-        textureStepS = 0x8000 / scaleX;
+        selectedPalette = 0x8000 / scaleX;
         gSPTextureRectangle(gRegionAllocPtr++, left, top, right[0], bottom[0], G_TX_RENDERTILE,
-                            texS, texT, (u16)(textureStepS * flipS),
+                            texS, texT, (u16)(selectedPalette * flipS),
                             (u16)((u16)(0x8000 / scaleY) * flipT));
     }
 }
