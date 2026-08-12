@@ -128,7 +128,7 @@ search_done:
     return outCount;
 }
 
-// saveRaceRecordReplayData best match: 98.607% (nonmatchings/saveRaceRecordReplayData-3/campaign12/generated/001-manual-slot1-u64-mask.c)
+// saveRaceRecordReplayData best match: 98.878% (nonmatchings/saveRaceRecordReplayData-7005356279296566789/base_57.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/main_menu/main_menu_scene_model/saveRaceRecordReplayData.s")
 
 #ifdef NON_MATCHING
@@ -222,10 +222,10 @@ PackedRaceRecordReplay gPackedRaceRecordReplayBuffer;
             if (count != 0) {                                                                              \
                 slotOldOffset = REPLAY_SLOT_OFFSET(slotIndex);                                             \
                 SET_REPLAY_SLOT_OFFSET(slotIndex, writeIndex);                                             \
-                copied = 0;                                                                                \
-                while (copied < gGameSaveDataBuffer[0].replaySlots[(slotIndex)].length) {                  \
-                    gGameSaveDataBuffer[0].replayData[writeIndex] = oldData[slotOldOffset + copied];       \
-                    copied++;                                                                              \
+                i = 0;                                                                                     \
+                while (i < gGameSaveDataBuffer[0].replaySlots[(slotIndex)].length) {                       \
+                    gGameSaveDataBuffer[0].replayData[writeIndex] = oldData[slotOldOffset + i];            \
+                    i++;                                                                                   \
                     AFTER_OLD_COPY(slotIndex);                                                             \
                     writeIndex++;                                                                          \
                 }                                                                                          \
@@ -233,11 +233,11 @@ PackedRaceRecordReplay gPackedRaceRecordReplayBuffer;
         } else {                                                                                           \
             SET_REPLAY_SLOT_OFFSET(slotIndex, writeIndex);                                                 \
             gGameSaveDataBuffer[0].replaySlots[(slotIndex)].length = compressedLength;                     \
-            copied = 0;                                                                                    \
-            while (copied < compressedLength) {                                                            \
-                gGameSaveDataBuffer[0].replayData[writeIndex] = gCompressedRaceRecordReplayBuffer[copied]; \
+            i = 0;                                                                                         \
+            while (i < compressedLength) {                                                                 \
+                gGameSaveDataBuffer[0].replayData[writeIndex] = gCompressedRaceRecordReplayBuffer[i];      \
                 writeIndex++;                                                                              \
-                copied++;                                                                                  \
+                i++;                                                                                       \
             }                                                                                              \
         }                                                                                                  \
     }
@@ -252,46 +252,10 @@ s32 saveRaceRecordReplayData(void) {
     s32 compressedLength;
     s32 totalLength;
     s32 writeIndex;
-    s32 oldOffset;
-    s32 copied;
     s32 count;
     s32 course;
-    u8 buttons;
 
-    history = getRelocatableHeapBlockBase(ASSET_HANDLE(43));
-    if (history->lastWriteIndex >= 0xFD5) {
-        return 1;
-    }
-
-    gPackedRaceRecordReplayBuffer.fields.frameCount = history->lastWriteIndex;
-    gPackedRaceRecordReplayBuffer.fields.characterId = history->characterId;
-    packed = gPackedRaceRecordReplayBuffer.bytes;
-    gPackedRaceRecordReplayBuffer.fields.characterVariant = history->characterVariant;
-
-    i = 0;
-    if (history->lastWriteIndex <= 0) {
-        goto packed_inputs_done;
-    }
-packed_inputs_loop:
-    packed[4 + (i * 3)] = history->stickX[i];
-    packed[5 + (i * 3)] = history->stickY[i];
-    buttons = history->buttons[i];
-    ((volatile u8 *)packed)[6 + (i * 3)] = buttons;
-    packed[6 + (i * 3)] = buttons & ~0x40;
-    i++;
-    if (i < history->lastWriteIndex) {
-        goto packed_inputs_loop;
-    }
-packed_inputs_done:
-
-    compressedLength = compressRaceRecordReplayData(
-        gPackedRaceRecordReplayBuffer.bytes,
-        (history->lastWriteIndex * 3) + 4,
-        gCompressedRaceRecordReplayBuffer
-    );
-    if (compressedLength < 0) {
-        return 1;
-    }
+    history = getRelocatableHeapBlockBase(ASSET_HANDLE(43)); if (history->lastWriteIndex >= 0xFD5) { return 1; } gPackedRaceRecordReplayBuffer.fields.frameCount = history->lastWriteIndex; gPackedRaceRecordReplayBuffer.fields.characterId = history->characterId; packed = gPackedRaceRecordReplayBuffer.bytes; gPackedRaceRecordReplayBuffer.fields.characterVariant = history->characterVariant; i = 0; if (history->lastWriteIndex <= 0) { goto packed_inputs_done; } packed_inputs_loop: packed[4 + (i * 3)] = history->stickX[i]; packed[5 + (i * 3)] = history->stickY[i]; packed[6 + (i * 3)] = history->buttons[i]; packed[6 + (i * 3)] &= ~0x40; i++; if (i < history->lastWriteIndex) { goto packed_inputs_loop; } packed_inputs_done: compressedLength = compressRaceRecordReplayData(gPackedRaceRecordReplayBuffer.bytes, (history->lastWriteIndex * 3) + 4, gCompressedRaceRecordReplayBuffer); if (compressedLength < 0) { return 1; }
 
     course = gRaceCourseIndex.signedValue;
     totalLength = 0;
@@ -308,7 +272,7 @@ packed_inputs_done:
         }
     }
     if (course != 1) {
-        count = gGameSaveDataBuffer[0].replaySlots[1].length & 0xFFFFFFFFFFFFFFFF;
+        count = gGameSaveDataBuffer[0].replaySlots[1].length;
         if (gGameSaveDataBuffer[0].replaySlots[1].length != 0) {
             if (count >= REPLAY_SAVE_MIN_NORMAL) {
                 totalLength += count;
