@@ -224,11 +224,8 @@ extern GameSaveRecordTime gRaceTimeTrialFinishTime;
 extern s16 gMenuFadeAlpha;
 extern s8 gRacePlayerCount;
 extern s16 gRacePlayerAttackStartTimer;
-#ifdef NON_MATCHING
 extern u8 gTrainingCourseLesson;
 extern u8 gMainMenuModeSelection;
-extern void initCourseRecordBannerFadeOut(void *);
-#endif
 extern u8 D_80121B57;
 extern u8 D_80121B60;
 extern s8 D_80121B61;
@@ -594,7 +591,7 @@ void openRaceStartTransitionFlow(void) {
     suspendGameTask(2);
 }
 
-// initRaceSceneFlow best match: 95.939% (nonmatchings/initRaceSceneFlow-6078661025080551018/base_6.c)
+// initRaceSceneFlow best match: 96.191% (nonmatchings/initRaceSceneFlow-7005356279296566789/base_65.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race/flow/race_flow/initRaceSceneFlow.s")
 
 #ifdef NON_MATCHING
@@ -608,7 +605,10 @@ void initRaceSceneFlow(void) {
     u8 *courseCharacterIds;
     u16 *replayRecordFlag;
     s32 duplicate;
-    s32 playerCount;
+    union {
+        u32 unsignedValue;
+        s32 signedValue;
+    } playerCount;
     s32 courseIndex;
 
     gRaceUpdatePaused = 0;
@@ -636,8 +636,8 @@ void initRaceSceneFlow(void) {
     gRacePlayers[1].itemTriggerChance = D_800DC5B4[courseIndex];
     gRacePlayers[2].itemTriggerChance = D_800DC5B4[courseIndex];
     gRacePlayers[3].itemTriggerChance = D_800DC5B4[courseIndex];
-    playerCount = gPlayerCount;
-    if (playerCount != 1) {
+    playerCount.unsignedValue = gPlayerCount;
+    if (playerCount.signedValue != 1) {
         gRacePlayers[0].actionTriggerChance = 0;
         gRacePlayers[1].actionTriggerChance = 0;
         gRacePlayers[2].actionTriggerChance = 0;
@@ -653,13 +653,15 @@ void initRaceSceneFlow(void) {
     gRacePlayers[2].unk17 = 2;
     gRacePlayers[3].unk17 = 3;
 
-    if (playerCount > 0) {
-        player = gRacePlayers;
-        end = &gRacePlayers[playerCount];
+    if (playerCount.signedValue > 0) {
+        if (1) {
+            player = gRacePlayers;
+            end = &gRacePlayers[playerCount.unsignedValue];
+        }
         do {
             player->isCpu = 0;
             player++;
-        } while (player < &gRacePlayers[playerCount]);
+        } while (player < &gRacePlayers[playerCount.unsignedValue]);
     }
 
     gRacePlayers[0].characterId = gRacePlayers[0].selectedCharacterId;
@@ -671,12 +673,12 @@ void initRaceSceneFlow(void) {
     gRacePlayers[2].characterVariant = gRacePlayers[2].menuSelection;
     gRacePlayers[3].characterVariant = gRacePlayers[3].menuSelection;
     gRacePlayers[0].unk12 = gRacePlayers[0].selectionUnlockState;
-    gRacePlayers[1].unk12 = gRacePlayers[1].selectionUnlockState;
+    gRacePlayers[1].unk12 = gRacePlayers[1].selectionUnlockState ^ 0;
     gRacePlayers[2].unk12 = gRacePlayers[2].selectionUnlockState;
     gRacePlayers[3].unk12 = gRacePlayers[3].selectionUnlockState;
 
-    if (playerCount < 4) {
-        player = &gRacePlayers[playerCount];
+    if (playerCount.signedValue < 4) {
+        player = &gRacePlayers[playerCount.unsignedValue];
         courseCharacters = D_800DC58C[courseIndex];
         courseCharacterIds = D_800DC4C4[courseIndex];
         i = 1;
@@ -684,9 +686,9 @@ void initRaceSceneFlow(void) {
             for (;;) {
                 duplicate = 1;
                 player->characterId = *courseCharacterIds++;
-                if (playerCount > 0) {
+                if (playerCount.signedValue > 0) {
                     if (1) {
-                        end = &gRacePlayers[playerCount];
+                        end = &gRacePlayers[playerCount.signedValue];
                     }
                     other = gRacePlayers;
                     do {
@@ -700,15 +702,17 @@ void initRaceSceneFlow(void) {
                     break;
                 }
             }
-            player->characterVariant = courseCharacters[player->characterId].stickX;
-            player->unk12 = courseCharacters[player->characterId].stickY;
+            if (1) {
+                player->characterVariant = courseCharacters[player->characterId].stickX;
+                player->unk12 = courseCharacters[player->characterId].stickY;
+            }
             player++;
             i = player < gRacePlayersEnd;
         }
     }
 
-    playerCount = gRaceSplitscreenMode;
-    if (playerCount == 0) {
+    playerCount.unsignedValue = gRaceSplitscreenMode;
+    if (playerCount.unsignedValue == 0) {
         gRacePlayers[0].isActive = 1;
         gRacePlayers[1].isActive = 1;
         gRacePlayers[2].isActive = 1;
