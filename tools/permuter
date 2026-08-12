@@ -152,7 +152,10 @@ if [ "$PRESERVE_F3DEX" = true ]; then
     # gDPSetCombineLERP implementation. Texture-loading macros token-paste
     # their G_IM_SIZ_* argument with suffixes such as _TILE_BYTES, so that
     # argument must also survive preprocessing ("1##_TILE_BYTES" is invalid).
-    IMPORT_ARGS=(--preserve-macros '(?:g[DS]P.*)|(?:G_CC_.*)|(?:G_[CA]CMUX_.*)|(?:G_IM_SIZ_.*)' "${IMPORT_ARGS[@]}")
+    # gSPClipRatio similarly token-pastes its FRUSTRATIO_* argument into the
+    # FR_NEG_FRUSTRATIO_* and FR_POS_FRUSTRATIO_* object macros, so retain
+    # those leaf constants for the imported macro's later expansion.
+    IMPORT_ARGS=(--preserve-macros '(?:g[DS]P.*)|(?:G_CC_.*)|(?:G_[CA]CMUX_.*)|(?:G_IM_SIZ_.*)|(?:FR_(?:NEG|POS)_FRUSTRATIO_.*)' "${IMPORT_ARGS[@]}")
 fi
 
 IMPORT_OUTPUT=$(./tools/decomp-permuter/import.py "${IMPORT_ARGS[@]}" 2>&1)
