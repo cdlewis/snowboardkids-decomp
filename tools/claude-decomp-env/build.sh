@@ -12,6 +12,15 @@ OBJECT_OUTPUT="$(realpath "${1%.c}.o")"
 ANNOTATED_OUTPUT="$(realpath "${1%.c}_annotated.s")"
 OBJECT_DUMP="${1%.c}_object_dump.s"
 WORKSPACE="$(pwd -P)"
+DIFF_ALGORITHM=sequence
+
+if [ -f "$WORKSPACE/.diff_algorithm" ]; then
+    DIFF_ALGORITHM="$(tr -d '[:space:]' < "$WORKSPACE/.diff_algorithm")"
+fi
+if [ "$DIFF_ALGORITHM" != sequence ] && [ "$DIFF_ALGORITHM" != levenshtein ]; then
+    echo "ERROR: Unsupported diff algorithm in $WORKSPACE/.diff_algorithm: $DIFF_ALGORITHM"
+    exit 1
+fi
 
 if ! command -v flock >/dev/null 2>&1; then
     echo "ERROR: flock is required to serialize matching builds."
@@ -111,7 +120,7 @@ python3 ./normalize_asm.py "$OBJECT_DUMP" > "${1%.c}_object_dump_normalized.s"
 diff -u --suppress-common-lines target_object_dump_normalized.s "${1%.c}_object_dump_normalized.s" > "${1%.c}_diff" || true
 echo "Comparison with target file: ${1%.c}_diff"
 
-SCORE_OUTPUT=$(python3 dist.py target.o "$OBJECT_OUTPUT" --stack-diffs)
+SCORE_OUTPUT=$(python3 dist.py target.o "$OBJECT_OUTPUT" --stack-diffs --algorithm "$DIFF_ALGORITHM")
 echo "$SCORE_OUTPUT"
 
 MATCH_PERCENT=$(echo "$SCORE_OUTPUT" | grep -oP 'Score: \K[0-9.]+' || true)
