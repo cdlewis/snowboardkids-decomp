@@ -858,8 +858,8 @@ void drawMenuSpriteSubrect(
     }
 }
 
-// drawMenuSpriteFixedScale best match: 90.059%
-// (nonmatchings/drawMenuSpriteFixedScale-2163214805492048867/base_8.c)
+// drawMenuSpriteFixedScale best match: 90.118%
+// (nonmatchings/drawMenuSpriteFixedScale-4542485759220937537/base_29.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/renderer/menu_renderer/drawMenuSpriteFixedScale.s")
 
 #ifdef NON_MATCHING
@@ -889,7 +889,6 @@ void drawMenuSpriteFixedScale(
     s16 tScale;
     s32 texS;
     s32 texWidth;
-    s32 texHeight;
     u16 scaleYValue;
     u16 scaleYStep;
 
@@ -916,8 +915,8 @@ void drawMenuSpriteFixedScale(
 
     clipRight = x; drawLeft = (drawRight = clipRight + gMenuViewportCenterX) << 2;
     texS = (y + gMenuViewportCenterY) << 2; drawTop = texS;
-    drawRight = (((scaleX * texWidth) << 2) / 0x1000) + drawLeft; texHeight = texture->height;
-    drawBottom = (((scaleYValue * texHeight) << 2) / 0x1000) + drawTop;
+    drawRight = (((scaleX * texWidth) << 2) / 0x1000) + drawLeft;
+    drawBottom = (((scaleYValue * texture->height) << 2) / 0x1000) + drawTop;
     texS = 0;
     texT = 0;
 
@@ -925,7 +924,7 @@ void drawMenuSpriteFixedScale(
         texS = (texWidth - 1) << 5;
     }
     if (tScale == -1) {
-        texT = (texHeight - 1) << 5;
+        texT = (texture->height - 1) << 5;
     }
 
     clipTop = (s16)((gMenuViewportCenterY - (gMenuViewportHeight / 2)) << 2);
@@ -943,7 +942,7 @@ void drawMenuSpriteFixedScale(
         }
         if (drawTop < clipTop) {
             texT = (((((clipTop - drawTop) << 2) << 1) << 12) / scaleYValue);
-            if (tScale == -1) texT = ((texHeight - 1) << 5) - texT;
+            if (tScale == -1) texT = ((texture->height - 1) << 5) - texT;
             drawTop = clipTop;
         }
         if (drawRight >= clipRight) {
