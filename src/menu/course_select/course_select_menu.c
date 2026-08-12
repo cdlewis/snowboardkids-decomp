@@ -2337,7 +2337,7 @@ void initCourseSelectCourseDetailsMenu(void) {
 // clang-format on
 
 // updateCourseSelectCourseDetailsMenu best match: 99.474%
-// (nonmatchings/updateCourseSelectCourseDetailsMenu-8498672362023432715/base_7.c)
+// (nonmatchings/updateCourseSelectCourseDetailsMenu-4542485759220937537/base_3.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/course_select/course_select_menu/updateCourseSelectCourseDetailsMenu.s")
 
 #ifdef NON_MATCHING
@@ -2401,7 +2401,9 @@ void updateCourseSelectCourseDetailsMenu(void) {
             }
         }
         if (repeat) {
-            repeat += 1;
+            if (1) {
+                repeat += 1;
+            }
             gMenuInputRepeatTimers[0] = repeat;
             soundId = (repeat & 0xFFFF) & 0xFFFF;
             if ((((((soundId & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) == ((0xFFFF & 0xFFFF) & 0xFFFF)) {
