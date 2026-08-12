@@ -16,5 +16,6 @@ void waitForRaceSetupNamePlate(MenuScreenEffectActor *arg0);
 void initMainMenuModeBoardTransition(MenuScreenEffectActor *arg0);
 void initMainMenuModeLabelFadeIn(MenuScreenEffectActor *arg0);
 void initMainMenuBoardModels(MenuScreenEffectActor *arg0);
+void initCourseRecordBannerFadeOut(MenuScreenEffectActor *arg0);
 
 #endif
