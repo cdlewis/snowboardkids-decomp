@@ -719,16 +719,15 @@ extern void
 drawAssetTableSpriteWithExplicitPaletteWideIndex(s16 x, s16 y, AssetTable *table, s32 entryIndex, u16 paletteIndex);
 #endif
 
-// drawScaledAssetTableSprite best match: 96.863%
-// (nonmatchings/drawScaledAssetTableSprite-3327344942128263994/base_68.c)
+// drawScaledAssetTableSprite best match: 97.235%
+// (nonmatchings/drawScaledAssetTableSprite-4542485759220937537/base_35.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/renderer/menu_render_utils/drawScaledAssetTableSprite.s")
 
 #ifdef NON_MATCHING
 void drawScaledAssetTableSprite(s16 x, s16 y, AssetTable *asset, volatile u16 entryIndex, u16 scale) {
     s32 x0;
     s32 y0;
-    AssetTableEntry *paletteBase;
-    AssetTableEntry *sprite;
+    AssetTableEntry *paletteBase; AssetTableEntry *sprite;
     s32 spriteWidth;
     s32 x1;
     s32 y1;
@@ -738,12 +737,13 @@ void drawScaledAssetTableSprite(s16 x, s16 y, AssetTable *asset, volatile u16 en
     clippedS = scale;
     if (clippedS >= 0) {
         paletteBase = asset->entryCount + asset->entries;
+        x0 = gMenuViewportCenterX;
         sprite = (AssetTableEntry *)asset + (entryIndex & 0xFFFFu);
         {
             s32 spriteHeight;
 
             spriteWidth = sprite[1].width;
-            x0 = x + gMenuViewportCenterX;
+            x0 = x0 + x;
             x1 = spriteWidth >> clippedS;
             spriteHeight = sprite[1].height;
             y0 = y + gMenuViewportCenterY;
