@@ -3253,22 +3253,14 @@ void func_8005CE4C(RaceUiDualCounterActor *arg0) {
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)func_8005CDB0);
 }
 
-// func_8005CF60 best match: 98.840% (nonmatchings/func_8005CF60-8498672362023432715/base_9.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race/ui/race_ui_effects/func_8005CF60.s")
-
-#ifdef NON_MATCHING
-
 const char gRaceUiTrickAttackPointTotalFormat[4] = "%d";
 const char gRaceUiTrickAttackSecondaryCounterFormat[4] = "%d";
 
 void func_8005CF60(RaceUiDualCounterActor *arg0) {
-    char *ptr;
-    char *ptr2;
-    char buffer[0x24];
-    Gfx **gfxp;
+    s32 i;
+    char buffer[0x28];
     s32 x;
 
-    gfxp = &gRegionAllocPtr;
     if (arg0->alpha18 != 0xFF) {
         gDPPipeSync(gRegionAllocPtr++);
         gDPSetCombineMode(gRegionAllocPtr++, G_CC_MODULATEIA_PRIM, G_CC_MODULATEIA_PRIM);
@@ -3277,8 +3269,8 @@ void func_8005CF60(RaceUiDualCounterActor *arg0) {
     }
 
     sprintf(buffer, gRaceUiTrickAttackPointTotalFormat, gRacePlayers[0].trickAttackPointTotal);
+
     x = -0x50;
-    ptr = buffer;
     if (gRacePlayers[0].trickAttackPointTotal >= 10) {
         x = -0x54;
     }
@@ -3289,59 +3281,46 @@ void func_8005CF60(RaceUiDualCounterActor *arg0) {
         x = -0x5C;
     }
 
-loop1:
-    if (*ptr != '\0') {
-        goto body1;
+    i = 0;
+    while (1) {
+        if (buffer[i] == '\0') {
+            break;
+        }
+        if (buffer[i] != ' ') {
+            drawAssetTableSprite(x, -0x37, getRelocatableHeapBlockBase(gAssetHandles[0x1F]), buffer[i] - 5);
+        }
+        i++;
+        x += 8;
     }
-    goto done1;
 
-body1:
-    if (*ptr != ' ') {
-        drawAssetTableSprite(x, -0x37, getRelocatableHeapBlockBase(gAssetHandles[0x1F]), *ptr - 5);
-    }
-    ptr++;
-    x += 8;
-    goto loop1;
-
-done1:
     x = -0x50;
     sprintf(buffer, gRaceUiTrickAttackSecondaryCounterFormat, gRacePlayers[0].unk2C3);
-    ptr2 = buffer;
     if (gRacePlayers[0].unk2C3 >= 10) {
         x = -0x54;
     }
 
-loop2:
-    if (*ptr2 != '\0') {
-        goto body2;
-    }
-    goto done2;
-
-body2:
-    if (*ptr2 != ' ') {
-        drawAssetTableSpriteWithExplicitPalette(
-            x,
-            -0x13,
-            getRelocatableHeapBlockBase(gAssetHandles[0x1F]),
-            *ptr2 - 5,
-            0xE
-        );
-    }
-    ptr2++;
-    x += 8;
-    goto loop2;
-    x = (unsigned int)gMenuRenderModeResetDl;
-
-done2:
-    if (gfxp == NULL) {}
-    if (arg0->alpha18 != 0xFF) {
-        gRacePlayers[0].trickAttackPointTotal += 0;
-        if (gfxp != NULL) {
-            gSPDisplayList(gRegionAllocPtr++, gMenuRenderModeResetDl);
+    i = 0;
+    while (1) {
+        if (buffer[i] == '\0') {
+            break;
         }
+        if (buffer[i] != ' ') {
+            drawAssetTableSpriteWithExplicitPalette(
+                x,
+                -0x13,
+                getRelocatableHeapBlockBase(gAssetHandles[0x1F]),
+                buffer[i] - 5,
+                0xE
+            );
+        }
+        i++;
+        x += 8;
+    }
+
+    if (arg0->alpha18 != 0xFF) {
+        gSPDisplayList(gRegionAllocPtr++, gMenuRenderModeResetDl);
     }
 }
-#endif
 
 const char gRaceUiPendingTrickPrizeFormat[0x4] = "%5d";
 const char gRaceUiPendingMakeBonusFormat[0x4] = "%5d";
