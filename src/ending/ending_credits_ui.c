@@ -43,14 +43,9 @@ typedef struct EndingObjectSpriteDebugViewerActor {
     /* 0x1F */ u8 palette;
 } EndingObjectSpriteDebugViewerActor;
 
-typedef struct EndingCreditsPageTextPosition {
-    /* 0x00 */ s16 x;
-    /* 0x02 */ s16 y;
-} EndingCreditsPageTextPosition;
-
 typedef struct EndingCreditsPageTextLineLayout {
     /* 0x00 */ s16 count;
-    /* 0x02 */ EndingCreditsPageTextPosition positions[5];
+    /* 0x02 */ Vec2s positions[5];
     /* 0x16 */ s16 pad16;
 } EndingCreditsPageTextLineLayout;
 
@@ -134,7 +129,7 @@ void drawEndingCreditsPageText(EndingCreditsPageTextActor *arg0) {
     s32 y;
     u16 lineText[0x1C];
     u16 pad[6];
-    EndingCreditsPageTextPosition *position;
+    Vec2s *position;
     EndingCreditsPageTextLineLayout *layout;
     volatile u16 colorMode;
     u16 glyph;

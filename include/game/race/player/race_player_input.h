@@ -2,20 +2,13 @@
 #define RACE_PLAYER_INPUT_H
 
 #include "common.h"
-#include "game/math/fixed_matrix_types.h"
+#include "game/math/geometry.h"
 
 #define RACE_PLAYER_COUNT 4
 
-typedef s16 Matrix4s[0x10];
 typedef u8 RacePlayerOrder[RACE_PLAYER_COUNT];
 
 struct RaceUiRankTrigger;
-
-typedef union {
-    s32 words[8];
-    s16 halfwords[0x10];
-    FixedTransform transform;
-} RacePlayerTransformBlock;
 
 typedef struct RacePlayerCollisionVolume {
     /* 0x00 */ s16 axis[9];
@@ -91,19 +84,20 @@ typedef struct RacePlayer {
     /* 0x094 */ union {
         RacePlayerCollisionVolume collisionVolumes[14];
         struct {
-            /* 0x094 */ FixedMatrix3sPadded transform;
+            /* 0x094 */ Mat3x3 transform;
+            /* 0x0A6 */ s16 padA6;
             /* 0x0A8 */ Vec3i itemSpawnOffset;
             /* 0x0B4 */ char padB4[0x14];
             /* 0x0C8 */ Vec3i posC8;
             /* 0x0D4 */ char padD4[0x94];
             /* 0x168 */ Vec3i effectPos;
-            /* 0x174 */ FixedTransform renderTransform;
+            /* 0x174 */ Transform3D renderTransform;
             /* 0x194 */ char pad194[0x34];
             /* 0x1C8 */ Vec3i projectilePos;
             /* 0x1D4 */ char pad1D4[0x80];
         };
         struct {
-            /* 0x094 */ RacePlayerTransformBlock copyBlock94;
+            /* 0x094 */ Transform3D copyBlock94;
             /* 0x0B4 */ char padB4Copy[0x1A0];
         };
     };

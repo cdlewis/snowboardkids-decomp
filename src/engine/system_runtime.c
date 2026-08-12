@@ -1,4 +1,5 @@
 #include "common.h"
+#include "game/race/camera/race_camera.h"
 #include "game/audio/sound_manager.h"
 #include "game/engine/system_runtime.h"
 #include "game/engine/frame_render_task.h"
@@ -423,22 +424,13 @@ typedef struct {
     s16 bottom;
 } RuntimeViewportState;
 
-typedef struct {
-    u8 pad0[0x30];
-    s16 rotation[9];
-    s16 pad42;
-    s32 transformOffset[3];
-    Mtx transform;
-    u8 pad90[0x20];
-} RuntimeViewportCamera;
-
-extern RuntimeViewportCamera D_801121E0[4];
 extern s16 gUiBlinkTimer;
 extern s16 gMenuViewportWidth;
 extern s16 gMenuViewportHeight;
 extern s16 gMenuViewportCenterX;
 extern s16 gMenuViewportCenterY;
 extern u8 gCurrentViewportIndex;
+extern RaceCamera D_801121E0[4];
 
 #define runtimeDisplayListData ((RuntimeViewportDisplayListData *)gCurrentTaskDisplayListStart)
 #define runtimeViewportStates ((RuntimeViewportState *)gViewportStates)
@@ -489,7 +481,7 @@ void appendViewportDisplayLists(u8 frameIndex) {
             gMenuViewportCenterY = top + (gMenuViewportHeight / 2);
 
             runtimeDisplayListData->viewportMatrices[gCurrentViewportIndex] =
-                D_801121E0[gCurrentViewportIndex].transform;
+                D_801121E0[gCurrentViewportIndex].packedTransform;
             runtimeDisplayListData->viewportMatrices[gCurrentViewportIndex].m[1][2] = 0;
             runtimeDisplayListData->viewportMatrices[gCurrentViewportIndex].m[1][3] = 1;
             runtimeDisplayListData->viewportMatrices[gCurrentViewportIndex].m[3][2] = 0;
@@ -572,46 +564,46 @@ void appendViewportDisplayLists(u8 frameIndex) {
             }
 
             runtimeDisplayListData->rotations[gCurrentViewportIndex].words[0] =
-                ((D_801121E0[gCurrentViewportIndex].rotation[0] << 4) & upperMask) |
-                ((D_801121E0[gCurrentViewportIndex].rotation[1] >> 12) & 0xFFFF);
+                ((D_801121E0[gCurrentViewportIndex].cameraTransform.rotation[0] << 4) & upperMask) |
+                ((D_801121E0[gCurrentViewportIndex].cameraTransform.rotation[1] >> 12) & 0xFFFF);
             runtimeDisplayListData->rotations[gCurrentViewportIndex].words[1] =
-                (D_801121E0[gCurrentViewportIndex].rotation[2] << 4) & upperMask;
+                (D_801121E0[gCurrentViewportIndex].cameraTransform.rotation[2] << 4) & upperMask;
             runtimeDisplayListData->rotations[gCurrentViewportIndex].words[2] =
-                ((D_801121E0[gCurrentViewportIndex].rotation[3] << 4) & upperMask) |
-                ((D_801121E0[gCurrentViewportIndex].rotation[4] >> 12) & 0xFFFF);
+                ((D_801121E0[gCurrentViewportIndex].cameraTransform.rotation[3] << 4) & upperMask) |
+                ((D_801121E0[gCurrentViewportIndex].cameraTransform.rotation[4] >> 12) & 0xFFFF);
             runtimeDisplayListData->rotations[gCurrentViewportIndex].words[3] =
-                (D_801121E0[gCurrentViewportIndex].rotation[5] << 4) & upperMask;
+                (D_801121E0[gCurrentViewportIndex].cameraTransform.rotation[5] << 4) & upperMask;
             runtimeDisplayListData->rotations[gCurrentViewportIndex].words[4] =
-                ((D_801121E0[gCurrentViewportIndex].rotation[6] << 4) & upperMask) |
-                ((D_801121E0[gCurrentViewportIndex].rotation[7] >> 12) & 0xFFFF);
+                ((D_801121E0[gCurrentViewportIndex].cameraTransform.rotation[6] << 4) & upperMask) |
+                ((D_801121E0[gCurrentViewportIndex].cameraTransform.rotation[7] >> 12) & 0xFFFF);
             runtimeDisplayListData->rotations[gCurrentViewportIndex].words[5] =
-                (D_801121E0[gCurrentViewportIndex].rotation[8] << 4) & upperMask;
+                (D_801121E0[gCurrentViewportIndex].cameraTransform.rotation[8] << 4) & upperMask;
             runtimeDisplayListData->translations[gCurrentViewportIndex].words[6] =
-                (D_801121E0[gCurrentViewportIndex].transformOffset[0] & upperMask) |
-                ((D_801121E0[gCurrentViewportIndex].transformOffset[1] >> 16) & 0xFFFF);
+                (D_801121E0[gCurrentViewportIndex].cameraTransform.translation.x & upperMask) |
+                ((D_801121E0[gCurrentViewportIndex].cameraTransform.translation.y >> 16) & 0xFFFF);
             runtimeDisplayListData->translations[gCurrentViewportIndex].words[7] =
-                (D_801121E0[gCurrentViewportIndex].transformOffset[2] & upperMask) | 1;
+                (D_801121E0[gCurrentViewportIndex].cameraTransform.translation.z & upperMask) | 1;
 
             runtimeDisplayListData->rotations[gCurrentViewportIndex].words[8] =
-                ((D_801121E0[gCurrentViewportIndex].rotation[0] << 20) & upperMask) |
-                ((D_801121E0[gCurrentViewportIndex].rotation[1] << 4) & 0xFFFF);
+                ((D_801121E0[gCurrentViewportIndex].cameraTransform.rotation[0] << 20) & upperMask) |
+                ((D_801121E0[gCurrentViewportIndex].cameraTransform.rotation[1] << 4) & 0xFFFF);
             runtimeDisplayListData->rotations[gCurrentViewportIndex].words[9] =
-                (D_801121E0[gCurrentViewportIndex].rotation[2] << 20) & upperMask;
+                (D_801121E0[gCurrentViewportIndex].cameraTransform.rotation[2] << 20) & upperMask;
             runtimeDisplayListData->rotations[gCurrentViewportIndex].words[10] =
-                ((D_801121E0[gCurrentViewportIndex].rotation[3] << 20) & upperMask) |
-                ((D_801121E0[gCurrentViewportIndex].rotation[4] << 4) & 0xFFFF);
+                ((D_801121E0[gCurrentViewportIndex].cameraTransform.rotation[3] << 20) & upperMask) |
+                ((D_801121E0[gCurrentViewportIndex].cameraTransform.rotation[4] << 4) & 0xFFFF);
             runtimeDisplayListData->rotations[gCurrentViewportIndex].words[11] =
-                (D_801121E0[gCurrentViewportIndex].rotation[5] << 20) & upperMask;
+                (D_801121E0[gCurrentViewportIndex].cameraTransform.rotation[5] << 20) & upperMask;
             runtimeDisplayListData->rotations[gCurrentViewportIndex].words[12] =
-                ((D_801121E0[gCurrentViewportIndex].rotation[6] << 20) & upperMask) |
-                ((D_801121E0[gCurrentViewportIndex].rotation[7] << 4) & 0xFFFF);
+                ((D_801121E0[gCurrentViewportIndex].cameraTransform.rotation[6] << 20) & upperMask) |
+                ((D_801121E0[gCurrentViewportIndex].cameraTransform.rotation[7] << 4) & 0xFFFF);
             runtimeDisplayListData->rotations[gCurrentViewportIndex].words[13] =
-                (D_801121E0[gCurrentViewportIndex].rotation[8] << 20) & upperMask;
+                (D_801121E0[gCurrentViewportIndex].cameraTransform.rotation[8] << 20) & upperMask;
             runtimeDisplayListData->translations[gCurrentViewportIndex].words[14] =
-                ((D_801121E0[gCurrentViewportIndex].transformOffset[0] << 16) & upperMask) |
-                (D_801121E0[gCurrentViewportIndex].transformOffset[1] & 0xFFFF);
+                ((D_801121E0[gCurrentViewportIndex].cameraTransform.translation.x << 16) & upperMask) |
+                (D_801121E0[gCurrentViewportIndex].cameraTransform.translation.y & 0xFFFF);
             runtimeDisplayListData->translations[gCurrentViewportIndex].words[15] =
-                (D_801121E0[gCurrentViewportIndex].transformOffset[2] << 16) & upperMask;
+                (D_801121E0[gCurrentViewportIndex].cameraTransform.translation.z << 16) & upperMask;
 
             if (gBackdropRenderCallbackList != NULL) {
                 gSPPerspNormalize(

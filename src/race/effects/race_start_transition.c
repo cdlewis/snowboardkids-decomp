@@ -15,7 +15,7 @@
 #include "game/engine/viewport_manager.h"
 
 typedef struct {
-    FixedTransform transform;
+    Transform3D transform;
     Vec3i worldPos;
     Vec3i localPos;
 } TransformScratch;
@@ -164,7 +164,7 @@ void updateMenuCameraObjectLookAtOrigin(void) {
     RaceCamera *obj;
 
     obj = gCurrentMenuCameraObject;
-    makeFixedRotationYX(obj->rotationMatrix, -obj->pitch, -obj->yaw);
+    makeFixedRotationYX(obj->cameraTransform.rotation, -obj->pitch, -obj->yaw);
     obj = gCurrentMenuCameraObject;
     scratch.localPos.x = 0;
     scratch.localPos.y = 0;
@@ -172,11 +172,11 @@ void updateMenuCameraObjectLookAtOrigin(void) {
     makeFixedRotationXY(scratch.transform.rotation, obj->pitch, obj->yaw);
     transformVec3iByFixedMatrix(scratch.transform.rotation, &scratch.localPos, &scratch.worldPos);
     obj = gCurrentMenuCameraObject;
-    obj->transformOffset.x = scratch.worldPos.x - obj->pos.x;
+    obj->cameraTransform.translation.x = scratch.worldPos.x - obj->pos.x;
     obj = gCurrentMenuCameraObject;
-    obj->transformOffset.y = scratch.worldPos.y - obj->pos.y;
+    obj->cameraTransform.translation.y = scratch.worldPos.y - obj->pos.y;
     obj = gCurrentMenuCameraObject;
-    obj->transformOffset.z = scratch.worldPos.z - obj->pos.z;
+    obj->cameraTransform.translation.z = scratch.worldPos.z - obj->pos.z;
 }
 
 void updateMenuCameraObjectLookAtOriginCallback(void) {
@@ -188,7 +188,7 @@ void updateMenuCameraObjectWithTargetOffset(void) {
     RaceCamera *obj;
 
     obj = gCurrentMenuCameraObject;
-    makeFixedRotationYX(obj->rotationMatrix, -obj->pitch, -obj->yaw);
+    makeFixedRotationYX(obj->cameraTransform.rotation, -obj->pitch, -obj->yaw);
     obj = gCurrentMenuCameraObject;
     scratch.localPos.x = gMenuCameraTargetOffset.x;
     scratch.localPos.y = gMenuCameraTargetOffset.y;
@@ -196,11 +196,11 @@ void updateMenuCameraObjectWithTargetOffset(void) {
     makeFixedRotationXY(scratch.transform.rotation, obj->pitch, obj->yaw);
     transformVec3iByFixedMatrix(scratch.transform.rotation, &scratch.localPos, &scratch.worldPos);
     obj = gCurrentMenuCameraObject;
-    obj->transformOffset.x = scratch.worldPos.x - obj->pos.x;
+    obj->cameraTransform.translation.x = scratch.worldPos.x - obj->pos.x;
     obj = gCurrentMenuCameraObject;
-    obj->transformOffset.y = scratch.worldPos.y - obj->pos.y;
+    obj->cameraTransform.translation.y = scratch.worldPos.y - obj->pos.y;
     obj = gCurrentMenuCameraObject;
-    obj->transformOffset.z = scratch.worldPos.z - obj->pos.z;
+    obj->cameraTransform.translation.z = scratch.worldPos.z - obj->pos.z;
 }
 
 void updateMenuCameraObjectWithTargetOffsetCallback(void) {

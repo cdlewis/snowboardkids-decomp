@@ -4,11 +4,6 @@
 #include "common.h"
 
 typedef struct {
-    /* 0x00 */ s16 x;
-    /* 0x02 */ s16 y;
-} ControllerPakVec2s;
-
-typedef struct {
     /* 0x00 */ char pad[0x18];
     /* 0x18 */ s16 x;
     /* 0x1A */ s16 y;
@@ -34,7 +29,7 @@ typedef struct {
 
 typedef struct {
     /* 0x00 */ char pad[0x18];
-    /* 0x18 */ ControllerPakVec2s positions[6];
+    /* 0x18 */ Vec2s positions[6];
     /* 0x30 */ s16 cursorScale;
     /* 0x32 */ u16 cursorTimer;
 } ControllerPakFileListActor;

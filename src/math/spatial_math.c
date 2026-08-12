@@ -1,19 +1,13 @@
 #include "common.h"
 #include "game/math/spatial_math.h"
+#include "game/race/camera/race_camera.h"
 
 #define RACE_VIEWPORT_CAMERA_COUNT 3
 #define RACE_VIEWPORT_CAMERA_CULL_RANGE 0xBA00000
 #define NEG_RACE_VIEWPORT_CAMERA_CULL_RANGE (-RACE_VIEWPORT_CAMERA_CULL_RANGE + 1)
 
-typedef struct {
-    u8 pad0[0x44];
-    s32 transformOffsetX;
-    s32 pad48;
-    s32 transformOffsetZ;
-    u8 pad50[0x60];
-} RaceViewportCameraTransform;
-
 extern u8 gCurrentViewportIndex;
+extern RaceCamera D_801121E0[RACE_VIEWPORT_CAMERA_COUNT];
 s16 gFixedArctanAngleTable[648] = {
     0x0000, 0x0001, 0x0002, 0x0003, 0x0004, 0x0005, 0x0006, 0x0007, 0x0008, 0x0009, 0x000A, 0x000B, 0x000C, 0x000D,
     0x000E, 0x000F, 0x0010, 0x0011, 0x0012, 0x0013, 0x0014, 0x0015, 0x0016, 0x0017, 0x0018, 0x0019, 0x001A, 0x001B,
@@ -63,14 +57,12 @@ s16 gFixedArctanAngleTable[648] = {
     0x01FA, 0x01FB, 0x01FB, 0x01FC, 0x01FC, 0x01FD, 0x01FD, 0x01FE, 0x01FE, 0x01FF, 0x01FF, 0x01FF, 0x01FF, 0x01FF,
     0x01FF, 0x01FF, 0x01FF, 0x01FF,
 };
-extern RaceViewportCameraTransform D_801121E0[RACE_VIEWPORT_CAMERA_COUNT];
-
 s32 isPositionNearCurrentRaceViewportCamera(Vec3i *position) {
     s32 deltaX;
     s32 deltaZ;
 
-    deltaX = -D_801121E0[gCurrentViewportIndex].transformOffsetX - position->x;
-    deltaZ = -D_801121E0[gCurrentViewportIndex].transformOffsetZ - position->z;
+    deltaX = -D_801121E0[gCurrentViewportIndex].cameraTransform.translation.x - position->x;
+    deltaZ = -D_801121E0[gCurrentViewportIndex].cameraTransform.translation.z - position->z;
 
     if ((deltaX < RACE_VIEWPORT_CAMERA_CULL_RANGE) && (deltaX >= NEG_RACE_VIEWPORT_CAMERA_CULL_RANGE) &&
         (deltaZ < RACE_VIEWPORT_CAMERA_CULL_RANGE)) {

@@ -3,6 +3,7 @@
 #include "game/engine/relocatable_heap.h"
 #include "game/engine/render_callback.h"
 #include "game/menu/main_menu/main_menu_scene_model_renderer.h"
+#include "game/menu/renderer/menu_render_utils.h"
 #include "game/race/player/race_player_model_renderer.h"
 
 #define ASSET_HANDLE(index) (gAssetHandles[(index)])
@@ -48,7 +49,6 @@ s16 *gMainMenuSceneModelPartInitDataByModel[] = {
     NULL,
 };
 
-extern Mtx *allocFixedTransformMatrix(MainMenuModelTransform *);
 extern u8 gCurrentViewportIndex;
 extern Gfx *gRegionAllocPtr;
 
@@ -61,7 +61,7 @@ void initMainMenuSceneModelRenderer_pad(void) {
 // IDO code generation for this function is sensitive to source line layout.
 // clang-format off
 void drawMainMenuSceneModel(MainMenuSceneModel *arg0) {
-    MainMenuModelTransform *transform;
+    Transform3D *transform;
     Mtx *matrix;
     s32 partIndex;
     s32 displayListCount;

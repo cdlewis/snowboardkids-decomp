@@ -2,7 +2,7 @@
 #define RACE_CAMERA_H
 
 #include "common.h"
-#include "game/math/fixed_matrix_types.h"
+#include "game/math/geometry.h"
 
 typedef struct RaceCamera {
     /* 0x00 */ u16 playerIndex;
@@ -16,10 +16,9 @@ typedef struct RaceCamera {
     /* 0x24 */ s32 distance;
     /* 0x28 */ s32 unk28;
     /* 0x2C */ void (*update)(void);
-    /* 0x30 */ FixedMatrix3s rotationMatrix;
-    /* 0x42 */ s16 pad42;
-    /* 0x44 */ Vec3i transformOffset;
-    /* 0x50 */ u8 transform[0x42];
+    /* 0x30 */ Transform3D cameraTransform;
+    /* 0x50 */ Mtx packedTransform;
+    /* 0x90 */ s16 unk90;
     /* 0x92 */ s16 unk92;
     /* 0x94 */ Vec3i prevPos;
     /* 0xA0 */ s16 timer;

@@ -60,7 +60,7 @@ struct MenuScreenEffectActor {
 };
 
 typedef struct {
-    /* 0x00 */ FixedTransform source;
+    /* 0x00 */ Transform3D source;
     /* 0x20 */ s32 pad20;
 } TitleMenuRotatingBoardScratch;
 
@@ -160,7 +160,6 @@ extern u32 D_2000E70[];
 extern u32 D_20058A8[];
 
 void drawMenuAsciiTextDefaultScale(s32, s32, void *, s32);
-Mtx *allocFixedTransformMatrix(FixedTransform *);
 void drawRaceSetupBackdropModels(MenuScreenEffectActor *);
 void drawRaceSetupCourseBackdrop(void *);
 void renderRaceSetupBackdrop(MenuScreenEffectActor *);
@@ -434,7 +433,7 @@ void drawRaceStartPlayerEffectSprite(MenuScreenEffectActor *arg0) {
     void *spA4;
     void *spA0;
     volatile u8 gap[0xC];
-    FixedTransform sp74;
+    Transform3D sp74;
 
     if (gRenderMatricesDirty != 0) {
         arg0->unk2F = 1;
@@ -478,7 +477,7 @@ void drawRaceStartPlayerEffectSprite(MenuScreenEffectActor *arg0) {
 }
 
 void updateRaceStartPlayerEffectActive(MenuScreenEffectActor *arg0) {
-    FixedMatrix3sScratch sp38;
+    s16 sp38[0x10];
     Vec3i sp2C;
     RacePlayer *player;
     u8 temp;
@@ -650,7 +649,7 @@ void waitForRaceSetupNamePlate(MenuScreenEffectActor *arg0) {
 void drawMainMenuModeBoardTransition(MenuScreenEffectActor *arg0) {
     void *image;
     void *palette;
-    FixedTransform transform;
+    Transform3D transform;
     Mtx *matrix;
 
     if (gCurrentViewportIndex == 2) {

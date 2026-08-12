@@ -21,11 +21,6 @@
         _g->words.w1 = (cmd1);             \
     }
 
-typedef struct {
-    /* 0x0 */ s16 x;
-    /* 0x2 */ s16 y;
-} Vec2s;
-
 typedef union {
     Vec3i vec;
     struct {
@@ -301,7 +296,6 @@ extern u8 gCurrentViewportIndex;
 extern Gfx *gRegionAllocPtr;
 
 void getAssetTableImageAndExplicitPalette(u8 *, u16, u16, void **, void **);
-void *allocFixedTransformMatrix(FixedTransform *);
 /* Local 4-arg declaration; see note in callback_task_scheduler.h. */
 RaceItemEffectActor *createCallbackTaskWithUserIdPreservingArgs(void *, s32, s32, s32);
 
@@ -408,7 +402,7 @@ void spawnRaceItemTrackSparkBurst(Vec3i *arg0, Vec3i *arg1, Vec3i *arg2, Vec3i *
 // IDO code generation for this function is sensitive to source line layout.
 // clang-format off
 void renderRacePlayerHitEffect(RaceItemEffectActor *arg0) {
-    FixedTransform sp88;
+    Transform3D sp88;
     void *sp84;
     void *sp80;
     s32 frame;
@@ -438,7 +432,7 @@ void initRacePlayerHitEffect(RaceItemEffectActor *arg0) {
     char pad2C[4];
     RacePlayer *sp58;
     char pad50[8];
-    FixedTransform sp30;
+    Transform3D sp30;
     Vec3i sp24;
 
     arg0->vector24.fields.word24.timer = -1;
@@ -482,7 +476,7 @@ void spawnRaceItemImpactEffect(s32 arg0, s32 arg1, s32 arg2, s16 arg3) {
 
 void renderRaceItemProjectileTrailEffect(RaceItemEffectActor *arg0) {
     volatile u8 padding[4];
-    FixedTransform sp64;
+    Transform3D sp64;
     Gfx *temp_v0_2;
 
     if (gRenderMatricesDirty != 0) {
@@ -569,7 +563,7 @@ void spawnRaceItemProjectileTrailEffect(s32 arg0, s32 arg1, s32 arg2, s16 arg3) 
 }
 
 void renderRacePlayerShockEffect(RaceItemEffectActor *arg0) {
-    FixedTransform sp80;
+    Transform3D sp80;
     void *sp7C;
     void *sp78;
     volatile s32 pad[2];
@@ -664,7 +658,7 @@ void initRacePlayerShockEffect(RaceItemEffectActor *arg0) {
 // clang-format off
 void renderRaceItemBreakParticle(RaceItemEffectActor *arg0) {
     volatile s32 pad0;
-    FixedTransform sp74;
+    Transform3D sp74;
     volatile u8 padding[0x14];
     Gfx *temp_v0_2;
     Gfx *temp_v0_3;
@@ -731,7 +725,7 @@ void updateRaceItemBreakParticle(RaceItemEffectActor *arg0) {
 void initRaceItemBreakParticle(RaceItemEffectActor *arg0) {
     char padTail[8];
     volatile s32 pad0[1];
-    FixedMatrix3sScratch sp3C;
+    s16 sp3C[0x10];
     Vec3i sp30;
     volatile s32 pad1[1];
     RacePlayer *player;
@@ -794,7 +788,7 @@ void spawnRaceItemBreakParticles(s16 playerIndex, s16 itemIndex) {
 }
 
 void renderRacePlayerRecoverySparkle(RaceItemEffectActor *arg0) {
-    FixedTransform sp78;
+    Transform3D sp78;
     void *sp74;
     void *sp70;
 
@@ -866,7 +860,7 @@ void initRacePlayerRecoverySparkle(RaceItemEffectActor *arg0) {
 }
 
 void renderRacePlayerSnowSpray(RaceItemFollowActor *arg0) {
-    FixedTransform sp90;
+    Transform3D sp90;
     void *sp8C;
     void *sp88;
     volatile s32 pad[2];
@@ -1045,7 +1039,7 @@ void renderRaceItemTextureEffects(RaceItemTextureActor *arg0) {
     register RaceItemTextureActor *actor;
     s32 i;
     RaceItemDrawNode *node;
-    FixedTransform transform;
+    Transform3D transform;
 
     actor = arg0;
     transform = gIdentityFixedTransform;
@@ -1148,7 +1142,7 @@ void initRaceItemTextureEffects(RaceItemTextureActor *arg0) {
 CLANG_DIAGNOSTIC_POP
 
 void renderRacePlayerLandingSnowSpray(RaceItemFollowActor *arg0) {
-    FixedTransform sp98;
+    Transform3D sp98;
     void *sp94;
     void *sp90;
     volatile s32 pad[2];
