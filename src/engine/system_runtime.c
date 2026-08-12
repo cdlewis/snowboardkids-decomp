@@ -828,8 +828,8 @@ void appendFadeOverlayDisplayList(void) {
     gDPSetFogColor(gRegionAllocPtr++, gFadeColorRed, gFadeColorGreen, gFadeColorBlue, 255);
 }
 
-// submitFramebufferRenderTask best GBI match: 93.985% at
-// nonmatchings/submitFramebufferRenderTask-7050948565576131586/base_73.c.
+// submitFramebufferRenderTask best GBI match: 94.381% at
+// nonmatchings/submitFramebufferRenderTask-4/base_63.c.
 #ifdef NON_MATCHING
 void submitFramebufferRenderTask(u8 frameIndex) {
     FrameRenderTask *renderTask;
@@ -838,7 +838,7 @@ void submitFramebufferRenderTask(u8 frameIndex) {
     SchedulerState *schedulerState;
     s32 framebufferIndex;
     u8 colorByte;
-    s32 taskIndex;
+    u8 taskIndex;
     s32 nextColorIndex;
     unsigned long long ucodeBootSize;
     void *rdpOutputBufferEnd;
@@ -849,7 +849,7 @@ void submitFramebufferRenderTask(u8 frameIndex) {
 
     colorByte = gFramebufferColorBufferIndex + 1;
     framebufferIndex = colorByte & 0xFF;
-    taskIndex = frameIndex & 0xFF;
+    taskIndex = frameIndex;
     gFramebufferColorBufferIndex = colorByte;
     if (framebufferIndex >= FRAMEBUFFER_COUNT) {
         framebufferIndex = gFramebufferColorBufferIndex = 0;
