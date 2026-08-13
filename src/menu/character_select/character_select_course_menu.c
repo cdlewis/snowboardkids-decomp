@@ -345,8 +345,8 @@ void initCharacterSelectCourseMenuFromPlayerSelect(void) {
 }
 // clang-format on
 
-// updateCharacterSelectCourseMenu best match: 99.160%
-// (nonmatchings/updateCharacterSelectCourseMenu-3327344942128263994/base_36.c)
+// updateCharacterSelectCourseMenu best match: 99.294%
+// (nonmatchings/updateCharacterSelectCourseMenu-3327344942128263994/campaign_split_timer_register/timer_selection07_split_register_00.c)
 
 // asm-processor requires this pragma to remain on one line.
 // clang-format off
@@ -366,6 +366,7 @@ void updateCharacterSelectCourseMenu(void) {
     s32 upInput;
     s16 previousSelection;
     u16 repeatTimer;
+    u16 postRepeatTimer;
     s32 selection;
 
     if (gCurrentGameTask->fade != 0) {
@@ -382,19 +383,26 @@ void updateCharacterSelectCourseMenu(void) {
                 if (gCharacterSelectCourseCursorState.fields.listCursorState == 1) {
                     heldInputValue = gPlayerInputHeld[0];
                     for (heldInput = heldInputValue;;) {
-                        previousSelection = (s16)*selectionPtr;
                         selection = *selectionPtr;
+                        previousSelection = (s16)selection;
+                        selection |= 0;
+                        selection |= 0;
+                        selection |= 0;
+                        selection |= 0;
+                        selection |= 0;
+                        selection |= 0;
+                        selection |= 0;
                         input = heldInput;
  upInput = input & (STICK_UP | U_JPAD); if ((upInput == 0) && ((input & (STICK_DOWN | D_JPAD)) == 0)) { *repeatTimerPtr = 0; } pressedInput = *pressedInputPtr; break; } repeatTimer = *repeatTimerPtr; if ((pressedInput & (STICK_UP | U_JPAD)) || (((upInput != 0) && (((s32)repeatTimer) >= 0xB)) && ((repeatTimer % 3) == 0))) { if (!repeatTimer) { repeatTimer += 1; } if (selection > 0) { gRaceCourseIndex.signedValue = selection - 1; selection = gRaceCourseIndex.signedValue; } *repeatTimerPtr = repeatTimer; } else if ((pressedInput & (STICK_DOWN | D_JPAD)) || ((((*repeatTimerPtr = repeatTimer, input & (STICK_DOWN | D_JPAD))) && ((*repeatTimerPtr = (upInput = repeatTimer), ((s32)repeatTimer) >= 0xB))) && ((*repeatTimerPtr = repeatTimer, (repeatTimer % 3) == 0)))) { *repeatTimerPtr = repeatTimer; if (repeatTimer == 0) { *repeatTimerPtr = repeatTimer + 1; } if ((*gCharacterSelectActiveCourseOptions)[selection] != (-1)) { gRaceCourseIndex.signedValue = selection + 1;
                             selection = gRaceCourseIndex.signedValue;
                         }
                     }
 
-                    repeatTimer = *repeatTimerPtr;
-                    if (repeatTimer != 0) {
-                        repeatTimer++;
-                        *repeatTimerPtr = repeatTimer;
-                        if (repeatTimer == 0xFFFF) {
+                    postRepeatTimer = *repeatTimerPtr;
+                    if (postRepeatTimer != 0) {
+                        postRepeatTimer++;
+                        *repeatTimerPtr = postRepeatTimer;
+                        if (postRepeatTimer == 0xFFFF) {
                             *repeatTimerPtr = 0xC;
                         }
                     }
