@@ -345,8 +345,8 @@ void initCharacterSelectCourseMenuFromPlayerSelect(void) {
 }
 // clang-format on
 
-// updateCharacterSelectCourseMenu best match: 99.294%
-// (nonmatchings/updateCharacterSelectCourseMenu-3327344942128263994/campaign_split_timer_register/timer_selection07_split_register_00.c)
+// updateCharacterSelectCourseMenu best match: 99.905%
+// (nonmatchings/updateCharacterSelectCourseMenu-3327344942128263994/base_45.c)
 
 // asm-processor requires this pragma to remain on one line.
 // clang-format off
@@ -366,7 +366,6 @@ void updateCharacterSelectCourseMenu(void) {
     s32 upInput;
     s16 previousSelection;
     u16 repeatTimer;
-    u16 postRepeatTimer;
     s32 selection;
 
     if (gCurrentGameTask->fade != 0) {
@@ -381,10 +380,13 @@ void updateCharacterSelectCourseMenu(void) {
                 pressedInputPtr = gPlayerInputPressed;
                 repeatTimerPtr = gMenuInputRepeatTimers;
                 if (gCharacterSelectCourseCursorState.fields.listCursorState == 1) {
-                    heldInputValue = gPlayerInputHeld[0];
-                    for (heldInput = heldInputValue;;) {
-                        selection = *selectionPtr;
+                    for (heldInput = gPlayerInputHeld[0], selection = *selectionPtr;;) {
+                        heldInput &= -1;
+                        heldInput &= -1;
+                        heldInput &= -1;
+                        heldInput &= -1;
                         previousSelection = (s16)selection;
+                        selection |= 0;
                         selection |= 0;
                         selection |= 0;
                         selection |= 0;
@@ -398,11 +400,11 @@ void updateCharacterSelectCourseMenu(void) {
                         }
                     }
 
-                    postRepeatTimer = *repeatTimerPtr;
-                    if (postRepeatTimer != 0) {
-                        postRepeatTimer++;
-                        *repeatTimerPtr = postRepeatTimer;
-                        if (postRepeatTimer == 0xFFFF) {
+                    repeatTimer = *repeatTimerPtr;
+                    if (repeatTimer != 0) {
+                        repeatTimer++;
+                        *repeatTimerPtr = repeatTimer;
+                        if (repeatTimer == 0xFFFF) {
                             *repeatTimerPtr = 0xC;
                         }
                     }
