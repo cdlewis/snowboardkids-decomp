@@ -201,6 +201,7 @@ extern u8 gPendingFramebufferSwapCount;
 extern u8 gRumblePakConnectedMask;
 extern Gfx *gCurrentTaskDisplayListStart;
 extern u8 gFramebufferColorBufferIndex;
+extern u8 D_800B1CC0[];
 extern u8 D_369000[];
 extern u8 D_80360000[];
 extern u8 D_80368000[];
@@ -828,49 +829,33 @@ void appendFadeOverlayDisplayList(void) {
     gDPSetFogColor(gRegionAllocPtr++, gFadeColorRed, gFadeColorGreen, gFadeColorBlue, 255);
 }
 
-// submitFramebufferRenderTask best GBI match: 94.381% at
-// nonmatchings/submitFramebufferRenderTask-4/base_63.c.
+// submitFramebufferRenderTask best match: 98.219%
 #ifdef NON_MATCHING
+#line 136
 void submitFramebufferRenderTask(u8 frameIndex) {
-    FrameRenderTask *renderTask;
-    FramebufferPrepareTask *prepareTask;
-    FrameRenderTask *renderTaskAlias;
-    SchedulerState *schedulerState;
-    s32 framebufferIndex;
-    u8 colorByte;
-    u8 taskIndex;
+    SchedulerTask *schedulerTask;
     s32 nextColorIndex;
-    unsigned long long ucodeBootSize;
-    void *rdpOutputBufferEnd;
-    void *rdpOutputBuffer;
-    Gfx *prepareDisplayList;
-    void *prepareFramebuffer;
-    void *textureImage;
 
-    colorByte = gFramebufferColorBufferIndex + 1;
-    framebufferIndex = colorByte & 0xFF;
-    taskIndex = frameIndex;
-    gFramebufferColorBufferIndex = colorByte;
-    if (framebufferIndex >= FRAMEBUFFER_COUNT) {
-        framebufferIndex = gFramebufferColorBufferIndex = 0;
+    gFramebufferColorBufferIndex++;
+    if (gFramebufferColorBufferIndex >= FRAMEBUFFER_COUNT) {
+        gFramebufferColorBufferIndex = 0;
     }
 
-    renderTask = &gFrameRenderTasks[taskIndex];
-    nextColorIndex = 1;
-    renderTask->framebuffer = D_8038E800 + framebufferIndex * FRAMEBUFFER_SIZE;
-    frameIndex = taskIndex;
-    selectMenuRenderScratchBuffer(taskIndex);
+    gFrameRenderTasks[frameIndex].framebuffer = D_8038E800 + gFramebufferColorBufferIndex * FRAMEBUFFER_SIZE;
+    selectMenuRenderScratchBuffer(frameIndex);
 
-    gRegionAllocPtr = renderTask->displayList;
-    gCurrentTaskDisplayListStart = (Gfx *)&renderTask->viewportData;
+
+    gRegionAllocPtr = gFrameRenderTasks[frameIndex].displayList;
+    gCurrentTaskDisplayListStart = (Gfx *)&gFrameRenderTasks[frameIndex].viewportData;
+    schedulerTask = &gFrameRenderTasks[frameIndex].schedulerTask;
 
     gSPSegment(gRegionAllocPtr++, 0, 0);
     gDPSetScissor(gRegionAllocPtr++, G_SC_NON_INTERLACE, 0, 0, 320, 240);
-    gSPClearGeometryMode(gRegionAllocPtr++, G_ZBUFFER | G_SHADE | G_CULL_BOTH | G_FOG | G_LIGHTING | G_SHADING_SMOOTH);
+    gSPClearGeometryMode(gRegionAllocPtr++,
+                         G_ZBUFFER | G_SHADE | G_CULL_BOTH | G_FOG | G_LIGHTING | G_SHADING_SMOOTH);
     gSPClipRatio(gRegionAllocPtr++, FRUSTRATIO_1);
     gDPPipelineMode(gRegionAllocPtr++, G_PM_NPRIMITIVE);
-    textureImage = D_369000;
-    gDPSetTextureImage(gRegionAllocPtr++, G_IM_FMT_RGBA, G_IM_SIZ_16b, 320, textureImage);
+    gDPSetTextureImage(gRegionAllocPtr++, G_IM_FMT_RGBA, G_IM_SIZ_16b, 320, D_369000);
 
     if (gClearFramebufferOnNextTask != 0) {
         gClearFramebufferOnNextTask = 0;
@@ -881,7 +866,7 @@ void submitFramebufferRenderTask(u8 frameIndex) {
         gDPFillRectangle(gRegionAllocPtr++, 0, 0, 319, 239);
         gDPSetDepthImage(gRegionAllocPtr++, D_80369000);
         gDPPipeSync(gRegionAllocPtr++);
-        gDPSetColorImage(gRegionAllocPtr++, G_IM_FMT_RGBA, G_IM_SIZ_16b, 320, renderTask->framebuffer);
+        gDPSetColorImage(gRegionAllocPtr++, G_IM_FMT_RGBA, G_IM_SIZ_16b, 320, gFrameRenderTasks[frameIndex].framebuffer);
         gDPSetFillColor(gRegionAllocPtr++, 0x10001);
         gDPFillRectangle(gRegionAllocPtr++, 0, 0, 319, 239);
         gDPSetEnvColor(gRegionAllocPtr++, 0, 0, 0, 0);
@@ -895,7 +880,7 @@ void submitFramebufferRenderTask(u8 frameIndex) {
         gDPSetKeyGB(gRegionAllocPtr++, 0, 0, 0, 0, 0, 0);
         gDPSetCombineKey(gRegionAllocPtr++, G_CK_NONE);
         gDPNoOp(gRegionAllocPtr++);
-        gDPSetTileSize(gRegionAllocPtr++, G_TX_RENDERTILE, 0, 0, 0, 0);
+        gDPSetTileSize(gRegionAllocPtr++, 0, 0, 0, 0, 0);
         gDPSetTileSize(gRegionAllocPtr++, 1, 0, 0, 0, 0);
         gDPSetTileSize(gRegionAllocPtr++, 2, 0, 0, 0, 0);
         gDPSetTileSize(gRegionAllocPtr++, 3, 0, 0, 0, 0);
@@ -903,129 +888,25 @@ void submitFramebufferRenderTask(u8 frameIndex) {
         gDPSetTileSize(gRegionAllocPtr++, 5, 0, 0, 0, 0);
         gDPSetTileSize(gRegionAllocPtr++, 6, 0, 0, 0, 0);
         gDPSetTileSize(gRegionAllocPtr++, 7, 0, 0, 0, 0);
-        gDPSetTile(
-            gRegionAllocPtr++,
-            G_IM_FMT_RGBA,
-            G_IM_SIZ_4b,
-            0,
-            0,
-            G_TX_RENDERTILE,
-            0,
-            G_TX_NOMIRROR | G_TX_WRAP,
-            G_TX_NOMASK,
-            G_TX_NOLOD,
-            G_TX_NOMIRROR | G_TX_WRAP,
-            G_TX_NOMASK,
-            G_TX_NOLOD
-        );
-        gDPSetTile(
-            gRegionAllocPtr++,
-            G_IM_FMT_RGBA,
-            G_IM_SIZ_4b,
-            0,
-            0,
-            1,
-            0,
-            G_TX_NOMIRROR | G_TX_WRAP,
-            G_TX_NOMASK,
-            G_TX_NOLOD,
-            G_TX_NOMIRROR | G_TX_WRAP,
-            G_TX_NOMASK,
-            G_TX_NOLOD
-        );
-        gDPSetTile(
-            gRegionAllocPtr++,
-            G_IM_FMT_RGBA,
-            G_IM_SIZ_4b,
-            0,
-            0,
-            2,
-            0,
-            G_TX_NOMIRROR | G_TX_WRAP,
-            G_TX_NOMASK,
-            G_TX_NOLOD,
-            G_TX_NOMIRROR | G_TX_WRAP,
-            G_TX_NOMASK,
-            G_TX_NOLOD
-        );
-        gDPSetTile(
-            gRegionAllocPtr++,
-            G_IM_FMT_RGBA,
-            G_IM_SIZ_4b,
-            0,
-            0,
-            3,
-            0,
-            G_TX_NOMIRROR | G_TX_WRAP,
-            G_TX_NOMASK,
-            G_TX_NOLOD,
-            G_TX_NOMIRROR | G_TX_WRAP,
-            G_TX_NOMASK,
-            G_TX_NOLOD
-        );
-        gDPSetTile(
-            gRegionAllocPtr++,
-            G_IM_FMT_RGBA,
-            G_IM_SIZ_4b,
-            0,
-            0,
-            4,
-            0,
-            G_TX_NOMIRROR | G_TX_WRAP,
-            G_TX_NOMASK,
-            G_TX_NOLOD,
-            G_TX_NOMIRROR | G_TX_WRAP,
-            G_TX_NOMASK,
-            G_TX_NOLOD
-        );
-        gDPSetTile(
-            gRegionAllocPtr++,
-            G_IM_FMT_RGBA,
-            G_IM_SIZ_4b,
-            0,
-            0,
-            5,
-            0,
-            G_TX_NOMIRROR | G_TX_WRAP,
-            G_TX_NOMASK,
-            G_TX_NOLOD,
-            G_TX_NOMIRROR | G_TX_WRAP,
-            G_TX_NOMASK,
-            G_TX_NOLOD
-        );
-        gDPSetTile(
-            gRegionAllocPtr++,
-            G_IM_FMT_RGBA,
-            G_IM_SIZ_4b,
-            0,
-            0,
-            6,
-            0,
-            G_TX_NOMIRROR | G_TX_WRAP,
-            G_TX_NOMASK,
-            G_TX_NOLOD,
-            G_TX_NOMIRROR | G_TX_WRAP,
-            G_TX_NOMASK,
-            G_TX_NOLOD
-        );
-        gDPSetTile(
-            gRegionAllocPtr++,
-            G_IM_FMT_RGBA,
-            G_IM_SIZ_4b,
-            0,
-            0,
-            7,
-            0,
-            G_TX_NOMIRROR | G_TX_WRAP,
-            G_TX_NOMASK,
-            G_TX_NOLOD,
-            G_TX_NOMIRROR | G_TX_WRAP,
-            G_TX_NOMASK,
-            G_TX_NOLOD
-        );
+        gDPSetTile(gRegionAllocPtr++, G_IM_FMT_RGBA, G_IM_SIZ_4b, 0, 0, 0,
+                   0, G_TX_WRAP, G_TX_NOMASK, G_TX_NOLOD, G_TX_WRAP, G_TX_NOMASK, G_TX_NOLOD);
+        gDPSetTile(gRegionAllocPtr++, G_IM_FMT_RGBA, G_IM_SIZ_4b, 0, 0, 1,
+                   0, G_TX_WRAP, G_TX_NOMASK, G_TX_NOLOD, G_TX_WRAP, G_TX_NOMASK, G_TX_NOLOD);
+        gDPSetTile(gRegionAllocPtr++, G_IM_FMT_RGBA, G_IM_SIZ_4b, 0, 0, 2,
+                   0, G_TX_WRAP, G_TX_NOMASK, G_TX_NOLOD, G_TX_WRAP, G_TX_NOMASK, G_TX_NOLOD);
+        gDPSetTile(gRegionAllocPtr++, G_IM_FMT_RGBA, G_IM_SIZ_4b, 0, 0, 3,
+                   0, G_TX_WRAP, G_TX_NOMASK, G_TX_NOLOD, G_TX_WRAP, G_TX_NOMASK, G_TX_NOLOD);
+        gDPSetTile(gRegionAllocPtr++, G_IM_FMT_RGBA, G_IM_SIZ_4b, 0, 0, 4,
+                   0, G_TX_WRAP, G_TX_NOMASK, G_TX_NOLOD, G_TX_WRAP, G_TX_NOMASK, G_TX_NOLOD);
+        gDPSetTile(gRegionAllocPtr++, G_IM_FMT_RGBA, G_IM_SIZ_4b, 0, 0, 5,
+                   0, G_TX_WRAP, G_TX_NOMASK, G_TX_NOLOD, G_TX_WRAP, G_TX_NOMASK, G_TX_NOLOD);
+        gDPSetTile(gRegionAllocPtr++, G_IM_FMT_RGBA, G_IM_SIZ_4b, 0, 0, 6,
+                   0, G_TX_WRAP, G_TX_NOMASK, G_TX_NOLOD, G_TX_WRAP, G_TX_NOMASK, G_TX_NOLOD);
+        gDPSetTile(gRegionAllocPtr++, G_IM_FMT_RGBA, G_IM_SIZ_4b, 0, 0, 7,
+                   0, G_TX_WRAP, G_TX_NOMASK, G_TX_NOLOD, G_TX_WRAP, G_TX_NOMASK, G_TX_NOLOD);
     } else {
         gDPSetDepthImage(gRegionAllocPtr++, D_80369000);
-        gDPSetColorImage(gRegionAllocPtr++, G_IM_FMT_RGBA, G_IM_SIZ_16b, 320, renderTask->framebuffer);
+        gDPSetColorImage(gRegionAllocPtr++, G_IM_FMT_RGBA, G_IM_SIZ_16b, 320, gFrameRenderTasks[frameIndex].framebuffer);
     }
 
     gDPSetAlphaCompare(gRegionAllocPtr++, G_AC_NONE);
@@ -1033,54 +914,58 @@ void submitFramebufferRenderTask(u8 frameIndex) {
     gDPFullSync(gRegionAllocPtr++);
     gSPEndDisplayList(gRegionAllocPtr++);
 
-    renderTask->schedulerTask.rspTask.t.data_ptr =
+    schedulerTask->rspTask.t.data_ptr =
         (u64 *)((RuntimeViewportDisplayListData *)gCurrentTaskDisplayListStart + 1);
-    renderTask->schedulerTask.rspTask.t.data_size =
-        (((u8 *)gRegionAllocPtr -
-          (u8 *)((RuntimeViewportDisplayListData *)gCurrentTaskDisplayListStart + 1)) >> 3) * 8;
-    renderTask->schedulerTask.rspTask.t.ucode = (u64 *)gspF3DLX_fifoTextStart;
-    renderTask->schedulerTask.rspTask.t.type = nextColorIndex;
-    ucodeBootSize = aspMainTextStart - rspbootTextStart;
-    renderTaskAlias = renderTask;
-    renderTaskAlias->schedulerTask.rspTask.t.dram_stack_size = RSP_DRAM_STACK_SIZE;
-    rdpOutputBuffer = D_80360000;
-    rdpOutputBufferEnd = (u8 *)rdpOutputBuffer + RSP_OUTPUT_BUFFER_SIZE;
-    renderTaskAlias->schedulerTask.rspTask.t.ucode_data = (u64 *)gspF3DLX_fifoDataStart;
-    renderTaskAlias->schedulerTask.rspTask.t.ucode_data_size = RSP_UCODE_DATA_SIZE;
-    renderTaskAlias->schedulerTask.rspTask.t.dram_stack = (u64 *)D_80368C00;
-    renderTaskAlias->schedulerTask.rspTask.t.output_buff_size = (u64 *)rdpOutputBufferEnd;
-    renderTaskAlias->schedulerTask.rspTask.t.yield_data_size = RSP_YIELD_BUFFER_SIZE;
-    renderTaskAlias->schedulerTask.rspTask.t.yield_data_ptr = (u64 *)D_80368000;
-    renderTaskAlias->schedulerTask.flags = SCHEDULER_SWAPBUFFER_FLAG;
-    renderTaskAlias->schedulerTask.rspTask.t.flags = 0;
-    renderTaskAlias->schedulerTask.rspTask.t.ucode_boot = (u64 *)rspbootTextStart;
-    renderTaskAlias->schedulerTask.rspTask.t.ucode_boot_size = ucodeBootSize;
-    renderTaskAlias->schedulerTask.rspTask.t.output_buff = (u64 *)rdpOutputBuffer;
-    renderTaskAlias->schedulerTask.next = NULL;
-    renderTaskAlias->schedulerTask.doneQueue = &gFramebufferRenderDoneQueue;
-    renderTaskAlias->schedulerTask.doneMsg = &renderTaskAlias->completionMessage;
-    renderTaskAlias->schedulerTask.framebuffer = renderTaskAlias->framebuffer;
-    renderTaskAlias->schedulerTask.retrace =
-        SCHEDULER_RETRACE_MASK & (gLastSchedulerRetraceCounter + FRAMEBUFFER_SWAP_RETRACE_DELAY);
-    renderTaskAlias->status |= nextColorIndex;
-    schedulerState = &gSchedulerState;
-    osSendMesg(getSchedulerGraphicsTaskQueue(schedulerState), renderTaskAlias, nextColorIndex);
+    schedulerTask->rspTask.t.data_size =
+        (gRegionAllocPtr - (Gfx *)((RuntimeViewportDisplayListData *)gCurrentTaskDisplayListStart + 1)) *
+        sizeof(Gfx);
+    schedulerTask->rspTask.t.type = M_GFXTASK;
+    schedulerTask->rspTask.t.flags = 0;
+    schedulerTask->rspTask.t.ucode_boot = (u64 *)rspbootTextStart;
+    schedulerTask->rspTask.t.ucode_boot_size = (unsigned long)aspMainTextStart - (unsigned long)rspbootTextStart;
+#line 218
+    schedulerTask->rspTask.t.ucode = (u64 *)D_800B1CC0;
+#line 224
+    schedulerTask->rspTask.t.ucode_data = (u64 *)gspF3DLX_fifoDataStart;
+    schedulerTask->rspTask.t.ucode_data_size = RSP_UCODE_DATA_SIZE;
+    schedulerTask->rspTask.t.dram_stack = (u64 *)D_80368C00;
+#line 218
+    schedulerTask->rspTask.t.dram_stack_size = RSP_DRAM_STACK_SIZE;
+#line 227
+    schedulerTask->rspTask.t.output_buff = (u64 *)D_80360000;
+    schedulerTask->rspTask.t.output_buff_size = (unsigned long)D_80360000 + RSP_OUTPUT_BUFFER_SIZE;
+    schedulerTask->rspTask.t.yield_data_ptr = (u64 *)D_80368000;
+    schedulerTask->rspTask.t.yield_data_size = RSP_YIELD_BUFFER_SIZE;
+    schedulerTask->next = NULL;
+#line 218
+    schedulerTask->flags = SCHEDULER_SWAPBUFFER_FLAG;
+#line 233
+#line 230
+    schedulerTask->doneQueue = &gFramebufferRenderDoneQueue;
+#line 234
+    schedulerTask->doneMsg = &gFrameRenderTasks[frameIndex].completionMessage;
+    schedulerTask->framebuffer = gFrameRenderTasks[frameIndex].framebuffer;
+    schedulerTask->retrace =
+        SCHEDULER_RETRACE_MASK & (unsigned long long)(gLastSchedulerRetraceCounter + FRAMEBUFFER_SWAP_RETRACE_DELAY);
+    gFrameRenderTasks[frameIndex].status |= 1;
+    osSendMesg(getSchedulerGraphicsTaskQueue(&gSchedulerState), schedulerTask, 1);
 
-    frameIndex = (taskIndex + 1) & nextColorIndex;
-    nextColorIndex = gFramebufferColorBufferIndex + 1;
+    frameIndex = (frameIndex + 1) & 1;
+    nextColorIndex = gFramebufferColorBufferIndex;
+    nextColorIndex++;
     if (nextColorIndex >= FRAMEBUFFER_COUNT) {
         nextColorIndex = 0;
     }
 
-    prepareTask = &gFramebufferPrepareTasks[frameIndex];
-    prepareDisplayList = prepareTask->displayList;
-    gRegionAllocPtr = prepareDisplayList;
+    schedulerTask = &gFramebufferPrepareTasks[frameIndex].schedulerTask;
+    gRegionAllocPtr = gFramebufferPrepareTasks[frameIndex].displayList;
     gSPSegment(gRegionAllocPtr++, 0, 0);
     gDPSetScissor(gRegionAllocPtr++, G_SC_NON_INTERLACE, 0, 0, 320, 240);
-    gSPClearGeometryMode(gRegionAllocPtr++, G_ZBUFFER | G_SHADE | G_CULL_BOTH | G_FOG | G_LIGHTING | G_SHADING_SMOOTH);
+    gSPClearGeometryMode(gRegionAllocPtr++,
+                         G_ZBUFFER | G_SHADE | G_CULL_BOTH | G_FOG | G_LIGHTING | G_SHADING_SMOOTH);
     gSPClipRatio(gRegionAllocPtr++, FRUSTRATIO_1);
     gDPPipelineMode(gRegionAllocPtr++, G_PM_NPRIMITIVE);
-    gDPSetTextureImage(gRegionAllocPtr++, G_IM_FMT_RGBA, G_IM_SIZ_16b, 320, textureImage);
+    gDPSetTextureImage(gRegionAllocPtr++, G_IM_FMT_RGBA, G_IM_SIZ_16b, 320, D_369000);
     gDPSetCycleType(gRegionAllocPtr++, G_CYC_FILL);
     gDPSetRenderMode(gRegionAllocPtr++, G_RM_NOOP, G_RM_NOOP2);
     gDPSetColorImage(gRegionAllocPtr++, G_IM_FMT_RGBA, G_IM_SIZ_16b, 320, D_80369000);
@@ -1088,36 +973,34 @@ void submitFramebufferRenderTask(u8 frameIndex) {
     gDPFillRectangle(gRegionAllocPtr++, 0, 0, 319, 239);
     gDPSetDepthImage(gRegionAllocPtr++, D_80369000);
     gDPPipeSync(gRegionAllocPtr++);
-    prepareFramebuffer = D_8038E800 + nextColorIndex * FRAMEBUFFER_SIZE;
-    gDPSetColorImage(gRegionAllocPtr++, G_IM_FMT_RGBA, G_IM_SIZ_16b, 320, prepareFramebuffer);
+    gDPSetColorImage(gRegionAllocPtr++, G_IM_FMT_RGBA, G_IM_SIZ_16b, 320, D_8038E800 + nextColorIndex * FRAMEBUFFER_SIZE);
     gDPSetFillColor(gRegionAllocPtr++, 0x10001);
     gDPFillRectangle(gRegionAllocPtr++, 0, 0, 319, 239);
     gDPFullSync(gRegionAllocPtr++);
     gSPEndDisplayList(gRegionAllocPtr++);
 
-    prepareTask->schedulerTask.rspTask.t.data_ptr = (u64 *)prepareDisplayList;
-    prepareTask->schedulerTask.rspTask.t.data_size =
-        (((u8 *)gRegionAllocPtr - (u8 *)prepareTask->displayList) >> 3) * 8;
-    prepareTask->schedulerTask.rspTask.t.type = M_GFXTASK;
-    prepareTask->schedulerTask.rspTask.t.ucode_boot = (u64 *)rspbootTextStart;
-    prepareTask->schedulerTask.rspTask.t.ucode_boot_size = ucodeBootSize;
-    prepareTask->schedulerTask.rspTask.t.ucode = (u64 *)gspF3DLX_fifoTextStart;
-    prepareTask->schedulerTask.rspTask.t.ucode_data = (u64 *)gspF3DLX_fifoDataStart;
-    prepareTask->schedulerTask.rspTask.t.dram_stack = (u64 *)D_80368C00;
-    prepareTask->schedulerTask.rspTask.t.dram_stack_size = RSP_DRAM_STACK_SIZE;
-    prepareTask->schedulerTask.rspTask.t.ucode_data_size = RSP_UCODE_DATA_SIZE;
-    prepareTask->schedulerTask.rspTask.t.output_buff = (u64 *)rdpOutputBuffer;
-    prepareTask->schedulerTask.rspTask.t.yield_data_ptr = (u64 *)D_80368000;
-    prepareTask->schedulerTask.rspTask.t.yield_data_size = RSP_YIELD_BUFFER_SIZE;
-    prepareTask->schedulerTask.next = NULL;
-    prepareTask->schedulerTask.flags = 0;
-    prepareTask->schedulerTask.doneQueue = &gFramebufferRenderDoneQueue;
-    prepareTask->schedulerTask.doneMsg = NULL;
-    prepareTask->schedulerTask.rspTask.t.output_buff_size = (u64 *)rdpOutputBufferEnd;
-    prepareTask->schedulerTask.framebuffer = prepareFramebuffer;
-    osSendMesg(getSchedulerGraphicsTaskQueue(schedulerState), prepareTask, OS_MESG_BLOCK);
-}
+    schedulerTask->rspTask.t.data_ptr = (u64 *)gFramebufferPrepareTasks[frameIndex].displayList;
+    schedulerTask->rspTask.t.data_size = (gRegionAllocPtr - gFramebufferPrepareTasks[frameIndex].displayList) * sizeof(Gfx);
+    schedulerTask->rspTask.t.type = M_GFXTASK;
+    schedulerTask->rspTask.t.ucode_boot = (u64 *)rspbootTextStart;
+    schedulerTask->rspTask.t.ucode_boot_size = (unsigned long)aspMainTextStart - (unsigned long)rspbootTextStart;
+    schedulerTask->rspTask.t.ucode = (u64 *)D_800B1CC0;
+    schedulerTask->rspTask.t.ucode_data = (u64 *)gspF3DLX_fifoDataStart;
+    schedulerTask->rspTask.t.ucode_data_size = RSP_UCODE_DATA_SIZE;
+    schedulerTask->rspTask.t.dram_stack = (u64 *)D_80368C00;
+    schedulerTask->rspTask.t.dram_stack_size = RSP_DRAM_STACK_SIZE;
+    schedulerTask->rspTask.t.output_buff = (u64 *)D_80360000;
+    schedulerTask->rspTask.t.output_buff_size = (unsigned long)D_80360000 + RSP_OUTPUT_BUFFER_SIZE;
+    schedulerTask->rspTask.t.yield_data_ptr = (u64 *)D_80368000;
+    schedulerTask->rspTask.t.yield_data_size = RSP_YIELD_BUFFER_SIZE;
+    schedulerTask->next = NULL;
+    schedulerTask->flags = 0;
+    schedulerTask->doneQueue = &gFramebufferRenderDoneQueue;
+    schedulerTask->doneMsg = NULL;
+    schedulerTask->framebuffer = D_8038E800 + nextColorIndex * FRAMEBUFFER_SIZE;
 
+    osSendMesg(getSchedulerGraphicsTaskQueue(&gSchedulerState), schedulerTask, OS_MESG_BLOCK);
+}
 #else
 #pragma GLOBAL_ASM("asm/nonmatchings/engine/system_runtime/submitFramebufferRenderTask.s")
 #endif
