@@ -858,7 +858,7 @@ void drawMenuSpriteSubrect(
 }
 
 // drawMenuSpriteFixedScale best match: 90.118%
-// (nonmatchings/drawMenuSpriteFixedScale-4542485759220937537/base_29.c)
+// Clean typed candidate: 86.402% (nonmatchings/drawMenuSpriteFixedScale-2/base.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/renderer/menu_renderer/drawMenuSpriteFixedScale.s")
 
 #ifdef NON_MATCHING
@@ -873,8 +873,8 @@ void drawMenuSpriteFixedScale(
     u8 unusedPalette
 ) {
     FontTexture *texture;
-    u8 *textureBase;
-    u8 *paletteBase;
+    FontTexture *textureBase;
+    MenuGlyphPalette *paletteBase;
     s32 drawLeft;
     s32 drawTop;
     s32 drawRight;
@@ -888,11 +888,11 @@ void drawMenuSpriteFixedScale(
     s16 tScale;
     s32 texS;
     s32 texWidth;
+    s32 texHeight;
     u16 scaleYValue;
     u16 scaleYStep;
 
-    paletteBase = (s32)assetAddress + sizeof(FontAssetHeader) +
-                  (assetAddress->header.entryCount * sizeof(FontTexture));
+    paletteBase = (MenuGlyphPalette *)(assetAddress->header.entryCount + assetAddress->textures);
     scaleYValue = scaleY;
 
     if (scaleX >= 0xF001) {
@@ -910,12 +910,14 @@ void drawMenuSpriteFixedScale(
 
     sScale = gMenuSpriteFlipScales[flipMode & 3][0];
     tScale = gMenuSpriteFlipScales[flipMode & 3][1];
-    textureBase = (u8 *)(s32)assetAddress + (tileIndex * sizeof(FontTexture)); textureBase += sizeof(FontAssetHeader); texture = (FontTexture *)textureBase; texWidth = texture->width;
+    textureBase = assetAddress->textures;
+    texture = &textureBase[tileIndex];
+    texWidth = texture->width;
 
     clipRight = x; drawLeft = (drawRight = clipRight + gMenuViewportCenterX) << 2;
     texS = (y + gMenuViewportCenterY) << 2; drawTop = texS;
-    drawRight = (((scaleX * texWidth) << 2) / 0x1000) + drawLeft;
-    drawBottom = (((scaleYValue * texture->height) << 2) / 0x1000) + drawTop;
+    drawRight = (((scaleX * texWidth) << 2) / 0x1000) + drawLeft; texHeight = texture->height;
+    drawBottom = (((scaleYValue * texHeight) << 2) / 0x1000) + drawTop;
     texS = 0;
     texT = 0;
 
@@ -923,7 +925,7 @@ void drawMenuSpriteFixedScale(
         texS = (texWidth - 1) << 5;
     }
     if (tScale == -1) {
-        texT = (texture->height - 1) << 5;
+        texT = (texHeight - 1) << 5;
     }
 
     clipTop = (s16)((gMenuViewportCenterY - (gMenuViewportHeight / 2)) << 2);
@@ -941,7 +943,7 @@ void drawMenuSpriteFixedScale(
         }
         if (drawTop < clipTop) {
             texT = (((((clipTop - drawTop) << 2) << 1) << 12) / scaleYValue);
-            if (tScale == -1) texT = ((texture->height - 1) << 5) - texT;
+            if (tScale == -1) texT = ((texHeight - 1) << 5) - texT;
             drawTop = clipTop;
         }
         if (drawRight >= clipRight) {
@@ -953,7 +955,7 @@ void drawMenuSpriteFixedScale(
 
         gDPLoadTextureTile_4b(
             gRegionAllocPtr++,
-            (u8 *)((s32)assetAddress + texture->imageOffset + 0x80000000),
+            texture->imageOffset + (u8 *)assetAddress + 0x80000000,
             G_IM_FMT_CI,
             texture->width,
             texture->height,
@@ -969,7 +971,9 @@ void drawMenuSpriteFixedScale(
             G_TX_NOLOD,
             G_TX_NOLOD
         );
-        gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, (u8 *)((u32)paletteBase + (texture->paletteIndex << 5) + 0x80000000));
+        gDPLoadTLUT_pal16(
+            gRegionAllocPtr++, 0, (u8 *)((u32)&paletteBase[texture->paletteIndex] + 0x80000000)
+        );
         scaleYValue = 0x400000 / scaleX; scaleYStep = scaleY;
         gSPTextureRectangle(
             gRegionAllocPtr++,
