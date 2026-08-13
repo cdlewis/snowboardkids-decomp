@@ -591,7 +591,7 @@ void openRaceStartTransitionFlow(void) {
     suspendGameTask(2);
 }
 
-// initRaceSceneFlow best match: 96.191% (nonmatchings/initRaceSceneFlow-7005356279296566789/base_65.c)
+// initRaceSceneFlow best match: 96.213% (nonmatchings/initRaceSceneFlow-21/base_6.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race/flow/race_flow/initRaceSceneFlow.s")
 
 #ifdef NON_MATCHING
@@ -707,7 +707,7 @@ void initRaceSceneFlow(void) {
                 player->unk12 = courseCharacters[player->characterId].stickY;
             }
             player++;
-            i = player < gRacePlayersEnd;
+            i = player < (RacePlayer *)&gFrameCounter;
         }
     }
 
