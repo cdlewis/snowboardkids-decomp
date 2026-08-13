@@ -2022,8 +2022,8 @@ void initCourseSelectCourseStats(CourseSelectWidgetActor *arg0) {
     setCallbackTaskCallback(temp_a3, (CallbackTaskCallback)updateCourseSelectCourseStats);
 }
 
-// drawCourseSelectCourseDescription best match: 96.923%
-// (nonmatchings/drawCourseSelectCourseDescription-7181144369148334388/base_35.c)
+// drawCourseSelectCourseDescription best match: 96.952%
+// (nonmatchings/drawCourseSelectCourseDescription-1846960929180867216/base_50.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/course_select/course_select_ui/drawCourseSelectCourseDescription.s")
 
 #if 0
@@ -2165,7 +2165,7 @@ extern u8 D_8010AEA8;
 extern u8 gCourseSelectExtraCourseIds[];
 
 void drawCourseSelectCourseDescription(CourseSelectWidgetActor *arg0) {
-    u8 unused[4];
+    u16 unused[2];
     MenuGlyphScript *volatile text;
     MenuGlyphScript *boardText;
     MenuGlyphScript script[8];
@@ -2179,6 +2179,9 @@ void drawCourseSelectCourseDescription(CourseSelectWidgetActor *arg0) {
     if (gCourseSelectStatus.purchaseMessage == 0) {
         if ((D_8010AEA8 == 0) && ((gRacePlayers[0].menuState == 0) || (gRacePlayers[0].menuState == 3) ||
                                   (gRacePlayers[0].menuState == 9))) {
+            if (1) {}
+            if (1) {}
+            if (1) {}
             if (gCourseSelectStatus.descriptionMode == 1) {
                 descriptionIndex = 3;
             } else if (gCourseSelectStatus.descriptionMode == 2) {
