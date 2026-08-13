@@ -18,9 +18,9 @@
     ((-(s64)(x) * (sizeX) + (s64)(y) * (sizeY) + (s64)(z) * (sizeZ)) / 0x1000)
 #define RACE_PLAYER_SURFACE_DOT2(a, b, c, d) ((product = (s64)(a) * (b)), ((product + (s64)(c) * (d)) / 0x1000))
 #define RACE_PLAYER_SURFACE_COLLISION_POINT(x, y, z, sizeX, sizeY, sizeZ) \
-    ((product = (s64)(y) * (sizeY)), ((product + (s64)(x) * (sizeX) + (s64)(z) * (sizeZ)) / 0x1000))
+    (((s64)(y) * (sizeY) + ((product = (s64)(x) * (sizeX)), (product + (s64)(z) * (sizeZ)))) / 0x1000)
 #define RACE_PLAYER_SURFACE_MIRRORED_COLLISION_POINT(x, y, z, sizeX, sizeY, sizeZ) \
-    ((product = (s64)(y) * (sizeY)), ((product + -(s64)(x) * (sizeX) + (s64)(z) * (sizeZ)) / 0x1000))
+    (((s64)(y) * (sizeY) + ((product = -(s64)(x) * (sizeX)), (product + (s64)(z) * (sizeZ)))) / 0x1000)
 
 typedef struct {
     Vec3i worldPos;
@@ -1017,12 +1017,6 @@ s32 tryApplyRacePlayerItemHit(Vec3i *pos, s32 xzSize, s16 flag, s16 playerIndex)
     return 0;
 }
 
-// updateRacePlayerSurfaceContact best match: 99.914%
-// (nonmatchings/updateRacePlayerSurfaceContact-2163214805492048867/base_22.c) The assembly references interior elements
-// of gRacePlayerGroundProbeOffsets by fixed offsets.
-#pragma GLOBAL_ASM("asm/nonmatchings/race/player/race_player_movement/updateRacePlayerSurfaceContact.s")
-
-#ifdef NON_MATCHING
 
 s32 updateRacePlayerSurfaceContact(RacePlayer *player) {
     MatrixScratch playerRotation;
@@ -1497,8 +1491,6 @@ s32 updateRacePlayerSurfaceContact(RacePlayer *player) {
     }
     return 0;
 }
-
-#endif
 
 s32 updateRacePlayerGroundAlignment(RacePlayer *player) {
     MatrixScratch playerRotation;
