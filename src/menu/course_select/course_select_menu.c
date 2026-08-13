@@ -171,8 +171,8 @@ void initCourseSelectMenu(void) {
     gCourseSelectStatus.unk2E = 0;
 }
 
-// updateCourseSelectModeMenu best match: 99.706%
-// (nonmatchings/updateCourseSelectModeMenu-7812531368330432019/base_23.c)
+// updateCourseSelectModeMenu best match: 99.745%
+// (nonmatchings/updateCourseSelectModeMenu-31/output-65-1/source.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/course_select/course_select_menu/updateCourseSelectModeMenu.s")
 
 #ifdef NON_MATCHING
@@ -185,7 +185,6 @@ void updateCourseSelectModeMenu(void) {
     s32 selection;
     s32 zero;
     s32 oldSelection;
-    s32 decrementedSelection;
     s32 incrementedSelection;
     register s32 timerValue;
     register s32 nextTimer;
@@ -225,14 +224,12 @@ void updateCourseSelectModeMenu(void) {
                     timer = (u16)gMenuInputRepeatTimers[0];
                     timer = (u16)gMenuInputRepeatTimers[0];
                     nextTimer = timer + (1 & 0xFFFFFFFFFFFFFFFFu);
-                    decrementedSelection = selection - 1;
                     if (timer == 0) {
                         gMenuInputRepeatTimers[0] = nextTimer;
                         timer = (u16)nextTimer;
                     }
                     if (selection > 0) {
-                        gCourseSelectModeSelection = decrementedSelection;
-                        selection = (u8)decrementedSelection;
+                        selection = (u8)(gCourseSelectModeSelection = selection - 1);
                     }
                 } else {
                     timer = (u16)gMenuInputRepeatTimers[0];
@@ -249,15 +246,16 @@ void updateCourseSelectModeMenu(void) {
                         if (selection < 2) {
                             incrementedSelection = selection + 1;
                             gCourseSelectModeSelection = incrementedSelection;
-                            selection = ((((((u8)incrementedSelection) & 0xFFu) & 0xFFu) & 0xFFu) & 0xFFu) & 0xFFu;
+                            selection = (((((u8)incrementedSelection) & 0xFFu) & 0xFFu) & 0xFFu) & 0xFFu;
                         }
                     }
                 }
                 repeatTimerCopy = selection ^ 0;
                 if (timer != 0) {
                     if (1) {}
-                    nextTimer = timer + ((((((1 & 0xFFFFFFFFFFFFFFFFu) & 0xFFFFFFFFFFFFFFFFu) & 0xFFFFFFFFFFFFFFFFu) &
-                                           0xFFFFFFFFFFFFFFFFu) &
+                    nextTimer = timer + (((0xFFFFFFFFFFFFFFFFu & (((1 & 0xFFFFFFFFFFFFFFFFu) &
+                                                                   0xFFFFFFFFFFFFFFFFu) &
+                                                                  0xFFFFFFFFFFFFFFFFu)) &
                                           0xFFFFFFFFFFFFFFFFu) &
                                          0xFFFFFFFFFFFFFFFFu);
                     timer = 0;
@@ -272,6 +270,7 @@ void updateCourseSelectModeMenu(void) {
                     if (gShopMenuDescriptionSeen == 0) {
                         gShopMenuDescriptionSeen = 1;
                     }
+                    if (1) {} if (1) {} if (1) {} if (1) {} if (1) {}
                     if (gShopMenuShowNewCoursesMessage == 1) {
                         gShopMenuShowNewCoursesMessage = 0;
                     }
