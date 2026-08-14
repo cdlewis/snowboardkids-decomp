@@ -7,6 +7,8 @@ import argparse
 import html
 import json
 import re
+import shutil
+import subprocess
 import sys
 from dataclasses import dataclass
 from datetime import datetime, timezone
@@ -25,6 +27,15 @@ from report_nonmatching_matches import (
 GLABEL_RE = re.compile(r"^\s*glabel\s+(?P<name>[A-Za-z_][A-Za-z0-9_]*)\b", re.MULTILINE)
 SIZE_RE = re.compile(r"^\s*nonmatching\s+\S+\s*,\s*0x(?P<size>[0-9A-Fa-f]+)\s*$", re.MULTILINE)
 DECOMP_ME_URL = "https://decomp.me/scratch"
+PREVIEW_WIDTH = 1200
+PREVIEW_HEIGHT = 630
+CHROMIUM_EXECUTABLES = (
+    "chromium",
+    "chromium-browser",
+    "google-chrome",
+    "google-chrome-stable",
+    "chrome",
+)
 
 
 @dataclass(frozen=True)
@@ -161,6 +172,41 @@ def collect_scratch_results(
     )
 
 
+def find_chromium() -> str:
+    """Return a Chromium-compatible browser executable from PATH."""
+    for executable in CHROMIUM_EXECUTABLES:
+        resolved = shutil.which(executable)
+        if resolved:
+            return resolved
+    raise RuntimeError(
+        "could not generate the social preview: Chromium or Google Chrome "
+        "was not found in PATH"
+    )
+
+
+def screenshot_preview(html_path: Path, output_path: Path) -> None:
+    """Render the report's social-media preview with headless Chromium."""
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    command = [
+        find_chromium(),
+        "--headless",
+        "--disable-gpu",
+        "--no-sandbox",
+        "--hide-scrollbars",
+        f"--window-size={PREVIEW_WIDTH},{PREVIEW_HEIGHT}",
+        f"--screenshot={output_path}",
+        html_path.as_uri(),
+    ]
+    try:
+        subprocess.run(command, check=True, capture_output=True, text=True)
+    except subprocess.CalledProcessError as exc:
+        detail = exc.stderr.strip() or exc.stdout.strip() or f"exit status {exc.returncode}"
+        raise RuntimeError(f"could not generate the social preview: {detail}") from exc
+
+    if not output_path.is_file() or output_path.stat().st_size == 0:
+        raise RuntimeError(f"Chromium did not write the social preview to {output_path}")
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--repo-root", type=Path, default=repo_root_from_script())
@@ -182,6 +228,7 @@ def main() -> int:
 
     template_path = Path(__file__).resolve().parent / "decompilation_summary" / "template.html"
     output_path = args.output.resolve() if args.output else repo_root / "docs" / "index.html"
+    preview_path = output_path.with_name("og.png")
     document = render_document(
         template_path.read_text(),
         functions,
@@ -190,8 +237,9 @@ def main() -> int:
     )
     output_path.parent.mkdir(parents=True, exist_ok=True)
     output_path.write_text(document)
+    screenshot_preview(output_path, preview_path)
     print(
-        f"Wrote {output_path} with "
+        f"Wrote {output_path} and {preview_path} with "
         f"{sum(function.name in scratch for function in functions)} scratches "
         f"for {len(functions)} remaining functions"
     )

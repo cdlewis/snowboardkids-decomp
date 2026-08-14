@@ -9,7 +9,7 @@ Snowboard Kids
 
 A matching decompilation of [Snowboard Kids](https://en.wikipedia.org/wiki/Snowboard_Kids) for Nintendo 64.
 
-See the [remaining-functions report](docs/index.html) for the best known match percentages for functions still in assembly. Regenerate it with `make decompilation-summary`.
+See the [remaining-functions report](docs/index.html) for the best known match percentages for functions still in assembly. Regenerate it and its social preview image with `make decompilation-summary`; Chromium or Google Chrome must be available in `PATH`.
 
 **This repository does not contain any game assets or assembly whatsoever. An existing copy of the game is required. This project is not a port, to PC or any other platform. It takes a Nintendo 64 rom, extracts assets from it, and combines them with C code we reverse-engineered from the rom, to produce an identical rom. It is explicitly a non-goal for this project to be used for any commercial purpose.**
 
