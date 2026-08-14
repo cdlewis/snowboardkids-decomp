@@ -452,7 +452,7 @@ def print_rows(title: str, rows: list[ReportRow], repo_root: Path) -> None:
     for row in rows:
         local_attempt = format_local_attempt(row.local)
         marker = " ✨" if row.uses_gfx_region_alloc_ptr else ""
-        function = f"{row.local.function}{marker}"
+        function = f"🐸 {row.local.function}{marker}"
         print(
             f"{function:<24} "
             f"{row.local.percent:8.3f}%  "
