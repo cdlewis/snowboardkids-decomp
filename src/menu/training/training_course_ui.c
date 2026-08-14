@@ -388,32 +388,21 @@ void initTrainingCourseLessonEndMenu(TrainingCourseUiActor *arg0) {
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateTrainingCourseLessonEndMenu);
 }
 
-// drawTrainingCourseDialog best match: 99.475% (nonmatchings/drawTrainingCourseDialog-2163214805492048867/base_52.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/menu/training/training_course_ui/drawTrainingCourseDialog.s")
-
-#ifdef NON_MATCHING
 void drawTrainingCourseDialog(TrainingCourseUiActor *arg0) {
-    register TrainingCourseUiActor *dialog;
     s32 i;
-    u16 lineY;
-    s32 visibleIndex;
-    s32 scriptIndex;
     u16 lineX;
-    register TrainingCourseUiScript firstToken;
-    register TrainingCourseUiScript currentToken;
-    u16 reachedEnd;
-    s16 dialogY;
-    register TrainingCourseUiScript nextToken;
+    TrainingCourseUiScript token;
+    s32 visibleIndex;
+    TrainingCourseUiActor *dialog;
     TrainingCourseUiScript glyphText[2];
-    register u32 token;
-    register TrainingCourseUiActor *actor;
+    u16 lineY;
+    u16 reachedEnd;
 
     dialog = arg0;
-    actor = arg0;
 
     drawMenuSprite(
-        (s16)(dialog->x - 4),
-        (s16)(dialog->y + 0x14),
+        dialog->x - 4,
+        dialog->y + 0x14,
         getRelocatableHeapBlockBase(gAssetHandles[0x2A]),
         2,
         0x20,
@@ -422,8 +411,8 @@ void drawTrainingCourseDialog(TrainingCourseUiActor *arg0) {
         0
     );
     drawMenuSprite(
-        (s16)(dialog->x + 0xF8),
-        (s16)(dialog->y + 0x14),
+        dialog->x + 0xF8,
+        dialog->y + 0x14,
         getRelocatableHeapBlockBase(gAssetHandles[0x2A]),
         4,
         0x20,
@@ -434,8 +423,8 @@ void drawTrainingCourseDialog(TrainingCourseUiActor *arg0) {
 
     for (i = 0; i < 0xF0; i += 0x10) {
         drawMenuSprite(
-            (s16)(dialog->x + i + 0xC),
-            (s16)(dialog->y + 0x14),
+            dialog->x + i + 0xC,
+            dialog->y + 0x14,
             getRelocatableHeapBlockBase(gAssetHandles[0x2A]),
             3,
             0x20,
@@ -444,8 +433,8 @@ void drawTrainingCourseDialog(TrainingCourseUiActor *arg0) {
             0
         );
         drawMenuSprite(
-            (s16)(dialog->x + i + 0xC),
-            (s16)(dialog->y + 0x4C),
+            dialog->x + i + 0xC,
+            dialog->y + 0x4C,
             getRelocatableHeapBlockBase(gAssetHandles[0x2A]),
             8,
             0x20,
@@ -455,10 +444,9 @@ void drawTrainingCourseDialog(TrainingCourseUiActor *arg0) {
         );
     }
 
-    currentToken = 0xF8;
     drawMenuSprite(
-        (s16)(dialog->x - 4),
-        (s16)(dialog->y + 0x4C),
+        dialog->x - 4,
+        dialog->y + 0x4C,
         getRelocatableHeapBlockBase(gAssetHandles[0x2A]),
         7,
         0x20,
@@ -467,8 +455,8 @@ void drawTrainingCourseDialog(TrainingCourseUiActor *arg0) {
         0
     );
     drawMenuSprite(
-        (s16)(dialog->x + currentToken),
-        (s16)(dialog->y + 0x4C),
+        dialog->x + 0xF8,
+        dialog->y + 0x4C,
         getRelocatableHeapBlockBase(gAssetHandles[0x2A]),
         9,
         0x20,
@@ -477,11 +465,10 @@ void drawTrainingCourseDialog(TrainingCourseUiActor *arg0) {
         0
     );
 
-    i = (dialog->scriptState == 4) * 0;
-    for (;;) {
+    for (i = 0; i < 0x30; i += 0x10) {
         drawMenuSprite(
-            (s16)(dialog->x - 4),
-            (s16)(dialog->y + i + 0x24),
+            dialog->x - 4,
+            dialog->y + i + 0x24,
             getRelocatableHeapBlockBase(gAssetHandles[0x2A]),
             5,
             0x20,
@@ -490,8 +477,8 @@ void drawTrainingCourseDialog(TrainingCourseUiActor *arg0) {
             0
         );
         drawMenuSprite(
-            (s16)(dialog->x + currentToken),
-            (s16)(dialog->y + i + 0x24),
+            dialog->x + 0xF8,
+            dialog->y + i + 0x24,
             getRelocatableHeapBlockBase(gAssetHandles[0x2A]),
             6,
             0x20,
@@ -499,76 +486,61 @@ void drawTrainingCourseDialog(TrainingCourseUiActor *arg0) {
             0,
             0
         );
-        i += 0x10;
-        if (i >= 0x30) {
-            break;
-        }
     }
 
     dialog->glyphPalette = 7;
     glyphText[1] = 0xFFFF;
     reachedEnd = 0;
     lineX = 0;
-    visibleIndex = 0;
-
-    if (dialog->state.script.visibleGlyphCount > 0) {
-        scriptIndex = 0;
-        if (1) {
-            lineY = 0;
-        parse_visible_glyph:
-            currentToken = dialog->layout.script[scriptIndex];
-            firstToken = currentToken;
-            nextToken = firstToken;
-            while ((nextToken >= 0xFF01) && ((token = currentToken), actor->layout.script[scriptIndex] != 0xFFFE)) {
-                if ((currentToken & 0xFFFF) == 0xFFFF) {
-                    dialog->scriptState = 1;
-                    reachedEnd = 1;
-                    break;
-                }
-                dialogY = dialog->y;
-                if ((currentToken & 0xFFFF) == 0xFFFD) {
-                    currentToken = dialog->layout.script[scriptIndex + 1];
-                    lineY += 0x10;
-                    lineX = 0;
-                    scriptIndex++;
-                    if ((!dialogY) && (!dialogY)) {}
-                    nextToken = currentToken;
-                } else if ((currentToken & 0xFFFF) == 0xFFFC) {
-                    dialog->glyphPalette = dialog->layout.script[scriptIndex + 1];
-                    currentToken = dialog->layout.script[scriptIndex + 2];
-                    scriptIndex += 2;
-                    nextToken = currentToken;
-                } else if ((token ^ 0) == 0xFFFB) {
-                    dialog->scriptState = 2;
-                    reachedEnd = 1;
-                    break;
-                }
+    lineY = 0;
+    i = 0;
+    for (visibleIndex = 0; visibleIndex < dialog->state.script.visibleGlyphCount; visibleIndex++) {
+        while (dialog->layout.script[i] > 0xFF00 && dialog->layout.script[i] != 0xFFFE) {
+            token = dialog->layout.script[i];
+            if (token == 0xFFFF) {
+                dialog->scriptState = 1;
+                reachedEnd = 1;
+                break;
             }
-
-            if (1 == reachedEnd) {
-                glyphText[0] = 0xFFFE;
-            } else {
-                glyphText[0] = dialog->layout.script[scriptIndex];
+            if (token == 0xFFFD) {
+                lineY += 0x10;
+                lineX = 0;
+                i++;
+                continue;
             }
-
-            drawMenuColoredGlyphScript(
-                (s16)(dialog->x + lineX),
-                (s16)(dialog->y + lineY + 0x18),
-                glyphText,
-                0,
-                0x100,
-                (u16)dialog->glyphPalette,
-                0x29
-            );
-
-            if (1 != reachedEnd) {
-                scriptIndex++;
-                lineX += 0x10;
+            if (token == 0xFFFC) {
+                if (((!i) && (!i)) && (!i)) {}
+                i++;
+                dialog->glyphPalette = dialog->layout.script[i];
+                i++;
+                continue;
             }
-            visibleIndex++;
-            if (visibleIndex < actor->state.script.visibleGlyphCount) {
-                goto parse_visible_glyph;
+            if (token == 0xFFFB) {
+                dialog->scriptState = 2;
+                reachedEnd = 1;
+                break;
             }
+        }
+
+        if (1 == reachedEnd) {
+            glyphText[0] = 0xFFFE;
+        } else {
+            glyphText[0] = dialog->layout.script[i];
+        }
+
+        drawMenuColoredGlyphScript(
+            dialog->x + lineX,
+            dialog->y + lineY + 0x18,
+            glyphText,
+            0,
+            0x100,
+            dialog->glyphPalette,
+            0x29
+        );
+
+        if (1 != reachedEnd) {
+            i++;
+            lineX += 0x10;
         }
     }
 
@@ -582,8 +554,8 @@ void drawTrainingCourseDialog(TrainingCourseUiActor *arg0) {
 
     if (((dialog->scriptState == 1) || (dialog->scriptState == 2)) && (gMainMenuSelectionResult == 0)) {
         drawMenuSprite(
-            (s16)(dialog->x + 0xF4),
-            (s16)(dialog->y + 0x48),
+            dialog->x + 0xF4,
+            dialog->y + 0x48,
             getRelocatableHeapBlockBase(gAssetHandles[0x2A]),
             dialog->confirmBlinkTimer >= 8,
             0x20,
@@ -593,7 +565,6 @@ void drawTrainingCourseDialog(TrainingCourseUiActor *arg0) {
         );
     }
 }
-#endif
 
 void updateTrainingCourseDialogScrollOut(TrainingCourseUiActor *arg0) {
     arg0->y += 0x10;
