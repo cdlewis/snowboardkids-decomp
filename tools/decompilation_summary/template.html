@@ -6,7 +6,7 @@
     <title>Snowboard Kids — {{REMAINING_COUNT}} Functions Left</title>
     <meta name="description" content="Snowboard Kids matching decompilation progress and remaining function report." />
     <meta property="og:title" content="Snowboard Kids — {{REMAINING_COUNT}} Functions Left" />
-    <meta property="og:description" content="Live summary of the remaining functions and their best known match percentages." />
+    <meta property="og:description" content="Best known match percentages for the remaining functions." />
     <style>
       :root {
         color-scheme: dark;
@@ -79,7 +79,7 @@
 
       .stats {
         display: grid;
-        grid-template-columns: repeat(4, minmax(0, 1fr));
+        grid-template-columns: repeat(3, minmax(0, 1fr));
         gap: 14px;
         max-width: 1180px;
         margin: 0 auto 24px;
@@ -145,20 +145,23 @@
       .function-row { padding: 17px 20px; border-bottom: 2px dashed #171b2922; transition: background .15s ease; }
       .function-row:last-child { border-bottom: 0; }
       .function-row:hover { background: #ffd12e28; }
+      .function-row.needs-match { background: #e62b4010; }
+      .function-row.needs-match:hover { background: #e62b4020; }
       .function-row[hidden] { display: none; }
       .function-cell { min-width: 0; }
       .function-name { display: block; overflow-wrap: anywhere; font: 800 14px ui-monospace, SFMono-Regular, Menlo, monospace; text-decoration-thickness: 2px; text-decoration-color: var(--orange); text-underline-offset: 3px; }
       .function-size { display: block; margin-top: 5px; color: #7b7f89; font-size: 12px; }
       .source-cell { color: var(--blue); font-size: 13px; font-weight: 800; }
       .score-cell strong { display: block; margin-top: 5px; text-align: right; font: 900 14px ui-monospace, SFMono-Regular, Menlo, monospace; }
+      .score-cell .missing-score { margin: 0; color: var(--red); }
       .score-detail { display: block; margin-top: 4px; color: #7b7f89; font: 10px ui-monospace, SFMono-Regular, Menlo, monospace; text-align: right; }
 
       .score-track { height: 17px; overflow: hidden; background: #10152512; border: 2px solid var(--ink); border-radius: 99px; }
       .score-track span { display: block; height: 100%; background: linear-gradient(90deg, var(--red), var(--orange), var(--yellow), var(--mint)); border-right: 2px solid var(--ink); }
       .actions { display: flex; flex-wrap: wrap; gap: 7px; }
       .action { padding: 8px 9px; color: var(--ink); background: var(--yellow); border: 2px solid var(--ink); border-radius: 7px; box-shadow: 2px 2px 0 var(--ink); font-size: 10px; font-weight: 1000; letter-spacing: .04em; text-decoration: none; text-transform: uppercase; }
-      .action.scratch { background: var(--orange); }
       .action:hover { transform: translate(-1px, -1px); box-shadow: 3px 3px 0 var(--ink); }
+      .missing-badge { padding: 8px 9px; color: var(--snow); background: var(--red); border: 2px solid var(--ink); border-radius: 7px; font-size: 10px; font-weight: 1000; letter-spacing: .04em; text-transform: uppercase; }
 
       .empty { display: none; padding: 34px; color: #747986; text-align: center; }
       .empty.visible { display: block; }
@@ -187,14 +190,12 @@
   </head>
   <body>
     <header>
-      <p class="eyebrow">Matching decompilation status</p>
       <h1>Snowboard Kids<br /><em>{{REMAINING_COUNT}} functions left</em></h1>
-      <p class="intro">Every remaining assembly function, ranked by its best known match. Local scores come from logged matching workspaces; scratch scores come from decomp.me.</p>
+      <p class="intro">Every remaining assembly function, ranked by its best known match percentage. Functions without a published match are flagged at the bottom.</p>
     </header>
 
     <section class="stats" aria-label="Project summary">
       <div class="stat"><strong>{{REMAINING_COUNT}}</strong><span>functions remaining</span></div>
-      <div class="stat"><strong>{{SCORED_COUNT}}</strong><span>with a scored attempt</span></div>
       <div class="stat"><strong>{{REMAINING_BYTES}}</strong><span>assembly bytes remaining</span></div>
       <div class="stat"><strong>{{CODE_PERCENT}}</strong><span>code matched</span></div>
     </section>
@@ -205,7 +206,7 @@
           <label><input id="search" type="search" placeholder="Filter functions…" autocomplete="off" /></label>
           <span id="visible-count">{{REMAINING_COUNT}} shown</span>
         </div>
-        <div class="table-head"><span>Function</span><span>Best source</span><span>Match</span><span>Links</span></div>
+        <div class="table-head"><span>Function</span><span>Best match by</span><span>Match</span><span>Link</span></div>
 {{FUNCTION_ROWS}}
         <p class="empty" id="empty">No functions match that filter.</p>
       </section>
