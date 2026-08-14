@@ -75,6 +75,10 @@ typedef struct {
     /* 0x01 */ u8 stickY;
 } RaceCourseCharacterEntry;
 
+typedef struct {
+    u8 characterIds[10 * 4];
+} RaceCourseCharacterIdTable;
+
 extern CourseGridEntry D_800DBD10[];
 
 CourseGridEntry *D_800DC490[12] = {
@@ -93,17 +97,19 @@ CourseGridEntry *D_800DC490[12] = {
 };
 
 u8 gPendingEndingCreditsFlow = 0;
-u8 D_800DC4C4[10][4] = {
-    { 2, 3, 4, 0 },
-    { 0, 1, 2, 3 },
-    { 1, 2, 3, 4 },
-    { 0, 3, 4, 1 },
-    { 0, 2, 3, 4 },
-    { 0, 1, 2, 3 },
-    { 1, 3, 4, 0 },
-    { 0, 1, 2, 3 },
-    { 5, 0, 1, 3 },
-    { 0, 1, 4, 2 },
+RaceCourseCharacterIdTable D_800DC4C4 = {
+    {
+        2, 3, 4, 0,
+        0, 1, 2, 3,
+        1, 2, 3, 4,
+        0, 3, 4, 1,
+        0, 2, 3, 4,
+        0, 1, 2, 3,
+        1, 3, 4, 0,
+        0, 1, 2, 3,
+        5, 0, 1, 3,
+        0, 1, 4, 2,
+    },
 };
 RaceCourseCharacterEntry D_800DC4EC[8] = {
     { 1,  0 },
@@ -591,25 +597,15 @@ void openRaceStartTransitionFlow(void) {
     suspendGameTask(2);
 }
 
-// initRaceSceneFlow best match: 96.213% (nonmatchings/initRaceSceneFlow-21/base_6.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race/flow/race_flow/initRaceSceneFlow.s")
-
-#ifdef NON_MATCHING
 void initRaceSceneFlow(void) {
     s32 i;
-    RacePlayer *player;
-    RacePlayer *end;
-    RacePlayer *other;
-    RaceInputHistoryBuffer *history;
-    RaceCourseCharacterEntry *courseCharacters;
-    u8 *courseCharacterIds;
-    u16 *replayRecordFlag;
+    s32 j;
+    s32 k;
+    s32 pad;
     s32 duplicate;
-    union {
-        u32 unsignedValue;
-        s32 signedValue;
-    } playerCount;
-    s32 courseIndex;
+    RaceCourseCharacterEntry *characterEntry;
+    RaceInputHistoryBuffer *history;
+    u16 *replayRecordFlag;
 
     gRaceUpdatePaused = 0;
     D_80121B57 = 0;
@@ -621,23 +617,19 @@ void initRaceSceneFlow(void) {
     gPendingEndingCreditsFlow = 0;
     stopSoundEffects();
     requestMusicSequenceStop(0);
-
     gRacePlayers[0].isCpu = 1;
     gRacePlayers[1].isCpu = 1;
     gRacePlayers[2].isCpu = 1;
     gRacePlayers[3].isCpu = 1;
-
-    courseIndex = gRaceCourseIndex.signedValue;
-    gRacePlayers[0].actionTriggerChance = D_800DC5B4[courseIndex];
-    gRacePlayers[1].actionTriggerChance = D_800DC5B4[courseIndex];
-    gRacePlayers[2].actionTriggerChance = D_800DC5B4[courseIndex];
-    gRacePlayers[3].actionTriggerChance = D_800DC5B4[courseIndex];
-    gRacePlayers[0].itemTriggerChance = D_800DC5B4[courseIndex];
-    gRacePlayers[1].itemTriggerChance = D_800DC5B4[courseIndex];
-    gRacePlayers[2].itemTriggerChance = D_800DC5B4[courseIndex];
-    gRacePlayers[3].itemTriggerChance = D_800DC5B4[courseIndex];
-    playerCount.unsignedValue = gPlayerCount;
-    if (playerCount.signedValue != 1) {
+    gRacePlayers[0].actionTriggerChance = D_800DC5B4[gRaceCourseIndex.signedValue];
+    gRacePlayers[1].actionTriggerChance = D_800DC5B4[gRaceCourseIndex.signedValue];
+    gRacePlayers[2].actionTriggerChance = D_800DC5B4[gRaceCourseIndex.signedValue];
+    gRacePlayers[3].actionTriggerChance = D_800DC5B4[gRaceCourseIndex.signedValue];
+    gRacePlayers[0].itemTriggerChance = D_800DC5B4[gRaceCourseIndex.signedValue];
+    gRacePlayers[1].itemTriggerChance = D_800DC5B4[gRaceCourseIndex.signedValue];
+    gRacePlayers[2].itemTriggerChance = D_800DC5B4[gRaceCourseIndex.signedValue];
+    gRacePlayers[3].itemTriggerChance = D_800DC5B4[gRaceCourseIndex.signedValue];
+    if (gPlayerCount != 1) {
         gRacePlayers[0].actionTriggerChance = 0;
         gRacePlayers[1].actionTriggerChance = 0;
         gRacePlayers[2].actionTriggerChance = 0;
@@ -647,23 +639,13 @@ void initRaceSceneFlow(void) {
         gRacePlayers[2].itemTriggerChance = 0;
         gRacePlayers[3].itemTriggerChance = 0;
     }
-
     gRacePlayers[0].unk17 = 0;
     gRacePlayers[1].unk17 = 1;
     gRacePlayers[2].unk17 = 2;
     gRacePlayers[3].unk17 = 3;
-
-    if (playerCount.signedValue > 0) {
-        if (1) {
-            player = gRacePlayers;
-            end = &gRacePlayers[playerCount.unsignedValue];
-        }
-        do {
-            player->isCpu = 0;
-            player++;
-        } while (player < &gRacePlayers[playerCount.unsignedValue]);
+    for (i = 0; i < gPlayerCount; i++) {
+        gRacePlayers[i].isCpu = 0;
     }
-
     gRacePlayers[0].characterId = gRacePlayers[0].selectedCharacterId;
     gRacePlayers[1].characterId = gRacePlayers[1].selectedCharacterId;
     gRacePlayers[2].characterId = gRacePlayers[2].selectedCharacterId;
@@ -673,46 +655,29 @@ void initRaceSceneFlow(void) {
     gRacePlayers[2].characterVariant = gRacePlayers[2].menuSelection;
     gRacePlayers[3].characterVariant = gRacePlayers[3].menuSelection;
     gRacePlayers[0].unk12 = gRacePlayers[0].selectionUnlockState;
-    gRacePlayers[1].unk12 = gRacePlayers[1].selectionUnlockState ^ 0;
+    gRacePlayers[1].unk12 = gRacePlayers[1].selectionUnlockState;
     gRacePlayers[2].unk12 = gRacePlayers[2].selectionUnlockState;
     gRacePlayers[3].unk12 = gRacePlayers[3].selectionUnlockState;
 
-    if (playerCount.signedValue < 4) {
-        player = &gRacePlayers[playerCount.unsignedValue];
-        courseCharacters = D_800DC58C[courseIndex];
-        courseCharacterIds = D_800DC4C4[courseIndex];
-        i = 1;
-        while (i != 0) {
-            for (;;) {
-                duplicate = 1;
-                player->characterId = *courseCharacterIds++;
-                if (playerCount.signedValue > 0) {
-                    if (1) {
-                        end = &gRacePlayers[playerCount.signedValue];
-                    }
-                    other = gRacePlayers;
-                    do {
-                        if (player->characterId == other->characterId) {
-                            duplicate = 0;
-                        }
-                        other++;
-                    } while (other < end);
-                }
-                if (duplicate != 0) {
-                    break;
+    for (i = gPlayerCount, k = 0; i < 4; i++) {
+        while (1) {
+            duplicate = 1;
+            gRacePlayers[i].characterId =
+                D_800DC4C4.characterIds[gRaceCourseIndex.signedValue * 4 + k++];
+            for (j = 0; j < gPlayerCount; j++) {
+                if (gRacePlayers[i].characterId == gRacePlayers[j].characterId) {
+                    duplicate = 0;
                 }
             }
-            if (1) {
-                player->characterVariant = courseCharacters[player->characterId].stickX;
-                player->unk12 = courseCharacters[player->characterId].stickY;
+            if (duplicate != 0) {
+                break;
             }
-            player++;
-            i = player < (RacePlayer *)&gFrameCounter;
         }
+        characterEntry = &D_800DC58C[gRaceCourseIndex.signedValue][gRacePlayers[i].characterId & 0xFFFFFFFFu];
+        gRacePlayers[i].characterVariant = characterEntry->stickX;
+        gRacePlayers[i].unk12 = characterEntry->stickY;
     }
-
-    playerCount.unsignedValue = gRaceSplitscreenMode;
-    if (playerCount.unsignedValue == 0) {
+    if (gRaceSplitscreenMode == 0) {
         gRacePlayers[0].isActive = 1;
         gRacePlayers[1].isActive = 1;
         gRacePlayers[2].isActive = 1;
@@ -730,8 +695,7 @@ void initRaceSceneFlow(void) {
         gRacePlayerAttackStartTimer = 0x64;
         initCallbackTaskScheduler(2);
     }
-
-    for (i = 0; i < RACE_PLAYER_COUNT; i++) {
+    for (i = 0; i < 4; i++) {
         gRacePlayers[i].unk15 = 0;
         gRacePlayers[i].replayInputSource = 0;
         gRacePlayers[i].soundDisabled = 0;
@@ -748,57 +712,57 @@ void initRaceSceneFlow(void) {
         history->characterId = gRacePlayers[0].characterId;
         history->characterVariant = gRacePlayers[0].characterVariant;
         history->unkC = gRacePlayers[0].unk12;
-        i = 0;
-        do {
-            history->stickX[i + 1] = 0;
-            history->stickY[i + 1] = 0;
-            history->buttons[i + 1] = 0;
-            history->stickX[i + 2] = 0;
-            history->stickY[i + 2] = 0;
-            history->buttons[i + 2] = 0;
-            history->stickX[i + 3] = 0;
-            history->stickY[i + 3] = 0;
-            history->buttons[i + 3] = 0;
-            i += 4;
-            history->stickX[i - 4] = 0;
-            history->stickY[i - 4] = 0;
-            history->buttons[i - 4] = 0;
-        } while (i != RACE_INPUT_HISTORY_LENGTH);
+
+
+        for (i = 0; i < 0x1194; i++) {
+            history->stickX[i] = 0;
+            history->stickY[i] = 0;
+            history->buttons[i] = 0;
+        }
 
         switch (gRaceCourseIndex.signedValue) {
             case 0:
                 replayRecordFlag = &gGameSaveDataBuffer[0].replaySlots[0].length;
                 break;
+
             case 1:
                 replayRecordFlag = &gGameSaveDataBuffer[0].replaySlots[1].length;
                 break;
+
             case 2:
                 replayRecordFlag = &gGameSaveDataBuffer[0].replaySlots[2].length;
                 break;
+
             case 3:
                 replayRecordFlag = &gGameSaveDataBuffer[0].replaySlots[3].length;
                 break;
+
             case 4:
                 replayRecordFlag = &gGameSaveDataBuffer[0].replaySlots[4].length;
                 break;
+
             case 5:
                 replayRecordFlag = &gGameSaveDataBuffer[0].replaySlots[5].length;
                 break;
+
             case 6:
                 replayRecordFlag = &gGameSaveDataBuffer[0].replaySlots[6].length;
                 break;
+
             case 8:
                 replayRecordFlag = &gGameSaveDataBuffer[0].replaySlots[7].length;
                 break;
+
             case 9:
                 replayRecordFlag = &gGameSaveDataBuffer[0].replaySlots[8].length;
                 break;
         }
-        if ((gRaceCourseIndex.signedValue != 7) && (*replayRecordFlag != 0)) {
+
+        if ((gRaceCourseIndex.signedValue != 7) && ((*replayRecordFlag) != 0)) {
             gAssetHandles[0x7] = allocRelocatableHeapBlock(0x34CC);
             loadCurrentRaceRecordReplayData();
             history = getRelocatableHeapBlockBase(gAssetHandles[0x7]);
-            if (history->enabled != 0) {
+            if (history->enabled) {
                 history->writeIndex = 0;
                 gRacePlayers[1].isActive = 1;
                 gRacePlayers[1].isCpu = 0;
@@ -817,6 +781,7 @@ void initRaceSceneFlow(void) {
     gMenuFlowState = 1;
     resetRaceCameras();
     resetAllViewports();
+
     if (gRaceCourseIndex.signedValue != 6) {
         configureViewport(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.3333334f);
     } else {
@@ -843,17 +808,11 @@ void initRaceSceneFlow(void) {
         createCallbackTask((CallbackTaskCallback)func_80065E90, 6, 0x64);
         setCurrentGameTaskCallback(startRaceGameplayFlow, 0);
     }
-
-    i = 0;
-    if ((s32)gPlayerCount > 0) {
-        do {
-            requestRumbleMotorInit(i);
-            i++;
-        } while (i < (s32)gPlayerCount);
+    for (i = 0; i < gPlayerCount; i++) {
+        requestRumbleMotorInit(i);
     }
     updateRelocatableHeap();
 }
-#endif
 
 void fadeOutRaceStartTransitionFlow(void) {
     gMenuFadeAlpha -= 8;
