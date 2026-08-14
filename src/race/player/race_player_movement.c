@@ -212,7 +212,9 @@ void getRacePlayerRankingProgress(s32 arg0, s32 *arg1, s32 *arg2) {
     }
 }
 
-// updateRacePlayerRankings best match: 99.899% (nonmatchings/updateRacePlayerRankings/base_9.c)
+// updateRacePlayerRankings best match: 99.949% -- the folded no-op index on the
+// first gRaceOrderPlayerIds store shifts a compiler temp web so the spill slot
+// matches; only `lb a1` vs `lb t8` (and its multu) remain in the final loop.
 #pragma GLOBAL_ASM("asm/nonmatchings/race/player/race_player_movement/updateRacePlayerRankings.s")
 
 #ifdef NON_MATCHING
@@ -228,7 +230,7 @@ void updateRacePlayerRankings(void) {
 
     if (gRaceSplitscreenMode != 2) {
         if (gMenuFlowState & 1) {
-            gRaceOrderPlayerIds[0] = 0;
+            gRaceOrderPlayerIds[(gRacePlayers[order[j]].stateFlags & 0x40) * 0] = 0;
             gRaceOrderPlayerIds[1] = 1;
             gRaceOrderPlayerIds[2] = 2;
             gRaceOrderPlayerIds[3] = 3;
