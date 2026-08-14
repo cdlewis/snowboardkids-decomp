@@ -29,6 +29,9 @@ CharacterSelectCourseMenuData gCharacterSelectCourseMenuData = {
     { 7, -1, 0, 0, 0, 0, 0, 0 },
 };
 
+u16 gCharacterSelectCourseExitOptionIndex;
+CharacterSelectCourseCursorState gCharacterSelectCourseCursorState;
+
 extern void enqueueSoundEffect(s32, s32);
 extern void releaseMenuAssetHandles(void);
 extern s16 gMenuFadeAlpha;
@@ -345,8 +348,9 @@ void initCharacterSelectCourseMenuFromPlayerSelect(void) {
 }
 // clang-format on
 
-// updateCharacterSelectCourseMenu best match: 99.905%
-// (nonmatchings/updateCharacterSelectCourseMenu-3327344942128263994/base_45.c)
+// updateCharacterSelectCourseMenu best match: 99.994% -- only the
+// `li a1,0xC` vs `li t5,0xC` register choice (and its store) differ; the
+// NON_MATCHING body below otherwise byte-matches the target.
 
 // asm-processor requires this pragma to remain on one line.
 // clang-format off
@@ -395,7 +399,7 @@ void updateCharacterSelectCourseMenu(void) {
                         selection |= 0;
                         selection |= 0;
                         input = heldInput;
- upInput = input & (STICK_UP | U_JPAD); if ((upInput == 0) && ((input & (STICK_DOWN | D_JPAD)) == 0)) { *repeatTimerPtr = 0; } pressedInput = *pressedInputPtr; break; } repeatTimer = *repeatTimerPtr; if ((pressedInput & (STICK_UP | U_JPAD)) || (((upInput != 0) && (((s32)repeatTimer) >= 0xB)) && ((repeatTimer % 3) == 0))) { if (!repeatTimer) { repeatTimer += 1; } if (selection > 0) { gRaceCourseIndex.signedValue = selection - 1; selection = gRaceCourseIndex.signedValue; } *repeatTimerPtr = repeatTimer; } else if ((pressedInput & (STICK_DOWN | D_JPAD)) || ((((*repeatTimerPtr = repeatTimer, input & (STICK_DOWN | D_JPAD))) && ((*repeatTimerPtr = (upInput = repeatTimer), ((s32)repeatTimer) >= 0xB))) && ((*repeatTimerPtr = repeatTimer, (repeatTimer % 3) == 0)))) { *repeatTimerPtr = repeatTimer; if (repeatTimer == 0) { *repeatTimerPtr = repeatTimer + 1; } if ((*gCharacterSelectActiveCourseOptions)[selection] != (-1)) { gRaceCourseIndex.signedValue = selection + 1;
+ upInput = input & (STICK_UP | U_JPAD); if ((upInput == 0) && ((input & (STICK_DOWN | D_JPAD)) == 0)) { *repeatTimerPtr = 0; } pressedInput = *pressedInputPtr; break; } repeatTimer = *repeatTimerPtr; if ((pressedInput & (STICK_UP | U_JPAD)) || (((upInput != 0) && (((s32)repeatTimer) >= 0xB)) && (((((s32)repeatTimer)) % 3) == 0))) { if (!repeatTimer) { repeatTimer += 1; } if (selection > 0) { gRaceCourseIndex.signedValue = selection - 1; selection = gRaceCourseIndex.signedValue; } *repeatTimerPtr = repeatTimer; } else if ((pressedInput & (STICK_DOWN | D_JPAD)) || ((((*repeatTimerPtr = repeatTimer, input & (STICK_DOWN | D_JPAD))) && ((*repeatTimerPtr = (upInput = repeatTimer), ((s32)repeatTimer) >= 0xB))) && ((*repeatTimerPtr = repeatTimer, ((((s32)repeatTimer)) % 3) == 0)))) { *repeatTimerPtr = repeatTimer; if (repeatTimer == 0) { *repeatTimerPtr = repeatTimer + 1; } if ((*gCharacterSelectActiveCourseOptions)[selection] != (-1)) { gRaceCourseIndex.signedValue = selection + 1;
                             selection = gRaceCourseIndex.signedValue;
                         }
                     }
@@ -405,7 +409,8 @@ void updateCharacterSelectCourseMenu(void) {
                         repeatTimer++;
                         *repeatTimerPtr = repeatTimer;
                         if (repeatTimer == 0xFFFF) {
-                            *repeatTimerPtr = 0xC;
+                            *repeatTimerPtr = repeatTimer = 0xC;
+                            if (((!repeatTimer) && (!repeatTimer)) && (!repeatTimer)) {}
                         }
                     }
 
@@ -435,7 +440,7 @@ void updateCharacterSelectCourseMenu(void) {
                     } else if ((input & B_BUTTON) && (gMenuFlowState == (gCharacterSelectCourseExitOptionIndex + 1))) {
                         enqueueSoundEffect(1, 0x32);
                         gCharacterSelectCourseCursorState.fields.listCursorState = 2;
-                        gCharacterSelectCourseCursorState.fields.listCursorSpriteIndex = spriteIndex;
+                            gCharacterSelectCourseCursorState.fields.listCursorSpriteIndex = spriteIndex;
                         gRacePlayers[0].menuState = 7;
                         setCurrentGameTaskCallback(&handleCharacterSelectCourseSelection, 0);
                         requestMusicSequenceStop(8);
@@ -464,6 +469,7 @@ void updateCharacterSelectCourseMenu(void) {
     gMenuFlowState = 0;
     updateCallbackTasks();
 }
+
 #endif
 
 void updateCharacterSelectCourseSubmenu(void) {

@@ -1,0 +1,5 @@
+gCharacterSelectCourseSubmenuState = gCharacterSelectCourseCursorState + 0x1;
+gCharacterSelectCoursePreviewFrameState = gCharacterSelectCourseCursorState + 0x2;
+gCharacterSelectCourseCursorSpriteIndex = gCharacterSelectCourseCursorState + 0x4;
+gCharacterSelectCourseCursorTimer = gCharacterSelectCourseCursorState + 0x6;
+gCharacterSelectCourseSubmenuTimer = gCharacterSelectCourseCursorState + 0x7;
