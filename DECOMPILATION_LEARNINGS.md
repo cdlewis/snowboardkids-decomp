@@ -458,6 +458,17 @@ and control flow already match and only register *names* differ.
   code for globals defined in the current TU (can keep base addresses in
   registers across adjacent stores) versus globals declared `extern` (can
   force extra address reloads and worse delay-slot scheduling).
+- **A shared `lui $at` across two stores means the symbols are TU-defined.**
+  For `extern` globals, every macro store expands with its own `lui $at`;
+  IDO only emits one `lui` serving two `%lo` stores (often with the second
+  store in a branch delay slot) when it laid out both objects itself. If the
+  target shows `sb x,%lo(A)($at)` and `sh y,%lo(B)($at)` off a single `lui`,
+  define the spanning object (typically a struct/union covering both
+  addresses) in the file, give the file a `.bss` split at that VRAM, and add
+  an alias linker script for the interior symbol names that other TUs still
+  reference. Splat names interior offsets as separate symbols, so the reloc
+  names in a compiled attempt (`A+4`) and the target (`B`) can differ while
+  the linked bytes are identical.
 - **Try a fixed-trip array loop before adding interior-symbol aliases.** For
   small `extern` multidimensional arrays, IDO can fully unroll the loop while
   still emitting a fresh address load for each interleaved row access. The
