@@ -356,6 +356,9 @@ format: check-clang-format-version
 format-check: check-clang-format-version
 	$(CLANG_FORMAT) --dry-run --Werror -style=file $(FORMAT_FILES)
 
+decompilation-summary:
+	$(PYTHON) $(TOOLS_DIR)/decompilation_summary.py
+
 # Tidy is diagnostic-only: automatic fixes can alter matching code generation.
 tidy: check-clang-tidy-version
 	$(CLANG_TIDY) $(TIDY_C_FILES) -- $(CC_CHECK_FLAGS) $(CC_CHECK_INCLUDES) $(C_DEFINES) $(CC_CHECK_MIPS_DEFINES)
@@ -374,4 +377,5 @@ clean:
 ### Settings
 .SECONDARY:
 .PHONY: all clean default extract nonmatching verify check \
-	check-clang-format-version check-clang-tidy-version format format-check tidy
+	check-clang-format-version check-clang-tidy-version format format-check tidy \
+	decompilation-summary

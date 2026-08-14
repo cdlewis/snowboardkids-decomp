@@ -51,6 +51,7 @@ class ScratchResult:
     max_score: int | float | None
     slug: str
     match_override: bool
+    author: str | None = None
 
 
 @dataclass(frozen=True)
@@ -272,6 +273,8 @@ def parse_scratch_results(
 
         score = scratch.get("score")
         max_score = scratch.get("max_score")
+        owner = scratch.get("owner")
+        author = owner.get("username") if isinstance(owner, dict) else None
         yield ScratchResult(
             function=function,
             percent=percent,
@@ -279,6 +282,7 @@ def parse_scratch_results(
             max_score=max_score if isinstance(max_score, (int, float)) else None,
             slug=str(slug),
             match_override=bool(scratch.get("match_override")),
+            author=author if isinstance(author, str) and author else None,
         )
 
 

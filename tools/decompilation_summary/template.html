@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Snowboard Kids — {{REMAINING_COUNT}} Functions Left</title>
+    <meta name="description" content="Snowboard Kids matching decompilation progress and remaining function report." />
+    <meta property="og:title" content="Snowboard Kids — {{REMAINING_COUNT}} Functions Left" />
+    <meta property="og:description" content="Live summary of the remaining functions and their best known match percentages." />
+    <style>
+      :root {
+        color-scheme: dark;
+        --night: #071426;
+        --blue: #0d3458;
+        --ice: #b9e9ff;
+        --snow: #f8fbff;
+        --ink: #101525;
+        --paper: #fff9e9;
+        --yellow: #ffd12e;
+        --orange: #ff7b29;
+        --red: #e62b40;
+        --mint: #32d2a1;
+      }
+
+      * { box-sizing: border-box; }
+      html { scroll-behavior: smooth; }
+      body {
+        margin: 0;
+        min-height: 100vh;
+        color: var(--snow);
+        background:
+          radial-gradient(circle at 14% 4%, #287fb3 0, transparent 34rem),
+          radial-gradient(circle at 86% 9%, #d86145 0, transparent 27rem),
+          linear-gradient(180deg, var(--blue), var(--night) 62%);
+        font-family: ui-rounded, "Arial Rounded MT Bold", system-ui, sans-serif;
+      }
+
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        opacity: .45;
+        background-image:
+          radial-gradient(circle, #fff 0 1.5px, transparent 1.8px),
+          radial-gradient(circle, #fff 0 1px, transparent 1.3px);
+        background-position: 13px 21px, 91px 72px;
+        background-size: 137px 151px, 193px 179px;
+      }
+
+      a { color: inherit; }
+      header, main, footer { position: relative; z-index: 1; }
+      header { max-width: 1180px; margin: auto; padding: 64px 26px 30px; }
+
+      .eyebrow {
+        margin: 0 0 12px;
+        color: var(--ice);
+        font-size: 12px;
+        font-weight: 900;
+        letter-spacing: .2em;
+        text-transform: uppercase;
+      }
+
+      h1 {
+        max-width: 950px;
+        margin: 0;
+        font-size: clamp(46px, 8vw, 100px);
+        font-weight: 1000;
+        font-style: italic;
+        letter-spacing: -.055em;
+        line-height: .9;
+        text-transform: uppercase;
+        -webkit-text-stroke: 2px var(--ink);
+        text-shadow: 5px 5px 0 var(--red), 9px 9px 0 var(--ink), 17px 19px 28px #0008;
+      }
+
+      h1 em { color: var(--yellow); font-style: inherit; }
+      .intro { max-width: 760px; margin: 35px 0 0; color: #d9ebf7; font-size: 17px; line-height: 1.6; }
+
+      .stats {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 14px;
+        max-width: 1180px;
+        margin: 0 auto 24px;
+        padding: 0 26px;
+      }
+
+      .stat {
+        min-height: 116px;
+        padding: 20px;
+        color: var(--ink);
+        background: var(--paper);
+        border: 3px solid var(--ink);
+        border-radius: 16px;
+        box-shadow: 6px 6px 0 var(--ink);
+      }
+
+      .stat strong { display: block; color: var(--red); font-size: clamp(27px, 4vw, 42px); line-height: 1; }
+      .stat span { display: block; margin-top: 10px; font-size: 12px; font-weight: 900; letter-spacing: .1em; text-transform: uppercase; }
+
+      main { max-width: 1180px; margin: auto; padding: 12px 26px 80px; }
+      .panel { overflow: hidden; color: var(--ink); background: var(--paper); border: 4px solid var(--ink); border-radius: 20px; box-shadow: 10px 10px 0 var(--ink); }
+
+      .toolbar {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        padding: 18px 20px;
+        color: var(--snow);
+        background: var(--ink);
+      }
+
+      .toolbar label { flex: 1; }
+      input[type="search"] {
+        width: 100%;
+        padding: 12px 15px;
+        color: var(--ink);
+        background: var(--snow);
+        border: 0;
+        border-radius: 10px;
+        font: 700 15px ui-monospace, SFMono-Regular, Menlo, monospace;
+        outline: 3px solid transparent;
+      }
+      input[type="search"]:focus { outline-color: var(--yellow); }
+      #visible-count { flex: none; color: var(--yellow); font-size: 13px; font-weight: 900; text-transform: uppercase; }
+
+      .table-head, .function-row {
+        display: grid;
+        grid-template-columns: minmax(230px, 1.4fr) minmax(130px, .7fr) minmax(250px, 1fr) minmax(160px, .7fr);
+        align-items: center;
+        gap: 20px;
+      }
+
+      .table-head {
+        padding: 12px 20px;
+        color: #697080;
+        border-bottom: 2px solid #171b2922;
+        font-size: 11px;
+        font-weight: 900;
+        letter-spacing: .12em;
+        text-transform: uppercase;
+      }
+
+      .function-row { padding: 17px 20px; border-bottom: 2px dashed #171b2922; transition: background .15s ease; }
+      .function-row:last-child { border-bottom: 0; }
+      .function-row:hover { background: #ffd12e28; }
+      .function-row[hidden] { display: none; }
+      .function-cell { min-width: 0; }
+      .function-name { display: block; overflow-wrap: anywhere; font: 800 14px ui-monospace, SFMono-Regular, Menlo, monospace; text-decoration-thickness: 2px; text-decoration-color: var(--orange); text-underline-offset: 3px; }
+      .function-size { display: block; margin-top: 5px; color: #7b7f89; font-size: 12px; }
+      .source-cell { color: var(--blue); font-size: 13px; font-weight: 800; }
+      .score-cell strong { display: block; margin-top: 5px; text-align: right; font: 900 14px ui-monospace, SFMono-Regular, Menlo, monospace; }
+      .score-detail { display: block; margin-top: 4px; color: #7b7f89; font: 10px ui-monospace, SFMono-Regular, Menlo, monospace; text-align: right; }
+
+      .score-track { height: 17px; overflow: hidden; background: #10152512; border: 2px solid var(--ink); border-radius: 99px; }
+      .score-track span { display: block; height: 100%; background: linear-gradient(90deg, var(--red), var(--orange), var(--yellow), var(--mint)); border-right: 2px solid var(--ink); }
+      .actions { display: flex; flex-wrap: wrap; gap: 7px; }
+      .action { padding: 8px 9px; color: var(--ink); background: var(--yellow); border: 2px solid var(--ink); border-radius: 7px; box-shadow: 2px 2px 0 var(--ink); font-size: 10px; font-weight: 1000; letter-spacing: .04em; text-decoration: none; text-transform: uppercase; }
+      .action.scratch { background: var(--orange); }
+      .action:hover { transform: translate(-1px, -1px); box-shadow: 3px 3px 0 var(--ink); }
+
+      .empty { display: none; padding: 34px; color: #747986; text-align: center; }
+      .empty.visible { display: block; }
+      footer { padding: 0 24px 48px; color: #a7becd; font: 12px ui-monospace, SFMono-Regular, Menlo, monospace; text-align: center; }
+
+      @media (max-width: 880px) {
+        .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        .table-head { display: none; }
+        .function-row { grid-template-columns: 1fr auto; }
+        .source-cell { grid-column: 1; }
+        .score-cell { grid-column: 1 / -1; }
+        .actions { grid-column: 2; grid-row: 1 / 3; justify-content: flex-end; }
+      }
+
+      @media (max-width: 540px) {
+        header { padding-top: 45px; }
+        h1 { -webkit-text-stroke-width: 1.5px; text-shadow: 3px 3px 0 var(--red), 6px 6px 0 var(--ink); }
+        .stats { grid-template-columns: 1fr 1fr; gap: 9px; }
+        .stat { min-height: 98px; padding: 15px; }
+        .toolbar { align-items: stretch; flex-direction: column; }
+        .function-row { grid-template-columns: 1fr; gap: 10px; }
+        .source-cell, .score-cell, .actions { grid-column: 1; grid-row: auto; }
+        .actions { justify-content: flex-start; }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <p class="eyebrow">Matching decompilation status</p>
+      <h1>Snowboard Kids<br /><em>{{REMAINING_COUNT}} functions left</em></h1>
+      <p class="intro">Every remaining assembly function, ranked by its best known match. Local scores come from logged matching workspaces; scratch scores come from decomp.me.</p>
+    </header>
+
+    <section class="stats" aria-label="Project summary">
+      <div class="stat"><strong>{{REMAINING_COUNT}}</strong><span>functions remaining</span></div>
+      <div class="stat"><strong>{{SCORED_COUNT}}</strong><span>with a scored attempt</span></div>
+      <div class="stat"><strong>{{REMAINING_BYTES}}</strong><span>assembly bytes remaining</span></div>
+      <div class="stat"><strong>{{CODE_PERCENT}}</strong><span>code matched</span></div>
+    </section>
+
+    <main>
+      <section class="panel">
+        <div class="toolbar">
+          <label><input id="search" type="search" placeholder="Filter functions…" autocomplete="off" /></label>
+          <span id="visible-count">{{REMAINING_COUNT}} shown</span>
+        </div>
+        <div class="table-head"><span>Function</span><span>Best source</span><span>Match</span><span>Links</span></div>
+{{FUNCTION_ROWS}}
+        <p class="empty" id="empty">No functions match that filter.</p>
+      </section>
+    </main>
+
+    <footer>Generated {{GENERATED_AT}} · scores are snapshots and may have moved since generation</footer>
+    <script>
+      const search = document.querySelector("#search");
+      const rows = [...document.querySelectorAll(".function-row")];
+      const count = document.querySelector("#visible-count");
+      const empty = document.querySelector("#empty");
+      search.addEventListener("input", () => {
+        const query = search.value.trim().toLowerCase();
+        let visible = 0;
+        for (const row of rows) {
+          row.hidden = !row.dataset.name.includes(query);
+          if (!row.hidden) visible++;
+        }
+        count.textContent = `${visible} shown`;
+        empty.classList.toggle("visible", visible === 0);
+      });
+    </script>
+  </body>
+</html>

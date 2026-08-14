@@ -1,0 +1,543 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Snowboard Kids — 24 Functions Left</title>
+    <meta name="description" content="Snowboard Kids matching decompilation progress and remaining function report." />
+    <meta property="og:title" content="Snowboard Kids — 24 Functions Left" />
+    <meta property="og:description" content="Live summary of the remaining functions and their best known match percentages." />
+    <style>
+      :root {
+        color-scheme: dark;
+        --night: #071426;
+        --blue: #0d3458;
+        --ice: #b9e9ff;
+        --snow: #f8fbff;
+        --ink: #101525;
+        --paper: #fff9e9;
+        --yellow: #ffd12e;
+        --orange: #ff7b29;
+        --red: #e62b40;
+        --mint: #32d2a1;
+      }
+
+      * { box-sizing: border-box; }
+      html { scroll-behavior: smooth; }
+      body {
+        margin: 0;
+        min-height: 100vh;
+        color: var(--snow);
+        background:
+          radial-gradient(circle at 14% 4%, #287fb3 0, transparent 34rem),
+          radial-gradient(circle at 86% 9%, #d86145 0, transparent 27rem),
+          linear-gradient(180deg, var(--blue), var(--night) 62%);
+        font-family: ui-rounded, "Arial Rounded MT Bold", system-ui, sans-serif;
+      }
+
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        opacity: .45;
+        background-image:
+          radial-gradient(circle, #fff 0 1.5px, transparent 1.8px),
+          radial-gradient(circle, #fff 0 1px, transparent 1.3px);
+        background-position: 13px 21px, 91px 72px;
+        background-size: 137px 151px, 193px 179px;
+      }
+
+      a { color: inherit; }
+      header, main, footer { position: relative; z-index: 1; }
+      header { max-width: 1180px; margin: auto; padding: 64px 26px 30px; }
+
+      .eyebrow {
+        margin: 0 0 12px;
+        color: var(--ice);
+        font-size: 12px;
+        font-weight: 900;
+        letter-spacing: .2em;
+        text-transform: uppercase;
+      }
+
+      h1 {
+        max-width: 950px;
+        margin: 0;
+        font-size: clamp(46px, 8vw, 100px);
+        font-weight: 1000;
+        font-style: italic;
+        letter-spacing: -.055em;
+        line-height: .9;
+        text-transform: uppercase;
+        -webkit-text-stroke: 2px var(--ink);
+        text-shadow: 5px 5px 0 var(--red), 9px 9px 0 var(--ink), 17px 19px 28px #0008;
+      }
+
+      h1 em { color: var(--yellow); font-style: inherit; }
+      .intro { max-width: 760px; margin: 35px 0 0; color: #d9ebf7; font-size: 17px; line-height: 1.6; }
+
+      .stats {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 14px;
+        max-width: 1180px;
+        margin: 0 auto 24px;
+        padding: 0 26px;
+      }
+
+      .stat {
+        min-height: 116px;
+        padding: 20px;
+        color: var(--ink);
+        background: var(--paper);
+        border: 3px solid var(--ink);
+        border-radius: 16px;
+        box-shadow: 6px 6px 0 var(--ink);
+      }
+
+      .stat strong { display: block; color: var(--red); font-size: clamp(27px, 4vw, 42px); line-height: 1; }
+      .stat span { display: block; margin-top: 10px; font-size: 12px; font-weight: 900; letter-spacing: .1em; text-transform: uppercase; }
+
+      main { max-width: 1180px; margin: auto; padding: 12px 26px 80px; }
+      .panel { overflow: hidden; color: var(--ink); background: var(--paper); border: 4px solid var(--ink); border-radius: 20px; box-shadow: 10px 10px 0 var(--ink); }
+
+      .toolbar {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        padding: 18px 20px;
+        color: var(--snow);
+        background: var(--ink);
+      }
+
+      .toolbar label { flex: 1; }
+      input[type="search"] {
+        width: 100%;
+        padding: 12px 15px;
+        color: var(--ink);
+        background: var(--snow);
+        border: 0;
+        border-radius: 10px;
+        font: 700 15px ui-monospace, SFMono-Regular, Menlo, monospace;
+        outline: 3px solid transparent;
+      }
+      input[type="search"]:focus { outline-color: var(--yellow); }
+      #visible-count { flex: none; color: var(--yellow); font-size: 13px; font-weight: 900; text-transform: uppercase; }
+
+      .table-head, .function-row {
+        display: grid;
+        grid-template-columns: minmax(230px, 1.4fr) minmax(130px, .7fr) minmax(250px, 1fr) minmax(160px, .7fr);
+        align-items: center;
+        gap: 20px;
+      }
+
+      .table-head {
+        padding: 12px 20px;
+        color: #697080;
+        border-bottom: 2px solid #171b2922;
+        font-size: 11px;
+        font-weight: 900;
+        letter-spacing: .12em;
+        text-transform: uppercase;
+      }
+
+      .function-row { padding: 17px 20px; border-bottom: 2px dashed #171b2922; transition: background .15s ease; }
+      .function-row:last-child { border-bottom: 0; }
+      .function-row:hover { background: #ffd12e28; }
+      .function-row[hidden] { display: none; }
+      .function-cell { min-width: 0; }
+      .function-name { display: block; overflow-wrap: anywhere; font: 800 14px ui-monospace, SFMono-Regular, Menlo, monospace; text-decoration-thickness: 2px; text-decoration-color: var(--orange); text-underline-offset: 3px; }
+      .function-size { display: block; margin-top: 5px; color: #7b7f89; font-size: 12px; }
+      .source-cell { color: var(--blue); font-size: 13px; font-weight: 800; }
+      .score-cell strong { display: block; margin-top: 5px; text-align: right; font: 900 14px ui-monospace, SFMono-Regular, Menlo, monospace; }
+      .score-detail { display: block; margin-top: 4px; color: #7b7f89; font: 10px ui-monospace, SFMono-Regular, Menlo, monospace; text-align: right; }
+
+      .score-track { height: 17px; overflow: hidden; background: #10152512; border: 2px solid var(--ink); border-radius: 99px; }
+      .score-track span { display: block; height: 100%; background: linear-gradient(90deg, var(--red), var(--orange), var(--yellow), var(--mint)); border-right: 2px solid var(--ink); }
+      .actions { display: flex; flex-wrap: wrap; gap: 7px; }
+      .action { padding: 8px 9px; color: var(--ink); background: var(--yellow); border: 2px solid var(--ink); border-radius: 7px; box-shadow: 2px 2px 0 var(--ink); font-size: 10px; font-weight: 1000; letter-spacing: .04em; text-decoration: none; text-transform: uppercase; }
+      .action.scratch { background: var(--orange); }
+      .action:hover { transform: translate(-1px, -1px); box-shadow: 3px 3px 0 var(--ink); }
+
+      .empty { display: none; padding: 34px; color: #747986; text-align: center; }
+      .empty.visible { display: block; }
+      footer { padding: 0 24px 48px; color: #a7becd; font: 12px ui-monospace, SFMono-Regular, Menlo, monospace; text-align: center; }
+
+      @media (max-width: 880px) {
+        .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        .table-head { display: none; }
+        .function-row { grid-template-columns: 1fr auto; }
+        .source-cell { grid-column: 1; }
+        .score-cell { grid-column: 1 / -1; }
+        .actions { grid-column: 2; grid-row: 1 / 3; justify-content: flex-end; }
+      }
+
+      @media (max-width: 540px) {
+        header { padding-top: 45px; }
+        h1 { -webkit-text-stroke-width: 1.5px; text-shadow: 3px 3px 0 var(--red), 6px 6px 0 var(--ink); }
+        .stats { grid-template-columns: 1fr 1fr; gap: 9px; }
+        .stat { min-height: 98px; padding: 15px; }
+        .toolbar { align-items: stretch; flex-direction: column; }
+        .function-row { grid-template-columns: 1fr; gap: 10px; }
+        .source-cell, .score-cell, .actions { grid-column: 1; grid-row: auto; }
+        .actions { justify-content: flex-start; }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <p class="eyebrow">Matching decompilation status</p>
+      <h1>Snowboard Kids<br /><em>24 functions left</em></h1>
+      <p class="intro">Every remaining assembly function, ranked by its best known match. Local scores come from logged matching workspaces; scratch scores come from decomp.me.</p>
+    </header>
+
+    <section class="stats" aria-label="Project summary">
+      <div class="stat"><strong>24</strong><span>functions remaining</span></div>
+      <div class="stat"><strong>24</strong><span>with a scored attempt</span></div>
+      <div class="stat"><strong>48,656</strong><span>assembly bytes remaining</span></div>
+      <div class="stat"><strong>93.04%</strong><span>code matched</span></div>
+    </section>
+
+    <main>
+      <section class="panel">
+        <div class="toolbar">
+          <label><input id="search" type="search" placeholder="Filter functions…" autocomplete="off" /></label>
+          <span id="visible-count">24 shown</span>
+        </div>
+        <div class="table-head"><span>Function</span><span>Best source</span><span>Match</span><span>Links</span></div>
+        <article class="function-row" data-name="updateraceplayerrankings" data-score="99.949495">
+          <div class="function-cell">
+            <a class="function-name" href="https://github.com/cdlewis/snowboardkids-decomp/blob/main/asm/nonmatchings/race/player/race_player_movement/updateRacePlayerRankings.s" target="_blank" rel="noopener">updateRacePlayerRankings</a>
+            <span class="function-size">792 bytes</span>
+          </div>
+          <div class="source-cell">decomp.me · cdlewis</div>
+          <div class="score-cell">
+            <div class="score-track" aria-label="Best match 99.949%"><span style="width:99.949%"></span></div>
+            <strong>99.949%</strong>
+            <span class="score-detail">local 99.949% · scratch 99.949%</span>
+          </div>
+          <div class="actions"><a class="action" href="https://github.com/cdlewis/snowboardkids-decomp/blob/main/asm/nonmatchings/race/player/race_player_movement/updateRacePlayerRankings.s" target="_blank" rel="noopener">assembly ↗</a><a class="action scratch" href="https://decomp.me/scratch/tDy6z" target="_blank" rel="noopener">scratch ↗</a></div>
+        </article>
+        <article class="function-row" data-name="getracecoursetargetpositionahead" data-score="99.927000">
+          <div class="function-cell">
+            <a class="function-name" href="https://github.com/cdlewis/snowboardkids-decomp/blob/main/asm/nonmatchings/race/motion/race_motion/getRaceCourseTargetPositionAhead.s" target="_blank" rel="noopener">getRaceCourseTargetPositionAhead</a>
+            <span class="function-size">1,648 bytes</span>
+          </div>
+          <div class="source-cell">Local workspace</div>
+          <div class="score-cell">
+            <div class="score-track" aria-label="Best match 99.927%"><span style="width:99.927%"></span></div>
+            <strong>99.927%</strong>
+            <span class="score-detail">local 99.927% · scratch 99.903%</span>
+          </div>
+          <div class="actions"><a class="action" href="https://github.com/cdlewis/snowboardkids-decomp/blob/main/asm/nonmatchings/race/motion/race_motion/getRaceCourseTargetPositionAhead.s" target="_blank" rel="noopener">assembly ↗</a><a class="action scratch" href="https://decomp.me/scratch/fOgw6" target="_blank" rel="noopener">scratch ↗</a></div>
+        </article>
+        <article class="function-row" data-name="updateraceplayersurfacecontact" data-score="99.914000">
+          <div class="function-cell">
+            <a class="function-name" href="https://github.com/cdlewis/snowboardkids-decomp/blob/main/asm/nonmatchings/race/player/race_player_movement/updateRacePlayerSurfaceContact.s" target="_blank" rel="noopener">updateRacePlayerSurfaceContact</a>
+            <span class="function-size">5,580 bytes</span>
+          </div>
+          <div class="source-cell">Local workspace</div>
+          <div class="score-cell">
+            <div class="score-track" aria-label="Best match 99.914%"><span style="width:99.914%"></span></div>
+            <strong>99.914%</strong>
+            <span class="score-detail">local 99.914% · scratch 99.725%</span>
+          </div>
+          <div class="actions"><a class="action" href="https://github.com/cdlewis/snowboardkids-decomp/blob/main/asm/nonmatchings/race/player/race_player_movement/updateRacePlayerSurfaceContact.s" target="_blank" rel="noopener">assembly ↗</a><a class="action scratch" href="https://decomp.me/scratch/suB3u" target="_blank" rel="noopener">scratch ↗</a></div>
+        </article>
+        <article class="function-row" data-name="updatecharacterselectcoursemenu" data-score="99.905000">
+          <div class="function-cell">
+            <a class="function-name" href="https://github.com/cdlewis/snowboardkids-decomp/blob/main/asm/nonmatchings/menu/character_select/character_select_course_menu/updateCharacterSelectCourseMenu.s" target="_blank" rel="noopener">updateCharacterSelectCourseMenu</a>
+            <span class="function-size">1,052 bytes</span>
+          </div>
+          <div class="source-cell">Local workspace</div>
+          <div class="score-cell">
+            <div class="score-track" aria-label="Best match 99.905%"><span style="width:99.905%"></span></div>
+            <strong>99.905%</strong>
+            <span class="score-detail">local 99.905% · scratch 99.125%</span>
+          </div>
+          <div class="actions"><a class="action" href="https://github.com/cdlewis/snowboardkids-decomp/blob/main/asm/nonmatchings/menu/character_select/character_select_course_menu/updateCharacterSelectCourseMenu.s" target="_blank" rel="noopener">assembly ↗</a><a class="action scratch" href="https://decomp.me/scratch/zar0u" target="_blank" rel="noopener">scratch ↗</a></div>
+        </article>
+        <article class="function-row" data-name="updatecharacterselectmenu" data-score="99.730000">
+          <div class="function-cell">
+            <a class="function-name" href="https://github.com/cdlewis/snowboardkids-decomp/blob/main/asm/nonmatchings/menu/character_select/character_select_menu/updateCharacterSelectMenu.s" target="_blank" rel="noopener">updateCharacterSelectMenu</a>
+            <span class="function-size">1,480 bytes</span>
+          </div>
+          <div class="source-cell">Local workspace</div>
+          <div class="score-cell">
+            <div class="score-track" aria-label="Best match 99.730%"><span style="width:99.730%"></span></div>
+            <strong>99.730%</strong>
+            <span class="score-detail">local 99.730% · scratch 87.465%</span>
+          </div>
+          <div class="actions"><a class="action" href="https://github.com/cdlewis/snowboardkids-decomp/blob/main/asm/nonmatchings/menu/character_select/character_select_menu/updateCharacterSelectMenu.s" target="_blank" rel="noopener">assembly ↗</a><a class="action scratch" href="https://decomp.me/scratch/fyh4J" target="_blank" rel="noopener">scratch ↗</a></div>
+        </article>
+        <article class="function-row" data-name="initraceplayer" data-score="99.720000">
+          <div class="function-cell">
+            <a class="function-name" href="https://github.com/cdlewis/snowboardkids-decomp/blob/main/asm/nonmatchings/race/player/race_player_update/initRacePlayer.s" target="_blank" rel="noopener">initRacePlayer</a>
+            <span class="function-size">1,644 bytes</span>
+          </div>
+          <div class="source-cell">Local workspace</div>
+          <div class="score-cell">
+            <div class="score-track" aria-label="Best match 99.720%"><span style="width:99.720%"></span></div>
+            <strong>99.720%</strong>
+            <span class="score-detail">local 99.720% · scratch 99.403%</span>
+          </div>
+          <div class="actions"><a class="action" href="https://github.com/cdlewis/snowboardkids-decomp/blob/main/asm/nonmatchings/race/player/race_player_update/initRacePlayer.s" target="_blank" rel="noopener">assembly ↗</a><a class="action scratch" href="https://decomp.me/scratch/oA34O" target="_blank" rel="noopener">scratch ↗</a></div>
+        </article>
+        <article class="function-row" data-name="updatecourseselectmodemenu" data-score="99.707031">
+          <div class="function-cell">
+            <a class="function-name" href="https://github.com/cdlewis/snowboardkids-decomp/blob/main/asm/nonmatchings/menu/course_select/course_select_menu/updateCourseSelectModeMenu.s" target="_blank" rel="noopener">updateCourseSelectModeMenu</a>
+            <span class="function-size">1,024 bytes</span>
+          </div>
+          <div class="source-cell">decomp.me · cdlewis</div>
+          <div class="score-cell">
+            <div class="score-track" aria-label="Best match 99.707%"><span style="width:99.707%"></span></div>
+            <strong>99.707%</strong>
+            <span class="score-detail">local 99.706% · scratch 99.707%</span>
+          </div>
+          <div class="actions"><a class="action" href="https://github.com/cdlewis/snowboardkids-decomp/blob/main/asm/nonmatchings/menu/course_select/course_select_menu/updateCourseSelectModeMenu.s" target="_blank" rel="noopener">assembly ↗</a><a class="action scratch" href="https://decomp.me/scratch/AxqBk" target="_blank" rel="noopener">scratch ↗</a></div>
+        </article>
+        <article class="function-row" data-name="resolveraceplayercollisionvolumes" data-score="99.697000">
+          <div class="function-cell">
+            <a class="function-name" href="https://github.com/cdlewis/snowboardkids-decomp/blob/main/asm/nonmatchings/race/player/race_player_collision/resolveRacePlayerCollisionVolumes.s" target="_blank" rel="noopener">resolveRacePlayerCollisionVolumes</a>
+            <span class="function-size">5,256 bytes</span>
+          </div>
+          <div class="source-cell">Local workspace</div>
+          <div class="score-cell">
+            <div class="score-track" aria-label="Best match 99.697%"><span style="width:99.697%"></span></div>
+            <strong>99.697%</strong>
+            <span class="score-detail">local 99.697% · scratch 99.094%</span>
+          </div>
+          <div class="actions"><a class="action" href="https://github.com/cdlewis/snowboardkids-decomp/blob/main/asm/nonmatchings/race/player/race_player_collision/resolveRacePlayerCollisionVolumes.s" target="_blank" rel="noopener">assembly ↗</a><a class="action scratch" href="https://decomp.me/scratch/uK1h7" target="_blank" rel="noopener">scratch ↗</a></div>
+        </article>
+        <article class="function-row" data-name="decompresshuffmanassetpayload" data-score="99.695000">
+          <div class="function-cell">
+            <a class="function-name" href="https://github.com/cdlewis/snowboardkids-decomp/blob/main/asm/nonmatchings/engine/asset_manager/decompressHuffmanAssetPayload.s" target="_blank" rel="noopener">decompressHuffmanAssetPayload</a>
+            <span class="function-size">1,048 bytes</span>
+          </div>
+          <div class="source-cell">Local workspace</div>
+          <div class="score-cell">
+            <div class="score-track" aria-label="Best match 99.695%"><span style="width:99.695%"></span></div>
+            <strong>99.695%</strong>
+            <span class="score-detail">local 99.695% · scratch 98.435%</span>
+          </div>
+          <div class="actions"><a class="action" href="https://github.com/cdlewis/snowboardkids-decomp/blob/main/asm/nonmatchings/engine/asset_manager/decompressHuffmanAssetPayload.s" target="_blank" rel="noopener">assembly ↗</a><a class="action scratch" href="https://decomp.me/scratch/8YBSa" target="_blank" rel="noopener">scratch ↗</a></div>
+        </article>
+        <article class="function-row" data-name="drawtrainingcoursedialog" data-score="99.570248">
+          <div class="function-cell">
+            <a class="function-name" href="https://github.com/cdlewis/snowboardkids-decomp/blob/main/asm/nonmatchings/menu/training/training_course_ui/drawTrainingCourseDialog.s" target="_blank" rel="noopener">drawTrainingCourseDialog</a>
+            <span class="function-size">1,452 bytes</span>
+          </div>
+          <div class="source-cell">decomp.me · cdlewis</div>
+          <div class="score-cell">
+            <div class="score-track" aria-label="Best match 99.570%"><span style="width:99.570%"></span></div>
+            <strong>99.570%</strong>
+            <span class="score-detail">local 99.475% · scratch 99.570%</span>
+          </div>
+          <div class="actions"><a class="action" href="https://github.com/cdlewis/snowboardkids-decomp/blob/main/asm/nonmatchings/menu/training/training_course_ui/drawTrainingCourseDialog.s" target="_blank" rel="noopener">assembly ↗</a><a class="action scratch" href="https://decomp.me/scratch/xnACu" target="_blank" rel="noopener">scratch ↗</a></div>
+        </article>
+        <article class="function-row" data-name="updatecourseselectcoursedetailsmenu" data-score="99.474000">
+          <div class="function-cell">
+            <a class="function-name" href="https://github.com/cdlewis/snowboardkids-decomp/blob/main/asm/nonmatchings/menu/course_select/course_select_menu/updateCourseSelectCourseDetailsMenu.s" target="_blank" rel="noopener">updateCourseSelectCourseDetailsMenu</a>
+            <span class="function-size">836 bytes</span>
+          </div>
+          <div class="source-cell">Local workspace</div>
+          <div class="score-cell">
+            <div class="score-track" aria-label="Best match 99.474%"><span style="width:99.474%"></span></div>
+            <strong>99.474%</strong>
+            <span class="score-detail">local 99.474% · scratch 99.474%</span>
+          </div>
+          <div class="actions"><a class="action" href="https://github.com/cdlewis/snowboardkids-decomp/blob/main/asm/nonmatchings/menu/course_select/course_select_menu/updateCourseSelectCourseDetailsMenu.s" target="_blank" rel="noopener">assembly ↗</a><a class="action scratch" href="https://decomp.me/scratch/pFjqv" target="_blank" rel="noopener">scratch ↗</a></div>
+        </article>
+        <article class="function-row" data-name="validatecontrollerpaksave" data-score="99.306000">
+          <div class="function-cell">
+            <a class="function-name" href="https://github.com/cdlewis/snowboardkids-decomp/blob/main/asm/nonmatchings/menu/main_menu/controller_main_menu_flow/validateControllerPakSave.s" target="_blank" rel="noopener">validateControllerPakSave</a>
+            <span class="function-size">144 bytes</span>
+          </div>
+          <div class="source-cell">Local workspace</div>
+          <div class="score-cell">
+            <div class="score-track" aria-label="Best match 99.306%"><span style="width:99.306%"></span></div>
+            <strong>99.306%</strong>
+            <span class="score-detail">local 99.306% · scratch 99.306%</span>
+          </div>
+          <div class="actions"><a class="action" href="https://github.com/cdlewis/snowboardkids-decomp/blob/main/asm/nonmatchings/menu/main_menu/controller_main_menu_flow/validateControllerPakSave.s" target="_blank" rel="noopener">assembly ↗</a><a class="action scratch" href="https://decomp.me/scratch/rPleq" target="_blank" rel="noopener">scratch ↗</a></div>
+        </article>
+        <article class="function-row" data-name="saveracerecordreplaydata" data-score="98.878000">
+          <div class="function-cell">
+            <a class="function-name" href="https://github.com/cdlewis/snowboardkids-decomp/blob/main/asm/nonmatchings/menu/main_menu/main_menu_scene_model/saveRaceRecordReplayData.s" target="_blank" rel="noopener">saveRaceRecordReplayData</a>
+            <span class="function-size">3,212 bytes</span>
+          </div>
+          <div class="source-cell">Local workspace</div>
+          <div class="score-cell">
+            <div class="score-track" aria-label="Best match 98.878%"><span style="width:98.878%"></span></div>
+            <strong>98.878%</strong>
+            <span class="score-detail">local 98.878% · scratch 98.163%</span>
+          </div>
+          <div class="actions"><a class="action" href="https://github.com/cdlewis/snowboardkids-decomp/blob/main/asm/nonmatchings/menu/main_menu/main_menu_scene_model/saveRaceRecordReplayData.s" target="_blank" rel="noopener">assembly ↗</a><a class="action scratch" href="https://decomp.me/scratch/Csk4t" target="_blank" rel="noopener">scratch ↗</a></div>
+        </article>
+        <article class="function-row" data-name="submitframebufferrendertask" data-score="98.219000">
+          <div class="function-cell">
+            <a class="function-name" href="https://github.com/cdlewis/snowboardkids-decomp/blob/main/asm/nonmatchings/engine/system_runtime/submitFramebufferRenderTask.s" target="_blank" rel="noopener">submitFramebufferRenderTask</a>
+            <span class="function-size">2,920 bytes</span>
+          </div>
+          <div class="source-cell">Local workspace</div>
+          <div class="score-cell">
+            <div class="score-track" aria-label="Best match 98.219%"><span style="width:98.219%"></span></div>
+            <strong>98.219%</strong>
+            <span class="score-detail">local 98.219% · scratch 97.596%</span>
+          </div>
+          <div class="actions"><a class="action" href="https://github.com/cdlewis/snowboardkids-decomp/blob/main/asm/nonmatchings/engine/system_runtime/submitFramebufferRenderTask.s" target="_blank" rel="noopener">assembly ↗</a><a class="action scratch" href="https://decomp.me/scratch/qZR02" target="_blank" rel="noopener">scratch ↗</a></div>
+        </article>
+        <article class="function-row" data-name="drawscaledassettablespritewithexplicitpalette" data-score="97.578000">
+          <div class="function-cell">
+            <a class="function-name" href="https://github.com/cdlewis/snowboardkids-decomp/blob/main/asm/nonmatchings/menu/renderer/menu_render_utils/drawScaledAssetTableSpriteWithExplicitPalette.s" target="_blank" rel="noopener">drawScaledAssetTableSpriteWithExplicitPalette</a>
+            <span class="function-size">1,288 bytes</span>
+          </div>
+          <div class="source-cell">Local workspace</div>
+          <div class="score-cell">
+            <div class="score-track" aria-label="Best match 97.578%"><span style="width:97.578%"></span></div>
+            <strong>97.578%</strong>
+            <span class="score-detail">local 97.578% · scratch 97.314%</span>
+          </div>
+          <div class="actions"><a class="action" href="https://github.com/cdlewis/snowboardkids-decomp/blob/main/asm/nonmatchings/menu/renderer/menu_render_utils/drawScaledAssetTableSpriteWithExplicitPalette.s" target="_blank" rel="noopener">assembly ↗</a><a class="action scratch" href="https://decomp.me/scratch/5KjSd" target="_blank" rel="noopener">scratch ↗</a></div>
+        </article>
+        <article class="function-row" data-name="updatemultiplayercourseselectmenu" data-score="97.510000">
+          <div class="function-cell">
+            <a class="function-name" href="https://github.com/cdlewis/snowboardkids-decomp/blob/main/asm/nonmatchings/menu/course_select/multiplayer_course_select_menu/updateMultiplayerCourseSelectMenu.s" target="_blank" rel="noopener">updateMultiplayerCourseSelectMenu</a>
+            <span class="function-size">3,340 bytes</span>
+          </div>
+          <div class="source-cell">Local workspace</div>
+          <div class="score-cell">
+            <div class="score-track" aria-label="Best match 97.510%"><span style="width:97.510%"></span></div>
+            <strong>97.510%</strong>
+            <span class="score-detail">local 97.510% · scratch 97.080%</span>
+          </div>
+          <div class="actions"><a class="action" href="https://github.com/cdlewis/snowboardkids-decomp/blob/main/asm/nonmatchings/menu/course_select/multiplayer_course_select_menu/updateMultiplayerCourseSelectMenu.s" target="_blank" rel="noopener">assembly ↗</a><a class="action scratch" href="https://decomp.me/scratch/l7O10" target="_blank" rel="noopener">scratch ↗</a></div>
+        </article>
+        <article class="function-row" data-name="drawscaledassettablesprite" data-score="97.235000">
+          <div class="function-cell">
+            <a class="function-name" href="https://github.com/cdlewis/snowboardkids-decomp/blob/main/asm/nonmatchings/menu/renderer/menu_render_utils/drawScaledAssetTableSprite.s" target="_blank" rel="noopener">drawScaledAssetTableSprite</a>
+            <span class="function-size">1,288 bytes</span>
+          </div>
+          <div class="source-cell">Local workspace</div>
+          <div class="score-cell">
+            <div class="score-track" aria-label="Best match 97.235%"><span style="width:97.235%"></span></div>
+            <strong>97.235%</strong>
+            <span class="score-detail">local 97.235% · scratch —</span>
+          </div>
+          <div class="actions"><a class="action" href="https://github.com/cdlewis/snowboardkids-decomp/blob/main/asm/nonmatchings/menu/renderer/menu_render_utils/drawScaledAssetTableSprite.s" target="_blank" rel="noopener">assembly ↗</a></div>
+        </article>
+        <article class="function-row" data-name="drawcourseselectcoursedescription" data-score="96.952000">
+          <div class="function-cell">
+            <a class="function-name" href="https://github.com/cdlewis/snowboardkids-decomp/blob/main/asm/nonmatchings/menu/course_select/course_select_ui/drawCourseSelectCourseDescription.s" target="_blank" rel="noopener">drawCourseSelectCourseDescription</a>
+            <span class="function-size">1,408 bytes</span>
+          </div>
+          <div class="source-cell">Local workspace</div>
+          <div class="score-cell">
+            <div class="score-track" aria-label="Best match 96.952%"><span style="width:96.952%"></span></div>
+            <strong>96.952%</strong>
+            <span class="score-detail">local 96.952% · scratch 96.463%</span>
+          </div>
+          <div class="actions"><a class="action" href="https://github.com/cdlewis/snowboardkids-decomp/blob/main/asm/nonmatchings/menu/course_select/course_select_ui/drawCourseSelectCourseDescription.s" target="_blank" rel="noopener">assembly ↗</a><a class="action scratch" href="https://decomp.me/scratch/T5kmn" target="_blank" rel="noopener">scratch ↗</a></div>
+        </article>
+        <article class="function-row" data-name="drawcontrollerpakfiledeletefilelist" data-score="96.563000">
+          <div class="function-cell">
+            <a class="function-name" href="https://github.com/cdlewis/snowboardkids-decomp/blob/main/asm/nonmatchings/menu/controller_pak/controller_pak_ui/drawControllerPakFileDeleteFileList.s" target="_blank" rel="noopener">drawControllerPakFileDeleteFileList</a>
+            <span class="function-size">1,336 bytes</span>
+          </div>
+          <div class="source-cell">Local workspace</div>
+          <div class="score-cell">
+            <div class="score-track" aria-label="Best match 96.563%"><span style="width:96.563%"></span></div>
+            <strong>96.563%</strong>
+            <span class="score-detail">local 96.563% · scratch —</span>
+          </div>
+          <div class="actions"><a class="action" href="https://github.com/cdlewis/snowboardkids-decomp/blob/main/asm/nonmatchings/menu/controller_pak/controller_pak_ui/drawControllerPakFileDeleteFileList.s" target="_blank" rel="noopener">assembly ↗</a></div>
+        </article>
+        <article class="function-row" data-name="drawmenutilemapsprite" data-score="96.329000">
+          <div class="function-cell">
+            <a class="function-name" href="https://github.com/cdlewis/snowboardkids-decomp/blob/main/asm/nonmatchings/menu/renderer/menu_renderer/drawMenuTilemapSprite.s" target="_blank" rel="noopener">drawMenuTilemapSprite</a>
+            <span class="function-size">2,900 bytes</span>
+          </div>
+          <div class="source-cell">Local workspace</div>
+          <div class="score-cell">
+            <div class="score-track" aria-label="Best match 96.329%"><span style="width:96.329%"></span></div>
+            <strong>96.329%</strong>
+            <span class="score-detail">local 96.329% · scratch 94.966%</span>
+          </div>
+          <div class="actions"><a class="action" href="https://github.com/cdlewis/snowboardkids-decomp/blob/main/asm/nonmatchings/menu/renderer/menu_renderer/drawMenuTilemapSprite.s" target="_blank" rel="noopener">assembly ↗</a><a class="action scratch" href="https://decomp.me/scratch/7w43X" target="_blank" rel="noopener">scratch ↗</a></div>
+        </article>
+        <article class="function-row" data-name="drawmenuspritewithalphaclipped" data-score="92.448000">
+          <div class="function-cell">
+            <a class="function-name" href="https://github.com/cdlewis/snowboardkids-decomp/blob/main/asm/nonmatchings/menu/renderer/menu_renderer/drawMenuSpriteWithAlphaClipped.s" target="_blank" rel="noopener">drawMenuSpriteWithAlphaClipped</a>
+            <span class="function-size">1,796 bytes</span>
+          </div>
+          <div class="source-cell">Local workspace</div>
+          <div class="score-cell">
+            <div class="score-track" aria-label="Best match 92.448%"><span style="width:92.448%"></span></div>
+            <strong>92.448%</strong>
+            <span class="score-detail">local 92.448% · scratch 91.425%</span>
+          </div>
+          <div class="actions"><a class="action" href="https://github.com/cdlewis/snowboardkids-decomp/blob/main/asm/nonmatchings/menu/renderer/menu_renderer/drawMenuSpriteWithAlphaClipped.s" target="_blank" rel="noopener">assembly ↗</a><a class="action scratch" href="https://decomp.me/scratch/1ctbG" target="_blank" rel="noopener">scratch ↗</a></div>
+        </article>
+        <article class="function-row" data-name="drawmenuspritefixedscale" data-score="90.118000">
+          <div class="function-cell">
+            <a class="function-name" href="https://github.com/cdlewis/snowboardkids-decomp/blob/main/asm/nonmatchings/menu/renderer/menu_renderer/drawMenuSpriteFixedScale.s" target="_blank" rel="noopener">drawMenuSpriteFixedScale</a>
+            <span class="function-size">1,688 bytes</span>
+          </div>
+          <div class="source-cell">Local workspace</div>
+          <div class="score-cell">
+            <div class="score-track" aria-label="Best match 90.118%"><span style="width:90.118%"></span></div>
+            <strong>90.118%</strong>
+            <span class="score-detail">local 90.118% · scratch 88.467%</span>
+          </div>
+          <div class="actions"><a class="action" href="https://github.com/cdlewis/snowboardkids-decomp/blob/main/asm/nonmatchings/menu/renderer/menu_renderer/drawMenuSpriteFixedScale.s" target="_blank" rel="noopener">assembly ↗</a><a class="action scratch" href="https://decomp.me/scratch/TrfsK" target="_blank" rel="noopener">scratch ↗</a></div>
+        </article>
+        <article class="function-row" data-name="drawmenuspriteclipped" data-score="89.725806">
+          <div class="function-cell">
+            <a class="function-name" href="https://github.com/cdlewis/snowboardkids-decomp/blob/main/asm/nonmatchings/menu/renderer/menu_renderer/drawMenuSpriteClipped.s" target="_blank" rel="noopener">drawMenuSpriteClipped</a>
+            <span class="function-size">1,984 bytes</span>
+          </div>
+          <div class="source-cell">decomp.me · Bl00D4NGEL</div>
+          <div class="score-cell">
+            <div class="score-track" aria-label="Best match 89.726%"><span style="width:89.726%"></span></div>
+            <strong>89.726%</strong>
+            <span class="score-detail">local 88.647% · scratch 89.726%</span>
+          </div>
+          <div class="actions"><a class="action" href="https://github.com/cdlewis/snowboardkids-decomp/blob/main/asm/nonmatchings/menu/renderer/menu_renderer/drawMenuSpriteClipped.s" target="_blank" rel="noopener">assembly ↗</a><a class="action scratch" href="https://decomp.me/scratch/yIYrl" target="_blank" rel="noopener">scratch ↗</a></div>
+        </article>
+        <article class="function-row" data-name="updatecourseselectcourselist" data-score="85.195000">
+          <div class="function-cell">
+            <a class="function-name" href="https://github.com/cdlewis/snowboardkids-decomp/blob/main/asm/nonmatchings/menu/course_select/course_select_menu/updateCourseSelectCourseList.s" target="_blank" rel="noopener">updateCourseSelectCourseList</a>
+            <span class="function-size">3,540 bytes</span>
+          </div>
+          <div class="source-cell">Local workspace</div>
+          <div class="score-cell">
+            <div class="score-track" aria-label="Best match 85.195%"><span style="width:85.195%"></span></div>
+            <strong>85.195%</strong>
+            <span class="score-detail">local 85.195% · scratch 79.488%</span>
+          </div>
+          <div class="actions"><a class="action" href="https://github.com/cdlewis/snowboardkids-decomp/blob/main/asm/nonmatchings/menu/course_select/course_select_menu/updateCourseSelectCourseList.s" target="_blank" rel="noopener">assembly ↗</a><a class="action scratch" href="https://decomp.me/scratch/yRE62" target="_blank" rel="noopener">scratch ↗</a></div>
+        </article>
+        <p class="empty" id="empty">No functions match that filter.</p>
+      </section>
+    </main>
+
+    <footer>Generated 2026-08-14 02:54 UTC · scores are snapshots and may have moved since generation</footer>
+    <script>
+      const search = document.querySelector("#search");
+      const rows = [...document.querySelectorAll(".function-row")];
+      const count = document.querySelector("#visible-count");
+      const empty = document.querySelector("#empty");
+      search.addEventListener("input", () => {
+        const query = search.value.trim().toLowerCase();
+        let visible = 0;
+        for (const row of rows) {
+          row.hidden = !row.dataset.name.includes(query);
+          if (!row.hidden) visible++;
+        }
+        count.textContent = `${visible} shown`;
+        empty.classList.toggle("visible", visible === 0);
+      });
+    </script>
+  </body>
+</html>
