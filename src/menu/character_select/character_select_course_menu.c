@@ -440,7 +440,7 @@ void updateCharacterSelectCourseMenu(void) {
                     } else if ((input & B_BUTTON) && (gMenuFlowState == (gCharacterSelectCourseExitOptionIndex + 1))) {
                         enqueueSoundEffect(1, 0x32);
                         gCharacterSelectCourseCursorState.fields.listCursorState = 2;
-                            gCharacterSelectCourseCursorState.fields.listCursorSpriteIndex = spriteIndex;
+                        gCharacterSelectCourseCursorState.fields.listCursorSpriteIndex = spriteIndex;
                         gRacePlayers[0].menuState = 7;
                         setCurrentGameTaskCallback(&handleCharacterSelectCourseSelection, 0);
                         requestMusicSequenceStop(8);
