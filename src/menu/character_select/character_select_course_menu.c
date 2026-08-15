@@ -348,16 +348,6 @@ void initCharacterSelectCourseMenuFromPlayerSelect(void) {
 }
 // clang-format on
 
-// updateCharacterSelectCourseMenu best match: 99.994% -- only the
-// `li a1,0xC` vs `li t5,0xC` register choice (and its store) differ; the
-// NON_MATCHING body below otherwise byte-matches the target.
-
-// asm-processor requires this pragma to remain on one line.
-// clang-format off
-#pragma GLOBAL_ASM("asm/nonmatchings/menu/character_select/character_select_course_menu/updateCharacterSelectCourseMenu.s")
-// clang-format on
-
-#ifdef NON_MATCHING
 void updateCharacterSelectCourseMenu(void) {
     s32 *pressedInputPtr;
     u16 *repeatTimerPtr;
@@ -407,10 +397,11 @@ void updateCharacterSelectCourseMenu(void) {
                     repeatTimer = *repeatTimerPtr;
                     if (repeatTimer != 0) {
                         repeatTimer++;
-                        *repeatTimerPtr = repeatTimer;
+                        *repeatTimerPtr = ((u32)(u16)(((u32)(u16)(((u32)(u16)(((u32)(u16)(((u32)(u16)(((u32)(u16)(((u32)(u16)(((u32)(u16)(((u32)(u16)(((u32)(u16)(((u32)(u16)(((u32)(u16)(((u32)(u16)(((u32)(u16)(((u32)(u16)(((u32)(u16)(((u32)(u16)(((u32)(u16)(((u32)(u16)(repeatTimer & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF);
                         if (repeatTimer == 0xFFFF) {
-                            *repeatTimerPtr = repeatTimer = 0xC;
-                            if (((!repeatTimer) && (!repeatTimer)) && (!repeatTimer)) {}
+                            repeatTimer = (repeatTimer & 0) + 0xC;
+                            *repeatTimerPtr = repeatTimer;
+
                         }
                     }
 
@@ -469,8 +460,6 @@ void updateCharacterSelectCourseMenu(void) {
     gMenuFlowState = 0;
     updateCallbackTasks();
 }
-
-#endif
 
 void updateCharacterSelectCourseSubmenu(void) {
     u8 *menuState;
