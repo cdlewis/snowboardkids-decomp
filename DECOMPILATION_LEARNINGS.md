@@ -454,6 +454,12 @@ and control flow already match and only register *names* differ.
   translation unit. The containing `.bss` contribution can then receive
   larger section-end padding, so distinguish object-boundary padding from
   padding between C objects before inferring an aggregate type.
+- **Preserve short BSS contributions at assembly time, not by rewriting ELF
+  objects.** IDO's object output and GNU `as` normally round a `.bss` section
+  up to its 16-byte alignment. When the target needs a data-only C object's
+  logical BSS size, compile it to IDO assembly and assemble that output with
+  GNU `as -no-pad-sections`; apply the same assembler option to adjacent raw
+  BSS objects. Verify the unlinked section sizes with `readelf` before linking.
 - **Local definition vs. `extern` affects codegen.** IDO generates different
   code for globals defined in the current TU (can keep base addresses in
   registers across adjacent stores) versus globals declared `extern` (can

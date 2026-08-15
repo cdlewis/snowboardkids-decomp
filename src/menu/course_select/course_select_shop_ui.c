@@ -227,7 +227,6 @@ extern int sprintf(char *, const char *, ...);
 extern u16 gCourseDetailsPreviewCourseTiles[];
 extern u16 gCourseDetailsPreviewExtraTiles[];
 extern Vec2s gCoursePreviewCloseSparkleOffsetsEnd[];
-extern u8 gShopMenuModeCursorState;
 extern u8 gShopMenuDescriptionSeen;
 extern u8 gShopMenuShowNewCoursesMessage;
 extern s16 gCoursePreviewViewportHeight;
@@ -930,7 +929,7 @@ void updateShopMenuModeCursor(ShopMenuWidgetActor *arg0) {
     u8 globalState;
 
     state = arg0->transition.bytes.state;
-    if (state != (globalState = gCourseSelectStatus.unk28)) {
+    if (state != (globalState = COURSE_SELECT_STATUS_LAYOUT.cursorState)) {
         arg0->transition.bytes.state = globalState;
         /* Preserve IDO's state/globalState register allocation. */
         if (1) {}
@@ -939,8 +938,8 @@ void updateShopMenuModeCursor(ShopMenuWidgetActor *arg0) {
         if (1) {}
         if (1) {}
         state = globalState;
-        arg0->sprite.index = gCourseSelectStatus.unk2A;
-        arg0->transition.bytes.timer = gCourseSelectStatus.unk2C;
+        arg0->sprite.index = COURSE_SELECT_STATUS_LAYOUT.cursorValue;
+        arg0->transition.bytes.timer = COURSE_SELECT_STATUS_LAYOUT.purchaseMessageState;
     }
 
     switch (state) {
@@ -978,7 +977,7 @@ void updateShopMenuModeCursor(ShopMenuWidgetActor *arg0) {
             break;
     }
 
-    gShopMenuModeCursorState = state;
+    gCourseSelectCursorState = state;
     if (arg0->transition.bytes.state == 4) {
         removeCallbackTask(arg0);
         return;
@@ -1607,7 +1606,7 @@ void updateCourseDetailsMenu(ShopMenuWidgetActor *arg0) {
     s16 cursorX;
 
     visibleActor = arg0;
-    menuState = gCourseDetailsMenuState;
+    menuState = gCourseSelectSubmenuState;
     state = arg0->state;
     if ((menuState & 0xFFFFFFFF) != state) {
         state = menuState;
@@ -1710,7 +1709,7 @@ void updateCourseDetailsMenu(ShopMenuWidgetActor *arg0) {
         state = arg0->state;
     }
 
-    gCourseDetailsMenuState = state;
+    gCourseSelectSubmenuState = state;
     if (arg0->state == COURSE_DETAILS_STATE_DONE) {
         removeCallbackTask((CallbackTask *)arg0);
         return;

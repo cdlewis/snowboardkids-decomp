@@ -5,6 +5,10 @@
 
 #define COURSE_UNLOCK_PRICE_COUNT 12
 
+#define COURSE_SELECT_PLAYER_COUNT 4
+#define COURSE_SELECT_COLUMN_COUNT 4
+#define COURSE_SELECT_EXTRA_COURSE_COUNT 3
+
 typedef union {
     struct {
         union {
@@ -27,12 +31,6 @@ typedef union {
         /* 0x14 */ s16 unk14[4];
         /* 0x1C */ s16 unk1C[4];
         /* 0x24 */ u8 unk24[4];
-        /* 0x28 */ u8 unk28;
-        /* 0x29 */ u8 transitionState;
-        /* 0x2A */ s16 unk2A;
-        /* 0x2C */ s16 unk2C;
-        /* 0x2E */ u8 unk2E;
-        /* 0x2F */ u8 unk2F[9];
     };
     struct {
         /* 0x00 */ u8 previewModelState[4];
@@ -46,21 +44,42 @@ typedef union {
             /* 0x1C */ u8 outgoingPreviewModelAngleBytes[8];
         };
         /* 0x24 */ u8 extraCourseCounts[4];
-        /* 0x28 */ u8 pad28[0x10];
     };
-    struct {
-        /* 0x00 */ u8 pad0[0x2C];
-        /* 0x2C */ u16 purchaseMessage;
-        /* 0x2E */ u8 descriptionMode;
-        /* 0x2F */ u8 pad2F[9];
-    };
-    /* 0x00 */ u8 bytes[0x38];
+    /* 0x00 */ u8 bytes[0x28];
 } CourseSelectStatus;
 
+typedef struct {
+    CourseSelectStatus core;
+    u8 cursorState;
+    u8 submenuState;
+    s16 cursorValue;
+    s16 purchaseMessageState;
+    u8 extraCourseColumnState;
+} CourseSelectStatusLayout;
+
+#define COURSE_SELECT_STATUS_LAYOUT (*(CourseSelectStatusLayout *)&gCourseSelectStatus)
+
 extern CourseSelectStatus gCourseSelectStatus;
+extern u8 gCourseSelectHasExtraCourse[COURSE_SELECT_PLAYER_COUNT];
+extern u8 gCourseSelectSelectionTimers[COURSE_SELECT_PLAYER_COUNT];
+extern u8 gCourseSelectPurchaseFlowActive;
+extern u8 gCourseSelectSelectedRows[COURSE_SELECT_PLAYER_COUNT];
+extern u8 gCourseSelectInputLocked;
+extern s8 gCourseSelectColumnUnlocked[COURSE_SELECT_PLAYER_COUNT][COURSE_SELECT_EXTRA_COURSE_COUNT];
+extern u8 gCourseSelectColumnCounts[COURSE_SELECT_PLAYER_COUNT];
+extern u8 gCourseSelectSlideStates[COURSE_SELECT_PLAYER_COUNT];
+extern u16 gCourseSelectViewportSyncState;
+extern s32 gCourseSelectVerticalOffsets[COURSE_SELECT_PLAYER_COUNT];
+extern s32 gCourseSelectHorizontalOffsets[COURSE_SELECT_PLAYER_COUNT];
+extern u8 gCourseSelectCourseIds[COURSE_SELECT_PLAYER_COUNT][COURSE_SELECT_COLUMN_COUNT];
+extern u8 gCourseSelectExtraCourseIds[COURSE_SELECT_PLAYER_COUNT][COURSE_SELECT_EXTRA_COURSE_COUNT];
+extern u8 gCourseSelectCursorState;
+extern u8 gCourseSelectSubmenuState;
+extern s16 gCourseSelectCursorValue;
+extern u16 gCourseSelectPurchaseMessageState;
+extern u8 gCourseSelectExtraCourseColumnState;
 extern u32 gCourseUnlockPrices[COURSE_UNLOCK_PRICE_COUNT];
 extern u8 gCourseSelectModeSelection;
-extern u8 gCourseDetailsMenuState;
 extern u8 gCourseDetailsMenuSelection;
 extern u8 gCourseDetailsPreviewPage;
 extern u8 gCourseDetailsCloseFromBack;

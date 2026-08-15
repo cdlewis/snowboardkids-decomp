@@ -1,0 +1,6 @@
+#include "game/menu/course_select/course_select_menu.h"
+
+s32 gCourseSelectVerticalOffsets[COURSE_SELECT_PLAYER_COUNT];
+s32 gCourseSelectHorizontalOffsets[COURSE_SELECT_PLAYER_COUNT];
+u8 gCourseSelectCourseIds[COURSE_SELECT_PLAYER_COUNT][COURSE_SELECT_COLUMN_COUNT];
+u8 gCourseSelectExtraCourseIds[COURSE_SELECT_PLAYER_COUNT][COURSE_SELECT_EXTRA_COURSE_COUNT];
