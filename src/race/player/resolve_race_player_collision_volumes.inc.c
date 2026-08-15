@@ -158,14 +158,15 @@ matrix_row_normal:
   player->collisionVolumes[0].point[2] += player->pos.z + offset[2];
   player->collisionVolumes[1].point[0] += player->collisionVolumes[0].point[0];
   player->collisionVolumes[1].point[1] += player->collisionVolumes[0].point[1];
+  sourceIterator = player->collisionSources;
   player->collisionVolumes[1].point[2] += player->collisionVolumes[0].point[2];
   for (i = 2; i < player->collisionVolumeCount; i++)
   {
-      k = player->collisionSources[i].parentIndex;
+      k = sourceIterator[i].parentIndex;
       for (sinY = 0; sinY != 3; sinY++)
       {
         parentAxisY = player->collisionVolumes[k].axis[sinY + 3];
-        player->collisionVolumes[i].point[sinY] = (((((s64) player->collisionVolumes[k].axis[sinY]) * player->collisionSources[i].sizeX) + (((s64) parentAxisY) * player->collisionSources[i].sizeY)) + (((s64) player->collisionVolumes[k].axis[sinY + 6]) * player->collisionSources[i].sizeZ)) / 0x1000;
+        player->collisionVolumes[i].point[sinY] = (((((s64) player->collisionVolumes[k].axis[sinY]) * sourceIterator[i].sizeX) + (((s64) parentAxisY) * sourceIterator[i].sizeY)) + (((s64) player->collisionVolumes[k].axis[sinY + 6]) * sourceIterator[i].sizeZ)) / 0x1000;
         player->collisionVolumes[i].point[sinY] += player->collisionVolumes[k].point[sinY];
       }
   }
