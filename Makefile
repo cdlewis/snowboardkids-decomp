@@ -166,10 +166,6 @@ $(BUILD_DIR)/src/ultra/libc/xldtob.o: C_OPT = -O3
 $(BUILD_DIR)/src/ultra/libc/xldtob.o: IDO_CC = $(IDO_DIRECT)
 $(BUILD_DIR)/src/ultra/os/exceptasm.o: ULTRA_AS_ISA = mips3
 $(BUILD_DIR)/src/ultra/os/exceptasm.o: ULTRA_AS_POST = $(PYTHON) $(TOOLS_DIR)/set_o32abi_bit.py $@
-# The final C function owns a delay slot previously split into a four-byte
-# assembly segment. Remove only IDO's verified trailing section padding.
-$(BUILD_DIR)/src/menu/main_menu/main_menu_scene_model.o: C_OBJ_POSTPROCESS = \
-	$(PYTHON) $(TOOLS_DIR)/trim_elf_section_tail.py $@ .text 12
 # These course-select BSS objects end at intentional non-16-byte boundaries.
 # Preserve their logical section sizes instead of adding assembler tail padding.
 COURSE_SELECT_BSS_C_O_FILES := \

@@ -108,12 +108,6 @@ segments:
       - [0x40120, c, menu/main_menu/main_menu_race_flow]
       - [0x40BD0, c, menu/main_menu/training_course_race_flow]
       - [0x41880, c, menu/main_menu/main_menu_scene_model]
-      - [0x43164, c, menu/main_menu/main_menu_scene_model_renderer]
-      - start: 0x436B4
-        type: asm
-        name: menu/main_menu/initMainMenuSceneModelParts
-        linker_section_order: .text
-        linker_section: .text.mp
       - [0x437C0, c, engine/relocatable_heap]
       - [0x43CD0, c, engine/asset_manager]
       - [0x44550, c, race/scene/race_scene_setup]
@@ -311,7 +305,7 @@ segments:
       - [0xBC430, .data, demo/main_menu_demo_race_intro]
       - [0xBC490, .data, demo/title_demo_race_intro]
       - [0xD4800, .data, menu/main_menu/main_menu_race_flow]
-      - [0xD48B0, .data, menu/main_menu/main_menu_scene_model_renderer]
+      - [0xD48B0, .data, menu/main_menu/main_menu_scene_model]
       - [0xD4B00, .data, engine/asset_manager]
       - [0xD4C20, .data, race/scene/race_scene_setup]
       - [0xD4CB0, .data, menu/renderer/menu_render_utils]
