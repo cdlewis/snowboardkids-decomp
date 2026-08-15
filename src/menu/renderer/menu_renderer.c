@@ -137,7 +137,7 @@ s16 gMenuSpriteFlipScales[4][2] = {
 };
 
 extern void *allocMenuRenderScratch(s32 size);
-s32 drawMenuTilemapSprite(MenuRenderSprite *sprite, s32 arg1, s16 x, s16 y);
+void drawMenuTilemapSprite(MenuRenderSprite *sprite, s32 arg1, s16 x, s16 y);
 void drawMenuSpriteClipped(
     s16 x,
     s16 y,
@@ -1254,12 +1254,12 @@ void drawMenuTilemapSpriteCallback(MenuRenderSprite *arg0) {
 void func_80011D6C(void) {
 }
 
-// drawMenuTilemapSprite best match: 96.329%
-// (nonmatchings/drawMenuTilemapSprite-6078661025080551018/base_16.c)
+// drawMenuTilemapSprite best match: 96.592%
+// (nonmatchings/drawMenuTilemapSprite-898222243517849634/base_24.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/renderer/menu_renderer/drawMenuTilemapSprite.s")
 
 #ifdef NON_MATCHING
-s32 drawMenuTilemapSprite(MenuRenderSprite *sprite, s32 imageSize, s16 tilemapWidth, s16 tilemapHeight) {
+void drawMenuTilemapSprite(MenuRenderSprite *sprite, s32 imageSize, s16 tilemapWidth, s16 tilemapHeight) {
     MenuRenderSprite *render;
     s16 clipLeft;
     s16 clipTop;
@@ -1479,8 +1479,6 @@ s32 drawMenuTilemapSprite(MenuRenderSprite *sprite, s32 imageSize, s16 tilemapWi
         drawY += render->tileXStep;
         tileY = (tileY + 1) % tilemapHeight;
     }
-
-    return row;
 }
 #endif
 
