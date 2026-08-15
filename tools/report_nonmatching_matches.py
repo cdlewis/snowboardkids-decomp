@@ -6,6 +6,7 @@ functions that no longer exist in either active assembly tree or are already
 present in asm/matchings according to the selected filter scope, and reports:
 
 - functions with a logged 100% match that have not been moved to asm/matchings
+- decomp.me scratches with a 100% match that have not been moved to asm/matchings
 - partially matched functions, ordered by best logged match percentage
 - decomp.me scratch scores, when available, as supplemental context
 """
@@ -350,6 +351,23 @@ def best_scratch_results_by_function(
     return best_by_function
 
 
+def full_unintegrated_scratch_results(
+    repo_root: Path,
+    scratches_paths: Iterable[Path],
+) -> list[ScratchResult]:
+    aliases = function_name_aliases(repo_root)
+    matched_functions = canonicalize_function_names(matched_function_names(repo_root), aliases)
+    scratch_results = best_scratch_results_by_function(
+        scratches_paths,
+        matched_functions,
+        aliases,
+    )
+    return sorted(
+        (result for result in scratch_results.values() if result.percent >= FULL_MATCH_PERCENT),
+        key=lambda result: result.function,
+    )
+
+
 def report_rows_by_function(
     repo_root: Path,
     scan_roots: Iterable[Path],
@@ -466,6 +484,18 @@ def print_rows(title: str, rows: list[ReportRow], repo_root: Path) -> None:
         scratch_text = format_scratch(row.scratch)
         if scratch_text:
             print(f"{'':<24} {'':>9}   {scratch_text}")
+
+
+def print_scratch_rows(title: str, rows: list[ScratchResult]) -> None:
+    print(title)
+    if not rows:
+        print("  none")
+        return
+
+    print(f"{'Function':<32} {'Scratch'}")
+    print("-" * 64)
+    for scratch in rows:
+        print(f"{scratch.function:<32} {format_scratch(scratch)}")
 
 
 def main() -> int:
@@ -587,16 +617,26 @@ def main() -> int:
         (row for row in results if row.local.percent < FULL_MATCH_PERCENT),
         key=lambda row: (-row.local.percent, row.local.function),
     )
+    full_scratch_matches = full_unintegrated_scratch_results(repo_root, scratches_paths)
 
     if not args.partial_only:
         print_rows("100% matched in match_log but missing from primary asm/matchings", full_matches, repo_root)
+        if scratches_paths:
+            print()
+            print_scratch_rows(
+                "100% matched on decomp.me but missing from primary asm/matchings",
+                full_scratch_matches,
+            )
     if not args.partial_only and not args.full_only:
         print()
     if not args.full_only:
         print_rows("Partially matched functions", partial_matches, repo_root)
 
     if not args.partial_only and not args.full_only:
-        print(f"\nTotals: full={len(full_matches)} partial={len(partial_matches)}")
+        print(
+            f"\nTotals: full={len(full_matches)} "
+            f"decomp.me_full={len(full_scratch_matches)} partial={len(partial_matches)}"
+        )
 
     return 0
 
