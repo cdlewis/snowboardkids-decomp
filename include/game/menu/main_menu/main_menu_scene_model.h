@@ -14,12 +14,10 @@ typedef union MainMenuModelAnimationBank {
 } MainMenuModelAnimationBank;
 
 typedef struct MainMenuModelPart {
-    s32 previousPartOffsetZ;
-    s8 displayObjectIndex;
-    char pad5[0x1];
-    Vec3s rot;
-    s32 offsetX;
-    s32 offsetY;
+    /* 0x00 */ s8 displayObjectIndex;
+    /* 0x01 */ char pad1;
+    /* 0x02 */ Vec3s rot;
+    /* 0x08 */ Vec3i offset;
 } MainMenuModelPart;
 
 typedef struct MainMenuSceneModel {
@@ -33,8 +31,8 @@ typedef struct MainMenuSceneModel {
     s16 *animationCursor;
     s16 framesRemaining;
     s16 frameDuration;
+    s32 unk18;
     MainMenuModelPart parts[14];
-    s32 lastPartOffsetZ;
     Vec3i pos;
     Vec3s rot;
     s16 unk146;
