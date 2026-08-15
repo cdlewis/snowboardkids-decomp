@@ -128,7 +128,7 @@ search_done:
     return outCount;
 }
 
-// saveRaceRecordReplayData best match: 98.878% (nonmatchings/saveRaceRecordReplayData-7005356279296566789/base_57.c)
+// saveRaceRecordReplayData best match: 98.921% (nonmatchings/saveRaceRecordReplayData-898222243517849634/base_24.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/main_menu/main_menu_scene_model/saveRaceRecordReplayData.s")
 
 #ifdef NON_MATCHING
@@ -152,7 +152,7 @@ PackedRaceRecordReplay gPackedRaceRecordReplayBuffer;
     }
 
 #define ACCUM_SLOT(courseIndex, slotIndex, maxSize, minSize)               \
-    if (course != (courseIndex)) {                                         \
+    if (gRaceCourseIndex.signedValue != (courseIndex)) {                   \
         count = gGameSaveDataBuffer[0].replaySlots[(slotIndex)].length;    \
         if (gGameSaveDataBuffer[0].replaySlots[(slotIndex)].length != 0) { \
             if (count >= (minSize)) {                                      \
@@ -165,15 +165,15 @@ PackedRaceRecordReplay gPackedRaceRecordReplayBuffer;
         }                                                                  \
     }
 
-#define COPY_COURSE_DIFF_0 (course != 0)
-#define COPY_COURSE_DIFF_1 (course != 1)
-#define COPY_COURSE_DIFF_2 (course != 2)
-#define COPY_COURSE_DIFF_3 (course != 3)
-#define COPY_COURSE_DIFF_4 (course != 4)
-#define COPY_COURSE_DIFF_5 (course != 5)
-#define COPY_COURSE_DIFF_6 (course != 6)
-#define COPY_COURSE_DIFF_8 (course != 8)
-#define COPY_COURSE_DIFF_9 (course != 9)
+#define COPY_COURSE_DIFF_0 (gRaceCourseIndex.signedValue != 0)
+#define COPY_COURSE_DIFF_1 (gRaceCourseIndex.signedValue != 1)
+#define COPY_COURSE_DIFF_2 (gRaceCourseIndex.signedValue != 2)
+#define COPY_COURSE_DIFF_3 (gRaceCourseIndex.signedValue != 3)
+#define COPY_COURSE_DIFF_4 (gRaceCourseIndex.signedValue != 4)
+#define COPY_COURSE_DIFF_5 (gRaceCourseIndex.signedValue != 5)
+#define COPY_COURSE_DIFF_6 (gRaceCourseIndex.signedValue != 6)
+#define COPY_COURSE_DIFF_8 (gRaceCourseIndex.signedValue != 8)
+#define COPY_COURSE_DIFF_9 (gRaceCourseIndex.signedValue != 9)
 #define COPY_COURSE_DIFF_I(courseIndex) COPY_COURSE_DIFF_##courseIndex
 #define COPY_COURSE_DIFF(courseIndex) COPY_COURSE_DIFF_I(courseIndex)
 
@@ -253,13 +253,13 @@ s32 saveRaceRecordReplayData(void) {
     s32 totalLength;
     s32 writeIndex;
     s32 count;
-    s32 course;
 
     history = getRelocatableHeapBlockBase(ASSET_HANDLE(43)); if (history->lastWriteIndex >= 0xFD5) { return 1; } gPackedRaceRecordReplayBuffer.fields.frameCount = history->lastWriteIndex; gPackedRaceRecordReplayBuffer.fields.characterId = history->characterId; packed = gPackedRaceRecordReplayBuffer.bytes; gPackedRaceRecordReplayBuffer.fields.characterVariant = history->characterVariant; i = 0; if (history->lastWriteIndex <= 0) { goto packed_inputs_done; } packed_inputs_loop: packed[4 + (i * 3)] = history->stickX[i]; packed[5 + (i * 3)] = history->stickY[i]; packed[6 + (i * 3)] = history->buttons[i]; packed[6 + (i * 3)] &= ~0x40; i++; if (i < history->lastWriteIndex) { goto packed_inputs_loop; } packed_inputs_done: compressedLength = compressRaceRecordReplayData(gPackedRaceRecordReplayBuffer.bytes, (history->lastWriteIndex * 3) + 4, gCompressedRaceRecordReplayBuffer); if (compressedLength < 0) { return 1; }
 
-    course = gRaceCourseIndex.signedValue;
     totalLength = 0;
-    if (course != 0) {
+    if (ASSET_HANDLE(0)) {}
+    if (ASSET_HANDLE(1)) {}
+    if (gRaceCourseIndex.signedValue != 0) {
         count = gGameSaveDataBuffer[0].replaySlots[0].length;
         if (gGameSaveDataBuffer[0].replaySlots[0].length != 0) {
             if (count >= REPLAY_SAVE_MIN_NORMAL) {
@@ -271,7 +271,7 @@ s32 saveRaceRecordReplayData(void) {
             totalLength += REPLAY_SAVE_MAX_NORMAL;
         }
     }
-    if (course != 1) {
+    if (gRaceCourseIndex.signedValue != 1) {
         count = gGameSaveDataBuffer[0].replaySlots[1].length;
         if (gGameSaveDataBuffer[0].replaySlots[1].length != 0) {
             if (count >= REPLAY_SAVE_MIN_NORMAL) {
@@ -293,7 +293,7 @@ s32 saveRaceRecordReplayData(void) {
 
     if (compressedLength >= REPLAY_SAVE_MIN_NORMAL) {
         totalLength += compressedLength;
-    } else if ((course == 9) || (course == 8)) {
+    } else if ((gRaceCourseIndex.signedValue == 9) || (gRaceCourseIndex.signedValue == 8)) {
         totalLength += REPLAY_SAVE_MAX_EXTRA;
     } else {
         totalLength += REPLAY_SAVE_MAX_NORMAL;
@@ -307,7 +307,6 @@ s32 saveRaceRecordReplayData(void) {
     oldData = getRelocatableHeapBlockBase(gAssetHandles[0x20]);
     COPY_REPLAY_BACKUP(src, dst, oldData);
 
-    course = gRaceCourseIndex.signedValue;
     writeIndex = 0;
     COPY_SLOT(0, 0);
     COPY_SLOT(1, 1);
