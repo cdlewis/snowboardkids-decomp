@@ -1,5 +1,5 @@
 candidate_source: python3 tools/score_functions.py asm/nonmatchings --json
-prompt: "use the $n64-decomp-campaign skill on $INPUT"
+prompt: "use the $n64-decomp-campaign skill on $INPUT. try all strategies. do not give up."
 agent: codex
 agent_flags: --config model_reasoning_effort='"xhigh"'
-timeout: 60m
+timeout: 180m
