@@ -32,6 +32,9 @@ typedef struct {
 } CharacterSelectState;
 
 extern CharacterSelectState gCharacterSelectHudState;
+extern s8 D_8010AE64[4];
+
+#define gCharacterSelectHighlightedRosterIndices D_8010AE64
 
 void initCharacterSelectMenu(void);
 void updateCharacterSelectMenu(void);

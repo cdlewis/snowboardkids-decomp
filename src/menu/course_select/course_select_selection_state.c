@@ -1,0 +1,8 @@
+#include "game/menu/course_select/course_select_menu.h"
+
+u8 gCourseSelectHasExtraCourse[COURSE_SELECT_PLAYER_COUNT];
+u8 gCourseSelectSelectionTimers[COURSE_SELECT_PLAYER_COUNT];
+u8 gCourseSelectPurchaseFlowActive;
+u8 gCourseSelectSelectedRows[COURSE_SELECT_PLAYER_COUNT];
+u8 gCourseSelectInputLocked;
+s8 gCourseSelectColumnUnlocked[COURSE_SELECT_PLAYER_COUNT][COURSE_SELECT_EXTRA_COURSE_COUNT];

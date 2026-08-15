@@ -170,6 +170,20 @@ $(BUILD_DIR)/src/ultra/os/exceptasm.o: ULTRA_AS_POST = $(PYTHON) $(TOOLS_DIR)/se
 # assembly segment. Remove only IDO's verified trailing section padding.
 $(BUILD_DIR)/src/menu/main_menu/main_menu_scene_model.o: C_OBJ_POSTPROCESS = \
 	$(PYTHON) $(TOOLS_DIR)/trim_elf_section_tail.py $@ .text 12
+# These course-select BSS objects end at intentional non-16-byte boundaries.
+# Preserve their logical section sizes instead of adding assembler tail padding.
+COURSE_SELECT_BSS_C_O_FILES := \
+	$(BUILD_DIR)/src/menu/course_select/course_select_selection_state.o \
+	$(BUILD_DIR)/src/menu/course_select/course_select_transition_state.o \
+	$(BUILD_DIR)/src/menu/course_select/course_select_course_tables.o \
+	$(BUILD_DIR)/src/menu/course_select/course_select_status.o
+COURSE_SELECT_UNPADDED_BSS_O_FILES := \
+	$(COURSE_SELECT_BSS_C_O_FILES) \
+	$(BUILD_DIR)/asm/data/bss_chunk_a_2_course_select_selection_tail.bss.o \
+	$(BUILD_DIR)/asm/data/bss_chunk_a_2_course_select_transition_tail.bss.o \
+	$(BUILD_DIR)/asm/data/bss_chunk_a_2_course_select_tables_tail.bss.o \
+	$(BUILD_DIR)/asm/data/bss_chunk_a_2_course_select_status_tail.bss.o
+$(COURSE_SELECT_UNPADDED_BSS_O_FILES): ASFLAGS += -no-pad-sections
 # The weak, zero-initialized prompt state preserves IDO's original codegen;
 # raw BSS owns its storage. Remove only that verified trailing data block.
 $(BUILD_DIR)/src/menu/race_setup/race_setup_menu.o: C_OBJ_POSTPROCESS = \
@@ -181,7 +195,6 @@ LINKER_SCRIPTS = linker_scripts/hardware_regs.ld linker_scripts/libultra_syms.ld
                  linker_scripts/game_syms.ld \
                  linker_scripts/race_setup_menu_syms.ld \
                  linker_scripts/character_select_course_menu_syms.ld \
-                 linker_scripts/course_select_menu_syms.ld \
                  linker_scripts/controller_subsystem_syms.ld \
                  linker_scripts/race_motion_syms.ld \
                  linker_scripts/training_course_ui_syms.ld
@@ -282,6 +295,22 @@ $(BUILD_DIR)/%.o: %.s
 $(TEXTCONV_DIR)/%.c: %.c $(TOOLS_DIR)/textconv.py $(CHARMAP)
 	@mkdir -p $(dir $@)
 	$(V)$(TEXTCONV) $(CHARMAP) $< $@
+
+# IDO's object writer rounds BSS sections to 16 bytes. These data-only files
+# are assembled from IDO's normal output with GNU as so -no-pad-sections can
+# preserve their actual sizes.
+$(COURSE_SELECT_BSS_C_O_FILES): $(BUILD_DIR)/%.o: $(TEXTCONV_DIR)/%.c
+	@mkdir -p $(dir $@)
+	$(PRINTF) "[$(GREEN)   c    $(NO_COL)]  $*.c\n"
+	$(V)$(CC_CHECK) $(CC_CHECK_FLAGS) $(CC_CHECK_WARNINGS) \
+		$(CC_CHECK_INCLUDES) $(C_DEFINES) $(CC_CHECK_MIPS_DEFINES) -iquote $(dir $*) $<
+	$(V)cd $(dir $@) && $(abspath $(CC)) \
+		$(filter-out -c -I. -Iinclude -Iinclude/PR -Isrc/ultra/audio -Isrc/ultra/libc,$(CFLAGS)) $(C_OPT) \
+		-I$(abspath .) -I$(abspath include) -I$(abspath include/PR) \
+		-I$(abspath src/ultra/audio) -I$(abspath src/ultra/libc) -I$(abspath $(dir $*)) \
+		-S $(abspath $<)
+	$(V)$(AS) $(ASFLAGS) -o $@ $(dir $@)$(notdir $*).s
+	$(V)$(RM) $(dir $@)$(notdir $*).s
 
 $(BUILD_DIR)/%.o: $(TEXTCONV_DIR)/%.c
 	@mkdir -p $(dir $@)
