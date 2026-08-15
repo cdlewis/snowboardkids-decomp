@@ -116,7 +116,7 @@ void drawMenuTextureByAssetId(s16 x, s16 y, void *texture, u16 assetId, u16 widt
 void setMenuSpriteActorDebugUpdate(MenuRenderSpriteActor *actor);
 void updateMenuSpriteActorDebugControls(MenuRenderSpriteActor *actor);
 void drawMenuTilemapSpriteCallback(MenuRenderSprite *sprite);
-s32 drawMenuTilemapSprite(MenuRenderSprite *sprite, s32 arg1, s16 x, s16 y);
+void drawMenuTilemapSprite(MenuRenderSprite *sprite, s32 arg1, s16 x, s16 y);
 void noopMenuSpriteCallback(void);
 void drawMenuGlyphScriptWithFontBank(
     volatile s16 x,
