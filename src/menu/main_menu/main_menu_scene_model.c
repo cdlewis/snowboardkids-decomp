@@ -128,119 +128,11 @@ search_done:
     return outCount;
 }
 
-// saveRaceRecordReplayData best match: 98.921% (nonmatchings/saveRaceRecordReplayData-898222243517849634/base_24.c)
+// saveRaceRecordReplayData best match: 98.878% (nonmatchings/saveRaceRecordReplayData-7005356279296566789/base_81.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/main_menu/main_menu_scene_model/saveRaceRecordReplayData.s")
 
 #ifdef NON_MATCHING
 PackedRaceRecordReplay gPackedRaceRecordReplayBuffer;
-
-#define REPLAY_SAVE_MAX_NORMAL 0x580
-#define REPLAY_SAVE_MIN_NORMAL 0x581
-#define REPLAY_SAVE_MAX_EXTRA 0x300
-#define REPLAY_SAVE_MIN_EXTRA 0x301
-
-#define COPY_REPLAY_BACKUP(source, destination, backup)                                                         \
-    (source) = gGameSaveDataBuffer[0].replayData;                                                               \
-    (destination) = (backup);                                                                                   \
-    while (1) {                                                                                                 \
-        *(destination) = *(source);                                                                             \
-        (source)++;                                                                                             \
-        (destination)++;                                                                                        \
-        if ((u32)(source) >= (u32) & gGameSaveDataBuffer[0].replayData[GAME_SAVE_REPLAY_COPY_HALFWORD_COUNT]) { \
-            break;                                                                                              \
-        }                                                                                                       \
-    }
-
-#define ACCUM_SLOT(courseIndex, slotIndex, maxSize, minSize)               \
-    if (gRaceCourseIndex.signedValue != (courseIndex)) {                   \
-        count = gGameSaveDataBuffer[0].replaySlots[(slotIndex)].length;    \
-        if (gGameSaveDataBuffer[0].replaySlots[(slotIndex)].length != 0) { \
-            if (count >= (minSize)) {                                      \
-                totalLength += count;                                      \
-            } else {                                                       \
-                totalLength += (maxSize);                                  \
-            }                                                              \
-        } else {                                                           \
-            totalLength += (maxSize);                                      \
-        }                                                                  \
-    }
-
-#define COPY_COURSE_DIFF_0 (gRaceCourseIndex.signedValue != 0)
-#define COPY_COURSE_DIFF_1 (gRaceCourseIndex.signedValue != 1)
-#define COPY_COURSE_DIFF_2 (gRaceCourseIndex.signedValue != 2)
-#define COPY_COURSE_DIFF_3 (gRaceCourseIndex.signedValue != 3)
-#define COPY_COURSE_DIFF_4 (gRaceCourseIndex.signedValue != 4)
-#define COPY_COURSE_DIFF_5 (gRaceCourseIndex.signedValue != 5)
-#define COPY_COURSE_DIFF_6 (gRaceCourseIndex.signedValue != 6)
-#define COPY_COURSE_DIFF_8 (gRaceCourseIndex.signedValue != 8)
-#define COPY_COURSE_DIFF_9 (gRaceCourseIndex.signedValue != 9)
-#define COPY_COURSE_DIFF_I(courseIndex) COPY_COURSE_DIFF_##courseIndex
-#define COPY_COURSE_DIFF(courseIndex) COPY_COURSE_DIFF_I(courseIndex)
-
-#define AFTER_OLD_COPY_0()
-#define AFTER_OLD_COPY_1()
-#define AFTER_OLD_COPY_2()
-#define AFTER_OLD_COPY_3()
-#define AFTER_OLD_COPY_4()
-#define AFTER_OLD_COPY_5() \
-    if (!count) {}
-#define AFTER_OLD_COPY_6()
-#define AFTER_OLD_COPY_7()
-#define AFTER_OLD_COPY_8()
-#define AFTER_OLD_COPY_I(slotIndex) AFTER_OLD_COPY_##slotIndex()
-#define AFTER_OLD_COPY(slotIndex) AFTER_OLD_COPY_I(slotIndex)
-
-#define REPLAY_SLOT_OFFSET_0 gGameSaveDataBuffer[0].replaySlots[0].offset
-#define REPLAY_SLOT_OFFSET_1 gGameSaveDataBuffer[0].replaySlots[1].offset
-#define REPLAY_SLOT_OFFSET_2 gGameSaveDataBuffer[0].replaySlots[2].offset
-#define REPLAY_SLOT_OFFSET_3 gGameSaveDataBuffer[0].replaySlots[3].offset
-#define REPLAY_SLOT_OFFSET_4 gGameSaveDataBuffer[0].replaySlots[4].offset
-#define REPLAY_SLOT_OFFSET_5 gGameSaveDataBuffer[0].replaySlots[5].offset
-#define REPLAY_SLOT_OFFSET_6 gGameSaveDataBuffer[0].replaySlots[6].offset
-#define REPLAY_SLOT_OFFSET_7 gGameSaveDataBuffer[0].replaySlots[7].offset
-#define REPLAY_SLOT_OFFSET_8 gGameSaveDataBuffer[0].replaySlots[8].offset
-#define REPLAY_SLOT_OFFSET_I(slotIndex) REPLAY_SLOT_OFFSET_##slotIndex
-#define REPLAY_SLOT_OFFSET(slotIndex) REPLAY_SLOT_OFFSET_I(slotIndex)
-
-#define SET_REPLAY_SLOT_OFFSET_0(value) (REPLAY_SLOT_OFFSET_0 = (value))
-#define SET_REPLAY_SLOT_OFFSET_1(value) (REPLAY_SLOT_OFFSET_1 = (value))
-#define SET_REPLAY_SLOT_OFFSET_2(value) (REPLAY_SLOT_OFFSET_2 = (value))
-#define SET_REPLAY_SLOT_OFFSET_3(value) (REPLAY_SLOT_OFFSET_3 = (value))
-#define SET_REPLAY_SLOT_OFFSET_4(value) (REPLAY_SLOT_OFFSET_4 = (value))
-#define SET_REPLAY_SLOT_OFFSET_5(value) (REPLAY_SLOT_OFFSET_5 = (value))
-#define SET_REPLAY_SLOT_OFFSET_6(value) (REPLAY_SLOT_OFFSET_6 = (value))
-#define SET_REPLAY_SLOT_OFFSET_7(value) (REPLAY_SLOT_OFFSET_7 = (value))
-#define SET_REPLAY_SLOT_OFFSET_8(value) (REPLAY_SLOT_OFFSET_8 = (value))
-#define SET_REPLAY_SLOT_OFFSET_I(slotIndex, value) SET_REPLAY_SLOT_OFFSET_##slotIndex(value)
-#define SET_REPLAY_SLOT_OFFSET(slotIndex, value) SET_REPLAY_SLOT_OFFSET_I(slotIndex, value)
-
-#define COPY_SLOT(courseIndex, slotIndex)                                                                  \
-    {                                                                                                      \
-        s32 slotOldOffset;                                                                                 \
-        if (COPY_COURSE_DIFF(courseIndex)) {                                                               \
-            count = gGameSaveDataBuffer[0].replaySlots[(slotIndex)].length;                                \
-            if (count != 0) {                                                                              \
-                slotOldOffset = REPLAY_SLOT_OFFSET(slotIndex);                                             \
-                SET_REPLAY_SLOT_OFFSET(slotIndex, writeIndex);                                             \
-                i = 0;                                                                                     \
-                while (i < gGameSaveDataBuffer[0].replaySlots[(slotIndex)].length) {                       \
-                    gGameSaveDataBuffer[0].replayData[writeIndex] = oldData[slotOldOffset + i];            \
-                    i++;                                                                                   \
-                    AFTER_OLD_COPY(slotIndex);                                                             \
-                    writeIndex++;                                                                          \
-                }                                                                                          \
-            }                                                                                              \
-        } else {                                                                                           \
-            SET_REPLAY_SLOT_OFFSET(slotIndex, writeIndex);                                                 \
-            gGameSaveDataBuffer[0].replaySlots[(slotIndex)].length = compressedLength;                     \
-            i = 0;                                                                                         \
-            while (i < compressedLength) {                                                                 \
-                gGameSaveDataBuffer[0].replayData[writeIndex] = gCompressedRaceRecordReplayBuffer[i];      \
-                writeIndex++;                                                                              \
-                i++;                                                                                       \
-            }                                                                                              \
-        }                                                                                                  \
-    }
 
 s32 saveRaceRecordReplayData(void) {
     RaceInputHistoryBuffer *history;
@@ -252,127 +144,70 @@ s32 saveRaceRecordReplayData(void) {
     s32 compressedLength;
     s32 totalLength;
     s32 writeIndex;
+    s32 oldOffset;
     s32 count;
-
+    s32 course;
     history = getRelocatableHeapBlockBase(ASSET_HANDLE(43)); if (history->lastWriteIndex >= 0xFD5) { return 1; } gPackedRaceRecordReplayBuffer.fields.frameCount = history->lastWriteIndex; gPackedRaceRecordReplayBuffer.fields.characterId = history->characterId; packed = gPackedRaceRecordReplayBuffer.bytes; gPackedRaceRecordReplayBuffer.fields.characterVariant = history->characterVariant; i = 0; if (history->lastWriteIndex <= 0) { goto packed_inputs_done; } packed_inputs_loop: packed[4 + (i * 3)] = history->stickX[i]; packed[5 + (i * 3)] = history->stickY[i]; packed[6 + (i * 3)] = history->buttons[i]; packed[6 + (i * 3)] &= ~0x40; i++; if (i < history->lastWriteIndex) { goto packed_inputs_loop; } packed_inputs_done: compressedLength = compressRaceRecordReplayData(gPackedRaceRecordReplayBuffer.bytes, (history->lastWriteIndex * 3) + 4, gCompressedRaceRecordReplayBuffer); if (compressedLength < 0) { return 1; }
-
+    course = gRaceCourseIndex.signedValue;
     totalLength = 0;
-    if (ASSET_HANDLE(0)) {}
-    if (ASSET_HANDLE(1)) {}
-    if (gRaceCourseIndex.signedValue != 0) {
+    if (course != 0) {
         count = gGameSaveDataBuffer[0].replaySlots[0].length;
         if (gGameSaveDataBuffer[0].replaySlots[0].length != 0) {
-            if (count >= REPLAY_SAVE_MIN_NORMAL) {
+            if (count >= 0x581) {
                 totalLength += count;
             } else {
-                totalLength += REPLAY_SAVE_MAX_NORMAL;
+                totalLength += 0x580;
             }
         } else {
-            totalLength += REPLAY_SAVE_MAX_NORMAL;
+            totalLength += 0x580;
         }
     }
-    if (gRaceCourseIndex.signedValue != 1) {
+    if (course != 1) {
         count = gGameSaveDataBuffer[0].replaySlots[1].length;
         if (gGameSaveDataBuffer[0].replaySlots[1].length != 0) {
-            if (count >= REPLAY_SAVE_MIN_NORMAL) {
+            if (count >= 0x581) {
                 totalLength += count;
             } else {
-                totalLength += REPLAY_SAVE_MAX_NORMAL;
+                totalLength += 0x580;
             }
         } else {
-            totalLength += REPLAY_SAVE_MAX_NORMAL;
+            totalLength += 0x580;
         }
     }
-    ACCUM_SLOT(2, 2, REPLAY_SAVE_MAX_NORMAL, REPLAY_SAVE_MIN_NORMAL);
-    ACCUM_SLOT(3, 3, REPLAY_SAVE_MAX_NORMAL, REPLAY_SAVE_MIN_NORMAL);
-    ACCUM_SLOT(4, 4, REPLAY_SAVE_MAX_NORMAL, REPLAY_SAVE_MIN_NORMAL);
-    ACCUM_SLOT(5, 5, REPLAY_SAVE_MAX_NORMAL, REPLAY_SAVE_MIN_NORMAL);
-    ACCUM_SLOT(6, 6, REPLAY_SAVE_MAX_NORMAL, REPLAY_SAVE_MIN_NORMAL);
-    ACCUM_SLOT(8, 7, REPLAY_SAVE_MAX_EXTRA, REPLAY_SAVE_MIN_EXTRA);
-    ACCUM_SLOT(9, 8, REPLAY_SAVE_MAX_EXTRA, REPLAY_SAVE_MIN_EXTRA);
-
-    if (compressedLength >= REPLAY_SAVE_MIN_NORMAL) {
+    if (course != (2)) { count = gGameSaveDataBuffer[0].replaySlots[(2)].length; if (gGameSaveDataBuffer[0].replaySlots[(2)].length != 0) { if (count >= (0x581)) { totalLength += count; } else { totalLength += (0x580); } } else { totalLength += (0x580); } };
+    if (course != (3)) { count = gGameSaveDataBuffer[0].replaySlots[(3)].length; if (gGameSaveDataBuffer[0].replaySlots[(3)].length != 0) { if (count >= (0x581)) { totalLength += count; } else { totalLength += (0x580); } } else { totalLength += (0x580); } };
+    if (course != (4)) { count = gGameSaveDataBuffer[0].replaySlots[(4)].length; if (gGameSaveDataBuffer[0].replaySlots[(4)].length != 0) { if (count >= (0x581)) { totalLength += count; } else { totalLength += (0x580); } } else { totalLength += (0x580); } };
+    if (course != (5)) { count = gGameSaveDataBuffer[0].replaySlots[(5)].length; if (gGameSaveDataBuffer[0].replaySlots[(5)].length != 0) { if (count >= (0x581)) { totalLength += count; } else { totalLength += (0x580); } } else { totalLength += (0x580); } };
+    if (course != (6)) { count = gGameSaveDataBuffer[0].replaySlots[(6)].length; if (gGameSaveDataBuffer[0].replaySlots[(6)].length != 0) { if (count >= (0x581)) { totalLength += count; } else { totalLength += (0x580); } } else { totalLength += (0x580); } };
+    if (course != (8)) { count = gGameSaveDataBuffer[0].replaySlots[(7)].length; if (gGameSaveDataBuffer[0].replaySlots[(7)].length != 0) { if (count >= (0x301)) { totalLength += count; } else { totalLength += (0x300); } } else { totalLength += (0x300); } };
+    if (course != (9)) { count = gGameSaveDataBuffer[0].replaySlots[(8)].length; if (gGameSaveDataBuffer[0].replaySlots[(8)].length != 0) { if (count >= (0x301)) { totalLength += count; } else { totalLength += (0x300); } } else { totalLength += (0x300); } };
+    if (compressedLength >= 0x581) {
         totalLength += compressedLength;
-    } else if ((gRaceCourseIndex.signedValue == 9) || (gRaceCourseIndex.signedValue == 8)) {
-        totalLength += REPLAY_SAVE_MAX_EXTRA;
+    } else if ((course == 9) || (course == 8)) {
+        totalLength += 0x300;
     } else {
-        totalLength += REPLAY_SAVE_MAX_NORMAL;
+        totalLength += 0x580;
     }
-
     if (totalLength >= 0x3A81) {
         return 1;
     }
-
     gAssetHandles[0x20] = allocRelocatableHeapBlock(0x7500);
     oldData = getRelocatableHeapBlockBase(gAssetHandles[0x20]);
-    COPY_REPLAY_BACKUP(src, dst, oldData);
-
+    (src) = gGameSaveDataBuffer[0].replayData; (dst) = (oldData); while (1) { *(dst) = *(src); (src)++; (dst)++; if ((u32)(src) >= (u32)&gGameSaveDataBuffer[0].replayData[(0x72AA / sizeof(u16))]) { break; } };
+    course = gRaceCourseIndex.signedValue;
     writeIndex = 0;
-    COPY_SLOT(0, 0);
-    COPY_SLOT(1, 1);
-    COPY_SLOT(2, 2);
-    COPY_SLOT(3, 3);
-    COPY_SLOT(4, 4);
-    COPY_SLOT(5, 5);
-    COPY_SLOT(6, 6);
-    COPY_SLOT(8, 7);
-    COPY_SLOT(9, 8);
-
+    { s32 slotOldOffset; if ((course != 0)) { count = gGameSaveDataBuffer[0].replaySlots[(0)].length; if (count != 0) { slotOldOffset = gGameSaveDataBuffer[0].replaySlots[0].offset; (gGameSaveDataBuffer[0].replaySlots[0].offset = (writeIndex)); i = 0; while (i < gGameSaveDataBuffer[0].replaySlots[(0)].length) { gGameSaveDataBuffer[0].replayData[writeIndex] = oldData[slotOldOffset + i]; i++; ; writeIndex++; } } } else { (gGameSaveDataBuffer[0].replaySlots[0].offset = (writeIndex)); gGameSaveDataBuffer[0].replaySlots[(0)].length = compressedLength; i = 0; while (i < compressedLength) { gGameSaveDataBuffer[0].replayData[writeIndex] = gCompressedRaceRecordReplayBuffer[i]; writeIndex++; i++; } } };
+    { s32 slotOldOffset; if ((course != 1)) { count = gGameSaveDataBuffer[0].replaySlots[(1)].length; if (count != 0) { slotOldOffset = gGameSaveDataBuffer[0].replaySlots[1].offset; (gGameSaveDataBuffer[0].replaySlots[1].offset = (writeIndex)); i = 0; while (i < gGameSaveDataBuffer[0].replaySlots[(1)].length) { gGameSaveDataBuffer[0].replayData[writeIndex] = oldData[slotOldOffset + i]; i++; ; writeIndex++; } } } else { (gGameSaveDataBuffer[0].replaySlots[1].offset = (writeIndex)); gGameSaveDataBuffer[0].replaySlots[(1)].length = compressedLength; i = 0; while (i < compressedLength) { gGameSaveDataBuffer[0].replayData[writeIndex] = gCompressedRaceRecordReplayBuffer[i]; writeIndex++; i++; } } };
+    { s32 slotOldOffset; if ((course != 2)) { count = gGameSaveDataBuffer[0].replaySlots[(2)].length; if (count != 0) { slotOldOffset = gGameSaveDataBuffer[0].replaySlots[2].offset; (gGameSaveDataBuffer[0].replaySlots[2].offset = (writeIndex)); i = 0; while (i < gGameSaveDataBuffer[0].replaySlots[(2)].length) { gGameSaveDataBuffer[0].replayData[writeIndex] = oldData[slotOldOffset + i]; i++; ; writeIndex++; } } } else { (gGameSaveDataBuffer[0].replaySlots[2].offset = (writeIndex)); gGameSaveDataBuffer[0].replaySlots[(2)].length = compressedLength; i = 0; while (i < compressedLength) { gGameSaveDataBuffer[0].replayData[writeIndex] = gCompressedRaceRecordReplayBuffer[i]; writeIndex++; i++; } } };
+    { s32 slotOldOffset; if ((course != 3)) { count = gGameSaveDataBuffer[0].replaySlots[(3)].length; if (count != 0) { slotOldOffset = gGameSaveDataBuffer[0].replaySlots[3].offset; (gGameSaveDataBuffer[0].replaySlots[3].offset = (writeIndex)); i = 0; while (i < gGameSaveDataBuffer[0].replaySlots[(3)].length) { gGameSaveDataBuffer[0].replayData[writeIndex] = oldData[slotOldOffset + i]; i++; ; writeIndex++; } } } else { (gGameSaveDataBuffer[0].replaySlots[3].offset = (writeIndex)); gGameSaveDataBuffer[0].replaySlots[(3)].length = compressedLength; i = 0; while (i < compressedLength) { gGameSaveDataBuffer[0].replayData[writeIndex] = gCompressedRaceRecordReplayBuffer[i]; writeIndex++; i++; } } };
+    { s32 slotOldOffset; if ((course != 4)) { count = gGameSaveDataBuffer[0].replaySlots[(4)].length; if (count != 0) { slotOldOffset = gGameSaveDataBuffer[0].replaySlots[4].offset; (gGameSaveDataBuffer[0].replaySlots[4].offset = (writeIndex)); i = 0; while (i < gGameSaveDataBuffer[0].replaySlots[(4)].length) { gGameSaveDataBuffer[0].replayData[writeIndex] = oldData[slotOldOffset + i]; i++; ; writeIndex++; } } } else { (gGameSaveDataBuffer[0].replaySlots[4].offset = (writeIndex)); gGameSaveDataBuffer[0].replaySlots[(4)].length = compressedLength; i = 0; while (i < compressedLength) { gGameSaveDataBuffer[0].replayData[writeIndex] = gCompressedRaceRecordReplayBuffer[i]; writeIndex++; i++; } } };
+    { s32 slotOldOffset; if ((course != 5)) { count = gGameSaveDataBuffer[0].replaySlots[(5)].length; if (count != 0) { slotOldOffset = gGameSaveDataBuffer[0].replaySlots[5].offset; (gGameSaveDataBuffer[0].replaySlots[5].offset = (writeIndex)); i = 0; while (i < gGameSaveDataBuffer[0].replaySlots[(5)].length) { gGameSaveDataBuffer[0].replayData[writeIndex] = oldData[slotOldOffset + i]; i++; if (!count) {}; writeIndex++; } } } else { (gGameSaveDataBuffer[0].replaySlots[5].offset = (writeIndex)); gGameSaveDataBuffer[0].replaySlots[(5)].length = compressedLength; i = 0; while (i < compressedLength) { gGameSaveDataBuffer[0].replayData[writeIndex] = gCompressedRaceRecordReplayBuffer[i]; writeIndex++; i++; } } };
+    { s32 slotOldOffset; if ((course != 6)) { count = gGameSaveDataBuffer[0].replaySlots[(6)].length; if (count != 0) { slotOldOffset = gGameSaveDataBuffer[0].replaySlots[6].offset; (gGameSaveDataBuffer[0].replaySlots[6].offset = (writeIndex)); i = 0; while (i < gGameSaveDataBuffer[0].replaySlots[(6)].length) { gGameSaveDataBuffer[0].replayData[writeIndex] = oldData[slotOldOffset + i]; i++; ; writeIndex++; } } } else { (gGameSaveDataBuffer[0].replaySlots[6].offset = (writeIndex)); gGameSaveDataBuffer[0].replaySlots[(6)].length = compressedLength; i = 0; while (i < compressedLength) { gGameSaveDataBuffer[0].replayData[writeIndex] = gCompressedRaceRecordReplayBuffer[i]; writeIndex++; i++; } } };
+    { s32 slotOldOffset; if ((course != 8)) { count = gGameSaveDataBuffer[0].replaySlots[(7)].length; if (count != 0) { slotOldOffset = gGameSaveDataBuffer[0].replaySlots[7].offset; (gGameSaveDataBuffer[0].replaySlots[7].offset = (writeIndex)); i = 0; while (i < gGameSaveDataBuffer[0].replaySlots[(7)].length) { gGameSaveDataBuffer[0].replayData[writeIndex] = oldData[slotOldOffset + i]; i++; ; writeIndex++; } } } else { (gGameSaveDataBuffer[0].replaySlots[7].offset = (writeIndex)); gGameSaveDataBuffer[0].replaySlots[(7)].length = compressedLength; i = 0; while (i < compressedLength) { gGameSaveDataBuffer[0].replayData[writeIndex] = gCompressedRaceRecordReplayBuffer[i]; writeIndex++; i++; } } };
+    { s32 slotOldOffset; if ((course != 9)) { count = gGameSaveDataBuffer[0].replaySlots[(8)].length; if (count != 0) { slotOldOffset = gGameSaveDataBuffer[0].replaySlots[8].offset; (gGameSaveDataBuffer[0].replaySlots[8].offset = (writeIndex)); i = 0; while (i < gGameSaveDataBuffer[0].replaySlots[(8)].length) { gGameSaveDataBuffer[0].replayData[writeIndex] = oldData[slotOldOffset + i]; i++; ; writeIndex++; } } } else { (gGameSaveDataBuffer[0].replaySlots[8].offset = (writeIndex)); gGameSaveDataBuffer[0].replaySlots[(8)].length = compressedLength; i = 0; while (i < compressedLength) { gGameSaveDataBuffer[0].replayData[writeIndex] = gCompressedRaceRecordReplayBuffer[i]; writeIndex++; i++; } } };
     freeRelocatableHeapBlock(gAssetHandles[0x20]);
     return 0;
 }
-
-#undef COPY_SLOT
-#undef COPY_REPLAY_BACKUP
-#undef SET_REPLAY_SLOT_OFFSET
-#undef SET_REPLAY_SLOT_OFFSET_I
-#undef SET_REPLAY_SLOT_OFFSET_8
-#undef SET_REPLAY_SLOT_OFFSET_7
-#undef SET_REPLAY_SLOT_OFFSET_6
-#undef SET_REPLAY_SLOT_OFFSET_5
-#undef SET_REPLAY_SLOT_OFFSET_4
-#undef SET_REPLAY_SLOT_OFFSET_3
-#undef SET_REPLAY_SLOT_OFFSET_2
-#undef SET_REPLAY_SLOT_OFFSET_1
-#undef SET_REPLAY_SLOT_OFFSET_0
-#undef REPLAY_SLOT_OFFSET
-#undef REPLAY_SLOT_OFFSET_I
-#undef REPLAY_SLOT_OFFSET_8
-#undef REPLAY_SLOT_OFFSET_7
-#undef REPLAY_SLOT_OFFSET_6
-#undef REPLAY_SLOT_OFFSET_5
-#undef REPLAY_SLOT_OFFSET_4
-#undef REPLAY_SLOT_OFFSET_3
-#undef REPLAY_SLOT_OFFSET_2
-#undef REPLAY_SLOT_OFFSET_1
-#undef REPLAY_SLOT_OFFSET_0
-#undef AFTER_OLD_COPY
-#undef AFTER_OLD_COPY_I
-#undef AFTER_OLD_COPY_8
-#undef AFTER_OLD_COPY_7
-#undef AFTER_OLD_COPY_6
-#undef AFTER_OLD_COPY_5
-#undef AFTER_OLD_COPY_4
-#undef AFTER_OLD_COPY_3
-#undef AFTER_OLD_COPY_2
-#undef AFTER_OLD_COPY_1
-#undef AFTER_OLD_COPY_0
-#undef COPY_COURSE_DIFF
-#undef COPY_COURSE_DIFF_I
-#undef COPY_COURSE_DIFF_9
-#undef COPY_COURSE_DIFF_8
-#undef COPY_COURSE_DIFF_6
-#undef COPY_COURSE_DIFF_5
-#undef COPY_COURSE_DIFF_4
-#undef COPY_COURSE_DIFF_3
-#undef COPY_COURSE_DIFF_2
-#undef COPY_COURSE_DIFF_1
-#undef COPY_COURSE_DIFF_0
-#undef ACCUM_SLOT
-#undef REPLAY_SAVE_MIN_EXTRA
-#undef REPLAY_SAVE_MAX_EXTRA
-#undef REPLAY_SAVE_MIN_NORMAL
-#undef REPLAY_SAVE_MAX_NORMAL
 #endif
 
 void loadCurrentRaceRecordReplayData(void) {
