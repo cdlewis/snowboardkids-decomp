@@ -258,8 +258,8 @@ void initMultiplayerCourseSelectMenu(void) {
     gCourseSelectStatus.unk2C = 0;
 }
 
-// updateMultiplayerCourseSelectMenu best match: 97.747% (base_73.c; positionally ranked)
-// 273 positional word mismatches, 59 opcode mismatches, and 11 alignment gaps.
+// updateMultiplayerCourseSelectMenu best match: 98.696% (base_29.c; positionally ranked)
+// 180 positional word mismatches, 47 opcode mismatches, and 6 alignment gaps.
 // asm-processor requires this pragma to remain on one line.
 // clang-format off
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/course_select/multiplayer_course_select_menu/updateMultiplayerCourseSelectMenu.s")
@@ -316,8 +316,9 @@ void updateMultiplayerCourseSelectMenu(void) {
             playerIndex = 0;
             if (gPlayerCount > 0) {
                 while (1) {
-                    if ((D_8010AEE8[playerIndex] != 0) || (state = gMenuChoicePromptState[playerIndex], state == 1) ||
-                        (state == 9) || (state >= 5)) {
+                    if ((D_8010AEE8[playerIndex] != 0) ||
+                        (state = gMenuChoicePromptState[playerIndex], gMenuChoicePromptState[playerIndex] == 1) ||
+                        (state == 9) || (gMenuChoicePromptState[playerIndex] >= 5)) {
                         count++;
                     }
                     playerIndex++;
@@ -342,8 +343,7 @@ void updateMultiplayerCourseSelectMenu(void) {
             }
         } else if (D_800EC9C0 == 0) {
             for (playerIndex = 0; playerIndex < gPlayerCount; playerIndex++) {
-                state = gMenuChoicePromptState[playerIndex];
-                if (state == 0) {
+                if (gMenuChoicePromptState[playerIndex] == 0) {
                     if ((gCourseSelectStatus.unk0[playerIndex] == 1) && (gRacePlayers[playerIndex].menuState == 0) &&
                         !(D_8010AECC[playerIndex] & 1)) {
                         if (D_8010AEB0 == 1) {
@@ -386,6 +386,10 @@ void updateMultiplayerCourseSelectMenu(void) {
                                 if (gCharacterSelectHudState.highlightedRosterIndices[playerIndex] < maxColumn) {
                                     gCharacterSelectHudState.highlightedRosterIndices[playerIndex]++;
                                     enqueueSoundEffect(0x19, 0x32);
+                                    // These inert conditions preserve IDO's register allocation for the remaining block.
+                                    // clang-format off
+                                    if (1) { } if (1) { } if (1) { } if (1) { } if (1) { }
+                                    // clang-format on
                                     D_8010AEAC[playerIndex] = 0;
                                     input = *pressedInput;
                                 }
@@ -398,9 +402,8 @@ void updateMultiplayerCourseSelectMenu(void) {
                                 }
                             }
 
-                            state = extraColumn;
-                            if ((state != gCharacterSelectHudState.highlightedRosterIndices[playerIndex]) &&
-                                (state != oldColumn) &&
+                            if ((extraColumn != gCharacterSelectHudState.highlightedRosterIndices[playerIndex]) &&
+                                (extraColumn != oldColumn) &&
                                 (oldColumn != gCharacterSelectHudState.highlightedRosterIndices[playerIndex])) {
                                 D_8010AECC[playerIndex]++;
                                 if (oldColumn < gCharacterSelectHudState.highlightedRosterIndices[playerIndex]) {
@@ -410,8 +413,8 @@ void updateMultiplayerCourseSelectMenu(void) {
                                 }
                             }
 
-                            if (state == gCharacterSelectHudState.highlightedRosterIndices[playerIndex]) {
-                                gRacePlayers[playerIndex].menuSelection = D_8010AEF8[playerIndex][state - 1];
+                            if (extraColumn == gCharacterSelectHudState.highlightedRosterIndices[playerIndex]) {
+                                gRacePlayers[playerIndex].menuSelection = D_8010AEF8[playerIndex][extraColumn - 1];
                                 gCourseSelectExtraCourseColumnState = 1;
                             } else {
                                 gRacePlayers[playerIndex].menuSelection =
@@ -429,7 +432,8 @@ void updateMultiplayerCourseSelectMenu(void) {
                                         gRacePlayers[0].menuState = 9;
                                         D_8010AEB0 = 1;
                                         gMenuFlowState = 1;
-                                    } else if ((gRacePlayers[playerIndex].menuSelection >= 9) ||
+                                    } else if ((((((gRacePlayers[playerIndex].menuSelection & 0xFF) & 0xFF) & 0xFF) &
+                                                  0xFF) >= 9) ||
                                                ((gRacePlayers[playerIndex].menuSelection < 9) &&
                                                 (D_8010AEB8[playerIndex][gCharacterSelectHudState
                                                                              .highlightedRosterIndices[playerIndex]] !=
@@ -454,7 +458,7 @@ void updateMultiplayerCourseSelectMenu(void) {
                                 }
                             } else {
                             handle_column_cancel:
-                                if (cancelInput != 0) {
+                                if ((cancelInput = input & 0x4000, cancelInput != 0)) {
                                     enqueueSoundEffect(0x18, 0x32);
                                     gRacePlayers[playerIndex].menuState = 9;
                                     D_8010AEB0 = 1;
@@ -463,13 +467,13 @@ void updateMultiplayerCourseSelectMenu(void) {
                         }
                     }
                 } else {
-                    if (state == 9) {
+                    if (gMenuChoicePromptState[playerIndex] == 9) {
                         D_8010AEA4[playerIndex]++;
                     } else {
                         D_8010AEA4[playerIndex] = 0;
                     }
 
-                    if ((state >= 2) && (state < 5)) {
+                    if ((gMenuChoicePromptState[playerIndex] >= 2) && (gMenuChoicePromptState[playerIndex] < 5)) {
                         if (D_8010AEB0 == 1) {
                             gRacePlayers[playerIndex].menuState = 9;
                         } else {
@@ -484,10 +488,9 @@ void updateMultiplayerCourseSelectMenu(void) {
                                 if (gMenuInputRepeatTimers[playerIndex] == 0) {
                                     gMenuInputRepeatTimers[playerIndex]++;
                                 }
-                                if (state >= 3) {
-                                    gMenuChoicePromptState[playerIndex] = state - 1;
+                                if (gMenuChoicePromptState[playerIndex] >= 3) {
+                                    gMenuChoicePromptState[playerIndex] = gMenuChoicePromptState[playerIndex] - 1;
                                     enqueueSoundEffect(0x19, 0x32);
-                                    state = gMenuChoicePromptState[playerIndex];
                                     input = gPlayerInputPressed[playerIndex];
                                 }
                             } else if ((input & 0x20400) || ((gPlayerInputHeld[playerIndex] & 0x20400) &&
@@ -496,10 +499,10 @@ void updateMultiplayerCourseSelectMenu(void) {
                                 if (gMenuInputRepeatTimers[playerIndex] == 0) {
                                     gMenuInputRepeatTimers[playerIndex]++;
                                 }
-                                if (state < (gCourseSelectStatus.unk24[playerIndex] + 1)) {
-                                    gMenuChoicePromptState[playerIndex] = state + 1;
+                                if (gMenuChoicePromptState[playerIndex] <
+                                    (gCourseSelectStatus.unk24[playerIndex] + 1)) {
+                                    gMenuChoicePromptState[playerIndex] = gMenuChoicePromptState[playerIndex] + 1;
                                     enqueueSoundEffect(0x19, 0x32);
-                                    state = gMenuChoicePromptState[playerIndex];
                                     input = gPlayerInputPressed[playerIndex];
                                 }
                             }
