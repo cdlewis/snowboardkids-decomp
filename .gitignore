@@ -6,6 +6,7 @@ snowboardkids.ld
 undefined_funcs_auto.txt
 undefined_syms_auto.txt
 build
+*.o
 tools/ido-recomp
 .decomp_dev_secret
 .push_secrets
