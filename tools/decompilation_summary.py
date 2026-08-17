@@ -75,7 +75,7 @@ def find_remaining_functions(repo_root: Path) -> list[RemainingFunction]:
     return functions
 
 
-def progress_measures(report_path: Path) -> dict[str, object]:
+def load_progress_report(report_path: Path) -> dict[str, object]:
     if not report_path.is_file():
         return {}
     try:
@@ -83,8 +83,42 @@ def progress_measures(report_path: Path) -> dict[str, object]:
     except (OSError, json.JSONDecodeError) as exc:
         print(f"warning: could not read {report_path}: {exc}", file=sys.stderr)
         return {}
-    measures = report.get("measures") if isinstance(report, dict) else None
+    return report if isinstance(report, dict) else {}
+
+
+def progress_measures(report: dict[str, object]) -> dict[str, object]:
+    measures = report.get("measures")
     return measures if isinstance(measures, dict) else {}
+
+
+def report_remaining_functions(report: dict[str, object]) -> list[RemainingFunction]:
+    """Return the exact unmatched functions recorded by mapfile_parser."""
+    units = report.get("units")
+    if not isinstance(units, list):
+        return []
+
+    functions: list[RemainingFunction] = []
+    for unit in units:
+        if not isinstance(unit, dict):
+            continue
+        unit_name = unit.get("name")
+        unit_path = Path(unit_name) if isinstance(unit_name, str) else Path()
+        unit_functions = unit.get("functions")
+        if not isinstance(unit_functions, list):
+            continue
+        for function in unit_functions:
+            if not isinstance(function, dict) or function.get("fuzzy_match_percent") == 100:
+                continue
+            name = function.get("name")
+            size = function.get("size")
+            if not isinstance(name, str):
+                continue
+            try:
+                parsed_size = int(size) if size is not None else None
+            except (TypeError, ValueError):
+                parsed_size = None
+            functions.append(RemainingFunction(name, unit_path, parsed_size))
+    return functions
 
 
 def render_rows(
@@ -223,7 +257,8 @@ def main() -> int:
         for root in scan_roots
         if (root / "tools" / "scratches.json").is_file()
     ]
-    functions = find_remaining_functions(repo_root)
+    report = load_progress_report(repo_root / "report.json")
+    functions = report_remaining_functions(report) or find_remaining_functions(repo_root)
     scratch = collect_scratch_results(repo_root, scratches_paths)
 
     template_path = Path(__file__).resolve().parent / "decompilation_summary" / "template.html"
@@ -233,7 +268,7 @@ def main() -> int:
         template_path.read_text(),
         functions,
         scratch,
-        progress_measures(repo_root / "report.json"),
+        progress_measures(report),
     )
     output_path.parent.mkdir(parents=True, exist_ok=True)
     output_path.write_text(document)

@@ -381,7 +381,8 @@ format: check-clang-format-version
 format-check: check-clang-format-version
 	$(CLANG_FORMAT) --dry-run --Werror -style=file $(FORMAT_FILES)
 
-decompilation-summary:
+decompilation-summary: all
+	$(PYTHON) -m mapfile_parser objdiff_report --quiet
 	$(PYTHON) $(TOOLS_DIR)/decompilation_summary.py
 
 # Tidy is diagnostic-only: automatic fixes can alter matching code generation.
