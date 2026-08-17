@@ -31,8 +31,6 @@ typedef struct {
 extern CharacterSelectCourseMenuData gCharacterSelectCourseMenuData;
 extern u16 gCharacterSelectCourseExitOptionIndex;
 extern CharacterSelectCourseCursorState gCharacterSelectCourseCursorState;
-extern u8 gCharacterSelectCourseSubmenuState;
-extern u8 gCharacterSelectCourseSubmenuTimer;
 
 #define gCharacterSelectCourseOptionsByUnlock (gCharacterSelectCourseMenuData.courseOptionsByUnlock)
 #define gPlayerBadgeDisplayOrder (gCharacterSelectCourseMenuData.playerBadgeDisplayOrder)

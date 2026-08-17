@@ -2977,6 +2977,9 @@ void updateCharacterSelectCourseNamePopup(CharacterSelectCourseWidgetActor *arg0
         arg0->transition.bytes.timer = gCharacterSelectCourseCursorState.fields.submenuTimer;
     }
 
+    if (state) {
+        while (0) {}
+    }
     switch (state) {
         case 0:
             if ((++arg0->transition.bytes.timer) == 2) {
@@ -3009,6 +3012,7 @@ void updateCharacterSelectCourseNamePopup(CharacterSelectCourseWidgetActor *arg0
             if ((gRacePlayers[0].menuState == 3) || (gRacePlayers[0].menuState == 7)) {
                 arg0->transition.bytes.state = 5;
             }
+            if (globalState) {}
             state = arg0->transition.bytes.state;
             break;
         case 5:
@@ -3022,8 +3026,9 @@ void updateCharacterSelectCourseNamePopup(CharacterSelectCourseWidgetActor *arg0
             break;
     }
 
-    gCharacterSelectCourseSubmenuState = state;
-    gCharacterSelectCourseSubmenuTimer = arg0->transition.bytes.timer;
+    (arg0 ? &gCharacterSelectCourseCursorState : &gCharacterSelectCourseCursorState)->fields.submenuState = state;
+    (arg0 ? &gCharacterSelectCourseCursorState : &gCharacterSelectCourseCursorState)->fields.submenuTimer =
+        arg0->transition.bytes.timer;
 
     if (arg0->transition.bytes.state == 6) {
         removeCallbackTask(arg0);
@@ -3382,8 +3387,9 @@ void updateCharacterSelectCourseExitPopup(CharacterSelectCourseWidgetActor *arg0
             break;
     }
 
-    gCharacterSelectCourseSubmenuState = state;
-    gCharacterSelectCourseSubmenuTimer = arg0->transition.bytes.timer;
+    (arg0 ? &gCharacterSelectCourseCursorState : &gCharacterSelectCourseCursorState)->fields.submenuState = state;
+    (arg0 ? &gCharacterSelectCourseCursorState : &gCharacterSelectCourseCursorState)
+        ->fields.submenuTimer = arg0->transition.bytes.timer;
 
     if (arg0->transition.bytes.state == 6) {
         removeCallbackTask(arg0);
