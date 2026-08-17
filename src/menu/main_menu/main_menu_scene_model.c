@@ -18,7 +18,10 @@
 #define FIXED_MATRIX_ONE 0x1000
 #define MAIN_MENU_SCENE_MODEL_PART_COUNT 14
 #define MAIN_MENU_SCENE_MODEL_MATRIX_AXES 3
+#define MAIN_MENU_CHARACTER_COUNT 6
 #define FIXED_MATRIX_ROWS(matrix) ((s16(*)[MAIN_MENU_SCENE_MODEL_MATRIX_AXES])(matrix))
+#define MAIN_MENU_ASSET_RANGE_ADDRESS(table, index) \
+    (((MainMenuAssetRangeTableView *)(table))->addresses[(index)])
 
 typedef struct MainMenuAnimationWritePart {
     s32 word0;
@@ -27,6 +30,11 @@ typedef struct MainMenuAnimationWritePart {
     s32 wordC;
     s32 word10;
 } MainMenuAnimationWritePart;
+
+typedef union MainMenuAssetRangeTableView {
+    RomAssetRange ranges[MAIN_MENU_CHARACTER_COUNT];
+    void *addresses[MAIN_MENU_CHARACTER_COUNT * 2];
+} MainMenuAssetRangeTableView;
 
 #define ASSET_HANDLE(index) (gAssetHandles[(index)])
 
@@ -348,20 +356,17 @@ void loadMainMenuSceneModelAnimationBank(void) {
     LOAD_ASSET(_215BE0, 0x3F);
 }
 
-INCLUDE_ASM("asm/matchings/menu/main_menu/main_menu_scene_model", initMainMenuSceneModel);
-
-#ifdef NON_MATCHING
 void initMainMenuSceneModel(s32 sceneModelIndex, s32 characterIndex) {
     MainMenuSceneModel *model;
 
     loadRawRomAsset(
-        gCharacterRawAssetRanges[characterIndex].start,
-        gCharacterRawAssetRanges[characterIndex].end,
+        MAIN_MENU_ASSET_RANGE_ADDRESS(gCharacterRawAssetRanges, characterIndex * 2),
+        MAIN_MENU_ASSET_RANGE_ADDRESS(gCharacterRawAssetRanges, (characterIndex * 2) + 1),
         MAIN_MENU_SCENE_MODEL_GEOMETRY_HANDLE_BASE + sceneModelIndex
     );
     loadCompressedRomAsset(
-        gCharacterTextureAssetRanges[characterIndex].start,
-        gCharacterTextureAssetRanges[characterIndex].end,
+        MAIN_MENU_ASSET_RANGE_ADDRESS(gCharacterTextureAssetRanges, characterIndex * 2),
+        MAIN_MENU_ASSET_RANGE_ADDRESS(gCharacterTextureAssetRanges, (characterIndex * 2) + 1),
         MAIN_MENU_SCENE_MODEL_TEXTURE_HANDLE_BASE + sceneModelIndex
     );
     ASSET_HANDLE(MAIN_MENU_SCENE_MODEL_HANDLE_BASE + sceneModelIndex) =
@@ -371,7 +376,6 @@ void initMainMenuSceneModel(s32 sceneModelIndex, s32 characterIndex) {
     model->characterIndex = characterIndex;
     initMainMenuSceneModelParts(model);
 }
-#endif
 
 void setMainMenuSceneModelAnimation(s32 modelIndex, s32 animationIndex) {
     MainMenuModelAnimationBank *animationBank;
