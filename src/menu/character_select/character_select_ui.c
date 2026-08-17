@@ -41,15 +41,9 @@ typedef struct {
     u16 unusedData[0x14];
 } CharacterSelectUiConfirmationBannerText;
 
-extern s8 D_8010AE52;
-extern u8 D_8010AE52_state;
-extern u8 D_8010AE51;
 extern CharacterSelectUiPlayerPanelFrameController *D_8010ADE0;
 extern CharacterSelectUiPanelActor *D_8010ADE4;
-extern s16 D_8010AE58;
 extern s32 gMenuFlowState;
-extern u8 D_8010AE5E;
-extern u8 D_8010AE5F;
 
 CharacterSelectUiConfirmationBannerText gCharacterSelectConfirmationBannerText = {
     {
@@ -359,7 +353,7 @@ void updateCharacterSelectConfirmationBanner(CharacterSelectUiBannerActor *arg0)
     }
 
     gCharacterSelectHudState.phase = actor->state;
-    D_8010AE58 = actor->alpha;
+    gCharacterSelectHudState.bannerAlpha = actor->alpha;
     if (actor->state != 8) {
         addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawCharacterSelectConfirmationBanner, actor);
     }
@@ -482,7 +476,7 @@ void updateCharacterSelectPlayerPanelFrames(CharacterSelectUiPanelActor *arg0) {
             break;
     }
 
-    D_8010AE51 = var_v0;
+    (var_v0 ? &gCharacterSelectHudState : &gCharacterSelectHudState)->exitMode = var_v0;
     addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawCharacterSelectPlayerPanelFrames, actor);
 }
 
@@ -590,7 +584,7 @@ void updateCharacterSelectRosterIcons(CharacterSelectUiRosterIconActor *arg0) {
             var_v1 = arg0->state;
             break;
         case 2:
-            D_8010AE52 = new_var;
+            gCharacterSelectHudState.rosterReady = new_var;
             var_v1 = arg0->state;
             break;
     }
@@ -624,8 +618,8 @@ void initCharacterSelectRosterIcons(CharacterSelectUiRosterIconActor *arg0) {
         player = &gGameSaveDataBuffer[0];
         do {
             actor->playerFlags = actor->playerFlags | (player->characterFlags & 1);
-            D_8010AE5E = actor->playerFlags;
-            D_8010AE5F = actor->unk23;
+            gCharacterSelectHudState.leftSecretSlotUnlocked = actor->playerFlags;
+            gCharacterSelectHudState.rightSecretSlotUnlocked = actor->unk23;
             i++;
             player++;
         } while (i < gPlayerCount);
@@ -664,7 +658,7 @@ void updateCharacterSelectPlayerCursorMarkers(CharacterSelectUiPlayerCursorActor
     RacePlayer *player;
     s8 *layout;
 
-    globalMode = D_8010AE52;
+    globalMode = gCharacterSelectHudState.rosterReady;
     mode = arg0->mode;
 
     if (globalMode != mode) {
@@ -692,7 +686,7 @@ void updateCharacterSelectPlayerCursorMarkers(CharacterSelectUiPlayerCursorActor
         mode = (((((((((arg0->mode & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF;
     }
 
-    D_8010AE52_state = mode;
+    (mode ? &gCharacterSelectHudState : &gCharacterSelectHudState)->rosterReady = mode;
     addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawCharacterSelectPlayerCursorMarkers, arg0);
 }
 // clang-format on
