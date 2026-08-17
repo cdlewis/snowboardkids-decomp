@@ -403,6 +403,43 @@ above can possibly work, so read them before spending a variant.
   Even an unused narrow local can preserve the frame size and alignment of
   every lower slot, so do not remove one merely because it emits no direct
   load or store.
+- **Solve the frame arithmetically instead of guessing at padding locals.** The
+  frame is `round8(argArea + saveArea + T + L)`, where `L` is the declared-locals
+  block (top-anchored at the frame size, packed top-down in declaration order)
+  and `T` is the compiler's temp area below it. `argArea` and `saveArea` are
+  readable straight off the target's prologue, and `T` has a floor that is fixed
+  for a given instruction stream: once opcodes and registers match, build two
+  candidates with different `L` and solve for it. From then on the target's `L`
+  is arithmetic, not search — and if the required `L` is impossible, that is a
+  proof about the source rather than a plateau.
+- **`L` is set by the deepest local that needs memory, not by the declaration
+  count.** IDO assigns every local a virtual offset in declaration order, but
+  reserves frame space only down to the deepest one that actually needs a home
+  (spilled, address-taken, or an aggregate). Locals declared *below* that one
+  are free if they stay in registers, which is a clean way to add a carrier
+  without moving any existing slot. Conversely, a narrow local declared *above*
+  a spilled one is what holds the block's size up, so deleting it moves every
+  lower home.
+- **Read the compiler's own answer rather than inferring stack homes.** IDO emits
+  an `.mdebug` section that the project build strips. Recompiling the same
+  source with `-g3` added keeps `-O2` codegen and lists every local as an
+  `stLocal`/`scAbs` symbol whose home is `frameSize + value`. That turns "which
+  variable owns this offset" from a guess into a lookup, and it is how a frame
+  model should be validated before any variant is spent on it.
+- **A narrow spill below the locals block is a compiler temp, not a local.** A
+  spill of a declared narrow local goes to that local's own home, so an `sh`/
+  `lhu` or `sb`/`lbu` pair at an offset *below* the block bottom identifies a
+  compiler expression temp — its slot sits immediately under the locals block.
+  Reaching that slot needs the value to be an expression rather than a named
+  variable; a narrowing conversion used at several sites is the usual producer,
+  and it is worth grepping already-matched functions for the shape before
+  inventing spellings.
+- **uopt will not hoist control flow out of a loop.** A branch-selected value
+  (ternary, `&&`/`||` in value position) written inline inside a loop is
+  recomputed every iteration, whatever it reads. Caching its operands in locals
+  does not help: the obstacle is the branch, not the memory access. So a
+  loop-carried value whose definition needs a branch cannot be loop-invariant
+  code motion's output, and must be a named local in the preheader.
 - **Combine block scopes with declaration order to tune small frames.** Moving
   non-overlapping pointer iterators into their actual loop scopes can shrink an
   otherwise-correct frame without changing the instruction stream. An unused
