@@ -28,13 +28,10 @@ typedef struct {
     /* 0x0F */ u8 rightSecretSlotUnlocked;
     /* 0x10 */ u16 cursorX;
     /* 0x12 */ u16 cursorY;
-    /* 0x14 */ s8 highlightedRosterIndices[4];
 } CharacterSelectState;
 
 extern CharacterSelectState gCharacterSelectHudState;
-extern s8 D_8010AE64[4];
-
-#define gCharacterSelectHighlightedRosterIndices D_8010AE64
+extern s8 gCharacterSelectHighlightedRosterIndices[4];
 
 void initCharacterSelectMenu(void);
 void updateCharacterSelectMenu(void);

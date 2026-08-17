@@ -19,6 +19,7 @@
 #define CONTROLLER_PAK_STATUS_MENU_COMPLETE 0x13
 
 CharacterSelectState gCharacterSelectHudState;
+s8 gCharacterSelectHighlightedRosterIndices[4];
 u8 gCharacterSelectSecretCharacterUnlocked;
 u16 gCharacterSelectIdOrder[] = { 5, 0, 1, 2, 3, 4 };
 s16 gCharacterSelectVoiceSoundIds[] = { 0x5D, 0x57, 0x58, 0x5A, 0x59, 0x5B, 0, 0, 0, 0 };
@@ -29,7 +30,6 @@ extern CallbackTask *D_8010ADE0;
 extern CallbackTask *D_8010ADE4;
 extern CallbackTask *D_8010ADEC;
 extern s16 gMenuFadeAlpha;
-extern s8 D_8010AE64[];
 // Per-player highlighted index. During character-roster browsing
 // (gCharacterSelectHudState.phase == 3), this indexes gCharacterSelectIdOrder,
 // not RacePlayer.characterId directly. Live-observed values: 1 = Slash,
@@ -68,7 +68,7 @@ void initCharacterSelectMenu(void) {
         for (i = 0; i < gPlayerCount; i++) {
             for (j = 0; j != 6; j++) {
                 if (gRacePlayers[i].selectedCharacterId == gCharacterSelectIdOrder[j]) {
-                    D_8010AE64[i] = j;
+                    gCharacterSelectHighlightedRosterIndices[i] = j;
                     break;
                 }
             }
@@ -79,7 +79,7 @@ void initCharacterSelectMenu(void) {
 
         for (i = 0; i < gPlayerCount; i++) {
             gRacePlayers[i].selectedCharacterId = i;
-            D_8010AE64[i] = i + 1;
+            gCharacterSelectHighlightedRosterIndices[i] = i + 1;
         }
     }
 
@@ -185,7 +185,7 @@ void updateCharacterSelectMenu(void) {
 
         for (playerIndex = 0; playerIndex < gPlayerCount; playerIndex++) {
             if (gRacePlayers[playerIndex].menuState == 0) {
-                highlightedIndex = &D_8010AE64[playerIndex];
+                highlightedIndex = &gCharacterSelectHighlightedRosterIndices[playerIndex];
                 selection = *highlightedIndex;
                 otherPlayerIndex = gPlayerInputHeld[playerIndex];
                 heldRight = otherPlayerIndex & (STICK_RIGHT | R_JPAD);
@@ -205,7 +205,7 @@ void updateCharacterSelectMenu(void) {
                     while ((duplicateCount != 0) && (attempt != 7)) {
                         duplicateCount = 0;
                         for (otherPlayerIndex = 0; otherPlayerIndex < gPlayerCount; otherPlayerIndex++) {
-                            if ((otherPlayerIndex != playerIndex) && (selection == D_8010AE64[otherPlayerIndex])) {
+                            if ((otherPlayerIndex != playerIndex) && (selection == gCharacterSelectHighlightedRosterIndices[otherPlayerIndex])) {
                                 duplicateCount++;
                             }
                         }
@@ -238,11 +238,11 @@ void updateCharacterSelectMenu(void) {
                     pressedInput = gPlayerInputPressed[playerIndex];
                 }
                 *highlightedIndex = selection;
-                gRacePlayers[playerIndex].selectedCharacterId = gCharacterSelectIdOrder[D_8010AE64[playerIndex]];
+                gRacePlayers[playerIndex].selectedCharacterId = gCharacterSelectIdOrder[gCharacterSelectHighlightedRosterIndices[playerIndex]];
 
                 if ((pressedInput & A_BUTTON) || (pressedInput & START_BUTTON)) {
                     if (gRacePlayers[playerIndex].menuState == 0) {
-                        enqueueSoundEffect(gCharacterSelectVoiceSoundIds[D_8010AE64[playerIndex]], 0x32);
+                        enqueueSoundEffect(gCharacterSelectVoiceSoundIds[gCharacterSelectHighlightedRosterIndices[playerIndex]], 0x32);
                         gRacePlayers[playerIndex].menuState = 1;
                         gCharacterSelectHudState.selectedTokenState[playerIndex] = CHARACTER_SELECT_TOKEN_START;
                     }
