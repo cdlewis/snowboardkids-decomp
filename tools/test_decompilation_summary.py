@@ -12,6 +12,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from decompilation_summary import (
     RemainingFunction,
+    report_remaining_functions,
     render_document,
     screenshot_preview,
 )
@@ -19,6 +20,27 @@ from report_nonmatching_matches import ScratchResult
 
 
 class RemainingFunctionsTest(unittest.TestCase):
+    def test_report_is_canonical_for_remaining_functions_and_sizes(self) -> None:
+        report = {
+            "units": [
+                {
+                    "name": "build/src/example",
+                    "functions": [
+                        {"name": "matched", "size": "16", "fuzzy_match_percent": 100.0},
+                        {"name": "assembly", "size": "24"},
+                        {"name": "nonmatchingC", "size": "32", "fuzzy_match_percent": 99.0},
+                    ],
+                }
+            ]
+        }
+
+        functions = report_remaining_functions(report)
+
+        self.assertEqual(
+            [(function.name, function.size) for function in functions],
+            [("assembly", 24), ("nonmatchingC", 32)],
+        )
+
     def test_render_document_replaces_summary_markers(self) -> None:
         function = RemainingFunction("example", Path("example"), 16)
         scratch = ScratchResult("example", 99.0, 1, 100, "abcde", False, "racer")
