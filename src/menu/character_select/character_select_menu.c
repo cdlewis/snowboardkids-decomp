@@ -119,8 +119,14 @@ void initCharacterSelectMenu(void) {
     updateCallbackTasks();
 }
 
-// updateCharacterSelectMenu best match: 99.811%
-// (nonmatchings/updateCharacterSelectMenu-17/actual_tu_lineage_candidates/001-flatten_directional_region.c).
+// updateCharacterSelectMenu best match: 99.919%
+// (nonmatchings/updateCharacterSelectMenu-12/base_57.c). Registers, opcodes and
+// instruction count are exact and the frame size now matches at -0x88; the only
+// residual is six stack-offset immediates. The u16 roster bound is carried in a
+// compiler expression temp in the original, not in a declared local, and no C
+// spelling found so far reproduces that. See campaign-findings.md notes
+// WB-01..WB-04 for the frame law, the proof that the locals block must be
+// exactly 32 bytes, and the dead-family table.
 // The assembly include below preserves the exact original code.
 // Per-frame driver for the character roster screen only. Live RAM-watch
 // testing observed gCharacterSelectHudState.phase as:
@@ -133,19 +139,16 @@ void initCharacterSelectMenu(void) {
 
 #ifdef NON_MATCHING
 void updateCharacterSelectMenu(void) {
-    u8 minimumIndex;
-    u16 maximumIndex;
     s32 playerIndex;
     s32 otherPlayerIndex;
     u32 attempt;
-    u16 leftRepeatTimer;
-    u16 nextRepeatTimer;
-    u32 heldRight;
     u32 pressedInput;
     s8 *highlightedIndex;
+    u16 maximumIndex;
+    u16 repeatTimerScratch;
     u16 repeatTimer;
+    u8 minimumIndex;
     u8 selection;
-    u8 unused;
     u8 duplicateCount;
     u8 moveDirection;
     u8 secretCharacterUnlocked;
@@ -171,7 +174,6 @@ void updateCharacterSelectMenu(void) {
             }
         }
     } else if (gCharacterSelectHudState.rosterReady == 1) {
-        maximumIndex = 5;
         if (gCharacterSelectHudState.leftSecretSlotUnlocked != 0) {
             minimumIndex = 0;
         } else {
@@ -188,13 +190,12 @@ void updateCharacterSelectMenu(void) {
                 highlightedIndex = &gCharacterSelectHighlightedRosterIndices[playerIndex];
                 selection = *highlightedIndex;
                 otherPlayerIndex = gPlayerInputHeld[playerIndex];
-                heldRight = otherPlayerIndex & (STICK_RIGHT | R_JPAD);
-                if (1) { secretCharacterUnlocked = gCharacterSelectSecretCharacterUnlocked; if (!heldRight && !((s32)otherPlayerIndex & (s32)(STICK_LEFT | L_JPAD))) { gMenuInputRepeatTimers[playerIndex] = 0; } pressedInput = gPlayerInputPressed[playerIndex]; if ((pressedInput & (STICK_LEFT | L_JPAD)) || ((otherPlayerIndex & (STICK_LEFT | L_JPAD)) && ((leftRepeatTimer = gMenuInputRepeatTimers[playerIndex]) >= 0xB) && (leftRepeatTimer & 1))) { if (gMenuInputRepeatTimers[playerIndex] == 0) { gMenuInputRepeatTimers[playerIndex] = gMenuInputRepeatTimers[playerIndex] + 1; } if (minimumIndex < selection) { selection--; moveDirection = CHARACTER_SELECT_MOVE_LEFT; } } repeatTimer = (u16)gMenuInputRepeatTimers[playerIndex]; if ((pressedInput & (STICK_RIGHT | R_JPAD)) || (heldRight && (repeatTimer >= 0xB) && (repeatTimer & 1))) { if ((u32)repeatTimer == 0) { gMenuInputRepeatTimers[playerIndex] = repeatTimer + 1; repeatTimer = (u16)gMenuInputRepeatTimers[playerIndex]; } if (selection < maximumIndex) { selection++; moveDirection = CHARACTER_SELECT_MOVE_RIGHT; } } }
+                if (1) { secretCharacterUnlocked = gCharacterSelectSecretCharacterUnlocked; if (!(otherPlayerIndex & (STICK_RIGHT | R_JPAD)) && !((s32)otherPlayerIndex & (s32)(STICK_LEFT | L_JPAD))) { gMenuInputRepeatTimers[playerIndex] = 0; } pressedInput = gPlayerInputPressed[playerIndex]; if ((pressedInput & (STICK_LEFT | L_JPAD)) || ((otherPlayerIndex & (STICK_LEFT | L_JPAD)) && ((repeatTimerScratch = gMenuInputRepeatTimers[playerIndex]) >= 0xB) && (repeatTimerScratch & 1))) { if (gMenuInputRepeatTimers[playerIndex] == 0) { gMenuInputRepeatTimers[playerIndex] = gMenuInputRepeatTimers[playerIndex] + 1; } if (minimumIndex < selection) { selection--; moveDirection = CHARACTER_SELECT_MOVE_LEFT; } } repeatTimer = (u16)gMenuInputRepeatTimers[playerIndex]; if ((pressedInput & (STICK_RIGHT | R_JPAD)) || ((otherPlayerIndex & (STICK_RIGHT | R_JPAD)) && (repeatTimer >= 0xB) && (repeatTimer & 1))) { if ((u32)repeatTimer == 0) { gMenuInputRepeatTimers[playerIndex] = repeatTimer + 1; repeatTimer = (u16)gMenuInputRepeatTimers[playerIndex]; } if (selection < maximumIndex) { selection++; moveDirection = CHARACTER_SELECT_MOVE_RIGHT; } } }
 
-                nextRepeatTimer = repeatTimer + 1;
+                repeatTimerScratch = repeatTimer + 1;
                 if (repeatTimer != 0) {
-                    gMenuInputRepeatTimers[playerIndex] = nextRepeatTimer;
-                    if ((nextRepeatTimer & 0xFFFF) == 0xFFFF) {
+                    gMenuInputRepeatTimers[playerIndex] = repeatTimerScratch;
+                    if ((repeatTimerScratch & 0xFFFF) == 0xFFFF) {
                         gMenuInputRepeatTimers[playerIndex] = 0xC;
                     }
                 }
