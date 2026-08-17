@@ -12,6 +12,5 @@ D_8010AE52_state = gCharacterSelectHudState + 0x2;
 D_8010AE58 = gCharacterSelectHudState + 0x8;
 D_8010AE5E = gCharacterSelectHudState + 0xE;
 D_8010AE5F = gCharacterSelectHudState + 0xF;
-D_8010AE64 = gCharacterSelectHudState + 0x14;
 gControllerPakRaceRecordSaveStatusTransitionStep = gControllerPakRaceRecordSaveStatusTransition;
 gActiveGameTaskListView = gActiveGameTaskList;

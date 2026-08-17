@@ -48,7 +48,6 @@ extern CharacterSelectUiPlayerPanelFrameController *D_8010ADE0;
 extern CharacterSelectUiPanelActor *D_8010ADE4;
 extern s16 D_8010AE58;
 extern s32 gMenuFlowState;
-extern s8 D_8010AE64[];
 extern u8 D_8010AE5E;
 extern u8 D_8010AE5F;
 
@@ -652,7 +651,7 @@ void drawCharacterSelectPlayerCursorMarkers(CharacterSelectUiPlayerCursorActor *
     RacePlayer *player;
     CharacterSelectUiPlayerCursorActor *actorX;
 
- do { if (arg0->mode != 0) { i = 0; if (((s32) gPlayerCount) > 0) { player = gRacePlayers; tiles = gCharacterSelectPlayerMarkerTiles; actorX = arg0; do { evenMatch = 0; oddMatch = 0; j = 0; if (player->menuState != 0) { alpha = 0x100; } else { alpha = arg0->scale; } if (((s32) gPlayerCount) > 0) { do { if ((j != i) && (D_8010AE64[i] == D_8010AE64[j])) { if (!(j & 1)) { evenMatch = 1; } else { oddMatch = 2; } } j++; } while (j < ((s32) gPlayerCount)); } drawMenuSpriteWithAlpha(actorX->x[0], arg0->y, getRelocatableHeapBlockBase(gAssetHandles[0x21]), tiles[evenMatch + oddMatch], 0x20, 0x20, 0, alpha, 0); i++; player++; tiles += 4; actorX = (CharacterSelectUiPlayerCursorActor *) (((u8 *) actorX) + 2); } while (i < ((s32) gPlayerCount)); } } } while (0);
+ do { if (arg0->mode != 0) { i = 0; if (((s32) gPlayerCount) > 0) { player = gRacePlayers; tiles = gCharacterSelectPlayerMarkerTiles; actorX = arg0; do { evenMatch = 0; oddMatch = 0; j = 0; if (player->menuState != 0) { alpha = 0x100; } else { alpha = arg0->scale; } if (((s32) gPlayerCount) > 0) { do { if ((j != i) && (gCharacterSelectHighlightedRosterIndices[i] == gCharacterSelectHighlightedRosterIndices[j])) { if (!(j & 1)) { evenMatch = 1; } else { oddMatch = 2; } } j++; } while (j < ((s32) gPlayerCount)); } drawMenuSpriteWithAlpha(actorX->x[0], arg0->y, getRelocatableHeapBlockBase(gAssetHandles[0x21]), tiles[evenMatch + oddMatch], 0x20, 0x20, 0, alpha, 0); i++; player++; tiles += 4; actorX = (CharacterSelectUiPlayerCursorActor *) (((u8 *) actorX) + 2); } while (i < ((s32) gPlayerCount)); } } } while (0);
 }
 // clang-format on
 
@@ -673,7 +672,7 @@ void updateCharacterSelectPlayerCursorMarkers(CharacterSelectUiPlayerCursorActor
     }
 
     if (mode != 0) {
- i = 0; if ((s32)gPlayerCount > 0) { layout = D_8010AE64; player = gRacePlayers; do {
+ i = 0; if ((s32)gPlayerCount > 0) { layout = gCharacterSelectHighlightedRosterIndices; player = gRacePlayers; do {
                 if (player->selectedCharacterId < 5) {
                     arg0->x[i] = (layout[i] * 0x20) + arg0->baseX;
                 } else if (player->selectedCharacterId == 5) {
@@ -732,7 +731,7 @@ void initCharacterSelectPlayerCursorMarkers(CharacterSelectUiPlayerCursorActor *
     }
 
     if ((s32)gPlayerCount > 0) {
-        highlightedRosterIndices = gCharacterSelectHudState.highlightedRosterIndices;
+        highlightedRosterIndices = gCharacterSelectHighlightedRosterIndices;
         marker.actor = arg0;
         do {
             marker.actor->x[0] = (*highlightedRosterIndices * 0x20) + arg0->baseX;
