@@ -172,6 +172,30 @@ void removeHuffmanQueueNode(s16 arg0) {
 
 // decompressHuffmanAssetPayload best match: 99.695%
 // Remaining mismatch: 14 register-allocation-only instruction words.
+// Instruction count (262), every positional opcode and the frame (-64) already
+// match; the residual is entirely uopt register coloring.
+//
+// Measured with an instrumented uopt (globalcolor trace, gated to reproduce the
+// stock object byte-identically). The back-reference copy loop's two pointer
+// webs are tied at save=155 with *identical* interference neighbour sets, so the
+// tie breaks on web number and `destination` colors first. Both are blocked from
+// v1 by the `copiedByte` web (save=200), which emits no instruction of its own —
+// ugen coalesces it onto the temp carrying the loaded byte — but still reserves
+// v1. Reaching the target (source=v1, destination=a1, symbol=a2) requires both:
+//   1. the copiedByte web must not be colored before the pointers, and
+//   2. the source web must be colored before the destination web.
+// (2) alone is free: swapping the two pre-loop pointer initializations flips
+// them, and costs +1 word only because v1 is still held. (1) is only reached by
+// deleting the copiedByte temp, which changes the loop's instruction shape and
+// costs ~70 words. Every free construct that would supply the missing
+// occurrence count is canonicalized by cfe before uopt sees it.
+//
+// Searched and excluded: declaration order (112 builds, one object), symbol
+// carrier reweighting, all eight decomp-workbench sweep generators including a
+// 220-build hoist sweep, no-temp copy-loop rewrites, line ties at the pointer
+// init, and ~2000 permuter iterations. Full campaign log and the removal lattice
+// (all 7 accumulated constructs are load-bearing) are in
+// nonmatchings/decompressHuffmanAssetPayload-5/FINDINGS.md.
 #pragma GLOBAL_ASM("asm/nonmatchings/engine/asset_manager/decompressHuffmanAssetPayload.s")
 
 #ifdef NON_MATCHING

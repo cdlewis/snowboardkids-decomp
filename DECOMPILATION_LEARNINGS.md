@@ -19,6 +19,16 @@ decomp-permuter is the right tool — but verify each permuter suggestion in
 isolation rather than importing a whole batch, since some of its output (e.g.
 `& 0xFFFFFFFFFFFFFFFF`, no-op `^ 0`, dead-code-after-return) is artefactual.
 
+**Do not trust a permuter score without re-checking the object.** The
+`compile.sh` used by this project's permuter workspaces invokes `cc` directly —
+no `asm-processor`, and it never strips `.mdebug` — so its scorer reads debug and
+symbol collateral rather than `.text` alone. On a register-only residual this
+produced a *43% apparent improvement* (score 80 against a base of 140) on a
+candidate whose `.text` was `instruction-words-identical` to the base. Rebuild
+any permuter winner through `build.sh`/the project pipeline and compare the
+object before believing the number; on a near-match its score gradient can be
+pure noise, in which case the search cannot converge and is better stopped.
+
 ## IDO codegen: optimization level and control flow
 
 - **Branch direction and fall-through matter.** For `if (cond) { A } else { B }`,
@@ -270,6 +280,52 @@ and control flow already match and only register *names* differ.
   `(&table[frame])[index * stride]` instead of
   `table[frame + (index * stride)]`. This remains typed array indexing while
   preserving the target's address-construction order.
+
+### What uopt's coloring actually does (measured, not inferred)
+
+These were measured on IDO 5.3 `-O2 -mips1` with an instrumented `uopt`
+(`ido-static-recomp`'s `uopt.instrumented` dropped into a copy of
+`tools/ido-recomp/linux`, gated by checking that it reproduces the stock object
+byte-identically with its trace variables unset). They constrain which nudges
+above can possibly work, so read them before spending a variant.
+
+- **Colors are chosen lowest-index-first, and the pool includes `t0`–`t5`.**
+  The order is `c1=v0 c2=v1 c3=a0 c4=a1 c5=a2 c6=a3 c7=t0 … c12=t5`, then
+  `c14–c22 = s0–s8`. A `t`-register in the output is therefore *not* evidence of
+  a ugen temporary at this optimization level — uopt colors them. Tools that
+  classify `t0`–`t9` as always-ugen (a claim probed under `-mips2`) will
+  mislabel a plain coloring difference as a pool-versus-temp "class crossing"
+  and send you after web *formation* when the real question is web *ordering*.
+- **Webs are colored in descending `save`, and ties break on web number**,
+  which is construction chronology. Two webs with identical interference
+  neighbour sets are indistinguishable to the allocator, so whichever was
+  constructed first takes the lower-index register. That makes statement order
+  at the *creation* site a real dial: swapping two adjacent pointer
+  initializations swaps their registers.
+- **`save = totalsave / nocs`, and `nocs = ((n - 2) >> 2) + 2` for `n`
+  occurrences.** So `save` is a coarse, non-monotone dial: adding occurrences
+  raises `totalsave` but jumps `nocs` at `n = 2` and `n = 6`, which can *halve*
+  a web's priority. One occurrence in a loop body outranks three occurrences
+  spread over a loop plus a cold block. Compute the target before adding reads.
+- **A local that is coalesced away still reserves a register.** A `u8` temp
+  holding a loaded byte across a couple of increments can emit no instruction of
+  its own (ugen coalesces it onto the temp that carries the load) and yet hold a
+  caller-saved register in the interference graph, blocking every web it
+  overlaps. Deleting the temp is what frees the register; no spelling of the
+  temp's *type* (7 tried) or of its uses changes this.
+- **`cfe` canonicalizes redundant pointer decoration before `uopt` sees it.**
+  `*(p + 0)`, `*(p - 0)`, `p[0]`, `*(u8 *)p`, `(p, *p)`, `p = p + 0`, `p += 0`,
+  `p = &p[0]`, `p = p` and `p = p + 1` versus `p += 1` all produce a
+  byte-identical object. The "redundant mask" lever that works on integers has
+  **no pointer analogue** — do not plan a web-weight campaign around one.
+- **Declaration order of register-allocated locals is inert.** Moving each of
+  four locals to all 29 positions in a declaration block (112 builds) produced a
+  single object. When no local is frame-homed, declaration order moves neither
+  the coloring order nor the frame; spend the variant elsewhere.
+- **`force_declined` in a globalcolor trace is a real dead end, not a hint.**
+  If forcing a web onto the target register is declined because that register is
+  held by an *interfering* web, no reweighting can win it. Either the blocking
+  web must lose the register, or the two must be colored in the other order.
 
 ## IDO codegen: loop shape and strength reduction
 
