@@ -557,15 +557,12 @@ void updateControllerPakFreeSpaceInfo(void) {
     gControllerPakFreeFileCount = maxFiles - filesUsed;
 }
 
-// validateControllerPakSave best match: 99.306% at nonmatchings/validateControllerPakSave-8239461464121803931/base_23.c
-#pragma GLOBAL_ASM("asm/nonmatchings/menu/main_menu/controller_main_menu_flow/validateControllerPakSave.s")
-
-#ifdef NON_MATCHING
-u16 validateControllerPakSave(volatile s32 arg0) {
+u16 validateControllerPakSave(volatile s32 channel) {
     u8 *nextByte;
     s32 wordCursorValid;
     u8 *save;
     u32 *wordCursor;
+    s32 new_var;
     u8 *byteCursor;
     s32 offset;
     s32 i;
@@ -573,39 +570,51 @@ u16 validateControllerPakSave(volatile s32 arg0) {
     s32 secondByteStep;
     s32 count;
 
-    save = (u8 *)&gGameSaveDataBuffer[arg0 & 0xFFFFFFFFFFFFFFFF];
+    save = (u8 *)&gGameSaveDataBuffer[channel << 1 << 1 >> 2];
     wordCursor = (u32 *)save;
     byteCursor = save;
     offset = 0;
-    do {
+    for (;;) {
         offset += 4;
         firstByteStep = (byteCursor + 1) - byteCursor;
         wordCursor++;
         byteCursor++;
+        if (1) { } if (1) { } if (1) { } if (1) { }
         secondByteStep = firstByteStep && firstByteStep;
-        if (secondByteStep) {}
-    } while (offset < 0x2C);
+        if (secondByteStep) {
+        }
+        if (!(offset < 0x2C)) {
+            break;
+        }
+    }
 
     i = 0;
     wordCursorValid = wordCursor && wordCursor;
     byteCursor = save;
     offset += firstByteStep - 1;
     count = 0xC;
-    do {
+    for (;;) {
         i++;
+        new_var = i;
+        wordCursorValid = new_var && new_var;
         nextByte = byteCursor + 1;
         secondByteStep = nextByte - byteCursor;
         firstByteStep = wordCursorValid;
-        if (secondByteStep) {}
-        if ((firstByteStep ^ 0) && wordCursor) {}
-        if (save && save) {}
+        if (secondByteStep) {
+        }
+        if ((firstByteStep ^ 0) && wordCursor) {
+        }
+        if (save && save) {
+        }
         byteCursor++;
-    } while (i != count);
+        if (!(new_var != count)) {
+            break;
+        }
+    }
     i += secondByteStep - 1;
 
-    return validateControllerPakSaveData(arg0);
+    return validateControllerPakSaveData(channel);
 }
-#endif
 
 s32 validateControllerPakSaveData(s32 channel) {
     s32 pad;

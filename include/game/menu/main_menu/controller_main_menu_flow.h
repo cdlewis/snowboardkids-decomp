@@ -62,7 +62,7 @@ void requestControllerPakDeleteFile(u16 arg0);
 void deleteControllerPakFile(u16 arg0);
 void requestControllerPakFreeSpaceUpdate(void);
 void updateControllerPakFreeSpaceInfo(void);
-u16 validateControllerPakSave(s32 arg0);
+u16 validateControllerPakSave(volatile s32 arg0);
 s32 validateControllerPakSaveData(s32 arg0);
 void enterMainMenuFromRace(void);
 void initMainMenu(void);
