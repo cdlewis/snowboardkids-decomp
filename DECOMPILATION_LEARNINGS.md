@@ -413,6 +413,23 @@ above can possibly work, so read them before spending a variant.
   around unrelated setup, IDO may fold one into a strength-reduced cursor while
   retaining the other as a dead `move reg, zero` in a preceding call's delay
   slot.
+- **Naming a strength-reduced array cursor changes the address arithmetic, not
+  just its register.** `p = &s->arr[i]` or `p = s->arr; p[i]` folds
+  `offsetof(arr)` into the cursor itself (`addiu p, base, OFFSET`), while the
+  plain `s->arr[i].field` expression keeps the member offset as the load/store
+  *displacement* and strength-reduces only `i * stride`. So when the target
+  initialises a cursor with a bare `move cur, base` and carries a large
+  displacement on the access, the cursor is IDO's own induction variable: no
+  pointer local reproduces it, and introducing one also tends to drop an
+  instruction by folding the bias. Read the displacement before deciding a
+  cursor is a source-level pointer.
+- **Changing which local carries a loop index has global blast radius.**
+  Substituting a different local for a loop index, with no change to the
+  emitted arithmetic, can shift register assignment from the *first*
+  instructions of the function, because web construction chronology is global.
+  Always re-measure the whole object: a substitution that fixes the two
+  contested registers inside the loop can move a hundred opcodes elsewhere and
+  be a large net regression.
 - **A descending array-index loop can become a pointer walk.** For a loop such
   as `for (i = count - 1; i >= 0; i--)`, IDO may replace the integer induction
   variable with a pointer initialized to the last element, decrement it by the
@@ -732,6 +749,13 @@ above can possibly work, so read them before spending a variant.
   boundaries against disassembly, `symbol_addrs.txt`, and the linker map.
 
 ## Matching workflow
+
+- **Prove line-number insensitivity before chasing statement-line levers.**
+  This project builds without `-g`, and inserting blank lines anywhere in a
+  function produces a byte-identical object. External guidance that points at
+  statement line assignment, `#line` ties or physical-layout reflow assumes a
+  debug-bearing build; run the blank-line control first and skip the whole
+  family when it comes back inert.
 
 - **Rank near-matches on object truth, not only on the workspace score.**
   `dist.py`'s sequence cost can rank a candidate holding an extra instruction

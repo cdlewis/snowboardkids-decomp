@@ -589,7 +589,7 @@ s32 isRacePlayerRespawnSurfaceValid(RacePlayer *arg0) {
 }
 
 // resolveRacePlayerCollisionVolumes best match: 99.638%
-// (nonmatchings/resolveRacePlayerCollisionVolumes-898222243517849634/base_41.c)
+// (nonmatchings/resolveRacePlayerCollisionVolumes-18/base_1.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/race/player/race_player_collision/resolveRacePlayerCollisionVolumes.s")
 
 #ifdef NON_MATCHING
