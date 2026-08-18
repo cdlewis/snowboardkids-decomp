@@ -167,6 +167,19 @@ variable before adopting such a variant.
   per computation instead, the original source did not have that symmetric
   four-local shape — look for a different variable structure rather than
   permuting the one you have.
+- **Statement order across a block of *independent* sibling assignments is a
+  first-class allocation lever, even when declaration order is not.** Four
+  mutually independent clip-bound assignments (`min/max` on each axis, each one
+  global load, one halving, one subtract-or-add, one shift) were permuted 24
+  ways with the instruction sequence, instruction count, frame size and every
+  stack home held constant. Positional word mismatches ranged from 271 to 397
+  out of 422 — one statement order colored the whole downstream `Gfx` macro
+  tail correctly and another rotated it by one slot. The same candidate set was
+  immune to all 65 declaration-order permutations and to 183 blank-line layouts.
+  So when a residual is "same opcodes, permuted registers", permute the order of
+  independent *statements* before spending variants on declarations, types, or
+  physical layout; and rank the permutation on positional words, because the
+  reordering penalty in `dist.py` hides this lever entirely.
 
 IDO colors registers by its internal temp numbering, not by source variable
 identity. Textually identical expressions can compile to distinct loads, and
