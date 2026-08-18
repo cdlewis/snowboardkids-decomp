@@ -241,8 +241,10 @@ void initMultiplayerCourseSelectMenu(void) {
     COURSE_SELECT_STATUS_LAYOUT.purchaseMessageState = 0;
 }
 
-// updateMultiplayerCourseSelectMenu best match: 98.696% (base_29.c; positionally ranked)
-// 180 positional word mismatches, 47 opcode mismatches, and 6 alignment gaps.
+// updateMultiplayerCourseSelectMenu best match: 99.210% (base_115.c)
+// Object comparison against the target is now a pure allocation residual:
+// 94 positional word mismatches, 0 opcode mismatches, 0 alignment gaps,
+// exact instruction count (836) and exact frame size (0xB0).
 // asm-processor requires this pragma to remain on one line.
 // clang-format off
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/course_select/multiplayer_course_select_menu/updateMultiplayerCourseSelectMenu.s")
@@ -279,6 +281,15 @@ void updateMultiplayerCourseSelectMenu(void) {
         }
     } else {
         finishedPlayerCount = 0;
+        // Three discarded reads of gPlayerCount. They emit no instructions but each
+        // adds an occurrence to the variable's web, which raises its priority in
+        // IDO's colouring pool ahead of the &gRacePlayers[gPlayerCount] end pointer.
+        // Without them the two webs swap a0/a1 across the whole else branch.
+        // The dial is monotone and saturates here: fewer than three has no effect,
+        // more than three is identical.
+        if ((s32) gPlayerCount);
+        if ((s32) gPlayerCount);
+        if ((s32) gPlayerCount);
         if (gPlayerCount > 0) {
             // Keeping the initializer and loop on one source line reproduces IDO's target scheduling.
             // clang-format off
@@ -318,8 +329,10 @@ void updateMultiplayerCourseSelectMenu(void) {
                 } else {
                     maxVisiblePlayerCount = 4;
                 }
-                for (playerIndex = 0; playerIndex < maxVisiblePlayerCount; playerIndex++) {
+                playerIndex = 0;
+                while (playerIndex < maxVisiblePlayerCount) {
                     gRacePlayers[playerIndex].menuState = 3;
+                    playerIndex++;
                 }
                 D_800EC9C0 = 0xF;
                 gMenuFlowState = 1;
@@ -588,17 +601,22 @@ void updateMultiplayerCourseSelectMenu(void) {
         }
     }
 
-    // Keeping the initializer and loop on one source line reproduces IDO's target scheduling.
     // clang-format off
-    camera = D_801121E0; while (1) {
+    // Keeping the initializers and loop header on one source line reproduces IDO's
+    // target scheduling.
+    // The redundant playerIndex cursor keeps that variable live to the end of the
+    // function, which is what reproduces the target's allocation for the whole
+    // per-player block. Removing it costs 17 positional words.
+    playerIndex = 0; camera = D_801121E0; while (1) {
+        // clang-format on
         gCurrentMenuCameraObject = camera;
         (*camera).update();
         camera++;
+        playerIndex++;
         if (camera == &D_801124A0) {
             break;
         }
     }
-    // clang-format on
     updateCallbackTasks();
 }
 #endif
