@@ -82,6 +82,8 @@ s16 *gMainMenuSceneModelPartInitDataByModel[] = {
 extern u8 gCurrentViewportIndex;
 extern Gfx *gRegionAllocPtr;
 
+PackedRaceRecordReplay gPackedRaceRecordReplayBuffer;
+
 s32 compressRaceRecordReplayData(u8 *src, s32 srcLen, u16 *dst) {
     s32 count;
     s32 srcPos;
@@ -184,18 +186,14 @@ search_done:
     return outCount;
 }
 
-// saveRaceRecordReplayData best match: 99.981% (nonmatchings/saveRaceRecordReplayData-9/base_18.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/menu/main_menu/main_menu_scene_model/saveRaceRecordReplayData.s")
-
-#ifdef NON_MATCHING
 #define REPLAY_SAVE_MAX_NORMAL 0x580
 #define REPLAY_SAVE_MAX_EXTRA 0x300
-#define ACCUM_REPLAY_SLOT(courseIndex, slotIndex, maxSize)                         \
+#define ACCUM_REPLAY_SLOT(scratch, courseIndex, slotIndex, maxSize)                \
     if (gRaceCourseIndex.signedValue != (courseIndex)) {                           \
-        count = gGameSaveDataBuffer[0].replaySlots[(slotIndex)].length;            \
+        scratch = gGameSaveDataBuffer[0].replaySlots[(slotIndex)].length;          \
         if (gGameSaveDataBuffer[0].replaySlots[(slotIndex)].length != 0) {         \
-            if (count > (maxSize)) {                                               \
-                totalLength += count;                                              \
+            if (scratch > (maxSize)) {                                             \
+                totalLength += scratch;                                            \
             } else {                                                               \
                 totalLength += (maxSize);                                          \
             }                                                                      \
@@ -203,8 +201,6 @@ search_done:
             totalLength += (maxSize);                                              \
         }                                                                          \
     }
-
-PackedRaceRecordReplay gPackedRaceRecordReplayBuffer;
 
 s32 saveRaceRecordReplayData(void) {
     s32 pad[3];
@@ -242,15 +238,16 @@ s32 saveRaceRecordReplayData(void) {
     }
 
     totalLength = 0;
-    ACCUM_REPLAY_SLOT(0, 0, REPLAY_SAVE_MAX_NORMAL);
-    ACCUM_REPLAY_SLOT(1, 1, REPLAY_SAVE_MAX_NORMAL);
-    ACCUM_REPLAY_SLOT(2, 2, REPLAY_SAVE_MAX_NORMAL);
-    ACCUM_REPLAY_SLOT(3, 3, REPLAY_SAVE_MAX_NORMAL);
-    ACCUM_REPLAY_SLOT(4, 4, REPLAY_SAVE_MAX_NORMAL);
-    ACCUM_REPLAY_SLOT(5, 5, REPLAY_SAVE_MAX_NORMAL);
-    ACCUM_REPLAY_SLOT(6, 6, REPLAY_SAVE_MAX_NORMAL);
-    ACCUM_REPLAY_SLOT(8, 7, REPLAY_SAVE_MAX_EXTRA);
-    ACCUM_REPLAY_SLOT(9, 8, REPLAY_SAVE_MAX_EXTRA);
+    /* writeIndex is not live yet, so the extra-course slots borrow it as scratch. */
+    ACCUM_REPLAY_SLOT(count, 0, 0, REPLAY_SAVE_MAX_NORMAL);
+    ACCUM_REPLAY_SLOT(count, 1, 1, REPLAY_SAVE_MAX_NORMAL);
+    ACCUM_REPLAY_SLOT(count, 2, 2, REPLAY_SAVE_MAX_NORMAL);
+    ACCUM_REPLAY_SLOT(count, 3, 3, REPLAY_SAVE_MAX_NORMAL);
+    ACCUM_REPLAY_SLOT(count, 4, 4, REPLAY_SAVE_MAX_NORMAL);
+    ACCUM_REPLAY_SLOT(count, 5, 5, REPLAY_SAVE_MAX_NORMAL);
+    ACCUM_REPLAY_SLOT(count, 6, 6, REPLAY_SAVE_MAX_NORMAL);
+    ACCUM_REPLAY_SLOT(writeIndex, 8, 7, REPLAY_SAVE_MAX_EXTRA);
+    ACCUM_REPLAY_SLOT(writeIndex, 9, 8, REPLAY_SAVE_MAX_EXTRA);
 
     if (compressedLength > REPLAY_SAVE_MAX_NORMAL) {
         totalLength += compressedLength;
@@ -433,7 +430,6 @@ s32 saveRaceRecordReplayData(void) {
 #undef ACCUM_REPLAY_SLOT
 #undef REPLAY_SAVE_MAX_EXTRA
 #undef REPLAY_SAVE_MAX_NORMAL
-#endif
 
 void loadCurrentRaceRecordReplayData(void) {
     u16 *compressed;
