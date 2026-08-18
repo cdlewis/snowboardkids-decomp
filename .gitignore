@@ -26,6 +26,10 @@ ctx.c.m2c
 
 task-runner/**/*.log
 
+# Local decompilation campaign notes
+campaign-findings.md
+campaign-findings.md.notes.d/
+
 # decomp.me PostgreSQL helper output
 tools/decompme_*.json
 decompme_exports/
