@@ -53,7 +53,10 @@ typedef struct {
     u8 cursorState;
     u8 submenuState;
     s16 cursorValue;
-    s16 purchaseMessageState;
+    union {
+        s16 purchaseMessageState;
+        u16 purchaseMessageStateUnsigned;
+    };
     u8 extraCourseColumnState;
 } CourseSelectStatusLayout;
 
