@@ -380,6 +380,31 @@ above can possibly work, so read them before spending a variant.
   constant and then hoist it out of the branch entirely. So when the target
   shows `li k / sll / addu` for an index whose value is obviously constant, the
   original used the subscript form; the pointer form cannot reproduce it.
+- **A hoisted-literal web cannot be moved, but the *scratch local* next to it
+  decides which register it may keep.** When a constant is used twice in one
+  region IDO builds its own web for it, splits it, and colors the surviving
+  piece lowest-free-index. You cannot reach that web from source (see the
+  "constant carrier" bullet above), so work the *blockers* instead: whichever
+  local the source assigns in that region carries its web forward into the
+  following region, and therefore forbids its own color to the constant. Two
+  sources that emit byte-identical instructions can still differ here, because
+  the choice of local is pure web formation. Concretely, if the constant is
+  landing on the register held by a later variable `A` and you want it on the
+  register held by later variable `B`, stop using `B` as the region's scratch
+  and use `A` instead: `B`'s color becomes reachable and `A`'s is blocked. The
+  live-range reach is one-directional and *late* — only an assignment in the
+  last blocks before the constant's final use creates the interference, so an
+  earlier block's use of the same local is inert.
+- **Register-allocation residuals of this shape are best diagnosed from the
+  `webdetail` record, not by guessing.** With an instrumented `uopt`,
+  `CDX_DETAIL_WEB=all` prints `type=2 … table=N raw10=0x0000000N` for a hoisted
+  integer literal `N` and `type=3 … raw10=<negative frame offset>` for a local
+  variable, so a web can be tied to a source symbol by its declaration offset
+  instead of by forcing colors and reading the diff. Then `CDX_FORCE=p1:wN=cM`
+  on the literal's web confirms ownership in one build, and the `p1dec`
+  `forbidden0` mask says exactly which register must be freed and which must
+  be blocked before any source variant is worth compiling.
+
 - **A discarded read also extends the live range of the `%hi` web it names.**
   The priority-penalty rule above is not the only effect: `if (G && G) {}` in a
   branch that does not otherwise mention `G` keeps `%hi(G)` live through that

@@ -436,6 +436,8 @@ segments:
       - { type: bss, name: bss_chunk_a_2_course_select_tail, vram: 0x8010AF50 }
       - { type: .bss, name: ending/ending_credits_flow, vram: 0x8010B1A0 }
       - { type: bss, name: bss_chunk_a_2_ending_credits_flow_tail, vram: 0x8010B1B0 }
+      - { type: .bss, name: menu/main_menu/main_menu_scene_model, vram: 0x8010B200 }
+      - { type: bss, name: bss_chunk_a_2_main_menu_scene_model_tail, vram: 0x8010E180 }
       - { type: .bss, name: race/items/race_item_effects, vram: 0x801121D0 }
       - { type: bss, name: bss_chunk_a_2_race_item_effects_tail, vram: 0x801121E0 }
       - { type: .bss, name: engine/viewport_manager, vram: 0x801124B0 }
