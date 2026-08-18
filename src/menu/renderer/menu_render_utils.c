@@ -720,7 +720,12 @@ drawAssetTableSpriteWithExplicitPaletteWideIndex(s16 x, s16 y, AssetTable *table
 #endif
 
 // drawScaledAssetTableSprite best match: 97.235%
-// (nonmatchings/drawScaledAssetTableSprite-4542485759220937537/base_35.c)
+// (nonmatchings/drawScaledAssetTableSprite-4542485759220937537/base_40.c)
+//
+// Measured residual: the target colors the scale as $9/t1 and the right bound as $10/t2,
+// and pairs the sprite geometry per axis (v0=width, v1=scaled width, a0=height,
+// a1=scaled height). Every source shape reachable here colors the two field loads
+// v0/v1 and the two shift results a0/a1 instead, so one uopt web pair stays swapped.
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/renderer/menu_render_utils/drawScaledAssetTableSprite.s")
 
 #ifdef NON_MATCHING
@@ -738,17 +743,16 @@ void drawScaledAssetTableSprite(s16 x, s16 y, AssetTable *asset, volatile u16 en
     if (clippedS >= 0) {
         paletteBase = asset->entryCount + asset->entries;
         x0 = gMenuViewportCenterX;
-        sprite = (AssetTableEntry *)asset + (entryIndex & 0xFFFFu);
+        sprite = &asset->entries[entryIndex & 0xFFFFu];
         {
             s32 spriteHeight;
 
-            spriteWidth = sprite[1].width;
+            spriteWidth = sprite->width;
             x0 = x0 + x;
             x1 = spriteWidth >> clippedS;
-            spriteHeight = sprite[1].height;
+            spriteHeight = sprite->height;
             y0 = y + gMenuViewportCenterY;
             y1 = spriteHeight >> clippedS;
-            sprite++;
             x0 = x0 + ((spriteWidth - x1) / 2);
             y0 = y0 + ((spriteHeight - y1) / 2);
             x1 += x0;
@@ -780,7 +784,6 @@ void drawScaledAssetTableSprite(s16 x, s16 y, AssetTable *asset, volatile u16 en
         }
         if (x1 >= gMenuViewportCenterX + (gMenuViewportWidth / 2)) {
             x1 = gMenuViewportCenterX + (gMenuViewportWidth / 2);
-            if (1) {}
         }
         if (y1 >= gMenuViewportCenterY + (gMenuViewportHeight / 2)) {
             y1 = gMenuViewportCenterY + (gMenuViewportHeight / 2);
@@ -799,8 +802,8 @@ void drawScaledAssetTableSprite(s16 x, s16 y, AssetTable *asset, volatile u16 en
                             x1 << 2, y1 << 2, G_TX_RENDERTILE,
                             (clippedS << 5) + 0x10,
                             (clippedT << 5) + 0x10,
-                            spriteWidth = 1 << (scale + 10),
-                            spriteWidth);
+                            1 << (scale + 10),
+                            1 << (scale + 10));
         gDPPipeSync(gRegionAllocPtr++);
         gDPSetTextureFilter(gRegionAllocPtr++, G_TF_POINT);
         gDPPipeSync(gRegionAllocPtr++);
