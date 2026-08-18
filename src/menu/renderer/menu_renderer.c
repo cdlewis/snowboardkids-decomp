@@ -303,123 +303,131 @@ extern void
 drawMenuSpriteWideIndex(s16 x, s16 y, void *texture, s32 tileIndex, u16 width, u16 height, u8 palette, u8 flip);
 #endif
 
-// drawMenuSpriteClipped best match: 90.704%
+// drawMenuSpriteClipped best match: 98.227%
+// (nonmatchings/drawMenuSpriteClipped-17/base_47.c; verified equivalent spelling base_74.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/renderer/menu_renderer/drawMenuSpriteClipped.s")
 
 #ifdef NON_MATCHING
-void drawMenuSpriteClipped(s16 x, s16 y, MenuFontAssetTable *table, volatile u16 imageIndex, u16 scaleX, u16 scaleY,
-                           u8 flipMode, u8 paletteIndex, s32 clipLeft, s32 clipTop, s32 clipRight,
-                           s32 clipBottom) {
+/*
+ * The defining TU's true signature takes a plain u16 image index and s16 clip
+ * bounds; the shared declaration above keeps the promoted s32/volatile shape
+ * that the already-matched callers were compiled against (cross-TU prototype
+ * mismatches exist in the original game).
+ *
+ * The stacked redundant & 0xFFFFu masks and the (short) cast on the flipped
+ * texS initialization are runtime no-ops (gSPTextureRectangle masks s to 16
+ * bits) that phase-shift IDO's temporary allocation into the target's basin.
+ */
+void drawMenuSpriteClipped(s16 x, s16 y, MenuFontAssetTable *table, u16 imageIndex, u16 scaleX, u16 scaleY,
+                           u8 flipMode, u8 paletteIndex, s16 clipLeft, s16 clipTop, s16 clipRight,
+                           s16 clipBottom) {
     MenuFontAssetEntry *entry;
-    s16 minY;
-    MenuPalette *palettes;
-    s32 left;
-    s32 top;
-    s32 right[1];
-    s32 bottom[1];
-    s32 texS;
-    s32 texT;
+    s32 selectedPalette;
+    u8 *palette;
+    s32 left; // sp90
+    s32 top; // sp8C
+    s32 right; // sp88
+    s32 bottom; // sp84
+    s32 texS; // sp80
+    s32 texT; // sp7C
+    s32 width;
+    u32 height;
+    s16 flipS; // sp72
+    s16 flipT; // sp70
+    s16 pad2;
     s16 minX;
+    s16 minY;
     s16 maxX;
     s16 maxY;
-    s16 flipS;
-    s16 flipT;
-    s32 width;
-    u8 height;
-    u16 selectedPalette;
 
-    palettes = (MenuPalette *)(table->entryCount + table->entries);
-    if (scaleX >= 0x201) {
+    entry = &table->entries[imageIndex];
+    palette = table->entryCount * sizeof(MenuFontAssetEntry) + (u8*)table->entries;
+    if (scaleX > 0x200) {
         return;
     }
     if (scaleX <= 0) {
         return;
     }
-    if (scaleY >= 0x201) {
+    if (scaleY > 0x200) {
         return;
     }
     if (scaleY <= 0) {
         return;
     }
-    flipT = gMenuSpriteFlipScales[flipMode & 3][1];
-    flipS = gMenuSpriteFlipScales[flipMode & 3][0];
-    entry = &table->entries[imageIndex];
+
+    flipS = ((s16 *)gMenuSpriteFlipScales)[(flipMode & 3) * 2 + 0];
+    flipT = ((s16 *)gMenuSpriteFlipScales)[(flipMode & 3) * 2 + 1];
+
     width = entry->width;
+    height = entry->height;
+    
     left = (x + gMenuViewportCenterX) << 2;
     top = (y + gMenuViewportCenterY) << 2;
-    height = entry->height;
-    right[0] = (((scaleX * width) << 2) >> 5) + left;
-    bottom[0] = ((((scaleY * height) << 1) << 1) >> 5) + top;
-    texS = 0;
+    right = left + (((scaleX * entry->width) << 2) >> 5);
+    bottom = top + (((scaleY * entry->height) << 2) >> 5);
 
-    if (flipS == -1) {
-        texS = (width - 1) << 5;
-    }
+    texS = 0;
     texT = 0;
+    if (flipS == -1) {
+        
+        texS = ((((((short) (width - 1)) << 5) & 0xFFFFu) & 0xFFFFu) & 0xFFFFu) & 0xFFFFu;
+    }
     if (flipT == -1) {
+        
         texT = (height - 1) << 5;
     }
 
-    minX = gMenuViewportCenterX - (s16)clipLeft;
-    maxY = gMenuViewportCenterY + (s16)clipBottom;
-    minY = gMenuViewportCenterY - (s16)clipTop;
-    maxX = gMenuViewportCenterX + (s16)clipRight;
-    if (minX < gMenuViewportCenterX - (gMenuViewportWidth / 2)) {
-        minX = gMenuViewportCenterX - (gMenuViewportWidth / 2);
+
+    clipTop = gMenuViewportCenterY - clipTop;
+    clipBottom = gMenuViewportCenterY + clipBottom;
+    clipLeft = gMenuViewportCenterX - clipLeft;
+    clipRight = gMenuViewportCenterX + clipRight;
+    if (clipLeft < gMenuViewportCenterX - (gMenuViewportWidth / 2)) {
+        clipLeft = gMenuViewportCenterX - (gMenuViewportWidth / 2);
     }
-    if (maxX > gMenuViewportCenterX + (gMenuViewportWidth / 2)) {
-        maxX = gMenuViewportCenterX + (gMenuViewportWidth / 2);
+    if (clipRight > gMenuViewportCenterX + (gMenuViewportWidth / 2)) {
+        clipRight = gMenuViewportCenterX + (gMenuViewportWidth / 2);
     }
-    if (minY < gMenuViewportCenterY - (gMenuViewportHeight / 2)) {
-        minY = gMenuViewportCenterY - (gMenuViewportHeight / 2);
+    if (clipTop < gMenuViewportCenterY - (gMenuViewportHeight / 2)) {
+        clipTop = gMenuViewportCenterY - (gMenuViewportHeight / 2);
     }
-    if (maxY > gMenuViewportCenterY + (gMenuViewportHeight / 2)) {
-        maxY = gMenuViewportCenterY + (gMenuViewportHeight / 2);
+    if (clipBottom > gMenuViewportCenterY + (gMenuViewportHeight / 2)) {
+        clipBottom = gMenuViewportCenterY + (gMenuViewportHeight / 2);
     }
 
-    if (left >= (s16)(maxX << 2)) {
+    minX = clipRight << 2;
+    minY = clipBottom << 2;
+    maxX = clipLeft << 2;
+    maxY = clipTop << 2;
+    if ((left >= minX) || (top >= minY) || (right < maxX) || (bottom < maxY)) {
         return;
     }
-    if (top >= (s16)(maxY << 2)) {
-        return;
-    }
-    if (right[0] < (s16)(minX << 2)) {
-        return;
-    }
-    if (bottom[0] < (s16)(minY << 2)) {
-        return;
-    }
-    if (left < (s16)(minX << 2)) {
-        s32 clippedTexS;
 
-        clippedTexS = ((((s16)(minX << 2) - left) << 3) << 5) / scaleX;
-        texS = clippedTexS;
+    if (left < maxX) {
+        texS = (((maxX - left) << 3) << 5) / scaleX;
         if (flipS == -1) {
-            texS = ((width - 1) << 5) - clippedTexS;
+            texS = ((entry->width - 1) << 5) - texS;
         }
-        left = (s16)(minX << 2);
+        left = maxX;
     }
-    if (top < (s16)(minY << 2)) {
-        s32 clippedTexT;
-
-        clippedTexT = ((((s16)(minY << 2) - top) << 3) << 5) / scaleY;
-        texT = clippedTexT;
+    if (top < maxY) {
+        texT = (((maxY - top) << 3) << 5) / scaleY;
         if (flipT == -1) {
-            texT = ((height - 1) << 5) - clippedTexT;
+            texT = ((entry->height - 1) << 5) - texT;
         }
-        top = (s16)(minY << 2);
+        top = maxY;
     }
-    if (right[0] >= (s16)(maxX << 2)) {
-        right[0] = (s16)(maxX << 2) - 4;
+    if (right >= minX) {
+        right = minX - 4;
     }
-    if (bottom[0] >= (s16)(maxY << 2)) {
-        bottom[0] = (s16)(maxY << 2) - 4;
+    if (bottom >= minY) {
+        bottom = minY - 4;
     }
 
     if (paletteIndex == 0) {
         selectedPalette = entry->textureIndex;
     } else {
-        selectedPalette = paletteIndex - 1;
+        selectedPalette = (u16)(paletteIndex - 1);
     }
 
     gDPLoadTextureTile_4b(gRegionAllocPtr++, entry->imageOffset + (u8 *)table,
@@ -427,13 +435,12 @@ void drawMenuSpriteClipped(s16 x, s16 y, MenuFontAssetTable *table, volatile u16
                           entry->width, entry->height, 0, G_TX_CLAMP, G_TX_CLAMP,
                           G_TX_NOMASK, G_TX_NOMASK, G_TX_NOLOD, G_TX_NOLOD);
     if (selectedPalette != 0xFE) {
-        gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, palettes[selectedPalette]);
+        gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, (selectedPalette << 5) + (u8*)palette);
     } else {
         gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, gMenuTransparentPalette);
     }
-    selectedPalette = 0x8000 / scaleX;
-    gSPTextureRectangle(gRegionAllocPtr++, left, top, right[0], bottom[0], G_TX_RENDERTILE,
-                        texS, texT, (u16)(selectedPalette * flipS),
+    gSPTextureRectangle(gRegionAllocPtr++, left, top, right, bottom, G_TX_RENDERTILE,
+                        texS, texT, (u16)((u16)(0x8000 / scaleX) * flipS),
                         (u16)((u16)(0x8000 / scaleY) * flipT));
 }
 #endif
