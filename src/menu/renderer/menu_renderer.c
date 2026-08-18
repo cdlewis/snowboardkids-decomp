@@ -500,7 +500,7 @@ extern void drawMenuSpriteWithAlphaWideArgs(
 #endif
 
 // drawMenuSpriteWithAlphaClipped best match: 92.448%
-// (nonmatchings/drawMenuSpriteWithAlphaClipped-6078661025080551018/base_20.c)
+// (nonmatchings/drawMenuSpriteWithAlphaClipped/base_1.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/renderer/menu_renderer/drawMenuSpriteWithAlphaClipped.s")
 
 #ifdef NON_MATCHING
