@@ -2010,15 +2010,15 @@ void initCourseSelectCourseStats(CourseSelectWidgetActor *arg0) {
     setCallbackTaskCallback(temp_a3, (CallbackTaskCallback)updateCourseSelectCourseStats);
 }
 
-// drawCourseSelectCourseDescription best match: 95.430%
-// (nonmatchings/drawCourseSelectCourseDescription-29/base_122.c)
+// drawCourseSelectCourseDescription best match: 95.402%
+// (nonmatchings/drawCourseSelectCourseDescription-29/base_222.c)
 //
 // NOTE ON SCORING: the project scorer (tools/asm-differ / dist.py) rates this
 // variant BELOW the previous 96.952% attempt, but an object-level comparison
 // against the extracted target shows it is substantially closer:
 //
 //                       prev best   this variant   (target: 352 insns)
-//   differing words         316          124
+//   differing words         316          121
 //   differing opcodes       268           28
 //   instruction count       348          351
 //   relocation mismatches     6            0
@@ -2152,6 +2152,14 @@ void drawCourseSelectCourseDescription(CourseSelectWidgetActor *arg0) {
             }
         }
     } else {
+        /* Fake: two discarded references to the literal 9 in this cold block. A
+         * discarded read is a pure priority penalty on the web it touches, and
+         * demoting the CSE web for the constant 9 is what moves it out of v1 into
+         * a0, which is where the target holds it (words 124 -> 121, and the last
+         * differing immediate disappears). One read is inert, three score the
+         * same, four regress; both must precede the load below. */
+        if (gCourseSelectModeSelection == 9) {}
+        if (gCourseSelectModeSelection == 9) {}
         digitCount = COURSE_SELECT_STATUS_LAYOUT.purchaseMessageStateUnsigned;
         drawMenuGlyphScript(
             arg0->x,
