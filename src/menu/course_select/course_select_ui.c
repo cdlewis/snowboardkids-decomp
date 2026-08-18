@@ -2010,16 +2010,16 @@ void initCourseSelectCourseStats(CourseSelectWidgetActor *arg0) {
     setCallbackTaskCallback(temp_a3, (CallbackTaskCallback)updateCourseSelectCourseStats);
 }
 
-// drawCourseSelectCourseDescription best match: 93.202%
-// (nonmatchings/drawCourseSelectCourseDescription-29/base_8.c)
+// drawCourseSelectCourseDescription best match: 95.430%
+// (nonmatchings/drawCourseSelectCourseDescription-29/base_122.c)
 //
 // NOTE ON SCORING: the project scorer (tools/asm-differ / dist.py) rates this
 // variant BELOW the previous 96.952% attempt, but an object-level comparison
 // against the extracted target shows it is substantially closer:
 //
 //                       prev best   this variant   (target: 352 insns)
-//   differing words         316          134
-//   differing opcodes       268           50
+//   differing words         316          124
+//   differing opcodes       268           28
 //   instruction count       348          351
 //   relocation mismatches     6            0
 //
@@ -2135,6 +2135,11 @@ void drawCourseSelectCourseDescription(CourseSelectWidgetActor *arg0) {
                     if (pricedCourseId >= 9) {}
                 } else {
                     digitCount = 3;
+                    /* Fake: a code-free double read of gCourseUnlockPrices. It keeps the
+                     * %hi(gCourseUnlockPrices) web live through this branch, which is what
+                     * makes IDO hoist it the way the target does (words 134 -> 124,
+                     * differing opcodes 50 -> 28). One read is inert; three score the same. */
+                    if (gCourseUnlockPrices && gCourseUnlockPrices) {}
                     script[2] = 0x2B;
                     script[digitCount] = 0x2B;
                     script[digitCount + 1] = 0x2B;
