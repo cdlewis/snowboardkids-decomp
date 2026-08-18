@@ -621,6 +621,25 @@ above can possibly work, so read them before spending a variant.
   some functions and unsigned by others, pick the struct view whose field type
   matches the load (the project keeps both `s16`- and `u16`-field view structs
   for this reason).
+- **A signed carrier defeats CSE between two macro masks of the same value.**
+  GBI's `_SHIFTL(v, s, w)` masks through `(unsigned int)(v) & mask`, while
+  hand-written macro arithmetic such as `gDPLoadTLUT_pal16`'s
+  `(256 + (((pal) & 0xf) * 16))` masks `v` directly. When the same variable
+  feeds both, uopt only CSEs the two masks if the variable's own type is
+  unsigned — with an `s32`/`int` carrier the two `and`s are different
+  expressions and IDO emits `andi` twice, one of them redundantly masking an
+  already-masked value. If the target shows a single `andi` whose result is
+  reused across the two expansions, make the carrier unsigned *and* pass it to
+  the macro unmasked; pre-masking the argument yourself re-creates the second
+  `andi`. The same reasoning applies to any pair of macros where one casts to
+  `unsigned` before masking and the other does not.
+- **Arithmetic on a `u16` local zero-extends first; the `s16` field does not.**
+  `u16 m = obj->s16Field; ... m - 1` emits `andi ...,0xffff` before the
+  `addiu`, because the local's declared type forces a 16-bit-clean value.
+  Reading the `s16` field directly (`obj->s16Field - 1`) reuses the already
+  sign-extended register and emits only the `addiu`. When a target shows the
+  bare `addiu` at one site and the `andi` at another, that is evidence of two
+  differently typed source expressions, not one reused local.
 - **Byte signedness can perturb constant lifetime.** Even a same-sized
   `s8`/`u8` field-type change can shift which constant IDO reuses for a store
   and thus hoist or delay a `li`. Preserve observed byte signedness when
