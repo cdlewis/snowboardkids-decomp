@@ -230,6 +230,20 @@ and control flow already match and only register *names* differ.
   instruction after `lhu`. Moving that mask across one expression can move a
   single FIFO allocation to the other side of the expression, changing its
   register while restoring the register sequence immediately afterward.
+  The mask *count* is a further dial: stacking several redundant masks on one
+  expression (`((x & 0xFFFFu) & 0xFFFFu) & 0xFFFFu`) advances the FIFO one
+  step per mask, and only one exact count may land in the target's basin —
+  measured on one function, four stacked masks matched a register/schedule
+  region that one, two, three, and five masks all missed. When the value only
+  reaches a GBI macro that masks it anyway, the stack is runtime-neutral.
+- **Constant-stride 2D subscripts and hand-flattened indexing are not
+  codegen-neutral.** `arr[i][0]` on an `s16 [N][2]` and
+  `((s16 *)arr)[i * 2 + 0]` compute the same address, but cfe hands uopt
+  different multiply trees (one `*4` versus chained `*2`s), which can recolor
+  registers well beyond the indexing expression. When a candidate imported
+  from a scratch uses the flat spelling against a project array typed 2D,
+  keep the flat spelling through a pointer cast rather than converting to the
+  2D subscript, and re-measure before assuming equivalence.
 - **Pre-increment expresses "store raw, compare masked".** For a narrow field
   both stored and compared, `++field` (or `field += 1`) makes IDO store the raw
   increment and mask separately into a fresh register for the compare. A
