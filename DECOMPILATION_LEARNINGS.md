@@ -415,6 +415,31 @@ above can possibly work, so read them before spending a variant.
   more regressed, and the same construct at nine other statement boundaries
   only regressed.
 
+- **Tail liveness is a whole-function allocation dial.** Giving an *existing*
+  local one more occurrence in the function's last loop — e.g. carrying a
+  redundant `playerIndex++` alongside a pointer walk that already terminates on
+  the pointer — keeps that variable live to the end of the function and can
+  re-color the allocation hundreds of instructions earlier. On
+  `updateMultiplayerCourseSelectMenu` it moved the residual from 150 positional
+  words to 94 *and* dissolved a three-instruction scheduling rotation about 700
+  instructions upstream, turning a `structure-mismatch` into a pure
+  `allocation-mismatch` (0 opcode mismatches, 0 gaps). Reach for it when a
+  structural residual sits far from any construct you can vary and every local
+  edit at the residual has failed: the cause can be that the target keeps a
+  carrier live past the point your version lets it die. The natural spelling is
+  a parallel index or cursor, which this codebase's loops already use
+  idiomatically; the permuter finds the same mechanism as a read of an
+  *uninitialised* variable in the tail, which is the same dial written as
+  undefined behaviour — take the mechanism, not the mutation.
+
+- **Spelling decides whether a discarded read is free.** `if ((s32) V);` (a cast
+  guarding an *empty statement*) emitted nothing here, while `if (V) {}` with a
+  braced body cost a branch pair and shrank the frame from `0xB0` to `0xA8`,
+  which regresses everything downstream. Before reading a count or a site as
+  evidence, confirm the construct is actually zero-footprint on the current
+  parent by checking `insns` and `frame` on the compared object, not by
+  assuming it from the shape.
+
 ## IDO codegen: loop shape and strength reduction
 
 - **A terminal backward `goto` can align an unreachable epilogue.** IDO may
@@ -825,6 +850,15 @@ above can possibly work, so read them before spending a variant.
   boundaries against disassembly, `symbol_addrs.txt`, and the linker map.
 
 ## Matching workflow
+
+- **Rebuild a per-function workspace baseline from the project's own headers,
+  not from an archived scratch prelude.** The same function body scored 95.749%
+  against a decomp.me-style typedef prelude and 98.851% against the real
+  project headers in the same workspace with the same compiler. A prelude that
+  merely compiles still models a different translation unit, so every ranking
+  taken against it is measuring the wrong program. Reconstruct the baseline
+  first and confirm it reproduces (or beats) the score recorded in the source
+  comment before starting a campaign.
 
 - **A recorded best-match percentage is only meaningful with its environment.**
   Scores from a per-function workspace depend on the target object's symbol
