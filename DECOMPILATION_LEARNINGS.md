@@ -316,6 +316,23 @@ and control flow already match and only register *names* differ.
   array index) rather than reaching for `volatile` or dead-code hacks. The
   extra read changes liveness and can flip the allocator to the target's
   registers cleanly.
+- **A one-element array declaration demotes a local to a true memory
+  variable — and that is a whole-function lever, not a local one.** Declaring
+  `s32 v[1]` and writing `v[0]` makes the local address-taken, so uopt stops
+  colouring it: every write stores to its stack home and every *basic block*
+  reloads it (within a block the value is still CSE'd, so this is not
+  `volatile`). Reach for it when the target stores a coordinate/accumulator
+  immediately after computing it and re-loads it at each subsequent `&&`
+  operand while the candidate keeps it live in a register. The register it
+  gives up is handed to whichever variable lost the previous allocation round,
+  so this is the way to swap one variable for another in the register set when
+  both have similar reference counts. Two collateral effects to budget for:
+  the frame can grow, and uopt turns conservative function-wide — pointer
+  parameters get homed at entry instead of at last use, and other parameters
+  may be spilled at their definition rather than at the pressure peak. Confirm
+  the frame size and the parameter-spill placement after applying it, and
+  prefer forcing the *smallest* set of locals that produces the target's
+  reload pattern.
 - **Let GBI bitfield macros perform their own narrowing.** Macros such as
   `gDPSetPrimColor` mask fields to their encoded width while packing command
   words. A caller-side mask on the same argument is redundant and can extend
@@ -542,6 +559,15 @@ above can possibly work, so read them before spending a variant.
   symbol instead. For incomplete external arrays, IDO cannot fold the trip
   count, but it can still strength-reduce the typed source and destination
   indexing into the target's simple pointer walk.
+- **IDO does not reliably fold consecutive constant left-shifts, so spell
+  them exactly as the target emits them.** `(x << 3) << 5` compiles to two
+  `sll`s, not one `sll ..., 0x8`, while `(x << 1) << 1` does collapse to a
+  single `sll ..., 0x2`. Because folding is not guaranteed, treat the shift
+  decomposition as a source-level choice to be read off the target rather than
+  a normalization the compiler will apply: count the `sll`s in the target
+  window and match them. Getting this wrong is a *structural* residual (it
+  changes the instruction count), so resolve it before spending any effort on
+  register allocation.
 - **Prefer a plain multiply literal over a hand-decomposed shift.** When a
   multiply by a non-power-of-2 appears, writing `x * 0x60000` gives IDO the
   freedom to emit its strength-reduced `sll`/`subu`/`sll` chain in the target's
