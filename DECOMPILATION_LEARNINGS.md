@@ -307,6 +307,17 @@ above can possibly work, so read them before spending a variant.
   raises `totalsave` but jumps `nocs` at `n = 2` and `n = 6`, which can *halve*
   a web's priority. One occurrence in a loop body outranks three occurrences
   spread over a loop plus a cold block. Compute the target before adding reads.
+- **A discarded read is a pure priority *penalty* on the web it reads.** It
+  adds occurrences, so it can push `nocs` over one of its steps, but it
+  contributes nothing to `totalsave` — the quotient can only fall. A dead
+  `if (v && v) {}` or `if (v) {}` filler added to reach the target instruction
+  count is therefore *not* allocation-neutral for `v`: it can drop `v`'s web
+  below a competitor it would otherwise have tied with and beaten on web
+  number, silently swapping the two registers. When such a filler is load
+  bearing, spell it against a variable that is *not* part of the register
+  residual; reading the contested variable buys instruction count at the price
+  of its color.
+
 - **A local that is coalesced away still reserves a register.** A `u8` temp
   holding a loaded byte across a couple of increments can emit no instruction of
   its own (ugen coalesces it onto the temp that carries the load) and yet hold a
