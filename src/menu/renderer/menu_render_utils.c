@@ -719,15 +719,7 @@ extern void
 drawAssetTableSpriteWithExplicitPaletteWideIndex(s16 x, s16 y, AssetTable *table, s32 entryIndex, u16 paletteIndex);
 #endif
 
-// drawScaledAssetTableSprite best match: 99.907%
-// (nonmatchings/drawScaledAssetTableSprite-67/base_1.c)
-//
-// Measured residual: six instruction words differ only by a v1/a0 register swap in
-// the initial width/height calculations. Control flow, stack layout, relocations,
-// and the complete display-list command stream match.
-#pragma GLOBAL_ASM("asm/nonmatchings/menu/renderer/menu_render_utils/drawScaledAssetTableSprite.s")
-
-#ifdef NON_MATCHING
+// Matched by queueRAM via decomp.me scratch y0AXZ.
 void drawScaledAssetTableSprite(s16 x, s16 y, AssetTable *asset, u16 entryIndex, u16 scale) {
     s32 x0;
     s32 y0;
@@ -744,6 +736,7 @@ void drawScaledAssetTableSprite(s16 x, s16 y, AssetTable *asset, u16 entryIndex,
     clippedS = scale;
     clippedT = scale;
     sprite = &asset->entries[entryIndex];
+    x1 = spriteWidth >> clippedS; // fakematch
     if (scale < 0) {
         return;
     }
@@ -809,7 +802,6 @@ void drawScaledAssetTableSprite(s16 x, s16 y, AssetTable *asset, u16 entryIndex,
     gDPSetTextureFilter(gRegionAllocPtr++, G_TF_POINT);
     gDPPipeSync(gRegionAllocPtr++);
 }
-#endif
 
 // drawScaledAssetTableSpriteWithExplicitPalette best match: 97.391%
 // (nonmatchings/drawScaledAssetTableSpriteWithExplicitPalette-7181144369148334388/base_17.c)
