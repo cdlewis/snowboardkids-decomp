@@ -673,6 +673,43 @@ above can possibly work, so read them before spending a variant.
   reference. Splat names interior offsets as separate symbols, so the reloc
   names in a compiled attempt (`A+4`) and the target (`B`) can differ while
   the linked bytes are identical.
+- **Counting `lui $at` per store tells you how many symbols the source saw.**
+  A direct reference to a whole global (scalar, or an array/struct element at a
+  constant index) folds the offset into the `%lo` and costs one `lui $at` each
+  time. But once one *object* is referenced enough times in a region and a
+  register is free, uopt promotes `&object` to a base register and every later
+  access becomes `off(base)`. So `N` stores to `N` distinct globals emit `N`
+  `lui $at`, while `N` stores to `N` fields of one aggregate emit one
+  `lui`/`addiu` pair plus `N` offset stores. If the target shows a fresh
+  `lui $at,%hi(S)` before every `%lo(S+k)` store, the source did **not** see
+  those slots as one aggregate, no matter how the extractor named them --
+  splat labels any address inside a sized symbol as `S+k`, which hides the
+  distinction. Re-model the storage as separate globals; a struct/union
+  overlay macro can keep the aggregate spelling for the other translation
+  units that genuinely index it with a variable.
+- **Mixed folded and based addressing off one symbol means two source views.**
+  When part of a run addresses `%lo(S+k)($at)` and the tail addresses
+  `k(reg)` off a materialized `&S`, the tail came through a pointer or cast
+  expression (for example a `(Layout *)&S` overlay), whose address *is* a
+  common subexpression and therefore gets promoted, while the plain global
+  references never form one. Reproduce both spellings rather than picking one.
+- **Two names for one address suppress IDO's cross-block load CSE.** If the
+  target reloads a global that your candidate keeps in a register across
+  branches, and no call or aliasing store separates the two reads, the
+  original source most likely read the address through two different objects
+  (a struct member in one place, a standalone global in the other). uopt
+  value-numbers by object, so distinct symbols never merge. A linker-script
+  alias (`aliasName = realSymbol;`) plus an `extern` declaration reproduces
+  this without moving any storage, and leaves the linked bytes identical.
+  Prefer it to `volatile`: a volatile access materializes the address into a
+  register (`lui`/`addiu`/`0(reg)`) instead of emitting the target's direct
+  `lui`/`%lo` pair.
+- **Consolidating extracted symbols into aggregates can silently cost a
+  match.** "Clean up the `D_xxxxxxxx` symbols into one struct" commits are
+  invisible to the ROM checksum but change every access in unmatched
+  functions from folded to based addressing. When a partial match regresses
+  for no apparent source reason, check whether the symbols it reads were
+  merged since the score was recorded.
 - **Try a fixed-trip array loop before adding interior-symbol aliases.** For
   small `extern` multidimensional arrays, IDO can fully unroll the loop while
   still emitting a fresh address load for each interleaved row access. The
@@ -774,6 +811,15 @@ above can possibly work, so read them before spending a variant.
   boundaries against disassembly, `symbol_addrs.txt`, and the linker map.
 
 ## Matching workflow
+
+- **A recorded best-match percentage is only meaningful with its environment.**
+  Scores from a per-function workspace depend on the target object's symbol
+  names and on whatever local type definitions the candidate carried. After a
+  project-wide symbol rename or struct consolidation, an old candidate can
+  score twenty points lower without its source having changed. Re-measure the
+  in-tree body against a freshly bootstrapped workspace before treating a
+  recorded number as the bar to beat, and prove the harness first by
+  recompiling a previously recorded candidate in its own workspace.
 
 - **Prove line-number insensitivity before chasing statement-line levers.**
   This project builds without `-g`, and inserting blank lines anywhere in a

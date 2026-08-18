@@ -62,7 +62,40 @@ typedef struct {
 
 #define COURSE_SELECT_STATUS_LAYOUT (*(CourseSelectStatusLayout *)&gCourseSelectStatus)
 
-extern CourseSelectStatus gCourseSelectStatus;
+extern u8 gCourseSelectPreviewModelState0;
+extern u8 gCourseSelectPreviewModelState1;
+extern u8 gCourseSelectPreviewModelState2;
+extern u8 gCourseSelectPreviewModelState3;
+extern u8 gCourseSelectIncomingModelState0;
+extern u8 gCourseSelectIncomingModelState1;
+extern u8 gCourseSelectIncomingModelState2;
+extern u8 gCourseSelectIncomingModelState3;
+extern u8 gCourseSelectOutgoingModelState0;
+extern u8 gCourseSelectOutgoingModelState1;
+extern u8 gCourseSelectOutgoingModelState2;
+extern u8 gCourseSelectOutgoingModelState3;
+extern u8 gCourseSelectIncomingModelTimer0;
+extern u8 gCourseSelectIncomingModelTimer1;
+extern u8 gCourseSelectIncomingModelTimer2;
+extern u8 gCourseSelectIncomingModelTimer3;
+extern u8 gCourseSelectOutgoingModelTimer0;
+extern u8 gCourseSelectOutgoingModelTimer1;
+extern u8 gCourseSelectOutgoingModelTimer2;
+extern u8 gCourseSelectOutgoingModelTimer3;
+extern s16 gCourseSelectIncomingModelAngle0;
+extern s16 gCourseSelectIncomingModelAngle1;
+extern s16 gCourseSelectIncomingModelAngle2;
+extern s16 gCourseSelectIncomingModelAngle3;
+extern s16 gCourseSelectOutgoingModelAngle0;
+extern s16 gCourseSelectOutgoingModelAngle1;
+extern s16 gCourseSelectOutgoingModelAngle2;
+extern s16 gCourseSelectOutgoingModelAngle3;
+extern u8 gCourseSelectExtraCourseCount0;
+extern u8 gCourseSelectExtraCourseCount1;
+extern u8 gCourseSelectExtraCourseCount2;
+extern u8 gCourseSelectExtraCourseCount3;
+
+#define gCourseSelectStatus (*(CourseSelectStatus *)&gCourseSelectPreviewModelState0)
 extern u8 gCourseSelectHasExtraCourse[COURSE_SELECT_PLAYER_COUNT];
 extern u8 gCourseSelectSelectionTimers[COURSE_SELECT_PLAYER_COUNT];
 extern u8 gCourseSelectPurchaseFlowActive;
@@ -82,6 +115,8 @@ extern s16 gCourseSelectCursorValue;
 extern u16 gCourseSelectPurchaseMessageState;
 extern u8 gCourseSelectExtraCourseColumnState;
 extern u32 gCourseUnlockPrices[COURSE_UNLOCK_PRICE_COUNT];
+extern s8 gCourseSelectHighlightedColumn;
+extern u8 gCourseSelectSelectedCourseId;
 extern u8 gCourseSelectModeSelection;
 extern u8 gCourseDetailsMenuSelection;
 extern u8 gCourseDetailsPreviewPage;
