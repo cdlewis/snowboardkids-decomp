@@ -135,6 +135,29 @@ pure noise, in which case the search cannot converge and is better stopped.
 
 ## IDO codegen: register allocation nudges
 
+- **Read IDO's pre-`as1` output before theorising about an allocation
+  residual.** `cc -S` (same flags, minus `-c`) writes the assembly that `ugen`
+  produced: final register numbers, `.loc` line records, and unexpanded
+  pseudo-ops such as `div $15, $14, 2`. That is the layer where register
+  allocation is decided, so a "schedule" difference in the object is often a
+  register difference upstream — `as1` reorders around the physical registers
+  it is handed. Diffing two candidates' `-S` output isolates one changed
+  decision where diffing their objects shows dozens of shifted rows. It also
+  shows which instructions `as1` invents: a stack reload of a homed parameter
+  becomes the object's `move`, and `div x, y, 2` becomes the
+  `bgez`/`addiu`/`sra` block, so an apparent basic-block boundary in the object
+  need not exist when the source statement is scheduled.
+- **uopt's `v0/v1/a0/a1` group is assigned by value *kind*, not by source
+  order.** For a symmetric pair of computations (two field loads feeding two
+  shifts, say), IDO consistently colors both loads with the low pair and both
+  derived values with the high pair. Measured non-levers for that grouping:
+  local declaration order, statement order, per-axis nested scopes, expression
+  grouping, separate carrier variables, and source line layout. Only the order
+  *within* each pair follows the source. If the target interleaves the pair
+  per computation instead, the original source did not have that symmetric
+  four-local shape — look for a different variable structure rather than
+  permuting the one you have.
+
 IDO colors registers by its internal temp numbering, not by source variable
 identity. Textually identical expressions can compile to distinct loads, and
 that extra load can shift a base pointer into the register the target uses.
@@ -669,6 +692,32 @@ above can possibly work, so read them before spending a variant.
   boundaries against disassembly, `symbol_addrs.txt`, and the linker map.
 
 ## Matching workflow
+
+- **Rank near-matches on object truth, not only on the workspace score.**
+  `dist.py`'s sequence cost can rank a candidate holding an extra instruction
+  above one whose instruction count already equals the target: the extra
+  instruction shifts every later row, but the scorer's alignment absorbs it
+  while a genuinely different schedule is penalised. Before concluding which
+  of two near-matches is closer, compare instruction count, frame size, and
+  positional word mismatches. Two candidates can differ by 0.4% in the
+  workspace score and by an order of magnitude in positional word mismatches,
+  in opposite directions.
+- **Verify a fake is load-bearing before keeping it.** Scaffolding accumulated
+  across attempts is not automatically doing work. Recompile with each fake
+  removed individually and compare object hashes: `if (1) {}` blocks,
+  dead-variable-reuse tricks like `dead = expr, dead` for a repeated macro
+  argument, `ptr[1].field` plus a later `ptr++` in place of `&base->arr[i]`
+  and `ptr->field`, and `if (c >= 0) { ... }` versus an early `if (c < 0)
+  return;` are all frequently inert. Ones that are not — a `volatile` narrow
+  parameter forcing a stack reload, a redundant `& 0xFFFF` — show up
+  immediately as a large regression.
+- **Declared locals are not free in a GBI-heavy leaf.** Naming the viewport
+  bounds (`minX`, `maxY`, `halfHeight`, ...) in a function that already keeps
+  several values live pushes them out of registers and gives each a stack home,
+  growing the frame in 8-byte steps. If the target's frame is fixed and its
+  bounds live in scratch registers, they were anonymous common subexpressions;
+  copying a matched sibling's named-bound idiom into a busier function will
+  fail on frame size alone.
 
 - **Mirror matched siblings verbatim.** When a function sits next to an
   already-matched near-twin (common in state-machine callback families),
