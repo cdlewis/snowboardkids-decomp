@@ -361,6 +361,35 @@ above can possibly work, so read them before spending a variant.
   held by an *interfering* web, no reweighting can win it. Either the blocking
   web must lose the register, or the two must be colored in the other order.
 
+- **A local initialised to a literal is folded away before webs exist, so a
+  "constant carrier" can never recolour a constant.** When the target holds a
+  CSE'd literal in a register you cannot reach, the obvious move is to declare
+  a local for it and use that local at the comparison, `div` and `mul` sites.
+  It does not work: uopt constant-propagates the carrier at every use and the
+  object comes back byte-identical to the literal spelling, with the carrier's
+  frame slot as the only trace (declared locals get a home whether or not they
+  survive). Measured across `s32`, `u32`, `s16`, `s8`, `u8` and `char`
+  carriers, assigned at the top of the function and mid-function, and also as a
+  graft onto an existing dead local: every variant produced the same object.
+  Work the *priority* of the compiler's own constant web instead - occurrence
+  count and which blocks the occurrences sit in.
+- **Subscripting by a variable blocks the fold-and-hoist that a pointer walk
+  invites.** `arr[i] = v; arr[i + 1] = v;` keeps `i` in a register and computes
+  `base + i*2` at the site. The equivalent `p = arr; p += i;` followed by
+  `p[0]`, `p[1]` lets uopt constant-fold the whole address when `i` is a known
+  constant and then hoist it out of the branch entirely. So when the target
+  shows `li k / sll / addu` for an index whose value is obviously constant, the
+  original used the subscript form; the pointer form cannot reproduce it.
+- **A discarded read also extends the live range of the `%hi` web it names.**
+  The priority-penalty rule above is not the only effect: `if (G && G) {}` in a
+  branch that does not otherwise mention `G` keeps `%hi(G)` live through that
+  branch, which changes where IDO materialises the `lui`. Use it when the
+  target hoists an address into an early slot that your build fills with an
+  unrelated literal. Both the count and the site are dials and both saturate -
+  in one case one read was inert, two and three gave the same object, four or
+  more regressed, and the same construct at nine other statement boundaries
+  only regressed.
+
 ## IDO codegen: loop shape and strength reduction
 
 - **A terminal backward `goto` can align an unreachable epilogue.** IDO may
@@ -636,6 +665,17 @@ above can possibly work, so read them before spending a variant.
   source. For data mismatches after source changes, use the data differ
   (`--find-first-mismatch`) before making layout assumptions.
 
+- **The relocation table decides between two spellings that address the same
+  byte.** Adjacent globals make several source expressions name one address:
+  with `u8 A[4][4]` immediately followed by `u8 B[4][3]`, `B[0][i - 1]` and
+  `A[4][i - 1]` are the same pointer. They are not the same object. The first
+  relocates against `B` and needs an explicit `addiu -1`; the second relocates
+  against `A` with addend 0xf and folds into the load displacement, which is
+  what the target did. `decomp-workbench compare --symbol F target.o cand.o`
+  lists relocation target differences directly - check them before treating a
+  residual as register allocation, because a wrong symbol also drags in extra
+  address arithmetic and can look structural.
+
 ## Segment splitting and alignment
 
 - **C object `.text` pads to 16-byte alignment.** Splitting a segment at an
@@ -701,7 +741,12 @@ above can possibly work, so read them before spending a variant.
   of two near-matches is closer, compare instruction count, frame size, and
   positional word mismatches. Two candidates can differ by 0.4% in the
   workspace score and by an order of magnitude in positional word mismatches,
-  in opposite directions.
+  in opposite directions. The gap can be far wider than that: a candidate with
+  six wrong relocations and 268 of 348 positional opcodes differing scored
+  *better* than one with zero wrong relocations and 28, because the scorer's
+  insertion/deletion/reordering penalties dwarf its register penalty and its
+  diff realigns shifted code for free. When the two disagree, the relocation
+  table and the positional opcode count are the honest oracle.
 - **Verify a fake is load-bearing before keeping it.** Scaffolding accumulated
   across attempts is not automatically doing work. Recompile with each fake
   removed individually and compare object hashes: `if (1) {}` blocks,
