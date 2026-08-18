@@ -137,7 +137,6 @@ s16 gMenuSpriteFlipScales[4][2] = {
 };
 
 extern void *allocMenuRenderScratch(s32 size);
-void drawMenuTilemapSprite(MenuRenderSprite *sprite, s32 arg1, s16 x, s16 y);
 void drawMenuSpriteClipped(
     s16 x,
     s16 y,
@@ -1253,57 +1252,46 @@ void drawMenuTilemapSpriteCallback(MenuRenderSprite *arg0) {
 void func_80011D6C(void) {
 }
 
-// drawMenuTilemapSprite best match: 96.626%
-// (nonmatchings/drawMenuTilemapSprite-2/base_9.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/menu/renderer/menu_renderer/drawMenuTilemapSprite.s")
-
-#ifdef NON_MATCHING
 void drawMenuTilemapSprite(MenuRenderSprite *sprite, s32 imageSize, s16 tilemapWidth, s16 tilemapHeight) {
-    MenuRenderSprite *render;
+    s16 sourceX;
+    s16 sourceY;
+    s16 drawX;
+    s16 drawY;
     s16 clipLeft;
     s16 clipTop;
     s16 clipRight;
     s16 clipBottom;
-    s16 sourceX;
-    s16 sourceY;
     u16 tileMask;
-    s32 tileShift;
+    s16 firstDrawX;
     s16 columnCount;
     s16 rowCount;
-    s16 firstDrawX;
-    s16 drawX;
-    s16 drawY;
-    s16 tileY;
     s16 column;
     s16 row;
-    s16 tileId;
-    MenuRenderTileInfo *info;
-    s32 paletteIndex;
     s16 scaleS;
     s16 scaleT;
     s16 rectLeft;
     s16 rectTop;
-    s16 tileX;
     s16 rectRight;
     s16 rectBottom;
+    s16 tileId;
     s16 texS;
     s16 texT;
-    s32 paletteValue;
-    s16 paletteBank;
     s16 imageIndex;
+    s16 tileX;
+    s16 tileY;
+    u16 tileShift;
     s16 *tilemap;
     u16 *image;
-    s32 textureFormat;
     s32 sourceOffsetX;
-    s32 sourceOffsetY;
+    MenuRenderSprite *render;
+    u32 paletteIndex;
     MenuRenderTileInfo *tileInfo;
-    u16 *palette;
+    u8 *palette;
 
-    render = sprite;
-    tilemap = (s16 *)render->tilemap;
+    tilemap = (s16 *)(render = sprite)->tilemap;
     image = render->image;
     tileInfo = (MenuRenderTileInfo *)render->tileInfo;
-    palette = render->palette;
+    palette = (u8 *)render->palette;
 
     clipLeft = render->clipX;
     sourceX = render->x;
@@ -1319,7 +1307,6 @@ void drawMenuTilemapSprite(MenuRenderSprite *sprite, s32 imageSize, s16 tilemapW
         sourceY = (sourceY + clipTop) - render->clipY;
     }
 
-    textureFormat = G_IM_FMT_CI;
     clipRight = render->clipX + render->width;
     if (clipRight > gMenuViewportWidth / 2) {
         clipRight = gMenuViewportWidth / 2;
@@ -1339,56 +1326,53 @@ void drawMenuTilemapSprite(MenuRenderSprite *sprite, s32 imageSize, s16 tilemapW
     if (render->tileSize == 0x10) {
         tileShift = 4;
     } else {
-        if (0) {}
         tileShift = 5;
     }
 
-    sourceOffsetX = tileMask & sourceX;
+    sourceOffsetX = sourceX & tileMask;
     columnCount = ((clipRight - clipLeft) + tileMask - 1) >> tileShift;
     rowCount = ((clipBottom - clipTop) + tileMask - 1) >> tileShift;
-    if (sourceOffsetX != 0) {
+
+    if (sourceX & tileMask) {
         columnCount++;
     }
+    firstDrawX = clipLeft - sourceOffsetX;
 
-    sourceOffsetY = sourceY & tileMask;
-    if (sourceOffsetY != 0) {
+    if (sourceY & tileMask) {
         rowCount++;
     }
-
-    firstDrawX = clipLeft - sourceOffsetX;
-    drawY = clipTop - sourceOffsetY;
+    drawY = clipTop - (sourceY & tileMask);
     tileY = (sourceY >> tileShift) % tilemapHeight;
-    while (0) {}
+
     for (row = 0; row < rowCount; row++) {
         drawX = firstDrawX;
         tileX = (sourceX >> tileShift) % tilemapWidth;
 
         for (column = 0; column < columnCount; column++) {
-            tileId = tilemap[(s16)(tileX + (tileY * render->tileYStep))];
-            info = &tileInfo[tileId];
-            paletteIndex = info->paletteIndex;
-            imageIndex = info->imageIndex;
-            paletteValue = paletteIndex;
+            imageIndex = tileX + (tileY * render->tileYStep);
+            tileId = tilemap[imageIndex];
+            paletteIndex = tileInfo[tileId].paletteIndex;
+            imageIndex = tileInfo[tileId].imageIndex;
 
             if (tileId != 0) {
-                scaleT = gMenuSpriteFlipScales[info->flip][1];
-                scaleS = gMenuSpriteFlipScales[info->flip][0];
+                scaleS = ((s16 *)gMenuSpriteFlipScales)[tileInfo[tileId].flip * 2 + 0];
+                scaleT = ((s16 *)gMenuSpriteFlipScales)[tileInfo[tileId].flip * 2 + 1];
                 rectLeft = drawX;
                 rectTop = drawY;
                 rectRight = drawX + render->tileSize;
                 rectBottom = drawY + render->tileXStep;
-                tileMask = render->tileSize;
                 texS = 0;
                 texT = 0;
 
                 if (scaleS == -1) {
-                    texS = tileMask - 1;
+                    texS = render->tileSize - 1;
                 }
                 if (scaleT == -1) {
                     texT = render->tileXStep - 1;
                 }
 
-                if ((drawX < clipRight) && (drawY < clipBottom) && (rectRight >= clipLeft) && (rectBottom >= clipTop)) {
+                if ((drawX < clipRight) && (drawY < clipBottom) && (rectRight >= clipLeft) &&
+                    (rectBottom >= clipTop)) {
                     if (drawX < clipLeft) {
                         texS = clipLeft - drawX;
                         if (scaleS == -1) {
@@ -1408,24 +1392,23 @@ void drawMenuTilemapSprite(MenuRenderSprite *sprite, s32 imageSize, s16 tilemapW
                     if (rectRight >= clipRight) {
                         rectRight = clipRight - 1;
                     }
-                    paletteBank = paletteValue;
                     if (rectBottom >= clipBottom) {
                         rectBottom = clipBottom - 1;
                     }
 
                     if ((u8)imageSize == 0) {
-                        gDPLoadTLUT_pal16(gRegionAllocPtr++, paletteValue, palette + (paletteBank << 4));
+                        gDPLoadTLUT_pal16(gRegionAllocPtr++, paletteIndex, palette + (paletteIndex << 5));
                         gDPLoadTextureTile_4b(
                             gRegionAllocPtr++,
                             &image[((imageIndex - 1) * render->tileSize * render->tileXStep) / 4],
-                            textureFormat,
+                            G_IM_FMT_CI,
                             render->tileSize,
                             render->tileXStep,
                             0,
                             0,
                             render->tileSize,
                             render->tileXStep,
-                            paletteValue & 0xF,
+                            paletteIndex,
                             G_TX_CLAMP,
                             G_TX_CLAMP,
                             G_TX_NOMASK,
@@ -1434,11 +1417,13 @@ void drawMenuTilemapSprite(MenuRenderSprite *sprite, s32 imageSize, s16 tilemapW
                             G_TX_NOLOD
                         );
                     } else {
-                        gDPLoadTLUT_pal256(gRegionAllocPtr++, palette + (paletteValue << 4));
+                        if (tilemapHeight) {
+                        }
+                        gDPLoadTLUT_pal256(gRegionAllocPtr++, palette + (paletteIndex << 5));
                         gDPLoadTextureTile(
                             gRegionAllocPtr++,
                             &image[((imageIndex - 1) * render->tileSize * render->tileXStep) / 2],
-                            textureFormat,
+                            G_IM_FMT_CI,
                             G_IM_SIZ_8b,
                             render->tileSize,
                             render->tileXStep,
@@ -1465,8 +1450,8 @@ void drawMenuTilemapSprite(MenuRenderSprite *sprite, s32 imageSize, s16 tilemapW
                         G_TX_RENDERTILE,
                         texS << 5,
                         texT << 5,
-                        (scaleS << 3) << 7,
-                        (scaleT << 8) << 2
+                        (u16)(scaleS << 10),
+                        (u16)(scaleT << 10)
                     );
                 }
             }
@@ -1479,7 +1464,6 @@ void drawMenuTilemapSprite(MenuRenderSprite *sprite, s32 imageSize, s16 tilemapW
         tileY = (tileY + 1) % tilemapHeight;
     }
 }
-#endif
 
 void drawMenuGlyphScriptWithFontBank(
     volatile s16 x,
