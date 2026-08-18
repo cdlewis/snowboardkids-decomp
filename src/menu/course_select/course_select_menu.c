@@ -319,8 +319,14 @@ void initCourseSelectCourseList(void) {
     updateCallbackTasks();
 }
 
-// updateCourseSelectCourseList best match: 84.857%
-// (nonmatchings/updateCourseSelectCourseList-12/base_final2.c)
+// updateCourseSelectCourseList best match: 86.998%
+// (nonmatchings/updateCourseSelectCourseList-14/base_best.c)
+//
+// gCourseSelectSelectedCourseId, gCourseSelectHighlightedColumn and gMenuInputHeld are
+// linker aliases onto storage this file also reaches through gRacePlayers,
+// gCharacterSelectHighlightedRosterIndices and gPlayerInputHeld. The target reloads those
+// addresses where a single object would have been value-numbered into one load, so the
+// original source saw two declarations for each.
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/course_select/course_select_menu/updateCourseSelectCourseList.s")
 
 #ifdef NON_MATCHING
@@ -389,7 +395,7 @@ void updateCourseSelectCourseList(void) {
                 }
                 heldUp = gPlayerInputHeld[0] & 0x10800;
                 previousColumn = gCourseSelectHighlightedColumn;
-                if ((heldUp == 0) && !(gPlayerInputHeld[0] & 0x20400)) {
+                if ((heldUp == 0) && !(gMenuInputHeld & 0x20400)) {
                     gMenuInputRepeatTimers[0] = 0;
                 }
                 if ((gPlayerInputPressed[0] & 0x10800) ||
@@ -437,14 +443,14 @@ void updateCourseSelectCourseList(void) {
                     gCourseSelectExtraCourseColumnState = 0;
                     gCourseSelectSelectedCourseId = selectedCourse;
                 }
-                if ((s32)gCourseSelectSelectedCourseId >= 9) {
-                    gRacePlayers[0].selectionUnlockState = 0;
+                if ((s32)gRacePlayers[playerIndex].menuSelection >= 9) {
+                    gRacePlayers[playerIndex].selectionUnlockState = 0;
                 } else {
-                    unlockState = gGameSaveDataBuffer[0].courseUnlockStates[gCourseSelectSelectedCourseId];
+                    unlockState = gGameSaveDataBuffer[0].courseUnlockStates[gRacePlayers[playerIndex].menuSelection];
                     if (unlockState == -1) {
-                        gRacePlayers[0].selectionUnlockState = (u8)((s32)gCourseSelectSelectedCourseId % 3);
+                        gRacePlayers[playerIndex].selectionUnlockState = (u8)((s32)gRacePlayers[playerIndex].menuSelection % 3);
                     } else {
-                        gRacePlayers[0].selectionUnlockState = (u8)unlockState;
+                        gRacePlayers[playerIndex].selectionUnlockState = (u8)unlockState;
                     }
                 }
                 if ((gCourseSelectHorizontalOffsets[0] == 0) && ((gPlayerInputPressed[0] & 0x1000) || (gPlayerInputPressed[0] & 0x8000))) {
@@ -501,7 +507,7 @@ void updateCourseSelectCourseList(void) {
                 }
                 pressed = gPlayerInputPressed[0];
                 if ((pressed & 0x10800) ||
-                    ((gPlayerInputHeld[0] & 0x10800) && ((s32)(u16)gMenuInputRepeatTimers[0] >= 9) &&
+                    ((gMenuInputHeld & 0x10800) && ((s32)(u16)gMenuInputRepeatTimers[0] >= 9) &&
                      ((u16)gMenuInputRepeatTimers[0] & 1))) {
                     repeat = (u16)gMenuInputRepeatTimers[0];
                     if (repeat == 0) {
@@ -517,7 +523,7 @@ void updateCourseSelectCourseList(void) {
                 } else {
                     repeat = (u16)gMenuInputRepeatTimers[0];
                     if ((pressed & 0x20400) ||
-                        ((gPlayerInputHeld[0] & 0x20400) && ((s32)repeat >= 9) && (repeat & 1))) {
+                        ((gMenuInputHeld & 0x20400) && ((s32)repeat >= 9) && (repeat & 1))) {
                         if (repeat == 0) {
                             repeat += 1;
                         }

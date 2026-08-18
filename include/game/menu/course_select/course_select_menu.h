@@ -115,6 +115,7 @@ extern s16 gCourseSelectCursorValue;
 extern u16 gCourseSelectPurchaseMessageState;
 extern u8 gCourseSelectExtraCourseColumnState;
 extern u32 gCourseUnlockPrices[COURSE_UNLOCK_PRICE_COUNT];
+extern s32 gMenuInputHeld;
 extern s8 gCourseSelectHighlightedColumn;
 extern u8 gCourseSelectSelectedCourseId;
 extern u8 gCourseSelectModeSelection;
