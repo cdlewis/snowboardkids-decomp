@@ -29,6 +29,16 @@ any permuter winner through `build.sh`/the project pipeline and compare the
 object before believing the number; on a near-match its score gradient can be
 pure noise, in which case the search cannot converge and is better stopped.
 
+**Check permuter winners for stale captures, not just for artefactual
+operators.** A frequent and easily missed invalid mutation is hoisting a read
+of a variable into a new local *before* code that still writes to it, then
+using the local at the original site. It looks like an innocuous CSE and the
+diff is three lines, but it silently discards every later update. On one
+function the permuter's top three candidates all captured a rectangle edge
+before the clipping code clamped it, so the emitted primitive would have
+ignored clipping entirely. Locate every later assignment to the captured
+variable before adopting such a variant.
+
 ## IDO codegen: optimization level and control flow
 
 - **Branch direction and fall-through matter.** For `if (cond) { A } else { B }`,
@@ -869,6 +879,31 @@ above can possibly work, so read them before spending a variant.
   boundaries against disassembly, `symbol_addrs.txt`, and the linker map.
 
 ## Matching workflow
+
+- **Drive large source sweeps with the project's own scorer, not a proxy.**
+  Three metrics can rank the same candidate set in three different orders.
+  Positional instruction-word mismatches favour whichever variant happens to
+  align, and will crown a candidate that merely moved a block: relocating a
+  22-instruction region scored 210 positional words against a 484 parent while
+  being strictly further away. An opcode-aligned edit script (insertions +
+  deletions + residual) is better but still disagrees. `dist.py` is
+  decomp-permuter's scorer — 100 per insertion/deletion, 60 per reordering, 5
+  per register difference — and it is the number the repository records, so it
+  is the only ranking that decides whether a candidate is an improvement. On
+  one 60,000-variant sweep the two proxy winners scored 85.494% and 90.159%
+  against the parent's 90.694%.
+
+- **A function's codegen does not depend on the rest of its translation unit.**
+  Compiling a candidate standalone against the project headers, with the
+  per-function workspace's flags, reproduces the in-project object's function
+  bytes and `dist.py` score exactly — verified by recompiling five already
+  matched siblings from one file through both paths, all
+  `instruction-words-identical`. Standalone compiles are far cheaper than
+  rebuilding the whole unit, so use them for sweeps and reserve the full-unit
+  build for the final verification. Do not assume "this function is sensitive
+  to its surrounding file" without measuring it; that claim has been recorded
+  before and did not hold up.
+
 
 - **Rebuild a per-function workspace baseline from the project's own headers,
   not from an archived scratch prelude.** The same function body scored 95.749%
