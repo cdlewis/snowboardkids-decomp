@@ -704,6 +704,20 @@ above can possibly work, so read them before spending a variant.
   Prefer it to `volatile`: a volatile access materializes the address into a
   register (`lui`/`addiu`/`0(reg)`) instead of emitting the target's direct
   `lui`/`%lo` pair.
+- **A linker-script alias is the cheap way to test a second declaration.**
+  `aliasName = realSymbol;` in a `-T` script plus an `extern` of the right
+  type gives uopt a distinct object at the same address without moving any
+  storage, so the experiment is reversible and the linked bytes never change.
+  Test the placement one read at a time: aliasing every reference is usually
+  worse than aliasing the two or three the target actually reloads, and an
+  alias in the wrong place adds a load the target does not have.
+- **Base-register promotion is register-availability driven, so it does not
+  always yield to naming.** uopt promotes the address of an object only when a
+  register is free at that point, which is why the same symbol can be promoted
+  in one region of the target and folded in another. If splitting or aliasing
+  the symbol does not change the addressing form, stop: the residual is
+  downstream pressure from some other region, and it usually resolves when
+  that region becomes faithful rather than by more edits at the promotion site.
 - **Consolidating extracted symbols into aggregates can silently cost a
   match.** "Clean up the `D_xxxxxxxx` symbols into one struct" commits are
   invisible to the ROM checksum but change every access in unmatched
