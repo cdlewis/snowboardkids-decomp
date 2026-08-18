@@ -2010,144 +2010,22 @@ void initCourseSelectCourseStats(CourseSelectWidgetActor *arg0) {
     setCallbackTaskCallback(temp_a3, (CallbackTaskCallback)updateCourseSelectCourseStats);
 }
 
-// drawCourseSelectCourseDescription best match: 96.952%
-// (nonmatchings/drawCourseSelectCourseDescription-1846960929180867216/base_50.c)
+// drawCourseSelectCourseDescription best match: 93.202%
+// (nonmatchings/drawCourseSelectCourseDescription-29/base_8.c)
+//
+// NOTE ON SCORING: the project scorer (tools/asm-differ / dist.py) rates this
+// variant BELOW the previous 96.952% attempt, but an object-level comparison
+// against the extracted target shows it is substantially closer:
+//
+//                       prev best   this variant   (target: 352 insns)
+//   differing words         316          134
+//   differing opcodes       268           50
+//   instruction count       348          351
+//   relocation mismatches     6            0
+//
+// The scorer's alignment rewards the old shape; the relocation table is ground
+// truth. This variant reproduces the target's own symbol references.
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/course_select/course_select_ui/drawCourseSelectCourseDescription.s")
-
-#if 0
-#ifdef NON_MATCHING
-
-void drawCourseSelectCourseDescription(CourseSelectWidgetActor *arg0) {
-    volatile CourseSelectStatus *status = &gCourseSelectStatus;
-    MenuGlyphScript *volatile text;
-    volatile RacePlayer *selection;
-    MenuGlyphScript buffer[8];
-    s32 value;
-    s32 courseId;
-    s32 digitCount;
-    u32 price;
-    MenuGlyphScript *digits;
-    u16 selectedIndex;
-    u16 splitMode;
-
-    selection = gRacePlayers;
-    price = 3;
-    digitCount = status->unk2C;
-    value = digitCount;
-    if ((u32)value == 0) {
-        s32 courseIndex;
-        s32 selectedCourseId;
-
-        if ((gCourseSelectPurchaseFlowActive == 0) && ((value = selection->menuState) == 0 || (value == 3) || (value == 9))) {
-            value = status->unk2E;
-            if (value == 1) {
-                value = price;
-            } else if (value == 2) {
-                value = 4;
-            } else if ((courseId = selection->menuSelection, courseId >= 9) && (courseId < 12)) {
-                value = 5;
-            } else {
-                value = courseId % 3;
-                value &= 0xFFFFU;
-            }
-            text = gCourseSelectModeDescriptionText[value].text;
-        } else {
-            if ((gMenuChoicePromptState[0] < 2) || (gMenuChoicePromptState[0] == 9)) {
-                selectedIndex = 1;
-            } else if (gMenuChoicePromptState[0] < 5) {
-                selectedIndex = gMenuChoicePromptState[0] - 1;
-            }
-
-            if ((gMenuChoicePromptState[0] >= 5) && (gMenuChoicePromptState[0] != 9)) {
-                arg0->subState = 1;
-            }
-
-            if (arg0->subState == 0) {
-                arg0->timer = selectedIndex;
-            } else {
-                selectedIndex = arg0->timer;
-            }
-
-            if ((gRaceSplitscreenMode == 3) && ((courseId = selection->menuSelection) <= 8)) {
-                text = gCourseSelectBoardLevelByCourseText[courseId % 3].text;
-            } else if (((courseId = selection->menuSelection) >= 9) && (courseId < 12)) {
-                text = gCourseSelectExtraCourseBoardLevelText
-                           [gCourseSelectExtraCourseIds[0][selectedIndex - 2] % 3]
-                               .text;
-            } else {
-                text = gCourseSelectBoardLevelText;
-            }
-        }
-
-        drawMenuGlyphScript(arg0->x, arg0->y, text, 1, arg0->spriteIndex, 0);
-
-        if ((gRaceSplitscreenMode == 3) && (((value = selection->menuState) == 1) || (value == 2))) {
-            if ((gCharacterSelectHighlightedRosterIndices[0] != 3) || !(gGameSaveDataBuffer[0].extraCourseUnlockFlags & 7)) {
-                buffer[0] = -4;
-                buffer[1] = 6;
-                buffer[2] = selectedIndex;
-                buffer[3] = -1;
-                drawMenuGlyphScript((s16)(arg0->x + 0x48), (s16)(arg0->y + 0x10), buffer, 1, arg0->spriteIndex, 0);
-            }
-
-            splitMode = gCourseSelectModeSelection;
-            if (splitMode == 0) {
-                buffer[0] = -4;
-                buffer[1] = 6;
-                if ((selectedIndex >= 2) || (selection->menuSelection >= 9)) {
-                    selectedCourseId = selection->menuSelection;
-                    if (selectedCourseId >= 9) {
-                        courseIndex = gCourseSelectExtraCourseIds[0][selectedIndex - 2];
-                    } else {
-                        courseIndex = ((selectedCourseId % 3) + (selectedIndex * 3)) - 3;
-                    }
-
-                    price = gCourseUnlockPrices[courseIndex];
-                    if (price < 10000) {
-                        digitCount = 5;
-                    } else if (price < 100000) {
-                        digitCount = 6;
-                    } else {
-                        digitCount = 7;
-                    }
-
-                    if (price != 0) {
-                        digits = &buffer[digitCount];
-                        do {
-                            digits -= 1;
-                            digits[1] = price % 10;
-                            digitCount = 10;
-                            price /= digitCount;
-                        } while (price != 0);
-                    }
-
-                    digits = &buffer[digitCount];
-                    digits[1] = 0x10;
-                    digits[2] = -1;
-                    if (selection->menuSelection >= 9) {
-                    }
-                } else {
-                    digitCount = 3;
-                    do {
-                        buffer[2] = 0x2B;
-                        digits = &buffer[digitCount];
-                        digits[0] = 0x2B;
-                        digits[1] = 0x2B;
-                    } while (0);
-                    digits[2] = 0x2B;
-                    digits[3] = 0x2B;
-                    buffer[7] = -1;
-                }
-                drawMenuGlyphScript((s16)(arg0->x + 0x20), (s16)(arg0->y + 0x20), buffer, 1, arg0->spriteIndex, 0);
-            }
-        }
-    } else {
-        digitCount = arg0->spriteIndex;
-        drawMenuGlyphScript(arg0->x, arg0->y, gCourseSelectPurchaseMessageText[value - 1].text, 1, digitCount, 0);
-    }
-}
-#endif
-#endif
 
 #ifdef NON_MATCHING
 
@@ -2159,19 +2037,19 @@ void drawCourseSelectCourseDescription(CourseSelectWidgetActor *arg0) {
     u32 descriptionIndex;
     s32 pricedCourseId;
     u32 price;
-    register s32 digitCount;
+    s32 digitCount;
     MenuGlyphScript *digit;
     u16 selectedIndex;
 
-    if (gCourseSelectPurchaseMessageState == 0) {
+    if (COURSE_SELECT_STATUS_LAYOUT.purchaseMessageStateUnsigned == 0) {
         if ((gCourseSelectPurchaseFlowActive == 0) && ((gRacePlayers[0].menuState == 0) || (gRacePlayers[0].menuState == 3) ||
                                   (gRacePlayers[0].menuState == 9))) {
             if (1) {}
             if (1) {}
             if (1) {}
-            if (gCourseSelectExtraCourseColumnState == 1) {
+            if (COURSE_SELECT_STATUS_LAYOUT.extraCourseColumnState == 1) {
                 descriptionIndex = 3;
-            } else if (gCourseSelectExtraCourseColumnState == 2) {
+            } else if (COURSE_SELECT_STATUS_LAYOUT.extraCourseColumnState == 2) {
                 descriptionIndex = 4;
             } else if ((gRacePlayers[0].menuSelection >= 9) && (gRacePlayers[0].menuSelection < 12)) {
                 descriptionIndex = 5;
@@ -2197,7 +2075,7 @@ void drawCourseSelectCourseDescription(CourseSelectWidgetActor *arg0) {
                 text = gCourseSelectBoardLevelByCourseText[gRacePlayers[0].menuSelection % 3].text;
             } else {
                 if ((gRacePlayers[0].menuSelection >= 9) && (gRacePlayers[0].menuSelection < 12)) {
-                    pricedCourseId = gCourseSelectExtraCourseIds[0][selectedIndex - 1] % 3;
+                    pricedCourseId = gCourseSelectCourseIds[4][selectedIndex - 1] % 3;
                     descriptionIndex = pricedCourseId;
                     boardText = gCourseSelectExtraCourseBoardLevelText[descriptionIndex].text;
                     pricedCourseId = gRacePlayers[0].menuSelection;
@@ -2227,7 +2105,7 @@ void drawCourseSelectCourseDescription(CourseSelectWidgetActor *arg0) {
                 script[1] = 6;
                 if ((selectedIndex >= 2) || (gRacePlayers[0].menuSelection >= 9)) {
                     if (gRacePlayers[0].menuSelection >= 9) {
-                        pricedCourseId = gCourseSelectExtraCourseIds[0][(selectedIndex - 1) ^ 0];
+                        pricedCourseId = gCourseSelectCourseIds[4][selectedIndex - 1];
                     } else {
                         pricedCourseId = (gRacePlayers[0].menuSelection % 3) + (selectedIndex * 3) - 3;
                     }
@@ -2243,23 +2121,25 @@ void drawCourseSelectCourseDescription(CourseSelectWidgetActor *arg0) {
                     if (price != 0) {
                         digit = script;
                         digit += digitCount;
-                        do {
+                        while (1) {
                             digit--;
                             digit[1] = price % 10;
                             price /= 10;
-                        } while (price != 0);
+                            if (price == 0) {
+                                break;
+                            }
+                        }
                     }
                     script[digitCount + 1] = 0x10;
                     script[digitCount + 2] = 0xFFFF;
                     if (pricedCourseId >= 9) {}
                 } else {
                     digitCount = 3;
-                    do {
-                        script[2] = 0x2B;
-                        digit = script;
-                        digit += digitCount;
-                        digit[3] = digit[2] = digit[1] = digit[0] = 0x2B;
-                    } while (0 != 0);
+                    script[2] = 0x2B;
+                    script[digitCount] = 0x2B;
+                    script[digitCount + 1] = 0x2B;
+                    script[digitCount + 2] = 0x2B;
+                    script[digitCount + 3] = 0x2B;
                     script[7] = 0xFFFF;
                 }
                 descriptionIndex = (s32)arg0->spriteIndex;
@@ -2267,7 +2147,7 @@ void drawCourseSelectCourseDescription(CourseSelectWidgetActor *arg0) {
             }
         }
     } else {
-        digitCount = gCourseSelectPurchaseMessageState;
+        digitCount = COURSE_SELECT_STATUS_LAYOUT.purchaseMessageStateUnsigned;
         drawMenuGlyphScript(
             arg0->x,
             arg0->y,
@@ -2279,6 +2159,7 @@ void drawCourseSelectCourseDescription(CourseSelectWidgetActor *arg0) {
     }
 }
 #endif
+
 
 void updateCourseSelectCourseDescription(CourseSelectWidgetActor *arg0) {
     s32 screenState;
