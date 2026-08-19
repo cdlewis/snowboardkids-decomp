@@ -499,8 +499,8 @@ extern void drawMenuSpriteWithAlphaWideArgs(
 );
 #endif
 
-// drawMenuSpriteWithAlphaClipped best match: 92.448%
-// (nonmatchings/drawMenuSpriteWithAlphaClipped/base_1.c)
+// drawMenuSpriteWithAlphaClipped best match: 92.604%
+// (nonmatchings/drawMenuSpriteWithAlphaClipped-7189982689049576090/base_14.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/renderer/menu_renderer/drawMenuSpriteWithAlphaClipped.s")
 
 #ifdef NON_MATCHING
@@ -542,7 +542,7 @@ void drawMenuSpriteWithAlphaClipped(
     u16 palettePadding;
     u16 palette;
 
-    paletteBase = (asset->header.entryCount * sizeof(FontTexture)) + (u8 *)asset + 8;
+    paletteBase = (asset->header.entryCount * sizeof(FontTexture)) + (u8 *)asset + sizeof(FontAssetHeader);
     flipScale = gMenuSpriteFlipScales[flipMode & 3];
 
     if (scaleX >= 0x201) {
@@ -577,6 +577,8 @@ void drawMenuSpriteWithAlphaClipped(
             texS = (texWidth - 1) << 5;
         }
         minX = gMenuViewportCenterY;
+        if ((left && left) && left) {
+        }
         if (flipT == -1) {
             texT = (texHeight - 1) << 5;
         }
@@ -590,14 +592,14 @@ void drawMenuSpriteWithAlphaClipped(
         scaleXValue = scaleX;
         if ((left < maxX) && (top < maxY) && (right >= minX) && (bottom >= minY)) {
             if (left < minX) {
-                texS = (((minX - left) << 8) / scaleXValue);
+                texS = ((minX - left) << 8) / scaleXValue;
                 if (flipS == -1) {
                     texS = ((texWidth - 1) << 5) - texS;
                 }
                 left = minX;
             }
             if (top < minY) {
-                texT = (((minY - top) << 8) / scaleYValue);
+                texT = ((minY - top) << 8) / scaleYValue;
                 if (flipT == -1) {
                     texT = ((texHeight - 1) << 5) - texT;
                 }
@@ -624,7 +626,8 @@ void drawMenuSpriteWithAlphaClipped(
                     0xFA000000,
                     ((alpha & 0xFF) << 0x18) | ((alpha & 0xFF) << 0x10) | ((alpha & 0xFF) << 8) | 0xFF
                 );
-                if ((texT && texT) && texT) {}
+                if ((texT && texT) && texT) {
+                }
             }
 
             gDPLoadTextureTile_4b(
