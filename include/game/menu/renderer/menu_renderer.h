@@ -41,15 +41,15 @@ void drawMenuSpriteClipped(
     s16 x,
     s16 y,
     MenuFontAssetTable *table,
-    volatile u16 imageIndex,
+    u16 imageIndex,
     u16 scaleX,
     u16 scaleY,
     u8 flipMode,
     u8 paletteIndex,
-    s32 clipLeft,
-    s32 clipTop,
-    s32 clipRight,
-    s32 clipBottom
+    s16 clipLeft,
+    s16 clipTop,
+    s16 clipRight,
+    s16 clipBottom
 );
 void drawMenuSpriteWithAlpha(
     s16 x,
