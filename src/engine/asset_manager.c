@@ -170,234 +170,164 @@ void removeHuffmanQueueNode(s16 arg0) {
     }
 }
 
-// decompressHuffmanAssetPayload best match: 99.695%
-// Remaining mismatch: 14 register-allocation-only instruction words.
-// Instruction count (262), every positional opcode and the frame (-64) already
-// match; the residual is entirely uopt register coloring.
-//
-// Measured with an instrumented uopt (globalcolor trace, gated to reproduce the
-// stock object byte-identically). The back-reference copy loop's two pointer
-// webs are tied at save=155 with *identical* interference neighbour sets, so the
-// tie breaks on web number and `destination` colors first. Both are blocked from
-// v1 by the `copiedByte` web (save=200), which emits no instruction of its own —
-// ugen coalesces it onto the temp carrying the loaded byte — but still reserves
-// v1. Reaching the target (source=v1, destination=a1, symbol=a2) requires both:
-//   1. the copiedByte web must not be colored before the pointers, and
-//   2. the source web must be colored before the destination web.
-// (2) alone is free: swapping the two pre-loop pointer initializations flips
-// them, and costs +1 word only because v1 is still held. (1) is only reached by
-// deleting the copiedByte temp, which changes the loop's instruction shape and
-// costs ~70 words. Every free construct that would supply the missing
-// occurrence count is canonicalized by cfe before uopt sees it.
-//
-// Searched and excluded: declaration order (112 builds, one object), symbol
-// carrier reweighting, all eight decomp-workbench sweep generators including a
-// 220-build hoist sweep, no-temp copy-loop rewrites, line ties at the pointer
-// init, and ~2000 permuter iterations. Full campaign log and the removal lattice
-// (all 7 accumulated constructs are load-bearing) are in
-// nonmatchings/decompressHuffmanAssetPayload-5/FINDINGS.md.
+// decompressHuffmanAssetPayload best match: 99.905%
+// Remaining mismatch: five register-allocation-only instruction words. The
+// instruction count (262), every positional opcode, and the frame (-64) match.
+// The target colors both decoded-symbol webs as a2; this candidate colors them
+// as t1. The natural forward byte-copy loop now matches the target exactly and
+// intentionally permits overlapping LZ back-references.
 #pragma GLOBAL_ASM("asm/nonmatchings/engine/asset_manager/decompressHuffmanAssetPayload.s")
 
 #ifdef NON_MATCHING
-void decompressHuffmanAssetPayload(u8 arg0, u8 *arg1, u8 *arg2, s32 arg3) {
-    s32 one;
-    u8 **unusedArg1Address;
-    HuffmanNode *node;
-    HuffmanNode *parentNode;
-    s32 length;
+void decompressHuffmanAssetPayload(u8 flags, u8 *compressedPayload, u8 *output, s32 outputSize) {
+    u8 **unusedPayloadAddress;
     s32 bit;
     s32 nodeIndex;
-    s32 rootNodeIndex;
     s32 bitIndex;
-    s32 lastBitIndex;
-    u8 bitsPerByte;
-    u8 *rawDestination;
-    s32 firstCodeCopy;
+    s32 copyLength;
     s32 tableBytesRead;
     s32 outputOffset;
-    s32 nodeValue;
-    s32 sourceOffset;
-    s32 symbol;
-    u8 *input;
+    u8 savedCode;
+    s32 copyIndex;
+    u8 distanceLowByte;
+    u8 symbol;
     s32 rangeStart;
+    u8 *input;
     s32 rangeEnd;
-    s32 leafNodeIndexCopy;
-    s32 weightCopy;
-    u8 weight;
     s32 end;
-    u8 copiedByte;
     s32 currentNodeIndex;
-    u8 *destination;
-    u8 *source;
+    u8 *unusedDestination;
+    u8 *unusedSource;
+    s32 one;
 
-    unusedArg1Address = &arg1;
+    unusedPayloadAddress = &compressedPayload;
     gHuffmanQueueHead = -1;
     gHuffmanQueueTail = -1;
     gHuffmanQueueCount = 0;
     gHuffmanNodeCount = 0;
     tableBytesRead = 0;
-    input = arg1; end = -1; read_range: rangeStart = *input; tableBytesRead += 1; input += 1; if (tableBytesRead != 1) { if (rangeStart == 0) { goto build_tree; } }
-    rangeEnd = *input;
-    tableBytesRead += 1;
-    input += 1;
-    currentNodeIndex = rangeStart;
-    if (rangeEnd >= rangeStart) {
-        rangeStart = rangeEnd + 1; goto read_leaf; while (rangeStart != currentNodeIndex) { read_leaf:
-            leafNodeIndexCopy = gHuffmanNodeCount;
-            rootNodeIndex = leafNodeIndexCopy;
-            weightCopy = *input;
-            weight = weightCopy;
-            tableBytesRead += 1;
-            input += 1;
-            node = &gHuffmanNodes[rootNodeIndex];
-            node->left = end;
-            node->right = end;
-            node->value = (s16)currentNodeIndex;
-            node->weight = (s16)weight;
-            insertHuffmanQueueNode((s16)rootNodeIndex);
-            currentNodeIndex += 1;
-            gHuffmanNodeCount += 1;
+    input = compressedPayload; one = 1; end = -one; while (1) {
+        rangeStart = *input++;
+        tableBytesRead++;
+        if ((tableBytesRead != 1) && (rangeStart == 0)) {
+            break;
+        }
+        tableBytesRead++;
+        rangeEnd = *input++;
+        for (currentNodeIndex = rangeStart; currentNodeIndex <= rangeEnd; currentNodeIndex++) {
+            tableBytesRead++;
+            gHuffmanNodes[gHuffmanNodeCount].weight = *input++;
+            gHuffmanNodes[gHuffmanNodeCount].left = end;
+            gHuffmanNodes[gHuffmanNodeCount].right = end;
+            gHuffmanNodes[gHuffmanNodeCount].value = currentNodeIndex;
+            insertHuffmanQueueNode(gHuffmanNodeCount);
+            gHuffmanNodeCount++;
         }
     }
-    goto read_range;
 
-build_tree:
-    if (gHuffmanQueueCount >= 2) {
+    while (1) {
+        if (gHuffmanQueueCount < 2) {
+            break;
+        }
         nodeIndex = gHuffmanQueueTail;
         rangeStart = nodeIndex;
         removeHuffmanQueueNode(rangeStart);
         nodeIndex = gHuffmanQueueTail;
         rangeEnd = nodeIndex;
         removeHuffmanQueueNode(rangeEnd);
+        gHuffmanNodes[gHuffmanNodeCount].weight =
+            gHuffmanNodes[rangeEnd].weight + gHuffmanNodes[rangeStart].weight;
+        gHuffmanNodes[gHuffmanNodeCount].left = rangeEnd;
+        gHuffmanNodes[gHuffmanNodeCount].right = rangeStart;
+        gHuffmanNodes[gHuffmanNodeCount].value = end;
         nodeIndex = gHuffmanNodeCount;
-        parentNode = &gHuffmanNodes[nodeIndex];
-        parentNode->weight = gHuffmanNodes[rangeEnd].weight + gHuffmanNodes[rangeStart].weight;
-        parentNode->left = rangeEnd;
-        parentNode->right = rangeStart;
-        parentNode->value = end;
-        insertHuffmanQueueNode((s16)gHuffmanNodeCount);
-        gHuffmanNodeCount += 1;
-        goto build_tree;
+        insertHuffmanQueueNode(nodeIndex);
+        gHuffmanNodeCount++;
     }
 
-    one = 1;
     bitIndex = 0;
     outputOffset = 0;
-    length = 0;
-    lastBitIndex = 7;
-    bitsPerByte = 8;
-    if (arg0 == 0) {
-        rawDestination = arg2;
-        goto decode_raw_output;
-        while (outputOffset != arg3) {
-        decode_raw_output:
+    if (flags == 0) {
+        while (1) {
             currentNodeIndex = gHuffmanNodeCount - 1;
-        decode_raw_symbol:
-            nodeValue = gHuffmanNodes[currentNodeIndex].value;
-            if (end != nodeValue) {
-                symbol = nodeValue;
-                symbol &= 0xFF;
-            } else {
-                if (bitIndex == bitsPerByte) {
-                    input += 1;
+            while (1) {
+                if (end != gHuffmanNodes[currentNodeIndex].value) {
+                    symbol = gHuffmanNodes[currentNodeIndex].value;
+                    break;
+                }
+                if (bitIndex == 8) {
+                    input++;
                     bitIndex = 0;
                 }
-                bit = *input & (1 << (lastBitIndex - bitIndex));
-                bitIndex += 1;
+                bit = *input & (1 << (7 - bitIndex));
+                bitIndex++;
                 if (bit == 0) {
                     currentNodeIndex = gHuffmanNodes[currentNodeIndex].left;
                 } else {
                     currentNodeIndex = gHuffmanNodes[currentNodeIndex].right;
                 }
-                goto decode_raw_symbol;
             }
-            *rawDestination = (s8)symbol;
-            outputOffset += 1;
-            rawDestination += 1;
-        }
-        if (((!end) && (!end)) && (!end)) {
+
+            output[outputOffset++] = symbol;
+            if (outputOffset == outputSize) {
+                break;
+            }
         }
     } else {
-    decode_pair:
-        firstCodeCopy = (rootNodeIndex = gHuffmanNodeCount - 1);
-        currentNodeIndex = firstCodeCopy;
-        length = 0xF;
-    decode_first_symbol:
-        nodeValue = gHuffmanNodes[currentNodeIndex].value;
-        symbol = nodeValue;
-        symbol &= 0xFF;
-        if (end != nodeValue) {
-            currentNodeIndex = firstCodeCopy;
-        } else {
-            if (bitIndex == bitsPerByte) {
-                input += 1;
-                bitIndex = 0;
-            }
-            bit = *input & (one << (lastBitIndex - bitIndex));
-            bitIndex += 1;
-            bitIndex++;
-            bitIndex--;
-            if (bit == 0) {
-                currentNodeIndex = gHuffmanNodes[currentNodeIndex].left;
-            } else {
-                currentNodeIndex = gHuffmanNodes[currentNodeIndex].right;
-            }
-            goto decode_first_symbol;
-        }
-    decode_second_symbol:
-        nodeValue = gHuffmanNodes[currentNodeIndex].value;
-        if (end != nodeValue) {
-            sourceOffset = nodeValue & 0xFF;
-        } else {
-            if (bitIndex == bitsPerByte) {
-                input += 1;
-                bitIndex = 0;
-            }
-            bit = *input & (1 << (lastBitIndex - bitIndex));
-            bitIndex += 1;
-            if (bit == 0) {
-                currentNodeIndex = gHuffmanNodes[currentNodeIndex].left;
-            } else {
-                currentNodeIndex = gHuffmanNodes[currentNodeIndex].right;
-            }
-            goto decode_second_symbol;
-        }
-        firstCodeCopy = symbol;
-        if (symbol == 0) {
-            if (1) {
-                destination = arg2 + outputOffset;
-                *destination = sourceOffset & 0xFFFFFFFF;
-                outputOffset += 1;
-            }
-        } else {
-            symbol = (firstCodeCopy >> 4) & length;
-            sourceOffset = outputOffset - ((((firstCodeCopy << 3) << 5) | sourceOffset) & 0xFFF);
-            nodeValue = 0;
-            if (symbol > 0) {
-                destination = arg2 + outputOffset;
-                source = arg2 + ((0, sourceOffset));
-            copy_backreference:
-                copiedByte = *source;
-                nodeValue += 1;
-                outputOffset += 1;
-                destination += 1;
-                source += 1;
-                length = nodeValue;
-                destination[end] = copiedByte & 0xFFu;
-                if (nodeValue < symbol) {
-                    goto copy_backreference;
+        while (1) {
+            currentNodeIndex = gHuffmanNodeCount - 1;
+            while (1) {
+                symbol = gHuffmanNodes[currentNodeIndex].value;
+                if (end != gHuffmanNodes[currentNodeIndex].value) {
+                    currentNodeIndex = gHuffmanNodeCount - 1;
+                    break;
                 }
-                if (!length) {
+                if (bitIndex == 8) {
+                    input++;
+                    bitIndex = 0;
+                }
+                bit = *input & (1 << (7 - bitIndex));
+                bitIndex++;
+                if (bit == 0) {
+                    currentNodeIndex = gHuffmanNodes[currentNodeIndex].left;
+                } else {
+                    currentNodeIndex = (&gHuffmanNodes[currentNodeIndex])->right;
                 }
             }
+
+            while (1) {
+                if (end != gHuffmanNodes[currentNodeIndex].value) {
+                    distanceLowByte = gHuffmanNodes[currentNodeIndex].value;
+                    break;
+                }
+                if (bitIndex == 8) {
+                    input++;
+                    bitIndex = 0;
+                }
+                bit = *input & (1 << (7 - bitIndex));
+                bitIndex++;
+                if (bit == 0) {
+                    currentNodeIndex = gHuffmanNodes[currentNodeIndex].left;
+                } else {
+                    currentNodeIndex = gHuffmanNodes[currentNodeIndex].right;
+                }
+            }
+
+            currentNodeIndex = rangeStart;
+            savedCode = (u8)symbol;
+            if (symbol == 0) {
+                output[outputOffset++] = distanceLowByte;
+            } else {
+                copyLength = (savedCode >> 4) & 0xF;
+                one = outputOffset - (((savedCode << 8) | distanceLowByte) & 0xFFF);
+                for (copyIndex = 0; copyIndex < copyLength;) {
+                    output[outputOffset++] = output[one + copyIndex++];
+                }
+            }
+            if (outputOffset >= outputSize) {
+                break;
+            }
         }
-        if (outputOffset < arg3) {
-            goto decode_pair;
-        }
-    }
-    if (!symbol) {
-    }
-    if (!length) {
     }
 }
 #endif
