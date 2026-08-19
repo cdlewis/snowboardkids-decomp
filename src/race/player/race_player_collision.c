@@ -588,10 +588,212 @@ s32 isRacePlayerRespawnSurfaceValid(RacePlayer *arg0) {
     return 1;
 }
 
-// resolveRacePlayerCollisionVolumes best match: 99.638%
-// (nonmatchings/resolveRacePlayerCollisionVolumes-18/base_1.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/race/player/race_player_collision/resolveRacePlayerCollisionVolumes.s")
+void resolveRacePlayerCollisionVolumes(RacePlayer* player) {
+    RacePlayerCollisionSource* source;
+    RacePlayer* volumeView;
+    RacePlayer* parentView;
+    RacePlayer* sourceView;
+    s16 localAxes[14][16];
+    s32 i;
+    s32 j;
+    s32 k;
+    Mat3x3 tempMtx;
+    s32 sinX;
+    s32 cosX;
+    s32 sinY;
+    Mat3x3 playerMtx;
+    s32 cosY;
+    s32 sinZ;
+    s32 cosZ;
+    Mat3x3 baseMtx;
+    s32 offset[3];
+    Mat3x3 effectMtx;
+    s16 parentAxisY;
+    s32 temp;
+    RacePlayerCollisionSource* sourceIterator;
+    s32 sourceIndex;
+    s32 parentIndex;
 
-#ifdef NON_MATCHING
-#include "resolve_race_player_collision_volumes.inc.c"
-#endif
+    player->unk288 = player->pitchAngle;
+    player->unk28A = player->facingAngle;
+    player->unk28C = player->unk2EE;
+    if (player->stateFlags & 0x400) {
+        for (i = 0; i < player->collisionVolumeCount; i++) {
+            sinX = fixedSine(player->collisionSources[player->collisionSources[i].mirroredParentIndex].rotX);
+            cosX = fixedCosine(player->collisionSources[player->collisionSources[i].mirroredParentIndex].rotX);
+            sinY = fixedSine(-player->collisionSources[player->collisionSources[i].mirroredParentIndex].rotY);
+            cosY = fixedCosine(-player->collisionSources[player->collisionSources[i].mirroredParentIndex].rotY);
+            sinZ = fixedSine(-player->collisionSources[player->collisionSources[i].mirroredParentIndex].rotZ);
+            cosZ = fixedCosine(-player->collisionSources[player->collisionSources[i].mirroredParentIndex].rotZ);
+            localAxes[i][0] = (((s32) cosY) * cosZ) / 0x1000;
+            localAxes[i][1] = (((s32) cosY) * sinZ) / 0x1000;
+            localAxes[i][2] = -sinY;
+            temp = (((s32) sinX) * sinY) / 0x1000;
+            localAxes[i][3] = ((((s32) temp) * cosZ) / 0x1000) + ((((s32) cosX) * (-sinZ)) / 0x1000);
+            localAxes[i][4] = ((((s32) temp) * sinZ) / 0x1000) + ((((s32) cosX) * cosZ) / 0x1000);
+            localAxes[i][5] = (((s32) sinX) * cosY) / 0x1000;
+            temp = (((s32) cosX) * sinY) / 0x1000;
+            localAxes[i][6] = ((((s32) temp) * cosZ) / 0x1000) + ((((s32) sinX) * sinZ) / 0x1000);
+            localAxes[i][7] = ((((s32) temp) * sinZ) / 0x1000) + ((((s32) (-sinX)) * cosZ) / 0x1000);
+            localAxes[i][8] = (((s32) cosX) * cosY) / 0x1000;
+            if (player->stateFlags & 0x200000) {
+                localAxes[i][1] = (localAxes[i][1] * player->unk2D6) / 8;
+                localAxes[i][4] = (localAxes[i][4] * player->unk2D6) / 8;
+                localAxes[i][7] = (localAxes[i][7] * player->unk2D6) / 8;
+            }
+        }
+
+        makeFixedRotationZYX(effectMtx, player->unk6C, -player->unk6E, -player->unk70);
+        makeFixedRotationZXY(playerMtx, player->unk288, player->unk28A, player->unk28C);
+        offset[0] = (((s64) playerMtx[3]) * player->collisionCenterOffset) / 0x1000;
+        offset[1] = (((s64) playerMtx[4]) * player->collisionCenterOffset) / 0x1000;
+        offset[2] = (((s64) playerMtx[5]) * player->collisionCenterOffset) / 0x1000;
+        multiplyFixedMatrix3s(effectMtx, playerMtx, baseMtx);
+        for (k = 0; k < player->collisionVolumeCount; k++) {
+
+            for (i = 0; i < 3; i++) {
+                for (j = 0; j < 3; j++) {
+                    player->collisionVolumes[k].axis[(i * 3) + j] =
+                        (((localAxes[k][(i * 3)] * baseMtx[j]) + (localAxes[k][(i * 3) + 1] * baseMtx[j + 3])) +
+                         (localAxes[k][(i * 3) + 2] * baseMtx[j + 6])) /
+                        0x1000;
+                }
+            }
+        }
+
+        player->collisionVolumes[0].point[0] =
+            ((((-((s64) baseMtx[0])) * player->collisionSources[0].sizeX) +
+              (((s64) baseMtx[3]) * (player->collisionSources[0].sizeY - player->collisionCenterOffset))) +
+             (((s64) baseMtx[6]) * player->collisionSources[0].sizeZ)) /
+            0x1000;
+        player->collisionVolumes[0].point[1] =
+            ((((-((s64) baseMtx[1])) * player->collisionSources[0].sizeX) +
+              (((s64) baseMtx[4]) * (player->collisionSources[0].sizeY - player->collisionCenterOffset))) +
+             (((s64) baseMtx[7]) * player->collisionSources[0].sizeZ)) /
+            0x1000;
+        player->collisionVolumes[0].point[2] =
+            ((((-((s64) baseMtx[2])) * player->collisionSources[0].sizeX) +
+              (((s64) baseMtx[5]) * (player->collisionSources[0].sizeY - player->collisionCenterOffset))) +
+             (((s64) baseMtx[8]) * player->collisionSources[0].sizeZ)) /
+            0x1000;
+        player->collisionVolumes[1].point[0] =
+            ((((-((s64) player->collisionVolumes[0].axis[0])) * player->collisionSources[1].sizeX) +
+              (((s64) player->collisionVolumes[0].axis[3]) * player->collisionSources[1].sizeY)) +
+             (((s64) player->collisionVolumes[0].axis[6]) * player->collisionSources[1].sizeZ)) /
+            0x1000;
+        player->collisionVolumes[1].point[1] =
+            ((((-((s64) player->collisionVolumes[0].axis[1])) * player->collisionSources[1].sizeX) +
+              (((s64) player->collisionVolumes[0].axis[4]) * player->collisionSources[1].sizeY)) +
+             (((s64) player->collisionVolumes[0].axis[7]) * player->collisionSources[1].sizeZ)) /
+            0x1000;
+        player->collisionVolumes[1].point[2] =
+            ((((-((s64) player->collisionVolumes[0].axis[2])) * player->collisionSources[1].sizeX) +
+              (((s64) player->collisionVolumes[0].axis[5]) * player->collisionSources[1].sizeY)) +
+             (((s64) player->collisionVolumes[0].axis[8]) * player->collisionSources[1].sizeZ)) /
+            0x1000;
+    } else {
+        for (i = 0; i < player->collisionVolumeCount; i++) {
+            sinX = fixedSine(player->collisionSources[i].rotX);
+            cosX = fixedCosine(player->collisionSources[i].rotX);
+            sinY = fixedSine(player->collisionSources[i].rotY);
+            cosY = fixedCosine(player->collisionSources[i].rotY);
+            sinZ = fixedSine(player->collisionSources[i].rotZ);
+            cosZ = fixedCosine(player->collisionSources[i].rotZ);
+            localAxes[i][0] = (((s32) cosY) * cosZ) / 0x1000;
+            localAxes[i][1] = (((s32) cosY) * sinZ) / 0x1000;
+            localAxes[i][2] = -sinY;
+            temp = (((s32) sinX) * sinY) / 0x1000;
+            localAxes[i][3] = ((((s32) temp) * cosZ) / 0x1000) + ((((s32) cosX) * (-sinZ)) / 0x1000);
+            localAxes[i][4] = ((((s32) temp) * sinZ) / 0x1000) + ((((s32) cosX) * cosZ) / 0x1000);
+            localAxes[i][5] = (((s32) sinX) * cosY) / 0x1000;
+            temp = (((s32) cosX) * sinY) / 0x1000;
+            localAxes[i][6] = ((((s32) temp) * cosZ) / 0x1000) + ((((s32) sinX) * sinZ) / 0x1000);
+            localAxes[i][7] = ((((s32) temp) * sinZ) / 0x1000) + ((((s32) (-sinX)) * cosZ) / 0x1000);
+            localAxes[i][8] = (((s32) cosX) * cosY) / 0x1000;
+            if (player->stateFlags & 0x200000) {
+                localAxes[i][1] = (localAxes[i][1] * player->unk2D6) / 8;
+                localAxes[i][4] = (localAxes[i][4] * player->unk2D6) / 8;
+                localAxes[i][7] = (localAxes[i][7] * player->unk2D6) / 8;
+            }
+        }
+
+        makeFixedRotationZYX(effectMtx, player->unk6C, player->unk6E, player->unk70);
+        makeFixedRotationZXY(playerMtx, player->unk288, player->unk28A, player->unk28C);
+        offset[0] = (((s64) playerMtx[3]) * player->collisionCenterOffset) / 0x1000;
+        offset[1] = (((s64) playerMtx[4]) * player->collisionCenterOffset) / 0x1000;
+        offset[2] = (((s64) playerMtx[5]) * player->collisionCenterOffset) / 0x1000;
+        makeFixedRotationY(baseMtx, 0x800);
+        multiplyFixedMatrix3s(baseMtx, playerMtx, tempMtx);
+        multiplyFixedMatrix3s(effectMtx, tempMtx, baseMtx);
+        for (k = 0; k < player->collisionVolumeCount; k++) {
+            for (i = 0; i < 3; i++) {
+                for (j = 0; j < 3; j++) {
+                    player->collisionVolumes[k].axis[(i * 3) + j] =
+                        (((localAxes[k][(i * 3)] * baseMtx[j]) + (localAxes[k][(i * 3) + 1] * baseMtx[j + 3])) +
+                         (localAxes[k][(i * 3) + 2] * baseMtx[j + 6])) /
+                        0x1000;
+                }
+            }
+        }
+
+        player->collisionVolumes[0].point[0] =
+            (((((s64) baseMtx[0]) * player->collisionSources[0].sizeX) +
+              (((s64) baseMtx[3]) * (player->collisionSources[0].sizeY - player->collisionCenterOffset))) +
+             (((s64) baseMtx[6]) * player->collisionSources[0].sizeZ)) /
+            0x1000;
+        player->collisionVolumes[0].point[1] =
+            (((((s64) baseMtx[1]) * player->collisionSources[0].sizeX) +
+              (((s64) baseMtx[4]) * (player->collisionSources[0].sizeY - player->collisionCenterOffset))) +
+             (((s64) baseMtx[7]) * player->collisionSources[0].sizeZ)) /
+            0x1000;
+        player->collisionVolumes[0].point[2] =
+            (((((s64) baseMtx[2]) * player->collisionSources[0].sizeX) +
+              (((s64) baseMtx[5]) * (player->collisionSources[0].sizeY - player->collisionCenterOffset))) +
+             (((s64) baseMtx[8]) * player->collisionSources[0].sizeZ)) /
+            0x1000;
+        player->collisionVolumes[1].point[0] =
+            (((((s64) player->collisionVolumes[0].axis[0]) * player->collisionSources[1].sizeX) +
+              (((s64) player->collisionVolumes[0].axis[3]) * player->collisionSources[1].sizeY)) +
+             (((s64) player->collisionVolumes[0].axis[6]) * player->collisionSources[1].sizeZ)) /
+            0x1000;
+        player->collisionVolumes[1].point[1] =
+            (((((s64) player->collisionVolumes[0].axis[1]) * player->collisionSources[1].sizeX) +
+              (((s64) player->collisionVolumes[0].axis[4]) * player->collisionSources[1].sizeY)) +
+             (((s64) player->collisionVolumes[0].axis[7]) * player->collisionSources[1].sizeZ)) /
+            0x1000;
+        player->collisionVolumes[1].point[2] =
+            (((((s64) player->collisionVolumes[0].axis[2]) * player->collisionSources[1].sizeX) +
+              (((s64) player->collisionVolumes[0].axis[5]) * player->collisionSources[1].sizeY)) +
+             (((s64) player->collisionVolumes[0].axis[8]) * player->collisionSources[1].sizeZ)) /
+            0x1000;
+    }
+    player->collisionVolumes[0].point[0] += player->pos.x + offset[0];
+    player->collisionVolumes[0].point[1] += (((player->pos.y - player->unk58) + player->unk64) + offset[1]) + 0xA000;
+    player->collisionVolumes[0].point[2] += player->pos.z + offset[2];
+    player->collisionVolumes[1].point[0] += player->collisionVolumes[0].point[0];
+    player->collisionVolumes[1].point[1] += player->collisionVolumes[0].point[1];
+    player->collisionVolumes[1].point[2] += player->collisionVolumes[0].point[2];
+    for (k = 2; k < player->collisionVolumeCount; k++) {
+        parentIndex = player->collisionSources[k].parentIndex;
+        for (i = 0; i < 3; i++) {
+            player->collisionVolumes[k].point[i] =
+                (((((s64) player->collisionVolumes[parentIndex].axis[i]) * player->collisionSources[k].sizeX) +
+                  (((s64) player->collisionVolumes[parentIndex].axis[i + 3]) * player->collisionSources[k].sizeY)) +
+                 (((s64) player->collisionVolumes[parentIndex].axis[i + 6]) * player->collisionSources[k].sizeZ)) /
+                0x1000;
+            player->collisionVolumes[k].point[i] += player->collisionVolumes[parentIndex].point[i];
+        }
+    }
+    for (i = 0; i < player->collisionVolumeCount; i++) {
+
+        player->collisionVolumes[i].axis[0] /= 4;
+        player->collisionVolumes[i].axis[1] /= 4;
+        player->collisionVolumes[i].axis[2] /= 4;
+        player->collisionVolumes[i].axis[3] /= 4;
+        player->collisionVolumes[i].axis[4] /= 4;
+        player->collisionVolumes[i].axis[5] /= 4;
+        player->collisionVolumes[i].axis[6] /= 4;
+        player->collisionVolumes[i].axis[7] /= 4;
+        player->collisionVolumes[i].axis[8] /= 4;
+    }
+}
