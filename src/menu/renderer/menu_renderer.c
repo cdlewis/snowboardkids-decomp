@@ -871,43 +871,38 @@ void drawMenuSpriteSubrect(
     }
 }
 
-// drawMenuSpriteFixedScale best match: 90.118%
-// Best typed candidate: 87.855% (nonmatchings/drawMenuSpriteFixedScale-2/base_24.c)
+// drawMenuSpriteFixedScale best match: 98.565%
+// (nonmatchings/drawMenuSpriteFixedScale-7189982689049576090/base_53.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/renderer/menu_renderer/drawMenuSpriteFixedScale.s")
 
 #ifdef NON_MATCHING
+/*
+ * The empty conditions and single-line clipping block are IDO allocation and
+ * frontend-lineage nudges. They do not change the rendering behavior.
+ */
 void drawMenuSpriteFixedScale(
-    s16 x,
-    s16 y,
-    FontAsset *assetAddress,
-    u16 tileIndex,
-    u16 scaleX,
-    u16 scaleY,
-    u8 flipMode,
-    u8 unusedPalette
+    s16 x, s16 y, FontAsset *asset, u16 tileIndex,
+    u16 scaleX, u16 scaleY, u8 flipMode, u8 unusedPalette
 ) {
     FontTexture *texture;
     FontTexture *textures;
-    MenuGlyphPalette *paletteBase;
-    s32 drawLeft;
-    s32 drawTop;
-    s32 drawRight;
-    s32 drawBottom;
-    s16 clipRight;
-    s16 clipBottom;
-    s32 texT;
-    s32 clipLeft;
-    s32 clipTop;
-    s16 sScale;
-    s16 tScale;
+    u8 *paletteBase;
+    s32 left;
+    s32 top;
+    s32 right;
+    s32 bottom;
     s32 texS;
-    s32 texWidth;
-    u16 scaleYValue;
-    u16 scaleYStep;
+    s32 texT;
+    s32 minX;
+    s32 minY;
+    s16 flipS;
+    s16 flipT;
+    s16 maxX;
+    s16 maxY;
 
-    paletteBase = (MenuGlyphPalette *)&assetAddress->textures[assetAddress->header.entryCount];
-    scaleYValue = scaleY;
-
+    textures = asset->textures;
+    texture = &textures[tileIndex];
+    paletteBase = asset->header.entryCount * sizeof(FontTexture) + (u8 *)asset->textures;
     if (scaleX >= 0xF001) {
         return;
     }
@@ -921,92 +916,41 @@ void drawMenuSpriteFixedScale(
         return;
     }
 
-    sScale = gMenuSpriteFlipScales[flipMode & 3][0];
-    tScale = gMenuSpriteFlipScales[flipMode & 3][1];
-    textures = assetAddress->textures;
-    textures += tileIndex;
-    texture = textures; texWidth = texture->width;
+    flipS = ((s16 *)gMenuSpriteFlipScales)[(flipMode & 3) * 2 + 0];
+    flipT = ((s16 *)gMenuSpriteFlipScales)[(flipMode & 3) * 2 + 1];
 
-    clipRight = x;
-    drawRight = clipRight + gMenuViewportCenterX;
-    drawLeft = drawRight << 2;
-    texS = (y + gMenuViewportCenterY) << 2;
-    drawTop = texS;
-    drawRight = (((scaleX * texWidth) << 2) / 0x1000) + drawLeft;
-    drawBottom = (((scaleYValue * texture->height) << 2) / 0x1000) + drawTop;
+    texS = texture->width;
+    texT = texture->height;
+    left = (x + gMenuViewportCenterX) << 2;
+    top = (y + gMenuViewportCenterY) << 2;
+    right = left + (((scaleX * texS) << 2) / 0x1000);
+    bottom = top + (((scaleY * texT) << 2) / 0x1000);
+
     texS = 0;
     texT = 0;
-
-    if (sScale == -1) {
-        texS = (texWidth - 1) << 5;
+    if (flipS == -1) {
+        texS = (texture->width - 1) << 5;
     }
-    if (tScale == -1) {
+    if (flipT == -1) {
         texT = (texture->height - 1) << 5;
     }
 
-    clipTop = (s16)((gMenuViewportCenterY - (gMenuViewportHeight / 2)) << 2);
-    clipBottom = (gMenuViewportCenterY + (gMenuViewportHeight / 2)) << 2;
-    clipLeft = (s16)((gMenuViewportCenterX - (gMenuViewportWidth / 2)) << 2);
-    clipRight = (gMenuViewportCenterX + (gMenuViewportWidth / 2)) << 2;
+    minY = (s16)((gMenuViewportCenterY - (gMenuViewportHeight / 2)) << 2);
+    maxY = (gMenuViewportCenterY + (gMenuViewportHeight / 2)) << 2;
+    minX = (s16)((gMenuViewportCenterX - (gMenuViewportWidth / 2)) << 2);
+    maxX = (gMenuViewportCenterX + (gMenuViewportWidth / 2)) << 2;
 
-    if ((drawLeft < clipRight) && (drawTop < clipBottom) && (drawRight >= clipLeft) &&
-        (drawBottom >= clipTop)) {
-        if (drawLeft < clipLeft) {
-            texS = ((((clipLeft - drawLeft) * 8) << 12) / scaleX);
-            if (sScale == -1) {
-                texS = ((texWidth - 1) << 5) - texS;
-            }
-            drawLeft = clipLeft;
+    if ((left < maxX) && (top < maxY) && (right >= minX) && (bottom >= minY)) {
+        if (left < minX) {         if (flipMode && flipMode) {         }             texS = (((minX - left) << 3) << 12) / scaleX;             if (flipS == -1) {                 texS = ((texture->width - 1) << 5) - texS;                 if (top) {                 }             }             left = minX;         }         if (top < minY) {             texT = (((minY - top) << 3) << 12) / scaleY;             if (flipT == -1) {                 texT = ((texture->height - 1) << 5) - texT;             }             top = minY;         }         if (right >= maxX) {             right = maxX - 4;         }         if (bottom >= maxY) {             bottom = maxY - 4;         }          {             u16 scaleYValue;             u16 scaleYStep;              gDPLoadTextureTile_4b(             gRegionAllocPtr++, texture->imageOffset + (u8 *)asset + 0x80000000,             G_IM_FMT_CI, texture->width, texture->height,             0, 0, texture->width, texture->height, 0,             G_TX_CLAMP, G_TX_CLAMP, G_TX_NOMASK, G_TX_NOMASK,             G_TX_NOLOD, G_TX_NOLOD         );             gDPLoadTLUT_pal16(                 gRegionAllocPtr++, 0,             paletteBase + (texture->paletteIndex << 5) + 0x80000000         );
+            scaleYValue = 0x400000 / scaleX;
+            scaleYStep = scaleY;
+            gSPTextureRectangle(
+                gRegionAllocPtr++, left, top, right, bottom, G_TX_RENDERTILE,
+                texS, texT,
+                (u16)(scaleYValue * flipS),
+                (u16)((u16)(0x400000 / scaleYStep) * flipT)
+            );
         }
-        if (drawTop < clipTop) {
-            texT = ((((clipTop - drawTop) * 8) << 12) / scaleYValue);
-            if (tScale == -1) {
-                texT = ((texture->height - 1) << 5) - texT;
-            }
-            drawTop = clipTop;
-        }
-        if (drawRight >= clipRight) {
-            drawRight = clipRight - 4;
-        }
-        if (drawBottom >= clipBottom) {
-            drawBottom = clipBottom - 4;
-        }
-
-        gDPLoadTextureTile_4b(
-            gRegionAllocPtr++,
-            texture->imageOffset + (u8 *)assetAddress + 0x80000000,
-            G_IM_FMT_CI,
-            texture->width,
-            texture->height,
-            0,
-            0,
-            texture->width,
-            texture->height,
-            0,
-            G_TX_CLAMP,
-            G_TX_CLAMP,
-            G_TX_NOMASK,
-            G_TX_NOMASK,
-            G_TX_NOLOD,
-            G_TX_NOLOD
-        );
-        gDPLoadTLUT_pal16(
-            gRegionAllocPtr++, 0, (u8 *)((u32)&paletteBase[texture->paletteIndex] + 0x80000000)
-        );
-        scaleYValue = 0x400000 / scaleX;
-        scaleYStep = scaleY;
-        gSPTextureRectangle(
-            gRegionAllocPtr++,
-            drawLeft,
-            drawTop,
-            drawRight,
-            drawBottom,
-            G_TX_RENDERTILE,
-            texS,
-            texT,
-            (u16)(scaleYValue * sScale),
-            (u16)((u16)(0x400000 / scaleYStep) * tScale)
-        );
     }
 }
 #endif
