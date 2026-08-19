@@ -3,4 +3,4 @@ prompt: "decompile the function: $INPUT[0]. These similar functions have been ma
 agent: codex
 agent_flags: --config model_reasoning_effort='"xhigh"'
 success_command: 'git add -u && git commit -m "matched $CANDIDATE"'
-timeout: 120m
+timeout: 180m
