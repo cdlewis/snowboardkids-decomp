@@ -241,6 +241,7 @@ void initMultiplayerCourseSelectMenu(void) {
     COURSE_SELECT_STATUS_LAYOUT.purchaseMessageState = 0;
 }
 
+// Matched by inspectredc via decomp.me scratch J668c.
 void updateMultiplayerCourseSelectMenu(void) {
     s32 input;
     s32 tempTimer;

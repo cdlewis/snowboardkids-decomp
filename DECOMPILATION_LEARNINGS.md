@@ -342,6 +342,16 @@ and control flow already match and only register *names* differ.
   `T *ptr; ptr = &arr[expr]; f(ptr);` can schedule the base-address `lui %hi`
   earlier than the combined initializer `T *ptr = &arr[expr];`. When chasing a
   single misplaced address-materialization `lui`, try splitting.
+- **Reuse an earlier index variable as the cursor of the function's final loop
+  to fix hoist rotations far upstream.** Which variable drives a trailing loop
+  (e.g. a per-object update walk at the end of a large function) decides its
+  liveness over the whole body, and that can flip global-scheduler decisions
+  hundreds of instructions earlier — delay-slot fills, constant/`lui` hoists
+  around a mid-function block, and the allocation of an entire region. When a
+  candidate matches except for a small "rotation" (init/`li`/`lui` occupying
+  each other's slots around a branch), try spelling the tail loop with the
+  same index variable used by the mid-function loops instead of a fresh one,
+  before reaching for dead reads or other scaffolding.
 - **Source order of struct-field stores steers temp numbering.** When only
   temp-register names differ across an otherwise identical sequence of field
   stores, reorder the assignments in C (not the logic) — writing them in
@@ -875,6 +885,16 @@ above can possibly work, so read them before spending a variant.
   lists relocation target differences directly - check them before treating a
   residual as register allocation, because a wrong symbol also drags in extra
   address arithmetic and can look structural.
+- **A reloc-name-only residual can already be a 100% ROM match.** When the
+  candidate and target instruction words are identical except for the symbol
+  named in a relocation (`symB - 2` vs. `symA + 0xE` where both resolve to the
+  same address, or an end pointer spelled `arr + sizeof(arr)` vs. the next
+  symbol's name), the linked bytes are identical: splat anchors disassembled
+  addresses to the nearest known symbol, which need not be the symbol the
+  source named. Confirm by diffing raw `.text` words of the two objects
+  (ignoring reloc addend words that resolve to the same VRAM address) and by
+  running the full ROM build - do not spend attempts, or accept implausible
+  source, chasing the last fraction of a text-based score.
 
 ## Segment splitting and alignment
 
