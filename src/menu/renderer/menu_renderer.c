@@ -151,21 +151,6 @@ void drawMenuSpriteClipped(
     s32 clipRight,
     s32 clipBottom
 );
-void drawMenuSpriteWithAlphaClipped(
-    s16 arg0,
-    s16 arg1,
-    void *arg2,
-    u16 arg3,
-    u16 arg4,
-    u16 arg5,
-    u8 arg6,
-    u16 arg7,
-    u8 arg8,
-    s32 arg9,
-    s32 argA,
-    s32 argB,
-    s32 argC
-);
 void drawMenuGlyph(s16 x, s16 y, u16 glyphIndex, u8 paletteIndex, u16 intensity, u16 fontBank);
 extern Gfx *gRegionAllocPtr;
 extern s16 gMenuFadeAlpha;
@@ -499,11 +484,6 @@ extern void drawMenuSpriteWithAlphaWideArgs(
 );
 #endif
 
-// drawMenuSpriteWithAlphaClipped best match: 92.604%
-// (nonmatchings/drawMenuSpriteWithAlphaClipped-7189982689049576090/base_14.c)
-#pragma GLOBAL_ASM("asm/nonmatchings/menu/renderer/menu_renderer/drawMenuSpriteWithAlphaClipped.s")
-
-#ifdef NON_MATCHING
 void drawMenuSpriteWithAlphaClipped(
     s16 x,
     s16 y,
@@ -513,14 +493,14 @@ void drawMenuSpriteWithAlphaClipped(
     u16 scaleY,
     u8 flipMode,
     u16 alpha,
-    u8 paletteArg,
+    u8 paletteIndex,
     s32 clipLeft,
     s32 clipTop,
     s32 clipRight,
     s32 clipBottom
 ) {
     FontTexture *texture;
-    volatile s32 pad;
+    volatile u8 paddingA[4];
     u8 *paletteBase;
     s32 left;
     s32 top;
@@ -528,147 +508,130 @@ void drawMenuSpriteWithAlphaClipped(
     s32 bottom;
     s32 texS;
     s32 texT;
+    u32 height;
+    volatile u8 paddingB[4];
+    s32 paddingWord;
+    s16 flipS;
+    s16 flipT;
+    s16 paddingHalfword;
     s32 minX;
     s32 minY;
     s32 maxX;
-    s16 flipS;
-    s16 flipT;
-    s16 *flipScale;
     s32 maxY;
-    s32 texWidth;
-    s32 texHeight;
-    s32 scaleXValue;
-    s32 scaleYValue;
-    u16 palettePadding;
-    u16 palette;
+    volatile u16 paddingC;
+    u16 selectedPalette;
 
+    texture = &asset->textures[tileIndex];
     paletteBase = (asset->header.entryCount * sizeof(FontTexture)) + (u8 *)asset + sizeof(FontAssetHeader);
-    flipScale = gMenuSpriteFlipScales[flipMode & 3];
-
-    if (scaleX >= 0x201) {
+    if (scaleX > 0x200) {
         return;
     }
     if (scaleX <= 0) {
         return;
     }
-    if (scaleY >= 0x201) {
+    if (scaleY > 0x200) {
         return;
     }
     if (scaleY <= 0) {
         return;
     }
-    {
-        flipS = flipScale[0];
-        flipT = flipScale[1];
-        texture = &asset->textures[tileIndex];
-        texT = x + gMenuViewportCenterX;
-        texWidth = texture->width;
-        texHeight = texture->height;
+    flipS = ((s16 *)gMenuSpriteFlipScales)[(flipMode & 3) * 2 + 0];
+    flipT = ((s16 *)gMenuSpriteFlipScales)[(flipMode & 3) * 2 + 1];
 
-        left = texT << 2;
-        top = ((((((y & 0xFFFFu) & 0xFFFFu) & 0xFFFFu) & 0xFFFFu) + gMenuViewportCenterY) << 1) << 1;
-        right = (((scaleX * texWidth) << 2) >> 5) + left;
-        bottom = (((scaleY * texHeight) << 2) >> 5) + (0, top);
-        texS = 0;
-        texT = 0;
-        texT = 0;
-        texS += texture->imageOffset * 0;
+    texS = texture->width;
+    texT = texture->height;
+    left = (x + gMenuViewportCenterX) << 2;
+    top = (y + gMenuViewportCenterY) << 2;
+    right = left + (((scaleX * texS) << 2) >> 5);
+    bottom = top + (((scaleY * texT) << 2) >> 5);
+
+    height = texture->height;
+    // Retain the cached height's frontend web while initializing the S coordinate.
+    texS = height * 0;
+    texT = 0;
+    if (flipS == -1) {
+        texS = (texture->width - 1) << 5;
+    }
+    if (flipT == -1) {
+        texT = ((texture->height - 1) << 5) - texT;
+    }
+
+    minY = (s16)((gMenuViewportCenterY - (s16)clipTop) << 2);
+    maxY = (s16)((gMenuViewportCenterY + (s16)clipBottom) << 2);
+    minX = (s16)((gMenuViewportCenterX - (s16)clipLeft) << 2);
+    maxX = (s16)((gMenuViewportCenterX + (s16)clipRight) << 2);
+
+    if ((left >= maxX) || (top >= maxY) || (right < minX) || (bottom < minY)) {
+        return;
+    }
+    if (left < minX) {
+        texS = (((minX - left) << 3) << 5) / scaleX;
         if (flipS == -1) {
-            texS = (texWidth - 1) << 5;
+            texS = ((texture->width - 1) << 5) - texS;
         }
-        minX = gMenuViewportCenterY;
-        if ((left && left) && left) {
-        }
+        left = minX;
+    }
+    if (top < minY) {
+        texT = (((minY - top) << 3) << 5) / scaleY;
         if (flipT == -1) {
-            texT = (texHeight - 1) << 5;
+            texT = ((texture->height - 1) << 5) - texT;
         }
+        top = minY;
+    }
+    if (right >= maxX) {
+        right = maxX - 4;
+    }
+    if (bottom >= maxY) {
+        bottom = maxY - 4;
+    }
 
-        minY = (s16)((minX - (s16)clipTop) << 2);
-        maxY = (s16)((gMenuViewportCenterY + (s16)clipBottom) << 2);
-        minX = (s16)((gMenuViewportCenterX - (s16)clipLeft) << 2);
-        maxX = (s16)((gMenuViewportCenterX + (s16)clipRight) << 2);
+    if (paletteIndex == 0) {
+        selectedPalette = texture->paletteIndex;
+    } else {
+        selectedPalette = paletteIndex - 1;
+    }
 
-        scaleYValue = scaleY;
-        scaleXValue = scaleX;
-        if ((left < maxX) && (top < maxY) && (right >= minX) && (bottom >= minY)) {
-            if (left < minX) {
-                texS = ((minX - left) << 8) / scaleXValue;
-                if (flipS == -1) {
-                    texS = ((texWidth - 1) << 5) - texS;
-                }
-                left = minX;
-            }
-            if (top < minY) {
-                texT = ((minY - top) << 8) / scaleYValue;
-                if (flipT == -1) {
-                    texT = ((texHeight - 1) << 5) - texT;
-                }
-                top = minY;
-            }
-            if (right >= maxX) {
-                right = maxX - 4;
-            }
-            if (bottom >= maxY) {
-                bottom = maxY - 4;
-            }
+    if (alpha != 0x100) {
+        gDPPipeSync(gRegionAllocPtr++);
+        gDPSetCombineMode(gRegionAllocPtr++, G_CC_MODULATEIA_PRIM, G_CC_MODULATEIA_PRIM);
+        gDPSetPrimColor(gRegionAllocPtr++, 0, 0, alpha, alpha, alpha, 0xFF);
+    }
 
-            if (paletteArg == (texture->imageOffset * 0)) {
-                palette = texture->paletteIndex;
-            } else {
-                palette = paletteArg - 1;
-            }
-
-            if (alpha != 0x100) {
-                gDPPipeSync(gRegionAllocPtr++);
-                FONT_GFX_CMD(gRegionAllocPtr++, 0xFC119623, 0xFF2FFFFF);
-                FONT_GFX_CMD(
-                    gRegionAllocPtr++,
-                    0xFA000000,
-                    ((alpha & 0xFF) << 0x18) | ((alpha & 0xFF) << 0x10) | ((alpha & 0xFF) << 8) | 0xFF
-                );
-                if ((texT && texT) && texT) {
-                }
-            }
-
-            gDPLoadTextureTile_4b(
-                gRegionAllocPtr++,
-                texture->imageOffset + (u8 *)asset,
-                G_IM_FMT_CI,
-                texture->width,
-                texture->height,
-                0,
-                0,
-                texture->width,
-                texture->height,
-                0,
-                G_TX_CLAMP,
-                G_TX_CLAMP,
-                G_TX_NOMASK,
-                G_TX_NOMASK,
-                G_TX_NOLOD,
-                G_TX_NOLOD
-            );
-            gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, paletteBase + (palette * 0x20));
-            palette = 0x8000 / scaleXValue;
-            gSPTextureRectangle(
-                gRegionAllocPtr++,
-                left,
-                top,
-                right,
-                bottom,
-                G_TX_RENDERTILE,
-                texS,
-                texT,
-                (u16)(palette * flipS),
-                (u16)((u16)(0x8000 / scaleYValue) * flipT)
-            );
-            if (alpha != 0x100) {
-                gSPDisplayList(gRegionAllocPtr++, gMenuRenderModeResetDl);
-            }
-        }
+    gDPLoadTextureTile_4b(
+        gRegionAllocPtr++,
+        texture->imageOffset + (u8 *)asset,
+        G_IM_FMT_CI,
+        texture->width,
+        texture->height,
+        0,
+        0,
+        texture->width,
+        texture->height,
+        0,
+        G_TX_CLAMP,
+        G_TX_CLAMP,
+        G_TX_NOMASK,
+        G_TX_NOMASK,
+        G_TX_NOLOD,
+        G_TX_NOLOD
+    );
+    gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, paletteBase + (selectedPalette << 5));
+    gSPTextureRectangle(
+        gRegionAllocPtr++,
+        left,
+        top,
+        right,
+        bottom,
+        G_TX_RENDERTILE,
+        texS,
+        texT,
+        (u16)((u16)(0x8000 / scaleX) * flipS),
+        (u16)((u16)(0x8000 / scaleY) * flipT)
+    );
+    if (alpha != 0x100) {
+        gSPDisplayList(gRegionAllocPtr++, gMenuRenderModeResetDl);
     }
 }
-#endif
 
 void drawMenuSpriteWithPaletteScale(s16 x, s16 y, FontAsset *asset, u16 index, u16 intensity) {
     FontTexture *texture;
