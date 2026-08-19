@@ -2010,31 +2010,12 @@ void initCourseSelectCourseStats(CourseSelectWidgetActor *arg0) {
     setCallbackTaskCallback(temp_a3, (CallbackTaskCallback)updateCourseSelectCourseStats);
 }
 
-// drawCourseSelectCourseDescription best match: 95.402%
-// (nonmatchings/drawCourseSelectCourseDescription-29/base_222.c)
-//
-// NOTE ON SCORING: the project scorer (tools/asm-differ / dist.py) rates this
-// variant BELOW the previous 96.952% attempt, but an object-level comparison
-// against the extracted target shows it is substantially closer:
-//
-//                       prev best   this variant   (target: 352 insns)
-//   differing words         316          121
-//   differing opcodes       268           28
-//   instruction count       348          351
-//   relocation mismatches     6            0
-//
-// The scorer's alignment rewards the old shape; the relocation table is ground
-// truth. This variant reproduces the target's own symbol references.
-#pragma GLOBAL_ASM("asm/nonmatchings/menu/course_select/course_select_ui/drawCourseSelectCourseDescription.s")
-
-#ifdef NON_MATCHING
-
 void drawCourseSelectCourseDescription(CourseSelectWidgetActor *arg0) {
-    u16 unused[2];
-    MenuGlyphScript *volatile text;
-    MenuGlyphScript *boardText;
+    s32 i;
+    MenuGlyphScript *text;
+    s32 pad;
     MenuGlyphScript script[8];
-    u32 descriptionIndex;
+    u16 descriptionIndex;
     s32 pricedCourseId;
     u32 price;
     s32 digitCount;
@@ -2042,11 +2023,9 @@ void drawCourseSelectCourseDescription(CourseSelectWidgetActor *arg0) {
     u16 selectedIndex;
 
     if (COURSE_SELECT_STATUS_LAYOUT.purchaseMessageStateUnsigned == 0) {
-        if ((gCourseSelectPurchaseFlowActive == 0) && ((gRacePlayers[0].menuState == 0) || (gRacePlayers[0].menuState == 3) ||
-                                  (gRacePlayers[0].menuState == 9))) {
-            if (1) {}
-            if (1) {}
-            if (1) {}
+        if ((gCourseSelectPurchaseFlowActive == 0) &&
+            (((gRacePlayers[0].menuState == 0) || (gRacePlayers[0].menuState == 3)) ||
+             (gRacePlayers[0].menuState == 9))) {
             if (COURSE_SELECT_STATUS_LAYOUT.extraCourseColumnState == 1) {
                 descriptionIndex = 3;
             } else if (COURSE_SELECT_STATUS_LAYOUT.extraCourseColumnState == 2) {
@@ -2054,7 +2033,7 @@ void drawCourseSelectCourseDescription(CourseSelectWidgetActor *arg0) {
             } else if ((gRacePlayers[0].menuSelection >= 9) && (gRacePlayers[0].menuSelection < 12)) {
                 descriptionIndex = 5;
             } else {
-                descriptionIndex = (gRacePlayers[0].menuSelection % 3) & 0xFFFF;
+                descriptionIndex = gRacePlayers[0].menuSelection % 3;
             }
             text = gCourseSelectModeDescriptionText[descriptionIndex].text;
         } else {
@@ -2075,21 +2054,14 @@ void drawCourseSelectCourseDescription(CourseSelectWidgetActor *arg0) {
                 text = gCourseSelectBoardLevelByCourseText[gRacePlayers[0].menuSelection % 3].text;
             } else {
                 if ((gRacePlayers[0].menuSelection >= 9) && (gRacePlayers[0].menuSelection < 12)) {
-                    pricedCourseId = gCourseSelectCourseIds[4][selectedIndex - 1] % 3;
-                    descriptionIndex = pricedCourseId;
-                    boardText = gCourseSelectExtraCourseBoardLevelText[descriptionIndex].text;
-                    pricedCourseId = gRacePlayers[0].menuSelection;
-                    text = boardText;
+                    i = gCourseSelectCourseIds[4][selectedIndex - 1] % 3;
+                    text = gCourseSelectExtraCourseBoardLevelText[i].text;
                 } else {
-                    boardText = gCourseSelectBoardLevelText;
+                    text = gCourseSelectBoardLevelText;
                 }
-                text = boardText;
             }
         }
-
-        boardText = text;
-        drawMenuGlyphScript(arg0->x, arg0->y, boardText, 1, (u16)(s32)arg0->spriteIndex, 0);
-
+        drawMenuGlyphScript(arg0->x, arg0->y, text, 1, arg0->spriteIndex, 0);
         if ((gRaceSplitscreenMode == 3) && ((gRacePlayers[0].menuState == 1) || (gRacePlayers[0].menuState == 2))) {
             if ((gCharacterSelectHighlightedRosterIndices[0] != 3) ||
                 ((gGameSaveDataBuffer[0].extraCourseUnlockFlags & 7) == 0)) {
@@ -2097,19 +2069,18 @@ void drawCourseSelectCourseDescription(CourseSelectWidgetActor *arg0) {
                 script[1] = 6;
                 script[2] = selectedIndex;
                 script[3] = 0xFFFF;
-                drawMenuGlyphScript(arg0->x + 0x48, arg0->y + 0x10, script, 1, (u16)(s32)arg0->spriteIndex, 0);
+                drawMenuGlyphScript(arg0->x + 0x48, arg0->y + 0x10, script, 1, arg0->spriteIndex, 0);
             }
-
             if (gCourseSelectModeSelection == 0) {
                 script[0] = 0xFFFC;
                 script[1] = 6;
                 if ((selectedIndex >= 2) || (gRacePlayers[0].menuSelection >= 9)) {
                     if (gRacePlayers[0].menuSelection >= 9) {
-                        pricedCourseId = gCourseSelectCourseIds[4][selectedIndex - 1];
+                        i = gCourseSelectCourseIds[4][selectedIndex - 1];
                     } else {
-                        pricedCourseId = (gRacePlayers[0].menuSelection % 3) + (selectedIndex * 3) - 3;
+                        i = ((gRacePlayers[0].menuSelection % 3) + (selectedIndex * 3)) - 3;
                     }
-                    price = gCourseUnlockPrices[pricedCourseId];
+                    price = gCourseUnlockPrices[i];
                     if (price < 10000) {
                         digitCount = 5;
                     } else if (price < 100000) {
@@ -2117,61 +2088,34 @@ void drawCourseSelectCourseDescription(CourseSelectWidgetActor *arg0) {
                     } else {
                         digitCount = 7;
                     }
-                    pricedCourseId = gRacePlayers[0].menuSelection;
-                    if (price != 0) {
-                        digit = script;
-                        digit += digitCount;
-                        while (1) {
-                            digit--;
-                            digit[1] = price % 10;
-                            price /= 10;
-                            if (price == 0) {
-                                break;
-                            }
-                        }
+                    i = 0;
+                    while (price != 0) {
+                        script[digitCount - i] = price % 10;
+                        price /= 10;
+                        i++;
                     }
                     script[digitCount + 1] = 0x10;
                     script[digitCount + 2] = 0xFFFF;
-                    if (pricedCourseId >= 9) {}
+                    if (gRacePlayers[0].menuSelection >= 9) {}
                 } else {
-                    digitCount = 3;
-                    /* Fake: a code-free double read of gCourseUnlockPrices. It keeps the
-                     * %hi(gCourseUnlockPrices) web live through this branch, which is what
-                     * makes IDO hoist it the way the target does (words 134 -> 124,
-                     * differing opcodes 50 -> 28). One read is inert; three score the same. */
-                    if (gCourseUnlockPrices && gCourseUnlockPrices) {}
-                    script[2] = 0x2B;
-                    script[digitCount] = 0x2B;
-                    script[digitCount + 1] = 0x2B;
-                    script[digitCount + 2] = 0x2B;
-                    script[digitCount + 3] = 0x2B;
+                    for (i = 2; i < 7; i++) { script[i] = 0x2B; }
                     script[7] = 0xFFFF;
                 }
-                descriptionIndex = (s32)arg0->spriteIndex;
-                drawMenuGlyphScript(arg0->x + 0x20, arg0->y + 0x20, script, 1, (u16)descriptionIndex, 0);
+                drawMenuGlyphScript(arg0->x + 0x20, arg0->y + 0x20, script, 1, arg0->spriteIndex, 0);
             }
         }
     } else {
-        /* Fake: two discarded references to the literal 9 in this cold block. A
-         * discarded read is a pure priority penalty on the web it touches, and
-         * demoting the CSE web for the constant 9 is what moves it out of v1 into
-         * a0, which is where the target holds it (words 124 -> 121, and the last
-         * differing immediate disappears). One read is inert, three score the
-         * same, four regress; both must precede the load below. */
-        if (gCourseSelectModeSelection == 9) {}
-        if (gCourseSelectModeSelection == 9) {}
-        digitCount = COURSE_SELECT_STATUS_LAYOUT.purchaseMessageStateUnsigned;
+        text = gCourseSelectPurchaseMessageText[COURSE_SELECT_STATUS_LAYOUT.purchaseMessageStateUnsigned - 1].text;
         drawMenuGlyphScript(
             arg0->x,
             arg0->y,
-            gCourseSelectPurchaseMessageText[digitCount - 1U].text,
+            text,
             1,
-            (u16)(s32)arg0->spriteIndex,
+            arg0->spriteIndex,
             0
         );
     }
 }
-#endif
 
 
 void updateCourseSelectCourseDescription(CourseSelectWidgetActor *arg0) {
