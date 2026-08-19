@@ -303,8 +303,8 @@ extern void
 drawMenuSpriteWideIndex(s16 x, s16 y, void *texture, s32 tileIndex, u16 width, u16 height, u8 palette, u8 flip);
 #endif
 
-// drawMenuSpriteClipped best match: 98.227%
-// (nonmatchings/drawMenuSpriteClipped-17/base_47.c; verified equivalent spelling base_74.c)
+// drawMenuSpriteClipped best match: 99.706%
+// (nonmatchings/drawMenuSpriteClipped-18/base.c)
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/renderer/menu_renderer/drawMenuSpriteClipped.s")
 
 #ifdef NON_MATCHING
@@ -314,9 +314,9 @@ drawMenuSpriteWideIndex(s16 x, s16 y, void *texture, s32 tileIndex, u16 width, u
  * that the already-matched callers were compiled against (cross-TU prototype
  * mismatches exist in the original game).
  *
- * The stacked redundant & 0xFFFFu masks and the (short) cast on the flipped
- * texS initialization are runtime no-ops (gSPTextureRectangle masks s to 16
- * bits) that phase-shift IDO's temporary allocation into the target's basin.
+ * The dead height use is a compiler-allocation nudge. It leaves one extra byte
+ * store versus the target but otherwise reproduces the normalized instruction
+ * stream exactly.
  */
 void drawMenuSpriteClipped(s16 x, s16 y, MenuFontAssetTable *table, u16 imageIndex, u16 scaleX, u16 scaleY,
                            u8 flipMode, u8 paletteIndex, s16 clipLeft, s16 clipTop, s16 clipRight,
@@ -330,8 +330,8 @@ void drawMenuSpriteClipped(s16 x, s16 y, MenuFontAssetTable *table, u16 imageInd
     s32 bottom; // sp84
     s32 texS; // sp80
     s32 texT; // sp7C
-    s32 width;
-    u32 height;
+    u8 height;
+    s32 pad;
     s16 flipS; // sp72
     s16 flipT; // sp70
     s16 pad2;
@@ -358,23 +358,22 @@ void drawMenuSpriteClipped(s16 x, s16 y, MenuFontAssetTable *table, u16 imageInd
     flipS = ((s16 *)gMenuSpriteFlipScales)[(flipMode & 3) * 2 + 0];
     flipT = ((s16 *)gMenuSpriteFlipScales)[(flipMode & 3) * 2 + 1];
 
-    width = entry->width;
-    height = entry->height;
+    texS = entry->width;
+    texT = entry->height;
     
     left = (x + gMenuViewportCenterX) << 2;
     top = (y + gMenuViewportCenterY) << 2;
-    right = left + (((scaleX * entry->width) << 2) >> 5);
-    bottom = top + (((scaleY * entry->height) << 2) >> 5);
+    right = left + (((scaleX * texS) << 2) >> 5);
+    bottom = top + (((scaleY * texT) << 2) >> 5);
 
+    height = entry->height;
     texS = 0;
     texT = 0;
     if (flipS == -1) {
-        
-        texS = ((((((short) (width - 1)) << 5) & 0xFFFFu) & 0xFFFFu) & 0xFFFFu) & 0xFFFFu;
+        texS = ((entry->width - 1) << 5) - texS;
     }
     if (flipT == -1) {
-        
-        texT = (height - 1) << 5;
+        texT = ((entry->height - 1) << 5) - texT;
     }
 
 
@@ -442,6 +441,7 @@ void drawMenuSpriteClipped(s16 x, s16 y, MenuFontAssetTable *table, u16 imageInd
     gSPTextureRectangle(gRegionAllocPtr++, left, top, right, bottom, G_TX_RENDERTILE,
                         texS, texT, (u16)((u16)(0x8000 / scaleX) * flipS),
                         (u16)((u16)(0x8000 / scaleY) * flipT));
+    if (height) {}
 }
 #endif
 
