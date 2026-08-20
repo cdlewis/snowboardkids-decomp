@@ -76,7 +76,6 @@ Contributing
 
 Contributions are most welcome! There are a variety of ways you can assist:
 
-* Match new functions! The project is so new that just starting Claude in the directory and asking it to match stuff will probably yield useful results.
 * Fix compiler warnings
 * Clean up code: you'll see plenty of hastily decompiled functions that use pointer arithmetic rather than proper struct access. We need help cleaning up these functions.
 * Document code: some functions/variables have useful names (rather than func_XXX or D_XXX) but most don't. Some that do are incorrectly named. We need lots of help investigating and documenting what all these functions do.
