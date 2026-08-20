@@ -170,55 +170,46 @@ void removeHuffmanQueueNode(s16 arg0) {
     }
 }
 
-// decompressHuffmanAssetPayload best match: 99.905%
-// Remaining mismatch: five register-allocation-only instruction words. The
-// instruction count (262), every positional opcode, and the frame (-64) match.
-// The target colors both decoded-symbol webs as a2; this candidate colors them
-// as t1. The natural forward byte-copy loop now matches the target exactly and
-// intentionally permits overlapping LZ back-references.
-#pragma GLOBAL_ASM("asm/nonmatchings/engine/asset_manager/decompressHuffmanAssetPayload.s")
-
-#ifdef NON_MATCHING
 void decompressHuffmanAssetPayload(u8 flags, u8 *compressedPayload, u8 *output, s32 outputSize) {
-    u8 **unusedPayloadAddress;
+    u8 *input;
+    u8 *outputCopy;
     s32 bit;
     s32 nodeIndex;
     s32 bitIndex;
-    s32 copyLength;
+    s32 firstCodeCopy;
     s32 tableBytesRead;
     s32 outputOffset;
-    u8 savedCode;
-    s32 copyIndex;
-    u8 distanceLowByte;
+    u8 new_var;
+    s32 nodeValue;
+    u8 sourceOffset;
     u8 symbol;
     s32 rangeStart;
-    u8 *input;
     s32 rangeEnd;
     s32 end;
     s32 currentNodeIndex;
-    u8 *unusedDestination;
-    u8 *unusedSource;
-    s32 one;
+    u8 *destination;
+    u8 *source;
+    s32 var_t4;
+    s32 temp;
 
-    unusedPayloadAddress = &compressedPayload;
     gHuffmanQueueHead = -1;
     gHuffmanQueueTail = -1;
     gHuffmanQueueCount = 0;
     gHuffmanNodeCount = 0;
     tableBytesRead = 0;
-    input = compressedPayload; one = 1; end = -one; while (1) {
-        rangeStart = *input++;
-        tableBytesRead++;
+    input = compressedPayload;
+    outputCopy = output;
+
+    while (1) {
+        rangeStart = input[tableBytesRead++];
         if ((tableBytesRead != 1) && (rangeStart == 0)) {
             break;
         }
-        tableBytesRead++;
-        rangeEnd = *input++;
+        rangeEnd = input[tableBytesRead++];
         for (currentNodeIndex = rangeStart; currentNodeIndex <= rangeEnd; currentNodeIndex++) {
-            tableBytesRead++;
-            gHuffmanNodes[gHuffmanNodeCount].weight = *input++;
-            gHuffmanNodes[gHuffmanNodeCount].left = end;
-            gHuffmanNodes[gHuffmanNodeCount].right = end;
+            gHuffmanNodes[gHuffmanNodeCount].weight = input[tableBytesRead++];
+            gHuffmanNodes[gHuffmanNodeCount].left = -1;
+            gHuffmanNodes[gHuffmanNodeCount].right = -1;
             gHuffmanNodes[gHuffmanNodeCount].value = currentNodeIndex;
             insertHuffmanQueueNode(gHuffmanNodeCount);
             gHuffmanNodeCount++;
@@ -239,7 +230,7 @@ void decompressHuffmanAssetPayload(u8 flags, u8 *compressedPayload, u8 *output, 
             gHuffmanNodes[rangeEnd].weight + gHuffmanNodes[rangeStart].weight;
         gHuffmanNodes[gHuffmanNodeCount].left = rangeEnd;
         gHuffmanNodes[gHuffmanNodeCount].right = rangeStart;
-        gHuffmanNodes[gHuffmanNodeCount].value = end;
+        gHuffmanNodes[gHuffmanNodeCount].value = -1;
         nodeIndex = gHuffmanNodeCount;
         insertHuffmanQueueNode(nodeIndex);
         gHuffmanNodeCount++;
@@ -251,15 +242,15 @@ void decompressHuffmanAssetPayload(u8 flags, u8 *compressedPayload, u8 *output, 
         while (1) {
             currentNodeIndex = gHuffmanNodeCount - 1;
             while (1) {
-                if (end != gHuffmanNodes[currentNodeIndex].value) {
+                if (gHuffmanNodes[currentNodeIndex].value != -1) {
                     symbol = gHuffmanNodes[currentNodeIndex].value;
                     break;
                 }
                 if (bitIndex == 8) {
-                    input++;
+                    tableBytesRead++;
                     bitIndex = 0;
                 }
-                bit = *input & (1 << (7 - bitIndex));
+                bit = input[tableBytesRead] & (1 << (7 - bitIndex));
                 bitIndex++;
                 if (bit == 0) {
                     currentNodeIndex = gHuffmanNodes[currentNodeIndex].left;
@@ -275,36 +266,18 @@ void decompressHuffmanAssetPayload(u8 flags, u8 *compressedPayload, u8 *output, 
         }
     } else {
         while (1) {
-            currentNodeIndex = gHuffmanNodeCount - 1;
+            currentNodeIndex = temp = gHuffmanNodeCount - 1;
             while (1) {
                 symbol = gHuffmanNodes[currentNodeIndex].value;
-                if (end != gHuffmanNodes[currentNodeIndex].value) {
-                    currentNodeIndex = gHuffmanNodeCount - 1;
+                if (gHuffmanNodes[currentNodeIndex].value != -1) {
+                    currentNodeIndex = temp;
                     break;
                 }
                 if (bitIndex == 8) {
-                    input++;
+                    tableBytesRead++;
                     bitIndex = 0;
                 }
-                bit = *input & (1 << (7 - bitIndex));
-                bitIndex++;
-                if (bit == 0) {
-                    currentNodeIndex = gHuffmanNodes[currentNodeIndex].left;
-                } else {
-                    currentNodeIndex = (&gHuffmanNodes[currentNodeIndex])->right;
-                }
-            }
-
-            while (1) {
-                if (end != gHuffmanNodes[currentNodeIndex].value) {
-                    distanceLowByte = gHuffmanNodes[currentNodeIndex].value;
-                    break;
-                }
-                if (bitIndex == 8) {
-                    input++;
-                    bitIndex = 0;
-                }
-                bit = *input & (1 << (7 - bitIndex));
+                bit = input[tableBytesRead] & (1 << (7 - bitIndex));
                 bitIndex++;
                 if (bit == 0) {
                     currentNodeIndex = gHuffmanNodes[currentNodeIndex].left;
@@ -313,15 +286,32 @@ void decompressHuffmanAssetPayload(u8 flags, u8 *compressedPayload, u8 *output, 
                 }
             }
 
-            currentNodeIndex = rangeStart;
-            savedCode = (u8)symbol;
+            while (1) {
+                if (gHuffmanNodes[currentNodeIndex].value != -1) {
+                    sourceOffset = gHuffmanNodes[currentNodeIndex].value;
+                    break;
+                }
+                if (bitIndex == 8) {
+                    tableBytesRead++;
+                    bitIndex = 0;
+                }
+                bit = input[tableBytesRead] & (1 << (7 - bitIndex));
+                bitIndex++;
+                if (bit == 0) {
+                    currentNodeIndex = gHuffmanNodes[currentNodeIndex].left;
+                } else {
+                    currentNodeIndex = gHuffmanNodes[currentNodeIndex].right;
+                }
+            }
+
             if (symbol == 0) {
-                output[outputOffset++] = distanceLowByte;
+                outputCopy[outputOffset++] = sourceOffset;
             } else {
-                copyLength = (savedCode >> 4) & 0xF;
-                one = outputOffset - (((savedCode << 8) | distanceLowByte) & 0xFFF);
-                for (copyIndex = 0; copyIndex < copyLength;) {
-                    output[outputOffset++] = output[one + copyIndex++];
+                firstCodeCopy = (symbol >> 4) & 0xF;
+                var_t4 = outputOffset - (((symbol << 8) | sourceOffset) & 0xFFF);
+
+                for (nodeValue = 0; nodeValue < firstCodeCopy;) {
+                    outputCopy[outputOffset++] = output[var_t4 + nodeValue++];
                 }
             }
             if (outputOffset >= outputSize) {
@@ -330,7 +320,6 @@ void decompressHuffmanAssetPayload(u8 flags, u8 *compressedPayload, u8 *output, 
         }
     }
 }
-#endif
 
 void loadCompressedRomAsset(void *arg0, void *arg1, s32 arg2) {
     s16 *sp28;
