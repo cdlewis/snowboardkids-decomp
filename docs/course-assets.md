@@ -89,31 +89,64 @@ particle, bumper, trailing-particle pair, and spinning-object pair. Other
 multi-list tails use the conservative `COURSE_AUXILIARY_DISPLAY_LISTS` name
 until their individual nested entry points are tied to runtime behavior.
 
-The main entry point of each course was recursively traced through segment 2
-`G_DL` commands. Its `G_VTX` commands address the compressed segment 3 model
-resource bundle. Those confirmed ranges are extracted as editable N64 `Vtx`
-records; all bytes not yet proven to be vertices remain explicit raw parts so
-that no texture or palette format is guessed. Exact Huffman tables, bit padding,
-and LZ token choices are preserved, so edited manifests still reproduce the
-original compressed stream when unchanged.
+Every confirmed top-level entry point was recursively traced through segment 2
+`G_DL` commands. Its `G_VTX`, `G_SETTIMG`, `G_LOADBLOCK`, and `G_LOADTLUT`
+commands address the compressed segment 3 model-resource bundle. Confirmed
+ranges are extracted as editable N64 `Vtx` records, CI4 textures, and RGBA16
+palettes. Texture storage dimensions come from the load-block byte count and
+render-tile stride; `G_SETTILESIZE` is not used as an allocation size because
+courses frequently use it to repeat a smaller stored texture.
 
-| Course | Display lists traced | Vertex loads | Vertices decoded |
-| --- | ---: | ---: | ---: |
-| Big Snowman | 21 | 168 | 4,407 |
-| Sunset Rock | 35 | 161 | 3,664 |
-| Night Highway | 38 | 157 | 3,414 |
-| Grass Valley | 21 | 223 | 6,035 |
-| Dizzy-Land | 56 | 223 | 4,865 |
-| Quicksand Valley | 52 | 224 | 4,931 |
-| Silver Mountain | 27 | 231 | 5,994 |
-| Animal Land | 28 | 126 | 2,891 |
-| Ninja Land | 19 | 119 | 2,894 |
-| Rookie Mountain | 19 | 80 | 1,753 |
+Bytes that are not referenced by a confirmed display-list root remain explicit
+raw parts. Exact Huffman tables, bit padding, and LZ token choices are preserved,
+so edited manifests still reproduce the original compressed stream when
+unchanged.
 
-This accounts for 40,848 vertex records across all ten environments. The
-remaining segment 3 parts are deliberately called model resources, rather than
-textures, because the runtime treats the bundle as a complete RSP segment and
-its remaining internal formats have not all been classified.
+| Course | Display lists | Vertex loads | Vertices | CI4 textures | RGBA16 palettes |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Big Snowman | 24 | 175 | 4,556 | 37 | 21 |
+| Sunset Rock | 37 | 166 | 3,760 | 34 | 14 |
+| Night Highway | 40 | 162 | 3,508 | 44 | 15 |
+| Grass Valley | 23 | 228 | 6,152 | 69 | 19 |
+| Dizzy-Land | 66 | 252 | 5,387 | 62 | 18 |
+| Quicksand Valley | 56 | 233 | 5,116 | 51 | 13 |
+| Silver Mountain | 29 | 236 | 6,099 | 65 | 22 |
+| Animal Land | 30 | 131 | 2,994 | 46 | 12 |
+| Ninja Land | 21 | 124 | 3,009 | 66 | 16 |
+| Rookie Mountain | 21 | 85 | 1,870 | 25 | 9 |
+
+This accounts for 347 display lists, 42,451 vertex records, 499 textures, and
+159 palettes across all ten environments. The asset is still called model
+resources, rather than textures, because the runtime treats it as a complete
+RSP segment containing all of those resource classes.
+
+## Course sprite-table layout
+
+The nine optional course sprite assets use the same `AssetTable` format as the
+menu and race UI renderers:
+
+```text
+u32 unknown_0
+u32 entry_count
+CourseSpriteEntry entries[entry_count] // image offset, palette index, width, height
+u16 rgba16_palettes[][16]
+u8 ci4_images[]
+```
+
+Every table parses with complete byte coverage. Animal Land has no table because
+the Trick Game does not load one.
+
+| Course | Entries | Palettes | CI4 images | Decompressed size |
+| --- | ---: | ---: | ---: | ---: |
+| Big Snowman | 2 | 1 | 2 | `0x758` |
+| Sunset Rock | 2 | 1 | 2 | `0x758` |
+| Night Highway | 5 | 2 | 5 | `0xD90` |
+| Grass Valley | 8 | 5 | 8 | `0x1288` |
+| Dizzy-Land | 2 | 1 | 2 | `0x758` |
+| Quicksand Valley | 2 | 1 | 2 | `0x758` |
+| Silver Mountain | 8 | 5 | 8 | `0x1808` |
+| Ninja Land | 2 | 1 | 2 | `0x758` |
+| Rookie Mountain | 2 | 1 | 2 | `0x758` |
 
 ## Surface-data layout
 
@@ -164,11 +197,9 @@ unnamed.
 
 ## Remaining documentation work
 
-- Classify and decode the raw texture, palette, and other model-resource ranges
-  that remain between the confirmed vertex arrays.
+- Determine whether unreferenced raw model-resource tails contain dormant
+  vertices or other data used by display-list entry points not yet identified.
 - Give semantic names to individual nested display lists as their runtime or
   visual roles are established.
-- Add a structured extractor for the optional course sprite tables and decode
-  their compressed format.
 - Identify `RaceCourseSurface.unknown_18` and unknown fields in
   `RaceCourseStartEntry` from runtime uses.

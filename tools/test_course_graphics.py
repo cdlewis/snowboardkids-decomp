@@ -1,6 +1,10 @@
 import unittest
 
-from tools.course_graphics_common import pack_course_model_resources, trace_course_graphics
+from tools.course_graphics_common import (
+    collect_course_texture_references,
+    pack_course_model_resources,
+    trace_course_graphics,
+)
 
 
 class CourseGraphicsTests(unittest.TestCase):
@@ -35,6 +39,34 @@ class CourseGraphicsTests(unittest.TestCase):
         packed = pack_course_model_resources(manifest)
 
         self.assertEqual(packed, bytes.fromhex("aabbccdd 0001fffe00030004fffb00060708090a"))
+
+    def test_collects_ci4_texture_and_palette_loads(self):
+        bundle = bytes.fromhex(
+            "FD50000003000000 F550000007094260 E600000000000000 F3000000071FF200 "
+            "E700000000000000 F540080000094260 F2000000007FC3FC FD10000003000400 "
+            "E800000000000000 F500010007000000 E600000000000000 F00000000703C000 "
+            "E700000000000000 B800000000000000"
+        )
+        graph = trace_course_graphics(bundle, [0])
+
+        textures, palettes = collect_course_texture_references(bundle, graph, 0x500)
+
+        self.assertEqual(
+            [(item.offset, item.size, item.format, item.width, item.height) for item in textures],
+            [(0, 0x400, "ci4", 64, 32)],
+        )
+        self.assertEqual([(item.offset, item.colors) for item in palettes], [(0x400, 16)])
+
+    def test_model_resource_manifest_packs_texture_and_palette(self):
+        manifest = {
+            "decompressed_size": 8,
+            "parts": [
+                {"type": "texture", "offset": 0, "format": "ci4", "width": 4, "height": 2, "data": "01234567"},
+                {"type": "palette", "offset": 4, "format": "rgba16", "colors": 2, "values": [0x89AB, 0xCDEF]},
+            ],
+        }
+
+        self.assertEqual(pack_course_model_resources(manifest), bytes.fromhex("0123456789abcdef"))
 
 
 if __name__ == "__main__":
