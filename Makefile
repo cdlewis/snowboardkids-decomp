@@ -224,6 +224,7 @@ TIDY_C_FILES := $(filter-out %.inc.c $(TIDY_C_FRAGMENT_FILES),$(PROJECT_C_FILES)
 TEXTCONV = $(PYTHON) $(TOOLS_DIR)/textconv.py
 CHARMAP = $(TOOLS_DIR)/charmap.txt
 TEXTCONV_DIR = $(BUILD_DIR)/textconv
+COURSE_SURFACE_DATA_PACK = $(PYTHON) $(TOOLS_DIR)/course_surface_data_pack.py
 
 BIN_FILES   := $(foreach dir,$(BIN_DIRS),$(wildcard $(dir)/*.bin))
 BIN_O_FILES := $(patsubst %.bin,$(BUILD_DIR)/%.o,$(BIN_FILES))
@@ -333,6 +334,16 @@ $(BUILD_DIR)/%.o: %.bin
 	@mkdir -p $(dir $@)
 	$(PRINTF) "[$(PINK) linker $(NO_COL)]  $<\n"
 	$(V)$(LD) -r -b binary -o $@ $<
+
+# Editable compressed course collision/path data -> *.o
+$(BUILD_DIR)/assets/course_surface_data/%.o: assets/course_surface_data/%.yaml \
+		$(TOOLS_DIR)/course_surface_data_pack.py \
+		$(TOOLS_DIR)/course_surface_data_common.py \
+		$(TOOLS_DIR)/huffman_asset.py
+	@mkdir -p $(dir $@)
+	$(PRINTF) "[$(GREEN) course $(NO_COL)]  $<\n"
+	$(V)$(COURSE_SURFACE_DATA_PACK) $< --out $(BUILD_DIR)/assets/course_surface_data/$*.bin
+	$(V)$(LD) -r -b binary -o $@ $(BUILD_DIR)/assets/course_surface_data/$*.bin
 
 # *.o -> *.elf
 $(TARGET).elf: $(LD_SCRIPT) $(LINKER_SCRIPTS) $(O_FILES)

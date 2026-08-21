@@ -71,6 +71,11 @@ If everything works correctly you should see:
 build/snowboardkids.z64: OK
 ```
 
+## Reverse-engineering notes
+
+- [Course asset inventory](docs/course-assets.md) documents the ten course
+  environments, their ROM ranges, runtime asset roles, and known data layouts.
+
 Contributing
 ============
 

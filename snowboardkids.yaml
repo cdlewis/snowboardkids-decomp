@@ -467,6 +467,9 @@ segments:
     subsegments:
       - { type: .bss, vram: 0x80160480, name: engine/system_runtime_buffers }
 
+  # Per-course uncompressed RSP segment 2 graphics bundles. These contain
+  # vertices, display lists, and related graphics resources, not whole levels.
+  # See docs/course-assets.md for the complete course asset inventory.
   - type: bin
     start: 0xE35C0
     name: LEVEL_BIG_SNOWMAN
@@ -644,6 +647,7 @@ segments:
   - { start: 0x158D90, type: bin, name: _158D90, vram: 0 }
   - { start: 0x15C750, type: bin, name: _15C750, vram: 0 }
   - { start: 0x160360, type: bin, name: _160360, vram: 0 }
+  # Per-course compressed RSP segment 3 texture bundles, in course-index order.
   - type: bin
     start: 0x163410
     name: LEVEL_BIG_SNOWMAN_TEXTURES
@@ -724,6 +728,9 @@ segments:
     name: _1E74E0
     vram: 0
 
+  # Optional compressed course sprite tables. Animal Land (course 7) has no
+  # sprite-table asset; the sequence therefore skips from Silver Mountain to
+  # Ninja Land.
   - type: bin
     start: 0x1EC0F0
     name: LEVEL_BIG_SNOWMAN_SPRITES
@@ -789,52 +796,53 @@ segments:
     name: _215BE0
     vram: 0
 
-  - type: bin
+  # Per-course compressed collision/path surface data, in course-index order.
+  - type: course_surface_data
     start: 0x21D9D0
     name: LEVEL_BIG_SNOWMAN_SURFACE_DATA
     vram: 0
 
-  - type: bin
+  - type: course_surface_data
     start: 0x222500
     name: LEVEL_SUNSET_ROCK_SURFACE_DATA
     vram: 0
 
-  - type: bin
+  - type: course_surface_data
     start: 0x2274A0
     name: LEVEL_NIGHT_HIGHWAY_SURFACE_DATA
     vram: 0
 
-  - type: bin
+  - type: course_surface_data
     start: 0x22AE50
     name: LEVEL_GRASS_VALLEY_SURFACE_DATA
     vram: 0
 
-  - type: bin
+  - type: course_surface_data
     start: 0x2308E0
     name: LEVEL_DIZZY_LAND_SURFACE_DATA
     vram: 0
 
-  - type: bin
+  - type: course_surface_data
     start: 0x2349E0
     name: LEVEL_QUICKSAND_VALLEY_SURFACE_DATA
     vram: 0
 
-  - type: bin
+  - type: course_surface_data
     start: 0x23A7D0
     name: LEVEL_SILVER_MOUNTAIN_SURFACE_DATA
     vram: 0
 
-  - type: bin
+  - type: course_surface_data
     start: 0x23E9D0
     name: LEVEL_ANIMAL_LAND_SURFACE_DATA
     vram: 0
 
-  - type: bin
+  - type: course_surface_data
     start: 0x23FCC0
     name: LEVEL_NINJA_LAND_SURFACE_DATA
     vram: 0
 
-  - type: bin
+  - type: course_surface_data
     start: 0x241160
     name: LEVEL_ROOKIE_MOUNTAIN_SURFACE_DATA
     vram: 0
