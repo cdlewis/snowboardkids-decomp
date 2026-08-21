@@ -32,6 +32,11 @@ def metadata_from_manifest(manifest: dict) -> CompressionMetadata:
         table=bytes.fromhex(str(compression["huffman_table"])),
         padding_bits=str(compression.get("padding_bits", "")),
         unused_tail=bytes.fromhex(str(compression.get("unused_tail", ""))),
+        lz_tokens=(
+            bytes.fromhex(str(compression["lz_tokens"]))
+            if compression.get("lz_tokens") is not None
+            else None
+        ),
     )
 
 

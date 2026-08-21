@@ -467,10 +467,10 @@ segments:
     subsegments:
       - { type: .bss, vram: 0x80160480, name: engine/system_runtime_buffers }
 
-  # Per-course uncompressed RSP segment 2 graphics bundles. These contain
-  # vertices, display lists, and related graphics resources, not whole levels.
+  # Per-course uncompressed RSP segment 2 graphics bundles. These contain the
+  # nested display-list graph and related graphics resources, not whole levels.
   # See docs/course-assets.md for the complete course asset inventory.
-  - type: bin
+  - type: course_display_list
     start: 0xE35C0
     name: BIG_SNOWMAN_COURSE_GRAPHICS
     vram: 0x02000000
@@ -483,7 +483,7 @@ segments:
   - { start: 0xEC310, type: course_display_list, name: BIG_SNOWMAN_COURSE_SECONDARY_BACKDROP_DISPLAY_LIST, vram: 0x02008D50, align: 8, subalign: 8, exclusive_ram_id: level_big_snowman }
   - { start: 0xEC400, type: course_display_list, name: BIG_SNOWMAN_COURSE_AUXILIARY_DISPLAY_LISTS, vram: 0x02008E40, align: 8, subalign: 8, exclusive_ram_id: level_big_snowman }
 
-  - type: bin
+  - type: course_display_list
     start: 0xEC9A0
     name: SUNSET_ROCK_COURSE_GRAPHICS
     vram: 0x02000000
@@ -495,7 +495,7 @@ segments:
   - { start: 0xF5920, type: course_display_list, name: SUNSET_ROCK_COURSE_BACKDROP_DISPLAY_LIST, vram: 0x02008F80, align: 8, subalign: 8, exclusive_ram_id: level_sunset_rock }
   - { start: 0xF5AE8, type: course_display_list, name: SUNSET_ROCK_COURSE_AUXILIARY_DISPLAY_LISTS, vram: 0x02009148, align: 8, subalign: 8, exclusive_ram_id: level_sunset_rock }
 
-  - type: bin
+  - type: course_display_list
     start: 0xF6160
     name: NIGHT_HIGHWAY_COURSE_GRAPHICS
     vram: 0x02000000
@@ -507,7 +507,7 @@ segments:
   - { start: 0xFE8F0, type: course_display_list, name: NIGHT_HIGHWAY_COURSE_BACKDROP_DISPLAY_LIST, vram: 0x02008790, align: 8, subalign: 8, exclusive_ram_id: level_night_highway }
   - { start: 0xFECA0, type: course_display_list, name: NIGHT_HIGHWAY_COURSE_AUXILIARY_DISPLAY_LISTS, vram: 0x02008B40, align: 8, subalign: 8, exclusive_ram_id: level_night_highway }
 
-  - type: bin
+  - type: course_display_list
     start: 0xFEDA0
     name: GRASS_VALLEY_COURSE_GRAPHICS
     vram: 0x02000000
@@ -519,7 +519,7 @@ segments:
   - { start: 0x10A280, type: course_display_list, name: GRASS_VALLEY_COURSE_BACKDROP_DISPLAY_LIST, vram: 0x0200B4E0, align: 8, subalign: 8, exclusive_ram_id: level_grass_valley }
   - { start: 0x10A490, type: course_display_list, name: GRASS_VALLEY_COURSE_AUXILIARY_DISPLAY_LISTS, vram: 0x0200B6F0, align: 8, subalign: 8, exclusive_ram_id: level_grass_valley }
 
-  - type: bin
+  - type: course_display_list
     start: 0x10AAB0
     name: DIZZY_LAND_COURSE_GRAPHICS
     vram: 0x02000000
@@ -539,7 +539,7 @@ segments:
   - { start: 0x117E58, type: course_display_list, name: DIZZY_LAND_SPINNING_OBJECT_BASE_DISPLAY_LIST, vram: 0x0200D3A8, align: 8, subalign: 8, exclusive_ram_id: level_dizzy_land }
   - { start: 0x117EF8, type: course_display_list, name: DIZZY_LAND_COURSE_AUXILIARY_DISPLAY_LISTS, vram: 0x0200D448, align: 8, subalign: 8, exclusive_ram_id: level_dizzy_land }
 
-  - type: bin
+  - type: course_display_list
     start: 0x118670
     name: QUICKSAND_VALLEY_COURSE_GRAPHICS
     vram: 0x02000000
@@ -553,7 +553,7 @@ segments:
   - { start: 0x124E18, type: course_display_list, name: QUICKSAND_VALLEY_COURSE_SECONDARY_BACKDROP_DISPLAY_LIST, vram: 0x0200C7A8, align: 8, subalign: 8, exclusive_ram_id: level_quicksand_valley }
   - { start: 0x124E78, type: course_display_list, name: QUICKSAND_VALLEY_COURSE_AUXILIARY_DISPLAY_LISTS_B, vram: 0x0200C808, align: 8, subalign: 8, exclusive_ram_id: level_quicksand_valley }
 
-  - type: bin
+  - type: course_display_list
     start: 0x125C90
     name: SILVER_MOUNTAIN_COURSE_GRAPHICS
     vram: 0x02000000
@@ -565,7 +565,7 @@ segments:
   - { start: 0x131558, type: course_display_list, name: SILVER_MOUNTAIN_COURSE_BACKDROP_DISPLAY_LIST, vram: 0x0200B8C8, align: 8, subalign: 8, exclusive_ram_id: level_silver_mountain }
   - { start: 0x131768, type: course_display_list, name: SILVER_MOUNTAIN_COURSE_AUXILIARY_DISPLAY_LISTS, vram: 0x0200BAD8, align: 8, subalign: 8, exclusive_ram_id: level_silver_mountain }
 
-  - type: bin
+  - type: course_display_list
     start: 0x131A90
     name: ANIMAL_LAND_COURSE_GRAPHICS
     vram: 0x02000000
@@ -577,7 +577,7 @@ segments:
   - { start: 0x137FD8, type: course_display_list, name: ANIMAL_LAND_COURSE_BACKDROP_DISPLAY_LIST, vram: 0x02006548, align: 8, subalign: 8, exclusive_ram_id: level_animal_land }
   - { start: 0x1382E8, type: course_display_list, name: ANIMAL_LAND_COURSE_AUXILIARY_DISPLAY_LISTS, vram: 0x02006858, align: 8, subalign: 8, exclusive_ram_id: level_animal_land }
 
-  - type: bin
+  - type: course_display_list
     start: 0x1384B0
     name: NINJA_LAND_COURSE_GRAPHICS
     vram: 0x02000000
@@ -589,7 +589,7 @@ segments:
   - { start: 0x13ED30, type: course_display_list, name: NINJA_LAND_COURSE_BACKDROP_DISPLAY_LIST, vram: 0x02006880, align: 8, subalign: 8, exclusive_ram_id: level_ninja_land }
   - { start: 0x13F050, type: course_display_list, name: NINJA_LAND_COURSE_AUXILIARY_DISPLAY_LISTS, vram: 0x02006BA0, align: 8, subalign: 8, exclusive_ram_id: level_ninja_land }
 
-  - type: bin
+  - type: course_display_list
     start: 0x13F3B0
     name: ROOKIE_MOUNTAIN_COURSE_GRAPHICS
     vram: 0x02000000
@@ -647,56 +647,86 @@ segments:
   - { start: 0x158D90, type: bin, name: _158D90, vram: 0 }
   - { start: 0x15C750, type: bin, name: _15C750, vram: 0 }
   - { start: 0x160360, type: bin, name: _160360, vram: 0 }
-  # Per-course compressed RSP segment 3 texture bundles, in course-index order.
-  - type: bin
+  # Per-course compressed RSP segment 3 model resources, in course-index order.
+  - type: course_model_resources
     start: 0x163410
-    name: BIG_SNOWMAN_COURSE_TEXTURES
+    name: BIG_SNOWMAN_COURSE_MODEL_RESOURCES
     vram: 0
+    graphics_start: 0xE35C0
+    graphics_end: 0xEC9A0
+    root_offset: 0x8900
 
-  - type: bin
+  - type: course_model_resources
     start: 0x171480
-    name: SUNSET_ROCK_COURSE_TEXTURES
+    name: SUNSET_ROCK_COURSE_MODEL_RESOURCES
     vram: 0
+    graphics_start: 0xEC9A0
+    graphics_end: 0xF6160
+    root_offset: 0x8E30
 
-  - type: bin
+  - type: course_model_resources
     start: 0x17D220
-    name: NIGHT_HIGHWAY_COURSE_TEXTURES
+    name: NIGHT_HIGHWAY_COURSE_MODEL_RESOURCES
     vram: 0
+    graphics_start: 0xF6160
+    graphics_end: 0xFEDA0
+    root_offset: 0x8628
 
-  - type: bin
+  - type: course_model_resources
     start: 0x186910
-    name: GRASS_VALLEY_COURSE_TEXTURES
+    name: GRASS_VALLEY_COURSE_MODEL_RESOURCES
     vram: 0
+    graphics_start: 0xFEDA0
+    graphics_end: 0x10AAB0
+    root_offset: 0xB400
 
-  - type: bin
+  - type: course_model_resources
     start: 0x197490
-    name: DIZZY_LAND_COURSE_TEXTURES
+    name: DIZZY_LAND_COURSE_MODEL_RESOURCES
     vram: 0
+    graphics_start: 0x10AAB0
+    graphics_end: 0x118670
+    root_offset: 0xBD48
 
-  - type: bin
+  - type: course_model_resources
     start: 0x1A5620
-    name: QUICKSAND_VALLEY_COURSE_TEXTURES
+    name: QUICKSAND_VALLEY_COURSE_MODEL_RESOURCES
     vram: 0
+    graphics_start: 0x118670
+    graphics_end: 0x125C90
+    root_offset: 0xC060
 
-  - type: bin
+  - type: course_model_resources
     start: 0x1B3160
-    name: SILVER_MOUNTAIN_COURSE_TEXTURES
+    name: SILVER_MOUNTAIN_COURSE_MODEL_RESOURCES
     vram: 0
+    graphics_start: 0x125C90
+    graphics_end: 0x131A90
+    root_offset: 0xB7B8
 
-  - type: bin
+  - type: course_model_resources
     start: 0x1C24B0
-    name: ANIMAL_LAND_COURSE_TEXTURES
+    name: ANIMAL_LAND_COURSE_MODEL_RESOURCES
     vram: 0
+    graphics_start: 0x131A90
+    graphics_end: 0x1384B0
+    root_offset: 0x6430
 
-  - type: bin
+  - type: course_model_resources
     start: 0x1C9630
-    name: NINJA_LAND_COURSE_TEXTURES
+    name: NINJA_LAND_COURSE_MODEL_RESOURCES
     vram: 0
+    graphics_start: 0x1384B0
+    graphics_end: 0x13F3B0
+    root_offset: 0x67B0
 
-  - type: bin
+  - type: course_model_resources
     start: 0x1D3070
-    name: ROOKIE_MOUNTAIN_COURSE_TEXTURES
+    name: ROOKIE_MOUNTAIN_COURSE_MODEL_RESOURCES
     vram: 0
+    graphics_start: 0x13F3B0
+    graphics_end: 0x145380
+    root_offset: 0x57D8
 
   - type: bin
     start: 0x1D82B0

@@ -30,9 +30,10 @@ not additional environments. Asset names use the retail US course names.
 Each environment is assembled from up to four independently loaded assets:
 
 - `<COURSE>_COURSE_GRAPHICS` is an uncompressed RSP segment 2 graphics bundle.
-  It contains vertices, display lists, and other display-list resources; it is
-  not the entire level.
-- `<COURSE>_COURSE_TEXTURES` is a compressed RSP segment 3 texture bundle.
+  It contains the nested display-list graph and a small amount of embedded
+  resource data; it is not the entire level.
+- `<COURSE>_COURSE_MODEL_RESOURCES` is a compressed RSP segment 3 bundle. It
+  contains the course vertices plus texture, palette, and other model data.
 - `<COURSE>_COURSE_SURFACE_DATA` is compressed collision and course-path data.
 - `<COURSE>_COURSE_SPRITES` is an optional compressed course-specific sprite
   table. Animal Land does not load or have one.
@@ -40,7 +41,7 @@ Each environment is assembled from up to four independently loaded assets:
 The ranges below are half-open ROM ranges (`start` through, but not including,
 `end`). Sizes are compressed sizes for assets loaded through `LOAD_ASSET`.
 
-| Id | Course | Segment 2 graphics | Textures | Surface data | Sprites |
+| Id | Course | Segment 2 graphics | Model resources | Surface data | Sprites |
 | ---: | --- | --- | --- | --- | --- |
 | 0 | Big Snowman | `0x0E35C0..0x0EC9A0` (`0x93E0`) | `0x163410..0x171480` (`0xE070`) | `0x21D9D0..0x222500` (`0x4B30`) | `0x1EC0F0..0x1EC4A0` (`0x3B0`) |
 | 1 | Sunset Rock | `0x0EC9A0..0x0F6160` (`0x97C0`) | `0x171480..0x17D220` (`0xBDA0`) | `0x222500..0x2274A0` (`0x4FA0`) | `0x1EC4A0..0x1EC810` (`0x370`) |
@@ -58,15 +59,15 @@ The ranges below are half-open ROM ranges (`start` through, but not including,
 ranges are shared race, character, UI, or effect resources and should not be
 treated as additional course environments merely because race code loads them.
 
-## Graphics bundle entry points
+## Graphics and model resources
 
-All 41 known command-stream ranges now use course- and purpose-based names.
-They are extracted under `assets/course_display_lists` as rebuildable `Gfx`
-arrays with an F3DEX macro decode included as a reference. Exact source words
-remain authoritative because some auxiliary ranges mix display-list commands
-with embedded resource data, and some otherwise valid commands contain bits
-that a macro disassembler normalizes. These sources cover `0x7350` bytes and
-round-trip exactly.
+All ten segment 2 graphics bundles are now source-backed. They are divided into
+51 rebuildable ranges under `assets/course_display_lists`: one complete leading
+graphics range per course and the 41 previously identified main, backdrop,
+effect, and auxiliary ranges. Each is represented as exact `Gfx` source words
+with an F3DEX macro decode included as a reference. The source words remain
+authoritative because a few ranges contain embedded resource data, and some
+otherwise valid commands contain bits that a macro disassembler normalizes.
 
 Confirmed top-level entry points are:
 
@@ -88,10 +89,31 @@ particle, bumper, trailing-particle pair, and spinning-object pair. Other
 multi-list tails use the conservative `COURSE_AUXILIARY_DISPLAY_LISTS` name
 until their individual nested entry points are tied to runtime behavior.
 
-The leading portion of each graphics bundle remains binary. It interleaves
-nested display lists, vertex arrays, and other resources addressed by the named
-top-level lists, so it should be split from a complete reference graph rather
-than by treating the whole prefix as vertices.
+The main entry point of each course was recursively traced through segment 2
+`G_DL` commands. Its `G_VTX` commands address the compressed segment 3 model
+resource bundle. Those confirmed ranges are extracted as editable N64 `Vtx`
+records; all bytes not yet proven to be vertices remain explicit raw parts so
+that no texture or palette format is guessed. Exact Huffman tables, bit padding,
+and LZ token choices are preserved, so edited manifests still reproduce the
+original compressed stream when unchanged.
+
+| Course | Display lists traced | Vertex loads | Vertices decoded |
+| --- | ---: | ---: | ---: |
+| Big Snowman | 21 | 168 | 4,407 |
+| Sunset Rock | 35 | 161 | 3,664 |
+| Night Highway | 38 | 157 | 3,414 |
+| Grass Valley | 21 | 223 | 6,035 |
+| Dizzy-Land | 56 | 223 | 4,865 |
+| Quicksand Valley | 52 | 224 | 4,931 |
+| Silver Mountain | 27 | 231 | 5,994 |
+| Animal Land | 28 | 126 | 2,891 |
+| Ninja Land | 19 | 119 | 2,894 |
+| Rookie Mountain | 19 | 80 | 1,753 |
+
+This accounts for 40,848 vertex records across all ten environments. The
+remaining segment 3 parts are deliberately called model resources, rather than
+textures, because the runtime treats the bundle as a complete RSP segment and
+its remaining internal formats have not all been classified.
 
 ## Surface-data layout
 
@@ -142,10 +164,11 @@ unnamed.
 
 ## Remaining documentation work
 
-- Trace and extract the nested display lists and vertex/resource ranges in the
-  leading segment 2 bundle data.
-- Add structured extractors for texture and sprite assets, comparable to
-  Snowboard Kids 2's course asset types.
-- Decode the compressed texture and sprite-table formats.
+- Classify and decode the raw texture, palette, and other model-resource ranges
+  that remain between the confirmed vertex arrays.
+- Give semantic names to individual nested display lists as their runtime or
+  visual roles are established.
+- Add a structured extractor for the optional course sprite tables and decode
+  their compressed format.
 - Identify `RaceCourseSurface.unknown_18` and unknown fields in
   `RaceCourseStartEntry` from runtime uses.
