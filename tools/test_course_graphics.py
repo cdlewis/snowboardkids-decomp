@@ -3,6 +3,7 @@ import unittest
 from tools.course_graphics_common import (
     collect_course_texture_references,
     pack_course_model_resources,
+    scan_course_resource_commands,
     trace_course_graphics,
 )
 
@@ -67,6 +68,15 @@ class CourseGraphicsTests(unittest.TestCase):
         }
 
         self.assertEqual(pack_course_model_resources(manifest), bytes.fromhex("0123456789abcdef"))
+
+    def test_scans_packed_lists_without_a_known_root(self):
+        bundle = bytes.fromhex("0400081F03000010 B800000000000000")
+
+        vertices, textures, palettes = scan_course_resource_commands(bundle, 0x30)
+
+        self.assertEqual([(item.offset, item.count) for item in vertices], [(0x10, 2)])
+        self.assertEqual(textures, [])
+        self.assertEqual(palettes, [])
 
 
 if __name__ == "__main__":

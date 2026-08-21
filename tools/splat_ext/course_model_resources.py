@@ -7,7 +7,7 @@ from typing import Optional
 from splat.segtypes.common.segment import CommonSegment
 from splat.util import log, options
 
-from tools.course_graphics_common import collect_course_texture_references, parse_int, trace_course_graphics
+from tools.course_graphics_common import parse_int, scan_course_resource_commands, trace_course_graphics
 from tools.course_surface_data_common import write_yaml
 from tools.huffman_asset import decompress_huffman_asset
 
@@ -70,12 +70,12 @@ class N64SegCourse_model_resources(CommonSegment):
         graph = trace_course_graphics(rom_bytes[graphics_start:graphics_end], self._root_offsets())
 
         decompressed, compression = decompress_huffman_asset(rom_bytes[self.rom_start : self.rom_end])
-        textures, palettes = collect_course_texture_references(
-            rom_bytes[graphics_start:graphics_end], graph, len(decompressed)
+        all_vertex_references, textures, palettes = scan_course_resource_commands(
+            rom_bytes[graphics_start:graphics_end], len(decompressed)
         )
         vertex_mask = bytearray(len(decompressed))
-        segment3_references = [reference for reference in graph.vertex_references if reference.segment == 3]
-        for reference in segment3_references:
+        traced_vertex_references = [reference for reference in graph.vertex_references if reference.segment == 3]
+        for reference in all_vertex_references:
             start = reference.offset
             end = start + reference.count * 0x10
             if start % 0x10 or end > len(decompressed):
@@ -152,6 +152,82 @@ class N64SegCourse_model_resources(CommonSegment):
                 )
             )
 
+        coverage = bytearray(len(decompressed))
+        for start, end, _ in classified_ranges:
+            coverage[start:end] = b"\x01" * (end - start)
+
+        first_vertex = min((reference.offset for reference in all_vertex_references), default=len(decompressed))
+        unreferenced_palette_count = 0
+        offset = 0
+        while offset < first_vertex:
+            if coverage[offset]:
+                offset += 1
+                continue
+            end = offset + 1
+            while end < first_vertex and not coverage[end]:
+                end += 1
+            if offset % 0x20 or (end - offset) % 0x20:
+                log.error(f"course model resources {self.name} has an unclassified palette-bank gap")
+            for start in range(offset, end, 0x20):
+                unreferenced_palette_count += 1
+                classified_ranges.append(
+                    (
+                        start,
+                        start + 0x20,
+                        {
+                            "type": "palette",
+                            "offset": start,
+                            "format": "rgba16",
+                            "colors": 16,
+                            "referenced": False,
+                            "load_slots": [],
+                            "values": [
+                                int.from_bytes(decompressed[pos : pos + 2], "big")
+                                for pos in range(start, start + 0x20, 2)
+                            ],
+                        },
+                    )
+                )
+            offset = end
+
+        coverage = bytearray(len(decompressed))
+        for start, end, _ in classified_ranges:
+            coverage[start:end] = b"\x01" * (end - start)
+        offset = first_vertex
+        unreferenced_vertex_count = 0
+        while offset < len(decompressed):
+            if coverage[offset]:
+                offset += 1
+                continue
+            end = offset + 1
+            while end < len(decompressed) and not coverage[end]:
+                end += 1
+            data = decompressed[offset:end]
+            is_vertices = (
+                offset % 0x10 == 0
+                and len(data) % 0x10 == 0
+                and any(data)
+                and all(data[pos + 6 : pos + 8] == b"\x00\x00" for pos in range(0, len(data), 0x10))
+            )
+            if is_vertices:
+                unreferenced_vertex_count += len(data) // 0x10
+                classified_ranges.append(
+                    (
+                        offset,
+                        end,
+                        {
+                            "type": "vertices",
+                            "offset": offset,
+                            "referenced": False,
+                            "vertices": [
+                                self._vertex_dict(decompressed[pos : pos + 0x10])
+                                for pos in range(offset, end, 0x10)
+                            ],
+                        },
+                    )
+                )
+            offset = end
+
         parts = []
         cursor = 0
         for start, end, part in sorted(classified_ranges):
@@ -170,12 +246,15 @@ class N64SegCourse_model_resources(CommonSegment):
             "decompressed_size": len(decompressed),
             "graphics_graph": {
                 "display_list_count": len(graph.display_lists),
-                "vertex_load_count": len(segment3_references),
+                "vertex_load_count": len(traced_vertex_references),
+                "packed_vertex_load_count": len(all_vertex_references),
                 "unique_vertex_range_count": len(
-                    {(reference.offset, reference.count) for reference in segment3_references}
+                    {(reference.offset, reference.count) for reference in all_vertex_references}
                 ),
                 "texture_count": len(textures),
-                "palette_count": len(palettes),
+                "palette_count": len(palettes) + unreferenced_palette_count,
+                "unreferenced_palette_count": unreferenced_palette_count,
+                "unreferenced_vertex_count": unreferenced_vertex_count,
             },
             "compression": {
                 "flags": compression.flags,

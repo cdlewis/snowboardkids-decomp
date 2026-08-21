@@ -85,40 +85,61 @@ Confirmed top-level entry points are:
 | Rookie Mountain | `ROOKIE_MOUNTAIN_COURSE_DISPLAY_LIST` | `ROOKIE_MOUNTAIN_COURSE_BACKDROP_DISPLAY_LIST` |
 
 Dizzy-Land's directly referenced course effects are also named: the three-part
-particle, bumper, trailing-particle pair, and spinning-object pair. Other
-multi-list tails use the conservative `COURSE_AUXILIARY_DISPLAY_LISTS` name
-until their individual nested entry points are tied to runtime behavior.
+particle, bumper, trailing-particle pair, and spinning-object pair. The runtime
+table `gRaceCourseRankModelDisplayLists` now identifies the two lap-state lists
+used by each course's finish-line rank model. Their containing ranges retain the
+conservative `COURSE_AUXILIARY_DISPLAY_LISTS` name where they also contain
+unrelated effects or entry points.
+
+| Course | Active rank-model display lists |
+| --- | --- |
+| Big Snowman | `0x02009200` (surface 1), `0x02008E40`, `0x02009020` (finish line) |
+| Sunset Rock | `0x020091E0`, `0x020093E8` |
+| Night Highway | `0x02008E40`, `0x02009020` |
+| Grass Valley | `0x0200B6F0`, `0x0200B880` |
+| Dizzy-Land | `0x0200D448`, `0x0200D5E0` |
+| Quicksand Valley | `0x0200C5A0`, `0x0200C760` |
+| Silver Mountain | `0x0200BAD8`, `0x0200BC68` |
+| Animal Land | None; the Trick Game does not create this model |
+| Ninja Land | `0x02006BA0`, `0x02006D50` |
+| Rookie Mountain | `0x02005BA8`, `0x02005DB8` |
 
 Every confirmed top-level entry point was recursively traced through segment 2
-`G_DL` commands. Its `G_VTX`, `G_SETTIMG`, `G_LOADBLOCK`, and `G_LOADTLUT`
-commands address the compressed segment 3 model-resource bundle. Confirmed
-ranges are extracted as editable N64 `Vtx` records, CI4 textures, and RGBA16
-palettes. Texture storage dimensions come from the load-block byte count and
-render-tile stride; `G_SETTILESIZE` is not used as an allocation size because
-courses frequently use it to repeat a smaller stored texture.
+`G_DL` commands. The extractor also scans every aligned source word for valid,
+in-bounds resource commands, covering packed display lists whose entry points
+have not yet been given semantic names. Their `G_VTX`, `G_SETTIMG`,
+`G_LOADBLOCK`, and `G_LOADTLUT` commands address the compressed segment 3
+model-resource bundle. Resources are extracted as editable N64 `Vtx` records,
+CI4 textures, and RGBA16 palettes. Texture storage dimensions come from the
+load-block byte count and render-tile stride; `G_SETTILESIZE` is not used as an
+allocation size because courses frequently use it to repeat a smaller stored
+texture.
 
-Bytes that are not referenced by a confirmed display-list root remain explicit
-raw parts. Exact Huffman tables, bit padding, and LZ token choices are preserved,
-so edited manifests still reproduce the original compressed stream when
-unchanged.
+All ten model-resource manifests now have complete structured byte coverage and
+no anonymous raw parts. One eight-vertex block in Big Snowman and three
+16-color palettes (one in Silver Mountain and two in Rookie Mountain) are not
+referenced by any source-backed command; they remain editable structured parts
+with `referenced: false`. Exact Huffman tables, bit padding, and LZ token choices
+are preserved, so unchanged manifests reproduce the original compressed stream.
 
-| Course | Display lists | Vertex loads | Vertices | CI4 textures | RGBA16 palettes |
-| --- | ---: | ---: | ---: | ---: | ---: |
-| Big Snowman | 24 | 175 | 4,556 | 37 | 21 |
-| Sunset Rock | 37 | 166 | 3,760 | 34 | 14 |
-| Night Highway | 40 | 162 | 3,508 | 44 | 15 |
-| Grass Valley | 23 | 228 | 6,152 | 69 | 19 |
-| Dizzy-Land | 66 | 252 | 5,387 | 62 | 18 |
-| Quicksand Valley | 56 | 233 | 5,116 | 51 | 13 |
-| Silver Mountain | 29 | 236 | 6,099 | 65 | 22 |
-| Animal Land | 30 | 131 | 2,994 | 46 | 12 |
-| Ninja Land | 21 | 124 | 3,009 | 66 | 16 |
-| Rookie Mountain | 21 | 85 | 1,870 | 25 | 9 |
+| Course | Display lists | Root-traced vertex loads | All packed vertex loads | Vertices | CI4 textures | RGBA16 palettes |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| Big Snowman | 24 | 175 | 179 | 4,604 | 39 | 21 |
+| Sunset Rock | 37 | 166 | 176 | 3,872 | 37 | 16 |
+| Night Highway | 40 | 162 | 166 | 3,532 | 44 | 15 |
+| Grass Valley | 23 | 228 | 230 | 6,180 | 70 | 19 |
+| Dizzy-Land | 66 | 252 | 268 | 5,628 | 63 | 18 |
+| Quicksand Valley | 56 | 233 | 262 | 5,616 | 52 | 14 |
+| Silver Mountain | 29 | 236 | 238 | 6,115 | 66 | 24 |
+| Animal Land | 30 | 131 | 135 | 3,032 | 46 | 12 |
+| Ninja Land | 21 | 124 | 126 | 3,037 | 67 | 16 |
+| Rookie Mountain | 21 | 85 | 87 | 1,896 | 26 | 11 |
 
-This accounts for 347 display lists, 42,451 vertex records, 499 textures, and
-159 palettes across all ten environments. The asset is still called model
-resources, rather than textures, because the runtime treats it as a complete
-RSP segment containing all of those resource classes.
+This accounts for 347 recursively traced display lists, 1,867 packed vertex-load
+commands covering 43,512 vertex records, 510 textures, and 166 palettes across
+all ten environments. The asset is still called model resources, rather than
+textures, because the runtime treats it as a complete RSP segment containing
+all of those resource classes.
 
 ## Course sprite-table layout
 
@@ -197,8 +218,6 @@ unnamed.
 
 ## Remaining documentation work
 
-- Determine whether unreferenced raw model-resource tails contain dormant
-  vertices or other data used by display-list entry points not yet identified.
 - Give semantic names to individual nested display lists as their runtime or
   visual roles are established.
 - Identify `RaceCourseSurface.unknown_18` and unknown fields in

@@ -219,6 +219,35 @@ def collect_course_texture_references(
     return texture_references, palette_references
 
 
+def scan_course_resource_commands(
+    bundle: bytes, resource_size: int
+) -> tuple[list[VertexReference], list[TextureReference], list[PaletteReference]]:
+    """Scan every aligned command word, including packed lists without a known root."""
+    vertex_references = []
+    for position in range(0, len(bundle), 8):
+        word0, word1 = struct.unpack(">II", bundle[position : position + 8])
+        if word0 >> 24 != 0x04 or word1 >> 24 != 3:
+            continue
+        count = (word0 >> 10) & 0x3F
+        offset = word1 & 0x00FFFFFF
+        if count and offset + count * 0x10 <= resource_size:
+            vertex_references.append(
+                VertexReference(
+                    command_offset=position,
+                    segment=3,
+                    offset=offset,
+                    count=count,
+                )
+            )
+
+    linear_graph = CourseGraphicsGraph(
+        display_lists=[DisplayListNode(offset=0, end=len(bundle))],
+        vertex_references=vertex_references,
+    )
+    textures, palettes = collect_course_texture_references(bundle, linear_graph, resource_size)
+    return vertex_references, textures, palettes
+
+
 def compression_metadata_from_manifest(manifest: dict) -> CompressionMetadata:
     compression = manifest["compression"]
     return CompressionMetadata(

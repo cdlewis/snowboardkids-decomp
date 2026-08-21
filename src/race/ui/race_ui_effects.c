@@ -935,7 +935,7 @@ Vtx D_800D63D0[] = {
     { { { 0, -2, 0 }, 0x0000, { -16, 496 }, { 0xFF, 0xFF, 0xFF, 0xFF } } },
 };
 
-u32 *D_800D6400[] = {
+u32 *gRaceCourseRankModelDisplayLists[] = {
     (u32 *)0x02009200, (u32 *)0x02009200, (u32 *)0x02008E40, (u32 *)0x02009020, (u32 *)0x02009200, (u32 *)0x02009200,
     (u32 *)0x020091E0, (u32 *)0x020093E8, (u32 *)0x02009200, (u32 *)0x02009200, (u32 *)0x02008E40, (u32 *)0x02009020,
     (u32 *)0x0200B6F0, (u32 *)0x0200B6F0, (u32 *)0x0200B6F0, (u32 *)0x0200B880, (u32 *)0x0200B6F0, (u32 *)0x0200B6F0,
@@ -5576,8 +5576,10 @@ void initRaceCourseRankModel(RaceUiRankParticleActor *actor) {
     actor->copyBlock.translation.x = actor->pos.x;
     actor->copyBlock.translation.y = actor->pos.y;
     actor->copyBlock.translation.z = actor->pos.z;
-    actor->displayLists[0] = D_800D6400[(actor->index * 2) + (gRaceCourseIndex.signedValue * 4)];
-    actor->displayLists[1] = D_800D6400[(actor->index * 2) + (gRaceCourseIndex.signedValue * 4) + 1];
+    actor->displayLists[0] =
+        gRaceCourseRankModelDisplayLists[(actor->index * 2) + (gRaceCourseIndex.signedValue * 4)];
+    actor->displayLists[1] =
+        gRaceCourseRankModelDisplayLists[(actor->index * 2) + (gRaceCourseIndex.signedValue * 4) + 1];
     setCallbackTaskCallback(actor, (CallbackTaskCallback)updateRaceCourseRankModel);
 }
 
