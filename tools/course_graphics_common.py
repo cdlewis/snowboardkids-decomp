@@ -29,6 +29,23 @@ class CourseGraphicsGraph:
     vertex_references: list[VertexReference]
 
 
+@dataclass(frozen=True)
+class TextureReference:
+    offset: int
+    size: int
+    format: str
+    width: int
+    height: int
+    palette_slots: tuple[int, ...]
+
+
+@dataclass(frozen=True)
+class PaletteReference:
+    offset: int
+    colors: int
+    load_slots: tuple[int, ...]
+
+
 def parse_int(value) -> int:
     return int(value, 0) if isinstance(value, str) else int(value)
 
@@ -88,6 +105,120 @@ def trace_course_graphics(bundle: bytes, root_offsets: list[int]) -> CourseGraph
     )
 
 
+def collect_course_texture_references(
+    bundle: bytes, graph: CourseGraphicsGraph, resource_size: int
+) -> tuple[list[TextureReference], list[PaletteReference]]:
+    """Find segment-3 CI textures and TLUTs loaded by a traced F3DEX graph."""
+    textures: dict[int, dict] = {}
+    palettes: dict[int, dict] = {}
+
+    for node in graph.display_lists:
+        texture_image = None
+        loaded_texture = None
+        load_tile = None
+        render_tile = None
+
+        for position in range(node.offset, node.end, 8):
+            word0, word1 = struct.unpack(">II", bundle[position : position + 8])
+            opcode = word0 >> 24
+
+            if opcode == 0xFD and word1 >> 24 == 3:  # G_SETTIMG
+                texture_image = {
+                    "offset": word1 & 0x00FFFFFF,
+                    "format": (word0 >> 21) & 0x7,
+                    "size": (word0 >> 19) & 0x3,
+                }
+                loaded_texture = None
+                load_tile = None
+                render_tile = None
+            elif opcode == 0xF5:  # G_SETTILE
+                tile = {
+                    "format": (word0 >> 21) & 0x7,
+                    "size": (word0 >> 19) & 0x3,
+                    "line": (word0 >> 9) & 0x1FF,
+                    "tmem": word0 & 0x1FF,
+                    "tile": (word1 >> 24) & 0x7,
+                    "palette": (word1 >> 20) & 0xF,
+                }
+                if tile["tile"] == 7:
+                    load_tile = tile
+                else:
+                    render_tile = tile
+            elif opcode == 0xF3 and texture_image is not None:  # G_LOADBLOCK
+                texel_count = ((word1 >> 12) & 0xFFF) + 1
+                byte_count = (texel_count * (1 << texture_image["size"]) + 1) // 2
+                loaded_texture = {"offset": texture_image["offset"], "size": byte_count}
+            elif opcode == 0xF0 and texture_image is not None:  # G_LOADTLUT
+                color_count = ((word1 >> 14) & 0x3FF) + 1
+                start = texture_image["offset"]
+                end = start + color_count * 2
+                if start < 0 or end > resource_size:
+                    raise ValueError(f"palette range 0x{start:X}-0x{end:X} exceeds model resources")
+                slot = None
+                if load_tile is not None and load_tile["tmem"] >= 0x100:
+                    slot = (load_tile["tmem"] - 0x100) // 0x10
+                old = palettes.setdefault(start, {"colors": color_count, "slots": set()})
+                if old["colors"] != color_count:
+                    raise ValueError(f"palette at 0x{start:X} is loaded with inconsistent sizes")
+                if slot is not None:
+                    old["slots"].add(slot)
+                texture_image = None
+                loaded_texture = None
+            elif opcode == 0xF2 and loaded_texture is not None and render_tile is not None:  # G_SETTILESIZE
+                fmt = render_tile["format"]
+                siz = render_tile["size"]
+                if fmt != 2 or siz not in (0, 1):  # Only confirmed CI4/CI8 resources.
+                    continue
+                row_bytes = render_tile["line"] * 8
+                if row_bytes == 0 or loaded_texture["size"] % row_bytes:
+                    raise ValueError(
+                        f"texture at 0x{loaded_texture['offset']:X} has an invalid tile stride"
+                    )
+                width = row_bytes * (2 if siz == 0 else 1)
+                height = loaded_texture["size"] // row_bytes
+                start = loaded_texture["offset"]
+                end = start + loaded_texture["size"]
+                if start < 0 or end > resource_size:
+                    raise ValueError(f"texture range 0x{start:X}-0x{end:X} exceeds model resources")
+
+                values = {
+                    "size": loaded_texture["size"],
+                    "format": "ci4" if siz == 0 else "ci8",
+                    "width": width,
+                    "height": height,
+                }
+                old = textures.setdefault(start, {**values, "slots": set()})
+                if any(old[key] != value for key, value in values.items()):
+                    raise ValueError(f"texture at 0x{start:X} is loaded with inconsistent dimensions")
+                old["slots"].add(render_tile["palette"])
+
+    texture_references = [
+        TextureReference(
+            offset=offset,
+            size=values["size"],
+            format=values["format"],
+            width=values["width"],
+            height=values["height"],
+            palette_slots=tuple(sorted(values["slots"])),
+        )
+        for offset, values in sorted(textures.items())
+    ]
+    palette_references = [
+        PaletteReference(offset=offset, colors=values["colors"], load_slots=tuple(sorted(values["slots"])))
+        for offset, values in sorted(palettes.items())
+    ]
+
+    ranges = sorted(
+        [(item.offset, item.offset + item.size) for item in texture_references]
+        + [(item.offset, item.offset + item.colors * 2) for item in palette_references]
+    )
+    for (_, previous_end), (start, _) in zip(ranges, ranges[1:]):
+        if start < previous_end:
+            raise ValueError(f"model-resource ranges overlap at 0x{start:X}")
+
+    return texture_references, palette_references
+
+
 def compression_metadata_from_manifest(manifest: dict) -> CompressionMetadata:
     compression = manifest["compression"]
     return CompressionMetadata(
@@ -131,6 +262,21 @@ def pack_course_model_resources(manifest: dict) -> bytes:
                     )
                 )
             data = bytes(data)
+        elif part["type"] == "texture":
+            data = bytes.fromhex(str(part["data"]))
+            expected_size = (parse_int(part["width"]) * parse_int(part["height"]))
+            if part["format"] == "ci4":
+                expected_size = (expected_size + 1) // 2
+            elif part["format"] != "ci8":
+                raise ValueError(f"unsupported course texture format {part['format']!r}")
+            if len(data) != expected_size:
+                raise ValueError(
+                    f"texture at 0x{start:X} has 0x{len(data):X} bytes, expected 0x{expected_size:X}"
+                )
+        elif part["type"] == "palette":
+            data = b"".join(parse_int(value).to_bytes(2, "big") for value in part["values"])
+            if len(data) != parse_int(part["colors"]) * 2:
+                raise ValueError(f"palette at 0x{start:X} has the wrong color count")
         else:
             raise ValueError(f"unsupported course model-resource part type {part['type']!r}")
 

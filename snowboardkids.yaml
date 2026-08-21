@@ -654,7 +654,7 @@ segments:
     vram: 0
     graphics_start: 0xE35C0
     graphics_end: 0xEC9A0
-    root_offset: 0x8900
+    root_offsets: [0x8900, 0x89E0, 0x8D50, 0x8E40]
 
   - type: course_model_resources
     start: 0x171480
@@ -662,7 +662,7 @@ segments:
     vram: 0
     graphics_start: 0xEC9A0
     graphics_end: 0xF6160
-    root_offset: 0x8E30
+    root_offsets: [0x8E30, 0x8F80, 0x9148]
 
   - type: course_model_resources
     start: 0x17D220
@@ -670,7 +670,7 @@ segments:
     vram: 0
     graphics_start: 0xF6160
     graphics_end: 0xFEDA0
-    root_offset: 0x8628
+    root_offsets: [0x8628, 0x8790, 0x8B40]
 
   - type: course_model_resources
     start: 0x186910
@@ -678,7 +678,7 @@ segments:
     vram: 0
     graphics_start: 0xFEDA0
     graphics_end: 0x10AAB0
-    root_offset: 0xB400
+    root_offsets: [0xB400, 0xB4E0, 0xB6F0]
 
   - type: course_model_resources
     start: 0x197490
@@ -686,7 +686,7 @@ segments:
     vram: 0
     graphics_start: 0x10AAB0
     graphics_end: 0x118670
-    root_offset: 0xBD48
+    root_offsets: [0xBD48, 0xBF40, 0xC1C8, 0xC6A0, 0xC7D8, 0xC910, 0xCC20, 0xCE48, 0xCFB0, 0xD3A8, 0xD448]
 
   - type: course_model_resources
     start: 0x1A5620
@@ -694,7 +694,7 @@ segments:
     vram: 0
     graphics_start: 0x118670
     graphics_end: 0x125C90
-    root_offset: 0xC060
+    root_offsets: [0xC060, 0xC238, 0xC428, 0xC7A8, 0xC808]
 
   - type: course_model_resources
     start: 0x1B3160
@@ -702,7 +702,7 @@ segments:
     vram: 0
     graphics_start: 0x125C90
     graphics_end: 0x131A90
-    root_offset: 0xB7B8
+    root_offsets: [0xB7B8, 0xB8C8, 0xBAD8]
 
   - type: course_model_resources
     start: 0x1C24B0
@@ -710,7 +710,7 @@ segments:
     vram: 0
     graphics_start: 0x131A90
     graphics_end: 0x1384B0
-    root_offset: 0x6430
+    root_offsets: [0x6430, 0x6548, 0x6858]
 
   - type: course_model_resources
     start: 0x1C9630
@@ -718,7 +718,7 @@ segments:
     vram: 0
     graphics_start: 0x1384B0
     graphics_end: 0x13F3B0
-    root_offset: 0x67B0
+    root_offsets: [0x67B0, 0x6880, 0x6BA0]
 
   - type: course_model_resources
     start: 0x1D3070
@@ -726,7 +726,7 @@ segments:
     vram: 0
     graphics_start: 0x13F3B0
     graphics_end: 0x145380
-    root_offset: 0x57D8
+    root_offsets: [0x57D8, 0x58A8, 0x5BA8]
 
   - type: bin
     start: 0x1D82B0
@@ -761,47 +761,47 @@ segments:
   # Optional compressed course sprite tables. Animal Land (course 7) has no
   # sprite-table asset; the sequence therefore skips from Silver Mountain to
   # Ninja Land.
-  - type: bin
+  - type: course_sprite_table
     start: 0x1EC0F0
     name: BIG_SNOWMAN_COURSE_SPRITES
     vram: 0
 
-  - type: bin
+  - type: course_sprite_table
     start: 0x1EC4A0
     name: SUNSET_ROCK_COURSE_SPRITES
     vram: 0
 
-  - type: bin
+  - type: course_sprite_table
     start: 0x1EC810
     name: NIGHT_HIGHWAY_COURSE_SPRITES
     vram: 0
 
-  - type: bin
+  - type: course_sprite_table
     start: 0x1ECD00
     name: GRASS_VALLEY_COURSE_SPRITES
     vram: 0
 
-  - type: bin
+  - type: course_sprite_table
     start: 0x1ED910
     name: DIZZY_LAND_COURSE_SPRITES
     vram: 0
 
-  - type: bin
+  - type: course_sprite_table
     start: 0x1EDC80
     name: QUICKSAND_VALLEY_COURSE_SPRITES
     vram: 0
 
-  - type: bin
+  - type: course_sprite_table
     start: 0x1EE060
     name: SILVER_MOUNTAIN_COURSE_SPRITES
     vram: 0
 
-  - type: bin
+  - type: course_sprite_table
     start: 0x1EEEA0
     name: NINJA_LAND_COURSE_SPRITES
     vram: 0
 
-  - type: bin
+  - type: course_sprite_table
     start: 0x1EF1D0
     name: ROOKIE_MOUNTAIN_COURSE_SPRITES
     vram: 0

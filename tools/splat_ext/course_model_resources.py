@@ -7,7 +7,7 @@ from typing import Optional
 from splat.segtypes.common.segment import CommonSegment
 from splat.util import log, options
 
-from tools.course_graphics_common import parse_int, trace_course_graphics
+from tools.course_graphics_common import collect_course_texture_references, parse_int, trace_course_graphics
 from tools.course_surface_data_common import write_yaml
 from tools.huffman_asset import decompress_huffman_asset
 
@@ -43,6 +43,17 @@ class N64SegCourse_model_resources(CommonSegment):
         assert isinstance(self.yaml, dict)
         return parse_int(self.yaml[key])
 
+    def _root_offsets(self) -> list[int]:
+        if not isinstance(self.yaml, dict):
+            log.error(f"course model-resource segment {self.name} needs root_offsets")
+        assert isinstance(self.yaml, dict)
+        values = self.yaml.get("root_offsets")
+        if values is None:
+            return [self._required_int("root_offset")]
+        if not isinstance(values, list) or not values:
+            log.error(f"course model-resource segment {self.name} has invalid root_offsets")
+        return [parse_int(value) for value in values]
+
     @staticmethod
     def _vertex_dict(data: bytes) -> dict:
         x, y, z, flag, s, t, r, g, b, a = struct.unpack(">hhhHhhBBBB", data)
@@ -56,10 +67,12 @@ class N64SegCourse_model_resources(CommonSegment):
 
         graphics_start = self._required_int("graphics_start")
         graphics_end = self._required_int("graphics_end")
-        root_offset = self._required_int("root_offset")
-        graph = trace_course_graphics(rom_bytes[graphics_start:graphics_end], [root_offset])
+        graph = trace_course_graphics(rom_bytes[graphics_start:graphics_end], self._root_offsets())
 
         decompressed, compression = decompress_huffman_asset(rom_bytes[self.rom_start : self.rom_end])
+        textures, palettes = collect_course_texture_references(
+            rom_bytes[graphics_start:graphics_end], graph, len(decompressed)
+        )
         vertex_mask = bytearray(len(decompressed))
         segment3_references = [reference for reference in graph.vertex_references if reference.segment == 3]
         for reference in segment3_references:
@@ -72,25 +85,84 @@ class N64SegCourse_model_resources(CommonSegment):
                 )
             vertex_mask[start:end] = b"\x01" * (end - start)
 
-        parts = []
+        classified_ranges = []
         offset = 0
         while offset < len(decompressed):
-            is_vertices = vertex_mask[offset] != 0
+            if not vertex_mask[offset]:
+                offset += 1
+                continue
             end = offset + 1
-            while end < len(decompressed) and (vertex_mask[end] != 0) == is_vertices:
+            while end < len(decompressed) and vertex_mask[end]:
                 end += 1
-
-            if is_vertices:
-                if offset % 0x10 or end % 0x10:
-                    log.error(f"course model resources {self.name} has an unaligned merged vertex range")
-                vertices = [
-                    self._vertex_dict(decompressed[vertex_offset : vertex_offset + 0x10])
-                    for vertex_offset in range(offset, end, 0x10)
-                ]
-                parts.append({"type": "vertices", "offset": offset, "vertices": vertices})
-            else:
-                parts.append({"type": "raw", "offset": offset, "data": decompressed[offset:end].hex()})
+            if offset % 0x10 or end % 0x10:
+                log.error(f"course model resources {self.name} has an unaligned merged vertex range")
+            classified_ranges.append(
+                (
+                    offset,
+                    end,
+                    {
+                        "type": "vertices",
+                        "offset": offset,
+                        "vertices": [
+                            self._vertex_dict(decompressed[vertex_offset : vertex_offset + 0x10])
+                            for vertex_offset in range(offset, end, 0x10)
+                        ],
+                    },
+                )
+            )
             offset = end
+
+        for texture in textures:
+            start = texture.offset
+            end = start + texture.size
+            classified_ranges.append(
+                (
+                    start,
+                    end,
+                    {
+                        "type": "texture",
+                        "offset": start,
+                        "format": texture.format,
+                        "width": texture.width,
+                        "height": texture.height,
+                        "palette_slots": list(texture.palette_slots),
+                        "data": decompressed[start:end].hex(),
+                    },
+                )
+            )
+
+        for palette in palettes:
+            start = palette.offset
+            end = start + palette.colors * 2
+            classified_ranges.append(
+                (
+                    start,
+                    end,
+                    {
+                        "type": "palette",
+                        "offset": start,
+                        "format": "rgba16",
+                        "colors": palette.colors,
+                        "load_slots": list(palette.load_slots),
+                        "values": [
+                            int.from_bytes(decompressed[value_offset : value_offset + 2], "big")
+                            for value_offset in range(start, end, 2)
+                        ],
+                    },
+                )
+            )
+
+        parts = []
+        cursor = 0
+        for start, end, part in sorted(classified_ranges):
+            if start < cursor:
+                log.error(f"course model resources {self.name} has overlapping parts at 0x{start:X}")
+            if start > cursor:
+                parts.append({"type": "raw", "offset": cursor, "data": decompressed[cursor:start].hex()})
+            parts.append(part)
+            cursor = end
+        if cursor < len(decompressed):
+            parts.append({"type": "raw", "offset": cursor, "data": decompressed[cursor:].hex()})
 
         manifest = {
             "name": self.name,
@@ -102,6 +174,8 @@ class N64SegCourse_model_resources(CommonSegment):
                 "unique_vertex_range_count": len(
                     {(reference.offset, reference.count) for reference in segment3_references}
                 ),
+                "texture_count": len(textures),
+                "palette_count": len(palettes),
             },
             "compression": {
                 "flags": compression.flags,

@@ -226,6 +226,7 @@ CHARMAP = $(TOOLS_DIR)/charmap.txt
 TEXTCONV_DIR = $(BUILD_DIR)/textconv
 COURSE_SURFACE_DATA_PACK = $(PYTHON) $(TOOLS_DIR)/course_surface_data_pack.py
 COURSE_MODEL_RESOURCES_PACK = $(PYTHON) $(TOOLS_DIR)/course_model_resources_pack.py
+COURSE_SPRITE_TABLE_PACK = $(PYTHON) $(TOOLS_DIR)/course_sprite_table_pack.py
 
 BIN_FILES   := $(foreach dir,$(BIN_DIRS),$(wildcard $(dir)/*.bin))
 BIN_O_FILES := $(patsubst %.bin,$(BUILD_DIR)/%.o,$(BIN_FILES))
@@ -355,6 +356,17 @@ $(BUILD_DIR)/assets/course_model_resources/%.o: assets/course_model_resources/%.
 	$(PRINTF) "[$(GREEN) course $(NO_COL)]  $<\n"
 	$(V)$(COURSE_MODEL_RESOURCES_PACK) $< --out $(BUILD_DIR)/assets/course_model_resources/$*.bin
 	$(V)$(LD) -r -b binary -o $@ $(BUILD_DIR)/assets/course_model_resources/$*.bin
+
+# Editable compressed course-specific sprite tables.
+$(BUILD_DIR)/assets/course_sprite_tables/%.o: assets/course_sprite_tables/%.yaml \
+		$(TOOLS_DIR)/course_sprite_table_pack.py \
+		$(TOOLS_DIR)/course_sprite_table_common.py \
+		$(TOOLS_DIR)/course_graphics_common.py \
+		$(TOOLS_DIR)/huffman_asset.py
+	@mkdir -p $(dir $@)
+	$(PRINTF) "[$(GREEN) course $(NO_COL)]  $<\n"
+	$(V)$(COURSE_SPRITE_TABLE_PACK) $< --out $(BUILD_DIR)/assets/course_sprite_tables/$*.bin
+	$(V)$(LD) -r -b binary -o $@ $(BUILD_DIR)/assets/course_sprite_tables/$*.bin
 
 # Editable F3DEX command streams from the course segment-2 graphics bundles.
 # GNU as preserves command streams whose lengths are not multiples of IDO's
