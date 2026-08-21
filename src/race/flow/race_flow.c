@@ -2409,31 +2409,31 @@ void initRaceRecordSettingsFlow(void) {
     LOAD_ASSET(_1F1A90, 0x28);
     switch (gRaceCourseIndex.unsignedValue) {
         case 0:
-            LOAD_ASSET(LEVEL_BIG_SNOWMAN_SPRITES, 0x1D);
+            LOAD_ASSET(BIG_SNOWMAN_COURSE_SPRITES, 0x1D);
             break;
         case 1:
-            LOAD_ASSET(LEVEL_SUNSET_ROCK_SPRITES, 0x1D);
+            LOAD_ASSET(SUNSET_ROCK_COURSE_SPRITES, 0x1D);
             break;
         case 2:
-            LOAD_ASSET(LEVEL_NIGHT_HIGHWAY_SPRITES, 0x1D);
+            LOAD_ASSET(NIGHT_HIGHWAY_COURSE_SPRITES, 0x1D);
             break;
         case 3:
-            LOAD_ASSET(LEVEL_GRASS_VALLEY_SPRITES, 0x1D);
+            LOAD_ASSET(GRASS_VALLEY_COURSE_SPRITES, 0x1D);
             break;
         case 4:
-            LOAD_ASSET(LEVEL_DIZZY_LAND_SPRITES, 0x1D);
+            LOAD_ASSET(DIZZY_LAND_COURSE_SPRITES, 0x1D);
             break;
         case 5:
-            LOAD_ASSET(LEVEL_QUICKSAND_VALLEY_SPRITES, 0x1D);
+            LOAD_ASSET(QUICKSAND_VALLEY_COURSE_SPRITES, 0x1D);
             break;
         case 6:
-            LOAD_ASSET(LEVEL_SILVER_MOUNTAIN_SPRITES, 0x1D);
+            LOAD_ASSET(SILVER_MOUNTAIN_COURSE_SPRITES, 0x1D);
             break;
         case 8:
-            LOAD_ASSET(LEVEL_NINJA_LAND_SPRITES, 0x1D);
+            LOAD_ASSET(NINJA_LAND_COURSE_SPRITES, 0x1D);
             break;
         case 9:
-            LOAD_ASSET(LEVEL_ROOKIE_MOUNTAIN_SPRITES, 0x1D);
+            LOAD_ASSET(ROOKIE_MOUNTAIN_COURSE_SPRITES, 0x1D);
             break;
     }
     LOAD_ASSET(_1E74E0, 0x1C);

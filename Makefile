@@ -345,6 +345,22 @@ $(BUILD_DIR)/assets/course_surface_data/%.o: assets/course_surface_data/%.yaml \
 	$(V)$(COURSE_SURFACE_DATA_PACK) $< --out $(BUILD_DIR)/assets/course_surface_data/$*.bin
 	$(V)$(LD) -r -b binary -o $@ $(BUILD_DIR)/assets/course_surface_data/$*.bin
 
+# Editable F3DEX command streams from the course segment-2 graphics bundles.
+# GNU as preserves command streams whose lengths are not multiples of IDO's
+# normal 16-byte data-section alignment.
+$(BUILD_DIR)/assets/course_display_lists/%.o: assets/course_display_lists/%.c
+	@mkdir -p $(dir $@)
+	$(PRINTF) "[$(GREEN) course $(NO_COL)]  $<\n"
+	$(V)$(CC_CHECK) $(CC_CHECK_FLAGS) $(CC_CHECK_WARNINGS) \
+		$(CC_CHECK_INCLUDES) $(C_DEFINES) $(CC_CHECK_MIPS_DEFINES) $<
+	$(V)cd $(dir $@) && $(abspath $(CC)) \
+		$(filter-out -c -I. -Iinclude -Iinclude/PR -Isrc/ultra/audio -Isrc/ultra/libc,$(CFLAGS)) $(C_OPT) \
+		-I$(abspath .) -I$(abspath include) -I$(abspath include/PR) \
+		-I$(abspath src/ultra/audio) -I$(abspath src/ultra/libc) \
+		-S $(abspath $<)
+	$(V)$(AS) $(ASFLAGS) -no-pad-sections -o $@ $(dir $@)$(notdir $*).s
+	$(V)$(RM) $(dir $@)$(notdir $*).s
+
 # *.o -> *.elf
 $(TARGET).elf: $(LD_SCRIPT) $(LINKER_SCRIPTS) $(O_FILES)
 	$(PRINTF) "[$(PINK) linker $(NO_COL)]  Linking $(TARGET).elf\n"
