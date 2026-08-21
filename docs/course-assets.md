@@ -92,18 +92,42 @@ u16 coordinate_count
 Vec3s coordinates[coordinate_count]
 
 u16 face_count
-RaceMotionFace faces[face_count]       // 8 bytes per face
+RaceCourseSurfaceFace faces[face_count] // 8 bytes per face
 
-RaceMotionSurface surfaces[]          // 0x1C bytes per surface
-
-u16 final_value
+u16 surface_count
+RaceCourseSurface surfaces[surface_count] // 0x1C bytes per surface
 ```
 
-Each `RaceMotionSurface` contains four neighboring surface indices, four boundary
-coordinate indices, a path/position index, an angle, and four additional 16-bit
-properties. The asset size supplies the surface count after accounting for the
-trailing, not-yet-understood `final_value`. This is the predecessor of Snowboard
-Kids 2's extracted `track_sector_mesh` format.
+Each face contains three coordinate indices, the gameplay surface type, and a
+boolean that skips the first triangle-edge containment test.
+
+Each `RaceCourseSurface` contains four neighboring surface indices, four
+boundary coordinate indices, a reference coordinate, the path heading angle,
+an inclusive/exclusive range into the face table, one unknown value at offset
+`0x18`, and endpoint-clamping flags at offset `0x1A`. This is the predecessor of
+Snowboard Kids 2's extracted `track_sector_mesh` format.
+
+All ten assets parse completely, and their declared surface counts agree with
+the runtime course metadata:
+
+| Course | Coordinates | Faces | Surfaces |
+| --- | ---: | ---: | ---: |
+| Big Snowman | 1,283 | 1,349 | 182 |
+| Sunset Rock | 1,361 | 1,522 | 160 |
+| Night Highway | 1,004 | 841 | 197 |
+| Grass Valley | 1,547 | 1,280 | 293 |
+| Dizzy-Land | 1,128 | 951 | 212 |
+| Quicksand Valley | 1,532 | 1,327 | 328 |
+| Silver Mountain | 1,144 | 840 | 253 |
+| Animal Land | 372 | 480 | 40 |
+| Ninja Land | 381 | 321 | 68 |
+| Rookie Mountain | 422 | 388 | 67 |
+
+The editable YAML manifests use these same names: `surface_type`,
+`skip_first_edge_check`, `neighbor_indices`, `boundary_coordinate_indices`,
+`reference_coordinate_index`, `path_angle`, `face_start_index`,
+`face_end_index`, and `edge_clamp_flags`. Only `unknown_18` remains deliberately
+unnamed.
 
 ## Remaining documentation work
 
@@ -111,5 +135,5 @@ Kids 2's extracted `track_sector_mesh` format.
   assets, comparable to Snowboard Kids 2's course asset types.
 - Identify and rename nested segment 2 display-list/resource splits.
 - Decode the compressed texture and sprite-table formats.
-- Name the unknown fields in `RaceMotionFace`, `RaceMotionSurface`, and
-  `RaceCourseStartEntry` from their runtime uses.
+- Identify `RaceCourseSurface.unknown_18` and unknown fields in
+  `RaceCourseStartEntry` from runtime uses.
