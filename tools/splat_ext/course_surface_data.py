@@ -114,6 +114,7 @@ class N64SegCourse_surface_data(CommonSegment):
                 "huffman_table": compression.table.hex(),
                 "padding_bits": compression.padding_bits,
                 "unused_tail": compression.unused_tail.hex(),
+                "lz_tokens": compression.lz_tokens.hex() if compression.lz_tokens is not None else None,
             },
             "coordinates": coordinates,
             "faces": faces,

@@ -52,7 +52,7 @@ void loadRaceCourseAssets(void) {
             gAssetHandles[0x8] = allocRelocatableHeapBlock(size);
             lockRelocatableHeapBlock(gAssetHandles[0x8]);
             DMA_ASSET(BIG_SNOWMAN_COURSE_GRAPHICS, getRelocatableHeapBlockBase(gAssetHandles[0x8]), size);
-            LOAD_ASSET(BIG_SNOWMAN_COURSE_TEXTURES, 9);
+            LOAD_ASSET(BIG_SNOWMAN_COURSE_MODEL_RESOURCES, 9);
             LOAD_ASSET(BIG_SNOWMAN_COURSE_SURFACE_DATA, 0x1B);
             initRaceCourseSurfaceData();
             LOAD_ASSET(BIG_SNOWMAN_COURSE_SPRITES, 0x1D);
@@ -62,7 +62,7 @@ void loadRaceCourseAssets(void) {
             gAssetHandles[0x8] = allocRelocatableHeapBlock(size);
             lockRelocatableHeapBlock(gAssetHandles[0x8]);
             DMA_ASSET(SUNSET_ROCK_COURSE_GRAPHICS, getRelocatableHeapBlockBase(gAssetHandles[0x8]), size);
-            LOAD_ASSET(SUNSET_ROCK_COURSE_TEXTURES, 9);
+            LOAD_ASSET(SUNSET_ROCK_COURSE_MODEL_RESOURCES, 9);
             LOAD_ASSET(SUNSET_ROCK_COURSE_SURFACE_DATA, 0x1B);
             initRaceCourseSurfaceData();
             LOAD_ASSET(SUNSET_ROCK_COURSE_SPRITES, 0x1D);
@@ -72,7 +72,7 @@ void loadRaceCourseAssets(void) {
             gAssetHandles[0x8] = allocRelocatableHeapBlock(size);
             lockRelocatableHeapBlock(gAssetHandles[0x8]);
             DMA_ASSET(NIGHT_HIGHWAY_COURSE_GRAPHICS, getRelocatableHeapBlockBase(gAssetHandles[0x8]), size);
-            LOAD_ASSET(NIGHT_HIGHWAY_COURSE_TEXTURES, 9);
+            LOAD_ASSET(NIGHT_HIGHWAY_COURSE_MODEL_RESOURCES, 9);
             LOAD_ASSET(NIGHT_HIGHWAY_COURSE_SURFACE_DATA, 0x1B);
             initRaceCourseSurfaceData();
             LOAD_ASSET(NIGHT_HIGHWAY_COURSE_SPRITES, 0x1D);
@@ -82,7 +82,7 @@ void loadRaceCourseAssets(void) {
             gAssetHandles[0x8] = allocRelocatableHeapBlock(size);
             lockRelocatableHeapBlock(gAssetHandles[0x8]);
             DMA_ASSET(GRASS_VALLEY_COURSE_GRAPHICS, getRelocatableHeapBlockBase(gAssetHandles[0x8]), size);
-            LOAD_ASSET(GRASS_VALLEY_COURSE_TEXTURES, 9);
+            LOAD_ASSET(GRASS_VALLEY_COURSE_MODEL_RESOURCES, 9);
             LOAD_ASSET(GRASS_VALLEY_COURSE_SURFACE_DATA, 0x1B);
             initRaceCourseSurfaceData();
             LOAD_ASSET(GRASS_VALLEY_COURSE_SPRITES, 0x1D);
@@ -92,7 +92,7 @@ void loadRaceCourseAssets(void) {
             gAssetHandles[0x8] = allocRelocatableHeapBlock(size);
             lockRelocatableHeapBlock(gAssetHandles[0x8]);
             DMA_ASSET(DIZZY_LAND_COURSE_GRAPHICS, getRelocatableHeapBlockBase(gAssetHandles[0x8]), size);
-            LOAD_ASSET(DIZZY_LAND_COURSE_TEXTURES, 9);
+            LOAD_ASSET(DIZZY_LAND_COURSE_MODEL_RESOURCES, 9);
             LOAD_ASSET(DIZZY_LAND_COURSE_SURFACE_DATA, 0x1B);
             initRaceCourseSurfaceData();
             LOAD_ASSET(DIZZY_LAND_COURSE_SPRITES, 0x1D);
@@ -102,7 +102,7 @@ void loadRaceCourseAssets(void) {
             gAssetHandles[0x8] = allocRelocatableHeapBlock(size);
             lockRelocatableHeapBlock(gAssetHandles[0x8]);
             DMA_ASSET(QUICKSAND_VALLEY_COURSE_GRAPHICS, getRelocatableHeapBlockBase(gAssetHandles[0x8]), size);
-            LOAD_ASSET(QUICKSAND_VALLEY_COURSE_TEXTURES, 9);
+            LOAD_ASSET(QUICKSAND_VALLEY_COURSE_MODEL_RESOURCES, 9);
             LOAD_ASSET(QUICKSAND_VALLEY_COURSE_SURFACE_DATA, 0x1B);
             initRaceCourseSurfaceData();
             LOAD_ASSET(QUICKSAND_VALLEY_COURSE_SPRITES, 0x1D);
@@ -112,7 +112,7 @@ void loadRaceCourseAssets(void) {
             gAssetHandles[0x8] = allocRelocatableHeapBlock(size);
             lockRelocatableHeapBlock(gAssetHandles[0x8]);
             DMA_ASSET(SILVER_MOUNTAIN_COURSE_GRAPHICS, getRelocatableHeapBlockBase(gAssetHandles[0x8]), size);
-            LOAD_ASSET(SILVER_MOUNTAIN_COURSE_TEXTURES, 9);
+            LOAD_ASSET(SILVER_MOUNTAIN_COURSE_MODEL_RESOURCES, 9);
             LOAD_ASSET(SILVER_MOUNTAIN_COURSE_SURFACE_DATA, 0x1B);
             initRaceCourseSurfaceData();
             LOAD_ASSET(SILVER_MOUNTAIN_COURSE_SPRITES, 0x1D);
@@ -122,7 +122,7 @@ void loadRaceCourseAssets(void) {
             gAssetHandles[0x8] = allocRelocatableHeapBlock(size);
             lockRelocatableHeapBlock(gAssetHandles[0x8]);
             DMA_ASSET(ANIMAL_LAND_COURSE_GRAPHICS, getRelocatableHeapBlockBase(gAssetHandles[0x8]), size);
-            LOAD_ASSET(ANIMAL_LAND_COURSE_TEXTURES, 9);
+            LOAD_ASSET(ANIMAL_LAND_COURSE_MODEL_RESOURCES, 9);
             LOAD_ASSET(ANIMAL_LAND_COURSE_SURFACE_DATA, 0x1B);
             initRaceCourseSurfaceData();
             break;
@@ -131,7 +131,7 @@ void loadRaceCourseAssets(void) {
             gAssetHandles[0x8] = allocRelocatableHeapBlock(size);
             lockRelocatableHeapBlock(gAssetHandles[0x8]);
             DMA_ASSET(NINJA_LAND_COURSE_GRAPHICS, getRelocatableHeapBlockBase(gAssetHandles[0x8]), size);
-            LOAD_ASSET(NINJA_LAND_COURSE_TEXTURES, 9);
+            LOAD_ASSET(NINJA_LAND_COURSE_MODEL_RESOURCES, 9);
             LOAD_ASSET(NINJA_LAND_COURSE_SURFACE_DATA, 0x1B);
             initRaceCourseSurfaceData();
             LOAD_ASSET(NINJA_LAND_COURSE_SPRITES, 0x1D);
@@ -141,7 +141,7 @@ void loadRaceCourseAssets(void) {
             gAssetHandles[0x8] = allocRelocatableHeapBlock(size);
             lockRelocatableHeapBlock(gAssetHandles[0x8]);
             DMA_ASSET(ROOKIE_MOUNTAIN_COURSE_GRAPHICS, getRelocatableHeapBlockBase(gAssetHandles[0x8]), size);
-            LOAD_ASSET(ROOKIE_MOUNTAIN_COURSE_TEXTURES, 9);
+            LOAD_ASSET(ROOKIE_MOUNTAIN_COURSE_MODEL_RESOURCES, 9);
             LOAD_ASSET(ROOKIE_MOUNTAIN_COURSE_SURFACE_DATA, 0x1B);
             initRaceCourseSurfaceData();
             LOAD_ASSET(ROOKIE_MOUNTAIN_COURSE_SPRITES, 0x1D);

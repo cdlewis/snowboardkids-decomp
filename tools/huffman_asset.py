@@ -24,6 +24,7 @@ class CompressionMetadata:
     table: bytes
     padding_bits: str
     unused_tail: bytes
+    lz_tokens: bytes | None = None
 
 
 def _build_tree(table: bytes) -> tuple[list[HuffmanNode], int, int]:
@@ -106,6 +107,7 @@ def decompress_huffman_asset(data: bytes) -> tuple[bytes, CompressionMetadata]:
     bitstream_start = 5 + table_size
     bit_position = 0
     output = bytearray()
+    lz_tokens = bytearray()
 
     while len(output) < output_size:
         first, bit_position = _decode_symbol(data, bitstream_start, bit_position, nodes, root)
@@ -114,6 +116,7 @@ def decompress_huffman_asset(data: bytes) -> tuple[bytes, CompressionMetadata]:
             continue
 
         second, bit_position = _decode_symbol(data, bitstream_start, bit_position, nodes, root)
+        lz_tokens.extend((first, second))
         if first == 0:
             output.append(second)
             continue
@@ -142,6 +145,7 @@ def decompress_huffman_asset(data: bytes) -> tuple[bytes, CompressionMetadata]:
         table=table,
         padding_bits=padding_bits,
         unused_tail=data[bitstream_start + used_bytes :],
+        lz_tokens=bytes(lz_tokens) if flags == 1 else None,
     )
     return bytes(output), metadata
 
@@ -201,12 +205,41 @@ def _tokenize_lz(data: bytes) -> list[int]:
     return tokens
 
 
+def _decompress_lz_tokens(tokens: bytes) -> bytes:
+    if len(tokens) % 2:
+        raise ValueError("Huffman/LZ token stream has an odd byte count")
+
+    output = bytearray()
+    for offset in range(0, len(tokens), 2):
+        first = tokens[offset]
+        second = tokens[offset + 1]
+        if first == 0:
+            output.append(second)
+            continue
+
+        count = first >> 4
+        source_offset = ((first << 8) | second) & MAX_COPY_OFFSET
+        if count == 0 or source_offset == 0 or source_offset > len(output):
+            raise ValueError(
+                f"invalid saved Huffman/LZ copy at token {offset // 2:#x}: "
+                f"count={count:#x}, offset={source_offset:#x}"
+            )
+        for _ in range(count):
+            output.append(output[-source_offset])
+    return bytes(output)
+
+
 def compress_huffman_asset(data: bytes, metadata: CompressionMetadata) -> bytes:
     nodes, root, table_size = _build_tree(metadata.table)
     if table_size != len(metadata.table):
         raise ValueError("Huffman table contains bytes after its terminator")
     codes = _build_codes(nodes, root)
-    symbols = data if metadata.flags == 0 else _tokenize_lz(data)
+    if metadata.flags == 0:
+        symbols = data
+    elif metadata.lz_tokens is not None and _decompress_lz_tokens(metadata.lz_tokens) == data:
+        symbols = metadata.lz_tokens
+    else:
+        symbols = _tokenize_lz(data)
 
     encoded = bytearray()
     current_byte = 0

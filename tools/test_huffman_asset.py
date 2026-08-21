@@ -31,6 +31,21 @@ class HuffmanAssetTests(unittest.TestCase):
         decompressed, _ = decompress_huffman_asset(compressed)
         self.assertEqual(decompressed, data)
 
+    def test_huffman_lz_preserves_saved_tokenization(self):
+        metadata = CompressionMetadata(
+            flags=1,
+            table=bytes.fromhex("0001010130300100"),
+            padding_bits="",
+            unused_tail=b"",
+            lz_tokens=bytes.fromhex("0001000100010001"),
+        )
+
+        compressed = compress_huffman_asset(b"\x01\x01\x01\x01", metadata)
+        decompressed, extracted_metadata = decompress_huffman_asset(compressed)
+
+        self.assertEqual(decompressed, b"\x01\x01\x01\x01")
+        self.assertEqual(extracted_metadata.lz_tokens, metadata.lz_tokens)
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -253,7 +253,7 @@ void initRaceStartTransition(void) {
     LOAD_RAW_ASSET(_145380, 8);
     LOAD_ASSET(_1DCED0, 9);
     loadRawRomAsset((void *)&ROOKIE_MOUNTAIN_COURSE_GRAPHICS_ROM_START, (void *)&_145380_ROM_START, 0xE);
-    LOAD_ASSET(ROOKIE_MOUNTAIN_COURSE_TEXTURES, 0x12);
+    LOAD_ASSET(ROOKIE_MOUNTAIN_COURSE_MODEL_RESOURCES, 0x12);
     initCallbackTaskScheduler(2);
     resetRaceCameras();
     setRaceCameraModeForced(0, 0x1D);
