@@ -472,134 +472,134 @@ segments:
   # See docs/course-assets.md for the complete course asset inventory.
   - type: bin
     start: 0xE35C0
-    name: LEVEL_BIG_SNOWMAN
+    name: BIG_SNOWMAN_COURSE_GRAPHICS
     vram: 0x02000000
     align: 8
     subalign: 8
     exclusive_ram_id: level_big_snowman
 
-  - { start: 0xEBEC0, type: bin, name: _EBEC0, vram: 0x02008900, align: 8, subalign: 8, exclusive_ram_id: level_big_snowman }
-  - { start: 0xEBFA0, type: bin, name: _EBFA0, vram: 0x020089E0, align: 8, subalign: 8, exclusive_ram_id: level_big_snowman }
-  - { start: 0xEC310, type: bin, name: _EC310, vram: 0x02008D50, align: 8, subalign: 8, exclusive_ram_id: level_big_snowman }
-  - { start: 0xEC400, type: bin, name: _EC400, vram: 0x02008E40, align: 8, subalign: 8, exclusive_ram_id: level_big_snowman }
+  - { start: 0xEBEC0, type: course_display_list, name: BIG_SNOWMAN_COURSE_DISPLAY_LIST, vram: 0x02008900, align: 8, subalign: 8, exclusive_ram_id: level_big_snowman }
+  - { start: 0xEBFA0, type: course_display_list, name: BIG_SNOWMAN_COURSE_BACKDROP_DISPLAY_LIST, vram: 0x020089E0, align: 8, subalign: 8, exclusive_ram_id: level_big_snowman }
+  - { start: 0xEC310, type: course_display_list, name: BIG_SNOWMAN_COURSE_SECONDARY_BACKDROP_DISPLAY_LIST, vram: 0x02008D50, align: 8, subalign: 8, exclusive_ram_id: level_big_snowman }
+  - { start: 0xEC400, type: course_display_list, name: BIG_SNOWMAN_COURSE_AUXILIARY_DISPLAY_LISTS, vram: 0x02008E40, align: 8, subalign: 8, exclusive_ram_id: level_big_snowman }
 
   - type: bin
     start: 0xEC9A0
-    name: LEVEL_SUNSET_ROCK
+    name: SUNSET_ROCK_COURSE_GRAPHICS
     vram: 0x02000000
     align: 8
     subalign: 8
     exclusive_ram_id: level_sunset_rock
 
-  - { start: 0xF57D0, type: bin, name: _F57D0, vram: 0x02008E30, align: 8, subalign: 8, exclusive_ram_id: level_sunset_rock }
-  - { start: 0xF5920, type: bin, name: _F5920, vram: 0x02008F80, align: 8, subalign: 8, exclusive_ram_id: level_sunset_rock }
-  - { start: 0xF5AE8, type: bin, name: _F5AE8, vram: 0x02009148, align: 8, subalign: 8, exclusive_ram_id: level_sunset_rock }
+  - { start: 0xF57D0, type: course_display_list, name: SUNSET_ROCK_COURSE_DISPLAY_LIST, vram: 0x02008E30, align: 8, subalign: 8, exclusive_ram_id: level_sunset_rock }
+  - { start: 0xF5920, type: course_display_list, name: SUNSET_ROCK_COURSE_BACKDROP_DISPLAY_LIST, vram: 0x02008F80, align: 8, subalign: 8, exclusive_ram_id: level_sunset_rock }
+  - { start: 0xF5AE8, type: course_display_list, name: SUNSET_ROCK_COURSE_AUXILIARY_DISPLAY_LISTS, vram: 0x02009148, align: 8, subalign: 8, exclusive_ram_id: level_sunset_rock }
 
   - type: bin
     start: 0xF6160
-    name: LEVEL_NIGHT_HIGHWAY
+    name: NIGHT_HIGHWAY_COURSE_GRAPHICS
     vram: 0x02000000
     align: 8
     subalign: 8
     exclusive_ram_id: level_night_highway
 
-  - { start: 0xFE788, type: bin, name: _FE788, vram: 0x02008628, align: 8, subalign: 8, exclusive_ram_id: level_night_highway }
-  - { start: 0xFE8F0, type: bin, name: _FE8F0, vram: 0x02008790, align: 8, subalign: 8, exclusive_ram_id: level_night_highway }
-  - { start: 0xFECA0, type: bin, name: _FECA0, vram: 0x02008B40, align: 8, subalign: 8, exclusive_ram_id: level_night_highway }
+  - { start: 0xFE788, type: course_display_list, name: NIGHT_HIGHWAY_COURSE_DISPLAY_LIST, vram: 0x02008628, align: 8, subalign: 8, exclusive_ram_id: level_night_highway }
+  - { start: 0xFE8F0, type: course_display_list, name: NIGHT_HIGHWAY_COURSE_BACKDROP_DISPLAY_LIST, vram: 0x02008790, align: 8, subalign: 8, exclusive_ram_id: level_night_highway }
+  - { start: 0xFECA0, type: course_display_list, name: NIGHT_HIGHWAY_COURSE_AUXILIARY_DISPLAY_LISTS, vram: 0x02008B40, align: 8, subalign: 8, exclusive_ram_id: level_night_highway }
 
   - type: bin
     start: 0xFEDA0
-    name: LEVEL_GRASS_VALLEY
+    name: GRASS_VALLEY_COURSE_GRAPHICS
     vram: 0x02000000
     align: 8
     subalign: 8
     exclusive_ram_id: level_grass_valley
 
-  - { start: 0x10A1A0, type: bin, name: _10A1A0, vram: 0x0200B400, align: 8, subalign: 8, exclusive_ram_id: level_grass_valley }
-  - { start: 0x10A280, type: bin, name: _10A280, vram: 0x0200B4E0, align: 8, subalign: 8, exclusive_ram_id: level_grass_valley }
-  - { start: 0x10A490, type: bin, name: _10A490, vram: 0x0200B6F0, align: 8, subalign: 8, exclusive_ram_id: level_grass_valley }
+  - { start: 0x10A1A0, type: course_display_list, name: GRASS_VALLEY_COURSE_DISPLAY_LIST, vram: 0x0200B400, align: 8, subalign: 8, exclusive_ram_id: level_grass_valley }
+  - { start: 0x10A280, type: course_display_list, name: GRASS_VALLEY_COURSE_BACKDROP_DISPLAY_LIST, vram: 0x0200B4E0, align: 8, subalign: 8, exclusive_ram_id: level_grass_valley }
+  - { start: 0x10A490, type: course_display_list, name: GRASS_VALLEY_COURSE_AUXILIARY_DISPLAY_LISTS, vram: 0x0200B6F0, align: 8, subalign: 8, exclusive_ram_id: level_grass_valley }
 
   - type: bin
     start: 0x10AAB0
-    name: LEVEL_DIZZY_LAND
+    name: DIZZY_LAND_COURSE_GRAPHICS
     vram: 0x02000000
     align: 8
     subalign: 8
     exclusive_ram_id: level_dizzy_land
 
-  - { start: 0x1167F8, type: bin, name: _1167F8, vram: 0x0200BD48, align: 8, subalign: 8, exclusive_ram_id: level_dizzy_land }
-  - { start: 0x1169F0, type: bin, name: _1169F0, vram: 0x0200BF40, align: 8, subalign: 8, exclusive_ram_id: level_dizzy_land }
-  - { start: 0x116C78, type: bin, name: _ADDR_200C1C8, vram: 0x0200C1C8, align: 8, subalign: 8, exclusive_ram_id: level_dizzy_land }
-  - { start: 0x117150, type: bin, name: _ADDR_200C6A0, vram: 0x0200C6A0, align: 8, subalign: 8, exclusive_ram_id: level_dizzy_land }
-  - { start: 0x117288, type: bin, name: _ADDR_200C7D8, vram: 0x0200C7D8, align: 8, subalign: 8, exclusive_ram_id: level_dizzy_land }
-  - { start: 0x1173C0, type: bin, name: _ADDR_200C910, vram: 0x0200C910, align: 8, subalign: 8, exclusive_ram_id: level_dizzy_land }
-  - { start: 0x1176D0, type: bin, name: _ADDR_200CC20, vram: 0x0200CC20, align: 8, subalign: 8, exclusive_ram_id: level_dizzy_land }
-  - { start: 0x1178F8, type: bin, name: _ADDR_200CE48, vram: 0x0200CE48, align: 8, subalign: 8, exclusive_ram_id: level_dizzy_land }
-  - { start: 0x117A60, type: bin, name: _ADDR_200CFB0, vram: 0x0200CFB0, align: 8, subalign: 8, exclusive_ram_id: level_dizzy_land }
-  - { start: 0x117E58, type: bin, name: _ADDR_200D3A8, vram: 0x0200D3A8, align: 8, subalign: 8, exclusive_ram_id: level_dizzy_land }
-  - { start: 0x117EF8, type: bin, name: LEVEL_DIZZY_LAND_SUFFIX, vram: 0x0200D448, align: 8, subalign: 8, exclusive_ram_id: level_dizzy_land }
+  - { start: 0x1167F8, type: course_display_list, name: DIZZY_LAND_COURSE_DISPLAY_LIST, vram: 0x0200BD48, align: 8, subalign: 8, exclusive_ram_id: level_dizzy_land }
+  - { start: 0x1169F0, type: course_display_list, name: DIZZY_LAND_COURSE_BACKDROP_DISPLAY_LIST, vram: 0x0200BF40, align: 8, subalign: 8, exclusive_ram_id: level_dizzy_land }
+  - { start: 0x116C78, type: course_display_list, name: DIZZY_LAND_TRIPLE_PARTICLE_CENTER_DISPLAY_LIST, vram: 0x0200C1C8, align: 8, subalign: 8, exclusive_ram_id: level_dizzy_land }
+  - { start: 0x117150, type: course_display_list, name: DIZZY_LAND_TRIPLE_PARTICLE_NEGATIVE_SINE_OFFSET_DISPLAY_LIST, vram: 0x0200C6A0, align: 8, subalign: 8, exclusive_ram_id: level_dizzy_land }
+  - { start: 0x117288, type: course_display_list, name: DIZZY_LAND_TRIPLE_PARTICLE_POSITIVE_SINE_OFFSET_DISPLAY_LIST, vram: 0x0200C7D8, align: 8, subalign: 8, exclusive_ram_id: level_dizzy_land }
+  - { start: 0x1173C0, type: course_display_list, name: DIZZY_LAND_BUMPER_DISPLAY_LIST, vram: 0x0200C910, align: 8, subalign: 8, exclusive_ram_id: level_dizzy_land }
+  - { start: 0x1176D0, type: course_display_list, name: DIZZY_LAND_TRAILING_PARTICLE_DISPLAY_LIST, vram: 0x0200CC20, align: 8, subalign: 8, exclusive_ram_id: level_dizzy_land }
+  - { start: 0x1178F8, type: course_display_list, name: DIZZY_LAND_TRAILING_PARTICLE_BASE_DISPLAY_LIST, vram: 0x0200CE48, align: 8, subalign: 8, exclusive_ram_id: level_dizzy_land }
+  - { start: 0x117A60, type: course_display_list, name: DIZZY_LAND_SPINNING_OBJECT_UPPER_DISPLAY_LIST, vram: 0x0200CFB0, align: 8, subalign: 8, exclusive_ram_id: level_dizzy_land }
+  - { start: 0x117E58, type: course_display_list, name: DIZZY_LAND_SPINNING_OBJECT_BASE_DISPLAY_LIST, vram: 0x0200D3A8, align: 8, subalign: 8, exclusive_ram_id: level_dizzy_land }
+  - { start: 0x117EF8, type: course_display_list, name: DIZZY_LAND_COURSE_AUXILIARY_DISPLAY_LISTS, vram: 0x0200D448, align: 8, subalign: 8, exclusive_ram_id: level_dizzy_land }
 
   - type: bin
     start: 0x118670
-    name: LEVEL_QUICKSAND_VALLEY
+    name: QUICKSAND_VALLEY_COURSE_GRAPHICS
     vram: 0x02000000
     align: 8
     subalign: 8
     exclusive_ram_id: level_quicksand_valley
 
-  - { start: 0x1246D0, type: bin, name: _1246D0, vram: 0x0200C060, align: 8, subalign: 8, exclusive_ram_id: level_quicksand_valley }
-  - { start: 0x1248A8, type: bin, name: _1248A8, vram: 0x0200C238, align: 8, subalign: 8, exclusive_ram_id: level_quicksand_valley }
-  - { start: 0x124A98, type: bin, name: _124A98, vram: 0x0200C428, align: 8, subalign: 8, exclusive_ram_id: level_quicksand_valley }
-  - { start: 0x124E18, type: bin, name: _124E18, vram: 0x0200C7A8, align: 8, subalign: 8, exclusive_ram_id: level_quicksand_valley }
-  - { start: 0x124E78, type: bin, name: _124E78, vram: 0x0200C808, align: 8, subalign: 8, exclusive_ram_id: level_quicksand_valley }
+  - { start: 0x1246D0, type: course_display_list, name: QUICKSAND_VALLEY_COURSE_DISPLAY_LIST, vram: 0x0200C060, align: 8, subalign: 8, exclusive_ram_id: level_quicksand_valley }
+  - { start: 0x1248A8, type: course_display_list, name: QUICKSAND_VALLEY_COURSE_BACKDROP_DISPLAY_LIST, vram: 0x0200C238, align: 8, subalign: 8, exclusive_ram_id: level_quicksand_valley }
+  - { start: 0x124A98, type: course_display_list, name: QUICKSAND_VALLEY_COURSE_AUXILIARY_DISPLAY_LISTS_A, vram: 0x0200C428, align: 8, subalign: 8, exclusive_ram_id: level_quicksand_valley }
+  - { start: 0x124E18, type: course_display_list, name: QUICKSAND_VALLEY_COURSE_SECONDARY_BACKDROP_DISPLAY_LIST, vram: 0x0200C7A8, align: 8, subalign: 8, exclusive_ram_id: level_quicksand_valley }
+  - { start: 0x124E78, type: course_display_list, name: QUICKSAND_VALLEY_COURSE_AUXILIARY_DISPLAY_LISTS_B, vram: 0x0200C808, align: 8, subalign: 8, exclusive_ram_id: level_quicksand_valley }
 
   - type: bin
     start: 0x125C90
-    name: LEVEL_SILVER_MOUNTAIN
+    name: SILVER_MOUNTAIN_COURSE_GRAPHICS
     vram: 0x02000000
     align: 8
     subalign: 8
     exclusive_ram_id: level_silver_mountain
 
-  - { start: 0x131448, type: bin, name: _131448, vram: 0x0200B7B8, align: 8, subalign: 8, exclusive_ram_id: level_silver_mountain }
-  - { start: 0x131558, type: bin, name: _131558, vram: 0x0200B8C8, align: 8, subalign: 8, exclusive_ram_id: level_silver_mountain }
-  - { start: 0x131768, type: bin, name: _131768, vram: 0x0200BAD8, align: 8, subalign: 8, exclusive_ram_id: level_silver_mountain }
+  - { start: 0x131448, type: course_display_list, name: SILVER_MOUNTAIN_COURSE_DISPLAY_LIST, vram: 0x0200B7B8, align: 8, subalign: 8, exclusive_ram_id: level_silver_mountain }
+  - { start: 0x131558, type: course_display_list, name: SILVER_MOUNTAIN_COURSE_BACKDROP_DISPLAY_LIST, vram: 0x0200B8C8, align: 8, subalign: 8, exclusive_ram_id: level_silver_mountain }
+  - { start: 0x131768, type: course_display_list, name: SILVER_MOUNTAIN_COURSE_AUXILIARY_DISPLAY_LISTS, vram: 0x0200BAD8, align: 8, subalign: 8, exclusive_ram_id: level_silver_mountain }
 
   - type: bin
     start: 0x131A90
-    name: LEVEL_ANIMAL_LAND
+    name: ANIMAL_LAND_COURSE_GRAPHICS
     vram: 0x02000000
     align: 8
     subalign: 8
     exclusive_ram_id: level_animal_land
 
-  - { start: 0x137EC0, type: bin, name: _137EC0, vram: 0x02006430, align: 8, subalign: 8, exclusive_ram_id: level_animal_land }
-  - { start: 0x137FD8, type: bin, name: _137FD8, vram: 0x02006548, align: 8, subalign: 8, exclusive_ram_id: level_animal_land }
-  - { start: 0x1382E8, type: bin, name: _1382E8, vram: 0x02006858, align: 8, subalign: 8, exclusive_ram_id: level_animal_land }
+  - { start: 0x137EC0, type: course_display_list, name: ANIMAL_LAND_COURSE_DISPLAY_LIST, vram: 0x02006430, align: 8, subalign: 8, exclusive_ram_id: level_animal_land }
+  - { start: 0x137FD8, type: course_display_list, name: ANIMAL_LAND_COURSE_BACKDROP_DISPLAY_LIST, vram: 0x02006548, align: 8, subalign: 8, exclusive_ram_id: level_animal_land }
+  - { start: 0x1382E8, type: course_display_list, name: ANIMAL_LAND_COURSE_AUXILIARY_DISPLAY_LISTS, vram: 0x02006858, align: 8, subalign: 8, exclusive_ram_id: level_animal_land }
 
   - type: bin
     start: 0x1384B0
-    name: LEVEL_NINJA_LAND
+    name: NINJA_LAND_COURSE_GRAPHICS
     vram: 0x02000000
     align: 8
     subalign: 8
     exclusive_ram_id: level_ninja_land
 
-  - { start: 0x13EC60, type: bin, name: _13EC60, vram: 0x020067B0, align: 8, subalign: 8, exclusive_ram_id: level_ninja_land }
-  - { start: 0x13ED30, type: bin, name: _13ED30, vram: 0x02006880, align: 8, subalign: 8, exclusive_ram_id: level_ninja_land }
-  - { start: 0x13F050, type: bin, name: _13F050, vram: 0x02006BA0, align: 8, subalign: 8, exclusive_ram_id: level_ninja_land }
+  - { start: 0x13EC60, type: course_display_list, name: NINJA_LAND_COURSE_DISPLAY_LIST, vram: 0x020067B0, align: 8, subalign: 8, exclusive_ram_id: level_ninja_land }
+  - { start: 0x13ED30, type: course_display_list, name: NINJA_LAND_COURSE_BACKDROP_DISPLAY_LIST, vram: 0x02006880, align: 8, subalign: 8, exclusive_ram_id: level_ninja_land }
+  - { start: 0x13F050, type: course_display_list, name: NINJA_LAND_COURSE_AUXILIARY_DISPLAY_LISTS, vram: 0x02006BA0, align: 8, subalign: 8, exclusive_ram_id: level_ninja_land }
 
   - type: bin
     start: 0x13F3B0
-    name: LEVEL_ROOKIE_MOUNTAIN
+    name: ROOKIE_MOUNTAIN_COURSE_GRAPHICS
     vram: 0x02000000
     align: 8
     subalign: 8
     exclusive_ram_id: level_rookie_mountain
 
-  - { start: 0x144B88, type: bin, name: _144B88, vram: 0x020057D8, align: 8, subalign: 8, exclusive_ram_id: level_rookie_mountain }
-  - { start: 0x144C58, type: bin, name: _144C58, vram: 0x020058A8, align: 8, subalign: 8, exclusive_ram_id: level_rookie_mountain }
-  - { start: 0x144F58, type: bin, name: _144F58, vram: 0x02005BA8, align: 8, subalign: 8, exclusive_ram_id: level_rookie_mountain }
+  - { start: 0x144B88, type: course_display_list, name: ROOKIE_MOUNTAIN_COURSE_DISPLAY_LIST, vram: 0x020057D8, align: 8, subalign: 8, exclusive_ram_id: level_rookie_mountain }
+  - { start: 0x144C58, type: course_display_list, name: ROOKIE_MOUNTAIN_COURSE_BACKDROP_DISPLAY_LIST, vram: 0x020058A8, align: 8, subalign: 8, exclusive_ram_id: level_rookie_mountain }
+  - { start: 0x144F58, type: course_display_list, name: ROOKIE_MOUNTAIN_COURSE_AUXILIARY_DISPLAY_LISTS, vram: 0x02005BA8, align: 8, subalign: 8, exclusive_ram_id: level_rookie_mountain }
   - type: bin
     start: 0x145380
     name: _145380
@@ -650,52 +650,52 @@ segments:
   # Per-course compressed RSP segment 3 texture bundles, in course-index order.
   - type: bin
     start: 0x163410
-    name: LEVEL_BIG_SNOWMAN_TEXTURES
+    name: BIG_SNOWMAN_COURSE_TEXTURES
     vram: 0
 
   - type: bin
     start: 0x171480
-    name: LEVEL_SUNSET_ROCK_TEXTURES
+    name: SUNSET_ROCK_COURSE_TEXTURES
     vram: 0
 
   - type: bin
     start: 0x17D220
-    name: LEVEL_NIGHT_HIGHWAY_TEXTURES
+    name: NIGHT_HIGHWAY_COURSE_TEXTURES
     vram: 0
 
   - type: bin
     start: 0x186910
-    name: LEVEL_GRASS_VALLEY_TEXTURES
+    name: GRASS_VALLEY_COURSE_TEXTURES
     vram: 0
 
   - type: bin
     start: 0x197490
-    name: LEVEL_DIZZY_LAND_TEXTURES
+    name: DIZZY_LAND_COURSE_TEXTURES
     vram: 0
 
   - type: bin
     start: 0x1A5620
-    name: LEVEL_QUICKSAND_VALLEY_TEXTURES
+    name: QUICKSAND_VALLEY_COURSE_TEXTURES
     vram: 0
 
   - type: bin
     start: 0x1B3160
-    name: LEVEL_SILVER_MOUNTAIN_TEXTURES
+    name: SILVER_MOUNTAIN_COURSE_TEXTURES
     vram: 0
 
   - type: bin
     start: 0x1C24B0
-    name: LEVEL_ANIMAL_LAND_TEXTURES
+    name: ANIMAL_LAND_COURSE_TEXTURES
     vram: 0
 
   - type: bin
     start: 0x1C9630
-    name: LEVEL_NINJA_LAND_TEXTURES
+    name: NINJA_LAND_COURSE_TEXTURES
     vram: 0
 
   - type: bin
     start: 0x1D3070
-    name: LEVEL_ROOKIE_MOUNTAIN_TEXTURES
+    name: ROOKIE_MOUNTAIN_COURSE_TEXTURES
     vram: 0
 
   - type: bin
@@ -733,47 +733,47 @@ segments:
   # Ninja Land.
   - type: bin
     start: 0x1EC0F0
-    name: LEVEL_BIG_SNOWMAN_SPRITES
+    name: BIG_SNOWMAN_COURSE_SPRITES
     vram: 0
 
   - type: bin
     start: 0x1EC4A0
-    name: LEVEL_SUNSET_ROCK_SPRITES
+    name: SUNSET_ROCK_COURSE_SPRITES
     vram: 0
 
   - type: bin
     start: 0x1EC810
-    name: LEVEL_NIGHT_HIGHWAY_SPRITES
+    name: NIGHT_HIGHWAY_COURSE_SPRITES
     vram: 0
 
   - type: bin
     start: 0x1ECD00
-    name: LEVEL_GRASS_VALLEY_SPRITES
+    name: GRASS_VALLEY_COURSE_SPRITES
     vram: 0
 
   - type: bin
     start: 0x1ED910
-    name: LEVEL_DIZZY_LAND_SPRITES
+    name: DIZZY_LAND_COURSE_SPRITES
     vram: 0
 
   - type: bin
     start: 0x1EDC80
-    name: LEVEL_QUICKSAND_VALLEY_SPRITES
+    name: QUICKSAND_VALLEY_COURSE_SPRITES
     vram: 0
 
   - type: bin
     start: 0x1EE060
-    name: LEVEL_SILVER_MOUNTAIN_SPRITES
+    name: SILVER_MOUNTAIN_COURSE_SPRITES
     vram: 0
 
   - type: bin
     start: 0x1EEEA0
-    name: LEVEL_NINJA_LAND_SPRITES
+    name: NINJA_LAND_COURSE_SPRITES
     vram: 0
 
   - type: bin
     start: 0x1EF1D0
-    name: LEVEL_ROOKIE_MOUNTAIN_SPRITES
+    name: ROOKIE_MOUNTAIN_COURSE_SPRITES
     vram: 0
 
   - type: bin
@@ -799,52 +799,52 @@ segments:
   # Per-course compressed collision/path surface data, in course-index order.
   - type: course_surface_data
     start: 0x21D9D0
-    name: LEVEL_BIG_SNOWMAN_SURFACE_DATA
+    name: BIG_SNOWMAN_COURSE_SURFACE_DATA
     vram: 0
 
   - type: course_surface_data
     start: 0x222500
-    name: LEVEL_SUNSET_ROCK_SURFACE_DATA
+    name: SUNSET_ROCK_COURSE_SURFACE_DATA
     vram: 0
 
   - type: course_surface_data
     start: 0x2274A0
-    name: LEVEL_NIGHT_HIGHWAY_SURFACE_DATA
+    name: NIGHT_HIGHWAY_COURSE_SURFACE_DATA
     vram: 0
 
   - type: course_surface_data
     start: 0x22AE50
-    name: LEVEL_GRASS_VALLEY_SURFACE_DATA
+    name: GRASS_VALLEY_COURSE_SURFACE_DATA
     vram: 0
 
   - type: course_surface_data
     start: 0x2308E0
-    name: LEVEL_DIZZY_LAND_SURFACE_DATA
+    name: DIZZY_LAND_COURSE_SURFACE_DATA
     vram: 0
 
   - type: course_surface_data
     start: 0x2349E0
-    name: LEVEL_QUICKSAND_VALLEY_SURFACE_DATA
+    name: QUICKSAND_VALLEY_COURSE_SURFACE_DATA
     vram: 0
 
   - type: course_surface_data
     start: 0x23A7D0
-    name: LEVEL_SILVER_MOUNTAIN_SURFACE_DATA
+    name: SILVER_MOUNTAIN_COURSE_SURFACE_DATA
     vram: 0
 
   - type: course_surface_data
     start: 0x23E9D0
-    name: LEVEL_ANIMAL_LAND_SURFACE_DATA
+    name: ANIMAL_LAND_COURSE_SURFACE_DATA
     vram: 0
 
   - type: course_surface_data
     start: 0x23FCC0
-    name: LEVEL_NINJA_LAND_SURFACE_DATA
+    name: NINJA_LAND_COURSE_SURFACE_DATA
     vram: 0
 
   - type: course_surface_data
     start: 0x241160
-    name: LEVEL_ROOKIE_MOUNTAIN_SURFACE_DATA
+    name: ROOKIE_MOUNTAIN_COURSE_SURFACE_DATA
     vram: 0
 
   - type: bin
