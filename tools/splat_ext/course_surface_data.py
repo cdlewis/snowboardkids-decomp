@@ -61,37 +61,48 @@ class N64SegCourse_surface_data(CommonSegment):
         for _ in range(face_count):
             if offset + 8 > len(decompressed):
                 log.error(f"course surface data {self.name} has a truncated face table")
-            coord0, coord1, coord2, face_index, unknown_07 = struct.unpack(">HHHbB", decompressed[offset : offset + 8])
+            coord0, coord1, coord2, surface_type, skip_first_edge_check = struct.unpack(
+                ">HHHbB", decompressed[offset : offset + 8]
+            )
             faces.append(
                 {
-                    "coord0": coord0,
-                    "coord1": coord1,
-                    "coord2": coord2,
-                    "face_index": face_index,
-                    "unknown_07": unknown_07,
+                    "coordinate_indices": [coord0, coord1, coord2],
+                    "surface_type": surface_type,
+                    "skip_first_edge_check": skip_first_edge_check,
                 }
             )
             offset += 8
 
+        if offset + 2 > len(decompressed):
+            log.error(f"course surface data {self.name} has no surface count")
+        surface_count = int.from_bytes(decompressed[offset : offset + 2], "big")
+        offset += 2
+
         remaining = len(decompressed) - offset
-        if remaining < 2 or (remaining - 2) % 0x1C:
+        if remaining != surface_count * 0x1C:
             log.error(
                 f"course surface data {self.name} has 0x{remaining:X} bytes after its face table; "
-                "expected 0x1C-byte surfaces followed by a u16"
+                f"expected {surface_count} 0x1C-byte surfaces"
             )
 
         surfaces = []
-        surface_end = len(decompressed) - 2
-        while offset < surface_end:
+        for _ in range(surface_count):
             chunk = decompressed[offset : offset + 0x1C]
             neighbors = struct.unpack(">hhhh", chunk[0:8])
-            coords = struct.unpack(">HHHH", chunk[8:0x10])
-            position_index, angle = struct.unpack(">hh", chunk[0x10:0x14])
-            unknown = struct.unpack(">HHHH", chunk[0x14:0x1C])
-            surface = {f"neighbor{i}": value for i, value in enumerate(neighbors)}
-            surface.update({f"coord{i}": value for i, value in enumerate(coords)})
-            surface.update({"position_index": position_index, "angle": angle})
-            surface.update({f"unknown_{offset_:02x}": value for offset_, value in zip(range(0x14, 0x1C, 2), unknown)})
+            boundary_coords = struct.unpack(">hhhh", chunk[8:0x10])
+            reference_coord_index, path_angle, face_start_index, face_end_index, unknown_18, edge_clamp_flags = (
+                struct.unpack(">hhHHHH", chunk[0x10:0x1C])
+            )
+            surface = {
+                "neighbor_indices": list(neighbors),
+                "boundary_coordinate_indices": list(boundary_coords),
+                "reference_coordinate_index": reference_coord_index,
+                "path_angle": path_angle,
+                "face_start_index": face_start_index,
+                "face_end_index": face_end_index,
+                "unknown_18": unknown_18,
+                "edge_clamp_flags": edge_clamp_flags,
+            }
             surfaces.append(surface)
             offset += 0x1C
 
@@ -107,7 +118,6 @@ class N64SegCourse_surface_data(CommonSegment):
             "coordinates": coordinates,
             "faces": faces,
             "surfaces": surfaces,
-            "final_value": int.from_bytes(decompressed[-2:], "big"),
         }
         write_yaml(self.out_path(), manifest)
         self.log(f"Wrote {self.name} to {self.out_path()}")

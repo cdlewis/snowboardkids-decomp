@@ -53,22 +53,31 @@ def pack_course_surface_data(manifest: dict) -> bytes:
     faces = manifest["faces"]
     output.extend(len(faces).to_bytes(2, "big"))
     for face in faces:
+        coordinate_indices = face["coordinate_indices"]
         output.extend(
             struct.pack(
                 ">HHHbB",
-                parse_int(face["coord0"]),
-                parse_int(face["coord1"]),
-                parse_int(face["coord2"]),
-                parse_int(face["face_index"]),
-                parse_int(face["unknown_07"]),
+                *(parse_int(index) for index in coordinate_indices),
+                parse_int(face["surface_type"]),
+                parse_int(face["skip_first_edge_check"]),
             )
         )
 
-    for surface in manifest["surfaces"]:
-        output.extend(struct.pack(">hhhh", *(parse_int(surface[f"neighbor{i}"]) for i in range(4))))
-        output.extend(struct.pack(">HHHH", *(parse_int(surface[f"coord{i}"]) for i in range(4))))
-        output.extend(struct.pack(">hh", parse_int(surface["position_index"]), parse_int(surface["angle"])))
-        output.extend(struct.pack(">HHHH", *(parse_int(surface[f"unknown_{offset:02x}"]) for offset in range(0x14, 0x1C, 2))))
+    surfaces = manifest["surfaces"]
+    output.extend(len(surfaces).to_bytes(2, "big"))
+    for surface in surfaces:
+        output.extend(struct.pack(">hhhh", *(parse_int(index) for index in surface["neighbor_indices"])))
+        output.extend(struct.pack(">hhhh", *(parse_int(index) for index in surface["boundary_coordinate_indices"])))
+        output.extend(
+            struct.pack(
+                ">hhHHHH",
+                parse_int(surface["reference_coordinate_index"]),
+                parse_int(surface["path_angle"]),
+                parse_int(surface["face_start_index"]),
+                parse_int(surface["face_end_index"]),
+                parse_int(surface["unknown_18"]),
+                parse_int(surface["edge_clamp_flags"]),
+            )
+        )
 
-    output.extend(parse_int(manifest["final_value"]).to_bytes(2, "big"))
     return bytes(output)
