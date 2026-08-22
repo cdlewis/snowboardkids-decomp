@@ -116,6 +116,13 @@ scrolling course textures rather than UI sprites. `RaceCourseScrollingTextureId`
 also gives every scene-setup index a course-specific name. The two display lists
 rendered by course trigger volumes are named for Sunset Rock and Animal Land.
 
+The scrolling-texture wrappers reference 25 nested geometry display lists. All
+25 now have source-backed boundaries and names tying them to their owning course
+and scrolling-texture instance: three for Sunset Rock, three for Night Highway,
+six for Dizzy-Land, eleven for Quicksand Valley, and two for Animal Land. This
+replaces the former generic Night Highway, Quicksand Valley, and Animal Land
+`COURSE_AUXILIARY_DISPLAY_LISTS` ranges with their demonstrated rendering role.
+
 Course scenery and prop models use a single 26-entry runtime pointer table,
 `gRaceCourseObjectDisplayLists`. It was previously represented in C as two
 adjacent arrays even though both renderers indexed across the boundary; it is
@@ -274,5 +281,6 @@ uses:
 
 - Replace stable scenery-entry numbers with visual object names only where a
   depicted identity can be established from render or gameplay evidence.
-- Give semantic names to nested display lists that have no direct runtime
-  entry point.
+- Split and document the large course-mesh section lists called by each
+  top-level `COURSE_DISPLAY_LIST`; their geometry needs rendered or spatial
+  evidence before assigning landmark names.
