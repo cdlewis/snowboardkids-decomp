@@ -27,6 +27,10 @@ first game's loader actually uses. `tools/generate_course_definitions.py`
 validates those definitions and generates the shared course ID and asset
 declaration fragments under `include/generated`.
 
+For ROM-derived packages in the Snowboard Kids 2 binary layouts, see
+[`sk2-course-export.md`](sk2-course-export.md). Generated course bytes remain
+outside version control.
+
 The ROM also contains older or internal English labels in the default save-data
 template. `BEGISNOW`, `TRAPED`, `SNOW GARDEN`, and `ZIPANGU` correspond to Big
 Snowman, Sunset Rock, Dizzy-Land, and Ninja Land respectively. They are aliases,
