@@ -258,7 +258,10 @@ TARGET = $(BUILD_DIR)/$(BASENAME)
 
 default: all
 
-all: dirs $(TARGET).z64 verify
+all: course-definitions dirs $(TARGET).z64 verify
+
+course-definitions:
+	$(V)$(PYTHON) $(TOOLS_DIR)/generate_course_definitions.py --check
 
 # Build the ROM without SHA1 verification (useful while a build is non-matching).
 # The N64 CRC is still applied in the .z64 step, so the result is a bootable ROM.
@@ -453,6 +456,6 @@ clean:
 
 ### Settings
 .SECONDARY:
-.PHONY: all clean default extract nonmatching verify check \
+.PHONY: all clean default extract nonmatching verify check course-definitions \
 	check-clang-format-version check-clang-tidy-version format format-check tidy \
 	decompilation-summary

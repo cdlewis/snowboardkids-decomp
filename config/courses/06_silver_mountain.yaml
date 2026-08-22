@@ -1,0 +1,16 @@
+name: Silver Mountain
+key: silver_mountain
+enum: SILVER_MOUNTAIN
+legacy_id: 6
+kind: standard
+uses: [race]
+assets:
+  graphics: { symbol: SILVER_MOUNTAIN_COURSE_GRAPHICS, rom_start: '0x125C90', rom_end: '0x131A90' }
+  model_resources: { symbol: SILVER_MOUNTAIN_COURSE_MODEL_RESOURCES, rom_start: '0x1B3160', rom_end: '0x1C24B0' }
+  surface_data: { symbol: SILVER_MOUNTAIN_COURSE_SURFACE_DATA, rom_start: '0x23A7D0', rom_end: '0x23E9D0' }
+  sprites: { symbol: SILVER_MOUNTAIN_COURSE_SPRITES, rom_start: '0x1EE060', rom_end: '0x1EEEA0' }
+render:
+  main_display_list: SILVER_MOUNTAIN_COURSE_DISPLAY_LIST
+  backdrop_display_lists: [SILVER_MOUNTAIN_COURSE_BACKDROP_DISPLAY_LIST]
+  scenery_entries: gSilverMountainCourseSceneryEntries
+  scrolling_textures: []

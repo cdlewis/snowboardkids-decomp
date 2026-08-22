@@ -20,6 +20,13 @@ The canonical course-index mapping is:
 | 8 | Ninja Land | Secret race |
 | 9 | Rookie Mountain | Race, training, and transition scenes |
 
+The machine-readable source of truth for this mapping and its per-course asset
+inventory is `config/courses/*.yaml`. This follows the organization used by the
+Snowboard Kids 2 decompilation while retaining the asset categories that the
+first game's loader actually uses. `tools/generate_course_definitions.py`
+validates those definitions and generates the shared course ID and asset
+declaration fragments under `include/generated`.
+
 The ROM also contains older or internal English labels in the default save-data
 template. `BEGISNOW`, `TRAPED`, `SNOW GARDEN`, and `ZIPANGU` correspond to Big
 Snowman, Sunset Rock, Dizzy-Land, and Ninja Land respectively. They are aliases,
@@ -61,13 +68,14 @@ treated as additional course environments merely because race code loads them.
 
 ## Graphics and model resources
 
-All ten segment 2 graphics bundles are now source-backed. They are divided into
-94 rebuildable ranges under `assets/course_display_lists`: one complete leading
-graphics range per course and 84 main, backdrop, effect, and runtime-identified
-auxiliary ranges. Each is represented as exact `Gfx` source words with an F3DEX
-macro decode included as a reference. The source words remain authoritative
-because a few ranges contain embedded resource data, and some otherwise valid
-commands contain bits that a macro disassembler normalizes.
+All ten segment 2 graphics bundles are source-backed under
+`assets/course_display_lists`. Each course has one bundle-level
+`<COURSE>_COURSE_GRAPHICS` asset, plus boundaries for main, backdrop, effect,
+and other entry points whose runtime roles are known. Each range is represented
+as exact `Gfx` source words with an F3DEX macro decode included as a reference.
+The source words remain authoritative because a few ranges contain embedded
+resource data, and some otherwise valid commands contain bits that a macro
+disassembler normalizes.
 
 Confirmed top-level entry points are:
 
@@ -116,37 +124,16 @@ scrolling course textures rather than UI sprites. `RaceCourseScrollingTextureId`
 also gives every scene-setup index a course-specific name. The two display lists
 rendered by course trigger volumes are named for Sunset Rock and Animal Land.
 
-The scrolling-texture wrappers reference 25 nested geometry display lists. All
-25 now have source-backed boundaries and names tying them to their owning course
-and scrolling-texture instance: three for Sunset Rock, three for Night Highway,
-six for Dizzy-Land, eleven for Quicksand Valley, and two for Animal Land. This
-replaces the former generic Night Highway, Quicksand Valley, and Animal Land
-`COURSE_AUXILIARY_DISPLAY_LISTS` ranges with their demonstrated rendering role.
+The scrolling-texture wrappers reference 25 nested geometry display lists. Their
+owning texture instance and course are documented, but the nested geometry is
+kept inside the course graphics bundle unless it has an independently confirmed
+runtime role.
 
 Each top-level `COURSE_DISPLAY_LIST` is a fog/render-state wrapper around an
-ordered set of course-mesh sections. All 306 section roots now have explicit
-source boundaries. Nine section-zero roots coincide with their course's
-`COURSE_GRAPHICS` bundle start; the other 297 use
-`<COURSE>_COURSE_MESH_SECTION_<index>_DISPLAY_LIST`, where `index` is the stable
-call order in the top-level wrapper.
-
-| Course | Mesh sections |
-| --- | ---: |
-| Big Snowman | 20 |
-| Sunset Rock | 34 |
-| Night Highway | 37 |
-| Grass Valley | 20 |
-| Dizzy-Land | 55 |
-| Quicksand Valley | 51 |
-| Silver Mountain | 26 |
-| Animal Land | 27 |
-| Ninja Land | 18 |
-| Rookie Mountain | 18 |
-
-These section names are intentionally structural. They establish editable,
-individually previewable assets without claiming that a section corresponds to
-one landmark: a section can contain multiple nearby surfaces, while a single
-landmark can span adjacent sections.
+ordered set of internal course-mesh display lists. As in the Snowboard Kids 2
+project, these bundle-internal roots use stable offset names in decoded output
+(`..._COURSE_GRAPHICS_display_list_<offset>`) rather than becoming hundreds of
+top-level YAML assets or receiving speculative landmark names.
 
 Course scenery and prop models use a single 26-entry runtime pointer table,
 `gRaceCourseObjectDisplayLists`. It was previously represented in C as two
@@ -306,5 +293,3 @@ uses:
 
 - Replace stable scenery-entry numbers with visual object names only where a
   depicted identity can be established from render or gameplay evidence.
-- Generate spatial previews for the course-mesh sections and replace structural
-  indices with landmark names only where the geometry establishes one reliably.

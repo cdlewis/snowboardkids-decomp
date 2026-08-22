@@ -8,38 +8,34 @@ from tools.course_graphics_common import (
     scan_course_resource_commands,
     trace_course_graphics,
 )
+from tools.splat_ext.course_display_list import course_display_list_symbol
 
 
 class CourseGraphicsTests(unittest.TestCase):
-    def test_all_top_level_course_mesh_roots_have_named_asset_boundaries(self):
+    def test_course_mesh_roots_remain_bundle_internal(self):
         repo_root = Path(__file__).resolve().parent.parent
         yaml_text = (repo_root / "snowboardkids.yaml").read_text()
         asset_declarations = (repo_root / "include/assets.h").read_text()
-        root_count = 0
-        named_section_count = 0
+        self.assertNotIn("_COURSE_MESH_SECTION_", yaml_text)
+        self.assertNotIn("_COURSE_MESH_SECTION_", asset_declarations)
 
+        internal_roots = []
         for path in (repo_root / "assets/course_display_lists").glob("*_COURSE_DISPLAY_LIST.c"):
             course = path.stem.removesuffix("_COURSE_DISPLAY_LIST")
             if f"name: {course}_COURSE_GRAPHICS" not in yaml_text:
                 continue
+            internal_roots.extend(
+                re.findall(r"[A-Z_]+_COURSE_GRAPHICS_display_list_[0-9A-F]{6}", path.read_text())
+            )
+        self.assertEqual(len(internal_roots), 306)
 
-            offsets = [
-                int(offset, 16)
-                for offset in re.findall(r"gsSPDisplayList\(0x02([0-9A-Fa-f]{6})\)", path.read_text())
-            ]
-            root_count += len(offsets)
-            for index, offset in enumerate(offsets):
-                if offset == 0:
-                    self.assertIn(f"name: {course}_COURSE_GRAPHICS", yaml_text)
-                    continue
-
-                name = f"{course}_COURSE_MESH_SECTION_{index:02d}_DISPLAY_LIST"
-                self.assertRegex(yaml_text, rf"name: {name}, vram: 0x02{offset:06X}")
-                self.assertIn(f"USE_ASSET({name});", asset_declarations)
-                named_section_count += 1
-
-        self.assertEqual(root_count, 306)
-        self.assertEqual(named_section_count, 297)
+    def test_segment_two_display_list_calls_get_stable_internal_names(self):
+        self.assertEqual(
+            course_display_list_symbol(0x02001E90, "level_sunset_rock"),
+            "SUNSET_ROCK_COURSE_GRAPHICS_display_list_001E90",
+        )
+        self.assertIsNone(course_display_list_symbol(0x03001E90, "level_sunset_rock"))
+        self.assertIsNone(course_display_list_symbol(0x02001E90, "shared_race_models"))
 
     def test_trace_follows_segment_two_calls_and_records_segment_three_vertices(self):
         nested = bytes.fromhex("0400081F03000010 B800000000000000")

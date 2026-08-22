@@ -1,0 +1,16 @@
+name: Big Snowman
+key: big_snowman
+enum: BIG_SNOWMAN
+legacy_id: 0
+kind: standard
+uses: [race, skill_games]
+assets:
+  graphics: { symbol: BIG_SNOWMAN_COURSE_GRAPHICS, rom_start: '0x0E35C0', rom_end: '0x0EC9A0' }
+  model_resources: { symbol: BIG_SNOWMAN_COURSE_MODEL_RESOURCES, rom_start: '0x163410', rom_end: '0x171480' }
+  surface_data: { symbol: BIG_SNOWMAN_COURSE_SURFACE_DATA, rom_start: '0x21D9D0', rom_end: '0x222500' }
+  sprites: { symbol: BIG_SNOWMAN_COURSE_SPRITES, rom_start: '0x1EC0F0', rom_end: '0x1EC4A0' }
+render:
+  main_display_list: BIG_SNOWMAN_COURSE_DISPLAY_LIST
+  backdrop_display_lists: [BIG_SNOWMAN_COURSE_BACKDROP_DISPLAY_LIST, BIG_SNOWMAN_COURSE_SECONDARY_BACKDROP_DISPLAY_LIST]
+  scenery_entries: gBigSnowmanCourseSceneryEntries
+  scrolling_textures: []

@@ -3,6 +3,10 @@
 
 #include "common.h"
 
+typedef enum {
+#include "generated/course_ids.inc"
+} RaceCourseId;
+
 typedef union {
     s16 signedValue;
     u16 unsignedValue;

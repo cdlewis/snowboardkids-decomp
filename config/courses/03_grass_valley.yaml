@@ -1,0 +1,16 @@
+name: Grass Valley
+key: grass_valley
+enum: GRASS_VALLEY
+legacy_id: 3
+kind: standard
+uses: [race]
+assets:
+  graphics: { symbol: GRASS_VALLEY_COURSE_GRAPHICS, rom_start: '0x0FEDA0', rom_end: '0x10AAB0' }
+  model_resources: { symbol: GRASS_VALLEY_COURSE_MODEL_RESOURCES, rom_start: '0x186910', rom_end: '0x197490' }
+  surface_data: { symbol: GRASS_VALLEY_COURSE_SURFACE_DATA, rom_start: '0x22AE50', rom_end: '0x2308E0' }
+  sprites: { symbol: GRASS_VALLEY_COURSE_SPRITES, rom_start: '0x1ECD00', rom_end: '0x1ED910' }
+render:
+  main_display_list: GRASS_VALLEY_COURSE_DISPLAY_LIST
+  backdrop_display_lists: [GRASS_VALLEY_COURSE_BACKDROP_DISPLAY_LIST]
+  scenery_entries: gGrassValleyCourseSceneryEntries
+  scrolling_textures: []

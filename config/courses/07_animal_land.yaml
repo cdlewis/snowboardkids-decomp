@@ -1,0 +1,16 @@
+name: Animal Land
+key: animal_land
+enum: ANIMAL_LAND
+legacy_id: 7
+kind: trick
+uses: [trick_game]
+assets:
+  graphics: { symbol: ANIMAL_LAND_COURSE_GRAPHICS, rom_start: '0x131A90', rom_end: '0x1384B0' }
+  model_resources: { symbol: ANIMAL_LAND_COURSE_MODEL_RESOURCES, rom_start: '0x1C24B0', rom_end: '0x1C9630' }
+  surface_data: { symbol: ANIMAL_LAND_COURSE_SURFACE_DATA, rom_start: '0x23E9D0', rom_end: '0x23FCC0' }
+  sprites: null
+render:
+  main_display_list: ANIMAL_LAND_COURSE_DISPLAY_LIST
+  backdrop_display_lists: [ANIMAL_LAND_COURSE_BACKDROP_DISPLAY_LIST]
+  scenery_entries: gAnimalLandCourseSceneryEntries
+  scrolling_textures: [RACE_COURSE_SCROLLING_TEXTURE_ANIMAL_LAND]

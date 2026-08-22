@@ -1,0 +1,16 @@
+name: Sunset Rock
+key: sunset_rock
+enum: SUNSET_ROCK
+legacy_id: 1
+kind: standard
+uses: [race, skill_games]
+assets:
+  graphics: { symbol: SUNSET_ROCK_COURSE_GRAPHICS, rom_start: '0x0EC9A0', rom_end: '0x0F6160' }
+  model_resources: { symbol: SUNSET_ROCK_COURSE_MODEL_RESOURCES, rom_start: '0x171480', rom_end: '0x17D220' }
+  surface_data: { symbol: SUNSET_ROCK_COURSE_SURFACE_DATA, rom_start: '0x222500', rom_end: '0x2274A0' }
+  sprites: { symbol: SUNSET_ROCK_COURSE_SPRITES, rom_start: '0x1EC4A0', rom_end: '0x1EC810' }
+render:
+  main_display_list: SUNSET_ROCK_COURSE_DISPLAY_LIST
+  backdrop_display_lists: [SUNSET_ROCK_COURSE_BACKDROP_DISPLAY_LIST]
+  scenery_entries: gSunsetRockCourseSceneryEntries
+  scrolling_textures: [RACE_COURSE_SCROLLING_TEXTURE_SUNSET_ROCK_0, RACE_COURSE_SCROLLING_TEXTURE_SUNSET_ROCK_1]
