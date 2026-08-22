@@ -478,6 +478,12 @@ segments:
     subalign: 8
     exclusive_ram_id: level_big_snowman
 
+  - { start: 0xE3720, type: course_display_list, name: BIG_SNOWMAN_COURSE_SCENERY_MODEL_1_DISPLAY_LIST, vram: 0x02000160, align: 8, subalign: 8, exclusive_ram_id: level_big_snowman }
+  - { start: 0xE39D0, type: course_display_list, name: BIG_SNOWMAN_COURSE_SCENERY_MODEL_4_DISPLAY_LIST, vram: 0x02000410, align: 8, subalign: 8, exclusive_ram_id: level_big_snowman }
+  - { start: 0xE3B28, type: course_display_list, name: BIG_SNOWMAN_COURSE_SCENERY_MODEL_8_DISPLAY_LIST, vram: 0x02000568, align: 8, subalign: 8, exclusive_ram_id: level_big_snowman }
+  - { start: 0xE40F0, type: course_display_list, name: BIG_SNOWMAN_COURSE_SCENERY_MODEL_10_DISPLAY_LIST, vram: 0x02000B30, align: 8, subalign: 8, exclusive_ram_id: level_big_snowman }
+  - { start: 0xE4F80, type: course_display_list, name: BIG_SNOWMAN_COURSE_SCENERY_MODEL_17_DISPLAY_LIST, vram: 0x020019C0, align: 8, subalign: 8, exclusive_ram_id: level_big_snowman }
+  - { start: 0xE6490, type: course_display_list, name: BIG_SNOWMAN_COURSE_SCENERY_MODEL_25_DISPLAY_LIST, vram: 0x02002ED0, align: 8, subalign: 8, exclusive_ram_id: level_big_snowman }
   - { start: 0xEBEC0, type: course_display_list, name: BIG_SNOWMAN_COURSE_DISPLAY_LIST, vram: 0x02008900, align: 8, subalign: 8, exclusive_ram_id: level_big_snowman }
   - { start: 0xEBFA0, type: course_display_list, name: BIG_SNOWMAN_COURSE_BACKDROP_DISPLAY_LIST, vram: 0x020089E0, align: 8, subalign: 8, exclusive_ram_id: level_big_snowman }
   - { start: 0xEC310, type: course_display_list, name: BIG_SNOWMAN_COURSE_SECONDARY_BACKDROP_DISPLAY_LIST, vram: 0x02008D50, align: 8, subalign: 8, exclusive_ram_id: level_big_snowman }
@@ -493,6 +499,12 @@ segments:
     subalign: 8
     exclusive_ram_id: level_sunset_rock
 
+  - { start: 0xECF08, type: course_display_list, name: SUNSET_ROCK_COURSE_SCENERY_MODEL_8_DISPLAY_LIST, vram: 0x02000568, align: 8, subalign: 8, exclusive_ram_id: level_sunset_rock }
+  - { start: 0xED4D0, type: course_display_list, name: SUNSET_ROCK_COURSE_SCENERY_MODEL_10_DISPLAY_LIST, vram: 0x02000B30, align: 8, subalign: 8, exclusive_ram_id: level_sunset_rock }
+  - { start: 0xEDCF0, type: course_display_list, name: SUNSET_ROCK_COURSE_SCENERY_MODEL_11_DISPLAY_LIST, vram: 0x02001350, align: 8, subalign: 8, exclusive_ram_id: level_sunset_rock }
+  - { start: 0xEDEE8, type: course_display_list, name: SUNSET_ROCK_COURSE_THROWN_PICKUP_MODEL_DISPLAY_LIST, vram: 0x02001548, align: 8, subalign: 8, exclusive_ram_id: level_sunset_rock }
+  - { start: 0xEE6A0, type: course_display_list, name: SUNSET_ROCK_COURSE_SCENERY_MODEL_18_DISPLAY_LIST, vram: 0x02001D00, align: 8, subalign: 8, exclusive_ram_id: level_sunset_rock }
+  - { start: 0xEEA48, type: course_display_list, name: SUNSET_ROCK_COURSE_PROP_MODEL_DISPLAY_LIST, vram: 0x020020A8, align: 8, subalign: 8, exclusive_ram_id: level_sunset_rock }
   - { start: 0xF57D0, type: course_display_list, name: SUNSET_ROCK_COURSE_DISPLAY_LIST, vram: 0x02008E30, align: 8, subalign: 8, exclusive_ram_id: level_sunset_rock }
   - { start: 0xF5920, type: course_display_list, name: SUNSET_ROCK_COURSE_BACKDROP_DISPLAY_LIST, vram: 0x02008F80, align: 8, subalign: 8, exclusive_ram_id: level_sunset_rock }
   - { start: 0xF5AE8, type: course_display_list, name: SUNSET_ROCK_COURSE_TRIGGER_VOLUME_DISPLAY_LIST, vram: 0x02009148, align: 8, subalign: 8, exclusive_ram_id: level_sunset_rock }
@@ -509,6 +521,7 @@ segments:
     subalign: 8
     exclusive_ram_id: level_night_highway
 
+  - { start: 0xF66C8, type: course_display_list, name: NIGHT_HIGHWAY_COURSE_SCENERY_MODEL_8_DISPLAY_LIST, vram: 0x02000568, align: 8, subalign: 8, exclusive_ram_id: level_night_highway }
   - { start: 0xFE788, type: course_display_list, name: NIGHT_HIGHWAY_COURSE_DISPLAY_LIST, vram: 0x02008628, align: 8, subalign: 8, exclusive_ram_id: level_night_highway }
   - { start: 0xFE8F0, type: course_display_list, name: NIGHT_HIGHWAY_COURSE_BACKDROP_DISPLAY_LIST, vram: 0x02008790, align: 8, subalign: 8, exclusive_ram_id: level_night_highway }
   - { start: 0xFECA0, type: course_display_list, name: NIGHT_HIGHWAY_COURSE_AUXILIARY_DISPLAY_LISTS, vram: 0x02008B40, align: 8, subalign: 8, exclusive_ram_id: level_night_highway }
@@ -522,6 +535,7 @@ segments:
     subalign: 8
     exclusive_ram_id: level_grass_valley
 
+  - { start: 0xFF308, type: course_display_list, name: GRASS_VALLEY_COURSE_SCENERY_MODEL_8_DISPLAY_LIST, vram: 0x02000568, align: 8, subalign: 8, exclusive_ram_id: level_grass_valley }
   - { start: 0x10A1A0, type: course_display_list, name: GRASS_VALLEY_COURSE_DISPLAY_LIST, vram: 0x0200B400, align: 8, subalign: 8, exclusive_ram_id: level_grass_valley }
   - { start: 0x10A280, type: course_display_list, name: GRASS_VALLEY_COURSE_BACKDROP_DISPLAY_LIST, vram: 0x0200B4E0, align: 8, subalign: 8, exclusive_ram_id: level_grass_valley }
   - { start: 0x10A490, type: course_display_list, name: GRASS_VALLEY_COURSE_RANK_MODEL_LAPS_REMAINING_DISPLAY_LIST, vram: 0x0200B6F0, align: 8, subalign: 8, exclusive_ram_id: level_grass_valley }
@@ -535,6 +549,9 @@ segments:
     subalign: 8
     exclusive_ram_id: level_dizzy_land
 
+  - { start: 0x10B018, type: course_display_list, name: DIZZY_LAND_COURSE_SCENERY_MODEL_8_DISPLAY_LIST, vram: 0x02000568, align: 8, subalign: 8, exclusive_ram_id: level_dizzy_land }
+  - { start: 0x10BE00, type: course_display_list, name: DIZZY_LAND_COURSE_SCENERY_MODEL_11_DISPLAY_LIST, vram: 0x02001350, align: 8, subalign: 8, exclusive_ram_id: level_dizzy_land }
+  - { start: 0x10C7B0, type: course_display_list, name: DIZZY_LAND_COURSE_SCENERY_MODEL_18_DISPLAY_LIST, vram: 0x02001D00, align: 8, subalign: 8, exclusive_ram_id: level_dizzy_land }
   - { start: 0x1167F8, type: course_display_list, name: DIZZY_LAND_COURSE_DISPLAY_LIST, vram: 0x0200BD48, align: 8, subalign: 8, exclusive_ram_id: level_dizzy_land }
   - { start: 0x1169F0, type: course_display_list, name: DIZZY_LAND_COURSE_BACKDROP_DISPLAY_LIST, vram: 0x0200BF40, align: 8, subalign: 8, exclusive_ram_id: level_dizzy_land }
   - { start: 0x116C78, type: course_display_list, name: DIZZY_LAND_TRIPLE_PARTICLE_CENTER_DISPLAY_LIST, vram: 0x0200C1C8, align: 8, subalign: 8, exclusive_ram_id: level_dizzy_land }
@@ -558,6 +575,7 @@ segments:
     subalign: 8
     exclusive_ram_id: level_quicksand_valley
 
+  - { start: 0x118BD8, type: course_display_list, name: QUICKSAND_VALLEY_COURSE_SCENERY_MODEL_8_DISPLAY_LIST, vram: 0x02000568, align: 8, subalign: 8, exclusive_ram_id: level_quicksand_valley }
   - { start: 0x1246D0, type: course_display_list, name: QUICKSAND_VALLEY_COURSE_DISPLAY_LIST, vram: 0x0200C060, align: 8, subalign: 8, exclusive_ram_id: level_quicksand_valley }
   - { start: 0x1248A8, type: course_display_list, name: QUICKSAND_VALLEY_COURSE_BACKDROP_DISPLAY_LIST, vram: 0x0200C238, align: 8, subalign: 8, exclusive_ram_id: level_quicksand_valley }
   - { start: 0x124A98, type: course_display_list, name: QUICKSAND_VALLEY_COURSE_AUXILIARY_DISPLAY_LISTS_A, vram: 0x0200C428, align: 8, subalign: 8, exclusive_ram_id: level_quicksand_valley }
@@ -576,6 +594,7 @@ segments:
     subalign: 8
     exclusive_ram_id: level_silver_mountain
 
+  - { start: 0x1261F8, type: course_display_list, name: SILVER_MOUNTAIN_COURSE_SCENERY_MODEL_8_DISPLAY_LIST, vram: 0x02000568, align: 8, subalign: 8, exclusive_ram_id: level_silver_mountain }
   - { start: 0x131448, type: course_display_list, name: SILVER_MOUNTAIN_COURSE_DISPLAY_LIST, vram: 0x0200B7B8, align: 8, subalign: 8, exclusive_ram_id: level_silver_mountain }
   - { start: 0x131558, type: course_display_list, name: SILVER_MOUNTAIN_COURSE_BACKDROP_DISPLAY_LIST, vram: 0x0200B8C8, align: 8, subalign: 8, exclusive_ram_id: level_silver_mountain }
   - { start: 0x131768, type: course_display_list, name: SILVER_MOUNTAIN_COURSE_RANK_MODEL_LAPS_REMAINING_DISPLAY_LIST, vram: 0x0200BAD8, align: 8, subalign: 8, exclusive_ram_id: level_silver_mountain }
@@ -589,6 +608,7 @@ segments:
     subalign: 8
     exclusive_ram_id: level_animal_land
 
+  - { start: 0x132DE0, type: course_display_list, name: ANIMAL_LAND_COURSE_SCENERY_MODEL_11_DISPLAY_LIST, vram: 0x02001350, align: 8, subalign: 8, exclusive_ram_id: level_animal_land }
   - { start: 0x137EC0, type: course_display_list, name: ANIMAL_LAND_COURSE_DISPLAY_LIST, vram: 0x02006430, align: 8, subalign: 8, exclusive_ram_id: level_animal_land }
   - { start: 0x137FD8, type: course_display_list, name: ANIMAL_LAND_COURSE_BACKDROP_DISPLAY_LIST, vram: 0x02006548, align: 8, subalign: 8, exclusive_ram_id: level_animal_land }
   - { start: 0x1382E8, type: course_display_list, name: ANIMAL_LAND_COURSE_AUXILIARY_DISPLAY_LISTS, vram: 0x02006858, align: 8, subalign: 8, exclusive_ram_id: level_animal_land }
@@ -603,6 +623,7 @@ segments:
     subalign: 8
     exclusive_ram_id: level_ninja_land
 
+  - { start: 0x138A18, type: course_display_list, name: NINJA_LAND_COURSE_SCENERY_MODEL_8_DISPLAY_LIST, vram: 0x02000568, align: 8, subalign: 8, exclusive_ram_id: level_ninja_land }
   - { start: 0x13EC60, type: course_display_list, name: NINJA_LAND_COURSE_DISPLAY_LIST, vram: 0x020067B0, align: 8, subalign: 8, exclusive_ram_id: level_ninja_land }
   - { start: 0x13ED30, type: course_display_list, name: NINJA_LAND_COURSE_BACKDROP_DISPLAY_LIST, vram: 0x02006880, align: 8, subalign: 8, exclusive_ram_id: level_ninja_land }
   - { start: 0x13F050, type: course_display_list, name: NINJA_LAND_COURSE_RANK_MODEL_LAPS_REMAINING_DISPLAY_LIST, vram: 0x02006BA0, align: 8, subalign: 8, exclusive_ram_id: level_ninja_land }
@@ -616,6 +637,8 @@ segments:
     subalign: 8
     exclusive_ram_id: level_rookie_mountain
 
+  - { start: 0x13F918, type: course_display_list, name: ROOKIE_MOUNTAIN_COURSE_SCENERY_MODEL_8_DISPLAY_LIST, vram: 0x02000568, align: 8, subalign: 8, exclusive_ram_id: level_rookie_mountain }
+  - { start: 0x13FEE0, type: course_display_list, name: ROOKIE_MOUNTAIN_COURSE_SCENERY_MODEL_10_DISPLAY_LIST, vram: 0x02000B30, align: 8, subalign: 8, exclusive_ram_id: level_rookie_mountain }
   - { start: 0x144B88, type: course_display_list, name: ROOKIE_MOUNTAIN_COURSE_DISPLAY_LIST, vram: 0x020057D8, align: 8, subalign: 8, exclusive_ram_id: level_rookie_mountain }
   - { start: 0x144C58, type: course_display_list, name: ROOKIE_MOUNTAIN_COURSE_BACKDROP_DISPLAY_LIST, vram: 0x020058A8, align: 8, subalign: 8, exclusive_ram_id: level_rookie_mountain }
   - { start: 0x144F58, type: course_display_list, name: ROOKIE_MOUNTAIN_COURSE_RANK_MODEL_LAPS_REMAINING_DISPLAY_LIST, vram: 0x02005BA8, align: 8, subalign: 8, exclusive_ram_id: level_rookie_mountain }

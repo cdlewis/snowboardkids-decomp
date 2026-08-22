@@ -42,12 +42,12 @@ typedef struct RaceCourseRenderEffect {
 } RaceCourseRenderEffect;
 
 typedef struct {
-    s16 displayListIndex;
+    s16 modelIndex;
     s16 pad2;
     Vec3i position;
     s16 rotation;
     s16 pad12;
-} CourseRenderEntry;
+} RaceCourseSceneryEntry;
 
 typedef struct {
     s8 type;
@@ -280,7 +280,7 @@ CourseMarkerSpawnEntry *gCourseTextureMarkerSpawnEntriesByCourse[] = {
     D_800DA058,
 };
 
-Vtx D_800DA0C0[] = {
+Vtx gRaceCourseSceneryFogPanelVertices[] = {
     { { { -40, 80, -136 }, 0x0000, { 0, 0 }, { 30, 25, 35, 255 } } },
     { { { -42, 82, -136 }, 0x0000, { 0, 0 }, { 30, 25, 35, 255 } } },
     { { { -42, 742, -1736 }, 0x0000, { 0, 0 }, { 0, 0, 0, 255 } } },
@@ -291,14 +291,14 @@ Vtx D_800DA0C0[] = {
     { { { 40, 740, -1736 }, 0x0000, { 0, 0 }, { 0, 0, 0, 255 } } },
 };
 
-Gfx D_800DA140[] = {
+Gfx gRaceCourseSceneryFogPanelDisplayList[] = {
     gsDPPipeSync(),
     gsDPSetCycleType(G_CYC_2CYCLE),
     gsSPSetGeometryMode(G_FOG),
     gsSPTexture(0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_OFF),
     gsDPSetCombineMode(G_CC_SHADE, G_CC_SHADE),
     gsDPSetRenderMode(G_RM_FOG_SHADE_A, G_RM_AA_ZB_OPA_SURF2),
-    gsSPVertex(D_800DA0C0, 8, 0),
+    gsSPVertex(gRaceCourseSceneryFogPanelVertices, 8, 0),
     gsSP1Quadrangle(1, 2, 3, 0, 0),
     gsSP1Quadrangle(3, 2, 1, 0, 0),
     gsSP1Quadrangle(5, 6, 7, 4, 0),
@@ -310,18 +310,16 @@ Gfx D_800DA140[] = {
     gsSPEndDisplayList(),
 };
 
-void *gRaceCourseSceneryDisplayLists[] = {
+Gfx *gRaceCourseObjectDisplayLists[] = {
     (void *)0x02000000, (void *)0x02000160, (void *)0x02000000, (void *)0x020002C0,
     (void *)0x02000410, (void *)0x020028F0, (void *)0x02002DB8, (void *)0x02000000,
     (void *)0x02000568, (void *)0x02000910, (void *)0x02000B30, (void *)0x02001350,
-};
-Gfx *gThrownPickupModelDisplayList[] = {
-    (Gfx *)0x02001548, (Gfx *)0x02001678, (Gfx *)0x02001730, (Gfx *)0x02001810, (Gfx *)0x020018E8,
-    (Gfx *)0x020019C0, (Gfx *)0x02001D00, (Gfx *)D_800DA140, (Gfx *)0x020020A8, (Gfx *)0x02002208,
-    (Gfx *)0x020023A8, (Gfx *)0x02002490, (Gfx *)0x02002660, (Gfx *)0x02002ED0,
+    (void *)0x02001548, (void *)0x02001678, (void *)0x02001730, (void *)0x02001810, (void *)0x020018E8,
+    (void *)0x020019C0, (void *)0x02001D00, gRaceCourseSceneryFogPanelDisplayList, (void *)0x020020A8,
+    (void *)0x02002208, (void *)0x020023A8, (void *)0x02002490, (void *)0x02002660, (void *)0x02002ED0,
 };
 
-CourseRenderEntry D_800DA228[] = {
+RaceCourseSceneryEntry gBigSnowmanCourseSceneryEntries[] = {
     { 0,  0, { 0x01D014A8, 0xFF6C4D78, 0xFB9EA3E0 }, 608,  0 },
     { 0,  0, { 0x0240BB14, 0xFF6C4D78, 0xFA935474 }, 608,  0 },
     { 1,  0, { 0xD23466CE, 0xE42B18E0, 0xF5EA0624 }, 2304, 0 },
@@ -338,7 +336,7 @@ CourseRenderEntry D_800DA228[] = {
     { -1, 0, { 0x00000000, 0x00000000, 0x00000000 }, 0,    0 },
 };
 
-CourseRenderEntry D_800DA340[] = {
+RaceCourseSceneryEntry gSunsetRockCourseSceneryEntries[] = {
     { 8,  0, { 0xF88F8010, 0x01B3C704, 0x08B7C216 }, 3952, 0 },
     { 8,  0, { 0x25AB1286, 0xB99EAFDE, 0xA418BB3C }, 736,  0 },
     { 19, 0, { 0x25AB1286, 0xB99EAFDE, 0xA418BB3C }, 736,  0 },
@@ -349,21 +347,21 @@ CourseRenderEntry D_800DA340[] = {
     { -1, 0, { 0x00000000, 0x00000000, 0x00000000 }, 0,    0 },
 };
 
-CourseRenderEntry D_800DA3E0[] = {
+RaceCourseSceneryEntry gNightHighwayCourseSceneryEntries[] = {
     { 8,  0, { 0xFB3C1234, 0x0166050E, 0x02974782 }, 0,    0 },
     { 8,  0, { 0x1678D7C8, 0xD0575952, 0xC957E20F }, 2192, 0 },
     { 19, 0, { 0x1678D7C8, 0xD0575952, 0xC957E20F }, 2192, 0 },
     { -1, 0, { 0x00000000, 0x00000000, 0x00000000 }, 0,    0 },
 };
 
-CourseRenderEntry D_800DA430[] = {
+RaceCourseSceneryEntry gGrassValleyCourseSceneryEntries[] = {
     { 8,  0, { 0x053E07E6, 0x00874833, 0xFA36E885 }, 1808, 0 },
     { 8,  0, { 0xB3F31DAE, 0xD0500000, 0x9B0A372B }, 2000, 0 },
     { 19, 0, { 0xB3F31DAE, 0xD0500000, 0x9B0A372B }, 2000, 0 },
     { -1, 0, { 0x00000000, 0x00000000, 0x00000000 }, 0,    0 },
 };
 
-CourseRenderEntry D_800DA480[] = {
+RaceCourseSceneryEntry gDizzyLandCourseSceneryEntries[] = {
     { 11, 0, { 0x05A47A7A, 0xD7FCE5DB, 0xAFF3326D }, 3712, 0 },
     { 11, 0, { 0x040EFAF2, 0xD8D2DC67, 0xB3E951AB }, 1120, 0 },
     { 11, 0, { 0x095DF1CC, 0xD9C54381, 0xB2FF5E19 }, 4080, 0 },
@@ -383,32 +381,32 @@ CourseRenderEntry D_800DA480[] = {
     { -1, 0, { 0x00000000, 0x00000000, 0x00000000 }, 0,    0 },
 };
 
-CourseRenderEntry D_800DA5D4[] = {
+RaceCourseSceneryEntry gQuicksandValleyCourseSceneryEntries[] = {
     { 8,  0, { 0xFCA42745, 0x0169B6DA, 0xF7136E88 }, 3008, 0 },
     { 8,  0, { 0x46B6BF2E, 0xD8100000, 0x04CBF586 }, 2704, 0 },
     { 19, 0, { 0x46B6BF2E, 0xD8100000, 0x04CBF586 }, 2704, 0 },
     { -1, 0, { 0x00000000, 0x00000000, 0x00000000 }, 0,    0 },
 };
 
-CourseRenderEntry D_800DA624[] = {
+RaceCourseSceneryEntry gSilverMountainCourseSceneryEntries[] = {
     { 8,  0, { 0x9F401566, 0xDD5C0000, 0xE785C37D }, 3296, 0 },
     { 19, 0, { 0x9F401566, 0xDD5C0000, 0xE785C37D }, 3296, 0 },
     { 8,  0, { 0xF61512AA, 0x00011DE4, 0xF93B37B9 }, 3264, 0 },
     { -1, 0, { 0x00000000, 0x00000000, 0x00000000 }, 0,    0 },
 };
 
-CourseRenderEntry D_800DA674[] = {
+RaceCourseSceneryEntry gAnimalLandCourseSceneryEntries[] = {
     { 11, 0, { 0xF3C2296E, 0xF2A20000, 0xEE5E0129 }, 1792, 0 },
     { -1, 0, { 0x00000000, 0x00000000, 0x00000000 }, 0,    0 },
 };
 
-CourseRenderEntry D_800DA69C[] = {
+RaceCourseSceneryEntry gNinjaLandCourseSceneryEntries[] = {
     { 19, 0, { 0x19B8F477, 0xF2F60000, 0xE965AC2E }, 2432, 0 },
     { 8,  0, { 0xFB2EE4C4, 0x013F685D, 0x035893BA }, 3968, 0 },
     { -1, 0, { 0x00000000, 0x00000000, 0x00000000 }, 0,    0 },
 };
 
-CourseRenderEntry D_800DA6D8[] = {
+RaceCourseSceneryEntry gRookieMountainCourseSceneryEntries[] = {
     { 8,  0, { 0x14DA6C89, 0xEEC47C98, 0xF4485684 }, 3792, 0 },
     { 19, 0, { 0x14DA6C89, 0xEEC47C98, 0xF4485684 }, 3792, 0 },
     { 8,  0, { 0x00000000, 0xFFFDFDD7, 0x0003AEE6 }, 0,    0 },
@@ -416,9 +414,17 @@ CourseRenderEntry D_800DA6D8[] = {
     { -1, 0, { 0x00000000, 0x00000000, 0x00000000 }, 0,    0 },
 };
 
-CourseRenderEntry *gRaceCourseSceneryEntriesByCourse[] = {
-    D_800DA228, D_800DA340, D_800DA3E0, D_800DA430, D_800DA480,
-    D_800DA5D4, D_800DA624, D_800DA674, D_800DA69C, D_800DA6D8,
+RaceCourseSceneryEntry *gRaceCourseSceneryEntriesByCourse[] = {
+    gBigSnowmanCourseSceneryEntries,
+    gSunsetRockCourseSceneryEntries,
+    gNightHighwayCourseSceneryEntries,
+    gGrassValleyCourseSceneryEntries,
+    gDizzyLandCourseSceneryEntries,
+    gQuicksandValleyCourseSceneryEntries,
+    gSilverMountainCourseSceneryEntries,
+    gAnimalLandCourseSceneryEntries,
+    gNinjaLandCourseSceneryEntries,
+    gRookieMountainCourseSceneryEntries,
 };
 
 SoundParams gCourseGateSoundParams[] = {
@@ -836,7 +842,7 @@ void initCourseTextureMarkers(RaceCourseRenderEffect *arg0) {
 }
 
 void renderRaceCourseSceneryObjects(RaceCourseRenderEffect *arg0) {
-    CourseRenderEntry *var_s4;
+    RaceCourseSceneryEntry *var_s4;
     s32 var_s5;
     s32 var_s7;
     Gfx *temp_s0;
@@ -846,7 +852,7 @@ void renderRaceCourseSceneryObjects(RaceCourseRenderEffect *arg0) {
     var_s4 = gRaceCourseSceneryEntriesByCourse[gRaceCourseIndex.signedValue];
     var_s7 = TRUE;
     var_s5 = 0;
-    if (var_s4->displayListIndex != -1) {
+    if (var_s4->modelIndex != -1) {
         do {
             if (isPositionNearCurrentRaceViewportCamera(&var_s4->position) != 0) {
                 if (var_s7 != 0) {
@@ -863,11 +869,11 @@ void renderRaceCourseSceneryObjects(RaceCourseRenderEffect *arg0) {
                 gDma1p(temp_s0, 1, (u32)arg0->vertices + (var_s5 << 6), 0x40, 2);
 
                 temp_s0 = gRegionAllocPtr++;
-                gSPDisplayList(temp_s0, gRaceCourseSceneryDisplayLists[var_s4->displayListIndex]);
+                gSPDisplayList(temp_s0, gRaceCourseObjectDisplayLists[var_s4->modelIndex]);
             }
             var_s4++;
             var_s5++;
-        } while (var_s4->displayListIndex != -1);
+        } while (var_s4->modelIndex != -1);
     }
 }
 
@@ -877,8 +883,8 @@ void updateRaceCourseSceneryObjects(void *arg0) {
 
 void initRaceCourseSceneryObjects(RaceCourseRenderEffect *arg0) {
     s32 size;
-    CourseRenderEntry *base;
-    CourseRenderEntry *entry;
+    RaceCourseSceneryEntry *base;
+    RaceCourseSceneryEntry *entry;
     s32 i;
     Transform3D transform;
     s32 count;
@@ -886,11 +892,11 @@ void initRaceCourseSceneryObjects(RaceCourseRenderEffect *arg0) {
     base = gRaceCourseSceneryEntriesByCourse[gRaceCourseIndex.signedValue];
     count = 0;
     entry = base;
-    if (base->displayListIndex != -1) {
+    if (base->modelIndex != -1) {
         do {
             count++;
             entry++;
-        } while (entry->displayListIndex != -1);
+        } while (entry->modelIndex != -1);
     }
 
     if (count != 0) {
