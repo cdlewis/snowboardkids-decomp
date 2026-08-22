@@ -22,7 +22,7 @@ class CourseSurfaceDataTests(unittest.TestCase):
                     "path_angle": 0x1234,
                     "face_start_index": 9,
                     "face_end_index": 10,
-                    "unknown_18": 0xABCD,
+                    "unused_18": 0xABCD,
                     "edge_clamp_flags": 5,
                 }
             ],
