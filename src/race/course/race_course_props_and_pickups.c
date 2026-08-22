@@ -15,6 +15,7 @@
 
 #define RACE_MODEL_BUFFER_HANDLE gAssetHandles[0x24]
 #define RACE_PICKUP_G_TRI2 0xB1
+#define THROWN_PICKUP_COURSE_OBJECT_MODEL_INDEX 12
 #define racePickupTriangleWord(v0, v1, v2, flag) \
     (_SHIFTL((flag), 24, 8) | _SHIFTL((v0) * 2, 16, 8) | _SHIFTL((v1) * 2, 8, 8) | _SHIFTL((v2) * 2, 0, 8))
 #define gRacePickupQuadrangle(pkt, v0, v1, v2, v3, flag)                                                \
@@ -794,8 +795,7 @@ u32 D_800D9C38[] = { 0, 0 };
 
 extern void osWritebackDCache(void *, s32);
 extern void enqueuePositionalSoundEffect(s32, void *, s32, s32);
-extern void *gRaceCourseSceneryDisplayLists[];
-extern Gfx *gThrownPickupModelDisplayList[];
+extern Gfx *gRaceCourseObjectDisplayLists[];
 extern u8 gRaceUpdatePaused;
 extern u8 gTrainingCourseLesson;
 extern Gfx gEffectRenderModeSetupDl[];
@@ -837,7 +837,7 @@ void renderRaceCoursePropModels(CourseEffectModelListActor *arg0) {
                 gDma1p(temp_s0, 1, (u32)arg0->modelBuffer + (var_s5 << 6), 0x40, 2);
 
                 temp_s0 = gRegionAllocPtr++;
-                gSPDisplayList(temp_s0, gRaceCourseSceneryDisplayLists[var_s4->modelIndex]);
+                gSPDisplayList(temp_s0, gRaceCourseObjectDisplayLists[var_s4->modelIndex]);
             }
             var_s4++;
             var_s5++;
@@ -1107,7 +1107,9 @@ void renderThrownPickupModel(ThrownPickupRenderActor *arg0) {
             gSPSegment(gRegionAllocPtr++, 0x02, getRelocatableHeapBlockBase(gAssetHandles[0xA]));
             gSPSegment(gRegionAllocPtr++, 0x03, getRelocatableHeapBlockBase(gAssetHandles[0xB]));
             gSPMatrix(gRegionAllocPtr++, arg0->matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
-            gSPDisplayList(gRegionAllocPtr++, gThrownPickupModelDisplayList[0]);
+            gSPDisplayList(
+                gRegionAllocPtr++, gRaceCourseObjectDisplayLists[THROWN_PICKUP_COURSE_OBJECT_MODEL_INDEX]
+            );
         }
     }
 }

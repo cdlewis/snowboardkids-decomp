@@ -62,8 +62,8 @@ treated as additional course environments merely because race code loads them.
 ## Graphics and model resources
 
 All ten segment 2 graphics bundles are now source-backed. They are divided into
-71 rebuildable ranges under `assets/course_display_lists`: one complete leading
-graphics range per course and 61 main, backdrop, effect, and runtime-identified
+94 rebuildable ranges under `assets/course_display_lists`: one complete leading
+graphics range per course and 84 main, backdrop, effect, and runtime-identified
 auxiliary ranges. Each is represented as exact `Gfx` source words with an F3DEX
 macro decode included as a reference. The source words remain authoritative
 because a few ranges contain embedded resource data, and some otherwise valid
@@ -111,6 +111,31 @@ its eight display-list roots are split into two Sunset Rock assets, one Night
 Highway asset, two Dizzy-Land assets, two Quicksand Valley assets, and one
 Animal Land asset. The two display lists rendered by course trigger volumes are
 also named for Sunset Rock and Animal Land.
+
+Course scenery and prop models use a single 26-entry runtime pointer table,
+`gRaceCourseObjectDisplayLists`. It was previously represented in C as two
+adjacent arrays even though both renderers indexed across the boundary; it is
+now declared at its actual size. Slot 19 is the shared code-resident fog panel.
+Every course-backed slot selected by a placement table has a source-backed
+entry-point boundary:
+
+| Course | Scenery model slots | Other object models |
+| --- | --- | --- |
+| Big Snowman | 0, 1, 4, 8, 10, 17, 25 | Shared fog panel |
+| Sunset Rock | 8, 10, 11, 18 | Thrown pickup (slot 12), course prop (slot 20), shared fog panel |
+| Night Highway | 8 | Shared fog panel |
+| Grass Valley | 8 | Shared fog panel |
+| Dizzy-Land | 8, 11, 18 | Shared fog panel |
+| Quicksand Valley | 8 | Shared fog panel |
+| Silver Mountain | 8 | Shared fog panel |
+| Animal Land | 11 | None |
+| Ninja Land | 8 | Shared fog panel |
+| Rookie Mountain | 8, 10 | Shared fog panel |
+
+The ten formerly anonymous scenery placement arrays are correspondingly named
+`g<Course>CourseSceneryEntries`. Names such as `SCENERY_MODEL_8` deliberately
+retain the stable runtime slot until the depicted object's visual identity is
+confirmed.
 
 Every confirmed top-level entry point was recursively traced through segment 2
 `G_DL` commands. The extractor also scans every aligned source word for valid,
@@ -239,5 +264,7 @@ uses:
 
 ## Remaining documentation work
 
-- Give semantic names to individual nested display lists as their runtime or
-  visual roles are established.
+- Replace stable scenery-slot and slide-sprite numbers with visual object names
+  as their depicted identities are established.
+- Give semantic names to nested display lists that have no direct runtime
+  entry point.
