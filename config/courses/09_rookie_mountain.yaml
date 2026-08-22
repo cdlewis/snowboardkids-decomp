@@ -1,0 +1,16 @@
+name: Rookie Mountain
+key: rookie_mountain
+enum: ROOKIE_MOUNTAIN
+legacy_id: 9
+kind: standard
+uses: [race, training, transitions]
+assets:
+  graphics: { symbol: ROOKIE_MOUNTAIN_COURSE_GRAPHICS, rom_start: '0x13F3B0', rom_end: '0x145380' }
+  model_resources: { symbol: ROOKIE_MOUNTAIN_COURSE_MODEL_RESOURCES, rom_start: '0x1D3070', rom_end: '0x1D82B0' }
+  surface_data: { symbol: ROOKIE_MOUNTAIN_COURSE_SURFACE_DATA, rom_start: '0x241160', rom_end: '0x2427D0' }
+  sprites: { symbol: ROOKIE_MOUNTAIN_COURSE_SPRITES, rom_start: '0x1EF1D0', rom_end: '0x1EF530' }
+render:
+  main_display_list: ROOKIE_MOUNTAIN_COURSE_DISPLAY_LIST
+  backdrop_display_lists: [ROOKIE_MOUNTAIN_COURSE_BACKDROP_DISPLAY_LIST]
+  scenery_entries: gRookieMountainCourseSceneryEntries
+  scrolling_textures: []

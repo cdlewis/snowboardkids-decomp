@@ -29,6 +29,16 @@ from splat.segtypes.common.segment import CommonSegment
 from splat.util import log, options
 
 
+def course_display_list_symbol(address: int, exclusive_ram_id: object) -> Optional[str]:
+    """Name bundle-internal segment-2 calls without making them linker assets."""
+    if address >> 24 != 2 or not isinstance(exclusive_ram_id, str):
+        return None
+    if not exclusive_ram_id.startswith("level_"):
+        return None
+    course = exclusive_ram_id.removeprefix("level_").upper()
+    return f"{course}_COURSE_GRAPHICS_display_list_{address & 0xFFFFFF:06X}"
+
+
 class N64SegCourse_display_list(CommonSegment):
     @staticmethod
     def is_data() -> bool:
@@ -64,6 +74,12 @@ class N64SegCourse_display_list(CommonSegment):
         gfxd_printf(f"0x{address:08X}")
         return 1
 
+    def _print_display_list_address(self, address: int) -> int:
+        exclusive_ram_id = self.yaml.get("exclusive_ram_id") if isinstance(self.yaml, dict) else None
+        symbol = course_display_list_symbol(address, exclusive_ram_id)
+        gfxd_printf(symbol if symbol is not None else f"0x{address:08X}")
+        return 1
+
     def _disassemble_chunk(self, data: bytes) -> str:
         gfxd_input_buffer(data)
         output_bytes = bytes(len(data) * 160)
@@ -76,7 +92,7 @@ class N64SegCourse_display_list(CommonSegment):
         gfxd_timg_callback(lambda address, fmt, size, width, height, palette: self._print_segmented_address(address))
         gfxd_cimg_callback(lambda address, fmt, size, width: self._print_segmented_address(address))
         gfxd_zimg_callback(self._print_segmented_address)
-        gfxd_dl_callback(self._print_segmented_address)
+        gfxd_dl_callback(self._print_display_list_address)
         gfxd_mtx_callback(self._print_segmented_address)
         gfxd_lookat_callback(lambda address, count: self._print_segmented_address(address))
         gfxd_light_callback(lambda address, count: self._print_segmented_address(address))

@@ -1,0 +1,16 @@
+name: Quicksand Valley
+key: quicksand_valley
+enum: QUICKSAND_VALLEY
+legacy_id: 5
+kind: standard
+uses: [race]
+assets:
+  graphics: { symbol: QUICKSAND_VALLEY_COURSE_GRAPHICS, rom_start: '0x118670', rom_end: '0x125C90' }
+  model_resources: { symbol: QUICKSAND_VALLEY_COURSE_MODEL_RESOURCES, rom_start: '0x1A5620', rom_end: '0x1B3160' }
+  surface_data: { symbol: QUICKSAND_VALLEY_COURSE_SURFACE_DATA, rom_start: '0x2349E0', rom_end: '0x23A7D0' }
+  sprites: { symbol: QUICKSAND_VALLEY_COURSE_SPRITES, rom_start: '0x1EDC80', rom_end: '0x1EE060' }
+render:
+  main_display_list: QUICKSAND_VALLEY_COURSE_DISPLAY_LIST
+  backdrop_display_lists: [QUICKSAND_VALLEY_COURSE_BACKDROP_DISPLAY_LIST, QUICKSAND_VALLEY_COURSE_SECONDARY_BACKDROP_DISPLAY_LIST]
+  scenery_entries: gQuicksandValleyCourseSceneryEntries
+  scrolling_textures: [RACE_COURSE_SCROLLING_TEXTURE_QUICKSAND_VALLEY_0, RACE_COURSE_SCROLLING_TEXTURE_QUICKSAND_VALLEY_1]
