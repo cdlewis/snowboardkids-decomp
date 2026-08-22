@@ -48,7 +48,8 @@ void loadRaceCourseAssets(void) {
 
     switch (gRaceCourseIndex.unsignedValue) {
         case 0:
-            size = (u8 *)&BIG_SNOWMAN_COURSE_AUXILIARY_DISPLAY_LISTS_ROM_END - (u8 *)&BIG_SNOWMAN_COURSE_GRAPHICS_ROM_START;
+            size = (u8 *)&BIG_SNOWMAN_COURSE_SURFACE_1_RANK_MODEL_DISPLAY_LIST_ROM_END -
+                   (u8 *)&BIG_SNOWMAN_COURSE_GRAPHICS_ROM_START;
             gAssetHandles[0x8] = allocRelocatableHeapBlock(size);
             lockRelocatableHeapBlock(gAssetHandles[0x8]);
             DMA_ASSET(BIG_SNOWMAN_COURSE_GRAPHICS, getRelocatableHeapBlockBase(gAssetHandles[0x8]), size);
@@ -58,7 +59,8 @@ void loadRaceCourseAssets(void) {
             LOAD_ASSET(BIG_SNOWMAN_COURSE_SPRITES, 0x1D);
             break;
         case 1:
-            size = (u8 *)&SUNSET_ROCK_COURSE_AUXILIARY_DISPLAY_LISTS_ROM_END - (u8 *)&SUNSET_ROCK_COURSE_GRAPHICS_ROM_START;
+            size = (u8 *)&SUNSET_ROCK_COURSE_SLIDE_SPRITE_1_DISPLAY_LIST_ROM_END -
+                   (u8 *)&SUNSET_ROCK_COURSE_GRAPHICS_ROM_START;
             gAssetHandles[0x8] = allocRelocatableHeapBlock(size);
             lockRelocatableHeapBlock(gAssetHandles[0x8]);
             DMA_ASSET(SUNSET_ROCK_COURSE_GRAPHICS, getRelocatableHeapBlockBase(gAssetHandles[0x8]), size);
@@ -68,7 +70,8 @@ void loadRaceCourseAssets(void) {
             LOAD_ASSET(SUNSET_ROCK_COURSE_SPRITES, 0x1D);
             break;
         case 2:
-            size = (u8 *)&NIGHT_HIGHWAY_COURSE_AUXILIARY_DISPLAY_LISTS_ROM_END - (u8 *)&NIGHT_HIGHWAY_COURSE_GRAPHICS_ROM_START;
+            size = (u8 *)&NIGHT_HIGHWAY_COURSE_SLIDE_SPRITE_DISPLAY_LIST_ROM_END -
+                   (u8 *)&NIGHT_HIGHWAY_COURSE_GRAPHICS_ROM_START;
             gAssetHandles[0x8] = allocRelocatableHeapBlock(size);
             lockRelocatableHeapBlock(gAssetHandles[0x8]);
             DMA_ASSET(NIGHT_HIGHWAY_COURSE_GRAPHICS, getRelocatableHeapBlockBase(gAssetHandles[0x8]), size);
@@ -78,7 +81,8 @@ void loadRaceCourseAssets(void) {
             LOAD_ASSET(NIGHT_HIGHWAY_COURSE_SPRITES, 0x1D);
             break;
         case 3:
-            size = (u8 *)&GRASS_VALLEY_COURSE_AUXILIARY_DISPLAY_LISTS_ROM_END - (u8 *)&GRASS_VALLEY_COURSE_GRAPHICS_ROM_START;
+            size = (u8 *)&GRASS_VALLEY_COURSE_RANK_MODEL_FINAL_LAP_DISPLAY_LIST_ROM_END -
+                   (u8 *)&GRASS_VALLEY_COURSE_GRAPHICS_ROM_START;
             gAssetHandles[0x8] = allocRelocatableHeapBlock(size);
             lockRelocatableHeapBlock(gAssetHandles[0x8]);
             DMA_ASSET(GRASS_VALLEY_COURSE_GRAPHICS, getRelocatableHeapBlockBase(gAssetHandles[0x8]), size);
@@ -88,7 +92,8 @@ void loadRaceCourseAssets(void) {
             LOAD_ASSET(GRASS_VALLEY_COURSE_SPRITES, 0x1D);
             break;
         case 4:
-            size = (u8 *)&DIZZY_LAND_COURSE_AUXILIARY_DISPLAY_LISTS_ROM_END - (u8 *)&DIZZY_LAND_COURSE_GRAPHICS_ROM_START;
+            size = (u8 *)&DIZZY_LAND_COURSE_SLIDE_SPRITE_1_DISPLAY_LIST_ROM_END -
+                   (u8 *)&DIZZY_LAND_COURSE_GRAPHICS_ROM_START;
             gAssetHandles[0x8] = allocRelocatableHeapBlock(size);
             lockRelocatableHeapBlock(gAssetHandles[0x8]);
             DMA_ASSET(DIZZY_LAND_COURSE_GRAPHICS, getRelocatableHeapBlockBase(gAssetHandles[0x8]), size);
@@ -98,7 +103,8 @@ void loadRaceCourseAssets(void) {
             LOAD_ASSET(DIZZY_LAND_COURSE_SPRITES, 0x1D);
             break;
         case 5:
-            size = (u8 *)&QUICKSAND_VALLEY_COURSE_AUXILIARY_DISPLAY_LISTS_B_ROM_END - (u8 *)&QUICKSAND_VALLEY_COURSE_GRAPHICS_ROM_START;
+            size = (u8 *)&QUICKSAND_VALLEY_COURSE_SLIDE_SPRITE_1_DISPLAY_LIST_ROM_END -
+                   (u8 *)&QUICKSAND_VALLEY_COURSE_GRAPHICS_ROM_START;
             gAssetHandles[0x8] = allocRelocatableHeapBlock(size);
             lockRelocatableHeapBlock(gAssetHandles[0x8]);
             DMA_ASSET(QUICKSAND_VALLEY_COURSE_GRAPHICS, getRelocatableHeapBlockBase(gAssetHandles[0x8]), size);
@@ -108,7 +114,8 @@ void loadRaceCourseAssets(void) {
             LOAD_ASSET(QUICKSAND_VALLEY_COURSE_SPRITES, 0x1D);
             break;
         case 6:
-            size = (u8 *)&SILVER_MOUNTAIN_COURSE_AUXILIARY_DISPLAY_LISTS_ROM_END - (u8 *)&SILVER_MOUNTAIN_COURSE_GRAPHICS_ROM_START;
+            size = (u8 *)&SILVER_MOUNTAIN_COURSE_RANK_MODEL_FINAL_LAP_DISPLAY_LIST_ROM_END -
+                   (u8 *)&SILVER_MOUNTAIN_COURSE_GRAPHICS_ROM_START;
             gAssetHandles[0x8] = allocRelocatableHeapBlock(size);
             lockRelocatableHeapBlock(gAssetHandles[0x8]);
             DMA_ASSET(SILVER_MOUNTAIN_COURSE_GRAPHICS, getRelocatableHeapBlockBase(gAssetHandles[0x8]), size);
@@ -118,7 +125,8 @@ void loadRaceCourseAssets(void) {
             LOAD_ASSET(SILVER_MOUNTAIN_COURSE_SPRITES, 0x1D);
             break;
         case 7:
-            size = (u8 *)&ANIMAL_LAND_COURSE_AUXILIARY_DISPLAY_LISTS_ROM_END - (u8 *)&ANIMAL_LAND_COURSE_GRAPHICS_ROM_START;
+            size = (u8 *)&ANIMAL_LAND_COURSE_TRIGGER_VOLUME_DISPLAY_LIST_ROM_END -
+                   (u8 *)&ANIMAL_LAND_COURSE_GRAPHICS_ROM_START;
             gAssetHandles[0x8] = allocRelocatableHeapBlock(size);
             lockRelocatableHeapBlock(gAssetHandles[0x8]);
             DMA_ASSET(ANIMAL_LAND_COURSE_GRAPHICS, getRelocatableHeapBlockBase(gAssetHandles[0x8]), size);
@@ -127,7 +135,8 @@ void loadRaceCourseAssets(void) {
             initRaceCourseSurfaceData();
             break;
         case 8:
-            size = (u8 *)&NINJA_LAND_COURSE_AUXILIARY_DISPLAY_LISTS_ROM_END - (u8 *)&NINJA_LAND_COURSE_GRAPHICS_ROM_START;
+            size = (u8 *)&NINJA_LAND_COURSE_RANK_MODEL_FINAL_LAP_DISPLAY_LIST_ROM_END -
+                   (u8 *)&NINJA_LAND_COURSE_GRAPHICS_ROM_START;
             gAssetHandles[0x8] = allocRelocatableHeapBlock(size);
             lockRelocatableHeapBlock(gAssetHandles[0x8]);
             DMA_ASSET(NINJA_LAND_COURSE_GRAPHICS, getRelocatableHeapBlockBase(gAssetHandles[0x8]), size);
@@ -137,7 +146,8 @@ void loadRaceCourseAssets(void) {
             LOAD_ASSET(NINJA_LAND_COURSE_SPRITES, 0x1D);
             break;
         case 9:
-            size = (u8 *)&ROOKIE_MOUNTAIN_COURSE_AUXILIARY_DISPLAY_LISTS_ROM_END - (u8 *)&ROOKIE_MOUNTAIN_COURSE_GRAPHICS_ROM_START;
+            size = (u8 *)&ROOKIE_MOUNTAIN_COURSE_RANK_MODEL_FINAL_LAP_DISPLAY_LIST_ROM_END -
+                   (u8 *)&ROOKIE_MOUNTAIN_COURSE_GRAPHICS_ROM_START;
             gAssetHandles[0x8] = allocRelocatableHeapBlock(size);
             lockRelocatableHeapBlock(gAssetHandles[0x8]);
             DMA_ASSET(ROOKIE_MOUNTAIN_COURSE_GRAPHICS, getRelocatableHeapBlockBase(gAssetHandles[0x8]), size);

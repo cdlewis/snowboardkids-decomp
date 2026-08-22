@@ -80,7 +80,7 @@ def pack_course_surface_data(manifest: dict) -> bytes:
                 parse_int(surface["path_angle"]),
                 parse_int(surface["face_start_index"]),
                 parse_int(surface["face_end_index"]),
-                parse_int(surface["unknown_18"]),
+                parse_int(surface["unused_18"]),
                 parse_int(surface["edge_clamp_flags"]),
             )
         )

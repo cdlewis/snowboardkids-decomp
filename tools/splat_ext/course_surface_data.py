@@ -90,7 +90,7 @@ class N64SegCourse_surface_data(CommonSegment):
             chunk = decompressed[offset : offset + 0x1C]
             neighbors = struct.unpack(">hhhh", chunk[0:8])
             boundary_coords = struct.unpack(">hhhh", chunk[8:0x10])
-            reference_coord_index, path_angle, face_start_index, face_end_index, unknown_18, edge_clamp_flags = (
+            reference_coord_index, path_angle, face_start_index, face_end_index, unused_18, edge_clamp_flags = (
                 struct.unpack(">hhHHHH", chunk[0x10:0x1C])
             )
             surface = {
@@ -100,7 +100,7 @@ class N64SegCourse_surface_data(CommonSegment):
                 "path_angle": path_angle,
                 "face_start_index": face_start_index,
                 "face_end_index": face_end_index,
-                "unknown_18": unknown_18,
+                "unused_18": unused_18,
                 "edge_clamp_flags": edge_clamp_flags,
             }
             surfaces.append(surface)

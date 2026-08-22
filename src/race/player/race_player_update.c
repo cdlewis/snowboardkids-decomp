@@ -907,7 +907,9 @@ void updateRacePlayerMode00Grounded(RacePlayer *player) {
         spawn = &gRaceCourseStartEntries[gRaceCourseIndex.signedValue];
         if ((spawn->pathIndex == player->coursePathIndex) && !(player->stateFlags & 0x40)) {
             surfaceCue =
-                (s16)(((calculateFixedAngleBetweenXZPoints(player->pos.x, player->pos.z, spawn->unk40, spawn->unk44) -
+                (s16)(((calculateFixedAngleBetweenXZPoints(
+                           player->pos.x, player->pos.z, spawn->startSurfaceTargetX, spawn->startSurfaceTargetZ
+                       ) -
                         player->facingAngle) +
                        0x400) &
                       0xFFF);
@@ -1298,7 +1300,9 @@ void updateRacePlayerAirborneLaunch(RacePlayer *player) {
         spawn = &gRaceCourseStartEntries[gRaceCourseIndex.signedValue];
         if ((spawn->pathIndex == player->coursePathIndex) && !(player->stateFlags & 0x40)) {
             velocityY =
-                (s16)(((calculateFixedAngleBetweenXZPoints(player->pos.x, player->pos.z, spawn->unk40, spawn->unk44) -
+                (s16)(((calculateFixedAngleBetweenXZPoints(
+                           player->pos.x, player->pos.z, spawn->startSurfaceTargetX, spawn->startSurfaceTargetZ
+                       ) -
                         player->facingAngle) +
                        0x400) &
                       0xFFF);
@@ -1387,8 +1391,8 @@ void updateRacePlayerAirborneCruise(RacePlayer *player) {
             var_v1 = calculateFixedAngleBetweenXZPoints(
                          player->pos.x,
                          player->pos.z,
-                         gRaceCourseStartEntries[gRaceCourseIndex.signedValue].unk40,
-                         gRaceCourseStartEntries[gRaceCourseIndex.signedValue].unk44
+                         gRaceCourseStartEntries[gRaceCourseIndex.signedValue].startSurfaceTargetX,
+                         gRaceCourseStartEntries[gRaceCourseIndex.signedValue].startSurfaceTargetZ
                      ) -
                      player->facingAngle + 0x400;
             if ((s16)(var_v1 & 0xFFF) < 0x800) {
@@ -3768,7 +3772,9 @@ void updateRacePlayerMode03Nudge(RacePlayer *player) {
 
     spawn = &gRaceCourseStartEntries[gRaceCourseIndex.signedValue];
     if ((spawn->pathIndex == playerAlias->coursePathIndex) && !(playerAlias->stateFlags & 0x40)) {
-        angleDiff = calculateFixedAngleBetweenXZPoints(playerAlias->pos.x, player->pos.z, spawn->unk40, spawn->unk44);
+        angleDiff = calculateFixedAngleBetweenXZPoints(
+            playerAlias->pos.x, player->pos.z, spawn->startSurfaceTargetX, spawn->startSurfaceTargetZ
+        );
         if (playerAlias->stateFlags & 0x400) {
             angleDiff += 0x800;
         }
@@ -3935,7 +3941,9 @@ void updateRacePlayerMode08SpinoutRecover(RacePlayer *player) {
 
     spawn = &gRaceCourseStartEntries[gRaceCourseIndex.signedValue];
     if ((spawn->pathIndex == player->coursePathIndex) && !(player->stateFlags & 0x40)) {
-        targetAngle = calculateFixedAngleBetweenXZPoints(player->pos.x, player->pos.z, spawn->unk40, spawn->unk44);
+        targetAngle = calculateFixedAngleBetweenXZPoints(
+            player->pos.x, player->pos.z, spawn->startSurfaceTargetX, spawn->startSurfaceTargetZ
+        );
         if (player->stateFlags & 0x400) {
             targetAngle += 0x800;
         }
@@ -4870,21 +4878,23 @@ void updateRacePlayerMode07AlignToLaunchRamp(RacePlayer *player) {
     if (1) {}
     if (temp_a1 != 0) {
         angleDelta /= temp_a1;
-        if (gRaceCourseStartEntries[gRaceCourseIndex.signedValue].unk1C) {}
+        if (gRaceCourseStartEntries[gRaceCourseIndex.signedValue].launchRampTargetZ) {}
         player->facingAngle += angleDelta;
         tempX = player->pos.x;
         tempZ = player->pos.z;
         if (temp_a1) {}
         if (1) {
             player->pos.x =
-                tempX - (0 - ((gRaceCourseStartEntries[gRaceCourseIndex.signedValue].unk18 - tempX) / temp_a1));
+                tempX -
+                (0 - ((gRaceCourseStartEntries[gRaceCourseIndex.signedValue].launchRampTargetX - tempX) / temp_a1));
         }
-        player->pos.z = tempZ - (0 - ((gRaceCourseStartEntries[gRaceCourseIndex.signedValue].unk1C - tempZ) / temp_a1));
+        player->pos.z =
+            tempZ - (0 - ((gRaceCourseStartEntries[gRaceCourseIndex.signedValue].launchRampTargetZ - tempZ) / temp_a1));
     }
 
     if (--player->stateTimer == 0) {
-        player->pos.x = gRaceCourseStartEntries[gRaceCourseIndex.signedValue].unk18;
-        player->pos.z = gRaceCourseStartEntries[gRaceCourseIndex.signedValue].unk1C;
+        player->pos.x = gRaceCourseStartEntries[gRaceCourseIndex.signedValue].launchRampTargetX;
+        player->pos.z = gRaceCourseStartEntries[gRaceCourseIndex.signedValue].launchRampTargetZ;
         player->updateState++;
         player->updateTimer = 0;
         player->stateTimer = 0;
@@ -4898,8 +4908,8 @@ void updateRacePlayerMode07StartLaunchRamp(RacePlayer *player) {
         player->updateState++;
         player->updateTimer = 0;
         player->facingAngle = player->unk2FA;
-        player->pos.x = gRaceCourseStartEntries[gRaceCourseIndex.signedValue].unk18;
-        player->pos.z = gRaceCourseStartEntries[gRaceCourseIndex.signedValue].unk1C;
+        player->pos.x = gRaceCourseStartEntries[gRaceCourseIndex.signedValue].launchRampTargetX;
+        player->pos.z = gRaceCourseStartEntries[gRaceCourseIndex.signedValue].launchRampTargetZ;
     }
 }
 
@@ -5121,10 +5131,10 @@ void updateRacePlayerMode07SpiralExit(RacePlayer *player) {
             gRaceCourseStartEntries[gRaceCourseIndex.signedValue].spiralCourseObjectAngle
         );
         transformVec3iByFixedMatrix((s16 *)scratch.matrix, (Vec3i *)&scratch.sourceX, (Vec3i *)&player->pos);
-        player->pos.x += gRaceCourseStartEntries[gRaceCourseIndex.signedValue].unk8.x;
-        player->pos.y += gRaceCourseStartEntries[gRaceCourseIndex.signedValue].unk8.y + 0x80000;
-        player->pos.z += gRaceCourseStartEntries[gRaceCourseIndex.signedValue].unk8.z;
-        player->coursePathIndex = gRaceCourseStartEntries[gRaceCourseIndex.signedValue].unk4;
+        player->pos.x += gRaceCourseStartEntries[gRaceCourseIndex.signedValue].spiralOrigin.x;
+        player->pos.y += gRaceCourseStartEntries[gRaceCourseIndex.signedValue].spiralOrigin.y + 0x80000;
+        player->pos.z += gRaceCourseStartEntries[gRaceCourseIndex.signedValue].spiralOrigin.z;
+        player->coursePathIndex = gRaceCourseStartEntries[gRaceCourseIndex.signedValue].spiralExitSurfaceIndex;
         player->lapDigit++;
         player->previousPosition = player->pos;
         player->stateTimer = 0x28;
@@ -5195,7 +5205,7 @@ s32 tryStartRacePlayerCourseObjectMode(s16 arg0) {
         }
     }
 
-    delta = gRacePlayers[arg0].pos.x - gRaceCourseStartEntries[gRaceCourseIndex.signedValue].unk18;
+    delta = gRacePlayers[arg0].pos.x - gRaceCourseStartEntries[gRaceCourseIndex.signedValue].launchRampTargetX;
     if (delta < 0) {
         delta = -delta;
     }
@@ -5203,7 +5213,7 @@ s32 tryStartRacePlayerCourseObjectMode(s16 arg0) {
         return 0;
     }
 
-    delta = gRacePlayers[arg0].pos.z - gRaceCourseStartEntries[gRaceCourseIndex.signedValue].unk1C;
+    delta = gRacePlayers[arg0].pos.z - gRaceCourseStartEntries[gRaceCourseIndex.signedValue].launchRampTargetZ;
     if (delta < 0) {
         delta = -delta;
     }

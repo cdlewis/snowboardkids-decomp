@@ -1165,9 +1165,9 @@ void initLaunchRampCourseObject(RaceMovingEffect *arg0) {
     makeFixedRotationY(mtx, gRaceCourseStartEntries[gRaceCourseIndex.signedValue].launchRampCourseObjectAngle + 0x400);
     transformVec3iByFixedMatrix(mtx, &arg0->velocity, &arg0->pos);
     arg0->velocity.z = 0xFFFE0000;
-    arg0->pos.x += gRaceCourseStartEntries[COURSE_INDEX_RELOAD].pos.x;
-    arg0->pos.y += gRaceCourseStartEntries[COURSE_INDEX_RELOAD].pos.y;
-    arg0->pos.z += gRaceCourseStartEntries[COURSE_INDEX_RELOAD].pos.z;
+    arg0->pos.x += gRaceCourseStartEntries[COURSE_INDEX_RELOAD].launchRampOrigin.x;
+    arg0->pos.y += gRaceCourseStartEntries[COURSE_INDEX_RELOAD].launchRampOrigin.y;
+    arg0->pos.z += gRaceCourseStartEntries[COURSE_INDEX_RELOAD].launchRampOrigin.z;
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateLaunchRampCourseObjectArc);
 }
 
@@ -1280,9 +1280,9 @@ void initSpiralCourseObject(RaceMovingEffect *arg0) {
     transformVec3iByFixedMatrix(mtx, &arg0->velocity, &arg0->pos);
     arg0->velocity.x = 0;
     arg0->velocity.z = -0x20000;
-    arg0->pos.x += gRaceCourseStartEntries[gRaceCourseIndex.signedValue].unk8.x;
-    arg0->pos.y += gRaceCourseStartEntries[gRaceCourseIndex.signedValue].unk8.y + 0x40000;
-    arg0->pos.z += gRaceCourseStartEntries[gRaceCourseIndex.signedValue].unk8.z;
+    arg0->pos.x += gRaceCourseStartEntries[gRaceCourseIndex.signedValue].spiralOrigin.x;
+    arg0->pos.y += gRaceCourseStartEntries[gRaceCourseIndex.signedValue].spiralOrigin.y + 0x40000;
+    arg0->pos.z += gRaceCourseStartEntries[gRaceCourseIndex.signedValue].spiralOrigin.z;
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateSpiralCourseObjectLaunch);
     updateSpiralCourseObjectLaunch(arg0);
 }

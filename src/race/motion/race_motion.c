@@ -26,7 +26,7 @@ typedef struct RaceCourseSurface {
     s16 pathAngle;
     u16 faceStartIndex;
     u16 faceEndIndex;
-    u16 unk18;
+    u16 unused18;
     u16 edgeClampFlags;
 } RaceCourseSurface;
 
@@ -1031,8 +1031,8 @@ void getRaceCourseTargetPositionAhead(s32 arg0, s32 arg1, s32 arg2, s32 *arg3, s
         deltaZ = arg2 - ((deltaZ << 2) << 15);
         projected =
             ((((s64)(-gRaceCourseSurfaceAngleSin)) * deltaX) + (((s64)gRaceCourseSurfaceAngleCos) * deltaZ)) / 0x1000;
-        if ((arg0 >= gRaceCourseStartEntries[gRaceCourseIndex.signedValue].unk38) &&
-            (gRaceCourseStartEntries[gRaceCourseIndex.signedValue].unk3A >= arg0)) {
+        if ((arg0 >= gRaceCourseStartEntries[gRaceCourseIndex.signedValue].positiveLookaheadSurfaceStartIndex) &&
+            (gRaceCourseStartEntries[gRaceCourseIndex.signedValue].positiveLookaheadSurfaceEndIndex >= arg0)) {
             projected += 0xC00000;
             *arg3 = (((s64)(-gRaceCourseSurfaceAngleSin)) * projected) / 0x1000;
             *arg4 = (((s64)gRaceCourseSurfaceAngleCos) * projected) / 0x1000;
@@ -1065,8 +1065,8 @@ void getRaceCourseTargetPositionAhead(s32 arg0, s32 arg1, s32 arg2, s32 *arg3, s
         *arg3 += gRaceCourseSurfaceCoords[gRaceCourseSurfaces[pathIndex].referenceCoordIndex].x << 0x11;
         *arg4 += gRaceCourseSurfaceCoords[gRaceCourseSurfaces[pathIndex].referenceCoordIndex].z << 0x11;
     } else {
-        *arg3 = gRaceCourseStartEntries[gRaceCourseIndex.signedValue].unk18;
-        *arg4 = gRaceCourseStartEntries[gRaceCourseIndex.signedValue].unk1C;
+        *arg3 = gRaceCourseStartEntries[gRaceCourseIndex.signedValue].launchRampTargetX;
+        *arg4 = gRaceCourseStartEntries[gRaceCourseIndex.signedValue].launchRampTargetZ;
     }
 }
 
@@ -1083,8 +1083,8 @@ void getRaceCourseProgressPosition(s32 arg0, s32 *arg1, s32 *arg2, s32 arg3) {
         *arg1 += gRaceCourseSurfaceCoords[gRaceCourseSurfaces[arg0].referenceCoordIndex].x << 0x11;
         *arg2 += gRaceCourseSurfaceCoords[gRaceCourseSurfaces[arg0].referenceCoordIndex].z << 0x11;
     } else {
-        *arg1 = gRaceCourseStartEntries[gRaceCourseIndex.signedValue].unk40;
-        *arg2 = gRaceCourseStartEntries[gRaceCourseIndex.signedValue].unk44;
+        *arg1 = gRaceCourseStartEntries[gRaceCourseIndex.signedValue].startSurfaceTargetX;
+        *arg2 = gRaceCourseStartEntries[gRaceCourseIndex.signedValue].startSurfaceTargetZ;
     }
 }
 

@@ -62,12 +62,12 @@ treated as additional course environments merely because race code loads them.
 ## Graphics and model resources
 
 All ten segment 2 graphics bundles are now source-backed. They are divided into
-51 rebuildable ranges under `assets/course_display_lists`: one complete leading
-graphics range per course and the 41 previously identified main, backdrop,
-effect, and auxiliary ranges. Each is represented as exact `Gfx` source words
-with an F3DEX macro decode included as a reference. The source words remain
-authoritative because a few ranges contain embedded resource data, and some
-otherwise valid commands contain bits that a macro disassembler normalizes.
+71 rebuildable ranges under `assets/course_display_lists`: one complete leading
+graphics range per course and 61 main, backdrop, effect, and runtime-identified
+auxiliary ranges. Each is represented as exact `Gfx` source words with an F3DEX
+macro decode included as a reference. The source words remain authoritative
+because a few ranges contain embedded resource data, and some otherwise valid
+commands contain bits that a macro disassembler normalizes.
 
 Confirmed top-level entry points are:
 
@@ -95,7 +95,7 @@ unrelated effects or entry points.
 | --- | --- |
 | Big Snowman | `0x02009200` (surface 1), `0x02008E40`, `0x02009020` (finish line) |
 | Sunset Rock | `0x020091E0`, `0x020093E8` |
-| Night Highway | `0x02008E40`, `0x02009020` |
+| Night Highway | None; scene setup does not create this model |
 | Grass Valley | `0x0200B6F0`, `0x0200B880` |
 | Dizzy-Land | `0x0200D448`, `0x0200D5E0` |
 | Quicksand Valley | `0x0200C5A0`, `0x0200C760` |
@@ -103,6 +103,14 @@ unrelated effects or entry points.
 | Animal Land | None; the Trick Game does not create this model |
 | Ninja Land | `0x02006BA0`, `0x02006D50` |
 | Rookie Mountain | `0x02005BA8`, `0x02005DB8` |
+
+Each two-list pair is now split into `RANK_MODEL_LAPS_REMAINING` and
+`RANK_MODEL_FINAL_LAP` assets, matching the runtime lap-state selection. The
+otherwise anonymous course slide table is named `gRaceCourseSlideSpriteInit`;
+its eight display-list roots are split into two Sunset Rock assets, one Night
+Highway asset, two Dizzy-Land assets, two Quicksand Valley assets, and one
+Animal Land asset. The two display lists rendered by course trigger volumes are
+also named for Sunset Rock and Animal Land.
 
 Every confirmed top-level entry point was recursively traced through segment 2
 `G_DL` commands. The extractor also scans every aligned source word for valid,
@@ -213,12 +221,23 @@ the runtime course metadata:
 The editable YAML manifests use these same names: `surface_type`,
 `skip_first_edge_check`, `neighbor_indices`, `boundary_coordinate_indices`,
 `reference_coordinate_index`, `path_angle`, `face_start_index`,
-`face_end_index`, and `edge_clamp_flags`. Only `unknown_18` remains deliberately
-unnamed.
+`face_end_index`, and `edge_clamp_flags`. The word at offset `0x18` is preserved
+as `unused_18`: no runtime code reads it, so the name documents the evidence
+without assigning an unsupported gameplay meaning.
+
+The remaining fields in `RaceCourseStartEntry` are now named from their runtime
+uses:
+
+| Field | Runtime role |
+| --- | --- |
+| `spiralExitSurfaceIndex` | Surface assigned to a player leaving the spiral course object |
+| `spiralOrigin` | Shared world-space origin for that object and its player exit |
+| `launchRampTargetX`, `launchRampTargetZ` | Trigger center and alignment target for the launch-ramp sequence |
+| `launchRampOrigin` | World-space origin used to spawn the animated launch-ramp object |
+| `positiveLookaheadSurfaceStartIndex`, `positiveLookaheadSurfaceEndIndex` | Inclusive surface range using positive rather than negative path lookahead |
+| `startSurfaceTargetX`, `startSurfaceTargetZ` | Steering and progress target used while on the start surface |
 
 ## Remaining documentation work
 
 - Give semantic names to individual nested display lists as their runtime or
   visual roles are established.
-- Identify `RaceCourseSurface.unknown_18` and unknown fields in
-  `RaceCourseStartEntry` from runtime uses.

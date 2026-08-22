@@ -96,11 +96,11 @@ drawAssetTableSpriteWithExplicitPaletteWideIndex(s16 x, s16 y, AssetTable *table
     }
 
 typedef struct {
-    s32 word;
-    u16 half;
-    u8 b6;
-    u8 b7;
-} RaceUiSpriteInit;
+    s32 displayListAddress;
+    u16 spriteAssetId;
+    u8 useOverlayQueue;
+    u8 soundSourceIndex;
+} RaceCourseSlideSpriteInit;
 
 
 typedef union {
@@ -110,11 +110,6 @@ typedef union {
         s16 lo;
     } half;
 } SplitWord;
-
-typedef struct {
-    /* 0x00 */ u16 assetId;
-    /* 0x02 */ u8 pad2[6];
-} RaceUiAssetEntry;
 
 typedef struct RaceUiTransitionActor {
     /* 0x00 */ u8 pad0[0x10];
@@ -140,8 +135,8 @@ typedef struct RaceUiSlideActor {
     /* 0x20 */ s16 angle;
     /* 0x22 */ u8 pad22[2];
     /* 0x24 */ Gfx *displayList;
-    /* 0x28 */ s32 velocity;
-    /* 0x2C */ s32 soundIndex;
+    /* 0x28 */ s32 useOverlayQueue;
+    /* 0x2C */ s32 soundSourceIndex;
 } RaceUiSlideActor;
 
 typedef struct RaceUiCounterActor {
@@ -763,7 +758,7 @@ typedef struct RaceUiCourseSpriteActor {
     /* 0x62 */ u8 matrixDirty;
 } RaceUiCourseSpriteActor;
 
-RaceUiSpriteInit D_800D5FF0[] = {
+RaceCourseSlideSpriteInit gRaceCourseSlideSpriteInit[] = {
     { 0x0200D350, 0x0044, 0x00, 0x00 },
     { 0x0200D5D0, 0x0003, 0x01, 0x00 },
     { 0x02008C18, 0x0003, 0x01, 0x00 },
@@ -773,8 +768,6 @@ RaceUiSpriteInit D_800D5FF0[] = {
     { 0x02009700, 0x0003, 0x01, 0x01 },
     { 0x02009770, 0x0003, 0x00, 0x00 },
 };
-
-#define D_800D5FF4 ((RaceUiAssetEntry *)&D_800D5FF0[0].half)
 
 Vec3i D_800D6030[] = {
     { 0,         0,          0          },
@@ -1307,13 +1300,13 @@ void renderRaceCourseSlideSprite(RaceUiSlideActor *arg0) {
 void updateRaceCourseSlideSprite(RaceUiSlideActor *arg0) {
     s32 temp_v0;
 
-    temp_v0 = arg0->soundIndex;
+    temp_v0 = arg0->soundSourceIndex;
     arg0->angle = arg0->angle + 2;
     arg0->angle = arg0->angle & 0x3F;
     if (temp_v0 != 0) {
         enqueuePlayerLoopingPositionalSoundRequest(0xE, &D_800D6030[temp_v0], 0x7F, 0x32, 0.0f, 0xA);
     }
-    if (arg0->velocity != 0) {
+    if (arg0->useOverlayQueue != 0) {
         addRenderCallback(&D_801248EC, (RenderCallback)renderRaceCourseSlideSprite, arg0);
         return;
     }
@@ -1324,13 +1317,13 @@ void initRaceCourseSlideSprite(RaceUiSlideActor *arg0) {
     arg0->angle = 0;
     getAssetTableImageAndPalette(
         getRelocatableHeapBlockBase(ASSET_HANDLE(0x1C)),
-        D_800D5FF4[arg0->index].assetId,
+        gRaceCourseSlideSpriteInit[arg0->index].spriteAssetId,
         &arg0->image,
         &arg0->palette
     );
-    arg0->displayList = (Gfx *)D_800D5FF0[arg0->index].word;
-    arg0->velocity = D_800D5FF0[arg0->index].b6;
-    arg0->soundIndex = D_800D5FF0[arg0->index].b7;
+    arg0->displayList = (Gfx *)gRaceCourseSlideSpriteInit[arg0->index].displayListAddress;
+    arg0->useOverlayQueue = gRaceCourseSlideSpriteInit[arg0->index].useOverlayQueue;
+    arg0->soundSourceIndex = gRaceCourseSlideSpriteInit[arg0->index].soundSourceIndex;
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceCourseSlideSprite);
 }
 
