@@ -59,7 +59,7 @@ void loadRaceCourseAssets(void) {
             LOAD_ASSET(BIG_SNOWMAN_COURSE_SPRITES, 0x1D);
             break;
         case 1:
-            size = (u8 *)&SUNSET_ROCK_COURSE_SLIDE_SPRITE_1_DISPLAY_LIST_ROM_END -
+            size = (u8 *)&SUNSET_ROCK_COURSE_SCROLLING_TEXTURE_1_DISPLAY_LIST_ROM_END -
                    (u8 *)&SUNSET_ROCK_COURSE_GRAPHICS_ROM_START;
             gAssetHandles[0x8] = allocRelocatableHeapBlock(size);
             lockRelocatableHeapBlock(gAssetHandles[0x8]);
@@ -70,7 +70,7 @@ void loadRaceCourseAssets(void) {
             LOAD_ASSET(SUNSET_ROCK_COURSE_SPRITES, 0x1D);
             break;
         case 2:
-            size = (u8 *)&NIGHT_HIGHWAY_COURSE_SLIDE_SPRITE_DISPLAY_LIST_ROM_END -
+            size = (u8 *)&NIGHT_HIGHWAY_COURSE_SCROLLING_TEXTURE_DISPLAY_LIST_ROM_END -
                    (u8 *)&NIGHT_HIGHWAY_COURSE_GRAPHICS_ROM_START;
             gAssetHandles[0x8] = allocRelocatableHeapBlock(size);
             lockRelocatableHeapBlock(gAssetHandles[0x8]);
@@ -92,7 +92,7 @@ void loadRaceCourseAssets(void) {
             LOAD_ASSET(GRASS_VALLEY_COURSE_SPRITES, 0x1D);
             break;
         case 4:
-            size = (u8 *)&DIZZY_LAND_COURSE_SLIDE_SPRITE_1_DISPLAY_LIST_ROM_END -
+            size = (u8 *)&DIZZY_LAND_COURSE_SCROLLING_TEXTURE_1_DISPLAY_LIST_ROM_END -
                    (u8 *)&DIZZY_LAND_COURSE_GRAPHICS_ROM_START;
             gAssetHandles[0x8] = allocRelocatableHeapBlock(size);
             lockRelocatableHeapBlock(gAssetHandles[0x8]);
@@ -103,7 +103,7 @@ void loadRaceCourseAssets(void) {
             LOAD_ASSET(DIZZY_LAND_COURSE_SPRITES, 0x1D);
             break;
         case 5:
-            size = (u8 *)&QUICKSAND_VALLEY_COURSE_SLIDE_SPRITE_1_DISPLAY_LIST_ROM_END -
+            size = (u8 *)&QUICKSAND_VALLEY_COURSE_SCROLLING_TEXTURE_1_DISPLAY_LIST_ROM_END -
                    (u8 *)&QUICKSAND_VALLEY_COURSE_GRAPHICS_ROM_START;
             gAssetHandles[0x8] = allocRelocatableHeapBlock(size);
             lockRelocatableHeapBlock(gAssetHandles[0x8]);
@@ -280,8 +280,10 @@ void initRaceCourseSceneTasks(void) {
             spawnPatrolCourseObject(0x17, 0xF3EFF851, 0xE8BCCFE0, 0xF5650CCB, 0xE9A4FC34);
             spawnPatrolCourseObject(0x17, 0xF6BEB9D1, 0xEA69C4DE, 0xF6F1B095, 0xEBF8B05E);
             createCallbackTask((CallbackTaskCallback)&initRaceCourseSceneryObjects, 0, 0x64);
-            createCallbackTaskWithUserId((CallbackTaskCallback)&initRaceCourseSlideSprite, 0, 0x64, 6);
-            createCallbackTaskWithUserId((CallbackTaskCallback)&initRaceCourseSlideSprite, 0, 0x64, 7);
+            createCallbackTaskWithUserId((CallbackTaskCallback)&initRaceCourseScrollingTexture, 0, 0x64,
+                                         RACE_COURSE_SCROLLING_TEXTURE_SUNSET_ROCK_0);
+            createCallbackTaskWithUserId((CallbackTaskCallback)&initRaceCourseScrollingTexture, 0, 0x64,
+                                         RACE_COURSE_SCROLLING_TEXTURE_SUNSET_ROCK_1);
             createCallbackTaskWithUserId((CallbackTaskCallback)&initCourseTriggerVolume, 0, 0x64, 0);
             createCallbackTaskWithUserId((CallbackTaskCallback)&initRaceCoursePropModels, 0, 0x64, 0);
             createCallbackTask((CallbackTaskCallback)&initCourseGateObject, 0, 0x64);
@@ -322,7 +324,8 @@ void initRaceCourseSceneTasks(void) {
             createCallbackTask((CallbackTaskCallback)&initRaceCourseModelRenderTask, 0, 0x64);
             createCallbackTask((CallbackTaskCallback)&initRaceCourseSceneryObjects, 0, 0x64);
             createCallbackTask((CallbackTaskCallback)&initCourseGateObject, 0, 0x64);
-            createCallbackTaskWithUserId((CallbackTaskCallback)&initRaceCourseSlideSprite, 0, 0x64, 2);
+            createCallbackTaskWithUserId((CallbackTaskCallback)&initRaceCourseScrollingTexture, 0, 0x64,
+                                         RACE_COURSE_SCROLLING_TEXTURE_NIGHT_HIGHWAY);
             createCallbackTaskWithUserId((CallbackTaskCallback)&initCourseStartFinishSprite, 0, 0x64, 0);
             createCallbackTaskWithUserId((CallbackTaskCallback)&initCourseStartFinishSprite, 0, 0x64, 1);
             if ((gRaceSplitscreenMode == 0) && (gMainMenuModeSelection == 0)) {
@@ -388,8 +391,10 @@ void initRaceCourseSceneTasks(void) {
             createCallbackTaskWithUserId((CallbackTaskCallback)&initRaceCourseTripleParticle, 0, 0x64, 0);
             createCallbackTaskWithUserId((CallbackTaskCallback)&func_800631B0, 0, 0x64, 0);
             createCallbackTaskWithUserId((CallbackTaskCallback)&initRaceCourseSpinningObject, 0, 0x64, 0);
-            createCallbackTaskWithUserId((CallbackTaskCallback)&initRaceCourseSlideSprite, 0, 0x64, 4);
-            createCallbackTaskWithUserId((CallbackTaskCallback)&initRaceCourseSlideSprite, 0, 0x64, 5);
+            createCallbackTaskWithUserId((CallbackTaskCallback)&initRaceCourseScrollingTexture, 0, 0x64,
+                                         RACE_COURSE_SCROLLING_TEXTURE_DIZZY_LAND_0);
+            createCallbackTaskWithUserId((CallbackTaskCallback)&initRaceCourseScrollingTexture, 0, 0x64,
+                                         RACE_COURSE_SCROLLING_TEXTURE_DIZZY_LAND_1);
             createCallbackTaskWithUserId((CallbackTaskCallback)&initRaceCourseRankModel, 0, 0x64, 1);
             if ((gRaceSplitscreenMode == 0) && (gMainMenuModeSelection == 0)) {
                 if (sp2C != 0) {
@@ -424,8 +429,10 @@ void initRaceCourseSceneTasks(void) {
             break;
         case 5:
             createCallbackTask((CallbackTaskCallback)&initRaceCourseModelRenderTask, 0, 0x64);
-            createCallbackTaskWithUserId((CallbackTaskCallback)&initRaceCourseSlideSprite, 0, 0x64, 0);
-            createCallbackTaskWithUserId((CallbackTaskCallback)&initRaceCourseSlideSprite, 0, 0x64, 1);
+            createCallbackTaskWithUserId((CallbackTaskCallback)&initRaceCourseScrollingTexture, 0, 0x64,
+                                         RACE_COURSE_SCROLLING_TEXTURE_QUICKSAND_VALLEY_0);
+            createCallbackTaskWithUserId((CallbackTaskCallback)&initRaceCourseScrollingTexture, 0, 0x64,
+                                         RACE_COURSE_SCROLLING_TEXTURE_QUICKSAND_VALLEY_1);
             createCallbackTask((CallbackTaskCallback)&initRaceCourseSceneryObjects, 0, 0x64);
             createCallbackTaskWithUserId((CallbackTaskCallback)&initRaceCourseRankModel, 0, 0x64, 1);
             createCallbackTask((CallbackTaskCallback)&initCourseGateObject, 0, 0x64);
@@ -490,7 +497,8 @@ void initRaceCourseSceneTasks(void) {
             break;
         case 7:
             createCallbackTask((CallbackTaskCallback)&initRaceCourseModelRenderTask, 0, 0x64);
-            createCallbackTaskWithUserId((CallbackTaskCallback)&initRaceCourseSlideSprite, 0, 0x64, 3);
+            createCallbackTaskWithUserId((CallbackTaskCallback)&initRaceCourseScrollingTexture, 0, 0x64,
+                                         RACE_COURSE_SCROLLING_TEXTURE_ANIMAL_LAND);
             createCallbackTaskWithUserId((CallbackTaskCallback)&initCourseTriggerVolume, 0, 0x64, 1);
             createCallbackTask((CallbackTaskCallback)&initRaceCourseSceneryObjects, 0, 0x64);
             setBootFadeColor(0xFFU, 0xFFU, 0xFFU);
