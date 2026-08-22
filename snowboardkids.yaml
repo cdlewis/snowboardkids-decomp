@@ -478,12 +478,32 @@ segments:
     subalign: 8
     exclusive_ram_id: level_big_snowman
 
+  - { start: 0xE3660, type: course_display_list, name: BIG_SNOWMAN_COURSE_MESH_SECTION_00_DISPLAY_LIST, vram: 0x020000A0, align: 8, subalign: 8, exclusive_ram_id: level_big_snowman }
   - { start: 0xE3720, type: course_display_list, name: BIG_SNOWMAN_COURSE_SCENERY_ENTRY_1_DISPLAY_LIST, vram: 0x02000160, align: 8, subalign: 8, exclusive_ram_id: level_big_snowman }
   - { start: 0xE39D0, type: course_display_list, name: BIG_SNOWMAN_COURSE_SCENERY_ENTRY_4_DISPLAY_LIST, vram: 0x02000410, align: 8, subalign: 8, exclusive_ram_id: level_big_snowman }
   - { start: 0xE3B28, type: course_display_list, name: BIG_SNOWMAN_COURSE_SCENERY_ENTRY_8_DISPLAY_LIST, vram: 0x02000568, align: 8, subalign: 8, exclusive_ram_id: level_big_snowman }
   - { start: 0xE40F0, type: course_display_list, name: BIG_SNOWMAN_COURSE_SCENERY_ENTRY_10_DISPLAY_LIST, vram: 0x02000B30, align: 8, subalign: 8, exclusive_ram_id: level_big_snowman }
+  - { start: 0xE41F8, type: course_display_list, name: BIG_SNOWMAN_COURSE_MESH_SECTION_01_DISPLAY_LIST, vram: 0x02000C38, align: 8, subalign: 8, exclusive_ram_id: level_big_snowman }
+  - { start: 0xE4A98, type: course_display_list, name: BIG_SNOWMAN_COURSE_MESH_SECTION_02_DISPLAY_LIST, vram: 0x020014D8, align: 8, subalign: 8, exclusive_ram_id: level_big_snowman }
+  - { start: 0xE4F50, type: course_display_list, name: BIG_SNOWMAN_COURSE_MESH_SECTION_03_DISPLAY_LIST, vram: 0x02001990, align: 8, subalign: 8, exclusive_ram_id: level_big_snowman }
   - { start: 0xE4F80, type: course_display_list, name: BIG_SNOWMAN_COURSE_SCENERY_ENTRY_17_DISPLAY_LIST, vram: 0x020019C0, align: 8, subalign: 8, exclusive_ram_id: level_big_snowman }
+  - { start: 0xE5930, type: course_display_list, name: BIG_SNOWMAN_COURSE_MESH_SECTION_04_DISPLAY_LIST, vram: 0x02002370, align: 8, subalign: 8, exclusive_ram_id: level_big_snowman }
+  - { start: 0xE5FC0, type: course_display_list, name: BIG_SNOWMAN_COURSE_MESH_SECTION_05_DISPLAY_LIST, vram: 0x02002A00, align: 8, subalign: 8, exclusive_ram_id: level_big_snowman }
   - { start: 0xE6490, type: course_display_list, name: BIG_SNOWMAN_COURSE_SCENERY_ENTRY_25_DISPLAY_LIST, vram: 0x02002ED0, align: 8, subalign: 8, exclusive_ram_id: level_big_snowman }
+  - { start: 0xE6710, type: course_display_list, name: BIG_SNOWMAN_COURSE_MESH_SECTION_06_DISPLAY_LIST, vram: 0x02003150, align: 8, subalign: 8, exclusive_ram_id: level_big_snowman }
+  - { start: 0xE70D0, type: course_display_list, name: BIG_SNOWMAN_COURSE_MESH_SECTION_07_DISPLAY_LIST, vram: 0x02003B10, align: 8, subalign: 8, exclusive_ram_id: level_big_snowman }
+  - { start: 0xE79A8, type: course_display_list, name: BIG_SNOWMAN_COURSE_MESH_SECTION_08_DISPLAY_LIST, vram: 0x020043E8, align: 8, subalign: 8, exclusive_ram_id: level_big_snowman }
+  - { start: 0xE7E20, type: course_display_list, name: BIG_SNOWMAN_COURSE_MESH_SECTION_09_DISPLAY_LIST, vram: 0x02004860, align: 8, subalign: 8, exclusive_ram_id: level_big_snowman }
+  - { start: 0xE8608, type: course_display_list, name: BIG_SNOWMAN_COURSE_MESH_SECTION_10_DISPLAY_LIST, vram: 0x02005048, align: 8, subalign: 8, exclusive_ram_id: level_big_snowman }
+  - { start: 0xE8B08, type: course_display_list, name: BIG_SNOWMAN_COURSE_MESH_SECTION_11_DISPLAY_LIST, vram: 0x02005548, align: 8, subalign: 8, exclusive_ram_id: level_big_snowman }
+  - { start: 0xE9468, type: course_display_list, name: BIG_SNOWMAN_COURSE_MESH_SECTION_12_DISPLAY_LIST, vram: 0x02005EA8, align: 8, subalign: 8, exclusive_ram_id: level_big_snowman }
+  - { start: 0xE98E8, type: course_display_list, name: BIG_SNOWMAN_COURSE_MESH_SECTION_13_DISPLAY_LIST, vram: 0x02006328, align: 8, subalign: 8, exclusive_ram_id: level_big_snowman }
+  - { start: 0xE9F08, type: course_display_list, name: BIG_SNOWMAN_COURSE_MESH_SECTION_14_DISPLAY_LIST, vram: 0x02006948, align: 8, subalign: 8, exclusive_ram_id: level_big_snowman }
+  - { start: 0xEA550, type: course_display_list, name: BIG_SNOWMAN_COURSE_MESH_SECTION_15_DISPLAY_LIST, vram: 0x02006F90, align: 8, subalign: 8, exclusive_ram_id: level_big_snowman }
+  - { start: 0xEAD80, type: course_display_list, name: BIG_SNOWMAN_COURSE_MESH_SECTION_16_DISPLAY_LIST, vram: 0x020077C0, align: 8, subalign: 8, exclusive_ram_id: level_big_snowman }
+  - { start: 0xEB218, type: course_display_list, name: BIG_SNOWMAN_COURSE_MESH_SECTION_17_DISPLAY_LIST, vram: 0x02007C58, align: 8, subalign: 8, exclusive_ram_id: level_big_snowman }
+  - { start: 0xEB750, type: course_display_list, name: BIG_SNOWMAN_COURSE_MESH_SECTION_18_DISPLAY_LIST, vram: 0x02008190, align: 8, subalign: 8, exclusive_ram_id: level_big_snowman }
+  - { start: 0xEBA20, type: course_display_list, name: BIG_SNOWMAN_COURSE_MESH_SECTION_19_DISPLAY_LIST, vram: 0x02008460, align: 8, subalign: 8, exclusive_ram_id: level_big_snowman }
   - { start: 0xEBEC0, type: course_display_list, name: BIG_SNOWMAN_COURSE_DISPLAY_LIST, vram: 0x02008900, align: 8, subalign: 8, exclusive_ram_id: level_big_snowman }
   - { start: 0xEBFA0, type: course_display_list, name: BIG_SNOWMAN_COURSE_BACKDROP_DISPLAY_LIST, vram: 0x020089E0, align: 8, subalign: 8, exclusive_ram_id: level_big_snowman }
   - { start: 0xEC310, type: course_display_list, name: BIG_SNOWMAN_COURSE_SECONDARY_BACKDROP_DISPLAY_LIST, vram: 0x02008D50, align: 8, subalign: 8, exclusive_ram_id: level_big_snowman }
@@ -499,12 +519,45 @@ segments:
     subalign: 8
     exclusive_ram_id: level_sunset_rock
 
+  - { start: 0xECAA0, type: course_display_list, name: SUNSET_ROCK_COURSE_MESH_SECTION_01_DISPLAY_LIST, vram: 0x02000100, align: 8, subalign: 8, exclusive_ram_id: level_sunset_rock }
+  - { start: 0xECBD8, type: course_display_list, name: SUNSET_ROCK_COURSE_MESH_SECTION_02_DISPLAY_LIST, vram: 0x02000238, align: 8, subalign: 8, exclusive_ram_id: level_sunset_rock }
+  - { start: 0xECC98, type: course_display_list, name: SUNSET_ROCK_COURSE_MESH_SECTION_03_DISPLAY_LIST, vram: 0x020002F8, align: 8, subalign: 8, exclusive_ram_id: level_sunset_rock }
   - { start: 0xECF08, type: course_display_list, name: SUNSET_ROCK_COURSE_SCENERY_ENTRY_8_DISPLAY_LIST, vram: 0x02000568, align: 8, subalign: 8, exclusive_ram_id: level_sunset_rock }
+  - { start: 0xED1C0, type: course_display_list, name: SUNSET_ROCK_COURSE_MESH_SECTION_04_DISPLAY_LIST, vram: 0x02000820, align: 8, subalign: 8, exclusive_ram_id: level_sunset_rock }
   - { start: 0xED4D0, type: course_display_list, name: SUNSET_ROCK_COURSE_SCENERY_ENTRY_10_DISPLAY_LIST, vram: 0x02000B30, align: 8, subalign: 8, exclusive_ram_id: level_sunset_rock }
   - { start: 0xEDCF0, type: course_display_list, name: SUNSET_ROCK_COURSE_SCENERY_ENTRY_11_DISPLAY_LIST, vram: 0x02001350, align: 8, subalign: 8, exclusive_ram_id: level_sunset_rock }
   - { start: 0xEDEE8, type: course_display_list, name: SUNSET_ROCK_COURSE_THROWN_PICKUP_MODEL_DISPLAY_LIST, vram: 0x02001548, align: 8, subalign: 8, exclusive_ram_id: level_sunset_rock }
+  - { start: 0xEE250, type: course_display_list, name: SUNSET_ROCK_COURSE_MESH_SECTION_05_DISPLAY_LIST, vram: 0x020018B0, align: 8, subalign: 8, exclusive_ram_id: level_sunset_rock }
+  - { start: 0xEE388, type: course_display_list, name: SUNSET_ROCK_COURSE_MESH_SECTION_06_DISPLAY_LIST, vram: 0x020019E8, align: 8, subalign: 8, exclusive_ram_id: level_sunset_rock }
   - { start: 0xEE6A0, type: course_display_list, name: SUNSET_ROCK_COURSE_SCENERY_ENTRY_18_DISPLAY_LIST, vram: 0x02001D00, align: 8, subalign: 8, exclusive_ram_id: level_sunset_rock }
+  - { start: 0xEE830, type: course_display_list, name: SUNSET_ROCK_COURSE_MESH_SECTION_07_DISPLAY_LIST, vram: 0x02001E90, align: 8, subalign: 8, exclusive_ram_id: level_sunset_rock }
+  - { start: 0xEE8F8, type: course_display_list, name: SUNSET_ROCK_COURSE_MESH_SECTION_08_DISPLAY_LIST, vram: 0x02001F58, align: 8, subalign: 8, exclusive_ram_id: level_sunset_rock }
   - { start: 0xEEA48, type: course_display_list, name: SUNSET_ROCK_COURSE_PROP_MODEL_DISPLAY_LIST, vram: 0x020020A8, align: 8, subalign: 8, exclusive_ram_id: level_sunset_rock }
+  - { start: 0xEEB20, type: course_display_list, name: SUNSET_ROCK_COURSE_MESH_SECTION_09_DISPLAY_LIST, vram: 0x02002180, align: 8, subalign: 8, exclusive_ram_id: level_sunset_rock }
+  - { start: 0xEEE48, type: course_display_list, name: SUNSET_ROCK_COURSE_MESH_SECTION_10_DISPLAY_LIST, vram: 0x020024A8, align: 8, subalign: 8, exclusive_ram_id: level_sunset_rock }
+  - { start: 0xEF3A8, type: course_display_list, name: SUNSET_ROCK_COURSE_MESH_SECTION_11_DISPLAY_LIST, vram: 0x02002A08, align: 8, subalign: 8, exclusive_ram_id: level_sunset_rock }
+  - { start: 0xEFA78, type: course_display_list, name: SUNSET_ROCK_COURSE_MESH_SECTION_12_DISPLAY_LIST, vram: 0x020030D8, align: 8, subalign: 8, exclusive_ram_id: level_sunset_rock }
+  - { start: 0xF0370, type: course_display_list, name: SUNSET_ROCK_COURSE_MESH_SECTION_13_DISPLAY_LIST, vram: 0x020039D0, align: 8, subalign: 8, exclusive_ram_id: level_sunset_rock }
+  - { start: 0xF0CD8, type: course_display_list, name: SUNSET_ROCK_COURSE_MESH_SECTION_14_DISPLAY_LIST, vram: 0x02004338, align: 8, subalign: 8, exclusive_ram_id: level_sunset_rock }
+  - { start: 0xF1008, type: course_display_list, name: SUNSET_ROCK_COURSE_MESH_SECTION_15_DISPLAY_LIST, vram: 0x02004668, align: 8, subalign: 8, exclusive_ram_id: level_sunset_rock }
+  - { start: 0xF13F8, type: course_display_list, name: SUNSET_ROCK_COURSE_MESH_SECTION_16_DISPLAY_LIST, vram: 0x02004A58, align: 8, subalign: 8, exclusive_ram_id: level_sunset_rock }
+  - { start: 0xF15B8, type: course_display_list, name: SUNSET_ROCK_COURSE_MESH_SECTION_17_DISPLAY_LIST, vram: 0x02004C18, align: 8, subalign: 8, exclusive_ram_id: level_sunset_rock }
+  - { start: 0xF1820, type: course_display_list, name: SUNSET_ROCK_COURSE_MESH_SECTION_18_DISPLAY_LIST, vram: 0x02004E80, align: 8, subalign: 8, exclusive_ram_id: level_sunset_rock }
+  - { start: 0xF1C18, type: course_display_list, name: SUNSET_ROCK_COURSE_MESH_SECTION_19_DISPLAY_LIST, vram: 0x02005278, align: 8, subalign: 8, exclusive_ram_id: level_sunset_rock }
+  - { start: 0xF1CF8, type: course_display_list, name: SUNSET_ROCK_COURSE_MESH_SECTION_20_DISPLAY_LIST, vram: 0x02005358, align: 8, subalign: 8, exclusive_ram_id: level_sunset_rock }
+  - { start: 0xF1DB8, type: course_display_list, name: SUNSET_ROCK_COURSE_MESH_SECTION_21_DISPLAY_LIST, vram: 0x02005418, align: 8, subalign: 8, exclusive_ram_id: level_sunset_rock }
+  - { start: 0xF2378, type: course_display_list, name: SUNSET_ROCK_COURSE_MESH_SECTION_22_DISPLAY_LIST, vram: 0x020059D8, align: 8, subalign: 8, exclusive_ram_id: level_sunset_rock }
+  - { start: 0xF2A98, type: course_display_list, name: SUNSET_ROCK_COURSE_MESH_SECTION_23_DISPLAY_LIST, vram: 0x020060F8, align: 8, subalign: 8, exclusive_ram_id: level_sunset_rock }
+  - { start: 0xF2B50, type: course_display_list, name: SUNSET_ROCK_COURSE_MESH_SECTION_24_DISPLAY_LIST, vram: 0x020061B0, align: 8, subalign: 8, exclusive_ram_id: level_sunset_rock }
+  - { start: 0xF3090, type: course_display_list, name: SUNSET_ROCK_COURSE_MESH_SECTION_25_DISPLAY_LIST, vram: 0x020066F0, align: 8, subalign: 8, exclusive_ram_id: level_sunset_rock }
+  - { start: 0xF3608, type: course_display_list, name: SUNSET_ROCK_COURSE_MESH_SECTION_26_DISPLAY_LIST, vram: 0x02006C68, align: 8, subalign: 8, exclusive_ram_id: level_sunset_rock }
+  - { start: 0xF3CD8, type: course_display_list, name: SUNSET_ROCK_COURSE_MESH_SECTION_27_DISPLAY_LIST, vram: 0x02007338, align: 8, subalign: 8, exclusive_ram_id: level_sunset_rock }
+  - { start: 0xF4360, type: course_display_list, name: SUNSET_ROCK_COURSE_MESH_SECTION_28_DISPLAY_LIST, vram: 0x020079C0, align: 8, subalign: 8, exclusive_ram_id: level_sunset_rock }
+  - { start: 0xF4418, type: course_display_list, name: SUNSET_ROCK_COURSE_MESH_SECTION_29_DISPLAY_LIST, vram: 0x02007A78, align: 8, subalign: 8, exclusive_ram_id: level_sunset_rock }
+  - { start: 0xF48B0, type: course_display_list, name: SUNSET_ROCK_COURSE_MESH_SECTION_30_DISPLAY_LIST, vram: 0x02007F10, align: 8, subalign: 8, exclusive_ram_id: level_sunset_rock }
+  - { start: 0xF4B18, type: course_display_list, name: SUNSET_ROCK_COURSE_MESH_SECTION_31_DISPLAY_LIST, vram: 0x02008178, align: 8, subalign: 8, exclusive_ram_id: level_sunset_rock }
+  - { start: 0xF4BC8, type: course_display_list, name: SUNSET_ROCK_COURSE_MESH_SECTION_32_DISPLAY_LIST, vram: 0x02008228, align: 8, subalign: 8, exclusive_ram_id: level_sunset_rock }
+  - { start: 0xF4FD0, type: course_display_list, name: SUNSET_ROCK_COURSE_MESH_SECTION_33_DISPLAY_LIST, vram: 0x02008630, align: 8, subalign: 8, exclusive_ram_id: level_sunset_rock }
   - { start: 0xF57D0, type: course_display_list, name: SUNSET_ROCK_COURSE_DISPLAY_LIST, vram: 0x02008E30, align: 8, subalign: 8, exclusive_ram_id: level_sunset_rock }
   - { start: 0xF5920, type: course_display_list, name: SUNSET_ROCK_COURSE_BACKDROP_DISPLAY_LIST, vram: 0x02008F80, align: 8, subalign: 8, exclusive_ram_id: level_sunset_rock }
   - { start: 0xF5AE8, type: course_display_list, name: SUNSET_ROCK_COURSE_TRIGGER_VOLUME_DISPLAY_LIST, vram: 0x02009148, align: 8, subalign: 8, exclusive_ram_id: level_sunset_rock }
@@ -525,6 +578,42 @@ segments:
     exclusive_ram_id: level_night_highway
 
   - { start: 0xF66C8, type: course_display_list, name: NIGHT_HIGHWAY_COURSE_SCENERY_ENTRY_8_DISPLAY_LIST, vram: 0x02000568, align: 8, subalign: 8, exclusive_ram_id: level_night_highway }
+  - { start: 0xF67D8, type: course_display_list, name: NIGHT_HIGHWAY_COURSE_MESH_SECTION_01_DISPLAY_LIST, vram: 0x02000678, align: 8, subalign: 8, exclusive_ram_id: level_night_highway }
+  - { start: 0xF6AF8, type: course_display_list, name: NIGHT_HIGHWAY_COURSE_MESH_SECTION_02_DISPLAY_LIST, vram: 0x02000998, align: 8, subalign: 8, exclusive_ram_id: level_night_highway }
+  - { start: 0xF6BA8, type: course_display_list, name: NIGHT_HIGHWAY_COURSE_MESH_SECTION_03_DISPLAY_LIST, vram: 0x02000A48, align: 8, subalign: 8, exclusive_ram_id: level_night_highway }
+  - { start: 0xF6E40, type: course_display_list, name: NIGHT_HIGHWAY_COURSE_MESH_SECTION_04_DISPLAY_LIST, vram: 0x02000CE0, align: 8, subalign: 8, exclusive_ram_id: level_night_highway }
+  - { start: 0xF73F0, type: course_display_list, name: NIGHT_HIGHWAY_COURSE_MESH_SECTION_05_DISPLAY_LIST, vram: 0x02001290, align: 8, subalign: 8, exclusive_ram_id: level_night_highway }
+  - { start: 0xF79B0, type: course_display_list, name: NIGHT_HIGHWAY_COURSE_MESH_SECTION_06_DISPLAY_LIST, vram: 0x02001850, align: 8, subalign: 8, exclusive_ram_id: level_night_highway }
+  - { start: 0xF7A60, type: course_display_list, name: NIGHT_HIGHWAY_COURSE_MESH_SECTION_07_DISPLAY_LIST, vram: 0x02001900, align: 8, subalign: 8, exclusive_ram_id: level_night_highway }
+  - { start: 0xF7B10, type: course_display_list, name: NIGHT_HIGHWAY_COURSE_MESH_SECTION_08_DISPLAY_LIST, vram: 0x020019B0, align: 8, subalign: 8, exclusive_ram_id: level_night_highway }
+  - { start: 0xF80D8, type: course_display_list, name: NIGHT_HIGHWAY_COURSE_MESH_SECTION_09_DISPLAY_LIST, vram: 0x02001F78, align: 8, subalign: 8, exclusive_ram_id: level_night_highway }
+  - { start: 0xF82B0, type: course_display_list, name: NIGHT_HIGHWAY_COURSE_MESH_SECTION_10_DISPLAY_LIST, vram: 0x02002150, align: 8, subalign: 8, exclusive_ram_id: level_night_highway }
+  - { start: 0xF8648, type: course_display_list, name: NIGHT_HIGHWAY_COURSE_MESH_SECTION_11_DISPLAY_LIST, vram: 0x020024E8, align: 8, subalign: 8, exclusive_ram_id: level_night_highway }
+  - { start: 0xF8BE8, type: course_display_list, name: NIGHT_HIGHWAY_COURSE_MESH_SECTION_12_DISPLAY_LIST, vram: 0x02002A88, align: 8, subalign: 8, exclusive_ram_id: level_night_highway }
+  - { start: 0xF9150, type: course_display_list, name: NIGHT_HIGHWAY_COURSE_MESH_SECTION_13_DISPLAY_LIST, vram: 0x02002FF0, align: 8, subalign: 8, exclusive_ram_id: level_night_highway }
+  - { start: 0xF9678, type: course_display_list, name: NIGHT_HIGHWAY_COURSE_MESH_SECTION_14_DISPLAY_LIST, vram: 0x02003518, align: 8, subalign: 8, exclusive_ram_id: level_night_highway }
+  - { start: 0xF99A0, type: course_display_list, name: NIGHT_HIGHWAY_COURSE_MESH_SECTION_15_DISPLAY_LIST, vram: 0x02003840, align: 8, subalign: 8, exclusive_ram_id: level_night_highway }
+  - { start: 0xF9A60, type: course_display_list, name: NIGHT_HIGHWAY_COURSE_MESH_SECTION_16_DISPLAY_LIST, vram: 0x02003900, align: 8, subalign: 8, exclusive_ram_id: level_night_highway }
+  - { start: 0xF9ED0, type: course_display_list, name: NIGHT_HIGHWAY_COURSE_MESH_SECTION_17_DISPLAY_LIST, vram: 0x02003D70, align: 8, subalign: 8, exclusive_ram_id: level_night_highway }
+  - { start: 0xFA468, type: course_display_list, name: NIGHT_HIGHWAY_COURSE_MESH_SECTION_18_DISPLAY_LIST, vram: 0x02004308, align: 8, subalign: 8, exclusive_ram_id: level_night_highway }
+  - { start: 0xFA8A8, type: course_display_list, name: NIGHT_HIGHWAY_COURSE_MESH_SECTION_19_DISPLAY_LIST, vram: 0x02004748, align: 8, subalign: 8, exclusive_ram_id: level_night_highway }
+  - { start: 0xFAAB8, type: course_display_list, name: NIGHT_HIGHWAY_COURSE_MESH_SECTION_20_DISPLAY_LIST, vram: 0x02004958, align: 8, subalign: 8, exclusive_ram_id: level_night_highway }
+  - { start: 0xFAE28, type: course_display_list, name: NIGHT_HIGHWAY_COURSE_MESH_SECTION_21_DISPLAY_LIST, vram: 0x02004CC8, align: 8, subalign: 8, exclusive_ram_id: level_night_highway }
+  - { start: 0xFB140, type: course_display_list, name: NIGHT_HIGHWAY_COURSE_MESH_SECTION_22_DISPLAY_LIST, vram: 0x02004FE0, align: 8, subalign: 8, exclusive_ram_id: level_night_highway }
+  - { start: 0xFB498, type: course_display_list, name: NIGHT_HIGHWAY_COURSE_MESH_SECTION_23_DISPLAY_LIST, vram: 0x02005338, align: 8, subalign: 8, exclusive_ram_id: level_night_highway }
+  - { start: 0xFBA38, type: course_display_list, name: NIGHT_HIGHWAY_COURSE_MESH_SECTION_24_DISPLAY_LIST, vram: 0x020058D8, align: 8, subalign: 8, exclusive_ram_id: level_night_highway }
+  - { start: 0xFBDC0, type: course_display_list, name: NIGHT_HIGHWAY_COURSE_MESH_SECTION_25_DISPLAY_LIST, vram: 0x02005C60, align: 8, subalign: 8, exclusive_ram_id: level_night_highway }
+  - { start: 0xFC438, type: course_display_list, name: NIGHT_HIGHWAY_COURSE_MESH_SECTION_26_DISPLAY_LIST, vram: 0x020062D8, align: 8, subalign: 8, exclusive_ram_id: level_night_highway }
+  - { start: 0xFC640, type: course_display_list, name: NIGHT_HIGHWAY_COURSE_MESH_SECTION_27_DISPLAY_LIST, vram: 0x020064E0, align: 8, subalign: 8, exclusive_ram_id: level_night_highway }
+  - { start: 0xFCAA0, type: course_display_list, name: NIGHT_HIGHWAY_COURSE_MESH_SECTION_28_DISPLAY_LIST, vram: 0x02006940, align: 8, subalign: 8, exclusive_ram_id: level_night_highway }
+  - { start: 0xFCC18, type: course_display_list, name: NIGHT_HIGHWAY_COURSE_MESH_SECTION_29_DISPLAY_LIST, vram: 0x02006AB8, align: 8, subalign: 8, exclusive_ram_id: level_night_highway }
+  - { start: 0xFD360, type: course_display_list, name: NIGHT_HIGHWAY_COURSE_MESH_SECTION_30_DISPLAY_LIST, vram: 0x02007200, align: 8, subalign: 8, exclusive_ram_id: level_night_highway }
+  - { start: 0xFD728, type: course_display_list, name: NIGHT_HIGHWAY_COURSE_MESH_SECTION_31_DISPLAY_LIST, vram: 0x020075C8, align: 8, subalign: 8, exclusive_ram_id: level_night_highway }
+  - { start: 0xFD920, type: course_display_list, name: NIGHT_HIGHWAY_COURSE_MESH_SECTION_32_DISPLAY_LIST, vram: 0x020077C0, align: 8, subalign: 8, exclusive_ram_id: level_night_highway }
+  - { start: 0xFDD28, type: course_display_list, name: NIGHT_HIGHWAY_COURSE_MESH_SECTION_33_DISPLAY_LIST, vram: 0x02007BC8, align: 8, subalign: 8, exclusive_ram_id: level_night_highway }
+  - { start: 0xFE0C8, type: course_display_list, name: NIGHT_HIGHWAY_COURSE_MESH_SECTION_34_DISPLAY_LIST, vram: 0x02007F68, align: 8, subalign: 8, exclusive_ram_id: level_night_highway }
+  - { start: 0xFE238, type: course_display_list, name: NIGHT_HIGHWAY_COURSE_MESH_SECTION_35_DISPLAY_LIST, vram: 0x020080D8, align: 8, subalign: 8, exclusive_ram_id: level_night_highway }
+  - { start: 0xFE678, type: course_display_list, name: NIGHT_HIGHWAY_COURSE_MESH_SECTION_36_DISPLAY_LIST, vram: 0x02008518, align: 8, subalign: 8, exclusive_ram_id: level_night_highway }
   - { start: 0xFE788, type: course_display_list, name: NIGHT_HIGHWAY_COURSE_DISPLAY_LIST, vram: 0x02008628, align: 8, subalign: 8, exclusive_ram_id: level_night_highway }
   - { start: 0xFE8F0, type: course_display_list, name: NIGHT_HIGHWAY_COURSE_BACKDROP_DISPLAY_LIST, vram: 0x02008790, align: 8, subalign: 8, exclusive_ram_id: level_night_highway }
   - { start: 0xFECA0, type: course_display_list, name: NIGHT_HIGHWAY_COURSE_SCROLLING_TEXTURE_GEOMETRY_0_DISPLAY_LIST, vram: 0x02008B40, align: 8, subalign: 8, exclusive_ram_id: level_night_highway }
@@ -541,6 +630,25 @@ segments:
     exclusive_ram_id: level_grass_valley
 
   - { start: 0xFF308, type: course_display_list, name: GRASS_VALLEY_COURSE_SCENERY_ENTRY_8_DISPLAY_LIST, vram: 0x02000568, align: 8, subalign: 8, exclusive_ram_id: level_grass_valley }
+  - { start: 0xFF778, type: course_display_list, name: GRASS_VALLEY_COURSE_MESH_SECTION_01_DISPLAY_LIST, vram: 0x020009D8, align: 8, subalign: 8, exclusive_ram_id: level_grass_valley }
+  - { start: 0xFFDE0, type: course_display_list, name: GRASS_VALLEY_COURSE_MESH_SECTION_02_DISPLAY_LIST, vram: 0x02001040, align: 8, subalign: 8, exclusive_ram_id: level_grass_valley }
+  - { start: 0x100528, type: course_display_list, name: GRASS_VALLEY_COURSE_MESH_SECTION_03_DISPLAY_LIST, vram: 0x02001788, align: 8, subalign: 8, exclusive_ram_id: level_grass_valley }
+  - { start: 0x100F38, type: course_display_list, name: GRASS_VALLEY_COURSE_MESH_SECTION_04_DISPLAY_LIST, vram: 0x02002198, align: 8, subalign: 8, exclusive_ram_id: level_grass_valley }
+  - { start: 0x101B98, type: course_display_list, name: GRASS_VALLEY_COURSE_MESH_SECTION_05_DISPLAY_LIST, vram: 0x02002DF8, align: 8, subalign: 8, exclusive_ram_id: level_grass_valley }
+  - { start: 0x102828, type: course_display_list, name: GRASS_VALLEY_COURSE_MESH_SECTION_06_DISPLAY_LIST, vram: 0x02003A88, align: 8, subalign: 8, exclusive_ram_id: level_grass_valley }
+  - { start: 0x103168, type: course_display_list, name: GRASS_VALLEY_COURSE_MESH_SECTION_07_DISPLAY_LIST, vram: 0x020043C8, align: 8, subalign: 8, exclusive_ram_id: level_grass_valley }
+  - { start: 0x104028, type: course_display_list, name: GRASS_VALLEY_COURSE_MESH_SECTION_08_DISPLAY_LIST, vram: 0x02005288, align: 8, subalign: 8, exclusive_ram_id: level_grass_valley }
+  - { start: 0x1046C0, type: course_display_list, name: GRASS_VALLEY_COURSE_MESH_SECTION_09_DISPLAY_LIST, vram: 0x02005920, align: 8, subalign: 8, exclusive_ram_id: level_grass_valley }
+  - { start: 0x1050F8, type: course_display_list, name: GRASS_VALLEY_COURSE_MESH_SECTION_10_DISPLAY_LIST, vram: 0x02006358, align: 8, subalign: 8, exclusive_ram_id: level_grass_valley }
+  - { start: 0x1061A0, type: course_display_list, name: GRASS_VALLEY_COURSE_MESH_SECTION_11_DISPLAY_LIST, vram: 0x02007400, align: 8, subalign: 8, exclusive_ram_id: level_grass_valley }
+  - { start: 0x106FC0, type: course_display_list, name: GRASS_VALLEY_COURSE_MESH_SECTION_12_DISPLAY_LIST, vram: 0x02008220, align: 8, subalign: 8, exclusive_ram_id: level_grass_valley }
+  - { start: 0x107AA8, type: course_display_list, name: GRASS_VALLEY_COURSE_MESH_SECTION_13_DISPLAY_LIST, vram: 0x02008D08, align: 8, subalign: 8, exclusive_ram_id: level_grass_valley }
+  - { start: 0x1084B0, type: course_display_list, name: GRASS_VALLEY_COURSE_MESH_SECTION_14_DISPLAY_LIST, vram: 0x02009710, align: 8, subalign: 8, exclusive_ram_id: level_grass_valley }
+  - { start: 0x108828, type: course_display_list, name: GRASS_VALLEY_COURSE_MESH_SECTION_15_DISPLAY_LIST, vram: 0x02009A88, align: 8, subalign: 8, exclusive_ram_id: level_grass_valley }
+  - { start: 0x1093B8, type: course_display_list, name: GRASS_VALLEY_COURSE_MESH_SECTION_16_DISPLAY_LIST, vram: 0x0200A618, align: 8, subalign: 8, exclusive_ram_id: level_grass_valley }
+  - { start: 0x109928, type: course_display_list, name: GRASS_VALLEY_COURSE_MESH_SECTION_17_DISPLAY_LIST, vram: 0x0200AB88, align: 8, subalign: 8, exclusive_ram_id: level_grass_valley }
+  - { start: 0x109C30, type: course_display_list, name: GRASS_VALLEY_COURSE_MESH_SECTION_18_DISPLAY_LIST, vram: 0x0200AE90, align: 8, subalign: 8, exclusive_ram_id: level_grass_valley }
+  - { start: 0x109E10, type: course_display_list, name: GRASS_VALLEY_COURSE_MESH_SECTION_19_DISPLAY_LIST, vram: 0x0200B070, align: 8, subalign: 8, exclusive_ram_id: level_grass_valley }
   - { start: 0x10A1A0, type: course_display_list, name: GRASS_VALLEY_COURSE_DISPLAY_LIST, vram: 0x0200B400, align: 8, subalign: 8, exclusive_ram_id: level_grass_valley }
   - { start: 0x10A280, type: course_display_list, name: GRASS_VALLEY_COURSE_BACKDROP_DISPLAY_LIST, vram: 0x0200B4E0, align: 8, subalign: 8, exclusive_ram_id: level_grass_valley }
   - { start: 0x10A490, type: course_display_list, name: GRASS_VALLEY_COURSE_RANK_MODEL_LAPS_REMAINING_DISPLAY_LIST, vram: 0x0200B6F0, align: 8, subalign: 8, exclusive_ram_id: level_grass_valley }
@@ -554,9 +662,63 @@ segments:
     subalign: 8
     exclusive_ram_id: level_dizzy_land
 
+  - { start: 0x10AF70, type: course_display_list, name: DIZZY_LAND_COURSE_MESH_SECTION_01_DISPLAY_LIST, vram: 0x020004C0, align: 8, subalign: 8, exclusive_ram_id: level_dizzy_land }
   - { start: 0x10B018, type: course_display_list, name: DIZZY_LAND_COURSE_SCENERY_ENTRY_8_DISPLAY_LIST, vram: 0x02000568, align: 8, subalign: 8, exclusive_ram_id: level_dizzy_land }
+  - { start: 0x10B328, type: course_display_list, name: DIZZY_LAND_COURSE_MESH_SECTION_02_DISPLAY_LIST, vram: 0x02000878, align: 8, subalign: 8, exclusive_ram_id: level_dizzy_land }
+  - { start: 0x10B8D0, type: course_display_list, name: DIZZY_LAND_COURSE_MESH_SECTION_03_DISPLAY_LIST, vram: 0x02000E20, align: 8, subalign: 8, exclusive_ram_id: level_dizzy_land }
+  - { start: 0x10BB00, type: course_display_list, name: DIZZY_LAND_COURSE_MESH_SECTION_04_DISPLAY_LIST, vram: 0x02001050, align: 8, subalign: 8, exclusive_ram_id: level_dizzy_land }
+  - { start: 0x10BD18, type: course_display_list, name: DIZZY_LAND_COURSE_MESH_SECTION_05_DISPLAY_LIST, vram: 0x02001268, align: 8, subalign: 8, exclusive_ram_id: level_dizzy_land }
   - { start: 0x10BE00, type: course_display_list, name: DIZZY_LAND_COURSE_SCENERY_ENTRY_11_DISPLAY_LIST, vram: 0x02001350, align: 8, subalign: 8, exclusive_ram_id: level_dizzy_land }
+  - { start: 0x10C048, type: course_display_list, name: DIZZY_LAND_COURSE_MESH_SECTION_06_DISPLAY_LIST, vram: 0x02001598, align: 8, subalign: 8, exclusive_ram_id: level_dizzy_land }
+  - { start: 0x10C328, type: course_display_list, name: DIZZY_LAND_COURSE_MESH_SECTION_07_DISPLAY_LIST, vram: 0x02001878, align: 8, subalign: 8, exclusive_ram_id: level_dizzy_land }
   - { start: 0x10C7B0, type: course_display_list, name: DIZZY_LAND_COURSE_SCENERY_ENTRY_18_DISPLAY_LIST, vram: 0x02001D00, align: 8, subalign: 8, exclusive_ram_id: level_dizzy_land }
+  - { start: 0x10C9F0, type: course_display_list, name: DIZZY_LAND_COURSE_MESH_SECTION_08_DISPLAY_LIST, vram: 0x02001F40, align: 8, subalign: 8, exclusive_ram_id: level_dizzy_land }
+  - { start: 0x10CBC0, type: course_display_list, name: DIZZY_LAND_COURSE_MESH_SECTION_09_DISPLAY_LIST, vram: 0x02002110, align: 8, subalign: 8, exclusive_ram_id: level_dizzy_land }
+  - { start: 0x10D1D0, type: course_display_list, name: DIZZY_LAND_COURSE_MESH_SECTION_10_DISPLAY_LIST, vram: 0x02002720, align: 8, subalign: 8, exclusive_ram_id: level_dizzy_land }
+  - { start: 0x10D3B0, type: course_display_list, name: DIZZY_LAND_COURSE_MESH_SECTION_11_DISPLAY_LIST, vram: 0x02002900, align: 8, subalign: 8, exclusive_ram_id: level_dizzy_land }
+  - { start: 0x10D5C0, type: course_display_list, name: DIZZY_LAND_COURSE_MESH_SECTION_12_DISPLAY_LIST, vram: 0x02002B10, align: 8, subalign: 8, exclusive_ram_id: level_dizzy_land }
+  - { start: 0x10D928, type: course_display_list, name: DIZZY_LAND_COURSE_MESH_SECTION_13_DISPLAY_LIST, vram: 0x02002E78, align: 8, subalign: 8, exclusive_ram_id: level_dizzy_land }
+  - { start: 0x10DC90, type: course_display_list, name: DIZZY_LAND_COURSE_MESH_SECTION_14_DISPLAY_LIST, vram: 0x020031E0, align: 8, subalign: 8, exclusive_ram_id: level_dizzy_land }
+  - { start: 0x10E138, type: course_display_list, name: DIZZY_LAND_COURSE_MESH_SECTION_15_DISPLAY_LIST, vram: 0x02003688, align: 8, subalign: 8, exclusive_ram_id: level_dizzy_land }
+  - { start: 0x10E5C0, type: course_display_list, name: DIZZY_LAND_COURSE_MESH_SECTION_16_DISPLAY_LIST, vram: 0x02003B10, align: 8, subalign: 8, exclusive_ram_id: level_dizzy_land }
+  - { start: 0x10E688, type: course_display_list, name: DIZZY_LAND_COURSE_MESH_SECTION_17_DISPLAY_LIST, vram: 0x02003BD8, align: 8, subalign: 8, exclusive_ram_id: level_dizzy_land }
+  - { start: 0x10EB80, type: course_display_list, name: DIZZY_LAND_COURSE_MESH_SECTION_18_DISPLAY_LIST, vram: 0x020040D0, align: 8, subalign: 8, exclusive_ram_id: level_dizzy_land }
+  - { start: 0x10EF70, type: course_display_list, name: DIZZY_LAND_COURSE_MESH_SECTION_19_DISPLAY_LIST, vram: 0x020044C0, align: 8, subalign: 8, exclusive_ram_id: level_dizzy_land }
+  - { start: 0x10F020, type: course_display_list, name: DIZZY_LAND_COURSE_MESH_SECTION_20_DISPLAY_LIST, vram: 0x02004570, align: 8, subalign: 8, exclusive_ram_id: level_dizzy_land }
+  - { start: 0x10F720, type: course_display_list, name: DIZZY_LAND_COURSE_MESH_SECTION_21_DISPLAY_LIST, vram: 0x02004C70, align: 8, subalign: 8, exclusive_ram_id: level_dizzy_land }
+  - { start: 0x10F848, type: course_display_list, name: DIZZY_LAND_COURSE_MESH_SECTION_22_DISPLAY_LIST, vram: 0x02004D98, align: 8, subalign: 8, exclusive_ram_id: level_dizzy_land }
+  - { start: 0x10FCC8, type: course_display_list, name: DIZZY_LAND_COURSE_MESH_SECTION_23_DISPLAY_LIST, vram: 0x02005218, align: 8, subalign: 8, exclusive_ram_id: level_dizzy_land }
+  - { start: 0x110130, type: course_display_list, name: DIZZY_LAND_COURSE_MESH_SECTION_24_DISPLAY_LIST, vram: 0x02005680, align: 8, subalign: 8, exclusive_ram_id: level_dizzy_land }
+  - { start: 0x110400, type: course_display_list, name: DIZZY_LAND_COURSE_MESH_SECTION_25_DISPLAY_LIST, vram: 0x02005950, align: 8, subalign: 8, exclusive_ram_id: level_dizzy_land }
+  - { start: 0x1106C8, type: course_display_list, name: DIZZY_LAND_COURSE_MESH_SECTION_26_DISPLAY_LIST, vram: 0x02005C18, align: 8, subalign: 8, exclusive_ram_id: level_dizzy_land }
+  - { start: 0x1108A8, type: course_display_list, name: DIZZY_LAND_COURSE_MESH_SECTION_27_DISPLAY_LIST, vram: 0x02005DF8, align: 8, subalign: 8, exclusive_ram_id: level_dizzy_land }
+  - { start: 0x110C70, type: course_display_list, name: DIZZY_LAND_COURSE_MESH_SECTION_28_DISPLAY_LIST, vram: 0x020061C0, align: 8, subalign: 8, exclusive_ram_id: level_dizzy_land }
+  - { start: 0x1110F8, type: course_display_list, name: DIZZY_LAND_COURSE_MESH_SECTION_29_DISPLAY_LIST, vram: 0x02006648, align: 8, subalign: 8, exclusive_ram_id: level_dizzy_land }
+  - { start: 0x111448, type: course_display_list, name: DIZZY_LAND_COURSE_MESH_SECTION_30_DISPLAY_LIST, vram: 0x02006998, align: 8, subalign: 8, exclusive_ram_id: level_dizzy_land }
+  - { start: 0x111560, type: course_display_list, name: DIZZY_LAND_COURSE_MESH_SECTION_31_DISPLAY_LIST, vram: 0x02006AB0, align: 8, subalign: 8, exclusive_ram_id: level_dizzy_land }
+  - { start: 0x111780, type: course_display_list, name: DIZZY_LAND_COURSE_MESH_SECTION_32_DISPLAY_LIST, vram: 0x02006CD0, align: 8, subalign: 8, exclusive_ram_id: level_dizzy_land }
+  - { start: 0x111AC8, type: course_display_list, name: DIZZY_LAND_COURSE_MESH_SECTION_33_DISPLAY_LIST, vram: 0x02007018, align: 8, subalign: 8, exclusive_ram_id: level_dizzy_land }
+  - { start: 0x111F28, type: course_display_list, name: DIZZY_LAND_COURSE_MESH_SECTION_34_DISPLAY_LIST, vram: 0x02007478, align: 8, subalign: 8, exclusive_ram_id: level_dizzy_land }
+  - { start: 0x112078, type: course_display_list, name: DIZZY_LAND_COURSE_MESH_SECTION_35_DISPLAY_LIST, vram: 0x020075C8, align: 8, subalign: 8, exclusive_ram_id: level_dizzy_land }
+  - { start: 0x1122E0, type: course_display_list, name: DIZZY_LAND_COURSE_MESH_SECTION_36_DISPLAY_LIST, vram: 0x02007830, align: 8, subalign: 8, exclusive_ram_id: level_dizzy_land }
+  - { start: 0x1124F0, type: course_display_list, name: DIZZY_LAND_COURSE_MESH_SECTION_37_DISPLAY_LIST, vram: 0x02007A40, align: 8, subalign: 8, exclusive_ram_id: level_dizzy_land }
+  - { start: 0x112830, type: course_display_list, name: DIZZY_LAND_COURSE_MESH_SECTION_38_DISPLAY_LIST, vram: 0x02007D80, align: 8, subalign: 8, exclusive_ram_id: level_dizzy_land }
+  - { start: 0x112B30, type: course_display_list, name: DIZZY_LAND_COURSE_MESH_SECTION_39_DISPLAY_LIST, vram: 0x02008080, align: 8, subalign: 8, exclusive_ram_id: level_dizzy_land }
+  - { start: 0x112F28, type: course_display_list, name: DIZZY_LAND_COURSE_MESH_SECTION_40_DISPLAY_LIST, vram: 0x02008478, align: 8, subalign: 8, exclusive_ram_id: level_dizzy_land }
+  - { start: 0x1131E8, type: course_display_list, name: DIZZY_LAND_COURSE_MESH_SECTION_41_DISPLAY_LIST, vram: 0x02008738, align: 8, subalign: 8, exclusive_ram_id: level_dizzy_land }
+  - { start: 0x113458, type: course_display_list, name: DIZZY_LAND_COURSE_MESH_SECTION_42_DISPLAY_LIST, vram: 0x020089A8, align: 8, subalign: 8, exclusive_ram_id: level_dizzy_land }
+  - { start: 0x113620, type: course_display_list, name: DIZZY_LAND_COURSE_MESH_SECTION_43_DISPLAY_LIST, vram: 0x02008B70, align: 8, subalign: 8, exclusive_ram_id: level_dizzy_land }
+  - { start: 0x113E70, type: course_display_list, name: DIZZY_LAND_COURSE_MESH_SECTION_44_DISPLAY_LIST, vram: 0x020093C0, align: 8, subalign: 8, exclusive_ram_id: level_dizzy_land }
+  - { start: 0x114290, type: course_display_list, name: DIZZY_LAND_COURSE_MESH_SECTION_45_DISPLAY_LIST, vram: 0x020097E0, align: 8, subalign: 8, exclusive_ram_id: level_dizzy_land }
+  - { start: 0x1145B0, type: course_display_list, name: DIZZY_LAND_COURSE_MESH_SECTION_46_DISPLAY_LIST, vram: 0x02009B00, align: 8, subalign: 8, exclusive_ram_id: level_dizzy_land }
+  - { start: 0x114778, type: course_display_list, name: DIZZY_LAND_COURSE_MESH_SECTION_47_DISPLAY_LIST, vram: 0x02009CC8, align: 8, subalign: 8, exclusive_ram_id: level_dizzy_land }
+  - { start: 0x114AF0, type: course_display_list, name: DIZZY_LAND_COURSE_MESH_SECTION_48_DISPLAY_LIST, vram: 0x0200A040, align: 8, subalign: 8, exclusive_ram_id: level_dizzy_land }
+  - { start: 0x115008, type: course_display_list, name: DIZZY_LAND_COURSE_MESH_SECTION_49_DISPLAY_LIST, vram: 0x0200A558, align: 8, subalign: 8, exclusive_ram_id: level_dizzy_land }
+  - { start: 0x115A60, type: course_display_list, name: DIZZY_LAND_COURSE_MESH_SECTION_50_DISPLAY_LIST, vram: 0x0200AFB0, align: 8, subalign: 8, exclusive_ram_id: level_dizzy_land }
+  - { start: 0x115B38, type: course_display_list, name: DIZZY_LAND_COURSE_MESH_SECTION_51_DISPLAY_LIST, vram: 0x0200B088, align: 8, subalign: 8, exclusive_ram_id: level_dizzy_land }
+  - { start: 0x115FF8, type: course_display_list, name: DIZZY_LAND_COURSE_MESH_SECTION_52_DISPLAY_LIST, vram: 0x0200B548, align: 8, subalign: 8, exclusive_ram_id: level_dizzy_land }
+  - { start: 0x116380, type: course_display_list, name: DIZZY_LAND_COURSE_MESH_SECTION_53_DISPLAY_LIST, vram: 0x0200B8D0, align: 8, subalign: 8, exclusive_ram_id: level_dizzy_land }
+  - { start: 0x116440, type: course_display_list, name: DIZZY_LAND_COURSE_MESH_SECTION_54_DISPLAY_LIST, vram: 0x0200B990, align: 8, subalign: 8, exclusive_ram_id: level_dizzy_land }
   - { start: 0x1167F8, type: course_display_list, name: DIZZY_LAND_COURSE_DISPLAY_LIST, vram: 0x0200BD48, align: 8, subalign: 8, exclusive_ram_id: level_dizzy_land }
   - { start: 0x1169F0, type: course_display_list, name: DIZZY_LAND_COURSE_BACKDROP_DISPLAY_LIST, vram: 0x0200BF40, align: 8, subalign: 8, exclusive_ram_id: level_dizzy_land }
   - { start: 0x116C78, type: course_display_list, name: DIZZY_LAND_TRIPLE_PARTICLE_CENTER_DISPLAY_LIST, vram: 0x0200C1C8, align: 8, subalign: 8, exclusive_ram_id: level_dizzy_land }
@@ -586,7 +748,57 @@ segments:
     subalign: 8
     exclusive_ram_id: level_quicksand_valley
 
+  - { start: 0x118AB0, type: course_display_list, name: QUICKSAND_VALLEY_COURSE_MESH_SECTION_01_DISPLAY_LIST, vram: 0x02000440, align: 8, subalign: 8, exclusive_ram_id: level_quicksand_valley }
   - { start: 0x118BD8, type: course_display_list, name: QUICKSAND_VALLEY_COURSE_SCENERY_ENTRY_8_DISPLAY_LIST, vram: 0x02000568, align: 8, subalign: 8, exclusive_ram_id: level_quicksand_valley }
+  - { start: 0x119410, type: course_display_list, name: QUICKSAND_VALLEY_COURSE_MESH_SECTION_02_DISPLAY_LIST, vram: 0x02000DA0, align: 8, subalign: 8, exclusive_ram_id: level_quicksand_valley }
+  - { start: 0x119650, type: course_display_list, name: QUICKSAND_VALLEY_COURSE_MESH_SECTION_03_DISPLAY_LIST, vram: 0x02000FE0, align: 8, subalign: 8, exclusive_ram_id: level_quicksand_valley }
+  - { start: 0x119E58, type: course_display_list, name: QUICKSAND_VALLEY_COURSE_MESH_SECTION_04_DISPLAY_LIST, vram: 0x020017E8, align: 8, subalign: 8, exclusive_ram_id: level_quicksand_valley }
+  - { start: 0x11A1C8, type: course_display_list, name: QUICKSAND_VALLEY_COURSE_MESH_SECTION_05_DISPLAY_LIST, vram: 0x02001B58, align: 8, subalign: 8, exclusive_ram_id: level_quicksand_valley }
+  - { start: 0x11A458, type: course_display_list, name: QUICKSAND_VALLEY_COURSE_MESH_SECTION_06_DISPLAY_LIST, vram: 0x02001DE8, align: 8, subalign: 8, exclusive_ram_id: level_quicksand_valley }
+  - { start: 0x11A528, type: course_display_list, name: QUICKSAND_VALLEY_COURSE_MESH_SECTION_07_DISPLAY_LIST, vram: 0x02001EB8, align: 8, subalign: 8, exclusive_ram_id: level_quicksand_valley }
+  - { start: 0x11A9D8, type: course_display_list, name: QUICKSAND_VALLEY_COURSE_MESH_SECTION_08_DISPLAY_LIST, vram: 0x02002368, align: 8, subalign: 8, exclusive_ram_id: level_quicksand_valley }
+  - { start: 0x11AFC8, type: course_display_list, name: QUICKSAND_VALLEY_COURSE_MESH_SECTION_09_DISPLAY_LIST, vram: 0x02002958, align: 8, subalign: 8, exclusive_ram_id: level_quicksand_valley }
+  - { start: 0x11B710, type: course_display_list, name: QUICKSAND_VALLEY_COURSE_MESH_SECTION_10_DISPLAY_LIST, vram: 0x020030A0, align: 8, subalign: 8, exclusive_ram_id: level_quicksand_valley }
+  - { start: 0x11C0F0, type: course_display_list, name: QUICKSAND_VALLEY_COURSE_MESH_SECTION_11_DISPLAY_LIST, vram: 0x02003A80, align: 8, subalign: 8, exclusive_ram_id: level_quicksand_valley }
+  - { start: 0x11C870, type: course_display_list, name: QUICKSAND_VALLEY_COURSE_MESH_SECTION_12_DISPLAY_LIST, vram: 0x02004200, align: 8, subalign: 8, exclusive_ram_id: level_quicksand_valley }
+  - { start: 0x11CEB0, type: course_display_list, name: QUICKSAND_VALLEY_COURSE_MESH_SECTION_13_DISPLAY_LIST, vram: 0x02004840, align: 8, subalign: 8, exclusive_ram_id: level_quicksand_valley }
+  - { start: 0x11D3C8, type: course_display_list, name: QUICKSAND_VALLEY_COURSE_MESH_SECTION_14_DISPLAY_LIST, vram: 0x02004D58, align: 8, subalign: 8, exclusive_ram_id: level_quicksand_valley }
+  - { start: 0x11DD60, type: course_display_list, name: QUICKSAND_VALLEY_COURSE_MESH_SECTION_15_DISPLAY_LIST, vram: 0x020056F0, align: 8, subalign: 8, exclusive_ram_id: level_quicksand_valley }
+  - { start: 0x11E1B0, type: course_display_list, name: QUICKSAND_VALLEY_COURSE_MESH_SECTION_16_DISPLAY_LIST, vram: 0x02005B40, align: 8, subalign: 8, exclusive_ram_id: level_quicksand_valley }
+  - { start: 0x11E790, type: course_display_list, name: QUICKSAND_VALLEY_COURSE_MESH_SECTION_17_DISPLAY_LIST, vram: 0x02006120, align: 8, subalign: 8, exclusive_ram_id: level_quicksand_valley }
+  - { start: 0x11E9E0, type: course_display_list, name: QUICKSAND_VALLEY_COURSE_MESH_SECTION_18_DISPLAY_LIST, vram: 0x02006370, align: 8, subalign: 8, exclusive_ram_id: level_quicksand_valley }
+  - { start: 0x11F2D0, type: course_display_list, name: QUICKSAND_VALLEY_COURSE_MESH_SECTION_19_DISPLAY_LIST, vram: 0x02006C60, align: 8, subalign: 8, exclusive_ram_id: level_quicksand_valley }
+  - { start: 0x11F420, type: course_display_list, name: QUICKSAND_VALLEY_COURSE_MESH_SECTION_20_DISPLAY_LIST, vram: 0x02006DB0, align: 8, subalign: 8, exclusive_ram_id: level_quicksand_valley }
+  - { start: 0x11F780, type: course_display_list, name: QUICKSAND_VALLEY_COURSE_MESH_SECTION_21_DISPLAY_LIST, vram: 0x02007110, align: 8, subalign: 8, exclusive_ram_id: level_quicksand_valley }
+  - { start: 0x11F878, type: course_display_list, name: QUICKSAND_VALLEY_COURSE_MESH_SECTION_22_DISPLAY_LIST, vram: 0x02007208, align: 8, subalign: 8, exclusive_ram_id: level_quicksand_valley }
+  - { start: 0x11FC18, type: course_display_list, name: QUICKSAND_VALLEY_COURSE_MESH_SECTION_23_DISPLAY_LIST, vram: 0x020075A8, align: 8, subalign: 8, exclusive_ram_id: level_quicksand_valley }
+  - { start: 0x11FF98, type: course_display_list, name: QUICKSAND_VALLEY_COURSE_MESH_SECTION_24_DISPLAY_LIST, vram: 0x02007928, align: 8, subalign: 8, exclusive_ram_id: level_quicksand_valley }
+  - { start: 0x1201F0, type: course_display_list, name: QUICKSAND_VALLEY_COURSE_MESH_SECTION_25_DISPLAY_LIST, vram: 0x02007B80, align: 8, subalign: 8, exclusive_ram_id: level_quicksand_valley }
+  - { start: 0x120400, type: course_display_list, name: QUICKSAND_VALLEY_COURSE_MESH_SECTION_26_DISPLAY_LIST, vram: 0x02007D90, align: 8, subalign: 8, exclusive_ram_id: level_quicksand_valley }
+  - { start: 0x120658, type: course_display_list, name: QUICKSAND_VALLEY_COURSE_MESH_SECTION_27_DISPLAY_LIST, vram: 0x02007FE8, align: 8, subalign: 8, exclusive_ram_id: level_quicksand_valley }
+  - { start: 0x120770, type: course_display_list, name: QUICKSAND_VALLEY_COURSE_MESH_SECTION_28_DISPLAY_LIST, vram: 0x02008100, align: 8, subalign: 8, exclusive_ram_id: level_quicksand_valley }
+  - { start: 0x120888, type: course_display_list, name: QUICKSAND_VALLEY_COURSE_MESH_SECTION_29_DISPLAY_LIST, vram: 0x02008218, align: 8, subalign: 8, exclusive_ram_id: level_quicksand_valley }
+  - { start: 0x120A68, type: course_display_list, name: QUICKSAND_VALLEY_COURSE_MESH_SECTION_30_DISPLAY_LIST, vram: 0x020083F8, align: 8, subalign: 8, exclusive_ram_id: level_quicksand_valley }
+  - { start: 0x120BF8, type: course_display_list, name: QUICKSAND_VALLEY_COURSE_MESH_SECTION_31_DISPLAY_LIST, vram: 0x02008588, align: 8, subalign: 8, exclusive_ram_id: level_quicksand_valley }
+  - { start: 0x120E78, type: course_display_list, name: QUICKSAND_VALLEY_COURSE_MESH_SECTION_32_DISPLAY_LIST, vram: 0x02008808, align: 8, subalign: 8, exclusive_ram_id: level_quicksand_valley }
+  - { start: 0x1210D0, type: course_display_list, name: QUICKSAND_VALLEY_COURSE_MESH_SECTION_33_DISPLAY_LIST, vram: 0x02008A60, align: 8, subalign: 8, exclusive_ram_id: level_quicksand_valley }
+  - { start: 0x121348, type: course_display_list, name: QUICKSAND_VALLEY_COURSE_MESH_SECTION_34_DISPLAY_LIST, vram: 0x02008CD8, align: 8, subalign: 8, exclusive_ram_id: level_quicksand_valley }
+  - { start: 0x1219C0, type: course_display_list, name: QUICKSAND_VALLEY_COURSE_MESH_SECTION_35_DISPLAY_LIST, vram: 0x02009350, align: 8, subalign: 8, exclusive_ram_id: level_quicksand_valley }
+  - { start: 0x121CF8, type: course_display_list, name: QUICKSAND_VALLEY_COURSE_MESH_SECTION_36_DISPLAY_LIST, vram: 0x02009688, align: 8, subalign: 8, exclusive_ram_id: level_quicksand_valley }
+  - { start: 0x121E20, type: course_display_list, name: QUICKSAND_VALLEY_COURSE_MESH_SECTION_37_DISPLAY_LIST, vram: 0x020097B0, align: 8, subalign: 8, exclusive_ram_id: level_quicksand_valley }
+  - { start: 0x121F28, type: course_display_list, name: QUICKSAND_VALLEY_COURSE_MESH_SECTION_38_DISPLAY_LIST, vram: 0x020098B8, align: 8, subalign: 8, exclusive_ram_id: level_quicksand_valley }
+  - { start: 0x121FD8, type: course_display_list, name: QUICKSAND_VALLEY_COURSE_MESH_SECTION_39_DISPLAY_LIST, vram: 0x02009968, align: 8, subalign: 8, exclusive_ram_id: level_quicksand_valley }
+  - { start: 0x1225F8, type: course_display_list, name: QUICKSAND_VALLEY_COURSE_MESH_SECTION_40_DISPLAY_LIST, vram: 0x02009F88, align: 8, subalign: 8, exclusive_ram_id: level_quicksand_valley }
+  - { start: 0x1229F8, type: course_display_list, name: QUICKSAND_VALLEY_COURSE_MESH_SECTION_41_DISPLAY_LIST, vram: 0x0200A388, align: 8, subalign: 8, exclusive_ram_id: level_quicksand_valley }
+  - { start: 0x122AB8, type: course_display_list, name: QUICKSAND_VALLEY_COURSE_MESH_SECTION_42_DISPLAY_LIST, vram: 0x0200A448, align: 8, subalign: 8, exclusive_ram_id: level_quicksand_valley }
+  - { start: 0x122D50, type: course_display_list, name: QUICKSAND_VALLEY_COURSE_MESH_SECTION_43_DISPLAY_LIST, vram: 0x0200A6E0, align: 8, subalign: 8, exclusive_ram_id: level_quicksand_valley }
+  - { start: 0x1233A0, type: course_display_list, name: QUICKSAND_VALLEY_COURSE_MESH_SECTION_44_DISPLAY_LIST, vram: 0x0200AD30, align: 8, subalign: 8, exclusive_ram_id: level_quicksand_valley }
+  - { start: 0x123938, type: course_display_list, name: QUICKSAND_VALLEY_COURSE_MESH_SECTION_45_DISPLAY_LIST, vram: 0x0200B2C8, align: 8, subalign: 8, exclusive_ram_id: level_quicksand_valley }
+  - { start: 0x123B00, type: course_display_list, name: QUICKSAND_VALLEY_COURSE_MESH_SECTION_46_DISPLAY_LIST, vram: 0x0200B490, align: 8, subalign: 8, exclusive_ram_id: level_quicksand_valley }
+  - { start: 0x123C68, type: course_display_list, name: QUICKSAND_VALLEY_COURSE_MESH_SECTION_47_DISPLAY_LIST, vram: 0x0200B5F8, align: 8, subalign: 8, exclusive_ram_id: level_quicksand_valley }
+  - { start: 0x123E58, type: course_display_list, name: QUICKSAND_VALLEY_COURSE_MESH_SECTION_48_DISPLAY_LIST, vram: 0x0200B7E8, align: 8, subalign: 8, exclusive_ram_id: level_quicksand_valley }
+  - { start: 0x124000, type: course_display_list, name: QUICKSAND_VALLEY_COURSE_MESH_SECTION_49_DISPLAY_LIST, vram: 0x0200B990, align: 8, subalign: 8, exclusive_ram_id: level_quicksand_valley }
+  - { start: 0x1242B0, type: course_display_list, name: QUICKSAND_VALLEY_COURSE_MESH_SECTION_50_DISPLAY_LIST, vram: 0x0200BC40, align: 8, subalign: 8, exclusive_ram_id: level_quicksand_valley }
   - { start: 0x1246D0, type: course_display_list, name: QUICKSAND_VALLEY_COURSE_DISPLAY_LIST, vram: 0x0200C060, align: 8, subalign: 8, exclusive_ram_id: level_quicksand_valley }
   - { start: 0x1248A8, type: course_display_list, name: QUICKSAND_VALLEY_COURSE_BACKDROP_DISPLAY_LIST, vram: 0x0200C238, align: 8, subalign: 8, exclusive_ram_id: level_quicksand_valley }
   - { start: 0x124A98, type: course_display_list, name: QUICKSAND_VALLEY_COURSE_AUXILIARY_DISPLAY_LISTS_A, vram: 0x0200C428, align: 8, subalign: 8, exclusive_ram_id: level_quicksand_valley }
@@ -616,6 +828,31 @@ segments:
     exclusive_ram_id: level_silver_mountain
 
   - { start: 0x1261F8, type: course_display_list, name: SILVER_MOUNTAIN_COURSE_SCENERY_ENTRY_8_DISPLAY_LIST, vram: 0x02000568, align: 8, subalign: 8, exclusive_ram_id: level_silver_mountain }
+  - { start: 0x126638, type: course_display_list, name: SILVER_MOUNTAIN_COURSE_MESH_SECTION_01_DISPLAY_LIST, vram: 0x020009A8, align: 8, subalign: 8, exclusive_ram_id: level_silver_mountain }
+  - { start: 0x126F78, type: course_display_list, name: SILVER_MOUNTAIN_COURSE_MESH_SECTION_02_DISPLAY_LIST, vram: 0x020012E8, align: 8, subalign: 8, exclusive_ram_id: level_silver_mountain }
+  - { start: 0x127510, type: course_display_list, name: SILVER_MOUNTAIN_COURSE_MESH_SECTION_03_DISPLAY_LIST, vram: 0x02001880, align: 8, subalign: 8, exclusive_ram_id: level_silver_mountain }
+  - { start: 0x127C18, type: course_display_list, name: SILVER_MOUNTAIN_COURSE_MESH_SECTION_04_DISPLAY_LIST, vram: 0x02001F88, align: 8, subalign: 8, exclusive_ram_id: level_silver_mountain }
+  - { start: 0x128320, type: course_display_list, name: SILVER_MOUNTAIN_COURSE_MESH_SECTION_05_DISPLAY_LIST, vram: 0x02002690, align: 8, subalign: 8, exclusive_ram_id: level_silver_mountain }
+  - { start: 0x1288D8, type: course_display_list, name: SILVER_MOUNTAIN_COURSE_MESH_SECTION_06_DISPLAY_LIST, vram: 0x02002C48, align: 8, subalign: 8, exclusive_ram_id: level_silver_mountain }
+  - { start: 0x129390, type: course_display_list, name: SILVER_MOUNTAIN_COURSE_MESH_SECTION_07_DISPLAY_LIST, vram: 0x02003700, align: 8, subalign: 8, exclusive_ram_id: level_silver_mountain }
+  - { start: 0x1294B8, type: course_display_list, name: SILVER_MOUNTAIN_COURSE_MESH_SECTION_08_DISPLAY_LIST, vram: 0x02003828, align: 8, subalign: 8, exclusive_ram_id: level_silver_mountain }
+  - { start: 0x129F90, type: course_display_list, name: SILVER_MOUNTAIN_COURSE_MESH_SECTION_09_DISPLAY_LIST, vram: 0x02004300, align: 8, subalign: 8, exclusive_ram_id: level_silver_mountain }
+  - { start: 0x12A110, type: course_display_list, name: SILVER_MOUNTAIN_COURSE_MESH_SECTION_10_DISPLAY_LIST, vram: 0x02004480, align: 8, subalign: 8, exclusive_ram_id: level_silver_mountain }
+  - { start: 0x12A728, type: course_display_list, name: SILVER_MOUNTAIN_COURSE_MESH_SECTION_11_DISPLAY_LIST, vram: 0x02004A98, align: 8, subalign: 8, exclusive_ram_id: level_silver_mountain }
+  - { start: 0x12AFF8, type: course_display_list, name: SILVER_MOUNTAIN_COURSE_MESH_SECTION_12_DISPLAY_LIST, vram: 0x02005368, align: 8, subalign: 8, exclusive_ram_id: level_silver_mountain }
+  - { start: 0x12B8C0, type: course_display_list, name: SILVER_MOUNTAIN_COURSE_MESH_SECTION_13_DISPLAY_LIST, vram: 0x02005C30, align: 8, subalign: 8, exclusive_ram_id: level_silver_mountain }
+  - { start: 0x12C1B0, type: course_display_list, name: SILVER_MOUNTAIN_COURSE_MESH_SECTION_14_DISPLAY_LIST, vram: 0x02006520, align: 8, subalign: 8, exclusive_ram_id: level_silver_mountain }
+  - { start: 0x12C548, type: course_display_list, name: SILVER_MOUNTAIN_COURSE_MESH_SECTION_15_DISPLAY_LIST, vram: 0x020068B8, align: 8, subalign: 8, exclusive_ram_id: level_silver_mountain }
+  - { start: 0x12D300, type: course_display_list, name: SILVER_MOUNTAIN_COURSE_MESH_SECTION_16_DISPLAY_LIST, vram: 0x02007670, align: 8, subalign: 8, exclusive_ram_id: level_silver_mountain }
+  - { start: 0x12D830, type: course_display_list, name: SILVER_MOUNTAIN_COURSE_MESH_SECTION_17_DISPLAY_LIST, vram: 0x02007BA0, align: 8, subalign: 8, exclusive_ram_id: level_silver_mountain }
+  - { start: 0x12E2D0, type: course_display_list, name: SILVER_MOUNTAIN_COURSE_MESH_SECTION_18_DISPLAY_LIST, vram: 0x02008640, align: 8, subalign: 8, exclusive_ram_id: level_silver_mountain }
+  - { start: 0x12EA48, type: course_display_list, name: SILVER_MOUNTAIN_COURSE_MESH_SECTION_19_DISPLAY_LIST, vram: 0x02008DB8, align: 8, subalign: 8, exclusive_ram_id: level_silver_mountain }
+  - { start: 0x12F2B0, type: course_display_list, name: SILVER_MOUNTAIN_COURSE_MESH_SECTION_20_DISPLAY_LIST, vram: 0x02009620, align: 8, subalign: 8, exclusive_ram_id: level_silver_mountain }
+  - { start: 0x130100, type: course_display_list, name: SILVER_MOUNTAIN_COURSE_MESH_SECTION_21_DISPLAY_LIST, vram: 0x0200A470, align: 8, subalign: 8, exclusive_ram_id: level_silver_mountain }
+  - { start: 0x130400, type: course_display_list, name: SILVER_MOUNTAIN_COURSE_MESH_SECTION_22_DISPLAY_LIST, vram: 0x0200A770, align: 8, subalign: 8, exclusive_ram_id: level_silver_mountain }
+  - { start: 0x1306A0, type: course_display_list, name: SILVER_MOUNTAIN_COURSE_MESH_SECTION_23_DISPLAY_LIST, vram: 0x0200AA10, align: 8, subalign: 8, exclusive_ram_id: level_silver_mountain }
+  - { start: 0x130DD0, type: course_display_list, name: SILVER_MOUNTAIN_COURSE_MESH_SECTION_24_DISPLAY_LIST, vram: 0x0200B140, align: 8, subalign: 8, exclusive_ram_id: level_silver_mountain }
+  - { start: 0x131138, type: course_display_list, name: SILVER_MOUNTAIN_COURSE_MESH_SECTION_25_DISPLAY_LIST, vram: 0x0200B4A8, align: 8, subalign: 8, exclusive_ram_id: level_silver_mountain }
   - { start: 0x131448, type: course_display_list, name: SILVER_MOUNTAIN_COURSE_DISPLAY_LIST, vram: 0x0200B7B8, align: 8, subalign: 8, exclusive_ram_id: level_silver_mountain }
   - { start: 0x131558, type: course_display_list, name: SILVER_MOUNTAIN_COURSE_BACKDROP_DISPLAY_LIST, vram: 0x0200B8C8, align: 8, subalign: 8, exclusive_ram_id: level_silver_mountain }
   - { start: 0x131768, type: course_display_list, name: SILVER_MOUNTAIN_COURSE_RANK_MODEL_LAPS_REMAINING_DISPLAY_LIST, vram: 0x0200BAD8, align: 8, subalign: 8, exclusive_ram_id: level_silver_mountain }
@@ -629,7 +866,33 @@ segments:
     subalign: 8
     exclusive_ram_id: level_animal_land
 
+  - { start: 0x131F08, type: course_display_list, name: ANIMAL_LAND_COURSE_MESH_SECTION_01_DISPLAY_LIST, vram: 0x02000478, align: 8, subalign: 8, exclusive_ram_id: level_animal_land }
+  - { start: 0x132268, type: course_display_list, name: ANIMAL_LAND_COURSE_MESH_SECTION_02_DISPLAY_LIST, vram: 0x020007D8, align: 8, subalign: 8, exclusive_ram_id: level_animal_land }
+  - { start: 0x1326F8, type: course_display_list, name: ANIMAL_LAND_COURSE_MESH_SECTION_03_DISPLAY_LIST, vram: 0x02000C68, align: 8, subalign: 8, exclusive_ram_id: level_animal_land }
+  - { start: 0x1327C0, type: course_display_list, name: ANIMAL_LAND_COURSE_MESH_SECTION_04_DISPLAY_LIST, vram: 0x02000D30, align: 8, subalign: 8, exclusive_ram_id: level_animal_land }
+  - { start: 0x132950, type: course_display_list, name: ANIMAL_LAND_COURSE_MESH_SECTION_05_DISPLAY_LIST, vram: 0x02000EC0, align: 8, subalign: 8, exclusive_ram_id: level_animal_land }
   - { start: 0x132DE0, type: course_display_list, name: ANIMAL_LAND_COURSE_SCENERY_ENTRY_11_DISPLAY_LIST, vram: 0x02001350, align: 8, subalign: 8, exclusive_ram_id: level_animal_land }
+  - { start: 0x132E10, type: course_display_list, name: ANIMAL_LAND_COURSE_MESH_SECTION_06_DISPLAY_LIST, vram: 0x02001380, align: 8, subalign: 8, exclusive_ram_id: level_animal_land }
+  - { start: 0x133338, type: course_display_list, name: ANIMAL_LAND_COURSE_MESH_SECTION_07_DISPLAY_LIST, vram: 0x020018A8, align: 8, subalign: 8, exclusive_ram_id: level_animal_land }
+  - { start: 0x1336C8, type: course_display_list, name: ANIMAL_LAND_COURSE_MESH_SECTION_08_DISPLAY_LIST, vram: 0x02001C38, align: 8, subalign: 8, exclusive_ram_id: level_animal_land }
+  - { start: 0x133D88, type: course_display_list, name: ANIMAL_LAND_COURSE_MESH_SECTION_09_DISPLAY_LIST, vram: 0x020022F8, align: 8, subalign: 8, exclusive_ram_id: level_animal_land }
+  - { start: 0x133E50, type: course_display_list, name: ANIMAL_LAND_COURSE_MESH_SECTION_10_DISPLAY_LIST, vram: 0x020023C0, align: 8, subalign: 8, exclusive_ram_id: level_animal_land }
+  - { start: 0x1343D8, type: course_display_list, name: ANIMAL_LAND_COURSE_MESH_SECTION_11_DISPLAY_LIST, vram: 0x02002948, align: 8, subalign: 8, exclusive_ram_id: level_animal_land }
+  - { start: 0x134710, type: course_display_list, name: ANIMAL_LAND_COURSE_MESH_SECTION_12_DISPLAY_LIST, vram: 0x02002C80, align: 8, subalign: 8, exclusive_ram_id: level_animal_land }
+  - { start: 0x1349F8, type: course_display_list, name: ANIMAL_LAND_COURSE_MESH_SECTION_13_DISPLAY_LIST, vram: 0x02002F68, align: 8, subalign: 8, exclusive_ram_id: level_animal_land }
+  - { start: 0x134B88, type: course_display_list, name: ANIMAL_LAND_COURSE_MESH_SECTION_14_DISPLAY_LIST, vram: 0x020030F8, align: 8, subalign: 8, exclusive_ram_id: level_animal_land }
+  - { start: 0x1350F0, type: course_display_list, name: ANIMAL_LAND_COURSE_MESH_SECTION_15_DISPLAY_LIST, vram: 0x02003660, align: 8, subalign: 8, exclusive_ram_id: level_animal_land }
+  - { start: 0x1355C0, type: course_display_list, name: ANIMAL_LAND_COURSE_MESH_SECTION_16_DISPLAY_LIST, vram: 0x02003B30, align: 8, subalign: 8, exclusive_ram_id: level_animal_land }
+  - { start: 0x135A88, type: course_display_list, name: ANIMAL_LAND_COURSE_MESH_SECTION_17_DISPLAY_LIST, vram: 0x02003FF8, align: 8, subalign: 8, exclusive_ram_id: level_animal_land }
+  - { start: 0x136078, type: course_display_list, name: ANIMAL_LAND_COURSE_MESH_SECTION_18_DISPLAY_LIST, vram: 0x020045E8, align: 8, subalign: 8, exclusive_ram_id: level_animal_land }
+  - { start: 0x1361C0, type: course_display_list, name: ANIMAL_LAND_COURSE_MESH_SECTION_19_DISPLAY_LIST, vram: 0x02004730, align: 8, subalign: 8, exclusive_ram_id: level_animal_land }
+  - { start: 0x136610, type: course_display_list, name: ANIMAL_LAND_COURSE_MESH_SECTION_20_DISPLAY_LIST, vram: 0x02004B80, align: 8, subalign: 8, exclusive_ram_id: level_animal_land }
+  - { start: 0x136A60, type: course_display_list, name: ANIMAL_LAND_COURSE_MESH_SECTION_21_DISPLAY_LIST, vram: 0x02004FD0, align: 8, subalign: 8, exclusive_ram_id: level_animal_land }
+  - { start: 0x136E70, type: course_display_list, name: ANIMAL_LAND_COURSE_MESH_SECTION_22_DISPLAY_LIST, vram: 0x020053E0, align: 8, subalign: 8, exclusive_ram_id: level_animal_land }
+  - { start: 0x1372C0, type: course_display_list, name: ANIMAL_LAND_COURSE_MESH_SECTION_23_DISPLAY_LIST, vram: 0x02005830, align: 8, subalign: 8, exclusive_ram_id: level_animal_land }
+  - { start: 0x1375C0, type: course_display_list, name: ANIMAL_LAND_COURSE_MESH_SECTION_24_DISPLAY_LIST, vram: 0x02005B30, align: 8, subalign: 8, exclusive_ram_id: level_animal_land }
+  - { start: 0x1378C0, type: course_display_list, name: ANIMAL_LAND_COURSE_MESH_SECTION_25_DISPLAY_LIST, vram: 0x02005E30, align: 8, subalign: 8, exclusive_ram_id: level_animal_land }
+  - { start: 0x137BC0, type: course_display_list, name: ANIMAL_LAND_COURSE_MESH_SECTION_26_DISPLAY_LIST, vram: 0x02006130, align: 8, subalign: 8, exclusive_ram_id: level_animal_land }
   - { start: 0x137EC0, type: course_display_list, name: ANIMAL_LAND_COURSE_DISPLAY_LIST, vram: 0x02006430, align: 8, subalign: 8, exclusive_ram_id: level_animal_land }
   - { start: 0x137FD8, type: course_display_list, name: ANIMAL_LAND_COURSE_BACKDROP_DISPLAY_LIST, vram: 0x02006548, align: 8, subalign: 8, exclusive_ram_id: level_animal_land }
   - { start: 0x1382E8, type: course_display_list, name: ANIMAL_LAND_COURSE_SCROLLING_TEXTURE_GEOMETRY_0_DISPLAY_LIST, vram: 0x02006858, align: 8, subalign: 8, exclusive_ram_id: level_animal_land }
@@ -646,6 +909,23 @@ segments:
     exclusive_ram_id: level_ninja_land
 
   - { start: 0x138A18, type: course_display_list, name: NINJA_LAND_COURSE_SCENERY_ENTRY_8_DISPLAY_LIST, vram: 0x02000568, align: 8, subalign: 8, exclusive_ram_id: level_ninja_land }
+  - { start: 0x138F80, type: course_display_list, name: NINJA_LAND_COURSE_MESH_SECTION_01_DISPLAY_LIST, vram: 0x02000AD0, align: 8, subalign: 8, exclusive_ram_id: level_ninja_land }
+  - { start: 0x139458, type: course_display_list, name: NINJA_LAND_COURSE_MESH_SECTION_02_DISPLAY_LIST, vram: 0x02000FA8, align: 8, subalign: 8, exclusive_ram_id: level_ninja_land }
+  - { start: 0x139D00, type: course_display_list, name: NINJA_LAND_COURSE_MESH_SECTION_03_DISPLAY_LIST, vram: 0x02001850, align: 8, subalign: 8, exclusive_ram_id: level_ninja_land }
+  - { start: 0x13A270, type: course_display_list, name: NINJA_LAND_COURSE_MESH_SECTION_04_DISPLAY_LIST, vram: 0x02001DC0, align: 8, subalign: 8, exclusive_ram_id: level_ninja_land }
+  - { start: 0x13ABF0, type: course_display_list, name: NINJA_LAND_COURSE_MESH_SECTION_05_DISPLAY_LIST, vram: 0x02002740, align: 8, subalign: 8, exclusive_ram_id: level_ninja_land }
+  - { start: 0x13B6C8, type: course_display_list, name: NINJA_LAND_COURSE_MESH_SECTION_06_DISPLAY_LIST, vram: 0x02003218, align: 8, subalign: 8, exclusive_ram_id: level_ninja_land }
+  - { start: 0x13BB78, type: course_display_list, name: NINJA_LAND_COURSE_MESH_SECTION_07_DISPLAY_LIST, vram: 0x020036C8, align: 8, subalign: 8, exclusive_ram_id: level_ninja_land }
+  - { start: 0x13C260, type: course_display_list, name: NINJA_LAND_COURSE_MESH_SECTION_08_DISPLAY_LIST, vram: 0x02003DB0, align: 8, subalign: 8, exclusive_ram_id: level_ninja_land }
+  - { start: 0x13CE48, type: course_display_list, name: NINJA_LAND_COURSE_MESH_SECTION_09_DISPLAY_LIST, vram: 0x02004998, align: 8, subalign: 8, exclusive_ram_id: level_ninja_land }
+  - { start: 0x13D360, type: course_display_list, name: NINJA_LAND_COURSE_MESH_SECTION_10_DISPLAY_LIST, vram: 0x02004EB0, align: 8, subalign: 8, exclusive_ram_id: level_ninja_land }
+  - { start: 0x13D588, type: course_display_list, name: NINJA_LAND_COURSE_MESH_SECTION_11_DISPLAY_LIST, vram: 0x020050D8, align: 8, subalign: 8, exclusive_ram_id: level_ninja_land }
+  - { start: 0x13D668, type: course_display_list, name: NINJA_LAND_COURSE_MESH_SECTION_12_DISPLAY_LIST, vram: 0x020051B8, align: 8, subalign: 8, exclusive_ram_id: level_ninja_land }
+  - { start: 0x13D9A8, type: course_display_list, name: NINJA_LAND_COURSE_MESH_SECTION_13_DISPLAY_LIST, vram: 0x020054F8, align: 8, subalign: 8, exclusive_ram_id: level_ninja_land }
+  - { start: 0x13DC60, type: course_display_list, name: NINJA_LAND_COURSE_MESH_SECTION_14_DISPLAY_LIST, vram: 0x020057B0, align: 8, subalign: 8, exclusive_ram_id: level_ninja_land }
+  - { start: 0x13DFE0, type: course_display_list, name: NINJA_LAND_COURSE_MESH_SECTION_15_DISPLAY_LIST, vram: 0x02005B30, align: 8, subalign: 8, exclusive_ram_id: level_ninja_land }
+  - { start: 0x13E358, type: course_display_list, name: NINJA_LAND_COURSE_MESH_SECTION_16_DISPLAY_LIST, vram: 0x02005EA8, align: 8, subalign: 8, exclusive_ram_id: level_ninja_land }
+  - { start: 0x13E668, type: course_display_list, name: NINJA_LAND_COURSE_MESH_SECTION_17_DISPLAY_LIST, vram: 0x020061B8, align: 8, subalign: 8, exclusive_ram_id: level_ninja_land }
   - { start: 0x13EC60, type: course_display_list, name: NINJA_LAND_COURSE_DISPLAY_LIST, vram: 0x020067B0, align: 8, subalign: 8, exclusive_ram_id: level_ninja_land }
   - { start: 0x13ED30, type: course_display_list, name: NINJA_LAND_COURSE_BACKDROP_DISPLAY_LIST, vram: 0x02006880, align: 8, subalign: 8, exclusive_ram_id: level_ninja_land }
   - { start: 0x13F050, type: course_display_list, name: NINJA_LAND_COURSE_RANK_MODEL_LAPS_REMAINING_DISPLAY_LIST, vram: 0x02006BA0, align: 8, subalign: 8, exclusive_ram_id: level_ninja_land }
@@ -660,11 +940,29 @@ segments:
     exclusive_ram_id: level_rookie_mountain
 
   - { start: 0x13F918, type: course_display_list, name: ROOKIE_MOUNTAIN_COURSE_SCENERY_ENTRY_8_DISPLAY_LIST, vram: 0x02000568, align: 8, subalign: 8, exclusive_ram_id: level_rookie_mountain }
+  - { start: 0x13FEC0, type: course_display_list, name: ROOKIE_MOUNTAIN_COURSE_MESH_SECTION_01_DISPLAY_LIST, vram: 0x02000B10, align: 8, subalign: 8, exclusive_ram_id: level_rookie_mountain }
   - { start: 0x13FEE0, type: course_display_list, name: ROOKIE_MOUNTAIN_COURSE_SCENERY_ENTRY_10_DISPLAY_LIST, vram: 0x02000B30, align: 8, subalign: 8, exclusive_ram_id: level_rookie_mountain }
+  - { start: 0x140250, type: course_display_list, name: ROOKIE_MOUNTAIN_COURSE_MESH_SECTION_02_DISPLAY_LIST, vram: 0x02000EA0, align: 8, subalign: 8, exclusive_ram_id: level_rookie_mountain }
+  - { start: 0x1404B0, type: course_display_list, name: ROOKIE_MOUNTAIN_COURSE_MESH_SECTION_03_DISPLAY_LIST, vram: 0x02001100, align: 8, subalign: 8, exclusive_ram_id: level_rookie_mountain }
+  - { start: 0x140B38, type: course_display_list, name: ROOKIE_MOUNTAIN_COURSE_MESH_SECTION_04_DISPLAY_LIST, vram: 0x02001788, align: 8, subalign: 8, exclusive_ram_id: level_rookie_mountain }
+  - { start: 0x140D38, type: course_display_list, name: ROOKIE_MOUNTAIN_COURSE_MESH_SECTION_05_DISPLAY_LIST, vram: 0x02001988, align: 8, subalign: 8, exclusive_ram_id: level_rookie_mountain }
+  - { start: 0x141028, type: course_display_list, name: ROOKIE_MOUNTAIN_COURSE_MESH_SECTION_06_DISPLAY_LIST, vram: 0x02001C78, align: 8, subalign: 8, exclusive_ram_id: level_rookie_mountain }
+  - { start: 0x141300, type: course_display_list, name: ROOKIE_MOUNTAIN_COURSE_MESH_SECTION_07_DISPLAY_LIST, vram: 0x02001F50, align: 8, subalign: 8, exclusive_ram_id: level_rookie_mountain }
+  - { start: 0x141A00, type: course_display_list, name: ROOKIE_MOUNTAIN_COURSE_MESH_SECTION_08_DISPLAY_LIST, vram: 0x02002650, align: 8, subalign: 8, exclusive_ram_id: level_rookie_mountain }
+  - { start: 0x141DC8, type: course_display_list, name: ROOKIE_MOUNTAIN_COURSE_MESH_SECTION_09_DISPLAY_LIST, vram: 0x02002A18, align: 8, subalign: 8, exclusive_ram_id: level_rookie_mountain }
+  - { start: 0x1427F0, type: course_display_list, name: ROOKIE_MOUNTAIN_COURSE_MESH_SECTION_10_DISPLAY_LIST, vram: 0x02003440, align: 8, subalign: 8, exclusive_ram_id: level_rookie_mountain }
+  - { start: 0x142B20, type: course_display_list, name: ROOKIE_MOUNTAIN_COURSE_MESH_SECTION_11_DISPLAY_LIST, vram: 0x02003770, align: 8, subalign: 8, exclusive_ram_id: level_rookie_mountain }
+  - { start: 0x1436D0, type: course_display_list, name: ROOKIE_MOUNTAIN_COURSE_MESH_SECTION_12_DISPLAY_LIST, vram: 0x02004320, align: 8, subalign: 8, exclusive_ram_id: level_rookie_mountain }
+  - { start: 0x143A90, type: course_display_list, name: ROOKIE_MOUNTAIN_COURSE_MESH_SECTION_13_DISPLAY_LIST, vram: 0x020046E0, align: 8, subalign: 8, exclusive_ram_id: level_rookie_mountain }
+  - { start: 0x143B50, type: course_display_list, name: ROOKIE_MOUNTAIN_COURSE_MESH_SECTION_14_DISPLAY_LIST, vram: 0x020047A0, align: 8, subalign: 8, exclusive_ram_id: level_rookie_mountain }
+  - { start: 0x1440B0, type: course_display_list, name: ROOKIE_MOUNTAIN_COURSE_MESH_SECTION_15_DISPLAY_LIST, vram: 0x02004D00, align: 8, subalign: 8, exclusive_ram_id: level_rookie_mountain }
+  - { start: 0x144A10, type: course_display_list, name: ROOKIE_MOUNTAIN_COURSE_MESH_SECTION_16_DISPLAY_LIST, vram: 0x02005660, align: 8, subalign: 8, exclusive_ram_id: level_rookie_mountain }
+  - { start: 0x144AD0, type: course_display_list, name: ROOKIE_MOUNTAIN_COURSE_MESH_SECTION_17_DISPLAY_LIST, vram: 0x02005720, align: 8, subalign: 8, exclusive_ram_id: level_rookie_mountain }
   - { start: 0x144B88, type: course_display_list, name: ROOKIE_MOUNTAIN_COURSE_DISPLAY_LIST, vram: 0x020057D8, align: 8, subalign: 8, exclusive_ram_id: level_rookie_mountain }
   - { start: 0x144C58, type: course_display_list, name: ROOKIE_MOUNTAIN_COURSE_BACKDROP_DISPLAY_LIST, vram: 0x020058A8, align: 8, subalign: 8, exclusive_ram_id: level_rookie_mountain }
   - { start: 0x144F58, type: course_display_list, name: ROOKIE_MOUNTAIN_COURSE_RANK_MODEL_LAPS_REMAINING_DISPLAY_LIST, vram: 0x02005BA8, align: 8, subalign: 8, exclusive_ram_id: level_rookie_mountain }
   - { start: 0x145168, type: course_display_list, name: ROOKIE_MOUNTAIN_COURSE_RANK_MODEL_FINAL_LAP_DISPLAY_LIST, vram: 0x02005DB8, align: 8, subalign: 8, exclusive_ram_id: level_rookie_mountain }
+
   - type: bin
     start: 0x145380
     name: _145380
