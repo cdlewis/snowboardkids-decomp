@@ -97,10 +97,10 @@ drawAssetTableSpriteWithExplicitPaletteWideIndex(s16 x, s16 y, AssetTable *table
 
 typedef struct {
     s32 displayListAddress;
-    u16 spriteAssetId;
+    u16 textureAssetId;
     u8 useOverlayQueue;
     u8 soundSourceIndex;
-} RaceCourseSlideSpriteInit;
+} RaceCourseScrollingTextureInit;
 
 
 typedef union {
@@ -126,18 +126,18 @@ typedef struct RaceUiTransitionActor {
     /* 0x72 */ u8 matrixDirty;
 } RaceUiTransitionActor;
 
-typedef struct RaceUiSlideActor {
+typedef struct RaceCourseScrollingTextureActor {
     /* 0x00 */ u8 pad0[0x10];
     /* 0x10 */ u16 index;
     /* 0x12 */ u8 pad12[6];
-    /* 0x18 */ void *image;
+    /* 0x18 */ void *texture;
     /* 0x1C */ void *palette;
-    /* 0x20 */ s16 angle;
+    /* 0x20 */ s16 textureScrollOffset;
     /* 0x22 */ u8 pad22[2];
     /* 0x24 */ Gfx *displayList;
     /* 0x28 */ s32 useOverlayQueue;
     /* 0x2C */ s32 soundSourceIndex;
-} RaceUiSlideActor;
+} RaceCourseScrollingTextureActor;
 
 typedef struct RaceUiCounterActor {
     /* 0x00 */ u8 pad0[0x10];
@@ -758,7 +758,7 @@ typedef struct RaceUiCourseSpriteActor {
     /* 0x62 */ u8 matrixDirty;
 } RaceUiCourseSpriteActor;
 
-RaceCourseSlideSpriteInit gRaceCourseSlideSpriteInit[] = {
+RaceCourseScrollingTextureInit gRaceCourseScrollingTextureInit[RACE_COURSE_SCROLLING_TEXTURE_COUNT] = {
     { 0x0200D350, 0x0044, 0x00, 0x00 },
     { 0x0200D5D0, 0x0003, 0x01, 0x00 },
     { 0x02008C18, 0x0003, 0x01, 0x00 },
@@ -1266,7 +1266,7 @@ const char gRaceUiTrickScorePopupBonusFormat[0xC] = "%3d";
 const char gRaceUiRankPrizeCounterFormat[0x4] = "%5d";
 const char gRaceUiCoinCounterFormat[0x4] = "%5d";
 
-void renderRaceCourseSlideSprite(RaceUiSlideActor *arg0) {
+void renderRaceCourseScrollingTexture(RaceCourseScrollingTextureActor *arg0) {
     volatile u8 pad[8];
     Gfx *gfx;
 
@@ -1276,7 +1276,7 @@ void renderRaceCourseSlideSprite(RaceUiSlideActor *arg0) {
     gSPMatrix(gRegionAllocPtr++, &gIdentityMatrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
     gDPLoadTextureBlock_4b(
         gRegionAllocPtr++,
-        arg0->image,
+        arg0->texture,
         G_IM_FMT_CI,
         0x20,
         0x40,
@@ -1290,41 +1290,41 @@ void renderRaceCourseSlideSprite(RaceUiSlideActor *arg0) {
     );
 
     gfx = gRegionAllocPtr++;
-    gfx->words.w0 = ((arg0->angle * 4) & 0xFFF) | 0xF2000000;
-    gfx->words.w1 = ((arg0->angle + 0x40) << 2) & 0xFFF;
+    gfx->words.w0 = ((arg0->textureScrollOffset * 4) & 0xFFF) | 0xF2000000;
+    gfx->words.w1 = ((arg0->textureScrollOffset + 0x40) << 2) & 0xFFF;
 
     gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, arg0->palette);
     gSPDisplayList(gRegionAllocPtr++, arg0->displayList);
 }
 
-void updateRaceCourseSlideSprite(RaceUiSlideActor *arg0) {
+void updateRaceCourseScrollingTexture(RaceCourseScrollingTextureActor *arg0) {
     s32 temp_v0;
 
     temp_v0 = arg0->soundSourceIndex;
-    arg0->angle = arg0->angle + 2;
-    arg0->angle = arg0->angle & 0x3F;
+    arg0->textureScrollOffset = arg0->textureScrollOffset + 2;
+    arg0->textureScrollOffset = arg0->textureScrollOffset & 0x3F;
     if (temp_v0 != 0) {
         enqueuePlayerLoopingPositionalSoundRequest(0xE, &D_800D6030[temp_v0], 0x7F, 0x32, 0.0f, 0xA);
     }
     if (arg0->useOverlayQueue != 0) {
-        addRenderCallback(&D_801248EC, (RenderCallback)renderRaceCourseSlideSprite, arg0);
+        addRenderCallback(&D_801248EC, (RenderCallback)renderRaceCourseScrollingTexture, arg0);
         return;
     }
-    addRenderCallback(&gRaceObjectRenderCallbackList, (RenderCallback)renderRaceCourseSlideSprite, arg0);
+    addRenderCallback(&gRaceObjectRenderCallbackList, (RenderCallback)renderRaceCourseScrollingTexture, arg0);
 }
 
-void initRaceCourseSlideSprite(RaceUiSlideActor *arg0) {
-    arg0->angle = 0;
+void initRaceCourseScrollingTexture(RaceCourseScrollingTextureActor *arg0) {
+    arg0->textureScrollOffset = 0;
     getAssetTableImageAndPalette(
         getRelocatableHeapBlockBase(ASSET_HANDLE(0x1C)),
-        gRaceCourseSlideSpriteInit[arg0->index].spriteAssetId,
-        &arg0->image,
+        gRaceCourseScrollingTextureInit[arg0->index].textureAssetId,
+        &arg0->texture,
         &arg0->palette
     );
-    arg0->displayList = (Gfx *)gRaceCourseSlideSpriteInit[arg0->index].displayListAddress;
-    arg0->useOverlayQueue = gRaceCourseSlideSpriteInit[arg0->index].useOverlayQueue;
-    arg0->soundSourceIndex = gRaceCourseSlideSpriteInit[arg0->index].soundSourceIndex;
-    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceCourseSlideSprite);
+    arg0->displayList = (Gfx *)gRaceCourseScrollingTextureInit[arg0->index].displayListAddress;
+    arg0->useOverlayQueue = gRaceCourseScrollingTextureInit[arg0->index].useOverlayQueue;
+    arg0->soundSourceIndex = gRaceCourseScrollingTextureInit[arg0->index].soundSourceIndex;
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceCourseScrollingTexture);
 }
 
 void drawRaceUiBoardReversePrompt(RaceUiPromptActor *arg0) {

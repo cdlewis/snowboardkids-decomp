@@ -31,7 +31,19 @@ struct RaceUiResultsBannerActor;
 struct RaceUiRisingTrailActor;
 struct RaceUiScaledParticleActor;
 struct RaceUiSingleTrailActor;
-struct RaceUiSlideActor;
+struct RaceCourseScrollingTextureActor;
+
+typedef enum RaceCourseScrollingTextureId {
+    RACE_COURSE_SCROLLING_TEXTURE_QUICKSAND_VALLEY_0,
+    RACE_COURSE_SCROLLING_TEXTURE_QUICKSAND_VALLEY_1,
+    RACE_COURSE_SCROLLING_TEXTURE_NIGHT_HIGHWAY,
+    RACE_COURSE_SCROLLING_TEXTURE_ANIMAL_LAND,
+    RACE_COURSE_SCROLLING_TEXTURE_DIZZY_LAND_0,
+    RACE_COURSE_SCROLLING_TEXTURE_DIZZY_LAND_1,
+    RACE_COURSE_SCROLLING_TEXTURE_SUNSET_ROCK_0,
+    RACE_COURSE_SCROLLING_TEXTURE_SUNSET_ROCK_1,
+    RACE_COURSE_SCROLLING_TEXTURE_COUNT
+} RaceCourseScrollingTextureId;
 struct RaceUiSnowboardTrailActor;
 struct RaceUiSnowboardTrailPlayer;
 struct RaceUiSparkleActor;
@@ -44,9 +56,9 @@ struct RaceUiTransitionActor;
 struct RaceUiTransitionRenderActor;
 struct RaceUiTripleParticleActor;
 
-void renderRaceCourseSlideSprite(struct RaceUiSlideActor *arg0);
-void updateRaceCourseSlideSprite(struct RaceUiSlideActor *arg0);
-void initRaceCourseSlideSprite(struct RaceUiSlideActor *arg0);
+void renderRaceCourseScrollingTexture(struct RaceCourseScrollingTextureActor *arg0);
+void updateRaceCourseScrollingTexture(struct RaceCourseScrollingTextureActor *arg0);
+void initRaceCourseScrollingTexture(struct RaceCourseScrollingTextureActor *arg0);
 void drawRaceUiBoardReversePrompt(struct RaceUiPromptActor *arg0);
 void updateRaceUiBoardReversePrompt(struct RaceUiPromptActor *arg0);
 void initRaceUiBoardReversePrompt(struct RaceUiPromptActor *arg0);

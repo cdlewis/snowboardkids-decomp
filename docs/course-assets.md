@@ -106,11 +106,15 @@ unrelated effects or entry points.
 
 Each two-list pair is now split into `RANK_MODEL_LAPS_REMAINING` and
 `RANK_MODEL_FINAL_LAP` assets, matching the runtime lap-state selection. The
-otherwise anonymous course slide table is named `gRaceCourseSlideSpriteInit`;
-its eight display-list roots are split into two Sunset Rock assets, one Night
-Highway asset, two Dizzy-Land assets, two Quicksand Valley assets, and one
-Animal Land asset. The two display lists rendered by course trigger volumes are
-also named for Sunset Rock and Animal Land.
+otherwise anonymous animated-surface table is named
+`gRaceCourseScrollingTextureInit`; its eight display-list roots are split into
+two Sunset Rock assets, one Night Highway asset, two Dizzy-Land assets, two
+Quicksand Valley assets, and one Animal Land asset. Runtime code loads a 32x64
+CI4 image and palette, advances the render tile's texture coordinate every
+frame, and draws the course geometry. These are therefore documented as
+scrolling course textures rather than UI sprites. `RaceCourseScrollingTextureId`
+also gives every scene-setup index a course-specific name. The two display lists
+rendered by course trigger volumes are named for Sunset Rock and Animal Land.
 
 Course scenery and prop models use a single 26-entry runtime pointer table,
 `gRaceCourseObjectDisplayLists`. It was previously represented in C as two
@@ -119,7 +123,7 @@ now declared at its actual size. Slot 19 is the shared code-resident fog panel.
 Every course-backed slot selected by a placement table has a source-backed
 entry-point boundary:
 
-| Course | Scenery model slots | Other object models |
+| Course | Scenery entry slots | Other object models |
 | --- | --- | --- |
 | Big Snowman | 0, 1, 4, 8, 10, 17, 25 | Shared fog panel |
 | Sunset Rock | 8, 10, 11, 18 | Thrown pickup (slot 12), course prop (slot 20), shared fog panel |
@@ -133,9 +137,13 @@ entry-point boundary:
 | Rookie Mountain | 8, 10 | Shared fog panel |
 
 The ten formerly anonymous scenery placement arrays are correspondingly named
-`g<Course>CourseSceneryEntries`. Names such as `SCENERY_MODEL_8` deliberately
+`g<Course>CourseSceneryEntries`. Names such as `SCENERY_ENTRY_8` deliberately
 retain the stable runtime slot until the depicted object's visual identity is
-confirmed.
+confirmed. These roots are entry points, not necessarily independent models:
+several begin with triangle commands that reuse vertices loaded by an earlier
+part of the same display-list stream, and several slot roots are suffixes of one
+shared command sequence. Calling them `SCENERY_MODEL_<slot>` incorrectly implied
+that every root described a self-contained visual object.
 
 Every confirmed top-level entry point was recursively traced through segment 2
 `G_DL` commands. The extractor also scans every aligned source word for valid,
@@ -264,7 +272,7 @@ uses:
 
 ## Remaining documentation work
 
-- Replace stable scenery-slot and slide-sprite numbers with visual object names
-  as their depicted identities are established.
+- Replace stable scenery-entry numbers with visual object names only where a
+  depicted identity can be established from render or gameplay evidence.
 - Give semantic names to nested display lists that have no direct runtime
   entry point.
