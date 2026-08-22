@@ -123,6 +123,31 @@ six for Dizzy-Land, eleven for Quicksand Valley, and two for Animal Land. This
 replaces the former generic Night Highway, Quicksand Valley, and Animal Land
 `COURSE_AUXILIARY_DISPLAY_LISTS` ranges with their demonstrated rendering role.
 
+Each top-level `COURSE_DISPLAY_LIST` is a fog/render-state wrapper around an
+ordered set of course-mesh sections. All 306 section roots now have explicit
+source boundaries. Nine section-zero roots coincide with their course's
+`COURSE_GRAPHICS` bundle start; the other 297 use
+`<COURSE>_COURSE_MESH_SECTION_<index>_DISPLAY_LIST`, where `index` is the stable
+call order in the top-level wrapper.
+
+| Course | Mesh sections |
+| --- | ---: |
+| Big Snowman | 20 |
+| Sunset Rock | 34 |
+| Night Highway | 37 |
+| Grass Valley | 20 |
+| Dizzy-Land | 55 |
+| Quicksand Valley | 51 |
+| Silver Mountain | 26 |
+| Animal Land | 27 |
+| Ninja Land | 18 |
+| Rookie Mountain | 18 |
+
+These section names are intentionally structural. They establish editable,
+individually previewable assets without claiming that a section corresponds to
+one landmark: a section can contain multiple nearby surfaces, while a single
+landmark can span adjacent sections.
+
 Course scenery and prop models use a single 26-entry runtime pointer table,
 `gRaceCourseObjectDisplayLists`. It was previously represented in C as two
 adjacent arrays even though both renderers indexed across the boundary; it is
@@ -281,6 +306,5 @@ uses:
 
 - Replace stable scenery-entry numbers with visual object names only where a
   depicted identity can be established from render or gameplay evidence.
-- Split and document the large course-mesh section lists called by each
-  top-level `COURSE_DISPLAY_LIST`; their geometry needs rendered or spatial
-  evidence before assigning landmark names.
+- Generate spatial previews for the course-mesh sections and replace structural
+  indices with landmark names only where the geometry establishes one reliably.
