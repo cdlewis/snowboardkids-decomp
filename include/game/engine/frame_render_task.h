@@ -3,6 +3,7 @@
 
 #include "common.h"
 #include "game/audio/audio_engine.h"
+#include "game/engine/runtime_matrix.h"
 
 #define FRAME_RENDER_TASK_COUNT 2
 #define FRAME_RENDER_TASK_STRIDE 0x18620
@@ -10,12 +11,6 @@
 #define FRAME_RENDER_DISPLAY_LIST_SIZE 0x18000
 #define FRAMEBUFFER_PREPARE_TASK_STRIDE 0x860
 #define FRAMEBUFFER_PREPARE_DISPLAY_LIST_SIZE 0x800
-
-typedef union RuntimeMtx {
-    Mtx mtx;
-    u32 words[16];
-    s64 forceStructureAlignment;
-} RuntimeMtx;
 
 typedef struct RuntimeViewportDisplayListData {
     /* 0x000 */ u8 pad0[0x78];
