@@ -799,7 +799,7 @@ void drawTexturedMainMenuSceneModel(MainMenuSceneModel *arg0) {
             matrix = allocFixedTransformMatrix(arg0->displayObjects);
             model = arg0;
             if (matrix != NULL) {
-                drawRacePlayerModelRootPart(matrix, model->textureId, model->paletteId);
+                drawSnowboardModel(matrix, model->textureId, model->paletteId);
             }
 
             gDPPipeSync(gRegionAllocPtr++);

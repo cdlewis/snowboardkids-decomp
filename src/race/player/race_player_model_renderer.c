@@ -15,13 +15,13 @@ Gfx gRacePlayerShadowRenderSetupDisplayList[] = {
     gsSPEndDisplayList(),
 };
 
-Gfx *gRacePlayerModelRootPartDisplayLists[RACE_PLAYER_MODEL_RENDERER_PART_COUNT + 2] = {
+Gfx *gSnowboardDisplayLists[RACE_PLAYER_MODEL_RENDERER_PART_COUNT + 2] = {
     (Gfx *)0x020004B8, (Gfx *)0x02000180, (Gfx *)0x02000828, (Gfx *)0x020004B8, (Gfx *)0x02000180,
     (Gfx *)0x02000828, (Gfx *)0x020004B8, (Gfx *)0x02000180, (Gfx *)0x02000828, (Gfx *)0x02002F68,
     (Gfx *)0x02003408, (Gfx *)0x02003768, (Gfx *)0x02001AE0, (Gfx *)0x02001F80, (Gfx *)0x02002300,
 };
 
-Gfx *gRaceGhostPlayerModelRootPartDisplayLists[RACE_PLAYER_MODEL_RENDERER_PART_COUNT + 2] = {
+Gfx *gGhostSnowboardDisplayLists[RACE_PLAYER_MODEL_RENDERER_PART_COUNT + 2] = {
     (Gfx *)0x02003BC0, (Gfx *)0x02003A48, (Gfx *)0x02003DB0, (Gfx *)0x02003BC0, (Gfx *)0x02003A48,
     (Gfx *)0x02003DB0, (Gfx *)0x02003BC0, (Gfx *)0x02003A48, (Gfx *)0x02003DB0, (Gfx *)0x02004720,
     (Gfx *)0x02004A10, (Gfx *)0x02004B70, (Gfx *)0x02003F68, (Gfx *)0x02004228, (Gfx *)0x020043E8,
@@ -183,7 +183,7 @@ void drawRacePlayerGroundShadow(RacePlayer *player) {
     }
 }
 
-void drawRacePlayerModelRootPart(void *asset, s16 dlIndex, s16 textureIndex) {
+void drawSnowboardModel(void *asset, s16 dlIndex, s16 textureIndex) {
     void *image;
     void *palette;
 
@@ -200,10 +200,10 @@ void drawRacePlayerModelRootPart(void *asset, s16 dlIndex, s16 textureIndex) {
 
     gDPLoadTextureBlock_4b(gRegionAllocPtr++, image, G_IM_FMT_CI, 64, 64, 0, G_TX_CLAMP, G_TX_CLAMP, 0, 0, 0, 0);
     gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, palette);
-    gSPDisplayList(gRegionAllocPtr++, gRacePlayerModelRootPartDisplayLists[dlIndex]);
+    gSPDisplayList(gRegionAllocPtr++, gSnowboardDisplayLists[dlIndex]);
 }
 
-void drawRaceGhostPlayerModelRootPart(void *asset, s16 dlIndex, s16 textureIndex) {
+void drawGhostSnowboardModel(void *asset, s16 dlIndex, s16 textureIndex) {
     void *image;
     void *palette;
 
@@ -219,7 +219,7 @@ void drawRaceGhostPlayerModelRootPart(void *asset, s16 dlIndex, s16 textureIndex
 
     gDPLoadTextureBlock_4b(gRegionAllocPtr++, image, G_IM_FMT_CI, 64, 64, 0, G_TX_CLAMP, G_TX_CLAMP, 0, 0, 0, 0);
     gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, palette);
-    gSPDisplayList(gRegionAllocPtr++, gRaceGhostPlayerModelRootPartDisplayLists[dlIndex]);
+    gSPDisplayList(gRegionAllocPtr++, gGhostSnowboardDisplayLists[dlIndex]);
 }
 
 void drawRacePlayerModel(RacePlayer *player) {
@@ -253,7 +253,7 @@ void drawRacePlayerModel(RacePlayer *player) {
         return;
     }
 
-    drawRacePlayerModelRootPart(drawPlayer->partVtx[0], drawPlayer->texHeaderIndex, drawPlayer->textureVariant);
+    drawSnowboardModel(drawPlayer->partVtx[0], drawPlayer->texHeaderIndex, drawPlayer->textureVariant);
 
     if (drawPlayer->blinkTimer != 0) {
         if (drawPlayer->blinkTimer < 0xA5 && drawPlayer->blinkTimer >= 0x10) {
@@ -338,7 +338,7 @@ void drawRaceGhostPlayerModel(RacePlayer *player) {
     alphaPulse = (alphaPulse * 4) + 0x26;
     gDPSetPrimColor(gRegionAllocPtr++, 0, 0, 0, 0, 0, alphaPulse);
 
-    drawRaceGhostPlayerModelRootPart(player->partVtx[0], player->texHeaderIndex, player->textureVariant);
+    drawGhostSnowboardModel(player->partVtx[0], player->texHeaderIndex, player->textureVariant);
 
     if ((player->flags & RACE_PLAYER_MODEL_RENDERER_FLAG_HIDE_MESHES) == 0) {
         gDPPipeSync(gRegionAllocPtr++);
