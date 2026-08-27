@@ -351,7 +351,7 @@ void drawCourseSelectPreviewModel(CourseSelectCoursePreviewActor *arg0) {
             composeFixedTransforms(&arg0->sourceTransform, &arg0->playerTransforms[var_t0], &sp30);
             arg0->matrix = allocFixedTransformMatrix(&sp30);
             if (arg0->matrix != 0) {
-                drawRacePlayerModelRootPart(arg0->matrix, (s16)sp2F, (s16)sp2E);
+                drawSnowboardModel(arg0->matrix, (s16)sp2F, (s16)sp2E);
             }
         }
     }
@@ -723,7 +723,7 @@ void drawCourseSelectPreviewModelClose(CourseSelectCoursePreviewActor *arg0) {
             composeFixedTransforms(&arg0->sourceTransform, &arg0->playerTransforms[var_t0], &sp30);
             arg0->matrix = allocFixedTransformMatrix(&sp30);
             if (arg0->matrix != 0) {
-                drawRacePlayerModelRootPart(arg0->matrix, (s16)sp2F, (s16)sp2E);
+                drawSnowboardModel(arg0->matrix, (s16)sp2F, (s16)sp2E);
             }
         }
     }

@@ -15,12 +15,12 @@
 
 extern Mtx gRacePlayerShadowMatrixTemplate;
 extern Gfx gRacePlayerShadowRenderSetupDisplayList[];
-extern Gfx *gRacePlayerModelRootPartDisplayLists[RACE_PLAYER_MODEL_RENDERER_PART_COUNT + 2];
-extern Gfx *gRaceGhostPlayerModelRootPartDisplayLists[RACE_PLAYER_MODEL_RENDERER_PART_COUNT + 2];
+extern Gfx *gSnowboardDisplayLists[RACE_PLAYER_MODEL_RENDERER_PART_COUNT + 2];
+extern Gfx *gGhostSnowboardDisplayLists[RACE_PLAYER_MODEL_RENDERER_PART_COUNT + 2];
 
 void drawRacePlayerGroundShadow(RacePlayer *player);
-void drawRacePlayerModelRootPart(void *asset, s16 dlIndex, s16 textureIndex);
-void drawRaceGhostPlayerModelRootPart(void *asset, s16 dlIndex, s16 textureIndex);
+void drawSnowboardModel(void *asset, s16 dlIndex, s16 textureIndex);
+void drawGhostSnowboardModel(void *asset, s16 dlIndex, s16 textureIndex);
 void drawRacePlayerModel(RacePlayer *player);
 void drawRaceGhostPlayerModel(RacePlayer *player);
 
