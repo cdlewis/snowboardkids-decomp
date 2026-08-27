@@ -181,11 +181,11 @@ void initMainMenuModePreviewRace(void) {
     gRacePlayers[2].characterVariant = 0;
     five1 = 5;
     gRacePlayers[3].characterVariant = 0;
-    gRacePlayers->unk12 = 3;
-    gRacePlayers[1].unk12 = five0;
+    gRacePlayers->snowboardTextureIndex = 3;
+    gRacePlayers[1].snowboardTextureIndex = five0;
     player = gRacePlayers;
-    gRacePlayers[2].unk12 = six0;
-    gRacePlayers[3].unk12 = seven0;
+    gRacePlayers[2].snowboardTextureIndex = six0;
+    gRacePlayers[3].snowboardTextureIndex = seven0;
     player->unk17 = 0;
     gRacePlayers[1].unk17 = one1;
     gRacePlayers[2].unk17 = two2;

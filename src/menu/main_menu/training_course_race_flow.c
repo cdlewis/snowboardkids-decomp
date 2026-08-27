@@ -92,10 +92,10 @@ void initTrainingCourseRace(void) {
     gRacePlayers[1].characterVariant = 0;
     gRacePlayers[2].characterVariant = 0;
     gRacePlayers[3].characterVariant = 0;
-    gRacePlayers[0].unk12 = 3;
-    gRacePlayers[1].unk12 = five0;
-    gRacePlayers[2].unk12 = six0;
-    gRacePlayers[3].unk12 = seven0;
+    gRacePlayers[0].snowboardTextureIndex = 3;
+    gRacePlayers[1].snowboardTextureIndex = five0;
+    gRacePlayers[2].snowboardTextureIndex = six0;
+    gRacePlayers[3].snowboardTextureIndex = seven0;
     gRacePlayers[0].unk17 = 0;
     gRacePlayers[1].unk17 = 1;
     gRacePlayers[2].unk17 = two0;

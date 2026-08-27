@@ -86,10 +86,10 @@ void initTitleDemoRaceIntro(void) {
     players[1].characterVariant = six;
     players[2].characterVariant = six;
     players[3].characterVariant = six;
-    players[0].unk12 = one;
-    players[playerOne].unk12 = two;
-    players[2].unk12 = three;
-    players[3].unk12 = four;
+    players[0].snowboardTextureIndex = one;
+    players[playerOne].snowboardTextureIndex = two;
+    players[2].snowboardTextureIndex = three;
+    players[3].snowboardTextureIndex = four;
     players[0].isActive = active;
     players[1].isActive = active;
     players[2].isActive = active;

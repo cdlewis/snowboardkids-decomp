@@ -140,16 +140,16 @@ void drawRacePlayerGroundShadow(RacePlayer *player) {
     s32 i;
 
     if (gRenderMatricesDirty != 0) {
-        player->flags &= ~RACE_PLAYER_MODEL_RENDERER_FLAG_SHADOW_READY;
+        player->stateFlags &= ~RACE_PLAYER_MODEL_RENDERER_FLAG_SHADOW_READY;
         player->shadowVtx = allocMenuRenderScratch(0x40);
         if (player->shadowVtx == NULL) {
             return;
         }
 
         for (i = 0; i < RACE_PLAYER_MODEL_RENDERER_PLAYER_COUNT; i++) {
-            player->shadowVtx[i].v.ob[0] = (player->shadowPoints[i].x - player->shadowPoints[0].x) >> 14;
-            player->shadowVtx[i].v.ob[1] = (player->shadowPoints[i].y - player->shadowPoints[0].y) >> 14;
-            player->shadowVtx[i].v.ob[2] = (player->shadowPoints[i].z - player->shadowPoints[0].z) >> 14;
+            player->shadowVtx[i].v.ob[0] = (player->markerPoints[i].x - player->markerPoints[0].x) >> 14;
+            player->shadowVtx[i].v.ob[1] = (player->markerPoints[i].y - player->markerPoints[0].y) >> 14;
+            player->shadowVtx[i].v.ob[2] = (player->markerPoints[i].z - player->markerPoints[0].z) >> 14;
             player->shadowVtx[i].v.flag = 0;
             player->shadowVtx[i].v.cn[0] = 0;
             player->shadowVtx[i].v.cn[1] = 0;
@@ -165,19 +165,19 @@ void drawRacePlayerGroundShadow(RacePlayer *player) {
         *player->shadowMtx = gRacePlayerShadowMatrixTemplate;
 
         player->shadowMtx->m[1][2] =
-            (player->shadowPoints[0].x & 0xFFFF0000) | (((player->shadowPoints[0].y + 0xA000) >> 16) & 0xFFFF);
-        player->shadowMtx->m[1][3] = (player->shadowPoints[0].z & 0xFFFF0000) | 1;
+            (player->markerPoints[0].x & 0xFFFF0000) | (((player->markerPoints[0].y + 0xA000) >> 16) & 0xFFFF);
+        player->shadowMtx->m[1][3] = (player->markerPoints[0].z & 0xFFFF0000) | 1;
         player->shadowMtx->m[3][2] =
-            ((player->shadowPoints[0].x << 16) & 0xFFFF0000) | ((player->shadowPoints[0].y + 0xA000) & 0xFFFF);
-        player->shadowMtx->m[3][3] = (player->shadowPoints[0].z << 16) & 0xFFFF0000;
-        player->flags |= RACE_PLAYER_MODEL_RENDERER_FLAG_SHADOW_READY;
+            ((player->markerPoints[0].x << 16) & 0xFFFF0000) | ((player->markerPoints[0].y + 0xA000) & 0xFFFF);
+        player->shadowMtx->m[3][3] = (player->markerPoints[0].z << 16) & 0xFFFF0000;
+        player->stateFlags |= RACE_PLAYER_MODEL_RENDERER_FLAG_SHADOW_READY;
     }
 
-    if (isPositionNearCurrentRaceViewportCamera(player->shadowPoints) != 0 &&
-        (player->flags & RACE_PLAYER_MODEL_RENDERER_FLAG_SHADOW_READY) != 0) {
+    if (isPositionNearCurrentRaceViewportCamera(player->markerPoints) != 0 &&
+        (player->stateFlags & RACE_PLAYER_MODEL_RENDERER_FLAG_SHADOW_READY) != 0) {
         gSPDisplayList(gRegionAllocPtr++, gRacePlayerShadowRenderSetupDisplayList);
-        gSPMatrix(gRegionAllocPtr++, (Mtx *)player->shadowMtx, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
-        gSPVertex(gRegionAllocPtr++, (Vtx *)player->shadowVtx, RACE_PLAYER_MODEL_RENDERER_PLAYER_COUNT, 0);
+        gSPMatrix(gRegionAllocPtr++, player->shadowMtx, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+        gSPVertex(gRegionAllocPtr++, player->shadowVtx, RACE_PLAYER_MODEL_RENDERER_PLAYER_COUNT, 0);
         gSP1Quadrangle(gRegionAllocPtr++, 1, 3, 2, 0, 0);
         gSP1Quadrangle(gRegionAllocPtr++, 2, 3, 1, 0, 0);
     }
@@ -224,39 +224,44 @@ void drawGhostSnowboardModel(void *asset, s16 dlIndex, s16 textureIndex) {
 
 void drawRacePlayerModel(RacePlayer *player) {
     RacePlayer *countPlayer;
-    RacePlayer *partVtxPlayer;
+    RacePlayer *partMatrixPlayer;
     Transform3D *partSource;
     RacePlayer *drawPlayer;
     s32 i;
 
     countPlayer = player;
     if (gRenderMatricesDirty != 0) {
-        player->flags |= RACE_PLAYER_MODEL_RENDERER_FLAG_SHADOW;
+        player->stateFlags |= RACE_PLAYER_MODEL_RENDERER_FLAG_SHADOW;
         i = 0;
-        if (player->partCount > 0) {
-            partVtxPlayer = player;
-            partSource = player->partSources;
+        if (player->collisionVolumeCount > 0) {
+            partMatrixPlayer = player;
+            partSource = player->collisionVolumes;
             do {
-                partVtxPlayer->partVtx[0] = allocFixedTransformMatrix(partSource);
-                if (partVtxPlayer->partVtx[0] == NULL) {
-                    player->flags &= ~RACE_PLAYER_MODEL_RENDERER_FLAG_SHADOW;
+                partMatrixPlayer->partMatrices[0] = allocFixedTransformMatrix(partSource);
+                if (partMatrixPlayer->partMatrices[0] == NULL) {
+                    player->stateFlags &= ~RACE_PLAYER_MODEL_RENDERER_FLAG_SHADOW;
                 }
                 i++;
-                partVtxPlayer = (RacePlayer *)((void **)partVtxPlayer + 1);
+                // Advance one matrix slot while retaining the source's matching induction-variable shape.
+                partMatrixPlayer = (RacePlayer *)((Mtx **)partMatrixPlayer + 1);
                 partSource++;
-            } while (i < countPlayer->partCount);
+            } while (i < countPlayer->collisionVolumeCount);
         }
     }
 
     drawPlayer = player;
-    if ((drawPlayer->flags & RACE_PLAYER_MODEL_RENDERER_FLAG_SHADOW) == 0) {
+    if ((drawPlayer->stateFlags & RACE_PLAYER_MODEL_RENDERER_FLAG_SHADOW) == 0) {
         return;
     }
 
-    drawSnowboardModel(drawPlayer->partVtx[0], drawPlayer->texHeaderIndex, drawPlayer->textureVariant);
+    drawSnowboardModel(
+        drawPlayer->partMatrices[0],
+        drawPlayer->characterVariant,
+        drawPlayer->snowboardTextureIndex
+    );
 
-    if (drawPlayer->blinkTimer != 0) {
-        if (drawPlayer->blinkTimer < 0xA5 && drawPlayer->blinkTimer >= 0x10) {
+    if (drawPlayer->actionSoundTimer != 0) {
+        if (drawPlayer->actionSoundTimer < 0xA5 && drawPlayer->actionSoundTimer >= 0x10) {
             return;
         }
         if ((gUiBlinkTimer & 1) != 0) {
@@ -264,43 +269,43 @@ void drawRacePlayerModel(RacePlayer *player) {
         }
     }
 
-    if ((drawPlayer->flags & RACE_PLAYER_MODEL_RENDERER_FLAG_HIDE_MESHES) == 0) {
+    if ((drawPlayer->stateFlags & RACE_PLAYER_MODEL_RENDERER_FLAG_HIDE_MESHES) == 0) {
         gDPPipeSync(gRegionAllocPtr++);
         gSPSegment(gRegionAllocPtr++, 2, getRelocatableHeapBlockBase(gAssetHandles[drawPlayer->playerIndex + 0xE]));
         gSPSegment(gRegionAllocPtr++, 3, getRelocatableHeapBlockBase(gAssetHandles[drawPlayer->playerIndex + 0x12]));
 
-        gSPMatrix(gRegionAllocPtr++, (Mtx *)drawPlayer->partVtx[1], G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
-        gSPDisplayList(gRegionAllocPtr++, gRacePlayerModelPart0DisplayLists[drawPlayer->textureSet]);
-        gSPMatrix(gRegionAllocPtr++, (Mtx *)drawPlayer->partVtx[2], G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
-        gSPDisplayList(gRegionAllocPtr++, gRacePlayerModelPart1DisplayLists[drawPlayer->textureSet]);
-        gSPMatrix(gRegionAllocPtr++, (Mtx *)drawPlayer->partVtx[3], G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
-        gSPDisplayList(gRegionAllocPtr++, gRacePlayerModelPart2DisplayLists[drawPlayer->textureSet]);
-        gSPMatrix(gRegionAllocPtr++, (Mtx *)drawPlayer->partVtx[4], G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
-        gSPDisplayList(gRegionAllocPtr++, gRacePlayerModelPart3DisplayLists[drawPlayer->textureSet]);
-        gSPMatrix(gRegionAllocPtr++, (Mtx *)drawPlayer->partVtx[5], G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
-        gSPDisplayList(gRegionAllocPtr++, gRacePlayerModelPart4DisplayLists[drawPlayer->textureSet]);
-        gSPMatrix(gRegionAllocPtr++, (Mtx *)drawPlayer->partVtx[6], G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
-        gSPDisplayList(gRegionAllocPtr++, gRacePlayerModelPart5DisplayLists[drawPlayer->textureSet]);
-        gSPMatrix(gRegionAllocPtr++, (Mtx *)drawPlayer->partVtx[7], G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
-        gSPDisplayList(gRegionAllocPtr++, gRacePlayerModelPart6DisplayLists[drawPlayer->textureSet]);
-        gSPMatrix(gRegionAllocPtr++, (Mtx *)drawPlayer->partVtx[8], G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
-        gSPDisplayList(gRegionAllocPtr++, gRacePlayerModelPart7DisplayLists[drawPlayer->textureSet]);
-        gSPMatrix(gRegionAllocPtr++, (Mtx *)drawPlayer->partVtx[9], G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
-        gSPDisplayList(gRegionAllocPtr++, gRacePlayerModelPart8DisplayLists[drawPlayer->textureSet]);
-        gSPMatrix(gRegionAllocPtr++, (Mtx *)drawPlayer->partVtx[10], G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
-        gSPDisplayList(gRegionAllocPtr++, gRacePlayerModelPart9DisplayLists[drawPlayer->textureSet]);
-        gSPMatrix(gRegionAllocPtr++, (Mtx *)drawPlayer->partVtx[11], G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
-        gSPDisplayList(gRegionAllocPtr++, gRacePlayerModelPart10DisplayLists[drawPlayer->textureSet]);
-        gSPMatrix(gRegionAllocPtr++, (Mtx *)drawPlayer->partVtx[12], G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
-        gSPDisplayList(gRegionAllocPtr++, gRacePlayerModelPart11DisplayLists[drawPlayer->textureSet]);
-        gSPMatrix(gRegionAllocPtr++, (Mtx *)drawPlayer->partVtx[13], G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
-        gSPDisplayList(gRegionAllocPtr++, gRacePlayerModelPart12DisplayLists[drawPlayer->textureSet]);
+        gSPMatrix(gRegionAllocPtr++, drawPlayer->partMatrices[1], G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+        gSPDisplayList(gRegionAllocPtr++, gRacePlayerModelPart0DisplayLists[drawPlayer->characterId]);
+        gSPMatrix(gRegionAllocPtr++, drawPlayer->partMatrices[2], G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+        gSPDisplayList(gRegionAllocPtr++, gRacePlayerModelPart1DisplayLists[drawPlayer->characterId]);
+        gSPMatrix(gRegionAllocPtr++, drawPlayer->partMatrices[3], G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+        gSPDisplayList(gRegionAllocPtr++, gRacePlayerModelPart2DisplayLists[drawPlayer->characterId]);
+        gSPMatrix(gRegionAllocPtr++, drawPlayer->partMatrices[4], G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+        gSPDisplayList(gRegionAllocPtr++, gRacePlayerModelPart3DisplayLists[drawPlayer->characterId]);
+        gSPMatrix(gRegionAllocPtr++, drawPlayer->partMatrices[5], G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+        gSPDisplayList(gRegionAllocPtr++, gRacePlayerModelPart4DisplayLists[drawPlayer->characterId]);
+        gSPMatrix(gRegionAllocPtr++, drawPlayer->partMatrices[6], G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+        gSPDisplayList(gRegionAllocPtr++, gRacePlayerModelPart5DisplayLists[drawPlayer->characterId]);
+        gSPMatrix(gRegionAllocPtr++, drawPlayer->partMatrices[7], G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+        gSPDisplayList(gRegionAllocPtr++, gRacePlayerModelPart6DisplayLists[drawPlayer->characterId]);
+        gSPMatrix(gRegionAllocPtr++, drawPlayer->partMatrices[8], G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+        gSPDisplayList(gRegionAllocPtr++, gRacePlayerModelPart7DisplayLists[drawPlayer->characterId]);
+        gSPMatrix(gRegionAllocPtr++, drawPlayer->partMatrices[9], G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+        gSPDisplayList(gRegionAllocPtr++, gRacePlayerModelPart8DisplayLists[drawPlayer->characterId]);
+        gSPMatrix(gRegionAllocPtr++, drawPlayer->partMatrices[10], G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+        gSPDisplayList(gRegionAllocPtr++, gRacePlayerModelPart9DisplayLists[drawPlayer->characterId]);
+        gSPMatrix(gRegionAllocPtr++, drawPlayer->partMatrices[11], G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+        gSPDisplayList(gRegionAllocPtr++, gRacePlayerModelPart10DisplayLists[drawPlayer->characterId]);
+        gSPMatrix(gRegionAllocPtr++, drawPlayer->partMatrices[12], G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+        gSPDisplayList(gRegionAllocPtr++, gRacePlayerModelPart11DisplayLists[drawPlayer->characterId]);
+        gSPMatrix(gRegionAllocPtr++, drawPlayer->partMatrices[13], G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+        gSPDisplayList(gRegionAllocPtr++, gRacePlayerModelPart12DisplayLists[drawPlayer->characterId]);
     }
 }
 
 void drawRaceGhostPlayerModel(RacePlayer *player) {
     RacePlayer *countPlayer;
-    RacePlayer *partVtxPlayer;
+    RacePlayer *partMatrixPlayer;
     Transform3D *partSource;
     s32 i;
     s32 alphaPulse;
@@ -308,26 +313,27 @@ void drawRaceGhostPlayerModel(RacePlayer *player) {
 
     countPlayer = player;
     if (gRenderMatricesDirty != 0) {
-        player->flags |= RACE_PLAYER_MODEL_RENDERER_FLAG_SHADOW;
+        player->stateFlags |= RACE_PLAYER_MODEL_RENDERER_FLAG_SHADOW;
         i = 0;
-        if (player->partCount > 0) {
-            partVtxPlayer = player;
-            partSource = player->partSources;
+        if (player->collisionVolumeCount > 0) {
+            partMatrixPlayer = player;
+            partSource = player->collisionVolumes;
             do {
                 // Folded away by IDO, but preserves the target's saved-register allocation.
-                if ((partVtxPlayer && partVtxPlayer) && partVtxPlayer) {}
-                partVtxPlayer->partVtx[0] = allocFixedTransformMatrix(partSource);
-                if (partVtxPlayer->partVtx[0] == NULL) {
-                    player->flags &= ~RACE_PLAYER_MODEL_RENDERER_FLAG_SHADOW;
+                if ((partMatrixPlayer && partMatrixPlayer) && partMatrixPlayer) {}
+                partMatrixPlayer->partMatrices[0] = allocFixedTransformMatrix(partSource);
+                if (partMatrixPlayer->partMatrices[0] == NULL) {
+                    player->stateFlags &= ~RACE_PLAYER_MODEL_RENDERER_FLAG_SHADOW;
                 }
                 i++;
-                partVtxPlayer = (RacePlayer *)((void **)partVtxPlayer + 1);
+                // Advance one matrix slot while retaining the source's matching induction-variable shape.
+                partMatrixPlayer = (RacePlayer *)((Mtx **)partMatrixPlayer + 1);
                 partSource++;
-            } while (i < countPlayer->partCount);
+            } while (i < countPlayer->collisionVolumeCount);
         }
     }
 
-    if ((player->flags & RACE_PLAYER_MODEL_RENDERER_FLAG_SHADOW) == 0) {
+    if ((player->stateFlags & RACE_PLAYER_MODEL_RENDERER_FLAG_SHADOW) == 0) {
         return;
     }
 
@@ -338,38 +344,38 @@ void drawRaceGhostPlayerModel(RacePlayer *player) {
     alphaPulse = (alphaPulse * 4) + 0x26;
     gDPSetPrimColor(gRegionAllocPtr++, 0, 0, 0, 0, 0, alphaPulse);
 
-    drawGhostSnowboardModel(player->partVtx[0], player->texHeaderIndex, player->textureVariant);
+    drawGhostSnowboardModel(player->partMatrices[0], player->characterVariant, player->snowboardTextureIndex);
 
-    if ((player->flags & RACE_PLAYER_MODEL_RENDERER_FLAG_HIDE_MESHES) == 0) {
+    if ((player->stateFlags & RACE_PLAYER_MODEL_RENDERER_FLAG_HIDE_MESHES) == 0) {
         gDPPipeSync(gRegionAllocPtr++);
         gSPSegment(gRegionAllocPtr++, 2, getRelocatableHeapBlockBase(gAssetHandles[player->playerIndex + 0xE]));
         segmentGfx = gRegionAllocPtr++;
         gSPSegment(segmentGfx, 3, getRelocatableHeapBlockBase(gAssetHandles[player->playerIndex + 0x12]));
-        gSPMatrix(gRegionAllocPtr++, (Mtx *)player->partVtx[1], G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
-        gSPDisplayList(gRegionAllocPtr++, gRaceGhostPlayerModelPart0DisplayLists[player->textureSet]);
-        gSPMatrix(gRegionAllocPtr++, (Mtx *)player->partVtx[2], G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
-        gSPDisplayList(gRegionAllocPtr++, gRaceGhostPlayerModelPart1DisplayLists[player->textureSet]);
-        gSPMatrix(gRegionAllocPtr++, (Mtx *)player->partVtx[3], G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
-        gSPDisplayList(gRegionAllocPtr++, gRaceGhostPlayerModelPart2DisplayLists[player->textureSet]);
-        gSPMatrix(gRegionAllocPtr++, (Mtx *)player->partVtx[4], G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
-        gSPDisplayList(gRegionAllocPtr++, gRaceGhostPlayerModelPart3DisplayLists[player->textureSet]);
-        gSPMatrix(gRegionAllocPtr++, (Mtx *)player->partVtx[5], G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
-        gSPDisplayList(gRegionAllocPtr++, gRaceGhostPlayerModelPart4DisplayLists[player->textureSet]);
-        gSPMatrix(gRegionAllocPtr++, (Mtx *)player->partVtx[6], G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
-        gSPDisplayList(gRegionAllocPtr++, gRaceGhostPlayerModelPart5DisplayLists[player->textureSet]);
-        gSPMatrix(gRegionAllocPtr++, (Mtx *)player->partVtx[7], G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
-        gSPDisplayList(gRegionAllocPtr++, gRaceGhostPlayerModelPart6DisplayLists[player->textureSet]);
-        gSPMatrix(gRegionAllocPtr++, (Mtx *)player->partVtx[8], G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
-        gSPDisplayList(gRegionAllocPtr++, gRaceGhostPlayerModelPart7DisplayLists[player->textureSet]);
-        gSPMatrix(gRegionAllocPtr++, (Mtx *)player->partVtx[9], G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
-        gSPDisplayList(gRegionAllocPtr++, gRaceGhostPlayerModelPart8DisplayLists[player->textureSet]);
-        gSPMatrix(gRegionAllocPtr++, (Mtx *)player->partVtx[10], G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
-        gSPDisplayList(gRegionAllocPtr++, gRaceGhostPlayerModelPart9DisplayLists[player->textureSet]);
-        gSPMatrix(gRegionAllocPtr++, (Mtx *)player->partVtx[11], G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
-        gSPDisplayList(gRegionAllocPtr++, gRaceGhostPlayerModelPart10DisplayLists[player->textureSet]);
-        gSPMatrix(gRegionAllocPtr++, (Mtx *)player->partVtx[12], G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
-        gSPDisplayList(gRegionAllocPtr++, gRaceGhostPlayerModelPart11DisplayLists[player->textureSet]);
-        gSPMatrix(gRegionAllocPtr++, (Mtx *)player->partVtx[13], G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
-        gSPDisplayList(gRegionAllocPtr++, gRaceGhostPlayerModelPart12DisplayLists[player->textureSet]);
+        gSPMatrix(gRegionAllocPtr++, player->partMatrices[1], G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+        gSPDisplayList(gRegionAllocPtr++, gRaceGhostPlayerModelPart0DisplayLists[player->characterId]);
+        gSPMatrix(gRegionAllocPtr++, player->partMatrices[2], G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+        gSPDisplayList(gRegionAllocPtr++, gRaceGhostPlayerModelPart1DisplayLists[player->characterId]);
+        gSPMatrix(gRegionAllocPtr++, player->partMatrices[3], G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+        gSPDisplayList(gRegionAllocPtr++, gRaceGhostPlayerModelPart2DisplayLists[player->characterId]);
+        gSPMatrix(gRegionAllocPtr++, player->partMatrices[4], G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+        gSPDisplayList(gRegionAllocPtr++, gRaceGhostPlayerModelPart3DisplayLists[player->characterId]);
+        gSPMatrix(gRegionAllocPtr++, player->partMatrices[5], G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+        gSPDisplayList(gRegionAllocPtr++, gRaceGhostPlayerModelPart4DisplayLists[player->characterId]);
+        gSPMatrix(gRegionAllocPtr++, player->partMatrices[6], G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+        gSPDisplayList(gRegionAllocPtr++, gRaceGhostPlayerModelPart5DisplayLists[player->characterId]);
+        gSPMatrix(gRegionAllocPtr++, player->partMatrices[7], G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+        gSPDisplayList(gRegionAllocPtr++, gRaceGhostPlayerModelPart6DisplayLists[player->characterId]);
+        gSPMatrix(gRegionAllocPtr++, player->partMatrices[8], G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+        gSPDisplayList(gRegionAllocPtr++, gRaceGhostPlayerModelPart7DisplayLists[player->characterId]);
+        gSPMatrix(gRegionAllocPtr++, player->partMatrices[9], G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+        gSPDisplayList(gRegionAllocPtr++, gRaceGhostPlayerModelPart8DisplayLists[player->characterId]);
+        gSPMatrix(gRegionAllocPtr++, player->partMatrices[10], G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+        gSPDisplayList(gRegionAllocPtr++, gRaceGhostPlayerModelPart9DisplayLists[player->characterId]);
+        gSPMatrix(gRegionAllocPtr++, player->partMatrices[11], G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+        gSPDisplayList(gRegionAllocPtr++, gRaceGhostPlayerModelPart10DisplayLists[player->characterId]);
+        gSPMatrix(gRegionAllocPtr++, player->partMatrices[12], G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+        gSPDisplayList(gRegionAllocPtr++, gRaceGhostPlayerModelPart11DisplayLists[player->characterId]);
+        gSPMatrix(gRegionAllocPtr++, player->partMatrices[13], G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+        gSPDisplayList(gRegionAllocPtr++, gRaceGhostPlayerModelPart12DisplayLists[player->characterId]);
     }
 }
