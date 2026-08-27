@@ -41,14 +41,18 @@ typedef struct GameTask {
     };
 } GameTask;
 
-typedef union FramebufferSwapDelay {
+typedef union FramebufferRenderInterval {
     s8 value;
     u8 timerValue;
     u8 raw[4];
-} FramebufferSwapDelay;
+} FramebufferRenderInterval;
 
 extern GameTask *gCurrentGameTask;
-extern FramebufferSwapDelay gFramebufferSwapDelay;
+extern FramebufferRenderInterval gFramebufferRenderInterval;
+extern u8 gFramebufferSubmissionCountdown[4];
+extern u8 gPendingFramebufferSwapCount;
+extern u8 gFramebufferSwapHold;
+extern u8 gNextFramebufferRenderTaskIndex;
 
 void initGameTaskScheduler(void);
 void updateGameTaskScheduler(void);

@@ -35,7 +35,7 @@ extern void initControllerPakDeleteConfirmPrompt(CallbackTask *);
 void initControllerPakRaceRecordSaveFlow(void) {
     resetAllViewports();
     configureViewport(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.3333334f);
-    gFramebufferSwapDelay.value = 0;
+    gFramebufferRenderInterval.value = 0;
     gControllerPakStatusCodes[0] = 0;
     gMenuChoicePromptState[0] = 0;
     gControllerPakRetryCounts[0] = 0;
@@ -335,7 +335,7 @@ void fadeOutControllerPakRaceRecordSaveFlow(void) {
     } else if (gPendingFramebufferSwapCount == 2) {
         releaseMenuAssetHandles();
         gFramebufferSwapHold = 0;
-        gFramebufferSwapDelay.value = 0;
+        gFramebufferRenderInterval.value = 0;
         resumeGameTask(2);
         removeGameTask(4);
     }

@@ -69,7 +69,7 @@ void initCourseSelectMenu(void) {
         gCourseSelectSelectedRows[i] = 0;
     }
 
-    gFramebufferSwapDelay.value = 0;
+    gFramebufferRenderInterval.value = 0;
     gCurrentGameTask->fade = 0xFF;
     LOAD_ASSET(_5CBA80, 0x21);
     LOAD_ASSET(_593D10, 0x22);
@@ -1233,7 +1233,7 @@ void exitCourseSelectMenu(void) {
     } else if (gPendingFramebufferSwapCount == 2) {
         releaseMenuAssetHandles();
         gFramebufferSwapHold = 0;
-        do { gFramebufferSwapDelay.value = 0; gMenuFlowState = 0; resumeGameTask(2); removeGameTask(4); count = 0; if (gPrimaryCourseUnlockStates.values[0] == (-1)) { count = 1; } ptr = &gCourseUnlockScanStart.value; loop: if (ptr[0x3F] == (-1)) { count++; } if (ptr[0x40] == (-1)) { count++; } if (ptr[0x41] == (-1)) { count++; } if (ptr[0x42] == (-1)) { count++; } } while (0);
+        do { gFramebufferRenderInterval.value = 0; gMenuFlowState = 0; resumeGameTask(2); removeGameTask(4); count = 0; if (gPrimaryCourseUnlockStates.values[0] == (-1)) { count = 1; } ptr = &gCourseUnlockScanStart.value; loop: if (ptr[0x3F] == (-1)) { count++; } if (ptr[0x40] == (-1)) { count++; } if (ptr[0x41] == (-1)) { count++; } if (ptr[0x42] == (-1)) { count++; } } while (0);
         ptr += 4;
         if (ptr != &gCourseUnlockScanEnd.value) {
             goto loop;

@@ -146,7 +146,7 @@ void initRaceSetupMenu(void) {
     resetAllViewports();
     configureViewport(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.3333334f);
 
-    gFramebufferSwapDelay.value = 0;
+    gFramebufferRenderInterval.value = 0;
     gCurrentGameTask->fade = 0;
     gCurrentGameTask->timer = 0;
     gMenuSelectionConfirmTimer = 0;

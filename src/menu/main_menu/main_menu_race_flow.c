@@ -70,7 +70,7 @@ void initMainMenuModePreviewRaceSelectionMenu(void) {
     LOAD_RAW_ASSET(_1467B0, 8);
     LOAD_ASSET(_1DE360, 9);
     gMainMenuSelectionResult = 0;
-    gFramebufferSwapDelay.value = 0;
+    gFramebufferRenderInterval.value = 0;
     gMenuFadeAlpha = 0xFF;
     resetAllViewports();
     gViewportStates[0].overlayAlpha = 0x80;
@@ -120,7 +120,7 @@ void exitMainMenuModePreviewRaceSelectionMenu(void) {
     if (gPendingFramebufferSwapCount == 2) {
         releaseMenuAssetHandles();
         gFramebufferSwapHold = 0;
-        gFramebufferSwapDelay.value = 0;
+        gFramebufferRenderInterval.value = 0;
         if (gMainMenuModeSelection != 0xC) {
             setCurrentGameTaskCallback(&initMainMenuModePreviewRace, 0);
         } else {
@@ -212,14 +212,14 @@ void initMainMenuModePreviewRace(void) {
     loadRaceCharacterAssets();
     resetRaceCameras();
     resetAllViewports();
-    gFramebufferSwapDelay.value = 0;
+    gFramebufferRenderInterval.value = 0;
     initRacePlayers();
     gPlayerCount = 1;
     initRaceHud();
     gPlayerCount = 4;
     configureViewport(0, 0xA0, 0x50, 0x108, 0x78, 0x140, 0x8C, 2.285714388f);
     gRacePlayerHudStatuses[0].active = one1;
-    gFramebufferSwapDelay.value = 0;
+    gFramebufferRenderInterval.value = 0;
     initRaceCourseSceneTasks();
     gMenuFadeAlpha = 0xFF;
     gRaceRumbleEnabled = 0;
@@ -330,7 +330,7 @@ void returnToMainMenuModePreviewRaceSelectionMenu(void) {
         stopSoundEffects();
         releaseMenuAssetHandles();
         gFramebufferSwapHold = 0;
-        gFramebufferSwapDelay.value = 0;
+        gFramebufferRenderInterval.value = 0;
         setCurrentGameTaskCallback(&initMainMenuModePreviewRaceSelectionMenu, 0);
     }
 }

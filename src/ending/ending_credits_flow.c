@@ -58,7 +58,7 @@ void initEndingCreditsFlow(void) {
         0x14,
         0xAF0
     );
-    gFramebufferSwapDelay.value = 0;
+    gFramebufferRenderInterval.value = 0;
     gMenuCameraTargetOffset.x = 0;
     if (1) {
         gMenuCameraTargetOffset.y = 0xFFB60000;
@@ -144,7 +144,7 @@ void fadeOutEndingCreditsFlow(void) {
         if (gPendingFramebufferSwapCount == 2) {
             releaseMenuAssetHandles();
             gFramebufferSwapHold = 0;
-            gFramebufferSwapDelay.value = 0;
+            gFramebufferRenderInterval.value = 0;
             resumeGameTask(2);
             removeGameTask(4);
         }

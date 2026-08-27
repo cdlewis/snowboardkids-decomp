@@ -32,7 +32,7 @@ void initControllerPakFileDeleteFlow(void) {
     }
     resetAllViewports();
     configureViewport(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.333333373f);
-    gFramebufferSwapDelay.value = 0;
+    gFramebufferRenderInterval.value = 0;
     gCurrentGameTask->fade = 0;
     gCurrentGameTask->timer = 0;
     gMenuFlowState = 0;
@@ -232,7 +232,7 @@ void fadeOutControllerPakFileDeleteFlow(void) {
         if (gPendingFramebufferSwapCount == 2) {
             releaseMenuAssetHandles();
             gFramebufferSwapHold = 0;
-            gFramebufferSwapDelay.value = 0;
+            gFramebufferRenderInterval.value = 0;
             resumeGameTask(0);
             removeGameTask(4);
         }
