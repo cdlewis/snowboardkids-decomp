@@ -136,7 +136,7 @@ extern void *allocMenuRenderScratch(s32 size);
 extern s16 gUiBlinkTimer;
 extern Gfx *gRegionAllocPtr;
 
-void drawRacePlayerGroundShadow(RacePlayerModelRenderState *player) {
+void drawRacePlayerGroundShadow(RacePlayer *player) {
     s32 i;
 
     if (gRenderMatricesDirty != 0) {
@@ -147,14 +147,14 @@ void drawRacePlayerGroundShadow(RacePlayerModelRenderState *player) {
         }
 
         for (i = 0; i < RACE_PLAYER_MODEL_RENDERER_PLAYER_COUNT; i++) {
-            player->shadowVtx[i].x = (player->shadowPoints[i].x - player->shadowPoints[0].x) >> 14;
-            player->shadowVtx[i].y = (player->shadowPoints[i].y - player->shadowPoints[0].y) >> 14;
-            player->shadowVtx[i].z = (player->shadowPoints[i].z - player->shadowPoints[0].z) >> 14;
-            player->shadowVtx[i].flag = 0;
-            player->shadowVtx[i].r = 0;
-            player->shadowVtx[i].g = 0;
-            player->shadowVtx[i].b = 0;
-            player->shadowVtx[i].a = 0x30;
+            player->shadowVtx[i].v.ob[0] = (player->shadowPoints[i].x - player->shadowPoints[0].x) >> 14;
+            player->shadowVtx[i].v.ob[1] = (player->shadowPoints[i].y - player->shadowPoints[0].y) >> 14;
+            player->shadowVtx[i].v.ob[2] = (player->shadowPoints[i].z - player->shadowPoints[0].z) >> 14;
+            player->shadowVtx[i].v.flag = 0;
+            player->shadowVtx[i].v.cn[0] = 0;
+            player->shadowVtx[i].v.cn[1] = 0;
+            player->shadowVtx[i].v.cn[2] = 0;
+            player->shadowVtx[i].v.cn[3] = 0x30;
         }
 
         player->shadowMtx = allocMenuRenderScratch(0x100);
@@ -162,14 +162,14 @@ void drawRacePlayerGroundShadow(RacePlayerModelRenderState *player) {
             return;
         }
 
-        *player->shadowMtx = *(RacePlayerShadowMtx *)gRacePlayerShadowMatrixTemplate;
+        *player->shadowMtx = gRacePlayerShadowMatrixTemplate;
 
-        player->shadowMtx->words[6] =
+        player->shadowMtx->m[1][2] =
             (player->shadowPoints[0].x & 0xFFFF0000) | (((player->shadowPoints[0].y + 0xA000) >> 16) & 0xFFFF);
-        player->shadowMtx->words[7] = (player->shadowPoints[0].z & 0xFFFF0000) | 1;
-        player->shadowMtx->words[14] =
+        player->shadowMtx->m[1][3] = (player->shadowPoints[0].z & 0xFFFF0000) | 1;
+        player->shadowMtx->m[3][2] =
             ((player->shadowPoints[0].x << 16) & 0xFFFF0000) | ((player->shadowPoints[0].y + 0xA000) & 0xFFFF);
-        player->shadowMtx->words[15] = (player->shadowPoints[0].z << 16) & 0xFFFF0000;
+        player->shadowMtx->m[3][3] = (player->shadowPoints[0].z << 16) & 0xFFFF0000;
         player->flags |= RACE_PLAYER_MODEL_RENDERER_FLAG_SHADOW_READY;
     }
 
@@ -222,11 +222,11 @@ void drawRaceGhostPlayerModelRootPart(void *asset, s16 dlIndex, s16 textureIndex
     gSPDisplayList(gRegionAllocPtr++, gRaceGhostPlayerModelRootPartDisplayLists[dlIndex]);
 }
 
-void drawRacePlayerModel(RacePlayerModelRenderState *player) {
-    RacePlayerModelRenderState *countPlayer;
-    RacePlayerModelRenderState *partVtxPlayer;
+void drawRacePlayerModel(RacePlayer *player) {
+    RacePlayer *countPlayer;
+    RacePlayer *partVtxPlayer;
     Transform3D *partSource;
-    RacePlayerModelRenderState *drawPlayer;
+    RacePlayer *drawPlayer;
     s32 i;
 
     countPlayer = player;
@@ -242,7 +242,7 @@ void drawRacePlayerModel(RacePlayerModelRenderState *player) {
                     player->flags &= ~RACE_PLAYER_MODEL_RENDERER_FLAG_SHADOW;
                 }
                 i++;
-                partVtxPlayer = (RacePlayerModelRenderState *)((void **)partVtxPlayer + 1);
+                partVtxPlayer = (RacePlayer *)((void **)partVtxPlayer + 1);
                 partSource++;
             } while (i < countPlayer->partCount);
         }
@@ -298,9 +298,9 @@ void drawRacePlayerModel(RacePlayerModelRenderState *player) {
     }
 }
 
-void drawRaceGhostPlayerModel(RacePlayerModelRenderState *player) {
-    RacePlayerModelRenderState *countPlayer;
-    RacePlayerModelRenderState *partVtxPlayer;
+void drawRaceGhostPlayerModel(RacePlayer *player) {
+    RacePlayer *countPlayer;
+    RacePlayer *partVtxPlayer;
     Transform3D *partSource;
     s32 i;
     s32 alphaPulse;
@@ -321,7 +321,7 @@ void drawRaceGhostPlayerModel(RacePlayerModelRenderState *player) {
                     player->flags &= ~RACE_PLAYER_MODEL_RENDERER_FLAG_SHADOW;
                 }
                 i++;
-                partVtxPlayer = (RacePlayerModelRenderState *)((void **)partVtxPlayer + 1);
+                partVtxPlayer = (RacePlayer *)((void **)partVtxPlayer + 1);
                 partSource++;
             } while (i < countPlayer->partCount);
         }

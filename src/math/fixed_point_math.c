@@ -25,9 +25,13 @@ Mtx gIdentityMatrix = {
 };
 
 /* Packed matrix template patched with the player's shadow translation. */
-u32 gRacePlayerShadowMatrixTemplate[16] = {
-    0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000001,
-    0x40000000, 0x00000000, 0x00004000, 0x00000000, 0x00000000, 0x40000000, 0x00000000, 0x00000000,
+Mtx gRacePlayerShadowMatrixTemplate = {
+    {
+     { 0x00000000, 0x00000000, 0x00000000, 0x00000000 },
+     { 0x00000000, 0x00000000, 0x00000000, 0x00000001 },
+     { 0x40000000, 0x00000000, 0x00004000, 0x00000000 },
+     { 0x00000000, 0x40000000, 0x00000000, 0x00000000 },
+     },
 };
 
 void initFixedTransform(Transform3D *transform) {

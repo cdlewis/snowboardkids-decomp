@@ -130,7 +130,7 @@ void updateRaceMotionAnimationDebugViewer(void) {
     addRenderCallback(
         &gModelRenderCallbackList,
         (RenderCallback)drawRacePlayerModel,
-        (RacePlayerModelRenderState *)&gRacePlayers[0]
+        &gRacePlayers[0]
     );
     addRenderCallback(&gMenuForegroundRenderCallbackList, drawRaceMotionAnimationDebugViewerMotionNumber, NULL);
 }

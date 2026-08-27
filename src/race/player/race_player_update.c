@@ -5666,18 +5666,18 @@ void updateRacePlayersPostUpdate(void) {
                 addRenderCallback(
                     &D_801248C8,
                     (RenderCallback)drawRacePlayerModel,
-                    (RacePlayerModelRenderState *)player
+                    player
                 );
                 addRenderCallback(
                     &D_801248EC,
                     (RenderCallback)drawRacePlayerGroundShadow,
-                    (RacePlayerModelRenderState *)player
+                    player
                 );
             } else {
                 addRenderCallback(
                     &D_801248EC,
                     (RenderCallback)drawRaceGhostPlayerModel,
-                    (RacePlayerModelRenderState *)player
+                    player
                 );
             }
             i++;
