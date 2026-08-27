@@ -654,10 +654,10 @@ void initRaceSceneFlow(void) {
     gRacePlayers[1].characterVariant = gRacePlayers[1].menuSelection;
     gRacePlayers[2].characterVariant = gRacePlayers[2].menuSelection;
     gRacePlayers[3].characterVariant = gRacePlayers[3].menuSelection;
-    gRacePlayers[0].unk12 = gRacePlayers[0].selectionUnlockState;
-    gRacePlayers[1].unk12 = gRacePlayers[1].selectionUnlockState;
-    gRacePlayers[2].unk12 = gRacePlayers[2].selectionUnlockState;
-    gRacePlayers[3].unk12 = gRacePlayers[3].selectionUnlockState;
+    gRacePlayers[0].snowboardTextureIndex = gRacePlayers[0].selectionUnlockState;
+    gRacePlayers[1].snowboardTextureIndex = gRacePlayers[1].selectionUnlockState;
+    gRacePlayers[2].snowboardTextureIndex = gRacePlayers[2].selectionUnlockState;
+    gRacePlayers[3].snowboardTextureIndex = gRacePlayers[3].selectionUnlockState;
 
     for (i = gPlayerCount, k = 0; i < 4; i++) {
         while (1) {
@@ -675,7 +675,7 @@ void initRaceSceneFlow(void) {
         }
         characterEntry = &D_800DC58C[gRaceCourseIndex.signedValue][gRacePlayers[i].characterId & 0xFFFFFFFFu];
         gRacePlayers[i].characterVariant = characterEntry->stickX;
-        gRacePlayers[i].unk12 = characterEntry->stickY;
+        gRacePlayers[i].snowboardTextureIndex = characterEntry->stickY;
     }
     if (gRaceSplitscreenMode == 0) {
         gRacePlayers[0].isActive = 1;
@@ -711,7 +711,7 @@ void initRaceSceneFlow(void) {
         history->courseId = gRaceCourseIndex.signedValue;
         history->characterId = gRacePlayers[0].characterId;
         history->characterVariant = gRacePlayers[0].characterVariant;
-        history->unkC = gRacePlayers[0].unk12;
+        history->unkC = gRacePlayers[0].snowboardTextureIndex;
 
 
         for (i = 0; i < 0x1194; i++) {
@@ -770,7 +770,7 @@ void initRaceSceneFlow(void) {
                 gRacePlayers[1].replayInputSource = 1;
                 gRacePlayers[1].characterId = history->characterId;
                 gRacePlayers[1].characterVariant = history->characterVariant;
-                gRacePlayers[1].unk12 = history->unkC;
+                gRacePlayers[1].snowboardTextureIndex = history->unkC;
                 gRacePlayerCount = 2;
             }
         }

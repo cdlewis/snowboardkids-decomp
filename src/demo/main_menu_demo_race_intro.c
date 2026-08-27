@@ -85,10 +85,10 @@ void initMainMenuDemoRaceIntro(void) {
     gRacePlayers[2].characterVariant = 6;
     gRacePlayers[3].characterId = gMainMenuDemoRaceIntroEntries[gMainMenuDemoRaceIntroIndex].player3Character;
     gRacePlayers[3].characterVariant = 6;
-    gRacePlayers->unk12 = 1;
-    gRacePlayers[1].unk12 = 2;
-    gRacePlayers[2].unk12 = 3;
-    gRacePlayers[3].unk12 = 4;
+    gRacePlayers->snowboardTextureIndex = 1;
+    gRacePlayers[1].snowboardTextureIndex = 2;
+    gRacePlayers[2].snowboardTextureIndex = 3;
+    gRacePlayers[3].snowboardTextureIndex = 4;
     if (gRaceSplitscreenMode == 0) { gRacePlayers->isActive = 1;
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            gRacePlayers[1].isActive = 1;
         gRacePlayers[2].isActive = 1;
