@@ -24,6 +24,7 @@ typedef struct RaceSetupMenuPackedData {
 extern RaceSetupMenuSubState gRaceSetupMenuSubState;
 extern RaceSetupMenuPackedData gRaceSetupMenuPackedData;
 extern u8 gRaceSetupSavePanelFrameState;
+extern u8 gRaceSetupSavePanelCreateTimer;
 
 #define gControllerPakRaceRecordSaveStatusChoicePromptStates gRaceSetupMenuPackedData.raceRecordChoicePromptStates
 

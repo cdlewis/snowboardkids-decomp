@@ -2141,6 +2141,7 @@ gRacePlayerHudStatuses = 0x8011228C; // type:u8 size:0x4
 gControllerPakStatusCodes = 0x800EC9C8;
 gControllerPakRetryCounts = 0x800EC9D8;
 gControllerPakOperationCounts = 0x800EC9E0;
+gRaceSetupSavePanelCreateTimer = 0x800EC9E4; // type:u8 size:0x1
 gGameSaveDataBuffer = 0x800EC9F0; // size:0x1E3E0 allow_addend:True
 osAiSetNextBuffer = 0x800A59D0; // type:func
 osAiGetLength = 0x800A5A80; // type:func
