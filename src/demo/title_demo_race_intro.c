@@ -15,12 +15,6 @@
 #include "game/race/player/race_player_input.h"
 #include "game/menu/renderer/menu_screen_effects.h"
 
-typedef union {
-    u32 words[sizeof(RacePlayer) / sizeof(u32)];
-    RacePlayer player;
-    u8 bytes[sizeof(RacePlayer)];
-} RacePlayerReplaySnapshot;
-
 s16 gTitleDemoReplaySegmentFrames[16] = {
     0x0000, 0x0039, 0x006C, 0x00A1, 0x00D2, 0x0107, 0x0138, 0x026C,
     0x02A2, 0x02D3, 0x0307, 0x0339, 0x036E, 0x03A0, 0x03D4, 0x0413,
@@ -42,8 +36,6 @@ RacePlayerReplaySnapshot gTitleDemoReplayInputs[4][16] = {
 
 extern s16 gMenuFadeAlpha;
 extern u8 gPendingFramebufferSwapCount;
-extern volatile char gTitleDemoRaceIntroViewportHeight;
-extern s8 gTitleDemoRaceIntroFadeStep;
 extern s16 gRaceLapCount;
 extern s8 gRacePlayerCount;
 extern u8 gRaceUpdatePaused;
