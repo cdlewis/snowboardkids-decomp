@@ -3,7 +3,6 @@
 
 #include "common.h"
 #include "game/audio/audio_engine.h"
-#include "game/engine/runtime_matrix.h"
 
 #define FRAME_RENDER_TASK_COUNT 2
 #define FRAME_RENDER_TASK_STRIDE 0x18620
@@ -15,10 +14,10 @@
 typedef struct RuntimeViewportDisplayListData {
     /* 0x000 */ u8 pad0[0x78];
     /* 0x078 */ Vp viewports[4];
-    /* 0x0B8 */ RuntimeMtx projections[4];
-    /* 0x1B8 */ RuntimeMtx overlayProjections[4];
-    /* 0x2B8 */ RuntimeMtx rotations[4];
-    /* 0x3B8 */ RuntimeMtx translations[4];
+    /* 0x0B8 */ Mtx projections[4];
+    /* 0x1B8 */ Mtx overlayProjections[4];
+    /* 0x2B8 */ Mtx rotations[4];
+    /* 0x3B8 */ Mtx translations[4];
     /* 0x4B8 */ Mtx viewportMatrices[4];
 } RuntimeViewportDisplayListData;
 

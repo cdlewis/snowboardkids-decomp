@@ -2,7 +2,6 @@
 #define VIEWPORT_MANAGER_H
 
 #include "common.h"
-#include "game/engine/runtime_matrix.h"
 
 typedef struct {
     /* 0x00 */ s8 active;
@@ -15,30 +14,12 @@ typedef struct {
     /* 0x07 */ u8 pad7;
     /* 0x08 */ s16 overlayAlpha;
     /* 0x0A */ u8 padA[6];
-    /* 0x10 */ union {
-        struct {
-            /* 0x10 */ s16 viewportScaleX;
-            /* 0x12 */ s16 viewportScaleY;
-            /* 0x14 */ s16 viewportScaleZ;
-            /* 0x16 */ s16 viewportScaleW;
-            /* 0x18 */ s16 viewportTranslateX;
-            /* 0x1A */ s16 viewportTranslateY;
-            /* 0x1C */ s16 viewportTranslateZ;
-            /* 0x1E */ s16 viewportTranslateW;
-        };
-        Vp viewport;
-    };
+    /* 0x10 */ Vp viewport;
     /* 0x20 */ u16 perspectiveNorm;
     /* 0x22 */ u16 overlayPerspectiveNorm;
     /* 0x24 */ u8 pad24[4];
-    /* 0x28 */ union {
-        Mtx projectionMatrix;
-        RuntimeMtx projection;
-    };
-    /* 0x68 */ union {
-        Mtx overlayProjectionMatrix;
-        RuntimeMtx overlayProjection;
-    };
+    /* 0x28 */ Mtx projectionMatrix;
+    /* 0x68 */ Mtx overlayProjectionMatrix;
     /* 0xA8 */ s16 left;
     /* 0xAA */ s16 top;
     /* 0xAC */ s16 right;

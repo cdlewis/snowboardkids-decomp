@@ -21,10 +21,10 @@ void resetAllViewports(void) {
         gViewportStates[i].overlayG = 0;
         gViewportStates[i].overlayB = 0;
         gViewportStates[i].overlayAlpha = 0;
-        gViewportStates[i].viewportScaleZ = 0x1FF;
-        gViewportStates[i].viewportScaleW = 0;
-        gViewportStates[i].viewportTranslateZ = 0x1FF;
-        gViewportStates[i].viewportTranslateW = 0;
+        gViewportStates[i].viewport.vp.vscale[2] = 0x1FF;
+        gViewportStates[i].viewport.vp.vscale[3] = 0;
+        gViewportStates[i].viewport.vp.vtrans[2] = 0x1FF;
+        gViewportStates[i].viewport.vp.vtrans[3] = 0;
     }
 }
 
@@ -39,10 +39,10 @@ void resetViewport(s32 arg0) {
     viewport->overlayG = 0;
     viewport->overlayB = 0;
     viewport->overlayAlpha = 0;
-    viewport->viewportScaleZ = 0x1FF;
-    viewport->viewportScaleW = 0;
-    viewport->viewportTranslateZ = 0x1FF;
-    viewport->viewportTranslateW = 0;
+    viewport->viewport.vp.vscale[2] = 0x1FF;
+    viewport->viewport.vp.vscale[3] = 0;
+    viewport->viewport.vp.vtrans[2] = 0x1FF;
+    viewport->viewport.vp.vtrans[3] = 0;
 }
 
 void configureViewport(
@@ -56,10 +56,10 @@ void configureViewport(
     f32 aspect
 ) {
     gViewportStates[viewportIndex].active = 1;
-    gViewportStates[viewportIndex].viewportTranslateX = centerX * 4;
-    gViewportStates[viewportIndex].viewportTranslateY = centerY * 4;
-    gViewportStates[viewportIndex].viewportScaleX = scaleX * 2;
-    gViewportStates[viewportIndex].viewportScaleY = scaleY * 2;
+    gViewportStates[viewportIndex].viewport.vp.vtrans[0] = centerX * 4;
+    gViewportStates[viewportIndex].viewport.vp.vtrans[1] = centerY * 4;
+    gViewportStates[viewportIndex].viewport.vp.vscale[0] = scaleX * 2;
+    gViewportStates[viewportIndex].viewport.vp.vscale[1] = scaleY * 2;
 
     gViewportStates[viewportIndex].left = centerX - (width / 2);
     gViewportStates[viewportIndex].top = centerY - (height / 2);
@@ -129,10 +129,10 @@ void configureViewportWithFovAndFarClip(
     s32 farClip
 ) {
     gViewportStates[viewportIndex].active = 1;
-    gViewportStates[viewportIndex].viewportTranslateX = centerX * 4;
-    gViewportStates[viewportIndex].viewportTranslateY = centerY * 4;
-    gViewportStates[viewportIndex].viewportScaleX = scaleX * 2;
-    gViewportStates[viewportIndex].viewportScaleY = scaleY * 2;
+    gViewportStates[viewportIndex].viewport.vp.vtrans[0] = centerX * 4;
+    gViewportStates[viewportIndex].viewport.vp.vtrans[1] = centerY * 4;
+    gViewportStates[viewportIndex].viewport.vp.vscale[0] = scaleX * 2;
+    gViewportStates[viewportIndex].viewport.vp.vscale[1] = scaleY * 2;
 
     gViewportStates[viewportIndex].left = centerX - (width / 2);
     gViewportStates[viewportIndex].top = centerY - (height / 2);
@@ -200,10 +200,10 @@ void configureRaceViewport(
     f32 aspect
 ) {
     gViewportStates[viewportIndex].active = 1;
-    gViewportStates[viewportIndex].viewportTranslateX = centerX * 4;
-    gViewportStates[viewportIndex].viewportTranslateY = centerY * 4;
-    gViewportStates[viewportIndex].viewportScaleX = scaleX * 2;
-    gViewportStates[viewportIndex].viewportScaleY = scaleY * 2;
+    gViewportStates[viewportIndex].viewport.vp.vtrans[0] = centerX * 4;
+    gViewportStates[viewportIndex].viewport.vp.vtrans[1] = centerY * 4;
+    gViewportStates[viewportIndex].viewport.vp.vscale[0] = scaleX * 2;
+    gViewportStates[viewportIndex].viewport.vp.vscale[1] = scaleY * 2;
 
     gViewportStates[viewportIndex].left = centerX - (width / 2);
     gViewportStates[viewportIndex].top = centerY - (height / 2);
@@ -271,10 +271,10 @@ void configureMenuViewport(
     f32 aspect
 ) {
     gViewportStates[viewportIndex].active = 1;
-    gViewportStates[viewportIndex].viewportTranslateX = centerX * 4;
-    gViewportStates[viewportIndex].viewportTranslateY = centerY * 4;
-    gViewportStates[viewportIndex].viewportScaleX = scaleX * 2;
-    gViewportStates[viewportIndex].viewportScaleY = scaleY * 2;
+    gViewportStates[viewportIndex].viewport.vp.vtrans[0] = centerX * 4;
+    gViewportStates[viewportIndex].viewport.vp.vtrans[1] = centerY * 4;
+    gViewportStates[viewportIndex].viewport.vp.vscale[0] = scaleX * 2;
+    gViewportStates[viewportIndex].viewport.vp.vscale[1] = scaleY * 2;
 
     gViewportStates[viewportIndex].left = centerX - (width / 2);
     gViewportStates[viewportIndex].top = centerY - (height / 2);

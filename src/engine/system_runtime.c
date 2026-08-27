@@ -438,9 +438,9 @@ void appendViewportDisplayLists(u8 frameIndex) {
             runtimeDisplayListData->viewports[gCurrentViewportIndex] =
                 gViewportStates[gCurrentViewportIndex].viewport;
             runtimeDisplayListData->projections[gCurrentViewportIndex] =
-                gViewportStates[gCurrentViewportIndex].projection;
+                gViewportStates[gCurrentViewportIndex].projectionMatrix;
             runtimeDisplayListData->overlayProjections[gCurrentViewportIndex] =
-                gViewportStates[gCurrentViewportIndex].overlayProjection;
+                gViewportStates[gCurrentViewportIndex].overlayProjectionMatrix;
 
             left = gViewportStates[gCurrentViewportIndex].left;
             top = gViewportStates[gCurrentViewportIndex].top;
@@ -532,46 +532,46 @@ void appendViewportDisplayLists(u8 frameIndex) {
                 runRenderCallbacks(&D_80124848);
             }
 
-            runtimeDisplayListData->rotations[gCurrentViewportIndex].words[0] =
+            runtimeDisplayListData->rotations[gCurrentViewportIndex].m[0][0] =
                 ((D_801121E0[gCurrentViewportIndex].cameraTransform.rotation[0] << 4) & upperMask) |
                 ((D_801121E0[gCurrentViewportIndex].cameraTransform.rotation[1] >> 12) & 0xFFFF);
-            runtimeDisplayListData->rotations[gCurrentViewportIndex].words[1] =
+            runtimeDisplayListData->rotations[gCurrentViewportIndex].m[0][1] =
                 (D_801121E0[gCurrentViewportIndex].cameraTransform.rotation[2] << 4) & upperMask;
-            runtimeDisplayListData->rotations[gCurrentViewportIndex].words[2] =
+            runtimeDisplayListData->rotations[gCurrentViewportIndex].m[0][2] =
                 ((D_801121E0[gCurrentViewportIndex].cameraTransform.rotation[3] << 4) & upperMask) |
                 ((D_801121E0[gCurrentViewportIndex].cameraTransform.rotation[4] >> 12) & 0xFFFF);
-            runtimeDisplayListData->rotations[gCurrentViewportIndex].words[3] =
+            runtimeDisplayListData->rotations[gCurrentViewportIndex].m[0][3] =
                 (D_801121E0[gCurrentViewportIndex].cameraTransform.rotation[5] << 4) & upperMask;
-            runtimeDisplayListData->rotations[gCurrentViewportIndex].words[4] =
+            runtimeDisplayListData->rotations[gCurrentViewportIndex].m[1][0] =
                 ((D_801121E0[gCurrentViewportIndex].cameraTransform.rotation[6] << 4) & upperMask) |
                 ((D_801121E0[gCurrentViewportIndex].cameraTransform.rotation[7] >> 12) & 0xFFFF);
-            runtimeDisplayListData->rotations[gCurrentViewportIndex].words[5] =
+            runtimeDisplayListData->rotations[gCurrentViewportIndex].m[1][1] =
                 (D_801121E0[gCurrentViewportIndex].cameraTransform.rotation[8] << 4) & upperMask;
-            runtimeDisplayListData->translations[gCurrentViewportIndex].words[6] =
+            runtimeDisplayListData->translations[gCurrentViewportIndex].m[1][2] =
                 (D_801121E0[gCurrentViewportIndex].cameraTransform.translation.x & upperMask) |
                 ((D_801121E0[gCurrentViewportIndex].cameraTransform.translation.y >> 16) & 0xFFFF);
-            runtimeDisplayListData->translations[gCurrentViewportIndex].words[7] =
+            runtimeDisplayListData->translations[gCurrentViewportIndex].m[1][3] =
                 (D_801121E0[gCurrentViewportIndex].cameraTransform.translation.z & upperMask) | 1;
 
-            runtimeDisplayListData->rotations[gCurrentViewportIndex].words[8] =
+            runtimeDisplayListData->rotations[gCurrentViewportIndex].m[2][0] =
                 ((D_801121E0[gCurrentViewportIndex].cameraTransform.rotation[0] << 20) & upperMask) |
                 ((D_801121E0[gCurrentViewportIndex].cameraTransform.rotation[1] << 4) & 0xFFFF);
-            runtimeDisplayListData->rotations[gCurrentViewportIndex].words[9] =
+            runtimeDisplayListData->rotations[gCurrentViewportIndex].m[2][1] =
                 (D_801121E0[gCurrentViewportIndex].cameraTransform.rotation[2] << 20) & upperMask;
-            runtimeDisplayListData->rotations[gCurrentViewportIndex].words[10] =
+            runtimeDisplayListData->rotations[gCurrentViewportIndex].m[2][2] =
                 ((D_801121E0[gCurrentViewportIndex].cameraTransform.rotation[3] << 20) & upperMask) |
                 ((D_801121E0[gCurrentViewportIndex].cameraTransform.rotation[4] << 4) & 0xFFFF);
-            runtimeDisplayListData->rotations[gCurrentViewportIndex].words[11] =
+            runtimeDisplayListData->rotations[gCurrentViewportIndex].m[2][3] =
                 (D_801121E0[gCurrentViewportIndex].cameraTransform.rotation[5] << 20) & upperMask;
-            runtimeDisplayListData->rotations[gCurrentViewportIndex].words[12] =
+            runtimeDisplayListData->rotations[gCurrentViewportIndex].m[3][0] =
                 ((D_801121E0[gCurrentViewportIndex].cameraTransform.rotation[6] << 20) & upperMask) |
                 ((D_801121E0[gCurrentViewportIndex].cameraTransform.rotation[7] << 4) & 0xFFFF);
-            runtimeDisplayListData->rotations[gCurrentViewportIndex].words[13] =
+            runtimeDisplayListData->rotations[gCurrentViewportIndex].m[3][1] =
                 (D_801121E0[gCurrentViewportIndex].cameraTransform.rotation[8] << 20) & upperMask;
-            runtimeDisplayListData->translations[gCurrentViewportIndex].words[14] =
+            runtimeDisplayListData->translations[gCurrentViewportIndex].m[3][2] =
                 ((D_801121E0[gCurrentViewportIndex].cameraTransform.translation.x << 16) & upperMask) |
                 (D_801121E0[gCurrentViewportIndex].cameraTransform.translation.y & 0xFFFF);
-            runtimeDisplayListData->translations[gCurrentViewportIndex].words[15] =
+            runtimeDisplayListData->translations[gCurrentViewportIndex].m[3][3] =
                 (D_801121E0[gCurrentViewportIndex].cameraTransform.translation.z << 16) & upperMask;
 
             if (gBackdropRenderCallbackList != NULL) {
@@ -759,22 +759,22 @@ void initFramebufferRenderTaskState(void) {
     gFrameRenderTaskStatuses[0].status = 0;
     gFrameRenderTaskStatuses[1].status = 0;
     gFramebufferColorBufferIndex = 0;
-    gFrameRenderTasks[0].viewportData.rotations[0].mtx = gIdentityMatrix;
-    gFrameRenderTasks[0].viewportData.rotations[1].mtx = gIdentityMatrix;
-    gFrameRenderTasks[0].viewportData.rotations[2].mtx = gIdentityMatrix;
-    gFrameRenderTasks[0].viewportData.rotations[3].mtx = gIdentityMatrix;
-    gFrameRenderTasks[0].viewportData.translations[0].mtx = gIdentityMatrix;
-    gFrameRenderTasks[0].viewportData.translations[1].mtx = gIdentityMatrix;
-    gFrameRenderTasks[0].viewportData.translations[2].mtx = gIdentityMatrix;
-    gFrameRenderTasks[0].viewportData.translations[3].mtx = gIdentityMatrix;
-    gFrameRenderTasks[1].viewportData.rotations[0].mtx = gIdentityMatrix;
-    gFrameRenderTasks[1].viewportData.rotations[1].mtx = gIdentityMatrix;
-    gFrameRenderTasks[1].viewportData.rotations[2].mtx = gIdentityMatrix;
-    gFrameRenderTasks[1].viewportData.rotations[3].mtx = gIdentityMatrix;
-    gFrameRenderTasks[1].viewportData.translations[0].mtx = gIdentityMatrix;
-    gFrameRenderTasks[1].viewportData.translations[1].mtx = gIdentityMatrix;
-    gFrameRenderTasks[1].viewportData.translations[2].mtx = gIdentityMatrix;
-    gFrameRenderTasks[1].viewportData.translations[3].mtx = gIdentityMatrix;
+    gFrameRenderTasks[0].viewportData.rotations[0] = gIdentityMatrix;
+    gFrameRenderTasks[0].viewportData.rotations[1] = gIdentityMatrix;
+    gFrameRenderTasks[0].viewportData.rotations[2] = gIdentityMatrix;
+    gFrameRenderTasks[0].viewportData.rotations[3] = gIdentityMatrix;
+    gFrameRenderTasks[0].viewportData.translations[0] = gIdentityMatrix;
+    gFrameRenderTasks[0].viewportData.translations[1] = gIdentityMatrix;
+    gFrameRenderTasks[0].viewportData.translations[2] = gIdentityMatrix;
+    gFrameRenderTasks[0].viewportData.translations[3] = gIdentityMatrix;
+    gFrameRenderTasks[1].viewportData.rotations[0] = gIdentityMatrix;
+    gFrameRenderTasks[1].viewportData.rotations[1] = gIdentityMatrix;
+    gFrameRenderTasks[1].viewportData.rotations[2] = gIdentityMatrix;
+    gFrameRenderTasks[1].viewportData.rotations[3] = gIdentityMatrix;
+    gFrameRenderTasks[1].viewportData.translations[0] = gIdentityMatrix;
+    gFrameRenderTasks[1].viewportData.translations[1] = gIdentityMatrix;
+    gFrameRenderTasks[1].viewportData.translations[2] = gIdentityMatrix;
+    gFrameRenderTasks[1].viewportData.translations[3] = gIdentityMatrix;
     gMenuFadeOverlayActive = 0;
 }
 
