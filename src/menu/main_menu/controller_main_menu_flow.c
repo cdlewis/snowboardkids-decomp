@@ -67,12 +67,8 @@ extern s32 gControllerPakFileNos[];
 extern OSPfs gControllerPakHandles[];
 extern OSPfs gRumblePakHandles[];
 extern SaveFileIdentity gControllerPakSaveFileIdentity;
-extern u8 gControllerPakGameName[];
-extern u8 gControllerPakExtName[];
 extern u8 gControllerReadPending;
 extern s32 gControllerPakFileNos[];
-extern u8 gControllerPakGameName[];
-extern u8 gControllerPakExtName[];
 extern s16 gMenuFadeAlpha;
 extern u8 gMainMenuSecretCodeStep;
 extern u8 gConnectedControllerCount;
@@ -242,8 +238,8 @@ void checkControllerPakSaveStatus(u16 arg0) {
         &gControllerPakHandles[arg0],
         gControllerPakSaveFileIdentity.companyCode,
         gControllerPakSaveFileIdentity.gameCode,
-        gControllerPakExtName,
-        gControllerPakGameName,
+        gControllerPakSaveFileIdentity.gameName,
+        gControllerPakSaveFileIdentity.extName,
         &gControllerPakFileNos[arg0]
     );
     if (ret == 0) {
@@ -310,8 +306,8 @@ void readControllerPakSave(u16 controllerIndex) {
         &gControllerPakHandles[controllerIndex],
         gControllerPakSaveFileIdentity.companyCode,
         gControllerPakSaveFileIdentity.gameCode,
-        gControllerPakExtName,
-        gControllerPakGameName,
+        gControllerPakSaveFileIdentity.gameName,
+        gControllerPakSaveFileIdentity.extName,
         &gControllerPakFileNos[controllerIndex]
     );
 
@@ -404,16 +400,16 @@ void writeControllerPakSave(u16 controllerIndex) {
             pfs,
             gControllerPakSaveFileIdentity.companyCode,
             gControllerPakSaveFileIdentity.gameCode,
-            gControllerPakExtName,
-            gControllerPakGameName,
+            gControllerPakSaveFileIdentity.gameName,
+            gControllerPakSaveFileIdentity.extName,
             fileNo
         ) == 5) {
         osPfsAllocateFile(
             pfs,
             gControllerPakSaveFileIdentity.companyCode,
             gControllerPakSaveFileIdentity.gameCode,
-            gControllerPakExtName,
-            gControllerPakGameName,
+            gControllerPakSaveFileIdentity.gameName,
+            gControllerPakSaveFileIdentity.extName,
             0x7900,
             fileNo
         );
