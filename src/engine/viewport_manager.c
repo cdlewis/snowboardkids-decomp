@@ -21,10 +21,10 @@ void resetAllViewports(void) {
         gViewportStates[i].overlayG = 0;
         gViewportStates[i].overlayB = 0;
         gViewportStates[i].overlayAlpha = 0;
-        gViewportStates[i].unk14 = 0x1FF;
-        gViewportStates[i].unk16 = 0;
-        gViewportStates[i].unk1C = 0x1FF;
-        gViewportStates[i].unk1E = 0;
+        gViewportStates[i].viewportScaleZ = 0x1FF;
+        gViewportStates[i].viewportScaleW = 0;
+        gViewportStates[i].viewportTranslateZ = 0x1FF;
+        gViewportStates[i].viewportTranslateW = 0;
     }
 }
 
@@ -39,10 +39,10 @@ void resetViewport(s32 arg0) {
     viewport->overlayG = 0;
     viewport->overlayB = 0;
     viewport->overlayAlpha = 0;
-    viewport->unk14 = 0x1FF;
-    viewport->unk16 = 0;
-    viewport->unk1C = 0x1FF;
-    viewport->unk1E = 0;
+    viewport->viewportScaleZ = 0x1FF;
+    viewport->viewportScaleW = 0;
+    viewport->viewportTranslateZ = 0x1FF;
+    viewport->viewportTranslateW = 0;
 }
 
 void configureViewport(
