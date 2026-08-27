@@ -20,8 +20,6 @@
 extern void drawMenuAsciiTextDefaultScale(s32, s32, char *, s32);
 extern int sprintf(char *, const char *, ...);
 extern s16 gRaceLapCount;
-extern s16 gRaceHudSpinnerFrame;
-extern s16 gRaceHudMode;
 extern u8 gRaceUpdatePaused;
 extern u8 gTrainingCourseLesson;
 extern u8 gMainMenuModeSelection;
@@ -224,26 +222,26 @@ u32 D_800DC9A8[0x532] = {
 
 void initRaceHud(void) {
     LOAD_ASSET(_245A80, 0x1F);
-    gRaceHudMode = -1;
+    gRaceHudMode = RACE_HUD_MODE_NONE;
     gRaceHudSpinnerFrame = 0;
 
     if (gPlayerCount == 1) {
         if (gRaceSplitscreenMode == 0) {
-            gRaceHudMode = 0;
+            gRaceHudMode = RACE_HUD_MODE_ONE_PLAYER;
         }
         if (gRaceSplitscreenMode == 2) {
-            gRaceHudMode = 4;
+            gRaceHudMode = RACE_HUD_MODE_TIME_TRIAL;
         }
         if (gRaceSplitscreenMode == 1) {
             if (gRaceTypeSelection == 0) {
-                gRaceHudMode = 5;
+                gRaceHudMode = RACE_HUD_MODE_TARGET_TIME_CHALLENGE;
             }
             if (gRaceTypeSelection == 1) {
-                gRaceHudMode = 6;
+                gRaceHudMode = RACE_HUD_MODE_SCORE_ATTACK;
                 gRaceChallengeTimeLimit = D_800DC928[gRaceCourseIndex.signedValue];
             }
             if (gRaceTypeSelection == 2) {
-                gRaceHudMode = 7;
+                gRaceHudMode = RACE_HUD_MODE_TRICK_ATTACK;
                 gRaceChallengeTimeLimit = D_800DC950;
             }
         }
@@ -252,7 +250,7 @@ void initRaceHud(void) {
     }
 
     if ((gTrainingCourseLesson != 0) || (gMainMenuModeSelection != 0)) {
-        gRaceHudMode = 8;
+        gRaceHudMode = RACE_HUD_MODE_TRAINING_OR_DEMO;
     }
 
     gRaceElapsedTimer.minutes = 0;
@@ -1069,15 +1067,15 @@ void drawRaceCourseProgressMeter(void *arg0) {
         }
     }
 
-    if (gRaceHudMode == 0) {
+    if (gRaceHudMode == RACE_HUD_MODE_ONE_PLAYER) {
         xBase = 0x78;
         yBase = -0x56;
     }
-    if (gRaceHudMode == 1) {
+    if (gRaceHudMode == RACE_HUD_MODE_TWO_PLAYER) {
         xBase = 0x78;
         yBase = -0x48;
     }
-    if ((gRaceHudMode == 2) || (gRaceHudMode == 3)) {
+    if ((gRaceHudMode == RACE_HUD_MODE_THREE_PLAYER) || (gRaceHudMode == RACE_HUD_MODE_FOUR_PLAYER)) {
         xBase = -8;
         yBase = -0x48;
     }
@@ -1163,7 +1161,7 @@ void updateRaceCourseProgressMeter(void) {
         }
     }
 
-    if (gRaceHudMode == 0) {
+    if (gRaceHudMode == RACE_HUD_MODE_ONE_PLAYER) {
         addRenderCallback(&gRaceOverlayRenderCallbackList, drawRaceCourseProgressMeter, 0);
         return;
     }
@@ -1179,7 +1177,7 @@ void updateRaceHud(void) {
     }
 
     switch (*(u16 *)&gRaceHudMode) {
-        case 0:
+        case RACE_HUD_MODE_ONE_PLAYER:
             if (gRacePlayers[0].itemEffectPalette != 0) {
                 if (gRacePlayers[0].itemEffectPalette == 4) {
                     spawnRaceUiSparkle(-0x20, -0x60, 0, 0, 0);
@@ -1196,7 +1194,7 @@ void updateRaceHud(void) {
             addRenderCallback(&gRaceForegroundRenderCallbackList, noopRaceHudCallback, 0);
             updateRaceCourseProgressMeter();
             return;
-        case 1:
+        case RACE_HUD_MODE_TWO_PLAYER:
             for (i = 0; i < 2; i++) {
                 if (gRacePlayers[i].itemEffectPalette != 0) {
                     if (gRacePlayers[i].itemEffectPalette == 4) {
@@ -1215,7 +1213,7 @@ void updateRaceHud(void) {
             addRenderCallback(&gRaceForegroundRenderCallbackList, drawTwoPlayerLapCounter, 0);
             updateRaceCourseProgressMeter();
             return;
-        case 3:
+        case RACE_HUD_MODE_FOUR_PLAYER:
             if (gRacePlayers[3].itemEffectPalette != 0) {
                 if (gRacePlayers[3].itemEffectPalette == 4) {
                     spawnRaceUiSparkle(-0x10, -0x30, 3, 1, 0);
@@ -1228,7 +1226,7 @@ void updateRaceHud(void) {
                 }
                 gRacePlayers[3].actionEffectPalette--;
             }
-        case 2:
+        case RACE_HUD_MODE_THREE_PLAYER:
             for (i = 0; i < 3; i++) {
                 if (gRacePlayers[i].itemEffectPalette != 0) {
                     if (gRacePlayers[i].itemEffectPalette == 4) {
@@ -1246,11 +1244,11 @@ void updateRaceHud(void) {
             addRenderCallback(&gRaceOverlayRenderCallbackList, drawMultiplayerRaceHud, 0);
             addRenderCallback(&gRaceForegroundRenderCallbackList, drawMultiplayerLapCounter, 0);
             updateRaceCourseProgressMeter();
-            if ((s16)gRaceHudMode == 2) {
+            if ((s16)gRaceHudMode == RACE_HUD_MODE_THREE_PLAYER) {
                 addRenderCallback(&gMenuRenderCallbackList, drawThreePlayerHudDivider, 0);
             }
             return;
-        case 4: {
+        case RACE_HUD_MODE_TIME_TRIAL: {
             s32 sp40;
             s32 sp3C;
 
@@ -1269,7 +1267,7 @@ void updateRaceHud(void) {
             addRenderCallback(&gRaceForegroundRenderCallbackList, drawTimeTrialLabels, 0);
             return;
         }
-        case 5: {
+        case RACE_HUD_MODE_TARGET_TIME_CHALLENGE: {
             RaceTimer sp38;
 
             if (!(gMenuFlowState & 3)) {
@@ -1286,7 +1284,7 @@ void updateRaceHud(void) {
             addRenderCallback(&gRaceForegroundRenderCallbackList, drawTargetTimeChallengeLabels, 0);
             return;
         }
-        case 6:
+        case RACE_HUD_MODE_SCORE_ATTACK:
             if (!(gMenuFlowState & 3)) {
                 decrementRaceChallengeTimeLimit();
             }
@@ -1297,7 +1295,7 @@ void updateRaceHud(void) {
             addRenderCallback(&gRaceOverlayRenderCallbackList, drawScoreAttackChallengeHud, 0);
             addRenderCallback(&gRaceForegroundRenderCallbackList, drawScoreAttackChallengeLabels, 0);
             return;
-        case 7:
+        case RACE_HUD_MODE_TRICK_ATTACK:
             if (!(gMenuFlowState & 3)) {
                 decrementRaceChallengeTimeLimit();
             }
@@ -1308,7 +1306,7 @@ void updateRaceHud(void) {
             addRenderCallback(&gRaceOverlayRenderCallbackList, drawTrickAttackChallengeHud, 0);
             addRenderCallback(&gRaceForegroundRenderCallbackList, drawTrickAttackChallengeLabels, 0);
             return;
-        case 8:
+        case RACE_HUD_MODE_TRAINING_OR_DEMO:
             if (gRacePlayers[0].itemEffectPalette != 0) {
                 if (gRacePlayers[0].itemEffectPalette == 4) {
                     spawnRaceUiSparkle(-0x20, -0x60, 0, 0, 0);
