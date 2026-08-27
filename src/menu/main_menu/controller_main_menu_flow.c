@@ -31,18 +31,6 @@ typedef struct OSContPad {
     u8 errno;
 } OSContPad;
 
-typedef struct SaveFileIdentity {
-    s32 size;
-    u32 gameCode;
-    u16 companyCode;
-    char extName[4];
-    char gameName[16];
-} SaveFileIdentity;
-
-#define CONTROLLER_PAK_SAVE_READ_SIZE 0x78E0
-#define CONTROLLER_PAK_CHECKSUM_START_OFFSET 4
-#define CONTROLLER_PAK_MAX_READ_RETRIES 3
-
 #define CONTROLLER_PAK_SAVE_FIELD_OFFSET(field) ((u32) & (((GameSaveData *)0)->field))
 #define CONTROLLER_PAK_RECORD_AT(cursor, field) \
     (*(GameSaveRecordTime *)((cursor) + CONTROLLER_PAK_SAVE_FIELD_OFFSET(field)))
@@ -85,13 +73,10 @@ extern u8 gControllerReadPending;
 extern s32 gControllerPakFileNos[];
 extern u8 gControllerPakGameName[];
 extern u8 gControllerPakExtName[];
-extern u8 gControllerPakOperationCounts[];
 extern s16 gMenuFadeAlpha;
 extern u8 gMainMenuSecretCodeStep;
 extern u8 gConnectedControllerCount;
 extern u8 gRumblePakConnectedMask;
-extern s32 gControllerPakFreeBytes;
-extern s32 gControllerPakFreeFileCount;
 extern OSMesgQueue gControllerInputUpdateQueue;
 extern u8 gPendingFramebufferSwapCount;
 extern u8 gFramebufferSwapHold;
@@ -235,7 +220,7 @@ void checkControllerPakSaveStatus(u16 arg0) {
     s32 freeBytes;
     s32 i;
 
-    gControllerPakSaveFileIdentity.size = 0x7900;
+    gControllerPakSaveFileIdentity.size = CONTROLLER_PAK_SAVE_NOTE_SIZE;
     gControllerPakSaveFileIdentity.gameCode = 'NSKE';
     gControllerPakSaveFileIdentity.companyCode = 'EB';
 
@@ -396,7 +381,7 @@ void writeControllerPakSave(u16 controllerIndex) {
     OSPfs *volatile pfs;
 
     handle = &gControllerPakHandles[controllerIndex];
-    gControllerPakSaveFileIdentity.size = 0x7900;
+    gControllerPakSaveFileIdentity.size = CONTROLLER_PAK_SAVE_NOTE_SIZE;
     gControllerPakSaveFileIdentity.gameCode = 'NSKE';
     gControllerPakSaveFileIdentity.companyCode = 'EB';
 

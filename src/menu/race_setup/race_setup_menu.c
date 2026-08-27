@@ -255,7 +255,6 @@ void updateRaceSetupPlayerCountMenu(void) {
     updateCallbackTasks();
 }
 
-extern u8 gControllerPakOperationCounts[];
 extern u8 D_800EC9E4;
 
 // IDO code generation for this function is sensitive to source line layout.
@@ -289,22 +288,6 @@ void initRaceSetupSaveMenu(void) {
 }
 // clang-format on
 
-#define CONTROLLER_PAK_STATUS_PROBE 0
-#define CONTROLLER_PAK_STATUS_SAVE_STATUS 1
-#define CONTROLLER_PAK_STATUS_SAVE_READ 2
-#define CONTROLLER_PAK_STATUS_REPAIR 3
-#define CONTROLLER_PAK_STATUS_RETRY 4
-#define CONTROLLER_PAK_STATUS_READY 5
-#define CONTROLLER_PAK_STATUS_NO_PAK 7
-#define CONTROLLER_PAK_STATUS_SAVE_FOUND 8
-#define CONTROLLER_PAK_STATUS_READ_FAILED 0xD
-#define CONTROLLER_PAK_STATUS_REPAIR_FAILED 0xE
-#define CONTROLLER_PAK_STATUS_REPAIRED 0xF
-#define CONTROLLER_PAK_STATUS_REPAIR_CONFIRM 0x11
-#define CONTROLLER_PAK_STATUS_USE_EXISTING_SAVE 0x12
-#define CONTROLLER_PAK_RETRY_LIMIT 3
-#define CONTROLLER_PAK_STATUS_CHOICE_PROMPT 6
-
 #define SAVE_CHOICE_USE_PAK 3
 #define SAVE_CHOICE_SKIP_PAK 4
 #define SAVE_STATUS_TRANSITION_FADE_OUT 2
@@ -318,7 +301,6 @@ extern void requestControllerPakSaveReadWithContext(u16 controllerIndex, s32 pla
 extern void requestControllerPakRepairWithContext(u16 controllerIndex, s32 playerCount, s32 choiceValue);
 extern void initControllerPakRumbleCheckPrompt(CallbackTask *);
 
-extern u8 gControllerPakOperationCounts[];
 extern u8 D_800EC9E4;
 
 #if 0
@@ -907,20 +889,6 @@ void updateRaceSetupSaveMenu(void) {
 #undef SAVE_STATUS_TRANSITION_FADE_OUT
 #undef SAVE_CHOICE_SKIP_PAK
 #undef SAVE_CHOICE_USE_PAK
-#undef CONTROLLER_PAK_RETRY_LIMIT
-#undef CONTROLLER_PAK_STATUS_USE_EXISTING_SAVE
-#undef CONTROLLER_PAK_STATUS_REPAIR_CONFIRM
-#undef CONTROLLER_PAK_STATUS_REPAIRED
-#undef CONTROLLER_PAK_STATUS_REPAIR_FAILED
-#undef CONTROLLER_PAK_STATUS_READ_FAILED
-#undef CONTROLLER_PAK_STATUS_SAVE_FOUND
-#undef CONTROLLER_PAK_STATUS_NO_PAK
-#undef CONTROLLER_PAK_STATUS_READY
-#undef CONTROLLER_PAK_STATUS_RETRY
-#undef CONTROLLER_PAK_STATUS_REPAIR
-#undef CONTROLLER_PAK_STATUS_SAVE_READ
-#undef CONTROLLER_PAK_STATUS_SAVE_STATUS
-#undef CONTROLLER_PAK_STATUS_PROBE
 void raceSetupMenuNoop(void) {
 }
 
