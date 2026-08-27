@@ -2,6 +2,7 @@
 #define SYSTEM_RUNTIME_H
 
 #include "common.h"
+#include "game/engine/system_render.h"
 extern Gfx gMenuRenderModeResetDl[];
 extern Gfx gTranslucentSpriteRenderModeDl[];
 extern Mtx *gViewportMatrix;
@@ -11,14 +12,8 @@ extern u8 gRaceRecordSettingsEnabled;
 extern u8 gRaceCourseModelEffectsDisabled;
 extern u8 gRaceCourseOverlayEffectsDisabled;
 
-void main(void *arg);
-void bootThreadMain(void *arg);
-void gameThreadMain(void *arg);
-void initGameSystems(void);
 void dmaReadRom(u32 romOffset, void *ramAddress, s32 size);
-void appendViewportDisplayLists(u8 frameIndex);
 void resetRenderCallbackQueues(void);
-void submitFramebufferRenderTask(u8 frameIndex);
 void setBootFadeColor(u8 a0, u8 a1, u8 a2);
 void setTitleFadeColor(u8 a0, u8 a1, u8 a2);
 

@@ -2,6 +2,7 @@
 #include "game/race/camera/race_camera.h"
 #include "game/audio/sound_manager.h"
 #include "game/engine/system_runtime.h"
+#include "game/engine/system_boot.h"
 #include "game/engine/frame_render_task.h"
 #include "game/engine/game_task_scheduler.h"
 #include "game/engine/render_callback.h"
@@ -28,16 +29,10 @@
 #define STARTUP_CALLBACK_PRIORITY 100
 #define BOOT_FADE_TIMER 0x3E4
 #define TITLE_FADE_TIMER 0x3B6
-#define FRAMEBUFFER_COUNT 3
-#define FRAMEBUFFER_SIZE 0x25800
 #define FRAMEBUFFER_TASK_BUSY 1
 #define SCHEDULER_SWAPBUFFER_FLAG 0x40
 #define SCHEDULER_RETRACE_MASK 0xFFF
 #define FRAMEBUFFER_SWAP_RETRACE_DELAY 3
-#define RSP_OUTPUT_BUFFER_SIZE 0x8000
-#define RSP_UCODE_DATA_SIZE 0x800
-#define RSP_DRAM_STACK_SIZE 0x400
-#define RSP_YIELD_BUFFER_SIZE 0xC00
 #define OS_MESG_NOBLOCK 0
 #define OS_MESG_BLOCK 1
 #define OS_READ 0
@@ -217,8 +212,6 @@ extern void allocMenuRenderScratchBuffers(void);
 extern void selectMenuRenderScratchBuffer(s32);
 extern s32 osSendMesg(void *, void *, s32);
 extern void initFramebufferRenderTaskState(void);
-
-void appendFadeOverlayDisplayList(void);
 
 void main(void *arg) {
     osInitialize();
