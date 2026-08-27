@@ -1993,7 +1993,6 @@ gControllerPakRaceRecordSaveExitMessage = 0x800B79AC; // rom:0xB85AC size:0x14
 gControllerPakRaceRecordSaveStatusChoicePromptStates = 0x800B31A5; // rom:0xB3DA5 size:0x13
 gRaceSetupSavePanelInitialRects = 0x800B31B8; // rom:0xB3DB8 size:0x10
 gControllerPakFileStates = 0x8010AF98; // type:OSPfsState
-gControllerPakFileEntries = 0x8010AFA0; // type:ControllerPakFileEntry
 gControllerPakFreeBytes = 0x8010B198; // size:0x4
 gControllerPakFreeFileCount = 0x8010B19C; // size:0x4
 gPendingFramebufferSwapCount = 0x80123750; // type:u8

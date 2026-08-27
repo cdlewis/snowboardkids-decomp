@@ -14,13 +14,7 @@ typedef struct {
     /* 0x6 */ u8 unk6;
 } ControllerPakMenuState;
 
-typedef struct {
-    /* 0x00 */ u16 exists;
-    /* 0x02 */ char pad2[0x1E];
-} ControllerPakFileEntry; /* size = 0x20 */
-
 extern ControllerPakMenuState gControllerPakMenuState;
 extern OSPfsState gControllerPakFileStates[];
-extern ControllerPakFileEntry gControllerPakFileEntries[];
 
 #endif

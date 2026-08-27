@@ -123,7 +123,7 @@ void updateControllerPakFileDeleteFileList(void) {
     if (((gPlayerInputPressed[0] & A_BUTTON) ||
          (gPlayerInputPressed[0] & B_BUTTON, ((gPlayerInputPressed[0] & START_BUTTON) != 0))) &&
         (gPlayerInputPressed[0] & B_BUTTON,
-         (gControllerPakFileEntries[gControllerPakMenuState.fileIndex].exists != 0))) {
+         (gControllerPakFileStates[gControllerPakMenuState.fileIndex].company_code != 0))) {
         enqueueSoundEffect(0x18, 0x32);
         setCurrentGameTaskCallback(updateControllerPakFileDeleteConfirm, 0);
         gControllerPakMenuState.state = 2;
@@ -176,7 +176,7 @@ void updateControllerPakFileDeletePrompt(void) {
         if (gControllerPakMenuState.confirmChoice == 0) {
             requestControllerPakDeleteFile(gControllerPakMenuState.fileIndex);
             if (gControllerPakRetryCounts[0] == 0) {
-                gControllerPakFileEntries[gControllerPakMenuState.fileIndex].exists = 0;
+                gControllerPakFileStates[gControllerPakMenuState.fileIndex].company_code = 0;
                 requestControllerPakFileList();
                 requestControllerPakFreeSpaceUpdate();
                 setCurrentGameTaskCallback(updateControllerPakFileDeleteFileList, 0);
