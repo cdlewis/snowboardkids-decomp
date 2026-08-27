@@ -5,6 +5,7 @@
 #include "game/math/geometry.h"
 
 #define RACE_PLAYER_COUNT 4
+#define RACE_PLAYER_COLLISION_SQUASHED 0x200000
 
 typedef u8 RacePlayerOrder[RACE_PLAYER_COUNT];
 
@@ -218,7 +219,7 @@ typedef struct RacePlayer {
     /* 0x52D */ s8 itemTriggerCooldown;
     /* 0x52E */ char pad52E[0x3A];
     /* 0x568 */ s32 score;
-    /* 0x56C */ s32 unk56C;
+    /* 0x56C */ s32 cumulativeRaceScore;
     /* 0x570 */ s16 unk570;
     /* 0x572 */ s16 courseCoinMarkerCount;
     /* 0x574 */ s16 scoreAttackPointTotal;
@@ -227,8 +228,8 @@ typedef struct RacePlayer {
     /* 0x57A */ s8 unk57A;
     /* 0x57B */ s8 unk57B;
     /* 0x57C */ s16 unk57C;
-    /* 0x57E */ s16 unk57E;
-    /* 0x580 */ s8 unk580;
+    /* 0x57E */ s16 progressMeterPosition;
+    /* 0x580 */ s8 progressMeterSquashFrame;
     /* 0x581 */ s8 unk581;
     /* 0x582 */ s16 unk582;
     /* 0x584 */ s16 unk584;

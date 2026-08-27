@@ -1089,25 +1089,25 @@ void drawRaceCourseProgressMeter(void *arg0) {
 
     i = 3;
     do {
-        if (((gRacePlayers[order[i]].stateFlags & 0x200000) != 0) || (gRacePlayers[order[i]].unk580 != 0)) {
-            gRacePlayers[order[i]].unk580++;
+        if (((gRacePlayers[order[i]].stateFlags & RACE_PLAYER_COLLISION_SQUASHED) != 0) || (gRacePlayers[order[i]].progressMeterSquashFrame != 0)) {
+            gRacePlayers[order[i]].progressMeterSquashFrame++;
         }
-        if (((gRacePlayers[order[i]].stateFlags & 0x200000) != 0) && (gRacePlayers[order[i]].unk580 >= 5)) {
-            gRacePlayers[order[i]].unk580 = 4;
+        if (((gRacePlayers[order[i]].stateFlags & RACE_PLAYER_COLLISION_SQUASHED) != 0) && (gRacePlayers[order[i]].progressMeterSquashFrame >= 5)) {
+            gRacePlayers[order[i]].progressMeterSquashFrame = 4;
         }
-        if (gRacePlayers[order[i]].unk580 >= 6) {
-            gRacePlayers[order[i]].unk580 = 0;
+        if (gRacePlayers[order[i]].progressMeterSquashFrame >= 6) {
+            gRacePlayers[order[i]].progressMeterSquashFrame = 0;
         }
 
-        if (gRacePlayers[order[i]].unk580 != 0) {
+        if (gRacePlayers[order[i]].progressMeterSquashFrame != 0) {
             if (gRacePlayers[order[i]].unk2D8 != 0) {
                 temp.assetTable = getRelocatableHeapBlockBase(RACE_HUD_POPUP_FONT_HANDLE);
                 drawAssetTableSpriteWithExplicitPalette(
                     (s16)(xBase - 8),
-                    (s16)(gRacePlayers[order[i]].unk57E + yBase),
+                    (s16)(gRacePlayers[order[i]].progressMeterPosition + yBase),
                     temp.assetTable,
                     (
-                        &gRaceProgressMeterIconTiles[gRacePlayers[order[i]].unk580]
+                        &gRaceProgressMeterIconTiles[gRacePlayers[order[i]].progressMeterSquashFrame]
                     )[gRacePlayers[order[i]].characterId * 6],
                     gRaceProgressMeterIconPalettes[gRacePlayers[order[i]].characterId]
                 );
@@ -1115,10 +1115,10 @@ void drawRaceCourseProgressMeter(void *arg0) {
                 temp.assetTable = getRelocatableHeapBlockBase(RACE_HUD_POPUP_FONT_HANDLE);
                 drawAssetTableSprite(
                     (s16)(xBase - 8),
-                    (s16)(gRacePlayers[order[i]].unk57E + yBase),
+                    (s16)(gRacePlayers[order[i]].progressMeterPosition + yBase),
                     temp.assetTable,
                     (
-                        &gRaceProgressMeterIconTiles[gRacePlayers[order[i]].unk580]
+                        &gRaceProgressMeterIconTiles[gRacePlayers[order[i]].progressMeterSquashFrame]
                     )[gRacePlayers[order[i]].characterId * 6]
                 );
             }
@@ -1126,18 +1126,18 @@ void drawRaceCourseProgressMeter(void *arg0) {
             temp.assetTable = getRelocatableHeapBlockBase(RACE_HUD_POPUP_FONT_HANDLE);
             drawAssetTableSpriteWithExplicitPalette(
                 xBase,
-                (s16)(gRacePlayers[order[i]].unk57E + yBase),
+                (s16)(gRacePlayers[order[i]].progressMeterPosition + yBase),
                 temp.assetTable,
-                (&gRaceProgressMeterIconTiles[gRacePlayers[order[i]].unk580])[gRacePlayers[order[i]].characterId * 6],
+                (&gRaceProgressMeterIconTiles[gRacePlayers[order[i]].progressMeterSquashFrame])[gRacePlayers[order[i]].characterId * 6],
                 gRaceProgressMeterIconPalettes[gRacePlayers[order[i]].characterId]
             );
         } else {
             temp.assetTable = getRelocatableHeapBlockBase(RACE_HUD_POPUP_FONT_HANDLE);
             drawAssetTableSprite(
                 xBase,
-                (s16)(gRacePlayers[order[i]].unk57E + yBase),
+                (s16)(gRacePlayers[order[i]].progressMeterPosition + yBase),
                 temp.assetTable,
-                (&gRaceProgressMeterIconTiles[gRacePlayers[order[i]].unk580])[gRacePlayers[order[i]].characterId * 6]
+                (&gRaceProgressMeterIconTiles[gRacePlayers[order[i]].progressMeterSquashFrame])[gRacePlayers[order[i]].characterId * 6]
             );
         }
         i--;
@@ -1154,10 +1154,10 @@ void updateRaceCourseProgressMeter(void) {
         if (slots[1] < 0) {
             slots[1] = 0;
         }
-        gRacePlayers[i].unk57E =
+        gRacePlayers[i].progressMeterPosition =
             (slots[1] << 7) / (gRaceCourseStartEntries[gRaceCourseIndex.signedValue].pathIndex * 8);
-        if (gRacePlayers[i].unk57E >= 0x81) {
-            gRacePlayers[i].unk57E = 0x80;
+        if (gRacePlayers[i].progressMeterPosition >= 0x81) {
+            gRacePlayers[i].progressMeterPosition = 0x80;
         }
     }
 

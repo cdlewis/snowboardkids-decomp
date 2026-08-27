@@ -1870,9 +1870,9 @@ void updateRaceResultsFlow(void) {
                                 gRacePlayers[0].rankIndex + 1;
                         }
                         if (gGameSaveDataBuffer[0].highScores[gRaceCourseIndex.signedValue + 1] <
-                            gRacePlayers[0].unk56C) {
+                            gRacePlayers[0].cumulativeRaceScore) {
                             gGameSaveDataBuffer[0].highScores[gRaceCourseIndex.signedValue + 1] =
-                                gRacePlayers[0].unk56C;
+                                gRacePlayers[0].cumulativeRaceScore;
                         }
                     }
                     if (gRacePlayers[0].rankIndex == 0) {

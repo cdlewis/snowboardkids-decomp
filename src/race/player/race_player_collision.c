@@ -12,7 +12,6 @@
 
 #define RACE_PLAYER_COLLISION_YAW_FLIPPED 0x400
 #define RACE_PLAYER_COLLISION_ACTIVE 0x800
-#define RACE_PLAYER_COLLISION_SQUASHED 0x200000
 #define RACE_PLAYER_COLLISION_ALWAYS_VALID 0x400000
 
 #define RACE_PLAYER_COLLISION_ANGLE_MASK 0xFFF
@@ -636,7 +635,7 @@ void resolveRacePlayerCollisionVolumes(RacePlayer* player) {
             localAxes[i][6] = ((((s32) temp) * cosZ) / 0x1000) + ((((s32) sinX) * sinZ) / 0x1000);
             localAxes[i][7] = ((((s32) temp) * sinZ) / 0x1000) + ((((s32) (-sinX)) * cosZ) / 0x1000);
             localAxes[i][8] = (((s32) cosX) * cosY) / 0x1000;
-            if (player->stateFlags & 0x200000) {
+            if (player->stateFlags & RACE_PLAYER_COLLISION_SQUASHED) {
                 localAxes[i][1] = (localAxes[i][1] * player->unk2D6) / 8;
                 localAxes[i][4] = (localAxes[i][4] * player->unk2D6) / 8;
                 localAxes[i][7] = (localAxes[i][7] * player->unk2D6) / 8;
@@ -710,7 +709,7 @@ void resolveRacePlayerCollisionVolumes(RacePlayer* player) {
             localAxes[i][6] = ((((s32) temp) * cosZ) / 0x1000) + ((((s32) sinX) * sinZ) / 0x1000);
             localAxes[i][7] = ((((s32) temp) * sinZ) / 0x1000) + ((((s32) (-sinX)) * cosZ) / 0x1000);
             localAxes[i][8] = (((s32) cosX) * cosY) / 0x1000;
-            if (player->stateFlags & 0x200000) {
+            if (player->stateFlags & RACE_PLAYER_COLLISION_SQUASHED) {
                 localAxes[i][1] = (localAxes[i][1] * player->unk2D6) / 8;
                 localAxes[i][4] = (localAxes[i][4] * player->unk2D6) / 8;
                 localAxes[i][7] = (localAxes[i][7] * player->unk2D6) / 8;
