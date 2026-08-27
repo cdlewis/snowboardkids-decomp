@@ -6,8 +6,28 @@
 
 typedef GameSaveRecordTime RaceTimer;
 
+typedef enum RaceHudMode {
+    RACE_HUD_MODE_NONE = -1,
+    RACE_HUD_MODE_ONE_PLAYER = 0,
+    RACE_HUD_MODE_TWO_PLAYER = 1,
+    RACE_HUD_MODE_THREE_PLAYER = 2,
+    RACE_HUD_MODE_FOUR_PLAYER = 3,
+    RACE_HUD_MODE_TIME_TRIAL = 4,
+    RACE_HUD_MODE_TARGET_TIME_CHALLENGE = 5,
+    RACE_HUD_MODE_SCORE_ATTACK = 6,
+    RACE_HUD_MODE_TRICK_ATTACK = 7,
+    RACE_HUD_MODE_TRAINING_OR_DEMO = 8
+} RaceHudMode;
+
 extern RaceTimer gRaceElapsedTimer;
 extern RaceTimer gRaceCourseTargetTimes[10];
+/* Stored as s16 for the original ABI; values are RaceHudMode. */
+extern s16 gRaceHudMode;
+extern s16 gRaceHudSpinnerFrame;
+extern const char gRaceHudSinglePlayerTimerFormat[];
+extern const char gRaceHudTrainingTimerFormat[];
+extern const char gRaceHudTwoPlayerTimerFormat[];
+extern const char gRaceHudMultiplayerLapCounterFormat[];
 
 void initRaceHud(void);
 void drawTrickAttackChallengeHud(void *arg0);
