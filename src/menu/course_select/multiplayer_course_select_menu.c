@@ -91,7 +91,7 @@ void initMultiplayerCourseSelectMenu(void) {
         gCourseSelectHasExtraCourse[l] = 0;
         gCourseSelectSelectedRows[l] = 0;
     }
-    gFramebufferSwapDelay.value = 0;
+    gFramebufferRenderInterval.value = 0;
     D_800EC9E5 = 0;
     gCourseSelectPurchaseFlowActive = 0;
     gCourseSelectInputLocked = 0;
@@ -561,7 +561,7 @@ void fadeOutMultiplayerCourseSelectMenu(void) {
         if (gPendingFramebufferSwapCount == 2) {
             releaseMenuAssetHandles();
             gFramebufferSwapHold = 0;
-            gFramebufferSwapDelay.value = 0;
+            gFramebufferRenderInterval.value = 0;
             resumeGameTask(2);
             removeGameTask(4);
         }

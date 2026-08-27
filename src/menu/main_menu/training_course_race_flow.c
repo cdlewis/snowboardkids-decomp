@@ -141,12 +141,12 @@ void initTrainingCourseRace(void) {
     resetRaceCameras();
     resetAllViewports();
     gRacePlayerHudStatuses[0].active = 1;
-    gFramebufferSwapDelay.value = 0;
+    gFramebufferRenderInterval.value = 0;
     initRacePlayers();
     initRaceHud();
     configureViewport(0, 0xA0, 0x50, 0x108, 0x78, 0x140, 0x8C, 2.285714388f);
     gRacePlayerHudStatuses[0].active = 1;
-    gFramebufferSwapDelay.value = 0;
+    gFramebufferRenderInterval.value = 0;
     initRaceCourseSceneTasks();
     gMenuFadeAlpha = 0xFF;
     gRaceRumbleEnabled = 0;
@@ -325,7 +325,7 @@ void handleTrainingCourseLessonEndMenuSelection(void) {
         stopSoundEffects();
         releaseMenuAssetHandles();
         gFramebufferSwapHold = 0;
-        gFramebufferSwapDelay.value = 0;
+        gFramebufferRenderInterval.value = 0;
         if (gMainMenuSelectionResult == 1) {
             if (gTrainingCourseLesson < 9) {
                 gTrainingCourseLesson += 1;
@@ -349,7 +349,7 @@ void finishTrainingCourse(void) {
     LOAD_ASSET(_593D10, 0x29);
     LOAD_ASSET(_60F1A0, 0x2A);
     gMainMenuSelectionResult = 0;
-    gFramebufferSwapDelay.value = 0;
+    gFramebufferRenderInterval.value = 0;
     gMenuFadeAlpha = 0xFF;
     resetAllViewports();
     initCallbackTaskScheduler(0);
@@ -387,7 +387,7 @@ void exitTrainingCourseEndingDialog(void) {
     if (gPendingFramebufferSwapCount == 2) {
         releaseMenuAssetHandles();
         gFramebufferSwapHold = 0;
-        gFramebufferSwapDelay.value = 0;
+        gFramebufferRenderInterval.value = 0;
         setCurrentGameTaskCallback(&returnToMainMenuFromTrainingCourse, 0);
     }
 }

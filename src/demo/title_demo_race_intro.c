@@ -124,7 +124,7 @@ void initTitleDemoRaceIntro(void) {
     resetAllViewports();
     configureViewport(0, 0xA0, 0x78, 0x120, 0xB0, 0x140, 0xF0, 1.333333373f);
     gRacePlayerHudStatuses[0].active = playerOne;
-    gFramebufferSwapDelay.value = 0;
+    gFramebufferRenderInterval.value = 0;
     if ((six && six) != 0) {
         initRacePlayers();
     }
@@ -214,7 +214,7 @@ void finishTitleDemoRaceIntro(void) {
         gRaceCameraModeChangeDisabled = 0;
         releaseMenuAssetHandles();
         gFramebufferSwapHold = 0;
-        gFramebufferSwapDelay.value = 0;
+        gFramebufferRenderInterval.value = 0;
         stopSoundEffects();
         gMenuFlowState = 0;
         resumeGameTask(3);

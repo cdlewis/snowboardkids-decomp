@@ -6,8 +6,8 @@
 
 #define GAME_TASK_COUNT 8
 
-u8 gFramebufferSwapDelayTimer[4] = { 0, 0, 0, 0 };
-FramebufferSwapDelay gFramebufferSwapDelay = { 0 };
+u8 gFramebufferSubmissionCountdown[4] = { 0, 0, 0, 0 };
+FramebufferRenderInterval gFramebufferRenderInterval = { 0 };
 s8 gAnalogStickResponseCurve[56] = {
     0,  0,  0,  0,  0,  0,  0,  0,  1,  1,  1,  2,  2,  2,  3,  3,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14,
     15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 31, 31, 31, 31, 31, 0, 0,  1,  0,  0,  0,
@@ -18,9 +18,6 @@ extern u8 gGameTaskCount;
 extern GameTask gActiveGameTaskList;
 extern volatile GameTask gActiveGameTaskListView;
 extern GameTask *gFreeGameTaskStack[];
-extern u8 gPendingFramebufferSwapCount;
-extern u8 gFramebufferSwapHold;
-extern u8 gNextFramebufferRenderTaskIndex;
 extern s32 gPlayerInputPrevious[PLAYER_INPUT_COUNT];
 extern s32 gPlayer2InputPrevious;
 extern s32 gPlayer3InputPrevious;
@@ -200,13 +197,13 @@ void updateGameTaskScheduler(void) {
 s32 updateFramebufferRenderScheduler(void) {
     u8 frameIndex;
 
-    if (gFramebufferSwapDelayTimer[0] == 0) {
+    if (gFramebufferSubmissionCountdown[0] == 0) {
         if (gFramebufferSwapHold == 0) {
             frameIndex = gNextFramebufferRenderTaskIndex;
             if (gFrameRenderTaskStatuses[frameIndex].status == 0) {
                 if ((s32)gPendingFramebufferSwapCount > 0) {
                     submitFramebufferRenderTask(frameIndex);
-                    gFramebufferSwapDelayTimer[0] = gFramebufferSwapDelay.timerValue;
+                    gFramebufferSubmissionCountdown[0] = gFramebufferRenderInterval.timerValue;
                     gPendingFramebufferSwapCount--;
                     if (gNextFramebufferRenderTaskIndex != 0) {
                         gNextFramebufferRenderTaskIndex = 0;
@@ -221,7 +218,7 @@ s32 updateFramebufferRenderScheduler(void) {
         }
         goto return_one;
     }
-    gFramebufferSwapDelayTimer[0]--;
+    gFramebufferSubmissionCountdown[0]--;
 
 return_one:
     return 1;

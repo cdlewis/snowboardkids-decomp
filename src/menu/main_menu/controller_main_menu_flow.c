@@ -749,7 +749,7 @@ void initMainMenu(void) {
     gMainMenuSecretCodeStep = 0;
     resetAllViewports();
     configureMenuViewport(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.3333334f);
-    gFramebufferSwapDelay.value = 0;
+    gFramebufferRenderInterval.value = 0;
     LOAD_ASSET(_5DB9D0, 0x21);
     LOAD_ASSET(_5DCBE0, 0x25);
     LOAD_ASSET(_593D10, 0x22);
@@ -905,7 +905,7 @@ void fadeOutMainMenu(void) {
     } else if (gPendingFramebufferSwapCount == 2) {
         releaseMenuAssetHandles();
         gFramebufferSwapHold = 0;
-        gFramebufferSwapDelay.value = 0;
+        gFramebufferRenderInterval.value = 0;
         if (gCurrentGameTask->mainMenuTimer != 0) {
             temp_v1 = gCurrentGameTask->selection;
             if (temp_v1 == 0) {
@@ -930,7 +930,7 @@ void fadeOutMainMenu(void) {
 void initMainMenuModeSelect(void) {
     resetAllViewports();
     gViewportStates[0].overlayAlpha = 0x80;
-    gFramebufferSwapDelay.value = 0;
+    gFramebufferRenderInterval.value = 0;
     configureMenuViewport(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.3333334f);
     LOAD_RAW_ASSET(_1467B0, 8);
     LOAD_ASSET(_1DE360, 9);
@@ -1006,7 +1006,7 @@ void exitMainMenuModeSelect(void) {
     if (gPendingFramebufferSwapCount == 2) {
         releaseMenuAssetHandles();
         gFramebufferSwapHold = 0;
-        gFramebufferSwapDelay.value = 0;
+        gFramebufferRenderInterval.value = 0;
         setCurrentGameTaskCallback(initMainMenu, 0);
         if (gMenuFlowState == 0) {
             createGameTask(4, startTrainingCourseFlow, 0x64);
@@ -1024,7 +1024,7 @@ void initMainMenuSettings(void) {
     resetAllViewports();
     configureMenuViewport(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.3333334f);
     gViewportStates[0].overlayAlpha = 0x80;
-    gFramebufferSwapDelay.value = 0;
+    gFramebufferRenderInterval.value = 0;
     LOAD_ASSET(_593D10, 0x29);
     LOAD_ASSET(_1F1A90, 0x28);
     LOAD_ASSET(_60F1A0, 0x2A);
@@ -1137,7 +1137,7 @@ void exitMainMenuSettings(void) {
     if (gPendingFramebufferSwapCount == 2) {
         releaseMenuAssetHandles();
         gFramebufferSwapHold = 0;
-        gFramebufferSwapDelay.value = 0;
+        gFramebufferRenderInterval.value = 0;
         setCurrentGameTaskCallback(initMainMenu, 0);
     }
 }

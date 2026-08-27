@@ -336,7 +336,7 @@ void finishRaceStartTransition(void) {
     if (gPendingFramebufferSwapCount == 2) {
         releaseMenuAssetHandles();
         gFramebufferSwapHold = 0;
-        gFramebufferSwapDelay.value = 0;
+        gFramebufferRenderInterval.value = 0;
         resumeGameTask(2);
         removeGameTask(4);
     }
