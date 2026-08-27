@@ -255,8 +255,6 @@ void updateRaceSetupPlayerCountMenu(void) {
     updateCallbackTasks();
 }
 
-extern u8 D_800EC9E4;
-
 // IDO code generation for this function is sensitive to source line layout.
 // clang-format off
 void initRaceSetupSaveMenu(void) {
@@ -271,7 +269,7 @@ void initRaceSetupSaveMenu(void) {
         gControllerPakOperationCounts[i] = 0;
     }
 
-    D_800EC9E4 = 0;
+    gRaceSetupSavePanelCreateTimer = 0;
     do { i = 0; connectedControllerCount = gConnectedControllerCount; if (connectedControllerCount > 0) { player = gRacePlayers; do { player++; player[-1].menuState = 0; i++; } while (player < &gRacePlayers[connectedControllerCount]); i = 0; } do { initRaceSetupPlayerSaveData(i); i++; } while (i < 4); D_8010ADE0 = 0; D_8010ADE4 = 0; } while (0);
     D_8010ADE8 = 0;
     gMenuSelectionConfirmTimer = 0;
@@ -300,8 +298,6 @@ extern void requestControllerPakSaveStatusWithContext(u16 controllerIndex, s32 p
 extern void requestControllerPakSaveReadWithContext(u16 controllerIndex, s32 playerCount, s32 choiceValue);
 extern void requestControllerPakRepairWithContext(u16 controllerIndex, s32 playerCount, s32 choiceValue);
 extern void initControllerPakRumbleCheckPrompt(CallbackTask *);
-
-extern u8 D_800EC9E4;
 
 #if 0
 void updateRaceSetupSaveMenu(void) {
@@ -556,12 +552,12 @@ void updateRaceSetupSaveMenu(void) {
 
     if (allControllerPakOpsComplete != 0) {
         if (savePanelTask == NULL) {
-            D_800EC9E4++;
-            if (D_800EC9E4 >= SAVE_PANEL_CREATE_DELAY) {
+            gRaceSetupSavePanelCreateTimer++;
+            if (gRaceSetupSavePanelCreateTimer >= SAVE_PANEL_CREATE_DELAY) {
                 u8 *operationCount;
                 u8 *operationCountEnd;
 
-                D_800EC9E4 = 0;
+                gRaceSetupSavePanelCreateTimer = 0;
                 D_8010ADE8 = createCallbackTask((CallbackTaskCallback)initRaceSetupSaveStatusWidgets, 0, 0x63);
                 createCallbackTask((CallbackTaskCallback)initRaceSetupSavePanelIcons, 0, 0x63);
                 D_8010ADE0 = createCallbackTask((CallbackTaskCallback)initRaceSetupSavePanelFrame, 0, 0x63);
@@ -846,10 +842,10 @@ void updateRaceSetupSaveMenu(void) {
 
     if (allControllerPakOpsComplete) {
         if (savePanelTask == NULL) {
-            D_800EC9E4++;
+            gRaceSetupSavePanelCreateTimer++;
             saveChoicePromptInitializer = (CallbackTaskCallback)initRaceSetupSaveChoicePrompts;
-            if (D_800EC9E4 >= SAVE_PANEL_CREATE_DELAY) {
-                D_800EC9E4 = 0;
+            if (gRaceSetupSavePanelCreateTimer >= SAVE_PANEL_CREATE_DELAY) {
+                gRaceSetupSavePanelCreateTimer = 0;
                 D_8010ADE8 = createCallbackTask((CallbackTaskCallback)initRaceSetupSaveStatusWidgets, 0, 0x63);
                 createCallbackTask((CallbackTaskCallback)initRaceSetupSavePanelIcons, 0, 0x63);
                 D_8010ADE0 = createCallbackTask((CallbackTaskCallback)initRaceSetupSavePanelFrame, 0, 0x63);
