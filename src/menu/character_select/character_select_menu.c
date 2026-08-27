@@ -14,10 +14,6 @@
 #define CHARACTER_SELECT_MOVE_LEFT 1
 #define CHARACTER_SELECT_MOVE_RIGHT 2
 
-#define CONTROLLER_PAK_STATUS_READY 5
-#define CONTROLLER_PAK_STATUS_USE_EXISTING_SAVE 0x12
-#define CONTROLLER_PAK_STATUS_MENU_COMPLETE 0x13
-
 CharacterSelectState gCharacterSelectHudState;
 s8 gCharacterSelectHighlightedRosterIndices[4];
 u8 gCharacterSelectSecretCharacterUnlocked;
