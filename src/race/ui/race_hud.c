@@ -223,7 +223,7 @@ u32 D_800DC9A8[0x532] = {
 void initRaceHud(void) {
     LOAD_ASSET(_245A80, 0x1F);
     gRaceHudMode = RACE_HUD_MODE_NONE;
-    gRaceHudSpinnerFrame = 0;
+    gRaceHudCoinSpinnerFrame = 0;
 
     if (gPlayerCount == 1) {
         if (gRaceSplitscreenMode == 0) {
@@ -646,7 +646,7 @@ void drawTimeTrialLabels(void *unused) {
     drawMenuAsciiTextDefaultScale(0x48, -0x58, bestLapText, 7);
 }
 
-const char gRaceHudSinglePlayerTimerFormat[] = "%5ld";
+const char gRaceHudSinglePlayerScoreFormat[] = "%5ld";
 
 void drawSinglePlayerRaceHud(void *arg0) {
     s32 palette;
@@ -654,7 +654,7 @@ void drawSinglePlayerRaceHud(void *arg0) {
     s32 var_s1;
     char buffer[0x20];
 
-    sprintf(buffer, gRaceHudSinglePlayerTimerFormat, gRacePlayers[0].score);
+    sprintf(buffer, gRaceHudSinglePlayerScoreFormat, gRacePlayers[0].score);
     if (gRacePlayers[0].score < 100) {
         palette = 0x10;
     } else {
@@ -677,7 +677,7 @@ void drawSinglePlayerRaceHud(void *arg0) {
         0x78,
         0x50,
         getRelocatableHeapBlockBase(RACE_HUD_MAIN_FONT_HANDLE),
-        (gRaceHudSpinnerFrame >> 1) + 4
+        (gRaceHudCoinSpinnerFrame >> 1) + 4
     );
 
     if (gRacePlayers[0].itemEffectPalette != 0) {
@@ -741,7 +741,7 @@ void drawSinglePlayerRaceHud(void *arg0) {
 void noopRaceHudCallback(void *arg0) {
 }
 
-const char gRaceHudTrainingTimerFormat[] = "%5ld";
+const char gRaceHudTrainingScoreFormat[] = "%5ld";
 
 void drawTrainingRaceHud(void *arg0) {
     s32 palette;
@@ -749,7 +749,7 @@ void drawTrainingRaceHud(void *arg0) {
     s32 x;
     char buffer[0x20];
 
-    sprintf(buffer, gRaceHudTrainingTimerFormat, gRacePlayers[0].score);
+    sprintf(buffer, gRaceHudTrainingScoreFormat, gRacePlayers[0].score);
     if (gRacePlayers[0].score < 100) {
         palette = 0x10;
     } else {
@@ -772,7 +772,7 @@ void drawTrainingRaceHud(void *arg0) {
         0x78,
         0x50,
         getRelocatableHeapBlockBase(RACE_HUD_MAIN_FONT_HANDLE),
-        (gRaceHudSpinnerFrame >> 1) + 4
+        (gRaceHudCoinSpinnerFrame >> 1) + 4
     );
 
     if (gRacePlayers[0].itemEffectPalette != 0) {
@@ -813,7 +813,7 @@ void drawTrainingRaceHud(void *arg0) {
     drawAssetTableSprite(-0x88, 0x40, getRelocatableHeapBlockBase(RACE_HUD_POPUP_FONT_HANDLE), 0x29);
 }
 
-const char gRaceHudTwoPlayerTimerFormat[] = "%5ld";
+const char gRaceHudTwoPlayerScoreFormat[] = "%5ld";
 
 void drawTwoPlayerRaceHud(void *arg0) {
     volatile u8 padding[0x18];
@@ -832,7 +832,7 @@ void drawTwoPlayerRaceHud(void *arg0) {
         y = 0x1A;
     }
 
-    sprintf(buffer, gRaceHudTwoPlayerTimerFormat, gRacePlayers[gCurrentViewportIndex].score);
+    sprintf(buffer, gRaceHudTwoPlayerScoreFormat, gRacePlayers[gCurrentViewportIndex].score);
     x = 0x50;
     ptr = buffer;
     if (gRacePlayers[gCurrentViewportIndex].score < 0x64) {
@@ -859,7 +859,7 @@ void drawTwoPlayerRaceHud(void *arg0) {
         0x78,
         y,
         getRelocatableHeapBlockBase(RACE_HUD_MAIN_FONT_HANDLE),
-        (gRaceHudSpinnerFrame >> 1) + 4
+        (gRaceHudCoinSpinnerFrame >> 1) + 4
     );
 
     if (gRacePlayers[gCurrentViewportIndex].itemEffectPalette != 0) {
@@ -938,7 +938,7 @@ void drawMultiplayerRaceHud(void *arg0) {
         0x38,
         0x24,
         getRelocatableHeapBlockBase(RACE_HUD_MAIN_FONT_HANDLE),
-        (gRaceHudSpinnerFrame >> 1) + 4,
+        (gRaceHudCoinSpinnerFrame >> 1) + 4,
         1
     );
 
@@ -973,14 +973,14 @@ void drawMultiplayerRaceHud(void *arg0) {
     drawAssetTableSprite(0x14, -0x30, getRelocatableHeapBlockBase(RACE_HUD_POPUP_FONT_HANDLE), 0x1A);
 }
 
-const char gRaceHudMultiplayerLapCounterFormat[] = "%5ld";
+const char gRaceHudMultiplayerScoreFormat[] = "%5ld";
 
-void drawMultiplayerLapCounter(void *arg0) {
+void drawMultiplayerScoreAndLapCounter(void *arg0) {
     s32 x;
     s32 palette;
     char buffer[0x20];
 
-    sprintf(buffer, gRaceHudMultiplayerLapCounterFormat, gRacePlayers[gCurrentViewportIndex].score);
+    sprintf(buffer, gRaceHudMultiplayerScoreFormat, gRacePlayers[gCurrentViewportIndex].score);
     if (gRacePlayers[gCurrentViewportIndex].score < 0x64) {
         palette = 1;
     } else {
@@ -1171,9 +1171,9 @@ void updateRaceCourseProgressMeter(void) {
 void updateRaceHud(void) {
     s32 i;
 
-    gRaceHudSpinnerFrame++;
-    if (gRaceHudSpinnerFrame >= 12) {
-        gRaceHudSpinnerFrame = 0;
+    gRaceHudCoinSpinnerFrame++;
+    if (gRaceHudCoinSpinnerFrame >= 12) {
+        gRaceHudCoinSpinnerFrame = 0;
     }
 
     switch (*(u16 *)&gRaceHudMode) {
@@ -1242,7 +1242,7 @@ void updateRaceHud(void) {
                 }
             }
             addRenderCallback(&gRaceOverlayRenderCallbackList, drawMultiplayerRaceHud, 0);
-            addRenderCallback(&gRaceForegroundRenderCallbackList, drawMultiplayerLapCounter, 0);
+            addRenderCallback(&gRaceForegroundRenderCallbackList, drawMultiplayerScoreAndLapCounter, 0);
             updateRaceCourseProgressMeter();
             if ((s16)gRaceHudMode == RACE_HUD_MODE_THREE_PLAYER) {
                 addRenderCallback(&gMenuRenderCallbackList, drawThreePlayerHudDivider, 0);

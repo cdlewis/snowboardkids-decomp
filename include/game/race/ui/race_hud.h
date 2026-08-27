@@ -23,11 +23,11 @@ extern RaceTimer gRaceElapsedTimer;
 extern RaceTimer gRaceCourseTargetTimes[10];
 /* Stored as s16 for the original ABI; values are RaceHudMode. */
 extern s16 gRaceHudMode;
-extern s16 gRaceHudSpinnerFrame;
-extern const char gRaceHudSinglePlayerTimerFormat[];
-extern const char gRaceHudTrainingTimerFormat[];
-extern const char gRaceHudTwoPlayerTimerFormat[];
-extern const char gRaceHudMultiplayerLapCounterFormat[];
+extern s16 gRaceHudCoinSpinnerFrame;
+extern const char gRaceHudSinglePlayerScoreFormat[];
+extern const char gRaceHudTrainingScoreFormat[];
+extern const char gRaceHudTwoPlayerScoreFormat[];
+extern const char gRaceHudMultiplayerScoreFormat[];
 
 void initRaceHud(void);
 void drawTrickAttackChallengeHud(void *arg0);
@@ -44,7 +44,7 @@ void drawTrainingRaceHud(void *arg0);
 void drawTwoPlayerRaceHud(void *arg0);
 void drawTwoPlayerLapCounter(void *arg0);
 void drawMultiplayerRaceHud(void *arg0);
-void drawMultiplayerLapCounter(void *arg0);
+void drawMultiplayerScoreAndLapCounter(void *arg0);
 void drawThreePlayerHudDivider(void *arg0);
 void incrementRaceElapsedTimer(void);
 void decrementRaceChallengeTimeLimit(void);
