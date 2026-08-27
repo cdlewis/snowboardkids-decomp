@@ -324,7 +324,7 @@ void resolveRacePlayerBodyCollisions(void) {
                 if (playerA->isActive != 0) {
                     playerB = &gRacePlayers[j];
                     if ((playerB->isActive != 0) && (playerA->soundDisabled == 0) && (playerB->soundDisabled == 0) &&
-                        !(playerA->stateFlags & 0x200000) && !(playerB->stateFlags & 0x200000)) {
+                        !(playerA->stateFlags & RACE_PLAYER_COLLISION_SQUASHED) && !(playerB->stateFlags & RACE_PLAYER_COLLISION_SQUASHED)) {
                         temp = playerA->unk5C - playerB->unk5C;
                         if ((temp < 0 ? (temp = -temp, playerA->collisionHeight) : playerB->collisionHeight) >= temp) {
                             radius = playerB->collisionRadius + playerA->collisionRadius;
@@ -1589,9 +1589,9 @@ void addRacePlayerScore(RacePlayer *arg0, s32 arg1) {
         if (arg0->score >= 0x186A0) {
             arg0->score = 0x1869F;
         }
-        arg0->unk56C += arg1;
-        if (arg0->unk56C >= 0x186A0) {
-            arg0->unk56C = 0x1869F;
+        arg0->cumulativeRaceScore += arg1;
+        if (arg0->cumulativeRaceScore >= 0x186A0) {
+            arg0->cumulativeRaceScore = 0x1869F;
         }
     }
 }
