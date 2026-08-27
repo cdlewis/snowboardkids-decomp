@@ -4,6 +4,8 @@
 #include "common.h"
 #include "game/math/geometry.h"
 
+#define RACE_CAMERA_COUNT 4
+
 typedef struct RaceCamera {
     /* 0x00 */ u16 playerIndex;
     /* 0x02 */ u16 mode;

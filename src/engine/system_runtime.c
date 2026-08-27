@@ -400,7 +400,7 @@ extern s16 gMenuViewportHeight;
 extern s16 gMenuViewportCenterX;
 extern s16 gMenuViewportCenterY;
 extern u8 gCurrentViewportIndex;
-extern RaceCamera D_801121E0[4];
+extern RaceCamera D_801121E0[RACE_CAMERA_COUNT];
 
 #define runtimeDisplayListData ((RuntimeViewportDisplayListData *)gCurrentTaskDisplayListStart)
 #define runtimeModelRenderCallbackLists (*(RenderCallbackNode * (*)[24]) & gModelRenderCallbackList)
