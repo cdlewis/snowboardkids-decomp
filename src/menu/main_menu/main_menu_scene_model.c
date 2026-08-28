@@ -16,10 +16,8 @@
 #define MAIN_MENU_ANIMATION_FRAME_DATA(bank, index) \
     ((s16 *)(((bank)->frameOffsets[(index)] * sizeof(s16)) + (s32)(bank)))
 #define FIXED_MATRIX_ONE 0x1000
-#define MAIN_MENU_SCENE_MODEL_PART_COUNT 14
 #define MAIN_MENU_SCENE_MODEL_MATRIX_AXES 3
 #define MAIN_MENU_CHARACTER_COUNT 6
-#define FIXED_MATRIX_ROWS(matrix) ((s16(*)[MAIN_MENU_SCENE_MODEL_MATRIX_AXES])(matrix))
 #define MAIN_MENU_ASSET_RANGE_ADDRESS(table, index) \
     (((MainMenuAssetRangeTableView *)(table))->addresses[(index)])
 
@@ -584,9 +582,9 @@ void applyMainMenuSceneModelAnimationFrame(MainMenuSceneModel *model) {
         writePart[2].word4 = cursor[2] << 11;
         writePart++;
         cursor += 3;
-    } while (i < 14);
+    } while (i < MAIN_MENU_SCENE_MODEL_PART_COUNT);
 
-    for (i = 0; i < 14; i++) {
+    for (i = 0; i < MAIN_MENU_SCENE_MODEL_PART_COUNT; i++) {
         part = &model->parts[i];
         part->rot.x = *cursor++;
         part->rot.y = *cursor++;
@@ -659,8 +657,8 @@ void setMainMenuSceneModelRotation(s32 modelIndex, s16 x, s16 y, s16 z) {
 }
 
 void updateMainMenuSceneModelTransforms(MainMenuSceneModel *model) {
-    Transform3D modelTransform;
-    Transform3D partTransforms[MAIN_MENU_SCENE_MODEL_PART_COUNT];
+    Transform3D rootTransform;
+    Transform3D localPartTransforms[MAIN_MENU_SCENE_MODEL_PART_COUNT];
     {
         s32 sineX;
         s32 cosineX;
@@ -668,72 +666,71 @@ void updateMainMenuSceneModelTransforms(MainMenuSceneModel *model) {
         s32 cosineY;
         s32 sineZ;
         s32 cosineZ;
-        s32 i;
+        s32 partIndex;
 
-        i = 0;
+        partIndex = 0;
         do {
-            sineX = fixedSine(model->parts[i].rot.x);
-            cosineX = fixedCosine(model->parts[i].rot.x);
-            sineY = fixedSine(model->parts[i].rot.y);
-            cosineY = fixedCosine(model->parts[i].rot.y);
-            sineZ = fixedSine(model->parts[i].rot.z);
-            cosineZ = fixedCosine(model->parts[i].rot.z);
+            sineX = fixedSine(model->parts[partIndex].rot.x);
+            cosineX = fixedCosine(model->parts[partIndex].rot.x);
+            sineY = fixedSine(model->parts[partIndex].rot.y);
+            cosineY = fixedCosine(model->parts[partIndex].rot.y);
+            sineZ = fixedSine(model->parts[partIndex].rot.z);
+            cosineZ = fixedCosine(model->parts[partIndex].rot.z);
 
-            partTransforms[i].rotation[MTX_XX] = (cosineY * cosineZ) / FIXED_MATRIX_ONE;
-            partTransforms[i].rotation[MTX_XY] = (cosineY * sineZ) / FIXED_MATRIX_ONE;
-            partTransforms[i].rotation[MTX_XZ] = -sineY;
-            partTransforms[i].rotation[MTX_YX] =
+            localPartTransforms[partIndex].rotation[MTX_XX] = (cosineY * cosineZ) / FIXED_MATRIX_ONE;
+            localPartTransforms[partIndex].rotation[MTX_XY] = (cosineY * sineZ) / FIXED_MATRIX_ONE;
+            localPartTransforms[partIndex].rotation[MTX_XZ] = -sineY;
+            localPartTransforms[partIndex].rotation[MTX_YX] =
                 (((((sineX * sineY) / FIXED_MATRIX_ONE) * cosineZ) / FIXED_MATRIX_ONE) +
                  ((cosineX * -sineZ) / FIXED_MATRIX_ONE));
-            partTransforms[i].rotation[MTX_YY] =
+            localPartTransforms[partIndex].rotation[MTX_YY] =
                 (((((sineX * sineY) / FIXED_MATRIX_ONE) * sineZ) / FIXED_MATRIX_ONE) +
                  ((cosineX * cosineZ) / FIXED_MATRIX_ONE));
-            partTransforms[i].rotation[MTX_YZ] = (sineX * cosineY) / FIXED_MATRIX_ONE;
-            partTransforms[i].rotation[MTX_ZX] =
+            localPartTransforms[partIndex].rotation[MTX_YZ] = (sineX * cosineY) / FIXED_MATRIX_ONE;
+            localPartTransforms[partIndex].rotation[MTX_ZX] =
                 (((((cosineX * sineY) / FIXED_MATRIX_ONE) * cosineZ) / FIXED_MATRIX_ONE) +
                  ((sineX * sineZ) / FIXED_MATRIX_ONE));
-            partTransforms[i].rotation[MTX_ZY] =
+            localPartTransforms[partIndex].rotation[MTX_ZY] =
                 (((((cosineX * sineY) / FIXED_MATRIX_ONE) * sineZ) / FIXED_MATRIX_ONE) +
                  (((-sineX) * cosineZ) / FIXED_MATRIX_ONE));
-            partTransforms[i].rotation[MTX_ZZ] = (cosineX * cosineY) / FIXED_MATRIX_ONE;
-            i++;
-        } while (i != MAIN_MENU_SCENE_MODEL_PART_COUNT);
+            localPartTransforms[partIndex].rotation[MTX_ZZ] = (cosineX * cosineY) / FIXED_MATRIX_ONE;
+            partIndex++;
+        } while (partIndex != MAIN_MENU_SCENE_MODEL_PART_COUNT);
     }
 
-    makeFixedRotationZXY(modelTransform.rotation, model->rot.x, model->rot.y, model->rot.z);
-    modelTransform.translation.x = model->pos.x;
-    modelTransform.translation.y = model->pos.y;
-    modelTransform.translation.z = model->pos.z;
+    makeFixedRotationZXY(rootTransform.rotation, model->rot.x, model->rot.y, model->rot.z);
+    rootTransform.translation.x = model->pos.x;
+    rootTransform.translation.y = model->pos.y;
+    rootTransform.translation.z = model->pos.z;
 
     {
-        s32 i;
-        s32 j;
-        s32 k;
+        s32 partIndex;
+        s32 row;
+        s32 column;
 
-        for (i = 0; i < MAIN_MENU_SCENE_MODEL_PART_COUNT; i++) {
-            for (j = 0; j < MAIN_MENU_SCENE_MODEL_MATRIX_AXES; j++) {
-                for (k = 0; k < MAIN_MENU_SCENE_MODEL_MATRIX_AXES; k++) {
-                    FIXED_MATRIX_ROWS(model->displayObjects[i].rotation)
-                    [j][k] = ((FIXED_MATRIX_ROWS(partTransforms[i].rotation)[j][0] *
-                               FIXED_MATRIX_ROWS(modelTransform.rotation)[0][k]) +
-                              (FIXED_MATRIX_ROWS(partTransforms[i].rotation)[j][1] *
-                               FIXED_MATRIX_ROWS(modelTransform.rotation)[1][k]) +
-                              (FIXED_MATRIX_ROWS(partTransforms[i].rotation)[j][2] *
-                               FIXED_MATRIX_ROWS(modelTransform.rotation)[2][k])) /
-                             FIXED_MATRIX_ONE;
+        for (partIndex = 0; partIndex < MAIN_MENU_SCENE_MODEL_PART_COUNT; partIndex++) {
+            for (row = 0; row < MAIN_MENU_SCENE_MODEL_MATRIX_AXES; row++) {
+                for (column = 0; column < MAIN_MENU_SCENE_MODEL_MATRIX_AXES; column++) {
+                    model->partTransforms[partIndex].rotationRows[row][column] =
+                        ((localPartTransforms[partIndex].rotationRows[row][0] *
+                          rootTransform.rotationRows[0][column]) +
+                         (localPartTransforms[partIndex].rotationRows[row][1] *
+                          rootTransform.rotationRows[1][column]) +
+                         (localPartTransforms[partIndex].rotationRows[row][2] *
+                          rootTransform.rotationRows[2][column])) /
+                        FIXED_MATRIX_ONE;
                 }
             }
         }
 
-        for (i = 0; i < MAIN_MENU_SCENE_MODEL_PART_COUNT; i++) {
-            for (j = 0; j < MAIN_MENU_SCENE_MODEL_MATRIX_AXES; j++) {
-                ((s32 *)&model->displayObjects[i].translation)[j] =
-                    ((s64)modelTransform.rotation[j] * model->parts[i].offset.x +
-                     (s64)modelTransform.rotation[j + MAIN_MENU_SCENE_MODEL_MATRIX_AXES] * model->parts[i].offset.y +
-                     (s64)modelTransform.rotation[j + (MAIN_MENU_SCENE_MODEL_MATRIX_AXES * 2)] *
-                         model->parts[i].offset.z) /
+        for (partIndex = 0; partIndex < MAIN_MENU_SCENE_MODEL_PART_COUNT; partIndex++) {
+            for (row = 0; row < MAIN_MENU_SCENE_MODEL_MATRIX_AXES; row++) {
+                model->partTransforms[partIndex].translationElements[row] =
+                    ((s64)rootTransform.rotationRows[0][row] * model->parts[partIndex].offset.x +
+                     (s64)rootTransform.rotationRows[1][row] * model->parts[partIndex].offset.y +
+                     (s64)rootTransform.rotationRows[2][row] * model->parts[partIndex].offset.z) /
                     FIXED_MATRIX_ONE;
-                ((s32 *)&model->displayObjects[i].translation)[j] += ((s32 *)&modelTransform.translation)[j];
+                model->partTransforms[partIndex].translationElements[row] += rootTransform.translationElements[row];
             }
         }
     }
@@ -764,8 +761,8 @@ void drawMainMenuSceneModel(MainMenuSceneModel *arg0) {
                        ASSET_HANDLE(MAIN_MENU_SCENE_MODEL_TEXTURE_HANDLE_BASE +
                                     (u16)arg0->sceneModelIndex)));
 
-        displayListCount = 13;
-        partIndex = 1; transform = &arg0->displayObjects[1]; do {
+        displayListCount = MAIN_MENU_SCENE_MODEL_PART_COUNT - 1;
+        partIndex = 1; transform = &arg0->partTransforms[1]; do {
             matrix = allocFixedTransformMatrix(transform);
             if (matrix != NULL) {
                 gSPMatrix(gRegionAllocPtr++, matrix,
@@ -778,7 +775,7 @@ void drawMainMenuSceneModel(MainMenuSceneModel *arg0) {
             }
             partIndex++;
             transform++;
-        } while (partIndex != 14);
+        } while (partIndex != MAIN_MENU_SCENE_MODEL_PART_COUNT);
 
         /* Keep arg0 live through the loop exit for the original register allocation. */
         if (arg0 == NULL) {
@@ -796,7 +793,7 @@ void drawTexturedMainMenuSceneModel(MainMenuSceneModel *arg0) {
 
     do {
         if ((u16)arg0->viewportIndex == gCurrentViewportIndex) {
-            matrix = allocFixedTransformMatrix(arg0->displayObjects);
+            matrix = allocFixedTransformMatrix(arg0->partTransforms);
             model = arg0;
             if (matrix != NULL) {
                 drawSnowboardModel(matrix, model->textureId, model->paletteId);
@@ -818,10 +815,10 @@ void drawTexturedMainMenuSceneModel(MainMenuSceneModel *arg0) {
                 )
             );
 
-            stride = 13;
+            stride = MAIN_MENU_SCENE_MODEL_PART_COUNT - 1;
             displayLists = gMainMenuSceneModelPartDisplayLists;
-            for (i = 1; i < 14; i++) {
-                matrix = allocFixedTransformMatrix(&model->displayObjects[i]);
+            for (i = 1; i < MAIN_MENU_SCENE_MODEL_PART_COUNT; i++) {
+                matrix = allocFixedTransformMatrix(&model->partTransforms[i]);
                 if (matrix != NULL) {
                     gSPMatrix(gRegionAllocPtr++, matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
                     gSPDisplayList(gRegionAllocPtr++, displayLists[((u16)model->characterIndex * stride) + i - 1]);
@@ -910,7 +907,7 @@ void initMainMenuSceneModelParts(MainMenuSceneModel *model) {
     model->parts[13].displayObjectIndex = 5;
 
     cursor = gMainMenuSceneModelPartInitDataByModel[(u16)model->characterIndex];
-    for (i = 0; i < 14; i++) {
+    for (i = 0; i < MAIN_MENU_SCENE_MODEL_PART_COUNT; i++) {
         model->parts[i].rot.x = model->parts[i].rot.y = model->parts[i].rot.z = 0;
         model->parts[i].offset.x = cursor[0] << 16;
         model->parts[i].offset.y = cursor[1] << 16;
