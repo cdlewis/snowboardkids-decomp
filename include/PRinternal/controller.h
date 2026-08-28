@@ -193,7 +193,7 @@ typedef struct {
 
 extern s32 __osEepStatus(OSMesgQueue *, OSContStatus *);
 u16 __osSumcalc(u8 *ptr, int length);
-s32 __osIdCheckSum(u16 *ptr, u16 *csum, u16 *icsum);
+s32 __osIdCheckSum(const __OSPackId *id, u16 *csum, u16 *icsum);
 s32 __osRepairPackId(OSPfs *pfs, const __OSPackId *sourceId, __OSPackId *repairedId);
 s32 __osCheckPackId(OSPfs *pfs, __OSPackId *temp);
 s32 __osGetId(OSPfs *pfs);

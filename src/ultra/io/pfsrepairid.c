@@ -6,45 +6,45 @@ s32 osPfsRepairId(OSPfs *pfs) {
     int byteIndex;
     u16 checksum;
     u16 invertedChecksum;
-    __OSPackId initialPackId;
+    __OSPackId candidatePackId;
     __OSPackId repairedPackId;
     s32 ret;
-    __OSPackId *validPackId;
+    __OSPackId *packId;
 
     SET_ACTIVEBANK_TO_ZERO();
-    ERRCK(__osContRamRead(pfs->queue, pfs->channel, PFS_ID_0AREA, (u8 *)&initialPackId));
-    __osIdCheckSum((u16 *)&initialPackId, &checksum, &invertedChecksum);
-    validPackId = &initialPackId;
+    ERRCK(__osContRamRead(pfs->queue, pfs->channel, PFS_ID_0AREA, (u8 *)&candidatePackId));
+    __osIdCheckSum(&candidatePackId, &checksum, &invertedChecksum);
+    packId = &candidatePackId;
 
     /* Recover another redundant ID copy, or rebuild the ID if every copy is corrupt. */
-    if (validPackId->checksum != checksum || validPackId->inverted_checksum != invertedChecksum) {
-        ret = __osCheckPackId(pfs, validPackId);
+    if (packId->checksum != checksum || packId->inverted_checksum != invertedChecksum) {
+        ret = __osCheckPackId(pfs, packId);
 
         if (ret == PFS_ERR_ID_FATAL) {
-            ERRCK(__osRepairPackId(pfs, validPackId, &repairedPackId));
-            validPackId = &repairedPackId;
+            ERRCK(__osRepairPackId(pfs, packId, &repairedPackId));
+            packId = &repairedPackId;
         } else if (ret != 0) {
             return ret;
         }
     }
 
     /* Reprobe the accessory before accepting it as a Controller Pak. */
-    if ((validPackId->deviceid & PFS_ID_DEVICE_ID_BIT) == 0) {
-        ERRCK(__osRepairPackId(pfs, validPackId, &repairedPackId));
-        validPackId = &repairedPackId;
+    if ((packId->deviceid & PFS_ID_DEVICE_ID_BIT) == 0) {
+        ERRCK(__osRepairPackId(pfs, packId, &repairedPackId));
+        packId = &repairedPackId;
 
-        if ((validPackId->deviceid & PFS_ID_DEVICE_ID_BIT) == 0) {
+        if ((packId->deviceid & PFS_ID_DEVICE_ID_BIT) == 0) {
             return PFS_ERR_DEVICE;
         }
     }
 
     /* Refresh the file-system geometry cached in the public handle. */
     for (byteIndex = 0; byteIndex < ARRLEN(pfs->id); byteIndex++) {
-        pfs->id[byteIndex] = ((u8 *)validPackId)[byteIndex];
+        pfs->id[byteIndex] = ((u8 *)packId)[byteIndex];
     }
 
-    pfs->version = validPackId->version;
-    pfs->banks = validPackId->banks;
+    pfs->version = packId->version;
+    pfs->banks = packId->banks;
     pfs->inode_start_page = 1 + DEF_DIR_PAGES + (2 * pfs->banks);
     pfs->dir_size = DEF_DIR_PAGES * PFS_ONE_PAGE;
     pfs->inode_table = PFS_ONE_PAGE;
