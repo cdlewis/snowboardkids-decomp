@@ -14,35 +14,6 @@
 #define CHARACTER_SELECT_UI_PLAYER_FRAME_HANDLE (gAssetHandles[0x21])
 #define CHARACTER_SELECT_UI_BANNER_TEXTURE_HANDLE (gAssetHandles[0x29])
 #define CHARACTER_SELECT_UI_AVAILABLE_CHARACTER_ICON_HANDLE (gAssetHandles[0x1F])
-typedef struct {
-    u8 pad0[0x24];
-    /* 0x24 */ u8 playerFrameReady;
-} CharacterSelectUiPlayerPanelFrameController;
-
-typedef struct {
-    u8 pad0[0x18];
-    /* 0x18 */ s16 x[RACE_PLAYER_COUNT];
-    /* 0x20 */ s16 y[RACE_PLAYER_COUNT];
-    /* 0x28 */ u16 frameLimit;
-    /* 0x2A */ u16 frameStep;
-    /* 0x2C */ u16 frameCounter;
-    u8 pad2E[2];
-    /* 0x30 */ u8 mode;
-} CharacterSelectUiPanelTransitionActor;
-
-typedef struct {
-    /* 0x0 */ u8 speed;
-    /* 0x1 */ u8 turn;
-    /* 0x2 */ u8 trick;
-} CharacterSelectUiCharacterStats;
-
-typedef struct {
-    MenuGlyphScript confirmationText[2][0x1C];
-    u16 unusedData[0x14];
-} CharacterSelectUiConfirmationBannerText;
-
-extern CharacterSelectUiPlayerPanelFrameController *D_8010ADE0;
-extern CharacterSelectUiPanelActor *D_8010ADE4;
 extern s32 gMenuFlowState;
 
 CharacterSelectUiConfirmationBannerText gCharacterSelectConfirmationBannerText = {
@@ -264,7 +235,7 @@ void drawCharacterSelectConfirmationBanner(CharacterSelectUiBannerActor *arg0) {
                 alpha = actor->alpha & 0xFFFF;
                 ;
             } else {
-                alpha = (u16)actor->unk1E;
+                alpha = (u16)actor->confirmationCursorAlpha;
             }
             drawMenuSpriteWithAlpha(
                 (s16)(actor->x + 0x4C),
@@ -303,7 +274,7 @@ void updateCharacterSelectConfirmationBanner(CharacterSelectUiBannerActor *arg0)
         arg0->state = gCharacterSelectHudState.phase;
         arg0->alpha = gCharacterSelectHudState.bannerAlpha;
         arg0->bounceTimer = gCharacterSelectHudState.bannerBounceTimer;
-        arg0->unk1E = gCharacterSelectHudState.bannerBounceOffset;
+        arg0->confirmationCursorAlpha = gCharacterSelectHudState.bannerBounceOffset;
     }
 
     if (gCharacterSelectHudState.confirmationChoice != actor->mode) {
@@ -343,9 +314,9 @@ void updateCharacterSelectConfirmationBanner(CharacterSelectUiBannerActor *arg0)
                 break;
             case 4:
                 if (actor->bounceTimer < 0x10) {
-                    actor->unk1E -= 9;
+                    actor->confirmationCursorAlpha -= 9;
                 } else {
-                    actor->unk1E += 9;
+                    actor->confirmationCursorAlpha += 9;
                 }
                 actor->bounceTimer = (actor->bounceTimer + 1) & 0x1F;
                 break;
@@ -385,8 +356,8 @@ void drawCharacterSelectPlayerPanelFrames(CharacterSelectUiPlayerPanelFrameActor
         panel = actor;
         playerNumber = i + 1;
         drawMenuSpriteWithAlpha(
-            actor->panelX[i],
-            actor->panelY[i],
+            actor->x[i],
+            actor->y[i],
             getRelocatableHeapBlockBase(CHARACTER_SELECT_UI_PLAYER_FRAME_HANDLE),
             0x23,
             0x20,
@@ -396,8 +367,8 @@ void drawCharacterSelectPlayerPanelFrames(CharacterSelectUiPlayerPanelFrameActor
             playerNumber
         );
         drawMenuSpriteWithAlpha(
-            (s16)(actor->panelX[i] + 0x40),
-            actor->panelY[i],
+            (s16)(actor->x[i] + 0x40),
+            actor->y[i],
             getRelocatableHeapBlockBase(CHARACTER_SELECT_UI_PLAYER_FRAME_HANDLE),
             0x24,
             0x20,
@@ -407,8 +378,8 @@ void drawCharacterSelectPlayerPanelFrames(CharacterSelectUiPlayerPanelFrameActor
             playerNumber
         );
         drawMenuSpriteWithAlpha(
-            (s16)(panel->panelX[i] + 0x80),
-            panel->panelY[i],
+            (s16)(panel->x[i] + 0x80),
+            panel->y[i],
             getRelocatableHeapBlockBase(CHARACTER_SELECT_UI_PLAYER_FRAME_HANDLE),
             0xC,
             0x20,
@@ -419,13 +390,13 @@ void drawCharacterSelectPlayerPanelFrames(CharacterSelectUiPlayerPanelFrameActor
         );
 
         sprintf(text, gCharacterSelectPlayerNumberFormat, playerNumber);
-        drawMenuAsciiText((s16)(actor->panelX[i] + 0x32), (s16)(panel->panelY[i] + 2), (u8 *)text, 0, alpha);
+        drawMenuAsciiText((s16)(actor->x[i] + 0x32), (s16)(panel->y[i] + 2), (u8 *)text, 0, alpha);
 
         if (alpha != 0x100) {
             if ((!actor) && (!actor)) {}
             drawMenuSpriteWithAlpha(
-                (s16)(actor->panelX[i] + 2),
-                (s16)(actor->panelY[i] + 0x14),
+                (s16)(actor->x[i] + 2),
+                (s16)(actor->y[i] + 0x14),
                 getRelocatableHeapBlockBase(CHARACTER_SELECT_UI_UNUSED_HANDLE),
                 0x90,
                 0x20,
@@ -438,25 +409,25 @@ void drawCharacterSelectPlayerPanelFrames(CharacterSelectUiPlayerPanelFrameActor
     }
 }
 
-void updateCharacterSelectPlayerPanelFrames(CharacterSelectUiPanelActor *arg0) {
+void updateCharacterSelectPlayerPanelFrames(CharacterSelectUiPlayerPanelFrameActor *arg0) {
     u8 var_v0;
     u8 desired;
     u8 var_v1;
-    CharacterSelectUiPanelActor *actor;
-    CharacterSelectUiPlayerPanelFrameController *owner;
+    CharacterSelectUiPlayerPanelFrameActor *actor;
+    CharacterSelectUiRosterIconActor *owner;
 
     owner = D_8010ADE0;
     actor = arg0;
-    var_v0 = actor->targetY.mode;
+    var_v0 = actor->transitionState;
     desired = gCharacterSelectHudState.exitMode;
     var_v1 = var_v0;
     if (desired != var_v0) {
-        actor->targetY.mode = desired;
+        actor->transitionState = desired;
         var_v0 = desired & 0xFF;
-        actor->targetX.target[0] = gCharacterSelectHudState.cursorX;
-        var_v0 = actor->targetY.mode;
+        actor->frameLimit = gCharacterSelectHudState.cursorX;
+        var_v0 = actor->transitionState;
         var_v1 = var_v0;
-        actor->targetX.target[1] = gCharacterSelectHudState.cursorY;
+        actor->frameStep = gCharacterSelectHudState.cursorY;
     }
 
     switch (var_v1) {
@@ -464,10 +435,10 @@ void updateCharacterSelectPlayerPanelFrames(CharacterSelectUiPanelActor *arg0) {
             actor->y[1] += 8;
             actor->y[3] += 8;
             if (actor->y[3] == 0x24) {
-                actor->targetY.mode = 2;
-                owner->playerFrameReady = 1;
+                actor->transitionState = 2;
+                owner->state = 1;
             }
-            var_v0 = actor->targetY.mode;
+            var_v0 = actor->transitionState;
             break;
         case 0:
         case 2:
@@ -480,7 +451,7 @@ void updateCharacterSelectPlayerPanelFrames(CharacterSelectUiPanelActor *arg0) {
     addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawCharacterSelectPlayerPanelFrames, actor);
 }
 
-void initCharacterSelectPlayerPanelFrames(CharacterSelectUiPanelActor *arg0) {
+void initCharacterSelectPlayerPanelFrames(CharacterSelectUiPlayerPanelFrameActor *arg0) {
     arg0->x[0] = -0x88;
     arg0->y[0] = -0x60;
     arg0->x[1] = -0x88;
@@ -489,9 +460,9 @@ void initCharacterSelectPlayerPanelFrames(CharacterSelectUiPanelActor *arg0) {
     arg0->y[2] = -0x60;
     arg0->x[3] = 4;
     arg0->y[3] = 4;
-    arg0->targetX.target[0] = 0x8C;
-    arg0->targetX.target[1] = 0x44;
-    arg0->targetY.mode = 0;
+    arg0->frameLimit = 0x8C;
+    arg0->frameStep = 0x44;
+    arg0->transitionState = 0;
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateCharacterSelectPlayerPanelFrames);
 }
 
@@ -534,7 +505,7 @@ void drawCharacterSelectRosterIcons(CharacterSelectUiRosterIconActor *arg0) {
             xOffset += 0x20;
         } while (i < 5);
 
-        if (arg0->playerFlags != 0) {
+        if (arg0->leftSecretSlotUnlocked != 0) {
             alpha = 0x100;
             j = 0;
             if (gPlayerCount > 0) {
@@ -609,23 +580,23 @@ void initCharacterSelectRosterIcons(CharacterSelectUiRosterIconActor *arg0) {
     arg0->unk26 = 0;
     arg0->state = 0;
     arg0->timer = 0;
-    arg0->playerFlags = 0;
+    arg0->leftSecretSlotUnlocked = 0;
     actor = arg0;
-    arg0->unk23 = 0;
+    arg0->rightSecretSlotUnlocked = 0;
 
     i = 0;
     if (gPlayerCount > 0) {
         player = &gGameSaveDataBuffer[0];
         do {
-            actor->playerFlags = actor->playerFlags | (player->characterFlags & 1);
-            gCharacterSelectHudState.leftSecretSlotUnlocked = actor->playerFlags;
-            gCharacterSelectHudState.rightSecretSlotUnlocked = actor->unk23;
+            actor->leftSecretSlotUnlocked = actor->leftSecretSlotUnlocked | (player->characterFlags & 1);
+            gCharacterSelectHudState.leftSecretSlotUnlocked = actor->leftSecretSlotUnlocked;
+            gCharacterSelectHudState.rightSecretSlotUnlocked = actor->rightSecretSlotUnlocked;
             i++;
             player++;
         } while (i < gPlayerCount);
     }
 
-    if (actor->playerFlags == 1) {
+    if (actor->leftSecretSlotUnlocked == 1) {
         actor->targetX = -0x40;
     } else {
         actor->targetX = targetX;
@@ -744,9 +715,9 @@ void initCharacterSelectPlayerCursorMarkers(CharacterSelectUiPlayerCursorActor *
 
 const char gCharacterSelectCharacterStatFormat[] = "%d";
 
-void drawCharacterSelectPlayerStatsPanels(CharacterSelectUiPanelActor *arg0) {
+void drawCharacterSelectPlayerStatsPanels(CharacterSelectUiPlayerStatsPanelActor *arg0) {
     CharacterSelectUiPlayerCursorActor *controller = D_8010ADE8;
-    CharacterSelectUiPanelActor *actor = arg0;
+    CharacterSelectUiPlayerStatsPanelActor *actor = arg0;
     s32 i;
     s32 j;
     s32 k;
@@ -758,13 +729,13 @@ void drawCharacterSelectPlayerStatsPanels(CharacterSelectUiPanelActor *arg0) {
         for (i = 0; i < gPlayerCount; i++) {
             if (gRacePlayers[i].menuState == 0) {
                 textureIndex = 0x21;
-                if (actor->targetX.statsBlinkTimer[i] > 10) {
-                    actor->targetY.statsBlinkVisible[i] = 1;
+                if (actor->blinkTimer[i] > 10) {
+                    actor->blinkVisible[i] = 1;
                 } else {
-                    actor->targetY.statsBlinkVisible[i] = 0;
+                    actor->blinkVisible[i] = 0;
                 }
 
-                if (actor->targetY.statsBlinkVisible[i] != 0) {
+                if (actor->blinkVisible[i] != 0) {
                     tile = gRacePlayers[i].selectedCharacterId + 0x3D;
                 } else {
                     tile = gRacePlayers[i].selectedCharacterId + 0x37;
@@ -890,13 +861,13 @@ void drawCharacterSelectPlayerStatsPanels(CharacterSelectUiPanelActor *arg0) {
 #ifdef PREVIOUS_NON_MATCHING
 extern const char gCharacterSelectCharacterStatFormat[];
 
-void drawCharacterSelectPlayerStatsPanels(CharacterSelectUiPanelActor *statsPanels) {
-    CharacterSelectUiPanelActor *base;
+void drawCharacterSelectPlayerStatsPanels(CharacterSelectUiPlayerStatsPanelActor *statsPanels) {
+    CharacterSelectUiPlayerStatsPanelActor *base;
     u8 *statsBase;
     s32 stride;
     RacePlayer *player;
     volatile s16 *textureHandles;
-    CharacterSelectUiPanelActor *actor;
+    CharacterSelectUiPlayerStatsPanelActor *actor;
     s32 i;
     s32 j;
     s32 xOffset;
@@ -921,12 +892,12 @@ void drawCharacterSelectPlayerStatsPanels(CharacterSelectUiPanelActor *statsPane
                 j = (xOffset = 0);
                 if (player->menuState == 0) {
                     iconIndex = 0x21;
-                    if (base->targetX.statsBlinkTimer[i] >= 0xB) {
-                        base->targetY.statsBlinkVisible[i] = 1;
+                    if (base->blinkTimer[i] >= 0xB) {
+                        base->blinkVisible[i] = 1;
                     } else {
-                        base->targetY.statsBlinkVisible[i] = 0;
+                        base->blinkVisible[i] = 0;
                     }
-                    if (base->targetY.statsBlinkVisible[i] != 0) {
+                    if (base->blinkVisible[i] != 0) {
                         tile = (player->selectedCharacterId + 0x3D) & 0xFFFF;
                     } else {
                         tile = (player->selectedCharacterId + 0x37) & 0xFFFF;
@@ -1082,7 +1053,7 @@ void drawCharacterSelectPlayerStatsPanels(CharacterSelectUiPanelActor *statsPane
 #ifdef NON_MATCHING
 const char gCharacterSelectCharacterStatFormat[] = "%d";
 
-void drawCharacterSelectPlayerStatsPanels(CharacterSelectUiPanelActor *arg0) {
+void drawCharacterSelectPlayerStatsPanels(CharacterSelectUiPlayerStatsPanelActor *arg0) {
     s32 j;
     s32 i;
     s32 xOffset;
@@ -1090,7 +1061,7 @@ void drawCharacterSelectPlayerStatsPanels(CharacterSelectUiPanelActor *arg0) {
     u8 textureIndex;
     u8 text[4];
     CharacterSelectUiPlayerCursorActor *controller = D_8010ADE8;
-    CharacterSelectUiPanelActor *actor = arg0;
+    CharacterSelectUiPlayerStatsPanelActor *actor = arg0;
 
     if (controller->mode != 0) {
         i = 0;
@@ -1101,13 +1072,13 @@ void drawCharacterSelectPlayerStatsPanels(CharacterSelectUiPanelActor *arg0) {
                 j = 0;
                 if (player->menuState == 0) {
                     textureIndex = 0x21;
-                    if (actor->targetX.statsBlinkTimer[i] >= 0xB) {
-                        actor->targetY.statsBlinkVisible[i] = 1;
+                    if (actor->blinkTimer[i] >= 0xB) {
+                        actor->blinkVisible[i] = 1;
                     } else {
-                        actor->targetY.statsBlinkVisible[i] = 0;
+                        actor->blinkVisible[i] = 0;
                     }
 
-                    if (actor->targetY.statsBlinkVisible[i] != 0) {
+                    if (actor->blinkVisible[i] != 0) {
                         tile = player->selectedCharacterId + 0x3D;
                     } else {
                         tile = player->selectedCharacterId + 0x37;
@@ -1235,10 +1206,10 @@ void drawCharacterSelectPlayerStatsPanels(CharacterSelectUiPanelActor *arg0) {
 }
 #endif
 
-void updateCharacterSelectPlayerStatsPanels(CharacterSelectUiPanelActor *arg0) {
+void updateCharacterSelectPlayerStatsPanels(CharacterSelectUiPlayerStatsPanelActor *arg0) {
     s32 i;
-    CharacterSelectUiPanelActor *statsPanels;
-    CharacterSelectUiPanelActor *panelFrames;
+    CharacterSelectUiPlayerStatsPanelActor *statsPanels;
+    CharacterSelectUiPlayerPanelFrameActor *panelFrames;
 
     panelFrames = D_8010ADE4;
     statsPanels = arg0;
@@ -1246,13 +1217,13 @@ void updateCharacterSelectPlayerStatsPanels(CharacterSelectUiPanelActor *arg0) {
         statsPanels->x[i] = panelFrames->x[i];
         statsPanels->y[i] = panelFrames->y[i];
         if (gRacePlayers[i].menuState == 0) {
-            statsPanels->targetX.statsBlinkTimer[i] = (statsPanels->targetX.statsBlinkTimer[i] + 1) % 20;
+            statsPanels->blinkTimer[i] = (statsPanels->blinkTimer[i] + 1) % 20;
         }
     }
     addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawCharacterSelectPlayerStatsPanels, arg0);
 }
 
-void initCharacterSelectPlayerStatsPanels(CharacterSelectUiPanelActor *arg0) {
+void initCharacterSelectPlayerStatsPanels(CharacterSelectUiPlayerStatsPanelActor *arg0) {
     arg0->x[0] = -0x88;
     arg0->y[0] = -0x60;
     arg0->x[1] = -0x88;
@@ -1285,9 +1256,10 @@ void drawCharacterSelectSelectedCharacterTokens(CharacterSelectUiSelectedCharact
 }
 
 void updateCharacterSelectSelectedCharacterTokens(CharacterSelectUiSelectedCharacterTokenActor *arg0) {
-    CharacterSelectUiPanelTransitionActor *panelFrames;
+    CharacterSelectUiPlayerPanelFrameActor *panelFrames;
     CharacterSelectUiSelectedCharacterTokenActor *tokens;
     CharacterSelectUiSelectedCharacterTokenActor *actor;
+    volatile CharacterSelectUiSelectedCharacterTokenActor *volatileActor;
     s32 playerIndex;
     u32 menuState;
     s32 characterId;
@@ -1301,9 +1273,10 @@ void updateCharacterSelectSelectedCharacterTokens(CharacterSelectUiSelectedChara
     s16 panelX;
     s32 panelY;
 
-    panelFrames = (CharacterSelectUiPanelTransitionActor *)D_8010ADE4;
+    panelFrames = D_8010ADE4;
     tokens = arg0;
     actor = arg0;
+    volatileActor = arg0;
     for (playerIndex = 0; playerIndex < (s32)gPlayerCount; playerIndex++) {
         menuState = gCharacterSelectHudState.selectedTokenState[playerIndex];
         state = tokens->state[playerIndex];
@@ -1348,7 +1321,7 @@ void updateCharacterSelectSelectedCharacterTokens(CharacterSelectUiSelectedChara
                 }
                 tokens->x[playerIndex] = rosterX;
                 tokens->y[playerIndex] = -8;
-                tokens->signedTileSize[playerIndex] = 1;
+                tokens->tileSize[playerIndex] = 1;
                 tokens->timer[playerIndex] = 0;
                 tokens->state[playerIndex] = CHARACTER_SELECT_TOKEN_FLYING;
                 state = tokens->state[playerIndex];
@@ -1381,16 +1354,16 @@ void updateCharacterSelectSelectedCharacterTokens(CharacterSelectUiSelectedChara
                         }
                         actor->timer[playerIndex]++;
                         if ((actor->timer[playerIndex] % actor->divisor[playerIndex]) == 0) {
-                            actor->signedTileSize[playerIndex]++;
+                            actor->tileSize[playerIndex]++;
                         }
-                        if (actor->signedTileSize[playerIndex] >= 0x21) {
-                            actor->signedTileSize[playerIndex] = 0x20;
+                        if (actor->tileSize[playerIndex] >= 0x21) {
+                            actor->tileSize[playerIndex] = 0x20;
                         }
                         if ((actor->x[playerIndex] == panelFrames->x[playerIndex] + 0x38) &&
                             (actor->y[playerIndex] == panelFrames->y[playerIndex] + 0x18)) {
                             actor->state[playerIndex] = CHARACTER_SELECT_TOKEN_LANDED;
-                            actor->signedTileSize[playerIndex] = 0x20;
-                            state = actor->volatileState[playerIndex];
+                            actor->tileSize[playerIndex] = 0x20;
+                            state = volatileActor->state[playerIndex];
                             goto flight_done;
                         }
                         step++;
@@ -1408,7 +1381,7 @@ void updateCharacterSelectSelectedCharacterTokens(CharacterSelectUiSelectedChara
         gCharacterSelectHudState.selectedTokenState[playerIndex] = state;
     }
 
-    if (panelFrames->mode == 3) {
+    if (panelFrames->transitionState == 3) {
         step = 0;
         do {
             for (panelIndex = 0; panelIndex != RACE_PLAYER_COUNT; panelIndex++) {
@@ -1437,7 +1410,7 @@ void updateCharacterSelectSelectedCharacterTokens(CharacterSelectUiSelectedChara
             }
             step++;
             if (panelFrames->x[0] == -0x114) {
-                panelFrames->mode = 4;
+                panelFrames->transitionState = 4;
                 break;
             }
         } while (step != 0x10);
