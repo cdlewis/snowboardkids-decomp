@@ -11,7 +11,7 @@
 #define FRAMEBUFFER_PREPARE_TASK_STRIDE 0x860
 #define FRAMEBUFFER_PREPARE_DISPLAY_LIST_SIZE 0x800
 
-typedef struct RuntimeViewportDisplayListData {
+struct RuntimeViewportDisplayListData {
     /* 0x000 */ u8 pad0[0x78];
     /* 0x078 */ Vp viewports[4];
     /* 0x0B8 */ Mtx projections[4];
@@ -19,11 +19,11 @@ typedef struct RuntimeViewportDisplayListData {
     /* 0x2B8 */ Mtx rotations[4];
     /* 0x3B8 */ Mtx translations[4];
     /* 0x4B8 */ Mtx viewportMatrices[4];
-} RuntimeViewportDisplayListData;
+};
 
 typedef struct FrameRenderTask {
     /* 0x00000 */ SchedulerTask schedulerTask;
-    /* 0x00060 */ void *framebuffer;
+    /* 0x00060 */ u16 *framebuffer;
     /* 0x00064 */ s16 completionMessage;
     /* 0x00066 */ u8 status;
     /* 0x00067 */ u8 pad67;
