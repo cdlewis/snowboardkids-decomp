@@ -12,6 +12,8 @@
 #include "game/race/race_state.h"
 #include "game/engine/viewport_manager.h"
 #include "game/math/fixed_point_math.h"
+#include "PR/os_cache.h"
+#include "PR/os_thread.h"
 #include "PR/sptask.h"
 #include "PR/ucode.h"
 
@@ -37,23 +39,15 @@
 #define OS_MESG_BLOCK 1
 #define OS_READ 0
 #define OS_TV_NTSC 1
-typedef s32 OSId;
-typedef s32 OSPri;
-
-struct OSThread_s;
-struct OSPiHandle_s;
-
-typedef struct OSThread_s OSThread;
-typedef struct OSPiHandle_s OSPiHandle;
 
 #include "game/audio/audio_engine.h"
 
 typedef struct {
-    RenderCallbackNode entry0;
-    RenderCallbackNode entry1;
-    RenderCallbackNode entry2;
-    RenderCallbackNode entry3;
-} CallbackQueueGroup;
+    RenderCallbackNode queue0;
+    RenderCallbackNode queue1;
+    RenderCallbackNode queue2;
+    RenderCallbackNode queue3;
+} RenderCallbackQueueGroup;
 
 u8 gMenuFadeOverlayActive = 0;
 
@@ -158,11 +152,7 @@ s32 gClearFramebufferOnNextTask = 1;
 
 extern void osInitialize(void);
 extern void osCreatePiManager(OSPri, OSMesgQueue *, OSMesg *, s32);
-extern void osCreateThread(OSThread *, OSId, void (*)(void *), void *, void *, OSPri);
 extern void osCreateMesgQueue(OSMesgQueue *, OSMesg *, s32);
-extern void osStartThread(OSThread *);
-extern void osSetThreadPri(OSThread *, OSPri);
-extern void osInvalDCache(void *, s32);
 extern s32 osPiStartDma(OSIoMesg *, s32, s32, u32, void *, u32, OSMesgQueue *);
 extern s32 osRecvMesg(OSMesgQueue *, OSMesg *, s32);
 extern void osViBlack(u8);
@@ -726,13 +716,13 @@ void appendViewportDisplayLists(u8 frameIndex) {
 // clang-format off
 void resetRenderCallbackQueues(void) {
     u32 end;
-    CallbackQueueGroup *group;
+    RenderCallbackQueueGroup *group;
 
     gMenuForegroundRenderCallbackList = NULL;
     gRaceForegroundRenderCallbackList = NULL;
-    do { end = (u32)&gBackdropRenderCallbackList; group = (CallbackQueueGroup *)&gModelRenderCallbackList; loop: group++; group[-1].entry0.next = NULL; group[-1].entry1.next = NULL; } while (0);
-    group[-1].entry2.next = NULL;
-    group[-1].entry3.next = NULL;
+    do { end = (u32)&gBackdropRenderCallbackList; group = (RenderCallbackQueueGroup *)&gModelRenderCallbackList; loop: group++; group[-1].queue0.next = NULL; group[-1].queue1.next = NULL; } while (0);
+    group[-1].queue2.next = NULL;
+    group[-1].queue3.next = NULL;
     if ((u32)group != end) {
         goto loop;
     }
