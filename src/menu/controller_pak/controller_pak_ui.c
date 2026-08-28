@@ -1056,7 +1056,7 @@ void initControllerPakFileDeleteFileList(ControllerPakFileListActor *arg0) {
 }
 
 void drawControllerPakFileDeleteIcon(ControllerPakSpriteActor *arg0) {
-    drawMenuTilemapSprite((MenuRenderSprite *)&arg0->sprite, 0, arg0->common.x, arg0->common.y);
+    drawMenuTilemapSprite((MenuRenderSprite *)&arg0->sprite, MENU_TILEMAP_TEXEL_4B, arg0->common.x, arg0->common.y);
 }
 
 void updateControllerPakFileDeleteIcon(ControllerPakSpriteActor *arg0) {
@@ -1073,7 +1073,7 @@ void initControllerPakFileDeleteIcon(ControllerPakSpriteActor *arg0) {
 }
 
 void drawControllerPakMessageIcon(ControllerPakSpriteActor *arg0) {
-    drawMenuTilemapSprite((MenuRenderSprite *)&arg0->sprite, 1, arg0->common.x, arg0->common.y);
+    drawMenuTilemapSprite((MenuRenderSprite *)&arg0->sprite, MENU_TILEMAP_TEXEL_8B, arg0->common.x, arg0->common.y);
 }
 
 void updateControllerPakMessageIcon(ControllerPakSpriteActor *arg0) {

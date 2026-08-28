@@ -62,12 +62,6 @@ struct MenuRenderTask {
     /* 0x16 */ s16 isActive;
 };
 
-typedef struct MenuRenderTileInfo {
-    /* 0x0 */ s16 imageIndex;
-    /* 0x2 */ u8 paletteIndex;
-    /* 0x3 */ u8 flip;
-} MenuRenderTileInfo;
-
 struct MenuRenderSpriteActor {
     /* 0x00 */ MenuRenderTask task;
     /* 0x18 */ MenuRenderSprite sprite;
@@ -1104,42 +1098,47 @@ void func_80011C18(MenuRenderSpriteActor *arg0) {
 
 void updateMenuSpriteActorDebugControls(MenuRenderSpriteActor *actor) {
     if (gPlayerInputHeld[0] & U_CBUTTONS) {
-        actor->sprite.y++;
+        actor->sprite.scrollY++;
     }
     if (gPlayerInputHeld[0] & D_CBUTTONS) {
-        actor->sprite.y--;
+        actor->sprite.scrollY--;
     }
     if (gPlayerInputHeld[0] & R_CBUTTONS) {
-        actor->sprite.x++;
+        actor->sprite.scrollX++;
     }
     if (gPlayerInputHeld[0] & L_CBUTTONS) {
-        actor->sprite.x--;
+        actor->sprite.scrollX--;
     }
 
-    if (actor->sprite.x >= 0x141) {
-        actor->sprite.x = 0;
+    if (actor->sprite.scrollX >= 0x141) {
+        actor->sprite.scrollX = 0;
     }
-    if (actor->sprite.x < 0) {
-        actor->sprite.x = 0x13F;
+    if (actor->sprite.scrollX < 0) {
+        actor->sprite.scrollX = 0x13F;
     }
-    if (actor->sprite.y >= 0x9C1) {
-        actor->sprite.y = 0;
+    if (actor->sprite.scrollY >= 0x9C1) {
+        actor->sprite.scrollY = 0;
     }
-    if (actor->sprite.y < 0) {
-        actor->sprite.y = 0x9BF;
+    if (actor->sprite.scrollY < 0) {
+        actor->sprite.scrollY = 0x9BF;
     }
 
     addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawMenuTilemapSpriteCallback, &actor->sprite);
 }
 
 void drawMenuTilemapSpriteCallback(MenuRenderSprite *arg0) {
-    drawMenuTilemapSprite(arg0, 0, 0, 0);
+    drawMenuTilemapSprite(arg0, MENU_TILEMAP_TEXEL_4B, 0, 0);
 }
 
 void func_80011D6C(void) {
 }
 
-void drawMenuTilemapSprite(MenuRenderSprite *sprite, s32 imageSize, s16 tilemapWidth, s16 tilemapHeight) {
+void drawMenuTilemapSprite(
+    MenuRenderSprite *sprite,
+    MenuTilemapTexelSize texelSize,
+    s16 tilemapWidth,
+    s16 tilemapHeight
+) {
     s16 sourceX;
     s16 sourceY;
     s16 drawX;
@@ -1168,38 +1167,38 @@ void drawMenuTilemapSprite(MenuRenderSprite *sprite, s32 imageSize, s16 tilemapW
     s16 tileY;
     u16 tileShift;
     s16 *tilemap;
-    u16 *image;
+    u16 *images;
     s32 sourceOffsetX;
     MenuRenderSprite *render;
     u32 paletteIndex;
-    MenuRenderTileInfo *tileInfo;
-    u8 *palette;
+    MenuTilemapTile *tiles;
+    u8 *paletteData;
 
-    tilemap = (s16 *)(render = sprite)->tilemap;
-    image = render->image;
-    tileInfo = (MenuRenderTileInfo *)render->tileInfo;
-    palette = (u8 *)render->palette;
+    tilemap = (render = sprite)->tilemap;
+    images = render->images;
+    tiles = render->tiles;
+    paletteData = render->paletteData;
 
-    clipLeft = render->clipX;
-    sourceX = render->x;
+    clipLeft = render->viewportX;
+    sourceX = render->scrollX;
     if (clipLeft < -gMenuViewportWidth / 2) {
         clipLeft = -gMenuViewportWidth / 2;
-        sourceX = (sourceX + clipLeft) - render->clipX;
+        sourceX = (sourceX + clipLeft) - render->viewportX;
     }
 
-    clipTop = render->clipY;
-    sourceY = render->y;
+    clipTop = render->viewportY;
+    sourceY = render->scrollY;
     if (clipTop < -gMenuViewportHeight / 2) {
         clipTop = -gMenuViewportHeight / 2;
-        sourceY = (sourceY + clipTop) - render->clipY;
+        sourceY = (sourceY + clipTop) - render->viewportY;
     }
 
-    clipRight = render->clipX + render->width;
+    clipRight = render->viewportX + render->viewportWidth;
     if (clipRight > gMenuViewportWidth / 2) {
         clipRight = gMenuViewportWidth / 2;
     }
 
-    clipBottom = render->clipY + render->height;
+    clipBottom = render->viewportY + render->viewportHeight;
     if (clipBottom > gMenuViewportHeight / 2) {
         clipBottom = gMenuViewportHeight / 2;
     }
@@ -1209,8 +1208,8 @@ void drawMenuTilemapSprite(MenuRenderSprite *sprite, s32 imageSize, s16 tilemapW
     clipTop += gMenuViewportCenterY;
     clipBottom += gMenuViewportCenterY;
 
-    tileMask = render->tileSize - 1;
-    if (render->tileSize == 0x10) {
+    tileMask = render->tileWidth - 1;
+    if (render->tileWidth == 0x10) {
         tileShift = 4;
     } else {
         tileShift = 5;
@@ -1236,26 +1235,26 @@ void drawMenuTilemapSprite(MenuRenderSprite *sprite, s32 imageSize, s16 tilemapW
         tileX = (sourceX >> tileShift) % tilemapWidth;
 
         for (column = 0; column < columnCount; column++) {
-            imageIndex = tileX + (tileY * render->tileYStep);
+            imageIndex = tileX + (tileY * render->tilemapWidth);
             tileId = tilemap[imageIndex];
-            paletteIndex = tileInfo[tileId].paletteIndex;
-            imageIndex = tileInfo[tileId].imageIndex;
+            paletteIndex = tiles[tileId].paletteIndex;
+            imageIndex = tiles[tileId].imageIndex;
 
             if (tileId != 0) {
-                scaleS = ((s16 *)gMenuSpriteFlipScales)[tileInfo[tileId].flip * 2 + 0];
-                scaleT = ((s16 *)gMenuSpriteFlipScales)[tileInfo[tileId].flip * 2 + 1];
+                scaleS = gMenuSpriteFlipScales[tiles[tileId].flip * 2];
+                scaleT = gMenuSpriteFlipScales[tiles[tileId].flip * 2 + 1];
                 rectLeft = drawX;
                 rectTop = drawY;
-                rectRight = drawX + render->tileSize;
-                rectBottom = drawY + render->tileXStep;
+                rectRight = drawX + render->tileWidth;
+                rectBottom = drawY + render->tileHeight;
                 texS = 0;
                 texT = 0;
 
                 if (scaleS == -1) {
-                    texS = render->tileSize - 1;
+                    texS = render->tileWidth - 1;
                 }
                 if (scaleT == -1) {
-                    texT = render->tileXStep - 1;
+                    texT = render->tileHeight - 1;
                 }
 
                 if ((drawX < clipRight) && (drawY < clipBottom) && (rectRight >= clipLeft) &&
@@ -1263,7 +1262,7 @@ void drawMenuTilemapSprite(MenuRenderSprite *sprite, s32 imageSize, s16 tilemapW
                     if (drawX < clipLeft) {
                         texS = clipLeft - drawX;
                         if (scaleS == -1) {
-                            texS = (render->tileSize - texS) - 1;
+                            texS = (render->tileWidth - texS) - 1;
                         }
                         rectLeft = clipLeft;
                     }
@@ -1271,7 +1270,7 @@ void drawMenuTilemapSprite(MenuRenderSprite *sprite, s32 imageSize, s16 tilemapW
                     if (drawY < clipTop) {
                         texT = clipTop - drawY;
                         if (scaleT == -1) {
-                            texT = (render->tileXStep - texT) - 1;
+                            texT = (render->tileHeight - texT) - 1;
                         }
                         rectTop = clipTop;
                     }
@@ -1283,18 +1282,18 @@ void drawMenuTilemapSprite(MenuRenderSprite *sprite, s32 imageSize, s16 tilemapW
                         rectBottom = clipBottom - 1;
                     }
 
-                    if ((u8)imageSize == 0) {
-                        gDPLoadTLUT_pal16(gRegionAllocPtr++, paletteIndex, palette + (paletteIndex << 5));
+                    if ((u8)texelSize == MENU_TILEMAP_TEXEL_4B) {
+                        gDPLoadTLUT_pal16(gRegionAllocPtr++, paletteIndex, paletteData + (paletteIndex << 5));
                         gDPLoadTextureTile_4b(
                             gRegionAllocPtr++,
-                            &image[((imageIndex - 1) * render->tileSize * render->tileXStep) / 4],
+                            &images[((imageIndex - 1) * render->tileWidth * render->tileHeight) / 4],
                             G_IM_FMT_CI,
-                            render->tileSize,
-                            render->tileXStep,
+                            render->tileWidth,
+                            render->tileHeight,
                             0,
                             0,
-                            render->tileSize,
-                            render->tileXStep,
+                            render->tileWidth,
+                            render->tileHeight,
                             paletteIndex,
                             G_TX_CLAMP,
                             G_TX_CLAMP,
@@ -1304,20 +1303,21 @@ void drawMenuTilemapSprite(MenuRenderSprite *sprite, s32 imageSize, s16 tilemapW
                             G_TX_NOLOD
                         );
                     } else {
+                        // This no-op keeps tilemapHeight live across both loop divisions, matching IDO's register allocation.
                         if (tilemapHeight) {
                         }
-                        gDPLoadTLUT_pal256(gRegionAllocPtr++, palette + (paletteIndex << 5));
+                        gDPLoadTLUT_pal256(gRegionAllocPtr++, paletteData + (paletteIndex << 5));
                         gDPLoadTextureTile(
                             gRegionAllocPtr++,
-                            &image[((imageIndex - 1) * render->tileSize * render->tileXStep) / 2],
+                            &images[((imageIndex - 1) * render->tileWidth * render->tileHeight) / 2],
                             G_IM_FMT_CI,
                             G_IM_SIZ_8b,
-                            render->tileSize,
-                            render->tileXStep,
+                            render->tileWidth,
+                            render->tileHeight,
                             0,
                             0,
-                            render->tileSize,
-                            render->tileXStep,
+                            render->tileWidth,
+                            render->tileHeight,
                             0,
                             G_TX_CLAMP,
                             G_TX_CLAMP,
@@ -1343,11 +1343,11 @@ void drawMenuTilemapSprite(MenuRenderSprite *sprite, s32 imageSize, s16 tilemapW
                 }
             }
 
-            drawX += render->tileSize;
+            drawX += render->tileWidth;
             tileX = (tileX + 1) % tilemapWidth;
         }
 
-        drawY += render->tileXStep;
+        drawY += render->tileHeight;
         tileY = (tileY + 1) % tilemapHeight;
     }
 }
