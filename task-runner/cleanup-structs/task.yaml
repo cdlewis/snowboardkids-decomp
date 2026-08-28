@@ -1,0 +1,30 @@
+candidate_source: python3 tools/find_source_header_pairs.py --json
+prompt: >-
+  Clean up the structs associated with the source/header pair $INPUT while
+  preserving the matching ROM. Run ./tools/build-and-verify.sh before editing
+  to establish a clean baseline. Read both files and search the entire codebase
+  for every definition, declaration, and use of their types before editing.
+  Replace unknown field names such as unk4 with descriptive names whenever the
+  behavior provides enough evidence. Consolidate duplicate or overlapping
+  structs into one canonical definition in the appropriate header, and update
+  all users to include it instead of keeping source-local copies. Bias toward
+  placing canonical struct definitions in headers, including structs currently
+  used by only one source file when doing so gives the recompilation project a
+  clearer, reusable type model; keep a struct source-local only when there is a
+  concrete reason for it to remain private. Remove struct unions: determine the
+  one real field type from all access patterns and replace each union and its
+  aliases with a single accurately named, strongly typed field. Also correct
+  misleading type names, field types, signedness, array lengths, padding,
+  forward declarations, and redundant typedefs or externs when the evidence
+  supports doing so. Do not guess semantic names without evidence, change
+  intentional SDK or ABI types, use void pointers, casts, manual pointer
+  arithmetic, duplicate fields, aliases, or unions to hide layout or type
+  problems, or perform unrelated cleanup. Preserve exact field offsets, struct
+  sizes, alignments, declaration order, and code generation. Build before using
+  asm-differ so comparisons are current; check every function affected by a type
+  or layout change, then run ./tools/build-and-verify.sh. If an improvement
+  cannot be made to match exactly, revert that improvement and leave the pair in
+  a fully matching state.
+agent: codex
+success_command: 'git add -A && git commit -m "clean up structs: $CANDIDATE"'
+timeout: 60m
