@@ -13,13 +13,6 @@
 #include "game/race/player/race_player_input.h"
 
 typedef struct {
-    u8 state;
-    u8 pad1;
-    s16 scale;
-    u16 slideOffset;
-} ControllerPakRaceRecordSaveUiTransition;
-
-typedef struct {
     MenuGlyphScript statusMessagePrefix[0x2CB];
     u8 choicePromptSprites[0x26];
 } ControllerPakRaceRecordSaveUiDataStorage;
@@ -86,46 +79,14 @@ extern s16 gControllerPakRaceRecordSaveStatusTransitionAlpha;
 extern u16 gControllerPakRaceRecordSaveStatusTransitionTargetStatus;
 extern u16 gControllerPakRaceRecordSaveStatusTransitionNextStatus;
 extern u8 gControllerPakRaceRecordSaveStatusTransitionStep;
-extern void *D_8010ADE0;
-extern void *D_8010ADE4;
+extern ControllerPakRaceRecordSavePromptFrameActor *D_8010ADE0;
+extern ControllerPakRaceRecordSaveStatusMessageActor *D_8010ADE4;
 
 #define CONTROLLER_PAK_RACE_RECORD_SAVE_SCORE_TEXTURE_HANDLE (gAssetHandles[0x21])
 
-struct ControllerPakRaceRecordSaveActor {
-    char pad[0x18];
-    s16 x;
-    s16 y;
-    union {
-        s8 state;
-        s16 scale;
-    } unk1C;
-    union {
-        struct {
-            s8 unk1E;
-            s8 unk1F;
-            u8 unk20;
-            u8 frame;
-            u16 alpha;
-            u16 alphaTimer;
-        } b;
-        struct {
-            s16 slideOffset;
-            u16 selection;
-            u16 alpha;
-            u16 alphaTimer;
-        } w;
-        struct {
-            u16 slideOffset;
-            u16 selection;
-            u16 alpha;
-            u16 alphaTimer;
-        } wu;
-    } state;
-};
-
 const char D_800E0F30[] = "%6d";
 
-void drawControllerPakRaceRecordSaveScorePanel(ControllerPakRaceRecordSaveActor *arg0) {
+void drawControllerPakRaceRecordSaveScorePanel(ControllerPakRaceRecordSaveScorePanelActor *arg0) {
     s16 *new_var;
     s16 *badgeIndex;
     s32 xOffset;
@@ -253,39 +214,39 @@ void drawControllerPakRaceRecordSaveScorePanel(ControllerPakRaceRecordSaveActor 
     }
 }
 
-void updateControllerPakRaceRecordSaveScorePanel(ControllerPakRaceRecordSaveActor *arg0) {
-    u8 state = arg0->unk1C.state;
+void updateControllerPakRaceRecordSaveScorePanel(ControllerPakRaceRecordSaveScorePanelActor *arg0) {
+    u8 state = arg0->state;
 
     switch (state) {
         case 0:
             arg0->x -= 0x20;
             if (arg0->x < -0x43) {
                 arg0->x = -0x44;
-                arg0->unk1C.state = 1;
+                arg0->state = 1;
                 D_8010ADE0 =
                     createCallbackTask((CallbackTaskCallback)initControllerPakRaceRecordSavePromptFrame, 0, 0x62);
                 createCallbackTask((CallbackTaskCallback)initControllerPakRaceRecordSaveExitMessage, 0, 0x63);
             }
-            state = arg0->unk1C.state;
+            state = arg0->state;
             break;
         case 1:
             if (gControllerPakStatusCodes[0] != 0) {
                 if (gMenuSelectionConfirmTimer == 0x14) {
-                    state = arg0->unk1C.state = 2;
+                    state = arg0->state = 2;
                 }
             }
             break;
         case 2:
             arg0->x -= 0x20;
             if (arg0->x < -0x117) {
-                arg0->unk1C.state = 3;
+                arg0->state = 3;
             }
-            state = arg0->unk1C.state;
+            state = arg0->state;
             break;
         case 3:
             break;
     }
-    state = arg0->unk1C.state;
+    state = arg0->state;
     if (state == 3) {
         removeCallbackTask(arg0);
         return;
@@ -293,19 +254,19 @@ void updateControllerPakRaceRecordSaveScorePanel(ControllerPakRaceRecordSaveActo
     addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawControllerPakRaceRecordSaveScorePanel, arg0);
 }
 
-void initControllerPakRaceRecordSaveScorePanel(ControllerPakRaceRecordSaveActor *arg0) {
+void initControllerPakRaceRecordSaveScorePanel(ControllerPakRaceRecordSaveScorePanelActor *arg0) {
     arg0->x = 0x90;
     arg0->y = -0x20;
-    arg0->unk1C.state = 0;
+    arg0->state = 0;
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateControllerPakRaceRecordSaveScorePanel);
 }
 
-void drawControllerPakRaceRecordSavePromptFrame(ControllerPakRaceRecordSaveActor *arg0) {
+void drawControllerPakRaceRecordSavePromptFrame(ControllerPakRaceRecordSavePromptFrameActor *arg0) {
     s32 zero = 0;
     u16 alpha;
 
     if (gControllerPakStatusCodes[0] != 8) {
-        alpha = arg0->unk1C.scale;
+        alpha = arg0->scale;
         drawMenuSpriteWithAlpha(
             (s16)(arg0->x - 2),
             (s16)(arg0->y + 0xC),
@@ -331,34 +292,34 @@ void drawControllerPakRaceRecordSavePromptFrame(ControllerPakRaceRecordSaveActor
     }
 }
 
-void updateControllerPakRaceRecordSavePromptFrame(ControllerPakRaceRecordSaveActor *arg0) {
-    u8 state = arg0->state.b.unk1F;
+void updateControllerPakRaceRecordSavePromptFrame(ControllerPakRaceRecordSavePromptFrameActor *arg0) {
+    u8 state = arg0->state;
 
     switch (state) {
         case 0:
-            arg0->unk1C.scale += 0x26;
-            if (arg0->unk1C.scale >= 0x100) {
-                arg0->unk1C.scale = 0x100;
-                arg0->state.b.unk1F = 1;
+            arg0->scale += 0x26;
+            if (arg0->scale >= 0x100) {
+                arg0->scale = 0x100;
+                arg0->state = 1;
                 D_8010ADE4 =
                     createCallbackTask((CallbackTaskCallback)initControllerPakRaceRecordSaveStatusMessage, 0, 0x63);
             }
-            state = arg0->state.b.unk1F;
+            state = arg0->state;
             break;
         case 1:
-            state = arg0->state.b.unk1F = 2;
+            state = arg0->state = 2;
             break;
         case 2:
             if ((gControllerPakStatusCodes[0] == 5) && (gMenuSelectionConfirmTimer == 0x14)) {
-                state = arg0->state.b.unk1F = 3;
+                state = arg0->state = 3;
             }
             break;
         case 3:
             arg0->x -= 0x20;
             if (arg0->x < -0x117) {
-                arg0->state.b.unk1F = 4;
+                arg0->state = 4;
             }
-            state = arg0->state.b.unk1F;
+            state = arg0->state;
             break;
         case 4:
             break;
@@ -370,30 +331,30 @@ void updateControllerPakRaceRecordSavePromptFrame(ControllerPakRaceRecordSaveAct
     addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawControllerPakRaceRecordSavePromptFrame, arg0);
 }
 
-void initControllerPakRaceRecordSavePromptFrame(ControllerPakRaceRecordSaveActor *arg0) {
+void initControllerPakRaceRecordSavePromptFrame(ControllerPakRaceRecordSavePromptFrameActor *arg0) {
     arg0->x = -0x44;
     arg0->y = -0x1E;
-    arg0->unk1C.scale = 0;
-    arg0->state.b.unk1F = 0;
+    arg0->scale = 0;
+    arg0->state = 0;
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateControllerPakRaceRecordSavePromptFrame);
 }
 
-void drawControllerPakRaceRecordSaveStatusMessage(ControllerPakRaceRecordSaveActor *arg0) {
+void drawControllerPakRaceRecordSaveStatusMessage(ControllerPakRaceRecordSaveStatusMessageActor *arg0) {
     MenuGlyphScript *text;
     void *texture;
 
     if (gControllerPakStatusCodes[0] != 8) {
         text = gControllerPakRaceRecordSaveStatusMessages[gControllerPakStatusCodes[0]];
-        drawMenuGlyphScript(arg0->x, arg0->y, text, 1, arg0->unk1C.scale, 0);
+        drawMenuGlyphScript(arg0->x, arg0->y, text, 1, arg0->alpha, 0);
         if (((gControllerPakStatusCodes[0] == 4) || (gControllerPakStatusCodes[0] >= 7)) &&
             (gMenuChoicePromptState[0] == 0)) {
-            if (arg0->unk1C.scale == 0x100) {
+            if (arg0->alpha == 0x100) {
                 texture = getRelocatableHeapBlockBase(gAssetHandles[0x21]);
                 drawMenuSprite(
                     (s16)(arg0->x + 0x70),
                     (s16)(arg0->y + 0x10),
                     texture,
-                    ((s32)arg0->state.b.frame >= 8) + 5,
+                    ((s32)arg0->arrowFrame >= 8) + 5,
                     0x20,
                     0x20,
                     0,
@@ -404,75 +365,75 @@ void drawControllerPakRaceRecordSaveStatusMessage(ControllerPakRaceRecordSaveAct
     }
 }
 
-void updateControllerPakRaceRecordSaveStatusMessage(ControllerPakRaceRecordSaveActor *arg0) {
+void updateControllerPakRaceRecordSaveStatusMessage(ControllerPakRaceRecordSaveStatusMessageActor *arg0) {
     u8 state;
     u8 globalState;
 
-    state = arg0->state.b.unk20;
+    state = arg0->state;
     if (state != (globalState = gControllerPakRaceRecordSaveStatusTransition.step)) {
-        arg0->state.b.unk20 = globalState;
+        arg0->state = globalState;
         state = globalState;
-        arg0->unk1C.scale = gControllerPakRaceRecordSaveStatusTransition.alpha;
-        arg0->state.wu.slideOffset = gControllerPakRaceRecordSaveStatusTransition.targetStatus;
+        arg0->alpha = gControllerPakRaceRecordSaveStatusTransition.alpha;
+        arg0->targetStatus = gControllerPakRaceRecordSaveStatusTransition.targetStatus;
     }
 
     switch (state) {
         case 0:
-            arg0->state.b.unk20 = 1;
-            state = arg0->state.b.unk20;
+            arg0->state = 1;
+            state = arg0->state;
             break;
         case 1:
             if ((gControllerPakStatusCodes[0] == 5) && (gMenuSelectionConfirmTimer == 0x14)) {
-                arg0->state.b.unk20 = 4;
-                state = arg0->state.b.unk20;
+                arg0->state = 4;
+                state = arg0->state;
             }
             break;
         case 2:
-            arg0->unk1C.scale += 0x26;
-            if (arg0->unk1C.scale >= 0x100) {
-                arg0->unk1C.scale = 0x100;
-                arg0->state.b.unk20 = 1;
+            arg0->alpha += 0x26;
+            if (arg0->alpha >= 0x100) {
+                arg0->alpha = 0x100;
+                arg0->state = 1;
             }
-            state = arg0->state.b.unk20;
+            state = arg0->state;
             break;
         case 3:
-            arg0->unk1C.scale -= 0x26;
-            if (arg0->unk1C.scale <= (state * 0)) {
-                arg0->unk1C.scale = 0;
-                arg0->state.b.unk20 = 2;
+            arg0->alpha -= 0x26;
+            if (arg0->alpha <= (state * 0)) {
+                arg0->alpha = 0;
+                arg0->state = 2;
                 gMenuChoicePromptState[0] = 0;
-                gControllerPakStatusCodes[0] = arg0->state.wu.slideOffset;
+                gControllerPakStatusCodes[0] = arg0->targetStatus;
             }
-            state = arg0->state.b.unk20;
+            state = arg0->state;
             break;
         case 4:
             arg0->x -= 0x20;
             if (arg0->x < -0x117) {
-                arg0->state.b.unk20 = 5;
+                arg0->state = 5;
             }
-            state = arg0->state.b.unk20;
+            state = arg0->state;
             break;
     }
 
-    arg0->state.b.frame = (arg0->state.b.frame + 1) & 0xF;
+    arg0->arrowFrame = (arg0->arrowFrame + 1) & 0xF;
     gControllerPakRaceRecordSaveStatusTransitionStep = state;
-    if ((u8)arg0->state.b.unk20 == 5) {
+    if ((u8)arg0->state == 5) {
         removeCallbackTask(arg0);
         return;
     }
     addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawControllerPakRaceRecordSaveStatusMessage, arg0);
 }
 
-void initControllerPakRaceRecordSaveStatusMessage(ControllerPakRaceRecordSaveActor *arg0) {
+void initControllerPakRaceRecordSaveStatusMessage(ControllerPakRaceRecordSaveStatusMessageActor *arg0) {
     arg0->x = -0x42;
     arg0->y = -0xE;
-    arg0->unk1C.scale = 0x100;
+    arg0->alpha = 0x100;
     gControllerPakRaceRecordSaveStatusTransitionAlpha = 0x100;
-    arg0->state.b.unk20 = 0;
+    arg0->state = 0;
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateControllerPakRaceRecordSaveStatusMessage);
 }
 
-void drawControllerPakRaceRecordSaveStatusChoicePrompt(ControllerPakRaceRecordSaveActor *arg0) {
+void drawControllerPakRaceRecordSaveStatusChoicePrompt(ControllerPakRaceRecordSaveStatusChoicePromptActor *arg0) {
     u32 drawAlpha;
     int isEvenState;
     u16 alpha;
@@ -490,7 +451,7 @@ void drawControllerPakRaceRecordSaveStatusChoicePrompt(ControllerPakRaceRecordSa
         drawAlpha = alpha;
         drawMenuSpriteWithAlpha(
             arg0->x,
-            arg0->unk1C.scale,
+            arg0->bottomChoiceY,
             getRelocatableHeapBlockBase(gAssetHandles[0x21]),
             gControllerPakRaceRecordSaveChoicePromptBottomSprites[gControllerPakStatusCodes[0] * 2],
             0x20,
@@ -508,7 +469,7 @@ void drawControllerPakRaceRecordSaveStatusChoicePrompt(ControllerPakRaceRecordSa
 
         drawMenuSpriteWithAlpha(
             arg0->x,
-            arg0->y,
+            arg0->topChoiceY,
             getRelocatableHeapBlockBase(gAssetHandles[0x21]),
             gControllerPakRaceRecordSaveChoicePromptTopSprites[gControllerPakStatusCodes[0] * 2],
             0x20,
@@ -522,36 +483,36 @@ void drawControllerPakRaceRecordSaveStatusChoicePrompt(ControllerPakRaceRecordSa
         if ((state == 3) || (state == 4)) {
             drawMenuSpriteWithAlpha(
                 arg0->x,
-                (s16)(((gMenuChoicePromptState[0] * 0x10) + arg0->y) - 0x30),
+                (s16)(((gMenuChoicePromptState[0] * 0x10) + arg0->topChoiceY) - 0x30),
                 getRelocatableHeapBlockBase(gAssetHandles[0x21]),
                 0x12,
                 0x20,
                 0x20,
                 0,
-                (u16)arg0->state.w.alpha,
+                (u16)arg0->cursorAlpha,
                 7
             );
             state = gMenuChoicePromptState[0];
         }
     }
-    if ((state >= 5) && (arg0->state.w.slideOffset == 0)) {
-        gControllerPakRaceRecordSaveStatusTransitionTargetStatus = arg0->state.w.selection;
+    if ((state >= 5) && (arg0->slideOffset == 0)) {
+        gControllerPakRaceRecordSaveStatusTransitionTargetStatus = arg0->nextStatus;
         gControllerPakRaceRecordSaveStatusTransition.step = 3;
         gMenuChoicePromptState[0] = 0;
-        if (arg0->state.w.selection == 0) {
+        if (arg0->nextStatus == 0) {
             gControllerPakRaceRecordSaveStatusTransition.alpha = 0x100;
             gControllerPakRaceRecordSaveStatusTransition.step = 1;
-            gControllerPakStatusCodes[0] = arg0->state.w.selection;
+            gControllerPakStatusCodes[0] = arg0->nextStatus;
         }
     }
 }
 
-void updateControllerPakRaceRecordSaveStatusChoicePrompt(ControllerPakRaceRecordSaveActor *arg0) {
+void updateControllerPakRaceRecordSaveStatusChoicePrompt(ControllerPakRaceRecordSaveStatusChoicePromptActor *arg0) {
     s32 temp_a0;
     s32 var_v1;
 
-    if (gControllerPakRaceRecordSaveStatusTransitionNextStatus != arg0->state.w.selection) {
-        arg0->state.w.selection = gControllerPakRaceRecordSaveStatusTransitionNextStatus;
+    if (gControllerPakRaceRecordSaveStatusTransitionNextStatus != arg0->nextStatus) {
+        arg0->nextStatus = gControllerPakRaceRecordSaveStatusTransitionNextStatus;
     }
     if ((gMenuChoicePromptState[0] != 0) && (gMenuChoicePromptState[0] != 3) && (gMenuChoicePromptState[0] != 4)) {
         if (gMenuChoicePromptState[0] < 5) {
@@ -560,31 +521,31 @@ void updateControllerPakRaceRecordSaveStatusChoicePrompt(ControllerPakRaceRecord
             var_v1 = -1;
         }
         temp_a0 = var_v1 * 8;
-        arg0->state.w.slideOffset += temp_a0;
-        if (arg0->state.w.slideOffset == 0x20) {
+        arg0->slideOffset += temp_a0;
+        if (arg0->slideOffset == 0x20) {
             gMenuChoicePromptState[0] += 2;
-            arg0->state.b.alphaTimer = 0;
-            arg0->state.b.alpha = 0x100;
+            arg0->cursorAlphaTimer = 0;
+            arg0->cursorAlpha = 0x100;
         }
         if (temp_a0 == 8) {
-            if (arg0->state.w.slideOffset < 0x18) {
-                arg0->y += 8;
+            if (arg0->slideOffset < 0x18) {
+                arg0->topChoiceY += 8;
             }
-            arg0->unk1C.scale += 8;
+            arg0->bottomChoiceY += 8;
         } else {
-            if (arg0->state.w.slideOffset < 0x10) {
-                arg0->y -= 8;
+            if (arg0->slideOffset < 0x10) {
+                arg0->topChoiceY -= 8;
             }
-            arg0->unk1C.scale -= 8;
+            arg0->bottomChoiceY -= 8;
         }
     }
     if ((gMenuChoicePromptState[0] == 3) || (gMenuChoicePromptState[0] == 4)) {
-        if ((s32)arg0->state.b.alphaTimer < 0x10) {
-            arg0->state.b.alpha -= 9;
+        if ((s32)arg0->cursorAlphaTimer < 0x10) {
+            arg0->cursorAlpha -= 9;
         } else {
-            arg0->state.b.alpha += 9;
+            arg0->cursorAlpha += 9;
         }
-        arg0->state.b.alphaTimer = (arg0->state.b.alphaTimer + 1) & 0x1F;
+        arg0->cursorAlphaTimer = (arg0->cursorAlphaTimer + 1) & 0x1F;
     }
     addRenderCallback(
         &gMenuRenderCallbackList,
@@ -593,40 +554,40 @@ void updateControllerPakRaceRecordSaveStatusChoicePrompt(ControllerPakRaceRecord
     );
 }
 
-void initControllerPakRaceRecordSaveStatusChoicePrompt(ControllerPakRaceRecordSaveActor *arg0) {
+void initControllerPakRaceRecordSaveStatusChoicePrompt(ControllerPakRaceRecordSaveStatusChoicePromptActor *arg0) {
     arg0->x = -0x28;
-    arg0->y = 0xC;
-    arg0->unk1C.scale = 0xC;
+    arg0->topChoiceY = 0xC;
+    arg0->bottomChoiceY = 0xC;
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateControllerPakRaceRecordSaveStatusChoicePrompt);
 }
 
-void drawControllerPakRaceRecordSaveExitMessage(ControllerPakRaceRecordSaveActor *arg0) {
-    drawMenuGlyphScriptDefaultFont(arg0->x, arg0->y, gControllerPakRaceRecordSaveExitMessage, 1, arg0->unk1C.scale);
+void drawControllerPakRaceRecordSaveExitMessage(ControllerPakRaceRecordSaveExitMessageActor *arg0) {
+    drawMenuGlyphScriptDefaultFont(arg0->x, arg0->y, gControllerPakRaceRecordSaveExitMessage, 1, arg0->alpha);
 }
 
-void updateControllerPakRaceRecordSaveExitMessage(ControllerPakRaceRecordSaveActor *arg0) {
-    u8 state = arg0->state.b.unk1E;
+void updateControllerPakRaceRecordSaveExitMessage(ControllerPakRaceRecordSaveExitMessageActor *arg0) {
+    u8 state = arg0->state;
 
     switch (state) {
         case 0:
-            arg0->unk1C.scale += 0x26;
-            if (arg0->unk1C.scale >= 0x100) {
-                arg0->unk1C.scale = 0x100;
-                arg0->state.b.unk1E = 1;
+            arg0->alpha += 0x26;
+            if (arg0->alpha >= 0x100) {
+                arg0->alpha = 0x100;
+                arg0->state = 1;
             }
-            state = arg0->state.b.unk1E;
+            state = arg0->state;
             break;
         case 1:
             if ((gControllerPakStatusCodes[0] == 5) && (gMenuSelectionConfirmTimer == 0x14)) {
-                state = arg0->state.b.unk1E = 2;
+                state = arg0->state = 2;
             }
             break;
         case 2:
             arg0->x -= 0x20;
             if (arg0->x < -0xD7) {
-                arg0->state.b.unk1E = 4;
+                arg0->state = 4;
             }
-            state = arg0->state.b.unk1E;
+            state = arg0->state;
             break;
     }
     if ((unsigned int)state == 4) {
@@ -636,10 +597,10 @@ void updateControllerPakRaceRecordSaveExitMessage(ControllerPakRaceRecordSaveAct
     addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawControllerPakRaceRecordSaveExitMessage, arg0);
 }
 
-void initControllerPakRaceRecordSaveExitMessage(ControllerPakRaceRecordSaveActor *arg0) {
+void initControllerPakRaceRecordSaveExitMessage(ControllerPakRaceRecordSaveExitMessageActor *arg0) {
     arg0->x = -0x24;
     arg0->y = -0x38;
-    arg0->unk1C.scale = 0;
-    arg0->state.b.unk1E = 0;
+    arg0->alpha = 0;
+    arg0->state = 0;
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateControllerPakRaceRecordSaveExitMessage);
 }
