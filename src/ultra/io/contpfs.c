@@ -29,14 +29,14 @@ u16 __osSumcalc(u8 *ptr, int length) {
 #endif
 }
 
-s32 __osIdCheckSum(u16 *ptr, u16 *csum, u16 *icsum) {
+s32 __osIdCheckSum(const __OSPackId *id, u16 *csum, u16 *icsum) {
     u16 data = 0;
     u32 j;
 
     *csum = *icsum = 0;
 
     for (j = 0; j < ((sizeof(__OSPackId) - sizeof(u32)) / sizeof(u8)); j += 2) {
-        data = *(u16 *)((u32)ptr + j);
+        data = *(u16 *)((u32)id + j);
         *csum += data;
         *icsum += ~data;
     }
@@ -121,7 +121,7 @@ s32 __osRepairPackId(OSPfs *pfs, const __OSPackId *sourceId, __OSPackId *repaire
     repairedId->deviceid = (sourceId->deviceid & (u16)~PFS_ID_DEVICE_ID_BIT) | deviceIdBit;
     repairedId->banks = bankCount;
     repairedId->version = sourceId->version;
-    __osIdCheckSum((u16 *)repairedId, &repairedId->checksum, &repairedId->inverted_checksum);
+    __osIdCheckSum(repairedId, &repairedId->checksum, &repairedId->inverted_checksum);
     idBlockAddresses[0] = PFS_ID_0AREA;
     idBlockAddresses[1] = PFS_ID_1AREA;
     idBlockAddresses[2] = PFS_ID_2AREA;
@@ -161,7 +161,7 @@ s32 __osCheckPackId(OSPfs *pfs, __OSPackId *temp) {
     index[3] = PFS_ID_3AREA;
     for (i = 1; i < ARRLEN(index); i++) {
         ERRCK(__osContRamRead(pfs->queue, pfs->channel, index[i], (u8 *)temp));
-        __osIdCheckSum((u16 *)temp, &sum, &isum);
+        __osIdCheckSum(temp, &sum, &isum);
         if (temp->checksum == sum && temp->inverted_checksum == isum) {
             break;
         }
@@ -193,7 +193,7 @@ s32 __osGetId(OSPfs *pfs) {
 
     SET_ACTIVEBANK_TO_ZERO();
     ERRCK(__osContRamRead(pfs->queue, pfs->channel, PFS_ID_0AREA, (u8 *)&primaryPackId));
-    __osIdCheckSum((u16 *)&primaryPackId, &checksum, &invertedChecksum);
+    __osIdCheckSum(&primaryPackId, &checksum, &invertedChecksum);
     packId = &primaryPackId;
 
     /* Recover one of the redundant ID copies, or rebuild the ID if every copy is corrupt. */

@@ -26,7 +26,7 @@ s32 osPfsInitPak(OSMesgQueue *queue, OSPfs *pfs, int channel) {
     pfs->status = 0;
 
     ERRCK(SELECT_BANK(pfs, 0));
-    __osIdCheckSum((u16 *)initialPackIdBlock, &checksum, &invertedChecksum);
+    __osIdCheckSum((__OSPackId *)initialPackIdBlock, &checksum, &invertedChecksum);
     validPackId = (__OSPackId *)initialPackIdBlock;
 
     /* Recover a valid ID from one of the Controller Pak's redundant ID blocks. */
