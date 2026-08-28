@@ -2,23 +2,72 @@
 #define CONTROLLER_PAK_RACE_RECORD_SAVE_UI_H
 
 #include "common.h"
+#include "game/engine/callback_task_scheduler.h"
 
-typedef struct ControllerPakRaceRecordSaveActor ControllerPakRaceRecordSaveActor;
+typedef struct {
+    /* 0x00 */ CallbackTaskHeader task;
+    /* 0x18 */ s16 x;
+    /* 0x1A */ s16 y;
+    /* 0x1C */ u8 state;
+    /* 0x1D */ u8 pad1D[0xB];
+} ControllerPakRaceRecordSaveScorePanelActor; // size = 0x28
 
-void drawControllerPakRaceRecordSaveScorePanel(ControllerPakRaceRecordSaveActor *arg0);
-void updateControllerPakRaceRecordSaveScorePanel(ControllerPakRaceRecordSaveActor *arg0);
-void initControllerPakRaceRecordSaveScorePanel(ControllerPakRaceRecordSaveActor *arg0);
-void drawControllerPakRaceRecordSavePromptFrame(ControllerPakRaceRecordSaveActor *arg0);
-void updateControllerPakRaceRecordSavePromptFrame(ControllerPakRaceRecordSaveActor *arg0);
-void initControllerPakRaceRecordSavePromptFrame(ControllerPakRaceRecordSaveActor *arg0);
-void drawControllerPakRaceRecordSaveStatusMessage(ControllerPakRaceRecordSaveActor *arg0);
-void updateControllerPakRaceRecordSaveStatusMessage(ControllerPakRaceRecordSaveActor *arg0);
-void initControllerPakRaceRecordSaveStatusMessage(ControllerPakRaceRecordSaveActor *arg0);
-void drawControllerPakRaceRecordSaveStatusChoicePrompt(ControllerPakRaceRecordSaveActor *arg0);
-void updateControllerPakRaceRecordSaveStatusChoicePrompt(ControllerPakRaceRecordSaveActor *arg0);
-void initControllerPakRaceRecordSaveStatusChoicePrompt(ControllerPakRaceRecordSaveActor *arg0);
-void drawControllerPakRaceRecordSaveExitMessage(ControllerPakRaceRecordSaveActor *arg0);
-void updateControllerPakRaceRecordSaveExitMessage(ControllerPakRaceRecordSaveActor *arg0);
-void initControllerPakRaceRecordSaveExitMessage(ControllerPakRaceRecordSaveActor *arg0);
+typedef struct {
+    /* 0x00 */ CallbackTaskHeader task;
+    /* 0x18 */ s16 x;
+    /* 0x1A */ s16 y;
+    /* 0x1C */ s16 scale;
+    /* 0x1E */ u8 pad1E;
+    /* 0x1F */ u8 state;
+    /* 0x20 */ u8 pad20[8];
+} ControllerPakRaceRecordSavePromptFrameActor; // size = 0x28
+
+typedef struct {
+    /* 0x00 */ CallbackTaskHeader task;
+    /* 0x18 */ s16 x;
+    /* 0x1A */ s16 y;
+    /* 0x1C */ s16 alpha;
+    /* 0x1E */ u16 targetStatus;
+    /* 0x20 */ u8 state;
+    /* 0x21 */ u8 arrowFrame;
+    /* 0x22 */ u8 pad22[6];
+} ControllerPakRaceRecordSaveStatusMessageActor; // size = 0x28
+
+typedef struct {
+    /* 0x00 */ CallbackTaskHeader task;
+    /* 0x18 */ s16 x;
+    /* 0x1A */ s16 topChoiceY;
+    /* 0x1C */ s16 bottomChoiceY;
+    /* 0x1E */ s16 slideOffset;
+    /* 0x20 */ u16 nextStatus;
+    /* 0x22 */ u16 cursorAlpha;
+    /* 0x24 */ u16 cursorAlphaTimer;
+    /* 0x26 */ u8 pad26[2];
+} ControllerPakRaceRecordSaveStatusChoicePromptActor; // size = 0x28
+
+typedef struct {
+    /* 0x00 */ CallbackTaskHeader task;
+    /* 0x18 */ s16 x;
+    /* 0x1A */ s16 y;
+    /* 0x1C */ s16 alpha;
+    /* 0x1E */ u8 state;
+    /* 0x1F */ u8 pad1F[9];
+} ControllerPakRaceRecordSaveExitMessageActor; // size = 0x28
+
+void drawControllerPakRaceRecordSaveScorePanel(ControllerPakRaceRecordSaveScorePanelActor *arg0);
+void updateControllerPakRaceRecordSaveScorePanel(ControllerPakRaceRecordSaveScorePanelActor *arg0);
+void initControllerPakRaceRecordSaveScorePanel(ControllerPakRaceRecordSaveScorePanelActor *arg0);
+void drawControllerPakRaceRecordSavePromptFrame(ControllerPakRaceRecordSavePromptFrameActor *arg0);
+void updateControllerPakRaceRecordSavePromptFrame(ControllerPakRaceRecordSavePromptFrameActor *arg0);
+void initControllerPakRaceRecordSavePromptFrame(ControllerPakRaceRecordSavePromptFrameActor *arg0);
+void drawControllerPakRaceRecordSaveStatusMessage(ControllerPakRaceRecordSaveStatusMessageActor *arg0);
+void updateControllerPakRaceRecordSaveStatusMessage(ControllerPakRaceRecordSaveStatusMessageActor *arg0);
+void initControllerPakRaceRecordSaveStatusMessage(ControllerPakRaceRecordSaveStatusMessageActor *arg0);
+void drawControllerPakRaceRecordSaveStatusChoicePrompt(ControllerPakRaceRecordSaveStatusChoicePromptActor *arg0);
+void updateControllerPakRaceRecordSaveStatusChoicePrompt(ControllerPakRaceRecordSaveStatusChoicePromptActor *arg0);
+void initControllerPakRaceRecordSaveStatusChoicePrompt(ControllerPakRaceRecordSaveStatusChoicePromptActor *arg0);
+void drawControllerPakRaceRecordSaveExitMessage(ControllerPakRaceRecordSaveExitMessageActor *arg0);
+void updateControllerPakRaceRecordSaveExitMessage(ControllerPakRaceRecordSaveExitMessageActor *arg0);
+void initControllerPakRaceRecordSaveExitMessage(ControllerPakRaceRecordSaveExitMessageActor *arg0);
 
 #endif
