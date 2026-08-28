@@ -48,6 +48,9 @@ typedef struct RaceMotionAnimationAsset {
 
 #define RACE_MOTION_JOINT_COUNT 12
 #define RACE_MOTION_FRAME_SAMPLE_COUNT 2
+#define RACE_MOTION_DECODED_JOINT_FRAME_PADDING_COUNT 2
+#define RACE_MOTION_DECODED_JOINT_FRAME_STRIDE \
+    (RACE_MOTION_JOINT_COUNT + RACE_MOTION_DECODED_JOINT_FRAME_PADDING_COUNT)
 #define RACE_MOTION_PARTIAL_ANIMATION_JOINT_COUNT 5
 #define RACE_MOTION_PARTIAL_ANIMATION_START_JOINT 6
 #define RACE_MOTION_PACKED_JOINT_ROTATION_SKIP_BYTES 0x24
@@ -78,11 +81,12 @@ typedef struct RaceMotionDecodedRootFrame {
 
 typedef struct RaceMotionDecodedJointFrame {
     Vec3i joints[RACE_MOTION_JOINT_COUNT];
-    Vec3i stridePadding[2];
+    Vec3i stridePadding[RACE_MOTION_DECODED_JOINT_FRAME_PADDING_COUNT];
 } RaceMotionDecodedJointFrame;
 
+// Compiler-sensitive cursor view used while advancing one RaceMotionStateJoint at a time.
 typedef struct RaceMotionPartialJointCursor {
-    char pad0[0x33A];
+    char padToRotation[0x33A];
     s16 rotationX;
     s16 rotationY;
     s16 rotationZ;
@@ -264,9 +268,8 @@ extern s32 gRaceCourseCollisionAdjustedX;
 extern s32 gRaceCourseCollisionAdjustedZ;
 extern volatile s32 gRaceMotionRotationFrameBuffer[];
 extern volatile s32 gRaceMotionRotationDecodeFrameBuffer[];
-extern Vec3i gRaceMotionJointFrameBuffer[];
+extern RaceMotionDecodedJointFrame gRaceMotionJointFrameBuffer[RACE_MOTION_FRAME_SAMPLE_COUNT];
 extern Vec3i gRaceMotionJointDecodeFrameBuffer[];
-extern s32 gRaceMotionJointBlendBuffer[];
 extern s32 gRacePlayerHitCueId;
 
 void initRaceCourseSurfaceData(void) {
@@ -1473,14 +1476,14 @@ interpolate_joint:
 
 // IDO code generation for this function is sensitive to source line layout.
 // clang-format off
-void blendRaceMotionJointAnimation(RaceMotionState *state, s32 animIndex, s32 timer, s32 duration) {
+void blendRaceMotionJointAnimation(RaceMotionState *state, s32 animationIndex, s32 blendTimer, s32 blendDuration) {
     RaceMotionAnimationAsset *animationAsset;
     RaceMotionPackedJointRotation *packedRotation;
     RaceMotionDecodedJointFrame *decodedJointFrame;
     RaceMotionDecodedJointFrame *decodedJointFrameEnd;
     Vec3i *decodedJoint;
-    RaceMotionPartialJointCursor *jointCursor;
-    s32 *blendData;
+    RaceMotionPartialJointCursor *stateJointCursor;
+    Vec3i *jointFrameData;
     s32 jointIndex;
     s32 startX;
     s32 startY;
@@ -1491,7 +1494,16 @@ void blendRaceMotionJointAnimation(RaceMotionState *state, s32 animIndex, s32 ti
     s16 packedZAndFlags;
 
     animationAsset = getRelocatableHeapBlockBase(gAssetHandles[0x16 + state->modelId]);
-    packedRotation = (RaceMotionPackedJointRotation *)((u16 *)animationAsset + animationAsset->animationOffsets[animIndex] + 1); decodedJointFrameEnd = (RaceMotionDecodedJointFrame *)&gRacePlayerHitCueId; decodedJointFrame = (RaceMotionDecodedJointFrame *)gRaceMotionJointFrameBuffer; decode_frame: packedRotation += RACE_MOTION_PACKED_JOINT_ROTATION_PREFIX_COUNT; for (jointIndex = RACE_MOTION_PARTIAL_ANIMATION_START_JOINT; jointIndex < RACE_MOTION_JOINT_COUNT; jointIndex++) { decodedJoint = &decodedJointFrame->joints[jointIndex]; packedXY = packedRotation->xy;
+    packedRotation = (RaceMotionPackedJointRotation *)((u16 *)animationAsset +              \
+        animationAsset->animationOffsets[animationIndex] + 1);                             \
+    decodedJointFrameEnd = &gRaceMotionJointFrameBuffer[RACE_MOTION_FRAME_SAMPLE_COUNT];    \
+    decodedJointFrame = gRaceMotionJointFrameBuffer;                                       \
+decode_frame:                                                                               \
+    packedRotation += RACE_MOTION_PACKED_JOINT_ROTATION_PREFIX_COUNT;                      \
+    for (jointIndex = RACE_MOTION_PARTIAL_ANIMATION_START_JOINT;                           \
+         jointIndex < RACE_MOTION_JOINT_COUNT; jointIndex++) {                             \
+        decodedJoint = &decodedJointFrame->joints[jointIndex];                             \
+        packedXY = packedRotation->xy;
         packedZAndFlags = packedRotation->zAndFlags;
         packedRotation++;
         decodedJoint->x = (packedXY >> 4) & 0xFF0;
@@ -1513,35 +1525,38 @@ void blendRaceMotionJointAnimation(RaceMotionState *state, s32 animIndex, s32 ti
         goto decode_frame;
     }
 
-    blendData = gRaceMotionJointBlendBuffer;
+    jointFrameData =
+        &gRaceMotionJointFrameBuffer[0].joints[RACE_MOTION_PARTIAL_ANIMATION_START_JOINT];
     jointIndex = RACE_MOTION_PARTIAL_ANIMATION_START_JOINT;
-    jointCursor = &((RaceMotionBlendAnimationState *)state)->jointCursor;
+    stateJointCursor = &((RaceMotionBlendAnimationState *)state)->jointCursor;
 blend_joint:
-    startX = blendData[0];
-    angleDelta = (blendData[42] - startX) & 0xFFF;
+    startX = jointFrameData->x;
+    angleDelta = (jointFrameData[RACE_MOTION_DECODED_JOINT_FRAME_STRIDE].x - startX) & 0xFFF;
     if (angleDelta >= 0x801) {
         angleDelta -= 0x1000;
     }
-    blendOffset = (angleDelta * timer) / duration;
-    jointCursor->rotationX = startX + blendOffset;
+    blendOffset = (angleDelta * blendTimer) / blendDuration;
+    stateJointCursor->rotationX = startX + blendOffset;
 
-    angleDelta = (blendData[43] - (startY = blendData[1])) & 0xFFF;
+    angleDelta =
+        (jointFrameData[RACE_MOTION_DECODED_JOINT_FRAME_STRIDE].y - (startY = jointFrameData->y)) & 0xFFF;
     if (angleDelta >= 0x801) {
         angleDelta -= 0x1000;
     }
-    blendOffset = (angleDelta * timer) / duration;
-    jointCursor->rotationY = startY + blendOffset;
+    blendOffset = (angleDelta * blendTimer) / blendDuration;
+    stateJointCursor->rotationY = startY + blendOffset;
 
-    angleDelta = (blendData[44] - (startZ = blendData[2])) & 0xFFF;
+    angleDelta =
+        (jointFrameData[RACE_MOTION_DECODED_JOINT_FRAME_STRIDE].z - (startZ = jointFrameData->z)) & 0xFFF;
     if (angleDelta >= 0x801) {
         angleDelta -= 0x1000;
     }
-    blendOffset = (angleDelta * timer) / duration;
-    jointCursor->rotationZ = startZ + blendOffset;
+    blendOffset = (angleDelta * blendTimer) / blendDuration;
+    stateJointCursor->rotationZ = startZ + blendOffset;
 
     jointIndex++;
-    blendData += 3;
-    jointCursor = (RaceMotionPartialJointCursor *)((u8 *)jointCursor + sizeof(RaceMotionStateJoint));
+    jointFrameData++;
+    stateJointCursor = (RaceMotionPartialJointCursor *)((RaceMotionStateJoint *)stateJointCursor + 1);
     if (jointIndex != RACE_MOTION_JOINT_COUNT) {
         goto blend_joint;
     }
