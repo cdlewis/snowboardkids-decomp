@@ -7,6 +7,7 @@
 #define MAIN_MENU_SCENE_MODEL_GEOMETRY_HANDLE_BASE 0x33
 #define MAIN_MENU_SCENE_MODEL_TEXTURE_HANDLE_BASE 0x39
 #define MAIN_MENU_SCENE_MODEL_ANIMATION_BANK_HANDLE 0x3F
+#define MAIN_MENU_SCENE_MODEL_PART_COUNT 14
 
 typedef union MainMenuModelAnimationBank {
     s32 frameOffsets[1];
@@ -32,11 +33,11 @@ typedef struct MainMenuSceneModel {
     s16 framesRemaining;
     s16 frameDuration;
     s32 unk18;
-    MainMenuModelPart parts[14];
+    MainMenuModelPart parts[MAIN_MENU_SCENE_MODEL_PART_COUNT];
     Vec3i pos;
     Vec3s rot;
     s16 unk146;
-    Transform3D displayObjects[14];
+    Transform3D partTransforms[MAIN_MENU_SCENE_MODEL_PART_COUNT];
 } MainMenuSceneModel;
 
 void loadMainMenuSceneModelAssets(void);

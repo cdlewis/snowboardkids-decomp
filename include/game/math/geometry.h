@@ -24,9 +24,15 @@ typedef s16 Mat3x3[9];
 
 /* Rotation transform: a 3x3 fixed-point rotation followed by a translation. */
 typedef struct Transform3D {
-    /* 0x00 */ Mat3x3 rotation;
+    /* 0x00 */ union {
+        Mat3x3 rotation;
+        s16 rotationRows[3][3];
+    };
     /* 0x12 */ s16 pad12;
-    /* 0x14 */ Vec3i translation;
+    /* 0x14 */ union {
+        Vec3i translation;
+        s32 translationElements[3];
+    };
 } Transform3D;
 
 #endif
