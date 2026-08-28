@@ -1631,7 +1631,7 @@ void initRaceSetupSaveChoicePrompts(RectListActor *arg0) {
 void drawMenuIconTilemapSpriteActor(void *arg0) {
     SpriteActor *actor = arg0;
 
-    drawMenuTilemapSprite(&actor->sprite.render, 0, actor->x, actor->y);
+    drawMenuTilemapSprite(&actor->sprite.render, MENU_TILEMAP_TEXEL_4B, actor->x, actor->y);
 }
 
 void updateMenuIconTilemapSpriteActor(SpriteActor *arg0) {
@@ -1640,12 +1640,12 @@ void updateMenuIconTilemapSpriteActor(SpriteActor *arg0) {
     SpriteActor *actor = arg0;
 
     temp_a2 = actor;
-    actor->sprite.render.x--;
+    actor->sprite.render.scrollX--;
     temp_v0 = &temp_a2->sprite;
-    if (actor->sprite.render.x < 0) {
-        actor->sprite.render.x = 0x2FF;
+    if (actor->sprite.render.scrollX < 0) {
+        actor->sprite.render.scrollX = 0x2FF;
     }
-    temp_v0->render.y = (temp_v0->render.y + 1) & 0x1FF;
+    temp_v0->render.scrollY = (temp_v0->render.scrollY + 1) & 0x1FF;
     addRenderCallback(&gMenuOverlayRenderCallbackList, (RenderCallback)drawMenuIconTilemapSpriteActor, (void *)temp_a2);
 }
 
@@ -1653,8 +1653,8 @@ void initMenuIconTilemapSpriteActor(SpriteActor *arg0) {
     SpriteActor *temp_a2 = arg0;
 
     initMenuTilemapSprite(&temp_a2->sprite, getRelocatableHeapBlockBase(gAssetHandles[38]));
-    temp_a2->x = temp_a2->sprite.render.tileYStep;
-    temp_a2->y = temp_a2->sprite.render.padA;
+    temp_a2->x = temp_a2->sprite.render.tilemapWidth;
+    temp_a2->y = temp_a2->sprite.render.tilemapHeight;
     setCallbackTaskCallback(temp_a2, (CallbackTaskCallback)updateMenuIconTilemapSpriteActor);
 }
 
@@ -1662,20 +1662,20 @@ void initMenuTilemapSprite(MenuTilemapSprite *arg0, MenuTilemapSpriteAsset *arg1
     MenuTilemapSprite *dst = arg0;
     MenuTilemapSpriteAsset *src = arg1;
 
-    dst->render.x = 0;
-    dst->render.y = 0;
-    dst->render.tileYStep = src->unk0;
-    dst->render.padA = src->unk2;
-    dst->render.tileSize = src->unk4;
-    dst->render.tileXStep = src->unk6;
-    dst->render.clipX = -0x90;
-    dst->render.clipY = -0x68;
-    dst->render.width = 0x120;
-    dst->render.height = 0xD0;
-    dst->render.tilemap = (u16 *)(src->unkA + (u8 *)src);
-    dst->render.image = (u16 *)(src->unkE + (u8 *)src);
-    dst->render.tileInfo = src->unk10;
-    dst->render.palette = (u16 *)(src->unkC + (u8 *)src);
+    dst->render.scrollX = 0;
+    dst->render.scrollY = 0;
+    dst->render.tilemapWidth = src->tilemapWidth;
+    dst->render.tilemapHeight = src->tilemapHeight;
+    dst->render.tileWidth = src->tileWidth;
+    dst->render.tileHeight = src->tileHeight;
+    dst->render.viewportX = -0x90;
+    dst->render.viewportY = -0x68;
+    dst->render.viewportWidth = 0x120;
+    dst->render.viewportHeight = 0xD0;
+    dst->render.tilemap = (s16 *)(src->tilemapOffset + (u8 *)src);
+    dst->render.images = (u16 *)(src->imageOffset + (u8 *)src);
+    dst->render.tiles = src->tiles;
+    dst->render.paletteData = src->paletteOffset + (u8 *)src;
     dst->unk24 = -1;
 }
 

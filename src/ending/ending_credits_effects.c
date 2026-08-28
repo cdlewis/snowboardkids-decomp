@@ -647,7 +647,7 @@ void initEndingCreditsTommySnowmanEntrance(EndingCreditsEffectActor *arg0) {
 }
 
 void drawEndingCreditsTransitionSnowboardIcon(EndingCreditsEffectActor *arg0) {
-    drawMenuTilemapSprite(&arg0->menuSprite, 1, arg0->x, arg0->y);
+    drawMenuTilemapSprite(&arg0->menuSprite, MENU_TILEMAP_TEXEL_8B, arg0->x, arg0->y);
 }
 
 void updateEndingCreditsTransitionSnowboardIconIdle(EndingCreditsEffectActor *arg0) {
@@ -832,7 +832,7 @@ void initEndingCreditsTransitionSnowboardIcon(EndingCreditsEffectActor *arg0) {
 }
 
 void drawEndingCreditsTransitionSnowflakeIcon(EndingCreditsEffectActor *arg0) {
-    drawMenuTilemapSprite(&arg0->menuSprite, 1, arg0->x, arg0->y);
+    drawMenuTilemapSprite(&arg0->menuSprite, MENU_TILEMAP_TEXEL_8B, arg0->x, arg0->y);
 }
 
 void updateEndingCreditsTransitionSnowflakeIconReverseSpin(EndingCreditsEffectActor *arg0) {
@@ -877,7 +877,7 @@ void initEndingCreditsTransitionSnowflakeIcon(EndingCreditsEffectActor *arg0) {
 }
 
 void drawEndingCreditsTransitionLogoWipe(EndingCreditsEffectActor *arg0) {
-    drawMenuTilemapSprite(&arg0->menuSprite, 0, arg0->x, arg0->y);
+    drawMenuTilemapSprite(&arg0->menuSprite, MENU_TILEMAP_TEXEL_4B, arg0->x, arg0->y);
 }
 
 void updateEndingCreditsTransitionLogoWipeIdle(EndingCreditsEffectActor *arg0) {

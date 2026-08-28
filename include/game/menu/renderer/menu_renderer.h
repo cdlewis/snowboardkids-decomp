@@ -3,21 +3,32 @@
 
 #include "common.h"
 
+typedef struct MenuTilemapTile {
+    /* 0x0 */ s16 imageIndex;
+    /* 0x2 */ u8 paletteIndex;
+    /* 0x3 */ u8 flip;
+} MenuTilemapTile;
+
+typedef enum MenuTilemapTexelSize {
+    MENU_TILEMAP_TEXEL_4B,
+    MENU_TILEMAP_TEXEL_8B
+} MenuTilemapTexelSize;
+
 typedef struct MenuRenderSprite {
-    /* 0x00 */ s16 x;
-    /* 0x02 */ s16 y;
-    /* 0x04 */ s16 tileSize;
-    /* 0x06 */ s16 tileXStep;
-    /* 0x08 */ s16 tileYStep;
-    /* 0x0A */ s16 padA;
-    /* 0x0C */ s16 clipX;
-    /* 0x0E */ s16 clipY;
-    /* 0x10 */ s16 width;
-    /* 0x12 */ s16 height;
-    /* 0x14 */ u16 *image;
-    /* 0x18 */ u16 *tilemap;
-    /* 0x1C */ u8 *tileInfo;
-    /* 0x20 */ u16 *palette;
+    /* 0x00 */ s16 scrollX;
+    /* 0x02 */ s16 scrollY;
+    /* 0x04 */ s16 tileWidth;
+    /* 0x06 */ s16 tileHeight;
+    /* 0x08 */ s16 tilemapWidth;
+    /* 0x0A */ s16 tilemapHeight;
+    /* 0x0C */ s16 viewportX;
+    /* 0x0E */ s16 viewportY;
+    /* 0x10 */ s16 viewportWidth;
+    /* 0x12 */ s16 viewportHeight;
+    /* 0x14 */ u16 *images;
+    /* 0x18 */ s16 *tilemap;
+    /* 0x1C */ MenuTilemapTile *tiles;
+    /* 0x20 */ u8 *paletteData;
 } MenuRenderSprite;
 typedef struct MenuRenderSpriteActor MenuRenderSpriteActor;
 typedef struct MenuFontAssetTable MenuFontAssetTable;
@@ -116,7 +127,12 @@ void drawMenuTextureByAssetId(s16 x, s16 y, void *texture, u16 assetId, u16 widt
 void setMenuSpriteActorDebugUpdate(MenuRenderSpriteActor *actor);
 void updateMenuSpriteActorDebugControls(MenuRenderSpriteActor *actor);
 void drawMenuTilemapSpriteCallback(MenuRenderSprite *sprite);
-void drawMenuTilemapSprite(MenuRenderSprite *sprite, s32 arg1, s16 x, s16 y);
+void drawMenuTilemapSprite(
+    MenuRenderSprite *sprite,
+    MenuTilemapTexelSize texelSize,
+    s16 tilemapWidth,
+    s16 tilemapHeight
+);
 void noopMenuSpriteCallback(void);
 void drawMenuGlyphScriptWithFontBank(
     volatile s16 x,

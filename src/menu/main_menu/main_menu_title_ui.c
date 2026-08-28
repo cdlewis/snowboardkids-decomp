@@ -48,7 +48,7 @@ struct MainMenuTitleCursorActor {
 extern u8 gConnectedControllerCount;
 
 void drawMainMenuTitleLogo(MainMenuTitleLogoActor *arg0) {
-    drawMenuTilemapSprite(&arg0->tilemapSprite.render, 1, arg0->common.x, arg0->common.y);
+    drawMenuTilemapSprite(&arg0->tilemapSprite.render, MENU_TILEMAP_TEXEL_8B, arg0->common.x, arg0->common.y);
 }
 
 void updateMainMenuTitleLogo(MainMenuTitleLogoActor *arg0) {
