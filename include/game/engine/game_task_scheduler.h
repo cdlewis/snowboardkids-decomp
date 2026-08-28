@@ -6,6 +6,10 @@
 
 #define GAME_TASK_CALLBACK_COUNT 3
 
+#define GAME_TASK_STATE_ACTIVE 0
+#define GAME_TASK_STATE_SUSPENDED 1
+#define GAME_TASK_STATE_PENDING 2
+
 typedef void (*GameTaskCallback)(void);
 
 typedef struct GameTask {
