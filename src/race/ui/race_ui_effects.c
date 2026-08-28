@@ -3755,10 +3755,10 @@ void drawRaceUiResultAwardBadge(CallbackTask *task) {
 }
 
 void updateRaceUiResultAwardBadgeDelay(CallbackTask *task) {
-    if ((u16)task->userId != 0) {
-        task->userId = (u16)task->userId - 1;
+    if ((u16)task->header.userId != 0) {
+        task->header.userId = (u16)task->header.userId - 1;
     } else {
-        addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawRaceUiResultAwardBadge, (void *)task);
+        addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawRaceUiResultAwardBadge, task);
     }
 }
 

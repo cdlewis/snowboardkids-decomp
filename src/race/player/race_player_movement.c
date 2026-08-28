@@ -297,7 +297,7 @@ void updateRacePlayerFinalLapStatus(RacePlayer *player) {
         if ((gRaceCameraModeChangeDisabled == 0) && (gRacePlayerHudStatuses[player->playerIndex].active != 0)) {
             task = createCallbackTask((CallbackTaskCallback)initFinalLapPrompt, 6, 0x64);
             if (task != NULL) {
-                task->userId = player->playerIndex;
+                task->header.userId = player->playerIndex;
             }
         }
     }

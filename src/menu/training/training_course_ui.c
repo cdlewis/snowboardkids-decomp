@@ -13,15 +13,7 @@
 typedef MenuGlyphScript TrainingCourseUiScript;
 
 struct TrainingCourseUiActor {
-    /* 0x00 */ struct TrainingCourseUiActor *prev;
-    /* 0x04 */ struct TrainingCourseUiActor *next;
-    /* 0x08 */ void (*callback)(struct TrainingCourseUiActor *);
-    /* 0x0C */ u16 type;
-    /* 0x0E */ u16 priority;
-    /* 0x10 */ s16 unk10;
-    /* 0x12 */ s16 unk12;
-    /* 0x14 */ s16 callbackTimer;
-    /* 0x16 */ s16 isActive;
+    /* 0x00 */ CallbackTaskHeader task;
     /* 0x18 */ s16 x;
     /* 0x1A */ s16 y;
     union {
