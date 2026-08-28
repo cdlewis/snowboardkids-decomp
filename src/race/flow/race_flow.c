@@ -1940,7 +1940,7 @@ void updateRaceResultsFlow(void) {
                     recordIndex++;
                 } while (recordIndex < 5);
 
-                resultActor->userId = recordIndex;
+                resultActor->header.userId = recordIndex;
                 if (recordIndex < 5) {
                     for (shiftIndex = 3; shiftIndex >= recordIndex; shiftIndex--) {
                         gGameSaveDataBuffer[0].timeTrialRecords[gRaceCourseIndex.signedValue][shiftIndex + 1] =
@@ -1984,7 +1984,7 @@ void updateRaceResultsFlow(void) {
                     if (gRaceChallengeFailed != 0) {
                         recordIndex = 5;
                     }
-                    resultActor->userId = recordIndex;
+                    resultActor->header.userId = recordIndex;
                     if (recordIndex < 5) {
                         for (shiftIndex = 3; shiftIndex >= recordIndex; shiftIndex--) {
                             gGameSaveDataBuffer[0].trickAttackScores[gRaceCourseIndex.signedValue][shiftIndex + 1] =
@@ -2027,7 +2027,7 @@ void updateRaceResultsFlow(void) {
                     if (gRaceChallengeFailed != 0) {
                         recordIndex = 5;
                     }
-                    resultActor->userId = recordIndex;
+                    resultActor->header.userId = recordIndex;
                     if (recordIndex < 5) {
                         for (shiftIndex = 3; shiftIndex >= recordIndex; shiftIndex--) {
                             gGameSaveDataBuffer[0].scoreAttackScores[gRaceCourseIndex.signedValue][shiftIndex + 1] =
@@ -2075,7 +2075,7 @@ void updateRaceResultsFlow(void) {
                     if (gRaceChallengeFailed != 0) {
                         recordIndex = 5;
                     }
-                    resultActor->userId = recordIndex;
+                    resultActor->header.userId = recordIndex;
                     if (recordIndex < 5) {
                         for (shiftIndex = 3; shiftIndex >= recordIndex; shiftIndex--) {
                             gGameSaveDataBuffer[0].raceRecords[gRaceCourseIndex.signedValue][shiftIndex + 1] =

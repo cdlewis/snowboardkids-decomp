@@ -4,12 +4,13 @@
 #undef CALLBACK_TASK_SCHEDULER_IMPLEMENTATION
 #include "game/engine/system_runtime.h"
 
-typedef struct CallbackTaskGroup {
-    CallbackTask tasks[4];
-} CallbackTaskGroup;
-
+/*
+ * This overlapping view is required to preserve IDO's register allocation in
+ * the two task creation functions. D_80112770.activeListSentinel aliases
+ * gCallbackTaskActiveListSentinel at offset 0x10.
+ */
 typedef struct CallbackTaskSchedulerBss {
-    u8 unk0[0x10];
+    u8 padding[0x10];
     CallbackTask activeListSentinel;
 } CallbackTaskSchedulerBss;
 
@@ -48,15 +49,15 @@ void initCallbackTaskScheduler(s32 arg0) {
     CallbackTaskGroup *end;
 
     gCallbackTaskActiveListHead = NULL; resetRenderCallbackQueues(); pool = gFreeCallbackTaskPool; task0 = &D_80112898; task1 = &D_801129B0; task2 = &D_80112AC8; task3 = &D_80112BE0; end = &D_80121820; loop: pool[3] = &task3->tasks[0]; task3++; pool[1] = &task1->tasks[0]; pool[2] = &task2->tasks[0]; if (((!task0) && (!task0)) && (!task0)) { } task2++; task1++; pool[0] = &task0->tasks[0]; task0++;
-    task0[-1].tasks[1].isActive = 0;
-    task0[-1].tasks[1].callbackTimer = 0;
-    task0[-1].tasks[2].isActive = 0;
-    task0[-1].tasks[2].callbackTimer = 0;
-    task0[-1].tasks[3].isActive = 0;
-    task0[-1].tasks[3].callbackTimer = 0;
+    task0[-1].tasks[1].header.isActive = 0;
+    task0[-1].tasks[1].header.callbackTimer = 0;
+    task0[-1].tasks[2].header.isActive = 0;
+    task0[-1].tasks[2].header.callbackTimer = 0;
+    task0[-1].tasks[3].header.isActive = 0;
+    task0[-1].tasks[3].header.callbackTimer = 0;
     pool += 4;
-    task0[-1].tasks[0].isActive = 0;
-    task0[-1].tasks[0].callbackTimer = 0;
+    task0[-1].tasks[0].header.isActive = 0;
+    task0[-1].tasks[0].header.callbackTimer = 0;
     if (task3 != end) {
         goto loop;
     }
@@ -107,9 +108,9 @@ void updateCallbackTasks(void) {
     if (gCurrentCallbackTask != NULL) {
         do {
             new_var = 0;
-            gCurrentCallbackTask->callbackTimer = new_var;
-            gCurrentCallbackTask->callback(gCurrentCallbackTask);
-            s0 = gCurrentCallbackTask->next;
+            gCurrentCallbackTask->header.callbackTimer = new_var;
+            gCurrentCallbackTask->header.callback(gCurrentCallbackTask);
+            s0 = gCurrentCallbackTask->header.next;
             gCurrentCallbackTask = s0;
         } while (gCurrentCallbackTask != NULL);
     }
@@ -126,13 +127,13 @@ void updateCallbackTasksWithMinPriority(s32 minPriority) {
 
     if (s0 != NULL) {
         do {
-            s0->callbackTimer = 0;
+            s0->header.callbackTimer = 0;
             s0 = gCurrentCallbackTask;
-            if ((u16)s0->priority < minPriority) {
+            if ((u16)s0->header.priority < minPriority) {
                 break;
             }
-            s0->callback(s0);
-            s0 = gCurrentCallbackTask->next;
+            s0->header.callback(s0);
+            s0 = gCurrentCallbackTask->header.next;
             gCurrentCallbackTask = s0;
         } while (s0 != NULL);
     }
@@ -150,11 +151,11 @@ void updateRemainingCallbackTasks(void) {
 
     if (s0 != NULL) {
         do {
-            s0->callbackTimer = 0;
+            s0->header.callbackTimer = 0;
             s0 = gCurrentCallbackTask;
             if ((s0 && s0) && s0) {}
-            s0->callback(s0);
-            s0 = gCurrentCallbackTask->next;
+            s0->header.callback(s0);
+            s0 = gCurrentCallbackTask->header.next;
             gCurrentCallbackTask = s0;
         } while (s0 != NULL);
     }
@@ -230,28 +231,28 @@ void *createCallbackTaskPreservingArgs(CallbackTaskCallback callback, u16 type, 
     gFreeCallbackTaskCount = index;
     task = gFreeCallbackTaskPool
         [(((((((index & 0xFFFF) & 0xFFFFu) & 0xFFFFu) & 0xFFFFu) & 0xFFFFu) & 0xFFFFu) & 0xFFFFu) & 0xFFFFu];
-    if (prev->next != NULL) {
-        next = sentinel->next;
+    if (prev->header.next != NULL) {
+        next = sentinel->header.next;
         do {
-            if ((u16)next->priority < priority) {
+            if ((u16)next->header.priority < priority) {
                 break;
             }
             prev = next;
-            next = next->next;
+            next = next->header.next;
         } while (next != NULL);
     }
 
-    task->prev = prev;
-    task->next = prev->next;
-    next = prev->next;
+    task->header.prev = prev;
+    task->header.next = prev->header.next;
+    next = prev->header.next;
     if (next != NULL) {
-        next->prev = task;
+        next->header.prev = task;
     }
-    prev->next = task;
-    task->isActive = 1;
-    task->callback = callback;
-    task->type = type;
-    task->priority = priority;
+    prev->header.next = task;
+    task->header.isActive = 1;
+    task->header.callback = callback;
+    task->header.type = type;
+    task->header.priority = priority;
     return task;
 }
 
@@ -325,43 +326,43 @@ void *createCallbackTask(CallbackTaskCallback callback, u16 type, s32 priority) 
     sentinel = &D_80112770.activeListSentinel;
     gFreeCallbackTaskCount = index;
     task = gFreeCallbackTaskPool[(((((((index & 0xFFFF) & 0xFFFFu) & 0xFFFFu) & 0xFFFFu) & 0xFFFFu) & 0xFFFFu) & 0xFFFFu) & 0xFFFFu];
-    if (prev->next != NULL) {
-        next = sentinel->next;
+    if (prev->header.next != NULL) {
+        next = sentinel->header.next;
         do {
-            if ((u16)next->priority < priority) {
+            if ((u16)next->header.priority < priority) {
                 break;
             }
             prev = next;
-            next = next->next;
+            next = next->header.next;
         } while (next != NULL);
     }
 
-    task->prev = prev;
-    task->next = prev->next;
-    next = prev->next;
+    task->header.prev = prev;
+    task->header.next = prev->header.next;
+    next = prev->header.next;
     if (next != NULL) {
-        next->prev = task;
+        next->header.prev = task;
     }
-    prev->next = task;
-    task->callback = callback;
-    task->type = type;
-    task->priority = priority;
-    task->isActive = 1;
+    prev->header.next = task;
+    task->header.callback = callback;
+    task->header.type = type;
+    task->header.priority = priority;
+    task->header.isActive = 1;
 
     i = 0;
-    do { task->args[i] = NULL; i = (i + 1) & 0xFFFF; } while (i < 0x40U);
+    do { task->callbackData[i] = 0; i = (i + 1) & 0xFFFF; } while (i < 0x40U);
     return task;
 }
 // clang-format on
 
 // IDO code generation for this function is sensitive to source line layout.
 // clang-format off
-void *createCallbackTaskWithUserId(CallbackTaskCallback callback, s32 type, s32 priority, s32 userId){ CallbackTask *t=createCallbackTaskS32(callback,type&0xFFFF,priority); if(t!=NULL){t->userId=userId;} return t;}
+void *createCallbackTaskWithUserId(CallbackTaskCallback callback, s32 type, s32 priority, s32 userId){ CallbackTask *t=createCallbackTaskS32(callback,type&0xFFFF,priority); if(t!=NULL){t->header.userId=userId;} return t;}
 // clang-format on
 
 // IDO code generation for this function is sensitive to source line layout.
 // clang-format off
-void *createCallbackTaskWithUserIdPreservingArgs(CallbackTaskCallback callback, s32 type, s32 priority, s32 userId){ CallbackTask *t=createCallbackTaskPreservingArgsS32(callback,type&0xFFFF,priority); if(t!=NULL){t->userId=userId;} return t;}
+void *createCallbackTaskWithUserIdPreservingArgs(CallbackTaskCallback callback, s32 type, s32 priority, s32 userId){ CallbackTask *t=createCallbackTaskPreservingArgsS32(callback,type&0xFFFF,priority); if(t!=NULL){t->header.userId=userId;} return t;}
 // clang-format on
 
 void removeCallbackTask(void *taskPtr) {
@@ -370,17 +371,17 @@ void removeCallbackTask(void *taskPtr) {
     u16 *counter;
     unsigned char type;
 
-    task->isActive = 0;
-    task->prev->next = task->next;
-    next = task->next;
+    task->header.isActive = 0;
+    task->header.prev->header.next = task->header.next;
+    next = task->header.next;
     if (next != NULL) {
-        next->prev = task->prev;
+        next->header.prev = task->header.prev;
     }
 
     gFreeCallbackTaskPool[gFreeCallbackTaskCount] = task;
     gFreeCallbackTaskCount++;
 
-    type = task->type & 0xFF;
+    type = task->header.type & 0xFF;
     switch (type) {
         case 0:
             counter = &gFreeCallbackTaskType0Count;
@@ -413,6 +414,8 @@ void removeCallbackTask(void *taskPtr) {
     }
 }
 
-void setCallbackTaskCallback(void *task, CallbackTaskCallback callback) {
-    ((CallbackTask *)task)->callback = callback;
+void setCallbackTaskCallback(void *taskPtr, CallbackTaskCallback callback) {
+    CallbackTask *task = taskPtr;
+
+    task->header.callback = callback;
 }

@@ -3,20 +3,30 @@
 
 #include "common.h"
 
-typedef struct CallbackTask {
-    struct CallbackTask *prev;
-    struct CallbackTask *next;
-    void (*callback)(void *);
-    u16 type;
-    u16 priority;
-    s16 userId;
-    s16 unk12;
-    s16 callbackTimer;
-    s16 isActive;
-    void *args[0x40];
-} CallbackTask; // size = 0x118
+typedef struct CallbackTask CallbackTask;
 
 typedef void (*CallbackTaskCallback)(void *);
+
+typedef struct CallbackTaskHeader {
+    /* 0x00 */ CallbackTask *prev;
+    /* 0x04 */ CallbackTask *next;
+    /* 0x08 */ CallbackTaskCallback callback;
+    /* 0x0C */ u16 type;
+    /* 0x0E */ u16 priority;
+    /* 0x10 */ s16 userId;
+    /* 0x12 */ s16 unk12;
+    /* 0x14 */ s16 callbackTimer;
+    /* 0x16 */ s16 isActive;
+} CallbackTaskHeader; // size = 0x18
+
+struct CallbackTask {
+    /* 0x000 */ CallbackTaskHeader header;
+    /* 0x018 */ u32 callbackData[0x40];
+}; // size = 0x118
+
+typedef struct CallbackTaskGroup {
+    CallbackTask tasks[4];
+} CallbackTaskGroup; // size = 0x460
 
 void initCallbackTaskScheduler(s32 arg0);
 void updateCallbackTasks(void);

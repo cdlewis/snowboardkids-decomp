@@ -42,7 +42,6 @@
 // Palette selectors are passed as s32 values, but only their low byte is used.
 #define MENU_GLYPH_PALETTE_INDEX(palette) (((u8 *)&(palette))[3])
 
-typedef struct MenuRenderTask MenuRenderTask;
 typedef struct MenuRenderAssetTableHeader MenuRenderAssetTableHeader;
 typedef struct MenuRenderAssetTableEntry MenuRenderAssetTableEntry;
 typedef struct FontAssetHeader FontAssetHeader;
@@ -50,20 +49,8 @@ typedef struct FontTexture FontTexture;
 typedef struct MenuFontAssetEntry MenuFontAssetEntry;
 typedef union MenuGlyphPalette MenuGlyphPalette;
 
-struct MenuRenderTask {
-    /* 0x00 */ MenuRenderTask *prev;
-    /* 0x04 */ MenuRenderTask *next;
-    /* 0x08 */ void (*callback)(MenuRenderTask *);
-    /* 0x0C */ u16 type;
-    /* 0x0E */ u16 priority;
-    /* 0x10 */ s16 unk10;
-    /* 0x12 */ s16 unk12;
-    /* 0x14 */ s16 callbackTimer;
-    /* 0x16 */ s16 isActive;
-};
-
 struct MenuRenderSpriteActor {
-    /* 0x00 */ MenuRenderTask task;
+    /* 0x00 */ CallbackTaskHeader task;
     /* 0x18 */ MenuRenderSprite sprite;
 };
 
