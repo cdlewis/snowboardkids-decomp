@@ -200,7 +200,7 @@ s32 updateFramebufferRenderScheduler(void) {
     if (gFramebufferSubmissionCountdown[0] == 0) {
         if (gFramebufferSwapHold == 0) {
             frameIndex = gNextFramebufferRenderTaskIndex;
-            if (gFrameRenderTaskStatuses[frameIndex].status == 0) {
+            if (gFrameRenderTasks[frameIndex].status == 0) {
                 if ((s32)gPendingFramebufferSwapCount > 0) {
                     submitFramebufferRenderTask(frameIndex);
                     gFramebufferSubmissionCountdown[0] = gFramebufferRenderInterval.timerValue;

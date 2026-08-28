@@ -4,14 +4,21 @@
 #include "common.h"
 
 #define FRAMEBUFFER_COUNT 3
-#define FRAMEBUFFER_SIZE 0x25800
+#define FRAMEBUFFER_WIDTH 320
+#define FRAMEBUFFER_HEIGHT 240
+#define FRAMEBUFFER_PIXEL_COUNT (FRAMEBUFFER_WIDTH * FRAMEBUFFER_HEIGHT)
+#define FRAMEBUFFER_SIZE (FRAMEBUFFER_PIXEL_COUNT * sizeof(u16))
 #define RSP_OUTPUT_BUFFER_SIZE 0x8000
 #define RSP_UCODE_DATA_SIZE 0x800
 #define RSP_DRAM_STACK_SIZE 0x400
 #define RSP_YIELD_BUFFER_SIZE 0xC00
 
+typedef struct RuntimeViewportDisplayListData RuntimeViewportDisplayListData;
+
 extern Gfx *gRegionAllocPtr;
-extern Gfx *gCurrentTaskDisplayListStart;
+extern RuntimeViewportDisplayListData *gCurrentFrameRenderData;
+extern u16 gDepthBuffer[FRAMEBUFFER_PIXEL_COUNT];
+extern u16 gFramebuffers[FRAMEBUFFER_COUNT][FRAMEBUFFER_PIXEL_COUNT];
 extern u8 gFramebufferColorBufferIndex;
 extern s32 gClearFramebufferOnNextTask;
 extern u16 gLastSchedulerRetraceCounter;
