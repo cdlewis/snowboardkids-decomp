@@ -4,6 +4,9 @@
 #include "PRinternal/controller.h"
 #include "PR/rmon.h"
 
+#define PFS_BANK_PROBE_BLOCK 0
+#define PFS_BANK_PROBE_MARKER 0x80
+
 #if BUILD_VERSION >= VERSION_J
 __OSInode __osPfsInodeCache ALIGNED(0x8);
 s32 __osPfsInodeCacheChannel = -1;
@@ -46,15 +49,15 @@ s32 __osIdCheckSum(const __OSPackId *id, u16 *csum, u16 *icsum) {
 
 s32 __osRepairPackId(OSPfs *pfs, const __OSPackId *sourceId, __OSPackId *repairedId) {
     s32 ret = 0;
-    u8 workingBlock[BLOCKSIZE];
-    u8 readback[BLOCKSIZE];
-    u8 deviceIdBit = 0;
+    u8 scratchBlock[BLOCKSIZE];
+    u8 probeReadback[BLOCKSIZE];
+    u8 controllerPakBit = 0;
     int i;
-    int bankCount;
+    int detectedBankCount;
     u16 idBlockAddresses[4];
 
 #if BUILD_VERSION >= VERSION_J
-    bankCount = 0;
+    detectedBankCount = 0;
 #else
     SET_ACTIVEBANK_TO_ZERO();
 #endif
@@ -67,48 +70,48 @@ s32 __osRepairPackId(OSPfs *pfs, const __OSPackId *sourceId, __OSPackId *repaire
 #if BUILD_VERSION >= VERSION_J
     SET_ACTIVEBANK_TO_ZERO();
 #else
-    bankCount = 0;
+    detectedBankCount = 0;
 #endif
 
     /*
-     * Write a distinct pattern to block 0 of each candidate bank. The readback
-     * proves the bank is writable; rechecking bank 0 proves later selections do
-     * not alias it.
+     * Write a distinct pattern to the first block of each candidate bank. The
+     * readback proves the bank is writable; rechecking bank 0 proves later bank
+     * selections do not alias it.
      */
     do {
-        ERRCK(SELECT_BANK(pfs, bankCount));
-        ERRCK(__osContRamRead(pfs->queue, pfs->channel, 0, workingBlock));
+        ERRCK(SELECT_BANK(pfs, detectedBankCount));
+        ERRCK(__osContRamRead(pfs->queue, pfs->channel, PFS_BANK_PROBE_BLOCK, scratchBlock));
 
-        workingBlock[0] = bankCount | 0x80;
+        scratchBlock[0] = detectedBankCount | PFS_BANK_PROBE_MARKER;
 
-        for (i = 1; i < BLOCKSIZE; i++) {
-            workingBlock[i] = ~workingBlock[i];
+        for (i = 1; i < ARRLEN(scratchBlock); i++) {
+            scratchBlock[i] = ~scratchBlock[i];
         }
 
-        ERRCK(__osContRamWrite(pfs->queue, pfs->channel, 0, workingBlock, FALSE));
-        ERRCK(__osContRamRead(pfs->queue, pfs->channel, 0, readback));
+        ERRCK(__osContRamWrite(pfs->queue, pfs->channel, PFS_BANK_PROBE_BLOCK, scratchBlock, FALSE));
+        ERRCK(__osContRamRead(pfs->queue, pfs->channel, PFS_BANK_PROBE_BLOCK, probeReadback));
 
-        for (i = 0; i < BLOCKSIZE; i++) {
-            if (readback[i] != workingBlock[i]) {
+        for (i = 0; i < ARRLEN(probeReadback); i++) {
+            if (probeReadback[i] != scratchBlock[i]) {
                 break;
             }
         }
 
-        if (i != BLOCKSIZE) {
+        if (i != ARRLEN(probeReadback)) {
             break;
         }
 
-        if (bankCount > 0) {
+        if (detectedBankCount > 0) {
             ERRCK(SELECT_BANK(pfs, 0));
-            ERRCK(__osContRamRead(pfs->queue, pfs->channel, 0, workingBlock));
+            ERRCK(__osContRamRead(pfs->queue, pfs->channel, PFS_BANK_PROBE_BLOCK, scratchBlock));
 
-            if (workingBlock[0] != 0x80) {
+            if (scratchBlock[0] != PFS_BANK_PROBE_MARKER) {
                 break;
             }
         }
 
-        bankCount++;
-    } while (bankCount < PFS_MAX_BANKS);
+        detectedBankCount++;
+    } while (detectedBankCount < PFS_MAX_BANKS);
 
 #if BUILD_VERSION >= VERSION_J
     SET_ACTIVEBANK_TO_ZERO();
@@ -116,10 +119,10 @@ s32 __osRepairPackId(OSPfs *pfs, const __OSPackId *sourceId, __OSPackId *repaire
     ERRCK(SELECT_BANK(pfs, 0));
 #endif
 
-    deviceIdBit = (bankCount > 0) ? PFS_ID_DEVICE_ID_BIT : 0;
+    controllerPakBit = (detectedBankCount > 0) ? PFS_ID_DEVICE_ID_BIT : 0;
 
-    repairedId->deviceid = (sourceId->deviceid & (u16)~PFS_ID_DEVICE_ID_BIT) | deviceIdBit;
-    repairedId->banks = bankCount;
+    repairedId->deviceid = (sourceId->deviceid & (u16)~PFS_ID_DEVICE_ID_BIT) | controllerPakBit;
+    repairedId->banks = detectedBankCount;
     repairedId->version = sourceId->version;
     __osIdCheckSum(repairedId, &repairedId->checksum, &repairedId->inverted_checksum);
     idBlockAddresses[0] = PFS_ID_0AREA;
@@ -132,10 +135,10 @@ s32 __osRepairPackId(OSPfs *pfs, const __OSPackId *sourceId, __OSPackId *repaire
         ERRCK(__osContRamWrite(pfs->queue, pfs->channel, idBlockAddresses[i], (u8 *)repairedId, TRUE));
     }
 
-    ERRCK(__osContRamRead(pfs->queue, pfs->channel, PFS_ID_0AREA, workingBlock));
+    ERRCK(__osContRamRead(pfs->queue, pfs->channel, PFS_ID_0AREA, scratchBlock));
 
-    for (i = 0; i < BLOCKSIZE; i++) {
-        if (workingBlock[i] != ((u8 *)repairedId)[i]) {
+    for (i = 0; i < ARRLEN(scratchBlock); i++) {
+        if (scratchBlock[i] != ((u8 *)repairedId)[i]) {
 #if BUILD_VERSION >= VERSION_J
             return PFS_ERR_DEVICE;
 #else
