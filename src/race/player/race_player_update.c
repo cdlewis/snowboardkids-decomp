@@ -30,8 +30,10 @@
 #define setRaceMotionAnimation(player, animIndex) setRaceMotionAnimation(RACE_MOTION_STATE(player), (animIndex))
 #define interpolateRaceMotionJointAnimationFrame(player, animIndex, frameTimer, frameTimerReset) \
     interpolateRaceMotionJointAnimationFrame(RACE_MOTION_STATE(player), (animIndex), (frameTimer), (frameTimerReset))
-#define blendRaceMotionJointAnimation(player, animIndex, timer, duration) \
-    blendRaceMotionJointAnimation(RACE_MOTION_STATE(player), (animIndex), (timer), (duration))
+#define blendRaceMotionJointAnimation(player, animationIndex, blendTimer, blendDuration) \
+    blendRaceMotionJointAnimation(                                                        \
+        RACE_MOTION_STATE(player), (animationIndex), (blendTimer), (blendDuration)       \
+    )
 #define stepRaceMotionLoopingAnimation(player) stepRaceMotionLoopingAnimation(RACE_MOTION_STATE(player))
 #define stepRaceMotionLoopingJointAnimation(player) stepRaceMotionLoopingJointAnimation(RACE_MOTION_STATE(player))
 #define stepRaceMotionAnimationUntilEnd(player) stepRaceMotionAnimationUntilEnd(RACE_MOTION_STATE(player))

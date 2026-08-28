@@ -58,7 +58,12 @@ void interpolateRaceMotionJointAnimationFrame(
     s32 frameTimer,
     s32 frameTimerReset
 );
-void blendRaceMotionJointAnimation(RaceMotionState *state, s32 animIndex, s32 timer, s32 duration);
+void blendRaceMotionJointAnimation(
+    RaceMotionState *state,
+    s32 animationIndex,
+    s32 blendTimer,
+    s32 blendDuration
+);
 void stepRaceMotionLoopingAnimation(RaceMotionState *state);
 void stepRaceMotionLoopingJointAnimation(RaceMotionState *state);
 s32 stepRaceMotionAnimationUntilEnd(RaceMotionState *state);
