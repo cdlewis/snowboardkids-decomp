@@ -73,14 +73,14 @@ void initRaceMotionAnimationDebugViewer(void) {
 
     setRaceCameraMode(0, 2);
     state = &gRacePlayers[0];
-    state->unk2EE = 0;
-    temp_v0 = state->unk2EE;
+    state->leanAngle = 0;
+    temp_v0 = state->leanAngle;
     state->pos.x = 0;
     state->pos.y = 0;
     state->pos.z = 0;
     state->animationId = 0;
-    state->unk64 = 0xFFFA0000;
-    state->unk58 = 0;
+    state->groundCorrectionY = 0xFFFA0000;
+    state->groundOffset = 0;
     state->mode = 0;
     state->playerIndex = 0;
     state->facingAngle = temp_v0;

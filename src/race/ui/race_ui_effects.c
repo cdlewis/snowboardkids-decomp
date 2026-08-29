@@ -524,15 +524,6 @@ typedef struct {
     /* 0x12 */ u8 pad12[2];
 } RaceUiRankTextRenderEntry;
 
-typedef struct RaceUiRankTrigger {
-    /* 0x00 */ struct RaceUiRankTrigger *next;
-    /* 0x04 */ s32 x;
-    /* 0x08 */ s32 y;
-    /* 0x0C */ s32 z;
-    /* 0x10 */ s32 radius;
-    /* 0x14 */ s8 triggered;
-} RaceUiRankTrigger;
-
 typedef struct RaceUiPopupActor {
     /* 0x00 */ u8 pad0[0x10];
     /* 0x10 */ u16 index;
@@ -6241,7 +6232,7 @@ void renderRaceScoreAttackRings(RaceUiRankTextRenderActor *arg0) {
 void updateRaceScoreAttackRings(void *arg0) {
     volatile u8 pad[8];
     RaceUiRankTextRenderEntry *entry;
-    RaceUiRankTrigger *trigger;
+    RaceScoreAttackRingTrigger *trigger;
     s32 radius;
     s32 dx;
     s32 dy;
@@ -6258,11 +6249,11 @@ void updateRaceScoreAttackRings(void *arg0) {
                     do {
                         if (trigger->triggered == 0) {
                             radius = trigger->radius + 0xE0000;
-                            dx = trigger->x - entry->position.x;
+                            dx = trigger->position.x - entry->position.x;
                             if ((dx < radius) && (-radius < dx)) {
-                                dy = (trigger->y - entry->position.y) + 0xFFF20000;
+                                dy = (trigger->position.y - entry->position.y) + 0xFFF20000;
                                 if ((dy < radius) && (-radius < dy)) {
-                                    dz = trigger->z - entry->position.z;
+                                    dz = trigger->position.z - entry->position.z;
                                     if ((dz < radius) && (-radius < dz) &&
                                         (integerSquareRoot64((s64)dx * dx + (s64)dy * dy + (s64)dz * dz) < radius)) {
                                         trigger->triggered = 1;

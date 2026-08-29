@@ -1438,7 +1438,7 @@ void collidePlayerWithCourseTriggerVolume(RacePlayer *player, RaceCourseTriggerE
 
     if ((player->stateFlags & 0x2000) == 0) {
         delta.x = player->pos.x - gCourseTriggerEntries[trigger->task.userId].position.x;
-        delta.y = player->unk5C - gCourseTriggerEntries[trigger->task.userId].position.y;
+        delta.y = player->collisionBottomY - gCourseTriggerEntries[trigger->task.userId].position.y;
         delta.z = player->pos.z - gCourseTriggerEntries[trigger->task.userId].position.z;
         transformVec3iByFixedMatrix(matrix, &delta, &transformed);
 
@@ -1455,7 +1455,7 @@ void collidePlayerWithCourseTriggerVolume(RacePlayer *player, RaceCourseTriggerE
             transformVec3iByFixedMatrix(matrix, &delta, &transformed);
 
             player->pos.x += transformed.x;
-            player->unk5C += transformed.y;
+            player->collisionBottomY += transformed.y;
             player->pos.z += transformed.z;
             player->stateFlags |= 0x02000000;
             player->unk332 = gCourseTriggerEntries[trigger->task.userId].yaw ^ 0;
@@ -1470,7 +1470,7 @@ void collidePlayerWithCourseTriggerVolume(RacePlayer *player, RaceCourseTriggerE
     }
 
     delta.x = player->pos.x - gCourseTriggerEntries[trigger->task.userId].position.x;
-    delta.y = player->unk5C - gCourseTriggerEntries[trigger->task.userId].position.y;
+    delta.y = player->collisionBottomY - gCourseTriggerEntries[trigger->task.userId].position.y;
     delta.z = player->pos.z - gCourseTriggerEntries[trigger->task.userId].position.z;
     transformVec3iByFixedMatrix(matrix, &delta, &transformed);
 
