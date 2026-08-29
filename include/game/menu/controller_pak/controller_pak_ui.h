@@ -2,6 +2,7 @@
 #define CONTROLLER_PAK_UI_H
 
 #include "common.h"
+#include "game/menu/renderer/menu_renderer.h"
 
 typedef struct {
     /* 0x00 */ char pad[0x18];
@@ -41,16 +42,8 @@ typedef struct {
 } ControllerPakTwoPointActor;
 
 typedef struct {
-    /* 0x00 */ s16 x;
-    /* 0x02 */ s16 y;
-    /* 0x04 */ u8 unk4[4];
-} ControllerPakSprite;
-
-typedef struct {
     /* 0x00 */ ControllerPakMenuActor common;
-    /* 0x1C */ ControllerPakSprite sprite;
-    /* 0x24 */ s16 startX;
-    /* 0x26 */ s16 startY;
+    /* 0x1C */ MenuTilemapSprite sprite;
 } ControllerPakSpriteActor;
 
 typedef struct {

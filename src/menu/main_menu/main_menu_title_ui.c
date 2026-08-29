@@ -20,16 +20,7 @@ typedef struct {
 
 struct MainMenuTitleLogoActor {
     MainMenuTitleActor common;
-    union {
-        /* 0x1C */ MenuTilemapSprite tilemapSprite;
-        struct {
-            /* 0x1C */ s16 width;
-            /* 0x1E */ s16 height;
-            /* 0x20 */ char pad20[4];
-            /* 0x24 */ s16 startX;
-            /* 0x26 */ s16 startY;
-        };
-    };
+    /* 0x1C */ MenuTilemapSprite tilemapSprite;
 };
 
 struct MainMenuTitleOptionsActor {
@@ -57,10 +48,10 @@ void updateMainMenuTitleLogo(MainMenuTitleLogoActor *arg0) {
 
 void initMainMenuTitleLogo(MainMenuTitleLogoActor *arg0) {
     initMenuTilemapSprite(&arg0->tilemapSprite, getRelocatableHeapBlockBase(TITLE_SCREEN_LOGO_SPRITE_HANDLE));
-    arg0->width = 0x10;
-    arg0->height = 0x10;
-    arg0->common.x = arg0->startX;
-    arg0->common.y = arg0->startY;
+    arg0->tilemapSprite.render.scrollX = 0x10;
+    arg0->tilemapSprite.render.scrollY = 0x10;
+    arg0->common.x = arg0->tilemapSprite.render.tilemapWidth;
+    arg0->common.y = arg0->tilemapSprite.render.tilemapHeight;
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateMainMenuTitleLogo);
 }
 

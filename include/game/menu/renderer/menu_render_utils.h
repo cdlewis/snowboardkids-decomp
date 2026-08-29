@@ -2,8 +2,7 @@
 #define MENU_RENDER_UTILS_H
 
 #include "common.h"
-
-typedef struct AssetTable AssetTable;
+#include "game/menu/renderer/menu_renderer.h"
 
 void getAssetTableImageAndPalette(void *asset, u16 index, void **image, void **palette);
 void drawMenuAsciiChar(s16 x, s16 y, u8 character, u16 palette);

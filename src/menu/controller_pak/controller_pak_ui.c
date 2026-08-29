@@ -1056,7 +1056,7 @@ void initControllerPakFileDeleteFileList(ControllerPakFileListActor *arg0) {
 }
 
 void drawControllerPakFileDeleteIcon(ControllerPakSpriteActor *arg0) {
-    drawMenuTilemapSprite((MenuRenderSprite *)&arg0->sprite, MENU_TILEMAP_TEXEL_4B, arg0->common.x, arg0->common.y);
+    drawMenuTilemapSprite(&arg0->sprite.render, MENU_TILEMAP_TEXEL_4B, arg0->common.x, arg0->common.y);
 }
 
 void updateControllerPakFileDeleteIcon(ControllerPakSpriteActor *arg0) {
@@ -1064,16 +1064,16 @@ void updateControllerPakFileDeleteIcon(ControllerPakSpriteActor *arg0) {
 }
 
 void initControllerPakFileDeleteIcon(ControllerPakSpriteActor *arg0) {
-    initMenuTilemapSprite((MenuTilemapSprite *)&arg0->sprite, getRelocatableHeapBlockBase(gAssetHandles[0x26]));
-    arg0->sprite.x = 0x10;
-    arg0->sprite.y = 0x10;
-    arg0->common.x = arg0->startX;
-    arg0->common.y = arg0->startY;
+    initMenuTilemapSprite(&arg0->sprite, getRelocatableHeapBlockBase(gAssetHandles[0x26]));
+    arg0->sprite.render.scrollX = 0x10;
+    arg0->sprite.render.scrollY = 0x10;
+    arg0->common.x = arg0->sprite.render.tilemapWidth;
+    arg0->common.y = arg0->sprite.render.tilemapHeight;
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateControllerPakFileDeleteIcon);
 }
 
 void drawControllerPakMessageIcon(ControllerPakSpriteActor *arg0) {
-    drawMenuTilemapSprite((MenuRenderSprite *)&arg0->sprite, MENU_TILEMAP_TEXEL_8B, arg0->common.x, arg0->common.y);
+    drawMenuTilemapSprite(&arg0->sprite.render, MENU_TILEMAP_TEXEL_8B, arg0->common.x, arg0->common.y);
 }
 
 void updateControllerPakMessageIcon(ControllerPakSpriteActor *arg0) {
@@ -1081,11 +1081,11 @@ void updateControllerPakMessageIcon(ControllerPakSpriteActor *arg0) {
 }
 
 void initControllerPakMessageIcon(ControllerPakSpriteActor *arg0) {
-    initMenuTilemapSprite((MenuTilemapSprite *)&arg0->sprite, getRelocatableHeapBlockBase(gAssetHandles[0x26]));
-    arg0->sprite.x = 0x10;
-    arg0->sprite.y = 0x20;
-    arg0->common.x = arg0->startX;
-    arg0->common.y = arg0->startY;
+    initMenuTilemapSprite(&arg0->sprite, getRelocatableHeapBlockBase(gAssetHandles[0x26]));
+    arg0->sprite.render.scrollX = 0x10;
+    arg0->sprite.render.scrollY = 0x20;
+    arg0->common.x = arg0->sprite.render.tilemapWidth;
+    arg0->common.y = arg0->sprite.render.tilemapHeight;
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateControllerPakMessageIcon);
 }
 
