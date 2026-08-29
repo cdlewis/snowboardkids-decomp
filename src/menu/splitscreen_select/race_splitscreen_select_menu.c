@@ -40,7 +40,7 @@ void returnToRaceSplitscreenSelectMenu(void) {
     gMenuFadeAlpha = gCurrentGameTask->fade;
     setCurrentGameTaskCallback(updateRaceSplitscreenSelectMenu, 0);
     gRaceSplitscreenSelectCursorTarget.state = 0;
-    gRaceSplitscreenSelectCursorTarget.nextState = 0;
+    gRaceSplitscreenSelectCursorTarget.alphaTarget = 0;
     updateCallbackTasks();
 }
 
@@ -69,7 +69,7 @@ void initRaceSplitscreenSelectMenu(void) {
     gMenuFadeAlpha = gCurrentGameTask->fade;
     setCurrentGameTaskCallback(updateRaceSplitscreenSelectMenu, 0);
     gRaceSplitscreenSelectCursorTarget.state = 0;
-    gRaceSplitscreenSelectCursorTarget.nextState = 0;
+    gRaceSplitscreenSelectCursorTarget.alphaTarget = 0;
     updateCallbackTasks();
 }
 
@@ -132,7 +132,7 @@ void updateRaceSplitscreenSelectMenu(void) {
                             enqueueSoundEffect(0x18, 0x32);
                             gMenuSelectionConfirmTimer = 1;
                             gRaceSplitscreenSelectCursorTarget.state = 2;
-                            gRaceSplitscreenSelectCursorTarget.nextState = 0x100;
+                            gRaceSplitscreenSelectCursorTarget.alphaTarget = 0x100;
                             gMenuExitSelection = 0;
                         }
                     }
@@ -147,7 +147,7 @@ void updateRaceSplitscreenSelectMenu(void) {
             enqueueSoundEffect(1, 0x32);
             gMenuSelectionConfirmTimer = 1;
             gRaceSplitscreenSelectCursorTarget.state = 2;
-            gRaceSplitscreenSelectCursorTarget.nextState = 0x100;
+            gRaceSplitscreenSelectCursorTarget.alphaTarget = 0x100;
             gMenuExitSelection = 1;
         }
 

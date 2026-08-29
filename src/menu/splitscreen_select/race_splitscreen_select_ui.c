@@ -14,20 +14,6 @@
 #define ASSET_HANDLE(index) (gAssetHandles[(index)])
 #define RACE_SPLITSCREEN_SELECT_TEXTURE_HANDLE (gAssetHandles[0x21])
 
-typedef MenuGlyphScript RaceSplitscreenSelectPortrait[0x46];
-
-typedef struct {
-    /* 0x000 */ RaceSplitscreenSelectPortrait portraits[6];
-    /* 0x348 */ MenuGlyphScript unusedScript[10];
-} RaceSplitscreenSelectPortraitTable;
-
-typedef struct {
-    /* 0x00 */ u16 centerTiles[16];
-    /* 0x20 */ u16 rightEdgeTiles[2];
-    /* 0x24 */ u16 bottomEdgeTiles[2];
-    /* 0x28 */ u16 cornerTile;
-} RaceSplitscreenSelectFrameTiles;
-
 extern int sprintf(char *, const char *, ...);
 extern u8 gRaceSplitscreenSelectCursorAnimState;
 extern Gfx *gRegionAllocPtr;
@@ -134,7 +120,7 @@ RaceSplitscreenSelectFrameTiles gRaceSplitscreenSelectFrameTiles[5] = {
      0x00A3 },
 };
 
-RaceSplitscreenSelectPortraitTable gRaceSplitscreenSelectPortraitScripts = {
+RaceSplitscreenSelectDescriptionScriptTable gRaceSplitscreenSelectDescriptionScripts = {
     {
      {
             // textconv requires these _() invocations to retain their original line layout.
@@ -172,8 +158,8 @@ const char gRaceSplitscreenSelectEntryFeeFormat[] = "%6dG";
 
 // IDO code generation for this function is sensitive to source line layout.
 // clang-format off
-void drawRaceSplitscreenSelectPlayerCountIcons(RaceSplitscreenSelectRowActor *icons) {
-    RaceSplitscreenSelectRowActor *savedIcons;
+void drawRaceSplitscreenSelectPlayerCountIcons(RaceSplitscreenSelectOptionIconActor *icons) {
+    RaceSplitscreenSelectOptionIconActor *savedIcons;
     s32 iconIndex;
     s32 blinkAlpha;
     s32 yOffset;
@@ -181,7 +167,7 @@ void drawRaceSplitscreenSelectPlayerCountIcons(RaceSplitscreenSelectRowActor *ic
 
     savedIcons = icons;
     iconIndex = 0;
-    if (iconIndex < (s32) icons->playerCount) {
+    if (iconIndex < (s32) icons->visibleCount) {
         /*
          * The outer do/while (0), repeated iconIndex initialization, empty if,
          * and paired statements must retain this shape for IDO's register
@@ -197,24 +183,24 @@ void drawRaceSplitscreenSelectPlayerCountIcons(RaceSplitscreenSelectRowActor *ic
                 blinkAlpha = 0xFF;
             }
             tileIndex = iconIndex + 8;
-            drawMenuSprite(icons->iconX[iconIndex], (s16)(icons->iconY + yOffset),
+            drawMenuSprite(icons->x[iconIndex], (s16)(icons->y + yOffset),
                            getRelocatableHeapBlockBase(RACE_SPLITSCREEN_SELECT_TEXTURE_HANDLE),
                            tileIndex, 0x20, 0x20, 0, blinkAlpha);
             yOffset += 0x14; iconIndex++;
-            if (icons->playerCount) {}
-        } while (iconIndex < ((s32) savedIcons->playerCount)); } while (0);
+            if (icons->visibleCount) {}
+        } while (iconIndex < ((s32) savedIcons->visibleCount)); } while (0);
     }
 }
 // clang-format on
 
-void updateRaceSplitscreenSelectPlayerCountIcons(RaceSplitscreenSelectRowActor *arg0) {
+void updateRaceSplitscreenSelectPlayerCountIcons(RaceSplitscreenSelectOptionIconActor *arg0) {
     s32 i;
     s32 moved;
-    void (*callback)(RaceSplitscreenSelectWidgetActor *);
+    void (*callback)(RaceSplitscreenSelectOptionFrameActor *);
     s32 state;
     int stateByte;
-    RaceSplitscreenSelectRowActor *row;
-    RaceSplitscreenSelectRowActor *actor;
+    RaceSplitscreenSelectOptionIconActor *row;
+    RaceSplitscreenSelectOptionIconActor *actor;
 
     stateByte = arg0->state;
     actor = arg0;
@@ -223,20 +209,20 @@ void updateRaceSplitscreenSelectPlayerCountIcons(RaceSplitscreenSelectRowActor *
     switch (state) {
         case 0:
             moved = 0;
-            for (i = 0; i < row->playerCount; i++) {
-                if (row->iconX[i] < -0x7C) {
-                    row->iconX[i] += 0x10;
+            for (i = 0; i < row->visibleCount; i++) {
+                if (row->x[i] < -0x7C) {
+                    row->x[i] += 0x10;
                     moved++;
-                    if (row->iconX[i] >= -0x7C) {
-                        row->iconX[i] = -0x7C;
+                    if (row->x[i] >= -0x7C) {
+                        row->x[i] = -0x7C;
                     }
                 }
             }
 
             row->spawnTimer++;
             if (!(row->spawnTimer & 1)) {
-                if (row->playerCount < 5) {
-                    row->playerCount++;
+                if (row->visibleCount < 5) {
+                    row->visibleCount++;
                 }
             }
 
@@ -260,9 +246,9 @@ void updateRaceSplitscreenSelectPlayerCountIcons(RaceSplitscreenSelectRowActor *
             break;
         case 2:
             for (i = 0; i < 5; i++) {
-                arg0->iconX[i] -= 0x20;
+                arg0->x[i] -= 0x20;
             }
-            if (arg0->iconX[0] < -0x103) {
+            if (arg0->x[0] < -0x103) {
                 arg0->state = 3;
             }
             break;
@@ -279,21 +265,21 @@ void updateRaceSplitscreenSelectPlayerCountIcons(RaceSplitscreenSelectRowActor *
 
 // IDO code generation for this function is sensitive to source line layout.
 // clang-format off
-void initRaceSplitscreenSelectPlayerCountIcons(RaceSplitscreenSelectRowActor *arg0) {
+void initRaceSplitscreenSelectPlayerCountIcons(RaceSplitscreenSelectOptionIconActor *arg0) {
     s32 i;
 
-    for (i = 0; i < 5; i++) { arg0->iconX[i] = -0x104; }
+    for (i = 0; i < 5; i++) { arg0->x[i] = -0x104; }
 
-    arg0->iconY = -0x60;
+    arg0->y = -0x60;
     arg0->spawnTimer = 0;
-    arg0->playerCount = 1;
+    arg0->visibleCount = 1;
     arg0->state = 0;
 
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceSplitscreenSelectPlayerCountIcons);
 }
 // clang-format on
 
-void drawRaceSplitscreenSelectCornerSprites(RaceSplitscreenSelectWidgetActor *arg0) {
+void drawRaceSplitscreenSelectCornerSprites(RaceSplitscreenSelectCornerSpriteActor *arg0) {
     drawMenuSprite(arg0->x, arg0->y, getRelocatableHeapBlockBase(ASSET_HANDLE(33)), 3, 0x20, 0x20, 0, 0);
     drawMenuSprite((s16)(arg0->x + 0x40), arg0->y, getRelocatableHeapBlockBase(ASSET_HANDLE(33)), 4, 0x20, 0x20, 0, 0);
     drawMenuSprite(arg0->x, (s16)(arg0->y + 0x40), getRelocatableHeapBlockBase(ASSET_HANDLE(33)), 5, 0x20, 0x20, 0, 0);
@@ -309,29 +295,29 @@ void drawRaceSplitscreenSelectCornerSprites(RaceSplitscreenSelectWidgetActor *ar
     );
 }
 
-void updateRaceSplitscreenSelectCornerSprites(RaceSplitscreenSelectWidgetActor *arg0) {
-    u8 state = arg0->sprite.bytes.state;
+void updateRaceSplitscreenSelectCornerSprites(RaceSplitscreenSelectCornerSpriteActor *arg0) {
+    u8 state = arg0->state;
 
     switch (state) {
         case 0:
             arg0->x += 0x20;
             if (arg0->x >= -0x88) {
                 arg0->x = -0x88;
-                arg0->sprite.bytes.state = 1;
+                arg0->state = 1;
             }
-            state = arg0->sprite.bytes.state;
+            state = arg0->state;
             break;
         case 1:
             if (gRacePlayers[0].menuState == 1) {
-                state = arg0->sprite.bytes.state = 2;
+                state = arg0->state = 2;
             }
             break;
         case 2:
             arg0->x -= 0x20;
             if (arg0->x < -0x10D) {
-                arg0->sprite.bytes.state = 3;
+                arg0->state = 3;
             }
-            state = arg0->sprite.bytes.state;
+            state = arg0->state;
             break;
         case 3:
             break;
@@ -343,13 +329,13 @@ void updateRaceSplitscreenSelectCornerSprites(RaceSplitscreenSelectWidgetActor *
     addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawRaceSplitscreenSelectCornerSprites, arg0);
 }
 
-void initRaceSplitscreenSelectCornerSprites(RaceSplitscreenSelectWidgetActor *arg0) {
+void initRaceSplitscreenSelectCornerSprites(RaceSplitscreenSelectCornerSpriteActor *arg0) {
     arg0->x = -0x108;
     arg0->y = 8;
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceSplitscreenSelectCornerSprites);
 }
 
-void drawRaceSplitscreenSelectOption0Frame(RaceSplitscreenSelectWidgetActor *arg0) {
+void drawRaceSplitscreenSelectOption0Frame(RaceSplitscreenSelectOption0FrameActor *arg0) {
     s32 shouldDraw;
     s32 i;
     s32 tileOffset;
@@ -363,7 +349,7 @@ void drawRaceSplitscreenSelectOption0Frame(RaceSplitscreenSelectWidgetActor *arg
             (s16)(arg0->x + ((i & 3) << 5)),
             (s16)(arg0->y + ((i / 4) << 5)),
             getRelocatableHeapBlockBase(RACE_SPLITSCREEN_SELECT_TEXTURE_HANDLE),
-            gRaceSplitscreenSelectFrameTiles[(u16)arg0->counter].centerTiles[tileOffset],
+            gRaceSplitscreenSelectFrameTiles[(u16)arg0->optionIndex].centerTiles[tileOffset],
             0,
             0x100
         );
@@ -380,7 +366,7 @@ void drawRaceSplitscreenSelectOption0Frame(RaceSplitscreenSelectWidgetActor *arg
             (s16)(arg0->x + 0x80),
             (s16)(arg0->y + offset),
             getRelocatableHeapBlockBase(RACE_SPLITSCREEN_SELECT_TEXTURE_HANDLE),
-            gRaceSplitscreenSelectFrameTiles[(u16)arg0->counter].rightEdgeTiles[tileOffset],
+            gRaceSplitscreenSelectFrameTiles[(u16)arg0->optionIndex].rightEdgeTiles[tileOffset],
             0,
             0x100
         );
@@ -389,7 +375,7 @@ void drawRaceSplitscreenSelectOption0Frame(RaceSplitscreenSelectWidgetActor *arg
             (s16)(arg0->x + offset),
             (s16)(arg0->y + 0x80),
             getRelocatableHeapBlockBase(RACE_SPLITSCREEN_SELECT_TEXTURE_HANDLE),
-            gRaceSplitscreenSelectFrameTiles[(u16)arg0->counter].bottomEdgeTiles[tileOffset],
+            gRaceSplitscreenSelectFrameTiles[(u16)arg0->optionIndex].bottomEdgeTiles[tileOffset],
             0,
             0x100
         );
@@ -403,7 +389,7 @@ void drawRaceSplitscreenSelectOption0Frame(RaceSplitscreenSelectWidgetActor *arg
         (s16)(arg0->x + 0x80),
         (s16)(arg0->y + 0x80),
         getRelocatableHeapBlockBase(RACE_SPLITSCREEN_SELECT_TEXTURE_HANDLE),
-        gRaceSplitscreenSelectFrameTiles[(u16)arg0->counter].cornerTile,
+        gRaceSplitscreenSelectFrameTiles[(u16)arg0->optionIndex].cornerTile,
         0,
         0x100
     );
@@ -493,19 +479,19 @@ void drawRaceSplitscreenSelectOption0Frame(RaceSplitscreenSelectWidgetActor *arg
     }
 }
 
-void updateRaceSplitscreenSelectOption0Frame(RaceSplitscreenSelectWidgetActor *arg0) {
+void updateRaceSplitscreenSelectOption0Frame(RaceSplitscreenSelectOption0FrameActor *arg0) {
     int state;
 
-    if ((gRaceSplitscreenMode >= (u16)arg0->counter) && (arg0->row.bytes.subState != 0) && (arg0->y != -0x48)) {
-        state = arg0->row.bytes.subState = 2;
+    if ((gRaceSplitscreenMode >= (u16)arg0->optionIndex) && (arg0->state != 0) && (arg0->y != -0x48)) {
+        state = arg0->state = 2;
     } else {
-        state = arg0->row.bytes.subState;
-        if ((gRaceSplitscreenMode < (u16)arg0->counter) && (state != 0) && (arg0->y != -0x140)) {
-            state = arg0->row.bytes.subState = 1;
+        state = arg0->state;
+        if ((gRaceSplitscreenMode < (u16)arg0->optionIndex) && (state != 0) && (arg0->y != -0x140)) {
+            state = arg0->state = 1;
         } else {
-            state = arg0->row.bytes.subState;
+            state = arg0->state;
             if ((state != 0) && (state < 4)) {
-                state = arg0->row.bytes.subState = 3;
+                state = arg0->state = 3;
             }
         }
     }
@@ -513,53 +499,53 @@ void updateRaceSplitscreenSelectOption0Frame(RaceSplitscreenSelectWidgetActor *a
     switch (state) {
         case 0:
             arg0->x -= 0x20;
-            if (arg0->row.bytes.subTimer == 0) {
+            if (arg0->cornerSpawnTimer == 0) {
                 createCallbackTask((CallbackTaskCallback)initRaceSplitscreenSelectCornerSprites, 0, 0x63);
             }
-            arg0->row.bytes.subTimer++;
+            arg0->cornerSpawnTimer++;
             if (arg0->x < -7) {
                 arg0->x = -8;
-                arg0->row.bytes.subState = 3;
+                arg0->state = 3;
                 gActiveMenuTask = createCallbackTask((CallbackTaskCallback)initRaceSplitscreenSelectCursor, 0, 0x64);
                 createCallbackTask((CallbackTaskCallback)initRaceSplitscreenSelectPortrait, 0, 0x64);
                 createCallbackTask((CallbackTaskCallback)initRaceSplitscreenSelectArrowPrompt, 0, 0x64);
                 createCallbackTask((CallbackTaskCallback)initRaceSplitscreenSelectEntryFee, 0, 0x64);
             }
-            state = arg0->row.bytes.subState;
+            state = arg0->state;
             break;
         case 1:
             arg0->y -= 0x24;
             if (arg0->y < -0x13F) {
                 arg0->y = -0x140;
-                arg0->row.bytes.subState = 3;
+                arg0->state = 3;
             }
-            state = arg0->row.bytes.subState;
+            state = arg0->state;
             break;
         case 2:
             arg0->y += 0x24;
             if (arg0->y >= -0x48) {
                 arg0->y = -0x48;
-                arg0->row.bytes.subState = 3;
+                arg0->state = 3;
             }
-            state = arg0->row.bytes.subState;
+            state = arg0->state;
             break;
         case 3:
             gMenuFlowState += 1;
             if (gRacePlayers[0].menuState == 1) {
-                arg0->row.bytes.subState = 4;
+                arg0->state = 4;
             }
-            state = arg0->row.bytes.subState;
+            state = arg0->state;
             break;
         case 4:
             arg0->x += 0x20;
             if (arg0->x >= 0xA0) {
-                arg0->row.bytes.subState = 5;
+                arg0->state = 5;
             }
-            state = arg0->row.bytes.subState;
+            state = arg0->state;
             break;
         case 5:
             gRacePlayers[0].menuState = 2;
-            state = arg0->row.bytes.subState;
+            state = arg0->state;
             break;
     }
 
@@ -570,18 +556,18 @@ void updateRaceSplitscreenSelectOption0Frame(RaceSplitscreenSelectWidgetActor *a
     addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawRaceSplitscreenSelectOption0Frame, arg0);
 }
 
-void initRaceSplitscreenSelectOption0Frame(RaceSplitscreenSelectWidgetActor *arg0) {
+void initRaceSplitscreenSelectOption0Frame(RaceSplitscreenSelectOption0FrameActor *arg0) {
     arg0->x = 0x94;
     arg0->y = -0x48;
-    arg0->sprite.spriteIndex = -8;
-    arg0->transition.alpha = -0x74;
-    arg0->counter = 0;
-    arg0->row.bytes.subTimer = 0;
-    arg0->row.bytes.subState = 0;
+    arg0->unused1C = -8;
+    arg0->unused1E = -0x74;
+    arg0->optionIndex = 0;
+    arg0->cornerSpawnTimer = 0;
+    arg0->state = 0;
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceSplitscreenSelectOption0Frame);
 }
 
-void drawRaceSplitscreenSelectOption1Frame(RaceSplitscreenSelectWidgetActor *arg0) {
+void drawRaceSplitscreenSelectOption1Frame(RaceSplitscreenSelectOptionFrameActor *arg0) {
     s32 shouldDraw;
     s32 i;
     s32 tileOffset;
@@ -594,7 +580,7 @@ void drawRaceSplitscreenSelectOption1Frame(RaceSplitscreenSelectWidgetActor *arg
             (s16)(arg0->x + ((i & 3) << 5)),
             (s16)(arg0->y + ((i / 4) << 5)),
             getRelocatableHeapBlockBase(RACE_SPLITSCREEN_SELECT_TEXTURE_HANDLE),
-            gRaceSplitscreenSelectFrameTiles[(u16)arg0->sprite.spriteIndex].centerTiles[tileOffset],
+            gRaceSplitscreenSelectFrameTiles[(u16)arg0->optionIndex].centerTiles[tileOffset],
             0,
             0x100,
             0xA0,
@@ -612,7 +598,7 @@ void drawRaceSplitscreenSelectOption1Frame(RaceSplitscreenSelectWidgetActor *arg
             (s16)(arg0->x + 0x80),
             (s16)(arg0->y + offset),
             getRelocatableHeapBlockBase(RACE_SPLITSCREEN_SELECT_TEXTURE_HANDLE),
-            gRaceSplitscreenSelectFrameTiles[(u16)arg0->sprite.spriteIndex].rightEdgeTiles[tileOffset],
+            gRaceSplitscreenSelectFrameTiles[(u16)arg0->optionIndex].rightEdgeTiles[tileOffset],
             0,
             0x100,
             0xA0,
@@ -622,7 +608,7 @@ void drawRaceSplitscreenSelectOption1Frame(RaceSplitscreenSelectWidgetActor *arg
             (s16)(arg0->x + offset),
             (s16)(arg0->y + 0x80),
             getRelocatableHeapBlockBase(RACE_SPLITSCREEN_SELECT_TEXTURE_HANDLE),
-            gRaceSplitscreenSelectFrameTiles[(u16)arg0->sprite.spriteIndex].bottomEdgeTiles[tileOffset],
+            gRaceSplitscreenSelectFrameTiles[(u16)arg0->optionIndex].bottomEdgeTiles[tileOffset],
             0,
             0x100,
             0xA0,
@@ -639,7 +625,7 @@ void drawRaceSplitscreenSelectOption1Frame(RaceSplitscreenSelectWidgetActor *arg
         (s16)(arg0->x + 0x80),
         (s16)(arg0->y + 0x80),
         getRelocatableHeapBlockBase(RACE_SPLITSCREEN_SELECT_TEXTURE_HANDLE),
-        gRaceSplitscreenSelectFrameTiles[(u16)arg0->sprite.spriteIndex].cornerTile,
+        gRaceSplitscreenSelectFrameTiles[(u16)arg0->optionIndex].cornerTile,
         0,
         0x100,
         0xA0,
@@ -647,17 +633,17 @@ void drawRaceSplitscreenSelectOption1Frame(RaceSplitscreenSelectWidgetActor *arg
     );
 }
 
-void updateRaceSplitscreenSelectOption1Frame(RaceSplitscreenSelectWidgetActor *arg0) {
+void updateRaceSplitscreenSelectOption1Frame(RaceSplitscreenSelectOptionFrameActor *arg0) {
     int state;
 
-    if ((gRaceSplitscreenMode >= (u16)arg0->sprite.spriteIndex) && (arg0->y != -0x48)) {
-        state = arg0->transition.bytes.state = 2;
-    } else if ((gRaceSplitscreenMode < (u16)arg0->sprite.spriteIndex) && (arg0->y != -0x140)) {
-        state = arg0->transition.bytes.state = 1;
+    if ((gRaceSplitscreenMode >= (u16)arg0->optionIndex) && (arg0->y != -0x48)) {
+        state = arg0->state = 2;
+    } else if ((gRaceSplitscreenMode < (u16)arg0->optionIndex) && (arg0->y != -0x140)) {
+        state = arg0->state = 1;
     } else {
-        state = arg0->transition.bytes.state;
+        state = arg0->state;
         if (state < 4) {
-            state = arg0->transition.bytes.state = 3;
+            state = arg0->state = 3;
         }
     }
 
@@ -669,35 +655,35 @@ void updateRaceSplitscreenSelectOption1Frame(RaceSplitscreenSelectWidgetActor *a
             arg0->y -= 0x24;
             if (arg0->y < -0x13F) {
                 arg0->y = -0x140;
-                arg0->transition.bytes.state = 3;
+                arg0->state = 3;
             }
-            state = arg0->transition.bytes.state;
+            state = arg0->state;
             break;
         case 2:
             arg0->y += 0x24;
             if (arg0->y >= -0x48) {
                 arg0->y = -0x48;
-                arg0->transition.bytes.state = 3;
+                arg0->state = 3;
             }
-            state = arg0->transition.bytes.state;
+            state = arg0->state;
             break;
         case 3:
             gMenuFlowState += 1;
             if (gRacePlayers[0].menuState == 1) {
                 if (arg0->y == -0x140) {
-                    arg0->transition.bytes.state = 5;
+                    arg0->state = 5;
                 } else {
-                    arg0->transition.bytes.state = 4;
+                    arg0->state = 4;
                 }
             }
-            state = arg0->transition.bytes.state;
+            state = arg0->state;
             break;
         case 4:
             arg0->x += 0x20;
             if (arg0->x >= 0xA0) {
-                arg0->transition.bytes.state = 5;
+                arg0->state = 5;
             }
-            state = arg0->transition.bytes.state;
+            state = arg0->state;
             break;
     }
 
@@ -708,16 +694,16 @@ void updateRaceSplitscreenSelectOption1Frame(RaceSplitscreenSelectWidgetActor *a
     addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawRaceSplitscreenSelectOption1Frame, arg0);
 }
 
-void initRaceSplitscreenSelectOption1Frame(RaceSplitscreenSelectWidgetActor *arg0) {
+void initRaceSplitscreenSelectOption1Frame(RaceSplitscreenSelectOptionFrameActor *arg0) {
     arg0->x = -8;
     arg0->y = -0x140;
-    arg0->sprite.spriteIndex = 1;
-    arg0->transition.bytes.timer = 0;
-    arg0->transition.bytes.state = 0;
+    arg0->optionIndex = 1;
+    arg0->unusedTimer = 0;
+    arg0->state = 0;
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceSplitscreenSelectOption1Frame);
 }
 
-void drawRaceSplitscreenSelectOption2Frame(RaceSplitscreenSelectWidgetActor *arg0) {
+void drawRaceSplitscreenSelectOption2Frame(RaceSplitscreenSelectOptionFrameActor *arg0) {
     s32 shouldDraw;
     s32 i;
     s32 tileIndex;
@@ -730,7 +716,7 @@ void drawRaceSplitscreenSelectOption2Frame(RaceSplitscreenSelectWidgetActor *arg
             (s16)(arg0->x + ((i & 3) << 5)),
             (s16)(arg0->y + ((i / 4) << 5)),
             getRelocatableHeapBlockBase(RACE_SPLITSCREEN_SELECT_TEXTURE_HANDLE),
-            gRaceSplitscreenSelectFrameTiles[(u16)arg0->sprite.spriteIndex].centerTiles[tileIndex],
+            gRaceSplitscreenSelectFrameTiles[(u16)arg0->optionIndex].centerTiles[tileIndex],
             0,
             0x100,
             0xA0,
@@ -748,7 +734,7 @@ void drawRaceSplitscreenSelectOption2Frame(RaceSplitscreenSelectWidgetActor *arg
             (s16)(arg0->x + 0x80),
             (s16)(arg0->y + offset),
             getRelocatableHeapBlockBase(RACE_SPLITSCREEN_SELECT_TEXTURE_HANDLE),
-            gRaceSplitscreenSelectFrameTiles[(u16)arg0->sprite.spriteIndex].rightEdgeTiles[tileIndex],
+            gRaceSplitscreenSelectFrameTiles[(u16)arg0->optionIndex].rightEdgeTiles[tileIndex],
             0,
             0x100,
             0xA0,
@@ -758,7 +744,7 @@ void drawRaceSplitscreenSelectOption2Frame(RaceSplitscreenSelectWidgetActor *arg
             (s16)(arg0->x + offset),
             (s16)(arg0->y + 0x80),
             getRelocatableHeapBlockBase(RACE_SPLITSCREEN_SELECT_TEXTURE_HANDLE),
-            gRaceSplitscreenSelectFrameTiles[(u16)arg0->sprite.spriteIndex].bottomEdgeTiles[tileIndex],
+            gRaceSplitscreenSelectFrameTiles[(u16)arg0->optionIndex].bottomEdgeTiles[tileIndex],
             0,
             0x100,
             0xA0,
@@ -775,7 +761,7 @@ void drawRaceSplitscreenSelectOption2Frame(RaceSplitscreenSelectWidgetActor *arg
         (s16)(arg0->x + 0x80),
         (s16)(arg0->y + 0x80),
         getRelocatableHeapBlockBase(RACE_SPLITSCREEN_SELECT_TEXTURE_HANDLE),
-        gRaceSplitscreenSelectFrameTiles[(u16)arg0->sprite.spriteIndex].cornerTile,
+        gRaceSplitscreenSelectFrameTiles[(u16)arg0->optionIndex].cornerTile,
         0,
         0x100,
         0xA0,
@@ -783,17 +769,17 @@ void drawRaceSplitscreenSelectOption2Frame(RaceSplitscreenSelectWidgetActor *arg
     );
 }
 
-void updateRaceSplitscreenSelectOption2Frame(RaceSplitscreenSelectWidgetActor *arg0) {
+void updateRaceSplitscreenSelectOption2Frame(RaceSplitscreenSelectOptionFrameActor *arg0) {
     int state;
 
-    if ((gRaceSplitscreenMode >= (u16)arg0->sprite.spriteIndex) && (arg0->y != -0x48)) {
-        state = arg0->transition.bytes.state = 2;
-    } else if ((gRaceSplitscreenMode < (u16)arg0->sprite.spriteIndex) && (arg0->y != -0x140)) {
-        state = arg0->transition.bytes.state = 1;
+    if ((gRaceSplitscreenMode >= (u16)arg0->optionIndex) && (arg0->y != -0x48)) {
+        state = arg0->state = 2;
+    } else if ((gRaceSplitscreenMode < (u16)arg0->optionIndex) && (arg0->y != -0x140)) {
+        state = arg0->state = 1;
     } else {
-        state = arg0->transition.bytes.state;
+        state = arg0->state;
         if (state < 4) {
-            state = arg0->transition.bytes.state = 3;
+            state = arg0->state = 3;
         }
     }
 
@@ -805,35 +791,35 @@ void updateRaceSplitscreenSelectOption2Frame(RaceSplitscreenSelectWidgetActor *a
             arg0->y -= 0x24;
             if (arg0->y < -0x13F) {
                 arg0->y = -0x140;
-                arg0->transition.bytes.state = 3;
+                arg0->state = 3;
             }
-            state = arg0->transition.bytes.state;
+            state = arg0->state;
             break;
         case 2:
             arg0->y += 0x24;
             if (arg0->y >= -0x48) {
                 arg0->y = -0x48;
-                arg0->transition.bytes.state = 3;
+                arg0->state = 3;
             }
-            state = arg0->transition.bytes.state;
+            state = arg0->state;
             break;
         case 3:
             gMenuFlowState += 1;
             if (gRacePlayers[0].menuState == 1) {
                 if (arg0->y == -0x140) {
-                    arg0->transition.bytes.state = 5;
+                    arg0->state = 5;
                 } else {
-                    arg0->transition.bytes.state = 4;
+                    arg0->state = 4;
                 }
             }
-            state = arg0->transition.bytes.state;
+            state = arg0->state;
             break;
         case 4:
             arg0->x += 0x20;
             if (arg0->x >= 0xA0) {
-                arg0->transition.bytes.state = 5;
+                arg0->state = 5;
             }
-            state = arg0->transition.bytes.state;
+            state = arg0->state;
             break;
     }
 
@@ -844,16 +830,16 @@ void updateRaceSplitscreenSelectOption2Frame(RaceSplitscreenSelectWidgetActor *a
     addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawRaceSplitscreenSelectOption2Frame, arg0);
 }
 
-void initRaceSplitscreenSelectOption2Frame(RaceSplitscreenSelectWidgetActor *arg0) {
+void initRaceSplitscreenSelectOption2Frame(RaceSplitscreenSelectOptionFrameActor *arg0) {
     arg0->x = -8;
     arg0->y = -0x140;
-    arg0->sprite.spriteIndex = 2;
-    arg0->transition.bytes.timer = 0;
-    arg0->transition.bytes.state = 0;
+    arg0->optionIndex = 2;
+    arg0->unusedTimer = 0;
+    arg0->state = 0;
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceSplitscreenSelectOption2Frame);
 }
 
-void drawRaceSplitscreenSelectOption3Frame(RaceSplitscreenSelectWidgetActor *arg0) {
+void drawRaceSplitscreenSelectOption3Frame(RaceSplitscreenSelectOptionFrameActor *arg0) {
     s32 shouldDraw;
     s32 i;
     s32 tileOffset;
@@ -866,7 +852,7 @@ void drawRaceSplitscreenSelectOption3Frame(RaceSplitscreenSelectWidgetActor *arg
             (s16)(arg0->x + ((i & 3) << 5)),
             (s16)(arg0->y + ((i / 4) << 5)),
             getRelocatableHeapBlockBase(RACE_SPLITSCREEN_SELECT_TEXTURE_HANDLE),
-            gRaceSplitscreenSelectFrameTiles[(u16)arg0->sprite.spriteIndex].centerTiles[tileOffset],
+            gRaceSplitscreenSelectFrameTiles[(u16)arg0->optionIndex].centerTiles[tileOffset],
             0,
             0x100,
             0xA0,
@@ -884,7 +870,7 @@ void drawRaceSplitscreenSelectOption3Frame(RaceSplitscreenSelectWidgetActor *arg
             (s16)(arg0->x + 0x80),
             (s16)(arg0->y + offset),
             getRelocatableHeapBlockBase(RACE_SPLITSCREEN_SELECT_TEXTURE_HANDLE),
-            gRaceSplitscreenSelectFrameTiles[(u16)arg0->sprite.spriteIndex].rightEdgeTiles[tileOffset],
+            gRaceSplitscreenSelectFrameTiles[(u16)arg0->optionIndex].rightEdgeTiles[tileOffset],
             0,
             0x100,
             0xA0,
@@ -894,7 +880,7 @@ void drawRaceSplitscreenSelectOption3Frame(RaceSplitscreenSelectWidgetActor *arg
             (s16)(arg0->x + offset),
             (s16)(arg0->y + 0x80),
             getRelocatableHeapBlockBase(RACE_SPLITSCREEN_SELECT_TEXTURE_HANDLE),
-            gRaceSplitscreenSelectFrameTiles[(u16)arg0->sprite.spriteIndex].bottomEdgeTiles[tileOffset],
+            gRaceSplitscreenSelectFrameTiles[(u16)arg0->optionIndex].bottomEdgeTiles[tileOffset],
             0,
             0x100,
             0xA0,
@@ -911,7 +897,7 @@ void drawRaceSplitscreenSelectOption3Frame(RaceSplitscreenSelectWidgetActor *arg
         (s16)(arg0->x + 0x80),
         (s16)(arg0->y + 0x80),
         getRelocatableHeapBlockBase(RACE_SPLITSCREEN_SELECT_TEXTURE_HANDLE),
-        gRaceSplitscreenSelectFrameTiles[(u16)arg0->sprite.spriteIndex].cornerTile,
+        gRaceSplitscreenSelectFrameTiles[(u16)arg0->optionIndex].cornerTile,
         0,
         0x100,
         0xA0,
@@ -919,17 +905,17 @@ void drawRaceSplitscreenSelectOption3Frame(RaceSplitscreenSelectWidgetActor *arg
     );
 }
 
-void updateRaceSplitscreenSelectOption3Frame(RaceSplitscreenSelectWidgetActor *arg0) {
+void updateRaceSplitscreenSelectOption3Frame(RaceSplitscreenSelectOptionFrameActor *arg0) {
     int state;
 
-    if ((gRaceSplitscreenMode >= (u16)arg0->sprite.spriteIndex) && (arg0->y != -0x48)) {
-        state = arg0->transition.bytes.state = 2;
-    } else if ((gRaceSplitscreenMode < (u16)arg0->sprite.spriteIndex) && (arg0->y != -0x140)) {
-        state = arg0->transition.bytes.state = 1;
+    if ((gRaceSplitscreenMode >= (u16)arg0->optionIndex) && (arg0->y != -0x48)) {
+        state = arg0->state = 2;
+    } else if ((gRaceSplitscreenMode < (u16)arg0->optionIndex) && (arg0->y != -0x140)) {
+        state = arg0->state = 1;
     } else {
-        state = arg0->transition.bytes.state;
+        state = arg0->state;
         if (state < 4) {
-            state = arg0->transition.bytes.state = 3;
+            state = arg0->state = 3;
         }
     }
 
@@ -941,35 +927,35 @@ void updateRaceSplitscreenSelectOption3Frame(RaceSplitscreenSelectWidgetActor *a
             arg0->y -= 0x24;
             if (arg0->y < -0x13F) {
                 arg0->y = -0x140;
-                arg0->transition.bytes.state = 3;
+                arg0->state = 3;
             }
-            state = arg0->transition.bytes.state;
+            state = arg0->state;
             break;
         case 2:
             arg0->y += 0x24;
             if (arg0->y >= -0x48) {
                 arg0->y = -0x48;
-                arg0->transition.bytes.state = 3;
+                arg0->state = 3;
             }
-            state = arg0->transition.bytes.state;
+            state = arg0->state;
             break;
         case 3:
             gMenuFlowState += 1;
             if (gRacePlayers[0].menuState == 1) {
                 if (arg0->y == -0x140) {
-                    arg0->transition.bytes.state = 5;
+                    arg0->state = 5;
                 } else {
-                    arg0->transition.bytes.state = 4;
+                    arg0->state = 4;
                 }
             }
-            state = arg0->transition.bytes.state;
+            state = arg0->state;
             break;
         case 4:
             arg0->x += 0x20;
             if (arg0->x >= 0xA0) {
-                arg0->transition.bytes.state = 5;
+                arg0->state = 5;
             }
-            state = arg0->transition.bytes.state;
+            state = arg0->state;
             break;
     }
 
@@ -980,16 +966,16 @@ void updateRaceSplitscreenSelectOption3Frame(RaceSplitscreenSelectWidgetActor *a
     addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawRaceSplitscreenSelectOption3Frame, arg0);
 }
 
-void initRaceSplitscreenSelectOption3Frame(RaceSplitscreenSelectWidgetActor *arg0) {
+void initRaceSplitscreenSelectOption3Frame(RaceSplitscreenSelectOptionFrameActor *arg0) {
     arg0->x = -8;
     arg0->y = -0x140;
-    arg0->sprite.spriteIndex = 3;
-    arg0->transition.bytes.timer = 0;
-    arg0->transition.bytes.state = 0;
+    arg0->optionIndex = 3;
+    arg0->unusedTimer = 0;
+    arg0->state = 0;
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceSplitscreenSelectOption3Frame);
 }
 
-void drawRaceSplitscreenSelectOption4Frame(RaceSplitscreenSelectWidgetActor *arg0) {
+void drawRaceSplitscreenSelectOption4Frame(RaceSplitscreenSelectOptionFrameActor *arg0) {
     s32 shouldDraw;
     s32 i;
     s32 tileIndex;
@@ -1002,7 +988,7 @@ void drawRaceSplitscreenSelectOption4Frame(RaceSplitscreenSelectWidgetActor *arg
             (s16)(arg0->x + ((i & 3) << 5)),
             (s16)(arg0->y + ((i / 4) << 5)),
             getRelocatableHeapBlockBase(RACE_SPLITSCREEN_SELECT_TEXTURE_HANDLE),
-            gRaceSplitscreenSelectFrameTiles[(u16)arg0->sprite.spriteIndex].centerTiles[tileIndex],
+            gRaceSplitscreenSelectFrameTiles[(u16)arg0->optionIndex].centerTiles[tileIndex],
             0,
             0x100,
             0xA0,
@@ -1020,7 +1006,7 @@ void drawRaceSplitscreenSelectOption4Frame(RaceSplitscreenSelectWidgetActor *arg
             (s16)(arg0->x + 0x80),
             (s16)(arg0->y + offset),
             getRelocatableHeapBlockBase(RACE_SPLITSCREEN_SELECT_TEXTURE_HANDLE),
-            gRaceSplitscreenSelectFrameTiles[(u16)arg0->sprite.spriteIndex].rightEdgeTiles[tileIndex],
+            gRaceSplitscreenSelectFrameTiles[(u16)arg0->optionIndex].rightEdgeTiles[tileIndex],
             0,
             0x100,
             0xA0,
@@ -1030,7 +1016,7 @@ void drawRaceSplitscreenSelectOption4Frame(RaceSplitscreenSelectWidgetActor *arg
             (s16)(arg0->x + offset),
             (s16)(arg0->y + 0x80),
             getRelocatableHeapBlockBase(RACE_SPLITSCREEN_SELECT_TEXTURE_HANDLE),
-            gRaceSplitscreenSelectFrameTiles[(u16)arg0->sprite.spriteIndex].bottomEdgeTiles[tileIndex],
+            gRaceSplitscreenSelectFrameTiles[(u16)arg0->optionIndex].bottomEdgeTiles[tileIndex],
             0,
             0x100,
             0xA0,
@@ -1047,7 +1033,7 @@ void drawRaceSplitscreenSelectOption4Frame(RaceSplitscreenSelectWidgetActor *arg
         (s16)(arg0->x + 0x80),
         (s16)(arg0->y + 0x80),
         getRelocatableHeapBlockBase(RACE_SPLITSCREEN_SELECT_TEXTURE_HANDLE),
-        gRaceSplitscreenSelectFrameTiles[(u16)arg0->sprite.spriteIndex].cornerTile,
+        gRaceSplitscreenSelectFrameTiles[(u16)arg0->optionIndex].cornerTile,
         0,
         0x100,
         0xA0,
@@ -1055,18 +1041,18 @@ void drawRaceSplitscreenSelectOption4Frame(RaceSplitscreenSelectWidgetActor *arg
     );
 }
 
-void updateRaceSplitscreenSelectOption4Frame(RaceSplitscreenSelectWidgetActor *arg0) {
+void updateRaceSplitscreenSelectOption4Frame(RaceSplitscreenSelectOptionFrameActor *arg0) {
     int state;
 
     gMenuFlowState = 0;
-    if ((gRaceSplitscreenMode >= (u16)arg0->sprite.spriteIndex) && (arg0->y != -0x48)) {
-        state = arg0->transition.bytes.state = 2;
-    } else if ((gRaceSplitscreenMode < (u16)arg0->sprite.spriteIndex) && (arg0->y != -0x140)) {
-        state = arg0->transition.bytes.state = 1;
+    if ((gRaceSplitscreenMode >= (u16)arg0->optionIndex) && (arg0->y != -0x48)) {
+        state = arg0->state = 2;
+    } else if ((gRaceSplitscreenMode < (u16)arg0->optionIndex) && (arg0->y != -0x140)) {
+        state = arg0->state = 1;
     } else {
-        state = arg0->transition.bytes.state;
+        state = arg0->state;
         if (state < 4) {
-            state = arg0->transition.bytes.state = 3;
+            state = arg0->state = 3;
         }
     }
 
@@ -1078,35 +1064,35 @@ void updateRaceSplitscreenSelectOption4Frame(RaceSplitscreenSelectWidgetActor *a
             arg0->y -= 0x24;
             if (arg0->y < -0x13F) {
                 arg0->y = -0x140;
-                arg0->transition.bytes.state = 3;
+                arg0->state = 3;
             }
-            state = arg0->transition.bytes.state;
+            state = arg0->state;
             break;
         case 2:
             arg0->y += 0x24;
             if (arg0->y >= -0x48) {
                 arg0->y = -0x48;
-                arg0->transition.bytes.state = 3;
+                arg0->state = 3;
             }
-            state = arg0->transition.bytes.state;
+            state = arg0->state;
             break;
         case 3:
             gMenuFlowState += 1;
             if (gRacePlayers[0].menuState == 1) {
                 if (arg0->y == -0x140) {
-                    arg0->transition.bytes.state = 5;
+                    arg0->state = 5;
                 } else {
-                    arg0->transition.bytes.state = 4;
+                    arg0->state = 4;
                 }
             }
-            state = arg0->transition.bytes.state;
+            state = arg0->state;
             break;
         case 4:
             arg0->x += 0x20;
             if (arg0->x >= 0xA0) {
-                arg0->transition.bytes.state = 5;
+                arg0->state = 5;
             }
-            state = arg0->transition.bytes.state;
+            state = arg0->state;
             break;
     }
 
@@ -1117,16 +1103,16 @@ void updateRaceSplitscreenSelectOption4Frame(RaceSplitscreenSelectWidgetActor *a
     addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawRaceSplitscreenSelectOption4Frame, arg0);
 }
 
-void initRaceSplitscreenSelectOption4Frame(RaceSplitscreenSelectWidgetActor *arg0) {
+void initRaceSplitscreenSelectOption4Frame(RaceSplitscreenSelectOptionFrameActor *arg0) {
     arg0->x = -8;
     arg0->y = -0x140;
-    arg0->sprite.spriteIndex = 4;
-    arg0->transition.bytes.timer = 0;
-    arg0->transition.bytes.state = 0;
+    arg0->optionIndex = 4;
+    arg0->unusedTimer = 0;
+    arg0->state = 0;
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceSplitscreenSelectOption4Frame);
 }
 
-void drawRaceSplitscreenSelectCursor(RaceSplitscreenSelectWidgetActor *arg0) {
+void drawRaceSplitscreenSelectCursor(RaceSplitscreenSelectAnimatedWidgetActor *arg0) {
     drawMenuSpriteWithAlpha(
         arg0->x,
         (s16)(arg0->y + (gRaceSplitscreenMode * 0x14)),
@@ -1135,79 +1121,79 @@ void drawRaceSplitscreenSelectCursor(RaceSplitscreenSelectWidgetActor *arg0) {
         0x20,
         0x20,
         0,
-        arg0->sprite.spriteIndex,
+        arg0->alpha,
         0
     );
 }
 
-void updateRaceSplitscreenSelectCursor(RaceSplitscreenSelectWidgetActor *arg0) {
+void updateRaceSplitscreenSelectCursor(RaceSplitscreenSelectAnimatedWidgetActor *arg0) {
     u8 state;
     u8 globalState;
 
-    state = arg0->transition.bytes.state;
+    state = arg0->state;
     if (state != (globalState = gRaceSplitscreenSelectCursorTarget.state)) {
-        arg0->transition.bytes.state = globalState;
+        arg0->state = globalState;
         if (1) {}
         if (1) {}
         if (1) {}
         if (1) {}
         if (1) {}
         state = globalState;
-        arg0->sprite.spriteIndex = gRaceSplitscreenSelectCursorTarget.nextState;
+        arg0->alpha = gRaceSplitscreenSelectCursorTarget.alphaTarget;
     }
 
     switch (state) {
         case 0:
-            arg0->sprite.spriteIndex += 0x26;
-            if (arg0->sprite.spriteIndex >= 0x100) {
-                arg0->sprite.spriteIndex = 0x100;
-                arg0->transition.bytes.state = 1;
+            arg0->alpha += 0x26;
+            if (arg0->alpha >= 0x100) {
+                arg0->alpha = 0x100;
+                arg0->state = 1;
             }
-            state = arg0->transition.bytes.state;
+            state = arg0->state;
             break;
         case 1:
-            if ((s32)arg0->transition.bytes.timer < 0x10) {
-                arg0->sprite.spriteIndex -= 9;
+            if ((s32)arg0->animationTimer < 0x10) {
+                arg0->alpha -= 9;
             } else {
-                arg0->sprite.spriteIndex += 9;
+                arg0->alpha += 9;
             }
-            state = arg0->transition.bytes.state;
-            arg0->transition.bytes.timer = (arg0->transition.bytes.timer + 1) & 0x1F;
+            state = arg0->state;
+            arg0->animationTimer = (arg0->animationTimer + 1) & 0x1F;
             break;
         case 2:
             if (gRacePlayers[0].menuState == 1) {
-                state = arg0->transition.bytes.state = 3;
+                state = arg0->state = 3;
             }
             break;
         case 3:
             arg0->x -= 0x20;
             if (arg0->x < -0xEF) {
-                arg0->transition.bytes.state = 4;
+                arg0->state = 4;
             }
-            state = arg0->transition.bytes.state;
+            state = arg0->state;
             break;
         case 4:
             break;
     }
 
     gRaceSplitscreenSelectCursorAnimState = state;
-    if (arg0->transition.bytes.state == 4) {
+    if (arg0->state == 4) {
         removeCallbackTask(arg0);
         return;
     }
     addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawRaceSplitscreenSelectCursor, arg0);
 }
 
-void initRaceSplitscreenSelectCursor(RaceSplitscreenSelectWidgetActor *arg0) {
+void initRaceSplitscreenSelectCursor(RaceSplitscreenSelectAnimatedWidgetActor *arg0) {
     arg0->x = -0x7C;
     arg0->y = -0x60;
-    arg0->sprite.spriteIndex = 0;
-    arg0->transition.bytes.state = 0;
-    arg0->transition.bytes.timer = 0;
+    arg0->alpha = 0;
+    arg0->state = 0;
+    arg0->animationTimer = 0;
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceSplitscreenSelectCursor);
 }
 
-void drawRaceSplitscreenSelectPortrait(RaceSplitscreenSelectWidgetActor *arg0) {
+void drawRaceSplitscreenSelectPortrait(RaceSplitscreenSelectAnimatedWidgetActor *arg0) {
     s32 portraitIndex;
 
     if (gRaceSplitscreenMode == 3) {
@@ -1221,55 +1207,55 @@ void drawRaceSplitscreenSelectPortrait(RaceSplitscreenSelectWidgetActor *arg0) {
     drawMenuGlyphScript(
         arg0->x,
         arg0->y,
-        gRaceSplitscreenSelectPortraitScripts.portraits[portraitIndex],
+        gRaceSplitscreenSelectDescriptionScripts.descriptions[portraitIndex],
         1,
-        arg0->sprite.spriteIndex,
+        arg0->alpha,
         0
     );
 }
 
-void updateRaceSplitscreenSelectPortrait(RaceSplitscreenSelectWidgetActor *arg0) {
-    u8 state = arg0->transition.bytes.state;
+void updateRaceSplitscreenSelectPortrait(RaceSplitscreenSelectAnimatedWidgetActor *arg0) {
+    u8 state = arg0->state;
 
     switch (state) {
         case 0:
-            arg0->sprite.spriteIndex += 0x26;
-            if (arg0->sprite.spriteIndex >= 0x100) {
-                arg0->sprite.spriteIndex = 0x100;
-                arg0->transition.bytes.state = 1;
+            arg0->alpha += 0x26;
+            if (arg0->alpha >= 0x100) {
+                arg0->alpha = 0x100;
+                arg0->state = 1;
             }
             break;
         case 1:
             if (gRacePlayers[0].menuState == 1) {
-                arg0->transition.bytes.state = 2;
+                arg0->state = 2;
             }
             break;
         case 2:
             arg0->x -= 0x20;
             if (arg0->x < -0xFF) {
-                arg0->transition.bytes.state = 3;
+                arg0->state = 3;
             }
             break;
         case 3:
             break;
     }
-    gRaceSplitscreenSelectPortraitAlpha = arg0->sprite.spriteIndex;
-    if (arg0->transition.bytes.state == 3) {
+    gRaceSplitscreenSelectCursorTarget.portraitAlpha = arg0->alpha;
+    if (arg0->state == 3) {
         removeCallbackTask(arg0);
         return;
     }
     addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawRaceSplitscreenSelectPortrait, arg0);
 }
 
-void initRaceSplitscreenSelectPortrait(RaceSplitscreenSelectWidgetActor *arg0) {
+void initRaceSplitscreenSelectPortrait(RaceSplitscreenSelectAnimatedWidgetActor *arg0) {
     arg0->x = -0x84;
     arg0->y = 0xC;
-    arg0->sprite.spriteIndex = 0;
-    arg0->transition.bytes.state = 0;
+    arg0->alpha = 0;
+    arg0->state = 0;
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceSplitscreenSelectPortrait);
 }
 
-void drawRaceSplitscreenSelectArrowPrompt(RaceSplitscreenSelectWidgetActor *arg0) {
+void drawRaceSplitscreenSelectArrowPrompt(RaceSplitscreenSelectAnimatedWidgetActor *arg0) {
     drawMenuSpriteWithAlpha(
         arg0->x,
         arg0->y,
@@ -1278,34 +1264,34 @@ void drawRaceSplitscreenSelectArrowPrompt(RaceSplitscreenSelectWidgetActor *arg0
         0x20,
         0x20,
         0,
-        arg0->sprite.spriteIndex,
+        arg0->alpha,
         0
     );
 }
 
-void updateRaceSplitscreenSelectArrowPrompt(RaceSplitscreenSelectWidgetActor *arg0) {
-    u8 state = arg0->transition.bytes.state;
+void updateRaceSplitscreenSelectArrowPrompt(RaceSplitscreenSelectAnimatedWidgetActor *arg0) {
+    u8 state = arg0->state;
 
     switch (state) {
         case 0:
-            arg0->sprite.spriteIndex += 0x26;
-            if (arg0->sprite.spriteIndex >= 0x100) {
-                arg0->sprite.spriteIndex = 0x100;
-                arg0->transition.bytes.state = 1;
+            arg0->alpha += 0x26;
+            if (arg0->alpha >= 0x100) {
+                arg0->alpha = 0x100;
+                arg0->state = 1;
             }
-            state = arg0->transition.bytes.state;
+            state = arg0->state;
             break;
         case 1:
             if (gRacePlayers[0].menuState == 1) {
-                state = arg0->transition.bytes.state = 2;
+                state = arg0->state = 2;
             }
             break;
         case 2:
             arg0->x += 0x20;
             if (arg0->x >= 0xA0) {
-                arg0->transition.bytes.state = 3;
+                arg0->state = 3;
             }
-            state = arg0->transition.bytes.state;
+            state = arg0->state;
             break;
         case 3:
             break;
@@ -1317,15 +1303,15 @@ void updateRaceSplitscreenSelectArrowPrompt(RaceSplitscreenSelectWidgetActor *ar
     addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawRaceSplitscreenSelectArrowPrompt, arg0);
 }
 
-void initRaceSplitscreenSelectArrowPrompt(RaceSplitscreenSelectWidgetActor *arg0) {
+void initRaceSplitscreenSelectArrowPrompt(RaceSplitscreenSelectAnimatedWidgetActor *arg0) {
     arg0->x = -8;
     arg0->y = -0x5C;
-    arg0->sprite.spriteIndex = 0;
-    arg0->transition.bytes.state = 0;
+    arg0->alpha = 0;
+    arg0->state = 0;
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceSplitscreenSelectArrowPrompt);
 }
 
-void drawRaceSplitscreenSelectEntryFee(RaceSplitscreenSelectWidgetActor *arg0) {
+void drawRaceSplitscreenSelectEntryFee(RaceSplitscreenSelectAnimatedWidgetActor *arg0) {
     char sp40[0x18];
 
     drawMenuPanelBackdrop(arg0->x, arg0->y, 0x5000, 0x4000);
@@ -1337,36 +1323,36 @@ void drawRaceSplitscreenSelectEntryFee(RaceSplitscreenSelectWidgetActor *arg0) {
         0x20,
         0x20,
         0,
-        arg0->sprite.spriteIndex,
+        arg0->alpha,
         0
     );
     sprintf(sp40, gRaceSplitscreenSelectEntryFeeFormat, gRacePlayers[0].money);
-    drawMenuAsciiText((s16)(arg0->x + 0x10), (s16)(arg0->y + 0x10), sp40, 0, arg0->sprite.spriteIndex);
+    drawMenuAsciiText((s16)(arg0->x + 0x10), (s16)(arg0->y + 0x10), sp40, 0, arg0->alpha);
 }
 
-void updateRaceSplitscreenSelectEntryFee(RaceSplitscreenSelectWidgetActor *arg0) {
-    u8 state = arg0->transition.bytes.state;
+void updateRaceSplitscreenSelectEntryFee(RaceSplitscreenSelectAnimatedWidgetActor *arg0) {
+    u8 state = arg0->state;
 
     switch (state) {
         case 0:
-            arg0->sprite.spriteIndex += 0x26;
-            if (arg0->sprite.spriteIndex >= 0x100) {
-                arg0->sprite.spriteIndex = 0x100;
-                arg0->transition.bytes.state = 1;
+            arg0->alpha += 0x26;
+            if (arg0->alpha >= 0x100) {
+                arg0->alpha = 0x100;
+                arg0->state = 1;
             }
-            state = arg0->transition.bytes.state;
+            state = arg0->state;
             break;
         case 1:
             if (gRacePlayers[0].menuState == 1) {
-                state = arg0->transition.bytes.state = 2;
+                state = arg0->state = 2;
             }
             break;
         case 2:
             arg0->x += 0x20;
             if (arg0->x >= 0xA0) {
-                arg0->transition.bytes.state = 3;
+                arg0->state = 3;
             }
-            state = arg0->transition.bytes.state;
+            state = arg0->state;
             break;
         case 3:
             break;
@@ -1378,11 +1364,11 @@ void updateRaceSplitscreenSelectEntryFee(RaceSplitscreenSelectWidgetActor *arg0)
     addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawRaceSplitscreenSelectEntryFee, arg0);
 }
 
-void initRaceSplitscreenSelectEntryFee(RaceSplitscreenSelectWidgetActor *arg0) {
+void initRaceSplitscreenSelectEntryFee(RaceSplitscreenSelectAnimatedWidgetActor *arg0) {
     arg0->x = 0x30;
     arg0->y = 0x40;
-    arg0->sprite.spriteIndex = 0;
-    arg0->transition.bytes.state = 0;
+    arg0->alpha = 0;
+    arg0->state = 0;
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceSplitscreenSelectEntryFee);
 }
 
