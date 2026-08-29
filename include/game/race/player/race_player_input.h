@@ -67,26 +67,7 @@ typedef struct RacePlayer {
     /* 0x091 */ s8 stickY;
     /* 0x092 */ s8 unk92;
     /* 0x093 */ s8 unk93;
-    /* 0x094 */ union {
-        Transform3D collisionVolumes[RACE_PLAYER_MODEL_PART_CAPACITY];
-        struct {
-            /* 0x094 */ Mat3x3 transform;
-            /* 0x0A6 */ s16 padA6;
-            /* 0x0A8 */ Vec3i itemSpawnOffset;
-            /* 0x0B4 */ char padB4[0x14];
-            /* 0x0C8 */ Vec3i posC8;
-            /* 0x0D4 */ char padD4[0x94];
-            /* 0x168 */ Vec3i effectPos;
-            /* 0x174 */ Transform3D renderTransform;
-            /* 0x194 */ char pad194[0x34];
-            /* 0x1C8 */ Vec3i projectilePos;
-            /* 0x1D4 */ char pad1D4[0x80];
-        };
-        struct {
-            /* 0x094 */ Transform3D copyBlock94;
-            /* 0x0B4 */ char padB4Copy[0x1A0];
-        };
-    };
+    /* 0x094 */ Transform3D modelPartTransforms[RACE_PLAYER_MODEL_PART_CAPACITY];
     /* 0x254 */ s32 unk254;
     /* 0x258 */ s32 unk258;
     /* 0x25C */ s32 unk25C;
@@ -210,7 +191,7 @@ typedef struct RacePlayer {
     /* 0x52C */ s8 actionTriggerCooldown;
     /* 0x52D */ s8 itemTriggerCooldown;
     /* 0x52E */ char pad52E[2];
-    /* 0x530 */ Mtx *partMatrices[RACE_PLAYER_MODEL_PART_CAPACITY];
+    /* 0x530 */ Mtx *modelPartMatrices[RACE_PLAYER_MODEL_PART_CAPACITY];
     /* 0x568 */ s32 score;
     /* 0x56C */ s32 cumulativeRaceScore;
     /* 0x570 */ s16 unk570;

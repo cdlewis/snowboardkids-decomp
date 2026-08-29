@@ -629,11 +629,11 @@ void updateRacePlayerShockEffect(RaceItemEffectActor *arg0) {
     if (actor->unk34.shorts.height.byte < 0) {
         actor->unk34.shorts.height.byte = 0;
     }
-    transformVec3iByFixedMatrix(gRacePlayers[actor->playerIndex].transform, &actor->vector24.vec, &actor->payload.vec);
+    transformVec3iByFixedMatrix(gRacePlayers[actor->playerIndex].modelPartTransforms[0].rotation, &actor->vector24.vec, &actor->payload.vec);
     player = &gRacePlayers[actor->playerIndex];
-    actor->payload.vec.x += player->itemSpawnOffset.x;
-    actor->payload.vec.y += player->itemSpawnOffset.y;
-    actor->payload.vec.z += player->itemSpawnOffset.z;
+    actor->payload.vec.x += player->modelPartTransforms[0].translation.x;
+    actor->payload.vec.y += player->modelPartTransforms[0].translation.y;
+    actor->payload.vec.z += player->modelPartTransforms[0].translation.z;
     addRenderCallback(&D_801248C8, (RenderCallback)renderRacePlayerShockEffect, actor);
 }
 
@@ -852,9 +852,9 @@ void updateRacePlayerRecoverySparkle(RaceItemEffectActor *arg0) {
 
 void initRacePlayerRecoverySparkle(RaceItemEffectActor *arg0) {
     arg0->vector24.fields.word28.bytes.phase = -1;
-    arg0->payload.vec.x = gRacePlayers[arg0->playerIndex].effectPos.x + ((randomNextMain() - 0x80) << 10);
-    arg0->payload.vec.y = gRacePlayers[arg0->playerIndex].effectPos.y + ((randomNextMain() - 0x80) << 10);
-    arg0->payload.vec.z = gRacePlayers[arg0->playerIndex].effectPos.z + ((randomNextMain() - 0x80) << 10);
+    arg0->payload.vec.x = gRacePlayers[arg0->playerIndex].modelPartTransforms[6].translation.x + ((randomNextMain() - 0x80) << 10);
+    arg0->payload.vec.y = gRacePlayers[arg0->playerIndex].modelPartTransforms[6].translation.y + ((randomNextMain() - 0x80) << 10);
+    arg0->payload.vec.z = gRacePlayers[arg0->playerIndex].modelPartTransforms[6].translation.z + ((randomNextMain() - 0x80) << 10);
     updateRacePlayerRecoverySparkle(arg0);
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRacePlayerRecoverySparkle);
 }

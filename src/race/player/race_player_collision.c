@@ -653,7 +653,7 @@ void resolveRacePlayerCollisionVolumes(RacePlayer* player) {
 
             for (i = 0; i < 3; i++) {
                 for (j = 0; j < 3; j++) {
-                    player->collisionVolumes[k].rotation[(i * 3) + j] =
+                    player->modelPartTransforms[k].rotation[(i * 3) + j] =
                         (((localAxes[k][(i * 3)] * baseMtx[j]) + (localAxes[k][(i * 3) + 1] * baseMtx[j + 3])) +
                          (localAxes[k][(i * 3) + 2] * baseMtx[j + 6])) /
                         0x1000;
@@ -661,35 +661,35 @@ void resolveRacePlayerCollisionVolumes(RacePlayer* player) {
             }
         }
 
-        player->collisionVolumes[0].translation.x =
+        player->modelPartTransforms[0].translation.x =
             ((((-((s64) baseMtx[0])) * player->modelParts[0].offset.x) +
               (((s64) baseMtx[3]) * (player->modelParts[0].offset.y - player->collisionCenterOffset))) +
              (((s64) baseMtx[6]) * player->modelParts[0].offset.z)) /
             0x1000;
-        player->collisionVolumes[0].translation.y =
+        player->modelPartTransforms[0].translation.y =
             ((((-((s64) baseMtx[1])) * player->modelParts[0].offset.x) +
               (((s64) baseMtx[4]) * (player->modelParts[0].offset.y - player->collisionCenterOffset))) +
              (((s64) baseMtx[7]) * player->modelParts[0].offset.z)) /
             0x1000;
-        player->collisionVolumes[0].translation.z =
+        player->modelPartTransforms[0].translation.z =
             ((((-((s64) baseMtx[2])) * player->modelParts[0].offset.x) +
               (((s64) baseMtx[5]) * (player->modelParts[0].offset.y - player->collisionCenterOffset))) +
              (((s64) baseMtx[8]) * player->modelParts[0].offset.z)) /
             0x1000;
-        player->collisionVolumes[1].translation.x =
-            ((((-((s64) player->collisionVolumes[0].rotation[0])) * player->modelParts[1].offset.x) +
-              (((s64) player->collisionVolumes[0].rotation[3]) * player->modelParts[1].offset.y)) +
-             (((s64) player->collisionVolumes[0].rotation[6]) * player->modelParts[1].offset.z)) /
+        player->modelPartTransforms[1].translation.x =
+            ((((-((s64) player->modelPartTransforms[0].rotation[0])) * player->modelParts[1].offset.x) +
+              (((s64) player->modelPartTransforms[0].rotation[3]) * player->modelParts[1].offset.y)) +
+             (((s64) player->modelPartTransforms[0].rotation[6]) * player->modelParts[1].offset.z)) /
             0x1000;
-        player->collisionVolumes[1].translation.y =
-            ((((-((s64) player->collisionVolumes[0].rotation[1])) * player->modelParts[1].offset.x) +
-              (((s64) player->collisionVolumes[0].rotation[4]) * player->modelParts[1].offset.y)) +
-             (((s64) player->collisionVolumes[0].rotation[7]) * player->modelParts[1].offset.z)) /
+        player->modelPartTransforms[1].translation.y =
+            ((((-((s64) player->modelPartTransforms[0].rotation[1])) * player->modelParts[1].offset.x) +
+              (((s64) player->modelPartTransforms[0].rotation[4]) * player->modelParts[1].offset.y)) +
+             (((s64) player->modelPartTransforms[0].rotation[7]) * player->modelParts[1].offset.z)) /
             0x1000;
-        player->collisionVolumes[1].translation.z =
-            ((((-((s64) player->collisionVolumes[0].rotation[2])) * player->modelParts[1].offset.x) +
-              (((s64) player->collisionVolumes[0].rotation[5]) * player->modelParts[1].offset.y)) +
-             (((s64) player->collisionVolumes[0].rotation[8]) * player->modelParts[1].offset.z)) /
+        player->modelPartTransforms[1].translation.z =
+            ((((-((s64) player->modelPartTransforms[0].rotation[2])) * player->modelParts[1].offset.x) +
+              (((s64) player->modelPartTransforms[0].rotation[5]) * player->modelParts[1].offset.y)) +
+             (((s64) player->modelPartTransforms[0].rotation[8]) * player->modelParts[1].offset.z)) /
             0x1000;
     } else {
         for (i = 0; i < player->modelPartCount; i++) {
@@ -728,7 +728,7 @@ void resolveRacePlayerCollisionVolumes(RacePlayer* player) {
         for (k = 0; k < player->modelPartCount; k++) {
             for (i = 0; i < 3; i++) {
                 for (j = 0; j < 3; j++) {
-                    player->collisionVolumes[k].rotation[(i * 3) + j] =
+                    player->modelPartTransforms[k].rotation[(i * 3) + j] =
                         (((localAxes[k][(i * 3)] * baseMtx[j]) + (localAxes[k][(i * 3) + 1] * baseMtx[j + 3])) +
                          (localAxes[k][(i * 3) + 2] * baseMtx[j + 6])) /
                         0x1000;
@@ -736,65 +736,65 @@ void resolveRacePlayerCollisionVolumes(RacePlayer* player) {
             }
         }
 
-        player->collisionVolumes[0].translation.x =
+        player->modelPartTransforms[0].translation.x =
             (((((s64) baseMtx[0]) * player->modelParts[0].offset.x) +
               (((s64) baseMtx[3]) * (player->modelParts[0].offset.y - player->collisionCenterOffset))) +
              (((s64) baseMtx[6]) * player->modelParts[0].offset.z)) /
             0x1000;
-        player->collisionVolumes[0].translation.y =
+        player->modelPartTransforms[0].translation.y =
             (((((s64) baseMtx[1]) * player->modelParts[0].offset.x) +
               (((s64) baseMtx[4]) * (player->modelParts[0].offset.y - player->collisionCenterOffset))) +
              (((s64) baseMtx[7]) * player->modelParts[0].offset.z)) /
             0x1000;
-        player->collisionVolumes[0].translation.z =
+        player->modelPartTransforms[0].translation.z =
             (((((s64) baseMtx[2]) * player->modelParts[0].offset.x) +
               (((s64) baseMtx[5]) * (player->modelParts[0].offset.y - player->collisionCenterOffset))) +
              (((s64) baseMtx[8]) * player->modelParts[0].offset.z)) /
             0x1000;
-        player->collisionVolumes[1].translation.x =
-            (((((s64) player->collisionVolumes[0].rotation[0]) * player->modelParts[1].offset.x) +
-              (((s64) player->collisionVolumes[0].rotation[3]) * player->modelParts[1].offset.y)) +
-             (((s64) player->collisionVolumes[0].rotation[6]) * player->modelParts[1].offset.z)) /
+        player->modelPartTransforms[1].translation.x =
+            (((((s64) player->modelPartTransforms[0].rotation[0]) * player->modelParts[1].offset.x) +
+              (((s64) player->modelPartTransforms[0].rotation[3]) * player->modelParts[1].offset.y)) +
+             (((s64) player->modelPartTransforms[0].rotation[6]) * player->modelParts[1].offset.z)) /
             0x1000;
-        player->collisionVolumes[1].translation.y =
-            (((((s64) player->collisionVolumes[0].rotation[1]) * player->modelParts[1].offset.x) +
-              (((s64) player->collisionVolumes[0].rotation[4]) * player->modelParts[1].offset.y)) +
-             (((s64) player->collisionVolumes[0].rotation[7]) * player->modelParts[1].offset.z)) /
+        player->modelPartTransforms[1].translation.y =
+            (((((s64) player->modelPartTransforms[0].rotation[1]) * player->modelParts[1].offset.x) +
+              (((s64) player->modelPartTransforms[0].rotation[4]) * player->modelParts[1].offset.y)) +
+             (((s64) player->modelPartTransforms[0].rotation[7]) * player->modelParts[1].offset.z)) /
             0x1000;
-        player->collisionVolumes[1].translation.z =
-            (((((s64) player->collisionVolumes[0].rotation[2]) * player->modelParts[1].offset.x) +
-              (((s64) player->collisionVolumes[0].rotation[5]) * player->modelParts[1].offset.y)) +
-             (((s64) player->collisionVolumes[0].rotation[8]) * player->modelParts[1].offset.z)) /
+        player->modelPartTransforms[1].translation.z =
+            (((((s64) player->modelPartTransforms[0].rotation[2]) * player->modelParts[1].offset.x) +
+              (((s64) player->modelPartTransforms[0].rotation[5]) * player->modelParts[1].offset.y)) +
+             (((s64) player->modelPartTransforms[0].rotation[8]) * player->modelParts[1].offset.z)) /
             0x1000;
     }
-    player->collisionVolumes[0].translation.x += player->pos.x + offset[0];
-    player->collisionVolumes[0].translation.y += (((player->pos.y - player->unk58) + player->unk64) + offset[1]) + 0xA000;
-    player->collisionVolumes[0].translation.z += player->pos.z + offset[2];
-    player->collisionVolumes[1].translation.x += player->collisionVolumes[0].translation.x;
-    player->collisionVolumes[1].translation.y += player->collisionVolumes[0].translation.y;
-    player->collisionVolumes[1].translation.z += player->collisionVolumes[0].translation.z;
+    player->modelPartTransforms[0].translation.x += player->pos.x + offset[0];
+    player->modelPartTransforms[0].translation.y += (((player->pos.y - player->unk58) + player->unk64) + offset[1]) + 0xA000;
+    player->modelPartTransforms[0].translation.z += player->pos.z + offset[2];
+    player->modelPartTransforms[1].translation.x += player->modelPartTransforms[0].translation.x;
+    player->modelPartTransforms[1].translation.y += player->modelPartTransforms[0].translation.y;
+    player->modelPartTransforms[1].translation.z += player->modelPartTransforms[0].translation.z;
     for (k = 2; k < player->modelPartCount; k++) {
         parentPartIndex = player->modelParts[k].parentPartIndex;
         for (i = 0; i < 3; i++) {
-            VEC3I_COMPONENT(player->collisionVolumes[k].translation, i) =
-                (((((s64) player->collisionVolumes[parentPartIndex].rotation[i]) * player->modelParts[k].offset.x) +
-                  (((s64) player->collisionVolumes[parentPartIndex].rotation[i + 3]) * player->modelParts[k].offset.y)) +
-                 (((s64) player->collisionVolumes[parentPartIndex].rotation[i + 6]) * player->modelParts[k].offset.z)) /
+            VEC3I_COMPONENT(player->modelPartTransforms[k].translation, i) =
+                (((((s64) player->modelPartTransforms[parentPartIndex].rotation[i]) * player->modelParts[k].offset.x) +
+                  (((s64) player->modelPartTransforms[parentPartIndex].rotation[i + 3]) * player->modelParts[k].offset.y)) +
+                 (((s64) player->modelPartTransforms[parentPartIndex].rotation[i + 6]) * player->modelParts[k].offset.z)) /
                 0x1000;
-            VEC3I_COMPONENT(player->collisionVolumes[k].translation, i) +=
-                VEC3I_COMPONENT(player->collisionVolumes[parentPartIndex].translation, i);
+            VEC3I_COMPONENT(player->modelPartTransforms[k].translation, i) +=
+                VEC3I_COMPONENT(player->modelPartTransforms[parentPartIndex].translation, i);
         }
     }
     for (i = 0; i < player->modelPartCount; i++) {
 
-        player->collisionVolumes[i].rotation[0] /= 4;
-        player->collisionVolumes[i].rotation[1] /= 4;
-        player->collisionVolumes[i].rotation[2] /= 4;
-        player->collisionVolumes[i].rotation[3] /= 4;
-        player->collisionVolumes[i].rotation[4] /= 4;
-        player->collisionVolumes[i].rotation[5] /= 4;
-        player->collisionVolumes[i].rotation[6] /= 4;
-        player->collisionVolumes[i].rotation[7] /= 4;
-        player->collisionVolumes[i].rotation[8] /= 4;
+        player->modelPartTransforms[i].rotation[0] /= 4;
+        player->modelPartTransforms[i].rotation[1] /= 4;
+        player->modelPartTransforms[i].rotation[2] /= 4;
+        player->modelPartTransforms[i].rotation[3] /= 4;
+        player->modelPartTransforms[i].rotation[4] /= 4;
+        player->modelPartTransforms[i].rotation[5] /= 4;
+        player->modelPartTransforms[i].rotation[6] /= 4;
+        player->modelPartTransforms[i].rotation[7] /= 4;
+        player->modelPartTransforms[i].rotation[8] /= 4;
     }
 }
