@@ -3,15 +3,9 @@
 #include "game/math/fixed_point_math.h"
 #include "game/race/motion/race_motion.h"
 #include "game/race/player/race_player_progress.h"
-#include "game/race/player/race_player_input.h"
 
 #define RANK_ARROW_DISTANCE 0x03800000
 #define RANK_ARROW_NEGATIVE_LIMIT ((s32)0xFC800001)
-
-typedef struct RacePlayerCheckpointEvent {
-    /* 0x00 */ s16 pathFrame;
-    /* 0x02 */ s16 eventId;
-} RacePlayerCheckpointEvent;
 
 extern u32 D_800DC9A8[];
 extern s16 gFrameCounter;
@@ -358,7 +352,7 @@ void updateRacePlayerCheckpointEvents(RacePlayer *player) {
             if (z < 0x600000 && z > 0) {
                 player->checkpointEventMask |= eventMask;
                 player->checkpointHit = 1;
-                player->surfaceCueOverrideMask = event->eventId;
+                player->surfaceCueOverrideMask = event->surfaceCueMask;
                 break;
             }
         }
