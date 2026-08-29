@@ -11,7 +11,13 @@
 
 typedef u8 RacePlayerOrder[RACE_PLAYER_COUNT];
 
-struct RaceUiRankTrigger;
+typedef struct RaceScoreAttackRingTrigger {
+    /* 0x00 */ struct RaceScoreAttackRingTrigger *next;
+    /* 0x04 */ Vec3i position;
+    /* 0x10 */ s32 radius;
+    /* 0x14 */ s8 triggered;
+    /* 0x15 */ u8 pad15[3];
+} RaceScoreAttackRingTrigger;
 
 typedef struct RacePlayer {
     /* 0x000 */ u16 playerIndex;
@@ -41,24 +47,18 @@ typedef struct RacePlayer {
     /* 0x034 */ Vec3i previousPosition;
     /* 0x040 */ Vec3i velocity;
     /* 0x04C */ char pad4C[0xC];
-    /* 0x058 */ s32 unk58;
-    /* 0x05C */ s32 unk5C;
-    /* 0x060 */ s32 unk60;
-    /* 0x064 */ s32 unk64;
+    /* 0x058 */ s32 groundOffset;
+    /* 0x05C */ s32 collisionBottomY;
+    /* 0x060 */ s32 targetGroundOffset;
+    /* 0x064 */ s32 groundCorrectionY;
     /* 0x068 */ s32 collisionCenterOffset;
-    /* 0x06C */ s16 unk6C;
-    /* 0x06E */ s16 unk6E;
-    /* 0x070 */ s16 unk70;
+    /* 0x06C */ s16 modelRotationX;
+    /* 0x06E */ s16 modelRotationY;
+    /* 0x070 */ s16 modelRotationZ;
     /* 0x072 */ char pad72[2];
-    /* 0x074 */ s32 unk74;
+    /* 0x074 */ s32 verticalVelocityLimit;
     /* 0x078 */ char pad78[4];
-    /* 0x07C */ union {
-        s32 stateTimer;
-        struct {
-            s16 stateTimerHigh;
-            s16 stateTimerLow;
-        };
-    };
+    /* 0x07C */ s32 stateTimer;
     /* 0x080 */ s32 unk80;
     /* 0x084 */ u32 inputFlags;
     /* 0x088 */ u32 currentInputFlags;
@@ -68,10 +68,10 @@ typedef struct RacePlayer {
     /* 0x092 */ s8 unk92;
     /* 0x093 */ s8 unk93;
     /* 0x094 */ Transform3D modelPartTransforms[RACE_PLAYER_MODEL_PART_CAPACITY];
-    /* 0x254 */ s32 unk254;
-    /* 0x258 */ s32 unk258;
+    /* 0x254 */ s32 localVelocityZ;
+    /* 0x258 */ s32 localVelocityX;
     /* 0x25C */ s32 unk25C;
-    /* 0x260 */ s32 unk260;
+    /* 0x260 */ s32 gravity;
     /* 0x264 */ s32 unk264;
     /* 0x268 */ s32 unk268;
     /* 0x26C */ s32 unk26C;
@@ -86,7 +86,7 @@ typedef struct RacePlayer {
     /* 0x28C */ s16 unk28C;
     /* 0x28E */ char pad28E[2];
     /* 0x290 */ Vec3i projectedPos;
-    /* 0x29C */ s32 unk29C;
+    /* 0x29C */ s32 movementSpeed;
     /* 0x2A0 */ s16 unk2A0;
     /* 0x2A2 */ s16 unk2A2;
     /* 0x2A4 */ s16 unk2A4;
@@ -98,8 +98,8 @@ typedef struct RacePlayer {
     /* 0x2C3 */ s8 unk2C3;
     /* 0x2C4 */ u16 unk2C4;
     /* 0x2C6 */ u16 pendingItemHitFlags;
-    /* 0x2C8 */ s32 unk2C8;
-    /* 0x2CC */ s32 unk2CC;
+    /* 0x2C8 */ s32 collisionVelocityX;
+    /* 0x2CC */ s32 collisionVelocityZ;
     /* 0x2D0 */ char pad2D0[2];
     /* 0x2D2 */ s16 hitSourcePlayerIndex;
     /* 0x2D4 */ s16 unk2D4;
@@ -114,12 +114,12 @@ typedef struct RacePlayer {
     /* 0x2E8 */ s16 unk2E8;
     /* 0x2EA */ s16 pitchAngle;
     /* 0x2EC */ s16 facingAngle;
-    /* 0x2EE */ s16 unk2EE;
-    /* 0x2F0 */ s16 unk2F0;
+    /* 0x2EE */ s16 leanAngle;
+    /* 0x2F0 */ s16 surfacePitchAngle;
     /* 0x2F2 */ char pad2F2[2];
-    /* 0x2F4 */ s16 unk2F4;
-    /* 0x2F6 */ s16 unk2F6;
-    /* 0x2F8 */ s16 unk2F8;
+    /* 0x2F4 */ s16 surfaceRollAngle;
+    /* 0x2F6 */ s16 leanInput;
+    /* 0x2F8 */ s16 leanScale;
     /* 0x2FA */ s16 unk2FA;
     /* 0x2FC */ u32 stateFlags;
     /* 0x300 */ s16 mode;
@@ -131,7 +131,7 @@ typedef struct RacePlayer {
     /* 0x30C */ s16 subStateStep;
     /* 0x30E */ s16 subStateParam;
     /* 0x310 */ s32 unk310;
-    /* 0x314 */ s32 unk314;
+    /* 0x314 */ s32 speedLimit;
     /* 0x318 */ s32 unk318;
     /* 0x31C */ s16 unk31C;
     /* 0x31E */ s16 unk31E;
@@ -156,16 +156,16 @@ typedef struct RacePlayer {
     /* 0x498 */ Vtx *shadowVtx;
     /* 0x49C */ Mtx *shadowMtx;
     /* 0x4A0 */ Vec3i groundMarkerSources[8];
-    /* 0x500 */ u8 unk500;
+    /* 0x500 */ u8 groundContactMask;
     /* 0x501 */ char pad501[1];
     /* 0x502 */ s16 coursePathIndex;
-    /* 0x504 */ s32 unk504;
+    /* 0x504 */ s32 coursePathOffset;
     /* 0x508 */ s8 lapDigit;
     /* 0x509 */ s8 rankIndex;
     /* 0x50A */ char pad50A[2];
     /* 0x50C */ union {
         s16 *anglePtr;
-        struct RaceUiRankTrigger *scoreAttackRingTriggerList;
+        RaceScoreAttackRingTrigger *scoreAttackRingTriggerList;
     };
     /* 0x510 */ s16 shieldEffectTimer;
     /* 0x512 */ s8 itemEffectType;

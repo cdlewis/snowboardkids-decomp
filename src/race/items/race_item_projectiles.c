@@ -24,7 +24,7 @@ typedef struct {
     s32 pad;
     Vec3i transformed;
     Vec3i offset;
-} TransformScratch;
+} RaceItemProjectileTransformScratch;
 
 struct RaceItemProjectileActor {
     /* 0x00 */ u8 pad0[0x10];
@@ -124,7 +124,7 @@ s32 findRaceItemProjectileHomingTarget(Vec3i *pos, s32 radius, s16 angle, s16 pl
                     dx = -dx;
                 }
                 if (dx < radius) {
-                    dist = player->unk5C - pos->y;
+                    dist = player->collisionBottomY - pos->y;
                     if (dist < 0) {
                         dist = -dist;
                     }

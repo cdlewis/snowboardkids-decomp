@@ -298,11 +298,11 @@ void resolveRacePlayerHitReactions(RacePlayer *arg0) {
     temp_v0 = arg0->pendingItemHitFlags;
     if (temp_v0 != 0) {
         if ((temp_v0 & 0x200) &&
-            (arg0->unk5C < (getRaceCourseSurfaceHeight(arg0->coursePathIndex, arg0->pos.x, arg0->pos.z) + 0xB0000))) {
+            (arg0->collisionBottomY < (getRaceCourseSurfaceHeight(arg0->coursePathIndex, arg0->pos.x, arg0->pos.z) + 0xB0000))) {
             arg0->pendingItemHitFlags |= 1;
         }
-        gRacePlayerHitDeltaX = arg0->unk2C8 - arg0->velocity.x;
-        gRacePlayerHitDeltaZ = arg0->unk2CC - arg0->velocity.z;
+        gRacePlayerHitDeltaX = arg0->collisionVelocityX - arg0->velocity.x;
+        gRacePlayerHitDeltaZ = arg0->collisionVelocityZ - arg0->velocity.z;
         gRacePlayerHitDistance =
             (u32)integerSquareRoot64(
                 (s64)gRacePlayerHitDeltaX * gRacePlayerHitDeltaX + (s64)gRacePlayerHitDeltaZ * gRacePlayerHitDeltaZ
@@ -384,8 +384,8 @@ void resolveRacePlayerHitReactions(RacePlayer *arg0) {
                 arg0->updateState = 0;
                 arg0->updateTimer = 0;
                 arg0->unk2DE = (s16)gRacePlayerHitAngle;
-                arg0->unk2E0 = arg0->unk2C8;
-                arg0->unk2E4 = arg0->unk2CC;
+                arg0->unk2E0 = arg0->collisionVelocityX;
+                arg0->unk2E4 = arg0->collisionVelocityZ;
                 if (arg0->soundDisabled == 0) {
                     enqueuePositionalSoundEffect(0x14, &arg0->pos, 0x7F, 0x32);
                     spawnRacePlayerHitEffect(
@@ -419,8 +419,8 @@ void resolveRacePlayerHitReactions(RacePlayer *arg0) {
                 arg0->updateState = 0;
                 arg0->updateTimer = 0;
                 arg0->unk2DE = (s16)gRacePlayerHitAngle;
-                arg0->unk2E0 = arg0->unk2C8;
-                arg0->unk2E4 = arg0->unk2CC;
+                arg0->unk2E0 = arg0->collisionVelocityX;
+                arg0->unk2E4 = arg0->collisionVelocityZ;
                 break;
             case 2:
                 enqueueRacePlayerVoiceSound(arg0, 2);
@@ -428,8 +428,8 @@ void resolveRacePlayerHitReactions(RacePlayer *arg0) {
                 arg0->updateState = 0;
                 arg0->updateTimer = 0;
                 arg0->unk2DE = (s16)gRacePlayerHitAngle;
-                arg0->unk2E0 = arg0->unk2C8;
-                arg0->unk2E4 = arg0->unk2CC;
+                arg0->unk2E0 = arg0->collisionVelocityX;
+                arg0->unk2E4 = arg0->collisionVelocityZ;
                 if (arg0->soundDisabled == 0) {
                     enqueuePositionalSoundEffect(0x14, &arg0->pos, 0x7F, 0x32);
                     spawnRacePlayerHitEffect(
@@ -616,7 +616,7 @@ void resolveRacePlayerCollisionVolumes(RacePlayer* player) {
 
     player->unk288 = player->pitchAngle;
     player->unk28A = player->facingAngle;
-    player->unk28C = player->unk2EE;
+    player->unk28C = player->leanAngle;
     if (player->stateFlags & 0x400) {
         for (i = 0; i < player->modelPartCount; i++) {
             sinX = fixedSine(player->modelParts[player->modelParts[i].mirroredPartIndex].rotation.x);
@@ -643,7 +643,7 @@ void resolveRacePlayerCollisionVolumes(RacePlayer* player) {
             }
         }
 
-        makeFixedRotationZYX(effectMtx, player->unk6C, -player->unk6E, -player->unk70);
+        makeFixedRotationZYX(effectMtx, player->modelRotationX, -player->modelRotationY, -player->modelRotationZ);
         makeFixedRotationZXY(playerMtx, player->unk288, player->unk28A, player->unk28C);
         offset[0] = (((s64) playerMtx[3]) * player->collisionCenterOffset) / 0x1000;
         offset[1] = (((s64) playerMtx[4]) * player->collisionCenterOffset) / 0x1000;
@@ -717,7 +717,7 @@ void resolveRacePlayerCollisionVolumes(RacePlayer* player) {
             }
         }
 
-        makeFixedRotationZYX(effectMtx, player->unk6C, player->unk6E, player->unk70);
+        makeFixedRotationZYX(effectMtx, player->modelRotationX, player->modelRotationY, player->modelRotationZ);
         makeFixedRotationZXY(playerMtx, player->unk288, player->unk28A, player->unk28C);
         offset[0] = (((s64) playerMtx[3]) * player->collisionCenterOffset) / 0x1000;
         offset[1] = (((s64) playerMtx[4]) * player->collisionCenterOffset) / 0x1000;
@@ -768,7 +768,7 @@ void resolveRacePlayerCollisionVolumes(RacePlayer* player) {
             0x1000;
     }
     player->modelPartTransforms[0].translation.x += player->pos.x + offset[0];
-    player->modelPartTransforms[0].translation.y += (((player->pos.y - player->unk58) + player->unk64) + offset[1]) + 0xA000;
+    player->modelPartTransforms[0].translation.y += (((player->pos.y - player->groundOffset) + player->groundCorrectionY) + offset[1]) + 0xA000;
     player->modelPartTransforms[0].translation.z += player->pos.z + offset[2];
     player->modelPartTransforms[1].translation.x += player->modelPartTransforms[0].translation.x;
     player->modelPartTransforms[1].translation.y += player->modelPartTransforms[0].translation.y;
