@@ -3221,13 +3221,13 @@ void func_8005CE4C(RaceUiDualCounterActor *arg0) {
         &gRaceElapsedTimer,
         (RaceTimer *)&arg0->row
     );
-    new_var = &gRacePlayers[0].unk570;
+    new_var = &gRacePlayers[0].collectedCourseCoinMarkerCount;
     if (gRaceChallengeFailed != 0) {
         arg0->leftValue = 0;
         temp_v0 = *new_var;
     } else {
         arg0->leftValue = ((arg0->row * 0x3C) + arg0->column) * 0x14;
-        if (gRacePlayers[0].courseCoinMarkerCount == (temp_v0 = gRacePlayers[0].unk570)) {
+        if (gRacePlayers[0].totalCourseCoinMarkerCount == (temp_v0 = gRacePlayers[0].collectedCourseCoinMarkerCount)) {
             arg0->flag = 1;
             arg0->bonus = 0x12C;
             temp_v0 = *new_var;
@@ -3278,8 +3278,8 @@ void func_8005CF60(RaceUiDualCounterActor *arg0) {
     }
 
     x = -0x50;
-    sprintf(buffer, gRaceUiTrickAttackSecondaryCounterFormat, gRacePlayers[0].unk2C3);
-    if (gRacePlayers[0].unk2C3 >= 10) {
+    sprintf(buffer, gRaceUiTrickAttackSecondaryCounterFormat, gRacePlayers[0].trickAttackMakeCount);
+    if (gRacePlayers[0].trickAttackMakeCount >= 10) {
         x = -0x54;
     }
 
@@ -3733,7 +3733,7 @@ void initRaceUiTrickPrizePayout(RaceUiCourseStatsActor *arg0) {
         *(volatile s16 *)&arg0->pendingMakeBonus = 0;
     } else {
         arg0->pendingTrickPrize = gRacePlayers[0].trickAttackPointTotal * 3;
-        arg0->pendingMakeBonus = gRacePlayers[0].unk2C3 * 10;
+        arg0->pendingMakeBonus = gRacePlayers[0].trickAttackMakeCount * 10;
     }
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceUiTrickPrizePayoutFadeIn);
 }
@@ -3832,7 +3832,7 @@ void func_8005EA4C(RaceUiSparkleActor *arg0) {
             arg0->alpha -= 0x10;
             if (arg0->alpha <= 0) {
                 player = &gRacePlayers[arg0->playerIndex];
-                player->unk2D8--;
+                player->activeSparkleEffectCount--;
                 removeCallbackTask((CallbackTask *)arg0);
                 return;
             }
@@ -3915,7 +3915,7 @@ void func_8005ECA8(RaceUiSparkleActor *arg0) {
                 }
 
                 player = &gRacePlayers[arg0->playerIndex];
-                player->unk2D8++;
+                player->activeSparkleEffectCount++;
                 if (gRacePlayerHudStatuses[arg0->playerIndex].active != 0) {
                     enqueueSoundEffect(0x53, 0x5A);
                 }
@@ -5966,7 +5966,7 @@ loop:
             if (isRacePlayerInsideCylinder(pos, xzSize, ySize, 0) != 0) {
                 entry->active = 0;
                 enqueuePositionalSoundEffect(0x18, pos, 0x7F, 0x32);
-                gRacePlayers[0].unk570++;
+                gRacePlayers[0].collectedCourseCoinMarkerCount++;
                 if (gRacePlayers[0].trailEffectTimer != 0) {
                     gRacePlayers[0].trailEffectTimer = 0xF0;
                 } else {
@@ -6029,7 +6029,7 @@ void initRaceCourseCoinMarkers(RaceUiGfxCommandActor *actor) {
             marker++;
         } while (marker->sentinel != -1);
     }
-    gRacePlayers[0].courseCoinMarkerCount = markerCount;
+    gRacePlayers[0].totalCourseCoinMarkerCount = markerCount;
     actor->count = markerCount;
     if (markerCount != 0) {
         gAssetHandles[0x24] = allocRelocatableHeapBlock(markerCount * sizeof(Mtx));

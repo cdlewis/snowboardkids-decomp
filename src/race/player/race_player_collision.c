@@ -367,7 +367,7 @@ void resolveRacePlayerHitReactions(RacePlayer *arg0) {
     }
     if (gRacePlayerHitCueId != 0) {
         if (arg0->stateFlags & 0x800) {
-            arg0->unk2C3 = 0;
+            arg0->trickAttackMakeCount = 0;
         }
         arg0->unk57A = 0;
         switch (gRacePlayerHitCueId) {

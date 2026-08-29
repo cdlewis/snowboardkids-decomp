@@ -226,7 +226,6 @@ extern s32 gRaceCameraReplayStartY;
 extern s32 gRaceCameraReplayStartZ;
 extern s32 gMenuFlowState;
 extern s16 gRaceLapCount;
-extern GameSaveRecordTime gRaceTimeTrialFinishTime;
 extern s16 gMenuFadeAlpha;
 extern s8 gRacePlayerCount;
 extern s16 gRacePlayerAttackStartTimer;

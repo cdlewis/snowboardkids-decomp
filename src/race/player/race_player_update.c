@@ -609,7 +609,7 @@ void updateRacePlayer(RacePlayer *player) {
         player->unk310 += 0x6000;
     }
 
-    for (i = 0; i < player->unk2D8; i++) {
+    for (i = 0; i < player->activeSparkleEffectCount; i++) {
         player->unk310 -= player->unk310 >> 2;
     }
 
@@ -5775,7 +5775,7 @@ void updateRacePlayerVoiceSounds(RacePlayer *player) {
         if ((s32)(u32)bitIndex >= 0xA) {
             bitIndex = 9;
         }
-        player->unk2C4 |= 1 << bitIndex;
+        player->trickAttackCompletedTrickMask |= 1 << bitIndex;
     }
     splitType = player2->unk2A2;
     if (splitType != 0) {
@@ -5821,12 +5821,12 @@ void updateRacePlayerVoiceSounds(RacePlayer *player) {
                     score = 0x270F;
                 }
                 player->trickAttackPointTotal += score;
-                player->unk2C3++;
-                if (player->unk2C3 >= 0x64) {
-                    player->unk2C3 = 0x63;
+                player->trickAttackMakeCount++;
+                if (player->trickAttackMakeCount >= 0x64) {
+                    player->trickAttackMakeCount = 0x63;
                 }
-                if (player->unk2C2 < player->unk2C3) {
-                    player->unk2C2 = player2->unk2C3;
+                if (player->trickAttackBestMakeCount < player->trickAttackMakeCount) {
+                    player->trickAttackBestMakeCount = player2->trickAttackMakeCount;
                 }
                 if (score >= 0xA) {
                     soundType = 0x4E;
@@ -5840,9 +5840,9 @@ void updateRacePlayerVoiceSounds(RacePlayer *player) {
                 if (score >= 0x28) {
                     soundType = 0x50;
                 }
-                if (player2->unk2C4 == 0x3FE) {
+                if (player2->trickAttackCompletedTrickMask == 0x3FE) {
                     player2->trickAttackPointTotal += 0x12C;
-                    player2->unk2C4 = 0x3FF;
+                    player2->trickAttackCompletedTrickMask = 0x3FF;
                     soundType = 0x51;
                     spawnRaceUiTrickScorePopup((void *)score, 1);
                 } else {
@@ -5885,7 +5885,7 @@ void updateRacePlayerPostUpdateMode22(RacePlayer *player) {
         if (stateFlags & 8) {
             player->stateFlags = stateFlags & ~8;
         } else if (stateFlags & 0x800) {
-            player->unk2C3 = 0;
+            player->trickAttackMakeCount = 0;
             player->mode = 0xE;
             player->updateState = 0;
             player->updateTimer = 0;
@@ -5925,7 +5925,7 @@ void updateRacePlayerPostUpdateAirborneTrick(RacePlayer *player) {
         if (stateFlags & 8) {
             player->stateFlags = stateFlags & ~8;
         } else if (stateFlags & 0x800) {
-            player->unk2C3 = 0;
+            player->trickAttackMakeCount = 0;
             player->mode = 0xE;
             player->updateState = 0;
             player->updateTimer = 0;
