@@ -280,31 +280,31 @@ void initRacePlayers(void) {
 
 void applyRacePlayerTuning(RacePlayer *arg0) {
     RacePlayer *player;
-    PlayerTuningRow *var_v0;
-    PlayerTuningRow *var_v1;
-    PlayerTuningRow *temp_a1;
-    PlayerTuningRow *temp_a2;
+    RacePlayerTuning *var_v0;
+    RacePlayerTuning *var_v1;
+    RacePlayerTuning *temp_a1;
+    RacePlayerTuning *temp_a2;
 
     player = arg0;
-    var_v0 = gRacePlayerCharacterTuningRows;
+    var_v0 = gRacePlayerCharacterTuning;
     if ((gRaceDemoPlaybackEnabled != 0) || (var_v1 = var_v0, gMainMenuModeSelection != 0)) {
-        var_v0 = gRacePlayerDemoBoardTuningRows;
-        var_v1 = gRacePlayerDemoCharacterTuningRows;
+        var_v0 = gRacePlayerDemoBoardTuning;
+        var_v1 = gRacePlayerDemoCharacterTuning;
     } else {
-        var_v0 = gRacePlayerBoardTuningRows;
+        var_v0 = gRacePlayerBoardTuning;
     }
-    temp_a1 = (PlayerTuningRow *)((u8 *)var_v1 + (player->characterId * sizeof(PlayerTuningRow)));
-    temp_a2 = (PlayerTuningRow *)((u8 *)var_v0 + (player->characterVariant * sizeof(PlayerTuningRow)));
-    player->unk25C = (temp_a1->unk0 + temp_a2->unk0) << 8;
+    temp_a1 = (RacePlayerTuning *)((u8 *)var_v1 + (player->characterId * sizeof(RacePlayerTuning)));
+    temp_a2 = (RacePlayerTuning *)((u8 *)var_v0 + (player->characterVariant * sizeof(RacePlayerTuning)));
+    player->unk25C = (temp_a1->maxSpeed + temp_a2->maxSpeed) << 8;
     player->unk314 = player->unk25C;
-    player->unk260 = (temp_a1->unk2 + temp_a2->unk2) << 4;
-    player->unk264 = (temp_a1->unk4 + temp_a2->unk4) << 4;
-    player->unk268 = (temp_a1->unk6 + temp_a2->unk6);
-    player->unk274 = (temp_a1->unk8 + temp_a2->unk8) << 4;
-    player->unk26C = (temp_a1->unkA + temp_a2->unkA) << 4;
-    player->unk270 = (temp_a1->unkC + temp_a2->unkC) << 4;
-    player->unk278 = (temp_a1->unkE + temp_a2->unkE) << 4;
-    player->unk27C = (temp_a1->unk10 + temp_a2->unk10) << 4;
+    player->unk260 = (temp_a1->gravity + temp_a2->gravity) << 4;
+    player->unk264 = (temp_a1->aerialGravity + temp_a2->aerialGravity) << 4;
+    player->unk268 = temp_a1->turnStrength + temp_a2->turnStrength;
+    player->unk274 = (temp_a1->lateralDeceleration + temp_a2->lateralDeceleration) << 4;
+    player->unk26C = (temp_a1->turnRadiusAtFullLean + temp_a2->turnRadiusAtFullLean) << 4;
+    player->unk270 = (temp_a1->turnRadiusAtHalfLean + temp_a2->turnRadiusAtHalfLean) << 4;
+    player->unk278 = (temp_a1->forwardDeceleration + temp_a2->forwardDeceleration) << 4;
+    player->unk27C = (temp_a1->reverseDeceleration + temp_a2->reverseDeceleration) << 4;
 }
 
 void initRacePlayer(RacePlayer *player) {
