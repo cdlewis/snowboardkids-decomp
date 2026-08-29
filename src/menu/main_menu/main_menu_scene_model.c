@@ -893,21 +893,22 @@ void addMainMenuSceneModelDrawCallbackForViewport(s32 modelIndex, s32 viewportIn
 void initMainMenuSceneModelParts(MainMenuSceneModel *model) {
     s16 *cursor;
     s32 i;
+    s8 rootParentIndex = -1;
 
-    model->parts[0].partId = -1;
-    model->parts[1].partId = -1;
-    model->parts[2].partId = 1;
-    model->parts[3].partId = 2;
-    model->parts[4].partId = 1;
-    model->parts[5].partId = 4;
-    model->parts[6].partId = 1;
-    model->parts[7].partId = 6;
-    model->parts[8].partId = 6;
-    model->parts[9].partId = 8;
-    model->parts[10].partId = 6;
-    model->parts[11].partId = 10;
-    model->parts[12].partId = 3;
-    model->parts[13].partId = 5;
+    model->parts[0].parentPartIndex = rootParentIndex;
+    model->parts[1].parentPartIndex = rootParentIndex;
+    model->parts[2].parentPartIndex = 1;
+    model->parts[3].parentPartIndex = 2;
+    model->parts[4].parentPartIndex = 1;
+    model->parts[5].parentPartIndex = 4;
+    model->parts[6].parentPartIndex = 1;
+    model->parts[7].parentPartIndex = 6;
+    model->parts[8].parentPartIndex = 6;
+    model->parts[9].parentPartIndex = 8;
+    model->parts[10].parentPartIndex = 6;
+    model->parts[11].parentPartIndex = 10;
+    model->parts[12].parentPartIndex = 3;
+    model->parts[13].parentPartIndex = 5;
 
     cursor = gMainMenuSceneModelPartInitDataByModel[(u16)model->characterIndex];
     for (i = 0; i < MAIN_MENU_SCENE_MODEL_PART_COUNT; i++) {

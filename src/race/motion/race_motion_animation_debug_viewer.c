@@ -85,7 +85,7 @@ void initRaceMotionAnimationDebugViewer(void) {
     state->playerIndex = 0;
     state->facingAngle = temp_v0;
     state->pitchAngle = temp_v0;
-    initRaceMotionModelParts((RaceMotionInitState *)state);
+    initRaceMotionModelParts(state);
 }
 
 void drawRaceMotionAnimationDebugViewerMotionNumber(void *unused) {
