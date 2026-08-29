@@ -94,9 +94,9 @@ typedef struct RacePlayer {
     /* 0x2A8 */ s16 surfaceCueState[6];
     /* 0x2B4 */ s16 surfaceCueStep[6];
     /* 0x2C0 */ s16 trickAttackPointTotal;
-    /* 0x2C2 */ s8 unk2C2;
-    /* 0x2C3 */ s8 unk2C3;
-    /* 0x2C4 */ u16 unk2C4;
+    /* 0x2C2 */ s8 trickAttackBestMakeCount;
+    /* 0x2C3 */ s8 trickAttackMakeCount;
+    /* 0x2C4 */ u16 trickAttackCompletedTrickMask;
     /* 0x2C6 */ u16 pendingItemHitFlags;
     /* 0x2C8 */ s32 collisionVelocityX;
     /* 0x2CC */ s32 collisionVelocityZ;
@@ -104,7 +104,7 @@ typedef struct RacePlayer {
     /* 0x2D2 */ s16 hitSourcePlayerIndex;
     /* 0x2D4 */ s16 unk2D4;
     /* 0x2D6 */ s16 unk2D6;
-    /* 0x2D8 */ s16 unk2D8;
+    /* 0x2D8 */ s16 activeSparkleEffectCount;
     /* 0x2DA */ s16 trailEffectTimer;
     /* 0x2DC */ u8 unk2DC;
     /* 0x2DD */ char pad2DD[1];
@@ -194,8 +194,8 @@ typedef struct RacePlayer {
     /* 0x530 */ Mtx *modelPartMatrices[RACE_PLAYER_MODEL_PART_CAPACITY];
     /* 0x568 */ s32 score;
     /* 0x56C */ s32 cumulativeRaceScore;
-    /* 0x570 */ s16 unk570;
-    /* 0x572 */ s16 courseCoinMarkerCount;
+    /* 0x570 */ s16 collectedCourseCoinMarkerCount;
+    /* 0x572 */ s16 totalCourseCoinMarkerCount;
     /* 0x574 */ s16 scoreAttackPointTotal;
     /* 0x576 */ s16 scoreAttackPointTarget;
     /* 0x578 */ s16 unk578;

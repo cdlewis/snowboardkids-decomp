@@ -25,11 +25,9 @@ extern u8 gTrainingCourseLesson;
 extern u8 gMainMenuModeSelection;
 extern u8 gCurrentViewportIndex;
 extern s16 gUiBlinkTimer;
-extern RaceTimer gRaceChallengeTimeLimit;
 extern u8 gRaceTimeTrialFinishRecorded;
 extern u8 gRaceChallengeFailed;
 extern s32 gMenuFlowState;
-extern s32 gRaceTimeTrialFinishTime;
 
 u8 gRaceTimerTensDigitTileOffsets[8] = { 5, 5, 8, 11, 14, 17, 0, 0 };
 u8 gRaceTimerOnesDigitTileIds[8] = { 4, 20, 21, 22, 23, 24, 25, 0 };
@@ -321,15 +319,15 @@ void drawTrickAttackChallengeHud(void *arg0) {
     drawAssetTableSpriteWithExplicitPalette(0x50, 0x50, getRelocatableHeapBlockBase(RACE_HUD_POPUP_FONT_HANDLE), 0x36, finalPalette);
     drawAssetTableSpriteWithExplicitPalette(0x68, 0x50, getRelocatableHeapBlockBase(RACE_HUD_POPUP_FONT_HANDLE), 0x35, finalPalette);
 
-    if (gRacePlayers[0].unk2C3 < 10) {
+    if (gRacePlayers[0].trickAttackMakeCount < 10) {
         x = -0x90;
         temp.i = 0;
-        if (gRacePlayers[0].unk2C3 > 0) {
+        if (gRacePlayers[0].trickAttackMakeCount > 0) {
             do {
                 drawScaledAssetTableSprite((s16)x, -0x68, getRelocatableHeapBlockBase(RACE_HUD_POPUP_FONT_HANDLE), 0x26, 1);
                 temp.i++;
                 x += 8;
-            } while (temp.i < gRacePlayers[0].unk2C3);
+            } while (temp.i < gRacePlayers[0].trickAttackMakeCount);
         }
     } else {
         drawAssetTableSprite(-0x84, -0x60, getRelocatableHeapBlockBase(RACE_HUD_POPUP_FONT_HANDLE), 0x26);
@@ -358,8 +356,8 @@ void drawTrickAttackChallengeHud(void *arg0) {
         drawAssetTableSprite(0x40, 0x54, getRelocatableHeapBlockBase(RACE_HUD_POPUP_FONT_HANDLE), 0x4F);
     }
 
-    if (gRacePlayers[0].unk2C3 >= 10) {
-        sprintf(buffer, gRaceHudTrickAttackSecondaryCounterFormat, gRacePlayers[0].unk2C3);
+    if (gRacePlayers[0].trickAttackMakeCount >= 10) {
+        sprintf(buffer, gRaceHudTrickAttackSecondaryCounterFormat, gRacePlayers[0].trickAttackMakeCount);
         drawAssetTableSprite(-0x64, -0x59, getRelocatableHeapBlockBase(RACE_HUD_POPUP_FONT_HANDLE), (u8)buffer[0] - 5);
         drawAssetTableSprite(-0x5C, -0x59, getRelocatableHeapBlockBase(RACE_HUD_POPUP_FONT_HANDLE), (u8)buffer[1] - 5);
     }
@@ -528,7 +526,7 @@ void drawTargetTimeChallengeHud(void *arg0) {
     drawAssetTableSprite(-0x88, 0x40, getRelocatableHeapBlockBase(RACE_HUD_POPUP_FONT_HANDLE), 0x24);
     drawAssetTableSprite(-0x88, 0x40, getRelocatableHeapBlockBase(RACE_HUD_POPUP_FONT_HANDLE), 0x25);
 
-    sprintf(buffer, gRaceHudTargetTimeChallengeSecondaryCounterFormat, gRacePlayers[0].unk570);
+    sprintf(buffer, gRaceHudTargetTimeChallengeSecondaryCounterFormat, gRacePlayers[0].collectedCourseCoinMarkerCount);
     drawAssetTableSprite(-0x60, -0x50, getRelocatableHeapBlockBase(RACE_HUD_POPUP_FONT_HANDLE), (u8)buffer[0] - 5);
     if (buffer[1] != 0) {
         drawAssetTableSprite(-0x58, -0x50, getRelocatableHeapBlockBase(RACE_HUD_POPUP_FONT_HANDLE), (u8)buffer[1] - 5);
@@ -558,8 +556,8 @@ void drawTargetTimeChallengeLabels(void *arg0) {
     sprintf(
         sp28,
         gRaceHudTargetTimeChallengeLapProgressFormat,
-        gRacePlayers[0].unk570,
-        gRacePlayers[0].courseCoinMarkerCount
+        gRacePlayers[0].collectedCourseCoinMarkerCount,
+        gRacePlayers[0].totalCourseCoinMarkerCount
     );
     sp28[1] = ' ';
     if (sp28[2] != '/') {
@@ -1045,7 +1043,7 @@ void drawRaceCourseProgressMeter(void *arg0) {
     s32 i;
     s32 j;
     union {
-        s32 rankIndex;
+        s32 playerId;
         AssetTable *assetTable;
     } temp;
     s32 order[4];
@@ -1060,9 +1058,9 @@ void drawRaceCourseProgressMeter(void *arg0) {
     for (i = 0; i < 3; i++) {
         for (j = i + 1; j < 4; j++) {
             if (gRacePlayers[order[j]].rankIndex < gRacePlayers[order[i]].rankIndex) {
-                temp.rankIndex = order[i];
+                temp.playerId = order[i];
                 order[i] = order[j];
-                order[j] = temp.rankIndex;
+                order[j] = temp.playerId;
             }
         }
     }
@@ -1100,7 +1098,7 @@ void drawRaceCourseProgressMeter(void *arg0) {
         }
 
         if (gRacePlayers[order[i]].progressMeterSquashFrame != 0) {
-            if (gRacePlayers[order[i]].unk2D8 != 0) {
+            if (gRacePlayers[order[i]].activeSparkleEffectCount != 0) {
                 temp.assetTable = getRelocatableHeapBlockBase(RACE_HUD_POPUP_FONT_HANDLE);
                 drawAssetTableSpriteWithExplicitPalette(
                     (s16)(xBase - 8),
@@ -1122,7 +1120,7 @@ void drawRaceCourseProgressMeter(void *arg0) {
                     )[gRacePlayers[order[i]].characterId * 6]
                 );
             }
-        } else if (gRacePlayers[order[i]].unk2D8 != 0) {
+        } else if (gRacePlayers[order[i]].activeSparkleEffectCount != 0) {
             temp.assetTable = getRelocatableHeapBlockBase(RACE_HUD_POPUP_FONT_HANDLE);
             drawAssetTableSpriteWithExplicitPalette(
                 xBase,
@@ -1257,7 +1255,7 @@ void updateRaceHud(void) {
                 if (gRaceTimeTrialFinishRecorded == 0) {
                     getRacePlayerRankingProgress(0, &sp40, &sp3C);
                     if ((gRaceCourseStartEntries[gRaceCourseIndex.signedValue].finishLinePathIndex * 8) < sp40) {
-                        gRaceTimeTrialFinishTime = *(s32 *)&gRaceElapsedTimer;
+                        gRaceTimeTrialFinishTime = gRaceElapsedTimer;
                         gRaceTimeTrialFinishRecorded = 1;
                         createCallbackTask((CallbackTaskCallback)initTimeTrialRecordDeltaPopup, 0, 0);
                     }

@@ -20,6 +20,8 @@ typedef enum RaceHudMode {
 } RaceHudMode;
 
 extern RaceTimer gRaceElapsedTimer;
+extern RaceTimer gRaceChallengeTimeLimit;
+extern RaceTimer gRaceTimeTrialFinishTime;
 extern RaceTimer gRaceCourseTargetTimes[10];
 /* Stored as s16 for the original ABI; values are RaceHudMode. */
 extern s16 gRaceHudMode;
