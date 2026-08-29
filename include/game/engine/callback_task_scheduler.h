@@ -13,7 +13,7 @@ typedef struct CallbackTaskHeader {
     /* 0x08 */ CallbackTaskCallback callback;
     /* 0x0C */ u16 type;
     /* 0x0E */ u16 priority;
-    /* 0x10 */ s16 userId;
+    /* 0x10 */ u16 userId;
     /* 0x12 */ s16 unk12;
     /* 0x14 */ s16 callbackTimer;
     /* 0x16 */ s16 isActive;
