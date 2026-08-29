@@ -4,6 +4,7 @@
 #include "game/engine/relocatable_heap.h"
 #include "game/math/fixed_point_math.h"
 #include "game/race/motion/race_motion.h"
+#include "game/race/player/character_model.h"
 #include "game/race/player/race_player_progress.h"
 
 typedef struct RaceCourseSurfaceFace {
@@ -98,17 +99,6 @@ typedef struct RaceMotionBlendAnimationState {
     RaceMotionPartialJointCursor jointCursor;
 } RaceMotionBlendAnimationState;
 
-typedef struct RaceMotionModelPart {
-    u8 partId;
-    u8 parentPartId;
-    s16 rotationX;
-    s16 rotationY;
-    s16 rotationZ;
-    s32 x;
-    s32 y;
-    s32 z;
-} RaceMotionModelPart;
-
 typedef struct RaceMotionStateJoint {
     s32 unk0;
     s16 unk4;
@@ -162,7 +152,7 @@ struct RaceMotionInitState {
     u8 pad0[0x10];
     u8 modelId;
     u8 pad11[0x327];
-    RaceMotionModelPart parts[RACE_MOTION_MODEL_PART_CAPACITY];
+    CharacterModelPart parts[RACE_MOTION_MODEL_PART_CAPACITY];
     s16 partCount;
 };
 
@@ -1672,12 +1662,12 @@ void initRaceMotionModelParts(RaceMotionInitState *state) {
     positions = gRaceMotionModelPartPositions[state->modelId];
 
     for (i = 0; i < state->partCount; i++, positions++) {
-        state->parts[i].rotationZ = 0;
-        zero = state->parts[i].rotationZ;
-        state->parts[i].rotationY = zero;
-        state->parts[i].rotationX = zero;
-        state->parts[i].x = positions->x << RACE_MOTION_MODEL_POSITION_FRAC_BITS;
-        state->parts[i].y = positions->y << RACE_MOTION_MODEL_POSITION_FRAC_BITS;
-        state->parts[i].z = positions->z << RACE_MOTION_MODEL_POSITION_FRAC_BITS;
+        state->parts[i].rotation.z = 0;
+        zero = state->parts[i].rotation.z;
+        state->parts[i].rotation.y = zero;
+        state->parts[i].rotation.x = zero;
+        state->parts[i].offset.x = positions->x << RACE_MOTION_MODEL_POSITION_FRAC_BITS;
+        state->parts[i].offset.y = positions->y << RACE_MOTION_MODEL_POSITION_FRAC_BITS;
+        state->parts[i].offset.z = positions->z << RACE_MOTION_MODEL_POSITION_FRAC_BITS;
     }
 }

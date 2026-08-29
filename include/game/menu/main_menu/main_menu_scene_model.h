@@ -2,6 +2,7 @@
 #define MAIN_MENU_SCENE_MODEL_H
 
 #include "common.h"
+#include "game/race/player/character_model.h"
 
 #define MAIN_MENU_SCENE_MODEL_HANDLE_BASE 0x2D
 #define MAIN_MENU_SCENE_MODEL_GEOMETRY_HANDLE_BASE 0x33
@@ -9,35 +10,27 @@
 #define MAIN_MENU_SCENE_MODEL_ANIMATION_BANK_HANDLE 0x3F
 #define MAIN_MENU_SCENE_MODEL_PART_COUNT 14
 
-typedef union MainMenuModelAnimationBank {
+typedef struct MainMenuAnimationBank {
     s32 frameOffsets[1];
-    s16 frameData[1];
-} MainMenuModelAnimationBank;
-
-typedef struct MainMenuModelPart {
-    /* 0x00 */ s8 displayObjectIndex;
-    /* 0x01 */ char pad1;
-    /* 0x02 */ Vec3s rot;
-    /* 0x08 */ Vec3i offset;
-} MainMenuModelPart;
+} MainMenuAnimationBank;
 
 typedef struct MainMenuSceneModel {
-    s16 sceneModelIndex;
-    s16 characterIndex;
-    s16 textureId;
-    s16 paletteId;
-    s16 viewportIndex;
-    char padA[0x2];
-    s16 *animationStart;
-    s16 *animationCursor;
-    s16 framesRemaining;
-    s16 frameDuration;
-    s32 unk18;
-    MainMenuModelPart parts[MAIN_MENU_SCENE_MODEL_PART_COUNT];
-    Vec3i pos;
-    Vec3s rot;
-    s16 unk146;
-    Transform3D partTransforms[MAIN_MENU_SCENE_MODEL_PART_COUNT];
+    /* 0x000 */ s16 sceneModelIndex;
+    /* 0x002 */ s16 characterIndex;
+    /* 0x004 */ s16 snowboardDisplayListIndex;
+    /* 0x006 */ s16 snowboardTextureIndex;
+    /* 0x008 */ s16 viewportIndex;
+    /* 0x00A */ char padA[2];
+    /* 0x00C */ s16 *animationStart;
+    /* 0x010 */ s16 *animationCursor;
+    /* 0x014 */ s16 framesRemaining;
+    /* 0x016 */ s16 frameCount;
+    /* 0x018 */ s32 unk18;
+    /* 0x01C */ CharacterModelPart parts[MAIN_MENU_SCENE_MODEL_PART_COUNT];
+    /* 0x134 */ Vec3i position;
+    /* 0x140 */ Vec3s rotation;
+    /* 0x146 */ s16 pad146;
+    /* 0x148 */ Transform3D partTransforms[MAIN_MENU_SCENE_MODEL_PART_COUNT];
 } MainMenuSceneModel;
 
 void loadMainMenuSceneModelAssets(void);

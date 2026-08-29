@@ -29,14 +29,13 @@ typedef struct MainMenuAnimationWritePart {
     s32 word10;
 } MainMenuAnimationWritePart;
 
-typedef union MainMenuAssetRangeTableView {
-    RomAssetRange ranges[MAIN_MENU_CHARACTER_COUNT];
-    void *addresses[MAIN_MENU_CHARACTER_COUNT * 2];
+typedef struct MainMenuAssetRangeTableView {
+    u8 *addresses[MAIN_MENU_CHARACTER_COUNT * 2];
 } MainMenuAssetRangeTableView;
 
 #define ASSET_HANDLE(index) (gAssetHandles[(index)])
 
-Gfx *gMainMenuSceneModelPartDisplayLists[] = {
+Gfx *gMainMenuSceneModelPartDisplayLists[MAIN_MENU_CHARACTER_COUNT * (MAIN_MENU_SCENE_MODEL_PART_COUNT - 1)] = {
     (Gfx *)0x02000000, (Gfx *)0x02000068, (Gfx *)0x020000D8, (Gfx *)0x02000168, (Gfx *)0x020001D8, (Gfx *)0x02000268,
     (Gfx *)0x02000540, (Gfx *)0x02000A28, (Gfx *)0x02000AA0, (Gfx *)0x02000C48, (Gfx *)0x02000CC0, (Gfx *)0x02000E68,
     (Gfx *)0x020010C0, (Gfx *)0x02000000, (Gfx *)0x02000128, (Gfx *)0x02000218, (Gfx *)0x02000308, (Gfx *)0x020003F8,
@@ -52,22 +51,22 @@ Gfx *gMainMenuSceneModelPartDisplayLists[] = {
     (Gfx *)0x020010E8, (Gfx *)0x02001170, (Gfx *)0x02001410, (Gfx *)0x02001498, (Gfx *)0x02001738, (Gfx *)0x020017C8,
 };
 
-s16 gMainMenuSceneModelPartInitDataA[] = {
+s16 gMainMenuSceneModelPartInitDataA[MAIN_MENU_SCENE_MODEL_PART_COUNT * 3] = {
     0, 0,    0, 0,   0x25, 0, -6, -2,  0, 0,   -12, 0, 6, -2,  0, 0, -12, 0,  0, 0,   0,
     0, 0x10, 0, -10, 0xE,  0, -8, -15, 0, 0xA, 0xE, 0, 8, -15, 0, 0, -12, -5, 0, -12, -5,
 };
 
-s16 gMainMenuSceneModelPartInitDataB[] = {
+s16 gMainMenuSceneModelPartInitDataB[MAIN_MENU_SCENE_MODEL_PART_COUNT * 3] = {
     0, 0, 0, 0,   0x2B, 0, -6,  -5,  0, 0,   -16, 0, 6,   -5,  0, 0, -16, 0,  0, 0,   0,
     0, 9, 0, -10, 8,    0, -10, -16, 0, 0xA, 8,   0, 0xA, -16, 0, 0, -10, -3, 0, -10, -3,
 };
 
-s16 gMainMenuSceneModelPartInitDataC[] = {
+s16 gMainMenuSceneModelPartInitDataC[MAIN_MENU_SCENE_MODEL_PART_COUNT * 3] = {
     0, 0,    0, 0,   0x33, 0, -8,  -3,  0, 0,    -18,  -1, 8,   -3,  0, 1,  -18, -1, 0, 5,   -5,
     0, 0x20, 2, -23, 0x17, 5, -11, -21, 0, 0x17, 0x17, 5,  0xB, -21, 0, -1, -19, -7, 2, -19, -7,
 };
 
-s16 *gMainMenuSceneModelPartInitDataByModel[] = {
+s16 *gMainMenuSceneModelPartInitDataByModel[MAIN_MENU_CHARACTER_COUNT + 1] = {
     gMainMenuSceneModelPartInitDataA,
     gMainMenuSceneModelPartInitDataB,
     gMainMenuSceneModelPartInitDataA,
@@ -541,12 +540,12 @@ void initMainMenuSceneModel(s32 sceneModelIndex, s32 characterIndex) {
 }
 
 void setMainMenuSceneModelAnimation(s32 modelIndex, s32 animationIndex) {
-    MainMenuModelAnimationBank *animationBank;
+    MainMenuAnimationBank *animationBank;
     s16 *frameData;
     MainMenuSceneModel *model;
     s16 frameDuration;
 
-    animationBank = (MainMenuModelAnimationBank *)getRelocatableHeapBlockBase(
+    animationBank = (MainMenuAnimationBank *)getRelocatableHeapBlockBase(
         ASSET_HANDLE(MAIN_MENU_SCENE_MODEL_ANIMATION_BANK_HANDLE)
     );
     frameData = MAIN_MENU_ANIMATION_FRAME_DATA(animationBank, animationIndex);
@@ -557,7 +556,7 @@ void setMainMenuSceneModelAnimation(s32 modelIndex, s32 animationIndex) {
     model->animationStart = frameData;
     model->framesRemaining++;
     model->animationCursor = frameData;
-    model->frameDuration = frameDuration;
+    model->frameCount = frameDuration;
 }
 
 MainMenuSceneModel *getMainMenuSceneModel(s32 modelIndex) {
@@ -570,7 +569,7 @@ void applyMainMenuSceneModelAnimationFrame(MainMenuSceneModel *model) {
     s16 *cursor;
     s32 i;
     MainMenuAnimationWritePart *writePart;
-    MainMenuModelPart *part;
+    CharacterModelPart *part;
 
     cursor = model->animationCursor;
     i = 0;
@@ -586,9 +585,9 @@ void applyMainMenuSceneModelAnimationFrame(MainMenuSceneModel *model) {
 
     for (i = 0; i < MAIN_MENU_SCENE_MODEL_PART_COUNT; i++) {
         part = &model->parts[i];
-        part->rot.x = *cursor++;
-        part->rot.y = *cursor++;
-        part->rot.z = *cursor++;
+        part->rotation.x = *cursor++;
+        part->rotation.y = *cursor++;
+        part->rotation.z = *cursor++;
     }
 
     model->animationCursor = cursor;
@@ -630,7 +629,7 @@ void loopMainMenuSceneModelAnimation(s32 modelIndex) {
         (MainMenuSceneModel *)getRelocatableHeapBlockBase(ASSET_HANDLE(MAIN_MENU_SCENE_MODEL_HANDLE_BASE + modelIndex));
     model->framesRemaining--;
     if (model->framesRemaining <= 0) {
-        model->framesRemaining = model->frameDuration;
+        model->framesRemaining = model->frameCount;
         model->animationCursor = model->animationStart;
     }
     applyMainMenuSceneModelAnimationFrame(model);
@@ -641,9 +640,9 @@ void setMainMenuSceneModelPosition(s32 modelIndex, s32 x, s32 y, s32 z) {
 
     model =
         (MainMenuSceneModel *)getRelocatableHeapBlockBase(ASSET_HANDLE(MAIN_MENU_SCENE_MODEL_HANDLE_BASE + modelIndex));
-    model->pos.x = x;
-    model->pos.y = y;
-    model->pos.z = z;
+    model->position.x = x;
+    model->position.y = y;
+    model->position.z = z;
 }
 
 void setMainMenuSceneModelRotation(s32 modelIndex, s16 x, s16 y, s16 z) {
@@ -651,9 +650,9 @@ void setMainMenuSceneModelRotation(s32 modelIndex, s16 x, s16 y, s16 z) {
 
     model =
         (MainMenuSceneModel *)getRelocatableHeapBlockBase(ASSET_HANDLE(MAIN_MENU_SCENE_MODEL_HANDLE_BASE + modelIndex));
-    model->rot.x = x;
-    model->rot.y = y;
-    model->rot.z = z;
+    model->rotation.x = x;
+    model->rotation.y = y;
+    model->rotation.z = z;
 }
 
 void updateMainMenuSceneModelTransforms(MainMenuSceneModel *model) {
@@ -670,12 +669,12 @@ void updateMainMenuSceneModelTransforms(MainMenuSceneModel *model) {
 
         partIndex = 0;
         do {
-            sineX = fixedSine(model->parts[partIndex].rot.x);
-            cosineX = fixedCosine(model->parts[partIndex].rot.x);
-            sineY = fixedSine(model->parts[partIndex].rot.y);
-            cosineY = fixedCosine(model->parts[partIndex].rot.y);
-            sineZ = fixedSine(model->parts[partIndex].rot.z);
-            cosineZ = fixedCosine(model->parts[partIndex].rot.z);
+            sineX = fixedSine(model->parts[partIndex].rotation.x);
+            cosineX = fixedCosine(model->parts[partIndex].rotation.x);
+            sineY = fixedSine(model->parts[partIndex].rotation.y);
+            cosineY = fixedCosine(model->parts[partIndex].rotation.y);
+            sineZ = fixedSine(model->parts[partIndex].rotation.z);
+            cosineZ = fixedCosine(model->parts[partIndex].rotation.z);
 
             localPartTransforms[partIndex].rotation[MTX_XX] = (cosineY * cosineZ) / FIXED_MATRIX_ONE;
             localPartTransforms[partIndex].rotation[MTX_XY] = (cosineY * sineZ) / FIXED_MATRIX_ONE;
@@ -698,10 +697,10 @@ void updateMainMenuSceneModelTransforms(MainMenuSceneModel *model) {
         } while (partIndex != MAIN_MENU_SCENE_MODEL_PART_COUNT);
     }
 
-    makeFixedRotationZXY(rootTransform.rotation, model->rot.x, model->rot.y, model->rot.z);
-    rootTransform.translation.x = model->pos.x;
-    rootTransform.translation.y = model->pos.y;
-    rootTransform.translation.z = model->pos.z;
+    makeFixedRotationZXY(rootTransform.rotation, model->rotation.x, model->rotation.y, model->rotation.z);
+    rootTransform.translation.x = model->position.x;
+    rootTransform.translation.y = model->position.y;
+    rootTransform.translation.z = model->position.z;
 
     {
         s32 partIndex;
@@ -796,7 +795,7 @@ void drawTexturedMainMenuSceneModel(MainMenuSceneModel *arg0) {
             matrix = allocFixedTransformMatrix(arg0->partTransforms);
             model = arg0;
             if (matrix != NULL) {
-                drawSnowboardModel(matrix, model->textureId, model->paletteId);
+                drawSnowboardModel(matrix, model->snowboardDisplayListIndex, model->snowboardTextureIndex);
             }
 
             gDPPipeSync(gRegionAllocPtr++);
@@ -838,22 +837,26 @@ void addMainMenuSceneModelDrawCallback(s32 modelIndex) {
     addRenderCallback(&gSceneModelRenderCallbackList, (RenderCallback)drawMainMenuSceneModel, model);
 }
 
-void addMainMenuSceneModelTexturedDrawCallback(s32 modelIndex, s32 textureId, s32 paletteId) {
+void addMainMenuSceneModelTexturedDrawCallback(
+    s32 modelIndex,
+    s32 snowboardDisplayListIndex,
+    s32 snowboardTextureIndex
+) {
     MainMenuSceneModel *model;
 
     model =
         (MainMenuSceneModel *)getRelocatableHeapBlockBase(ASSET_HANDLE(MAIN_MENU_SCENE_MODEL_HANDLE_BASE + modelIndex));
     updateMainMenuSceneModelTransforms(model);
     model->viewportIndex = 0;
-    model->textureId = (s16)textureId;
-    model->paletteId = (s16)paletteId;
+    model->snowboardDisplayListIndex = (s16)snowboardDisplayListIndex;
+    model->snowboardTextureIndex = (s16)snowboardTextureIndex;
     addRenderCallback(&gSceneModelRenderCallbackList, (RenderCallback)drawTexturedMainMenuSceneModel, model);
 }
 
 void addMainMenuSceneModelTexturedDrawCallbackWithUnusedArg(
     s32 modelIndex,
-    s32 textureId,
-    s32 paletteId,
+    s32 snowboardDisplayListIndex,
+    s32 snowboardTextureIndex,
     s32 unusedArg
 ) {
     MainMenuSceneModel *model;
@@ -862,8 +865,8 @@ void addMainMenuSceneModelTexturedDrawCallbackWithUnusedArg(
         (MainMenuSceneModel *)getRelocatableHeapBlockBase(ASSET_HANDLE(MAIN_MENU_SCENE_MODEL_HANDLE_BASE + modelIndex));
     updateMainMenuSceneModelTransforms(model);
     model->viewportIndex = 0;
-    model->textureId = (s16)textureId;
-    model->paletteId = (s16)paletteId;
+    model->snowboardDisplayListIndex = (s16)snowboardDisplayListIndex;
+    model->snowboardTextureIndex = (s16)snowboardTextureIndex;
     addRenderCallback(&gSceneModelRenderCallbackList, (RenderCallback)drawTexturedMainMenuSceneModel, model);
 }
 
@@ -891,24 +894,24 @@ void initMainMenuSceneModelParts(MainMenuSceneModel *model) {
     s16 *cursor;
     s32 i;
 
-    model->parts[0].displayObjectIndex = -1;
-    model->parts[1].displayObjectIndex = -1;
-    model->parts[2].displayObjectIndex = 1;
-    model->parts[3].displayObjectIndex = 2;
-    model->parts[4].displayObjectIndex = 1;
-    model->parts[5].displayObjectIndex = 4;
-    model->parts[6].displayObjectIndex = 1;
-    model->parts[7].displayObjectIndex = 6;
-    model->parts[8].displayObjectIndex = 6;
-    model->parts[9].displayObjectIndex = 8;
-    model->parts[10].displayObjectIndex = 6;
-    model->parts[11].displayObjectIndex = 10;
-    model->parts[12].displayObjectIndex = 3;
-    model->parts[13].displayObjectIndex = 5;
+    model->parts[0].partId = -1;
+    model->parts[1].partId = -1;
+    model->parts[2].partId = 1;
+    model->parts[3].partId = 2;
+    model->parts[4].partId = 1;
+    model->parts[5].partId = 4;
+    model->parts[6].partId = 1;
+    model->parts[7].partId = 6;
+    model->parts[8].partId = 6;
+    model->parts[9].partId = 8;
+    model->parts[10].partId = 6;
+    model->parts[11].partId = 10;
+    model->parts[12].partId = 3;
+    model->parts[13].partId = 5;
 
     cursor = gMainMenuSceneModelPartInitDataByModel[(u16)model->characterIndex];
     for (i = 0; i < MAIN_MENU_SCENE_MODEL_PART_COUNT; i++) {
-        model->parts[i].rot.x = model->parts[i].rot.y = model->parts[i].rot.z = 0;
+        model->parts[i].rotation.x = model->parts[i].rotation.y = model->parts[i].rotation.z = 0;
         model->parts[i].offset.x = cursor[0] << 16;
         model->parts[i].offset.y = cursor[1] << 16;
         model->parts[i].offset.z = cursor[2] << 16;
