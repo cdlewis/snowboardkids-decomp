@@ -564,7 +564,7 @@ void updateRaceCameraCourseStart(void) {
         }
         D_801124A0->unk28 += diff;
 
-        diff = gRaceCourseStartEntries[gRaceCourseIndex.signedValue].cameraPos.x - D_801124A0->pos.x;
+        diff = gRaceCourseStartEntries[gRaceCourseIndex.signedValue].courseStartCameraPosition.x - D_801124A0->pos.x;
         if (diff >= 0xC001) {
             diff = 0xC000;
         }
@@ -573,7 +573,7 @@ void updateRaceCameraCourseStart(void) {
         }
         D_801124A0->pos.x += diff;
 
-        diff = gRaceCourseStartEntries[gRaceCourseIndex.signedValue].cameraPos.y - D_801124A0->pos.y;
+        diff = gRaceCourseStartEntries[gRaceCourseIndex.signedValue].courseStartCameraPosition.y - D_801124A0->pos.y;
         if (diff >= 0xC001) {
             diff = 0xC000;
         }
@@ -582,7 +582,7 @@ void updateRaceCameraCourseStart(void) {
         }
         D_801124A0->pos.y += diff;
 
-        diff = gRaceCourseStartEntries[gRaceCourseIndex.signedValue].cameraPos.z - D_801124A0->pos.z;
+        diff = gRaceCourseStartEntries[gRaceCourseIndex.signedValue].courseStartCameraPosition.z - D_801124A0->pos.z;
         if (diff >= 0xC001) {
             diff = 0xC000;
         }
