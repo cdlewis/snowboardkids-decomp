@@ -14,13 +14,13 @@
 #include "game/race/effects/race_start_transition.h"
 #include "game/engine/viewport_manager.h"
 
-typedef struct {
-    Transform3D transform;
-    Vec3i worldPos;
-    Vec3i localPos;
-} TransformScratch;
+typedef struct RaceStartCameraTransformScratch {
+    /* 0x00 */ Transform3D rotationTransform;
+    /* 0x20 */ Vec3i rotatedOffset;
+    /* 0x2C */ Vec3i targetOffset;
+} RaceStartCameraTransformScratch;
 
-RaceCourseStartEntry gRaceCourseStartEntries[10] = {
+RaceCourseStartEntry gRaceCourseStartEntries[RACE_COURSE_COUNT] = {
     { 175,
      2, 181,
      { 0, 0 },
@@ -154,29 +154,27 @@ u8 gRaceSetupOpponentFocusCharacterIds[5][4] = {
 u32 D_800BB824[3] = { 0, 0, 0 };
 
 extern void releaseMenuAssetHandles(void);
-extern u8 gPendingFramebufferSwapCount;
-extern u8 gFramebufferSwapHold;
 extern u8 gPendingEndingCreditsFlow;
 extern s16 gMenuFadeAlpha;
 
 void updateMenuCameraObjectLookAtOrigin(void) {
-    TransformScratch scratch;
+    RaceStartCameraTransformScratch scratch;
     RaceCamera *obj;
 
     obj = gCurrentMenuCameraObject;
     makeFixedRotationYX(obj->cameraTransform.rotation, -obj->pitch, -obj->yaw);
     obj = gCurrentMenuCameraObject;
-    scratch.localPos.x = 0;
-    scratch.localPos.y = 0;
-    scratch.localPos.z = -obj->distance;
-    makeFixedRotationXY(scratch.transform.rotation, obj->pitch, obj->yaw);
-    transformVec3iByFixedMatrix(scratch.transform.rotation, &scratch.localPos, &scratch.worldPos);
+    scratch.targetOffset.x = 0;
+    scratch.targetOffset.y = 0;
+    scratch.targetOffset.z = -obj->distance;
+    makeFixedRotationXY(scratch.rotationTransform.rotation, obj->pitch, obj->yaw);
+    transformVec3iByFixedMatrix(scratch.rotationTransform.rotation, &scratch.targetOffset, &scratch.rotatedOffset);
     obj = gCurrentMenuCameraObject;
-    obj->cameraTransform.translation.x = scratch.worldPos.x - obj->pos.x;
+    obj->cameraTransform.translation.x = scratch.rotatedOffset.x - obj->pos.x;
     obj = gCurrentMenuCameraObject;
-    obj->cameraTransform.translation.y = scratch.worldPos.y - obj->pos.y;
+    obj->cameraTransform.translation.y = scratch.rotatedOffset.y - obj->pos.y;
     obj = gCurrentMenuCameraObject;
-    obj->cameraTransform.translation.z = scratch.worldPos.z - obj->pos.z;
+    obj->cameraTransform.translation.z = scratch.rotatedOffset.z - obj->pos.z;
 }
 
 void updateMenuCameraObjectLookAtOriginCallback(void) {
@@ -184,23 +182,23 @@ void updateMenuCameraObjectLookAtOriginCallback(void) {
 }
 
 void updateMenuCameraObjectWithTargetOffset(void) {
-    TransformScratch scratch;
+    RaceStartCameraTransformScratch scratch;
     RaceCamera *obj;
 
     obj = gCurrentMenuCameraObject;
     makeFixedRotationYX(obj->cameraTransform.rotation, -obj->pitch, -obj->yaw);
     obj = gCurrentMenuCameraObject;
-    scratch.localPos.x = gMenuCameraTargetOffset.x;
-    scratch.localPos.y = gMenuCameraTargetOffset.y;
-    scratch.localPos.z = -obj->distance;
-    makeFixedRotationXY(scratch.transform.rotation, obj->pitch, obj->yaw);
-    transformVec3iByFixedMatrix(scratch.transform.rotation, &scratch.localPos, &scratch.worldPos);
+    scratch.targetOffset.x = gMenuCameraTargetOffset.x;
+    scratch.targetOffset.y = gMenuCameraTargetOffset.y;
+    scratch.targetOffset.z = -obj->distance;
+    makeFixedRotationXY(scratch.rotationTransform.rotation, obj->pitch, obj->yaw);
+    transformVec3iByFixedMatrix(scratch.rotationTransform.rotation, &scratch.targetOffset, &scratch.rotatedOffset);
     obj = gCurrentMenuCameraObject;
-    obj->cameraTransform.translation.x = scratch.worldPos.x - obj->pos.x;
+    obj->cameraTransform.translation.x = scratch.rotatedOffset.x - obj->pos.x;
     obj = gCurrentMenuCameraObject;
-    obj->cameraTransform.translation.y = scratch.worldPos.y - obj->pos.y;
+    obj->cameraTransform.translation.y = scratch.rotatedOffset.y - obj->pos.y;
     obj = gCurrentMenuCameraObject;
-    obj->cameraTransform.translation.z = scratch.worldPos.z - obj->pos.z;
+    obj->cameraTransform.translation.z = scratch.rotatedOffset.z - obj->pos.z;
 }
 
 void updateMenuCameraObjectWithTargetOffsetCallback(void) {

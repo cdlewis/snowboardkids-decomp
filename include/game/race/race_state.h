@@ -12,18 +12,18 @@ typedef union {
     u16 unsignedValue;
 } RaceCourseIndexValue;
 
-typedef struct {
+typedef struct RaceCourseStartEntry {
     /* 0x00 */ s16 pathIndex;
     /* 0x02 */ s16 lapCount;
     /* 0x04 */ s16 spiralExitSurfaceIndex;
-    /* 0x06 */ u8 pad6[2];
+    /* 0x06 */ u8 padding06[2];
     /* 0x08 */ Vec3i spiralOrigin;
     /* 0x14 */ s16 spiralCourseObjectAngle;
     /* 0x16 */ s16 launchRampCourseObjectAngle;
     /* 0x18 */ s32 launchRampTargetX;
     /* 0x1C */ s32 launchRampTargetZ;
     /* 0x20 */ Vec3i launchRampOrigin;
-    /* 0x2C */ Vec3i cameraPos;
+    /* 0x2C */ Vec3i courseStartCameraPosition;
     /* 0x38 */ s16 positiveLookaheadSurfaceStartIndex;
     /* 0x3A */ s16 positiveLookaheadSurfaceEndIndex;
     /* 0x3C */ s16 finishLinePathIndex;
@@ -41,7 +41,7 @@ typedef char RaceCourseStartEntrySizeCheck[(sizeof(RaceCourseStartEntry) == 0x48
 typedef char RacePlayerHudStatusSizeCheck[(sizeof(RacePlayerHudStatus) == 0xB0) ? 1 : -1];
 
 extern RaceCourseIndexValue gRaceCourseIndex;
-extern RaceCourseStartEntry gRaceCourseStartEntries[10];
+extern RaceCourseStartEntry gRaceCourseStartEntries[RACE_COURSE_COUNT];
 extern RacePlayerHudStatus gRacePlayerHudStatuses[];
 extern u8 gRaceDemoPlaybackEnabled;
 extern u8 gRaceResultState;
