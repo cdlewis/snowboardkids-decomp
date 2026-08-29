@@ -4,22 +4,28 @@
 #include "common.h"
 struct RacePlayer;
 
-typedef struct {
-    s16 unk0;
-    s16 unk2;
-    s16 unk4;
-    s16 unk6;
-    s16 unk8;
-    s16 unkA;
-    s16 unkC;
-    s16 unkE;
-    s16 unk10;
-} PlayerTuningRow;
+#define RACE_PLAYER_BOARD_TUNING_COUNT 15
+#define RACE_PLAYER_CHARACTER_TUNING_COUNT 7
+#define RACE_PLAYER_DEMO_CHARACTER_TUNING_COUNT 6
 
-extern PlayerTuningRow gRacePlayerBoardTuningRows[];
-extern PlayerTuningRow gRacePlayerCharacterTuningRows[];
-extern PlayerTuningRow gRacePlayerDemoBoardTuningRows[];
-extern PlayerTuningRow gRacePlayerDemoCharacterTuningRows[];
+typedef struct RacePlayerTuning {
+    s16 maxSpeed;
+    s16 gravity;
+    s16 aerialGravity;
+    s16 turnStrength;
+    s16 lateralDeceleration;
+    s16 turnRadiusAtFullLean;
+    s16 turnRadiusAtHalfLean;
+    s16 forwardDeceleration;
+    s16 reverseDeceleration;
+} RacePlayerTuning;
+
+typedef char RacePlayerTuningSizeCheck[(sizeof(RacePlayerTuning) == 0x12) ? 1 : -1];
+
+extern RacePlayerTuning gRacePlayerBoardTuning[RACE_PLAYER_BOARD_TUNING_COUNT];
+extern RacePlayerTuning gRacePlayerCharacterTuning[RACE_PLAYER_CHARACTER_TUNING_COUNT];
+extern RacePlayerTuning gRacePlayerDemoBoardTuning[RACE_PLAYER_BOARD_TUNING_COUNT];
+extern RacePlayerTuning gRacePlayerDemoCharacterTuning[RACE_PLAYER_DEMO_CHARACTER_TUNING_COUNT];
 
 void initRacePlayers(void);
 void applyRacePlayerTuning(struct RacePlayer *player);
