@@ -879,7 +879,7 @@ void spawnEndingCreditsTumblingSnowboard(s32 arg0, s32 arg1, s32 arg2, u16 arg3,
 void drawEndingCreditsTumblingSnowboard(EndingCreditsTumblingSnowboard *arg0) {
     Mtx *temp = allocFixedTransformMatrix(&arg0->transform);
     if (temp != 0) {
-        drawSnowboardModel((void *)temp, arg0->textureId, arg0->paletteId);
+        drawSnowboardModel(temp, arg0->textureId, arg0->paletteId);
     }
 }
 

@@ -4677,7 +4677,7 @@ void func_800615BC(RaceUiRankTrailActor *arg0) {
     RacePlayer *player;
     s32 i;
 
-    arg0->copyBlock = (&gRacePlayers[arg0->playerIndex])->copyBlock94;
+    arg0->copyBlock = (&gRacePlayers[arg0->playerIndex])->modelPartTransforms[0];
     arg0->copyBlock.rotation[0] = arg0->copyBlock.rotation[0] / 4;
     arg0->copyBlock.rotation[1] = arg0->copyBlock.rotation[1] / 4;
     arg0->copyBlock.rotation[2] = arg0->copyBlock.rotation[2] / 4;
@@ -4824,7 +4824,7 @@ void renderRaceUiSingleTrailEffect(RaceUiSingleTrailActor *arg0) {
 void updateRaceUiSingleTrailEffect(RaceUiSingleTrailActor *arg0) {
     composeFixedTransforms(
         &arg0->localTransform,
-        &gRacePlayers[arg0->playerIndex].renderTransform,
+        &gRacePlayers[arg0->playerIndex].modelPartTransforms[7],
         &arg0->copyBlock
     );
 
@@ -4986,9 +4986,9 @@ void func_800623E8(RaceUiTransitionActor *arg0) {
         }
         if (arg0->unk6C != 0) {
             player = &gRacePlayers[arg0->index];
-            arg0->transformSource.translation.x = player->posC8.x;
-            arg0->transformSource.translation.y = player->posC8.y;
-            arg0->transformSource.translation.z = player->posC8.z;
+            arg0->transformSource.translation.x = player->modelPartTransforms[1].translation.x;
+            arg0->transformSource.translation.y = player->modelPartTransforms[1].translation.y;
+            arg0->transformSource.translation.z = player->modelPartTransforms[1].translation.z;
         } else {
             if (arg0->unk6E == 0) {
                 removeCallbackTask(arg0);
@@ -5071,11 +5071,11 @@ void func_800628DC(RaceUiOrbitingSpriteActor *arg0) {
         return;
     }
 
-    transformVec3iByFixedMatrix(player->renderTransform.rotation, &D_800D62A0, &arg0->pos);
+    transformVec3iByFixedMatrix(player->modelPartTransforms[7].rotation, &D_800D62A0, &arg0->pos);
     player = &gRacePlayers[arg0->playerIndex];
-    arg0->pos.x += player->renderTransform.translation.x;
-    arg0->pos.y += player->renderTransform.translation.y + 0x80000;
-    arg0->pos.z += player->renderTransform.translation.z;
+    arg0->pos.x += player->modelPartTransforms[7].translation.x;
+    arg0->pos.y += player->modelPartTransforms[7].translation.y + 0x80000;
+    arg0->pos.z += player->modelPartTransforms[7].translation.z;
     arg0->angle += 0xC0;
     arg0->pos.x -= fixedSine(arg0->angle) << 7;
     arg0->pos.z += fixedCosine(arg0->angle) << 7;
