@@ -18,8 +18,6 @@
 #define FIXED_MATRIX_ONE 0x1000
 #define MAIN_MENU_SCENE_MODEL_MATRIX_AXES 3
 #define MAIN_MENU_CHARACTER_COUNT 6
-#define MAIN_MENU_ASSET_RANGE_ADDRESS(table, index) \
-    (((MainMenuAssetRangeTableView *)(table))->addresses[(index)])
 
 typedef struct MainMenuAnimationWritePart {
     s32 word0;
@@ -28,10 +26,6 @@ typedef struct MainMenuAnimationWritePart {
     s32 wordC;
     s32 word10;
 } MainMenuAnimationWritePart;
-
-typedef struct MainMenuAssetRangeTableView {
-    u8 *addresses[MAIN_MENU_CHARACTER_COUNT * 2];
-} MainMenuAssetRangeTableView;
 
 #define ASSET_HANDLE(index) (gAssetHandles[(index)])
 
@@ -522,13 +516,17 @@ void initMainMenuSceneModel(s32 sceneModelIndex, s32 characterIndex) {
     MainMenuSceneModel *model;
 
     loadRawRomAsset(
-        MAIN_MENU_ASSET_RANGE_ADDRESS(gCharacterRawAssetRanges, characterIndex * 2),
-        MAIN_MENU_ASSET_RANGE_ADDRESS(gCharacterRawAssetRanges, (characterIndex * 2) + 1),
+        gCharacterRawAssetRanges
+            .romBoundAddresses[characterIndex * ROM_ASSET_RANGE_BOUND_COUNT + ROM_ASSET_RANGE_START],
+        gCharacterRawAssetRanges
+            .romBoundAddresses[characterIndex * ROM_ASSET_RANGE_BOUND_COUNT + ROM_ASSET_RANGE_END],
         MAIN_MENU_SCENE_MODEL_GEOMETRY_HANDLE_BASE + sceneModelIndex
     );
     loadCompressedRomAsset(
-        MAIN_MENU_ASSET_RANGE_ADDRESS(gCharacterTextureAssetRanges, characterIndex * 2),
-        MAIN_MENU_ASSET_RANGE_ADDRESS(gCharacterTextureAssetRanges, (characterIndex * 2) + 1),
+        gCharacterTextureAssetRanges
+            .romBoundAddresses[characterIndex * ROM_ASSET_RANGE_BOUND_COUNT + ROM_ASSET_RANGE_START],
+        gCharacterTextureAssetRanges
+            .romBoundAddresses[characterIndex * ROM_ASSET_RANGE_BOUND_COUNT + ROM_ASSET_RANGE_END],
         MAIN_MENU_SCENE_MODEL_TEXTURE_HANDLE_BASE + sceneModelIndex
     );
     ASSET_HANDLE(MAIN_MENU_SCENE_MODEL_HANDLE_BASE + sceneModelIndex) =

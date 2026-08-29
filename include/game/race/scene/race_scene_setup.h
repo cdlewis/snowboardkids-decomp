@@ -3,14 +3,23 @@
 
 #include "common.h"
 
-typedef struct RomAssetRange {
-    /* 0x0 */ u8 *start;
-    /* 0x4 */ u8 *end;
-} RomAssetRange;
+#define RACE_CHARACTER_ASSET_COUNT 6
 
-extern RomAssetRange gCharacterRawAssetRanges[];
-extern RomAssetRange gCharacterTextureAssetRanges[];
-extern RomAssetRange gCharacterModelAssetRanges[];
+typedef enum RomAssetRangeBound {
+    ROM_ASSET_RANGE_START,
+    ROM_ASSET_RANGE_END,
+    ROM_ASSET_RANGE_BOUND_COUNT
+} RomAssetRangeBound;
+
+typedef struct CharacterRomAssetRangeTable {
+    u8 *romBoundAddresses[RACE_CHARACTER_ASSET_COUNT * ROM_ASSET_RANGE_BOUND_COUNT];
+} CharacterRomAssetRangeTable;
+
+typedef char CharacterRomAssetRangeTableSizeCheck[(sizeof(CharacterRomAssetRangeTable) == 0x30) ? 1 : -1];
+
+extern CharacterRomAssetRangeTable gCharacterRawAssetRanges;
+extern CharacterRomAssetRangeTable gCharacterTextureAssetRanges;
+extern CharacterRomAssetRangeTable gCharacterModelAssetRanges;
 
 void loadRaceCourseAssets(void);
 void loadRaceCharacterAssets(void);
