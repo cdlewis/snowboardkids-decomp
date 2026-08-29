@@ -26,7 +26,6 @@
 #include "game/engine/viewport_manager.h"
 
 #define RACE_MOTION_STATE(player) ((RaceMotionState *)(player))
-#define RACE_MOTION_INIT_STATE(player) ((RaceMotionInitState *)(player))
 #define setRaceMotionAnimation(player, animIndex) setRaceMotionAnimation(RACE_MOTION_STATE(player), (animIndex))
 #define interpolateRaceMotionJointAnimationFrame(player, animIndex, frameTimer, frameTimerReset) \
     interpolateRaceMotionJointAnimationFrame(RACE_MOTION_STATE(player), (animIndex), (frameTimer), (frameTimerReset))
@@ -38,7 +37,6 @@
 #define stepRaceMotionLoopingJointAnimation(player) stepRaceMotionLoopingJointAnimation(RACE_MOTION_STATE(player))
 #define stepRaceMotionAnimationUntilEnd(player) stepRaceMotionAnimationUntilEnd(RACE_MOTION_STATE(player))
 #define stepRaceMotionJointAnimationUntilEnd(player) stepRaceMotionJointAnimationUntilEnd(RACE_MOTION_STATE(player))
-#define initRaceMotionModelParts(player) initRaceMotionModelParts(RACE_MOTION_INIT_STATE(player))
 
 typedef struct {
     Vec3i position;
@@ -327,7 +325,7 @@ void initRacePlayer(RacePlayer *player) {
 
     player->unk588 = 0.0f;
     pos.vec = &player->pos;
-    initRaceMotionModelParts((RaceMotionInitState *)player);
+    initRaceMotionModelParts(player);
     setRaceMotionAnimation((RaceMotionState *)player, 1);
 
     if (gRacePlayerCount == 4) {

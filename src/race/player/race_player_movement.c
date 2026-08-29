@@ -1126,62 +1126,62 @@ s32 updateRacePlayerSurfaceContact(RacePlayer *player) {
             worldRotation.values[0],
             worldRotation.values[3],
             worldRotation.values[6],
-            player->collisionSources[0].sizeX,
-            player->collisionSources[0].sizeY - player->collisionCenterOffset,
-            player->collisionSources[0].sizeZ
+            player->modelParts[0].offset.x,
+            player->modelParts[0].offset.y - player->collisionCenterOffset,
+            player->modelParts[0].offset.z
         );
         collisionY = RACE_PLAYER_SURFACE_MIRRORED_COLLISION_POINT(
             worldRotation.values[1],
             worldRotation.values[4],
             worldRotation.values[7],
-            player->collisionSources[0].sizeX,
-            player->collisionSources[0].sizeY - player->collisionCenterOffset,
-            player->collisionSources[0].sizeZ
+            player->modelParts[0].offset.x,
+            player->modelParts[0].offset.y - player->collisionCenterOffset,
+            player->modelParts[0].offset.z
         );
         collisionZ = RACE_PLAYER_SURFACE_MIRRORED_COLLISION_POINT(
             worldRotation.values[2],
             worldRotation.values[5],
             worldRotation.values[8],
-            player->collisionSources[0].sizeX,
-            player->collisionSources[0].sizeY - player->collisionCenterOffset,
-            player->collisionSources[0].sizeZ
+            player->modelParts[0].offset.x,
+            player->modelParts[0].offset.y - player->collisionCenterOffset,
+            player->modelParts[0].offset.z
         );
         makeFixedRotationXYZ(
             intermediateRotation.values,
-            player->collisionSources[0].rotX,
-            -player->collisionSources[0].rotY,
-            -player->collisionSources[0].rotZ
+            player->modelParts[0].rotation.x,
+            -player->modelParts[0].rotation.y,
+            -player->modelParts[0].rotation.z
         );
     } else {
         collisionX = RACE_PLAYER_SURFACE_COLLISION_POINT(
             worldRotation.values[0],
             worldRotation.values[3],
             worldRotation.values[6],
-            player->collisionSources[0].sizeX,
-            player->collisionSources[0].sizeY - player->collisionCenterOffset,
-            player->collisionSources[0].sizeZ
+            player->modelParts[0].offset.x,
+            player->modelParts[0].offset.y - player->collisionCenterOffset,
+            player->modelParts[0].offset.z
         );
         collisionY = RACE_PLAYER_SURFACE_COLLISION_POINT(
             worldRotation.values[1],
             worldRotation.values[4],
             worldRotation.values[7],
-            player->collisionSources[0].sizeX,
-            player->collisionSources[0].sizeY - player->collisionCenterOffset,
-            player->collisionSources[0].sizeZ
+            player->modelParts[0].offset.x,
+            player->modelParts[0].offset.y - player->collisionCenterOffset,
+            player->modelParts[0].offset.z
         );
         collisionZ = RACE_PLAYER_SURFACE_COLLISION_POINT(
             worldRotation.values[2],
             worldRotation.values[5],
             worldRotation.values[8],
-            player->collisionSources[0].sizeX,
-            player->collisionSources[0].sizeY - player->collisionCenterOffset,
-            player->collisionSources[0].sizeZ
+            player->modelParts[0].offset.x,
+            player->modelParts[0].offset.y - player->collisionCenterOffset,
+            player->modelParts[0].offset.z
         );
         makeFixedRotationXYZ(
             intermediateRotation.values,
-            player->collisionSources[0].rotX,
-            player->collisionSources[0].rotY,
-            player->collisionSources[0].rotZ
+            player->modelParts[0].rotation.x,
+            player->modelParts[0].rotation.y,
+            player->modelParts[0].rotation.z
         );
     }
 
@@ -1352,62 +1352,62 @@ s32 updateRacePlayerGroundAlignment(RacePlayer *player) {
             worldRotation.values[0],
             worldRotation.values[3],
             worldRotation.values[6],
-            player->collisionSources[0].sizeX,
-            player->collisionSources[0].sizeY - player->collisionCenterOffset,
-            player->collisionSources[0].sizeZ
+            player->modelParts[0].offset.x,
+            player->modelParts[0].offset.y - player->collisionCenterOffset,
+            player->modelParts[0].offset.z
         );
         collisionPoint.y = MIRRORED_COLLISION_POINT(
             worldRotation.values[1],
             worldRotation.values[4],
             worldRotation.values[7],
-            player->collisionSources[0].sizeX,
-            player->collisionSources[0].sizeY - player->collisionCenterOffset,
-            player->collisionSources[0].sizeZ
+            player->modelParts[0].offset.x,
+            player->modelParts[0].offset.y - player->collisionCenterOffset,
+            player->modelParts[0].offset.z
         );
         probeScratch.collisionZ = MIRRORED_COLLISION_POINT(
             worldRotation.values[2],
             worldRotation.values[5],
             worldRotation.values[8],
-            player->collisionSources[0].sizeX,
-            player->collisionSources[0].sizeY - player->collisionCenterOffset,
-            player->collisionSources[0].sizeZ
+            player->modelParts[0].offset.x,
+            player->modelParts[0].offset.y - player->collisionCenterOffset,
+            player->modelParts[0].offset.z
         );
         makeFixedRotationXYZ(
             intermediateRotation.values,
-            player->collisionSources[0].rotX,
-            -player->collisionSources[0].rotY,
-            -player->collisionSources[0].rotZ
+            player->modelParts[0].rotation.x,
+            -player->modelParts[0].rotation.y,
+            -player->modelParts[0].rotation.z
         );
     } else {
         probeScratch.collisionX = COLLISION_POINT(
             worldRotation.values[0],
             worldRotation.values[3],
             worldRotation.values[6],
-            player->collisionSources[0].sizeX,
-            player->collisionSources[0].sizeY - player->collisionCenterOffset,
-            player->collisionSources[0].sizeZ
+            player->modelParts[0].offset.x,
+            player->modelParts[0].offset.y - player->collisionCenterOffset,
+            player->modelParts[0].offset.z
         );
         collisionPoint.y = COLLISION_POINT(
             worldRotation.values[1],
             worldRotation.values[4],
             worldRotation.values[7],
-            player->collisionSources[0].sizeX,
-            player->collisionSources[0].sizeY - player->collisionCenterOffset,
-            player->collisionSources[0].sizeZ
+            player->modelParts[0].offset.x,
+            player->modelParts[0].offset.y - player->collisionCenterOffset,
+            player->modelParts[0].offset.z
         );
         probeScratch.collisionZ = COLLISION_POINT(
             worldRotation.values[2],
             worldRotation.values[5],
             worldRotation.values[8],
-            player->collisionSources[0].sizeX,
-            player->collisionSources[0].sizeY - player->collisionCenterOffset,
-            player->collisionSources[0].sizeZ
+            player->modelParts[0].offset.x,
+            player->modelParts[0].offset.y - player->collisionCenterOffset,
+            player->modelParts[0].offset.z
         );
         makeFixedRotationXYZ(
             intermediateRotation.values,
-            player->collisionSources[0].rotX,
-            player->collisionSources[0].rotY,
-            player->collisionSources[0].rotZ
+            player->modelParts[0].rotation.x,
+            player->modelParts[0].rotation.y,
+            player->modelParts[0].rotation.z
         );
     }
 

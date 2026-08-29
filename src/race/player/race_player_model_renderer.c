@@ -233,7 +233,7 @@ void drawRacePlayerModel(RacePlayer *player) {
     if (gRenderMatricesDirty != 0) {
         player->stateFlags |= RACE_PLAYER_MODEL_RENDERER_FLAG_SHADOW;
         i = 0;
-        if (player->collisionVolumeCount > 0) {
+        if (player->modelPartCount > 0) {
             partMatrixPlayer = player;
             partSource = player->collisionVolumes;
             do {
@@ -245,7 +245,7 @@ void drawRacePlayerModel(RacePlayer *player) {
                 // Advance one matrix slot while retaining the source's matching induction-variable shape.
                 partMatrixPlayer = (RacePlayer *)((Mtx **)partMatrixPlayer + 1);
                 partSource++;
-            } while (i < countPlayer->collisionVolumeCount);
+            } while (i < countPlayer->modelPartCount);
         }
     }
 
@@ -315,7 +315,7 @@ void drawRaceGhostPlayerModel(RacePlayer *player) {
     if (gRenderMatricesDirty != 0) {
         player->stateFlags |= RACE_PLAYER_MODEL_RENDERER_FLAG_SHADOW;
         i = 0;
-        if (player->collisionVolumeCount > 0) {
+        if (player->modelPartCount > 0) {
             partMatrixPlayer = player;
             partSource = player->collisionVolumes;
             do {
@@ -329,7 +329,7 @@ void drawRaceGhostPlayerModel(RacePlayer *player) {
                 // Advance one matrix slot while retaining the source's matching induction-variable shape.
                 partMatrixPlayer = (RacePlayer *)((Mtx **)partMatrixPlayer + 1);
                 partSource++;
-            } while (i < countPlayer->collisionVolumeCount);
+            } while (i < countPlayer->modelPartCount);
         }
     }
 

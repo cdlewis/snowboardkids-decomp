@@ -3,6 +3,7 @@
 
 #include "common.h"
 #include "game/math/geometry.h"
+#include "game/race/player/character_model.h"
 
 #define RACE_PLAYER_COUNT 4
 #define RACE_PLAYER_MODEL_PART_CAPACITY 14
@@ -11,17 +12,6 @@
 typedef u8 RacePlayerOrder[RACE_PLAYER_COUNT];
 
 struct RaceUiRankTrigger;
-
-typedef struct RacePlayerCollisionSource {
-    /* 0x00 */ u8 parentIndex;
-    /* 0x01 */ u8 mirroredParentIndex;
-    /* 0x02 */ s16 rotX;
-    /* 0x04 */ s16 rotY;
-    /* 0x06 */ s16 rotZ;
-    /* 0x08 */ s32 sizeX;
-    /* 0x0C */ s32 sizeY;
-    /* 0x10 */ s32 sizeZ;
-} RacePlayerCollisionSource;
 
 typedef struct RacePlayer {
     /* 0x000 */ u16 playerIndex;
@@ -171,10 +161,16 @@ typedef struct RacePlayer {
     /* 0x332 */ s16 unk332;
     /* 0x334 */ s16 unk334;
     /* 0x336 */ s16 unk336;
-    /* 0x338 */ RacePlayerCollisionSource collisionSources[14];
-    /* 0x450 */ s16 collisionVolumeCount;
+    /* 0x338 */ CharacterModelPart modelParts[RACE_PLAYER_MODEL_PART_CAPACITY];
+    /* 0x450 */ s16 modelPartCount;
     /* 0x452 */ s16 animationId;
-    /* 0x454 */ char pad454[0x14];
+    /* 0x454 */ s32 animationStartOffset;
+    /* 0x458 */ s32 animationFrameDataOffset;
+    /* 0x45C */ s16 animationFrameCount;
+    /* 0x45E */ s16 animationFramesRemaining;
+    /* 0x460 */ char pad460[4];
+    /* 0x464 */ s16 animationFrameDuration;
+    /* 0x466 */ s16 animationFrameTimer;
     /* 0x468 */ Vec3i markerPoints[RACE_PLAYER_COUNT];
     /* 0x498 */ Vtx *shadowVtx;
     /* 0x49C */ Mtx *shadowMtx;
