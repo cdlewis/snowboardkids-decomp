@@ -94,23 +94,6 @@ typedef struct {
 } TitleMenuWidgetItemView;
 
 typedef struct {
-    /* 0x00 */ u16 tilemapWidth;
-    /* 0x02 */ u16 tilemapHeight;
-    /* 0x04 */ u16 tileWidth;
-    /* 0x06 */ u16 tileHeight;
-    /* 0x08 */ u16 tileCount;
-    /* 0x0A */ u16 tilemapOffset;
-    /* 0x0C */ u16 paletteOffset;
-    /* 0x0E */ u16 imageOffset;
-    /* 0x10 */ MenuTilemapTile tiles[1];
-} MenuTilemapSpriteAsset;
-
-typedef struct {
-    /* 0x00 */ MenuRenderSprite render;
-    /* 0x24 */ s16 unk24;
-} MenuTilemapSprite;
-
-typedef struct {
     /* 0x00 */ u8 pad0[0x18];
     /* 0x18 */ s16 x;
     /* 0x1A */ s16 y;

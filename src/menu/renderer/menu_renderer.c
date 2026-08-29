@@ -27,7 +27,6 @@
 #define MENU_GLYPH_WIDE_WIDTH 0x10
 #define MENU_GLYPH_NARROW_WIDTH 8
 #define MENU_GLYPH_DEFAULT_FONT_BANK 0x22
-#define MENU_PALETTE_COLOR_COUNT 0x10
 #define MENU_PALETTE_SIZE_BYTES 0x20
 #define MENU_RGBA5551_ALPHA_BIT 1
 #define MENU_RGBA5551_CHANNEL_MASK 0x1F
@@ -42,71 +41,6 @@
 // Palette selectors are passed as s32 values, but only their low byte is used.
 #define MENU_GLYPH_PALETTE_INDEX(palette) (((u8 *)&(palette))[3])
 
-typedef struct MenuRenderAssetTableHeader MenuRenderAssetTableHeader;
-typedef struct MenuRenderAssetTableEntry MenuRenderAssetTableEntry;
-typedef struct FontAssetHeader FontAssetHeader;
-typedef struct FontTexture FontTexture;
-typedef struct MenuFontAssetEntry MenuFontAssetEntry;
-typedef union MenuGlyphPalette MenuGlyphPalette;
-
-struct MenuRenderSpriteActor {
-    /* 0x00 */ CallbackTaskHeader task;
-    /* 0x18 */ MenuRenderSprite sprite;
-};
-
-struct MenuRenderAssetTableEntry {
-    /* 0x0 */ s32 imageOffset;
-    /* 0x4 */ u16 textureIndex;
-    /* 0x6 */ u8 width;
-    /* 0x7 */ u8 height;
-};
-
-struct MenuRenderAssetTableHeader {
-    /* 0x0 */ s32 unk0;
-    /* 0x4 */ s32 entryCount;
-    /* 0x8 */ MenuRenderAssetTableEntry entries[1];
-};
-
-struct MenuFontAssetEntry {
-    /* 0x0 */ s32 imageOffset;
-    /* 0x4 */ u16 textureIndex;
-    /* 0x6 */ u8 width;
-    /* 0x7 */ u8 height;
-};
-
-struct FontAssetHeader {
-    /* 0x0 */ s32 unk0;
-    /* 0x4 */ s32 entryCount;
-};
-
-struct FontTexture {
-    /* 0x0 */ u32 imageOffset;
-    /* 0x4 */ u16 paletteIndex;
-    /* 0x6 */ u8 width;
-    /* 0x7 */ u8 height;
-};
-
-struct FontAsset {
-    /* 0x0 */ FontAssetHeader header;
-    /* 0x8 */ FontTexture textures[1];
-};
-
-struct MenuFontAssetTable {
-    /* 0x0 */ s32 unk0;
-    /* 0x4 */ s32 entryCount;
-    /* 0x8 */ MenuFontAssetEntry entries[1];
-};
-
-union MenuGlyphPalette {
-    u8 bytes[MENU_PALETTE_SIZE_BYTES];
-    u16 colors[MENU_PALETTE_COLOR_COUNT];
-};
-
-typedef u16 MenuPalette[MENU_PALETTE_COLOR_COUNT];
-
-typedef void (*MenuRenderSpriteActorCallback)(MenuRenderSpriteActor *);
-typedef void (*MenuRenderCallback)(MenuRenderSprite *);
-
 u16 gMenuTransparentPalette[MENU_PALETTE_COLOR_COUNT] = {
     0x0000, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF,
     0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF,
@@ -115,8 +49,6 @@ s16 gMenuSpriteFlipScales[8] = {
     1, 1, -1, 1, 1, -1, -1, -1,
 };
 
-extern void *allocMenuRenderScratch(s32 size);
-void drawMenuGlyph(s16 x, s16 y, u16 glyphIndex, u8 paletteIndex, u16 intensity, u16 fontBank);
 extern Gfx *gRegionAllocPtr;
 extern s16 gMenuFadeAlpha;
 extern s16 gMenuViewportWidth;
@@ -127,7 +59,7 @@ extern s16 gMenuViewportCenterY;
 void drawMenuAssetRegion(
     s16 x,
     s16 y,
-    void *tableAddress,
+    AssetTable *table,
     u16 entryIndex,
     u16 scaleX,
     u16 scaleY,
@@ -136,7 +68,7 @@ void drawMenuAssetRegion(
     u8 width,
     u8 height
 ) {
-    MenuRenderAssetTableEntry *entry;
+    AssetTableEntry *entry;
     s32 minX;
     u8 *paletteBase;
     s32 left;
@@ -151,9 +83,8 @@ void drawMenuAssetRegion(
     s16 maxX;
     s16 maxY;
 
-    entry = &((MenuRenderAssetTableHeader *)tableAddress)->entries[entryIndex];
-    paletteBase = (((MenuRenderAssetTableHeader *)tableAddress)->entryCount * sizeof(MenuRenderAssetTableEntry)) +
-                  (u8 *)tableAddress + sizeof(MenuRenderAssetTableEntry);
+    entry = &table->entries[entryIndex];
+    paletteBase = (table->entryCount * sizeof(AssetTableEntry)) + (u8 *)table + sizeof(AssetTableEntry);
     scaleXValue = scaleX;
     scaleYValue = scaleY;
     left = (x + gMenuViewportCenterX) << 2;
@@ -190,7 +121,7 @@ void drawMenuAssetRegion(
 
         gDPLoadTextureTile_4b(
             gRegionAllocPtr++,
-            entry->imageOffset + (u8 *)tableAddress + 0x80000000,
+            entry->imageOffset + (u8 *)table + 0x80000000,
             G_IM_FMT_CI,
             entry->width,
             entry->height,
@@ -206,7 +137,7 @@ void drawMenuAssetRegion(
             G_TX_NOLOD,
             G_TX_NOLOD
         );
-        gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, paletteBase + (entry->textureIndex << 5) + 0x80000000);
+        gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, paletteBase + (entry->paletteIndex << 5) + 0x80000000);
         gSPTextureRectangle(
             gRegionAllocPtr++,
             left,
@@ -222,7 +153,7 @@ void drawMenuAssetRegion(
     }
 }
 
-void drawMenuSprite(s16 arg0, s16 arg1, void *arg2, u16 arg3, u16 arg4, u16 arg5, u8 arg6, u8 arg7) {
+void drawMenuSprite(s16 arg0, s16 arg1, AssetTable *arg2, u16 arg3, u16 arg4, u16 arg5, u8 arg6, u8 arg7) {
     s16 temp_v0;
     s16 temp_v1;
 
@@ -244,19 +175,19 @@ void drawMenuSprite(s16 arg0, s16 arg1, void *arg2, u16 arg3, u16 arg4, u16 arg5
 
 /* Preserve the promoted tile-index argument used by an older caller. */
 #ifdef __clang__
-void drawMenuSpriteWideIndex(s16 x, s16 y, void *texture, s32 tileIndex, u16 width, u16 height, u8 palette, u8 flip) {
-    drawMenuSprite(x, y, texture, tileIndex, width, height, palette, flip);
+void drawMenuSpriteWideIndex(s16 x, s16 y, AssetTable *table, s32 tileIndex, u16 width, u16 height, u8 palette, u8 flip) {
+    drawMenuSprite(x, y, table, tileIndex, width, height, palette, flip);
 }
 #else
 #pragma weak drawMenuSpriteWideIndex = drawMenuSprite
 extern void
-drawMenuSpriteWideIndex(s16 x, s16 y, void *texture, s32 tileIndex, u16 width, u16 height, u8 palette, u8 flip);
+drawMenuSpriteWideIndex(s16 x, s16 y, AssetTable *table, s32 tileIndex, u16 width, u16 height, u8 palette, u8 flip);
 #endif
 
-void drawMenuSpriteClipped(s16 x, s16 y, MenuFontAssetTable *table, u16 imageIndex, u16 scaleX, u16 scaleY,
+void drawMenuSpriteClipped(s16 x, s16 y, AssetTable *table, u16 imageIndex, u16 scaleX, u16 scaleY,
                            u8 flipMode, u8 paletteIndex, s16 clipLeft, s16 clipTop, s16 clipRight,
                            s16 clipBottom) {
-    MenuFontAssetEntry *entry;
+    AssetTableEntry *entry;
     s32 selectedPalette;
     u8 *palette;
     s32 left; // sp90
@@ -276,7 +207,7 @@ void drawMenuSpriteClipped(s16 x, s16 y, MenuFontAssetTable *table, u16 imageInd
     s16 maxY;
 
     entry = &table->entries[imageIndex];
-    palette = table->entryCount * sizeof(MenuFontAssetEntry) + (u8*)table->entries;
+    palette = table->entryCount * sizeof(AssetTableEntry) + (u8*)table->entries;
     if (scaleX > 0x200) {
         return;
     }
@@ -359,7 +290,7 @@ void drawMenuSpriteClipped(s16 x, s16 y, MenuFontAssetTable *table, u16 imageInd
     }
 
     if (paletteIndex == 0) {
-        selectedPalette = entry->textureIndex;
+        selectedPalette = entry->paletteIndex;
     } else {
         selectedPalette = (u16)(paletteIndex - 1);
     }
@@ -378,7 +309,7 @@ void drawMenuSpriteClipped(s16 x, s16 y, MenuFontAssetTable *table, u16 imageInd
                         (u16)((u16)(0x8000 / scaleY) * flipT));
 }
 
-void drawMenuSpriteWithAlpha(s16 arg0, s16 arg1, void *arg2, u16 arg3, u16 arg4, u16 arg5, u8 arg6, u16 arg7, u8 arg8) {
+void drawMenuSpriteWithAlpha(s16 arg0, s16 arg1, AssetTable *arg2, u16 arg3, u16 arg4, u16 arg5, u8 arg6, u16 arg7, u8 arg8) {
     s32 temp_v0;
     s32 temp_v1;
 
@@ -407,7 +338,7 @@ void drawMenuSpriteWithAlpha(s16 arg0, s16 arg1, void *arg2, u16 arg3, u16 arg4,
 void drawMenuSpriteWithAlphaWideArgs(
     s32 x,
     s32 y,
-    void *texture,
+    AssetTable *table,
     s32 tileIndex,
     s32 width,
     s32 height,
@@ -415,14 +346,14 @@ void drawMenuSpriteWithAlphaWideArgs(
     s32 alpha,
     u32 flip
 ) {
-    drawMenuSpriteWithAlpha(x, y, texture, tileIndex, width, height, palette, alpha, flip);
+    drawMenuSpriteWithAlpha(x, y, table, tileIndex, width, height, palette, alpha, flip);
 }
 #else
 #pragma weak drawMenuSpriteWithAlphaWideArgs = drawMenuSpriteWithAlpha
 extern void drawMenuSpriteWithAlphaWideArgs(
     s32 x,
     s32 y,
-    void *texture,
+    AssetTable *table,
     s32 tileIndex,
     s32 width,
     s32 height,
@@ -435,7 +366,7 @@ extern void drawMenuSpriteWithAlphaWideArgs(
 void drawMenuSpriteWithAlphaClipped(
     s16 x,
     s16 y,
-    FontAsset *asset,
+    AssetTable *asset,
     u16 tileIndex,
     u16 scaleX,
     u16 scaleY,
@@ -447,7 +378,7 @@ void drawMenuSpriteWithAlphaClipped(
     s32 clipRight,
     s32 clipBottom
 ) {
-    FontTexture *texture;
+    AssetTableEntry *texture;
     volatile u8 paddingA[4];
     u8 *paletteBase;
     s32 left;
@@ -469,8 +400,8 @@ void drawMenuSpriteWithAlphaClipped(
     volatile u16 paddingC;
     u16 selectedPalette;
 
-    texture = &asset->textures[tileIndex];
-    paletteBase = (asset->header.entryCount * sizeof(FontTexture)) + (u8 *)asset + sizeof(FontAssetHeader);
+    texture = &asset->entries[tileIndex];
+    paletteBase = (asset->entryCount * sizeof(AssetTableEntry)) + (u8 *)asset + sizeof(AssetTableEntry);
     if (scaleX > 0x200) {
         return;
     }
@@ -581,8 +512,8 @@ void drawMenuSpriteWithAlphaClipped(
     }
 }
 
-void drawMenuSpriteWithPaletteScale(s16 x, s16 y, FontAsset *asset, u16 index, u16 intensity) {
-    FontTexture *texture;
+void drawMenuSpriteWithPaletteScale(s16 x, s16 y, AssetTable *asset, u16 index, u16 intensity) {
+    AssetTableEntry *texture;
     u8 *textureBase;
     u8 *paletteBase;
     s32 left;
@@ -592,18 +523,18 @@ void drawMenuSpriteWithPaletteScale(s16 x, s16 y, FontAsset *asset, u16 index, u
     s32 srcX;
     s32 srcY;
     u16 headerSize;
-    MenuGlyphPalette *scratch;
-    MenuGlyphPalette *source;
+    MenuPalette *scratch;
+    MenuPalette *source;
     u16 red;
     u16 green;
     u16 blue;
     u16 scaledRed;
     s32 i;
 
-    headerSize = sizeof(FontAssetHeader);
-    textureBase = (u8 *)asset + (index * sizeof(FontTexture));
-    texture = (FontTexture *)(textureBase + headerSize);
-    paletteBase = (asset->header.entryCount * sizeof(FontTexture)) + (u8 *)asset + headerSize;
+    headerSize = sizeof(AssetTableEntry);
+    textureBase = (u8 *)asset + (index * sizeof(AssetTableEntry));
+    texture = (AssetTableEntry *)(textureBase + headerSize);
+    paletteBase = (asset->entryCount * sizeof(AssetTableEntry)) + (u8 *)asset + headerSize;
     left = x + gMenuViewportCenterX;
     top = y + gMenuViewportCenterY;
     right = left + (texture->width >> 1);
@@ -635,8 +566,8 @@ void drawMenuSpriteWithPaletteScale(s16 x, s16 y, FontAsset *asset, u16 index, u
     gDPPipeSync(gRegionAllocPtr++);
     gDPSetTextureFilter(gRegionAllocPtr++, G_TF_AVERAGE);
 
-    source = (MenuGlyphPalette *)(paletteBase + (texture->paletteIndex * MENU_PALETTE_SIZE_BYTES));
-    scratch = allocMenuRenderScratch(sizeof(MenuGlyphPalette));
+    source = (MenuPalette *)(paletteBase + (texture->paletteIndex * MENU_PALETTE_SIZE_BYTES));
+    scratch = allocMenuRenderScratch(sizeof(MenuPalette));
     for (i = 0; i != MENU_PALETTE_COLOR_COUNT; i++) {
         scratch->colors[i] = source->colors[i];
         if (scratch->colors[i] & MENU_RGBA5551_ALPHA_BIT) {
@@ -690,7 +621,7 @@ void drawMenuSpriteWithPaletteScale(s16 x, s16 y, FontAsset *asset, u16 index, u
 void drawMenuSpriteSubrect(
     s16 x,
     s16 y,
-    void *assetAddress,
+    AssetTable *asset,
     u16 index,
     u8 srcX,
     u8 srcY,
@@ -699,7 +630,7 @@ void drawMenuSpriteSubrect(
     s32 scaleX,
     s32 scaleY
 ) {
-    FontTexture *texture;
+    AssetTableEntry *texture;
     s32 minX;
     u8 *paletteBase;
     s32 left;
@@ -714,9 +645,8 @@ void drawMenuSpriteSubrect(
     s16 maxX;
     s16 maxY;
 
-    texture = &((FontAsset *)assetAddress)->textures[index];
-    paletteBase = (((FontAsset *)assetAddress)->header.entryCount * sizeof(FontTexture)) + (u8 *)assetAddress +
-                  sizeof(FontAssetHeader);
+    texture = &asset->entries[index];
+    paletteBase = (asset->entryCount * sizeof(AssetTableEntry)) + (u8 *)asset + sizeof(AssetTableEntry);
     scaleXValue = scaleX;
     scaleYValue = scaleY;
     left = (x + gMenuViewportCenterX) << 2;
@@ -753,7 +683,7 @@ void drawMenuSpriteSubrect(
 
         gDPLoadTextureTile_4b(
             gRegionAllocPtr++,
-            texture->imageOffset + (u8 *)assetAddress + 0x80000000,
+            texture->imageOffset + (u8 *)asset + 0x80000000,
             G_IM_FMT_CI,
             texture->width,
             texture->height,
@@ -785,9 +715,9 @@ void drawMenuSpriteSubrect(
     }
 }
 
-void drawMenuSpriteFixedScale(s16 x, s16 y, FontAsset *assetAddress, u16 tileIndex, u16 scaleX,
+void drawMenuSpriteFixedScale(s16 x, s16 y, AssetTable *asset, u16 tileIndex, u16 scaleX,
                               u16 scaleY, u8 flipMode, u8 unusedPalette) {
-    FontTexture *texture;
+    AssetTableEntry *texture;
     s32 pad;
     u8 *paletteBase;
     s32 drawLeft;
@@ -805,8 +735,8 @@ void drawMenuSpriteFixedScale(s16 x, s16 y, FontAsset *assetAddress, u16 tileInd
     s32 temp_v1;
     u32 height;
 
-    texture = &assetAddress->textures[tileIndex];
-    paletteBase = assetAddress->header.entryCount * sizeof(FontTexture) + (u8*)assetAddress->textures;
+    texture = &asset->entries[tileIndex];
+    paletteBase = asset->entryCount * sizeof(AssetTableEntry) + (u8*)asset->entries;
 
     if (scaleX > 0xF000 || scaleX < 0x10 || scaleY > 0xE800 || scaleY < 0x10) {
         return;
@@ -862,7 +792,7 @@ void drawMenuSpriteFixedScale(s16 x, s16 y, FontAsset *assetAddress, u16 tileInd
     }
 
     gDPLoadTextureTile_4b(
-        gRegionAllocPtr++, OS_PHYSICAL_TO_K0(texture->imageOffset + (u8 *)assetAddress),
+        gRegionAllocPtr++, OS_PHYSICAL_TO_K0(texture->imageOffset + (u8 *)asset),
         G_IM_FMT_CI, texture->width, texture->height, 0, 0, texture->width, texture->height, 0,
         G_TX_CLAMP, G_TX_CLAMP, G_TX_NOMASK, G_TX_NOMASK, G_TX_NOLOD, G_TX_NOLOD);
     gDPLoadTLUT_pal16(gRegionAllocPtr++, 0,
@@ -872,21 +802,21 @@ void drawMenuSpriteFixedScale(s16 x, s16 y, FontAsset *assetAddress, u16 tileInd
                         (u16)((u16)(0x400000 / scaleY) * tScale));
 }
 
-void drawMenuSpriteTile(s16 arg0, s16 arg1, void *arg2, u16 arg3, u16 arg4, u16 arg5) {
+void drawMenuSpriteTile(s16 arg0, s16 arg1, AssetTable *arg2, u16 arg3, u16 arg4, u16 arg5) {
     drawMenuSpriteTileClipped(arg0, arg1, arg2, arg3, arg4, arg5, gMenuViewportWidth / 2, gMenuViewportHeight / 2);
 }
 
 void drawMenuSpriteTileClipped(
     s16 x,
     s16 y,
-    MenuFontAssetTable *table,
+    AssetTable *table,
     u16 entryIndex,
     u16 unused,
     u16 intensity,
     s16 clipX,
     s16 clipY
 ) {
-    MenuFontAssetEntry *entry;
+    AssetTableEntry *entry;
     volatile s32 padding2;
     u8 *paletteBase;
     volatile u8 padding0[0x18];
@@ -982,7 +912,7 @@ void drawMenuSpriteTileClipped(
         gDPSetCombineMode(gRegionAllocPtr++, G_CC_MODULATEIA_PRIM, G_CC_MODULATEIA_PRIM);
         gDPSetPrimColor(gRegionAllocPtr++, 0, 0, intensity, intensity, intensity, 0xFF);
     }
-    gDPLoadTLUT_pal256(gRegionAllocPtr++, paletteBase + (entry->textureIndex << 5));
+    gDPLoadTLUT_pal256(gRegionAllocPtr++, paletteBase + (entry->paletteIndex << 5));
     gSPTextureRectangle(
         gRegionAllocPtr++,
         x0 << 2,
@@ -1003,7 +933,7 @@ void drawMenuSpriteTileClipped(
 void func_80011854(void) {
 }
 
-void drawMenuTextureByAssetId(s16 x, s16 y, void *texture, u16 assetId, u16 width, u16 height) {
+void drawMenuTextureByAssetId(s16 x, s16 y, AssetTable *unusedTable, u16 assetId, u16 width, u16 height) {
     s32 x0;
     s32 y0;
     s32 x1;
@@ -1055,7 +985,7 @@ void drawMenuTextureByAssetId(s16 x, s16 y, void *texture, u16 assetId, u16 widt
         y1 = clipY1 - 4;
     }
 
-    getAssetTableImageAndPalette((void *)getRelocatableHeapBlockBase(gAssetHandles[13]), assetId, &image, &palette);
+    getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gAssetHandles[13]), assetId, &image, &palette);
 
     FONT_GFX_CMD(gRegionAllocPtr++, 0xFD500000, (u32)&image);
     FONT_GFX_CMD(gRegionAllocPtr++, 0xF5500000, 0x07080200);
@@ -1452,11 +1382,11 @@ void drawMenuGlyph(s16 x, s16 y, u16 glyphIndex, u8 paletteIndex, u16 intensity,
     s32 i;
     u16 paletteColor;
     u8 new_var;
-    MenuGlyphPalette *paletteBase;
-    FontAsset *font;
-    MenuGlyphPalette *srcPalette;
+    MenuPalette *paletteBase;
+    AssetTable *font;
+    MenuPalette *srcPalette;
     u16 *scaledPalette;
-    FontTexture *entry;
+    AssetTableEntry *entry;
     u16 red;
     u16 green;
     u16 blue;
@@ -1469,7 +1399,7 @@ void drawMenuGlyph(s16 x, s16 y, u16 glyphIndex, u8 paletteIndex, u16 intensity,
         color = 8;
     }
 
-    paletteBase = (MenuGlyphPalette *)(font->header.entryCount + font->textures);
+    paletteBase = (MenuPalette *)(font->entryCount + font->entries);
     x1 = x0 = x + gMenuViewportCenterX;
     y0 = y + gMenuViewportCenterY;
     x1 = color + x0;
@@ -1507,7 +1437,7 @@ void drawMenuGlyph(s16 x, s16 y, u16 glyphIndex, u8 paletteIndex, u16 intensity,
         y1 = (gMenuViewportCenterY + (gMenuViewportHeight / 2)) - 1;
     }
 
-    entry = font->textures;
+    entry = font->entries;
     entry += glyphIndex;
     srcPalette = &paletteBase[entry->paletteIndex];
     scaledPalette = allocMenuRenderScratch(0x20);
@@ -1695,11 +1625,11 @@ void drawMenuColoredGlyph(s16 x, s16 y, u16 glyph, u8 palette, u16 paletteScale,
     s32 i;
     u16 paletteColor;
     u8 new_var;
-    MenuGlyphPalette *paletteBase;
-    MenuFontAssetTable *font;
-    MenuGlyphPalette *srcPalette;
+    MenuPalette *paletteBase;
+    AssetTable *font;
+    MenuPalette *srcPalette;
     u16 *scaledPalette;
-    MenuFontAssetEntry *entry;
+    AssetTableEntry *entry;
     s32 color;
     u16 red;
     u16 green;
@@ -1721,7 +1651,7 @@ void drawMenuColoredGlyph(s16 x, s16 y, u16 glyph, u8 palette, u16 paletteScale,
         font = getRelocatableHeapBlockBase(gAssetHandles[((u16)fontBank) + 1]);
         glyphWidth = 8;
     }
-    paletteBase = (MenuGlyphPalette *)(font->entryCount + font->entries);
+    paletteBase = (MenuPalette *)(font->entryCount + font->entries);
     srcPalette = &paletteBase[paletteIndex];
     x0 = x + gMenuViewportCenterX;
     y0 = y + gMenuViewportCenterY;
@@ -1817,19 +1747,19 @@ void drawMenuAsciiGlyph(s16 x, s16 y, u16 tileS, s32 tileT, u16 palette, u16 pal
     s32 clipT;
     s32 maxX;
     volatile u16 *dst;
-    FontTexture *texture;
-    MenuGlyphPalette *palettes;
-    FontAsset *font;
+    AssetTableEntry *texture;
+    MenuPalette *palettes;
+    AssetTable *font;
     s32 maxY;
     s32 i;
     s16 paletteIndex;
 
     font = getRelocatableHeapBlockBase(gAssetHandles[6]);
-    palettes = (MenuGlyphPalette *)(font->header.entryCount + font->textures);
-    paletteIndex = *(s16 *)&font->textures[0].paletteIndex;
+    palettes = (MenuPalette *)(font->entryCount + font->entries);
+    paletteIndex = *(s16 *)&font->entries[0].paletteIndex;
     x0 = x + gMenuViewportCenterX;
     i = y + gMenuViewportCenterY;
-    texture = &font->textures[0];
+    texture = &font->entries[0];
     x1 = x0 + 8;
     y1 = i + 8;
     clipS = 0;
@@ -1849,8 +1779,8 @@ void drawMenuAsciiGlyph(s16 x, s16 y, u16 tileS, s32 tileT, u16 palette, u16 pal
                 minY = gMenuViewportCenterY - halfHeight;
                 if ((x1 >= minX) && (y1 >= minY)) {
                     s32 colorValue;
-                    MenuGlyphPalette *scratch;
-                    MenuGlyphPalette *source;
+                    MenuPalette *scratch;
+                    MenuPalette *source;
                     s32 color;
                     s32 red;
                     u16 green;
@@ -1880,7 +1810,7 @@ void drawMenuAsciiGlyph(s16 x, s16 y, u16 tileS, s32 tileT, u16 palette, u16 pal
                     }
                     storedY = i;
                     if (1) {
-                    scratch = allocMenuRenderScratch(sizeof(MenuGlyphPalette)); i = 0; source = &palettes[paletteIndex]; dst = scratch->colors; palette_loop: *dst = (color = (*(u16 *)&source->bytes[i]) & 0xFFFFu); i += sizeof(u16); if ((colorValue = color & 0xFFFF) & 1) { red = ((colorValue >> 11) & 0x1F) & 0xFFFF;
+                    scratch = allocMenuRenderScratch(sizeof(MenuPalette)); i = 0; source = &palettes[paletteIndex]; dst = scratch->colors; palette_loop: *dst = (color = (*(u16 *)&source->bytes[i]) & 0xFFFFu); i += sizeof(u16); if ((colorValue = color & 0xFFFF) & 1) { red = ((colorValue >> 11) & 0x1F) & 0xFFFF;
                         green = (colorValue >> 6) & 0x1F;
                         colorValue = (blue = (colorValue >> 1) & 0x1F);
                         scaleValue = paletteScale;
@@ -1894,7 +1824,7 @@ void drawMenuAsciiGlyph(s16 x, s16 y, u16 tileS, s32 tileT, u16 palette, u16 pal
                     }
                     dst += 2;
                     dst--;
-                    if (i != sizeof(MenuGlyphPalette)) {
+                    if (i != sizeof(MenuPalette)) {
                         goto palette_loop;
                     }
 
@@ -1984,10 +1914,10 @@ s32 stepMenuFadeAlpha(s32 value, s16 step, u8 increase) {
     return value;
 }
 
-void drawMenuSpriteCrossfade(s16 x, s16 y, MenuFontAssetTable *table, u16 imageIndex0, u16 imageIndex1, u8 alpha) {
-    MenuFontAssetEntry *entry0;
-    MenuFontAssetEntry *entry1;
-    MenuFontAssetEntry *paletteBase;
+void drawMenuSpriteCrossfade(s16 x, s16 y, AssetTable *table, u16 imageIndex0, u16 imageIndex1, u8 alpha) {
+    AssetTableEntry *entry0;
+    AssetTableEntry *entry1;
+    AssetTableEntry *paletteBase;
     s32 minX;
     s32 maxX;
     s32 minY;
@@ -2118,7 +2048,7 @@ void drawMenuSpriteCrossfade(s16 x, s16 y, MenuFontAssetTable *table, u16 imageI
         G_TX_NOLOD,
         G_TX_NOLOD
     );
-    gDPLoadTLUT_pal256(gRegionAllocPtr++, (entry1->textureIndex << 5) + (u8 *)paletteBase);
+    gDPLoadTLUT_pal256(gRegionAllocPtr++, (entry1->paletteIndex << 5) + (u8 *)paletteBase);
     gSPTextureRectangle(
         gRegionAllocPtr++,
         x0 << 2,

@@ -16,30 +16,17 @@
         _g->words.w1 = (cmd1);        \
     }
 
-typedef struct {
-    /* 0x0 */ s32 imageOffset;
-    /* 0x4 */ u16 textureIndex;
-    /* 0x6 */ u8 width;
-    /* 0x7 */ u8 height;
-} AssetTableEntry;
+#define PACKED_MTX_WORD(matrix, index) ((matrix)->m[(index) / 4][(index) % 4])
 
-typedef struct AssetTable AssetTable;
-
-struct AssetTable {
-    /* 0x0 */ s32 unk0;
-    /* 0x4 */ s32 entryCount;
-    /* 0x8 */ AssetTableEntry entries[1];
-};
-
-typedef struct {
-    /* 0x00 */ u8 pad0[8];
-    /* 0x08 */ s32 imageOffset;
-    /* 0x0C */ u8 padC[2];
+/* Flattening the header and first entry preserves IDO's display-list operand scheduling. */
+typedef struct MenuAsciiFontAsset {
+    /* 0x00 */ u32 unk0;
+    /* 0x04 */ u32 entryCount;
+    /* 0x08 */ u32 imageOffset;
+    /* 0x0C */ u16 paletteIndex;
     /* 0x0E */ u8 width;
     /* 0x0F */ u8 height;
-} FontTexture;
-
-#define PACKED_MTX_WORD(matrix, index) ((matrix)->m[(index) / 4][(index) % 4])
+} MenuAsciiFontAsset;
 
 /* Named components preserve IDO's operand scheduling in the matrix packers. */
 typedef struct {
@@ -120,7 +107,7 @@ void getAssetTableImageAndPalette(void *asset, u16 arg1, void **arg2, void **arg
     idx = 1;
     *arg2 = (void *)(arg0 + temp_v1[idx].imageOffset);
     temp_v0 += 8;
-    *arg3 = (void *)((temp_v1[idx].textureIndex << 5) + temp_v0);
+    *arg3 = (void *)((temp_v1[idx].paletteIndex << 5) + temp_v0);
 }
 
 void getAssetTableImageAndExplicitPalette(u8 *arg0, u16 arg1, u16 arg2, void **arg3, void **arg4) {
@@ -144,7 +131,7 @@ void getAssetTableImagePaletteAndSize(u8 *arg0, u16 arg1, void **arg2, void **ar
     idx = 1;
     *arg2 = (void *)(arg0 + temp_v1[idx].imageOffset);
     temp_v0 += 8;
-    *arg3 = (void *)((temp_v1[idx].textureIndex << 5) + temp_v0);
+    *arg3 = (void *)((temp_v1[idx].paletteIndex << 5) + temp_v0);
     *arg4 = temp_v1[idx].width;
     *arg5 = temp_v1[idx].height;
 }
@@ -227,7 +214,7 @@ void drawAssetTableSprite(s16 x, s16 y, AssetTable *table, u16 entryIndex) {
         G_TX_NOLOD,
         G_TX_NOLOD
     );
-    gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, paletteBase + (entry->textureIndex << 5));
+    gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, paletteBase + (entry->paletteIndex << 5));
     gSPTextureRectangle(
         gRegionAllocPtr++,
         x0 << 2,
@@ -349,7 +336,7 @@ void drawPulsingAssetTableSprite(s16 x, s16 y, AssetTable *table, u16 entryIndex
         G_TX_NOLOD,
         G_TX_NOLOD
     );
-    gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, paletteBase + (entry->textureIndex << 5));
+    gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, paletteBase + (entry->paletteIndex << 5));
     gSPTextureRectangle(
         gRegionAllocPtr++,
         x0 << 2,
@@ -591,7 +578,7 @@ void drawAssetTableSprite8bpp(s16 x, s16 y, AssetTable *table, u16 entryIndex) {
         G_TX_NOLOD,
         G_TX_NOLOD
     );
-    gDPLoadTLUT_pal256(gRegionAllocPtr++, paletteBase + (entry->textureIndex << 5));
+    gDPLoadTLUT_pal256(gRegionAllocPtr++, paletteBase + (entry->paletteIndex << 5));
     gSPTextureRectangle(
         gRegionAllocPtr++,
         x0 << 2,
@@ -791,7 +778,7 @@ void drawScaledAssetTableSprite(s16 x, s16 y, AssetTable *asset, u16 entryIndex,
                           G_TX_CLAMP, G_TX_CLAMP, G_TX_NOMASK, G_TX_NOMASK,
                           G_TX_NOLOD, G_TX_NOLOD);
     gDPLoadTLUT_pal16(gRegionAllocPtr++, 0,
-                      (sprite->textureIndex << 5) + paletteBase);
+                      (sprite->paletteIndex << 5) + paletteBase);
     gSPTextureRectangle(gRegionAllocPtr++, x0 << 2, y0 << 2,
                         x1 << 2, y1 << 2, G_TX_RENDERTILE,
                         (clippedS << 5) + 0x10,
@@ -1002,11 +989,11 @@ void drawMenuAsciiCharImpl(s16 x, s16 y, u8 ch, u16 arg3) {
     char pad[8];
     u32 tile;
     u16 s;
-    FontTexture *font;
+    MenuAsciiFontAsset *font;
 
     if ((ch >= 'a') && (ch <= 'z')) {
         if (gMenuAsciiFontTextureNeedsLoad) {
-            font = (FontTexture *)getRelocatableHeapBlockBase(gAssetHandles[6]);
+            font = getRelocatableHeapBlockBase(gAssetHandles[6]);
 
             gDPLoadTextureTile_4b(
                 gRegionAllocPtr++,
@@ -1035,7 +1022,7 @@ void drawMenuAsciiCharImpl(s16 x, s16 y, u8 ch, u16 arg3) {
         drawMenuAsciiFontTile(x, y, s, tile & 0x38, arg3 & 0xFFFF & 0xFFFF & 0xFFFF);
     } else {
         if (gMenuAsciiFontTextureNeedsLoad != 0) {
-            font = (FontTexture *)getRelocatableHeapBlockBase(gAssetHandles[6]);
+            font = getRelocatableHeapBlockBase(gAssetHandles[6]);
 
             gDPLoadTextureTile_4b(
                 gRegionAllocPtr++,

@@ -2,6 +2,27 @@
 #define MENU_RENDERER_H
 
 #include "common.h"
+#include "game/engine/callback_task_scheduler.h"
+
+#define MENU_PALETTE_COLOR_COUNT 0x10
+
+typedef struct AssetTableEntry {
+    /* 0x0 */ u32 imageOffset;
+    /* 0x4 */ u16 paletteIndex;
+    /* 0x6 */ u8 width;
+    /* 0x7 */ u8 height;
+} AssetTableEntry;
+
+typedef struct AssetTable {
+    /* 0x0 */ u32 unk0;
+    /* 0x4 */ u32 entryCount;
+    /* 0x8 */ AssetTableEntry entries[1];
+} AssetTable;
+
+typedef union MenuPalette {
+    u8 bytes[MENU_PALETTE_COLOR_COUNT * sizeof(u16)];
+    u16 colors[MENU_PALETTE_COLOR_COUNT];
+} MenuPalette;
 
 typedef struct MenuTilemapTile {
     /* 0x0 */ s16 imageIndex;
@@ -30,15 +51,35 @@ typedef struct MenuRenderSprite {
     /* 0x1C */ MenuTilemapTile *tiles;
     /* 0x20 */ u8 *paletteData;
 } MenuRenderSprite;
-typedef struct MenuRenderSpriteActor MenuRenderSpriteActor;
-typedef struct MenuFontAssetTable MenuFontAssetTable;
-typedef struct FontAsset FontAsset;
+
+typedef struct MenuTilemapSpriteAsset {
+    /* 0x00 */ u16 tilemapWidth;
+    /* 0x02 */ u16 tilemapHeight;
+    /* 0x04 */ u16 tileWidth;
+    /* 0x06 */ u16 tileHeight;
+    /* 0x08 */ u16 tileCount;
+    /* 0x0A */ u16 tilemapOffset;
+    /* 0x0C */ u16 paletteOffset;
+    /* 0x0E */ u16 imageOffset;
+    /* 0x10 */ MenuTilemapTile tiles[1];
+} MenuTilemapSpriteAsset;
+
+typedef struct MenuTilemapSprite {
+    /* 0x00 */ MenuRenderSprite render;
+    /* 0x24 */ s16 unk24;
+} MenuTilemapSprite;
+
+typedef struct MenuRenderSpriteActor {
+    /* 0x00 */ CallbackTaskHeader task;
+    /* 0x18 */ MenuRenderSprite sprite;
+} MenuRenderSpriteActor;
+
 typedef u16 MenuGlyphScript;
 
 void drawMenuAssetRegion(
     s16 x,
     s16 y,
-    void *texture,
+    AssetTable *table,
     u16 tileIndex,
     u16 scaleX,
     u16 scaleY,
@@ -47,11 +88,11 @@ void drawMenuAssetRegion(
     u8 width,
     u8 height
 );
-void drawMenuSprite(s16 x, s16 y, void *texture, u16 tileIndex, u16 width, u16 height, u8 palette, u8 flip);
+void drawMenuSprite(s16 x, s16 y, AssetTable *table, u16 tileIndex, u16 width, u16 height, u8 palette, u8 flip);
 void drawMenuSpriteClipped(
     s16 x,
     s16 y,
-    MenuFontAssetTable *table,
+    AssetTable *table,
     u16 imageIndex,
     u16 scaleX,
     u16 scaleY,
@@ -65,7 +106,7 @@ void drawMenuSpriteClipped(
 void drawMenuSpriteWithAlpha(
     s16 x,
     s16 y,
-    void *texture,
+    AssetTable *table,
     u16 tileIndex,
     u16 width,
     u16 height,
@@ -76,7 +117,7 @@ void drawMenuSpriteWithAlpha(
 void drawMenuSpriteWithAlphaClipped(
     s16 x,
     s16 y,
-    FontAsset *asset,
+    AssetTable *asset,
     u16 tileIndex,
     u16 scaleX,
     u16 scaleY,
@@ -88,11 +129,11 @@ void drawMenuSpriteWithAlphaClipped(
     s32 clipRight,
     s32 clipBottom
 );
-void drawMenuSpriteWithPaletteScale(s16 x, s16 y, FontAsset *asset, u16 index, u16 intensity);
+void drawMenuSpriteWithPaletteScale(s16 x, s16 y, AssetTable *asset, u16 index, u16 intensity);
 void drawMenuSpriteSubrect(
     s16 x,
     s16 y,
-    void *texture,
+    AssetTable *asset,
     u16 tileIndex,
     u8 srcX,
     u8 srcY,
@@ -104,18 +145,18 @@ void drawMenuSpriteSubrect(
 void drawMenuSpriteFixedScale(
     s16 x,
     s16 y,
-    FontAsset *asset,
+    AssetTable *asset,
     u16 tileIndex,
     u16 scaleX,
     u16 scaleY,
     u8 flip,
     u8 unusedPalette
 );
-void drawMenuSpriteTile(s16 x, s16 y, void *texture, u16 tileIndex, u16 width, u16 height);
+void drawMenuSpriteTile(s16 x, s16 y, AssetTable *table, u16 tileIndex, u16 width, u16 height);
 void drawMenuSpriteTileClipped(
     s16 x,
     s16 y,
-    MenuFontAssetTable *table,
+    AssetTable *table,
     u16 entryIndex,
     u16 unused,
     u16 intensity,
@@ -123,7 +164,7 @@ void drawMenuSpriteTileClipped(
     s16 clipY
 );
 void noopMenuRenderCallback(void);
-void drawMenuTextureByAssetId(s16 x, s16 y, void *texture, u16 assetId, u16 width, u16 height);
+void drawMenuTextureByAssetId(s16 x, s16 y, AssetTable *unusedTable, u16 assetId, u16 width, u16 height);
 void setMenuSpriteActorDebugUpdate(MenuRenderSpriteActor *actor);
 void updateMenuSpriteActorDebugControls(MenuRenderSpriteActor *actor);
 void drawMenuTilemapSpriteCallback(MenuRenderSprite *sprite);
@@ -168,6 +209,6 @@ void drawMenuAsciiGlyph(s16 x, s16 y, u16 tileX, s32 tileY, u16 palette, u16 sca
 void drawMenuAsciiText(s16 x, s16 y, u8 *text, u16 palette, u16 scale);
 void drawMenuSolidRect(s16 x0, s16 y0, s16 x1, s16 y1, s16 r, s16 g, s16 b);
 s32 stepMenuFadeAlpha(s32 value, s16 step, u8 increase);
-void drawMenuSpriteCrossfade(s16 x, s16 y, MenuFontAssetTable *table, u16 imageIndex0, u16 imageIndex1, u8 alpha);
+void drawMenuSpriteCrossfade(s16 x, s16 y, AssetTable *table, u16 imageIndex0, u16 imageIndex1, u8 alpha);
 
 #endif
