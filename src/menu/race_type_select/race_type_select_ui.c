@@ -12,56 +12,16 @@
 #include "game/race/player/race_player_input.h"
 
 #define ASSET_HANDLE(index) (gAssetHandles[(index)])
-#define gRaceTypeSelectSpecialFrameCornerTile gRaceTypeSelectFrameTileMaps.padded.specialCorner
-
-typedef MenuGlyphScript RaceTypeSelectPortrait[0x46];
-
-typedef struct {
-    /* 0x00 */ u16 center[16];
-    /* 0x20 */ u16 right[2];
-    /* 0x24 */ u16 bottom[2];
-    /* 0x28 */ u16 corner;
-} RaceTypeSelectFrameTileMap;
-
-typedef struct {
-    /* 0x00 */ u16 center[16];
-    /* 0x20 */ u16 right[2];
-    /* 0x24 */ u16 bottom[2];
-} RaceTypeSelectPartialFrameTileMap;
-
-typedef union {
-    /* 0x00 */ u16 tiles[84];
-    /* 0x00 */ RaceTypeSelectFrameTileMap entries[3];
-    /* 0x00 */ RaceTypeSelectFrameTileMap frames[3];
-    struct {
-        /* 0x00 */ u8 pad0[0x7E];
-        /* 0x7E */ RaceTypeSelectPartialFrameTileMap selected;
-        /* 0xA6 */ u16 specialCorner;
-    } padded;
-} RaceTypeSelectFrameTileMapTable;
-
-typedef struct {
-    /* 0x00 */ u8 pad0[0x7E];
-    /* 0x7E */ RaceTypeSelectPartialFrameTileMap selected;
-} RaceTypeSelectPaddedFrameTileMapTable;
-
-typedef struct {
-    /* 0x000 */ RaceTypeSelectPortrait portraits[4];
-    /* 0x230 */ MenuGlyphScript trailingText[0x14];
-} RaceTypeSelectPortraitScriptTable;
-
-RaceTypeSelectFrameTileMapTable gRaceTypeSelectFrameTileMaps = {
-    {
-     0x0000, 0x0001, 0x0002, 0x0003, 0x0005, 0x0006, 0x0007, 0x0008, 0x0009, 0x000A, 0x000B, 0x000C, 0x000E, 0x000F,
+RaceTypeSelectFrameTileTable gRaceTypeSelectFrameTileMaps = {
+    0x0000, 0x0001, 0x0002, 0x0003, 0x0005, 0x0006, 0x0007, 0x0008, 0x0009, 0x000A, 0x000B, 0x000C, 0x000E, 0x000F,
      0x0010, 0x0011, 0x0004, 0x000D, 0x0012, 0x0013, 0x0014, 0x0015, 0x0016, 0x0017, 0x0018, 0x001A, 0x001B, 0x001C,
      0x001D, 0x001E, 0x001F, 0x0020, 0x0021, 0x0023, 0x0024, 0x0025, 0x0026, 0x0019, 0x0022, 0x0027, 0x0028, 0x0029,
      0x002A, 0x002B, 0x002C, 0x002D, 0x002F, 0x0030, 0x0031, 0x0032, 0x0033, 0x0034, 0x0035, 0x0036, 0x0038, 0x0039,
      0x003A, 0x003B, 0x002E, 0x0037, 0x003C, 0x003D, 0x003E, 0x00A4, 0x00A5, 0x00A6, 0x00A7, 0x00A9, 0x00AA, 0x00AB,
      0x00AC, 0x00AD, 0x00AE, 0x00AF, 0x00B0, 0x00B2, 0x00B3, 0x00B4, 0x00B5, 0x00A8, 0x00B1, 0x00B6, 0x00B7, 0x00B8,
-     }
 };
 
-RaceTypeSelectPortraitScriptTable gRaceTypeSelectPortraitScripts = {
+RaceTypeSelectDescriptionScriptTable gRaceTypeSelectPortraitScripts = {
     {
      {
             // textconv requires these _() invocations to retain their original line layout.
@@ -93,26 +53,25 @@ extern int sprintf(char *, const char *, ...);
 
 // IDO code generation for this function is sensitive to source line layout.
 // clang-format off
-void drawRaceTypeSelectOptionIcons(RaceTypeSelectRowActor *arg0) {
-    RaceTypeSelectRowActor *savedArg;
+void drawRaceTypeSelectOptionIcons(RaceTypeSelectOptionIconActor *arg0) {
+    RaceTypeSelectOptionIconActor *savedArg;
     s32 i;
     s32 alpha;
     s32 yOffset;
-    RaceTypeSelectRowActor *row;
     u16 tileIndex;
 
     savedArg = arg0;
- do { i = 0; if (arg0->playerCount > 0) { yOffset = 0; row = arg0; do { alpha = 0; if (((((gMenuSelectionConfirmTimer > 0) && (gMenuSelectionConfirmTimer < 8)) && (gMenuExitSelection == 0)) && (i == gRaceTypeSelection)) && (gMenuSelectionConfirmTimer & 1)) { if ((!savedArg->playerCount) && (!savedArg->playerCount)) { } alpha = 0xFF; } tileIndex = i + 0xD; drawMenuSprite(row->iconX[0], (s16) (arg0->iconY + yOffset), getRelocatableHeapBlockBase(gAssetHandles[0x21]), tileIndex, 0x20, 0x20, 0, alpha); i++; yOffset += 0x18; row = (RaceTypeSelectRowActor *) (((u8 *) row) + 2); } while (i < savedArg->playerCount); } } while (0);
+ do { i = 0; if (arg0->visibleCount > 0) { yOffset = 0; do { alpha = 0; if (((((gMenuSelectionConfirmTimer > 0) && (gMenuSelectionConfirmTimer < 8)) && (gMenuExitSelection == 0)) && (i == gRaceTypeSelection)) && (gMenuSelectionConfirmTimer & 1)) { if ((!savedArg->visibleCount) && (!savedArg->visibleCount)) { } alpha = 0xFF; } tileIndex = i + 0xD; drawMenuSprite(arg0->x[i], (s16) (arg0->y + yOffset), getRelocatableHeapBlockBase(gAssetHandles[0x21]), tileIndex, 0x20, 0x20, 0, alpha); yOffset += 0x18; i++; } while (i < savedArg->visibleCount); } } while (0);
 }
 // clang-format on
 
-void updateRaceTypeSelectOptionIcons(RaceTypeSelectRowActor *arg0) {
+void updateRaceTypeSelectOptionIcons(RaceTypeSelectOptionIconActor *arg0) {
     s32 i;
     s32 moved;
     s32 state;
     int stateByte;
-    RaceTypeSelectRowActor *row;
-    RaceTypeSelectRowActor *actor;
+    RaceTypeSelectOptionIconActor *row;
+    RaceTypeSelectOptionIconActor *actor;
 
     stateByte = arg0->state;
     actor = arg0;
@@ -121,20 +80,20 @@ void updateRaceTypeSelectOptionIcons(RaceTypeSelectRowActor *arg0) {
     switch (state) {
         case 0:
             moved = 0;
-            for (i = 0; i < row->playerCount; i++) {
-                if (row->iconX[i] < -0x7C) {
-                    row->iconX[i] += 0x10;
+            for (i = 0; i < row->visibleCount; i++) {
+                if (row->x[i] < -0x7C) {
+                    row->x[i] += 0x10;
                     moved++;
-                    if (row->iconX[i] >= -0x7C) {
-                        row->iconX[i] = -0x7C;
+                    if (row->x[i] >= -0x7C) {
+                        row->x[i] = -0x7C;
                     }
                 }
             }
 
             row->spawnTimer++;
             if (!(row->spawnTimer & 1)) {
-                if (row->playerCount < 4) {
-                    row->playerCount++;
+                if (row->visibleCount < 4) {
+                    row->visibleCount++;
                 }
             }
 
@@ -154,9 +113,9 @@ void updateRaceTypeSelectOptionIcons(RaceTypeSelectRowActor *arg0) {
             break;
         case 2:
             for (i = 0; i < 5; i++) {
-                arg0->iconX[i] -= 0x20;
+                arg0->x[i] -= 0x20;
             }
-            if (arg0->iconX[0] < -0x103) {
+            if (arg0->x[0] < -0x103) {
                 arg0->state = 3;
             }
             break;
@@ -171,25 +130,25 @@ void updateRaceTypeSelectOptionIcons(RaceTypeSelectRowActor *arg0) {
     addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawRaceTypeSelectOptionIcons, actor);
 }
 
-void initRaceTypeSelectOptionIcons(RaceTypeSelectRowActor *arg0) {
+void initRaceTypeSelectOptionIcons(RaceTypeSelectOptionIconActor *arg0) {
     s32 temp_v1 = -0x104;
     long long zero;
     s32 temp_t6 = -0x58;
     s32 temp_t7 = 1;
 
-    arg0->iconX[0] = temp_v1;
-    arg0->iconX[1] = temp_v1;
-    arg0->iconX[2] = temp_v1;
-    arg0->iconX[3] = temp_v1;
-    arg0->iconY = temp_t6;
+    arg0->x[0] = temp_v1;
+    arg0->x[1] = temp_v1;
+    arg0->x[2] = temp_v1;
+    arg0->x[3] = temp_v1;
+    arg0->y = temp_t6;
     zero = 0;
     arg0->spawnTimer = zero;
-    arg0->playerCount = temp_t7;
+    arg0->visibleCount = temp_t7;
     arg0->state = zero;
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceTypeSelectOptionIcons);
 }
 
-void drawRaceTypeSelectCornerSprites(RaceTypeSelectWidgetActor *arg0) {
+void drawRaceTypeSelectCornerSprites(RaceTypeSelectCornerSpriteActor *arg0) {
     drawMenuSprite(arg0->x, arg0->y, getRelocatableHeapBlockBase(ASSET_HANDLE(33)), 3, 0x20, 0x20, 0, 0);
     drawMenuSprite((s16)(arg0->x + 0x40), arg0->y, getRelocatableHeapBlockBase(ASSET_HANDLE(33)), 4, 0x20, 0x20, 0, 0);
     drawMenuSprite(arg0->x, (s16)(arg0->y + 0x40), getRelocatableHeapBlockBase(ASSET_HANDLE(33)), 5, 0x20, 0x20, 0, 0);
@@ -205,29 +164,29 @@ void drawRaceTypeSelectCornerSprites(RaceTypeSelectWidgetActor *arg0) {
     );
 }
 
-void updateRaceTypeSelectCornerSprites(RaceTypeSelectWidgetActor *arg0) {
-    u8 state = arg0->sprite.bytes.state;
+void updateRaceTypeSelectCornerSprites(RaceTypeSelectCornerSpriteActor *arg0) {
+    u8 state = arg0->state;
 
     switch (state) {
         case 0:
             arg0->x += 0x20;
             if (arg0->x >= -0x88) {
                 arg0->x = -0x88;
-                arg0->sprite.bytes.state = 1;
+                arg0->state = 1;
             }
-            state = arg0->sprite.bytes.state;
+            state = arg0->state;
             break;
         case 1:
             if (gRacePlayers[0].menuState == 1) {
-                state = arg0->sprite.bytes.state = 2;
+                state = arg0->state = 2;
             }
             break;
         case 2:
             arg0->x -= 0x20;
             if (arg0->x < -0x10D) {
-                arg0->sprite.bytes.state = 3;
+                arg0->state = 3;
             }
-            state = arg0->sprite.bytes.state;
+            state = arg0->state;
             break;
         case 3:
             break;
@@ -239,13 +198,13 @@ void updateRaceTypeSelectCornerSprites(RaceTypeSelectWidgetActor *arg0) {
     addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawRaceTypeSelectCornerSprites, arg0);
 }
 
-void initRaceTypeSelectCornerSprites(RaceTypeSelectWidgetActor *arg0) {
+void initRaceTypeSelectCornerSprites(RaceTypeSelectCornerSpriteActor *arg0) {
     arg0->x = -0x108;
     arg0->y = 8;
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceTypeSelectCornerSprites);
 }
 
-void drawRaceTypeSelectOption0Frame(RaceTypeSelectWidgetActor *arg0) {
+void drawRaceTypeSelectOption0Frame(RaceTypeSelectOption0FrameActor *arg0) {
     s32 shouldDraw;
     s32 i;
     s32 tileOffset;
@@ -259,7 +218,7 @@ void drawRaceTypeSelectOption0Frame(RaceTypeSelectWidgetActor *arg0) {
             (s16)(arg0->x + ((i & 3) << 5)),
             (s16)(arg0->y + ((i / 4) << 5)),
             getRelocatableHeapBlockBase(gAssetHandles[0x25]),
-            gRaceTypeSelectFrameTileMaps.frames[(u16)arg0->widget.counter].center[tileOffset],
+            gRaceTypeSelectFrameTileMaps.optionFrames[(u16)arg0->optionIndex].centerTiles[tileOffset],
             0,
             0x100
         );
@@ -276,7 +235,7 @@ void drawRaceTypeSelectOption0Frame(RaceTypeSelectWidgetActor *arg0) {
             (s16)(arg0->x + 0x80),
             (s16)(arg0->y + offset),
             getRelocatableHeapBlockBase(gAssetHandles[0x25]),
-            gRaceTypeSelectFrameTileMaps.frames[(u16)arg0->widget.counter].right[tileOffset],
+            gRaceTypeSelectFrameTileMaps.optionFrames[(u16)arg0->optionIndex].rightEdgeTiles[tileOffset],
             0,
             0x100
         );
@@ -285,7 +244,7 @@ void drawRaceTypeSelectOption0Frame(RaceTypeSelectWidgetActor *arg0) {
             (s16)(arg0->x + offset),
             (s16)(arg0->y + 0x80),
             getRelocatableHeapBlockBase(gAssetHandles[0x25]),
-            gRaceTypeSelectFrameTileMaps.frames[(u16)arg0->widget.counter].bottom[tileOffset],
+            gRaceTypeSelectFrameTileMaps.optionFrames[(u16)arg0->optionIndex].bottomEdgeTiles[tileOffset],
             0,
             0x100
         );
@@ -299,7 +258,7 @@ void drawRaceTypeSelectOption0Frame(RaceTypeSelectWidgetActor *arg0) {
         (s16)(arg0->x + 0x80),
         (s16)(arg0->y + 0x80),
         getRelocatableHeapBlockBase(gAssetHandles[0x25]),
-        gRaceTypeSelectFrameTileMaps.frames[(u16)arg0->widget.counter].corner,
+        gRaceTypeSelectFrameTileMaps.optionFrames[(u16)arg0->optionIndex].cornerTile,
         0,
         0x100
     );
@@ -389,19 +348,19 @@ void drawRaceTypeSelectOption0Frame(RaceTypeSelectWidgetActor *arg0) {
     }
 }
 
-void updateRaceTypeSelectOption0Frame(RaceTypeSelectWidgetActor *arg0) {
+void updateRaceTypeSelectOption0Frame(RaceTypeSelectOption0FrameActor *arg0) {
     int state;
 
-    if ((gRaceTypeSelection >= (u16)arg0->widget.counter) && (arg0->row.bytes.subState != 0) && (arg0->y != -0x48)) {
-        state = arg0->row.bytes.subState = 2;
+    if ((gRaceTypeSelection >= (u16)arg0->optionIndex) && (arg0->state != 0) && (arg0->y != -0x48)) {
+        state = arg0->state = 2;
     } else {
-        state = arg0->row.bytes.subState;
-        if ((gRaceTypeSelection < (u16)arg0->widget.counter) && (state != 0) && (arg0->y != -0x140)) {
-            state = arg0->row.bytes.subState = 1;
+        state = arg0->state;
+        if ((gRaceTypeSelection < (u16)arg0->optionIndex) && (state != 0) && (arg0->y != -0x140)) {
+            state = arg0->state = 1;
         } else {
-            state = arg0->row.bytes.subState;
+            state = arg0->state;
             if ((state != 0) && (state < 4)) {
-                state = arg0->row.bytes.subState = 3;
+                state = arg0->state = 3;
             }
         }
     }
@@ -409,53 +368,53 @@ void updateRaceTypeSelectOption0Frame(RaceTypeSelectWidgetActor *arg0) {
     switch (state) {
         case 0:
             arg0->x -= 0x20;
-            if (arg0->row.bytes.subTimer == 0) {
+            if (arg0->cornerSpawnTimer == 0) {
                 createCallbackTask((CallbackTaskCallback)initRaceTypeSelectCornerSprites, 0, 0x63);
             }
-            arg0->row.bytes.subTimer++;
+            arg0->cornerSpawnTimer++;
             if (arg0->x < -7) {
                 arg0->x = -8;
-                arg0->row.bytes.subState = 3;
+                arg0->state = 3;
                 gActiveMenuTask = createCallbackTask((CallbackTaskCallback)initRaceTypeSelectCursor, 0, 0x64);
                 createCallbackTask((CallbackTaskCallback)initRaceTypeSelectPortrait, 0, 0x64);
                 createCallbackTask((CallbackTaskCallback)initRaceTypeSelectArrowPrompt, 0, 0x64);
                 createCallbackTask((CallbackTaskCallback)initRaceTypeSelectEntryFee, 0, 0x64);
             }
-            state = arg0->row.bytes.subState;
+            state = arg0->state;
             break;
         case 1:
             arg0->y -= 0x24;
             if (arg0->y < -0x13F) {
                 arg0->y = -0x140;
-                arg0->row.bytes.subState = 3;
+                arg0->state = 3;
             }
-            state = arg0->row.bytes.subState;
+            state = arg0->state;
             break;
         case 2:
             arg0->y += 0x24;
             if (arg0->y >= -0x48) {
                 arg0->y = -0x48;
-                arg0->row.bytes.subState = 3;
+                arg0->state = 3;
             }
-            state = arg0->row.bytes.subState;
+            state = arg0->state;
             break;
         case 3:
             gMenuFlowState += 1;
             if (gRacePlayers[0].menuState == 1) {
-                arg0->row.bytes.subState = 4;
+                arg0->state = 4;
             }
-            state = arg0->row.bytes.subState;
+            state = arg0->state;
             break;
         case 4:
             arg0->x += 0x20;
             if (arg0->x >= 0xA0) {
-                arg0->row.bytes.subState = 5;
+                arg0->state = 5;
             }
-            state = arg0->row.bytes.subState;
+            state = arg0->state;
             break;
         case 5:
             gRacePlayers[0].menuState = 2;
-            state = arg0->row.bytes.subState;
+            state = arg0->state;
             break;
     }
 
@@ -466,18 +425,18 @@ void updateRaceTypeSelectOption0Frame(RaceTypeSelectWidgetActor *arg0) {
     addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawRaceTypeSelectOption0Frame, arg0);
 }
 
-void initRaceTypeSelectOption0Frame(RaceTypeSelectWidgetActor *arg0) {
+void initRaceTypeSelectOption0Frame(RaceTypeSelectOption0FrameActor *arg0) {
     arg0->x = 0x94;
     arg0->y = -0x48;
-    arg0->sprite.spriteIndex = -8;
-    arg0->transition.alpha = -0x74;
-    arg0->widget.counter = 0;
-    arg0->row.bytes.subTimer = 0;
-    arg0->row.bytes.subState = 0;
+    arg0->unused1C = -8;
+    arg0->unused1E = -0x74;
+    arg0->optionIndex = 0;
+    arg0->cornerSpawnTimer = 0;
+    arg0->state = 0;
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceTypeSelectOption0Frame);
 }
 
-void drawRaceTypeSelectOption1Frame(RaceTypeSelectWidgetActor *arg0) {
+void drawRaceTypeSelectOption1Frame(RaceTypeSelectOptionFrameActor *arg0) {
     s32 shouldDraw;
     s32 i;
     s32 tileOffset;
@@ -490,7 +449,7 @@ void drawRaceTypeSelectOption1Frame(RaceTypeSelectWidgetActor *arg0) {
             (s16)(arg0->x + ((i & 3) << 5)),
             (s16)(arg0->y + ((i / 4) << 5)),
             getRelocatableHeapBlockBase(gAssetHandles[0x25]),
-            gRaceTypeSelectFrameTileMaps.frames[(u16)arg0->sprite.spriteIndex].center[tileOffset],
+            gRaceTypeSelectFrameTileMaps.optionFrames[(u16)arg0->optionIndex].centerTiles[tileOffset],
             0,
             0x100,
             0xA0,
@@ -508,7 +467,7 @@ void drawRaceTypeSelectOption1Frame(RaceTypeSelectWidgetActor *arg0) {
             (s16)(arg0->x + 0x80),
             (s16)(arg0->y + offset),
             getRelocatableHeapBlockBase(gAssetHandles[0x25]),
-            gRaceTypeSelectFrameTileMaps.frames[(u16)arg0->sprite.spriteIndex].right[tileOffset],
+            gRaceTypeSelectFrameTileMaps.optionFrames[(u16)arg0->optionIndex].rightEdgeTiles[tileOffset],
             0,
             0x100,
             0xA0,
@@ -518,7 +477,7 @@ void drawRaceTypeSelectOption1Frame(RaceTypeSelectWidgetActor *arg0) {
             (s16)(arg0->x + offset),
             (s16)(arg0->y + 0x80),
             getRelocatableHeapBlockBase(gAssetHandles[0x25]),
-            gRaceTypeSelectFrameTileMaps.frames[(u16)arg0->sprite.spriteIndex].bottom[tileOffset],
+            gRaceTypeSelectFrameTileMaps.optionFrames[(u16)arg0->optionIndex].bottomEdgeTiles[tileOffset],
             0,
             0x100,
             0xA0,
@@ -535,7 +494,7 @@ void drawRaceTypeSelectOption1Frame(RaceTypeSelectWidgetActor *arg0) {
         (s16)(arg0->x + 0x80),
         (s16)(arg0->y + 0x80),
         getRelocatableHeapBlockBase(gAssetHandles[0x25]),
-        gRaceTypeSelectFrameTileMaps.frames[(u16)arg0->sprite.spriteIndex].corner,
+        gRaceTypeSelectFrameTileMaps.optionFrames[(u16)arg0->optionIndex].cornerTile,
         0,
         0x100,
         0xA0,
@@ -543,17 +502,17 @@ void drawRaceTypeSelectOption1Frame(RaceTypeSelectWidgetActor *arg0) {
     );
 }
 
-void updateRaceTypeSelectOption1Frame(RaceTypeSelectWidgetActor *arg0) {
+void updateRaceTypeSelectOption1Frame(RaceTypeSelectOptionFrameActor *arg0) {
     int state;
 
-    if ((gRaceTypeSelection >= (u16)arg0->sprite.spriteIndex) && (arg0->y != -0x48)) {
-        state = arg0->transition.bytes.state = 2;
-    } else if ((gRaceTypeSelection < (u16)arg0->sprite.spriteIndex) && (arg0->y != -0x140)) {
-        state = arg0->transition.bytes.state = 1;
+    if ((gRaceTypeSelection >= (u16)arg0->optionIndex) && (arg0->y != -0x48)) {
+        state = arg0->state = 2;
+    } else if ((gRaceTypeSelection < (u16)arg0->optionIndex) && (arg0->y != -0x140)) {
+        state = arg0->state = 1;
     } else {
-        state = arg0->transition.bytes.state;
+        state = arg0->state;
         if (state < 4) {
-            state = arg0->transition.bytes.state = 3;
+            state = arg0->state = 3;
         }
     }
 
@@ -565,35 +524,35 @@ void updateRaceTypeSelectOption1Frame(RaceTypeSelectWidgetActor *arg0) {
             arg0->y -= 0x24;
             if (arg0->y < -0x13F) {
                 arg0->y = -0x140;
-                arg0->transition.bytes.state = 3;
+                arg0->state = 3;
             }
-            state = arg0->transition.bytes.state;
+            state = arg0->state;
             break;
         case 2:
             arg0->y += 0x24;
             if (arg0->y >= -0x48) {
                 arg0->y = -0x48;
-                arg0->transition.bytes.state = 3;
+                arg0->state = 3;
             }
-            state = arg0->transition.bytes.state;
+            state = arg0->state;
             break;
         case 3:
             gMenuFlowState += 1;
             if (gRacePlayers[0].menuState == 1) {
                 if (arg0->y == -0x140) {
-                    arg0->transition.bytes.state = 5;
+                    arg0->state = 5;
                 } else {
-                    arg0->transition.bytes.state = 4;
+                    arg0->state = 4;
                 }
             }
-            state = arg0->transition.bytes.state;
+            state = arg0->state;
             break;
         case 4:
             arg0->x += 0x20;
             if (arg0->x >= 0xA0) {
-                arg0->transition.bytes.state = 5;
+                arg0->state = 5;
             }
-            state = arg0->transition.bytes.state;
+            state = arg0->state;
             break;
     }
 
@@ -604,16 +563,16 @@ void updateRaceTypeSelectOption1Frame(RaceTypeSelectWidgetActor *arg0) {
     addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawRaceTypeSelectOption1Frame, arg0);
 }
 
-void initRaceTypeSelectOption1Frame(RaceTypeSelectWidgetActor *arg0) {
+void initRaceTypeSelectOption1Frame(RaceTypeSelectOptionFrameActor *arg0) {
     arg0->x = -8;
     arg0->y = -0x140;
-    arg0->sprite.spriteIndex = 1;
-    arg0->transition.bytes.timer = 0;
-    arg0->transition.bytes.state = 0;
+    arg0->optionIndex = 1;
+    arg0->unusedTimer = 0;
+    arg0->state = 0;
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceTypeSelectOption1Frame);
 }
 
-void drawRaceTypeSelectOption2Frame(RaceTypeSelectWidgetActor *arg0) {
+void drawRaceTypeSelectOption2Frame(RaceTypeSelectOptionFrameActor *arg0) {
     s32 shouldDraw;
     s32 i;
     s32 tileOffset;
@@ -626,7 +585,7 @@ void drawRaceTypeSelectOption2Frame(RaceTypeSelectWidgetActor *arg0) {
             arg0->x + ((i & 3) << 5),
             arg0->y + ((i / 4) << 5),
             getRelocatableHeapBlockBase(gAssetHandles[0x25]),
-            gRaceTypeSelectFrameTileMaps.entries[(u16)arg0->sprite.spriteIndex].center[tileOffset],
+            gRaceTypeSelectFrameTileMaps.optionFrames[(u16)arg0->optionIndex].centerTiles[tileOffset],
             0,
             0x100,
             0xA0,
@@ -644,7 +603,7 @@ void drawRaceTypeSelectOption2Frame(RaceTypeSelectWidgetActor *arg0) {
             arg0->x + 0x80,
             arg0->y + offset,
             getRelocatableHeapBlockBase(gAssetHandles[0x25]),
-            gRaceTypeSelectFrameTileMaps.entries[(u16)arg0->sprite.spriteIndex].right[tileOffset],
+            gRaceTypeSelectFrameTileMaps.optionFrames[(u16)arg0->optionIndex].rightEdgeTiles[tileOffset],
             0,
             0x100,
             0xA0,
@@ -654,7 +613,7 @@ void drawRaceTypeSelectOption2Frame(RaceTypeSelectWidgetActor *arg0) {
             arg0->x + offset,
             arg0->y + 0x80,
             getRelocatableHeapBlockBase(gAssetHandles[0x25]),
-            gRaceTypeSelectFrameTileMaps.entries[(u16)arg0->sprite.spriteIndex].bottom[tileOffset],
+            gRaceTypeSelectFrameTileMaps.optionFrames[(u16)arg0->optionIndex].bottomEdgeTiles[tileOffset],
             0,
             0x100,
             0xA0,
@@ -671,7 +630,7 @@ void drawRaceTypeSelectOption2Frame(RaceTypeSelectWidgetActor *arg0) {
         arg0->x + 0x80,
         arg0->y + 0x80,
         getRelocatableHeapBlockBase(gAssetHandles[0x25]),
-        gRaceTypeSelectFrameTileMaps.entries[(u16)arg0->sprite.spriteIndex].corner,
+        gRaceTypeSelectFrameTileMaps.optionFrames[(u16)arg0->optionIndex].cornerTile,
         0,
         0x100,
         0xA0,
@@ -679,17 +638,17 @@ void drawRaceTypeSelectOption2Frame(RaceTypeSelectWidgetActor *arg0) {
     );
 }
 
-void updateRaceTypeSelectOption2Frame(RaceTypeSelectWidgetActor *arg0) {
+void updateRaceTypeSelectOption2Frame(RaceTypeSelectOptionFrameActor *arg0) {
     int state;
 
-    if ((gRaceTypeSelection >= (u16)arg0->sprite.spriteIndex) && (arg0->y != -0x48)) {
-        state = arg0->transition.bytes.state = 2;
-    } else if ((gRaceTypeSelection < (u16)arg0->sprite.spriteIndex) && (arg0->y != -0x140)) {
-        state = arg0->transition.bytes.state = 1;
+    if ((gRaceTypeSelection >= (u16)arg0->optionIndex) && (arg0->y != -0x48)) {
+        state = arg0->state = 2;
+    } else if ((gRaceTypeSelection < (u16)arg0->optionIndex) && (arg0->y != -0x140)) {
+        state = arg0->state = 1;
     } else {
-        state = arg0->transition.bytes.state;
+        state = arg0->state;
         if (state < 4) {
-            state = arg0->transition.bytes.state = 3;
+            state = arg0->state = 3;
         }
     }
 
@@ -701,35 +660,35 @@ void updateRaceTypeSelectOption2Frame(RaceTypeSelectWidgetActor *arg0) {
             arg0->y -= 0x24;
             if (arg0->y < -0x13F) {
                 arg0->y = -0x140;
-                arg0->transition.bytes.state = 3;
+                arg0->state = 3;
             }
-            state = arg0->transition.bytes.state;
+            state = arg0->state;
             break;
         case 2:
             arg0->y += 0x24;
             if (arg0->y >= -0x48) {
                 arg0->y = -0x48;
-                arg0->transition.bytes.state = 3;
+                arg0->state = 3;
             }
-            state = arg0->transition.bytes.state;
+            state = arg0->state;
             break;
         case 3:
             gMenuFlowState += 1;
             if (gRacePlayers[0].menuState == 1) {
                 if (arg0->y == -0x140) {
-                    arg0->transition.bytes.state = 5;
+                    arg0->state = 5;
                 } else {
-                    arg0->transition.bytes.state = 4;
+                    arg0->state = 4;
                 }
             }
-            state = arg0->transition.bytes.state;
+            state = arg0->state;
             break;
         case 4:
             arg0->x += 0x20;
             if (arg0->x >= 0xA0) {
-                arg0->transition.bytes.state = 5;
+                arg0->state = 5;
             }
-            state = arg0->transition.bytes.state;
+            state = arg0->state;
             break;
     }
 
@@ -740,37 +699,34 @@ void updateRaceTypeSelectOption2Frame(RaceTypeSelectWidgetActor *arg0) {
     addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawRaceTypeSelectOption2Frame, arg0);
 }
 
-void initRaceTypeSelectOption2Frame(RaceTypeSelectWidgetActor *arg0) {
+void initRaceTypeSelectOption2Frame(RaceTypeSelectOptionFrameActor *arg0) {
     arg0->x = -8;
     arg0->y = -0x140;
-    arg0->sprite.spriteIndex = 2;
-    arg0->transition.bytes.timer = 0;
-    arg0->transition.bytes.state = 0;
+    arg0->optionIndex = 2;
+    arg0->unusedTimer = 0;
+    arg0->state = 0;
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceTypeSelectOption2Frame);
 }
 
 // IDO code generation for this function is sensitive to source line layout.
 // clang-format off
-void drawRaceTypeSelectOption3Frame(RaceTypeSelectWidgetActor *arg0) {
-    RaceTypeSelectPaddedFrameTileMapTable *tileMap;
+void drawRaceTypeSelectOption3Frame(RaceTypeSelectExitFrameActor *arg0) {
     s32 i;
     s32 tileOffset;
     s32 offset;
 
-    tileMap = (RaceTypeSelectPaddedFrameTileMapTable *)&gRaceTypeSelectFrameTileMaps;
     tileOffset = 0;
     for (i = 0; i < 16; i++, tileOffset++) {
         drawMenuSpriteTileClipped(arg0->x + ((i & 3) << 5), arg0->y + ((i / 4) << 5), getRelocatableHeapBlockBase(gAssetHandles[0x21]),
-                      tileMap->selected.center[tileOffset], 0, 0x100, 0xA0, 0x49);
+                      gRaceTypeSelectFrameTileMaps.exitFrame.centerTiles[tileOffset], 0, 0x100, 0xA0, 0x49);
     }
 
-    tileMap = (RaceTypeSelectPaddedFrameTileMapTable *)&gRaceTypeSelectFrameTileMaps;
     tileOffset = 0;
     offset = 0; i = 0x80; do {
         drawMenuSpriteTileClipped(arg0->x + 0x80, arg0->y + offset, getRelocatableHeapBlockBase(gAssetHandles[0x21]),
-                      tileMap->selected.right[tileOffset], 0, 0x100, 0xA0, 0x49);
+                      gRaceTypeSelectFrameTileMaps.exitFrame.rightEdgeTiles[tileOffset], 0, 0x100, 0xA0, 0x49);
         drawMenuSpriteTileClipped(arg0->x + offset, arg0->y + 0x80, getRelocatableHeapBlockBase(gAssetHandles[0x21]),
-                      tileMap->selected.bottom[tileOffset], 0, 0x100, 0xA0, 0x49);
+                      gRaceTypeSelectFrameTileMaps.exitFrame.bottomEdgeTiles[tileOffset], 0, 0x100, 0xA0, 0x49);
         i = 0x80;
         offset += 0x40;
         tileOffset++;
@@ -779,23 +735,23 @@ void drawRaceTypeSelectOption3Frame(RaceTypeSelectWidgetActor *arg0) {
     i--;
 
     drawMenuSpriteTileClipped(arg0->x + 0x80, arg0->y + 0x80, getRelocatableHeapBlockBase(gAssetHandles[0x21]),
-                  gRaceTypeSelectSpecialFrameCornerTile, 0, 0x100, 0xA0, 0x49);
+                  gRaceTypeSelectFrameTileMaps.exitFrameCornerTile, 0, 0x100, 0xA0, 0x49);
 }
 // clang-format on
 
-void updateRaceTypeSelectOption3Frame(RaceTypeSelectWidgetActor *arg0) {
+void updateRaceTypeSelectOption3Frame(RaceTypeSelectExitFrameActor *arg0) {
     int state;
 
-    if ((gRaceTypeSelection == 3) && (arg0->y != -0x48) && ((s32)arg0->widget.bytes.state < 6)) {
-        state = arg0->widget.bytes.state = 2;
+    if ((gRaceTypeSelection == 3) && (arg0->y != -0x48) && ((s32)arg0->state < 6)) {
+        state = arg0->state = 2;
     } else {
-        state = (s32)arg0->widget.bytes.state;
+        state = (s32)arg0->state;
         if ((gRaceTypeSelection != 3) && (arg0->y != -0x140) && (state < 6)) {
-            state = arg0->widget.bytes.state = 1;
+            state = arg0->state = 1;
         } else {
-            state = arg0->widget.bytes.state;
+            state = arg0->state;
             if (state < 4) {
-                state = arg0->widget.bytes.state = 3;
+                state = arg0->state = 3;
             }
         }
     }
@@ -807,50 +763,50 @@ void updateRaceTypeSelectOption3Frame(RaceTypeSelectWidgetActor *arg0) {
             arg0->y -= 0x24;
             if (arg0->y < -0x13F) {
                 arg0->y = -0x140;
-                arg0->widget.bytes.state = 3;
+                arg0->state = 3;
             }
-            state = arg0->widget.bytes.state;
+            state = arg0->state;
             break;
         case 2:
             arg0->y += 0x24;
             if (arg0->y >= -0x48) {
                 arg0->y = -0x48;
-                arg0->widget.bytes.state = 6;
-                arg0->transition.step = 8;
+                arg0->state = 6;
+                arg0->bounceStep = 8;
             }
-            state = arg0->widget.bytes.state;
+            state = arg0->state;
             break;
         case 3:
             gMenuFlowState += 1;
             if (gRacePlayers[0].menuState == 1) {
                 if (arg0->y == -0x140) {
-                    arg0->widget.bytes.state = 5;
+                    arg0->state = 5;
                 } else {
-                    arg0->widget.bytes.state = 4;
+                    arg0->state = 4;
                 }
             }
-            state = arg0->widget.bytes.state;
+            state = arg0->state;
             break;
         case 4:
             arg0->x += 0x20;
             if (arg0->x >= 0xA0) {
-                arg0->widget.bytes.state = 5;
+                arg0->state = 5;
             }
-            state = arg0->widget.bytes.state;
+            state = arg0->state;
             break;
         case 6:
-            arg0->y -= arg0->transition.step;
-            state = arg0->widget.bytes.state = 7;
+            arg0->y -= arg0->bounceStep;
+            state = arg0->state = 7;
             break;
         case 7:
-            arg0->y += arg0->transition.step;
-            arg0->transition.step /= 2;
-            if (arg0->transition.step == 0) {
-                arg0->widget.bytes.state = 3;
+            arg0->y += arg0->bounceStep;
+            arg0->bounceStep /= 2;
+            if (arg0->bounceStep == 0) {
+                arg0->state = 3;
             } else {
-                arg0->widget.bytes.state = 6;
+                arg0->state = 6;
             }
-            state = arg0->widget.bytes.state;
+            state = arg0->state;
             break;
     }
 
@@ -861,16 +817,16 @@ void updateRaceTypeSelectOption3Frame(RaceTypeSelectWidgetActor *arg0) {
     addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawRaceTypeSelectOption3Frame, arg0);
 }
 
-void initRaceTypeSelectOption3Frame(RaceTypeSelectWidgetActor *arg0) {
+void initRaceTypeSelectOption3Frame(RaceTypeSelectExitFrameActor *arg0) {
     arg0->x = -8;
     arg0->y = -0x140;
-    arg0->sprite.spriteIndex = 2;
-    arg0->widget.bytes.timer = 0;
-    arg0->widget.bytes.state = 0;
+    arg0->unused1C = 2;
+    arg0->unusedTimer = 0;
+    arg0->state = 0;
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceTypeSelectOption3Frame);
 }
 
-void drawRaceTypeSelectCursor(RaceTypeSelectWidgetActor *arg0) {
+void drawRaceTypeSelectCursor(RaceTypeSelectAnimatedWidgetActor *arg0) {
     drawMenuSpriteWithAlpha(
         arg0->x,
         (s16)(arg0->y + (gRaceTypeSelection * 0x18)),
@@ -879,18 +835,18 @@ void drawRaceTypeSelectCursor(RaceTypeSelectWidgetActor *arg0) {
         0x20,
         0x20,
         0,
-        arg0->sprite.spriteIndex,
+        arg0->alpha,
         0
     );
 }
 
-void updateRaceTypeSelectCursor(RaceTypeSelectWidgetActor *arg0) {
+void updateRaceTypeSelectCursor(RaceTypeSelectAnimatedWidgetActor *arg0) {
     u8 state;
     u8 globalState;
 
-    state = arg0->transition.bytes.state;
+    state = arg0->state;
     if (state != (globalState = gRaceTypeSelectCursorTarget.state)) {
-        arg0->transition.bytes.state = globalState;
+        arg0->state = globalState;
         /* Preserve IDO's state/globalState register allocation. */
         if (1) {}
         if (1) {}
@@ -898,89 +854,89 @@ void updateRaceTypeSelectCursor(RaceTypeSelectWidgetActor *arg0) {
         if (1) {}
         if (1) {}
         state = globalState;
-        arg0->sprite.spriteIndex = gRaceTypeSelectCursorTarget.alpha;
+        arg0->alpha = gRaceTypeSelectCursorTarget.alpha;
     }
 
     switch (state) {
         case 0:
-            arg0->sprite.spriteIndex += 0x26;
-            if (arg0->sprite.spriteIndex >= 0x100) {
-                arg0->sprite.spriteIndex = 0x100;
-                arg0->transition.bytes.state = 1;
+            arg0->alpha += 0x26;
+            if (arg0->alpha >= 0x100) {
+                arg0->alpha = 0x100;
+                arg0->state = 1;
             }
-            state = arg0->transition.bytes.state;
+            state = arg0->state;
             break;
         case 1:
-            if ((s32)arg0->transition.bytes.timer < 0x10) {
-                arg0->sprite.spriteIndex -= 9;
+            if ((s32)arg0->animationTimer < 0x10) {
+                arg0->alpha -= 9;
             } else {
-                arg0->sprite.spriteIndex += 9;
+                arg0->alpha += 9;
             }
-            state = arg0->transition.bytes.state;
-            arg0->transition.bytes.timer = (arg0->transition.bytes.timer + 1) & 0x1F;
+            state = arg0->state;
+            arg0->animationTimer = (arg0->animationTimer + 1) & 0x1F;
             break;
         case 2:
             if (gRacePlayers[0].menuState == 1) {
-                state = arg0->transition.bytes.state = 3;
+                state = arg0->state = 3;
             }
             break;
         case 3:
             arg0->x -= 0x20;
             if (arg0->x < -0xEF) {
-                arg0->transition.bytes.state = 4;
+                arg0->state = 4;
             }
-            state = arg0->transition.bytes.state;
+            state = arg0->state;
             break;
         case 4:
             break;
     }
 
     gRaceTypeSelectCursorAnimState = state;
-    if (arg0->transition.bytes.state == 4) {
+    if (arg0->state == 4) {
         removeCallbackTask(arg0);
         return;
     }
     addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawRaceTypeSelectCursor, arg0);
 }
 
-void initRaceTypeSelectCursor(RaceTypeSelectWidgetActor *arg0) {
+void initRaceTypeSelectCursor(RaceTypeSelectAnimatedWidgetActor *arg0) {
     arg0->x = -0x7C;
     arg0->y = -0x58;
-    arg0->sprite.spriteIndex = 0;
-    arg0->transition.bytes.state = 0;
-    arg0->transition.bytes.timer = 0;
+    arg0->alpha = 0;
+    arg0->state = 0;
+    arg0->animationTimer = 0;
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceTypeSelectCursor);
 }
 
-void drawRaceTypeSelectPortrait(RaceTypeSelectWidgetActor *arg0) {
-    RaceTypeSelectPortrait *portrait = &gRaceTypeSelectPortraitScripts.portraits[gRaceTypeSelection];
+void drawRaceTypeSelectPortrait(RaceTypeSelectAnimatedWidgetActor *arg0) {
+    RaceTypeSelectDescription *description = &gRaceTypeSelectPortraitScripts.descriptions[gRaceTypeSelection];
 
-    drawMenuGlyphScript(arg0->x, arg0->y, *portrait, 1, arg0->sprite.spriteIndex, 0);
+    drawMenuGlyphScript(arg0->x, arg0->y, *description, 1, arg0->alpha, 0);
 }
 
-void updateRaceTypeSelectPortrait(RaceTypeSelectWidgetActor *arg0) {
-    u8 state = arg0->transition.bytes.state;
+void updateRaceTypeSelectPortrait(RaceTypeSelectAnimatedWidgetActor *arg0) {
+    u8 state = arg0->state;
 
     switch (state) {
         case 0:
-            arg0->sprite.spriteIndex += 0x26;
-            if (arg0->sprite.spriteIndex >= 0x100) {
-                arg0->sprite.spriteIndex = 0x100;
-                arg0->transition.bytes.state = 1;
+            arg0->alpha += 0x26;
+            if (arg0->alpha >= 0x100) {
+                arg0->alpha = 0x100;
+                arg0->state = 1;
             }
-            state = arg0->transition.bytes.state;
+            state = arg0->state;
             break;
         case 1:
             if (gRacePlayers[0].menuState == 1) {
-                state = arg0->transition.bytes.state = 2;
+                state = arg0->state = 2;
             }
             break;
         case 2:
             arg0->x -= 0x20;
             if (arg0->x < -0xFF) {
-                arg0->transition.bytes.state = 3;
+                arg0->state = 3;
             }
-            state = arg0->transition.bytes.state;
+            state = arg0->state;
             break;
         case 3:
             break;
@@ -992,15 +948,15 @@ void updateRaceTypeSelectPortrait(RaceTypeSelectWidgetActor *arg0) {
     addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawRaceTypeSelectPortrait, arg0);
 }
 
-void initRaceTypeSelectPortrait(RaceTypeSelectWidgetActor *arg0) {
+void initRaceTypeSelectPortrait(RaceTypeSelectAnimatedWidgetActor *arg0) {
     arg0->x = -0x84;
     arg0->y = 0xC;
-    arg0->sprite.spriteIndex = 0;
-    arg0->transition.bytes.state = 0;
+    arg0->alpha = 0;
+    arg0->state = 0;
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceTypeSelectPortrait);
 }
 
-void drawRaceTypeSelectArrowPrompt(RaceTypeSelectWidgetActor *arg0) {
+void drawRaceTypeSelectArrowPrompt(RaceTypeSelectAnimatedWidgetActor *arg0) {
     drawMenuSpriteWithAlpha(
         arg0->x,
         arg0->y,
@@ -1009,34 +965,34 @@ void drawRaceTypeSelectArrowPrompt(RaceTypeSelectWidgetActor *arg0) {
         0x20,
         0x20,
         0,
-        arg0->sprite.spriteIndex,
+        arg0->alpha,
         0
     );
 }
 
-void updateRaceTypeSelectArrowPrompt(RaceTypeSelectWidgetActor *arg0) {
-    u8 state = arg0->transition.bytes.state;
+void updateRaceTypeSelectArrowPrompt(RaceTypeSelectAnimatedWidgetActor *arg0) {
+    u8 state = arg0->state;
 
     switch (state) {
         case 0:
-            arg0->sprite.spriteIndex += 0x26;
-            if (arg0->sprite.spriteIndex >= 0x100) {
-                arg0->sprite.spriteIndex = 0x100;
-                arg0->transition.bytes.state = 1;
+            arg0->alpha += 0x26;
+            if (arg0->alpha >= 0x100) {
+                arg0->alpha = 0x100;
+                arg0->state = 1;
             }
-            state = arg0->transition.bytes.state;
+            state = arg0->state;
             break;
         case 1:
             if (gRacePlayers[0].menuState == 1) {
-                state = arg0->transition.bytes.state = 2;
+                state = arg0->state = 2;
             }
             break;
         case 2:
             arg0->x += 0x20;
             if (arg0->x >= 0xA0) {
-                arg0->transition.bytes.state = 3;
+                arg0->state = 3;
             }
-            state = arg0->transition.bytes.state;
+            state = arg0->state;
             break;
         case 3:
             break;
@@ -1048,15 +1004,15 @@ void updateRaceTypeSelectArrowPrompt(RaceTypeSelectWidgetActor *arg0) {
     addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawRaceTypeSelectArrowPrompt, arg0);
 }
 
-void initRaceTypeSelectArrowPrompt(RaceTypeSelectWidgetActor *arg0) {
+void initRaceTypeSelectArrowPrompt(RaceTypeSelectAnimatedWidgetActor *arg0) {
     arg0->x = -8;
     arg0->y = -0x5C;
-    arg0->sprite.spriteIndex = 0;
-    arg0->transition.bytes.state = 0;
+    arg0->alpha = 0;
+    arg0->state = 0;
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceTypeSelectArrowPrompt);
 }
 
-void drawRaceTypeSelectEntryFee(RaceTypeSelectWidgetActor *arg0) {
+void drawRaceTypeSelectEntryFee(RaceTypeSelectAnimatedWidgetActor *arg0) {
     char sp40[0x18];
 
     if (gRaceTypeSelection != 3) {
@@ -1069,37 +1025,37 @@ void drawRaceTypeSelectEntryFee(RaceTypeSelectWidgetActor *arg0) {
             0x20,
             0x20,
             0,
-            arg0->sprite.spriteIndex,
+            arg0->alpha,
             0
         );
         sprintf(sp40, gRaceTypeSelectEntryFeeFormat, gRacePlayers[0].money);
-        drawMenuAsciiText((s16)(arg0->x + 0x10), (s16)(arg0->y + 0x10), sp40, 0, arg0->sprite.spriteIndex);
+        drawMenuAsciiText((s16)(arg0->x + 0x10), (s16)(arg0->y + 0x10), sp40, 0, arg0->alpha);
     }
 }
 
-void updateRaceTypeSelectEntryFee(RaceTypeSelectWidgetActor *arg0) {
-    u8 state = arg0->transition.bytes.state;
+void updateRaceTypeSelectEntryFee(RaceTypeSelectAnimatedWidgetActor *arg0) {
+    u8 state = arg0->state;
 
     switch (state) {
         case 0:
-            arg0->sprite.spriteIndex += 0x26;
-            if (arg0->sprite.spriteIndex >= 0x100) {
-                arg0->sprite.spriteIndex = 0x100;
-                arg0->transition.bytes.state = 1;
+            arg0->alpha += 0x26;
+            if (arg0->alpha >= 0x100) {
+                arg0->alpha = 0x100;
+                arg0->state = 1;
             }
-            state = arg0->transition.bytes.state;
+            state = arg0->state;
             break;
         case 1:
             if (gRacePlayers[0].menuState == 1) {
-                state = arg0->transition.bytes.state = 2;
+                state = arg0->state = 2;
             }
             break;
         case 2:
             arg0->x += 0x20;
             if (arg0->x >= 0xA0) {
-                arg0->transition.bytes.state = 3;
+                arg0->state = 3;
             }
-            state = arg0->transition.bytes.state;
+            state = arg0->state;
             break;
         case 3:
             break;
@@ -1111,10 +1067,10 @@ void updateRaceTypeSelectEntryFee(RaceTypeSelectWidgetActor *arg0) {
     addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawRaceTypeSelectEntryFee, arg0);
 }
 
-void initRaceTypeSelectEntryFee(RaceTypeSelectWidgetActor *arg0) {
+void initRaceTypeSelectEntryFee(RaceTypeSelectAnimatedWidgetActor *arg0) {
     arg0->x = 0x30;
     arg0->y = 0x40;
-    arg0->sprite.spriteIndex = 0;
-    arg0->transition.bytes.state = 0;
+    arg0->alpha = 0;
+    arg0->state = 0;
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceTypeSelectEntryFee);
 }
