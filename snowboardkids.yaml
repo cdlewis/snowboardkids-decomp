@@ -967,13 +967,40 @@ segments:
   - { start: 0x2521F0, type: bin, name: _2521F0, vram: 0 }
   - { start: 0x254380, type: bin, name: _254380, vram: 0 }
   - { start: 0x256420, type: bin, name: _256420, vram: 0 }
-  - [0x258C80, bin]
+  - { start: 0x258C80, type: bin, name: _258C80, vram: 0 }
+  - { start: 0x25B410, type: bin, name: _25B410, vram: 0 }
+  - { start: 0x25DF80, type: bin, name: _25DF80, vram: 0 }
+  - { start: 0x260A30, type: bin, name: _260A30, vram: 0 }
+  - { start: 0x263520, type: bin, name: _263520, vram: 0 }
+  - { start: 0x265D30, type: bin, name: _265D30, vram: 0 }
+  - { start: 0x2688C0, type: bin, name: _2688C0, vram: 0 }
+  - { start: 0x26B1D0, type: bin, name: _26B1D0, vram: 0 }
+  - { start: 0x26DE60, type: bin, name: _26DE60, vram: 0 }
+  - { start: 0x270730, type: bin, name: _270730, vram: 0 }
+  - { start: 0x2732E0, type: bin, name: _2732E0, vram: 0 }
   - type: bin
     start: 0x275A90
     name: _275A90
     vram: 0
-  - [0x27E290, bin]
+  - { start: 0x27E290, type: bin, name: _27E290, vram: 0 }
   - [0x369000, bin]
+  - { start: 0x541D50, type: bin, name: _541D50, vram: 0 }
+  - { start: 0x5457B0, type: bin, name: _5457B0, vram: 0 }
+  - { start: 0x546940, type: bin, name: _546940, vram: 0 }
+  - { start: 0x546EE0, type: bin, name: _546EE0, vram: 0 }
+  - { start: 0x5487A0, type: bin, name: _5487A0, vram: 0 }
+  - { start: 0x549650, type: bin, name: _549650, vram: 0 }
+  - { start: 0x549AA0, type: bin, name: _549AA0, vram: 0 }
+  - { start: 0x549EF0, type: bin, name: _549EF0, vram: 0 }
+  - { start: 0x54AFE0, type: bin, name: _54AFE0, vram: 0 }
+  - { start: 0x552640, type: bin, name: _552640, vram: 0 }
+  - { start: 0x55C020, type: bin, name: _55C020, vram: 0 }
+  - { start: 0x563F20, type: bin, name: _563F20, vram: 0 }
+  - { start: 0x56CFF0, type: bin, name: _56CFF0, vram: 0 }
+  - { start: 0x5757B0, type: bin, name: _5757B0, vram: 0 }
+  - { start: 0x57E350, type: bin, name: _57E350, vram: 0 }
+  - { start: 0x585570, type: bin, name: _585570, vram: 0 }
+  - { start: 0x58F6B0, type: bin, name: _58F6B0, vram: 0 }
   - type: bin
     start: 0x593D10
     name: _593D10

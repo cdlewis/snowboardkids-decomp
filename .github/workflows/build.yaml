@@ -63,6 +63,15 @@ jobs:
         run: PATH="$(pwd)/.venv/bin:$PATH" make
         working-directory: main
 
+      - name: Verify ROM shiftability
+        run: |
+          PATH="$(pwd)/.venv/bin:$PATH" ./tools/build-shift-test.sh
+          PATH="$(pwd)/.venv/bin:$PATH" SHIFT_AFTER=_1467B0 ./tools/build-shift-test.sh
+          PATH="$(pwd)/.venv/bin:$PATH" SHIFT_AFTER=BIG_SNOWMAN_COURSE_GRAPHICS ./tools/build-shift-test.sh
+          PATH="$(pwd)/.venv/bin:$PATH" SHIFT_AFTER=_27E290 ./tools/build-shift-test.sh
+          PATH="$(pwd)/.venv/bin:$PATH" SHIFT_AFTER=_593D10 ./tools/build-shift-test.sh
+        working-directory: main
+
       - name: Generate objdiff report
         run: PATH="$(pwd)/.venv/bin:$PATH" python3 -m mapfile_parser objdiff_report
         working-directory: main

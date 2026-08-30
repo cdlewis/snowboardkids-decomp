@@ -51,7 +51,8 @@ typedef struct AudioCamera {
 } AudioCamera;
 
 typedef struct SoundRomRange {
-    s32 words[2];
+    u32 romStart;
+    u32 romEnd;
 } SoundRomRange;
 
 typedef union SoundHalfArg {
@@ -190,28 +191,28 @@ s32 D_800DBAAC[108] = {
 };
 
 SoundRomRange gMusicSequenceRomRanges[10] = {
-    { 0x00541D50, 0x005457B0 },
-    { 0x005457B0, 0x00546940 },
-    { 0x00546940, 0x00546EE0 },
-    { 0x00546EE0, 0x005487A0 },
-    { 0x005487A0, 0x00549650 },
-    { 0x00549650, 0x00549AA0 },
-    { 0x00549AA0, 0x00549EF0 },
-    { 0x00549EF0, 0x0054AFE0 },
-    { 0x00546940, 0x00546EE0 },
-    { 0x00546940, 0x00546EE0 },
+    { (u32)&_541D50_ROM_START, (u32)&_541D50_ROM_END },
+    { (u32)&_5457B0_ROM_START, (u32)&_5457B0_ROM_END },
+    { (u32)&_546940_ROM_START, (u32)&_546940_ROM_END },
+    { (u32)&_546EE0_ROM_START, (u32)&_546EE0_ROM_END },
+    { (u32)&_5487A0_ROM_START, (u32)&_5487A0_ROM_END },
+    { (u32)&_549650_ROM_START, (u32)&_549650_ROM_END },
+    { (u32)&_549AA0_ROM_START, (u32)&_549AA0_ROM_END },
+    { (u32)&_549EF0_ROM_START, (u32)&_549EF0_ROM_END },
+    { (u32)&_546940_ROM_START, (u32)&_546940_ROM_END },
+    { (u32)&_546940_ROM_START, (u32)&_546940_ROM_END },
 };
 
 SoundRomRange gRaceMusicSequenceRomRanges[9] = {
-    { 0x0054AFE0, 0x00552640 },
-    { 0x00552640, 0x0055C020 },
-    { 0x0055C020, 0x00563F20 },
-    { 0x00563F20, 0x0056CFF0 },
-    { 0x0056CFF0, 0x005757B0 },
-    { 0x005757B0, 0x0057E350 },
-    { 0x0057E350, 0x00585570 },
-    { 0x00585570, 0x0058F6B0 },
-    { 0x0058F6B0, 0x00593D10 },
+    { (u32)&_54AFE0_ROM_START, (u32)&_54AFE0_ROM_END },
+    { (u32)&_552640_ROM_START, (u32)&_552640_ROM_END },
+    { (u32)&_55C020_ROM_START, (u32)&_55C020_ROM_END },
+    { (u32)&_563F20_ROM_START, (u32)&_563F20_ROM_END },
+    { (u32)&_56CFF0_ROM_START, (u32)&_56CFF0_ROM_END },
+    { (u32)&_5757B0_ROM_START, (u32)&_5757B0_ROM_END },
+    { (u32)&_57E350_ROM_START, (u32)&_57E350_ROM_END },
+    { (u32)&_585570_ROM_START, (u32)&_585570_ROM_END },
+    { (u32)&_58F6B0_ROM_START, (u32)&_58F6B0_ROM_END },
 };
 
 u16 gCourseMusicSequenceBanks[14] = {
@@ -275,7 +276,6 @@ u32 D_800DBD10[0x1E0] = {
     0x00000000, 0x00000000, 0x00000000,
 };
 
-extern u8 D_27E290[];
 extern s32 gPendingMusicCommand;
 extern s32 gCurrentMusicSequenceHandle;
 extern s32 gMusicSequenceStopped;
@@ -371,7 +371,7 @@ void initSoundManager(void) {
     init.heapBase = (u8 *)getRelocatableHeapBlockBase(gAssetHandles[3]);
     init.heapLen = 0x80000;
     init.soundBank = (PlayerCommandBank *)getRelocatableHeapBlockBase(gAssetHandles[4]);
-    init.sampleBaseOffset = (s32)D_27E290;
+    init.sampleBaseOffset = (s32)&_27E290_ROM_START;
     init.tuningTable = D_800DABB0;
     init.pitchOffsetTable = D_800DACAC;
     init.fxHeader = D_800DB8FC;
@@ -402,8 +402,8 @@ s32 loadMusicSequenceBank(s32 arg0) {
 
     if (gCurrentMusicSequenceHandle == 0) {
         range = (SoundRomRange *)((arg0 * 2) + (s32 *)gMusicSequenceRomRanges);
-        size = range->words[1] - range->words[0];
-        dmaReadRom(range->words[0], getRelocatableHeapBlockBase(gAssetHandles[5]), size);
+        size = range->romEnd - range->romStart;
+        dmaReadRom(range->romStart, getRelocatableHeapBlockBase(gAssetHandles[5]), size);
         if ((gCurrentMusicSequenceHandle =
                  MusStartSong((PlayerCommandData *)getRelocatableHeapBlockBase(gAssetHandles[5]))) != 0) {
             gCurrentMusicSequenceBank = arg0;

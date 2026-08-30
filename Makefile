@@ -253,6 +253,11 @@ ULTRA_IDO_AS_O_FILES := $(patsubst %.s,$(BUILD_DIR)/%.o,$(ULTRA_IDO_AS_FILES))
 O_FILES := $(shell grep -E 'build/(asm|assets|src)/.+\.o' $(LD_SCRIPT) -o 2>/dev/null | sort | uniq)
 
 TARGET = $(BUILD_DIR)/$(BASENAME)
+SHIFT_BUILD_DIR ?= $(BUILD_DIR)/shift
+SHIFT_AFTER ?= main
+SHIFT_PAD_SIZE ?= 0x10
+SHIFT_LD = $(SHIFT_BUILD_DIR)/$(BASENAME).ld
+SHIFT_TARGET = $(SHIFT_BUILD_DIR)/$(BASENAME)
 
 ### Targets
 
@@ -267,6 +272,19 @@ course-definitions:
 # The N64 CRC is still applied in the .z64 step, so the result is a bootable ROM.
 nonmatching: dirs $(TARGET).z64
 	$(PRINTF) "[$(YELLOW) nonmatch $(NO_COL)]  Built $(TARGET).z64 (SHA1 verification skipped)\n"
+
+check-rom-addresses:
+	$(V)$(PYTHON) $(TOOLS_DIR)/check_rom_addresses.py
+
+# Inject padding into ROM space only, then verify all later ROM symbols moved
+# while every VRAM symbol retained its normal address.
+shift-test: course-definitions dirs check-rom-addresses $(TARGET).z64 $(SHIFT_TARGET).z64
+	$(V)$(PYTHON) $(TOOLS_DIR)/verify_shifted_map.py \
+		$(TARGET).map $(SHIFT_TARGET).map --after $(SHIFT_AFTER) --pad-size $(SHIFT_PAD_SIZE)
+	$(V)$(PYTHON) $(TOOLS_DIR)/verify_shifted_rom.py \
+		$(TARGET).z64 $(SHIFT_TARGET).z64 $(TARGET).map $(SHIFT_TARGET).map \
+		--after $(SHIFT_AFTER) --pad-size $(SHIFT_PAD_SIZE)
+	$(PRINTF) "[$(GREEN)  shift $(NO_COL)]  Built $(SHIFT_TARGET).z64 after $(SHIFT_AFTER) (+$(SHIFT_PAD_SIZE) ROM bytes)\n"
 
 dirs:
 	@mkdir -p $(BUILD_DIR)/asm/data
@@ -403,6 +421,23 @@ $(TARGET).z64: $(TARGET).bin
 	$(V)cp $< $@
 	$(V)$(PYTHON) $(N64CRC) $@
 
+$(SHIFT_LD): FORCE $(LD_SCRIPT) $(TOOLS_DIR)/make_shiftable_linker.py
+	@mkdir -p $(dir $@)
+	$(V)$(PYTHON) $(TOOLS_DIR)/make_shiftable_linker.py $(LD_SCRIPT) $@ \
+		--after $(SHIFT_AFTER) --pad-size $(SHIFT_PAD_SIZE)
+
+$(SHIFT_TARGET).elf: $(SHIFT_LD) $(LINKER_SCRIPTS) $(O_FILES)
+	@mkdir -p $(dir $@)
+	$(V)$(LD) -T $(SHIFT_LD) -Map $(SHIFT_TARGET).map \
+		$(foreach ld,$(LINKER_SCRIPTS),-T $(ld)) --no-check-sections -o $@
+
+$(SHIFT_TARGET).bin: $(SHIFT_TARGET).elf
+	$(V)$(OBJCOPY) $(OBJCOPYFLAGS) $< $@
+
+$(SHIFT_TARGET).z64: $(SHIFT_TARGET).bin
+	$(V)cp $< $@
+	$(V)$(PYTHON) $(N64CRC) $@
+
 # SHA1 verification
 verify: $(TARGET).z64
 	$(PRINTF) "[$(GREEN) verify $(NO_COL)]  Checking $(BASENAME).sha1\n"
@@ -420,6 +455,8 @@ check-clang-format-version:
 			echo "Error: clang-format $(LLVM_MAJOR_VERSION) is required (found major version $${version:-unknown})" >&2; \
 			exit 1; \
 		fi
+
+FORCE:
 
 check-clang-tidy-version:
 	@command -v $(CLANG_TIDY) >/dev/null 2>&1 || { echo "Error: $(CLANG_TIDY) was not found" >&2; exit 1; }
@@ -456,6 +493,6 @@ clean:
 
 ### Settings
 .SECONDARY:
-.PHONY: all clean default extract nonmatching verify check course-definitions \
+.PHONY: all clean default extract nonmatching shift-test check-rom-addresses verify check course-definitions FORCE \
 	check-clang-format-version check-clang-tidy-version format format-check tidy \
 	decompilation-summary

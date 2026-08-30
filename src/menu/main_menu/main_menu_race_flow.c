@@ -27,18 +27,18 @@ typedef struct {
 } MainMenuModePreviewRaceCourseAsset;
 
 MainMenuModePreviewRaceCourseAsset gMainMenuModePreviewRaceCourseAssets[] = {
-    { 0, { 0, 0, 0 }, NULL,           NULL           },
-    { 0, { 0, 0, 0 }, (u8 *)0x258C80, (u8 *)0x25B410 },
-    { 0, { 0, 0, 0 }, (u8 *)0x25B410, (u8 *)0x25DF80 },
-    { 9, { 0, 0, 0 }, (u8 *)0x25DF80, (u8 *)0x260A30 },
-    { 0, { 0, 0, 0 }, (u8 *)0x260A30, (u8 *)0x263520 },
-    { 0, { 0, 0, 0 }, (u8 *)0x263520, (u8 *)0x265D30 },
-    { 4, { 0, 0, 0 }, (u8 *)0x265D30, (u8 *)0x2688C0 },
-    { 1, { 0, 0, 0 }, (u8 *)0x2688C0, (u8 *)0x26B1D0 },
-    { 3, { 0, 0, 0 }, (u8 *)0x26B1D0, (u8 *)0x26DE60 },
-    { 2, { 0, 0, 0 }, (u8 *)0x26DE60, (u8 *)0x270730 },
-    { 9, { 0, 0, 0 }, (u8 *)0x270730, (u8 *)0x2732E0 },
-    { 0, { 0, 0, 0 }, (u8 *)0x2732E0, (u8 *)0x275A90 },
+    { 0, { 0, 0, 0 }, NULL,                     NULL                   },
+    { 0, { 0, 0, 0 }, (u8 *)&_258C80_ROM_START, (u8 *)&_258C80_ROM_END },
+    { 0, { 0, 0, 0 }, (u8 *)&_25B410_ROM_START, (u8 *)&_25B410_ROM_END },
+    { 9, { 0, 0, 0 }, (u8 *)&_25DF80_ROM_START, (u8 *)&_25DF80_ROM_END },
+    { 0, { 0, 0, 0 }, (u8 *)&_260A30_ROM_START, (u8 *)&_260A30_ROM_END },
+    { 0, { 0, 0, 0 }, (u8 *)&_263520_ROM_START, (u8 *)&_263520_ROM_END },
+    { 4, { 0, 0, 0 }, (u8 *)&_265D30_ROM_START, (u8 *)&_265D30_ROM_END },
+    { 1, { 0, 0, 0 }, (u8 *)&_2688C0_ROM_START, (u8 *)&_2688C0_ROM_END },
+    { 3, { 0, 0, 0 }, (u8 *)&_26B1D0_ROM_START, (u8 *)&_26B1D0_ROM_END },
+    { 2, { 0, 0, 0 }, (u8 *)&_26DE60_ROM_START, (u8 *)&_26DE60_ROM_END },
+    { 9, { 0, 0, 0 }, (u8 *)&_270730_ROM_START, (u8 *)&_270730_ROM_END },
+    { 0, { 0, 0, 0 }, (u8 *)&_2732E0_ROM_START, (u8 *)&_2732E0_ROM_END },
 };
 s16 gMainMenuModePreviewRaceDurationBySelection[] = {
     0x384, 0x287, 0x2BB, 0x33B, 0x23F, 0x2B2, 0x2C7, 0x138, 0x1AF, 0x1FD, 0x16A, 0x1E2, 0, 0, 0, 0,
