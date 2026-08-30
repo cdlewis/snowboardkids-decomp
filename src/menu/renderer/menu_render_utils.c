@@ -62,8 +62,6 @@ u16 D_800D40B0[16] = {
     0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
 };
 
-extern void *allocMenuRenderScratch(s32);
-
 // IDO code generation for this function is sensitive to source line layout.
 // clang-format off
 void initMenuAssetHandles(void)
@@ -240,7 +238,6 @@ void drawAssetTableSpriteWideIndex(s16 x, s16 y, AssetTable *table, s32 entryInd
 }
 #else
 #pragma weak drawAssetTableSpriteWideIndex = drawAssetTableSprite
-extern void drawAssetTableSpriteWideIndex(s16 x, s16 y, AssetTable *table, s32 entryIndex);
 #endif
 
 void drawPulsingAssetTableSprite(s16 x, s16 y, AssetTable *table, u16 entryIndex) {
@@ -1055,14 +1052,12 @@ void drawMenuAsciiCharImpl(s16 x, s16 y, u8 ch, u16 arg3) {
 CLANG_DIAGNOSTIC_POP
 
 #pragma weak drawMenuAsciiChar = drawMenuAsciiCharImpl
-extern void drawMenuAsciiChar(s16 x, s16 y, u8 ch, u16 arg3);
 #ifdef __clang__
 void drawMenuAsciiCharLegacy(s16 x, s16 y, volatile s32 ch, u16 arg3) {
     drawMenuAsciiCharImpl(x, y, ch, arg3);
 }
 #else
 #pragma weak drawMenuAsciiCharLegacy = drawMenuAsciiCharImpl
-extern void drawMenuAsciiCharLegacy(s16 x, s16 y, volatile s32 ch, u16 arg3);
 #endif
 
 CLANG_DIAGNOSTIC_PUSH

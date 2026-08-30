@@ -27,7 +27,6 @@
 /* Local 3-arg declaration; see note in callback_task_scheduler.h. */
 extern void *createCallbackTaskWithUserIdPreservingArgs(void *, s32, s32);
 extern RaceCamera D_801121E0[];
-extern void drawAssetTableSpriteWideIndex(s16 x, s16 y, AssetTable *table, s32 entryIndex);
 
 #define RACE_UI_TRAIL_GFX_ALLOC_PTR (*(RaceUiDisplayCommand **)&gRegionAllocPtr)
 #define ASSET_HANDLE(index) (gAssetHandles[(index)])
@@ -1243,7 +1242,6 @@ extern u8 gRaceUpdatePaused;
 extern void drawAssetTableSprite8bpp(s16, s16, void *, s32);
 extern void drawMenuAsciiTextDefaultScale(s32, s32, const void *, s32);
 extern void enqueuePlayerLoopingPositionalSoundRequest(s32, void *, s32, s32, f32, s32);
-extern void *allocMenuRenderScratch(s32 size);
 
 const char gRaceUiBoardReversePromptLabelBlinkOn[0x10] = "Board Reverse";
 const char gRaceUiBoardReversePromptLabelBlinkOff[0x10] = "Board Reverse";
