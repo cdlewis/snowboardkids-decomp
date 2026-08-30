@@ -1,0 +1,43 @@
+candidate_source: python3 tools/find_header_hygiene_candidates.py --json
+prompt: >-
+  Clean up every header-ownership problem reported by
+  `python3 tools/find_header_hygiene_candidates.py` for header $INPUT[0] and
+  source $INPUT[1] while preserving the matching ROM. `NO_OWNING_HEADER` or an
+  empty path means the detector could not identify that side of the pair. Work
+  on this candidate and any directly affected owners or consumers; search the
+  full repository before deciding where a declaration or type belongs.
+
+  A public project header must not expose an incomplete named type through a
+  declaration such as `typedef struct EndingCreditsJam EndingCreditsJam;` while
+  keeping the complete definition in a C file or another unrelated header.
+  Move the authoritative complete struct or union definition, along with any
+  required supporting types, into its owning header. Remove duplicate local
+  definitions and update includes and users. If dependency cycles appear,
+  resolve ownership with the appropriate existing header or a focused shared
+  header; do not preserve an opaque forward typedef merely to avoid fixing the
+  dependency.
+
+  Function declarations belong in the header owned by the C file that defines
+  the function. Normal project function declarations in headers must not use
+  the `extern` keyword. C files must include that authoritative header directly
+  instead of carrying an ad-hoc `extern` function declaration. If no owning
+  header exists, create the appropriately located header, add the accurate
+  declaration, and update the implementation and all consumers to include it.
+  `extern` declarations for data and object symbols are valid and must not be
+  removed under this rule. Do not rewrite canonical Nintendo/libultra SDK
+  headers merely because their upstream style uses `extern` function
+  prototypes.
+
+  Reconcile every function signature and type against its implementation and
+  all callers. Do not generalize parameters to `void *`, add casts, use manual
+  pointer arithmetic, duplicate fields, or introduce layout aliases to hide a
+  conflict. Preserve struct sizes, offsets, alignment, declaration order, and
+  code generation. Run `./tools/build-and-verify.sh` before editing to establish
+  a baseline, rebuild before using asm-differ, check every function affected by
+  a type or signature change, and finish only when
+  `./tools/build-and-verify.sh` succeeds. Re-run the candidate detector and
+  confirm the reported problems for this candidate are gone.
+agent: codex
+agent_flags: --config model_reasoning_effort='"xhigh"'
+success_command: 'git add -A && git commit -m "clean header ownership: $CANDIDATE"'
+timeout: 60m
