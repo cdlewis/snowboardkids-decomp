@@ -8,32 +8,13 @@
 #include "game/ending/ending_credits_flow.h"
 #include "font_encoding.h"
 #include <PR/rmon.h>
-/*
- * drawEndingCreditsPageText only matches when this call is compiled against
- * the original promoted argument types. Suppress the narrow prototype here so
- * the legacy declaration below remains local to this translation unit.
- */
-#define MENU_RENDERER_OMIT_DRAW_MENU_GLYPH_SCRIPT
 #include "game/menu/renderer/menu_renderer.h"
-#undef MENU_RENDERER_OMIT_DRAW_MENU_GLYPH_SCRIPT
-
-extern void drawMenuGlyphScript(s32 x, s32 y, u8 *text, s32 palette, s32 scale, s32 colorMode);
 
 #define ENDING_CREDITS_TEXT_FADE_MAX 0x100
 #define ENDING_CREDITS_PAGE_FADE_STEP 0xA
 #define ENDING_CREDITS_PAGE_RESET_DELAY 0x20
 #define ENDING_CREDITS_PAGE_VISIBLE_FRAMES 0x96
 #define ENDING_CREDITS_PAGE_COUNT 0x19
-
-struct EndingCreditsPageTextActor {
-    /* 0x00 */ u8 pad0[0x1C];
-    /* 0x1C */ s16 x;
-    /* 0x1E */ s16 y;
-    /* 0x20 */ u16 pageIndex;
-    /* 0x22 */ u16 timer;
-    /* 0x24 */ s16 alpha;
-    /* 0x26 */ u8 state;
-};
 
 typedef struct EndingObjectSpriteDebugViewerActor {
     /* 0x00 */ u8 pad0[0x18];
@@ -109,22 +90,16 @@ EndingCreditsPageTextLineLayout gEndingCreditsPageTextLineLayouts[ENDING_CREDITS
     { 3, { { -112, 0 }, { -112, 16 }, { -136, 52 }, { 0, 0 }, { 0, 0 } },        0 },
 };
 
-extern int sprintf(char *, const char *, ...);
-
-void drawEndingCreditsPageText(EndingCreditsPageTextActor *arg0);
-void updateEndingCreditsTheEndTextFadeIn(EndingCreditsPageTextActor *arg0);
-void updateEndingCreditsPageText(EndingCreditsPageTextActor *arg0);
-void updateEndingObjectSpriteDebugViewer(EndingObjectSpriteDebugViewerActor *arg0);
-
 CLANG_DIAGNOSTIC_PUSH
 CLANG_DIAGNOSTIC_IGNORE_UNINITIALIZED
+CLANG_DIAGNOSTIC_IGNORE_SELF_ASSIGN
 void drawEndingCreditsPageText(EndingCreditsPageTextActor *arg0) {
     register s32 lineCount;
     s32 lineIndex;
     s32 scriptIndex;
     s32 lineLength;
     s32 positionIndex;
-    s16 alpha;
+    s16 drawY;
     s16 x;
     s32 y;
     u16 lineText[0x1C];
@@ -141,11 +116,11 @@ void drawEndingCreditsPageText(EndingCreditsPageTextActor *arg0) {
         scriptIndex = 0;
         positionIndex = 0;
         do {
-            layout = &gEndingCreditsPageTextLineLayouts[y = arg0->pageIndex];
+            layout = &gEndingCreditsPageTextLineLayouts[y = (lineLength = arg0->pageIndex)];
             position = &layout->positions[positionIndex];
             x = position->x;
             glyph = gEndingCreditsPageTextScripts[arg0->pageIndex][scriptIndex];
-            y = position->y;
+            y = drawY = position->y;
             lineLength = 0;
             if (gEndingCreditsPageTextScripts[arg0->pageIndex][scriptIndex] != 0xFFFF) {
                 do {
@@ -160,15 +135,14 @@ void drawEndingCreditsPageText(EndingCreditsPageTextActor *arg0) {
                 if (!lineCount) {}
             }
             lineText[lineLength] = 0xFFFF;
-            alpha = 0xFFFF;
             scriptIndex++;
             drawMenuGlyphScript(
-                (x << 16) >> 16,
-                y,
-                (u8 *)lineText,
+                (x = x),
+                drawY,
+                lineText,
                 (((0 & 0xFFFFu) & 0xFFFFu) & 0xFFFFu) & 0xFFFFu,
                 arg0->alpha,
-                colorMode & alpha
+                colorMode
             );
             if (((!arg0) && (!arg0)) && (!arg0)) {}
             lineIndex++;
