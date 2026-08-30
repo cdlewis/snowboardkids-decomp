@@ -10,7 +10,6 @@ Transform3D gIdentityFixedTransform = {
      FIXED_MATRIX_ONE, 0,
      0, 0,
      FIXED_MATRIX_ONE, },
-    0,
     { 0, 0, 0 },
 };
 

@@ -40,7 +40,6 @@ typedef struct {
     s16 zx;
     s16 zy;
     s16 zz;
-    s16 pad12;
     Vec3i translation;
 } Transform3DComponents;
 
