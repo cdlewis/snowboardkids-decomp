@@ -22,8 +22,6 @@
 #include "game/engine/viewport_manager.h"
 #include "game/race/player/race_player_input.h"
 
-extern void initCourseSelectPlayerPanels(void *);
-
 extern u8 gPendingFramebufferSwapCount;
 extern u8 gFramebufferSwapHold;
 
