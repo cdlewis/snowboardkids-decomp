@@ -3,8 +3,85 @@
 
 #include "common.h"
 
-typedef struct ShopMenuRowActor ShopMenuRowActor;
-typedef struct ShopMenuWidgetActor ShopMenuWidgetActor;
+typedef struct ShopMenuRowActor {
+    char pad0[0x18];
+    /* 0x18 */ s16 rowXPositions[5];
+    /* 0x22 */ s16 baseY;
+    /* 0x24 */ u8 state;
+    /* 0x25 */ u8 revealTimer;
+    /* 0x26 */ u8 visibleRowCount;
+} ShopMenuRowActor;
+
+typedef struct ShopMenuWidgetActor {
+    char pad0[0x18];
+    union {
+        struct {
+            union {
+                struct {
+                    /* 0x18 */ s16 x;
+                    /* 0x1A */ s16 y;
+                    union {
+                        /* 0x1C */ s16 index;
+                        struct {
+                            /* 0x1C */ u8 state;
+                            /* 0x1D */ u8 pad1D;
+                        } bytes;
+                    } sprite;
+                    union {
+                        struct {
+                            /* 0x1E */ u8 state;
+                            /* 0x1F */ u8 timer;
+                        } bytes;
+                        /* 0x1E */ u16 counter;
+                        /* 0x1E */ s16 alpha;
+                    } transition;
+                    union {
+                        struct {
+                            /* 0x20 */ u8 state;
+                            /* 0x21 */ u8 timer;
+                            /* 0x22 */ u8 subState;
+                            /* 0x23 */ u8 subTimer;
+                        } bytes;
+                        /* 0x20 */ s16 counter;
+                        /* 0x20 */ s32 price;
+                    } item;
+                    union {
+                        struct {
+                            /* 0x24 */ u8 state;
+                            /* 0x25 */ u8 timer;
+                        } bytes;
+                        /* 0x24 */ u8 slideState;
+                    } slide;
+                };
+                /* 0x18 */ s16 cursorPositions[10];
+            };
+            /* 0x2C */ s16 targetY;
+            /* 0x2E */ s16 targetX;
+            union {
+                struct {
+                    /* 0x30 */ s16 pulseAlpha;
+                    /* 0x32 */ u16 pulseTimer;
+                } bytes;
+                /* 0x30 */ s32 pulse;
+            } prompt;
+            /* 0x34 */ u16 spawnTimer;
+            /* 0x36 */ s16 visibleCount;
+            /* 0x38 */ u8 state;
+        };
+        struct {
+            char pad18[6];
+            union {
+                /* 0x1E */ u16 counters[12];
+                struct {
+                    /* 0x1E */ u16 patternIndex;
+                    /* 0x20 */ u16 tileBase;
+                    /* 0x22 */ s16 alpha;
+                };
+            };
+        } sparkle;
+        /* 0x18 */ s16 randomValues[15];
+    };
+} ShopMenuWidgetActor;
 
 void drawShopMenuModeChoiceRows(ShopMenuRowActor *arg0);
 void updateShopMenuModeChoiceRows(ShopMenuRowActor *arg0);
