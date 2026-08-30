@@ -1,13 +1,10 @@
 #ifndef ENDING_CREDITS_SLASH_H
 #define ENDING_CREDITS_SLASH_H
 
-#include "common.h"
+#include "game/ending/ending_credits_character.h"
 
 typedef struct EndingCreditsSlashActor {
-    /* 0x00 */ u8 callbackTaskState[0x18];
-    /* 0x18 */ Vec3i position;
-    /* 0x24 */ Vec3s rotation;
-    /* 0x2A */ u16 stateTimer;
+    /* 0x00 */ EndingCreditsCharacterActor character;
     /* 0x2C */ u16 phase0DAnimationId;
 } EndingCreditsSlashActor;
 
