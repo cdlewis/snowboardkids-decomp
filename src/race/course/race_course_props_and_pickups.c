@@ -1,5 +1,6 @@
 #include "game/race/race_state.h"
 #include "common.h"
+#include "game/audio/sound_manager.h"
 #include "game/menu/renderer/menu_render_utils.h"
 #include "game/engine/render_callback.h"
 #include "game/engine/system_runtime.h"
@@ -50,91 +51,6 @@ typedef struct {
     /* 0x0C */ s16 rotation;
     /* 0x0E */ s16 variant;
 } PickupSpawnEntry;
-
-struct ThrownPickupSpawnerActor {
-    char pad0[0x10];
-    /* 0x10 */ u16 spawnIndex;
-    char pad12[6];
-    /* 0x18 */ s16 timer;
-    /* 0x1A */ s8 lastVariant;
-};
-
-struct CourseEffectModelListActor {
-    char pad0[0x10];
-    /* 0x10 */ u16 modelListIndex;
-    char pad12[6];
-    /* 0x18 */ Mtx *modelBuffer;
-    /* 0x1C */ s16 modelIndexOffset;
-    /* 0x1E */ s16 modelCount;
-};
-
-struct ThrownPickupRenderActor {
-    char pad0[0x18];
-    /* 0x18 */ Mtx *matrix;
-    /* 0x1C */ Vec3i pos;
-    /* 0x28 */ s16 pitch;
-    /* 0x2A */ s16 yaw;
-    char pad2C[2];
-    /* 0x2E */ s8 matrixDirty;
-};
-
-struct ThrownPickupModelActor {
-    char pad0[0x1C];
-    /* 0x1C */ Vec3i pos;
-    /* 0x28 */ s16 pitch;
-    /* 0x2A */ s16 modelIndex;
-    /* 0x2C */ s16 unk2C;
-    char pad2E[2];
-    /* 0x30 */ Vec3i transformedPos;
-    /* 0x3C */ Vec3i velocity;
-    /* 0x48 */ s16 bounceCount;
-    /* 0x4A */ s16 timer;
-};
-
-struct RacePickupActor {
-    char pad0[0x10];
-    /* 0x10 */ u16 spawnIndex;
-    char pad12[6];
-    /* 0x18 */ s16 timer;
-    /* 0x1A */ s16 matrixDirty;
-    /* 0x1C */ Vec3i pos;
-    /* 0x28 */ Vec3i drawPos;
-    /* 0x34 */ Transform3D transform;
-    /* 0x54 */ void *displayList;
-    /* 0x58 */ void *rotationDisplayList;
-    /* 0x5C */ void *scaleDisplayList;
-    /* 0x60 */ s32 velY;
-    /* 0x64 */ void *image0;
-    /* 0x68 */ void *palette0;
-    char pad6C[8];
-    /* 0x74 */ void *image1;
-    /* 0x78 */ void *palette1;
-    /* 0x7C */ void *image2;
-    /* 0x80 */ void *palette2;
-    /* 0x84 */ s16 rotation;
-    /* 0x86 */ s16 variant;
-};
-
-struct PickupShardParticleActor {
-    char pad0[0x10];
-    /* 0x10 */ u16 spawnOffsetIndex;
-    char pad12[6];
-    /* 0x18 */ Vec3i pos;
-    /* 0x24 */ Vec3i velocity;
-    /* 0x30 */ s16 rotX;
-    /* 0x32 */ s16 rotY;
-    /* 0x34 */ s16 rotZ;
-    /* 0x36 */ s16 rotVelX;
-    /* 0x38 */ s16 rotVelY;
-    /* 0x3A */ s16 rotVelZ;
-    /* 0x3C */ s16 timer;
-    char pad3E[2];
-    /* 0x40 */ void *displayList;
-    /* 0x44 */ s8 transformDirty;
-    char pad45[3];
-    /* 0x48 */ void *image;
-    /* 0x4C */ void *palette;
-};
 
 u32 D_800D7750 = 0;
 
@@ -794,7 +710,6 @@ Vec3i gPickupShardInitialVelocities[] = {
 
 u32 D_800D9C38[] = { 0, 0 };
 
-extern void enqueuePositionalSoundEffect(s32, void *, s32, s32);
 extern Gfx *gRaceCourseObjectDisplayLists[];
 extern u8 gRaceUpdatePaused;
 extern u8 gTrainingCourseLesson;
