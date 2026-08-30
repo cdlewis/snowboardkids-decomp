@@ -1,5 +1,6 @@
 #include "game/race/race_state.h"
 #include "common.h"
+#include <PR/os_libc.h>
 #include "game/save_data.h"
 #include "game/menu/renderer/menu_render_utils.h"
 #include "game/engine/render_callback.h"
@@ -18,7 +19,6 @@
 #define RACE_HUD_POPUP_FONT_HANDLE (gAssetHandles[0x1F])
 
 extern void drawMenuAsciiTextDefaultScale(s32, s32, char *, s32);
-extern int sprintf(char *, const char *, ...);
 extern s16 gRaceLapCount;
 extern u8 gRaceUpdatePaused;
 extern u8 gTrainingCourseLesson;

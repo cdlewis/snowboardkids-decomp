@@ -14,8 +14,6 @@
 #include <PR/mbi.h>
 #include "game/math/geometry.h"
 
-int sprintf(char *buffer, const char *format, ...);
-
 #define STICK_RIGHT 0x40000
 #define STICK_LEFT 0x80000
 #define STICK_UP 0x10000

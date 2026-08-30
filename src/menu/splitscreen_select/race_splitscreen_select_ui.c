@@ -1,6 +1,7 @@
 #include "game/race/race_state.h"
 #include "font_encoding.h"
 #include "common.h"
+#include <PR/os_libc.h>
 #include "game/engine/asset_manager.h"
 #include "game/engine/render_callback.h"
 #include "game/engine/relocatable_heap.h"
@@ -14,7 +15,6 @@
 #define ASSET_HANDLE(index) (gAssetHandles[(index)])
 #define RACE_SPLITSCREEN_SELECT_TEXTURE_HANDLE (gAssetHandles[0x21])
 
-extern int sprintf(char *, const char *, ...);
 extern u8 gRaceSplitscreenSelectCursorAnimState;
 extern Gfx *gRegionAllocPtr;
 extern u8 gMenuExitSelection;
