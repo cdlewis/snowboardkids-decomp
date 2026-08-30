@@ -7,6 +7,7 @@
 #include "game/menu/character_select/character_select_course_menu.h"
 #include "game/menu/controller_pak/controller_pak_race_record_save_flow.h"
 #include "game/menu/controller_pak/controller_pak_menu.h"
+#include "game/menu/controller_pak/controller_pak_ui.h"
 #include "game/engine/game_task_scheduler.h"
 #include "game/menu/controller_pak/controller_pak_race_record_save_ui.h"
 #include "game/menu/main_menu/controller_main_menu_flow.h"
@@ -30,7 +31,6 @@ extern s32 gMenuFlowState;
 extern s32 D_8010ADE0;
 extern CallbackTask *D_8010ADE4;
 extern s16 gMenuFadeAlpha;
-extern void initControllerPakDeleteConfirmPrompt(CallbackTask *);
 
 void initControllerPakRaceRecordSaveFlow(void) {
     resetAllViewports();
@@ -64,15 +64,6 @@ void initControllerPakRaceRecordSaveFlow(void) {
     gControllerPakMenuState.confirmChoice = 0;
     setCurrentGameTaskCallback(updateControllerPakRaceRecordSaveFlow, 0);
 }
-
-#ifdef PREVIOUS_NON_MATCHING
-extern void requestRumbleMotorInit(u16);
-extern void requestControllerPakProbe(u16);
-extern void requestControllerPakSaveStatus(u16);
-extern void requestControllerPakSaveWrite(u16, s32, ControllerPakRaceRecordSaveStatusTransition *, s16);
-extern void requestControllerPakRepair(u16);
-extern void initControllerPakDeleteConfirmPrompt(CallbackTask *);
-#endif
 
 #include "updateControllerPakRaceRecordSaveFlow.inc.c"
 
@@ -132,12 +123,7 @@ void updateControllerPakRaceRecordSaveFlow(void) {
                 case 2:
                     if (((u8)gControllerPakRaceRecordSaveStatusTransition.step) != 3) {
                         sp1C = temp_t0;
-                        requestControllerPakSaveWrite(
-                            0,
-                            3,
-                            &gControllerPakRaceRecordSaveStatusTransition,
-                            gMenuChoicePromptState[0]
-                        );
+                        requestControllerPakSaveWrite(0);
                         if (gControllerPakRetryCounts[0] == 0) {
                             gControllerPakRaceRecordSaveStatusTransition.targetStatus = 5;
                             gControllerPakRaceRecordSaveStatusTransition.step = 3;
