@@ -25,39 +25,6 @@ typedef struct {
     Vec3i offset;
 } RaceItemProjectileTransformScratch;
 
-struct RaceItemProjectileActor {
-    /* 0x00 */ u8 pad0[0x10];
-    /* 0x10 */ u16 playerIndex;
-    /* 0x12 */ u8 pad12[6];
-    /* 0x18 */ Vec3i pos;
-    /* 0x24 */ Mtx *matrix;
-    /* 0x28 */ s32 velocityY;
-    /* 0x2C */ s32 accelerationY;
-    /* 0x30 */ void *image;
-    /* 0x34 */ void *palette;
-    /* 0x38 */ s16 timer;
-    union {
-        /* 0x3A */ s16 targetPlayerIndex;
-        /* 0x3A */ s16 blinkTimer;
-    };
-    /* 0x3C */ s16 targetAngle;
-    /* 0x3E */ s16 startAngle;
-    union {
-        /* 0x40 */ s16 angle;
-        /* 0x40 */ s16 *anglePtr;
-        /* 0x40 */ s8 matrixDirty;
-        struct {
-            /* 0x40 */ u8 pad40[2];
-            /* 0x42 */ s8 matrixDirty2;
-        } matrixFlags;
-    };
-    /* 0x44 */ Vec3i prevPos;
-    /* 0x50 */ s32 radius;
-    /* 0x54 */ s8 unk54;
-    /* 0x55 */ u8 pad55[0x58 - 0x55];
-    /* 0x58 */ s8 matrixDirty2;
-};
-
 extern Gfx gEffectRenderModeSetupDl[];
 extern Gfx gEffectRenderModeCleanupDl[];
 extern Gfx *gRegionAllocPtr;
