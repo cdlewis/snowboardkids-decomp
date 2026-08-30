@@ -578,7 +578,7 @@ void initCharacterSelectRosterIcons(CharacterSelectUiRosterIconActor *arg0) {
     arg0->y = -0x10;
     arg0->targetY = -0x48;
     arg0->speedX = 0x12;
-    arg0->unk26 = 0;
+    arg0->unused26 = 0;
     arg0->state = 0;
     arg0->timer = 0;
     arg0->leftSecretSlotUnlocked = 0;
