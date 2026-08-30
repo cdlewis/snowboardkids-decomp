@@ -10,7 +10,7 @@ typedef struct {
     /* 0x1A */ s16 y;
     /* 0x1C */ u8 state;
     /* 0x1D */ u8 pad1D[0xB];
-} ControllerPakRaceRecordSaveScorePanelActor; // size = 0x28
+} ControllerPakRaceRecordSaveScorePanelActor;
 
 typedef struct {
     /* 0x00 */ CallbackTaskHeader task;
@@ -20,7 +20,7 @@ typedef struct {
     /* 0x1E */ u8 pad1E;
     /* 0x1F */ u8 state;
     /* 0x20 */ u8 pad20[8];
-} ControllerPakRaceRecordSavePromptFrameActor; // size = 0x28
+} ControllerPakRaceRecordSavePromptFrameActor;
 
 typedef struct {
     /* 0x00 */ CallbackTaskHeader task;
@@ -31,7 +31,7 @@ typedef struct {
     /* 0x20 */ u8 state;
     /* 0x21 */ u8 arrowFrame;
     /* 0x22 */ u8 pad22[6];
-} ControllerPakRaceRecordSaveStatusMessageActor; // size = 0x28
+} ControllerPakRaceRecordSaveStatusMessageActor;
 
 typedef struct {
     /* 0x00 */ CallbackTaskHeader task;
@@ -43,7 +43,7 @@ typedef struct {
     /* 0x22 */ u16 cursorAlpha;
     /* 0x24 */ u16 cursorAlphaTimer;
     /* 0x26 */ u8 pad26[2];
-} ControllerPakRaceRecordSaveStatusChoicePromptActor; // size = 0x28
+} ControllerPakRaceRecordSaveStatusChoicePromptActor;
 
 typedef struct {
     /* 0x00 */ CallbackTaskHeader task;
@@ -52,7 +52,7 @@ typedef struct {
     /* 0x1C */ s16 alpha;
     /* 0x1E */ u8 state;
     /* 0x1F */ u8 pad1F[9];
-} ControllerPakRaceRecordSaveExitMessageActor; // size = 0x28
+} ControllerPakRaceRecordSaveExitMessageActor;
 
 void drawControllerPakRaceRecordSaveScorePanel(ControllerPakRaceRecordSaveScorePanelActor *arg0);
 void updateControllerPakRaceRecordSaveScorePanel(ControllerPakRaceRecordSaveScorePanelActor *arg0);

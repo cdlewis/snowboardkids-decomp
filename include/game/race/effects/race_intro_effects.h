@@ -15,7 +15,7 @@ typedef union RaceIntroPackedAngles {
 typedef struct RaceIntroMeshActor {
     /* 0x00 */ CallbackTaskHeader task;
     /* 0x18 */ Mtx *matrices;
-} RaceIntroMeshActor; // size = 0x1C
+} RaceIntroMeshActor;
 
 typedef struct RaceIntroEffectActor {
     /* 0x00 */ CallbackTaskHeader task;
@@ -43,7 +43,7 @@ typedef struct RaceIntroEffectActor {
         /* 0x40 */ s8 displayList0Valid;
     };
     /* 0x44 */ s8 displayListValid;
-} RaceIntroEffectActor; // size = 0x48
+} RaceIntroEffectActor;
 
 void drawRaceIntroModelMeshes(RaceIntroMeshActor *arg0);
 void enqueueDrawRaceIntroModelMeshes(RaceIntroMeshActor *arg0);

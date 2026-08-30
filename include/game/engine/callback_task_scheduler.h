@@ -18,16 +18,16 @@ typedef struct CallbackTaskHeader {
     /* 0x12 */ s16 unk12;
     /* 0x14 */ s16 callbackTimer;
     /* 0x16 */ s16 isActive;
-} CallbackTaskHeader; // size = 0x18
+} CallbackTaskHeader;
 
 struct CallbackTask {
     /* 0x000 */ CallbackTaskHeader header;
     /* 0x018 */ u32 callbackData[0x40];
-}; // size = 0x118
+};
 
 typedef struct CallbackTaskGroup {
     CallbackTask tasks[4];
-} CallbackTaskGroup; // size = 0x460
+} CallbackTaskGroup;
 
 void initCallbackTaskScheduler(s32 arg0);
 void updateCallbackTasks(void);
@@ -44,12 +44,7 @@ void *createCallbackTask(CallbackTaskCallback callback, s32 type, s32 priority);
 void *createCallbackTaskWithUserId(CallbackTaskCallback callback, s32 type, s32 priority, s32 userId);
 CLANG_DIAGNOSTIC_PUSH
 CLANG_DIAGNOSTIC_IGNORE_STRICT_PROTOTYPES
-void *createCallbackTaskWithUserIdPreservingArgs(
-    void (*callback)(),
-    s32 type,
-    s32 priority,
-    s32 userId
-);
+void *createCallbackTaskWithUserIdPreservingArgs(void (*callback)(), s32 type, s32 priority, s32 userId);
 CLANG_DIAGNOSTIC_POP
 void removeCallbackTask(void *task);
 void setCallbackTaskCallback(void *task, CallbackTaskCallback callback);

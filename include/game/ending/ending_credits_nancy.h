@@ -8,7 +8,7 @@ typedef struct EndingCreditsNancyActor {
     /* 0x18 */ Vec3i pos;
     /* 0x24 */ Vec3s rot;
     /* 0x2A */ u16 timer;
-} EndingCreditsNancyActor; // size = 0x2C
+} EndingCreditsNancyActor;
 
 void updateEndingNancyFinalPose(EndingCreditsNancyActor *arg0);
 void updateEndingNancyStartFinalPose(EndingCreditsNancyActor *arg0);

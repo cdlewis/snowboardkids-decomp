@@ -16,12 +16,12 @@ typedef struct RelocatableHeapBlock {
     s32 size;
     u8 index;
     u8 status;
-} RelocatableHeapBlock; // size = 0x14
+} RelocatableHeapBlock;
 
 typedef struct RelocatableHeapBlockStartAlias {
     u8 *start;
     u8 pad[0x10];
-} RelocatableHeapBlockStartAlias; // size = 0x14
+} RelocatableHeapBlockStartAlias;
 
 extern RelocatableHeapBlockStartAlias gRelocatableHeapBlockStartAliases[];
 extern RelocatableHeapBlock *gRelocatableHeapFreeBlockStack[];

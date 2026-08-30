@@ -11,7 +11,7 @@ typedef struct EndingCreditsPageTextActor {
     /* 0x22 */ u16 timer;
     /* 0x24 */ s16 alpha;
     /* 0x26 */ u8 state;
-} EndingCreditsPageTextActor; // size = 0x28
+} EndingCreditsPageTextActor;
 
 void initEndingCreditsPageTextActor(EndingCreditsPageTextActor *arg0);
 
