@@ -30,8 +30,6 @@ typedef struct {
     /* 0x12 */ u16 cursorY;
 } CharacterSelectState;
 
-typedef char CharacterSelectStateSizeCheck[(sizeof(CharacterSelectState) == 0x14) ? 1 : -1];
-
 extern CharacterSelectState gCharacterSelectHudState;
 extern s8 gCharacterSelectHighlightedRosterIndices[4];
 

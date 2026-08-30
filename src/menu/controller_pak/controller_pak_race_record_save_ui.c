@@ -185,7 +185,7 @@ void drawControllerPakRaceRecordSaveScorePanel(ControllerPakRaceRecordSaveScoreP
 
     if (count > 0) {
         xOffset = 0;
-        new_var = gPlayerBadgeDisplayOrder;
+        new_var = gCharacterSelectCourseMenuData.playerBadgeDisplayOrder;
         badgeIndex = new_var;
         do {
             tile = gGameSaveDataBuffer[0].cupPlacements[*badgeIndex];
