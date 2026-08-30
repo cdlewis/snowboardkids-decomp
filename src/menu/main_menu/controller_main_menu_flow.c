@@ -100,7 +100,6 @@ void requestRumbleMotorInit(u16 arg0) {
     osRecvMesg(&gControllerSubsystemReplyQueue, &msg, OS_MESG_BLOCK);
 }
 
-extern void requestRumbleMotorInitWithContext(u16 controllerIndex, s32 playerCount, s32 choiceValue);
 #pragma weak requestRumbleMotorInitWithContext = requestRumbleMotorInit
 
 void serviceRumbleMotorRequest(u16 arg0) {
@@ -204,7 +203,6 @@ void requestControllerPakSaveStatus(u16 arg0) {
     osRecvMesg(&gControllerSubsystemReplyQueue, &msg, OS_MESG_BLOCK);
 }
 
-extern void requestControllerPakSaveStatusWithContext(u16 controllerIndex, s32 playerCount, s32 choiceValue);
 #pragma weak requestControllerPakSaveStatusWithContext = requestControllerPakSaveStatus
 
 void checkControllerPakSaveStatus(u16 arg0) {
@@ -271,7 +269,6 @@ void requestControllerPakSaveRead(u16 arg0) {
     osRecvMesg(&gControllerSubsystemReplyQueue, &msg, OS_MESG_BLOCK);
 }
 
-extern void requestControllerPakSaveReadWithContext(u16 controllerIndex, s32 playerCount, s32 choiceValue);
 #pragma weak requestControllerPakSaveReadWithContext = requestControllerPakSaveRead
 
 void readControllerPakSave(u16 controllerIndex) {
@@ -439,7 +436,6 @@ void requestControllerPakRepair(u16 arg0) {
     osRecvMesg(&gControllerSubsystemReplyQueue, &msg, OS_MESG_BLOCK);
 }
 
-extern void requestControllerPakRepairWithContext(u16 controllerIndex, s32 playerCount, s32 choiceValue);
 #pragma weak requestControllerPakRepairWithContext = requestControllerPakRepair
 
 void repairControllerPakId(u16 arg0) {
