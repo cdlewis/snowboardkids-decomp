@@ -222,14 +222,14 @@ void initMultiplayerCourseSelectMenu(void) {
 
         gRacePlayers[j].menuSelection = gCourseSelectCourseIds[j][k];
 
-        COURSE_SELECT_STATUS_LAYOUT.core.unk0[j] = 0;
-        COURSE_SELECT_STATUS_LAYOUT.core.unk4Array[j] = 0;
-        COURSE_SELECT_STATUS_LAYOUT.core.unk8Array[j] = 0;
-        COURSE_SELECT_STATUS_LAYOUT.core.unkCArray[j] = 0;
-        COURSE_SELECT_STATUS_LAYOUT.core.unk10Array[j] = 0;
-        COURSE_SELECT_STATUS_LAYOUT.core.unk14[j] = 0;
-        COURSE_SELECT_STATUS_LAYOUT.core.unk1C[j] = 0;
-        COURSE_SELECT_STATUS_LAYOUT.core.unk24[j] = 0;
+        COURSE_SELECT_STATUS_LAYOUT.core.previewModelState[j] = 0;
+        COURSE_SELECT_STATUS_LAYOUT.core.incomingPreviewModelState[j] = 0;
+        COURSE_SELECT_STATUS_LAYOUT.core.outgoingPreviewModelState[j] = 0;
+        COURSE_SELECT_STATUS_LAYOUT.core.incomingPreviewModelTimer[j] = 0;
+        COURSE_SELECT_STATUS_LAYOUT.core.outgoingPreviewModelTimer[j] = 0;
+        COURSE_SELECT_STATUS_LAYOUT.core.incomingPreviewModelAngle[j] = 0;
+        COURSE_SELECT_STATUS_LAYOUT.core.outgoingPreviewModelAngle[j] = 0;
+        COURSE_SELECT_STATUS_LAYOUT.core.extraCourseCounts[j] = 0;
     }
 
     COURSE_SELECT_STATUS_LAYOUT.cursorState = 0;
@@ -295,7 +295,7 @@ void updateMultiplayerCourseSelectMenu(void) {
         } else if (D_800EC9C0 == 0) {
             for (playerIndex = 0; playerIndex < gPlayerCount; playerIndex++) {
                 if (gMenuChoicePromptState[playerIndex] == 0) {
-                    if (((gCourseSelectStatus.unk0[playerIndex] == 1) && (gRacePlayers[playerIndex].menuState == 0)) &&
+                    if (((gCourseSelectStatus.previewModelState[playerIndex] == 1) && (gRacePlayers[playerIndex].menuState == 0)) &&
                         (!(gCourseSelectSlideStates[playerIndex] & 1))) {
                         if (gCourseSelectInputLocked == 1) {
                             gRacePlayers[playerIndex].menuState = 9;
@@ -437,7 +437,7 @@ void updateMultiplayerCourseSelectMenu(void) {
                                     gMenuInputRepeatTimers[playerIndex]++;
                                 }
                                 if (gMenuChoicePromptState[playerIndex] <
-                                    (gCourseSelectStatus.unk24[playerIndex] + 1)) {
+                                    (gCourseSelectStatus.extraCourseCounts[playerIndex] + 1)) {
                                     gMenuChoicePromptState[playerIndex]++;
                                     enqueueSoundEffect(0x19, 0x32);
                                 }
@@ -485,13 +485,13 @@ void updateMultiplayerCourseSelectMenu(void) {
                                 }
                                 gMenuChoicePromptState[playerIndex] += 3;
                                 if (gCourseSelectSlideStates[playerIndex] == 0) {
-                                    gCourseSelectStatus.unkCArray[playerIndex] = 1;
-                                    gCourseSelectStatus.unk14[playerIndex] = 0;
-                                    gCourseSelectStatus.unk4Array[playerIndex] = 3;
+                                    gCourseSelectStatus.incomingPreviewModelTimer[playerIndex] = 1;
+                                    gCourseSelectStatus.incomingPreviewModelAngle[playerIndex] = 0;
+                                    gCourseSelectStatus.incomingPreviewModelState[playerIndex] = 3;
                                 } else {
-                                    gCourseSelectStatus.unk10Array[playerIndex] = 1;
-                                    gCourseSelectStatus.unk1C[playerIndex] = 0;
-                                    gCourseSelectStatus.unk8Array[playerIndex] = 3;
+                                    gCourseSelectStatus.outgoingPreviewModelTimer[playerIndex] = 1;
+                                    gCourseSelectStatus.outgoingPreviewModelAngle[playerIndex] = 0;
+                                    gCourseSelectStatus.outgoingPreviewModelState[playerIndex] = 3;
                                 }
                             } else if (gPlayerInputPressed[playerIndex] & 0x4000) {
                                 enqueueSoundEffect(0x18, 0x32);
@@ -514,9 +514,9 @@ void updateMultiplayerCourseSelectMenu(void) {
                         gRacePlayers[playerIndex].menuState = 1;
                         gMenuChoicePromptState[playerIndex] -= 3;
                         if (gCourseSelectSlideStates[playerIndex] == 0) {
-                            gCourseSelectStatus.unk4Array[playerIndex] = 1;
+                            gCourseSelectStatus.incomingPreviewModelState[playerIndex] = 1;
                         } else {
-                            gCourseSelectStatus.unk8Array[playerIndex] = 1;
+                            gCourseSelectStatus.outgoingPreviewModelState[playerIndex] = 1;
                         }
                     } else {
                         count++;

@@ -99,8 +99,8 @@ void drawControllerPakRaceRecordSaveScorePanel(ControllerPakRaceRecordSaveScoreP
     s32 count;
 
     drawMenuSprite(
-        arg0->x,
-        arg0->y,
+        arg0->common.x,
+        arg0->common.y,
         getRelocatableHeapBlockBase(CONTROLLER_PAK_RACE_RECORD_SAVE_SCORE_TEXTURE_HANDLE),
         0xA,
         0x20,
@@ -109,8 +109,8 @@ void drawControllerPakRaceRecordSaveScorePanel(ControllerPakRaceRecordSaveScoreP
         0
     );
     drawMenuSprite(
-        (s16)(arg0->x + 0x40),
-        arg0->y,
+        (s16)(arg0->common.x + 0x40),
+        arg0->common.y,
         getRelocatableHeapBlockBase(CONTROLLER_PAK_RACE_RECORD_SAVE_SCORE_TEXTURE_HANDLE),
         0xB,
         0x20,
@@ -119,8 +119,8 @@ void drawControllerPakRaceRecordSaveScorePanel(ControllerPakRaceRecordSaveScoreP
         0
     );
     drawMenuSprite(
-        (s16)(arg0->x + 0x80),
-        arg0->y,
+        (s16)(arg0->common.x + 0x80),
+        arg0->common.y,
         getRelocatableHeapBlockBase(CONTROLLER_PAK_RACE_RECORD_SAVE_SCORE_TEXTURE_HANDLE),
         0xC,
         0x20,
@@ -131,10 +131,10 @@ void drawControllerPakRaceRecordSaveScorePanel(ControllerPakRaceRecordSaveScoreP
 
     text[0] = '1';
     text[1] = 0;
-    drawMenuAsciiText((s16)(arg0->x + 0x32), (s16)((unsigned long)(arg0->y + 2)), text, 0, 0x100);
+    drawMenuAsciiText((s16)(arg0->common.x + 0x32), (s16)((unsigned long)(arg0->common.y + 2)), text, 0, 0x100);
 
     sprintf(text, D_800E0F30, gRacePlayers[0].money);
-    drawMenuAsciiText((s16)(arg0->x + 0x44), (s16)(arg0->y + 0x1B), text, 0, 0x100);
+    drawMenuAsciiText((s16)(arg0->common.x + 0x44), (s16)(arg0->common.y + 0x1B), text, 0, 0x100);
 
     if (gGameSaveDataBuffer[0].progressionLevel == 3) {
         count = 3;
@@ -155,8 +155,8 @@ void drawControllerPakRaceRecordSaveScorePanel(ControllerPakRaceRecordSaveScoreP
             }
 
             drawMenuSpriteWithAlpha(
-                (s16)(arg0->x + next + 4),
-                (s16)(arg0->y + 0x11),
+                (s16)(arg0->common.x + next + 4),
+                (s16)(arg0->common.y + 0x11),
                 getRelocatableHeapBlockBase(CONTROLLER_PAK_RACE_RECORD_SAVE_SCORE_TEXTURE_HANDLE),
                 0x19,
                 0x20,
@@ -198,8 +198,8 @@ void drawControllerPakRaceRecordSaveScorePanel(ControllerPakRaceRecordSaveScoreP
                 if ((!i) && (!i)) {}
             }
             drawMenuSpriteWithAlpha(
-                (s16)(arg0->x + xOffset + 4),
-                (s16)(arg0->y + 0x27),
+                (s16)(arg0->common.x + xOffset + 4),
+                (s16)(arg0->common.y + 0x27),
                 getRelocatableHeapBlockBase(CONTROLLER_PAK_RACE_RECORD_SAVE_SCORE_TEXTURE_HANDLE),
                 i + 0x1A,
                 0x20,
@@ -220,9 +220,9 @@ void updateControllerPakRaceRecordSaveScorePanel(ControllerPakRaceRecordSaveScor
 
     switch (state) {
         case 0:
-            arg0->x -= 0x20;
-            if (arg0->x < -0x43) {
-                arg0->x = -0x44;
+            arg0->common.x -= 0x20;
+            if (arg0->common.x < -0x43) {
+                arg0->common.x = -0x44;
                 arg0->state = 1;
                 D_8010ADE0 =
                     createCallbackTask((CallbackTaskCallback)initControllerPakRaceRecordSavePromptFrame, 0, 0x62);
@@ -238,8 +238,8 @@ void updateControllerPakRaceRecordSaveScorePanel(ControllerPakRaceRecordSaveScor
             }
             break;
         case 2:
-            arg0->x -= 0x20;
-            if (arg0->x < -0x117) {
+            arg0->common.x -= 0x20;
+            if (arg0->common.x < -0x117) {
                 arg0->state = 3;
             }
             state = arg0->state;
@@ -256,8 +256,8 @@ void updateControllerPakRaceRecordSaveScorePanel(ControllerPakRaceRecordSaveScor
 }
 
 void initControllerPakRaceRecordSaveScorePanel(ControllerPakRaceRecordSaveScorePanelActor *arg0) {
-    arg0->x = 0x90;
-    arg0->y = -0x20;
+    arg0->common.x = 0x90;
+    arg0->common.y = -0x20;
     arg0->state = 0;
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateControllerPakRaceRecordSaveScorePanel);
 }
@@ -269,8 +269,8 @@ void drawControllerPakRaceRecordSavePromptFrame(ControllerPakRaceRecordSavePromp
     if (gControllerPakStatusCodes[0] != 8) {
         alpha = arg0->scale;
         drawMenuSpriteWithAlpha(
-            (s16)(arg0->x - 2),
-            (s16)(arg0->y + 0xC),
+            (s16)(arg0->common.x - 2),
+            (s16)(arg0->common.y + 0xC),
             getRelocatableHeapBlockBase(gAssetHandles[0x21]),
             8,
             0x20,
@@ -280,8 +280,8 @@ void drawControllerPakRaceRecordSavePromptFrame(ControllerPakRaceRecordSavePromp
             zero
         );
         drawMenuSpriteWithAlpha(
-            (s16)(arg0->x + 0x3E),
-            (s16)(arg0->y + 0xC),
+            (s16)(arg0->common.x + 0x3E),
+            (s16)(arg0->common.y + 0xC),
             getRelocatableHeapBlockBase(gAssetHandles[0x21]),
             9,
             0x20,
@@ -316,8 +316,8 @@ void updateControllerPakRaceRecordSavePromptFrame(ControllerPakRaceRecordSavePro
             }
             break;
         case 3:
-            arg0->x -= 0x20;
-            if (arg0->x < -0x117) {
+            arg0->common.x -= 0x20;
+            if (arg0->common.x < -0x117) {
                 arg0->state = 4;
             }
             state = arg0->state;
@@ -333,8 +333,8 @@ void updateControllerPakRaceRecordSavePromptFrame(ControllerPakRaceRecordSavePro
 }
 
 void initControllerPakRaceRecordSavePromptFrame(ControllerPakRaceRecordSavePromptFrameActor *arg0) {
-    arg0->x = -0x44;
-    arg0->y = -0x1E;
+    arg0->common.x = -0x44;
+    arg0->common.y = -0x1E;
     arg0->scale = 0;
     arg0->state = 0;
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateControllerPakRaceRecordSavePromptFrame);
@@ -346,14 +346,14 @@ void drawControllerPakRaceRecordSaveStatusMessage(ControllerPakRaceRecordSaveSta
 
     if (gControllerPakStatusCodes[0] != 8) {
         text = gControllerPakRaceRecordSaveStatusMessages[gControllerPakStatusCodes[0]];
-        drawMenuGlyphScript(arg0->x, arg0->y, text, 1, arg0->alpha, 0);
+        drawMenuGlyphScript(arg0->common.x, arg0->common.y, text, 1, arg0->alpha, 0);
         if (((gControllerPakStatusCodes[0] == 4) || (gControllerPakStatusCodes[0] >= 7)) &&
             (gMenuChoicePromptState[0] == 0)) {
             if (arg0->alpha == 0x100) {
                 texture = getRelocatableHeapBlockBase(gAssetHandles[0x21]);
                 drawMenuSprite(
-                    (s16)(arg0->x + 0x70),
-                    (s16)(arg0->y + 0x10),
+                    (s16)(arg0->common.x + 0x70),
+                    (s16)(arg0->common.y + 0x10),
                     texture,
                     ((s32)arg0->arrowFrame >= 8) + 5,
                     0x20,
@@ -408,8 +408,8 @@ void updateControllerPakRaceRecordSaveStatusMessage(ControllerPakRaceRecordSaveS
             state = arg0->state;
             break;
         case 4:
-            arg0->x -= 0x20;
-            if (arg0->x < -0x117) {
+            arg0->common.x -= 0x20;
+            if (arg0->common.x < -0x117) {
                 arg0->state = 5;
             }
             state = arg0->state;
@@ -426,8 +426,8 @@ void updateControllerPakRaceRecordSaveStatusMessage(ControllerPakRaceRecordSaveS
 }
 
 void initControllerPakRaceRecordSaveStatusMessage(ControllerPakRaceRecordSaveStatusMessageActor *arg0) {
-    arg0->x = -0x42;
-    arg0->y = -0xE;
+    arg0->common.x = -0x42;
+    arg0->common.y = -0xE;
     arg0->alpha = 0x100;
     gControllerPakRaceRecordSaveStatusTransitionAlpha = 0x100;
     arg0->state = 0;
@@ -451,7 +451,7 @@ void drawControllerPakRaceRecordSaveStatusChoicePrompt(ControllerPakRaceRecordSa
 
         drawAlpha = alpha;
         drawMenuSpriteWithAlpha(
-            arg0->x,
+            arg0->common.x,
             arg0->bottomChoiceY,
             getRelocatableHeapBlockBase(gAssetHandles[0x21]),
             gControllerPakRaceRecordSaveChoicePromptBottomSprites[gControllerPakStatusCodes[0] * 2],
@@ -469,8 +469,8 @@ void drawControllerPakRaceRecordSaveStatusChoicePrompt(ControllerPakRaceRecordSa
         }
 
         drawMenuSpriteWithAlpha(
-            arg0->x,
-            arg0->topChoiceY,
+            arg0->common.x,
+            arg0->common.y,
             getRelocatableHeapBlockBase(gAssetHandles[0x21]),
             gControllerPakRaceRecordSaveChoicePromptTopSprites[gControllerPakStatusCodes[0] * 2],
             0x20,
@@ -483,8 +483,8 @@ void drawControllerPakRaceRecordSaveStatusChoicePrompt(ControllerPakRaceRecordSa
         state = gMenuChoicePromptState[0];
         if ((state == 3) || (state == 4)) {
             drawMenuSpriteWithAlpha(
-                arg0->x,
-                (s16)(((gMenuChoicePromptState[0] * 0x10) + arg0->topChoiceY) - 0x30),
+                arg0->common.x,
+                (s16)(((gMenuChoicePromptState[0] * 0x10) + arg0->common.y) - 0x30),
                 getRelocatableHeapBlockBase(gAssetHandles[0x21]),
                 0x12,
                 0x20,
@@ -530,12 +530,12 @@ void updateControllerPakRaceRecordSaveStatusChoicePrompt(ControllerPakRaceRecord
         }
         if (temp_a0 == 8) {
             if (arg0->slideOffset < 0x18) {
-                arg0->topChoiceY += 8;
+                arg0->common.y += 8;
             }
             arg0->bottomChoiceY += 8;
         } else {
             if (arg0->slideOffset < 0x10) {
-                arg0->topChoiceY -= 8;
+                arg0->common.y -= 8;
             }
             arg0->bottomChoiceY -= 8;
         }
@@ -556,14 +556,14 @@ void updateControllerPakRaceRecordSaveStatusChoicePrompt(ControllerPakRaceRecord
 }
 
 void initControllerPakRaceRecordSaveStatusChoicePrompt(ControllerPakRaceRecordSaveStatusChoicePromptActor *arg0) {
-    arg0->x = -0x28;
-    arg0->topChoiceY = 0xC;
+    arg0->common.x = -0x28;
+    arg0->common.y = 0xC;
     arg0->bottomChoiceY = 0xC;
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateControllerPakRaceRecordSaveStatusChoicePrompt);
 }
 
 void drawControllerPakRaceRecordSaveExitMessage(ControllerPakRaceRecordSaveExitMessageActor *arg0) {
-    drawMenuGlyphScriptDefaultFont(arg0->x, arg0->y, gControllerPakRaceRecordSaveExitMessage, 1, arg0->alpha);
+    drawMenuGlyphScriptDefaultFont(arg0->common.x, arg0->common.y, gControllerPakRaceRecordSaveExitMessage, 1, arg0->alpha);
 }
 
 void updateControllerPakRaceRecordSaveExitMessage(ControllerPakRaceRecordSaveExitMessageActor *arg0) {
@@ -584,8 +584,8 @@ void updateControllerPakRaceRecordSaveExitMessage(ControllerPakRaceRecordSaveExi
             }
             break;
         case 2:
-            arg0->x -= 0x20;
-            if (arg0->x < -0xD7) {
+            arg0->common.x -= 0x20;
+            if (arg0->common.x < -0xD7) {
                 arg0->state = 4;
             }
             state = arg0->state;
@@ -599,8 +599,8 @@ void updateControllerPakRaceRecordSaveExitMessage(ControllerPakRaceRecordSaveExi
 }
 
 void initControllerPakRaceRecordSaveExitMessage(ControllerPakRaceRecordSaveExitMessageActor *arg0) {
-    arg0->x = -0x24;
-    arg0->y = -0x38;
+    arg0->common.x = -0x24;
+    arg0->common.y = -0x38;
     arg0->alpha = 0;
     arg0->state = 0;
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateControllerPakRaceRecordSaveExitMessage);

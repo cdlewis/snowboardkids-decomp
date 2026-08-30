@@ -9,43 +9,15 @@
 #define COURSE_SELECT_COLUMN_COUNT 4
 #define COURSE_SELECT_EXTRA_COURSE_COUNT 3
 
-typedef union {
-    struct {
-        union {
-            struct {
-                /* 0x00 */ u8 unk0[4];
-                /* 0x04 */ u8 playerOneCourseDecided;
-                /* 0x05 */ u8 unk5[3];
-                /* 0x08 */ u8 playerTwoCourseDecided;
-                /* 0x09 */ u8 unk9[7];
-                /* 0x10 */ u8 unk10[4];
-            };
-            struct {
-                /* 0x00 */ u8 unk0Array[4];
-                /* 0x04 */ u8 unk4Array[4];
-                /* 0x08 */ u8 unk8Array[4];
-                /* 0x0C */ u8 unkCArray[4];
-                /* 0x10 */ u8 unk10Array[4];
-            };
-        };
-        /* 0x14 */ s16 unk14[4];
-        /* 0x1C */ s16 unk1C[4];
-        /* 0x24 */ u8 unk24[4];
-    };
-    struct {
-        /* 0x00 */ u8 previewModelState[4];
-        /* 0x04 */ u8 incomingPreviewModelState[4];
-        /* 0x08 */ u8 outgoingPreviewModelState[4];
-        /* 0x0C */ u8 incomingPreviewModelTimer[4];
-        /* 0x10 */ u8 outgoingPreviewModelTimer[4];
-        /* 0x14 */ u16 incomingPreviewModelAngle[4];
-        union {
-            /* 0x1C */ u16 outgoingPreviewModelAngle[4];
-            /* 0x1C */ u8 outgoingPreviewModelAngleBytes[8];
-        };
-        /* 0x24 */ u8 extraCourseCounts[4];
-    };
-    /* 0x00 */ u8 bytes[0x28];
+typedef struct {
+    /* 0x00 */ u8 previewModelState[COURSE_SELECT_PLAYER_COUNT];
+    /* 0x04 */ u8 incomingPreviewModelState[COURSE_SELECT_PLAYER_COUNT];
+    /* 0x08 */ u8 outgoingPreviewModelState[COURSE_SELECT_PLAYER_COUNT];
+    /* 0x0C */ u8 incomingPreviewModelTimer[COURSE_SELECT_PLAYER_COUNT];
+    /* 0x10 */ u8 outgoingPreviewModelTimer[COURSE_SELECT_PLAYER_COUNT];
+    /* 0x14 */ u16 incomingPreviewModelAngle[COURSE_SELECT_PLAYER_COUNT];
+    /* 0x1C */ u16 outgoingPreviewModelAngle[COURSE_SELECT_PLAYER_COUNT];
+    /* 0x24 */ u8 extraCourseCounts[COURSE_SELECT_PLAYER_COUNT];
 } CourseSelectStatus;
 
 typedef struct {
@@ -53,10 +25,7 @@ typedef struct {
     u8 cursorState;
     u8 submenuState;
     s16 cursorValue;
-    union {
-        s16 purchaseMessageState;
-        u16 purchaseMessageStateUnsigned;
-    };
+    u16 purchaseMessageState;
     u8 extraCourseColumnState;
 } CourseSelectStatusLayout;
 
