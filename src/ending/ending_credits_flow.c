@@ -17,6 +17,7 @@
 #include "game/ending/ending_credits_tommy.h"
 #include "game/menu/main_menu/main_menu_scene_model.h"
 #include "game/engine/viewport_manager.h"
+#include "game/menu/renderer/menu_render_utils.h"
 #include "game/menu/renderer/menu_renderer.h"
 
 /* These globals form the original 0x10-byte ending_credits_flow BSS contribution. */
@@ -26,8 +27,6 @@ u8 gEndingCreditsHandshakeState;
 u8 gEndingCreditsTransitionSnowboardIconSpinStep;
 s16 gEndingCreditsTransitionSnowboardIconAngle;
 u8 gEndingCreditsCharacterAuraDoneFlags[ENDING_CREDITS_CHARACTER_COUNT];
-
-extern void releaseMenuAssetHandles(void);
 
 extern s16 gMenuFadeAlpha;
 extern RaceCamera D_801121E0;

@@ -7,6 +7,7 @@
 #include "game/engine/system_runtime.h"
 #include "game/race/scene/race_scene_setup.h"
 #include "game/engine/game_task_scheduler.h"
+#include "game/menu/renderer/menu_render_utils.h"
 #include "game/menu/renderer/menu_screen_effects.h"
 #include "game/race/camera/race_camera.h"
 #include "game/race/player/race_player_update.h"
@@ -58,7 +59,6 @@ extern f32 D_800E10A4;
 extern f32 D_800E10A8;
 extern f32 D_800E10AC;
 extern f32 D_800E10B0;
-extern void releaseMenuAssetHandles(void);
 
 void initMainMenuDemoRaceIntro(void) {
     RacePlayer *players;

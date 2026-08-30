@@ -9,6 +9,7 @@
 #include "game/math/fixed_point_math.h"
 #include "game/engine/game_task_scheduler.h"
 #include "game/menu/main_menu/main_menu_scene_model.h"
+#include "game/menu/renderer/menu_render_utils.h"
 #include "game/menu/renderer/menu_screen_effects.h"
 #include "game/race/camera/race_camera.h"
 #include "game/race/effects/race_start_transition.h"
@@ -153,7 +154,6 @@ u8 gRaceSetupOpponentFocusCharacterIds[5][4] = {
 
 u32 D_800BB824[3] = { 0, 0, 0 };
 
-extern void releaseMenuAssetHandles(void);
 extern u8 gPendingEndingCreditsFlow;
 extern s16 gMenuFadeAlpha;
 

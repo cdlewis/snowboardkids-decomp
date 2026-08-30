@@ -6,10 +6,9 @@
 #include "game/menu/controller_pak/controller_pak_replay_save_message_flow.h"
 #include "game/menu/controller_pak/controller_pak_ui.h"
 #include "game/engine/game_task_scheduler.h"
+#include "game/menu/renderer/menu_render_utils.h"
 #include "game/menu/renderer/menu_renderer.h"
 #include "game/engine/viewport_manager.h"
-
-extern void releaseMenuAssetHandles(void);
 
 extern s16 gMenuFadeAlpha;
 extern u8 gPendingFramebufferSwapCount;

@@ -7,6 +7,7 @@
 #include "game/menu/character_select/character_select_course_menu.h"
 #include "game/engine/game_task_scheduler.h"
 #include "game/menu/main_menu/controller_main_menu_flow.h"
+#include "game/menu/renderer/menu_render_utils.h"
 #include "game/menu/renderer/menu_renderer.h"
 #include "game/menu/splitscreen_select/race_splitscreen_select_menu.h"
 #include "game/menu/splitscreen_select/race_splitscreen_select_ui.h"
@@ -14,7 +15,6 @@
 #include "game/engine/viewport_manager.h"
 #include "game/race/player/race_player_input.h"
 
-extern void releaseMenuAssetHandles(void);
 extern s32 enqueueSoundEffect(s16, s16);
 
 extern u8 D_800EC9DC;

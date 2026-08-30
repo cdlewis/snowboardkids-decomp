@@ -6,12 +6,12 @@
 #include "game/menu/character_select/character_select_course_menu.h"
 #include "game/menu/controller_pak/controller_pak_ui.h"
 #include "game/engine/game_task_scheduler.h"
+#include "game/menu/renderer/menu_render_utils.h"
 #include "game/menu/renderer/menu_renderer.h"
 #include "game/menu/controller_pak/controller_pak_continue_prompt_flow.h"
 #include "game/engine/viewport_manager.h"
 
 extern u64 enqueueSoundEffect(s32, s32);
-extern void releaseMenuAssetHandles(void);
 
 extern s16 gMenuFadeAlpha;
 extern s32 gMenuFlowState;

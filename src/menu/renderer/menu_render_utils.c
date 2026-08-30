@@ -2,7 +2,7 @@
 #include "common.h"
 #include "game/engine/asset_manager.h"
 #include "game/engine/system_runtime.h"
-#include "game/menu/renderer/menu_renderer.h"
+#include "game/menu/renderer/menu_render_utils.h"
 #include "game/engine/render_callback.h"
 #include "game/engine/relocatable_heap.h"
 #include "game/math/fixed_point_math.h"

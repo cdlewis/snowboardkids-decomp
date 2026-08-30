@@ -10,6 +10,7 @@
 #include "game/menu/course_select/course_select_ui.h"
 #include "game/menu/main_menu/controller_main_menu_flow.h"
 #include "game/engine/game_task_scheduler.h"
+#include "game/menu/renderer/menu_render_utils.h"
 #include "game/menu/renderer/menu_renderer.h"
 #include "game/race/effects/race_start_transition.h"
 #include "game/menu/course_select/course_select_shop_ui.h"
@@ -48,7 +49,6 @@ extern s8 gCourseSelectSelectedCourseSavedSlot;
 extern s32 gMenuFlowState;
 extern u8 gPendingFramebufferSwapCount;
 extern u8 gFramebufferSwapHold;
-extern void releaseMenuAssetHandles(void);
 extern s32 enqueueSoundEffect(s16, s16);
 
 void initCourseSelectMenu(void) {

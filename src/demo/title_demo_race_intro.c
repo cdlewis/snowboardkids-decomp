@@ -12,6 +12,7 @@
 #include "game/race/ui/race_hud.h"
 #include "game/engine/viewport_manager.h"
 #include "game/race/player/race_player_input.h"
+#include "game/menu/renderer/menu_render_utils.h"
 #include "game/menu/renderer/menu_screen_effects.h"
 
 s16 gTitleDemoReplaySegmentFrames[16] = {
@@ -43,7 +44,6 @@ extern u8 gMainMenuModeSelection;
 extern s16 gRacePlayerAttackStartTimer;
 extern u8 gFramebufferSwapHold;
 extern s32 gMenuFlowState;
-extern void releaseMenuAssetHandles(void);
 
 #define RACE_PLAYER_REPLAY_SNAPSHOT(index) (((RacePlayerReplaySnapshot *)gRacePlayers)[index])
 
