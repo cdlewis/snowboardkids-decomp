@@ -6,8 +6,17 @@
 
 void initMenuAssetHandles(void);
 void releaseMenuAssetHandles(void);
+void *resolveAssetTableRelativePointer(void *asset, u32 relativeAddress);
 void initMenuAsciiFontTexture(void);
 void getAssetTableImageAndPalette(void *asset, u16 index, void **image, void **palette);
+void getAssetTableImagePaletteAndSize(
+    u8 *asset,
+    u16 index,
+    void **image,
+    void **palette,
+    s16 *width,
+    s16 *height
+);
 void drawMenuAsciiChar(s16 x, s16 y, u8 character, u16 palette);
 void drawMenuAsciiCharImpl(s16 x, s16 y, u8 character, u16 palette);
 void drawMenuAsciiCharLegacy(s16 x, s16 y, volatile s32 character, u16 palette);

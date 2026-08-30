@@ -78,7 +78,6 @@ extern Gfx D_20028F0[];
 extern Gfx D_2002DB8[];
 extern Gfx gEffectRenderModeSetupDl[];
 extern Gfx gEffectRenderModeCleanupDl[];
-extern void getAssetTableImagePaletteAndSize(u8 *, s32, u32 *, u32 *, s16 *, s16 *);
 
 extern s16 gFrameCounter;
 
@@ -168,8 +167,8 @@ RaceIntroRenderCommandEntry *gRaceIntroAnimatedBillboardCommandsByCourse[10] = {
 
 void drawRaceIntroModelMeshes(RaceIntroMeshActor *arg0) {
     volatile u8 pad[0xC];
-    u32 image;
-    u32 palette;
+    void *image;
+    void *palette;
     s16 width;
     s16 height;
     RaceIntroRenderCommandEntry *entry;
@@ -665,8 +664,8 @@ void initRaceIntroFlyoverActor(RaceIntroEffectActor *arg0) {
 
 void drawRaceIntroAnimatedBillboards(RaceIntroMeshActor *arg0) {
     volatile u8 pad[0xC];
-    u32 image;
-    u32 palette;
+    void *image;
+    void *palette;
     s16 width;
     s16 height;
     RaceIntroRenderCommandEntry *entry;
@@ -688,7 +687,7 @@ void drawRaceIntroAnimatedBillboards(RaceIntroMeshActor *arg0) {
                     loadedTextureIndex = textureIndex;
                     getAssetTableImagePaletteAndSize(
                         (u8 *)getRelocatableHeapBlockBase((s32)ASSET_HANDLE(0x1C)),
-                        textureIndex & 0xFFFF,
+                        textureIndex,
                         &image,
                         &palette,
                         &width,
