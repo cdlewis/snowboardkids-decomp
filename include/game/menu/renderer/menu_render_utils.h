@@ -4,7 +4,9 @@
 #include "common.h"
 #include "game/menu/renderer/menu_renderer.h"
 
+void initMenuAssetHandles(void);
 void releaseMenuAssetHandles(void);
+void initMenuAsciiFontTexture(void);
 void getAssetTableImageAndPalette(void *asset, u16 index, void **image, void **palette);
 void drawMenuAsciiChar(s16 x, s16 y, u8 character, u16 palette);
 void drawMenuAsciiCharImpl(s16 x, s16 y, u8 character, u16 palette);
@@ -28,6 +30,7 @@ Mtx *allocTranslationOnlyFixedMatrix(Mtx *source);
 void setPackedMatrixTranslation(Mtx *matrix, Vec3i *translation);
 void copyPackedMatrixTranslation(Mtx *source, Mtx *dest);
 s32 isPositionNearAnyRaceViewportFocus(Vec3i *position);
+void allocRenderCallbackScratchBuffer(void);
 void allocMenuRenderScratchBuffers(void);
 void selectMenuRenderScratchBuffer(s32 bufferIndex);
 void *allocMenuRenderScratch(s32 size);
