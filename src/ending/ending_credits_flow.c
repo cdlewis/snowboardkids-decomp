@@ -90,20 +90,20 @@ void initEndingCreditsFlow(void) {
             createCallbackTask((CallbackTaskCallback)initEndingCreditsTransitionLogoWipe, 0, 0x64);
             createCallbackTask((CallbackTaskCallback)initEndingCreditsTransitionSnowflakeIcon, 0, 0x64);
         }
-        gCurrentGameTask->fade = 0xFF;
+        gCurrentGameTask->callbackData0 = 0xFF;
     }
     state = gCurrentGameTask;
-    gMenuFadeAlpha = state->fade;
-    gCurrentGameTask->timer = 5;
+    gMenuFadeAlpha = state->callbackData0;
+    gCurrentGameTask->callbackData1 = 5;
     setCurrentGameTaskCallback(fadeInEndingCreditsFlow, 0);
 }
 
 void fadeInEndingCreditsFlow(void) {
-    if (gCurrentGameTask->timer != 0) {
-        gCurrentGameTask->timer--;
+    if (gCurrentGameTask->callbackData1 != 0) {
+        gCurrentGameTask->callbackData1--;
     } else {
-        if (gCurrentGameTask->fade != 0) {
-            gCurrentGameTask->fade = stepMenuFadeAlpha((s16)gCurrentGameTask->fade, 0x10, 0);
+        if (gCurrentGameTask->callbackData0 != 0) {
+            gCurrentGameTask->callbackData0 = stepMenuFadeAlpha((s16)gCurrentGameTask->callbackData0, 0x10, 0);
         } else {
             setCurrentGameTaskCallback(updateEndingCreditsFlow, 0);
             createCallbackTask((CallbackTaskCallback)initEndingCreditsPageTextActor, 0, 0x64);
@@ -120,9 +120,9 @@ void fadeInEndingCreditsFlow(void) {
 
 void updateEndingCreditsFlow(void) {
     if (gEndingCreditsSequencePhase == 0x43) {
-        gCurrentGameTask->timer++;
-        if (gCurrentGameTask->timer == 0x12C) {
-            gCurrentGameTask->timer = 0;
+        gCurrentGameTask->callbackData1++;
+        if (gCurrentGameTask->callbackData1 == 0x12C) {
+            gCurrentGameTask->callbackData1 = 0;
             setCurrentGameTaskCallback(fadeOutEndingCreditsFlow, 0);
         }
     }
@@ -132,9 +132,9 @@ void updateEndingCreditsFlow(void) {
 }
 
 void fadeOutEndingCreditsFlow(void) {
-    if (gCurrentGameTask->fade != 0xFF) {
-        gCurrentGameTask->fade = stepMenuFadeAlpha((s16)gCurrentGameTask->fade, 0x10, 1);
-        if (gCurrentGameTask->fade == 0xFF) {
+    if (gCurrentGameTask->callbackData0 != 0xFF) {
+        gCurrentGameTask->callbackData0 = stepMenuFadeAlpha((s16)gCurrentGameTask->callbackData0, 0x10, 1);
+        if (gCurrentGameTask->callbackData0 == 0xFF) {
             gFramebufferSwapHold = 1;
         } else {
             updateCallbackTasks();

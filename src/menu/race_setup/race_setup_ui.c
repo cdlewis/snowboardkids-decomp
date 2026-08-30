@@ -365,7 +365,7 @@ void updateRaceSetupPlayerCountPrompt(MenuIntroActor *arg0) {
                 alpha = actor->alpha;
                 break;
             case 3:
-                if (gCurrentGameTask->unk1C == 2) {
+                if (gCurrentGameTask->callbackData1 == 2) {
                     alpha = ((volatile MenuIntroActor *)actor)->alpha;
                     actor->state = 4;
                 }
@@ -901,7 +901,7 @@ void updateRaceSetupFourPlayerOption(MenuItemActor *arg0) {
     }
     if (x < -0x108) {
         removeCallbackTask(actor);
-        gCurrentGameTask->unk1C = 2;
+        gCurrentGameTask->callbackData1 = 2;
         return;
     }
     addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawRaceSetupFourPlayerOption, (void *)actor);
@@ -946,7 +946,7 @@ void updateRaceSetupPlayerCountCursor(FadeItemActor *arg0) {
         actor->alpha = temp_t6;
         if ((temp_t6 & 0xFFFF) >= 0x100) {
             actor->alpha = 0x100;
-            gCurrentGameTask->unk1C = 1;
+            gCurrentGameTask->callbackData1 = 1;
         }
     } else if (gMenuFlowState != 0) {
         temp_a2->x = temp_a2->x - 0x20;

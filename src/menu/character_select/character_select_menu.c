@@ -47,9 +47,9 @@ void initCharacterSelectMenu(void) {
         gFramebufferRenderInterval.value = 0;
         gMenuSelectionConfirmTimer = 0;
         gMenuExitSelection = 0;
-        gCurrentGameTask->fade = 0xFF;
-        gCurrentGameTask->timer = 0;
-        gMenuFadeAlpha = gCurrentGameTask->fade;
+        gCurrentGameTask->callbackData0 = 0xFF;
+        gCurrentGameTask->callbackData1 = 0;
+        gMenuFadeAlpha = gCurrentGameTask->callbackData0;
         LOAD_ASSET(_59AAA0, 0x21);
         LOAD_ASSET(_245A80, 0x1F);
         LOAD_ASSET(_593D10, 0x22);
@@ -66,7 +66,7 @@ void initCharacterSelectMenu(void) {
             }
         }
     } else {
-        gCurrentGameTask->fade = 1;
+        gCurrentGameTask->callbackData0 = 1;
         gMenuFadeAlpha = 1;
 
         for (i = 0; i < gPlayerCount; i++) {
@@ -131,9 +131,9 @@ void updateCharacterSelectMenu(void) {
     u16 maximumIndex;
     s32 pad2;
 
-    if (gCurrentGameTask->fade != 0) {
-        gCurrentGameTask->fade = stepMenuFadeAlpha((s16)gCurrentGameTask->fade, 0x24, 0);
-        if (gCurrentGameTask->fade == 0) {
+    if (gCurrentGameTask->callbackData0 != 0) {
+        gCurrentGameTask->callbackData0 = stepMenuFadeAlpha((s16)gCurrentGameTask->callbackData0, 0x24, 0);
+        if (gCurrentGameTask->callbackData0 == 0) {
             gCharacterSelectHudState.phase = CHARACTER_SELECT_PHASE_PROMPT;
         }
     } else if (gCharacterSelectHudState.phase < CHARACTER_SELECT_PHASE_ROSTER) {
@@ -313,9 +313,9 @@ void updateCharacterSelectConfirmationMenu(void) {
 }
 
 void fadeOutCharacterSelectMenu(void) {
-    if (gCurrentGameTask->fade != 0xFF) {
-        gCurrentGameTask->fade = stepMenuFadeAlpha((s16)gCurrentGameTask->fade, 0x24, 1);
-        if (gCurrentGameTask->fade == 0xFF) {
+    if (gCurrentGameTask->callbackData0 != 0xFF) {
+        gCurrentGameTask->callbackData0 = stepMenuFadeAlpha((s16)gCurrentGameTask->callbackData0, 0x24, 1);
+        if (gCurrentGameTask->callbackData0 == 0xFF) {
             gFramebufferSwapHold = 1;
         } else {
             updateCallbackTasks();

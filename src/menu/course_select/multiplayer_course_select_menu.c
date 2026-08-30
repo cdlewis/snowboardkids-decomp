@@ -91,8 +91,8 @@ void initMultiplayerCourseSelectMenu(void) {
     D_800EC9E5 = 0;
     gCourseSelectPurchaseFlowActive = 0;
     gCourseSelectInputLocked = 0;
-    gCurrentGameTask->fade = 0xFF;
-    gMenuFadeAlpha = gCurrentGameTask->fade;
+    gCurrentGameTask->callbackData0 = 0xFF;
+    gMenuFadeAlpha = gCurrentGameTask->callbackData0;
 
     LOAD_ASSET(_5CBA80, 0x21);
     LOAD_ASSET(_593D10, 0x22);
@@ -115,8 +115,8 @@ void initMultiplayerCourseSelectMenu(void) {
     gMenuFlowState = 0;
     gCourseSelectViewportSyncState = 0;
     gCourseSelectModeSelection = 0;
-    gCurrentGameTask->timer = 0;
-    gCurrentGameTask->unk20 = 0;
+    gCurrentGameTask->callbackData1 = 0;
+    gCurrentGameTask->callbackData2 = 0;
     setCurrentGameTaskCallback(updateMultiplayerCourseSelectMenu, 0);
 
     for (i = 0; i < 4; i++) {
@@ -253,9 +253,9 @@ void updateMultiplayerCourseSelectMenu(void) {
     s32 i;
 
     count = 0;
-    if (gCurrentGameTask->fade != 0) {
-        gCurrentGameTask->fade = stepMenuFadeAlpha((s16)gCurrentGameTask->fade, 0x24, 0);
-        if (gCurrentGameTask->fade == 0) {
+    if (gCurrentGameTask->callbackData0 != 0) {
+        gCurrentGameTask->callbackData0 = stepMenuFadeAlpha((s16)gCurrentGameTask->callbackData0, 0x24, 0);
+        if (gCurrentGameTask->callbackData0 == 0) {
             if (gPlayerCount == 1) {
                 createCallbackTask((CallbackTaskCallback)initCourseSelectCourseIconList, 0, 0x63);
             } else {
@@ -546,9 +546,9 @@ void updateMultiplayerCourseSelectMenu(void) {
 }
 
 void fadeOutMultiplayerCourseSelectMenu(void) {
-    if (gCurrentGameTask->fade != 0xFF) {
-        gCurrentGameTask->fade = stepMenuFadeAlpha((s16)gCurrentGameTask->fade, 0x24, 1);
-        if (gCurrentGameTask->fade == 0xFF) {
+    if (gCurrentGameTask->callbackData0 != 0xFF) {
+        gCurrentGameTask->callbackData0 = stepMenuFadeAlpha((s16)gCurrentGameTask->callbackData0, 0x24, 1);
+        if (gCurrentGameTask->callbackData0 == 0xFF) {
             gFramebufferSwapHold = 1;
         } else {
             updateCallbackTasks();

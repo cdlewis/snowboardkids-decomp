@@ -22,8 +22,8 @@ void initControllerPakContinuePromptFlow(void) {
     resetAllViewports();
     configureViewport(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.333333373f);
     gFramebufferRenderInterval.value = 0;
-    gCurrentGameTask->fade = 0xFF;
-    gCurrentGameTask->timer = 0;
+    gCurrentGameTask->callbackData0 = 0xFF;
+    gCurrentGameTask->callbackData1 = 0;
     gMenuFlowState = 0;
     gControllerPakContinuePromptTransition.state = 0;
     gControllerPakContinuePromptTransition.x = 0x100;
@@ -33,7 +33,7 @@ void initControllerPakContinuePromptFlow(void) {
     LOAD_ASSET(_60F1A0, 0x29);
     initCallbackTaskScheduler(0);
     createCallbackTask((CallbackTaskCallback)initControllerPakContinuePrompt, 0, 0x64);
-    gMenuFadeAlpha = gCurrentGameTask->fade;
+    gMenuFadeAlpha = gCurrentGameTask->callbackData0;
     setCurrentGameTaskCallback(updateControllerPakContinuePromptFlow, 0);
     updateCallbackTasks();
 }
@@ -43,28 +43,28 @@ void updateControllerPakContinuePromptFlow(void) {
     s32 temp_v0;
     s32 var_v0;
 
-    temp_v0 = gCurrentGameTask->fade;
+    temp_v0 = gCurrentGameTask->callbackData0;
     if (temp_v0 != 0) {
-        gCurrentGameTask->fade = stepMenuFadeAlpha((s32)(s16)temp_v0, 0x24, 0);
-        if (gCurrentGameTask->fade == 0) {
+        gCurrentGameTask->callbackData0 = stepMenuFadeAlpha((s32)(s16)temp_v0, 0x24, 0);
+        if (gCurrentGameTask->callbackData0 == 0) {
             gControllerPakContinuePromptTransition.state = 1;
         }
     } else {
-        var_v0 = gCurrentGameTask->timer;
+        var_v0 = gCurrentGameTask->callbackData1;
         temp_a1 = var_v0;
         if ((gPlayerInputPressed[0] & (STICK_UP | U_JPAD)) && (var_v0 != 0)) {
-            gCurrentGameTask->timer = var_v0 - 1;
-            var_v0 = gCurrentGameTask->timer;
+            gCurrentGameTask->callbackData1 = var_v0 - 1;
+            var_v0 = gCurrentGameTask->callbackData1;
         } else if ((gPlayerInputPressed[0] & (STICK_DOWN | D_JPAD)) && (var_v0 != 1)) {
-            gCurrentGameTask->timer = var_v0 + 1;
-            var_v0 = gCurrentGameTask->timer;
+            gCurrentGameTask->callbackData1 = var_v0 + 1;
+            var_v0 = gCurrentGameTask->callbackData1;
         }
         if (temp_a1 != var_v0) {
             enqueueSoundEffect(0x19, 0x32);
         }
         if ((gPlayerInputPressed[0] & A_BUTTON) || (gPlayerInputPressed[0] & START_BUTTON)) {
             enqueueSoundEffect(0x18, 0x32);
-            gMenuFlowState = gCurrentGameTask->timer;
+            gMenuFlowState = gCurrentGameTask->callbackData1;
             gControllerPakContinuePromptTransition.state = 2;
             gControllerPakContinuePromptTransition.x = 0x100;
             setCurrentGameTaskCallback(closeControllerPakContinuePromptFlow, 0);
@@ -75,9 +75,9 @@ void updateControllerPakContinuePromptFlow(void) {
 }
 
 void closeControllerPakContinuePromptFlow(void) {
-    if (gCurrentGameTask->fade != 0xFF) {
-        gCurrentGameTask->fade = stepMenuFadeAlpha((s16)gCurrentGameTask->fade, 0x24, 1);
-        if (gCurrentGameTask->fade == 0xFF) {
+    if (gCurrentGameTask->callbackData0 != 0xFF) {
+        gCurrentGameTask->callbackData0 = stepMenuFadeAlpha((s16)gCurrentGameTask->callbackData0, 0x24, 1);
+        if (gCurrentGameTask->callbackData0 == 0xFF) {
             gFramebufferSwapHold = 1;
             gControllerPakContinuePromptTransition.state = 3;
         } else {

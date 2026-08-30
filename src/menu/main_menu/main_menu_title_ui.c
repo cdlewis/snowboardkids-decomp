@@ -65,10 +65,10 @@ void drawMainMenuTitleOptions(MainMenuTitleOptionsActor *arg0) {
 }
 
 void updateMainMenuTitleOptions(MainMenuTitleOptionsActor *arg0) {
-    if (gCurrentGameTask->selection != (u16)(0, arg0->selectedOption)) {
+    if (gCurrentGameTask->callbackData1 != (u16)(0, arg0->selectedOption)) {
         arg0->blinkAlpha = 0x100;
         arg0->blinkTimer = 0;
-        arg0->selectedOption = gCurrentGameTask->selection;
+        arg0->selectedOption = gCurrentGameTask->callbackData1;
     }
     if ((s32)(u16)arg0->blinkTimer < 0x10) {
         arg0->blinkAlpha -= 9;
@@ -97,12 +97,12 @@ void drawMainMenuTitleCursor(MainMenuTitleCursorActor *arg0) {
 }
 
 void updateMainMenuTitleCursor(MainMenuTitleCursorActor *arg0) {
-    if (gCurrentGameTask->selection != 1) {
+    if (gCurrentGameTask->callbackData1 != 1) {
         arg0->common.x = -0x34;
     } else {
         arg0->common.x = -0x3C;
     }
-    arg0->common.y = (gCurrentGameTask->selection << 4) + 0x20;
+    arg0->common.y = (gCurrentGameTask->callbackData1 << 4) + 0x20;
     addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawMainMenuTitleCursor, arg0);
 }
 

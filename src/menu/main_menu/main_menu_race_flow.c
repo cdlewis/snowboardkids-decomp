@@ -256,7 +256,7 @@ void waitForMainMenuModePreviewRaceStart(void) {
     updateRemainingCallbackTasks();
     updateRaceCameras();
     if (gMainMenuSelectionResult != 0) {
-        gCurrentGameTask->transitionTimer = 0;
+        gCurrentGameTask->callbackData0 = 0;
         requestMusicSequenceStop(0x20);
         setCurrentGameTaskCallback(&zoomMainMenuModePreviewRaceViewport, 0);
     }
@@ -271,8 +271,8 @@ void zoomMainMenuModePreviewRaceViewport(void) {
     s32 height;
     f32 aspect;
 
-    gCurrentGameTask->transitionTimer += 1;
-    timer = gCurrentGameTask->transitionTimer;
+    gCurrentGameTask->callbackData0 += 1;
+    timer = gCurrentGameTask->callbackData0;
     width = (s16)(((timer * 0x18) / 16) + 0x108);
     centerY = (s16)(((timer * 0x28) / 16) + 0x50);
     height = (s16)(((((0, timer)) * 0x58) / 16) + 0x78);
@@ -280,10 +280,10 @@ void zoomMainMenuModePreviewRaceViewport(void) {
     aspect = (f32)((((f64)timer * -0.9523809523809523) / 0x10) + 2.2857142857142856);
     timer = 0x140;
     configureViewport(width * 0, 0xA0, centerY, width, height, timer, scaleY, aspect);
-    if (gCurrentGameTask->transitionTimer == MAIN_MENU_MODE_PREVIEW_RACE_VIEWPORT_ZOOM_FRAMES) {
+    if (gCurrentGameTask->callbackData0 == MAIN_MENU_MODE_PREVIEW_RACE_VIEWPORT_ZOOM_FRAMES) {
         requestMusicSequenceBank(0xF);
         configureViewport(0, 0xA0, 0x78, 0x120, 0xD0, timer, 0xF0, 1.3333334f);
-        gCurrentGameTask->transitionTimer = 0;
+        gCurrentGameTask->callbackData0 = 0;
         setCurrentGameTaskCallback(runMainMenuModePreviewRace, 0);
     }
     updateRacePlayers();
@@ -301,8 +301,8 @@ void runMainMenuModePreviewRace(void) {
     updateRemainingCallbackTasks();
     updateRaceCameras();
     updateRaceHud();
-    gCurrentGameTask->transitionTimer += 1;
-    if (gCurrentGameTask->transitionTimer == gMainMenuModePreviewRaceDurationBySelection[gMainMenuModeSelection]) {
+    gCurrentGameTask->callbackData0 += 1;
+    if (gCurrentGameTask->callbackData0 == gMainMenuModePreviewRaceDurationBySelection[gMainMenuModeSelection]) {
         setCurrentGameTaskCallback(fadeOutMainMenuModePreviewRace, 0);
         requestMusicSequenceStop(0x40);
     }

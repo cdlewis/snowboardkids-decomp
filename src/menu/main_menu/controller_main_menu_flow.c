@@ -745,10 +745,10 @@ void initMainMenu(void) {
     LOAD_ASSET(_593D10, 0x22);
     LOAD_RAW_ASSET(_1467B0, 8);
     LOAD_ASSET(_1DE360, 9);
-    gCurrentGameTask->fade = 0xFF;
-    gCurrentGameTask->selection = 0;
-    gCurrentGameTask->delay = 0x32;
-    gCurrentGameTask->mainMenuTimer = 0x4B0;
+    gCurrentGameTask->callbackData0 = 0xFF;
+    gCurrentGameTask->callbackData1 = 0;
+    gCurrentGameTask->callbackData2 = 0x32;
+    gCurrentGameTask->callbackData3 = 0x4B0;
     initCallbackTaskScheduler(0);
     if (gConnectedControllerCount != 0) {
         createCallbackTask((CallbackTaskCallback)&initMainMenuTitleCursor, 0, 0x64);
@@ -783,7 +783,7 @@ void initMainMenu(void) {
     setMainMenuSceneModelRotation(4, 0, 0xDD0, 0);
     resetRaceCameras();
     setRaceCameraMode(0, 0x1F);
-    gMenuFadeAlpha = (s16)gCurrentGameTask->fade;
+    gMenuFadeAlpha = (s16)gCurrentGameTask->callbackData0;
     gMenuFadeOverlayActive = 1;
     enqueueSoundEffect(0x4A, 0x32);
     setCurrentGameTaskCallback(&updateMainMenu, 0);
@@ -800,30 +800,30 @@ void updateMainMenu(void) {
     s32 temp_a0;
 
     flag = 0;
-    temp_v1 = gCurrentGameTask->fade;
+    temp_v1 = gCurrentGameTask->callbackData0;
     if (temp_v1 != 0) {
-        gCurrentGameTask->fade = stepMenuFadeAlpha((s16)temp_v1, 0x10, 0);
-        if (gCurrentGameTask->fade == 0) {
+        gCurrentGameTask->callbackData0 = stepMenuFadeAlpha((s16)temp_v1, 0x10, 0);
+        if (gCurrentGameTask->callbackData0 == 0) {
             gMenuFadeOverlayActive = 0;
         }
     } else {
-        if (gCurrentGameTask->delay != 0) {
-            gCurrentGameTask->delay -= 1;
-            if (gCurrentGameTask->delay == 0) {
+        if (gCurrentGameTask->callbackData2 != 0) {
+            gCurrentGameTask->callbackData2 -= 1;
+            if (gCurrentGameTask->callbackData2 == 0) {
                 requestMusicSequenceBank(0);
             }
         }
         temp_a0 = gPlayerInputPressed[0];
         if (temp_a0 & (STICK_UP | U_JPAD)) {
-            if (gCurrentGameTask->selection != 0) {
-                gCurrentGameTask->selection -= 1;
+            if (gCurrentGameTask->callbackData1 != 0) {
+                gCurrentGameTask->callbackData1 -= 1;
                 enqueueSoundEffect(0x19, 0x32);
                 temp_a0 = gPlayerInputPressed[0];
             }
         }
         if (temp_a0 & (STICK_DOWN | D_JPAD)) {
-            if (gCurrentGameTask->selection != 2) {
-                gCurrentGameTask->selection += 1;
+            if (gCurrentGameTask->callbackData1 != 2) {
+                gCurrentGameTask->callbackData1 += 1;
                 enqueueSoundEffect(0x19, 0x32);
                 temp_a0 = gPlayerInputPressed[0];
             }
@@ -833,8 +833,8 @@ void updateMainMenu(void) {
             enqueueSoundEffect(1, 0x32);
         }
         if (flag == 0) {
-            gCurrentGameTask->mainMenuTimer -= 1;
-            if (gCurrentGameTask->mainMenuTimer == 0) {
+            gCurrentGameTask->callbackData3 -= 1;
+            if (gCurrentGameTask->callbackData3 == 0) {
                 flag = 1;
             }
         }
@@ -853,7 +853,7 @@ void updateMainMenu(void) {
     loopMainMenuSceneModelAnimation(2);
     loopMainMenuSceneModelAnimation(3);
     loopMainMenuSceneModelAnimation(4);
-    if (gCurrentGameTask->fade == 0xEF) {
+    if (gCurrentGameTask->callbackData0 == 0xEF) {
         addMainMenuSceneModelDrawCallback(0);
         addMainMenuSceneModelDrawCallback(1);
         addMainMenuSceneModelDrawCallback(2);
@@ -873,10 +873,10 @@ void fadeOutMainMenu(void) {
     s32 temp_v0;
     s32 temp_v1;
 
-    temp_v0 = gCurrentGameTask->fade;
+    temp_v0 = gCurrentGameTask->callbackData0;
     if (temp_v0 != 0xFF) {
-        gCurrentGameTask->fade = stepMenuFadeAlpha((s16)temp_v0, 0x28, 1);
-        if (gCurrentGameTask->fade == 0xFF) {
+        gCurrentGameTask->callbackData0 = stepMenuFadeAlpha((s16)temp_v0, 0x28, 1);
+        if (gCurrentGameTask->callbackData0 == 0xFF) {
             gFramebufferSwapHold = 1;
         } else {
             updateRaceCamera(0);
@@ -896,8 +896,8 @@ void fadeOutMainMenu(void) {
         releaseMenuAssetHandles();
         gFramebufferSwapHold = 0;
         gFramebufferRenderInterval.value = 0;
-        if (gCurrentGameTask->mainMenuTimer != 0) {
-            temp_v1 = gCurrentGameTask->selection;
+        if (gCurrentGameTask->callbackData3 != 0) {
+            temp_v1 = gCurrentGameTask->callbackData1;
             if (temp_v1 == 0) {
                 createGameTask(2, initNewGameSaveData, 0x64);
                 removeGameTask(3);

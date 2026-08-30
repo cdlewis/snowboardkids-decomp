@@ -1273,7 +1273,7 @@ void updateCourseUnlockPricePanel(ShopMenuWidgetActor *arg0) {
             break;
         case 1:
             arg0->item.price = gCourseUnlockPrices[gRacePlayers[0].menuSelection];
-            if (gCurrentGameTask->shopItemPrice >= 2) {
+            if (gCurrentGameTask->callbackData1 >= 2) {
                 arg0->slide.bytes.state = 2;
             }
             break;
@@ -1307,7 +1307,7 @@ void updateCourseUnlockPricePanel(ShopMenuWidgetActor *arg0) {
             if (arg0->slide.bytes.timer >= 0x14) {
                 arg0->slide.bytes.timer = 0;
                 arg0->slide.bytes.state = 4;
-                gCurrentGameTask->shopItemPrice = gCurrentGameTask->shopItemPrice + 2;
+                gCurrentGameTask->callbackData1 = gCurrentGameTask->callbackData1 + 2;
             }
             break;
         case 4:
@@ -1428,7 +1428,7 @@ void drawCourseUnlockPurchasePrompt(ShopMenuWidgetActor *arg0) {
 void updateCourseUnlockPurchasePrompt(ShopMenuWidgetActor *arg0) {
     ShopMenuWidgetActor *temp_a2;
 
-    arg0->item.price = gCurrentGameTask->shopItemPrice;
+    arg0->item.price = gCurrentGameTask->callbackData1;
     temp_a2 = arg0;
     if (arg0->transition.counter < 0x10) {
         arg0->sprite.index -= 9;
@@ -1533,7 +1533,7 @@ void updateCourseDetailsMenu(ShopMenuWidgetActor *arg0) {
         arg0->state = menuState;
     }
 
-    screenState = gCurrentGameTask->unk20;
+    screenState = gCurrentGameTask->callbackData2;
     if (((screenState == 3) || (screenState == 9)) && (state < COURSE_DETAILS_STATE_EXIT)) {
         state = (arg0->state = COURSE_DETAILS_STATE_EXIT);
         arg0->prompt.bytes.pulseAlpha = 0x100;
@@ -1714,7 +1714,7 @@ void drawCourseDetailsPreviewTile(ShopMenuWidgetActor *arg0) {
 void updateCourseDetailsPreviewTile(ShopMenuWidgetActor *arg0) {
     u8 state;
 
-    if ((gCurrentGameTask->unk20 == 3) || (gCurrentGameTask->unk20 == 9)) {
+    if ((gCurrentGameTask->callbackData2 == 3) || (gCurrentGameTask->callbackData2 == 9)) {
         arg0->sprite.bytes.state = 2;
     }
     state = arg0->sprite.bytes.state;

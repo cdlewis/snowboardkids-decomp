@@ -182,7 +182,7 @@ void waitForTrainingCourseStartSelection(void) {
     updateRemainingCallbackTasks();
     updateRaceCameras();
     if (gMainMenuSelectionResult != 0) {
-        gCurrentGameTask->transitionTimer = 0;
+        gCurrentGameTask->callbackData0 = 0;
         requestMusicSequenceStop(0x20);
         setCurrentGameTaskCallback(&zoomTrainingCourseRaceViewport, 0);
     }
@@ -197,8 +197,8 @@ void zoomTrainingCourseRaceViewport(void) {
     s32 height;
     f32 aspect;
 
-    gCurrentGameTask->transitionTimer += 1;
-    timer = gCurrentGameTask->transitionTimer;
+    gCurrentGameTask->callbackData0 += 1;
+    timer = gCurrentGameTask->callbackData0;
     width = (s16)(((timer * 0x18) / 16) + 0x108);
     centerY = (s16)(((timer * 0x28) / 16) + 0x50);
     height = (s16)(((((0, timer)) * 0x58) / 16) + 0x78);
@@ -206,7 +206,7 @@ void zoomTrainingCourseRaceViewport(void) {
     aspect = (f32)((((f64)timer * -0.9523809523809523) / 0x10) + 2.2857142857142856);
     timer = 0x140;
     configureViewport(width * 0, 0xA0, centerY, width, height, timer, scaleY, aspect);
-    if (gCurrentGameTask->transitionTimer == 0x10) {
+    if (gCurrentGameTask->callbackData0 == 0x10) {
         requestMusicSequenceBank(0xF);
         configureViewport(0, 0xA0, 0x78, 0x120, 0xD0, timer, 0xF0, 1.3333334f);
         setCurrentGameTaskCallback(runTrainingCourseUntilLessonEnd, 0);
@@ -226,7 +226,7 @@ void runTrainingCourseUntilLessonEnd(void) {
     updateRemainingCallbackTasks();
     updateRaceCameras();
     updateRaceHud();
-    gCurrentGameTask->transitionTimer = 0;
+    gCurrentGameTask->callbackData0 = 0;
     switch (gTrainingCourseLesson) {
         case 1:
             if (gRacePlayers[0].coursePathIndex == 0x50) {
@@ -280,13 +280,13 @@ void fadeInTrainingCourseLessonEndMenu(void) {
     updateRemainingCallbackTasks();
     updateRaceCameras();
     updateRaceHud();
-    gCurrentGameTask->transitionTimer += 0x10;
-    temp_v1 = gCurrentGameTask->transitionTimer;
+    gCurrentGameTask->callbackData0 += 0x10;
+    temp_v1 = gCurrentGameTask->callbackData0;
     if (temp_v1 == 0x80) {
         createCallbackTask((CallbackTaskCallback)initTrainingCourseLessonEndMenu, 0, 0x64);
         setCurrentGameTaskCallback(waitForTrainingCourseLessonEndMenuSelection, 0);
     }
-    temp_v1 = gCurrentGameTask->transitionTimer;
+    temp_v1 = gCurrentGameTask->callbackData0;
     gViewportStates[0].overlayAlpha = temp_v1;
 }
 

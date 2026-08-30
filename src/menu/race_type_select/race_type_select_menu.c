@@ -28,14 +28,14 @@ void returnToRaceTypeSelectMenu(void) {
     gMenuSelectionConfirmTimer = 0;
     gRacePlayers[0].menuState = 0;
     gActiveMenuTask = 0;
-    gCurrentGameTask->fade = 1;
-    gCurrentGameTask->timer = 0;
+    gCurrentGameTask->callbackData0 = 1;
+    gCurrentGameTask->callbackData1 = 0;
     gMenuExitSelection = 0;
     gMenuInputRepeatTimers[0] = 0;
     if (gRaceCourseIndex.signedValue == 7) {
         gRaceCourseIndex.signedValue = 9;
     }
-    gMenuFadeAlpha = gCurrentGameTask->fade;
+    gMenuFadeAlpha = gCurrentGameTask->callbackData0;
     if (gRaceTypeSelection == 3) {
         gRaceTypeSelection = 0;
     }
@@ -50,7 +50,7 @@ void initRaceTypeSelectMenu(void) {
     resetAllViewports();
     configureViewport(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.333333373f);
     gFramebufferRenderInterval.value = 0;
-    gCurrentGameTask->fade = 0xFF;
+    gCurrentGameTask->callbackData0 = 0xFF;
     LOAD_ASSET(_5A1ED0, 0x21);
     LOAD_ASSET(_593D10, 0x22);
     LOAD_ASSET(_598A70, 0x23);
@@ -63,13 +63,13 @@ void initRaceTypeSelectMenu(void) {
     gMenuSelectionConfirmTimer = 0;
     gRacePlayers[0].menuState = 0;
     gActiveMenuTask = 0;
-    gCurrentGameTask->timer = 0;
+    gCurrentGameTask->callbackData1 = 0;
     gMenuExitSelection = 0;
     gMenuInputRepeatTimers[0] = 0;
     if (gRaceCourseIndex.signedValue == 7) {
         gRaceCourseIndex.signedValue = 9;
     }
-    gMenuFadeAlpha = gCurrentGameTask->fade;
+    gMenuFadeAlpha = gCurrentGameTask->callbackData0;
     if (gRaceTypeSelection == 3) {
         gRaceTypeSelection = 0;
     }
@@ -93,9 +93,9 @@ void updateRaceTypeSelectMenu(void) {
     u8 waitTimer;
     RaceTypeSelectCursorState *cursorTarget;
 
-    if (gCurrentGameTask->fade != 0) {
-        gCurrentGameTask->fade = stepMenuFadeAlpha((s16)gCurrentGameTask->fade, 0x24, 0);
-        if (gCurrentGameTask->fade == 0) {
+    if (gCurrentGameTask->callbackData0 != 0) {
+        gCurrentGameTask->callbackData0 = stepMenuFadeAlpha((s16)gCurrentGameTask->callbackData0, 0x24, 0);
+        if (gCurrentGameTask->callbackData0 == 0) {
             createCallbackTask((CallbackTaskCallback)initRaceTypeSelectOptionIcons, 0, 0x62);
         }
     } else {
@@ -220,9 +220,9 @@ void handleRaceTypeSelectMenuSelection(void) {
 }
 
 void fadeOutRaceTypeSelectMenu(void) {
-    if (gCurrentGameTask->fade != 0xFF) {
-        gCurrentGameTask->fade = stepMenuFadeAlpha((s16)gCurrentGameTask->fade, 0x24, 1);
-        if (gCurrentGameTask->fade == 0xFF) {
+    if (gCurrentGameTask->callbackData0 != 0xFF) {
+        gCurrentGameTask->callbackData0 = stepMenuFadeAlpha((s16)gCurrentGameTask->callbackData0, 0x24, 1);
+        if (gCurrentGameTask->callbackData0 == 0xFF) {
             gFramebufferSwapHold = 1;
         } else {
             updateCallbackTasks();

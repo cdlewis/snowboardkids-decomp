@@ -18,9 +18,9 @@ void initControllerPakReplaySaveMessageFlow(void) {
     resetAllViewports();
     configureViewport(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.333333373f);
     gFramebufferRenderInterval.value = 0;
-    gCurrentGameTask->fade = 0xFF;
-    gCurrentGameTask->timer = 0;
-    gMenuFadeAlpha = gCurrentGameTask->fade;
+    gCurrentGameTask->callbackData0 = 0xFF;
+    gCurrentGameTask->callbackData1 = 0;
+    gMenuFadeAlpha = gCurrentGameTask->callbackData0;
     LOAD_ASSET(_5E26E0, 0x26);
     initCallbackTaskScheduler(0);
     createCallbackTask((CallbackTaskCallback)initControllerPakMessageIcon, 0, 0x5E);
@@ -29,22 +29,22 @@ void initControllerPakReplaySaveMessageFlow(void) {
 }
 
 void updateControllerPakReplaySaveMessageFirstPageFadeIn(void) {
-    if (gCurrentGameTask->fade != 0) {
-        gCurrentGameTask->fade = stepMenuFadeAlpha(gCurrentGameTask->fade, 0xF, 0);
+    if (gCurrentGameTask->callbackData0 != 0) {
+        gCurrentGameTask->callbackData0 = stepMenuFadeAlpha(gCurrentGameTask->callbackData0, 0xF, 0);
     } else {
-        gCurrentGameTask->timer++;
+        gCurrentGameTask->callbackData1++;
     }
-    if (gCurrentGameTask->timer >= 0x50) {
-        gCurrentGameTask->timer = 0;
+    if (gCurrentGameTask->callbackData1 >= 0x50) {
+        gCurrentGameTask->callbackData1 = 0;
         setCurrentGameTaskCallback(updateControllerPakReplaySaveMessageFirstPageFadeOut, 0);
     }
     updateCallbackTasks();
 }
 
 void updateControllerPakReplaySaveMessageFirstPageFadeOut(void) {
-    if (gCurrentGameTask->fade != 0xFF) {
-        gCurrentGameTask->fade = stepMenuFadeAlpha(gCurrentGameTask->fade, 0xF, 1);
-        if (gCurrentGameTask->fade == 0xFF) {
+    if (gCurrentGameTask->callbackData0 != 0xFF) {
+        gCurrentGameTask->callbackData0 = stepMenuFadeAlpha(gCurrentGameTask->callbackData0, 0xF, 1);
+        if (gCurrentGameTask->callbackData0 == 0xFF) {
             releaseMenuAssetHandles();
             LOAD_ASSET(_5E0E40, 0x26);
         }
@@ -55,32 +55,32 @@ void updateControllerPakReplaySaveMessageFirstPageFadeOut(void) {
 }
 
 void waitForControllerPakReplaySaveMessageSecondPage(void) {
-    gCurrentGameTask->timer++;
-    if (gCurrentGameTask->timer >= 0x14) {
-        gCurrentGameTask->fade = 0xFF;
-        gMenuFadeAlpha = gCurrentGameTask->fade;
-        gCurrentGameTask->timer = 0;
+    gCurrentGameTask->callbackData1++;
+    if (gCurrentGameTask->callbackData1 >= 0x14) {
+        gCurrentGameTask->callbackData0 = 0xFF;
+        gMenuFadeAlpha = gCurrentGameTask->callbackData0;
+        gCurrentGameTask->callbackData1 = 0;
         setCurrentGameTaskCallback(updateControllerPakReplaySaveMessageSecondPageFadeIn, 0);
     }
     updateCallbackTasks();
 }
 
 void updateControllerPakReplaySaveMessageSecondPageFadeIn(void) {
-    if (gCurrentGameTask->fade != 0) {
-        gCurrentGameTask->fade = stepMenuFadeAlpha(gCurrentGameTask->fade, 0xF, 0);
+    if (gCurrentGameTask->callbackData0 != 0) {
+        gCurrentGameTask->callbackData0 = stepMenuFadeAlpha(gCurrentGameTask->callbackData0, 0xF, 0);
     } else {
-        gCurrentGameTask->timer++;
+        gCurrentGameTask->callbackData1++;
     }
-    if (gCurrentGameTask->timer >= 0x50) {
+    if (gCurrentGameTask->callbackData1 >= 0x50) {
         setCurrentGameTaskCallback(fadeOutControllerPakReplaySaveMessageFlow, 0);
     }
     updateCallbackTasks();
 }
 
 void fadeOutControllerPakReplaySaveMessageFlow(void) {
-    if (gCurrentGameTask->fade != 0xFF) {
-        gCurrentGameTask->fade = stepMenuFadeAlpha(gCurrentGameTask->fade, 0xF, 1);
-        if (gCurrentGameTask->fade == 0xFF) {
+    if (gCurrentGameTask->callbackData0 != 0xFF) {
+        gCurrentGameTask->callbackData0 = stepMenuFadeAlpha(gCurrentGameTask->callbackData0, 0xF, 1);
+        if (gCurrentGameTask->callbackData0 == 0xFF) {
             gFramebufferSwapHold = 1;
         } else {
             updateCallbackTasks();
