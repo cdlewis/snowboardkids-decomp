@@ -12,30 +12,6 @@
 #define TITLE_SCREEN_LOGO_SPRITE_HANDLE ASSET_HANDLE(37)
 #define TITLE_SCREEN_TEXTURE_HANDLE (gAssetHandles[0x21])
 
-typedef struct {
-    char pad0[0x18];
-    /* 0x18 */ s16 x;
-    /* 0x1A */ s16 y;
-} MainMenuTitleActor;
-
-struct MainMenuTitleLogoActor {
-    MainMenuTitleActor common;
-    /* 0x1C */ MenuTilemapSprite tilemapSprite;
-};
-
-struct MainMenuTitleOptionsActor {
-    MainMenuTitleActor common;
-    /* 0x1C */ s16 labelY;
-    /* 0x1E */ s16 unused1E;
-    /* 0x20 */ u16 selectedOption;
-    /* 0x22 */ u16 blinkTimer;
-    /* 0x24 */ s16 blinkAlpha;
-};
-
-struct MainMenuTitleCursorActor {
-    MainMenuTitleActor common;
-};
-
 extern u8 gConnectedControllerCount;
 
 void drawMainMenuTitleLogo(MainMenuTitleLogoActor *arg0) {
