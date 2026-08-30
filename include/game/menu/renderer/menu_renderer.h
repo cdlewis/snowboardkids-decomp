@@ -114,6 +114,17 @@ void drawMenuSpriteWithAlpha(
     u16 alpha,
     u8 flip
 );
+void drawMenuSpriteWithAlphaWideArgs(
+    s32 x,
+    s32 y,
+    AssetTable *table,
+    s32 tileIndex,
+    s32 width,
+    s32 height,
+    s32 palette,
+    s32 alpha,
+    u32 flip
+);
 void drawMenuSpriteWithAlphaClipped(
     s16 x,
     s16 y,
