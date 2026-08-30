@@ -139,12 +139,12 @@ loop_24:
     }
     }
 
-    gCharacterSelectCourseCursorState.fields.listCursorState = 0;
-    gCharacterSelectCourseCursorState.fields.submenuState = 0;
-    gCharacterSelectCourseCursorState.fields.previewFrameState = 0;
-    gCharacterSelectCourseCursorState.fields.listCursorSpriteIndex = 0;
-    gCharacterSelectCourseCursorState.fields.listCursorTimer = 0;
-    gCharacterSelectCourseCursorState.fields.submenuTimer = 0;
+    gCharacterSelectCourseCursorState.listCursorState = 0;
+    gCharacterSelectCourseCursorState.submenuState = 0;
+    gCharacterSelectCourseCursorState.previewFrameState = 0;
+    gCharacterSelectCourseCursorState.listCursorSpriteIndex = 0;
+    gCharacterSelectCourseCursorState.listCursorTimer = 0;
+    gCharacterSelectCourseCursorState.submenuTimer = 0;
     }
 }
 // clang-format on
@@ -238,12 +238,12 @@ void initCharacterSelectCourseMenuFromRace(void)
     gCharacterSelectCourseExitOptionIndex += 1;
   }
   while (var_v0_3 != 20);
-  gCharacterSelectCourseCursorState.fields.listCursorState = 0;
-  gCharacterSelectCourseCursorState.fields.submenuState = 0;
-  gCharacterSelectCourseCursorState.fields.previewFrameState = 0;
-  gCharacterSelectCourseCursorState.fields.listCursorSpriteIndex = 0;
-  gCharacterSelectCourseCursorState.fields.listCursorTimer = 0;
-  gCharacterSelectCourseCursorState.fields.submenuTimer = 0;
+  gCharacterSelectCourseCursorState.listCursorState = 0;
+  gCharacterSelectCourseCursorState.submenuState = 0;
+  gCharacterSelectCourseCursorState.previewFrameState = 0;
+  gCharacterSelectCourseCursorState.listCursorSpriteIndex = 0;
+  gCharacterSelectCourseCursorState.listCursorTimer = 0;
+  gCharacterSelectCourseCursorState.submenuTimer = 0;
   updateCallbackTasks();
 }
 // clang-format on
@@ -337,12 +337,12 @@ void initCharacterSelectCourseMenuFromPlayerSelect(void) {
         gCharacterSelectCourseExitOptionIndex += 1;
     } while (var_v0_3 != 20);
 
-    gCharacterSelectCourseCursorState.fields.listCursorState = 0;
-    gCharacterSelectCourseCursorState.fields.submenuState = 0;
-    gCharacterSelectCourseCursorState.fields.previewFrameState = 0;
-    gCharacterSelectCourseCursorState.fields.listCursorSpriteIndex = 0;
-    gCharacterSelectCourseCursorState.fields.listCursorTimer = 0;
-    gCharacterSelectCourseCursorState.fields.submenuTimer = 0 * 0;
+    gCharacterSelectCourseCursorState.listCursorState = 0;
+    gCharacterSelectCourseCursorState.submenuState = 0;
+    gCharacterSelectCourseCursorState.previewFrameState = 0;
+    gCharacterSelectCourseCursorState.listCursorSpriteIndex = 0;
+    gCharacterSelectCourseCursorState.listCursorTimer = 0;
+    gCharacterSelectCourseCursorState.submenuTimer = 0 * 0;
     updateCallbackTasks();
 }
 // clang-format on
@@ -372,7 +372,7 @@ void updateCharacterSelectCourseMenu(void) {
             if (gMenuSelectionConfirmTimer == 0) {
                 pressedInputPtr = gPlayerInputPressed;
                 repeatTimerPtr = gMenuInputRepeatTimers;
-                if (gCharacterSelectCourseCursorState.fields.listCursorState == 1) {
+                if (gCharacterSelectCourseCursorState.listCursorState == 1) {
                     for (heldInput = gPlayerInputHeld[0], selection = *selectionPtr;;) {
                         heldInput &= -1;
                         heldInput &= -1;
@@ -418,19 +418,19 @@ void updateCharacterSelectCourseMenu(void) {
                         enqueueSoundEffect(1, 0x32);
                         if ((*gCharacterSelectActiveCourseOptions)[gRaceCourseIndex.signedValue] != -1) {
                             gMenuSelectionConfirmTimer = 1;
-                            gCharacterSelectCourseCursorState.fields.listCursorState = 2;
-                            gCharacterSelectCourseCursorState.fields.listCursorSpriteIndex = spriteIndex;
+                            gCharacterSelectCourseCursorState.listCursorState = 2;
+                            gCharacterSelectCourseCursorState.listCursorSpriteIndex = spriteIndex;
                         } else {
-                            gCharacterSelectCourseCursorState.fields.listCursorState = 2;
-                            gCharacterSelectCourseCursorState.fields.listCursorSpriteIndex = spriteIndex;
+                            gCharacterSelectCourseCursorState.listCursorState = 2;
+                            gCharacterSelectCourseCursorState.listCursorSpriteIndex = spriteIndex;
                             gRacePlayers[0].menuState = 7;
                             setCurrentGameTaskCallback(&handleCharacterSelectCourseSelection, 0);
                             requestMusicSequenceStop(8);
                         }
                     } else if ((input & B_BUTTON) && (gMenuFlowState == (gCharacterSelectCourseExitOptionIndex + 1))) {
                         enqueueSoundEffect(1, 0x32);
-                        gCharacterSelectCourseCursorState.fields.listCursorState = 2;
-                        gCharacterSelectCourseCursorState.fields.listCursorSpriteIndex = spriteIndex;
+                        gCharacterSelectCourseCursorState.listCursorState = 2;
+                        gCharacterSelectCourseCursorState.listCursorSpriteIndex = spriteIndex;
                         gRacePlayers[0].menuState = 7;
                         setCurrentGameTaskCallback(&handleCharacterSelectCourseSelection, 0);
                         requestMusicSequenceStop(8);
@@ -451,7 +451,7 @@ void updateCharacterSelectCourseMenu(void) {
             }
         }
 
-        if (gCharacterSelectCourseCursorState.fields.submenuState >= 2) {
+        if (gCharacterSelectCourseCursorState.submenuState >= 2) {
             setCurrentGameTaskCallback(&updateCharacterSelectCourseSubmenu, 0);
         }
     }
@@ -468,7 +468,7 @@ void updateCharacterSelectCourseSubmenu(void) {
     state = gRacePlayers[0].menuState;
     menuState = &gRacePlayers[0].menuState;
     if (state < 3) {
-        switch (gCharacterSelectCourseCursorState.fields.submenuState) {
+        switch (gCharacterSelectCourseCursorState.submenuState) {
             case 2:
                 input = gPlayerInputPressed[0];
                 if (input & B_BUTTON) {
@@ -477,7 +477,7 @@ void updateCharacterSelectCourseSubmenu(void) {
                 } else if ((input & A_BUTTON) || (input & START_BUTTON)) {
                     enqueueSoundEffect(1, 0x32);
                     gMenuChoicePromptState[0] = 1;
-                    gCharacterSelectCourseCursorState.fields.submenuState = 3;
+                    gCharacterSelectCourseCursorState.submenuState = 3;
                     createCallbackTask((CallbackTaskCallback)initCharacterSelectCourseConfirmCursor, 0, 0x61);
                 }
                 break;
@@ -497,16 +497,16 @@ void updateCharacterSelectCourseSubmenu(void) {
                     if ((input & A_BUTTON) || (input & START_BUTTON)) {
                         enqueueSoundEffect(0x18, 0x32);
                         gMenuChoicePromptState[0] += 2;
-                        gCharacterSelectCourseCursorState.fields.submenuState = 4;
+                        gCharacterSelectCourseCursorState.submenuState = 4;
                     } else if (input & B_BUTTON) {
                         enqueueSoundEffect(1, 0x32);
                         gMenuChoicePromptState[0] = 6;
-                        gCharacterSelectCourseCursorState.fields.submenuState = 4;
+                        gCharacterSelectCourseCursorState.submenuState = 4;
                     }
                 }
                 break;
             case 4:
-                if (gCharacterSelectCourseCursorState.fields.submenuTimer == 4) {
+                if (gCharacterSelectCourseCursorState.submenuTimer == 4) {
                     if (gMenuChoicePromptState[0] == 6) {
                         gRacePlayers[0].menuState = 3;
                     } else {
@@ -521,9 +521,9 @@ void updateCharacterSelectCourseSubmenu(void) {
             gRacePlayers[0].menuState = 0;
             gMenuSelectionConfirmTimer = 0;
             setCurrentGameTaskCallback(updateCharacterSelectCourseMenu, 0);
-            gCharacterSelectCourseCursorState.fields.listCursorState = 1;
-            gCharacterSelectCourseCursorState.fields.listCursorSpriteIndex = 0x100;
-            gCharacterSelectCourseCursorState.fields.listCursorTimer = 0;
+            gCharacterSelectCourseCursorState.listCursorState = 1;
+            gCharacterSelectCourseCursorState.listCursorSpriteIndex = 0x100;
+            gCharacterSelectCourseCursorState.listCursorTimer = 0;
             state = *menuState;
         }
         if (state == 8) {
