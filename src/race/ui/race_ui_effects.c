@@ -1225,7 +1225,6 @@ extern u8 gRaceChallengeFailed;
 extern u8 gRaceUpdatePaused;
 
 extern void drawAssetTableSprite8bpp(s16, s16, void *, s32);
-extern void drawMenuAsciiTextDefaultScale(s32, s32, const void *, s32);
 extern void enqueuePlayerLoopingPositionalSoundRequest(s32, void *, s32, s32, f32, s32);
 
 const char gRaceUiBoardReversePromptLabelBlinkOn[0x10] = "Board Reverse";
@@ -1299,10 +1298,10 @@ void initRaceCourseScrollingTexture(RaceCourseScrollingTextureActor *arg0) {
 void drawRaceUiBoardReversePrompt(RaceUiPromptActor *arg0) {
     if (gCurrentViewportIndex == arg0->index) {
         if (gUiBlinkTimer & 1) {
-            drawMenuAsciiTextDefaultScale(-0x34, arg0->y, &gRaceUiBoardReversePromptLabelBlinkOn, 0);
+            drawMenuAsciiTextDefaultScale(-0x34, arg0->y, gRaceUiBoardReversePromptLabelBlinkOn, 0);
             return;
         }
-        drawMenuAsciiTextDefaultScale(-0x34, arg0->y, &gRaceUiBoardReversePromptLabelBlinkOff, 1);
+        drawMenuAsciiTextDefaultScale(-0x34, arg0->y, gRaceUiBoardReversePromptLabelBlinkOff, 1);
     }
 }
 
@@ -1622,9 +1621,9 @@ void func_80058360(RaceUiAlpha18Actor *arg0) {
         gDPSetRenderMode(gRegionAllocPtr++, G_RM_XLU_SURF, G_RM_XLU_SURF2);
         gDPSetPrimColor(gRegionAllocPtr++, 0, 0, 0xFF, 0xFF, 0xFF, arg0->alpha);
     }
-    drawMenuAsciiTextDefaultScale(8, -0x48, &gRaceUiRankPrizeLabel, 5);
-    drawMenuAsciiTextDefaultScale(0, -0x18, &gRaceUiGetCoinLabel, 5);
-    drawMenuAsciiTextDefaultScale(4, 0x18, &gRaceUiTotalMoneyLabel, 5);
+    drawMenuAsciiTextDefaultScale(8, -0x48, gRaceUiRankPrizeLabel, 5);
+    drawMenuAsciiTextDefaultScale(0, -0x18, gRaceUiGetCoinLabel, 5);
+    drawMenuAsciiTextDefaultScale(4, 0x18, gRaceUiTotalMoneyLabel, 5);
     if (arg0->alpha != 0xFF) {
         gSPDisplayList(gRegionAllocPtr++, gMenuRenderModeResetDl);
     }
@@ -2477,20 +2476,20 @@ void func_8005AC44(RaceUiCounterActor *arg0) {
     }
 
     if (gRaceChallengeFailed != 0) {
-        drawMenuAsciiTextDefaultScale(-8, (s16)y, &gRaceUiHitPrizeX1Label, 5);
+        drawMenuAsciiTextDefaultScale(-8, (s16)y, gRaceUiHitPrizeX1Label, 5);
     } else {
-        drawMenuAsciiTextDefaultScale(-0xC, (s16)y, &gRaceUiHitPrizeX50Label, 5);
+        drawMenuAsciiTextDefaultScale(-0xC, (s16)y, gRaceUiHitPrizeX50Label, 5);
     }
 
     y += 0x28;
     if (arg0->flag != 0) {
-        drawMenuAsciiTextDefaultScale(-0xC, (s16)y, &gRaceUiPerfectHitLabel, 5);
+        drawMenuAsciiTextDefaultScale(-0xC, (s16)y, gRaceUiPerfectHitLabel, 5);
         y += 0x28;
     }
 
-    drawMenuAsciiTextDefaultScale(-8, (s16)y, &gRaceUiCompleteBonusLabel, 5);
+    drawMenuAsciiTextDefaultScale(-8, (s16)y, gRaceUiCompleteBonusLabel, 5);
     y += 0x28;
-    drawMenuAsciiTextDefaultScale(4, (s16)y, &gRaceUiHitPrizeTotalMoneyLabel, 5);
+    drawMenuAsciiTextDefaultScale(4, (s16)y, gRaceUiHitPrizeTotalMoneyLabel, 5);
 
     if (arg0->alpha != 0xFF) {
         gSPDisplayList(gRegionAllocPtr++, gMenuRenderModeResetDl);
@@ -2504,11 +2503,11 @@ const char gRaceUiCourseValueHitLabelRow4[0x4] = "Hit";
 const char gRaceUiCourseValueHitLabelRow5[0x4] = "Hit";
 
 void func_8005AE1C(void *arg0) {
-    drawMenuAsciiTextDefaultScale(0x20, -0x48, &gRaceUiCourseValueHitLabelRow1, 6);
-    drawMenuAsciiTextDefaultScale(0x20, -0x28, &gRaceUiCourseValueHitLabelRow2, 6);
-    drawMenuAsciiTextDefaultScale(0x20, -8, &gRaceUiCourseValueHitLabelRow3, 6);
-    drawMenuAsciiTextDefaultScale(0x20, 0x18, &gRaceUiCourseValueHitLabelRow4, 4);
-    drawMenuAsciiTextDefaultScale(0x20, 0x38, &gRaceUiCourseValueHitLabelRow5, 4);
+    drawMenuAsciiTextDefaultScale(0x20, -0x48, gRaceUiCourseValueHitLabelRow1, 6);
+    drawMenuAsciiTextDefaultScale(0x20, -0x28, gRaceUiCourseValueHitLabelRow2, 6);
+    drawMenuAsciiTextDefaultScale(0x20, -8, gRaceUiCourseValueHitLabelRow3, 6);
+    drawMenuAsciiTextDefaultScale(0x20, 0x18, gRaceUiCourseValueHitLabelRow4, 4);
+    drawMenuAsciiTextDefaultScale(0x20, 0x38, gRaceUiCourseValueHitLabelRow5, 4);
 }
 
 void func_8005AEB0(void *arg0) {
@@ -2931,7 +2930,7 @@ void func_8005C14C(RaceUiDualCounterActor *arg0) {
     char buf[0x18];
     char *bufp;
     s32 y;
-    u32 textY;
+    s16 textY;
     RaceTimer *targetTime;
 
     if (arg0->alpha != 0xFF) {
@@ -2971,7 +2970,7 @@ void func_8005C14C(RaceUiDualCounterActor *arg0) {
     }
     drawMenuAsciiTextDefaultScale(-8, (s16)y, gRaceUiTargetTimeChallengeCompleteBonusLabel, 5);
     y += 0x20;
-    textY = (s16)y;
+    textY = y;
     drawMenuAsciiTextDefaultScale(-0xC, textY, gRaceUiTargetTimeChallengeMoneyLabel, 5);
 
     if (arg0->alpha != 0xFF) {
@@ -3492,13 +3491,13 @@ void func_8005D9B4(RaceUiAlpha18Actor *arg0) {
     }
 
     y = -0x50;
-    drawMenuAsciiTextDefaultScale(-0xC, (s16)y, &gRaceUiPendingTrickPrizeLabel, 5);
+    drawMenuAsciiTextDefaultScale(-0xC, (s16)y, gRaceUiPendingTrickPrizeLabel, 5);
     y += 0x28;
-    drawMenuAsciiTextDefaultScale(-8, (s16)y, &gRaceUiPendingMakeBonusLabel, 5);
+    drawMenuAsciiTextDefaultScale(-8, (s16)y, gRaceUiPendingMakeBonusLabel, 5);
     y += 0x28;
-    drawMenuAsciiTextDefaultScale(-8, (s16)y, &gRaceUiPendingCompleteBonusLabel, 5);
+    drawMenuAsciiTextDefaultScale(-8, (s16)y, gRaceUiPendingCompleteBonusLabel, 5);
     y += 0x28;
-    drawMenuAsciiTextDefaultScale(-0xC, (s16)y, &gRaceUiPendingMoneyLabel, 5);
+    drawMenuAsciiTextDefaultScale(-0xC, (s16)y, gRaceUiPendingMoneyLabel, 5);
 
     if ((*arg0p)->alpha != 0xFF) {
         gSPDisplayList(gRegionAllocPtr++, gMenuRenderModeResetDl);
@@ -3514,11 +3513,11 @@ const char gRaceUiTrickValuePointLabelRow4[0x4] = "P";
 const char gRaceUiTrickValuePointLabelRow5[0x8] = "P";
 
 void func_8005DB3C(void *arg0) {
-    drawMenuAsciiTextDefaultScale(0x30, -0x48, &gRaceUiTrickValuePointLabelRow1, 6);
-    drawMenuAsciiTextDefaultScale(0x30, -0x28, &gRaceUiTrickValuePointLabelRow2, 6);
-    drawMenuAsciiTextDefaultScale(0x30, -8, &gRaceUiTrickValuePointLabelRow3, 6);
-    drawMenuAsciiTextDefaultScale(0x30, 0x18, &gRaceUiTrickValuePointLabelRow4, 4);
-    drawMenuAsciiTextDefaultScale(0x30, 0x38, &gRaceUiTrickValuePointLabelRow5, 4);
+    drawMenuAsciiTextDefaultScale(0x30, -0x48, gRaceUiTrickValuePointLabelRow1, 6);
+    drawMenuAsciiTextDefaultScale(0x30, -0x28, gRaceUiTrickValuePointLabelRow2, 6);
+    drawMenuAsciiTextDefaultScale(0x30, -8, gRaceUiTrickValuePointLabelRow3, 6);
+    drawMenuAsciiTextDefaultScale(0x30, 0x18, gRaceUiTrickValuePointLabelRow4, 4);
+    drawMenuAsciiTextDefaultScale(0x30, 0x38, gRaceUiTrickValuePointLabelRow5, 4);
 }
 
 void func_8005DBD0(void *arg0) {

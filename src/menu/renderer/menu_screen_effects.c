@@ -128,7 +128,6 @@ extern u32 D_2000E48[];
 extern u32 D_2000E70[];
 extern u32 D_20058A8[];
 
-void drawMenuAsciiTextDefaultScale(s32, s32, void *, s32);
 void drawRaceSetupBackdropModels(MenuScreenEffectActor *);
 void drawRaceSetupCourseBackdrop(void *);
 void renderRaceSetupBackdrop(MenuScreenEffectActor *);
