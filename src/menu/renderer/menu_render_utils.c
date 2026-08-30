@@ -1141,7 +1141,7 @@ void runRenderCallbacks(RenderCallbackNode **arg0) {
     RenderCallbackNode *s0 = *arg0;
     if (s0 != NULL) {
     loop:
-        if ((u32)(((u8 *)gRegionAllocPtr - (u8 *)gCurrentFrameRenderData) - 0x5B8) < 0x14181U) {
+        if ((u32)(((u8 *)gRegionAllocPtr - (u8 *)gCurrentFrameRenderData) - sizeof(FrameRenderData)) < 0x14181U) {
             s0->callback(s0->arg);
             s0 = s0->next;
             if (s0 != NULL) {
