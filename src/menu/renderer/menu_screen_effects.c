@@ -22,43 +22,11 @@
         _g->words.w1 = (cmd1);             \
     }
 
-typedef union {
-    s32 word;
-    struct {
-        s16 hi;
-        s16 lo;
-    } half;
-    struct {
-        u8 b0;
-        u8 b1;
-        u8 b2;
-        u8 b3;
-    } byte;
-} OverlayActorWord;
-
 typedef struct {
     /* 0x00 */ OverlayActorWord x;
     /* 0x04 */ OverlayActorWord y;
     /* 0x08 */ OverlayActorWord z;
 } OverlayActorTransform;
-
-struct MenuScreenEffectActor {
-    /* 0x00 */ u8 pad0[0x10];
-    /* 0x10 */ u16 index;
-    /* 0x12 */ u8 pad12[6];
-    /* 0x18 */ OverlayActorWord unk18;
-    /* 0x1C */ OverlayActorWord unk1C;
-    /* 0x20 */ OverlayActorWord unk20;
-    /* 0x24 */ OverlayActorWord unk24;
-    /* 0x28 */ u16 timer;
-    /* 0x2A */ s16 unk2A;
-    /* 0x2C */ u8 pad2C[2];
-    /* 0x2E */ u8 unk2E;
-    /* 0x2F */ u8 unk2F;
-    /* 0x30 */ OverlayActorWord unk30;
-    /* 0x34 */ s16 spriteIndex;
-    /* 0x36 */ s16 alpha;
-};
 
 typedef struct {
     /* 0x00 */ Transform3D source;
