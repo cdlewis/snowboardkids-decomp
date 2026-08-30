@@ -72,9 +72,6 @@ enum {
     COURSE_LIST_SLIDE_SELECTED_OUT
 };
 
-extern int sprintf(char *, const char *, ...);
-extern void
-drawAssetTableSpriteWithExplicitPaletteWideIndex(s16 x, s16 y, AssetTable *table, s32 entryIndex, u16 paletteIndex);
 u16 gCharacterSelectCoursePreviewFrameTileMaps[20] = {
     0x0161, 0x0162, 0x0163, 0x0164, 0x0166, 0x0167, 0x0168, 0x0169, 0x016A, 0x016B,
     0x016C, 0x016D, 0x016F, 0x0170, 0x0171, 0x0172, 0x0165, 0x016E, 0x0173, 0x0174,
