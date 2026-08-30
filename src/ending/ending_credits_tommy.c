@@ -42,12 +42,12 @@ extern s16 gAssetHandles[];
 void noopEndingCreditsTommy(void) {
 }
 
-void updateEndingTommyFinalPose(EndingCreditsTommy *arg0) {
+void updateEndingTommyFinalPose(EndingCreditsCharacterActor *arg0) {
     stepMainMenuSceneModelAnimation(4);
     addMainMenuSceneModelDrawCallback(4);
 }
 
-void updateEndingTommyStartFinalPose(EndingCreditsTommy *arg0) {
+void updateEndingTommyStartFinalPose(EndingCreditsCharacterActor *arg0) {
     stepMainMenuSceneModelAnimation(4);
     addMainMenuSceneModelDrawCallback(4);
     addEndingActorShadowRenderCallback(&gEndingActorShadow);
@@ -57,7 +57,7 @@ void updateEndingTommyStartFinalPose(EndingCreditsTommy *arg0) {
     }
 }
 
-void updateEndingTommyWaitThenFinalPhase(EndingCreditsTommy *arg0) {
+void updateEndingTommyWaitThenFinalPhase(EndingCreditsCharacterActor *arg0) {
     s32 new_var2;
     s32 sp18;
     s32 new_var;
@@ -68,88 +68,88 @@ void updateEndingTommyWaitThenFinalPhase(EndingCreditsTommy *arg0) {
     new_var2 = (new_var = 4);
     addMainMenuSceneModelDrawCallback(new_var2);
     if (sp18 == 1) {
-        temp_v0 = arg0->timer;
+        temp_v0 = arg0->stateTimer;
         temp_t7 = temp_v0;
         temp_t7 = temp_t7 + 1;
         if (temp_v0 < 0x1E) {
-            arg0->timer = temp_t7;
+            arg0->stateTimer = temp_t7;
             if ((temp_t7 & 0xFFFFU) == 0x1E) {
                 gEndingCreditsSequencePhase = 0x3E;
             }
         }
         if (gEndingCreditsSequencePhase == 0x40) {
-            arg0->timer = 0;
+            arg0->stateTimer = 0;
             setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateEndingTommyStartFinalPose);
             setMainMenuSceneModelAnimation(4, 0x60);
         }
     }
 }
 
-void waitEndingTommyPhase3D(EndingCreditsTommy *arg0) {
+void waitEndingTommyPhase3D(EndingCreditsCharacterActor *arg0) {
     loopMainMenuSceneModelAnimation(4);
     addMainMenuSceneModelDrawCallback(4);
     addEndingActorShadowRenderCallback(&gEndingActorShadow);
     if (gEndingCreditsSequencePhase == 0x3D) {
-        arg0->timer = 0;
+        arg0->stateTimer = 0;
         setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateEndingTommyWaitThenFinalPhase);
         setMainMenuSceneModelAnimation(4, 0x5F);
     }
 }
 
-void updateEndingTommyEnterForPhase3A(EndingCreditsTommy *arg0) {
+void updateEndingTommyEnterForPhase3A(EndingCreditsCharacterActor *arg0) {
     s32 limit = (s32)0xFF700000;
 
     loopMainMenuSceneModelAnimation(4);
-    arg0->posX += 0x48000;
-    if (arg0->posX >= limit) {
-        arg0->posX = limit;
+    arg0->position.x += 0x48000;
+    if (arg0->position.x >= limit) {
+        arg0->position.x = limit;
         gEndingCreditsSequencePhase = 0x3A;
         setCallbackTaskCallback(arg0, (CallbackTaskCallback)waitEndingTommyPhase3D);
     }
-    setMainMenuSceneModelPosition(4, arg0->posX, arg0->posY, arg0->posZ);
+    setMainMenuSceneModelPosition(4, arg0->position.x, arg0->position.y, arg0->position.z);
     addMainMenuSceneModelDrawCallback(4);
     addEndingActorShadowRenderCallback(&gEndingActorShadow);
 }
 
-void waitEndingTommyPhase39(EndingCreditsTommy *arg0) {
+void waitEndingTommyPhase39(EndingCreditsCharacterActor *arg0) {
     u16 temp_t6;
     u16 temp_v0;
 
-    temp_v0 = arg0->timer;
+    temp_v0 = arg0->stateTimer;
     if (temp_v0 < 0x23) {
         temp_t6 = temp_v0 + 1;
-        arg0->timer = temp_t6;
+        arg0->stateTimer = temp_t6;
         if ((temp_t6 & 0xFFFF) == 0x23) {
             gEndingCreditsSequencePhase = 0x10;
         }
     } else if (gEndingCreditsSequencePhase == 0x39) {
-        arg0->posX = 0xFCA00000;
+        arg0->position.x = 0xFCA00000;
         setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateEndingTommyEnterForPhase3A);
         setMainMenuSceneModelAnimation(4, 4);
-        arg0->rotY = 0;
-        setMainMenuSceneModelRotation(4, arg0->rotX, arg0->rotY, arg0->rotZ);
-        gEndingActorShadow.unkC = 9;
-        gEndingActorShadow.posX = 0xFFF20000;
-        gEndingActorShadow.posY = 0xFFF20000;
-        gEndingActorShadow.posZ = 0xA0000;
+        arg0->rotation.y = 0;
+        setMainMenuSceneModelRotation(4, arg0->rotation.x, arg0->rotation.y, arg0->rotation.z);
+        gEndingActorShadow.modelPartIndex = 9;
+        gEndingActorShadow.offset.x = 0xFFF20000;
+        gEndingActorShadow.offset.y = 0xFFF20000;
+        gEndingActorShadow.offset.z = 0xA0000;
     }
 }
 
-void updateEndingTommySlideLeftAfterBurst(EndingCreditsTommy *arg0) {
-    arg0->posX += (s32)0xFFFE8000;
-    if (arg0->posX < (s32)0xFE700001) {
-        arg0->posX = (s32)0xFE700000;
-        arg0->posY = 0;
+void updateEndingTommySlideLeftAfterBurst(EndingCreditsCharacterActor *arg0) {
+    arg0->position.x += (s32)0xFFFE8000;
+    if (arg0->position.x < (s32)0xFE700001) {
+        arg0->position.x = (s32)0xFE700000;
+        arg0->position.y = 0;
         setCallbackTaskCallback(arg0, (CallbackTaskCallback)waitEndingTommyPhase39);
     }
-    setMainMenuSceneModelPosition(4, arg0->posX, arg0->posY, arg0->posZ);
+    setMainMenuSceneModelPosition(4, arg0->position.x, arg0->position.y, arg0->position.z);
     loopMainMenuSceneModelAnimation(4);
     addMainMenuSceneModelDrawCallback(4);
     addEndingActorShadowRenderCallback(&gEndingActorShadow);
 }
 
-void updateEndingTommyStartBurstExit(EndingCreditsTommy *arg0) {
-    EndingCreditsTommy *new_var;
+void updateEndingTommyStartBurstExit(EndingCreditsCharacterActor *arg0) {
+    EndingCreditsCharacterActor *new_var;
     s32 sp20;
 
     sp20 = stepMainMenuSceneModelAnimation(4);
@@ -158,16 +158,16 @@ void updateEndingTommyStartBurstExit(EndingCreditsTommy *arg0) {
     if (sp20 == 1) {
         setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateEndingTommySlideLeftAfterBurst);
         setMainMenuSceneModelAnimation(4, 3);
-        arg0->rotY = 0xC00;
-        setMainMenuSceneModelRotation(4, arg0->rotX, (new_var = arg0)->rotY, arg0->rotZ);
-        gEndingActorShadow.unkC = 9;
-        gEndingActorShadow.posX = 0xFFF20000;
-        gEndingActorShadow.posY = 0xFFF20000;
-        gEndingActorShadow.posZ = 0;
+        arg0->rotation.y = 0xC00;
+        setMainMenuSceneModelRotation(4, arg0->rotation.x, (new_var = arg0)->rotation.y, arg0->rotation.z);
+        gEndingActorShadow.modelPartIndex = 9;
+        gEndingActorShadow.offset.x = 0xFFF20000;
+        gEndingActorShadow.offset.y = 0xFFF20000;
+        gEndingActorShadow.offset.z = 0;
     }
 }
 
-void updateEndingTommyWaitBeforeBurstExit(EndingCreditsTommy *arg0) {
+void updateEndingTommyWaitBeforeBurstExit(EndingCreditsCharacterActor *arg0) {
     s32 unused;
     volatile unsigned int sp18;
     s32 var_v0;
@@ -175,61 +175,61 @@ void updateEndingTommyWaitBeforeBurstExit(EndingCreditsTommy *arg0) {
     sp18 = stepMainMenuSceneModelAnimation(4);
     addMainMenuSceneModelDrawCallback(4);
     if (sp18 == 1) {
-        arg0->timer++;
-        if (arg0->timer == 0x41) {
-            arg0->timer = 0;
+        arg0->stateTimer++;
+        if (arg0->stateTimer == 0x41) {
+            arg0->stateTimer = 0;
             setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateEndingTommyStartBurstExit);
             setMainMenuSceneModelAnimation(4, 0x1E);
         }
     } else {
-        arg0->timer++;
-        var_v0 = arg0->timer;
+        arg0->stateTimer++;
+        var_v0 = arg0->stateTimer;
         if (var_v0 == 0x1F) {
-            gEndingActorShadow.actorId = 4;
-            gEndingActorShadow.unkC = 0xB;
-            gEndingActorShadow.posY = -0x180000;
-            var_v0 = arg0->timer;
+            gEndingActorShadow.characterId = 4;
+            gEndingActorShadow.modelPartIndex = 0xB;
+            gEndingActorShadow.offset.y = -0x180000;
+            var_v0 = arg0->stateTimer;
         }
         if (var_v0 == 0x27) {
             createCallbackTask((CallbackTaskCallback)initEndingCreditsTommyBigBurst, 0, 0x64);
-            arg0->timer = 0;
+            arg0->stateTimer = 0;
         }
     }
-    if ((u8)gEndingActorShadow.actorId == 4) {
+    if ((u8)gEndingActorShadow.characterId == 4) {
         addEndingActorShadowRenderCallback(&gEndingActorShadow);
     }
 }
 
-void updateEndingTommyWaitBeforeBurst(EndingCreditsTommy *arg0) {
-    u16 temp_v0 = arg0->timer;
-    EndingCreditsTommy *temp_a2 = arg0;
+void updateEndingTommyWaitBeforeBurst(EndingCreditsCharacterActor *arg0) {
+    u16 temp_v0 = arg0->stateTimer;
+    EndingCreditsCharacterActor *temp_a2 = arg0;
 
     if (temp_v0 < 0x1E) {
-        arg0->timer = temp_v0 + 1;
+        arg0->stateTimer = temp_v0 + 1;
     } else if (stepMainMenuSceneModelAnimation(4) == 1) {
-        temp_a2->timer = 0;
+        temp_a2->stateTimer = 0;
         setCallbackTaskCallback(temp_a2, (CallbackTaskCallback)updateEndingTommyWaitBeforeBurstExit);
         setMainMenuSceneModelAnimation(4, 0x1D);
     }
     addMainMenuSceneModelDrawCallback(4);
 }
 
-void waitEndingTommyPhase0F(EndingCreditsTommy *arg0) {
+void waitEndingTommyPhase0F(EndingCreditsCharacterActor *arg0) {
     loopMainMenuSceneModelAnimation(4);
     addMainMenuSceneModelDrawCallback(4);
-    arg0->timer++;
+    arg0->stateTimer++;
     if (gEndingCreditsSequencePhase == 0xF) {
-        arg0->timer = 0;
-        setMainMenuSceneModelPosition(4, arg0->posX, arg0->posY, arg0->posZ);
+        arg0->stateTimer = 0;
+        setMainMenuSceneModelPosition(4, arg0->position.x, arg0->position.y, arg0->position.z);
         setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateEndingTommyWaitBeforeBurst);
         setMainMenuSceneModelAnimation(4, 0x1C);
         gEndingCreditsCharacterAuraDoneFlags[ENDING_CREDITS_CHARACTER_TOMMY] = 1;
     }
 }
 
-void updateEndingTommyStartPhase0CAuras(EndingCreditsTommy *arg0) {
+void updateEndingTommyStartPhase0CAuras(EndingCreditsCharacterActor *arg0) {
     if (stepMainMenuSceneModelAnimation(4) == 1) {
-        arg0->timer = 0;
+        arg0->stateTimer = 0;
         setCallbackTaskCallback(arg0, (CallbackTaskCallback)waitEndingTommyPhase0F);
         setMainMenuSceneModelAnimation(4, 0xC);
         gEndingCreditsSequencePhase = 0xC;
@@ -240,11 +240,11 @@ void updateEndingTommyStartPhase0CAuras(EndingCreditsTommy *arg0) {
     addMainMenuSceneModelDrawCallback(4);
 }
 
-void updateEndingTommyWaitBeforePhase0CAuras(EndingCreditsTommy *arg0) {
+void updateEndingTommyWaitBeforePhase0CAuras(EndingCreditsCharacterActor *arg0) {
     if (stepMainMenuSceneModelAnimation(4) == 1) {
-        arg0->timer++;
-        if (arg0->timer == 0x14) {
-            arg0->timer = 0;
+        arg0->stateTimer++;
+        if (arg0->stateTimer == 0x14) {
+            arg0->stateTimer = 0;
             setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateEndingTommyStartPhase0CAuras);
             setMainMenuSceneModelAnimation(4, 0xB);
         }
@@ -252,35 +252,35 @@ void updateEndingTommyWaitBeforePhase0CAuras(EndingCreditsTommy *arg0) {
     addMainMenuSceneModelDrawCallback(4);
 }
 
-void updateEndingTommySlideLeftToPhase0A(EndingCreditsTommy *arg0) {
+void updateEndingTommySlideLeftToPhase0A(EndingCreditsCharacterActor *arg0) {
     loopMainMenuSceneModelAnimation(4);
-    arg0->posX += (s32)0xFFFB8000;
-    if (arg0->posX < (s32)0xFF600001) {
-        arg0->posX = (s32)0xFF600000;
+    arg0->position.x += (s32)0xFFFB8000;
+    if (arg0->position.x < (s32)0xFF600001) {
+        arg0->position.x = (s32)0xFF600000;
         setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateEndingTommyWaitBeforePhase0CAuras);
         setMainMenuSceneModelAnimation(4, 0xA);
     }
-    setMainMenuSceneModelPosition(4, arg0->posX, arg0->posY, arg0->posZ);
+    setMainMenuSceneModelPosition(4, arg0->position.x, arg0->position.y, arg0->position.z);
     addMainMenuSceneModelDrawCallback(4);
 }
 
-void updateEndingTommyHopLeftToPhase0A(EndingCreditsTommy *arg0) {
+void updateEndingTommyHopLeftToPhase0A(EndingCreditsCharacterActor *arg0) {
     if (stepMainMenuSceneModelAnimation(4) == 0) {
-        s32 var_v0 = (arg0->timer < 5) ? 1 : -1;
+        s32 var_v0 = (arg0->stateTimer < 5) ? 1 : -1;
 
-        arg0->posY += var_v0 * 0x3E000;
-        arg0->posX += (s32)0xFFF60000;
-        setMainMenuSceneModelPosition(4, arg0->posX, arg0->posY, arg0->posZ);
+        arg0->position.y += var_v0 * 0x3E000;
+        arg0->position.x += (s32)0xFFF60000;
+        setMainMenuSceneModelPosition(4, arg0->position.x, arg0->position.y, arg0->position.z);
     } else {
-        arg0->posY = 0x6C000;
-        setMainMenuSceneModelPosition(4, arg0->posX, 0x6C000, arg0->posZ);
+        arg0->position.y = 0x6C000;
+        setMainMenuSceneModelPosition(4, arg0->position.x, 0x6C000, arg0->position.z);
         setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateEndingTommySlideLeftToPhase0A);
         setMainMenuSceneModelAnimation(4, 9);
     }
     addMainMenuSceneModelDrawCallback(4);
 }
 
-void waitEndingTommyPhase0B(EndingCreditsTommy *arg0) {
+void waitEndingTommyPhase0B(EndingCreditsCharacterActor *arg0) {
     if (gEndingCreditsSequencePhase < 0xA) {
         loopMainMenuSceneModelAnimation(4);
     } else if (gEndingCreditsSequencePhase == 0xB) {
@@ -292,11 +292,11 @@ void waitEndingTommyPhase0B(EndingCreditsTommy *arg0) {
     addEndingActorShadowRenderCallback(&gEndingActorShadow);
 }
 
-void waitEndingTommyPhase08Aura(EndingCreditsTommy *arg0) {
+void waitEndingTommyPhase08Aura(EndingCreditsCharacterActor *arg0) {
     if (gEndingCreditsSequencePhase == 8) {
         setCallbackTaskCallback(arg0, (CallbackTaskCallback)waitEndingTommyPhase0B);
         setMainMenuSceneModelAnimation(4, 7);
-        gEndingActorShadow.posY = (s32)0xFFE80000;
+        gEndingActorShadow.offset.y = (s32)0xFFE80000;
         gEndingCreditsCharacterAuraDoneFlags[ENDING_CREDITS_CHARACTER_TOMMY] = 0;
         spawnEndingCreditsCharacterAura(-0x24, -0x32, 4, 0);
     }
@@ -304,16 +304,16 @@ void waitEndingTommyPhase08Aura(EndingCreditsTommy *arg0) {
     addEndingActorShadowRenderCallback(&gEndingActorShadow);
 }
 
-void updateEndingTommyRepeatAnimThenPhase07(EndingCreditsTommy *arg0) {
+void updateEndingTommyRepeatAnimThenPhase07(EndingCreditsCharacterActor *arg0) {
     if (stepMainMenuSceneModelAnimation(4) == 1) {
-        arg0->timer++;
-        if (arg0->timer < 6) {
+        arg0->stateTimer++;
+        if (arg0->stateTimer < 6) {
             setMainMenuSceneModelAnimation(4, 6);
         }
     }
-    if (arg0->timer == 6) {
+    if (arg0->stateTimer == 6) {
         setCallbackTaskCallback(arg0, (CallbackTaskCallback)waitEndingTommyPhase08Aura);
-        arg0->timer = 0;
+        arg0->stateTimer = 0;
         gEndingCreditsCharacterAuraDoneFlags[ENDING_CREDITS_CHARACTER_TOMMY] = 1;
         gEndingCreditsSequencePhase = 7;
     }
@@ -321,7 +321,7 @@ void updateEndingTommyRepeatAnimThenPhase07(EndingCreditsTommy *arg0) {
     addEndingActorShadowRenderCallback(&gEndingActorShadow);
 }
 
-void updateEndingTommyWaitForPhase06(EndingCreditsTommy *arg0) {
+void updateEndingTommyWaitForPhase06(EndingCreditsCharacterActor *arg0) {
     if ((stepMainMenuSceneModelAnimation(4) == 1) && (gEndingCreditsSequencePhase == 4)) {
         gEndingCreditsSequencePhase = 5;
     }
@@ -335,7 +335,7 @@ void updateEndingTommyWaitForPhase06(EndingCreditsTommy *arg0) {
     addEndingActorShadowRenderCallback(&gEndingActorShadow);
 }
 
-void waitEndingTommyPhase04(EndingCreditsTommy *arg0) {
+void waitEndingTommyPhase04(EndingCreditsCharacterActor *arg0) {
     loopMainMenuSceneModelAnimation(4);
     if (gEndingCreditsSequencePhase == 4) {
         setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateEndingTommyWaitForPhase06);
@@ -345,46 +345,46 @@ void waitEndingTommyPhase04(EndingCreditsTommy *arg0) {
     addEndingActorShadowRenderCallback(&gEndingActorShadow);
 }
 
-void updateEndingTommyEnterToCenter(EndingCreditsTommy *arg0) {
-    arg0->posX += 0x24000;
-    if (arg0->posX >= 0x100000) {
-        arg0->posX = 0x100000;
+void updateEndingTommyEnterToCenter(EndingCreditsCharacterActor *arg0) {
+    arg0->position.x += 0x24000;
+    if (arg0->position.x >= 0x100000) {
+        arg0->position.x = 0x100000;
         gEndingCreditsSequencePhase = 2;
         setCallbackTaskCallback(arg0, (CallbackTaskCallback)waitEndingTommyPhase04);
-        setMainMenuSceneModelPosition(4, arg0->posX, arg0->posY, arg0->posZ);
+        setMainMenuSceneModelPosition(4, arg0->position.x, arg0->position.y, arg0->position.z);
         setMainMenuSceneModelAnimation(4, 4);
     } else {
-        setMainMenuSceneModelPosition(4, arg0->posX, arg0->posY, arg0->posZ);
+        setMainMenuSceneModelPosition(4, arg0->position.x, arg0->position.y, arg0->position.z);
         loopMainMenuSceneModelAnimation(4);
     }
     addMainMenuSceneModelDrawCallback(4);
     addEndingActorShadowRenderCallback(&gEndingActorShadow);
 }
 
-void waitEndingTommyPhase01(EndingCreditsTommy *arg0) {
+void waitEndingTommyPhase01(EndingCreditsCharacterActor *arg0) {
     if (gEndingCreditsSequencePhase == 1) {
         setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateEndingTommyEnterToCenter);
         createCallbackTask((CallbackTaskCallback)&initEndingCreditsTommySnowmanEntrance, 0, 0x64);
     }
 }
 
-void initEndingCreditsTommy(EndingCreditsTommy *arg0) {
-    arg0->posX = (s32)0xFE700000;
-    arg0->posY = 0;
-    arg0->posZ = 0;
-    arg0->rotX = 0;
-    arg0->rotY = 0x400;
-    arg0->rotZ = 0;
-    arg0->timer = 0;
+void initEndingCreditsTommy(EndingCreditsCharacterActor *arg0) {
+    arg0->position.x = (s32)0xFE700000;
+    arg0->position.y = 0;
+    arg0->position.z = 0;
+    arg0->rotation.x = 0;
+    arg0->rotation.y = 0x400;
+    arg0->rotation.z = 0;
+    arg0->stateTimer = 0;
     initMainMenuSceneModel(4, 4);
     setMainMenuSceneModelAnimation(4, 3);
-    setMainMenuSceneModelPosition(4, arg0->posX, arg0->posY, arg0->posZ);
-    setMainMenuSceneModelRotation(4, arg0->rotX, arg0->rotY, arg0->rotZ);
-    gEndingActorShadow.actorId = 4;
-    gEndingActorShadow.unkC = 9;
-    gEndingActorShadow.posX = (s32)0xFFF20000;
-    gEndingActorShadow.posY = (s32)0xFFF20000;
-    gEndingActorShadow.posZ = 0;
+    setMainMenuSceneModelPosition(4, arg0->position.x, arg0->position.y, arg0->position.z);
+    setMainMenuSceneModelRotation(4, arg0->rotation.x, arg0->rotation.y, arg0->rotation.z);
+    gEndingActorShadow.characterId = 4;
+    gEndingActorShadow.modelPartIndex = 9;
+    gEndingActorShadow.offset.x = (s32)0xFFF20000;
+    gEndingActorShadow.offset.y = (s32)0xFFF20000;
+    gEndingActorShadow.offset.z = 0;
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)waitEndingTommyPhase01);
 }
 
@@ -393,15 +393,15 @@ void drawEndingActorShadow(MainMenuSceneActorShadow *arg0) {
     EndingShadowStack stack;
     MainMenuSceneModel *model;
 
-    model = getMainMenuSceneModel((u8)arg0->actorId);
-    stack.pos.x = arg0->posX;
-    stack.pos.y = arg0->posY;
-    stack.pos.z = arg0->posZ;
-    transformVec3iByFixedMatrix(model->partTransforms[(u8)arg0->unkC].rotation, &stack.pos, &stack.transformed);
+    model = getMainMenuSceneModel((u8)arg0->characterId);
+    stack.pos.x = arg0->offset.x;
+    stack.pos.y = arg0->offset.y;
+    stack.pos.z = arg0->offset.z;
+    transformVec3iByFixedMatrix(model->partTransforms[(u8)arg0->modelPartIndex].rotation, &stack.pos, &stack.transformed);
     stack.transform = gIdentityFixedTransform;
-    stack.transform.translation.x = model->partTransforms[(u8)arg0->unkC].translation.x + stack.transformed.x;
-    stack.transform.translation.y = model->partTransforms[(u8)arg0->unkC].translation.y + stack.transformed.y;
-    stack.transform.translation.z = model->partTransforms[(u8)arg0->unkC].translation.z;
+    stack.transform.translation.x = model->partTransforms[(u8)arg0->modelPartIndex].translation.x + stack.transformed.x;
+    stack.transform.translation.y = model->partTransforms[(u8)arg0->modelPartIndex].translation.y + stack.transformed.y;
+    stack.transform.translation.z = model->partTransforms[(u8)arg0->modelPartIndex].translation.z;
 
     ENDING_GFX_CMD(gRegionAllocPtr++, 0x06000000, (u32)gAlphaSpriteRenderModeDl);
 
