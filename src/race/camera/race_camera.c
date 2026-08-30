@@ -1,8 +1,7 @@
 #include "game/race/race_state.h"
 #include "common.h"
-#define calculateFixedAngleBetweenXZPoints calculateFixedAngleBetweenXZPoints_s32
 #include "game/math/fixed_point_math.h"
-#undef calculateFixedAngleBetweenXZPoints
+#include "game/math/spatial_math.h"
 #include "game/race/motion/race_motion.h"
 #include "game/race/camera/race_camera.h"
 #include "game/race/player/race_player_input.h"
@@ -146,7 +145,6 @@ RaceCameraTransition gRaceCameraPositionTransitions[] = {
     { 0, 0x0F, { 0xE21D1637, 0xED2A73FF, 0xE3E16721 }, { 0xE21D1637, 0xED3BB3FF, 0xE3E16721 } },
 };
 
-extern s16 calculateFixedAngleBetweenXZPoints(s32, s32, s32, s32);
 extern RaceCamera D_801121E0[RACE_CAMERA_COUNT];
 extern RaceCamera *D_801124A0;
 extern s32 gRaceCameraReplayStartX;

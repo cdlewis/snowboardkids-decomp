@@ -1,8 +1,6 @@
 #include "common.h"
 #include "game/math/spatial_math.h"
-#define calculateFixedAngleBetweenXZPoints calculateFixedAngleBetweenXZPoints_s32
 #include "game/math/fixed_point_math.h"
-#undef calculateFixedAngleBetweenXZPoints
 #include "game/audio/sound_manager.h"
 #include "game/race/motion/race_motion.h"
 #include "game/race/race_state.h"

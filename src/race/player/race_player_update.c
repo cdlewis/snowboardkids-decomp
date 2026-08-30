@@ -9,9 +9,8 @@
 #include "game/race/camera/race_camera.h"
 #include "game/race/course/race_course_effects.h"
 #include "game/race/player/race_player_collision.h"
-#define calculateFixedAngleBetweenXZPoints calculateFixedAngleBetweenXZPoints_s32
 #include "game/math/fixed_point_math.h"
-#undef calculateFixedAngleBetweenXZPoints
+#include "game/math/spatial_math.h"
 #include "game/race/player/race_player_input.h"
 #include "game/race/items/race_item_effects.h"
 #include "game/race/player/race_player_pickup_effects.h"
@@ -61,7 +60,6 @@ typedef union {
     u64 align;
 } RaceSpawnX;
 
-extern s16 calculateFixedAngleBetweenXZPoints(s32, s32, s32, s32);
 extern void enqueuePlayerLoopingPositionalSoundRequest(s32, Vec3i *, s32, s32, f32, s16);
 extern void *createCallbackTaskWithUserIdPreservingArgs(void *, s32, s32, s32);
 extern u8 gMainMenuModeSelection;
