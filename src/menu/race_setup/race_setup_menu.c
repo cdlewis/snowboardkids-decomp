@@ -128,7 +128,6 @@ RaceSetupMenuSubState gRaceSetupMenuSubState;
 s16 gRaceSetupSavePanelRects[2][4];
 
 extern u8 gConnectedControllerCount;
-extern s32 enqueueSoundEffect(s16 soundId, s16 priority);
 extern s16 gMenuFadeAlpha;
 extern char D_800EC9E5;
 extern u8 gHighestUnlockedCourse;

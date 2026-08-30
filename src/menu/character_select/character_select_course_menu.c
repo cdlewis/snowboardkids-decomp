@@ -33,7 +33,6 @@ CharacterSelectCourseMenuData gCharacterSelectCourseMenuData = {
 u16 gCharacterSelectCourseExitOptionIndex;
 CharacterSelectCourseCursorState gCharacterSelectCourseCursorState;
 
-extern void enqueueSoundEffect(s32, s32);
 extern s16 gMenuFadeAlpha;
 extern CharacterSelectOptionList *gCharacterSelectActiveCourseOptions;
 extern s32 D_8010ADE0;

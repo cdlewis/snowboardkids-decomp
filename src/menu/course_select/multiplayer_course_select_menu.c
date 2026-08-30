@@ -37,7 +37,6 @@ s16 gCourseSelectColumnSoundEffects[MULTIPLAYER_COURSE_SELECT_COLUMN_COUNT] = {
 };
 
 extern void n_alSeqpDelete(void);
-extern s32 enqueueSoundEffect(s16 soundId, s16 volume);
 extern s16 gMenuFadeAlpha;
 extern u8 D_800EC9C0;
 extern s8 D_800EC9E5;

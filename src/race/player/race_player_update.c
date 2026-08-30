@@ -61,7 +61,6 @@ typedef union {
     u64 align;
 } RaceSpawnX;
 
-extern s32 enqueueSoundEffect(s32, s32);
 extern s16 calculateFixedAngleBetweenXZPoints(s32, s32, s32, s32);
 extern void enqueuePlayerLoopingPositionalSoundRequest(s32, Vec3i *, s32, s32, f32, s16);
 extern void *createCallbackTaskWithUserIdPreservingArgs(void *, s32, s32, s32);

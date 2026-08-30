@@ -1,6 +1,7 @@
 #include "common.h"
 #include "font_encoding.h"
 #include "game/save_data.h"
+#include "game/audio/sound_manager.h"
 #include "game/engine/asset_manager.h"
 #include "game/engine/render_callback.h"
 #include "game/engine/relocatable_heap.h"
@@ -50,7 +51,6 @@ typedef struct {
 #define gRaceSetupSaveChoicePromptBottomSprites (gRaceSetupSavePromptData.saveChoicePromptBottomSprites)
 #define gRaceSetupSaveChoicePromptTopSprites (gRaceSetupSavePromptData.saveChoicePromptTopSprites)
 
-extern s32 enqueueSoundEffect(s32, s32);
 MenuGlyphScript gRaceSetupPlayerCountPromptText[5][0x34] = {
     {
         // textconv requires these _() invocations to retain their original line layout.

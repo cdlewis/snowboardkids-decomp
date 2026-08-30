@@ -1,6 +1,7 @@
 #include "game/race/race_state.h"
 #include "font_encoding.h"
 #include "common.h"
+#include "game/audio/sound_manager.h"
 #include "game/engine/asset_manager.h"
 #include "game/engine/render_callback.h"
 #include "game/engine/relocatable_heap.h"
@@ -243,7 +244,6 @@ extern s16 gFrameCounter;
 extern s16 gUiBlinkTimer;
 
 extern void drawMenuFillRectangle(s16, s16, s16, s16, u8, u8, u8);
-extern void enqueueSoundEffect(s16, s16);
 
 void drawMainMenuModeSelectFrame(void *arg0) {
     s32 edgeX;

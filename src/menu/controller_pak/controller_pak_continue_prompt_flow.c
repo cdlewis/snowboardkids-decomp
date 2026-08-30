@@ -11,7 +11,6 @@
 #include "game/menu/controller_pak/controller_pak_continue_prompt_flow.h"
 #include "game/engine/viewport_manager.h"
 
-extern u64 enqueueSoundEffect(s32, s32);
 
 extern s16 gMenuFadeAlpha;
 extern s32 gMenuFlowState;

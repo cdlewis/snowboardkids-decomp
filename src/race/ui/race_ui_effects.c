@@ -1,6 +1,7 @@
 #include "game/race/race_state.h"
 #include "common.h"
 #include "game/save_data.h"
+#include "game/audio/sound_manager.h"
 #include "game/menu/renderer/menu_render_utils.h"
 #include "game/engine/render_callback.h"
 #include "game/engine/system_runtime.h"
@@ -673,9 +674,7 @@ typedef struct {
 
 typedef struct RaceUiOverlayActor {
     /* 0x00 */ u8 pad0[0x18];
-    /* 0x18 */ s32 x;
-    /* 0x1C */ s32 y;
-    /* 0x20 */ s32 z;
+    /* 0x18 */ Vec3i pos;
     /* 0x24 */ u8 pad24[4];
     /* 0x28 */ s32 velocity;
     /* 0x2C */ u8 pad2C[4];
@@ -1246,8 +1245,6 @@ extern u8 gRaceUpdatePaused;
 extern void drawAssetTableSprite8bpp(s16, s16, void *, s32);
 extern void drawMenuAsciiTextDefaultScale(s32, s32, const void *, s32);
 extern void enqueuePlayerLoopingPositionalSoundRequest(s32, void *, s32, s32, f32, s32);
-extern void enqueuePositionalSoundEffect(s32, void *, s32, s32);
-extern void enqueueSoundEffect(s32, s32);
 extern void *allocMenuRenderScratch(s32 size);
 
 const char gRaceUiBoardReversePromptLabelBlinkOn[0x10] = "Board Reverse";
@@ -6084,9 +6081,9 @@ void func_80065808(RaceUiOverlayActor *arg0) {
         if (arg0->matrixDirty != 0) {
             arg0->matrixDirty = 0;
             sp9C = gIdentityFixedTransform;
-            sp9C.translation.x = arg0->x;
-            sp9C.translation.y = arg0->y;
-            sp9C.translation.z = arg0->z;
+            sp9C.translation.x = arg0->pos.x;
+            sp9C.translation.y = arg0->pos.y;
+            sp9C.translation.z = arg0->pos.z;
             arg0->matrix = allocFixedTransformMatrix(&sp9C);
         }
         do {
@@ -6103,7 +6100,7 @@ void updateRaceStartOverlayFallOut(RaceUiOverlayActor *arg0) {
     timer = arg0->timer;
     actor = arg0;
     if (timer != 0) {
-        arg0->y += arg0->velocity;
+        arg0->pos.y += arg0->velocity;
         arg0->velocity += 0x2000;
         arg0->timer = timer - 1;
     } else {
@@ -6123,7 +6120,7 @@ void func_80065D24(RaceUiOverlayActor *arg0) {
     temp_s0 = arg0;
     if (temp_v0 == 0) {
         if (arg0->assetTimer == 0) {
-            enqueuePositionalSoundEffect(9, &temp_s0->x, 0x7F, 0x32);
+            enqueuePositionalSoundEffect(9, &temp_s0->pos, 0x7F, 0x32);
         }
         temp_v0_3 = getRelocatableHeapBlockBase(ASSET_HANDLE(0x1F));
         getAssetTableImageAndPalette(
@@ -6142,7 +6139,7 @@ void func_80065D24(RaceUiOverlayActor *arg0) {
     }
 
     temp_v0_2 = temp_s0->velocity;
-    temp_s0->y += temp_v0_2;
+    temp_s0->pos.y += temp_v0_2;
     temp_s0->velocity = temp_v0_2 + 0xC00;
     addRenderCallback(&gRaceModelEffectRenderCallbackList, (RenderCallback)func_80065808, temp_s0);
 }
@@ -6151,7 +6148,7 @@ void func_80065E0C(RaceUiOverlayActor *arg0) {
     s16 timer = arg0->timer;
 
     if (timer != 0) {
-        arg0->y -= arg0->velocity;
+        arg0->pos.y -= arg0->velocity;
         arg0->velocity -= 0x2000;
         arg0->timer = timer - 1;
     } else {
@@ -6166,14 +6163,17 @@ void func_80065E0C(RaceUiOverlayActor *arg0) {
 void func_80065E90(RaceUiOverlayActor *arg0) {
     s32 i;
 
-    arg0->x = 0;
-    arg0->z = gRacePlayers[0].pos.z + 0xFF900000;
+    arg0->pos.x = 0;
+    arg0->pos.z = gRacePlayers[0].pos.z + 0xFF900000;
     arg0->velocity = 0;
-    arg0->y = getRaceCourseSurfaceHeight(findRaceCourseSurfaceFromHint(0, 0, arg0->z), arg0->x, arg0->z) + 0x200000;
+    arg0->pos.y = getRaceCourseSurfaceHeight(
+                      findRaceCourseSurfaceFromHint(0, 0, arg0->pos.z), arg0->pos.x, arg0->pos.z
+                  ) +
+                  0x200000;
 
     for (i = 0; i < 0x40; i++) {
         arg0->velocity += 0x2000;
-        arg0->y += arg0->velocity;
+        arg0->pos.y += arg0->velocity;
         arg0->timer++;
     }
 

@@ -24,7 +24,6 @@ extern s32 gRacePlayerHitDistance;
 extern s16 gRacePlayerHitEffectAngle;
 extern s32 gRacePlayerHitDeltaX;
 extern s32 gRacePlayerHitDeltaZ;
-s32 enqueueSoundEffect(s16, s16);
 void enqueueRacePlayerVoiceSound(RacePlayer *, s32);
 
 s32 tryQueueRacePlayerHitCueSpinout(RacePlayer *arg0) {
