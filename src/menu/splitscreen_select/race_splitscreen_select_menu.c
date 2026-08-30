@@ -26,17 +26,17 @@ extern u8 gPendingFramebufferSwapCount;
 extern u8 gFramebufferSwapHold;
 
 void returnToRaceSplitscreenSelectMenu(void) {
-    gCurrentGameTask->fade = 1;
+    gCurrentGameTask->callbackData0 = 1;
     requestMusicSequenceBank(1);
     gMenuSelectionConfirmTimer = 0;
     gRacePlayers[0].menuState = 0;
     gActiveMenuTask = 0;
-    gCurrentGameTask->timer = 0;
+    gCurrentGameTask->callbackData1 = 0;
     gMenuFlowState = 0;
     gMenuExitSelection = 0;
     gCourseSelectFromRaceTypeMenu = 0;
     gMenuInputRepeatTimers[0] = 0;
-    gMenuFadeAlpha = gCurrentGameTask->fade;
+    gMenuFadeAlpha = gCurrentGameTask->callbackData0;
     setCurrentGameTaskCallback(updateRaceSplitscreenSelectMenu, 0);
     gRaceSplitscreenSelectCursorTarget.state = 0;
     gRaceSplitscreenSelectCursorTarget.alphaTarget = 0;
@@ -50,7 +50,7 @@ void initRaceSplitscreenSelectMenu(void) {
     resetAllViewports();
     configureViewport(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.333333373f);
     gFramebufferRenderInterval.value = 0;
-    gCurrentGameTask->fade = 0xFF;
+    gCurrentGameTask->callbackData0 = 0xFF;
     LOAD_ASSET(_5A1ED0, 0x21);
     LOAD_ASSET(_593D10, 0x22);
     LOAD_ASSET(_598A70, 0x23);
@@ -62,10 +62,10 @@ void initRaceSplitscreenSelectMenu(void) {
     gMenuSelectionConfirmTimer = 0;
     gRacePlayers[0].menuState = 0;
     gActiveMenuTask = 0;
-    gCurrentGameTask->timer = 0;
+    gCurrentGameTask->callbackData1 = 0;
     gMenuExitSelection = 0;
     gMenuInputRepeatTimers[0] = 0;
-    gMenuFadeAlpha = gCurrentGameTask->fade;
+    gMenuFadeAlpha = gCurrentGameTask->callbackData0;
     setCurrentGameTaskCallback(updateRaceSplitscreenSelectMenu, 0);
     gRaceSplitscreenSelectCursorTarget.state = 0;
     gRaceSplitscreenSelectCursorTarget.alphaTarget = 0;
@@ -79,9 +79,9 @@ void updateRaceSplitscreenSelectMenu(void) {
     u8 confirmTimer;
     GameTaskCallback callback;
 
-    if (gCurrentGameTask->fade != 0) {
-        gCurrentGameTask->fade = stepMenuFadeAlpha((s16)gCurrentGameTask->fade, 0x24, 0);
-        if (gCurrentGameTask->fade == 0) {
+    if (gCurrentGameTask->callbackData0 != 0) {
+        gCurrentGameTask->callbackData0 = stepMenuFadeAlpha((s16)gCurrentGameTask->callbackData0, 0x24, 0);
+        if (gCurrentGameTask->callbackData0 == 0) {
             createCallbackTask((CallbackTaskCallback)initRaceSplitscreenSelectPlayerCountIcons, 0, 0x63);
         }
     } else {
@@ -180,9 +180,9 @@ void handleRaceSplitscreenSelectMenuSelection(void) {
 }
 
 void fadeOutRaceSplitscreenSelectMenu(void) {
-    if (gCurrentGameTask->fade != 0xFF) {
-        gCurrentGameTask->fade = stepMenuFadeAlpha((s16)gCurrentGameTask->fade, 0x24, 1);
-        if (gCurrentGameTask->fade == 0xFF) {
+    if (gCurrentGameTask->callbackData0 != 0xFF) {
+        gCurrentGameTask->callbackData0 = stepMenuFadeAlpha((s16)gCurrentGameTask->callbackData0, 0x24, 1);
+        if (gCurrentGameTask->callbackData0 == 0xFF) {
             gFramebufferSwapHold = 1;
         } else {
             updateCallbackTasks();

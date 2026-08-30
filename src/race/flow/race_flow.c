@@ -246,13 +246,13 @@ extern ViewportSlot D_801121E0[];
 void initStartupControllerPakFlow(void) {
     LOAD_ASSET(_2427D0, 6);
     initCallbackTaskScheduler(0);
-    gCurrentGameTask->fadeTimer = 0xA;
+    gCurrentGameTask->callbackData0 = 0xA;
     setCurrentGameTaskCallback(&waitStartupRumbleInit, 0);
 }
 
 void waitStartupRumbleInit(void) {
-    gCurrentGameTask->fadeTimer -= 1;
-    if (gCurrentGameTask->fadeTimer == 0) {
+    gCurrentGameTask->callbackData0 -= 1;
+    if (gCurrentGameTask->callbackData0 == 0) {
         requestRumbleMotorInit(0);
         requestRumbleMotorInit(1);
         requestRumbleMotorInit(2);
@@ -795,9 +795,9 @@ void initRaceSceneFlow(void) {
     }
     gRaceRumbleEnabled = 1;
     if (gRaceSplitscreenMode == 0) {
-        gCurrentGameTask->fadeTimer = 0;
-        gCurrentGameTask->unk1C = 0;
-        gCurrentGameTask->countdown = 0x1E;
+        gCurrentGameTask->callbackData0 = 0;
+        gCurrentGameTask->callbackData1 = 0;
+        gCurrentGameTask->callbackData2 = 0x1E;
         createCallbackTask((CallbackTaskCallback)initCourseRecordBannerFadeOut, 0, 0x64);
         setCurrentGameTaskCallback(fadeOutRaceStartTransitionFlow, 0);
     } else {
@@ -815,9 +815,9 @@ void fadeOutRaceStartTransitionFlow(void) {
     gMenuFadeAlpha -= 8;
     if (gMenuFadeAlpha < 0) {
         gMenuFadeAlpha = 0;
-        gCurrentGameTask->countdown--;
+        gCurrentGameTask->callbackData2--;
     }
-    if (gCurrentGameTask->countdown == 0) {
+    if (gCurrentGameTask->callbackData2 == 0) {
         setRaceCameraMode(0, 0x1E);
         requestMusicSequenceBank(5);
         setCurrentGameTaskCallback(&fadeInRaceGameplayViewports, 0);
@@ -831,7 +831,7 @@ void fadeInRaceGameplayViewports(void) {
     GameTask *state;
 
     state = gCurrentGameTask;
-    temp_a0 = state->unk1C;
+    temp_a0 = state->callbackData1;
     if (temp_a0 >= 0x32) {
         gMenuFadeOverlayActive = 1;
         gMenuFadeAlpha += 0x16;
@@ -899,7 +899,7 @@ void fadeInRaceGameplayViewports(void) {
             setCurrentGameTaskCallback(startRaceGameplayFlow, 0);
         }
     } else {
-        state->unk1C = temp_a0 + 1;
+        state->callbackData1 = temp_a0 + 1;
         gMenuFadeAlpha -= 0x10;
         if (gMenuFadeAlpha < 0) {
             gMenuFadeAlpha = 0;
@@ -1001,7 +1001,7 @@ void updateRaceGameplayFlow(void) {
     }
     updateRaceFlowFrameWithCourseEffects();
     if (areRacePlayersFinished() != 0) {
-        gCurrentGameTask->fadeTimer = 0x3C;
+        gCurrentGameTask->callbackData0 = 0x3C;
         gRaceRumbleEnabled = 0;
         setCurrentGameTaskCallback(waitRaceFinishResultsFlow, 0);
     }
@@ -1011,48 +1011,48 @@ void updateRaceGameplayFlow(void) {
 void waitRaceFinishResultsFlow(void) {
     D_80121B57 = 0;
     updateRaceFlowFrameWithCourseEffects();
-    gCurrentGameTask->fadeTimer--;
-    if (gCurrentGameTask->fadeTimer == 0) {
+    gCurrentGameTask->callbackData0--;
+    if (gCurrentGameTask->callbackData0 == 0) {
         gMenuFlowState |= 8;
         switch (gPlayerCount) {
             case 3:
-                gCurrentGameTask->unk1C = 0;
-                if (gRacePlayers[1].rankIndex < gRacePlayers[gCurrentGameTask->unk1C].rankIndex) {
-                    gCurrentGameTask->unk1C = 1;
+                gCurrentGameTask->callbackData1 = 0;
+                if (gRacePlayers[1].rankIndex < gRacePlayers[gCurrentGameTask->callbackData1].rankIndex) {
+                    gCurrentGameTask->callbackData1 = 1;
                 }
-                if (gRacePlayers[2].rankIndex < gRacePlayers[gCurrentGameTask->unk1C].rankIndex) {
-                    gCurrentGameTask->unk1C = 2;
+                if (gRacePlayers[2].rankIndex < gRacePlayers[gCurrentGameTask->callbackData1].rankIndex) {
+                    gCurrentGameTask->callbackData1 = 2;
                 }
-                gCurrentGameTask->unk1C += 2;
+                gCurrentGameTask->callbackData1 += 2;
                 setCurrentGameTaskCallback(zoomRaceWinnerViewport, 0);
                 break;
             case 4:
-                gCurrentGameTask->unk1C = 0;
-                if (gRacePlayers[1].rankIndex < gRacePlayers[gCurrentGameTask->unk1C].rankIndex) {
-                    gCurrentGameTask->unk1C = 1;
+                gCurrentGameTask->callbackData1 = 0;
+                if (gRacePlayers[1].rankIndex < gRacePlayers[gCurrentGameTask->callbackData1].rankIndex) {
+                    gCurrentGameTask->callbackData1 = 1;
                 }
-                if (gRacePlayers[2].rankIndex < gRacePlayers[gCurrentGameTask->unk1C].rankIndex) {
-                    gCurrentGameTask->unk1C = 2;
+                if (gRacePlayers[2].rankIndex < gRacePlayers[gCurrentGameTask->callbackData1].rankIndex) {
+                    gCurrentGameTask->callbackData1 = 2;
                 }
-                if (gRacePlayers[3].rankIndex < gRacePlayers[gCurrentGameTask->unk1C].rankIndex) {
-                    gCurrentGameTask->unk1C = 3;
+                if (gRacePlayers[3].rankIndex < gRacePlayers[gCurrentGameTask->callbackData1].rankIndex) {
+                    gCurrentGameTask->callbackData1 = 3;
                 }
-                gCurrentGameTask->unk1C += 5;
+                gCurrentGameTask->callbackData1 += 5;
                 setCurrentGameTaskCallback(zoomRaceWinnerViewport, 0);
                 break;
             case 2:
                 if (gRacePlayers[0].rankIndex < gRacePlayers[1].rankIndex) {
-                    gCurrentGameTask->unk1C = 0;
+                    gCurrentGameTask->callbackData1 = 0;
                     gRacePlayerHudStatuses[1].active = 0;
                 } else {
-                    gCurrentGameTask->unk1C = 1;
+                    gCurrentGameTask->callbackData1 = 1;
                     gRacePlayerHudStatuses[0].active = 0;
                 }
-                gCurrentGameTask->fadeTimer = 0;
+                gCurrentGameTask->callbackData0 = 0;
                 setCurrentGameTaskCallback(zoomRaceWinnerViewport, 0);
                 break;
             case 1:
-                gCurrentGameTask->fadeTimer = 0;
+                gCurrentGameTask->callbackData0 = 0;
                 setCurrentGameTaskCallback(prepareRaceResultsFlow, 0);
                 break;
         }
@@ -1084,13 +1084,13 @@ void interpolateRaceViewport(
     s32 temp_t2;
     s32 temp_t3;
 
-    sp2C = (((arg8 - arg1) * gCurrentGameTask->fadeTimer) / 15) + arg1;
-    sp28 = (((arg9 - arg2) * gCurrentGameTask->fadeTimer) / 15) + arg2;
-    temp_t0 = (((arg10 - arg3) * gCurrentGameTask->fadeTimer) / 15) + arg3;
-    temp_t1 = (((arg11 - arg4) * gCurrentGameTask->fadeTimer) / 15) + arg4;
-    temp_t2 = (((arg12 - arg5) * gCurrentGameTask->fadeTimer) / 15) + arg5;
-    temp_t3 = (((arg13 - arg6) * gCurrentGameTask->fadeTimer) / 15) + arg6;
-    temp_fv0 = (((arg14 - arg7) * (f32)gCurrentGameTask->fadeTimer) / 15.0f) + arg7;
+    sp2C = (((arg8 - arg1) * gCurrentGameTask->callbackData0) / 15) + arg1;
+    sp28 = (((arg9 - arg2) * gCurrentGameTask->callbackData0) / 15) + arg2;
+    temp_t0 = (((arg10 - arg3) * gCurrentGameTask->callbackData0) / 15) + arg3;
+    temp_t1 = (((arg11 - arg4) * gCurrentGameTask->callbackData0) / 15) + arg4;
+    temp_t2 = (((arg12 - arg5) * gCurrentGameTask->callbackData0) / 15) + arg5;
+    temp_t3 = (((arg13 - arg6) * gCurrentGameTask->callbackData0) / 15) + arg6;
+    temp_fv0 = (((arg14 - arg7) * (f32)gCurrentGameTask->callbackData0) / 15.0f) + arg7;
     if (gRaceCourseIndex.signedValue != 6) {
         configureViewport(arg0, sp2C, sp28, temp_t0, temp_t1, temp_t2, temp_t3, temp_fv0);
     } else {
@@ -1099,8 +1099,8 @@ void interpolateRaceViewport(
 }
 
 void zoomRaceWinnerViewport(void) {
-    gCurrentGameTask->fadeTimer += 1;
-    switch (gCurrentGameTask->unk1C) {
+    gCurrentGameTask->callbackData0 += 1;
+    switch (gCurrentGameTask->callbackData1) {
         case 0:
             interpolateRaceViewport(
                 0,
@@ -1136,7 +1136,7 @@ void zoomRaceWinnerViewport(void) {
                 0x78,
                 2.6666667f
             );
-            if (gCurrentGameTask->fadeTimer == 0xF) {
+            if (gCurrentGameTask->callbackData0 == 0xF) {
                 resetViewport(1);
                 D_801121E0[1].active = 0;
             }
@@ -1176,7 +1176,7 @@ void zoomRaceWinnerViewport(void) {
                 0x78,
                 2.6666667f
             );
-            if (gCurrentGameTask->fadeTimer == 0xF) {
+            if (gCurrentGameTask->callbackData0 == 0xF) {
                 resetViewport(0);
                 D_801121E0[0].active = 0;
             }
@@ -1233,7 +1233,7 @@ void zoomRaceWinnerViewport(void) {
                 0x78,
                 1.3333334f
             );
-            if (gCurrentGameTask->fadeTimer == 0xF) {
+            if (gCurrentGameTask->callbackData0 == 0xF) {
                 D_801121E0[1].active = 0;
                 D_801121E0[2].active = 0;
                 resetViewport(1);
@@ -1292,7 +1292,7 @@ void zoomRaceWinnerViewport(void) {
                 0x78,
                 1.3333334f
             );
-            if (gCurrentGameTask->fadeTimer == 0xF) {
+            if (gCurrentGameTask->callbackData0 == 0xF) {
                 D_801121E0[0].active = 0;
                 D_801121E0[2].active = 0;
                 resetViewport(0);
@@ -1351,7 +1351,7 @@ void zoomRaceWinnerViewport(void) {
                 0x78,
                 1.3333334f
             );
-            if (gCurrentGameTask->fadeTimer == 0xF) {
+            if (gCurrentGameTask->callbackData0 == 0xF) {
                 D_801121E0[0].active = 0;
                 D_801121E0[1].active = 0;
                 resetViewport(0);
@@ -1427,7 +1427,7 @@ void zoomRaceWinnerViewport(void) {
                 0x78,
                 1.3333334f
             );
-            if (gCurrentGameTask->fadeTimer == 0xF) {
+            if (gCurrentGameTask->callbackData0 == 0xF) {
                 resetViewport(1);
                 resetViewport(2);
                 resetViewport(3);
@@ -1505,7 +1505,7 @@ void zoomRaceWinnerViewport(void) {
                 0x78,
                 1.3333334f
             );
-            if (gCurrentGameTask->fadeTimer == 0xF) {
+            if (gCurrentGameTask->callbackData0 == 0xF) {
                 D_801121E0[0].active = 0;
                 D_801121E0[2].active = 0;
                 D_801121E0[3].active = 0;
@@ -1583,7 +1583,7 @@ void zoomRaceWinnerViewport(void) {
                 0x78,
                 1.3333334f
             );
-            if (gCurrentGameTask->fadeTimer == 0xF) {
+            if (gCurrentGameTask->callbackData0 == 0xF) {
                 D_801121E0[0].active = 0;
                 D_801121E0[1].active = 0;
                 D_801121E0[3].active = 0;
@@ -1661,7 +1661,7 @@ void zoomRaceWinnerViewport(void) {
                 0x78,
                 1.3333334f
             );
-            if (gCurrentGameTask->fadeTimer == 0xF) {
+            if (gCurrentGameTask->callbackData0 == 0xF) {
                 D_801121E0[0].active = 0;
                 D_801121E0[1].active = 0;
                 D_801121E0[2].active = 0;
@@ -1672,7 +1672,7 @@ void zoomRaceWinnerViewport(void) {
             break;
     }
     updateRaceFlowFrame();
-    if (gCurrentGameTask->fadeTimer == 0xF) {
+    if (gCurrentGameTask->callbackData0 == 0xF) {
         setCurrentGameTaskCallback(prepareRaceResultsFlow, 0);
     }
 }
@@ -1800,7 +1800,7 @@ void prepareRaceResultsFlow(void) {
             break;
     }
 
-    gCurrentGameTask->unk1C = 0x3C;
+    gCurrentGameTask->callbackData1 = 0x3C;
     setCurrentGameTaskCallback(updateRaceResultsFlow, 0);
     if (D_80121B60 != 0) {
         requestMusicSequenceBank(6);
@@ -1835,8 +1835,8 @@ void updateRaceResultsFlow(void) {
         } while (recordIndex < (s32)gPlayerCount);
     }
 
-    if (gCurrentGameTask->fadeStep != 0) {
-        gCurrentGameTask->fadeStep--;
+    if (gCurrentGameTask->callbackData1 != 0) {
+        gCurrentGameTask->callbackData1--;
     } else {
         ready.value = 1;
     }
@@ -1881,7 +1881,7 @@ void updateRaceResultsFlow(void) {
                     } else {
                         gMenuFlowState |= 0x20;
                     }
-                    gCurrentGameTask->fade = 0xA;
+                    gCurrentGameTask->callbackData0 = 0xA;
                     setCurrentGameTaskCallback(updateRaceResultsMusicFlow, 0);
                 }
             } else {
@@ -1911,7 +1911,7 @@ void updateRaceResultsFlow(void) {
                     if (ready.value == 0) {
                         gMenuFlowState |= 0x20;
                     }
-                    gCurrentGameTask->fade = 0xA;
+                    gCurrentGameTask->callbackData0 = 0xA;
                     setCurrentGameTaskCallback(updateRaceResultsMusicFlow, 0);
                 }
             }
@@ -1960,7 +1960,7 @@ void updateRaceResultsFlow(void) {
                     gRaceResultState = 2;
                     gMenuFlowState |= 0x20;
                 }
-                gCurrentGameTask->fade = 0xA;
+                gCurrentGameTask->callbackData0 = 0xA;
                 setCurrentGameTaskCallback(updateRaceResultsMusicFlow, 0);
             }
             break;
@@ -2005,7 +2005,7 @@ void updateRaceResultsFlow(void) {
                         gRaceResultState = 2;
                         gMenuFlowState |= 0x20;
                     }
-                    gCurrentGameTask->fade = 0xA;
+                    gCurrentGameTask->callbackData0 = 0xA;
                     setCurrentGameTaskCallback(updateRaceResultsMusicFlow, 0);
                 }
                 break;
@@ -2045,7 +2045,7 @@ void updateRaceResultsFlow(void) {
                         gRaceResultState = 2;
                         gMenuFlowState |= 0x20;
                     }
-                    gCurrentGameTask->fade = 0xA;
+                    gCurrentGameTask->callbackData0 = 0xA;
                     setCurrentGameTaskCallback(updateRaceResultsMusicFlow, 0);
                 }
                 break;
@@ -2093,7 +2093,7 @@ void updateRaceResultsFlow(void) {
                         gRaceResultState = 2;
                         gMenuFlowState |= 0x20;
                     }
-                    gCurrentGameTask->fade = 0xA;
+                    gCurrentGameTask->callbackData0 = 0xA;
                     setCurrentGameTaskCallback(updateRaceResultsMusicFlow, 0);
                 }
                 break;
@@ -2113,7 +2113,7 @@ void updateRaceResultsFlow(void) {
 void updateRaceResultsMusicFlow(void) {
     if (countActiveMusicSequences() == 0) {
         requestMusicSequenceBank(7);
-        gCurrentGameTask->unk1C = 0x3C;
+        gCurrentGameTask->callbackData1 = 0x3C;
         gMenuFlowState |= 0x20;
     }
     if (D_80121B60 != 0) {
@@ -2121,9 +2121,9 @@ void updateRaceResultsMusicFlow(void) {
     }
     updateRaceFlowFrame();
     if (gMenuFlowState & 0x10) {
-        gCurrentGameTask->fadeTimer -= 1;
-        if (gCurrentGameTask->fadeTimer == 0) {
-            gCurrentGameTask->fadeTimer = 4;
+        gCurrentGameTask->callbackData0 -= 1;
+        if (gCurrentGameTask->callbackData0 == 0) {
+            gCurrentGameTask->callbackData0 = 4;
             setCurrentGameTaskCallback(&fadeOutRaceResultsFlow, 0);
             requestMusicSequenceStop(0x14);
         }
@@ -2140,8 +2140,8 @@ void fadeOutRaceResultsFlow(void) {
     gMenuFadeAlpha += 0x10;
     if (gMenuFadeAlpha >= 0xFF) {
         gMenuFadeAlpha = 0xFF;
-        gCurrentGameTask->fadeTimer -= 1;
-        if (gCurrentGameTask->fadeTimer == 0) {
+        gCurrentGameTask->callbackData0 -= 1;
+        if (gCurrentGameTask->callbackData0 == 0) {
             stopSoundEffects();
             if ((gRaceSplitscreenMode == 2) &&
                 (((Unk80043040 *)getRelocatableHeapBlockBase(gAssetHandles[0x2B]))->unk8 != 0) && (D_80121B61 != 0) &&
@@ -2250,8 +2250,8 @@ void initRaceGhostReplayFlow(void) {
     gMenuFadeAlpha = 0xFF;
     updateRelocatableHeap();
     requestMusicSequenceBank(0);
-    gCurrentGameTask->fadeTimer = 0;
-    gCurrentGameTask->unk1C = 0;
+    gCurrentGameTask->callbackData0 = 0;
+    gCurrentGameTask->callbackData1 = 0;
     createCallbackTask((CallbackTaskCallback)func_80057E60, 6, 0x64);
     if (D_80121B61 == -1) {
         createCallbackTask((CallbackTaskCallback)updateRaceGhostUnavailableMessage, 6, 0x64);
@@ -2262,10 +2262,10 @@ void initRaceGhostReplayFlow(void) {
 void updateRaceGhostReplayFlow(void) {
     void *sp18;
 
-    if (gCurrentGameTask->fadeTimer == D_800DC5C0[gCurrentGameTask->unk1C]) {
+    if (gCurrentGameTask->callbackData0 == D_800DC5C0[gCurrentGameTask->callbackData1]) {
         if (loadNextRaceReplayCourseGridEntry() != 0) {
-            if (gCurrentGameTask->unk1C != 0xB) {
-                gCurrentGameTask->unk1C++;
+            if (gCurrentGameTask->callbackData1 != 0xB) {
+                gCurrentGameTask->callbackData1++;
                 gRacePlayers[0].replayInputSource = 2;
                 gRacePlayers[0].unk15 = 0;
                 gViewportStates[0].overlayAlpha = 0;
@@ -2278,11 +2278,11 @@ void updateRaceGhostReplayFlow(void) {
             setCurrentGameTaskCallback(fadeOutRaceGhostReplayFlow, 0);
         }
     }
-    if (gCurrentGameTask->fadeTimer == 1) {
+    if (gCurrentGameTask->callbackData0 == 1) {
         gMenuFadeAlpha = 0;
     }
     if (gRaceUpdatePaused == 0) {
-        gCurrentGameTask->fadeTimer++;
+        gCurrentGameTask->callbackData0++;
     }
     updateRaceReplayFrame();
     if (gPlayerInputPressed[0] & START_BUTTON) {

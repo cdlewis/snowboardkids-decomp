@@ -41,12 +41,12 @@ void initControllerPakRaceRecordSaveFlow(void) {
     gControllerPakRetryCounts[0] = 0;
     gRacePlayers[0].menuState = 0;
     gMenuSelectionConfirmTimer = 0;
-    gCurrentGameTask->fade = 0xFF;
+    gCurrentGameTask->callbackData0 = 0xFF;
     gActiveMenuTask = 0;
     D_8010ADE0 = 0;
     D_8010ADE4 = 0;
     D_8010ADE8 = 0;
-    gMenuFadeAlpha = gCurrentGameTask->fade;
+    gMenuFadeAlpha = gCurrentGameTask->callbackData0;
     gGameSaveDataBuffer[0].money = gRacePlayers[0].money;
     LOAD_ASSET(_59AAA0, 0x21);
     LOAD_ASSET(_59AAA0, 0x24);
@@ -78,11 +78,11 @@ void updateControllerPakRaceRecordSaveFlow(void) {
     s32 temp_v1;
     s32 var_t7;
     sp24 = 0;
-    temp_v0 = gCurrentGameTask->fade;
+    temp_v0 = gCurrentGameTask->callbackData0;
     temp_t0 = D_8010ADE4;
     if (temp_v0 != 0) {
-        gCurrentGameTask->fade = stepMenuFadeAlpha((s32)((s16)temp_v0), 0x24, 0);
-        if (gCurrentGameTask->fade == 0) {
+        gCurrentGameTask->callbackData0 = stepMenuFadeAlpha((s32)((s16)temp_v0), 0x24, 0);
+        if (gCurrentGameTask->callbackData0 == 0) {
             gControllerPakMenuState.state = 3;
             gControllerPakMenuState.confirmChoice = 1;
             createCallbackTask((CallbackTaskCallback)initControllerPakDeleteConfirmPrompt, 0, 0x64);
@@ -311,11 +311,11 @@ void updateControllerPakRaceRecordSaveFlow(void) {
 #endif
 
 void fadeOutControllerPakRaceRecordSaveFlow(void) {
-    s32 temp_v0 = gCurrentGameTask->fade;
+    s32 temp_v0 = gCurrentGameTask->callbackData0;
     if (temp_v0 != 0xFF) {
-        gCurrentGameTask->fade = stepMenuFadeAlpha((s16)temp_v0, 0x20, 1);
+        gCurrentGameTask->callbackData0 = stepMenuFadeAlpha((s16)temp_v0, 0x20, 1);
         updateCallbackTasks();
-        if (gCurrentGameTask->fade == 0xFF) {
+        if (gCurrentGameTask->callbackData0 == 0xFF) {
             gFramebufferSwapHold = 1;
         }
     } else if (gPendingFramebufferSwapCount == 2) {

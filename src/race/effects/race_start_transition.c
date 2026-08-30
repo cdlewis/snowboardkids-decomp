@@ -263,7 +263,7 @@ void initRaceStartTransition(void) {
     configureViewport(2, 0xA0, 0x78, 0x120, 0xC0, 0x140, 0xF0, 1.333333373f);
     enableViewportClear(2);
     gMenuFadeAlpha = 0xFF;
-    gCurrentGameTask->fade = 5;
+    gCurrentGameTask->callbackData0 = 5;
     effectArg = transition - 1;
     createCallbackTaskWithUserId((CallbackTaskCallback)initRaceSetupBackdrop, 0, 0x64, effectArg);
     createCallbackTask((CallbackTaskCallback)initMainMenuModeBoardTransition, 0, 0x64);
@@ -283,10 +283,10 @@ void initRaceStartTransition(void) {
 }
 
 void updateRaceStartTransitionIntroDelay(void) {
-    gCurrentGameTask->fade--;
-    if (gCurrentGameTask->fade == 0) {
+    gCurrentGameTask->callbackData0--;
+    if (gCurrentGameTask->callbackData0 == 0) {
         requestMusicSequenceBank(4);
-        gCurrentGameTask->fade = 0x12C;
+        gCurrentGameTask->callbackData0 = 0x12C;
         setCurrentGameTaskCallback(updateRaceStartTransitionFadeIn, 0);
     }
     createCallbackTaskWithUserId((CallbackTaskCallback)initFallingMenuSnowflake, 5, 0x64, 0);
@@ -306,8 +306,8 @@ void updateRaceStartTransitionFadeIn(void) {
     }
     state = &gCurrentGameTask;
     currentState = *state;
-    currentState->fade -= 1;
-    if ((*state)->fade == 0) {
+    currentState->callbackData0 -= 1;
+    if ((*state)->callbackData0 == 0) {
         requestMusicSequenceStop(0x7E);
         setCurrentGameTaskCallback(updateRaceStartTransitionFadeOut, 0);
     }
@@ -320,7 +320,7 @@ void updateRaceStartTransitionFadeIn(void) {
 void updateRaceStartTransitionFadeOut(void) {
     gMenuFadeAlpha += 4;
     if (gMenuFadeAlpha >= 0xFF) {
-        gCurrentGameTask->fade = 0xFF;
+        gCurrentGameTask->callbackData0 = 0xFF;
         gFramebufferSwapHold = 1;
         setCurrentGameTaskCallback(finishRaceStartTransition, 0);
     }

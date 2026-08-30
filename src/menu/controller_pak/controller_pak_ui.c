@@ -297,7 +297,7 @@ void updateControllerPakContinuePrompt(ControllerPakOptionsActor *arg0) {
     temp_v0 = state;
     switch (temp_v0 ^ 0) {
         case 1:
-            temp_a2->selectedOption = gCurrentGameTask->timer;
+            temp_a2->selectedOption = gCurrentGameTask->callbackData1;
             if (temp_a2->timer < 0x10) {
                 temp_a2->scale -= 9;
             } else {

@@ -33,14 +33,14 @@ void initControllerPakFileDeleteFlow(void) {
     resetAllViewports();
     configureViewport(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.333333373f);
     gFramebufferRenderInterval.value = 0;
-    gCurrentGameTask->fade = 0;
-    gCurrentGameTask->timer = 0;
+    gCurrentGameTask->callbackData0 = 0;
+    gCurrentGameTask->callbackData1 = 0;
     gMenuFlowState = 0;
     gControllerPakRetryCounts[0] = 0;
     gControllerPakFreeBytes = 0;
     gControllerPakFreeFileCount = 0;
     gRaceRumbleEnabled = 0;
-    gMenuFadeAlpha = gCurrentGameTask->fade;
+    gMenuFadeAlpha = gCurrentGameTask->callbackData0;
     LOAD_ASSET(_5DFDD0, 0x21);
     LOAD_ASSET(_593D10, 0x22);
     LOAD_ASSET(_598A70, 0x23);
@@ -221,9 +221,9 @@ void updateControllerPakFileDeleteErrorPrompt(void) {
 }
 
 void fadeOutControllerPakFileDeleteFlow(void) {
-    if (gCurrentGameTask->fade != 0xFF) {
-        gCurrentGameTask->fade = stepMenuFadeAlpha((s16)gCurrentGameTask->fade, 0x24, 1);
-        if (gCurrentGameTask->fade == 0xFF) {
+    if (gCurrentGameTask->callbackData0 != 0xFF) {
+        gCurrentGameTask->callbackData0 = stepMenuFadeAlpha((s16)gCurrentGameTask->callbackData0, 0x24, 1);
+        if (gCurrentGameTask->callbackData0 == 0xFF) {
             gFramebufferSwapHold = 1;
         } else {
             updateCallbackTasks();

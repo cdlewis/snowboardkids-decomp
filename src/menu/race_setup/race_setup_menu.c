@@ -147,8 +147,8 @@ void initRaceSetupMenu(void) {
     configureViewport(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.3333334f);
 
     gFramebufferRenderInterval.value = 0;
-    gCurrentGameTask->fade = 0;
-    gCurrentGameTask->timer = 0;
+    gCurrentGameTask->callbackData0 = 0;
+    gCurrentGameTask->callbackData1 = 0;
     gMenuSelectionConfirmTimer = 0;
     D_800EC9E5 = 1;
     gCourseSelectModeSelection = 0;
@@ -158,7 +158,7 @@ void initRaceSetupMenu(void) {
     gMenuFlowState = 0;
     gMenuInputRepeatTimers[0] = 0;
     gPlayerCount = 1;
-    gMenuFadeAlpha = gCurrentGameTask->fade;
+    gMenuFadeAlpha = gCurrentGameTask->callbackData0;
 
     LOAD_ASSET(_59AAA0, 0x21);
     LOAD_ASSET(_245A80, 0x1F);
@@ -202,7 +202,7 @@ void updateRaceSetupPlayerCountMenu(void) {
         gRaceSetupMenuSubState.state = substateNext;
         gRaceSetupMenuSubState.timer = 0;
     }
-    if (gCurrentGameTask->timer == one) {
+    if (gCurrentGameTask->callbackData1 == one) {
         temp_v1 = gMenuSelectionConfirmTimer;
         confirmationValue = temp_v1;
         temp_v0 = temp_v1;
@@ -249,7 +249,7 @@ void updateRaceSetupPlayerCountMenu(void) {
     }
     if (gRaceSetupMenuSubState.state == 5) {
         setCurrentGameTaskCallback(initRaceSetupSaveMenu, 0);
-        gCurrentGameTask->fade = 0;
+        gCurrentGameTask->callbackData0 = 0;
         gMenuSelectionConfirmTimer = 0;
     }
     updateCallbackTasks();

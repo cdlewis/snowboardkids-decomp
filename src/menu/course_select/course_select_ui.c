@@ -285,7 +285,7 @@ void updateCourseSelectPreviewModelIn(CourseSelectAnimatedActor *arg0) {
                         actor->vecs[i].y = -gCourseSelectHorizontalOffsets[i];
                     }
                     actor->state[i] = 2;
-                } else if (gCurrentGameTask->screenState == 9) {
+                } else if (gCurrentGameTask->callbackData2 == 9) {
                     actor->state[i] = 8;
                 }
                 break;
@@ -333,7 +333,7 @@ void updateCourseSelectPreviewModelIn(CourseSelectAnimatedActor *arg0) {
             case 7:
                 if (gRacePlayers[i].menuState == 3) {
                     actor->state[i] = 5;
-                } else if (gCurrentGameTask->screenState == 9) {
+                } else if (gCurrentGameTask->callbackData2 == 9) {
                     actor->state[i] = 8;
                 }
                 break;
@@ -436,7 +436,7 @@ void updateCourseSelectPreviewModelIn(CourseSelectAnimatedActor *arg0)
                     actor->vecs[i].y = -gCourseSelectHorizontalOffsets[i];
                 }
                 actor->state[i] = 2;
-            } else if (gCurrentGameTask->screenState == 9) {
+            } else if (gCurrentGameTask->callbackData2 == 9) {
                 actor->state[i] = 8;
             }
             break;
@@ -484,7 +484,7 @@ void updateCourseSelectPreviewModelIn(CourseSelectAnimatedActor *arg0)
         case 7:
             if (gRacePlayers[i].menuState == 3) {
                 actor->state[i] = 5;
-            } else if (gCurrentGameTask->screenState == 9) {
+            } else if (gCurrentGameTask->callbackData2 == 9) {
                 actor->state[i] = 8;
             }
             break;
@@ -652,7 +652,7 @@ void updateCourseSelectPreviewModelOut(CourseSelectAnimatedActor *arg0) {
                         actor->vecs[i].y = -gCourseSelectHorizontalOffsets[i];
                     }
                     actor->state[i] = 2;
-                } else if (gCurrentGameTask->screenState == 9) {
+                } else if (gCurrentGameTask->callbackData2 == 9) {
                     actor->state[i] = 8;
                 }
                 break;
@@ -703,7 +703,7 @@ void updateCourseSelectPreviewModelOut(CourseSelectAnimatedActor *arg0) {
             case 7:
                 if (gRacePlayers[i].menuState == 3) {
                     actor->state[i] = 5;
-                } else if (gCurrentGameTask->screenState == 9) {
+                } else if (gCurrentGameTask->callbackData2 == 9) {
                     actor->state[i] = 8;
                 }
                 break;
@@ -711,7 +711,7 @@ void updateCourseSelectPreviewModelOut(CourseSelectAnimatedActor *arg0) {
                 actor->vecs[i].x += 0x200000;
                 if (actor->vecs[i].x == 0xC00000) {
                     actor->state[i] = 9;
-                    gCurrentGameTask->screenState = 0xB;
+                    gCurrentGameTask->callbackData2 = 0xB;
                 }
                 break;
             case 9:
@@ -901,13 +901,13 @@ void updateCourseSelectCourseIconList(CourseSelectIconListActor *arg0) {
 
     actor = arg0;
     for (playerIndex = 0; playerIndex < (s32)gPlayerCount; playerIndex++) {
-        if (gCurrentGameTask->screenState == 1) {
+        if (gCurrentGameTask->callbackData2 == 1) {
             actor->state[playerIndex] = 9;
         }
-        if ((gCurrentGameTask->screenState == 3) && (actor->state[playerIndex] < 11)) {
+        if ((gCurrentGameTask->callbackData2 == 3) && (actor->state[playerIndex] < 11)) {
             actor->state[playerIndex] = 11;
         }
-        if (gCurrentGameTask->screenState == 9) {
+        if (gCurrentGameTask->callbackData2 == 9) {
             actor->state[playerIndex] = 13;
         }
         state = actor->state[playerIndex];
@@ -1070,7 +1070,7 @@ void updateCourseSelectCourseIconList(CourseSelectIconListActor *arg0) {
                 break;
 
             case 12:
-                if (gCurrentGameTask->screenState == 4) {
+                if (gCurrentGameTask->callbackData2 == 4) {
                     actor->state[playerIndex] = 4;
                 }
                 break;
@@ -1212,7 +1212,7 @@ void updateCourseSelectCourseCursors(CourseSelectWidgetActor *arg0) {
                         actor->courseCursorAlpha[i] = 0x100;
                         actor->courseCursorTimer[i] = 0;
                     }
-                    if (gCurrentGameTask->screenState == 9) {
+                    if (gCurrentGameTask->callbackData2 == 9) {
                         actor->courseCursorState[i] = 4;
                     }
                     state = actor->courseCursorState[i];
@@ -1301,10 +1301,10 @@ void updateCourseSelectCourseListBackdrop(CourseSelectWidgetActor *arg0) {
     s32 forceState;
 
     forceState = 3;
-    screenState = gCurrentGameTask->screenState;
+    screenState = gCurrentGameTask->callbackData2;
     if (screenState == 1) {
         arg0->pad18[4] = 2;
-        screenState = gCurrentGameTask->screenState;
+        screenState = gCurrentGameTask->callbackData2;
     }
     if ((forceState == screenState) && (arg0->pad18[4] < 5)) {
         arg0->pad18[4] = 5;
@@ -1333,16 +1333,16 @@ void updateCourseSelectCourseListBackdrop(CourseSelectWidgetActor *arg0) {
         case 2:
             arg0->x -= 0x20;
             if (arg0->x < -0x10D) {
-                if (gCurrentGameTask->screenState != 0) {
+                if (gCurrentGameTask->callbackData2 != 0) {
                     arg0->pad18[4] = 4;
-                    gCurrentGameTask->screenState = 2;
+                    gCurrentGameTask->callbackData2 = 2;
                 } else {
                     arg0->pad18[4] = 3;
                 }
             }
             break;
         case 4:
-            if (gCurrentGameTask->screenState == 9) {
+            if (gCurrentGameTask->callbackData2 == 9) {
                 arg0->pad18[4] = 3;
             }
             break;
@@ -1354,11 +1354,11 @@ void updateCourseSelectCourseListBackdrop(CourseSelectWidgetActor *arg0) {
             }
             break;
         case 6:
-            gCurrentGameTask->screenState = 4;
+            gCurrentGameTask->callbackData2 = 4;
             arg0->pad18[4] = 7;
             break;
         case 7:
-            gCurrentGameTask->screenState = 5;
+            gCurrentGameTask->callbackData2 = 5;
             arg0->pad18[4] = 1;
             break;
     }
@@ -1829,7 +1829,7 @@ void updateCourseSelectCourseStats(CourseSelectWidgetActor *arg0) {
             if (gRacePlayers[0].menuState == 3) {
                 arg0->transitionState = 2;
             }
-            if (gCurrentGameTask->screenState == 9) {
+            if (gCurrentGameTask->callbackData2 == 9) {
                 arg0->transitionState = 4;
             }
             state = arg0->transitionState;
@@ -1997,10 +1997,10 @@ void updateCourseSelectCourseDescription(CourseSelectWidgetActor *arg0) {
     s32 temp_a0;
 
     temp_a0 = 3;
-    screenState = gCurrentGameTask->screenState;
+    screenState = gCurrentGameTask->callbackData2;
     if (screenState == 1) {
         arg0->pad18_2[6] = 2;
-        screenState = gCurrentGameTask->screenState;
+        screenState = gCurrentGameTask->callbackData2;
     }
     if ((temp_a0 == screenState) && (arg0->pad18_2[6] < 5)) {
         arg0->pad18_2[6] = 5;
@@ -2022,7 +2022,7 @@ void updateCourseSelectCourseDescription(CourseSelectWidgetActor *arg0) {
         case 2:
             arg0->coordinates[0] -= 0x20;
             if (arg0->coordinates[0] < -0xFF) {
-                if (gCurrentGameTask->screenState != 0) {
+                if (gCurrentGameTask->callbackData2 != 0) {
                     arg0->pad18_2[6] = 4;
                 } else {
                     arg0->pad18_2[6] = 3;
@@ -2030,7 +2030,7 @@ void updateCourseSelectCourseDescription(CourseSelectWidgetActor *arg0) {
             }
             break;
         case 4:
-            if (gCurrentGameTask->screenState == 9) {
+            if (gCurrentGameTask->callbackData2 == 9) {
                 arg0->pad18_2[6] = 3;
             }
             break;
@@ -2042,7 +2042,7 @@ void updateCourseSelectCourseDescription(CourseSelectWidgetActor *arg0) {
             }
             break;
         case 6:
-            if (gCurrentGameTask->screenState == 4) {
+            if (gCurrentGameTask->callbackData2 == 4) {
                 arg0->pad18_2[6] = 1;
             }
             break;
@@ -2112,7 +2112,7 @@ void updateCourseSelectExtraCourseBadge(CourseSelectWidgetActor *arg0) {
             state = arg0->state;
             break;
         case 1:
-            if ((gRacePlayers[0].menuState == 3) || (gCurrentGameTask->screenState == 9)) {
+            if ((gRacePlayers[0].menuState == 3) || (gCurrentGameTask->callbackData2 == 9)) {
                 state = (arg0->state = 2);
             }
             break;
@@ -2217,7 +2217,7 @@ void updateCourseSelectExtraCourseIconListIn(CourseSelectWidgetActor *arg0) {
                 var_v0 = (CourseSelectWidgetActor *)((u8 *)var_v0 + sizeof(s16));
             } while (var_v1 < (s32)temp_a1->itemCount);
         }
-    } else if (gCurrentGameTask->screenState == 4) {
+    } else if (gCurrentGameTask->callbackData2 == 4) {
         setCallbackTaskCallback(temp_a2, (CallbackTaskCallback)updateCourseSelectExtraCourseIconList);
     }
     addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawCourseSelectExtraCourseIconList, temp_a2);
@@ -2244,12 +2244,12 @@ void updateCourseSelectExtraCourseIconListOut(CourseSelectWidgetActor *arg0) {
         if (var_v0 < -0xE7) {
             arg0->x = -0xE8;
         }
-        var_v0_3 = gCurrentGameTask->screenState;
+        var_v0_3 = gCurrentGameTask->callbackData2;
     } else {
-        var_v0_3 = gCurrentGameTask->screenState;
+        var_v0_3 = gCurrentGameTask->callbackData2;
         if (var_v0_3 == 3) {
             setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateCourseSelectExtraCourseIconListIn);
-            var_v0_3 = gCurrentGameTask->screenState;
+            var_v0_3 = gCurrentGameTask->callbackData2;
         }
     }
     if (var_v0_3 == 9) {
@@ -2313,7 +2313,7 @@ void updateCourseSelectExtraCourseIconList(CourseSelectWidgetActor *arg0) {
         for (playerIndex = 0; playerIndex < gPlayerCount; playerIndex++) {
             actor->alpha[playerIndex] = 0x100;
         }
-    } else if (gCurrentGameTask->screenState == 1) {
+    } else if (gCurrentGameTask->callbackData2 == 1) {
         setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateCourseSelectExtraCourseIconListOut);
         actor->alpha[0] = 0x100;
         actor->pulseTimer[0] = 0;
@@ -2465,7 +2465,7 @@ void updateCourseSelectExtraCourseIconList(CourseSelectWidgetActor *arg0) {
                 playerIndex++;
             } while (playerIndex < (s32)gPlayerCount);
         }
-    } else if (gCurrentGameTask->screenState == 1) {
+    } else if (gCurrentGameTask->callbackData2 == 1) {
         setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateCourseSelectExtraCourseIconListOut);
         ((CourseSelectExtraCourseIconListActor *)arg0)->alpha[0] = 0x100;
         actor->pulseTimer[0] = 0;

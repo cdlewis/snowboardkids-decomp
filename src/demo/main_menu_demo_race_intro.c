@@ -159,15 +159,15 @@ void initMainMenuDemoRaceIntro(void) {
     setCurrentGameTaskCallback(waitForMainMenuDemoRaceIntroStart, 0);
     gMenuFadeAlpha = 0xFF;
     gRaceRumbleEnabled = 0;
-    gCurrentGameTask->fadeDelay = 0x384;
-    gCurrentGameTask->fadeStep = 0;
-    gCurrentGameTask->courseSegment = 0;
-    gCurrentGameTask->startDelay = 0x14;
+    gCurrentGameTask->callbackData0 = 0x384;
+    gCurrentGameTask->callbackData1 = 0;
+    gCurrentGameTask->callbackData2 = 0;
+    gCurrentGameTask->callbackData3 = 0x14;
 }
 
 void waitForMainMenuDemoRaceIntroStart(void) {
-    gCurrentGameTask->startDelay--;
-    if (gCurrentGameTask->startDelay == 0) {
+    gCurrentGameTask->callbackData3--;
+    if (gCurrentGameTask->callbackData3 == 0) {
         requestCourseMusicSequence();
         createCallbackTask((CallbackTaskCallback)updateTitleScreenStartPrompt, 0, 0x64);
         setCurrentGameTaskCallback(updateMainMenuDemoRaceIntro, 0);
@@ -178,7 +178,7 @@ void updateMainMenuDemoRaceIntro(void) {
     GameTask *state;
     s32 fadeStep;
 
-    if (gCurrentGameTask->fadeStep == 0) {
+    if (gCurrentGameTask->callbackData1 == 0) {
         gMenuFadeAlpha -= 0x10;
         if (gMenuFadeAlpha < 0) {
             gMenuFadeAlpha = 0;
@@ -191,28 +191,28 @@ void updateMainMenuDemoRaceIntro(void) {
     updateRaceCameras();
     updateRaceHud();
     state = gCurrentGameTask;
-    if (state->fadeDelay != 0) {
-        state->fadeDelay--;
+    if (state->callbackData0 != 0) {
+        state->callbackData0--;
         state = gCurrentGameTask;
-        fadeStep = state->fadeStep;
+        fadeStep = state->callbackData1;
     } else {
-        fadeStep = state->fadeStep;
+        fadeStep = state->callbackData1;
         if (fadeStep == 0) {
-            state->fadeStep = 4;
+            state->callbackData1 = 4;
             requestMusicSequenceStop(0x78);
             state = gCurrentGameTask;
-            fadeStep = state->fadeStep;
+            fadeStep = state->callbackData1;
         }
     }
     if ((gPlayerInputPressed[0] & START_BUTTON) && (fadeStep == 0)) {
-        state->fadeStep = 0x10;
+        state->callbackData1 = 0x10;
         requestMusicSequenceStop(0x1E);
         state = gCurrentGameTask;
-        fadeStep = state->fadeStep;
+        fadeStep = state->callbackData1;
     }
     if (fadeStep != 0) {
         gMenuFadeOverlayActive = 1;
-        gMenuFadeAlpha += state->fadeStep;
+        gMenuFadeAlpha += state->callbackData1;
         if (!(gMenuFadeAlpha < 0xFF)) {
             gMenuFadeAlpha = 0xFF;
             gFramebufferSwapHold = 1;

@@ -53,16 +53,16 @@ void initCharacterSelectCourseMenuFromRaceTypeSelect(void) {
     u8 temp_v1;
     GameSaveData *var_v0;
 
-    gCurrentGameTask->fade = 0;
+    gCurrentGameTask->callbackData0 = 0;
     requestMusicSequenceBank(2);
     createCallbackTask((CallbackTaskCallback) initCharacterSelectLimitedCourseList, 0, 0x63);
-    gCurrentGameTask->timer = 0;
+    gCurrentGameTask->callbackData1 = 0;
     gMenuSelectionConfirmTimer = 0;
     gMenuExitSelection = 0;
     gRacePlayers[0].menuState = 0;
     gMenuInputRepeatTimers[0] = 0;
     gMenuChoicePromptState[0] = 0;
-    gMenuFadeAlpha = gCurrentGameTask->fade;
+    gMenuFadeAlpha = gCurrentGameTask->callbackData0;
     var_v1 = 0;
     if (gPlayerCount > var_v1) {
         var_v0 = &gGameSaveDataBuffer[0]; do {
@@ -176,7 +176,7 @@ void initCharacterSelectCourseMenuFromRace(void)
   createCallbackTask((CallbackTaskCallback) initMenuIconTilemapSpriteActor, 0, 0x5E);
   if (gRaceSplitscreenMode == 1)
   {
- LOAD_ASSET(_5CCD40, 0x25); createCallbackTask((CallbackTaskCallback) initCharacterSelectLimitedCourseList, 0, 0x63); gCurrentGameTask->fade = 0; } else { gCurrentGameTask->fade = 0xFF; } gCurrentGameTask->timer = 0; gMenuSelectionConfirmTimer = 0; gMenuExitSelection = 0; gMenuFlowState = 0; gRacePlayers[0].menuState = 0; gMenuInputRepeatTimers[0] = 0; gMenuChoicePromptState[0] = 0; gMenuFadeAlpha = gCurrentGameTask->fade; var_v1 = 0; if (gPlayerCount > var_v1) { var_v0 = &gGameSaveDataBuffer[0]; do { temp_v1 = var_v0->progressionLevel; var_v0 += 1; if (gHighestUnlockedCourse < temp_v1) { gHighestUnlockedCourse = temp_v1; } } while (var_v0 < (&gGameSaveDataBuffer[0] + gPlayerCount));
+ LOAD_ASSET(_5CCD40, 0x25); createCallbackTask((CallbackTaskCallback) initCharacterSelectLimitedCourseList, 0, 0x63); gCurrentGameTask->callbackData0 = 0; } else { gCurrentGameTask->callbackData0 = 0xFF; } gCurrentGameTask->callbackData1 = 0; gMenuSelectionConfirmTimer = 0; gMenuExitSelection = 0; gMenuFlowState = 0; gRacePlayers[0].menuState = 0; gMenuInputRepeatTimers[0] = 0; gMenuChoicePromptState[0] = 0; gMenuFadeAlpha = gCurrentGameTask->callbackData0; var_v1 = 0; if (gPlayerCount > var_v1) { var_v0 = &gGameSaveDataBuffer[0]; do { temp_v1 = var_v0->progressionLevel; var_v0 += 1; if (gHighestUnlockedCourse < temp_v1) { gHighestUnlockedCourse = temp_v1; } } while (var_v0 < (&gGameSaveDataBuffer[0] + gPlayerCount));
     var_v1 *= 0;
   }
   gActiveMenuTask = 0;
@@ -276,20 +276,20 @@ void initCharacterSelectCourseMenuFromPlayerSelect(void) {
         LOAD_ASSET(_245A80, 0x1F);
         initCallbackTaskScheduler(0);
         createCallbackTask((CallbackTaskCallback)initMenuIconTilemapSpriteActor, 0, 0x5E);
-        gCurrentGameTask->fade = 0xFF;
+        gCurrentGameTask->callbackData0 = 0xFF;
     } else {
-        gCurrentGameTask->fade = 0;
+        gCurrentGameTask->callbackData0 = 0;
         createCallbackTask((CallbackTaskCallback)initCharacterSelectUnlockedCourseList, 0, 0x63);
     }
 
-    gCurrentGameTask->timer = 0;
+    gCurrentGameTask->callbackData1 = 0;
     gMenuSelectionConfirmTimer = 0;
     gMenuExitSelection = 0;
     gMenuFlowState = 0;
     gRacePlayers[0].menuState = 0;
     gMenuInputRepeatTimers[0] = 0;
     gMenuChoicePromptState[0] = 0;
-    gMenuFadeAlpha = gCurrentGameTask->fade;
+    gMenuFadeAlpha = gCurrentGameTask->callbackData0;
     gActiveMenuTask = 0;
     sp2C = 0;
     D_8010ADE0 = 0;
@@ -361,9 +361,9 @@ void updateCharacterSelectCourseMenu(void) {
     u16 repeatTimer;
     s32 selection;
 
-    if (gCurrentGameTask->fade != 0) {
-        gCurrentGameTask->fade = stepMenuFadeAlpha((s16)gCurrentGameTask->fade, 0x24, 0);
-        if (gCurrentGameTask->fade == 0) {
+    if (gCurrentGameTask->callbackData0 != 0) {
+        gCurrentGameTask->callbackData0 = stepMenuFadeAlpha((s16)gCurrentGameTask->callbackData0, 0x24, 0);
+        if (gCurrentGameTask->callbackData0 == 0) {
             createCallbackTask((CallbackTaskCallback)&initCharacterSelectUnlockedCourseList, 0, 0x63);
         }
     } else {
@@ -553,9 +553,9 @@ void handleCharacterSelectCourseSelection(void) {
 }
 
 void fadeOutCharacterSelectCourseMenu(void) {
-    if (gCurrentGameTask->fade != 0xFF) {
-        gCurrentGameTask->fade = stepMenuFadeAlpha((s16)gCurrentGameTask->fade, 0x24, 1);
-        if (gCurrentGameTask->fade == 0xFF) {
+    if (gCurrentGameTask->callbackData0 != 0xFF) {
+        gCurrentGameTask->callbackData0 = stepMenuFadeAlpha((s16)gCurrentGameTask->callbackData0, 0x24, 1);
+        if (gCurrentGameTask->callbackData0 == 0xFF) {
             gFramebufferSwapHold = 1;
         } else {
             updateCallbackTasks();

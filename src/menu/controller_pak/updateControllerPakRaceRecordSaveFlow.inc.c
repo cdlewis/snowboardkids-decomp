@@ -7,11 +7,11 @@ void updateControllerPakRaceRecordSaveFlow(void) {
 
     completion = &sp24;
     completion->value = 0;
-    fade = gCurrentGameTask->fade;
+    fade = gCurrentGameTask->callbackData0;
     temp_t0 = D_8010ADE4;
     if (fade != 0) {
-        gCurrentGameTask->fade = stepMenuFadeAlpha((s32)(s16)fade, 0x24, 0U);
-        if (gCurrentGameTask->fade == 0) {
+        gCurrentGameTask->callbackData0 = stepMenuFadeAlpha((s32)(s16)fade, 0x24, 0U);
+        if (gCurrentGameTask->callbackData0 == 0) {
             gControllerPakMenuState.state = 3;
             gControllerPakMenuState.confirmChoice = 1;
             createCallbackTask((CallbackTaskCallback)initControllerPakDeleteConfirmPrompt, 0, 0x64);
