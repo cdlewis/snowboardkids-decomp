@@ -3,6 +3,7 @@
 
 #include "common.h"
 #include "game/audio/audio_engine.h"
+#include "game/engine/system_render.h"
 
 #define FRAME_RENDER_TASK_COUNT 2
 #define FRAME_RENDER_TASK_STRIDE 0x18620
@@ -10,16 +11,6 @@
 #define FRAME_RENDER_DISPLAY_LIST_SIZE 0x18000
 #define FRAMEBUFFER_PREPARE_TASK_STRIDE 0x860
 #define FRAMEBUFFER_PREPARE_DISPLAY_LIST_SIZE 0x800
-
-struct RuntimeViewportDisplayListData {
-    /* 0x000 */ u8 pad0[0x78];
-    /* 0x078 */ Vp viewports[4];
-    /* 0x0B8 */ Mtx projections[4];
-    /* 0x1B8 */ Mtx overlayProjections[4];
-    /* 0x2B8 */ Mtx rotations[4];
-    /* 0x3B8 */ Mtx translations[4];
-    /* 0x4B8 */ Mtx viewportMatrices[4];
-};
 
 typedef struct FrameRenderTask {
     /* 0x00000 */ SchedulerTask schedulerTask;

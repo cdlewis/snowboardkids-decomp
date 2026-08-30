@@ -21,6 +21,9 @@ extern u8 gRaceCourseModelEffectsDisabled;
 extern u8 gRaceCourseOverlayEffectsDisabled;
 
 void dmaReadRom(u32 romOffset, void *ramAddress, s32 size);
+void appendFadeOverlayDisplayList(void);
+void appendViewportDisplayLists(u8 frameIndex);
 void resetRenderCallbackQueues(void);
 void setBootFadeColor(u8 a0, u8 a1, u8 a2);
 void setTitleFadeColor(u8 a0, u8 a1, u8 a2);
+void submitFramebufferRenderTask(u8 frameIndex);
