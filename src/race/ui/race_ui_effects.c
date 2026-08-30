@@ -1210,7 +1210,6 @@ extern u8 gRaceChallengeFailed;
 extern u8 gRaceUpdatePaused;
 
 extern void drawAssetTableSprite8bpp(s16, s16, void *, s32);
-extern void enqueuePlayerLoopingPositionalSoundRequest(s32, void *, s32, s32, f32, s32);
 
 const char gRaceUiBoardReversePromptLabelBlinkOn[0x10] = "Board Reverse";
 const char gRaceUiBoardReversePromptLabelBlinkOff[0x10] = "Board Reverse";
