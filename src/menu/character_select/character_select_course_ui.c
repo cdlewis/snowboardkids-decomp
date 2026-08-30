@@ -501,7 +501,7 @@ void initCharacterSelectUnlockedCourseList(CharacterSelectCourseMenuFrameActor *
 
     arg0->baseY = baseY;
     arg0->itemSpacing = spacing;
-    do { arg0->y[1] = baseY + spacing; arg0->y[2] = baseY + (spacing * 2); arg0->x[0] = -0x104; arg0->x[1] = -0x104; arg0->x[2] = -0x104; arg0->x[2] = -0x104; arg0->y[0] = baseY; i = 3; loop = (CharacterSelectCourseListInitLoop *)&arg0->pad0[6]; limit = 0xB; do { loop->x0 = -0x104; loop->x1 = -0x104; loop->x2 = -0x104; loop = (CharacterSelectCourseListInitLoop *)&loop->next; loop->xNext = -0x104; loop->y0 = baseY + (i * spacing); loop->y1 = baseY + ((i + 1) * spacing); loop->y2 = baseY + ((i + 2) * spacing); loop->y3 = baseY + ((i + 3) * spacing); i += 4; } while (i != limit); } while (0);
+    do { arg0->y[1] = baseY + spacing; arg0->y[2] = baseY + (spacing * 2); arg0->x[0] = -0x104; arg0->x[1] = -0x104; arg0->x[2] = -0x104; arg0->x[2] = -0x104; arg0->y[0] = baseY; i = 3; loop = (CharacterSelectCourseListInitLoop *)&((u8 *)&arg0->taskHeader)[6]; limit = 0xB; do { loop->x0 = -0x104; loop->x1 = -0x104; loop->x2 = -0x104; loop = (CharacterSelectCourseListInitLoop *)&loop->next; loop->xNext = -0x104; loop->y0 = baseY + (i * spacing); loop->y1 = baseY + ((i + 1) * spacing); loop->y2 = baseY + ((i + 2) * spacing); loop->y3 = baseY + ((i + 3) * spacing); i += 4; } while (i != limit); } while (0);
 
     arg0->timer = 0;
     arg0->itemCount = 1;

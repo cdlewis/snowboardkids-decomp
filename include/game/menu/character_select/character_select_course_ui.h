@@ -1,6 +1,7 @@
 #ifndef CHARACTER_SELECT_COURSE_UI_H
 #define CHARACTER_SELECT_COURSE_UI_H
 
+#include "game/engine/callback_task_scheduler.h"
 #include "game/menu/character_select/character_select_course_menu.h"
 
 typedef struct CharacterSelectCourseWidgetActor {
@@ -41,7 +42,7 @@ typedef struct CharacterSelectCourseWidgetActor {
 } CharacterSelectCourseWidgetActor;
 
 typedef struct CharacterSelectCourseMenuFrameActor {
-    /* 0x00 */ u8 pad0[0x18];
+    /* 0x00 */ CallbackTaskHeader taskHeader;
     /* 0x18 */ s16 x[11];
     /* 0x2E */ s16 y[11];
     /* 0x44 */ s16 baseY;
