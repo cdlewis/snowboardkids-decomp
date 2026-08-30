@@ -12,9 +12,6 @@
 #include "game/race/player/race_player_model_renderer.h"
 #include "game/race/scene/race_scene_setup.h"
 
-/* Frame offsets are halfword-relative to the bank start; this form preserves target addu order. */
-#define MAIN_MENU_ANIMATION_FRAME_DATA(bank, index) \
-    ((s16 *)(((bank)->frameOffsets[(index)] * sizeof(s16)) + (s32)(bank)))
 #define FIXED_MATRIX_ROWS(matrix) ((s16(*)[MAIN_MENU_SCENE_MODEL_MATRIX_AXES])(matrix))
 #define FIXED_MATRIX_ONE 0x1000
 #define MAIN_MENU_SCENE_MODEL_MATRIX_AXES 3
@@ -539,15 +536,15 @@ void initMainMenuSceneModel(s32 sceneModelIndex, s32 characterIndex) {
 }
 
 void setMainMenuSceneModelAnimation(s32 modelIndex, s32 animationIndex) {
-    MainMenuAnimationBank *animationBank;
+    s16 *animationBank;
     s16 *frameData;
     MainMenuSceneModel *model;
     s16 frameDuration;
 
-    animationBank = (MainMenuAnimationBank *)getRelocatableHeapBlockBase(
+    animationBank = (s16 *)getRelocatableHeapBlockBase(
         ASSET_HANDLE(MAIN_MENU_SCENE_MODEL_ANIMATION_BANK_HANDLE)
     );
-    frameData = MAIN_MENU_ANIMATION_FRAME_DATA(animationBank, animationIndex);
+    frameData = &animationBank[((s32 *)animationBank)[animationIndex]];
     model =
         (MainMenuSceneModel *)getRelocatableHeapBlockBase(ASSET_HANDLE(MAIN_MENU_SCENE_MODEL_HANDLE_BASE + modelIndex));
     frameDuration = *frameData++;
