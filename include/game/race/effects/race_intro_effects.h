@@ -2,9 +2,48 @@
 #define RACE_INTRO_EFFECTS_H
 
 #include "common.h"
+#include "game/engine/callback_task_scheduler.h"
 
-typedef struct RaceIntroEffectActor RaceIntroEffectActor;
-typedef struct RaceIntroMeshActor RaceIntroMeshActor;
+typedef union RaceIntroPackedAngles {
+    s32 word;
+    struct {
+        s16 yaw;
+        s16 pitch;
+    } half;
+} RaceIntroPackedAngles;
+
+typedef struct RaceIntroMeshActor {
+    /* 0x00 */ CallbackTaskHeader task;
+    /* 0x18 */ Mtx *matrices;
+} RaceIntroMeshActor; // size = 0x1C
+
+typedef struct RaceIntroEffectActor {
+    /* 0x00 */ CallbackTaskHeader task;
+    /* 0x18 */ Vec3i position;
+    /* 0x24 */ s32 velocityY;
+    /* 0x28 */ s32 radius;
+    /* 0x2C */ RaceIntroPackedAngles angle;
+    union {
+        struct {
+            /* 0x30 */ s16 scale;
+            /* 0x32 */ s16 tilt;
+            /* 0x34 */ s16 pitchVelocity;
+            /* 0x36 */ s16 spinVelocity;
+        };
+        struct {
+            /* 0x30 */ void *image;
+            /* 0x34 */ void *palette;
+        };
+    };
+    /* 0x38 */ s16 timer;
+    /* 0x3A */ s16 stateTimer;
+    /* 0x3C */ Mtx *displayList0;
+    union {
+        /* 0x40 */ Mtx *displayList1;
+        /* 0x40 */ s8 displayList0Valid;
+    };
+    /* 0x44 */ s8 displayListValid;
+} RaceIntroEffectActor; // size = 0x48
 
 void drawRaceIntroModelMeshes(RaceIntroMeshActor *arg0);
 void enqueueDrawRaceIntroModelMeshes(RaceIntroMeshActor *arg0);

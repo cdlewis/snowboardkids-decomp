@@ -26,53 +26,6 @@ typedef struct {
     /* 0x04 */ Vec3i position;
 } RaceIntroRenderCommandEntry;
 
-struct RaceIntroMeshActor {
-    /* 0x00 */ u8 pad0[0x18];
-    /* 0x18 */ Mtx *matrices;
-};
-
-typedef void (*RaceIntroEffectCallback)(RaceIntroEffectActor *);
-
-typedef union {
-    s32 word;
-    struct {
-        s16 yaw;
-        s16 pitch;
-    } half;
-} PackedAngles;
-
-struct RaceIntroEffectActor {
-    /* 0x00 */ char pad0[0x8];
-    /* 0x08 */ RaceIntroEffectCallback callback;
-    /* 0x0C */ char padC[0x4];
-    /* 0x10 */ u16 index;
-    /* 0x12 */ char pad12[0x6];
-    /* 0x18 */ Vec3i position;
-    /* 0x24 */ s32 velocityY;
-    /* 0x28 */ s32 radius;
-    /* 0x2C */ PackedAngles angle;
-    union {
-        struct {
-            /* 0x30 */ s16 scale;
-            /* 0x32 */ s16 tilt;
-            /* 0x34 */ s16 pitchVelocity;
-            /* 0x36 */ s16 spinVelocity;
-        };
-        struct {
-            /* 0x30 */ void *image;
-            /* 0x34 */ void *palette;
-        };
-    };
-    /* 0x38 */ s16 timer;
-    /* 0x3A */ s16 stateTimer;
-    /* 0x3C */ Mtx *displayList0;
-    union {
-        /* 0x40 */ Mtx *displayList1;
-        /* 0x40 */ s8 displayList0Valid;
-    };
-    /* 0x44 */ s8 displayListValid;
-};
-
 extern Gfx *gRegionAllocPtr;
 extern Gfx D_20028F0[];
 extern Gfx D_2002DB8[];
@@ -333,8 +286,8 @@ void waitRaceIntroBillboardSpawn(RaceIntroEffectActor *arg0) {
     arg0->timer--;
     if (!arg0->timer) {
         arg0->timer = 0x5A;
-        temp_t3 = &gRaceIntroBillboardPositions[arg0->index];
-        arg0->position = *(&gRaceIntroBillboardPositions[arg0->index]);
+        temp_t3 = &gRaceIntroBillboardPositions[arg0->task.userId];
+        arg0->position = *(&gRaceIntroBillboardPositions[arg0->task.userId]);
         arg0->velocityY = 0;
         arg0->radius = 0;
         arg0->angle.word = 0xFFF00000;
@@ -343,10 +296,10 @@ void waitRaceIntroBillboardSpawn(RaceIntroEffectActor *arg0) {
 }
 
 void initRaceIntroBillboard(RaceIntroEffectActor *arg0) {
-    arg0->timer = (arg0->index * 0x1E) + 0x1E;
+    arg0->timer = (arg0->task.userId * 0x1E) + 0x1E;
     getAssetTableImageAndPalette(
         getRelocatableHeapBlockBase(ASSET_HANDLE(0x1D)),
-        arg0->index + 3,
+        arg0->task.userId + 3,
         &arg0->image,
         &arg0->palette
     );
