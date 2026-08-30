@@ -194,7 +194,6 @@ void drawMenuColoredGlyphScript(
     u16 colorMode,
     u16 fontBank
 );
-#ifndef MENU_RENDERER_OMIT_DRAW_MENU_GLYPH_SCRIPT
 void drawMenuGlyphScript(
     volatile s16 x,
     s16 y,
@@ -203,7 +202,6 @@ void drawMenuGlyphScript(
     u16 scale,
     volatile u16 colorMode
 );
-#endif
 void drawMenuColoredGlyph(s16 x, s16 y, u16 glyph, u8 palette, u16 scale, u16 colorMode, s32 fontBank);
 void drawMenuAsciiGlyph(s16 x, s16 y, u16 tileX, s32 tileY, u16 palette, u16 scale);
 void drawMenuAsciiText(s16 x, s16 y, u8 *text, u16 palette, u16 scale);
