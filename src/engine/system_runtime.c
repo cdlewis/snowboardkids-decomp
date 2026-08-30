@@ -277,11 +277,11 @@ void gameThreadMain(void *arg0) {
                 break;
             case 5:
                 gPendingFramebufferSwapCount++;
-                gFrameRenderTasks[0].status = gFrameRenderTaskStatuses[0].status & 0xFFFE;
+                gFrameRenderTasks[0].status = gFrameRenderTaskStatuses[0][0] & 0xFFFE;
                 break;
             case 6:
                 gPendingFramebufferSwapCount++;
-                gFrameRenderTasks[1].status = gFrameRenderTaskStatuses[1].status & 0xFFFE;
+                gFrameRenderTasks[1].status = gFrameRenderTaskStatuses[1][0] & 0xFFFE;
                 break;
             case 3:
                 done = 1;
@@ -726,8 +726,8 @@ void initFramebufferRenderTaskState(void) {
         gFrameRenderTasks[1].framebuffer = gFramebuffers[1];
     }
     osViSetSpecialFeatures(0x6A);
-    gFrameRenderTaskStatuses[0].status = 0;
-    gFrameRenderTaskStatuses[1].status = 0;
+    gFrameRenderTaskStatuses[0][0] = 0;
+    gFrameRenderTaskStatuses[1][0] = 0;
     gFramebufferColorBufferIndex = 0;
     gFrameRenderTasks[0].viewportData.rotations[0] = gIdentityMatrix;
     gFrameRenderTasks[0].viewportData.rotations[1] = gIdentityMatrix;
