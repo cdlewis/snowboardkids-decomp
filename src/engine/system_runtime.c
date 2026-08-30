@@ -7,6 +7,7 @@
 #include "game/engine/game_task_scheduler.h"
 #include "game/engine/render_callback.h"
 #include "game/menu/main_menu/controller_main_menu_flow.h"
+#include "game/menu/renderer/menu_render_utils.h"
 #include "game/engine/relocatable_heap.h"
 #include "game/race/flow/race_flow.h"
 #include "game/race/race_state.h"
@@ -150,8 +151,6 @@ s16 gFadeTimer = BOOT_FADE_TIMER;
 
 s32 gClearFramebufferOnNextTask = 1;
 
-extern void initMenuAsciiFontTexture(void);
-
 extern u8 gFadeColorRed;
 extern u8 gFadeColorGreen;
 extern u8 gFadeColorBlue;
@@ -183,11 +182,6 @@ extern u8 D_80368000[];
 extern u8 D_80368C00[];
 extern u8 gBootThreadStack[BOOT_THREAD_STACK_SIZE];
 extern u8 gGameThreadStack[GAME_THREAD_STACK_SIZE];
-extern void initMenuAssetHandles(void);
-extern void allocRenderCallbackScratchBuffer(void);
-extern void allocMenuRenderScratchBuffers(void);
-extern void selectMenuRenderScratchBuffer(s32);
-extern void initFramebufferRenderTaskState(void);
 
 void main(void *arg) {
     osInitialize();
