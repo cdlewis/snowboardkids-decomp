@@ -12,6 +12,7 @@
 #include "game/math/spatial_math.h"
 #include "game/math/fixed_point_math.h"
 #include "game/race/motion/race_motion.h"
+#include <PR/os_cache.h>
 
 #define RACE_MODEL_BUFFER_HANDLE gAssetHandles[0x24]
 #define RACE_PICKUP_G_TRI2 0xB1
@@ -793,7 +794,6 @@ Vec3i gPickupShardInitialVelocities[] = {
 
 u32 D_800D9C38[] = { 0, 0 };
 
-extern void osWritebackDCache(void *, s32);
 extern void enqueuePositionalSoundEffect(s32, void *, s32, s32);
 extern Gfx *gRaceCourseObjectDisplayLists[];
 extern u8 gRaceUpdatePaused;

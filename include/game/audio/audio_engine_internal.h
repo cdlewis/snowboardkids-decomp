@@ -7,6 +7,7 @@
 #undef alSynSetPan
 #include <PR/os_ai.h>
 #include <PR/os_convert.h>
+#include <PR/rmon.h>
 #include <PR/ucode.h>
 #include "game/audio/audio_engine.h"
 
@@ -31,27 +32,7 @@ typedef struct SchedulerThreadMainLocals {
 
 extern const char D_800E1A60[16];
 
-extern s32 osSendMesg(OSMesgQueue *, OSMesg, s32);
-extern s32 osSetIntMask(s32);
-extern s32 osRecvMesg(OSMesgQueue *, OSMesg *, s32);
-extern void osCreateMesgQueue(OSMesgQueue *, OSMesg *, s32);
-extern void osCreateThread(SchedulerThread *, s32, void (*)(void *), void *, void *, s32);
-extern void osCreateViManager(s32);
-extern void osSetEventMesg(s32, OSMesgQueue *, OSMesg);
-extern void osStartThread(SchedulerThread *);
-extern void osViBlack(u8);
-extern void osViSwapBuffer(void *);
-extern void osViSetEvent(OSMesgQueue *, OSMesg, u32);
-extern void osViSetMode(SchedulerViMode *);
-extern void *osViGetCurrentFramebuffer(void);
-extern void *osViGetNextFramebuffer(void);
-extern void osWritebackDCacheAll(void);
-extern void osSpTaskYield(void);
-extern u32 osAiGetLength(void);
-extern u32 osVirtualToPhysical(void *);
-extern s32 osPiStartDma(OSIoMesg *, s32, s32, u32, void *, u32, OSMesgQueue *);
 extern void alSynSetPan(ALSynth *, ALVoice *, s32);
-extern void rmonPrintf(const char *, ...);
 extern AudioDmaState gAudioDmaState;
 extern AudioDmaBuffer *gAudioDmaBufferPool;
 extern f32 sinf(f32);
@@ -102,7 +83,6 @@ extern u16 mus_master_volume_songs;
 extern s32 mus_vsyncs_per_second;
 extern s32 mus_next_frame_time;
 extern ALSynth gAudioSynthesizer;
-extern s32 osTvType;
 
 extern ALDMAproc initAudioDmaCallback(AudioDmaState **);
 

@@ -313,8 +313,6 @@ extern u8 gCurrentQueuedSoundAux;
 extern SchedulerThread gAudioThread;
 extern SchedulerState gSchedulerState;
 
-void osStartThread(void *);
-void osStopThread(void *);
 void *allocRenderCallbackScratch(s32 arg0);
 void requestMusicSequenceBank(s32 arg0);
 s32 reserveSoundEffectQueueWriteIndex(void);

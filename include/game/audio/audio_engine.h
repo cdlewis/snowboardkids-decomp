@@ -2,27 +2,12 @@
 #define AUDIO_ENGINE_H
 
 #include "common.h"
+#include <PR/os.h>
 #include <PR/libaudio.h>
 #include <PR/sptask.h>
 
-typedef void *OSMesg;
-
-typedef struct OSMesgQueue {
-    void *mtqueue;
-    void *fullqueue;
-    s32 validCount;
-    s32 first;
-    s32 msgCount;
-    OSMesg *msg;
-} OSMesgQueue;
-
-typedef struct SchedulerThread {
-    u8 pad[0x1B0];
-} SchedulerThread;
-
-typedef struct SchedulerViMode {
-    u8 pad[0x50];
-} SchedulerViMode;
+typedef OSThread SchedulerThread;
+typedef OSViMode SchedulerViMode;
 
 typedef struct SchedulerClient {
     struct SchedulerClient *next;
@@ -209,10 +194,6 @@ typedef struct AudioSynthInitConfig {
     s32 frameRate;
     s32 commandListSize;
 } AudioSynthInitConfig;
-
-typedef struct OSIoMesg {
-    u8 pad[0x18];
-} OSIoMesg;
 
 typedef struct PlayerCommandBank {
     u8 pad0[0x10];

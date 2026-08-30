@@ -1,6 +1,5 @@
 #include "game/race/race_state.h"
 #include "assets.h"
-#include "game/demo/race_demo_intro.h"
 #include "game/demo/title_demo_race_intro.h"
 #include "game/audio/sound_manager.h"
 #include "game/engine/callback_task_scheduler.h"
