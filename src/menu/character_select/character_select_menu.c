@@ -4,6 +4,7 @@
 #include "game/engine/asset_manager.h"
 #include "game/menu/character_select/character_select_menu.h"
 #include "game/engine/game_task_scheduler.h"
+#include "game/menu/renderer/menu_render_utils.h"
 #include "game/menu/renderer/menu_renderer.h"
 #include "game/menu/character_select/character_select_ui.h"
 #include "game/menu/main_menu/controller_main_menu_flow.h"
@@ -20,7 +21,6 @@ u8 gCharacterSelectSecretCharacterUnlocked;
 u16 gCharacterSelectIdOrder[] = { 5, 0, 1, 2, 3, 4 };
 s16 gCharacterSelectVoiceSoundIds[] = { 0x5D, 0x57, 0x58, 0x5A, 0x59, 0x5B, 0, 0, 0, 0 };
 
-extern void releaseMenuAssetHandles(void);
 extern s32 enqueueSoundEffect(s16, s16);
 extern CallbackTask *D_8010ADEC;
 extern s16 gMenuFadeAlpha;

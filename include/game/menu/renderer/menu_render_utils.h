@@ -4,6 +4,7 @@
 #include "common.h"
 #include "game/menu/renderer/menu_renderer.h"
 
+void releaseMenuAssetHandles(void);
 void getAssetTableImageAndPalette(void *asset, u16 index, void **image, void **palette);
 void drawMenuAsciiChar(s16 x, s16 y, u8 character, u16 palette);
 void drawMenuAsciiCharImpl(s16 x, s16 y, u8 character, u16 palette);

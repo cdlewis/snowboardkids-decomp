@@ -13,7 +13,9 @@
 #include "game/menu/main_menu/main_menu_scene_model.h"
 #include "game/menu/main_menu/main_menu_scene_model_renderer.h"
 #include "game/menu/main_menu/main_menu_race_flow.h"
+#include "game/menu/main_menu/training_course_race_flow.h"
 #include "game/menu/main_menu/main_menu_title_ui.h"
+#include "game/menu/renderer/menu_render_utils.h"
 #include "game/race/camera/race_camera.h"
 #include "game/race/flow/race_flow.h"
 #include "game/race/race_state.h"
@@ -54,7 +56,6 @@ u8 gControllerPakSaveExtNameBytesEnd[0x84] = {
 };
 u8 gMainMenuReturnFromRace = 0;
 
-extern void releaseMenuAssetHandles(void);
 extern void enqueueSoundEffect(s32, s32);
 extern OSMesgQueue gControllerSubsystemRequestQueue;
 extern OSMesgQueue gControllerSubsystemReplyQueue;

@@ -8,6 +8,7 @@
 #include "game/race/player/race_player_input.h"
 #include "game/engine/game_task_scheduler.h"
 #include "game/menu/training/training_course_ui.h"
+#include "game/menu/renderer/menu_render_utils.h"
 #include "game/menu/renderer/menu_screen_effects.h"
 #include "game/menu/main_menu/controller_main_menu_flow.h"
 #include "game/menu/main_menu/main_menu_panel_ui.h"
@@ -53,7 +54,6 @@ extern s32 gMenuFlowState;
 extern u8 gMainMenuModeSelection;
 extern s16 gRacePlayerAttackStartTimer;
 
-extern void releaseMenuAssetHandles(void);
 extern u8 gPendingFramebufferSwapCount;
 extern u8 gTrainingCourseLesson;
 

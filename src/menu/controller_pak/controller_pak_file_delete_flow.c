@@ -8,12 +8,12 @@
 #include "game/menu/controller_pak/controller_pak_ui.h"
 #include "game/engine/game_task_scheduler.h"
 #include "game/menu/main_menu/controller_main_menu_flow.h"
+#include "game/menu/renderer/menu_render_utils.h"
 #include "game/menu/renderer/menu_renderer.h"
 #include "game/engine/viewport_manager.h"
 #include "game/race/race_state.h"
 
 extern s32 enqueueSoundEffect(s32, s32);
-extern void releaseMenuAssetHandles(void);
 
 extern u8 gControllerPakMenuCursorState;
 extern u8 gControllerPakDeletePromptState;

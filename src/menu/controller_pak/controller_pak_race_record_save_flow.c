@@ -10,6 +10,7 @@
 #include "game/menu/controller_pak/controller_pak_race_record_save_ui.h"
 #include "game/menu/main_menu/controller_main_menu_flow.h"
 #include "game/menu/race_setup/race_setup_menu.h"
+#include "game/menu/renderer/menu_render_utils.h"
 #include "game/menu/renderer/menu_renderer.h"
 #include "game/engine/viewport_manager.h"
 #include "game/race/player/race_player_input.h"
@@ -28,7 +29,6 @@ extern s32 gMenuFlowState;
 extern s32 D_8010ADE0;
 extern CallbackTask *D_8010ADE4;
 extern s16 gMenuFadeAlpha;
-extern void releaseMenuAssetHandles(void);
 extern s32 enqueueSoundEffect(s16, s16);
 extern void initControllerPakDeleteConfirmPrompt(CallbackTask *);
 

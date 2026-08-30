@@ -12,6 +12,7 @@
 #include "game/menu/main_menu/controller_main_menu_flow.h"
 #include "game/engine/game_task_scheduler.h"
 #include "game/engine/relocatable_heap.h"
+#include "game/menu/renderer/menu_render_utils.h"
 #include "game/menu/renderer/menu_renderer.h"
 #include "game/race/camera/race_camera.h"
 #include "game/race/effects/race_start_transition.h"
@@ -21,7 +22,6 @@
 #include "game/engine/viewport_manager.h"
 #include "game/race/player/race_player_input.h"
 
-extern void releaseMenuAssetHandles(void);
 extern void initCourseSelectPlayerPanels(void *);
 
 extern u8 gPendingFramebufferSwapCount;

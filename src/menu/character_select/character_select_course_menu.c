@@ -9,6 +9,7 @@
 #include "game/menu/character_select/character_select_course_ui.h"
 #include "game/menu/main_menu/controller_main_menu_flow.h"
 #include "game/engine/game_task_scheduler.h"
+#include "game/menu/renderer/menu_render_utils.h"
 #include "game/menu/renderer/menu_renderer.h"
 #include "game/menu/race_type_select/race_type_select_menu.h"
 #include "game/menu/splitscreen_select/race_splitscreen_select_menu.h"
@@ -33,7 +34,6 @@ u16 gCharacterSelectCourseExitOptionIndex;
 CharacterSelectCourseCursorState gCharacterSelectCourseCursorState;
 
 extern void enqueueSoundEffect(s32, s32);
-extern void releaseMenuAssetHandles(void);
 extern s16 gMenuFadeAlpha;
 extern CharacterSelectOptionList *gCharacterSelectActiveCourseOptions;
 extern s32 D_8010ADE0;
