@@ -14,7 +14,7 @@ typedef struct FrameRenderTask {
     /* 0x060 */ u16 *framebuffer;
     /* 0x064 */ s16 completionMessage;
     /* 0x066 */ u8 status;
-    /* 0x068 */ RuntimeViewportDisplayListData viewportData;
+    /* 0x068 */ FrameRenderData renderData;
     /* 0x620 */ Gfx displayList[FRAME_RENDER_DISPLAY_LIST_COUNT];
 } FrameRenderTask;
 

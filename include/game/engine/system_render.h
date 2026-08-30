@@ -13,18 +13,22 @@
 #define RSP_DRAM_STACK_SIZE 0x400
 #define RSP_YIELD_BUFFER_SIZE 0xC00
 
-typedef struct RuntimeViewportDisplayListData {
-    /* 0x000 */ u8 pad0[0x78];
-    /* 0x078 */ Vp viewports[4];
-    /* 0x0B8 */ Mtx projections[4];
-    /* 0x1B8 */ Mtx overlayProjections[4];
-    /* 0x2B8 */ Mtx rotations[4];
-    /* 0x3B8 */ Mtx translations[4];
-    /* 0x4B8 */ Mtx viewportMatrices[4];
-} RuntimeViewportDisplayListData;
+typedef struct RuntimeViewportData {
+    /* 0x000 */ Vp viewports[4];
+    /* 0x040 */ Mtx projections[4];
+    /* 0x140 */ Mtx overlayProjections[4];
+    /* 0x240 */ Mtx rotations[4];
+    /* 0x340 */ Mtx translations[4];
+    /* 0x440 */ Mtx viewportMatrices[4];
+} RuntimeViewportData;
+
+typedef struct FrameRenderData {
+    /* 0x000 */ u8 reserved[0x78];
+    /* 0x078 */ RuntimeViewportData viewport;
+} FrameRenderData;
 
 extern Gfx *gRegionAllocPtr;
-extern RuntimeViewportDisplayListData *gCurrentFrameRenderData;
+extern FrameRenderData *gCurrentFrameRenderData;
 extern u16 gDepthBuffer[FRAMEBUFFER_PIXEL_COUNT];
 extern u16 gFramebuffers[FRAMEBUFFER_COUNT][FRAMEBUFFER_PIXEL_COUNT];
 extern u8 gFramebufferColorBufferIndex;
