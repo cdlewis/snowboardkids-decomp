@@ -19,17 +19,6 @@
         _g->words.w1 = (cmd1);          \
     }
 
-struct EndingCreditsTommy {
-    /* 0x00 */ char pad0[0x18];
-    /* 0x18 */ s32 posX;
-    /* 0x1C */ s32 posY;
-    /* 0x20 */ s32 posZ;
-    /* 0x24 */ s16 rotX;
-    /* 0x26 */ s16 rotY;
-    /* 0x28 */ s16 rotZ;
-    /* 0x2A */ u16 timer;
-};
-
 typedef struct {
     /* 0x00 */ void *palette;
     /* 0x04 */ void *image;
