@@ -1209,8 +1209,6 @@ extern u8 gCurrentViewportIndex;
 extern u8 gRaceChallengeFailed;
 extern u8 gRaceUpdatePaused;
 
-extern void drawAssetTableSprite8bpp(s16, s16, void *, s32);
-
 const char gRaceUiBoardReversePromptLabelBlinkOn[0x10] = "Board Reverse";
 const char gRaceUiBoardReversePromptLabelBlinkOff[0x10] = "Board Reverse";
 const char gRaceUiTrickScorePopupPointsFormat[0x4] = "%2d";
@@ -1777,6 +1775,8 @@ void initRaceUiPrizePayout(RaceUiPrizePayoutActor *arg0) {
 }
 
 void func_80058C00(RaceUiResultsBannerActor *arg0) {
+    u16 characterSpriteIndex;
+
     if (arg0->alpha != 0xFF) {
         gDPPipeSync(gRegionAllocPtr++);
         gDPSetCombineMode(gRegionAllocPtr++, G_CC_MODULATEIA_PRIM, G_CC_MODULATEIA_PRIM);
@@ -1791,7 +1791,7 @@ void func_80058C00(RaceUiResultsBannerActor *arg0) {
             -0x54,
             -0x50,
             getRelocatableHeapBlockBase(gAssetHandles[0x1F]),
-            (gRacePlayers[arg0->player0].characterId + 0x41) & 0xFFFF
+            (characterSpriteIndex = gRacePlayers[arg0->player0].characterId + 0x41)
         );
         drawAssetTableSprite(-0x30, -0x40, getRelocatableHeapBlockBase(gAssetHandles[0x1F]), 0x4C);
     }
@@ -1803,7 +1803,7 @@ void func_80058C00(RaceUiResultsBannerActor *arg0) {
             0x3C,
             -0x30,
             getRelocatableHeapBlockBase(gAssetHandles[0x1F]),
-            (gRacePlayers[arg0->player1].characterId + 0x41) & 0xFFFF
+            (characterSpriteIndex = gRacePlayers[arg0->player1].characterId + 0x41)
         );
         drawAssetTableSprite(0x60, -0x20, getRelocatableHeapBlockBase(gAssetHandles[0x1F]), 0x4C);
     }
@@ -1815,7 +1815,7 @@ void func_80058C00(RaceUiResultsBannerActor *arg0) {
             -0x54,
             -0x10,
             getRelocatableHeapBlockBase(gAssetHandles[0x1F]),
-            (gRacePlayers[arg0->player2].characterId + 0x41) & 0xFFFF
+            (characterSpriteIndex = gRacePlayers[arg0->player2].characterId + 0x41)
         );
         drawAssetTableSprite(-0x30, 0, getRelocatableHeapBlockBase(gAssetHandles[0x1F]), 0x4C);
     }
@@ -1827,7 +1827,7 @@ void func_80058C00(RaceUiResultsBannerActor *arg0) {
             0x3C,
             0x10,
             getRelocatableHeapBlockBase(gAssetHandles[0x1F]),
-            (gRacePlayers[arg0->player3].characterId + 0x41) & 0xFFFF
+            (characterSpriteIndex = gRacePlayers[arg0->player3].characterId + 0x41)
         );
         drawAssetTableSprite(0x60, 0x20, getRelocatableHeapBlockBase(gAssetHandles[0x1F]), 0x4C);
     }
