@@ -2,8 +2,7 @@
 #define ASSET_MANAGER_H
 
 #include "common.h"
-
-typedef struct RandomStateObject RandomStateObject;
+#include "game/race/player/race_player_input.h"
 
 #define ASSET_HANDLE_COUNT 0x40
 
@@ -15,7 +14,7 @@ extern AssetHandles gAssetHandles;
 s32 randomNextMain(void);
 s32 randomNextSecondary(void);
 void resetSecondaryRng(void);
-u8 randomNextObject(RandomStateObject *arg0);
+u8 randomNextObject(RacePlayer *player);
 void resetGameplayRng(void);
 void insertHuffmanQueueNode(s16 arg0);
 void removeHuffmanQueueNode(s16 arg0);

@@ -1575,7 +1575,7 @@ void updateRacePickupIdle(RacePickupActor *arg0) {
             // skew toward common/weaker tier values; higher values skew rarer/stronger.
             if (arg0->variant == 0) {
                 player->itemEffectType =
-                    gItemEffectRollTable[player->rankIndex][randomNextObject((RandomStateObject *)player) & 0xF];
+                    gItemEffectRollTable[player->rankIndex][randomNextObject(player) & 0xF];
                 if (gTrainingCourseLesson != 0) {
                     player->itemEffectType = 1;
                 }
@@ -1583,7 +1583,7 @@ void updateRacePickupIdle(RacePickupActor *arg0) {
                 player->itemEffectPalette = 4;
             } else {
                 player->actionEffectType =
-                    gActionEffectRollTable[player->rankIndex][randomNextObject((RandomStateObject *)player) & 0xF];
+                    gActionEffectRollTable[player->rankIndex][randomNextObject(player) & 0xF];
                 if (gTrainingCourseLesson != 0) {
                     player->actionEffectType = 1;
                 }
