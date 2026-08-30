@@ -10,10 +10,6 @@
 #define MAIN_MENU_SCENE_MODEL_ANIMATION_BANK_HANDLE 0x3F
 #define MAIN_MENU_SCENE_MODEL_PART_COUNT 14
 
-typedef struct MainMenuAnimationBank {
-    s32 frameOffsets[1];
-} MainMenuAnimationBank;
-
 typedef struct MainMenuSceneModel {
     /* 0x000 */ s16 sceneModelIndex;
     /* 0x002 */ s16 characterIndex;
