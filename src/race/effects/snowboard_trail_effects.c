@@ -1,8 +1,10 @@
 #include "common.h"
+#include "game/race/effects/snowboard_trail_effects.h"
 #include "game/engine/asset_manager.h"
 #include "game/engine/render_callback.h"
 #include "game/engine/system_runtime.h"
 #include "game/engine/relocatable_heap.h"
+#include "game/race/player/race_player_input.h"
 #include "game/race/ui/race_ui_effects.h"
 #include "game/math/spatial_math.h"
 #include "game/math/fixed_point_math.h"
@@ -11,46 +13,6 @@
 #define SNOWBOARD_TRAIL_TIMER 0xF0
 #define SNOWBOARD_TRAIL_FLAG_FACING_BACKWARD 0x400
 #define SNOWBOARD_TRAIL_FLAG_CANCEL 0x3040
-
-struct RacePlayer;
-
-typedef struct SnowboardTrailState {
-    /* 0x00 */ s16 state;
-    /* 0x02 */ u8 pad02[0x04 - 0x02];
-    /* 0x04 */ Vec3i localOffset;
-    /* 0x10 */ Vec3i scale;
-    /* 0x1C */ Vec3i worldPos;
-    /* 0x28 */ Transform3D frontTransform;
-    /* 0x48 */ Transform3D backTransform;
-    /* 0x68 */ s16 modelYaw;
-    /* 0x6A */ s16 spinYaw;
-    /* 0x6C */ void *frontDisplayList;
-    /* 0x70 */ void *backDisplayList;
-    /* 0x74 */ s16 scaleStep;
-    /* 0x76 */ u8 displayListsDirty;
-} SnowboardTrailState;
-
-typedef struct SnowboardTrailPlayer {
-    /* 0x000 */ u8 pad000[0x014 - 0x000];
-    /* 0x014 */ s8 disabled;
-    /* 0x015 */ u8 pad015[0x028 - 0x015];
-    /* 0x028 */ Transform3D trailFrontSource;
-    /* 0x048 */ Transform3D trailBackSource;
-    /* 0x068 */ u8 pad068[0x06C - 0x068];
-    /* 0x06C */ void *trailFrontDisplayList;
-    /* 0x070 */ void *trailBackDisplayList;
-    /* 0x074 */ u8 pad074[0x076 - 0x074];
-    /* 0x076 */ u8 trailDisplayListsDirty;
-    /* 0x077 */ u8 pad077[0x094 - 0x077];
-    /* 0x094 */ Transform3D modelTransform;
-    /* 0x0B4 */ u8 pad0B4[0x2DA - 0x0B4];
-    /* 0x2DA */ s16 trailTimer;
-    /* 0x2DC */ u8 trailSide;
-    /* 0x2DD */ u8 pad2DD[0x2FC - 0x2DD];
-    /* 0x2FC */ s32 flags;
-    /* 0x300 */ u8 pad300[0x58C - 0x300];
-    /* 0x58C */ SnowboardTrailState trail;
-} SnowboardTrailPlayer;
 
 extern u8 gRaceUpdatePaused;
 extern u32 gSnowboardTrailFrontDisplayList[];
@@ -81,22 +43,22 @@ void renderSnowboardTrailEffect(SnowboardTrailState *trail) {
     }
 }
 
-void func_8008393C(SnowboardTrailPlayer *player) {
+void updateSnowboardTrailEffect(RacePlayer *player) {
     SnowboardTrailState *trail;
     Transform3D scratch;
 
-    trail = &player->trail;
-    switch (player->trail.state) {
+    trail = &player->snowboardTrail;
+    switch (player->snowboardTrail.state) {
         case 0:
             break;
         case 1:
             trail->spinYaw += 0x240;
-            transformVec3iByFixedMatrix(player->modelTransform.rotation, &trail->localOffset, &trail->worldPos);
-            trail->worldPos.x += player->modelTransform.translation.x;
-            trail->worldPos.y += player->modelTransform.translation.y;
-            trail->worldPos.z += player->modelTransform.translation.z;
+            transformVec3iByFixedMatrix(player->modelPartTransforms[0].rotation, &trail->localOffset, &trail->worldPos);
+            trail->worldPos.x += player->modelPartTransforms[0].translation.x;
+            trail->worldPos.y += player->modelPartTransforms[0].translation.y;
+            trail->worldPos.z += player->modelPartTransforms[0].translation.z;
             makeFixedRotationY(scratch.rotation, trail->modelYaw);
-            multiplyFixedMatrix3s(scratch.rotation, player->modelTransform.rotation, trail->frontTransform.rotation);
+            multiplyFixedMatrix3s(scratch.rotation, player->modelPartTransforms[0].rotation, trail->frontTransform.rotation);
             trail->frontTransform.translation.x = trail->worldPos.x;
             trail->frontTransform.translation.y = trail->worldPos.y;
             trail->frontTransform.translation.z = trail->worldPos.z;
@@ -120,7 +82,7 @@ void func_8008393C(SnowboardTrailPlayer *player) {
             if (trail->scaleStep == 0x10) {
                 trail->state = 2;
             }
-            if (player->disabled == 0) {
+            if (player->soundDisabled == 0) {
                 addRenderCallback(
                     &gRaceModelEffectRenderCallbackList,
                     (RenderCallback)renderSnowboardTrailEffect,
@@ -130,12 +92,12 @@ void func_8008393C(SnowboardTrailPlayer *player) {
             return;
         case 2:
             trail->spinYaw += 0x240;
-            transformVec3iByFixedMatrix(player->modelTransform.rotation, &trail->localOffset, &trail->worldPos);
-            trail->worldPos.x += player->modelTransform.translation.x;
-            trail->worldPos.y += player->modelTransform.translation.y;
-            trail->worldPos.z += player->modelTransform.translation.z;
+            transformVec3iByFixedMatrix(player->modelPartTransforms[0].rotation, &trail->localOffset, &trail->worldPos);
+            trail->worldPos.x += player->modelPartTransforms[0].translation.x;
+            trail->worldPos.y += player->modelPartTransforms[0].translation.y;
+            trail->worldPos.z += player->modelPartTransforms[0].translation.z;
             makeFixedRotationY(scratch.rotation, trail->modelYaw);
-            multiplyFixedMatrix3s(scratch.rotation, player->modelTransform.rotation, trail->frontTransform.rotation);
+            multiplyFixedMatrix3s(scratch.rotation, player->modelPartTransforms[0].rotation, trail->frontTransform.rotation);
             trail->frontTransform.translation.x = trail->worldPos.x;
             trail->frontTransform.translation.y = trail->worldPos.y;
             trail->frontTransform.translation.z = trail->worldPos.z;
@@ -144,20 +106,20 @@ void func_8008393C(SnowboardTrailPlayer *player) {
             scratch.translation.y = trail->scale.y;
             scratch.translation.z = trail->scale.z;
             composeFixedTransforms(&scratch, &trail->frontTransform, &trail->backTransform);
-            if (player->flags & SNOWBOARD_TRAIL_FLAG_CANCEL) {
-                player->trailTimer = 0;
+            if (player->stateFlags & SNOWBOARD_TRAIL_FLAG_CANCEL) {
+                player->trailEffectTimer = 0;
             }
             if (gRaceUpdatePaused == 0) {
-                if (player->trailTimer != 0) {
-                    player->trailTimer--;
+                if (player->trailEffectTimer != 0) {
+                    player->trailEffectTimer--;
                 }
             }
-            if (player->trailTimer == 0) {
+            if (player->trailEffectTimer == 0) {
                 trail->state = 0;
-                spawnRaceUiSnowboardTrailEffect((struct RaceUiSnowboardTrailPlayer *)player);
+                spawnRaceUiSnowboardTrailEffect(player);
                 return;
             }
-            if (player->disabled == 0) {
+            if (player->soundDisabled == 0) {
                 addRenderCallback(
                     &gRaceModelEffectRenderCallbackList,
                     (RenderCallback)renderSnowboardTrailEffect,
@@ -170,23 +132,22 @@ void func_8008393C(SnowboardTrailPlayer *player) {
     }
 }
 
-void startSnowboardTrailEffect(struct RacePlayer *input) {
-    SnowboardTrailPlayer *player = (SnowboardTrailPlayer *)input;
-    SnowboardTrailState *trail = &player->trail;
+void startSnowboardTrailEffect(RacePlayer *player) {
+    SnowboardTrailState *trail = &player->snowboardTrail;
 
-    player->trailTimer = SNOWBOARD_TRAIL_TIMER;
-    if (player->flags & SNOWBOARD_TRAIL_FLAG_FACING_BACKWARD) {
+    player->trailEffectTimer = SNOWBOARD_TRAIL_TIMER;
+    if (player->stateFlags & SNOWBOARD_TRAIL_FLAG_FACING_BACKWARD) {
         trail->localOffset.x = 0x300000;
         trail->localOffset.y = 0;
         trail->localOffset.z = 0;
         trail->modelYaw = 0;
-        player->trailSide = 1;
+        player->snowboardTrailSide = 1;
     } else {
         trail->localOffset.x = -0x300000;
         trail->localOffset.y = 0;
         trail->localOffset.z = 0;
         trail->modelYaw = 0x800;
-        player->trailSide = 0;
+        player->snowboardTrailSide = 0;
     }
     trail->spinYaw = 0;
     trail->scale.x = 0xF0000;

@@ -1038,7 +1038,7 @@ void updateRacePlayerMode00Grounded(RacePlayer *player) {
         rotation = 0;
         if (player->trailEffectTimer != 0) {
             rotation = -0x8000;
-            if (player->unk2DC != 0) {
+            if (player->snowboardTrailSide != 0) {
                 rotation = 0x8000;
             }
         }
@@ -1360,7 +1360,7 @@ void updateRacePlayerAirborneLaunch(RacePlayer *player) {
     rotation = 0;
     if (player->trailEffectTimer != 0) {
         rotation = -0x8000;
-        if (player->unk2DC != 0) {
+        if (player->snowboardTrailSide != 0) {
             rotation = 0x8000;
         }
     }
@@ -1454,7 +1454,7 @@ void updateRacePlayerAirborneCruise(RacePlayer *player) {
     var_a2 = 0;
     if (player->trailEffectTimer) {
         var_a2 = -0x8000;
-        if (player->unk2DC != 0) {
+        if (player->snowboardTrailSide != 0) {
             var_a2 = 0x8000;
         }
     }

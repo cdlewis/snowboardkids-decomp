@@ -32,6 +32,7 @@ struct RaceUiRisingTrailActor;
 struct RaceUiScaledParticleActor;
 struct RaceUiSingleTrailActor;
 struct RaceCourseScrollingTextureActor;
+struct RacePlayer;
 
 typedef enum RaceCourseScrollingTextureId {
     RACE_COURSE_SCROLLING_TEXTURE_QUICKSAND_VALLEY_0,
@@ -45,7 +46,6 @@ typedef enum RaceCourseScrollingTextureId {
     RACE_COURSE_SCROLLING_TEXTURE_COUNT
 } RaceCourseScrollingTextureId;
 struct RaceUiSnowboardTrailActor;
-struct RaceUiSnowboardTrailPlayer;
 struct RaceUiSparkleActor;
 struct RaceUiSpinningParticleActor;
 struct RaceUiTextParticleActor;
@@ -178,7 +178,7 @@ void spawnRacePlayerSparkleEffect(s16 arg0);
 void renderRaceUiSnowboardTrailEffect(struct RaceUiSnowboardTrailActor *arg0);
 void updateRaceUiSnowboardTrailEffect(struct RaceUiSnowboardTrailActor *arg0);
 void initRaceUiSnowboardTrailEffect(struct RaceUiSnowboardTrailActor *arg0);
-void spawnRaceUiSnowboardTrailEffect(struct RaceUiSnowboardTrailPlayer *player);
+void spawnRaceUiSnowboardTrailEffect(struct RacePlayer *player);
 void func_8005F6A4(struct RaceUiRankTrailActor *arg0);
 void func_8005F828(struct RaceUiRankTrailActor *arg0);
 void initRaceUiItemStealTrailEffect(struct RaceUiRankTrailActor *arg0);

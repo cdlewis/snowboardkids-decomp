@@ -263,21 +263,6 @@ typedef struct {
     } words;
 } RaceUiDisplayCommand;
 
-typedef struct {
-    /* 0x00 */ s16 state;
-    /* 0x02 */ u8 pad02[0x1C - 0x02];
-    /* 0x1C */ Vec3i worldPos;
-    /* 0x28 */ Transform3D copyBlock;
-    /* 0x48 */ u8 pad48[0x6A - 0x48];
-    /* 0x6A */ s16 spinYaw;
-} RaceUiSnowboardTrailState;
-
-typedef struct RaceUiSnowboardTrailPlayer {
-    /* 0x000 */ u16 playerIndex;
-    /* 0x002 */ u8 pad002[0x58C - 0x002];
-    /* 0x58C */ RaceUiSnowboardTrailState trail;
-} RaceUiSnowboardTrailPlayer;
-
 typedef struct RaceUiSnowboardTrailActor {
     /* 0x00 */ u8 pad0[0x24];
     /* 0x24 */ Vec3i scale;
@@ -4071,15 +4056,15 @@ void initRaceUiSnowboardTrailEffect(RaceUiSnowboardTrailActor *actor) {
     setCallbackTaskCallback(actor, (CallbackTaskCallback)updateRaceUiSnowboardTrailEffect);
 }
 
-void spawnRaceUiSnowboardTrailEffect(RaceUiSnowboardTrailPlayer *player) {
+void spawnRaceUiSnowboardTrailEffect(RacePlayer *player) {
     RaceUiSnowboardTrailActor *actor =
         createCallbackTaskPreservingArgs((CallbackTaskCallback)initRaceUiSnowboardTrailEffect, 0, 0x62);
 
     if (actor != NULL) {
         actor->playerIndex = player->playerIndex;
-        actor->worldPos = player->trail.worldPos;
-        actor->frontTransform = player->trail.copyBlock;
-        actor->spinYaw = player->trail.spinYaw;
+        actor->worldPos = player->snowboardTrail.worldPos;
+        actor->frontTransform = player->snowboardTrail.frontTransform;
+        actor->spinYaw = player->snowboardTrail.spinYaw;
     }
 }
 
@@ -5963,7 +5948,7 @@ loop:
                 if (gRacePlayers[0].trailEffectTimer != 0) {
                     gRacePlayers[0].trailEffectTimer = 0xF0;
                 } else {
-                    startSnowboardTrailEffect((struct RacePlayer *)gRacePlayers);
+                    startSnowboardTrailEffect(gRacePlayers);
                 }
                 if (gRacePlayers[0].trailEffectTimer) {}
             }

@@ -3,6 +3,7 @@
 
 #include "common.h"
 #include "game/math/geometry.h"
+#include "game/race/effects/snowboard_trail_effects.h"
 #include "game/race/player/character_model.h"
 
 #define RACE_PLAYER_COUNT 4
@@ -106,7 +107,7 @@ typedef struct RacePlayer {
     /* 0x2D6 */ s16 unk2D6;
     /* 0x2D8 */ s16 activeSparkleEffectCount;
     /* 0x2DA */ s16 trailEffectTimer;
-    /* 0x2DC */ u8 unk2DC;
+    /* 0x2DC */ u8 snowboardTrailSide;
     /* 0x2DD */ char pad2DD[1];
     /* 0x2DE */ s16 unk2DE;
     /* 0x2E0 */ s32 unk2E0;
@@ -209,7 +210,7 @@ typedef struct RacePlayer {
     /* 0x584 */ s16 unk584;
     /* 0x586 */ char pad586[2];
     /* 0x588 */ f32 unk588;
-    /* 0x58C */ char pad58C[0x78];
+    /* 0x58C */ SnowboardTrailState snowboardTrail;
     /* 0x604 */ s16 rumbleTimer;
     /* 0x606 */ s16 rumblePatternIndex;
     /* 0x608 */ s8 rumblePatternId;
