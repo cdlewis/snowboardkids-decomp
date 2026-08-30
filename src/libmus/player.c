@@ -1,3 +1,4 @@
+#include <PR/gu.h>
 #include "game/audio/audio_engine_internal.h"
 
 #define FIRST_DRUM_NOTE 12
@@ -267,7 +268,7 @@ void __MusIntSetVolumeAndPan(PlayerCommandState *arg0, s32 arg1) {
     pan = (((*(u8 *)&arg0->pan) * arg0->unkB2) >> 7) & 0x7F;
     if (pan != oldPan) {
         arg0->old_pan = pan;
-        alSynSetPan(&gAudioSynthesizer, &mus_voices[arg1], pan & 0xFF);
+        alSynSetPan(&gAudioSynthesizer, &mus_voices[arg1], pan);
     }
 }
 
