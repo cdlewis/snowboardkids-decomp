@@ -61,7 +61,6 @@ typedef union {
 } RaceSpawnX;
 
 extern void enqueuePlayerLoopingPositionalSoundRequest(s32, Vec3i *, s32, s32, f32, s16);
-extern void *createCallbackTaskWithUserIdPreservingArgs(void *, s32, s32, s32);
 extern u8 gMainMenuModeSelection;
 extern s8 gRacePlayerCount;
 extern u8 gRaceUpdatePaused;

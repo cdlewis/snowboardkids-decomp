@@ -1,6 +1,7 @@
 #include "common.h"
 #include "game/engine/callback_task_scheduler.h"
 #include "game/engine/asset_manager.h"
+#include "game/audio/sound_manager.h"
 #include "game/race/player/race_player_input.h"
 #include "game/math/spatial_math.h"
 #include "game/race/items/race_item_projectiles.h"
@@ -10,10 +11,6 @@
 #include "game/race/ui/race_ui_effects.h"
 
 typedef void (*EffectCallback)(void *);
-
-extern void enqueuePositionalSoundEffect(s32 soundId, void *pos, s32 volume, s32 distance);
-
-extern void *createCallbackTaskWithUserIdPreservingArgs(void *, s32, s32, s32);
 
 void updateRacePlayerItemEffectUse(RacePlayer *player) {
     s32 trigger;
@@ -217,7 +214,7 @@ void updateRacePlayerActionEffectUse(RacePlayer *player) {
             if ((type == 6) && (player->actionSoundTimer == 0)) {
                 player->actionSoundTimer = 0xB4;
                 player->actionEffectType = 0;
-                enqueuePositionalSoundEffect(0x10, &player->pos.x, 0x7F, 0x32);
+                enqueuePositionalSoundEffect(0x10, &player->pos, 0x7F, 0x32);
             }
         }
     }

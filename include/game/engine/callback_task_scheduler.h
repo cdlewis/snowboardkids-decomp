@@ -2,6 +2,7 @@
 #define CALLBACK_TASK_SCHEDULER_H
 
 #include "common.h"
+#include "compiler_diagnostics.h"
 
 typedef struct CallbackTask CallbackTask;
 
@@ -41,12 +42,15 @@ void *createCallbackTaskPreservingArgs(CallbackTaskCallback callback, s32 type, 
 void *createCallbackTask(CallbackTaskCallback callback, s32 type, s32 priority);
 #endif
 void *createCallbackTaskWithUserId(CallbackTaskCallback callback, s32 type, s32 priority, s32 userId);
-/*
- * createCallbackTaskWithUserIdPreservingArgs is intentionally not declared here: its callers disagree on the
- * arity (race_item_effects.c passes 4 args, race_ui_effects.c passes 3), and
- * both call shapes are baked into matched ROM code. A single shared prototype
- * cannot satisfy both, so each caller keeps its own local declaration.
- */
+CLANG_DIAGNOSTIC_PUSH
+CLANG_DIAGNOSTIC_IGNORE_STRICT_PROTOTYPES
+void *createCallbackTaskWithUserIdPreservingArgs(
+    void (*callback)(),
+    s32 type,
+    s32 priority,
+    s32 userId
+);
+CLANG_DIAGNOSTIC_POP
 void removeCallbackTask(void *task);
 void setCallbackTaskCallback(void *task, CallbackTaskCallback callback);
 

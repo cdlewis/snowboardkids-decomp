@@ -5,12 +5,14 @@
 #include "game/engine/render_callback.h"
 #include "game/engine/system_runtime.h"
 #include "game/race/items/race_item_projectiles.h"
+#include "game/audio/sound_manager.h"
 #include "game/race/motion/race_motion.h"
 #include "game/engine/relocatable_heap.h"
 #include "game/engine/callback_task_scheduler.h"
 #include "game/race/items/race_item_effects.h"
 #include "game/race/player/race_player_movement.h"
 #include "game/race/player/race_player_input.h"
+#include "game/race/ui/race_ui_effects.h"
 #include "game/math/fixed_point_math.h"
 #include "game/math/spatial_math.h"
 
@@ -60,8 +62,6 @@ u8 D_800D4660[4][28] = {
      },
 };
 
-void spawnRaceUiFadingImpact(s32, s32, s32, u16);
-void enqueuePositionalSoundEffect(s32, void *, s32, s32);
 s16 fixedSine(s16);
 s16 fixedCosine(s16);
 s64 __ll_mul(s64, s64);
