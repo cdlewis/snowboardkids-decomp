@@ -292,10 +292,6 @@ void initRaceSetupSaveMenu(void) {
 #define SAVE_PANEL_CREATE_DELAY 5
 #define SAVE_READY_CONFIRM_DELAY 0xF
 
-extern void requestRumbleMotorInitWithContext(u16 controllerIndex, s32 playerCount, s32 choiceValue);
-extern void requestControllerPakSaveStatusWithContext(u16 controllerIndex, s32 playerCount, s32 choiceValue);
-extern void requestControllerPakSaveReadWithContext(u16 controllerIndex, s32 playerCount, s32 choiceValue);
-extern void requestControllerPakRepairWithContext(u16 controllerIndex, s32 playerCount, s32 choiceValue);
 extern void initControllerPakRumbleCheckPrompt(CallbackTask *);
 
 #if 0
