@@ -8,6 +8,7 @@
 #include "game/math/fixed_point_math.h"
 #include "game/engine/viewport_manager.h"
 #include "game/race/camera/race_camera.h"
+#include <PR/os_cache.h>
 
 #define FONT_GFX_CMD(pkt, cmd0, cmd1) \
     {                                 \
@@ -1195,8 +1196,6 @@ void *allocMenuRenderScratch(s32 size) {
 
     return oldPtr;
 }
-
-extern void osWritebackDCache(void *, s32);
 
 void writebackMenuRenderScratchBuffer(s32 arg0) {
     if (arg0 == 0) {

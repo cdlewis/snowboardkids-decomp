@@ -7,6 +7,7 @@
 #include "game/ending/ending_credits_ui.h"
 #include "game/ending/ending_credits_flow.h"
 #include "font_encoding.h"
+#include <PR/rmon.h>
 /*
  * drawEndingCreditsPageText only matches when this call is compiled against
  * the original promoted argument types. Suppress the narrow prototype here so
@@ -108,7 +109,6 @@ EndingCreditsPageTextLineLayout gEndingCreditsPageTextLineLayouts[ENDING_CREDITS
     { 3, { { -112, 0 }, { -112, 16 }, { -136, 52 }, { 0, 0 }, { 0, 0 } },        0 },
 };
 
-extern int rmonPrintf(const char *, ...);
 extern int sprintf(char *, const char *, ...);
 
 void drawEndingCreditsPageText(EndingCreditsPageTextActor *arg0);

@@ -150,16 +150,7 @@ s16 gFadeTimer = BOOT_FADE_TIMER;
 
 s32 gClearFramebufferOnNextTask = 1;
 
-extern void osInitialize(void);
-extern void osCreatePiManager(OSPri, OSMesgQueue *, OSMesg *, s32);
-extern void osCreateMesgQueue(OSMesgQueue *, OSMesg *, s32);
-extern s32 osPiStartDma(OSIoMesg *, s32, s32, u32, void *, u32, OSMesgQueue *);
-extern s32 osRecvMesg(OSMesgQueue *, OSMesg *, s32);
-extern void osViBlack(u8);
-extern void osViSetSpecialFeatures(u32);
 extern void initMenuAsciiFontTexture(void);
-
-extern s32 osTvType;
 
 extern u8 gFadeColorRed;
 extern u8 gFadeColorGreen;
@@ -196,7 +187,6 @@ extern void initMenuAssetHandles(void);
 extern void allocRenderCallbackScratchBuffer(void);
 extern void allocMenuRenderScratchBuffers(void);
 extern void selectMenuRenderScratchBuffer(s32);
-extern s32 osSendMesg(void *, void *, s32);
 extern void initFramebufferRenderTaskState(void);
 
 void main(void *arg) {

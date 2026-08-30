@@ -21,6 +21,7 @@
 #include "game/demo/title_demo_race_intro.h"
 #include "game/engine/viewport_manager.h"
 #include "game/menu/renderer/menu_renderer.h"
+#include <PR/os_motor.h>
 
 #define OS_MESG_BLOCK 1
 
@@ -53,9 +54,6 @@ u8 gControllerPakSaveExtNameBytesEnd[0x84] = {
 };
 u8 gMainMenuReturnFromRace = 0;
 
-extern s32 osMotorInit(OSMesgQueue *, OSPfs *, s32);
-extern s32 osMotorStart(OSPfs *);
-extern s32 osMotorStop(OSPfs *);
 extern void releaseMenuAssetHandles(void);
 extern void enqueueSoundEffect(s32, s32);
 extern OSMesgQueue gControllerSubsystemRequestQueue;

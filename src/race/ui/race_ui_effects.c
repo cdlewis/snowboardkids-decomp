@@ -21,6 +21,7 @@
 #include "game/race/player/race_player_input.h"
 #include "game/race/camera/race_camera.h"
 #include "game/race/ui/race_hud.h"
+#include <PR/os_cache.h>
 
 /* Local 3-arg declaration; see note in callback_task_scheduler.h. */
 extern void *createCallbackTaskWithUserIdPreservingArgs(void *, s32, s32);
@@ -1247,7 +1248,6 @@ extern void drawMenuAsciiTextDefaultScale(s32, s32, const void *, s32);
 extern void enqueuePlayerLoopingPositionalSoundRequest(s32, void *, s32, s32, f32, s32);
 extern void enqueuePositionalSoundEffect(s32, void *, s32, s32);
 extern void enqueueSoundEffect(s32, s32);
-extern void osWritebackDCache(void *, s32);
 extern void *allocMenuRenderScratch(s32 size);
 
 const char gRaceUiBoardReversePromptLabelBlinkOn[0x10] = "Board Reverse";

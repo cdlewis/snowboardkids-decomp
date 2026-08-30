@@ -10,6 +10,7 @@
 #include "game/math/spatial_math.h"
 #include "game/math/fixed_point_math.h"
 #include "game/race/player/race_player_input.h"
+#include <PR/os_cache.h>
 
 #define ASSET_HANDLE(index) (gAssetHandles[(index)])
 #define RACE_INTRO_EFFECTS_GFX_CMD(pkt, cmd0, cmd1) \
@@ -72,7 +73,6 @@ struct RaceIntroEffectActor {
     /* 0x44 */ s8 displayListValid;
 };
 
-extern void osWritebackDCache(void *, s32);
 extern Gfx *gRegionAllocPtr;
 extern Gfx D_20028F0[];
 extern Gfx D_2002DB8[];
