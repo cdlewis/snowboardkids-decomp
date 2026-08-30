@@ -15,6 +15,7 @@
 /* Frame offsets are halfword-relative to the bank start; this form preserves target addu order. */
 #define MAIN_MENU_ANIMATION_FRAME_DATA(bank, index) \
     ((s16 *)(((bank)->frameOffsets[(index)] * sizeof(s16)) + (s32)(bank)))
+#define FIXED_MATRIX_ROWS(matrix) ((s16(*)[MAIN_MENU_SCENE_MODEL_MATRIX_AXES])(matrix))
 #define FIXED_MATRIX_ONE 0x1000
 #define MAIN_MENU_SCENE_MODEL_MATRIX_AXES 3
 #define MAIN_MENU_CHARACTER_COUNT 6
@@ -708,13 +709,14 @@ void updateMainMenuSceneModelTransforms(MainMenuSceneModel *model) {
         for (partIndex = 0; partIndex < MAIN_MENU_SCENE_MODEL_PART_COUNT; partIndex++) {
             for (row = 0; row < MAIN_MENU_SCENE_MODEL_MATRIX_AXES; row++) {
                 for (column = 0; column < MAIN_MENU_SCENE_MODEL_MATRIX_AXES; column++) {
-                    model->partTransforms[partIndex].rotationRows[row][column] =
-                        ((localPartTransforms[partIndex].rotationRows[row][0] *
-                          rootTransform.rotationRows[0][column]) +
-                         (localPartTransforms[partIndex].rotationRows[row][1] *
-                          rootTransform.rotationRows[1][column]) +
-                         (localPartTransforms[partIndex].rotationRows[row][2] *
-                          rootTransform.rotationRows[2][column])) /
+                    FIXED_MATRIX_ROWS(model->partTransforms[partIndex].rotation)
+                    [row][column] =
+                        ((FIXED_MATRIX_ROWS(localPartTransforms[partIndex].rotation)[row][0] *
+                          FIXED_MATRIX_ROWS(rootTransform.rotation)[0][column]) +
+                         (FIXED_MATRIX_ROWS(localPartTransforms[partIndex].rotation)[row][1] *
+                          FIXED_MATRIX_ROWS(rootTransform.rotation)[1][column]) +
+                         (FIXED_MATRIX_ROWS(localPartTransforms[partIndex].rotation)[row][2] *
+                          FIXED_MATRIX_ROWS(rootTransform.rotation)[2][column])) /
                         FIXED_MATRIX_ONE;
                 }
             }
@@ -722,12 +724,12 @@ void updateMainMenuSceneModelTransforms(MainMenuSceneModel *model) {
 
         for (partIndex = 0; partIndex < MAIN_MENU_SCENE_MODEL_PART_COUNT; partIndex++) {
             for (row = 0; row < MAIN_MENU_SCENE_MODEL_MATRIX_AXES; row++) {
-                model->partTransforms[partIndex].translationElements[row] =
-                    ((s64)rootTransform.rotationRows[0][row] * model->parts[partIndex].offset.x +
-                     (s64)rootTransform.rotationRows[1][row] * model->parts[partIndex].offset.y +
-                     (s64)rootTransform.rotationRows[2][row] * model->parts[partIndex].offset.z) /
+                ((s32 *)&model->partTransforms[partIndex].translation)[row] =
+                    ((s64)FIXED_MATRIX_ROWS(rootTransform.rotation)[0][row] * model->parts[partIndex].offset.x +
+                     (s64)FIXED_MATRIX_ROWS(rootTransform.rotation)[1][row] * model->parts[partIndex].offset.y +
+                     (s64)FIXED_MATRIX_ROWS(rootTransform.rotation)[2][row] * model->parts[partIndex].offset.z) /
                     FIXED_MATRIX_ONE;
-                model->partTransforms[partIndex].translationElements[row] += rootTransform.translationElements[row];
+                ((s32 *)&model->partTransforms[partIndex].translation)[row] += ((s32 *)&rootTransform.translation)[row];
             }
         }
     }
