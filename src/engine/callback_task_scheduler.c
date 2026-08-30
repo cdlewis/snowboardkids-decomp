@@ -362,7 +362,10 @@ void *createCallbackTaskWithUserId(CallbackTaskCallback callback, s32 type, s32 
 
 // IDO code generation for this function is sensitive to source line layout.
 // clang-format off
-void *createCallbackTaskWithUserIdPreservingArgs(CallbackTaskCallback callback, s32 type, s32 priority, s32 userId){ CallbackTask *t=createCallbackTaskPreservingArgsS32(callback,type&0xFFFF,priority); if(t!=NULL){t->header.userId=userId;} return t;}
+CLANG_DIAGNOSTIC_PUSH
+CLANG_DIAGNOSTIC_IGNORE_STRICT_PROTOTYPES
+void *createCallbackTaskWithUserIdPreservingArgs(void (*callback)(), s32 type, s32 priority, s32 userId){ CallbackTask *t=createCallbackTaskPreservingArgsS32(callback,type&0xFFFF,priority); if(t!=NULL){t->header.userId=userId;} return t;}
+CLANG_DIAGNOSTIC_POP
 // clang-format on
 
 void removeCallbackTask(void *taskPtr) {

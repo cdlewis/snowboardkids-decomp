@@ -171,8 +171,6 @@ extern u8 gCurrentViewportIndex;
 extern Gfx *gRegionAllocPtr;
 
 void getAssetTableImageAndExplicitPalette(u8 *, u16, u16, void **, void **);
-/* Local 4-arg declaration; see note in callback_task_scheduler.h. */
-RaceItemEffectActor *createCallbackTaskWithUserIdPreservingArgs(void *, s32, s32, s32);
 
 s32 getRaceItemEffectType(s32 arg0) {
     u8 *p = gRaceCourseItemEffectTypeTables[gRaceCourseIndex.signedValue];

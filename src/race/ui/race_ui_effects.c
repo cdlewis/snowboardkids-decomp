@@ -25,8 +25,6 @@
 #include "game/race/ui/race_hud.h"
 #include <PR/os_cache.h>
 
-/* Local 3-arg declaration; see note in callback_task_scheduler.h. */
-extern void *createCallbackTaskWithUserIdPreservingArgs(void *, s32, s32);
 extern RaceCamera D_801121E0[];
 
 #define RACE_UI_TRAIL_GFX_ALLOC_PTR (*(RaceUiDisplayCommand **)&gRegionAllocPtr)
@@ -440,19 +438,6 @@ typedef struct RaceUiFadingTrailActor {
     /* 0x4C */ u8 pad4C[2];
     /* 0x4E */ u8 matrixDirty;
 } RaceUiFadingTrailActor;
-
-typedef struct RaceUiFadingImpactActor {
-    /* 0x00 */ u8 pad0[0x10];
-    /* 0x10 */ u16 playerIndex;
-    /* 0x12 */ u8 pad12[0x18 - 0x12];
-    /* 0x18 */ Transform3D copyBlock;
-    /* 0x38 */ Vec3i pos;
-    /* 0x44 */ Mtx *matrix;
-    /* 0x48 */ s16 angle;
-    /* 0x4A */ s16 alpha;
-    /* 0x4C */ s16 scale;
-    /* 0x4E */ u8 matrixDirty;
-} RaceUiFadingImpactActor;
 
 typedef struct RaceUiTransitionRenderActor {
     /* 0x00 */ u8 pad0[0x24];
@@ -4911,12 +4896,13 @@ void initRaceUiFadingImpact(RaceUiFadingImpactActor *actor) {
     setCallbackTaskCallback(actor, (CallbackTaskCallback)func_80061F38);
 }
 
-void spawnRaceUiFadingImpact(void *x, void *y, void *z) {
-    RaceUiFadingImpactActor *actor = createCallbackTaskWithUserIdPreservingArgs(initRaceUiFadingImpact, 0, 3);
+void spawnRaceUiFadingImpact(s32 x, s32 y, s32 z, s32 userId) {
+    RaceUiFadingImpactActor *actor =
+        createCallbackTaskWithUserIdPreservingArgs(initRaceUiFadingImpact, 0, 3, userId);
     if (actor != NULL) {
-        actor->pos.x = (s32)x;
-        actor->pos.y = (s32)y;
-        actor->pos.z = (s32)z;
+        actor->pos.x = x;
+        actor->pos.y = y;
+        actor->pos.z = z;
     }
 }
 
