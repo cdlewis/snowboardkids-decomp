@@ -5,17 +5,13 @@
 
 typedef s16 CharacterSelectCourseUnlockList[11];
 
-typedef union CharacterSelectCourseCursorState {
-    u8 bytes[8];
-    struct {
-        /* 0x00 */ u8 listCursorState;
-        /* 0x01 */ u8 submenuState;
-        /* 0x02 */ u8 previewFrameState;
-        /* 0x03 */ u8 pad3;
-        /* 0x04 */ s16 listCursorSpriteIndex;
-        /* 0x06 */ u8 listCursorTimer;
-        /* 0x07 */ u8 submenuTimer;
-    } fields;
+typedef struct CharacterSelectCourseCursorState {
+    /* 0x00 */ u8 listCursorState;
+    /* 0x01 */ u8 submenuState;
+    /* 0x02 */ u8 previewFrameState;
+    /* 0x04 */ s16 listCursorSpriteIndex;
+    /* 0x06 */ u8 listCursorTimer;
+    /* 0x07 */ u8 submenuTimer;
 } CharacterSelectCourseCursorState;
 
 typedef char CharacterSelectCourseCursorStateSizeCheck

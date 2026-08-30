@@ -908,9 +908,9 @@ void updateCharacterSelectCoursePreviewFrame(CharacterSelectCourseWidgetActor *a
         }
     }
 
-    if (switchState != gCharacterSelectCourseCursorState.fields.previewFrameState) {
+    if (switchState != gCharacterSelectCourseCursorState.previewFrameState) {
         switchState = state = arg0->transition.bytes.state =
-            gCharacterSelectCourseCursorState.fields.previewFrameState;
+            gCharacterSelectCourseCursorState.previewFrameState;
     }
 
     switch (switchState) {
@@ -980,7 +980,7 @@ void updateCharacterSelectCoursePreviewFrame(CharacterSelectCourseWidgetActor *a
             break;
     }
 
-    gCharacterSelectCourseCursorState.fields.previewFrameState = state;
+    gCharacterSelectCourseCursorState.previewFrameState = state;
     if (arg0->transition.bytes.state == 7) {
         removeCallbackTask(arg0);
         return;
@@ -2406,11 +2406,11 @@ void updateCharacterSelectCourseListCursor(CharacterSelectCourseWidgetActor *arg
     u8 globalState;
 
     state = arg0->transition.bytes.state;
-    if (state != (globalState = gCharacterSelectCourseCursorState.fields.listCursorState)) {
+    if (state != (globalState = gCharacterSelectCourseCursorState.listCursorState)) {
         arg0->transition.bytes.state = globalState;
         state = globalState;
-        arg0->sprite.index = gCharacterSelectCourseCursorState.fields.listCursorSpriteIndex;
-        arg0->transition.bytes.timer = gCharacterSelectCourseCursorState.fields.listCursorTimer;
+        arg0->sprite.index = gCharacterSelectCourseCursorState.listCursorSpriteIndex;
+        arg0->transition.bytes.timer = gCharacterSelectCourseCursorState.listCursorTimer;
     }
 
     /* Preserve IDO's state selector register allocation. */
@@ -2442,7 +2442,7 @@ void updateCharacterSelectCourseListCursor(CharacterSelectCourseWidgetActor *arg
             break;
     }
 
-    gCharacterSelectCourseCursorState.bytes[primaryPlayerIndex] = state;
+    (&gCharacterSelectCourseCursorState.listCursorState)[primaryPlayerIndex] = state;
     if (gRacePlayers[primaryPlayerIndex].menuState == 7) {
         removeCallbackTask(arg0);
         return;
@@ -2969,10 +2969,10 @@ void updateCharacterSelectCourseNamePopup(CharacterSelectCourseWidgetActor *arg0
     u8 globalState;
 
     state = arg0->transition.bytes.state;
-    if (state != (globalState = gCharacterSelectCourseCursorState.fields.submenuState)) {
+    if (state != (globalState = gCharacterSelectCourseCursorState.submenuState)) {
         arg0->transition.bytes.state = globalState;
         state = globalState;
-        arg0->transition.bytes.timer = gCharacterSelectCourseCursorState.fields.submenuTimer;
+        arg0->transition.bytes.timer = gCharacterSelectCourseCursorState.submenuTimer;
     }
 
     if (state) {
@@ -3024,15 +3024,15 @@ void updateCharacterSelectCourseNamePopup(CharacterSelectCourseWidgetActor *arg0
             break;
     }
 
-    (arg0 ? &gCharacterSelectCourseCursorState : &gCharacterSelectCourseCursorState)->fields.submenuState = state;
-    (arg0 ? &gCharacterSelectCourseCursorState : &gCharacterSelectCourseCursorState)->fields.submenuTimer =
+    (arg0 ? &gCharacterSelectCourseCursorState : &gCharacterSelectCourseCursorState)->submenuState = state;
+    (arg0 ? &gCharacterSelectCourseCursorState : &gCharacterSelectCourseCursorState)->submenuTimer =
         arg0->transition.bytes.timer;
 
     if (arg0->transition.bytes.state == 6) {
         removeCallbackTask(arg0);
         D_8010ADE0 = NULL;
-        gCharacterSelectCourseCursorState.fields.submenuState = 0;
-        gCharacterSelectCourseCursorState.fields.submenuTimer = 0;
+        gCharacterSelectCourseCursorState.submenuState = 0;
+        gCharacterSelectCourseCursorState.submenuTimer = 0;
         return;
     }
     addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawCharacterSelectCourseNamePopup, arg0);
@@ -3337,7 +3337,7 @@ void updateCharacterSelectCourseExitPopup(CharacterSelectCourseWidgetActor *arg0
     u8 globalState;
 
     state = arg0->transition.bytes.state;
-    if (state != (globalState = gCharacterSelectCourseCursorState.fields.submenuState)) {
+    if (state != (globalState = gCharacterSelectCourseCursorState.submenuState)) {
         arg0->transition.bytes.state = globalState;
         /* Preserve IDO's state/globalState register allocation. */
         if (1) {}
@@ -3346,7 +3346,7 @@ void updateCharacterSelectCourseExitPopup(CharacterSelectCourseWidgetActor *arg0
         if (1) {}
         if (1) {}
         state = globalState;
-        arg0->transition.bytes.timer = gCharacterSelectCourseCursorState.fields.submenuTimer;
+        arg0->transition.bytes.timer = gCharacterSelectCourseCursorState.submenuTimer;
     }
 
     switch (state) {
@@ -3385,15 +3385,15 @@ void updateCharacterSelectCourseExitPopup(CharacterSelectCourseWidgetActor *arg0
             break;
     }
 
-    (arg0 ? &gCharacterSelectCourseCursorState : &gCharacterSelectCourseCursorState)->fields.submenuState = state;
+    (arg0 ? &gCharacterSelectCourseCursorState : &gCharacterSelectCourseCursorState)->submenuState = state;
     (arg0 ? &gCharacterSelectCourseCursorState : &gCharacterSelectCourseCursorState)
-        ->fields.submenuTimer = arg0->transition.bytes.timer;
+        ->submenuTimer = arg0->transition.bytes.timer;
 
     if (arg0->transition.bytes.state == 6) {
         removeCallbackTask(arg0);
         D_8010ADE0 = NULL;
-        gCharacterSelectCourseCursorState.fields.submenuState = 0;
-        gCharacterSelectCourseCursorState.fields.submenuTimer = 0;
+        gCharacterSelectCourseCursorState.submenuState = 0;
+        gCharacterSelectCourseCursorState.submenuTimer = 0;
         return;
     }
     addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawCharacterSelectCourseExitPopup, arg0);
