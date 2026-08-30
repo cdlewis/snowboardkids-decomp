@@ -13,7 +13,15 @@
 #define RSP_DRAM_STACK_SIZE 0x400
 #define RSP_YIELD_BUFFER_SIZE 0xC00
 
-typedef struct RuntimeViewportDisplayListData RuntimeViewportDisplayListData;
+typedef struct RuntimeViewportDisplayListData {
+    /* 0x000 */ u8 pad0[0x78];
+    /* 0x078 */ Vp viewports[4];
+    /* 0x0B8 */ Mtx projections[4];
+    /* 0x1B8 */ Mtx overlayProjections[4];
+    /* 0x2B8 */ Mtx rotations[4];
+    /* 0x3B8 */ Mtx translations[4];
+    /* 0x4B8 */ Mtx viewportMatrices[4];
+} RuntimeViewportDisplayListData;
 
 extern Gfx *gRegionAllocPtr;
 extern RuntimeViewportDisplayListData *gCurrentFrameRenderData;
@@ -29,9 +37,5 @@ extern s16 gMenuViewportWidth;
 extern s16 gMenuViewportHeight;
 extern s16 gMenuViewportCenterX;
 extern s16 gMenuViewportCenterY;
-
-void appendFadeOverlayDisplayList(void);
-void appendViewportDisplayLists(u8 frameIndex);
-void submitFramebufferRenderTask(u8 frameIndex);
 
 #endif
