@@ -320,8 +320,6 @@ s32 startCurrentQueuedSoundEffect(void);
 s32 calculatePositionalSoundVolume(Vec3i *pos, s32 volume);
 void updatePlayerLoopingPositionalSound(s32 soundId, s32 mode, s32 volume, f32 pitch);
 
-extern void enqueuePositionalSoundRequest(s32, Vec3i *, s32, s32, f32, s32, s32);
-
 // IDO code generation for this function is sensitive to source line layout.
 // clang-format off
 void initSoundManager(void) {
