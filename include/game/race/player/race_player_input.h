@@ -174,7 +174,7 @@ typedef struct RacePlayer {
     /* 0x515 */ s8 actionEffectType;
     /* 0x516 */ s8 actionEffectPalette;
     /* 0x517 */ s8 unk517;
-    /* 0x518 */ s8 randomIndex;
+    /* 0x518 */ u8 randomIndex;
     /* 0x519 */ s8 unk519;
     /* 0x51A */ u8 itemTargetFlag;
     /* 0x51B */ char pad51B[1];
