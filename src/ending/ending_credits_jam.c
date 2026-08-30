@@ -7,17 +7,6 @@
 #include "game/menu/main_menu/main_menu_scene_model.h"
 #include "game/menu/main_menu/main_menu_scene_model_renderer.h"
 
-struct EndingCreditsJam {
-    /* 0x00 */ char pad0[0x18];
-    /* 0x18 */ s32 posX;
-    /* 0x1C */ s32 posY;
-    /* 0x20 */ s32 posZ;
-    /* 0x24 */ s16 rotX;
-    /* 0x26 */ s16 rotY;
-    /* 0x28 */ s16 rotZ;
-    /* 0x2A */ u16 timer;
-};
-
 void updateEndingJamFinalPose(EndingCreditsJam *arg0) {
     stepMainMenuSceneModelAnimation(2);
     addMainMenuSceneModelDrawCallback(2);
