@@ -1,5 +1,6 @@
 #include "game/race/race_state.h"
 #include "common.h"
+#include "game/audio/sound_manager.h"
 #include "game/menu/renderer/menu_renderer.h"
 #include "game/menu/renderer/menu_render_utils.h"
 #include "game/engine/render_callback.h"
@@ -182,7 +183,6 @@ void drawMainMenuModeLabel(MenuScreenEffectActor *);
 void updateMainMenuModeLabelFadeIn(MenuScreenEffectActor *);
 void drawMainMenuRotatingBoardModel(MenuScreenEffectActor *);
 void drawMainMenuStaticBoardModel(void *);
-void enqueueSoundEffect(s16, s32, void *);
 
 void drawFallingMenuSnowflake(MenuScreenEffectActor *arg0) {
     void *texture;
@@ -361,7 +361,7 @@ void stopRaceSetupCharacterFocus(MenuScreenEffectActor *arg0) {
 void updateRaceSetupCharacterFocus(MenuScreenEffectActor *arg0) {
     if (gMenuFadeAlpha == 0) {
         if (arg0->unk18.byte.b0 != 0) {
-            enqueueSoundEffect(raceSetupCharacterFocusSoundIds[arg0->index], 0x32, arg0);
+            enqueueSoundEffect(raceSetupCharacterFocusSoundIds[arg0->index], 0x32);
             arg0->unk18.byte.b0 = 0;
         }
         loopMainMenuSceneModelAnimation(0);

@@ -1,6 +1,7 @@
 #include "common.h"
 #include "game/save_data.h"
 #include "assets.h"
+#include "game/audio/sound_manager.h"
 #include "game/engine/callback_task_scheduler.h"
 #include "game/engine/asset_manager.h"
 #include "game/menu/character_select/character_select_course_menu.h"
@@ -29,7 +30,6 @@ extern s32 gMenuFlowState;
 extern s32 D_8010ADE0;
 extern CallbackTask *D_8010ADE4;
 extern s16 gMenuFadeAlpha;
-extern s32 enqueueSoundEffect(s16, s16);
 extern void initControllerPakDeleteConfirmPrompt(CallbackTask *);
 
 void initControllerPakRaceRecordSaveFlow(void) {

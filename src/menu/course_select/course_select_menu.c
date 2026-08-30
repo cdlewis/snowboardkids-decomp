@@ -49,7 +49,6 @@ extern s8 gCourseSelectSelectedCourseSavedSlot;
 extern s32 gMenuFlowState;
 extern u8 gPendingFramebufferSwapCount;
 extern u8 gFramebufferSwapHold;
-extern s32 enqueueSoundEffect(s16, s16);
 
 void initCourseSelectMenu(void) {
     u32 size;

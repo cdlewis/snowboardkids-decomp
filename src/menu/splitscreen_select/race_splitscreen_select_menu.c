@@ -15,7 +15,6 @@
 #include "game/engine/viewport_manager.h"
 #include "game/race/player/race_player_input.h"
 
-extern s32 enqueueSoundEffect(s16, s16);
 
 extern u8 D_800EC9DC;
 

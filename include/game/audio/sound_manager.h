@@ -8,6 +8,7 @@ void updateSoundManager(void);
 void fadeOutAllMusicSequences(void);
 void requestMusicSequenceBank(s32 arg0);
 void requestMusicSequenceStop(s32 arg0);
+s32 enqueueSoundEffect(s16 soundId, s16 priority);
 void stopSoundEffects(void);
 void requestCourseMusicSequence(void);
 s32 countActiveMusicSequences(void);

@@ -56,7 +56,6 @@ u8 gControllerPakSaveExtNameBytesEnd[0x84] = {
 };
 u8 gMainMenuReturnFromRace = 0;
 
-extern void enqueueSoundEffect(s32, s32);
 extern OSMesgQueue gControllerSubsystemRequestQueue;
 extern OSMesgQueue gControllerSubsystemReplyQueue;
 extern OSMesgQueue gControllerEventQueue;

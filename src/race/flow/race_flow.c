@@ -242,7 +242,6 @@ extern u8 gRaceUpdatePaused;
 extern s16 gFrameCounter;
 extern ViewportSlot D_801121E0[];
 
-extern void enqueueSoundEffect(s32, s32);
 
 void initStartupControllerPakFlow(void) {
     LOAD_ASSET(_2427D0, 6);

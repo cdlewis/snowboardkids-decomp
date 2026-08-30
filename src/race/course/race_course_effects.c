@@ -308,7 +308,6 @@ RaceCourseTriggerEntry gCourseTriggerEntries[] = {
     { 4, 6, 0x122, 0, { 0xF7B42249, 0xF305D31B, 0xEB7622AF }, 0xFBA, 0x400, 0x02006988 },
 };
 
-extern void enqueueSoundEffect(s32, s32);
 extern void *resolveAssetTableRelativePointer(void *, u32);
 extern s32 gMenuFlowState;
 extern u8 gCurrentViewportIndex;

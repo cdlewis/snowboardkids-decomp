@@ -21,7 +21,6 @@ u8 gCharacterSelectSecretCharacterUnlocked;
 u16 gCharacterSelectIdOrder[] = { 5, 0, 1, 2, 3, 4 };
 s16 gCharacterSelectVoiceSoundIds[] = { 0x5D, 0x57, 0x58, 0x5A, 0x59, 0x5B, 0, 0, 0, 0 };
 
-extern s32 enqueueSoundEffect(s16, s16);
 extern CallbackTask *D_8010ADEC;
 extern s16 gMenuFadeAlpha;
 // Per-player highlighted index. During character-roster browsing

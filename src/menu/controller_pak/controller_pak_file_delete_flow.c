@@ -1,5 +1,6 @@
 #include "common.h"
 #include "assets.h"
+#include "game/audio/sound_manager.h"
 #include "game/engine/callback_task_scheduler.h"
 #include "game/engine/asset_manager.h"
 #include "game/menu/character_select/character_select_course_menu.h"
@@ -13,7 +14,6 @@
 #include "game/engine/viewport_manager.h"
 #include "game/race/race_state.h"
 
-extern s32 enqueueSoundEffect(s32, s32);
 
 extern u8 gControllerPakMenuCursorState;
 extern u8 gControllerPakDeletePromptState;

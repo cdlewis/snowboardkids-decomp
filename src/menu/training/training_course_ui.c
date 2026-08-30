@@ -1,5 +1,6 @@
 #include "common.h"
 #include "font_encoding.h"
+#include "game/audio/sound_manager.h"
 #include "game/engine/asset_manager.h"
 #include "game/engine/render_callback.h"
 #include "game/engine/relocatable_heap.h"
@@ -116,7 +117,6 @@ TrainingCourseLessonTitleData gTrainingCourseLessonTitleText = {
 /* The final title-text slot and the first X position share the halfword at 0x800B51B6. */
 extern s16 gTrainingCourseLessonTitleXPositions[];
 extern u8 gTrainingCourseLesson;
-extern void enqueueSoundEffect(s32, s32, TrainingCourseUiActor *);
 void drawTrainingCourseDialog(TrainingCourseUiActor *);
 void updateTrainingCourseDialog(TrainingCourseUiActor *);
 void redrawTrainingCourseDialog(TrainingCourseUiActor *);
@@ -346,7 +346,7 @@ void updateTrainingCourseLessonEndMenu(TrainingCourseUiActor *arg0) {
         }
     }
     if (var_a0 != temp_a1) {
-        enqueueSoundEffect(0x19, 0x32, arg0);
+        enqueueSoundEffect(0x19, 0x32);
     }
     if ((u16)arg0->highlightTimer < 0x10) {
         arg0->highlightScale -= 9;
@@ -355,7 +355,7 @@ void updateTrainingCourseLessonEndMenu(TrainingCourseUiActor *arg0) {
     }
     arg0->highlightTimer = ((u16)arg0->highlightTimer + 1) & 0x1F;
     if ((gPlayerInputPressed[0] & A_BUTTON) || (gPlayerInputPressed[0] & START_BUTTON)) {
-        enqueueSoundEffect(1, 0x32, arg0);
+        enqueueSoundEffect(1, 0x32);
         gMainMenuSelectionResult = (u16)arg0->state.selectedAction + 1;
         arg0->highlightScale = 0x100;
         arg0->highlightTimer = 0;
@@ -607,7 +607,7 @@ void updateTrainingCourseDialog(TrainingCourseUiActor *arg0) {
         case 1:
             arg0->confirmBlinkTimer = (arg0->confirmBlinkTimer + 1) & 0xF;
             if ((A_BUTTON & gPlayerInputPressed[0]) || (gPlayerInputPressed[0] & START_BUTTON)) {
-                enqueueSoundEffect(1, 0x32, arg0);
+                enqueueSoundEffect(1, 0x32);
                 arg0->confirmBlinkTimer = 0;
                 gMainMenuSelectionResult = 1;
                 if (arg0->keepVisibleAfterConfirm == 0) {
@@ -620,7 +620,7 @@ void updateTrainingCourseDialog(TrainingCourseUiActor *arg0) {
         case 2:
             arg0->confirmBlinkTimer = (arg0->confirmBlinkTimer + 1) & 0xF;
             if ((gPlayerInputPressed[0] & A_BUTTON) || (gPlayerInputPressed[0] & START_BUTTON)) {
-                enqueueSoundEffect(1, 0x32, arg0);
+                enqueueSoundEffect(1, 0x32);
                 if (*arg0->layout.script != 0xFFFB) {
                     do {
                         arg0->layout.script++;
