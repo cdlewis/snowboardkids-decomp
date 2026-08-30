@@ -1233,7 +1233,7 @@ void drawRaceSetupSavePanelIcons(TitleMenuIconStripActor *actor) {
                     }
 
                     if (displayCount > 0) {
-                        badgeSaveData = &gGameSaveDataBuffer[playerIndex.reloaded]; badgeDisplayOrderStart = gPlayerBadgeDisplayOrder; badgeOrder = badgeDisplayOrderStart; nextIconOrBadgeOffset = 0;
+                        badgeSaveData = &gGameSaveDataBuffer[playerIndex.reloaded]; badgeDisplayOrderStart = gCharacterSelectCourseMenuData.playerBadgeDisplayOrder; badgeOrder = badgeDisplayOrderStart; nextIconOrBadgeOffset = 0;
                         coordinateCursor = (RaceSetupSavePanelPlayerCoordinates *)&actor->pad0[playerCoordinateOffset];
                         do {
                             paletteIndex = badgeSaveData->cupPlacements[*badgeOrder];

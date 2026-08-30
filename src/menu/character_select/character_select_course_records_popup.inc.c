@@ -13,11 +13,11 @@ void drawCharacterSelectCourseRecordsPopup(CharacterSelectCourseWidgetActor *act
     s32 pad3;
 
     if (gRaceSplitscreenMode == 2) {
-        courseOptions = gCharacterSelectCourseOptionsByUnlock[gHighestUnlockedCourse];
+        courseOptions = gCharacterSelectCourseMenuData.courseOptionsByUnlock[gHighestUnlockedCourse];
     } else if (gRaceTypeSelection < 2) {
-        courseOptions = gCharacterSelectShortCourseOptions;
+        courseOptions = gCharacterSelectCourseMenuData.shortCourseOptions;
     } else {
-        courseOptions = gCharacterSelectSingleCourseOption;
+        courseOptions = gCharacterSelectCourseMenuData.singleCourseOption;
     }
 
     for (rowIndex = 0; rowIndex < 5; rowIndex++) {

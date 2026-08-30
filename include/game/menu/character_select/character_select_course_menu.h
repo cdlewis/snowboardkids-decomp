@@ -14,9 +14,6 @@ typedef struct CharacterSelectCourseCursorState {
     /* 0x07 */ u8 submenuTimer;
 } CharacterSelectCourseCursorState;
 
-typedef char CharacterSelectCourseCursorStateSizeCheck
-    [(sizeof(CharacterSelectCourseCursorState) == 0x8) ? 1 : -1];
-
 typedef struct {
     CharacterSelectCourseUnlockList courseOptionsByUnlock[3];
     s16 playerBadgeDisplayOrder[11];
@@ -27,11 +24,6 @@ typedef struct {
 extern CharacterSelectCourseMenuData gCharacterSelectCourseMenuData;
 extern u16 gCharacterSelectCourseExitOptionIndex;
 extern CharacterSelectCourseCursorState gCharacterSelectCourseCursorState;
-
-#define gCharacterSelectCourseOptionsByUnlock (gCharacterSelectCourseMenuData.courseOptionsByUnlock)
-#define gPlayerBadgeDisplayOrder (gCharacterSelectCourseMenuData.playerBadgeDisplayOrder)
-#define gCharacterSelectShortCourseOptions (gCharacterSelectCourseMenuData.shortCourseOptions)
-#define gCharacterSelectSingleCourseOption (gCharacterSelectCourseMenuData.singleCourseOption)
 
 void initCharacterSelectCourseMenuFromRaceTypeSelect(void);
 void initCharacterSelectCourseMenuFromRace(void);

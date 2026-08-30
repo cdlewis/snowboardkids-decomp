@@ -87,15 +87,15 @@ void initCharacterSelectCourseMenuFromRaceTypeSelect(void) {
     s16 *activeOptions;
     CharacterSelectCourseUnlockList *courseOptionsByUnlock;
 
-    courseOptionsByUnlock = gCharacterSelectCourseOptionsByUnlock;
+    courseOptionsByUnlock = gCharacterSelectCourseMenuData.courseOptionsByUnlock;
     if (gCourseSelectFromRaceTypeMenu == 1) {
         if (gRaceTypeSelection < 2) {
-            gCharacterSelectActiveCourseOptions = (CharacterSelectOptionList *) gCharacterSelectShortCourseOptions;
+            gCharacterSelectActiveCourseOptions = (CharacterSelectOptionList *) gCharacterSelectCourseMenuData.shortCourseOptions;
             if ((gRaceCourseIndex.signedValue != 9) && (gRaceCourseIndex.signedValue != 0) && (gRaceCourseIndex.signedValue != 1)) {
                 gRaceCourseIndex.signedValue = 9;
             }
         } else {
-            gCharacterSelectActiveCourseOptions = (CharacterSelectOptionList *) gCharacterSelectSingleCourseOption;
+            gCharacterSelectActiveCourseOptions = (CharacterSelectOptionList *) gCharacterSelectCourseMenuData.singleCourseOption;
             gRaceCourseIndex.signedValue = 7;
         }
     } else {
@@ -186,12 +186,12 @@ void initCharacterSelectCourseMenuFromRace(void)
   do { } while (0);
   setCurrentGameTaskCallback(updateCharacterSelectCourseMenu, 0);
   var_v1 = sp2C;
-  courseOptionsByUnlock = gCharacterSelectCourseOptionsByUnlock;
+  courseOptionsByUnlock = gCharacterSelectCourseMenuData.courseOptionsByUnlock;
   if (gCourseSelectFromRaceTypeMenu == 1)
   {
     if (gRaceTypeSelection < 2)
     {
-      gCharacterSelectActiveCourseOptions = (CharacterSelectOptionList *) gCharacterSelectShortCourseOptions;
+      gCharacterSelectActiveCourseOptions = (CharacterSelectOptionList *) gCharacterSelectCourseMenuData.shortCourseOptions;
       if (((gRaceCourseIndex.signedValue != 9) && (gRaceCourseIndex.signedValue != 0)) && (gRaceCourseIndex.signedValue != 1))
       {
         gRaceCourseIndex.signedValue = 9;
@@ -199,7 +199,7 @@ void initCharacterSelectCourseMenuFromRace(void)
     }
     else
     {
-      gCharacterSelectActiveCourseOptions = (CharacterSelectOptionList *) gCharacterSelectSingleCourseOption;
+      gCharacterSelectActiveCourseOptions = (CharacterSelectOptionList *) gCharacterSelectCourseMenuData.singleCourseOption;
       gRaceCourseIndex.signedValue = 7;
     }
   }
@@ -266,7 +266,7 @@ void initCharacterSelectCourseMenuFromPlayerSelect(void) {
         resetAllViewports();
         configureViewport(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.333333373f);
         gFramebufferRenderInterval.value = 0;
-        if (gCharacterSelectShortCourseOptions) {
+        if (gCharacterSelectCourseMenuData.shortCourseOptions) {
         }
         LOAD_ASSET(_5A1ED0, 0x21);
         LOAD_ASSET(_593D10, 0x22);
@@ -296,15 +296,15 @@ void initCharacterSelectCourseMenuFromPlayerSelect(void) {
     D_8010ADE4 = 0;
     var_v1 = sp2C;
     if (gPlayerCount > 0) { var_v0 = &gGameSaveDataBuffer[0]; do { temp_v1 = var_v0->progressionLevel; var_v0 += 1; if (gHighestUnlockedCourse < temp_v1) { gHighestUnlockedCourse = temp_v1; } } while (var_v0 < &gGameSaveDataBuffer[0] + gPlayerCount); var_v1++; var_v1--; } setCurrentGameTaskCallback(updateCharacterSelectCourseMenu, 0); var_v1 = sp2C;
-    courseOptionsByUnlock = gCharacterSelectCourseOptionsByUnlock;
+    courseOptionsByUnlock = gCharacterSelectCourseMenuData.courseOptionsByUnlock;
     if (gCourseSelectFromRaceTypeMenu == 1) {
         if (gRaceTypeSelection < 2) {
-            gCharacterSelectActiveCourseOptions = (CharacterSelectOptionList *) gCharacterSelectShortCourseOptions;
+            gCharacterSelectActiveCourseOptions = (CharacterSelectOptionList *) gCharacterSelectCourseMenuData.shortCourseOptions;
             if ((gRaceCourseIndex.signedValue != 9) && (gRaceCourseIndex.signedValue != 0) && (gRaceCourseIndex.signedValue != 1)) {
                 gRaceCourseIndex.signedValue = 9;
             }
         } else {
-            gCharacterSelectActiveCourseOptions = (CharacterSelectOptionList *) gCharacterSelectSingleCourseOption;
+            gCharacterSelectActiveCourseOptions = (CharacterSelectOptionList *) gCharacterSelectCourseMenuData.singleCourseOption;
             gRaceCourseIndex.signedValue = 7;
         }
     } else {
