@@ -11,6 +11,7 @@ void getAssetTableImageAndPalette(void *asset, u16 index, void **image, void **p
 void drawMenuAsciiChar(s16 x, s16 y, u8 character, u16 palette);
 void drawMenuAsciiCharImpl(s16 x, s16 y, u8 character, u16 palette);
 void drawAssetTableSprite(s16 x, s16 y, AssetTable *table, u16 entryIndex);
+void drawMenuFillRectangle(s16 x, s16 y, s16 width, s16 height, u8 red, u8 green, u8 blue);
 void drawPulsingAssetTableSprite(s16 x, s16 y, AssetTable *table, u16 entryIndex);
 void drawAssetTableSpriteWithDefaultPalette(s16 x, s16 y, AssetTable *table, u16 entryIndex);
 void drawAssetTableSpriteWithExplicitPalette(s16 x, s16 y, AssetTable *table, u16 entryIndex, u16 paletteIndex);

@@ -3,7 +3,16 @@
 
 #include "common.h"
 
-typedef struct MenuPanelActor MenuPanelActor;
+typedef struct MenuPanelActor {
+    /* 0x00 */ char pad0[0x18];
+    /* 0x18 */ s32 x;
+    /* 0x1C */ s32 y;
+    /* 0x20 */ u16 *tileList;
+    /* 0x24 */ u16 *tileListStart;
+    /* 0x28 */ s16 inputRepeatTimer;
+    /* 0x2A */ u8 selectedTile;
+    /* 0x2B */ u8 selectionState;
+} MenuPanelActor; // size = 0x2C
 
 void drawMainMenuModeSelectFrame(void *arg0);
 void drawMainMenuModeSelectIcons(MenuPanelActor *arg0);

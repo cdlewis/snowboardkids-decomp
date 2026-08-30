@@ -20,8 +20,6 @@
 #define MENU_PANEL_SOUND_VOLUME 0x32
 #define MENU_PANEL_TEXTURE_HANDLE (gAssetHandles[0x2A])
 
-typedef void (*MenuPanelActorCallback)(MenuPanelActor *);
-
 typedef struct {
     union {
         MenuGlyphScript finalTitleText[12];
@@ -38,17 +36,6 @@ typedef struct {
     u8 leftTargets[0x10];
     u8 rightTargets[0x10];
 } MainMenuModeSelectByteData;
-
-struct MenuPanelActor {
-    /* 0x00 */ char pad0[0x18];
-    /* 0x18 */ s32 x;
-    /* 0x1C */ s32 y;
-    /* 0x20 */ u16 *tileList;
-    /* 0x24 */ u16 *tileListStart;
-    /* 0x28 */ s16 inputRepeatTimer;
-    /* 0x2A */ u8 selectedTile;
-    /* 0x2B */ u8 selectionState;
-};
 
 MenuGlyphScript mainMenuModeSelectTitleText[] = {
     // textconv requires these _() invocations to retain their original line layout.
@@ -242,8 +229,6 @@ extern s16 gMenuFadeAlpha;
 extern s32 gMenuFlowState;
 extern s16 gFrameCounter;
 extern s16 gUiBlinkTimer;
-
-extern void drawMenuFillRectangle(s16, s16, s16, s16, u8, u8, u8);
 
 void drawMainMenuModeSelectFrame(void *arg0) {
     s32 edgeX;
