@@ -703,8 +703,6 @@ void drawAssetTableSpriteWithExplicitPaletteWideIndex(
 }
 #else
 #pragma weak drawAssetTableSpriteWithExplicitPaletteWideIndex = drawAssetTableSpriteWithExplicitPalette
-extern void
-drawAssetTableSpriteWithExplicitPaletteWideIndex(s16 x, s16 y, AssetTable *table, s32 entryIndex, u16 paletteIndex);
 #endif
 
 // Matched by queueRAM via decomp.me scratch y0AXZ.

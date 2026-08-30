@@ -28,8 +28,6 @@
 extern void *createCallbackTaskWithUserIdPreservingArgs(void *, s32, s32);
 extern RaceCamera D_801121E0[];
 extern void drawAssetTableSpriteWideIndex(s16 x, s16 y, AssetTable *table, s32 entryIndex);
-extern void
-drawAssetTableSpriteWithExplicitPaletteWideIndex(s16 x, s16 y, AssetTable *table, s32 entryIndex, u16 paletteIndex);
 
 #define RACE_UI_TRAIL_GFX_ALLOC_PTR (*(RaceUiDisplayCommand **)&gRegionAllocPtr)
 #define ASSET_HANDLE(index) (gAssetHandles[(index)])
