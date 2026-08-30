@@ -32,7 +32,6 @@ extern s16 gMenuFadeAlpha;
 // 0 = Free Style, 1 = All Around, 2 = Alpine, 3 = back, and 4/5 appear to be
 // locked/unowned special board states.
 extern s32 gMenuFlowState;
-extern u8 D_60F1A0[];
 extern u8 D_800EC9E5;
 extern u8 gMenuExitSelection;
 extern u8 gPendingFramebufferSwapCount;

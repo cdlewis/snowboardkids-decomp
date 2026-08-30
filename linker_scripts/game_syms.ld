@@ -5,24 +5,6 @@
  * C references and legacy assembly references resolve to the same address.
  */
 
-/* ROM asset starts. */
-D_13F3B0 = ROOKIE_MOUNTAIN_COURSE_GRAPHICS_ROM_START;
-D_145380 = _145380_ROM_START;
-D_1467B0 = _1467B0_ROM_START;
-D_1D3070 = ROOKIE_MOUNTAIN_COURSE_MODEL_RESOURCES_ROM_START;
-D_1D82B0 = _1D82B0_ROM_START;
-D_1DCED0 = _1DCED0_ROM_START;
-D_1DE360 = _1DE360_ROM_START;
-D_1E0F70 = _1E0F70_ROM_START;
-D_1E19C0 = _1E19C0_ROM_START;
-D_24DBE0 = _24DBE0_ROM_START;
-D_275A90 = _275A90_ROM_START;
-D_27E290 = _27E290_ROM_START;
-D_369000 = _369000_ROM_START;
-D_593D10 = _593D10_ROM_START;
-D_5DAF30 = _5DAF30_ROM_START;
-D_5DB9D0 = _5DB9D0_ROM_START;
-
 /* Shared race-model overlay addresses. */
 D_2000000 = _147910_VRAM;
 D_20006C8 = _147910_VRAM + 0x6C8;
@@ -48,7 +30,8 @@ gRaceActionPickupDisplayList = _147910_SUFFIX_VRAM + 0x80;
 /* Rookie Mountain overlay address. */
 D_20058A8 = ROOKIE_MOUNTAIN_COURSE_BACKDROP_DISPLAY_LIST_VRAM;
 
-/* Fixed virtual addresses encoded in original data. */
+/* Fixed physical/virtual addresses encoded in original data. */
+D_369000 = 0x369000;
 D_80000000 = 0x80000000;
 
 /* Typed slot-zero subobject views used where IDO must retain distinct relocations. */

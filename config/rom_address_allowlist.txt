@@ -1,0 +1,4 @@
+# path token reason
+linker_scripts/game_syms.ld D_369000 Fixed physical framebuffer address used by RDP commands.
+linker_scripts/game_syms.ld 0x369000 Fixed physical framebuffer address used by RDP commands.
+src/engine/system_runtime.c D_369000 Fixed physical framebuffer address used by RDP commands.
