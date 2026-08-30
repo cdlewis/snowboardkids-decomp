@@ -1222,7 +1222,7 @@ void updateCourseSelectCourseCursors(CourseSelectWidgetActor *arg0) {
                     break;
             }
             i++;
-            gCourseSelectStatus.bytes[i - 1] = state;
+            gCourseSelectStatus.previewModelState[i - 1] = state;
         } while (i < (s32)gPlayerCount);
     }
 
@@ -1896,7 +1896,7 @@ void drawCourseSelectCourseDescription(CourseSelectWidgetActor *arg0) {
     MenuGlyphScript *digit;
     u16 selectedIndex;
 
-    if (COURSE_SELECT_STATUS_LAYOUT.purchaseMessageStateUnsigned == 0) {
+    if (COURSE_SELECT_STATUS_LAYOUT.purchaseMessageState == 0) {
         if ((gCourseSelectPurchaseFlowActive == 0) &&
             (((gRacePlayers[0].menuState == 0) || (gRacePlayers[0].menuState == 3)) ||
              (gRacePlayers[0].menuState == 9))) {
@@ -1979,7 +1979,7 @@ void drawCourseSelectCourseDescription(CourseSelectWidgetActor *arg0) {
             }
         }
     } else {
-        text = gCourseSelectPurchaseMessageText[COURSE_SELECT_STATUS_LAYOUT.purchaseMessageStateUnsigned - 1].text;
+        text = gCourseSelectPurchaseMessageText[COURSE_SELECT_STATUS_LAYOUT.purchaseMessageState - 1].text;
         drawMenuGlyphScript(
             arg0->x,
             arg0->y,

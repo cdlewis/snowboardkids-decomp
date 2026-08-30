@@ -859,7 +859,7 @@ void updateShopMenuModeCursor(ShopMenuWidgetActor *arg0) {
         if (1) {}
         state = globalState;
         arg0->sprite.index = COURSE_SELECT_STATUS_LAYOUT.cursorValue;
-        arg0->transition.bytes.timer = COURSE_SELECT_STATUS_LAYOUT.purchaseMessageState;
+        arg0->transition.bytes.timer = (s16)COURSE_SELECT_STATUS_LAYOUT.purchaseMessageState;
     }
 
     switch (state) {
