@@ -3,8 +3,29 @@
 
 #include "common.h"
 
-typedef struct EndingCreditsLinda EndingCreditsLinda;
-typedef struct EndingCreditsTumblingSnowboard EndingCreditsTumblingSnowboard;
+typedef struct EndingCreditsLinda {
+    char pad[0x18];
+    s32 posX;
+    s32 posY;
+    s32 posZ;
+    s16 rotX;
+    s16 rotY;
+    s16 rotZ;
+    u16 timer;
+    u16 animTimer;
+    u16 textureId;
+    u16 paletteId;
+} EndingCreditsLinda;
+
+typedef struct EndingCreditsTumblingSnowboard {
+    char pad0[0x10];
+    u16 mode;
+    char pad12[0x6];
+    Transform3D transform;
+    u16 textureId;
+    u16 paletteId;
+    u16 timer;
+} EndingCreditsTumblingSnowboard;
 
 void updateEndingLindaFinalPose(EndingCreditsLinda *arg0);
 void updateEndingLindaStartFinalPose(EndingCreditsLinda *arg0);

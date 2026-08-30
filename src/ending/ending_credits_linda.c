@@ -4,40 +4,14 @@
 #include "game/ending/ending_credits_effects.h"
 #include "game/ending/ending_credits_flow.h"
 #include "game/ending/ending_credits_linda.h"
+#include "game/math/fixed_point_math.h"
 #include "game/menu/main_menu/main_menu_scene_model.h"
 #include "game/menu/main_menu/main_menu_scene_model_renderer.h"
 #include "game/menu/renderer/menu_render_utils.h"
 #include "game/race/player/race_player_model_renderer.h"
 #include "game/math/fixed_matrix_multiply.h"
 
-struct EndingCreditsLinda {
-    char pad[0x18];
-    s32 posX;
-    s32 posY;
-    s32 posZ;
-    s16 rotX;
-    s16 rotY;
-    s16 rotZ;
-    u16 timer;
-    u16 animTimer;
-    u16 textureId;
-    u16 paletteId;
-};
-
-struct EndingCreditsTumblingSnowboard {
-    char pad0[0x10];
-    u16 mode;
-    char pad12[0x6];
-    Transform3D transform;
-    u16 textureId;
-    u16 paletteId;
-    u16 timer;
-};
-
-extern void makeFixedRotationX(void *, s16);
-extern void makeFixedRotationZ(void *, s16);
-extern void makeFixedRotationYX(void *, s16, s16, ...);
-extern void *D_8010ADE0;
+extern EndingCreditsTumblingSnowboard *D_8010ADE0;
 
 void updateEndingLindaFinalPose(EndingCreditsLinda *arg0) {
     stepMainMenuSceneModelAnimation(3);
@@ -866,12 +840,11 @@ void spawnEndingCreditsTumblingSnowboard(s32 arg0, s32 arg1, s32 arg2, u16 arg3,
 
     temp_v0 =
         createCallbackTaskWithUserId((void (*)(void *))updateEndingCreditsTumblingSnowboardSlideIn, 0, 0x64, arg5);
-    D_8010ADE0 = temp_v0;
+    sp1C = D_8010ADE0 = temp_v0;
     temp_v0->transform.translation.x = arg0;
     temp_v0->transform.translation.y = arg1;
     temp_v0->transform.translation.z = arg2;
-    sp1C = temp_v0;
-    makeFixedRotationYX(temp_v0->transform.rotation, 0x400, 0x400, &D_8010ADE0);
+    makeFixedRotationYX(temp_v0->transform.rotation, 0x400, 0x400);
     sp1C->textureId = arg3;
     sp1C->paletteId = arg4;
 }
