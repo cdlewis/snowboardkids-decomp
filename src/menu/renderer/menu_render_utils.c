@@ -1062,9 +1062,9 @@ void drawMenuAsciiCharLegacy(s16 x, s16 y, volatile s32 ch, u16 arg3) {
 
 CLANG_DIAGNOSTIC_PUSH
 CLANG_DIAGNOSTIC_IGNORE_SELF_ASSIGN
-void drawMenuAsciiTextDefaultScale(s16 arg0, s16 arg1, u8 *arg2, u16 arg3) {
+void drawMenuAsciiTextDefaultScale(s16 arg0, s16 arg1, const char *arg2, u16 arg3) {
     s32 var_s0;
-    u8 *var_s1;
+    const char *var_s1;
     char mask;
     s32 var_s2;
     s32 temp_s4;

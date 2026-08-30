@@ -18,7 +18,6 @@
 #define RACE_HUD_MAIN_FONT_HANDLE (gAssetHandles[0x1C])
 #define RACE_HUD_POPUP_FONT_HANDLE (gAssetHandles[0x1F])
 
-extern void drawMenuAsciiTextDefaultScale(s32, s32, char *, s32);
 extern s16 gRaceLapCount;
 extern u8 gRaceUpdatePaused;
 extern u8 gTrainingCourseLesson;
@@ -368,8 +367,8 @@ const char gRaceHudTrickAttackPointLabel[] = "Point";
 const char gRaceHudTrickAttackTimeLimitLabel[] = "Time Limit";
 
 void drawTrickAttackChallengeLabels(void *arg0) {
-    drawMenuAsciiTextDefaultScale(0x60, -0x61, (char *)gRaceHudTrickAttackPointLabel, 5);
-    drawMenuAsciiTextDefaultScale(0x38, 0x47, (char *)gRaceHudTrickAttackTimeLimitLabel, 5);
+    drawMenuAsciiTextDefaultScale(0x60, -0x61, gRaceHudTrickAttackPointLabel, 5);
+    drawMenuAsciiTextDefaultScale(0x38, 0x47, gRaceHudTrickAttackTimeLimitLabel, 5);
 }
 
 const char gRaceHudScoreAttackTimeLimitMinutesFormat[] = "%2.2d";
@@ -474,7 +473,7 @@ const char gRaceHudScoreAttackPointTargetFormat[] = "/%d";
 void drawScoreAttackChallengeLabels(void *arg0) {
     char sp18[0x20];
 
-    drawMenuAsciiTextDefaultScale(0x38, 0x47, (char *)gRaceHudScoreAttackTimeLimitLabel, 5);
+    drawMenuAsciiTextDefaultScale(0x38, 0x47, gRaceHudScoreAttackTimeLimitLabel, 5);
     sprintf(sp18, gRaceHudScoreAttackPointTargetFormat, gRacePlayers[0].scoreAttackPointTarget);
     drawMenuAsciiTextDefaultScale(0x70, -0x48, sp18, 6);
 }
@@ -542,8 +541,8 @@ void drawTargetTimeChallengeLabels(void *arg0) {
     char sp28[0x20];
     RaceTimer *targetTime;
 
-    drawMenuAsciiTextDefaultScale(0x48, 0x47, (char *)gRaceHudTargetTimeChallengeLapTimeLabel, 5);
-    drawMenuAsciiTextDefaultScale(0x32, -0x60, (char *)gRaceHudTargetTimeChallengeTargetTimeLabel, 7);
+    drawMenuAsciiTextDefaultScale(0x48, 0x47, gRaceHudTargetTimeChallengeLapTimeLabel, 5);
+    drawMenuAsciiTextDefaultScale(0x32, -0x60, gRaceHudTargetTimeChallengeTargetTimeLabel, 7);
     targetTime = &gRaceCourseTargetTimes[gRaceCourseIndex.signedValue];
     sprintf(
         sp28,
@@ -632,8 +631,8 @@ const char gRaceHudTimeTrialBestLapFormat[] = "%2.2d'%2.2d\"%2.2d";
 void drawTimeTrialLabels(void *unused) {
     char bestLapText[0x20];
 
-    drawMenuAsciiTextDefaultScale(0x48, 0x47, (char *)gRaceHudTimeTrialLapTimeLabel, 5);
-    drawMenuAsciiTextDefaultScale(0x48, -0x61, (char *)gRaceHudTimeTrialBestLapLabel, 7);
+    drawMenuAsciiTextDefaultScale(0x48, 0x47, gRaceHudTimeTrialLapTimeLabel, 5);
+    drawMenuAsciiTextDefaultScale(0x48, -0x61, gRaceHudTimeTrialBestLapLabel, 7);
     sprintf(
         bestLapText,
         gRaceHudTimeTrialBestLapFormat,
@@ -984,7 +983,7 @@ void drawMultiplayerScoreAndLapCounter(void *arg0) {
     } else {
         palette = 2;
     }
-    drawMenuAsciiTextDefaultScale(0x14, 0x28, buffer, palette & 0xFFFF);
+    drawMenuAsciiTextDefaultScale(0x14, 0x28, buffer, palette);
 
     if (gCurrentViewportIndex < 2) {
         x = -0x2C;
