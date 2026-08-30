@@ -12,6 +12,7 @@
 #include "game/engine/viewport_manager.h"
 #include "game/race/player/race_player_input.h"
 #include "game/menu/character_select/character_select_menu.h"
+#include "game/menu/controller_pak/controller_pak_ui.h"
 #include "game/menu/course_select/course_select_menu.h"
 #include "game/menu/course_select/multiplayer_course_select_menu.h"
 #include "game/menu/main_menu/controller_main_menu_flow.h"
@@ -291,8 +292,6 @@ void initRaceSetupSaveMenu(void) {
 #define SAVE_STATUS_TRANSITION_DONE 3
 #define SAVE_PANEL_CREATE_DELAY 5
 #define SAVE_READY_CONFIRM_DELAY 0xF
-
-extern void initControllerPakRumbleCheckPrompt(CallbackTask *);
 
 #if 0
 void updateRaceSetupSaveMenu(void) {
