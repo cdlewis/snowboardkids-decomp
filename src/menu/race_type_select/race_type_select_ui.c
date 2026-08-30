@@ -49,8 +49,6 @@ extern s32 gMenuFlowState;
 
 const char gRaceTypeSelectEntryFeeFormat[] = "%6dG";
 
-extern int sprintf(char *, const char *, ...);
-
 // IDO code generation for this function is sensitive to source line layout.
 // clang-format off
 void drawRaceTypeSelectOptionIcons(RaceTypeSelectOptionIconActor *arg0) {
