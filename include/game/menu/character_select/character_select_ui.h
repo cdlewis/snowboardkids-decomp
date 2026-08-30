@@ -2,11 +2,12 @@
 #define CHARACTER_SELECT_UI_H
 
 #include "common.h"
+#include "game/engine/callback_task_scheduler.h"
 #include "game/menu/renderer/menu_renderer.h"
 #include "game/race/player/race_player_input.h"
 
 typedef struct {
-    u8 pad0[0x18];
+    /* 0x00 */ CallbackTaskHeader taskHeader;
     /* 0x18 */ s16 x;
     /* 0x1A */ s16 y;
     /* 0x1C */ s16 alpha;
@@ -18,18 +19,18 @@ typedef struct {
 } CharacterSelectUiBannerActor;
 
 typedef struct {
-    u8 pad0[0x18];
+    /* 0x00 */ CallbackTaskHeader taskHeader;
     /* 0x18 */ s16 x[RACE_PLAYER_COUNT];
     /* 0x20 */ s16 y[RACE_PLAYER_COUNT];
     /* 0x28 */ u16 frameLimit;
     /* 0x2A */ u16 frameStep;
     /* 0x2C */ u16 frameCounter;
-    u8 pad2E[2];
+    /* 0x2E */ u16 unused2E;
     /* 0x30 */ u8 transitionState;
 } CharacterSelectUiPlayerPanelFrameActor;
 
 typedef struct {
-    u8 pad0[0x18];
+    /* 0x00 */ CallbackTaskHeader taskHeader;
     /* 0x18 */ s16 x;
     /* 0x1A */ s16 y;
     /* 0x1C */ s16 targetX;
@@ -39,20 +40,20 @@ typedef struct {
     /* 0x23 */ u8 rightSecretSlotUnlocked;
     /* 0x24 */ u8 state;
     /* 0x25 */ u8 timer;
-    /* 0x26 */ s16 unk26;
+    /* 0x26 */ s16 unused26;
 } CharacterSelectUiRosterIconActor;
 
 typedef struct {
-    u8 pad0[0x18];
+    /* 0x00 */ CallbackTaskHeader taskHeader;
     /* 0x18 */ s16 x[RACE_PLAYER_COUNT];
     /* 0x20 */ s16 y[RACE_PLAYER_COUNT];
-    u8 pad28[RACE_PLAYER_COUNT];
+    /* 0x28 */ u8 unused28[RACE_PLAYER_COUNT];
     /* 0x2C */ u8 blinkTimer[RACE_PLAYER_COUNT];
     /* 0x30 */ u8 blinkVisible[RACE_PLAYER_COUNT];
 } CharacterSelectUiPlayerStatsPanelActor;
 
 typedef struct {
-    u8 pad0[0x18];
+    /* 0x00 */ CallbackTaskHeader taskHeader;
     /* 0x18 */ s16 x[RACE_PLAYER_COUNT];
     /* 0x20 */ s16 y[RACE_PLAYER_COUNT];
     /* 0x28 */ s16 xDistance[RACE_PLAYER_COUNT];
@@ -68,7 +69,7 @@ typedef struct {
 } CharacterSelectUiSelectedCharacterTokenActor;
 
 typedef struct {
-    u8 pad0[0x18];
+    /* 0x00 */ CallbackTaskHeader taskHeader;
     /* 0x18 */ s16 x[RACE_PLAYER_COUNT];
     /* 0x20 */ s16 y;
     /* 0x22 */ s16 baseX;
@@ -85,7 +86,7 @@ typedef struct {
 
 typedef struct {
     MenuGlyphScript confirmationText[2][0x1C];
-    u16 unusedData[0x14];
+    MenuGlyphScript unusedText[0x14];
 } CharacterSelectUiConfirmationBannerText;
 
 extern CharacterSelectUiRosterIconActor *D_8010ADE0;
