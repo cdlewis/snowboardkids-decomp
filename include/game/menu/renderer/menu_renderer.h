@@ -89,6 +89,16 @@ void drawMenuAssetRegion(
     u8 height
 );
 void drawMenuSprite(s16 x, s16 y, AssetTable *table, u16 tileIndex, u16 width, u16 height, u8 palette, u8 flip);
+void drawMenuSpriteWideIndex(
+    s16 x,
+    s16 y,
+    AssetTable *table,
+    s32 tileIndex,
+    u16 width,
+    u16 height,
+    u8 palette,
+    u8 flip
+);
 void drawMenuSpriteClipped(
     s16 x,
     s16 y,

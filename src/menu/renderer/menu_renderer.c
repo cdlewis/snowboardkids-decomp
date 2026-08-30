@@ -180,8 +180,6 @@ void drawMenuSpriteWideIndex(s16 x, s16 y, AssetTable *table, s32 tileIndex, u16
 }
 #else
 #pragma weak drawMenuSpriteWideIndex = drawMenuSprite
-extern void
-drawMenuSpriteWideIndex(s16 x, s16 y, AssetTable *table, s32 tileIndex, u16 width, u16 height, u8 palette, u8 flip);
 #endif
 
 void drawMenuSpriteClipped(s16 x, s16 y, AssetTable *table, u16 imageIndex, u16 scaleX, u16 scaleY,
