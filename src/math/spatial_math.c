@@ -72,7 +72,7 @@ s32 isPositionNearCurrentRaceViewportCamera(Vec3i *position) {
     return 0;
 }
 
-s32 calculateFixedAngleFromDeltaXZ(s32 deltaX, s32 deltaZ) {
+s16 calculateFixedAngleFromDeltaXZ(s32 deltaX, s32 deltaZ) {
     s16 angle;
 
     deltaZ = -deltaZ;
@@ -125,6 +125,6 @@ s32 calculateFixedAngleFromDeltaXZ(s32 deltaX, s32 deltaZ) {
     return angle;
 }
 
-s32 calculateFixedAngleBetweenXZPoints(s32 fromX, s32 fromZ, s32 toX, s32 toZ) {
+s16 calculateFixedAngleBetweenXZPoints(s32 fromX, s32 fromZ, s32 toX, s32 toZ) {
     return calculateFixedAngleFromDeltaXZ(toX - fromX, toZ - fromZ);
 }
