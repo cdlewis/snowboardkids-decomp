@@ -2,9 +2,7 @@
 #define GAME_AUDIO_AUDIO_ENGINE_INTERNAL_H
 
 #include "common.h"
-#define alSynSetPan alSynSetPan_u8
 #include <PR/libaudio.h>
-#undef alSynSetPan
 #include <PR/os_ai.h>
 #include <PR/os_convert.h>
 #include <PR/rmon.h>
@@ -32,10 +30,8 @@ typedef struct SchedulerThreadMainLocals {
 
 extern const char D_800E1A60[16];
 
-extern void alSynSetPan(ALSynth *, ALVoice *, s32);
 extern AudioDmaState gAudioDmaState;
 extern AudioDmaBuffer *gAudioDmaBufferPool;
-extern f32 sinf(f32);
 extern s32 gAudioThreadStarted;
 extern s32 gAudioCmdListIndex;
 extern u32 gAudioFrameCounter;
@@ -83,7 +79,5 @@ extern u16 mus_master_volume_songs;
 extern s32 mus_vsyncs_per_second;
 extern s32 mus_next_frame_time;
 extern ALSynth gAudioSynthesizer;
-
-extern ALDMAproc initAudioDmaCallback(AudioDmaState **);
 
 #endif

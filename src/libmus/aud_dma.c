@@ -1,3 +1,4 @@
+#include "game/audio/audio_engine.h"
 #include "game/audio/audio_engine_internal.h"
 
 s32 audioDmaCallback(s32 addr, s32 len, void *state) {
