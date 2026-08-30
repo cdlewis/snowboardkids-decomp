@@ -1,4 +1,4 @@
-const char D_800E1A60[16] = "NG Channel\n";
+const char gSoundPlayerNoChannelMessage[16] = "NG Channel\n";
 
 u8 *Fstop(PlayerCommandState *arg0, u8 *arg1) {
     arg0->unk60 = 0;

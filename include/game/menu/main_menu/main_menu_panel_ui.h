@@ -12,7 +12,7 @@ typedef struct MenuPanelActor {
     /* 0x28 */ s16 inputRepeatTimer;
     /* 0x2A */ u8 selectedTile;
     /* 0x2B */ u8 selectionState;
-} MenuPanelActor; // size = 0x2C
+} MenuPanelActor;
 
 void drawMainMenuModeSelectFrame(void *arg0);
 void drawMainMenuModeSelectIcons(MenuPanelActor *arg0);

@@ -135,7 +135,7 @@ s32 MusStartSong(PlayerCommandData *arg0) {
         if (arg0->sequenceOffsets[i] != 0) {
             index = __MusIntFindChannel(value, i);
             if (index == -1) {
-                rmonPrintf(D_800E1A60);
+                rmonPrintf(gSoundPlayerNoChannelMessage);
             }
             state = &mus_channels[index];
             __MusIntInitialiseChannel(state);

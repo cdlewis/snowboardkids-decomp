@@ -28,7 +28,7 @@ typedef struct SchedulerThreadMainLocals {
     OSMesg msg;
 } SchedulerThreadMainLocals;
 
-extern const char D_800E1A60[16];
+extern const char gSoundPlayerNoChannelMessage[16];
 
 extern AudioDmaState gAudioDmaState;
 extern AudioDmaBuffer *gAudioDmaBufferPool;

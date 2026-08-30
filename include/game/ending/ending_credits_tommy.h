@@ -12,7 +12,7 @@ typedef struct EndingCreditsTommy {
     /* 0x26 */ s16 rotY;
     /* 0x28 */ s16 rotZ;
     /* 0x2A */ u16 timer;
-} EndingCreditsTommy; // size = 0x2C
+} EndingCreditsTommy;
 
 typedef struct {
     /* 0x00 */ s32 posX;

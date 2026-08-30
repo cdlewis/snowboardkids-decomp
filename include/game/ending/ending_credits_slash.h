@@ -9,7 +9,7 @@ typedef struct EndingCreditsSlashActor {
     /* 0x24 */ Vec3s rotation;
     /* 0x2A */ u16 stateTimer;
     /* 0x2C */ u16 phase0DAnimationId;
-} EndingCreditsSlashActor; // size = 0x30
+} EndingCreditsSlashActor;
 
 void noopEndingCreditsSlash(void);
 void updateEndingSlashFinalPose(EndingCreditsSlashActor *arg0);
