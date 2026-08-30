@@ -1,4 +1,5 @@
 #include "common.h"
+#include <PR/os_libc.h>
 #include "font_encoding.h"
 #include "game/engine/asset_manager.h"
 #include "game/engine/render_callback.h"

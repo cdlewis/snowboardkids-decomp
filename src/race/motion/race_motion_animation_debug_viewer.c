@@ -1,4 +1,5 @@
 #include "common.h"
+#include <PR/os_libc.h>
 #include "game/engine/controller_input.h"
 #include "game/engine/render_callback.h"
 #include "game/race/camera/race_camera.h"

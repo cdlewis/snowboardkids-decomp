@@ -1,5 +1,6 @@
 #include "game/race/race_state.h"
 #include "common.h"
+#include <PR/os_libc.h>
 #include "game/save_data.h"
 #include "game/audio/sound_manager.h"
 #include "game/menu/renderer/menu_render_utils.h"
@@ -1226,7 +1227,6 @@ extern const char gRaceUiPendingMoneyLabel[];
 extern Gfx *gRegionAllocPtr;
 extern Gfx gEffectRenderModeCleanupDl[];
 extern Gfx gEffectRenderModeSetupDl[];
-extern int sprintf(char *, const char *, ...);
 extern s16 gFrameCounter;
 extern s16 gRaceLapCount;
 extern s16 gUiBlinkTimer;

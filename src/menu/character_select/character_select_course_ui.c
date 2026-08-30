@@ -1,6 +1,7 @@
 #include "game/race/race_state.h"
 #include "font_encoding.h"
 #include "common.h"
+#include <PR/os_libc.h>
 #include "game/save_data.h"
 #include "game/engine/asset_manager.h"
 #include "game/engine/render_callback.h"
