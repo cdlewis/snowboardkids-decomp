@@ -308,7 +308,6 @@ RaceCourseTriggerEntry gCourseTriggerEntries[] = {
     { 4, 6, 0x122, 0, { 0xF7B42249, 0xF305D31B, 0xEB7622AF }, 0xFBA, 0x400, 0x02006988 },
 };
 
-extern void *resolveAssetTableRelativePointer(void *, u32);
 extern s32 gMenuFlowState;
 extern u8 gCurrentViewportIndex;
 extern u8 gRaceUpdatePaused;
@@ -552,7 +551,6 @@ void initFinalLapPrompt(CallbackTask *arg0) {
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateFinalLapPrompt);
 }
 
-extern void getAssetTableImagePaletteAndSize(u8 *, s32, void **, void **, s16 *, s16 *);
 void renderCourseTextureMarkers(RaceCourseObjectMatrixEffect *arg0) {
     volatile u8 pad[8];
     void *image;
@@ -574,7 +572,7 @@ void renderCourseTextureMarkers(RaceCourseObjectMatrixEffect *arg0) {
                     textureIndex = entry->type;
                     getAssetTableImagePaletteAndSize(
                         (u8 *)getRelocatableHeapBlockBase((s32)ASSET_HANDLE(0x1C)),
-                        textureIndex & 0xFFFF,
+                        textureIndex,
                         &image,
                         &palette,
                         &width,
