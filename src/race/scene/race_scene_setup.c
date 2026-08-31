@@ -325,7 +325,7 @@ void initRaceCourseSceneTasks(void) {
                     createCallbackTaskWithUserId((CallbackTaskCallback)&initRacePickup, 0, 0x64, 0x55);
                     createCallbackTaskWithUserId((CallbackTaskCallback)&initRacePickup, 0, 0x64, 0x56);
                 }
-                func_80061AF4(0x59, (void *)0x2290CDA1, (void *)0xC5F82815, 0xAF0);
+                spawnRaceUiThrownTrailObstacle(0x59, (void *)0x2290CDA1, (void *)0xC5F82815, 0xAF0);
             }
             if (gRaceSplitscreenMode == 1) {
                 if (gRaceTypeSelection == 0) {
@@ -406,7 +406,7 @@ void initRaceCourseSceneTasks(void) {
             createCallbackTask((CallbackTaskCallback)&initRaceCourseSceneryObjects, 0, 0x64);
             createCallbackTask((CallbackTaskCallback)&initCourseGateObject, 0, 0x64);
             createCallbackTaskWithUserId((CallbackTaskCallback)&initRaceCourseTripleParticle, 0, 0x64, 0);
-            createCallbackTaskWithUserId((CallbackTaskCallback)&func_800631B0, 0, 0x64, 0);
+            createCallbackTaskWithUserId((CallbackTaskCallback)&initDizzyLandTrailingParticle, 0, 0x64, 0);
             createCallbackTaskWithUserId((CallbackTaskCallback)&initRaceCourseSpinningObject, 0, 0x64, 0);
             createCallbackTaskWithUserId((CallbackTaskCallback)&initRaceCourseScrollingTexture, 0, 0x64,
                                          RACE_COURSE_SCROLLING_TEXTURE_DIZZY_LAND_0);
@@ -480,7 +480,7 @@ void initRaceCourseSceneTasks(void) {
             break;
         case 6:
             createCallbackTask((CallbackTaskCallback)&initRaceCourseModelRenderTask, 0, 0x64);
-            createCallbackTask((CallbackTaskCallback)&func_80063FC0, 0, 1);
+            createCallbackTask((CallbackTaskCallback)&initSilverMountainSnowParticles, 0, 1);
             createCallbackTask((CallbackTaskCallback)&initRaceCourseSceneryObjects, 0, 0x64);
             createCallbackTask((CallbackTaskCallback)&initCourseGateObject, 0, 0x64);
             createCallbackTask((CallbackTaskCallback)&initRaceIntroModelMeshes, 0, 0x64);

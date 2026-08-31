@@ -23,9 +23,6 @@ typedef struct SnowboardTrailState {
 
 typedef char SnowboardTrailStateSizeCheck[(sizeof(SnowboardTrailState) == 0x78) ? 1 : -1];
 
-#define renderSnowboardTrailEffect func_800837D0
-#define updateSnowboardTrailEffect func_8008393C
-
 void renderSnowboardTrailEffect(SnowboardTrailState *trail);
 void updateSnowboardTrailEffect(struct RacePlayer *player);
 void startSnowboardTrailEffect(struct RacePlayer *player);
