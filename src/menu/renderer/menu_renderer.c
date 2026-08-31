@@ -917,7 +917,7 @@ void drawMenuSpriteTileClipped(
     }
 }
 
-void func_80011854(void) {
+void noOpMenuRendererCallback(void) {
 }
 
 void drawMenuTextureByAssetId(s16 x, s16 y, AssetTable *unusedTable, u16 assetId, u16 width, u16 height) {
@@ -996,7 +996,7 @@ void drawMenuTextureByAssetId(s16 x, s16 y, AssetTable *unusedTable, u16 assetId
     FONT_GFX_CMD(gRegionAllocPtr++, 0xB3000000, 0x04000400);
 }
 
-void func_80011C18(MenuRenderSpriteActor *arg0) {
+void initMenuSpriteActorDebugControls(MenuRenderSpriteActor *arg0) {
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateMenuSpriteActorDebugControls);
 }
 
@@ -1034,7 +1034,7 @@ void drawMenuTilemapSpriteCallback(MenuRenderSprite *arg0) {
     drawMenuTilemapSprite(arg0, MENU_TILEMAP_TEXEL_4B, 0, 0);
 }
 
-void func_80011D6C(void) {
+void noOpMenuTilemapCallback(void) {
 }
 
 void drawMenuTilemapSprite(

@@ -802,7 +802,7 @@ void initRaceSceneFlow(void) {
         setCurrentGameTaskCallback(fadeOutRaceStartTransitionFlow, 0);
     } else {
         createCallbackTask((CallbackTaskCallback)initRaceCountdownPrompt, 6, 0x64);
-        createCallbackTask((CallbackTaskCallback)func_80065E90, 6, 0x64);
+        createCallbackTask((CallbackTaskCallback)initRaceStartOverlay, 6, 0x64);
         setCurrentGameTaskCallback(startRaceGameplayFlow, 0);
     }
     for (i = 0; i < gPlayerCount; i++) {
@@ -839,7 +839,7 @@ void fadeInRaceGameplayViewports(void) {
             setRaceCameraMode(0, 1);
             gMenuFadeAlpha = 0xFF;
             createCallbackTask((CallbackTaskCallback)initRaceCountdownPrompt, 6, 0x64);
-            createCallbackTask((CallbackTaskCallback)func_80065E90, 6, 0x64);
+            createCallbackTask((CallbackTaskCallback)initRaceStartOverlay, 6, 0x64);
             switch (gPlayerCount & 0xFFFFFFFF) {
                 case 1:
                     if (gRaceCourseIndex.signedValue != 6) {
@@ -1918,7 +1918,7 @@ void updateRaceResultsFlow(void) {
             break;
 
         case 2:
-            resultActor = createCallbackTask((CallbackTaskCallback)func_8005A2F0, 6, 0x64);
+            resultActor = createCallbackTask((CallbackTaskCallback)initRaceUiCourseStats, 6, 0x64);
             if (resultActor != NULL) {
                 currentTime = gRaceElapsedTimer.fraction +
                               (gRaceElapsedTimer.seconds * COURSE_TIME_SECOND) +
@@ -2051,7 +2051,7 @@ void updateRaceResultsFlow(void) {
                 break;
 
             case 0:
-                resultActor = createCallbackTask((CallbackTaskCallback)func_8005CE4C, 6, 0x64);
+                resultActor = createCallbackTask((CallbackTaskCallback)initRaceUiCourseRecordPayout, 6, 0x64);
                 if (resultActor != NULL) {
                     currentTime = gRaceElapsedTimer.fraction +
                                   (gRaceElapsedTimer.seconds * COURSE_TIME_SECOND) +
@@ -2252,7 +2252,7 @@ void initRaceGhostReplayFlow(void) {
     requestMusicSequenceBank(0);
     gCurrentGameTask->callbackData0 = 0;
     gCurrentGameTask->callbackData1 = 0;
-    createCallbackTask((CallbackTaskCallback)func_80057E60, 6, 0x64);
+    createCallbackTask((CallbackTaskCallback)updateRaceUiPrizePayoutContinuePrompt, 6, 0x64);
     if (D_80121B61 == -1) {
         createCallbackTask((CallbackTaskCallback)updateRaceGhostUnavailableMessage, 6, 0x64);
     }
