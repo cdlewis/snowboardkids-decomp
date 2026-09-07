@@ -4,14 +4,19 @@
 from __future__ import annotations
 
 import struct
+from pathlib import Path
+
+from tools.asset_images import image_bytes
 
 from tools.course_graphics_common import parse_int
 
 
-def parse_course_sprite_table(data: bytes) -> dict:
+def parse_course_sprite_table(data: bytes, ci8_entries=(), include_unused_palettes=False) -> dict:
     if len(data) < 8:
         raise ValueError("course sprite table is shorter than its header")
     unknown_0, entry_count = struct.unpack(">II", data[:8])
+    if any(index < 0 or index >= entry_count for index in ci8_entries):
+        raise ValueError("CI8 entry index exceeds sprite entry count")
     entry_end = 8 + entry_count * 8
     if entry_end > len(data):
         raise ValueError(f"course sprite table has invalid entry count {entry_count}")
@@ -22,6 +27,9 @@ def parse_course_sprite_table(data: bytes) -> dict:
     for index in range(entry_count):
         offset = 8 + index * 8
         image_offset, palette_index, width, height = struct.unpack(">IHBB", data[offset : offset + 8])
+        if not width or not height:
+            raise ValueError(f"sprite {index} has zero dimensions")
+        fmt = "ci8" if index in ci8_entries else "ci4"
         entries.append(
             {
                 "name": f"sprite_{index:02d}",
@@ -31,11 +39,17 @@ def parse_course_sprite_table(data: bytes) -> dict:
                 "height": height,
             }
         )
-        dimensions = (width, height)
+        dimensions = (width, height, fmt)
         if image_offset in image_specs and image_specs[image_offset] != dimensions:
             raise ValueError(f"shared sprite image at 0x{image_offset:X} has inconsistent dimensions")
         image_specs[image_offset] = dimensions
-        palette_count = max(palette_count, palette_index + 1)
+        palette_count = max(palette_count, palette_index + (16 if fmt == "ci8" else 1))
+
+    if include_unused_palettes and image_specs:
+        palette_bytes = min(image_specs) - entry_end
+        if palette_bytes < 0 or palette_bytes % 32:
+            raise ValueError("sprite palette bank is not aligned to 32-byte slots")
+        palette_count = max(palette_count, palette_bytes // 32)
 
     palette_end = entry_end + palette_count * 0x20
     if palette_end > len(data):
@@ -55,8 +69,8 @@ def parse_course_sprite_table(data: bytes) -> dict:
 
     images = []
     covered = [(0, palette_end)]
-    for image_offset, (width, height) in sorted(image_specs.items()):
-        size = (width * height + 1) // 2
+    for image_offset, (width, height, fmt) in sorted(image_specs.items()):
+        size = (width * height + 1) // 2 if fmt == "ci4" else width * height
         end = image_offset + size
         if image_offset < palette_end or end > len(data):
             raise ValueError(f"sprite image range 0x{image_offset:X}-0x{end:X} is invalid")
@@ -64,7 +78,7 @@ def parse_course_sprite_table(data: bytes) -> dict:
             {
                 "name": f"image_{image_offset:04X}",
                 "offset": image_offset,
-                "format": "ci4",
+                "format": fmt,
                 "width": width,
                 "height": height,
                 "data": data[image_offset:end].hex(),
@@ -93,7 +107,7 @@ def parse_course_sprite_table(data: bytes) -> dict:
     }
 
 
-def pack_course_sprite_table(manifest: dict) -> bytes:
+def pack_course_sprite_table(manifest: dict, base_path: Path = Path(".")) -> bytes:
     size = parse_int(manifest["decompressed_size"])
     output = bytearray(size)
     written = bytearray(size)
@@ -131,8 +145,9 @@ def pack_course_sprite_table(manifest: dict) -> bytes:
         write(parse_int(palette["offset"]), values, f"sprite palette {palette['name']}")
 
     for image in manifest["images"]:
-        data = bytes.fromhex(str(image["data"]))
-        expected = (parse_int(image["width"]) * parse_int(image["height"]) + 1) // 2
+        data = image_bytes(image, base_path)
+        pixels = parse_int(image["width"]) * parse_int(image["height"])
+        expected = (pixels + 1) // 2 if image["format"] == "ci4" else pixels
         if len(data) != expected:
             raise ValueError(f"sprite image {image['name']} has 0x{len(data):X} bytes, expected 0x{expected:X}")
         write(parse_int(image["offset"]), data, f"sprite image {image['name']}")

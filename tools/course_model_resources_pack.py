@@ -10,6 +10,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from tools.course_graphics_common import compression_metadata_from_manifest, pack_course_model_resources
 from tools.course_surface_data_common import load_yaml
 from tools.huffman_asset import compress_huffman_asset
+from tools.asset_parts import write_dependencies
 
 
 def main() -> None:
@@ -19,10 +20,11 @@ def main() -> None:
     args = parser.parse_args()
 
     manifest = load_yaml(args.manifest)
-    packed = pack_course_model_resources(manifest)
+    packed = pack_course_model_resources(manifest, args.manifest.parent)
     compressed = compress_huffman_asset(packed, compression_metadata_from_manifest(manifest))
     args.out.parent.mkdir(parents=True, exist_ok=True)
     args.out.write_bytes(compressed)
+    write_dependencies(args.manifest, manifest, args.out)
 
 
 if __name__ == "__main__":

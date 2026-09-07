@@ -20,8 +20,8 @@ class CourseGraphicsTests(unittest.TestCase):
         self.assertNotIn("_COURSE_MESH_SECTION_", asset_declarations)
 
         internal_roots = []
-        for path in (repo_root / "assets/course_display_lists").glob("*_COURSE_DISPLAY_LIST.c"):
-            course = path.stem.removesuffix("_COURSE_DISPLAY_LIST")
+        for path in (repo_root / "assets/courses").glob("*/geometry/terrain.c"):
+            course = path.parent.parent.name.upper()
             if f"name: {course}_COURSE_GRAPHICS" not in yaml_text:
                 continue
             internal_roots.extend(

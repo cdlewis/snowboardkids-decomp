@@ -294,6 +294,25 @@ dirs:
 extract: check
 	$(PRINTF) "[$(CYAN) splat  $(NO_COL)]  Extracting $(BASENAME).yaml\n"
 	$(V)$(SPLAT) $(BASENAME).yaml
+	$(V)$(PYTHON) $(TOOLS_DIR)/asset_inventory.py --source-views-only
+	$(V)$(PYTHON) $(TOOLS_DIR)/asset_bundles.py migrate --if-absent
+	$(V)$(PYTHON) $(TOOLS_DIR)/semantic_assets.py
+	$(V)$(PYTHON) $(TOOLS_DIR)/asset_inventory.py
+	$(V)$(PYTHON) $(TOOLS_DIR)/asset_bundles.py previews
+
+.PHONY: asset-report verify-assets asset-previews migrate-assets
+asset-report:
+	$(V)$(PYTHON) $(TOOLS_DIR)/asset_inventory.py
+
+verify-assets:
+	$(V)$(PYTHON) $(TOOLS_DIR)/asset_inventory.py --verify
+
+asset-previews:
+	$(V)$(PYTHON) $(TOOLS_DIR)/asset_bundles.py previews
+
+migrate-assets:
+	$(V)$(PYTHON) $(TOOLS_DIR)/asset_bundles.py migrate --if-absent
+	$(V)$(PYTHON) $(TOOLS_DIR)/semantic_assets.py
 
 #################
 ## COMPILATION ##
@@ -359,6 +378,23 @@ $(BUILD_DIR)/%.o: %.bin
 	$(V)$(LD) -r -b binary -o $@ $<
 
 # Editable compressed course collision/path data -> *.o
+# Packers refresh dependencies when manifests change their source paths.
+-include $(wildcard $(BUILD_DIR)/assets/readable/*.d $(BUILD_DIR)/assets/course_model_resources/*.d $(BUILD_DIR)/assets/course_sprite_tables/*.d)
+-include $(wildcard $(BUILD_DIR)/assets/course_display_lists/*.d $(BUILD_DIR)/assets/course_surface_data/*.d)
+# Explicit scatter rules take precedence over the legacy pattern rules below.
+-include assets/layout/bundles.mk
+$(BUILD_DIR)/assets/readable/%.o: assets/readable/%.yaml \
+        $(TOOLS_DIR)/readable_asset_pack.py $(TOOLS_DIR)/readable_assets.py \
+        $(TOOLS_DIR)/asset_images.py $(TOOLS_DIR)/course_sprite_table_common.py \
+		$(TOOLS_DIR)/animation_assets.py \
+		$(TOOLS_DIR)/audio_assets.py $(TOOLS_DIR)/asset_parts.py \
+		$(TOOLS_DIR)/model_assets.py \
+		$(TOOLS_DIR)/music_assets.py \
+        $(TOOLS_DIR)/course_graphics_common.py $(TOOLS_DIR)/huffman_asset.py
+	@mkdir -p $(dir $@)
+	$(V)$(PYTHON) $(TOOLS_DIR)/readable_asset_pack.py $< --out $(BUILD_DIR)/assets/readable/$*.bin
+	$(V)$(LD) -r -b binary -o $@ $(BUILD_DIR)/assets/readable/$*.bin
+
 $(BUILD_DIR)/assets/course_surface_data/%.o: assets/course_surface_data/%.yaml \
 		$(TOOLS_DIR)/course_surface_data_pack.py \
 		$(TOOLS_DIR)/course_surface_data_common.py \
@@ -370,6 +406,7 @@ $(BUILD_DIR)/assets/course_surface_data/%.o: assets/course_surface_data/%.yaml \
 
 # Editable compressed course vertices and remaining segment-3 resources.
 $(BUILD_DIR)/assets/course_model_resources/%.o: assets/course_model_resources/%.yaml \
+		$(TOOLS_DIR)/asset_images.py $(TOOLS_DIR)/asset_parts.py \
 		$(TOOLS_DIR)/course_model_resources_pack.py \
 		$(TOOLS_DIR)/course_graphics_common.py \
 		$(TOOLS_DIR)/huffman_asset.py
@@ -380,6 +417,7 @@ $(BUILD_DIR)/assets/course_model_resources/%.o: assets/course_model_resources/%.
 
 # Editable compressed course-specific sprite tables.
 $(BUILD_DIR)/assets/course_sprite_tables/%.o: assets/course_sprite_tables/%.yaml \
+		$(TOOLS_DIR)/asset_images.py $(TOOLS_DIR)/asset_parts.py \
 		$(TOOLS_DIR)/course_sprite_table_pack.py \
 		$(TOOLS_DIR)/course_sprite_table_common.py \
 		$(TOOLS_DIR)/course_graphics_common.py \
@@ -487,7 +525,6 @@ tidy: check-clang-tidy-version
 clean:
 	$(PRINTF) "[$(YELLOW) clean  $(NO_COL)]  Removing generated files\n"
 	$(V)rm -rf asm
-	$(V)rm -rf assets
 	$(V)rm -rf build
 	$(V)rm -f *auto.txt
 

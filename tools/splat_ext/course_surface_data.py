@@ -8,6 +8,7 @@ from splat.segtypes.common.segment import CommonSegment
 from splat.util import log, options
 
 from tools.course_surface_data_common import write_yaml
+from tools.asset_staging import staging_path
 from tools.huffman_asset import decompress_huffman_asset
 
 
@@ -120,5 +121,6 @@ class N64SegCourse_surface_data(CommonSegment):
             "faces": faces,
             "surfaces": surfaces,
         }
-        write_yaml(self.out_path(), manifest)
-        self.log(f"Wrote {self.name} to {self.out_path()}")
+        path = staging_path(self.out_path())
+        write_yaml(path, manifest)
+        self.log(f"Wrote {self.name} to {path}")
