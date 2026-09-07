@@ -162,17 +162,47 @@ def process_source(source, characters, named_values):
     return "".join(output)
 
 
+def decode_text(values, characters, named_values):
+    """Decode every u16, retaining terminators and unknown/control words exactly."""
+    chars = {value: key for key, value in reversed(list(characters.items()))}
+    names = {value: key for key, value in reversed(list(named_values.items()))}
+    out, i = [], 0
+    while i < len(values):
+        value = values[i]
+        if not 0 <= value <= 65535:
+            raise TextConversionError("text word exceeds u16 range")
+        if value == 0xFFFC and i + 1 < len(values):
+            i += 1
+            out.append(f"{{COLOR:{values[i]}}}")
+        elif value in chars:
+            char = chars[value]
+            out.append({"\0": r"\0", "\\": r"\\", "{": r"\{", "}": r"\}"}.get(char, char))
+        elif value in names:
+            out.append("{" + names[value] + "}")
+        else:
+            out.append(f"{{0x{value:04X}}}")
+        i += 1
+    return "".join(out)
+
+
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("charmap")
     parser.add_argument("input")
     parser.add_argument("output")
+    parser.add_argument("--decode", action="store_true", help="decode big-endian u16 binary to readable text")
     args = parser.parse_args(argv)
 
     try:
         characters, named_values = parse_charmap(args.charmap)
-        source = sys.stdin.read() if args.input == "-" else Path(args.input).read_text()
-        converted = process_source(source, characters, named_values)
+        if args.decode:
+            data = sys.stdin.buffer.read() if args.input == "-" else Path(args.input).read_bytes()
+            if len(data) % 2:
+                raise TextConversionError("text binary has an odd byte count")
+            converted = decode_text([int.from_bytes(data[i:i+2], "big") for i in range(0, len(data), 2)], characters, named_values)
+        else:
+            source = sys.stdin.read() if args.input == "-" else Path(args.input).read_text()
+            converted = process_source(source, characters, named_values)
         if args.output == "-":
             sys.stdout.write(converted)
         else:

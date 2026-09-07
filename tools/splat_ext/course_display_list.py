@@ -1,4 +1,5 @@
 from pathlib import Path
+from tools.asset_staging import staging_path
 from typing import Optional
 
 from pygfxd import (
@@ -154,7 +155,7 @@ class N64SegCourse_display_list(CommonSegment):
             "",
         ]
 
-        path = self.out_path()
+        path = staging_path(self.out_path())
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_text("\n".join(lines), encoding="utf-8", newline="\n")
         self.log(f"Wrote {self.name} to {path}")

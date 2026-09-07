@@ -1,6 +1,7 @@
 snowboardkids.z64
 asm
 assets
+asset-backups/
 snowboardkids.d
 snowboardkids.ld
 undefined_funcs_auto.txt

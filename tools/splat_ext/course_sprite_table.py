@@ -8,7 +8,9 @@ from splat.util import log, options
 
 from tools.course_sprite_table_common import parse_course_sprite_table
 from tools.course_surface_data_common import write_yaml
+from tools.asset_staging import staging_path
 from tools.huffman_asset import decompress_huffman_asset
+from tools.asset_images import externalize_sprites
 
 
 class N64SegCourse_sprite_table(CommonSegment):
@@ -57,5 +59,7 @@ class N64SegCourse_sprite_table(CommonSegment):
             },
             **parsed,
         }
-        write_yaml(self.out_path(), manifest)
-        self.log(f"Wrote {self.name} to {self.out_path()}")
+        path = staging_path(self.out_path())
+        externalize_sprites(manifest, path)
+        write_yaml(path, manifest)
+        self.log(f"Wrote {self.name} to {path}")

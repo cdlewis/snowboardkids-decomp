@@ -1,5 +1,8 @@
 from __future__ import annotations
 
+from tools.asset_images import externalize_model
+from tools.asset_staging import staging_path
+
 import struct
 from pathlib import Path
 from typing import Optional
@@ -152,6 +155,15 @@ class N64SegCourse_model_resources(CommonSegment):
                 )
             )
 
+        for extra in self.yaml.get("extra_palettes", []):
+            start, colors = int(extra["offset"]), int(extra["colors"])
+            end = start + colors * 2
+            if not 0 <= start < end <= len(decompressed):
+                raise ValueError("extra palette exceeds model-resource bank")
+            classified_ranges.append((start, end, dict(type="palette", offset=start, format="rgba16",
+                                                       colors=colors, referenced=False, load_slots=[],
+                                                       values=list(struct.unpack_from(f">{colors}H", decompressed, start)))))
+
         coverage = bytearray(len(decompressed))
         for start, end, _ in classified_ranges:
             coverage[start:end] = b"\x01" * (end - start)
@@ -159,7 +171,7 @@ class N64SegCourse_model_resources(CommonSegment):
         first_vertex = min((reference.offset for reference in all_vertex_references), default=len(decompressed))
         unreferenced_palette_count = 0
         offset = 0
-        while offset < first_vertex:
+        while offset < first_vertex and self.type == "course_model_resources":
             if coverage[offset]:
                 offset += 1
                 continue
@@ -252,7 +264,7 @@ class N64SegCourse_model_resources(CommonSegment):
                     {(reference.offset, reference.count) for reference in all_vertex_references}
                 ),
                 "texture_count": len(textures),
-                "palette_count": len(palettes) + unreferenced_palette_count,
+                "palette_count": sum(part["type"] == "palette" for part in parts),
                 "unreferenced_palette_count": unreferenced_palette_count,
                 "unreferenced_vertex_count": unreferenced_vertex_count,
             },
@@ -265,5 +277,7 @@ class N64SegCourse_model_resources(CommonSegment):
             },
             "parts": parts,
         }
-        write_yaml(self.out_path(), manifest)
-        self.log(f"Wrote {self.name} to {self.out_path()}")
+        path = staging_path(self.out_path())
+        externalize_model(manifest, path)
+        write_yaml(path, manifest)
+        self.log(f"Wrote {self.name} to {path}")

@@ -73,6 +73,11 @@ build/snowboardkids.z64: OK
 
 ## Reverse-engineering notes
 
+- [Readable asset extraction](docs/readable-assets.md) explains semantic asset
+  bundles, Blender-friendly GLB models/animations, PNGs, text, replays, audio,
+  safe migration, and byte-exact rebuilding. Start with
+  `assets/items/pan/pan.glb` and `assets/courses/<course>/preview.glb`;
+  regenerate GLBs with `make asset-previews`. All eleven items have named bundles.
 - [Course asset inventory](docs/course-assets.md) documents the ten course
   environments, their ROM ranges, runtime asset roles, and known data layouts.
 

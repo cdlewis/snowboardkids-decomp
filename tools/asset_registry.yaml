@@ -1,0 +1,32 @@
+schema_version: 1
+# IDs: race_player_pickup_effects.c. Icons: race_hud.c, bank _245A80.
+# Projectile images: race_item_projectiles.c, handle 0x1E = _243270.
+items:
+  slapstick: {family: projectile, runtime_id: 1, icons: [5, 6, 7], sprites: {_243270: [0]}, renderer: initWideHomingItemProjectile}
+  parachute: {family: projectile, runtime_id: 2, icons: [8, 9, 10], sprites: {_243270: [1]}, renderer: initLongRangeHomingItemProjectile}
+  freeze_shot: {family: projectile, runtime_id: 3, icons: [11, 12, 13], sprites: {_243270: [2]}, renderer: initCloseRangeHomingItemProjectile}
+  snowman: {family: projectile, runtime_id: 4, icons: [14, 15, 16], sprites: {_243270: [3]}, renderer: initBouncingItemProjectile}
+  bomb: {family: projectile, runtime_id: 5, icons: [17, 18, 19], sprites: {_243270: [4]}, renderer: initAreaBlastItemProjectile}
+  speed_fan: {family: action, runtime_id: 1, icons: [20], model_roots: [0x2208, 0x23A8], renderer: startSnowboardTrailEffect}
+  ghost: {family: action, runtime_id: 2, icons: [21], sprites: {_1E74E0: [0x23, 0x24, 0x25, 0x26]}, renderer: spawnRacePlayerSparkleEffect}
+  pan: {family: action, runtime_id: 3, icons: [22], model_roots: [0x2660], renderer: spawnGhostSlowdownTargets}
+  rock: {family: action, runtime_id: 4, icons: [23], sprites: {_1E74E0: [2]}, renderer: initFallingActionProjectile}
+  rat_face:
+    family: action
+    runtime_id: 5
+    icons: [24]
+    sprites: {_243270: [6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35]}
+    renderer: initForwardActionProjectileEffect
+    animation_source: {file: src/race/ui/race_ui_effects.c, symbol: D_800D6520}
+  invisible: {family: action, runtime_id: 6, icons: [25], renderer: updateRacePlayerActionEffectUse, procedural: Player visibility/state effect; no standalone mesh}
+courses:
+  big_snowman: {runtime_id: 0, scenery: gBigSnowmanCourseSceneryEntries}
+  sunset_rock: {runtime_id: 1, scenery: gSunsetRockCourseSceneryEntries}
+  night_highway: {runtime_id: 2, scenery: gNightHighwayCourseSceneryEntries}
+  grass_valley: {runtime_id: 3, scenery: gGrassValleyCourseSceneryEntries}
+  dizzy_land: {runtime_id: 4, scenery: gDizzyLandCourseSceneryEntries}
+  quicksand_valley: {runtime_id: 5, scenery: gQuicksandValleyCourseSceneryEntries}
+  silver_mountain: {runtime_id: 6, scenery: gSilverMountainCourseSceneryEntries}
+  animal_land: {runtime_id: 7, scenery: gAnimalLandCourseSceneryEntries}
+  ninja_land: {runtime_id: 8, scenery: gNinjaLandCourseSceneryEntries}
+  rookie_mountain: {runtime_id: 9, scenery: gRookieMountainCourseSceneryEntries}

@@ -11,6 +11,7 @@ from tools.course_graphics_common import compression_metadata_from_manifest
 from tools.course_sprite_table_common import pack_course_sprite_table
 from tools.course_surface_data_common import load_yaml
 from tools.huffman_asset import compress_huffman_asset
+from tools.asset_parts import write_dependencies
 
 
 def main() -> int:
@@ -20,10 +21,11 @@ def main() -> int:
     args = parser.parse_args()
 
     manifest = load_yaml(args.manifest)
-    packed = pack_course_sprite_table(manifest)
+    packed = pack_course_sprite_table(manifest, args.manifest.parent)
     compressed = compress_huffman_asset(packed, compression_metadata_from_manifest(manifest))
     args.out.parent.mkdir(parents=True, exist_ok=True)
     args.out.write_bytes(compressed)
+    write_dependencies(args.manifest, manifest, args.out)
     return 0
 
 

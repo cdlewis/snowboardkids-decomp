@@ -666,17 +666,17 @@ segments:
   - { start: 0x144F58, type: course_display_list, name: ROOKIE_MOUNTAIN_COURSE_RANK_MODEL_LAPS_REMAINING_DISPLAY_LIST, vram: 0x02005BA8, align: 8, subalign: 8, exclusive_ram_id: level_rookie_mountain }
   - { start: 0x145168, type: course_display_list, name: ROOKIE_MOUNTAIN_COURSE_RANK_MODEL_FINAL_LAP_DISPLAY_LIST, vram: 0x02005DB8, align: 8, subalign: 8, exclusive_ram_id: level_rookie_mountain }
 
-  - type: bin
+  - type: course_display_list
     start: 0x145380
     name: _145380
     vram: 0
 
-  - type: bin
+  - type: course_display_list
     start: 0x1467B0
     name: _1467B0
     vram: 0
 
-  - type: bin
+  - type: course_display_list
     start: 0x147910
     name: _147910
     vram: 0x02000000
@@ -684,35 +684,39 @@ segments:
     subalign: 8
     exclusive_ram_id: shared_race_models
 
-  - { start: 0x148220, type: bin, name: _148220, vram: 0x02000910, align: 8, subalign: 8, exclusive_ram_id: shared_race_models }
-  - { start: 0x148440, type: bin, name: _148440, vram: 0x02000B30, align: 8, subalign: 8, exclusive_ram_id: shared_race_models }
-  - { start: 0x148F88, type: bin, name: _148F88, vram: 0x02001678, align: 8, subalign: 8, exclusive_ram_id: shared_race_models }
-  - { start: 0x149040, type: bin, name: _149040, vram: 0x02001730, align: 8, subalign: 8, exclusive_ram_id: shared_race_models }
-  - { start: 0x149120, type: bin, name: _149120, vram: 0x02001810, align: 8, subalign: 8, exclusive_ram_id: shared_race_models }
-  - { start: 0x1491F8, type: bin, name: _1491F8, vram: 0x020018E8, align: 8, subalign: 8, exclusive_ram_id: shared_race_models }
-  - { start: 0x1492D0, type: bin, name: _ADDR_20019C0, vram: 0x020019C0, align: 8, subalign: 8, exclusive_ram_id: shared_race_models }
-  - { start: 0x149610, type: bin, name: _149610, vram: 0x02001D00, align: 8, subalign: 8, exclusive_ram_id: shared_race_models }
-  - { start: 0x1499B8, type: bin, name: _1499B8, vram: 0x020020A8, align: 8, subalign: 8, exclusive_ram_id: shared_race_models }
-  - { start: 0x149DA0, type: bin, name: _ADDR_2002490, vram: 0x02002490, align: 8, subalign: 8, exclusive_ram_id: shared_race_models }
-  - { start: 0x149F70, type: bin, name: _ADDR_2002660, vram: 0x02002660, align: 8, subalign: 8, exclusive_ram_id: shared_race_models }
-  - { start: 0x14A200, type: bin, name: _14A200, vram: 0x020028F0, align: 8, subalign: 8, exclusive_ram_id: shared_race_models }
-  - { start: 0x14AB28, type: bin, name: _14AB28, vram: 0x02003218, align: 8, subalign: 8, exclusive_ram_id: shared_race_models }
-  - { start: 0x14AE48, type: bin, name: _ADDR_2003538, vram: 0x02003538, align: 8, subalign: 8, exclusive_ram_id: shared_race_models }
-  - { start: 0x14AF08, type: bin, name: _ADDR_20035F8, vram: 0x020035F8, align: 8, subalign: 8, exclusive_ram_id: shared_race_models }
-  - { start: 0x14B180, type: bin, name: _ADDR_2003870, vram: 0x02003870, align: 8, subalign: 8, exclusive_ram_id: shared_race_models }
-  - { start: 0x14B348, type: bin, name: _147910_SUFFIX, vram: 0x02003A38, align: 8, subalign: 8, exclusive_ram_id: shared_race_models }
+  - { start: 0x148220, type: course_display_list, name: _148220, vram: 0x02000910, align: 8, subalign: 8, exclusive_ram_id: shared_race_models }
+  - { start: 0x148440, type: course_display_list, name: _148440, vram: 0x02000B30, align: 8, subalign: 8, exclusive_ram_id: shared_race_models }
+  - { start: 0x148F88, type: course_display_list, name: _148F88, vram: 0x02001678, align: 8, subalign: 8, exclusive_ram_id: shared_race_models }
+  - { start: 0x149040, type: course_display_list, name: _149040, vram: 0x02001730, align: 8, subalign: 8, exclusive_ram_id: shared_race_models }
+  - { start: 0x149120, type: course_display_list, name: _149120, vram: 0x02001810, align: 8, subalign: 8, exclusive_ram_id: shared_race_models }
+  - { start: 0x1491F8, type: course_display_list, name: _1491F8, vram: 0x020018E8, align: 8, subalign: 8, exclusive_ram_id: shared_race_models }
+  - { start: 0x1492D0, type: course_display_list, name: _ADDR_20019C0, vram: 0x020019C0, align: 8, subalign: 8, exclusive_ram_id: shared_race_models }
+  - { start: 0x149610, type: course_display_list, name: _149610, vram: 0x02001D00, align: 8, subalign: 8, exclusive_ram_id: shared_race_models }
+  - { start: 0x1499B8, type: course_display_list, name: _1499B8, vram: 0x020020A8, align: 8, subalign: 8, exclusive_ram_id: shared_race_models }
+  - { start: 0x149DA0, type: course_display_list, name: _ADDR_2002490, vram: 0x02002490, align: 8, subalign: 8, exclusive_ram_id: shared_race_models }
+  - { start: 0x149F70, type: course_display_list, name: _ADDR_2002660, vram: 0x02002660, align: 8, subalign: 8, exclusive_ram_id: shared_race_models }
+  - { start: 0x14A200, type: course_display_list, name: _14A200, vram: 0x020028F0, align: 8, subalign: 8, exclusive_ram_id: shared_race_models }
+  - { start: 0x14AB28, type: course_display_list, name: _14AB28, vram: 0x02003218, align: 8, subalign: 8, exclusive_ram_id: shared_race_models }
+  - { start: 0x14AE48, type: course_display_list, name: _ADDR_2003538, vram: 0x02003538, align: 8, subalign: 8, exclusive_ram_id: shared_race_models }
+  - { start: 0x14AF08, type: course_display_list, name: _ADDR_20035F8, vram: 0x020035F8, align: 8, subalign: 8, exclusive_ram_id: shared_race_models }
+  - { start: 0x14B180, type: course_display_list, name: _ADDR_2003870, vram: 0x02003870, align: 8, subalign: 8, exclusive_ram_id: shared_race_models }
+  - { start: 0x14B348, type: course_display_list, name: _147910_SUFFIX, vram: 0x02003A38, align: 8, subalign: 8, exclusive_ram_id: shared_race_models }
 
-  - type: bin
+  - type: readable_asset
     start: 0x14B450
     name: _14B450
     vram: 0
+    # Snowboard geometry, including ghost variants; vertices share segment 2.
+    asset_format: embedded_model
+    compression: none
+    root_offsets: [0x180, 0x4B8, 0x828, 0x1AE0, 0x1F80, 0x2300, 0x2F68, 0x3408, 0x3768, 0x3A48, 0x3BC0, 0x3DB0, 0x3F68, 0x4228, 0x43E8, 0x4720, 0x4A10, 0x4B70]
 
-  - { start: 0x1502A0, type: bin, name: _1502A0, vram: 0 }
-  - { start: 0x152930, type: bin, name: _152930, vram: 0 }
-  - { start: 0x155A20, type: bin, name: _155A20, vram: 0 }
-  - { start: 0x158D90, type: bin, name: _158D90, vram: 0 }
-  - { start: 0x15C750, type: bin, name: _15C750, vram: 0 }
-  - { start: 0x160360, type: bin, name: _160360, vram: 0 }
+  - { start: 0x1502A0, type: course_display_list, name: _1502A0, vram: 0 }
+  - { start: 0x152930, type: course_display_list, name: _152930, vram: 0 }
+  - { start: 0x155A20, type: course_display_list, name: _155A20, vram: 0 }
+  - { start: 0x158D90, type: course_display_list, name: _158D90, vram: 0 }
+  - { start: 0x15C750, type: course_display_list, name: _15C750, vram: 0 }
+  - { start: 0x160360, type: course_display_list, name: _160360, vram: 0 }
   # Per-course compressed RSP segment 3 model resources, in course-index order.
   - type: course_model_resources
     start: 0x163410
@@ -794,35 +798,84 @@ segments:
     graphics_end: 0x145380
     root_offsets: [0x57D8, 0x58A8, 0x5BA8]
 
-  - type: bin
+  - type: model_resources
     start: 0x1D82B0
     name: _1D82B0
     vram: 0
+    graphics_start: 0x147910
+    graphics_end: 0x14B450
+    root_offsets: [0]
 
-  - type: bin
+  - type: model_resources
     start: 0x1DCED0
     name: _1DCED0
     vram: 0
+    graphics_start: 0x145380
+    graphics_end: 0x1467B0
+    root_offsets: [0]
 
-  - type: bin
+  - type: model_resources
     start: 0x1DE360
     name: _1DE360
     vram: 0
+    graphics_start: 0x1467B0
+    graphics_end: 0x147910
+    root_offsets: [0]
+    # Two unreferenced RGBA16 palettes between the texture and vertex banks.
+    extra_palettes: [{ offset: 0x2A60, colors: 16 }, { offset: 0x2A80, colors: 16 }]
 
-  - type: bin
+  - type: readable_asset
     start: 0x1E0F70
     name: _1E0F70
     vram: 0
-  - { start: 0x1E19C0, type: bin, name: _1E19C0, vram: 0 }
-  - { start: 0x1E2380, type: bin, name: _1E2380, vram: 0 }
-  - { start: 0x1E2DE0, type: bin, name: _1E2DE0, vram: 0 }
-  - { start: 0x1E3FE0, type: bin, name: _1E3FE0, vram: 0 }
-  - { start: 0x1E4AB0, type: bin, name: _1E4AB0, vram: 0 }
-  - { start: 0x1E68A0, type: bin, name: _1E68A0, vram: 0 }
-  - type: bin
+    asset_format: sprite_table
+  - type: model_resources
+    start: 0x1E19C0
+    name: _1E19C0
+    vram: 0
+    graphics_start: 0x1502A0
+    graphics_end: 0x152930
+    root_offsets: [0x0, 0x68, 0xD8, 0x168, 0x1D8, 0x268, 0x540, 0xA28, 0xAA0, 0xC48, 0xCC0, 0xE68, 0x10C0, 0x1348, 0x13B0, 0x1420, 0x14B0, 0x1520, 0x15B0, 0x1888, 0x1D70, 0x1DE8, 0x1F90, 0x2008, 0x21B0, 0x2408]
+  - type: model_resources
+    start: 0x1E2380
+    name: _1E2380
+    vram: 0
+    graphics_start: 0x152930
+    graphics_end: 0x155A20
+    root_offsets: [0x0, 0x128, 0x218, 0x308, 0x3F8, 0x4F0, 0x850, 0xBE8, 0xD10, 0xFD0, 0x1128, 0x13E8, 0x1630, 0x1878, 0x19A0, 0x1A90, 0x1B80, 0x1C70, 0x1D68, 0x20C8, 0x2460, 0x2588, 0x2848, 0x29A0, 0x2C60, 0x2EA8]
+  - type: model_resources
+    start: 0x1E2DE0
+    name: _1E2DE0
+    vram: 0
+    graphics_start: 0x155A20
+    graphics_end: 0x158D90
+    root_offsets: [0x0, 0xE0, 0x1D0, 0x338, 0x428, 0x4F0, 0x8A0, 0xDD8, 0xF50, 0x1178, 0x12F0, 0x1508, 0x1760, 0x19B8, 0x1A98, 0x1B88, 0x1CF0, 0x1DE0, 0x1EA8, 0x2258, 0x2790, 0x2908, 0x2B30, 0x2CA8, 0x2EC0, 0x3118]
+  - type: model_resources
+    start: 0x1E3FE0
+    name: _1E3FE0
+    vram: 0
+    graphics_start: 0x158D90
+    graphics_end: 0x15C750
+    root_offsets: [0x0, 0x1C8, 0x378, 0x528, 0x6D8, 0x888, 0xCD8, 0x1148, 0x1210, 0x14D0, 0x1590, 0x1850, 0x1A98, 0x1CE0, 0x1EA8, 0x2058, 0x2208, 0x23B8, 0x2568, 0x29B8, 0x2E28, 0x2EF0, 0x31B0, 0x3270, 0x3530, 0x3778]
+  - type: model_resources
+    start: 0x1E4AB0
+    name: _1E4AB0
+    vram: 0
+    graphics_start: 0x15C750
+    graphics_end: 0x160360
+    root_offsets: [0x0, 0xE0, 0x2D0, 0x4E0, 0x6B0, 0x8C0, 0xCE0, 0x1298, 0x1408, 0x1608, 0x1778, 0x1978, 0x1BA0, 0x1E08, 0x1EE8, 0x20D8, 0x22E8, 0x24B8, 0x26C8, 0x2AE8, 0x30A0, 0x3210, 0x3410, 0x3580, 0x3780, 0x39A8]
+  - type: model_resources
+    start: 0x1E68A0
+    name: _1E68A0
+    vram: 0
+    graphics_start: 0x160360
+    graphics_end: 0x163410
+    root_offsets: [0x0, 0x2A0, 0x330, 0x518, 0x5B8, 0x7B0, 0xCF0, 0x10E8, 0x1170, 0x1410, 0x1498, 0x1738, 0x17C8, 0x1858, 0x1AF8, 0x1B88, 0x1D70, 0x1E10, 0x2008, 0x2548, 0x2940, 0x29C8, 0x2C68, 0x2CF0, 0x2F90, 0x3020]
+  - type: readable_asset
     start: 0x1E74E0
     name: _1E74E0
     vram: 0
+    asset_format: sprite_table
 
   # Optional compressed course sprite tables. Animal Land (course 7) has no
   # sprite-table asset; the sequence therefore skips from Silver Mountain to
@@ -872,25 +925,24 @@ segments:
     name: ROOKIE_MOUNTAIN_COURSE_SPRITES
     vram: 0
 
-  - type: bin
+  - type: readable_asset
     start: 0x1EF530
     name: _1EF530
     vram: 0
+    asset_format: sprite_table
 
-  - type: bin
+  - type: readable_asset
     start: 0x1F1A90
     name: _1F1A90
     vram: 0
-  - { start: 0x1F2220, type: bin, name: _1F2220, vram: 0 }
-  - { start: 0x1F7D20, type: bin, name: _1F7D20, vram: 0 }
-  - { start: 0x1FE860, type: bin, name: _1FE860, vram: 0 }
-  - { start: 0x2044B0, type: bin, name: _2044B0, vram: 0 }
-  - { start: 0x20A940, type: bin, name: _20A940, vram: 0 }
-  - { start: 0x211470, type: bin, name: _211470, vram: 0 }
-  - type: bin
-    start: 0x215BE0
-    name: _215BE0
-    vram: 0
+    asset_format: sprite_table
+  - { start: 0x1F2220, type: readable_asset, name: _1F2220, vram: 0, asset_format: race_animation, part_count: 12 }
+  - { start: 0x1F7D20, type: readable_asset, name: _1F7D20, vram: 0, asset_format: race_animation, part_count: 12 }
+  - { start: 0x1FE860, type: readable_asset, name: _1FE860, vram: 0, asset_format: race_animation, part_count: 12 }
+  - { start: 0x2044B0, type: readable_asset, name: _2044B0, vram: 0, asset_format: race_animation, part_count: 12 }
+  - { start: 0x20A940, type: readable_asset, name: _20A940, vram: 0, asset_format: race_animation, part_count: 12 }
+  - { start: 0x211470, type: readable_asset, name: _211470, vram: 0, asset_format: race_animation, part_count: 12 }
+  - { start: 0x215BE0, type: readable_asset, name: _215BE0, vram: 0, asset_format: scene_animation, part_count: 14 }
 
   # Per-course compressed collision/path surface data, in course-index order.
   - type: course_surface_data
@@ -943,166 +995,271 @@ segments:
     name: ROOKIE_MOUNTAIN_COURSE_SURFACE_DATA
     vram: 0
 
-  - type: bin
+  - type: readable_asset
     start: 0x2427D0
     name: _2427D0
     vram: 0
+    asset_format: sprite_table
 
-  - type: bin
+  - type: readable_asset
     start: 0x243270
     name: _243270
     vram: 0
+    asset_format: sprite_table
 
-  - type: bin
+  - type: readable_asset
     start: 0x245A80
     name: _245A80
     vram: 0
+    asset_format: sprite_table
+    ci8_entry_ranges: [[65, 72]]
 
-  - type: bin
+  - type: readable_asset
     start: 0x24C8E0
     name: _24C8E0
     vram: 0
-  - { start: 0x24DBE0, type: bin, name: _24DBE0, vram: 0 }
-  - { start: 0x250260, type: bin, name: _250260, vram: 0 }
-  - { start: 0x2521F0, type: bin, name: _2521F0, vram: 0 }
-  - { start: 0x254380, type: bin, name: _254380, vram: 0 }
-  - { start: 0x256420, type: bin, name: _256420, vram: 0 }
-  - { start: 0x258C80, type: bin, name: _258C80, vram: 0 }
-  - { start: 0x25B410, type: bin, name: _25B410, vram: 0 }
-  - { start: 0x25DF80, type: bin, name: _25DF80, vram: 0 }
-  - { start: 0x260A30, type: bin, name: _260A30, vram: 0 }
-  - { start: 0x263520, type: bin, name: _263520, vram: 0 }
-  - { start: 0x265D30, type: bin, name: _265D30, vram: 0 }
-  - { start: 0x2688C0, type: bin, name: _2688C0, vram: 0 }
-  - { start: 0x26B1D0, type: bin, name: _26B1D0, vram: 0 }
-  - { start: 0x26DE60, type: bin, name: _26DE60, vram: 0 }
-  - { start: 0x270730, type: bin, name: _270730, vram: 0 }
-  - { start: 0x2732E0, type: bin, name: _2732E0, vram: 0 }
-  - type: bin
+    asset_format: replay
+  - type: readable_asset
+    start: 0x24DBE0
+    name: _24DBE0
+    vram: 0
+    asset_format: replay
+  - type: readable_asset
+    start: 0x250260
+    name: _250260
+    vram: 0
+    asset_format: replay
+  - type: readable_asset
+    start: 0x2521F0
+    name: _2521F0
+    vram: 0
+    asset_format: replay
+  - type: readable_asset
+    start: 0x254380
+    name: _254380
+    vram: 0
+    asset_format: replay
+  - type: readable_asset
+    start: 0x256420
+    name: _256420
+    vram: 0
+    asset_format: replay
+  - type: readable_asset
+    start: 0x258C80
+    name: _258C80
+    vram: 0
+    asset_format: replay
+  - type: readable_asset
+    start: 0x25B410
+    name: _25B410
+    vram: 0
+    asset_format: replay
+  - type: readable_asset
+    start: 0x25DF80
+    name: _25DF80
+    vram: 0
+    asset_format: replay
+  - type: readable_asset
+    start: 0x260A30
+    name: _260A30
+    vram: 0
+    asset_format: replay
+  - type: readable_asset
+    start: 0x263520
+    name: _263520
+    vram: 0
+    asset_format: replay
+  - type: readable_asset
+    start: 0x265D30
+    name: _265D30
+    vram: 0
+    asset_format: replay
+  - type: readable_asset
+    start: 0x2688C0
+    name: _2688C0
+    vram: 0
+    asset_format: replay
+  - type: readable_asset
+    start: 0x26B1D0
+    name: _26B1D0
+    vram: 0
+    asset_format: replay
+  - type: readable_asset
+    start: 0x26DE60
+    name: _26DE60
+    vram: 0
+    asset_format: replay
+  - type: readable_asset
+    start: 0x270730
+    name: _270730
+    vram: 0
+    asset_format: replay
+  - type: readable_asset
+    start: 0x2732E0
+    name: _2732E0
+    vram: 0
+    asset_format: replay
+  - type: readable_asset
     start: 0x275A90
     name: _275A90
     vram: 0
-  - { start: 0x27E290, type: bin, name: _27E290, vram: 0 }
-  - [0x369000, bin]
-  - { start: 0x541D50, type: bin, name: _541D50, vram: 0 }
-  - { start: 0x5457B0, type: bin, name: _5457B0, vram: 0 }
-  - { start: 0x546940, type: bin, name: _546940, vram: 0 }
-  - { start: 0x546EE0, type: bin, name: _546EE0, vram: 0 }
-  - { start: 0x5487A0, type: bin, name: _5487A0, vram: 0 }
-  - { start: 0x549650, type: bin, name: _549650, vram: 0 }
-  - { start: 0x549AA0, type: bin, name: _549AA0, vram: 0 }
-  - { start: 0x549EF0, type: bin, name: _549EF0, vram: 0 }
-  - { start: 0x54AFE0, type: bin, name: _54AFE0, vram: 0 }
-  - { start: 0x552640, type: bin, name: _552640, vram: 0 }
-  - { start: 0x55C020, type: bin, name: _55C020, vram: 0 }
-  - { start: 0x563F20, type: bin, name: _563F20, vram: 0 }
-  - { start: 0x56CFF0, type: bin, name: _56CFF0, vram: 0 }
-  - { start: 0x5757B0, type: bin, name: _5757B0, vram: 0 }
-  - { start: 0x57E350, type: bin, name: _57E350, vram: 0 }
-  - { start: 0x585570, type: bin, name: _585570, vram: 0 }
-  - { start: 0x58F6B0, type: bin, name: _58F6B0, vram: 0 }
-  - type: bin
+    asset_format: pointer_bank
+  - type: readable_asset
+    start: 0x27E290
+    name: _27E290
+    vram: 0
+    asset_format: sample_bank
+    compression: none
+    bank_asset: _275A90
+    sample_base_asset: _27E290
+  - { start: 0x369000, type: readable_asset, name: '369000', vram: 0, asset_format: sample_bank, compression: none, bank_asset: _275A90, sample_base_asset: _27E290 }
+  - { start: 0x541D50, type: readable_asset, name: _541D50, vram: 0, asset_format: music_sequence, compression: none }
+  - { start: 0x5457B0, type: readable_asset, name: _5457B0, vram: 0, asset_format: music_sequence, compression: none }
+  - { start: 0x546940, type: readable_asset, name: _546940, vram: 0, asset_format: music_sequence, compression: none }
+  - { start: 0x546EE0, type: readable_asset, name: _546EE0, vram: 0, asset_format: music_sequence, compression: none }
+  - { start: 0x5487A0, type: readable_asset, name: _5487A0, vram: 0, asset_format: music_sequence, compression: none }
+  - { start: 0x549650, type: readable_asset, name: _549650, vram: 0, asset_format: music_sequence, compression: none }
+  - { start: 0x549AA0, type: readable_asset, name: _549AA0, vram: 0, asset_format: music_sequence, compression: none }
+  - { start: 0x549EF0, type: readable_asset, name: _549EF0, vram: 0, asset_format: music_sequence, compression: none }
+  - { start: 0x54AFE0, type: readable_asset, name: _54AFE0, vram: 0, asset_format: music_sequence, compression: none }
+  - { start: 0x552640, type: readable_asset, name: _552640, vram: 0, asset_format: music_sequence, compression: none }
+  - { start: 0x55C020, type: readable_asset, name: _55C020, vram: 0, asset_format: music_sequence, compression: none }
+  - { start: 0x563F20, type: readable_asset, name: _563F20, vram: 0, asset_format: music_sequence, compression: none }
+  - { start: 0x56CFF0, type: readable_asset, name: _56CFF0, vram: 0, asset_format: music_sequence, compression: none }
+  - { start: 0x5757B0, type: readable_asset, name: _5757B0, vram: 0, asset_format: music_sequence, compression: none }
+  - { start: 0x57E350, type: readable_asset, name: _57E350, vram: 0, asset_format: music_sequence, compression: none }
+  - { start: 0x585570, type: readable_asset, name: _585570, vram: 0, asset_format: music_sequence, compression: none }
+  - { start: 0x58F6B0, type: readable_asset, name: _58F6B0, vram: 0, asset_format: music_sequence, compression: none }
+  - type: readable_asset
     start: 0x593D10
     name: _593D10
     vram: 0
+    asset_format: sprite_table
 
-  - type: bin
+  - type: readable_asset
     start: 0x598A70
     name: _598A70
     vram: 0
+    asset_format: sprite_table
 
-  - type: bin
+  - type: readable_asset
     start: 0x59AAA0
     name: _59AAA0
     vram: 0
+    asset_format: sprite_table
+    ci8_entry_ranges: [[55, 67]]
 
-  - type: bin
+  - type: readable_asset
     start: 0x59DFE0
     name: _59DFE0
     vram: 0
-  - [0x59E7F0, bin]
-  - type: bin
+    asset_format: tilemap
+    image_format: ci4
+  - { start: 0x59E7F0, type: readable_asset, name: 59E7F0, vram: 0, asset_format: sprite_table }
+  - type: readable_asset
     start: 0x5A1ED0
     name: _5A1ED0
     vram: 0
-  - type: bin
+    asset_format: sprite_table
+    ci8_entry_ranges: [[59, 395]]
+  - type: readable_asset
     start: 0x5C5320
     name: _5C5320
     vram: 0
-  - type: bin
+    asset_format: sprite_table
+  - type: readable_asset
     start: 0x5CBA80
     name: _5CBA80
     vram: 0
+    asset_format: sprite_table
 
-  - type: bin
+  - type: readable_asset
     start: 0x5CCD40
     name: _5CCD40
     vram: 0
+    asset_format: sprite_table
+    ci8_entry_ranges: [[0, 63]]
 
-  - type: bin
+  - type: readable_asset
     start: 0x5D4280
     name: _5D4280
     vram: 0
+    asset_format: sprite_table
+    ci8_entry_ranges: [[26, 96]]
 
-  - type: bin
+  - type: readable_asset
     start: 0x5DAF30
     name: _5DAF30
     vram: 0
+    asset_format: sprite_table
 
-  - type: bin
+  - type: readable_asset
     start: 0x5DB9D0
     name: _5DB9D0
     vram: 0
+    asset_format: sprite_table
 
-  - type: bin
+  - type: readable_asset
     start: 0x5DCBE0
     name: _5DCBE0
     vram: 0
+    asset_format: tilemap
+    image_format: ci8
 
-  - type: bin
+  - type: readable_asset
     start: 0x5DFDD0
     name: _5DFDD0
     vram: 0
+    asset_format: sprite_table
 
-  - type: bin
+  - type: readable_asset
     start: 0x5E0350
     name: _5E0350
     vram: 0
+    asset_format: tilemap
+    image_format: ci4
 
-  - type: bin
+  - type: readable_asset
     start: 0x5E0E40
     name: _5E0E40
     vram: 0
+    asset_format: tilemap
+    image_format: ci8
 
-  - type: bin
+  - type: readable_asset
     start: 0x5E26E0
     name: _5E26E0
     vram: 0
+    asset_format: tilemap
+    image_format: ci8
 
-  - type: bin
-    start: 0x5E34A0
-    name: _5E34A0
-    vram: 0
+  - { start: 0x5E34A0, type: readable_asset, name: _5E34A0, vram: 0, asset_format: scene_animation, part_count: 14 }
 
-  - type: bin
+  - type: readable_asset
     start: 0x608560
     name: _608560
     vram: 0
+    asset_format: sprite_table
 
-  - type: bin
+  - type: readable_asset
     start: 0x609AA0
     name: _609AA0
     vram: 0
+    asset_format: tilemap
+    image_format: ci8
 
-  - type: bin
+  - type: readable_asset
     start: 0x60ECB0
     name: _60ECB0
     vram: 0
+    asset_format: tilemap
+    image_format: ci4
 
-  - type: bin
+  - type: readable_asset
     start: 0x60F1A0
     name: _60F1A0
     vram: 0
+    asset_format: sprite_table
 
   - [0x60F990, bin] # everything beyond this point is blank
 

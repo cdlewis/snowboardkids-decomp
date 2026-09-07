@@ -106,7 +106,7 @@ def trace_course_graphics(bundle: bytes, root_offsets: list[int]) -> CourseGraph
 
 
 def collect_course_texture_references(
-    bundle: bytes, graph: CourseGraphicsGraph, resource_size: int
+    bundle: bytes, graph: CourseGraphicsGraph, resource_size: int, resource_segment: int = 3
 ) -> tuple[list[TextureReference], list[PaletteReference]]:
     """Find segment-3 CI textures and TLUTs loaded by a traced F3DEX graph."""
     textures: dict[int, dict] = {}
@@ -122,7 +122,7 @@ def collect_course_texture_references(
             word0, word1 = struct.unpack(">II", bundle[position : position + 8])
             opcode = word0 >> 24
 
-            if opcode == 0xFD and word1 >> 24 == 3:  # G_SETTIMG
+            if opcode == 0xFD and word1 >> 24 == resource_segment:  # G_SETTIMG
                 texture_image = {
                     "offset": word1 & 0x00FFFFFF,
                     "format": (word0 >> 21) & 0x7,
@@ -263,7 +263,10 @@ def compression_metadata_from_manifest(manifest: dict) -> CompressionMetadata:
     )
 
 
-def pack_course_model_resources(manifest: dict) -> bytes:
+def pack_course_model_resources(manifest: dict, base_path=None) -> bytes:
+    from pathlib import Path
+    from tools.asset_images import image_bytes
+    base_path = Path(".") if base_path is None else base_path
     size = parse_int(manifest["decompressed_size"])
     output = bytearray(size)
     written = bytearray(size)
@@ -292,7 +295,7 @@ def pack_course_model_resources(manifest: dict) -> bytes:
                 )
             data = bytes(data)
         elif part["type"] == "texture":
-            data = bytes.fromhex(str(part["data"]))
+            data = image_bytes(part, base_path)
             expected_size = (parse_int(part["width"]) * parse_int(part["height"]))
             if part["format"] == "ci4":
                 expected_size = (expected_size + 1) // 2

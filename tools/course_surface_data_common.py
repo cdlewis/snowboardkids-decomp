@@ -17,12 +17,12 @@ def parse_int(value) -> int:
 
 def load_yaml(path: Path) -> dict:
     with path.open("r", encoding="utf-8") as stream:
-        return yaml.safe_load(stream)
+        return yaml.load(stream, Loader=getattr(yaml, "CSafeLoader", yaml.SafeLoader))
 
 
 def write_yaml(path: Path, data: dict) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(yaml.safe_dump(data, sort_keys=False), encoding="utf-8", newline="\n")
+    path.write_text(yaml.dump(data, Dumper=getattr(yaml, "CSafeDumper", yaml.SafeDumper), sort_keys=False), encoding="utf-8", newline="\n")
 
 
 def metadata_from_manifest(manifest: dict) -> CompressionMetadata:
