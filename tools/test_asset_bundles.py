@@ -20,6 +20,53 @@ def vertex(x, y, z, s=0, t=0):
 
 
 class BundleTests(unittest.TestCase):
+    def test_format_specific_segment_adapters(self):
+        import importlib
+        from tools.asset_bundles import ASSET_TYPES, source_segments
+        from tools.splat_ext.asset_segment import AssetSegment
+        root = Path(__file__).resolve().parents[1]
+        _,segments = source_segments(root)
+        self.assertTrue(set(ASSET_TYPES).issubset({s['type'] for s in segments}))
+        for segment in segments:
+            self.assertNotEqual(segment['type'],'readable_asset')
+            self.assertNotIn('asset_format',segment)
+        for kind in ASSET_TYPES:
+            module = importlib.import_module('tools.splat_ext.'+kind)
+            cls = getattr(module,'N64Seg'+kind.capitalize())
+            self.assertTrue(issubclass(cls,AssetSegment))
+            instance = object.__new__(cls)
+            instance.type = kind
+            self.assertEqual(instance.statistics_type,kind)
+
+    def test_extract_uses_segment_type(self):
+        from tools.readable_assets import extract_asset, pack_asset
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory)/'replay.yaml'
+            data = bytes(4*2400*3)
+            manifest = extract_asset(data,dict(type='replay',name='test',compression='none'),path)
+            self.assertEqual(manifest['format'],'replay')
+            self.assertEqual(pack_asset(manifest,path.parent),data)
+
+    def test_existing_decoder_migration_preserves_sources_and_object_identity(self):
+        from tools.semantic_assets import upgrade
+        from tools.course_surface_data_common import load_yaml
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root/LAYOUT).parent.mkdir(parents=True)
+            source = root/'replay.yaml'
+            original = dump(dict(format='replay',schema_version=2,compression='none'))
+            source.write_bytes(original)
+            row = dict(name='test',decoder='readable_asset',source='replay.yaml',
+                       object='assets/readable/test.o')
+            (root/LAYOUT).write_bytes(dump(dict(schema_version=2,segments=[row])))
+            with patch('tools.semantic_assets.validate_structure'):
+                upgrade(root,{})
+                upgrade(root,{})
+            migrated = load_yaml(root/LAYOUT)['segments'][0]
+            self.assertEqual(migrated,dict(row,decoder='replay'))
+            self.assertEqual(source.read_bytes(),original)
+            self.assertIn('$(BUILD_DIR)/assets/readable/test.o:',(root/'assets/layout/bundles.mk').read_text())
+
     def test_character_bundle_names(self):
         from tools.asset_bundles import owner, CHAR_RESOURCES, CHAR_ANIMATIONS
         names = ('slash','wendy','jam','linda','tommy','ninja')

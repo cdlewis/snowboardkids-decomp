@@ -14,6 +14,7 @@ from tools.course_graphics_common import pack_course_model_resources, compressio
 from tools.huffman_asset import compress_huffman_asset
 from tools.readable_assets import pack_asset
 from tools.source_assets import extract_source_assets, source_files
+from tools.asset_bundles import ASSET_TYPES
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -35,7 +36,7 @@ def inventory(root, rom, verify=False):
                 "course_sprite_table": ("course_sprite_tables", pack_course_sprite_table),
                 "course_model_resources": ("course_model_resources", pack_course_model_resources),
                 "model_resources": ("course_model_resources", pack_course_model_resources),
-                "readable_asset": ("readable", pack_asset)}
+                **{kind: ("readable", pack_asset) for kind in ASSET_TYPES}}
     for entry, following in zip(segments, segments[1:]):
         s = entry if isinstance(entry, dict) else dict(start=entry[0], type=entry[1], name=f"{entry[0]:X}")
         start = s["start"]
@@ -78,7 +79,7 @@ def inventory(root, rom, verify=False):
                     row["outputs"].append(str((path.parent / m["path"]).relative_to(root)))
                 if verify:
                     try:
-                        if s["type"] == "readable_asset":
+                        if s["type"] in ASSET_TYPES:
                             rebuilt = packer(m, path.parent)
                         else:
                             payload = packer(m) if s["type"] == "course_surface_data" else packer(m, path.parent)

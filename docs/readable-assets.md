@@ -6,6 +6,13 @@ Blender-importable GLB previews, using Splat extensions and exact packers. The f
 remains padding. Game code and assets already defined in C retain their existing
 source definitions.
 
+Splat segments declare their actual type directly: `sprite_table`, `tilemap`,
+`race_animation`, `scene_animation`, `embedded_model`, `replay`, `pointer_bank`,
+`sample_bank`, or `music_sequence`. These use thin format-specific adapters over
+shared extraction code; there is no `asset_format` selector in the ROM config.
+Existing bundle layouts migrate their decoder names automatically without moving
+editable files or changing linker object identities.
+
 ```sh
 make extract
 make verify-assets

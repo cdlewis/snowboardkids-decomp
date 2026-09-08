@@ -21,9 +21,11 @@ from tools.huffman_asset import compress_huffman_asset
 
 ROOT = Path(__file__).resolve().parents[1]
 LAYOUT = Path('assets/layout/segments.yaml')
+ASSET_TYPES = ('sprite_table', 'tilemap', 'race_animation', 'scene_animation',
+               'pointer_bank', 'sample_bank', 'embedded_model', 'music_sequence', 'replay')
 FAMILIES = {'course_model_resources': 'course_model_resources', 'model_resources': 'course_model_resources',
             'course_surface_data': 'course_surface_data', 'course_sprite_table': 'course_sprite_tables',
-            'readable_asset': 'readable', 'course_display_list': 'course_display_lists'}
+            **{kind: 'readable' for kind in ASSET_TYPES}, 'course_display_list': 'course_display_lists'}
 CHAR_RESOURCES = ['_1E19C0', '_1E2380', '_1E2DE0', '_1E3FE0', '_1E4AB0', '_1E68A0']
 CHAR_ANIMATIONS = ['_1F2220', '_1F7D20', '_1FE860', '_2044B0', '_20A940', '_211470']
 COURSES = ['big_snowman', 'sunset_rock', 'rookie_mountain', 'dizzy_land', 'quicksand_valley',
@@ -81,7 +83,7 @@ def owner(s):
         return 'assets/shared/race_models'
     if name == '_14B450':
         return 'assets/models/snowboards'
-    fmt = s.get('asset_format', s['type'])
+    fmt = s['type']
     family = {'sprite_table': 'sprites', 'tilemap': 'tilemaps', 'sample_bank': 'audio/samples',
               'pointer_bank': 'audio/banks', 'music_sequence': 'audio/music', 'replay': 'replays',
               'race_animation': 'animations/race', 'scene_animation': 'animations/scenes',
@@ -189,7 +191,7 @@ def migrate(root, if_absent=False):
                     dest = owners[s['name']] if bank['name'] == '_1D82B0' else str(base)
                     bundles[dest]['models'].append(dict(name=name, roots=[s['start']-bank['graphics_start']+start], **common))
     for s in rows:
-        if s.get('asset_format') == 'embedded_model':
+        if s['type'] == 'embedded_model':
             base = owners[s['name']]
             for offset in s['root_offsets']:
                 bundles[base]['models'].append(dict(name=f'board_{offset:06x}', embedded=s['name'], roots=[offset]))
@@ -295,7 +297,7 @@ def index_models(root, layout):
                     setup=billboard[0],vertex_binding=dict(address=billboard[2],count=billboard[3]),
                     texture_binding=dict(asset='_1E74E0',entry=billboard[5],wrap=True),**common))
     for spec in specs:
-        if spec.get('asset_format') == 'embedded_model':
+        if spec['type'] == 'embedded_model':
             destination = rows[spec['name']]['bundle']
             for offset in spec['root_offsets']:
                 if offset in (0x180,0x4B8,0x828,0x3A48,0x3BC0,0x3DB0):
@@ -419,7 +421,8 @@ def pack_segment(root, row, compressed=True):
         result = commands(safe_path(root, row['source']))
     else:
         m, path = materialize(root, row)
-        if row['decoder'] == 'readable_asset':
+        # Accept pre-migration layout records without restoring a generic Splat type.
+        if row['decoder'] in ASSET_TYPES or row['decoder'] == 'readable_asset':
             if not compressed:
                 m['compression'] = 'none'
             result = pack_asset(m, path.parent)
