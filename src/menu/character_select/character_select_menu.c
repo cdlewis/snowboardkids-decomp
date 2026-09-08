@@ -51,7 +51,7 @@ void initCharacterSelectMenu(void) {
         gCurrentGameTask->callbackData1 = 0;
         gMenuFadeAlpha = gCurrentGameTask->callbackData0;
         LOAD_ASSET(_59AAA0, 0x21);
-        LOAD_ASSET(_245A80, 0x1F);
+        LOAD_ASSET(SHARED_UI_SPRITES, 0x1F);
         LOAD_ASSET(_593D10, 0x22);
         LOAD_ASSET(_598A70, 0x23);
         LOAD_ASSET(_60F1A0, 0x29);

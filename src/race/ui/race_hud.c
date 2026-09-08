@@ -218,7 +218,7 @@ u32 D_800DC9A8[0x532] = {
 };
 
 void initRaceHud(void) {
-    LOAD_ASSET(_245A80, 0x1F);
+    LOAD_ASSET(SHARED_UI_SPRITES, 0x1F);
     gRaceHudMode = RACE_HUD_MODE_NONE;
     gRaceHudCoinSpinnerFrame = 0;
 

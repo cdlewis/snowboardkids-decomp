@@ -358,7 +358,7 @@ void initSoundManager(void) {
     gSharedLoopingPositionalSoundHandle = 0;
 
     gAssetHandles[3] = allocRelocatableHeapBlock(0x80000);
-    LOAD_ASSET(_275A90, 4);
+    LOAD_ASSET(SOUND_POINTER_BANK, 4);
     gAssetHandles[5] = allocRelocatableHeapBlock(0x10000);
 
     init.count = 0x18;

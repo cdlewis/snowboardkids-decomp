@@ -2433,7 +2433,7 @@ void initRaceRecordSettingsFlow(void) {
             LOAD_ASSET(ROOKIE_MOUNTAIN_COURSE_SPRITES, 0x1D);
             break;
     }
-    LOAD_ASSET(_1E74E0, 0x1C);
+    LOAD_ASSET(RACE_EFFECT_SPRITES, 0x1C);
     initCallbackTaskScheduler(0);
     gMenuFlowState = 0;
     createCallbackTaskWithUserId((CallbackTaskCallback)initRaceRecordSettingsPanel, 0, 0x64, 0);

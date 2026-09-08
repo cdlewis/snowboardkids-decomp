@@ -196,13 +196,13 @@ def migrate_tree(original_root, root, layout, registry):
     # Name every item first; the same image offset keeps exactly one owner even
     # when multiple item entries alias it or select alternative palettes.
     sprite_manifests = {name:load_yaml(root/next(Path(k) for k,v in moves.items() if str(v)==row['source']))
-        for name,row in rows.items() if name in ('_243270','_245A80','_1E74E0')}
+        for name,row in rows.items() if name in ('RACE_ITEM_SPRITES','SHARED_UI_SPRITES','RACE_EFFECT_SPRITES')}
     sprite_sources = {name:next(Path(k) for k,v in moves.items() if str(v)==rows[name]['source']) for name in sprite_manifests}
     uses = {}
     item_images = {}
     for name,item in registry['items'].items():
         refs = dict(item.get('sprites',{}))
-        refs['_245A80'] = item['icons']
+        refs['SHARED_UI_SPRITES'] = item['icons']
         item_images[name] = []
         for bank,indices in refs.items():
             m = sprite_manifests[bank]
@@ -221,7 +221,7 @@ def migrate_tree(original_root, root, layout, registry):
         roots = item.get('model_roots',[])
         for definition in definitions.values():
             model = definition['model']
-            if model.get('resource')=='_1D82B0' and model['roots'][0] in roots:
+            if model.get('resource')=='SHARED_RACE_MODEL_RESOURCES' and model['roots'][0] in roots:
                 old_base = Path(definition['bundle']).parent
                 new_base = Path('assets/items')/item_name
                 for file in (root/old_base).rglob('*'):
@@ -286,7 +286,7 @@ def migrate_tree(original_root, root, layout, registry):
     root_lookup = {}
     for key,d in definitions.items():
         m = d['model']
-        if m.get('resource')=='_1D82B0':
+        if m.get('resource')=='SHARED_RACE_MODEL_RESOURCES':
             root_lookup[m['roots'][0]] = key
         old_b = bundles[d['bundle']]
         if old_b['id'].startswith('courses/'):
@@ -300,7 +300,7 @@ def migrate_tree(original_root, root, layout, registry):
             path = Path(d['bundle'])
             name = m['name']
         for item_name,item in registry['items'].items():
-            if m.get('resource')=='_1D82B0' and m['roots'][0] in item.get('model_roots',[]):
+            if m.get('resource')=='SHARED_RACE_MODEL_RESOURCES' and m['roots'][0] in item.get('model_roots',[]):
                 path = Path('assets/items')/item_name/'asset.yaml'
                 name = item_name if len(item['model_roots'])==1 else ('front' if m['roots'][0]==item['model_roots'][0] else 'back')
         b = final_bundles.setdefault(str(path),dict(schema_version=2,id=str(path.parent.relative_to('assets')),models=[],animations=[]))
@@ -311,7 +311,7 @@ def migrate_tree(original_root, root, layout, registry):
         b['models'].append(dict(name=name,preview=name+'.glb'))
         # Animation sources have moved into records; exporter reads layout refs.
         m['animation_assets'] = [Path(p).stem for p in old_b.get('animations',[])]
-    shared_model = next(d['model'] for d in final_defs.values() if d['model'].get('resource')=='_1D82B0')
+    shared_model = next(d['model'] for d in final_defs.values() if d['model'].get('resource')=='SHARED_RACE_MODEL_RESOURCES')
     def model_for_root(address):
         if address in root_lookup:
             return definitions[root_lookup[address]]['new_key']
@@ -375,7 +375,7 @@ def migrate_tree(original_root, root, layout, registry):
             b['animation_source'] = item['animation_source']
         for bank,index,old,palette in item_images[name]:
             ref = dict(image=os.path.relpath(moves.get(old,old),base),palette=dict(bank=bank,index=palette),entry=index)
-            b['icons' if bank=='_245A80' else 'sprites'].append(ref)
+            b['icons' if bank=='SHARED_UI_SPRITES' else 'sprites'].append(ref)
         b['shared_effects'] = ['src/race/items/race_item_effects.c','src/race/player/race_player_pickup_effects.c']
     # Retain non-model family bundles with corrected file references, but hide
     # packing records from their public sources lists.

@@ -1,0 +1,141 @@
+schema_version: 1
+renames:
+  - old: _1502A0
+    name: SLASH_GRAPHICS
+    rom_start: 0x1502A0
+    evidence: "src/race/scene/race_scene_setup.c: character range tables and shared race loaders"
+
+  - old: _1E19C0
+    name: SLASH_MODEL_RESOURCES
+    rom_start: 0x1E19C0
+    evidence: "src/race/scene/race_scene_setup.c: character range tables and shared race loaders"
+
+  - old: _1F2220
+    name: SLASH_RACE_ANIMATIONS
+    rom_start: 0x1F2220
+    evidence: "src/race/scene/race_scene_setup.c: character range tables and shared race loaders"
+
+  - old: _152930
+    name: WENDY_GRAPHICS
+    rom_start: 0x152930
+    evidence: "src/race/scene/race_scene_setup.c: character range tables and shared race loaders"
+
+  - old: _1E2380
+    name: WENDY_MODEL_RESOURCES
+    rom_start: 0x1E2380
+    evidence: "src/race/scene/race_scene_setup.c: character range tables and shared race loaders"
+
+  - old: _1F7D20
+    name: WENDY_RACE_ANIMATIONS
+    rom_start: 0x1F7D20
+    evidence: "src/race/scene/race_scene_setup.c: character range tables and shared race loaders"
+
+  - old: _155A20
+    name: JAM_GRAPHICS
+    rom_start: 0x155A20
+    evidence: "src/race/scene/race_scene_setup.c: character range tables and shared race loaders"
+
+  - old: _1E2DE0
+    name: JAM_MODEL_RESOURCES
+    rom_start: 0x1E2DE0
+    evidence: "src/race/scene/race_scene_setup.c: character range tables and shared race loaders"
+
+  - old: _1FE860
+    name: JAM_RACE_ANIMATIONS
+    rom_start: 0x1FE860
+    evidence: "src/race/scene/race_scene_setup.c: character range tables and shared race loaders"
+
+  - old: _158D90
+    name: LINDA_GRAPHICS
+    rom_start: 0x158D90
+    evidence: "src/race/scene/race_scene_setup.c: character range tables and shared race loaders"
+
+  - old: _1E3FE0
+    name: LINDA_MODEL_RESOURCES
+    rom_start: 0x1E3FE0
+    evidence: "src/race/scene/race_scene_setup.c: character range tables and shared race loaders"
+
+  - old: _2044B0
+    name: LINDA_RACE_ANIMATIONS
+    rom_start: 0x2044B0
+    evidence: "src/race/scene/race_scene_setup.c: character range tables and shared race loaders"
+
+  - old: _15C750
+    name: TOMMY_GRAPHICS
+    rom_start: 0x15C750
+    evidence: "src/race/scene/race_scene_setup.c: character range tables and shared race loaders"
+
+  - old: _1E4AB0
+    name: TOMMY_MODEL_RESOURCES
+    rom_start: 0x1E4AB0
+    evidence: "src/race/scene/race_scene_setup.c: character range tables and shared race loaders"
+
+  - old: _20A940
+    name: TOMMY_RACE_ANIMATIONS
+    rom_start: 0x20A940
+    evidence: "src/race/scene/race_scene_setup.c: character range tables and shared race loaders"
+
+  - old: _160360
+    name: NINJA_GRAPHICS
+    rom_start: 0x160360
+    evidence: "src/race/scene/race_scene_setup.c: character range tables and shared race loaders"
+
+  - old: _1E68A0
+    name: NINJA_MODEL_RESOURCES
+    rom_start: 0x1E68A0
+    evidence: "src/race/scene/race_scene_setup.c: character range tables and shared race loaders"
+
+  - old: _211470
+    name: NINJA_RACE_ANIMATIONS
+    rom_start: 0x211470
+    evidence: "src/race/scene/race_scene_setup.c: character range tables and shared race loaders"
+
+  - old: _147910
+    name: SHARED_RACE_GRAPHICS
+    rom_start: 0x147910
+    evidence: "src/race/scene/race_scene_setup.c: character range tables and shared race loaders"
+
+  - old: _147910_SUFFIX
+    name: SHARED_RACE_GRAPHICS_SUFFIX
+    rom_start: 0x14B348
+    evidence: "src/race/scene/race_scene_setup.c: character range tables and shared race loaders"
+
+  - old: _1D82B0
+    name: SHARED_RACE_MODEL_RESOURCES
+    rom_start: 0x1D82B0
+    evidence: "src/race/scene/race_scene_setup.c: character range tables and shared race loaders"
+
+  - old: _14B450
+    name: SNOWBOARD_MODELS
+    rom_start: 0x14B450
+    evidence: "src/race/scene/race_scene_setup.c: character range tables and shared race loaders"
+
+  - old: _1EF530
+    name: SNOWBOARD_TEXTURES
+    rom_start: 0x1EF530
+    evidence: "src/race/scene/race_scene_setup.c: character range tables and shared race loaders"
+
+  - old: _243270
+    name: RACE_ITEM_SPRITES
+    rom_start: 0x243270
+    evidence: "src/race/scene/race_scene_setup.c: character range tables and shared race loaders"
+
+  - old: _1E74E0
+    name: RACE_EFFECT_SPRITES
+    rom_start: 0x1E74E0
+    evidence: "src/race/scene/race_scene_setup.c: handle 0x1C; race_item_projectiles.c and race_ui_effects.c"
+
+  - old: _245A80
+    name: SHARED_UI_SPRITES
+    rom_start: 0x245A80
+    evidence: "src/race/ui/race_hud.c and menu loaders"
+
+  - old: _ADDR_2002660
+    name: PAN_DISPLAY_LIST
+    rom_start: 0x149F70
+    evidence: "src/race/ui/race_ui_effects.c: renderGhostSlowdownActor"
+
+  - old: _275A90
+    name: SOUND_POINTER_BANK
+    rom_start: 0x275A90
+    evidence: "src/audio/sound_manager.c: init.soundBank"

@@ -26,8 +26,8 @@ ASSET_TYPES = ('sprite_table', 'tilemap', 'race_animation', 'scene_animation',
 FAMILIES = {'course_model_resources': 'course_model_resources', 'model_resources': 'course_model_resources',
             'course_surface_data': 'course_surface_data', 'course_sprite_table': 'course_sprite_tables',
             **{kind: 'readable' for kind in ASSET_TYPES}, 'course_display_list': 'course_display_lists'}
-CHAR_RESOURCES = ['_1E19C0', '_1E2380', '_1E2DE0', '_1E3FE0', '_1E4AB0', '_1E68A0']
-CHAR_ANIMATIONS = ['_1F2220', '_1F7D20', '_1FE860', '_2044B0', '_20A940', '_211470']
+CHAR_RESOURCES = ['SLASH_MODEL_RESOURCES', 'WENDY_MODEL_RESOURCES', 'JAM_MODEL_RESOURCES', 'LINDA_MODEL_RESOURCES', 'TOMMY_MODEL_RESOURCES', 'NINJA_MODEL_RESOURCES']
+CHAR_ANIMATIONS = ['SLASH_RACE_ANIMATIONS', 'WENDY_RACE_ANIMATIONS', 'JAM_RACE_ANIMATIONS', 'LINDA_RACE_ANIMATIONS', 'TOMMY_RACE_ANIMATIONS', 'NINJA_RACE_ANIMATIONS']
 COURSES = ['big_snowman', 'sunset_rock', 'rookie_mountain', 'dizzy_land', 'quicksand_valley',
            'silver_mountain', 'night_highway', 'animal_land', 'ninja_land', 'grass_valley']
 
@@ -77,11 +77,11 @@ def owner(s):
     if name in CHAR_RESOURCES + CHAR_ANIMATIONS:
         index = (CHAR_RESOURCES if name in CHAR_RESOURCES else CHAR_ANIMATIONS).index(name)
         return f'assets/characters/{CHARACTER_NAMES[index]}'
-    if name == '_ADDR_2002660':
+    if name == 'PAN_DISPLAY_LIST':
         return 'assets/models/items/pan'
-    if name == '_1D82B0':
+    if name == 'SHARED_RACE_MODEL_RESOURCES':
         return 'assets/shared/race_models'
-    if name == '_14B450':
+    if name == 'SNOWBOARD_MODELS':
         return 'assets/models/snowboards'
     fmt = s['type']
     family = {'sprite_table': 'sprites', 'tilemap': 'tilemaps', 'sample_bank': 'audio/samples',
@@ -95,6 +95,8 @@ def owner(s):
 def migrate(root, if_absent=False):
     if (root / LAYOUT).exists():
         if if_absent:
+            from tools.asset_name_migration import migrate_names
+            migrate_names(root)
             print('Existing bundles retained; no authoritative sources overwritten.')
             return
         raise ValueError('bundles already exist; migration refuses to overwrite edits')
@@ -102,9 +104,9 @@ def migrate(root, if_absent=False):
     owners = {s['name']: owner(s) for s in rows}
     resources = [s for s in rows if s['type'] in ('model_resources', 'course_model_resources')]
     for s in rows:
-        if s['type'] == 'course_display_list' and s['name'] != '_ADDR_2002660':
+        if s['type'] == 'course_display_list' and s['name'] != 'PAN_DISPLAY_LIST':
             bank = next((r for r in resources if r['graphics_start'] <= s['start'] < r['graphics_end']), None)
-            if bank and bank['name'] != '_1D82B0':
+            if bank and bank['name'] != 'SHARED_RACE_MODEL_RESOURCES':
                 owners[s['name']] = owners[bank['name']]
     planned, bundles, layout_rows, file_map = {}, {}, [], {}
 
@@ -187,8 +189,8 @@ def migrate(root, if_absent=False):
                 body = commands(staged if staged.exists() else root / s['legacy'])
                 starts = [0] + [p+8 for p in range(0, len(body)-8, 8) if body[p] == 0xB8]
                 for start in starts:
-                    name = 'pan' if s['name'] == '_ADDR_2002660' else f"{s['name'].lstrip('_').lower()}_{start:04x}"
-                    dest = owners[s['name']] if bank['name'] == '_1D82B0' else str(base)
+                    name = 'pan' if s['name'] == 'PAN_DISPLAY_LIST' else f"{s['name'].lstrip('_').lower()}_{start:04x}"
+                    dest = owners[s['name']] if bank['name'] == 'SHARED_RACE_MODEL_RESOURCES' else str(base)
                     bundles[dest]['models'].append(dict(name=name, roots=[s['start']-bank['graphics_start']+start], **common))
     for s in rows:
         if s['type'] == 'embedded_model':
@@ -273,7 +275,7 @@ def index_models(root, layout):
                 offset = scroll[0]&0xFFFFFF
                 candidates.add(offset)
                 for node in trace_course_graphics(data,[offset]).display_lists:
-                    bindings[node.offset] = dict(asset='_1E74E0',entry=scroll[1],wrap=True)
+                    bindings[node.offset] = dict(asset='RACE_EFFECT_SPRITES',entry=scroll[1],wrap=True)
         # Self-contained model lists start with a pipe sync and bounding vertices.
         candidates.update(i for i in range(0,len(data)-16,8)
                           if data[i:i+4]==bytes.fromhex('e7000000') and data[i+8]==4 and data[i+16]==0xBE)
@@ -282,8 +284,8 @@ def index_models(root, layout):
             if not any(data[p] in (0xB1,0xBF,0xB5) for node in graph.display_lists for p in range(node.offset,node.end,8)):
                 continue
             source = next(s for s in gfx if s['start'] <= bank['graphics_start']+offset < s['end'])
-            name = 'pan' if bank['name']=='_1D82B0' and offset==0x2660 else f"{source['name'].lstrip('_').lower()}_{offset:06x}"
-            target = rows[source['name']]['bundle'] if bank['name']=='_1D82B0' else destination
+            name = 'pan' if bank['name']=='SHARED_RACE_MODEL_RESOURCES' and offset==0x2660 else f"{source['name'].lstrip('_').lower()}_{offset:06x}"
+            target = rows[source['name']]['bundle'] if bank['name']=='SHARED_RACE_MODEL_RESOURCES' else destination
             model = dict(name=name,roots=[offset],**common)
             if offset in bindings:
                 model['texture_binding'] = bindings[offset]
@@ -295,16 +297,16 @@ def index_models(root, layout):
             if bank['name'].lower().startswith(course+'_'):
                 bundles[destination]['models'].append(dict(name=f'billboard_{i:02d}',roots=[billboard[1]&0xFFFFFF],
                     setup=billboard[0],vertex_binding=dict(address=billboard[2],count=billboard[3]),
-                    texture_binding=dict(asset='_1E74E0',entry=billboard[5],wrap=True),**common))
+                    texture_binding=dict(asset='RACE_EFFECT_SPRITES',entry=billboard[5],wrap=True),**common))
     for spec in specs:
         if spec['type'] == 'embedded_model':
             destination = rows[spec['name']]['bundle']
             for offset in spec['root_offsets']:
                 if offset in (0x180,0x4B8,0x828,0x3A48,0x3BC0,0x3DB0):
-                    count = load_yaml(root/rows['_1EF530']['source'])['entry_count']
+                    count = load_yaml(root/rows['SNOWBOARD_TEXTURES']['source'])['entry_count']
                     for entry in range(count):
                         bundles[destination]['models'].append(dict(name=f'board_{offset:06x}_texture_{entry:02d}',
-                            embedded=spec['name'],roots=[offset],texture_binding=dict(asset='_1EF530',entry=entry,wrap=False)))
+                            embedded=spec['name'],roots=[offset],texture_binding=dict(asset='SNOWBOARD_TEXTURES',entry=entry,wrap=False)))
                 else:
                     bundles[destination]['models'].append(dict(name=f'board_{offset:06x}',embedded=spec['name'],roots=[offset]))
     for path,bundle in bundles.items():
@@ -346,7 +348,7 @@ def index_models(root, layout):
 def organize_shared_resources(root, rows, bundles):
     """A uniquely consumed range belongs beside its model, not in a bank bucket."""
     from tools.course_graphics_common import trace_course_graphics, collect_course_texture_references
-    row = rows.get('_1D82B0')
+    row = rows.get('SHARED_RACE_MODEL_RESOURCES')
     if row is None:
         return
     original = load_yaml(root/row['source'])

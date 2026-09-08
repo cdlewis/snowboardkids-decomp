@@ -1407,7 +1407,7 @@ segments:
 
   - type: course_display_list
     start: 0x147910
-    name: _147910
+    name: SHARED_RACE_GRAPHICS
     vram: 0x02000000
     align: 8
     subalign: 8
@@ -1495,7 +1495,7 @@ segments:
 
   - start: 0x149F70
     type: course_display_list
-    name: _ADDR_2002660
+    name: PAN_DISPLAY_LIST
     vram: 0x02002660
     align: 8
     subalign: 8
@@ -1543,7 +1543,7 @@ segments:
 
   - start: 0x14B348
     type: course_display_list
-    name: _147910_SUFFIX
+    name: SHARED_RACE_GRAPHICS_SUFFIX
     vram: 0x02003A38
     align: 8
     subalign: 8
@@ -1551,7 +1551,7 @@ segments:
 
   - type: embedded_model
     start: 0x14B450
-    name: _14B450
+    name: SNOWBOARD_MODELS
     vram: 0
     # Snowboard geometry, including ghost variants; vertices share segment 2.
     compression: none
@@ -1559,32 +1559,32 @@ segments:
 
   - start: 0x1502A0
     type: course_display_list
-    name: _1502A0
+    name: SLASH_GRAPHICS
     vram: 0
 
   - start: 0x152930
     type: course_display_list
-    name: _152930
+    name: WENDY_GRAPHICS
     vram: 0
 
   - start: 0x155A20
     type: course_display_list
-    name: _155A20
+    name: JAM_GRAPHICS
     vram: 0
 
   - start: 0x158D90
     type: course_display_list
-    name: _158D90
+    name: LINDA_GRAPHICS
     vram: 0
 
   - start: 0x15C750
     type: course_display_list
-    name: _15C750
+    name: TOMMY_GRAPHICS
     vram: 0
 
   - start: 0x160360
     type: course_display_list
-    name: _160360
+    name: NINJA_GRAPHICS
     vram: 0
 
   - type: course_model_resources
@@ -1669,7 +1669,7 @@ segments:
 
   - type: model_resources
     start: 0x1D82B0
-    name: _1D82B0
+    name: SHARED_RACE_MODEL_RESOURCES
     vram: 0
     graphics_start: 0x147910
     graphics_end: 0x14B450
@@ -1700,7 +1700,7 @@ segments:
 
   - type: model_resources
     start: 0x1E19C0
-    name: _1E19C0
+    name: SLASH_MODEL_RESOURCES
     vram: 0
     graphics_start: 0x1502A0
     graphics_end: 0x152930
@@ -1708,7 +1708,7 @@ segments:
 
   - type: model_resources
     start: 0x1E2380
-    name: _1E2380
+    name: WENDY_MODEL_RESOURCES
     vram: 0
     graphics_start: 0x152930
     graphics_end: 0x155A20
@@ -1716,7 +1716,7 @@ segments:
 
   - type: model_resources
     start: 0x1E2DE0
-    name: _1E2DE0
+    name: JAM_MODEL_RESOURCES
     vram: 0
     graphics_start: 0x155A20
     graphics_end: 0x158D90
@@ -1724,7 +1724,7 @@ segments:
 
   - type: model_resources
     start: 0x1E3FE0
-    name: _1E3FE0
+    name: LINDA_MODEL_RESOURCES
     vram: 0
     graphics_start: 0x158D90
     graphics_end: 0x15C750
@@ -1732,7 +1732,7 @@ segments:
 
   - type: model_resources
     start: 0x1E4AB0
-    name: _1E4AB0
+    name: TOMMY_MODEL_RESOURCES
     vram: 0
     graphics_start: 0x15C750
     graphics_end: 0x160360
@@ -1740,7 +1740,7 @@ segments:
 
   - type: model_resources
     start: 0x1E68A0
-    name: _1E68A0
+    name: NINJA_MODEL_RESOURCES
     vram: 0
     graphics_start: 0x160360
     graphics_end: 0x163410
@@ -1748,7 +1748,7 @@ segments:
 
   - type: sprite_table
     start: 0x1E74E0
-    name: _1E74E0
+    name: RACE_EFFECT_SPRITES
     vram: 0
 
   # Optional compressed course sprite tables. Animal Land (course 7) has no
@@ -1802,7 +1802,7 @@ segments:
 
   - type: sprite_table
     start: 0x1EF530
-    name: _1EF530
+    name: SNOWBOARD_TEXTURES
     vram: 0
 
   - type: sprite_table
@@ -1812,37 +1812,37 @@ segments:
 
   - start: 0x1F2220
     type: race_animation
-    name: _1F2220
+    name: SLASH_RACE_ANIMATIONS
     vram: 0
     part_count: 12
 
   - start: 0x1F7D20
     type: race_animation
-    name: _1F7D20
+    name: WENDY_RACE_ANIMATIONS
     vram: 0
     part_count: 12
 
   - start: 0x1FE860
     type: race_animation
-    name: _1FE860
+    name: JAM_RACE_ANIMATIONS
     vram: 0
     part_count: 12
 
   - start: 0x2044B0
     type: race_animation
-    name: _2044B0
+    name: LINDA_RACE_ANIMATIONS
     vram: 0
     part_count: 12
 
   - start: 0x20A940
     type: race_animation
-    name: _20A940
+    name: TOMMY_RACE_ANIMATIONS
     vram: 0
     part_count: 12
 
   - start: 0x211470
     type: race_animation
-    name: _211470
+    name: NINJA_RACE_ANIMATIONS
     vram: 0
     part_count: 12
 
@@ -1911,12 +1911,12 @@ segments:
 
   - type: sprite_table
     start: 0x243270
-    name: _243270
+    name: RACE_ITEM_SPRITES
     vram: 0
 
   - type: sprite_table
     start: 0x245A80
-    name: _245A80
+    name: SHARED_UI_SPRITES
     vram: 0
     ci8_entry_ranges: [[65, 72]]
 
@@ -2007,7 +2007,7 @@ segments:
 
   - type: pointer_bank
     start: 0x275A90
-    name: _275A90
+    name: SOUND_POINTER_BANK
     vram: 0
 
   - type: sample_bank
@@ -2015,7 +2015,7 @@ segments:
     name: _27E290
     vram: 0
     compression: none
-    bank_asset: _275A90
+    bank_asset: SOUND_POINTER_BANK
     sample_base_asset: _27E290
 
   - start: 0x369000
@@ -2023,7 +2023,7 @@ segments:
     name: '369000'
     vram: 0
     compression: none
-    bank_asset: _275A90
+    bank_asset: SOUND_POINTER_BANK
     sample_base_asset: _27E290
 
   - start: 0x541D50

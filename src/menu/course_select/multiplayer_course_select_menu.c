@@ -101,10 +101,10 @@ void initMultiplayerCourseSelectMenu(void) {
     LOAD_ASSET(_5A1ED0, 0x25);
     LOAD_ASSET(_59DFE0, 0x26);
 
-    gAssetHandles[0xC] = allocRelocatableHeapBlock(ASSET_SIZE(_14B450));
-    DMA_ASSET(_14B450, (void *)getRelocatableHeapBlockBase(gAssetHandles[0xC]), ASSET_SIZE(_14B450));
-    LOAD_ASSET(_1EF530, 0xD);
-    LOAD_ASSET(_245A80, 0x1F);
+    gAssetHandles[0xC] = allocRelocatableHeapBlock(ASSET_SIZE(SNOWBOARD_MODELS));
+    DMA_ASSET(SNOWBOARD_MODELS, (void *)getRelocatableHeapBlockBase(gAssetHandles[0xC]), ASSET_SIZE(SNOWBOARD_MODELS));
+    LOAD_ASSET(SNOWBOARD_TEXTURES, 0xD);
+    LOAD_ASSET(SHARED_UI_SPRITES, 0x1F);
     initCallbackTaskScheduler(0);
     createCallbackTask((CallbackTaskCallback)initMenuIconTilemapSpriteActor, 0, 0x63);
 

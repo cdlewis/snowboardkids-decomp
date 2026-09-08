@@ -55,7 +55,7 @@ void initRaceSplitscreenSelectMenu(void) {
     LOAD_ASSET(_593D10, 0x22);
     LOAD_ASSET(_598A70, 0x23);
     LOAD_ASSET(_59DFE0, 0x26);
-    LOAD_ASSET(_245A80, 0x1F);
+    LOAD_ASSET(SHARED_UI_SPRITES, 0x1F);
     LOAD_ASSET(_59AAA0, 0x24);
     initCallbackTaskScheduler(0);
     createCallbackTask((CallbackTaskCallback)initMenuIconTilemapSpriteActor, 0, 0x5E);
