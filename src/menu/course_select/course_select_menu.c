@@ -78,11 +78,11 @@ void initCourseSelectMenu(void) {
     LOAD_ASSET(_59DFE0, 0x26);
     LOAD_ASSET(_5D4280, 0x27);
 
-    size = ASSET_SIZE(_14B450);
+    size = ASSET_SIZE(SNOWBOARD_MODELS);
     gAssetHandles[0xC] = allocRelocatableHeapBlock(size);
-    DMA_ASSET(_14B450, (void *)getRelocatableHeapBlockBase(gAssetHandles[0xC]), size);
-    LOAD_ASSET(_1EF530, 0xD);
-    LOAD_ASSET(_1E74E0, 0x1C);
+    DMA_ASSET(SNOWBOARD_MODELS, (void *)getRelocatableHeapBlockBase(gAssetHandles[0xC]), size);
+    LOAD_ASSET(SNOWBOARD_TEXTURES, 0xD);
+    LOAD_ASSET(RACE_EFFECT_SPRITES, 0x1C);
     initCallbackTaskScheduler(0);
     createCallbackTask((CallbackTaskCallback)initMenuIconTilemapSpriteActor, 0, 0x5E);
 

@@ -66,7 +66,7 @@ void initMainMenuModePreviewRaceSelectionMenu(void) {
     LOAD_ASSET(_1F1A90, 0x28);
     LOAD_ASSET(_593D10, 0x29);
     LOAD_ASSET(_60F1A0, 0x2A);
-    LOAD_ASSET(_245A80, 0x1F);
+    LOAD_ASSET(SHARED_UI_SPRITES, 0x1F);
     LOAD_RAW_ASSET(_1467B0, 8);
     LOAD_ASSET(_1DE360, 9);
     gMainMenuSelectionResult = 0;

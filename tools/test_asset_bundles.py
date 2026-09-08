@@ -122,7 +122,8 @@ class BundleTests(unittest.TestCase):
             self.assertEqual(old.read_text(),original)
             new = root/row['source']
             new.write_text(original.replace('12345678','87654321'))
-            migrate(root,if_absent=True)
+            with patch('tools.asset_name_migration.migrate_names'):
+                migrate(root,if_absent=True)
             self.assertEqual(pack_segment(root,row),words((0xB8000000,0x87654321)))
             with self.assertRaises(ValueError):
                 migrate(root)

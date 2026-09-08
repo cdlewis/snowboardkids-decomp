@@ -4335,7 +4335,7 @@ void renderGhostSlowdownActor(RaceUiPodiumTrailActor *arg0) {
         gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x02, getRelocatableHeapBlockBase(ASSET_HANDLE(0xA)));
         gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x03, getRelocatableHeapBlockBase(ASSET_HANDLE(0xB)));
         gSPMatrix(RACE_UI_TRAIL_GFX_ALLOC_PTR++, arg0->matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
-        gSPDisplayList(RACE_UI_TRAIL_GFX_ALLOC_PTR++, &_ADDR_2002660_VRAM);
+        gSPDisplayList(RACE_UI_TRAIL_GFX_ALLOC_PTR++, &PAN_DISPLAY_LIST_VRAM);
     }
 }
 

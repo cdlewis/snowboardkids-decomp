@@ -16,34 +16,34 @@
 
 CharacterRomAssetRangeTable gCharacterRawAssetRanges = {
     {
-        (u8 *)&_1502A0_ROM_START, (u8 *)&_1502A0_ROM_END,
-        (u8 *)&_152930_ROM_START, (u8 *)&_152930_ROM_END,
-        (u8 *)&_155A20_ROM_START, (u8 *)&_155A20_ROM_END,
-        (u8 *)&_158D90_ROM_START, (u8 *)&_158D90_ROM_END,
-        (u8 *)&_15C750_ROM_START, (u8 *)&_15C750_ROM_END,
-        (u8 *)&_160360_ROM_START, (u8 *)&_160360_ROM_END,
+        (u8 *)&SLASH_GRAPHICS_ROM_START, (u8 *)&SLASH_GRAPHICS_ROM_END,
+        (u8 *)&WENDY_GRAPHICS_ROM_START, (u8 *)&WENDY_GRAPHICS_ROM_END,
+        (u8 *)&JAM_GRAPHICS_ROM_START, (u8 *)&JAM_GRAPHICS_ROM_END,
+        (u8 *)&LINDA_GRAPHICS_ROM_START, (u8 *)&LINDA_GRAPHICS_ROM_END,
+        (u8 *)&TOMMY_GRAPHICS_ROM_START, (u8 *)&TOMMY_GRAPHICS_ROM_END,
+        (u8 *)&NINJA_GRAPHICS_ROM_START, (u8 *)&NINJA_GRAPHICS_ROM_END,
     }
 };
 
 CharacterRomAssetRangeTable gCharacterTextureAssetRanges = {
     {
-        (u8 *)&_1E19C0_ROM_START, (u8 *)&_1E19C0_ROM_END,
-        (u8 *)&_1E2380_ROM_START, (u8 *)&_1E2380_ROM_END,
-        (u8 *)&_1E2DE0_ROM_START, (u8 *)&_1E2DE0_ROM_END,
-        (u8 *)&_1E3FE0_ROM_START, (u8 *)&_1E3FE0_ROM_END,
-        (u8 *)&_1E4AB0_ROM_START, (u8 *)&_1E4AB0_ROM_END,
-        (u8 *)&_1E68A0_ROM_START, (u8 *)&_1E68A0_ROM_END,
+        (u8 *)&SLASH_MODEL_RESOURCES_ROM_START, (u8 *)&SLASH_MODEL_RESOURCES_ROM_END,
+        (u8 *)&WENDY_MODEL_RESOURCES_ROM_START, (u8 *)&WENDY_MODEL_RESOURCES_ROM_END,
+        (u8 *)&JAM_MODEL_RESOURCES_ROM_START, (u8 *)&JAM_MODEL_RESOURCES_ROM_END,
+        (u8 *)&LINDA_MODEL_RESOURCES_ROM_START, (u8 *)&LINDA_MODEL_RESOURCES_ROM_END,
+        (u8 *)&TOMMY_MODEL_RESOURCES_ROM_START, (u8 *)&TOMMY_MODEL_RESOURCES_ROM_END,
+        (u8 *)&NINJA_MODEL_RESOURCES_ROM_START, (u8 *)&NINJA_MODEL_RESOURCES_ROM_END,
     }
 };
 
 CharacterRomAssetRangeTable gCharacterModelAssetRanges = {
     {
-        (u8 *)&_1F2220_ROM_START, (u8 *)&_1F2220_ROM_END,
-        (u8 *)&_1F7D20_ROM_START, (u8 *)&_1F7D20_ROM_END,
-        (u8 *)&_1FE860_ROM_START, (u8 *)&_1FE860_ROM_END,
-        (u8 *)&_2044B0_ROM_START, (u8 *)&_2044B0_ROM_END,
-        (u8 *)&_20A940_ROM_START, (u8 *)&_20A940_ROM_END,
-        (u8 *)&_211470_ROM_START, (u8 *)&_211470_ROM_END,
+        (u8 *)&SLASH_RACE_ANIMATIONS_ROM_START, (u8 *)&SLASH_RACE_ANIMATIONS_ROM_END,
+        (u8 *)&WENDY_RACE_ANIMATIONS_ROM_START, (u8 *)&WENDY_RACE_ANIMATIONS_ROM_END,
+        (u8 *)&JAM_RACE_ANIMATIONS_ROM_START, (u8 *)&JAM_RACE_ANIMATIONS_ROM_END,
+        (u8 *)&LINDA_RACE_ANIMATIONS_ROM_START, (u8 *)&LINDA_RACE_ANIMATIONS_ROM_END,
+        (u8 *)&TOMMY_RACE_ANIMATIONS_ROM_START, (u8 *)&TOMMY_RACE_ANIMATIONS_ROM_END,
+        (u8 *)&NINJA_RACE_ANIMATIONS_ROM_START, (u8 *)&NINJA_RACE_ANIMATIONS_ROM_END,
     }
 };
 
@@ -164,12 +164,12 @@ void loadRaceCourseAssets(void) {
             break;
     }
 
-    size = (u8 *)&_147910_SUFFIX_ROM_END - (u8 *)&_147910_ROM_START;
+    size = (u8 *)&SHARED_RACE_GRAPHICS_SUFFIX_ROM_END - (u8 *)&SHARED_RACE_GRAPHICS_ROM_START;
     gAssetHandles[10] = allocRelocatableHeapBlock(size);
     lockRelocatableHeapBlock(gAssetHandles[10]);
-    DMA_ASSET(_147910, getRelocatableHeapBlockBase(gAssetHandles[0xA]), size);
-    LOAD_ASSET(_1D82B0, 0xB);
-    LOAD_ASSET(_1E74E0, 0x1C);
+    DMA_ASSET(SHARED_RACE_GRAPHICS, getRelocatableHeapBlockBase(gAssetHandles[0xA]), size);
+    LOAD_ASSET(SHARED_RACE_MODEL_RESOURCES, 0xB);
+    LOAD_ASSET(RACE_EFFECT_SPRITES, 0x1C);
     LOAD_ASSET(_5DAF30, 0x2A);
 }
 
@@ -186,10 +186,10 @@ void loadRaceCharacterAssets(void) {
     s32 textureCharacterId;
     s32 size;
 
-    size = ASSET_SIZE(_14B450);
+    size = ASSET_SIZE(SNOWBOARD_MODELS);
     gAssetHandles[0xC] = allocRelocatableHeapBlock(size);
-    DMA_ASSET(_14B450, getRelocatableHeapBlockBase(gAssetHandles[0xC]), size);
-    LOAD_ASSET(_1EF530, 0xD);
+    DMA_ASSET(SNOWBOARD_MODELS, getRelocatableHeapBlockBase(gAssetHandles[0xC]), size);
+    LOAD_ASSET(SNOWBOARD_TEXTURES, 0xD);
 
     rawRanges = gCharacterRawAssetRanges.romBoundAddresses;
     textureRanges = gCharacterTextureAssetRanges.romBoundAddresses;
@@ -222,7 +222,7 @@ void loadRaceCharacterAssets(void) {
         }
     }
 
-    LOAD_ASSET(_243270, 0x1E);
+    LOAD_ASSET(RACE_ITEM_SPRITES, 0x1E);
 }
 
 void initRaceCourseSceneTasks(void) {

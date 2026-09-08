@@ -57,7 +57,7 @@ void initRaceTypeSelectMenu(void) {
     LOAD_ASSET(_59AAA0, 0x24);
     LOAD_ASSET(_59DFE0, 0x26);
     LOAD_ASSET(_5CCD40, 0x25);
-    LOAD_ASSET(_245A80, 0x1F);
+    LOAD_ASSET(SHARED_UI_SPRITES, 0x1F);
     initCallbackTaskScheduler(0);
     createCallbackTask((CallbackTaskCallback)initMenuIconTilemapSpriteActor, 0, 0x5E);
     gMenuSelectionConfirmTimer = 0;

@@ -13,6 +13,20 @@ shared extraction code; there is no `asset_format` selector in the ROM config.
 Existing bundle layouts migrate their decoder names automatically without moving
 editable files or changing linker object identities.
 
+Known asset identities are recorded with ROM starts and source evidence in
+`tools/asset_names.yaml`. The six characters' graphics, model-resource and race
+animation banks, shared race banks, snowboard banks, item/effect/UI sprites, pan
+display list and sound pointer bank use semantic segment and symbol names.
+Extraction automatically migrates old names, filenames, model references and
+linker object paths. It compares every packed section against the existing edited
+tree before switching, retaining a backup under `asset-backups/asset-names-*/`.
+Conflicting destinations are rejected; repeated migration is a no-op.
+
+Unidentified music tracks, scene-animation purposes and mixed model/UI segments
+remain future naming candidates. In particular, `_1499B8` contains more than fan
+geometry and is not named after that one contained model. Numeric vertex and
+display-list offsets remain offsets, not inferred semantic identities.
+
 ```sh
 make extract
 make verify-assets
@@ -101,13 +115,13 @@ legacy edits or destinations. Repeated extraction retains canonical sources.
 Pack an individual bundled ROM section with:
 
 ```sh
-python3 tools/asset_bundles.py pack _1D82B0 --out /tmp/shared-race.bin
+python3 tools/asset_bundles.py pack SHARED_RACE_MODEL_RESOURCES --out /tmp/shared-race.bin
 ```
 
 Stable ROM-address names are retained for assets without established semantic
-names. The report connects them to their loaders. For example, `_14B450` is the
-snowboard bundle, `_245A80` contains race UI sprites including CI8 portraits,
-`_5DCBE0` is the title tilemap, and `_275A90` is the Mus pointer bank.
+names. The report connects them to their loaders. For example, `SNOWBOARD_MODELS` is the
+snowboard bundle, `SHARED_UI_SPRITES` contains race UI sprites including CI8 portraits,
+`_5DCBE0` is the title tilemap, and `SOUND_POINTER_BANK` is the Mus pointer bank.
 
 ## Editing and rebuilding
 
@@ -119,7 +133,7 @@ image, display-list, replay, and sample edits trigger the correct rebuild,
 including when a manifest changes its source paths.
 
 ```sh
-python3 tools/asset_bundles.py pack _245A80 --out /tmp/ui.bin
+python3 tools/asset_bundles.py pack SHARED_UI_SPRITES --out /tmp/ui.bin
 python3 tools/asset_bundles.py pack BIG_SNOWMAN_COURSE_MODEL_RESOURCES --out /tmp/course.bin
 ```
 
