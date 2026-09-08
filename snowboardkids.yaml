@@ -1549,12 +1549,11 @@ segments:
     subalign: 8
     exclusive_ram_id: shared_race_models
 
-  - type: readable_asset
+  - type: embedded_model
     start: 0x14B450
     name: _14B450
     vram: 0
     # Snowboard geometry, including ghost variants; vertices share segment 2.
-    asset_format: embedded_model
     compression: none
     root_offsets: [0x180, 0x4B8, 0x828, 0x1AE0, 0x1F80, 0x2300, 0x2F68, 0x3408, 0x3768, 0x3A48, 0x3BC0, 0x3DB0, 0x3F68, 0x4228, 0x43E8, 0x4720, 0x4A10, 0x4B70]
 
@@ -1694,11 +1693,10 @@ segments:
     # Two unreferenced RGBA16 palettes between the texture and vertex banks.
     extra_palettes: [{ offset: 0x2A60, colors: 16 }, { offset: 0x2A80, colors: 16 }]
 
-  - type: readable_asset
+  - type: sprite_table
     start: 0x1E0F70
     name: _1E0F70
     vram: 0
-    asset_format: sprite_table
 
   - type: model_resources
     start: 0x1E19C0
@@ -1748,11 +1746,10 @@ segments:
     graphics_end: 0x163410
     root_offsets: [0x0, 0x2A0, 0x330, 0x518, 0x5B8, 0x7B0, 0xCF0, 0x10E8, 0x1170, 0x1410, 0x1498, 0x1738, 0x17C8, 0x1858, 0x1AF8, 0x1B88, 0x1D70, 0x1E10, 0x2008, 0x2548, 0x2940, 0x29C8, 0x2C68, 0x2CF0, 0x2F90, 0x3020]
 
-  - type: readable_asset
+  - type: sprite_table
     start: 0x1E74E0
     name: _1E74E0
     vram: 0
-    asset_format: sprite_table
 
   # Optional compressed course sprite tables. Animal Land (course 7) has no
   # sprite-table asset; the sequence therefore skips from Silver Mountain to
@@ -1803,65 +1800,56 @@ segments:
     name: ROOKIE_MOUNTAIN_COURSE_SPRITES
     vram: 0
 
-  - type: readable_asset
+  - type: sprite_table
     start: 0x1EF530
     name: _1EF530
     vram: 0
-    asset_format: sprite_table
 
-  - type: readable_asset
+  - type: sprite_table
     start: 0x1F1A90
     name: _1F1A90
     vram: 0
-    asset_format: sprite_table
 
   - start: 0x1F2220
-    type: readable_asset
+    type: race_animation
     name: _1F2220
     vram: 0
-    asset_format: race_animation
     part_count: 12
 
   - start: 0x1F7D20
-    type: readable_asset
+    type: race_animation
     name: _1F7D20
     vram: 0
-    asset_format: race_animation
     part_count: 12
 
   - start: 0x1FE860
-    type: readable_asset
+    type: race_animation
     name: _1FE860
     vram: 0
-    asset_format: race_animation
     part_count: 12
 
   - start: 0x2044B0
-    type: readable_asset
+    type: race_animation
     name: _2044B0
     vram: 0
-    asset_format: race_animation
     part_count: 12
 
   - start: 0x20A940
-    type: readable_asset
+    type: race_animation
     name: _20A940
     vram: 0
-    asset_format: race_animation
     part_count: 12
 
   - start: 0x211470
-    type: readable_asset
+    type: race_animation
     name: _211470
     vram: 0
-    asset_format: race_animation
     part_count: 12
 
   - start: 0x215BE0
-    type: readable_asset
+    type: scene_animation
     name: _215BE0
     vram: 0
-    asset_format: scene_animation
     part_count: 14
 
   # Per-course compressed collision/path surface data, in course-index order.
@@ -1916,413 +1904,351 @@ segments:
     name: ROOKIE_MOUNTAIN_COURSE_SURFACE_DATA
     vram: 0
 
-  - type: readable_asset
+  - type: sprite_table
     start: 0x2427D0
     name: _2427D0
     vram: 0
-    asset_format: sprite_table
 
-  - type: readable_asset
+  - type: sprite_table
     start: 0x243270
     name: _243270
     vram: 0
-    asset_format: sprite_table
 
-  - type: readable_asset
+  - type: sprite_table
     start: 0x245A80
     name: _245A80
     vram: 0
-    asset_format: sprite_table
     ci8_entry_ranges: [[65, 72]]
 
-  - type: readable_asset
+  - type: replay
     start: 0x24C8E0
     name: _24C8E0
     vram: 0
-    asset_format: replay
 
-  - type: readable_asset
+  - type: replay
     start: 0x24DBE0
     name: _24DBE0
     vram: 0
-    asset_format: replay
 
-  - type: readable_asset
+  - type: replay
     start: 0x250260
     name: _250260
     vram: 0
-    asset_format: replay
 
-  - type: readable_asset
+  - type: replay
     start: 0x2521F0
     name: _2521F0
     vram: 0
-    asset_format: replay
 
-  - type: readable_asset
+  - type: replay
     start: 0x254380
     name: _254380
     vram: 0
-    asset_format: replay
 
-  - type: readable_asset
+  - type: replay
     start: 0x256420
     name: _256420
     vram: 0
-    asset_format: replay
 
-  - type: readable_asset
+  - type: replay
     start: 0x258C80
     name: _258C80
     vram: 0
-    asset_format: replay
 
-  - type: readable_asset
+  - type: replay
     start: 0x25B410
     name: _25B410
     vram: 0
-    asset_format: replay
 
-  - type: readable_asset
+  - type: replay
     start: 0x25DF80
     name: _25DF80
     vram: 0
-    asset_format: replay
 
-  - type: readable_asset
+  - type: replay
     start: 0x260A30
     name: _260A30
     vram: 0
-    asset_format: replay
 
-  - type: readable_asset
+  - type: replay
     start: 0x263520
     name: _263520
     vram: 0
-    asset_format: replay
 
-  - type: readable_asset
+  - type: replay
     start: 0x265D30
     name: _265D30
     vram: 0
-    asset_format: replay
 
-  - type: readable_asset
+  - type: replay
     start: 0x2688C0
     name: _2688C0
     vram: 0
-    asset_format: replay
 
-  - type: readable_asset
+  - type: replay
     start: 0x26B1D0
     name: _26B1D0
     vram: 0
-    asset_format: replay
 
-  - type: readable_asset
+  - type: replay
     start: 0x26DE60
     name: _26DE60
     vram: 0
-    asset_format: replay
 
-  - type: readable_asset
+  - type: replay
     start: 0x270730
     name: _270730
     vram: 0
-    asset_format: replay
 
-  - type: readable_asset
+  - type: replay
     start: 0x2732E0
     name: _2732E0
     vram: 0
-    asset_format: replay
 
-  - type: readable_asset
+  - type: pointer_bank
     start: 0x275A90
     name: _275A90
     vram: 0
-    asset_format: pointer_bank
 
-  - type: readable_asset
+  - type: sample_bank
     start: 0x27E290
     name: _27E290
     vram: 0
-    asset_format: sample_bank
     compression: none
     bank_asset: _275A90
     sample_base_asset: _27E290
 
   - start: 0x369000
-    type: readable_asset
+    type: sample_bank
     name: '369000'
     vram: 0
-    asset_format: sample_bank
     compression: none
     bank_asset: _275A90
     sample_base_asset: _27E290
 
   - start: 0x541D50
-    type: readable_asset
+    type: music_sequence
     name: _541D50
     vram: 0
-    asset_format: music_sequence
     compression: none
 
   - start: 0x5457B0
-    type: readable_asset
+    type: music_sequence
     name: _5457B0
     vram: 0
-    asset_format: music_sequence
     compression: none
 
   - start: 0x546940
-    type: readable_asset
+    type: music_sequence
     name: _546940
     vram: 0
-    asset_format: music_sequence
     compression: none
 
   - start: 0x546EE0
-    type: readable_asset
+    type: music_sequence
     name: _546EE0
     vram: 0
-    asset_format: music_sequence
     compression: none
 
   - start: 0x5487A0
-    type: readable_asset
+    type: music_sequence
     name: _5487A0
     vram: 0
-    asset_format: music_sequence
     compression: none
 
   - start: 0x549650
-    type: readable_asset
+    type: music_sequence
     name: _549650
     vram: 0
-    asset_format: music_sequence
     compression: none
 
   - start: 0x549AA0
-    type: readable_asset
+    type: music_sequence
     name: _549AA0
     vram: 0
-    asset_format: music_sequence
     compression: none
 
   - start: 0x549EF0
-    type: readable_asset
+    type: music_sequence
     name: _549EF0
     vram: 0
-    asset_format: music_sequence
     compression: none
 
   - start: 0x54AFE0
-    type: readable_asset
+    type: music_sequence
     name: _54AFE0
     vram: 0
-    asset_format: music_sequence
     compression: none
 
   - start: 0x552640
-    type: readable_asset
+    type: music_sequence
     name: _552640
     vram: 0
-    asset_format: music_sequence
     compression: none
 
   - start: 0x55C020
-    type: readable_asset
+    type: music_sequence
     name: _55C020
     vram: 0
-    asset_format: music_sequence
     compression: none
 
   - start: 0x563F20
-    type: readable_asset
+    type: music_sequence
     name: _563F20
     vram: 0
-    asset_format: music_sequence
     compression: none
 
   - start: 0x56CFF0
-    type: readable_asset
+    type: music_sequence
     name: _56CFF0
     vram: 0
-    asset_format: music_sequence
     compression: none
 
   - start: 0x5757B0
-    type: readable_asset
+    type: music_sequence
     name: _5757B0
     vram: 0
-    asset_format: music_sequence
     compression: none
 
   - start: 0x57E350
-    type: readable_asset
+    type: music_sequence
     name: _57E350
     vram: 0
-    asset_format: music_sequence
     compression: none
 
   - start: 0x585570
-    type: readable_asset
+    type: music_sequence
     name: _585570
     vram: 0
-    asset_format: music_sequence
     compression: none
 
   - start: 0x58F6B0
-    type: readable_asset
+    type: music_sequence
     name: _58F6B0
     vram: 0
-    asset_format: music_sequence
     compression: none
 
-  - type: readable_asset
+  - type: sprite_table
     start: 0x593D10
     name: _593D10
     vram: 0
-    asset_format: sprite_table
 
-  - type: readable_asset
+  - type: sprite_table
     start: 0x598A70
     name: _598A70
     vram: 0
-    asset_format: sprite_table
 
-  - type: readable_asset
+  - type: sprite_table
     start: 0x59AAA0
     name: _59AAA0
     vram: 0
-    asset_format: sprite_table
     ci8_entry_ranges: [[55, 67]]
 
-  - type: readable_asset
+  - type: tilemap
     start: 0x59DFE0
     name: _59DFE0
     vram: 0
-    asset_format: tilemap
     image_format: ci4
 
   - start: 0x59E7F0
-    type: readable_asset
+    type: sprite_table
     name: 59E7F0
     vram: 0
-    asset_format: sprite_table
 
-  - type: readable_asset
+  - type: sprite_table
     start: 0x5A1ED0
     name: _5A1ED0
     vram: 0
-    asset_format: sprite_table
     ci8_entry_ranges: [[59, 395]]
 
-  - type: readable_asset
+  - type: sprite_table
     start: 0x5C5320
     name: _5C5320
     vram: 0
-    asset_format: sprite_table
 
-  - type: readable_asset
+  - type: sprite_table
     start: 0x5CBA80
     name: _5CBA80
     vram: 0
-    asset_format: sprite_table
 
-  - type: readable_asset
+  - type: sprite_table
     start: 0x5CCD40
     name: _5CCD40
     vram: 0
-    asset_format: sprite_table
     ci8_entry_ranges: [[0, 63]]
 
-  - type: readable_asset
+  - type: sprite_table
     start: 0x5D4280
     name: _5D4280
     vram: 0
-    asset_format: sprite_table
     ci8_entry_ranges: [[26, 96]]
 
-  - type: readable_asset
+  - type: sprite_table
     start: 0x5DAF30
     name: _5DAF30
     vram: 0
-    asset_format: sprite_table
 
-  - type: readable_asset
+  - type: sprite_table
     start: 0x5DB9D0
     name: _5DB9D0
     vram: 0
-    asset_format: sprite_table
 
-  - type: readable_asset
+  - type: tilemap
     start: 0x5DCBE0
     name: _5DCBE0
     vram: 0
-    asset_format: tilemap
     image_format: ci8
 
-  - type: readable_asset
+  - type: sprite_table
     start: 0x5DFDD0
     name: _5DFDD0
     vram: 0
-    asset_format: sprite_table
 
-  - type: readable_asset
+  - type: tilemap
     start: 0x5E0350
     name: _5E0350
     vram: 0
-    asset_format: tilemap
     image_format: ci4
 
-  - type: readable_asset
+  - type: tilemap
     start: 0x5E0E40
     name: _5E0E40
     vram: 0
-    asset_format: tilemap
     image_format: ci8
 
-  - type: readable_asset
+  - type: tilemap
     start: 0x5E26E0
     name: _5E26E0
     vram: 0
-    asset_format: tilemap
     image_format: ci8
 
   - start: 0x5E34A0
-    type: readable_asset
+    type: scene_animation
     name: _5E34A0
     vram: 0
-    asset_format: scene_animation
     part_count: 14
 
-  - type: readable_asset
+  - type: sprite_table
     start: 0x608560
     name: _608560
     vram: 0
-    asset_format: sprite_table
 
-  - type: readable_asset
+  - type: tilemap
     start: 0x609AA0
     name: _609AA0
     vram: 0
-    asset_format: tilemap
     image_format: ci8
 
-  - type: readable_asset
+  - type: tilemap
     start: 0x60ECB0
     name: _60ECB0
     vram: 0
-    asset_format: tilemap
     image_format: ci4
 
-  - type: readable_asset
+  - type: sprite_table
     start: 0x60F1A0
     name: _60F1A0
     vram: 0
-    asset_format: sprite_table
 
   - [0x60F990, bin] # everything beyond this point is blank
 

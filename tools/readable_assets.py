@@ -84,7 +84,7 @@ def extract_asset(blob, spec, path):
         data, metadata = blob, None
     else:
         data, metadata = decompress_huffman_asset(blob)
-    family = spec["asset_format"]
+    family = spec["type"]
     m = dict(schema_version=2, name=spec["name"], format=family, decompressed_size=len(data),
              compression=compression_dict(metadata) if metadata else "none")
     if family == "sprite_table":

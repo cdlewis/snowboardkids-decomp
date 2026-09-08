@@ -8,14 +8,15 @@ from tools.audio_assets import parse_pointer_bank, extract_samples
 from tools.huffman_asset import decompress_huffman_asset
 
 
-class N64SegReadable_asset(CommonSegment):
+class AssetSegment(CommonSegment):
+    """Shared extraction plumbing for format-specific asset segments."""
     @staticmethod
     def is_data():
         return True
 
     @property
     def statistics_type(self):
-        return "readable_asset"
+        return self.type
 
     def get_linker_section(self):
         return ".data"
@@ -24,6 +25,7 @@ class N64SegReadable_asset(CommonSegment):
         return "wa"
 
     def out_path(self):
+        # Keep established linker object identities; split writes only to staging.
         return options.opts.asset_path / "readable" / f"{self.name}.yaml"
 
     def should_split(self):
@@ -33,7 +35,7 @@ class N64SegReadable_asset(CommonSegment):
         if self.rom_end is None:
             raise ValueError(f"{self.name}: missing ROM end")
         try:
-            if self.yaml["asset_format"] == "sample_bank":
+            if self.type == "sample_bank":
                 segments = load_yaml(options.opts.base_path / "snowboardkids.yaml")["segments"]
                 segments = [s for s in segments if isinstance(s, list) or "start" in s]
                 ranges = {}

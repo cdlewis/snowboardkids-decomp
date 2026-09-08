@@ -14,7 +14,7 @@ import sys
 import tempfile
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-from tools.asset_bundles import ROOT, LAYOUT, CHARACTER_NAMES, dump, materialize, pack_segment, write_makefile
+from tools.asset_bundles import ROOT, LAYOUT, CHARACTER_NAMES, ASSET_TYPES, dump, materialize, pack_segment, write_makefile
 from tools.course_surface_data_common import load_yaml
 
 LEGACY_DIRS = ('course_display_lists','course_model_resources','course_sprite_tables','course_surface_data','readable')
@@ -94,6 +94,17 @@ def name_characters(root):
 def upgrade(root, registry):
     name_characters(root)
     layout = load_yaml(root/LAYOUT)
+    changed = False
+    for row in layout['segments']:
+        if row['decoder'] == 'readable_asset':
+            kind = load_yaml(root/row['source'])['format']
+            if kind not in ASSET_TYPES:
+                raise ValueError(f'unsupported asset segment type: {kind}')
+            row['decoder'] = kind
+            changed = True
+    if changed:
+        (root/LAYOUT).write_bytes(dump(layout))
+        write_makefile(root,layout)
     if layout.get('schema_version',1)>=2:
         validate_structure(root)
         print('Semantic bundles already current; editable sources retained.')
