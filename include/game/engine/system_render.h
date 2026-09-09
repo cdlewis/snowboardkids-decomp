@@ -27,6 +27,16 @@ typedef struct FrameRenderData {
     /* 0x078 */ RuntimeViewportData viewport;
 } FrameRenderData;
 
+extern u8 gRspOutputBuffer[RSP_OUTPUT_BUFFER_SIZE];
+extern u8 gRspYieldBuffer[RSP_YIELD_BUFFER_SIZE];
+extern u8 gRspDramStack[RSP_DRAM_STACK_SIZE];
+extern u8 gF3dlxMicrocodeText[];
+extern Vp gFullscreenOverlayViewport[1];
+extern Gfx gModelRenderSetupDisplayList[];
+extern Gfx gBackdropRenderSetupDisplayList[];
+extern Gfx gTranslucentOverlaySetupDisplayList[];
+extern u32 gTranslucentOverlayIntensityTexture[8];
+
 extern Gfx *gRegionAllocPtr;
 extern FrameRenderData *gCurrentFrameRenderData;
 extern u16 gDepthBuffer[FRAMEBUFFER_PIXEL_COUNT];

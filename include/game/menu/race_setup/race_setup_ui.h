@@ -76,7 +76,7 @@ typedef struct {
     /* 0x48 */ s16 alphaTimer[4];
 } TitleMenuTransitionActor;
 
-typedef struct {
+typedef struct TitleMenuWidgetActor {
     /* 0x00 */ u8 pad0[0x18];
     /* 0x18 */ s16 x[4];
     /* 0x20 */ s16 y[4];

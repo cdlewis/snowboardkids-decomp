@@ -33,6 +33,8 @@ typedef union FramebufferRenderInterval {
 
 extern GameTask *gCurrentGameTask;
 extern FramebufferRenderInterval gFramebufferRenderInterval;
+/* Only byte zero is a semantic countdown; the remaining bytes preserve storage.
+ * Controls framebuffer task submission frequency, not VI swap delay. */
 extern u8 gFramebufferSubmissionCountdown[4];
 extern u8 gPendingFramebufferSwapCount;
 extern u8 gFramebufferSwapHold;

@@ -4,6 +4,26 @@
 #include "common.h"
 #include "game/menu/renderer/menu_renderer.h"
 
+typedef enum ControllerPakRumblePromptPhase {
+    CONTROLLER_PAK_RUMBLE_OPEN = 0,
+    CONTROLLER_PAK_RUMBLE_INSERT_ACK = 1,
+    CONTROLLER_PAK_RUMBLE_CHECK_MOTORS = 2,
+    CONTROLLER_PAK_RUMBLE_WARNING_ACK = 3,
+    CONTROLLER_PAK_RUMBLE_FADE_OUT = 4,
+    CONTROLLER_PAK_RUMBLE_DISMISSED = 5,
+    CONTROLLER_PAK_RUMBLE_INITIAL_PROBE = 6,
+    CONTROLLER_PAK_RUMBLE_CHECK_HOLD = 7,
+    CONTROLLER_PAK_RUMBLE_DEVICE_SUMMARY = 8,
+    CONTROLLER_PAK_RUMBLE_CONFIRM_DEVICES = 9,
+} ControllerPakRumblePromptPhase;
+
+typedef enum ControllerPakRumbleMessageIndex {
+    CONTROLLER_PAK_RUMBLE_MESSAGE_INSERT = 0,
+    CONTROLLER_PAK_RUMBLE_MESSAGE_CHECKING = 1,
+    CONTROLLER_PAK_RUMBLE_MESSAGE_DO_NOT_REMOVE = 2,
+    CONTROLLER_PAK_RUMBLE_MESSAGE_CONFIRM = 3,
+} ControllerPakRumbleMessageIndex;
+
 /* These linker symbols overlap: transition + 2 is the state view.
  * confirmSelection also aliases gControllerPakRumbleCheckPromptConfirmSelection.
  * They must never be allocated as independent objects. */
@@ -33,6 +53,7 @@ typedef char ControllerPakRumbleStateSizeCheck[
 
 extern ControllerPakRumbleCheckPromptTransition gControllerPakRumbleCheckPromptTransition;
 extern ControllerPakRumbleCheckPromptState gControllerPakRumbleCheckPromptState;
+extern u8 gControllerPakRumbleCheckPromptConfirmSelection;
 
 typedef struct {
     /* 0x00 */ char pad[0x18];

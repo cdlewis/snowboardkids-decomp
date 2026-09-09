@@ -18,7 +18,7 @@ typedef struct {
     /* 0x23 */ u8 bounceTimer;
 } CharacterSelectUiBannerActor;
 
-typedef struct {
+typedef struct CharacterSelectUiPlayerPanelFrameActor {
     /* 0x00 */ CallbackTaskHeader taskHeader;
     /* 0x18 */ s16 x[RACE_PLAYER_COUNT];
     /* 0x20 */ s16 y[RACE_PLAYER_COUNT];
@@ -29,7 +29,7 @@ typedef struct {
     /* 0x30 */ u8 transitionState;
 } CharacterSelectUiPlayerPanelFrameActor;
 
-typedef struct {
+typedef struct CharacterSelectUiRosterIconActor {
     /* 0x00 */ CallbackTaskHeader taskHeader;
     /* 0x18 */ s16 x;
     /* 0x1A */ s16 y;
@@ -68,7 +68,7 @@ typedef struct {
     /* 0x68 */ u8 state[RACE_PLAYER_COUNT];
 } CharacterSelectUiSelectedCharacterTokenActor;
 
-typedef struct {
+typedef struct CharacterSelectUiPlayerCursorActor {
     /* 0x00 */ CallbackTaskHeader taskHeader;
     /* 0x18 */ s16 x[RACE_PLAYER_COUNT];
     /* 0x20 */ s16 y;
@@ -89,8 +89,6 @@ typedef struct {
     MenuGlyphScript unusedText[0x14];
 } CharacterSelectUiConfirmationBannerText;
 
-extern CharacterSelectUiRosterIconActor *D_8010ADE0;
-extern CharacterSelectUiPlayerPanelFrameActor *D_8010ADE4;
 
 void drawCharacterSelectConfirmationBanner(CharacterSelectUiBannerActor *arg0);
 void updateCharacterSelectConfirmationBanner(CharacterSelectUiBannerActor *arg0);

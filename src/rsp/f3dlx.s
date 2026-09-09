@@ -2,8 +2,8 @@
 
 .section .text, "ax"
 
-.globl D_800B1CC0
-D_800B1CC0:
+.globl gF3dlxMicrocodeText
+gF3dlxMicrocodeText:
 glabel gspF3DLX_fifoTextStart
 .incbin "assets/rsp/f3dlx.textbin.bin"
 endlabel gspF3DLX_fifoTextStart

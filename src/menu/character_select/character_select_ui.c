@@ -1,3 +1,4 @@
+#include "game/menu/menu_scratch.h"
 #include "common.h"
 #include <PR/os_libc.h>
 #include "font_encoding.h"
@@ -417,7 +418,7 @@ void updateCharacterSelectPlayerPanelFrames(CharacterSelectUiPlayerPanelFrameAct
     CharacterSelectUiPlayerPanelFrameActor *actor;
     CharacterSelectUiRosterIconActor *owner;
 
-    owner = D_8010ADE0;
+    owner = gMenuScratch0.rosterIcons;
     actor = arg0;
     var_v0 = actor->transitionState;
     desired = gCharacterSelectHudState.exitMode;
@@ -717,7 +718,7 @@ void initCharacterSelectPlayerCursorMarkers(CharacterSelectUiPlayerCursorActor *
 const char gCharacterSelectCharacterStatFormat[] = "%d";
 
 void drawCharacterSelectPlayerStatsPanels(CharacterSelectUiPlayerStatsPanelActor *arg0) {
-    CharacterSelectUiPlayerCursorActor *controller = D_8010ADE8;
+    CharacterSelectUiPlayerCursorActor *controller = gMenuScratch2.playerCursors;
     CharacterSelectUiPlayerStatsPanelActor *actor = arg0;
     s32 i;
     s32 j;
@@ -866,7 +867,7 @@ void updateCharacterSelectPlayerStatsPanels(CharacterSelectUiPlayerStatsPanelAct
     CharacterSelectUiPlayerStatsPanelActor *statsPanels;
     CharacterSelectUiPlayerPanelFrameActor *panelFrames;
 
-    panelFrames = D_8010ADE4;
+    panelFrames = gMenuScratch1.playerFrames;
     statsPanels = arg0;
     for (i = 0; i != RACE_PLAYER_COUNT; i++) {
         statsPanels->x[i] = panelFrames->x[i];
@@ -928,7 +929,7 @@ void updateCharacterSelectSelectedCharacterTokens(CharacterSelectUiSelectedChara
     s16 panelX;
     s32 panelY;
 
-    panelFrames = D_8010ADE4;
+    panelFrames = gMenuScratch1.playerFrames;
     tokens = arg0;
     actor = arg0;
     volatileActor = arg0;

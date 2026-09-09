@@ -1,3 +1,4 @@
+#include "game/menu/menu_scratch.h"
 #include "common.h"
 #include "game/save_data.h"
 #include "assets.h"
@@ -256,7 +257,7 @@ void initCourseSelectCourseList(void) {
     gMenuSelectionConfirmTimer = 0;
     gMenuInputRepeatTimers[0] = 0;
     createCallbackTask((CallbackTaskCallback)initCourseSelectCourseIconList, 0, 0x63);
-    D_8010ADE8 = createCallbackTask((CallbackTaskCallback)initCourseSelectExtraCourseIconList, 0, 0x61);
+    gMenuScratch2.task = createCallbackTask((CallbackTaskCallback)initCourseSelectExtraCourseIconList, 0, 0x61);
 
     if (gGameSaveDataBuffer[0].extraCourseUnlockFlags & 7) {
         gCourseSelectHasExtraCourse[0] = 1;

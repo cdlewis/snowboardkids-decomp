@@ -3,6 +3,21 @@
 
 #include "common.h"
 
+/* Player-count UI protocol; separate from ControllerPakSaveFlowStatus.
+ * CHECKING dispatches initRaceSetupSaveMenu for every player count. Save panels
+ * can request CHECK_COMPLETE again with forceUpdate. */
+typedef enum RaceSetupPlayerCountPromptPhase {
+    RACE_SETUP_PROMPT_OPEN = 0,
+    RACE_SETUP_PROMPT_CONFIRM_PLAYER_COUNT = 1,
+    RACE_SETUP_PROMPT_MOVE_UP = 2,
+    RACE_SETUP_PROMPT_SELECT_OPTIONS = 3,
+    RACE_SETUP_PROMPT_MOVE_DOWN = 4,
+    RACE_SETUP_PROMPT_CHECKING = 5,
+    RACE_SETUP_PROMPT_CHECK_COMPLETE = 6,
+    RACE_SETUP_PROMPT_COMPLETION_FADE = 7,
+    RACE_SETUP_PROMPT_DISMISSED = 8
+} RaceSetupPlayerCountPromptPhase;
+
 typedef struct {
     /* 0x00 */ u8 state;
     /* 0x01 */ u8 timer;

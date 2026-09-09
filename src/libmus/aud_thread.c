@@ -39,6 +39,8 @@ void initAudioSynthesizer(
     if (gTargetAudioTaskOutputLen & 0xF) {
         gTargetAudioTaskOutputLen = (gTargetAudioTaskOutputLen & ~0xF) + 0x10;
     }
+    /* Lengths are stereo frames (two s16 samples), aligned to sixteen frames.
+     * Each output allocation below reserves (target + 0x68) * four bytes. */
     gMinAudioTaskOutputLen = gTargetAudioTaskOutputLen - 0x10;
     gMaxAudioTaskOutputLen = gTargetAudioTaskOutputLen + 0x68;
 
@@ -123,6 +125,10 @@ s32 buildAudioTask(AudioTask *task, AudioInfo *info) {
         osAiSetNextBuffer(info->buf, info->len * 4);
     }
 
+    /* AI reports bytes: >> 2 converts to stereo frames. Original hardware FIFO
+     * bounds keep this within the allocation. Preserve the s16 narrowing before
+     * the unsigned minimum comparison: a host queue may violate this assumption
+     * and requires a separate signed clamp in the port, not an ABI change here. */
     task->outLen = ((gTargetAudioTaskOutputLen - (osAiGetLength() >> 2)) + 0x68) & 0xFFF0;
     if ((u32)task->outLen < (u32)gMinAudioTaskOutputLen) {
         task->outLen = gMinAudioTaskOutputLen;

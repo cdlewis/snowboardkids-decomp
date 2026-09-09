@@ -31,6 +31,7 @@ gRaceActionPickupDisplayList = SHARED_RACE_GRAPHICS_SUFFIX_VRAM + 0x80;
 D_20058A8 = ROOKIE_MOUNTAIN_COURSE_BACKDROP_DISPLAY_LIST_VRAM;
 
 /* Fixed physical/virtual addresses encoded in original data. */
+/* Physical GPU alias of gDepthBuffer (0x80369000), not an image asset. */
 D_369000 = 0x369000;
 D_80000000 = 0x80000000;
 
@@ -57,3 +58,6 @@ D_800DE818 = gRacePlayerGroundProbeOffsets + 0x68;
 
 /* Keep the end sentinel opaque to IDO loop-trip-count folding. */
 gRaceCamerasEnd = gRaceCameras + 0x2C0;
+
+/* Eight 0x0C slots; existing queue names alias their head words. */
+gModelRenderCallbackQueues = gModelRenderCallbackList;

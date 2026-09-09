@@ -35,6 +35,14 @@ void drawAssetTableSpriteWithExplicitPaletteWideIndex(
     s32 entryIndex,
     u16 paletteIndex
 );
+/* scale is a right-shift exponent (1 = half size). The reduced image is
+ * recentered within the unscaled dimensions BEFORE clipping: a 32px image at
+ * scale 1 begins at x + 8 and spans 16px. x/y are viewport-relative and may be
+ * negative. Final packed rectangle coordinates need unsigned-range clipping;
+ * source origins are s10.5, and clipping must account for scaled derivatives.
+ * Original inclusive tile endpoints and +0.5 source origins are retained.
+ * See docs/upstream-decomp-contracts.md for command-level portability evidence.
+ */
 void drawScaledAssetTableSprite(s16 x, s16 y, AssetTable *table, u16 entryIndex, u16 scale);
 void drawScaledAssetTableSpriteWithExplicitPalette(
     s16 x,

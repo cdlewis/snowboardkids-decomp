@@ -1,3 +1,4 @@
+#include "game/menu/menu_scratch.h"
 #include "common.h"
 #include "game/engine/render_callback.h"
 #include "game/engine/callback_task_scheduler.h"
@@ -11,7 +12,6 @@
 #include "game/race/player/race_player_model_renderer.h"
 #include "game/math/fixed_matrix_multiply.h"
 
-extern EndingCreditsTumblingSnowboard *D_8010ADE0;
 
 void updateEndingLindaFinalPose(EndingCreditsLindaActor *arg0) {
     stepMainMenuSceneModelAnimation(3);
@@ -840,7 +840,7 @@ void spawnEndingCreditsTumblingSnowboard(s32 arg0, s32 arg1, s32 arg2, u16 arg3,
 
     temp_v0 =
         createCallbackTaskWithUserId((void (*)(void *))updateEndingCreditsTumblingSnowboardSlideIn, 0, 0x64, arg5);
-    sp1C = D_8010ADE0 = temp_v0;
+    sp1C = gMenuScratch0.endingSnowboard = temp_v0;
     temp_v0->transform.translation.x = arg0;
     temp_v0->transform.translation.y = arg1;
     temp_v0->transform.translation.z = arg2;

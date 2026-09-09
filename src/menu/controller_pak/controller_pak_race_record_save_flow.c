@@ -1,3 +1,4 @@
+#include "game/menu/menu_scratch.h"
 #include "common.h"
 #include "game/save_data.h"
 #include "assets.h"
@@ -28,8 +29,6 @@ extern u8 gPendingFramebufferSwapCount;
 extern u8 gFramebufferSwapHold;
 extern u8 gControllerPakMenuCursorState;
 extern s32 gMenuFlowState;
-extern s32 D_8010ADE0;
-extern CallbackTask *D_8010ADE4;
 extern s16 gMenuFadeAlpha;
 
 void initControllerPakRaceRecordSaveFlow(void) {
@@ -43,9 +42,9 @@ void initControllerPakRaceRecordSaveFlow(void) {
     gMenuSelectionConfirmTimer = 0;
     gCurrentGameTask->callbackData0 = 0xFF;
     gActiveMenuTask = 0;
-    D_8010ADE0 = 0;
-    D_8010ADE4 = 0;
-    D_8010ADE8 = 0;
+    gMenuScratch0.value = 0;
+    gMenuScratch1.task = 0;
+    gMenuScratch2.task = 0;
     gMenuFadeAlpha = gCurrentGameTask->callbackData0;
     gGameSaveDataBuffer[0].money = gRacePlayers[0].money;
     LOAD_ASSET(_59AAA0, 0x21);
@@ -55,7 +54,7 @@ void initControllerPakRaceRecordSaveFlow(void) {
     LOAD_ASSET(_60F1A0, 0x29);
     initCallbackTaskScheduler(0);
     gActiveMenuTask = createCallbackTask((CallbackTaskCallback)&initControllerPakRaceRecordSaveScorePanel, 0, 0x61);
-    D_8010ADE8 = createCallbackTask((CallbackTaskCallback)&initControllerPakRaceRecordSaveStatusChoicePrompt, 0, 0x60);
+    gMenuScratch2.task = createCallbackTask((CallbackTaskCallback)&initControllerPakRaceRecordSaveStatusChoicePrompt, 0, 0x60);
     gControllerPakRaceRecordSaveStatusTransition.step = 0;
     gControllerPakRaceRecordSaveStatusTransition.alpha = 0;
     gControllerPakRaceRecordSaveStatusTransition.targetStatus = 0;
@@ -75,7 +74,7 @@ void updateControllerPakRaceRecordSaveFlow(void) {
     completion = &sp24;
     completion->value = 0;
     fade = gCurrentGameTask->callbackData0;
-    temp_t0 = D_8010ADE4;
+    temp_t0 = gMenuScratch1.task;
     if (fade != 0) {
         gCurrentGameTask->callbackData0 = stepMenuFadeAlpha((s32)(s16)fade, 0x24, 0U);
         if (gCurrentGameTask->callbackData0 == 0) {

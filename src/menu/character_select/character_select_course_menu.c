@@ -1,3 +1,4 @@
+#include "game/menu/menu_scratch.h"
 #include "game/race/race_state.h"
 #include "common.h"
 #include "game/save_data.h"
@@ -35,8 +36,6 @@ CharacterSelectCourseCursorState gCharacterSelectCourseCursorState;
 
 extern s16 gMenuFadeAlpha;
 extern CharacterSelectOptionList *gCharacterSelectActiveCourseOptions;
-extern s32 D_8010ADE0;
-extern s32 D_8010ADE4;
 extern s32 gMenuFlowState;
 extern u8 gMenuExitSelection;
 extern u8 gHighestUnlockedCourse;
@@ -78,8 +77,8 @@ void initCharacterSelectCourseMenuFromRaceTypeSelect(void) {
 
     var_v1 = 0;
     gActiveMenuTask = NULL;
-    D_8010ADE0 = 0;
-    D_8010ADE4 = 0;
+    gMenuScratch0.value = 0;
+    gMenuScratch1.value = 0;
     setCurrentGameTaskCallback(updateCharacterSelectCourseMenu, 0);
     updateCallbackTasks();
 
@@ -180,8 +179,8 @@ void initCharacterSelectCourseMenuFromRace(void)
     var_v1 *= 0;
   }
   gActiveMenuTask = 0;
-  D_8010ADE0 = 0;
-  D_8010ADE4 = 0;
+  gMenuScratch0.value = 0;
+  gMenuScratch1.value = 0;
   sp2C = var_v1;
   do { } while (0);
   setCurrentGameTaskCallback(updateCharacterSelectCourseMenu, 0);
@@ -292,8 +291,8 @@ void initCharacterSelectCourseMenuFromPlayerSelect(void) {
     gMenuFadeAlpha = gCurrentGameTask->callbackData0;
     gActiveMenuTask = 0;
     sp2C = 0;
-    D_8010ADE0 = 0;
-    D_8010ADE4 = 0;
+    gMenuScratch0.value = 0;
+    gMenuScratch1.value = 0;
     var_v1 = sp2C;
     if (gPlayerCount > 0) { var_v0 = &gGameSaveDataBuffer[0]; do { temp_v1 = var_v0->progressionLevel; var_v0 += 1; if (gHighestUnlockedCourse < temp_v1) { gHighestUnlockedCourse = temp_v1; } } while (var_v0 < &gGameSaveDataBuffer[0] + gPlayerCount); var_v1++; var_v1--; } setCurrentGameTaskCallback(updateCharacterSelectCourseMenu, 0); var_v1 = sp2C;
     courseOptionsByUnlock = gCharacterSelectCourseMenuData.courseOptionsByUnlock;

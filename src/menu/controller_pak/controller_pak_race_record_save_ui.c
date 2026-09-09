@@ -1,3 +1,4 @@
+#include "game/menu/menu_scratch.h"
 #include "common.h"
 #include <PR/os_libc.h>
 #include "font_encoding.h"
@@ -80,8 +81,6 @@ extern s16 gControllerPakRaceRecordSaveStatusTransitionAlpha;
 extern u16 gControllerPakRaceRecordSaveStatusTransitionTargetStatus;
 extern u16 gControllerPakRaceRecordSaveStatusTransitionNextStatus;
 extern u8 gControllerPakRaceRecordSaveStatusTransitionStep;
-extern ControllerPakRaceRecordSavePromptFrameActor *D_8010ADE0;
-extern ControllerPakRaceRecordSaveStatusMessageActor *D_8010ADE4;
 
 #define CONTROLLER_PAK_RACE_RECORD_SAVE_SCORE_TEXTURE_HANDLE (gAssetHandles[0x21])
 
@@ -224,7 +223,7 @@ void updateControllerPakRaceRecordSaveScorePanel(ControllerPakRaceRecordSaveScor
             if (arg0->common.x < -0x43) {
                 arg0->common.x = -0x44;
                 arg0->state = 1;
-                D_8010ADE0 =
+                gMenuScratch0.recordSaveFrame =
                     createCallbackTask((CallbackTaskCallback)initControllerPakRaceRecordSavePromptFrame, 0, 0x62);
                 createCallbackTask((CallbackTaskCallback)initControllerPakRaceRecordSaveExitMessage, 0, 0x63);
             }
@@ -302,7 +301,7 @@ void updateControllerPakRaceRecordSavePromptFrame(ControllerPakRaceRecordSavePro
             if (arg0->scale >= 0x100) {
                 arg0->scale = 0x100;
                 arg0->state = 1;
-                D_8010ADE4 =
+                gMenuScratch1.recordSaveMessage =
                     createCallbackTask((CallbackTaskCallback)initControllerPakRaceRecordSaveStatusMessage, 0, 0x63);
             }
             state = arg0->state;

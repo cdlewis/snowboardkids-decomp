@@ -2989,3 +2989,25 @@ __osPiGetAccess = 0x800AA8E0; // type:func rom:0xAB4E0
 __osPiRelAccess = 0x800AA924; // type:func rom:0xAB524
 
 gRaceCameras = 0x801121E0; // type:RaceCamera
+
+gMenuScratch0 = 0x8010ADE0; // size:0x4
+gMenuScratch1 = 0x8010ADE4; // size:0x4
+gMenuScratch2 = 0x8010ADE8; // size:0x4
+
+gRspOutputBuffer = 0x80360000;
+
+gRspYieldBuffer = 0x80368000;
+
+gRspDramStack = 0x80368C00;
+
+gF3dlxMicrocodeText = 0x800B1CC0; // rom:0xB28C0
+
+gFullscreenOverlayViewport = 0x800DEF18; // rom:0xDFB18
+
+gModelRenderSetupDisplayList = 0x800DEF28; // rom:0xDFB28
+
+gBackdropRenderSetupDisplayList = 0x800DEF90; // rom:0xDFB90
+
+gTranslucentOverlaySetupDisplayList = 0x800DF098; // rom:0xDFC98
+
+gTranslucentOverlayIntensityTexture = 0x800DF078; // rom:0xDFC78

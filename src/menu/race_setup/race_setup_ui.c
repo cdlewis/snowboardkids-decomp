@@ -1,3 +1,4 @@
+#include "game/menu/menu_scratch.h"
 #include "common.h"
 #include <PR/os_libc.h>
 #include "font_encoding.h"
@@ -157,7 +158,6 @@ RaceSetupSavePromptData gRaceSetupSavePromptData = {
 };
 const char D_800E0A80[] = "%d";
 const char D_800E0A84[] = "%6d";
-extern TitleMenuWidgetActor *D_8010ADE0;
 extern s32 gMenuFlowState;
 void drawRaceSetupPlayerCountPrompt(MenuIntroActor *arg0) {
     s32 i;
@@ -1379,7 +1379,7 @@ void updateRaceSetupSaveStatusWidgets(TitleMenuWidgetActor *arg0) {
     s32 playerIndex;
     TitleMenuWidgetActor *panelPositions;
 
-    panelPositions = D_8010ADE0;
+    panelPositions = gMenuScratch0.saveWidgets;
     actor = arg0;
     for (playerIndex = 0; playerIndex < (s32)gPlayerCount; playerIndex++) {
         actor->x[playerIndex] = panelPositions->x[playerIndex];
