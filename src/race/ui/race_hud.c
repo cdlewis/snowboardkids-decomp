@@ -812,6 +812,8 @@ void drawTrainingRaceHud(void *arg0) {
 
 const char gRaceHudTwoPlayerScoreFormat[] = "%5ld";
 
+/* Matching-sensitive: separate stack objects provide buffer/end boundaries.
+ * Portable code should use explicit storage and a five-character draw bound. */
 void drawTwoPlayerRaceHud(void *arg0) {
     volatile u8 padding[0x18];
     s32 y;

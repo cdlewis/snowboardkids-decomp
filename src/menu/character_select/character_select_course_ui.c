@@ -1,3 +1,4 @@
+#include "game/menu/menu_scratch.h"
 #include "game/race/race_state.h"
 #include "font_encoding.h"
 #include "common.h"
@@ -210,8 +211,6 @@ MenuGlyphScript gCharacterSelectCourseStartGameText[44] = {
 #define gCharacterSelectCoursePreviewFrameCornerTileMaps \
     ((CharacterSelectCourseFrameCornerTileMap *)gCharacterSelectCoursePreviewFrameCornerTileMaps)
 #define gCharacterSelectCourseExitPreviewCornerTile (gCharacterSelectCourseExitPreviewData.cornerTile)
-extern void *D_8010ADE0;
-extern void *D_8010ADE4;
 extern u8 gHighestUnlockedCourse;
 extern u8 gCourseSelectFromRaceTypeMenu;
 extern s32 gMenuFlowState;
@@ -353,7 +352,7 @@ void updateCharacterSelectUnlockedCourseList(CharacterSelectCourseMenuFrameActor
             if (arg0->itemCount < (gCharacterSelectCourseExitOptionIndex + 1)) {
                 arg0->itemCount++;
                 if (arg0->itemCount == (gCharacterSelectCourseExitOptionIndex + 1)) {
-                    D_8010ADE4 = createCallbackTask((CallbackTaskCallback)initCharacterSelectCoursePreviewFrame, 0, 0x58);
+                    gMenuScratch1.task = createCallbackTask((CallbackTaskCallback)initCharacterSelectCoursePreviewFrame, 0, 0x58);
                     createCallbackTask((CallbackTaskCallback)initCharacterSelectCoursePreviewPanel1, 0, 0x59);
                     createCallbackTask((CallbackTaskCallback)initCharacterSelectCoursePreviewPanel2, 0, 0x5A);
                     createCallbackTask((CallbackTaskCallback)initCharacterSelectCoursePreviewPanel3, 0, 0x5B);
@@ -408,7 +407,7 @@ void updateCharacterSelectUnlockedCourseList(CharacterSelectCourseMenuFrameActor
             arg0->y[gRaceCourseIndex.signedValue] = -0x60;
             arg0->state = COURSE_LIST_SUBMENU_OPEN;
             if (gRaceSplitscreenMode == 2) {
-                D_8010ADE0 = createCallbackTask((CallbackTaskCallback)initCharacterSelectCourseExitPopup, 0, 0x62);
+                gMenuScratch0.task = createCallbackTask((CallbackTaskCallback)initCharacterSelectCourseExitPopup, 0, 0x62);
                 createCallbackTask((CallbackTaskCallback)initCharacterSelectCourseRecordsPopup, 0, 0x63);
             } else {
                 createCallbackTask((CallbackTaskCallback)initCharacterSelectCoursePlayerStatsPanel, 0, 0x61);
@@ -616,7 +615,7 @@ void updateCharacterSelectLimitedCourseList(CharacterSelectCourseMenuFrameActor 
                 if (arg0->itemCount < visibleOptionCount) {
                     arg0->itemCount++;
                     if (visibleOptionCount == arg0->itemCount) {
-                        D_8010ADE4 =
+                        gMenuScratch1.task =
                             createCallbackTask((CallbackTaskCallback)initCharacterSelectCoursePreviewFrame, 0, 0x59);
                         if (gRaceTypeSelection < 2) {
                             createCallbackTask((CallbackTaskCallback)initCharacterSelectCoursePreviewPanel1, 0, 0x5A);
@@ -664,7 +663,7 @@ void updateCharacterSelectLimitedCourseList(CharacterSelectCourseMenuFrameActor 
                 arg0->y[gRaceCourseIndex.signedValue] = -0x58;
                 arg0->state = COURSE_LIST_SUBMENU_OPEN;
                 createCallbackTask((CallbackTaskCallback)initCharacterSelectCourseRecordsPopup, 0, 0x62);
-                D_8010ADE0 = createCallbackTask((CallbackTaskCallback)initCharacterSelectCourseExitPopup, 0, 0x63);
+                gMenuScratch0.task = createCallbackTask((CallbackTaskCallback)initCharacterSelectCourseExitPopup, 0, 0x63);
             }
             break;
 
@@ -2806,7 +2805,7 @@ void updateCharacterSelectCourseSubmenuFrame(CharacterSelectCourseWidgetActor *a
             if (arg0->x >= -0x88) {
                 arg0->x = -0x88;
                 arg0->sprite.bytes.state = 1;
-                D_8010ADE0 = createCallbackTask((CallbackTaskCallback)initCharacterSelectCourseNamePopup, 0, 0x63);
+                gMenuScratch0.task = createCallbackTask((CallbackTaskCallback)initCharacterSelectCourseNamePopup, 0, 0x63);
             }
             state = arg0->sprite.bytes.state;
             break;
@@ -3030,7 +3029,7 @@ void updateCharacterSelectCourseNamePopup(CharacterSelectCourseWidgetActor *arg0
 
     if (arg0->transition.bytes.state == 6) {
         removeCallbackTask(arg0);
-        D_8010ADE0 = NULL;
+        gMenuScratch0.task = NULL;
         gCharacterSelectCourseCursorState.submenuState = 0;
         gCharacterSelectCourseCursorState.submenuTimer = 0;
         return;
@@ -3624,7 +3623,7 @@ void updateCharacterSelectCourseExitPopup(CharacterSelectCourseWidgetActor *arg0
 
     if (arg0->transition.bytes.state == 6) {
         removeCallbackTask(arg0);
-        D_8010ADE0 = NULL;
+        gMenuScratch0.task = NULL;
         gCharacterSelectCourseCursorState.submenuState = 0;
         gCharacterSelectCourseCursorState.submenuTimer = 0;
         return;

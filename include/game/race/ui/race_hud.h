@@ -46,6 +46,8 @@ void drawTimeTrialLabels(void *arg0);
 void drawSinglePlayerRaceHud(void *arg0);
 void noopRaceHudCallback(void *arg0);
 void drawTrainingRaceHud(void *arg0);
+/* Viewport-local HUD callbacks differ between 2P and 3/4P. The shared meter is
+ * queued afterwards: race overlay in 1P, menu queue in multiplayer. */
 void drawTwoPlayerRaceHud(void *arg0);
 void drawTwoPlayerLapCounter(void *arg0);
 void drawMultiplayerRaceHud(void *arg0);
@@ -53,6 +55,8 @@ void drawMultiplayerScoreAndLapCounter(void *arg0);
 void drawThreePlayerNoEntryPanel(void *arg0);
 void incrementRaceElapsedTimer(void);
 void decrementRaceChallengeTimeLimit(void);
+/* Entry 0x50 starts at (xBase + 4, yBase + 4), relative to menu viewport center.
+ * Asset bounds are distinct from the visible meter stroke. */
 void drawRaceCourseProgressMeter(void *arg0);
 void updateRaceCourseProgressMeter(void);
 void updateRaceHud(void);

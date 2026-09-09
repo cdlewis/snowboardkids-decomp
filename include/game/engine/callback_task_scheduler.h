@@ -50,6 +50,5 @@ void removeCallbackTask(void *task);
 void setCallbackTaskCallback(void *task, CallbackTaskCallback callback);
 
 extern void *gActiveMenuTask;
-extern void *D_8010ADE8;
 
 #endif

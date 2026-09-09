@@ -88,6 +88,12 @@ void drawMenuAssetRegion(
     u8 width,
     u8 height
 );
+/* Sprite x/y are signed viewport-relative coordinates. Sprite scale arguments
+ * that shift dimensions are exponents, not geometric multipliers (1 = half).
+ * Clip only final unsigned texture-rectangle coordinates; source s10.5 origins
+ * and derivatives use different units and require scaled clipping offsets.
+ * Asset-table helpers can also recenter the reduced image before clipping.
+ */
 void drawMenuSprite(s16 x, s16 y, AssetTable *table, u16 tileIndex, u16 width, u16 height, u8 palette, u8 flip);
 void drawMenuSpriteWideIndex(
     s16 x,

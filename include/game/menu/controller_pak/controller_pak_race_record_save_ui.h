@@ -15,14 +15,14 @@ typedef struct {
     /* 0x1C */ u8 state;
 } ControllerPakRaceRecordSaveScorePanelActor;
 
-typedef struct {
+typedef struct ControllerPakRaceRecordSavePromptFrameActor {
     /* 0x00 */ ControllerPakRaceRecordSaveActor common;
     /* 0x1C */ s16 scale;
     /* 0x1E */ u8 unused1E;
     /* 0x1F */ u8 state;
 } ControllerPakRaceRecordSavePromptFrameActor;
 
-typedef struct {
+typedef struct ControllerPakRaceRecordSaveStatusMessageActor {
     /* 0x00 */ ControllerPakRaceRecordSaveActor common;
     /* 0x1C */ s16 alpha;
     /* 0x1E */ u16 targetStatus;

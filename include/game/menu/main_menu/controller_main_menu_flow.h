@@ -36,9 +36,14 @@ typedef enum ControllerPakSaveFlowStatus {
     CONTROLLER_PAK_STATUS_CHOICE_PROMPT = 6,
     CONTROLLER_PAK_STATUS_NO_PAK = 7,
     CONTROLLER_PAK_STATUS_SAVE_FOUND = 8,
+    CONTROLLER_PAK_STATUS_SAVE_NOT_FOUND = 9,
+    CONTROLLER_PAK_STATUS_ABSENT_OR_WRONG_DEVICE = 0xA,
+    CONTROLLER_PAK_STATUS_INSUFFICIENT_SPACE = 0xB,
+    CONTROLLER_PAK_STATUS_DIRECTORY_FULL = 0xC,
     CONTROLLER_PAK_STATUS_READ_FAILED = 0xD,
     CONTROLLER_PAK_STATUS_REPAIR_FAILED = 0xE,
     CONTROLLER_PAK_STATUS_REPAIRED = 0xF,
+    CONTROLLER_PAK_STATUS_RUMBLE_DEVICE = 0x10,
     CONTROLLER_PAK_STATUS_REPAIR_CONFIRM = 0x11,
     CONTROLLER_PAK_STATUS_USE_EXISTING_SAVE = 0x12,
     CONTROLLER_PAK_STATUS_MENU_COMPLETE = 0x13
@@ -81,23 +86,25 @@ void initControllerSubsystem(void);
 void controllerSubsystemThreadMain(void *threadArg);
 void requestControllerRead(void);
 void updateControllerInputState(void);
-void requestRumbleMotorInit(u16 arg0);
+void requestRumbleMotorInit(u16 controllerIndex);
 void requestRumbleMotorInitWithContext(u16 controllerIndex, s32 playerCount, s32 choiceValue);
-void serviceRumbleMotorRequest(u16 arg0);
-void requestRumbleMotorStart(u16 arg0);
-void requestControllerPakProbe(u16 arg0);
-void probeControllerPak(u16 arg0);
-void requestControllerPakSaveStatus(u16 arg0);
+void serviceRumbleMotorRequest(u16 controllerIndex);
+void requestRumbleMotorStart(u16 controllerIndex);
+void requestControllerPakProbe(u16 controllerIndex);
+void probeControllerPak(u16 controllerIndex);
+void requestControllerPakSaveStatus(u16 controllerIndex);
 void requestControllerPakSaveStatusWithContext(u16 controllerIndex, s32 playerCount, s32 choiceValue);
-void checkControllerPakSaveStatus(u16 arg0);
-void requestControllerPakSaveRead(u16 arg0);
+void checkControllerPakSaveStatus(u16 controllerIndex);
+void requestControllerPakSaveRead(u16 controllerIndex);
 void requestControllerPakSaveReadWithContext(u16 controllerIndex, s32 playerCount, s32 choiceValue);
-void readControllerPakSave(u16 arg0);
-void requestControllerPakSaveWrite(u16 arg0);
-void writeControllerPakSave(u16 arg0);
-void requestControllerPakRepair(u16 arg0);
+/* Read/checksum failures increment retries; semantic success clears retries.
+ * Semantic failure alone preserves the count, which setup initially clears. */
+void readControllerPakSave(u16 controllerIndex);
+void requestControllerPakSaveWrite(u16 controllerIndex);
+void writeControllerPakSave(u16 controllerIndex);
+void requestControllerPakRepair(u16 controllerIndex);
 void requestControllerPakRepairWithContext(u16 controllerIndex, s32 playerCount, s32 choiceValue);
-void repairControllerPakId(u16 arg0);
+void repairControllerPakId(u16 controllerIndex);
 void requestControllerPakFileList(void);
 void readControllerPakFileStates(void);
 void requestControllerPakDeleteFile(u16 arg0);

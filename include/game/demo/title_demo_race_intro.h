@@ -18,7 +18,8 @@ extern s16 gTitleDemoReplaySegmentFrames[16];
 extern s16 gTitleDemoCameraModeFrames[22];
 extern u8 gTitleDemoCameraModes[24];
 extern RacePlayerReplaySnapshot gTitleDemoReplayInputs[4][16];
-extern volatile char gTitleDemoRaceIntroViewportHeight;
+/* Viewport reveal height: 0..0xB0 in steps of 0x10. */
+extern volatile u8 gTitleDemoRaceIntroViewportHeight;
 extern s8 gTitleDemoRaceIntroFadeStep;
 
 void initTitleDemoRaceIntro(void);

@@ -91,121 +91,121 @@ void updateControllerInputState(void) {
 }
 // clang-format on
 
-void requestRumbleMotorInit(u16 arg0) {
+void requestRumbleMotorInit(u16 controllerIndex) {
     OSMesg msg;
 
     msg = NULL;
 
-    osSendMesg(&gControllerSubsystemRequestQueue, (OSMesg)(arg0 + CONTROLLER_REQUEST_INIT_RUMBLE), OS_MESG_BLOCK);
+    osSendMesg(&gControllerSubsystemRequestQueue, (OSMesg)(controllerIndex + CONTROLLER_REQUEST_INIT_RUMBLE), OS_MESG_BLOCK);
     osRecvMesg(&gControllerSubsystemReplyQueue, &msg, OS_MESG_BLOCK);
 }
 
 #pragma weak requestRumbleMotorInitWithContext = requestRumbleMotorInit
 
-void serviceRumbleMotorRequest(u16 arg0) {
-    if (gRumbleMotorStatuses[arg0] == RUMBLE_MOTOR_NO_PAK) {
-        gRumbleMotorRequestStates[arg0] = 0;
-        if (gRumblePakConnectedMask & (1 << arg0)) {
+void serviceRumbleMotorRequest(u16 controllerIndex) {
+    if (gRumbleMotorStatuses[controllerIndex] == RUMBLE_MOTOR_NO_PAK) {
+        gRumbleMotorRequestStates[controllerIndex] = 0;
+        if (gRumblePakConnectedMask & (1 << controllerIndex)) {
             osSendMesg(
                 &gControllerSubsystemRequestQueue,
-                (OSMesg)(arg0 + CONTROLLER_REQUEST_RETRY_RUMBLE_INIT),
+                (OSMesg)(controllerIndex + CONTROLLER_REQUEST_RETRY_RUMBLE_INIT),
                 OS_MESG_BLOCK
             );
         }
-    } else if (gRumbleMotorStatuses[arg0] == RUMBLE_MOTOR_WRONG_DEVICE) {
-        gRumbleMotorRequestStates[arg0] = 0;
-        if (gRumblePakConnectedMask & (1 << arg0)) {
+    } else if (gRumbleMotorStatuses[controllerIndex] == RUMBLE_MOTOR_WRONG_DEVICE) {
+        gRumbleMotorRequestStates[controllerIndex] = 0;
+        if (gRumblePakConnectedMask & (1 << controllerIndex)) {
             osSendMesg(
                 &gControllerSubsystemRequestQueue,
-                (OSMesg)(arg0 + CONTROLLER_REQUEST_RETRY_RUMBLE_INIT),
+                (OSMesg)(controllerIndex + CONTROLLER_REQUEST_RETRY_RUMBLE_INIT),
                 OS_MESG_BLOCK
             );
         }
-    } else if (gRumbleMotorStatuses[arg0] == RUMBLE_MOTOR_CONTROLLER_FAILURE) {
-        gRumbleMotorRequestStates[arg0] = 0;
-        if (gRumblePakConnectedMask & (1 << arg0)) {
+    } else if (gRumbleMotorStatuses[controllerIndex] == RUMBLE_MOTOR_CONTROLLER_FAILURE) {
+        gRumbleMotorRequestStates[controllerIndex] = 0;
+        if (gRumblePakConnectedMask & (1 << controllerIndex)) {
             osSendMesg(
                 &gControllerSubsystemRequestQueue,
-                (OSMesg)(arg0 + CONTROLLER_REQUEST_RETRY_RUMBLE_INIT),
+                (OSMesg)(controllerIndex + CONTROLLER_REQUEST_RETRY_RUMBLE_INIT),
                 OS_MESG_BLOCK
             );
         }
     } else {
-        if (gRumbleMotorRequestStates[arg0] == 0) {
+        if (gRumbleMotorRequestStates[controllerIndex] == 0) {
             osSendMesg(
                 &gControllerSubsystemRequestQueue,
-                (OSMesg)(arg0 + CONTROLLER_REQUEST_STOP_RUMBLE),
+                (OSMesg)(controllerIndex + CONTROLLER_REQUEST_STOP_RUMBLE),
                 OS_MESG_BLOCK
             );
         } else {
             osSendMesg(
                 &gControllerSubsystemRequestQueue,
-                (OSMesg)(arg0 + CONTROLLER_REQUEST_START_RUMBLE),
+                (OSMesg)(controllerIndex + CONTROLLER_REQUEST_START_RUMBLE),
                 OS_MESG_BLOCK
             );
         }
-        gRumbleMotorRequestStates[arg0] = 0;
+        gRumbleMotorRequestStates[controllerIndex] = 0;
     }
 }
 
-void requestRumbleMotorStart(u16 arg0) {
+void requestRumbleMotorStart(u16 controllerIndex) {
     if (gRaceRumbleEnabled != 0) {
-        if (gRumblePakConnectedMask & (1 << arg0)) {
-            gRumbleMotorRequestStates[arg0] = 1;
+        if (gRumblePakConnectedMask & (1 << controllerIndex)) {
+            gRumbleMotorRequestStates[controllerIndex] = 1;
         }
     }
 }
 
-void requestControllerPakProbe(u16 arg0) {
+void requestControllerPakProbe(u16 controllerIndex) {
     OSMesg msg;
 
     msg = NULL;
 
-    osSendMesg(&gControllerSubsystemRequestQueue, (OSMesg)(arg0 + CONTROLLER_REQUEST_PROBE_PAK), OS_MESG_BLOCK);
+    osSendMesg(&gControllerSubsystemRequestQueue, (OSMesg)(controllerIndex + CONTROLLER_REQUEST_PROBE_PAK), OS_MESG_BLOCK);
     osRecvMesg(&gControllerSubsystemReplyQueue, &msg, OS_MESG_BLOCK);
 }
 
-void probeControllerPak(u16 arg0) {
+void probeControllerPak(u16 controllerIndex) {
     u32 ret;
 
-    ret = osPfsInitPak(&gControllerEventQueue, &gControllerPakHandles[arg0], arg0);
+    ret = osPfsInitPak(&gControllerEventQueue, &gControllerPakHandles[controllerIndex], controllerIndex);
     if (ret == 2) {
-        ret = osPfsInitPak(&gControllerEventQueue, &gControllerPakHandles[arg0], arg0);
+        ret = osPfsInitPak(&gControllerEventQueue, &gControllerPakHandles[controllerIndex], controllerIndex);
     }
 
     if (ret == 0) {
-        gControllerPakStatusCodes[arg0] = 1;
+        gControllerPakStatusCodes[controllerIndex] = 1;
     }
 
     if ((ret == 1) || (ret == 11)) {
-        gControllerPakStatusCodes[arg0] = 10;
+        gControllerPakStatusCodes[controllerIndex] = CONTROLLER_PAK_STATUS_ABSENT_OR_WRONG_DEVICE;
     }
 
     if (ret == 10) {
-        if (gRumblePakConnectedByController[arg0] == 1) {
-            gControllerPakStatusCodes[arg0] = 16;
+        if (gRumblePakConnectedByController[controllerIndex] == 1) {
+            gControllerPakStatusCodes[controllerIndex] = CONTROLLER_PAK_STATUS_RUMBLE_DEVICE;
         } else {
-            gControllerPakStatusCodes[arg0] = 7;
+            gControllerPakStatusCodes[controllerIndex] = 7;
         }
     }
 
     if (ret != 0) {
-        gControllerPakOperationCounts[arg0]++;
+        gControllerPakOperationCounts[controllerIndex]++;
     }
 }
 
-void requestControllerPakSaveStatus(u16 arg0) {
+void requestControllerPakSaveStatus(u16 controllerIndex) {
     OSMesg msg;
 
     msg = NULL;
 
-    osSendMesg(&gControllerSubsystemRequestQueue, (OSMesg)(arg0 + CONTROLLER_REQUEST_CHECK_SAVE), OS_MESG_BLOCK);
+    osSendMesg(&gControllerSubsystemRequestQueue, (OSMesg)(controllerIndex + CONTROLLER_REQUEST_CHECK_SAVE), OS_MESG_BLOCK);
     osRecvMesg(&gControllerSubsystemReplyQueue, &msg, OS_MESG_BLOCK);
 }
 
 #pragma weak requestControllerPakSaveStatusWithContext = requestControllerPakSaveStatus
 
-void checkControllerPakSaveStatus(u16 arg0) {
+void checkControllerPakSaveStatus(u16 controllerIndex) {
     s32 ret;
     s32 maxFiles;
     s32 filesUsed;
@@ -228,44 +228,44 @@ void checkControllerPakSaveStatus(u16 arg0) {
         i++;
     } while (i < 16);
 
-    osPfsInitPak(&gControllerEventQueue, &gControllerPakHandles[arg0], arg0);
+    osPfsInitPak(&gControllerEventQueue, &gControllerPakHandles[controllerIndex], controllerIndex);
 
     ret = osPfsFindFile(
-        &gControllerPakHandles[arg0],
+        &gControllerPakHandles[controllerIndex],
         gControllerPakSaveFileIdentity.companyCode,
         gControllerPakSaveFileIdentity.gameCode,
         gControllerPakSaveFileIdentity.gameName,
         gControllerPakSaveFileIdentity.extName,
-        &gControllerPakFileNos[arg0]
+        &gControllerPakFileNos[controllerIndex]
     );
     if (ret == 0) {
-        gControllerPakStatusCodes[arg0] = 2;
+        gControllerPakStatusCodes[controllerIndex] = 2;
     } else {
-        osPfsNumFiles(&gControllerPakHandles[arg0], &maxFiles, &filesUsed);
+        osPfsNumFiles(&gControllerPakHandles[controllerIndex], &maxFiles, &filesUsed);
         if (filesUsed == 0x10) {
-            gControllerPakStatusCodes[arg0] = 0xC;
+            gControllerPakStatusCodes[controllerIndex] = CONTROLLER_PAK_STATUS_DIRECTORY_FULL;
         } else {
-            osPfsFreeBlocks(&gControllerPakHandles[arg0], &freeBytes);
+            osPfsFreeBlocks(&gControllerPakHandles[controllerIndex], &freeBytes);
             maxFiles = freeBytes / 256;
             if (maxFiles < 0x79) {
-                gControllerPakStatusCodes[arg0] = 0xB;
+                gControllerPakStatusCodes[controllerIndex] = CONTROLLER_PAK_STATUS_INSUFFICIENT_SPACE;
             } else if (ret == 5) {
-                gControllerPakStatusCodes[arg0] = 9;
+                gControllerPakStatusCodes[controllerIndex] = CONTROLLER_PAK_STATUS_SAVE_NOT_FOUND;
             }
         }
     }
 
     if (ret != 0) {
-        gControllerPakOperationCounts[arg0]++;
+        gControllerPakOperationCounts[controllerIndex]++;
     }
 }
 
-void requestControllerPakSaveRead(u16 arg0) {
+void requestControllerPakSaveRead(u16 controllerIndex) {
     OSMesg msg;
 
     msg = NULL;
 
-    osSendMesg(&gControllerSubsystemRequestQueue, (OSMesg)(arg0 + CONTROLLER_REQUEST_READ_SAVE), OS_MESG_BLOCK);
+    osSendMesg(&gControllerSubsystemRequestQueue, (OSMesg)(controllerIndex + CONTROLLER_REQUEST_READ_SAVE), OS_MESG_BLOCK);
     osRecvMesg(&gControllerSubsystemReplyQueue, &msg, OS_MESG_BLOCK);
 }
 
@@ -353,12 +353,12 @@ void readControllerPakSave(u16 controllerIndex) {
     gControllerPakOperationCounts[controllerIndex]++;
 }
 
-void requestControllerPakSaveWrite(u16 arg0) {
+void requestControllerPakSaveWrite(u16 controllerIndex) {
     OSMesg msg;
 
     msg = NULL;
 
-    osSendMesg(&gControllerSubsystemRequestQueue, (OSMesg)(arg0 + CONTROLLER_REQUEST_WRITE_SAVE), OS_MESG_BLOCK);
+    osSendMesg(&gControllerSubsystemRequestQueue, (OSMesg)(controllerIndex + CONTROLLER_REQUEST_WRITE_SAVE), OS_MESG_BLOCK);
     osRecvMesg(&gControllerSubsystemReplyQueue, &msg, OS_MESG_BLOCK);
 }
 
@@ -427,28 +427,28 @@ void writeControllerPakSave(u16 controllerIndex) {
     }
 }
 
-void requestControllerPakRepair(u16 arg0) {
+void requestControllerPakRepair(u16 controllerIndex) {
     OSMesg msg;
 
     msg = NULL;
 
-    osSendMesg(&gControllerSubsystemRequestQueue, (OSMesg)(arg0 + CONTROLLER_REQUEST_REPAIR_PAK), OS_MESG_BLOCK);
+    osSendMesg(&gControllerSubsystemRequestQueue, (OSMesg)(controllerIndex + CONTROLLER_REQUEST_REPAIR_PAK), OS_MESG_BLOCK);
     osRecvMesg(&gControllerSubsystemReplyQueue, &msg, OS_MESG_BLOCK);
 }
 
 #pragma weak requestControllerPakRepairWithContext = requestControllerPakRepair
 
-void repairControllerPakId(u16 arg0) {
+void repairControllerPakId(u16 controllerIndex) {
     OSPfs **sp18;
     OSPfs *pfs;
     s32 ret;
 
-    pfs = &gControllerPakHandles[arg0];
+    pfs = &gControllerPakHandles[controllerIndex];
     sp18 = &pfs;
-    osPfsInitPak(&gControllerEventQueue, *sp18, arg0);
+    osPfsInitPak(&gControllerEventQueue, *sp18, controllerIndex);
     ret = osPfsRepairId(pfs);
     if ((ret == 4) || (ret == 0xA)) {
-        gControllerPakRetryCounts[arg0] += 1;
+        gControllerPakRetryCounts[controllerIndex] += 1;
     }
 }
 

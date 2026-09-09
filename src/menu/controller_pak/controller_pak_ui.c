@@ -316,7 +316,7 @@ void drawControllerPakRumbleCheckPrompt(ControllerPakRumbleCheckPromptActor *act
     u16 alpha;
     MenuGlyphScript playerNumberText[5];
 
-    if (actor->state == 8) {
+    if (actor->state == CONTROLLER_PAK_RUMBLE_DEVICE_SUMMARY) {
         yAdjust = 8;
     } else {
         yAdjust = 0;
@@ -432,7 +432,7 @@ void drawControllerPakRumbleCheckPrompt(ControllerPakRumbleCheckPromptActor *act
         }
     }
 
-    if (actor->state == 8) {
+    if (actor->state == CONTROLLER_PAK_RUMBLE_DEVICE_SUMMARY) {
         for (playerIndex = 0; playerIndex < 4; playerIndex++) {
             playerNumberText[0] = -4;
             playerNumberText[1] = 7;
@@ -478,7 +478,7 @@ void drawControllerPakRumbleCheckPrompt(ControllerPakRumbleCheckPromptActor *act
         );
     }
 
-    if (actor->state == 9) {
+    if (actor->state == CONTROLLER_PAK_RUMBLE_CONFIRM_DEVICES) {
         alpha = (gControllerPakRumbleCheckPromptTransition.confirmSelection == 0) ? 0x100 : 0x60;
         drawMenuSpriteWithAlpha(
             (s16)(actor->common.x + 0x4C),
@@ -520,7 +520,7 @@ void drawControllerPakRumbleCheckPrompt(ControllerPakRumbleCheckPromptActor *act
         );
     }
 
-    if ((actor->state == 1) || (actor->state == 3) || (actor->state == 8)) {
+    if ((actor->state == CONTROLLER_PAK_RUMBLE_INSERT_ACK) || (actor->state == CONTROLLER_PAK_RUMBLE_WARNING_ACK) || (actor->state == CONTROLLER_PAK_RUMBLE_DEVICE_SUMMARY)) {
         drawMenuSprite(
             (s16)(actor->common.x + 0xD0),
             (s16)(actor->common.y + yAdjust + 0x20),
@@ -554,47 +554,47 @@ void updateControllerPakRumbleCheckPrompt(ControllerPakRumbleCheckPromptActor *a
     }
 
     switch (state) {
-        case 0:
+        case CONTROLLER_PAK_RUMBLE_OPEN:
             arg0->scale += 0x28;
             if (arg0->scale >= 0x100) {
                 arg0->scale = 0x100;
                 if (gControllerPakRumbleCheckPromptTransition.selectedOption == 1) {
-                    arg0->state = 3;
+                    arg0->state = CONTROLLER_PAK_RUMBLE_WARNING_ACK;
                 } else {
-                    arg0->state = 1;
+                    arg0->state = CONTROLLER_PAK_RUMBLE_INSERT_ACK;
                 }
             }
             state = arg0->state;
             break;
-        case 1:
+        case CONTROLLER_PAK_RUMBLE_INSERT_ACK:
             state = arg0->state;
             arg0->timer = (arg0->timer + 1) & 0xF;
             break;
-        case 2:
+        case CONTROLLER_PAK_RUMBLE_CHECK_MOTORS:
             state = arg0->state;
             arg0->timer = 0;
             break;
-        case 3:
+        case CONTROLLER_PAK_RUMBLE_WARNING_ACK:
             state = arg0->state;
             arg0->timer = (arg0->timer + 1) & 0xF;
             break;
-        case 4:
+        case CONTROLLER_PAK_RUMBLE_FADE_OUT:
             arg0->scale -= 0x28;
             if (arg0->scale <= 0) {
                 arg0->scale = 0;
-                arg0->state = 5;
+                arg0->state = CONTROLLER_PAK_RUMBLE_DISMISSED;
             }
             state = arg0->state;
             break;
-        case 7:
+        case CONTROLLER_PAK_RUMBLE_CHECK_HOLD:
             state = arg0->state;
             arg0->timer = 0;
             break;
-        case 8:
+        case CONTROLLER_PAK_RUMBLE_DEVICE_SUMMARY:
             state = arg0->state;
             arg0->timer = (arg0->timer + 1) & 0xF;
             break;
-        case 9:
+        case CONTROLLER_PAK_RUMBLE_CONFIRM_DEVICES:
             if ((s32)arg0->timer < 0x10) {
                 arg0->optionScale -= 9;
             } else {
@@ -603,13 +603,13 @@ void updateControllerPakRumbleCheckPrompt(ControllerPakRumbleCheckPromptActor *a
             state = arg0->state;
             arg0->timer = (arg0->timer + 1) & 0x1F;
             break;
-        case 5:
-        case 6:
+        case CONTROLLER_PAK_RUMBLE_DISMISSED:
+        case CONTROLLER_PAK_RUMBLE_INITIAL_PROBE:
             break;
     }
 
     gControllerPakRumbleCheckPromptState.state = state;
-    if (arg0->state == 5) {
+    if (arg0->state == CONTROLLER_PAK_RUMBLE_DISMISSED) {
         removeCallbackTask(arg0);
         return;
     }
@@ -620,10 +620,10 @@ void updateControllerPakRumbleCheckPrompt(ControllerPakRumbleCheckPromptActor *a
 void initControllerPakRumbleCheckPrompt(ControllerPakRumbleCheckPromptActor *arg0) {
     arg0->common.x = -0x70;
     arg0->common.y = -0x1C;
-    arg0->state = 6;
+    arg0->state = CONTROLLER_PAK_RUMBLE_INITIAL_PROBE;
     arg0->scale = 0;
     arg0->timer = 0;
-    arg0->messageIndex = 0;
+    arg0->messageIndex = CONTROLLER_PAK_RUMBLE_MESSAGE_INSERT;
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateControllerPakRumbleCheckPrompt);
 }
 

@@ -16,7 +16,6 @@ struct RaceUiDualCounterActor;
 struct RaceUiEffectParticleActor;
 struct RaceUiFadingTrailActor;
 struct RaceUiGfxCommandActor;
-struct RaceUiOverlayActor;
 struct RaceUiOrbitingSpriteActor;
 struct RaceUiPodiumTrailActor;
 struct RaceUiPopupActor;
@@ -54,6 +53,25 @@ struct RaceUiTrailingParticleActor;
 struct RaceUiTransitionActor;
 struct RaceUiTransitionRenderActor;
 struct RaceUiTripleParticleActor;
+
+/* Image/palette pointers follow the generic asset-loader void ** contract. */
+typedef struct RaceUiOverlayActor {
+    /* 0x00 */ u8 pad0[0x18];
+    /* 0x18 */ Vec3i pos;
+    /* 0x24 */ u8 pad24[4];
+    /* 0x28 */ s32 velocity;
+    /* 0x2C */ u8 pad2C[4];
+    /* 0x30 */ s16 timer;
+    /* 0x32 */ s16 assetTimer;
+    /* 0x34 */ Mtx *matrix;
+    /* 0x38 */ void *panelAPalette;
+    /* 0x3C */ void *panelAImage;
+    /* 0x40 */ void *panelBPalette;
+    /* 0x44 */ void *panelBImage;
+    /* 0x48 */ u8 matrixDirty;
+} RaceUiOverlayActor;
+
+typedef char RaceUiOverlayActorSizeCheck[(sizeof(RaceUiOverlayActor) == 0x4C) ? 1 : -1];
 
 typedef struct RaceUiFadingImpactActor {
     /* 0x00 */ u8 pad0[0x10];

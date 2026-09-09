@@ -1,3 +1,4 @@
+#include "game/menu/menu_scratch.h"
 #include "game/race/race_state.h"
 #include "common.h"
 #include "game/save_data.h"
@@ -37,8 +38,6 @@ s16 gCourseSelectColumnSoundEffects[MULTIPLAYER_COURSE_SELECT_COLUMN_COUNT] = {
 extern s16 gMenuFadeAlpha;
 extern u8 D_800EC9C0;
 extern s8 D_800EC9E5;
-extern s32 D_8010ADE0;
-extern s32 D_8010ADE4;
 extern s32 gPlayerInputHeld[];
 extern s32 gPlayerInputPressed[];
 extern RaceCamera D_801124A0;
@@ -109,8 +108,8 @@ void initMultiplayerCourseSelectMenu(void) {
 
     D_800EC9C0 = 0;
     gActiveMenuTask = 0;
-    D_8010ADE0 = 0;
-    D_8010ADE4 = 0;
+    gMenuScratch0.value = 0;
+    gMenuScratch1.value = 0;
     gMenuFlowState = 0;
     gCourseSelectViewportSyncState = 0;
     gCourseSelectModeSelection = 0;
@@ -261,7 +260,7 @@ void updateMultiplayerCourseSelectMenu(void) {
                 createCallbackTask((CallbackTaskCallback)initCourseSelectPlayerPanels, 0, 0x62);
                 createCallbackTask((CallbackTaskCallback)initCourseSelectCompletePanels, 0, 0x63);
             }
-            D_8010ADE8 = createCallbackTask((CallbackTaskCallback)initCourseSelectExtraCourseIconList, 0, 0x61);
+            gMenuScratch2.task = createCallbackTask((CallbackTaskCallback)initCourseSelectExtraCourseIconList, 0, 0x61);
         }
     } else {
         finishedPlayerCount = 0;

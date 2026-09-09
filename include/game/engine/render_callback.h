@@ -11,6 +11,17 @@ typedef struct RenderCallbackNode {
     void *arg;
 } RenderCallbackNode;
 
+/* Only head is consumed as a list pointer. The two trailing words retain
+ * the original 0x0C slot spacing; their meaning is not established. */
+typedef struct RenderCallbackQueueSlot {
+    RenderCallbackNode *head;
+    u32 reserved[2];
+} RenderCallbackQueueSlot;
+
+#define MODEL_RENDER_CALLBACK_QUEUE_COUNT 8
+typedef char RenderCallbackQueueSlotSizeCheck[(sizeof(RenderCallbackQueueSlot) == 0xC) ? 1 : -1];
+extern RenderCallbackQueueSlot gModelRenderCallbackQueues[MODEL_RENDER_CALLBACK_QUEUE_COUNT];
+
 void addRenderCallback(RenderCallbackNode **queue, RenderCallback callback, void *arg);
 void runRenderCallbacks(RenderCallbackNode **queue);
 

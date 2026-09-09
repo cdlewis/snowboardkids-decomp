@@ -1,3 +1,4 @@
+#include "game/menu/menu_scratch.h"
 #include "game/race/race_state.h"
 #include "font_encoding.h"
 #include "common.h"
@@ -55,8 +56,6 @@ typedef enum {
 
 extern const char D_800E0DB8[];
 extern u8 D_800EC9C0;
-extern CallbackTask *D_8010ADE0;
-extern CallbackTask *D_8010ADE4;
 extern s32 gMenuFlowState;
 extern u8 gCurrentViewportIndex;
 
@@ -359,7 +358,7 @@ void updateCourseSelectPreviewModelIn(CourseSelectAnimatedActor *arg0) {
     if ((gRacePlayers[0].menuState == 4) || (actor->transitionState[0] == 9)) {
         removeCallbackTask(actor);
         finishCourseSelectUiTask(1);
-        D_8010ADE0 = 0;
+        gMenuScratch0.task = 0;
     } else {
         addRenderCallback(
             &gModelRenderCallbackList,
@@ -581,7 +580,7 @@ void updateCourseSelectPreviewModelOut(CourseSelectAnimatedActor *arg0) {
     if ((gRacePlayers[0].menuState == 4) || (actor->transitionState[0] == 9)) {
         removeCallbackTask(actor);
         finishCourseSelectUiTask(2);
-        D_8010ADE4 = 0;
+        gMenuScratch1.task = 0;
     } else {
         addRenderCallback(
             &gModelRenderCallbackList,
@@ -788,8 +787,8 @@ void updateCourseSelectCourseIconList(CourseSelectIconListActor *arg0) {
                 if ((u32)iconIndex == 0) {
                     actor->state[playerIndex] = 1;
                     if (gPlayerCount == 1) {
-                        D_8010ADE0 = createCallbackTask((CallbackTaskCallback)initCourseSelectPreviewModelIn, 0, 0x63);
-                        D_8010ADE4 = createCallbackTask((CallbackTaskCallback)initCourseSelectPreviewModelOut, 0, 0x62);
+                        gMenuScratch0.task = createCallbackTask((CallbackTaskCallback)initCourseSelectPreviewModelIn, 0, 0x63);
+                        gMenuScratch1.task = createCallbackTask((CallbackTaskCallback)initCourseSelectPreviewModelOut, 0, 0x62);
                         createCallbackTask((CallbackTaskCallback)initCourseSelectCourseListBackdrop, 0, 0x60);
                     } else if (playerIndex == 0) {
                         createCallbackTask((CallbackTaskCallback)initCourseSelectCourseStats, 0, 0x62);
@@ -1916,7 +1915,7 @@ void updateCourseSelectExtraCourseIconListClose(CourseSelectExtraCourseIconListA
     if (temp_a2->iconX[0][0] < -0xDF) {
         removeCallbackTask(temp_a2);
         finishCourseSelectUiTask(8);
-        D_8010ADE8 = 0;
+        gMenuScratch2.task = 0;
         return;
     }
 
@@ -2340,9 +2339,9 @@ void updateCourseSelectPlayerPanels(CourseSelectPlayerPanelListActor *arg0) {
                         if (actor->x[i] == actor->targetX[i]) {
                             ((CourseSelectPlayerPanelListActor *)statePtr)->state[0] = 1;
                             if (count == next) {
-                                D_8010ADE0 =
+                                gMenuScratch0.task =
                                     createCallbackTask((CallbackTaskCallback)initCourseSelectPreviewModelIn, 0, 0x62);
-                                D_8010ADE4 =
+                                gMenuScratch1.task =
                                     createCallbackTask((CallbackTaskCallback)initCourseSelectPreviewModelOut, 0, 0x62);
                                 createCallbackTask((CallbackTaskCallback)initCourseSelectCourseIconList, 0, 0x62);
                             }
@@ -2567,8 +2566,8 @@ void updateCourseSelectCompletePanels(CourseSelectCompletePanelsActor *actor) {
     u16 alpha;
     s32 i;
 
-    source0 = (CourseSelectAnimatedActor *)D_8010ADE0;
-    source1 = (CourseSelectAnimatedActor *)D_8010ADE4;
+    source0 = gMenuScratch0.coursePreview;
+    source1 = gMenuScratch1.coursePreview;
     panel = actor;
     task = panel;
     for (i = 0; i < gPlayerCount; i++) {

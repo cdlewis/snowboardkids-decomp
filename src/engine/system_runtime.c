@@ -44,21 +44,21 @@
 #include "game/audio/audio_engine.h"
 
 typedef struct {
-    RenderCallbackNode queue0;
-    RenderCallbackNode queue1;
-    RenderCallbackNode queue2;
-    RenderCallbackNode queue3;
+    RenderCallbackQueueSlot queue0;
+    RenderCallbackQueueSlot queue1;
+    RenderCallbackQueueSlot queue2;
+    RenderCallbackQueueSlot queue3;
 } RenderCallbackQueueGroup;
 
 u8 gMenuFadeOverlayActive = 0;
 
 s16 gMenuFadeAlpha = 0;
 
-Vp D_800DEF18[] = {
+Vp gFullscreenOverlayViewport[] = {
     { { { 640, 480, 511, 0 }, { 640, 480, 511, 0 } } },
 };
 
-Gfx D_800DEF28[] = {
+Gfx gModelRenderSetupDisplayList[] = {
     gsDPPipeSync(),
     gsDPSetColorDither(G_CD_BAYER),
     gsDPSetCycleType(G_CYC_1CYCLE),
@@ -74,7 +74,7 @@ Gfx D_800DEF28[] = {
     gsSPEndDisplayList(),
 };
 
-Gfx D_800DEF90[] = {
+Gfx gBackdropRenderSetupDisplayList[] = {
     gsDPPipeSync(),
     gsDPSetColorDither(G_CD_BAYER),
     gsDPSetCycleType(G_CYC_1CYCLE),
@@ -109,11 +109,11 @@ Gfx gMenuRenderModeResetDl[] = {
     gsSPEndDisplayList(),
 };
 
-u32 D_800DF078[] = {
+u32 gTranslucentOverlayIntensityTexture[] = {
     0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF,
 };
 
-Gfx D_800DF098[] = {
+Gfx gTranslucentOverlaySetupDisplayList[] = {
     gsDPPipeSync(),
     gsDPSetColorDither(G_CD_DISABLE),
     gsDPSetCycleType(G_CYC_1CYCLE),
@@ -128,7 +128,7 @@ Gfx D_800DF098[] = {
     gsDPSetCombineMode(G_CC_MODULATEI_PRIM, G_CC_MODULATEI_PRIM),
     gsDPSetRenderMode(G_RM_AA_XLU_SURF, G_RM_AA_XLU_SURF2),
     gsDPLoadTextureTile_4b(
-        D_800DF078,
+        gTranslucentOverlayIntensityTexture,
         G_IM_FMT_I,
         16,
         0,
@@ -175,11 +175,7 @@ extern Gfx *gRegionAllocPtr;
 extern u8 gPendingFramebufferSwapCount;
 extern u8 gRumblePakConnectedMask;
 extern u8 gFramebufferColorBufferIndex;
-extern u8 D_800B1CC0[];
 extern u8 D_369000[];
-extern u8 D_80360000[];
-extern u8 D_80368000[];
-extern u8 D_80368C00[];
 extern u8 gBootThreadStack[BOOT_THREAD_STACK_SIZE];
 extern u8 gGameThreadStack[GAME_THREAD_STACK_SIZE];
 
@@ -371,7 +367,6 @@ extern s16 gMenuViewportCenterX;
 extern s16 gMenuViewportCenterY;
 extern u8 gCurrentViewportIndex;
 
-#define runtimeModelRenderCallbackLists (*(RenderCallbackNode * (*)[24]) & gModelRenderCallbackList)
 #define VIEWPORT_COUNT 4
 
 void appendViewportDisplayLists(u8 frameIndex) {
@@ -392,7 +387,7 @@ void appendViewportDisplayLists(u8 frameIndex) {
     gDPSetScissor(
         gRegionAllocPtr++, G_SC_NON_INTERLACE, 0, 0, FRAMEBUFFER_WIDTH, FRAMEBUFFER_HEIGHT
     );
-    gSPViewport(gRegionAllocPtr++, D_800DEF18);
+    gSPViewport(gRegionAllocPtr++, gFullscreenOverlayViewport);
 
     if (gMenuOverlayRenderCallbackList != NULL) {
         gSPDisplayList(gRegionAllocPtr++, gMenuRenderModeResetDl);
@@ -565,12 +560,12 @@ void appendViewportDisplayLists(u8 frameIndex) {
                     &gCurrentFrameRenderData->viewport.translations[gCurrentViewportIndex],
                     G_MTX_NOPUSH | G_MTX_MUL | G_MTX_PROJECTION
                 );
-                gSPDisplayList(gRegionAllocPtr++, D_800DEF90);
+                gSPDisplayList(gRegionAllocPtr++, gBackdropRenderSetupDisplayList);
                 runRenderCallbacks(&gBackdropRenderCallbackList);
             }
 
-            for (i = 0; i < 24; i += 3) {
-                if (runtimeModelRenderCallbackLists[i] != NULL) {
+            for (i = 0; i < MODEL_RENDER_CALLBACK_QUEUE_COUNT; i++) {
+                if (gModelRenderCallbackQueues[i].head != NULL) {
                     hasModelCallbacks = 1;
                 }
             }
@@ -593,11 +588,11 @@ void appendViewportDisplayLists(u8 frameIndex) {
                     &gCurrentFrameRenderData->viewport.translations[gCurrentViewportIndex],
                     G_MTX_NOPUSH | G_MTX_MUL | G_MTX_PROJECTION
                 );
-                gSPDisplayList(gRegionAllocPtr++, D_800DEF28);
+                gSPDisplayList(gRegionAllocPtr++, gModelRenderSetupDisplayList);
 
-                for (i = 0; i < 24; i += 3) {
-                    if (runtimeModelRenderCallbackLists[i] != NULL) {
-                        queue = &runtimeModelRenderCallbackLists[i];
+                for (i = 0; i < MODEL_RENDER_CALLBACK_QUEUE_COUNT; i++) {
+                    if (gModelRenderCallbackQueues[i].head != NULL) {
+                        queue = &gModelRenderCallbackQueues[i].head;
                         if (queue == &gEffectRenderCallbackList) {
                             gSPMatrix(
                                 gRegionAllocPtr++,
@@ -622,7 +617,7 @@ void appendViewportDisplayLists(u8 frameIndex) {
             }
 
             if (gViewportStates[gCurrentViewportIndex].overlayAlpha != 0) {
-                gSPDisplayList(gRegionAllocPtr++, D_800DF098);
+                gSPDisplayList(gRegionAllocPtr++, gTranslucentOverlaySetupDisplayList);
                 gDPSetPrimColor(
                     gRegionAllocPtr++,
                     0,
@@ -671,7 +666,7 @@ void appendViewportDisplayLists(u8 frameIndex) {
     gDPSetScissor(gRegionAllocPtr++, G_SC_NON_INTERLACE, 0, 0, 320, 240);
 
     if (gMenuFadeAlpha != 0) {
-        gSPDisplayList(gRegionAllocPtr++, D_800DF098);
+        gSPDisplayList(gRegionAllocPtr++, gTranslucentOverlaySetupDisplayList);
         if (gMenuFadeOverlayActive != 0) {
             gDPSetPrimColor(gRegionAllocPtr++, 0, 0, 255, 255, 255, gMenuFadeAlpha);
         } else {
@@ -692,7 +687,6 @@ void appendViewportDisplayLists(u8 frameIndex) {
     }
 }
 
-#undef runtimeModelRenderCallbackLists
 #undef VIEWPORT_COUNT
 
 // IDO code generation for this function is sensitive to source line layout.
@@ -703,9 +697,9 @@ void resetRenderCallbackQueues(void) {
 
     gMenuForegroundRenderCallbackList = NULL;
     gRaceForegroundRenderCallbackList = NULL;
-    do { end = (u32)&gBackdropRenderCallbackList; group = (RenderCallbackQueueGroup *)&gModelRenderCallbackList; loop: group++; group[-1].queue0.next = NULL; group[-1].queue1.next = NULL; } while (0);
-    group[-1].queue2.next = NULL;
-    group[-1].queue3.next = NULL;
+    do { end = (u32)&gBackdropRenderCallbackList; group = (RenderCallbackQueueGroup *)gModelRenderCallbackQueues; loop: group++; group[-1].queue0.head = NULL; group[-1].queue1.head = NULL; } while (0);
+    group[-1].queue2.head = NULL;
+    group[-1].queue3.head = NULL;
     if ((u32)group != end) {
         goto loop;
     }
@@ -876,15 +870,15 @@ void submitFramebufferRenderTask(u8 frameIndex) {
     schedulerTask->rspTask.t.flags = 0;
     schedulerTask->rspTask.t.ucode_boot = (u64 *)rspbootTextStart;
     schedulerTask->rspTask.t.ucode_boot_size = (unsigned long)aspMainTextStart - (unsigned long)rspbootTextStart;
-    schedulerTask->rspTask.t.ucode = (u64 *)D_800B1CC0;
+    schedulerTask->rspTask.t.ucode = (u64 *)gF3dlxMicrocodeText;
     schedulerTask->rspTask.t.ucode_data = (u64 *)gspF3DLX_fifoDataStart;
     schedulerTask->rspTask.t.ucode_data_size = RSP_UCODE_DATA_SIZE;
-    schedulerTask->rspTask.t.dram_stack = (u64 *)D_80368C00;
+    schedulerTask->rspTask.t.dram_stack = (u64 *)gRspDramStack;
     schedulerTask->rspTask.t.dram_stack_size = RSP_DRAM_STACK_SIZE;
-    schedulerTask->rspTask.t.output_buff = (u64 *)D_80360000;
+    schedulerTask->rspTask.t.output_buff = (u64 *)gRspOutputBuffer;
     schedulerTask->rspTask.t.output_buff_size =
-        (u64 *)((unsigned long)D_80360000 + (long long)RSP_OUTPUT_BUFFER_SIZE);
-    schedulerTask->rspTask.t.yield_data_ptr = (u64 *)D_80368000;
+        (u64 *)((unsigned long)gRspOutputBuffer + (long long)RSP_OUTPUT_BUFFER_SIZE);
+    schedulerTask->rspTask.t.yield_data_ptr = (u64 *)gRspYieldBuffer;
     schedulerTask->rspTask.t.yield_data_size = RSP_YIELD_BUFFER_SIZE;
     schedulerTask->next = NULL;
     schedulerTask->flags = SCHEDULER_SWAPBUFFER_FLAG;
@@ -944,15 +938,15 @@ void submitFramebufferRenderTask(u8 frameIndex) {
     schedulerTask->rspTask.t.type = M_GFXTASK;
     schedulerTask->rspTask.t.ucode_boot = (u64 *)rspbootTextStart;
     schedulerTask->rspTask.t.ucode_boot_size = (unsigned long)aspMainTextStart - (unsigned long)rspbootTextStart;
-    schedulerTask->rspTask.t.ucode = (u64 *)D_800B1CC0;
+    schedulerTask->rspTask.t.ucode = (u64 *)gF3dlxMicrocodeText;
     schedulerTask->rspTask.t.ucode_data = (u64 *)gspF3DLX_fifoDataStart;
     schedulerTask->rspTask.t.ucode_data_size = RSP_UCODE_DATA_SIZE;
-    schedulerTask->rspTask.t.dram_stack = (u64 *)D_80368C00;
+    schedulerTask->rspTask.t.dram_stack = (u64 *)gRspDramStack;
     schedulerTask->rspTask.t.dram_stack_size = RSP_DRAM_STACK_SIZE;
-    schedulerTask->rspTask.t.output_buff = (u64 *)D_80360000;
+    schedulerTask->rspTask.t.output_buff = (u64 *)gRspOutputBuffer;
     schedulerTask->rspTask.t.output_buff_size =
-        (u64 *)((unsigned long)D_80360000 + (long long)RSP_OUTPUT_BUFFER_SIZE);
-    schedulerTask->rspTask.t.yield_data_ptr = (u64 *)D_80368000;
+        (u64 *)((unsigned long)gRspOutputBuffer + (long long)RSP_OUTPUT_BUFFER_SIZE);
+    schedulerTask->rspTask.t.yield_data_ptr = (u64 *)gRspYieldBuffer;
     schedulerTask->rspTask.t.yield_data_size = RSP_YIELD_BUFFER_SIZE;
     schedulerTask->next = NULL;
     schedulerTask->flags = 0;
