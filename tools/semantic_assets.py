@@ -45,8 +45,8 @@ def validate_registry(root, registry):
         if sorted(ids)!=list(range(1,count+1)):
             raise ValueError(f'incomplete/duplicate {family} item IDs: {ids}')
     hud = (root/'src/race/ui/race_hud.c').read_text()
-    shot = numbers(initializer(hud,'gRaceTimerTensDigitTileOffsets'))
-    action = numbers(initializer(hud,'gRaceTimerOnesDigitTileIds'))
+    shot = numbers(initializer(hud,'gRaceHudItemEffectTileOffsets'))
+    action = numbers(initializer(hud,'gRaceHudActionEffectTileIds'))
     for name,item in items.items():
         i = item['runtime_id']
         expected = list(range(shot[i],shot[i]+3)) if item['family']=='projectile' else [action[i]]

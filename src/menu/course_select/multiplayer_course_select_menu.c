@@ -41,7 +41,6 @@ extern s32 D_8010ADE0;
 extern s32 D_8010ADE4;
 extern s32 gPlayerInputHeld[];
 extern s32 gPlayerInputPressed[];
-extern RaceCamera D_801121E0[];
 extern RaceCamera D_801124A0;
 extern s32 gMenuFlowState;
 
@@ -82,8 +81,8 @@ void initMultiplayerCourseSelectMenu(void) {
     }
 
     for (l = 0; l < 4; l++) {
-        D_801121E0[l].update = updateMenuCameraObjectLookAtOriginCallback;
-        D_801121E0[l].distance = i;
+        gRaceCameras[l].update = updateMenuCameraObjectLookAtOriginCallback;
+        gRaceCameras[l].distance = i;
         gCourseSelectHasExtraCourse[l] = 0;
         gCourseSelectSelectedRows[l] = 0;
     }
@@ -538,7 +537,7 @@ void updateMultiplayerCourseSelectMenu(void) {
     }
 
     for (playerIndex = 0; playerIndex < 4; playerIndex++) {
-        gCurrentMenuCameraObject = &D_801121E0[playerIndex];
+        gCurrentMenuCameraObject = &gRaceCameras[playerIndex];
         gCurrentMenuCameraObject->update();
     }
 

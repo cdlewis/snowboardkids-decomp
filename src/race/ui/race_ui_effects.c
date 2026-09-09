@@ -25,7 +25,6 @@
 #include "game/race/ui/race_hud.h"
 #include <PR/os_cache.h>
 
-extern RaceCamera D_801121E0[];
 
 #define RACE_UI_TRAIL_GFX_ALLOC_PTR (*(RaceUiDisplayCommand **)&gRegionAllocPtr)
 #define ASSET_HANDLE(index) (gAssetHandles[(index)])
@@ -5397,9 +5396,9 @@ void renderSilverMountainSnowParticles(RaceUiEffectParticleActor *arg0) {
     gSPDisplayList(gRegionAllocPtr++, gAlphaSpriteRenderModeDl);
 
     transform.transform = gIdentityFixedTransform;
-    cameraX = -D_801121E0[gCurrentViewportIndex].cameraTransform.translation.x;
-    cameraY = -D_801121E0[gCurrentViewportIndex].cameraTransform.translation.y;
-    cameraZ = -D_801121E0[gCurrentViewportIndex].cameraTransform.translation.z;
+    cameraX = -gRaceCameras[gCurrentViewportIndex].cameraTransform.translation.x;
+    cameraY = -gRaceCameras[gCurrentViewportIndex].cameraTransform.translation.y;
+    cameraZ = -gRaceCameras[gCurrentViewportIndex].cameraTransform.translation.z;
 
     i = 0;
     if (actor->count > 0) {

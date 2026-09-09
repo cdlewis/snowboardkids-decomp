@@ -1,3 +1,4 @@
+#include "game/race/camera/race_camera.h"
 #include "game/race/race_state.h"
 #include "common.h"
 #include "game/menu/renderer/menu_renderer.h"
@@ -165,7 +166,6 @@ Vtx gRacePlayerLandingSnowSprayQuadVertices[4] = {
 };
 
 RaceItemDrawNode *gRaceItemTextureEffectDrawLists[4];
-extern RaceItemDrawLists D_801121E0;
 extern u8 gRaceUpdatePaused;
 extern u8 gCurrentViewportIndex;
 extern Gfx *gRegionAllocPtr;
@@ -927,7 +927,7 @@ void renderRaceItemTextureEffects(RaceItemTextureActor *arg0) {
                         node = node->next;
                     } while (node != NULL);
                 }
-            } while (D_801121E0.heads != &gRaceItemTextureEffectDrawLists[i]);
+            } while ((void *)gRaceCameras != &gRaceItemTextureEffectDrawLists[i]);
         }
         gSPDisplayList(gRegionAllocPtr++, gEffectRenderModeSetupDl);
         i = 0;
@@ -969,7 +969,7 @@ void renderRaceItemTextureEffects(RaceItemTextureActor *arg0) {
                 } while (node != NULL);
             }
             i++;
-        } while (D_801121E0.heads != &gRaceItemTextureEffectDrawLists[i]);
+        } while ((void *)gRaceCameras != &gRaceItemTextureEffectDrawLists[i]);
         gSPDisplayList(gRegionAllocPtr++, gEffectRenderModeCleanupDl);
     } while (0);
 }

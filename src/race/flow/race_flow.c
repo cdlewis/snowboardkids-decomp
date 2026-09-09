@@ -54,12 +54,6 @@ typedef struct {
 } CourseGridEntry;
 
 typedef struct {
-    /* 0x00 */ u8 pad0[0xAC];
-    /* 0xAC */ u8 active;
-    /* 0xAD */ u8 padAD[0xB0 - 0xAD];
-} ViewportSlot;
-
-typedef struct {
     /* 0x00 */ s32 unk0;
     /* 0x04 */ u8 pad4[0x8 - 0x4];
     /* 0x08 */ s8 unk8;
@@ -240,7 +234,6 @@ extern u8 gFramebufferSwapHold;
 extern u8 gRumblePakConnectedMask;
 extern u8 gRaceUpdatePaused;
 extern s16 gFrameCounter;
-extern ViewportSlot D_801121E0[];
 
 
 void initStartupControllerPakFlow(void) {
@@ -847,7 +840,7 @@ void fadeInRaceGameplayViewports(void) {
                     } else {
                         configureRaceViewport(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.3333334f);
                     }
-                    D_801121E0[0].active = 1;
+                    gRaceCameras[0].initialized.value = 1;
                     gFramebufferRenderInterval.value = 0;
                     break;
                 case 2:
@@ -858,8 +851,8 @@ void fadeInRaceGameplayViewports(void) {
                         configureRaceViewport(0, 0xA0, 0x43, 0x120, 0x68, 0x140, 0x78, 2.6666667f);
                         configureRaceViewport(1, 0xA0, 0xAD, 0x120, 0x68, 0x140, 0x78, 2.6666667f);
                     }
-                    D_801121E0[0].active = 1;
-                    D_801121E0[1].active = 1;
+                    gRaceCameras[0].initialized.value = 1;
+                    gRaceCameras[1].initialized.value = 1;
                     gFramebufferRenderInterval.value = 1;
                     break;
                 case 3:
@@ -872,9 +865,9 @@ void fadeInRaceGameplayViewports(void) {
                         configureRaceViewport(1, 0x57, 0xAD, 0x90, 0x68, 0xA0, 0x78, 1.3333334f);
                         configureRaceViewport(2, 0xE9, 0x43, 0x90, 0x68, 0xA0, 0x78, 1.3333334f);
                     }
-                    D_801121E0[0].active = 1;
-                    D_801121E0[1].active = 1;
-                    D_801121E0[2].active = 1;
+                    gRaceCameras[0].initialized.value = 1;
+                    gRaceCameras[1].initialized.value = 1;
+                    gRaceCameras[2].initialized.value = 1;
                     gFramebufferRenderInterval.value = 1;
                     break;
                 case 4:
@@ -889,10 +882,10 @@ void fadeInRaceGameplayViewports(void) {
                         configureRaceViewport(2, 0xE9, 0x43, 0x90, 0x68, 0xA0, 0x78, 1.3333334f);
                         configureRaceViewport(3, 0xE9, 0xAD, 0x90, 0x68, 0xA0, 0x78, 1.3333334f);
                     }
-                    D_801121E0[0].active = 1;
-                    D_801121E0[1].active = 1;
-                    D_801121E0[2].active = 1;
-                    D_801121E0[3].active = 1;
+                    gRaceCameras[0].initialized.value = 1;
+                    gRaceCameras[1].initialized.value = 1;
+                    gRaceCameras[2].initialized.value = 1;
+                    gRaceCameras[3].initialized.value = 1;
                     gFramebufferRenderInterval.value = 1;
                     break;
             }
@@ -1138,7 +1131,7 @@ void zoomRaceWinnerViewport(void) {
             );
             if (gCurrentGameTask->callbackData0 == 0xF) {
                 resetViewport(1);
-                D_801121E0[1].active = 0;
+                gRaceCameras[1].initialized.value = 0;
             }
             break;
         case 1:
@@ -1178,7 +1171,7 @@ void zoomRaceWinnerViewport(void) {
             );
             if (gCurrentGameTask->callbackData0 == 0xF) {
                 resetViewport(0);
-                D_801121E0[0].active = 0;
+                gRaceCameras[0].initialized.value = 0;
             }
             break;
         case 2:
@@ -1234,8 +1227,8 @@ void zoomRaceWinnerViewport(void) {
                 1.3333334f
             );
             if (gCurrentGameTask->callbackData0 == 0xF) {
-                D_801121E0[1].active = 0;
-                D_801121E0[2].active = 0;
+                gRaceCameras[1].initialized.value = 0;
+                gRaceCameras[2].initialized.value = 0;
                 resetViewport(1);
                 resetViewport(2);
             }
@@ -1293,8 +1286,8 @@ void zoomRaceWinnerViewport(void) {
                 1.3333334f
             );
             if (gCurrentGameTask->callbackData0 == 0xF) {
-                D_801121E0[0].active = 0;
-                D_801121E0[2].active = 0;
+                gRaceCameras[0].initialized.value = 0;
+                gRaceCameras[2].initialized.value = 0;
                 resetViewport(0);
                 resetViewport(2);
             }
@@ -1352,8 +1345,8 @@ void zoomRaceWinnerViewport(void) {
                 1.3333334f
             );
             if (gCurrentGameTask->callbackData0 == 0xF) {
-                D_801121E0[0].active = 0;
-                D_801121E0[1].active = 0;
+                gRaceCameras[0].initialized.value = 0;
+                gRaceCameras[1].initialized.value = 0;
                 resetViewport(0);
                 resetViewport(1);
             }
@@ -1431,9 +1424,9 @@ void zoomRaceWinnerViewport(void) {
                 resetViewport(1);
                 resetViewport(2);
                 resetViewport(3);
-                D_801121E0[1].active = 0;
-                D_801121E0[2].active = 0;
-                D_801121E0[3].active = 0;
+                gRaceCameras[1].initialized.value = 0;
+                gRaceCameras[2].initialized.value = 0;
+                gRaceCameras[3].initialized.value = 0;
             }
             break;
         case 6:
@@ -1506,9 +1499,9 @@ void zoomRaceWinnerViewport(void) {
                 1.3333334f
             );
             if (gCurrentGameTask->callbackData0 == 0xF) {
-                D_801121E0[0].active = 0;
-                D_801121E0[2].active = 0;
-                D_801121E0[3].active = 0;
+                gRaceCameras[0].initialized.value = 0;
+                gRaceCameras[2].initialized.value = 0;
+                gRaceCameras[3].initialized.value = 0;
                 resetViewport(0);
                 resetViewport(2);
                 resetViewport(3);
@@ -1584,9 +1577,9 @@ void zoomRaceWinnerViewport(void) {
                 1.3333334f
             );
             if (gCurrentGameTask->callbackData0 == 0xF) {
-                D_801121E0[0].active = 0;
-                D_801121E0[1].active = 0;
-                D_801121E0[3].active = 0;
+                gRaceCameras[0].initialized.value = 0;
+                gRaceCameras[1].initialized.value = 0;
+                gRaceCameras[3].initialized.value = 0;
                 resetViewport(0);
                 resetViewport(1);
                 resetViewport(3);
@@ -1662,9 +1655,9 @@ void zoomRaceWinnerViewport(void) {
                 1.3333334f
             );
             if (gCurrentGameTask->callbackData0 == 0xF) {
-                D_801121E0[0].active = 0;
-                D_801121E0[1].active = 0;
-                D_801121E0[2].active = 0;
+                gRaceCameras[0].initialized.value = 0;
+                gRaceCameras[1].initialized.value = 0;
+                gRaceCameras[2].initialized.value = 0;
                 resetViewport(0);
                 resetViewport(1);
                 resetViewport(2);

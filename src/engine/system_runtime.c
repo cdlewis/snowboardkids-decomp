@@ -370,7 +370,6 @@ extern s16 gMenuViewportHeight;
 extern s16 gMenuViewportCenterX;
 extern s16 gMenuViewportCenterY;
 extern u8 gCurrentViewportIndex;
-extern RaceCamera D_801121E0[RACE_CAMERA_COUNT];
 
 #define runtimeModelRenderCallbackLists (*(RenderCallbackNode * (*)[24]) & gModelRenderCallbackList)
 #define VIEWPORT_COUNT 4
@@ -421,7 +420,7 @@ void appendViewportDisplayLists(u8 frameIndex) {
             gMenuViewportCenterY = top + (gMenuViewportHeight / 2);
 
             gCurrentFrameRenderData->viewport.viewportMatrices[gCurrentViewportIndex] =
-                D_801121E0[gCurrentViewportIndex].packedTransform;
+                gRaceCameras[gCurrentViewportIndex].packedTransform;
             gCurrentFrameRenderData->viewport.viewportMatrices[gCurrentViewportIndex].m[1][2] = 0;
             gCurrentFrameRenderData->viewport.viewportMatrices[gCurrentViewportIndex].m[1][3] = 1;
             gCurrentFrameRenderData->viewport.viewportMatrices[gCurrentViewportIndex].m[3][2] = 0;
@@ -504,46 +503,46 @@ void appendViewportDisplayLists(u8 frameIndex) {
             }
 
             gCurrentFrameRenderData->viewport.rotations[gCurrentViewportIndex].m[0][0] =
-                ((D_801121E0[gCurrentViewportIndex].cameraTransform.rotation[0] << 4) & upperMask) |
-                ((D_801121E0[gCurrentViewportIndex].cameraTransform.rotation[1] >> 12) & 0xFFFF);
+                ((gRaceCameras[gCurrentViewportIndex].cameraTransform.rotation[0] << 4) & upperMask) |
+                ((gRaceCameras[gCurrentViewportIndex].cameraTransform.rotation[1] >> 12) & 0xFFFF);
             gCurrentFrameRenderData->viewport.rotations[gCurrentViewportIndex].m[0][1] =
-                (D_801121E0[gCurrentViewportIndex].cameraTransform.rotation[2] << 4) & upperMask;
+                (gRaceCameras[gCurrentViewportIndex].cameraTransform.rotation[2] << 4) & upperMask;
             gCurrentFrameRenderData->viewport.rotations[gCurrentViewportIndex].m[0][2] =
-                ((D_801121E0[gCurrentViewportIndex].cameraTransform.rotation[3] << 4) & upperMask) |
-                ((D_801121E0[gCurrentViewportIndex].cameraTransform.rotation[4] >> 12) & 0xFFFF);
+                ((gRaceCameras[gCurrentViewportIndex].cameraTransform.rotation[3] << 4) & upperMask) |
+                ((gRaceCameras[gCurrentViewportIndex].cameraTransform.rotation[4] >> 12) & 0xFFFF);
             gCurrentFrameRenderData->viewport.rotations[gCurrentViewportIndex].m[0][3] =
-                (D_801121E0[gCurrentViewportIndex].cameraTransform.rotation[5] << 4) & upperMask;
+                (gRaceCameras[gCurrentViewportIndex].cameraTransform.rotation[5] << 4) & upperMask;
             gCurrentFrameRenderData->viewport.rotations[gCurrentViewportIndex].m[1][0] =
-                ((D_801121E0[gCurrentViewportIndex].cameraTransform.rotation[6] << 4) & upperMask) |
-                ((D_801121E0[gCurrentViewportIndex].cameraTransform.rotation[7] >> 12) & 0xFFFF);
+                ((gRaceCameras[gCurrentViewportIndex].cameraTransform.rotation[6] << 4) & upperMask) |
+                ((gRaceCameras[gCurrentViewportIndex].cameraTransform.rotation[7] >> 12) & 0xFFFF);
             gCurrentFrameRenderData->viewport.rotations[gCurrentViewportIndex].m[1][1] =
-                (D_801121E0[gCurrentViewportIndex].cameraTransform.rotation[8] << 4) & upperMask;
+                (gRaceCameras[gCurrentViewportIndex].cameraTransform.rotation[8] << 4) & upperMask;
             gCurrentFrameRenderData->viewport.translations[gCurrentViewportIndex].m[1][2] =
-                (D_801121E0[gCurrentViewportIndex].cameraTransform.translation.x & upperMask) |
-                ((D_801121E0[gCurrentViewportIndex].cameraTransform.translation.y >> 16) & 0xFFFF);
+                (gRaceCameras[gCurrentViewportIndex].cameraTransform.translation.x & upperMask) |
+                ((gRaceCameras[gCurrentViewportIndex].cameraTransform.translation.y >> 16) & 0xFFFF);
             gCurrentFrameRenderData->viewport.translations[gCurrentViewportIndex].m[1][3] =
-                (D_801121E0[gCurrentViewportIndex].cameraTransform.translation.z & upperMask) | 1;
+                (gRaceCameras[gCurrentViewportIndex].cameraTransform.translation.z & upperMask) | 1;
 
             gCurrentFrameRenderData->viewport.rotations[gCurrentViewportIndex].m[2][0] =
-                ((D_801121E0[gCurrentViewportIndex].cameraTransform.rotation[0] << 20) & upperMask) |
-                ((D_801121E0[gCurrentViewportIndex].cameraTransform.rotation[1] << 4) & 0xFFFF);
+                ((gRaceCameras[gCurrentViewportIndex].cameraTransform.rotation[0] << 20) & upperMask) |
+                ((gRaceCameras[gCurrentViewportIndex].cameraTransform.rotation[1] << 4) & 0xFFFF);
             gCurrentFrameRenderData->viewport.rotations[gCurrentViewportIndex].m[2][1] =
-                (D_801121E0[gCurrentViewportIndex].cameraTransform.rotation[2] << 20) & upperMask;
+                (gRaceCameras[gCurrentViewportIndex].cameraTransform.rotation[2] << 20) & upperMask;
             gCurrentFrameRenderData->viewport.rotations[gCurrentViewportIndex].m[2][2] =
-                ((D_801121E0[gCurrentViewportIndex].cameraTransform.rotation[3] << 20) & upperMask) |
-                ((D_801121E0[gCurrentViewportIndex].cameraTransform.rotation[4] << 4) & 0xFFFF);
+                ((gRaceCameras[gCurrentViewportIndex].cameraTransform.rotation[3] << 20) & upperMask) |
+                ((gRaceCameras[gCurrentViewportIndex].cameraTransform.rotation[4] << 4) & 0xFFFF);
             gCurrentFrameRenderData->viewport.rotations[gCurrentViewportIndex].m[2][3] =
-                (D_801121E0[gCurrentViewportIndex].cameraTransform.rotation[5] << 20) & upperMask;
+                (gRaceCameras[gCurrentViewportIndex].cameraTransform.rotation[5] << 20) & upperMask;
             gCurrentFrameRenderData->viewport.rotations[gCurrentViewportIndex].m[3][0] =
-                ((D_801121E0[gCurrentViewportIndex].cameraTransform.rotation[6] << 20) & upperMask) |
-                ((D_801121E0[gCurrentViewportIndex].cameraTransform.rotation[7] << 4) & 0xFFFF);
+                ((gRaceCameras[gCurrentViewportIndex].cameraTransform.rotation[6] << 20) & upperMask) |
+                ((gRaceCameras[gCurrentViewportIndex].cameraTransform.rotation[7] << 4) & 0xFFFF);
             gCurrentFrameRenderData->viewport.rotations[gCurrentViewportIndex].m[3][1] =
-                (D_801121E0[gCurrentViewportIndex].cameraTransform.rotation[8] << 20) & upperMask;
+                (gRaceCameras[gCurrentViewportIndex].cameraTransform.rotation[8] << 20) & upperMask;
             gCurrentFrameRenderData->viewport.translations[gCurrentViewportIndex].m[3][2] =
-                ((D_801121E0[gCurrentViewportIndex].cameraTransform.translation.x << 16) & upperMask) |
-                (D_801121E0[gCurrentViewportIndex].cameraTransform.translation.y & 0xFFFF);
+                ((gRaceCameras[gCurrentViewportIndex].cameraTransform.translation.x << 16) & upperMask) |
+                (gRaceCameras[gCurrentViewportIndex].cameraTransform.translation.y & 0xFFFF);
             gCurrentFrameRenderData->viewport.translations[gCurrentViewportIndex].m[3][3] =
-                (D_801121E0[gCurrentViewportIndex].cameraTransform.translation.z << 16) & upperMask;
+                (gRaceCameras[gCurrentViewportIndex].cameraTransform.translation.z << 16) & upperMask;
 
             if (gBackdropRenderCallbackList != NULL) {
                 gSPPerspNormalize(

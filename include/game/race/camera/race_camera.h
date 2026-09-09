@@ -6,6 +6,12 @@
 
 #define RACE_CAMERA_COUNT 4
 
+/* Both byte views preserve original IDO constant sharing for stores. */
+typedef union RaceCameraActivation {
+    u8 value;
+    s8 signedValue;
+} RaceCameraActivation;
+
 typedef struct RaceCamera {
     /* 0x00 */ u16 playerIndex;
     /* 0x02 */ u16 mode;
@@ -27,10 +33,21 @@ typedef struct RaceCamera {
     /* 0xA2 */ u8 padA2[2];
     /* 0xA4 */ s32 velocity;
     /* 0xA8 */ s32 unkA8;
-    /* 0xAC */ u8 initialized;
+    /* 0xAC */ RaceCameraActivation initialized;
     /* 0xAD */ u8 padAD[3];
 } RaceCamera;
 
+typedef char RaceCameraSizeCheck[(sizeof(RaceCamera) == 0xB0) ? 1 : -1];
+
+/* resetRaceCameras clears initialized before copying camera zero to all four slots.
+ * fadeInRaceGameplayViewports activates participating slots; race-flow shutdown
+ * clears them individually. Menu previews also use these cameras, so viewport
+ * geometry alone does not indicate gameplay activation. Launch-ramp handling
+ * temporarily sets initialized to 2; positional audio only counts value 1.
+ */
+extern RaceCamera gRaceCameras[RACE_CAMERA_COUNT];
+/* Linker-only end sentinel; no additional camera is allocated. */
+extern RaceCamera gRaceCamerasEnd[];
 extern RaceCamera *gCurrentMenuCameraObject;
 extern u8 gRaceCameraModeChangeDisabled;
 

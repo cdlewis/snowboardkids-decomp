@@ -145,7 +145,6 @@ RaceCameraTransition gRaceCameraPositionTransitions[] = {
     { 0, 0x0F, { 0xE21D1637, 0xED2A73FF, 0xE3E16721 }, { 0xE21D1637, 0xED3BB3FF, 0xE3E16721 } },
 };
 
-extern RaceCamera D_801121E0[RACE_CAMERA_COUNT];
 extern RaceCamera *D_801124A0;
 extern s32 gRaceCameraReplayStartX;
 extern s32 gRaceCameraReplayStartY;
@@ -158,14 +157,14 @@ void setRaceCameraMode(u16 arg0, u16 arg1) {
     RaceCamera *temp;
 
     if (gRaceCameraModeChangeDisabled == 0) {
-        temp = &D_801121E0[arg0];
+        temp = &gRaceCameras[arg0];
         temp->mode = arg1;
         temp->update = gRaceCameraModeUpdates[arg1];
     }
 }
 
 void setRaceCameraModeForced(u16 arg0, u16 arg1) {
-    RaceCamera *temp = &D_801121E0[arg0];
+    RaceCamera *temp = &gRaceCameras[arg0];
 
     temp->mode = arg1;
     temp->update = gRaceCameraModeUpdates[arg1];
@@ -175,8 +174,8 @@ void resetRaceCameras(void) {
     RaceCamera *camera;
 
     setRaceCameraMode(0, 0);
-    camera = D_801121E0;
-    camera->initialized = 0;
+    camera = gRaceCameras;
+    camera->initialized.value = 0;
     camera->pitch = 0;
     camera->yaw = 0;
     camera->roll = 0;
@@ -185,13 +184,13 @@ void resetRaceCameras(void) {
     camera->pos.z = 0;
     camera->distance = 0;
     camera->unk28 = 0;
-    D_801121E0[1] = D_801121E0[0];
-    D_801121E0[2] = D_801121E0[0];
-    D_801121E0[3] = D_801121E0[0];
-    D_801121E0[0].playerIndex = 0;
-    D_801121E0[1].playerIndex = 1;
-    D_801121E0[2].playerIndex = 2;
-    D_801121E0[3].playerIndex = 3;
+    gRaceCameras[1] = gRaceCameras[0];
+    gRaceCameras[2] = gRaceCameras[0];
+    gRaceCameras[3] = gRaceCameras[0];
+    gRaceCameras[0].playerIndex = 0;
+    gRaceCameras[1].playerIndex = 1;
+    gRaceCameras[2].playerIndex = 2;
+    gRaceCameras[3].playerIndex = 3;
 }
 
 // IDO code generation for this function is sensitive to source line layout.
@@ -202,7 +201,7 @@ void updateRaceCameras(void) {
 
     index = 0;
     if (gRacePlayerCount > 0) {
- camera = D_801121E0; do {
+ camera = gRaceCameras; do {
             (D_801124A0 = camera)->update();
             index += 1;
             camera += 1;
@@ -212,7 +211,7 @@ void updateRaceCameras(void) {
 // clang-format on
 
 void updateRaceCamera(s32 arg0) {
-    D_801124A0 = &D_801121E0[arg0];
+    D_801124A0 = &gRaceCameras[arg0];
     D_801124A0->update();
 }
 
