@@ -9,7 +9,6 @@
     extern u32 *id##_ROM_END;   \
     extern u32 *id##_VRAM;      \
     extern u32 *id##_VRAM_END
-#endif
 
 extern Gfx gMenuRenderModeResetDl[];
 extern Gfx gTranslucentSpriteRenderModeDl[];
@@ -28,3 +27,5 @@ void initFramebufferRenderTaskState(void);
 void setBootFadeColor(u8 a0, u8 a1, u8 a2);
 void setTitleFadeColor(u8 a0, u8 a1, u8 a2);
 void submitFramebufferRenderTask(u8 frameIndex);
+
+#endif

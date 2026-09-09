@@ -28,8 +28,8 @@ extern u8 gRaceTimeTrialFinishRecorded;
 extern u8 gRaceChallengeFailed;
 extern s32 gMenuFlowState;
 
-u8 gRaceTimerTensDigitTileOffsets[8] = { 5, 5, 8, 11, 14, 17, 0, 0 };
-u8 gRaceTimerOnesDigitTileIds[8] = { 4, 20, 21, 22, 23, 24, 25, 0 };
+u8 gRaceHudItemEffectTileOffsets[8] = { 5, 5, 8, 11, 14, 17, 0, 0 };
+u8 gRaceHudActionEffectTileIds[8] = { 4, 20, 21, 22, 23, 24, 25, 0 };
 
 RaceTimer gRaceCourseTargetTimes[10] = {
     { 3, 0, 0 },
@@ -520,7 +520,7 @@ void drawTargetTimeChallengeHud(void *arg0) {
         -0x88,
         -0x60,
         getRelocatableHeapBlockBase(RACE_HUD_POPUP_FONT_HANDLE),
-        gRaceTimerOnesDigitTileIds[1]
+        gRaceHudActionEffectTileIds[1]
     );
     drawAssetTableSprite(-0x88, 0x40, getRelocatableHeapBlockBase(RACE_HUD_POPUP_FONT_HANDLE), 0x24);
     drawAssetTableSprite(-0x88, 0x40, getRelocatableHeapBlockBase(RACE_HUD_POPUP_FONT_HANDLE), 0x25);
@@ -616,7 +616,7 @@ void drawTimeTrialHud(void *arg0) {
             -0x10,
             -0x60,
             getRelocatableHeapBlockBase(RACE_HUD_POPUP_FONT_HANDLE),
-            gRaceTimerOnesDigitTileIds[gRacePlayers[0].actionEffectType]
+            gRaceHudActionEffectTileIds[gRacePlayers[0].actionEffectType]
         );
     }
 
@@ -682,7 +682,7 @@ void drawSinglePlayerRaceHud(void *arg0) {
             -0x20,
             -0x60,
             getRelocatableHeapBlockBase(RACE_HUD_POPUP_FONT_HANDLE),
-            gRaceTimerTensDigitTileOffsets[gRacePlayers[0].itemEffectType] + gRacePlayers[0].itemEffectCount - 1,
+            gRaceHudItemEffectTileOffsets[gRacePlayers[0].itemEffectType] + gRacePlayers[0].itemEffectCount - 1,
             gRacePlayers[0].itemEffectPalette
         );
     } else {
@@ -690,7 +690,7 @@ void drawSinglePlayerRaceHud(void *arg0) {
             -0x20,
             -0x60,
             getRelocatableHeapBlockBase(RACE_HUD_POPUP_FONT_HANDLE),
-            gRaceTimerTensDigitTileOffsets[gRacePlayers[0].itemEffectType] + gRacePlayers[0].itemEffectCount - 1
+            gRaceHudItemEffectTileOffsets[gRacePlayers[0].itemEffectType] + gRacePlayers[0].itemEffectCount - 1
         );
     }
 
@@ -699,7 +699,7 @@ void drawSinglePlayerRaceHud(void *arg0) {
             0,
             -0x60,
             getRelocatableHeapBlockBase(RACE_HUD_POPUP_FONT_HANDLE),
-            gRaceTimerOnesDigitTileIds[gRacePlayers[0].actionEffectType],
+            gRaceHudActionEffectTileIds[gRacePlayers[0].actionEffectType],
             gRacePlayers[0].actionEffectPalette
         );
     } else {
@@ -707,7 +707,7 @@ void drawSinglePlayerRaceHud(void *arg0) {
             0,
             -0x60,
             getRelocatableHeapBlockBase(RACE_HUD_POPUP_FONT_HANDLE),
-            gRaceTimerOnesDigitTileIds[gRacePlayers[0].actionEffectType]
+            gRaceHudActionEffectTileIds[gRacePlayers[0].actionEffectType]
         );
     }
 
@@ -777,7 +777,7 @@ void drawTrainingRaceHud(void *arg0) {
             -0x20,
             -0x60,
             getRelocatableHeapBlockBase(RACE_HUD_POPUP_FONT_HANDLE),
-            gRaceTimerTensDigitTileOffsets[gRacePlayers[0].itemEffectType] + gRacePlayers[0].itemEffectCount - 1,
+            gRaceHudItemEffectTileOffsets[gRacePlayers[0].itemEffectType] + gRacePlayers[0].itemEffectCount - 1,
             gRacePlayers[0].itemEffectPalette
         );
     } else {
@@ -785,7 +785,7 @@ void drawTrainingRaceHud(void *arg0) {
             -0x20,
             -0x60,
             getRelocatableHeapBlockBase(RACE_HUD_POPUP_FONT_HANDLE),
-            gRaceTimerTensDigitTileOffsets[gRacePlayers[0].itemEffectType] + gRacePlayers[0].itemEffectCount - 1
+            gRaceHudItemEffectTileOffsets[gRacePlayers[0].itemEffectType] + gRacePlayers[0].itemEffectCount - 1
         );
     }
 
@@ -794,7 +794,7 @@ void drawTrainingRaceHud(void *arg0) {
             0,
             -0x60,
             getRelocatableHeapBlockBase(RACE_HUD_POPUP_FONT_HANDLE),
-            gRaceTimerOnesDigitTileIds[gRacePlayers[0].actionEffectType],
+            gRaceHudActionEffectTileIds[gRacePlayers[0].actionEffectType],
             gRacePlayers[0].actionEffectPalette
         );
     } else {
@@ -802,7 +802,7 @@ void drawTrainingRaceHud(void *arg0) {
             0,
             -0x60,
             getRelocatableHeapBlockBase(RACE_HUD_POPUP_FONT_HANDLE),
-            gRaceTimerOnesDigitTileIds[gRacePlayers[0].actionEffectType]
+            gRaceHudActionEffectTileIds[gRacePlayers[0].actionEffectType]
         );
     }
 
@@ -864,7 +864,7 @@ void drawTwoPlayerRaceHud(void *arg0) {
             -0x88,
             -0x30,
             getRelocatableHeapBlockBase(RACE_HUD_POPUP_FONT_HANDLE),
-            gRaceTimerTensDigitTileOffsets[gRacePlayers[gCurrentViewportIndex].itemEffectType] +
+            gRaceHudItemEffectTileOffsets[gRacePlayers[gCurrentViewportIndex].itemEffectType] +
                 gRacePlayers[gCurrentViewportIndex].itemEffectCount - 1,
             gRacePlayers[gCurrentViewportIndex].itemEffectPalette
         );
@@ -873,7 +873,7 @@ void drawTwoPlayerRaceHud(void *arg0) {
             -0x88,
             -0x30,
             getRelocatableHeapBlockBase(RACE_HUD_POPUP_FONT_HANDLE),
-            gRaceTimerTensDigitTileOffsets[gRacePlayers[gCurrentViewportIndex].itemEffectType] +
+            gRaceHudItemEffectTileOffsets[gRacePlayers[gCurrentViewportIndex].itemEffectType] +
                 gRacePlayers[gCurrentViewportIndex].itemEffectCount - 1
         );
     }
@@ -883,7 +883,7 @@ void drawTwoPlayerRaceHud(void *arg0) {
             -0x68,
             -0x30,
             getRelocatableHeapBlockBase(RACE_HUD_POPUP_FONT_HANDLE),
-            gRaceTimerOnesDigitTileIds[gRacePlayers[gCurrentViewportIndex].actionEffectType],
+            gRaceHudActionEffectTileIds[gRacePlayers[gCurrentViewportIndex].actionEffectType],
             gRacePlayers[gCurrentViewportIndex].actionEffectPalette
         );
     } else {
@@ -891,7 +891,7 @@ void drawTwoPlayerRaceHud(void *arg0) {
             -0x68,
             -0x30,
             getRelocatableHeapBlockBase(RACE_HUD_POPUP_FONT_HANDLE),
-            gRaceTimerOnesDigitTileIds[gRacePlayers[gCurrentViewportIndex].actionEffectType]
+            gRaceHudActionEffectTileIds[gRacePlayers[gCurrentViewportIndex].actionEffectType]
         );
     }
 
@@ -945,7 +945,7 @@ void drawMultiplayerRaceHud(void *arg0) {
         -0x18,
         -0x38,
         texture,
-        gRaceTimerTensDigitTileOffsets[gRacePlayers[gCurrentViewportIndex].itemEffectType] +
+        gRaceHudItemEffectTileOffsets[gRacePlayers[gCurrentViewportIndex].itemEffectType] +
             gRacePlayers[gCurrentViewportIndex].itemEffectCount - 1,
         player->itemEffectPalette + 1
     );
@@ -956,7 +956,7 @@ void drawMultiplayerRaceHud(void *arg0) {
         -8,
         -0x38,
         texture,
-        gRaceTimerOnesDigitTileIds[player->actionEffectType],
+        gRaceHudActionEffectTileIds[player->actionEffectType],
         player->actionEffectPalette + 1
     );
 
@@ -996,7 +996,7 @@ void drawMultiplayerScoreAndLapCounter(void *arg0) {
     drawMenuAsciiChar((s16)(x + 0x10), -0x30, gRaceLapCount + 0x30, 2);
 }
 
-void drawThreePlayerHudDivider(void *arg0) {
+void drawThreePlayerNoEntryPanel(void *arg0) {
     drawAssetTableSprite(0xC, 0x2C, getRelocatableHeapBlockBase(ASSET_HANDLE(0x1F)), 0x90);
 }
 
@@ -1242,7 +1242,7 @@ void updateRaceHud(void) {
             addRenderCallback(&gRaceForegroundRenderCallbackList, drawMultiplayerScoreAndLapCounter, 0);
             updateRaceCourseProgressMeter();
             if ((s16)gRaceHudMode == RACE_HUD_MODE_THREE_PLAYER) {
-                addRenderCallback(&gMenuRenderCallbackList, drawThreePlayerHudDivider, 0);
+                addRenderCallback(&gMenuRenderCallbackList, drawThreePlayerNoEntryPanel, 0);
             }
             return;
         case RACE_HUD_MODE_TIME_TRIAL: {

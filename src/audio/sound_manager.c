@@ -1,3 +1,4 @@
+#include "game/race/camera/race_camera.h"
 #include "game/race/race_state.h"
 #include "common.h"
 #include "assets.h"
@@ -41,14 +42,6 @@ typedef struct PositionalSoundRequest {
     s16 mode;
     f32 pitch;
 } PositionalSoundRequest;
-
-typedef struct AudioCamera {
-    u8 pad0[0x94];
-    Vec3i prevPos;
-    u8 padA0[0xAC - 0xA0];
-    s8 initialized;
-    u8 padAD[3];
-} AudioCamera;
 
 typedef struct SoundRomRange {
     u32 romStart;
@@ -301,8 +294,6 @@ extern s32 gFreeSoundHandleCount;
 extern SoundHandleNode *gFreeSoundHandleStack[];
 extern SoundQueueEntry gSoundQueue[];
 extern s32 gPendingMusicCommandArg;
-extern AudioCamera D_801121E0[];
-extern AudioCamera D_801124A0[];
 extern s32 gPlayerPositionalSoundHandle0[];
 extern u8 gCurrentQueuedSoundType;
 extern u8 gCurrentQueuedSoundId;
@@ -687,7 +678,7 @@ void fadeOutAllMusicSequences(void) {
 }
 
 s32 calculatePositionalSoundVolume(Vec3i *pos, s32 volume) {
-    AudioCamera *camera;
+    RaceCamera *camera;
     s32 distance;
     s32 dx;
     s32 dy;
@@ -704,9 +695,9 @@ s32 calculatePositionalSoundVolume(Vec3i *pos, s32 volume) {
         volume = 0x7F;
     }
 
-    camera = D_801121E0;
+    camera = gRaceCameras;
     do {
-        if (camera->initialized == 1) {
+        if (camera->initialized.signedValue == 1) {
             dx = camera->prevPos.x - pos->x;
             if ((dx >= -0x4000000) && (dx < 0x4000001)) {
                 dy = camera->prevPos.y - pos->y;
@@ -722,7 +713,7 @@ s32 calculatePositionalSoundVolume(Vec3i *pos, s32 volume) {
             }
         }
         camera++;
-    } while (camera != D_801124A0);
+    } while (camera != gRaceCamerasEnd);
 
     attenuation = 0x1000 - fixedSine(distance / 0x10000);
     adjustedVolume = (volume * attenuation) / 0x1000;
@@ -746,16 +737,16 @@ void updatePlayerLoopingPositionalSound(s32 soundId, s32 mode, s32 volume, f32 p
     adjustedVolume = calculatePositionalSoundVolume(&gRacePlayers[mode].pos, volume);
 
     activeCameras = 0;
-    if (D_801121E0[0].initialized != 0) {
+    if (gRaceCameras[0].initialized.signedValue != 0) {
         activeCameras = 1;
     }
-    if (D_801121E0[1].initialized != 0) {
+    if (gRaceCameras[1].initialized.signedValue != 0) {
         activeCameras += 1;
     }
-    if (D_801121E0[2].initialized != 0) {
+    if (gRaceCameras[2].initialized.signedValue != 0) {
         activeCameras += 1;
     }
-    if (D_801121E0[3].initialized != 0) {
+    if (gRaceCameras[3].initialized.signedValue != 0) {
         activeCameras += 1;
     }
     if (gRaceDemoPlaybackEnabled != 0) {

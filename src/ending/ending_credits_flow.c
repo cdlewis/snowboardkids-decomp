@@ -29,7 +29,6 @@ s16 gEndingCreditsTransitionSnowboardIconAngle;
 u8 gEndingCreditsCharacterAuraDoneFlags[ENDING_CREDITS_CHARACTER_COUNT];
 
 extern s16 gMenuFadeAlpha;
-extern RaceCamera D_801121E0;
 extern u8 gPendingFramebufferSwapCount;
 extern u8 gFramebufferSwapHold;
 
@@ -41,9 +40,9 @@ void initEndingCreditsFlow(void) {
     volatile GameTask *state;
 
     resetRaceCameras();
-    D_801121E0.update = updateMenuCameraObjectWithTargetOffsetCallback;
-    D_801121E0.distance = 0x5D24000;
-    D_801121E0.pitch = 0xFC0;
+    gRaceCameras[0].update = updateMenuCameraObjectWithTargetOffsetCallback;
+    gRaceCameras[0].distance = 0x5D24000;
+    gRaceCameras[0].pitch = 0xFC0;
     resetAllViewports();
     configureViewportWithFovAndFarClip(
         0,
@@ -127,7 +126,7 @@ void updateEndingCreditsFlow(void) {
         }
     }
     updateCallbackTasks();
-    gCurrentMenuCameraObject = &D_801121E0;
+    gCurrentMenuCameraObject = &gRaceCameras[0];
     gCurrentMenuCameraObject->update();
 }
 

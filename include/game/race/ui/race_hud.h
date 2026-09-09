@@ -19,6 +19,9 @@ typedef enum RaceHudMode {
     RACE_HUD_MODE_TRAINING_OR_DEMO = 8
 } RaceHudMode;
 
+/* Item tiles add itemEffectCount - 1; action tiles use actionEffectType directly. */
+extern u8 gRaceHudItemEffectTileOffsets[8];
+extern u8 gRaceHudActionEffectTileIds[8];
 extern RaceTimer gRaceElapsedTimer;
 extern RaceTimer gRaceChallengeTimeLimit;
 extern RaceTimer gRaceTimeTrialFinishTime;
@@ -47,7 +50,7 @@ void drawTwoPlayerRaceHud(void *arg0);
 void drawTwoPlayerLapCounter(void *arg0);
 void drawMultiplayerRaceHud(void *arg0);
 void drawMultiplayerScoreAndLapCounter(void *arg0);
-void drawThreePlayerHudDivider(void *arg0);
+void drawThreePlayerNoEntryPanel(void *arg0);
 void incrementRaceElapsedTimer(void);
 void decrementRaceChallengeTimeLimit(void);
 void drawRaceCourseProgressMeter(void *arg0);

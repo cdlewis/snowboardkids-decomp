@@ -16,27 +16,6 @@
 
 #define CONTROLLER_PAK_DELETE_PANEL_HANDLE (gAssetHandles[0x29])
 
-typedef struct {
-    s16 pad0;
-    u8 state;
-    u8 pad3;
-    u16 targetScale;
-    u16 timer;
-    u8 selectedOption;
-    u8 confirmSelection;
-} ControllerPakRumbleCheckPromptTransition;
-
-typedef struct {
-    u8 state;
-    u8 pad1;
-    u16 targetScale;
-    u16 timer;
-    u8 selectedOption;
-    u8 confirmSelection;
-} ControllerPakRumbleCheckPromptState;
-
-extern ControllerPakRumbleCheckPromptTransition gControllerPakRumbleCheckPromptTransition;
-extern ControllerPakRumbleCheckPromptState gControllerPakRumbleCheckPromptState;
 extern u8 gControllerPakMenuConfirmChoice;
 extern u8 gControllerPakMenuCursorState;
 extern u8 gControllerPakDeletePromptState;
@@ -492,7 +471,7 @@ void drawControllerPakRumbleCheckPrompt(ControllerPakRumbleCheckPromptActor *act
         drawMenuGlyphScript(
             actor->common.x,
             actor->common.y,
-            gControllerPakRumbleCheckPromptText[actor->targetScale],
+            gControllerPakRumbleCheckPromptText[actor->messageIndex],
             0,
             actor->scale,
             0
@@ -569,7 +548,7 @@ void updateControllerPakRumbleCheckPrompt(ControllerPakRumbleCheckPromptActor *a
         if (1) {}
         if (1) {}
         if (1) {}
-        arg0->targetScale = gControllerPakRumbleCheckPromptTransition.targetScale;
+        arg0->messageIndex = gControllerPakRumbleCheckPromptTransition.messageIndex;
         arg0->timer = 0;
         arg0->optionScale = 0x100; state = globalState;
     }
@@ -644,7 +623,7 @@ void initControllerPakRumbleCheckPrompt(ControllerPakRumbleCheckPromptActor *arg
     arg0->state = 6;
     arg0->scale = 0;
     arg0->timer = 0;
-    arg0->targetScale = 0;
+    arg0->messageIndex = 0;
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateControllerPakRumbleCheckPrompt);
 }
 

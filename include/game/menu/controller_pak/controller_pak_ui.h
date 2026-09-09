@@ -4,6 +4,36 @@
 #include "common.h"
 #include "game/menu/renderer/menu_renderer.h"
 
+/* These linker symbols overlap: transition + 2 is the state view.
+ * confirmSelection also aliases gControllerPakRumbleCheckPromptConfirmSelection.
+ * They must never be allocated as independent objects. */
+typedef struct {
+    /* 0x00 */ s16 pad0;
+    /* 0x02 */ u8 state;
+    /* 0x03 */ u8 pad3;
+    /* 0x04 */ u16 messageIndex;
+    /* 0x06 */ u16 timer;
+    /* 0x08 */ u8 selectedOption;
+    /* 0x09 */ u8 confirmSelection;
+} ControllerPakRumbleCheckPromptTransition;
+
+typedef struct {
+    /* 0x00 */ u8 state;
+    /* 0x01 */ u8 pad1;
+    /* 0x02 */ u16 messageIndex;
+    /* 0x04 */ u16 timer;
+    /* 0x06 */ u8 selectedOption;
+    /* 0x07 */ u8 confirmSelection;
+} ControllerPakRumbleCheckPromptState;
+
+typedef char ControllerPakRumbleTransitionSizeCheck[
+    (sizeof(ControllerPakRumbleCheckPromptTransition) == 0xA) ? 1 : -1];
+typedef char ControllerPakRumbleStateSizeCheck[
+    (sizeof(ControllerPakRumbleCheckPromptState) == 8) ? 1 : -1];
+
+extern ControllerPakRumbleCheckPromptTransition gControllerPakRumbleCheckPromptTransition;
+extern ControllerPakRumbleCheckPromptState gControllerPakRumbleCheckPromptState;
+
 typedef struct {
     /* 0x00 */ char pad[0x18];
     /* 0x18 */ s16 x;
@@ -25,7 +55,7 @@ typedef struct {
     /* 0x20 */ u16 timer;
     /* 0x22 */ u8 state;
     /* 0x23 */ u8 selectedOption;
-    /* 0x24 */ u16 targetScale;
+    /* 0x24 */ u16 messageIndex;
 } ControllerPakRumbleCheckPromptActor;
 
 typedef struct {

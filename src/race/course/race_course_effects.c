@@ -311,7 +311,6 @@ RaceCourseTriggerEntry gCourseTriggerEntries[] = {
 extern s32 gMenuFlowState;
 extern u8 gCurrentViewportIndex;
 extern u8 gRaceUpdatePaused;
-extern RaceCamera D_801121E0[];
 extern Gfx *gRegionAllocPtr;
 
 void drawRaceCountdownReadyPrompt(RaceCountdownEffect *arg0) {
@@ -439,10 +438,10 @@ void renderRaceCourseBackdrop(RaceCourseModelRenderEffect *arg0) {
     volatile u8 pad[8];
 
     sp100 = gIdentityFixedTransform;
-    sp100.translation.x = -D_801121E0[gCurrentViewportIndex].cameraTransform.translation.x;
-    sp100.translation.y = -D_801121E0[gCurrentViewportIndex].cameraTransform.translation.y;
+    sp100.translation.x = -gRaceCameras[gCurrentViewportIndex].cameraTransform.translation.x;
+    sp100.translation.y = -gRaceCameras[gCurrentViewportIndex].cameraTransform.translation.y;
     matrixFlags = G_MTX_NOPUSH;
-    sp100.translation.z = -D_801121E0[gCurrentViewportIndex].cameraTransform.translation.z;
+    sp100.translation.z = -gRaceCameras[gCurrentViewportIndex].cameraTransform.translation.z;
 
     arg0->backdropMatrix = allocFixedTransformMatrix(&sp100);
     if (arg0->backdropMatrix != NULL) {

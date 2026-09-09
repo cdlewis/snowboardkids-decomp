@@ -17,22 +17,6 @@
 #include "game/menu/course_select/multiplayer_course_select_menu.h"
 #include "game/menu/main_menu/controller_main_menu_flow.h"
 
-typedef struct {
-    /* 0x0 */ s16 pad0;
-    /* 0x2 */ u8 state;
-    /* 0x3 */ u8 pad3;
-    /* 0x4 */ u16 targetScale;
-    /* 0x6 */ u16 timer;
-    /* 0x8 */ u8 selectedOption;
-    /* 0x9 */ u8 confirmSelection;
-} ControllerPakRumbleCheckPromptTransition;
-
-typedef struct {
-    /* 0x0 */ u8 state;
-    /* 0x1 */ u8 pad1;
-    /* 0x2 */ u16 targetScale;
-} ControllerPakRumbleCheckPromptState;
-
 typedef struct RaceSetupSaveDefaultTime {
     s8 minutes;
     s8 seconds;
@@ -132,7 +116,6 @@ extern u8 gConnectedControllerCount;
 extern s16 gMenuFadeAlpha;
 extern char D_800EC9E5;
 extern u8 gHighestUnlockedCourse;
-extern ControllerPakRumbleCheckPromptTransition gControllerPakRumbleCheckPromptTransition;
 extern u8 gControllerPakRumbleCheckPromptConfirmSelection;
 extern u8 gRumblePakConnectedMask;
 extern CallbackTask *D_8010ADE0;
@@ -551,7 +534,7 @@ void updateRaceSetupSaveMenu(void) {
             createCallbackTask((CallbackTaskCallback)initControllerPakRumbleCheckPrompt, 0, 0x64);
             gControllerPakRumbleCheckPromptTransition.state = 6;
             gControllerPakRumbleCheckPromptTransition.selectedOption = 0;
-            gControllerPakRumbleCheckPromptTransition.targetScale = 2;
+            gControllerPakRumbleCheckPromptTransition.messageIndex = 2;
 
             for (i = 0; i < gPlayerCount; i++) {
                 gRaceSetupMenuSubState.statusTransitionStates[i] = SAVE_STATUS_TRANSITION_DONE;
@@ -593,7 +576,7 @@ void updateRaceSetupRumblePrompt(void) {
                 state = 2;
                 enqueueSoundEffect(1, 0x32);
                 gControllerPakRumbleCheckPromptState.state = state;
-                gControllerPakRumbleCheckPromptState.targetScale = 1;
+                gControllerPakRumbleCheckPromptState.messageIndex = 1;
                 state = 2;
             }
             break;
@@ -641,10 +624,10 @@ void updateRaceSetupRumblePrompt(void) {
             }
             if (connectedCount == gPlayerCount) {
                 gControllerPakRumbleCheckPromptTransition.selectedOption = 1;
-                gControllerPakRumbleCheckPromptTransition.targetScale = 2;
+                gControllerPakRumbleCheckPromptTransition.messageIndex = 2;
             } else {
                 gControllerPakRumbleCheckPromptTransition.selectedOption = 0;
-                gControllerPakRumbleCheckPromptTransition.targetScale = 0;
+                gControllerPakRumbleCheckPromptTransition.messageIndex = 0;
             }
             state = (gControllerPakRumbleCheckPromptTransition.state = 0);
             break;
@@ -653,7 +636,7 @@ void updateRaceSetupRumblePrompt(void) {
             gControllerPakRumbleCheckPromptTransition.timer--;
             if (gControllerPakRumbleCheckPromptTransition.timer == 0) {
                 gControllerPakRumbleCheckPromptTransition.state = 8;
-                gControllerPakRumbleCheckPromptTransition.targetScale = 2;
+                gControllerPakRumbleCheckPromptTransition.messageIndex = 2;
                 state = 8;
                 state = gControllerPakRumbleCheckPromptTransition.state;
             }
@@ -664,7 +647,7 @@ void updateRaceSetupRumblePrompt(void) {
                 state = 9;
                 enqueueSoundEffect(1, 0x32);
                 gControllerPakRumbleCheckPromptState.state = state;
-                gControllerPakRumbleCheckPromptState.targetScale = 3;
+                gControllerPakRumbleCheckPromptState.messageIndex = 3;
                 gControllerPakRumbleCheckPromptConfirmSelection = 1;
                 state = 9;
             }
@@ -687,7 +670,7 @@ void updateRaceSetupRumblePrompt(void) {
                 statusIndex = 1;
                 if (gControllerPakRumbleCheckPromptConfirmSelection == one) {
                     gControllerPakRumbleCheckPromptState.state = 1;
-                    gControllerPakRumbleCheckPromptState.targetScale = (statusIndex != 1) * 0;
+                    gControllerPakRumbleCheckPromptState.messageIndex = (statusIndex != 1) * 0;
                 } else {
                     connectedCount = 0;
                     for (i = 0; i < (s32)gPlayerCount; i++) {
@@ -699,7 +682,7 @@ void updateRaceSetupRumblePrompt(void) {
                     statusIndex = 3;
                     if (connectedCount > 0) {
                         gControllerPakRumbleCheckPromptState.state = statusIndex;
-                        gControllerPakRumbleCheckPromptState.targetScale = 2;
+                        gControllerPakRumbleCheckPromptState.messageIndex = 2;
                     } else {
                         gControllerPakRumbleCheckPromptState.state = i;
                     }

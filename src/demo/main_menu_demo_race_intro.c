@@ -28,12 +28,6 @@ typedef struct {
     /* 0x0F */ u8 player3Character;
 } MainMenuDemoRaceIntroEntry;
 
-typedef struct {
-    /* 0x00 */ char pad0[0xAC];
-    /* 0xAC */ s8 active;
-    /* 0xAD */ char padAD[3];
-} RaceIntroCamera;
-
 u8 gMainMenuDemoRaceIntroIndex = 0;
 MainMenuDemoRaceIntroEntry gMainMenuDemoRaceIntroEntries[] = {
     { 9, 0, 0, 0, (void *)&_24DBE0_ROM_START, (void *)&_24DBE0_ROM_END, 0, 1, 2, 3 },
@@ -43,7 +37,6 @@ MainMenuDemoRaceIntroEntry gMainMenuDemoRaceIntroEntries[] = {
     { 3, 0, 0, 1, (void *)&_256420_ROM_START, (void *)&_256420_ROM_END, 3, 1, 4, 2 },
 };
 
-extern RaceIntroCamera D_801121E0[];
 extern s16 gMenuFadeAlpha;
 extern s16 gRaceLapCount;
 extern s16 gRacePlayerAttackStartTimer;
@@ -144,10 +137,10 @@ void initMainMenuDemoRaceIntro(void) {
         configureViewport(1, 0x57, 0xAD, 0x90U, 0x68U, 0xA0U, 0x78U, D_800E10A8);
         configureViewport(2, 0xE9, 0x43, 0x90U, 0x68U, 0xA0U, 0x78U, D_800E10AC);
         configureViewport(3, 0xE9, 0xAD, 0x90U, 0x68U, 0xA0U, 0x78U, D_800E10B0);
-        D_801121E0[0].active = 1;
-        D_801121E0[1].active = 1;
-        D_801121E0[2].active = 1;
-        D_801121E0[3].active = 1;
+        gRaceCameras[0].initialized.signedValue = 1;
+        gRaceCameras[1].initialized.signedValue = 1;
+        gRaceCameras[2].initialized.signedValue = 1;
+        gRaceCameras[3].initialized.signedValue = 1;
         if (1) {
             *((u8*)&gFramebufferRenderInterval.value) = 1;
         }

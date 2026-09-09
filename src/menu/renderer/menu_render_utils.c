@@ -48,7 +48,6 @@ typedef struct {
     s32 w8, w9, w10, w11, w12, w13, w14, w15;
 } PackedMtxWords;
 
-extern RaceCamera D_801121E0[];
 extern s16 gMenuAsciiFontPaletteIndex;
 extern s16 gMenuViewportWidth;
 extern s16 gMenuViewportHeight;
@@ -1358,8 +1357,8 @@ s32 isPositionNearAnyRaceViewportFocus(Vec3i *position) {
 
     for (i = 0; i < 4; i++) {
         if (gViewportStates[i].active != 0) {
-            diffX = D_801121E0[i].pos.x - position->x;
-            diffZ = D_801121E0[i].pos.z - position->z;
+            diffX = gRaceCameras[i].pos.x - position->x;
+            diffZ = gRaceCameras[i].pos.z - position->z;
             if ((diffX < 0x6000000) && (diffX >= (s32)0xFA000001) && (diffZ < 0x6000000) &&
                 (diffZ >= (s32)0xFA000001)) {
                 return 1;

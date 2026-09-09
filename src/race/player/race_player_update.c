@@ -5050,16 +5050,6 @@ void updateRacePlayerMode07LaunchRampDrift(RacePlayer *player) {
 }
 
 typedef struct {
-    /* 0x00 */ char pad0[0x94];
-    /* 0x94 */ s32 unk94;
-    /* 0x98 */ s32 unk98;
-    /* 0x9C */ s32 unk9C;
-    /* 0xA0 */ char padA0[0xC];
-    /* 0xAC */ s8 active;
-    /* 0xAD */ char padAD[3];
-} Unk801121E0;
-
-typedef struct {
     /* 0x00 */ u8 matrix[0x20];
     /* 0x20 */ s32 transformedX;
     /* 0x24 */ s32 transformedY;
@@ -5069,7 +5059,6 @@ typedef struct {
     /* 0x34 */ s32 sourceZ;
 } PlayerTransformScratch80095A88;
 
-extern Unk801121E0 D_801121E0[];
 
 void updateRacePlayerMode07LaunchRampClimb(RacePlayer *player) {
     PlayerTransformScratch80095A88 scratch;
@@ -5107,8 +5096,8 @@ void updateRacePlayerMode07LaunchRampClimb(RacePlayer *player) {
 
     if (player->stateTimer < 0x3C) {
         player->stateFlags |= 0x80000;
-        if (D_801121E0[(u16)player->playerIndex].active != 0) {
-            D_801121E0[(u16)player->playerIndex].active = 2;
+        if (gRaceCameras[(u16)player->playerIndex].initialized.signedValue != 0) {
+            gRaceCameras[(u16)player->playerIndex].initialized.signedValue = 2;
         }
     }
 }
@@ -5137,9 +5126,9 @@ void updateRacePlayerMode07SpiralExit(RacePlayer *player) {
         player->facingAngle = gRaceCourseStartEntries[gRaceCourseIndex.signedValue].spiralCourseObjectAngle;
         player->coursePathOffset = -projectRaceCourseSurfaceProgress(player->coursePathIndex, player->pos.x, player->pos.z);
         setRaceCameraMode(player->playerIndex, 1);
-        D_801121E0[player->playerIndex].unk94 = player->pos.x;
-        D_801121E0[player->playerIndex].unk98 = player->pos.y;
-        D_801121E0[player->playerIndex].unk9C = player->pos.z;
+        gRaceCameras[player->playerIndex].prevPos.x = player->pos.x;
+        gRaceCameras[player->playerIndex].prevPos.y = player->pos.y;
+        gRaceCameras[player->playerIndex].prevPos.z = player->pos.z;
         createCallbackTask((CallbackTaskCallback)initSpiralCourseObject, 0, 0x64);
         if (player->lapDigit >= (gRaceLapCount - 1)) {
             createCallbackTaskWithUserIdPreservingArgs(waitForRaceSetupNamePlate, 0, 0x64, player->playerIndex);
@@ -5180,8 +5169,8 @@ void updateRacePlayerMode07SpiralExit(RacePlayer *player) {
             player->pos.z += player->velocity.z * 4;
         }
 
-        if (D_801121E0[player->playerIndex].active != 0) {
-            D_801121E0[player->playerIndex].active = 1;
+        if (gRaceCameras[player->playerIndex].initialized.signedValue != 0) {
+            gRaceCameras[player->playerIndex].initialized.signedValue = 1;
         }
     }
 }
