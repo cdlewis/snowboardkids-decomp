@@ -21,22 +21,6 @@
 #include "game/race/player/race_player_input.h"
 
 typedef struct {
-    /* 0x0 */ u8 highByte;
-    /* 0x1 */ u8 courseIndex;
-} CourseSelectWidgetPlayerSlot;
-
-typedef struct {
-    /* 0x000 */ CallbackTaskHeader task;
-    /* 0x018 */ Mtx *renderMatrix;
-    /* 0x01C */ Transform3D viewTransform;
-    /* 0x03C */ Transform3D modelTransforms[4];
-    /* 0x0BC */ Vec3i modelOffsets[4];
-    /* 0x0EC */ u16 rotationAngle[4];
-    /* 0x0F4 */ CourseSelectWidgetPlayerSlot playerSlots[4];
-    /* 0x0FC */ u8 playerFlags[4];
-} CourseSelectCoursePreviewActor;
-
-typedef struct {
     u8 speed;
     u8 handling;
     u8 trick;
