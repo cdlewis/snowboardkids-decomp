@@ -1,3 +1,4 @@
+#include "game/race/items/race_items.h"
 #include "game/race/race_state.h"
 #include "common.h"
 #include "game/engine/render_callback.h"
@@ -355,7 +356,7 @@ void initRacePlayer(RacePlayer *player) {
         player->unk274 = 0xC0000;
     }
     if (gRaceSplitscreenMode == 2) {
-        player->actionEffectType = 1;
+        player->actionEffectType = RACE_ACTION_SPEED_FAN;
     }
     if (player->isCpu == 0) {
         player->unk519 = 6;
@@ -375,13 +376,13 @@ void initRacePlayer(RacePlayer *player) {
 
     if (gRaceDemoPlaybackEnabled == 1) {
         if (player->playerIndex == 0) {
-            player->itemEffectType = 3;
+            player->itemEffectType = RACE_ITEM_FREEZE_SHOT;
             player->itemEffectCount = 3;
         } else {
-            player->itemEffectType = 5;
+            player->itemEffectType = RACE_ITEM_BOMB;
             player->itemEffectCount = 3;
         }
-        player->actionEffectType = 1;
+        player->actionEffectType = RACE_ACTION_SPEED_FAN;
     }
 
     switch (gTrainingCourseLesson) {
@@ -445,49 +446,49 @@ void initRacePlayer(RacePlayer *player) {
 
     switch (gMainMenuModeSelection) {
         case 1:
-            player->itemEffectType = 1;
+            player->itemEffectType = RACE_ITEM_SLAPSTICK;
             player->itemEffectCount = 3;
             break;
         case 2:
-            player->itemEffectType = 2;
+            player->itemEffectType = RACE_ITEM_PARACHUTE;
             player->itemEffectCount = 3;
             break;
         case 3:
-            player->itemEffectType = 3;
+            player->itemEffectType = RACE_ITEM_FREEZE_SHOT;
             player->itemEffectCount = 3;
             break;
         case 4:
-            player->itemEffectType = 4;
+            player->itemEffectType = RACE_ITEM_SNOWMAN;
             player->itemEffectCount = 3;
             break;
         case 5:
-            player->itemEffectType = 5;
+            player->itemEffectType = RACE_ITEM_BOMB;
             player->itemEffectCount = 3;
             break;
         case 6:
-            player->actionEffectType = 1;
+            player->actionEffectType = RACE_ACTION_SPEED_FAN;
             break;
         case 7:
-            player->actionEffectType = 2;
+            player->actionEffectType = RACE_ACTION_GHOST;
             break;
         case 8:
-            player->actionEffectType = 3;
+            player->actionEffectType = RACE_ACTION_PAN;
             break;
         case 9:
-            player->actionEffectType = 4;
+            player->actionEffectType = RACE_ACTION_ROCK;
             break;
         case 10:
-            player->actionEffectType = 5;
+            player->actionEffectType = RACE_ACTION_RAT_FACE;
             if (player->playerIndex != 0) {
                 player->score = 0x1388;
             }
             break;
         case 11:
-            player->actionEffectType = 6;
+            player->actionEffectType = RACE_ACTION_INVISIBLE;
             if (player->playerIndex == 2) {
-                player->actionEffectType = 3;
+                player->actionEffectType = RACE_ACTION_PAN;
             }
-            player->itemEffectType = 1;
+            player->itemEffectType = RACE_ITEM_SLAPSTICK;
             player->itemEffectCount = 3;
             break;
     }

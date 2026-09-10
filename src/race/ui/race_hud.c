@@ -1,3 +1,4 @@
+#include "game/race/items/race_items.h"
 #include "game/race/race_state.h"
 #include "common.h"
 #include <PR/os_libc.h>
@@ -611,7 +612,7 @@ void drawTimeTrialHud(void *arg0) {
     drawAssetTableSprite(0x58, 0x50, getRelocatableHeapBlockBase(RACE_HUD_POPUP_FONT_HANDLE), 0x36);
     drawAssetTableSprite(0x70, 0x50, getRelocatableHeapBlockBase(RACE_HUD_POPUP_FONT_HANDLE), 0x35);
 
-    if (gRacePlayers[0].actionEffectType != 0) {
+    if (gRacePlayers[0].actionEffectType != RACE_ACTION_NONE) {
         drawAssetTableSprite(
             -0x10,
             -0x60,
