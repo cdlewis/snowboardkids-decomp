@@ -120,6 +120,22 @@ typedef struct CourseSelectExtraCourseIconListActor {
     /* 0x68 */ u16 tileIndices[4][3];
 } CourseSelectExtraCourseIconListActor;
 
+typedef struct {
+    /* 0x0 */ u8 highByte;
+    /* 0x1 */ u8 courseIndex;
+} CourseSelectWidgetPlayerSlot;
+
+typedef struct {
+    /* 0x000 */ CallbackTaskHeader task;
+    /* 0x018 */ Mtx *renderMatrix;
+    /* 0x01C */ Transform3D viewTransform;
+    /* 0x03C */ Transform3D modelTransforms[4];
+    /* 0x0BC */ Vec3i modelOffsets[4];
+    /* 0x0EC */ u16 rotationAngle[4];
+    /* 0x0F4 */ CourseSelectWidgetPlayerSlot playerSlots[4];
+    /* 0x0FC */ u8 playerFlags[4];
+} CourseSelectCoursePreviewActor;
+
 typedef struct CourseSelectAnimatedActor {
     /* 0x000 */ CallbackTaskHeader task;
     /* 0x018 */ Mtx *renderMatrix;
@@ -138,6 +154,8 @@ extern CourseModeDescriptionText gCourseSelectModeDescriptionText[7];
 extern CoursePurchaseMessageText gCourseSelectPurchaseMessageText[2];
 extern MenuGlyphScript gCourseSelectBoardLevelText[];
 
+void drawCourseSelectPreviewModel(CourseSelectCoursePreviewActor *arg0);
+void drawCourseSelectPreviewModelClose(CourseSelectCoursePreviewActor *arg0);
 void updateCourseSelectPreviewModelIn(CourseSelectAnimatedActor *arg0);
 void initCourseSelectPreviewModelIn(void *arg0);
 void updateCourseSelectPreviewModelOut(CourseSelectAnimatedActor *arg0);
