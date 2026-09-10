@@ -1,3 +1,4 @@
+#include "game/race/items/race_items.h"
 #include "game/race/race_state.h"
 #include "common.h"
 #include "game/audio/sound_manager.h"
@@ -573,17 +574,57 @@ Vtx gRacePickupTopVertices[] = {
 };
 
 u8 gItemEffectRollTable[][0x10] = {
-    { 0x04, 0x04, 0x04, 0x04, 0x05, 0x05, 0x05, 0x05, 0x05, 0x05, 0x05, 0x05, 0x05, 0x03, 0x01, 0x02 },
-    { 0x04, 0x04, 0x05, 0x05, 0x03, 0x03, 0x03, 0x03, 0x01, 0x01, 0x01, 0x01, 0x02, 0x02, 0x02, 0x02 },
-    { 0x04, 0x05, 0x03, 0x03, 0x03, 0x03, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x02, 0x02, 0x02, 0x02 },
-    { 0x04, 0x03, 0x03, 0x03, 0x03, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x02, 0x02, 0x02 },
+    {
+        RACE_ITEM_SNOWMAN, RACE_ITEM_SNOWMAN, RACE_ITEM_SNOWMAN, RACE_ITEM_SNOWMAN,
+        RACE_ITEM_BOMB, RACE_ITEM_BOMB, RACE_ITEM_BOMB, RACE_ITEM_BOMB,
+        RACE_ITEM_BOMB, RACE_ITEM_BOMB, RACE_ITEM_BOMB, RACE_ITEM_BOMB,
+        RACE_ITEM_BOMB, RACE_ITEM_FREEZE_SHOT, RACE_ITEM_SLAPSTICK, RACE_ITEM_PARACHUTE,
+    },
+    {
+        RACE_ITEM_SNOWMAN, RACE_ITEM_SNOWMAN, RACE_ITEM_BOMB, RACE_ITEM_BOMB,
+        RACE_ITEM_FREEZE_SHOT, RACE_ITEM_FREEZE_SHOT, RACE_ITEM_FREEZE_SHOT, RACE_ITEM_FREEZE_SHOT,
+        RACE_ITEM_SLAPSTICK, RACE_ITEM_SLAPSTICK, RACE_ITEM_SLAPSTICK, RACE_ITEM_SLAPSTICK,
+        RACE_ITEM_PARACHUTE, RACE_ITEM_PARACHUTE, RACE_ITEM_PARACHUTE, RACE_ITEM_PARACHUTE,
+    },
+    {
+        RACE_ITEM_SNOWMAN, RACE_ITEM_BOMB, RACE_ITEM_FREEZE_SHOT, RACE_ITEM_FREEZE_SHOT,
+        RACE_ITEM_FREEZE_SHOT, RACE_ITEM_FREEZE_SHOT, RACE_ITEM_SLAPSTICK, RACE_ITEM_SLAPSTICK,
+        RACE_ITEM_SLAPSTICK, RACE_ITEM_SLAPSTICK, RACE_ITEM_SLAPSTICK, RACE_ITEM_SLAPSTICK,
+        RACE_ITEM_PARACHUTE, RACE_ITEM_PARACHUTE, RACE_ITEM_PARACHUTE, RACE_ITEM_PARACHUTE,
+    },
+    {
+        RACE_ITEM_SNOWMAN, RACE_ITEM_FREEZE_SHOT, RACE_ITEM_FREEZE_SHOT, RACE_ITEM_FREEZE_SHOT,
+        RACE_ITEM_FREEZE_SHOT, RACE_ITEM_SLAPSTICK, RACE_ITEM_SLAPSTICK, RACE_ITEM_SLAPSTICK,
+        RACE_ITEM_SLAPSTICK, RACE_ITEM_SLAPSTICK, RACE_ITEM_SLAPSTICK, RACE_ITEM_SLAPSTICK,
+        RACE_ITEM_SLAPSTICK, RACE_ITEM_PARACHUTE, RACE_ITEM_PARACHUTE, RACE_ITEM_PARACHUTE,
+    },
 };
 
 u8 gActionEffectRollTable[][0x10] = {
-    { 0x04, 0x04, 0x04, 0x04, 0x04, 0x04, 0x04, 0x04, 0x04, 0x04, 0x04, 0x06, 0x06, 0x06, 0x02, 0x01 },
-    { 0x04, 0x04, 0x04, 0x02, 0x06, 0x06, 0x06, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x01, 0x01 },
-    { 0x04, 0x06, 0x01, 0x02, 0x02, 0x02, 0x02, 0x02, 0x06, 0x01, 0x01, 0x03, 0x03, 0x03, 0x03, 0x03 },
-    { 0x06, 0x02, 0x02, 0x02, 0x01, 0x01, 0x01, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x05 },
+    {
+        RACE_ACTION_ROCK, RACE_ACTION_ROCK, RACE_ACTION_ROCK, RACE_ACTION_ROCK,
+        RACE_ACTION_ROCK, RACE_ACTION_ROCK, RACE_ACTION_ROCK, RACE_ACTION_ROCK,
+        RACE_ACTION_ROCK, RACE_ACTION_ROCK, RACE_ACTION_ROCK, RACE_ACTION_INVISIBLE,
+        RACE_ACTION_INVISIBLE, RACE_ACTION_INVISIBLE, RACE_ACTION_GHOST, RACE_ACTION_SPEED_FAN,
+    },
+    {
+        RACE_ACTION_ROCK, RACE_ACTION_ROCK, RACE_ACTION_ROCK, RACE_ACTION_GHOST,
+        RACE_ACTION_INVISIBLE, RACE_ACTION_INVISIBLE, RACE_ACTION_INVISIBLE, RACE_ACTION_GHOST,
+        RACE_ACTION_GHOST, RACE_ACTION_GHOST, RACE_ACTION_GHOST, RACE_ACTION_GHOST,
+        RACE_ACTION_GHOST, RACE_ACTION_GHOST, RACE_ACTION_SPEED_FAN, RACE_ACTION_SPEED_FAN,
+    },
+    {
+        RACE_ACTION_ROCK, RACE_ACTION_INVISIBLE, RACE_ACTION_SPEED_FAN, RACE_ACTION_GHOST,
+        RACE_ACTION_GHOST, RACE_ACTION_GHOST, RACE_ACTION_GHOST, RACE_ACTION_GHOST,
+        RACE_ACTION_INVISIBLE, RACE_ACTION_SPEED_FAN, RACE_ACTION_SPEED_FAN, RACE_ACTION_PAN,
+        RACE_ACTION_PAN, RACE_ACTION_PAN, RACE_ACTION_PAN, RACE_ACTION_PAN,
+    },
+    {
+        RACE_ACTION_INVISIBLE, RACE_ACTION_GHOST, RACE_ACTION_GHOST, RACE_ACTION_GHOST,
+        RACE_ACTION_SPEED_FAN, RACE_ACTION_SPEED_FAN, RACE_ACTION_SPEED_FAN, RACE_ACTION_PAN,
+        RACE_ACTION_PAN, RACE_ACTION_PAN, RACE_ACTION_PAN, RACE_ACTION_PAN,
+        RACE_ACTION_PAN, RACE_ACTION_PAN, RACE_ACTION_PAN, RACE_ACTION_RAT_FACE,
+    },
 };
 
 PickupSpawnEntry gRacePickupSpawnEntries[] = {
@@ -1492,7 +1533,7 @@ void updateRacePickupIdle(RacePickupActor *arg0) {
                 player->itemEffectType =
                     gItemEffectRollTable[player->rankIndex][randomNextObject(player) & 0xF];
                 if (gTrainingCourseLesson != 0) {
-                    player->itemEffectType = 1;
+                    player->itemEffectType = RACE_ITEM_SLAPSTICK;
                 }
                 player->itemEffectCount = 3;
                 player->itemEffectPalette = 4;
@@ -1500,14 +1541,13 @@ void updateRacePickupIdle(RacePickupActor *arg0) {
                 player->actionEffectType =
                     gActionEffectRollTable[player->rankIndex][randomNextObject(player) & 0xF];
                 if (gTrainingCourseLesson != 0) {
-                    player->actionEffectType = 1;
+                    player->actionEffectType = RACE_ACTION_SPEED_FAN;
                 }
                 // Course index 8 special case, CPU opponents only. When a CPU's action roll
-                // lands on the common tier-4 result, there is a 255/256 chance to upgrade it
-                // to the rarer tier 6.
-                if ((gRaceCourseIndex.signedValue == 8) && (player->isCpu != 0) && (player->actionEffectType == 4)) {
+                // lands on rock, there is a 255/256 chance to replace it with invisibility.
+                if ((gRaceCourseIndex.signedValue == 8) && (player->isCpu != 0) && (player->actionEffectType == RACE_ACTION_ROCK)) {
                     if (randomNextMain() != 0) {
-                        player->actionEffectType = 6;
+                        player->actionEffectType = RACE_ACTION_INVISIBLE;
                     }
                 }
                 player->actionEffectPalette = 4;

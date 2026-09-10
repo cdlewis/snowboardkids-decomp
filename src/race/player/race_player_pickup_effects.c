@@ -1,3 +1,4 @@
+#include "game/race/items/race_items.h"
 #include "common.h"
 #include "game/engine/callback_task_scheduler.h"
 #include "game/engine/asset_manager.h"
@@ -63,7 +64,7 @@ void updateRacePlayerItemEffectUse(RacePlayer *player) {
 
     if (trigger != 0) {
         if (player->itemEffectCount != 0) {
-            if (player->itemEffectType == 1) {
+            if (player->itemEffectType == RACE_ITEM_SLAPSTICK) {
                 if (createCallbackTaskWithUserIdPreservingArgs(
                         initWideHomingItemProjectile,
                         (u16)(player->playerIndex + 1),
@@ -74,7 +75,7 @@ void updateRacePlayerItemEffectUse(RacePlayer *player) {
                     player->itemEffectCount--;
                 }
             }
-            if (player->itemEffectType == 2) {
+            if (player->itemEffectType == RACE_ITEM_PARACHUTE) {
                 if (createCallbackTaskWithUserIdPreservingArgs(
                         initLongRangeHomingItemProjectile,
                         (u16)(player->playerIndex + 1),
@@ -85,7 +86,7 @@ void updateRacePlayerItemEffectUse(RacePlayer *player) {
                     player->itemEffectCount--;
                 }
             }
-            if (player->itemEffectType == 3) {
+            if (player->itemEffectType == RACE_ITEM_FREEZE_SHOT) {
                 if (createCallbackTaskWithUserIdPreservingArgs(
                         initCloseRangeHomingItemProjectile,
                         (u16)(player->playerIndex + 1),
@@ -96,7 +97,7 @@ void updateRacePlayerItemEffectUse(RacePlayer *player) {
                     player->itemEffectCount--;
                 }
             }
-            if (player->itemEffectType == 4) {
+            if (player->itemEffectType == RACE_ITEM_SNOWMAN) {
                 if (createCallbackTaskWithUserIdPreservingArgs(
                         initBouncingItemProjectile,
                         (u16)(player->playerIndex + 1),
@@ -107,7 +108,7 @@ void updateRacePlayerItemEffectUse(RacePlayer *player) {
                     player->itemEffectCount--;
                 }
             }
-            if (player->itemEffectType == 5) {
+            if (player->itemEffectType == RACE_ITEM_BOMB) {
                 if (createCallbackTaskWithUserIdPreservingArgs(
                         initAreaBlastItemProjectile,
                         (u16)(player->playerIndex + 1),
@@ -119,7 +120,7 @@ void updateRacePlayerItemEffectUse(RacePlayer *player) {
                 }
             }
             if (player->itemEffectCount == 0) {
-                player->itemEffectType = 0;
+                player->itemEffectType = RACE_ITEM_NONE;
             }
         }
 
@@ -156,7 +157,7 @@ void updateRacePlayerActionEffectUse(RacePlayer *player) {
             player->actionTriggerCooldown--;
         }
 
-        if (player->actionEffectType == 6) {
+        if (player->actionEffectType == RACE_ACTION_INVISIBLE) {
             trigger = 0;
             if (player->itemTargetFlag != 0) {
                 trigger = 1;
@@ -168,37 +169,37 @@ void updateRacePlayerActionEffectUse(RacePlayer *player) {
 
     if (trigger != 0) {
         type = player->actionEffectType;
-        if (type != 0) {
-            if ((type == 1) && (player->trailEffectTimer == 0)) {
+        if (type != RACE_ACTION_NONE) {
+            if ((type == RACE_ACTION_SPEED_FAN) && (player->trailEffectTimer == 0)) {
                 startSnowboardTrailEffect(player);
-                player->actionEffectType = 0;
+                player->actionEffectType = RACE_ACTION_NONE;
                 type = player->actionEffectType;
             }
 
-            if (type == 2) {
+            if (type == RACE_ACTION_GHOST) {
                 spawnRacePlayerSparkleEffect(player->playerIndex);
-                player->actionEffectType = 0;
+                player->actionEffectType = RACE_ACTION_NONE;
                 type = player->actionEffectType;
             }
 
-            if (type == 3) {
+            if (type == RACE_ACTION_PAN) {
                 spawnGhostSlowdownTargets(player->playerIndex);
-                player->actionEffectType = 0;
+                player->actionEffectType = RACE_ACTION_NONE;
                 type = player->actionEffectType;
             }
 
-            if (type == 4) {
+            if (type == RACE_ACTION_ROCK) {
                 createCallbackTaskWithUserIdPreservingArgs(
                     initFallingActionProjectile,
                     0,
                     0x3C,
                     (u16)player->playerIndex
                 );
-                player->actionEffectType = 0;
+                player->actionEffectType = RACE_ACTION_NONE;
                 type = player->actionEffectType;
             }
 
-            if (type == 5) {
+            if (type == RACE_ACTION_RAT_FACE) {
                 if (player->isCpu == 0) {
                     createCallbackTaskWithUserIdPreservingArgs(
                         initForwardActionProjectileEffect,
@@ -207,13 +208,13 @@ void updateRacePlayerActionEffectUse(RacePlayer *player) {
                         (u16)player->playerIndex
                     );
                 }
-                player->actionEffectType = 0;
+                player->actionEffectType = RACE_ACTION_NONE;
                 type = player->actionEffectType;
             }
 
-            if ((type == 6) && (player->actionSoundTimer == 0)) {
+            if ((type == RACE_ACTION_INVISIBLE) && (player->actionSoundTimer == 0)) {
                 player->actionSoundTimer = 0xB4;
-                player->actionEffectType = 0;
+                player->actionEffectType = RACE_ACTION_NONE;
                 enqueuePositionalSoundEffect(0x10, &player->pos, 0x7F, 0x32);
             }
         }
