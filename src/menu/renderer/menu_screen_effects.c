@@ -1,3 +1,4 @@
+#include "game/race/ui/race_ui_effects.h"
 #include "game/race/race_state.h"
 #include "common.h"
 #include "game/audio/sound_manager.h"
@@ -41,9 +42,9 @@ s16 raceSetupCharacterFocusSoundIds[6] = {
     0x26, 0x2B, 0x39, 0x31, 0x3E, 0,
 };
 
-u8 raceSetupOpponentFocusAnimationIds[4] = { 3, 4, 3, 4 };
+u8 passAwardOpponentAnimationIds[4] = { 3, 4, 3, 4 };
 
-s32 raceSetupOpponentFocusXPositions[6] = {
+s32 passAwardOpponentXPositions[6] = {
     0x05000000, 0xFFA00000, 0xFFE00000, 0x00200000, 0x00600000, 0,
 };
 
@@ -64,18 +65,18 @@ s16 courseRecordDigitTileOffsets[10] = {
     0, 0, 3, 6, 0, 0, 6, 0, 0, 0,
 };
 
-Vtx mainMenuModeBoardTransitionVertices[4] = {
+Vtx congratulationsBannerModelVertices[4] = {
     { { { -108, 8, 0 }, 0, { 0, 0 }, { 0xFF, 0xFF, 0xFF, 0xFF } } },
     { { { 107, 8, 0 }, 0, { 6912, 0 }, { 0xFF, 0xFF, 0xFF, 0xFF } } },
     { { { 107, -7, 0 }, 0, { 6912, 512 }, { 0xFF, 0xFF, 0xFF, 0xFF } } },
     { { { -108, -7, 0 }, 0, { 0, 512 }, { 0xFF, 0xFF, 0xFF, 0xFF } } },
 };
 
-s16 mainMenuModeIconFlashTileOffsets[10] = {
+s16 congratulationsBannerSpriteTileOffsets[10] = {
     0, 1, 2, 3, 4, 5, 6, 7, 8, 1,
 };
 
-s16 mainMenuModeLabelFlashTileOffsets[538] = {
+s16 passAwardLabelFlashTileOffsets[538] = {
     0x000A, 0x000B, 0x000C, 0x000B, 0x000D, 0x000E, 0x000F, 0x000E, 0x0010, 0x0011, 0x0012, 0x0011, 0x0000, 0x0000,
     0x0000, 0x0000, 0x0000, 0x0000, 0xFF97, 0x00D1, 0x0000, 0x0000, 0xFFF0, 0xFFF0, 0xE4E4, 0xE4FF, 0x0069, 0x00D1,
     0x0000, 0x0000, 0x05F0, 0xFFF0, 0xE4E4, 0xE4FF, 0x0069, 0xFFFF, 0x0000, 0x0000, 0x05F0, 0x05F0, 0xE4E4, 0xE4FF,
@@ -116,7 +117,6 @@ s16 mainMenuModeLabelFlashTileOffsets[538] = {
     0xF4E3, 0x7F05, 0xD688, 0x7A09, 0x0100, 0x0000, 0xF52D, 0x87B9, 0xF4A4, 0xA1ED, 0xD7C9, 0xCCB7, 0xFF00, 0x0000,
     0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
 };
-extern u32 gAlphaSpriteRenderModeDl[];
 extern s16 gMenuFadeAlpha;
 extern s16 gFrameCounter;
 extern u8 gCurrentViewportIndex;
@@ -128,10 +128,10 @@ extern u32 D_2000E48[];
 extern u32 D_2000E70[];
 extern u32 D_20058A8[];
 
-void drawRaceSetupBackdropModels(MenuScreenEffectActor *);
-void drawRaceSetupCourseBackdrop(void *);
-void renderRaceSetupBackdrop(MenuScreenEffectActor *);
-void stopRaceSetupCharacterFocus(MenuScreenEffectActor *);
+void drawPassAwardPodiumModels(MenuScreenEffectActor *);
+void drawPassAwardCourseBackdrop(void *);
+void renderPassAwardPodium(MenuScreenEffectActor *);
+void stopPassAwardWinner(MenuScreenEffectActor *);
 void drawTitleScreenStartPrompt(MenuScreenEffectActor *);
 void drawRaceStartPlayerEffectSprite(MenuScreenEffectActor *);
 void updateRaceStartPlayerEffectActive(MenuScreenEffectActor *);
@@ -143,11 +143,11 @@ void drawRaceSetupNamePlate(MenuScreenEffectActor *);
 void updateRaceSetupNamePlateSlideOut(MenuScreenEffectActor *);
 void holdRaceSetupNamePlate(MenuScreenEffectActor *);
 void updateRaceSetupNamePlateSlideIn(MenuScreenEffectActor *);
-void drawMainMenuModeBoardTransition(MenuScreenEffectActor *);
-void updateMainMenuModeBoardTransition(MenuScreenEffectActor *);
-void updateMainMenuModeIconFlash(MenuScreenEffectActor *);
-void drawMainMenuModeLabel(MenuScreenEffectActor *);
-void updateMainMenuModeLabelFadeIn(MenuScreenEffectActor *);
+void drawCongratulationsBannerModel(MenuScreenEffectActor *);
+void updateCongratulationsBannerModel(MenuScreenEffectActor *);
+void updateCongratulationsBannerSprite(MenuScreenEffectActor *);
+void drawPassAwardLabel(MenuScreenEffectActor *);
+void updatePassAwardLabelFadeIn(MenuScreenEffectActor *);
 void drawMainMenuRotatingBoardModel(MenuScreenEffectActor *);
 void drawMainMenuStaticBoardModel(void *);
 
@@ -274,7 +274,7 @@ void initFallingMenuSnowflake(MenuScreenEffectActor *arg0) {
     }
 }
 
-void drawRaceSetupBackdropModels(MenuScreenEffectActor *arg0) {
+void drawPassAwardPodiumModels(MenuScreenEffectActor *arg0) {
     register MenuScreenEffectActor *actor = arg0;
 
     if (gCurrentViewportIndex == 0) {
@@ -297,8 +297,8 @@ void drawRaceSetupBackdropModels(MenuScreenEffectActor *arg0) {
     }
 }
 
-// drawRaceSetupCourseBackdrop best match: 99.677% at nonmatchings/drawRaceSetupCourseBackdrop-2/output-20-1/source.c
-void drawRaceSetupCourseBackdrop(void *arg0) {
+// drawPassAwardCourseBackdrop best match: 99.677% at nonmatchings/drawPassAwardCourseBackdrop-2/output-20-1/source.c
+void drawPassAwardCourseBackdrop(void *arg0) {
     if (gCurrentViewportIndex == 0) {
         gDPPipeSync(gRegionAllocPtr++);
 
@@ -311,45 +311,45 @@ void drawRaceSetupCourseBackdrop(void *arg0) {
     }
 }
 
-void renderRaceSetupBackdrop(MenuScreenEffectActor *arg0) {
-    addRenderCallback(&gBackdropRenderCallbackList, (RenderCallback)drawRaceSetupCourseBackdrop, arg0);
-    addRenderCallback(&gRaceObjectRenderCallbackList, (RenderCallback)drawRaceSetupBackdropModels, arg0);
+void renderPassAwardPodium(MenuScreenEffectActor *arg0) {
+    addRenderCallback(&gBackdropRenderCallbackList, (RenderCallback)drawPassAwardCourseBackdrop, arg0);
+    addRenderCallback(&gRaceObjectRenderCallbackList, (RenderCallback)drawPassAwardPodiumModels, arg0);
 }
 
-void initRaceSetupBackdrop(MenuScreenEffectActor *arg0) {
-    setCallbackTaskCallback(arg0, (CallbackTaskCallback)renderRaceSetupBackdrop);
+void initPassAwardPodium(MenuScreenEffectActor *arg0) {
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)renderPassAwardPodium);
 }
 
-void stopRaceSetupCharacterFocus(MenuScreenEffectActor *arg0) {
+void stopPassAwardWinner(MenuScreenEffectActor *arg0) {
     loopMainMenuSceneModelAnimation(0);
     addMainMenuSceneModelDrawCallbackForViewport0(0);
 }
 
-void updateRaceSetupCharacterFocus(MenuScreenEffectActor *arg0) {
+void updatePassAwardWinner(MenuScreenEffectActor *arg0) {
     if (gMenuFadeAlpha == 0) {
         if (arg0->unk18.byte.b0 != 0) {
             enqueueSoundEffect(raceSetupCharacterFocusSoundIds[arg0->index], 0x32);
             arg0->unk18.byte.b0 = 0;
         }
         loopMainMenuSceneModelAnimation(0);
-        setCallbackTaskCallback(arg0, (CallbackTaskCallback)stopRaceSetupCharacterFocus);
+        setCallbackTaskCallback(arg0, (CallbackTaskCallback)stopPassAwardWinner);
         addMainMenuSceneModelDrawCallbackForViewport0(0);
         return;
     }
     addMainMenuSceneModelDrawCallback(0);
 }
 
-void initRaceSetupCharacterFocus(MenuScreenEffectActor *arg0) {
+void initPassAwardWinner(MenuScreenEffectActor *arg0) {
     arg0->unk18.byte.b0 = 1;
     initMainMenuSceneModel(0, arg0->index);
     setMainMenuSceneModelAnimation(0, raceSetupCharacterFocusAnimationIds[arg0->index]);
     loopMainMenuSceneModelAnimation(0);
     setMainMenuSceneModelPosition(0, 0, 0, 0);
     setMainMenuSceneModelRotation(0, 0, 0, 0);
-    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceSetupCharacterFocus);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updatePassAwardWinner);
 }
 
-void updateRaceSetupOpponentFocus(MenuScreenEffectActor *arg0) {
+void updatePassAwardOpponent(MenuScreenEffectActor *arg0) {
     s16 temp = arg0->unk1C.half.hi;
 
     if (temp == 0) {
@@ -360,23 +360,23 @@ void updateRaceSetupOpponentFocus(MenuScreenEffectActor *arg0) {
     addMainMenuSceneModelDrawCallbackForViewport(arg0->unk18.word, 1);
 }
 
-void initRaceSetupOpponentFocus(MenuScreenEffectActor *arg0) {
+void initPassAwardOpponent(MenuScreenEffectActor *arg0) {
     s32 a = arg0->unk18.word;
     arg0->unk1C.half.hi = a * 0xF;
     initMainMenuSceneModel(a, arg0->index);
-    setMainMenuSceneModelAnimation(arg0->unk18.word, raceSetupOpponentFocusAnimationIds[arg0->index]);
+    setMainMenuSceneModelAnimation(arg0->unk18.word, passAwardOpponentAnimationIds[arg0->index]);
     loopMainMenuSceneModelAnimation(arg0->unk18.word);
     {
         s32 b = arg0->unk18.word;
-        setMainMenuSceneModelPosition(b, raceSetupOpponentFocusXPositions[b], 0xFFB50000, 0xA00000);
+        setMainMenuSceneModelPosition(b, passAwardOpponentXPositions[b], 0xFFB50000, 0xA00000);
     }
     setMainMenuSceneModelRotation(arg0->unk18.word, 0, 0x800, 0);
-    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceSetupOpponentFocus);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updatePassAwardOpponent);
 }
 
-void createRaceSetupOpponentFocus(s32 arg0, s32 arg1) {
+void createPassAwardOpponent(s32 arg0, s32 arg1) {
     MenuScreenEffectActor *p =
-        createCallbackTaskWithUserId((CallbackTaskCallback)initRaceSetupOpponentFocus, 0, 0x64, arg1);
+        createCallbackTaskWithUserId((CallbackTaskCallback)initPassAwardOpponent, 0, 0x64, arg1);
     if (p != NULL) {
         p->unk18.word = arg0;
     }
@@ -613,7 +613,9 @@ void waitForRaceSetupNamePlate(MenuScreenEffectActor *arg0) {
     removeCallbackTask(arg0);
 }
 
-void drawMainMenuModeBoardTransition(MenuScreenEffectActor *arg0) {
+/* Viewport 2 CONGRATULATIONS: rotating model and fading afterimages, then
+ * updateCongratulationsBannerModel replaces it with the sprite actor. */
+void drawCongratulationsBannerModel(MenuScreenEffectActor *arg0) {
     void *image;
     void *palette;
     Transform3D transform;
@@ -644,64 +646,65 @@ void drawMainMenuModeBoardTransition(MenuScreenEffectActor *arg0) {
             MAIN_MENU_GFX_CMD(gRegionAllocPtr++, 0xE7000000, 0);
             MAIN_MENU_GFX_CMD(gRegionAllocPtr++, 0x01020040, (u32)matrix);
             MAIN_MENU_GFX_CMD(gRegionAllocPtr++, 0x01000040, (u32)gViewportMatrix);
-            MAIN_MENU_GFX_CMD(gRegionAllocPtr++, 0x0400103F, (u32)mainMenuModeBoardTransitionVertices);
+            MAIN_MENU_GFX_CMD(gRegionAllocPtr++, 0x0400103F, (u32)congratulationsBannerModelVertices);
             MAIN_MENU_GFX_CMD(gRegionAllocPtr++, 0xB1060402, 0x00060200);
         }
     }
 }
 
-void updateMainMenuModeBoardAfterimage(MenuScreenEffectActor *arg0) {
+void updateCongratulationsBannerAfterimage(MenuScreenEffectActor *arg0) {
     arg0->alpha -= 0x20;
     if (arg0->alpha == 0) {
         removeCallbackTask(arg0);
         return;
     }
-    addRenderCallback(&gEffectRenderCallbackList, (RenderCallback)drawMainMenuModeBoardTransition, (void *)arg0);
+    addRenderCallback(&gEffectRenderCallbackList, (RenderCallback)drawCongratulationsBannerModel, (void *)arg0);
 }
 
-void updateMainMenuModeBoardTransition(MenuScreenEffectActor *arg0) {
+void updateCongratulationsBannerModel(MenuScreenEffectActor *arg0) {
     MenuScreenEffectActor *actor;
 
     arg0->unk1C.word = ((-0x400000LL * fixedSine((s16)(arg0->unk30.word + 0x400))) / 0x1000) + 0x700000;
     arg0->unk20.word = ((-0x9F0000LL * arg0->unk30.word) / 0x400) + 0xEC0000;
     arg0->spriteIndex = (0x5000LL * fixedSine(arg0->unk30.half.lo)) / 0x1000;
     if (arg0->unk30.word < 0x3F0) {
-        actor = createCallbackTask((CallbackTaskCallback)updateMainMenuModeBoardAfterimage, 0, 0x65);
+        actor = createCallbackTask((CallbackTaskCallback)updateCongratulationsBannerAfterimage, 0, 0x65);
         *(OverlayActorTransform *)&actor->unk18 = *(OverlayActorTransform *)&arg0->unk18;
         actor->spriteIndex = arg0->spriteIndex;
         actor->alpha = 0xC0;
         arg0->unk30.word += 0x10;
     } else {
-        createCallbackTask((CallbackTaskCallback)updateMainMenuModeIconFlash, 0, 0x63);
+        createCallbackTask((CallbackTaskCallback)updateCongratulationsBannerSprite, 0, 0x63);
         removeCallbackTask(arg0);
         return;
     }
-    addRenderCallback(&gEffectRenderCallbackList, (RenderCallback)drawMainMenuModeBoardTransition, (void *)arg0);
+    addRenderCallback(&gEffectRenderCallbackList, (RenderCallback)drawCongratulationsBannerModel, (void *)arg0);
 }
 
-void initMainMenuModeBoardTransition(MenuScreenEffectActor *arg0) {
+void initCongratulationsBannerModel(MenuScreenEffectActor *arg0) {
     arg0->alpha = 0xFF;
     arg0->unk30.word = 0;
     arg0->unk18.word = 0;
     arg0->unk1C.word = 0x300000;
     arg0->unk20.word = 0xEC0000;
     arg0->spriteIndex = 0;
-    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateMainMenuModeBoardTransition);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateCongratulationsBannerModel);
 }
 
-void drawMainMenuModeIconFlash(MenuScreenEffectActor *arg0) {
+/* Same banner asset (handle 34, entry 0), now a rectangle at (-108, -72). */
+void drawCongratulationsBannerSprite(MenuScreenEffectActor *arg0) {
     if (gCurrentViewportIndex == 2) {
         drawAssetTableSpriteWithExplicitPalette(
             -0x6C,
             -0x48,
             getRelocatableHeapBlockBase(gAssetHandles[34]),
             0,
-            mainMenuModeIconFlashTileOffsets[arg0->unk18.half.lo]
+            congratulationsBannerSpriteTileOffsets[arg0->unk18.half.lo]
         );
     }
 }
 
-void updateMainMenuModeIconFlash(MenuScreenEffectActor *arg0) {
+void updateCongratulationsBannerSprite(MenuScreenEffectActor *arg0) {
     s16 v;
     arg0->unk18.half.hi += 1;
     v = arg0->unk18.half.hi;
@@ -714,10 +717,10 @@ void updateMainMenuModeIconFlash(MenuScreenEffectActor *arg0) {
     } else {
         arg0->unk18.half.lo = 0;
     }
-    addRenderCallback(&gRaceOverlayRenderCallbackList, (RenderCallback)drawMainMenuModeIconFlash, arg0);
+    addRenderCallback(&gRaceOverlayRenderCallbackList, (RenderCallback)drawCongratulationsBannerSprite, arg0);
 }
 
-void drawMainMenuModeLabel(MenuScreenEffectActor *arg0) {
+void drawPassAwardLabel(MenuScreenEffectActor *arg0) {
     gDPPipeSync(gRegionAllocPtr++);
     gDPSetCombineMode(gRegionAllocPtr++, G_CC_MODULATEIA_PRIM, G_CC_MODULATEIA_PRIM);
     gDPSetRenderMode(gRegionAllocPtr++, G_RM_XLU_SURF, G_RM_XLU_SURF2);
@@ -731,7 +734,7 @@ void drawMainMenuModeLabel(MenuScreenEffectActor *arg0) {
                 0x38,
                 getRelocatableHeapBlockBase(gAssetHandles[34]),
                 2,
-                mainMenuModeLabelFlashTileOffsets[gFrameCounter & 3]
+                passAwardLabelFlashTileOffsets[gFrameCounter & 3]
             );
             break;
         case 1:
@@ -741,7 +744,7 @@ void drawMainMenuModeLabel(MenuScreenEffectActor *arg0) {
                 0x38,
                 getRelocatableHeapBlockBase(gAssetHandles[34]),
                 3,
-                mainMenuModeLabelFlashTileOffsets[gFrameCounter & 3]
+                passAwardLabelFlashTileOffsets[gFrameCounter & 3]
             );
             break;
         case 2:
@@ -751,7 +754,7 @@ void drawMainMenuModeLabel(MenuScreenEffectActor *arg0) {
                 0x38,
                 getRelocatableHeapBlockBase(gAssetHandles[34]),
                 4,
-                mainMenuModeLabelFlashTileOffsets[gFrameCounter & 3]
+                passAwardLabelFlashTileOffsets[gFrameCounter & 3]
             );
             break;
     }
@@ -759,7 +762,7 @@ void drawMainMenuModeLabel(MenuScreenEffectActor *arg0) {
     gSPDisplayList(gRegionAllocPtr++, gMenuRenderModeResetDl);
 }
 
-void updateMainMenuModeLabelFadeIn(MenuScreenEffectActor *arg0) {
+void updatePassAwardLabelFadeIn(MenuScreenEffectActor *arg0) {
     s16 v = arg0->unk18.half.hi;
     if (v != 0) {
         arg0->unk18.half.hi = v - 1;
@@ -769,13 +772,13 @@ void updateMainMenuModeLabelFadeIn(MenuScreenEffectActor *arg0) {
     if (arg0->unk18.half.lo >= 0x100) {
         arg0->unk18.half.lo = 0xFF;
     }
-    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawMainMenuModeLabel, arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawPassAwardLabel, arg0);
 }
 
-void initMainMenuModeLabelFadeIn(MenuScreenEffectActor *arg0) {
+void initPassAwardLabelFadeIn(MenuScreenEffectActor *arg0) {
     arg0->unk18.half.hi = 0x50;
     arg0->unk18.half.lo = 0;
-    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateMainMenuModeLabelFadeIn);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updatePassAwardLabelFadeIn);
 }
 
 void drawMainMenuRotatingBoardModel(MenuScreenEffectActor *arg0) {

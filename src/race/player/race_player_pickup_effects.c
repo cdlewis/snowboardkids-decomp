@@ -171,7 +171,7 @@ void updateRacePlayerActionEffectUse(RacePlayer *player) {
         type = player->actionEffectType;
         if (type != RACE_ACTION_NONE) {
             if ((type == RACE_ACTION_SPEED_FAN) && (player->trailEffectTimer == 0)) {
-                startSnowboardTrailEffect(player);
+                startSpeedFanEffect(player);
                 player->actionEffectType = RACE_ACTION_NONE;
                 type = player->actionEffectType;
             }

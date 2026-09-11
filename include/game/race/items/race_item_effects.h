@@ -11,6 +11,8 @@ typedef union {
         /* 0x1A */ s16 y;
         /* 0x1C */ u16 frame;
         /* 0x1E */ u8 pad1E[2];
+        /* HUD pickup sparkle view: colorR = viewport index, colorG = half-size
+         * flag, colorB = weapon/action palette selector (0x1D/0x1E). */
         /* 0x20 */ s8 colorR;
         /* 0x21 */ s8 colorG;
         /* 0x22 */ s8 colorB;
@@ -128,6 +130,8 @@ typedef struct RaceItemTextureActor {
     /* 0x18 */ void *images[4];
     /* 0x28 */ void *palettes[4];
 } RaceItemTextureActor;
+
+extern Gfx gRaceItemEffectTranslucentRenderSetupDl[6];
 
 s32 getRaceItemEffectType(s32 arg0);
 void updateRaceItemSparkBurst(RaceItemEffectActor *arg0);

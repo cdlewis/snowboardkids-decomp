@@ -1,6 +1,5 @@
 #include "game/math/fixed_point_math.h"
 
-#define FIXED_MATRIX_ONE 0x1000
 #define FIXED_MATRIX_ROWS(matrix) ((s16(*)[3])(matrix))
 
 Transform3D gIdentityFixedTransform = {

@@ -1,3 +1,6 @@
+#include "game/race/course/race_course_effects.h"
+#include "game/race/ui/race_ui_effects.h"
+#include "game/race/items/race_item_projectiles.h"
 #include "game/race/camera/race_camera.h"
 #include "game/race/race_state.h"
 #include "common.h"
@@ -55,10 +58,6 @@ typedef union {
 } LongLongParts;
 
 extern u8 D_800D4660[4][28];
-extern Gfx gRaceItemProjectileQuadVertices[];
-extern u32 gAlphaSpriteRenderModeDl[];
-extern Gfx gEffectRenderModeSetupDl[];
-extern Gfx gEffectRenderModeCleanupDl[];
 
 u8 *gRaceCourseItemEffectTypeTables[10] = {
     D_800D4660[0], D_800D4660[0], D_800D4660[0], D_800D4660[2], D_800D4660[1],
@@ -836,6 +835,9 @@ void initRacePlayerSnowSpray(RaceItemFollowActor *arg0) {
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRacePlayerSnowSpray);
 }
 
+/* Short HUD pickup flash, separate from world-space renderRacePlayerSparkleEffect.
+ * Half-size drawing subtracts another 8 pixels before the scaled helper
+ * recenters the texture; preserve this together with the spawn offset. */
 void renderRaceUiSparkle(RaceItemEffectActor *arg0) {
     if ((u8)arg0->payload.sprite.colorR == gCurrentViewportIndex) {
         if ((u8)arg0->payload.sprite.colorG == 0) {
@@ -895,6 +897,8 @@ void initRaceUiSparkle(RaceItemEffectActor *arg0) {
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceUiSparkle);
 }
 
+/* Spawn subtracts 8 from x/y. Grid HUD icons at (-24, -56) and (-8, -56)
+ * therefore use spawn positions (-16, -48) and (0, -48). */
 void spawnRaceUiSparkle(s32 arg0, s32 arg1, s16 arg2, s16 arg3, s16 arg4) {
     RaceItemEffectActor *temp_v0;
 

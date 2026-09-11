@@ -7,7 +7,7 @@ items:
   freeze_shot: {family: projectile, runtime_id: 3, icons: [11, 12, 13], sprites: {RACE_ITEM_SPRITES: [2]}, renderer: initCloseRangeHomingItemProjectile}
   snowman: {family: projectile, runtime_id: 4, icons: [14, 15, 16], sprites: {RACE_ITEM_SPRITES: [3]}, renderer: initBouncingItemProjectile}
   bomb: {family: projectile, runtime_id: 5, icons: [17, 18, 19], sprites: {RACE_ITEM_SPRITES: [4]}, renderer: initAreaBlastItemProjectile}
-  speed_fan: {family: action, runtime_id: 1, icons: [20], model_roots: [0x2208, 0x23A8], renderer: startSnowboardTrailEffect}
+  speed_fan: {family: action, runtime_id: 1, icons: [20], model_roots: [0x2208, 0x23A8], renderer: startSpeedFanEffect}
   ghost: {family: action, runtime_id: 2, icons: [21], sprites: {RACE_EFFECT_SPRITES: [0x23, 0x24, 0x25, 0x26]}, renderer: spawnRacePlayerSparkleEffect}
   pan: {family: action, runtime_id: 3, icons: [22], model_roots: [0x2660], renderer: spawnGhostSlowdownTargets}
   rock: {family: action, runtime_id: 4, icons: [23], sprites: {RACE_EFFECT_SPRITES: [2]}, renderer: initFallingActionProjectile}

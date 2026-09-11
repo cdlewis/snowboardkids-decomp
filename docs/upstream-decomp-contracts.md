@@ -5,6 +5,85 @@ acceptance criterion for source changes. No gameplay or original-hardware visual
 validation was performed. Recomp sampling, widescreen, audio clamps, framebuffer
 readback policy, and save storage are separate portability work.
 
+## Export and naming follow-up (2026-09-11)
+
+The projectile headers now expose the exact `RaceEffectMatrixScratch`,
+`RaceUiProjectileActor`, and `RaceUiProjectileVertexBlock` definitions.
+Clang target-layout assertions verified MIPS O32 sizes 0x24, 0x5C and 0x10
+and all requested actor offsets. The full build passed the original ROM SHA1
+check; the emitted game code and asset bytes are unchanged. The opaque vertex table still has eight entries, selecting
+entry 0 or 4 via `flags & 4`.
+
+| Owning header | Public data |
+| --- | --- |
+| `race_item_projectiles.h` | `gRaceItemProjectileQuadVertices[4]`, `gFallingActionProjectileQuadVertices[4]` (`Vtx`) |
+| `race_ui_effects.h` | `D_800D64A0[8]` (`RaceUiProjectileVertexBlock`), `gAlphaSpriteRenderModeDl[]` (`Gfx`) |
+| `race_item_effects.h` | `gRaceItemEffectTranslucentRenderSetupDl[6]` (`Gfx`) |
+| `race_course_effects.h` | `gEffectRenderModeSetupDl[]`, `gEffectRenderModeCleanupDl[]` (`Gfx`) |
+
+Consumers use these declarations, including the corrected projectile vertex
+type in item effects. Downstream must explicitly update its decomp pin, include
+`game/race/ui/race_ui_effects.h` and `game/race/course/race_course_effects.h` in
+`patches/projectile_tags.c`, and remove the three copied typedefs and seven local
+data externs. Preserve all ten patched renderers and their draw order, rebuild
+and regenerate patches, then build the app. The symbols already resolve through
+data dumps; do not add them to `patches/syms.ld`. That patch/app checkout is not
+part of this repository.
+
+Source/header filenames remain stable while these APIs use corrected names:
+
+| Previous family or symbol | Current name |
+| --- | --- |
+| `*SpiralCourseObject*` | `*LiftExitCourseObject*` |
+| Course-start `spiralOrigin`, `spiralCourseObjectAngle`, `spiralExitSurfaceIndex` | `liftExitOrigin`, `liftExitObjectAngle`, `liftExitSurfaceIndex` |
+| `SnowboardTrailState`, `*SnowboardTrailEffect`, player `snowboardTrail` | `SpeedFanState`, `*SpeedFanEffect`, player `speedFan` |
+| `RaceUiSnowboardTrailActor`, `*RaceUiSnowboardTrailEffect` | `RaceUiExpiredSpeedFanActor`, `*RaceUiExpiredSpeedFanEffect` |
+| `*RaceStartTransition*` | `*PassAwardCelebration*` |
+| `*RaceSetupBackdrop*`, `*RaceSetupCharacterFocus*`, `*RaceSetupOpponentFocus*` | `*PassAwardPodium*`, `*PassAwardWinner*`, `*PassAwardOpponent*` |
+| `*MainMenuModeBoardTransition*`, `*MainMenuModeBoardAfterimage*` | `*CongratulationsBannerModel*`, `*CongratulationsBannerAfterimage*` |
+| `*MainMenuModeIconFlash*`, `*MainMenuModeLabelFadeIn*` | `*CongratulationsBannerSprite*`, `*PassAwardLabelFadeIn*` |
+| `drawCourseSelectPreviewModel`, `drawCourseSelectPreviewModelClose` | `drawCourseSelectSnowboardPreviewIn`, `drawCourseSelectSnowboardPreviewOut` |
+| `D_800DECC0`, `RacePlayer.unk318`, `RacePlayer.rankArrow` | `gRaceRankSpeedBonuses`, `rankSpeedBonus`, `cpuPaceMode` |
+| `D_800D9C40`, `gTitleDemoReplayInputs` | `gCourseTextureMarkerVertices`, `gTitleDemoReplayPlayerSnapshots` |
+
+The speed fan state now uses `Mtx *frontMatrix` and `Mtx *backMatrix`, with
+`matricesDirty`; its MIPS size remains 0x78. The UI actor draws the expired fan.
+`FIXED_MATRIX_ONE` is public in `fixed_point_math.h` with value 0x1000.
+Course marker vertices are public as `Vtx[12]`: types 0/1 are tall quads with
+cylindrical collision, type 2 a small quad. Their static translations multiply
+`gViewportMatrix` to render camera-facing sprites.
+
+Lift-exit and entrance-bar identities follow movement and transform paths;
+the asset appearance still needs visual confirmation. The upper object shares
+its model with the lower launch-ramp path. Its turn subtracts 0x2A twice per
+update. Entrance `barAngle` opens to -0x400 in 16 updates and closes in eight;
+the separate second panel selects its model using `isOpen` independently.
+
+The pass-award celebration uses the named save `progressionLevel` byte. Level 0
+requires first places on courses 0–4 and 9, level 1 course 5, level 2 course 6;
+the last queues credits. Award actor IDs are `transition - 1`.
+`gPassAwardOpponentCharacterIds` has five rows: character 5 would be out of bounds.
+The congratulations model and fading copies hand off to the viewport-2 banner
+sprite at (-108, -72), using the same handle 34, entry 0 asset.
+
+Header comments document main-menu character renderer sharing with viewport 1,
+incoming/outgoing snowboard preview actors, and big-endian preview draw/update
+views. The draw view ends at 0x100, before the update view `transitionState[4]`.
+Title-demo snapshot restores and camera-mode changes have independent schedules.
+CPU pace constants retain the four numeric modes and signed-byte field; mode 0
+still applies rank bonuses to humans and character 5. HUD pickup sparkle comments
+explain the viewport/half-size/palette fields and both eight-pixel adjustments.
+
+### Paint-menu border investigation
+
+The reported native X=0..8 fragment remains unattributed. Logical menu bounds
+are 16..304 (`gMenuViewportWidth=288`, `gMenuViewportCenterX=160`). Source inspection
+finds independent border emitters in `drawShopMenuSelectedModePanel` and the
+character-select course frame/list callbacks. This does not establish which
+callback emits the paint color-list fragment; a captured draw-command/callback
+trace is still needed. No correction or semantic name is assigned. The downstream
+menu-scissor policy already hides it and is unchanged.
+
 ## Camera lifecycle
 
 `gRaceCameras` contains four 0xB0-byte `RaceCamera` objects. `initialized` is the

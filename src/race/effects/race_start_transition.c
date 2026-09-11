@@ -15,11 +15,11 @@
 #include "game/race/effects/race_start_transition.h"
 #include "game/engine/viewport_manager.h"
 
-typedef struct RaceStartCameraTransformScratch {
+typedef struct PassAwardCameraTransformScratch {
     /* 0x00 */ Transform3D rotationTransform;
     /* 0x20 */ Vec3i rotatedOffset;
     /* 0x2C */ Vec3i targetOffset;
-} RaceStartCameraTransformScratch;
+} PassAwardCameraTransformScratch;
 
 RaceCourseStartEntry gRaceCourseStartEntries[RACE_COURSE_COUNT] = {
     { 175,
@@ -144,7 +144,9 @@ s16 gSineTable[0x1000] = {
 #include "race_start_transition_sine_table.inc.c"
 };
 
-u8 gRaceSetupOpponentFocusCharacterIds[5][4] = {
+/* Five rows, for character IDs 0..4 only. Character 5 would index outside
+ * this table; preserve the original selection behavior. */
+u8 gPassAwardOpponentCharacterIds[5][4] = {
     { 1, 2, 3, 4 },
     { 0, 2, 3, 4 },
     { 0, 1, 3, 4 },
@@ -158,7 +160,7 @@ extern u8 gPendingEndingCreditsFlow;
 extern s16 gMenuFadeAlpha;
 
 void updateMenuCameraObjectLookAtOrigin(void) {
-    RaceStartCameraTransformScratch scratch;
+    PassAwardCameraTransformScratch scratch;
     RaceCamera *obj;
 
     obj = gCurrentMenuCameraObject;
@@ -182,7 +184,7 @@ void updateMenuCameraObjectLookAtOriginCallback(void) {
 }
 
 void updateMenuCameraObjectWithTargetOffset(void) {
-    RaceStartCameraTransformScratch scratch;
+    PassAwardCameraTransformScratch scratch;
     RaceCamera *obj;
 
     obj = gCurrentMenuCameraObject;
@@ -205,7 +207,10 @@ void updateMenuCameraObjectWithTargetOffsetCallback(void) {
     updateMenuCameraObjectWithTargetOffset();
 }
 
-void initRaceStartTransition(void) {
+/* Post-race pass award, before optional credits. Progression 0 requires first
+ * on courses 0..4 and 9, progression 1 course 5, progression 2 course 6.
+ * Award actor user IDs are transition - 1; the final award queues credits. */
+void initPassAwardCelebration(void) {
     s32 effectArg;
     s32 allReady;
     s32 transition;
@@ -213,16 +218,16 @@ void initRaceStartTransition(void) {
     transition = 0;
     if (gRaceSplitscreenMode == 0) {
         if (gPlayerCount == 1) {
-            if ((gGameSaveDataBuffer[0].cupPlacements[0x18] == 2) && (gGameSaveDataBuffer[0].cupPlacements[6] == 1)) {
-                gGameSaveDataBuffer[0].cupPlacements[0x18] = 3;
+            if ((gGameSaveDataBuffer[0].progressionLevel == 2) && (gGameSaveDataBuffer[0].cupPlacements[6] == 1)) {
+                gGameSaveDataBuffer[0].progressionLevel = 3;
                 gPendingEndingCreditsFlow = 1;
                 transition = 3;
             }
-            if ((gGameSaveDataBuffer[0].cupPlacements[0x18] == 1) && (gGameSaveDataBuffer[0].cupPlacements[5] == 1)) {
+            if ((gGameSaveDataBuffer[0].progressionLevel == 1) && (gGameSaveDataBuffer[0].cupPlacements[5] == 1)) {
                 transition = 2;
-                gGameSaveDataBuffer[0].cupPlacements[0x18] = 2;
+                gGameSaveDataBuffer[0].progressionLevel = 2;
             }
-            if (gGameSaveDataBuffer[0].cupPlacements[0x18] == 0) {
+            if (gGameSaveDataBuffer[0].progressionLevel == 0) {
                 if (gGameSaveDataBuffer[0].cupPlacements[9] == 1) {
                     allReady = 1;
                     for (effectArg = 0; effectArg < 5; effectArg++) {
@@ -232,7 +237,7 @@ void initRaceStartTransition(void) {
                     }
                     if (allReady != 0) {
                         transition = 1;
-                        gGameSaveDataBuffer[0].cupPlacements[0x18] = 1;
+                        gGameSaveDataBuffer[0].progressionLevel = 1;
                     }
                 }
             }
@@ -265,29 +270,29 @@ void initRaceStartTransition(void) {
     gMenuFadeAlpha = 0xFF;
     gCurrentGameTask->callbackData0 = 5;
     effectArg = transition - 1;
-    createCallbackTaskWithUserId((CallbackTaskCallback)initRaceSetupBackdrop, 0, 0x64, effectArg);
-    createCallbackTask((CallbackTaskCallback)initMainMenuModeBoardTransition, 0, 0x64);
-    createCallbackTaskWithUserId((CallbackTaskCallback)initMainMenuModeLabelFadeIn, 0, 0x64, effectArg);
+    createCallbackTaskWithUserId((CallbackTaskCallback)initPassAwardPodium, 0, 0x64, effectArg);
+    createCallbackTask((CallbackTaskCallback)initCongratulationsBannerModel, 0, 0x64);
+    createCallbackTaskWithUserId((CallbackTaskCallback)initPassAwardLabelFadeIn, 0, 0x64, effectArg);
     createCallbackTaskWithUserId(
-        (CallbackTaskCallback)initRaceSetupCharacterFocus,
+        (CallbackTaskCallback)initPassAwardWinner,
         0,
         0x64,
         gRacePlayers[0].characterId
     );
-    createRaceSetupOpponentFocus(1, gRaceSetupOpponentFocusCharacterIds[gRacePlayers[0].characterId][0]);
-    createRaceSetupOpponentFocus(2, gRaceSetupOpponentFocusCharacterIds[gRacePlayers[0].characterId][1]);
-    createRaceSetupOpponentFocus(3, gRaceSetupOpponentFocusCharacterIds[gRacePlayers[0].characterId][2]);
-    effectArg = gRaceSetupOpponentFocusCharacterIds[gRacePlayers[0].characterId][3];
-    createRaceSetupOpponentFocus(4, effectArg);
-    setCurrentGameTaskCallback(updateRaceStartTransitionIntroDelay, 0);
+    createPassAwardOpponent(1, gPassAwardOpponentCharacterIds[gRacePlayers[0].characterId][0]);
+    createPassAwardOpponent(2, gPassAwardOpponentCharacterIds[gRacePlayers[0].characterId][1]);
+    createPassAwardOpponent(3, gPassAwardOpponentCharacterIds[gRacePlayers[0].characterId][2]);
+    effectArg = gPassAwardOpponentCharacterIds[gRacePlayers[0].characterId][3];
+    createPassAwardOpponent(4, effectArg);
+    setCurrentGameTaskCallback(updatePassAwardCelebrationIntroDelay, 0);
 }
 
-void updateRaceStartTransitionIntroDelay(void) {
+void updatePassAwardCelebrationIntroDelay(void) {
     gCurrentGameTask->callbackData0--;
     if (gCurrentGameTask->callbackData0 == 0) {
         requestMusicSequenceBank(4);
         gCurrentGameTask->callbackData0 = 0x12C;
-        setCurrentGameTaskCallback(updateRaceStartTransitionFadeIn, 0);
+        setCurrentGameTaskCallback(updatePassAwardCelebrationFadeIn, 0);
     }
     createCallbackTaskWithUserId((CallbackTaskCallback)initFallingMenuSnowflake, 5, 0x64, 0);
     updateRaceCamera(0);
@@ -296,7 +301,7 @@ void updateRaceStartTransitionIntroDelay(void) {
     updateCallbackTasks();
 }
 
-void updateRaceStartTransitionFadeIn(void) {
+void updatePassAwardCelebrationFadeIn(void) {
     GameTask **state;
     GameTask *currentState;
 
@@ -309,7 +314,7 @@ void updateRaceStartTransitionFadeIn(void) {
     currentState->callbackData0 -= 1;
     if ((*state)->callbackData0 == 0) {
         requestMusicSequenceStop(0x7E);
-        setCurrentGameTaskCallback(updateRaceStartTransitionFadeOut, 0);
+        setCurrentGameTaskCallback(updatePassAwardCelebrationFadeOut, 0);
     }
     createCallbackTaskWithUserId((CallbackTaskCallback)initFallingMenuSnowflake, 5, 0x64, 0);
     updateRaceCamera(0);
@@ -317,12 +322,12 @@ void updateRaceStartTransitionFadeIn(void) {
     updateCallbackTasks();
 }
 
-void updateRaceStartTransitionFadeOut(void) {
+void updatePassAwardCelebrationFadeOut(void) {
     gMenuFadeAlpha += 4;
     if (gMenuFadeAlpha >= 0xFF) {
         gCurrentGameTask->callbackData0 = 0xFF;
         gFramebufferSwapHold = 1;
-        setCurrentGameTaskCallback(finishRaceStartTransition, 0);
+        setCurrentGameTaskCallback(finishPassAwardCelebration, 0);
     }
     createCallbackTaskWithUserId((CallbackTaskCallback)initFallingMenuSnowflake, 5, 0x64, 0);
     updateRaceCamera(0);
@@ -330,7 +335,7 @@ void updateRaceStartTransitionFadeOut(void) {
     updateCallbackTasks();
 }
 
-void finishRaceStartTransition(void) {
+void finishPassAwardCelebration(void) {
     if (gPendingFramebufferSwapCount == 2) {
         releaseMenuAssetHandles();
         gFramebufferSwapHold = 0;

@@ -30,7 +30,7 @@ u8 gTitleDemoCameraModes[24] = {
     0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1A, 0x1B, 0x1C, 0x00, 0x00, 0x00,
 };
 
-RacePlayerReplaySnapshot gTitleDemoReplayInputs[4][16] = {
+RacePlayerReplaySnapshot gTitleDemoReplayPlayerSnapshots[4][16] = {
 #include "title_demo_replay_inputs.inc.c"
 };
 
@@ -176,7 +176,7 @@ void updateTitleDemoRaceIntro(void) {
             }
         }
     }
-    do { fadeStep = gCurrentGameTask->callbackData1; if (fadeStep == gTitleDemoReplaySegmentFrames[gCurrentGameTask->callbackData2]) { destination = RACE_PLAYER_REPLAY_SNAPSHOT(0).bytes; i = 0; do { destination[i] = gTitleDemoReplayInputs[0][gCurrentGameTask->callbackData2].bytes[i]; i++; } while (i < sizeof(RacePlayerReplaySnapshot)); destination = RACE_PLAYER_REPLAY_SNAPSHOT(1).bytes; i = 0; do { destination[i] = gTitleDemoReplayInputs[1][gCurrentGameTask->callbackData2].bytes[i]; i++; if (1) { } } while (i < sizeof(RacePlayerReplaySnapshot)); destination = RACE_PLAYER_REPLAY_SNAPSHOT(2).bytes; i = 0; do { destination[i] = gTitleDemoReplayInputs[2][gCurrentGameTask->callbackData2].bytes[i]; i++; } while (i < sizeof(RacePlayerReplaySnapshot)); destination = RACE_PLAYER_REPLAY_SNAPSHOT(3).bytes; i = 0; while (i < sizeof(RacePlayerReplaySnapshot)) { destination[i] = gTitleDemoReplayInputs[3][gCurrentGameTask->callbackData2].bytes[i]; i++; } gCurrentGameTask->callbackData2++; fadeStep = gCurrentGameTask->callbackData1; } cameraIndex = gCurrentGameTask->callbackData3; if (fadeStep == gTitleDemoCameraModeFrames[cameraIndex]) { setRaceCameraMode(0, gTitleDemoCameraModes[cameraIndex]); gCurrentGameTask->callbackData3++; gRaceUpdatePaused = 1; } updateRacePlayers(); updateCallbackTasksWithMinPriority(0x63); updateRacePlayersPostUpdate(); updateRemainingCallbackTasks(); gRaceUpdatePaused = previousPause.value; } while (0);
+    do { fadeStep = gCurrentGameTask->callbackData1; if (fadeStep == gTitleDemoReplaySegmentFrames[gCurrentGameTask->callbackData2]) { destination = RACE_PLAYER_REPLAY_SNAPSHOT(0).bytes; i = 0; do { destination[i] = gTitleDemoReplayPlayerSnapshots[0][gCurrentGameTask->callbackData2].bytes[i]; i++; } while (i < sizeof(RacePlayerReplaySnapshot)); destination = RACE_PLAYER_REPLAY_SNAPSHOT(1).bytes; i = 0; do { destination[i] = gTitleDemoReplayPlayerSnapshots[1][gCurrentGameTask->callbackData2].bytes[i]; i++; if (1) { } } while (i < sizeof(RacePlayerReplaySnapshot)); destination = RACE_PLAYER_REPLAY_SNAPSHOT(2).bytes; i = 0; do { destination[i] = gTitleDemoReplayPlayerSnapshots[2][gCurrentGameTask->callbackData2].bytes[i]; i++; } while (i < sizeof(RacePlayerReplaySnapshot)); destination = RACE_PLAYER_REPLAY_SNAPSHOT(3).bytes; i = 0; while (i < sizeof(RacePlayerReplaySnapshot)) { destination[i] = gTitleDemoReplayPlayerSnapshots[3][gCurrentGameTask->callbackData2].bytes[i]; i++; } gCurrentGameTask->callbackData2++; fadeStep = gCurrentGameTask->callbackData1; } cameraIndex = gCurrentGameTask->callbackData3; if (fadeStep == gTitleDemoCameraModeFrames[cameraIndex]) { setRaceCameraMode(0, gTitleDemoCameraModes[cameraIndex]); gCurrentGameTask->callbackData3++; gRaceUpdatePaused = 1; } updateRacePlayers(); updateCallbackTasksWithMinPriority(0x63); updateRacePlayersPostUpdate(); updateRemainingCallbackTasks(); gRaceUpdatePaused = previousPause.value; } while (0);
     updateRaceCameras();
     gCurrentGameTask->callbackData1++;
     fadeDelay = gCurrentGameTask->callbackData0;

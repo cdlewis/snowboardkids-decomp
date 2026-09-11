@@ -10,6 +10,11 @@
 #define MAIN_MENU_SCENE_MODEL_ANIMATION_BANK_HANDLE 0x3F
 #define MAIN_MENU_SCENE_MODEL_PART_COUNT 14
 
+/* Shared animated character renderer. initMainMenu creates five slots;
+ * menu_screen_effects.c also queues these models in viewport 1.
+ * sceneModelIndex selects the asset/model slot, characterIndex the mesh row.
+ * drawMainMenuSceneModel draws body parts 1..13; the textured variant also
+ * draws part 0 (the snowboard). These do not use drawRacePlayerModel. */
 typedef struct MainMenuSceneModel {
     /* 0x000 */ s16 sceneModelIndex;
     /* 0x002 */ s16 characterIndex;

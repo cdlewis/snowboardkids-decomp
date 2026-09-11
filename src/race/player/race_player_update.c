@@ -186,7 +186,7 @@ void (*gRacePlayerModeUpdateHandlers[])(RacePlayer *) = {
     updateRacePlayerMode57AerialTrick,
 };
 
-s32 D_800DECC0[] = { 0, 0x8000, 0x10000, 0x20000 };
+s32 gRaceRankSpeedBonuses[] = { 0, 0x8000, 0x10000, 0x20000 };
 
 void (*gRacePlayerAirborneUpdateHandlers[])(RacePlayer *) = {
     updateRacePlayerAirborneLaunch,
@@ -623,25 +623,25 @@ void updateRacePlayer(RacePlayer *player) {
 
     resolveRacePlayerHitReactions(player);
 
-    if ((player->isCpu == 0) || (player->rankArrow == 0)) {
-        speedDelta = D_800DECC0[player->rankIndex];
-        catchupDelta = speedDelta - player->unk318;
+    if ((player->isCpu == 0) || (player->cpuPaceMode == RACE_CPU_PACE_RANK_BONUS)) {
+        speedDelta = gRaceRankSpeedBonuses[player->rankIndex];
+        catchupDelta = speedDelta - player->rankSpeedBonus;
         if (catchupDelta >= 0x21) {
             catchupDelta = 0x20;
         }
         if (catchupDelta < -0x30) {
             catchupDelta = -0x30;
         }
-        player->unk318 += catchupDelta;
-        player->unk310 += player->unk318;
+        player->rankSpeedBonus += catchupDelta;
+        player->unk310 += player->rankSpeedBonus;
     } else {
-        if (player->rankArrow == 1) {
+        if (player->cpuPaceMode == RACE_CPU_PACE_CATCH_UP) {
             player->unk310 += 0x70000;
         }
-        if (player->rankArrow == 2) {
+        if (player->cpuPaceMode == RACE_CPU_PACE_SLOW_DOWN) {
             player->unk310 /= 3;
         }
-        if ((player->rankArrow == 3) && (player->rankIndex != 3)) {
+        if ((player->cpuPaceMode == RACE_CPU_PACE_YIELD) && (player->rankIndex != 3)) {
             player->unk310 -= player->unk310 >> 4;
         }
     }
@@ -5113,24 +5113,24 @@ void updateRacePlayerMode07SpiralExit(RacePlayer *player) {
         scratch.sourceZ = 0x400000;
         makeFixedRotationY(
             (s16 *)scratch.matrix,
-            gRaceCourseStartEntries[gRaceCourseIndex.signedValue].spiralCourseObjectAngle
+            gRaceCourseStartEntries[gRaceCourseIndex.signedValue].liftExitObjectAngle
         );
         transformVec3iByFixedMatrix((s16 *)scratch.matrix, (Vec3i *)&scratch.sourceX, (Vec3i *)&player->pos);
-        player->pos.x += gRaceCourseStartEntries[gRaceCourseIndex.signedValue].spiralOrigin.x;
-        player->pos.y += gRaceCourseStartEntries[gRaceCourseIndex.signedValue].spiralOrigin.y + 0x80000;
-        player->pos.z += gRaceCourseStartEntries[gRaceCourseIndex.signedValue].spiralOrigin.z;
-        player->coursePathIndex = gRaceCourseStartEntries[gRaceCourseIndex.signedValue].spiralExitSurfaceIndex;
+        player->pos.x += gRaceCourseStartEntries[gRaceCourseIndex.signedValue].liftExitOrigin.x;
+        player->pos.y += gRaceCourseStartEntries[gRaceCourseIndex.signedValue].liftExitOrigin.y + 0x80000;
+        player->pos.z += gRaceCourseStartEntries[gRaceCourseIndex.signedValue].liftExitOrigin.z;
+        player->coursePathIndex = gRaceCourseStartEntries[gRaceCourseIndex.signedValue].liftExitSurfaceIndex;
         player->lapDigit++;
         player->previousPosition = player->pos;
         player->stateTimer = 0x28;
         player->stateFlags &= 0xFBFFFBFF;
-        player->facingAngle = gRaceCourseStartEntries[gRaceCourseIndex.signedValue].spiralCourseObjectAngle;
+        player->facingAngle = gRaceCourseStartEntries[gRaceCourseIndex.signedValue].liftExitObjectAngle;
         player->coursePathOffset = -projectRaceCourseSurfaceProgress(player->coursePathIndex, player->pos.x, player->pos.z);
         setRaceCameraMode(player->playerIndex, 1);
         gRaceCameras[player->playerIndex].prevPos.x = player->pos.x;
         gRaceCameras[player->playerIndex].prevPos.y = player->pos.y;
         gRaceCameras[player->playerIndex].prevPos.z = player->pos.z;
-        createCallbackTask((CallbackTaskCallback)initSpiralCourseObject, 0, 0x64);
+        createCallbackTask((CallbackTaskCallback)initLiftExitCourseObject, 0, 0x64);
         if (player->lapDigit >= (gRaceLapCount - 1)) {
             createCallbackTaskWithUserIdPreservingArgs(waitForRaceSetupNamePlate, 0, 0x64, player->playerIndex);
         }
@@ -5142,7 +5142,7 @@ void updateRacePlayerMode07SpiralExit(RacePlayer *player) {
     scratch.sourceZ = -0x40000;
     makeFixedRotationY(
         (s16 *)scratch.matrix,
-        gRaceCourseStartEntries[gRaceCourseIndex.signedValue].spiralCourseObjectAngle
+        gRaceCourseStartEntries[gRaceCourseIndex.signedValue].liftExitObjectAngle
     );
     transformVec3iByFixedMatrix((s16 *)scratch.matrix, (Vec3i *)&scratch.sourceX, (Vec3i *)&scratch.transformedX);
     player->pos.x += scratch.transformedX;
@@ -5620,7 +5620,7 @@ void updateRacePlayersPostUpdate(void) {
     i = 0;
     if (gRacePlayerCount > 0) {
         do {
-            updateSnowboardTrailEffect(&gRacePlayers[i]);
+            updateSpeedFanEffect(&gRacePlayers[i]);
             i++;
         } while (i < gRacePlayerCount);
         i = 0;

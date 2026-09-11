@@ -1,3 +1,4 @@
+#include "game/race/course/race_course_effects.h"
 #include "common.h"
 #include "game/engine/asset_manager.h"
 #include "game/menu/renderer/menu_renderer.h"
@@ -17,18 +18,11 @@
 #include "game/math/spatial_math.h"
 
 typedef struct {
-    /* 0x00 */ Transform3D source;
-    /* 0x20 */ s32 pad20;
-} RaceEffectMatrixScratch;
-
-typedef struct {
     s32 pad;
     Vec3i transformed;
     Vec3i offset;
 } RaceItemProjectileTransformScratch;
 
-extern Gfx gEffectRenderModeSetupDl[];
-extern Gfx gEffectRenderModeCleanupDl[];
 extern Gfx *gRegionAllocPtr;
 extern u8 gRaceUpdatePaused;
 extern s16 gUiBlinkTimer;

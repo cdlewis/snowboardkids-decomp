@@ -15,10 +15,10 @@ typedef union {
 typedef struct RaceCourseStartEntry {
     /* 0x00 */ s16 pathIndex;
     /* 0x02 */ s16 lapCount;
-    /* 0x04 */ s16 spiralExitSurfaceIndex;
+    /* 0x04 */ s16 liftExitSurfaceIndex;
     /* 0x06 */ u8 padding06[2];
-    /* 0x08 */ Vec3i spiralOrigin;
-    /* 0x14 */ s16 spiralCourseObjectAngle;
+    /* 0x08 */ Vec3i liftExitOrigin;
+    /* 0x14 */ s16 liftExitObjectAngle;
     /* 0x16 */ s16 launchRampCourseObjectAngle;
     /* 0x18 */ s32 launchRampTargetX;
     /* 0x1C */ s32 launchRampTargetZ;

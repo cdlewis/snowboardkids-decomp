@@ -13,7 +13,6 @@
 #include "game/race/scene/race_scene_setup.h"
 
 #define FIXED_MATRIX_ROWS(matrix) ((s16(*)[MAIN_MENU_SCENE_MODEL_MATRIX_AXES])(matrix))
-#define FIXED_MATRIX_ONE 0x1000
 #define MAIN_MENU_SCENE_MODEL_MATRIX_AXES 3
 #define MAIN_MENU_CHARACTER_COUNT 6
 

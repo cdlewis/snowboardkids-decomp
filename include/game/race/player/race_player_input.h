@@ -20,6 +20,15 @@ typedef struct RaceScoreAttackRingTrigger {
     /* 0x15 */ u8 pad15[3];
 } RaceScoreAttackRingTrigger;
 
+/* CPU distance/role policy. Mode 0 still applies the smoothed rank bonus,
+ * also used by humans; character 5 forces it, bypassing distance policy. */
+typedef enum RaceCpuPaceMode {
+    RACE_CPU_PACE_RANK_BONUS = 0,
+    RACE_CPU_PACE_CATCH_UP = 1, /* Add 0x70000 to target speed. */
+    RACE_CPU_PACE_SLOW_DOWN = 2, /* Divide target speed by three. */
+    RACE_CPU_PACE_YIELD = 3 /* Subtract 1/16 unless ranked fourth. */
+} RaceCpuPaceMode;
+
 typedef struct RacePlayer {
     /* 0x000 */ u16 playerIndex;
     /* 0x002 */ s16 unk2;
@@ -133,7 +142,7 @@ typedef struct RacePlayer {
     /* 0x30E */ s16 subStateParam;
     /* 0x310 */ s32 unk310;
     /* 0x314 */ s32 speedLimit;
-    /* 0x318 */ s32 unk318;
+    /* 0x318 */ s32 rankSpeedBonus; /* Approaches rank table by at most +0x20/-0x30 per update. */
     /* 0x31C */ s16 unk31C;
     /* 0x31E */ s16 unk31E;
     /* 0x320 */ s16 actionSoundTimer;
@@ -187,7 +196,7 @@ typedef struct RacePlayer {
     /* 0x527 */ s8 surfaceCueOverrideMask;
     /* 0x528 */ s8 unk528;
     /* 0x529 */ s8 displayRank;
-    /* 0x52A */ s8 rankArrow;
+    /* 0x52A */ s8 cpuPaceMode;
     /* 0x52B */ s8 rankTargetPlayer;
     /* 0x52C */ s8 actionTriggerCooldown;
     /* 0x52D */ s8 itemTriggerCooldown;
@@ -210,7 +219,7 @@ typedef struct RacePlayer {
     /* 0x584 */ s16 unk584;
     /* 0x586 */ char pad586[2];
     /* 0x588 */ f32 unk588;
-    /* 0x58C */ SnowboardTrailState snowboardTrail;
+    /* 0x58C */ SpeedFanState speedFan;
     /* 0x604 */ s16 rumbleTimer;
     /* 0x606 */ s16 rumblePatternIndex;
     /* 0x608 */ s8 rumblePatternId;

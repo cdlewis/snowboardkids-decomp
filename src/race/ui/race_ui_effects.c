@@ -1,3 +1,4 @@
+#include "game/race/course/race_course_effects.h"
 #include "game/race/race_state.h"
 #include "common.h"
 #include <PR/os_libc.h>
@@ -222,31 +223,6 @@ typedef struct {
     /* 0x68 */ s16 unk68;
 } RaceUiEffectActor;
 
-typedef struct RaceUiProjectileActor {
-    /* 0x00 */ u8 pad0[0x10];
-    /* 0x10 */ u16 index;
-    /* 0x12 */ u8 pad12[0x18 - 0x12];
-    /* 0x18 */ Vec3i pos;
-    /* 0x24 */ Vec3i velocity;
-    /* 0x30 */ u16 *animationScript;
-    /* 0x34 */ s16 frameTimer;
-    /* 0x36 */ s16 flags;
-    /* 0x38 */ Mtx *matrix;
-    /* 0x3C */ s16 unk3C;
-    /* 0x3E */ u8 pad3E[2];
-    /* 0x40 */ void *palette;
-    /* 0x44 */ void *image;
-    /* 0x48 */ u8 pad48[4];
-    /* 0x4C */ s32 unk4C;
-    /* 0x50 */ s32 verticalVelocity;
-    /* 0x54 */ s32 verticalAcceleration;
-    /* 0x58 */ u8 matrixDirty;
-} RaceUiProjectileActor;
-
-typedef struct {
-    /* 0x00 */ u8 pad[0x10];
-} RaceUiProjectileVertexBlock;
-
 typedef struct {
     /* 0x00 */ s32 unk0;
     /* 0x04 */ s32 unk4;
@@ -260,7 +236,7 @@ typedef struct {
     } words;
 } RaceUiDisplayCommand;
 
-typedef struct RaceUiSnowboardTrailActor {
+typedef struct RaceUiExpiredSpeedFanActor {
     /* 0x00 */ u8 pad0[0x24];
     /* 0x24 */ Vec3i scale;
     /* 0x30 */ Vec3i worldPos;
@@ -276,7 +252,7 @@ typedef struct RaceUiSnowboardTrailActor {
     /* 0x90 */ s16 scaleStep;
     /* 0x92 */ s16 timer;
     /* 0x94 */ u8 matrixDirty;
-} RaceUiSnowboardTrailActor;
+} RaceUiExpiredSpeedFanActor;
 
 typedef struct RaceUiRankParticleActor {
     /* 0x00 */ u8 pad0[0x10];
@@ -1179,16 +1155,14 @@ extern const char gRaceUiPendingMakeBonusLabel[];
 extern const char gRaceUiPendingCompleteBonusLabel[];
 extern const char gRaceUiPendingMoneyLabel[];
 extern Gfx *gRegionAllocPtr;
-extern Gfx gEffectRenderModeCleanupDl[];
-extern Gfx gEffectRenderModeSetupDl[];
 extern s16 gFrameCounter;
 extern s16 gRaceLapCount;
 extern s16 gUiBlinkTimer;
 extern s32 gMenuFlowState;
 extern s8 gRacePlayerCount;
 
-extern u32 gSnowboardTrailBackDisplayList[];
-extern u32 gSnowboardTrailFrontDisplayList[];
+extern u32 gSpeedFanBackDisplayList[];
+extern u32 gSpeedFanFrontDisplayList[];
 extern u8 gCurrentViewportIndex;
 extern u8 gRaceChallengeFailed;
 extern u8 gRaceUpdatePaused;
@@ -3954,7 +3928,7 @@ void spawnRacePlayerSparkleEffect(s16 arg0) {
     }
 }
 
-void renderRaceUiSnowboardTrailEffect(RaceUiSnowboardTrailActor *arg0) {
+void renderRaceUiExpiredSpeedFanEffect(RaceUiExpiredSpeedFanActor *arg0) {
     volatile u8 pad[0x20];
     RaceUiDisplayCommand *unused;
 
@@ -3973,16 +3947,16 @@ void renderRaceUiSnowboardTrailEffect(RaceUiSnowboardTrailActor *arg0) {
         gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x02, getRelocatableHeapBlockBase(ASSET_HANDLE(0xA)));
         gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x03, getRelocatableHeapBlockBase(ASSET_HANDLE(0xB)));
         gSPMatrix(RACE_UI_TRAIL_GFX_ALLOC_PTR++, arg0->frontMatrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
-        gSPDisplayList(RACE_UI_TRAIL_GFX_ALLOC_PTR++, gSnowboardTrailFrontDisplayList);
+        gSPDisplayList(RACE_UI_TRAIL_GFX_ALLOC_PTR++, gSpeedFanFrontDisplayList);
         gSPMatrix(RACE_UI_TRAIL_GFX_ALLOC_PTR++, arg0->backMatrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
-        gSPDisplayList(RACE_UI_TRAIL_GFX_ALLOC_PTR++, gSnowboardTrailBackDisplayList);
+        gSPDisplayList(RACE_UI_TRAIL_GFX_ALLOC_PTR++, gSpeedFanBackDisplayList);
     }
 }
 
-void updateRaceUiSnowboardTrailEffect(RaceUiSnowboardTrailActor *arg0) {
+void updateRaceUiExpiredSpeedFanEffect(RaceUiExpiredSpeedFanActor *arg0) {
     Transform3D sp30;
     volatile u8 pad[0x10];
-    RaceUiSnowboardTrailActor *actor;
+    RaceUiExpiredSpeedFanActor *actor;
 
     actor = arg0;
     actor->spinYaw += 0x240;
@@ -4008,30 +3982,30 @@ void updateRaceUiSnowboardTrailEffect(RaceUiSnowboardTrailActor *arg0) {
     }
 
     if (gRacePlayers[actor->playerIndex].soundDisabled == 0) {
-        addRenderCallback(&gSceneModelRenderCallbackList, (RenderCallback)renderRaceUiSnowboardTrailEffect, arg0);
+        addRenderCallback(&gSceneModelRenderCallbackList, (RenderCallback)renderRaceUiExpiredSpeedFanEffect, arg0);
     }
 }
 
-void initRaceUiSnowboardTrailEffect(RaceUiSnowboardTrailActor *actor) {
+void initRaceUiExpiredSpeedFanEffect(RaceUiExpiredSpeedFanActor *actor) {
     actor->scaleStep = 1;
     actor->scale.x = RACE_UI_SNOWBOARD_TRAIL_SCALE_X;
     actor->scale.y = RACE_UI_SNOWBOARD_TRAIL_SCALE_Y;
     actor->scale.z = RACE_UI_SNOWBOARD_TRAIL_SCALE_Z;
     actor->timer = RACE_UI_SNOWBOARD_TRAIL_TIMER;
     actor->velocityY = RACE_UI_SNOWBOARD_TRAIL_INITIAL_VELOCITY_Y;
-    updateRaceUiSnowboardTrailEffect(actor);
-    setCallbackTaskCallback(actor, (CallbackTaskCallback)updateRaceUiSnowboardTrailEffect);
+    updateRaceUiExpiredSpeedFanEffect(actor);
+    setCallbackTaskCallback(actor, (CallbackTaskCallback)updateRaceUiExpiredSpeedFanEffect);
 }
 
-void spawnRaceUiSnowboardTrailEffect(RacePlayer *player) {
-    RaceUiSnowboardTrailActor *actor =
-        createCallbackTaskPreservingArgs((CallbackTaskCallback)initRaceUiSnowboardTrailEffect, 0, 0x62);
+void spawnRaceUiExpiredSpeedFanEffect(RacePlayer *player) {
+    RaceUiExpiredSpeedFanActor *actor =
+        createCallbackTaskPreservingArgs((CallbackTaskCallback)initRaceUiExpiredSpeedFanEffect, 0, 0x62);
 
     if (actor != NULL) {
         actor->playerIndex = player->playerIndex;
-        actor->worldPos = player->snowboardTrail.worldPos;
-        actor->frontTransform = player->snowboardTrail.frontTransform;
-        actor->spinYaw = player->snowboardTrail.spinYaw;
+        actor->worldPos = player->speedFan.worldPos;
+        actor->frontTransform = player->speedFan.frontTransform;
+        actor->spinYaw = player->speedFan.spinYaw;
     }
 }
 
@@ -5916,7 +5890,7 @@ loop:
                 if (gRacePlayers[0].trailEffectTimer != 0) {
                     gRacePlayers[0].trailEffectTimer = 0xF0;
                 } else {
-                    startSnowboardTrailEffect(gRacePlayers);
+                    startSpeedFanEffect(gRacePlayers);
                 }
                 if (gRacePlayers[0].trailEffectTimer) {}
             }
