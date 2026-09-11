@@ -158,7 +158,7 @@ s16 gCourseSelectStatsPlayerMarkerLayout[][4] = {
     { 0x0000, 0x0000, 0x0000, 0x0000 },
 };
 
-void drawCourseSelectPreviewModel(CourseSelectCoursePreviewActor *arg0) {
+void drawCourseSelectSnowboardPreviewIn(CourseSelectCoursePreviewActor *arg0) {
     u8 sp2F;
     unsigned char sp2E;
     u8 var_t0;
@@ -346,7 +346,7 @@ void updateCourseSelectPreviewModelIn(CourseSelectAnimatedActor *arg0) {
     } else {
         addRenderCallback(
             &gModelRenderCallbackList,
-            (RenderCallback)(void (*)(CourseSelectCoursePreviewActor *))drawCourseSelectPreviewModel,
+            (RenderCallback)(void (*)(CourseSelectCoursePreviewActor *))drawCourseSelectSnowboardPreviewIn,
             (CourseSelectCoursePreviewActor *)actor
         );
     }
@@ -381,7 +381,7 @@ void initCourseSelectPreviewModelIn(void *arg0) {
     setCallbackTaskCallback(actor, (CallbackTaskCallback)updateCourseSelectPreviewModelIn);
 }
 
-void drawCourseSelectPreviewModelClose(CourseSelectCoursePreviewActor *arg0) {
+void drawCourseSelectSnowboardPreviewOut(CourseSelectCoursePreviewActor *arg0) {
     u8 sp2F;
     unsigned char sp2E;
     u8 var_t0;
@@ -568,7 +568,7 @@ void updateCourseSelectPreviewModelOut(CourseSelectAnimatedActor *arg0) {
     } else {
         addRenderCallback(
             &gModelRenderCallbackList,
-            (RenderCallback)(void (*)(CourseSelectCoursePreviewActor *))drawCourseSelectPreviewModelClose,
+            (RenderCallback)(void (*)(CourseSelectCoursePreviewActor *))drawCourseSelectSnowboardPreviewOut,
             (CourseSelectCoursePreviewActor *)actor
         );
     }

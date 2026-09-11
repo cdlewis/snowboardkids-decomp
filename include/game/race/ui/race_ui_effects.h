@@ -2,6 +2,7 @@
 #define RACE_UI_EFFECTS_H
 
 #include "common.h"
+#include "game/math/spatial_math.h"
 #include "game/engine/callback_task_scheduler.h"
 #include "game/race/ui/race_hud.h"
 
@@ -19,7 +20,6 @@ struct RaceUiGfxCommandActor;
 struct RaceUiOrbitingSpriteActor;
 struct RaceUiPodiumTrailActor;
 struct RaceUiPopupActor;
-struct RaceUiProjectileActor;
 struct RaceUiPrizePayoutActor;
 struct RaceUiPromptActor;
 struct RaceUiRankParticleActor;
@@ -32,6 +32,31 @@ struct RaceUiSingleTrailActor;
 struct RaceCourseScrollingTextureActor;
 struct RacePlayer;
 
+typedef struct {
+    /* 0x00 */ u8 pad[0x10];
+} RaceUiProjectileVertexBlock;
+
+typedef struct RaceUiProjectileActor {
+    /* 0x00 */ u8 pad0[0x10];
+    /* 0x10 */ u16 index;
+    /* 0x12 */ u8 pad12[0x18 - 0x12];
+    /* 0x18 */ Vec3i pos;
+    /* 0x24 */ Vec3i velocity;
+    /* 0x30 */ u16 *animationScript;
+    /* 0x34 */ s16 frameTimer;
+    /* 0x36 */ s16 flags;
+    /* 0x38 */ Mtx *matrix;
+    /* 0x3C */ s16 unk3C;
+    /* 0x3E */ u8 pad3E[2];
+    /* 0x40 */ void *palette;
+    /* 0x44 */ void *image;
+    /* 0x48 */ u8 pad48[4];
+    /* 0x4C */ s32 unk4C;
+    /* 0x50 */ s32 verticalVelocity;
+    /* 0x54 */ s32 verticalAcceleration;
+    /* 0x58 */ u8 matrixDirty;
+} RaceUiProjectileActor;
+
 typedef enum RaceCourseScrollingTextureId {
     RACE_COURSE_SCROLLING_TEXTURE_QUICKSAND_VALLEY_0,
     RACE_COURSE_SCROLLING_TEXTURE_QUICKSAND_VALLEY_1,
@@ -43,7 +68,7 @@ typedef enum RaceCourseScrollingTextureId {
     RACE_COURSE_SCROLLING_TEXTURE_SUNSET_ROCK_1,
     RACE_COURSE_SCROLLING_TEXTURE_COUNT
 } RaceCourseScrollingTextureId;
-struct RaceUiSnowboardTrailActor;
+struct RaceUiExpiredSpeedFanActor;
 struct RaceUiSparkleActor;
 struct RaceUiSpinningParticleActor;
 struct RaceUiTextParticleActor;
@@ -85,6 +110,9 @@ typedef struct RaceUiFadingImpactActor {
     /* 0x4C */ s16 scale;
     /* 0x4E */ u8 matrixDirty;
 } RaceUiFadingImpactActor;
+
+extern RaceUiProjectileVertexBlock D_800D64A0[8];
+extern Gfx gAlphaSpriteRenderModeDl[];
 
 void renderRaceCourseScrollingTexture(struct RaceCourseScrollingTextureActor *arg0);
 void updateRaceCourseScrollingTexture(struct RaceCourseScrollingTextureActor *arg0);
@@ -201,10 +229,10 @@ void updateRacePlayerSparkleRetarget(struct RaceUiSparkleActor *arg0);
 void updateRacePlayerSparkleRise(struct RaceUiSparkleActor *arg0);
 void initRacePlayerSparkleEffect(struct RaceUiSparkleActor *arg0);
 void spawnRacePlayerSparkleEffect(s16 arg0);
-void renderRaceUiSnowboardTrailEffect(struct RaceUiSnowboardTrailActor *arg0);
-void updateRaceUiSnowboardTrailEffect(struct RaceUiSnowboardTrailActor *arg0);
-void initRaceUiSnowboardTrailEffect(struct RaceUiSnowboardTrailActor *arg0);
-void spawnRaceUiSnowboardTrailEffect(struct RacePlayer *player);
+void renderRaceUiExpiredSpeedFanEffect(struct RaceUiExpiredSpeedFanActor *arg0);
+void updateRaceUiExpiredSpeedFanEffect(struct RaceUiExpiredSpeedFanActor *arg0);
+void initRaceUiExpiredSpeedFanEffect(struct RaceUiExpiredSpeedFanActor *arg0);
+void spawnRaceUiExpiredSpeedFanEffect(struct RacePlayer *player);
 void renderRaceUiItemStealTrailEffect(struct RaceUiRankTrailActor *arg0);
 void updateRaceUiItemStealTrailEffect(struct RaceUiRankTrailActor *arg0);
 void initRaceUiItemStealTrailEffect(struct RaceUiRankTrailActor *arg0);

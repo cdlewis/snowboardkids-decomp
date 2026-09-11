@@ -57,14 +57,17 @@ typedef struct PatrolCourseObjectEffect {
 typedef struct RaceCourseGateEffect {
     /* 0x00 */ CallbackTaskHeader task;
     /* 0x18 */ Transform3D baseTransform;
-    /* 0x38 */ Vec3i firstPanelPosition;
+    /* Inferred lift entrance bar (_149040_VRAM): opens 0 -> -0x400 in
+     * 16 steps of -0x40, closes in 8 steps of +0x80. The second panel uses
+     * isOpen to select _149120_VRAM/_1491F8_VRAM, independently of barAngle. */
+    /* 0x38 */ Vec3i barPosition;
     /* 0x44 */ Vec3i secondPanelPosition;
-    /* 0x50 */ s16 firstPanelAngle;
+    /* 0x50 */ s16 barAngle;
     /* 0x52 */ s16 unusedAngle;
     /* 0x54 */ s16 openTimer;
     /* 0x56 */ s16 isOpen;
     /* 0x58 */ Mtx *baseMatrix;
-    /* 0x5C */ Mtx *firstPanelMatrix;
+    /* 0x5C */ Mtx *barMatrix;
     /* 0x60 */ Mtx *secondPanelMatrix;
 } RaceCourseGateEffect;
 
@@ -134,6 +137,12 @@ typedef struct RaceCourseGateEntry {
     /* 0x0E */ s16 padding0E;
 } RaceCourseGateEntry;
 
+extern Gfx gEffectRenderModeSetupDl[];
+extern Gfx gEffectRenderModeCleanupDl[];
+/* Camera-facing sprites: static translations are multiplied by gViewportMatrix.
+ * Types 0/1 use tall quads and cylindrical collision; type 2 uses a small quad. */
+extern Vtx gCourseTextureMarkerVertices[12];
+
 void drawRaceCountdownReadyPrompt(RaceCountdownEffect *effect);
 void drawRaceCountdownGoPrompt(RaceCountdownEffect *effect);
 void updateRaceCountdownGoPromptOut(RaceCountdownEffect *effect);
@@ -163,11 +172,15 @@ void renderLaunchRampCourseObject(RaceMovingCourseObjectEffect *effect);
 void updateLaunchRampCourseObjectExit(RaceMovingCourseObjectEffect *effect);
 void updateLaunchRampCourseObjectArc(RaceMovingCourseObjectEffect *effect);
 void initLaunchRampCourseObject(RaceMovingCourseObjectEffect *effect);
-void renderSpiralCourseObject(RaceMovingCourseObjectEffect *effect);
-void updateSpiralCourseObjectExit(RaceMovingCourseObjectEffect *effect);
-void updateSpiralCourseObjectTurn(RaceMovingCourseObjectEffect *effect);
-void updateSpiralCourseObjectLaunch(RaceMovingCourseObjectEffect *effect);
-void initSpiralCourseObject(RaceMovingCourseObjectEffect *effect);
+/* Moving upper lift-exit object; launch/turn/exit callbacks share the actor.
+ * Turn subtracts 0x2A from yaw twice per update. Model _148220_VRAM
+ * (_14AB28_VRAM on course 8) is shared with the lower launch-ramp path.
+ * Identity inferred from movement; asset appearance needs visual confirmation. */
+void renderLiftExitCourseObject(RaceMovingCourseObjectEffect *effect);
+void updateLiftExitCourseObjectExit(RaceMovingCourseObjectEffect *effect);
+void updateLiftExitCourseObjectTurn(RaceMovingCourseObjectEffect *effect);
+void updateLiftExitCourseObjectLaunch(RaceMovingCourseObjectEffect *effect);
+void initLiftExitCourseObject(RaceMovingCourseObjectEffect *effect);
 void renderCourseGateObject(RaceCourseGateEffect *effect);
 void updateCourseGateClosing(RaceCourseGateEffect *effect);
 void updateCourseGateOpening(RaceCourseGateEffect *effect);

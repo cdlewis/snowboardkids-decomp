@@ -15,40 +15,40 @@
 #define SNOWBOARD_TRAIL_FLAG_CANCEL 0x3040
 
 extern u8 gRaceUpdatePaused;
-extern u32 gSnowboardTrailFrontDisplayList[];
-extern u32 gSnowboardTrailBackDisplayList[];
+extern u32 gSpeedFanFrontDisplayList[];
+extern u32 gSpeedFanBackDisplayList[];
 extern Gfx *gRegionAllocPtr;
 
-void renderSnowboardTrailEffect(SnowboardTrailState *trail) {
+void renderSpeedFanEffect(SpeedFanState *trail) {
     Gfx *unused;
 
     if (gRenderMatricesDirty != 0) {
-        trail->displayListsDirty = 1;
+        trail->matricesDirty = 1;
     }
 
-    if (trail->displayListsDirty != 0) {
-        trail->displayListsDirty = 0;
-        trail->frontDisplayList = allocFixedTransformMatrix(&trail->frontTransform);
-        trail->backDisplayList = allocFixedTransformMatrix(&trail->backTransform);
+    if (trail->matricesDirty != 0) {
+        trail->matricesDirty = 0;
+        trail->frontMatrix = allocFixedTransformMatrix(&trail->frontTransform);
+        trail->backMatrix = allocFixedTransformMatrix(&trail->backTransform);
     }
 
-    if (trail->frontDisplayList != NULL) {
+    if (trail->frontMatrix != NULL) {
         gDPPipeSync(gRegionAllocPtr++);
         gSPSegment(gRegionAllocPtr++, 0x02, getRelocatableHeapBlockBase(gAssetHandles[0xA]));
         gSPSegment(gRegionAllocPtr++, 0x03, getRelocatableHeapBlockBase(gAssetHandles[0xB]));
-        gSPMatrix(gRegionAllocPtr++, trail->frontDisplayList, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
-        gSPDisplayList(gRegionAllocPtr++, gSnowboardTrailFrontDisplayList);
-        gSPMatrix(gRegionAllocPtr++, trail->backDisplayList, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
-        gSPDisplayList(gRegionAllocPtr++, gSnowboardTrailBackDisplayList);
+        gSPMatrix(gRegionAllocPtr++, trail->frontMatrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+        gSPDisplayList(gRegionAllocPtr++, gSpeedFanFrontDisplayList);
+        gSPMatrix(gRegionAllocPtr++, trail->backMatrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+        gSPDisplayList(gRegionAllocPtr++, gSpeedFanBackDisplayList);
     }
 }
 
-void updateSnowboardTrailEffect(RacePlayer *player) {
-    SnowboardTrailState *trail;
+void updateSpeedFanEffect(RacePlayer *player) {
+    SpeedFanState *trail;
     Transform3D scratch;
 
-    trail = &player->snowboardTrail;
-    switch (player->snowboardTrail.state) {
+    trail = &player->speedFan;
+    switch (player->speedFan.state) {
         case 0:
             break;
         case 1:
@@ -85,7 +85,7 @@ void updateSnowboardTrailEffect(RacePlayer *player) {
             if (player->soundDisabled == 0) {
                 addRenderCallback(
                     &gRaceModelEffectRenderCallbackList,
-                    (RenderCallback)renderSnowboardTrailEffect,
+                    (RenderCallback)renderSpeedFanEffect,
                     trail
                 );
             }
@@ -116,13 +116,13 @@ void updateSnowboardTrailEffect(RacePlayer *player) {
             }
             if (player->trailEffectTimer == 0) {
                 trail->state = 0;
-                spawnRaceUiSnowboardTrailEffect(player);
+                spawnRaceUiExpiredSpeedFanEffect(player);
                 return;
             }
             if (player->soundDisabled == 0) {
                 addRenderCallback(
                     &gRaceModelEffectRenderCallbackList,
-                    (RenderCallback)renderSnowboardTrailEffect,
+                    (RenderCallback)renderSpeedFanEffect,
                     trail
                 );
             }
@@ -132,8 +132,8 @@ void updateSnowboardTrailEffect(RacePlayer *player) {
     }
 }
 
-void startSnowboardTrailEffect(RacePlayer *player) {
-    SnowboardTrailState *trail = &player->snowboardTrail;
+void startSpeedFanEffect(RacePlayer *player) {
+    SpeedFanState *trail = &player->speedFan;
 
     player->trailEffectTimer = SNOWBOARD_TRAIL_TIMER;
     if (player->stateFlags & SNOWBOARD_TRAIL_FLAG_FACING_BACKWARD) {

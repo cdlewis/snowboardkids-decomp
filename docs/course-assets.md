@@ -286,8 +286,8 @@ uses:
 
 | Field | Runtime role |
 | --- | --- |
-| `spiralExitSurfaceIndex` | Surface assigned to a player leaving the spiral course object |
-| `spiralOrigin` | Shared world-space origin for that object and its player exit |
+| `liftExitSurfaceIndex` | Surface assigned to a player leaving the upper lift-exit object |
+| `liftExitOrigin` | Shared world-space origin for that object and its player exit |
 | `launchRampTargetX`, `launchRampTargetZ` | Trigger center and alignment target for the launch-ramp sequence |
 | `launchRampOrigin` | World-space origin used to spawn the animated launch-ramp object |
 | `positiveLookaheadSurfaceStartIndex`, `positiveLookaheadSurfaceEndIndex` | Inclusive surface range using positive rather than negative path lookahead |

@@ -39,7 +39,7 @@ typedef struct {
     s32 padding38;
 } CourseTriggerScratch;
 
-Vtx D_800D9C40[] = {
+Vtx gCourseTextureMarkerVertices[] = {
     { { { -36, 144, 0 }, 0x0000, { -16, -16 }, { 228, 228, 228, 255 } } },
     { { { 36, 144, 0 }, 0x0000, { 1008, -16 }, { 228, 228, 228, 255 } } },
     { { { 36, -8, 0 }, 0x0000, { 1008, 2032 }, { 228, 228, 228, 255 } } },
@@ -598,7 +598,7 @@ void renderCourseTextureMarkers(RaceCourseObjectMatrixEffect *arg0) {
                 {
                     Gfx *_g = gRegionAllocPtr++;
                     _g->words.w0 = 0x0400103F;
-                    _g->words.w1 = (u32)&D_800D9C40[entry->type * 4];
+                    _g->words.w1 = (u32)&gCourseTextureMarkerVertices[entry->type * 4];
                 }
                 RACE_COURSE_EFFECTS_GFX_CMD(gRegionAllocPtr++, 0xB1060402, 0x60200);
             }
@@ -1005,7 +1005,7 @@ void initLaunchRampCourseObject(RaceMovingCourseObjectEffect *arg0) {
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateLaunchRampCourseObjectArc);
 }
 
-void renderSpiralCourseObject(RaceMovingCourseObjectEffect *arg0) {
+void renderLiftExitCourseObject(RaceMovingCourseObjectEffect *arg0) {
     volatile s32 unused;
     Transform3D transform;
     volatile s32 pad[2];
@@ -1033,7 +1033,7 @@ void renderSpiralCourseObject(RaceMovingCourseObjectEffect *arg0) {
     }
 }
 
-void updateSpiralCourseObjectExit(RaceMovingCourseObjectEffect *arg0) {
+void updateLiftExitCourseObjectExit(RaceMovingCourseObjectEffect *arg0) {
     Vec3i sp24;
     s16 temp_v0;
     RaceMovingCourseObjectEffect *temp_a3 = arg0;
@@ -1047,13 +1047,13 @@ void updateSpiralCourseObjectExit(RaceMovingCourseObjectEffect *arg0) {
             temp_a3->position.y += sp24.y;
             temp_a3->position.z += sp24.z;
         }
-        addRenderCallback(&gRaceObjectRenderCallbackList, (RenderCallback)renderSpiralCourseObject, temp_a3);
+        addRenderCallback(&gRaceObjectRenderCallbackList, (RenderCallback)renderLiftExitCourseObject, temp_a3);
         return;
     }
     removeCallbackTask(temp_a3);
 }
 
-void updateSpiralCourseObjectTurn(RaceMovingCourseObjectEffect *arg0) {
+void updateLiftExitCourseObjectTurn(RaceMovingCourseObjectEffect *arg0) {
     Vec3i sp2C;
     void *velocity;
 
@@ -1076,15 +1076,15 @@ void updateSpiralCourseObjectTurn(RaceMovingCourseObjectEffect *arg0) {
         arg0->position.z += sp2C.z;
 
         if (arg0->timer == 0) {
-            setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateSpiralCourseObjectExit);
+            setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateLiftExitCourseObjectExit);
             arg0->timer = 0x38;
         }
     }
 
-    addRenderCallback(&gRaceObjectRenderCallbackList, (RenderCallback)renderSpiralCourseObject, arg0);
+    addRenderCallback(&gRaceObjectRenderCallbackList, (RenderCallback)renderLiftExitCourseObject, arg0);
 }
 
-void updateSpiralCourseObjectLaunch(RaceMovingCourseObjectEffect *arg0) {
+void updateLiftExitCourseObjectLaunch(RaceMovingCourseObjectEffect *arg0) {
     Vec3i sp1C;
     RaceMovingCourseObjectEffect *temp_a3 = arg0;
 
@@ -1095,18 +1095,18 @@ void updateSpiralCourseObjectLaunch(RaceMovingCourseObjectEffect *arg0) {
         temp_a3->position.y += sp1C.y * 2;
         temp_a3->position.z += sp1C.z * 2;
         if (temp_a3->timer == 0) {
-            setCallbackTaskCallback(temp_a3, (CallbackTaskCallback)updateSpiralCourseObjectTurn);
+            setCallbackTaskCallback(temp_a3, (CallbackTaskCallback)updateLiftExitCourseObjectTurn);
             temp_a3->timer = 0x18;
         }
     }
-    addRenderCallback(&gRaceObjectRenderCallbackList, (RenderCallback)renderSpiralCourseObject, temp_a3);
+    addRenderCallback(&gRaceObjectRenderCallbackList, (RenderCallback)renderLiftExitCourseObject, temp_a3);
 }
 
-void initSpiralCourseObject(RaceMovingCourseObjectEffect *arg0) {
+void initLiftExitCourseObject(RaceMovingCourseObjectEffect *arg0) {
     s16 *mtx;
 
     arg0->timer = 0x28;
-    arg0->yaw = gRaceCourseStartEntries[gRaceCourseIndex.signedValue].spiralCourseObjectAngle;
+    arg0->yaw = gRaceCourseStartEntries[gRaceCourseIndex.signedValue].liftExitObjectAngle;
     arg0->velocity.x = -0x200000;
     arg0->velocity.z = 0x400000;
     mtx = arg0->movementTransform.rotation;
@@ -1114,11 +1114,11 @@ void initSpiralCourseObject(RaceMovingCourseObjectEffect *arg0) {
     transformVec3iByFixedMatrix(mtx, &arg0->velocity, &arg0->position);
     arg0->velocity.x = 0;
     arg0->velocity.z = -0x20000;
-    arg0->position.x += gRaceCourseStartEntries[gRaceCourseIndex.signedValue].spiralOrigin.x;
-    arg0->position.y += gRaceCourseStartEntries[gRaceCourseIndex.signedValue].spiralOrigin.y + 0x40000;
-    arg0->position.z += gRaceCourseStartEntries[gRaceCourseIndex.signedValue].spiralOrigin.z;
-    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateSpiralCourseObjectLaunch);
-    updateSpiralCourseObjectLaunch(arg0);
+    arg0->position.x += gRaceCourseStartEntries[gRaceCourseIndex.signedValue].liftExitOrigin.x;
+    arg0->position.y += gRaceCourseStartEntries[gRaceCourseIndex.signedValue].liftExitOrigin.y + 0x40000;
+    arg0->position.z += gRaceCourseStartEntries[gRaceCourseIndex.signedValue].liftExitOrigin.z;
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateLiftExitCourseObjectLaunch);
+    updateLiftExitCourseObjectLaunch(arg0);
 }
 
 void renderCourseGateObject(RaceCourseGateEffect *arg0) {
@@ -1130,7 +1130,7 @@ void renderCourseGateObject(RaceCourseGateEffect *arg0) {
 
     if (gRenderMatricesDirty != 0) {
         temp_s0->baseMatrix = NULL;
-        temp_s0->firstPanelMatrix = NULL;
+        temp_s0->barMatrix = NULL;
         temp_s0->secondPanelMatrix = NULL;
     }
 
@@ -1154,20 +1154,20 @@ void renderCourseGateObject(RaceCourseGateEffect *arg0) {
         gSPDisplayList(gRegionAllocPtr++, &_148F88_VRAM);
     }
 
-    if (temp_s0->firstPanelMatrix == NULL) {
+    if (temp_s0->barMatrix == NULL) {
         makeFixedRotationZY(
             scratch.rotation,
             gCourseGateSoundParams[gRaceCourseIndex.signedValue].angle,
-            temp_s0->firstPanelAngle
+            temp_s0->barAngle
         );
-        scratch.translation.x = temp_s0->firstPanelPosition.x;
-        scratch.translation.y = temp_s0->firstPanelPosition.y;
-        scratch.translation.z = temp_s0->firstPanelPosition.z;
-        temp_s0->firstPanelMatrix = allocFixedTransformMatrix(&scratch);
+        scratch.translation.x = temp_s0->barPosition.x;
+        scratch.translation.y = temp_s0->barPosition.y;
+        scratch.translation.z = temp_s0->barPosition.z;
+        temp_s0->barMatrix = allocFixedTransformMatrix(&scratch);
     }
 
-    if (temp_s0->firstPanelMatrix != NULL) {
-        gSPMatrix(gRegionAllocPtr++, temp_s0->firstPanelMatrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+    if (temp_s0->barMatrix != NULL) {
+        gSPMatrix(gRegionAllocPtr++, temp_s0->barMatrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
         gSPDisplayList(gRegionAllocPtr++, &_149040_VRAM);
     }
 
@@ -1192,8 +1192,8 @@ void renderCourseGateObject(RaceCourseGateEffect *arg0) {
 
 void updateCourseGateClosing(RaceCourseGateEffect *arg0) {
     if (gRaceUpdatePaused == 0) {
-        if (arg0->firstPanelAngle != 0) {
-            arg0->firstPanelAngle += 0x80;
+        if (arg0->barAngle != 0) {
+            arg0->barAngle += 0x80;
         } else {
             arg0->isOpen = 0;
             setCallbackTaskCallback(arg0, (CallbackTaskCallback)waitForCourseGateTrigger);
@@ -1207,9 +1207,9 @@ void updateCourseGateOpening(RaceCourseGateEffect *arg0) {
     s16 temp_v0;
 
     if (gRaceUpdatePaused == 0) {
-        temp_v0 = arg0->firstPanelAngle;
+        temp_v0 = arg0->barAngle;
         if (temp_v0 != -0x400) {
-            arg0->firstPanelAngle = temp_v0 - 0x40;
+            arg0->barAngle = temp_v0 - 0x40;
         }
         temp_s0->openTimer--;
         if (temp_s0->openTimer == 0) {
@@ -1246,10 +1246,10 @@ void initCourseGateObject(RaceCourseGateEffect *arg0) {
     sp28.x = 0x18000;
     sp28.y = 0x120000;
     sp28.z = -0x80000;
-    transformVec3iByFixedMatrix(mtx, &sp28, &arg0->firstPanelPosition);
-    arg0->firstPanelPosition.x += arg0->baseTransform.translation.x;
-    arg0->firstPanelPosition.y += arg0->baseTransform.translation.y;
-    arg0->firstPanelPosition.z += arg0->baseTransform.translation.z;
+    transformVec3iByFixedMatrix(mtx, &sp28, &arg0->barPosition);
+    arg0->barPosition.x += arg0->baseTransform.translation.x;
+    arg0->barPosition.y += arg0->baseTransform.translation.y;
+    arg0->barPosition.z += arg0->baseTransform.translation.z;
     sp28.x = 0;
     sp28.y = 0x120000;
     sp28.z = 0x50000;

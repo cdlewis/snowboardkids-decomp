@@ -4,6 +4,8 @@
 #include "game/math/fixed_matrix_multiply.h"
 #include "game/math/spatial_math.h"
 
+#define FIXED_MATRIX_ONE 0x1000
+
 extern s16 gSineTable[];
 
 /*

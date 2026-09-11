@@ -1,3 +1,4 @@
+#include "game/race/ui/race_ui_effects.h"
 #include "common.h"
 #include "game/engine/asset_manager.h"
 #include "game/engine/render_callback.h"
@@ -30,7 +31,6 @@ typedef struct {
 
 extern MainMenuSceneActorShadow gEndingActorShadow;
 extern Gfx *gRegionAllocPtr;
-extern u32 gAlphaSpriteRenderModeDl[];
 Vtx D_800B8100[4] = {
     { { { -16, 16, 0 }, 0, { 0, 0 }, { 0xFF, 0xFF, 0xFF, 0xFF } } },
     { { { 16, 16, 0 }, 0, { 480, 0 }, { 0xFF, 0xFF, 0xFF, 0xFF } } },

@@ -581,9 +581,9 @@ void openEndingCreditsIfUnlockedFlow(void) {
     }
 }
 
-void openRaceStartTransitionFlow(void) {
+void openPassAwardCelebrationFlow(void) {
     setCurrentGameTaskCallback(&openEndingCreditsIfUnlockedFlow, 0);
-    createGameTask(4, &initRaceStartTransition, 0x64);
+    createGameTask(4, &initPassAwardCelebration, 0x64);
     suspendGameTask(2);
 }
 
@@ -792,7 +792,7 @@ void initRaceSceneFlow(void) {
         gCurrentGameTask->callbackData1 = 0;
         gCurrentGameTask->callbackData2 = 0x1E;
         createCallbackTask((CallbackTaskCallback)initCourseRecordBannerFadeOut, 0, 0x64);
-        setCurrentGameTaskCallback(fadeOutRaceStartTransitionFlow, 0);
+        setCurrentGameTaskCallback(fadeOutPassAwardCelebrationFlow, 0);
     } else {
         createCallbackTask((CallbackTaskCallback)initRaceCountdownPrompt, 6, 0x64);
         createCallbackTask((CallbackTaskCallback)initRaceStartOverlay, 6, 0x64);
@@ -804,7 +804,7 @@ void initRaceSceneFlow(void) {
     updateRelocatableHeap();
 }
 
-void fadeOutRaceStartTransitionFlow(void) {
+void fadeOutPassAwardCelebrationFlow(void) {
     gMenuFadeAlpha -= 8;
     if (gMenuFadeAlpha < 0) {
         gMenuFadeAlpha = 0;
@@ -2316,7 +2316,7 @@ void finalizeRaceExitFlow(void) {
             if (gRaceSplitscreenMode == 1) {
                 setCurrentGameTaskCallback(openRaceTypeSelectFlow, 0);
             } else {
-                setCurrentGameTaskCallback(openRaceStartTransitionFlow, 0);
+                setCurrentGameTaskCallback(openPassAwardCelebrationFlow, 0);
             }
         } else {
             setCurrentGameTaskCallback(openPostRaceControllerPakContinuePromptFlow, 0);

@@ -9,10 +9,10 @@ void updateMenuCameraObjectLookAtOrigin(void);
 void updateMenuCameraObjectLookAtOriginCallback(void);
 void updateMenuCameraObjectWithTargetOffset(void);
 void updateMenuCameraObjectWithTargetOffsetCallback(void);
-void initRaceStartTransition(void);
-void updateRaceStartTransitionIntroDelay(void);
-void updateRaceStartTransitionFadeIn(void);
-void updateRaceStartTransitionFadeOut(void);
-void finishRaceStartTransition(void);
+void initPassAwardCelebration(void);
+void updatePassAwardCelebrationIntroDelay(void);
+void updatePassAwardCelebrationFadeIn(void);
+void updatePassAwardCelebrationFadeOut(void);
+void finishPassAwardCelebration(void);
 
 #endif

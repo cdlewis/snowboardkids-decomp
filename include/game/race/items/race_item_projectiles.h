@@ -3,6 +3,11 @@
 
 #include "game/math/spatial_math.h"
 
+typedef struct {
+    /* 0x00 */ Transform3D source;
+    /* 0x20 */ s32 pad20;
+} RaceEffectMatrixScratch;
+
 typedef struct RaceItemProjectileActor {
     /* 0x00 */ u8 pad0[0x10];
     /* 0x10 */ u16 playerIndex;
@@ -35,6 +40,9 @@ typedef struct RaceItemProjectileActor {
     /* 0x55 */ u8 pad55[0x58 - 0x55];
     /* 0x58 */ s8 matrixDirty2;
 } RaceItemProjectileActor;
+
+extern Vtx gRaceItemProjectileQuadVertices[4];
+extern Vtx gFallingActionProjectileQuadVertices[4];
 
 s32 findRaceItemProjectileHomingTarget(Vec3i *pos, s32 radius, s16 angle, s16 playerIndex, s16 *outAngle);
 void renderWideHomingItemProjectile(RaceItemProjectileActor *arg0);

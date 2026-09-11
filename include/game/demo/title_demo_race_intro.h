@@ -14,10 +14,13 @@ typedef char RacePlayerReplaySnapshotSizeCheck[
     (sizeof(RacePlayerReplaySnapshot) == sizeof(RacePlayer)) ? 1 : -1
 ];
 
+/* Segment starts restore all four complete player snapshots. The camera
+ * schedule is independent: changing camera mode need not restore players. */
 extern s16 gTitleDemoReplaySegmentFrames[16];
 extern s16 gTitleDemoCameraModeFrames[22];
 extern u8 gTitleDemoCameraModes[24];
-extern RacePlayerReplaySnapshot gTitleDemoReplayInputs[4][16];
+/* Full segment-start player state, not controller input records. */
+extern RacePlayerReplaySnapshot gTitleDemoReplayPlayerSnapshots[4][16];
 /* Viewport reveal height: 0..0xB0 in steps of 0x10. */
 extern volatile u8 gTitleDemoRaceIntroViewportHeight;
 extern s8 gTitleDemoRaceIntroFadeStep;

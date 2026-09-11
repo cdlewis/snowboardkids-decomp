@@ -136,6 +136,8 @@ u8 gSinglePlayerRankDisplayPatternSecond[4] = { 0, 1, 2, 0 };
 u8 gSinglePlayerRankDisplayPatternThird[4] = { 0, 1, 2, 0 };
 u8 gSinglePlayerRankDisplayPatternFourth[12] = { 0, 2, 1, 0 };
 
+/* Selects CPU pace policy from opponent roles, rank and X/Z separation
+ * from rankTargetPlayer. Clearing cpuPaceMode does not disable rank bonuses. */
 void updateRacePlayerRankDisplay(void) {
     s32 deltaX;
     s32 deltaZ;
@@ -266,19 +268,19 @@ void updateRacePlayerRankDisplay(void) {
         if (gRacePlayers[i].isCpu != 0) {
             switch (gRacePlayers[i].displayRank) {
                 case 0:
-                    gRacePlayers[i].rankArrow = 0;
+                    gRacePlayers[i].cpuPaceMode = RACE_CPU_PACE_RANK_BONUS;
                     break;
 
                 case 1:
-                    gRacePlayers[i].rankArrow = 0;
+                    gRacePlayers[i].cpuPaceMode = RACE_CPU_PACE_RANK_BONUS;
                     deltaX = gRacePlayers[gRacePlayers[i].rankTargetPlayer].pos.x - gRacePlayers[i].pos.x;
                     deltaZ = gRacePlayers[gRacePlayers[i].rankTargetPlayer].pos.z - gRacePlayers[i].pos.z;
                     if ((deltaX >= RANK_ARROW_DISTANCE) || (deltaX < RANK_ARROW_NEGATIVE_LIMIT) ||
                         (deltaZ >= RANK_ARROW_DISTANCE) || (deltaZ < RANK_ARROW_NEGATIVE_LIMIT)) {
                         if (gRacePlayers[gRacePlayers[i].rankTargetPlayer].rankIndex < gRacePlayers[i].rankIndex) {
-                            gRacePlayers[i].rankArrow = 1;
+                            gRacePlayers[i].cpuPaceMode = RACE_CPU_PACE_CATCH_UP;
                         } else {
-                            gRacePlayers[i].rankArrow = 2;
+                            gRacePlayers[i].cpuPaceMode = RACE_CPU_PACE_SLOW_DOWN;
                         }
                     }
                     break;
@@ -286,17 +288,17 @@ void updateRacePlayerRankDisplay(void) {
                 case 2:
                     if (gPlayerCount == 1) {
                         if (gRacePlayers[0].rankIndex < gRacePlayers[i].rankIndex) {
-                            gRacePlayers[i].rankArrow = 0;
+                            gRacePlayers[i].cpuPaceMode = RACE_CPU_PACE_RANK_BONUS;
                         } else {
-                            gRacePlayers[i].rankArrow = 3;
+                            gRacePlayers[i].cpuPaceMode = RACE_CPU_PACE_YIELD;
                         }
                     } else {
-                        gRacePlayers[i].rankArrow = 3;
+                        gRacePlayers[i].cpuPaceMode = RACE_CPU_PACE_YIELD;
                     }
                     break;
             }
             if (gRacePlayers[i].characterId == 5) {
-                gRacePlayers[i].rankArrow = 0;
+                gRacePlayers[i].cpuPaceMode = RACE_CPU_PACE_RANK_BONUS;
             }
         }
     }

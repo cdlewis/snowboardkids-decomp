@@ -1,3 +1,4 @@
+#include "game/race/course/race_course_effects.h"
 #include "game/race/race_state.h"
 #include "common.h"
 #include "game/menu/renderer/menu_render_utils.h"
@@ -29,8 +30,6 @@ typedef struct {
 extern Gfx *gRegionAllocPtr;
 extern Gfx D_20028F0[];
 extern Gfx D_2002DB8[];
-extern Gfx gEffectRenderModeSetupDl[];
-extern Gfx gEffectRenderModeCleanupDl[];
 
 extern s16 gFrameCounter;
 

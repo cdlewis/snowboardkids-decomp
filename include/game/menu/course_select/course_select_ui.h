@@ -125,6 +125,10 @@ typedef struct {
     /* 0x1 */ u8 courseIndex;
 } CourseSelectWidgetPlayerSlot;
 
+/* Draw view of CourseSelectAnimatedActor: playerFlags views transitionTimer
+ * at 0xFC, and playerSlots[i].courseIndex views the low byte of the s16
+ * targetCourseIndex[i] array at 0xF4 on big-endian MIPS. This view ends at
+ * 0x100, before transitionState[4]; the complete types have different sizes. */
 typedef struct {
     /* 0x000 */ CallbackTaskHeader task;
     /* 0x018 */ Mtx *renderMatrix;
@@ -154,8 +158,11 @@ extern CourseModeDescriptionText gCourseSelectModeDescriptionText[7];
 extern CoursePurchaseMessageText gCourseSelectPurchaseMessageText[2];
 extern MenuGlyphScript gCourseSelectBoardLevelText[];
 
-void drawCourseSelectPreviewModel(CourseSelectCoursePreviewActor *arg0);
-void drawCourseSelectPreviewModelClose(CourseSelectCoursePreviewActor *arg0);
+/* Separate snowboard preview actors owned by gMenuScratch0.task (incoming,
+ * slide states 0/1) and gMenuScratch1.task (outgoing, states 2/3). Both draw
+ * through drawSnowboardModel. */
+void drawCourseSelectSnowboardPreviewIn(CourseSelectCoursePreviewActor *arg0);
+void drawCourseSelectSnowboardPreviewOut(CourseSelectCoursePreviewActor *arg0);
 void updateCourseSelectPreviewModelIn(CourseSelectAnimatedActor *arg0);
 void initCourseSelectPreviewModelIn(void *arg0);
 void updateCourseSelectPreviewModelOut(CourseSelectAnimatedActor *arg0);

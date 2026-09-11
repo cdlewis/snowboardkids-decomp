@@ -1,3 +1,4 @@
+#include "game/race/course/race_course_effects.h"
 #include "game/race/items/race_items.h"
 #include "game/race/race_state.h"
 #include "common.h"
@@ -754,8 +755,6 @@ u32 D_800D9C38[] = { 0, 0 };
 extern Gfx *gRaceCourseObjectDisplayLists[];
 extern u8 gRaceUpdatePaused;
 extern u8 gTrainingCourseLesson;
-extern Gfx gEffectRenderModeSetupDl[];
-extern Gfx gEffectRenderModeCleanupDl[];
 extern Gfx gRaceItemPickupDisplayList[];
 extern Gfx gRaceActionPickupDisplayList[];
 extern Gfx *gRegionAllocPtr;
