@@ -101,14 +101,6 @@ typedef struct {
 } RaceCourseScrollingTextureInit;
 
 
-typedef union {
-    s32 word;
-    struct {
-        s16 hi;
-        s16 lo;
-    } half;
-} SplitWord;
-
 typedef struct RaceUiTransitionActor {
     /* 0x00 */ u8 pad0[0x10];
     /* 0x10 */ u16 index;
@@ -315,44 +307,6 @@ typedef struct RaceUiAnimatedTextActor {
     /* 0x54 */ s16 frame;
     /* 0x56 */ u8 matrixDirty;
 } RaceUiAnimatedTextActor;
-
-typedef struct RaceUiTrailingParticleActor {
-    /* 0x00 */ u8 pad0[0x10];
-    /* 0x10 */ u16 index;
-    /* 0x12 */ u8 pad12[0x18 - 0x12];
-    /* 0x18 */ Vec3i pos;
-    /* 0x24 */ Mtx *matrix0;
-    /* 0x28 */ Mtx *matrix1;
-    /* 0x2C */ s16 rotY;
-    /* 0x2E */ s16 rotX;
-    /* 0x30 */ u8 matrixDirty;
-} RaceUiTrailingParticleActor;
-
-typedef struct RaceUiTripleParticleActor {
-    /* 0x00 */ u8 pad0[0x10];
-    /* 0x10 */ u16 index;
-    /* 0x12 */ u8 pad12[0x18 - 0x12];
-    /* 0x18 */ Vec3i pos;
-    /* 0x24 */ Mtx *matrix0;
-    /* 0x28 */ Mtx *matrix1;
-    /* 0x2C */ Mtx *matrix2;
-    /* 0x30 */ s16 rotY;
-    /* 0x32 */ u8 matrixDirty;
-} RaceUiTripleParticleActor;
-
-typedef struct RaceUiSpinningParticleActor {
-    /* 0x00 */ u8 pad0[0x10];
-    /* 0x10 */ u16 index;
-    /* 0x12 */ u8 pad12[0x18 - 0x12];
-    /* 0x18 */ Vec3i pos;
-    /* 0x24 */ Mtx *matrix0;
-    /* 0x28 */ Mtx *matrix1;
-    /* 0x2C */ s16 rotY;
-    /* 0x2E */ s16 rotZ;
-    /* 0x30 */ s16 rotX;
-    /* 0x32 */ s16 rotX2;
-    /* 0x34 */ u8 matrixDirty;
-} RaceUiSpinningParticleActor;
 
 typedef struct RaceUiScaledParticleActor {
     /* 0x00 */ u8 pad0[0x10];

@@ -32,6 +32,58 @@ struct RaceUiSingleTrailActor;
 struct RaceCourseScrollingTextureActor;
 struct RacePlayer;
 
+/*
+ * Persistent course models. Bytes 0x00..0x17 are the CallbackTaskHeader:
+ * index aliases its userId, and pad0/pad12 cover the remaining scheduler fields.
+ * Keep the direct index and rotation fields for renderer consumers. The actors
+ * have different matrix/angle layouts, and their angles are not XYZ vectors.
+ */
+typedef struct RaceUiTripleParticleActor {
+    /* 0x00 */ u8 pad0[0x10];
+    /* 0x10 */ u16 index;
+    /* 0x12 */ u8 pad12[0x18 - 0x12];
+    /* 0x18 */ Vec3i pos;
+    /* 0x24 */ Mtx *matrix0;
+    /* 0x28 */ Mtx *matrix1;
+    /* 0x2C */ Mtx *matrix2;
+    /* 0x30 */ s16 rotY;
+    /* 0x32 */ u8 matrixDirty;
+} RaceUiTripleParticleActor;
+
+typedef struct RaceUiTrailingParticleActor {
+    /* 0x00 */ u8 pad0[0x10];
+    /* 0x10 */ u16 index;
+    /* 0x12 */ u8 pad12[0x18 - 0x12];
+    /* 0x18 */ Vec3i pos;
+    /* 0x24 */ Mtx *matrix0;
+    /* 0x28 */ Mtx *matrix1;
+    /* 0x2C */ s16 rotY;
+    /* 0x2E */ s16 rotX;
+    /* 0x30 */ u8 matrixDirty;
+} RaceUiTrailingParticleActor;
+
+typedef struct RaceUiSpinningParticleActor {
+    /* 0x00 */ u8 pad0[0x10];
+    /* 0x10 */ u16 index;
+    /* 0x12 */ u8 pad12[0x18 - 0x12];
+    /* 0x18 */ Vec3i pos;
+    /* 0x24 */ Mtx *matrix0;
+    /* 0x28 */ Mtx *matrix1;
+    /* 0x2C */ s16 rotY;
+    /* 0x2E */ s16 rotZ;
+    /* 0x30 */ s16 rotX;
+    /* 0x32 */ s16 rotX2;
+    /* 0x34 */ u8 matrixDirty;
+} RaceUiSpinningParticleActor;
+
+typedef union {
+    s32 word;
+    struct {
+        s16 hi;
+        s16 lo;
+    } half;
+} SplitWord;
+
 typedef struct {
     /* 0x00 */ u8 pad[0x10];
 } RaceUiProjectileVertexBlock;
@@ -70,14 +122,11 @@ typedef enum RaceCourseScrollingTextureId {
 } RaceCourseScrollingTextureId;
 struct RaceUiExpiredSpeedFanActor;
 struct RaceUiSparkleActor;
-struct RaceUiSpinningParticleActor;
 struct RaceUiTextParticleActor;
 struct RaceUiThrownTrailActor;
 struct RaceUiTimeTrialRecordDeltaPopupActor;
-struct RaceUiTrailingParticleActor;
 struct RaceUiTransitionActor;
 struct RaceUiTransitionRenderActor;
-struct RaceUiTripleParticleActor;
 
 /* Image/palette pointers follow the generic asset-loader void ** contract. */
 typedef struct RaceUiOverlayActor {
@@ -111,6 +160,7 @@ typedef struct RaceUiFadingImpactActor {
     /* 0x4E */ u8 matrixDirty;
 } RaceUiFadingImpactActor;
 
+extern Vec3i D_800D6324;
 extern RaceUiProjectileVertexBlock D_800D64A0[8];
 extern Gfx gAlphaSpriteRenderModeDl[];
 

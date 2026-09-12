@@ -111,6 +111,14 @@ typedef struct RaceItemEffectActor {
     /* 0x68 */ u8 *unk68;
 } RaceItemEffectActor;
 
+/*
+ * Snow spray and landing snow spray each draw two independently positioned
+ * sprites. On every unpaused update, pos1/pos2 are rebuilt from offset1/offset2
+ * plus the owning gRacePlayers[playerIndex].unk28, even for spray already in
+ * flight. Restoring a title-demo player snapshot therefore moves existing spray;
+ * renderer integrations must invalidate both sprites' interpolation along with
+ * the player's. Each actor expires when its timer reaches 0x18.
+ */
 typedef struct RaceItemFollowActor {
     /* 0x00 */ u8 pad0[0x10];
     /* 0x10 */ u16 playerIndex;
@@ -119,8 +127,8 @@ typedef struct RaceItemFollowActor {
     /* 0x24 */ Vec3i pos2;
     /* 0x30 */ Vec3i offset1;
     /* 0x3C */ Vec3i offset2;
-    /* 0x48 */ void *matrix1;
-    /* 0x4C */ void *matrix2;
+    /* 0x48 */ Mtx *matrix1;
+    /* 0x4C */ Mtx *matrix2;
     /* 0x50 */ s8 dirty;
     /* 0x51 */ s8 timer;
 } RaceItemFollowActor;
@@ -132,6 +140,8 @@ typedef struct RaceItemTextureActor {
 } RaceItemTextureActor;
 
 extern Gfx gRaceItemEffectTranslucentRenderSetupDl[6];
+extern Vtx gRacePlayerSnowSprayQuadVertices[4];
+extern Vtx gRacePlayerLandingSnowSprayQuadVertices[4];
 
 s32 getRaceItemEffectType(s32 arg0);
 void updateRaceItemSparkBurst(RaceItemEffectActor *arg0);
