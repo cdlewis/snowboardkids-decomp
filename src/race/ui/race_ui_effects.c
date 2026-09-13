@@ -725,7 +725,7 @@ Vec3i D_800D61C0[] = {
     { 131072,  258048, 8192    },
 };
 
-Vec3i D_800D6220[] = {
+Vec3i gDizzyLandTripleParticlePositions[] = {
     { 87549465, -252463332, -675267970 },
 };
 
@@ -766,19 +766,19 @@ Vec3i gIceCourseBumperPositions[] = {
     { 382028173, -410601578, -793439344 },
 };
 
-Vec3i D_800D6324 = {
+Vec3i gDizzyLandTrailingParticleLocalOffset = {
     0,
     15728640,
     -65536,
 };
 
-Vec3i D_800D6330[] = {
+Vec3i gDizzyLandTrailingParticlePositions[] = {
     { -2374729, -765234319, -1519126234 },
 };
 
-s16 D_800D633C[] = { 0x0240, 0x0000 };
+s16 gDizzyLandTrailingParticleYRotations[] = { 0x0240, 0x0000 };
 
-Vec3i D_800D6340[] = {
+Vec3i gDizzyLandSpinningObjectPositions[] = {
     { 443402522, -387728215, -622554590 },
 };
 
@@ -4511,7 +4511,7 @@ void updateRaceCourseTripleParticle(RaceUiTripleParticleActor *actor) {
 
 void initRaceCourseTripleParticle(RaceUiTripleParticleActor *actor) {
     actor->rotY = 0;
-    actor->pos = D_800D6220[actor->index];
+    actor->pos = gDizzyLandTripleParticlePositions[actor->index];
     setCallbackTaskCallback(actor, (CallbackTaskCallback)updateRaceCourseTripleParticle);
 }
 
@@ -5081,7 +5081,7 @@ void renderDizzyLandTrailingParticle(RaceUiTrailingParticleActor *arg0) {
             scratch.transform.translation.z = arg0->pos.z;
             arg0->matrix0 = allocFixedTransformMatrix(&scratch.transform);
 
-            transformVec3iByFixedMatrix(scratch.transform.rotation, &D_800D6324, &transformedOffset);
+            transformVec3iByFixedMatrix(scratch.transform.rotation, &gDizzyLandTrailingParticleLocalOffset, &transformedOffset);
             scratch.transform.translation.x += transformedOffset.x;
             scratch.transform.translation.y += transformedOffset.y;
             scratch.transform.translation.z += transformedOffset.z;
@@ -5109,8 +5109,8 @@ void updateDizzyLandTrailingParticle(RaceUiTrailingParticleActor *arg0) {
 }
 
 void initDizzyLandTrailingParticle(RaceUiTrailingParticleActor *arg0) {
-    arg0->pos = D_800D6330[arg0->index];
-    arg0->rotY = D_800D633C[arg0->index];
+    arg0->pos = gDizzyLandTrailingParticlePositions[arg0->index];
+    arg0->rotY = gDizzyLandTrailingParticleYRotations[arg0->index];
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateDizzyLandTrailingParticle);
 }
 
@@ -5168,7 +5168,7 @@ void updateRaceCourseSpinningObject(RaceUiSpinningParticleActor *arg0) {
 }
 
 void initRaceCourseSpinningObject(RaceUiSpinningParticleActor *arg0) {
-    arg0->pos = D_800D6340[arg0->index];
+    arg0->pos = gDizzyLandSpinningObjectPositions[arg0->index];
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceCourseSpinningObject);
 }
 

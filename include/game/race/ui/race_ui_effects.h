@@ -160,7 +160,7 @@ typedef struct RaceUiFadingImpactActor {
     /* 0x4E */ u8 matrixDirty;
 } RaceUiFadingImpactActor;
 
-extern Vec3i D_800D6324;
+extern Vec3i gDizzyLandTrailingParticleLocalOffset;
 extern RaceUiProjectileVertexBlock D_800D64A0[8];
 extern Gfx gAlphaSpriteRenderModeDl[];
 
