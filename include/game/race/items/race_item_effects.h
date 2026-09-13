@@ -2,7 +2,26 @@
 #define RACE_ITEM_EFFECTS_H
 
 #include "common.h"
+#include "game/engine/callback_task_scheduler.h"
 #include "game/math/spatial_math.h"
+
+typedef struct RaceItemDrawNode {
+    /* 0x00 */ struct RaceItemDrawNode *next;
+    /* 0x04 */ Vec3i *pos;
+    /* 0x08 */ Vtx *vertices;
+    /* 0x0C */ Mtx *matrix;
+    /* 0x10 */ u8 matrixDirty;
+} RaceItemDrawNode;
+
+typedef struct RaceItemSparkBurstActor {
+    /* 0x00 */ CallbackTaskHeader task;
+    /* 0x18 */ Vec3i payloads[2];
+    /* 0x30 */ u8 pad30[0xC];
+    /* 0x3C */ RaceItemDrawNode drawNodes[2];
+    /* 0x64 */ s16 timer;
+    /* 0x66 */ u8 pad66[2];
+    /* 0x68 */ u8 *frameSequence;
+} RaceItemSparkBurstActor;
 
 typedef union {
     Vec3i vec;
@@ -64,7 +83,7 @@ typedef union {
         /* 0x30 */ s16 x;
         /* 0x32 */ s16 y;
     } screen;
-    void *matrix;
+    Mtx *matrix;
     struct {
         /* 0x30 */ s16 drawInitialized;
         /* 0x32 */ s16 delay;
@@ -82,7 +101,7 @@ typedef union {
 } RaceItemEffectHeight;
 
 typedef union {
-    void *matrix;
+    Mtx *matrix;
     struct {
         /* 0x34 */ RaceItemEffectState state;
         /* 0x36 */ RaceItemEffectHeight height;
@@ -90,9 +109,7 @@ typedef union {
 } RaceItemEffectWord34;
 
 typedef struct RaceItemEffectActor {
-    /* 0x00 */ u8 pad0[0x10];
-    /* 0x10 */ u16 playerIndex;
-    /* 0x12 */ u8 pad12[6];
+    /* 0x00 */ CallbackTaskHeader task;
     /* 0x18 */ RaceItemEffectPayload payload;
     /* 0x24 */ RaceItemEffectVector24 vector24;
     /* 0x30 */ RaceItemEffectShorts30 unk30;
@@ -105,24 +122,18 @@ typedef struct RaceItemEffectActor {
     /* 0x4D */ u8 angleIndex;
     /* 0x4E */ u8 pad4E;
     /* 0x4F */ u8 followPlayerIndex;
-    /* 0x50 */ u8 pad50[0x64 - 0x50];
-    /* 0x64 */ s16 unk64;
-    /* 0x66 */ u8 pad66[2];
-    /* 0x68 */ u8 *unk68;
 } RaceItemEffectActor;
 
 /*
  * Snow spray and landing snow spray each draw two independently positioned
  * sprites. On every unpaused update, pos1/pos2 are rebuilt from offset1/offset2
- * plus the owning gRacePlayers[playerIndex].unk28, even for spray already in
+ * plus the owning gRacePlayers[task.userId].unk28, even for spray already in
  * flight. Restoring a title-demo player snapshot therefore moves existing spray;
  * renderer integrations must invalidate both sprites' interpolation along with
  * the player's. Each actor expires when its timer reaches 0x18.
  */
 typedef struct RaceItemFollowActor {
-    /* 0x00 */ u8 pad0[0x10];
-    /* 0x10 */ u16 playerIndex;
-    /* 0x12 */ u8 pad12[6];
+    /* 0x00 */ CallbackTaskHeader task;
     /* 0x18 */ Vec3i pos1;
     /* 0x24 */ Vec3i pos2;
     /* 0x30 */ Vec3i offset1;
@@ -134,18 +145,19 @@ typedef struct RaceItemFollowActor {
 } RaceItemFollowActor;
 
 typedef struct RaceItemTextureActor {
-    /* 0x00 */ u8 pad0[0x18];
+    /* 0x00 */ CallbackTaskHeader task;
     /* 0x18 */ void *images[4];
     /* 0x28 */ void *palettes[4];
 } RaceItemTextureActor;
 
+extern RaceItemDrawNode *gRaceItemTextureEffectDrawLists[4];
 extern Gfx gRaceItemEffectTranslucentRenderSetupDl[6];
 extern Vtx gRacePlayerSnowSprayQuadVertices[4];
 extern Vtx gRacePlayerLandingSnowSprayQuadVertices[4];
 
 s32 getRaceItemEffectType(s32 arg0);
-void updateRaceItemSparkBurst(RaceItemEffectActor *arg0);
-void initRaceItemSparkBurst(RaceItemEffectActor *arg0);
+void updateRaceItemSparkBurst(RaceItemSparkBurstActor *arg0);
+void initRaceItemSparkBurst(RaceItemSparkBurstActor *arg0);
 void spawnRaceItemTrackSparkBurst(Vec3i *arg0, Vec3i *arg1, Vec3i *arg2, Vec3i *arg3, s32 arg4, s16 arg5);
 void renderRacePlayerHitEffect(RaceItemEffectActor *arg0);
 void updateRacePlayerHitEffect(RaceItemEffectActor *arg0);
