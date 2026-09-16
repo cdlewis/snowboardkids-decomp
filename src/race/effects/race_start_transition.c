@@ -294,7 +294,7 @@ void updatePassAwardCelebrationIntroDelay(void) {
         gCurrentGameTask->callbackData0 = 0x12C;
         setCurrentGameTaskCallback(updatePassAwardCelebrationFadeIn, 0);
     }
-    createCallbackTaskWithUserId((CallbackTaskCallback)initFallingMenuSnowflake, 5, 0x64, 0);
+    createCallbackTaskWithUserId((CallbackTaskCallback)initFallingConfetti, 5, 0x64, 0);
     updateRaceCamera(0);
     updateRaceCamera(1);
     updateRaceCamera(2);
@@ -316,7 +316,7 @@ void updatePassAwardCelebrationFadeIn(void) {
         requestMusicSequenceStop(0x7E);
         setCurrentGameTaskCallback(updatePassAwardCelebrationFadeOut, 0);
     }
-    createCallbackTaskWithUserId((CallbackTaskCallback)initFallingMenuSnowflake, 5, 0x64, 0);
+    createCallbackTaskWithUserId((CallbackTaskCallback)initFallingConfetti, 5, 0x64, 0);
     updateRaceCamera(0);
     updateRaceCamera(1);
     updateCallbackTasks();
@@ -329,7 +329,7 @@ void updatePassAwardCelebrationFadeOut(void) {
         gFramebufferSwapHold = 1;
         setCurrentGameTaskCallback(finishPassAwardCelebration, 0);
     }
-    createCallbackTaskWithUserId((CallbackTaskCallback)initFallingMenuSnowflake, 5, 0x64, 0);
+    createCallbackTaskWithUserId((CallbackTaskCallback)initFallingConfetti, 5, 0x64, 0);
     updateRaceCamera(0);
     updateRaceCamera(1);
     updateCallbackTasks();

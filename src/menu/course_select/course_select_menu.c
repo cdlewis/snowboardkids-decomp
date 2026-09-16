@@ -84,7 +84,7 @@ void initCourseSelectMenu(void) {
     LOAD_ASSET(SNOWBOARD_TEXTURES, 0xD);
     LOAD_ASSET(RACE_EFFECT_SPRITES, 0x1C);
     initCallbackTaskScheduler(0);
-    createCallbackTask((CallbackTaskCallback)initMenuIconTilemapSpriteActor, 0, 0x5E);
+    createCallbackTask((CallbackTaskCallback)initScrollingMenuBackdropActor, 0, 0x5E);
 
     gMenuSelectionConfirmTimer = 0;
     D_800EC9C0 = 0;

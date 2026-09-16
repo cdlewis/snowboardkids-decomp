@@ -39,8 +39,6 @@
 #define RACE_UI_SINGLE_TRAIL_LOCAL_X 0
 #define RACE_UI_SINGLE_TRAIL_LOCAL_Y 0x100000
 #define RACE_UI_SINGLE_TRAIL_LOCAL_Z -0x200000
-#define ICE_COURSE_BUMPER_BASE_SCALE 0x1000
-#define ICE_COURSE_BUMPER_ROTATION_STEP 0x40
 #define RACE_UI_RESULTS_FADE_STEP 0x10
 #define RACE_UI_RESULTS_FULL_ALPHA 0xFF
 #define RACE_UI_RESULTS_REVEAL_TIMER 0x14
@@ -307,19 +305,6 @@ typedef struct RaceUiAnimatedTextActor {
     /* 0x54 */ s16 frame;
     /* 0x56 */ u8 matrixDirty;
 } RaceUiAnimatedTextActor;
-
-typedef struct RaceUiScaledParticleActor {
-    /* 0x00 */ u8 pad0[0x10];
-    /* 0x10 */ u16 index;
-    /* 0x12 */ u8 pad12[0x18 - 0x12];
-    /* 0x18 */ Vec3i pos;
-    /* 0x24 */ s16 scale;
-    /* 0x26 */ u8 pad26[2];
-    /* 0x28 */ Mtx *matrix;
-    /* 0x2C */ s16 rotY;
-    /* 0x2E */ s16 rotYStep;
-    /* 0x30 */ u8 matrixDirty;
-} RaceUiScaledParticleActor;
 
 typedef struct RaceUiRisingTrailActor {
     /* 0x00 */ u8 pad0[0x18];
@@ -753,7 +738,7 @@ Vec3i D_800D62A0 = {
     0,
 };
 
-Vec3i gIceCourseBumperPositions[] = {
+Vec3i gDizzyLandTeacupBumperPositions[] = {
     { 377616395, -404707244, -696356355 },
     { 390265355, -404750771, -700364235 },
     { 376196235, -406805942, -727249615 },
@@ -4972,7 +4957,7 @@ void spawnRaceUiStunOrbitingIcons(s16 playerIndex) {
     }
 }
 
-void renderIceCourseBumper(RaceUiScaledParticleActor *arg0) {
+void renderDizzyLandTeacupBumper(DizzyLandTeacupBumperActor *arg0) {
     struct {
         Transform3D transform;
         s16 unused[2];
@@ -4985,13 +4970,13 @@ void renderIceCourseBumper(RaceUiScaledParticleActor *arg0) {
     if (isPositionNearCurrentRaceViewportCamera(&arg0->pos) != 0) {
         if (arg0->matrixDirty != 0) {
             arg0->matrixDirty = 0;
-            makeFixedRotationY(scratch.transform.rotation, arg0->rotY);
-            scratch.transform.rotation[0] = SCALE_MATRIX_COMPONENT(scratch.transform.rotation[0], arg0->scale);
-            scratch.transform.rotation[3] = SCALE_MATRIX_COMPONENT(scratch.transform.rotation[3], arg0->scale);
-            scratch.transform.rotation[6] = SCALE_MATRIX_COMPONENT(scratch.transform.rotation[6], arg0->scale);
-            scratch.transform.rotation[2] = SCALE_MATRIX_COMPONENT(scratch.transform.rotation[2], arg0->scale);
-            scratch.transform.rotation[5] = SCALE_MATRIX_COMPONENT(scratch.transform.rotation[5], arg0->scale);
-            scratch.transform.rotation[8] = SCALE_MATRIX_COMPONENT(scratch.transform.rotation[8], arg0->scale);
+            makeFixedRotationY(scratch.transform.rotation, arg0->yaw);
+            scratch.transform.rotation[0] = SCALE_MATRIX_COMPONENT(scratch.transform.rotation[0], arg0->xzScale);
+            scratch.transform.rotation[3] = SCALE_MATRIX_COMPONENT(scratch.transform.rotation[3], arg0->xzScale);
+            scratch.transform.rotation[6] = SCALE_MATRIX_COMPONENT(scratch.transform.rotation[6], arg0->xzScale);
+            scratch.transform.rotation[2] = SCALE_MATRIX_COMPONENT(scratch.transform.rotation[2], arg0->xzScale);
+            scratch.transform.rotation[5] = SCALE_MATRIX_COMPONENT(scratch.transform.rotation[5], arg0->xzScale);
+            scratch.transform.rotation[8] = SCALE_MATRIX_COMPONENT(scratch.transform.rotation[8], arg0->xzScale);
             scratch.transform.translation.x = arg0->pos.x;
             scratch.transform.translation.y = arg0->pos.y;
             scratch.transform.translation.z = arg0->pos.z;
@@ -5003,13 +4988,13 @@ void renderIceCourseBumper(RaceUiScaledParticleActor *arg0) {
             gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x02, getRelocatableHeapBlockBase(ASSET_HANDLE(0x8)));
             gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x03, getRelocatableHeapBlockBase(ASSET_HANDLE(0x9)));
             gSPMatrix(RACE_UI_TRAIL_GFX_ALLOC_PTR++, arg0->matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
-            gSPDisplayList(RACE_UI_TRAIL_GFX_ALLOC_PTR++, &DIZZY_LAND_BUMPER_DISPLAY_LIST_VRAM);
+            gSPDisplayList(RACE_UI_TRAIL_GFX_ALLOC_PTR++, &DIZZY_LAND_TEACUP_BUMPER_DISPLAY_LIST_VRAM);
         }
     }
 }
 
-void updateIceCourseBumper(RaceUiScaledParticleActor *arg0) {
-    RaceUiScaledParticleActor *actor;
+void updateDizzyLandTeacupBumper(DizzyLandTeacupBumperActor *arg0) {
+    DizzyLandTeacupBumperActor *actor;
     Vec3i *pos;
     s16 scale;
 
@@ -5017,48 +5002,48 @@ void updateIceCourseBumper(RaceUiScaledParticleActor *arg0) {
     if (gRaceUpdatePaused == 0) {
         pos = &actor->pos;
         if (isPositionNearAnyRaceViewportFocus(pos) != 0) {
-            actor->rotY += actor->rotYStep;
+            actor->yaw += actor->yawStep;
 
             if (isRacePlayerInsideCylinder(pos, 0x200000, 0xF0000, 0) != 0) {
-                actor->scale = 0x1800;
+                actor->xzScale = 0x1800;
                 enqueuePositionalSoundEffect(0x67, pos, 0x7F, 0x32);
                 pushRacePlayerOutOfCylinder(pos, 0x2C0000, 0xF0000, 0);
             }
             if (isRacePlayerInsideCylinder(pos, 0x200000, 0xF0000, 1) != 0) {
-                actor->scale = 0x1800;
+                actor->xzScale = 0x1800;
                 enqueuePositionalSoundEffect(0x67, pos, 0x7F, 0x32);
                 pushRacePlayerOutOfCylinder(pos, 0x2C0000, 0xF0000, 1);
             }
             if (isRacePlayerInsideCylinder(pos, 0x200000, 0xF0000, 2) != 0) {
-                actor->scale = 0x1800;
+                actor->xzScale = 0x1800;
                 enqueuePositionalSoundEffect(0x67, pos, 0x7F, 0x32);
                 pushRacePlayerOutOfCylinder(pos, 0x2C0000, 0xF0000, 2);
             }
             if (isRacePlayerInsideCylinder(pos, 0x200000, 0xF0000, 3) != 0) {
-                actor->scale = 0x1800;
+                actor->xzScale = 0x1800;
                 enqueuePositionalSoundEffect(0x67, pos, 0x7F, 0x32);
                 pushRacePlayerOutOfCylinder(pos, 0x2C0000, 0xF0000, 3);
             }
 
-            scale = actor->scale;
+            scale = actor->xzScale;
             if (scale != 0x1000) {
-                actor->scale = scale - 0x100;
+                actor->xzScale = scale - 0x100;
             }
         }
     }
-    addRenderCallback(&gRaceModelEffectRenderCallbackList, (RenderCallback)renderIceCourseBumper, actor);
+    addRenderCallback(&gRaceModelEffectRenderCallbackList, (RenderCallback)renderDizzyLandTeacupBumper, actor);
 }
 
-void initIceCourseBumper(RaceUiScaledParticleActor *bumper) {
-    bumper->rotY = randomNextSecondary() << 4;
+void initDizzyLandTeacupBumper(DizzyLandTeacupBumperActor *bumper) {
+    bumper->yaw = randomNextSecondary() << 4;
     if (randomNextSecondary() & 1) {
-        bumper->rotYStep = ICE_COURSE_BUMPER_ROTATION_STEP;
+        bumper->yawStep = DIZZY_LAND_TEACUP_BUMPER_ROTATION_STEP;
     } else {
-        bumper->rotYStep = -ICE_COURSE_BUMPER_ROTATION_STEP;
+        bumper->yawStep = -DIZZY_LAND_TEACUP_BUMPER_ROTATION_STEP;
     }
-    bumper->scale = ICE_COURSE_BUMPER_BASE_SCALE;
-    bumper->pos = gIceCourseBumperPositions[bumper->index];
-    setCallbackTaskCallback(bumper, (CallbackTaskCallback)updateIceCourseBumper);
+    bumper->xzScale = DIZZY_LAND_TEACUP_BUMPER_BASE_SCALE;
+    bumper->pos = gDizzyLandTeacupBumperPositions[bumper->task.userId];
+    setCallbackTaskCallback(bumper, (CallbackTaskCallback)updateDizzyLandTeacupBumper);
 }
 
 void renderDizzyLandTrailingParticle(RaceUiTrailingParticleActor *arg0) {

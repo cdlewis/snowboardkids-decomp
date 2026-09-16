@@ -151,7 +151,7 @@ void updatePassAwardLabelFadeIn(MenuScreenEffectActor *);
 void drawMainMenuRotatingBoardModel(MenuScreenEffectActor *);
 void drawMainMenuStaticBoardModel(void *);
 
-void drawFallingMenuSnowflake(MenuScreenEffectActor *arg0) {
+void drawFallingConfetti(MenuScreenEffectActor *arg0) {
     void *texture;
 
     if (gCurrentViewportIndex == arg0->index) {
@@ -169,7 +169,7 @@ void drawFallingMenuSnowflake(MenuScreenEffectActor *arg0) {
     }
 }
 
-void updateFallingMenuSnowflakeDrift(MenuScreenEffectActor *arg0) {
+void updateFallingConfettiDrift(MenuScreenEffectActor *arg0) {
     s16 temp_v0;
     s16 temp_v0_2;
     u32 var_v1;
@@ -208,10 +208,10 @@ void updateFallingMenuSnowflakeDrift(MenuScreenEffectActor *arg0) {
         removeCallbackTask(arg0);
         return;
     }
-    addRenderCallback(&gRaceOverlayRenderCallbackList, (RenderCallback)drawFallingMenuSnowflake, (void *)arg0);
+    addRenderCallback(&gRaceOverlayRenderCallbackList, (RenderCallback)drawFallingConfetti, (void *)arg0);
 }
 
-void updateFallingMenuSnowflakeSway(MenuScreenEffectActor *arg0) {
+void updateFallingConfettiSway(MenuScreenEffectActor *arg0) {
     arg0->unk1C.half.hi = (arg0->unk1C.half.hi + 1) & 3;
     arg0->unk18.half.lo += arg0->unk20.half.lo;
     arg0->unk24.half.hi = (arg0->unk24.half.hi + 0x20) & 0xFFF;
@@ -223,10 +223,10 @@ void updateFallingMenuSnowflakeSway(MenuScreenEffectActor *arg0) {
         removeCallbackTask(arg0);
         return;
     }
-    addRenderCallback(&gRaceOverlayRenderCallbackList, (RenderCallback)drawFallingMenuSnowflake, (void *)arg0);
+    addRenderCallback(&gRaceOverlayRenderCallbackList, (RenderCallback)drawFallingConfetti, (void *)arg0);
 }
 
-void initFallingMenuSnowflake(MenuScreenEffectActor *arg0) {
+void initFallingConfetti(MenuScreenEffectActor *arg0) {
     s32 temp_v1;
     s16 rand;
 
@@ -246,7 +246,7 @@ void initFallingMenuSnowflake(MenuScreenEffectActor *arg0) {
                 arg0->unk20.half.lo = (randomNextMain() & 7) + 0x20;
             }
             arg0->unk2A = randomNextMain() % 5;
-            setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateFallingMenuSnowflakeSway);
+            setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateFallingConfettiSway);
             return;
         case 1:
             arg0->unk18.half.hi = (randomNextMain() - 0x80) << 4;
@@ -269,7 +269,7 @@ void initFallingMenuSnowflake(MenuScreenEffectActor *arg0) {
                 arg0->unk20.half.hi = (randomNextMain() * -8) & 0xF;
             }
             arg0->unk24.half.lo = randomNextMain() & 0xF;
-            setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateFallingMenuSnowflakeDrift);
+            setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateFallingConfettiDrift);
             return;
     }
 }

@@ -432,16 +432,16 @@ void initRaceCourseSceneTasks(void) {
                     createCallbackTaskWithUserId((CallbackTaskCallback)&initRacePickup, 0, 0x64, 0x60);
                 }
             }
-            createCallbackTaskWithUserId((CallbackTaskCallback)&initIceCourseBumper, 0, 0x64, 0);
-            createCallbackTaskWithUserId((CallbackTaskCallback)&initIceCourseBumper, 0, 0x64, 1);
-            createCallbackTaskWithUserId((CallbackTaskCallback)&initIceCourseBumper, 0, 0x64, 2);
-            createCallbackTaskWithUserId((CallbackTaskCallback)&initIceCourseBumper, 0, 0x64, 3);
-            createCallbackTaskWithUserId((CallbackTaskCallback)&initIceCourseBumper, 0, 0x64, 4);
-            createCallbackTaskWithUserId((CallbackTaskCallback)&initIceCourseBumper, 0, 0x64, 5);
-            createCallbackTaskWithUserId((CallbackTaskCallback)&initIceCourseBumper, 0, 0x64, 6);
-            createCallbackTaskWithUserId((CallbackTaskCallback)&initIceCourseBumper, 0, 0x64, 7);
-            createCallbackTaskWithUserId((CallbackTaskCallback)&initIceCourseBumper, 0, 0x64, 8);
-            createCallbackTaskWithUserId((CallbackTaskCallback)&initIceCourseBumper, 0, 0x64, 9);
+            createCallbackTaskWithUserId((CallbackTaskCallback)&initDizzyLandTeacupBumper, 0, 0x64, 0);
+            createCallbackTaskWithUserId((CallbackTaskCallback)&initDizzyLandTeacupBumper, 0, 0x64, 1);
+            createCallbackTaskWithUserId((CallbackTaskCallback)&initDizzyLandTeacupBumper, 0, 0x64, 2);
+            createCallbackTaskWithUserId((CallbackTaskCallback)&initDizzyLandTeacupBumper, 0, 0x64, 3);
+            createCallbackTaskWithUserId((CallbackTaskCallback)&initDizzyLandTeacupBumper, 0, 0x64, 4);
+            createCallbackTaskWithUserId((CallbackTaskCallback)&initDizzyLandTeacupBumper, 0, 0x64, 5);
+            createCallbackTaskWithUserId((CallbackTaskCallback)&initDizzyLandTeacupBumper, 0, 0x64, 6);
+            createCallbackTaskWithUserId((CallbackTaskCallback)&initDizzyLandTeacupBumper, 0, 0x64, 7);
+            createCallbackTaskWithUserId((CallbackTaskCallback)&initDizzyLandTeacupBumper, 0, 0x64, 8);
+            createCallbackTaskWithUserId((CallbackTaskCallback)&initDizzyLandTeacupBumper, 0, 0x64, 9);
             setBootFadeColor(0U, 0U, 0x40U);
             break;
         case 5:

@@ -58,7 +58,7 @@ void initRaceSplitscreenSelectMenu(void) {
     LOAD_ASSET(SHARED_UI_SPRITES, 0x1F);
     LOAD_ASSET(_59AAA0, 0x24);
     initCallbackTaskScheduler(0);
-    createCallbackTask((CallbackTaskCallback)initMenuIconTilemapSpriteActor, 0, 0x5E);
+    createCallbackTask((CallbackTaskCallback)initScrollingMenuBackdropActor, 0, 0x5E);
     gMenuSelectionConfirmTimer = 0;
     gRacePlayers[0].menuState = 0;
     gActiveMenuTask = 0;

@@ -6,6 +6,9 @@
 #include "game/engine/callback_task_scheduler.h"
 #include "game/race/ui/race_hud.h"
 
+#define DIZZY_LAND_TEACUP_BUMPER_BASE_SCALE 0x1000
+#define DIZZY_LAND_TEACUP_BUMPER_ROTATION_STEP 0x40
+
 struct RaceUiAlpha18Actor;
 struct RaceUiAlpha1AActor;
 struct RaceUiAlphaActor;
@@ -27,10 +30,24 @@ struct RaceUiRankTextRenderActor;
 struct RaceUiRankTrailActor;
 struct RaceUiResultsBannerActor;
 struct RaceUiRisingTrailActor;
-struct RaceUiScaledParticleActor;
 struct RaceUiSingleTrailActor;
 struct RaceCourseScrollingTextureActor;
 struct RacePlayer;
+
+/* Persistent Dizzy Land teacup; task.userId selects one of ten positions.
+ * xzScale affects X/Z only; yaw and yawStep are signed 16-bit angles. */
+typedef struct DizzyLandTeacupBumperActor {
+    /* 0x00 */ CallbackTaskHeader task;
+    /* 0x18 */ Vec3i pos;
+    /* 0x24 */ s16 xzScale;
+    /* 0x26 */ u8 pad26[2];
+    /* 0x28 */ Mtx *matrix;
+    /* 0x2C */ s16 yaw;
+    /* 0x2E */ s16 yawStep;
+    /* 0x30 */ u8 matrixDirty;
+} DizzyLandTeacupBumperActor;
+
+typedef char DizzyLandTeacupBumperActorSizeCheck[(sizeof(DizzyLandTeacupBumperActor) == 0x34) ? 1 : -1];
 
 /*
  * Persistent course models. Bytes 0x00..0x17 are the CallbackTaskHeader:
@@ -160,6 +177,7 @@ typedef struct RaceUiFadingImpactActor {
     /* 0x4E */ u8 matrixDirty;
 } RaceUiFadingImpactActor;
 
+extern Vec3i gDizzyLandTeacupBumperPositions[10];
 extern Vec3i gDizzyLandTrailingParticleLocalOffset;
 extern RaceUiProjectileVertexBlock D_800D64A0[8];
 extern Gfx gAlphaSpriteRenderModeDl[];
@@ -328,9 +346,9 @@ void renderRaceUiStunOrbitingIcon(struct RaceUiOrbitingSpriteActor *arg0);
 void updateRaceUiStunOrbitingIcon(struct RaceUiOrbitingSpriteActor *arg0);
 void initRaceUiStunOrbitingIcon(struct RaceUiOrbitingSpriteActor *arg0);
 void spawnRaceUiStunOrbitingIcons(s16 arg0);
-void renderIceCourseBumper(struct RaceUiScaledParticleActor *arg0);
-void updateIceCourseBumper(struct RaceUiScaledParticleActor *arg0);
-void initIceCourseBumper(struct RaceUiScaledParticleActor *arg0);
+void renderDizzyLandTeacupBumper(DizzyLandTeacupBumperActor *arg0);
+void updateDizzyLandTeacupBumper(DizzyLandTeacupBumperActor *arg0);
+void initDizzyLandTeacupBumper(DizzyLandTeacupBumperActor *arg0);
 void renderDizzyLandTrailingParticle(struct RaceUiTrailingParticleActor *arg0);
 void updateDizzyLandTrailingParticle(struct RaceUiTrailingParticleActor *arg0);
 void initDizzyLandTrailingParticle(struct RaceUiTrailingParticleActor *arg0);

@@ -131,6 +131,15 @@ typedef struct RaceItemEffectActor {
  * flight. Restoring a title-demo player snapshot therefore moves existing spray;
  * renderer integrations must invalidate both sprites' interpolation along with
  * the player's. Each actor expires when its timer reaches 0x18.
+ *
+ * Storage follows the CallbackTask free-pool contract: a removed spray slot can
+ * immediately become another spray, even for a different player. The address
+ * is not a spawn identity. timer counts game updates, not submitted render
+ * frames: updateGameTaskScheduler runs callbacks before
+ * updateFramebufferRenderScheduler, which can omit a submission. Neither the
+ * address nor timer (including timer <= 1) establishes continuity with the
+ * actor rendered at that address in the previous frame. Renderer history needs
+ * an independently tracked allocation lifetime.
  */
 typedef struct RaceItemFollowActor {
     /* 0x00 */ CallbackTaskHeader task;

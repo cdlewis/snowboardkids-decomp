@@ -1800,7 +1800,7 @@ void prepareRaceResultsFlow(void) {
         if ((gPlayerCount == 1) && (gRaceSplitscreenMode == 0)) {
             createCallbackTaskWithUserId((CallbackTaskCallback)updateRaceUiResultAwardBadgeDelay, 6, 0x64, 0xA9);
         }
-        createCallbackTaskWithUserId((CallbackTaskCallback)initFallingMenuSnowflake, 5, 0x64, D_80121B60 - 1);
+        createCallbackTaskWithUserId((CallbackTaskCallback)initFallingConfetti, 5, 0x64, D_80121B60 - 1);
     }
     updateRaceFlowFrame();
 }
@@ -2096,7 +2096,7 @@ void updateRaceResultsFlow(void) {
     }
 
     if (D_80121B60 != 0) {
-        createCallbackTaskWithUserId((CallbackTaskCallback)initFallingMenuSnowflake, 5, 0x64,
+        createCallbackTaskWithUserId((CallbackTaskCallback)initFallingConfetti, 5, 0x64,
                                      D_80121B60 - 1);
     }
     updateRaceFlowFrame();
@@ -2110,7 +2110,7 @@ void updateRaceResultsMusicFlow(void) {
         gMenuFlowState |= 0x20;
     }
     if (D_80121B60 != 0) {
-        createCallbackTaskWithUserId((CallbackTaskCallback)&initFallingMenuSnowflake, 5, 0x64, D_80121B60 - 1);
+        createCallbackTaskWithUserId((CallbackTaskCallback)&initFallingConfetti, 5, 0x64, D_80121B60 - 1);
     }
     updateRaceFlowFrame();
     if (gMenuFlowState & 0x10) {
@@ -2126,7 +2126,7 @@ void updateRaceResultsMusicFlow(void) {
 void fadeOutRaceResultsFlow(void) {
     gFramebufferRenderInterval.value = 0;
     if (D_80121B60 != 0) {
-        createCallbackTaskWithUserId((CallbackTaskCallback)initFallingMenuSnowflake, 5, 0x64, D_80121B60 - 1);
+        createCallbackTaskWithUserId((CallbackTaskCallback)initFallingConfetti, 5, 0x64, D_80121B60 - 1);
     }
     updateRaceFlowFrame();
     gRaceRumbleEnabled = 0;
@@ -2430,7 +2430,7 @@ void initRaceRecordSettingsFlow(void) {
     initCallbackTaskScheduler(0);
     gMenuFlowState = 0;
     createCallbackTaskWithUserId((CallbackTaskCallback)initRaceRecordSettingsPanel, 0, 0x64, 0);
-    createCallbackTask((CallbackTaskCallback)initMenuIconTilemapSpriteActor, 0, 0x5E);
+    createCallbackTask((CallbackTaskCallback)initScrollingMenuBackdropActor, 0, 0x5E);
     setCurrentGameTaskCallback(updateRaceRecordSettingsFlow, 0);
     requestMusicSequenceBank(7);
 }

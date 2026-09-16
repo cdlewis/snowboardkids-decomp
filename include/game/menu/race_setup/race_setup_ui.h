@@ -130,9 +130,9 @@ void initRaceSetupSaveStatusWidgets(TitleMenuWidgetActor *arg0);
 void drawRaceSetupSaveChoicePrompts(TitleMenuTransitionActor *arg0);
 void updateRaceSetupSaveChoicePrompts(TitleMenuTransitionActor *arg0);
 void initRaceSetupSaveChoicePrompts(RectListActor *arg0);
-void drawMenuIconTilemapSpriteActor(void *arg0);
-void updateMenuIconTilemapSpriteActor(SpriteActor *arg0);
-void initMenuIconTilemapSpriteActor(SpriteActor *arg0);
+void drawScrollingMenuBackdropActor(void *arg0);
+void updateScrollingMenuBackdropActor(SpriteActor *arg0);
+void initScrollingMenuBackdropActor(SpriteActor *arg0);
 void initMenuTilemapSprite(MenuTilemapSprite *sprite, MenuTilemapSpriteAsset *asset);
 void n_alSynFreeFX(s32 arg0);
 

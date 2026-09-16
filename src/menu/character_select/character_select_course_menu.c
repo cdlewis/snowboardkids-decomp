@@ -172,7 +172,7 @@ void initCharacterSelectCourseMenuFromRace(void)
   LOAD_ASSET(_59DFE0, 0x26);
   LOAD_ASSET(SHARED_UI_SPRITES, 0x1F);
   initCallbackTaskScheduler(0);
-  createCallbackTask((CallbackTaskCallback) initMenuIconTilemapSpriteActor, 0, 0x5E);
+  createCallbackTask((CallbackTaskCallback) initScrollingMenuBackdropActor, 0, 0x5E);
   if (gRaceSplitscreenMode == 1)
   {
  LOAD_ASSET(_5CCD40, 0x25); createCallbackTask((CallbackTaskCallback) initCharacterSelectLimitedCourseList, 0, 0x63); gCurrentGameTask->callbackData0 = 0; } else { gCurrentGameTask->callbackData0 = 0xFF; } gCurrentGameTask->callbackData1 = 0; gMenuSelectionConfirmTimer = 0; gMenuExitSelection = 0; gMenuFlowState = 0; gRacePlayers[0].menuState = 0; gMenuInputRepeatTimers[0] = 0; gMenuChoicePromptState[0] = 0; gMenuFadeAlpha = gCurrentGameTask->callbackData0; var_v1 = 0; if (gPlayerCount > var_v1) { var_v0 = &gGameSaveDataBuffer[0]; do { temp_v1 = var_v0->progressionLevel; var_v0 += 1; if (gHighestUnlockedCourse < temp_v1) { gHighestUnlockedCourse = temp_v1; } } while (var_v0 < (&gGameSaveDataBuffer[0] + gPlayerCount));
@@ -274,7 +274,7 @@ void initCharacterSelectCourseMenuFromPlayerSelect(void) {
         LOAD_ASSET(_59DFE0, 0x26);
         LOAD_ASSET(SHARED_UI_SPRITES, 0x1F);
         initCallbackTaskScheduler(0);
-        createCallbackTask((CallbackTaskCallback)initMenuIconTilemapSpriteActor, 0, 0x5E);
+        createCallbackTask((CallbackTaskCallback)initScrollingMenuBackdropActor, 0, 0x5E);
         gCurrentGameTask->callbackData0 = 0xFF;
     } else {
         gCurrentGameTask->callbackData0 = 0;

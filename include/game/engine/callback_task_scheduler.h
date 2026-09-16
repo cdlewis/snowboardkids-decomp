@@ -20,6 +20,14 @@ typedef struct CallbackTaskHeader {
     /* 0x16 */ s16 isActive;
 } CallbackTaskHeader;
 
+/*
+ * The scheduler initializes 216 contiguous slots with a MIPS stride of 0x118.
+ * removeCallbackTask returns a slot to gFreeCallbackTaskPool; the next successful
+ * createCallbackTaskPreservingArgs pops the most recently freed slot. Storage
+ * can therefore be reused immediately, including by an actor for another player.
+ * A task address and userId do not identify an allocation lifetime. Consumers
+ * retaining render history must track allocation lifetimes separately.
+ */
 struct CallbackTask {
     /* 0x000 */ CallbackTaskHeader header;
     /* 0x018 */ u32 callbackData[0x40];

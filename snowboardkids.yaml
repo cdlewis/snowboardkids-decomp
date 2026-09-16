@@ -893,7 +893,7 @@ segments:
 
   - start: 0x1173C0
     type: course_display_list
-    name: DIZZY_LAND_BUMPER_DISPLAY_LIST
+    name: DIZZY_LAND_TEACUP_BUMPER_DISPLAY_LIST
     vram: 0x0200C910
     align: 8
     subalign: 8

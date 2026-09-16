@@ -1629,13 +1629,13 @@ void initRaceSetupSaveChoicePrompts(RectListActor *arg0) {
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceSetupSaveChoicePrompts);
 }
 
-void drawMenuIconTilemapSpriteActor(void *arg0) {
+void drawScrollingMenuBackdropActor(void *arg0) {
     SpriteActor *actor = arg0;
 
     drawMenuTilemapSprite(&actor->sprite.render, MENU_TILEMAP_TEXEL_4B, actor->x, actor->y);
 }
 
-void updateMenuIconTilemapSpriteActor(SpriteActor *arg0) {
+void updateScrollingMenuBackdropActor(SpriteActor *arg0) {
     SpriteActor *temp_a2;
     MenuTilemapSprite *temp_v0;
     SpriteActor *actor = arg0;
@@ -1647,16 +1647,16 @@ void updateMenuIconTilemapSpriteActor(SpriteActor *arg0) {
         actor->sprite.render.scrollX = 0x2FF;
     }
     temp_v0->render.scrollY = (temp_v0->render.scrollY + 1) & 0x1FF;
-    addRenderCallback(&gMenuOverlayRenderCallbackList, (RenderCallback)drawMenuIconTilemapSpriteActor, (void *)temp_a2);
+    addRenderCallback(&gMenuOverlayRenderCallbackList, (RenderCallback)drawScrollingMenuBackdropActor, (void *)temp_a2);
 }
 
-void initMenuIconTilemapSpriteActor(SpriteActor *arg0) {
+void initScrollingMenuBackdropActor(SpriteActor *arg0) {
     SpriteActor *temp_a2 = arg0;
 
     initMenuTilemapSprite(&temp_a2->sprite, getRelocatableHeapBlockBase(gAssetHandles[38]));
     temp_a2->x = temp_a2->sprite.render.tilemapWidth;
     temp_a2->y = temp_a2->sprite.render.tilemapHeight;
-    setCallbackTaskCallback(temp_a2, (CallbackTaskCallback)updateMenuIconTilemapSpriteActor);
+    setCallbackTaskCallback(temp_a2, (CallbackTaskCallback)updateScrollingMenuBackdropActor);
 }
 
 void initMenuTilemapSprite(MenuTilemapSprite *arg0, MenuTilemapSpriteAsset *arg1) {

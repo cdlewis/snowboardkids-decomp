@@ -59,7 +59,7 @@ void initRaceTypeSelectMenu(void) {
     LOAD_ASSET(_5CCD40, 0x25);
     LOAD_ASSET(SHARED_UI_SPRITES, 0x1F);
     initCallbackTaskScheduler(0);
-    createCallbackTask((CallbackTaskCallback)initMenuIconTilemapSpriteActor, 0, 0x5E);
+    createCallbackTask((CallbackTaskCallback)initScrollingMenuBackdropActor, 0, 0x5E);
     gMenuSelectionConfirmTimer = 0;
     gRacePlayers[0].menuState = 0;
     gActiveMenuTask = 0;

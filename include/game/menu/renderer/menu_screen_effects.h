@@ -35,7 +35,7 @@ typedef struct MenuScreenEffectActor {
     /* 0x36 */ s16 alpha;
 } MenuScreenEffectActor;
 
-void initFallingMenuSnowflake(MenuScreenEffectActor *arg0);
+void initFallingConfetti(MenuScreenEffectActor *arg0);
 void initPassAwardPodium(MenuScreenEffectActor *arg0);
 void initPassAwardWinner(MenuScreenEffectActor *arg0);
 void createPassAwardOpponent(s32 arg0, s32 arg1);

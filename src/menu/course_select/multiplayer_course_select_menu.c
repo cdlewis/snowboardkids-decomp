@@ -104,7 +104,7 @@ void initMultiplayerCourseSelectMenu(void) {
     LOAD_ASSET(SNOWBOARD_TEXTURES, 0xD);
     LOAD_ASSET(SHARED_UI_SPRITES, 0x1F);
     initCallbackTaskScheduler(0);
-    createCallbackTask((CallbackTaskCallback)initMenuIconTilemapSpriteActor, 0, 0x63);
+    createCallbackTask((CallbackTaskCallback)initScrollingMenuBackdropActor, 0, 0x63);
 
     D_800EC9C0 = 0;
     gActiveMenuTask = 0;

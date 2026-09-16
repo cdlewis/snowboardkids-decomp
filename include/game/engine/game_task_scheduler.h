@@ -41,6 +41,10 @@ extern u8 gFramebufferSwapHold;
 extern u8 gNextFramebufferRenderTaskIndex;
 
 void initGameTaskScheduler(void);
+/* Runs active game callbacks before updateFramebufferRenderScheduler. That
+ * scheduler can omit framebuffer submission, so callback timers count game
+ * updates rather than submitted render frames. A timer alone cannot identify
+ * an actor spawn or prove continuity with a previously rendered lifetime. */
 void updateGameTaskScheduler(void);
 void createGameTask(s32 taskId, GameTaskCallback callback, s32 priority);
 void removeGameTask(s32 taskId);
