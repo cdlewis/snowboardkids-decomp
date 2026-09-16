@@ -1350,12 +1350,7 @@ void renderCourseTriggerVolume(RaceCourseTriggerEffect *arg0) {
     }
 
     if (arg0->matrix != NULL) {
-        {
-            Gfx *_g = gRegionAllocPtr++;
-
-            _g->words.w0 = 0xE7000000;
-            _g->words.w1 = 0;
-        }
+        gDPPipeSync(gRegionAllocPtr++);
         {
             Gfx *_g = gRegionAllocPtr++;
 
