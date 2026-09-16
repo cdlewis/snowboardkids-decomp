@@ -1133,11 +1133,7 @@ void renderCourseGateObject(RaceCourseGateEffect *arg0) {
     if (temp_s0->baseMatrix != NULL) {
         gDPPipeSync(gRegionAllocPtr++);
         gSPSegment(gRegionAllocPtr++, 2, getRelocatableHeapBlockBase(ASSET_HANDLE(0xA)));
-        {
-            Gfx *segment2 = gRegionAllocPtr++;
-            segment2->words.w0 = 0xBC000C06;
-            segment2->words.w1 = (u32)getRelocatableHeapBlockBase(ASSET_HANDLE(0xB));
-        }
+        gSPSegment(gRegionAllocPtr++, 3, getRelocatableHeapBlockBase(ASSET_HANDLE(0xB)));
         gSPMatrix(gRegionAllocPtr++, temp_s0->baseMatrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
         gSPDisplayList(gRegionAllocPtr++, &_148F88_VRAM);
     }
