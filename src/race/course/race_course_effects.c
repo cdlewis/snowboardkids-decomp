@@ -1353,11 +1353,10 @@ void renderCourseTriggerVolume(RaceCourseTriggerEffect *arg0) {
         gDPPipeSync(gRegionAllocPtr++);
         gSPSegment(gRegionAllocPtr++, 2, getRelocatableHeapBlockBase(ASSET_HANDLE(0x8)));
         {
-            Gfx *_g = gRegionAllocPtr++;
-            volatile s32 pad[2];
+            Gfx *segment = gRegionAllocPtr++;
+            volatile s32 pad[1];
 
-            _g->words.w0 = 0xBC000C06;
-            _g->words.w1 = (u32)getRelocatableHeapBlockBase(ASSET_HANDLE(0x9));
+            gSPSegment(segment, 3, getRelocatableHeapBlockBase(ASSET_HANDLE(0x9)));
         }
         {
             Gfx *_g = gRegionAllocPtr++;
