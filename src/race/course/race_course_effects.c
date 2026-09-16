@@ -20,12 +20,6 @@
 
 #define COURSE_INDEX_RELOAD (*(volatile s16 *)&gRaceCourseIndex.signedValue)
 #define ASSET_HANDLE(index) (gAssetHandles[(index)])
-#define RACE_COURSE_EFFECTS_GFX_CMD(pkt, cmd0, cmd1) \
-    {                                                \
-        Gfx *_g = (Gfx *)(pkt);                      \
-        _g->words.w0 = (cmd0);                       \
-        _g->words.w1 = (cmd1);                       \
-    }
 
 typedef struct {
     s32 dz;
@@ -596,7 +590,7 @@ void renderCourseTextureMarkers(RaceCourseObjectMatrixEffect *arg0) {
                 gSPMatrix(gRegionAllocPtr++, &arg0->matrices[i], G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
                 gSPMatrix(gRegionAllocPtr++, gViewportMatrix, G_MTX_NOPUSH | G_MTX_MUL | G_MTX_MODELVIEW);
                 gSPVertex(gRegionAllocPtr++, &gCourseTextureMarkerVertices[entry->type * 4], 4, 0);
-                RACE_COURSE_EFFECTS_GFX_CMD(gRegionAllocPtr++, 0xB1060402, 0x60200);
+                gSP2Triangles(gRegionAllocPtr++, 3, 2, 1, 0, 3, 1, 0, 0);
             }
             entry++;
             i++;
