@@ -2,6 +2,7 @@
 #define RACE_COURSE_EFFECTS_H
 
 #include "common.h"
+#include "game/race/player/race_player_input.h"
 #include "game/engine/callback_task_scheduler.h"
 
 enum CourseWaterLayerId {
@@ -10,7 +11,6 @@ enum CourseWaterLayerId {
     COURSE_WATER_LAYER_GRASS_VALLEY_BRIDGE_RIVER
 };
 
-struct RacePlayer;
 
 typedef struct RaceCountdownEffect {
     /* 0x00 */ CallbackTaskHeader task;
@@ -197,7 +197,7 @@ void renderCourseWaterLayer(RaceCourseWaterLayerActor *effect);
 void updateCourseWaterLayer(RaceCourseWaterLayerActor *effect);
 void initCourseWaterLayer(RaceCourseWaterLayerActor *effect);
 void renderCourseTriggerVolume(RaceCourseTriggerEffect *effect);
-void collidePlayerWithCourseTriggerVolume(struct RacePlayer *player, RaceCourseTriggerEffect *trigger);
+void collidePlayerWithCourseTriggerVolume(RacePlayer *player, RaceCourseTriggerEffect *trigger);
 void updateCourseTriggerVolume(RaceCourseTriggerEffect *effect);
 void initCourseTriggerVolume(RaceCourseTriggerEffect *effect);
 

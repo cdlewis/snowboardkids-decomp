@@ -3,7 +3,7 @@
 
 #include "common.h"
 #include "game/math/geometry.h"
-#include "game/race/effects/snowboard_trail_effects.h"
+#include "game/race/effects/snowboard_trail_types.h"
 #include "game/race/player/character_model.h"
 
 #define RACE_PLAYER_COUNT 4

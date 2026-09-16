@@ -26,7 +26,6 @@
 #include "game/race/ui/race_hud.h"
 #include <PR/os_cache.h>
 
-
 #define RACE_UI_TRAIL_GFX_ALLOC_PTR (*(RaceUiDisplayCommand **)&gRegionAllocPtr)
 #define ASSET_HANDLE(index) (gAssetHandles[(index)])
 #define RACE_UI_SNOWBOARD_TRAIL_SCALE_X 0xF0000
@@ -98,82 +97,6 @@ typedef struct {
     u8 soundSourceIndex;
 } RaceCourseScrollingTextureInit;
 
-
-typedef struct RaceUiTransitionActor {
-    /* 0x00 */ u8 pad0[0x10];
-    /* 0x10 */ u16 index;
-    /* 0x12 */ u8 pad12[6];
-    /* 0x18 */ u8 pad18[0x24 - 0x18];
-    /* 0x24 */ Transform3D transformSource;
-    /* 0x44 */ u8 pad44[0x64 - 0x44];
-    /* 0x64 */ Mtx *matrix;
-    /* 0x68 */ s32 unk68;
-    /* 0x6C */ s16 unk6C;
-    /* 0x6E */ s16 unk6E;
-    /* 0x70 */ u8 pad70[2];
-    /* 0x72 */ u8 matrixDirty;
-} RaceUiTransitionActor;
-
-typedef struct RaceCourseScrollingTextureActor {
-    /* 0x00 */ u8 pad0[0x10];
-    /* 0x10 */ u16 index;
-    /* 0x12 */ u8 pad12[6];
-    /* 0x18 */ void *texture;
-    /* 0x1C */ void *palette;
-    /* 0x20 */ s16 textureScrollOffset;
-    /* 0x22 */ u8 pad22[2];
-    /* 0x24 */ Gfx *displayList;
-    /* 0x28 */ s32 useOverlayQueue;
-    /* 0x2C */ s32 soundSourceIndex;
-} RaceCourseScrollingTextureActor;
-
-typedef struct RaceUiCounterActor {
-    /* 0x00 */ u8 pad0[0x10];
-    /* 0x10 */ u16 index;
-    /* 0x12 */ u8 pad12[6];
-    /* 0x18 */ s16 alpha;
-    /* 0x1A */ s16 timer;
-    /* 0x1C */ s16 state;
-    union {
-        /* 0x1E */ s16 value;
-        /* 0x1E */ s16 pendingHitPrize;
-    };
-    union {
-        /* 0x20 */ s16 bonus;
-        /* 0x20 */ s16 pendingPerfectHitBonus;
-    };
-    union {
-        /* 0x22 */ s16 target;
-        /* 0x22 */ s16 pendingCompleteBonus;
-    };
-    union {
-        /* 0x24 */ s16 flag;
-        /* 0x24 */ s16 hasPerfectHitBonus;
-    };
-} RaceUiCounterActor;
-
-typedef struct RaceUiDualCounterActor {
-    /* 0x00 */ u8 pad0[0x10];
-    /* 0x10 */ u16 index;
-    /* 0x12 */ u8 pad12[0x18 - 0x12];
-    union {
-        struct {
-            /* 0x18 */ s8 row;
-            /* 0x19 */ s8 column;
-        };
-        /* 0x18 */ s16 alpha18;
-    };
-    /* 0x1A */ s16 timeFraction;
-    /* 0x1C */ s16 alpha;
-    /* 0x1E */ s16 timer;
-    /* 0x20 */ s16 state;
-    /* 0x22 */ s16 leftValue;
-    /* 0x24 */ s16 bonus;
-    /* 0x26 */ s16 leftTarget;
-    /* 0x28 */ s16 rightValue;
-    /* 0x2A */ s16 flag;
-} RaceUiDualCounterActor;
-
 typedef struct {
     /* 0x00 */ u8 pad0[0x10];
     /* 0x10 */ u16 index;
@@ -214,153 +137,11 @@ typedef struct {
 } RaceUiEffectActor;
 
 typedef struct {
-    /* 0x00 */ s32 unk0;
-    /* 0x04 */ s32 unk4;
-    /* 0x08 */ s32 unk8;
-} RaceUiEffectParticle;
-
-typedef struct {
     struct {
         u32 w0;
         u32 w1;
     } words;
 } RaceUiDisplayCommand;
-
-typedef struct RaceUiExpiredSpeedFanActor {
-    /* 0x00 */ u8 pad0[0x24];
-    /* 0x24 */ Vec3i scale;
-    /* 0x30 */ Vec3i worldPos;
-    /* 0x3C */ s32 velocityY;
-    /* 0x40 */ Transform3D frontTransform;
-    /* 0x60 */ Transform3D backTransform;
-    /* 0x80 */ s16 playerIndex;
-    /* 0x82 */ u8 pad82[2];
-    /* 0x84 */ s16 spinYaw;
-    /* 0x86 */ u8 pad86[2];
-    /* 0x88 */ Mtx *frontMatrix;
-    /* 0x8C */ Mtx *backMatrix;
-    /* 0x90 */ s16 scaleStep;
-    /* 0x92 */ s16 timer;
-    /* 0x94 */ u8 matrixDirty;
-} RaceUiExpiredSpeedFanActor;
-
-typedef struct RaceUiRankParticleActor {
-    /* 0x00 */ u8 pad0[0x10];
-    /* 0x10 */ u16 index;
-    /* 0x12 */ u8 pad12[0x18 - 0x12];
-    /* 0x18 */ Vec3i pos;
-    /* 0x24 */ Transform3D copyBlock;
-    /* 0x44 */ void *matrix;
-    /* 0x48 */ u32 *displayLists[2];
-    /* 0x50 */ u8 matrixDirty;
-} RaceUiRankParticleActor;
-
-typedef struct RaceUiPodiumTrailActor {
-    /* 0x00 */ u8 pad0[0x18];
-    /* 0x18 */ Vec3i pos;
-    /* 0x24 */ Transform3D copyBlock;
-    /* 0x44 */ Mtx *matrix;
-    /* 0x48 */ s32 height;
-    /* 0x4C */ s32 velocity;
-    /* 0x50 */ s16 playerIndex;
-    /* 0x52 */ s16 targetPlayerIndex;
-    /* 0x54 */ s16 state;
-    /* 0x56 */ s16 timer;
-    /* 0x58 */ u8 matrixDirty;
-    /* 0x59 */ u8 playImpactSound;
-} RaceUiPodiumTrailActor;
-
-typedef struct RaceUiRankTrailActor {
-    /* 0x00 */ u8 pad0[0x10];
-    /* 0x10 */ u16 playerIndex;
-    /* 0x12 */ u8 pad12[0x18 - 0x12];
-    /* 0x18 */ Vec3i pos;
-    /* 0x24 */ Transform3D copyBlock;
-    /* 0x44 */ Mtx *matrix;
-    /* 0x48 */ s16 scale;
-    /* 0x4A */ u8 matrixDirty;
-} RaceUiRankTrailActor;
-
-typedef struct RaceUiTextParticleActor {
-    /* 0x00 */ u8 pad0[0x10];
-    /* 0x10 */ u16 index;
-    /* 0x12 */ u8 pad12[0x18 - 0x12];
-    /* 0x18 */ Vec3i pos;
-    /* 0x24 */ Mtx *matrix;
-    /* 0x28 */ void *palettes[4];
-    /* 0x38 */ void *images[4];
-    /* 0x48 */ Vec3i velocity;
-    /* 0x54 */ s16 timer;
-    /* 0x56 */ u8 matrixDirty;
-    /* 0x57 */ u8 useAltTextures;
-} RaceUiTextParticleActor;
-
-typedef struct RaceUiAnimatedTextActor {
-    /* 0x00 */ u8 pad0[0x18];
-    /* 0x18 */ Vec3i pos;
-    /* 0x24 */ Mtx *matrix;
-    /* 0x28 */ void *palettes[4];
-    /* 0x38 */ void *images[4];
-    /* 0x48 */ Vec3i velocity;
-    /* 0x54 */ s16 frame;
-    /* 0x56 */ u8 matrixDirty;
-} RaceUiAnimatedTextActor;
-
-typedef struct RaceUiRisingTrailActor {
-    /* 0x00 */ u8 pad0[0x18];
-    /* 0x18 */ Vec3i pos;
-    /* 0x24 */ u8 pad24[4];
-    /* 0x28 */ s16 angle;
-    /* 0x2A */ u8 pad2A[2];
-    /* 0x2C */ s16 sineAngle;
-    /* 0x2E */ u8 pad2E[2];
-    /* 0x30 */ Mtx *matrix;
-    /* 0x34 */ u8 pad34[2];
-    /* 0x36 */ u8 matrixDirty;
-} RaceUiRisingTrailActor;
-
-typedef struct RaceUiThrownTrailActor {
-    /* 0x00 */ u8 pad0[0x18];
-    /* 0x18 */ Vec3i pos;
-    /* 0x24 */ s16 surface;
-    /* 0x26 */ s16 targetAngle;
-    /* 0x28 */ s16 angle;
-    /* 0x2A */ s16 angleStep;
-    /* 0x2C */ s16 spin;
-    /* 0x2E */ u8 pad2E[6];
-    /* 0x34 */ s16 soundTimer;
-} RaceUiThrownTrailActor;
-
-typedef struct RaceUiSingleTrailActor {
-    /* 0x00 */ u8 pad0[0x10];
-    /* 0x10 */ u16 playerIndex;
-    /* 0x12 */ u8 pad12[0x24 - 0x12];
-    /* 0x24 */ Transform3D copyBlock;
-    /* 0x44 */ Transform3D localTransform;
-    /* 0x64 */ Mtx *matrix;
-    /* 0x68 */ s16 timer;
-    /* 0x6A */ u8 matrixDirty;
-} RaceUiSingleTrailActor;
-
-typedef struct RaceUiFadingTrailActor {
-    /* 0x00 */ u8 pad0[0x18];
-    /* 0x18 */ Transform3D copyBlock;
-    /* 0x38 */ Vec3i pos;
-    /* 0x44 */ Mtx *matrix;
-    /* 0x48 */ u8 pad48[2];
-    /* 0x4A */ s16 alpha;
-    /* 0x4C */ u8 pad4C[2];
-    /* 0x4E */ u8 matrixDirty;
-} RaceUiFadingTrailActor;
-
-typedef struct RaceUiTransitionRenderActor {
-    /* 0x00 */ u8 pad0[0x24];
-    /* 0x24 */ Transform3D copyBlock;
-    /* 0x44 */ u8 pad44[0x64 - 0x44];
-    /* 0x64 */ Mtx *matrix;
-    /* 0x68 */ u8 pad68[0x72 - 0x68];
-    /* 0x72 */ u8 matrixDirty;
-} RaceUiTransitionRenderActor;
 
 typedef struct {
     /* 0x00 */ u8 pad0[0x18];
@@ -373,32 +154,11 @@ typedef struct {
     /* 0x4E */ u8 matrixDirty;
 } RaceUiFragmentActor;
 
-typedef struct RaceUiEffectParticleActor {
-    /* 0x00 */ u8 pad0[0x18];
-    /* 0x18 */ RaceUiEffectParticle *particles;
-    /* 0x1C */ void *unk1C;
-    /* 0x20 */ void *unk20;
-    /* 0x24 */ s16 count;
-} RaceUiEffectParticleActor;
-
 typedef struct {
     /* 0x00 */ s16 active;
     /* 0x02 */ s16 sentinel;
     /* 0x04 */ Vec3i position;
 } RaceUiGfxCommandScriptEntry;
-
-typedef struct RaceUiGfxCommandActor {
-    /* 0x00 */ u8 pad0[0x18];
-    /* 0x18 */ Mtx *particles;
-    /* 0x1C */ s16 textureOffset;
-    /* 0x1E */ s16 count;
-} RaceUiGfxCommandActor;
-
-typedef struct RaceUiRankTextRenderActor {
-    /* 0x00 */ u8 pad0[0x18];
-    /* 0x18 */ Mtx *matrices;
-    /* 0x1C */ s16 count;
-} RaceUiRankTextRenderActor;
 
 typedef struct {
     /* 0x00 */ s16 active;
@@ -407,32 +167,6 @@ typedef struct {
     /* 0x10 */ s16 angle;
     /* 0x12 */ u8 pad12[2];
 } RaceUiRankTextRenderEntry;
-
-typedef struct RaceUiPopupActor {
-    /* 0x00 */ u8 pad0[0x10];
-    /* 0x10 */ u16 index;
-    /* 0x12 */ u8 pad12[6];
-    /* 0x18 */ u16 timer;
-    /* 0x1A */ u8 pad1A[2];
-    /* 0x1C */ s32 x;
-    /* 0x20 */ SplitWord y;
-    /* 0x24 */ u8 pad24[4];
-    /* 0x28 */ s32 velocity;
-    /* 0x2C */ void *parent;
-    /* 0x30 */ s8 playerIndex;
-} RaceUiPopupActor;
-
-typedef struct RaceUiTimeTrialRecordDeltaPopupActor {
-    /* 0x00 */ u8 pad0[0x18];
-    /* 0x18 */ u16 timer;
-    /* 0x1A */ u8 pad1A[2];
-    /* 0x1C */ s32 x;
-    /* 0x20 */ SplitWord y;
-    /* 0x24 */ u8 pad24[4];
-    /* 0x28 */ s32 velocity;
-    /* 0x2C */ RaceTimer delta;
-    /* 0x30 */ s8 isSlowerThanRecord;
-} RaceUiTimeTrialRecordDeltaPopupActor;
 
 typedef struct {
     /* 0x000 */ u8 pad0[0x12A];
@@ -456,35 +190,6 @@ typedef struct {
     /* 0x7869 */ u8 icons[10][5];
 } RaceUiCourseValueData;
 
-typedef struct RaceUiPromptActor {
-    /* 0x00 */ u8 pad0[0x10];
-    /* 0x10 */ u16 index;
-    /* 0x12 */ u8 pad12[0x18 - 0x12];
-    /* 0x18 */ u32 timer;
-    /* 0x1C */ s16 y;
-} RaceUiPromptActor;
-
-typedef struct RaceUiCourseStatsActor {
-    /* 0x00 */ u8 pad0[0x10];
-    /* 0x10 */ u16 index;
-    /* 0x12 */ u8 pad12[0x18 - 0x12];
-    union {
-        /* 0x18 */ s16 alpha;
-        /* 0x18 */ s16 titleAlpha;
-    };
-    union {
-        /* 0x1A */ s16 timer;
-        /* 0x1A */ s16 statsAlpha;
-    };
-    union {
-        /* 0x1C */ s16 visibleRows;
-        /* 0x1C */ s16 holdTimer;
-    };
-    /* 0x1E */ s16 pendingTrickPrize;
-    /* 0x20 */ s16 pendingMakeBonus;
-    /* 0x22 */ s16 pendingCompleteBonus;
-} RaceUiCourseStatsActor;
-
 typedef struct {
     /* 0x0000 */ u8 pad0[0x4E];
     /* 0x004E */ RaceTimer courseStatsNames[10][5];
@@ -505,45 +210,6 @@ typedef struct {
     /* 0x77C4 */ u8 icons[10][5];
 } RaceUiTrickIconData;
 
-typedef struct RaceUiAlphaActor {
-    /* 0x00 */ u8 pad0[0x1C];
-    /* 0x1C */ s16 alpha;
-} RaceUiAlphaActor;
-
-typedef struct RaceUiAlpha1AActor {
-    /* 0x00 */ u8 pad0[0x1A];
-    /* 0x1A */ s16 alpha;
-} RaceUiAlpha1AActor;
-
-typedef struct RaceUiAlpha18Actor {
-    /* 0x00 */ u8 pad0[0x18];
-    /* 0x18 */ s16 alpha;
-    /* 0x1A */ s16 timer;
-    /* 0x1C */ s16 score;
-} RaceUiAlpha18Actor;
-
-typedef struct RaceUiPrizePayoutActor {
-    /* 0x00 */ u8 pad0[0x18];
-    /* 0x18 */ s16 alpha;
-    /* 0x1A */ s16 timer;
-    /* 0x1C */ s16 prizeAmount;
-} RaceUiPrizePayoutActor;
-
-typedef struct RaceUiResultsBannerActor {
-    /* 0x00 */ u8 pad0[0x18];
-    /* 0x18 */ s16 alpha;
-    /* 0x1A */ s16 timer;
-    union {
-        struct {
-            /* 0x1C */ s8 player0;
-            /* 0x1D */ s8 player1;
-            /* 0x1E */ s8 player2;
-            /* 0x1F */ s8 player3;
-        };
-        /* 0x1C */ s8 playerIndices[4];
-    };
-} RaceUiResultsBannerActor;
-
 typedef struct {
     /* 0x00 */ u8 pad0[0x30];
     /* 0x30 */ u16 *script;
@@ -553,37 +219,6 @@ typedef struct {
     /* 0x40 */ s32 assetY;
     /* 0x44 */ s32 assetX;
 } RaceUiScriptActor;
-
-
-typedef struct RaceUiOrbitingSpriteActor {
-    /* 0x00 */ u8 pad0[0x18];
-    /* 0x18 */ Vec3i pos;
-    /* 0x24 */ Mtx *matrix;
-    /* 0x28 */ s16 angle;
-    /* 0x2A */ u8 pad2A[2];
-    /* 0x2C */ void *palette;
-    /* 0x30 */ void *image;
-    /* 0x34 */ u8 matrixDirty;
-    /* 0x35 */ u8 playerIndex;
-} RaceUiOrbitingSpriteActor;
-
-typedef struct RaceUiSparkleActor {
-    /* 0x00 */ u8 pad0[0x18];
-    /* 0x18 */ Vec3i pos;
-    /* 0x24 */ Mtx *matrix;
-    /* 0x28 */ s16 unk28;
-    /* 0x2A */ u8 pad2A[2];
-    /* 0x2C */ void *palettes[4];
-    /* 0x3C */ void *images[4];
-    /* 0x4C */ s32 zOffset;
-    /* 0x50 */ s16 alpha;
-    /* 0x52 */ s16 alphaStep;
-    /* 0x54 */ s16 timer;
-    /* 0x56 */ s16 scale;
-    /* 0x58 */ u8 matrixDirty;
-    /* 0x59 */ u8 playerIndex;
-    /* 0x5A */ u8 frame;
-} RaceUiSparkleActor;
 
 typedef struct {
     /* 0x00 */ u8 pad30[4];
@@ -598,23 +233,6 @@ typedef struct {
     /* 0x10 */ Mat3x3 matrix;
     /* 0x22 */ u8 pad52[4];
 } RaceUiSparkleRetargetScratch;
-
-typedef struct RaceUiCourseSpriteActor {
-    /* 0x00 */ u8 pad0[0x10];
-    /* 0x10 */ u16 index;
-    /* 0x12 */ u8 pad12[0x18 - 0x12];
-    /* 0x18 */ s32 x;
-    /* 0x1C */ s32 y;
-    /* 0x20 */ s32 z;
-    /* 0x24 */ u8 pad24[0x48 - 0x24];
-    /* 0x48 */ Vtx *vertices;
-    /* 0x4C */ s16 angle;
-    /* 0x4E */ u8 pad4E[0x50 - 0x4E];
-    /* 0x50 */ void *images[2];
-    /* 0x58 */ void *palettes[2];
-    /* 0x60 */ u8 pad60[0x62 - 0x60];
-    /* 0x62 */ u8 matrixDirty;
-} RaceUiCourseSpriteActor;
 
 RaceCourseScrollingTextureInit gRaceCourseScrollingTextureInit[RACE_COURSE_SCROLLING_TEXTURE_COUNT] = {
     { 0x0200D350, 0x0044, 0x00, 0x00 },
@@ -1164,18 +782,18 @@ void initRaceCourseScrollingTexture(RaceCourseScrollingTextureActor *arg0) {
     arg0->textureScrollOffset = 0;
     getAssetTableImageAndPalette(
         getRelocatableHeapBlockBase(ASSET_HANDLE(0x1C)),
-        gRaceCourseScrollingTextureInit[arg0->index].textureAssetId,
+        gRaceCourseScrollingTextureInit[arg0->task.userId].textureAssetId,
         &arg0->texture,
         &arg0->palette
     );
-    arg0->displayList = (Gfx *)gRaceCourseScrollingTextureInit[arg0->index].displayListAddress;
-    arg0->useOverlayQueue = gRaceCourseScrollingTextureInit[arg0->index].useOverlayQueue;
-    arg0->soundSourceIndex = gRaceCourseScrollingTextureInit[arg0->index].soundSourceIndex;
+    arg0->displayList = (Gfx *)gRaceCourseScrollingTextureInit[arg0->task.userId].displayListAddress;
+    arg0->useOverlayQueue = gRaceCourseScrollingTextureInit[arg0->task.userId].useOverlayQueue;
+    arg0->soundSourceIndex = gRaceCourseScrollingTextureInit[arg0->task.userId].soundSourceIndex;
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceCourseScrollingTexture);
 }
 
 void drawRaceUiBoardReversePrompt(RaceUiPromptActor *arg0) {
-    if (gCurrentViewportIndex == arg0->index) {
+    if (gCurrentViewportIndex == arg0->task.userId) {
         if (gUiBlinkTimer & 1) {
             drawMenuAsciiTextDefaultScale(-0x34, arg0->y, gRaceUiBoardReversePromptLabelBlinkOn, 0);
             return;
@@ -1185,14 +803,14 @@ void drawRaceUiBoardReversePrompt(RaceUiPromptActor *arg0) {
 }
 
 void updateRaceUiBoardReversePrompt(RaceUiPromptActor *arg0) {
-    if (gRacePlayers[arg0->index].stateFlags & 0x400) {
+    if (gRacePlayers[arg0->task.userId].stateFlags & 0x400) {
         if (arg0->timer < 0x1E) {
             arg0->timer++;
         }
     } else {
         arg0->timer = 0;
     }
-    if (gRacePlayers[arg0->index].stateFlags & 0x1040) {
+    if (gRacePlayers[arg0->task.userId].stateFlags & 0x1040) {
         arg0->timer = 0;
     }
     if (arg0->timer >= 0x1E) {
@@ -1986,7 +1604,7 @@ void drawRaceUiCourseStatsRows(RaceUiCourseStatsActor *arg0) {
     y = -0x50;
     for (row = 0, offset = 0; row != 5; row++, offset += 4, y += 0x20) {
         drawAssetTableSprite(-8, (s16)y, getRelocatableHeapBlockBase(gAssetHandles[0x1F]), row + 0x77);
-        if ((row == actor->index) && (gUiBlinkTimer & 1)) {
+        if ((row == actor->task.userId) && (gUiBlinkTimer & 1)) {
             drawRaceUiPackedTime(
                 &((RaceUiCourseStatsNameData *)&gGameSaveDataBuffer[0])
                      ->courseStatsNames[gRaceCourseIndex.signedValue][row],
@@ -2284,7 +1902,7 @@ void drawRaceUiScoreAttackCourseValues(RaceUiPopupActor *arg0) {
 
         drawAssetTableSprite(-8, (s16)y, getRelocatableHeapBlockBase(gAssetHandles[0x1F]), i + 0x77);
 
-        if ((i == arg0->index) && (gUiBlinkTimer & 1)) {
+        if ((i == arg0->task.userId) && (gUiBlinkTimer & 1)) {
             color = 0x10;
         } else if (i < 3) {
             color = 0xC;
@@ -2420,7 +2038,7 @@ void updateRaceUiHitPrizePayoutConfirmed(void *arg0) {
 void updateRaceUiHitPrizePayoutWaitForConfirm(RaceUiCounterActor *actor) {
     if (gPlayerInputPressed[0] & A_BUTTON) {
         enqueueSoundEffect(0x18, 0x32);
-        if (actor->index < 5) {
+        if (actor->task.userId < 5) {
             setCallbackTaskCallback(actor, (CallbackTaskCallback)updateRaceUiHitPrizeCourseValuesWaitForConfirm);
         } else {
             gMenuFlowState |= 0x10;
@@ -2760,7 +2378,7 @@ void drawRaceUiCourseRecordRows(RaceUiPopupActor *arg0) {
     /* IDO scheduling for this function depends on this initialization staying on one line. */
     i = 0; offset = 0; while (1) {
         drawAssetTableSprite(-8, (s16)y, getRelocatableHeapBlockBase(gAssetHandles[0x1F]), i + 0x77);
-        if ((i == arg0->index) && (gUiBlinkTimer & 1)) {
+        if ((i == arg0->task.userId) && (gUiBlinkTimer & 1)) {
             color = 0x10;
         } else if (i < 3) {
             color = 0xC;
@@ -2886,7 +2504,7 @@ void updateRaceUiCourseRecordPayoutConfirmed(void *arg0) {
 void updateRaceUiCourseRecordPayoutWaitForConfirm(RaceUiDualCounterActor *actor) {
     if (gPlayerInputPressed[0] & A_BUTTON) {
         enqueueSoundEffect(0x18, 0x32);
-        if (actor->index < 5) {
+        if (actor->task.userId < 5) {
             setCallbackTaskCallback(actor, (CallbackTaskCallback)updateRaceUiCourseRecordRowsWaitForConfirm);
         } else {
             gMenuFlowState |= 0x10;
@@ -3290,7 +2908,7 @@ void drawRaceUiTrickAttackCourseValues(RaceUiCourseStatsActor *arg0) {
     s32 space;
 
     y = -0x50;
-    i = 0; space = ' '; do { char buffer[8]; drawAssetTableSprite(-8, (s16)y, getRelocatableHeapBlockBase(gAssetHandles[0x1F]), i + 0x77); if ((i == arg0->index) && (gUiBlinkTimer & 1)) { color = 0x10; } else if (i < 3) { color = 0xC; } else {
+    i = 0; space = ' '; do { char buffer[8]; drawAssetTableSprite(-8, (s16)y, getRelocatableHeapBlockBase(gAssetHandles[0x1F]), i + 0x77); if ((i == arg0->task.userId) && (gUiBlinkTimer & 1)) { color = 0x10; } else if (i < 3) { color = 0xC; } else {
             color = 0xD;
         }
 
@@ -3430,7 +3048,7 @@ void updateRaceUiTrickPrizePayoutConfirmed(void *arg0) {
 void updateRaceUiTrickPrizePayoutWaitForConfirm(RaceUiCourseStatsActor *actor) {
     if (gPlayerInputPressed[0] & A_BUTTON) {
         enqueueSoundEffect(0x18, 0x32);
-        if (actor->index < 5) {
+        if (actor->task.userId < 5) {
             setCallbackTaskCallback(actor, (CallbackTaskCallback)updateRaceUiTrickPrizeCourseValuesWaitForConfirm);
         } else {
             gMenuFlowState |= 0x10;
@@ -3958,7 +3576,7 @@ void renderRaceUiItemStealTrailEffect(RaceUiRankTrailActor *arg0) {
 
     if (arg0->matrixDirty != 0) {
         arg0->matrixDirty = 0;
-        player = &gRacePlayers[arg0->playerIndex];
+        player = &gRacePlayers[arg0->task.userId];
         arg0->copyBlock.translation.x = player->unk28.x;
         arg0->copyBlock.translation.y = player->unk28.y + 0x100000;
         arg0->copyBlock.translation.z = player->unk28.z;
@@ -3980,13 +3598,13 @@ void updateRaceUiItemStealTrailEffect(RaceUiRankTrailActor *arg0) {
     s32 i;
 
     arg0->copyBlock = gIdentityFixedTransform;
-    player = &gRacePlayers[arg0->playerIndex];
+    player = &gRacePlayers[arg0->task.userId];
     arg0->pos.x = player->unk28.x;
     arg0->pos.y = player->unk28.y;
     arg0->pos.z = player->unk28.z;
 
     for (i = 0; i < 4; i++) {
-        if (i != arg0->playerIndex) {
+        if (i != arg0->task.userId) {
             pushRacePlayerOutOfCylinderAndApplyItemHit(&arg0->pos, 0xE0000, 0xB0000, 2, i);
         }
     }
@@ -4006,7 +3624,7 @@ void updateRaceUiItemStealTrailEffect(RaceUiRankTrailActor *arg0) {
         arg0->scale = scale + 2;
     }
 
-    if (gRacePlayers[arg0->playerIndex].stateFlags & 0x100000) {
+    if (gRacePlayers[arg0->task.userId].stateFlags & 0x100000) {
         addRenderCallback(&D_801248EC, (RenderCallback)renderRaceUiItemStealTrailEffect, (void *)arg0);
         return;
     }
@@ -4015,17 +3633,17 @@ void updateRaceUiItemStealTrailEffect(RaceUiRankTrailActor *arg0) {
         spawnRaceUiBurstTextParticle((void *)arg0->pos.x, (void *)arg0->pos.y, (void *)arg0->pos.z, i);
     }
 
-    enqueuePositionalSoundEffect(0x15, &gRacePlayers[arg0->playerIndex].pos, 0x7F, 0x32);
+    enqueuePositionalSoundEffect(0x15, &gRacePlayers[arg0->task.userId].pos, 0x7F, 0x32);
     removeCallbackTask(arg0);
 }
 
 void initRaceUiItemStealTrailEffect(RaceUiRankTrailActor *arg0) {
     arg0->scale = 2;
-    enqueuePositionalSoundEffect(0xF, &gRacePlayers[arg0->playerIndex].pos, 0x7F, 0x32);
+    enqueuePositionalSoundEffect(0xF, &gRacePlayers[arg0->task.userId].pos, 0x7F, 0x32);
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceUiItemStealTrailEffect);
 }
 
-void renderRaceUiBurstTextParticle(RaceUiAnimatedTextActor *arg0) {
+void renderRaceUiBurstTextParticle(RaceUiTextParticleActor *arg0) {
     volatile u8 padding[4];
     Transform3D sp64;
 
@@ -4046,7 +3664,7 @@ void renderRaceUiBurstTextParticle(RaceUiAnimatedTextActor *arg0) {
         gSPDisplayList(gRegionAllocPtr++, D_800D6160);
         gDPLoadTextureBlock_4b(
             gRegionAllocPtr++,
-            arg0->images[arg0->frame >> 2],
+            arg0->images[arg0->timer >> 2],
             G_IM_FMT_CI,
             0x20,
             0x20,
@@ -4058,7 +3676,7 @@ void renderRaceUiBurstTextParticle(RaceUiAnimatedTextActor *arg0) {
             G_TX_NOLOD,
             G_TX_NOLOD
         );
-        gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, arg0->palettes[arg0->frame >> 2]);
+        gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, arg0->palettes[arg0->timer >> 2]);
         gSPMatrix(gRegionAllocPtr++, arg0->matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
         gSPMatrix(gRegionAllocPtr++, gViewportMatrix, G_MTX_NOPUSH | G_MTX_MUL | G_MTX_MODELVIEW);
         RACE_UI_GSP_VERTEX_F3DEX(gRegionAllocPtr++, D_800D6120, 4, 0);
@@ -4131,7 +3749,7 @@ void updateRaceUiBurstTextParticle(RaceUiTextParticleActor *arg0) {
 
 void initRaceUiBurstTextParticle(RaceUiTextParticleActor *arg0) {
     arg0->timer = 0;
-    arg0->velocity = D_800D61C0[arg0->index];
+    arg0->velocity = D_800D61C0[arg0->task.userId];
     if (arg0->useAltTextures == 0) {
         getAssetTableImageAndPalette(
             getRelocatableHeapBlockBase(gAssetHandles[0x1C]),
@@ -4192,7 +3810,7 @@ void spawnRaceUiBurstTextParticle(void *arg0, void *arg1, void *arg2, s16 arg3) 
         createCallbackTaskPreservingArgs((CallbackTaskCallback)initRaceUiBurstTextParticle, 5, 0x1E);
     if (actor != NULL) {
         actor->useAltTextures = 0;
-        actor->index = arg3;
+        actor->task.userId = arg3;
         actor->pos.x = (s32)arg0;
         actor->pos.y = (s32)arg1;
         actor->pos.z = (s32)arg2;
@@ -4204,7 +3822,7 @@ void spawnRaceUiAltBurstTextParticle(void *arg0, void *arg1, void *arg2, s16 arg
         createCallbackTaskPreservingArgs((CallbackTaskCallback)initRaceUiBurstTextParticle, 5, 0x1E);
     if (actor != NULL) {
         actor->useAltTextures = 1;
-        actor->index = arg3;
+        actor->task.userId = arg3;
         actor->pos.x = (s32)arg0;
         actor->pos.y = (s32)arg1;
         actor->pos.z = (s32)arg2;
@@ -4496,7 +4114,7 @@ void updateDizzyLandCarousel(DizzyLandCarouselActor *actor) {
 
 void initDizzyLandCarousel(DizzyLandCarouselActor *actor) {
     actor->yaw = 0;
-    actor->pos = gDizzyLandCarouselPositions[actor->index];
+    actor->pos = gDizzyLandCarouselPositions[actor->task.userId];
     setCallbackTaskCallback(actor, (CallbackTaskCallback)updateDizzyLandCarousel);
 }
 
@@ -4526,7 +4144,7 @@ void updateRaceUiHeavyKnockdownTrailEffect(RaceUiRankTrailActor *arg0) {
     RacePlayer *player;
     s32 i;
 
-    arg0->copyBlock = (&gRacePlayers[arg0->playerIndex])->modelPartTransforms[0];
+    arg0->copyBlock = (&gRacePlayers[arg0->task.userId])->modelPartTransforms[0];
     arg0->copyBlock.rotation[0] = arg0->copyBlock.rotation[0] / 4;
     arg0->copyBlock.rotation[1] = arg0->copyBlock.rotation[1] / 4;
     arg0->copyBlock.rotation[2] = arg0->copyBlock.rotation[2] / 4;
@@ -4537,7 +4155,7 @@ void updateRaceUiHeavyKnockdownTrailEffect(RaceUiRankTrailActor *arg0) {
     arg0->copyBlock.rotation[7] = arg0->copyBlock.rotation[7] / 4;
     arg0->copyBlock.rotation[8] = arg0->copyBlock.rotation[8] / 4;
 
-    player = &gRacePlayers[arg0->playerIndex];
+    player = &gRacePlayers[arg0->task.userId];
     if (player->stateFlags & 0x400000) {
         addRenderCallback(&gRaceModelEffectRenderCallbackList, (RenderCallback)renderRaceUiHeavyKnockdownTrailEffect, (void *)arg0);
         return;
@@ -4561,7 +4179,7 @@ void initRaceUiHeavyKnockdownTrailEffect(void *arg0) {
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceUiHeavyKnockdownTrailEffect);
 }
 
-void renderRaceUiThrownTrailObstacle(RaceUiRisingTrailActor *arg0) {
+void renderRaceUiThrownTrailObstacle(RaceUiThrownTrailActor *arg0) {
     volatile s32 padlow;
     s32 sine;
     Transform3D sp80;
@@ -4574,7 +4192,7 @@ void renderRaceUiThrownTrailObstacle(RaceUiRisingTrailActor *arg0) {
     if (isPositionNearCurrentRaceViewportCamera(&arg0->pos) != 0) {
         if (arg0->matrixDirty != 0) {
             arg0->matrixDirty = 0;
-            sine = fixedSine(arg0->sineAngle);
+            sine = fixedSine(arg0->spin);
             makeFixedRotationY(sp80.rotation, (s16)(arg0->angle + 0x800));
             sp80.translation.x = arg0->pos.x;
             sp80.translation.y = arg0->pos.y + ((sine + 0x1000) << 5) + 0x10000;
@@ -4673,13 +4291,13 @@ void renderRaceUiSingleTrailEffect(RaceUiSingleTrailActor *arg0) {
 void updateRaceUiSingleTrailEffect(RaceUiSingleTrailActor *arg0) {
     composeFixedTransforms(
         &arg0->localTransform,
-        &gRacePlayers[arg0->playerIndex].modelPartTransforms[7],
+        &gRacePlayers[arg0->task.userId].modelPartTransforms[7],
         &arg0->copyBlock
     );
 
     if (gRaceUpdatePaused == 0) {
         arg0->timer--;
-        if (!(gRacePlayers[arg0->playerIndex].stateFlags & 0x2000)) {
+        if (!(gRacePlayers[arg0->task.userId].stateFlags & 0x2000)) {
             arg0->timer = 0;
         }
     }
@@ -4760,16 +4378,16 @@ void updateRaceUiFadingImpact(RaceUiFadingImpactActor *arg0) {
             sp24 = &arg0->pos;
             sp2C = (new_var->scale * 0x480000) / 64;
             if (tryApplyRacePlayerItemHit(sp24, sp2C, 0x80, 0) != 0) {
-                gRacePlayers[0].hitSourcePlayerIndex = new_var->playerIndex;
+                gRacePlayers[0].hitSourcePlayerIndex = new_var->task.userId;
             }
             if (tryApplyRacePlayerItemHit(sp24, sp2C, 0x80, 1) != 0) {
-                gRacePlayers[1].hitSourcePlayerIndex = new_var->playerIndex;
+                gRacePlayers[1].hitSourcePlayerIndex = new_var->task.userId;
             }
             if (tryApplyRacePlayerItemHit(sp24, sp2C, 0x80, 2) != 0) {
-                gRacePlayers[2].hitSourcePlayerIndex = arg0->playerIndex;
+                gRacePlayers[2].hitSourcePlayerIndex = arg0->task.userId;
             }
             if (tryApplyRacePlayerItemHit(sp24, sp2C, 0x80, 3) != 0) {
-                gRacePlayers[3].hitSourcePlayerIndex = arg0->playerIndex;
+                gRacePlayers[3].hitSourcePlayerIndex = arg0->task.userId;
             }
         }
     }
@@ -4802,7 +4420,7 @@ void spawnRaceUiFadingImpact(s32 x, s32 y, s32 z, s32 userId) {
     }
 }
 
-void renderRaceUiSpinHitTransitionEffect(RaceUiTransitionRenderActor *arg0) {
+void renderRaceUiSpinHitTransitionEffect(RaceUiTransitionActor *arg0) {
     volatile u8 pad[0x20];
     RaceUiDisplayCommand *unused;
 
@@ -4812,7 +4430,7 @@ void renderRaceUiSpinHitTransitionEffect(RaceUiTransitionRenderActor *arg0) {
 
     if (arg0->matrixDirty != 0) {
         arg0->matrixDirty = 0;
-        arg0->matrix = allocFixedTransformMatrix(&arg0->copyBlock);
+        arg0->matrix = allocFixedTransformMatrix(&arg0->transformSource);
     }
 
     if (arg0->matrix != NULL) {
@@ -4831,11 +4449,11 @@ void updateRaceUiSpinHitTransitionEffect(RaceUiTransitionActor *arg0) {
     s16 temp_a0;
 
     if (gRaceUpdatePaused == 0) {
-        if (!(gRacePlayers[arg0->index].stateFlags & 0x800000)) {
+        if (!(gRacePlayers[arg0->task.userId].stateFlags & 0x800000)) {
             arg0->unk6C = 0;
         }
         if (arg0->unk6C != 0) {
-            player = &gRacePlayers[arg0->index];
+            player = &gRacePlayers[arg0->task.userId];
             arg0->transformSource.translation.x = player->modelPartTransforms[1].translation.x;
             arg0->transformSource.translation.y = player->modelPartTransforms[1].translation.y;
             arg0->transformSource.translation.z = player->modelPartTransforms[1].translation.z;
@@ -4866,7 +4484,7 @@ void initRaceUiSpinHitTransitionEffect(RaceUiTransitionActor *arg0) {
     scaleFixedMatrix3sByQuarter(transform);
     arg0->unk6C = 1;
     arg0->unk6E = 0xF;
-    enqueuePositionalSoundEffect(0xB, &gRacePlayers[arg0->index].pos, 0x7F, 0x32);
+    enqueuePositionalSoundEffect(0xB, &gRacePlayers[arg0->task.userId].pos, 0x7F, 0x32);
     updateRaceUiSpinHitTransitionEffect(arg0);
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceUiSpinHitTransitionEffect);
 }
@@ -5094,8 +4712,8 @@ void updateDizzyLandFerrisWheel(DizzyLandFerrisWheelActor *arg0) {
 }
 
 void initDizzyLandFerrisWheel(DizzyLandFerrisWheelActor *arg0) {
-    arg0->pos = gDizzyLandFerrisWheelPositions[arg0->index];
-    arg0->yaw = gDizzyLandFerrisWheelYaws[arg0->index];
+    arg0->pos = gDizzyLandFerrisWheelPositions[arg0->task.userId];
+    arg0->yaw = gDizzyLandFerrisWheelYaws[arg0->task.userId];
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateDizzyLandFerrisWheel);
 }
 
@@ -5153,7 +4771,7 @@ void updateDizzyLandSpinningCabinRide(DizzyLandSpinningCabinRideActor *arg0) {
 }
 
 void initDizzyLandSpinningCabinRide(DizzyLandSpinningCabinRideActor *arg0) {
-    arg0->pos = gDizzyLandSpinningCabinRidePositions[arg0->index];
+    arg0->pos = gDizzyLandSpinningCabinRidePositions[arg0->task.userId];
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateDizzyLandSpinningCabinRide);
 }
 
@@ -5173,13 +4791,13 @@ void renderCourseStartFinishSprite(RaceUiCourseSpriteActor *arg0) {
             new_var->matrixDirty = 0;
             new_var->vertices = allocMenuRenderScratch(0x40);
             if (new_var->vertices != NULL) {
-                new_var->vertices[0] = D_800D6350[arg0->index * 4];
+                new_var->vertices[0] = D_800D6350[arg0->task.userId * 4];
                 arg0->vertices[0].v.tc[0] += arg0->angle << 5;
-                new_var->vertices[1] = D_800D6350[new_var->index * 4 + 1];
+                new_var->vertices[1] = D_800D6350[new_var->task.userId * 4 + 1];
                 arg0->vertices[1].v.tc[0] += new_var->angle << 5;
-                new_var->vertices[2] = D_800D6350[new_var->index * 4 + 2];
+                new_var->vertices[2] = D_800D6350[new_var->task.userId * 4 + 2];
                 arg0->vertices[2].v.tc[0] += arg0->angle << 5;
-                new_var->vertices[3] = D_800D6350[new_var->index * 4 + 3];
+                new_var->vertices[3] = D_800D6350[new_var->task.userId * 4 + 3];
                 arg0->vertices[3].v.tc[0] += new_var->angle << 5;
             }
         }
@@ -5225,7 +4843,7 @@ void initCourseStartFinishSprite(RaceUiCourseSpriteActor *actor) {
     s32 unused;
     s16 angle;
 
-    switch (actor->index) {
+    switch (actor->task.userId) {
         case 0:
             getRaceCourseSurfaceSpawnTransform(0, &actor->x, &actor->y, &actor->z, &angle);
             getAssetTableImageAndPalette(
@@ -5400,7 +5018,7 @@ void initRaceCourseRankModel(RaceUiRankParticleActor *actor) {
         s32 unused;
     } local;
 
-    switch (actor->index) {
+    switch (actor->task.userId) {
         case 0:
             getRaceCourseSurfaceSpawnTransform(1, &actor->pos.x, &actor->pos.y, &actor->pos.z, &local.angle);
             break;
@@ -5420,9 +5038,9 @@ void initRaceCourseRankModel(RaceUiRankParticleActor *actor) {
     actor->copyBlock.translation.y = actor->pos.y;
     actor->copyBlock.translation.z = actor->pos.z;
     actor->displayLists[0] =
-        gRaceCourseRankModelDisplayLists[(actor->index * 2) + (gRaceCourseIndex.signedValue * 4)];
+        gRaceCourseRankModelDisplayLists[(actor->task.userId * 2) + (gRaceCourseIndex.signedValue * 4)];
     actor->displayLists[1] =
-        gRaceCourseRankModelDisplayLists[(actor->index * 2) + (gRaceCourseIndex.signedValue * 4) + 1];
+        gRaceCourseRankModelDisplayLists[(actor->task.userId * 2) + (gRaceCourseIndex.signedValue * 4) + 1];
     setCallbackTaskCallback(actor, (CallbackTaskCallback)updateRaceCourseRankModel);
 }
 
@@ -5518,11 +5136,11 @@ void updateRaceUiProjectileFlyAway(RaceUiProjectileActor *arg0) {
 
     actor = arg0;
     if (!gRaceUpdatePaused) {
-        makeFixedRotationXY(sp24.mtx, gRacePlayers[actor->index].pitchAngle, gRacePlayers[actor->index].facingAngle);
+        makeFixedRotationXY(sp24.mtx, gRacePlayers[actor->task.userId].pitchAngle, gRacePlayers[actor->task.userId].facingAngle);
         transformVec3iByFixedMatrix(sp24.mtx, &actor->velocity, &actor->pos);
-        actor->pos.x += gRacePlayers[actor->index].unk28.x;
-        actor->pos.y += gRacePlayers[actor->index].unk28.y + actor->verticalVelocity;
-        actor->pos.z += gRacePlayers[actor->index].unk28.z;
+        actor->pos.x += gRacePlayers[actor->task.userId].unk28.x;
+        actor->pos.y += gRacePlayers[actor->task.userId].unk28.y + actor->verticalVelocity;
+        actor->pos.z += gRacePlayers[actor->task.userId].unk28.z;
         temp = (actor->verticalVelocity += actor->verticalAcceleration);
         actor->verticalAcceleration += 0x10000;
         if (temp >= 0x300001) {
@@ -5543,11 +5161,11 @@ void updateRaceUiProjectileStealScores(RaceUiProjectileActor *arg0) {
     s16 flags;
 
     if (gRaceUpdatePaused == 0) {
-        player = &gRacePlayers[arg0->index];
-        makeFixedRotationXY(sp44, gRacePlayers[arg0->index].pitchAngle, gRacePlayers[arg0->index].facingAngle);
+        player = &gRacePlayers[arg0->task.userId];
+        makeFixedRotationXY(sp44, gRacePlayers[arg0->task.userId].pitchAngle, gRacePlayers[arg0->task.userId].facingAngle);
         transformVec3iByFixedMatrix(sp44, &arg0->velocity, &arg0->pos);
 
-        player = &gRacePlayers[arg0->index];
+        player = &gRacePlayers[arg0->task.userId];
         arg0->pos.x += player->unk28.x;
         arg0->pos.y += player->unk28.y;
         arg0->pos.z += player->unk28.z;
@@ -5556,11 +5174,11 @@ void updateRaceUiProjectileStealScores(RaceUiProjectileActor *arg0) {
         i = 0;
         do {
             otherPlayer = &gRacePlayers[i];
-            if ((otherPlayer->isActive != 0) && (otherPlayer->playerIndex != arg0->index)) {
+            if ((otherPlayer->isActive != 0) && (otherPlayer->playerIndex != arg0->task.userId)) {
                 value = otherPlayer->score;
                 amount = (value >= 0xA6) ? 0xA6 : value;
                 otherPlayer->score = value - amount;
-                addRacePlayerScore(&gRacePlayers[arg0->index], amount);
+                addRacePlayerScore(&gRacePlayers[arg0->task.userId], amount);
             }
             i++;
         } while (i < RACE_PLAYER_COUNT);
@@ -5568,7 +5186,7 @@ void updateRaceUiProjectileStealScores(RaceUiProjectileActor *arg0) {
         flags = arg0->flags;
         amount = flags & 1;
         if (flags & 8) {
-            enqueuePositionalSoundEffect(0x69, &gRacePlayers[arg0->index].unk28, 0x7F, 0x32);
+            enqueuePositionalSoundEffect(0x69, &gRacePlayers[arg0->task.userId].unk28, 0x7F, 0x32);
             arg0->flags &= ~8;
             amount = 1;
             amount = (flags = arg0->flags) & amount;
@@ -5576,7 +5194,7 @@ void updateRaceUiProjectileStealScores(RaceUiProjectileActor *arg0) {
         if (amount) {
             arg0->verticalAcceleration = 0;
             arg0->verticalVelocity = 0;
-            enqueuePositionalSoundEffect(0x6A, &gRacePlayers[arg0->index].unk28, 0x7F, 0x32);
+            enqueuePositionalSoundEffect(0x6A, &gRacePlayers[arg0->task.userId].unk28, 0x7F, 0x32);
             setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceUiProjectileFlyAway);
         }
     }
@@ -5591,14 +5209,14 @@ void updateRaceUiProjectileBounceDown(RaceUiProjectileActor *arg0) {
 
     actor = arg0;
     if (gRaceUpdatePaused == 0) {
-        player = &gRacePlayers[actor->index];
+        player = &gRacePlayers[actor->task.userId];
         arg0 += 0;
         if (((!actor) && (!actor)) && (!actor)) {}
-        player = &gRacePlayers[actor->index];
+        player = &gRacePlayers[actor->task.userId];
         makeFixedRotationXY(sp2C, player->pitchAngle, player->facingAngle);
         transformVec3iByFixedMatrix(sp2C, &actor->velocity, &actor->pos);
 
-        player = &gRacePlayers[actor->index];
+        player = &gRacePlayers[actor->task.userId];
         actor->pos.x += player->unk28.x;
         actor->pos.y += player->unk28.y + actor->verticalVelocity;
         actor->pos.z += player->unk28.z;
@@ -5621,10 +5239,10 @@ void updateRaceUiProjectileGrounded(RaceUiProjectileActor *arg0) {
 
     actor = arg0;
     if (gRaceUpdatePaused == 0) {
-        makeFixedRotationXY(sp2C, gRacePlayers[actor->index].pitchAngle, gRacePlayers[actor->index].facingAngle);
+        makeFixedRotationXY(sp2C, gRacePlayers[actor->task.userId].pitchAngle, gRacePlayers[actor->task.userId].facingAngle);
         transformVec3iByFixedMatrix(sp2C, &actor->velocity, &actor->pos);
 
-        player = &gRacePlayers[actor->index];
+        player = &gRacePlayers[actor->task.userId];
         actor->pos.x += player->unk28.x;
         actor->pos.y += player->unk28.y;
         actor->pos.z += player->unk28.z;
@@ -5645,10 +5263,10 @@ void updateRaceUiProjectileInitialFall(RaceUiProjectileActor *arg0) {
 
     actor = arg0;
     if (gRaceUpdatePaused == 0) {
-        makeFixedRotationXY(sp2C, gRacePlayers[actor->index].pitchAngle, gRacePlayers[actor->index].facingAngle);
+        makeFixedRotationXY(sp2C, gRacePlayers[actor->task.userId].pitchAngle, gRacePlayers[actor->task.userId].facingAngle);
         transformVec3iByFixedMatrix(sp2C, &actor->velocity, &actor->pos);
 
-        player = &gRacePlayers[actor->index];
+        player = &gRacePlayers[actor->task.userId];
         actor->pos.x += player->unk28.x;
         actor->pos.y += player->unk28.y + actor->verticalVelocity;
         actor->pos.z += player->unk28.z;
@@ -5671,7 +5289,7 @@ void initForwardActionProjectileEffect(RaceUiProjectileActor *arg0) {
     arg0->verticalVelocity = 0x300000;
     arg0->verticalAcceleration = 0;
     setRaceUiProjectileAnimation(arg0, D_800D6520);
-    enqueuePositionalSoundEffect(0x66, &gRacePlayers[arg0->index].unk28, 0x7F, 0x32);
+    enqueuePositionalSoundEffect(0x66, &gRacePlayers[arg0->task.userId].unk28, 0x7F, 0x32);
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceUiProjectileInitialFall);
 }
 

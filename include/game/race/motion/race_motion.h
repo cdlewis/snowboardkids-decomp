@@ -2,6 +2,7 @@
 #define RACE_MOTION_H
 
 #include "common.h"
+#include "game/race/player/race_player_input.h"
 
 #define RACE_MOTION_JOINT_COUNT 12
 #define RACE_MOTION_FRAME_SAMPLE_COUNT 2
@@ -14,7 +15,6 @@
 #define RACE_MOTION_PACKED_JOINT_ROTATION_PREFIX_COUNT 9
 #define RACE_MOTION_MODEL_POSITION_FRAC_BITS 14
 
-struct RacePlayer;
 
 typedef struct RaceCourseSurfaceFace {
     u16 coord0;
@@ -162,6 +162,6 @@ void stepRaceMotionLoopingAnimation(RaceMotionState *state);
 void stepRaceMotionLoopingJointAnimation(RaceMotionState *state);
 s32 stepRaceMotionAnimationUntilEnd(RaceMotionState *state);
 s32 stepRaceMotionJointAnimationUntilEnd(RaceMotionState *state);
-void initRaceMotionModelParts(struct RacePlayer *player);
+void initRaceMotionModelParts(RacePlayer *player);
 
 #endif
