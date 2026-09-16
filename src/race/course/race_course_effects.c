@@ -595,11 +595,7 @@ void renderCourseTextureMarkers(RaceCourseObjectMatrixEffect *arg0) {
                 }
                 gSPMatrix(gRegionAllocPtr++, &arg0->matrices[i], G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
                 gSPMatrix(gRegionAllocPtr++, gViewportMatrix, G_MTX_NOPUSH | G_MTX_MUL | G_MTX_MODELVIEW);
-                {
-                    Gfx *_g = gRegionAllocPtr++;
-                    _g->words.w0 = 0x0400103F;
-                    _g->words.w1 = (u32)&gCourseTextureMarkerVertices[entry->type * 4];
-                }
+                gSPVertex(gRegionAllocPtr++, &gCourseTextureMarkerVertices[entry->type * 4], 4, 0);
                 RACE_COURSE_EFFECTS_GFX_CMD(gRegionAllocPtr++, 0xB1060402, 0x60200);
             }
             entry++;
