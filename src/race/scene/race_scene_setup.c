@@ -245,7 +245,8 @@ void initRaceCourseSceneTasks(void) {
             createCallbackTask((CallbackTaskCallback)&initCourseGateObject, 0, 0x64);
             createCallbackTaskWithUserId((CallbackTaskCallback)&initRaceCourseRankModel, 0, 0x64, 0);
             createCallbackTaskWithUserId((CallbackTaskCallback)&initRaceCourseRankModel, 0, 0x64, 1);
-            createCallbackTaskWithUserId((CallbackTaskCallback)&initCourseBillboardMarker, 0, 0x64, 0);
+            createCallbackTaskWithUserId((CallbackTaskCallback)&initCourseWaterLayer, 0, 0x64,
+                                         COURSE_WATER_LAYER_BIG_SNOWMAN);
             if ((gRaceSplitscreenMode == 0) && (gRaceDemoPlaybackEnabled == 0) && (gTrainingCourseLesson == 0) &&
                 (gMainMenuModeSelection == 0)) {
                 if (sp2C != 0) {
@@ -369,8 +370,10 @@ void initRaceCourseSceneTasks(void) {
             createCallbackTask((CallbackTaskCallback)&initRaceCourseModelRenderTask, 0, 0x64);
             createCallbackTask((CallbackTaskCallback)&initRaceCourseSceneryObjects, 0, 0x64);
             createCallbackTask((CallbackTaskCallback)&initCourseGateObject, 0, 0x64);
-            createCallbackTaskWithUserId((CallbackTaskCallback)&initCourseBillboardMarker, 0, 0x64, 1);
-            createCallbackTaskWithUserId((CallbackTaskCallback)&initCourseBillboardMarker, 0, 0x64, 2);
+            createCallbackTaskWithUserId((CallbackTaskCallback)&initCourseWaterLayer, 0, 0x64,
+                                         COURSE_WATER_LAYER_GRASS_VALLEY_WINDING_STREAM);
+            createCallbackTaskWithUserId((CallbackTaskCallback)&initCourseWaterLayer, 0, 0x64,
+                                         COURSE_WATER_LAYER_GRASS_VALLEY_BRIDGE_RIVER);
             createCallbackTaskWithUserId((CallbackTaskCallback)&initRaceCourseRankModel, 0, 0x64, 1);
             createCallbackTask((CallbackTaskCallback)&initRaceIntroModelMeshes, 0, 0x64);
             if ((gRaceSplitscreenMode == 0) && (gMainMenuModeSelection == 0)) {
@@ -405,9 +408,9 @@ void initRaceCourseSceneTasks(void) {
             createCallbackTask((CallbackTaskCallback)&initRaceCourseModelRenderTask, 0, 0x64);
             createCallbackTask((CallbackTaskCallback)&initRaceCourseSceneryObjects, 0, 0x64);
             createCallbackTask((CallbackTaskCallback)&initCourseGateObject, 0, 0x64);
-            createCallbackTaskWithUserId((CallbackTaskCallback)&initRaceCourseTripleParticle, 0, 0x64, 0);
-            createCallbackTaskWithUserId((CallbackTaskCallback)&initDizzyLandTrailingParticle, 0, 0x64, 0);
-            createCallbackTaskWithUserId((CallbackTaskCallback)&initRaceCourseSpinningObject, 0, 0x64, 0);
+            createCallbackTaskWithUserId((CallbackTaskCallback)&initDizzyLandCarousel, 0, 0x64, 0);
+            createCallbackTaskWithUserId((CallbackTaskCallback)&initDizzyLandFerrisWheel, 0, 0x64, 0);
+            createCallbackTaskWithUserId((CallbackTaskCallback)&initDizzyLandSpinningCabinRide, 0, 0x64, 0);
             createCallbackTaskWithUserId((CallbackTaskCallback)&initRaceCourseScrollingTexture, 0, 0x64,
                                          RACE_COURSE_SCROLLING_TEXTURE_DIZZY_LAND_0);
             createCallbackTaskWithUserId((CallbackTaskCallback)&initRaceCourseScrollingTexture, 0, 0x64,

@@ -139,3 +139,38 @@ renames:
     name: SOUND_POINTER_BANK
     rom_start: 0x275A90
     evidence: "src/audio/sound_manager.c: init.soundBank"
+
+  - old: DIZZY_LAND_TRIPLE_PARTICLE_CENTER_DISPLAY_LIST
+    name: DIZZY_LAND_CAROUSEL_CANOPY_DISPLAY_LIST
+    rom_start: 0x116C78
+    evidence: "docs/course-actor-identities.md: display-list geometry and textures"
+
+  - old: DIZZY_LAND_TRIPLE_PARTICLE_NEGATIVE_SINE_OFFSET_DISPLAY_LIST
+    name: DIZZY_LAND_CAROUSEL_HORSES_NEGATIVE_SINE_DISPLAY_LIST
+    rom_start: 0x117150
+    evidence: "docs/course-actor-identities.md: display-list geometry and textures"
+
+  - old: DIZZY_LAND_TRIPLE_PARTICLE_POSITIVE_SINE_OFFSET_DISPLAY_LIST
+    name: DIZZY_LAND_CAROUSEL_HORSES_POSITIVE_SINE_DISPLAY_LIST
+    rom_start: 0x117288
+    evidence: "docs/course-actor-identities.md: display-list geometry and textures"
+
+  - old: DIZZY_LAND_TRAILING_PARTICLE_BASE_DISPLAY_LIST
+    name: DIZZY_LAND_FERRIS_WHEEL_SUPPORT_DISPLAY_LIST
+    rom_start: 0x1178F8
+    evidence: "docs/course-actor-identities.md: display-list geometry and textures"
+
+  - old: DIZZY_LAND_TRAILING_PARTICLE_DISPLAY_LIST
+    name: DIZZY_LAND_FERRIS_WHEEL_DISPLAY_LIST
+    rom_start: 0x1176D0
+    evidence: "docs/course-actor-identities.md: display-list geometry and textures"
+
+  - old: DIZZY_LAND_SPINNING_OBJECT_UPPER_DISPLAY_LIST
+    name: DIZZY_LAND_SPINNING_CABIN_RIDE_CANOPY_DISPLAY_LIST
+    rom_start: 0x117A60
+    evidence: "docs/course-actor-identities.md: display-list geometry and textures"
+
+  - old: DIZZY_LAND_SPINNING_OBJECT_BASE_DISPLAY_LIST
+    name: DIZZY_LAND_SPINNING_CABIN_RIDE_POLE_DISPLAY_LIST
+    rom_start: 0x117E58
+    evidence: "docs/course-actor-identities.md: display-list geometry and textures"

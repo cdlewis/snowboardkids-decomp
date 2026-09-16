@@ -52,46 +52,49 @@ typedef char DizzyLandTeacupBumperActorSizeCheck[(sizeof(DizzyLandTeacupBumperAc
 /*
  * Persistent course models. Bytes 0x00..0x17 are the CallbackTaskHeader:
  * index aliases its userId, and pad0/pad12 cover the remaining scheduler fields.
- * Keep the direct index and rotation fields for renderer consumers. The actors
+ * The index aliases remain for renderer consumers. The actors
  * have different matrix/angle layouts, and their angles are not XYZ vectors.
  */
-typedef struct RaceUiTripleParticleActor {
+/* Peaked canopy and two alternating groups of horse-and-pole quads. */
+typedef struct DizzyLandCarouselActor {
     /* 0x00 */ u8 pad0[0x10];
     /* 0x10 */ u16 index;
     /* 0x12 */ u8 pad12[0x18 - 0x12];
     /* 0x18 */ Vec3i pos;
-    /* 0x24 */ Mtx *matrix0;
-    /* 0x28 */ Mtx *matrix1;
-    /* 0x2C */ Mtx *matrix2;
-    /* 0x30 */ s16 rotY;
+    /* 0x24 */ Mtx *canopyMatrix;
+    /* 0x28 */ Mtx *negativeSineHorsesMatrix;
+    /* 0x2C */ Mtx *positiveSineHorsesMatrix;
+    /* 0x30 */ s16 yaw;
     /* 0x32 */ u8 matrixDirty;
-} RaceUiTripleParticleActor;
+} DizzyLandCarouselActor;
 
-typedef struct RaceUiTrailingParticleActor {
+/* Upright wheel rotating about its hub above a stationary support. */
+typedef struct DizzyLandFerrisWheelActor {
     /* 0x00 */ u8 pad0[0x10];
     /* 0x10 */ u16 index;
     /* 0x12 */ u8 pad12[0x18 - 0x12];
     /* 0x18 */ Vec3i pos;
-    /* 0x24 */ Mtx *matrix0;
-    /* 0x28 */ Mtx *matrix1;
-    /* 0x2C */ s16 rotY;
-    /* 0x2E */ s16 rotX;
+    /* 0x24 */ Mtx *supportMatrix;
+    /* 0x28 */ Mtx *wheelMatrix;
+    /* 0x2C */ s16 yaw;
+    /* 0x2E */ s16 wheelAngle;
     /* 0x30 */ u8 matrixDirty;
-} RaceUiTrailingParticleActor;
+} DizzyLandFerrisWheelActor;
 
-typedef struct RaceUiSpinningParticleActor {
+/* Pink pole and rotating canopy carrying face-decorated cabins. */
+typedef struct DizzyLandSpinningCabinRideActor {
     /* 0x00 */ u8 pad0[0x10];
     /* 0x10 */ u16 index;
     /* 0x12 */ u8 pad12[0x18 - 0x12];
     /* 0x18 */ Vec3i pos;
-    /* 0x24 */ Mtx *matrix0;
-    /* 0x28 */ Mtx *matrix1;
-    /* 0x2C */ s16 rotY;
-    /* 0x2E */ s16 rotZ;
-    /* 0x30 */ s16 rotX;
-    /* 0x32 */ s16 rotX2;
+    /* 0x24 */ Mtx *poleMatrix;
+    /* 0x28 */ Mtx *canopyMatrix;
+    /* 0x2C */ s16 baseYaw;
+    /* 0x2E */ s16 spinAngle;
+    /* 0x30 */ s16 pitchPhase;
+    /* 0x32 */ s16 rollPhase;
     /* 0x34 */ u8 matrixDirty;
-} RaceUiSpinningParticleActor;
+} DizzyLandSpinningCabinRideActor;
 
 typedef union {
     s32 word;
@@ -178,7 +181,7 @@ typedef struct RaceUiFadingImpactActor {
 } RaceUiFadingImpactActor;
 
 extern Vec3i gDizzyLandTeacupBumperPositions[10];
-extern Vec3i gDizzyLandTrailingParticleLocalOffset;
+extern Vec3i gDizzyLandFerrisWheelHubOffset;
 extern RaceUiProjectileVertexBlock D_800D64A0[8];
 extern Gfx gAlphaSpriteRenderModeDl[];
 
@@ -322,9 +325,9 @@ void updateRaceUiScorePopupHold(struct RaceUiPopupActor *arg0);
 void updateRaceUiScorePopupSlideIn(struct RaceUiPopupActor *arg0);
 void initRaceUiScorePopup(struct RaceUiPopupActor *arg0);
 void spawnRaceUiScorePopup(void *arg0, s16 arg1);
-void renderRaceCourseTripleParticle(struct RaceUiTripleParticleActor *arg0);
-void updateRaceCourseTripleParticle(struct RaceUiTripleParticleActor *arg0);
-void initRaceCourseTripleParticle(struct RaceUiTripleParticleActor *arg0);
+void renderDizzyLandCarousel(struct DizzyLandCarouselActor *arg0);
+void updateDizzyLandCarousel(struct DizzyLandCarouselActor *arg0);
+void initDizzyLandCarousel(struct DizzyLandCarouselActor *arg0);
 void renderRaceUiHeavyKnockdownTrailEffect(struct RaceUiRankTrailActor *arg0);
 void updateRaceUiHeavyKnockdownTrailEffect(struct RaceUiRankTrailActor *arg0);
 void initRaceUiHeavyKnockdownTrailEffect(void *arg0);
@@ -349,12 +352,12 @@ void spawnRaceUiStunOrbitingIcons(s16 arg0);
 void renderDizzyLandTeacupBumper(DizzyLandTeacupBumperActor *arg0);
 void updateDizzyLandTeacupBumper(DizzyLandTeacupBumperActor *arg0);
 void initDizzyLandTeacupBumper(DizzyLandTeacupBumperActor *arg0);
-void renderDizzyLandTrailingParticle(struct RaceUiTrailingParticleActor *arg0);
-void updateDizzyLandTrailingParticle(struct RaceUiTrailingParticleActor *arg0);
-void initDizzyLandTrailingParticle(struct RaceUiTrailingParticleActor *arg0);
-void renderRaceCourseSpinningObject(struct RaceUiSpinningParticleActor *arg0);
-void updateRaceCourseSpinningObject(struct RaceUiSpinningParticleActor *arg0);
-void initRaceCourseSpinningObject(struct RaceUiSpinningParticleActor *arg0);
+void renderDizzyLandFerrisWheel(struct DizzyLandFerrisWheelActor *arg0);
+void updateDizzyLandFerrisWheel(struct DizzyLandFerrisWheelActor *arg0);
+void initDizzyLandFerrisWheel(struct DizzyLandFerrisWheelActor *arg0);
+void renderDizzyLandSpinningCabinRide(struct DizzyLandSpinningCabinRideActor *arg0);
+void updateDizzyLandSpinningCabinRide(struct DizzyLandSpinningCabinRideActor *arg0);
+void initDizzyLandSpinningCabinRide(struct DizzyLandSpinningCabinRideActor *arg0);
 void renderCourseStartFinishSprite(struct RaceUiCourseSpriteActor *arg0);
 void updateCourseStartFinishSprite(struct RaceUiCourseSpriteActor *actor);
 void initCourseStartFinishSprite(struct RaceUiCourseSpriteActor *actor);

@@ -297,7 +297,7 @@ RaceCourseGateEntry gCourseGateSoundParams[] = {
     { { 0x1442F7DC, 0xEEC80E50, 0xF3F545C2 }, 2768, 0 },
 };
 
-RaceCourseBillboardEntry gCourseBillboardMarkerEntries[] = {
+RaceCourseWaterLayerEntry gCourseWaterLayerEntries[] = {
     { 0x02000060, 0x02000088, 0x02000000, 6,  1, 3, 0 },
     { 0x0200BB90, 0x0200BBB8, 0x0200BA10, 24, 1, 3, 0 },
     { 0x0200BCC0, 0x0200BCE8, 0x0200BC00, 12, 1, 3, 0 },
@@ -1261,7 +1261,7 @@ void initCourseGateObject(RaceCourseGateEffect *arg0) {
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)waitForCourseGateTrigger);
 }
 
-void renderCourseBillboardMarker(RaceCourseBillboardEffect *arg0) {
+void renderCourseWaterLayer(RaceCourseWaterLayerActor *arg0) {
     Gfx *segmentGfx;
     Gfx *gfx;
     s32 i;
@@ -1270,21 +1270,21 @@ void renderCourseBillboardMarker(RaceCourseBillboardEffect *arg0) {
     u8 pad[0x10];
 
     if (gRenderMatricesDirty != 0) {
-        arg0->vertices = allocMenuRenderScratch((arg0->vertexCount * sizeof(Vtx)) + ((u32)pad & 0));
-        if (arg0->vertices != NULL) {
+        arg0->scrolledVertices = allocMenuRenderScratch((arg0->vertexCount * sizeof(Vtx)) + ((u32)pad & 0));
+        if (arg0->scrolledVertices != NULL) {
             i = 0;
             if (arg0->vertexCount > 0) {
                 do {
-                    arg0->vertices[i] = arg0->baseVertices[i];
-                    arg0->vertices[i].v.tc[1] += arg0->textureScroll;
-                    arg0->vertices[i].v.tc[1] &= 0xFFFF;
+                    arg0->scrolledVertices[i] = arg0->sourceVertices[i];
+                    arg0->scrolledVertices[i].v.tc[1] += arg0->textureScrollT;
+                    arg0->scrolledVertices[i].v.tc[1] &= 0xFFFF;
                     i++;
                 } while (i < arg0->vertexCount);
             }
         }
     }
 
-    if (arg0->vertices != NULL) {
+    if (arg0->scrolledVertices != NULL) {
         gDPPipeSync(gRegionAllocPtr++);
         newGfx = gRegionAllocPtr++;
         segmentGfx = newGfx;
@@ -1310,35 +1310,35 @@ void renderCourseBillboardMarker(RaceCourseBillboardEffect *arg0) {
         gfx = gRegionAllocPtr++;
         vertexCount = arg0->vertexCount;
         gfx->words.w0 = (((vertexCount << 0xA) | ((vertexCount << 4) - 1)) & 0xFFFF) | 0x04000000;
-        gfx->words.w1 = (u32)arg0->vertices;
+        gfx->words.w1 = (u32)arg0->scrolledVertices;
         gSPDisplayList(gRegionAllocPtr++, arg0->geometryDisplayListAddress);
     }
 }
 
-void updateCourseBillboardMarker(RaceCourseBillboardEffect *arg0) {
-    arg0->textureScroll -= 0x40;
-    arg0->textureScroll &= 0x7FF;
+void updateCourseWaterLayer(RaceCourseWaterLayerActor *arg0) {
+    arg0->textureScrollT -= 0x40;
+    arg0->textureScrollT &= 0x7FF;
     if (arg0->useAlternateRenderQueue != 0) {
-        addRenderCallback(&D_801248EC, (RenderCallback)renderCourseBillboardMarker, arg0);
+        addRenderCallback(&D_801248EC, (RenderCallback)renderCourseWaterLayer, arg0);
     } else {
-        addRenderCallback(&gRaceObjectRenderCallbackList, (RenderCallback)renderCourseBillboardMarker, arg0);
+        addRenderCallback(&gRaceObjectRenderCallbackList, (RenderCallback)renderCourseWaterLayer, arg0);
     }
 }
 
-void initCourseBillboardMarker(RaceCourseBillboardEffect *arg0) {
+void initCourseWaterLayer(RaceCourseWaterLayerActor *arg0) {
     getAssetTableImageAndPalette(
         getRelocatableHeapBlockBase(ASSET_HANDLE(0x1C)),
-        gCourseBillboardMarkerEntries[arg0->task.userId].textureIndex,
+        gCourseWaterLayerEntries[arg0->task.userId].textureIndex,
         &arg0->texture,
         &arg0->palette
     );
-    arg0->baseVertices = resolveAssetTableRelativePointer(
+    arg0->sourceVertices = resolveAssetTableRelativePointer(
         getRelocatableHeapBlockBase(ASSET_HANDLE(0x8)),
-        gCourseBillboardMarkerEntries[arg0->task.userId].baseVerticesAddress
+        gCourseWaterLayerEntries[arg0->task.userId].sourceVerticesAddress
     );
 
     {
-        RaceCourseBillboardEntry *entry = &gCourseBillboardMarkerEntries[arg0->task.userId];
+        RaceCourseWaterLayerEntry *entry = &gCourseWaterLayerEntries[arg0->task.userId];
 
         arg0->vertexCount = entry->vertexCount;
         arg0->renderSetupDisplayListAddress = entry->renderSetupDisplayListAddress;
@@ -1347,7 +1347,7 @@ void initCourseBillboardMarker(RaceCourseBillboardEffect *arg0) {
         arg0->useAlternateRenderQueue = entry->flags & 1;
         arg0->renderFlags = entry->flags & 2;
     }
-    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateCourseBillboardMarker);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateCourseWaterLayer);
 }
 
 void renderCourseTriggerVolume(RaceCourseTriggerEffect *arg0) {

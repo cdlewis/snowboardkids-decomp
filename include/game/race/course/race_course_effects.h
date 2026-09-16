@@ -4,6 +4,12 @@
 #include "common.h"
 #include "game/engine/callback_task_scheduler.h"
 
+enum CourseWaterLayerId {
+    COURSE_WATER_LAYER_BIG_SNOWMAN,
+    COURSE_WATER_LAYER_GRASS_VALLEY_WINDING_STREAM,
+    COURSE_WATER_LAYER_GRASS_VALLEY_BRIDGE_RIVER
+};
+
 struct RacePlayer;
 
 typedef struct RaceCountdownEffect {
@@ -81,31 +87,32 @@ typedef struct RaceMovingCourseObjectEffect {
     /* 0x54 */ Mtx *matrix;
 } RaceMovingCourseObjectEffect;
 
-typedef struct RaceCourseBillboardEffect {
+/* World-space water mesh; source vertices are copied before scrolling T. */
+typedef struct RaceCourseWaterLayerActor {
     /* 0x00 */ CallbackTaskHeader task;
     /* 0x18 */ void *texture;
     /* 0x1C */ void *palette;
-    /* 0x20 */ s16 textureScroll;
+    /* 0x20 */ s16 textureScrollT;
     /* 0x22 */ u8 padding22[2];
-    /* 0x24 */ Vtx *vertices;
-    /* 0x28 */ Vtx *baseVertices;
+    /* 0x24 */ Vtx *scrolledVertices;
+    /* 0x28 */ Vtx *sourceVertices;
     /* 0x2C */ s16 vertexCount;
     /* 0x2E */ u8 padding2E[2];
     /* 0x30 */ u32 renderSetupDisplayListAddress;
     /* 0x34 */ u32 geometryDisplayListAddress;
     /* 0x38 */ s32 useAlternateRenderQueue;
     /* 0x3C */ s32 renderFlags;
-} RaceCourseBillboardEffect;
+} RaceCourseWaterLayerActor;
 
-typedef struct RaceCourseBillboardEntry {
+typedef struct RaceCourseWaterLayerEntry {
     /* 0x00 */ u32 renderSetupDisplayListAddress;
     /* 0x04 */ u32 geometryDisplayListAddress;
-    /* 0x08 */ u32 baseVerticesAddress;
+    /* 0x08 */ u32 sourceVerticesAddress;
     /* 0x0C */ s16 vertexCount;
     /* 0x0E */ s16 flags;
     /* 0x10 */ u16 textureIndex;
     /* 0x12 */ s16 padding12;
-} RaceCourseBillboardEntry;
+} RaceCourseWaterLayerEntry;
 
 typedef struct RaceCourseTriggerEntry {
     /* 0x00 */ s16 halfWidth;
@@ -186,9 +193,9 @@ void updateCourseGateClosing(RaceCourseGateEffect *effect);
 void updateCourseGateOpening(RaceCourseGateEffect *effect);
 void waitForCourseGateTrigger(RaceCourseGateEffect *effect);
 void initCourseGateObject(RaceCourseGateEffect *effect);
-void renderCourseBillboardMarker(RaceCourseBillboardEffect *effect);
-void updateCourseBillboardMarker(RaceCourseBillboardEffect *effect);
-void initCourseBillboardMarker(RaceCourseBillboardEffect *effect);
+void renderCourseWaterLayer(RaceCourseWaterLayerActor *effect);
+void updateCourseWaterLayer(RaceCourseWaterLayerActor *effect);
+void initCourseWaterLayer(RaceCourseWaterLayerActor *effect);
 void renderCourseTriggerVolume(RaceCourseTriggerEffect *effect);
 void collidePlayerWithCourseTriggerVolume(struct RacePlayer *player, RaceCourseTriggerEffect *trigger);
 void updateCourseTriggerVolume(RaceCourseTriggerEffect *effect);

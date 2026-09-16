@@ -710,7 +710,7 @@ Vec3i D_800D61C0[] = {
     { 131072,  258048, 8192    },
 };
 
-Vec3i gDizzyLandTripleParticlePositions[] = {
+Vec3i gDizzyLandCarouselPositions[] = {
     { 87549465, -252463332, -675267970 },
 };
 
@@ -751,19 +751,19 @@ Vec3i gDizzyLandTeacupBumperPositions[] = {
     { 382028173, -410601578, -793439344 },
 };
 
-Vec3i gDizzyLandTrailingParticleLocalOffset = {
+Vec3i gDizzyLandFerrisWheelHubOffset = {
     0,
     15728640,
     -65536,
 };
 
-Vec3i gDizzyLandTrailingParticlePositions[] = {
+Vec3i gDizzyLandFerrisWheelPositions[] = {
     { -2374729, -765234319, -1519126234 },
 };
 
-s16 gDizzyLandTrailingParticleYRotations[] = { 0x0240, 0x0000 };
+s16 gDizzyLandFerrisWheelYaws[] = { 0x0240, 0x0000 };
 
-Vec3i gDizzyLandSpinningObjectPositions[] = {
+Vec3i gDizzyLandSpinningCabinRidePositions[] = {
     { 443402522, -387728215, -622554590 },
 };
 
@@ -4445,7 +4445,7 @@ void spawnRaceUiScorePopup(void *arg0, s16 arg1) {
     }
 }
 
-void renderRaceCourseTripleParticle(RaceUiTripleParticleActor *arg0) {
+void renderDizzyLandCarousel(DizzyLandCarouselActor *arg0) {
     s16 unused;
     Transform3D spAC;
     Transform3D sp8C;
@@ -4459,45 +4459,45 @@ void renderRaceCourseTripleParticle(RaceUiTripleParticleActor *arg0) {
     if (isPositionNearCurrentRaceViewportCamera(&arg0->pos) != 0) {
         if (arg0->matrixDirty != 0) {
             arg0->matrixDirty = 0;
-            makeFixedRotationY(spAC.rotation, arg0->rotY);
+            makeFixedRotationY(spAC.rotation, arg0->yaw);
             spAC.translation.x = arg0->pos.x;
             spAC.translation.y = arg0->pos.y;
             spAC.translation.z = arg0->pos.z;
 
             sp8C = sp6C = spAC;
 
-            sine = fixedSine((s16)(arg0->rotY << 4)) << 7;
+            sine = fixedSine((s16)(arg0->yaw << 4)) << 7;
             sp8C.translation.y = (sp8C.translation.y - sine) + 0x80000;
             sp6C.translation.y += sine + 0x80000;
 
-            arg0->matrix0 = allocFixedTransformMatrix(&spAC);
-            arg0->matrix1 = allocFixedTransformMatrix(&sp8C);
-            arg0->matrix2 = allocFixedTransformMatrix(&sp6C);
+            arg0->canopyMatrix = allocFixedTransformMatrix(&spAC);
+            arg0->negativeSineHorsesMatrix = allocFixedTransformMatrix(&sp8C);
+            arg0->positiveSineHorsesMatrix = allocFixedTransformMatrix(&sp6C);
         }
 
-        if ((arg0->matrix0 != NULL) && (arg0->matrix1 != NULL) && (arg0->matrix2 != NULL)) {
+        if ((arg0->canopyMatrix != NULL) && (arg0->negativeSineHorsesMatrix != NULL) && (arg0->positiveSineHorsesMatrix != NULL)) {
             gDPPipeSync(RACE_UI_TRAIL_GFX_ALLOC_PTR++);
             gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x02, getRelocatableHeapBlockBase(ASSET_HANDLE(0x8)));
             gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x03, getRelocatableHeapBlockBase(ASSET_HANDLE(0x9)));
-            gSPMatrix(RACE_UI_TRAIL_GFX_ALLOC_PTR++, arg0->matrix0, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
-            gSPDisplayList(RACE_UI_TRAIL_GFX_ALLOC_PTR++, &DIZZY_LAND_TRIPLE_PARTICLE_CENTER_DISPLAY_LIST_VRAM);
-            gSPMatrix(RACE_UI_TRAIL_GFX_ALLOC_PTR++, arg0->matrix1, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
-            gSPDisplayList(RACE_UI_TRAIL_GFX_ALLOC_PTR++, &DIZZY_LAND_TRIPLE_PARTICLE_NEGATIVE_SINE_OFFSET_DISPLAY_LIST_VRAM);
-            gSPMatrix(RACE_UI_TRAIL_GFX_ALLOC_PTR++, arg0->matrix2, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
-            gSPDisplayList(RACE_UI_TRAIL_GFX_ALLOC_PTR++, &DIZZY_LAND_TRIPLE_PARTICLE_POSITIVE_SINE_OFFSET_DISPLAY_LIST_VRAM);
+            gSPMatrix(RACE_UI_TRAIL_GFX_ALLOC_PTR++, arg0->canopyMatrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+            gSPDisplayList(RACE_UI_TRAIL_GFX_ALLOC_PTR++, &DIZZY_LAND_CAROUSEL_CANOPY_DISPLAY_LIST_VRAM);
+            gSPMatrix(RACE_UI_TRAIL_GFX_ALLOC_PTR++, arg0->negativeSineHorsesMatrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+            gSPDisplayList(RACE_UI_TRAIL_GFX_ALLOC_PTR++, &DIZZY_LAND_CAROUSEL_HORSES_NEGATIVE_SINE_DISPLAY_LIST_VRAM);
+            gSPMatrix(RACE_UI_TRAIL_GFX_ALLOC_PTR++, arg0->positiveSineHorsesMatrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+            gSPDisplayList(RACE_UI_TRAIL_GFX_ALLOC_PTR++, &DIZZY_LAND_CAROUSEL_HORSES_POSITIVE_SINE_DISPLAY_LIST_VRAM);
         }
     }
 }
 
-void updateRaceCourseTripleParticle(RaceUiTripleParticleActor *actor) {
-    actor->rotY += 4;
-    addRenderCallback(&gSceneModelRenderCallbackList, (RenderCallback)renderRaceCourseTripleParticle, (void *)actor);
+void updateDizzyLandCarousel(DizzyLandCarouselActor *actor) {
+    actor->yaw += 4;
+    addRenderCallback(&gSceneModelRenderCallbackList, (RenderCallback)renderDizzyLandCarousel, (void *)actor);
 }
 
-void initRaceCourseTripleParticle(RaceUiTripleParticleActor *actor) {
-    actor->rotY = 0;
-    actor->pos = gDizzyLandTripleParticlePositions[actor->index];
-    setCallbackTaskCallback(actor, (CallbackTaskCallback)updateRaceCourseTripleParticle);
+void initDizzyLandCarousel(DizzyLandCarouselActor *actor) {
+    actor->yaw = 0;
+    actor->pos = gDizzyLandCarouselPositions[actor->index];
+    setCallbackTaskCallback(actor, (CallbackTaskCallback)updateDizzyLandCarousel);
 }
 
 void renderRaceUiHeavyKnockdownTrailEffect(RaceUiRankTrailActor *arg0) {
@@ -5046,7 +5046,7 @@ void initDizzyLandTeacupBumper(DizzyLandTeacupBumperActor *bumper) {
     setCallbackTaskCallback(bumper, (CallbackTaskCallback)updateDizzyLandTeacupBumper);
 }
 
-void renderDizzyLandTrailingParticle(RaceUiTrailingParticleActor *arg0) {
+void renderDizzyLandFerrisWheel(DizzyLandFerrisWheelActor *arg0) {
     struct {
         Transform3D transform;
         s16 unused[2];
@@ -5060,46 +5060,46 @@ void renderDizzyLandTrailingParticle(RaceUiTrailingParticleActor *arg0) {
     if (isPositionNearCurrentRaceViewportCamera(&arg0->pos) != 0) {
         if (arg0->matrixDirty != 0) {
             arg0->matrixDirty = 0;
-            makeFixedRotationY(scratch.transform.rotation, arg0->rotY);
+            makeFixedRotationY(scratch.transform.rotation, arg0->yaw);
             scratch.transform.translation.x = arg0->pos.x;
             scratch.transform.translation.y = arg0->pos.y;
             scratch.transform.translation.z = arg0->pos.z;
-            arg0->matrix0 = allocFixedTransformMatrix(&scratch.transform);
+            arg0->supportMatrix = allocFixedTransformMatrix(&scratch.transform);
 
-            transformVec3iByFixedMatrix(scratch.transform.rotation, &gDizzyLandTrailingParticleLocalOffset, &transformedOffset);
+            transformVec3iByFixedMatrix(scratch.transform.rotation, &gDizzyLandFerrisWheelHubOffset, &transformedOffset);
             scratch.transform.translation.x += transformedOffset.x;
             scratch.transform.translation.y += transformedOffset.y;
             scratch.transform.translation.z += transformedOffset.z;
-            makeFixedRotationZY(scratch.transform.rotation, arg0->rotY, arg0->rotX);
-            arg0->matrix1 = allocFixedTransformMatrix(&scratch.transform);
+            makeFixedRotationZY(scratch.transform.rotation, arg0->yaw, arg0->wheelAngle);
+            arg0->wheelMatrix = allocFixedTransformMatrix(&scratch.transform);
         }
 
-        if (arg0->matrix1 != NULL) {
+        if (arg0->wheelMatrix != NULL) {
             gDPPipeSync(RACE_UI_TRAIL_GFX_ALLOC_PTR++);
             gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x02, getRelocatableHeapBlockBase(ASSET_HANDLE(0x8)));
             gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x03, getRelocatableHeapBlockBase(ASSET_HANDLE(0x9)));
-            gSPMatrix(RACE_UI_TRAIL_GFX_ALLOC_PTR++, arg0->matrix0, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
-            gSPDisplayList(RACE_UI_TRAIL_GFX_ALLOC_PTR++, &DIZZY_LAND_TRAILING_PARTICLE_BASE_DISPLAY_LIST_VRAM);
-            gSPMatrix(RACE_UI_TRAIL_GFX_ALLOC_PTR++, arg0->matrix1, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
-            gSPDisplayList(RACE_UI_TRAIL_GFX_ALLOC_PTR++, &DIZZY_LAND_TRAILING_PARTICLE_DISPLAY_LIST_VRAM);
+            gSPMatrix(RACE_UI_TRAIL_GFX_ALLOC_PTR++, arg0->supportMatrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+            gSPDisplayList(RACE_UI_TRAIL_GFX_ALLOC_PTR++, &DIZZY_LAND_FERRIS_WHEEL_SUPPORT_DISPLAY_LIST_VRAM);
+            gSPMatrix(RACE_UI_TRAIL_GFX_ALLOC_PTR++, arg0->wheelMatrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+            gSPDisplayList(RACE_UI_TRAIL_GFX_ALLOC_PTR++, &DIZZY_LAND_FERRIS_WHEEL_DISPLAY_LIST_VRAM);
         }
     }
 }
 
-void updateDizzyLandTrailingParticle(RaceUiTrailingParticleActor *arg0) {
+void updateDizzyLandFerrisWheel(DizzyLandFerrisWheelActor *arg0) {
     if (gRaceUpdatePaused == 0) {
-        arg0->rotX += 8;
+        arg0->wheelAngle += 8;
     }
-    addRenderCallback(&gRaceModelEffectRenderCallbackList, (RenderCallback)renderDizzyLandTrailingParticle, (void *)arg0);
+    addRenderCallback(&gRaceModelEffectRenderCallbackList, (RenderCallback)renderDizzyLandFerrisWheel, (void *)arg0);
 }
 
-void initDizzyLandTrailingParticle(RaceUiTrailingParticleActor *arg0) {
-    arg0->pos = gDizzyLandTrailingParticlePositions[arg0->index];
-    arg0->rotY = gDizzyLandTrailingParticleYRotations[arg0->index];
-    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateDizzyLandTrailingParticle);
+void initDizzyLandFerrisWheel(DizzyLandFerrisWheelActor *arg0) {
+    arg0->pos = gDizzyLandFerrisWheelPositions[arg0->index];
+    arg0->yaw = gDizzyLandFerrisWheelYaws[arg0->index];
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateDizzyLandFerrisWheel);
 }
 
-void renderRaceCourseSpinningObject(RaceUiSpinningParticleActor *arg0) {
+void renderDizzyLandSpinningCabinRide(DizzyLandSpinningCabinRideActor *arg0) {
     struct {
         Transform3D transform;
         s16 unused[2];
@@ -5119,42 +5119,42 @@ void renderRaceCourseSpinningObject(RaceUiSpinningParticleActor *arg0) {
 
     if (arg0->matrixDirty != 0) {
         arg0->matrixDirty = 0;
-        makeFixedRotationY(scratch.transform.rotation, arg0->rotY);
+        makeFixedRotationY(scratch.transform.rotation, arg0->baseYaw);
         scratch.transform.translation.x = arg0->pos.x;
         scratch.transform.translation.y = arg0->pos.y;
         scratch.transform.translation.z = arg0->pos.z;
-        arg0->matrix0 = allocFixedTransformMatrix(&scratch.transform);
+        arg0->poleMatrix = allocFixedTransformMatrix(&scratch.transform);
 
         scratch.transform.translation.y += 0x01000000;
-        temp.half.lo = fixedSine(arg0->rotX) >> 5;
-        temp2 = fixedSine(arg0->rotX2) >> 5;
-        makeFixedRotationYZX(scratch.transform.rotation, temp.half.lo, arg0->rotZ, temp2);
-        arg0->matrix1 = allocFixedTransformMatrix(&scratch.transform);
+        temp.half.lo = fixedSine(arg0->pitchPhase) >> 5;
+        temp2 = fixedSine(arg0->rollPhase) >> 5;
+        makeFixedRotationYZX(scratch.transform.rotation, temp.half.lo, arg0->spinAngle, temp2);
+        arg0->canopyMatrix = allocFixedTransformMatrix(&scratch.transform);
     }
 
-    if (arg0->matrix1 != NULL) {
+    if (arg0->canopyMatrix != NULL) {
         gDPPipeSync(gRegionAllocPtr++);
         gSPSegment(gRegionAllocPtr++, 0x02, getRelocatableHeapBlockBase(ASSET_HANDLE(0x8)));
         gSPSegment(gRegionAllocPtr++, 0x03, getRelocatableHeapBlockBase(ASSET_HANDLE(0x9)));
-        gSPMatrix(gRegionAllocPtr++, arg0->matrix0, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
-        gSPDisplayList(gRegionAllocPtr++, &DIZZY_LAND_SPINNING_OBJECT_BASE_DISPLAY_LIST_VRAM);
-        gSPMatrix(gRegionAllocPtr++, arg0->matrix1, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
-        gSPDisplayList(gRegionAllocPtr++, &DIZZY_LAND_SPINNING_OBJECT_UPPER_DISPLAY_LIST_VRAM);
+        gSPMatrix(gRegionAllocPtr++, arg0->poleMatrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+        gSPDisplayList(gRegionAllocPtr++, &DIZZY_LAND_SPINNING_CABIN_RIDE_POLE_DISPLAY_LIST_VRAM);
+        gSPMatrix(gRegionAllocPtr++, arg0->canopyMatrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+        gSPDisplayList(gRegionAllocPtr++, &DIZZY_LAND_SPINNING_CABIN_RIDE_CANOPY_DISPLAY_LIST_VRAM);
     }
 }
 
-void updateRaceCourseSpinningObject(RaceUiSpinningParticleActor *arg0) {
+void updateDizzyLandSpinningCabinRide(DizzyLandSpinningCabinRideActor *arg0) {
     if (gRaceUpdatePaused == 0) {
-        arg0->rotZ += 0x60;
-        arg0->rotX += 0x10;
-        arg0->rotX2 += 4;
+        arg0->spinAngle += 0x60;
+        arg0->pitchPhase += 0x10;
+        arg0->rollPhase += 4;
     }
-    addRenderCallback(&gRaceModelEffectRenderCallbackList, (RenderCallback)renderRaceCourseSpinningObject, arg0);
+    addRenderCallback(&gRaceModelEffectRenderCallbackList, (RenderCallback)renderDizzyLandSpinningCabinRide, arg0);
 }
 
-void initRaceCourseSpinningObject(RaceUiSpinningParticleActor *arg0) {
-    arg0->pos = gDizzyLandSpinningObjectPositions[arg0->index];
-    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceCourseSpinningObject);
+void initDizzyLandSpinningCabinRide(DizzyLandSpinningCabinRideActor *arg0) {
+    arg0->pos = gDizzyLandSpinningCabinRidePositions[arg0->index];
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateDizzyLandSpinningCabinRide);
 }
 
 void renderCourseStartFinishSprite(RaceUiCourseSpriteActor *arg0) {

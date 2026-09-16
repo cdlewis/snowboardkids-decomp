@@ -247,9 +247,9 @@ def index_models(root, layout):
     scroll_courses = ['quicksand_valley','quicksand_valley','night_highway','animal_land',
                       'dizzy_land','dizzy_land','sunset_rock','sunset_rock']
     effect_source = (root/'src/race/course/race_course_effects.c').read_text()
-    billboard_body = re.search(r'gCourseBillboardMarkerEntries\[\]\s*=\s*\{(.*?)\};',effect_source,re.S)[1]
-    billboards = [[int(v,0) for v in re.findall(r'0x[0-9A-Fa-f]+|\d+',line)]
-                  for line in re.findall(r'\{([^{}]+)\}',billboard_body)]
+    water_layer_body = re.search(r'gCourseWaterLayerEntries\[\]\s*=\s*\{(.*?)\};',effect_source,re.S)[1]
+    water_layers = [[int(v,0) for v in re.findall(r'0x[0-9A-Fa-f]+|\d+',line)]
+                    for line in re.findall(r'\{([^{}]+)\}',water_layer_body)]
     for bank in specs:
         if bank['type'] not in ('model_resources','course_model_resources'):
             continue
@@ -290,14 +290,15 @@ def index_models(root, layout):
             if offset in bindings:
                 model['texture_binding'] = bindings[offset]
             bundles[target]['models'].append(model)
-        for i,billboard in enumerate(billboards):
-            # race_scene_setup.c instantiates marker 0 in course 0 and markers
+        for i,water_layer in enumerate(water_layers):
+            # race_scene_setup.c instantiates water layer 0 in course 0 and layers
             # 1/2 in course 3, whose loader selects Grass Valley (not ROM order).
             course = 'big_snowman' if i==0 else 'grass_valley'
             if bank['name'].lower().startswith(course+'_'):
-                bundles[destination]['models'].append(dict(name=f'billboard_{i:02d}',roots=[billboard[1]&0xFFFFFF],
-                    setup=billboard[0],vertex_binding=dict(address=billboard[2],count=billboard[3]),
-                    texture_binding=dict(asset='RACE_EFFECT_SPRITES',entry=billboard[5],wrap=True),**common))
+                # Retain existing preview IDs for editable asset-tree compatibility.
+                bundles[destination]['models'].append(dict(name=f'billboard_{i:02d}',roots=[water_layer[1]&0xFFFFFF],
+                    setup=water_layer[0],vertex_binding=dict(address=water_layer[2],count=water_layer[3]),
+                    texture_binding=dict(asset='RACE_EFFECT_SPRITES',entry=water_layer[5],wrap=True),**common))
     for spec in specs:
         if spec['type'] == 'embedded_model':
             destination = rows[spec['name']]['bundle']

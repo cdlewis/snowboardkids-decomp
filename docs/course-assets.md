@@ -96,8 +96,10 @@ Confirmed top-level entry points are:
 | Ninja Land | `NINJA_LAND_COURSE_DISPLAY_LIST` | `NINJA_LAND_COURSE_BACKDROP_DISPLAY_LIST` |
 | Rookie Mountain | `ROOKIE_MOUNTAIN_COURSE_DISPLAY_LIST` | `ROOKIE_MOUNTAIN_COURSE_BACKDROP_DISPLAY_LIST` |
 
-Dizzy-Land's directly referenced course effects are also named: the three-part
-particle, bumper, trailing-particle pair, and spinning-object pair. The runtime
+Dizzy-Land's directly referenced course effects are also named: the carousel
+(canopy and two horse groups), teacup bumper, Ferris wheel (wheel and support),
+and spinning cabin ride (canopy and pole). See the
+[geometry identification notes](course-actor-identities.md). The runtime
 table `gRaceCourseRankModelDisplayLists` now identifies the two lap-state lists
 used by each course's finish-line rank model. Their containing ranges retain the
 conservative `COURSE_AUXILIARY_DISPLAY_LISTS` name where they also contain

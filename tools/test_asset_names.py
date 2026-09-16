@@ -12,7 +12,7 @@ class AssetNameTests(unittest.TestCase):
     def test_registry_matches_config(self):
         root = Path(__file__).resolve().parents[1]
         entries = registry(root)
-        self.assertEqual(len(entries),28)
+        self.assertEqual(len(entries),35)
         config = load_yaml(root/'snowboardkids.yaml')
         segments = {s['start']:s for s in config['segments'] if isinstance(s,dict) and 'start' in s}
         for entry in entries:
