@@ -1113,10 +1113,8 @@ void initLiftExitCourseObject(RaceMovingCourseObjectEffect *arg0) {
 
 void renderCourseGateObject(RaceCourseGateEffect *arg0) {
     Transform3D scratch;
-    volatile s32 pad[2];
+    volatile s32 pad[1];
     RaceCourseGateEffect *temp_s0 = arg0;
-    Gfx *segment1;
-    Gfx *segment2;
 
     if (gRenderMatricesDirty != 0) {
         temp_s0->baseMatrix = NULL;
@@ -1134,12 +1132,12 @@ void renderCourseGateObject(RaceCourseGateEffect *arg0) {
 
     if (temp_s0->baseMatrix != NULL) {
         gDPPipeSync(gRegionAllocPtr++);
-        segment1 = gRegionAllocPtr++;
-        segment1->words.w0 = 0xBC000806;
-        segment1->words.w1 = (u32)getRelocatableHeapBlockBase(ASSET_HANDLE(0xA));
-        segment2 = gRegionAllocPtr++;
-        segment2->words.w0 = 0xBC000C06;
-        segment2->words.w1 = (u32)getRelocatableHeapBlockBase(ASSET_HANDLE(0xB));
+        gSPSegment(gRegionAllocPtr++, 2, getRelocatableHeapBlockBase(ASSET_HANDLE(0xA)));
+        {
+            Gfx *segment2 = gRegionAllocPtr++;
+            segment2->words.w0 = 0xBC000C06;
+            segment2->words.w1 = (u32)getRelocatableHeapBlockBase(ASSET_HANDLE(0xB));
+        }
         gSPMatrix(gRegionAllocPtr++, temp_s0->baseMatrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
         gSPDisplayList(gRegionAllocPtr++, &_148F88_VRAM);
     }
