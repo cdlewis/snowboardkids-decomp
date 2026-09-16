@@ -1288,16 +1288,15 @@ void renderCourseWaterLayer(RaceCourseWaterLayerActor *arg0) {
         gDPPipeSync(gRegionAllocPtr++);
         newGfx = gRegionAllocPtr++;
         segmentGfx = newGfx;
-        segmentGfx->words.w0 = 0xBC000806;
-        segmentGfx->words.w1 = (u32)getRelocatableHeapBlockBase(ASSET_HANDLE(0x8));
+        gSPSegment(segmentGfx, 2, getRelocatableHeapBlockBase(ASSET_HANDLE(0x8)));
         gSPMatrix(gRegionAllocPtr++, &gIdentityMatrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
         gSPDisplayList(gRegionAllocPtr++, arg0->renderSetupDisplayListAddress);
         gDPLoadTextureBlock_4b(
             gRegionAllocPtr++,
             arg0->texture,
             G_IM_FMT_CI,
-            0x20,
-            0x40,
+            32,
+            64,
             0,
             G_TX_WRAP,
             G_TX_WRAP,
@@ -1309,8 +1308,7 @@ void renderCourseWaterLayer(RaceCourseWaterLayerActor *arg0) {
         gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, arg0->palette);
         gfx = gRegionAllocPtr++;
         vertexCount = arg0->vertexCount;
-        gfx->words.w0 = (((vertexCount << 0xA) | ((vertexCount << 4) - 1)) & 0xFFFF) | 0x04000000;
-        gfx->words.w1 = (u32)arg0->scrolledVertices;
+        gSPVertex(gfx, arg0->scrolledVertices, vertexCount, 0);
         gSPDisplayList(gRegionAllocPtr++, arg0->geometryDisplayListAddress);
     }
 }
