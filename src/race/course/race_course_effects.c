@@ -1359,12 +1359,7 @@ void renderCourseTriggerVolume(RaceCourseTriggerEffect *arg0) {
             gSPSegment(segment, 3, getRelocatableHeapBlockBase(ASSET_HANDLE(0x9)));
         }
         gSPMatrix(gRegionAllocPtr++, arg0->matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
-        {
-            Gfx *_g = gRegionAllocPtr++;
-
-            _g->words.w0 = 0x06000000;
-            _g->words.w1 = arg0->displayListAddress;
-        }
+        gSPDisplayList(gRegionAllocPtr++, arg0->displayListAddress);
     }
 }
 
