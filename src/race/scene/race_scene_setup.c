@@ -288,15 +288,15 @@ void initRaceCourseSceneTasks(void) {
         case 1:
             createCallbackTask((CallbackTaskCallback)&initRaceCourseModelRenderTask, 0, 0x64);
             createCallbackTask((CallbackTaskCallback)&initCourseTextureMarkers, 0, 0x64);
-            spawnPatrolCourseObject(0x17, 0xF682AF46, 0xEB74F202, 0xF82BAF46, 0xEA17F202);
-            spawnPatrolCourseObject(0x17, 0xF7062F46, 0xE897F202, 0xF5C82F46, 0xEA58F202);
-            spawnPatrolCourseObject(0x17, 0xF45B2F46, 0xE876F202, 0xF6502F46, 0xE7927202);
-            spawnPatrolCourseObject(0x17, 0xF53F2F46, 0xE5987202, 0xF2E4AF46, 0xE61F7202);
-            spawnPatrolCourseObject(0x17, 0xF2BDAF46, 0xE548F202, 0xF3AE2F46, 0xE3AF7202);
-            spawnPatrolCourseObject(0x17, 0xF25E41BF, 0xE5FB38EE, 0xF3169B57, 0xE56EEC94);
-            spawnPatrolCourseObject(0x17, 0xF50D1255, 0xE7032BEC, 0xF2E89861, 0xE70079E8);
-            spawnPatrolCourseObject(0x17, 0xF3EFF851, 0xE8BCCFE0, 0xF5650CCB, 0xE9A4FC34);
-            spawnPatrolCourseObject(0x17, 0xF6BEB9D1, 0xEA69C4DE, 0xF6F1B095, 0xEBF8B05E);
+            spawnPatrolPenguin(0x17, 0xF682AF46, 0xEB74F202, 0xF82BAF46, 0xEA17F202);
+            spawnPatrolPenguin(0x17, 0xF7062F46, 0xE897F202, 0xF5C82F46, 0xEA58F202);
+            spawnPatrolPenguin(0x17, 0xF45B2F46, 0xE876F202, 0xF6502F46, 0xE7927202);
+            spawnPatrolPenguin(0x17, 0xF53F2F46, 0xE5987202, 0xF2E4AF46, 0xE61F7202);
+            spawnPatrolPenguin(0x17, 0xF2BDAF46, 0xE548F202, 0xF3AE2F46, 0xE3AF7202);
+            spawnPatrolPenguin(0x17, 0xF25E41BF, 0xE5FB38EE, 0xF3169B57, 0xE56EEC94);
+            spawnPatrolPenguin(0x17, 0xF50D1255, 0xE7032BEC, 0xF2E89861, 0xE70079E8);
+            spawnPatrolPenguin(0x17, 0xF3EFF851, 0xE8BCCFE0, 0xF5650CCB, 0xE9A4FC34);
+            spawnPatrolPenguin(0x17, 0xF6BEB9D1, 0xEA69C4DE, 0xF6F1B095, 0xEBF8B05E);
             createCallbackTask((CallbackTaskCallback)&initRaceCourseSceneryObjects, 0, 0x64);
             createCallbackTaskWithUserId((CallbackTaskCallback)&initRaceCourseScrollingTexture, 0, 0x64,
                                          RACE_COURSE_SCROLLING_TEXTURE_SUNSET_ROCK_0);
@@ -305,8 +305,8 @@ void initRaceCourseSceneTasks(void) {
             createCallbackTaskWithUserId((CallbackTaskCallback)&initCourseTriggerVolume, 0, 0x64, 0);
             createCallbackTaskWithUserId((CallbackTaskCallback)&initRaceCoursePropModels, 0, 0x64, 0);
             createCallbackTask((CallbackTaskCallback)&initCourseGateObject, 0, 0x64);
-            createCallbackTaskWithUserId((CallbackTaskCallback)&updateThrownPickupSpawner, 0, 0x64, 0);
-            createCallbackTaskWithUserId((CallbackTaskCallback)&updateThrownPickupSpawner, 0, 0x64, 1);
+            createCallbackTaskWithUserId((CallbackTaskCallback)&updateFallingRockSpawner, 0, 0x64, 0);
+            createCallbackTaskWithUserId((CallbackTaskCallback)&updateFallingRockSpawner, 0, 0x64, 1);
             createCallbackTaskWithUserId((CallbackTaskCallback)&initRaceCourseRankModel, 0, 0x64, 1);
             if ((gRaceSplitscreenMode == 0) && (gMainMenuModeSelection == 0)) {
                 if (sp2C != 0) {

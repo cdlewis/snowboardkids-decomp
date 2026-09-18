@@ -19,7 +19,7 @@
 
 #define RACE_MODEL_BUFFER_HANDLE gAssetHandles[0x24]
 #define RACE_PICKUP_G_TRI2 0xB1
-#define THROWN_PICKUP_COURSE_OBJECT_MODEL_INDEX 12
+#define FALLING_ROCK_COURSE_OBJECT_MODEL_INDEX 12
 #define racePickupTriangleWord(v0, v1, v2, flag) \
     (_SHIFTL((flag), 24, 8) | _SHIFTL((v0) * 2, 16, 8) | _SHIFTL((v1) * 2, 8, 8) | _SHIFTL((v2) * 2, 0, 8))
 #define gRacePickupQuadrangle(pkt, v0, v1, v2, v3, flag)                                                \
@@ -538,7 +538,7 @@ PickupSpawnEntry D_800D9290[] = {
     { { 487472239, -724705911, -1039891444 }, 1938, 85 },
 };
 
-PickupSpawnEntry *gThrownPickupSpawnLists[] = { D_800D9250, D_800D9290 };
+PickupSpawnEntry *gFallingRockSpawnLists[] = { D_800D9250, D_800D9290 };
 
 Vtx gRacePickupBaseVertices[] = {
     { { { -10, 20, 2 }, 0x0000, { -16, -16 }, { 0xFF, 0xFF, 0xFF, 0xFF } } },
@@ -1037,7 +1037,7 @@ void initCourseCollectibleSprites(CourseEffectModelListActor *arg0) {
     }
 }
 
-void renderThrownPickupModel(ThrownPickupRenderActor *arg0) {
+void renderFallingRock(FallingRockActor *arg0) {
     struct {
         Transform3D transform;
         s16 unused[2];
@@ -1063,13 +1063,14 @@ void renderThrownPickupModel(ThrownPickupRenderActor *arg0) {
             gSPSegment(gRegionAllocPtr++, 0x03, getRelocatableHeapBlockBase(gAssetHandles[0xB]));
             gSPMatrix(gRegionAllocPtr++, arg0->matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
             gSPDisplayList(
-                gRegionAllocPtr++, gRaceCourseObjectDisplayLists[THROWN_PICKUP_COURSE_OBJECT_MODEL_INDEX]
+                gRegionAllocPtr++, gRaceCourseObjectDisplayLists[FALLING_ROCK_COURSE_OBJECT_MODEL_INDEX]
             );
         }
     }
 }
 
-void updateThrownPickupModel(ThrownPickupModelActor *arg0) {
+/* Sunset Rock hazard: gravity, descending player hits, and removal after two bounces. */
+void updateFallingRock(FallingRockActor *arg0) {
     Vec3i *pos;
     s32 groundY;
     s32 velocityY;
@@ -1085,8 +1086,8 @@ void updateThrownPickupModel(ThrownPickupModelActor *arg0) {
         arg0->pitch -= 0x20;
 
         if (timer == 0) {
-            arg0->unk2C = findRaceCourseSurfaceFromHint(arg0->unk2C, arg0->pos.x, arg0->pos.z);
-            groundY = getRaceCourseSurfaceHeight(arg0->unk2C, arg0->pos.x, arg0->pos.z);
+            arg0->surfaceIndex = findRaceCourseSurfaceFromHint(arg0->surfaceIndex, arg0->pos.x, arg0->pos.z);
+            groundY = getRaceCourseSurfaceHeight(arg0->surfaceIndex, arg0->pos.x, arg0->pos.z);
             pos = &arg0->pos;
             if (arg0->pos.y < groundY) {
                 enqueuePositionalSoundEffect(0x20, pos, 0x7F, 0x32);
@@ -1108,43 +1109,43 @@ void updateThrownPickupModel(ThrownPickupModelActor *arg0) {
         return;
     }
 
-    addRenderCallback(&gSceneModelRenderCallbackList, (RenderCallback)renderThrownPickupModel, arg0);
+    addRenderCallback(&gSceneModelRenderCallbackList, (RenderCallback)renderFallingRock, arg0);
 }
 
-void initThrownPickupModel(ThrownPickupModelActor *arg0) {
+void initFallingRock(FallingRockActor *arg0) {
     Scratch674B4 sp1C;
-    ThrownPickupModelActor *temp_a3 = arg0;
+    FallingRockActor *temp_a3 = arg0;
 
     if (gRaceUpdatePaused == 0) {
-        makeFixedRotationY(sp1C.transform.rotation, temp_a3->modelIndex);
+        makeFixedRotationY(sp1C.transform.rotation, temp_a3->yaw);
         temp_a3->timer = 0x32;
         temp_a3->velocity.x = 0;
         temp_a3->velocity.y = 0xB0000;
         temp_a3->velocity.z = 0xFFF90000;
         transformVec3iByFixedMatrix(sp1C.transform.rotation, &temp_a3->velocity, &temp_a3->transformedPos);
-        setCallbackTaskCallback(temp_a3, (CallbackTaskCallback)updateThrownPickupModel);
+        setCallbackTaskCallback(temp_a3, (CallbackTaskCallback)updateFallingRock);
     }
 }
 
-void spawnThrownPickupModel(s32 arg0, s32 arg1, s32 arg2, s16 arg3, s16 arg4) {
-    ThrownPickupModelActor *temp = createCallbackTask((CallbackTaskCallback)initThrownPickupModel, 0, 0x64);
+void spawnFallingRock(s32 arg0, s32 arg1, s32 arg2, s16 arg3, s16 arg4) {
+    FallingRockActor *temp = createCallbackTask((CallbackTaskCallback)initFallingRock, 0, 0x64);
 
     if (temp != NULL) {
         temp->pos.x = arg0;
         temp->pos.y = arg1;
         temp->pos.z = arg2;
-        temp->modelIndex = arg3;
-        temp->unk2C = arg4;
+        temp->yaw = arg3;
+        temp->surfaceIndex = arg4;
     }
 }
 
 #define SPAWN_RANGE_MAX 0x14000000
 #define SPAWN_RANGE_MIN -0x13FFFFFF
 
-void updateThrownPickupSpawner(ThrownPickupSpawnerActor *arg0) {
-    ThrownPickupModelActor *savedSpawned;
+void updateFallingRockSpawner(FallingRockSpawnerActor *arg0) {
+    FallingRockActor *savedSpawned;
     volatile s32 forceStack[6];
-    ThrownPickupModelActor *spawned;
+    FallingRockActor *spawned;
     PickupSpawnEntry *entry;
     s32 found;
     s32 diffX;
@@ -1155,7 +1156,7 @@ void updateThrownPickupSpawner(ThrownPickupSpawnerActor *arg0) {
     if (gRaceUpdatePaused == 0) {
         if (arg0->timer == 0) {
             arg0->timer = 0x20;
-            entry = gThrownPickupSpawnLists[arg0->spawnIndex];
+            entry = gFallingRockSpawnLists[arg0->task.userId];
             found = FALSE;
             if (gRaceSplitscreenMode != 2) {
                 for (i = 0; i < RACE_PLAYER_COUNT; i++) {
@@ -1172,7 +1173,7 @@ void updateThrownPickupSpawner(ThrownPickupSpawnerActor *arg0) {
                 found = TRUE;
             }
             if (found != 0) {
-                spawned = createCallbackTask((CallbackTaskCallback)initThrownPickupModel, 0, 0x64);
+                spawned = createCallbackTask((CallbackTaskCallback)initFallingRock, 0, 0x64);
                 if (spawned != NULL) {
                     savedSpawned = spawned;
                     rand = randomNextSecondary() & 3;
@@ -1185,8 +1186,8 @@ void updateThrownPickupSpawner(ThrownPickupSpawnerActor *arg0) {
                     savedSpawned->pos.x = (&entry[rand])->pos.x;
                     savedSpawned->pos.y = (&entry[rand])->pos.y;
                     savedSpawned->pos.z = (&entry[rand])->pos.z;
-                    savedSpawned->modelIndex = (&entry[rand])->rotation;
-                    savedSpawned->unk2C = (&entry[rand])->variant;
+                    savedSpawned->yaw = (&entry[rand])->rotation;
+                    savedSpawned->surfaceIndex = (&entry[rand])->variant;
                 }
             }
         } else {
@@ -1198,6 +1199,9 @@ void updateThrownPickupSpawner(ThrownPickupSpawnerActor *arg0) {
 #undef SPAWN_RANGE_MAX
 #undef SPAWN_RANGE_MIN
 
+/* The shop draws three independent parts: a floating item/action symbol,
+ * a camera-facing base (baseMatrix * gViewportMatrix), and a rotating shell.
+ * Collection/bouncing draws only the base; respawning rebuilds the shell. */
 void renderRacePickupIdle(RacePickupActor *arg0) {
     RacePickupMatrixScratch spF4;
 
@@ -1212,8 +1216,8 @@ void renderRacePickupIdle(RacePickupActor *arg0) {
             spF4.source.translation.x = arg0->drawPos.x;
             spF4.source.translation.y = arg0->drawPos.y;
             spF4.source.translation.z = arg0->drawPos.z;
-            arg0->displayList = allocFixedTransformMatrix(&spF4.source);
-            arg0->rotationDisplayList = allocFixedTransformMatrix(&arg0->transform);
+            arg0->baseMatrix = allocFixedTransformMatrix(&spF4.source);
+            arg0->shellMatrix = allocFixedTransformMatrix(&arg0->transform);
             spF4.source = arg0->transform;
             spF4.source.rotation[0] /= 2;
             spF4.source.rotation[1] /= 2;
@@ -1225,14 +1229,14 @@ void renderRacePickupIdle(RacePickupActor *arg0) {
             spF4.source.rotation[7] /= 2;
             spF4.source.rotation[8] /= 2;
             spF4.source.translation.y += (fixedSine((s16)((gFrameCounter << 7) & 0xFFF)) << 7) + 0x300000;
-            arg0->scaleDisplayList = allocFixedTransformMatrix(&spF4.source);
+            arg0->symbolMatrix = allocFixedTransformMatrix(&spF4.source);
         }
 
-        if (arg0->scaleDisplayList != NULL) {
+        if (arg0->symbolMatrix != NULL) {
             gDPPipeSync(gRegionAllocPtr++);
             gSPSegment(gRegionAllocPtr++, 0x02, getRelocatableHeapBlockBase(gAssetHandles[0xA]));
             gSPSegment(gRegionAllocPtr++, 0x03, getRelocatableHeapBlockBase(gAssetHandles[0xB]));
-            gSPMatrix(gRegionAllocPtr++, arg0->scaleDisplayList, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+            gSPMatrix(gRegionAllocPtr++, arg0->symbolMatrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
             if (arg0->variant == 0) {
                 gSPDisplayList(gRegionAllocPtr++, gRaceItemPickupDisplayList);
             } else {
@@ -1254,7 +1258,7 @@ void renderRacePickupIdle(RacePickupActor *arg0) {
                 0
             );
             gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, arg0->palette0);
-            gSPMatrix(gRegionAllocPtr++, arg0->displayList, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+            gSPMatrix(gRegionAllocPtr++, arg0->baseMatrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
             gSPMatrix(gRegionAllocPtr++, gViewportMatrix, G_MTX_NOPUSH | G_MTX_MUL | G_MTX_MODELVIEW);
             gDma1p(gRegionAllocPtr++, G_VTX, gRacePickupBaseVertices, 0x207F, 0);
             gRacePickupQuadrangle(gRegionAllocPtr++, 3, 2, 1, 0, 0);
@@ -1273,7 +1277,7 @@ void renderRacePickupIdle(RacePickupActor *arg0) {
                 0
             );
             gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, arg0->palette1);
-            gSPMatrix(gRegionAllocPtr++, arg0->rotationDisplayList, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+            gSPMatrix(gRegionAllocPtr++, arg0->shellMatrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
             gDma1p(gRegionAllocPtr++, G_VTX, gRacePickupTopVertices, 0x513F, 0);
             gRacePickupQuadrangle(gRegionAllocPtr++, 3, 2, 1, 0, 0);
             gRacePickupQuadrangle(gRegionAllocPtr++, 7, 6, 5, 4, 0);
@@ -1335,9 +1339,9 @@ void renderRacePickupBase(RacePickupActor *arg0) {
             sp64.source.translation.x = arg0->drawPos.x;
             sp64.source.translation.y = arg0->drawPos.y;
             sp64.source.translation.z = arg0->drawPos.z;
-            arg0->displayList = allocFixedTransformMatrix(&sp64.source);
+            arg0->baseMatrix = allocFixedTransformMatrix(&sp64.source);
         }
-        do { if (arg0->displayList != NULL) { temp_v0 = gRegionAllocPtr++; temp_v0->words.w0 = 0x06000000; temp_v0->words.w1 = (u32) gEffectRenderModeSetupDl; temp_v0_2 = gRegionAllocPtr++; temp_v0_2->words.w0 = 0xFD500000; temp_v0_2->words.w1 = (u32) arg0->image0; temp_v0_3 = gRegionAllocPtr++; temp_v0_3->words.w0 = 0xF5500000; temp_v0_3->words.w1 = 0x07080200; temp_v0_4 = gRegionAllocPtr++; temp_v0_4->words.w1 = 0; temp_v0_4->words.w0 = 0xE6000000; temp_v0_5 = gRegionAllocPtr++; temp_v0_5->words.w0 = 0xF3000000; temp_v0_5->words.w1 = 0x070FF400; temp_v0_6 = gRegionAllocPtr++; temp_v0_6->words.w1 = 0; temp_v0_6->words.w0 = 0xE7000000; temp_v0_7 = gRegionAllocPtr++; temp_v0_7->words.w0 = 0xF5400400; temp_v0_7->words.w1 = 0x00080200; temp_v0_8 = gRegionAllocPtr++; temp_v0_8->words.w0 = 0xF2000000; temp_v0_8->words.w1 = 0x0007C07C; temp_v0_9 = gRegionAllocPtr++; temp_v0_9->words.w0 = 0xFD100000; temp_v0_9->words.w1 = (u32) arg0->palette0; temp_v0_10 = gRegionAllocPtr++; temp_v0_10->words.w1 = 0; temp_v0_10->words.w0 = 0xE8000000; temp_v0_11 = gRegionAllocPtr++; temp_v0_11->words.w0 = 0xF5000100; temp_v0_11->words.w1 = 0x07000000; temp_v0_12 = gRegionAllocPtr++; temp_v0_12->words.w1 = 0; temp_v0_12->words.w0 = 0xE6000000; temp_v0_13 = gRegionAllocPtr++; temp_v0_13->words.w0 = 0xF0000000; temp_v0_13->words.w1 = 0x0703C000; temp_v0_14 = gRegionAllocPtr++; temp_v0_14->words.w1 = 0; temp_v0_14->words.w0 = 0xE7000000; temp_v0_15 = gRegionAllocPtr++; temp_v0_15->words.w0 = 0x01020040; temp_v0_15->words.w1 = (u32) arg0->displayList; temp_v0_16 = gRegionAllocPtr++; temp_v0_16->words.w0 = 0x01000040; temp_v0_16->words.w1 = (u32) gViewportMatrix; temp_v0_17 = gRegionAllocPtr++; temp_v0_17->words.w0 = 0x0400207F; temp_v0_17->words.w1 = (u32) gRacePickupBaseVertices; temp_v0_18 = gRegionAllocPtr++; temp_v0_18->words.w0 = 0xB1060402; temp_v0_18->words.w1 = 0x00060200; temp_v0_19 = gRegionAllocPtr++; temp_v0_19->words.w0 = 0x06000000; temp_v0_19->words.w1 = (u32) gEffectRenderModeCleanupDl; } } while (0);
+        do { if (arg0->baseMatrix != NULL) { temp_v0 = gRegionAllocPtr++; temp_v0->words.w0 = 0x06000000; temp_v0->words.w1 = (u32) gEffectRenderModeSetupDl; temp_v0_2 = gRegionAllocPtr++; temp_v0_2->words.w0 = 0xFD500000; temp_v0_2->words.w1 = (u32) arg0->image0; temp_v0_3 = gRegionAllocPtr++; temp_v0_3->words.w0 = 0xF5500000; temp_v0_3->words.w1 = 0x07080200; temp_v0_4 = gRegionAllocPtr++; temp_v0_4->words.w1 = 0; temp_v0_4->words.w0 = 0xE6000000; temp_v0_5 = gRegionAllocPtr++; temp_v0_5->words.w0 = 0xF3000000; temp_v0_5->words.w1 = 0x070FF400; temp_v0_6 = gRegionAllocPtr++; temp_v0_6->words.w1 = 0; temp_v0_6->words.w0 = 0xE7000000; temp_v0_7 = gRegionAllocPtr++; temp_v0_7->words.w0 = 0xF5400400; temp_v0_7->words.w1 = 0x00080200; temp_v0_8 = gRegionAllocPtr++; temp_v0_8->words.w0 = 0xF2000000; temp_v0_8->words.w1 = 0x0007C07C; temp_v0_9 = gRegionAllocPtr++; temp_v0_9->words.w0 = 0xFD100000; temp_v0_9->words.w1 = (u32) arg0->palette0; temp_v0_10 = gRegionAllocPtr++; temp_v0_10->words.w1 = 0; temp_v0_10->words.w0 = 0xE8000000; temp_v0_11 = gRegionAllocPtr++; temp_v0_11->words.w0 = 0xF5000100; temp_v0_11->words.w1 = 0x07000000; temp_v0_12 = gRegionAllocPtr++; temp_v0_12->words.w1 = 0; temp_v0_12->words.w0 = 0xE6000000; temp_v0_13 = gRegionAllocPtr++; temp_v0_13->words.w0 = 0xF0000000; temp_v0_13->words.w1 = 0x0703C000; temp_v0_14 = gRegionAllocPtr++; temp_v0_14->words.w1 = 0; temp_v0_14->words.w0 = 0xE7000000; temp_v0_15 = gRegionAllocPtr++; temp_v0_15->words.w0 = 0x01020040; temp_v0_15->words.w1 = (u32) arg0->baseMatrix; temp_v0_16 = gRegionAllocPtr++; temp_v0_16->words.w0 = 0x01000040; temp_v0_16->words.w1 = (u32) gViewportMatrix; temp_v0_17 = gRegionAllocPtr++; temp_v0_17->words.w0 = 0x0400207F; temp_v0_17->words.w1 = (u32) gRacePickupBaseVertices; temp_v0_18 = gRegionAllocPtr++; temp_v0_18->words.w0 = 0xB1060402; temp_v0_18->words.w1 = 0x00060200; temp_v0_19 = gRegionAllocPtr++; temp_v0_19->words.w0 = 0x06000000; temp_v0_19->words.w1 = (u32) gEffectRenderModeCleanupDl; } } while (0);
     }
 }
 // clang-format on
@@ -1355,11 +1359,11 @@ void renderRacePickupRespawn(RacePickupActor *arg0) {
             spF4.source.translation.x = arg0->drawPos.x;
             spF4.source.translation.y = arg0->drawPos.y;
             spF4.source.translation.z = arg0->drawPos.z;
-            arg0->displayList = allocFixedTransformMatrix(&spF4.source);
-            arg0->rotationDisplayList = allocFixedTransformMatrix(&arg0->transform);
+            arg0->baseMatrix = allocFixedTransformMatrix(&spF4.source);
+            arg0->shellMatrix = allocFixedTransformMatrix(&arg0->transform);
         }
-        if (arg0->displayList != NULL) {
-            if (arg0->rotationDisplayList != NULL) {
+        if (arg0->baseMatrix != NULL) {
+            if (arg0->shellMatrix != NULL) {
                 gSPDisplayList(gRegionAllocPtr++, gEffectRenderModeSetupDl);
                 gDPLoadTextureBlock_4b(
                     gRegionAllocPtr++,
@@ -1376,7 +1380,7 @@ void renderRacePickupRespawn(RacePickupActor *arg0) {
                     0
                 );
                 gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, arg0->palette0);
-                gSPMatrix(gRegionAllocPtr++, arg0->displayList, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+                gSPMatrix(gRegionAllocPtr++, arg0->baseMatrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
                 gSPMatrix(gRegionAllocPtr++, gViewportMatrix, G_MTX_NOPUSH | G_MTX_MUL | G_MTX_MODELVIEW);
                 gDma1p(gRegionAllocPtr++, G_VTX, gRacePickupBaseVertices, 0x103F, 0);
                 gRacePickupQuadrangle(gRegionAllocPtr++, 3, 2, 1, 0, 0);
@@ -1395,7 +1399,7 @@ void renderRacePickupRespawn(RacePickupActor *arg0) {
                     0
                 );
                 gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, arg0->palette1);
-                gSPMatrix(gRegionAllocPtr++, arg0->rotationDisplayList, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+                gSPMatrix(gRegionAllocPtr++, arg0->shellMatrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
                 gDma1p(gRegionAllocPtr++, G_VTX, gRacePickupTopVertices, 0x513F, 0);
                 gRacePickupQuadrangle(gRegionAllocPtr++, 3, 2, 1, 0, 0);
                 gRacePickupQuadrangle(gRegionAllocPtr++, 7, 6, 5, 4, 0);
@@ -1494,6 +1498,8 @@ void updateRacePickupCollected(RacePickupActor *arg0) {
     addRenderCallback(&gEffectRenderCallbackList, (RenderCallback)renderRacePickupBase, arg0);
 }
 
+/* Purchase costs 100 gold and grants an item/action, then emits eight shards
+ * with selectors 0..7. CPUs may buy with less gold, reducing their balance to zero. */
 void updateRacePickupIdle(RacePickupActor *arg0) {
     RacePlayer *player;
     s32 i;
@@ -1663,13 +1669,13 @@ void renderPickupShardParticle(PickupShardParticleActor *arg0) {
             transform.translation.x = arg0->pos.x;
             transform.translation.y = arg0->pos.y;
             transform.translation.z = arg0->pos.z;
-            arg0->displayList = allocFixedTransformMatrix(&transform);
+            arg0->matrix = allocFixedTransformMatrix(&transform);
         }
-        if (arg0->displayList != NULL) {
+        if (arg0->matrix != NULL) {
             temp_v0 = gRegionAllocPtr++;
             temp_v0->words.w1 = (u32)gEffectRenderModeSetupDl;
             temp_v0->words.w0 = 0x06000000;
-            temp_v0_2 = gRegionAllocPtr++; temp_v0_2->words.w0 = 0xFD500000; temp_v0_2->words.w1 = (u32)arg0->palette; temp_v0_3 = gRegionAllocPtr++; temp_v0_3->words.w0 = 0xF5500000; temp_v0_3->words.w1 = 0x07080200; temp_v0_4 = gRegionAllocPtr++; temp_v0_4->words.w1 = 0; temp_v0_4->words.w0 = 0xE6000000; temp_v0_5 = gRegionAllocPtr++; temp_v0_5->words.w0 = 0xF3000000; temp_v0_5->words.w1 = 0x070FF400; temp_v0_6 = gRegionAllocPtr++; temp_v0_6->words.w1 = 0; temp_v0_6->words.w0 = 0xE7000000; temp_v0_7 = gRegionAllocPtr++; temp_v0_7->words.w0 = 0xF5400400; temp_v0_7->words.w1 = 0x00080200; temp_v0_8 = gRegionAllocPtr++; temp_v0_8->words.w0 = 0xF2000000; temp_v0_8->words.w1 = 0x0007C07C; temp_v0_9 = gRegionAllocPtr++; temp_v0_9->words.w0 = 0xFD100000; temp_v0_9->words.w1 = (u32)arg0->image; temp_v0_10 = gRegionAllocPtr++; temp_v0_10->words.w1 = 0; temp_v0_10->words.w0 = 0xE8000000; temp_v0_11 = gRegionAllocPtr++; temp_v0_11->words.w0 = 0xF5000100; temp_v0_11->words.w1 = 0x07000000; temp_v0_12 = gRegionAllocPtr++; temp_v0_12->words.w1 = 0; temp_v0_12->words.w0 = 0xE6000000; temp_v0_13 = gRegionAllocPtr++; temp_v0_13->words.w0 = 0xF0000000; temp_v0_13->words.w1 = 0x0703C000; temp_v0_14 = gRegionAllocPtr++; temp_v0_14->words.w1 = 0; temp_v0_14->words.w0 = 0xE7000000; temp_v0_15 = gRegionAllocPtr++; temp_v0_15->words.w0 = 0x01020040; temp_v0_15->words.w1 = (u32)arg0->displayList; temp_v0_16 = gRegionAllocPtr++; temp_v0_16->words.w0 = 0x0400103F; temp_v0_16->words.w1 = (u32)&gRacePickupBaseVertices[((((u16)arg0->spawnOffsetIndex) >> 1) * 4) + 8]; if (arg0->spawnOffsetIndex & 1) { temp_v0_17 = gRegionAllocPtr++;
+            temp_v0_2 = gRegionAllocPtr++; temp_v0_2->words.w0 = 0xFD500000; temp_v0_2->words.w1 = (u32)arg0->palette; temp_v0_3 = gRegionAllocPtr++; temp_v0_3->words.w0 = 0xF5500000; temp_v0_3->words.w1 = 0x07080200; temp_v0_4 = gRegionAllocPtr++; temp_v0_4->words.w1 = 0; temp_v0_4->words.w0 = 0xE6000000; temp_v0_5 = gRegionAllocPtr++; temp_v0_5->words.w0 = 0xF3000000; temp_v0_5->words.w1 = 0x070FF400; temp_v0_6 = gRegionAllocPtr++; temp_v0_6->words.w1 = 0; temp_v0_6->words.w0 = 0xE7000000; temp_v0_7 = gRegionAllocPtr++; temp_v0_7->words.w0 = 0xF5400400; temp_v0_7->words.w1 = 0x00080200; temp_v0_8 = gRegionAllocPtr++; temp_v0_8->words.w0 = 0xF2000000; temp_v0_8->words.w1 = 0x0007C07C; temp_v0_9 = gRegionAllocPtr++; temp_v0_9->words.w0 = 0xFD100000; temp_v0_9->words.w1 = (u32)arg0->image; temp_v0_10 = gRegionAllocPtr++; temp_v0_10->words.w1 = 0; temp_v0_10->words.w0 = 0xE8000000; temp_v0_11 = gRegionAllocPtr++; temp_v0_11->words.w0 = 0xF5000100; temp_v0_11->words.w1 = 0x07000000; temp_v0_12 = gRegionAllocPtr++; temp_v0_12->words.w1 = 0; temp_v0_12->words.w0 = 0xE6000000; temp_v0_13 = gRegionAllocPtr++; temp_v0_13->words.w0 = 0xF0000000; temp_v0_13->words.w1 = 0x0703C000; temp_v0_14 = gRegionAllocPtr++; temp_v0_14->words.w1 = 0; temp_v0_14->words.w0 = 0xE7000000; temp_v0_15 = gRegionAllocPtr++; temp_v0_15->words.w0 = 0x01020040; temp_v0_15->words.w1 = (u32)arg0->matrix; temp_v0_16 = gRegionAllocPtr++; temp_v0_16->words.w0 = 0x0400103F; temp_v0_16->words.w1 = (u32)&gRacePickupBaseVertices[((((u16)arg0->task.userId) >> 1) * 4) + 8]; if (arg0->task.userId & 1) { temp_v0_17 = gRegionAllocPtr++;
                 temp_v0_17->words.w1 = 0x604;
                 temp_v0_17->words.w0 = 0xBF000000;
                 var_v0 = gRegionAllocPtr++;
@@ -1691,6 +1697,7 @@ void renderPickupShardParticle(PickupShardParticleActor *arg0) {
 }
 // clang-format on
 
+/* Ten unpaused update ticks; task.userId remains the shard selector throughout. */
 void updatePickupShardParticle(PickupShardParticleActor *arg0) {
     s32 temp_v0;
     PickupShardParticleActor *temp_a2 = arg0;
@@ -1725,7 +1732,7 @@ void initPickupShardParticle(PickupShardParticleActor *arg0) {
     makeFixedRotationY(transform.rotation, arg0->rotY);
     transformVec3iByFixedMatrix(
         transform.rotation,
-        &gPickupShardInitialVelocities[arg0->spawnOffsetIndex],
+        &gPickupShardInitialVelocities[arg0->task.userId],
         &arg0->velocity
     );
     getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gAssetHandles[0x1C]), 0x22, &arg0->palette, &arg0->image);
@@ -1737,7 +1744,7 @@ void spawnPickupShardParticle(s32 arg0, s32 arg1, s32 arg2, s16 arg3, s16 arg4) 
         createCallbackTaskPreservingArgs((CallbackTaskCallback)initPickupShardParticle, 5, 0x3B);
 
     if (temp != NULL) {
-        temp->spawnOffsetIndex = arg4;
+        temp->task.userId = arg4;
         temp->pos.x = arg0;
         temp->pos.y = arg1;
         temp->pos.z = arg2;

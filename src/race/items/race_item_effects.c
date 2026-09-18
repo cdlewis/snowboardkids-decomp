@@ -126,14 +126,14 @@ Vtx gRacePlayerRecoverySparkleQuadVertices[4] = {
     { { { -5, -5, 0 }, 0, { -16, 1008 }, { 0xFF, 0xFF, 0xFF, 0xFF } } },
 };
 
-Vtx gRacePlayerSnowSprayQuadVertices[4] = {
+Vtx gRacePlayerYellowTrickSparklesQuadVertices[4] = {
     { { { -4, 4, 0 }, 0, { -16, -16 }, { 0xFF, 0xFF, 0xFF, 0xFF } } },
     { { { 4, 4, 0 }, 0, { 496, -16 }, { 0xFF, 0xFF, 0xFF, 0xFF } } },
     { { { 4, -4, 0 }, 0, { 496, 496 }, { 0xFF, 0xFF, 0xFF, 0xFF } } },
     { { { -4, -4, 0 }, 0, { -16, 496 }, { 0xFF, 0xFF, 0xFF, 0xFF } } },
 };
 
-Vtx gRacePlayerLandingSnowSprayQuadVertices[4] = {
+Vtx gRacePlayerBlueTrickSparklesQuadVertices[4] = {
     { { { -4, 4, 0 }, 0, { -16, -16 }, { 0xFF, 0xFF, 0xFF, 0xFF } } },
     { { { 4, 4, 0 }, 0, { 496, -16 }, { 0xFF, 0xFF, 0xFF, 0xFF } } },
     { { { 4, -4, 0 }, 0, { 496, 496 }, { 0xFF, 0xFF, 0xFF, 0xFF } } },
@@ -707,7 +707,11 @@ void initRacePlayerRecoverySparkle(RaceItemEffectActor *arg0) {
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRacePlayerRecoverySparkle);
 }
 
-void renderRacePlayerSnowSpray(RaceItemFollowActor *arg0) {
+/* Yellow cross-shaped trick stars: RACE_EFFECT_SPRITES tiles 0x39..0x3E use
+ * default palette 0x11, confirmed by tile decoding and a reported UTM forward-spin
+ * capture. Two sprites start at board markers, then follow player movement for
+ * 24 unpaused update ticks. Board-contact snow uses renderRaceItemTextureEffects. */
+void renderRacePlayerYellowTrickSparkles(RaceItemFollowActor *arg0) {
     Transform3D sp90;
     void *sp8C;
     void *sp88;
@@ -753,17 +757,17 @@ void renderRacePlayerSnowSpray(RaceItemFollowActor *arg0) {
             RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0xE7000000, 0);
             RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0x01020040, (u32)arg0->matrix1);
             RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0x01000040, (u32)gViewportMatrix);
-            RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0x0400103F, (u32)gRacePlayerSnowSprayQuadVertices);
+            RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0x0400103F, (u32)gRacePlayerYellowTrickSparklesQuadVertices);
             RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0xB1060402, 0x60200);
             RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0x01020040, (u32)arg0->matrix2);
             RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0x01000040, (u32)gViewportMatrix);
-            RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0x0400103F, (u32)gRacePlayerSnowSprayQuadVertices);
+            RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0x0400103F, (u32)gRacePlayerYellowTrickSparklesQuadVertices);
             RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0xB1060402, 0x60200);
         }
     }
 }
 
-void updateRacePlayerSnowSpray(RaceItemFollowActor *arg0) {
+void updateRacePlayerYellowTrickSparkles(RaceItemFollowActor *arg0) {
     RacePlayer *player;
     RaceItemFollowActor *temp_a2 = arg0;
 
@@ -784,10 +788,10 @@ void updateRacePlayerSnowSpray(RaceItemFollowActor *arg0) {
     if (temp_a2->timer < 0) {
         temp_a2->timer = 0;
     }
-    addRenderCallback(&D_801248C8, (RenderCallback)renderRacePlayerSnowSpray, temp_a2);
+    addRenderCallback(&D_801248C8, (RenderCallback)renderRacePlayerYellowTrickSparkles, temp_a2);
 }
 
-void initRacePlayerSnowSpray(RaceItemFollowActor *arg0) {
+void initRacePlayerYellowTrickSparkles(RaceItemFollowActor *arg0) {
     RacePlayer *player;
 
     arg0->timer = -1;
@@ -807,8 +811,8 @@ void initRacePlayerSnowSpray(RaceItemFollowActor *arg0) {
         arg0->offset2.y = player->groundMarkerSources[3].y - player->unk28.y;
         arg0->offset2.z = player->groundMarkerSources[3].z - player->unk28.z;
     }
-    updateRacePlayerSnowSpray(arg0);
-    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRacePlayerSnowSpray);
+    updateRacePlayerYellowTrickSparkles(arg0);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRacePlayerYellowTrickSparkles);
 }
 
 /* Short HUD pickup flash, separate from world-space renderRacePlayerSparkleEffect.
@@ -994,7 +998,11 @@ void initRaceItemTextureEffects(RaceItemTextureActor *arg0) {
 // clang-format on
 CLANG_DIAGNOSTIC_POP
 
-void renderRacePlayerLandingSnowSpray(RaceItemFollowActor *arg0) {
+/* Blue trick stars reuse tiles 0x39..0x3E with palette 0x12. A reported UTM
+ * Nancy left-right special-trick capture confirms the color; aerial-trick handlers
+ * also spawn this effect. Like the yellow stars, two board-marker sprites follow
+ * player movement for 24 unpaused update ticks. */
+void renderRacePlayerBlueTrickSparkles(RaceItemFollowActor *arg0) {
     Transform3D sp98;
     void *sp94;
     void *sp90;
@@ -1041,17 +1049,17 @@ void renderRacePlayerLandingSnowSpray(RaceItemFollowActor *arg0) {
             RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0xE7000000, 0);
             RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0x01020040, (u32)arg0->matrix1);
             RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0x01000040, (u32)gViewportMatrix);
-            RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0x0400103F, (u32)gRacePlayerLandingSnowSprayQuadVertices);
+            RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0x0400103F, (u32)gRacePlayerBlueTrickSparklesQuadVertices);
             RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0xB1060402, 0x60200);
             RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0x01020040, (u32)arg0->matrix2);
             RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0x01000040, (u32)gViewportMatrix);
-            RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0x0400103F, (u32)gRacePlayerLandingSnowSprayQuadVertices);
+            RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0x0400103F, (u32)gRacePlayerBlueTrickSparklesQuadVertices);
             RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0xB1060402, 0x60200);
         }
     }
 }
 
-void updateRacePlayerLandingSnowSpray(RaceItemFollowActor *arg0) {
+void updateRacePlayerBlueTrickSparkles(RaceItemFollowActor *arg0) {
     RacePlayer *player;
     RaceItemFollowActor *temp_a2 = arg0;
 
@@ -1072,10 +1080,10 @@ void updateRacePlayerLandingSnowSpray(RaceItemFollowActor *arg0) {
     if (temp_a2->timer < 0) {
         temp_a2->timer = 0;
     }
-    addRenderCallback(&D_801248C8, (RenderCallback)renderRacePlayerLandingSnowSpray, temp_a2);
+    addRenderCallback(&D_801248C8, (RenderCallback)renderRacePlayerBlueTrickSparkles, temp_a2);
 }
 
-void initRacePlayerLandingSnowSpray(RaceItemFollowActor *arg0) {
+void initRacePlayerBlueTrickSparkles(RaceItemFollowActor *arg0) {
     RacePlayer *player;
 
     arg0->timer = -1;
@@ -1095,6 +1103,6 @@ void initRacePlayerLandingSnowSpray(RaceItemFollowActor *arg0) {
         arg0->offset2.y = player->groundMarkerSources[3].y - player->unk28.y;
         arg0->offset2.z = player->groundMarkerSources[3].z - player->unk28.z;
     }
-    updateRacePlayerLandingSnowSpray(arg0);
-    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRacePlayerLandingSnowSpray);
+    updateRacePlayerBlueTrickSparkles(arg0);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRacePlayerBlueTrickSparkles);
 }

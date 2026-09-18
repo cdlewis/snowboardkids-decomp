@@ -24,7 +24,7 @@
 typedef struct {
     s32 dz;
     Vec3i *volatile unusedPosition;
-} PatrolCourseObjectUpdateLocals;
+} PatrolPenguinUpdateLocals;
 
 typedef struct {
     Vec3i dest;
@@ -737,7 +737,10 @@ void initRaceCourseSceneryObjects(RaceCourseObjectMatrixEffect *arg0) {
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceCourseSceneryObjects);
 }
 
-void renderPatrolCourseObject(PatrolCourseObjectEffect *arg0) {
+/* _149610_VRAM is the penguin: visually confirmed from the front, side and rear
+ * of assets/models/unidentified/149610/149610_001d00.glb. Sunset Rock spawns nine.
+ * The quarter-scale model oscillates in yaw and bobs at twice that frequency. */
+void renderPatrolPenguin(PatrolPenguinActor *arg0) {
     s32 sine;
     s32 doubleSine;
     Transform3D transform;
@@ -776,8 +779,8 @@ void renderPatrolCourseObject(PatrolCourseObjectEffect *arg0) {
 }
 
 // Matched by queueram via decomp.me scratch WguxK.
-void updatePatrolCourseObject(PatrolCourseObjectEffect *arg0) {
-    PatrolCourseObjectUpdateLocals local;
+void updatePatrolPenguin(PatrolPenguinActor *arg0) {
+    PatrolPenguinUpdateLocals local;
     s16 rand;
     s32 targetAngle;
     s32 var_v1;
@@ -857,10 +860,10 @@ void updatePatrolCourseObject(PatrolCourseObjectEffect *arg0) {
             }
         }
     }
-    addRenderCallback(&gRaceObjectRenderCallbackList, (RenderCallback)renderPatrolCourseObject, arg0);
+    addRenderCallback(&gRaceObjectRenderCallbackList, (RenderCallback)renderPatrolPenguin, arg0);
 }
 
-void initPatrolCourseObject(PatrolCourseObjectEffect *arg0) {
+void initPatrolPenguin(PatrolPenguinActor *arg0) {
     s16 angle;
     s16 temp4C;
     s32 temp50;
@@ -877,12 +880,12 @@ void initPatrolCourseObject(PatrolCourseObjectEffect *arg0) {
         arg0->speed = temp50;
         arg0->animationPhaseStep = temp4E;
         arg0->position.y = getRaceCourseSurfaceHeight(arg0->surfaceIndex, arg0->position.x, arg0->position.z);
-        setCallbackTaskCallback(arg0, (CallbackTaskCallback)updatePatrolCourseObject);
+        setCallbackTaskCallback(arg0, (CallbackTaskCallback)updatePatrolPenguin);
     }
 }
 
-void spawnPatrolCourseObject(s16 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4) {
-    PatrolCourseObjectEffect *p = createCallbackTask((CallbackTaskCallback)initPatrolCourseObject, 0, 0x64);
+void spawnPatrolPenguin(s16 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4) {
+    PatrolPenguinActor *p = createCallbackTask((CallbackTaskCallback)initPatrolPenguin, 0, 0x64);
     if (p != 0) {
         p->startPosition.x = arg1;
         p->startPosition.z = arg2;

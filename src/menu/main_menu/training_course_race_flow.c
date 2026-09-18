@@ -156,7 +156,7 @@ void initTrainingCourseRace(void) {
     gMainMenuSelectionResult = 0;
     createCallbackTask((CallbackTaskCallback)initTrainingCourseOpeningDialog, 0, 0x64);
     createCallbackTask((CallbackTaskCallback)initTrainingCourseLessonTitlePanel, 0, 0x63);
-    createCallbackTask((CallbackTaskCallback)initRaceSetupCornerPrompts, 0, 0x64);
+    createCallbackTask((CallbackTaskCallback)initRaceSetupPreviewCornerMasks, 0, 0x64);
     setCurrentGameTaskCallback(fadeInTrainingCourseRace, 0);
     requestMusicSequenceBank(7);
 }
@@ -189,6 +189,12 @@ void waitForTrainingCourseStartSelection(void) {
     gViewportStates[0].overlayAlpha = 0x80;
 }
 
+/* Expand the lesson preview over 16 game-task updates (callbackData0):
+ * clip 264x120 -> 288x208, centre (160,80) -> (160,120), vertical viewport
+ * scale 140 -> 240, projection aspect 16/7 -> 4/3. The final 16-pixel border
+ * is the authored gameplay inset. Downstream recomp must preserve it: near-edge
+ * snapping previously removed borders at ticks 15/16 and triggered RT64 automatic
+ * widescreen. That was a viewport conversion issue, not a camera discontinuity. */
 void zoomTrainingCourseRaceViewport(void) {
     s32 timer;
     s32 width;
@@ -204,6 +210,7 @@ void zoomTrainingCourseRaceViewport(void) {
     height = (s16)(((((0, timer)) * 0x58) / 16) + 0x78);
     scaleY = (s16)(((timer * 0x64) / 16) + 0x8C);
     aspect = (f32)((((f64)timer * -0.9523809523809523) / 0x10) + 2.2857142857142856);
+    /* Reuse the local for fixed horizontal viewport scale, not duration. */
     timer = 0x140;
     configureViewport(width * 0, 0xA0, centerY, width, height, timer, scaleY, aspect);
     if (gCurrentGameTask->callbackData0 == 0x10) {

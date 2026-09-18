@@ -673,23 +673,30 @@ void initMainMenuModeSelectMenuOptions(MenuPanelActor *arg0) {
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateMainMenuModeSelectMenuOptions);
 }
 
-void drawRaceSetupCornerPrompts(void *arg0) {
+/* Four rounded black preview masks: asset handle 6, entries 6..9, at
+ * (-132,-100), (116,-100), (-132,4), (116,4) relative to the menu centre.
+ * The initial training opening spans native x=28..292 and y=20..140.
+ * Downstream recomp must align the preview scissor and shade with these sprites:
+ * round the converted opening inward to avoid exposing scene pixels beside them.
+ * The 3D scene scissor ignores the sprite scissor-aspect override, so it still
+ * needs explicit output-space conversion. */
+void drawRaceSetupPreviewCornerMasks(void *arg0) {
     drawAssetTableSpriteWithDefaultPalette(-0x84, -0x64, getRelocatableHeapBlockBase(gAssetHandles[6]), 6);
     drawAssetTableSpriteWithDefaultPalette(0x74, -0x64, getRelocatableHeapBlockBase(gAssetHandles[6]), 7);
     drawAssetTableSpriteWithDefaultPalette(-0x84, 4, getRelocatableHeapBlockBase(gAssetHandles[6]), 8);
     drawAssetTableSpriteWithDefaultPalette(0x74, 4, getRelocatableHeapBlockBase(gAssetHandles[6]), 9);
 }
 
-void updateRaceSetupCornerPrompts(MenuPanelActor *arg0) {
+void updateRaceSetupPreviewCornerMasks(MenuPanelActor *arg0) {
     if (gMainMenuSelectionResult == 0) {
-        addRenderCallback(&gMenuRenderCallbackList, drawRaceSetupCornerPrompts, arg0);
+        addRenderCallback(&gMenuRenderCallbackList, drawRaceSetupPreviewCornerMasks, arg0);
         return;
     }
     removeCallbackTask(arg0);
 }
 
-void initRaceSetupCornerPrompts(MenuPanelActor *arg0) {
-    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceSetupCornerPrompts);
+void initRaceSetupPreviewCornerMasks(MenuPanelActor *arg0) {
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceSetupPreviewCornerMasks);
 }
 
 void drawRaceGhostUnavailableMessage(void *arg0) {

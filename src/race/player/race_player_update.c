@@ -2027,7 +2027,7 @@ void updateRacePlayerMode13AerialTrick(RacePlayer *player) {
     if (stateTimer < 0x3D0) {
         player->stateFlags |= 0x800;
         if ((player->soundDisabled == 0) && (gFrameCounter & 1)) {
-            createCallbackTaskWithUserIdPreservingArgs(initRacePlayerSnowSpray, 5, 2, (u16)player->playerIndex);
+            createCallbackTaskWithUserIdPreservingArgs(initRacePlayerYellowTrickSparkles, 5, 2, (u16)player->playerIndex);
         }
     }
 }
@@ -2069,7 +2069,7 @@ void updateRacePlayerMode15AerialTrick(RacePlayer *player) {
     if (stateTimer < 0x3D0) {
         player->stateFlags |= 0x800;
         if ((player->soundDisabled == 0) && (gFrameCounter & 1)) {
-            createCallbackTaskWithUserIdPreservingArgs(initRacePlayerSnowSpray, 5, 2, (u16)player->playerIndex);
+            createCallbackTaskWithUserIdPreservingArgs(initRacePlayerYellowTrickSparkles, 5, 2, (u16)player->playerIndex);
         }
     }
 }
@@ -2112,7 +2112,7 @@ void updateRacePlayerMode16AerialTrick(RacePlayer *player) {
     if (timer < 0x3D0) {
         player->stateFlags |= 0x800;
         if ((player->soundDisabled == 0) && (gFrameCounter & 1)) {
-            createCallbackTaskWithUserIdPreservingArgs(initRacePlayerSnowSpray, 5, 2, (u16)player->playerIndex);
+            createCallbackTaskWithUserIdPreservingArgs(initRacePlayerYellowTrickSparkles, 5, 2, (u16)player->playerIndex);
         }
     }
 }
@@ -2155,7 +2155,7 @@ void updateRacePlayerMode17AerialTrick(RacePlayer *player) {
     if (timer < 0x3D0) {
         player->stateFlags |= 0x800;
         if ((player->soundDisabled == 0) && (gFrameCounter & 1)) {
-            createCallbackTaskWithUserIdPreservingArgs(initRacePlayerSnowSpray, 5, 2, (u16)player->playerIndex);
+            createCallbackTaskWithUserIdPreservingArgs(initRacePlayerYellowTrickSparkles, 5, 2, (u16)player->playerIndex);
         }
     }
 }
@@ -2199,7 +2199,7 @@ void updateRacePlayerMode18AerialTrick(RacePlayer *player) {
     if (timer < 0x3D0) {
         player->stateFlags |= 0x800;
         if ((player->soundDisabled == 0) && (gFrameCounter & 1)) {
-            createCallbackTaskWithUserIdPreservingArgs(initRacePlayerSnowSpray, 5, 2, (u16)player->playerIndex);
+            createCallbackTaskWithUserIdPreservingArgs(initRacePlayerYellowTrickSparkles, 5, 2, (u16)player->playerIndex);
         }
     }
 }
@@ -2243,7 +2243,7 @@ void updateRacePlayerMode19AerialTrick(RacePlayer *player) {
     if (timer < 0x3D0) {
         player->stateFlags |= 0x800;
         if ((player->soundDisabled == 0) && (gFrameCounter & 1)) {
-            createCallbackTaskWithUserIdPreservingArgs(initRacePlayerSnowSpray, 5, 2, (u16)player->playerIndex);
+            createCallbackTaskWithUserIdPreservingArgs(initRacePlayerYellowTrickSparkles, 5, 2, (u16)player->playerIndex);
         }
     }
 }
@@ -2287,7 +2287,7 @@ void updateRacePlayerMode20AerialTrick(RacePlayer *player) {
     if (timer < 0x3D0) {
         player->stateFlags |= 0x800;
         if ((player->soundDisabled == 0) && (gFrameCounter & 1)) {
-            createCallbackTaskWithUserIdPreservingArgs(initRacePlayerSnowSpray, 5, 2, (u16)player->playerIndex);
+            createCallbackTaskWithUserIdPreservingArgs(initRacePlayerYellowTrickSparkles, 5, 2, (u16)player->playerIndex);
         }
     }
 }
@@ -2331,7 +2331,7 @@ void updateRacePlayerMode21AerialTrick(RacePlayer *player) {
     if (timer < 0x3D0) {
         player->stateFlags |= 0x800;
         if ((player->soundDisabled == 0) && (gFrameCounter & 1)) {
-            createCallbackTaskWithUserIdPreservingArgs(initRacePlayerSnowSpray, 5, 2, (u16)player->playerIndex);
+            createCallbackTaskWithUserIdPreservingArgs(initRacePlayerYellowTrickSparkles, 5, 2, (u16)player->playerIndex);
         }
     }
 }
@@ -2392,7 +2392,7 @@ void updateRacePlayerMode31AerialTrick(RacePlayer *player) {
     if (timer < 0x3D0) {
         player->stateFlags |= 0x800;
         if ((player->soundDisabled == 0) && (gFrameCounter & 1)) {
-            createCallbackTaskWithUserIdPreservingArgs(initRacePlayerLandingSnowSpray, 5, 2, (u16)player->playerIndex);
+            createCallbackTaskWithUserIdPreservingArgs(initRacePlayerBlueTrickSparkles, 5, 2, (u16)player->playerIndex);
         }
     }
 }
@@ -2433,7 +2433,7 @@ void updateRacePlayerMode41AerialTrick(RacePlayer *player) {
     if (timer < 0x3D0) {
         player->stateFlags |= 0x800;
         if ((player->soundDisabled == 0) && (gFrameCounter & 1)) {
-            createCallbackTaskWithUserIdPreservingArgs(initRacePlayerLandingSnowSpray, 5, 2, (u16)player->playerIndex);
+            createCallbackTaskWithUserIdPreservingArgs(initRacePlayerBlueTrickSparkles, 5, 2, (u16)player->playerIndex);
         }
     }
 }
@@ -2474,7 +2474,7 @@ void updateRacePlayerMode42AerialTrick(RacePlayer *player) {
     if (timer < 0x3D0) {
         player->stateFlags |= 0x800;
         if ((player->soundDisabled == 0) && (gFrameCounter & 1)) {
-            createCallbackTaskWithUserIdPreservingArgs(initRacePlayerLandingSnowSpray, 5, 2, (u16)player->playerIndex);
+            createCallbackTaskWithUserIdPreservingArgs(initRacePlayerBlueTrickSparkles, 5, 2, (u16)player->playerIndex);
         }
     }
 }
@@ -2528,7 +2528,7 @@ void updateRacePlayerMode43AerialTrick(RacePlayer *player) {
     if (timer < 0x3D0) {
         player->stateFlags |= 0x800;
         if ((player->soundDisabled == 0) && (gFrameCounter & 1)) {
-            createCallbackTaskWithUserIdPreservingArgs(initRacePlayerLandingSnowSpray, 5, 2, (u16)player->playerIndex);
+            createCallbackTaskWithUserIdPreservingArgs(initRacePlayerBlueTrickSparkles, 5, 2, (u16)player->playerIndex);
         }
     }
 }
@@ -2560,7 +2560,7 @@ void updateRacePlayerMode32AerialTrick(RacePlayer *player) {
     if (stepRaceMotionAnimationUntilEnd(player) == 0) {
         player->stateFlags |= 0x800;
         if ((player->soundDisabled == 0) && (gFrameCounter & 1)) {
-            createCallbackTaskWithUserIdPreservingArgs(initRacePlayerLandingSnowSpray, 5, 2, (u16)player->playerIndex);
+            createCallbackTaskWithUserIdPreservingArgs(initRacePlayerBlueTrickSparkles, 5, 2, (u16)player->playerIndex);
         }
     }
 }
@@ -2609,7 +2609,7 @@ void updateRacePlayerMode33AerialTrick(RacePlayer *player) {
     if (timer < 0x3D0) {
         player->stateFlags |= 0x800;
         if ((player->soundDisabled == 0) && (gFrameCounter & 1)) {
-            createCallbackTaskWithUserIdPreservingArgs(initRacePlayerLandingSnowSpray, 5, 2, (u16)player->playerIndex);
+            createCallbackTaskWithUserIdPreservingArgs(initRacePlayerBlueTrickSparkles, 5, 2, (u16)player->playerIndex);
         }
     }
 }
@@ -2655,7 +2655,7 @@ void updateRacePlayerMode34AerialTrick(RacePlayer *player) {
     if (timer < 0x3D0) {
         player->stateFlags |= 0x800;
         if ((player->soundDisabled == 0) && (gFrameCounter & 1)) {
-            createCallbackTaskWithUserIdPreservingArgs(initRacePlayerLandingSnowSpray, 5, 2, (u16)player->playerIndex);
+            createCallbackTaskWithUserIdPreservingArgs(initRacePlayerBlueTrickSparkles, 5, 2, (u16)player->playerIndex);
         }
     }
 }
@@ -2714,7 +2714,7 @@ void updateRacePlayerMode44AerialTrick(RacePlayer *player) {
     if (timer < 0x3D0) {
         player->stateFlags |= 0x800;
         if ((player->soundDisabled == 0) && (gFrameCounter & 1)) {
-            createCallbackTaskWithUserIdPreservingArgs(initRacePlayerLandingSnowSpray, 5, 2, (u16)player->playerIndex);
+            createCallbackTaskWithUserIdPreservingArgs(initRacePlayerBlueTrickSparkles, 5, 2, (u16)player->playerIndex);
         }
     }
 }
@@ -2766,7 +2766,7 @@ void updateRacePlayerMode45AerialTrick(RacePlayer *player) {
     if (timer < 0x3D0) {
         player->stateFlags |= 0x800;
         if ((player->soundDisabled == 0) && (gFrameCounter & 1)) {
-            createCallbackTaskWithUserIdPreservingArgs(initRacePlayerLandingSnowSpray, 5, 2, (u16)player->playerIndex);
+            createCallbackTaskWithUserIdPreservingArgs(initRacePlayerBlueTrickSparkles, 5, 2, (u16)player->playerIndex);
         }
     }
 }
@@ -2817,7 +2817,7 @@ void updateRacePlayerMode46AerialTrick(RacePlayer *player) {
     if (timer < 0x3D0) {
         player->stateFlags |= 0x800;
         if ((player->soundDisabled == 0) && (gFrameCounter & 1)) {
-            createCallbackTaskWithUserIdPreservingArgs(initRacePlayerLandingSnowSpray, 5, 2, (u16)player->playerIndex);
+            createCallbackTaskWithUserIdPreservingArgs(initRacePlayerBlueTrickSparkles, 5, 2, (u16)player->playerIndex);
         }
     }
 }
@@ -2869,7 +2869,7 @@ void updateRacePlayerMode35AerialTrick(RacePlayer *player) {
     if (stateTimer < 0x3D0) {
         player->stateFlags |= 0x800;
         if ((player->soundDisabled == 0) && (gFrameCounter & 1)) {
-            createCallbackTaskWithUserIdPreservingArgs(initRacePlayerLandingSnowSpray, 5, 2, (u16)player->playerIndex);
+            createCallbackTaskWithUserIdPreservingArgs(initRacePlayerBlueTrickSparkles, 5, 2, (u16)player->playerIndex);
         }
     }
 }
@@ -2920,7 +2920,7 @@ void updateRacePlayerMode36AerialTrick(RacePlayer *player) {
     if (timer < 0x3D0) {
         player->stateFlags |= 0x800;
         if ((player->soundDisabled == 0) && (gFrameCounter & 1)) {
-            createCallbackTaskWithUserIdPreservingArgs(initRacePlayerLandingSnowSpray, 5, 2, (u16)player->playerIndex);
+            createCallbackTaskWithUserIdPreservingArgs(initRacePlayerBlueTrickSparkles, 5, 2, (u16)player->playerIndex);
         }
     }
 }
@@ -2981,7 +2981,7 @@ void updateRacePlayerMode47AerialTrick(RacePlayer *player) {
     if (timer < 0x3D0) {
         player->stateFlags |= 0x800;
         if ((player->soundDisabled == 0) && (gFrameCounter & 1)) {
-            createCallbackTaskWithUserIdPreservingArgs(initRacePlayerLandingSnowSpray, 5, 2, (u16)player->playerIndex);
+            createCallbackTaskWithUserIdPreservingArgs(initRacePlayerBlueTrickSparkles, 5, 2, (u16)player->playerIndex);
         }
     }
 }
@@ -3038,7 +3038,7 @@ void updateRacePlayerMode48AerialTrick(RacePlayer *player) {
     if (stateTimer < 0x3D0) {
         player->stateFlags |= 0x800;
         if ((player->soundDisabled == 0) && (gFrameCounter & 1)) {
-            createCallbackTaskWithUserIdPreservingArgs(initRacePlayerLandingSnowSpray, 5, 2, (u16)player->playerIndex);
+            createCallbackTaskWithUserIdPreservingArgs(initRacePlayerBlueTrickSparkles, 5, 2, (u16)player->playerIndex);
         }
     }
 }
@@ -3078,7 +3078,7 @@ void updateRacePlayerMode49AerialTrick(RacePlayer *player) {
     if (timer < 0x3D0) {
         player->stateFlags |= 0x800;
         if ((player->soundDisabled == 0) && (gFrameCounter & 1)) {
-            createCallbackTaskWithUserIdPreservingArgs(initRacePlayerLandingSnowSpray, 5, 2, (u16)player->playerIndex);
+            createCallbackTaskWithUserIdPreservingArgs(initRacePlayerBlueTrickSparkles, 5, 2, (u16)player->playerIndex);
         }
     }
 }
@@ -3162,7 +3162,7 @@ void updateRacePlayerMode37AerialTrick(RacePlayer *player) {
     if (timer < 0x3D0) {
         player->stateFlags |= 0x800;
         if ((player->soundDisabled == 0) && (gFrameCounter & 1)) {
-            createCallbackTaskWithUserIdPreservingArgs(initRacePlayerLandingSnowSpray, 5, 2, (u16)player->playerIndex);
+            createCallbackTaskWithUserIdPreservingArgs(initRacePlayerBlueTrickSparkles, 5, 2, (u16)player->playerIndex);
         }
     }
 }
@@ -3223,7 +3223,7 @@ void updateRacePlayerMode50AerialTrick(RacePlayer *player) {
     if (timer < 0x3D0) {
         player->stateFlags |= 0x800;
         if ((player->soundDisabled == 0) && (gFrameCounter & 1)) {
-            createCallbackTaskWithUserIdPreservingArgs(initRacePlayerLandingSnowSpray, 5, 2, (u16)player->playerIndex);
+            createCallbackTaskWithUserIdPreservingArgs(initRacePlayerBlueTrickSparkles, 5, 2, (u16)player->playerIndex);
         }
     }
 }
@@ -3310,7 +3310,7 @@ void updateRacePlayerMode51AerialTrick(RacePlayer *player) {
         playerAlias->stateFlags |= 0x800;
         if ((playerAlias->soundDisabled == 0) && (gFrameCounter & 1)) {
             createCallbackTaskWithUserIdPreservingArgs(
-                initRacePlayerLandingSnowSpray,
+                initRacePlayerBlueTrickSparkles,
                 5,
                 2,
                 (u16)playerAlias->playerIndex
@@ -3366,7 +3366,7 @@ void updateRacePlayerMode52AerialTrick(RacePlayer *player) {
     if (timer < 0x3D0) {
         player->stateFlags |= 0x800;
         if ((player->soundDisabled == 0) && (gFrameCounter & 1)) {
-            createCallbackTaskWithUserIdPreservingArgs(initRacePlayerLandingSnowSpray, 5, 2, (u16)player->playerIndex);
+            createCallbackTaskWithUserIdPreservingArgs(initRacePlayerBlueTrickSparkles, 5, 2, (u16)player->playerIndex);
         }
     }
 }
@@ -3398,7 +3398,7 @@ void updateRacePlayerMode38AerialTrick(RacePlayer *player) {
     if (stepRaceMotionAnimationUntilEnd(player) == 0) {
         player->stateFlags |= 0x800;
         if ((player->soundDisabled == 0) && (gFrameCounter & 1)) {
-            createCallbackTaskWithUserIdPreservingArgs(initRacePlayerLandingSnowSpray, 5, 2, (u16)player->playerIndex);
+            createCallbackTaskWithUserIdPreservingArgs(initRacePlayerBlueTrickSparkles, 5, 2, (u16)player->playerIndex);
         }
     }
 }
@@ -3459,7 +3459,7 @@ void updateRacePlayerMode53AerialTrick(RacePlayer *player) {
     if (timer < 0x3D0) {
         player->stateFlags |= 0x800;
         if ((player->soundDisabled == 0) && (gFrameCounter & 1)) {
-            createCallbackTaskWithUserIdPreservingArgs(initRacePlayerLandingSnowSpray, 5, 2, (u16)player->playerIndex);
+            createCallbackTaskWithUserIdPreservingArgs(initRacePlayerBlueTrickSparkles, 5, 2, (u16)player->playerIndex);
         }
     }
 }
@@ -3491,7 +3491,7 @@ void updateRacePlayerMode54AerialTrick(RacePlayer *player) {
     if (stepRaceMotionAnimationUntilEnd(player) == 0) {
         player->stateFlags |= 0x800;
         if ((player->soundDisabled == 0) && (gFrameCounter & 1)) {
-            createCallbackTaskWithUserIdPreservingArgs(initRacePlayerLandingSnowSpray, 5, 2, (u16)player->playerIndex);
+            createCallbackTaskWithUserIdPreservingArgs(initRacePlayerBlueTrickSparkles, 5, 2, (u16)player->playerIndex);
         }
     }
 }
@@ -3534,7 +3534,7 @@ void updateRacePlayerMode39AerialTrick(RacePlayer *player) {
             player->stateFlags |= 0x800;
             if ((player->soundDisabled == 0) && (gFrameCounter & 1)) {
                 createCallbackTaskWithUserIdPreservingArgs(
-                    initRacePlayerLandingSnowSpray,
+                    initRacePlayerBlueTrickSparkles,
                     5,
                     2,
                     (u16)player->playerIndex
@@ -3562,7 +3562,7 @@ void updateRacePlayerMode39AerialTrick(RacePlayer *player) {
                 player->stateFlags |= 0x800;
                 if ((player->soundDisabled == 0) && (gFrameCounter & 1)) {
                     createCallbackTaskWithUserIdPreservingArgs(
-                        initRacePlayerLandingSnowSpray,
+                        initRacePlayerBlueTrickSparkles,
                         5,
                         2,
                         (u16)player->playerIndex
@@ -3614,7 +3614,7 @@ void updateRacePlayerMode55AerialTrick(RacePlayer *player) {
     if (timer < 0x3D0) {
         player->stateFlags |= 0x800;
         if ((player->soundDisabled == 0) && (gFrameCounter & 1)) {
-            createCallbackTaskWithUserIdPreservingArgs(initRacePlayerLandingSnowSpray, 5, 2, (u16)player->playerIndex);
+            createCallbackTaskWithUserIdPreservingArgs(initRacePlayerBlueTrickSparkles, 5, 2, (u16)player->playerIndex);
         }
     }
 }
@@ -3658,7 +3658,7 @@ void updateRacePlayerMode56AerialTrick(RacePlayer *player) {
     if (timer < 0x3D0) {
         player->stateFlags |= 0x800;
         if ((player->soundDisabled == 0) && (gFrameCounter & 1)) {
-            createCallbackTaskWithUserIdPreservingArgs(initRacePlayerLandingSnowSpray, 5, 2, (u16)player->playerIndex);
+            createCallbackTaskWithUserIdPreservingArgs(initRacePlayerBlueTrickSparkles, 5, 2, (u16)player->playerIndex);
         }
     }
 }
@@ -3698,7 +3698,7 @@ void updateRacePlayerMode57AerialTrick(RacePlayer *player) {
     if (timer < 0x3D0) {
         player->stateFlags |= 0x800;
         if ((player->soundDisabled == 0) && (gFrameCounter & 1)) {
-            createCallbackTaskWithUserIdPreservingArgs(initRacePlayerLandingSnowSpray, 5, 2, (u16)player->playerIndex);
+            createCallbackTaskWithUserIdPreservingArgs(initRacePlayerBlueTrickSparkles, 5, 2, (u16)player->playerIndex);
         }
     }
 }

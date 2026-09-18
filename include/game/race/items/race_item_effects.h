@@ -161,8 +161,8 @@ typedef struct RaceItemTextureActor {
 
 extern RaceItemDrawNode *gRaceItemTextureEffectDrawLists[4];
 extern Gfx gRaceItemEffectTranslucentRenderSetupDl[6];
-extern Vtx gRacePlayerSnowSprayQuadVertices[4];
-extern Vtx gRacePlayerLandingSnowSprayQuadVertices[4];
+extern Vtx gRacePlayerYellowTrickSparklesQuadVertices[4];
+extern Vtx gRacePlayerBlueTrickSparklesQuadVertices[4];
 
 s32 getRaceItemEffectType(s32 arg0);
 void updateRaceItemSparkBurst(RaceItemSparkBurstActor *arg0);
@@ -187,9 +187,9 @@ void spawnRaceItemBreakParticles(s16 playerIndex, s16 itemIndex);
 void renderRacePlayerRecoverySparkle(RaceItemEffectActor *arg0);
 void updateRacePlayerRecoverySparkle(RaceItemEffectActor *arg0);
 void initRacePlayerRecoverySparkle(RaceItemEffectActor *arg0);
-void renderRacePlayerSnowSpray(RaceItemFollowActor *arg0);
-void updateRacePlayerSnowSpray(RaceItemFollowActor *arg0);
-void initRacePlayerSnowSpray(RaceItemFollowActor *arg0);
+void renderRacePlayerYellowTrickSparkles(RaceItemFollowActor *arg0);
+void updateRacePlayerYellowTrickSparkles(RaceItemFollowActor *arg0);
+void initRacePlayerYellowTrickSparkles(RaceItemFollowActor *arg0);
 void renderRaceUiSparkle(RaceItemEffectActor *arg0);
 void updateRaceUiSparkle(RaceItemEffectActor *arg0);
 void initRaceUiSparkle(RaceItemEffectActor *arg0);
@@ -197,8 +197,8 @@ void spawnRaceUiSparkle(s32 arg0, s32 arg1, s16 arg2, s16 arg3, s16 arg4);
 void renderRaceItemTextureEffects(RaceItemTextureActor *arg0);
 void updateRaceItemTextureEffects(RaceItemTextureActor *arg0);
 void initRaceItemTextureEffects(RaceItemTextureActor *arg0);
-void renderRacePlayerLandingSnowSpray(RaceItemFollowActor *arg0);
-void updateRacePlayerLandingSnowSpray(RaceItemFollowActor *arg0);
-void initRacePlayerLandingSnowSpray(RaceItemFollowActor *arg0);
+void renderRacePlayerBlueTrickSparkles(RaceItemFollowActor *arg0);
+void updateRacePlayerBlueTrickSparkles(RaceItemFollowActor *arg0);
+void initRacePlayerBlueTrickSparkles(RaceItemFollowActor *arg0);
 
 #endif

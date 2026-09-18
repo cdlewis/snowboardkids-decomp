@@ -228,7 +228,7 @@ void initMainMenuModePreviewRace(void) {
     LOAD_ASSET(_60F1A0, 0x2A);
     gMainMenuSelectionResult = 0;
     createCallbackTask((CallbackTaskCallback)initMainMenuModeDescriptionPanel, 0, 0x64);
-    createCallbackTask((CallbackTaskCallback)initRaceSetupCornerPrompts, 0, 0x64);
+    createCallbackTask((CallbackTaskCallback)initRaceSetupPreviewCornerMasks, 0, 0x64);
     one1++;
     one1--;
     setCurrentGameTaskCallback(fadeInMainMenuModePreviewRace, 0);

@@ -18,7 +18,11 @@
 
 CharacterSelectState gCharacterSelectHudState;
 s8 gCharacterSelectHighlightedRosterIndices[4];
-u8 gCharacterSelectSecretCharacterUnlocked;
+/* Secret-code state bypasses the duplicate-highlight/locked-slot conflict scan.
+ * Shinobin's visible roster slot is separately enabled by GameSaveData.characterFlags
+ * bit 0 in initCharacterSelectRosterIcons. Duplicate selection is source-derived;
+ * it has not been play-tested. */
+u8 gCharacterSelectUnrestrictedSelection;
 u16 gCharacterSelectIdOrder[] = { 5, 0, 1, 2, 3, 4 };
 s16 gCharacterSelectVoiceSoundIds[] = { 0x5D, 0x57, 0x58, 0x5A, 0x59, 0x5B, 0, 0, 0, 0 };
 
@@ -105,9 +109,9 @@ void initCharacterSelectMenu(void) {
     while (++i < 4) {
         gCharacterSelectHudState.selectedTokenState[i] = CHARACTER_SELECT_TOKEN_IDLE;
     }
-    gCharacterSelectSecretCharacterUnlocked = 0;
+    gCharacterSelectUnrestrictedSelection = 0;
     if (gMainMenuSecretCodeUnlocked != 0) {
-        gCharacterSelectSecretCharacterUnlocked = 1;
+        gCharacterSelectUnrestrictedSelection = 1;
     }
     updateCallbackTasks();
 }
@@ -187,7 +191,7 @@ void updateCharacterSelectMenu(void) {
                     }
                 }
 
-                if (gCharacterSelectSecretCharacterUnlocked == 0) {
+                if (gCharacterSelectUnrestrictedSelection == 0) {
                     attempt = 0;
                     duplicateCount = 1;
                     while ((duplicateCount != 0) && (attempt != 7)) {

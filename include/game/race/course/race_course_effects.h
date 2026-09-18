@@ -43,7 +43,7 @@ typedef struct RaceCourseTextureMarkerEntry {
     /* 0x04 */ Vec3i position;
 } RaceCourseTextureMarkerEntry;
 
-typedef struct PatrolCourseObjectEffect {
+typedef struct PatrolPenguinActor {
     /* 0x00 */ CallbackTaskHeader task;
     /* 0x18 */ Vec3i position;
     /* 0x24 */ Vec3i startPosition;
@@ -58,7 +58,7 @@ typedef struct PatrolCourseObjectEffect {
     /* 0x4C */ s16 maxTurnStep;
     /* 0x4E */ s16 animationPhaseStep;
     /* 0x50 */ s32 speed;
-} PatrolCourseObjectEffect;
+} PatrolPenguinActor;
 
 typedef struct RaceCourseGateEffect {
     /* 0x00 */ CallbackTaskHeader task;
@@ -171,10 +171,10 @@ void initCourseTextureMarkers(RaceCourseObjectMatrixEffect *effect);
 void renderRaceCourseSceneryObjects(RaceCourseObjectMatrixEffect *effect);
 void updateRaceCourseSceneryObjects(RaceCourseObjectMatrixEffect *effect);
 void initRaceCourseSceneryObjects(RaceCourseObjectMatrixEffect *effect);
-void renderPatrolCourseObject(PatrolCourseObjectEffect *effect);
-void updatePatrolCourseObject(PatrolCourseObjectEffect *effect);
-void initPatrolCourseObject(PatrolCourseObjectEffect *effect);
-void spawnPatrolCourseObject(s16 surfaceIndex, s32 startX, s32 startZ, s32 endX, s32 endZ);
+void renderPatrolPenguin(PatrolPenguinActor *effect);
+void updatePatrolPenguin(PatrolPenguinActor *effect);
+void initPatrolPenguin(PatrolPenguinActor *effect);
+void spawnPatrolPenguin(s16 surfaceIndex, s32 startX, s32 startZ, s32 endX, s32 endZ);
 void renderLaunchRampCourseObject(RaceMovingCourseObjectEffect *effect);
 void updateLaunchRampCourseObjectExit(RaceMovingCourseObjectEffect *effect);
 void updateLaunchRampCourseObjectArc(RaceMovingCourseObjectEffect *effect);
