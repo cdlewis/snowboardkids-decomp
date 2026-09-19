@@ -1063,11 +1063,30 @@ void drawRaceUiPrizePayoutCollectedCoins(void *arg0)
         x = 0x20;
         if (gRacePlayers[0].rankIndex == 3)
         {
- colorValue = 0xD; } else { colorValue = 0xC; } do { assets = &gAssetHandles[i]; space = ' '; color = colorValue; if (space != 0U) { } loop: if (buffer[i] != '\0') { if (buffer[i] != space) { drawAssetTableSpriteWithExplicitPalette((s16) x, -0xF, getRelocatableHeapBlockBase(assets[0x1F]), buffer[i] - 5, color); }
-            x += 8;
-            i++;
-            goto loop;
-        }
+            colorValue = 0xD; \
+        } else { \
+            colorValue = 0xC; \
+        } \
+        do { \
+            assets = &gAssetHandles[i]; \
+            space = ' '; \
+            color = colorValue; \
+            if (space != 0U) {} \
+        loop: \
+            if (buffer[i] != '\0') { \
+                if (buffer[i] != space) { \
+                    drawAssetTableSpriteWithExplicitPalette( \
+                        (s16)x, \
+                        -0xF, \
+                        getRelocatableHeapBlockBase(assets[0x1F]), \
+                        buffer[i] - 5, \
+                        color \
+                    ); \
+                }
+                x += 8;
+                i++;
+                goto loop;
+            }
         } while (0);
         drawAssetTableSpriteWithExplicitPalette((s16) x, -0xF, getRelocatableHeapBlockBase(assets[0x1F]), 0x37, color);
     }
@@ -1659,7 +1678,39 @@ void drawRaceUiCourseStatsElapsedTime(RaceUiAlpha1AActor *arg0) {
     s32 w1;
 
     /* IDO scheduling for this function depends on this block staying on one line. */
-    do { if (arg0->alpha != 0xFF) { gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w1 = 0; gfx->words.w0 = 0xE7000000; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = 0xFF2FFFFF; w0 = 0xFC119623; gfx->words.w0 = w0; gfx->words.w1 = w1; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = 0x00504240; w0 = 0xB900031D; gfx->words.w0 = w0; gfx->words.w1 = w1; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w0 = 0xFA000000; gfx->words.w1 = (arg0->alpha & 0xFF) | (~0xFF); } drawRaceUiPackedTime(&gRaceElapsedTimer, -0x6C, -0x30, 0xC); if (arg0->alpha != 0xFF) { gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = (s32) gMenuRenderModeResetDl; w0 = 0x06000000; gfx->words.w0 = w0; gfx->words.w1 = w1; } } while (0);
+    do { \
+        if (arg0->alpha != 0xFF) { \
+            gfx = gRegionAllocPtr; \
+            gRegionAllocPtr = gfx + 1; \
+            gfx->words.w1 = 0; \
+            gfx->words.w0 = 0xE7000000; \
+            gfx = gRegionAllocPtr; \
+            gRegionAllocPtr = gfx + 1; \
+            w1 = 0xFF2FFFFF; \
+            w0 = 0xFC119623; \
+            gfx->words.w0 = w0; \
+            gfx->words.w1 = w1; \
+            gfx = gRegionAllocPtr; \
+            gRegionAllocPtr = gfx + 1; \
+            w1 = 0x00504240; \
+            w0 = 0xB900031D; \
+            gfx->words.w0 = w0; \
+            gfx->words.w1 = w1; \
+            gfx = gRegionAllocPtr; \
+            gRegionAllocPtr = gfx + 1; \
+            gfx->words.w0 = 0xFA000000; \
+            gfx->words.w1 = (arg0->alpha & 0xFF) | (~0xFF); \
+        } \
+        drawRaceUiPackedTime(&gRaceElapsedTimer, -0x6C, -0x30, 0xC); \
+        if (arg0->alpha != 0xFF) { \
+            gfx = gRegionAllocPtr; \
+            gRegionAllocPtr = gfx + 1; \
+            w1 = (s32)gMenuRenderModeResetDl; \
+            w0 = 0x06000000; \
+            gfx->words.w0 = w0; \
+            gfx->words.w1 = w1; \
+        } \
+    } while (0);
 }
 // clang-format on
 
@@ -1673,7 +1724,39 @@ void drawRaceUiCourseStatsLapTimeLabel(RaceUiAlpha18Actor *arg0) {
     s32 w1;
 
     /* IDO scheduling for this function depends on this block staying on one line. */
-    do { if (arg0->alpha != 0xFF) { gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w1 = 0; gfx->words.w0 = 0xE7000000; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = 0xFF2FFFFF; w0 = 0xFC119623; gfx->words.w0 = w0; gfx->words.w1 = w1; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = 0x00504240; w0 = 0xB900031D; gfx->words.w0 = w0; gfx->words.w1 = w1; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w0 = 0xFA000000; gfx->words.w1 = (arg0->alpha & 0xFF) | (~0xFF); } drawMenuAsciiTextDefaultScale(-0x74, -0x3C, gRaceUiLapTimeLabel, 5); if (arg0->alpha != 0xFF) { gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = (s32) gMenuRenderModeResetDl; w0 = 0x06000000; gfx->words.w0 = w0; gfx->words.w1 = w1; } } while (0);
+    do { \
+        if (arg0->alpha != 0xFF) { \
+            gfx = gRegionAllocPtr; \
+            gRegionAllocPtr = gfx + 1; \
+            gfx->words.w1 = 0; \
+            gfx->words.w0 = 0xE7000000; \
+            gfx = gRegionAllocPtr; \
+            gRegionAllocPtr = gfx + 1; \
+            w1 = 0xFF2FFFFF; \
+            w0 = 0xFC119623; \
+            gfx->words.w0 = w0; \
+            gfx->words.w1 = w1; \
+            gfx = gRegionAllocPtr; \
+            gRegionAllocPtr = gfx + 1; \
+            w1 = 0x00504240; \
+            w0 = 0xB900031D; \
+            gfx->words.w0 = w0; \
+            gfx->words.w1 = w1; \
+            gfx = gRegionAllocPtr; \
+            gRegionAllocPtr = gfx + 1; \
+            gfx->words.w0 = 0xFA000000; \
+            gfx->words.w1 = (arg0->alpha & 0xFF) | (~0xFF); \
+        } \
+        drawMenuAsciiTextDefaultScale(-0x74, -0x3C, gRaceUiLapTimeLabel, 5); \
+        if (arg0->alpha != 0xFF) { \
+            gfx = gRegionAllocPtr; \
+            gRegionAllocPtr = gfx + 1; \
+            w1 = (s32)gMenuRenderModeResetDl; \
+            w0 = 0x06000000; \
+            gfx->words.w0 = w0; \
+            gfx->words.w1 = w1; \
+        } \
+    } while (0);
 }
 // clang-format on
 
@@ -1948,8 +2031,45 @@ void drawRaceUiScoreAttackTargetStatus(RaceUiAlpha18Actor *arg0) {
     char sp20[0xC];
 
     /* IDO scheduling for this function depends on this block staying on one line. */
-    do { if (arg0->alpha != 0xFF) { gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w1 = 0; gfx->words.w0 = 0xE7000000; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = 0xFF2FFFFF; w0 = 0xFC119623; gfx->words.w0 = w0; gfx->words.w1 = w1; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = 0x00504240; if ((gRegionAllocPtr && gRegionAllocPtr) && gRegionAllocPtr) { } w0 = 0xB900031D; gfx->words.w0 = w0; gfx->words.w1 = w1; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w0 = 0xFA000000; gfx->words.w1 = (arg0->alpha & 0xFF) | (~0xFF); }
-    sprintf(&sp20[0x14], gRaceUiScoreAttackTargetFormat, gRacePlayers[0].scoreAttackPointTarget); drawMenuAsciiTextDefaultScale(-0x54, -0x14, gRaceUiScoreAttackAsteriskLabel, 6); drawMenuAsciiTextDefaultScale(-0x3C, -0x14, &sp20[0x14], 6); if (gRaceChallengeFailed != 0) { drawMenuAsciiTextDefaultScale(-0x68, -4, gRaceUiScoreAttackTimeOutLabel, 4); } if (arg0->alpha != 0xFF) { gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = (s32) gMenuRenderModeResetDl; w0 = 0x06000000; gfx->words.w0 = w0; gfx->words.w1 = w1; } } while (0);
+    do { \
+        if (arg0->alpha != 0xFF) { \
+            gfx = gRegionAllocPtr; \
+            gRegionAllocPtr = gfx + 1; \
+            gfx->words.w1 = 0; \
+            gfx->words.w0 = 0xE7000000; \
+            gfx = gRegionAllocPtr; \
+            gRegionAllocPtr = gfx + 1; \
+            w1 = 0xFF2FFFFF; \
+            w0 = 0xFC119623; \
+            gfx->words.w0 = w0; \
+            gfx->words.w1 = w1; \
+            gfx = gRegionAllocPtr; \
+            gRegionAllocPtr = gfx + 1; \
+            w1 = 0x00504240; \
+            if ((gRegionAllocPtr && gRegionAllocPtr) && gRegionAllocPtr) {} \
+            w0 = 0xB900031D; \
+            gfx->words.w0 = w0; \
+            gfx->words.w1 = w1; \
+            gfx = gRegionAllocPtr; \
+            gRegionAllocPtr = gfx + 1; \
+            gfx->words.w0 = 0xFA000000; \
+            gfx->words.w1 = (arg0->alpha & 0xFF) | (~0xFF); \
+        }
+        sprintf(&sp20[0x14], gRaceUiScoreAttackTargetFormat, gRacePlayers[0].scoreAttackPointTarget); \
+        drawMenuAsciiTextDefaultScale(-0x54, -0x14, gRaceUiScoreAttackAsteriskLabel, 6); \
+        drawMenuAsciiTextDefaultScale(-0x3C, -0x14, &sp20[0x14], 6); \
+        if (gRaceChallengeFailed != 0) { \
+            drawMenuAsciiTextDefaultScale(-0x68, -4, gRaceUiScoreAttackTimeOutLabel, 4); \
+        } \
+        if (arg0->alpha != 0xFF) { \
+            gfx = gRegionAllocPtr; \
+            gRegionAllocPtr = gfx + 1; \
+            w1 = (s32)gMenuRenderModeResetDl; \
+            w0 = 0x06000000; \
+            gfx->words.w0 = w0; \
+            gfx->words.w1 = w1; \
+        } \
+    } while (0);
 }
 // clang-format on
 
@@ -2222,7 +2342,39 @@ void drawRaceUiCourseRecordElapsedTime(RaceUiAlphaActor *arg0) {
     s32 w1;
 
     /* IDO scheduling for this function depends on this block staying on one line. */
-    do { if (arg0->alpha != 0xFF) { gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w1 = 0; gfx->words.w0 = 0xE7000000; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = 0xFF2FFFFF; w0 = 0xFC119623; gfx->words.w0 = w0; gfx->words.w1 = w1; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = 0x00504240; w0 = 0xB900031D; gfx->words.w0 = w0; gfx->words.w1 = w1; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w0 = 0xFA000000; gfx->words.w1 = (arg0->alpha & 0xFF) | (~0xFF); } drawRaceUiPackedTime(&gRaceElapsedTimer, -0x68, -0x37, 0xC); if (arg0->alpha != 0xFF) { gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = (s32) gMenuRenderModeResetDl; w0 = 0x06000000; gfx->words.w0 = w0; gfx->words.w1 = w1; } } while (0);
+    do { \
+        if (arg0->alpha != 0xFF) { \
+            gfx = gRegionAllocPtr; \
+            gRegionAllocPtr = gfx + 1; \
+            gfx->words.w1 = 0; \
+            gfx->words.w0 = 0xE7000000; \
+            gfx = gRegionAllocPtr; \
+            gRegionAllocPtr = gfx + 1; \
+            w1 = 0xFF2FFFFF; \
+            w0 = 0xFC119623; \
+            gfx->words.w0 = w0; \
+            gfx->words.w1 = w1; \
+            gfx = gRegionAllocPtr; \
+            gRegionAllocPtr = gfx + 1; \
+            w1 = 0x00504240; \
+            w0 = 0xB900031D; \
+            gfx->words.w0 = w0; \
+            gfx->words.w1 = w1; \
+            gfx = gRegionAllocPtr; \
+            gRegionAllocPtr = gfx + 1; \
+            gfx->words.w0 = 0xFA000000; \
+            gfx->words.w1 = (arg0->alpha & 0xFF) | (~0xFF); \
+        } \
+        drawRaceUiPackedTime(&gRaceElapsedTimer, -0x68, -0x37, 0xC); \
+        if (arg0->alpha != 0xFF) { \
+            gfx = gRegionAllocPtr; \
+            gRegionAllocPtr = gfx + 1; \
+            w1 = (s32)gMenuRenderModeResetDl; \
+            w0 = 0x06000000; \
+            gfx->words.w0 = w0; \
+            gfx->words.w1 = w1; \
+        } \
+    } while (0);
 }
 // clang-format on
 
@@ -2410,7 +2562,39 @@ void drawRaceUiCourseRecordLapTimeLabel(RaceUiAlphaActor *arg0) {
     s32 w1;
 
     /* IDO scheduling for this function depends on this block staying on one line. */
-    do { if (arg0->alpha != 0xFF) { gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w1 = 0; gfx->words.w0 = 0xE7000000; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = 0xFF2FFFFF; w0 = 0xFC119623; gfx->words.w0 = w0; gfx->words.w1 = w1; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = 0x00504240; w0 = 0xB900031D; gfx->words.w0 = w0; gfx->words.w1 = w1; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w0 = 0xFA000000; gfx->words.w1 = (arg0->alpha & 0xFF) | (~0xFF); } drawMenuAsciiTextDefaultScale(-0x70, -0x40, gRaceUiTargetTimeChallengeLapTimeLabel, 5); if (arg0->alpha != 0xFF) { gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = (s32) gMenuRenderModeResetDl; w0 = 0x06000000; gfx->words.w0 = w0; gfx->words.w1 = w1; } } while (0);
+    do { \
+        if (arg0->alpha != 0xFF) { \
+            gfx = gRegionAllocPtr; \
+            gRegionAllocPtr = gfx + 1; \
+            gfx->words.w1 = 0; \
+            gfx->words.w0 = 0xE7000000; \
+            gfx = gRegionAllocPtr; \
+            gRegionAllocPtr = gfx + 1; \
+            w1 = 0xFF2FFFFF; \
+            w0 = 0xFC119623; \
+            gfx->words.w0 = w0; \
+            gfx->words.w1 = w1; \
+            gfx = gRegionAllocPtr; \
+            gRegionAllocPtr = gfx + 1; \
+            w1 = 0x00504240; \
+            w0 = 0xB900031D; \
+            gfx->words.w0 = w0; \
+            gfx->words.w1 = w1; \
+            gfx = gRegionAllocPtr; \
+            gRegionAllocPtr = gfx + 1; \
+            gfx->words.w0 = 0xFA000000; \
+            gfx->words.w1 = (arg0->alpha & 0xFF) | (~0xFF); \
+        } \
+        drawMenuAsciiTextDefaultScale(-0x70, -0x40, gRaceUiTargetTimeChallengeLapTimeLabel, 5); \
+        if (arg0->alpha != 0xFF) { \
+            gfx = gRegionAllocPtr; \
+            gRegionAllocPtr = gfx + 1; \
+            w1 = (s32)gMenuRenderModeResetDl; \
+            w0 = 0x06000000; \
+            gfx->words.w0 = w0; \
+            gfx->words.w1 = w1; \
+        } \
+    } while (0);
 }
 // clang-format on
 
@@ -2908,7 +3092,16 @@ void drawRaceUiTrickAttackCourseValues(RaceUiCourseStatsActor *arg0) {
     s32 space;
 
     y = -0x50;
-    i = 0; space = ' '; do { char buffer[8]; drawAssetTableSprite(-8, (s16)y, getRelocatableHeapBlockBase(gAssetHandles[0x1F]), i + 0x77); if ((i == arg0->task.userId) && (gUiBlinkTimer & 1)) { color = 0x10; } else if (i < 3) { color = 0xC; } else {
+    i = 0; \
+    space = ' '; \
+    do { \
+        char buffer[8]; \
+        drawAssetTableSprite(-8, (s16)y, getRelocatableHeapBlockBase(gAssetHandles[0x1F]), i + 0x77); \
+        if ((i == arg0->task.userId) && (gUiBlinkTimer & 1)) { \
+            color = 0x10; \
+        } else if (i < 3) { \
+            color = 0xC; \
+        } else {
             color = 0xD;
         }
 
@@ -2961,7 +3154,47 @@ void drawRaceUiTrickAttackResultLabels(RaceUiAlpha18Actor *arg0) {
     s32 new_var;
 
     /* IDO scheduling for this function depends on this block staying on one line. */
-    do { if (arg0->alpha != 0xFF) { gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w1 = 0; gfx->words.w0 = 0xE7000000; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = 0xFF2FFFFF; w0 = 0xFC119623; gfx->words.w0 = w0; gfx->words.w1 = w1; if (!gfx) { } gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = 0x00504240; if ((gRegionAllocPtr && gRegionAllocPtr) && gRegionAllocPtr) { } w0 = 0xB900031D; gfx->words.w0 = w0; gfx->words.w1 = w1; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w0 = 0xFA000000; gfx->words.w1 = (arg0->alpha & 0xFF) | (~0xFF); } drawMenuAsciiTextDefaultScale(-0x68, -0x40, new_var2 = gRaceUiTrickAttackResultsTrickLabel, 6); drawMenuAsciiTextDefaultScale(-0x64, -0x1C, gRaceUiTrickAttackResultsMakeLabel, 5); w0 = 8; if (gRaceChallengeFailed != 0) { new_var = w0; drawMenuAsciiTextDefaultScale(-0x6C, new_var, gRaceUiTrickAttackResultsTimeOutLabel, 4); } if (arg0->alpha != 0xFF) { gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = (s32) gMenuRenderModeResetDl; w0 = 0x06000000; gfx->words.w0 = w0; gfx->words.w1 = w1; } } while (0);
+    do { \
+        if (arg0->alpha != 0xFF) { \
+            gfx = gRegionAllocPtr; \
+            gRegionAllocPtr = gfx + 1; \
+            gfx->words.w1 = 0; \
+            gfx->words.w0 = 0xE7000000; \
+            gfx = gRegionAllocPtr; \
+            gRegionAllocPtr = gfx + 1; \
+            w1 = 0xFF2FFFFF; \
+            w0 = 0xFC119623; \
+            gfx->words.w0 = w0; \
+            gfx->words.w1 = w1; \
+            if (!gfx) {} \
+            gfx = gRegionAllocPtr; \
+            gRegionAllocPtr = gfx + 1; \
+            w1 = 0x00504240; \
+            if ((gRegionAllocPtr && gRegionAllocPtr) && gRegionAllocPtr) {} \
+            w0 = 0xB900031D; \
+            gfx->words.w0 = w0; \
+            gfx->words.w1 = w1; \
+            gfx = gRegionAllocPtr; \
+            gRegionAllocPtr = gfx + 1; \
+            gfx->words.w0 = 0xFA000000; \
+            gfx->words.w1 = (arg0->alpha & 0xFF) | (~0xFF); \
+        } \
+        drawMenuAsciiTextDefaultScale(-0x68, -0x40, new_var2 = gRaceUiTrickAttackResultsTrickLabel, 6); \
+        drawMenuAsciiTextDefaultScale(-0x64, -0x1C, gRaceUiTrickAttackResultsMakeLabel, 5); \
+        w0 = 8; \
+        if (gRaceChallengeFailed != 0) { \
+            new_var = w0; \
+            drawMenuAsciiTextDefaultScale(-0x6C, new_var, gRaceUiTrickAttackResultsTimeOutLabel, 4); \
+        } \
+        if (arg0->alpha != 0xFF) { \
+            gfx = gRegionAllocPtr; \
+            gRegionAllocPtr = gfx + 1; \
+            w1 = (s32)gMenuRenderModeResetDl; \
+            w0 = 0x06000000; \
+            gfx->words.w0 = w0; \
+            gfx->words.w1 = w1; \
+        } \
+    } while (0);
 }
 // clang-format on
 
@@ -2985,7 +3218,17 @@ void drawRaceUiTrickPrizePayoutLabels(RaceUiAlpha18Actor *arg0) {
         gRegionAllocPtr = gfx + 1;
         w1 = 0xFF2FFFFF;
         w0 = 0xFC119623;
-        gfx->words.w0 = w0; gfx->words.w1 = w1; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; w1 = 0x00504240; w0 = 0xB900031D; gfx->words.w0 = w0; gfx->words.w1 = w1; gfx = gRegionAllocPtr; gRegionAllocPtr = gfx + 1; gfx->words.w0 = 0xFA000000;
+        gfx->words.w0 = w0; \
+        gfx->words.w1 = w1; \
+        gfx = gRegionAllocPtr; \
+        gRegionAllocPtr = gfx + 1; \
+        w1 = 0x00504240; \
+        w0 = 0xB900031D; \
+        gfx->words.w0 = w0; \
+        gfx->words.w1 = w1; \
+        gfx = gRegionAllocPtr; \
+        gRegionAllocPtr = gfx + 1; \
+        gfx->words.w0 = 0xFA000000;
         gfx->words.w1 = ((*arg0p)->alpha & 0xFF) | ~0xFF;
     }
 
@@ -4526,7 +4769,64 @@ void renderRaceUiStunOrbitingIcon(RaceUiOrbitingSpriteActor *arg0) {
         arg0->matrix = allocFixedTransformMatrix(&sp64);
     }
 
- do { if (arg0->matrix != NULL) { temp_v0 = gRegionAllocPtr++; temp_v0->words.w0 = 0x06000000; temp_v0->words.w1 = (u32) gAlphaSpriteRenderModeDl; temp_v0_2 = gRegionAllocPtr++; temp_v0_2->words.w0 = 0xFD500000; temp_v0_2->words.w1 = (u32) arg0->image; temp_v0_3 = gRegionAllocPtr++; temp_v0_3->words.w0 = 0xF5500000; temp_v0_3->words.w1 = 0x07080200; temp_v0_4 = gRegionAllocPtr++; temp_v0_4->words.w1 = 0; temp_v0_4->words.w0 = 0xE6000000; temp_v0_5 = gRegionAllocPtr++; temp_v0_5->words.w0 = 0xF3000000; temp_v0_5->words.w1 = 0x0703F800; temp_v0_6 = gRegionAllocPtr++; temp_v0_6->words.w1 = 0; temp_v0_6->words.w0 = 0xE7000000; temp_v0_7 = gRegionAllocPtr++; temp_v0_7->words.w0 = 0xF5400200; temp_v0_7->words.w1 = 0x00080200; temp_v0_8 = gRegionAllocPtr++; temp_v0_8->words.w0 = 0xF2000000; temp_v0_8->words.w1 = 0x0003C03C; temp_v0_9 = gRegionAllocPtr++; temp_v0_9->words.w0 = 0xFD100000; temp_v0_9->words.w1 = (u32) arg0->palette; temp_v0_10 = gRegionAllocPtr++; temp_v0_10->words.w1 = 0; temp_v0_10->words.w0 = 0xE8000000; temp_v0_11 = gRegionAllocPtr++; temp_v0_11->words.w0 = 0xF5000100; temp_v0_11->words.w1 = 0x07000000; temp_v0_12 = gRegionAllocPtr++; temp_v0_12->words.w1 = 0; temp_v0_12->words.w0 = 0xE6000000; temp_v0_13 = gRegionAllocPtr++; temp_v0_13->words.w0 = 0xF0000000; temp_v0_13->words.w1 = 0x0703C000; temp_v0_14 = gRegionAllocPtr++; temp_v0_14->words.w1 = 0; temp_v0_14->words.w0 = 0xE7000000; temp_v0_15 = gRegionAllocPtr++; temp_v0_15->words.w0 = 0x01020040; temp_v0_15->words.w1 = (u32) arg0->matrix; temp_v0_16 = gRegionAllocPtr++; temp_v0_16->words.w0 = 0x01000040; temp_v0_16->words.w1 = (u32) gViewportMatrix; temp_v0_17 = gRegionAllocPtr++; temp_v0_17->words.w0 = 0x0400103F; temp_v0_17->words.w1 = (u32) D_800D6230; temp_v0_18 = gRegionAllocPtr++; temp_v0_18->words.w0 = 0xB1060402; temp_v0_18->words.w1 = 0x00060200; } } while (0);
+    do { \
+        if (arg0->matrix != NULL) { \
+            temp_v0 = gRegionAllocPtr++; \
+            temp_v0->words.w0 = 0x06000000; \
+            temp_v0->words.w1 = (u32)gAlphaSpriteRenderModeDl; \
+            temp_v0_2 = gRegionAllocPtr++; \
+            temp_v0_2->words.w0 = 0xFD500000; \
+            temp_v0_2->words.w1 = (u32)arg0->image; \
+            temp_v0_3 = gRegionAllocPtr++; \
+            temp_v0_3->words.w0 = 0xF5500000; \
+            temp_v0_3->words.w1 = 0x07080200; \
+            temp_v0_4 = gRegionAllocPtr++; \
+            temp_v0_4->words.w1 = 0; \
+            temp_v0_4->words.w0 = 0xE6000000; \
+            temp_v0_5 = gRegionAllocPtr++; \
+            temp_v0_5->words.w0 = 0xF3000000; \
+            temp_v0_5->words.w1 = 0x0703F800; \
+            temp_v0_6 = gRegionAllocPtr++; \
+            temp_v0_6->words.w1 = 0; \
+            temp_v0_6->words.w0 = 0xE7000000; \
+            temp_v0_7 = gRegionAllocPtr++; \
+            temp_v0_7->words.w0 = 0xF5400200; \
+            temp_v0_7->words.w1 = 0x00080200; \
+            temp_v0_8 = gRegionAllocPtr++; \
+            temp_v0_8->words.w0 = 0xF2000000; \
+            temp_v0_8->words.w1 = 0x0003C03C; \
+            temp_v0_9 = gRegionAllocPtr++; \
+            temp_v0_9->words.w0 = 0xFD100000; \
+            temp_v0_9->words.w1 = (u32)arg0->palette; \
+            temp_v0_10 = gRegionAllocPtr++; \
+            temp_v0_10->words.w1 = 0; \
+            temp_v0_10->words.w0 = 0xE8000000; \
+            temp_v0_11 = gRegionAllocPtr++; \
+            temp_v0_11->words.w0 = 0xF5000100; \
+            temp_v0_11->words.w1 = 0x07000000; \
+            temp_v0_12 = gRegionAllocPtr++; \
+            temp_v0_12->words.w1 = 0; \
+            temp_v0_12->words.w0 = 0xE6000000; \
+            temp_v0_13 = gRegionAllocPtr++; \
+            temp_v0_13->words.w0 = 0xF0000000; \
+            temp_v0_13->words.w1 = 0x0703C000; \
+            temp_v0_14 = gRegionAllocPtr++; \
+            temp_v0_14->words.w1 = 0; \
+            temp_v0_14->words.w0 = 0xE7000000; \
+            temp_v0_15 = gRegionAllocPtr++; \
+            temp_v0_15->words.w0 = 0x01020040; \
+            temp_v0_15->words.w1 = (u32)arg0->matrix; \
+            temp_v0_16 = gRegionAllocPtr++; \
+            temp_v0_16->words.w0 = 0x01000040; \
+            temp_v0_16->words.w1 = (u32)gViewportMatrix; \
+            temp_v0_17 = gRegionAllocPtr++; \
+            temp_v0_17->words.w0 = 0x0400103F; \
+            temp_v0_17->words.w1 = (u32)D_800D6230; \
+            temp_v0_18 = gRegionAllocPtr++; \
+            temp_v0_18->words.w0 = 0xB1060402; \
+            temp_v0_18->words.w1 = 0x00060200; \
+        } \
+    } while (0);
 }
 // clang-format on
 
@@ -5121,7 +5421,68 @@ void renderRaceUiProjectile(RaceUiProjectileActor *arg0) {
             sp74 = 0;
             do { } while (0);
         }
-        do { temp_v0_2 = gRegionAllocPtr++; temp_v0_2->words.w0 = 0x06000000; temp_v0_2->words.w1 = (u32) gAlphaSpriteRenderModeDl; temp_v0_3 = gRegionAllocPtr++; temp_v0_3->words.w0 = 0xFD500000; temp_v0_3->words.w1 = (u32) arg0->image; temp_v0_4 = gRegionAllocPtr++; temp_v0_4->words.w0 = 0xF5500000; temp_v0_4->words.w1 = 0x07080200; temp_v0_5 = gRegionAllocPtr++; temp_v0_5->words.w0 = 0xE6000000; temp_v0_5->words.w1 = 0; temp_t4 = gRegionAllocPtr++; temp_t4->words.w0 = 0xF3000000; temp_t0 = (((var_ra << 5) + 3) >> 2) - 1; if (temp_t0 < 0x7FF) { var_t5 = temp_t0; } else { var_t5 = 0x7FF; } temp_t4->words.w1 = (((var_t5 & 0xFFF) << 0xC) | 0x07000000) | 0x400; temp_v0_6 = gRegionAllocPtr++; temp_v0_6->words.w1 = 0; temp_v0_6->words.w0 = 0xE7000000; temp_v0_7 = gRegionAllocPtr++; temp_v0_7->words.w0 = 0xF5400400; temp_v0_7->words.w1 = 0x00080200; temp_v0_8 = gRegionAllocPtr++; temp_v0_8->words.w0 = 0xF2000000; temp_v0_8->words.w1 = (((var_ra - 1) << 2) & 0xFFF) | 0x0007C000; temp_v0_9 = gRegionAllocPtr++; temp_v0_9->words.w0 = 0xFD100000; temp_v0_9->words.w1 = (u32) arg0->palette; temp_v0_10 = gRegionAllocPtr++; temp_v0_10->words.w1 = 0; temp_v0_10->words.w0 = 0xE8000000; temp_v0_11 = gRegionAllocPtr++; temp_v0_11->words.w0 = 0xF5000100; temp_v0_11->words.w1 = 0x07000000; temp_v0_12 = gRegionAllocPtr++; temp_v0_12->words.w1 = 0; temp_v0_12->words.w0 = 0xE6000000; temp_v0_13 = gRegionAllocPtr++; temp_v0_13->words.w0 = 0xF0000000; temp_v0_13->words.w1 = 0x0703C000; temp_v0_14 = gRegionAllocPtr++; temp_v0_14->words.w1 = 0; temp_v0_14->words.w0 = 0xE7000000; temp_v0_17 = gRegionAllocPtr++; temp_v0_17->words.w0 = 0x01020040; temp_v0_17->words.w1 = (u32) arg0->matrix; temp_v0_18 = gRegionAllocPtr++; temp_v0_18->words.w0 = 0x01000040; temp_v0_18->words.w1 = (u32) gViewportMatrix; temp_v0_2 = gRegionAllocPtr++; temp_v0_2->words.w0 = 0x0400103F; temp_v0_2->words.w1 = (u32) (&D_800D64A0[sp74]); temp_v0_3 = gRegionAllocPtr++; temp_v0_3->words.w0 = 0xB1060402; temp_v0_3->words.w1 = 0x00060200; } while (0);
+        do { \
+            temp_v0_2 = gRegionAllocPtr++; \
+            temp_v0_2->words.w0 = 0x06000000; \
+            temp_v0_2->words.w1 = (u32)gAlphaSpriteRenderModeDl; \
+            temp_v0_3 = gRegionAllocPtr++; \
+            temp_v0_3->words.w0 = 0xFD500000; \
+            temp_v0_3->words.w1 = (u32)arg0->image; \
+            temp_v0_4 = gRegionAllocPtr++; \
+            temp_v0_4->words.w0 = 0xF5500000; \
+            temp_v0_4->words.w1 = 0x07080200; \
+            temp_v0_5 = gRegionAllocPtr++; \
+            temp_v0_5->words.w0 = 0xE6000000; \
+            temp_v0_5->words.w1 = 0; \
+            temp_t4 = gRegionAllocPtr++; \
+            temp_t4->words.w0 = 0xF3000000; \
+            temp_t0 = (((var_ra << 5) + 3) >> 2) - 1; \
+            if (temp_t0 < 0x7FF) { \
+                var_t5 = temp_t0; \
+            } else { \
+                var_t5 = 0x7FF; \
+            } \
+            temp_t4->words.w1 = (((var_t5 & 0xFFF) << 0xC) | 0x07000000) | 0x400; \
+            temp_v0_6 = gRegionAllocPtr++; \
+            temp_v0_6->words.w1 = 0; \
+            temp_v0_6->words.w0 = 0xE7000000; \
+            temp_v0_7 = gRegionAllocPtr++; \
+            temp_v0_7->words.w0 = 0xF5400400; \
+            temp_v0_7->words.w1 = 0x00080200; \
+            temp_v0_8 = gRegionAllocPtr++; \
+            temp_v0_8->words.w0 = 0xF2000000; \
+            temp_v0_8->words.w1 = (((var_ra - 1) << 2) & 0xFFF) | 0x0007C000; \
+            temp_v0_9 = gRegionAllocPtr++; \
+            temp_v0_9->words.w0 = 0xFD100000; \
+            temp_v0_9->words.w1 = (u32)arg0->palette; \
+            temp_v0_10 = gRegionAllocPtr++; \
+            temp_v0_10->words.w1 = 0; \
+            temp_v0_10->words.w0 = 0xE8000000; \
+            temp_v0_11 = gRegionAllocPtr++; \
+            temp_v0_11->words.w0 = 0xF5000100; \
+            temp_v0_11->words.w1 = 0x07000000; \
+            temp_v0_12 = gRegionAllocPtr++; \
+            temp_v0_12->words.w1 = 0; \
+            temp_v0_12->words.w0 = 0xE6000000; \
+            temp_v0_13 = gRegionAllocPtr++; \
+            temp_v0_13->words.w0 = 0xF0000000; \
+            temp_v0_13->words.w1 = 0x0703C000; \
+            temp_v0_14 = gRegionAllocPtr++; \
+            temp_v0_14->words.w1 = 0; \
+            temp_v0_14->words.w0 = 0xE7000000; \
+            temp_v0_17 = gRegionAllocPtr++; \
+            temp_v0_17->words.w0 = 0x01020040; \
+            temp_v0_17->words.w1 = (u32)arg0->matrix; \
+            temp_v0_18 = gRegionAllocPtr++; \
+            temp_v0_18->words.w0 = 0x01000040; \
+            temp_v0_18->words.w1 = (u32)gViewportMatrix; \
+            temp_v0_2 = gRegionAllocPtr++; \
+            temp_v0_2->words.w0 = 0x0400103F; \
+            temp_v0_2->words.w1 = (u32)(&D_800D64A0[sp74]); \
+            temp_v0_3 = gRegionAllocPtr++; \
+            temp_v0_3->words.w0 = 0xB1060402; \
+            temp_v0_3->words.w1 = 0x00060200; \
+        } while (0);
     }
 }
 // clang-format on

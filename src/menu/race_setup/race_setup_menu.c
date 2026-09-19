@@ -251,7 +251,25 @@ void initRaceSetupSaveMenu(void) {
     }
 
     gRaceSetupSavePanelCreateTimer = 0;
-    do { i = 0; connectedControllerCount = gConnectedControllerCount; if (connectedControllerCount > 0) { player = gRacePlayers; do { player++; player[-1].menuState = 0; i++; } while (player < &gRacePlayers[connectedControllerCount]); i = 0; } do { initRaceSetupPlayerSaveData(i); i++; } while (i < 4); gMenuScratch0.task = 0; gMenuScratch1.task = 0; } while (0);
+    do { \
+        i = 0; \
+        connectedControllerCount = gConnectedControllerCount; \
+        if (connectedControllerCount > 0) { \
+            player = gRacePlayers; \
+            do { \
+                player++; \
+                player[-1].menuState = 0; \
+                i++; \
+            } while (player < &gRacePlayers[connectedControllerCount]); \
+            i = 0; \
+        } \
+        do { \
+            initRaceSetupPlayerSaveData(i); \
+            i++; \
+        } while (i < 4); \
+        gMenuScratch0.task = 0; \
+        gMenuScratch1.task = 0; \
+    } while (0);
     gMenuScratch2.task = 0;
     gMenuSelectionConfirmTimer = 0;
     gMenuFlowState = 0;

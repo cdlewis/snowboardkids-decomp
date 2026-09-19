@@ -500,7 +500,30 @@ void initCharacterSelectUnlockedCourseList(CharacterSelectCourseMenuFrameActor *
 
     arg0->baseY = baseY;
     arg0->itemSpacing = spacing;
-    do { arg0->y[1] = baseY + spacing; arg0->y[2] = baseY + (spacing * 2); arg0->x[0] = -0x104; arg0->x[1] = -0x104; arg0->x[2] = -0x104; arg0->x[2] = -0x104; arg0->y[0] = baseY; i = 3; loop = (CharacterSelectCourseListInitLoop *)&((u8 *)&arg0->taskHeader)[6]; limit = 0xB; do { loop->x0 = -0x104; loop->x1 = -0x104; loop->x2 = -0x104; loop = (CharacterSelectCourseListInitLoop *)&loop->next; loop->xNext = -0x104; loop->y0 = baseY + (i * spacing); loop->y1 = baseY + ((i + 1) * spacing); loop->y2 = baseY + ((i + 2) * spacing); loop->y3 = baseY + ((i + 3) * spacing); i += 4; } while (i != limit); } while (0);
+    do { \
+        arg0->y[1] = baseY + spacing; \
+        arg0->y[2] = baseY + (spacing * 2); \
+        arg0->x[0] = -0x104; \
+        arg0->x[1] = -0x104; \
+        arg0->x[2] = -0x104; \
+        arg0->x[2] = -0x104; \
+        arg0->y[0] = baseY; \
+        i = 3; \
+        loop = (CharacterSelectCourseListInitLoop *)&((u8 *)&arg0->taskHeader)[6]; \
+        limit = 0xB; \
+        do { \
+            loop->x0 = -0x104; \
+            loop->x1 = -0x104; \
+            loop->x2 = -0x104; \
+            loop = (CharacterSelectCourseListInitLoop *)&loop->next; \
+            loop->xNext = -0x104; \
+            loop->y0 = baseY + (i * spacing); \
+            loop->y1 = baseY + ((i + 1) * spacing); \
+            loop->y2 = baseY + ((i + 2) * spacing); \
+            loop->y3 = baseY + ((i + 3) * spacing); \
+            i += 4; \
+        } while (i != limit); \
+    } while (0);
 
     arg0->timer = 0;
     arg0->itemCount = 1;
@@ -2708,7 +2731,78 @@ void drawCharacterSelectCoursePlayerStatsPanel(CharacterSelectCourseWidgetActor 
     s32 valueOffset;
     s32 three;
     register s32 i;
-    do { characterIds = gCharacterSelectCourseMenuData.courseOptionsByUnlock[gHighestUnlockedCourse]; if (gPlayerCount == 1) { drawMenuSprite(arg0->x, arg0->y, getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE), 0x21, 0x20, 0x20, 0, 0); drawMenuSprite((s16)(arg0->x + 0x30), arg0->y, getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE), 0x22, 0x20, 0x20, 0, 0); sprintf(buf - 0x10, gCharacterSelectCourseBestScoreFormat, (&gGameSaveDataBuffer[0].highScores[1])[characterIds[*(&gRaceCourseIndex.signedValue)]]); drawMenuAsciiText((s16)(arg0->x + 0x14), (s16)(arg0->y + 0x2A), buf - 0x10, 0, 0x100); valueOffset = 0; yOffset = 0; three = 3; do { sprintf(buf - 0x10, gCharacterSelectCourseMedalScoreFormat, *((u16 *)(&gCharacterSelectCourseMedalScoreThresholds[(((*(&gRaceCourseIndex.signedValue)) * three) * 2) + valueOffset]))); drawMenuAsciiText((s16)(arg0->x + 0x28), (s16)((arg0->y + yOffset) + 9), buf - 0x10, 0, 0x100); yOffset += 8; valueOffset += 2; } while (yOffset != 0x18); } else { drawMenuSprite(arg0->x, arg0->y, getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE), 0x26, 0x20, 0x20, 0, 0); drawMenuSprite(arg0->x, (s16)(arg0->y + 0x10), getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE), 0x27, 0x20, 0x20, 0, 0); yOffset = 0; for (i = 0; i < RACE_PLAYER_COUNT; i++) { sprintf(buf - 0x10, gCharacterSelectCoursePlayerRankFormat, gRacePlayers[i].unk18); drawMenuAsciiText((s16)(arg0->x + 0x40), (s16)((arg0->y + yOffset) + 0x10), buf - 0x10, 0, 0x100); yOffset += 8; } } } while (0);
+    do { \
+        characterIds = gCharacterSelectCourseMenuData.courseOptionsByUnlock[gHighestUnlockedCourse]; \
+        if (gPlayerCount == 1) { \
+            drawMenuSprite( \
+                arg0->x, \
+                arg0->y, \
+                getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE), \
+                0x21, \
+                0x20, \
+                0x20, \
+                0, \
+                0 \
+            ); \
+            drawMenuSprite( \
+                (s16)(arg0->x + 0x30), \
+                arg0->y, \
+                getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE), \
+                0x22, \
+                0x20, \
+                0x20, \
+                0, \
+                0 \
+            ); \
+            sprintf( \
+                buf - 0x10, \
+                gCharacterSelectCourseBestScoreFormat, \
+                (&gGameSaveDataBuffer[0].highScores[1])[characterIds[*(&gRaceCourseIndex.signedValue)]] \
+            ); \
+            drawMenuAsciiText((s16)(arg0->x + 0x14), (s16)(arg0->y + 0x2A), buf - 0x10, 0, 0x100); \
+            valueOffset = 0; \
+            yOffset = 0; \
+            three = 3; \
+            do { \
+                sprintf( \
+                    buf - 0x10, \
+                    gCharacterSelectCourseMedalScoreFormat, \
+                    *((u16 *)(&gCharacterSelectCourseMedalScoreThresholds \
+                                  [(((*(&gRaceCourseIndex.signedValue)) * three) * 2) + valueOffset])) \
+                ); \
+                drawMenuAsciiText((s16)(arg0->x + 0x28), (s16)((arg0->y + yOffset) + 9), buf - 0x10, 0, 0x100); \
+                yOffset += 8; \
+                valueOffset += 2; \
+            } while (yOffset != 0x18); \
+        } else { \
+            drawMenuSprite( \
+                arg0->x, \
+                arg0->y, \
+                getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE), \
+                0x26, \
+                0x20, \
+                0x20, \
+                0, \
+                0 \
+            ); \
+            drawMenuSprite( \
+                arg0->x, \
+                (s16)(arg0->y + 0x10), \
+                getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE), \
+                0x27, \
+                0x20, \
+                0x20, \
+                0, \
+                0 \
+            ); \
+            yOffset = 0; \
+            for (i = 0; i < RACE_PLAYER_COUNT; i++) { \
+                sprintf(buf - 0x10, gCharacterSelectCoursePlayerRankFormat, gRacePlayers[i].unk18); \
+                drawMenuAsciiText((s16)(arg0->x + 0x40), (s16)((arg0->y + yOffset) + 0x10), buf - 0x10, 0, 0x100); \
+                yOffset += 8; \
+            } \
+        } \
+    } while (0);
 }
 // clang-format on
 

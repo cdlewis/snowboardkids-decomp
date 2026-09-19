@@ -947,7 +947,40 @@ void updateRaceGameplayFlow(void) {
     s32 selection;
     s32 valueTwo;
 
-    opened = 0; i = 0; if (gPlayerCount > 0) { player = gRacePlayers; do { if (((player->soundDisabled == 0) && (gRaceUpdatePaused == 0)) && (gPlayerInputPressed[i] & START_BUTTON)) { D_80121B57 = 0; gRaceUpdatePaused = 1; opened = 1; enqueueSoundEffect(1, 0x32); requestRumbleMotorInit(0); requestRumbleMotorInit(1); requestRumbleMotorInit(2); requestRumbleMotorInit(3); } i++; player++; } while (i < gPlayerCount); } valueTwo = 2; if ((gRaceUpdatePaused != 0) && (opened == 0)) { i = 0; if (gPlayerCount > 0) { player = gRacePlayers; do { if (player->soundDisabled == 0) { input = gPlayerInputPressed[i]; if (input & (STICK_UP | U_JPAD)) { selection = D_80121B57; if (selection != 0) { D_80121B57 = selection - 1; enqueueSoundEffect(1, 0x32); input = gPlayerInputPressed[i]; }
+    opened = 0; \
+    i = 0; \
+    if (gPlayerCount > 0) { \
+        player = gRacePlayers; \
+        do { \
+            if (((player->soundDisabled == 0) && (gRaceUpdatePaused == 0)) && (gPlayerInputPressed[i] & START_BUTTON)) { \
+                D_80121B57 = 0; \
+                gRaceUpdatePaused = 1; \
+                opened = 1; \
+                enqueueSoundEffect(1, 0x32); \
+                requestRumbleMotorInit(0); \
+                requestRumbleMotorInit(1); \
+                requestRumbleMotorInit(2); \
+                requestRumbleMotorInit(3); \
+            } \
+            i++; \
+            player++; \
+        } while (i < gPlayerCount); \
+    } \
+    valueTwo = 2; \
+    if ((gRaceUpdatePaused != 0) && (opened == 0)) { \
+        i = 0; \
+        if (gPlayerCount > 0) { \
+            player = gRacePlayers; \
+            do { \
+                if (player->soundDisabled == 0) { \
+                    input = gPlayerInputPressed[i]; \
+                    if (input & (STICK_UP | U_JPAD)) { \
+                        selection = D_80121B57; \
+                        if (selection != 0) { \
+                            D_80121B57 = selection - 1; \
+                            enqueueSoundEffect(1, 0x32); \
+                            input = gPlayerInputPressed[i]; \
+                        }
                     }
                     if (input & (STICK_DOWN | D_JPAD)) {
                         selection = D_80121B57;

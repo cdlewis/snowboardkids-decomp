@@ -697,7 +697,14 @@ void resetRenderCallbackQueues(void) {
 
     gMenuForegroundRenderCallbackList = NULL;
     gRaceForegroundRenderCallbackList = NULL;
-    do { end = (u32)&gBackdropRenderCallbackList; group = (RenderCallbackQueueGroup *)gModelRenderCallbackQueues; loop: group++; group[-1].queue0.head = NULL; group[-1].queue1.head = NULL; } while (0);
+    do { \
+        end = (u32)&gBackdropRenderCallbackList; \
+        group = (RenderCallbackQueueGroup *)gModelRenderCallbackQueues; \
+    loop: \
+        group++; \
+        group[-1].queue0.head = NULL; \
+        group[-1].queue1.head = NULL; \
+    } while (0);
     group[-1].queue2.head = NULL;
     group[-1].queue3.head = NULL;
     if ((u32)group != end) {

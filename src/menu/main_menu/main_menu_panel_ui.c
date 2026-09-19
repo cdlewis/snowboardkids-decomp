@@ -341,8 +341,40 @@ void updateMainMenuModeSelectGrid(MenuPanelActor *arg0) {
     u8 temp_a2_3;
     u8 temp_a2_4;
 
-    if (arg0) {
-    } if ((gMenuFadeAlpha == 0) && (gMainMenuSelectionResult == 0)) { temp_v1 = gPlayerInputPressed[0]; do { if (temp_v1 & (STICK_UP | U_JPAD)) { temp_a2 = mainMenuModeSelectUpTargets[gMainMenuModeSelection]; if (temp_a2 != gMainMenuModeSelection) { gMainMenuModeSelection = temp_a2; enqueueSoundEffect(0x19, 0x32); temp_v1 = gPlayerInputPressed[0]; } } else if (temp_v1 & (STICK_DOWN | D_JPAD)) { var_v0 = gMainMenuModeSelection; temp_a2_2 = mainMenuModeSelectDownTargets[var_v0]; if (temp_a2_2 != var_v0) { gMainMenuModeSelection = temp_a2_2; enqueueSoundEffect(0x19, 0x32); temp_v1 = gPlayerInputPressed[0]; } } else if (temp_v1 & (STICK_RIGHT | R_JPAD)) { temp_a2_3 = mainMenuModeSelectRightTargets[gMainMenuModeSelection]; if (temp_a2_3 != gMainMenuModeSelection) { gMainMenuModeSelection = temp_a2_3; enqueueSoundEffect(0x19, 0x32); temp_v1 = gPlayerInputPressed[0]; } } else if (temp_v1 & (STICK_LEFT | L_JPAD)) { temp_a2_4 = mainMenuModeSelectLeftTargets[gMainMenuModeSelection]; if (temp_a2_4 != gMainMenuModeSelection) { gMainMenuModeSelection = temp_a2_4; enqueueSoundEffect(0x19, 0x32); temp_v1 = gPlayerInputPressed[0]; } }
+    if (arg0) {} \
+    if ((gMenuFadeAlpha == 0) && (gMainMenuSelectionResult == 0)) { \
+        temp_v1 = gPlayerInputPressed[0]; \
+        do { \
+            if (temp_v1 & (STICK_UP | U_JPAD)) { \
+                temp_a2 = mainMenuModeSelectUpTargets[gMainMenuModeSelection]; \
+                if (temp_a2 != gMainMenuModeSelection) { \
+                    gMainMenuModeSelection = temp_a2; \
+                    enqueueSoundEffect(0x19, 0x32); \
+                    temp_v1 = gPlayerInputPressed[0]; \
+                } \
+            } else if (temp_v1 & (STICK_DOWN | D_JPAD)) { \
+                var_v0 = gMainMenuModeSelection; \
+                temp_a2_2 = mainMenuModeSelectDownTargets[var_v0]; \
+                if (temp_a2_2 != var_v0) { \
+                    gMainMenuModeSelection = temp_a2_2; \
+                    enqueueSoundEffect(0x19, 0x32); \
+                    temp_v1 = gPlayerInputPressed[0]; \
+                } \
+            } else if (temp_v1 & (STICK_RIGHT | R_JPAD)) { \
+                temp_a2_3 = mainMenuModeSelectRightTargets[gMainMenuModeSelection]; \
+                if (temp_a2_3 != gMainMenuModeSelection) { \
+                    gMainMenuModeSelection = temp_a2_3; \
+                    enqueueSoundEffect(0x19, 0x32); \
+                    temp_v1 = gPlayerInputPressed[0]; \
+                } \
+            } else if (temp_v1 & (STICK_LEFT | L_JPAD)) { \
+                temp_a2_4 = mainMenuModeSelectLeftTargets[gMainMenuModeSelection]; \
+                if (temp_a2_4 != gMainMenuModeSelection) { \
+                    gMainMenuModeSelection = temp_a2_4; \
+                    enqueueSoundEffect(0x19, 0x32); \
+                    temp_v1 = gPlayerInputPressed[0]; \
+                } \
+            }
             if (temp_v1 & (A_BUTTON | B_BUTTON | START_BUTTON)) {
                 gMainMenuSelectionResult = 1;
                 if (temp_v1 & B_BUTTON) {
@@ -354,7 +386,11 @@ void updateMainMenuModeSelectGrid(MenuPanelActor *arg0) {
     }
 
     if (gMainMenuSelectionResult == 0) {
-        arg0->x = gFrameCounter & 0xF; if (arg0->x >= 9) { arg0->x = 0x10 - arg0->x; } arg0->x = (arg0->x * 0x10) + 0x7F;
+        arg0->x = gFrameCounter & 0xF; \
+        if (arg0->x >= 9) { \
+            arg0->x = 0x10 - arg0->x; \
+        } \
+        arg0->x = (arg0->x * 0x10) + 0x7F;
     } else if (gFrameCounter & 1) {
         arg0->x = 0;
     } else {

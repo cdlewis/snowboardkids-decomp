@@ -1797,32 +1797,63 @@ void drawMenuAsciiGlyph(s16 x, s16 y, u16 tileS, s32 tileT, u16 palette, u16 pal
                     }
                     storedY = i;
                     if (1) {
-                    scratch = allocMenuRenderScratch(sizeof(MenuPalette)); i = 0; source = &palettes[paletteIndex]; dst = scratch->colors; palette_loop: *dst = (color = (*(u16 *)&source->bytes[i]) & 0xFFFFu); i += sizeof(u16); if ((colorValue = color & 0xFFFF) & 1) { red = ((colorValue >> 11) & 0x1F) & 0xFFFF;
-                        green = (colorValue >> 6) & 0x1F;
-                        colorValue = (blue = (colorValue >> 1) & 0x1F);
-                        scaleValue = paletteScale;
-                        red = red * scaleValue;
-                        scaledRed = red / 0x100;
-                        red = scaledRed;
-                        green = (green * paletteScale) / 0x100;
-                        colorValue = green;
-                        blue = (blue * paletteScale) / 0x100;
-                        *dst = (red << 11) | (colorValue << 6) | (blue << 1) | 1;
-                    }
-                    dst += 2;
-                    dst--;
-                    if (i != sizeof(MenuPalette)) {
-                        goto palette_loop;
-                    }
+                        scratch = allocMenuRenderScratch(sizeof(MenuPalette)); \
+                        i = 0; \
+                        source = &palettes[paletteIndex]; \
+                        dst = scratch->colors; \
+                    palette_loop: \
+                        *dst = (color = (*(u16 *)&source->bytes[i]) & 0xFFFFu); \
+                        i += sizeof(u16); \
+                        if ((colorValue = color & 0xFFFF) & 1) { \
+                            red = ((colorValue >> 11) & 0x1F) & 0xFFFF;
+                            green = (colorValue >> 6) & 0x1F;
+                            colorValue = (blue = (colorValue >> 1) & 0x1F);
+                            scaleValue = paletteScale;
+                            red = red * scaleValue;
+                            scaledRed = red / 0x100;
+                            red = scaledRed;
+                            green = (green * paletteScale) / 0x100;
+                            colorValue = green;
+                            blue = (blue * paletteScale) / 0x100;
+                            *dst = (red << 11) | (colorValue << 6) | (blue << 1) | 1;
+                        }
+                        dst += 2;
+                        dst--;
+                        if (i != sizeof(MenuPalette)) {
+                            goto palette_loop;
+                        }
 
-                    gDPLoadTextureTile_4b(gRegionAllocPtr++, texture->imageOffset + (u8 *)font,
-                                          G_IM_FMT_CI, texture->width, texture->height,
-                                          0, 0, texture->width, texture->height, 0,
-                                          G_TX_CLAMP, G_TX_CLAMP, G_TX_NOMASK, G_TX_NOMASK,
-                                          G_TX_NOLOD, G_TX_NOLOD);
-                    gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, scratch);
-                    gSPTextureRectangle(gRegionAllocPtr++, x0 << 2, storedY << 2, x1 << 2, y1 << 2,
-                                        G_TX_RENDERTILE, clipS << 5, clipT << 5, 0x400, 0x400);
+                        gDPLoadTextureTile_4b( \
+                            gRegionAllocPtr++, \
+                            texture->imageOffset + (u8 *)font,
+                            G_IM_FMT_CI, \
+                            texture->width, \
+                            texture->height,
+                            0, \
+                            0, \
+                            texture->width, \
+                            texture->height, \
+                            0,
+                            G_TX_CLAMP, \
+                            G_TX_CLAMP, \
+                            G_TX_NOMASK, \
+                            G_TX_NOMASK,
+                            G_TX_NOLOD, \
+                            G_TX_NOLOD \
+                        );
+                        gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, scratch);
+                        gSPTextureRectangle( \
+                            gRegionAllocPtr++, \
+                            x0 << 2, \
+                            storedY << 2, \
+                            x1 << 2, \
+                            y1 << 2,
+                            G_TX_RENDERTILE, \
+                            clipS << 5, \
+                            clipT << 5, \
+                            0x400, \
+                            0x400 \
+                        );
                     }
                 }
             }

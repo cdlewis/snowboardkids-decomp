@@ -401,7 +401,17 @@ void drawScoreAttackChallengeHud(void *arg0) {
         sprintf(buffer, gRaceHudScoreAttackTimeLimitMinutesFormat, gRaceChallengeTimeLimit.minutes);
         finalPalette = (u16)palette;
         x = 0x40;
-        digit = buffer; temp.end = &buffer[2]; do { drawAssetTableSpriteWithExplicitPalette((s16)x, 0x50, getRelocatableHeapBlockBase(RACE_HUD_POPUP_FONT_HANDLE), (u8)*digit - 5, finalPalette); digit++;
+        digit = buffer; \
+        temp.end = &buffer[2]; \
+        do { \
+            drawAssetTableSpriteWithExplicitPalette( \
+                (s16)x, \
+                0x50, \
+                getRelocatableHeapBlockBase(RACE_HUD_POPUP_FONT_HANDLE), \
+                (u8)*digit - 5, \
+                finalPalette \
+            ); \
+            digit++;
             x += 8;
         } while ((u32)digit < (u32)temp.end);
 

@@ -48,7 +48,24 @@ void initCallbackTaskScheduler(s32 arg0) {
     CallbackTaskGroup *task3;
     CallbackTaskGroup *end;
 
-    gCallbackTaskActiveListHead = NULL; resetRenderCallbackQueues(); pool = gFreeCallbackTaskPool; task0 = &D_80112898; task1 = &D_801129B0; task2 = &D_80112AC8; task3 = &D_80112BE0; end = &D_80121820; loop: pool[3] = &task3->tasks[0]; task3++; pool[1] = &task1->tasks[0]; pool[2] = &task2->tasks[0]; if (((!task0) && (!task0)) && (!task0)) { } task2++; task1++; pool[0] = &task0->tasks[0]; task0++;
+    gCallbackTaskActiveListHead = NULL; \
+    resetRenderCallbackQueues(); \
+    pool = gFreeCallbackTaskPool; \
+    task0 = &D_80112898; \
+    task1 = &D_801129B0; \
+    task2 = &D_80112AC8; \
+    task3 = &D_80112BE0; \
+    end = &D_80121820; \
+loop: \
+    pool[3] = &task3->tasks[0]; \
+    task3++; \
+    pool[1] = &task1->tasks[0]; \
+    pool[2] = &task2->tasks[0]; \
+    if (((!task0) && (!task0)) && (!task0)) {} \
+    task2++; \
+    task1++; \
+    pool[0] = &task0->tasks[0]; \
+    task0++;
     task0[-1].tasks[1].header.isActive = 0;
     task0[-1].tasks[1].header.callbackTimer = 0;
     task0[-1].tasks[2].header.isActive = 0;
@@ -357,14 +374,26 @@ void *createCallbackTask(CallbackTaskCallback callback, u16 type, s32 priority) 
 
 // IDO code generation for this function is sensitive to source line layout.
 // clang-format off
-void *createCallbackTaskWithUserId(CallbackTaskCallback callback, s32 type, s32 priority, s32 userId){ CallbackTask *t=createCallbackTaskS32(callback,type&0xFFFF,priority); if(t!=NULL){t->header.userId=userId;} return t;}
+void *createCallbackTaskWithUserId(CallbackTaskCallback callback, s32 type, s32 priority, s32 userId) { \
+    CallbackTask *t = createCallbackTaskS32(callback, type & 0xFFFF, priority); \
+    if (t != NULL) { \
+        t->header.userId = userId; \
+    } \
+    return t; \
+}
 // clang-format on
 
 // IDO code generation for this function is sensitive to source line layout.
 // clang-format off
 CLANG_DIAGNOSTIC_PUSH
 CLANG_DIAGNOSTIC_IGNORE_STRICT_PROTOTYPES
-void *createCallbackTaskWithUserIdPreservingArgs(void (*callback)(), s32 type, s32 priority, s32 userId){ CallbackTask *t=createCallbackTaskPreservingArgsS32(callback,type&0xFFFF,priority); if(t!=NULL){t->header.userId=userId;} return t;}
+void *createCallbackTaskWithUserIdPreservingArgs(void (*callback)(), s32 type, s32 priority, s32 userId) { \
+    CallbackTask *t = createCallbackTaskPreservingArgsS32(callback, type & 0xFFFF, priority); \
+    if (t != NULL) { \
+        t->header.userId = userId; \
+    } \
+    return t; \
+}
 CLANG_DIAGNOSTIC_POP
 // clang-format on
 

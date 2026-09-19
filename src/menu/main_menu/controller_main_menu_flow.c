@@ -87,7 +87,18 @@ void requestControllerRead(void) {
 // clang-format off
 void updateControllerInputState(void) {
     u16 i;
- do { i = 0; do { if ((((s32) gConnectedControllerBitmask) >> i) & 1) { if (gControllerPads[i].errno == 0) { gControllerInputState[i] = *((ControllerInputState *) (&gControllerPads[i])); } } i++; } while (i < 4); gControllerReadPending = 0; } while (0);
+    do { \
+        i = 0; \
+        do { \
+            if ((((s32)gConnectedControllerBitmask) >> i) & 1) { \
+                if (gControllerPads[i].errno == 0) { \
+                    gControllerInputState[i] = *((ControllerInputState *)(&gControllerPads[i])); \
+                } \
+            } \
+            i++; \
+        } while (i < 4); \
+        gControllerReadPending = 0; \
+    } while (0);
 }
 // clang-format on
 

@@ -481,7 +481,17 @@ void drawCharacterSelectRosterIcons(CharacterSelectUiRosterIconActor *arg0) {
     s32 selectedAlpha;
     s32 tileTemp;
 
-    i = 0; if (arg0->state != 0) { assetHandles = gAssetHandles; xOffset = 0; selectedAlpha = 0x60; do { alpha = 0x100; j = 0; if (gPlayerCount > 0) { do { if ((i == gRacePlayers[j].selectedCharacterId) && (gRacePlayers[j].menuState != 0)) {
+    i = 0; \
+    if (arg0->state != 0) { \
+        assetHandles = gAssetHandles; \
+        xOffset = 0; \
+        selectedAlpha = 0x60; \
+        do { \
+            alpha = 0x100; \
+            j = 0; \
+            if (gPlayerCount > 0) { \
+                do { \
+                    if ((i == gRacePlayers[j].selectedCharacterId) && (gRacePlayers[j].menuState != 0)) {
                         tileTemp = i + 0x41;
                         alpha = 0x60;
                         tile = tileTemp;
@@ -618,7 +628,54 @@ void drawCharacterSelectPlayerCursorMarkers(CharacterSelectUiPlayerCursorActor *
     RacePlayer *player;
     CharacterSelectUiPlayerCursorActor *actorX;
 
- do { if (arg0->mode != 0) { i = 0; if (((s32) gPlayerCount) > 0) { player = gRacePlayers; tiles = gCharacterSelectPlayerMarkerTiles; actorX = arg0; do { evenMatch = 0; oddMatch = 0; j = 0; if (player->menuState != 0) { alpha = 0x100; } else { alpha = arg0->scale; } if (((s32) gPlayerCount) > 0) { do { if ((j != i) && (gCharacterSelectHighlightedRosterIndices[i] == gCharacterSelectHighlightedRosterIndices[j])) { if (!(j & 1)) { evenMatch = 1; } else { oddMatch = 2; } } j++; } while (j < ((s32) gPlayerCount)); } drawMenuSpriteWithAlpha(actorX->x[0], arg0->y, getRelocatableHeapBlockBase(gAssetHandles[0x21]), tiles[evenMatch + oddMatch], 0x20, 0x20, 0, alpha, 0); i++; player++; tiles += 4; actorX = (CharacterSelectUiPlayerCursorActor *) (((u8 *) actorX) + 2); } while (i < ((s32) gPlayerCount)); } } } while (0);
+    do { \
+        if (arg0->mode != 0) { \
+            i = 0; \
+            if (((s32)gPlayerCount) > 0) { \
+                player = gRacePlayers; \
+                tiles = gCharacterSelectPlayerMarkerTiles; \
+                actorX = arg0; \
+                do { \
+                    evenMatch = 0; \
+                    oddMatch = 0; \
+                    j = 0; \
+                    if (player->menuState != 0) { \
+                        alpha = 0x100; \
+                    } else { \
+                        alpha = arg0->scale; \
+                    } \
+                    if (((s32)gPlayerCount) > 0) { \
+                        do { \
+                            if ((j != i) && (gCharacterSelectHighlightedRosterIndices[i] == \
+                                             gCharacterSelectHighlightedRosterIndices[j])) { \
+                                if (!(j & 1)) { \
+                                    evenMatch = 1; \
+                                } else { \
+                                    oddMatch = 2; \
+                                } \
+                            } \
+                            j++; \
+                        } while (j < ((s32)gPlayerCount)); \
+                    } \
+                    drawMenuSpriteWithAlpha( \
+                        actorX->x[0], \
+                        arg0->y, \
+                        getRelocatableHeapBlockBase(gAssetHandles[0x21]), \
+                        tiles[evenMatch + oddMatch], \
+                        0x20, \
+                        0x20, \
+                        0, \
+                        alpha, \
+                        0 \
+                    ); \
+                    i++; \
+                    player++; \
+                    tiles += 4; \
+                    actorX = (CharacterSelectUiPlayerCursorActor *)(((u8 *)actorX) + 2); \
+                } while (i < ((s32)gPlayerCount)); \
+            } \
+        } \
+    } while (0);
 }
 // clang-format on
 

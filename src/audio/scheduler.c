@@ -73,7 +73,18 @@ void schedulerThreadMain(SchedulerState *arg0) {
     pendingAudio = 0;
     locals.msg = NULL;
     gSchedulerStartupRetraceCount = 0;
-    locals.queue = &arg0->retraceQueue; loop: osRecvMesg(locals.queue, &locals.msg, 1); switch ((s32)locals.msg) { case 0x29A: gRetraceCounter = gRetraceCounter + 1; gRetraceCounter = gRetraceCounter & 0xFFF; if ((started == 0) || (gSchedulerStartupRetraceCount < ((0, 0x16)))) { tryStartPendingRdpTask(arg0); pendingAudio = pendingAudio * 0; if (gSchedulerRdpTaskActive != 0) { pendingAudio = 1;
+    locals.queue = &arg0->retraceQueue; \
+loop: \
+    osRecvMesg(locals.queue, &locals.msg, 1); \
+    switch ((s32)locals.msg) { \
+        case 0x29A: \
+            gRetraceCounter = gRetraceCounter + 1; \
+            gRetraceCounter = gRetraceCounter & 0xFFF; \
+            if ((started == 0) || (gSchedulerStartupRetraceCount < ((0, 0x16)))) { \
+                tryStartPendingRdpTask(arg0); \
+                pendingAudio = pendingAudio * 0; \
+                if (gSchedulerRdpTaskActive != 0) { \
+                    pendingAudio = 1;
                 } else {
                     notifySchedulerClients(arg0, (s32)arg0);
                 }

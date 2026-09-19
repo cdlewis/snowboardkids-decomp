@@ -48,7 +48,13 @@ void initGameTaskScheduler(void) {
 
     gActiveGameTaskList.next = NULL;
     gActiveGameTaskList.priority = 0;
-    freeTask = gFreeGameTaskStack; task = gGameTaskPool; do { *freeTask = task; task++; freeTask++; } while (task < &gGameTaskPool[GAME_TASK_COUNT]);
+    freeTask = gFreeGameTaskStack; \
+    task = gGameTaskPool; \
+    do { \
+        *freeTask = task; \
+        task++; \
+        freeTask++; \
+    } while (task < &gGameTaskPool[GAME_TASK_COUNT]);
     gGameTaskCount = 0;
     gFrameCounter = 0;
     gPendingFramebufferSwapCount = 2;

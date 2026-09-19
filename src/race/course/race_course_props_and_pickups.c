@@ -1341,7 +1341,67 @@ void renderRacePickupBase(RacePickupActor *arg0) {
             sp64.source.translation.z = arg0->drawPos.z;
             arg0->baseMatrix = allocFixedTransformMatrix(&sp64.source);
         }
-        do { if (arg0->baseMatrix != NULL) { temp_v0 = gRegionAllocPtr++; temp_v0->words.w0 = 0x06000000; temp_v0->words.w1 = (u32) gEffectRenderModeSetupDl; temp_v0_2 = gRegionAllocPtr++; temp_v0_2->words.w0 = 0xFD500000; temp_v0_2->words.w1 = (u32) arg0->image0; temp_v0_3 = gRegionAllocPtr++; temp_v0_3->words.w0 = 0xF5500000; temp_v0_3->words.w1 = 0x07080200; temp_v0_4 = gRegionAllocPtr++; temp_v0_4->words.w1 = 0; temp_v0_4->words.w0 = 0xE6000000; temp_v0_5 = gRegionAllocPtr++; temp_v0_5->words.w0 = 0xF3000000; temp_v0_5->words.w1 = 0x070FF400; temp_v0_6 = gRegionAllocPtr++; temp_v0_6->words.w1 = 0; temp_v0_6->words.w0 = 0xE7000000; temp_v0_7 = gRegionAllocPtr++; temp_v0_7->words.w0 = 0xF5400400; temp_v0_7->words.w1 = 0x00080200; temp_v0_8 = gRegionAllocPtr++; temp_v0_8->words.w0 = 0xF2000000; temp_v0_8->words.w1 = 0x0007C07C; temp_v0_9 = gRegionAllocPtr++; temp_v0_9->words.w0 = 0xFD100000; temp_v0_9->words.w1 = (u32) arg0->palette0; temp_v0_10 = gRegionAllocPtr++; temp_v0_10->words.w1 = 0; temp_v0_10->words.w0 = 0xE8000000; temp_v0_11 = gRegionAllocPtr++; temp_v0_11->words.w0 = 0xF5000100; temp_v0_11->words.w1 = 0x07000000; temp_v0_12 = gRegionAllocPtr++; temp_v0_12->words.w1 = 0; temp_v0_12->words.w0 = 0xE6000000; temp_v0_13 = gRegionAllocPtr++; temp_v0_13->words.w0 = 0xF0000000; temp_v0_13->words.w1 = 0x0703C000; temp_v0_14 = gRegionAllocPtr++; temp_v0_14->words.w1 = 0; temp_v0_14->words.w0 = 0xE7000000; temp_v0_15 = gRegionAllocPtr++; temp_v0_15->words.w0 = 0x01020040; temp_v0_15->words.w1 = (u32) arg0->baseMatrix; temp_v0_16 = gRegionAllocPtr++; temp_v0_16->words.w0 = 0x01000040; temp_v0_16->words.w1 = (u32) gViewportMatrix; temp_v0_17 = gRegionAllocPtr++; temp_v0_17->words.w0 = 0x0400207F; temp_v0_17->words.w1 = (u32) gRacePickupBaseVertices; temp_v0_18 = gRegionAllocPtr++; temp_v0_18->words.w0 = 0xB1060402; temp_v0_18->words.w1 = 0x00060200; temp_v0_19 = gRegionAllocPtr++; temp_v0_19->words.w0 = 0x06000000; temp_v0_19->words.w1 = (u32) gEffectRenderModeCleanupDl; } } while (0);
+        do { \
+            if (arg0->baseMatrix != NULL) { \
+                temp_v0 = gRegionAllocPtr++; \
+                temp_v0->words.w0 = 0x06000000; \
+                temp_v0->words.w1 = (u32)gEffectRenderModeSetupDl; \
+                temp_v0_2 = gRegionAllocPtr++; \
+                temp_v0_2->words.w0 = 0xFD500000; \
+                temp_v0_2->words.w1 = (u32)arg0->image0; \
+                temp_v0_3 = gRegionAllocPtr++; \
+                temp_v0_3->words.w0 = 0xF5500000; \
+                temp_v0_3->words.w1 = 0x07080200; \
+                temp_v0_4 = gRegionAllocPtr++; \
+                temp_v0_4->words.w1 = 0; \
+                temp_v0_4->words.w0 = 0xE6000000; \
+                temp_v0_5 = gRegionAllocPtr++; \
+                temp_v0_5->words.w0 = 0xF3000000; \
+                temp_v0_5->words.w1 = 0x070FF400; \
+                temp_v0_6 = gRegionAllocPtr++; \
+                temp_v0_6->words.w1 = 0; \
+                temp_v0_6->words.w0 = 0xE7000000; \
+                temp_v0_7 = gRegionAllocPtr++; \
+                temp_v0_7->words.w0 = 0xF5400400; \
+                temp_v0_7->words.w1 = 0x00080200; \
+                temp_v0_8 = gRegionAllocPtr++; \
+                temp_v0_8->words.w0 = 0xF2000000; \
+                temp_v0_8->words.w1 = 0x0007C07C; \
+                temp_v0_9 = gRegionAllocPtr++; \
+                temp_v0_9->words.w0 = 0xFD100000; \
+                temp_v0_9->words.w1 = (u32)arg0->palette0; \
+                temp_v0_10 = gRegionAllocPtr++; \
+                temp_v0_10->words.w1 = 0; \
+                temp_v0_10->words.w0 = 0xE8000000; \
+                temp_v0_11 = gRegionAllocPtr++; \
+                temp_v0_11->words.w0 = 0xF5000100; \
+                temp_v0_11->words.w1 = 0x07000000; \
+                temp_v0_12 = gRegionAllocPtr++; \
+                temp_v0_12->words.w1 = 0; \
+                temp_v0_12->words.w0 = 0xE6000000; \
+                temp_v0_13 = gRegionAllocPtr++; \
+                temp_v0_13->words.w0 = 0xF0000000; \
+                temp_v0_13->words.w1 = 0x0703C000; \
+                temp_v0_14 = gRegionAllocPtr++; \
+                temp_v0_14->words.w1 = 0; \
+                temp_v0_14->words.w0 = 0xE7000000; \
+                temp_v0_15 = gRegionAllocPtr++; \
+                temp_v0_15->words.w0 = 0x01020040; \
+                temp_v0_15->words.w1 = (u32)arg0->baseMatrix; \
+                temp_v0_16 = gRegionAllocPtr++; \
+                temp_v0_16->words.w0 = 0x01000040; \
+                temp_v0_16->words.w1 = (u32)gViewportMatrix; \
+                temp_v0_17 = gRegionAllocPtr++; \
+                temp_v0_17->words.w0 = 0x0400207F; \
+                temp_v0_17->words.w1 = (u32)gRacePickupBaseVertices; \
+                temp_v0_18 = gRegionAllocPtr++; \
+                temp_v0_18->words.w0 = 0xB1060402; \
+                temp_v0_18->words.w1 = 0x00060200; \
+                temp_v0_19 = gRegionAllocPtr++; \
+                temp_v0_19->words.w0 = 0x06000000; \
+                temp_v0_19->words.w1 = (u32)gEffectRenderModeCleanupDl; \
+            } \
+        } while (0);
     }
 }
 // clang-format on
@@ -1675,7 +1735,53 @@ void renderPickupShardParticle(PickupShardParticleActor *arg0) {
             temp_v0 = gRegionAllocPtr++;
             temp_v0->words.w1 = (u32)gEffectRenderModeSetupDl;
             temp_v0->words.w0 = 0x06000000;
-            temp_v0_2 = gRegionAllocPtr++; temp_v0_2->words.w0 = 0xFD500000; temp_v0_2->words.w1 = (u32)arg0->palette; temp_v0_3 = gRegionAllocPtr++; temp_v0_3->words.w0 = 0xF5500000; temp_v0_3->words.w1 = 0x07080200; temp_v0_4 = gRegionAllocPtr++; temp_v0_4->words.w1 = 0; temp_v0_4->words.w0 = 0xE6000000; temp_v0_5 = gRegionAllocPtr++; temp_v0_5->words.w0 = 0xF3000000; temp_v0_5->words.w1 = 0x070FF400; temp_v0_6 = gRegionAllocPtr++; temp_v0_6->words.w1 = 0; temp_v0_6->words.w0 = 0xE7000000; temp_v0_7 = gRegionAllocPtr++; temp_v0_7->words.w0 = 0xF5400400; temp_v0_7->words.w1 = 0x00080200; temp_v0_8 = gRegionAllocPtr++; temp_v0_8->words.w0 = 0xF2000000; temp_v0_8->words.w1 = 0x0007C07C; temp_v0_9 = gRegionAllocPtr++; temp_v0_9->words.w0 = 0xFD100000; temp_v0_9->words.w1 = (u32)arg0->image; temp_v0_10 = gRegionAllocPtr++; temp_v0_10->words.w1 = 0; temp_v0_10->words.w0 = 0xE8000000; temp_v0_11 = gRegionAllocPtr++; temp_v0_11->words.w0 = 0xF5000100; temp_v0_11->words.w1 = 0x07000000; temp_v0_12 = gRegionAllocPtr++; temp_v0_12->words.w1 = 0; temp_v0_12->words.w0 = 0xE6000000; temp_v0_13 = gRegionAllocPtr++; temp_v0_13->words.w0 = 0xF0000000; temp_v0_13->words.w1 = 0x0703C000; temp_v0_14 = gRegionAllocPtr++; temp_v0_14->words.w1 = 0; temp_v0_14->words.w0 = 0xE7000000; temp_v0_15 = gRegionAllocPtr++; temp_v0_15->words.w0 = 0x01020040; temp_v0_15->words.w1 = (u32)arg0->matrix; temp_v0_16 = gRegionAllocPtr++; temp_v0_16->words.w0 = 0x0400103F; temp_v0_16->words.w1 = (u32)&gRacePickupBaseVertices[((((u16)arg0->task.userId) >> 1) * 4) + 8]; if (arg0->task.userId & 1) { temp_v0_17 = gRegionAllocPtr++;
+            temp_v0_2 = gRegionAllocPtr++; \
+            temp_v0_2->words.w0 = 0xFD500000; \
+            temp_v0_2->words.w1 = (u32)arg0->palette; \
+            temp_v0_3 = gRegionAllocPtr++; \
+            temp_v0_3->words.w0 = 0xF5500000; \
+            temp_v0_3->words.w1 = 0x07080200; \
+            temp_v0_4 = gRegionAllocPtr++; \
+            temp_v0_4->words.w1 = 0; \
+            temp_v0_4->words.w0 = 0xE6000000; \
+            temp_v0_5 = gRegionAllocPtr++; \
+            temp_v0_5->words.w0 = 0xF3000000; \
+            temp_v0_5->words.w1 = 0x070FF400; \
+            temp_v0_6 = gRegionAllocPtr++; \
+            temp_v0_6->words.w1 = 0; \
+            temp_v0_6->words.w0 = 0xE7000000; \
+            temp_v0_7 = gRegionAllocPtr++; \
+            temp_v0_7->words.w0 = 0xF5400400; \
+            temp_v0_7->words.w1 = 0x00080200; \
+            temp_v0_8 = gRegionAllocPtr++; \
+            temp_v0_8->words.w0 = 0xF2000000; \
+            temp_v0_8->words.w1 = 0x0007C07C; \
+            temp_v0_9 = gRegionAllocPtr++; \
+            temp_v0_9->words.w0 = 0xFD100000; \
+            temp_v0_9->words.w1 = (u32)arg0->image; \
+            temp_v0_10 = gRegionAllocPtr++; \
+            temp_v0_10->words.w1 = 0; \
+            temp_v0_10->words.w0 = 0xE8000000; \
+            temp_v0_11 = gRegionAllocPtr++; \
+            temp_v0_11->words.w0 = 0xF5000100; \
+            temp_v0_11->words.w1 = 0x07000000; \
+            temp_v0_12 = gRegionAllocPtr++; \
+            temp_v0_12->words.w1 = 0; \
+            temp_v0_12->words.w0 = 0xE6000000; \
+            temp_v0_13 = gRegionAllocPtr++; \
+            temp_v0_13->words.w0 = 0xF0000000; \
+            temp_v0_13->words.w1 = 0x0703C000; \
+            temp_v0_14 = gRegionAllocPtr++; \
+            temp_v0_14->words.w1 = 0; \
+            temp_v0_14->words.w0 = 0xE7000000; \
+            temp_v0_15 = gRegionAllocPtr++; \
+            temp_v0_15->words.w0 = 0x01020040; \
+            temp_v0_15->words.w1 = (u32)arg0->matrix; \
+            temp_v0_16 = gRegionAllocPtr++; \
+            temp_v0_16->words.w0 = 0x0400103F; \
+            temp_v0_16->words.w1 = (u32)&gRacePickupBaseVertices[((((u16)arg0->task.userId) >> 1) * 4) + 8]; \
+            if (arg0->task.userId & 1) { \
+                temp_v0_17 = gRegionAllocPtr++;
                 temp_v0_17->words.w1 = 0x604;
                 temp_v0_17->words.w0 = 0xBF000000;
                 var_v0 = gRegionAllocPtr++;

@@ -85,7 +85,15 @@ void initMenuAssetHandles(void)
 // clang-format off
 void releaseMenuAssetHandles(void)
 {
- do { s16 *handle = &gAssetHandles[7]; do { if ((*handle) != (-1)) { *handle = freeRelocatableHeapBlock(*handle); } handle++; } while (handle != (&gMenuAsciiFontPaletteIndex)); } while (0);
+    do { \
+        s16 *handle = &gAssetHandles[7]; \
+        do { \
+            if ((*handle) != (-1)) { \
+                *handle = freeRelocatableHeapBlock(*handle); \
+            } \
+            handle++; \
+        } while (handle != (&gMenuAsciiFontPaletteIndex)); \
+    } while (0);
 }
 // clang-format on
 

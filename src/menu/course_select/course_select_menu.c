@@ -723,7 +723,18 @@ void initCourseSelectCourseDetailsMenu(void) {
         setCurrentGameTaskCallback(updateCourseSelectCourseDetailsMenu, 0);
     }
 
- do { var_s0 = 0; if (gPlayerCount > 0) { var_s1 = gRaceCameras; do { ; (gCurrentMenuCameraObject = var_s1)->update(); var_s0 += 1; var_s1 += 1; } while (var_s0 < gPlayerCount); } } while (0);
+    do { \
+        var_s0 = 0; \
+        if (gPlayerCount > 0) { \
+            var_s1 = gRaceCameras; \
+            do { \
+                ; \
+                (gCurrentMenuCameraObject = var_s1)->update(); \
+                var_s0 += 1; \
+                var_s1 += 1; \
+            } while (var_s0 < gPlayerCount); \
+        } \
+    } while (0);
     updateCallbackTasks();
 }
 // clang-format on
@@ -824,7 +835,18 @@ void waitCourseSelectRecordsClose(void) {
         setCurrentGameTaskCallback(updateCourseSelectCourseDetailsMenu, 0);
     }
 
- do { var_s0 = 0; if (gPlayerCount > 0) { var_s1 = gRaceCameras; do { ; (gCurrentMenuCameraObject = var_s1)->update(); var_s0 += 1; var_s1 += 1; } while (var_s0 < gPlayerCount); } } while (0);
+    do { \
+        var_s0 = 0; \
+        if (gPlayerCount > 0) { \
+            var_s1 = gRaceCameras; \
+            do { \
+                ; \
+                (gCurrentMenuCameraObject = var_s1)->update(); \
+                var_s0 += 1; \
+                var_s1 += 1; \
+            } while (var_s0 < gPlayerCount); \
+        } \
+    } while (0);
     updateCallbackTasks();
 }
 // clang-format on
@@ -847,7 +869,18 @@ void returnToCourseSelectUnlockCourseList(void) {
         setCurrentGameTaskCallback(updateCourseSelectUnlockCourseList, 0);
     }
 
- do { var_s0 = 0; if (gPlayerCount > 0) { var_s1 = gRaceCameras; do { ; (gCurrentMenuCameraObject = var_s1)->update(); var_s0 += 1; var_s1 += 1; } while (var_s0 < gPlayerCount); } } while (0);
+    do { \
+        var_s0 = 0; \
+        if (gPlayerCount > 0) { \
+            var_s1 = gRaceCameras; \
+            do { \
+                ; \
+                (gCurrentMenuCameraObject = var_s1)->update(); \
+                var_s0 += 1; \
+                var_s1 += 1; \
+            } while (var_s0 < gPlayerCount); \
+        } \
+    } while (0);
     updateCallbackTasks();
 }
 // clang-format on
@@ -888,7 +921,18 @@ void returnToCourseSelectModeMenu(void) {
         COURSE_SELECT_STATUS_LAYOUT.extraCourseColumnState = 0;
     }
 
- do { var_s0 = 0; if (gPlayerCount > 0) { var_s1 = gRaceCameras; do { ; (gCurrentMenuCameraObject = var_s1)->update(); var_s0 += 1; var_s1 += 1; } while (var_s0 < gPlayerCount); } } while (0);
+    do { \
+        var_s0 = 0; \
+        if (gPlayerCount > 0) { \
+            var_s1 = gRaceCameras; \
+            do { \
+                ; \
+                (gCurrentMenuCameraObject = var_s1)->update(); \
+                var_s0 += 1; \
+                var_s1 += 1; \
+            } while (var_s0 < gPlayerCount); \
+        } \
+    } while (0);
     updateCallbackTasks();
 }
 // clang-format on
@@ -907,7 +951,11 @@ void initCourseSelectPreview(void) {
     temp[0x3F] = gCourseDetailsPreviewCourseTiles[(u8) gCourseDetailsPreviewPage * 7 + (u8) gCourseDetailsMenuSelection];
     gCourseSelectSubmenuState = 6;
     createCallbackTask((CallbackTaskCallback)&initCoursePreviewCloseSparkles, 0, 0x64);
-    setCurrentGameTaskCallback(updateCourseSelectPreviewClose, 0); var_s0 = gRaceCameras; do { gCurrentMenuCameraObject = var_s0; var_s0->update();
+    setCurrentGameTaskCallback(updateCourseSelectPreviewClose, 0); \
+    var_s0 = gRaceCameras; \
+    do { \
+        gCurrentMenuCameraObject = var_s0; \
+        var_s0->update();
         var_s0 += 1;
     } while (var_s0 != &D_80112340);
     updateCallbackTasks();
@@ -929,7 +977,14 @@ void updateCourseSelectPreviewClose(void) {
         resetViewport(1);
         setCurrentGameTaskCallback(updateCourseSelectCourseDetailsMenu, 0);
         gCourseSelectSubmenuState = 2;
- gCourseSelectViewportSyncState = 0; } var_s0 = gRaceCameras; do { (gCurrentMenuCameraObject = var_s0)->update(); var_s0 += 1; } while (var_s0 != (&D_80112340)); updateCallbackTasks();
+        gCourseSelectViewportSyncState = 0; \
+    } \
+    var_s0 = gRaceCameras; \
+    do { \
+        (gCurrentMenuCameraObject = var_s0)->update(); \
+        var_s0 += 1; \
+    } while (var_s0 != (&D_80112340)); \
+    updateCallbackTasks();
 }
 // clang-format on
 
@@ -949,7 +1004,30 @@ void exitCourseSelectMenu(void) {
     } else if (gPendingFramebufferSwapCount == 2) {
         releaseMenuAssetHandles();
         gFramebufferSwapHold = 0;
-        do { gFramebufferRenderInterval.value = 0; gMenuFlowState = 0; resumeGameTask(2); removeGameTask(4); count = 0; if (gPrimaryCourseUnlockStates.values[0] == (-1)) { count = 1; } ptr = &gCourseUnlockScanStart.value; loop: if (ptr[0x3F] == (-1)) { count++; } if (ptr[0x40] == (-1)) { count++; } if (ptr[0x41] == (-1)) { count++; } if (ptr[0x42] == (-1)) { count++; } } while (0);
+        do { \
+            gFramebufferRenderInterval.value = 0; \
+            gMenuFlowState = 0; \
+            resumeGameTask(2); \
+            removeGameTask(4); \
+            count = 0; \
+            if (gPrimaryCourseUnlockStates.values[0] == (-1)) { \
+                count = 1; \
+            } \
+            ptr = &gCourseUnlockScanStart.value; \
+        loop: \
+            if (ptr[0x3F] == (-1)) { \
+                count++; \
+            } \
+            if (ptr[0x40] == (-1)) { \
+                count++; \
+            } \
+            if (ptr[0x41] == (-1)) { \
+                count++; \
+            } \
+            if (ptr[0x42] == (-1)) { \
+                count++; \
+            } \
+        } while (0);
         ptr += 4;
         if (ptr != &gCourseUnlockScanEnd.value) {
             goto loop;

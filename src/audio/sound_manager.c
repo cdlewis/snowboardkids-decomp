@@ -328,7 +328,17 @@ void initSoundManager(void) {
     gCurrentMusicSequenceHandle = 0;
     gCurrentMusicSequenceBank = -1;
 
-    do { freeList = gFreeSoundHandleStack; node = gSoundHandleNodes; do { *freeList = node; node++; freeList++; } while (node < (SoundHandleNode *)&gActiveSoundHandleListHead); gFreeSoundHandleCount = 13; gCurrentQueuedSoundType = 0; } while (0);
+    do { \
+        freeList = gFreeSoundHandleStack; \
+        node = gSoundHandleNodes; \
+        do { \
+            *freeList = node; \
+            node++; \
+            freeList++; \
+        } while (node < (SoundHandleNode *)&gActiveSoundHandleListHead); \
+        gFreeSoundHandleCount = 13; \
+        gCurrentQueuedSoundType = 0; \
+    } while (0);
 
     gSoundQueueWriteIndex = 0;
     gSoundQueueReadIndex = 0;

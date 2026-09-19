@@ -731,7 +731,8 @@ s32 getRaceCourseSurfaceHeight(s32 surfaceIndex, s32 x, s32 z) {
     s32 pad[2];
     s32 zDelta;
 
-    for (faceIndex = gRaceCourseSurfaces[surfaceIndex].faceStartIndex; faceIndex < gRaceCourseSurfaces[surfaceIndex].faceEndIndex;
+    for (faceIndex = gRaceCourseSurfaces[surfaceIndex].faceStartIndex; \
+         faceIndex < gRaceCourseSurfaces[surfaceIndex].faceEndIndex;
          faceIndex++) {
         if ((gRaceCourseSurfaceFaces[faceIndex].skipFirstEdgeCheck != 0) ||
             ((s64)((gRaceCourseSurfaceCoords[gRaceCourseSurfaceFaces[faceIndex].coord1].x << 0x11) -
@@ -1098,7 +1099,11 @@ void interpolateRaceMotionAnimationFrame(RaceMotionState *state, s32 animationIn
 
     animationAsset = getRelocatableHeapBlockBase(gAssetHandles[0x16 + state->animationAssetSlot]);
     packedData = (s16 *)animationAsset + animationAsset->animationOffsets[animationIndex] + 1;
-    decodedRootFrame = (RaceMotionDecodedRootFrame *)gRaceMotionRotationDecodeFrameBuffer; decodedJointFrameEnd = (RaceMotionDecodedJointFrame *)&gRacePlayerHitCueId; decodedJointFrame = (RaceMotionDecodedJointFrame *)gRaceMotionJointDecodeFrameBuffer; one = 1; decode_frame:
+    decodedRootFrame = (RaceMotionDecodedRootFrame *)gRaceMotionRotationDecodeFrameBuffer; \
+    decodedJointFrameEnd = (RaceMotionDecodedJointFrame *)&gRacePlayerHitCueId; \
+    decodedJointFrame = (RaceMotionDecodedJointFrame *)gRaceMotionJointDecodeFrameBuffer; \
+    one = 1; \
+decode_frame:
     jointIndex = 0;
     decodedRoot = (Vec3i *)decodedRootFrame;
 
@@ -1220,7 +1225,11 @@ void interpolateRaceMotionJointAnimationFrame(RaceMotionState *state, s32 animat
 
     animationAsset = getRelocatableHeapBlockBase(gAssetHandles[0x16 + state->animationAssetSlot]);
     packedData = (s16 *)animationAsset + animationAsset->animationOffsets[animationIndex] + 1;
-    decodedRootFrame = (RaceMotionDecodedRootFrame *)gRaceMotionRotationDecodeFrameBuffer; decodedJointFrameEnd = (RaceMotionDecodedJointFrame *)&gRacePlayerHitCueId; decodedJointFrame = (RaceMotionDecodedJointFrame *)gRaceMotionJointDecodeFrameBuffer; one = 1; decode_frame:
+    decodedRootFrame = (RaceMotionDecodedRootFrame *)gRaceMotionRotationDecodeFrameBuffer; \
+    decodedJointFrameEnd = (RaceMotionDecodedJointFrame *)&gRacePlayerHitCueId; \
+    decodedJointFrame = (RaceMotionDecodedJointFrame *)gRaceMotionJointDecodeFrameBuffer; \
+    one = 1; \
+decode_frame:
     jointIndex = 0;
     decodedRoot = (Vec3i *)decodedRootFrame;
 
