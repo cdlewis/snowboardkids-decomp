@@ -1,4 +1,5 @@
 #include "game/race/race_state.h"
+#include "game/engine/game_task_scheduler.h"
 #include "common.h"
 #include "game/engine/asset_manager.h"
 #include "game/engine/system_runtime.h"
@@ -19,16 +20,6 @@
 
 #define PACKED_MTX_WORD(matrix, index) ((matrix)->m[(index) / 4][(index) % 4])
 
-/* Flattening the header and first entry preserves IDO's display-list operand scheduling. */
-typedef struct MenuAsciiFontAsset {
-    /* 0x00 */ u32 unk0;
-    /* 0x04 */ u32 entryCount;
-    /* 0x08 */ u32 imageOffset;
-    /* 0x0C */ u16 paletteIndex;
-    /* 0x0E */ u8 width;
-    /* 0x0F */ u8 height;
-} MenuAsciiFontAsset;
-
 /* Named components preserve IDO's operand scheduling in the matrix packers. */
 typedef struct {
     s16 xx;
@@ -48,12 +39,10 @@ typedef struct {
     s32 w8, w9, w10, w11, w12, w13, w14, w15;
 } PackedMtxWords;
 
-extern s16 gMenuAsciiFontPaletteIndex;
 extern s16 gMenuViewportWidth;
 extern s16 gMenuViewportHeight;
 extern s16 gMenuViewportCenterX;
 extern s16 gMenuViewportCenterY;
-extern s16 gFrameCounter;
 extern Gfx *gRegionAllocPtr;
 extern void *gMenuAsciiFontPaletteBase;
 u16 D_800D40B0[16] = {
@@ -896,14 +885,7 @@ void drawScaledAssetTableSpriteWithExplicitPalette(s16 x, s16 y, AssetTable *ass
     gDPPipeSync(gRegionAllocPtr++);
 }
 
-CLANG_DIAGNOSTIC_PUSH
-CLANG_DIAGNOSTIC_IGNORE_DEPRECATED_NON_PROTOTYPE
-void drawMenuAsciiFontTile(x, y, s, t, paletteIndex) s16 x;
-s16 y;
-u16 s;
-u16 t;
-u16 paletteIndex;
-{
+void drawMenuAsciiFontTile(s16 x, s16 y, u16 s, u16 t, u16 paletteIndex) {
     s32 x0;
     s32 y0;
     s32 x1;
@@ -976,8 +958,6 @@ u16 paletteIndex;
     }
 }
 
-extern s16 gMenuAsciiFontTextureNeedsLoad;
-
 void initMenuAsciiFontTexture(void) {
     AssetTable *assetTable = getRelocatableHeapBlockBase(gAssetHandles[6]);
 
@@ -990,7 +970,7 @@ void initMenuAsciiFontTexture(void) {
 void drawMenuAsciiCharImpl(s16 x, s16 y, u8 ch, u16 arg3) {
     char pad[8];
     u32 tile;
-    u16 s;
+    s16 s;
     MenuAsciiFontAsset *font;
 
     if ((ch >= 'a') && (ch <= 'z')) {
@@ -1020,8 +1000,8 @@ void drawMenuAsciiCharImpl(s16 x, s16 y, u8 ch, u16 arg3) {
             gMenuAsciiFontPaletteIndex = -1;
         }
         tile = ch - 0x40;
-        s = ((tile & 7) << 3) & 0xFFFF & 0xFFFF;
-        drawMenuAsciiFontTile(x, y, s, tile & 0x38, arg3 & 0xFFFF & 0xFFFF & 0xFFFF);
+        s = ((tile & 7) << 3);
+        drawMenuAsciiFontTile(x, y, s, (s16)(tile & 0x38), arg3);
     } else {
         if (gMenuAsciiFontTextureNeedsLoad != 0) {
             font = getRelocatableHeapBlockBase(gAssetHandles[6]);
@@ -1050,12 +1030,11 @@ void drawMenuAsciiCharImpl(s16 x, s16 y, u8 ch, u16 arg3) {
         }
         tile = ch - 0x20;
         if (tile < 0x40) {
-            s = ((tile & 7) << 3) & 0xFFFF & 0xFFFF;
-            drawMenuAsciiFontTile(x, y, s, tile & 0x38, arg3 & 0xFFFF & 0xFFFF & 0xFFFF);
+            s = ((tile & 7) << 3);
+            drawMenuAsciiFontTile(x, y, s, (s16)(tile & 0x38), arg3);
         }
     }
 }
-CLANG_DIAGNOSTIC_POP
 
 #pragma weak drawMenuAsciiChar = drawMenuAsciiCharImpl
 #ifdef __clang__

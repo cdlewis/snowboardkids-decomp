@@ -53,5 +53,4 @@ Both use race-effect sprite entry 3. Terrain context distinguishes them.
 Still unresolved. Static candidates do not identify the producer of the native
 X=0..8 fragment. A runtime capture must correlate its draw commands with the
 executing callback and active menu state. No border correction or semantic
-rename follows from this asset inspection. No recomp changes were made. See
-[the existing investigation](upstream-decomp-contracts.md#paint-menu-border-investigation).
+rename follows from this asset inspection. No recomp changes were made.

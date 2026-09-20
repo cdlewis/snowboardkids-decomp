@@ -1,4 +1,5 @@
 #include "game/race/race_state.h"
+#include "game/engine/game_task_scheduler.h"
 #include "common.h"
 #include "game/engine/asset_manager.h"
 #include "game/engine/callback_task_scheduler.h"
@@ -91,7 +92,6 @@ s16 gRacePlayerVoiceSoundIds5[] = { 0x25, 0x2C, 0x38, 0x32, 0x3E, 0x42 };
 s16 gRacePlayerVoiceSoundIds6[] = { 0x26, 0x2B, 0x39, 0x31, 0x3E, 0x42 };
 s16 gRacePlayerVoiceSoundIds7[] = { 0x26, 0x2B, 0x38, 0x32, 0x3E, 0x42, 0, 0, 0, 0, 0, 0 };
 
-extern s16 gFrameCounter;
 extern s8 gRacePlayerCount;
 extern s32 gMenuFlowState;
 extern s16 gRaceLapCount;

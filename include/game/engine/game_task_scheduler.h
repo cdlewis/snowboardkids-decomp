@@ -31,6 +31,8 @@ typedef union FramebufferRenderInterval {
     u8 raw[4];
 } FramebufferRenderInterval;
 
+/* Game-update counter, incremented modulo 0x1000. */
+extern s16 gFrameCounter;
 extern GameTask *gCurrentGameTask;
 extern FramebufferRenderInterval gFramebufferRenderInterval;
 /* Only byte zero is a semantic countdown; the remaining bytes preserve storage.

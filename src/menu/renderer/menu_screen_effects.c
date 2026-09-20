@@ -1,4 +1,5 @@
 #include "game/race/ui/race_ui_effects.h"
+#include "game/engine/game_task_scheduler.h"
 #include "game/race/race_state.h"
 #include "common.h"
 #include "game/audio/sound_manager.h"
@@ -118,7 +119,6 @@ s16 passAwardLabelFlashTileOffsets[538] = {
     0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
 };
 extern s16 gMenuFadeAlpha;
-extern s16 gFrameCounter;
 extern u8 gCurrentViewportIndex;
 extern u8 gConnectedControllerCount;
 extern u32 D_2000000[];

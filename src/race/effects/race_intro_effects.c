@@ -1,4 +1,5 @@
 #include "game/race/course/race_course_effects.h"
+#include "game/engine/game_task_scheduler.h"
 #include "game/race/race_state.h"
 #include "common.h"
 #include "game/menu/renderer/menu_render_utils.h"
@@ -31,7 +32,6 @@ extern Gfx *gRegionAllocPtr;
 extern Gfx D_20028F0[];
 extern Gfx D_2002DB8[];
 
-extern s16 gFrameCounter;
 
 Vtx *gRaceIntroModelVerticesByCourse[7] = {
     (Vtx *)0x800D5840, (Vtx *)0x800D5840, (Vtx *)0x800D5840, (Vtx *)0x800D5840,

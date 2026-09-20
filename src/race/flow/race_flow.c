@@ -233,7 +233,6 @@ extern u8 gPendingFramebufferSwapCount;
 extern u8 gFramebufferSwapHold;
 extern u8 gRumblePakConnectedMask;
 extern u8 gRaceUpdatePaused;
-extern s16 gFrameCounter;
 
 
 void initStartupControllerPakFlow(void) {

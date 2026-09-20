@@ -1,4 +1,5 @@
 #include "game/race/course/race_course_effects.h"
+#include "game/engine/game_task_scheduler.h"
 #include "game/race/items/race_items.h"
 #include "game/race/race_state.h"
 #include "common.h"
@@ -758,7 +759,6 @@ extern u8 gTrainingCourseLesson;
 extern Gfx gRaceItemPickupDisplayList[];
 extern Gfx gRaceActionPickupDisplayList[];
 extern Gfx *gRegionAllocPtr;
-extern s16 gFrameCounter;
 typedef struct Scratch674B4 {
     Transform3D transform;
     s32 pad[3];

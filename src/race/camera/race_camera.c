@@ -846,6 +846,9 @@ void initRaceCameraPositionTransition(void) {
     D_801124A0->update();
 }
 
+/* Modes 16..28 interpolate position while looking at the selected player.
+ * Passing near the camera can turn the look-at sharply without a shot change;
+ * title-demo snapshot restores and camera-mode changes are separate events. */
 void updateRaceCameraPositionTransition(void) {
     s16 timer;
     s16 duration;
@@ -902,6 +905,7 @@ void updateRaceCameraStaticFollow(void) {
     updateRaceCameraTransformFromAngles();
 }
 
+/* Mode 0x1E: capture a fixed focus for the continuous race-start flyby. */
 void initRaceCameraIntroPan(void) {
     RacePlayer *player = &gRacePlayers[0];
 
@@ -919,6 +923,8 @@ void initRaceCameraIntroPan(void) {
     D_801124A0->update();
 }
 
+/* Advance Z and derive Y from course height plus a sine-driven offset.
+ * The turn near the fixed focus can be rapid without a camera discontinuity. */
 void updateRaceCameraIntroPan(void) {
     s16 angle;
     s32 velocity;

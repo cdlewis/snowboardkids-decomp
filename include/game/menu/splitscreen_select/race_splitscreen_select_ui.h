@@ -72,6 +72,8 @@ typedef struct RaceSplitscreenSelectDescriptionScriptTable {
     /* 0x348 */ MenuGlyphScript title[10];
 } RaceSplitscreenSelectDescriptionScriptTable;
 
+/* 16x8 I4 backdrop artwork (64 bytes). */
+extern u32 gMenuPanelBackdropTexture[16];
 extern RaceSplitscreenSelectMenuState gRaceSplitscreenSelectCursorTarget;
 extern RaceSplitscreenSelectFrameTiles gRaceSplitscreenSelectFrameTiles[5];
 extern RaceSplitscreenSelectDescriptionScriptTable gRaceSplitscreenSelectDescriptionScripts;

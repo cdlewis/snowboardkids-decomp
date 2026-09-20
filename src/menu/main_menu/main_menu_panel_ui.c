@@ -1,4 +1,5 @@
 #include "game/race/race_state.h"
+#include "game/engine/game_task_scheduler.h"
 #include "font_encoding.h"
 #include "common.h"
 #include "game/audio/sound_manager.h"
@@ -227,7 +228,6 @@ extern u8 gMainMenuModeSelection;
 extern s16 gRaceLapCount;
 extern s16 gMenuFadeAlpha;
 extern s32 gMenuFlowState;
-extern s16 gFrameCounter;
 extern s16 gUiBlinkTimer;
 
 void drawMainMenuModeSelectFrame(void *arg0) {

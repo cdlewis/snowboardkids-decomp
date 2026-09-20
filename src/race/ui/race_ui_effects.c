@@ -1,4 +1,5 @@
 #include "game/race/course/race_course_effects.h"
+#include "game/engine/game_task_scheduler.h"
 #include "game/race/race_state.h"
 #include "common.h"
 #include <PR/os_libc.h>
@@ -712,7 +713,6 @@ extern const char gRaceUiPendingMakeBonusLabel[];
 extern const char gRaceUiPendingCompleteBonusLabel[];
 extern const char gRaceUiPendingMoneyLabel[];
 extern Gfx *gRegionAllocPtr;
-extern s16 gFrameCounter;
 extern s16 gRaceLapCount;
 extern s16 gUiBlinkTimer;
 extern s32 gMenuFlowState;
@@ -5881,7 +5881,7 @@ void initRaceCourseCoinMarkers(RaceUiGfxCommandActor *actor) {
 // clang-format off
 /* Original CI4 tile bounds are inclusive (48,40): LoadTile w1 0x070600A0,
  * SetTileSize w1 0x000C00A0. Vertices already contain half-texel UV offsets.
- * Keep these commands unchanged for matching; see upstream-decomp-contracts.md. */
+ * Keep these commands unchanged for matching. */
 void renderRaceStartOverlay(RaceUiOverlayActor *arg0) {
     volatile u8 pad[0xC];
     Transform3D transform;

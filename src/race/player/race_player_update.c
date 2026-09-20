@@ -1,4 +1,5 @@
 #include "game/race/items/race_items.h"
+#include "game/engine/game_task_scheduler.h"
 #include "game/race/race_state.h"
 #include "common.h"
 #include "game/engine/render_callback.h"
@@ -68,7 +69,6 @@ extern u8 gTrainingCourseLesson;
 extern s32 gMenuFlowState;
 extern s16 gRacePlayerAttackStartTimer;
 extern s16 gRaceLapCount;
-extern s16 gFrameCounter;
 
 u16 gRacePlayerVoiceBaseSoundIds[] = {
     0, 100, 100, 120, 120, 150, 150, 150, 150, 220, 250, 300, 350, 400, 500, 0,

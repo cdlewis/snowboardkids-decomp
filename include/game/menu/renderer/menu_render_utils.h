@@ -4,6 +4,21 @@
 #include "common.h"
 #include "game/menu/renderer/menu_renderer.h"
 
+/* Flattening the header and first entry preserves IDO's display-list operand scheduling. */
+typedef struct MenuAsciiFontAsset {
+    /* 0x00 */ u32 unk0;
+    /* 0x04 */ u32 entryCount;
+    /* 0x08 */ u32 imageOffset; /* Relative to the asset base. */
+    /* 0x0C */ u16 paletteIndex;
+    /* 0x0E */ u8 width; /* Texels. */
+    /* 0x0F */ u8 height; /* Texels. */
+} MenuAsciiFontAsset;
+
+extern s16 gMenuAsciiFontPaletteIndex;
+extern s16 gMenuAsciiFontTextureNeedsLoad;
+extern u16 D_800D40B0[16];
+
+void drawMenuAsciiFontTile(s16 x, s16 y, u16 s, u16 t, u16 paletteIndex);
 void initMenuAssetHandles(void);
 void releaseMenuAssetHandles(void);
 void *resolveAssetTableRelativePointer(void *asset, u32 relativeAddress);
@@ -41,7 +56,6 @@ void drawAssetTableSpriteWithExplicitPaletteWideIndex(
  * negative. Final packed rectangle coordinates need unsigned-range clipping;
  * source origins are s10.5, and clipping must account for scaled derivatives.
  * Original inclusive tile endpoints and +0.5 source origins are retained.
- * See docs/upstream-decomp-contracts.md for command-level portability evidence.
  */
 void drawScaledAssetTableSprite(s16 x, s16 y, AssetTable *table, u16 entryIndex, u16 scale);
 void drawScaledAssetTableSpriteWithExplicitPalette(

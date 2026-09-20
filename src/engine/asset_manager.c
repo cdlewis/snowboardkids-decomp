@@ -1,4 +1,5 @@
 #include "game/engine/asset_manager.h"
+#include "game/engine/game_task_scheduler.h"
 #include "common.h"
 #include "game/engine/relocatable_heap.h"
 #include "game/engine/system_runtime.h"
@@ -41,7 +42,6 @@ s16 gHuffmanQueueHead = -1;
 s16 gHuffmanQueueTail = -1;
 s16 gHuffmanQueueCount = 0;
 
-extern s16 gFrameCounter;
 extern CompressedAssetHeader gCompressedAssetHeader;
 extern HuffmanNode gHuffmanNodes[];
 extern s32 gHuffmanNodeCount;
