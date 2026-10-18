@@ -53,14 +53,14 @@ extern u8 raceSetupCharacterFocusAnimationIds[8];
 extern u8 passAwardOpponentAnimationIds[4];
 extern s32 passAwardOpponentXPositions[6];
 extern char D_800E0520[];
-extern u32 D_20006C8[];
-extern u32 D_2000000[];
-extern u32 D_2000D78[];
-extern u32 D_20058A8[];
+extern u32 gPassAwardPodiumVariant1Dl[];
+extern u32 gPassAwardPodiumVariant0Dl[];
+extern u32 gPassAwardPodiumVariant2Dl[];
+extern u32 gRookieMountainBackdropDl[];
 extern Vtx raceStartPlayerEffectVertices[4];
 extern s16 titleMenuSparklePositions[2];
-extern u32 D_2000E48[];
-extern u32 D_2000E70[];
+extern u32 gMainMenuRotatingBoardDl[];
+extern u32 gMainMenuStaticBoardDl[];
 extern void updateRaceStartPlayerEffectActive(MenuScreenEffectActor *);
 extern void updateCongratulationsBannerSprite(MenuScreenEffectActor *);
 
@@ -225,13 +225,13 @@ void drawPassAwardPodiumModels(MenuScreenEffectActor *arg0) {
         gSPMatrix(gRegionAllocPtr++, &gIdentityMatrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
 
         if (actor->index == 0) {
-            gSPDisplayList(gRegionAllocPtr++, D_2000000);
+            gSPDisplayList(gRegionAllocPtr++, gPassAwardPodiumVariant0Dl);
         }
         if (actor->index == 1) {
-            gSPDisplayList(gRegionAllocPtr++, D_20006C8);
+            gSPDisplayList(gRegionAllocPtr++, gPassAwardPodiumVariant1Dl);
         }
         if (actor->index == 2) {
-            gSPDisplayList(gRegionAllocPtr++, D_2000D78);
+            gSPDisplayList(gRegionAllocPtr++, gPassAwardPodiumVariant2Dl);
         }
     }
 }
@@ -245,7 +245,7 @@ void drawPassAwardCourseBackdrop(void *arg0) {
 
         gSPMatrix(gRegionAllocPtr++, &gIdentityMatrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
 
-        gSPDisplayList(gRegionAllocPtr++, D_20058A8);
+        gSPDisplayList(gRegionAllocPtr++, gRookieMountainBackdropDl);
     }
 }
 
@@ -743,7 +743,7 @@ void drawMainMenuRotatingBoardModel(MenuScreenEffectActor *arg0) {
 
             gSPMatrix(gRegionAllocPtr++, matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
 
-            gSPDisplayList(gRegionAllocPtr++, D_2000E48);
+            gSPDisplayList(gRegionAllocPtr++, gMainMenuRotatingBoardDl);
         }
     }
 }
@@ -757,7 +757,7 @@ void drawMainMenuStaticBoardModel(void *arg0) {
 
         gSPMatrix(gRegionAllocPtr++, &gIdentityMatrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
 
-        gSPDisplayList(gRegionAllocPtr++, D_2000E70);
+        gSPDisplayList(gRegionAllocPtr++, gMainMenuStaticBoardDl);
     }
 }
 

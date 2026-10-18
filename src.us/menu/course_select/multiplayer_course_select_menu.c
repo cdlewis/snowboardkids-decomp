@@ -40,7 +40,7 @@ extern u8 D_800EC9C0;
 extern s8 D_800EC9E5;
 extern s32 gPlayerInputHeld[];
 extern s32 gPlayerInputPressed[];
-extern RaceCamera D_801124A0;
+extern RaceCamera gCurrentRaceCamera;
 extern s32 gMenuFlowState;
 
 void initMultiplayerCourseSelectMenu(void) {

@@ -16,7 +16,7 @@ typedef struct MenuAsciiFontAsset {
 
 extern s16 gMenuAsciiFontPaletteIndex;
 extern s16 gMenuAsciiFontTextureNeedsLoad;
-extern u16 D_800D40B0[16];
+extern u16 gMenuDefaultSpritePalette[16];
 
 void drawMenuAsciiFontTile(s16 x, s16 y, u16 s, u16 t, u16 paletteIndex);
 void initMenuAssetHandles(void);

@@ -174,7 +174,7 @@ extern Gfx *gRegionAllocPtr;
 extern u8 gPendingFramebufferSwapCount;
 extern u8 gRumblePakConnectedMask;
 extern u8 gFramebufferColorBufferIndex;
-extern u8 D_369000[];
+extern u8 gDepthBufferPhysicalAddress[];
 extern u8 gBootThreadStack[BOOT_THREAD_STACK_SIZE];
 extern u8 gGameThreadStack[GAME_THREAD_STACK_SIZE];
 
@@ -791,7 +791,7 @@ void submitFramebufferRenderTask(u8 frameIndex) {
                          G_ZBUFFER | G_SHADE | G_CULL_BOTH | G_FOG | G_LIGHTING | G_SHADING_SMOOTH);
     gSPClipRatio(gRegionAllocPtr++, FRUSTRATIO_1);
     gDPPipelineMode(gRegionAllocPtr++, G_PM_NPRIMITIVE);
-    gDPSetTextureImage(gRegionAllocPtr++, G_IM_FMT_RGBA, G_IM_SIZ_16b, FRAMEBUFFER_WIDTH, D_369000);
+    gDPSetTextureImage(gRegionAllocPtr++, G_IM_FMT_RGBA, G_IM_SIZ_16b, FRAMEBUFFER_WIDTH, gDepthBufferPhysicalAddress);
 
     if (gClearFramebufferOnNextTask != 0) {
         gClearFramebufferOnNextTask = 0;
@@ -913,7 +913,7 @@ void submitFramebufferRenderTask(u8 frameIndex) {
                          G_ZBUFFER | G_SHADE | G_CULL_BOTH | G_FOG | G_LIGHTING | G_SHADING_SMOOTH);
     gSPClipRatio(gRegionAllocPtr++, FRUSTRATIO_1);
     gDPPipelineMode(gRegionAllocPtr++, G_PM_NPRIMITIVE);
-    gDPSetTextureImage(gRegionAllocPtr++, G_IM_FMT_RGBA, G_IM_SIZ_16b, FRAMEBUFFER_WIDTH, D_369000);
+    gDPSetTextureImage(gRegionAllocPtr++, G_IM_FMT_RGBA, G_IM_SIZ_16b, FRAMEBUFFER_WIDTH, gDepthBufferPhysicalAddress);
     gDPSetCycleType(gRegionAllocPtr++, G_CYC_FILL);
     gDPSetRenderMode(gRegionAllocPtr++, G_RM_NOOP, G_RM_NOOP2);
     gDPSetColorImage(

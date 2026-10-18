@@ -37,8 +37,8 @@ extern RenderCallbackNode *gBackdropRenderCallbackList;
 extern RenderCallbackNode *gEffectRenderCallbackList;
 extern RenderCallbackNode *gSceneModelRenderCallbackList;
 extern RenderCallbackNode *D_80124848;
-extern RenderCallbackNode *D_801248C8;
-extern RenderCallbackNode *D_801248E0;
-extern RenderCallbackNode *D_801248EC;
+extern RenderCallbackNode *gModelRenderCallbackQueue4Head;
+extern RenderCallbackNode *gModelRenderCallbackQueue6Head;
+extern RenderCallbackNode *gModelRenderCallbackQueue7Head;
 
 #endif

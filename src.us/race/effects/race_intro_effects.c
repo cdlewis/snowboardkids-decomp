@@ -74,7 +74,7 @@ u16 gRaceIntroAnimatedBillboardTextureIds[12] = {
     0x45, 0x51, 0x4B, 0x57, 0x4D, 0x47, 0x53, 0x59, 0x49, 0x4F, 0x5B, 0x55,
 };
 
-RaceIntroRenderCommandEntry D_800D5D48[40] = {
+RaceIntroRenderCommandEntry gRaceIntroDefaultRenderCommands[40] = {
     { 0,  { 0 }, { 0x02018F32, 0xFF105B2A, 0xFAB1BA41 } },
     { 0,  { 0 }, { 0x00335A8F, 0xF883B028, 0xEAC6E0F8 } },
     { 0,  { 0 }, { 0x0FD64911, 0xEF69D218, 0xF22FBB2C } },
@@ -118,8 +118,8 @@ RaceIntroRenderCommandEntry D_800D5D48[40] = {
 };
 
 RaceIntroRenderCommandEntry *gRaceIntroAnimatedBillboardCommandsByCourse[10] = {
-    D_800D5D48, D_800D5D48, D_800D5D48, D_800D5D48, D_800D5D48,
-    D_800D5D48, D_800D5D48, D_800D5D48, D_800D5D48, D_800D5D48,
+    gRaceIntroDefaultRenderCommands, gRaceIntroDefaultRenderCommands, gRaceIntroDefaultRenderCommands, gRaceIntroDefaultRenderCommands, gRaceIntroDefaultRenderCommands,
+    gRaceIntroDefaultRenderCommands, gRaceIntroDefaultRenderCommands, gRaceIntroDefaultRenderCommands, gRaceIntroDefaultRenderCommands, gRaceIntroDefaultRenderCommands,
 };
 
 void drawRaceIntroModelMeshes(RaceIntroMeshActor *arg0) {

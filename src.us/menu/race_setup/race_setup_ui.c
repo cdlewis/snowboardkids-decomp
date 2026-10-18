@@ -156,8 +156,8 @@ RaceSetupSavePromptData gRaceSetupSavePromptData = {
       0x14, 0x00, 0x00, 0x15, 0x16, 0x0E, 0x0F, 0x15, 0x16, 0x0F, 0x14, 0x0F, 0x15, 0x0F, 0x15, 0x17, 0x18,
       0x17, 0x18, 0x17, 0x18, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 }
 };
-const char D_800E0A80[] = "%d";
-const char D_800E0A84[] = "%6d";
+const char gRaceSetupPlayerNumberFormat[] = "%d";
+const char gRaceSetupMoneyFormat[] = "%6d";
 extern s32 gMenuFlowState;
 void drawRaceSetupPlayerCountPrompt(MenuIntroActor *arg0) {
     s32 i;
@@ -1018,11 +1018,11 @@ void drawRaceSetupSavePlayerPanels(TitleMenuWidgetItemView *actor) {
             playerNumber
         );
 
-        sprintf(text, D_800E0A80, playerNumber);
+        sprintf(text, gRaceSetupPlayerNumberFormat, playerNumber);
         drawMenuAsciiText((s16)(actor->x[i] + 0x32), (s16)(panel->y[i] + 2), text, 0, alpha);
 
         if (alpha == 0x100) {
-            sprintf(text, D_800E0A84, gRacePlayers[i].money);
+            sprintf(text, gRaceSetupMoneyFormat, gRacePlayers[i].money);
             drawMenuAsciiText((s16)(actor->x[i] + 0x44), (s16)(panel->y[i] + 0x1B), text, 0, alpha);
         } else {
             if ((!panel) && (!panel)) {}

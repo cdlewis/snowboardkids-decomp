@@ -64,12 +64,12 @@ extern u8 gHighestUnlockedCourse;
 extern s32 gMenuFlowState;
 extern u8 gConnectedControllerCount;
 extern s16 gRaceSetupSavePanelInitialRects[4][2];
-extern RaceSetupSaveDefaultTime D_800B31C8[11][5];
-extern RaceSetupDefaultSaveData D_800B32D0;
-extern RaceSetupSaveDefaultTime D_800B3270[11];
-extern RaceSetupSaveDefaultTimeTable D_800B32A4;
-extern u8 D_800B32C4[10];
-extern RaceSetupSaveDefaultTimeRow D_800B3294[1];
+extern RaceSetupSaveDefaultTime gDefaultTimeTrialRecords[11][5];
+extern RaceSetupDefaultSaveData gDefaultSaveRecordData;
+extern RaceSetupSaveDefaultTime gDefaultBestLapRecords[11];
+extern RaceSetupSaveDefaultTimeTable gDefaultRaceRecordsByCourseParity;
+extern u8 gDefaultScoreAttackScores[10];
+extern RaceSetupSaveDefaultTimeRow gDefaultRookieMountainRaceRecords[1];
 
 void initRaceSetupMenu(void) {
     s32 i;
@@ -676,43 +676,43 @@ void initRaceSetupPlayerSaveData(s32 playerIndex) {
     for (course = 0; course < 11; course++) {
         for (record = 0; record < 5; record++) {
             gGameSaveDataBuffer[playerIndex].timeTrialRecords[course][record].minutes =
-                D_800B31C8[course][record].minutes;
+                gDefaultTimeTrialRecords[course][record].minutes;
             gGameSaveDataBuffer[playerIndex].timeTrialRecords[course][record].seconds =
-                D_800B31C8[course][record].seconds;
+                gDefaultTimeTrialRecords[course][record].seconds;
             gGameSaveDataBuffer[playerIndex].timeTrialRecords[course][record].fraction =
-                D_800B31C8[course][record].fraction << 8;
+                gDefaultTimeTrialRecords[course][record].fraction << 8;
             gGameSaveDataBuffer[playerIndex].timeTrialCharacterIds[course][record] = 0x10;
             gGameSaveDataBuffer[playerIndex].timeTrialCharacterIds[course][record] += record;
 
             if (course == 9) {
                 gGameSaveDataBuffer[playerIndex].raceRecords[course][record].minutes =
-                    D_800B3294[0].records[record].minutes;
+                    gDefaultRookieMountainRaceRecords[0].records[record].minutes;
                 gGameSaveDataBuffer[playerIndex].raceRecords[course][record].seconds =
-                    D_800B3294[0].records[record].seconds;
+                    gDefaultRookieMountainRaceRecords[0].records[record].seconds;
                 gGameSaveDataBuffer[playerIndex].raceRecords[course][record].fraction =
-                    D_800B3294[0].records[record].fraction << 8;
+                    gDefaultRookieMountainRaceRecords[0].records[record].fraction << 8;
             } else {
                 gGameSaveDataBuffer[playerIndex].raceRecords[course][record].minutes =
-                    (&D_800B32A4.bytes[record * 3])[(course & 1) * sizeof(RaceSetupSaveDefaultTimeRow)];
+                    (&gDefaultRaceRecordsByCourseParity.bytes[record * 3])[(course & 1) * sizeof(RaceSetupSaveDefaultTimeRow)];
                 gGameSaveDataBuffer[playerIndex].raceRecords[course][record].seconds =
-                    (&D_800B32A4.bytes[record * 3])[(course & 1) * sizeof(RaceSetupSaveDefaultTimeRow) + 1];
+                    (&gDefaultRaceRecordsByCourseParity.bytes[record * 3])[(course & 1) * sizeof(RaceSetupSaveDefaultTimeRow) + 1];
                 gGameSaveDataBuffer[playerIndex].raceRecords[course][record].fraction =
-                    (&D_800B32A4.bytes[record * 3])[(course & 1) * sizeof(RaceSetupSaveDefaultTimeRow) + 2] << 8;
+                    (&gDefaultRaceRecordsByCourseParity.bytes[record * 3])[(course & 1) * sizeof(RaceSetupSaveDefaultTimeRow) + 2] << 8;
             }
             gGameSaveDataBuffer[playerIndex].raceRecordCharacterIds[course][record] = 0x10;
             gGameSaveDataBuffer[playerIndex].raceRecordCharacterIds[course][record] += record;
             if (course == 9) {
-                gGameSaveDataBuffer[playerIndex].scoreAttackScores[course][record] = D_800B32C4[record];
+                gGameSaveDataBuffer[playerIndex].scoreAttackScores[course][record] = gDefaultScoreAttackScores[record];
             } else {
-                gGameSaveDataBuffer[playerIndex].scoreAttackScores[course][record] = D_800B32C4[record + 5];
+                gGameSaveDataBuffer[playerIndex].scoreAttackScores[course][record] = gDefaultScoreAttackScores[record + 5];
             }
             gGameSaveDataBuffer[playerIndex].scoreAttackCharacterIds[course][record] = record;
-            gGameSaveDataBuffer[playerIndex].trickAttackScores[course][record] = D_800B32D0.trickAttackScores[record];
+            gGameSaveDataBuffer[playerIndex].trickAttackScores[course][record] = gDefaultSaveRecordData.trickAttackScores[record];
             gGameSaveDataBuffer[playerIndex].trickAttackCharacterIds[course][record] = record;
         }
-        gGameSaveDataBuffer[playerIndex].bestLapRecords[course].minutes = D_800B3270[course].minutes;
-        gGameSaveDataBuffer[playerIndex].bestLapRecords[course].seconds = D_800B3270[course].seconds;
-        gGameSaveDataBuffer[playerIndex].bestLapRecords[course].fraction = D_800B3270[course].fraction;
+        gGameSaveDataBuffer[playerIndex].bestLapRecords[course].minutes = gDefaultBestLapRecords[course].minutes;
+        gGameSaveDataBuffer[playerIndex].bestLapRecords[course].seconds = gDefaultBestLapRecords[course].seconds;
+        gGameSaveDataBuffer[playerIndex].bestLapRecords[course].fraction = gDefaultBestLapRecords[course].fraction;
     }
 
     gGameSaveDataBuffer[playerIndex].replaySlots[0].length = 0;

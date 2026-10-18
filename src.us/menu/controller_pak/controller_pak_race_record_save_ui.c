@@ -84,7 +84,7 @@ extern u8 gControllerPakRaceRecordSaveStatusTransitionStep;
 
 #define CONTROLLER_PAK_RACE_RECORD_SAVE_SCORE_TEXTURE_HANDLE (gAssetHandles[0x21])
 
-const char D_800E0F30[] = "%6d";
+const char gControllerPakRaceRecordMoneyFormat[] = "%6d";
 
 void drawControllerPakRaceRecordSaveScorePanel(ControllerPakRaceRecordSaveScorePanelActor *arg0) {
     s16 *new_var;
@@ -132,7 +132,7 @@ void drawControllerPakRaceRecordSaveScorePanel(ControllerPakRaceRecordSaveScoreP
     text[1] = 0;
     drawMenuAsciiText((s16)(arg0->common.x + 0x32), (s16)((unsigned long)(arg0->common.y + 2)), text, 0, 0x100);
 
-    sprintf(text, D_800E0F30, gRacePlayers[0].money);
+    sprintf(text, gControllerPakRaceRecordMoneyFormat, gRacePlayers[0].money);
     drawMenuAsciiText((s16)(arg0->common.x + 0x44), (s16)(arg0->common.y + 0x1B), text, 0, 0x100);
 
     if (gGameSaveDataBuffer[0].progressionLevel == 3) {

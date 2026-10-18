@@ -6,12 +6,12 @@
  */
 
 /* Award podium segment 2: initPassAwardCelebration loads _145380 into handle 8. */
-D_2000000 = _145380_command_000000;
-D_20006C8 = _145380_command_0006C8;
-D_2000D78 = _145380_command_000D78;
+gPassAwardPodiumVariant0Dl = _145380_command_000000;
+gPassAwardPodiumVariant1Dl = _145380_command_0006C8;
+gPassAwardPodiumVariant2Dl = _145380_command_000D78;
 /* Menu boards use the same handle and segment with a different bank. */
-D_2000E48 = _1467B0_command_000E48;
-D_2000E70 = _1467B0_command_000E70;
+gMainMenuRotatingBoardDl = _1467B0_command_000E48;
+gMainMenuStaticBoardDl = _1467B0_command_000E70;
 
 /* Shared race-model segment 2: handle 0xA. */
 D_2000910 = _148220_command_000000;
@@ -31,11 +31,11 @@ gRaceItemPickupDisplayList = SHARED_RACE_GRAPHICS_SUFFIX_command_000000;
 gRaceActionPickupDisplayList = SHARED_RACE_GRAPHICS_SUFFIX_command_000080;
 
 /* Rookie Mountain overlay address. */
-D_20058A8 = ROOKIE_MOUNTAIN_COURSE_BACKDROP_DISPLAY_LIST_command_000000;
+gRookieMountainBackdropDl = ROOKIE_MOUNTAIN_COURSE_BACKDROP_DISPLAY_LIST_command_000000;
 
 /* Fixed physical/virtual addresses encoded in original data. */
 /* Physical GPU alias of gDepthBuffer (0x80369000), not an image asset. */
-D_369000 = gDepthBuffer - 0x80000000;
+gDepthBufferPhysicalAddress = gDepthBuffer - 0x80000000;
 D_80000000 = 0x80000000;
 
 /* Typed slot-zero subobject views used where IDO must retain distinct relocations. */

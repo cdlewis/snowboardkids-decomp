@@ -31,7 +31,7 @@ typedef struct {
 
 extern MainMenuSceneActorShadow gEndingActorShadow;
 extern Gfx *gRegionAllocPtr;
-Vtx D_800B8100[4] = {
+Vtx gEndingActorShadowQuadVertices[4] = {
     { { { -16, 16, 0 }, 0, { 0, 0 }, { 0xFF, 0xFF, 0xFF, 0xFF } } },
     { { { 16, 16, 0 }, 0, { 480, 0 }, { 0xFF, 0xFF, 0xFF, 0xFF } } },
     { { { 16, -16, 0 }, 0, { 480, 480 }, { 0xFF, 0xFF, 0xFF, 0xFF } } },
@@ -422,7 +422,7 @@ void drawEndingActorShadow(MainMenuSceneActorShadow *arg0) {
     ENDING_GFX_CMD(gRegionAllocPtr++, 0xE7000000, 0);
     ENDING_GFX_CMD(gRegionAllocPtr++, 0xF5400200, 0x80200);
     ENDING_GFX_CMD(gRegionAllocPtr++, 0xF2000000, 0x3C03C);
-    ENDING_GFX_CMD(gRegionAllocPtr++, 0x0400103F, (u32)D_800B8100);
+    ENDING_GFX_CMD(gRegionAllocPtr++, 0x0400103F, (u32)gEndingActorShadowQuadVertices);
     ENDING_GFX_CMD(gRegionAllocPtr++, 0xB1060402, 0x60200);
 }
 

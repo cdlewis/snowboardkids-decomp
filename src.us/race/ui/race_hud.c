@@ -45,7 +45,7 @@ RaceTimer gRaceCourseTargetTimes[10] = {
     { 1, 0, 0 },
 };
 
-RaceTimer D_800DC928[10] = {
+RaceTimer gScoreAttackTimeLimitsByCourse[10] = {
     { 3, 0,  0 },
     { 3, 0,  0 },
     { 3, 0,  0 },
@@ -58,7 +58,7 @@ RaceTimer D_800DC928[10] = {
     { 1, 30, 0 },
 };
 
-RaceTimer D_800DC950 = { 3, 0, 0 };
+RaceTimer gTrickAttackTimeLimit = { 3, 0, 0 };
 
 u16 gRaceProgressMeterIconTiles[36] = {
     0x51, 0x64, 0x65, 0x66, 0x65, 0x64, 0x52, 0x67, 0x68, 0x69, 0x68, 0x67, 0x53, 0x6A, 0x6B, 0x6C, 0x6B, 0x6A,
@@ -236,11 +236,11 @@ void initRaceHud(void) {
             }
             if (gRaceTypeSelection == 1) {
                 gRaceHudMode = RACE_HUD_MODE_SCORE_ATTACK;
-                gRaceChallengeTimeLimit = D_800DC928[gRaceCourseIndex.signedValue];
+                gRaceChallengeTimeLimit = gScoreAttackTimeLimitsByCourse[gRaceCourseIndex.signedValue];
             }
             if (gRaceTypeSelection == 2) {
                 gRaceHudMode = RACE_HUD_MODE_TRICK_ATTACK;
-                gRaceChallengeTimeLimit = D_800DC950;
+                gRaceChallengeTimeLimit = gTrickAttackTimeLimit;
             }
         }
     } else {

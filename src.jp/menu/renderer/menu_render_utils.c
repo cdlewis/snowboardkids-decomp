@@ -32,7 +32,7 @@ typedef struct {
     s32 w8, w9, w10, w11, w12, w13, w14, w15;
 } PackedMtxWords;
 
-extern u16 D_800D3260[16];
+extern u16 gMenuDefaultSpritePalette[16];
 
 extern u8 *gRenderCallbackScratchPtr;
 extern u8 *gMenuRenderScratchPtr;
@@ -395,7 +395,7 @@ void drawAssetTableSpriteWithDefaultPalette(s16 x, s16 y, AssetTable *table, u16
         G_TX_NOLOD,
         G_TX_NOLOD
     );
-    gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, D_800D3260);
+    gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, gMenuDefaultSpritePalette);
     gSPTextureRectangle(
         gRegionAllocPtr++,
         x0 << 2,

@@ -57,13 +57,13 @@ extern void (*gRacePlayerModePostUpdateHandlers[])(RacePlayer *);
 
 extern void (*gRacePlayerMode30StateHandlers[])(RacePlayer *);
 
-extern void (*D_800DE018[])(RacePlayer *);
+extern void (*gRacePlayerMode07StateHandlers[])(RacePlayer *);
 
-extern void (*D_800DE000[])(RacePlayer *);
+extern void (*gRacePlayerAirborneUpdateHandlers[])(RacePlayer *);
 
-extern void (*D_800DE060[])(RacePlayer *);
+extern void (*gRacePlayerMode35CharacterHandlers[])(RacePlayer *);
 
-extern void (*D_800DE048[])(RacePlayer *);
+extern void (*gRacePlayerMode32CharacterHandlers[])(RacePlayer *);
 
 extern u16 gRacePlayerVoiceBaseSoundIds[];
 
@@ -689,7 +689,7 @@ void updateRacePlayerMode22Airborne(RacePlayer *player) {
 }
 
 void func_8008D91C(RacePlayer *player) {
-    D_800DE000[player->updateState](player);
+    gRacePlayerAirborneUpdateHandlers[player->updateState](player);
 }
 
 void updateRacePlayerAirborneLaunch(RacePlayer *player) {
@@ -3838,7 +3838,7 @@ void updateRacePlayerMode40Stun(RacePlayer *player) {
 }
 
 void func_80094C4C(RacePlayer *player) {
-    D_800DE018[player->updateState](player);
+    gRacePlayerMode07StateHandlers[player->updateState](player);
 }
 
 void updateRacePlayerMode07AlignToLaunchRamp(RacePlayer *player) {
@@ -4344,7 +4344,7 @@ void updateRacePlayerMode30AttackResolve(RacePlayer *player) {
 
 void func_80095F2C(RacePlayer *player) {
     updateRacePlayerLeanAngle(player, 0, 0);
-    D_800DE048[player->characterId](player);
+    gRacePlayerMode32CharacterHandlers[player->characterId](player);
 }
 
 void updateRacePlayerMode32Character0(RacePlayer *player) {
@@ -4481,7 +4481,7 @@ void updateRacePlayerMode32Character5(RacePlayer *player) {
 
 void func_800963D8(RacePlayer *player) {
     updateRacePlayerLeanAngle(player, 0, 0);
-    D_800DE060[player->characterId](player);
+    gRacePlayerMode35CharacterHandlers[player->characterId](player);
 }
 
 void updateRacePlayerMode35Character0(RacePlayer *player) {
@@ -4631,10 +4631,10 @@ void updateRacePlayersPostUpdate(void) {
             *nextSoundPos = *soundPos;
             player->unk28.y = player->groundCorrectionY + player->unk28.y - player->groundOffset + 0xA000;
             if (player->soundDisabled == 0) {
-                addRenderCallback(&D_801248C8, (RenderCallback)drawRacePlayerModel, player);
-                addRenderCallback(&D_801248EC, (RenderCallback)drawRacePlayerGroundShadow, player);
+                addRenderCallback(&gModelRenderCallbackQueue4Head, (RenderCallback)drawRacePlayerModel, player);
+                addRenderCallback(&gModelRenderCallbackQueue7Head, (RenderCallback)drawRacePlayerGroundShadow, player);
             } else {
-                addRenderCallback(&D_801248EC, (RenderCallback)drawRaceGhostPlayerModel, player);
+                addRenderCallback(&gModelRenderCallbackQueue7Head, (RenderCallback)drawRaceGhostPlayerModel, player);
             }
             i++;
 

@@ -38,7 +38,7 @@ typedef enum {
     COURSE_RATING_COUNT
 } CourseSelectCourseRatingType;
 
-extern const char D_800E0DB8[];
+extern const char gCourseSelectPlayerNumberFormat[];
 extern u8 D_800EC9C0;
 extern s32 gMenuFlowState;
 extern u8 gCurrentViewportIndex;
@@ -1264,12 +1264,12 @@ void initCourseSelectCourseListBackdrop(CourseSelectCourseListBackdropActor *arg
 }
 
 
-const char D_800E0DA0[] = "?";
-const char D_800E0DA4[] = "?";
-const char D_800E0DA8[] = "?";
-const char D_800E0DAC[] = "%d";
-const char D_800E0DB0[] = "%d";
-const char D_800E0DB4[] = "%d";
+const char gCourseSelectUnknownSpeedText[] = "?";
+const char gCourseSelectUnknownHandlingText[] = "?";
+const char gCourseSelectUnknownTrickText[] = "?";
+const char gCourseSelectSpeedFormat[] = "%d";
+const char gCourseSelectHandlingFormat[] = "%d";
+const char gCourseSelectTrickFormat[] = "%d";
 
 void drawCourseSelectCourseStats(CourseSelectCourseStatsActor *arg0) {
     s32 i;
@@ -1308,11 +1308,11 @@ void drawCourseSelectCourseStats(CourseSelectCourseStatsActor *arg0) {
 
             if (gPlayerCount < 3) {
                 if (courseIndex >= 9) {
-                    if ((D_800E0DA8 && D_800E0DA8) && D_800E0DA8) {}
+                    if ((gCourseSelectUnknownTrickText && gCourseSelectUnknownTrickText) && gCourseSelectUnknownTrickText) {}
                     drawMenuAsciiText(
                         (s16)(arg0->x[i] + 0x38),
                         arg0->y[i],
-                        (u8 *)D_800E0DA0,
+                        (u8 *)gCourseSelectUnknownSpeedText,
                         0,
                         arg0->alpha
                     );
@@ -1346,7 +1346,7 @@ void drawCourseSelectCourseStats(CourseSelectCourseStatsActor *arg0) {
                     drawMenuAsciiText(
                         (s16)(arg0->x[i] + 0x38),
                         (s16)(arg0->y[i] + 0xC),
-                        (u8 *)D_800E0DA4,
+                        (u8 *)gCourseSelectUnknownHandlingText,
                         0,
                         arg0->alpha
                     );
@@ -1379,7 +1379,7 @@ void drawCourseSelectCourseStats(CourseSelectCourseStatsActor *arg0) {
                         drawMenuAsciiText(
                             (s16)(arg0->x[i] + 0x38),
                             (s16)(arg0->y[i] + 0x18),
-                            (u8 *)D_800E0DA8,
+                            (u8 *)gCourseSelectUnknownTrickText,
                             0,
                             arg0->alpha
                         );
@@ -1417,7 +1417,7 @@ void drawCourseSelectCourseStats(CourseSelectCourseStatsActor *arg0) {
                 if (courseIndex < 9) {
                     sprintf(
                         text,
-                        D_800E0DAC,
+                        gCourseSelectSpeedFormat,
                         gCourseSelectCourseRatings.values[(courseIndex * COURSE_RATING_COUNT) + COURSE_RATING_SPEED]
                     );
                 }
@@ -1432,7 +1432,7 @@ void drawCourseSelectCourseStats(CourseSelectCourseStatsActor *arg0) {
                 if (courseIndex < 9) {
                     sprintf(
                         text,
-                        D_800E0DB0,
+                        gCourseSelectHandlingFormat,
                         gCourseSelectCourseRatings.values[(courseIndex * COURSE_RATING_COUNT) + COURSE_RATING_HANDLING]
                     );
                 }
@@ -1447,7 +1447,7 @@ void drawCourseSelectCourseStats(CourseSelectCourseStatsActor *arg0) {
                 if (courseIndex < 9) {
                     sprintf(
                         text,
-                        D_800E0DB4,
+                        gCourseSelectTrickFormat,
                         gCourseSelectCourseRatings.values[(courseIndex * COURSE_RATING_COUNT) + COURSE_RATING_TRICK]
                     );
                 }
@@ -2170,7 +2170,7 @@ void initCourseSelectExtraCourseIconList(CourseSelectExtraCourseIconListActor *a
     setCallbackTaskCallback(actor, (CallbackTaskCallback)updateCourseSelectExtraCourseIconList);
 }
 
-const char D_800E0DB8[] = "%d";
+const char gCourseSelectPlayerNumberFormat[] = "%d";
 
 void drawCourseSelectPlayerPanels(CourseSelectPlayerPanelListActor *arg0) {
     s32 j;
@@ -2322,7 +2322,7 @@ void drawCourseSelectPlayerPanels(CourseSelectPlayerPanelListActor *arg0) {
             tile
         );
 
-        sprintf(text, D_800E0DB8, i + 1);
+        sprintf(text, gCourseSelectPlayerNumberFormat, i + 1);
         drawMenuAsciiText((s16)(actor->x[i] + 0x34), (s16)(actor->y[i] + 2), text, 0, alpha);
 
         if (alpha == 0xC0) {

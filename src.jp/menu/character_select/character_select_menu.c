@@ -26,7 +26,7 @@ u8 gCharacterSelectUnrestrictedSelection;
 extern u16 gCharacterSelectIdOrder[];
 extern s16 gCharacterSelectVoiceSoundIds[];
 
-extern CallbackTask *D_8010A10C;
+extern CallbackTask *gCharacterSelectSelectedTokensTask;
 extern s16 gMenuFadeAlpha;
 // Per-player highlighted index. During character-roster browsing
 // (gCharacterSelectHudState.phase == 3), this indexes gCharacterSelectIdOrder,
@@ -83,7 +83,7 @@ void initCharacterSelectMenu(void) {
     }
 
     gActiveMenuTask = createCallbackTask((CallbackTaskCallback)initCharacterSelectConfirmationBanner, 0, 0x64);
-    D_8010A10C = createCallbackTask((CallbackTaskCallback)initCharacterSelectSelectedCharacterTokens, 0, 0x64);
+    gCharacterSelectSelectedTokensTask = createCallbackTask((CallbackTaskCallback)initCharacterSelectSelectedCharacterTokens, 0, 0x64);
     gMenuScratch2.task = createCallbackTask((CallbackTaskCallback)initCharacterSelectPlayerCursorMarkers, 0, 0x64);
     gMenuScratch0.task = createCallbackTask((CallbackTaskCallback)initCharacterSelectRosterIcons, 0, 0x64);
     createCallbackTask((CallbackTaskCallback)initCharacterSelectPlayerStatsPanels, 0, 0x64);

@@ -41,7 +41,7 @@ Vtx gFallingActionProjectileQuadVertices[4] = {
     { { { -3, -3, 0 }, 0, { -16, 496 }, { 0xFF, 0xFF, 0xFF, 0xFF } } },
 };
 
-u8 D_800D4660[4][28] = {
+u8 gRaceItemEffectTypeTableVariants[4][28] = {
     {
      0,  3,  1, 3, 0,     0,         0,        1, 3, 3,           1,                           4,                                  1,                          4,         3,              4,                                                                                     4,                                                         3, 3,                                                                                      3,                                                                               3,                                                3,                      3,                                                                    3,                                                                                                                                                                                                            3,                                                                                                                                                                                                                                                                                                                0,                                                                                                                                                                                                                                                              0,                                                                                                                          0,
      },

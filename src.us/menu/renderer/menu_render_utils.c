@@ -46,7 +46,7 @@ extern s16 gMenuViewportCenterX;
 extern s16 gMenuViewportCenterY;
 extern Gfx *gRegionAllocPtr;
 extern void *gMenuAsciiFontPaletteBase;
-u16 D_800D40B0[16] = {
+u16 gMenuDefaultSpritePalette[16] = {
     0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
 };
 
@@ -426,7 +426,7 @@ void drawAssetTableSpriteWithDefaultPalette(s16 x, s16 y, AssetTable *table, u16
         G_TX_NOLOD,
         G_TX_NOLOD
     );
-    gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, D_800D40B0);
+    gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, gMenuDefaultSpritePalette);
     gSPTextureRectangle(
         gRegionAllocPtr++,
         x0 << 2,

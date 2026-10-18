@@ -61,7 +61,7 @@ extern RaceCoursePropModelEntry D_800D7650[];
 
 RaceCoursePropModelEntry *gRaceCoursePropModelLists[] = { D_800D7650 };
 
-CourseCollectibleSpriteEntry D_800D7758[] = {
+CourseCollectibleSpriteEntry gBigSnowmanCollectibleSpriteEntries[] = {
     { 0, 0,  { 15625394, -16267348, -92789296 }       },
     { 0, 0,  { 11264774, -16184542, -93556277 }       },
     { 0, 0,  { 17089040, -15802262, -88353076 }       },
@@ -115,7 +115,7 @@ CourseCollectibleSpriteEntry D_800D7758[] = {
     { 0, -1, { 0, 0, 0 }                              },
 };
 
-CourseCollectibleSpriteEntry D_800D7A88[] = {
+CourseCollectibleSpriteEntry gSunsetRockCollectibleSpriteEntries[] = {
     { 0, 0,  { -104846079, 11793057, 62679876 }     },
     { 0, 0,  { -109616787, 10943512, 59536720 }     },
     { 0, 0,  { -114362505, 10647058, 56494516 }     },
@@ -166,7 +166,7 @@ CourseCollectibleSpriteEntry D_800D7A88[] = {
     { 0, -1, { 0, 0, 0 }                            },
 };
 
-CourseCollectibleSpriteEntry D_800D7D88[] = {
+CourseCollectibleSpriteEntry gNightHighwayCollectibleSpriteEntries[] = {
     { 0, 0,  { -4646135, -77869930, -214499624 }    },
     { 0, 0,  { -2807906, -78644686, -221063211 }    },
     { 0, 0,  { -93343959, -120830611, -298977931 }  },
@@ -222,7 +222,7 @@ CourseCollectibleSpriteEntry D_800D7D88[] = {
     { 0, -1, { 0, 0, 0 }                            },
 };
 
-CourseCollectibleSpriteEntry D_800D80D8[] = {
+CourseCollectibleSpriteEntry gGrassValleyCollectibleSpriteEntries[] = {
     { 0, 0,  { -2673536, -6952580, -39737543 }        },
     { 0, 0,  { -987762, -7620537, -43498569 }         },
     { 0, 0,  { -4125832, -7931615, -45223633 }        },
@@ -286,7 +286,7 @@ CourseCollectibleSpriteEntry D_800D80D8[] = {
     { 0, -1, { 0, 0, 0 }                              },
 };
 
-CourseCollectibleSpriteEntry D_800D84A8[] = {
+CourseCollectibleSpriteEntry gDizzyLandCollectibleSpriteEntries[] = {
     { 0, 0,  { 3218112, -8584428, -87053038 }       },
     { 0, 0,  { 11413308, -9022198, -86219560 }      },
     { 0, 0,  { 70507830, -29347149, -152598614 }    },
@@ -345,7 +345,7 @@ CourseCollectibleSpriteEntry D_800D84A8[] = {
     { 0, -1, { 0, 0, 0 }                            },
 };
 
-CourseCollectibleSpriteEntry D_800D8828[] = {
+CourseCollectibleSpriteEntry gQuicksandValleyCollectibleSpriteEntries[] = {
     { 0, 0,  { 80938466, -12040530, -83264440 }     },
     { 0, 0,  { 72340937, -10868177, -75221740 }     },
     { 0, 0,  { 74962572, -10934366, -73202380 }     },
@@ -403,7 +403,7 @@ CourseCollectibleSpriteEntry D_800D8828[] = {
     { 0, -1, { 0, 0, 0 }                            },
 };
 
-CourseCollectibleSpriteEntry D_800D8B98[] = {
+CourseCollectibleSpriteEntry gSilverMountainCollectibleSpriteEntries[] = {
     { 0, 0,  { 13704013, -35927164, -156528884 }     },
     { 0, 0,  { 10559070, -35060341, -161212912 }     },
     { 0, 0,  { 11032475, -35297768, -158502620 }     },
@@ -459,7 +459,7 @@ CourseCollectibleSpriteEntry D_800D8B98[] = {
     { 0, -1, { 0, 0, 0 }                             },
 };
 
-CourseCollectibleSpriteEntry D_800D8EE8[] = {
+CourseCollectibleSpriteEntry gNinjaLandCollectibleSpriteEntries[] = {
     { 0, 0,  { -730574, -10985141, -57698933 }     },
     { 0, 0,  { 5534464, -11996219, -62220017 }     },
     { 0, 0,  { 6013775, -9034517, -37749338 }      },
@@ -484,7 +484,7 @@ CourseCollectibleSpriteEntry D_800D8EE8[] = {
     { 0, -1, { 0, 0, 0 }                           },
 };
 
-CourseCollectibleSpriteEntry D_800D9048[] = {
+CourseCollectibleSpriteEntry gRookieMountainCollectibleSpriteEntries[] = {
     { 0, 0,  { 255203942, -269706759, -271409520 } },
     { 0, 0,  { 257980363, -269272094, -273880516 } },
     { 0, 0,  { 211870141, -203037540, -403747484 } },
@@ -514,8 +514,8 @@ CourseCollectibleSpriteEntry D_800D9048[] = {
 };
 
 CourseCollectibleSpriteEntry *gCourseCollectibleSpriteListsByCourse[] = {
-    D_800D7758, D_800D7A88, D_800D7D88, D_800D80D8, D_800D84A8,
-    D_800D8828, D_800D8B98, D_800D7758, D_800D8EE8, D_800D9048,
+    gBigSnowmanCollectibleSpriteEntries, gSunsetRockCollectibleSpriteEntries, gNightHighwayCollectibleSpriteEntries, gGrassValleyCollectibleSpriteEntries, gDizzyLandCollectibleSpriteEntries,
+    gQuicksandValleyCollectibleSpriteEntries, gSilverMountainCollectibleSpriteEntries, gBigSnowmanCollectibleSpriteEntries, gNinjaLandCollectibleSpriteEntries, gRookieMountainCollectibleSpriteEntries,
 };
 
 Vtx gCourseCollectibleSpriteVertices[] = {

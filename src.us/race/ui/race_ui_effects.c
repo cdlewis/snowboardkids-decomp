@@ -262,7 +262,7 @@ s16 gRacePrizeAmountsByCourseAndRank[][4] = {
     { 0x1770, 0x05DC, 0x0320, 0x0000 },
 };
 
-s16 D_800D6078[][4] = {
+s16 gRacePrizeAmountsRemainingCourses[][4] = {
     { 0x1B58, 0x0708, 0x0384, 0x0000 },
     { 0x1F40, 0x07D0, 0x03E8, 0x0000 },
     { 0x012C, 0x00C8, 0x0064, 0x0000 },
@@ -270,7 +270,7 @@ s16 D_800D6078[][4] = {
     { 0x0BB8, 0x0320, 0x0190, 0x0000 },
 };
 
-Vtx D_800D60A0[] = {
+Vtx gRacePlayerSparkleQuadVertices[] = {
     { { { -8, 16, 0 }, 0x0000, { -16, -16 }, { 0xFF, 0xFF, 0xFF, 0xFF } } },
     { { { 8, 16, 0 }, 0x0000, { 1008, -16 }, { 0xFF, 0xFF, 0xFF, 0xFF } } },
     { { { 8, 0, 0 }, 0x0000, { 1008, 1008 }, { 0xFF, 0xFF, 0xFF, 0xFF } } },
@@ -286,7 +286,7 @@ Gfx gTranslucentSpriteRenderModeDl[] = {
     gsSPEndDisplayList(),
 };
 
-Vec3i D_800D6110 = {
+Vec3i gRacePlayerSparkleOrbitOffset = {
     1048576,
     786432,
     0,
@@ -294,14 +294,14 @@ Vec3i D_800D6110 = {
 
 u32 D_800D611C = 0x00000000;
 
-Vtx D_800D6120[] = {
+Vtx gRaceUiBurstTextQuadVertices[] = {
     { { { -16, 32, 0 }, 0x0000, { -16, -16 }, { 0xFF, 0xFF, 0xFF, 0x9B } } },
     { { { 16, 32, 0 }, 0x0000, { 1008, -16 }, { 0xFF, 0xFF, 0xFF, 0x9B } } },
     { { { 16, 0, 0 }, 0x0000, { 1008, 1008 }, { 0xFF, 0xFF, 0xFF, 0x9B } } },
     { { { -16, 0, 0 }, 0x0000, { -16, 1008 }, { 0xFF, 0xFF, 0xFF, 0x9B } } },
 };
 
-Gfx D_800D6160[] = {
+Gfx gRaceUiBurstTextRenderSetupDl[] = {
     gsDPPipeSync(),
     gsSPTexture(0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_ON),
     gsDPSetCombineMode(G_CC_MODULATEIA, G_CC_MODULATEIA),
@@ -310,7 +310,7 @@ Gfx D_800D6160[] = {
     gsSPEndDisplayList(),
 };
 
-Gfx D_800D6190[] = {
+Gfx gRaceUiAltBurstTextRenderSetupDl[] = {
     gsDPPipeSync(),
     gsSPTexture(0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_ON),
     gsDPSetCombineMode(G_CC_MODULATEIDECALA, G_CC_MODULATEIDECALA),
@@ -319,7 +319,7 @@ Gfx D_800D6190[] = {
     gsSPEndDisplayList(),
 };
 
-Vec3i D_800D61C0[] = {
+Vec3i gRaceUiBurstTextInitialVelocities[] = {
     { 8192,    131072, 131072  },
     { -8192,   262144, 131072  },
     { 8192,    65536,  -137216 },
@@ -336,7 +336,7 @@ Vec3i gDizzyLandCarouselPositions[] = {
 
 u32 D_800D622C = 0x00000000;
 
-Vtx D_800D6230[] = {
+Vtx gRaceUiStunIconQuadVertices[] = {
     { { { -3, 6, 0 }, 0x0000, { -16, -16 }, { 0xFF, 0xFF, 0xFF, 0xFF } } },
     { { { 3, 6, 0 }, 0x0000, { 496, -16 }, { 0xFF, 0xFF, 0xFF, 0xFF } } },
     { { { 3, 0, 0 }, 0x0000, { 496, 496 }, { 0xFF, 0xFF, 0xFF, 0xFF } } },
@@ -352,7 +352,7 @@ Gfx gAlphaSpriteRenderModeDl[] = {
     gsSPEndDisplayList(),
 };
 
-Vec3i D_800D62A0 = {
+Vec3i gRaceUiStunIconHeadOffset = {
     0,
     1048576,
     0,
@@ -389,7 +389,7 @@ Vec3i gDizzyLandSpinningCabinRidePositions[] = {
 
 u32 D_800D634C = 0x00000000;
 
-Vtx D_800D6350[] = {
+Vtx gCourseStartFinishSpriteVertices[] = {
     { { { -158, 78, -740 }, 0x0000, { -16, -16 }, { 0xFF, 0xFF, 0xFF, 0xFF } } },
     { { { 158, 78, -740 }, 0x0000, { 2032, -16 }, { 0xFF, 0xFF, 0xFF, 0xFF } } },
     { { { 158, 32, -740 }, 0x0000, { 2032, 496 }, { 0xFF, 0xFF, 0xFF, 0xFF } } },
@@ -400,7 +400,7 @@ Vtx D_800D6350[] = {
     { { { 6124, -12157, -14036 }, 0x0000, { -16, 496 }, { 0xFF, 0xFF, 0xFF, 0xFF } } },
 };
 
-Vtx D_800D63D0[] = {
+Vtx gSilverMountainSnowParticleVertices[] = {
     { { { 0, 0, 0 }, 0x0000, { -16, -16 }, { 0xFF, 0xFF, 0xFF, 0xFF } } },
     { { { 2, 0, 0 }, 0x0000, { 496, -16 }, { 0xFF, 0xFF, 0xFF, 0xFF } } },
     { { { 0, -2, 0 }, 0x0000, { -16, 496 }, { 0xFF, 0xFF, 0xFF, 0xFF } } },
@@ -449,7 +449,7 @@ u32 *gRaceCourseRankModelDisplayLists[] = {
     (u32 *)ROOKIE_MOUNTAIN_COURSE_RANK_MODEL_FINAL_LAP_DISPLAY_LIST_command_000000,
 };
 
-RaceUiProjectileVertexBlock D_800D64A0[] = {
+RaceUiProjectileVertexBlock gRaceUiProjectileVertices[] = {
     { { 0xFF, 0xF8, 0x00, 0x08, 0x00, 0x00, 0x00, 0x00, 0xFF, 0xF0, 0xFF, 0xF0, 0xFF, 0xFF, 0xFF, 0xFF } },
     { { 0x00, 0x08, 0x00, 0x08, 0x00, 0x00, 0x00, 0x00, 0x03, 0xF0, 0xFF, 0xF0, 0xFF, 0xFF, 0xFF, 0xFF } },
     { { 0x00, 0x08, 0xFF, 0xF8, 0x00, 0x00, 0x00, 0x00, 0x03, 0xF0, 0x03, 0xF0, 0xFF, 0xFF, 0xFF, 0xFF } },
@@ -460,7 +460,7 @@ RaceUiProjectileVertexBlock D_800D64A0[] = {
     { { 0xFF, 0xF8, 0xFF, 0xF8, 0x00, 0x00, 0x00, 0x00, 0xFF, 0xF0, 0x07, 0xF0, 0xFF, 0xFF, 0xFF, 0xFF } },
 };
 
-u16 D_800D6520[] = {
+u16 gForwardActionProjectileAnimation[] = {
     0x0001, 0x0000, 0x0006, 0x0001, 0x0000, 0x0007, 0x0001, 0x0001, 0x0008, 0x0001, 0x0000, 0x0009, 0x0003,
     0x0000, 0x000A, 0x0003, 0x0000, 0x000B, 0x0003, 0x0004, 0x000C, 0x0003, 0x0004, 0x000D, 0x0003, 0x0004,
     0x000E, 0x0003, 0x0004, 0x000F, 0x0003, 0x0004, 0x0010, 0x0003, 0x0004, 0x0011, 0x0003, 0x0004, 0x0012,
@@ -471,7 +471,7 @@ u16 D_800D6520[] = {
     0x0008, 0x0020, 0x0003, 0x0008, 0x0021, 0x0003, 0x0000, 0x0022, 0x8003, 0x0001, 0x0023,
 };
 
-RaceUiGfxCommandScriptEntry D_800D65EC[] = {
+RaceUiGfxCommandScriptEntry gBigSnowmanCoinMarkerEntries[] = {
     { 0, 0,  { -1113058457, -1384091021, -884786256 } },
     { 0, 0,  { -1256022390, -1266127122, -953955089 } },
     { 0, 0,  { -1356974750, -1200158977, -871759792 } },
@@ -495,7 +495,7 @@ RaceUiGfxCommandScriptEntry D_800D65EC[] = {
     { 0, -1, { 0, 0, 0 }                              },
 };
 
-RaceUiGfxCommandScriptEntry D_800D673C[] = {
+RaceUiGfxCommandScriptEntry gDefaultCourseCoinMarkerEntries[] = {
     { 0, 0,  { 578400548, -1161579954, -1419050548 } },
     { 0, 0,  { 570107584, -1091766899, -1215840147 } },
     { 0, 0,  { 590106597, -1023006354, -1091883779 } },
@@ -519,7 +519,7 @@ RaceUiGfxCommandScriptEntry D_800D673C[] = {
     { 0, -1, { 0, 0, 0 }                             },
 };
 
-RaceUiGfxCommandScriptEntry D_800D688C[] = {
+RaceUiGfxCommandScriptEntry gRookieMountainCoinMarkerEntries[] = {
     { 0, 0,  { 5781130, -122303235, -323894409 }   },
     { 0, 0,  { 256000184, -271710884, -264596538 } },
     { 0, 0,  { 232045332, -232274759, -324202607 } },
@@ -533,19 +533,19 @@ RaceUiGfxCommandScriptEntry D_800D688C[] = {
     { 0, -1, { 0, 0, 0 }                           },
 };
 
-RaceUiGfxCommandScriptEntry *D_800D693C[] = {
-    D_800D65EC, D_800D673C, D_800D673C, D_800D673C, D_800D673C, D_800D673C,
-    D_800D673C, D_800D673C, D_800D673C, D_800D688C, NULL,
+RaceUiGfxCommandScriptEntry *gCourseCoinMarkerEntryLists[] = {
+    gBigSnowmanCoinMarkerEntries, gDefaultCourseCoinMarkerEntries, gDefaultCourseCoinMarkerEntries, gDefaultCourseCoinMarkerEntries, gDefaultCourseCoinMarkerEntries, gDefaultCourseCoinMarkerEntries,
+    gDefaultCourseCoinMarkerEntries, gDefaultCourseCoinMarkerEntries, gDefaultCourseCoinMarkerEntries, gRookieMountainCoinMarkerEntries, NULL,
 };
 
-Vtx D_800D6968[] = {
+Vtx gCourseCoinMarkerQuadVertices[] = {
     { { { -8, 16, 0 }, 0x0000, { -16, -16 }, { 0xFF, 0xFF, 0xFF, 0xFF } } },
     { { { 8, 16, 0 }, 0x0000, { 1008, -16 }, { 0xFF, 0xFF, 0xFF, 0xFF } } },
     { { { 8, 0, 0 }, 0x0000, { 1008, 1008 }, { 0xFF, 0xFF, 0xFF, 0xFF } } },
     { { { -8, 0, 0 }, 0x0000, { -16, 1008 }, { 0xFF, 0xFF, 0xFF, 0xFF } } },
 };
 
-Vtx D_800D69A8[] = {
+Vtx gRaceStartOverlayVertices[] = {
     { { { -24, 80, 0 }, 0x0000, { -16, -16 }, { 0xFF, 0xFF, 0xFF, 0xFF } } },
     { { { 24, 80, 0 }, 0x0000, { 1520, -16 }, { 0xFF, 0xFF, 0xFF, 0xFF } } },
     { { { 24, 40, 0 }, 0x0000, { 1520, 1264 }, { 0xFF, 0xFF, 0xFF, 0xFF } } },
@@ -556,7 +556,7 @@ Vtx D_800D69A8[] = {
     { { { -24, 0, 0 }, 0x0000, { -16, 1264 }, { 0xFF, 0xFF, 0xFF, 0xFF } } },
 };
 
-RaceUiRankTextRenderEntry D_800D6A28[] = {
+RaceUiRankTextRenderEntry gDefaultScoreAttackRingEntries[] = {
     { 0,  0, { 18375628, -17372035, -103918038 },      7936, { 0, 0 } },
     { 0,  0, { 19069163, -21885071, -138117274 },      3968, { 0, 0 } },
     { 0,  0, { -2054467, -29101872, -163456444 },      4256, { 0, 0 } },
@@ -620,7 +620,7 @@ RaceUiRankTextRenderEntry D_800D6A28[] = {
     { -1, 0, { 0, 0, 0 },                              0,    { 0, 0 } },
 };
 
-RaceUiRankTextRenderEntry D_800D6EEC[] = {
+RaceUiRankTextRenderEntry gSunsetRockScoreAttackRingEntries[] = {
     { 0,  0, { 321323, -39066673, -107359531 },       -192,  { 0, 0 } },
     { 0,  0, { 3723962, -81616883, -200730086 },      -272,  { 0, 0 } },
     { 0,  0, { -12743240, -86338292, -218120888 },    -160,  { 0, 0 } },
@@ -684,7 +684,7 @@ RaceUiRankTextRenderEntry D_800D6EEC[] = {
     { -1, 0, { 0, 0, 0 },                             0,     { 0, 0 } },
 };
 
-RaceUiRankTextRenderEntry D_800D73B0[] = {
+RaceUiRankTextRenderEntry gRookieMountainScoreAttackRingEntries[] = {
     { 0,  0, { 258193298, -267988693, -277803553 }, -2016, { 0, 0 } },
     { 0,  0, { 255193093, -268019726, -276443540 }, 2128,  { 0, 0 } },
     { 0,  0, { 251723645, -267984889, -275082043 }, 2128,  { 0, 0 } },
@@ -718,9 +718,9 @@ RaceUiRankTextRenderEntry D_800D73B0[] = {
     { -1, 0, { 0, 0, 0 },                           0,     { 0, 0 } },
 };
 
-RaceUiRankTextRenderEntry *D_800D761C[] = {
-    D_800D6A28, D_800D6EEC, D_800D6A28, D_800D6A28, D_800D6A28, D_800D6A28,
-    D_800D6A28, D_800D6A28, D_800D6A28, D_800D73B0, NULL,
+RaceUiRankTextRenderEntry *gCourseScoreAttackRingEntryLists[] = {
+    gDefaultScoreAttackRingEntries, gSunsetRockScoreAttackRingEntries, gDefaultScoreAttackRingEntries, gDefaultScoreAttackRingEntries, gDefaultScoreAttackRingEntries, gDefaultScoreAttackRingEntries,
+    gDefaultScoreAttackRingEntries, gDefaultScoreAttackRingEntries, gDefaultScoreAttackRingEntries, gRookieMountainScoreAttackRingEntries, NULL,
 };
 
 u32 D_800D7648[] = { 0x00000000, 0x00000000 };
@@ -806,7 +806,7 @@ void updateRaceCourseScrollingTexture(RaceCourseScrollingTextureActor *arg0) {
         enqueuePlayerLoopingPositionalSoundRequest(0xE, &D_800D6030[temp_v0], 0x7F, 0x32, 0.0f, 0xA);
     }
     if (arg0->useOverlayQueue != 0) {
-        addRenderCallback(&D_801248EC, (RenderCallback)renderRaceCourseScrollingTexture, arg0);
+        addRenderCallback(&gModelRenderCallbackQueue7Head, (RenderCallback)renderRaceCourseScrollingTexture, arg0);
         return;
     }
     addRenderCallback(&gRaceObjectRenderCallbackList, (RenderCallback)renderRaceCourseScrollingTexture, arg0);
@@ -1406,17 +1406,17 @@ void drawRaceUiResultsBannerPlacements(RaceUiResultsBannerActor *arg0) {
 }
 
 const char D_800E128C[4] = "*%d";
-const char D_800E1290[4] = "%dP";
-const char D_800E1294[4] = "COM";
+const char gRaceResultsSlot0PlayerLabelFormat[4] = "%dP";
+const char gRaceResultsSlot0CpuLabel[4] = "COM";
 const char D_800E1298[4] = "*%d";
-const char D_800E129C[4] = "%dP";
-const char D_800E12A0[4] = "COM";
+const char gRaceResultsSlot1PlayerLabelFormat[4] = "%dP";
+const char gRaceResultsSlot1CpuLabel[4] = "COM";
 const char D_800E12A4[4] = "*%d";
-const char D_800E12A8[4] = "%dP";
-const char D_800E12AC[4] = "COM";
+const char gRaceResultsSlot2PlayerLabelFormat[4] = "%dP";
+const char gRaceResultsSlot2CpuLabel[4] = "COM";
 const char D_800E12B0[4] = "*%d";
-const char D_800E12B4[4] = "%dP";
-const char D_800E12B8[4] = "COM";
+const char gRaceResultsSlot3PlayerLabelFormat[4] = "%dP";
+const char gRaceResultsSlot3CpuLabel[4] = "COM";
 
 void drawRaceUiResultsBannerPlayerLabels(RaceUiResultsBannerActor *arg0) {
     RaceUiResultsBannerActor *actor;
@@ -1438,10 +1438,10 @@ void drawRaceUiResultsBannerPlayerLabels(RaceUiResultsBannerActor *arg0) {
             drawMenuAsciiTextDefaultScale(-0x20, -0x38, text, 0);
         }
         if (gRacePlayers[actor->player0].isCpu == 0) {
-            sprintf(text, D_800E1290, gRacePlayers[actor->player0].playerIndex + 1);
+            sprintf(text, gRaceResultsSlot0PlayerLabelFormat, gRacePlayers[actor->player0].playerIndex + 1);
             drawMenuAsciiTextDefaultScale(-0x30, -0x48, text, 5);
         } else {
-            drawMenuAsciiTextDefaultScale(-0x30, -0x48, D_800E1294, 4);
+            drawMenuAsciiTextDefaultScale(-0x30, -0x48, gRaceResultsSlot0CpuLabel, 4);
         }
     }
 
@@ -1449,10 +1449,10 @@ void drawRaceUiResultsBannerPlayerLabels(RaceUiResultsBannerActor *arg0) {
         sprintf(text, D_800E1298, gRacePlayers[actor->player1].unk18);
         drawMenuAsciiTextDefaultScale(0x70, -0x18, text, 6);
         if (gRacePlayers[actor->player1].isCpu == 0) {
-            sprintf(text, D_800E129C, gRacePlayers[actor->player1].playerIndex + 1);
+            sprintf(text, gRaceResultsSlot1PlayerLabelFormat, gRacePlayers[actor->player1].playerIndex + 1);
             drawMenuAsciiTextDefaultScale(0x60, -0x28, text, 5);
         } else {
-            drawMenuAsciiTextDefaultScale(0x60, -0x28, D_800E12A0, 4);
+            drawMenuAsciiTextDefaultScale(0x60, -0x28, gRaceResultsSlot1CpuLabel, 4);
         }
     }
 
@@ -1460,10 +1460,10 @@ void drawRaceUiResultsBannerPlayerLabels(RaceUiResultsBannerActor *arg0) {
         sprintf(text, D_800E12A4, gRacePlayers[actor->player2].unk18);
         drawMenuAsciiTextDefaultScale(-0x20, 8, text, 6);
         if (gRacePlayers[actor->player2].isCpu == 0) {
-            sprintf(text, D_800E12A8, gRacePlayers[actor->player2].playerIndex + 1);
+            sprintf(text, gRaceResultsSlot2PlayerLabelFormat, gRacePlayers[actor->player2].playerIndex + 1);
             drawMenuAsciiTextDefaultScale(-0x30, -8, text, 5);
         } else {
-            drawMenuAsciiTextDefaultScale(-0x30, -8, D_800E12AC, 4);
+            drawMenuAsciiTextDefaultScale(-0x30, -8, gRaceResultsSlot2CpuLabel, 4);
         }
     }
 
@@ -1471,10 +1471,10 @@ void drawRaceUiResultsBannerPlayerLabels(RaceUiResultsBannerActor *arg0) {
         sprintf(text, D_800E12B0, gRacePlayers[actor->player3].unk18);
         drawMenuAsciiTextDefaultScale(0x70, 0x28, text, 6);
         if (gRacePlayers[actor->player3].isCpu == 0) {
-            sprintf(text, D_800E12B4, gRacePlayers[actor->player3].playerIndex + 1);
+            sprintf(text, gRaceResultsSlot3PlayerLabelFormat, gRacePlayers[actor->player3].playerIndex + 1);
             drawMenuAsciiTextDefaultScale(0x60, 0x18, text, 5);
         } else {
-            drawMenuAsciiTextDefaultScale(0x60, 0x18, D_800E12B8, 4);
+            drawMenuAsciiTextDefaultScale(0x60, 0x18, gRaceResultsSlot3CpuLabel, 4);
         }
     }
 
@@ -3551,7 +3551,7 @@ void renderRacePlayerSparkleEffect(RaceUiSparkleActor *arg0) {
         gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, arg1->palettes[arg1->frame]);
         gSPMatrix(gRegionAllocPtr++, arg1->matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
         gSPMatrix(gRegionAllocPtr++, gViewportMatrix, G_MTX_NOPUSH | G_MTX_MUL | G_MTX_MODELVIEW);
-        RACE_UI_GSP_VERTEX_F3DEX(gRegionAllocPtr++, D_800D60A0, 4, 0);
+        RACE_UI_GSP_VERTEX_F3DEX(gRegionAllocPtr++, gRacePlayerSparkleQuadVertices, 4, 0);
         RACE_UI_GSP1QUADRANGLE_F3DEX(gRegionAllocPtr++, 2, 1, 0, 3, 3);
     }
 }
@@ -3594,7 +3594,7 @@ void updateRacePlayerSparkleOrbit(RaceUiSparkleActor *arg0) {
         arg0->unk28 += 0x60;
         angle = arg0->unk28 - gRacePlayers[arg0->playerIndex].facingAngle;
         makeFixedRotationY(stack.matrix, angle);
-        transformVec3iByFixedMatrix(stack.matrix, &D_800D6110, &stack.vec);
+        transformVec3iByFixedMatrix(stack.matrix, &gRacePlayerSparkleOrbitOffset, &stack.vec);
 
         player = &gRacePlayers[arg0->playerIndex];
         makeFixedRotationXY(stack.matrix, player->pitchAngle, player->facingAngle);
@@ -3606,7 +3606,7 @@ void updateRacePlayerSparkleOrbit(RaceUiSparkleActor *arg0) {
         arg0->pos.z += player->unk28.z;
     }
 
-    addRenderCallback(&D_801248EC, (RenderCallback)renderRacePlayerSparkleEffect, (void *)arg0);
+    addRenderCallback(&gModelRenderCallbackQueue7Head, (RenderCallback)renderRacePlayerSparkleEffect, (void *)arg0);
 }
 
 void updateRacePlayerSparkleRetarget(RaceUiSparkleActor *arg0) {
@@ -3681,7 +3681,7 @@ void updateRacePlayerSparkleRetarget(RaceUiSparkleActor *arg0) {
         }
     }
 
-    addRenderCallback(&D_801248EC, (RenderCallback)renderRacePlayerSparkleEffect, (void *)arg0);
+    addRenderCallback(&gModelRenderCallbackQueue7Head, (RenderCallback)renderRacePlayerSparkleEffect, (void *)arg0);
 }
 
 void updateRacePlayerSparkleRise(RaceUiSparkleActor *arg0) {
@@ -3716,7 +3716,7 @@ void updateRacePlayerSparkleRise(RaceUiSparkleActor *arg0) {
         arg0->zOffset += 0x20000;
     }
 
-    addRenderCallback(&D_801248EC, (RenderCallback)renderRacePlayerSparkleEffect, arg0);
+    addRenderCallback(&gModelRenderCallbackQueue7Head, (RenderCallback)renderRacePlayerSparkleEffect, arg0);
 }
 
 void initRacePlayerSparkleEffect(RaceUiSparkleActor *arg0) {
@@ -3902,7 +3902,7 @@ void updateRaceUiItemStealTrailEffect(RaceUiRankTrailActor *arg0) {
     }
 
     if (gRacePlayers[arg0->task.userId].stateFlags & 0x100000) {
-        addRenderCallback(&D_801248EC, (RenderCallback)renderRaceUiItemStealTrailEffect, (void *)arg0);
+        addRenderCallback(&gModelRenderCallbackQueue7Head, (RenderCallback)renderRaceUiItemStealTrailEffect, (void *)arg0);
         return;
     }
 
@@ -3938,7 +3938,7 @@ void renderRaceUiBurstTextParticle(RaceUiTextParticleActor *arg0) {
     }
 
     if (arg0->matrix != NULL) {
-        gSPDisplayList(gRegionAllocPtr++, D_800D6160);
+        gSPDisplayList(gRegionAllocPtr++, gRaceUiBurstTextRenderSetupDl);
         gDPLoadTextureBlock_4b(
             gRegionAllocPtr++,
             arg0->images[arg0->timer >> 2],
@@ -3956,7 +3956,7 @@ void renderRaceUiBurstTextParticle(RaceUiTextParticleActor *arg0) {
         gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, arg0->palettes[arg0->timer >> 2]);
         gSPMatrix(gRegionAllocPtr++, arg0->matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
         gSPMatrix(gRegionAllocPtr++, gViewportMatrix, G_MTX_NOPUSH | G_MTX_MUL | G_MTX_MODELVIEW);
-        RACE_UI_GSP_VERTEX_F3DEX(gRegionAllocPtr++, D_800D6120, 4, 0);
+        RACE_UI_GSP_VERTEX_F3DEX(gRegionAllocPtr++, gRaceUiBurstTextQuadVertices, 4, 0);
         RACE_UI_GSP1QUADRANGLE_F3DEX(gRegionAllocPtr++, 2, 1, 0, 3, 3);
     }
 }
@@ -3979,7 +3979,7 @@ void renderRaceUiAltBurstTextParticle(RaceUiTextParticleActor *arg0) {
     }
 
     if (arg0->matrix != NULL) {
-        gSPDisplayList(gRegionAllocPtr++, D_800D6190);
+        gSPDisplayList(gRegionAllocPtr++, gRaceUiAltBurstTextRenderSetupDl);
         gDPLoadTextureBlock_4b(
             gRegionAllocPtr++,
             arg0->images[arg0->timer >> 2],
@@ -3997,7 +3997,7 @@ void renderRaceUiAltBurstTextParticle(RaceUiTextParticleActor *arg0) {
         gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, arg0->palettes[arg0->timer >> 2]);
         gSPMatrix(gRegionAllocPtr++, arg0->matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
         gSPMatrix(gRegionAllocPtr++, gViewportMatrix, G_MTX_NOPUSH | G_MTX_MUL | G_MTX_MODELVIEW);
-        RACE_UI_GSP_VERTEX_F3DEX(gRegionAllocPtr++, D_800D6120, 4, 0);
+        RACE_UI_GSP_VERTEX_F3DEX(gRegionAllocPtr++, gRaceUiBurstTextQuadVertices, 4, 0);
         RACE_UI_GSP1QUADRANGLE_F3DEX(gRegionAllocPtr++, 2, 1, 0, 3, 3);
     }
 }
@@ -4018,7 +4018,7 @@ void updateRaceUiBurstTextParticle(RaceUiTextParticleActor *arg0) {
         }
     }
     if (arg0->useAltTextures == 0) {
-        addRenderCallback(&D_801248EC, (RenderCallback)renderRaceUiBurstTextParticle, arg0);
+        addRenderCallback(&gModelRenderCallbackQueue7Head, (RenderCallback)renderRaceUiBurstTextParticle, arg0);
         return;
     }
     addRenderCallback(&gSceneModelRenderCallbackList, (RenderCallback)renderRaceUiAltBurstTextParticle, arg0);
@@ -4026,7 +4026,7 @@ void updateRaceUiBurstTextParticle(RaceUiTextParticleActor *arg0) {
 
 void initRaceUiBurstTextParticle(RaceUiTextParticleActor *arg0) {
     arg0->timer = 0;
-    arg0->velocity = D_800D61C0[arg0->task.userId];
+    arg0->velocity = gRaceUiBurstTextInitialVelocities[arg0->task.userId];
     if (arg0->useAltTextures == 0) {
         getAssetTableImageAndPalette(
             getRelocatableHeapBlockBase(gAssetHandles[0x1C]),
@@ -4672,7 +4672,7 @@ void updateRaceUiFadingImpact(RaceUiFadingImpactActor *arg0) {
     if (arg0->alpha <= 0) {
         removeCallbackTask(arg0);
     } else {
-        addRenderCallback(&D_801248EC, (RenderCallback)renderRaceUiFadingImpact, (void *)arg0);
+        addRenderCallback(&gModelRenderCallbackQueue7Head, (RenderCallback)renderRaceUiFadingImpact, (void *)arg0);
     }
 }
 
@@ -4855,7 +4855,7 @@ void renderRaceUiStunOrbitingIcon(RaceUiOrbitingSpriteActor *arg0) {
             temp_v0_16->words.w1 = (u32)gViewportMatrix; \
             temp_v0_17 = gRegionAllocPtr++; \
             temp_v0_17->words.w0 = 0x0400103F; \
-            temp_v0_17->words.w1 = (u32)D_800D6230; \
+            temp_v0_17->words.w1 = (u32)gRaceUiStunIconQuadVertices; \
             temp_v0_18 = gRegionAllocPtr++; \
             temp_v0_18->words.w0 = 0xB1060402; \
             temp_v0_18->words.w1 = 0x00060200; \
@@ -4873,7 +4873,7 @@ void updateRaceUiStunOrbitingIcon(RaceUiOrbitingSpriteActor *arg0) {
         return;
     }
 
-    transformVec3iByFixedMatrix(player->modelPartTransforms[7].rotation, &D_800D62A0, &arg0->pos);
+    transformVec3iByFixedMatrix(player->modelPartTransforms[7].rotation, &gRaceUiStunIconHeadOffset, &arg0->pos);
     player = &gRacePlayers[arg0->playerIndex];
     arg0->pos.x += player->modelPartTransforms[7].translation.x;
     arg0->pos.y += player->modelPartTransforms[7].translation.y + 0x80000;
@@ -4881,7 +4881,7 @@ void updateRaceUiStunOrbitingIcon(RaceUiOrbitingSpriteActor *arg0) {
     arg0->angle += 0xC0;
     arg0->pos.x -= fixedSine(arg0->angle) << 7;
     arg0->pos.z += fixedCosine(arg0->angle) << 7;
-    addRenderCallback(&D_801248EC, (RenderCallback)renderRaceUiStunOrbitingIcon, (void *)arg0);
+    addRenderCallback(&gModelRenderCallbackQueue7Head, (RenderCallback)renderRaceUiStunOrbitingIcon, (void *)arg0);
 }
 
 void initRaceUiStunOrbitingIcon(RaceUiOrbitingSpriteActor *arg0) {
@@ -5125,13 +5125,13 @@ void renderCourseStartFinishSprite(RaceUiCourseSpriteActor *arg0) {
             new_var->matrixDirty = 0;
             new_var->vertices = allocMenuRenderScratch(0x40);
             if (new_var->vertices != NULL) {
-                new_var->vertices[0] = D_800D6350[arg0->task.userId * 4];
+                new_var->vertices[0] = gCourseStartFinishSpriteVertices[arg0->task.userId * 4];
                 arg0->vertices[0].v.tc[0] += arg0->angle << 5;
-                new_var->vertices[1] = D_800D6350[new_var->task.userId * 4 + 1];
+                new_var->vertices[1] = gCourseStartFinishSpriteVertices[new_var->task.userId * 4 + 1];
                 arg0->vertices[1].v.tc[0] += new_var->angle << 5;
-                new_var->vertices[2] = D_800D6350[new_var->task.userId * 4 + 2];
+                new_var->vertices[2] = gCourseStartFinishSpriteVertices[new_var->task.userId * 4 + 2];
                 arg0->vertices[2].v.tc[0] += arg0->angle << 5;
-                new_var->vertices[3] = D_800D6350[new_var->task.userId * 4 + 3];
+                new_var->vertices[3] = gCourseStartFinishSpriteVertices[new_var->task.userId * 4 + 3];
                 arg0->vertices[3].v.tc[0] += new_var->angle << 5;
             }
         }
@@ -5170,7 +5170,7 @@ void updateCourseStartFinishSprite(RaceUiCourseSpriteActor *actor) {
     if ((gFrameCounter & COURSE_START_FINISH_SCROLL_FRAME_MASK) == 0) {
         actor->angle = (actor->angle + COURSE_START_FINISH_SCROLL_STEP) & COURSE_START_FINISH_SCROLL_MASK;
     }
-    addRenderCallback(&D_801248C8, (RenderCallback)renderCourseStartFinishSprite, actor);
+    addRenderCallback(&gModelRenderCallbackQueue4Head, (RenderCallback)renderCourseStartFinishSprite, actor);
 }
 
 void initCourseStartFinishSprite(RaceUiCourseSpriteActor *actor) {
@@ -5263,7 +5263,7 @@ void renderSilverMountainSnowParticles(RaceUiEffectParticleActor *arg0) {
             if (matrix != NULL) {
                 gSPMatrix(gRegionAllocPtr++, matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
                 gSPMatrix(gRegionAllocPtr++, gViewportMatrix, G_MTX_NOPUSH | G_MTX_MUL | G_MTX_MODELVIEW);
-                gSPVertex(gRegionAllocPtr++, D_800D63D0, 3, 0);
+                gSPVertex(gRegionAllocPtr++, gSilverMountainSnowParticleVertices, 3, 0);
                 gSP1Triangle(gRegionAllocPtr++, 0, 2, 1, 0);
                 actor = arg0;
             }
@@ -5342,7 +5342,7 @@ void renderRaceCourseRankModel(RaceUiRankParticleActor *arg0) {
 }
 
 void updateRaceCourseRankModel(RaceUiRankParticleActor *arg0) {
-    addRenderCallback(&D_801248C8, (RenderCallback)renderRaceCourseRankModel, arg0);
+    addRenderCallback(&gModelRenderCallbackQueue4Head, (RenderCallback)renderRaceCourseRankModel, arg0);
 }
 
 void initRaceCourseRankModel(RaceUiRankParticleActor *actor) {
@@ -5512,7 +5512,7 @@ void renderRaceUiProjectile(RaceUiProjectileActor *arg0) {
             temp_v0_18->words.w1 = (u32)gViewportMatrix; \
             temp_v0_2 = gRegionAllocPtr++; \
             temp_v0_2->words.w0 = 0x0400103F; \
-            temp_v0_2->words.w1 = (u32)(&D_800D64A0[sp74]); \
+            temp_v0_2->words.w1 = (u32)(&gRaceUiProjectileVertices[sp74]); \
             temp_v0_3 = gRegionAllocPtr++; \
             temp_v0_3->words.w0 = 0xB1060402; \
             temp_v0_3->words.w1 = 0x00060200; \
@@ -5543,7 +5543,7 @@ void updateRaceUiProjectileFlyAway(RaceUiProjectileActor *arg0) {
             return;
         }
     }
-    addRenderCallback(&D_801248C8, (RenderCallback)renderRaceUiProjectile, actor);
+    addRenderCallback(&gModelRenderCallbackQueue4Head, (RenderCallback)renderRaceUiProjectile, actor);
 }
 
 void updateRaceUiProjectileStealScores(RaceUiProjectileActor *arg0) {
@@ -5594,7 +5594,7 @@ void updateRaceUiProjectileStealScores(RaceUiProjectileActor *arg0) {
         }
     }
 
-    addRenderCallback(&D_801248C8, (RenderCallback)renderRaceUiProjectile, arg0);
+    addRenderCallback(&gModelRenderCallbackQueue4Head, (RenderCallback)renderRaceUiProjectile, arg0);
 }
 
 void updateRaceUiProjectileBounceDown(RaceUiProjectileActor *arg0) {
@@ -5624,7 +5624,7 @@ void updateRaceUiProjectileBounceDown(RaceUiProjectileActor *arg0) {
             setCallbackTaskCallback(actor, (CallbackTaskCallback)updateRaceUiProjectileStealScores);
         }
     }
-    addRenderCallback(&D_801248C8, (RenderCallback)renderRaceUiProjectile, actor);
+    addRenderCallback(&gModelRenderCallbackQueue4Head, (RenderCallback)renderRaceUiProjectile, actor);
 }
 
 void updateRaceUiProjectileGrounded(RaceUiProjectileActor *arg0) {
@@ -5648,7 +5648,7 @@ void updateRaceUiProjectileGrounded(RaceUiProjectileActor *arg0) {
             actor->verticalVelocity += 0x50000;
         }
     }
-    addRenderCallback(&D_801248C8, (RenderCallback)renderRaceUiProjectile, actor);
+    addRenderCallback(&gModelRenderCallbackQueue4Head, (RenderCallback)renderRaceUiProjectile, actor);
 }
 
 void updateRaceUiProjectileInitialFall(RaceUiProjectileActor *arg0) {
@@ -5672,7 +5672,7 @@ void updateRaceUiProjectileInitialFall(RaceUiProjectileActor *arg0) {
             setCallbackTaskCallback(actor, (CallbackTaskCallback)updateRaceUiProjectileGrounded);
         }
     }
-    addRenderCallback(&D_801248C8, (RenderCallback)renderRaceUiProjectile, actor);
+    addRenderCallback(&gModelRenderCallbackQueue4Head, (RenderCallback)renderRaceUiProjectile, actor);
 }
 
 void initForwardActionProjectileEffect(RaceUiProjectileActor *arg0) {
@@ -5683,7 +5683,7 @@ void initForwardActionProjectileEffect(RaceUiProjectileActor *arg0) {
     arg0->unk4C = 0;
     arg0->verticalVelocity = 0x300000;
     arg0->verticalAcceleration = 0;
-    setRaceUiProjectileAnimation(arg0, D_800D6520);
+    setRaceUiProjectileAnimation(arg0, gForwardActionProjectileAnimation);
     enqueuePositionalSoundEffect(0x66, &gRacePlayers[arg0->task.userId].unk28, 0x7F, 0x32);
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceUiProjectileInitialFall);
 }
@@ -5763,7 +5763,7 @@ void renderRaceCourseCoinMarkers(RaceUiGfxCommandActor *arg0) {
     actor = arg0;
     gSPDisplayList(gRegionAllocPtr++, gEffectRenderModeSetupDl);
 
-    entry = D_800D693C[gRaceCourseIndex.signedValue];
+    entry = gCourseCoinMarkerEntryLists[gRaceCourseIndex.signedValue];
     i = 0;
     if (entry->sentinel != -1) {
         do {
@@ -5796,7 +5796,7 @@ void renderRaceCourseCoinMarkers(RaceUiGfxCommandActor *arg0) {
 
                 gSPMatrix(gRegionAllocPtr++, &actor->particles[i], G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
                 gSPMatrix(gRegionAllocPtr++, gViewportMatrix, G_MTX_NOPUSH | G_MTX_MUL | G_MTX_MODELVIEW);
-                gSPVertex(gRegionAllocPtr++, D_800D6968, 4, 0);
+                gSPVertex(gRegionAllocPtr++, gCourseCoinMarkerQuadVertices, 4, 0);
                 gSP2Triangles(gRegionAllocPtr++, 3, 2, 1, 0, 3, 1, 0, 0);
             }
             entry++;
@@ -5815,7 +5815,7 @@ void updateRaceCourseCoinMarkers(RaceUiGfxCommandActor *arg0) {
     register s32 ySize;
     register s32 sentinel;
 
-    entry = D_800D693C[gRaceCourseIndex.signedValue];
+    entry = gCourseCoinMarkerEntryLists[gRaceCourseIndex.signedValue];
     actor = arg0;
     if (gFrameCounter & 1) {
         actor->textureOffset++;
@@ -5867,7 +5867,7 @@ void initRaceCourseCoinMarkerMatrices(RaceUiGfxCommandActor *arg0) {
     register s32 offset;
     register s32 one;
 
-    script = D_800D693C[gRaceCourseIndex.signedValue];
+    script = gCourseCoinMarkerEntryLists[gRaceCourseIndex.signedValue];
     actor1 = arg0;
     actor2 = arg0;
     i = 0;
@@ -5893,7 +5893,7 @@ void initRaceCourseCoinMarkers(RaceUiGfxCommandActor *actor) {
     RaceUiGfxCommandScriptEntry *marker;
     s32 markerCount;
 
-    marker = D_800D693C[gRaceCourseIndex.signedValue];
+    marker = gCourseCoinMarkerEntryLists[gRaceCourseIndex.signedValue];
     markerCount = 0;
     if (marker->sentinel != -1) {
         do {
@@ -5939,7 +5939,7 @@ void renderRaceStartOverlay(RaceUiOverlayActor *arg0) {
         gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, arg0->panelAPalette);
         gSPMatrix(gRegionAllocPtr++, arg0->matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
         gSPMatrix(gRegionAllocPtr++, gViewportMatrix, G_MTX_NOPUSH | G_MTX_MUL | G_MTX_MODELVIEW);
-        gSPVertex(gRegionAllocPtr++, D_800D69A8, 8, 0);
+        gSPVertex(gRegionAllocPtr++, gRaceStartOverlayVertices, 8, 0);
         gSP1Quadrangle(gRegionAllocPtr++, 3, 2, 1, 0, 0);
         gDPLoadTextureTile_4b(gRegionAllocPtr++, arg0->panelBImage, G_IM_FMT_CI,
             48, 40, 0, 0, 48, 40, 0, G_TX_CLAMP, G_TX_CLAMP,
@@ -6057,7 +6057,7 @@ void renderRaceScoreAttackRings(RaceUiRankTextRenderActor *arg0) {
     Gfx *temp_s2;
     Gfx *temp_s3;
 
-    var_s4 = D_800D761C[gRaceCourseIndex.signedValue];
+    var_s4 = gCourseScoreAttackRingEntryLists[gRaceCourseIndex.signedValue];
     var_fp = TRUE;
     var_s6 = 0;
     if (var_s4->active != -1) {
@@ -6096,7 +6096,7 @@ void updateRaceScoreAttackRings(void *arg0) {
     s32 dz;
     s32 i;
 
-    entry = D_800D761C[gRaceCourseIndex.signedValue];
+    entry = gCourseScoreAttackRingEntryLists[gRaceCourseIndex.signedValue];
     if (entry->active != -1) {
         do {
             if (entry->active != 0) {
@@ -6153,7 +6153,7 @@ void initRaceScoreAttackRingMatrices(RaceUiRankTextRenderActor *arg0) {
 
     actor1 = arg0;
     actor2 = arg0;
-    entry = D_800D761C[gRaceCourseIndex.signedValue];
+    entry = gCourseScoreAttackRingEntryLists[gRaceCourseIndex.signedValue];
     count = actor1->count;
     i = 0;
     if (count > 0) {
@@ -6187,7 +6187,7 @@ void initRaceScoreAttackRings(RaceUiRankTextRenderActor *arg0) {
     RaceUiRankTextRenderEntry *var_v0;
     s32 var_v1;
 
-    var_v0 = D_800D761C[gRaceCourseIndex.signedValue];
+    var_v0 = gCourseScoreAttackRingEntryLists[gRaceCourseIndex.signedValue];
     var_v1 = 0;
     if (var_v0->active != -1) {
         do {

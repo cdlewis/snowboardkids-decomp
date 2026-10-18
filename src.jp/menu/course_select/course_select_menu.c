@@ -44,7 +44,7 @@ extern u8 gMenuExitSelection;
 extern u8 gShopMenuDescriptionSeen;
 extern u8 gShopMenuShowNewCoursesMessage;
 extern s16 gCoursePreviewViewportHeight;
-extern RaceCamera D_80112340;
+extern RaceCamera gCourseSelectCameraUpdateEnd;
 extern s8 gCourseSelectSelectedCourseSavedSlot;
 extern s32 gMenuFlowState;
 extern u8 gPendingFramebufferSwapCount;
@@ -959,7 +959,7 @@ void initCourseSelectPreview(void) {
         gCurrentMenuCameraObject = var_s0; \
         var_s0->update();
         var_s0 += 1;
-    } while (var_s0 != &D_80112340);
+    } while (var_s0 != &gCourseSelectCameraUpdateEnd);
     updateCallbackTasks();
     enqueueSoundEffect(0x17, 0x32);
 }
@@ -985,7 +985,7 @@ void updateCourseSelectPreviewClose(void) {
     do { \
         (gCurrentMenuCameraObject = var_s0)->update(); \
         var_s0 += 1; \
-    } while (var_s0 != (&D_80112340)); \
+    } while (var_s0 != (&gCourseSelectCameraUpdateEnd)); \
     updateCallbackTasks();
 }
 // clang-format on

@@ -6,7 +6,7 @@
 
 /*
  * This overlapping view is required to preserve IDO's register allocation in
- * the two task creation functions. D_80112770.activeListSentinel aliases
+ * the two task creation functions. gCallbackTaskSchedulerBssView.activeListSentinel aliases
  * gCallbackTaskActiveListSentinel at offset 0x10.
  */
 typedef struct CallbackTaskSchedulerBss {
@@ -26,12 +26,12 @@ extern u16 gFreeCallbackTaskType3Count;
 extern u16 gFreeCallbackTaskType4Count;
 extern CallbackTask gCallbackTaskActiveListSentinel;
 extern CallbackTask *gCallbackTaskActiveListHead;
-extern CallbackTaskSchedulerBss D_80112770;
-extern CallbackTaskGroup D_80112898;
-extern CallbackTaskGroup D_801129B0;
-extern CallbackTaskGroup D_80112AC8;
-extern CallbackTaskGroup D_80112BE0;
-extern CallbackTaskGroup D_80121820;
+extern CallbackTaskSchedulerBss gCallbackTaskSchedulerBssView;
+extern CallbackTaskGroup gCallbackTaskPoolStartView0;
+extern CallbackTaskGroup gCallbackTaskPoolStartView1;
+extern CallbackTaskGroup gCallbackTaskPoolStartView2;
+extern CallbackTaskGroup gCallbackTaskPoolStartView3;
+extern CallbackTaskGroup gCallbackTaskPoolEnd;
 void *createCallbackTaskPreservingArgsS32(CallbackTaskCallback callback, s32 type, s32 priority);
 void *createCallbackTaskS32(CallbackTaskCallback callback, s32 type, s32 priority);
 #pragma weak createCallbackTaskPreservingArgsS32 = createCallbackTaskPreservingArgs
@@ -51,11 +51,11 @@ void initCallbackTaskScheduler(s32 arg0) {
     gCallbackTaskActiveListHead = NULL; \
     resetRenderCallbackQueues(); \
     pool = gFreeCallbackTaskPool; \
-    task0 = &D_80112898; \
-    task1 = &D_801129B0; \
-    task2 = &D_80112AC8; \
-    task3 = &D_80112BE0; \
-    end = &D_80121820; \
+    task0 = &gCallbackTaskPoolStartView0; \
+    task1 = &gCallbackTaskPoolStartView1; \
+    task2 = &gCallbackTaskPoolStartView2; \
+    task3 = &gCallbackTaskPoolStartView3; \
+    end = &gCallbackTaskPoolEnd; \
 loop: \
     pool[3] = &task3->tasks[0]; \
     task3++; \
@@ -244,7 +244,7 @@ void *createCallbackTaskPreservingArgs(CallbackTaskCallback callback, u16 type, 
     }
     index = (index & 0xFFFF) - 1;
     prev = &gCallbackTaskActiveListSentinel;
-    sentinel = &D_80112770.activeListSentinel;
+    sentinel = &gCallbackTaskSchedulerBssView.activeListSentinel;
     gFreeCallbackTaskCount = index;
     task = gFreeCallbackTaskPool
         [(((((((index & 0xFFFF) & 0xFFFFu) & 0xFFFFu) & 0xFFFFu) & 0xFFFFu) & 0xFFFFu) & 0xFFFFu) & 0xFFFFu];
@@ -340,7 +340,7 @@ void *createCallbackTask(CallbackTaskCallback callback, u16 type, s32 priority) 
     }
     index = (index & 0xFFFF) - 1;
     prev = &gCallbackTaskActiveListSentinel;
-    sentinel = &D_80112770.activeListSentinel;
+    sentinel = &gCallbackTaskSchedulerBssView.activeListSentinel;
     gFreeCallbackTaskCount = index;
     task = gFreeCallbackTaskPool[(((((((index & 0xFFFF) & 0xFFFFu) & 0xFFFFu) & 0xFFFFu) & 0xFFFFu) & 0xFFFFu) & 0xFFFFu) & 0xFFFFu];
     if (prev->header.next != NULL) {

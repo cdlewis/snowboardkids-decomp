@@ -31,9 +31,9 @@ extern u8 gTrainingCourseLesson;
 
 extern u8 gMainMenuModeSelection;
 
-extern RaceTimer D_800DBC58[10];
+extern RaceTimer gScoreAttackTimeLimitsByCourse[10];
 
-extern RaceTimer D_800DBC80;
+extern RaceTimer gTrickAttackTimeLimit;
 
 extern u8 gRaceTimeTrialFinishRecorded;
 
@@ -73,11 +73,11 @@ void initRaceHud(void) {
             }
             if (gRaceTypeSelection == 1) {
                 gRaceHudMode = RACE_HUD_MODE_SCORE_ATTACK;
-                gRaceChallengeTimeLimit = D_800DBC58[gRaceCourseIndex.signedValue];
+                gRaceChallengeTimeLimit = gScoreAttackTimeLimitsByCourse[gRaceCourseIndex.signedValue];
             }
             if (gRaceTypeSelection == 2) {
                 gRaceHudMode = RACE_HUD_MODE_TRICK_ATTACK;
-                gRaceChallengeTimeLimit = D_800DBC80;
+                gRaceChallengeTimeLimit = gTrickAttackTimeLimit;
             }
         }
     } else {

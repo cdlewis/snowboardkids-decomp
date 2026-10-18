@@ -72,13 +72,13 @@ typedef struct {
     s8 unk8;
 } Unk80043040;
 
-extern u8 D_80120E80;
+extern u8 gRaceResultsAwardPlayerNumber;
 
 extern u8 gRaceChallengeFailed;
 
 extern u8 gTrainingCourseLesson;
 
-extern RaceCourseCharacterIdTable D_800DB7F4;
+extern RaceCourseCharacterIdTable gRaceCourseOpponentCharacterIds;
 
 extern u8 gMainMenuModeSelection;
 
@@ -90,7 +90,7 @@ extern s16 gRacePlayerAttackStartTimer;
 
 extern s8 gRacePlayerCount;
 
-extern u16 D_800DB8F0[16];
+extern u16 gRaceGhostReplayGridSwitchFrames[16];
 
 extern u8 gRaceUpdatePaused;
 
@@ -102,15 +102,15 @@ extern s32 gRaceCameraReplayStartX;
 
 extern s16 gRaceLapCount;
 
-extern CourseGridEntry *D_800DB7C0[12];
+extern CourseGridEntry *gRaceReplayCourseGridLists[12];
 
-extern s8 D_80120E81;
+extern s8 gRaceGhostRecordStatus;
 extern u8 gPendingEndingCreditsFlow;
 extern s32 gMenuFlowState;
 extern u8 gRumblePakConnectedMask;
 extern s16 gMenuFadeAlpha;
-extern u8 D_80120E80;
-extern u8 D_80120E77;
+extern u8 gRaceResultsAwardPlayerNumber;
+extern u8 gRacePauseMenuSelection;
 
 void initStartupControllerPakFlow(void) {
     LOAD_ASSET(_2427D0, 6);
@@ -156,7 +156,7 @@ void enterMainMenuAfterStartupControllerPakFlow(void) {
 }
 
 void clearRaceReplayCourseGrid(void) {
-    CourseGridEntry *entry = D_800DB7C0[gRaceCourseIndex.signedValue];
+    CourseGridEntry *entry = gRaceReplayCourseGridLists[gRaceCourseIndex.signedValue];
     s32 count = 0;
 loop:
     if (entry->status != COURSE_GRID_ENTRY_END) {
@@ -171,7 +171,7 @@ loop:
 }
 
 void saveRaceReplayCourseGridEntry(void) {
-    CourseGridEntry *entry = D_800DB7C0[gRaceCourseIndex.signedValue];
+    CourseGridEntry *entry = gRaceReplayCourseGridLists[gRaceCourseIndex.signedValue];
     s32 i = 0;
 
 loop:
@@ -193,7 +193,7 @@ s32 loadNextRaceReplayCourseGridEntry(void) {
     s32 count;
     CourseGridEntry *entry;
 
-    entry = D_800DB7C0[gRaceCourseIndex.signedValue];
+    entry = gRaceReplayCourseGridLists[gRaceCourseIndex.signedValue];
     count = 0;
 loop:
     if (entry->status != COURSE_GRID_ENTRY_END) {
@@ -215,7 +215,7 @@ loop:
 }
 
 s32 hasPendingRaceReplayCourseGridEntry(void) {
-    CourseGridEntry *entry = D_800DB7C0[gRaceCourseIndex.signedValue];
+    CourseGridEntry *entry = gRaceReplayCourseGridLists[gRaceCourseIndex.signedValue];
 
 loop:
     if (entry->status != COURSE_GRID_ENTRY_END) {
@@ -465,7 +465,7 @@ void initRaceSceneFlow(void) {
     u16 *replayRecordFlag;
 
     gRaceUpdatePaused = 0;
-    D_80120E77 = 0;
+    gRacePauseMenuSelection = 0;
     gRaceCameraModeChangeDisabled = 0;
     gRaceResultState = 0;
     gRaceDemoPlaybackEnabled = 0;
@@ -519,7 +519,7 @@ void initRaceSceneFlow(void) {
     for (i = gPlayerCount, k = 0; i < 4; i++) {
         while (1) {
             duplicate = 1;
-            gRacePlayers[i].characterId = D_800DB7F4.characterIds[gRaceCourseIndex.signedValue * 4 + k++];
+            gRacePlayers[i].characterId = gRaceCourseOpponentCharacterIds.characterIds[gRaceCourseIndex.signedValue * 4 + k++];
             for (j = 0; j < gPlayerCount; j++) {
                 if (gRacePlayers[i].characterId == gRacePlayers[j].characterId) {
                     duplicate = 0;
@@ -787,17 +787,17 @@ void drawRacePauseMenu(void *arg0) {
 
     drawAssetTableSprite(-0x14, -0x10, getRelocatableHeapBlockBase(gAssetHandles[0x1F]), 0x57);
     color = 0x1A;
-    if (D_80120E77 == 0) {
+    if (gRacePauseMenuSelection == 0) {
         color = 0x1B;
     }
     drawAssetTableSpriteWithExplicitPalette(-0x1C, 0, getRelocatableHeapBlockBase(gAssetHandles[0x1F]), 0x58, color);
     color = 0x1A;
-    if (D_80120E77 == 1) {
+    if (gRacePauseMenuSelection == 1) {
         color = 0x1B;
     }
     drawAssetTableSpriteWithExplicitPalette(-0x1C, 0xA, getRelocatableHeapBlockBase(gAssetHandles[0x1F]), 0x59, color);
     color = 0x1A;
-    if (D_80120E77 == 2) {
+    if (gRacePauseMenuSelection == 2) {
         color = 0x1B;
     }
     drawAssetTableSpriteWithExplicitPalette(-0x1C, 0x14, getRelocatableHeapBlockBase(gAssetHandles[0x1F]), 0x5A, color);
@@ -806,7 +806,7 @@ void drawRacePauseMenu(void *arg0) {
 #pragma GLOBAL_ASM("asm.jp/nonmatchings/race/flow/race_flow/updateRaceGameplayFlow.s")
 
 void waitRaceFinishResultsFlow(void) {
-    D_80120E77 = 0;
+    gRacePauseMenuSelection = 0;
     updateRaceFlowFrameWithCourseEffects();
     gCurrentGameTask->callbackData0--;
     if (gCurrentGameTask->callbackData0 == 0) {
@@ -1482,8 +1482,8 @@ void prepareRaceResultsFlow(void) {
 
     gPendingEndingCreditsFlow = 0;
     gFramebufferRenderInterval.value = 0;
-    D_80120E80 = 0;
-    D_80120E81 = 0;
+    gRaceResultsAwardPlayerNumber = 0;
+    gRaceGhostRecordStatus = 0;
 
     switch (gRaceSplitscreenMode) {
         case 0:
@@ -1493,7 +1493,7 @@ void prepareRaceResultsFlow(void) {
                 player = gRacePlayers;
                 for (;;) {
                     if (player->rankIndex == 0) {
-                        D_80120E80 = i + 1;
+                        gRaceResultsAwardPlayerNumber = i + 1;
                     }
                     i++;
                     player++;
@@ -1526,9 +1526,9 @@ void prepareRaceResultsFlow(void) {
             }
             if (i < 5) {
                 gRaceResultState = 1;
-                D_80120E80 = 1;
+                gRaceResultsAwardPlayerNumber = 1;
                 if (i == 0) {
-                    D_80120E81 = 1;
+                    gRaceGhostRecordStatus = 1;
                 }
             } else {
                 gRaceResultState = 2;
@@ -1557,7 +1557,7 @@ void prepareRaceResultsFlow(void) {
                         }
                         if (i < 5) {
                             gRaceResultState = 1;
-                            D_80120E80 = 1;
+                            gRaceResultsAwardPlayerNumber = 1;
                         } else {
                             gRaceResultState = 2;
                         }
@@ -1580,7 +1580,7 @@ void prepareRaceResultsFlow(void) {
                     }
                     if (i < 5) {
                         gRaceResultState = 1;
-                        D_80120E80 = 1;
+                        gRaceResultsAwardPlayerNumber = 1;
                     } else {
                         gRaceResultState = 2;
                     }
@@ -1609,7 +1609,7 @@ void prepareRaceResultsFlow(void) {
                 }
                 if (i < 5) {
                     gRaceResultState = 1;
-                    D_80120E80 = 1;
+                    gRaceResultsAwardPlayerNumber = 1;
                 } else {
                     gRaceResultState = 2;
                 }
@@ -1619,12 +1619,12 @@ void prepareRaceResultsFlow(void) {
 
     gCurrentGameTask->callbackData1 = 0x3C;
     setCurrentGameTaskCallback(updateRaceResultsFlow, 0);
-    if (D_80120E80 != 0) {
+    if (gRaceResultsAwardPlayerNumber != 0) {
         requestMusicSequenceBank(6);
         if ((gPlayerCount == 1) && (gRaceSplitscreenMode == 0)) {
             createCallbackTaskWithUserId((CallbackTaskCallback)updateRaceUiResultAwardBadgeDelay, 6, 0x64, 0xA9);
         }
-        createCallbackTaskWithUserId((CallbackTaskCallback)initFallingConfetti, 5, 0x64, D_80120E80 - 1);
+        createCallbackTaskWithUserId((CallbackTaskCallback)initFallingConfetti, 5, 0x64, gRaceResultsAwardPlayerNumber - 1);
     }
     updateRaceFlowFrame();
 }
@@ -1659,12 +1659,12 @@ void updateRaceResultsFlow(void) {
     } else {
         ready.value = 1;
     }
-    if ((D_80120E80 != 0) && (countActiveMusicSequences() != 0)) {
+    if ((gRaceResultsAwardPlayerNumber != 0) && (countActiveMusicSequences() != 0)) {
         ready.value = 0;
     }
 
     if (ready.value != 0) {
-        if (D_80120E80 == 0) {
+        if (gRaceResultsAwardPlayerNumber == 0) {
             requestMusicSequenceStop(4);
         }
         gMenuFlowState |= 0x20;
@@ -1963,8 +1963,8 @@ void updateRaceResultsFlow(void) {
         }
     }
 
-    if (D_80120E80 != 0) {
-        createCallbackTaskWithUserId((CallbackTaskCallback)initFallingConfetti, 5, 0x64, D_80120E80 - 1);
+    if (gRaceResultsAwardPlayerNumber != 0) {
+        createCallbackTaskWithUserId((CallbackTaskCallback)initFallingConfetti, 5, 0x64, gRaceResultsAwardPlayerNumber - 1);
     }
     updateRaceFlowFrame();
 }
@@ -1975,8 +1975,8 @@ void updateRaceResultsMusicFlow(void) {
         gCurrentGameTask->callbackData1 = 0x3C;
         gMenuFlowState |= 0x20;
     }
-    if (D_80120E80 != 0) {
-        createCallbackTaskWithUserId((CallbackTaskCallback)&initFallingConfetti, 5, 0x64, D_80120E80 - 1);
+    if (gRaceResultsAwardPlayerNumber != 0) {
+        createCallbackTaskWithUserId((CallbackTaskCallback)&initFallingConfetti, 5, 0x64, gRaceResultsAwardPlayerNumber - 1);
     }
     updateRaceFlowFrame();
     if (gMenuFlowState & 0x10) {
@@ -1991,8 +1991,8 @@ void updateRaceResultsMusicFlow(void) {
 
 void fadeOutRaceResultsFlow(void) {
     gFramebufferRenderInterval.value = 0;
-    if (D_80120E80 != 0) {
-        createCallbackTaskWithUserId((CallbackTaskCallback)initFallingConfetti, 5, 0x64, D_80120E80 - 1);
+    if (gRaceResultsAwardPlayerNumber != 0) {
+        createCallbackTaskWithUserId((CallbackTaskCallback)initFallingConfetti, 5, 0x64, gRaceResultsAwardPlayerNumber - 1);
     }
     updateRaceFlowFrame();
     gRaceRumbleEnabled = 0;
@@ -2003,9 +2003,9 @@ void fadeOutRaceResultsFlow(void) {
         if (gCurrentGameTask->callbackData0 == 0) {
             stopSoundEffects();
             if ((gRaceSplitscreenMode == 2) &&
-                (((Unk80043040 *)getRelocatableHeapBlockBase(gAssetHandles[0x2B]))->unk8 != 0) && (D_80120E81 != 0) &&
+                (((Unk80043040 *)getRelocatableHeapBlockBase(gAssetHandles[0x2B]))->unk8 != 0) && (gRaceGhostRecordStatus != 0) &&
                 (saveRaceRecordReplayData() != 0)) {
-                D_80120E81 = -1;
+                gRaceGhostRecordStatus = -1;
             }
             if (gRaceSplitscreenMode == 2) {
                 setCurrentGameTaskCallback(&initRaceGhostReplayFlow, 0);
@@ -2112,7 +2112,7 @@ void initRaceGhostReplayFlow(void) {
     gCurrentGameTask->callbackData0 = 0;
     gCurrentGameTask->callbackData1 = 0;
     createCallbackTask((CallbackTaskCallback)updateRaceUiPrizePayoutContinuePrompt, 6, 0x64);
-    if (D_80120E81 == -1) {
+    if (gRaceGhostRecordStatus == -1) {
         createCallbackTask((CallbackTaskCallback)updateRaceGhostUnavailableMessage, 6, 0x64);
     }
     setCurrentGameTaskCallback(updateRaceGhostReplayFlow, 0);
@@ -2121,7 +2121,7 @@ void initRaceGhostReplayFlow(void) {
 void updateRaceGhostReplayFlow(void) {
     void *sp18;
 
-    if (gCurrentGameTask->callbackData0 == D_800DB8F0[gCurrentGameTask->callbackData1]) {
+    if (gCurrentGameTask->callbackData0 == gRaceGhostReplayGridSwitchFrames[gCurrentGameTask->callbackData1]) {
         if (loadNextRaceReplayCourseGridEntry() != 0) {
             if (gCurrentGameTask->callbackData1 != 0xB) {
                 gCurrentGameTask->callbackData1++;
@@ -2176,7 +2176,7 @@ void finalizeRaceExitFlow(void) {
         requestRumbleMotorInit(2);
         requestRumbleMotorInit(3);
         gMenuFlowState = 0;
-        if (D_80120E77 == 2) {
+        if (gRacePauseMenuSelection == 2) {
             setCurrentGameTaskCallback(initRaceSceneFlow, 0);
         } else if (gPlayerCount == 1) {
             if (gRaceSplitscreenMode == 1) {

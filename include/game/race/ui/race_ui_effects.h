@@ -467,7 +467,7 @@ typedef struct RaceUiCourseSpriteActor {
 
 extern Vec3i gDizzyLandTeacupBumperPositions[10];
 extern Vec3i gDizzyLandFerrisWheelHubOffset;
-extern RaceUiProjectileVertexBlock D_800D64A0[8];
+extern RaceUiProjectileVertexBlock gRaceUiProjectileVertices[8];
 extern Gfx gAlphaSpriteRenderModeDl[];
 
 void renderRaceCourseScrollingTexture(RaceCourseScrollingTextureActor *arg0);

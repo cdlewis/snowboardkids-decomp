@@ -5668,18 +5668,18 @@ void updateRacePlayersPostUpdate(void) {
             player->unk28.y = player->groundCorrectionY + player->unk28.y - player->groundOffset + 0xA000;
             if (player->soundDisabled == 0) {
                 addRenderCallback(
-                    &D_801248C8,
+                    &gModelRenderCallbackQueue4Head,
                     (RenderCallback)drawRacePlayerModel,
                     player
                 );
                 addRenderCallback(
-                    &D_801248EC,
+                    &gModelRenderCallbackQueue7Head,
                     (RenderCallback)drawRacePlayerGroundShadow,
                     player
                 );
             } else {
                 addRenderCallback(
-                    &D_801248EC,
+                    &gModelRenderCallbackQueue7Head,
                     (RenderCallback)drawRaceGhostPlayerModel,
                     player
                 );

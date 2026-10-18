@@ -68,7 +68,7 @@ Gfx gEffectRenderModeCleanupDl[] = {
     gsSPEndDisplayList(),
 };
 
-RaceCourseTextureMarkerEntry D_800D9D68[] = {
+RaceCourseTextureMarkerEntry gBigSnowmanTextureMarkerSpawnEntries[] = {
     { 0,  { 0 }, { 0xDA6797E0, 0xE8120000, 0xE8618D80 } },
     { 0,  { 0 }, { 0xDA5596C0, 0xE8050000, 0xE8E23CA8 } },
     { 0,  { 0 }, { 0xD95E35E8, 0xE7DF8000, 0xE8D1E9E8 } },
@@ -118,7 +118,7 @@ RaceCourseTextureMarkerEntry D_800D9D68[] = {
     { -1, { 0 }, { 0x00000000, 0x00000000, 0x00000000 } },
 };
 
-RaceCourseTextureMarkerEntry D_800DA058[] = {
+RaceCourseTextureMarkerEntry gSunsetRockTextureMarkerSpawnEntries[] = {
     { 2,  { 0 }, { 0x28C8B179, 0xD113BFA6, 0xC9F84D48 } },
     { 2,  { 0 }, { 0x29477435, 0xD084A801, 0xCC351004 } },
     { 2,  { 0 }, { 0x2A2C03A7, 0xD0016D55, 0xCE225B3E } },
@@ -128,8 +128,8 @@ RaceCourseTextureMarkerEntry D_800DA058[] = {
 };
 
 RaceCourseTextureMarkerEntry *gCourseTextureMarkerSpawnEntriesByCourse[] = {
-    D_800D9D68,
-    D_800DA058,
+    gBigSnowmanTextureMarkerSpawnEntries,
+    gSunsetRockTextureMarkerSpawnEntries,
 };
 
 Vtx gRaceCourseSceneryFogPanelVertices[] = {
@@ -1325,7 +1325,7 @@ void updateCourseWaterLayer(RaceCourseWaterLayerActor *arg0) {
     arg0->textureScrollT -= 0x40;
     arg0->textureScrollT &= 0x7FF;
     if (arg0->useAlternateRenderQueue != 0) {
-        addRenderCallback(&D_801248EC, (RenderCallback)renderCourseWaterLayer, arg0);
+        addRenderCallback(&gModelRenderCallbackQueue7Head, (RenderCallback)renderCourseWaterLayer, arg0);
     } else {
         addRenderCallback(&gRaceObjectRenderCallbackList, (RenderCallback)renderCourseWaterLayer, arg0);
     }

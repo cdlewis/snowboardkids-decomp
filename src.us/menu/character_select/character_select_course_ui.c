@@ -3732,9 +3732,9 @@ void initCharacterSelectCourseExitPopup(CharacterSelectCourseWidgetActor *arg0) 
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateCharacterSelectCourseExitPopup);
 }
 
-const char D_800E0B98[] = "%2.2d";
-const char D_800E0BA0[] = "%2.2d";
-const char D_800E0BA8[] = "%2.2d";
+const char gCharacterSelectRecordMinutesFormat[] = "%2.2d";
+const char gCharacterSelectRecordSecondsFormat[] = "%2.2d";
+const char gCharacterSelectRecordCentisecondsFormat[] = "%2.2d";
 
 void drawCharacterSelectCourseRecordTime(CharacterSelectCourseRecordTime *arg0, s32 x, s32 arg2, s32 arg3) {
     char buffer[0x58];
@@ -3746,7 +3746,7 @@ void drawCharacterSelectCourseRecordTime(CharacterSelectCourseRecordTime *arg0, 
     record = arg0;
     y = arg2;
     color = arg3;
-    sprintf(&buffer[-0x10], D_800E0B98, record->minutes);
+    sprintf(&buffer[-0x10], gCharacterSelectRecordMinutesFormat, record->minutes);
     i = -0x10;
     do {
         do {
@@ -3775,7 +3775,7 @@ void drawCharacterSelectCourseRecordTime(CharacterSelectCourseRecordTime *arg0, 
         x += 8;
     }
 
-    sprintf(&buffer[-0x10], D_800E0BA0, record->seconds);
+    sprintf(&buffer[-0x10], gCharacterSelectRecordSecondsFormat, record->seconds);
     i = -0x10;
     do {
         drawAssetTableSpriteWithExplicitPaletteWideIndex(
@@ -3797,7 +3797,7 @@ void drawCharacterSelectCourseRecordTime(CharacterSelectCourseRecordTime *arg0, 
     );
 
     x += 8;
-    sprintf(&buffer[-0x10], D_800E0BA8, record->centiseconds >> 8);
+    sprintf(&buffer[-0x10], gCharacterSelectRecordCentisecondsFormat, record->centiseconds >> 8);
     i = -0x10;
     do {
         drawAssetTableSpriteWithExplicitPaletteWideIndex(

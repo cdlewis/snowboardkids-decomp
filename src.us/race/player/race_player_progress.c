@@ -25,7 +25,7 @@ s8 *gRaceCoursePlayerPathOffsetTables[40] = {
     (s8 *)&D_800DC9A8[0x500], (s8 *)&D_800DC9A8[0x500], (s8 *)&D_800DC9A8[0x511], (s8 *)&D_800DC9A8[0x522],
 };
 
-RacePlayerCheckpointEvent D_800DDF14[8] = {
+RacePlayerCheckpointEvent gBigSnowmanCheckpointEvents[8] = {
     { 0x31, 7 },
     { 0x52, 7 },
     { 0x66, 3 },
@@ -36,14 +36,14 @@ RacePlayerCheckpointEvent D_800DDF14[8] = {
     { -1,   0 },
 };
 
-RacePlayerCheckpointEvent D_800DDF34[4] = {
+RacePlayerCheckpointEvent gSunsetRockCheckpointEvents[4] = {
     { 0x27, 7 },
     { 0x34, 7 },
     { 0x67, 7 },
     { -1,   0 },
 };
 
-RacePlayerCheckpointEvent D_800DDF44[10] = {
+RacePlayerCheckpointEvent gNightHighwayCheckpointEvents[10] = {
     { 0x06, 7 },
     { 0x21, 1 },
     { 0x2C, 1 },
@@ -56,7 +56,7 @@ RacePlayerCheckpointEvent D_800DDF44[10] = {
     { -1,   0 },
 };
 
-RacePlayerCheckpointEvent D_800DDF6C[14] = {
+RacePlayerCheckpointEvent gGrassValleyCheckpointEvents[14] = {
     { 0x10,  7 },
     { 0x13,  7 },
     { 0x22,  3 },
@@ -73,7 +73,7 @@ RacePlayerCheckpointEvent D_800DDF6C[14] = {
     { -1,    7 },
 };
 
-RacePlayerCheckpointEvent D_800DDFA4[9] = {
+RacePlayerCheckpointEvent gDizzyLandCheckpointEvents[9] = {
     { 0x22, 1 },
     { 0x46, 1 },
     { 0x56, 2 },
@@ -85,7 +85,7 @@ RacePlayerCheckpointEvent D_800DDFA4[9] = {
     { -1,   7 },
 };
 
-RacePlayerCheckpointEvent D_800DDFC8[10] = {
+RacePlayerCheckpointEvent gQuicksandValleyCheckpointEvents[10] = {
     { 0x1E,  3 },
     { 0x2E,  3 },
     { 0x77,  0 },
@@ -98,7 +98,7 @@ RacePlayerCheckpointEvent D_800DDFC8[10] = {
     { -1,    7 },
 };
 
-RacePlayerCheckpointEvent D_800DDFF0[8] = {
+RacePlayerCheckpointEvent gSilverMountainCheckpointEvents[8] = {
     { 0x1A, 3 },
     { 0x29, 0 },
     { 0x4C, 3 },
@@ -109,26 +109,26 @@ RacePlayerCheckpointEvent D_800DDFF0[8] = {
     { -1,   7 },
 };
 
-RacePlayerCheckpointEvent D_800DE010[4] = {
+RacePlayerCheckpointEvent gNinjaLandCheckpointEvents[4] = {
     { 0x15, 7 },
     { 0x1F, 7 },
     { 0x32, 0 },
     { -1,   7 },
 };
 
-RacePlayerCheckpointEvent D_800DE020[3] = {
+RacePlayerCheckpointEvent gRookieMountainCheckpointEvents[3] = {
     { 0x17, 7 },
     { 0x38, 7 },
     { -1,   7 },
 };
 
-RacePlayerCheckpointEvent D_800DE02C[1] = {
+RacePlayerCheckpointEvent gAnimalLandCheckpointEvents[1] = {
     { -1, 7 }
 };
 
 RacePlayerCheckpointEvent *gRaceCourseCheckpointEventLists[10] = {
-    D_800DDF14, D_800DDF34, D_800DDF44, D_800DDF6C, D_800DDFA4,
-    D_800DDFC8, D_800DDFF0, D_800DE02C, D_800DE010, D_800DE020,
+    gBigSnowmanCheckpointEvents, gSunsetRockCheckpointEvents, gNightHighwayCheckpointEvents, gGrassValleyCheckpointEvents, gDizzyLandCheckpointEvents,
+    gQuicksandValleyCheckpointEvents, gSilverMountainCheckpointEvents, gAnimalLandCheckpointEvents, gNinjaLandCheckpointEvents, gRookieMountainCheckpointEvents,
 };
 
 u8 gSinglePlayerRankDisplayPatternFirst[4] = { 1, 0, 2, 0 };

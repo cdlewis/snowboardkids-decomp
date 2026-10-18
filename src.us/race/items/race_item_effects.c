@@ -33,11 +33,11 @@ typedef union {
     } word;
 } LongLongParts;
 
-extern u8 D_800D4660[4][28];
+extern u8 gRaceItemEffectTypeTableVariants[4][28];
 
 u8 *gRaceCourseItemEffectTypeTables[10] = {
-    D_800D4660[0], D_800D4660[0], D_800D4660[0], D_800D4660[2], D_800D4660[1],
-    D_800D4660[3], D_800D4660[0], D_800D4660[0], D_800D4660[0], D_800D4660[0],
+    gRaceItemEffectTypeTableVariants[0], gRaceItemEffectTypeTableVariants[0], gRaceItemEffectTypeTableVariants[0], gRaceItemEffectTypeTableVariants[2], gRaceItemEffectTypeTableVariants[1],
+    gRaceItemEffectTypeTableVariants[3], gRaceItemEffectTypeTableVariants[0], gRaceItemEffectTypeTableVariants[0], gRaceItemEffectTypeTableVariants[0], gRaceItemEffectTypeTableVariants[0],
 };
 
 u16 gRaceItemEffectSpriteIds[8] = { 10, 11, 12, 13, 10, 0, 0, 0 };
@@ -397,7 +397,7 @@ void updateRacePlayerHitEffect(RaceItemEffectActor *arg0) {
     if (temp_v0 < 0) {
         arg0->vector24.fields.word24.timer = temp_v0 + 1;
     }
-    addRenderCallback(&D_801248E0, (RenderCallback)renderRacePlayerHitEffect, arg0);
+    addRenderCallback(&gModelRenderCallbackQueue6Head, (RenderCallback)renderRacePlayerHitEffect, arg0);
 }
 
 void initRacePlayerHitEffect(RaceItemEffectActor *arg0) {
@@ -507,7 +507,7 @@ void updateRaceItemProjectileTrailEffect(RaceItemEffectActor *arg0) {
             return;
         }
     }
-    addRenderCallback(&D_801248EC, (RenderCallback)renderRaceItemProjectileTrailEffect, arg0);
+    addRenderCallback(&gModelRenderCallbackQueue7Head, (RenderCallback)renderRaceItemProjectileTrailEffect, arg0);
 }
 
 void initRaceItemProjectileTrailEffect(RaceItemEffectActor *arg0) {
@@ -606,7 +606,7 @@ void updateRacePlayerShockEffect(RaceItemEffectActor *arg0) {
     actor->payload.vec.x += player->modelPartTransforms[0].translation.x;
     actor->payload.vec.y += player->modelPartTransforms[0].translation.y;
     actor->payload.vec.z += player->modelPartTransforms[0].translation.z;
-    addRenderCallback(&D_801248C8, (RenderCallback)renderRacePlayerShockEffect, actor);
+    addRenderCallback(&gModelRenderCallbackQueue4Head, (RenderCallback)renderRacePlayerShockEffect, actor);
 }
 
 void initRacePlayerShockEffect(RaceItemEffectActor *arg0) {
@@ -763,7 +763,7 @@ void updateRaceItemBreakParticle(RaceItemEffectActor *arg0) {
     if (arg0->unk30.particle.drawInitialized == 0) {
         arg0->unk30.particle.drawInitialized++;
     }
-    addRenderCallback(&D_801248EC, (RenderCallback)renderRaceItemBreakParticle, arg0);
+    addRenderCallback(&gModelRenderCallbackQueue7Head, (RenderCallback)renderRaceItemBreakParticle, arg0);
 }
 
 void initRaceItemBreakParticle(RaceItemEffectActor *arg0) {
@@ -891,7 +891,7 @@ void updateRacePlayerRecoverySparkle(RaceItemEffectActor *arg0) {
     if (arg0->vector24.fields.word28.bytes.phase < 0) {
         arg0->vector24.fields.word28.bytes.phase = 0;
     }
-    addRenderCallback(&D_801248C8, (RenderCallback)renderRacePlayerRecoverySparkle, arg0);
+    addRenderCallback(&gModelRenderCallbackQueue4Head, (RenderCallback)renderRacePlayerRecoverySparkle, arg0);
 }
 
 void initRacePlayerRecoverySparkle(RaceItemEffectActor *arg0) {
@@ -984,7 +984,7 @@ void updateRacePlayerYellowTrickSparkles(RaceItemFollowActor *arg0) {
     if (temp_a2->timer < 0) {
         temp_a2->timer = 0;
     }
-    addRenderCallback(&D_801248C8, (RenderCallback)renderRacePlayerYellowTrickSparkles, temp_a2);
+    addRenderCallback(&gModelRenderCallbackQueue4Head, (RenderCallback)renderRacePlayerYellowTrickSparkles, temp_a2);
 }
 
 void initRacePlayerYellowTrickSparkles(RaceItemFollowActor *arg0) {
@@ -1161,7 +1161,7 @@ void updateRaceItemTextureEffects(RaceItemTextureActor *arg0) {
 
     for (i = 0; i < 4; i++) gRaceItemTextureEffectDrawLists[i] = NULL;
 
-    addRenderCallback(&D_801248E0, (RenderCallback)renderRaceItemTextureEffects, arg0);
+    addRenderCallback(&gModelRenderCallbackQueue6Head, (RenderCallback)renderRaceItemTextureEffects, arg0);
 }
 // clang-format on
 
@@ -1304,7 +1304,7 @@ void updateRacePlayerBlueTrickSparkles(RaceItemFollowActor *arg0) {
     if (temp_a2->timer < 0) {
         temp_a2->timer = 0;
     }
-    addRenderCallback(&D_801248C8, (RenderCallback)renderRacePlayerBlueTrickSparkles, temp_a2);
+    addRenderCallback(&gModelRenderCallbackQueue4Head, (RenderCallback)renderRacePlayerBlueTrickSparkles, temp_a2);
 }
 
 void initRacePlayerBlueTrickSparkles(RaceItemFollowActor *arg0) {
