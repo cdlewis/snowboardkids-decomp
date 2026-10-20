@@ -1,6 +1,6 @@
 #include "game/race/course/race_course_effects.h"
 #include "game/race/ui/race_ui_effects.h"
-#include "game/race/items/race_item_projectiles.h"
+#include "game/race/items/race_projectiles.h"
 #include "game/race/camera/race_camera.h"
 #include "game/race/race_state.h"
 #include "common.h"
@@ -15,7 +15,7 @@
 #include "game/math/spatial_math.h"
 #include "game/math/fixed_point_math.h"
 #include "game/race/player/race_player_input.h"
-#include "game/race/items/race_item_effects.h"
+#include "game/race/effects/race_visual_effects.h"
 
 #define ASSET_HANDLE(index) (gAssetHandles[index])
 #define RACE_ITEM_GFX_CMD(pkt, cmd0, cmd1) \

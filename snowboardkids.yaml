@@ -113,8 +113,8 @@ segments:
       - [0x44550, c, race/scene/race_scene_setup]
       - [0x464E0, c, menu/renderer/menu_render_utils]
       - [0x49C00, c, math/spatial_math]
-      - [0x4A040, c, race/items/race_item_projectiles]
-      - [0x4E760, c, race/items/race_item_effects]
+      - [0x4A040, c, race/items/race_projectiles]
+      - [0x4E760, c, race/effects/race_visual_effects]
       - [0x51BF0, c, menu/main_menu/main_menu_panel_ui]
       - [0x54260, c, menu/renderer/menu_screen_effects]
       - [0x562B0, c, race/effects/race_intro_effects]
@@ -135,7 +135,7 @@ segments:
       - [0x83DC0, c, race/course/race_surface_cues]
       - [0x843D0, c, race/effects/snowboard_trail_effects]
       - [0x84980, c, race/player/race_player_input]
-      - [0x855E0, c, race/player/race_player_pickup_effects]
+      - [0x855E0, c, race/player/race_player_equipment_use]
       - [0x85B50, c, race/player/race_player_collision]
       - [0x88200, c, race/player/race_player_movement]
       - [0x8CAB0, c, race/player/race_player_update]
@@ -310,8 +310,8 @@ segments:
       - [0xD4C20, .data, race/scene/race_scene_setup]
       - [0xD4CB0, .data, menu/renderer/menu_render_utils]
       - [0xD4CD0, .data, math/spatial_math]
-      - [0xD51E0, .data, race/items/race_item_projectiles]
-      - [0xD52D0, .data, race/items/race_item_effects]
+      - [0xD51E0, .data, race/items/race_projectiles]
+      - [0xD52D0, .data, race/effects/race_visual_effects]
       - [0xD5640, .data, menu/main_menu/main_menu_panel_ui]
       - [0xD6330, .data, menu/renderer/menu_screen_effects]
       - [0xD6850, .data, race/effects/race_intro_effects]
@@ -438,8 +438,8 @@ segments:
       - { type: bss, name: bss_chunk_a_2_ending_credits_flow_tail, vram: 0x8010B1B0 }
       - { type: .bss, name: menu/main_menu/main_menu_scene_model, vram: 0x8010B200 }
       - { type: bss, name: bss_chunk_a_2_main_menu_scene_model_tail, vram: 0x8010E180 }
-      - { type: .bss, name: race/items/race_item_effects, vram: 0x801121D0 }
-      - { type: bss, name: bss_chunk_a_2_race_item_effects_tail, vram: 0x801121E0 }
+      - { type: .bss, name: race/effects/race_visual_effects, vram: 0x801121D0 }
+      - { type: bss, name: bss_chunk_a_2_race_visual_effects_tail, vram: 0x801121E0 }
       - { type: .bss, name: engine/viewport_manager, vram: 0x801124B0 }
       - { type: bss, name: bss_chunk_a_3, vram: 0x80112770 }
       - { type: .bss, name: race/player/race_player_input, vram: 0x80121D80 }

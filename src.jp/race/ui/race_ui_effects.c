@@ -21,7 +21,7 @@
 #include "game/math/spatial_math.h"
 #include "game/math/fixed_point_math.h"
 #include "game/race/motion/race_motion.h"
-#include "game/race/items/race_item_projectiles.h"
+#include "game/race/items/race_projectiles.h"
 #include "game/race/player/race_player_movement.h"
 #include "game/race/player/race_player_input.h"
 #include "game/race/camera/race_camera.h"
@@ -344,7 +344,7 @@ extern Vec3i gDizzyLandCarouselPositions[];
 extern Vtx gRaceUiStunIconQuadVertices[];
 extern Vec3i gDizzyLandSpinningCabinRidePositions[];
 extern Vtx gSilverMountainSnowParticleVertices[];
-extern u16 gForwardActionProjectileAnimation[];
+extern u16 gRatFaceItemAnimation[];
 extern Vtx gRaceStartOverlayVertices[];
 
 void renderRaceCourseScrollingTexture(RaceCourseScrollingTextureActor *arg0) {
@@ -3183,7 +3183,7 @@ void initRacePlayerSparkleEffect(RaceUiSparkleActor *arg0) {
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRacePlayerSparkleRise);
 }
 
-void spawnRacePlayerSparkleEffect(s16 arg0) {
+void spawnGhostItemEffect(s16 arg0) {
     RaceUiSparkleActor *temp =
         createCallbackTaskPreservingArgs((CallbackTaskCallback)initRacePlayerSparkleEffect, 0, 0x62);
     if (temp != NULL) {
@@ -3605,7 +3605,7 @@ void updateGhostSlowdownImpact(RaceUiPodiumTrailActor *arg0) {
         arg0->pos.z = player->unk28.z;
     }
 
-    gRacePlayers[arg0->targetPlayerIndex].itemTargetFlag = 1;
+    gRacePlayers[arg0->targetPlayerIndex].isTargetedByAttack = 1;
     addRenderCallback(&gRaceModelEffectRenderCallbackList, (RenderCallback)renderGhostSlowdownActor, arg0);
 }
 
@@ -3643,7 +3643,7 @@ void updateGhostSlowdownRise(RaceUiPodiumTrailActor *arg0) {
                 setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateGhostSlowdownImpact);
             }
         }
-        gRacePlayers[arg0->targetPlayerIndex].itemTargetFlag = 1;
+        gRacePlayers[arg0->targetPlayerIndex].isTargetedByAttack = 1;
         addRenderCallback(&gRaceModelEffectRenderCallbackList, (RenderCallback)renderGhostSlowdownActor, (void *)arg0);
     } else if (gRaceUpdatePaused == 0) {
         arg0->timer--;
@@ -3659,7 +3659,7 @@ void initGhostSlowdownActor(RaceUiPodiumTrailActor *arg0) {
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateGhostSlowdownRise);
 }
 
-void spawnGhostSlowdownTargets(s16 arg0) {
+void spawnPanItemTargets(s16 arg0) {
     s32 spawnIndex;
     s32 playerIndex;
     RaceUiPodiumTrailActor *actor;
@@ -5099,7 +5099,7 @@ void updateRaceUiProjectileInitialFall(RaceUiProjectileActor *arg0) {
     addRenderCallback(&gModelRenderCallbackQueue4Head, (RenderCallback)renderRaceUiProjectile, actor);
 }
 
-void initForwardActionProjectileEffect(RaceUiProjectileActor *arg0) {
+void initRatFaceItemEffect(RaceUiProjectileActor *arg0) {
     arg0->velocity.x = 0;
     arg0->velocity.y = 0x280000;
     arg0->velocity.z = 0;
@@ -5107,7 +5107,7 @@ void initForwardActionProjectileEffect(RaceUiProjectileActor *arg0) {
     arg0->unk4C = 0;
     arg0->verticalVelocity = 0x300000;
     arg0->verticalAcceleration = 0;
-    setRaceUiProjectileAnimation(arg0, gForwardActionProjectileAnimation);
+    setRaceUiProjectileAnimation(arg0, gRatFaceItemAnimation);
     enqueuePositionalSoundEffect(0x66, &gRacePlayers[arg0->task.userId].unk28, 0x7F, 0x32);
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceUiProjectileInitialFall);
 }

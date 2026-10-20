@@ -8,7 +8,7 @@
 #include "assets.h"
 #include "game/engine/asset_manager.h"
 #include "game/engine/relocatable_heap.h"
-#include "game/race/items/race_item_effects.h"
+#include "game/race/effects/race_visual_effects.h"
 #include "game/race/player/race_player_movement.h"
 #include "game/race/ui/race_hud.h"
 #include "game/race/ui/race_ui_effects.h"
@@ -149,7 +149,7 @@ void drawTargetTimeChallengeHud(void *arg0) {
         -0x88,
         -0x60,
         getRelocatableHeapBlockBase(RACE_HUD_POPUP_FONT_HANDLE),
-        gRaceHudActionEffectTileIds[1]
+        gRaceHudItemTileIds[1]
     );
     drawAssetTableSprite(-0x88, 0x40, getRelocatableHeapBlockBase(RACE_HUD_POPUP_FONT_HANDLE), 0x24);
     drawAssetTableSprite(-0x88, 0x40, getRelocatableHeapBlockBase(RACE_HUD_POPUP_FONT_HANDLE), 0x25);
@@ -238,37 +238,37 @@ void drawSinglePlayerRaceHud(void *arg0) {
         (gRaceHudCoinSpinnerFrame >> 1) + 4
     );
 
-    if (gRacePlayers[0].itemEffectPalette != 0) {
+    if (gRacePlayers[0].shotPalette != 0) {
         drawScaledAssetTableSprite(
             -0x20,
             -0x60,
             getRelocatableHeapBlockBase(RACE_HUD_POPUP_FONT_HANDLE),
-            gRaceHudItemEffectTileOffsets[gRacePlayers[0].itemEffectType] + gRacePlayers[0].itemEffectCount - 1,
-            gRacePlayers[0].itemEffectPalette
+            gRaceHudShotTileOffsets[gRacePlayers[0].shotType] + gRacePlayers[0].shotCount - 1,
+            gRacePlayers[0].shotPalette
         );
     } else {
         drawAssetTableSprite(
             -0x20,
             -0x60,
             getRelocatableHeapBlockBase(RACE_HUD_POPUP_FONT_HANDLE),
-            gRaceHudItemEffectTileOffsets[gRacePlayers[0].itemEffectType] + gRacePlayers[0].itemEffectCount - 1
+            gRaceHudShotTileOffsets[gRacePlayers[0].shotType] + gRacePlayers[0].shotCount - 1
         );
     }
 
-    if (gRacePlayers[0].actionEffectPalette != 0) {
+    if (gRacePlayers[0].itemPalette != 0) {
         drawScaledAssetTableSprite(
             0,
             -0x60,
             getRelocatableHeapBlockBase(RACE_HUD_POPUP_FONT_HANDLE),
-            gRaceHudActionEffectTileIds[gRacePlayers[0].actionEffectType],
-            gRacePlayers[0].actionEffectPalette
+            gRaceHudItemTileIds[gRacePlayers[0].itemType],
+            gRacePlayers[0].itemPalette
         );
     } else {
         drawAssetTableSprite(
             0,
             -0x60,
             getRelocatableHeapBlockBase(RACE_HUD_POPUP_FONT_HANDLE),
-            gRaceHudActionEffectTileIds[gRacePlayers[0].actionEffectType]
+            gRaceHudItemTileIds[gRacePlayers[0].itemType]
         );
     }
 
@@ -331,37 +331,37 @@ void drawTrainingRaceHud(void *arg0) {
         (gRaceHudCoinSpinnerFrame >> 1) + 4
     );
 
-    if (gRacePlayers[0].itemEffectPalette != 0) {
+    if (gRacePlayers[0].shotPalette != 0) {
         drawScaledAssetTableSprite(
             -0x20,
             -0x60,
             getRelocatableHeapBlockBase(RACE_HUD_POPUP_FONT_HANDLE),
-            gRaceHudItemEffectTileOffsets[gRacePlayers[0].itemEffectType] + gRacePlayers[0].itemEffectCount - 1,
-            gRacePlayers[0].itemEffectPalette
+            gRaceHudShotTileOffsets[gRacePlayers[0].shotType] + gRacePlayers[0].shotCount - 1,
+            gRacePlayers[0].shotPalette
         );
     } else {
         drawAssetTableSprite(
             -0x20,
             -0x60,
             getRelocatableHeapBlockBase(RACE_HUD_POPUP_FONT_HANDLE),
-            gRaceHudItemEffectTileOffsets[gRacePlayers[0].itemEffectType] + gRacePlayers[0].itemEffectCount - 1
+            gRaceHudShotTileOffsets[gRacePlayers[0].shotType] + gRacePlayers[0].shotCount - 1
         );
     }
 
-    if (gRacePlayers[0].actionEffectPalette != 0) {
+    if (gRacePlayers[0].itemPalette != 0) {
         drawScaledAssetTableSprite(
             0,
             -0x60,
             getRelocatableHeapBlockBase(RACE_HUD_POPUP_FONT_HANDLE),
-            gRaceHudActionEffectTileIds[gRacePlayers[0].actionEffectType],
-            gRacePlayers[0].actionEffectPalette
+            gRaceHudItemTileIds[gRacePlayers[0].itemType],
+            gRacePlayers[0].itemPalette
         );
     } else {
         drawAssetTableSprite(
             0,
             -0x60,
             getRelocatableHeapBlockBase(RACE_HUD_POPUP_FONT_HANDLE),
-            gRaceHudActionEffectTileIds[gRacePlayers[0].actionEffectType]
+            gRaceHudItemTileIds[gRacePlayers[0].itemType]
         );
     }
 
@@ -405,9 +405,9 @@ void drawMultiplayerRaceHud(void *arg0) {
         -0x18,
         -0x38,
         texture,
-        gRaceHudItemEffectTileOffsets[gRacePlayers[gCurrentViewportIndex].itemEffectType] +
-            gRacePlayers[gCurrentViewportIndex].itemEffectCount - 1,
-        player->itemEffectPalette + 1
+        gRaceHudShotTileOffsets[gRacePlayers[gCurrentViewportIndex].shotType] +
+            gRacePlayers[gCurrentViewportIndex].shotCount - 1,
+        player->shotPalette + 1
     );
 
     texture = getRelocatableHeapBlockBase(RACE_HUD_POPUP_FONT_HANDLE);
@@ -416,8 +416,8 @@ void drawMultiplayerRaceHud(void *arg0) {
         -8,
         -0x38,
         texture,
-        gRaceHudActionEffectTileIds[player->actionEffectType],
-        player->actionEffectPalette + 1
+        gRaceHudItemTileIds[player->itemType],
+        player->itemPalette + 1
     );
 
     texture = getRelocatableHeapBlockBase(RACE_HUD_POPUP_FONT_HANDLE);
@@ -639,17 +639,17 @@ void updateRaceHud(void) {
 
     switch (*(u16 *)&gRaceHudMode) {
         case RACE_HUD_MODE_ONE_PLAYER:
-            if (gRacePlayers[0].itemEffectPalette != 0) {
-                if (gRacePlayers[0].itemEffectPalette == 4) {
+            if (gRacePlayers[0].shotPalette != 0) {
+                if (gRacePlayers[0].shotPalette == 4) {
                     spawnRaceUiSparkle(-0x20, -0x60, 0, 0, 0);
                 }
-                gRacePlayers[0].itemEffectPalette--;
+                gRacePlayers[0].shotPalette--;
             }
-            if (gRacePlayers[0].actionEffectPalette != 0) {
-                if (gRacePlayers[0].actionEffectPalette == 4) {
+            if (gRacePlayers[0].itemPalette != 0) {
+                if (gRacePlayers[0].itemPalette == 4) {
                     spawnRaceUiSparkle(0, -0x60, 0, 0, 1);
                 }
-                gRacePlayers[0].actionEffectPalette--;
+                gRacePlayers[0].itemPalette--;
             }
             addRenderCallback(&gRaceOverlayRenderCallbackList, drawSinglePlayerRaceHud, 0);
             addRenderCallback(&gRaceForegroundRenderCallbackList, noopRaceHudCallback, 0);
@@ -657,17 +657,17 @@ void updateRaceHud(void) {
             return;
         case RACE_HUD_MODE_TWO_PLAYER:
             for (i = 0; i < 2; i++) {
-                if (gRacePlayers[i].itemEffectPalette != 0) {
-                    if (gRacePlayers[i].itemEffectPalette == 4) {
+                if (gRacePlayers[i].shotPalette != 0) {
+                    if (gRacePlayers[i].shotPalette == 4) {
                         spawnRaceUiSparkle(-0x88, -0x30, (s16)i, 0, 0);
                     }
-                    gRacePlayers[i].itemEffectPalette--;
+                    gRacePlayers[i].shotPalette--;
                 }
-                if (gRacePlayers[i].actionEffectPalette != 0) {
-                    if (gRacePlayers[i].actionEffectPalette == 4) {
+                if (gRacePlayers[i].itemPalette != 0) {
+                    if (gRacePlayers[i].itemPalette == 4) {
                         spawnRaceUiSparkle(-0x68, -0x30, (s16)i, 0, 1);
                     }
-                    gRacePlayers[i].actionEffectPalette--;
+                    gRacePlayers[i].itemPalette--;
                 }
             }
             addRenderCallback(&gRaceOverlayRenderCallbackList, drawTwoPlayerRaceHud, 0);
@@ -675,31 +675,31 @@ void updateRaceHud(void) {
             updateRaceCourseProgressMeter();
             return;
         case RACE_HUD_MODE_FOUR_PLAYER:
-            if (gRacePlayers[3].itemEffectPalette != 0) {
-                if (gRacePlayers[3].itemEffectPalette == 4) {
+            if (gRacePlayers[3].shotPalette != 0) {
+                if (gRacePlayers[3].shotPalette == 4) {
                     spawnRaceUiSparkle(-0x10, -0x30, 3, 1, 0);
                 }
-                gRacePlayers[3].itemEffectPalette--;
+                gRacePlayers[3].shotPalette--;
             }
-            if (gRacePlayers[3].actionEffectPalette != 0) {
-                if (gRacePlayers[3].actionEffectPalette == 4) {
+            if (gRacePlayers[3].itemPalette != 0) {
+                if (gRacePlayers[3].itemPalette == 4) {
                     spawnRaceUiSparkle(0, -0x30, 3, 1, 1);
                 }
-                gRacePlayers[3].actionEffectPalette--;
+                gRacePlayers[3].itemPalette--;
             }
         case RACE_HUD_MODE_THREE_PLAYER:
             for (i = 0; i < 3; i++) {
-                if (gRacePlayers[i].itemEffectPalette != 0) {
-                    if (gRacePlayers[i].itemEffectPalette == 4) {
+                if (gRacePlayers[i].shotPalette != 0) {
+                    if (gRacePlayers[i].shotPalette == 4) {
                         spawnRaceUiSparkle(-0x10, -0x30, (s16)i, 1, 0);
                     }
-                    gRacePlayers[i].itemEffectPalette--;
+                    gRacePlayers[i].shotPalette--;
                 }
-                if (gRacePlayers[i].actionEffectPalette != 0) {
-                    if (gRacePlayers[i].actionEffectPalette == 4) {
+                if (gRacePlayers[i].itemPalette != 0) {
+                    if (gRacePlayers[i].itemPalette == 4) {
                         spawnRaceUiSparkle(0, -0x30, (s16)i, 1, 1);
                     }
-                    gRacePlayers[i].actionEffectPalette--;
+                    gRacePlayers[i].itemPalette--;
                 }
             }
             addRenderCallback(&gRaceOverlayRenderCallbackList, drawMultiplayerRaceHud, 0);
@@ -768,17 +768,17 @@ void updateRaceHud(void) {
             addRenderCallback(&gRaceForegroundRenderCallbackList, drawTrickAttackChallengeLabels, 0);
             return;
         case RACE_HUD_MODE_TRAINING_OR_DEMO:
-            if (gRacePlayers[0].itemEffectPalette != 0) {
-                if (gRacePlayers[0].itemEffectPalette == 4) {
+            if (gRacePlayers[0].shotPalette != 0) {
+                if (gRacePlayers[0].shotPalette == 4) {
                     spawnRaceUiSparkle(-0x20, -0x60, 0, 0, 0);
                 }
-                gRacePlayers[0].itemEffectPalette--;
+                gRacePlayers[0].shotPalette--;
             }
-            if (gRacePlayers[0].actionEffectPalette != 0) {
-                if (gRacePlayers[0].actionEffectPalette == 4) {
+            if (gRacePlayers[0].itemPalette != 0) {
+                if (gRacePlayers[0].itemPalette == 4) {
                     spawnRaceUiSparkle(0, -0x60, 0, 0, 1);
                 }
-                gRacePlayers[0].actionEffectPalette--;
+                gRacePlayers[0].itemPalette--;
             }
             addRenderCallback(&gRaceOverlayRenderCallbackList, drawTrainingRaceHud, 0);
             return;

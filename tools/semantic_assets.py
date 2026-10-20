@@ -45,14 +45,14 @@ def validate_registry(root, registry):
         if sorted(ids)!=list(range(1,count+1)):
             raise ValueError(f'incomplete/duplicate {family} item IDs: {ids}')
     hud = (root/'src.us/race/ui/race_hud.c').read_text()
-    shot = numbers(initializer(hud,'gRaceHudItemEffectTileOffsets'))
-    action = numbers(initializer(hud,'gRaceHudActionEffectTileIds'))
+    shot = numbers(initializer(hud,'gRaceHudShotTileOffsets'))
+    action = numbers(initializer(hud,'gRaceHudItemTileIds'))
     for name,item in items.items():
         i = item['runtime_id']
         expected = list(range(shot[i],shot[i]+3)) if item['family']=='projectile' else [action[i]]
         if item['icons']!=expected:
             raise ValueError(f'{name}: icon registry differs from HUD table')
-    dispatch = (root/'src.us/race/player/race_player_pickup_effects.c').read_text()
+    dispatch = (root/'src.us/race/player/race_player_equipment_use.c').read_text()
     for name,item in items.items():
         if item['renderer'] not in dispatch:
             raise ValueError(f'{name}: renderer no longer appears in item dispatch')
@@ -382,7 +382,7 @@ def migrate_tree(original_root, root, layout, registry):
         for bank,index,old,palette in item_images[name]:
             ref = dict(image=os.path.relpath(moves.get(old,old),base),palette=dict(bank=bank,index=palette),entry=index)
             b['icons' if bank=='SHARED_UI_SPRITES' else 'sprites'].append(ref)
-        b['shared_effects'] = ['src.us/race/items/race_item_effects.c','src.us/race/player/race_player_pickup_effects.c']
+        b['shared_effects'] = ['src.us/race/effects/race_visual_effects.c','src.us/race/player/race_player_equipment_use.c']
     # Retain non-model family bundles with corrected file references, but hide
     # packing records from their public sources lists.
     for path,old in bundles.items():

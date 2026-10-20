@@ -46,7 +46,7 @@ typedef struct RacePickupActor {
     /* 0x34 */ Transform3D transform;
     /* 0x54 */ Mtx *baseMatrix; /* Camera-facing base, multiplied by gViewportMatrix. */
     /* 0x58 */ Mtx *shellMatrix;
-    /* 0x5C */ Mtx *symbolMatrix; /* Floating item/action symbol. */
+    /* 0x5C */ Mtx *symbolMatrix; /* Floating shot/item symbol. */
     /* 0x60 */ s32 velY;
     /* 0x64 */ void *image0;
     /* 0x68 */ void *palette0;

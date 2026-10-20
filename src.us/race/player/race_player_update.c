@@ -14,8 +14,8 @@
 #include "game/math/fixed_point_math.h"
 #include "game/math/spatial_math.h"
 #include "game/race/player/race_player_input.h"
-#include "game/race/items/race_item_effects.h"
-#include "game/race/player/race_player_pickup_effects.h"
+#include "game/race/effects/race_visual_effects.h"
+#include "game/race/player/race_player_equipment_use.h"
 #include "game/menu/renderer/menu_screen_effects.h"
 #include "game/race/player/race_player_movement.h"
 #include "game/race/player/race_player_progress.h"
@@ -357,13 +357,13 @@ void initRacePlayer(RacePlayer *player) {
         player->unk274 = 0xC0000;
     }
     if (gRaceSplitscreenMode == 2) {
-        player->actionEffectType = RACE_ACTION_SPEED_FAN;
+        player->itemType = RACE_ITEM_SPEED_FAN;
     }
     if (player->isCpu == 0) {
         player->unk519 = 6;
     }
     if ((gRaceSplitscreenMode == 1) && (gRaceTypeSelection == 1)) {
-        player->shieldEffectTimer = 10;
+        player->shieldShotCount = 10;
     }
     if (gRaceCourseIndex.signedValue == 9) {
         player->pos.z = -0xBD0000;
@@ -377,13 +377,13 @@ void initRacePlayer(RacePlayer *player) {
 
     if (gRaceDemoPlaybackEnabled == 1) {
         if (player->playerIndex == 0) {
-            player->itemEffectType = RACE_ITEM_FREEZE_SHOT;
-            player->itemEffectCount = 3;
+            player->shotType = RACE_SHOT_FREEZE_SHOT;
+            player->shotCount = 3;
         } else {
-            player->itemEffectType = RACE_ITEM_BOMB;
-            player->itemEffectCount = 3;
+            player->shotType = RACE_SHOT_BOMB;
+            player->shotCount = 3;
         }
-        player->actionEffectType = RACE_ACTION_SPEED_FAN;
+        player->itemType = RACE_ITEM_SPEED_FAN;
     }
 
     switch (gTrainingCourseLesson) {
@@ -447,50 +447,50 @@ void initRacePlayer(RacePlayer *player) {
 
     switch (gMainMenuModeSelection) {
         case 1:
-            player->itemEffectType = RACE_ITEM_SLAPSTICK;
-            player->itemEffectCount = 3;
+            player->shotType = RACE_SHOT_SLAPSTICK;
+            player->shotCount = 3;
             break;
         case 2:
-            player->itemEffectType = RACE_ITEM_PARACHUTE;
-            player->itemEffectCount = 3;
+            player->shotType = RACE_SHOT_PARACHUTE;
+            player->shotCount = 3;
             break;
         case 3:
-            player->itemEffectType = RACE_ITEM_FREEZE_SHOT;
-            player->itemEffectCount = 3;
+            player->shotType = RACE_SHOT_FREEZE_SHOT;
+            player->shotCount = 3;
             break;
         case 4:
-            player->itemEffectType = RACE_ITEM_SNOWMAN;
-            player->itemEffectCount = 3;
+            player->shotType = RACE_SHOT_SNOWMAN;
+            player->shotCount = 3;
             break;
         case 5:
-            player->itemEffectType = RACE_ITEM_BOMB;
-            player->itemEffectCount = 3;
+            player->shotType = RACE_SHOT_BOMB;
+            player->shotCount = 3;
             break;
         case 6:
-            player->actionEffectType = RACE_ACTION_SPEED_FAN;
+            player->itemType = RACE_ITEM_SPEED_FAN;
             break;
         case 7:
-            player->actionEffectType = RACE_ACTION_GHOST;
+            player->itemType = RACE_ITEM_GHOST;
             break;
         case 8:
-            player->actionEffectType = RACE_ACTION_PAN;
+            player->itemType = RACE_ITEM_PAN;
             break;
         case 9:
-            player->actionEffectType = RACE_ACTION_ROCK;
+            player->itemType = RACE_ITEM_ROCK;
             break;
         case 10:
-            player->actionEffectType = RACE_ACTION_RAT_FACE;
+            player->itemType = RACE_ITEM_RAT_FACE;
             if (player->playerIndex != 0) {
                 player->score = 0x1388;
             }
             break;
         case 11:
-            player->actionEffectType = RACE_ACTION_INVISIBLE;
+            player->itemType = RACE_ITEM_INVISIBLE;
             if (player->playerIndex == 2) {
-                player->actionEffectType = RACE_ACTION_PAN;
+                player->itemType = RACE_ITEM_PAN;
             }
-            player->itemEffectType = RACE_ITEM_SLAPSTICK;
-            player->itemEffectCount = 3;
+            player->shotType = RACE_SHOT_SLAPSTICK;
+            player->shotCount = 3;
             break;
     }
 
@@ -676,7 +676,7 @@ void updateRacePlayer(RacePlayer *player) {
     gRacePlayerModeUpdateHandlers[player->mode](player);
     player->unk517 = 0;
     player->unk57B = 0;
-    player->itemTargetFlag = 0;
+    player->isTargetedByAttack = 0;
     player->stateFlags &= ~0x2000000;
     if (player->stateFlags & 2) {
         player->stateFlags &= ~2;
@@ -719,11 +719,11 @@ void updateRacePlayer(RacePlayer *player) {
         }
     }
 
-    if (player->actionSoundTimer != 0) {
-        player->actionSoundTimer--;
+    if (player->invisibilityTimer != 0) {
+        player->invisibilityTimer--;
     }
     if (player->stateFlags & 0x403040) {
-        player->actionSoundTimer = 0;
+        player->invisibilityTimer = 0;
     }
 
     if (!(gMenuFlowState & 1)) {
@@ -1066,8 +1066,8 @@ void updateRacePlayerMode00Grounded(RacePlayer *player) {
                 player->updateTimer = 0;
                 player->unk525 = 0;
             }
-            updateRacePlayerItemEffectUse(player);
-            updateRacePlayerActionEffectUse(player);
+            updateRacePlayerShotUse(player);
+            updateRacePlayerItemUse(player);
         } else {
             player->unk57A--;
             player->unk92 = 6;
@@ -1157,7 +1157,7 @@ void updateRacePlayerMode01JumpStart(RacePlayer *player) {
     }
 
     if (player->subState == 0) {
-        updateRacePlayerItemEffectUse(player);
+        updateRacePlayerShotUse(player);
         if (player->isCpu == 0) {
             if (player->stickX > 0) {
                 player->facingAngle -= 0x18;
@@ -1223,7 +1223,7 @@ void updateRacePlayerMode22Airborne(RacePlayer *player) {
     }
 
     if (player->subState == 0) {
-        updateRacePlayerItemEffectUse(player);
+        updateRacePlayerShotUse(player);
         if (player->isCpu == 0) {
             if (player->stickX > 0) {
                 player->facingAngle -= 0x18;
@@ -1337,7 +1337,7 @@ void updateRacePlayerAirborneLaunch(RacePlayer *player) {
         setRaceMotionAnimation(player, 5);
     }
 
-    updateRacePlayerItemEffectUse(player);
+    updateRacePlayerShotUse(player);
     stepRaceMotionJointAnimationUntilEnd(player);
 
     velocityY = player->targetGroundOffset;
@@ -1449,7 +1449,7 @@ void updateRacePlayerAirborneCruise(RacePlayer *player) {
             }
         }
     }
-    updateRacePlayerItemEffectUse(player);
+    updateRacePlayerShotUse(player);
     updateRacePlayerLeanAngle(player, player->localVelocityZ, 0);
     player->velocity.y -= player->gravity;
     var_a2 = 0;

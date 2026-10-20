@@ -724,7 +724,7 @@ s32 tryApplyRacePlayerItemHit(Vec3i *pos, s32 xzSize, s16 flag, s16 playerIndex)
     if (player->isActive == 0) {
         return 0;
     }
-    if (player->actionSoundTimer != 0) {
+    if (player->invisibilityTimer != 0) {
         return 0;
     }
 

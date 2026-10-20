@@ -58,8 +58,8 @@ The JSON companion records every function, candidate, and supporting anchor.
 | race/scene/race_scene_setup | `0x44550` | `0x4426C..0x46200` | — | approximate | 0/3 |
 | menu/renderer/menu_render_utils | `0x464E0` | `0x46200` | -0x2e0 | supported | 27/38 |
 | math/spatial_math | `0x49C00` | `0x497D8` | -0x428 | supported | 2/3 |
-| race/items/race_item_projectiles | `0x4A040` | `0x49C10` | -0x430 | supported | 20/27 |
-| race/items/race_item_effects | `0x4E760` | `0x4E328..0x4e43c` | — | approximate | 25/36 |
+| race/items/race_projectiles | `0x4A040` | `0x49C10` | -0x430 | supported | 20/27 |
+| race/effects/race_visual_effects | `0x4E760` | `0x4E328..0x4e43c` | — | approximate | 25/36 |
 | menu/main_menu/main_menu_panel_ui | `0x51BF0` | `0x517C0` | -0x430 | supported | 16/23 |
 | menu/renderer/menu_screen_effects | `0x54260` | `0x53E28..0x53ec4` | — | approximate | 25/43 |
 | race/effects/race_intro_effects | `0x562B0` | `0x55E48..0x562a4` | — | approximate | 20/32 |
@@ -80,7 +80,7 @@ The JSON companion records every function, candidate, and supporting anchor.
 | race/course/race_surface_cues | `0x83DC0` | `0x83720` | -0x6a0 | supported | 2/3 |
 | race/effects/snowboard_trail_effects | `0x843D0` | `0x83D30` | -0x6a0 | supported | 2/3 |
 | race/player/race_player_input | `0x84980` | `0x842E0` | -0x6a0 | supported | 4/6 |
-| race/player/race_player_pickup_effects | `0x855E0` | `0x84F3C..0x859d4` | — | approximate | 0/2 |
+| race/player/race_player_equipment_use | `0x855E0` | `0x84F3C..0x859d4` | — | approximate | 0/2 |
 | race/player/race_player_collision | `0x85B50` | `0x84F3C..0x859d4` | — | approximate | 4/22 |
 | race/player/race_player_movement | `0x88200` | `0x87B58..0x8845c` | — | approximate | 17/21 |
 | race/player/race_player_update | `0x8CAB0` | `0x8C404..0x8d45c` | — | approximate | 80/110 |

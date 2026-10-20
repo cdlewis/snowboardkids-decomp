@@ -3,7 +3,7 @@
 
 #include "common.h"
 
-/* Active RACE_ACTION_SPEED_FAN model: front follows the board/local offset;
+/* Active RACE_ITEM_SPEED_FAN model: front follows the board/local offset;
  * back adds spinYaw. The UI expired-fan actor takes over when this expires. */
 typedef struct SpeedFanState {
     /* 0x00 */ s16 state;

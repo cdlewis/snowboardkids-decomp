@@ -88,8 +88,8 @@ segments:
       - [0x44270, c, race/scene/race_scene_setup]
       - [0x46200, c, menu/renderer/menu_render_utils]
       - [0x497D8, c, math/spatial_math]
-      - [0x49C10, c, race/items/race_item_projectiles]
-      - [0x4E330, c, race/items/race_item_effects]
+      - [0x49C10, c, race/items/race_projectiles]
+      - [0x4E330, c, race/effects/race_visual_effects]
       - [0x517C0, c, menu/main_menu/main_menu_panel_ui]
       - [0x53E30, c, menu/renderer/menu_screen_effects]
       - [0x55E50, c, race/effects/race_intro_effects]
@@ -110,7 +110,7 @@ segments:
       - [0x83720, c, race/course/race_surface_cues]
       - [0x83D30, c, race/effects/snowboard_trail_effects]
       - [0x842E0, c, race/player/race_player_input]
-      - [0x84F40, c, race/player/race_player_pickup_effects]
+      - [0x84F40, c, race/player/race_player_equipment_use]
       - [0x854B0, c, race/player/race_player_collision]
       - [0x87B60, c, race/player/race_player_movement]
       - [0x8C410, c, race/player/race_player_update]
@@ -273,8 +273,8 @@ segments:
       - [0xD3DD0, .data, race/scene/race_scene_setup]
       - [0xD3E60, databin, data_D3E60]
       - [0xD3E80, .data, math/spatial_math]
-      - [0xD4390, .data, race/items/race_item_projectiles]
-      - [0xD4480, .data, race/items/race_item_effects]
+      - [0xD4390, .data, race/items/race_projectiles]
+      - [0xD4480, .data, race/effects/race_visual_effects]
       - [0xD47F0, databin, data_D47F0]
       - [0xD5B80, .data, race/effects/race_intro_effects]
       - [0xD5F20, databin, data_D5F20]
@@ -397,7 +397,7 @@ segments:
       - {type: bss, vram: 0x8010A4D0, name: bss_8010A4D0}
       - {type: .bss, vram: 0x8010A520, name: menu/main_menu/main_menu_scene_model}
       - {type: bss, vram: 0x8010D4A0, name: bss_8010D4A0}
-      - {type: .bss, vram: 0x801114F0, name: race/items/race_item_effects}
+      - {type: .bss, vram: 0x801114F0, name: race/effects/race_visual_effects}
       - {type: bss, vram: 0x80111500, name: bss_80111500}
       - {type: .bss, vram: 0x801117D0, name: engine/viewport_manager}
       - {type: bss, vram: 0x80111A90, name: bss_80111A90}

@@ -84,7 +84,7 @@ extern u8 gMainMenuModeSelection;
 
 extern RaceCpuBoardConfig *gRaceCpuBoardConfigsByCourse[10];
 
-extern u8 gRaceCourseActionAndItemTriggerChances[12];
+extern u8 gRaceCourseCpuPickupUseChances[12];
 
 extern s16 gRacePlayerAttackStartTimer;
 
@@ -478,23 +478,23 @@ void initRaceSceneFlow(void) {
     gRacePlayers[1].isCpu = 1;
     gRacePlayers[2].isCpu = 1;
     gRacePlayers[3].isCpu = 1;
-    gRacePlayers[0].actionTriggerChance = gRaceCourseActionAndItemTriggerChances[gRaceCourseIndex.signedValue];
-    gRacePlayers[1].actionTriggerChance = gRaceCourseActionAndItemTriggerChances[gRaceCourseIndex.signedValue];
-    gRacePlayers[2].actionTriggerChance = gRaceCourseActionAndItemTriggerChances[gRaceCourseIndex.signedValue];
-    gRacePlayers[3].actionTriggerChance = gRaceCourseActionAndItemTriggerChances[gRaceCourseIndex.signedValue];
-    gRacePlayers[0].itemTriggerChance = gRaceCourseActionAndItemTriggerChances[gRaceCourseIndex.signedValue];
-    gRacePlayers[1].itemTriggerChance = gRaceCourseActionAndItemTriggerChances[gRaceCourseIndex.signedValue];
-    gRacePlayers[2].itemTriggerChance = gRaceCourseActionAndItemTriggerChances[gRaceCourseIndex.signedValue];
-    gRacePlayers[3].itemTriggerChance = gRaceCourseActionAndItemTriggerChances[gRaceCourseIndex.signedValue];
+    gRacePlayers[0].cpuItemUseChance = gRaceCourseCpuPickupUseChances[gRaceCourseIndex.signedValue];
+    gRacePlayers[1].cpuItemUseChance = gRaceCourseCpuPickupUseChances[gRaceCourseIndex.signedValue];
+    gRacePlayers[2].cpuItemUseChance = gRaceCourseCpuPickupUseChances[gRaceCourseIndex.signedValue];
+    gRacePlayers[3].cpuItemUseChance = gRaceCourseCpuPickupUseChances[gRaceCourseIndex.signedValue];
+    gRacePlayers[0].cpuShotUseChance = gRaceCourseCpuPickupUseChances[gRaceCourseIndex.signedValue];
+    gRacePlayers[1].cpuShotUseChance = gRaceCourseCpuPickupUseChances[gRaceCourseIndex.signedValue];
+    gRacePlayers[2].cpuShotUseChance = gRaceCourseCpuPickupUseChances[gRaceCourseIndex.signedValue];
+    gRacePlayers[3].cpuShotUseChance = gRaceCourseCpuPickupUseChances[gRaceCourseIndex.signedValue];
     if (gPlayerCount != 1) {
-        gRacePlayers[0].actionTriggerChance = 0;
-        gRacePlayers[1].actionTriggerChance = 0;
-        gRacePlayers[2].actionTriggerChance = 0;
-        gRacePlayers[3].actionTriggerChance = 0;
-        gRacePlayers[0].itemTriggerChance = 0;
-        gRacePlayers[1].itemTriggerChance = 0;
-        gRacePlayers[2].itemTriggerChance = 0;
-        gRacePlayers[3].itemTriggerChance = 0;
+        gRacePlayers[0].cpuItemUseChance = 0;
+        gRacePlayers[1].cpuItemUseChance = 0;
+        gRacePlayers[2].cpuItemUseChance = 0;
+        gRacePlayers[3].cpuItemUseChance = 0;
+        gRacePlayers[0].cpuShotUseChance = 0;
+        gRacePlayers[1].cpuShotUseChance = 0;
+        gRacePlayers[2].cpuShotUseChance = 0;
+        gRacePlayers[3].cpuShotUseChance = 0;
     }
     gRacePlayers[0].unk17 = 0;
     gRacePlayers[1].unk17 = 1;

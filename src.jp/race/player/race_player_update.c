@@ -14,8 +14,8 @@
 #include "game/math/fixed_point_math.h"
 #include "game/math/spatial_math.h"
 #include "game/race/player/race_player_input.h"
-#include "game/race/items/race_item_effects.h"
-#include "game/race/player/race_player_pickup_effects.h"
+#include "game/race/effects/race_visual_effects.h"
+#include "game/race/player/race_player_equipment_use.h"
 #include "game/menu/renderer/menu_screen_effects.h"
 #include "game/race/player/race_player_movement.h"
 #include "game/race/player/race_player_progress.h"
@@ -485,8 +485,8 @@ void updateRacePlayerMode00Grounded(RacePlayer *player) {
                 player->updateTimer = 0;
                 player->unk525 = 0;
             }
-            updateRacePlayerItemEffectUse(player);
-            updateRacePlayerActionEffectUse(player);
+            updateRacePlayerShotUse(player);
+            updateRacePlayerItemUse(player);
         } else {
             player->unk57A--;
             player->unk92 = 6;
@@ -576,7 +576,7 @@ void updateRacePlayerMode01JumpStart(RacePlayer *player) {
     }
 
     if (player->subState == 0) {
-        updateRacePlayerItemEffectUse(player);
+        updateRacePlayerShotUse(player);
         if (player->isCpu == 0) {
             if (player->stickX > 0) {
                 player->facingAngle -= 0x18;
@@ -642,7 +642,7 @@ void updateRacePlayerMode22Airborne(RacePlayer *player) {
     }
 
     if (player->subState == 0) {
-        updateRacePlayerItemEffectUse(player);
+        updateRacePlayerShotUse(player);
         if (player->isCpu == 0) {
             if (player->stickX > 0) {
                 player->facingAngle -= 0x18;
@@ -758,7 +758,7 @@ void updateRacePlayerAirborneLaunch(RacePlayer *player) {
         setRaceMotionAnimation(player, 5);
     }
 
-    updateRacePlayerItemEffectUse(player);
+    updateRacePlayerShotUse(player);
     stepRaceMotionJointAnimationUntilEnd(player);
 
     velocityY = player->targetGroundOffset;

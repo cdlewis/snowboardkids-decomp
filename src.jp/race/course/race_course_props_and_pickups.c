@@ -575,57 +575,57 @@ Vtx gRacePickupTopVertices[] = {
     { { { -10, 20, 10 }, 0x0000, { -16, 1008 }, { 0xFF, 0xFF, 0xFF, 0xFF } } },
 };
 
-u8 gItemEffectRollTable[][0x10] = {
+u8 gShotRollTable[][0x10] = {
     {
-        RACE_ITEM_SNOWMAN, RACE_ITEM_SNOWMAN, RACE_ITEM_SNOWMAN, RACE_ITEM_SNOWMAN,
-        RACE_ITEM_BOMB, RACE_ITEM_BOMB, RACE_ITEM_BOMB, RACE_ITEM_BOMB,
-        RACE_ITEM_BOMB, RACE_ITEM_BOMB, RACE_ITEM_BOMB, RACE_ITEM_BOMB,
-        RACE_ITEM_BOMB, RACE_ITEM_FREEZE_SHOT, RACE_ITEM_SLAPSTICK, RACE_ITEM_PARACHUTE,
+        RACE_SHOT_SNOWMAN, RACE_SHOT_SNOWMAN, RACE_SHOT_SNOWMAN, RACE_SHOT_SNOWMAN,
+        RACE_SHOT_BOMB, RACE_SHOT_BOMB, RACE_SHOT_BOMB, RACE_SHOT_BOMB,
+        RACE_SHOT_BOMB, RACE_SHOT_BOMB, RACE_SHOT_BOMB, RACE_SHOT_BOMB,
+        RACE_SHOT_BOMB, RACE_SHOT_FREEZE_SHOT, RACE_SHOT_SLAPSTICK, RACE_SHOT_PARACHUTE,
     },
     {
-        RACE_ITEM_SNOWMAN, RACE_ITEM_SNOWMAN, RACE_ITEM_BOMB, RACE_ITEM_BOMB,
-        RACE_ITEM_FREEZE_SHOT, RACE_ITEM_FREEZE_SHOT, RACE_ITEM_FREEZE_SHOT, RACE_ITEM_FREEZE_SHOT,
-        RACE_ITEM_SLAPSTICK, RACE_ITEM_SLAPSTICK, RACE_ITEM_SLAPSTICK, RACE_ITEM_SLAPSTICK,
-        RACE_ITEM_PARACHUTE, RACE_ITEM_PARACHUTE, RACE_ITEM_PARACHUTE, RACE_ITEM_PARACHUTE,
+        RACE_SHOT_SNOWMAN, RACE_SHOT_SNOWMAN, RACE_SHOT_BOMB, RACE_SHOT_BOMB,
+        RACE_SHOT_FREEZE_SHOT, RACE_SHOT_FREEZE_SHOT, RACE_SHOT_FREEZE_SHOT, RACE_SHOT_FREEZE_SHOT,
+        RACE_SHOT_SLAPSTICK, RACE_SHOT_SLAPSTICK, RACE_SHOT_SLAPSTICK, RACE_SHOT_SLAPSTICK,
+        RACE_SHOT_PARACHUTE, RACE_SHOT_PARACHUTE, RACE_SHOT_PARACHUTE, RACE_SHOT_PARACHUTE,
     },
     {
-        RACE_ITEM_SNOWMAN, RACE_ITEM_BOMB, RACE_ITEM_FREEZE_SHOT, RACE_ITEM_FREEZE_SHOT,
-        RACE_ITEM_FREEZE_SHOT, RACE_ITEM_FREEZE_SHOT, RACE_ITEM_SLAPSTICK, RACE_ITEM_SLAPSTICK,
-        RACE_ITEM_SLAPSTICK, RACE_ITEM_SLAPSTICK, RACE_ITEM_SLAPSTICK, RACE_ITEM_SLAPSTICK,
-        RACE_ITEM_PARACHUTE, RACE_ITEM_PARACHUTE, RACE_ITEM_PARACHUTE, RACE_ITEM_PARACHUTE,
+        RACE_SHOT_SNOWMAN, RACE_SHOT_BOMB, RACE_SHOT_FREEZE_SHOT, RACE_SHOT_FREEZE_SHOT,
+        RACE_SHOT_FREEZE_SHOT, RACE_SHOT_FREEZE_SHOT, RACE_SHOT_SLAPSTICK, RACE_SHOT_SLAPSTICK,
+        RACE_SHOT_SLAPSTICK, RACE_SHOT_SLAPSTICK, RACE_SHOT_SLAPSTICK, RACE_SHOT_SLAPSTICK,
+        RACE_SHOT_PARACHUTE, RACE_SHOT_PARACHUTE, RACE_SHOT_PARACHUTE, RACE_SHOT_PARACHUTE,
     },
     {
-        RACE_ITEM_SNOWMAN, RACE_ITEM_FREEZE_SHOT, RACE_ITEM_FREEZE_SHOT, RACE_ITEM_FREEZE_SHOT,
-        RACE_ITEM_FREEZE_SHOT, RACE_ITEM_SLAPSTICK, RACE_ITEM_SLAPSTICK, RACE_ITEM_SLAPSTICK,
-        RACE_ITEM_SLAPSTICK, RACE_ITEM_SLAPSTICK, RACE_ITEM_SLAPSTICK, RACE_ITEM_SLAPSTICK,
-        RACE_ITEM_SLAPSTICK, RACE_ITEM_PARACHUTE, RACE_ITEM_PARACHUTE, RACE_ITEM_PARACHUTE,
+        RACE_SHOT_SNOWMAN, RACE_SHOT_FREEZE_SHOT, RACE_SHOT_FREEZE_SHOT, RACE_SHOT_FREEZE_SHOT,
+        RACE_SHOT_FREEZE_SHOT, RACE_SHOT_SLAPSTICK, RACE_SHOT_SLAPSTICK, RACE_SHOT_SLAPSTICK,
+        RACE_SHOT_SLAPSTICK, RACE_SHOT_SLAPSTICK, RACE_SHOT_SLAPSTICK, RACE_SHOT_SLAPSTICK,
+        RACE_SHOT_SLAPSTICK, RACE_SHOT_PARACHUTE, RACE_SHOT_PARACHUTE, RACE_SHOT_PARACHUTE,
     },
 };
 
-u8 gActionEffectRollTable[][0x10] = {
+u8 gItemRollTable[][0x10] = {
     {
-        RACE_ACTION_ROCK, RACE_ACTION_ROCK, RACE_ACTION_ROCK, RACE_ACTION_ROCK,
-        RACE_ACTION_ROCK, RACE_ACTION_ROCK, RACE_ACTION_ROCK, RACE_ACTION_ROCK,
-        RACE_ACTION_ROCK, RACE_ACTION_ROCK, RACE_ACTION_ROCK, RACE_ACTION_INVISIBLE,
-        RACE_ACTION_INVISIBLE, RACE_ACTION_INVISIBLE, RACE_ACTION_GHOST, RACE_ACTION_SPEED_FAN,
+        RACE_ITEM_ROCK, RACE_ITEM_ROCK, RACE_ITEM_ROCK, RACE_ITEM_ROCK,
+        RACE_ITEM_ROCK, RACE_ITEM_ROCK, RACE_ITEM_ROCK, RACE_ITEM_ROCK,
+        RACE_ITEM_ROCK, RACE_ITEM_ROCK, RACE_ITEM_ROCK, RACE_ITEM_INVISIBLE,
+        RACE_ITEM_INVISIBLE, RACE_ITEM_INVISIBLE, RACE_ITEM_GHOST, RACE_ITEM_SPEED_FAN,
     },
     {
-        RACE_ACTION_ROCK, RACE_ACTION_ROCK, RACE_ACTION_ROCK, RACE_ACTION_GHOST,
-        RACE_ACTION_INVISIBLE, RACE_ACTION_INVISIBLE, RACE_ACTION_INVISIBLE, RACE_ACTION_GHOST,
-        RACE_ACTION_GHOST, RACE_ACTION_GHOST, RACE_ACTION_GHOST, RACE_ACTION_GHOST,
-        RACE_ACTION_GHOST, RACE_ACTION_GHOST, RACE_ACTION_SPEED_FAN, RACE_ACTION_SPEED_FAN,
+        RACE_ITEM_ROCK, RACE_ITEM_ROCK, RACE_ITEM_ROCK, RACE_ITEM_GHOST,
+        RACE_ITEM_INVISIBLE, RACE_ITEM_INVISIBLE, RACE_ITEM_INVISIBLE, RACE_ITEM_GHOST,
+        RACE_ITEM_GHOST, RACE_ITEM_GHOST, RACE_ITEM_GHOST, RACE_ITEM_GHOST,
+        RACE_ITEM_GHOST, RACE_ITEM_GHOST, RACE_ITEM_SPEED_FAN, RACE_ITEM_SPEED_FAN,
     },
     {
-        RACE_ACTION_ROCK, RACE_ACTION_INVISIBLE, RACE_ACTION_SPEED_FAN, RACE_ACTION_GHOST,
-        RACE_ACTION_GHOST, RACE_ACTION_GHOST, RACE_ACTION_GHOST, RACE_ACTION_GHOST,
-        RACE_ACTION_INVISIBLE, RACE_ACTION_SPEED_FAN, RACE_ACTION_SPEED_FAN, RACE_ACTION_PAN,
-        RACE_ACTION_PAN, RACE_ACTION_PAN, RACE_ACTION_PAN, RACE_ACTION_PAN,
+        RACE_ITEM_ROCK, RACE_ITEM_INVISIBLE, RACE_ITEM_SPEED_FAN, RACE_ITEM_GHOST,
+        RACE_ITEM_GHOST, RACE_ITEM_GHOST, RACE_ITEM_GHOST, RACE_ITEM_GHOST,
+        RACE_ITEM_INVISIBLE, RACE_ITEM_SPEED_FAN, RACE_ITEM_SPEED_FAN, RACE_ITEM_PAN,
+        RACE_ITEM_PAN, RACE_ITEM_PAN, RACE_ITEM_PAN, RACE_ITEM_PAN,
     },
     {
-        RACE_ACTION_INVISIBLE, RACE_ACTION_GHOST, RACE_ACTION_GHOST, RACE_ACTION_GHOST,
-        RACE_ACTION_SPEED_FAN, RACE_ACTION_SPEED_FAN, RACE_ACTION_SPEED_FAN, RACE_ACTION_PAN,
-        RACE_ACTION_PAN, RACE_ACTION_PAN, RACE_ACTION_PAN, RACE_ACTION_PAN,
-        RACE_ACTION_PAN, RACE_ACTION_PAN, RACE_ACTION_PAN, RACE_ACTION_RAT_FACE,
+        RACE_ITEM_INVISIBLE, RACE_ITEM_GHOST, RACE_ITEM_GHOST, RACE_ITEM_GHOST,
+        RACE_ITEM_SPEED_FAN, RACE_ITEM_SPEED_FAN, RACE_ITEM_SPEED_FAN, RACE_ITEM_PAN,
+        RACE_ITEM_PAN, RACE_ITEM_PAN, RACE_ITEM_PAN, RACE_ITEM_PAN,
+        RACE_ITEM_PAN, RACE_ITEM_PAN, RACE_ITEM_PAN, RACE_ITEM_RAT_FACE,
     },
 };
 
@@ -1199,7 +1199,7 @@ void updateFallingRockSpawner(FallingRockSpawnerActor *arg0) {
 #undef SPAWN_RANGE_MAX
 #undef SPAWN_RANGE_MIN
 
-/* The shop draws three independent parts: a floating item/action symbol,
+/* The shop draws three independent parts: a floating shot/item symbol,
  * a camera-facing base (baseMatrix * gViewportMatrix), and a rotating shell.
  * Collection/bouncing draws only the base; respawning rebuilds the shell. */
 void renderRacePickupIdle(RacePickupActor *arg0) {
@@ -1558,7 +1558,7 @@ void updateRacePickupCollected(RacePickupActor *arg0) {
     addRenderCallback(&gEffectRenderCallbackList, (RenderCallback)renderRacePickupBase, arg0);
 }
 
-/* Purchase costs 100 gold and grants an item/action, then emits eight shards
+/* Purchase costs 100 gold and grants shots or an item, then emits eight shards
  * with selectors 0..7. CPUs may buy with less gold, reducing their balance to zero. */
 void updateRacePickupIdle(RacePickupActor *arg0) {
     RacePlayer *player;
@@ -1587,36 +1587,36 @@ void updateRacePickupIdle(RacePickupActor *arg0) {
                 player->score = 0;
             }
 
-            // arg0->variant distinguishes the two item box colors: one branch resolves a held
-            // item (itemEffectType), the other an immediate action/ability (actionEffectType).
-            // Rank-weighted item/action selection is separate from speed and recovery assistance.
+            // Variant 0 is a red shop: three shots in the Z-button slot.
+            // Other variants are blue shops: one item in the B-button slot.
+            // Rank-weighted shot/item selection is separate from speed and recovery assistance.
             // Both roll tables are indexed by [rankIndex][rollIndex], where rollIndex comes
             // from randomNextObject walking a per-player counter through the shared byte table.
-            // Each player advances their own counter by 1 every time they draw an item/action,
+            // Each player advances their own counter by 1 every time they draw a shot/item,
             // regardless of box color. Lower rankIndex values are closer to 1st place and
             // skew toward common/weaker tier values; higher values skew rarer/stronger.
             if (arg0->variant == 0) {
-                player->itemEffectType =
-                    gItemEffectRollTable[player->rankIndex][randomNextObject(player) & 0xF];
+                player->shotType =
+                    gShotRollTable[player->rankIndex][randomNextObject(player) & 0xF];
                 if (gTrainingCourseLesson != 0) {
-                    player->itemEffectType = RACE_ITEM_SLAPSTICK;
+                    player->shotType = RACE_SHOT_SLAPSTICK;
                 }
-                player->itemEffectCount = 3;
-                player->itemEffectPalette = 4;
+                player->shotCount = 3;
+                player->shotPalette = 4;
             } else {
-                player->actionEffectType =
-                    gActionEffectRollTable[player->rankIndex][randomNextObject(player) & 0xF];
+                player->itemType =
+                    gItemRollTable[player->rankIndex][randomNextObject(player) & 0xF];
                 if (gTrainingCourseLesson != 0) {
-                    player->actionEffectType = RACE_ACTION_SPEED_FAN;
+                    player->itemType = RACE_ITEM_SPEED_FAN;
                 }
-                // Course index 8 special case, CPU opponents only. When a CPU's action roll
+                // Course index 8 special case, CPU opponents only. When a CPU's item roll
                 // lands on rock, there is a 255/256 chance to replace it with invisibility.
-                if ((gRaceCourseIndex.signedValue == 8) && (player->isCpu != 0) && (player->actionEffectType == RACE_ACTION_ROCK)) {
+                if ((gRaceCourseIndex.signedValue == 8) && (player->isCpu != 0) && (player->itemType == RACE_ITEM_ROCK)) {
                     if (randomNextMain() != 0) {
-                        player->actionEffectType = RACE_ACTION_INVISIBLE;
+                        player->itemType = RACE_ITEM_INVISIBLE;
                     }
                 }
-                player->actionEffectPalette = 4;
+                player->itemPalette = 4;
             }
 
             setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRacePickupCollected);

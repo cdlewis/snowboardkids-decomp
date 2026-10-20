@@ -5,12 +5,12 @@
 #include "game/menu/renderer/menu_render_utils.h"
 #include "game/engine/render_callback.h"
 #include "game/engine/system_runtime.h"
-#include "game/race/items/race_item_projectiles.h"
+#include "game/race/items/race_projectiles.h"
 #include "game/audio/sound_manager.h"
 #include "game/race/motion/race_motion.h"
 #include "game/engine/relocatable_heap.h"
 #include "game/engine/callback_task_scheduler.h"
-#include "game/race/items/race_item_effects.h"
+#include "game/race/effects/race_visual_effects.h"
 #include "game/race/player/race_player_movement.h"
 #include "game/race/player/race_player_input.h"
 #include "game/race/ui/race_ui_effects.h"
@@ -34,7 +34,7 @@ Vtx gRaceItemProjectileQuadVertices[4] = {
     { { { -6, -6, 0 }, 0, { -16, 496 }, { 0xFF, 0xFF, 0xFF, 0xFF } } },
 };
 
-Vtx gFallingActionProjectileQuadVertices[4] = {
+Vtx gRockItemQuadVertices[4] = {
     { { { -3, 3, 0 }, 0, { -16, -16 }, { 0xFF, 0xFF, 0xFF, 0xFF } } },
     { { { 3, 3, 0 }, 0, { 496, -16 }, { 0xFF, 0xFF, 0xFF, 0xFF } } },
     { { { 3, -3, 0 }, 0, { 496, 496 }, { 0xFF, 0xFF, 0xFF, 0xFF } } },
@@ -77,7 +77,7 @@ s32 findRaceItemProjectileHomingTarget(Vec3i *pos, s32 radius, s16 angle, s16 pl
     do {
         if (playerIndex != i) {
             player = &gRacePlayers[i];
-            if ((player->actionSoundTimer == 0) && !(player->stateFlags & 0x402000) && (player->isActive != 0)) {
+            if ((player->invisibilityTimer == 0) && !(player->stateFlags & 0x402000) && (player->isActive != 0)) {
                 dx = player->pos.x - pos->x;
                 if (dx < 0) {
                     dx = -dx;
@@ -116,7 +116,7 @@ s32 findRaceItemProjectileHomingTarget(Vec3i *pos, s32 radius, s16 angle, s16 pl
 
 // IDO code generation for this function is sensitive to source line layout.
 // clang-format off
-void renderWideHomingItemProjectile(RaceItemProjectileActor *arg0) {
+void renderWideHomingShotProjectile(RaceItemProjectileActor *arg0) {
     RaceEffectMatrixScratch sp6C;
     volatile u8 padding[8];
     Gfx *temp_v0_2;
@@ -230,7 +230,7 @@ void renderWideHomingItemProjectile(RaceItemProjectileActor *arg0) {
 }
 // clang-format on
 
-void updateWideHomingItemProjectile(RaceItemProjectileActor *arg0) {
+void updateWideHomingShotProjectile(RaceItemProjectileActor *arg0) {
     s32 sin;
     s32 xOffset;
     s32 cos;
@@ -251,7 +251,7 @@ void updateWideHomingItemProjectile(RaceItemProjectileActor *arg0) {
             findRaceItemProjectileHomingTarget(pos, 0x1600000, arg0->targetAngle, arg0->playerIndex, &angleDiff);
 
         if (arg0->targetPlayerIndex != -1) {
-            gRacePlayers[arg0->targetPlayerIndex].itemTargetFlag = 1;
+            gRacePlayers[arg0->targetPlayerIndex].isTargetedByAttack = 1;
             angleDiff = (angleDiff - arg0->targetAngle) & 0xFFF;
             if (angleDiff >= 0x801) {
                 angleDiff -= 0x1000;
@@ -314,12 +314,12 @@ void updateWideHomingItemProjectile(RaceItemProjectileActor *arg0) {
         spawnRaceItemProjectileTrailEffect(arg0->pos.x, arg0->pos.y, arg0->pos.z, 0);
     }
 
-    addRenderCallback(&gRaceObjectRenderCallbackList, (RenderCallback)renderWideHomingItemProjectile, arg0);
+    addRenderCallback(&gRaceObjectRenderCallbackList, (RenderCallback)renderWideHomingShotProjectile, arg0);
 }
 
 // IDO code generation for this function is sensitive to source line layout.
 // clang-format off
-void initWideHomingItemProjectile(RaceItemProjectileActor *arg0) {
+void initWideHomingShotProjectile(RaceItemProjectileActor *arg0) {
     volatile s32 pad0;
     Vec3i source;
     Vec3i transformed;
@@ -362,14 +362,14 @@ void initWideHomingItemProjectile(RaceItemProjectileActor *arg0) {
     arg0->pos.z += gRacePlayers[arg0->playerIndex].modelPartTransforms[0].translation.z;
     arg0->startAngle = gRacePlayers[arg0->playerIndex].coursePathIndex;
     getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gAssetHandles[0x1E]), 0, &arg0->image, &arg0->palette);
-    updateWideHomingItemProjectile(arg0);
-    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateWideHomingItemProjectile);
+    updateWideHomingShotProjectile(arg0);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateWideHomingShotProjectile);
 }
 // clang-format on
 
 // IDO code generation for this function is sensitive to source line layout.
 // clang-format off
-void renderCloseRangeHomingItemProjectile(RaceItemProjectileActor *arg0) {
+void renderCloseRangeHomingShotProjectile(RaceItemProjectileActor *arg0) {
     RaceEffectMatrixScratch sp64;
     volatile u8 padding[8];
     Gfx *temp_v0_2;
@@ -483,7 +483,7 @@ void renderCloseRangeHomingItemProjectile(RaceItemProjectileActor *arg0) {
 }
 // clang-format on
 
-void updateCloseRangeHomingItemProjectile(RaceItemProjectileActor *arg0) {
+void updateCloseRangeHomingShotProjectile(RaceItemProjectileActor *arg0) {
     s32 sin;
     s32 xOffset;
     s32 cos;
@@ -507,7 +507,7 @@ void updateCloseRangeHomingItemProjectile(RaceItemProjectileActor *arg0) {
             findRaceItemProjectileHomingTarget(pos, 0xE00000, arg0->targetAngle, arg0->playerIndex, &angleDiff);
 
         if (arg0->targetPlayerIndex != -1) {
-            gRacePlayers[arg0->targetPlayerIndex].itemTargetFlag = 1;
+            gRacePlayers[arg0->targetPlayerIndex].isTargetedByAttack = 1;
             angleDiff = (angleDiff - arg0->targetAngle) & 0xFFF;
             if (angleDiff >= 0x801) {
                 angleDiff -= 0x1000;
@@ -574,12 +574,12 @@ void updateCloseRangeHomingItemProjectile(RaceItemProjectileActor *arg0) {
         spawnRaceItemProjectileTrailEffect(arg0->pos.x, arg0->pos.y, arg0->pos.z, 2);
     }
 
-    addRenderCallback(&gRaceObjectRenderCallbackList, (RenderCallback)renderCloseRangeHomingItemProjectile, arg0);
+    addRenderCallback(&gRaceObjectRenderCallbackList, (RenderCallback)renderCloseRangeHomingShotProjectile, arg0);
 }
 
 // IDO code generation for this function is sensitive to source line layout.
 // clang-format off
-void initCloseRangeHomingItemProjectile(RaceItemProjectileActor *arg0) {
+void initCloseRangeHomingShotProjectile(RaceItemProjectileActor *arg0) {
     volatile s32 pad0;
     Vec3i source;
     Vec3i transformed;
@@ -622,14 +622,14 @@ void initCloseRangeHomingItemProjectile(RaceItemProjectileActor *arg0) {
     arg0->pos.z += gRacePlayers[arg0->playerIndex].modelPartTransforms[0].translation.z;
     arg0->startAngle = gRacePlayers[arg0->playerIndex].coursePathIndex;
     getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gAssetHandles[0x1E]), 2, &arg0->image, &arg0->palette);
-    updateCloseRangeHomingItemProjectile(arg0);
-    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateCloseRangeHomingItemProjectile);
+    updateCloseRangeHomingShotProjectile(arg0);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateCloseRangeHomingShotProjectile);
 }
 // clang-format on
 
 // IDO code generation for this function is sensitive to source line layout.
 // clang-format off
-void renderBouncingItemProjectile(RaceItemProjectileActor *arg0) {
+void renderBouncingShotProjectile(RaceItemProjectileActor *arg0) {
     RaceEffectMatrixScratch sp64;
     Gfx *temp_v0_2;
     Gfx *temp_v0_3;
@@ -742,7 +742,7 @@ void renderBouncingItemProjectile(RaceItemProjectileActor *arg0) {
 }
 // clang-format on
 
-void updateBouncingItemProjectile(RaceItemProjectileActor *arg0) {
+void updateBouncingShotProjectile(RaceItemProjectileActor *arg0) {
     s16 *angleDiffOut;
     s32 sin;
     s32 cos;
@@ -771,7 +771,7 @@ void updateBouncingItemProjectile(RaceItemProjectileActor *arg0) {
         );
 
         if (projectile->targetPlayerIndex != -1) {
-            gRacePlayers[projectile->targetPlayerIndex].itemTargetFlag = 1;
+            gRacePlayers[projectile->targetPlayerIndex].isTargetedByAttack = 1;
             angleDiff = (angleDiff - projectile->targetAngle) & 0xFFF;
             if (angleDiff >= 0x801) {
                 angleDiff -= 0x1000;
@@ -843,12 +843,12 @@ void updateBouncingItemProjectile(RaceItemProjectileActor *arg0) {
         spawnRaceItemProjectileTrailEffect(arg0->pos.x, arg0->pos.y, arg0->pos.z, 3);
     }
 
-    addRenderCallback(&gRaceObjectRenderCallbackList, (RenderCallback)renderBouncingItemProjectile, arg0);
+    addRenderCallback(&gRaceObjectRenderCallbackList, (RenderCallback)renderBouncingShotProjectile, arg0);
 }
 
 // IDO code generation for this function is sensitive to source line layout.
 // clang-format off
-void initBouncingItemProjectile(RaceItemProjectileActor *arg0) {
+void initBouncingShotProjectile(RaceItemProjectileActor *arg0) {
     volatile s32 pad0;
     Vec3i source;
     Vec3i transformed;
@@ -891,8 +891,8 @@ void initBouncingItemProjectile(RaceItemProjectileActor *arg0) {
     arg0->pos.z += gRacePlayers[arg0->playerIndex].modelPartTransforms[0].translation.z;
     arg0->startAngle = gRacePlayers[arg0->playerIndex].coursePathIndex;
     getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gAssetHandles[0x1E]), 3, &arg0->image, &arg0->palette);
-    updateBouncingItemProjectile(arg0);
-    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateBouncingItemProjectile);
+    updateBouncingShotProjectile(arg0);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateBouncingShotProjectile);
 }
 // clang-format on
 
@@ -1098,7 +1098,7 @@ void createThrownTrailImpactProjectile(s32 arg0, s32 arg1, s32 arg2, s16 arg3, s
 
 // IDO code generation for this function is sensitive to source line layout.
 // clang-format off
-void renderAreaBlastItemProjectile(RaceItemProjectileActor *arg0) {
+void renderAreaBlastShotProjectile(RaceItemProjectileActor *arg0) {
     RaceEffectMatrixScratch sp64;
     Gfx *temp_v0_2;
     Gfx *temp_v0_3;
@@ -1211,7 +1211,7 @@ void renderAreaBlastItemProjectile(RaceItemProjectileActor *arg0) {
 }
 // clang-format on
 
-void updateAreaBlastItemProjectile(RaceItemProjectileActor *arg0) {
+void updateAreaBlastShotProjectile(RaceItemProjectileActor *arg0) {
     s32 sin;
     s32 xOffset;
     volatile s32 cos;
@@ -1232,7 +1232,7 @@ void updateAreaBlastItemProjectile(RaceItemProjectileActor *arg0) {
             findRaceItemProjectileHomingTarget(pos, 0xA00000, arg0->targetAngle, arg0->playerIndex, &angleDiff);
 
         if (arg0->targetPlayerIndex != -1) {
-            gRacePlayers[arg0->targetPlayerIndex].itemTargetFlag = 1;
+            gRacePlayers[arg0->targetPlayerIndex].isTargetedByAttack = 1;
             angleDiff = (angleDiff - arg0->targetAngle) & 0xFFF;
             if (angleDiff >= 0x801) {
                 angleDiff -= 0x1000;
@@ -1296,12 +1296,12 @@ void updateAreaBlastItemProjectile(RaceItemProjectileActor *arg0) {
         spawnRaceItemProjectileTrailEffect(arg0->pos.x, arg0->pos.y, arg0->pos.z, 4);
     }
 
-    addRenderCallback(&gRaceObjectRenderCallbackList, (RenderCallback)renderAreaBlastItemProjectile, arg0);
+    addRenderCallback(&gRaceObjectRenderCallbackList, (RenderCallback)renderAreaBlastShotProjectile, arg0);
 }
 
 // IDO code generation for this function is sensitive to source line layout.
 // clang-format off
-void initAreaBlastItemProjectile(RaceItemProjectileActor *arg0) {
+void initAreaBlastShotProjectile(RaceItemProjectileActor *arg0) {
     volatile s32 pad0;
     Vec3i sp58;
     Vec3i transformed;
@@ -1352,14 +1352,14 @@ void initAreaBlastItemProjectile(RaceItemProjectileActor *arg0) {
     actor->pos.z += gRacePlayers[actor->playerIndex].modelPartTransforms[0].translation.z;
     actor->startAngle = gRacePlayers[actor->playerIndex].coursePathIndex;
     getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gAssetHandles[0x1E]), 4, &actor->image, &actor->palette);
-    updateAreaBlastItemProjectile(actor);
-    setCallbackTaskCallback(actor, (CallbackTaskCallback)updateAreaBlastItemProjectile);
+    updateAreaBlastShotProjectile(actor);
+    setCallbackTaskCallback(actor, (CallbackTaskCallback)updateAreaBlastShotProjectile);
 }
 // clang-format on
 
 // IDO code generation for this function is sensitive to source line layout.
 // clang-format off
-void renderLongRangeHomingItemProjectile(RaceItemProjectileActor *arg0) {
+void renderLongRangeHomingShotProjectile(RaceItemProjectileActor *arg0) {
     RaceEffectMatrixScratch sp64;
     Gfx *temp_v0_2;
     Gfx *temp_v0_3;
@@ -1472,7 +1472,7 @@ void renderLongRangeHomingItemProjectile(RaceItemProjectileActor *arg0) {
 }
 // clang-format on
 
-void updateLongRangeHomingItemProjectile(RaceItemProjectileActor *arg0) {
+void updateLongRangeHomingShotProjectile(RaceItemProjectileActor *arg0) {
     s32 sin;
     s32 xOffset;
     s32 cos;
@@ -1493,7 +1493,7 @@ void updateLongRangeHomingItemProjectile(RaceItemProjectileActor *arg0) {
             findRaceItemProjectileHomingTarget(pos, 0x1200000, arg0->targetAngle, arg0->playerIndex, &angleDiff);
 
         if (arg0->targetPlayerIndex != -1) {
-            gRacePlayers[arg0->targetPlayerIndex].itemTargetFlag = 1;
+            gRacePlayers[arg0->targetPlayerIndex].isTargetedByAttack = 1;
             angleDiff = (angleDiff - arg0->targetAngle) & 0xFFF;
             if (angleDiff >= 0x801) {
                 angleDiff -= 0x1000;
@@ -1556,12 +1556,12 @@ void updateLongRangeHomingItemProjectile(RaceItemProjectileActor *arg0) {
         spawnRaceItemProjectileTrailEffect(arg0->pos.x, arg0->pos.y, arg0->pos.z, 1);
     }
 
-    addRenderCallback(&gRaceObjectRenderCallbackList, (RenderCallback)renderLongRangeHomingItemProjectile, arg0);
+    addRenderCallback(&gRaceObjectRenderCallbackList, (RenderCallback)renderLongRangeHomingShotProjectile, arg0);
 }
 
 // IDO code generation for this function is sensitive to source line layout.
 // clang-format off
-void initLongRangeHomingItemProjectile(RaceItemProjectileActor *arg0) {
+void initLongRangeHomingShotProjectile(RaceItemProjectileActor *arg0) {
     Vec3i *new_var;
     Vec3i sp58;
     Vec3i transformed;
@@ -1612,14 +1612,14 @@ void initLongRangeHomingItemProjectile(RaceItemProjectileActor *arg0) {
     actor->pos.z += gRacePlayers[actor->playerIndex].modelPartTransforms[0].translation.z;
     actor->startAngle = gRacePlayers[actor->playerIndex].coursePathIndex;
     getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gAssetHandles[0x1E]), 1, &actor->image, &actor->palette);
-    updateLongRangeHomingItemProjectile(actor);
-    setCallbackTaskCallback(actor, (CallbackTaskCallback)updateLongRangeHomingItemProjectile);
+    updateLongRangeHomingShotProjectile(actor);
+    setCallbackTaskCallback(actor, (CallbackTaskCallback)updateLongRangeHomingShotProjectile);
 }
 // clang-format on
 
 // IDO code generation for this function is sensitive to source line layout.
 // clang-format off
-void renderFallingActionProjectile(RaceItemProjectileActor *arg0) {
+void renderRockItem(RaceItemProjectileActor *arg0) {
     RaceEffectMatrixScratch sp64;
     Gfx *temp_v0_2;
     Gfx *temp_v0_3;
@@ -1719,7 +1719,7 @@ void renderFallingActionProjectile(RaceItemProjectileActor *arg0) {
                 }; \
                 temp_v0_17 = gRegionAllocPtr++; \
                 temp_v0_17->words.w0 = 0x0400103F; \
-                temp_v0_17->words.w1 = (u32)gFallingActionProjectileQuadVertices; \
+                temp_v0_17->words.w1 = (u32)gRockItemQuadVertices; \
                 temp_v0_18 = gRegionAllocPtr++; \
                 temp_v0_18->words.w0 = 0xB1060402; \
                 temp_v0_18->words.w1 = 0x00060200; \
@@ -1736,7 +1736,7 @@ void renderFallingActionProjectile(RaceItemProjectileActor *arg0) {
 }
 // clang-format on
 
-void updateFallingActionProjectileLanded(RaceItemProjectileActor *arg0) {
+void updateRockItemLanded(RaceItemProjectileActor *arg0) {
     Vec3i *pos;
     RaceItemProjectileActor *actor;
     s32 i;
@@ -1765,10 +1765,10 @@ void updateFallingActionProjectileLanded(RaceItemProjectileActor *arg0) {
         i++;
     } while (i != 4);
 
-    addRenderCallback(&gRaceObjectRenderCallbackList, (RenderCallback)renderFallingActionProjectile, actor);
+    addRenderCallback(&gRaceObjectRenderCallbackList, (RenderCallback)renderRockItem, actor);
 }
 
-void updateFallingActionProjectile(RaceItemProjectileActor *arg0) {
+void updateRockItem(RaceItemProjectileActor *arg0) {
     Vec3i *pos;
     s32 i;
     s32 accelerationY;
@@ -1783,7 +1783,7 @@ void updateFallingActionProjectile(RaceItemProjectileActor *arg0) {
         groundY = getRaceCourseSurfaceHeight(arg0->angle, arg0->pos.x, arg0->pos.z);
         if (arg0->pos.y < groundY + 0x30000) {
             arg0->pos.y = groundY + 0x30000;
-            setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateFallingActionProjectileLanded);
+            setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRockItemLanded);
         }
 
         for (i = 0; i != 4; i++) {
@@ -1801,10 +1801,10 @@ void updateFallingActionProjectile(RaceItemProjectileActor *arg0) {
         }
     }
 
-    addRenderCallback(&gRaceObjectRenderCallbackList, (RenderCallback)renderFallingActionProjectile, arg0);
+    addRenderCallback(&gRaceObjectRenderCallbackList, (RenderCallback)renderRockItem, arg0);
 }
 
-void initFallingActionProjectile(RaceItemProjectileActor *arg0) {
+void initRockItem(RaceItemProjectileActor *arg0) {
     RacePlayer *player;
 
     arg0->timer = 0x3C;
@@ -1817,8 +1817,8 @@ void initFallingActionProjectile(RaceItemProjectileActor *arg0) {
     enqueuePositionalSoundEffect(0x6A, &arg0->pos, 0x7F, 0x32);
     arg0->angle = gRacePlayers[arg0->playerIndex].coursePathIndex;
     getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gAssetHandles[0x1C]), 2, &arg0->image, &arg0->palette);
-    updateFallingActionProjectile(arg0);
-    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateFallingActionProjectile);
+    updateRockItem(arg0);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRockItem);
 }
 
 // IDO code generation for this function is sensitive to source line layout.
@@ -1995,7 +1995,7 @@ void updateShieldProjectile(RaceItemProjectileActor *arg0) {
         if (arg0->timer == 0) {
             spawnRaceItemImpactEffect(arg0->pos.x, arg0->pos.y, arg0->pos.z, 2);
             removeCallbackTask((RaceItemProjectileActor *)arg0);
-            gRacePlayers[arg0->playerIndex].shieldEffectTimer++;
+            gRacePlayers[arg0->playerIndex].shieldShotCount++;
             return;
         }
 

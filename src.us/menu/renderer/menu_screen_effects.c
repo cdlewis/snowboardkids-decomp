@@ -458,7 +458,7 @@ void updateRaceStartPlayerEffectActive(MenuScreenEffectActor *arg0) {
     temp = arg0->unk2E;
     if (temp != 5) {
         arg0->unk2E = temp + 1;
-    } else if (player->itemTargetFlag == 0) {
+    } else if (player->isTargetedByAttack == 0) {
         setCallbackTaskCallback(arg0, (CallbackTaskCallback)waitForRaceStartPlayerEffect);
     }
 
@@ -485,7 +485,7 @@ void updateRaceStartPlayerEffectActive(MenuScreenEffectActor *arg0) {
 void waitForRaceStartPlayerEffect(MenuScreenEffectActor *arg0) {
     RacePlayer *player = &gRacePlayers[arg0->index];
     if (!(player->stateFlags & 0x2000)) {
-        if (player->itemTargetFlag != 0) {
+        if (player->isTargetedByAttack != 0) {
             arg0->unk2E = 0xFF;
             setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceStartPlayerEffectActive);
         }

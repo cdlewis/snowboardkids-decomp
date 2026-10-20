@@ -62,8 +62,9 @@ typedef struct RacePlayer {
     /* 0x016 */ s8 replayInputSource; /* RacePlayerInputSource */
     /* 0x017 */ s8 unk17;
     /* 0x018 */ s16 unk18;
-    /* 0x01A */ u8 actionTriggerChance;
-    /* 0x01B */ u8 itemTriggerChance;
+    /* CPU use thresholds, compared inclusively against a random byte; not percentages. */
+    /* 0x01A */ u8 cpuItemUseChance;
+    /* 0x01B */ u8 cpuShotUseChance;
     /* 0x01C */ Vec3i pos;
     /* 0x028 */ Vec3i unk28;
     /* 0x034 */ Vec3i previousPosition;
@@ -157,7 +158,7 @@ typedef struct RacePlayer {
     /* 0x318 */ s32 rankSpeedBonus; /* Approaches rank table by at most +0x20/-0x30 per update. */
     /* 0x31C */ s16 unk31C;
     /* 0x31E */ s16 unk31E;
-    /* 0x320 */ s16 actionSoundTimer;
+    /* 0x320 */ s16 invisibilityTimer;
     /* 0x322 */ char pad322[0xE];
     /* 0x330 */ s8 unk330;
     /* 0x331 */ s8 unk331;
@@ -189,16 +190,19 @@ typedef struct RacePlayer {
         s16 *anglePtr;
         RaceScoreAttackRingTrigger *scoreAttackRingTriggerList;
     };
-    /* 0x510 */ s16 shieldEffectTimer;
-    /* 0x512 */ s8 itemEffectType;
-    /* 0x513 */ s8 itemEffectPalette;
-    /* 0x514 */ s8 itemEffectCount;
-    /* 0x515 */ s8 actionEffectType;
-    /* 0x516 */ s8 actionEffectPalette;
+    /* Available shield shots: spent on spawn, returned when the projectile is removed. */
+    /* 0x510 */ s16 shieldShotCount;
+    /* Red-shop shot inventory (Z); blue-shop item inventory (B). See race_items.h. */
+    /* 0x512 */ s8 shotType;
+    /* 0x513 */ s8 shotPalette;
+    /* 0x514 */ s8 shotCount;
+    /* 0x515 */ s8 itemType;
+    /* 0x516 */ s8 itemPalette;
     /* 0x517 */ s8 unk517;
     /* 0x518 */ u8 randomIndex;
     /* 0x519 */ s8 unk519;
-    /* 0x51A */ u8 itemTargetFlag;
+    /* Set by homing shots and falling pans; cleared after the player mode update. */
+    /* 0x51A */ u8 isTargetedByAttack;
     /* 0x51B */ char pad51B[1];
     /* 0x51C */ u32 checkpointEventMask;
     /* 0x520 */ s32 smoothedPathOffset;
@@ -210,8 +214,10 @@ typedef struct RacePlayer {
     /* 0x529 */ s8 displayRank;
     /* 0x52A */ s8 cpuPaceMode;
     /* 0x52B */ s8 rankTargetPlayer;
-    /* 0x52C */ s8 actionTriggerCooldown;
-    /* 0x52D */ s8 itemTriggerCooldown;
+    /* Count eligible CPU use-function calls, normally ~30/sec (US); skipped calls pause them.
+     * Signed byte wraparound is intentional for the longer targeted-shot cooldown. */
+    /* 0x52C */ s8 cpuItemUseCooldown;
+    /* 0x52D */ s8 cpuShotUseCooldown;
     /* 0x52E */ char pad52E[2];
     /* 0x530 */ Mtx *modelPartMatrices[RACE_PLAYER_MODEL_PART_CAPACITY];
     /* 0x568 */ s32 score;

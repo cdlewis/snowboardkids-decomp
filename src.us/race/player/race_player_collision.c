@@ -5,7 +5,7 @@
 #include "game/race/motion/race_motion.h"
 #include "game/race/race_state.h"
 #include "game/race/player/race_player_collision.h"
-#include "game/race/items/race_item_effects.h"
+#include "game/race/effects/race_visual_effects.h"
 #include "game/race/items/race_item_hit_flags.h"
 
 #define RACE_PLAYER_COLLISION_YAW_FLIPPED 0x400
@@ -226,7 +226,7 @@ s32 tryQueueRacePlayerHitCueItemSteal(RacePlayer *arg0) {
     if (arg0->unk2D4 != 0) {
         return 1;
     }
-    if (arg0->actionSoundTimer != 0) {
+    if (arg0->invisibilityTimer != 0) {
         return 1;
     }
     if (gRacePlayerHitCueId < 0x10) {
@@ -239,7 +239,7 @@ s32 tryQueueRacePlayerHitCueGhostSlowdown(RacePlayer *arg0) {
     if (arg0->stateFlags & 0x375000) {
         return 1;
     }
-    if (arg0->actionSoundTimer != 0) {
+    if (arg0->invisibilityTimer != 0) {
         return 1;
     }
     if (gRacePlayerHitCueId < 0x11) {

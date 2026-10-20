@@ -12,10 +12,10 @@ from tools.textconv import parse_charmap, process_source, decode_text, encode_te
 
 
 def source_files(root):
-    """Only repository sources, excluding generated matching workspaces/contexts."""
-    result = subprocess.run(["git", "ls-files", "-z", "--", "src.us"], cwd=root,
+    """Repository sources, including unstaged additions but excluding ignored files."""
+    result = subprocess.run(["git", "ls-files", "-z", "--cached", "--others", "--exclude-standard", "--", "src.us"], cwd=root,
                             check=True, capture_output=True)
-    return [root / p for p in result.stdout.decode().split("\0") if p.endswith(".c")]
+    return sorted(root / p for p in result.stdout.decode().split("\0") if p.endswith(".c") and (root / p).is_file())
 
 
 def literal_values(body):

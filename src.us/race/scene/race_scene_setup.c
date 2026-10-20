@@ -9,7 +9,7 @@
 #include "game/race/motion/race_motion.h"
 #include "game/race/course/race_course_effects.h"
 #include "game/race/effects/race_intro_effects.h"
-#include "game/race/items/race_item_effects.h"
+#include "game/race/effects/race_visual_effects.h"
 #include "game/race/course/race_course_props_and_pickups.h"
 #include "game/race/ui/race_ui_effects.h"
 #include "game/race/player/race_player_input.h"

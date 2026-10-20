@@ -1,5 +1,5 @@
-#ifndef RACE_ITEM_PROJECTILES_H
-#define RACE_ITEM_PROJECTILES_H
+#ifndef RACE_PROJECTILES_H
+#define RACE_PROJECTILES_H
 
 #include "game/math/spatial_math.h"
 
@@ -42,32 +42,32 @@ typedef struct RaceItemProjectileActor {
 } RaceItemProjectileActor;
 
 extern Vtx gRaceItemProjectileQuadVertices[4];
-extern Vtx gFallingActionProjectileQuadVertices[4];
+extern Vtx gRockItemQuadVertices[4];
 
 s32 findRaceItemProjectileHomingTarget(Vec3i *pos, s32 radius, s16 angle, s16 playerIndex, s16 *outAngle);
-void renderWideHomingItemProjectile(RaceItemProjectileActor *arg0);
-void updateWideHomingItemProjectile(RaceItemProjectileActor *arg0);
-void initWideHomingItemProjectile(RaceItemProjectileActor *arg0);
-void renderCloseRangeHomingItemProjectile(RaceItemProjectileActor *arg0);
-void updateCloseRangeHomingItemProjectile(RaceItemProjectileActor *arg0);
-void initCloseRangeHomingItemProjectile(RaceItemProjectileActor *arg0);
-void renderBouncingItemProjectile(RaceItemProjectileActor *arg0);
-void updateBouncingItemProjectile(RaceItemProjectileActor *arg0);
-void initBouncingItemProjectile(RaceItemProjectileActor *arg0);
+void renderWideHomingShotProjectile(RaceItemProjectileActor *arg0);
+void updateWideHomingShotProjectile(RaceItemProjectileActor *arg0);
+void initWideHomingShotProjectile(RaceItemProjectileActor *arg0);
+void renderCloseRangeHomingShotProjectile(RaceItemProjectileActor *arg0);
+void updateCloseRangeHomingShotProjectile(RaceItemProjectileActor *arg0);
+void initCloseRangeHomingShotProjectile(RaceItemProjectileActor *arg0);
+void renderBouncingShotProjectile(RaceItemProjectileActor *arg0);
+void updateBouncingShotProjectile(RaceItemProjectileActor *arg0);
+void initBouncingShotProjectile(RaceItemProjectileActor *arg0);
 void renderThrownTrailImpactProjectile(RaceItemProjectileActor *arg0);
 void updateThrownTrailImpactProjectile(RaceItemProjectileActor *arg0);
 void initThrownTrailImpactProjectile(RaceItemProjectileActor *arg0);
 void createThrownTrailImpactProjectile(s32 arg0, s32 arg1, s32 arg2, s16 arg3, s16 arg4);
-void renderAreaBlastItemProjectile(RaceItemProjectileActor *arg0);
-void updateAreaBlastItemProjectile(RaceItemProjectileActor *arg0);
-void initAreaBlastItemProjectile(RaceItemProjectileActor *arg0);
-void renderLongRangeHomingItemProjectile(RaceItemProjectileActor *arg0);
-void updateLongRangeHomingItemProjectile(RaceItemProjectileActor *arg0);
-void initLongRangeHomingItemProjectile(RaceItemProjectileActor *arg0);
-void renderFallingActionProjectile(RaceItemProjectileActor *arg0);
-void updateFallingActionProjectileLanded(RaceItemProjectileActor *arg0);
-void updateFallingActionProjectile(RaceItemProjectileActor *arg0);
-void initFallingActionProjectile(RaceItemProjectileActor *arg0);
+void renderAreaBlastShotProjectile(RaceItemProjectileActor *arg0);
+void updateAreaBlastShotProjectile(RaceItemProjectileActor *arg0);
+void initAreaBlastShotProjectile(RaceItemProjectileActor *arg0);
+void renderLongRangeHomingShotProjectile(RaceItemProjectileActor *arg0);
+void updateLongRangeHomingShotProjectile(RaceItemProjectileActor *arg0);
+void initLongRangeHomingShotProjectile(RaceItemProjectileActor *arg0);
+void renderRockItem(RaceItemProjectileActor *arg0);
+void updateRockItemLanded(RaceItemProjectileActor *arg0);
+void updateRockItem(RaceItemProjectileActor *arg0);
+void initRockItem(RaceItemProjectileActor *arg0);
 void renderShieldProjectile(RaceItemProjectileActor *arg0);
 void updateShieldProjectile(RaceItemProjectileActor *arg0);
 void initShieldProjectile(RaceItemProjectileActor *arg0);

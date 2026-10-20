@@ -278,8 +278,8 @@ void drawRacePlayerModel(RacePlayer *player) {
         drawPlayer->snowboardTextureIndex
     );
 
-    if (drawPlayer->actionSoundTimer != 0) {
-        if (drawPlayer->actionSoundTimer < 0xA5 && drawPlayer->actionSoundTimer >= 0x10) {
+    if (drawPlayer->invisibilityTimer != 0) {
+        if (drawPlayer->invisibilityTimer < 0xA5 && drawPlayer->invisibilityTimer >= 0x10) {
             return;
         }
         if ((gUiBlinkTimer & 1) != 0) {

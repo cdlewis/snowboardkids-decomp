@@ -1,5 +1,5 @@
-#ifndef RACE_ITEM_EFFECTS_H
-#define RACE_ITEM_EFFECTS_H
+#ifndef RACE_VISUAL_EFFECTS_H
+#define RACE_VISUAL_EFFECTS_H
 
 #include "common.h"
 #include "game/engine/callback_task_scheduler.h"

@@ -214,7 +214,7 @@ RaceCpuBoardConfig *gRaceCpuBoardConfigsByCourse[10] = {
 };
 /* Shared action/item trigger chance: indices 0..8 use 100; Rookie Mountain (9)
  * uses 10. Animal Land (7) is the Trick Game course. */
-u8 gRaceCourseActionAndItemTriggerChances[12] = { 100, 100, 100, 100, 100, 100, 100, 100, 100, 10, 0, 0 };
+u8 gRaceCourseCpuPickupUseChances[12] = { 100, 100, 100, 100, 100, 100, 100, 100, 100, 10, 0, 0 };
 u16 gRaceGhostReplayGridSwitchFrames[16] = {
     0x0000, 0x0068, 0x00CD, 0x0135, 0x019C, 0x0203, 0x0268, 0x02CE,
     0x0335, 0x03A0, 0x040C, 0x0466, 0x7FFF, 0x0000, 0x0000, 0x0000,
@@ -615,23 +615,23 @@ void initRaceSceneFlow(void) {
     gRacePlayers[1].isCpu = 1;
     gRacePlayers[2].isCpu = 1;
     gRacePlayers[3].isCpu = 1;
-    gRacePlayers[0].actionTriggerChance = gRaceCourseActionAndItemTriggerChances[gRaceCourseIndex.signedValue];
-    gRacePlayers[1].actionTriggerChance = gRaceCourseActionAndItemTriggerChances[gRaceCourseIndex.signedValue];
-    gRacePlayers[2].actionTriggerChance = gRaceCourseActionAndItemTriggerChances[gRaceCourseIndex.signedValue];
-    gRacePlayers[3].actionTriggerChance = gRaceCourseActionAndItemTriggerChances[gRaceCourseIndex.signedValue];
-    gRacePlayers[0].itemTriggerChance = gRaceCourseActionAndItemTriggerChances[gRaceCourseIndex.signedValue];
-    gRacePlayers[1].itemTriggerChance = gRaceCourseActionAndItemTriggerChances[gRaceCourseIndex.signedValue];
-    gRacePlayers[2].itemTriggerChance = gRaceCourseActionAndItemTriggerChances[gRaceCourseIndex.signedValue];
-    gRacePlayers[3].itemTriggerChance = gRaceCourseActionAndItemTriggerChances[gRaceCourseIndex.signedValue];
+    gRacePlayers[0].cpuItemUseChance = gRaceCourseCpuPickupUseChances[gRaceCourseIndex.signedValue];
+    gRacePlayers[1].cpuItemUseChance = gRaceCourseCpuPickupUseChances[gRaceCourseIndex.signedValue];
+    gRacePlayers[2].cpuItemUseChance = gRaceCourseCpuPickupUseChances[gRaceCourseIndex.signedValue];
+    gRacePlayers[3].cpuItemUseChance = gRaceCourseCpuPickupUseChances[gRaceCourseIndex.signedValue];
+    gRacePlayers[0].cpuShotUseChance = gRaceCourseCpuPickupUseChances[gRaceCourseIndex.signedValue];
+    gRacePlayers[1].cpuShotUseChance = gRaceCourseCpuPickupUseChances[gRaceCourseIndex.signedValue];
+    gRacePlayers[2].cpuShotUseChance = gRaceCourseCpuPickupUseChances[gRaceCourseIndex.signedValue];
+    gRacePlayers[3].cpuShotUseChance = gRaceCourseCpuPickupUseChances[gRaceCourseIndex.signedValue];
     if (gPlayerCount != 1) {
-        gRacePlayers[0].actionTriggerChance = 0;
-        gRacePlayers[1].actionTriggerChance = 0;
-        gRacePlayers[2].actionTriggerChance = 0;
-        gRacePlayers[3].actionTriggerChance = 0;
-        gRacePlayers[0].itemTriggerChance = 0;
-        gRacePlayers[1].itemTriggerChance = 0;
-        gRacePlayers[2].itemTriggerChance = 0;
-        gRacePlayers[3].itemTriggerChance = 0;
+        gRacePlayers[0].cpuItemUseChance = 0;
+        gRacePlayers[1].cpuItemUseChance = 0;
+        gRacePlayers[2].cpuItemUseChance = 0;
+        gRacePlayers[3].cpuItemUseChance = 0;
+        gRacePlayers[0].cpuShotUseChance = 0;
+        gRacePlayers[1].cpuShotUseChance = 0;
+        gRacePlayers[2].cpuShotUseChance = 0;
+        gRacePlayers[3].cpuShotUseChance = 0;
     }
     gRacePlayers[0].unk17 = 0;
     gRacePlayers[1].unk17 = 1;

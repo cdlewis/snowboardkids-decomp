@@ -19,9 +19,9 @@ typedef enum RaceHudMode {
     RACE_HUD_MODE_TRAINING_OR_DEMO = 8
 } RaceHudMode;
 
-/* Item tiles add itemEffectCount - 1; action tiles use actionEffectType directly. */
-extern u8 gRaceHudItemEffectTileOffsets[8];
-extern u8 gRaceHudActionEffectTileIds[8];
+/* Shot tiles add shotCount - 1; item tiles use itemType directly. */
+extern u8 gRaceHudShotTileOffsets[8];
+extern u8 gRaceHudItemTileIds[8];
 extern RaceTimer gRaceElapsedTimer;
 extern RaceTimer gRaceChallengeTimeLimit;
 extern RaceTimer gRaceTimeTrialFinishTime;
