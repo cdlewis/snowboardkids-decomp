@@ -2,7 +2,8 @@
 
 /* Board identities follow course_select_ui.c and the board-selection arithmetic:
  * indices 0..8 are (level - 1) * 3 + type, with types Free Style, All Round, Alpine.
- * Labels for 9..11 describe the menu text, not confirmed board names.
+ * Special board order (Star, Feather, Ice) is inferred from the menu
+ * descriptions: fast/easy control, tricks, and useless.
  * Shinobin previews use (type % 3) + 12; 12..14 also have distinct board models.
  */
 __attribute__((aligned(16))) RacePlayerProperties gRaceBoardProperties[RACE_BOARD_PROPERTIES_COUNT] = {
@@ -105,7 +106,7 @@ __attribute__((aligned(16))) RacePlayerProperties gRaceBoardProperties[RACE_BOAR
         .forwardDeceleration = 0x0040,
         .reverseDeceleration = 0x0080,
     },
-    { /* 9: Special: fast and easy to control */
+    { /* 9: Star */
         .maxSpeed = 0x0D60,
         .gravity = 0x0640,
         .aerialGravity = 0x0302,
@@ -116,7 +117,7 @@ __attribute__((aligned(16))) RacePlayerProperties gRaceBoardProperties[RACE_BOAR
         .forwardDeceleration = 0x0040,
         .reverseDeceleration = 0x0040,
     },
-    { /* 10: Special: tricks */
+    { /* 10: Feather */
         .maxSpeed = 0x0C54,
         .gravity = 0x0000,
         .aerialGravity = 0x0000,
@@ -127,7 +128,7 @@ __attribute__((aligned(16))) RacePlayerProperties gRaceBoardProperties[RACE_BOAR
         .forwardDeceleration = 0x0040,
         .reverseDeceleration = 0x0040,
     },
-    { /* 11: Special: useless */
+    { /* 11: Ice */
         .maxSpeed = 0x0CEA,
         .gravity = 0x0032,
         .aerialGravity = 0x0302,
@@ -353,7 +354,7 @@ __attribute__((aligned(16))) RacePlayerProperties gRaceDemoBoardProperties[RACE_
         .forwardDeceleration = 0x0040,
         .reverseDeceleration = 0x0080,
     },
-    { /* 9: Special: fast and easy to control */
+    { /* 9: Star */
         .maxSpeed = 0x0D00,
         .gravity = 0x0000,
         .aerialGravity = 0x0000,
@@ -364,7 +365,7 @@ __attribute__((aligned(16))) RacePlayerProperties gRaceDemoBoardProperties[RACE_
         .forwardDeceleration = 0x0040,
         .reverseDeceleration = 0x0040,
     },
-    { /* 10: Special: tricks */
+    { /* 10: Feather */
         .maxSpeed = 0x0CC0,
         .gravity = 0x0000,
         .aerialGravity = 0x0000,
@@ -375,7 +376,7 @@ __attribute__((aligned(16))) RacePlayerProperties gRaceDemoBoardProperties[RACE_
         .forwardDeceleration = 0x0040,
         .reverseDeceleration = 0x0040,
     },
-    { /* 11: Special: useless */
+    { /* 11: Ice */
         .maxSpeed = 0x0DC0,
         .gravity = 0x0000,
         .aerialGravity = 0x0000,
