@@ -4,31 +4,8 @@
 #include "common.h"
 #include "game/race/player/race_player_input.h"
 
-#define RACE_PLAYER_BOARD_TUNING_COUNT 15
-#define RACE_PLAYER_CHARACTER_TUNING_COUNT 7
-#define RACE_PLAYER_DEMO_CHARACTER_TUNING_COUNT 6
-
-typedef struct RacePlayerTuning {
-    s16 maxSpeed;
-    s16 gravity;
-    s16 aerialGravity;
-    s16 turnStrength;
-    s16 lateralDeceleration;
-    s16 turnRadiusAtFullLean;
-    s16 turnRadiusAtHalfLean;
-    s16 forwardDeceleration;
-    s16 reverseDeceleration;
-} RacePlayerTuning;
-
-typedef char RacePlayerTuningSizeCheck[(sizeof(RacePlayerTuning) == 0x12) ? 1 : -1];
-
-extern RacePlayerTuning gRacePlayerBoardTuning[RACE_PLAYER_BOARD_TUNING_COUNT];
-extern RacePlayerTuning gRacePlayerCharacterTuning[RACE_PLAYER_CHARACTER_TUNING_COUNT];
-extern RacePlayerTuning gRacePlayerDemoBoardTuning[RACE_PLAYER_BOARD_TUNING_COUNT];
-extern RacePlayerTuning gRacePlayerDemoCharacterTuning[RACE_PLAYER_DEMO_CHARACTER_TUNING_COUNT];
-
 void initRacePlayers(void);
-void applyRacePlayerTuning(RacePlayer *player);
+void applyRacePlayerProperties(RacePlayer *player);
 void initRacePlayer(RacePlayer *player);
 void updateRacePlayers(void);
 void updateRacePlayer(RacePlayer *player);

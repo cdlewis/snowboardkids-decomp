@@ -50,7 +50,7 @@ typedef union {
 } RaceResultsReadyState;
 
 typedef struct {
-    u8 boardTuningIndex;
+    u8 boardPropertiesIndex;
     u8 snowboardTextureIndex;
 } RaceCpuBoardConfig;
 
@@ -531,7 +531,7 @@ void initRaceSceneFlow(void) {
         }
         characterEntry =
             &gRaceCpuBoardConfigsByCourse[gRaceCourseIndex.signedValue][gRacePlayers[i].characterId & 0xFFFFFFFFu];
-        gRacePlayers[i].characterVariant = characterEntry->boardTuningIndex;
+        gRacePlayers[i].characterVariant = characterEntry->boardPropertiesIndex;
         gRacePlayers[i].snowboardTextureIndex = characterEntry->snowboardTextureIndex;
     }
     if (gRaceSplitscreenMode == 0) {

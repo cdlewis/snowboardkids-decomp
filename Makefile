@@ -390,6 +390,17 @@ $(BUILD_DIR)/%.o: $(TEXTCONV_DIR)/%.c
 	$(V)$(RM_MDEBUG)
 	$(V)$(C_OBJ_POSTPROCESS)
 
+# This data-only file uses designated initializers, which IDO does not support.
+# GNU as preserves the original 16-byte section padding; attributes align each table.
+$(BUILD_DIR)/src.us/race/player/race_player_properties.o: $(TEXTCONV_DIR)/src.us/race/player/race_player_properties.c
+	@mkdir -p $(dir $@)
+	$(PRINTF) "[$(GREEN)   c    $(NO_COL)]  src.us/race/player/race_player_properties.c\n"
+	$(V)$(CC_CHECK) --target=mips-unknown-linux-gnu -mabi=32 -march=mips3 -mno-abicalls -fno-pic -G0 \
+		-ffreestanding -fno-builtin -fno-common -fno-addrsig -std=gnu99 -Wall -Wextra \
+		$(CC_CHECK_INCLUDES) $(C_DEFINES) -U_MIPS_ISA $(CC_CHECK_MIPS_DEFINES) -S -o $(@:.o=.s) $<
+	$(V)$(AS) $(ASFLAGS) -o $@ $(@:.o=.s)
+	$(V)$(RM) $(@:.o=.s)
+
 # Compile optional renderer variants without changing the matching objects.
 # Flexible links select them only when an asset requires CPU index translation.
 $(BUILD_DIR)/runtime-indices/%.o: $(TEXTCONV_DIR)/$(SRC_DIR)/menu/renderer/%.c include/game/menu/renderer/sprite_palette_relocation.h

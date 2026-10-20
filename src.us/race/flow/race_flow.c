@@ -65,7 +65,7 @@ typedef union {
 } RaceResultsReadyState;
 
 typedef struct {
-    /* 0x00 */ u8 boardTuningIndex;
+    /* 0x00 */ u8 boardPropertiesIndex;
     /* 0x01 */ u8 snowboardTextureIndex;
 } RaceCpuBoardConfig;
 
@@ -206,8 +206,8 @@ RaceCpuBoardConfig gRookieMountainCpuBoardConfigs[8] = {
     { 0, 0 },
 };
 /* Fixed course/character board setup, independent of dynamic rank assistance.
- * Silver Mountain (6): tuning 8; Animal Land (7): tuning 0;
- * Ninja Land (8): tuning 8, except character 5 uses 14. */
+ * Silver Mountain (6): board properties index 8; Animal Land (7): board properties index 0;
+ * Ninja Land (8): board properties index 8, except character 5 uses 14. */
 RaceCpuBoardConfig *gRaceCpuBoardConfigsByCourse[10] = {
     gBigSnowmanCpuBoardConfigs, gSunsetRockCpuBoardConfigs, gNightHighwayCpuBoardConfigs, gGrassValleyCpuBoardConfigs, gDizzyLandCpuBoardConfigs,
     gQuicksandValleyCpuBoardConfigs, gSilverMountainCpuBoardConfigs, gAnimalLandCpuBoardConfigs, gNinjaLandCpuBoardConfigs, gRookieMountainCpuBoardConfigs,
@@ -668,7 +668,7 @@ void initRaceSceneFlow(void) {
             }
         }
         characterEntry = &gRaceCpuBoardConfigsByCourse[gRaceCourseIndex.signedValue][gRacePlayers[i].characterId & 0xFFFFFFFFu];
-        gRacePlayers[i].characterVariant = characterEntry->boardTuningIndex;
+        gRacePlayers[i].characterVariant = characterEntry->boardPropertiesIndex;
         gRacePlayers[i].snowboardTextureIndex = characterEntry->snowboardTextureIndex;
     }
     if (gRaceSplitscreenMode == 0) {

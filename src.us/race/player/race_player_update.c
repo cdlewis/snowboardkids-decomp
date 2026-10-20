@@ -21,6 +21,7 @@
 #include "game/race/player/race_player_progress.h"
 #include "game/race/player/race_player_model_renderer.h"
 #include "game/race/player/race_player_update.h"
+#include "game/race/player/race_player_properties.h"
 #include "game/race/course/race_surface_cues.h"
 #include "game/race/ui/race_ui_effects.h"
 #include "game/race/effects/snowboard_trail_effects.h"
@@ -274,23 +275,23 @@ void initRacePlayers(void) {
     }
 }
 
-void applyRacePlayerTuning(RacePlayer *arg0) {
+void applyRacePlayerProperties(RacePlayer *arg0) {
     RacePlayer *player;
-    RacePlayerTuning *var_v0;
-    RacePlayerTuning *var_v1;
-    RacePlayerTuning *temp_a1;
-    RacePlayerTuning *temp_a2;
+    RacePlayerProperties *var_v0;
+    RacePlayerProperties *var_v1;
+    RacePlayerProperties *temp_a1;
+    RacePlayerProperties *temp_a2;
 
     player = arg0;
-    var_v0 = gRacePlayerCharacterTuning;
+    var_v0 = gRaceCharacterProperties;
     if ((gRaceDemoPlaybackEnabled != 0) || (var_v1 = var_v0, gMainMenuModeSelection != 0)) {
-        var_v0 = gRacePlayerDemoBoardTuning;
-        var_v1 = gRacePlayerDemoCharacterTuning;
+        var_v0 = gRaceDemoBoardProperties;
+        var_v1 = gRaceDemoCharacterProperties;
     } else {
-        var_v0 = gRacePlayerBoardTuning;
+        var_v0 = gRaceBoardProperties;
     }
-    temp_a1 = (RacePlayerTuning *)((u8 *)var_v1 + (player->characterId * sizeof(RacePlayerTuning)));
-    temp_a2 = (RacePlayerTuning *)((u8 *)var_v0 + (player->characterVariant * sizeof(RacePlayerTuning)));
+    temp_a1 = (RacePlayerProperties *)((u8 *)var_v1 + (player->characterId * sizeof(RacePlayerProperties)));
+    temp_a2 = (RacePlayerProperties *)((u8 *)var_v0 + (player->characterVariant * sizeof(RacePlayerProperties)));
     player->unk25C = (temp_a1->maxSpeed + temp_a2->maxSpeed) << 8;
     player->speedLimit = player->unk25C;
     player->gravity = (temp_a1->gravity + temp_a2->gravity) << 4;
@@ -348,7 +349,7 @@ void initRacePlayer(RacePlayer *player) {
     player->collisionRadius = 0x80000;
     player->collisionHeight = 0xE0000;
 
-    applyRacePlayerTuning(player);
+    applyRacePlayerProperties(player);
     if (player->isCpu != 0) {
         player->unk274 = 0x10000;
     }
