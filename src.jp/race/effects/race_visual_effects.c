@@ -18,12 +18,6 @@
 #include "game/race/effects/race_visual_effects.h"
 
 #define ASSET_HANDLE(index) (gAssetHandles[index])
-#define RACE_ITEM_GFX_CMD(pkt, cmd0, cmd1) \
-    {                                      \
-        Gfx *_g = (Gfx *)(pkt);            \
-        _g->words.w0 = (cmd0);             \
-        _g->words.w1 = (cmd1);             \
-    }
 
 typedef union {
     s64 value;
@@ -36,8 +30,10 @@ typedef union {
 extern u8 gRaceItemEffectTypeTableVariants[4][28];
 
 u8 *gRaceCourseItemEffectTypeTables[10] = {
-    gRaceItemEffectTypeTableVariants[0], gRaceItemEffectTypeTableVariants[0], gRaceItemEffectTypeTableVariants[0], gRaceItemEffectTypeTableVariants[2], gRaceItemEffectTypeTableVariants[1],
-    gRaceItemEffectTypeTableVariants[3], gRaceItemEffectTypeTableVariants[0], gRaceItemEffectTypeTableVariants[0], gRaceItemEffectTypeTableVariants[0], gRaceItemEffectTypeTableVariants[0],
+    gRaceItemEffectTypeTableVariants[0], gRaceItemEffectTypeTableVariants[0], gRaceItemEffectTypeTableVariants[0],
+    gRaceItemEffectTypeTableVariants[2], gRaceItemEffectTypeTableVariants[1], gRaceItemEffectTypeTableVariants[3],
+    gRaceItemEffectTypeTableVariants[0], gRaceItemEffectTypeTableVariants[0], gRaceItemEffectTypeTableVariants[0],
+    gRaceItemEffectTypeTableVariants[0],
 };
 
 u16 gRaceItemEffectSpriteIds[8] = { 10, 11, 12, 13, 10, 0, 0, 0 };
@@ -251,137 +247,56 @@ void spawnRaceItemTrackSparkBurst(Vec3i *arg0, Vec3i *arg1, Vec3i *arg2, Vec3i *
 }
 // clang-format on
 
-// IDO code generation for this function is sensitive to source line layout.
-// clang-format off
 void renderRacePlayerHitEffect(RaceItemEffectActor *arg0) {
     Transform3D sp88;
     void *sp84;
     void *sp80;
     s32 frame;
 
-    do { \
-        if (gRenderMatricesDirty) { \
-            sp88 = gIdentityFixedTransform; \
-            sp88.translation.x = arg0->payload.vec.x; \
-            sp88.translation.y = arg0->payload.vec.y; \
-            sp88.translation.z = arg0->payload.vec.z; \
-            arg0->unk30.matrix = allocFixedTransformMatrix(&sp88); \
-        } \
-        if (arg0->unk30.matrix != NULL) { \
-            if (isPositionNearCurrentRaceViewportCamera(&arg0->payload.vec) != 0) { \
-                { \
-                    Gfx *_g = (Gfx *)(gRegionAllocPtr++); \
-                    _g->words.w0 = 0xBB000001; \
-                    _g->words.w1 = 0xFFFFFFFF; \
-                }; \
-                { \
-                    Gfx *_g = (Gfx *)(gRegionAllocPtr++); \
-                    _g->words.w0 = 0xFC121824; \
-                    _g->words.w1 = 0xFF33FFFF; \
-                }; \
-                { \
-                    Gfx *_g = (Gfx *)(gRegionAllocPtr++); \
-                    _g->words.w0 = 0xB900031D; \
-                    _g->words.w1 = 0x005049D8; \
-                }; \
-                getAssetTableImageAndPalette( \
-                    getRelocatableHeapBlockBase(ASSET_HANDLE(0x1C)), \
-                    (frame = gRacePlayerHitEffectSpriteOffsets[arg0->task.userId] + \
-                             (arg0->vector24.fields.word24.timer >> 1), \
-                     0xFFFF & frame), \
-                    &sp84, \
-                    &sp80 \
-                ); \
-                { \
-                    Gfx *_g = (Gfx *)(gRegionAllocPtr++); \
-                    _g->words.w0 = 0xFD500000; \
-                    _g->words.w1 = (u32)sp84; \
-                }; \
-                { \
-                    Gfx *_g = (Gfx *)(gRegionAllocPtr++); \
-                    _g->words.w0 = 0xF5500000; \
-                    _g->words.w1 = 0x07080200; \
-                }; \
-                { \
-                    Gfx *_g = (Gfx *)(gRegionAllocPtr++); \
-                    _g->words.w0 = 0xE6000000; \
-                    _g->words.w1 = gRacePlayerHitEffectSpriteOffsets[arg0->task.userId] * 0; \
-                }; \
-                { \
-                    Gfx *_g = (Gfx *)(gRegionAllocPtr++); \
-                    _g->words.w0 = 0xF3000000; \
-                    _g->words.w1 = 0x070FF400; \
-                }; \
-                { \
-                    Gfx *_g = (Gfx *)(gRegionAllocPtr++); \
-                    _g->words.w0 = 0xE7000000; \
-                    _g->words.w1 = 0; \
-                }; \
-                { \
-                    Gfx *_g = (Gfx *)(gRegionAllocPtr++); \
-                    _g->words.w0 = 0xF5400400; \
-                    _g->words.w1 = 0x80200; \
-                }; \
-                { \
-                    Gfx *_g = (Gfx *)(gRegionAllocPtr++); \
-                    _g->words.w0 = 0xF2000000; \
-                    _g->words.w1 = 0x7C07C; \
-                }; \
-                { \
-                    Gfx *_g = (Gfx *)(gRegionAllocPtr++); \
-                    _g->words.w0 = 0xFD100000; \
-                    _g->words.w1 = (u32)sp80; \
-                }; \
-                { \
-                    Gfx *_g = (Gfx *)(gRegionAllocPtr++); \
-                    _g->words.w0 = 0xE8000000; \
-                    _g->words.w1 = 0; \
-                }; \
-                { \
-                    Gfx *_g = (Gfx *)(gRegionAllocPtr++); \
-                    _g->words.w0 = 0xF5000100; \
-                    _g->words.w1 = 0x07000000; \
-                }; \
-                { \
-                    Gfx *_g = (Gfx *)(gRegionAllocPtr++); \
-                    _g->words.w0 = 0xE6000000; \
-                    _g->words.w1 = 0; \
-                }; \
-                { \
-                    Gfx *_g = (Gfx *)(gRegionAllocPtr++); \
-                    _g->words.w0 = 0xF0000000; \
-                    _g->words.w1 = 0x0703C000; \
-                }; \
-                { \
-                    Gfx *_g = (Gfx *)(gRegionAllocPtr++); \
-                    _g->words.w0 = 0xE7000000; \
-                    _g->words.w1 = 0; \
-                }; \
-                { \
-                    Gfx *_g = (Gfx *)(gRegionAllocPtr++); \
-                    _g->words.w0 = 0x01020040; \
-                    _g->words.w1 = (u32)arg0->unk30.matrix; \
-                }; \
-                { \
-                    Gfx *_g = (Gfx *)(gRegionAllocPtr++); \
-                    _g->words.w0 = 0x01000040; \
-                    _g->words.w1 = (u32)gViewportMatrix; \
-                }; \
-                { \
-                    Gfx *_g = (Gfx *)(gRegionAllocPtr++); \
-                    _g->words.w0 = 0x0400103F; \
-                    _g->words.w1 = (u32)gRacePlayerHitEffectQuadVertices; \
-                }; \
-                { \
-                    Gfx *_g = (Gfx *)(gRegionAllocPtr++); \
-                    _g->words.w0 = 0xB1060402; \
-                    _g->words.w1 = 0x60200; \
-                }; \
-            } \
-        } \
+    do {
+        if (gRenderMatricesDirty) {
+            sp88 = gIdentityFixedTransform;
+            sp88.translation.x = arg0->payload.vec.x;
+            sp88.translation.y = arg0->payload.vec.y;
+            sp88.translation.z = arg0->payload.vec.z;
+            arg0->unk30.matrix = allocFixedTransformMatrix(&sp88);
+        }
+        if (arg0->unk30.matrix != NULL) {
+            if (isPositionNearCurrentRaceViewportCamera(&arg0->payload.vec) != 0) {
+                gSPTexture(gRegionAllocPtr++, 0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_ON);
+                gDPSetCombineMode(gRegionAllocPtr++, G_CC_MODULATEIA, G_CC_MODULATEIA);
+                gDPSetRenderMode(gRegionAllocPtr++, G_RM_AA_ZB_XLU_SURF, G_RM_AA_ZB_XLU_SURF2);
+                getAssetTableImageAndPalette(
+                    getRelocatableHeapBlockBase(ASSET_HANDLE(0x1C)),
+                    (frame = gRacePlayerHitEffectSpriteOffsets[arg0->task.userId] +
+                             (arg0->vector24.fields.word24.timer >> 1),
+                     0xFFFF & frame),
+                    &sp84,
+                    &sp80
+                );
+                gDPLoadTextureBlock_4b(
+                    gRegionAllocPtr++,
+                    sp84,
+                    G_IM_FMT_CI,
+                    32,
+                    32,
+                    0,
+                    G_TX_CLAMP,
+                    G_TX_CLAMP,
+                    G_TX_NOMASK,
+                    G_TX_NOMASK,
+                    G_TX_NOLOD,
+                    G_TX_NOLOD
+                );
+                gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, sp80);
+                gSPMatrix(gRegionAllocPtr++, (Mtx *)arg0->unk30.matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+                gSPMatrix(gRegionAllocPtr++, (Mtx *)gViewportMatrix, G_MTX_NOPUSH | G_MTX_MUL | G_MTX_MODELVIEW);
+                gSPVertex(gRegionAllocPtr++, gRacePlayerHitEffectQuadVertices, 4, 0);
+                gSP1Quadrangle(gRegionAllocPtr++, 2, 1, 0, 3, 3);
+            }
+        }
     } while (0);
 }
-// clang-format on
 
 void updateRacePlayerHitEffect(RaceItemEffectActor *arg0) {
     s16 temp_v0;
@@ -449,7 +364,6 @@ void spawnRaceItemImpactEffect(s32 arg0, s32 arg1, s32 arg2, s16 arg3) {
 void renderRaceItemProjectileTrailEffect(RaceItemEffectActor *arg0) {
     volatile u8 padding[4];
     Transform3D sp64;
-    Gfx *temp_v0_2;
 
     if (gRenderMatricesDirty != 0) {
         arg0->unk34.shorts.state.bytes.matrixDirty = 1;
@@ -469,9 +383,7 @@ void renderRaceItemProjectileTrailEffect(RaceItemEffectActor *arg0) {
 
     if (arg0->vector24.fields.word24.velocityX != 0) {
         gSPDisplayList(gRegionAllocPtr++, gRaceItemEffectTranslucentRenderSetupDl);
-        temp_v0_2 = gRegionAllocPtr++;
-        temp_v0_2->words.w0 = 0xFA000000;
-        temp_v0_2->words.w1 = (arg0->unk30.screen.x & 0xFF) | ~0xFF;
+        gDPSetPrimColor(gRegionAllocPtr++, 0, 0, 255, 255, 255, arg0->unk30.screen.x);
         gDPLoadTextureBlock_4b(
             gRegionAllocPtr++,
             arg0->vector24.fields.word2C.image,
@@ -563,25 +475,27 @@ void renderRacePlayerShockEffect(RaceItemEffectActor *arg0) {
                     &sp78
                 );
 
-                RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0x06000000, (u32)gEffectRenderModeSetupDl);
-                RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0xFD500000, (u32)sp7C);
-                RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0xF5500000, 0x07080200);
-                RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0xE6000000, 0);
-                RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0xF3000000, 0x0703F800);
-                RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0xE7000000, 0);
-                RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0xF5400200, 0x80200);
-                RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0xF2000000, 0x3C03C);
-                RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0xFD100000, (u32)sp78);
-                RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0xE8000000, 0);
-                RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0xF5000100, 0x07000000);
-                RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0xE6000000, 0);
-                RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0xF0000000, 0x0703C000);
-                RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0xE7000000, 0);
-                RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0x01020040, (u32)arg0->unk30.matrix);
-                RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0x01000040, (u32)gViewportMatrix);
-                RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0x0400103F, (u32)gRacePlayerShockEffectQuadVertices);
-                RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0xB1060402, 0x60200);
-                RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0x06000000, (u32)gEffectRenderModeCleanupDl);
+                gSPDisplayList(gRegionAllocPtr++, gEffectRenderModeSetupDl);
+                gDPLoadTextureBlock_4b(
+                    gRegionAllocPtr++,
+                    sp7C,
+                    G_IM_FMT_CI,
+                    16,
+                    16,
+                    0,
+                    G_TX_CLAMP,
+                    G_TX_CLAMP,
+                    G_TX_NOMASK,
+                    G_TX_NOMASK,
+                    G_TX_NOLOD,
+                    G_TX_NOLOD
+                );
+                gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, sp78);
+                gSPMatrix(gRegionAllocPtr++, (Mtx *)arg0->unk30.matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+                gSPMatrix(gRegionAllocPtr++, (Mtx *)gViewportMatrix, G_MTX_NOPUSH | G_MTX_MUL | G_MTX_MODELVIEW);
+                gSPVertex(gRegionAllocPtr++, gRacePlayerShockEffectQuadVertices, 4, 0);
+                gSP1Quadrangle(gRegionAllocPtr++, 2, 1, 0, 3, 3);
+                gSPDisplayList(gRegionAllocPtr++, gEffectRenderModeCleanupDl);
             }
         } while (0);
     }
@@ -601,7 +515,11 @@ void updateRacePlayerShockEffect(RaceItemEffectActor *arg0) {
     if (actor->unk34.shorts.height.byte < 0) {
         actor->unk34.shorts.height.byte = 0;
     }
-    transformVec3iByFixedMatrix(gRacePlayers[actor->task.userId].modelPartTransforms[0].rotation, &actor->vector24.vec, &actor->payload.vec);
+    transformVec3iByFixedMatrix(
+        gRacePlayers[actor->task.userId].modelPartTransforms[0].rotation,
+        &actor->vector24.vec,
+        &actor->payload.vec
+    );
     player = &gRacePlayers[actor->task.userId];
     actor->payload.vec.x += player->modelPartTransforms[0].translation.x;
     actor->payload.vec.y += player->modelPartTransforms[0].translation.y;
@@ -626,27 +544,10 @@ void initRacePlayerShockEffect(RaceItemEffectActor *arg0) {
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRacePlayerShockEffect);
 }
 
-// IDO code generation for this function is sensitive to source line layout.
-// clang-format off
 void renderRaceItemBreakParticle(RaceItemEffectActor *arg0) {
     volatile s32 pad0;
     Transform3D sp74;
-    volatile u8 padding[0x14];
-    Gfx *temp_v0_2;
-    Gfx *temp_v0_3;
-    Gfx *temp_v0_4;
-    Gfx *temp_v0_5;
-    Gfx *temp_v0_6;
-    Gfx *temp_v0_7;
-    Gfx *temp_v0_8;
-    Gfx *temp_v0_9;
-    Gfx *temp_v0_10;
-    Gfx *temp_v0_11;
-    Gfx *temp_v0_12;
-    Gfx *temp_v0_13;
-    Gfx *temp_v0_14;
-    Gfx *temp_v0_17;
-    Gfx *temp_v0_18;
+    volatile u8 padding[0xC];
 
     if (gRenderMatricesDirty != 0) {
         arg0->pad4E = 1;
@@ -662,82 +563,33 @@ void renderRaceItemBreakParticle(RaceItemEffectActor *arg0) {
             arg0->unk34.matrix = allocFixedTransformMatrix(&sp74);
         }
 
-        do { \
-            if (arg0->unk34.matrix != NULL) { \
-                { \
-                    Gfx *_g = (Gfx *)(gRegionAllocPtr++); \
-                    _g->words.w0 = (((u32)((((u32)6) & ((0x01 << 8) - 1)) << 24)) | \
-                                    ((u32)((((u32)0x00) & ((0x01 << 8) - 1)) << 16))) | \
-                                   ((u32)((((u32)0) & ((0x01 << 16) - 1)) << 0)); \
-                    _g->words.w1 = (u32)gRaceItemEffectTranslucentRenderSetupDl; \
-                }; \
-                temp_v0_2 = gRegionAllocPtr++; \
-                temp_v0_2->words.w0 = 0xFA000000; \
-                temp_v0_2->words.w1 = (arg0->unk38.width & 0xFF) | ~0xFF; \
-                temp_v0_3 = gRegionAllocPtr++; \
-                temp_v0_3->words.w0 = 0xFD500000; \
-                temp_v0_3->words.w1 = (u32)arg0->image; \
-                temp_v0_4 = gRegionAllocPtr++; \
-                temp_v0_4->words.w0 = 0xF5500000; \
-                temp_v0_4->words.w1 = 0x07080200; \
-                temp_v0_5 = gRegionAllocPtr++; \
-                temp_v0_5->words.w1 = 0; \
-                temp_v0_5->words.w0 = 0xE6000000; \
-                temp_v0_6 = gRegionAllocPtr++; \
-                temp_v0_6->words.w0 = 0xF3000000; \
-                temp_v0_6->words.w1 = 0x0703F800; \
-                temp_v0_7 = gRegionAllocPtr++; \
-                temp_v0_7->words.w1 = 0; \
-                temp_v0_7->words.w0 = 0xE7000000; \
-                temp_v0_8 = gRegionAllocPtr++; \
-                temp_v0_8->words.w0 = 0xF5400200; \
-                temp_v0_8->words.w1 = 0x00080200; \
-                temp_v0_9 = gRegionAllocPtr++; \
-                temp_v0_9->words.w0 = 0xF2000000; \
-                temp_v0_9->words.w1 = 0x0003C03C; \
-                temp_v0_10 = gRegionAllocPtr++; \
-                temp_v0_10->words.w0 = 0xFD100000; \
-                temp_v0_10->words.w1 = (u32)arg0->palette; \
-                temp_v0_11 = gRegionAllocPtr++; \
-                temp_v0_11->words.w1 = 0; \
-                temp_v0_11->words.w0 = 0xE8000000; \
-                temp_v0_12 = gRegionAllocPtr++; \
-                temp_v0_12->words.w0 = 0xF5000100; \
-                temp_v0_12->words.w1 = 0x07000000; \
-                temp_v0_13 = gRegionAllocPtr++; \
-                temp_v0_13->words.w1 = 0; \
-                temp_v0_13->words.w0 = 0xE6000000; \
-                temp_v0_14 = gRegionAllocPtr++; \
-                temp_v0_14->words.w0 = 0xF0000000; \
-                temp_v0_14->words.w1 = 0x0703C000; \
-                temp_v0_17 = gRegionAllocPtr++; \
-                temp_v0_17->words.w1 = 0; \
-                temp_v0_17->words.w0 = 0xE7000000; \
-                { \
-                    Gfx *_g = (Gfx *)(gRegionAllocPtr++); \
-                    _g->words.w0 = (((u32)((((u32)1) & ((0x01 << 8) - 1)) << 24)) | \
-                                    ((u32)((((u32)((0x00 | 0x02) | 0x00)) & ((0x01 << 8) - 1)) << 16))) | \
-                                   ((u32)((((u32)(sizeof(Mtx))) & ((0x01 << 16) - 1)) << 0)); \
-                    _g->words.w1 = (u32)arg0->unk34.matrix; \
-                }; \
-                { \
-                    Gfx *_g = (Gfx *)(gRegionAllocPtr++); \
-                    _g->words.w0 = (((u32)((((u32)1) & ((0x01 << 8) - 1)) << 24)) | \
-                                    ((u32)((((u32)((0x00 | 0x00) | 0x00)) & ((0x01 << 8) - 1)) << 16))) | \
-                                   ((u32)((((u32)(sizeof(Mtx))) & ((0x01 << 16) - 1)) << 0)); \
-                    _g->words.w1 = (u32)gViewportMatrix; \
-                }; \
-                temp_v0_18 = gRegionAllocPtr++; \
-                temp_v0_18->words.w0 = 0x0400103F; \
-                temp_v0_18->words.w1 = (u32)gRaceItemBreakParticleQuadVertices; \
-                temp_v0_2 = gRegionAllocPtr++; \
-                temp_v0_2->words.w0 = 0xB1060402; \
-                temp_v0_2->words.w1 = 0x00060200; \
-            } \
+        do {
+            if (arg0->unk34.matrix != NULL) {
+                gSPDisplayList(gRegionAllocPtr++, gRaceItemEffectTranslucentRenderSetupDl);
+                gDPSetPrimColor(gRegionAllocPtr++, 0, 0, 255, 255, 255, arg0->unk38.width);
+                gDPLoadTextureBlock_4b(
+                    gRegionAllocPtr++,
+                    arg0->image,
+                    G_IM_FMT_CI,
+                    16,
+                    16,
+                    0,
+                    G_TX_CLAMP,
+                    G_TX_CLAMP,
+                    G_TX_NOMASK,
+                    G_TX_NOMASK,
+                    G_TX_NOLOD,
+                    G_TX_NOLOD
+                );
+                gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, arg0->palette);
+                gSPMatrix(gRegionAllocPtr++, (Mtx *)arg0->unk34.matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+                gSPMatrix(gRegionAllocPtr++, (Mtx *)gViewportMatrix, G_MTX_NOPUSH | G_MTX_MUL | G_MTX_MODELVIEW);
+                gSPVertex(gRegionAllocPtr++, gRaceItemBreakParticleQuadVertices, 4, 0);
+                gSP1Quadrangle(gRegionAllocPtr++, 2, 1, 0, 3, 3);
+            }
         } while (0);
     }
 }
-// clang-format on
 
 void updateRaceItemBreakParticle(RaceItemEffectActor *arg0) {
     s16 temp_v0;
@@ -858,24 +710,30 @@ void renderRacePlayerRecoverySparkle(RaceItemEffectActor *arg0) {
                 &sp70
             );
 
-            RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0x06000000, (u32)gAlphaSpriteRenderModeDl);
-            RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0xFD500000, (u32)sp74);
-            RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0xF5500000, 0x07080200);
-            RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0xE6000000, 0);
-            RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0xF3000000, 0x070FF400);
-            RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0xE7000000, 0);
-            RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0xF5400400, 0x80200);
-            RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0xF2000000, 0x7C07C);
-            RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0xFD100000, (u32)sp70);
-            RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0xE8000000, 0);
-            RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0xF5000100, 0x07000000);
-            RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0xE6000000, 0);
-            RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0xF0000000, 0x0703C000);
-            RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0xE7000000, 0);
-            RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0x01020040, arg0->vector24.fields.word24.velocityX);
-            RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0x01000040, (u32)gViewportMatrix);
-            RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0x0400103F, (u32)gRacePlayerRecoverySparkleQuadVertices);
-            RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0xB1060402, 0x60200);
+            gSPDisplayList(gRegionAllocPtr++, gAlphaSpriteRenderModeDl);
+            gDPLoadTextureBlock_4b(
+                gRegionAllocPtr++,
+                sp74,
+                G_IM_FMT_CI,
+                32,
+                32,
+                0,
+                G_TX_CLAMP,
+                G_TX_CLAMP,
+                G_TX_NOMASK,
+                G_TX_NOMASK,
+                G_TX_NOLOD,
+                G_TX_NOLOD
+            );
+            gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, sp70);
+            gSPMatrix(
+                gRegionAllocPtr++,
+                (Mtx *)arg0->vector24.fields.word24.velocityX,
+                G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW
+            );
+            gSPMatrix(gRegionAllocPtr++, (Mtx *)gViewportMatrix, G_MTX_NOPUSH | G_MTX_MUL | G_MTX_MODELVIEW);
+            gSPVertex(gRegionAllocPtr++, gRacePlayerRecoverySparkleQuadVertices, 4, 0);
+            gSP1Quadrangle(gRegionAllocPtr++, 2, 1, 0, 3, 3);
         }
     }
 }
@@ -896,9 +754,12 @@ void updateRacePlayerRecoverySparkle(RaceItemEffectActor *arg0) {
 
 void initRacePlayerRecoverySparkle(RaceItemEffectActor *arg0) {
     arg0->vector24.fields.word28.bytes.phase = -1;
-    arg0->payload.vec.x = gRacePlayers[arg0->task.userId].modelPartTransforms[6].translation.x + ((randomNextMain() - 0x80) << 10);
-    arg0->payload.vec.y = gRacePlayers[arg0->task.userId].modelPartTransforms[6].translation.y + ((randomNextMain() - 0x80) << 10);
-    arg0->payload.vec.z = gRacePlayers[arg0->task.userId].modelPartTransforms[6].translation.z + ((randomNextMain() - 0x80) << 10);
+    arg0->payload.vec.x =
+        gRacePlayers[arg0->task.userId].modelPartTransforms[6].translation.x + ((randomNextMain() - 0x80) << 10);
+    arg0->payload.vec.y =
+        gRacePlayers[arg0->task.userId].modelPartTransforms[6].translation.y + ((randomNextMain() - 0x80) << 10);
+    arg0->payload.vec.z =
+        gRacePlayers[arg0->task.userId].modelPartTransforms[6].translation.z + ((randomNextMain() - 0x80) << 10);
     updateRacePlayerRecoverySparkle(arg0);
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRacePlayerRecoverySparkle);
 }
@@ -937,28 +798,30 @@ void renderRacePlayerYellowTrickSparkles(RaceItemFollowActor *arg0) {
                 &sp88
             );
 
-            RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0x06000000, (u32)gAlphaSpriteRenderModeDl);
-            RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0xFD500000, (u32)sp8C);
-            RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0xF5500000, 0x07080200);
-            RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0xE6000000, 0);
-            RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0xF3000000, 0x0703F800);
-            RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0xE7000000, 0);
-            RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0xF5400200, 0x80200);
-            RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0xF2000000, 0x3C03C);
-            RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0xFD100000, (u32)sp88);
-            RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0xE8000000, 0);
-            RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0xF5000100, 0x07000000);
-            RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0xE6000000, 0);
-            RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0xF0000000, 0x0703C000);
-            RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0xE7000000, 0);
-            RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0x01020040, (u32)arg0->matrix1);
-            RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0x01000040, (u32)gViewportMatrix);
-            RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0x0400103F, (u32)gRacePlayerYellowTrickSparklesQuadVertices);
-            RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0xB1060402, 0x60200);
-            RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0x01020040, (u32)arg0->matrix2);
-            RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0x01000040, (u32)gViewportMatrix);
-            RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0x0400103F, (u32)gRacePlayerYellowTrickSparklesQuadVertices);
-            RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0xB1060402, 0x60200);
+            gSPDisplayList(gRegionAllocPtr++, gAlphaSpriteRenderModeDl);
+            gDPLoadTextureBlock_4b(
+                gRegionAllocPtr++,
+                sp8C,
+                G_IM_FMT_CI,
+                16,
+                16,
+                0,
+                G_TX_CLAMP,
+                G_TX_CLAMP,
+                G_TX_NOMASK,
+                G_TX_NOMASK,
+                G_TX_NOLOD,
+                G_TX_NOLOD
+            );
+            gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, sp88);
+            gSPMatrix(gRegionAllocPtr++, (Mtx *)arg0->matrix1, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+            gSPMatrix(gRegionAllocPtr++, (Mtx *)gViewportMatrix, G_MTX_NOPUSH | G_MTX_MUL | G_MTX_MODELVIEW);
+            gSPVertex(gRegionAllocPtr++, gRacePlayerYellowTrickSparklesQuadVertices, 4, 0);
+            gSP1Quadrangle(gRegionAllocPtr++, 2, 1, 0, 3, 3);
+            gSPMatrix(gRegionAllocPtr++, (Mtx *)arg0->matrix2, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+            gSPMatrix(gRegionAllocPtr++, (Mtx *)gViewportMatrix, G_MTX_NOPUSH | G_MTX_MUL | G_MTX_MODELVIEW);
+            gSPVertex(gRegionAllocPtr++, gRacePlayerYellowTrickSparklesQuadVertices, 4, 0);
+            gSP1Quadrangle(gRegionAllocPtr++, 2, 1, 0, 3, 3);
         }
     }
 }
@@ -1257,28 +1120,30 @@ void renderRacePlayerBlueTrickSparkles(RaceItemFollowActor *arg0) {
                 &sp90
             );
 
-            RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0x06000000, (u32)gAlphaSpriteRenderModeDl);
-            RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0xFD500000, (u32)sp94);
-            RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0xF5500000, 0x07080200);
-            RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0xE6000000, 0);
-            RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0xF3000000, 0x0703F800);
-            RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0xE7000000, 0);
-            RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0xF5400200, 0x80200);
-            RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0xF2000000, 0x3C03C);
-            RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0xFD100000, (u32)sp90);
-            RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0xE8000000, 0);
-            RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0xF5000100, 0x07000000);
-            RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0xE6000000, 0);
-            RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0xF0000000, 0x0703C000);
-            RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0xE7000000, 0);
-            RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0x01020040, (u32)arg0->matrix1);
-            RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0x01000040, (u32)gViewportMatrix);
-            RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0x0400103F, (u32)gRacePlayerBlueTrickSparklesQuadVertices);
-            RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0xB1060402, 0x60200);
-            RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0x01020040, (u32)arg0->matrix2);
-            RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0x01000040, (u32)gViewportMatrix);
-            RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0x0400103F, (u32)gRacePlayerBlueTrickSparklesQuadVertices);
-            RACE_ITEM_GFX_CMD(gRegionAllocPtr++, 0xB1060402, 0x60200);
+            gSPDisplayList(gRegionAllocPtr++, gAlphaSpriteRenderModeDl);
+            gDPLoadTextureBlock_4b(
+                gRegionAllocPtr++,
+                sp94,
+                G_IM_FMT_CI,
+                16,
+                16,
+                0,
+                G_TX_CLAMP,
+                G_TX_CLAMP,
+                G_TX_NOMASK,
+                G_TX_NOMASK,
+                G_TX_NOLOD,
+                G_TX_NOLOD
+            );
+            gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, sp90);
+            gSPMatrix(gRegionAllocPtr++, (Mtx *)arg0->matrix1, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+            gSPMatrix(gRegionAllocPtr++, (Mtx *)gViewportMatrix, G_MTX_NOPUSH | G_MTX_MUL | G_MTX_MODELVIEW);
+            gSPVertex(gRegionAllocPtr++, gRacePlayerBlueTrickSparklesQuadVertices, 4, 0);
+            gSP1Quadrangle(gRegionAllocPtr++, 2, 1, 0, 3, 3);
+            gSPMatrix(gRegionAllocPtr++, (Mtx *)arg0->matrix2, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+            gSPMatrix(gRegionAllocPtr++, (Mtx *)gViewportMatrix, G_MTX_NOPUSH | G_MTX_MUL | G_MTX_MODELVIEW);
+            gSPVertex(gRegionAllocPtr++, gRacePlayerBlueTrickSparklesQuadVertices, 4, 0);
+            gSP1Quadrangle(gRegionAllocPtr++, 2, 1, 0, 3, 3);
         }
     }
 }
