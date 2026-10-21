@@ -539,7 +539,7 @@ void initRacePlayerShockEffect(RaceItemEffectActor *arg0) {
         arg0->vector24.fields.word24.velocityX = -arg0->vector24.fields.word24.velocityX;
     }
     player = &gRacePlayers[arg0->task.userId];
-    enqueuePositionalSoundEffect(9, (Vec3i *)&player->pos, 0x7F, 0x32);
+    enqueuePositionalSoundEffect(SFX_SHOCK, (Vec3i *)&player->pos, 0x7F, SFX_PRIORITY_NORMAL);
     updateRacePlayerShockEffect(arg0);
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRacePlayerShockEffect);
 }
@@ -667,9 +667,19 @@ void spawnRaceItemBreakParticles(s16 playerIndex, s16 itemIndex) {
     itemType = getRaceItemEffectType(itemIndex);
     if (itemType != 4) {
         if (itemType == 1) {
-            enqueuePositionalSoundEffect(0x12, (Vec3i *)&gRacePlayers[playerIndex].pos, 0x7F, 0x32);
+            enqueuePositionalSoundEffect(
+                SFX_ITEM_BREAK,
+                (Vec3i *)&gRacePlayers[playerIndex].pos,
+                0x7F,
+                SFX_PRIORITY_NORMAL
+            );
         } else {
-            enqueuePositionalSoundEffect(0x11, (Vec3i *)&gRacePlayers[playerIndex].pos, 0x7F, 0x32);
+            enqueuePositionalSoundEffect(
+                SFX_ITEM_IMPACT,
+                (Vec3i *)&gRacePlayers[playerIndex].pos,
+                0x7F,
+                SFX_PRIORITY_NORMAL
+            );
         }
 
         callback = initRaceItemBreakParticle;

@@ -370,7 +370,14 @@ void updateRaceCourseScrollingTexture(RaceCourseScrollingTextureActor *arg0) {
     arg0->textureScrollOffset = arg0->textureScrollOffset + 2;
     arg0->textureScrollOffset = arg0->textureScrollOffset & 0x3F;
     if (temp_v0 != 0) {
-        enqueuePlayerLoopingPositionalSoundRequest(0xE, &D_800D6030[temp_v0], 0x7F, 0x32, 0.0f, 0xA);
+        enqueuePlayerLoopingPositionalSoundRequest(
+            SFX_SUNSET_ROCK_AMBIENCE,
+            &D_800D6030[temp_v0],
+            0x7F,
+            SFX_PRIORITY_NORMAL,
+            0.0f,
+            0xA
+        );
     }
     if (arg0->useOverlayQueue != 0) {
         addRenderCallback(&gModelRenderCallbackQueue7Head, (RenderCallback)renderRaceCourseScrollingTexture, arg0);
@@ -736,7 +743,7 @@ void updateRaceUiPrizePayoutConfirmed(void *arg0) {
 
 void updateRaceUiPrizePayoutWaitForConfirm(void *arg0) {
     if (gPlayerInputPressed[0] & A_BUTTON) {
-        enqueueSoundEffect(0x18, 0x32);
+        enqueueSoundEffect(SFX_CONFIRM, SFX_PRIORITY_NORMAL);
         gMenuFlowState |= 0x10;
         setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceUiPrizePayoutConfirmed);
     }
@@ -796,12 +803,12 @@ void updateRaceUiPrizePayoutCountMoney(RaceUiAlpha18Actor *arg0) {
 
     if (player->rankIndex != 3) {
         if ((arg0->score == 0) && (player->score == 0)) {
-            enqueueSoundEffect(2, 0x32);
+            enqueueSoundEffect(SFX_RESULTS_TALLY_COMPLETE, SFX_PRIORITY_NORMAL);
             setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceUiPrizePayoutWaitForConfirm);
         }
     } else if (arg0->score == 0) {
         shouldPlaySound = 0;
-        enqueueSoundEffect(2, 0x32);
+        enqueueSoundEffect(SFX_RESULTS_TALLY_COMPLETE, SFX_PRIORITY_NORMAL);
         setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceUiPrizePayoutWaitForConfirm);
     }
 
@@ -809,7 +816,7 @@ void updateRaceUiPrizePayoutCountMoney(RaceUiAlpha18Actor *arg0) {
         s16 timer = arg0->timer;
         if (timer == 0) {
             arg0->timer = 2;
-            enqueueSoundEffect(0x1A, 0x32);
+            enqueueSoundEffect(SFX_COIN_TICK, SFX_PRIORITY_NORMAL);
         } else {
             arg0->timer = timer - 1;
         }
@@ -839,7 +846,7 @@ void updateRaceUiPrizePayoutRevealGetCoin(RaceUiPrizePayoutActor *actor) {
     actor->timer--;
     if (actor->timer == 0) {
         actor->timer = RACE_UI_PRIZE_PAYOUT_REVEAL_TIMER;
-        enqueueSoundEffect(0x1A, 0x32);
+        enqueueSoundEffect(SFX_COIN_TICK, SFX_PRIORITY_NORMAL);
         setCallbackTaskCallback(actor, (CallbackTaskCallback)updateRaceUiPrizePayoutWaitBeforeMoneyCount);
     }
     addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawRaceUiPrizePayoutRankPanel, actor);
@@ -851,7 +858,7 @@ void updateRaceUiPrizePayoutRevealGetCoin(RaceUiPrizePayoutActor *actor) {
 void updateRaceUiPrizePayoutRevealRankPrize(RaceUiPrizePayoutActor *arg0) {
     arg0->timer--;
     if (arg0->timer == 0) {
-        enqueueSoundEffect(0x1A, 0x32);
+        enqueueSoundEffect(SFX_COIN_TICK, SFX_PRIORITY_NORMAL);
         arg0->timer = RACE_UI_PRIZE_PAYOUT_REVEAL_TIMER;
         setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceUiPrizePayoutRevealGetCoin);
     }
@@ -864,7 +871,7 @@ void updateRaceUiPrizePayoutShowRankPrize(RaceUiPrizePayoutActor *arg0) {
     arg0->timer--;
     if (arg0->timer == 0) {
         arg0->timer = RACE_UI_PRIZE_PAYOUT_REVEAL_TIMER;
-        enqueueSoundEffect(0x1A, 0x32);
+        enqueueSoundEffect(SFX_COIN_TICK, SFX_PRIORITY_NORMAL);
         setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceUiPrizePayoutRevealRankPrize);
     }
     addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawRaceUiPrizePayoutRankPanel, arg0);
@@ -1080,7 +1087,7 @@ void updateRaceUiResultsBannerWaitForInput(RaceUiResultsBannerActor *arg0) {
             // clang-format on
             if ((*input & A_BUTTON) && !(gMenuFlowState & 0x10)) {
                 gMenuFlowState |= 0x10;
-                enqueueSoundEffect(0x18, 0x32);
+                enqueueSoundEffect(SFX_CONFIRM, SFX_PRIORITY_NORMAL);
                 setCallbackTaskCallback(actor, (CallbackTaskCallback)updateRaceUiResultsBannerConfirmed);
             }
             i++;
@@ -1279,7 +1286,7 @@ void updateRaceUiCourseStatsConfirmed(RaceUiCourseStatsActor *arg0) {
 void updateRaceUiCourseStatsWaitForConfirm(RaceUiCourseStatsActor *arg0) {
     if (gPlayerInputPressed[0] & A_BUTTON) {
         gMenuFlowState |= 0x10;
-        enqueueSoundEffect(0x18, 0x32);
+        enqueueSoundEffect(SFX_CONFIRM, SFX_PRIORITY_NORMAL);
         setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceUiCourseStatsConfirmed);
     }
     addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawRaceUiCourseStatsElapsedTime, arg0);
@@ -1614,7 +1621,7 @@ void updateRaceUiHitPrizeCourseValuesConfirmed(void *arg0) {
 
 void updateRaceUiHitPrizeCourseValuesWaitForConfirm(void *arg0) {
     if (gPlayerInputPressed[0] & A_BUTTON) {
-        enqueueSoundEffect(0x18, 0x32);
+        enqueueSoundEffect(SFX_CONFIRM, SFX_PRIORITY_NORMAL);
         gMenuFlowState |= 0x10;
         setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceUiHitPrizeCourseValuesConfirmed);
     }
@@ -1633,7 +1640,7 @@ void updateRaceUiHitPrizePayoutConfirmed(void *arg0) {
 
 void updateRaceUiHitPrizePayoutWaitForConfirm(RaceUiCounterActor *actor) {
     if (gPlayerInputPressed[0] & A_BUTTON) {
-        enqueueSoundEffect(0x18, 0x32);
+        enqueueSoundEffect(SFX_CONFIRM, SFX_PRIORITY_NORMAL);
         if (actor->task.userId < 5) {
             setCallbackTaskCallback(actor, (CallbackTaskCallback)updateRaceUiHitPrizeCourseValuesWaitForConfirm);
         } else {
@@ -1652,7 +1659,7 @@ void updateRaceUiHitPrizePayoutCountMoney(RaceUiCounterActor *arg0) {
 
     if (arg0->timer == 0) {
         arg0->timer = 2;
-        enqueueSoundEffect(0x1A, 0x32);
+        enqueueSoundEffect(SFX_COIN_TICK, SFX_PRIORITY_NORMAL);
     } else {
         arg0->timer--;
     }
@@ -1684,7 +1691,7 @@ void updateRaceUiHitPrizePayoutCountMoney(RaceUiCounterActor *arg0) {
     }
 
     if ((arg0->value == 0) && (arg0->bonus == 0) && (arg0->target == 0)) {
-        enqueueSoundEffect(2, 0x32);
+        enqueueSoundEffect(SFX_RESULTS_TALLY_COMPLETE, SFX_PRIORITY_NORMAL);
         arg0->timer = 0x14;
         setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceUiHitPrizePayoutWaitForConfirm);
     }
@@ -1728,7 +1735,7 @@ void updateRaceUiHitPrizeRevealCompleteBonus(RaceUiCounterActor *arg0) {
     arg0->state = RACE_UI_HIT_PRIZE_SHOW_COMPLETE_BONUS;
     arg0->timer--;
     if (arg0->timer == 0) {
-        enqueueSoundEffect(0x1A, 0x32);
+        enqueueSoundEffect(SFX_COIN_TICK, SFX_PRIORITY_NORMAL);
         arg0->timer = RACE_UI_RESULTS_REVEAL_TIMER;
         setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceUiHitPrizeRevealTotalMoney);
     }
@@ -1742,7 +1749,7 @@ void updateRaceUiHitPrizeRevealPerfectHit(RaceUiCounterActor *arg0) {
     arg0->state = RACE_UI_HIT_PRIZE_SHOW_PERFECT_HIT;
     arg0->timer--;
     if (arg0->timer == 0) {
-        enqueueSoundEffect(0x1A, 0x32);
+        enqueueSoundEffect(SFX_COIN_TICK, SFX_PRIORITY_NORMAL);
         arg0->timer = RACE_UI_RESULTS_REVEAL_TIMER;
         setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceUiHitPrizeRevealCompleteBonus);
     }
@@ -1756,7 +1763,7 @@ void updateRaceUiHitPrizeHoldHitPrize(RaceUiCounterActor *arg0) {
     arg0->state = RACE_UI_HIT_PRIZE_SHOW_HIT_PRIZE;
     arg0->timer--;
     if (arg0->timer == 0) {
-        enqueueSoundEffect(0x1A, 0x32);
+        enqueueSoundEffect(SFX_COIN_TICK, SFX_PRIORITY_NORMAL);
         arg0->timer = RACE_UI_RESULTS_REVEAL_TIMER;
         if (arg0->hasPerfectHitBonus != 0) {
             setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceUiHitPrizeRevealPerfectHit);
@@ -1774,7 +1781,7 @@ void updateRaceUiHitPrizeWaitBeforeHitPrize(RaceUiCounterActor *arg0) {
     arg0->timer--;
     if (arg0->timer == 0) {
         arg0->timer = RACE_UI_RESULTS_REVEAL_TIMER;
-        enqueueSoundEffect(0x1A, 0x32);
+        enqueueSoundEffect(SFX_COIN_TICK, SFX_PRIORITY_NORMAL);
         setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceUiHitPrizeHoldHitPrize);
     }
     addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawRaceUiScoreAttackPointTotal, arg0);
@@ -2085,7 +2092,7 @@ void updateRaceUiCourseRecordRowsConfirmed(void *arg0) {
 
 void updateRaceUiCourseRecordRowsWaitForConfirm(void *arg0) {
     if (gPlayerInputPressed[0] & A_BUTTON) {
-        enqueueSoundEffect(0x18, 0x32);
+        enqueueSoundEffect(SFX_CONFIRM, SFX_PRIORITY_NORMAL);
         gMenuFlowState |= 0x10;
         setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceUiCourseRecordRowsConfirmed);
     }
@@ -2103,7 +2110,7 @@ void updateRaceUiCourseRecordPayoutConfirmed(void *arg0) {
 
 void updateRaceUiCourseRecordPayoutWaitForConfirm(RaceUiDualCounterActor *actor) {
     if (gPlayerInputPressed[0] & A_BUTTON) {
-        enqueueSoundEffect(0x18, 0x32);
+        enqueueSoundEffect(SFX_CONFIRM, SFX_PRIORITY_NORMAL);
         if (actor->task.userId < 5) {
             setCallbackTaskCallback(actor, (CallbackTaskCallback)updateRaceUiCourseRecordRowsWaitForConfirm);
         } else {
@@ -2122,7 +2129,7 @@ void updateRaceUiCourseRecordPayoutCountMoney(RaceUiDualCounterActor *arg0) {
 
     if (arg0->timer == 0) {
         arg0->timer = 2;
-        enqueueSoundEffect(0x1A, 0x32);
+        enqueueSoundEffect(SFX_COIN_TICK, SFX_PRIORITY_NORMAL);
     } else {
         arg0->timer--;
     }
@@ -2161,7 +2168,7 @@ void updateRaceUiCourseRecordPayoutCountMoney(RaceUiDualCounterActor *arg0) {
     }
 
     if ((arg0->rightValue == 0) && (arg0->leftValue == 0) && (arg0->bonus == 0) && (arg0->leftTarget == 0)) {
-        enqueueSoundEffect(2, 0x32);
+        enqueueSoundEffect(SFX_RESULTS_TALLY_COMPLETE, SFX_PRIORITY_NORMAL);
         arg0->timer = 0x14;
         setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceUiCourseRecordPayoutWaitForConfirm);
     }
@@ -2209,7 +2216,7 @@ void updateRaceUiCourseRecordRevealFinalMoney(RaceUiDualCounterActor *actor) {
     actor->state = RACE_UI_COURSE_RECORD_FINAL_MONEY_STATE;
     actor->timer--;
     if (actor->timer == 0) {
-        enqueueSoundEffect(0x1A, 0x32);
+        enqueueSoundEffect(SFX_COIN_TICK, SFX_PRIORITY_NORMAL);
         actor->timer = RACE_UI_RESULTS_REVEAL_TIMER;
         setCallbackTaskCallback(actor, (CallbackTaskCallback)updateRaceUiCourseRecordHoldFinalMoney);
     }
@@ -2223,7 +2230,7 @@ void updateRaceUiCourseRecordRevealPerfectGet(RaceUiDualCounterActor *actor) {
     actor->state = RACE_UI_COURSE_RECORD_REVEAL_PERFECT_GET_STATE;
     actor->timer--;
     if (actor->timer == 0) {
-        enqueueSoundEffect(0x1A, 0x32);
+        enqueueSoundEffect(SFX_COIN_TICK, SFX_PRIORITY_NORMAL);
         actor->timer = RACE_UI_RESULTS_REVEAL_TIMER;
         setCallbackTaskCallback(actor, (CallbackTaskCallback)updateRaceUiCourseRecordRevealFinalMoney);
     }
@@ -2237,7 +2244,7 @@ void updateRaceUiCourseRecordRevealSpeedFanGet(RaceUiDualCounterActor *actor) {
     actor->state = RACE_UI_COURSE_RECORD_REVEAL_SPEED_FAN_GET_STATE;
     actor->timer--;
     if (actor->timer == 0) {
-        enqueueSoundEffect(0x1A, 0x32);
+        enqueueSoundEffect(SFX_COIN_TICK, SFX_PRIORITY_NORMAL);
         actor->timer = RACE_UI_RESULTS_REVEAL_TIMER;
         if (actor->flag != 0) {
             setCallbackTaskCallback(actor, (CallbackTaskCallback)updateRaceUiCourseRecordRevealPerfectGet);
@@ -2255,7 +2262,7 @@ void updateRaceUiCourseRecordRevealTimePrize(RaceUiDualCounterActor *actor) {
     actor->state = RACE_UI_COURSE_RECORD_REVEAL_TIME_PRIZE_STATE;
     actor->timer--;
     if (actor->timer == 0) {
-        enqueueSoundEffect(0x1A, 0x32);
+        enqueueSoundEffect(SFX_COIN_TICK, SFX_PRIORITY_NORMAL);
         actor->timer = RACE_UI_RESULTS_REVEAL_TIMER;
         setCallbackTaskCallback(actor, (CallbackTaskCallback)updateRaceUiCourseRecordRevealSpeedFanGet);
     }
@@ -2269,7 +2276,7 @@ void updateRaceUiCourseRecordWaitBeforeReveal(RaceUiDualCounterActor *actor) {
     actor->timer--;
     if (actor->timer == 0) {
         actor->timer = RACE_UI_RESULTS_REVEAL_TIMER;
-        enqueueSoundEffect(0x1A, 0x32);
+        enqueueSoundEffect(SFX_COIN_TICK, SFX_PRIORITY_NORMAL);
         setCallbackTaskCallback(actor, (CallbackTaskCallback)updateRaceUiCourseRecordRevealTimePrize);
     }
     addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawRaceUiCourseRecordElapsedTime, actor);
@@ -2652,7 +2659,7 @@ void updateRaceUiTrickPrizeCourseValuesConfirmed(void *arg0) {
 
 void updateRaceUiTrickPrizeCourseValuesWaitForConfirm(void *arg0) {
     if (gPlayerInputPressed[0] & A_BUTTON) {
-        enqueueSoundEffect(0x18, 0x32);
+        enqueueSoundEffect(SFX_CONFIRM, SFX_PRIORITY_NORMAL);
         gMenuFlowState |= 0x10;
         setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceUiTrickPrizeCourseValuesConfirmed);
     }
@@ -2671,7 +2678,7 @@ void updateRaceUiTrickPrizePayoutConfirmed(void *arg0) {
 
 void updateRaceUiTrickPrizePayoutWaitForConfirm(RaceUiCourseStatsActor *actor) {
     if (gPlayerInputPressed[0] & A_BUTTON) {
-        enqueueSoundEffect(0x18, 0x32);
+        enqueueSoundEffect(SFX_CONFIRM, SFX_PRIORITY_NORMAL);
         if (actor->task.userId < 5) {
             setCallbackTaskCallback(actor, (CallbackTaskCallback)updateRaceUiTrickPrizeCourseValuesWaitForConfirm);
         } else {
@@ -2690,7 +2697,7 @@ void updateRaceUiTrickPrizePayoutCountMoney(RaceUiCourseStatsActor *arg0) {
 
     if (arg0->timer == 0) {
         arg0->timer = 2;
-        enqueueSoundEffect(0x1A, 0x32);
+        enqueueSoundEffect(SFX_COIN_TICK, SFX_PRIORITY_NORMAL);
     } else {
         arg0->timer--;
     }
@@ -2722,7 +2729,7 @@ void updateRaceUiTrickPrizePayoutCountMoney(RaceUiCourseStatsActor *arg0) {
     }
 
     if ((arg0->pendingTrickPrize == 0) && (arg0->pendingMakeBonus == 0) && (arg0->pendingCompleteBonus == 0)) {
-        enqueueSoundEffect(2, 0x32);
+        enqueueSoundEffect(SFX_RESULTS_TALLY_COMPLETE, SFX_PRIORITY_NORMAL);
         arg0->timer = 0x14;
         setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceUiTrickPrizePayoutWaitForConfirm);
     }
@@ -2770,7 +2777,7 @@ void updateRaceUiTrickPrizePayoutRevealCompleteBonus(RaceUiCourseStatsActor *arg
     arg0->visibleRows = RACE_UI_TRICK_PRIZE_SHOW_COMPLETE_BONUS;
     arg0->timer--;
     if (arg0->timer == 0) {
-        enqueueSoundEffect(0x1A, 0x32);
+        enqueueSoundEffect(SFX_COIN_TICK, SFX_PRIORITY_NORMAL);
         arg0->timer = RACE_UI_TRICK_PRIZE_REVEAL_DELAY;
         setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceUiTrickPrizePayoutRevealMoneyRow);
     }
@@ -2784,7 +2791,7 @@ void updateRaceUiTrickPrizePayoutRevealMakeBonus(RaceUiCourseStatsActor *arg0) {
     arg0->visibleRows = 1;
     arg0->timer--;
     if (arg0->timer == 0) {
-        enqueueSoundEffect(0x1A, 0x32);
+        enqueueSoundEffect(SFX_COIN_TICK, SFX_PRIORITY_NORMAL);
         arg0->timer = RACE_UI_TRICK_PRIZE_REVEAL_DELAY;
         setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceUiTrickPrizePayoutRevealCompleteBonus);
     }
@@ -2798,7 +2805,7 @@ void updateRaceUiTrickPrizePayoutRevealTrickPrize(RaceUiCourseStatsActor *arg0) 
     arg0->timer--;
     arg0->visibleRows = 0;
     if (arg0->timer == 0) {
-        enqueueSoundEffect(0x1A, 0x32);
+        enqueueSoundEffect(SFX_COIN_TICK, SFX_PRIORITY_NORMAL);
         arg0->timer = RACE_UI_TRICK_PRIZE_REVEAL_DELAY;
         setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceUiTrickPrizePayoutRevealMakeBonus);
     }
@@ -2812,7 +2819,7 @@ void updateRaceUiTrickPrizePayoutWaitBeforeReveal(RaceUiCourseStatsActor *arg0) 
     arg0->timer--;
     if (arg0->timer == 0) {
         arg0->timer = RACE_UI_TRICK_PRIZE_REVEAL_DELAY;
-        enqueueSoundEffect(0x1A, 0x32);
+        enqueueSoundEffect(SFX_COIN_TICK, SFX_PRIORITY_NORMAL);
         setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceUiTrickPrizePayoutRevealTrickPrize);
     }
     addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawRaceUiTrickAttackTotals, arg0);
@@ -3025,9 +3032,14 @@ void updateRacePlayerSparkleRetarget(RaceUiSparkleActor *arg0) {
                 player = &gRacePlayers[arg0->playerIndex];
                 player->activeSparkleEffectCount++;
                 if (gRacePlayerHudStatuses[arg0->playerIndex].active != 0) {
-                    enqueueSoundEffect(0x53, 0x5A);
+                    enqueueSoundEffect(SFX_SPARKLE_RETARGET, SFX_PRIORITY_HIGH);
                 }
-                enqueuePositionalSoundEffect(0x10, &gRacePlayers[arg0->playerIndex].pos, 0x7F, 0x32);
+                enqueuePositionalSoundEffect(
+                    SFX_ITEM_USE,
+                    &gRacePlayers[arg0->playerIndex].pos,
+                    0x7F,
+                    SFX_PRIORITY_NORMAL
+                );
                 arg0->timer = 0x12C;
                 setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRacePlayerSparkleOrbit);
             }
@@ -3106,7 +3118,7 @@ void initRacePlayerSparkleEffect(RaceUiSparkleActor *arg0) {
         &arg0->images[3],
         &arg0->palettes[3]
     );
-    enqueuePositionalSoundEffect(0x10, &gRacePlayers[arg0->playerIndex].pos, 0x7F, 0x32);
+    enqueuePositionalSoundEffect(SFX_ITEM_USE, &gRacePlayers[arg0->playerIndex].pos, 0x7F, SFX_PRIORITY_NORMAL);
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRacePlayerSparkleRise);
 }
 
@@ -3270,13 +3282,13 @@ void updateRaceUiItemStealTrailEffect(RaceUiRankTrailActor *arg0) {
         spawnRaceUiBurstTextParticle((void *)arg0->pos.x, (void *)arg0->pos.y, (void *)arg0->pos.z, i);
     }
 
-    enqueuePositionalSoundEffect(0x15, &gRacePlayers[arg0->task.userId].pos, 0x7F, 0x32);
+    enqueuePositionalSoundEffect(SFX_ITEM_STEAL_END, &gRacePlayers[arg0->task.userId].pos, 0x7F, SFX_PRIORITY_NORMAL);
     removeCallbackTask(arg0);
 }
 
 void initRaceUiItemStealTrailEffect(RaceUiRankTrailActor *arg0) {
     arg0->scale = 2;
-    enqueuePositionalSoundEffect(0xF, &gRacePlayers[arg0->task.userId].pos, 0x7F, 0x32);
+    enqueuePositionalSoundEffect(SFX_ITEM_STEAL_START, &gRacePlayers[arg0->task.userId].pos, 0x7F, SFX_PRIORITY_NORMAL);
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceUiItemStealTrailEffect);
 }
 
@@ -3516,7 +3528,12 @@ void updateGhostSlowdownImpact(RaceUiPodiumTrailActor *arg0) {
         height = arg0->height + arg0->velocity;
         arg0->height = height;
         if ((height < 0x200000) && ((arg0->playImpactSound & 0xFF) != 0)) {
-            enqueuePositionalSoundEffect(0xC, &gRacePlayers[arg0->targetPlayerIndex].pos, 0x7F, 0x32);
+            enqueuePositionalSoundEffect(
+                SFX_GHOST_HIT,
+                &gRacePlayers[arg0->targetPlayerIndex].pos,
+                0x7F,
+                SFX_PRIORITY_NORMAL
+            );
             gRacePlayers[arg0->targetPlayerIndex].pendingItemHitFlags |= PLAYER_HITFLAG_GHOST_SLOWDOWN;
             gRacePlayers[arg0->targetPlayerIndex].hitSourcePlayerIndex = arg0->playerIndex;
             height = arg0->height;
@@ -3586,7 +3603,7 @@ void initGhostSlowdownActor(RaceUiPodiumTrailActor *arg0) {
     arg0->height = 0;
     arg0->velocity = 0;
     arg0->playImpactSound = 1;
-    enqueuePositionalSoundEffect(0xD, &gRacePlayers[arg0->playerIndex].pos, 0x7F, 0x32);
+    enqueuePositionalSoundEffect(SFX_GHOST_SLOWDOWN, &gRacePlayers[arg0->playerIndex].pos, 0x7F, SFX_PRIORITY_NORMAL);
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateGhostSlowdownRise);
 }
 
@@ -3777,7 +3794,7 @@ void updateRaceUiHeavyKnockdownTrailEffect(RaceUiRankTrailActor *arg0) {
         return;
     }
 
-    enqueuePositionalSoundEffect(0x11, &player->pos, 0x7F, 0x32);
+    enqueuePositionalSoundEffect(SFX_ITEM_IMPACT, &player->pos, 0x7F, SFX_PRIORITY_NORMAL);
 
     for (i = 0; i < 8; i++) {
         spawnRaceUiAltBurstTextParticle(
@@ -3838,7 +3855,7 @@ void updateRaceUiThrownTrailObstacle(RaceUiThrownTrailActor *arg0) {
         if (isPositionNearAnyRaceViewportFocus(pos) != 0) {
             pushRacePlayersOutOfCylinderAndApplyItemHit(pos, 0x1A0000, 0x600000, 2);
             if (arg0->soundTimer == 0) {
-                enqueuePositionalSoundEffect(0xD, pos, 0x7F, 0x31);
+                enqueuePositionalSoundEffect(SFX_GHOST_SLOWDOWN, pos, 0x7F, SFX_PRIORITY_LOW);
                 createThrownTrailImpactProjectile(
                     arg0->pos.x,
                     arg0->pos.y + 0x700000,
@@ -4022,7 +4039,7 @@ void initRaceUiFadingImpact(RaceUiFadingImpactActor *actor) {
     actor->copyBlock.translation.x = actor->pos.x;
     actor->copyBlock.translation.y = actor->pos.y;
     actor->copyBlock.translation.z = actor->pos.z;
-    enqueuePositionalSoundEffect(0x13, &actor->pos, 0x7F, 0x32);
+    enqueuePositionalSoundEffect(SFX_AREA_BLAST, &actor->pos, 0x7F, SFX_PRIORITY_NORMAL);
     setCallbackTaskCallback(actor, (CallbackTaskCallback)updateRaceUiFadingImpact);
 }
 
@@ -4099,7 +4116,7 @@ void initRaceUiSpinHitTransitionEffect(RaceUiTransitionActor *arg0) {
     scaleFixedMatrix3sByQuarter(transform);
     arg0->unk6C = 1;
     arg0->unk6E = 0xF;
-    enqueuePositionalSoundEffect(0xB, &gRacePlayers[arg0->task.userId].pos, 0x7F, 0x32);
+    enqueuePositionalSoundEffect(SFX_SPIN_HIT, &gRacePlayers[arg0->task.userId].pos, 0x7F, SFX_PRIORITY_NORMAL);
     updateRaceUiSpinHitTransitionEffect(arg0);
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceUiSpinHitTransitionEffect);
 }
@@ -4239,22 +4256,22 @@ void updateDizzyLandTeacupBumper(DizzyLandTeacupBumperActor *arg0) {
 
             if (isRacePlayerInsideCylinder(pos, 0x200000, 0xF0000, 0) != 0) {
                 actor->xzScale = 0x1800;
-                enqueuePositionalSoundEffect(0x67, pos, 0x7F, 0x32);
+                enqueuePositionalSoundEffect(SFX_TEACUP_BUMP, pos, 0x7F, SFX_PRIORITY_NORMAL);
                 pushRacePlayerOutOfCylinder(pos, 0x2C0000, 0xF0000, 0);
             }
             if (isRacePlayerInsideCylinder(pos, 0x200000, 0xF0000, 1) != 0) {
                 actor->xzScale = 0x1800;
-                enqueuePositionalSoundEffect(0x67, pos, 0x7F, 0x32);
+                enqueuePositionalSoundEffect(SFX_TEACUP_BUMP, pos, 0x7F, SFX_PRIORITY_NORMAL);
                 pushRacePlayerOutOfCylinder(pos, 0x2C0000, 0xF0000, 1);
             }
             if (isRacePlayerInsideCylinder(pos, 0x200000, 0xF0000, 2) != 0) {
                 actor->xzScale = 0x1800;
-                enqueuePositionalSoundEffect(0x67, pos, 0x7F, 0x32);
+                enqueuePositionalSoundEffect(SFX_TEACUP_BUMP, pos, 0x7F, SFX_PRIORITY_NORMAL);
                 pushRacePlayerOutOfCylinder(pos, 0x2C0000, 0xF0000, 2);
             }
             if (isRacePlayerInsideCylinder(pos, 0x200000, 0xF0000, 3) != 0) {
                 actor->xzScale = 0x1800;
-                enqueuePositionalSoundEffect(0x67, pos, 0x7F, 0x32);
+                enqueuePositionalSoundEffect(SFX_TEACUP_BUMP, pos, 0x7F, SFX_PRIORITY_NORMAL);
                 pushRacePlayerOutOfCylinder(pos, 0x2C0000, 0xF0000, 3);
             }
 
@@ -4811,7 +4828,12 @@ void updateRaceUiProjectileStealScores(RaceUiProjectileActor *arg0) {
         flags = arg0->flags;
         amount = flags & 1;
         if (flags & 8) {
-            enqueuePositionalSoundEffect(0x69, &gRacePlayers[arg0->task.userId].unk28, 0x7F, 0x32);
+            enqueuePositionalSoundEffect(
+                SFX_RAT_FACE_STEAL,
+                &gRacePlayers[arg0->task.userId].unk28,
+                0x7F,
+                SFX_PRIORITY_NORMAL
+            );
             arg0->flags &= ~8;
             amount = 1;
             amount = (flags = arg0->flags) & amount;
@@ -4819,7 +4841,12 @@ void updateRaceUiProjectileStealScores(RaceUiProjectileActor *arg0) {
         if (amount) {
             arg0->verticalAcceleration = 0;
             arg0->verticalVelocity = 0;
-            enqueuePositionalSoundEffect(0x6A, &gRacePlayers[arg0->task.userId].unk28, 0x7F, 0x32);
+            enqueuePositionalSoundEffect(
+                SFX_PROJECTILE_LAUNCH,
+                &gRacePlayers[arg0->task.userId].unk28,
+                0x7F,
+                SFX_PRIORITY_NORMAL
+            );
             setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceUiProjectileFlyAway);
         }
     }
@@ -4849,7 +4876,7 @@ void updateRaceUiProjectileBounceDown(RaceUiProjectileActor *arg0) {
         actor->verticalVelocity += actor->verticalAcceleration;
         if (actor->verticalVelocity <= 0) {
             actor->verticalVelocity = 0;
-            enqueuePositionalSoundEffect(0x68, &player->unk28, 0x7F, 0x32);
+            enqueuePositionalSoundEffect(SFX_RAT_FACE_LAND, &player->unk28, 0x7F, SFX_PRIORITY_NORMAL);
             advanceRaceUiProjectileAnimation(actor);
             setCallbackTaskCallback(actor, (CallbackTaskCallback)updateRaceUiProjectileStealScores);
         }
@@ -4922,7 +4949,12 @@ void initRatFaceItemEffect(RaceUiProjectileActor *arg0) {
     arg0->verticalVelocity = 0x300000;
     arg0->verticalAcceleration = 0;
     setRaceUiProjectileAnimation(arg0, gRatFaceItemAnimation);
-    enqueuePositionalSoundEffect(0x66, &gRacePlayers[arg0->task.userId].unk28, 0x7F, 0x32);
+    enqueuePositionalSoundEffect(
+        SFX_RAT_FACE_APPEAR,
+        &gRacePlayers[arg0->task.userId].unk28,
+        0x7F,
+        SFX_PRIORITY_NORMAL
+    );
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceUiProjectileInitialFall);
 }
 
@@ -5079,7 +5111,7 @@ loop:
         if (isPositionNearAnyRaceViewportFocus(pos) != 0) {
             if (isRacePlayerInsideCylinder(pos, xzSize, ySize, 0) != 0) {
                 entry->active = 0;
-                enqueuePositionalSoundEffect(0x18, pos, 0x7F, 0x32);
+                enqueuePositionalSoundEffect(SFX_CONFIRM, pos, 0x7F, SFX_PRIORITY_NORMAL);
                 gRacePlayers[0].collectedCourseCoinMarkerCount++;
                 if (gRacePlayers[0].trailEffectTimer != 0) {
                     gRacePlayers[0].trailEffectTimer = 0xF0;
@@ -5240,7 +5272,7 @@ void updateRaceStartOverlayAnimate(RaceUiOverlayActor *arg0) {
     temp_s0 = arg0;
     if (temp_v0 == 0) {
         if (arg0->assetTimer == 0) {
-            enqueuePositionalSoundEffect(9, &temp_s0->pos, 0x7F, 0x32);
+            enqueuePositionalSoundEffect(SFX_SHOCK, &temp_s0->pos, 0x7F, SFX_PRIORITY_NORMAL);
         }
         temp_v0_3 = getRelocatableHeapBlockBase(ASSET_HANDLE(0x1F));
         getAssetTableImageAndPalette(

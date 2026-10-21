@@ -819,7 +819,7 @@ void initMainMenu(void) {
     setRaceCameraMode(0, 0x1F);
     gMenuFadeAlpha = (s16)gCurrentGameTask->callbackData0;
     gMenuFadeOverlayActive = 1;
-    enqueueSoundEffect(0x4A, 0x32);
+    enqueueSoundEffect(SFX_MAIN_MENU_ENTER, SFX_PRIORITY_NORMAL);
     setCurrentGameTaskCallback(&updateMainMenu, 0);
     requestRumbleMotorInit(0U);
     requestRumbleMotorInit(1U);
@@ -851,20 +851,20 @@ void updateMainMenu(void) {
         if (pressedInput & (STICK_UP | U_JPAD)) {
             if (gCurrentGameTask->callbackData1 != 0) {
                 gCurrentGameTask->callbackData1 -= 1;
-                enqueueSoundEffect(0x19, 0x32);
+                enqueueSoundEffect(SFX_MENU_CURSOR, SFX_PRIORITY_NORMAL);
                 pressedInput = gPlayerInputPressed[0];
             }
         }
         if (pressedInput & (STICK_DOWN | D_JPAD)) {
             if (gCurrentGameTask->callbackData1 != 2) {
                 gCurrentGameTask->callbackData1 += 1;
-                enqueueSoundEffect(0x19, 0x32);
+                enqueueSoundEffect(SFX_MENU_CURSOR, SFX_PRIORITY_NORMAL);
                 pressedInput = gPlayerInputPressed[0];
             }
         }
         if ((pressedInput & START_BUTTON) || (pressedInput & A_BUTTON)) {
             flag = 1;
-            enqueueSoundEffect(1, 0x32);
+            enqueueSoundEffect(SFX_MENU_ACCEPT, SFX_PRIORITY_NORMAL);
         }
         if (flag == 0) {
             gCurrentGameTask->callbackData3 -= 1;
@@ -880,7 +880,7 @@ void updateMainMenu(void) {
     updateRaceCamera(0);
     if (checkMainMenuSecretCode() != 0) {
         gMainMenuSecretCodeUnlocked = 1;
-        enqueueSoundEffect(0x26, 0x32);
+        enqueueSoundEffect(SFX_SLASH_CHEER, SFX_PRIORITY_NORMAL);
     }
     loopMainMenuSceneModelAnimation(0);
     loopMainMenuSceneModelAnimation(1);
@@ -985,18 +985,18 @@ void updateMainMenuModeSelect(void) {
         pressedInput = gPlayerInputPressed[0];
         if (pressedInput & (STICK_UP | U_JPAD)) {
             if (gMenuFlowState != 0) {
-                enqueueSoundEffect(0x19, 0x32);
+                enqueueSoundEffect(SFX_MENU_CURSOR, SFX_PRIORITY_NORMAL);
                 gMenuFlowState -= 1;
                 pressedInput = gPlayerInputPressed[0];
             }
         }
         if ((pressedInput & (STICK_DOWN | D_JPAD)) && (gMenuFlowState != 2)) {
-            enqueueSoundEffect(0x19, 0x32);
+            enqueueSoundEffect(SFX_MENU_CURSOR, SFX_PRIORITY_NORMAL);
             gMenuFlowState += 1;
             pressedInput = gPlayerInputPressed[0];
         }
         if (pressedInput & (A_BUTTON | B_BUTTON | START_BUTTON)) {
-            enqueueSoundEffect(0x18, 0x32);
+            enqueueSoundEffect(SFX_CONFIRM, SFX_PRIORITY_NORMAL);
             if (gPlayerInputPressed[0] & B_BUTTON) {
                 gMenuFlowState = 2;
             }
@@ -1075,12 +1075,12 @@ void updateMainMenuSettings(void) {
         pressedInput = gPlayerInputPressed[0];
         if ((pressedInput & (STICK_UP | U_JPAD)) && (gMenuFlowState != 0)) {
             gMenuFlowState -= 1;
-            enqueueSoundEffect(0x19, 0x32);
+            enqueueSoundEffect(SFX_MENU_CURSOR, SFX_PRIORITY_NORMAL);
             pressedInput = gPlayerInputPressed[0];
         }
         if ((pressedInput & (STICK_DOWN | D_JPAD)) && (gMenuFlowState != 3)) {
             gMenuFlowState += 1;
-            enqueueSoundEffect(0x19, 0x32);
+            enqueueSoundEffect(SFX_MENU_CURSOR, SFX_PRIORITY_NORMAL);
             pressedInput = gPlayerInputPressed[0];
         }
         if (pressedInput & B_BUTTON) {
@@ -1091,21 +1091,21 @@ void updateMainMenuSettings(void) {
                 case 0:
                     if (gRaceRecordSettingsEnabled != 0) {
                         gRaceRecordSettingsEnabled -= 1;
-                        enqueueSoundEffect(0x19, 0x32);
+                        enqueueSoundEffect(SFX_MENU_CURSOR, SFX_PRIORITY_NORMAL);
                         pressedInput = gPlayerInputPressed[0];
                     }
                     break;
                 case 1:
                     if (gRaceCourseModelEffectsDisabled != 1) {
                         gRaceCourseModelEffectsDisabled += 1;
-                        enqueueSoundEffect(0x19, 0x32);
+                        enqueueSoundEffect(SFX_MENU_CURSOR, SFX_PRIORITY_NORMAL);
                         pressedInput = gPlayerInputPressed[0];
                     }
                     break;
                 case 2:
                     if (gRaceCourseOverlayEffectsDisabled != 1) {
                         gRaceCourseOverlayEffectsDisabled += 1;
-                        enqueueSoundEffect(0x19, 0x32);
+                        enqueueSoundEffect(SFX_MENU_CURSOR, SFX_PRIORITY_NORMAL);
                         pressedInput = gPlayerInputPressed[0];
                     }
                     break;
@@ -1116,21 +1116,21 @@ void updateMainMenuSettings(void) {
                 case 0:
                     if (gRaceRecordSettingsEnabled != 1) {
                         gRaceRecordSettingsEnabled += 1;
-                        enqueueSoundEffect(0x19, 0x32);
+                        enqueueSoundEffect(SFX_MENU_CURSOR, SFX_PRIORITY_NORMAL);
                         pressedInput = gPlayerInputPressed[0];
                     }
                     break;
                 case 1:
                     if (gRaceCourseModelEffectsDisabled != 0) {
                         gRaceCourseModelEffectsDisabled -= 1;
-                        enqueueSoundEffect(0x19, 0x32);
+                        enqueueSoundEffect(SFX_MENU_CURSOR, SFX_PRIORITY_NORMAL);
                         pressedInput = gPlayerInputPressed[0];
                     }
                     break;
                 case 2:
                     if (gRaceCourseOverlayEffectsDisabled != 0) {
                         gRaceCourseOverlayEffectsDisabled -= 1;
-                        enqueueSoundEffect(0x19, 0x32);
+                        enqueueSoundEffect(SFX_MENU_CURSOR, SFX_PRIORITY_NORMAL);
                         pressedInput = gPlayerInputPressed[0];
                     }
                     break;
@@ -1138,7 +1138,7 @@ void updateMainMenuSettings(void) {
         }
         if ((pressedInput & (A_BUTTON | B_BUTTON | START_BUTTON)) && (gMenuFlowState == 3)) {
             requestMusicSequenceStop(0x3C);
-            enqueueSoundEffect(0x18, 0x32);
+            enqueueSoundEffect(SFX_CONFIRM, SFX_PRIORITY_NORMAL);
             setCurrentGameTaskCallback(fadeOutMainMenuSettings, 0);
         }
     }

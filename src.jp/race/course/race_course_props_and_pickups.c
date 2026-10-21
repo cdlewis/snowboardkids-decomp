@@ -984,25 +984,25 @@ loop:
             if (isRacePlayerInsideCylinder(pos, xzSize, ySize, 0) != 0) {
                 addRacePlayerScore(&gRacePlayers[0], 0x64);
                 entry->enabled = 0;
-                enqueuePositionalSoundEffect(0x1A, pos, 0x7F, 0x32);
+                enqueuePositionalSoundEffect(SFX_COIN_TICK, pos, 0x7F, SFX_PRIORITY_NORMAL);
                 goto next;
             }
             if (isRacePlayerInsideCylinder(pos, xzSize, ySize, one) != 0) {
                 addRacePlayerScore(&gRacePlayers[1], 0x64);
                 entry->enabled = 0;
-                enqueuePositionalSoundEffect(0x1A, pos, 0x7F, 0x32);
+                enqueuePositionalSoundEffect(SFX_COIN_TICK, pos, 0x7F, SFX_PRIORITY_NORMAL);
                 goto next;
             }
             if (isRacePlayerInsideCylinder(pos, xzSize, ySize, 2) != 0) {
                 addRacePlayerScore(&gRacePlayers[2], 0x64);
                 entry->enabled = 0;
-                enqueuePositionalSoundEffect(0x1A, pos, 0x7F, 0x32);
+                enqueuePositionalSoundEffect(SFX_COIN_TICK, pos, 0x7F, SFX_PRIORITY_NORMAL);
                 goto next;
             }
             if (isRacePlayerInsideCylinder(pos, xzSize, ySize, 3) != 0) {
                 addRacePlayerScore(&gRacePlayers[3], 0x64);
                 entry->enabled = 0;
-                enqueuePositionalSoundEffect(0x1A, pos, 0x7F, 0x32);
+                enqueuePositionalSoundEffect(SFX_COIN_TICK, pos, 0x7F, SFX_PRIORITY_NORMAL);
                 goto next;
             }
         }
@@ -1123,7 +1123,7 @@ void updateFallingRock(FallingRockActor *arg0) {
             groundY = getRaceCourseSurfaceHeight(arg0->surfaceIndex, arg0->pos.x, arg0->pos.z);
             pos = &arg0->pos;
             if (arg0->pos.y < groundY) {
-                enqueuePositionalSoundEffect(0x20, pos, 0x7F, 0x32);
+                enqueuePositionalSoundEffect(SFX_FALLING_ROCK_BOUNCE, pos, 0x7F, SFX_PRIORITY_NORMAL);
                 arg0->pos.y = groundY;
                 arg0->transformedPos.y = arg0->velocity.y / 2;
                 arg0->bounceCount++;
@@ -1660,7 +1660,7 @@ void updateRacePickupIdle(RacePickupActor *arg0) {
             spawnPickupShardParticle(arg0->pos.x, arg0->pos.y, arg0->pos.z, arg0->rotation, 5);
             spawnPickupShardParticle(arg0->pos.x, arg0->pos.y, arg0->pos.z, arg0->rotation, 6);
             spawnPickupShardParticle(arg0->pos.x, arg0->pos.y, arg0->pos.z, arg0->rotation, 7);
-            enqueuePositionalSoundEffect(0x1F, &arg0->pos, 0x7F, 0x32);
+            enqueuePositionalSoundEffect(SFX_ITEM_PICKUP, &arg0->pos, 0x7F, SFX_PRIORITY_NORMAL);
 
             goto done;
         }

@@ -539,7 +539,7 @@ void updateCharacterSelectCourseMenu(void) {
                     }
 
                     if (previousSelection != selection) {
-                        enqueueSoundEffect(0x19, 0x32);
+                        enqueueSoundEffect(SFX_MENU_CURSOR, SFX_PRIORITY_NORMAL);
                     }
 
                     input = *pressedInputPtr;
@@ -549,7 +549,7 @@ void updateCharacterSelectCourseMenu(void) {
                           0xFFFFu) ||
                          (input & A_BUTTON)) &&
                         (gMenuFlowState == (gCharacterSelectCourseExitOptionIndex + 1))) {
-                        enqueueSoundEffect(1, 0x32);
+                        enqueueSoundEffect(SFX_MENU_ACCEPT, SFX_PRIORITY_NORMAL);
                         if ((*gCharacterSelectActiveCourseOptions)[gRaceCourseIndex.signedValue] != -1) {
                             gMenuSelectionConfirmTimer = 1;
                             gCharacterSelectCourseCursorState.listCursorState = 2;
@@ -562,7 +562,7 @@ void updateCharacterSelectCourseMenu(void) {
                             requestMusicSequenceStop(8);
                         }
                     } else if ((input & B_BUTTON) && (gMenuFlowState == (gCharacterSelectCourseExitOptionIndex + 1))) {
-                        enqueueSoundEffect(1, 0x32);
+                        enqueueSoundEffect(SFX_MENU_ACCEPT, SFX_PRIORITY_NORMAL);
                         gCharacterSelectCourseCursorState.listCursorState = 2;
                         gCharacterSelectCourseCursorState.listCursorSpriteIndex = spriteIndex;
                         gRacePlayers[0].menuState = 7;
@@ -607,9 +607,9 @@ void updateCharacterSelectCourseSubmenu(void) {
                 pressedInput = gPlayerInputPressed[0];
                 if (pressedInput & B_BUTTON) {
                     gRacePlayers[0].menuState = 3;
-                    enqueueSoundEffect(1, 0x32);
+                    enqueueSoundEffect(SFX_MENU_ACCEPT, SFX_PRIORITY_NORMAL);
                 } else if ((pressedInput & A_BUTTON) || (pressedInput & START_BUTTON)) {
-                    enqueueSoundEffect(1, 0x32);
+                    enqueueSoundEffect(SFX_MENU_ACCEPT, SFX_PRIORITY_NORMAL);
                     gMenuChoicePromptState[0] = 1;
                     gCharacterSelectCourseCursorState.submenuState = 3;
                     createCallbackTask((CallbackTaskCallback)initCharacterSelectCourseConfirmCursor, 0, 0x61);
@@ -620,20 +620,20 @@ void updateCharacterSelectCourseSubmenu(void) {
                     pressedInput = gPlayerInputPressed[0];
                     if ((pressedInput & (STICK_UP | U_JPAD)) && (gMenuChoicePromptState[0] != 3)) {
                         gMenuChoicePromptState[0]--;
-                        enqueueSoundEffect(0x19, 0x32);
+                        enqueueSoundEffect(SFX_MENU_CURSOR, SFX_PRIORITY_NORMAL);
                         pressedInput = gPlayerInputPressed[0];
                     } else if ((pressedInput & (STICK_DOWN | D_JPAD)) && (gMenuChoicePromptState[0] != 4)) {
                         gMenuChoicePromptState[0]++;
-                        enqueueSoundEffect(0x19, 0x32);
+                        enqueueSoundEffect(SFX_MENU_CURSOR, SFX_PRIORITY_NORMAL);
                         pressedInput = gPlayerInputPressed[0];
                     }
 
                     if ((pressedInput & A_BUTTON) || (pressedInput & START_BUTTON)) {
-                        enqueueSoundEffect(0x18, 0x32);
+                        enqueueSoundEffect(SFX_CONFIRM, SFX_PRIORITY_NORMAL);
                         gMenuChoicePromptState[0] += 2;
                         gCharacterSelectCourseCursorState.submenuState = 4;
                     } else if (pressedInput & B_BUTTON) {
-                        enqueueSoundEffect(1, 0x32);
+                        enqueueSoundEffect(SFX_MENU_ACCEPT, SFX_PRIORITY_NORMAL);
                         gMenuChoicePromptState[0] = 6;
                         gCharacterSelectCourseCursorState.submenuState = 4;
                     }

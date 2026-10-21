@@ -266,7 +266,7 @@ void stopPassAwardWinner(MenuScreenEffectActor *arg0) {
 void updatePassAwardWinner(MenuScreenEffectActor *arg0) {
     if (gMenuFadeAlpha == 0) {
         if (arg0->unk18.byte.b0 != 0) {
-            enqueueSoundEffect(raceSetupCharacterFocusSoundIds[arg0->index], 0x32);
+            enqueueSoundEffect(raceSetupCharacterFocusSoundIds[arg0->index], SFX_PRIORITY_NORMAL);
             arg0->unk18.byte.b0 = 0;
         }
         loopMainMenuSceneModelAnimation(0);

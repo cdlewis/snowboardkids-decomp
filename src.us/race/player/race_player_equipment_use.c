@@ -229,7 +229,7 @@ void updateRacePlayerItemUse(RacePlayer *player) {
             if ((itemType == RACE_ITEM_INVISIBLE) && (player->invisibilityTimer == 0)) {
                 player->invisibilityTimer = RACE_PLAYER_INVISIBILITY_DURATION;
                 player->itemType = RACE_ITEM_NONE;
-                enqueuePositionalSoundEffect(0x10, &player->pos, 0x7F, 0x32);
+                enqueuePositionalSoundEffect(SFX_ITEM_USE, &player->pos, 0x7F, SFX_PRIORITY_NORMAL);
             }
         }
     }

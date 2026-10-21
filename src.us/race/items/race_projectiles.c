@@ -234,7 +234,7 @@ void updateWideHomingShotProjectile(RaceItemProjectileActor *arg0) {
         }
 
         if (arg0->timer == 0) {
-            enqueuePositionalSoundEffect(0xA, pos, 0x7F, 0x32);
+            enqueuePositionalSoundEffect(SFX_PROJECTILE_IMPACT, pos, 0x7F, SFX_PRIORITY_NORMAL);
             spawnRaceItemImpactEffect(arg0->pos.x, arg0->pos.y, arg0->pos.z, 2);
             removeCallbackTask(arg0);
             return;
@@ -423,7 +423,7 @@ void updateCloseRangeHomingShotProjectile(RaceItemProjectileActor *arg0) {
 
         if (arg0->timer == 0) {
             if (hitPlayer == 0) {
-                enqueuePositionalSoundEffect(0xA, pos, 0x7F, 0x32);
+                enqueuePositionalSoundEffect(SFX_PROJECTILE_IMPACT, pos, 0x7F, SFX_PRIORITY_NORMAL);
             }
             spawnRaceItemImpactEffect(arg0->pos.x, arg0->pos.y, arg0->pos.z, 2);
             removeCallbackTask(arg0);
@@ -611,7 +611,7 @@ void updateBouncingShotProjectile(RaceItemProjectileActor *arg0) {
             arg0->pos.x += pushX;
             arg0->pos.z += pushZ;
             arg0->targetAngle = calculateFixedAngleFromDeltaXZ(velocity.x, velocity.z);
-            enqueuePositionalSoundEffect(0x11, pos, 0x7F, 0x32);
+            enqueuePositionalSoundEffect(SFX_ITEM_IMPACT, pos, 0x7F, SFX_PRIORITY_NORMAL);
         }
 
         for (i = 0; i < 4; i++) {
@@ -623,7 +623,7 @@ void updateBouncingShotProjectile(RaceItemProjectileActor *arg0) {
         }
 
         if (arg0->timer == 0) {
-            enqueuePositionalSoundEffect(0xA, pos, 0x7F, 0x32);
+            enqueuePositionalSoundEffect(SFX_PROJECTILE_IMPACT, pos, 0x7F, SFX_PRIORITY_NORMAL);
             spawnRaceItemImpactEffect(arg0->pos.x, arg0->pos.y, arg0->pos.z, 2);
             removeCallbackTask(arg0);
             return;
@@ -775,7 +775,7 @@ void updateThrownTrailImpactProjectile(RaceItemProjectileActor *arg0) {
 
         for (i = 0; i < 4; i++) {
             if (tryApplyRacePlayerItemHit(pos, 0x30000, 0x2000, i)) {
-                enqueuePositionalSoundEffect(0xA, pos, 0x7F, 0x32);
+                enqueuePositionalSoundEffect(SFX_PROJECTILE_IMPACT, pos, 0x7F, SFX_PRIORITY_NORMAL);
                 spawnRaceItemImpactEffect(arg0->pos.x, arg0->pos.y, arg0->pos.z, 2);
                 arg0->timer = 0;
                 i = 4;
@@ -1126,7 +1126,7 @@ void updateLongRangeHomingShotProjectile(RaceItemProjectileActor *arg0) {
         }
 
         if (arg0->timer == 0) {
-            enqueuePositionalSoundEffect(0xA, pos, 0x7F, 0x32);
+            enqueuePositionalSoundEffect(SFX_PROJECTILE_IMPACT, pos, 0x7F, SFX_PRIORITY_NORMAL);
             spawnRaceItemImpactEffect(arg0->pos.x, arg0->pos.y, arg0->pos.z, 2);
             removeCallbackTask(arg0);
             return;
@@ -1267,7 +1267,7 @@ void updateRockItemLanded(RaceItemProjectileActor *arg0) {
     radius = 0x30000;
     do {
         if (tryApplyRacePlayerItemHit(pos, radius, 0x400, i)) {
-            enqueuePositionalSoundEffect(0x14, pos, 0x7F, 0x32);
+            enqueuePositionalSoundEffect(SFX_COLLISION_IMPACT, pos, 0x7F, SFX_PRIORITY_NORMAL);
             spawnRaceItemImpactEffect(arg0->pos.x, actor->pos.y, actor->pos.z, 1);
             removeCallbackTask(arg0);
             return;
@@ -1299,7 +1299,7 @@ void updateRockItem(RaceItemProjectileActor *arg0) {
         for (i = 0; i != 4; i++) {
             pos = &arg0->pos;
             if ((i != arg0->playerIndex || arg0->timer == 0) && tryApplyRacePlayerItemHit(pos, 0x30000, 0x400, i)) {
-                enqueuePositionalSoundEffect(0x14, pos, 0x7F, 0x32);
+                enqueuePositionalSoundEffect(SFX_COLLISION_IMPACT, pos, 0x7F, SFX_PRIORITY_NORMAL);
                 spawnRaceItemImpactEffect(arg0->pos.x, arg0->pos.y, arg0->pos.z, 1);
                 removeCallbackTask(arg0);
                 return;
@@ -1324,7 +1324,7 @@ void initRockItem(RaceItemProjectileActor *arg0) {
     arg0->pos.x = player->modelPartTransforms[9].translation.x;
     arg0->pos.y = player->modelPartTransforms[9].translation.y;
     arg0->pos.z = player->modelPartTransforms[9].translation.z;
-    enqueuePositionalSoundEffect(0x6A, &arg0->pos, 0x7F, 0x32);
+    enqueuePositionalSoundEffect(SFX_PROJECTILE_LAUNCH, &arg0->pos, 0x7F, SFX_PRIORITY_NORMAL);
     arg0->angle = gRacePlayers[arg0->playerIndex].coursePathIndex;
     getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gAssetHandles[0x1C]), 2, &arg0->image, &arg0->palette);
     updateRockItem(arg0);
@@ -1425,11 +1425,11 @@ void updateShieldProjectile(RaceItemProjectileActor *arg0) {
                 arg0->timer = 0;
                 arg0->pos.x += pushX;
                 arg0->pos.z += pushZ;
-                enqueuePositionalSoundEffect(0xA, &arg0->pos, 0x7F, 0x32);
+                enqueuePositionalSoundEffect(SFX_PROJECTILE_IMPACT, &arg0->pos, 0x7F, SFX_PRIORITY_NORMAL);
             }
         } else {
             arg0->timer = 0;
-            enqueuePositionalSoundEffect(0x11, &arg0->pos, 0x7F, 0x32);
+            enqueuePositionalSoundEffect(SFX_ITEM_IMPACT, &arg0->pos, 0x7F, SFX_PRIORITY_NORMAL);
         }
 
         if (arg0->timer == 0) {

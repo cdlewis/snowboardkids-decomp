@@ -40,7 +40,7 @@ extern Gfx *gRegionAllocPtr;
 u8 raceSetupCharacterFocusAnimationIds[8] = { 0, 1, 0, 1, 2, 0, 0, 0 };
 
 s16 raceSetupCharacterFocusSoundIds[6] = {
-    0x26, 0x2B, 0x39, 0x31, 0x3E, 0,
+    SFX_SLASH_CHEER, SFX_NANCY_CHEER, SFX_JAM_CHEER, SFX_LINDA_CHEER, SFX_TOMMY_CHEER, SFX_NONE,
 };
 
 u8 passAwardOpponentAnimationIds[4] = { 3, 4, 3, 4 };
@@ -328,7 +328,7 @@ void stopPassAwardWinner(MenuScreenEffectActor *arg0) {
 void updatePassAwardWinner(MenuScreenEffectActor *arg0) {
     if (gMenuFadeAlpha == 0) {
         if (arg0->unk18.byte.b0 != 0) {
-            enqueueSoundEffect(raceSetupCharacterFocusSoundIds[arg0->index], 0x32);
+            enqueueSoundEffect(raceSetupCharacterFocusSoundIds[arg0->index], SFX_PRIORITY_NORMAL);
             arg0->unk18.byte.b0 = 0;
         }
         loopMainMenuSceneModelAnimation(0);

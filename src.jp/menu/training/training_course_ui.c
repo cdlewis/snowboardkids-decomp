@@ -58,7 +58,7 @@ void updateTrainingCourseLessonEndMenu(TrainingCourseUiActor *arg0) {
         }
     }
     if (var_a0 != temp_a1) {
-        enqueueSoundEffect(0x19, 0x32);
+        enqueueSoundEffect(SFX_MENU_CURSOR, SFX_PRIORITY_NORMAL);
     }
     if ((u16)arg0->highlightTimer < 0x10) {
         arg0->highlightScale -= 9;
@@ -67,7 +67,7 @@ void updateTrainingCourseLessonEndMenu(TrainingCourseUiActor *arg0) {
     }
     arg0->highlightTimer = ((u16)arg0->highlightTimer + 1) & 0x1F;
     if ((gPlayerInputPressed[0] & A_BUTTON) || (gPlayerInputPressed[0] & START_BUTTON)) {
-        enqueueSoundEffect(1, 0x32);
+        enqueueSoundEffect(SFX_MENU_ACCEPT, SFX_PRIORITY_NORMAL);
         gMainMenuSelectionResult = (u16)arg0->state.selectedAction + 1;
         arg0->highlightScale = 0x100;
         arg0->highlightTimer = 0;
@@ -319,7 +319,7 @@ void updateTrainingCourseDialog(TrainingCourseUiActor *arg0) {
         case 1:
             arg0->confirmBlinkTimer = (arg0->confirmBlinkTimer + 1) & 0xF;
             if ((A_BUTTON & gPlayerInputPressed[0]) || (gPlayerInputPressed[0] & START_BUTTON)) {
-                enqueueSoundEffect(1, 0x32);
+                enqueueSoundEffect(SFX_MENU_ACCEPT, SFX_PRIORITY_NORMAL);
                 arg0->confirmBlinkTimer = 0;
                 gMainMenuSelectionResult = 1;
                 if (arg0->keepVisibleAfterConfirm == 0) {
@@ -332,7 +332,7 @@ void updateTrainingCourseDialog(TrainingCourseUiActor *arg0) {
         case 2:
             arg0->confirmBlinkTimer = (arg0->confirmBlinkTimer + 1) & 0xF;
             if ((gPlayerInputPressed[0] & A_BUTTON) || (gPlayerInputPressed[0] & START_BUTTON)) {
-                enqueueSoundEffect(1, 0x32);
+                enqueueSoundEffect(SFX_MENU_ACCEPT, SFX_PRIORITY_NORMAL);
 
                 while (*arg0->layout.script != 0xFFFB) {
                     arg0->layout.script++;

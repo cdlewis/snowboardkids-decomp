@@ -59,10 +59,10 @@ void updateControllerPakContinuePromptFlow(void) {
             var_v0 = gCurrentGameTask->callbackData1;
         }
         if (temp_a1 != var_v0) {
-            enqueueSoundEffect(0x19, 0x32);
+            enqueueSoundEffect(SFX_MENU_CURSOR, SFX_PRIORITY_NORMAL);
         }
         if ((gPlayerInputPressed[0] & A_BUTTON) || (gPlayerInputPressed[0] & START_BUTTON)) {
-            enqueueSoundEffect(0x18, 0x32);
+            enqueueSoundEffect(SFX_CONFIRM, SFX_PRIORITY_NORMAL);
             gMenuFlowState = gCurrentGameTask->callbackData1;
             gControllerPakContinuePromptTransition.state = 2;
             gControllerPakContinuePromptTransition.x = 0x100;

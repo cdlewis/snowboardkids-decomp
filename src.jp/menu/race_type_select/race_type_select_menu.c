@@ -163,13 +163,13 @@ void updateRaceTypeSelectMenu(void) {
                     }
 
                     if (repeatTimerCopy != previousSelection) {
-                        enqueueSoundEffect(0x19, 0x32);
+                        enqueueSoundEffect(SFX_MENU_CURSOR, SFX_PRIORITY_NORMAL);
                         pressedInput = gPlayerInputPressed[0];
                         gRaceCourseIndex.signedValue = RACE_COURSE_ROOKIE_MOUNTAIN;
                     }
 
                     if ((pressedInput & START_BUTTON) || ((pressedInput & A_BUTTON) && (gMenuFlowState == 4))) {
-                        enqueueSoundEffect(0x18, 0x32);
+                        enqueueSoundEffect(SFX_CONFIRM, SFX_PRIORITY_NORMAL);
                         gMenuSelectionConfirmTimer = 1;
                         (&gRaceTypeSelectCursorTarget)->state = 2;
                         (&gRaceTypeSelectCursorTarget)->alpha = 0x100;
@@ -189,7 +189,7 @@ void updateRaceTypeSelectMenu(void) {
         }
 
         if ((waitTimer == 0) && (gPlayerInputPressed[0] & B_BUTTON) && (gMenuFlowState == (sp18[0] + 1))) {
-            enqueueSoundEffect(0x18, 0x32);
+            enqueueSoundEffect(SFX_CONFIRM, SFX_PRIORITY_NORMAL);
             cursorTarget = &gRaceTypeSelectCursorTarget;
             cursorTarget->state = 2;
             cursorTarget->alpha = 0x100;

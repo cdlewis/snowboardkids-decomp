@@ -699,7 +699,7 @@ void updateRacePlayer(RacePlayer *player) {
     }
 
     if (player->trailEffectTimer != 0) {
-        player->unk584 = 7;
+        player->unk584 = SFX_SPEED_FAN_LOOP;
         player->unk582 = 0x7F;
         player->unk588 = 0.0f;
         if (player->trailEffectTimer >= 0xDD) {
@@ -746,22 +746,22 @@ void updateRacePlayerMotionFeedback(RacePlayer *player) {
     }
 
     itemType = getRaceItemEffectType(player->unk330);
-    player->unk584 = 3;
+    player->unk584 = SFX_BOARD_GLIDE_LOOP;
     if (itemType == 1) {
-        player->unk584 = 0x1E;
+        player->unk584 = SFX_BREAKABLE_SURFACE_LOOP;
         player->unk582 = 0x7F;
         player->unk588 = 0.0f;
     }
     if (itemType == 2) {
-        player->unk584 = 4;
+        player->unk584 = SFX_BOARD_CONTACT_FALLBACK_LOOP;
     }
     if (3 == itemType) {
-        player->unk584 = 5;
+        player->unk584 = SFX_BOARD_SURFACE_SPRAY_LOOP;
     }
     if (4 == itemType) {
-        player->unk584 = 4;
+        player->unk584 = SFX_BOARD_CONTACT_FALLBACK_LOOP;
         if (player->unk330 == 0xD) {
-            player->unk584 = 6;
+            player->unk584 = SFX_BOARD_SURFACE_RUMBLE_LOOP;
             if (player->unk582 >= 0x51) {
                 player->rumbleTimer = 2;
                 player->rumblePatternId = 1;
@@ -770,7 +770,7 @@ void updateRacePlayerMotionFeedback(RacePlayer *player) {
         player->unk588 = 0.0f;
     }
     if (player->stateFlags & 0x2000000) {
-        player->unk584 = 4;
+        player->unk584 = SFX_BOARD_CONTACT_FALLBACK_LOOP;
     }
 }
 
@@ -803,7 +803,7 @@ void updateRacePlayerMode00Grounded(RacePlayer *player) {
         player->unk528 = 0;
         player->localVelocityX = 0;
         if (player->unk57B != 0) {
-            enqueueRacePlayerVoiceSound(player, 7);
+            enqueueRacePlayerVoiceSound(player, RACE_VOICE_LANDING);
             setRaceMotionAnimation(player, 0x22);
         }
     }
@@ -1083,7 +1083,7 @@ void updateRacePlayerMode00Grounded(RacePlayer *player) {
     player->pos.z += player->velocity.z;
     updateRacePlayerMotionFeedback(player);
     if (player->unk517 != 0) {
-        enqueueRacePlayerVoiceSound(player, 5);
+        enqueueRacePlayerVoiceSound(player, RACE_VOICE_ATTACK_SUCCESS);
     }
 }
 
@@ -1125,7 +1125,7 @@ void updateRacePlayerMode29Crash(RacePlayer *player) {
     player->unk578 = 6;
     updateRacePlayerMotionFeedback(player);
     if (player->unk517 != 0) {
-        enqueueRacePlayerVoiceSound(player, 5);
+        enqueueRacePlayerVoiceSound(player, RACE_VOICE_ATTACK_SUCCESS);
     }
 }
 
@@ -1193,7 +1193,7 @@ void updateRacePlayerMode01JumpStart(RacePlayer *player) {
     player->pos.z += player->velocity.z;
     player->verticalVelocityLimit = yVel;
     if (player->unk517 != 0) {
-        enqueueRacePlayerVoiceSound(player, 5);
+        enqueueRacePlayerVoiceSound(player, RACE_VOICE_ATTACK_SUCCESS);
     }
 }
 
@@ -1257,7 +1257,7 @@ void updateRacePlayerMode22Airborne(RacePlayer *player) {
     player->pos.z += player->velocity.z;
     player->verticalVelocityLimit = yVel;
     if (player->unk517 != 0) {
-        enqueueRacePlayerVoiceSound(player, 5);
+        enqueueRacePlayerVoiceSound(player, RACE_VOICE_ATTACK_SUCCESS);
     }
 }
 
@@ -1366,7 +1366,7 @@ void updateRacePlayerAirborneLaunch(RacePlayer *player) {
     updateRacePlayerSurfaceCue(player);
     updateRacePlayerMotionFeedback(player);
     if (player->unk517 != 0) {
-        enqueueRacePlayerVoiceSound(player, 5);
+        enqueueRacePlayerVoiceSound(player, RACE_VOICE_ATTACK_SUCCESS);
     }
 }
 
@@ -1462,7 +1462,7 @@ void updateRacePlayerAirborneCruise(RacePlayer *player) {
                 player->unk310 += 0x50000;
                 player->speedLimit += 0x50000;
                 var_a2 += 0x50000;
-                enqueueRacePlayerVoiceSound(player, 0);
+                enqueueRacePlayerVoiceSound(player, RACE_VOICE_TRICK);
             }
         } else {
             sp2C = -0x30000;
@@ -1473,7 +1473,7 @@ void updateRacePlayerAirborneCruise(RacePlayer *player) {
                 player->unk310 += 0x50000;
                 player->speedLimit += 0x50000;
                 var_a2 += 0xFFFB0000;
-                enqueueRacePlayerVoiceSound(player, 0);
+                enqueueRacePlayerVoiceSound(player, RACE_VOICE_TRICK);
             }
         }
     }
@@ -1490,8 +1490,8 @@ void updateRacePlayerAirborneCruise(RacePlayer *player) {
         switch (var_v1) {
             case 1:
                 if (player->soundDisabled == 0) {
-                    enqueuePositionalSoundEffect(0x17, (Vec3i *)(&player->pos), 0x7F, 0x32);
-                    enqueueRacePlayerVoiceSound(player, 0);
+                    enqueuePositionalSoundEffect(SFX_TRICK_START, (Vec3i *)(&player->pos), 0x7F, SFX_PRIORITY_NORMAL);
+                    enqueueRacePlayerVoiceSound(player, RACE_VOICE_TRICK);
                 }
                 player->mode = 0xD;
                 player->unk2A6 = 1;
@@ -1500,8 +1500,8 @@ void updateRacePlayerAirborneCruise(RacePlayer *player) {
 
             case 2:
                 if (player->soundDisabled == 0) {
-                    enqueuePositionalSoundEffect(0x17, (Vec3i *)(&player->pos), 0x7F, 0x32);
-                    enqueueRacePlayerVoiceSound(player, 0);
+                    enqueuePositionalSoundEffect(SFX_TRICK_START, (Vec3i *)(&player->pos), 0x7F, SFX_PRIORITY_NORMAL);
+                    enqueueRacePlayerVoiceSound(player, RACE_VOICE_TRICK);
                 }
                 player->mode = 0xF;
                 player->unk2A6 = 2;
@@ -1510,8 +1510,8 @@ void updateRacePlayerAirborneCruise(RacePlayer *player) {
 
             case 3:
                 if (player->soundDisabled == 0) {
-                    enqueuePositionalSoundEffect(0x17, (Vec3i *)(&player->pos), 0x7F, 0x32);
-                    enqueueRacePlayerVoiceSound(player, 0);
+                    enqueuePositionalSoundEffect(SFX_TRICK_START, (Vec3i *)(&player->pos), 0x7F, SFX_PRIORITY_NORMAL);
+                    enqueueRacePlayerVoiceSound(player, RACE_VOICE_TRICK);
                 }
                 player->mode = 0x10;
                 player->unk2A6 = 3;
@@ -1520,8 +1520,8 @@ void updateRacePlayerAirborneCruise(RacePlayer *player) {
 
             case 4:
                 if (player->soundDisabled == 0) {
-                    enqueuePositionalSoundEffect(0x17, (Vec3i *)(&player->pos), 0x7F, 0x32);
-                    enqueueRacePlayerVoiceSound(player, 0);
+                    enqueuePositionalSoundEffect(SFX_TRICK_START, (Vec3i *)(&player->pos), 0x7F, SFX_PRIORITY_NORMAL);
+                    enqueueRacePlayerVoiceSound(player, RACE_VOICE_TRICK);
                 }
                 player->mode = 0x11;
                 player->unk2A6 = 4;
@@ -1530,8 +1530,8 @@ void updateRacePlayerAirborneCruise(RacePlayer *player) {
 
             case 5:
                 if (player->soundDisabled == 0) {
-                    enqueuePositionalSoundEffect(0x17, (Vec3i *)(&player->pos), 0x7F, 0x32);
-                    enqueueRacePlayerVoiceSound(player, 1);
+                    enqueuePositionalSoundEffect(SFX_TRICK_START, (Vec3i *)(&player->pos), 0x7F, SFX_PRIORITY_NORMAL);
+                    enqueueRacePlayerVoiceSound(player, RACE_VOICE_COMPLEX_TRICK);
                 }
                 player->mode = 0x12;
                 player->unk2A6 = 5;
@@ -1540,8 +1540,8 @@ void updateRacePlayerAirborneCruise(RacePlayer *player) {
 
             case 6:
                 if (player->soundDisabled == 0) {
-                    enqueuePositionalSoundEffect(0x17, (Vec3i *)(&player->pos), 0x7F, 0x32);
-                    enqueueRacePlayerVoiceSound(player, 1);
+                    enqueuePositionalSoundEffect(SFX_TRICK_START, (Vec3i *)(&player->pos), 0x7F, SFX_PRIORITY_NORMAL);
+                    enqueueRacePlayerVoiceSound(player, RACE_VOICE_COMPLEX_TRICK);
                 }
                 player->mode = 0x13;
                 player->unk2A6 = 6;
@@ -1550,8 +1550,8 @@ void updateRacePlayerAirborneCruise(RacePlayer *player) {
 
             case 7:
                 if (player->soundDisabled == 0) {
-                    enqueuePositionalSoundEffect(0x17, (Vec3i *)(&player->pos), 0x7F, 0x32);
-                    enqueueRacePlayerVoiceSound(player, 1);
+                    enqueuePositionalSoundEffect(SFX_TRICK_START, (Vec3i *)(&player->pos), 0x7F, SFX_PRIORITY_NORMAL);
+                    enqueueRacePlayerVoiceSound(player, RACE_VOICE_COMPLEX_TRICK);
                 }
                 player->mode = 0x14;
                 player->unk2A6 = 7;
@@ -1560,8 +1560,8 @@ void updateRacePlayerAirborneCruise(RacePlayer *player) {
 
             case 8:
                 if (player->soundDisabled == 0) {
-                    enqueuePositionalSoundEffect(0x17, (Vec3i *)(&player->pos), 0x7F, 0x32);
-                    enqueueRacePlayerVoiceSound(player, 1);
+                    enqueuePositionalSoundEffect(SFX_TRICK_START, (Vec3i *)(&player->pos), 0x7F, SFX_PRIORITY_NORMAL);
+                    enqueueRacePlayerVoiceSound(player, RACE_VOICE_COMPLEX_TRICK);
                 }
                 player->mode = 0x15;
                 player->unk2A6 = 8;
@@ -1570,8 +1570,8 @@ void updateRacePlayerAirborneCruise(RacePlayer *player) {
 
             case 9:
                 if (player->soundDisabled == 0) {
-                    enqueuePositionalSoundEffect(0x17, (Vec3i *)(&player->pos), 0x7F, 0x32);
-                    enqueueRacePlayerVoiceSound(player, 1);
+                    enqueuePositionalSoundEffect(SFX_TRICK_START, (Vec3i *)(&player->pos), 0x7F, SFX_PRIORITY_NORMAL);
+                    enqueueRacePlayerVoiceSound(player, RACE_VOICE_COMPLEX_TRICK);
                 }
                 player->mode = 0x1F;
                 player->unk2A6 = 0xB;
@@ -1580,8 +1580,8 @@ void updateRacePlayerAirborneCruise(RacePlayer *player) {
 
             case 10:
                 if (player->soundDisabled == 0) {
-                    enqueuePositionalSoundEffect(0x17, (Vec3i *)(&player->pos), 0x7F, 0x32);
-                    enqueueRacePlayerVoiceSound(player, 1);
+                    enqueuePositionalSoundEffect(SFX_TRICK_START, (Vec3i *)(&player->pos), 0x7F, SFX_PRIORITY_NORMAL);
+                    enqueueRacePlayerVoiceSound(player, RACE_VOICE_COMPLEX_TRICK);
                 }
                 player->mode = 0x20;
                 player->unk2A6 = 0xB;
@@ -1590,8 +1590,8 @@ void updateRacePlayerAirborneCruise(RacePlayer *player) {
 
             case 11:
                 if (player->soundDisabled == 0) {
-                    enqueuePositionalSoundEffect(0x17, (Vec3i *)(&player->pos), 0x7F, 0x32);
-                    enqueueRacePlayerVoiceSound(player, 1);
+                    enqueuePositionalSoundEffect(SFX_TRICK_START, (Vec3i *)(&player->pos), 0x7F, SFX_PRIORITY_NORMAL);
+                    enqueueRacePlayerVoiceSound(player, RACE_VOICE_COMPLEX_TRICK);
                 }
                 player->mode = 0x21;
                 player->unk2A6 = 0xC;
@@ -1600,8 +1600,8 @@ void updateRacePlayerAirborneCruise(RacePlayer *player) {
 
             case 12:
                 if (player->soundDisabled == 0) {
-                    enqueuePositionalSoundEffect(0x17, (Vec3i *)(&player->pos), 0x7F, 0x32);
-                    enqueueRacePlayerVoiceSound(player, 1);
+                    enqueuePositionalSoundEffect(SFX_TRICK_START, (Vec3i *)(&player->pos), 0x7F, SFX_PRIORITY_NORMAL);
+                    enqueueRacePlayerVoiceSound(player, RACE_VOICE_COMPLEX_TRICK);
                 }
                 player->mode = 0x22;
                 player->unk2A6 = 0xD;
@@ -1610,8 +1610,8 @@ void updateRacePlayerAirborneCruise(RacePlayer *player) {
 
             case 13:
                 if (player->soundDisabled == 0) {
-                    enqueuePositionalSoundEffect(0x17, (Vec3i *)(&player->pos), 0x7F, 0x32);
-                    enqueueRacePlayerVoiceSound(player, 1);
+                    enqueuePositionalSoundEffect(SFX_TRICK_START, (Vec3i *)(&player->pos), 0x7F, SFX_PRIORITY_NORMAL);
+                    enqueueRacePlayerVoiceSound(player, RACE_VOICE_COMPLEX_TRICK);
                 }
                 player->mode = 0x23;
                 player->unk2A6 = 0xA;
@@ -1620,8 +1620,8 @@ void updateRacePlayerAirborneCruise(RacePlayer *player) {
 
             case 14:
                 if (player->soundDisabled == 0) {
-                    enqueuePositionalSoundEffect(0x17, (Vec3i *)(&player->pos), 0x7F, 0x32);
-                    enqueueRacePlayerVoiceSound(player, 1);
+                    enqueuePositionalSoundEffect(SFX_TRICK_START, (Vec3i *)(&player->pos), 0x7F, SFX_PRIORITY_NORMAL);
+                    enqueueRacePlayerVoiceSound(player, RACE_VOICE_COMPLEX_TRICK);
                 }
                 player->mode = 0x24;
                 player->unk2A6 = 0xC;
@@ -1630,8 +1630,8 @@ void updateRacePlayerAirborneCruise(RacePlayer *player) {
 
             case 15:
                 if (player->soundDisabled == 0) {
-                    enqueuePositionalSoundEffect(0x17, (Vec3i *)(&player->pos), 0x7F, 0x32);
-                    enqueueRacePlayerVoiceSound(player, 1);
+                    enqueuePositionalSoundEffect(SFX_TRICK_START, (Vec3i *)(&player->pos), 0x7F, SFX_PRIORITY_NORMAL);
+                    enqueueRacePlayerVoiceSound(player, RACE_VOICE_COMPLEX_TRICK);
                 }
                 player->mode = 0x25;
                 player->unk2A6 = 0xB;
@@ -1640,8 +1640,8 @@ void updateRacePlayerAirborneCruise(RacePlayer *player) {
 
             case 16:
                 if (player->soundDisabled == 0) {
-                    enqueuePositionalSoundEffect(0x17, (Vec3i *)(&player->pos), 0x7F, 0x32);
-                    enqueueRacePlayerVoiceSound(player, 1);
+                    enqueuePositionalSoundEffect(SFX_TRICK_START, (Vec3i *)(&player->pos), 0x7F, SFX_PRIORITY_NORMAL);
+                    enqueueRacePlayerVoiceSound(player, RACE_VOICE_COMPLEX_TRICK);
                 }
                 player->mode = 0x26;
                 player->unk2A6 = 0xD;
@@ -1650,8 +1650,8 @@ void updateRacePlayerAirborneCruise(RacePlayer *player) {
 
             case 17:
                 if (player->soundDisabled == 0) {
-                    enqueuePositionalSoundEffect(0x17, (Vec3i *)(&player->pos), 0x7F, 0x32);
-                    enqueueRacePlayerVoiceSound(player, 1);
+                    enqueuePositionalSoundEffect(SFX_TRICK_START, (Vec3i *)(&player->pos), 0x7F, SFX_PRIORITY_NORMAL);
+                    enqueueRacePlayerVoiceSound(player, RACE_VOICE_COMPLEX_TRICK);
                 }
                 player->mode = 0x27;
                 player->unk2A6 = 0xE;
@@ -1660,8 +1660,8 @@ void updateRacePlayerAirborneCruise(RacePlayer *player) {
 
             case 18:
                 if (player->soundDisabled == 0) {
-                    enqueuePositionalSoundEffect(0x17, (Vec3i *)(&player->pos), 0x7F, 0x32);
-                    enqueueRacePlayerVoiceSound(player, 1);
+                    enqueuePositionalSoundEffect(SFX_TRICK_START, (Vec3i *)(&player->pos), 0x7F, SFX_PRIORITY_NORMAL);
+                    enqueueRacePlayerVoiceSound(player, RACE_VOICE_COMPLEX_TRICK);
                 }
                 player->mode = 0x29;
                 player->unk2A6 = 9;
@@ -1670,8 +1670,8 @@ void updateRacePlayerAirborneCruise(RacePlayer *player) {
 
             case 19:
                 if (player->soundDisabled == 0) {
-                    enqueuePositionalSoundEffect(0x17, (Vec3i *)(&player->pos), 0x7F, 0x32);
-                    enqueueRacePlayerVoiceSound(player, 1);
+                    enqueuePositionalSoundEffect(SFX_TRICK_START, (Vec3i *)(&player->pos), 0x7F, SFX_PRIORITY_NORMAL);
+                    enqueueRacePlayerVoiceSound(player, RACE_VOICE_COMPLEX_TRICK);
                 }
                 player->mode = 0x2A;
                 player->unk2A6 = 0xA;
@@ -1680,8 +1680,8 @@ void updateRacePlayerAirborneCruise(RacePlayer *player) {
 
             case 20:
                 if (player->soundDisabled == 0) {
-                    enqueuePositionalSoundEffect(0x17, (Vec3i *)(&player->pos), 0x7F, 0x32);
-                    enqueueRacePlayerVoiceSound(player, 1);
+                    enqueuePositionalSoundEffect(SFX_TRICK_START, (Vec3i *)(&player->pos), 0x7F, SFX_PRIORITY_NORMAL);
+                    enqueueRacePlayerVoiceSound(player, RACE_VOICE_COMPLEX_TRICK);
                 }
                 player->mode = 0x2B;
                 player->unk2A6 = 0xC;
@@ -1690,8 +1690,8 @@ void updateRacePlayerAirborneCruise(RacePlayer *player) {
 
             case 21:
                 if (player->soundDisabled == 0) {
-                    enqueuePositionalSoundEffect(0x17, (Vec3i *)(&player->pos), 0x7F, 0x32);
-                    enqueueRacePlayerVoiceSound(player, 1);
+                    enqueuePositionalSoundEffect(SFX_TRICK_START, (Vec3i *)(&player->pos), 0x7F, SFX_PRIORITY_NORMAL);
+                    enqueueRacePlayerVoiceSound(player, RACE_VOICE_COMPLEX_TRICK);
                 }
                 player->mode = 0x2C;
                 player->unk2A6 = 9;
@@ -1700,8 +1700,8 @@ void updateRacePlayerAirborneCruise(RacePlayer *player) {
 
             case 22:
                 if (player->soundDisabled == 0) {
-                    enqueuePositionalSoundEffect(0x17, (Vec3i *)(&player->pos), 0x7F, 0x32);
-                    enqueueRacePlayerVoiceSound(player, 1);
+                    enqueuePositionalSoundEffect(SFX_TRICK_START, (Vec3i *)(&player->pos), 0x7F, SFX_PRIORITY_NORMAL);
+                    enqueueRacePlayerVoiceSound(player, RACE_VOICE_COMPLEX_TRICK);
                 }
                 player->mode = 0x2D;
                 player->unk2A6 = 0xA;
@@ -1710,8 +1710,8 @@ void updateRacePlayerAirborneCruise(RacePlayer *player) {
 
             case 23:
                 if (player->soundDisabled == 0) {
-                    enqueuePositionalSoundEffect(0x17, (Vec3i *)(&player->pos), 0x7F, 0x32);
-                    enqueueRacePlayerVoiceSound(player, 1);
+                    enqueuePositionalSoundEffect(SFX_TRICK_START, (Vec3i *)(&player->pos), 0x7F, SFX_PRIORITY_NORMAL);
+                    enqueueRacePlayerVoiceSound(player, RACE_VOICE_COMPLEX_TRICK);
                 }
                 player->mode = 0x2E;
                 player->unk2A6 = 0xE;
@@ -1720,8 +1720,8 @@ void updateRacePlayerAirborneCruise(RacePlayer *player) {
 
             case 24:
                 if (player->soundDisabled == 0) {
-                    enqueuePositionalSoundEffect(0x17, (Vec3i *)(&player->pos), 0x7F, 0x32);
-                    enqueueRacePlayerVoiceSound(player, 1);
+                    enqueuePositionalSoundEffect(SFX_TRICK_START, (Vec3i *)(&player->pos), 0x7F, SFX_PRIORITY_NORMAL);
+                    enqueueRacePlayerVoiceSound(player, RACE_VOICE_COMPLEX_TRICK);
                 }
                 player->mode = 0x2F;
                 player->unk2A6 = 9;
@@ -1730,8 +1730,8 @@ void updateRacePlayerAirborneCruise(RacePlayer *player) {
 
             case 25:
                 if (player->soundDisabled == 0) {
-                    enqueuePositionalSoundEffect(0x17, (Vec3i *)(&player->pos), 0x7F, 0x32);
-                    enqueueRacePlayerVoiceSound(player, 1);
+                    enqueuePositionalSoundEffect(SFX_TRICK_START, (Vec3i *)(&player->pos), 0x7F, SFX_PRIORITY_NORMAL);
+                    enqueueRacePlayerVoiceSound(player, RACE_VOICE_COMPLEX_TRICK);
                 }
                 player->mode = 0x30;
                 player->unk2A6 = 0xB;
@@ -1740,8 +1740,8 @@ void updateRacePlayerAirborneCruise(RacePlayer *player) {
 
             case 26:
                 if (player->soundDisabled == 0) {
-                    enqueuePositionalSoundEffect(0x17, (Vec3i *)(&player->pos), 0x7F, 0x32);
-                    enqueueRacePlayerVoiceSound(player, 1);
+                    enqueuePositionalSoundEffect(SFX_TRICK_START, (Vec3i *)(&player->pos), 0x7F, SFX_PRIORITY_NORMAL);
+                    enqueueRacePlayerVoiceSound(player, RACE_VOICE_COMPLEX_TRICK);
                 }
                 player->mode = 0x31;
                 player->unk2A6 = 0xD;
@@ -1750,8 +1750,8 @@ void updateRacePlayerAirborneCruise(RacePlayer *player) {
 
             case 27:
                 if (player->soundDisabled == 0) {
-                    enqueuePositionalSoundEffect(0x17, (Vec3i *)(&player->pos), 0x7F, 0x32);
-                    enqueueRacePlayerVoiceSound(player, 1);
+                    enqueuePositionalSoundEffect(SFX_TRICK_START, (Vec3i *)(&player->pos), 0x7F, SFX_PRIORITY_NORMAL);
+                    enqueueRacePlayerVoiceSound(player, RACE_VOICE_COMPLEX_TRICK);
                 }
                 player->mode = 0x32;
                 player->unk2A6 = 9;
@@ -1760,8 +1760,8 @@ void updateRacePlayerAirborneCruise(RacePlayer *player) {
 
             case 28:
                 if (player->soundDisabled == 0) {
-                    enqueuePositionalSoundEffect(0x17, (Vec3i *)(&player->pos), 0x7F, 0x32);
-                    enqueueRacePlayerVoiceSound(player, 1);
+                    enqueuePositionalSoundEffect(SFX_TRICK_START, (Vec3i *)(&player->pos), 0x7F, SFX_PRIORITY_NORMAL);
+                    enqueueRacePlayerVoiceSound(player, RACE_VOICE_COMPLEX_TRICK);
                 }
                 player->mode = 0x33;
                 player->unk2A6 = 0xA;
@@ -1770,8 +1770,8 @@ void updateRacePlayerAirborneCruise(RacePlayer *player) {
 
             case 29:
                 if (player->soundDisabled == 0) {
-                    enqueuePositionalSoundEffect(0x17, (Vec3i *)(&player->pos), 0x7F, 0x32);
-                    enqueueRacePlayerVoiceSound(player, 1);
+                    enqueuePositionalSoundEffect(SFX_TRICK_START, (Vec3i *)(&player->pos), 0x7F, SFX_PRIORITY_NORMAL);
+                    enqueueRacePlayerVoiceSound(player, RACE_VOICE_COMPLEX_TRICK);
                 }
                 player->mode = 0x34;
                 player->unk2A6 = 0xC;
@@ -1780,8 +1780,8 @@ void updateRacePlayerAirborneCruise(RacePlayer *player) {
 
             case 30:
                 if (player->soundDisabled == 0) {
-                    enqueuePositionalSoundEffect(0x17, (Vec3i *)(&player->pos), 0x7F, 0x32);
-                    enqueueRacePlayerVoiceSound(player, 1);
+                    enqueuePositionalSoundEffect(SFX_TRICK_START, (Vec3i *)(&player->pos), 0x7F, SFX_PRIORITY_NORMAL);
+                    enqueueRacePlayerVoiceSound(player, RACE_VOICE_COMPLEX_TRICK);
                 }
                 player->mode = 0x35;
                 player->unk2A6 = 0xA;
@@ -1790,8 +1790,8 @@ void updateRacePlayerAirborneCruise(RacePlayer *player) {
 
             case 31:
                 if (player->soundDisabled == 0) {
-                    enqueuePositionalSoundEffect(0x17, (Vec3i *)(&player->pos), 0x7F, 0x32);
-                    enqueueRacePlayerVoiceSound(player, 1);
+                    enqueuePositionalSoundEffect(SFX_TRICK_START, (Vec3i *)(&player->pos), 0x7F, SFX_PRIORITY_NORMAL);
+                    enqueueRacePlayerVoiceSound(player, RACE_VOICE_COMPLEX_TRICK);
                 }
                 player->mode = 0x36;
                 player->unk2A6 = 0xC;
@@ -1800,8 +1800,8 @@ void updateRacePlayerAirborneCruise(RacePlayer *player) {
 
             case 32:
                 if (player->soundDisabled == 0) {
-                    enqueuePositionalSoundEffect(0x17, (Vec3i *)(&player->pos), 0x7F, 0x32);
-                    enqueueRacePlayerVoiceSound(player, 1);
+                    enqueuePositionalSoundEffect(SFX_TRICK_START, (Vec3i *)(&player->pos), 0x7F, SFX_PRIORITY_NORMAL);
+                    enqueueRacePlayerVoiceSound(player, RACE_VOICE_COMPLEX_TRICK);
                 }
                 player->mode = 0x37;
                 player->unk2A6 = 9;
@@ -1810,8 +1810,8 @@ void updateRacePlayerAirborneCruise(RacePlayer *player) {
 
             case 33:
                 if (player->soundDisabled == 0) {
-                    enqueuePositionalSoundEffect(0x17, (Vec3i *)(&player->pos), 0x7F, 0x32);
-                    enqueueRacePlayerVoiceSound(player, 1);
+                    enqueuePositionalSoundEffect(SFX_TRICK_START, (Vec3i *)(&player->pos), 0x7F, SFX_PRIORITY_NORMAL);
+                    enqueueRacePlayerVoiceSound(player, RACE_VOICE_COMPLEX_TRICK);
                 }
                 player->mode = 0x38;
                 player->unk2A6 = 0xA;
@@ -1820,8 +1820,8 @@ void updateRacePlayerAirborneCruise(RacePlayer *player) {
 
             case 34:
                 if (player->soundDisabled == 0) {
-                    enqueuePositionalSoundEffect(0x17, (Vec3i *)(&player->pos), 0x7F, 0x32);
-                    enqueueRacePlayerVoiceSound(player, 1);
+                    enqueuePositionalSoundEffect(SFX_TRICK_START, (Vec3i *)(&player->pos), 0x7F, SFX_PRIORITY_NORMAL);
+                    enqueueRacePlayerVoiceSound(player, RACE_VOICE_COMPLEX_TRICK);
                 }
                 player->mode = 0x39;
                 player->unk2A6 = 0xD;
@@ -1852,7 +1852,7 @@ void updateRacePlayerAirborneCruise(RacePlayer *player) {
     stepRaceMotionJointAnimationUntilEnd(player);
     updateRacePlayerMotionFeedback(player);
     if (player->unk517 != 0) {
-        enqueueRacePlayerVoiceSound(player, 5);
+        enqueueRacePlayerVoiceSound(player, RACE_VOICE_ATTACK_SUCCESS);
     }
 }
 
@@ -4341,7 +4341,7 @@ void updateRacePlayerMode10TerrainCrashSlide(RacePlayer *player) {
     if ((stateFlags & 1) == 0) {
         updateRacePlayerLocalVelocityNoVerticalOffset(player, 0, 0, 0, 0);
         player->unk582 = 0x100;
-        player->unk584 = 8;
+        player->unk584 = SFX_CRASH_SLIDE_LOOP;
         player->unk588 = 0.0f;
         stateFlags = player->stateFlags;
     }
@@ -4417,7 +4417,7 @@ void updateRacePlayerMode12LaunchRecover(RacePlayer *player) {
 
     if (grounded == 0) {
         updateRacePlayerMotionFeedback(player);
-        if ((player->unk584 != 6) && (player->unk584 != 0x1E)) {
+        if ((player->unk584 != SFX_BOARD_SURFACE_RUMBLE_LOOP) && (player->unk584 != SFX_BREAKABLE_SURFACE_LOOP)) {
             player->unk588 = -6.0f;
         }
     }
@@ -4558,7 +4558,7 @@ void updateRacePlayerMode14PushHit(RacePlayer *player) {
         player->stateFlags = stateFlags & ~0x200;
         updateRacePlayerLocalVelocityNoVerticalOffset(player, 0, 0, 0, 0);
         player->unk582 = 0x100;
-        player->unk584 = 8;
+        player->unk584 = SFX_CRASH_SLIDE_LOOP;
         player->unk588 = 0.0f;
     } else {
         player->stateFlags = stateFlags | 0x200;
@@ -4871,7 +4871,7 @@ void updateRacePlayerMode40Stun(RacePlayer *player) {
         updateRacePlayerLocalVelocityNoVerticalOffset(player, 0, 0, 0, 0);
         player->stateFlags &= ~0x200;
         player->unk582 = 0x100;
-        player->unk584 = 8;
+        player->unk584 = SFX_CRASH_SLIDE_LOOP;
         player->unk588 = 0.0f;
     } else {
         player->stateFlags = stateFlags | 0x200;
@@ -5426,7 +5426,7 @@ void updateRacePlayerMode32Character0(RacePlayer *player) {
         }
         if (player->stateTimer == 0) {
             if (player->updateTimer == 1) {
-                enqueueRacePlayerVoiceSound(player, 6);
+                enqueueRacePlayerVoiceSound(player, RACE_VOICE_CHEER);
                 player->updateTimer++;
             }
             player->stateTimer = 0x14;
@@ -5449,7 +5449,7 @@ void updateRacePlayerMode32Character1(RacePlayer *player) {
         }
         if (player->stateTimer == 0) {
             if (player->updateTimer == 1) {
-                enqueueRacePlayerVoiceSound(player, 6);
+                enqueueRacePlayerVoiceSound(player, RACE_VOICE_CHEER);
                 player->updateTimer++;
             }
             setRaceMotionAnimation(player, 0x25);
@@ -5471,7 +5471,7 @@ void updateRacePlayerMode32Character2(RacePlayer *player) {
         }
         if (player->stateTimer == 0) {
             if (player->updateTimer == 1) {
-                enqueueRacePlayerVoiceSound(player, 6);
+                enqueueRacePlayerVoiceSound(player, RACE_VOICE_CHEER);
                 player->updateTimer++;
             }
             player->stateTimer = 0x14;
@@ -5494,7 +5494,7 @@ void updateRacePlayerMode32Character3(RacePlayer *player) {
         }
         if (player->stateTimer == 0) {
             if (player->updateTimer == 1) {
-                enqueueRacePlayerVoiceSound(player, 6);
+                enqueueRacePlayerVoiceSound(player, RACE_VOICE_CHEER);
                 player->updateTimer++;
             }
             player->stateTimer = 0;
@@ -5517,7 +5517,7 @@ void updateRacePlayerMode32Character4(RacePlayer *player) {
         }
         if (player->stateTimer == 0) {
             if (player->updateTimer == 1) {
-                enqueueRacePlayerVoiceSound(player, 6);
+                enqueueRacePlayerVoiceSound(player, RACE_VOICE_CHEER);
                 player->updateTimer++;
             }
             player->stateTimer = 0x32;
@@ -5531,7 +5531,7 @@ void updateRacePlayerMode32Character4(RacePlayer *player) {
 void updateRacePlayerMode32Character5(RacePlayer *player) {
     if (player->updateTimer == 0) {
         player->updateTimer++;
-        enqueueRacePlayerVoiceSound(player, 6);
+        enqueueRacePlayerVoiceSound(player, RACE_VOICE_CHEER);
         player->stateTimer = 0x1E;
         setRaceMotionAnimation(player, 0x23);
     }
@@ -5696,12 +5696,19 @@ void updateRacePlayersPostUpdate(void) {
                     player->unk584,
                     soundPos,
                     player->unk582,
-                    0x46,
+                    SFX_PRIORITY_PLAYER_LOOP,
                     player->unk588,
                     i
                 );
             } else {
-                enqueuePlayerLoopingPositionalSoundRequest(player->unk584, soundPos, 0, 0x46, player->unk588, i);
+                enqueuePlayerLoopingPositionalSoundRequest(
+                    player->unk584,
+                    soundPos,
+                    0,
+                    SFX_PRIORITY_PLAYER_LOOP,
+                    player->unk588,
+                    i
+                );
             }
 
             *nextSoundPos = *soundPos;
@@ -5829,26 +5836,26 @@ void updateRacePlayerVoiceSounds(RacePlayer *player) {
         playerIndex = player2->playerIndex;
         if (gRacePlayerHudStatuses[playerIndex].active != 0) {
             spawnRaceUiScorePopup((void *)soundId, (s16)playerIndex);
-            soundType = 0x4D;
+            soundType = SFX_TRICK_SCORE_LOW;
             if (soundId >= 0x64) {
-                soundType = 0x4E;
+                soundType = SFX_TRICK_SCORE_MEDIUM;
             }
             if (soundId >= 0x78) {
-                soundType = 0x4F;
+                soundType = SFX_TRICK_SCORE_HIGH;
             }
             if (soundId >= 0xC8) {
-                soundType = 0x51;
+                soundType = SFX_TRICK_BONUS;
             }
             if (soundId >= 0x12C) {
-                soundType = 0x50;
+                soundType = SFX_TRICK_SCORE_TOP;
             }
-            enqueueSoundEffect((s16)soundType, 0x5A);
+            enqueueSoundEffect((s16)soundType, SFX_PRIORITY_HIGH);
         }
     }
     if (gRaceSplitscreenMode == 1) {
         if (gRaceTypeSelection == 2) {
             if (score != 0) {
-                soundType = 0x4D;
+                soundType = SFX_TRICK_SCORE_LOW;
                 if (score >= 0x2710) {
                     score = 0x270F;
                 }
@@ -5861,26 +5868,26 @@ void updateRacePlayerVoiceSounds(RacePlayer *player) {
                     player->trickAttackBestMakeCount = player2->trickAttackMakeCount;
                 }
                 if (score >= 0xA) {
-                    soundType = 0x4E;
+                    soundType = SFX_TRICK_SCORE_MEDIUM;
                 }
                 if (score >= 0xF) {
-                    soundType = 0x4F;
+                    soundType = SFX_TRICK_SCORE_HIGH;
                 }
                 if (score >= 0x14) {
-                    soundType = 0x51;
+                    soundType = SFX_TRICK_BONUS;
                 }
                 if (score >= 0x28) {
-                    soundType = 0x50;
+                    soundType = SFX_TRICK_SCORE_TOP;
                 }
                 if (player2->trickAttackCompletedTrickMask == 0x3FE) {
                     player2->trickAttackPointTotal += 0x12C;
                     player2->trickAttackCompletedTrickMask = 0x3FF;
-                    soundType = 0x51;
+                    soundType = SFX_TRICK_BONUS;
                     spawnRaceUiTrickScorePopup((void *)score, 1);
                 } else {
                     spawnRaceUiTrickScorePopup((void *)score, 0);
                 }
-                enqueueSoundEffect((s16)soundType, 0x5A);
+                enqueueSoundEffect((s16)soundType, SFX_PRIORITY_HIGH);
                 if (player2->trickAttackPointTotal >= 0x2710) {
                     player2->trickAttackPointTotal = 0x270F;
                 }
@@ -5905,7 +5912,7 @@ void updateRacePlayerLoopingSound(RacePlayer *player) {
         player->rumblePatternId = 0;
     }
     if (player->soundDisabled == 0) {
-        enqueuePositionalSoundEffect(0x21, (Vec3i *)&player->pos.x, (s16)v0, 0x32);
+        enqueuePositionalSoundEffect(SFX_PLAYER_DESCENT, (Vec3i *)&player->pos.x, (s16)v0, SFX_PRIORITY_NORMAL);
     }
 }
 
@@ -5922,7 +5929,7 @@ void updateRacePlayerPostUpdateMode22(RacePlayer *player) {
             player->updateState = 0;
             player->updateTimer = 0;
             player->stateFlags = stateFlags & ~0x200;
-            enqueueRacePlayerVoiceSound(player, 2);
+            enqueueRacePlayerVoiceSound(player, RACE_VOICE_HIT);
         } else {
             player->stateFlags = stateFlags & ~0x200;
             if (tryStartRacePlayerCourseObjectMode(player->playerIndex) != 0) {
@@ -5962,7 +5969,7 @@ void updateRacePlayerPostUpdateAirborneTrick(RacePlayer *player) {
             player->updateState = 0;
             player->updateTimer = 0;
             player->stateFlags = stateFlags & ~0x200;
-            enqueueRacePlayerVoiceSound(player, 2);
+            enqueueRacePlayerVoiceSound(player, RACE_VOICE_HIT);
         } else {
             player->stateFlags = stateFlags & ~0x200;
             if (tryStartRacePlayerCourseObjectMode(player->playerIndex) != 0) {
@@ -6019,14 +6026,14 @@ void updateRacePlayerPostUpdateMode29(RacePlayer *player) {
                 player->trickAttackPointTotal = 0x270F;
             }
             createCallbackTaskPreservingArgs((CallbackTaskCallback)initRaceUiCrashScorePopup, 0, 0x64);
-            enqueueSoundEffect(0x51, 0x32);
+            enqueueSoundEffect(SFX_TRICK_BONUS, SFX_PRIORITY_NORMAL);
         }
         if (gRaceSplitscreenMode == 0) {
             addRacePlayerScore(player, 0x12C);
             playerIndex = player->playerIndex;
             if (gRacePlayerHudStatuses[playerIndex].active != 0) {
                 spawnRaceUiScorePopup((void *)0x12C, (s16)playerIndex);
-                enqueueSoundEffect(0x51, 0x32);
+                enqueueSoundEffect(SFX_TRICK_BONUS, SFX_PRIORITY_NORMAL);
             }
         }
     }

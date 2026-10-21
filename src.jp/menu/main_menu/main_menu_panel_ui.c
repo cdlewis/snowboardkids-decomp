@@ -20,8 +20,6 @@
 #define mainMenuModeSelectLeftTargets gMainMenuModeSelectByteData.leftTargets
 #define mainMenuModeSelectRightTargets gMainMenuModeSelectByteData.rightTargets
 #define MENU_PANEL_INPUT_REPEAT_FRAMES 4
-#define MENU_PANEL_ACCEPT_SOUND 0x18
-#define MENU_PANEL_SOUND_VOLUME 0x32
 #define MENU_PANEL_TEXTURE_HANDLE (gAssetHandles[0x2A])
 #define mainMenuModeSelectTopRowIconTiles gMainMenuModeSelectByteData.topRowIconTiles
 #define mainMenuModeSelectBottomRowIconTiles gMainMenuModeSelectByteData.bottomRowIconTiles
@@ -183,7 +181,7 @@ void updateMainMenuModeSelectGrid(MenuPanelActor *arg0) {
                 temp_a2 = mainMenuModeSelectUpTargets[gMainMenuModeSelection]; \
                 if (temp_a2 != gMainMenuModeSelection) { \
                     gMainMenuModeSelection = temp_a2; \
-                    enqueueSoundEffect(0x19, 0x32); \
+                    enqueueSoundEffect(SFX_MENU_CURSOR, SFX_PRIORITY_NORMAL); \
                     pressedInput = gPlayerInputPressed[0]; \
                 } \
             } else if (pressedInput & (STICK_DOWN | D_JPAD)) { \
@@ -191,21 +189,21 @@ void updateMainMenuModeSelectGrid(MenuPanelActor *arg0) {
                 temp_a2_2 = mainMenuModeSelectDownTargets[var_v0]; \
                 if (temp_a2_2 != var_v0) { \
                     gMainMenuModeSelection = temp_a2_2; \
-                    enqueueSoundEffect(0x19, 0x32); \
+                    enqueueSoundEffect(SFX_MENU_CURSOR, SFX_PRIORITY_NORMAL); \
                     pressedInput = gPlayerInputPressed[0]; \
                 } \
             } else if (pressedInput & (STICK_RIGHT | R_JPAD)) { \
                 temp_a2_3 = mainMenuModeSelectRightTargets[gMainMenuModeSelection]; \
                 if (temp_a2_3 != gMainMenuModeSelection) { \
                     gMainMenuModeSelection = temp_a2_3; \
-                    enqueueSoundEffect(0x19, 0x32); \
+                    enqueueSoundEffect(SFX_MENU_CURSOR, SFX_PRIORITY_NORMAL); \
                     pressedInput = gPlayerInputPressed[0]; \
                 } \
             } else if (pressedInput & (STICK_LEFT | L_JPAD)) { \
                 temp_a2_4 = mainMenuModeSelectLeftTargets[gMainMenuModeSelection]; \
                 if (temp_a2_4 != gMainMenuModeSelection) { \
                     gMainMenuModeSelection = temp_a2_4; \
-                    enqueueSoundEffect(0x19, 0x32); \
+                    enqueueSoundEffect(SFX_MENU_CURSOR, SFX_PRIORITY_NORMAL); \
                     pressedInput = gPlayerInputPressed[0]; \
                 } \
             }
@@ -215,7 +213,7 @@ void updateMainMenuModeSelectGrid(MenuPanelActor *arg0) {
                 if (pressedInput & B_BUTTON) {
                     gMainMenuModeSelection = 0xC;
                 }
-                enqueueSoundEffect(0x18, 0x32);
+                enqueueSoundEffect(SFX_CONFIRM, SFX_PRIORITY_NORMAL);
             }
         }
     }
@@ -487,7 +485,7 @@ void updateMainMenuModeDescriptionPanel(MenuPanelActor *arg0) {
                 arg0->tileList = arg0->tileListStart;
                 break;
         }
-        enqueueSoundEffect(MENU_PANEL_ACCEPT_SOUND, MENU_PANEL_SOUND_VOLUME);
+        enqueueSoundEffect(SFX_CONFIRM, SFX_PRIORITY_NORMAL);
     }
 
     addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawMainMenuModeDescriptionPanel, arg0);

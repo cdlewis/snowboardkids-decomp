@@ -953,7 +953,7 @@ void updateRaceGameplayFlow(void) {
                 gRacePauseMenuSelection = 0; \
                 gRaceUpdatePaused = 1; \
                 opened = 1; \
-                enqueueSoundEffect(1, 0x32); \
+                enqueueSoundEffect(SFX_MENU_ACCEPT, SFX_PRIORITY_NORMAL); \
                 requestRumbleMotorInit(0); \
                 requestRumbleMotorInit(1); \
                 requestRumbleMotorInit(2); \
@@ -975,7 +975,7 @@ void updateRaceGameplayFlow(void) {
                         selection = gRacePauseMenuSelection; \
                         if (selection != 0) { \
                             gRacePauseMenuSelection = selection - 1; \
-                            enqueueSoundEffect(1, 0x32); \
+                            enqueueSoundEffect(SFX_MENU_ACCEPT, SFX_PRIORITY_NORMAL); \
                             input = gPlayerInputPressed[i]; \
                         }
                     }
@@ -983,7 +983,7 @@ void updateRaceGameplayFlow(void) {
                         selection = gRacePauseMenuSelection;
                         if (valueTwo != selection) {
                             gRacePauseMenuSelection = selection + 1;
-                            enqueueSoundEffect(1, 0x32);
+                            enqueueSoundEffect(SFX_MENU_ACCEPT, SFX_PRIORITY_NORMAL);
                             input = gPlayerInputPressed[i];
                         }
                     }
@@ -991,14 +991,14 @@ void updateRaceGameplayFlow(void) {
                         input = gRacePauseMenuSelection;
                         if (input == 0) {
                             gRaceUpdatePaused = 0;
-                            enqueueSoundEffect(1, 0x32);
+                            enqueueSoundEffect(SFX_MENU_ACCEPT, SFX_PRIORITY_NORMAL);
                             input = gRacePauseMenuSelection;
                         }
                         if (input == 1) {
                             gRaceRumbleEnabled = 0;
                             gRaceUpdatePaused = 0;
                             gFramebufferSwapHold = 1;
-                            enqueueSoundEffect(1, 0x32);
+                            enqueueSoundEffect(SFX_MENU_ACCEPT, SFX_PRIORITY_NORMAL);
                             setCurrentGameTaskCallback(finalizeRaceExitFlow, 0);
                             return;
                         }
@@ -1006,7 +1006,7 @@ void updateRaceGameplayFlow(void) {
                             gRaceRumbleEnabled = 0;
                             gRaceUpdatePaused = 0;
                             gFramebufferSwapHold = 1;
-                            enqueueSoundEffect(1, 0x32);
+                            enqueueSoundEffect(SFX_MENU_ACCEPT, SFX_PRIORITY_NORMAL);
                             setCurrentGameTaskCallback(finalizeRaceExitFlow, 0);
                             return;
                         }
@@ -2488,18 +2488,18 @@ void updateRaceRecordSettingsFlow(void) {
         gMenuFadeAlpha = 0;
         pressedInput = gPlayerInputPressed[0];
         if ((pressedInput & (STICK_DOWN | D_JPAD)) && (gRaceLapCount != 9)) {
-            enqueueSoundEffect(0x19, 0x32);
+            enqueueSoundEffect(SFX_MENU_CURSOR, SFX_PRIORITY_NORMAL);
             gRaceLapCount += 1;
             pressedInput = gPlayerInputPressed[0];
         }
         if ((pressedInput & (STICK_UP | U_JPAD)) && (gRaceLapCount != 1)) {
-            enqueueSoundEffect(0x19, 0x32);
+            enqueueSoundEffect(SFX_MENU_CURSOR, SFX_PRIORITY_NORMAL);
             gRaceLapCount -= 1;
             pressedInput = gPlayerInputPressed[0];
         }
         if (pressedInput & (A_BUTTON | START_BUTTON)) {
             gMenuFlowState = 1;
-            enqueueSoundEffect(0x18, 0x32);
+            enqueueSoundEffect(SFX_CONFIRM, SFX_PRIORITY_NORMAL);
             requestMusicSequenceStop(0x3C);
             setCurrentGameTaskCallback(fadeOutRaceRecordSettingsFlow, 0);
         }

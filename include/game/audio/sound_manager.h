@@ -2,6 +2,7 @@
 #define SOUND_MANAGER_H
 
 #include "common.h"
+#include "game/audio/sound_ids.h"
 
 void initSoundManager(void);
 void updateSoundManager(void);
@@ -24,7 +25,14 @@ void enqueuePositionalSoundRequest(
 );
 void enqueuePlayerLoopingPositionalSoundRequest(s32 soundId, Vec3i *pos, s32 volume, s32 priority, f32 pitch, s16 mode);
 void playPendingPositionalSoundRequests(void);
-void enqueuePositionalSoundEffect(s16 soundId, Vec3i *pos, s16 volume, s16 distance);
-void enqueuePlayerPositionalSoundEffect(s16 soundId, Vec3i *pos, s16 volume, s16 distance, s16 arg4, s16 priority);
+void enqueuePositionalSoundEffect(s16 soundId, Vec3i *pos, s16 volume, s16 priority);
+void enqueuePlayerPositionalSoundEffect(
+    s16 soundId,
+    Vec3i *pos,
+    s16 volume,
+    s16 priority,
+    s16 playerIndex,
+    s16 minVolume
+);
 
 #endif

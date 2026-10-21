@@ -74,21 +74,39 @@ Vec3i gRacePlayerGroundProbeOffsets[] = {
 };
 
 s16 gRacePlayerVoiceSoundIds0[] = {
-    0x22, 0x22, 0x28, 0x28, 0x35, 0x35, 0x2E, 0x2E, 0x3B, 0x3B, 0x40, 0x40,
+    SFX_SLASH_TRICK, SFX_SLASH_TRICK, SFX_NANCY_TRICK, SFX_NANCY_TRICK, SFX_JAM_TRICK,      SFX_JAM_TRICK,
+    SFX_LINDA_TRICK, SFX_LINDA_TRICK, SFX_TOMMY_TRICK, SFX_TOMMY_TRICK, SFX_SHINOBIN_TRICK, SFX_SHINOBIN_TRICK,
 };
 
 s16 gRacePlayerVoiceSoundIds1[] = {
-    0x23, 0x23, 0x60, 0x29, 0x36, 0x36, 0x63, 0x2F, 0x3C, 0x3C, 0x40, 0x40,
+    SFX_SLASH_COMPLEX_TRICK, SFX_SLASH_COMPLEX_TRICK, SFX_NANCY_COMPLEX_TRICK_ALT, SFX_NANCY_COMPLEX_TRICK,
+    SFX_JAM_COMPLEX_TRICK,   SFX_JAM_COMPLEX_TRICK,   SFX_LINDA_COMPLEX_TRICK_ALT, SFX_LINDA_COMPLEX_TRICK,
+    SFX_TOMMY_COMPLEX_TRICK, SFX_TOMMY_COMPLEX_TRICK, SFX_SHINOBIN_TRICK,          SFX_SHINOBIN_TRICK,
 };
 
 s16 gRacePlayerVoiceSoundIds2[] = {
-    0x24, 0x5F, 0x62, 0x2A, 0x65, 0x37, 0x64, 0x30, 0x3D, 0x3D, 0x41, 0x41,
+    SFX_SLASH_HIT,     SFX_SLASH_HIT_ALT, SFX_NANCY_HIT_ALT, SFX_NANCY_HIT, SFX_JAM_HIT_ALT,  SFX_JAM_HIT,
+    SFX_LINDA_HIT_ALT, SFX_LINDA_HIT,     SFX_TOMMY_HIT,     SFX_TOMMY_HIT, SFX_SHINOBIN_HIT, SFX_SHINOBIN_HIT,
 };
 
-s16 gRacePlayerVoiceSoundIds4[] = { 0x27, 0x2D, 0x3A, 0x33, 0x3F, 0x43 };
-s16 gRacePlayerVoiceSoundIds5[] = { 0x25, 0x2C, 0x38, 0x32, 0x3E, 0x42 };
-s16 gRacePlayerVoiceSoundIds6[] = { 0x26, 0x2B, 0x39, 0x31, 0x3E, 0x42 };
-s16 gRacePlayerVoiceSoundIds7[] = { 0x26, 0x2B, 0x38, 0x32, 0x3E, 0x42, 0, 0, 0, 0, 0, 0 };
+s16 gRacePlayerVoiceSoundIds4[] = { SFX_SLASH_OBSTACLE_HIT, SFX_NANCY_OBSTACLE_HIT, SFX_JAM_OBSTACLE_HIT,
+                                    SFX_LINDA_OBSTACLE_HIT, SFX_TOMMY_OBSTACLE_HIT, SFX_SHINOBIN_OBSTACLE_HIT };
+s16 gRacePlayerVoiceSoundIds5[] = { SFX_SLASH_ATTACK_SUCCESS, SFX_NANCY_ATTACK_SUCCESS, SFX_JAM_ATTACK_SUCCESS,
+                                    SFX_LINDA_ATTACK_SUCCESS, SFX_TOMMY_CHEER,          SFX_SHINOBIN_CHEER };
+s16 gRacePlayerVoiceSoundIds6[] = { SFX_SLASH_CHEER, SFX_NANCY_CHEER, SFX_JAM_CHEER,
+                                    SFX_LINDA_CHEER, SFX_TOMMY_CHEER, SFX_SHINOBIN_CHEER };
+s16 gRacePlayerVoiceSoundIds7[] = { SFX_SLASH_CHEER,
+                                    SFX_NANCY_CHEER,
+                                    SFX_JAM_ATTACK_SUCCESS,
+                                    SFX_LINDA_ATTACK_SUCCESS,
+                                    SFX_TOMMY_CHEER,
+                                    SFX_SHINOBIN_CHEER,
+                                    SFX_NONE,
+                                    SFX_NONE,
+                                    SFX_NONE,
+                                    SFX_NONE,
+                                    SFX_NONE,
+                                    SFX_NONE };
 
 extern s8 gRacePlayerCount;
 extern s32 gMenuFlowState;
@@ -1628,82 +1646,82 @@ void addRacePlayerScore(RacePlayer *arg0, s32 arg1) {
 void enqueueRacePlayerVoiceSound(RacePlayer *player, s16 soundType) {
     if (player->soundDisabled == 0) {
         switch (soundType) {
-            case 0:
+            case RACE_VOICE_TRICK:
                 enqueuePlayerPositionalSoundEffect(
                     gRacePlayerVoiceSoundIds0[(randomNextMain() & 1) + (player->characterId * 2)],
                     &player->pos,
                     0x7F,
-                    0x5A,
+                    SFX_PRIORITY_HIGH,
                     (u16)player->playerIndex,
                     0
                 );
                 return;
-            case 1:
+            case RACE_VOICE_COMPLEX_TRICK:
                 enqueuePlayerPositionalSoundEffect(
                     gRacePlayerVoiceSoundIds1[(randomNextMain() & 1) + (player->characterId * 2)],
                     &player->pos,
                     0x7F,
-                    0x5A,
+                    SFX_PRIORITY_HIGH,
                     (u16)player->playerIndex,
                     0
                 );
                 return;
-            case 2:
+            case RACE_VOICE_HIT:
                 enqueuePlayerPositionalSoundEffect(
                     gRacePlayerVoiceSoundIds2[(randomNextMain() & 1) + (player->characterId * 2)],
                     &player->pos,
                     0x7F,
-                    0x5A,
+                    SFX_PRIORITY_HIGH,
                     (u16)player->playerIndex,
                     0
                 );
                 return;
-            case 3:
+            case RACE_VOICE_HIT_LOCAL:
                 enqueuePlayerPositionalSoundEffect(
                     gRacePlayerVoiceSoundIds2[(randomNextMain() & 1) + (player->characterId * 2)],
                     &player->pos,
                     0x7F,
-                    0x5A,
+                    SFX_PRIORITY_HIGH,
                     (u16)player->playerIndex,
                     0x60
                 );
                 return;
-            case 4:
+            case RACE_VOICE_OBSTACLE_HIT:
                 enqueuePlayerPositionalSoundEffect(
                     gRacePlayerVoiceSoundIds4[player->characterId],
                     &player->pos,
                     0x7F,
-                    0x5A,
+                    SFX_PRIORITY_HIGH,
                     (u16)player->playerIndex,
                     0
                 );
                 return;
-            case 5:
+            case RACE_VOICE_ATTACK_SUCCESS:
                 enqueuePlayerPositionalSoundEffect(
                     gRacePlayerVoiceSoundIds5[player->characterId],
                     &player->pos,
                     0x7F,
-                    0x5A,
+                    SFX_PRIORITY_HIGH,
                     (u16)player->playerIndex,
                     0
                 );
                 return;
-            case 6:
+            case RACE_VOICE_CHEER:
                 enqueuePlayerPositionalSoundEffect(
                     gRacePlayerVoiceSoundIds6[player->characterId],
                     &player->pos,
                     0x7F,
-                    0x5A,
+                    SFX_PRIORITY_HIGH,
                     (u16)player->playerIndex,
                     0
                 );
                 return;
-            case 7:
+            case RACE_VOICE_LANDING:
                 enqueuePlayerPositionalSoundEffect(
                     gRacePlayerVoiceSoundIds7[player->characterId],
                     &player->pos,
                     0x7F,
-                    0x5A,
+                    SFX_PRIORITY_HIGH,
                     (u16)player->playerIndex,
                     0
                 );

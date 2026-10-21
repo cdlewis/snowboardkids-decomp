@@ -384,7 +384,7 @@ void updateRaceCountdownGoPromptHold(RaceCountdownEffect *arg0) {
 void updateRaceCountdownReadyPromptIn(RaceCountdownEffect *arg0) {
     arg0->scaleStep++;
     if (arg0->scaleStep == 4) {
-        enqueueSoundEffect(0x4C, 0x5A);
+        enqueueSoundEffect(SFX_RACE_GO, SFX_PRIORITY_HIGH);
         arg0->timer = 0x14;
         setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceCountdownGoPromptHold);
     }
@@ -404,7 +404,7 @@ void updateRaceCountdownReadyPromptHold(RaceCountdownEffect *arg0) {
 
 void updateRaceCountdownInitialDelay(RaceCountdownEffect *arg0) {
     if ((--arg0->timer) == 0) {
-        enqueueSoundEffect(0x4B, 0x5A);
+        enqueueSoundEffect(SFX_RACE_READY, SFX_PRIORITY_HIGH);
         arg0->scaleStep = 4;
         arg0->timer = 0x3C;
         setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceCountdownReadyPromptHold);
@@ -575,7 +575,7 @@ void updateFinalLapPrompt(CallbackTask *arg0) {
 }
 
 void initFinalLapPrompt(CallbackTask *arg0) {
-    enqueueSoundEffect(0x52, 0x5A);
+    enqueueSoundEffect(SFX_FINAL_LAP, SFX_PRIORITY_HIGH);
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateFinalLapPrompt);
 }
 
@@ -1253,7 +1253,7 @@ void updateCourseGateOpening(RaceCourseGateEffect *arg0) {
                 0x1C,
                 &gCourseGateSoundParams[gRaceCourseIndex.signedValue].position,
                 0x7F,
-                0x32
+                SFX_PRIORITY_NORMAL
             );
             setCallbackTaskCallback(temp_s0, (CallbackTaskCallback)updateCourseGateClosing);
         }
@@ -1267,8 +1267,18 @@ void waitForCourseGateTrigger(RaceCourseGateEffect *arg0) {
         gMenuFlowState &= ~4;
         setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateCourseGateOpening);
         arg0->isOpen = 1;
-        enqueuePositionalSoundEffect(0x16, &gCourseGateSoundParams[gRaceCourseIndex.signedValue].position, 0x7F, 0x32);
-        enqueuePositionalSoundEffect(0x1B, &gCourseGateSoundParams[gRaceCourseIndex.signedValue].position, 0x7F, 0x32);
+        enqueuePositionalSoundEffect(
+            0x16,
+            &gCourseGateSoundParams[gRaceCourseIndex.signedValue].position,
+            0x7F,
+            SFX_PRIORITY_NORMAL
+        );
+        enqueuePositionalSoundEffect(
+            0x1B,
+            &gCourseGateSoundParams[gRaceCourseIndex.signedValue].position,
+            0x7F,
+            SFX_PRIORITY_NORMAL
+        );
     }
     addRenderCallback(&gRaceObjectRenderCallbackList, (RenderCallback)renderCourseGateObject, arg0);
 }

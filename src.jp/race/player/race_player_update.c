@@ -163,22 +163,22 @@ void updateRacePlayerMotionFeedback(RacePlayer *player) {
     }
 
     itemType = getRaceItemEffectType(player->unk330);
-    player->unk584 = 3;
+    player->unk584 = SFX_BOARD_GLIDE_LOOP;
     if (itemType == 1) {
-        player->unk584 = 0x1E;
+        player->unk584 = SFX_BREAKABLE_SURFACE_LOOP;
         player->unk582 = 0x7F;
         player->unk588 = 0.0f;
     }
     if (itemType == 2) {
-        player->unk584 = 4;
+        player->unk584 = SFX_BOARD_CONTACT_FALLBACK_LOOP;
     }
     if (3 == itemType) {
-        player->unk584 = 5;
+        player->unk584 = SFX_BOARD_SURFACE_SPRAY_LOOP;
     }
     if (4 == itemType) {
-        player->unk584 = 4;
+        player->unk584 = SFX_BOARD_CONTACT_FALLBACK_LOOP;
         if (player->unk330 == 0xD) {
-            player->unk584 = 6;
+            player->unk584 = SFX_BOARD_SURFACE_RUMBLE_LOOP;
             if (player->unk582 >= 0x51) {
                 player->rumbleTimer = 2;
                 player->rumblePatternId = 1;
@@ -187,7 +187,7 @@ void updateRacePlayerMotionFeedback(RacePlayer *player) {
         player->unk588 = 0.0f;
     }
     if (player->stateFlags & 0x2000000) {
-        player->unk584 = 4;
+        player->unk584 = SFX_BOARD_CONTACT_FALLBACK_LOOP;
     }
 }
 
@@ -220,7 +220,7 @@ void updateRacePlayerMode00Grounded(RacePlayer *player) {
         player->unk528 = 0;
         player->localVelocityX = 0;
         if (player->unk57B != 0) {
-            enqueueRacePlayerVoiceSound(player, 7);
+            enqueueRacePlayerVoiceSound(player, RACE_VOICE_LANDING);
             setRaceMotionAnimation(player, 0x22);
         }
     }
@@ -500,7 +500,7 @@ void updateRacePlayerMode00Grounded(RacePlayer *player) {
     player->pos.z += player->velocity.z;
     updateRacePlayerMotionFeedback(player);
     if (player->unk517 != 0) {
-        enqueueRacePlayerVoiceSound(player, 5);
+        enqueueRacePlayerVoiceSound(player, RACE_VOICE_ATTACK_SUCCESS);
     }
 }
 
@@ -542,7 +542,7 @@ void updateRacePlayerMode29Crash(RacePlayer *player) {
     player->unk578 = 6;
     updateRacePlayerMotionFeedback(player);
     if (player->unk517 != 0) {
-        enqueueRacePlayerVoiceSound(player, 5);
+        enqueueRacePlayerVoiceSound(player, RACE_VOICE_ATTACK_SUCCESS);
     }
 }
 
@@ -610,7 +610,7 @@ void updateRacePlayerMode01JumpStart(RacePlayer *player) {
     player->pos.z += player->velocity.z;
     player->verticalVelocityLimit = yVel;
     if (player->unk517 != 0) {
-        enqueueRacePlayerVoiceSound(player, 5);
+        enqueueRacePlayerVoiceSound(player, RACE_VOICE_ATTACK_SUCCESS);
     }
 }
 
@@ -674,7 +674,7 @@ void updateRacePlayerMode22Airborne(RacePlayer *player) {
     player->pos.z += player->velocity.z;
     player->verticalVelocityLimit = yVel;
     if (player->unk517 != 0) {
-        enqueueRacePlayerVoiceSound(player, 5);
+        enqueueRacePlayerVoiceSound(player, RACE_VOICE_ATTACK_SUCCESS);
     }
 }
 
@@ -783,7 +783,7 @@ void updateRacePlayerAirborneLaunch(RacePlayer *player) {
     updateRacePlayerSurfaceCue(player);
     updateRacePlayerMotionFeedback(player);
     if (player->unk517 != 0) {
-        enqueueRacePlayerVoiceSound(player, 5);
+        enqueueRacePlayerVoiceSound(player, RACE_VOICE_ATTACK_SUCCESS);
     }
 }
 
@@ -3274,7 +3274,7 @@ void updateRacePlayerMode10TerrainCrashSlide(RacePlayer *player) {
     if ((stateFlags & 1) == 0) {
         updateRacePlayerLocalVelocityNoVerticalOffset(player, 0, 0, 0, 0);
         player->unk582 = 0x100;
-        player->unk584 = 8;
+        player->unk584 = SFX_CRASH_SLIDE_LOOP;
         player->unk588 = 0.0f;
         stateFlags = player->stateFlags;
     }
@@ -3350,7 +3350,7 @@ void updateRacePlayerMode12LaunchRecover(RacePlayer *player) {
 
     if (grounded == 0) {
         updateRacePlayerMotionFeedback(player);
-        if ((player->unk584 != 6) && (player->unk584 != 0x1E)) {
+        if ((player->unk584 != SFX_BOARD_SURFACE_RUMBLE_LOOP) && (player->unk584 != SFX_BREAKABLE_SURFACE_LOOP)) {
             player->unk588 = -6.0f;
         }
     }
@@ -3491,7 +3491,7 @@ void updateRacePlayerMode14PushHit(RacePlayer *player) {
         player->stateFlags = stateFlags & ~0x200;
         updateRacePlayerLocalVelocityNoVerticalOffset(player, 0, 0, 0, 0);
         player->unk582 = 0x100;
-        player->unk584 = 8;
+        player->unk584 = SFX_CRASH_SLIDE_LOOP;
         player->unk588 = 0.0f;
     } else {
         player->stateFlags = stateFlags | 0x200;
@@ -3804,7 +3804,7 @@ void updateRacePlayerMode40Stun(RacePlayer *player) {
         updateRacePlayerLocalVelocityNoVerticalOffset(player, 0, 0, 0, 0);
         player->stateFlags &= ~0x200;
         player->unk582 = 0x100;
-        player->unk584 = 8;
+        player->unk584 = SFX_CRASH_SLIDE_LOOP;
         player->unk588 = 0.0f;
     } else {
         player->stateFlags = stateFlags | 0x200;
@@ -4349,7 +4349,7 @@ void updateRacePlayerMode32Character0(RacePlayer *player) {
         }
         if (player->stateTimer == 0) {
             if (player->updateTimer == 1) {
-                enqueueRacePlayerVoiceSound(player, 6);
+                enqueueRacePlayerVoiceSound(player, RACE_VOICE_CHEER);
                 player->updateTimer++;
             }
             player->stateTimer = 0x14;
@@ -4372,7 +4372,7 @@ void updateRacePlayerMode32Character1(RacePlayer *player) {
         }
         if (player->stateTimer == 0) {
             if (player->updateTimer == 1) {
-                enqueueRacePlayerVoiceSound(player, 6);
+                enqueueRacePlayerVoiceSound(player, RACE_VOICE_CHEER);
                 player->updateTimer++;
             }
             setRaceMotionAnimation(player, 0x25);
@@ -4394,7 +4394,7 @@ void updateRacePlayerMode32Character2(RacePlayer *player) {
         }
         if (player->stateTimer == 0) {
             if (player->updateTimer == 1) {
-                enqueueRacePlayerVoiceSound(player, 6);
+                enqueueRacePlayerVoiceSound(player, RACE_VOICE_CHEER);
                 player->updateTimer++;
             }
             player->stateTimer = 0x14;
@@ -4417,7 +4417,7 @@ void updateRacePlayerMode32Character3(RacePlayer *player) {
         }
         if (player->stateTimer == 0) {
             if (player->updateTimer == 1) {
-                enqueueRacePlayerVoiceSound(player, 6);
+                enqueueRacePlayerVoiceSound(player, RACE_VOICE_CHEER);
                 player->updateTimer++;
             }
             player->stateTimer = 0;
@@ -4440,7 +4440,7 @@ void updateRacePlayerMode32Character4(RacePlayer *player) {
         }
         if (player->stateTimer == 0) {
             if (player->updateTimer == 1) {
-                enqueueRacePlayerVoiceSound(player, 6);
+                enqueueRacePlayerVoiceSound(player, RACE_VOICE_CHEER);
                 player->updateTimer++;
             }
             player->stateTimer = 0x32;
@@ -4454,7 +4454,7 @@ void updateRacePlayerMode32Character4(RacePlayer *player) {
 void updateRacePlayerMode32Character5(RacePlayer *player) {
     if (player->updateTimer == 0) {
         player->updateTimer++;
-        enqueueRacePlayerVoiceSound(player, 6);
+        enqueueRacePlayerVoiceSound(player, RACE_VOICE_CHEER);
         player->stateTimer = 0x1E;
         setRaceMotionAnimation(player, 0x23);
     }
@@ -4610,12 +4610,19 @@ void updateRacePlayersPostUpdate(void) {
                     player->unk584,
                     soundPos,
                     player->unk582,
-                    0x46,
+                    SFX_PRIORITY_PLAYER_LOOP,
                     player->unk588,
                     i
                 );
             } else {
-                enqueuePlayerLoopingPositionalSoundRequest(player->unk584, soundPos, 0, 0x46, player->unk588, i);
+                enqueuePlayerLoopingPositionalSoundRequest(
+                    player->unk584,
+                    soundPos,
+                    0,
+                    SFX_PRIORITY_PLAYER_LOOP,
+                    player->unk588,
+                    i
+                );
             }
 
             *nextSoundPos = *soundPos;
@@ -4747,26 +4754,26 @@ void updateRacePlayerVoiceSounds(RacePlayer *player) {
         playerIndex = player2->playerIndex;
         if (gRacePlayerHudStatuses[playerIndex].active != 0) {
             spawnRaceUiScorePopup((void *)soundId, (s16)playerIndex);
-            soundType = 0x4D;
+            soundType = SFX_TRICK_SCORE_LOW;
             if (soundId >= 0x64) {
-                soundType = 0x4E;
+                soundType = SFX_TRICK_SCORE_MEDIUM;
             }
             if (soundId >= 0x78) {
-                soundType = 0x4F;
+                soundType = SFX_TRICK_SCORE_HIGH;
             }
             if (soundId >= 0xC8) {
-                soundType = 0x51;
+                soundType = SFX_TRICK_BONUS;
             }
             if (soundId >= 0x12C) {
-                soundType = 0x50;
+                soundType = SFX_TRICK_SCORE_TOP;
             }
-            enqueueSoundEffect((s16)soundType, 0x5A);
+            enqueueSoundEffect((s16)soundType, SFX_PRIORITY_HIGH);
         }
     }
     if (gRaceSplitscreenMode == 1) {
         if (gRaceTypeSelection == 2) {
             if (score != 0) {
-                soundType = 0x4D;
+                soundType = SFX_TRICK_SCORE_LOW;
                 if (score >= 0x2710) {
                     score = 0x270F;
                 }
@@ -4779,26 +4786,26 @@ void updateRacePlayerVoiceSounds(RacePlayer *player) {
                     player->trickAttackBestMakeCount = player2->trickAttackMakeCount;
                 }
                 if (score >= 0xA) {
-                    soundType = 0x4E;
+                    soundType = SFX_TRICK_SCORE_MEDIUM;
                 }
                 if (score >= 0xF) {
-                    soundType = 0x4F;
+                    soundType = SFX_TRICK_SCORE_HIGH;
                 }
                 if (score >= 0x14) {
-                    soundType = 0x51;
+                    soundType = SFX_TRICK_BONUS;
                 }
                 if (score >= 0x28) {
-                    soundType = 0x50;
+                    soundType = SFX_TRICK_SCORE_TOP;
                 }
                 if (player2->trickAttackCompletedTrickMask == 0x3FE) {
                     player2->trickAttackPointTotal += 0x12C;
                     player2->trickAttackCompletedTrickMask = 0x3FF;
-                    soundType = 0x51;
+                    soundType = SFX_TRICK_BONUS;
                     spawnRaceUiTrickScorePopup((void *)score, 1);
                 } else {
                     spawnRaceUiTrickScorePopup((void *)score, 0);
                 }
-                enqueueSoundEffect((s16)soundType, 0x5A);
+                enqueueSoundEffect((s16)soundType, SFX_PRIORITY_HIGH);
                 if (player2->trickAttackPointTotal >= 0x2710) {
                     player2->trickAttackPointTotal = 0x270F;
                 }
@@ -4823,7 +4830,7 @@ void updateRacePlayerLoopingSound(RacePlayer *player) {
         player->rumblePatternId = 0;
     }
     if (player->soundDisabled == 0) {
-        enqueuePositionalSoundEffect(0x21, (Vec3i *)&player->pos.x, (s16)v0, 0x32);
+        enqueuePositionalSoundEffect(SFX_PLAYER_DESCENT, (Vec3i *)&player->pos.x, (s16)v0, SFX_PRIORITY_NORMAL);
     }
 }
 
@@ -4840,7 +4847,7 @@ void updateRacePlayerPostUpdateMode22(RacePlayer *player) {
             player->updateState = 0;
             player->updateTimer = 0;
             player->stateFlags = stateFlags & ~0x200;
-            enqueueRacePlayerVoiceSound(player, 2);
+            enqueueRacePlayerVoiceSound(player, RACE_VOICE_HIT);
         } else {
             player->stateFlags = stateFlags & ~0x200;
             if (tryStartRacePlayerCourseObjectMode(player->playerIndex) != 0) {
@@ -4880,7 +4887,7 @@ void updateRacePlayerPostUpdateAirborneTrick(RacePlayer *player) {
             player->updateState = 0;
             player->updateTimer = 0;
             player->stateFlags = stateFlags & ~0x200;
-            enqueueRacePlayerVoiceSound(player, 2);
+            enqueueRacePlayerVoiceSound(player, RACE_VOICE_HIT);
         } else {
             player->stateFlags = stateFlags & ~0x200;
             if (tryStartRacePlayerCourseObjectMode(player->playerIndex) != 0) {
@@ -4937,14 +4944,14 @@ void updateRacePlayerPostUpdateMode29(RacePlayer *player) {
                 player->trickAttackPointTotal = 0x270F;
             }
             createCallbackTaskPreservingArgs((CallbackTaskCallback)initRaceUiCrashScorePopup, 0, 0x64);
-            enqueueSoundEffect(0x51, 0x32);
+            enqueueSoundEffect(SFX_TRICK_BONUS, SFX_PRIORITY_NORMAL);
         }
         if (gRaceSplitscreenMode == 0) {
             addRacePlayerScore(player, 0x12C);
             playerIndex = player->playerIndex;
             if (gRacePlayerHudStatuses[playerIndex].active != 0) {
                 spawnRaceUiScorePopup((void *)0x12C, (s16)playerIndex);
-                enqueueSoundEffect(0x51, 0x32);
+                enqueueSoundEffect(SFX_TRICK_BONUS, SFX_PRIORITY_NORMAL);
             }
         }
     }

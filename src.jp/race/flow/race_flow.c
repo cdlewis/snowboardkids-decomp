@@ -2330,18 +2330,18 @@ void updateRaceRecordSettingsFlow(void) {
         gMenuFadeAlpha = 0;
         pressedInput = gPlayerInputPressed[0];
         if ((pressedInput & (STICK_DOWN | D_JPAD)) && (gRaceLapCount != 9)) {
-            enqueueSoundEffect(0x19, 0x32);
+            enqueueSoundEffect(SFX_MENU_CURSOR, SFX_PRIORITY_NORMAL);
             gRaceLapCount += 1;
             pressedInput = gPlayerInputPressed[0];
         }
         if ((pressedInput & (STICK_UP | U_JPAD)) && (gRaceLapCount != 1)) {
-            enqueueSoundEffect(0x19, 0x32);
+            enqueueSoundEffect(SFX_MENU_CURSOR, SFX_PRIORITY_NORMAL);
             gRaceLapCount -= 1;
             pressedInput = gPlayerInputPressed[0];
         }
         if (pressedInput & (A_BUTTON | START_BUTTON)) {
             gMenuFlowState = 1;
-            enqueueSoundEffect(0x18, 0x32);
+            enqueueSoundEffect(SFX_CONFIRM, SFX_PRIORITY_NORMAL);
             requestMusicSequenceStop(0x3C);
             setCurrentGameTaskCallback(fadeOutRaceRecordSettingsFlow, 0);
         }

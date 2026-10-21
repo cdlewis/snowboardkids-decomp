@@ -149,7 +149,7 @@ void updateCharacterSelectMenu(void) {
             (gCharacterSelectHudState.bannerAlpha == 0x100)) {
             if ((gPlayerInputPressed[0] & A_BUTTON) || (gPlayerInputPressed[0] & START_BUTTON)) {
                 gCharacterSelectHudState.phase = CHARACTER_SELECT_PHASE_PROMPT_EXIT;
-                enqueueSoundEffect(1, 0x32);
+                enqueueSoundEffect(SFX_MENU_ACCEPT, SFX_PRIORITY_NORMAL);
                 for (playerIndex = 0; playerIndex < gPlayerCount; playerIndex++) {
                     if ((gControllerPakStatusCodes[playerIndex] == CONTROLLER_PAK_STATUS_USE_EXISTING_SAVE) ||
                         (gControllerPakStatusCodes[playerIndex] == CONTROLLER_PAK_STATUS_READY)) {
@@ -236,7 +236,7 @@ void updateCharacterSelectMenu(void) {
                 }
 
                 if (selection != gCharacterSelectHighlightedRosterIndices[playerIndex]) {
-                    enqueueSoundEffect(0x19, 0x32);
+                    enqueueSoundEffect(SFX_MENU_CURSOR, SFX_PRIORITY_NORMAL);
                 }
                 gCharacterSelectHighlightedRosterIndices[playerIndex] = selection;
                 gRacePlayers[playerIndex].selectedCharacterId =
@@ -247,7 +247,7 @@ void updateCharacterSelectMenu(void) {
                     if (gRacePlayers[playerIndex].menuState == 0) {
                         enqueueSoundEffect(
                             gCharacterSelectVoiceSoundIds[gCharacterSelectHighlightedRosterIndices[playerIndex]],
-                            0x32
+                            SFX_PRIORITY_NORMAL
                         );
                         gRacePlayers[playerIndex].menuState = 1;
                         gCharacterSelectHudState.selectedTokenState[playerIndex] = CHARACTER_SELECT_TOKEN_START;
@@ -298,12 +298,12 @@ void updateCharacterSelectConfirmationMenu(void) {
         }
 
         if (selection != oldSelection) {
-            enqueueSoundEffect(0x19, 0x32);
+            enqueueSoundEffect(SFX_MENU_CURSOR, SFX_PRIORITY_NORMAL);
             pressedInput = gPlayerInputPressed[0];
         }
 
         if ((pressedInput & A_BUTTON) || (pressedInput & START_BUTTON)) {
-            enqueueSoundEffect(0x18, 0x32);
+            enqueueSoundEffect(SFX_CONFIRM, SFX_PRIORITY_NORMAL);
             if (gCharacterSelectHudState.confirmationChoice == 0) {
                 setCurrentGameTaskCallback(fadeOutCharacterSelectMenu, 0);
                 gCharacterSelectHudState.cursorX = 0x8C;
@@ -319,7 +319,7 @@ void updateCharacterSelectConfirmationMenu(void) {
                 gCharacterSelectHudState.bannerAlpha = 0;
             }
         } else if (pressedInput & B_BUTTON) {
-            enqueueSoundEffect(0x18, 0x32);
+            enqueueSoundEffect(SFX_CONFIRM, SFX_PRIORITY_NORMAL);
             for (i = 0; i < gPlayerCount; i++) {
                 gRacePlayers[i].menuState = 0;
                 gCharacterSelectHudState.selectedTokenState[i] = 0;

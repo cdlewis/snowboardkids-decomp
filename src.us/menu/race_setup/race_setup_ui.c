@@ -359,7 +359,7 @@ void updateRaceSetupPlayerCountPrompt(MenuIntroActor *arg0) {
                 actor->y -= 0x10;
                 if (actor->y == -0x5C) {
                     actor->child = createCallbackTask((CallbackTaskCallback)initRaceSetupOnePlayerOption, 0, 0x63);
-                    enqueueSoundEffect(1, 0x32);
+                    enqueueSoundEffect(SFX_MENU_ACCEPT, SFX_PRIORITY_NORMAL);
                     actor->state = 3;
                 }
                 alpha = actor->alpha;
@@ -492,7 +492,7 @@ void updateRaceSetupOnePlayerOption(MenuItemActor *arg0) {
             arg0->x -= 0x20;
             if (arg0->x == 0x70) {
                 arg0->child = createCallbackTask((CallbackTaskCallback)initRaceSetupTwoPlayerOption, 0, 0x63);
-                enqueueSoundEffect(1, 0x32);
+                enqueueSoundEffect(SFX_MENU_ACCEPT, SFX_PRIORITY_NORMAL);
             }
             if (arg0->x == -0x50) {
                 arg0->state = 1;
@@ -626,7 +626,7 @@ void updateRaceSetupTwoPlayerOption(MenuItemActor *arg0) {
             arg0->x -= 0x20;
             if (arg0->x == 0x70) {
                 arg0->child = createCallbackTask((CallbackTaskCallback)initRaceSetupThreePlayerOption, 0, 0x63);
-                enqueueSoundEffect(1, 0x32);
+                enqueueSoundEffect(SFX_MENU_ACCEPT, SFX_PRIORITY_NORMAL);
             }
             if (arg0->x == -0x50) {
                 arg0->state = 1;
@@ -754,7 +754,7 @@ void updateRaceSetupThreePlayerOption(MenuItemActor *arg0) {
             arg0->x -= 0x20;
             if (arg0->x == 0x70) {
                 arg0->child = createCallbackTask((CallbackTaskCallback)initRaceSetupFourPlayerOption, 0, 0x63);
-                enqueueSoundEffect(1, 0x32);
+                enqueueSoundEffect(SFX_MENU_ACCEPT, SFX_PRIORITY_NORMAL);
             }
             if (arg0->x == -0x50) {
                 arg0->state = 1;

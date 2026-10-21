@@ -120,14 +120,14 @@ void updateRaceSplitscreenSelectMenu(void) {
                         }
                     }
                     if (oldSelection != gRaceSplitscreenMode) {
-                        enqueueSoundEffect(0x19, 0x32);
+                        enqueueSoundEffect(SFX_MENU_CURSOR, SFX_PRIORITY_NORMAL);
                         pressedInput = gPlayerInputPressed[0];
                     }
                     if ((pressedInput & START_BUTTON) || ((pressedInput & A_BUTTON) && (gMenuFlowState == 5))) {
                         if ((gRaceSplitscreenMode == 3) && (gRacePlayers[0].selectedCharacterId == 5)) {
-                            enqueueSoundEffect(0x46, 0x32);
+                            enqueueSoundEffect(SFX_MENU_BACK, SFX_PRIORITY_NORMAL);
                         } else {
-                            enqueueSoundEffect(0x18, 0x32);
+                            enqueueSoundEffect(SFX_CONFIRM, SFX_PRIORITY_NORMAL);
                             gMenuSelectionConfirmTimer = 1;
                             gRaceSplitscreenSelectCursorTarget.state = 2;
                             gRaceSplitscreenSelectCursorTarget.alphaTarget = 0x100;
@@ -142,7 +142,7 @@ void updateRaceSplitscreenSelectMenu(void) {
 
         confirmTimer = gMenuSelectionConfirmTimer;
         if (((gPlayerInputPressed[0] & B_BUTTON) && (gMenuFlowState == 5)) && (confirmTimer == 0)) {
-            enqueueSoundEffect(1, 0x32);
+            enqueueSoundEffect(SFX_MENU_ACCEPT, SFX_PRIORITY_NORMAL);
             gMenuSelectionConfirmTimer = 1;
             gRaceSplitscreenSelectCursorTarget.state = 2;
             gRaceSplitscreenSelectCursorTarget.alphaTarget = 0x100;

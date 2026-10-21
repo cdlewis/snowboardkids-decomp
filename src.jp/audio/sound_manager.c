@@ -603,7 +603,8 @@ void updatePlayerLoopingPositionalSound(s32 soundId, s32 mode, s32 volume, f32 p
 
         if (*(&gPlayerLoopingSoundHandle0 + mode) == 0) {
             *(&gPlayerLoopingSoundId0 + mode) = soundId;
-            *(&gPlayerLoopingSoundHandle0 + mode) = MusStartEffect2(soundId, adjustedVolume, 0x80, 0, 0x46);
+            *(&gPlayerLoopingSoundHandle0 + mode) =
+                MusStartEffect2(soundId, adjustedVolume, 0x80, 0, SFX_PRIORITY_PLAYER_LOOP);
             MusHandleSetFreqOffset(*(&gPlayerLoopingSoundHandle0 + mode), pitch);
         } else {
             MusHandleSetVolume(*(&gPlayerLoopingSoundHandle0 + mode), adjustedVolume);
@@ -624,7 +625,8 @@ void playPlayerPositionalSound(s32 soundId, s32 playerIndex, s32 volume, s32 min
             MusHandleStop(gPlayerPositionalSoundHandle0[playerIndex], 0);
             gPlayerPositionalSoundHandle0[playerIndex] = 0;
         }
-        gPlayerPositionalSoundHandle0[playerIndex] = MusStartEffect2(soundId, adjustedVolume, 0x80, 0, 0x5A);
+        gPlayerPositionalSoundHandle0[playerIndex] =
+            MusStartEffect2(soundId, adjustedVolume, 0x80, 0, SFX_PRIORITY_HIGH);
     }
 }
 
@@ -638,7 +640,7 @@ void updateSingleLoopingPositionalSound(s16 soundId, Vec3i *pos, s16 volume) {
             gSharedLoopingPositionalSoundHandle = 0;
         }
     } else if (gSharedLoopingPositionalSoundHandle == 0) {
-        gSharedLoopingPositionalSoundHandle = MusStartEffect2(soundId, adjustedVolume, 0x80, 0, 0x32);
+        gSharedLoopingPositionalSoundHandle = MusStartEffect2(soundId, adjustedVolume, 0x80, 0, SFX_PRIORITY_NORMAL);
     } else {
         MusHandleSetVolume(gSharedLoopingPositionalSoundHandle, adjustedVolume);
     }
