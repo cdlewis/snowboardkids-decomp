@@ -1932,27 +1932,27 @@ segments:
 
   - type: replay
     start: 0x24DBE0
-    name: _24DBE0
+    name: MAIN_MENU_DEMO_ROOKIE_MOUNTAIN_REPLAY
     vram: 0
 
   - type: replay
     start: 0x250260
-    name: _250260
+    name: MAIN_MENU_DEMO_BIG_SNOWMAN_REPLAY
     vram: 0
 
   - type: replay
     start: 0x2521F0
-    name: _2521F0
+    name: MAIN_MENU_DEMO_SUNSET_ROCK_REPLAY
     vram: 0
 
   - type: replay
     start: 0x254380
-    name: _254380
+    name: MAIN_MENU_DEMO_ANIMAL_LAND_REPLAY
     vram: 0
 
   - type: replay
     start: 0x256420
-    name: _256420
+    name: MAIN_MENU_DEMO_GRASS_VALLEY_REPLAY
     vram: 0
 
   - type: replay
