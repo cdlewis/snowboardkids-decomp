@@ -266,7 +266,7 @@ extern s16 gRaceLapCount;
 
 extern Vec3i gRaceUiStunIconHeadOffset;
 
-extern u32 *gRaceCourseRankModelDisplayLists[];
+extern Gfx *gRaceCourseRankModelDisplayLists[RACE_COURSE_COUNT * 4];
 
 extern RaceCourseScrollingTextureInit gRaceCourseScrollingTextureInit[RACE_COURSE_SCROLLING_TEXTURE_COUNT];
 

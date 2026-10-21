@@ -234,7 +234,7 @@ typedef struct RaceUiRankParticleActor {
     /* 0x18 */ Vec3i pos;
     /* 0x24 */ Transform3D copyBlock;
     /* 0x44 */ void *matrix;
-    /* 0x48 */ u32 *displayLists[2];
+    /* 0x48 */ Gfx *displayLists[2];
     /* 0x50 */ u8 matrixDirty;
 } RaceUiRankParticleActor;
 
