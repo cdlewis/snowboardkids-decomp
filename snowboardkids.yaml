@@ -344,7 +344,7 @@ segments:
       - [0xDFF40, .data, ultra/io/vitbl]
       - [0xE0C60, .data, ultra/audio/sl]
       - [0xE0C70, .data, ultra/io/aisetnextbuf]
-      - [0xE0C80, data]
+      - [0xE0C80, .data, ultra/os/thread]
       - [0xE0CA0, .data, ultra/io/siacs]
       - [0xE0CB0, .data, ultra/os/exceptasm]
       - [0xE0CD0, .data, ultra/libc/xprintf]
