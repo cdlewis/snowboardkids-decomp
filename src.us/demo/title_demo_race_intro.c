@@ -61,7 +61,7 @@ void initTitleDemoRaceIntro(void) {
     s32 five3 = RACE_PLAYER_INPUT_REPLAY;
     s32 playerOne;
 
-    gRaceCourseIndex.signedValue = 0;
+    gRaceCourseIndex.signedValue = RACE_COURSE_BIG_SNOWMAN;
     playerOne = 1;
     gRaceUpdatePaused = 0;
     gRaceCameraModeChangeDisabled = 0;

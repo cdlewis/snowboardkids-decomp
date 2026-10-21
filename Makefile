@@ -230,6 +230,7 @@ LINKER_SCRIPTS = linker_scripts/hardware_regs.ld linker_scripts/n64_os_syms.ld \
                  linker_scripts/game_syms.jp.ld \
                  undefined_funcs_auto.jp.txt undefined_syms_auto.jp.txt
 endif
+LINKER_SCRIPTS += linker_scripts/race_graphics_bundles.ld
 LDFLAGS        = -T $(LD_SCRIPT) -Map $(TARGET).map \
                  $(foreach ld,$(LINKER_SCRIPTS),-T $(ld)) \
                  --no-check-sections

@@ -881,7 +881,7 @@ void getRaceCourseTargetPositionAhead(s32 arg0, s32 arg1, s32 arg2, s32 *arg3, s
             projected += 0xC00000;
             *arg3 = (((s64)(-gRaceCourseSurfaceAngleSin)) * projected) / 0x1000;
             *arg4 = (((s64)gRaceCourseSurfaceAngleCos) * projected) / 0x1000;
-        } else if ((gRaceCourseIndex.signedValue == 3) && ((arg0 == 0x11D) || (arg0 == 0x11E))) {
+        } else if ((gRaceCourseIndex.signedValue == RACE_COURSE_GRASS_VALLEY) && ((arg0 == 0x11D) || (arg0 == 0x11E))) {
             projected += 0xC00000;
             *arg3 = (((s64)(-gRaceCourseSurfaceAngleSin)) * projected) / 0x1000;
             *arg4 = (((s64)gRaceCourseSurfaceAngleCos) * projected) / 0x1000;

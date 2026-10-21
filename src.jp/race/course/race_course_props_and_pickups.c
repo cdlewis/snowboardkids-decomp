@@ -1611,7 +1611,7 @@ void updateRacePickupIdle(RacePickupActor *arg0) {
                 }
                 // Course index 8 special case, CPU opponents only. When a CPU's item roll
                 // lands on rock, there is a 255/256 chance to replace it with invisibility.
-                if ((gRaceCourseIndex.signedValue == 8) && (player->isCpu != 0) && (player->itemType == RACE_ITEM_ROCK)) {
+                if ((gRaceCourseIndex.signedValue == RACE_COURSE_NINJA_LAND) && (player->isCpu != 0) && (player->itemType == RACE_ITEM_ROCK)) {
                     if (randomNextMain() != 0) {
                         player->itemType = RACE_ITEM_INVISIBLE;
                     }

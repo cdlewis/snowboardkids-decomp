@@ -352,7 +352,7 @@ void initRacePlayer(RacePlayer *player) {
     if ((gRaceSplitscreenMode == 1) && (gRaceTypeSelection == 1)) {
         player->shieldShotCount = 10;
     }
-    if (gRaceCourseIndex.signedValue == 9) {
+    if (gRaceCourseIndex.signedValue == RACE_COURSE_ROOKIE_MOUNTAIN) {
         player->pos.z = -0xBD0000;
     }
     player->collisionCenterOffset = 0xC0000;

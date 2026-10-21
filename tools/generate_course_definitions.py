@@ -109,6 +109,8 @@ def render_asset_declarations(courses: list[dict]) -> str:
             asset = course["assets"][asset_kind]
             if asset is not None:
                 lines.append(f"USE_ASSET({asset['symbol']});")
+                if asset_kind == "graphics":
+                    lines.append(f"USE_ASSET({asset['symbol']}_BUNDLE);")
     return "\n".join(lines) + "\n"
 
 

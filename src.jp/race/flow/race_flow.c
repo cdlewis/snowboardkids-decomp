@@ -286,7 +286,7 @@ void initNewGameSaveData(void) {
     gRacePlayers[1].unk18 = 0;
     gRacePlayers[2].unk18 = 0;
     gRacePlayers[3].unk18 = 0;
-    gRaceCourseIndex.signedValue = 0;
+    gRaceCourseIndex.signedValue = RACE_COURSE_BIG_SNOWMAN;
     gRaceSplitscreenMode = 0;
     gRaceCameraModeChangeDisabled = 0;
     setCurrentGameTaskCallback(openRaceSetupMenuFlow, 0);
@@ -577,44 +577,44 @@ void initRaceSceneFlow(void) {
         }
 
         switch (gRaceCourseIndex.signedValue) {
-            case 0:
+            case RACE_COURSE_BIG_SNOWMAN:
                 replayRecordFlag = &gGameSaveDataBuffer[0].replaySlots[0].length;
                 break;
 
-            case 1:
+            case RACE_COURSE_SUNSET_ROCK:
                 replayRecordFlag = &gGameSaveDataBuffer[0].replaySlots[1].length;
                 break;
 
-            case 2:
+            case RACE_COURSE_NIGHT_HIGHWAY:
                 replayRecordFlag = &gGameSaveDataBuffer[0].replaySlots[2].length;
                 break;
 
-            case 3:
+            case RACE_COURSE_GRASS_VALLEY:
                 replayRecordFlag = &gGameSaveDataBuffer[0].replaySlots[3].length;
                 break;
 
-            case 4:
+            case RACE_COURSE_DIZZY_LAND:
                 replayRecordFlag = &gGameSaveDataBuffer[0].replaySlots[4].length;
                 break;
 
-            case 5:
+            case RACE_COURSE_QUICKSAND_VALLEY:
                 replayRecordFlag = &gGameSaveDataBuffer[0].replaySlots[5].length;
                 break;
 
-            case 6:
+            case RACE_COURSE_SILVER_MOUNTAIN:
                 replayRecordFlag = &gGameSaveDataBuffer[0].replaySlots[6].length;
                 break;
 
-            case 8:
+            case RACE_COURSE_NINJA_LAND:
                 replayRecordFlag = &gGameSaveDataBuffer[0].replaySlots[7].length;
                 break;
 
-            case 9:
+            case RACE_COURSE_ROOKIE_MOUNTAIN:
                 replayRecordFlag = &gGameSaveDataBuffer[0].replaySlots[8].length;
                 break;
         }
 
-        if ((gRaceCourseIndex.signedValue != 7) && ((*replayRecordFlag) != 0)) {
+        if ((gRaceCourseIndex.signedValue != RACE_COURSE_ANIMAL_LAND) && ((*replayRecordFlag) != 0)) {
             gAssetHandles[0x7] = allocRelocatableHeapBlock(0x34CC);
             loadCurrentRaceRecordReplayData();
             history = getRelocatableHeapBlockBase(gAssetHandles[0x7]);
@@ -638,7 +638,7 @@ void initRaceSceneFlow(void) {
     resetRaceCameras();
     resetAllViewports();
 
-    if (gRaceCourseIndex.signedValue != 6) {
+    if (gRaceCourseIndex.signedValue != RACE_COURSE_SILVER_MOUNTAIN) {
         configureViewport(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.3333334f);
     } else {
         configureRaceViewport(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.3333334f);
@@ -701,7 +701,7 @@ void fadeInRaceGameplayViewports(void) {
             createCallbackTask((CallbackTaskCallback)initRaceStartOverlay, 6, 0x64);
             switch (gPlayerCount & 0xFFFFFFFF) {
                 case 1:
-                    if (gRaceCourseIndex.signedValue != 6) {
+                    if (gRaceCourseIndex.signedValue != RACE_COURSE_SILVER_MOUNTAIN) {
                         configureViewport(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.3333334f);
                     } else {
                         configureRaceViewport(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.3333334f);
@@ -710,7 +710,7 @@ void fadeInRaceGameplayViewports(void) {
                     gFramebufferRenderInterval.value = 0;
                     break;
                 case 2:
-                    if (gRaceCourseIndex.signedValue != 6) {
+                    if (gRaceCourseIndex.signedValue != RACE_COURSE_SILVER_MOUNTAIN) {
                         configureViewport(0, 0xA0, 0x43, 0x120, 0x68, 0x140, 0x78, 2.6666667f);
                         configureViewport(1, 0xA0, 0xAD, 0x120, 0x68, 0x140, 0x78, 2.6666667f);
                     } else {
@@ -722,7 +722,7 @@ void fadeInRaceGameplayViewports(void) {
                     gFramebufferRenderInterval.value = 1;
                     break;
                 case 3:
-                    if (gRaceCourseIndex.signedValue != 6) {
+                    if (gRaceCourseIndex.signedValue != RACE_COURSE_SILVER_MOUNTAIN) {
                         configureViewport(0, 0x57, 0x43, 0x90, 0x68, 0xA0, 0x78, 1.3333334f);
                         configureViewport(1, 0x57, 0xAD, 0x90, 0x68, 0xA0, 0x78, 1.3333334f);
                         configureViewport(2, 0xE9, 0x43, 0x90, 0x68, 0xA0, 0x78, 1.3333334f);
@@ -737,7 +737,7 @@ void fadeInRaceGameplayViewports(void) {
                     gFramebufferRenderInterval.value = 1;
                     break;
                 case 4:
-                    if (gRaceCourseIndex.signedValue != 6) {
+                    if (gRaceCourseIndex.signedValue != RACE_COURSE_SILVER_MOUNTAIN) {
                         configureViewport(0, 0x57, 0x43, 0x90, 0x68, 0xA0, 0x78, 1.3333334f);
                         configureViewport(1, 0x57, 0xAD, 0x90, 0x68, 0xA0, 0x78, 1.3333334f);
                         configureViewport(2, 0xE9, 0x43, 0x90, 0x68, 0xA0, 0x78, 1.3333334f);
@@ -888,7 +888,7 @@ void interpolateRaceViewport(
     temp_t2 = (((arg12 - arg5) * gCurrentGameTask->callbackData0) / 15) + arg5;
     temp_t3 = (((arg13 - arg6) * gCurrentGameTask->callbackData0) / 15) + arg6;
     temp_fv0 = (((arg14 - arg7) * (f32)gCurrentGameTask->callbackData0) / 15.0f) + arg7;
-    if (gRaceCourseIndex.signedValue != 6) {
+    if (gRaceCourseIndex.signedValue != RACE_COURSE_SILVER_MOUNTAIN) {
         configureViewport(arg0, sp2C, sp28, temp_t0, temp_t1, temp_t2, temp_t3, temp_fv0);
     } else {
         configureRaceViewport(arg0, sp2C, sp28, temp_t0, temp_t1, temp_t2, temp_t3, temp_fv0);
@@ -1691,7 +1691,7 @@ void updateRaceResultsFlow(void) {
                             }
                         }
                         if (gRacePlayers[0].rankIndex == 0) {
-                            if (gRaceCourseIndex.signedValue == 8) {
+                            if (gRaceCourseIndex.signedValue == RACE_COURSE_NINJA_LAND) {
                                 gPendingEndingCreditsFlow = 1;
                                 gGameSaveDataBuffer[0].extraCourseUnlockFlags |= 1;
                                 gGameSaveDataBuffer[0].cupPlacements[0x17] |= 1;
@@ -2094,7 +2094,7 @@ void initRaceGhostReplayFlow(void) {
     gMenuFlowState = 0;
     resetRaceCameras();
     resetAllViewports();
-    if (gRaceCourseIndex.signedValue != 6) {
+    if (gRaceCourseIndex.signedValue != RACE_COURSE_SILVER_MOUNTAIN) {
         configureViewport(0, 0xA0, 0x78, 0x100, 0xB0, 0x120, 0xD0, 1.3333334f);
     } else {
         configureRaceViewport(0, 0xA0, 0x78, 0x100, 0xB0, 0x120, 0xD0, 1.3333334f);
@@ -2264,31 +2264,31 @@ void initRaceRecordSettingsFlow(void) {
     LOAD_ASSET(_59DFE0, 0x26);
     LOAD_ASSET(_1F1A90, 0x28);
     switch (gRaceCourseIndex.unsignedValue) {
-        case 0:
+        case RACE_COURSE_BIG_SNOWMAN:
             LOAD_ASSET(BIG_SNOWMAN_COURSE_SPRITES, 0x1D);
             break;
-        case 1:
+        case RACE_COURSE_SUNSET_ROCK:
             LOAD_ASSET(SUNSET_ROCK_COURSE_SPRITES, 0x1D);
             break;
-        case 2:
+        case RACE_COURSE_NIGHT_HIGHWAY:
             LOAD_ASSET(NIGHT_HIGHWAY_COURSE_SPRITES, 0x1D);
             break;
-        case 3:
+        case RACE_COURSE_GRASS_VALLEY:
             LOAD_ASSET(GRASS_VALLEY_COURSE_SPRITES, 0x1D);
             break;
-        case 4:
+        case RACE_COURSE_DIZZY_LAND:
             LOAD_ASSET(DIZZY_LAND_COURSE_SPRITES, 0x1D);
             break;
-        case 5:
+        case RACE_COURSE_QUICKSAND_VALLEY:
             LOAD_ASSET(QUICKSAND_VALLEY_COURSE_SPRITES, 0x1D);
             break;
-        case 6:
+        case RACE_COURSE_SILVER_MOUNTAIN:
             LOAD_ASSET(SILVER_MOUNTAIN_COURSE_SPRITES, 0x1D);
             break;
-        case 8:
+        case RACE_COURSE_NINJA_LAND:
             LOAD_ASSET(NINJA_LAND_COURSE_SPRITES, 0x1D);
             break;
-        case 9:
+        case RACE_COURSE_ROOKIE_MOUNTAIN:
             LOAD_ASSET(ROOKIE_MOUNTAIN_COURSE_SPRITES, 0x1D);
             break;
     }

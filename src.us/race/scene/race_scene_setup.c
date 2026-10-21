@@ -53,110 +53,100 @@ void loadRaceCourseAssets(void) {
     s32 size;
 
     switch (gRaceCourseIndex.unsignedValue) {
-        case 0:
-            size = (u8 *)&BIG_SNOWMAN_COURSE_SURFACE_1_RANK_MODEL_DISPLAY_LIST_ROM_END -
-                   (u8 *)&BIG_SNOWMAN_COURSE_GRAPHICS_ROM_START;
+        case RACE_COURSE_BIG_SNOWMAN:
+            size = ASSET_SIZE(BIG_SNOWMAN_COURSE_GRAPHICS_BUNDLE);
             gAssetHandles[0x8] = allocRelocatableHeapBlock(size);
             lockRelocatableHeapBlock(gAssetHandles[0x8]);
-            DMA_ASSET(BIG_SNOWMAN_COURSE_GRAPHICS, getRelocatableHeapBlockBase(gAssetHandles[0x8]), size);
+            DMA_ASSET(BIG_SNOWMAN_COURSE_GRAPHICS_BUNDLE, getRelocatableHeapBlockBase(gAssetHandles[0x8]), size);
             LOAD_ASSET(BIG_SNOWMAN_COURSE_MODEL_RESOURCES, 9);
             LOAD_ASSET(BIG_SNOWMAN_COURSE_SURFACE_DATA, 0x1B);
             initRaceCourseSurfaceData();
             LOAD_ASSET(BIG_SNOWMAN_COURSE_SPRITES, 0x1D);
             break;
-        case 1:
-            size = (u8 *)&SUNSET_ROCK_COURSE_SCROLLING_TEXTURE_1_DISPLAY_LIST_ROM_END -
-                   (u8 *)&SUNSET_ROCK_COURSE_GRAPHICS_ROM_START;
+        case RACE_COURSE_SUNSET_ROCK:
+            size = ASSET_SIZE(SUNSET_ROCK_COURSE_GRAPHICS_BUNDLE);
             gAssetHandles[0x8] = allocRelocatableHeapBlock(size);
             lockRelocatableHeapBlock(gAssetHandles[0x8]);
-            DMA_ASSET(SUNSET_ROCK_COURSE_GRAPHICS, getRelocatableHeapBlockBase(gAssetHandles[0x8]), size);
+            DMA_ASSET(SUNSET_ROCK_COURSE_GRAPHICS_BUNDLE, getRelocatableHeapBlockBase(gAssetHandles[0x8]), size);
             LOAD_ASSET(SUNSET_ROCK_COURSE_MODEL_RESOURCES, 9);
             LOAD_ASSET(SUNSET_ROCK_COURSE_SURFACE_DATA, 0x1B);
             initRaceCourseSurfaceData();
             LOAD_ASSET(SUNSET_ROCK_COURSE_SPRITES, 0x1D);
             break;
-        case 2:
-            size = (u8 *)&NIGHT_HIGHWAY_COURSE_SCROLLING_TEXTURE_DISPLAY_LIST_ROM_END -
-                   (u8 *)&NIGHT_HIGHWAY_COURSE_GRAPHICS_ROM_START;
+        case RACE_COURSE_NIGHT_HIGHWAY:
+            size = ASSET_SIZE(NIGHT_HIGHWAY_COURSE_GRAPHICS_BUNDLE);
             gAssetHandles[0x8] = allocRelocatableHeapBlock(size);
             lockRelocatableHeapBlock(gAssetHandles[0x8]);
-            DMA_ASSET(NIGHT_HIGHWAY_COURSE_GRAPHICS, getRelocatableHeapBlockBase(gAssetHandles[0x8]), size);
+            DMA_ASSET(NIGHT_HIGHWAY_COURSE_GRAPHICS_BUNDLE, getRelocatableHeapBlockBase(gAssetHandles[0x8]), size);
             LOAD_ASSET(NIGHT_HIGHWAY_COURSE_MODEL_RESOURCES, 9);
             LOAD_ASSET(NIGHT_HIGHWAY_COURSE_SURFACE_DATA, 0x1B);
             initRaceCourseSurfaceData();
             LOAD_ASSET(NIGHT_HIGHWAY_COURSE_SPRITES, 0x1D);
             break;
-        case 3:
-            size = (u8 *)&GRASS_VALLEY_COURSE_RANK_MODEL_FINAL_LAP_DISPLAY_LIST_ROM_END -
-                   (u8 *)&GRASS_VALLEY_COURSE_GRAPHICS_ROM_START;
+        case RACE_COURSE_GRASS_VALLEY:
+            size = ASSET_SIZE(GRASS_VALLEY_COURSE_GRAPHICS_BUNDLE);
             gAssetHandles[0x8] = allocRelocatableHeapBlock(size);
             lockRelocatableHeapBlock(gAssetHandles[0x8]);
-            DMA_ASSET(GRASS_VALLEY_COURSE_GRAPHICS, getRelocatableHeapBlockBase(gAssetHandles[0x8]), size);
+            DMA_ASSET(GRASS_VALLEY_COURSE_GRAPHICS_BUNDLE, getRelocatableHeapBlockBase(gAssetHandles[0x8]), size);
             LOAD_ASSET(GRASS_VALLEY_COURSE_MODEL_RESOURCES, 9);
             LOAD_ASSET(GRASS_VALLEY_COURSE_SURFACE_DATA, 0x1B);
             initRaceCourseSurfaceData();
             LOAD_ASSET(GRASS_VALLEY_COURSE_SPRITES, 0x1D);
             break;
-        case 4:
-            size = (u8 *)&DIZZY_LAND_COURSE_SCROLLING_TEXTURE_1_DISPLAY_LIST_ROM_END -
-                   (u8 *)&DIZZY_LAND_COURSE_GRAPHICS_ROM_START;
+        case RACE_COURSE_DIZZY_LAND:
+            size = ASSET_SIZE(DIZZY_LAND_COURSE_GRAPHICS_BUNDLE);
             gAssetHandles[0x8] = allocRelocatableHeapBlock(size);
             lockRelocatableHeapBlock(gAssetHandles[0x8]);
-            DMA_ASSET(DIZZY_LAND_COURSE_GRAPHICS, getRelocatableHeapBlockBase(gAssetHandles[0x8]), size);
+            DMA_ASSET(DIZZY_LAND_COURSE_GRAPHICS_BUNDLE, getRelocatableHeapBlockBase(gAssetHandles[0x8]), size);
             LOAD_ASSET(DIZZY_LAND_COURSE_MODEL_RESOURCES, 9);
             LOAD_ASSET(DIZZY_LAND_COURSE_SURFACE_DATA, 0x1B);
             initRaceCourseSurfaceData();
             LOAD_ASSET(DIZZY_LAND_COURSE_SPRITES, 0x1D);
             break;
-        case 5:
-            size = (u8 *)&QUICKSAND_VALLEY_COURSE_SCROLLING_TEXTURE_1_DISPLAY_LIST_ROM_END -
-                   (u8 *)&QUICKSAND_VALLEY_COURSE_GRAPHICS_ROM_START;
+        case RACE_COURSE_QUICKSAND_VALLEY:
+            size = ASSET_SIZE(QUICKSAND_VALLEY_COURSE_GRAPHICS_BUNDLE);
             gAssetHandles[0x8] = allocRelocatableHeapBlock(size);
             lockRelocatableHeapBlock(gAssetHandles[0x8]);
-            DMA_ASSET(QUICKSAND_VALLEY_COURSE_GRAPHICS, getRelocatableHeapBlockBase(gAssetHandles[0x8]), size);
+            DMA_ASSET(QUICKSAND_VALLEY_COURSE_GRAPHICS_BUNDLE, getRelocatableHeapBlockBase(gAssetHandles[0x8]), size);
             LOAD_ASSET(QUICKSAND_VALLEY_COURSE_MODEL_RESOURCES, 9);
             LOAD_ASSET(QUICKSAND_VALLEY_COURSE_SURFACE_DATA, 0x1B);
             initRaceCourseSurfaceData();
             LOAD_ASSET(QUICKSAND_VALLEY_COURSE_SPRITES, 0x1D);
             break;
-        case 6:
-            size = (u8 *)&SILVER_MOUNTAIN_COURSE_RANK_MODEL_FINAL_LAP_DISPLAY_LIST_ROM_END -
-                   (u8 *)&SILVER_MOUNTAIN_COURSE_GRAPHICS_ROM_START;
+        case RACE_COURSE_SILVER_MOUNTAIN:
+            size = ASSET_SIZE(SILVER_MOUNTAIN_COURSE_GRAPHICS_BUNDLE);
             gAssetHandles[0x8] = allocRelocatableHeapBlock(size);
             lockRelocatableHeapBlock(gAssetHandles[0x8]);
-            DMA_ASSET(SILVER_MOUNTAIN_COURSE_GRAPHICS, getRelocatableHeapBlockBase(gAssetHandles[0x8]), size);
+            DMA_ASSET(SILVER_MOUNTAIN_COURSE_GRAPHICS_BUNDLE, getRelocatableHeapBlockBase(gAssetHandles[0x8]), size);
             LOAD_ASSET(SILVER_MOUNTAIN_COURSE_MODEL_RESOURCES, 9);
             LOAD_ASSET(SILVER_MOUNTAIN_COURSE_SURFACE_DATA, 0x1B);
             initRaceCourseSurfaceData();
             LOAD_ASSET(SILVER_MOUNTAIN_COURSE_SPRITES, 0x1D);
             break;
-        case 7:
-            size = (u8 *)&ANIMAL_LAND_COURSE_TRIGGER_VOLUME_DISPLAY_LIST_ROM_END -
-                   (u8 *)&ANIMAL_LAND_COURSE_GRAPHICS_ROM_START;
+        case RACE_COURSE_ANIMAL_LAND:
+            size = ASSET_SIZE(ANIMAL_LAND_COURSE_GRAPHICS_BUNDLE);
             gAssetHandles[0x8] = allocRelocatableHeapBlock(size);
             lockRelocatableHeapBlock(gAssetHandles[0x8]);
-            DMA_ASSET(ANIMAL_LAND_COURSE_GRAPHICS, getRelocatableHeapBlockBase(gAssetHandles[0x8]), size);
+            DMA_ASSET(ANIMAL_LAND_COURSE_GRAPHICS_BUNDLE, getRelocatableHeapBlockBase(gAssetHandles[0x8]), size);
             LOAD_ASSET(ANIMAL_LAND_COURSE_MODEL_RESOURCES, 9);
             LOAD_ASSET(ANIMAL_LAND_COURSE_SURFACE_DATA, 0x1B);
             initRaceCourseSurfaceData();
             break;
-        case 8:
-            size = (u8 *)&NINJA_LAND_COURSE_RANK_MODEL_FINAL_LAP_DISPLAY_LIST_ROM_END -
-                   (u8 *)&NINJA_LAND_COURSE_GRAPHICS_ROM_START;
+        case RACE_COURSE_NINJA_LAND:
+            size = ASSET_SIZE(NINJA_LAND_COURSE_GRAPHICS_BUNDLE);
             gAssetHandles[0x8] = allocRelocatableHeapBlock(size);
             lockRelocatableHeapBlock(gAssetHandles[0x8]);
-            DMA_ASSET(NINJA_LAND_COURSE_GRAPHICS, getRelocatableHeapBlockBase(gAssetHandles[0x8]), size);
+            DMA_ASSET(NINJA_LAND_COURSE_GRAPHICS_BUNDLE, getRelocatableHeapBlockBase(gAssetHandles[0x8]), size);
             LOAD_ASSET(NINJA_LAND_COURSE_MODEL_RESOURCES, 9);
             LOAD_ASSET(NINJA_LAND_COURSE_SURFACE_DATA, 0x1B);
             initRaceCourseSurfaceData();
             LOAD_ASSET(NINJA_LAND_COURSE_SPRITES, 0x1D);
             break;
-        case 9:
-            size = (u8 *)&ROOKIE_MOUNTAIN_COURSE_RANK_MODEL_FINAL_LAP_DISPLAY_LIST_ROM_END -
-                   (u8 *)&ROOKIE_MOUNTAIN_COURSE_GRAPHICS_ROM_START;
+        case RACE_COURSE_ROOKIE_MOUNTAIN:
+            size = ASSET_SIZE(ROOKIE_MOUNTAIN_COURSE_GRAPHICS_BUNDLE);
             gAssetHandles[0x8] = allocRelocatableHeapBlock(size);
             lockRelocatableHeapBlock(gAssetHandles[0x8]);
-            DMA_ASSET(ROOKIE_MOUNTAIN_COURSE_GRAPHICS, getRelocatableHeapBlockBase(gAssetHandles[0x8]), size);
+            DMA_ASSET(ROOKIE_MOUNTAIN_COURSE_GRAPHICS_BUNDLE, getRelocatableHeapBlockBase(gAssetHandles[0x8]), size);
             LOAD_ASSET(ROOKIE_MOUNTAIN_COURSE_MODEL_RESOURCES, 9);
             LOAD_ASSET(ROOKIE_MOUNTAIN_COURSE_SURFACE_DATA, 0x1B);
             initRaceCourseSurfaceData();
@@ -164,10 +154,10 @@ void loadRaceCourseAssets(void) {
             break;
     }
 
-    size = (u8 *)&SHARED_RACE_GRAPHICS_SUFFIX_ROM_END - (u8 *)&SHARED_RACE_GRAPHICS_ROM_START;
+    size = ASSET_SIZE(SHARED_RACE_GRAPHICS_BUNDLE);
     gAssetHandles[10] = allocRelocatableHeapBlock(size);
     lockRelocatableHeapBlock(gAssetHandles[10]);
-    DMA_ASSET(SHARED_RACE_GRAPHICS, getRelocatableHeapBlockBase(gAssetHandles[0xA]), size);
+    DMA_ASSET(SHARED_RACE_GRAPHICS_BUNDLE, getRelocatableHeapBlockBase(gAssetHandles[0xA]), size);
     LOAD_ASSET(SHARED_RACE_MODEL_RESOURCES, 0xB);
     LOAD_ASSET(RACE_EFFECT_SPRITES, 0x1C);
     LOAD_ASSET(_5DAF30, 0x2A);
@@ -239,7 +229,7 @@ void initRaceCourseSceneTasks(void) {
         }
     }
     switch (gRaceCourseIndex.unsignedValue) {
-        case 0:
+        case RACE_COURSE_BIG_SNOWMAN:
             createCallbackTask((CallbackTaskCallback)&initRaceCourseModelRenderTask, 0, 0x64);
             createCallbackTask((CallbackTaskCallback)&initRaceCourseSceneryObjects, 0, 0x64);
             createCallbackTask((CallbackTaskCallback)&initCourseGateObject, 0, 0x64);
@@ -285,7 +275,7 @@ void initRaceCourseSceneTasks(void) {
             }
             setBootFadeColor(0x80U, 0xC0U, 0xFFU);
             break;
-        case 1:
+        case RACE_COURSE_SUNSET_ROCK:
             createCallbackTask((CallbackTaskCallback)&initRaceCourseModelRenderTask, 0, 0x64);
             createCallbackTask((CallbackTaskCallback)&initCourseTextureMarkers, 0, 0x64);
             spawnPatrolPenguin(0x17, 0xF682AF46, 0xEB74F202, 0xF82BAF46, 0xEA17F202);
@@ -338,7 +328,7 @@ void initRaceCourseSceneTasks(void) {
             }
             setBootFadeColor(0xFFU, 0x80U, 0U);
             break;
-        case 2:
+        case RACE_COURSE_NIGHT_HIGHWAY:
             createCallbackTask((CallbackTaskCallback)&initRaceCourseModelRenderTask, 0, 0x64);
             createCallbackTask((CallbackTaskCallback)&initRaceCourseSceneryObjects, 0, 0x64);
             createCallbackTask((CallbackTaskCallback)&initCourseGateObject, 0, 0x64);
@@ -366,7 +356,7 @@ void initRaceCourseSceneTasks(void) {
             }
             setBootFadeColor(0U, 0U, 0x32U);
             break;
-        case 3:
+        case RACE_COURSE_GRASS_VALLEY:
             createCallbackTask((CallbackTaskCallback)&initRaceCourseModelRenderTask, 0, 0x64);
             createCallbackTask((CallbackTaskCallback)&initRaceCourseSceneryObjects, 0, 0x64);
             createCallbackTask((CallbackTaskCallback)&initCourseGateObject, 0, 0x64);
@@ -404,7 +394,7 @@ void initRaceCourseSceneTasks(void) {
             }
             setBootFadeColor(0x82U, 0xAFU, 0xFFU);
             break;
-        case 4:
+        case RACE_COURSE_DIZZY_LAND:
             createCallbackTask((CallbackTaskCallback)&initRaceCourseModelRenderTask, 0, 0x64);
             createCallbackTask((CallbackTaskCallback)&initRaceCourseSceneryObjects, 0, 0x64);
             createCallbackTask((CallbackTaskCallback)&initCourseGateObject, 0, 0x64);
@@ -447,7 +437,7 @@ void initRaceCourseSceneTasks(void) {
             createCallbackTaskWithUserId((CallbackTaskCallback)&initDizzyLandTeacupBumper, 0, 0x64, 9);
             setBootFadeColor(0U, 0U, 0x40U);
             break;
-        case 5:
+        case RACE_COURSE_QUICKSAND_VALLEY:
             createCallbackTask((CallbackTaskCallback)&initRaceCourseModelRenderTask, 0, 0x64);
             createCallbackTaskWithUserId((CallbackTaskCallback)&initRaceCourseScrollingTexture, 0, 0x64,
                                          RACE_COURSE_SCROLLING_TEXTURE_QUICKSAND_VALLEY_0);
@@ -481,7 +471,7 @@ void initRaceCourseSceneTasks(void) {
             }
             setBootFadeColor(0xF0U, 0xE6U, 0xBEU);
             break;
-        case 6:
+        case RACE_COURSE_SILVER_MOUNTAIN:
             createCallbackTask((CallbackTaskCallback)&initRaceCourseModelRenderTask, 0, 0x64);
             createCallbackTask((CallbackTaskCallback)&initSilverMountainSnowParticles, 0, 1);
             createCallbackTask((CallbackTaskCallback)&initRaceCourseSceneryObjects, 0, 0x64);
@@ -515,7 +505,7 @@ void initRaceCourseSceneTasks(void) {
             }
             setTitleFadeColor(0xFFU, 0xFFU, 0xFFU);
             break;
-        case 7:
+        case RACE_COURSE_ANIMAL_LAND:
             createCallbackTask((CallbackTaskCallback)&initRaceCourseModelRenderTask, 0, 0x64);
             createCallbackTaskWithUserId((CallbackTaskCallback)&initRaceCourseScrollingTexture, 0, 0x64,
                                          RACE_COURSE_SCROLLING_TEXTURE_ANIMAL_LAND);
@@ -523,7 +513,7 @@ void initRaceCourseSceneTasks(void) {
             createCallbackTask((CallbackTaskCallback)&initRaceCourseSceneryObjects, 0, 0x64);
             setBootFadeColor(0xFFU, 0xFFU, 0xFFU);
             break;
-        case 8:
+        case RACE_COURSE_NINJA_LAND:
             createCallbackTask((CallbackTaskCallback)&initRaceCourseModelRenderTask, 0, 0x64);
             createCallbackTask((CallbackTaskCallback)&initRaceCourseSceneryObjects, 0, 0x64);
             createCallbackTask((CallbackTaskCallback)&initCourseGateObject, 0, 0x64);
@@ -543,7 +533,7 @@ void initRaceCourseSceneTasks(void) {
             }
             setBootFadeColor(0xFFU, 0xFFU, 0xFFU);
             break;
-        case 9:
+        case RACE_COURSE_ROOKIE_MOUNTAIN:
             createCallbackTask((CallbackTaskCallback)&initRaceCourseModelRenderTask, 0, 0x64);
             createCallbackTask((CallbackTaskCallback)&initRaceCourseSceneryObjects, 0, 0x64);
             createCallbackTask((CallbackTaskCallback)&initCourseGateObject, 0, 0x64);

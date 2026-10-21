@@ -105,7 +105,7 @@ void getRacePlayerRankingProgress(s32 arg0, s32 *arg1, s32 *arg2) {
     *arg2 = player->coursePathOffset;
 
     switch (gRaceCourseIndex.signedValue) {
-        case 0:
+        case RACE_COURSE_BIG_SNOWMAN:
             temp = *arg1;
             if (temp >= 0x580) {
                 *arg1 = 0x598 - temp;
@@ -113,7 +113,7 @@ void getRacePlayerRankingProgress(s32 arg0, s32 *arg1, s32 *arg2) {
                 return;
             }
             break;
-        case 1:
+        case RACE_COURSE_SUNSET_ROCK:
             temp = *arg1;
             if (temp >= 0x4A8) {
                 *arg1 = 0x4A8 - temp;
@@ -121,7 +121,7 @@ void getRacePlayerRankingProgress(s32 arg0, s32 *arg1, s32 *arg2) {
                 return;
             }
             break;
-        case 2:
+        case RACE_COURSE_NIGHT_HIGHWAY:
             temp = *arg1;
             if ((temp >= 0x490) && (temp < 0x4B9)) {
                 *arg1 = 0x490 - temp;
@@ -141,7 +141,7 @@ void getRacePlayerRankingProgress(s32 arg0, s32 *arg1, s32 *arg2) {
                 return;
             }
             break;
-        case 3:
+        case RACE_COURSE_GRASS_VALLEY:
             temp = *arg1;
             if ((temp >= 0x628) && (temp < 0x649)) {
                 *arg1 = 0x628 - temp;
@@ -161,7 +161,7 @@ void getRacePlayerRankingProgress(s32 arg0, s32 *arg1, s32 *arg2) {
                 return;
             }
             break;
-        case 4:
+        case RACE_COURSE_DIZZY_LAND:
             temp = *arg1;
             if ((temp >= 0x618) && (temp < 0x641)) {
                 *arg1 = 0x618 - temp;
@@ -173,7 +173,7 @@ void getRacePlayerRankingProgress(s32 arg0, s32 *arg1, s32 *arg2) {
                 return;
             }
             break;
-        case 5:
+        case RACE_COURSE_QUICKSAND_VALLEY:
             temp = *arg1;
             if ((temp >= 0x6D0) && (temp < 0x6F9)) {
                 *arg1 = 0x6F8 - temp;
@@ -193,7 +193,7 @@ void getRacePlayerRankingProgress(s32 arg0, s32 *arg1, s32 *arg2) {
                 return;
             }
             break;
-        case 6:
+        case RACE_COURSE_SILVER_MOUNTAIN:
             temp = *arg1;
             if ((temp >= 0x7B8) && (temp < 0x7E1)) {
                 *arg1 = 0x7F8 - temp;
@@ -201,7 +201,7 @@ void getRacePlayerRankingProgress(s32 arg0, s32 *arg1, s32 *arg2) {
                 return;
             }
             break;
-        case 8:
+        case RACE_COURSE_NINJA_LAND:
             temp = *arg1;
             if ((temp >= 0x1F0) && (temp < 0x219)) {
                 *arg1 = 0x1F0 - temp;

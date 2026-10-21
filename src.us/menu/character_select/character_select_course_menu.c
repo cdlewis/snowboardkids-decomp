@@ -22,13 +22,13 @@ typedef s16 CharacterSelectOptionList[10];
 
 CharacterSelectCourseMenuData gCharacterSelectCourseMenuData = {
     {
-     { 9, 0, 1, 2, 3, 4, -1, 0, 0, 0, 0 },
-     { 9, 0, 1, 2, 3, 4, 5, -1, 0, 0, 0 },
-     { 9, 0, 1, 2, 3, 4, 5, 6, -1, 0, 0 },
+     { RACE_COURSE_ROOKIE_MOUNTAIN, RACE_COURSE_BIG_SNOWMAN, RACE_COURSE_SUNSET_ROCK, RACE_COURSE_NIGHT_HIGHWAY, RACE_COURSE_GRASS_VALLEY, RACE_COURSE_DIZZY_LAND, -1, 0, 0, 0, 0 },
+     { RACE_COURSE_ROOKIE_MOUNTAIN, RACE_COURSE_BIG_SNOWMAN, RACE_COURSE_SUNSET_ROCK, RACE_COURSE_NIGHT_HIGHWAY, RACE_COURSE_GRASS_VALLEY, RACE_COURSE_DIZZY_LAND, RACE_COURSE_QUICKSAND_VALLEY, -1, 0, 0, 0 },
+     { RACE_COURSE_ROOKIE_MOUNTAIN, RACE_COURSE_BIG_SNOWMAN, RACE_COURSE_SUNSET_ROCK, RACE_COURSE_NIGHT_HIGHWAY, RACE_COURSE_GRASS_VALLEY, RACE_COURSE_DIZZY_LAND, RACE_COURSE_QUICKSAND_VALLEY, RACE_COURSE_SILVER_MOUNTAIN, -1, 0, 0 },
      },
-    { 9, 0, 1, 2, 3, 4, 5, 6, 8, -1, 0 },
-    { 9, 0, 1, -1 },
-    { 7, -1, 0, 0, 0, 0, 0, 0 },
+    { RACE_COURSE_ROOKIE_MOUNTAIN, RACE_COURSE_BIG_SNOWMAN, RACE_COURSE_SUNSET_ROCK, RACE_COURSE_NIGHT_HIGHWAY, RACE_COURSE_GRASS_VALLEY, RACE_COURSE_DIZZY_LAND, RACE_COURSE_QUICKSAND_VALLEY, RACE_COURSE_SILVER_MOUNTAIN, RACE_COURSE_NINJA_LAND, -1, 0 },
+    { RACE_COURSE_ROOKIE_MOUNTAIN, RACE_COURSE_BIG_SNOWMAN, RACE_COURSE_SUNSET_ROCK, -1 },
+    { RACE_COURSE_ANIMAL_LAND, -1, 0, 0, 0, 0, 0, 0 },
 };
 
 u16 gCharacterSelectCourseExitOptionIndex;
@@ -90,17 +90,17 @@ void initCharacterSelectCourseMenuFromRaceTypeSelect(void) {
     if (gCourseSelectFromRaceTypeMenu == 1) {
         if (gRaceTypeSelection < 2) {
             gCharacterSelectActiveCourseOptions = (CharacterSelectOptionList *) gCharacterSelectCourseMenuData.shortCourseOptions;
-            if ((gRaceCourseIndex.signedValue != 9) && (gRaceCourseIndex.signedValue != 0) && (gRaceCourseIndex.signedValue != 1)) {
-                gRaceCourseIndex.signedValue = 9;
+            if ((gRaceCourseIndex.signedValue != RACE_COURSE_ROOKIE_MOUNTAIN) && (gRaceCourseIndex.signedValue != RACE_COURSE_BIG_SNOWMAN) && (gRaceCourseIndex.signedValue != RACE_COURSE_SUNSET_ROCK)) {
+                gRaceCourseIndex.signedValue = RACE_COURSE_ROOKIE_MOUNTAIN;
             }
         } else {
             gCharacterSelectActiveCourseOptions = (CharacterSelectOptionList *) gCharacterSelectCourseMenuData.singleCourseOption;
-            gRaceCourseIndex.signedValue = 7;
+            gRaceCourseIndex.signedValue = RACE_COURSE_ANIMAL_LAND;
         }
     } else {
         gCharacterSelectActiveCourseOptions = (CharacterSelectOptionList *) courseOptionsByUnlock[gHighestUnlockedCourse];
         if (gRaceCourseIndex.signedValue == -1) {
-            gRaceCourseIndex.signedValue = 9;
+            gRaceCourseIndex.signedValue = RACE_COURSE_ROOKIE_MOUNTAIN;
         }
     }
 
@@ -214,15 +214,15 @@ void initCharacterSelectCourseMenuFromRace(void)
     if (gRaceTypeSelection < 2)
     {
       gCharacterSelectActiveCourseOptions = (CharacterSelectOptionList *) gCharacterSelectCourseMenuData.shortCourseOptions;
-      if (((gRaceCourseIndex.signedValue != 9) && (gRaceCourseIndex.signedValue != 0)) && (gRaceCourseIndex.signedValue != 1))
+      if (((gRaceCourseIndex.signedValue != RACE_COURSE_ROOKIE_MOUNTAIN) && (gRaceCourseIndex.signedValue != RACE_COURSE_BIG_SNOWMAN)) && (gRaceCourseIndex.signedValue != RACE_COURSE_SUNSET_ROCK))
       {
-        gRaceCourseIndex.signedValue = 9;
+        gRaceCourseIndex.signedValue = RACE_COURSE_ROOKIE_MOUNTAIN;
       }
     }
     else
     {
       gCharacterSelectActiveCourseOptions = (CharacterSelectOptionList *) gCharacterSelectCourseMenuData.singleCourseOption;
-      gRaceCourseIndex.signedValue = 7;
+      gRaceCourseIndex.signedValue = RACE_COURSE_ANIMAL_LAND;
     }
   }
   else
@@ -230,7 +230,7 @@ void initCharacterSelectCourseMenuFromRace(void)
     gCharacterSelectActiveCourseOptions = (CharacterSelectOptionList *) courseOptionsByUnlock[gHighestUnlockedCourse];
     if (gRaceCourseIndex.signedValue == (-1))
     {
-      gRaceCourseIndex.signedValue = 9;
+      gRaceCourseIndex.signedValue = RACE_COURSE_ROOKIE_MOUNTAIN;
     }
   }
   activeOptions = *gCharacterSelectActiveCourseOptions;
@@ -335,17 +335,17 @@ void initCharacterSelectCourseMenuFromPlayerSelect(void) {
     if (gCourseSelectFromRaceTypeMenu == 1) {
         if (gRaceTypeSelection < 2) {
             gCharacterSelectActiveCourseOptions = (CharacterSelectOptionList *) gCharacterSelectCourseMenuData.shortCourseOptions;
-            if ((gRaceCourseIndex.signedValue != 9) && (gRaceCourseIndex.signedValue != 0) && (gRaceCourseIndex.signedValue != 1)) {
-                gRaceCourseIndex.signedValue = 9;
+            if ((gRaceCourseIndex.signedValue != RACE_COURSE_ROOKIE_MOUNTAIN) && (gRaceCourseIndex.signedValue != RACE_COURSE_BIG_SNOWMAN) && (gRaceCourseIndex.signedValue != RACE_COURSE_SUNSET_ROCK)) {
+                gRaceCourseIndex.signedValue = RACE_COURSE_ROOKIE_MOUNTAIN;
             }
         } else {
             gCharacterSelectActiveCourseOptions = (CharacterSelectOptionList *) gCharacterSelectCourseMenuData.singleCourseOption;
-            gRaceCourseIndex.signedValue = 7;
+            gRaceCourseIndex.signedValue = RACE_COURSE_ANIMAL_LAND;
         }
     } else {
         gCharacterSelectActiveCourseOptions = (CharacterSelectOptionList *) courseOptionsByUnlock[gHighestUnlockedCourse];
         if (gRaceCourseIndex.signedValue == -1) {
-            gRaceCourseIndex.signedValue = 9;
+            gRaceCourseIndex.signedValue = RACE_COURSE_ROOKIE_MOUNTAIN;
         }
     }
 

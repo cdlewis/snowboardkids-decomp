@@ -1843,7 +1843,7 @@ void initRaceUiHitPrizePayout(RaceUiCounterActor *arg0) {
     arg0->hasPerfectHitBonus = FALSE;
     arg0->pendingPerfectHitBonus = 0;
     arg0->pendingCompleteBonus = RACE_UI_HIT_PRIZE_SCORE_RATE;
-    if (gRaceCourseIndex.signedValue == 9) {
+    if (gRaceCourseIndex.signedValue == RACE_COURSE_ROOKIE_MOUNTAIN) {
         arg0->pendingCompleteBonus = RACE_UI_HIT_PRIZE_QUICKSAND_VALLEY_SCORE_RATE;
     }
     if (gRaceChallengeFailed != 0) {
@@ -2370,7 +2370,7 @@ void initRaceUiCourseRecordPayout(RaceUiDualCounterActor *arg0) {
     arg0->flag = 0;
     arg0->bonus = 0;
     arg0->leftTarget = 0x12C;
-    if (gRaceCourseIndex.signedValue == 9) {
+    if (gRaceCourseIndex.signedValue == RACE_COURSE_ROOKIE_MOUNTAIN) {
         arg0->leftTarget = 0x64;
     }
     calculateRaceTimerDelta(

@@ -610,11 +610,11 @@ void initRaceIntroFlyoverShortPan(RaceIntroEffectActor *arg0) {
 void initRaceIntroFlyoverActor(RaceIntroEffectActor *arg0) {
     s16 temp_v0 = gRaceCourseIndex.signedValue;
 
-    if (temp_v0 == 3) {
+    if (temp_v0 == RACE_COURSE_GRASS_VALLEY) {
         setCallbackTaskCallback(arg0, (CallbackTaskCallback)initRaceIntroFlyoverLongPan);
         temp_v0 = gRaceCourseIndex.signedValue;
     }
-    if (temp_v0 == 6) {
+    if (temp_v0 == RACE_COURSE_SILVER_MOUNTAIN) {
         setCallbackTaskCallback(arg0, (CallbackTaskCallback)initRaceIntroFlyoverShortPan);
     }
 }

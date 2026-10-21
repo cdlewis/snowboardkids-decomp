@@ -228,19 +228,19 @@ s32 saveRaceRecordReplayData(void) {
 
     totalLength = 0;
     /* writeIndex is not live yet, so the extra-course slots borrow it as scratch. */
-    ACCUM_REPLAY_SLOT(count, 0, 0, REPLAY_SAVE_MAX_NORMAL);
-    ACCUM_REPLAY_SLOT(count, 1, 1, REPLAY_SAVE_MAX_NORMAL);
-    ACCUM_REPLAY_SLOT(count, 2, 2, REPLAY_SAVE_MAX_NORMAL);
-    ACCUM_REPLAY_SLOT(count, 3, 3, REPLAY_SAVE_MAX_NORMAL);
-    ACCUM_REPLAY_SLOT(count, 4, 4, REPLAY_SAVE_MAX_NORMAL);
-    ACCUM_REPLAY_SLOT(count, 5, 5, REPLAY_SAVE_MAX_NORMAL);
-    ACCUM_REPLAY_SLOT(count, 6, 6, REPLAY_SAVE_MAX_NORMAL);
-    ACCUM_REPLAY_SLOT(writeIndex, 8, 7, REPLAY_SAVE_MAX_EXTRA);
-    ACCUM_REPLAY_SLOT(writeIndex, 9, 8, REPLAY_SAVE_MAX_EXTRA);
+    ACCUM_REPLAY_SLOT(count, RACE_COURSE_BIG_SNOWMAN, 0, REPLAY_SAVE_MAX_NORMAL);
+    ACCUM_REPLAY_SLOT(count, RACE_COURSE_SUNSET_ROCK, 1, REPLAY_SAVE_MAX_NORMAL);
+    ACCUM_REPLAY_SLOT(count, RACE_COURSE_NIGHT_HIGHWAY, 2, REPLAY_SAVE_MAX_NORMAL);
+    ACCUM_REPLAY_SLOT(count, RACE_COURSE_GRASS_VALLEY, 3, REPLAY_SAVE_MAX_NORMAL);
+    ACCUM_REPLAY_SLOT(count, RACE_COURSE_DIZZY_LAND, 4, REPLAY_SAVE_MAX_NORMAL);
+    ACCUM_REPLAY_SLOT(count, RACE_COURSE_QUICKSAND_VALLEY, 5, REPLAY_SAVE_MAX_NORMAL);
+    ACCUM_REPLAY_SLOT(count, RACE_COURSE_SILVER_MOUNTAIN, 6, REPLAY_SAVE_MAX_NORMAL);
+    ACCUM_REPLAY_SLOT(writeIndex, RACE_COURSE_NINJA_LAND, 7, REPLAY_SAVE_MAX_EXTRA);
+    ACCUM_REPLAY_SLOT(writeIndex, RACE_COURSE_ROOKIE_MOUNTAIN, 8, REPLAY_SAVE_MAX_EXTRA);
 
     if (compressedLength > REPLAY_SAVE_MAX_NORMAL) {
         totalLength += compressedLength;
-    } else if ((gRaceCourseIndex.signedValue == 9) || (gRaceCourseIndex.signedValue == 8)) {
+    } else if ((gRaceCourseIndex.signedValue == RACE_COURSE_ROOKIE_MOUNTAIN) || (gRaceCourseIndex.signedValue == RACE_COURSE_NINJA_LAND)) {
         totalLength += REPLAY_SAVE_MAX_EXTRA;
     } else {
         totalLength += REPLAY_SAVE_MAX_NORMAL;
@@ -259,7 +259,7 @@ s32 saveRaceRecordReplayData(void) {
 
     writeIndex = 0;
 
-    if (gRaceCourseIndex.signedValue != 0) {
+    if (gRaceCourseIndex.signedValue != RACE_COURSE_BIG_SNOWMAN) {
         count = gGameSaveDataBuffer[0].replaySlots[0].length;
         if (count != 0) {
             count = gGameSaveDataBuffer[0].replaySlots[0].offset;
@@ -276,7 +276,7 @@ s32 saveRaceRecordReplayData(void) {
         }
     }
 
-    if (gRaceCourseIndex.signedValue != 1) {
+    if (gRaceCourseIndex.signedValue != RACE_COURSE_SUNSET_ROCK) {
         count = gGameSaveDataBuffer[0].replaySlots[1].length;
         if (count != 0) {
             count = gGameSaveDataBuffer[0].replaySlots[1].offset;
@@ -293,7 +293,7 @@ s32 saveRaceRecordReplayData(void) {
         }
     }
 
-    if (gRaceCourseIndex.signedValue != 2) {
+    if (gRaceCourseIndex.signedValue != RACE_COURSE_NIGHT_HIGHWAY) {
         count = gGameSaveDataBuffer[0].replaySlots[2].length;
         if (count != 0) {
             count = gGameSaveDataBuffer[0].replaySlots[2].offset;
@@ -310,7 +310,7 @@ s32 saveRaceRecordReplayData(void) {
         }
     }
 
-    if (gRaceCourseIndex.signedValue != 3) {
+    if (gRaceCourseIndex.signedValue != RACE_COURSE_GRASS_VALLEY) {
         count = gGameSaveDataBuffer[0].replaySlots[3].length;
         if (count != 0) {
             count = gGameSaveDataBuffer[0].replaySlots[3].offset;
@@ -327,7 +327,7 @@ s32 saveRaceRecordReplayData(void) {
         }
     }
 
-    if (gRaceCourseIndex.signedValue != 4) {
+    if (gRaceCourseIndex.signedValue != RACE_COURSE_DIZZY_LAND) {
         count = gGameSaveDataBuffer[0].replaySlots[4].length;
         if (count != 0) {
             count = gGameSaveDataBuffer[0].replaySlots[4].offset;
@@ -344,7 +344,7 @@ s32 saveRaceRecordReplayData(void) {
         }
     }
 
-    if (gRaceCourseIndex.signedValue != 5) {
+    if (gRaceCourseIndex.signedValue != RACE_COURSE_QUICKSAND_VALLEY) {
         count = gGameSaveDataBuffer[0].replaySlots[5].length;
         if (count != 0) {
             count = gGameSaveDataBuffer[0].replaySlots[5].offset;
@@ -361,7 +361,7 @@ s32 saveRaceRecordReplayData(void) {
         }
     }
 
-    if (gRaceCourseIndex.signedValue != 6) {
+    if (gRaceCourseIndex.signedValue != RACE_COURSE_SILVER_MOUNTAIN) {
         count = gGameSaveDataBuffer[0].replaySlots[6].length;
         if (count != 0) {
             count = gGameSaveDataBuffer[0].replaySlots[6].offset;
@@ -378,7 +378,7 @@ s32 saveRaceRecordReplayData(void) {
         }
     }
 
-    if (gRaceCourseIndex.signedValue != 8) {
+    if (gRaceCourseIndex.signedValue != RACE_COURSE_NINJA_LAND) {
         count = gGameSaveDataBuffer[0].replaySlots[7].length;
         if (count != 0) {
             count = gGameSaveDataBuffer[0].replaySlots[7].offset;
@@ -395,7 +395,7 @@ s32 saveRaceRecordReplayData(void) {
         }
     }
 
-    if (gRaceCourseIndex.signedValue != 9) {
+    if (gRaceCourseIndex.signedValue != RACE_COURSE_ROOKIE_MOUNTAIN) {
         count = gGameSaveDataBuffer[0].replaySlots[8].length;
         if (count != 0) {
             count = gGameSaveDataBuffer[0].replaySlots[8].offset;
@@ -434,31 +434,31 @@ void loadCurrentRaceRecordReplayData(void) {
     outputIndex = 0;
     compressed = gGameSaveDataBuffer[0].replayData;
     switch (gRaceCourseIndex.unsignedValue) {
-        case 0:
+        case RACE_COURSE_BIG_SNOWMAN:
             compressed += gGameSaveDataBuffer[0].replaySlots[0].offset;
             break;
-        case 1:
+        case RACE_COURSE_SUNSET_ROCK:
             compressed += gGameSaveDataBuffer[0].replaySlots[1].offset;
             break;
-        case 2:
+        case RACE_COURSE_NIGHT_HIGHWAY:
             compressed += gGameSaveDataBuffer[0].replaySlots[2].offset;
             break;
-        case 3:
+        case RACE_COURSE_GRASS_VALLEY:
             compressed += gGameSaveDataBuffer[0].replaySlots[3].offset;
             break;
-        case 4:
+        case RACE_COURSE_DIZZY_LAND:
             compressed += gGameSaveDataBuffer[0].replaySlots[4].offset;
             break;
-        case 5:
+        case RACE_COURSE_QUICKSAND_VALLEY:
             compressed += gGameSaveDataBuffer[0].replaySlots[5].offset;
             break;
-        case 6:
+        case RACE_COURSE_SILVER_MOUNTAIN:
             compressed += gGameSaveDataBuffer[0].replaySlots[6].offset;
             break;
-        case 8:
+        case RACE_COURSE_NINJA_LAND:
             compressed += gGameSaveDataBuffer[0].replaySlots[7].offset;
             break;
-        case 9:
+        case RACE_COURSE_ROOKIE_MOUNTAIN:
             compressed += gGameSaveDataBuffer[0].replaySlots[8].offset;
             break;
     }

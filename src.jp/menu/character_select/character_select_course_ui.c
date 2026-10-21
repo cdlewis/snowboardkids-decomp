@@ -301,7 +301,7 @@ void updateCharacterSelectUnlockedCourseList(CharacterSelectCourseMenuFrameActor
                 // clang-format off
         }
 
-        if (gRaceCourseIndex.signedValue != 0) {
+        if (gRaceCourseIndex.signedValue != RACE_COURSE_BIG_SNOWMAN) {
             if (arg0->x[0] < -0x103) {
                 arg0->state = COURSE_LIST_MOVE_SELECTED_UP;
             }
@@ -351,7 +351,7 @@ void updateCharacterSelectUnlockedCourseList(CharacterSelectCourseMenuFrameActor
             index++;
         }
 
-        if (gRaceCourseIndex.signedValue != 0) {
+        if (gRaceCourseIndex.signedValue != RACE_COURSE_BIG_SNOWMAN) {
             if (arg0->x[0] >= -0x7C) {
                 arg0->state = COURSE_LIST_IDLE;
             }
@@ -579,7 +579,7 @@ void updateCharacterSelectLimitedCourseList(CharacterSelectCourseMenuFrameActor 
                 }
             }
 
-            if (gRaceCourseIndex.signedValue != 0) {
+            if (gRaceCourseIndex.signedValue != RACE_COURSE_BIG_SNOWMAN) {
                 if (arg0->x[0] < -0x103) {
                     arg0->state = COURSE_LIST_MOVE_SELECTED_UP;
                 }
@@ -629,7 +629,7 @@ void updateCharacterSelectLimitedCourseList(CharacterSelectCourseMenuFrameActor 
                 optionIndex++;
             }
 
-            if (gRaceCourseIndex.signedValue != 0) {
+            if (gRaceCourseIndex.signedValue != RACE_COURSE_BIG_SNOWMAN) {
                 if (arg0->x[0] >= -0x7C) {
                     arg0->state = COURSE_LIST_IDLE;
                 }

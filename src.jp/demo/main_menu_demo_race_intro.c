@@ -30,11 +30,11 @@ typedef struct {
 
 u8 gMainMenuDemoRaceIntroIndex = 0;
 MainMenuDemoRaceIntroEntry gMainMenuDemoRaceIntroEntries[] = {
-    { 9, 0, 0, 0, (void *)&_24DBE0_ROM_START, (void *)&_24DBE0_ROM_END, 0, 1, 2, 3 },
-    { 0, 1, 0, 0, (void *)&_250260_ROM_START, (void *)&_250260_ROM_END, 4, 1, 2, 3 },
-    { 1, 1, 1, 0, (void *)&_2521F0_ROM_START, (void *)&_2521F0_ROM_END, 2, 0, 1, 3 },
-    { 7, 1, 2, 0, (void *)&_254380_ROM_START, (void *)&_254380_ROM_END, 1, 0, 1, 3 },
-    { 3, 0, 0, 1, (void *)&_256420_ROM_START, (void *)&_256420_ROM_END, 3, 1, 4, 2 },
+    { RACE_COURSE_ROOKIE_MOUNTAIN, 0, 0, 0, (void *)&_24DBE0_ROM_START, (void *)&_24DBE0_ROM_END, 0, 1, 2, 3 },
+    { RACE_COURSE_BIG_SNOWMAN, 1, 0, 0, (void *)&_250260_ROM_START, (void *)&_250260_ROM_END, 4, 1, 2, 3 },
+    { RACE_COURSE_SUNSET_ROCK, 1, 1, 0, (void *)&_2521F0_ROM_START, (void *)&_2521F0_ROM_END, 2, 0, 1, 3 },
+    { RACE_COURSE_ANIMAL_LAND, 1, 2, 0, (void *)&_254380_ROM_START, (void *)&_254380_ROM_END, 1, 0, 1, 3 },
+    { RACE_COURSE_GRASS_VALLEY, 0, 0, 1, (void *)&_256420_ROM_START, (void *)&_256420_ROM_END, 3, 1, 4, 2 },
 };
 
 extern s16 gMenuFadeAlpha;

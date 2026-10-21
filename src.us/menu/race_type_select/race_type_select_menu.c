@@ -32,8 +32,8 @@ void returnToRaceTypeSelectMenu(void) {
     gCurrentGameTask->callbackData1 = 0;
     gMenuExitSelection = 0;
     gMenuInputRepeatTimers[0] = 0;
-    if (gRaceCourseIndex.signedValue == 7) {
-        gRaceCourseIndex.signedValue = 9;
+    if (gRaceCourseIndex.signedValue == RACE_COURSE_ANIMAL_LAND) {
+        gRaceCourseIndex.signedValue = RACE_COURSE_ROOKIE_MOUNTAIN;
     }
     gMenuFadeAlpha = gCurrentGameTask->callbackData0;
     if (gRaceTypeSelection == 3) {
@@ -66,8 +66,8 @@ void initRaceTypeSelectMenu(void) {
     gCurrentGameTask->callbackData1 = 0;
     gMenuExitSelection = 0;
     gMenuInputRepeatTimers[0] = 0;
-    if (gRaceCourseIndex.signedValue == 7) {
-        gRaceCourseIndex.signedValue = 9;
+    if (gRaceCourseIndex.signedValue == RACE_COURSE_ANIMAL_LAND) {
+        gRaceCourseIndex.signedValue = RACE_COURSE_ROOKIE_MOUNTAIN;
     }
     gMenuFadeAlpha = gCurrentGameTask->callbackData0;
     if (gRaceTypeSelection == 3) {
@@ -166,7 +166,7 @@ void updateRaceTypeSelectMenu(void) {
                     if (repeatTimerCopy != previousSelection) {
                         enqueueSoundEffect(0x19, 0x32);
                         pressedInput = gPlayerInputPressed[0];
-                        gRaceCourseIndex.signedValue = 9;
+                        gRaceCourseIndex.signedValue = RACE_COURSE_ROOKIE_MOUNTAIN;
                     }
 
                     if ((pressedInput & START_BUTTON) || ((pressedInput & A_BUTTON) && (gMenuFlowState == 4))) {

@@ -413,34 +413,34 @@ void renderRaceCourseModel(RaceCourseModelRenderEffect *arg0) {
     gSPMatrix(gRegionAllocPtr++, &gIdentityMatrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
 
     switch (gRaceCourseIndex.unsignedValue) {
-        case 0:
+        case RACE_COURSE_BIG_SNOWMAN:
             gSPDisplayList(gRegionAllocPtr++, &BIG_SNOWMAN_COURSE_DISPLAY_LIST_VRAM);
             break;
-        case 1:
+        case RACE_COURSE_SUNSET_ROCK:
             gSPDisplayList(gRegionAllocPtr++, &SUNSET_ROCK_COURSE_DISPLAY_LIST_VRAM);
             break;
-        case 2:
+        case RACE_COURSE_NIGHT_HIGHWAY:
             gSPDisplayList(gRegionAllocPtr++, &NIGHT_HIGHWAY_COURSE_DISPLAY_LIST_VRAM);
             break;
-        case 3:
+        case RACE_COURSE_GRASS_VALLEY:
             gSPDisplayList(gRegionAllocPtr++, &GRASS_VALLEY_COURSE_DISPLAY_LIST_VRAM);
             break;
-        case 4:
+        case RACE_COURSE_DIZZY_LAND:
             gSPDisplayList(gRegionAllocPtr++, &DIZZY_LAND_COURSE_DISPLAY_LIST_VRAM);
             break;
-        case 5:
+        case RACE_COURSE_QUICKSAND_VALLEY:
             gSPDisplayList(gRegionAllocPtr++, &QUICKSAND_VALLEY_COURSE_DISPLAY_LIST_VRAM);
             break;
-        case 6:
+        case RACE_COURSE_SILVER_MOUNTAIN:
             gSPDisplayList(gRegionAllocPtr++, &SILVER_MOUNTAIN_COURSE_DISPLAY_LIST_VRAM);
             break;
-        case 7:
+        case RACE_COURSE_ANIMAL_LAND:
             gSPDisplayList(gRegionAllocPtr++, &ANIMAL_LAND_COURSE_DISPLAY_LIST_VRAM);
             break;
-        case 8:
+        case RACE_COURSE_NINJA_LAND:
             gSPDisplayList(gRegionAllocPtr++, &NINJA_LAND_COURSE_DISPLAY_LIST_VRAM);
             break;
-        case 9:
+        case RACE_COURSE_ROOKIE_MOUNTAIN:
             gSPDisplayList(gRegionAllocPtr++, &ROOKIE_MOUNTAIN_COURSE_DISPLAY_LIST_VRAM);
             break;
     }
@@ -461,7 +461,7 @@ void renderRaceCourseBackdrop(RaceCourseModelRenderEffect *arg0) {
     arg0->backdropMatrix = allocFixedTransformMatrix(&sp100);
     if (arg0->backdropMatrix != NULL) {
         switch (gRaceCourseIndex.unsignedValue) {
-            case 0:
+            case RACE_COURSE_BIG_SNOWMAN:
                 gDPPipeSync(gRegionAllocPtr++);
                 gSPSegment(gRegionAllocPtr++, 0x02, getRelocatableHeapBlockBase(gAssetHandles[8]));
                 gSPSegment(gRegionAllocPtr++, 0x03, getRelocatableHeapBlockBase(gAssetHandles[9]));
@@ -469,35 +469,35 @@ void renderRaceCourseBackdrop(RaceCourseModelRenderEffect *arg0) {
                 gSPDisplayList(gRegionAllocPtr++, &BIG_SNOWMAN_COURSE_BACKDROP_DISPLAY_LIST_VRAM);
                 gSPDisplayList(gRegionAllocPtr++, &BIG_SNOWMAN_COURSE_SECONDARY_BACKDROP_DISPLAY_LIST_VRAM);
                 break;
-            case 1:
+            case RACE_COURSE_SUNSET_ROCK:
                 gDPPipeSync(gRegionAllocPtr++);
                 gSPSegment(gRegionAllocPtr++, 0x02, getRelocatableHeapBlockBase(gAssetHandles[8]));
                 gSPSegment(gRegionAllocPtr++, 0x03, textureBase = getRelocatableHeapBlockBase(gAssetHandles[9]));
                 gSPMatrix(gRegionAllocPtr++, arg0->backdropMatrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
                 gSPDisplayList(gRegionAllocPtr++, &SUNSET_ROCK_COURSE_BACKDROP_DISPLAY_LIST_VRAM);
                 break;
-            case 2:
+            case RACE_COURSE_NIGHT_HIGHWAY:
                 gDPPipeSync(gRegionAllocPtr++);
                 gSPSegment(gRegionAllocPtr++, 0x02, getRelocatableHeapBlockBase(gAssetHandles[8]));
                 gSPSegment(gRegionAllocPtr++, 0x03, getRelocatableHeapBlockBase(gAssetHandles[9]));
                 gSPMatrix(gRegionAllocPtr++, arg0->backdropMatrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
                 gSPDisplayList(gRegionAllocPtr++, &NIGHT_HIGHWAY_COURSE_BACKDROP_DISPLAY_LIST_VRAM);
                 break;
-            case 3:
+            case RACE_COURSE_GRASS_VALLEY:
                 gDPPipeSync(gRegionAllocPtr++);
                 gSPSegment(gRegionAllocPtr++, 0x02, getRelocatableHeapBlockBase(gAssetHandles[8]));
                 gSPSegment(gRegionAllocPtr++, 0x03, getRelocatableHeapBlockBase(gAssetHandles[9]));
                 gSPMatrix(gRegionAllocPtr++, arg0->backdropMatrix, (G_MTX_NOPUSH | G_MTX_LOAD) | matrixFlags);
                 gSPDisplayList(gRegionAllocPtr++, &GRASS_VALLEY_COURSE_BACKDROP_DISPLAY_LIST_VRAM);
                 break;
-            case 4:
+            case RACE_COURSE_DIZZY_LAND:
                 gDPPipeSync(gRegionAllocPtr++);
                 gSPSegment(gRegionAllocPtr++, 0x02, getRelocatableHeapBlockBase(gAssetHandles[8]));
                 gSPSegment(gRegionAllocPtr++, 0x03, getRelocatableHeapBlockBase(gAssetHandles[9]));
                 gSPMatrix(gRegionAllocPtr++, arg0->backdropMatrix, (matrixFlags | G_MTX_LOAD) | matrixFlags);
                 gSPDisplayList(gRegionAllocPtr++, &DIZZY_LAND_COURSE_BACKDROP_DISPLAY_LIST_VRAM);
                 break;
-            case 5:
+            case RACE_COURSE_QUICKSAND_VALLEY:
                 gDPPipeSync(gRegionAllocPtr++);
                 gSPSegment(gRegionAllocPtr++, 0x02, getRelocatableHeapBlockBase(gAssetHandles[8]));
                 gSPSegment(gRegionAllocPtr++, 0x03, getRelocatableHeapBlockBase(gAssetHandles[9]));
@@ -505,28 +505,28 @@ void renderRaceCourseBackdrop(RaceCourseModelRenderEffect *arg0) {
                 gSPDisplayList(gRegionAllocPtr++, &QUICKSAND_VALLEY_COURSE_BACKDROP_DISPLAY_LIST_VRAM);
                 gSPDisplayList(gRegionAllocPtr++, &QUICKSAND_VALLEY_COURSE_SECONDARY_BACKDROP_DISPLAY_LIST_VRAM);
                 break;
-            case 6:
+            case RACE_COURSE_SILVER_MOUNTAIN:
                 gDPPipeSync(gRegionAllocPtr++);
                 gSPSegment(gRegionAllocPtr++, 0x02, getRelocatableHeapBlockBase(gAssetHandles[8]));
                 gSPSegment(gRegionAllocPtr++, 0x03, getRelocatableHeapBlockBase(gAssetHandles[9]));
                 gSPMatrix(gRegionAllocPtr++, arg0->backdropMatrix, (matrixFlags | G_MTX_LOAD) | matrixFlags);
                 gSPDisplayList(gRegionAllocPtr++, &SILVER_MOUNTAIN_COURSE_BACKDROP_DISPLAY_LIST_VRAM);
                 break;
-            case 7:
+            case RACE_COURSE_ANIMAL_LAND:
                 gDPPipeSync(gRegionAllocPtr++);
                 gSPSegment(gRegionAllocPtr++, 0x02, getRelocatableHeapBlockBase(gAssetHandles[8]));
                 gSPSegment(gRegionAllocPtr++, 0x03, getRelocatableHeapBlockBase(gAssetHandles[9]));
                 gSPMatrix(gRegionAllocPtr++, arg0->backdropMatrix, (matrixFlags | G_MTX_LOAD) | matrixFlags);
                 gSPDisplayList(gRegionAllocPtr++, &ANIMAL_LAND_COURSE_BACKDROP_DISPLAY_LIST_VRAM);
                 break;
-            case 8:
+            case RACE_COURSE_NINJA_LAND:
                 gDPPipeSync(gRegionAllocPtr++);
                 gSPSegment(gRegionAllocPtr++, 0x02, getRelocatableHeapBlockBase(gAssetHandles[8]));
                 gSPSegment(gRegionAllocPtr++, 0x03, getRelocatableHeapBlockBase(gAssetHandles[9]));
                 gSPMatrix(gRegionAllocPtr++, arg0->backdropMatrix, (matrixFlags | G_MTX_LOAD) | matrixFlags);
                 gSPDisplayList(gRegionAllocPtr++, &NINJA_LAND_COURSE_BACKDROP_DISPLAY_LIST_VRAM);
                 break;
-            case 9:
+            case RACE_COURSE_ROOKIE_MOUNTAIN:
                 gDPPipeSync(gRegionAllocPtr++);
                 gSPSegment(gRegionAllocPtr++, 0x02, getRelocatableHeapBlockBase(gAssetHandles[8]));
                 gSPSegment(gRegionAllocPtr++, 0x03, getRelocatableHeapBlockBase(gAssetHandles[9]));
@@ -940,7 +940,7 @@ void renderLaunchRampCourseObject(RaceMovingCourseObjectEffect *arg0) {
             gSPSegment(gRegionAllocPtr++, 0x02, getRelocatableHeapBlockBase(ASSET_HANDLE(0xA)));
             gSPSegment(gRegionAllocPtr++, 0x03, getRelocatableHeapBlockBase(ASSET_HANDLE(0xB)));
             gSPMatrix(gRegionAllocPtr++, arg0->matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
-            if (gRaceCourseIndex.signedValue != 8) {
+            if (gRaceCourseIndex.signedValue != RACE_COURSE_NINJA_LAND) {
                 gSPDisplayList(gRegionAllocPtr++, &_148220_VRAM);
             } else {
                 gSPDisplayList(gRegionAllocPtr++, &_14AB28_VRAM);
@@ -1038,7 +1038,7 @@ void renderLiftExitCourseObject(RaceMovingCourseObjectEffect *arg0) {
             gSPSegment(gRegionAllocPtr++, 0x02, getRelocatableHeapBlockBase(ASSET_HANDLE(0xA)));
             gSPSegment(gRegionAllocPtr++, 0x03, getRelocatableHeapBlockBase(ASSET_HANDLE(0xB)));
             gSPMatrix(gRegionAllocPtr++, arg0->matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
-            if (gRaceCourseIndex.signedValue != 8) {
+            if (gRaceCourseIndex.signedValue != RACE_COURSE_NINJA_LAND) {
                 gSPDisplayList(gRegionAllocPtr++, &_148220_VRAM);
             } else {
                 gSPDisplayList(gRegionAllocPtr++, &_14AB28_VRAM);

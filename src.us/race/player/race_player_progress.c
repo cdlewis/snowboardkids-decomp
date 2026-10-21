@@ -372,7 +372,7 @@ s32 updateRacePlayerSmoothedPathOffset(s32 playerIndex, s32 pathIndex, s32 rankS
     courseIndex = gRaceCourseIndex.signedValue;
     entry = gRaceCoursePlayerPathOffsetTables[(courseIndex * RACE_PLAYER_COUNT) + playerIndex];
     pathIndexCopy = pathIndex;
-    if (courseIndex == 7) {
+    if (courseIndex == RACE_COURSE_ANIMAL_LAND) {
         if (playerIndex == 0) {
             return 0xFFF40000;
         }
@@ -405,7 +405,7 @@ s32 updateRacePlayerSmoothedPathOffset(s32 playerIndex, s32 pathIndex, s32 rankS
 s32 getRacePlayerPathOffset(s32 playerIndex, s32 pathIndex) {
     s8 *entry;
 
-    if (gRaceCourseIndex.signedValue == 7) {
+    if (gRaceCourseIndex.signedValue == RACE_COURSE_ANIMAL_LAND) {
         if (playerIndex == 0) {
             return 0xFFF40000;
         }

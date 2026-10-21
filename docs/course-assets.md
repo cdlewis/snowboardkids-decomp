@@ -72,6 +72,11 @@ treated as additional course environments merely because race code loads them.
 
 ## Graphics and model resources
 
+The loader uses `<COURSE>_COURSE_GRAPHICS_BUNDLE` ROM-range aliases for the
+complete segment 2 transfer. `linker_scripts/race_graphics_bundles.ld` derives
+these bounds from the first and last extracted pieces; an individual piece's
+`ROM_END` only marks that piece's end. Shared race graphics use the same scheme.
+
 All ten segment 2 graphics bundles are source-backed under
 `assets/course_display_lists`. Each course has one bundle-level
 `<COURSE>_COURSE_GRAPHICS` asset, plus boundaries for main, backdrop, effect,

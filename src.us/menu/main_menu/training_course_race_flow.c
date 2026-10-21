@@ -57,10 +57,10 @@ void initTrainingCourseRace(void) {
         case 4:
         case 5:
         case 6:
-            gRaceCourseIndex.signedValue = 0;
+            gRaceCourseIndex.signedValue = RACE_COURSE_BIG_SNOWMAN;
             break;
         default:
-            gRaceCourseIndex.signedValue = 9;
+            gRaceCourseIndex.signedValue = RACE_COURSE_ROOKIE_MOUNTAIN;
             break;
     }
 

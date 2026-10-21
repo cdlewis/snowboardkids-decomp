@@ -135,7 +135,7 @@ void initRaceSetupMenu(void) {
     gCourseSelectModeSelection = 0;
     gHighestUnlockedCourse = 0;
     gRaceRumbleEnabled = 0;
-    gRaceCourseIndex.signedValue = 9;
+    gRaceCourseIndex.signedValue = RACE_COURSE_ROOKIE_MOUNTAIN;
     gMenuFlowState = 0;
     gMenuInputRepeatTimers[0] = 0;
     gPlayerCount = 1;
@@ -747,7 +747,7 @@ void initRaceSetupPlayerSaveData(s32 playerIndex) {
             gGameSaveDataBuffer[playerIndex].timeTrialCharacterIds[course][record] = 0x10;
             gGameSaveDataBuffer[playerIndex].timeTrialCharacterIds[course][record] += record;
 
-            if (course == 9) {
+            if (course == RACE_COURSE_ROOKIE_MOUNTAIN) {
                 gGameSaveDataBuffer[playerIndex].raceRecords[course][record].minutes =
                     gDefaultRookieMountainRaceRecords[0].records[record].minutes;
                 gGameSaveDataBuffer[playerIndex].raceRecords[course][record].seconds =
@@ -764,7 +764,7 @@ void initRaceSetupPlayerSaveData(s32 playerIndex) {
             }
             gGameSaveDataBuffer[playerIndex].raceRecordCharacterIds[course][record] = 0x10;
             gGameSaveDataBuffer[playerIndex].raceRecordCharacterIds[course][record] += record;
-            if (course == 9) {
+            if (course == RACE_COURSE_ROOKIE_MOUNTAIN) {
                 gGameSaveDataBuffer[playerIndex].scoreAttackScores[course][record] = gDefaultScoreAttackScores[record];
             } else {
                 gGameSaveDataBuffer[playerIndex].scoreAttackScores[course][record] = gDefaultScoreAttackScores[record + 5];
