@@ -116,7 +116,7 @@ loop: \
                     startCurrentRdpTask(arg0);
                 } else {
                     gSchedulerRspTaskState &= ~1;
-                    osSendMesg(&arg0->queue14C, (OSMesg)arg0, 1);
+                    osSendMesg(&arg0->queue14C, (OSMesg)arg0, OS_MESG_BLOCK);
                 }
             }
             break;
@@ -183,9 +183,9 @@ void finishCurrentRdpTask(SchedulerState *arg0) {
         osSpTaskStartGo(&arg0->curRSPTask->rspTask);
     } else if (gSchedulerYieldResult == 2) {
         gSchedulerRspTaskState &= ~1;
-        osSendMesg(&arg0->queue14C, &msg, 1);
+        osSendMesg(&arg0->queue14C, &msg, OS_MESG_BLOCK);
     }
-    osSendMesg(arg0->curRDPTask->doneQueue, arg0->curRDPTask->doneMsg, 1);
+    osSendMesg(arg0->curRDPTask->doneQueue, arg0->curRDPTask->doneMsg, OS_MESG_BLOCK);
     gSchedulerRdpTaskActive = 0;
 }
 
@@ -197,17 +197,17 @@ void schedulerSwapBufferThreadMain(SchedulerState *scheduler) {
 
     msg = NULL;
     while (1) {
-        osRecvMesg(&scheduler->eventQueue, (OSMesg *)&scheduler->curRSPTask, 1);
+        osRecvMesg(&scheduler->eventQueue, (OSMesg *)&scheduler->curRSPTask, OS_MESG_BLOCK);
         waitForFramebufferAvailable(scheduler, scheduler->curRSPTask);
-        osSendMesg(&scheduler->retraceQueue, (OSMesg)1, 1);
-        osRecvMesg(&scheduler->queue14C, &msg, 1);
-        osRecvMesg(&scheduler->queue1A4, &msg, 1);
+        osSendMesg(&scheduler->retraceQueue, (OSMesg)1, OS_MESG_BLOCK);
+        osRecvMesg(&scheduler->queue14C, &msg, OS_MESG_BLOCK);
+        osRecvMesg(&scheduler->queue1A4, &msg, OS_MESG_BLOCK);
 
         task = scheduler->curRSPTask;
         if (task->flags & 0x40) {
             framebuffer = task->framebuffer;
             retrace = task->retrace;
-            osSendMesg(task->doneQueue, task->doneMsg, 1);
+            osSendMesg(task->doneQueue, task->doneMsg, OS_MESG_BLOCK);
             while (((gRetraceCounter - retrace) & 0xFFF) > 0x800) {
                 waitForNextFramebufferEvent(scheduler);
             }
@@ -255,7 +255,7 @@ void removeSchedulerClient(SchedulerState *arg0, SchedulerClient *arg1) {
 void notifySchedulerClients(SchedulerState *arg0, s32 arg1) {
     SchedulerClient *node = arg0->clients;
     while (node != NULL) {
-        osSendMesg(node->queue, (OSMesg)arg1, 0);
+        osSendMesg(node->queue, (OSMesg)arg1, OS_MESG_NOBLOCK);
         node = node->next;
     }
 }

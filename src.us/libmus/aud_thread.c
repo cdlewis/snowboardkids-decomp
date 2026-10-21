@@ -163,7 +163,7 @@ s32 buildAudioTask(AudioTask *task, AudioInfo *info) {
     task3->yieldDataPtr = NULL;
     task3->yieldDataSize = 0;
 
-    osSendMesg(getSchedulerAudioTaskQueue(gAudioSchedulerState), &task3->unk8, 1);
+    osSendMesg(getSchedulerAudioTaskQueue(gAudioSchedulerState), &task3->unk8, OS_MESG_BLOCK);
     gAudioCmdListIndex ^= 1;
     return 1;
 }
