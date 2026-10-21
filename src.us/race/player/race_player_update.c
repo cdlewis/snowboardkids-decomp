@@ -482,15 +482,17 @@ void initRacePlayer(RacePlayer *player) {
     }
 
     if (gMainMenuModeSelection != 0) {
-        *pos.vec = ((RacePlayerPreviewStart *)gRacePlayerPreviewStartPositions)
-                       [(gMainMenuModeSelection - 1) * 4 + player->playerIndex]
-                           .position;
-        player->facingAngle = ((RacePlayerPreviewStart *)gRacePlayerPreviewStartPositions)
-                                  [(gMainMenuModeSelection - 1) * 4 + player->playerIndex]
-                                      .facingAngle;
-        player->coursePathIndex = ((RacePlayerPreviewStart *)gRacePlayerPreviewStartPositions)
-                                      [(gMainMenuModeSelection - 1) * 4 + player->playerIndex]
-                                          .surfaceHint;
+        *pos.vec = ((RacePlayerPreviewStart *)
+                        gRacePlayerPreviewStartPositions)[(gMainMenuModeSelection - 1) * 4 + player->playerIndex]
+                       .position;
+        player->facingAngle = ((
+            RacePlayerPreviewStart *
+        )gRacePlayerPreviewStartPositions)[(gMainMenuModeSelection - 1) * 4 + player->playerIndex]
+                                  .facingAngle;
+        player->coursePathIndex = ((
+            RacePlayerPreviewStart *
+        )gRacePlayerPreviewStartPositions)[(gMainMenuModeSelection - 1) * 4 + player->playerIndex]
+                                      .surfaceHint;
     }
 
     player->coursePathIndex = findRaceCourseSurfaceFromHint(player->coursePathIndex, player->pos.x, player->pos.z);
@@ -891,13 +893,15 @@ void updateRacePlayerMode00Grounded(RacePlayer *player) {
     if (player->isCpu == 0) {
         spawn = &gRaceCourseStartEntries[gRaceCourseIndex.signedValue];
         if ((spawn->pathIndex == player->coursePathIndex) && !(player->stateFlags & 0x40)) {
-            surfaceCue =
-                (s16)(((calculateFixedAngleBetweenXZPoints(
-                           player->pos.x, player->pos.z, spawn->startSurfaceTargetX, spawn->startSurfaceTargetZ
-                       ) -
-                        player->facingAngle) +
-                       0x400) &
-                      0xFFF);
+            surfaceCue = (s16)(((calculateFixedAngleBetweenXZPoints(
+                                     player->pos.x,
+                                     player->pos.z,
+                                     spawn->startSurfaceTargetX,
+                                     spawn->startSurfaceTargetZ
+                                 ) -
+                                 player->facingAngle) +
+                                0x400) &
+                               0xFFF);
             if (surfaceCue < 0x800) {
                 if (player->stateFlags & 0x400) {
                     player->unk92 = 0;
@@ -1284,13 +1288,15 @@ void updateRacePlayerAirborneLaunch(RacePlayer *player) {
     if (player->isCpu == 0) {
         spawn = &gRaceCourseStartEntries[gRaceCourseIndex.signedValue];
         if ((spawn->pathIndex == player->coursePathIndex) && !(player->stateFlags & 0x40)) {
-            velocityY =
-                (s16)(((calculateFixedAngleBetweenXZPoints(
-                           player->pos.x, player->pos.z, spawn->startSurfaceTargetX, spawn->startSurfaceTargetZ
-                       ) -
-                        player->facingAngle) +
-                       0x400) &
-                      0xFFF);
+            velocityY = (s16)(((calculateFixedAngleBetweenXZPoints(
+                                    player->pos.x,
+                                    player->pos.z,
+                                    spawn->startSurfaceTargetX,
+                                    spawn->startSurfaceTargetZ
+                                ) -
+                                player->facingAngle) +
+                               0x400) &
+                              0xFFF);
             if (velocityY < 0x800) {
                 if (player->stateFlags & 0x400) {
                     player->stateFlags &= ~0x400;
@@ -2016,7 +2022,12 @@ void updateRacePlayerMode13AerialTrick(RacePlayer *player) {
     if (stateTimer < 0x3D0) {
         player->stateFlags |= 0x800;
         if ((player->soundDisabled == 0) && (gFrameCounter & 1)) {
-            createCallbackTaskWithUserIdPreservingArgs(initRacePlayerYellowTrickSparkles, 5, 2, (u16)player->playerIndex);
+            createCallbackTaskWithUserIdPreservingArgs(
+                initRacePlayerYellowTrickSparkles,
+                5,
+                2,
+                (u16)player->playerIndex
+            );
         }
     }
 }
@@ -2058,7 +2069,12 @@ void updateRacePlayerMode15AerialTrick(RacePlayer *player) {
     if (stateTimer < 0x3D0) {
         player->stateFlags |= 0x800;
         if ((player->soundDisabled == 0) && (gFrameCounter & 1)) {
-            createCallbackTaskWithUserIdPreservingArgs(initRacePlayerYellowTrickSparkles, 5, 2, (u16)player->playerIndex);
+            createCallbackTaskWithUserIdPreservingArgs(
+                initRacePlayerYellowTrickSparkles,
+                5,
+                2,
+                (u16)player->playerIndex
+            );
         }
     }
 }
@@ -2101,7 +2117,12 @@ void updateRacePlayerMode16AerialTrick(RacePlayer *player) {
     if (timer < 0x3D0) {
         player->stateFlags |= 0x800;
         if ((player->soundDisabled == 0) && (gFrameCounter & 1)) {
-            createCallbackTaskWithUserIdPreservingArgs(initRacePlayerYellowTrickSparkles, 5, 2, (u16)player->playerIndex);
+            createCallbackTaskWithUserIdPreservingArgs(
+                initRacePlayerYellowTrickSparkles,
+                5,
+                2,
+                (u16)player->playerIndex
+            );
         }
     }
 }
@@ -2144,7 +2165,12 @@ void updateRacePlayerMode17AerialTrick(RacePlayer *player) {
     if (timer < 0x3D0) {
         player->stateFlags |= 0x800;
         if ((player->soundDisabled == 0) && (gFrameCounter & 1)) {
-            createCallbackTaskWithUserIdPreservingArgs(initRacePlayerYellowTrickSparkles, 5, 2, (u16)player->playerIndex);
+            createCallbackTaskWithUserIdPreservingArgs(
+                initRacePlayerYellowTrickSparkles,
+                5,
+                2,
+                (u16)player->playerIndex
+            );
         }
     }
 }
@@ -2188,7 +2214,12 @@ void updateRacePlayerMode18AerialTrick(RacePlayer *player) {
     if (timer < 0x3D0) {
         player->stateFlags |= 0x800;
         if ((player->soundDisabled == 0) && (gFrameCounter & 1)) {
-            createCallbackTaskWithUserIdPreservingArgs(initRacePlayerYellowTrickSparkles, 5, 2, (u16)player->playerIndex);
+            createCallbackTaskWithUserIdPreservingArgs(
+                initRacePlayerYellowTrickSparkles,
+                5,
+                2,
+                (u16)player->playerIndex
+            );
         }
     }
 }
@@ -2232,7 +2263,12 @@ void updateRacePlayerMode19AerialTrick(RacePlayer *player) {
     if (timer < 0x3D0) {
         player->stateFlags |= 0x800;
         if ((player->soundDisabled == 0) && (gFrameCounter & 1)) {
-            createCallbackTaskWithUserIdPreservingArgs(initRacePlayerYellowTrickSparkles, 5, 2, (u16)player->playerIndex);
+            createCallbackTaskWithUserIdPreservingArgs(
+                initRacePlayerYellowTrickSparkles,
+                5,
+                2,
+                (u16)player->playerIndex
+            );
         }
     }
 }
@@ -2276,7 +2312,12 @@ void updateRacePlayerMode20AerialTrick(RacePlayer *player) {
     if (timer < 0x3D0) {
         player->stateFlags |= 0x800;
         if ((player->soundDisabled == 0) && (gFrameCounter & 1)) {
-            createCallbackTaskWithUserIdPreservingArgs(initRacePlayerYellowTrickSparkles, 5, 2, (u16)player->playerIndex);
+            createCallbackTaskWithUserIdPreservingArgs(
+                initRacePlayerYellowTrickSparkles,
+                5,
+                2,
+                (u16)player->playerIndex
+            );
         }
     }
 }
@@ -2320,7 +2361,12 @@ void updateRacePlayerMode21AerialTrick(RacePlayer *player) {
     if (timer < 0x3D0) {
         player->stateFlags |= 0x800;
         if ((player->soundDisabled == 0) && (gFrameCounter & 1)) {
-            createCallbackTaskWithUserIdPreservingArgs(initRacePlayerYellowTrickSparkles, 5, 2, (u16)player->playerIndex);
+            createCallbackTaskWithUserIdPreservingArgs(
+                initRacePlayerYellowTrickSparkles,
+                5,
+                2,
+                (u16)player->playerIndex
+            );
         }
     }
 }
@@ -3758,7 +3804,10 @@ void updateRacePlayerMode03Nudge(RacePlayer *player) {
     spawn = &gRaceCourseStartEntries[gRaceCourseIndex.signedValue];
     if ((spawn->pathIndex == playerAlias->coursePathIndex) && !(playerAlias->stateFlags & 0x40)) {
         angleDiff = calculateFixedAngleBetweenXZPoints(
-            playerAlias->pos.x, player->pos.z, spawn->startSurfaceTargetX, spawn->startSurfaceTargetZ
+            playerAlias->pos.x,
+            player->pos.z,
+            spawn->startSurfaceTargetX,
+            spawn->startSurfaceTargetZ
         );
         if (playerAlias->stateFlags & 0x400) {
             angleDiff += 0x800;
@@ -3929,7 +3978,10 @@ void updateRacePlayerMode08SpinoutRecover(RacePlayer *player) {
     spawn = &gRaceCourseStartEntries[gRaceCourseIndex.signedValue];
     if ((spawn->pathIndex == player->coursePathIndex) && !(player->stateFlags & 0x40)) {
         targetAngle = calculateFixedAngleBetweenXZPoints(
-            player->pos.x, player->pos.z, spawn->startSurfaceTargetX, spawn->startSurfaceTargetZ
+            player->pos.x,
+            player->pos.z,
+            spawn->startSurfaceTargetX,
+            spawn->startSurfaceTargetZ
         );
         if (player->stateFlags & 0x400) {
             targetAngle += 0x800;
@@ -5065,7 +5117,6 @@ typedef struct {
     /* 0x34 */ s32 sourceZ;
 } PlayerTransformScratch80095A88;
 
-
 void updateRacePlayerMode07LaunchRampClimb(RacePlayer *player) {
     PlayerTransformScratch80095A88 scratch;
 
@@ -5130,7 +5181,8 @@ void updateRacePlayerMode07SpiralExit(RacePlayer *player) {
         player->stateTimer = 0x28;
         player->stateFlags &= 0xFBFFFBFF;
         player->facingAngle = gRaceCourseStartEntries[gRaceCourseIndex.signedValue].liftExitObjectAngle;
-        player->coursePathOffset = -projectRaceCourseSurfaceProgress(player->coursePathIndex, player->pos.x, player->pos.z);
+        player->coursePathOffset =
+            -projectRaceCourseSurfaceProgress(player->coursePathIndex, player->pos.x, player->pos.z);
         setRaceCameraMode(player->playerIndex, 1);
         gRaceCameras[player->playerIndex].prevPos.x = player->pos.x;
         gRaceCameras[player->playerIndex].prevPos.y = player->pos.y;
@@ -5655,22 +5707,10 @@ void updateRacePlayersPostUpdate(void) {
             *nextSoundPos = *soundPos;
             player->unk28.y = player->groundCorrectionY + player->unk28.y - player->groundOffset + 0xA000;
             if (player->soundDisabled == 0) {
-                addRenderCallback(
-                    &gModelRenderCallbackQueue4Head,
-                    (RenderCallback)drawRacePlayerModel,
-                    player
-                );
-                addRenderCallback(
-                    &gModelRenderCallbackQueue7Head,
-                    (RenderCallback)drawRacePlayerGroundShadow,
-                    player
-                );
+                addRenderCallback(&gModelRenderCallbackQueue4Head, (RenderCallback)drawRacePlayerModel, player);
+                addRenderCallback(&gModelRenderCallbackQueue7Head, (RenderCallback)drawRacePlayerGroundShadow, player);
             } else {
-                addRenderCallback(
-                    &gModelRenderCallbackQueue7Head,
-                    (RenderCallback)drawRaceGhostPlayerModel,
-                    player
-                );
+                addRenderCallback(&gModelRenderCallbackQueue7Head, (RenderCallback)drawRaceGhostPlayerModel, player);
             }
             i++;
         } while (i < gRacePlayerCount);

@@ -31,26 +31,6 @@
 #define RACE_UI_HIT_PRIZE_SCORE_RATE 0x12C
 #define RACE_UI_HIT_PRIZE_QUICKSAND_VALLEY_SCORE_RATE 0x64
 #define RACE_UI_HIT_PRIZE_PERFECT_HIT_BONUS 0x3E8
-#define RACE_UI_GSP_VERTEX_F3DEX(pkt, v, n, v0) \
-    gDma1p((pkt), G_VTX, (v), ((n) << 10) | (sizeof(Vtx) * (n) - 1), (v0) * 2)
-#define RACE_UI_GSP1QUADRANGLE_F3DEX(pkt, v0, v1, v2, v3, flag)                                  \
-    {                                                                                            \
-        Gfx *_g = (Gfx *)(pkt);                                                                  \
-        _g->words.w0 = _SHIFTL(0xB1, 24, 8) | RACE_UI_SP_QUADRANGLE_WORD0(v0, v1, v2, v3, flag); \
-        _g->words.w1 = RACE_UI_SP_QUADRANGLE_WORD1(v0, v1, v2, v3, flag);                        \
-    }
-#define RACE_UI_SP_QUADRANGLE_WORD0(v0, v1, v2, v3, flag)   \
-    (((flag) == 0)   ? RACE_UI_SP_TRIANGLE_WORD(v0, v1, v2) \
-     : ((flag) == 1) ? RACE_UI_SP_TRIANGLE_WORD(v1, v2, v3) \
-     : ((flag) == 2) ? RACE_UI_SP_TRIANGLE_WORD(v2, v3, v0) \
-                     : RACE_UI_SP_TRIANGLE_WORD(v3, v0, v1))
-#define RACE_UI_SP_QUADRANGLE_WORD1(v0, v1, v2, v3, flag)   \
-    (((flag) == 0)   ? RACE_UI_SP_TRIANGLE_WORD(v0, v2, v3) \
-     : ((flag) == 1) ? RACE_UI_SP_TRIANGLE_WORD(v1, v3, v0) \
-     : ((flag) == 2) ? RACE_UI_SP_TRIANGLE_WORD(v2, v0, v1) \
-                     : RACE_UI_SP_TRIANGLE_WORD(v3, v1, v2))
-#define RACE_UI_SP_TRIANGLE_WORD(v0, v1, v2) \
-    (_SHIFTL((v0) * 2, 16, 8) | _SHIFTL((v1) * 2, 8, 8) | _SHIFTL((v2) * 2, 0, 8))
 #define ASSET_HANDLE(index) (gAssetHandles[(index)])
 #define RACE_UI_PRIZE_PAYOUT_REVEAL_TIMER 0x14
 #define RACE_UI_HIT_PRIZE_SHOW_TOTAL_MONEY 3
@@ -2979,8 +2959,8 @@ void renderRacePlayerSparkleEffect(RaceUiSparkleActor *arg0) {
         gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, arg1->palettes[arg1->frame]);
         gSPMatrix(gRegionAllocPtr++, arg1->matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
         gSPMatrix(gRegionAllocPtr++, gViewportMatrix, G_MTX_NOPUSH | G_MTX_MUL | G_MTX_MODELVIEW);
-        RACE_UI_GSP_VERTEX_F3DEX(gRegionAllocPtr++, gRacePlayerSparkleQuadVertices, 4, 0);
-        RACE_UI_GSP1QUADRANGLE_F3DEX(gRegionAllocPtr++, 2, 1, 0, 3, 3);
+        gSPVertex(gRegionAllocPtr++, gRacePlayerSparkleQuadVertices, 4, 0);
+        gSP1Quadrangle(gRegionAllocPtr++, 2, 1, 0, 3, 3);
     }
 }
 
@@ -3331,7 +3311,11 @@ void updateRaceUiItemStealTrailEffect(RaceUiRankTrailActor *arg0) {
     }
 
     if (gRacePlayers[arg0->task.userId].stateFlags & 0x100000) {
-        addRenderCallback(&gModelRenderCallbackQueue7Head, (RenderCallback)renderRaceUiItemStealTrailEffect, (void *)arg0);
+        addRenderCallback(
+            &gModelRenderCallbackQueue7Head,
+            (RenderCallback)renderRaceUiItemStealTrailEffect,
+            (void *)arg0
+        );
         return;
     }
 
@@ -3385,8 +3369,8 @@ void renderRaceUiBurstTextParticle(RaceUiTextParticleActor *arg0) {
         gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, arg0->palettes[arg0->timer >> 2]);
         gSPMatrix(gRegionAllocPtr++, arg0->matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
         gSPMatrix(gRegionAllocPtr++, gViewportMatrix, G_MTX_NOPUSH | G_MTX_MUL | G_MTX_MODELVIEW);
-        RACE_UI_GSP_VERTEX_F3DEX(gRegionAllocPtr++, gRaceUiBurstTextQuadVertices, 4, 0);
-        RACE_UI_GSP1QUADRANGLE_F3DEX(gRegionAllocPtr++, 2, 1, 0, 3, 3);
+        gSPVertex(gRegionAllocPtr++, gRaceUiBurstTextQuadVertices, 4, 0);
+        gSP1Quadrangle(gRegionAllocPtr++, 2, 1, 0, 3, 3);
     }
 }
 
@@ -3426,8 +3410,8 @@ void renderRaceUiAltBurstTextParticle(RaceUiTextParticleActor *arg0) {
         gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, arg0->palettes[arg0->timer >> 2]);
         gSPMatrix(gRegionAllocPtr++, arg0->matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
         gSPMatrix(gRegionAllocPtr++, gViewportMatrix, G_MTX_NOPUSH | G_MTX_MUL | G_MTX_MODELVIEW);
-        RACE_UI_GSP_VERTEX_F3DEX(gRegionAllocPtr++, gRaceUiBurstTextQuadVertices, 4, 0);
-        RACE_UI_GSP1QUADRANGLE_F3DEX(gRegionAllocPtr++, 2, 1, 0, 3, 3);
+        gSPVertex(gRegionAllocPtr++, gRaceUiBurstTextQuadVertices, 4, 0);
+        gSP1Quadrangle(gRegionAllocPtr++, 2, 1, 0, 3, 3);
     }
 }
 

@@ -54,7 +54,8 @@ void initControllerPakRaceRecordSaveFlow(void) {
     LOAD_ASSET(_60F1A0, 0x29);
     initCallbackTaskScheduler(0);
     gActiveMenuTask = createCallbackTask((CallbackTaskCallback)&initControllerPakRaceRecordSaveScorePanel, 0, 0x61);
-    gMenuScratch2.task = createCallbackTask((CallbackTaskCallback)&initControllerPakRaceRecordSaveStatusChoicePrompt, 0, 0x60);
+    gMenuScratch2.task =
+        createCallbackTask((CallbackTaskCallback)&initControllerPakRaceRecordSaveStatusChoicePrompt, 0, 0x60);
     gControllerPakRaceRecordSaveStatusTransition.step = 0;
     gControllerPakRaceRecordSaveStatusTransition.alpha = 0;
     gControllerPakRaceRecordSaveStatusTransition.targetStatus = 0;
@@ -272,8 +273,6 @@ void updateControllerPakRaceRecordSaveFlow(void) {
     }
     updateCallbackTasks();
 }
-
-
 
 void fadeOutControllerPakRaceRecordSaveFlow(void) {
     s32 temp_v0 = gCurrentGameTask->callbackData0;

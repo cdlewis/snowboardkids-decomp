@@ -917,8 +917,6 @@ void drawCharacterSelectPlayerStatsPanels(CharacterSelectUiPlayerStatsPanelActor
     }
 }
 
-
-
 void updateCharacterSelectPlayerStatsPanels(CharacterSelectUiPlayerStatsPanelActor *arg0) {
     s32 i;
     CharacterSelectUiPlayerStatsPanelActor *statsPanels;

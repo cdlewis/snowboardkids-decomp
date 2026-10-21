@@ -273,12 +273,7 @@ void initPassAwardCelebration(void) {
     createCallbackTaskWithUserId((CallbackTaskCallback)initPassAwardPodium, 0, 0x64, effectArg);
     createCallbackTask((CallbackTaskCallback)initCongratulationsBannerModel, 0, 0x64);
     createCallbackTaskWithUserId((CallbackTaskCallback)initPassAwardLabelFadeIn, 0, 0x64, effectArg);
-    createCallbackTaskWithUserId(
-        (CallbackTaskCallback)initPassAwardWinner,
-        0,
-        0x64,
-        gRacePlayers[0].characterId
-    );
+    createCallbackTaskWithUserId((CallbackTaskCallback)initPassAwardWinner, 0, 0x64, gRacePlayers[0].characterId);
     createPassAwardOpponent(1, gPassAwardOpponentCharacterIds[gRacePlayers[0].characterId][0]);
     createPassAwardOpponent(2, gPassAwardOpponentCharacterIds[gRacePlayers[0].characterId][1]);
     createPassAwardOpponent(3, gPassAwardOpponentCharacterIds[gRacePlayers[0].characterId][2]);

@@ -12,7 +12,6 @@
 #include "game/race/player/race_player_model_renderer.h"
 #include "game/math/fixed_matrix_multiply.h"
 
-
 void updateEndingLindaFinalPose(EndingCreditsLindaActor *arg0) {
     stepMainMenuSceneModelAnimation(3);
     addMainMenuSceneModelDrawCallback(3);
@@ -25,7 +24,12 @@ void updateEndingLindaStartFinalPose(EndingCreditsLindaActor *arg0) {
         setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateEndingLindaFinalPose);
         setMainMenuSceneModelAnimation(3, 0x5B);
         arg0->character.rotation.y = 0xC00;
-        setMainMenuSceneModelRotation(3, arg0->character.rotation.x, arg0->character.rotation.y, arg0->character.rotation.z);
+        setMainMenuSceneModelRotation(
+            3,
+            arg0->character.rotation.x,
+            arg0->character.rotation.y,
+            arg0->character.rotation.z
+        );
     }
 }
 
@@ -85,14 +89,24 @@ void updateEndingLindaWaitPhase3FAnim(EndingCreditsLindaActor *arg0) {
     } else {
         arg0->character.position.z += 0x80000;
     }
-    setMainMenuSceneModelPosition(3, arg0->character.position.x, arg0->character.position.y, arg0->character.position.z);
+    setMainMenuSceneModelPosition(
+        3,
+        arg0->character.position.x,
+        arg0->character.position.y,
+        arg0->character.position.z
+    );
     addMainMenuSceneModelDrawCallback(3);
 }
 
 void updateEndingLindaSpinUntilPhase3F(EndingCreditsLindaActor *arg0) {
     if (stepMainMenuSceneModelAnimation(3) == 0) {
         arg0->character.position.x = arg0->character.position.x + 0x18000;
-        setMainMenuSceneModelPosition(3, arg0->character.position.x, arg0->character.position.y, arg0->character.position.z);
+        setMainMenuSceneModelPosition(
+            3,
+            arg0->character.position.x,
+            arg0->character.position.y,
+            arg0->character.position.z
+        );
     }
     if (gEndingCreditsSequencePhase == 0x3F) {
         arg0->character.stateTimer = 0;
@@ -117,7 +131,12 @@ void updateEndingLindaTumbleToPhase3C(EndingCreditsLindaActor *arg0) {
     arg0->character.position.y += var_v0 << 19;
     arg0->character.position.z += 0xFFFA0000;
     arg0->character.stateTimer = arg0->character.stateTimer + 1;
-    setMainMenuSceneModelPosition(3, arg0->character.position.x, arg0->character.position.y, arg0->character.position.z);
+    setMainMenuSceneModelPosition(
+        3,
+        arg0->character.position.x,
+        arg0->character.position.y,
+        arg0->character.position.z
+    );
     addMainMenuSceneModelDrawCallback(3);
     if (sp20 == 1) {
         arg0->character.stateTimer = 0;
@@ -134,9 +153,19 @@ void updateEndingLindaExitUntilPhase3C(EndingCreditsLindaActor *arg0) {
         setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateEndingLindaTumbleToPhase3C);
         setMainMenuSceneModelAnimation(3, 0x5C);
         arg0->character.rotation.y = 0xC00;
-        setMainMenuSceneModelRotation(3, arg0->character.rotation.x, arg0->character.rotation.y, arg0->character.rotation.z);
+        setMainMenuSceneModelRotation(
+            3,
+            arg0->character.rotation.x,
+            arg0->character.rotation.y,
+            arg0->character.rotation.z
+        );
     }
-    setMainMenuSceneModelPosition(3, arg0->character.position.x, arg0->character.position.y, arg0->character.position.z);
+    setMainMenuSceneModelPosition(
+        3,
+        arg0->character.position.x,
+        arg0->character.position.y,
+        arg0->character.position.z
+    );
     addMainMenuSceneModelTexturedDrawCallbackWithUnusedArg(3, arg0->textureId, arg0->paletteId, 0xB);
 }
 
@@ -216,7 +245,12 @@ void updateEndingLindaSlideLeftFromFarRight(EndingCreditsLindaActor *arg0) {
         gEndingCreditsSequencePhase = 0x32;
     }
 
-    setMainMenuSceneModelPosition(3, arg0->character.position.x, arg0->character.position.y, arg0->character.position.z);
+    setMainMenuSceneModelPosition(
+        3,
+        arg0->character.position.x,
+        arg0->character.position.y,
+        arg0->character.position.z
+    );
     addMainMenuSceneModelTexturedDrawCallbackWithUnusedArg(3, arg0->textureId, arg0->paletteId, 0xB);
 }
 
@@ -247,7 +281,12 @@ void updateEndingLindaSlideLeftSetPhase2E(EndingCreditsLindaActor *arg0) {
             }
         }
     }
-    setMainMenuSceneModelPosition(3, arg0->character.position.x, arg0->character.position.y, arg0->character.position.z);
+    setMainMenuSceneModelPosition(
+        3,
+        arg0->character.position.x,
+        arg0->character.position.y,
+        arg0->character.position.z
+    );
     addMainMenuSceneModelTexturedDrawCallbackWithUnusedArg(3, arg0->textureId, arg0->paletteId, 0xB);
 }
 
@@ -273,7 +312,12 @@ void updateEndingLindaRunLeftSetPhase2D(EndingCreditsLindaActor *arg0) {
     } else if ((sp == 1) && (arg0->character.position.x >= 0x800001)) {
         setMainMenuSceneModelAnimation(3, 0x4B);
     }
-    setMainMenuSceneModelPosition(3, arg0->character.position.x, arg0->character.position.y, arg0->character.position.z);
+    setMainMenuSceneModelPosition(
+        3,
+        arg0->character.position.x,
+        arg0->character.position.y,
+        arg0->character.position.z
+    );
     addMainMenuSceneModelTexturedDrawCallbackWithUnusedArg(3, arg0->textureId, arg0->paletteId, 0xB);
 }
 
@@ -507,7 +551,12 @@ void updateEndingLindaHopRightToIdle(EndingCreditsLindaActor *arg0) {
         setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateEndingLindaWaitBeforePhase1B);
     } else {
         arg0->character.position.x = arg0->character.position.x + 0x40000;
-        setMainMenuSceneModelPosition(3, arg0->character.position.x, arg0->character.position.y, arg0->character.position.z);
+        setMainMenuSceneModelPosition(
+            3,
+            arg0->character.position.x,
+            arg0->character.position.y,
+            arg0->character.position.z
+        );
     }
     addMainMenuSceneModelDrawCallback(3);
 }
@@ -530,7 +579,12 @@ void updateEndingLindaHopRightToPose(EndingCreditsLindaActor *arg0) {
         setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateEndingLindaHopRightToIdle);
         setMainMenuSceneModelAnimation(3, 0x40);
     }
-    setMainMenuSceneModelPosition(3, arg0->character.position.x, arg0->character.position.y, arg0->character.position.z);
+    setMainMenuSceneModelPosition(
+        3,
+        arg0->character.position.x,
+        arg0->character.position.y,
+        arg0->character.position.z
+    );
     addMainMenuSceneModelDrawCallback(3);
 }
 
@@ -539,7 +593,12 @@ void updateEndingLindaSlideRightSetPhase1A(EndingCreditsLindaActor *arg0) {
     s32 sp20;
 
     arg0->character.position.x += 0x100000;
-    setMainMenuSceneModelPosition(3, arg0->character.position.x, arg0->character.position.y, arg0->character.position.z);
+    setMainMenuSceneModelPosition(
+        3,
+        arg0->character.position.x,
+        arg0->character.position.y,
+        arg0->character.position.z
+    );
     sp20 = stepMainMenuSceneModelAnimation(3);
     addMainMenuSceneModelDrawCallback(3);
     arg0->character.position.y += 0x50000;
@@ -601,9 +660,15 @@ void updateEndingLindaHandshakeLoop(EndingCreditsLindaActor *arg0) {
                 } else {
                     arg0->character.position.y = (s32)(arg0->character.position.y + 0xFFF70000);
                 }
-                setMainMenuSceneModelPosition(3, arg0->character.position.x, arg0->character.position.y, arg0->character.position.z);
+                setMainMenuSceneModelPosition(
+                    3,
+                    arg0->character.position.x,
+                    arg0->character.position.y,
+                    arg0->character.position.z
+                );
                 var_s1 += 1;
-                if ((arg0->animationTimer == 0xD) && (gEndingCreditsHandshakeState == 1) && (arg0->character.stateTimer == 3)) {
+                if ((arg0->animationTimer == 0xD) && (gEndingCreditsHandshakeState == 1) &&
+                    (arg0->character.stateTimer == 3)) {
                     gEndingCreditsHandshakeState = 5;
                 }
                 continue;
@@ -648,7 +713,12 @@ void startEndingLindaHandshakeLoop(EndingCreditsLindaActor *arg0) {
             arg0->character.rotation.y = 0x400;
             setMainMenuSceneModelAnimation(3, 0x3B);
         }
-        setMainMenuSceneModelRotation(3, arg0->character.rotation.x, arg0->character.rotation.y, arg0->character.rotation.z);
+        setMainMenuSceneModelRotation(
+            3,
+            arg0->character.rotation.x,
+            arg0->character.rotation.y,
+            arg0->character.rotation.z
+        );
     }
 }
 
@@ -658,7 +728,12 @@ void waitEndingLindaPhase19(EndingCreditsLindaActor *arg0) {
     if (arg0->character.stateTimer == 0xF) {
         gEndingCreditsSequencePhase = 0x19;
         setCallbackTaskCallback(arg0, (CallbackTaskCallback)startEndingLindaHandshakeLoop);
-        setMainMenuSceneModelPosition(3, arg0->character.position.x, arg0->character.position.y, arg0->character.position.z);
+        setMainMenuSceneModelPosition(
+            3,
+            arg0->character.position.x,
+            arg0->character.position.y,
+            arg0->character.position.z
+        );
     }
 }
 
@@ -695,7 +770,12 @@ void updateEndingLindaSlideLeftUntilPhase17(EndingCreditsLindaActor *arg0) {
         setMainMenuSceneModelAnimation(3, 0x38);
         gEndingCreditsSequencePhase = 0x17;
         arg0->character.rotation.y = 0x400;
-        setMainMenuSceneModelRotation(3, arg0->character.rotation.x, arg0->character.rotation.y, arg0->character.rotation.z);
+        setMainMenuSceneModelRotation(
+            3,
+            arg0->character.rotation.x,
+            arg0->character.rotation.y,
+            arg0->character.rotation.z
+        );
         var_a1 = arg0->character.position.x;
     }
     setMainMenuSceneModelPosition(3, var_a1, arg0->character.position.y, arg0->character.position.z);
@@ -724,7 +804,12 @@ void updateEndingLindaBlinkThenSlideLeft(EndingCreditsLindaActor *arg0) {
             setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateEndingLindaSlideLeftUntilPhase17);
             setMainMenuSceneModelAnimation(3, 0xF);
             arg0->character.rotation.y = 0xC00;
-            setMainMenuSceneModelRotation(3, arg0->character.rotation.x, arg0->character.rotation.y, arg0->character.rotation.z);
+            setMainMenuSceneModelRotation(
+                3,
+                arg0->character.rotation.x,
+                arg0->character.rotation.y,
+                arg0->character.rotation.z
+            );
         }
     }
 }
@@ -743,7 +828,12 @@ void updateEndingLindaSlideRightUntilPhase16(EndingCreditsLindaActor *arg0) {
 
     if (stepMainMenuSceneModelAnimation(3) == 0) {
         arg0->character.position.x = arg0->character.position.x + 0x48000;
-        setMainMenuSceneModelPosition(3, arg0->character.position.x, arg0->character.position.y, arg0->character.position.z);
+        setMainMenuSceneModelPosition(
+            3,
+            arg0->character.position.x,
+            arg0->character.position.y,
+            arg0->character.position.z
+        );
         temp_t9 = (arg0->character.stateTimer & 0xFFFF) + 1;
         arg0->character.stateTimer = temp_t9;
         if ((temp_t9 & 0xFFFF) == 2) {
@@ -768,7 +858,12 @@ void waitEndingLindaPhase15(EndingCreditsLindaActor *arg0) {
         arg0->character.stateTimer = 0;
         setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateEndingLindaSlideRightUntilPhase16);
         arg0->character.rotation.y = 0x400;
-        setMainMenuSceneModelRotation(3, arg0->character.rotation.x, arg0->character.rotation.y, arg0->character.rotation.z);
+        setMainMenuSceneModelRotation(
+            3,
+            arg0->character.rotation.x,
+            arg0->character.rotation.y,
+            arg0->character.rotation.z
+        );
         setMainMenuSceneModelAnimation(3, 0x28);
     } else if (sp20 == 1) {
         temp_t0 = (arg0->character.stateTimer & 0xFFFF) + 1;
@@ -798,7 +893,12 @@ void updateEndingLindaSlideLeftSetPhase14(EndingCreditsLindaActor *arg0) {
             setMainMenuSceneModelAnimation(3, 0x27);
         }
     }
-    setMainMenuSceneModelPosition(3, arg0->character.position.x, arg0->character.position.y, arg0->character.position.z);
+    setMainMenuSceneModelPosition(
+        3,
+        arg0->character.position.x,
+        arg0->character.position.y,
+        arg0->character.position.z
+    );
     addMainMenuSceneModelDrawCallback(3);
 }
 
@@ -829,8 +929,18 @@ void initEndingCreditsLinda(EndingCreditsLindaActor *arg0) {
     arg0->paletteId = 3;
     initMainMenuSceneModel(3, 3);
     setMainMenuSceneModelAnimation(3, 0x27);
-    setMainMenuSceneModelPosition(3, arg0->character.position.x, arg0->character.position.y, arg0->character.position.z);
-    setMainMenuSceneModelRotation(3, arg0->character.rotation.x, arg0->character.rotation.y, arg0->character.rotation.z);
+    setMainMenuSceneModelPosition(
+        3,
+        arg0->character.position.x,
+        arg0->character.position.y,
+        arg0->character.position.z
+    );
+    setMainMenuSceneModelRotation(
+        3,
+        arg0->character.rotation.x,
+        arg0->character.rotation.y,
+        arg0->character.rotation.z
+    );
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)waitEndingLindaPhase13);
 }
 

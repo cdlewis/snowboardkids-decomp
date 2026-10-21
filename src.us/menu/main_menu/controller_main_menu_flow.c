@@ -107,7 +107,11 @@ void requestRumbleMotorInit(u16 controllerIndex) {
 
     msg = NULL;
 
-    osSendMesg(&gControllerSubsystemRequestQueue, (OSMesg)(controllerIndex + CONTROLLER_REQUEST_INIT_RUMBLE), OS_MESG_BLOCK);
+    osSendMesg(
+        &gControllerSubsystemRequestQueue,
+        (OSMesg)(controllerIndex + CONTROLLER_REQUEST_INIT_RUMBLE),
+        OS_MESG_BLOCK
+    );
     osRecvMesg(&gControllerSubsystemReplyQueue, &msg, OS_MESG_BLOCK);
 }
 
@@ -172,7 +176,11 @@ void requestControllerPakProbe(u16 controllerIndex) {
 
     msg = NULL;
 
-    osSendMesg(&gControllerSubsystemRequestQueue, (OSMesg)(controllerIndex + CONTROLLER_REQUEST_PROBE_PAK), OS_MESG_BLOCK);
+    osSendMesg(
+        &gControllerSubsystemRequestQueue,
+        (OSMesg)(controllerIndex + CONTROLLER_REQUEST_PROBE_PAK),
+        OS_MESG_BLOCK
+    );
     osRecvMesg(&gControllerSubsystemReplyQueue, &msg, OS_MESG_BLOCK);
 }
 
@@ -210,7 +218,11 @@ void requestControllerPakSaveStatus(u16 controllerIndex) {
 
     msg = NULL;
 
-    osSendMesg(&gControllerSubsystemRequestQueue, (OSMesg)(controllerIndex + CONTROLLER_REQUEST_CHECK_SAVE), OS_MESG_BLOCK);
+    osSendMesg(
+        &gControllerSubsystemRequestQueue,
+        (OSMesg)(controllerIndex + CONTROLLER_REQUEST_CHECK_SAVE),
+        OS_MESG_BLOCK
+    );
     osRecvMesg(&gControllerSubsystemReplyQueue, &msg, OS_MESG_BLOCK);
 }
 
@@ -276,7 +288,11 @@ void requestControllerPakSaveRead(u16 controllerIndex) {
 
     msg = NULL;
 
-    osSendMesg(&gControllerSubsystemRequestQueue, (OSMesg)(controllerIndex + CONTROLLER_REQUEST_READ_SAVE), OS_MESG_BLOCK);
+    osSendMesg(
+        &gControllerSubsystemRequestQueue,
+        (OSMesg)(controllerIndex + CONTROLLER_REQUEST_READ_SAVE),
+        OS_MESG_BLOCK
+    );
     osRecvMesg(&gControllerSubsystemReplyQueue, &msg, OS_MESG_BLOCK);
 }
 
@@ -369,7 +385,11 @@ void requestControllerPakSaveWrite(u16 controllerIndex) {
 
     msg = NULL;
 
-    osSendMesg(&gControllerSubsystemRequestQueue, (OSMesg)(controllerIndex + CONTROLLER_REQUEST_WRITE_SAVE), OS_MESG_BLOCK);
+    osSendMesg(
+        &gControllerSubsystemRequestQueue,
+        (OSMesg)(controllerIndex + CONTROLLER_REQUEST_WRITE_SAVE),
+        OS_MESG_BLOCK
+    );
     osRecvMesg(&gControllerSubsystemReplyQueue, &msg, OS_MESG_BLOCK);
 }
 
@@ -443,7 +463,11 @@ void requestControllerPakRepair(u16 controllerIndex) {
 
     msg = NULL;
 
-    osSendMesg(&gControllerSubsystemRequestQueue, (OSMesg)(controllerIndex + CONTROLLER_REQUEST_REPAIR_PAK), OS_MESG_BLOCK);
+    osSendMesg(
+        &gControllerSubsystemRequestQueue,
+        (OSMesg)(controllerIndex + CONTROLLER_REQUEST_REPAIR_PAK),
+        OS_MESG_BLOCK
+    );
     osRecvMesg(&gControllerSubsystemReplyQueue, &msg, OS_MESG_BLOCK);
 }
 
@@ -565,10 +589,12 @@ u16 validateControllerPakSave(volatile s32 channel) {
         firstByteStep = (byteCursor + 1) - byteCursor;
         wordCursor++;
         byteCursor++;
-        if (1) { } if (1) { } if (1) { } if (1) { }
+        if (1) {}
+        if (1) {}
+        if (1) {}
+        if (1) {}
         secondByteStep = firstByteStep && firstByteStep;
-        if (secondByteStep) {
-        }
+        if (secondByteStep) {}
         if (!(offset < 0x2C)) {
             break;
         }
@@ -586,12 +612,9 @@ u16 validateControllerPakSave(volatile s32 channel) {
         nextByte = byteCursor + 1;
         secondByteStep = nextByte - byteCursor;
         firstByteStep = wordCursorValid;
-        if (secondByteStep) {
-        }
-        if ((firstByteStep ^ 0) && wordCursor) {
-        }
-        if (save && save) {
-        }
+        if (secondByteStep) {}
+        if ((firstByteStep ^ 0) && wordCursor) {}
+        if (save && save) {}
         byteCursor++;
         if (!(new_var != count)) {
             break;

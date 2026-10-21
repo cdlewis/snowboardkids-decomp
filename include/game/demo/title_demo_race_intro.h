@@ -10,9 +10,7 @@ typedef union RacePlayerReplaySnapshot {
     u8 bytes[sizeof(RacePlayer)];
 } RacePlayerReplaySnapshot;
 
-typedef char RacePlayerReplaySnapshotSizeCheck[
-    (sizeof(RacePlayerReplaySnapshot) == sizeof(RacePlayer)) ? 1 : -1
-];
+typedef char RacePlayerReplaySnapshotSizeCheck[(sizeof(RacePlayerReplaySnapshot) == sizeof(RacePlayer)) ? 1 : -1];
 
 /* Segment starts restore all four complete player snapshots. The camera
  * schedule is independent: changing camera mode need not restore players. */

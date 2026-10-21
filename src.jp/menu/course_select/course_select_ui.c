@@ -1041,8 +1041,15 @@ void drawCourseSelectCourseStats(CourseSelectCourseStatsActor *arg0) {
 
             if (gPlayerCount < 3) {
                 if (courseIndex >= 9) {
-                    if ((gCourseSelectUnknownTrickText && gCourseSelectUnknownTrickText) && gCourseSelectUnknownTrickText) {}
-                    drawMenuAsciiText((s16)(arg0->x[i] + 0x38), arg0->y[i], (u8 *)gCourseSelectUnknownSpeedText, 0, arg0->alpha);
+                    if ((gCourseSelectUnknownTrickText && gCourseSelectUnknownTrickText) &&
+                        gCourseSelectUnknownTrickText) {}
+                    drawMenuAsciiText(
+                        (s16)(arg0->x[i] + 0x38),
+                        arg0->y[i],
+                        (u8 *)gCourseSelectUnknownSpeedText,
+                        0,
+                        arg0->alpha
+                    );
                 } else {
                     j = 0;
                     if (j <

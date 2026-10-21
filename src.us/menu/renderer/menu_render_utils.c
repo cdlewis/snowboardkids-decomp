@@ -768,27 +768,51 @@ void drawScaledAssetTableSprite(s16 x, s16 y, AssetTable *asset, u16 entryIndex,
 
     gDPPipeSync(gRegionAllocPtr++);
     gDPSetTextureFilter(gRegionAllocPtr++, G_TF_AVERAGE);
-    gDPLoadTextureTile_4b(gRegionAllocPtr++, sprite->imageOffset + (u8 *)asset,
-                          G_IM_FMT_CI, sprite->width, sprite->height,
-                          0, 0, sprite->width, sprite->height, 0,
-                          G_TX_CLAMP, G_TX_CLAMP, G_TX_NOMASK, G_TX_NOMASK,
-                          G_TX_NOLOD, G_TX_NOLOD);
-    gDPLoadTLUT_pal16(gRegionAllocPtr++, 0,
-                      (sprite->paletteIndex << 5) + paletteBase);
-    gSPTextureRectangle(gRegionAllocPtr++, x0 << 2, y0 << 2,
-                        x1 << 2, y1 << 2, G_TX_RENDERTILE,
-                        (clippedS << 5) + 0x10,
-                        (clippedT << 5) + 0x10,
-                        1 << (scale + 10),
-                        1 << (scale + 10));
+    gDPLoadTextureTile_4b(
+        gRegionAllocPtr++,
+        sprite->imageOffset + (u8 *)asset,
+        G_IM_FMT_CI,
+        sprite->width,
+        sprite->height,
+        0,
+        0,
+        sprite->width,
+        sprite->height,
+        0,
+        G_TX_CLAMP,
+        G_TX_CLAMP,
+        G_TX_NOMASK,
+        G_TX_NOMASK,
+        G_TX_NOLOD,
+        G_TX_NOLOD
+    );
+    gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, (sprite->paletteIndex << 5) + paletteBase);
+    gSPTextureRectangle(
+        gRegionAllocPtr++,
+        x0 << 2,
+        y0 << 2,
+        x1 << 2,
+        y1 << 2,
+        G_TX_RENDERTILE,
+        (clippedS << 5) + 0x10,
+        (clippedT << 5) + 0x10,
+        1 << (scale + 10),
+        1 << (scale + 10)
+    );
     gDPPipeSync(gRegionAllocPtr++);
     gDPSetTextureFilter(gRegionAllocPtr++, G_TF_POINT);
     gDPPipeSync(gRegionAllocPtr++);
 }
 
 // Matched by inspectredc via decomp.me scratch LH2aY.
-void drawScaledAssetTableSpriteWithExplicitPalette(s16 x, s16 y, AssetTable *asset, u16 entryIndex,
-                                                   u16 paletteIndex, u16 scale) {
+void drawScaledAssetTableSpriteWithExplicitPalette(
+    s16 x,
+    s16 y,
+    AssetTable *asset,
+    u16 entryIndex,
+    u16 paletteIndex,
+    u16 scale
+) {
     s32 x0;
     s32 y0;
     u8 *paletteBase;
@@ -938,8 +962,11 @@ void drawMenuAsciiFontTile(s16 x, s16 y, u16 s, u16 t, u16 paletteIndex) {
 
                 if (gMenuAsciiFontPaletteIndex != paletteIndex) {
                     gMenuAsciiFontPaletteIndex = paletteIndex;
-                    FONT_GFX_CMD(gRegionAllocPtr++, 0xFD100000,
-                                 (SPRITE_PALETTE_INDEX(sMenuAsciiFontAsset, paletteIndex) << 5) + (u32)gMenuAsciiFontPaletteBase);
+                    FONT_GFX_CMD(
+                        gRegionAllocPtr++,
+                        0xFD100000,
+                        (SPRITE_PALETTE_INDEX(sMenuAsciiFontAsset, paletteIndex) << 5) + (u32)gMenuAsciiFontPaletteBase
+                    );
                     FONT_GFX_CMD(gRegionAllocPtr++, 0xE8000000, 0);
                     FONT_GFX_CMD(gRegionAllocPtr++, 0xF5000100, 0x07000000);
                     FONT_GFX_CMD(gRegionAllocPtr++, 0xE6000000, 0);

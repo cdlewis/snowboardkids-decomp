@@ -200,8 +200,7 @@ s32 __osGetId(OSPfs *pfs) {
     validPackId = &candidatePackId;
 
     /* Recover one of the redundant ID copies, or rebuild the ID if every copy is corrupt. */
-    if (validPackId->checksum != calculatedChecksum ||
-        validPackId->inverted_checksum != calculatedInvertedChecksum) {
+    if (validPackId->checksum != calculatedChecksum || validPackId->inverted_checksum != calculatedInvertedChecksum) {
         ret = __osCheckPackId(pfs, validPackId);
 
         if (ret == PFS_ERR_ID_FATAL) {

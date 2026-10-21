@@ -46,10 +46,8 @@ typedef struct {
     /* 0x07 */ u8 confirmSelection;
 } ControllerPakRumbleCheckPromptState;
 
-typedef char ControllerPakRumbleTransitionSizeCheck[
-    (sizeof(ControllerPakRumbleCheckPromptTransition) == 0xA) ? 1 : -1];
-typedef char ControllerPakRumbleStateSizeCheck[
-    (sizeof(ControllerPakRumbleCheckPromptState) == 8) ? 1 : -1];
+typedef char ControllerPakRumbleTransitionSizeCheck[(sizeof(ControllerPakRumbleCheckPromptTransition) == 0xA) ? 1 : -1];
+typedef char ControllerPakRumbleStateSizeCheck[(sizeof(ControllerPakRumbleCheckPromptState) == 8) ? 1 : -1];
 
 extern ControllerPakRumbleCheckPromptTransition gControllerPakRumbleCheckPromptTransition;
 extern ControllerPakRumbleCheckPromptState gControllerPakRumbleCheckPromptState;

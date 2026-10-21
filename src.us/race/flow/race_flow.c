@@ -93,17 +93,9 @@ CourseGridEntry *gRaceReplayCourseGridLists[12] = {
 u8 gPendingEndingCreditsFlow = 0;
 RaceCourseCharacterIdTable gRaceCourseOpponentCharacterIds = {
     {
-        2, 3, 4, 0,
-        0, 1, 2, 3,
-        1, 2, 3, 4,
-        0, 3, 4, 1,
-        0, 2, 3, 4,
-        0, 1, 2, 3,
-        1, 3, 4, 0,
-        0, 1, 2, 3,
-        5, 0, 1, 3,
-        0, 1, 4, 2,
-    },
+     2, 3, 4, 0, 0, 1, 2, 3, 1, 2, 3, 4, 0, 3, 4, 1, 0, 2, 3, 4,
+     0, 1, 2, 3, 1, 3, 4, 0, 0, 1, 2, 3, 5, 0, 1, 3, 0, 1, 4, 2,
+     },
 };
 RaceCpuBoardConfig gBigSnowmanCpuBoardConfigs[8] = {
     { 1,  0 },
@@ -209,8 +201,10 @@ RaceCpuBoardConfig gRookieMountainCpuBoardConfigs[8] = {
  * Silver Mountain (6): board properties index 8; Animal Land (7): board properties index 0;
  * Ninja Land (8): board properties index 8, except character 5 uses 14. */
 RaceCpuBoardConfig *gRaceCpuBoardConfigsByCourse[10] = {
-    gBigSnowmanCpuBoardConfigs, gSunsetRockCpuBoardConfigs, gNightHighwayCpuBoardConfigs, gGrassValleyCpuBoardConfigs, gDizzyLandCpuBoardConfigs,
-    gQuicksandValleyCpuBoardConfigs, gSilverMountainCpuBoardConfigs, gAnimalLandCpuBoardConfigs, gNinjaLandCpuBoardConfigs, gRookieMountainCpuBoardConfigs,
+    gBigSnowmanCpuBoardConfigs,     gSunsetRockCpuBoardConfigs, gNightHighwayCpuBoardConfigs,
+    gGrassValleyCpuBoardConfigs,    gDizzyLandCpuBoardConfigs,  gQuicksandValleyCpuBoardConfigs,
+    gSilverMountainCpuBoardConfigs, gAnimalLandCpuBoardConfigs, gNinjaLandCpuBoardConfigs,
+    gRookieMountainCpuBoardConfigs,
 };
 /* Shared action/item trigger chance: indices 0..8 use 100; Rookie Mountain (9)
  * uses 10. Animal Land (7) is the Trick Game course. */
@@ -238,7 +232,6 @@ extern u8 gPendingFramebufferSwapCount;
 extern u8 gFramebufferSwapHold;
 extern u8 gRumblePakConnectedMask;
 extern u8 gRaceUpdatePaused;
-
 
 void initStartupControllerPakFlow(void) {
     LOAD_ASSET(_2427D0, 6);
@@ -667,7 +660,8 @@ void initRaceSceneFlow(void) {
                 break;
             }
         }
-        characterEntry = &gRaceCpuBoardConfigsByCourse[gRaceCourseIndex.signedValue][gRacePlayers[i].characterId & 0xFFFFFFFFu];
+        characterEntry =
+            &gRaceCpuBoardConfigsByCourse[gRaceCourseIndex.signedValue][gRacePlayers[i].characterId & 0xFFFFFFFFu];
         gRacePlayers[i].characterVariant = characterEntry->boardPropertiesIndex;
         gRacePlayers[i].snowboardTextureIndex = characterEntry->snowboardTextureIndex;
     }
@@ -706,7 +700,6 @@ void initRaceSceneFlow(void) {
         history->characterId = gRacePlayers[0].characterId;
         history->characterVariant = gRacePlayers[0].characterVariant;
         history->unkC = gRacePlayers[0].snowboardTextureIndex;
-
 
         for (i = 0; i < 0x1194; i++) {
             history->stickX[i] = 0;
@@ -1837,7 +1830,12 @@ void prepareRaceResultsFlow(void) {
         if ((gPlayerCount == 1) && (gRaceSplitscreenMode == 0)) {
             createCallbackTaskWithUserId((CallbackTaskCallback)updateRaceUiResultAwardBadgeDelay, 6, 0x64, 0xA9);
         }
-        createCallbackTaskWithUserId((CallbackTaskCallback)initFallingConfetti, 5, 0x64, gRaceResultsAwardPlayerNumber - 1);
+        createCallbackTaskWithUserId(
+            (CallbackTaskCallback)initFallingConfetti,
+            5,
+            0x64,
+            gRaceResultsAwardPlayerNumber - 1
+        );
     }
     updateRaceFlowFrame();
 }
@@ -2147,7 +2145,12 @@ void updateRaceResultsMusicFlow(void) {
         gMenuFlowState |= 0x20;
     }
     if (gRaceResultsAwardPlayerNumber != 0) {
-        createCallbackTaskWithUserId((CallbackTaskCallback)&initFallingConfetti, 5, 0x64, gRaceResultsAwardPlayerNumber - 1);
+        createCallbackTaskWithUserId(
+            (CallbackTaskCallback)&initFallingConfetti,
+            5,
+            0x64,
+            gRaceResultsAwardPlayerNumber - 1
+        );
     }
     updateRaceFlowFrame();
     if (gMenuFlowState & 0x10) {
@@ -2163,7 +2166,12 @@ void updateRaceResultsMusicFlow(void) {
 void fadeOutRaceResultsFlow(void) {
     gFramebufferRenderInterval.value = 0;
     if (gRaceResultsAwardPlayerNumber != 0) {
-        createCallbackTaskWithUserId((CallbackTaskCallback)initFallingConfetti, 5, 0x64, gRaceResultsAwardPlayerNumber - 1);
+        createCallbackTaskWithUserId(
+            (CallbackTaskCallback)initFallingConfetti,
+            5,
+            0x64,
+            gRaceResultsAwardPlayerNumber - 1
+        );
     }
     updateRaceFlowFrame();
     gRaceRumbleEnabled = 0;
@@ -2174,8 +2182,8 @@ void fadeOutRaceResultsFlow(void) {
         if (gCurrentGameTask->callbackData0 == 0) {
             stopSoundEffects();
             if ((gRaceSplitscreenMode == 2) &&
-                (((Unk80043040 *)getRelocatableHeapBlockBase(gAssetHandles[0x2B]))->unk8 != 0) && (gRaceGhostRecordStatus != 0) &&
-                (saveRaceRecordReplayData() != 0)) {
+                (((Unk80043040 *)getRelocatableHeapBlockBase(gAssetHandles[0x2B]))->unk8 != 0) &&
+                (gRaceGhostRecordStatus != 0) && (saveRaceRecordReplayData() != 0)) {
                 gRaceGhostRecordStatus = -1;
             }
             if (gRaceSplitscreenMode == 2) {

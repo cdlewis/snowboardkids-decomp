@@ -191,25 +191,45 @@ void drawMenuSprite(s16 arg0, s16 arg1, AssetTable *arg2, u16 arg3, u16 arg4, u1
 
 /* Preserve the promoted tile-index argument used by an older caller. */
 #ifdef __clang__
-void drawMenuSpriteWideIndex(s16 x, s16 y, AssetTable *table, s32 tileIndex, u16 width, u16 height, u8 palette, u8 flip) {
+void drawMenuSpriteWideIndex(
+    s16 x,
+    s16 y,
+    AssetTable *table,
+    s32 tileIndex,
+    u16 width,
+    u16 height,
+    u8 palette,
+    u8 flip
+) {
     drawMenuSprite(x, y, table, tileIndex, width, height, palette, flip);
 }
 #else
 #pragma weak drawMenuSpriteWideIndex = drawMenuSprite
 #endif
 
-void drawMenuSpriteClipped(s16 x, s16 y, AssetTable *table, u16 imageIndex, u16 scaleX, u16 scaleY,
-                           u8 flipMode, u8 paletteIndex, s16 clipLeft, s16 clipTop, s16 clipRight,
-                           s16 clipBottom) {
+void drawMenuSpriteClipped(
+    s16 x,
+    s16 y,
+    AssetTable *table,
+    u16 imageIndex,
+    u16 scaleX,
+    u16 scaleY,
+    u8 flipMode,
+    u8 paletteIndex,
+    s16 clipLeft,
+    s16 clipTop,
+    s16 clipRight,
+    s16 clipBottom
+) {
     AssetTableEntry *entry;
     s32 selectedPalette;
     u8 *palette;
-    s32 left; // sp90
-    s32 top; // sp8C
-    s32 right; // sp88
+    s32 left;   // sp90
+    s32 top;    // sp8C
+    s32 right;  // sp88
     s32 bottom; // sp84
-    s32 texS; // sp80
-    s32 texT; // sp7C
+    s32 texS;   // sp80
+    s32 texT;   // sp7C
     u32 height;
     s32 pad;
     s16 flipS; // sp72
@@ -221,7 +241,7 @@ void drawMenuSpriteClipped(s16 x, s16 y, AssetTable *table, u16 imageIndex, u16 
     s16 maxY;
 
     entry = &table->entries[imageIndex];
-    palette = table->entryCount * sizeof(AssetTableEntry) + (u8*)table->entries;
+    palette = table->entryCount * sizeof(AssetTableEntry) + (u8 *)table->entries;
     if (scaleX > 0x200) {
         return;
     }
@@ -240,7 +260,7 @@ void drawMenuSpriteClipped(s16 x, s16 y, AssetTable *table, u16 imageIndex, u16 
 
     texS = entry->width;
     texT = entry->height;
-    
+
     left = (x + gMenuViewportCenterX) << 2;
     top = (y + gMenuViewportCenterY) << 2;
     right = left + (((scaleX * texS) << 2) >> 5);
@@ -255,7 +275,6 @@ void drawMenuSpriteClipped(s16 x, s16 y, AssetTable *table, u16 imageIndex, u16 
     if (flipT == -1) {
         texT = ((entry->height - 1) << 5) - texT;
     }
-
 
     clipTop = gMenuViewportCenterY - clipTop;
     clipBottom = gMenuViewportCenterY + clipBottom;
@@ -309,21 +328,54 @@ void drawMenuSpriteClipped(s16 x, s16 y, AssetTable *table, u16 imageIndex, u16 
         selectedPalette = SPRITE_PALETTE_INDEX(table, (u16)(paletteIndex - 1));
     }
 
-    gDPLoadTextureTile_4b(gRegionAllocPtr++, entry->imageOffset + (u8 *)table,
-                          G_IM_FMT_CI, entry->width, entry->height, 0, 0,
-                          entry->width, entry->height, 0, G_TX_CLAMP, G_TX_CLAMP,
-                          G_TX_NOMASK, G_TX_NOMASK, G_TX_NOLOD, G_TX_NOLOD);
+    gDPLoadTextureTile_4b(
+        gRegionAllocPtr++,
+        entry->imageOffset + (u8 *)table,
+        G_IM_FMT_CI,
+        entry->width,
+        entry->height,
+        0,
+        0,
+        entry->width,
+        entry->height,
+        0,
+        G_TX_CLAMP,
+        G_TX_CLAMP,
+        G_TX_NOMASK,
+        G_TX_NOMASK,
+        G_TX_NOLOD,
+        G_TX_NOLOD
+    );
     if (selectedPalette != 0xFE) {
-        gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, (selectedPalette << 5) + (u8*)palette);
+        gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, (selectedPalette << 5) + (u8 *)palette);
     } else {
         gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, gMenuTransparentPalette);
     }
-    gSPTextureRectangle(gRegionAllocPtr++, left, top, right, bottom, G_TX_RENDERTILE,
-                        texS, texT, (u16)((u16)(0x8000 / scaleX) * flipS),
-                        (u16)((u16)(0x8000 / scaleY) * flipT));
+    gSPTextureRectangle(
+        gRegionAllocPtr++,
+        left,
+        top,
+        right,
+        bottom,
+        G_TX_RENDERTILE,
+        texS,
+        texT,
+        (u16)((u16)(0x8000 / scaleX) * flipS),
+        (u16)((u16)(0x8000 / scaleY) * flipT)
+    );
 }
 
-void drawMenuSpriteWithAlpha(s16 arg0, s16 arg1, AssetTable *arg2, u16 arg3, u16 arg4, u16 arg5, u8 arg6, u16 arg7, u8 arg8) {
+void drawMenuSpriteWithAlpha(
+    s16 arg0,
+    s16 arg1,
+    AssetTable *arg2,
+    u16 arg3,
+    u16 arg4,
+    u16 arg5,
+    u8 arg6,
+    u16 arg7,
+    u8 arg8
+) {
     s32 temp_v0;
     s32 temp_v1;
 
@@ -718,8 +770,16 @@ void drawMenuSpriteSubrect(
     }
 }
 
-void drawMenuSpriteFixedScale(s16 x, s16 y, AssetTable *asset, u16 tileIndex, u16 scaleX,
-                              u16 scaleY, u8 flipMode, u8 unusedPalette) {
+void drawMenuSpriteFixedScale(
+    s16 x,
+    s16 y,
+    AssetTable *asset,
+    u16 tileIndex,
+    u16 scaleX,
+    u16 scaleY,
+    u8 flipMode,
+    u8 unusedPalette
+) {
     AssetTableEntry *texture;
     s32 pad;
     u8 *paletteBase;
@@ -739,7 +799,7 @@ void drawMenuSpriteFixedScale(s16 x, s16 y, AssetTable *asset, u16 tileIndex, u1
     u32 height;
 
     texture = &asset->entries[tileIndex];
-    paletteBase = asset->entryCount * sizeof(AssetTableEntry) + (u8*)asset->entries;
+    paletteBase = asset->entryCount * sizeof(AssetTableEntry) + (u8 *)asset->entries;
 
     if (scaleX > 0xF000 || scaleX < 0x10 || scaleY > 0xE800 || scaleY < 0x10) {
         return;
@@ -797,14 +857,36 @@ void drawMenuSpriteFixedScale(s16 x, s16 y, AssetTable *asset, u16 tileIndex, u1
     }
 
     gDPLoadTextureTile_4b(
-        gRegionAllocPtr++, OS_PHYSICAL_TO_K0(texture->imageOffset + (u8 *)asset),
-        G_IM_FMT_CI, texture->width, texture->height, 0, 0, texture->width, texture->height, 0,
-        G_TX_CLAMP, G_TX_CLAMP, G_TX_NOMASK, G_TX_NOMASK, G_TX_NOLOD, G_TX_NOLOD);
-    gDPLoadTLUT_pal16(gRegionAllocPtr++, 0,
-                      OS_PHYSICAL_TO_K0((texture->paletteIndex << 5) + paletteBase));
-    gSPTextureRectangle(gRegionAllocPtr++, drawLeft, drawTop, drawRight, drawBottom,
-                        G_TX_RENDERTILE, texS, texT, (u16)((u16)(0x400000 / scaleX) * sScale),
-                        (u16)((u16)(0x400000 / scaleY) * tScale));
+        gRegionAllocPtr++,
+        OS_PHYSICAL_TO_K0(texture->imageOffset + (u8 *)asset),
+        G_IM_FMT_CI,
+        texture->width,
+        texture->height,
+        0,
+        0,
+        texture->width,
+        texture->height,
+        0,
+        G_TX_CLAMP,
+        G_TX_CLAMP,
+        G_TX_NOMASK,
+        G_TX_NOMASK,
+        G_TX_NOLOD,
+        G_TX_NOLOD
+    );
+    gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, OS_PHYSICAL_TO_K0((texture->paletteIndex << 5) + paletteBase));
+    gSPTextureRectangle(
+        gRegionAllocPtr++,
+        drawLeft,
+        drawTop,
+        drawRight,
+        drawBottom,
+        G_TX_RENDERTILE,
+        texS,
+        texT,
+        (u16)((u16)(0x400000 / scaleX) * sScale),
+        (u16)((u16)(0x400000 / scaleY) * tScale)
+    );
 }
 
 void drawMenuSpriteTile(s16 arg0, s16 arg1, AssetTable *arg2, u16 arg3, u16 arg4, u16 arg5) {
@@ -1179,8 +1261,7 @@ void drawMenuTilemapSprite(
                     texT = render->tileHeight - 1;
                 }
 
-                if ((drawX < clipRight) && (drawY < clipBottom) && (rectRight >= clipLeft) &&
-                    (rectBottom >= clipTop)) {
+                if ((drawX < clipRight) && (drawY < clipBottom) && (rectRight >= clipLeft) && (rectBottom >= clipTop)) {
                     if (drawX < clipLeft) {
                         texS = clipLeft - drawX;
                         if (scaleS == -1) {
@@ -1225,9 +1306,9 @@ void drawMenuTilemapSprite(
                             G_TX_NOLOD
                         );
                     } else {
-                        // This no-op keeps tilemapHeight live across both loop divisions, matching IDO's register allocation.
-                        if (tilemapHeight) {
-                        }
+                        // This no-op keeps tilemapHeight live across both loop divisions, matching IDO's register
+                        // allocation.
+                        if (tilemapHeight) {}
                         gDPLoadTLUT_pal256(gRegionAllocPtr++, paletteData + (paletteIndex << 5));
                         gDPLoadTextureTile(
                             gRegionAllocPtr++,

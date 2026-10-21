@@ -83,7 +83,8 @@ void initCharacterSelectMenu(void) {
     }
 
     gActiveMenuTask = createCallbackTask((CallbackTaskCallback)initCharacterSelectConfirmationBanner, 0, 0x64);
-    gCharacterSelectSelectedTokensTask = createCallbackTask((CallbackTaskCallback)initCharacterSelectSelectedCharacterTokens, 0, 0x64);
+    gCharacterSelectSelectedTokensTask =
+        createCallbackTask((CallbackTaskCallback)initCharacterSelectSelectedCharacterTokens, 0, 0x64);
     gMenuScratch2.task = createCallbackTask((CallbackTaskCallback)initCharacterSelectPlayerCursorMarkers, 0, 0x64);
     gMenuScratch0.task = createCallbackTask((CallbackTaskCallback)initCharacterSelectRosterIcons, 0, 0x64);
     createCallbackTask((CallbackTaskCallback)initCharacterSelectPlayerStatsPanels, 0, 0x64);
@@ -164,10 +165,13 @@ void updateCharacterSelectMenu(void) {
         for (playerIndex = 0; playerIndex < gPlayerCount; playerIndex++) {
             if (gRacePlayers[playerIndex].menuState == 0) {
                 selection = gCharacterSelectHighlightedRosterIndices[playerIndex];
-                if (!(gPlayerInputHeld[playerIndex] & (STICK_RIGHT | R_JPAD)) && !(gPlayerInputHeld[playerIndex] & (STICK_LEFT | L_JPAD))) {
+                if (!(gPlayerInputHeld[playerIndex] & (STICK_RIGHT | R_JPAD)) &&
+                    !(gPlayerInputHeld[playerIndex] & (STICK_LEFT | L_JPAD))) {
                     gMenuInputRepeatTimers[playerIndex] = 0;
                 }
-                if ((gPlayerInputPressed[playerIndex] & (STICK_LEFT | L_JPAD)) || ((gPlayerInputHeld[playerIndex] & (STICK_LEFT | L_JPAD)) && ((otherPlayerIndex = gMenuInputRepeatTimers[playerIndex]) >= 0xB) && (otherPlayerIndex & 1))) {
+                if ((gPlayerInputPressed[playerIndex] & (STICK_LEFT | L_JPAD)) ||
+                    ((gPlayerInputHeld[playerIndex] & (STICK_LEFT | L_JPAD)) &&
+                     ((otherPlayerIndex = gMenuInputRepeatTimers[playerIndex]) >= 0xB) && (otherPlayerIndex & 1))) {
                     if (gMenuInputRepeatTimers[playerIndex] == 0) {
                         gMenuInputRepeatTimers[playerIndex] = gMenuInputRepeatTimers[playerIndex] + 1;
                     }
@@ -176,7 +180,9 @@ void updateCharacterSelectMenu(void) {
                         moveDirection = CHARACTER_SELECT_MOVE_LEFT;
                     }
                 }
-                if ((gPlayerInputPressed[playerIndex] & (STICK_RIGHT | R_JPAD)) || ((gPlayerInputHeld[playerIndex] & (STICK_RIGHT | R_JPAD)) && ((otherPlayerIndex = gMenuInputRepeatTimers[playerIndex]) >= 0xB) && (otherPlayerIndex & 1))) {
+                if ((gPlayerInputPressed[playerIndex] & (STICK_RIGHT | R_JPAD)) ||
+                    ((gPlayerInputHeld[playerIndex] & (STICK_RIGHT | R_JPAD)) &&
+                     ((otherPlayerIndex = gMenuInputRepeatTimers[playerIndex]) >= 0xB) && (otherPlayerIndex & 1))) {
                     if (gMenuInputRepeatTimers[playerIndex] == 0) {
                         gMenuInputRepeatTimers[playerIndex] = gMenuInputRepeatTimers[playerIndex] + 1;
                     }
@@ -199,7 +205,8 @@ void updateCharacterSelectMenu(void) {
                     while ((duplicateCount != 0) && (attempt != 7)) {
                         duplicateCount = 0;
                         for (otherPlayerIndex = 0; otherPlayerIndex < gPlayerCount; otherPlayerIndex++) {
-                            if ((otherPlayerIndex != playerIndex) && (selection == gCharacterSelectHighlightedRosterIndices[otherPlayerIndex])) {
+                            if ((otherPlayerIndex != playerIndex) &&
+                                (selection == gCharacterSelectHighlightedRosterIndices[otherPlayerIndex])) {
                                 duplicateCount++;
                             }
                         }
@@ -222,7 +229,8 @@ void updateCharacterSelectMenu(void) {
                             if (maximumIndex < selection) {
                                 selection = gCharacterSelectHighlightedRosterIndices[playerIndex];
                             }
-                            if (1);
+                            if (1)
+                                ;
                         }
                     }
                 }
@@ -231,11 +239,16 @@ void updateCharacterSelectMenu(void) {
                     enqueueSoundEffect(0x19, 0x32);
                 }
                 gCharacterSelectHighlightedRosterIndices[playerIndex] = selection;
-                gRacePlayers[playerIndex].selectedCharacterId = gCharacterSelectIdOrder[gCharacterSelectHighlightedRosterIndices[playerIndex]];
+                gRacePlayers[playerIndex].selectedCharacterId =
+                    gCharacterSelectIdOrder[gCharacterSelectHighlightedRosterIndices[playerIndex]];
 
-                if ((gPlayerInputPressed[playerIndex] & A_BUTTON) || (gPlayerInputPressed[playerIndex] & START_BUTTON)) {
+                if ((gPlayerInputPressed[playerIndex] & A_BUTTON) ||
+                    (gPlayerInputPressed[playerIndex] & START_BUTTON)) {
                     if (gRacePlayers[playerIndex].menuState == 0) {
-                        enqueueSoundEffect(gCharacterSelectVoiceSoundIds[gCharacterSelectHighlightedRosterIndices[playerIndex]], 0x32);
+                        enqueueSoundEffect(
+                            gCharacterSelectVoiceSoundIds[gCharacterSelectHighlightedRosterIndices[playerIndex]],
+                            0x32
+                        );
                         gRacePlayers[playerIndex].menuState = 1;
                         gCharacterSelectHudState.selectedTokenState[playerIndex] = CHARACTER_SELECT_TOKEN_START;
                     }

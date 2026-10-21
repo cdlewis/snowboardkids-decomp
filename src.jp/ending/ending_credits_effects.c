@@ -85,10 +85,10 @@ void initEndingCreditsCharacterVanishPoof(EndingCreditsAttachedEffectActor *arg0
 void spawnEndingCreditsCharacterVanishPoof(s16 arg0, s16 arg1, u8 arg2, u8 arg3) {
     EndingCreditsAttachedEffectActor *temp_v0 =
         (EndingCreditsAttachedEffectActor *)(gActiveMenuTask = createCallbackTask(
-                                         (CallbackTaskCallback)initEndingCreditsCharacterVanishPoof,
-                                         0,
-                                         0x63
-                                     ));
+                                                 (CallbackTaskCallback)initEndingCreditsCharacterVanishPoof,
+                                                 0,
+                                                 0x63
+                                             ));
 
     temp_v0->offsetX = arg0;
     temp_v0->offsetY = arg1;
@@ -99,16 +99,7 @@ void spawnEndingCreditsCharacterVanishPoof(s16 arg0, s16 arg1, u8 arg2, u8 arg3)
 void drawEndingCreditsNancySpeedLine(EndingCreditsNancySpeedLinesActor *arg0) {
     void *temp = getRelocatableHeapBlockBase(gAssetHandles[0x21]);
 
-    drawMenuSprite(
-        arg0->xPositions[arg0->lineIndex],
-        arg0->yPositions[arg0->lineIndex],
-        temp,
-        0xF,
-        0x20,
-        0x20,
-        0,
-        0
-    );
+    drawMenuSprite(arg0->xPositions[arg0->lineIndex], arg0->yPositions[arg0->lineIndex], temp, 0xF, 0x20, 0x20, 0, 0);
 }
 
 void updateEndingCreditsNancySpeedLines(EndingCreditsNancySpeedLinesActor *arg0) {
@@ -183,10 +174,10 @@ void initEndingCreditsCharacterLoopingSparkle(EndingCreditsAttachedEffectActor *
 void spawnEndingCreditsCharacterLoopingSparkle(s16 arg0, s16 arg1, u8 arg2) {
     EndingCreditsAttachedEffectActor *temp_v0 =
         (EndingCreditsAttachedEffectActor *)(gActiveMenuTask = createCallbackTask(
-                                         (CallbackTaskCallback)initEndingCreditsCharacterLoopingSparkle,
-                                         0,
-                                         0x63
-                                     ));
+                                                 (CallbackTaskCallback)initEndingCreditsCharacterLoopingSparkle,
+                                                 0,
+                                                 0x63
+                                             ));
 
     temp_v0->offsetX = arg0;
     temp_v0->offsetY = arg1;
@@ -494,10 +485,10 @@ void initEndingCreditsPhaseAdvanceSparkle(EndingCreditsAnimatedEffectActor *arg0
 void spawnEndingCreditsPhaseAdvanceSparkle(s16 arg0, s16 arg1) {
     EndingCreditsAnimatedEffectActor *temp =
         (EndingCreditsAnimatedEffectActor *)(gActiveMenuTask = createCallbackTask(
-                                         (CallbackTaskCallback)initEndingCreditsPhaseAdvanceSparkle,
-                                         0,
-                                         0x64
-                                     ));
+                                                 (CallbackTaskCallback)initEndingCreditsPhaseAdvanceSparkle,
+                                                 0,
+                                                 0x64
+                                             ));
 
     temp->common.x = arg0;
     temp->common.y = arg1;

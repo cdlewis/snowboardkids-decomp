@@ -562,7 +562,13 @@ void initControllerPakRaceRecordSaveStatusChoicePrompt(ControllerPakRaceRecordSa
 }
 
 void drawControllerPakRaceRecordSaveExitMessage(ControllerPakRaceRecordSaveExitMessageActor *arg0) {
-    drawMenuGlyphScriptDefaultFont(arg0->common.x, arg0->common.y, gControllerPakRaceRecordSaveExitMessage, 1, arg0->alpha);
+    drawMenuGlyphScriptDefaultFont(
+        arg0->common.x,
+        arg0->common.y,
+        gControllerPakRaceRecordSaveExitMessage,
+        1,
+        arg0->alpha
+    );
 }
 
 void updateControllerPakRaceRecordSaveExitMessage(ControllerPakRaceRecordSaveExitMessageActor *arg0) {

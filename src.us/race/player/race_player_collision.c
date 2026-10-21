@@ -295,7 +295,8 @@ void resolveRacePlayerHitReactions(RacePlayer *arg0) {
     temp_v0 = arg0->pendingItemHitFlags;
     if (temp_v0 != 0) {
         if ((temp_v0 & 0x200) &&
-            (arg0->collisionBottomY < (getRaceCourseSurfaceHeight(arg0->coursePathIndex, arg0->pos.x, arg0->pos.z) + 0xB0000))) {
+            (arg0->collisionBottomY <
+             (getRaceCourseSurfaceHeight(arg0->coursePathIndex, arg0->pos.x, arg0->pos.z) + 0xB0000))) {
             arg0->pendingItemHitFlags |= 1;
         }
         gRacePlayerHitDeltaX = arg0->collisionVelocityX - arg0->velocity.x;
@@ -585,11 +586,11 @@ s32 isRacePlayerRespawnSurfaceValid(RacePlayer *arg0) {
     return 1;
 }
 
-void resolveRacePlayerCollisionVolumes(RacePlayer* player) {
-    CharacterModelPart* source;
-    RacePlayer* volumeView;
-    RacePlayer* parentView;
-    RacePlayer* sourceView;
+void resolveRacePlayerCollisionVolumes(RacePlayer *player) {
+    CharacterModelPart *source;
+    RacePlayer *volumeView;
+    RacePlayer *parentView;
+    RacePlayer *sourceView;
     s16 localAxes[14][16];
     s32 i;
     s32 j;
@@ -607,7 +608,7 @@ void resolveRacePlayerCollisionVolumes(RacePlayer* player) {
     Mat3x3 effectMtx;
     s16 parentAxisY;
     s32 temp;
-    CharacterModelPart* sourceIterator;
+    CharacterModelPart *sourceIterator;
     s32 sourceIndex;
     s32 parentPartIndex;
 
@@ -622,17 +623,17 @@ void resolveRacePlayerCollisionVolumes(RacePlayer* player) {
             cosY = fixedCosine(-player->modelParts[player->modelParts[i].mirroredPartIndex].rotation.y);
             sinZ = fixedSine(-player->modelParts[player->modelParts[i].mirroredPartIndex].rotation.z);
             cosZ = fixedCosine(-player->modelParts[player->modelParts[i].mirroredPartIndex].rotation.z);
-            localAxes[i][0] = (((s32) cosY) * cosZ) / 0x1000;
-            localAxes[i][1] = (((s32) cosY) * sinZ) / 0x1000;
+            localAxes[i][0] = (((s32)cosY) * cosZ) / 0x1000;
+            localAxes[i][1] = (((s32)cosY) * sinZ) / 0x1000;
             localAxes[i][2] = -sinY;
-            temp = (((s32) sinX) * sinY) / 0x1000;
-            localAxes[i][3] = ((((s32) temp) * cosZ) / 0x1000) + ((((s32) cosX) * (-sinZ)) / 0x1000);
-            localAxes[i][4] = ((((s32) temp) * sinZ) / 0x1000) + ((((s32) cosX) * cosZ) / 0x1000);
-            localAxes[i][5] = (((s32) sinX) * cosY) / 0x1000;
-            temp = (((s32) cosX) * sinY) / 0x1000;
-            localAxes[i][6] = ((((s32) temp) * cosZ) / 0x1000) + ((((s32) sinX) * sinZ) / 0x1000);
-            localAxes[i][7] = ((((s32) temp) * sinZ) / 0x1000) + ((((s32) (-sinX)) * cosZ) / 0x1000);
-            localAxes[i][8] = (((s32) cosX) * cosY) / 0x1000;
+            temp = (((s32)sinX) * sinY) / 0x1000;
+            localAxes[i][3] = ((((s32)temp) * cosZ) / 0x1000) + ((((s32)cosX) * (-sinZ)) / 0x1000);
+            localAxes[i][4] = ((((s32)temp) * sinZ) / 0x1000) + ((((s32)cosX) * cosZ) / 0x1000);
+            localAxes[i][5] = (((s32)sinX) * cosY) / 0x1000;
+            temp = (((s32)cosX) * sinY) / 0x1000;
+            localAxes[i][6] = ((((s32)temp) * cosZ) / 0x1000) + ((((s32)sinX) * sinZ) / 0x1000);
+            localAxes[i][7] = ((((s32)temp) * sinZ) / 0x1000) + ((((s32)(-sinX)) * cosZ) / 0x1000);
+            localAxes[i][8] = (((s32)cosX) * cosY) / 0x1000;
             if (player->stateFlags & RACE_PLAYER_COLLISION_SQUASHED) {
                 localAxes[i][1] = (localAxes[i][1] * player->unk2D6) / 8;
                 localAxes[i][4] = (localAxes[i][4] * player->unk2D6) / 8;
@@ -642,9 +643,9 @@ void resolveRacePlayerCollisionVolumes(RacePlayer* player) {
 
         makeFixedRotationZYX(effectMtx, player->modelRotationX, -player->modelRotationY, -player->modelRotationZ);
         makeFixedRotationZXY(playerMtx, player->unk288, player->unk28A, player->unk28C);
-        offset[0] = (((s64) playerMtx[3]) * player->collisionCenterOffset) / 0x1000;
-        offset[1] = (((s64) playerMtx[4]) * player->collisionCenterOffset) / 0x1000;
-        offset[2] = (((s64) playerMtx[5]) * player->collisionCenterOffset) / 0x1000;
+        offset[0] = (((s64)playerMtx[3]) * player->collisionCenterOffset) / 0x1000;
+        offset[1] = (((s64)playerMtx[4]) * player->collisionCenterOffset) / 0x1000;
+        offset[2] = (((s64)playerMtx[5]) * player->collisionCenterOffset) / 0x1000;
         multiplyFixedMatrix3s(effectMtx, playerMtx, baseMtx);
         for (k = 0; k < player->modelPartCount; k++) {
 
@@ -659,34 +660,34 @@ void resolveRacePlayerCollisionVolumes(RacePlayer* player) {
         }
 
         player->modelPartTransforms[0].translation.x =
-            ((((-((s64) baseMtx[0])) * player->modelParts[0].offset.x) +
-              (((s64) baseMtx[3]) * (player->modelParts[0].offset.y - player->collisionCenterOffset))) +
-             (((s64) baseMtx[6]) * player->modelParts[0].offset.z)) /
+            ((((-((s64)baseMtx[0])) * player->modelParts[0].offset.x) +
+              (((s64)baseMtx[3]) * (player->modelParts[0].offset.y - player->collisionCenterOffset))) +
+             (((s64)baseMtx[6]) * player->modelParts[0].offset.z)) /
             0x1000;
         player->modelPartTransforms[0].translation.y =
-            ((((-((s64) baseMtx[1])) * player->modelParts[0].offset.x) +
-              (((s64) baseMtx[4]) * (player->modelParts[0].offset.y - player->collisionCenterOffset))) +
-             (((s64) baseMtx[7]) * player->modelParts[0].offset.z)) /
+            ((((-((s64)baseMtx[1])) * player->modelParts[0].offset.x) +
+              (((s64)baseMtx[4]) * (player->modelParts[0].offset.y - player->collisionCenterOffset))) +
+             (((s64)baseMtx[7]) * player->modelParts[0].offset.z)) /
             0x1000;
         player->modelPartTransforms[0].translation.z =
-            ((((-((s64) baseMtx[2])) * player->modelParts[0].offset.x) +
-              (((s64) baseMtx[5]) * (player->modelParts[0].offset.y - player->collisionCenterOffset))) +
-             (((s64) baseMtx[8]) * player->modelParts[0].offset.z)) /
+            ((((-((s64)baseMtx[2])) * player->modelParts[0].offset.x) +
+              (((s64)baseMtx[5]) * (player->modelParts[0].offset.y - player->collisionCenterOffset))) +
+             (((s64)baseMtx[8]) * player->modelParts[0].offset.z)) /
             0x1000;
         player->modelPartTransforms[1].translation.x =
-            ((((-((s64) player->modelPartTransforms[0].rotation[0])) * player->modelParts[1].offset.x) +
-              (((s64) player->modelPartTransforms[0].rotation[3]) * player->modelParts[1].offset.y)) +
-             (((s64) player->modelPartTransforms[0].rotation[6]) * player->modelParts[1].offset.z)) /
+            ((((-((s64)player->modelPartTransforms[0].rotation[0])) * player->modelParts[1].offset.x) +
+              (((s64)player->modelPartTransforms[0].rotation[3]) * player->modelParts[1].offset.y)) +
+             (((s64)player->modelPartTransforms[0].rotation[6]) * player->modelParts[1].offset.z)) /
             0x1000;
         player->modelPartTransforms[1].translation.y =
-            ((((-((s64) player->modelPartTransforms[0].rotation[1])) * player->modelParts[1].offset.x) +
-              (((s64) player->modelPartTransforms[0].rotation[4]) * player->modelParts[1].offset.y)) +
-             (((s64) player->modelPartTransforms[0].rotation[7]) * player->modelParts[1].offset.z)) /
+            ((((-((s64)player->modelPartTransforms[0].rotation[1])) * player->modelParts[1].offset.x) +
+              (((s64)player->modelPartTransforms[0].rotation[4]) * player->modelParts[1].offset.y)) +
+             (((s64)player->modelPartTransforms[0].rotation[7]) * player->modelParts[1].offset.z)) /
             0x1000;
         player->modelPartTransforms[1].translation.z =
-            ((((-((s64) player->modelPartTransforms[0].rotation[2])) * player->modelParts[1].offset.x) +
-              (((s64) player->modelPartTransforms[0].rotation[5]) * player->modelParts[1].offset.y)) +
-             (((s64) player->modelPartTransforms[0].rotation[8]) * player->modelParts[1].offset.z)) /
+            ((((-((s64)player->modelPartTransforms[0].rotation[2])) * player->modelParts[1].offset.x) +
+              (((s64)player->modelPartTransforms[0].rotation[5]) * player->modelParts[1].offset.y)) +
+             (((s64)player->modelPartTransforms[0].rotation[8]) * player->modelParts[1].offset.z)) /
             0x1000;
     } else {
         for (i = 0; i < player->modelPartCount; i++) {
@@ -696,17 +697,17 @@ void resolveRacePlayerCollisionVolumes(RacePlayer* player) {
             cosY = fixedCosine(player->modelParts[i].rotation.y);
             sinZ = fixedSine(player->modelParts[i].rotation.z);
             cosZ = fixedCosine(player->modelParts[i].rotation.z);
-            localAxes[i][0] = (((s32) cosY) * cosZ) / 0x1000;
-            localAxes[i][1] = (((s32) cosY) * sinZ) / 0x1000;
+            localAxes[i][0] = (((s32)cosY) * cosZ) / 0x1000;
+            localAxes[i][1] = (((s32)cosY) * sinZ) / 0x1000;
             localAxes[i][2] = -sinY;
-            temp = (((s32) sinX) * sinY) / 0x1000;
-            localAxes[i][3] = ((((s32) temp) * cosZ) / 0x1000) + ((((s32) cosX) * (-sinZ)) / 0x1000);
-            localAxes[i][4] = ((((s32) temp) * sinZ) / 0x1000) + ((((s32) cosX) * cosZ) / 0x1000);
-            localAxes[i][5] = (((s32) sinX) * cosY) / 0x1000;
-            temp = (((s32) cosX) * sinY) / 0x1000;
-            localAxes[i][6] = ((((s32) temp) * cosZ) / 0x1000) + ((((s32) sinX) * sinZ) / 0x1000);
-            localAxes[i][7] = ((((s32) temp) * sinZ) / 0x1000) + ((((s32) (-sinX)) * cosZ) / 0x1000);
-            localAxes[i][8] = (((s32) cosX) * cosY) / 0x1000;
+            temp = (((s32)sinX) * sinY) / 0x1000;
+            localAxes[i][3] = ((((s32)temp) * cosZ) / 0x1000) + ((((s32)cosX) * (-sinZ)) / 0x1000);
+            localAxes[i][4] = ((((s32)temp) * sinZ) / 0x1000) + ((((s32)cosX) * cosZ) / 0x1000);
+            localAxes[i][5] = (((s32)sinX) * cosY) / 0x1000;
+            temp = (((s32)cosX) * sinY) / 0x1000;
+            localAxes[i][6] = ((((s32)temp) * cosZ) / 0x1000) + ((((s32)sinX) * sinZ) / 0x1000);
+            localAxes[i][7] = ((((s32)temp) * sinZ) / 0x1000) + ((((s32)(-sinX)) * cosZ) / 0x1000);
+            localAxes[i][8] = (((s32)cosX) * cosY) / 0x1000;
             if (player->stateFlags & RACE_PLAYER_COLLISION_SQUASHED) {
                 localAxes[i][1] = (localAxes[i][1] * player->unk2D6) / 8;
                 localAxes[i][4] = (localAxes[i][4] * player->unk2D6) / 8;
@@ -716,9 +717,9 @@ void resolveRacePlayerCollisionVolumes(RacePlayer* player) {
 
         makeFixedRotationZYX(effectMtx, player->modelRotationX, player->modelRotationY, player->modelRotationZ);
         makeFixedRotationZXY(playerMtx, player->unk288, player->unk28A, player->unk28C);
-        offset[0] = (((s64) playerMtx[3]) * player->collisionCenterOffset) / 0x1000;
-        offset[1] = (((s64) playerMtx[4]) * player->collisionCenterOffset) / 0x1000;
-        offset[2] = (((s64) playerMtx[5]) * player->collisionCenterOffset) / 0x1000;
+        offset[0] = (((s64)playerMtx[3]) * player->collisionCenterOffset) / 0x1000;
+        offset[1] = (((s64)playerMtx[4]) * player->collisionCenterOffset) / 0x1000;
+        offset[2] = (((s64)playerMtx[5]) * player->collisionCenterOffset) / 0x1000;
         makeFixedRotationY(baseMtx, 0x800);
         multiplyFixedMatrix3s(baseMtx, playerMtx, tempMtx);
         multiplyFixedMatrix3s(effectMtx, tempMtx, baseMtx);
@@ -734,38 +735,39 @@ void resolveRacePlayerCollisionVolumes(RacePlayer* player) {
         }
 
         player->modelPartTransforms[0].translation.x =
-            (((((s64) baseMtx[0]) * player->modelParts[0].offset.x) +
-              (((s64) baseMtx[3]) * (player->modelParts[0].offset.y - player->collisionCenterOffset))) +
-             (((s64) baseMtx[6]) * player->modelParts[0].offset.z)) /
+            (((((s64)baseMtx[0]) * player->modelParts[0].offset.x) +
+              (((s64)baseMtx[3]) * (player->modelParts[0].offset.y - player->collisionCenterOffset))) +
+             (((s64)baseMtx[6]) * player->modelParts[0].offset.z)) /
             0x1000;
         player->modelPartTransforms[0].translation.y =
-            (((((s64) baseMtx[1]) * player->modelParts[0].offset.x) +
-              (((s64) baseMtx[4]) * (player->modelParts[0].offset.y - player->collisionCenterOffset))) +
-             (((s64) baseMtx[7]) * player->modelParts[0].offset.z)) /
+            (((((s64)baseMtx[1]) * player->modelParts[0].offset.x) +
+              (((s64)baseMtx[4]) * (player->modelParts[0].offset.y - player->collisionCenterOffset))) +
+             (((s64)baseMtx[7]) * player->modelParts[0].offset.z)) /
             0x1000;
         player->modelPartTransforms[0].translation.z =
-            (((((s64) baseMtx[2]) * player->modelParts[0].offset.x) +
-              (((s64) baseMtx[5]) * (player->modelParts[0].offset.y - player->collisionCenterOffset))) +
-             (((s64) baseMtx[8]) * player->modelParts[0].offset.z)) /
+            (((((s64)baseMtx[2]) * player->modelParts[0].offset.x) +
+              (((s64)baseMtx[5]) * (player->modelParts[0].offset.y - player->collisionCenterOffset))) +
+             (((s64)baseMtx[8]) * player->modelParts[0].offset.z)) /
             0x1000;
         player->modelPartTransforms[1].translation.x =
-            (((((s64) player->modelPartTransforms[0].rotation[0]) * player->modelParts[1].offset.x) +
-              (((s64) player->modelPartTransforms[0].rotation[3]) * player->modelParts[1].offset.y)) +
-             (((s64) player->modelPartTransforms[0].rotation[6]) * player->modelParts[1].offset.z)) /
+            (((((s64)player->modelPartTransforms[0].rotation[0]) * player->modelParts[1].offset.x) +
+              (((s64)player->modelPartTransforms[0].rotation[3]) * player->modelParts[1].offset.y)) +
+             (((s64)player->modelPartTransforms[0].rotation[6]) * player->modelParts[1].offset.z)) /
             0x1000;
         player->modelPartTransforms[1].translation.y =
-            (((((s64) player->modelPartTransforms[0].rotation[1]) * player->modelParts[1].offset.x) +
-              (((s64) player->modelPartTransforms[0].rotation[4]) * player->modelParts[1].offset.y)) +
-             (((s64) player->modelPartTransforms[0].rotation[7]) * player->modelParts[1].offset.z)) /
+            (((((s64)player->modelPartTransforms[0].rotation[1]) * player->modelParts[1].offset.x) +
+              (((s64)player->modelPartTransforms[0].rotation[4]) * player->modelParts[1].offset.y)) +
+             (((s64)player->modelPartTransforms[0].rotation[7]) * player->modelParts[1].offset.z)) /
             0x1000;
         player->modelPartTransforms[1].translation.z =
-            (((((s64) player->modelPartTransforms[0].rotation[2]) * player->modelParts[1].offset.x) +
-              (((s64) player->modelPartTransforms[0].rotation[5]) * player->modelParts[1].offset.y)) +
-             (((s64) player->modelPartTransforms[0].rotation[8]) * player->modelParts[1].offset.z)) /
+            (((((s64)player->modelPartTransforms[0].rotation[2]) * player->modelParts[1].offset.x) +
+              (((s64)player->modelPartTransforms[0].rotation[5]) * player->modelParts[1].offset.y)) +
+             (((s64)player->modelPartTransforms[0].rotation[8]) * player->modelParts[1].offset.z)) /
             0x1000;
     }
     player->modelPartTransforms[0].translation.x += player->pos.x + offset[0];
-    player->modelPartTransforms[0].translation.y += (((player->pos.y - player->groundOffset) + player->groundCorrectionY) + offset[1]) + 0xA000;
+    player->modelPartTransforms[0].translation.y +=
+        (((player->pos.y - player->groundOffset) + player->groundCorrectionY) + offset[1]) + 0xA000;
     player->modelPartTransforms[0].translation.z += player->pos.z + offset[2];
     player->modelPartTransforms[1].translation.x += player->modelPartTransforms[0].translation.x;
     player->modelPartTransforms[1].translation.y += player->modelPartTransforms[0].translation.y;
@@ -774,9 +776,11 @@ void resolveRacePlayerCollisionVolumes(RacePlayer* player) {
         parentPartIndex = player->modelParts[k].parentPartIndex;
         for (i = 0; i < 3; i++) {
             VEC3I_COMPONENT(player->modelPartTransforms[k].translation, i) =
-                (((((s64) player->modelPartTransforms[parentPartIndex].rotation[i]) * player->modelParts[k].offset.x) +
-                  (((s64) player->modelPartTransforms[parentPartIndex].rotation[i + 3]) * player->modelParts[k].offset.y)) +
-                 (((s64) player->modelPartTransforms[parentPartIndex].rotation[i + 6]) * player->modelParts[k].offset.z)) /
+                (((((s64)player->modelPartTransforms[parentPartIndex].rotation[i]) * player->modelParts[k].offset.x) +
+                  (((s64)player->modelPartTransforms[parentPartIndex].rotation[i + 3]) *
+                   player->modelParts[k].offset.y)) +
+                 (((s64)player->modelPartTransforms[parentPartIndex].rotation[i + 6]) *
+                  player->modelParts[k].offset.z)) /
                 0x1000;
             VEC3I_COMPONENT(player->modelPartTransforms[k].translation, i) +=
                 VEC3I_COMPONENT(player->modelPartTransforms[parentPartIndex].translation, i);

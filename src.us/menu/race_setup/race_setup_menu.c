@@ -194,7 +194,7 @@ void updateRaceSetupPlayerCountMenu(void) {
                 gMenuInputRepeatTimers[0] = 0;
             }
             if ((pressedInput & (STICK_UP | U_JPAD)) || ((temp_v0 != 0) && ((s32)gMenuInputRepeatTimers[0] >= 9) &&
-                                        (((s32)gMenuInputRepeatTimers[0] % 3) == 0))) {
+                                                         (((s32)gMenuInputRepeatTimers[0] % 3) == 0))) {
                 if (gMenuInputRepeatTimers[0] == 0) {
                     gMenuInputRepeatTimers[0] += 1;
                 }
@@ -292,7 +292,6 @@ void initRaceSetupSaveMenu(void) {
 #define SAVE_PANEL_CREATE_DELAY 5
 #define SAVE_READY_CONFIRM_DELAY 0xF
 
-
 void updateRaceSetupSaveMenu(void) {
     CallbackTaskCallback saveChoicePromptInitializer;
     s16 *choiceState;
@@ -311,7 +310,8 @@ void updateRaceSetupSaveMenu(void) {
     }
 
     if ((savePanelTask == NULL) || (gRaceSetupMenuSubState.forceUpdate != 0)) {
-        if ((gRaceSetupMenuSubState.state >= RACE_SETUP_PROMPT_CHECK_COMPLETE) && (gRaceSetupMenuSubState.state < RACE_SETUP_PROMPT_DISMISSED)) {
+        if ((gRaceSetupMenuSubState.state >= RACE_SETUP_PROMPT_CHECK_COMPLETE) &&
+            (gRaceSetupMenuSubState.state < RACE_SETUP_PROMPT_DISMISSED)) {
             if (gRaceSetupMenuSubState.state == RACE_SETUP_PROMPT_CHECK_COMPLETE) {
                 if ((gPlayerInputPressed[0] & A_BUTTON) || (gPlayerInputPressed[0] & START_BUTTON)) {
                     enqueueSoundEffect(1, 0x32);
@@ -756,21 +756,27 @@ void initRaceSetupPlayerSaveData(s32 playerIndex) {
                     gDefaultRookieMountainRaceRecords[0].records[record].fraction << 8;
             } else {
                 gGameSaveDataBuffer[playerIndex].raceRecords[course][record].minutes =
-                    (&gDefaultRaceRecordsByCourseParity.bytes[record * 3])[(course & 1) * sizeof(RaceSetupSaveDefaultTimeRow)];
+                    (&gDefaultRaceRecordsByCourseParity
+                          .bytes[record * 3])[(course & 1) * sizeof(RaceSetupSaveDefaultTimeRow)];
                 gGameSaveDataBuffer[playerIndex].raceRecords[course][record].seconds =
-                    (&gDefaultRaceRecordsByCourseParity.bytes[record * 3])[(course & 1) * sizeof(RaceSetupSaveDefaultTimeRow) + 1];
+                    (&gDefaultRaceRecordsByCourseParity
+                          .bytes[record * 3])[(course & 1) * sizeof(RaceSetupSaveDefaultTimeRow) + 1];
                 gGameSaveDataBuffer[playerIndex].raceRecords[course][record].fraction =
-                    (&gDefaultRaceRecordsByCourseParity.bytes[record * 3])[(course & 1) * sizeof(RaceSetupSaveDefaultTimeRow) + 2] << 8;
+                    (&gDefaultRaceRecordsByCourseParity
+                          .bytes[record * 3])[(course & 1) * sizeof(RaceSetupSaveDefaultTimeRow) + 2]
+                    << 8;
             }
             gGameSaveDataBuffer[playerIndex].raceRecordCharacterIds[course][record] = 0x10;
             gGameSaveDataBuffer[playerIndex].raceRecordCharacterIds[course][record] += record;
             if (course == RACE_COURSE_ROOKIE_MOUNTAIN) {
                 gGameSaveDataBuffer[playerIndex].scoreAttackScores[course][record] = gDefaultScoreAttackScores[record];
             } else {
-                gGameSaveDataBuffer[playerIndex].scoreAttackScores[course][record] = gDefaultScoreAttackScores[record + 5];
+                gGameSaveDataBuffer[playerIndex].scoreAttackScores[course][record] =
+                    gDefaultScoreAttackScores[record + 5];
             }
             gGameSaveDataBuffer[playerIndex].scoreAttackCharacterIds[course][record] = record;
-            gGameSaveDataBuffer[playerIndex].trickAttackScores[course][record] = gDefaultSaveRecordData.trickAttackScores[record];
+            gGameSaveDataBuffer[playerIndex].trickAttackScores[course][record] =
+                gDefaultSaveRecordData.trickAttackScores[record];
             gGameSaveDataBuffer[playerIndex].trickAttackCharacterIds[course][record] = record;
         }
         gGameSaveDataBuffer[playerIndex].bestLapRecords[course].minutes = gDefaultBestLapRecords[course].minutes;

@@ -287,15 +287,9 @@ RaceCourseSceneryEntry gRookieMountainCourseSceneryEntries[] = {
 };
 
 RaceCourseSceneryEntry *gRaceCourseSceneryEntriesByCourse[] = {
-    gBigSnowmanCourseSceneryEntries,
-    gSunsetRockCourseSceneryEntries,
-    gNightHighwayCourseSceneryEntries,
-    gGrassValleyCourseSceneryEntries,
-    gDizzyLandCourseSceneryEntries,
-    gQuicksandValleyCourseSceneryEntries,
-    gSilverMountainCourseSceneryEntries,
-    gAnimalLandCourseSceneryEntries,
-    gNinjaLandCourseSceneryEntries,
+    gBigSnowmanCourseSceneryEntries,     gSunsetRockCourseSceneryEntries, gNightHighwayCourseSceneryEntries,
+    gGrassValleyCourseSceneryEntries,    gDizzyLandCourseSceneryEntries,  gQuicksandValleyCourseSceneryEntries,
+    gSilverMountainCourseSceneryEntries, gAnimalLandCourseSceneryEntries, gNinjaLandCourseSceneryEntries,
     gRookieMountainCourseSceneryEntries,
 };
 
@@ -313,14 +307,34 @@ RaceCourseGateEntry gCourseGateSoundParams[] = {
 };
 
 RaceCourseWaterLayerEntry gCourseWaterLayerEntries[] = {
-    { (u32)BIG_SNOWMAN_COURSE_GRAPHICS_command_000060, (u32)BIG_SNOWMAN_COURSE_GRAPHICS_command_000088, (u32)BIG_SNOWMAN_COURSE_GRAPHICS_command_000000, 6,  1, 3, 0 },
-    { (u32)GRASS_VALLEY_COURSE_RANK_MODEL_FINAL_LAP_DISPLAY_LIST_command_000310, (u32)GRASS_VALLEY_COURSE_RANK_MODEL_FINAL_LAP_DISPLAY_LIST_command_000338, (u32)GRASS_VALLEY_COURSE_RANK_MODEL_FINAL_LAP_DISPLAY_LIST_command_000190, 24, 1, 3, 0 },
-    { (u32)GRASS_VALLEY_COURSE_RANK_MODEL_FINAL_LAP_DISPLAY_LIST_command_000440, (u32)GRASS_VALLEY_COURSE_RANK_MODEL_FINAL_LAP_DISPLAY_LIST_command_000468, (u32)GRASS_VALLEY_COURSE_RANK_MODEL_FINAL_LAP_DISPLAY_LIST_command_000380, 12, 1, 3, 0 },
+    { (u32)BIG_SNOWMAN_COURSE_GRAPHICS_command_000060,
+     (u32)BIG_SNOWMAN_COURSE_GRAPHICS_command_000088,
+     (u32)BIG_SNOWMAN_COURSE_GRAPHICS_command_000000,
+     6,  1,
+     3, 0 },
+    { (u32)GRASS_VALLEY_COURSE_RANK_MODEL_FINAL_LAP_DISPLAY_LIST_command_000310,
+     (u32)GRASS_VALLEY_COURSE_RANK_MODEL_FINAL_LAP_DISPLAY_LIST_command_000338,
+     (u32)GRASS_VALLEY_COURSE_RANK_MODEL_FINAL_LAP_DISPLAY_LIST_command_000190,
+     24, 1,
+     3, 0 },
+    { (u32)GRASS_VALLEY_COURSE_RANK_MODEL_FINAL_LAP_DISPLAY_LIST_command_000440,
+     (u32)GRASS_VALLEY_COURSE_RANK_MODEL_FINAL_LAP_DISPLAY_LIST_command_000468,
+     (u32)GRASS_VALLEY_COURSE_RANK_MODEL_FINAL_LAP_DISPLAY_LIST_command_000380,
+     12, 1,
+     3, 0 },
 };
 
 RaceCourseTriggerEntry gCourseTriggerEntries[] = {
-    { 2, 1, 0x186, 0, { 0x14CB79E2, 0xD85220A4, 0xD28EDA6A }, 0xF90, 0x70, (u32)SUNSET_ROCK_COURSE_TRIGGER_VOLUME_DISPLAY_LIST_command_000000 },
-    { 4, 6, 0x122, 0, { 0xF7B42249, 0xF305D31B, 0xEB7622AF }, 0xFBA, 0x400, (u32)ANIMAL_LAND_COURSE_TRIGGER_VOLUME_DISPLAY_LIST_command_000000 },
+    { 2,
+     1, 0x186,
+     0, { 0x14CB79E2, 0xD85220A4, 0xD28EDA6A },
+     0xF90, 0x70,
+     (u32)SUNSET_ROCK_COURSE_TRIGGER_VOLUME_DISPLAY_LIST_command_000000 },
+    { 4,
+     6, 0x122,
+     0, { 0xF7B42249, 0xF305D31B, 0xEB7622AF },
+     0xFBA, 0x400,
+     (u32)ANIMAL_LAND_COURSE_TRIGGER_VOLUME_DISPLAY_LIST_command_000000 },
 };
 
 extern s32 gMenuFlowState;
@@ -809,10 +823,19 @@ void updatePatrolPenguin(PatrolPenguinActor *arg0) {
     if (gRaceUpdatePaused == 0) {
         if (isPositionNearAnyRaceViewportFocus(&arg0->position) != 0) {
             if (arg0->movingTowardStart != 0) {
-                targetAngle =
-                    calculateFixedAngleBetweenXZPoints(arg0->position.x, arg0->position.z, arg0->startPosition.x, arg0->startPosition.z);
+                targetAngle = calculateFixedAngleBetweenXZPoints(
+                    arg0->position.x,
+                    arg0->position.z,
+                    arg0->startPosition.x,
+                    arg0->startPosition.z
+                );
             } else {
-                targetAngle = calculateFixedAngleBetweenXZPoints(arg0->position.x, arg0->position.z, arg0->endPosition.x, arg0->endPosition.z);
+                targetAngle = calculateFixedAngleBetweenXZPoints(
+                    arg0->position.x,
+                    arg0->position.z,
+                    arg0->endPosition.x,
+                    arg0->endPosition.z
+                );
             }
             var_v1 = (((((targetAngle & 0xFFFFu) & 0xFFFFu) & 0xFFFFu) & 0xFFFFu) - arg0->angle) & 0xFFF;
             targetAngle = -targetAngle;
@@ -891,7 +914,12 @@ void initPatrolPenguin(PatrolPenguinActor *arg0) {
     s16 temp4E;
 
     if (gRaceUpdatePaused == 0) {
-        angle = calculateFixedAngleBetweenXZPoints(arg0->startPosition.x, arg0->startPosition.z, arg0->endPosition.x, arg0->endPosition.z);
+        angle = calculateFixedAngleBetweenXZPoints(
+            arg0->startPosition.x,
+            arg0->startPosition.z,
+            arg0->endPosition.x,
+            arg0->endPosition.z
+        );
         arg0->position = arg0->startPosition;
         temp4C = 0x10;
         temp50 = 0x10000;
@@ -1222,7 +1250,10 @@ void updateCourseGateOpening(RaceCourseGateEffect *arg0) {
         temp_s0->openTimer--;
         if (temp_s0->openTimer == 0) {
             enqueuePositionalSoundEffect(
-                0x1C, &gCourseGateSoundParams[gRaceCourseIndex.signedValue].position, 0x7F, 0x32
+                0x1C,
+                &gCourseGateSoundParams[gRaceCourseIndex.signedValue].position,
+                0x7F,
+                0x32
             );
             setCallbackTaskCallback(temp_s0, (CallbackTaskCallback)updateCourseGateClosing);
         }
@@ -1424,8 +1455,7 @@ void collidePlayerWithCourseTriggerVolume(RacePlayer *player, RaceCourseTriggerE
         transformVec3iByFixedMatrix(matrix, &delta, &transformed);
 
         if ((transformed.z >= -trigger->halfDepth) && (trigger->halfDepth >= transformed.z) &&
-            (transformed.x >= (-trigger->halfWidth - 0x30000)) &&
-            ((trigger->halfWidth + 0x30000) >= transformed.x) &&
+            (transformed.x >= (-trigger->halfWidth - 0x30000)) && ((trigger->halfWidth + 0x30000) >= transformed.x) &&
             (transformed.y >= -0xFFFFF) && (trigger->height >= transformed.y)) {
             delta.y = trigger->height - transformed.y;
             delta.x = -transformed.x;
@@ -1446,8 +1476,18 @@ void collidePlayerWithCourseTriggerVolume(RacePlayer *player, RaceCourseTriggerE
     }
 
     if (player->unk578 == 0) {
-        pushRacePlayerOutOfCylinder(&trigger->positiveDepthCollisionCenter, trigger->halfWidth + 0x30000, 0x120000, player->playerIndex);
-        pushRacePlayerOutOfCylinder(&trigger->negativeDepthCollisionCenter, trigger->halfWidth + 0x30000, 0x100000, player->playerIndex);
+        pushRacePlayerOutOfCylinder(
+            &trigger->positiveDepthCollisionCenter,
+            trigger->halfWidth + 0x30000,
+            0x120000,
+            player->playerIndex
+        );
+        pushRacePlayerOutOfCylinder(
+            &trigger->negativeDepthCollisionCenter,
+            trigger->halfWidth + 0x30000,
+            0x100000,
+            player->playerIndex
+        );
     }
 
     delta.x = player->pos.x - gCourseTriggerEntries[trigger->task.userId].position.x;
@@ -1482,10 +1522,7 @@ void collidePlayerWithCourseTriggerVolume(RacePlayer *player, RaceCourseTriggerE
     }
 
     if (push != 0) {
-        makeFixedRotationY(
-            matrix,
-            gCourseTriggerEntries[trigger->task.userId].yaw
-        );
+        makeFixedRotationY(matrix, gCourseTriggerEntries[trigger->task.userId].yaw);
         delta.x = push;
         delta.y = 0;
         delta.z = 0;

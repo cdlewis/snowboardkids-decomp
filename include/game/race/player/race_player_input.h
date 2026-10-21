@@ -21,7 +21,7 @@ typedef enum RacePlayerInputSource {
     RACE_PLAYER_INPUT_LIVE = 0,
     RACE_PLAYER_INPUT_HISTORY_07 = 1, /* History buffer in asset slot 0x07. */
     RACE_PLAYER_INPUT_HISTORY_2B = 2, /* History buffer in asset slot 0x2B. */
-    RACE_PLAYER_INPUT_REPLAY = 5 /* Delegates to playRaceReplayInputFrame. */
+    RACE_PLAYER_INPUT_REPLAY = 5      /* Delegates to playRaceReplayInputFrame. */
 } RacePlayerInputSource;
 
 typedef struct RaceScoreAttackRingTrigger {
@@ -36,9 +36,9 @@ typedef struct RaceScoreAttackRingTrigger {
  * also used by humans; character 5 forces it, bypassing distance policy. */
 typedef enum RaceCpuPaceMode {
     RACE_CPU_PACE_RANK_BONUS = 0,
-    RACE_CPU_PACE_CATCH_UP = 1, /* Add 0x70000 to target speed. */
+    RACE_CPU_PACE_CATCH_UP = 1,  /* Add 0x70000 to target speed. */
     RACE_CPU_PACE_SLOW_DOWN = 2, /* Divide target speed by three. */
-    RACE_CPU_PACE_YIELD = 3 /* Subtract 1/16 unless ranked fourth. */
+    RACE_CPU_PACE_YIELD = 3      /* Subtract 1/16 unless ranked fourth. */
 } RaceCpuPaceMode;
 
 typedef struct RacePlayer {
@@ -83,8 +83,8 @@ typedef struct RacePlayer {
     /* 0x078 */ char pad78[4];
     /* 0x07C */ s32 stateTimer;
     /* 0x080 */ s32 unk80;
-    /* 0x084 */ u32 heldInput; /* Buttons and digital stick directions held this frame. */
-    /* 0x088 */ u32 pressedInput; /* Inputs newly pressed this frame. */
+    /* 0x084 */ u32 heldInput;     /* Buttons and digital stick directions held this frame. */
+    /* 0x088 */ u32 pressedInput;  /* Inputs newly pressed this frame. */
     /* 0x08C */ u32 previousInput; /* Held input from the previous frame. */
     /* 0x090 */ s8 stickX;
     /* 0x091 */ s8 stickY;

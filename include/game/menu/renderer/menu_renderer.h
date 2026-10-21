@@ -30,10 +30,7 @@ typedef struct MenuTilemapTile {
     /* 0x3 */ u8 flip;
 } MenuTilemapTile;
 
-typedef enum MenuTilemapTexelSize {
-    MENU_TILEMAP_TEXEL_4B,
-    MENU_TILEMAP_TEXEL_8B
-} MenuTilemapTexelSize;
+typedef enum MenuTilemapTexelSize { MENU_TILEMAP_TEXEL_4B, MENU_TILEMAP_TEXEL_8B } MenuTilemapTexelSize;
 
 typedef struct MenuRenderSprite {
     /* 0x00 */ s16 scrollX;

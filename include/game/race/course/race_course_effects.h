@@ -11,7 +11,6 @@ enum CourseWaterLayerId {
     COURSE_WATER_LAYER_GRASS_VALLEY_BRIDGE_RIVER
 };
 
-
 typedef struct RaceCountdownEffect {
     /* 0x00 */ CallbackTaskHeader task;
     /* 0x18 */ s16 scaleStep;

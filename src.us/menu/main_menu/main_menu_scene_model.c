@@ -28,19 +28,32 @@ typedef struct MainMenuAnimationWritePart {
 #define ASSET_HANDLE(index) (gAssetHandles[(index)])
 
 Gfx *gMainMenuSceneModelPartDisplayLists[MAIN_MENU_CHARACTER_COUNT * (MAIN_MENU_SCENE_MODEL_PART_COUNT - 1)] = {
-    SLASH_GRAPHICS_command_000000, SLASH_GRAPHICS_command_000068, SLASH_GRAPHICS_command_0000D8, SLASH_GRAPHICS_command_000168, SLASH_GRAPHICS_command_0001D8, SLASH_GRAPHICS_command_000268,
-    SLASH_GRAPHICS_command_000540, SLASH_GRAPHICS_command_000A28, SLASH_GRAPHICS_command_000AA0, SLASH_GRAPHICS_command_000C48, SLASH_GRAPHICS_command_000CC0, SLASH_GRAPHICS_command_000E68,
-    SLASH_GRAPHICS_command_0010C0, WENDY_GRAPHICS_command_000000, WENDY_GRAPHICS_command_000128, WENDY_GRAPHICS_command_000218, WENDY_GRAPHICS_command_000308, WENDY_GRAPHICS_command_0003F8,
-    WENDY_GRAPHICS_command_0004F0, WENDY_GRAPHICS_command_000850, WENDY_GRAPHICS_command_000BE8, WENDY_GRAPHICS_command_000D10, WENDY_GRAPHICS_command_000FD0, WENDY_GRAPHICS_command_001128,
-    WENDY_GRAPHICS_command_0013E8, WENDY_GRAPHICS_command_001630, JAM_GRAPHICS_command_000000, JAM_GRAPHICS_command_0000E0, JAM_GRAPHICS_command_0001D0, JAM_GRAPHICS_command_000338,
-    JAM_GRAPHICS_command_000428, JAM_GRAPHICS_command_0004F0, JAM_GRAPHICS_command_0008A0, JAM_GRAPHICS_command_000DD8, JAM_GRAPHICS_command_000F50, JAM_GRAPHICS_command_001178,
-    JAM_GRAPHICS_command_0012F0, JAM_GRAPHICS_command_001508, JAM_GRAPHICS_command_001760, LINDA_GRAPHICS_command_000000, LINDA_GRAPHICS_command_0001C8, LINDA_GRAPHICS_command_000378,
-    LINDA_GRAPHICS_command_000528, LINDA_GRAPHICS_command_0006D8, LINDA_GRAPHICS_command_000888, LINDA_GRAPHICS_command_000CD8, LINDA_GRAPHICS_command_001148, LINDA_GRAPHICS_command_001210,
-    LINDA_GRAPHICS_command_0014D0, LINDA_GRAPHICS_command_001590, LINDA_GRAPHICS_command_001850, LINDA_GRAPHICS_command_001A98, TOMMY_GRAPHICS_command_000000, TOMMY_GRAPHICS_command_0000E0,
-    TOMMY_GRAPHICS_command_0002D0, TOMMY_GRAPHICS_command_0004E0, TOMMY_GRAPHICS_command_0006B0, TOMMY_GRAPHICS_command_0008C0, TOMMY_GRAPHICS_command_000CE0, TOMMY_GRAPHICS_command_001298,
-    TOMMY_GRAPHICS_command_001408, TOMMY_GRAPHICS_command_001608, TOMMY_GRAPHICS_command_001778, TOMMY_GRAPHICS_command_001978, TOMMY_GRAPHICS_command_001BA0, NINJA_GRAPHICS_command_000000,
-    NINJA_GRAPHICS_command_0002A0, NINJA_GRAPHICS_command_000330, NINJA_GRAPHICS_command_000518, NINJA_GRAPHICS_command_0005B8, NINJA_GRAPHICS_command_0007B0, NINJA_GRAPHICS_command_000CF0,
-    NINJA_GRAPHICS_command_0010E8, NINJA_GRAPHICS_command_001170, NINJA_GRAPHICS_command_001410, NINJA_GRAPHICS_command_001498, NINJA_GRAPHICS_command_001738, NINJA_GRAPHICS_command_0017C8,
+    SLASH_GRAPHICS_command_000000, SLASH_GRAPHICS_command_000068, SLASH_GRAPHICS_command_0000D8,
+    SLASH_GRAPHICS_command_000168, SLASH_GRAPHICS_command_0001D8, SLASH_GRAPHICS_command_000268,
+    SLASH_GRAPHICS_command_000540, SLASH_GRAPHICS_command_000A28, SLASH_GRAPHICS_command_000AA0,
+    SLASH_GRAPHICS_command_000C48, SLASH_GRAPHICS_command_000CC0, SLASH_GRAPHICS_command_000E68,
+    SLASH_GRAPHICS_command_0010C0, WENDY_GRAPHICS_command_000000, WENDY_GRAPHICS_command_000128,
+    WENDY_GRAPHICS_command_000218, WENDY_GRAPHICS_command_000308, WENDY_GRAPHICS_command_0003F8,
+    WENDY_GRAPHICS_command_0004F0, WENDY_GRAPHICS_command_000850, WENDY_GRAPHICS_command_000BE8,
+    WENDY_GRAPHICS_command_000D10, WENDY_GRAPHICS_command_000FD0, WENDY_GRAPHICS_command_001128,
+    WENDY_GRAPHICS_command_0013E8, WENDY_GRAPHICS_command_001630, JAM_GRAPHICS_command_000000,
+    JAM_GRAPHICS_command_0000E0,   JAM_GRAPHICS_command_0001D0,   JAM_GRAPHICS_command_000338,
+    JAM_GRAPHICS_command_000428,   JAM_GRAPHICS_command_0004F0,   JAM_GRAPHICS_command_0008A0,
+    JAM_GRAPHICS_command_000DD8,   JAM_GRAPHICS_command_000F50,   JAM_GRAPHICS_command_001178,
+    JAM_GRAPHICS_command_0012F0,   JAM_GRAPHICS_command_001508,   JAM_GRAPHICS_command_001760,
+    LINDA_GRAPHICS_command_000000, LINDA_GRAPHICS_command_0001C8, LINDA_GRAPHICS_command_000378,
+    LINDA_GRAPHICS_command_000528, LINDA_GRAPHICS_command_0006D8, LINDA_GRAPHICS_command_000888,
+    LINDA_GRAPHICS_command_000CD8, LINDA_GRAPHICS_command_001148, LINDA_GRAPHICS_command_001210,
+    LINDA_GRAPHICS_command_0014D0, LINDA_GRAPHICS_command_001590, LINDA_GRAPHICS_command_001850,
+    LINDA_GRAPHICS_command_001A98, TOMMY_GRAPHICS_command_000000, TOMMY_GRAPHICS_command_0000E0,
+    TOMMY_GRAPHICS_command_0002D0, TOMMY_GRAPHICS_command_0004E0, TOMMY_GRAPHICS_command_0006B0,
+    TOMMY_GRAPHICS_command_0008C0, TOMMY_GRAPHICS_command_000CE0, TOMMY_GRAPHICS_command_001298,
+    TOMMY_GRAPHICS_command_001408, TOMMY_GRAPHICS_command_001608, TOMMY_GRAPHICS_command_001778,
+    TOMMY_GRAPHICS_command_001978, TOMMY_GRAPHICS_command_001BA0, NINJA_GRAPHICS_command_000000,
+    NINJA_GRAPHICS_command_0002A0, NINJA_GRAPHICS_command_000330, NINJA_GRAPHICS_command_000518,
+    NINJA_GRAPHICS_command_0005B8, NINJA_GRAPHICS_command_0007B0, NINJA_GRAPHICS_command_000CF0,
+    NINJA_GRAPHICS_command_0010E8, NINJA_GRAPHICS_command_001170, NINJA_GRAPHICS_command_001410,
+    NINJA_GRAPHICS_command_001498, NINJA_GRAPHICS_command_001738, NINJA_GRAPHICS_command_0017C8,
 };
 
 s16 gMainMenuSceneModelPartInitDataA[MAIN_MENU_SCENE_MODEL_PART_COUNT * 3] = {
@@ -177,18 +190,18 @@ search_done:
 
 #define REPLAY_SAVE_MAX_NORMAL 0x580
 #define REPLAY_SAVE_MAX_EXTRA 0x300
-#define ACCUM_REPLAY_SLOT(scratch, courseIndex, slotIndex, maxSize)                \
-    if (gRaceCourseIndex.signedValue != (courseIndex)) {                           \
-        scratch = gGameSaveDataBuffer[0].replaySlots[(slotIndex)].length;          \
-        if (gGameSaveDataBuffer[0].replaySlots[(slotIndex)].length != 0) {         \
-            if (scratch > (maxSize)) {                                             \
-                totalLength += scratch;                                            \
-            } else {                                                               \
-                totalLength += (maxSize);                                          \
-            }                                                                      \
-        } else {                                                                   \
-            totalLength += (maxSize);                                              \
-        }                                                                          \
+#define ACCUM_REPLAY_SLOT(scratch, courseIndex, slotIndex, maxSize)        \
+    if (gRaceCourseIndex.signedValue != (courseIndex)) {                   \
+        scratch = gGameSaveDataBuffer[0].replaySlots[(slotIndex)].length;  \
+        if (gGameSaveDataBuffer[0].replaySlots[(slotIndex)].length != 0) { \
+            if (scratch > (maxSize)) {                                     \
+                totalLength += scratch;                                    \
+            } else {                                                       \
+                totalLength += (maxSize);                                  \
+            }                                                              \
+        } else {                                                           \
+            totalLength += (maxSize);                                      \
+        }                                                                  \
     }
 
 s32 saveRaceRecordReplayData(void) {
@@ -240,7 +253,8 @@ s32 saveRaceRecordReplayData(void) {
 
     if (compressedLength > REPLAY_SAVE_MAX_NORMAL) {
         totalLength += compressedLength;
-    } else if ((gRaceCourseIndex.signedValue == RACE_COURSE_ROOKIE_MOUNTAIN) || (gRaceCourseIndex.signedValue == RACE_COURSE_NINJA_LAND)) {
+    } else if ((gRaceCourseIndex.signedValue == RACE_COURSE_ROOKIE_MOUNTAIN) ||
+               (gRaceCourseIndex.signedValue == RACE_COURSE_NINJA_LAND)) {
         totalLength += REPLAY_SAVE_MAX_EXTRA;
     } else {
         totalLength += REPLAY_SAVE_MAX_NORMAL;
@@ -516,8 +530,7 @@ void initMainMenuSceneModel(s32 sceneModelIndex, s32 characterIndex) {
     loadRawRomAsset(
         gCharacterRawAssetRanges
             .romBoundAddresses[characterIndex * ROM_ASSET_RANGE_BOUND_COUNT + ROM_ASSET_RANGE_START],
-        gCharacterRawAssetRanges
-            .romBoundAddresses[characterIndex * ROM_ASSET_RANGE_BOUND_COUNT + ROM_ASSET_RANGE_END],
+        gCharacterRawAssetRanges.romBoundAddresses[characterIndex * ROM_ASSET_RANGE_BOUND_COUNT + ROM_ASSET_RANGE_END],
         MAIN_MENU_SCENE_MODEL_GEOMETRY_HANDLE_BASE + sceneModelIndex
     );
     loadCompressedRomAsset(
@@ -541,9 +554,7 @@ void setMainMenuSceneModelAnimation(s32 modelIndex, s32 animationIndex) {
     MainMenuSceneModel *model;
     s16 frameDuration;
 
-    animationBank = (s16 *)getRelocatableHeapBlockBase(
-        ASSET_HANDLE(MAIN_MENU_SCENE_MODEL_ANIMATION_BANK_HANDLE)
-    );
+    animationBank = (s16 *)getRelocatableHeapBlockBase(ASSET_HANDLE(MAIN_MENU_SCENE_MODEL_ANIMATION_BANK_HANDLE));
     frameData = &animationBank[((s32 *)animationBank)[animationIndex]];
     model =
         (MainMenuSceneModel *)getRelocatableHeapBlockBase(ASSET_HANDLE(MAIN_MENU_SCENE_MODEL_HANDLE_BASE + modelIndex));
@@ -707,14 +718,13 @@ void updateMainMenuSceneModelTransforms(MainMenuSceneModel *model) {
             for (row = 0; row < MAIN_MENU_SCENE_MODEL_MATRIX_AXES; row++) {
                 for (column = 0; column < MAIN_MENU_SCENE_MODEL_MATRIX_AXES; column++) {
                     FIXED_MATRIX_ROWS(model->partTransforms[partIndex].rotation)
-                    [row][column] =
-                        ((FIXED_MATRIX_ROWS(localPartTransforms[partIndex].rotation)[row][0] *
-                          FIXED_MATRIX_ROWS(rootTransform.rotation)[0][column]) +
-                         (FIXED_MATRIX_ROWS(localPartTransforms[partIndex].rotation)[row][1] *
-                          FIXED_MATRIX_ROWS(rootTransform.rotation)[1][column]) +
-                         (FIXED_MATRIX_ROWS(localPartTransforms[partIndex].rotation)[row][2] *
-                          FIXED_MATRIX_ROWS(rootTransform.rotation)[2][column])) /
-                        FIXED_MATRIX_ONE;
+                    [row][column] = ((FIXED_MATRIX_ROWS(localPartTransforms[partIndex].rotation)[row][0] *
+                                      FIXED_MATRIX_ROWS(rootTransform.rotation)[0][column]) +
+                                     (FIXED_MATRIX_ROWS(localPartTransforms[partIndex].rotation)[row][1] *
+                                      FIXED_MATRIX_ROWS(rootTransform.rotation)[1][column]) +
+                                     (FIXED_MATRIX_ROWS(localPartTransforms[partIndex].rotation)[row][2] *
+                                      FIXED_MATRIX_ROWS(rootTransform.rotation)[2][column])) /
+                                    FIXED_MATRIX_ONE;
                 }
             }
         }

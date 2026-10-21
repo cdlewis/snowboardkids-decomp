@@ -32,22 +32,19 @@ extern Gfx *gRegionAllocPtr;
 extern Gfx D_20028F0[];
 extern Gfx D_2002DB8[];
 
-
 extern Vtx gRaceIntroCourseVertices[];
 extern Vtx gRaceIntroAlternateCourseVertices[];
 extern RaceIntroRenderCommandEntry gRaceIntroCourseCommands[];
 extern RaceIntroRenderCommandEntry gRaceIntroAlternateCourseCommands[];
 
 Vtx *gRaceIntroModelVerticesByCourse[7] = {
-    gRaceIntroCourseVertices, gRaceIntroCourseVertices, gRaceIntroCourseVertices, gRaceIntroCourseVertices,
+    gRaceIntroCourseVertices, gRaceIntroCourseVertices, gRaceIntroCourseVertices,          gRaceIntroCourseVertices,
     gRaceIntroCourseVertices, gRaceIntroCourseVertices, gRaceIntroAlternateCourseVertices,
 };
 
 RaceIntroRenderCommandEntry *gRaceIntroModelCommandsByCourse[7] = {
-    gRaceIntroCourseCommands, gRaceIntroCourseCommands,
-    gRaceIntroCourseCommands, gRaceIntroCourseCommands,
-    gRaceIntroCourseCommands, gRaceIntroCourseCommands,
-    gRaceIntroAlternateCourseCommands,
+    gRaceIntroCourseCommands, gRaceIntroCourseCommands, gRaceIntroCourseCommands,          gRaceIntroCourseCommands,
+    gRaceIntroCourseCommands, gRaceIntroCourseCommands, gRaceIntroAlternateCourseCommands,
 };
 
 Vtx gRaceIntroBillboardVertices[4] = {
@@ -118,8 +115,10 @@ RaceIntroRenderCommandEntry gRaceIntroDefaultRenderCommands[40] = {
 };
 
 RaceIntroRenderCommandEntry *gRaceIntroAnimatedBillboardCommandsByCourse[10] = {
-    gRaceIntroDefaultRenderCommands, gRaceIntroDefaultRenderCommands, gRaceIntroDefaultRenderCommands, gRaceIntroDefaultRenderCommands, gRaceIntroDefaultRenderCommands,
-    gRaceIntroDefaultRenderCommands, gRaceIntroDefaultRenderCommands, gRaceIntroDefaultRenderCommands, gRaceIntroDefaultRenderCommands, gRaceIntroDefaultRenderCommands,
+    gRaceIntroDefaultRenderCommands, gRaceIntroDefaultRenderCommands, gRaceIntroDefaultRenderCommands,
+    gRaceIntroDefaultRenderCommands, gRaceIntroDefaultRenderCommands, gRaceIntroDefaultRenderCommands,
+    gRaceIntroDefaultRenderCommands, gRaceIntroDefaultRenderCommands, gRaceIntroDefaultRenderCommands,
+    gRaceIntroDefaultRenderCommands,
 };
 
 void drawRaceIntroModelMeshes(RaceIntroMeshActor *arg0) {

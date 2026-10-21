@@ -1,7 +1,6 @@
 #include "game/engine/runtime_memory.h"
 #include "game/engine/system_render.h"
 
-
 u8 gRelocatableHeapStart[RELOCATABLE_HEAP_SIZE];
 static u8 sInitialBootStack[INITIAL_BOOT_STACK_SIZE];
 u8 gBootThreadStack[BOOT_THREAD_STACK_SIZE];

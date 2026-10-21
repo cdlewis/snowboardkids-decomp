@@ -71,10 +71,6 @@ void updateRaceMotionAnimationDebugViewer(void) {
             stepRaceMotionLoopingAnimation(&gRacePlayers[0]);
         }
     }
-    addRenderCallback(
-        &gModelRenderCallbackList,
-        (RenderCallback)drawRacePlayerModel,
-        &gRacePlayers[0]
-    );
+    addRenderCallback(&gModelRenderCallbackList, (RenderCallback)drawRacePlayerModel, &gRacePlayers[0]);
     addRenderCallback(&gMenuForegroundRenderCallbackList, drawRaceMotionAnimationDebugViewerMotionNumber, NULL);
 }

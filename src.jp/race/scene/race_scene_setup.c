@@ -16,35 +16,53 @@
 
 CharacterRomAssetRangeTable gCharacterRawAssetRanges = {
     {
-        (u8 *)&SLASH_GRAPHICS_ROM_START, (u8 *)&SLASH_GRAPHICS_ROM_END,
-        (u8 *)&WENDY_GRAPHICS_ROM_START, (u8 *)&WENDY_GRAPHICS_ROM_END,
-        (u8 *)&JAM_GRAPHICS_ROM_START, (u8 *)&JAM_GRAPHICS_ROM_END,
-        (u8 *)&LINDA_GRAPHICS_ROM_START, (u8 *)&LINDA_GRAPHICS_ROM_END,
-        (u8 *)&TOMMY_GRAPHICS_ROM_START, (u8 *)&TOMMY_GRAPHICS_ROM_END,
-        (u8 *)&NINJA_GRAPHICS_ROM_START, (u8 *)&NINJA_GRAPHICS_ROM_END,
-    }
+     (u8 *)&SLASH_GRAPHICS_ROM_START,
+     (u8 *)&SLASH_GRAPHICS_ROM_END,
+     (u8 *)&WENDY_GRAPHICS_ROM_START,
+     (u8 *)&WENDY_GRAPHICS_ROM_END,
+     (u8 *)&JAM_GRAPHICS_ROM_START,
+     (u8 *)&JAM_GRAPHICS_ROM_END,
+     (u8 *)&LINDA_GRAPHICS_ROM_START,
+     (u8 *)&LINDA_GRAPHICS_ROM_END,
+     (u8 *)&TOMMY_GRAPHICS_ROM_START,
+     (u8 *)&TOMMY_GRAPHICS_ROM_END,
+     (u8 *)&NINJA_GRAPHICS_ROM_START,
+     (u8 *)&NINJA_GRAPHICS_ROM_END,
+     }
 };
 
 CharacterRomAssetRangeTable gCharacterTextureAssetRanges = {
     {
-        (u8 *)&SLASH_MODEL_RESOURCES_ROM_START, (u8 *)&SLASH_MODEL_RESOURCES_ROM_END,
-        (u8 *)&WENDY_MODEL_RESOURCES_ROM_START, (u8 *)&WENDY_MODEL_RESOURCES_ROM_END,
-        (u8 *)&JAM_MODEL_RESOURCES_ROM_START, (u8 *)&JAM_MODEL_RESOURCES_ROM_END,
-        (u8 *)&LINDA_MODEL_RESOURCES_ROM_START, (u8 *)&LINDA_MODEL_RESOURCES_ROM_END,
-        (u8 *)&TOMMY_MODEL_RESOURCES_ROM_START, (u8 *)&TOMMY_MODEL_RESOURCES_ROM_END,
-        (u8 *)&NINJA_MODEL_RESOURCES_ROM_START, (u8 *)&NINJA_MODEL_RESOURCES_ROM_END,
-    }
+     (u8 *)&SLASH_MODEL_RESOURCES_ROM_START,
+     (u8 *)&SLASH_MODEL_RESOURCES_ROM_END,
+     (u8 *)&WENDY_MODEL_RESOURCES_ROM_START,
+     (u8 *)&WENDY_MODEL_RESOURCES_ROM_END,
+     (u8 *)&JAM_MODEL_RESOURCES_ROM_START,
+     (u8 *)&JAM_MODEL_RESOURCES_ROM_END,
+     (u8 *)&LINDA_MODEL_RESOURCES_ROM_START,
+     (u8 *)&LINDA_MODEL_RESOURCES_ROM_END,
+     (u8 *)&TOMMY_MODEL_RESOURCES_ROM_START,
+     (u8 *)&TOMMY_MODEL_RESOURCES_ROM_END,
+     (u8 *)&NINJA_MODEL_RESOURCES_ROM_START,
+     (u8 *)&NINJA_MODEL_RESOURCES_ROM_END,
+     }
 };
 
 CharacterRomAssetRangeTable gCharacterModelAssetRanges = {
     {
-        (u8 *)&SLASH_RACE_ANIMATIONS_ROM_START, (u8 *)&SLASH_RACE_ANIMATIONS_ROM_END,
-        (u8 *)&WENDY_RACE_ANIMATIONS_ROM_START, (u8 *)&WENDY_RACE_ANIMATIONS_ROM_END,
-        (u8 *)&JAM_RACE_ANIMATIONS_ROM_START, (u8 *)&JAM_RACE_ANIMATIONS_ROM_END,
-        (u8 *)&LINDA_RACE_ANIMATIONS_ROM_START, (u8 *)&LINDA_RACE_ANIMATIONS_ROM_END,
-        (u8 *)&TOMMY_RACE_ANIMATIONS_ROM_START, (u8 *)&TOMMY_RACE_ANIMATIONS_ROM_END,
-        (u8 *)&NINJA_RACE_ANIMATIONS_ROM_START, (u8 *)&NINJA_RACE_ANIMATIONS_ROM_END,
-    }
+     (u8 *)&SLASH_RACE_ANIMATIONS_ROM_START,
+     (u8 *)&SLASH_RACE_ANIMATIONS_ROM_END,
+     (u8 *)&WENDY_RACE_ANIMATIONS_ROM_START,
+     (u8 *)&WENDY_RACE_ANIMATIONS_ROM_END,
+     (u8 *)&JAM_RACE_ANIMATIONS_ROM_START,
+     (u8 *)&JAM_RACE_ANIMATIONS_ROM_END,
+     (u8 *)&LINDA_RACE_ANIMATIONS_ROM_START,
+     (u8 *)&LINDA_RACE_ANIMATIONS_ROM_END,
+     (u8 *)&TOMMY_RACE_ANIMATIONS_ROM_START,
+     (u8 *)&TOMMY_RACE_ANIMATIONS_ROM_END,
+     (u8 *)&NINJA_RACE_ANIMATIONS_ROM_START,
+     (u8 *)&NINJA_RACE_ANIMATIONS_ROM_END,
+     }
 };
 
 extern u8 gTrainingCourseLesson;
@@ -235,8 +253,12 @@ void initRaceCourseSceneTasks(void) {
             createCallbackTask((CallbackTaskCallback)&initCourseGateObject, 0, 0x64);
             createCallbackTaskWithUserId((CallbackTaskCallback)&initRaceCourseRankModel, 0, 0x64, 0);
             createCallbackTaskWithUserId((CallbackTaskCallback)&initRaceCourseRankModel, 0, 0x64, 1);
-            createCallbackTaskWithUserId((CallbackTaskCallback)&initCourseWaterLayer, 0, 0x64,
-                                         COURSE_WATER_LAYER_BIG_SNOWMAN);
+            createCallbackTaskWithUserId(
+                (CallbackTaskCallback)&initCourseWaterLayer,
+                0,
+                0x64,
+                COURSE_WATER_LAYER_BIG_SNOWMAN
+            );
             if ((gRaceSplitscreenMode == 0) && (gRaceDemoPlaybackEnabled == 0) && (gTrainingCourseLesson == 0) &&
                 (gMainMenuModeSelection == 0)) {
                 if (sp2C != 0) {
@@ -288,10 +310,18 @@ void initRaceCourseSceneTasks(void) {
             spawnPatrolPenguin(0x17, 0xF3EFF851, 0xE8BCCFE0, 0xF5650CCB, 0xE9A4FC34);
             spawnPatrolPenguin(0x17, 0xF6BEB9D1, 0xEA69C4DE, 0xF6F1B095, 0xEBF8B05E);
             createCallbackTask((CallbackTaskCallback)&initRaceCourseSceneryObjects, 0, 0x64);
-            createCallbackTaskWithUserId((CallbackTaskCallback)&initRaceCourseScrollingTexture, 0, 0x64,
-                                         RACE_COURSE_SCROLLING_TEXTURE_SUNSET_ROCK_0);
-            createCallbackTaskWithUserId((CallbackTaskCallback)&initRaceCourseScrollingTexture, 0, 0x64,
-                                         RACE_COURSE_SCROLLING_TEXTURE_SUNSET_ROCK_1);
+            createCallbackTaskWithUserId(
+                (CallbackTaskCallback)&initRaceCourseScrollingTexture,
+                0,
+                0x64,
+                RACE_COURSE_SCROLLING_TEXTURE_SUNSET_ROCK_0
+            );
+            createCallbackTaskWithUserId(
+                (CallbackTaskCallback)&initRaceCourseScrollingTexture,
+                0,
+                0x64,
+                RACE_COURSE_SCROLLING_TEXTURE_SUNSET_ROCK_1
+            );
             createCallbackTaskWithUserId((CallbackTaskCallback)&initCourseTriggerVolume, 0, 0x64, 0);
             createCallbackTaskWithUserId((CallbackTaskCallback)&initRaceCoursePropModels, 0, 0x64, 0);
             createCallbackTask((CallbackTaskCallback)&initCourseGateObject, 0, 0x64);
@@ -332,8 +362,12 @@ void initRaceCourseSceneTasks(void) {
             createCallbackTask((CallbackTaskCallback)&initRaceCourseModelRenderTask, 0, 0x64);
             createCallbackTask((CallbackTaskCallback)&initRaceCourseSceneryObjects, 0, 0x64);
             createCallbackTask((CallbackTaskCallback)&initCourseGateObject, 0, 0x64);
-            createCallbackTaskWithUserId((CallbackTaskCallback)&initRaceCourseScrollingTexture, 0, 0x64,
-                                         RACE_COURSE_SCROLLING_TEXTURE_NIGHT_HIGHWAY);
+            createCallbackTaskWithUserId(
+                (CallbackTaskCallback)&initRaceCourseScrollingTexture,
+                0,
+                0x64,
+                RACE_COURSE_SCROLLING_TEXTURE_NIGHT_HIGHWAY
+            );
             createCallbackTaskWithUserId((CallbackTaskCallback)&initCourseStartFinishSprite, 0, 0x64, 0);
             createCallbackTaskWithUserId((CallbackTaskCallback)&initCourseStartFinishSprite, 0, 0x64, 1);
             if ((gRaceSplitscreenMode == 0) && (gMainMenuModeSelection == 0)) {
@@ -360,10 +394,18 @@ void initRaceCourseSceneTasks(void) {
             createCallbackTask((CallbackTaskCallback)&initRaceCourseModelRenderTask, 0, 0x64);
             createCallbackTask((CallbackTaskCallback)&initRaceCourseSceneryObjects, 0, 0x64);
             createCallbackTask((CallbackTaskCallback)&initCourseGateObject, 0, 0x64);
-            createCallbackTaskWithUserId((CallbackTaskCallback)&initCourseWaterLayer, 0, 0x64,
-                                         COURSE_WATER_LAYER_GRASS_VALLEY_WINDING_STREAM);
-            createCallbackTaskWithUserId((CallbackTaskCallback)&initCourseWaterLayer, 0, 0x64,
-                                         COURSE_WATER_LAYER_GRASS_VALLEY_BRIDGE_RIVER);
+            createCallbackTaskWithUserId(
+                (CallbackTaskCallback)&initCourseWaterLayer,
+                0,
+                0x64,
+                COURSE_WATER_LAYER_GRASS_VALLEY_WINDING_STREAM
+            );
+            createCallbackTaskWithUserId(
+                (CallbackTaskCallback)&initCourseWaterLayer,
+                0,
+                0x64,
+                COURSE_WATER_LAYER_GRASS_VALLEY_BRIDGE_RIVER
+            );
             createCallbackTaskWithUserId((CallbackTaskCallback)&initRaceCourseRankModel, 0, 0x64, 1);
             createCallbackTask((CallbackTaskCallback)&initRaceIntroModelMeshes, 0, 0x64);
             if ((gRaceSplitscreenMode == 0) && (gMainMenuModeSelection == 0)) {
@@ -401,10 +443,18 @@ void initRaceCourseSceneTasks(void) {
             createCallbackTaskWithUserId((CallbackTaskCallback)&initDizzyLandCarousel, 0, 0x64, 0);
             createCallbackTaskWithUserId((CallbackTaskCallback)&initDizzyLandFerrisWheel, 0, 0x64, 0);
             createCallbackTaskWithUserId((CallbackTaskCallback)&initDizzyLandSpinningCabinRide, 0, 0x64, 0);
-            createCallbackTaskWithUserId((CallbackTaskCallback)&initRaceCourseScrollingTexture, 0, 0x64,
-                                         RACE_COURSE_SCROLLING_TEXTURE_DIZZY_LAND_0);
-            createCallbackTaskWithUserId((CallbackTaskCallback)&initRaceCourseScrollingTexture, 0, 0x64,
-                                         RACE_COURSE_SCROLLING_TEXTURE_DIZZY_LAND_1);
+            createCallbackTaskWithUserId(
+                (CallbackTaskCallback)&initRaceCourseScrollingTexture,
+                0,
+                0x64,
+                RACE_COURSE_SCROLLING_TEXTURE_DIZZY_LAND_0
+            );
+            createCallbackTaskWithUserId(
+                (CallbackTaskCallback)&initRaceCourseScrollingTexture,
+                0,
+                0x64,
+                RACE_COURSE_SCROLLING_TEXTURE_DIZZY_LAND_1
+            );
             createCallbackTaskWithUserId((CallbackTaskCallback)&initRaceCourseRankModel, 0, 0x64, 1);
             if ((gRaceSplitscreenMode == 0) && (gMainMenuModeSelection == 0)) {
                 if (sp2C != 0) {
@@ -439,10 +489,18 @@ void initRaceCourseSceneTasks(void) {
             break;
         case RACE_COURSE_QUICKSAND_VALLEY:
             createCallbackTask((CallbackTaskCallback)&initRaceCourseModelRenderTask, 0, 0x64);
-            createCallbackTaskWithUserId((CallbackTaskCallback)&initRaceCourseScrollingTexture, 0, 0x64,
-                                         RACE_COURSE_SCROLLING_TEXTURE_QUICKSAND_VALLEY_0);
-            createCallbackTaskWithUserId((CallbackTaskCallback)&initRaceCourseScrollingTexture, 0, 0x64,
-                                         RACE_COURSE_SCROLLING_TEXTURE_QUICKSAND_VALLEY_1);
+            createCallbackTaskWithUserId(
+                (CallbackTaskCallback)&initRaceCourseScrollingTexture,
+                0,
+                0x64,
+                RACE_COURSE_SCROLLING_TEXTURE_QUICKSAND_VALLEY_0
+            );
+            createCallbackTaskWithUserId(
+                (CallbackTaskCallback)&initRaceCourseScrollingTexture,
+                0,
+                0x64,
+                RACE_COURSE_SCROLLING_TEXTURE_QUICKSAND_VALLEY_1
+            );
             createCallbackTask((CallbackTaskCallback)&initRaceCourseSceneryObjects, 0, 0x64);
             createCallbackTaskWithUserId((CallbackTaskCallback)&initRaceCourseRankModel, 0, 0x64, 1);
             createCallbackTask((CallbackTaskCallback)&initCourseGateObject, 0, 0x64);
@@ -507,8 +565,12 @@ void initRaceCourseSceneTasks(void) {
             break;
         case RACE_COURSE_ANIMAL_LAND:
             createCallbackTask((CallbackTaskCallback)&initRaceCourseModelRenderTask, 0, 0x64);
-            createCallbackTaskWithUserId((CallbackTaskCallback)&initRaceCourseScrollingTexture, 0, 0x64,
-                                         RACE_COURSE_SCROLLING_TEXTURE_ANIMAL_LAND);
+            createCallbackTaskWithUserId(
+                (CallbackTaskCallback)&initRaceCourseScrollingTexture,
+                0,
+                0x64,
+                RACE_COURSE_SCROLLING_TEXTURE_ANIMAL_LAND
+            );
             createCallbackTaskWithUserId((CallbackTaskCallback)&initCourseTriggerVolume, 0, 0x64, 1);
             createCallbackTask((CallbackTaskCallback)&initRaceCourseSceneryObjects, 0, 0x64);
             setBootFadeColor(0xFFU, 0xFFU, 0xFFU);

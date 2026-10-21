@@ -221,8 +221,7 @@ void decompressHuffmanAssetPayload(u8 flags, u8 *compressedPayload, u8 *output, 
         nodeIndex = gHuffmanQueueTail;
         rangeEnd = nodeIndex;
         removeHuffmanQueueNode(rangeEnd);
-        gHuffmanNodes[gHuffmanNodeCount].weight =
-            gHuffmanNodes[rangeEnd].weight + gHuffmanNodes[rangeStart].weight;
+        gHuffmanNodes[gHuffmanNodeCount].weight = gHuffmanNodes[rangeEnd].weight + gHuffmanNodes[rangeStart].weight;
         gHuffmanNodes[gHuffmanNodeCount].left = rangeEnd;
         gHuffmanNodes[gHuffmanNodeCount].right = rangeStart;
         gHuffmanNodes[gHuffmanNodeCount].value = -1;

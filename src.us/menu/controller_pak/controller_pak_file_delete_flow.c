@@ -14,7 +14,6 @@
 #include "game/engine/viewport_manager.h"
 #include "game/race/race_state.h"
 
-
 extern u8 gControllerPakMenuCursorState;
 extern u8 gControllerPakDeletePromptState;
 extern u8 gPendingFramebufferSwapCount;

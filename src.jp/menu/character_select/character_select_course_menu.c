@@ -22,11 +22,47 @@ typedef s16 CharacterSelectOptionList[10];
 
 CharacterSelectCourseMenuData gCharacterSelectCourseMenuData = {
     {
-     { RACE_COURSE_ROOKIE_MOUNTAIN, RACE_COURSE_BIG_SNOWMAN, RACE_COURSE_SUNSET_ROCK, RACE_COURSE_NIGHT_HIGHWAY, RACE_COURSE_GRASS_VALLEY, RACE_COURSE_DIZZY_LAND, -1, 0, 0, 0, 0 },
-     { RACE_COURSE_ROOKIE_MOUNTAIN, RACE_COURSE_BIG_SNOWMAN, RACE_COURSE_SUNSET_ROCK, RACE_COURSE_NIGHT_HIGHWAY, RACE_COURSE_GRASS_VALLEY, RACE_COURSE_DIZZY_LAND, RACE_COURSE_QUICKSAND_VALLEY, -1, 0, 0, 0 },
-     { RACE_COURSE_ROOKIE_MOUNTAIN, RACE_COURSE_BIG_SNOWMAN, RACE_COURSE_SUNSET_ROCK, RACE_COURSE_NIGHT_HIGHWAY, RACE_COURSE_GRASS_VALLEY, RACE_COURSE_DIZZY_LAND, RACE_COURSE_QUICKSAND_VALLEY, RACE_COURSE_SILVER_MOUNTAIN, -1, 0, 0 },
+     { RACE_COURSE_ROOKIE_MOUNTAIN,
+          RACE_COURSE_BIG_SNOWMAN,
+          RACE_COURSE_SUNSET_ROCK,
+          RACE_COURSE_NIGHT_HIGHWAY,
+          RACE_COURSE_GRASS_VALLEY,
+          RACE_COURSE_DIZZY_LAND,
+          -1,
+          0,
+          0,
+          0,
+          0 },
+     { RACE_COURSE_ROOKIE_MOUNTAIN,
+          RACE_COURSE_BIG_SNOWMAN,
+          RACE_COURSE_SUNSET_ROCK,
+          RACE_COURSE_NIGHT_HIGHWAY,
+          RACE_COURSE_GRASS_VALLEY,
+          RACE_COURSE_DIZZY_LAND,
+          RACE_COURSE_QUICKSAND_VALLEY,
+          -1,
+          0,
+          0,
+          0 },
+     { RACE_COURSE_ROOKIE_MOUNTAIN,
+          RACE_COURSE_BIG_SNOWMAN,
+          RACE_COURSE_SUNSET_ROCK,
+          RACE_COURSE_NIGHT_HIGHWAY,
+          RACE_COURSE_GRASS_VALLEY,
+          RACE_COURSE_DIZZY_LAND,
+          RACE_COURSE_QUICKSAND_VALLEY,
+          RACE_COURSE_SILVER_MOUNTAIN,
+          -1,
+          0,
+          0 },
      },
-    { RACE_COURSE_ROOKIE_MOUNTAIN, RACE_COURSE_BIG_SNOWMAN, RACE_COURSE_SUNSET_ROCK, RACE_COURSE_NIGHT_HIGHWAY, RACE_COURSE_GRASS_VALLEY, RACE_COURSE_DIZZY_LAND, RACE_COURSE_QUICKSAND_VALLEY, RACE_COURSE_SILVER_MOUNTAIN, RACE_COURSE_NINJA_LAND, -1, 0 },
+    { RACE_COURSE_ROOKIE_MOUNTAIN,
+     RACE_COURSE_BIG_SNOWMAN, RACE_COURSE_SUNSET_ROCK,
+     RACE_COURSE_NIGHT_HIGHWAY, RACE_COURSE_GRASS_VALLEY,
+     RACE_COURSE_DIZZY_LAND, RACE_COURSE_QUICKSAND_VALLEY,
+     RACE_COURSE_SILVER_MOUNTAIN, RACE_COURSE_NINJA_LAND,
+     -1,
+     0 },
     { RACE_COURSE_ROOKIE_MOUNTAIN, RACE_COURSE_BIG_SNOWMAN, RACE_COURSE_SUNSET_ROCK, -1 },
     { RACE_COURSE_ANIMAL_LAND, -1, 0, 0, 0, 0, 0, 0 },
 };
@@ -452,7 +488,7 @@ void updateCharacterSelectCourseMenu(void) {
                         } \
                         if ((*gCharacterSelectActiveCourseOptions)[selection] != (-1)) { \
                             gRaceCourseIndex.signedValue = selection + 1;
-                        // clang-format on
+                            // clang-format on
                             selection = gRaceCourseIndex.signedValue;
                         }
                     }
@@ -460,11 +496,45 @@ void updateCharacterSelectCourseMenu(void) {
                     repeatTimer = *repeatTimerPtr;
                     if (repeatTimer != 0) {
                         repeatTimer++;
-                        *repeatTimerPtr = ((u32)(u16)(((u32)(u16)(((u32)(u16)(((u32)(u16)(((u32)(u16)(((u32)(u16)(((u32)(u16)(((u32)(u16)(((u32)(u16)(((u32)(u16)(((u32)(u16)(((u32)(u16)(((u32)(u16)(((u32)(u16)(((u32)(u16)(((u32)(u16)(((u32)(u16)(((u32)(u16)(((u32)(u16)(repeatTimer & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF);
+                        *repeatTimerPtr =
+                            ((u32)(u16)((
+                                            (u32)(u16)((
+                                                           (u32)(u16)((
+                                                                          (u32)(u16)(((u32)(u16)(((u32)(u16)(((u32)(u16)((
+                                                                                                                             (u32)(u16)((
+                                                                                                                                            (u32)(u16)(((u32)(u16)(((u32)(u16)(((u32)(u16)(((u32)(u16)(((u32)(u16)(((u32)(u16)(((u32)(u16)(((u32)(u16)(((u32)(u16)(((u32)(u16)(repeatTimer & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) & 0xFFFF) &
+                                                                                                                                                                                           0xFFFF) &
+                                                                                                                                                                                0xFFFF) &
+                                                                                                                                                                               0xFFFF) &
+                                                                                                                                                                    0xFFFF) &
+                                                                                                                                                                   0xFFFF) &
+                                                                                                                                                        0xFFFF) &
+                                                                                                                                                       0xFFFF) &
+                                                                                                                                            0xFFFF
+                                                                                                                                        ) &
+                                                                                                                                        0xFFFF) &
+                                                                                                                             0xFFFF
+                                                                                                                         ) &
+                                                                                                                         0xFFFF) &
+                                                                                                              0xFFFF) &
+                                                                                                             0xFFFF) &
+                                                                                                  0xFFFF) &
+                                                                                                 0xFFFF) &
+                                                                                      0xFFFF) &
+                                                                                     0xFFFF) &
+                                                                          0xFFFF
+                                                                      ) &
+                                                                      0xFFFF) &
+                                                           0xFFFF
+                                                       ) &
+                                                       0xFFFF) &
+                                            0xFFFF
+                                        ) &
+                                        0xFFFF) &
+                             0xFFFF);
                         if (repeatTimer == 0xFFFF) {
                             repeatTimer = (repeatTimer & 0) + 0xC;
                             *repeatTimerPtr = repeatTimer;
-
                         }
                     }
 

@@ -41,7 +41,12 @@ void updateEndingSlashStartFinalPose(EndingCreditsSlashActor *arg0) {
             setMainMenuSceneModelAnimation(0, 0x56);
             gEndingCreditsSequencePhase = 0x41;
             arg0->character.rotation.y = 0xC00;
-            setMainMenuSceneModelRotation(0, arg0->character.rotation.x, arg0->character.rotation.y, arg0->character.rotation.z);
+            setMainMenuSceneModelRotation(
+                0,
+                arg0->character.rotation.x,
+                arg0->character.rotation.y,
+                arg0->character.rotation.z
+            );
         }
     }
 }
@@ -91,7 +96,12 @@ void updateEndingSlashWaitPhase3FAnim(EndingCreditsSlashActor *arg0) {
 void updateEndingSlashSpinUntilPhase3F(EndingCreditsSlashActor *arg0) {
     if (stepMainMenuSceneModelAnimation(0) == 0) {
         arg0->character.position.x += 0x18000;
-        setMainMenuSceneModelPosition(0, arg0->character.position.x, arg0->character.position.y, arg0->character.position.z);
+        setMainMenuSceneModelPosition(
+            0,
+            arg0->character.position.x,
+            arg0->character.position.y,
+            arg0->character.position.z
+        );
     }
     if (gEndingCreditsSequencePhase == 0x3F) {
         arg0->character.stateTimer = 0;
@@ -118,7 +128,12 @@ void updateEndingSlashTumbleToPhase3C(EndingCreditsSlashActor *arg0) {
     if (arg0->character.stateTimer == 2) {
         gEndingCreditsSequencePhase = 0x3C;
     }
-    setMainMenuSceneModelPosition(0, arg0->character.position.x, arg0->character.position.y, arg0->character.position.z);
+    setMainMenuSceneModelPosition(
+        0,
+        arg0->character.position.x,
+        arg0->character.position.y,
+        arg0->character.position.z
+    );
     addMainMenuSceneModelDrawCallback(0);
     if (sp20 == 1) {
         arg0->character.stateTimer = 0;
@@ -134,10 +149,20 @@ void updateEndingSlashExitUntilPhase3B(EndingCreditsSlashActor *arg0) {
         setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateEndingSlashTumbleToPhase3C);
         setMainMenuSceneModelAnimation(0, 0x20);
         arg0->character.rotation.y = 0xC00;
-        setMainMenuSceneModelRotation(0, arg0->character.rotation.x, arg0->character.rotation.y, arg0->character.rotation.z);
+        setMainMenuSceneModelRotation(
+            0,
+            arg0->character.rotation.x,
+            arg0->character.rotation.y,
+            arg0->character.rotation.z
+        );
         gEndingCreditsCharacterAuraDoneFlags[ENDING_CREDITS_CHARACTER_SLASH] = 1;
     }
-    setMainMenuSceneModelPosition(0, arg0->character.position.x, arg0->character.position.y, arg0->character.position.z);
+    setMainMenuSceneModelPosition(
+        0,
+        arg0->character.position.x,
+        arg0->character.position.y,
+        arg0->character.position.z
+    );
     addMainMenuSceneModelDrawCallback(0);
 }
 
@@ -176,7 +201,12 @@ void updateEndingSlashSlideToCenter(EndingCreditsSlashActor *arg0) {
         temp->character.position.x = 0x500000;
         setCallbackTaskCallback(temp, (CallbackTaskCallback)updateEndingSlashSlowRotationWipe);
     }
-    setMainMenuSceneModelPosition(0, temp->character.position.x, temp->character.position.y, temp->character.position.z);
+    setMainMenuSceneModelPosition(
+        0,
+        temp->character.position.x,
+        temp->character.position.y,
+        temp->character.position.z
+    );
     addMainMenuSceneModelDrawCallback(0);
 }
 
@@ -230,7 +260,12 @@ void updateEndingSlashDashOffLeft(EndingCreditsSlashActor *arg0) {
         setCallbackTaskCallback(arg0, (CallbackTaskCallback)waitEndingSlashPhase34);
         gEndingCreditsCharacterAuraDoneFlags[ENDING_CREDITS_CHARACTER_SLASH] = 1;
     }
-    setMainMenuSceneModelPosition(0, arg0->character.position.x, arg0->character.position.y, arg0->character.position.z);
+    setMainMenuSceneModelPosition(
+        0,
+        arg0->character.position.x,
+        arg0->character.position.y,
+        arg0->character.position.z
+    );
     addMainMenuSceneModelDrawCallback(0);
 }
 
@@ -249,7 +284,12 @@ void updateEndingSlashVanishRetreat(EndingCreditsSlashActor *arg0) {
     if (arg0->character.stateTimer == 2) {
         gEndingCreditsSequencePhase = 0x30;
     }
-    setMainMenuSceneModelPosition(0, arg0->character.position.x, arg0->character.position.y, arg0->character.position.z);
+    setMainMenuSceneModelPosition(
+        0,
+        arg0->character.position.x,
+        arg0->character.position.y,
+        arg0->character.position.z
+    );
     addMainMenuSceneModelDrawCallback(0);
     if (sp20 == 1) {
         arg0->character.stateTimer = 0;
@@ -274,7 +314,12 @@ void waitEndingSlashPhase2F(EndingCreditsSlashActor *arg0) {
 void updateEndingSlashDriftAfterPhase2D(EndingCreditsSlashActor *arg0) {
     loopMainMenuSceneModelAnimation(0);
     arg0->character.position.x += 0x2000;
-    setMainMenuSceneModelPosition(0, arg0->character.position.x, arg0->character.position.y, arg0->character.position.z);
+    setMainMenuSceneModelPosition(
+        0,
+        arg0->character.position.x,
+        arg0->character.position.y,
+        arg0->character.position.z
+    );
     addMainMenuSceneModelDrawCallback(0);
     if (gEndingCreditsSequencePhase == 0x2D) {
         setCallbackTaskCallback(arg0, (CallbackTaskCallback)waitEndingSlashPhase2F);
@@ -290,7 +335,12 @@ void updateEndingSlashRunLeftThenPhase2B(EndingCreditsSlashActor *arg0) {
         arg0->character.position.z = 0xFFFF0000;
         gEndingCreditsSequencePhase = 0x2B;
     }
-    setMainMenuSceneModelPosition(0, arg0->character.position.x, arg0->character.position.y, arg0->character.position.z);
+    setMainMenuSceneModelPosition(
+        0,
+        arg0->character.position.x,
+        arg0->character.position.y,
+        arg0->character.position.z
+    );
     addMainMenuSceneModelDrawCallback(0);
 }
 
@@ -304,7 +354,12 @@ void updateEndingSlashSlideFarLeft(EndingCreditsSlashActor *arg0) {
         arg0->character.stateTimer = 0;
         gEndingCreditsCharacterAuraDoneFlags[ENDING_CREDITS_CHARACTER_SLASH] = 1;
     }
-    setMainMenuSceneModelPosition(0, arg0->character.position.x, arg0->character.position.y, arg0->character.position.z);
+    setMainMenuSceneModelPosition(
+        0,
+        arg0->character.position.x,
+        arg0->character.position.y,
+        arg0->character.position.z
+    );
     addMainMenuSceneModelDrawCallback(0);
 }
 
@@ -347,7 +402,12 @@ void updateEndingSlashSlideLeftToMarker(EndingCreditsSlashActor *arg0) {
         arg0->character.position.x = 0xFF700000;
         setCallbackTaskCallback(arg0, (CallbackTaskCallback)waitEndingSlashPhase28);
     }
-    setMainMenuSceneModelPosition(0, arg0->character.position.x, arg0->character.position.y, arg0->character.position.z);
+    setMainMenuSceneModelPosition(
+        0,
+        arg0->character.position.x,
+        arg0->character.position.y,
+        arg0->character.position.z
+    );
     addMainMenuSceneModelDrawCallback(0);
 }
 
@@ -358,7 +418,12 @@ void updateEndingSlashSlideRightToMarker(EndingCreditsSlashActor *arg0) {
         arg0->character.position.x = 0xFFCE0000;
         setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateEndingSlashSlideLeftToMarker);
     }
-    setMainMenuSceneModelPosition(0, arg0->character.position.x, arg0->character.position.y, arg0->character.position.z);
+    setMainMenuSceneModelPosition(
+        0,
+        arg0->character.position.x,
+        arg0->character.position.y,
+        arg0->character.position.z
+    );
     addMainMenuSceneModelDrawCallback(0);
 }
 
@@ -378,7 +443,12 @@ void updateEndingSlashSlideLeftSetPhase26(EndingCreditsSlashActor *arg0) {
         setCallbackTaskCallback(arg0, (CallbackTaskCallback)startEndingSlashPhase27Slide);
         gEndingCreditsSequencePhase = 0x26;
     }
-    setMainMenuSceneModelPosition(0, arg0->character.position.x, arg0->character.position.y, arg0->character.position.z);
+    setMainMenuSceneModelPosition(
+        0,
+        arg0->character.position.x,
+        arg0->character.position.y,
+        arg0->character.position.z
+    );
     addMainMenuSceneModelDrawCallback(0);
 }
 
@@ -394,7 +464,12 @@ void updateEndingSlashDiagonalSlideSetPhase24(EndingCreditsSlashActor *arg0) {
         setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateEndingSlashSlideLeftSetPhase26);
         gEndingCreditsSequencePhase = 0x24;
     }
-    setMainMenuSceneModelPosition(0, arg0->character.position.x, arg0->character.position.y, arg0->character.position.z);
+    setMainMenuSceneModelPosition(
+        0,
+        arg0->character.position.x,
+        arg0->character.position.y,
+        arg0->character.position.z
+    );
     addMainMenuSceneModelDrawCallback(0);
 }
 
@@ -417,7 +492,12 @@ void updateEndingSlashSlideRightSetPhase23(EndingCreditsSlashActor *arg0) {
         setCallbackTaskCallback(arg0, (CallbackTaskCallback)waitEndingSlashBeforeDiagonalSlide);
         gEndingCreditsSequencePhase = 0x23;
     }
-    setMainMenuSceneModelPosition(0, arg0->character.position.x, arg0->character.position.y, arg0->character.position.z);
+    setMainMenuSceneModelPosition(
+        0,
+        arg0->character.position.x,
+        arg0->character.position.y,
+        arg0->character.position.z
+    );
     addMainMenuSceneModelDrawCallback(0);
 }
 
@@ -437,7 +517,12 @@ void updateEndingSlashExitLeftAfterPhase22(EndingCreditsSlashActor *arg0) {
         setCallbackTaskCallback(arg0, (CallbackTaskCallback)waitEndingSlashPhase22Aura);
         gEndingCreditsCharacterAuraDoneFlags[ENDING_CREDITS_CHARACTER_SLASH] = 1;
     }
-    setMainMenuSceneModelPosition(0, arg0->character.position.x, arg0->character.position.y, arg0->character.position.z);
+    setMainMenuSceneModelPosition(
+        0,
+        arg0->character.position.x,
+        arg0->character.position.y,
+        arg0->character.position.z
+    );
     addMainMenuSceneModelDrawCallback(0);
 }
 
@@ -456,7 +541,12 @@ void updateEndingSlashAfterVanishWait(EndingCreditsSlashActor *arg0) {
             setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateEndingSlashExitLeftAfterPhase22);
             setMainMenuSceneModelAnimation(0, 0x1B);
             arg0->character.rotation.y = 0xC00;
-            setMainMenuSceneModelRotation(0, arg0->character.rotation.x, arg0->character.rotation.y, arg0->character.rotation.z);
+            setMainMenuSceneModelRotation(
+                0,
+                arg0->character.rotation.x,
+                arg0->character.rotation.y,
+                arg0->character.rotation.z
+            );
             gEndingCreditsSequencePhase = 0x1F;
             gEndingCreditsCharacterAuraDoneFlags[ENDING_CREDITS_CHARACTER_SLASH] = 0;
             spawnEndingCreditsCharacterAura(0x1C, -0x30, 0, 1);
@@ -490,7 +580,12 @@ void updateEndingSlashRepeatAnimThenVanish(EndingCreditsSlashActor *arg0) {
         }
     } else {
         arg0->character.position.x += 0xFFFF0000;
-        setMainMenuSceneModelPosition(0, arg0->character.position.x, arg0->character.position.y, arg0->character.position.z);
+        setMainMenuSceneModelPosition(
+            0,
+            arg0->character.position.x,
+            arg0->character.position.y,
+            arg0->character.position.z
+        );
     }
 }
 
@@ -627,7 +722,12 @@ void updateEndingSlashSlideLeftUntilPhase18(EndingCreditsSlashActor *arg0) {
     if (gEndingCreditsSequencePhase == 0x18) {
         setCallbackTaskCallback(arg0, (CallbackTaskCallback)waitEndingSlashPhase19);
     }
-    setMainMenuSceneModelPosition(0, arg0->character.position.x, arg0->character.position.y, arg0->character.position.z);
+    setMainMenuSceneModelPosition(
+        0,
+        arg0->character.position.x,
+        arg0->character.position.y,
+        arg0->character.position.z
+    );
 }
 
 void waitEndingSlashPhase17(EndingCreditsSlashActor *arg0) {
@@ -647,7 +747,12 @@ void updateEndingSlashSlideRightToIdle(EndingCreditsSlashActor *arg0) {
         setCallbackTaskCallback(arg0, (CallbackTaskCallback)waitEndingSlashPhase17);
         setMainMenuSceneModelAnimation(0, 0x24);
     }
-    setMainMenuSceneModelPosition(0, arg0->character.position.x, arg0->character.position.y, arg0->character.position.z);
+    setMainMenuSceneModelPosition(
+        0,
+        arg0->character.position.x,
+        arg0->character.position.y,
+        arg0->character.position.z
+    );
     addMainMenuSceneModelDrawCallback(0);
 }
 
@@ -701,7 +806,12 @@ void updateEndingSlashHopLeftAnim(EndingCreditsSlashActor *arg0) {
     arg0->character.position.x += 0xFFF80000;
     arg0->character.position.y += var_v0 * 0x60000;
     arg0->character.stateTimer = arg0->character.stateTimer + 1;
-    setMainMenuSceneModelPosition(0, arg0->character.position.x, arg0->character.position.y, arg0->character.position.z);
+    setMainMenuSceneModelPosition(
+        0,
+        arg0->character.position.x,
+        arg0->character.position.y,
+        arg0->character.position.z
+    );
     addMainMenuSceneModelDrawCallback(0);
     if (sp20 == 1) {
         arg0->character.stateTimer = 0;
@@ -754,7 +864,12 @@ void updateEndingSlashSlideLeftSlowRotation(EndingCreditsSlashActor *arg0) {
         arg0->character.position.x = -0xA00000;
         setCallbackTaskCallback(arg0, (CallbackTaskCallback)waitEndingSlashRotationPhase14);
     }
-    setMainMenuSceneModelPosition(0, arg0->character.position.x, arg0->character.position.y, arg0->character.position.z);
+    setMainMenuSceneModelPosition(
+        0,
+        arg0->character.position.x,
+        arg0->character.position.y,
+        arg0->character.position.z
+    );
     loopMainMenuSceneModelAnimation(0);
     addMainMenuSceneModelDrawCallback(0);
 }
@@ -799,7 +914,12 @@ void updateEndingSlashSlideRightSetPhase11(EndingCreditsSlashActor *arg0) {
     if (arg0->character.stateTimer == 0x18) {
         gEndingCreditsSequencePhase = 0x11;
     }
-    setMainMenuSceneModelPosition(0, arg0->character.position.x, arg0->character.position.y, arg0->character.position.z);
+    setMainMenuSceneModelPosition(
+        0,
+        arg0->character.position.x,
+        arg0->character.position.y,
+        arg0->character.position.z
+    );
     addMainMenuSceneModelDrawCallback(0);
 }
 
@@ -808,7 +928,12 @@ void waitEndingSlashPhase10Aura(EndingCreditsSlashActor *arg0) {
         arg0->character.position.x = 0xFE700000;
         arg0->character.rotation.y = 0x400;
         setMainMenuSceneModelPosition(0, -0x1900000, arg0->character.position.y, arg0->character.position.z);
-        setMainMenuSceneModelRotation(0, arg0->character.rotation.x, arg0->character.rotation.y, arg0->character.rotation.z);
+        setMainMenuSceneModelRotation(
+            0,
+            arg0->character.rotation.x,
+            arg0->character.rotation.y,
+            arg0->character.rotation.z
+        );
         setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateEndingSlashSlideRightSetPhase11);
         setMainMenuSceneModelAnimation(0, 0x1B);
         gEndingCreditsCharacterAuraDoneFlags[ENDING_CREDITS_CHARACTER_SLASH] = 0;
@@ -829,7 +954,12 @@ void updateEndingSlashExitRightSetPhase0E(EndingCreditsSlashActor *arg0) {
     if (arg0->character.stateTimer == 1) {
         gEndingCreditsSequencePhase = 0xE;
     }
-    setMainMenuSceneModelPosition(0, arg0->character.position.x, arg0->character.position.y, arg0->character.position.z);
+    setMainMenuSceneModelPosition(
+        0,
+        arg0->character.position.x,
+        arg0->character.position.y,
+        arg0->character.position.z
+    );
     addMainMenuSceneModelDrawCallback(0);
 }
 
@@ -966,7 +1096,12 @@ void updateEndingSlashSlideLeftToAura(EndingCreditsSlashActor *arg0) {
         setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateEndingSlashLongWaitSetShadow);
         setMainMenuSceneModelAnimation(0, 0xD);
         arg0->character.rotation.y = 0x400;
-        setMainMenuSceneModelRotation(0, arg0->character.rotation.x, arg0->character.rotation.y, arg0->character.rotation.z);
+        setMainMenuSceneModelRotation(
+            0,
+            arg0->character.rotation.x,
+            arg0->character.rotation.y,
+            arg0->character.rotation.z
+        );
         gEndingCreditsSequencePhase = 8;
         gEndingCreditsCharacterAuraDoneFlags[ENDING_CREDITS_CHARACTER_SLASH] = 0;
         spawnEndingCreditsCharacterAura(0x1C, -0x38, 0, 1);
@@ -1022,7 +1157,12 @@ void updateEndingSlashEnterFromRight(EndingCreditsSlashActor *arg0) {
     if (temp_a1 < 0x900001) {
         arg0->character.position.x = 0x900000;
         setCallbackTaskCallback(arg0, (CallbackTaskCallback)waitEndingSlashPhase3);
-        setMainMenuSceneModelPosition(0, arg0->character.position.x, arg0->character.position.y, arg0->character.position.z);
+        setMainMenuSceneModelPosition(
+            0,
+            arg0->character.position.x,
+            arg0->character.position.y,
+            arg0->character.position.z
+        );
         setMainMenuSceneModelAnimation(0, 1);
         spawnEndingCreditsPhaseAdvanceSparkle(0x50, -0x68);
     } else {
@@ -1048,7 +1188,17 @@ void initEndingCreditsSlash(EndingCreditsSlashActor *arg0) {
     arg0->character.rotation.z = 0;
     initMainMenuSceneModel(0, 0);
     setMainMenuSceneModelAnimation(0, 0);
-    setMainMenuSceneModelPosition(0, arg0->character.position.x, arg0->character.position.y, arg0->character.position.z);
-    setMainMenuSceneModelRotation(0, arg0->character.rotation.x, arg0->character.rotation.y, arg0->character.rotation.z);
+    setMainMenuSceneModelPosition(
+        0,
+        arg0->character.position.x,
+        arg0->character.position.y,
+        arg0->character.position.z
+    );
+    setMainMenuSceneModelRotation(
+        0,
+        arg0->character.rotation.x,
+        arg0->character.rotation.y,
+        arg0->character.rotation.z
+    );
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)waitEndingSlashPhase2);
 }

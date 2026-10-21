@@ -58,7 +58,11 @@ void updateSpeedFanEffect(RacePlayer *player) {
             trail->worldPos.y += player->modelPartTransforms[0].translation.y;
             trail->worldPos.z += player->modelPartTransforms[0].translation.z;
             makeFixedRotationY(scratch.rotation, trail->modelYaw);
-            multiplyFixedMatrix3s(scratch.rotation, player->modelPartTransforms[0].rotation, trail->frontTransform.rotation);
+            multiplyFixedMatrix3s(
+                scratch.rotation,
+                player->modelPartTransforms[0].rotation,
+                trail->frontTransform.rotation
+            );
             trail->frontTransform.translation.x = trail->worldPos.x;
             trail->frontTransform.translation.y = trail->worldPos.y;
             trail->frontTransform.translation.z = trail->worldPos.z;
@@ -83,11 +87,7 @@ void updateSpeedFanEffect(RacePlayer *player) {
                 trail->state = 2;
             }
             if (player->soundDisabled == 0) {
-                addRenderCallback(
-                    &gRaceModelEffectRenderCallbackList,
-                    (RenderCallback)renderSpeedFanEffect,
-                    trail
-                );
+                addRenderCallback(&gRaceModelEffectRenderCallbackList, (RenderCallback)renderSpeedFanEffect, trail);
             }
             return;
         case 2:
@@ -97,7 +97,11 @@ void updateSpeedFanEffect(RacePlayer *player) {
             trail->worldPos.y += player->modelPartTransforms[0].translation.y;
             trail->worldPos.z += player->modelPartTransforms[0].translation.z;
             makeFixedRotationY(scratch.rotation, trail->modelYaw);
-            multiplyFixedMatrix3s(scratch.rotation, player->modelPartTransforms[0].rotation, trail->frontTransform.rotation);
+            multiplyFixedMatrix3s(
+                scratch.rotation,
+                player->modelPartTransforms[0].rotation,
+                trail->frontTransform.rotation
+            );
             trail->frontTransform.translation.x = trail->worldPos.x;
             trail->frontTransform.translation.y = trail->worldPos.y;
             trail->frontTransform.translation.z = trail->worldPos.z;
@@ -120,11 +124,7 @@ void updateSpeedFanEffect(RacePlayer *player) {
                 return;
             }
             if (player->soundDisabled == 0) {
-                addRenderCallback(
-                    &gRaceModelEffectRenderCallbackList,
-                    (RenderCallback)renderSpeedFanEffect,
-                    trail
-                );
+                addRenderCallback(&gRaceModelEffectRenderCallbackList, (RenderCallback)renderSpeedFanEffect, trail);
             }
             return;
         default:

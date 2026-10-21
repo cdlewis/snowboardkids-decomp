@@ -7,14 +7,12 @@
 #define RACE_MOTION_JOINT_COUNT 12
 #define RACE_MOTION_FRAME_SAMPLE_COUNT 2
 #define RACE_MOTION_DECODED_JOINT_FRAME_PADDING_COUNT 2
-#define RACE_MOTION_DECODED_JOINT_FRAME_STRIDE \
-    (RACE_MOTION_JOINT_COUNT + RACE_MOTION_DECODED_JOINT_FRAME_PADDING_COUNT)
+#define RACE_MOTION_DECODED_JOINT_FRAME_STRIDE (RACE_MOTION_JOINT_COUNT + RACE_MOTION_DECODED_JOINT_FRAME_PADDING_COUNT)
 #define RACE_MOTION_PARTIAL_ANIMATION_JOINT_COUNT 5
 #define RACE_MOTION_PARTIAL_ANIMATION_START_JOINT 6
 #define RACE_MOTION_PACKED_JOINT_ROTATION_SKIP_BYTES 0x24
 #define RACE_MOTION_PACKED_JOINT_ROTATION_PREFIX_COUNT 9
 #define RACE_MOTION_MODEL_POSITION_FRAC_BITS 14
-
 
 typedef struct RaceCourseSurfaceFace {
     u16 coord0;
@@ -118,12 +116,7 @@ void interpolateRaceMotionJointAnimationFrame(
     s32 frameTimer,
     s32 frameTimerReset
 );
-void blendRaceMotionJointAnimation(
-    RacePlayer *player,
-    s32 animationIndex,
-    s32 blendTimer,
-    s32 blendDuration
-);
+void blendRaceMotionJointAnimation(RacePlayer *player, s32 animationIndex, s32 blendTimer, s32 blendDuration);
 void stepRaceMotionLoopingAnimation(RacePlayer *player);
 void stepRaceMotionLoopingJointAnimation(RacePlayer *player);
 s32 stepRaceMotionAnimationUntilEnd(RacePlayer *player);

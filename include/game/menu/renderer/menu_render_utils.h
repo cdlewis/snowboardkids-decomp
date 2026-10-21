@@ -10,7 +10,7 @@ typedef struct MenuAsciiFontAsset {
     /* 0x04 */ u32 entryCount;
     /* 0x08 */ u32 imageOffset; /* Relative to the asset base. */
     /* 0x0C */ u16 paletteIndex;
-    /* 0x0E */ u8 width; /* Texels. */
+    /* 0x0E */ u8 width;  /* Texels. */
     /* 0x0F */ u8 height; /* Texels. */
 } MenuAsciiFontAsset;
 
@@ -24,14 +24,7 @@ void releaseMenuAssetHandles(void);
 void *resolveAssetTableRelativePointer(void *asset, u32 relativeAddress);
 void initMenuAsciiFontTexture(void);
 void getAssetTableImageAndPalette(void *asset, u16 index, void **image, void **palette);
-void getAssetTableImagePaletteAndSize(
-    u8 *asset,
-    u16 index,
-    void **image,
-    void **palette,
-    s16 *width,
-    s16 *height
-);
+void getAssetTableImagePaletteAndSize(u8 *asset, u16 index, void **image, void **palette, s16 *width, s16 *height);
 void drawMenuAsciiChar(s16 x, s16 y, u8 character, u16 palette);
 void drawMenuAsciiCharImpl(s16 x, s16 y, u8 character, u16 palette);
 void drawMenuAsciiCharLegacy(s16 x, s16 y, volatile s32 character, u16 palette);

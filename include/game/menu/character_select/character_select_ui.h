@@ -89,7 +89,6 @@ typedef struct {
     MenuGlyphScript unusedText[0x14];
 } CharacterSelectUiConfirmationBannerText;
 
-
 void drawCharacterSelectConfirmationBanner(CharacterSelectUiBannerActor *arg0);
 void updateCharacterSelectConfirmationBanner(CharacterSelectUiBannerActor *arg0);
 void initCharacterSelectConfirmationBanner(CharacterSelectUiBannerActor *arg0);

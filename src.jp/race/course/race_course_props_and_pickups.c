@@ -514,8 +514,11 @@ CourseCollectibleSpriteEntry gRookieMountainCollectibleSpriteEntries[] = {
 };
 
 CourseCollectibleSpriteEntry *gCourseCollectibleSpriteListsByCourse[] = {
-    gBigSnowmanCollectibleSpriteEntries, gSunsetRockCollectibleSpriteEntries, gNightHighwayCollectibleSpriteEntries, gGrassValleyCollectibleSpriteEntries, gDizzyLandCollectibleSpriteEntries,
-    gQuicksandValleyCollectibleSpriteEntries, gSilverMountainCollectibleSpriteEntries, gBigSnowmanCollectibleSpriteEntries, gNinjaLandCollectibleSpriteEntries, gRookieMountainCollectibleSpriteEntries,
+    gBigSnowmanCollectibleSpriteEntries,     gSunsetRockCollectibleSpriteEntries,
+    gNightHighwayCollectibleSpriteEntries,   gGrassValleyCollectibleSpriteEntries,
+    gDizzyLandCollectibleSpriteEntries,      gQuicksandValleyCollectibleSpriteEntries,
+    gSilverMountainCollectibleSpriteEntries, gBigSnowmanCollectibleSpriteEntries,
+    gNinjaLandCollectibleSpriteEntries,      gRookieMountainCollectibleSpriteEntries,
 };
 
 Vtx gCourseCollectibleSpriteVertices[] = {
@@ -577,56 +580,88 @@ Vtx gRacePickupTopVertices[] = {
 
 u8 gShotRollTable[][0x10] = {
     {
-        RACE_SHOT_SNOWMAN, RACE_SHOT_SNOWMAN, RACE_SHOT_SNOWMAN, RACE_SHOT_SNOWMAN,
-        RACE_SHOT_BOMB, RACE_SHOT_BOMB, RACE_SHOT_BOMB, RACE_SHOT_BOMB,
-        RACE_SHOT_BOMB, RACE_SHOT_BOMB, RACE_SHOT_BOMB, RACE_SHOT_BOMB,
-        RACE_SHOT_BOMB, RACE_SHOT_FREEZE_SHOT, RACE_SHOT_SLAPSTICK, RACE_SHOT_PARACHUTE,
-    },
+     RACE_SHOT_SNOWMAN,   RACE_SHOT_SNOWMAN,
+     RACE_SHOT_SNOWMAN,   RACE_SHOT_SNOWMAN,
+     RACE_SHOT_BOMB,    RACE_SHOT_BOMB,
+     RACE_SHOT_BOMB,        RACE_SHOT_BOMB,
+     RACE_SHOT_BOMB,        RACE_SHOT_BOMB,
+     RACE_SHOT_BOMB,        RACE_SHOT_BOMB,
+     RACE_SHOT_BOMB,      RACE_SHOT_FREEZE_SHOT,
+     RACE_SHOT_SLAPSTICK, RACE_SHOT_PARACHUTE,
+     },
     {
-        RACE_SHOT_SNOWMAN, RACE_SHOT_SNOWMAN, RACE_SHOT_BOMB, RACE_SHOT_BOMB,
-        RACE_SHOT_FREEZE_SHOT, RACE_SHOT_FREEZE_SHOT, RACE_SHOT_FREEZE_SHOT, RACE_SHOT_FREEZE_SHOT,
-        RACE_SHOT_SLAPSTICK, RACE_SHOT_SLAPSTICK, RACE_SHOT_SLAPSTICK, RACE_SHOT_SLAPSTICK,
-        RACE_SHOT_PARACHUTE, RACE_SHOT_PARACHUTE, RACE_SHOT_PARACHUTE, RACE_SHOT_PARACHUTE,
-    },
+     RACE_SHOT_SNOWMAN,                   RACE_SHOT_SNOWMAN,
+     RACE_SHOT_BOMB,   RACE_SHOT_BOMB,
+     RACE_SHOT_FREEZE_SHOT,    RACE_SHOT_FREEZE_SHOT,
+     RACE_SHOT_FREEZE_SHOT, RACE_SHOT_FREEZE_SHOT,
+     RACE_SHOT_SLAPSTICK, RACE_SHOT_SLAPSTICK,
+     RACE_SHOT_SLAPSTICK,   RACE_SHOT_SLAPSTICK,
+     RACE_SHOT_PARACHUTE, RACE_SHOT_PARACHUTE,
+     RACE_SHOT_PARACHUTE, RACE_SHOT_PARACHUTE,
+     },
     {
-        RACE_SHOT_SNOWMAN, RACE_SHOT_BOMB, RACE_SHOT_FREEZE_SHOT, RACE_SHOT_FREEZE_SHOT,
-        RACE_SHOT_FREEZE_SHOT, RACE_SHOT_FREEZE_SHOT, RACE_SHOT_SLAPSTICK, RACE_SHOT_SLAPSTICK,
-        RACE_SHOT_SLAPSTICK, RACE_SHOT_SLAPSTICK, RACE_SHOT_SLAPSTICK, RACE_SHOT_SLAPSTICK,
-        RACE_SHOT_PARACHUTE, RACE_SHOT_PARACHUTE, RACE_SHOT_PARACHUTE, RACE_SHOT_PARACHUTE,
-    },
+     RACE_SHOT_SNOWMAN, RACE_SHOT_BOMB,
+     RACE_SHOT_FREEZE_SHOT,                   RACE_SHOT_FREEZE_SHOT,
+     RACE_SHOT_FREEZE_SHOT, RACE_SHOT_FREEZE_SHOT,
+     RACE_SHOT_SLAPSTICK, RACE_SHOT_SLAPSTICK,
+     RACE_SHOT_SLAPSTICK, RACE_SHOT_SLAPSTICK,
+     RACE_SHOT_SLAPSTICK,   RACE_SHOT_SLAPSTICK,
+     RACE_SHOT_PARACHUTE, RACE_SHOT_PARACHUTE,
+     RACE_SHOT_PARACHUTE, RACE_SHOT_PARACHUTE,
+     },
     {
-        RACE_SHOT_SNOWMAN, RACE_SHOT_FREEZE_SHOT, RACE_SHOT_FREEZE_SHOT, RACE_SHOT_FREEZE_SHOT,
-        RACE_SHOT_FREEZE_SHOT, RACE_SHOT_SLAPSTICK, RACE_SHOT_SLAPSTICK, RACE_SHOT_SLAPSTICK,
-        RACE_SHOT_SLAPSTICK, RACE_SHOT_SLAPSTICK, RACE_SHOT_SLAPSTICK, RACE_SHOT_SLAPSTICK,
-        RACE_SHOT_SLAPSTICK, RACE_SHOT_PARACHUTE, RACE_SHOT_PARACHUTE, RACE_SHOT_PARACHUTE,
-    },
+     RACE_SHOT_SNOWMAN, RACE_SHOT_FREEZE_SHOT,
+     RACE_SHOT_FREEZE_SHOT, RACE_SHOT_FREEZE_SHOT,
+     RACE_SHOT_FREEZE_SHOT,                 RACE_SHOT_SLAPSTICK,
+     RACE_SHOT_SLAPSTICK,     RACE_SHOT_SLAPSTICK,
+     RACE_SHOT_SLAPSTICK, RACE_SHOT_SLAPSTICK,
+     RACE_SHOT_SLAPSTICK, RACE_SHOT_SLAPSTICK,
+     RACE_SHOT_SLAPSTICK, RACE_SHOT_PARACHUTE,
+     RACE_SHOT_PARACHUTE, RACE_SHOT_PARACHUTE,
+     },
 };
 
 u8 gItemRollTable[][0x10] = {
     {
-        RACE_ITEM_ROCK, RACE_ITEM_ROCK, RACE_ITEM_ROCK, RACE_ITEM_ROCK,
-        RACE_ITEM_ROCK, RACE_ITEM_ROCK, RACE_ITEM_ROCK, RACE_ITEM_ROCK,
-        RACE_ITEM_ROCK, RACE_ITEM_ROCK, RACE_ITEM_ROCK, RACE_ITEM_INVISIBLE,
-        RACE_ITEM_INVISIBLE, RACE_ITEM_INVISIBLE, RACE_ITEM_GHOST, RACE_ITEM_SPEED_FAN,
-    },
+     RACE_ITEM_ROCK,      RACE_ITEM_ROCK,
+     RACE_ITEM_ROCK, RACE_ITEM_ROCK,
+     RACE_ITEM_ROCK, RACE_ITEM_ROCK,
+     RACE_ITEM_ROCK,      RACE_ITEM_ROCK,
+     RACE_ITEM_ROCK,      RACE_ITEM_ROCK,
+     RACE_ITEM_ROCK,      RACE_ITEM_INVISIBLE,
+     RACE_ITEM_INVISIBLE, RACE_ITEM_INVISIBLE,
+     RACE_ITEM_GHOST,     RACE_ITEM_SPEED_FAN,
+     },
     {
-        RACE_ITEM_ROCK, RACE_ITEM_ROCK, RACE_ITEM_ROCK, RACE_ITEM_GHOST,
-        RACE_ITEM_INVISIBLE, RACE_ITEM_INVISIBLE, RACE_ITEM_INVISIBLE, RACE_ITEM_GHOST,
-        RACE_ITEM_GHOST, RACE_ITEM_GHOST, RACE_ITEM_GHOST, RACE_ITEM_GHOST,
-        RACE_ITEM_GHOST, RACE_ITEM_GHOST, RACE_ITEM_SPEED_FAN, RACE_ITEM_SPEED_FAN,
-    },
+     RACE_ITEM_ROCK,                   RACE_ITEM_ROCK,
+     RACE_ITEM_ROCK, RACE_ITEM_GHOST,
+     RACE_ITEM_INVISIBLE, RACE_ITEM_INVISIBLE,
+     RACE_ITEM_INVISIBLE, RACE_ITEM_GHOST,
+     RACE_ITEM_GHOST, RACE_ITEM_GHOST,
+     RACE_ITEM_GHOST,     RACE_ITEM_GHOST,
+     RACE_ITEM_GHOST,     RACE_ITEM_GHOST,
+     RACE_ITEM_SPEED_FAN,     RACE_ITEM_SPEED_FAN,
+     },
     {
-        RACE_ITEM_ROCK, RACE_ITEM_INVISIBLE, RACE_ITEM_SPEED_FAN, RACE_ITEM_GHOST,
-        RACE_ITEM_GHOST, RACE_ITEM_GHOST, RACE_ITEM_GHOST, RACE_ITEM_GHOST,
-        RACE_ITEM_INVISIBLE, RACE_ITEM_SPEED_FAN, RACE_ITEM_SPEED_FAN, RACE_ITEM_PAN,
-        RACE_ITEM_PAN, RACE_ITEM_PAN, RACE_ITEM_PAN, RACE_ITEM_PAN,
-    },
+     RACE_ITEM_ROCK, RACE_ITEM_INVISIBLE,
+     RACE_ITEM_SPEED_FAN,              RACE_ITEM_GHOST,
+     RACE_ITEM_GHOST, RACE_ITEM_GHOST,
+     RACE_ITEM_GHOST, RACE_ITEM_GHOST,
+     RACE_ITEM_INVISIBLE,     RACE_ITEM_SPEED_FAN,
+     RACE_ITEM_SPEED_FAN,     RACE_ITEM_PAN,
+     RACE_ITEM_PAN, RACE_ITEM_PAN,
+     RACE_ITEM_PAN, RACE_ITEM_PAN,
+     },
     {
-        RACE_ITEM_INVISIBLE, RACE_ITEM_GHOST, RACE_ITEM_GHOST, RACE_ITEM_GHOST,
-        RACE_ITEM_SPEED_FAN, RACE_ITEM_SPEED_FAN, RACE_ITEM_SPEED_FAN, RACE_ITEM_PAN,
-        RACE_ITEM_PAN, RACE_ITEM_PAN, RACE_ITEM_PAN, RACE_ITEM_PAN,
-        RACE_ITEM_PAN, RACE_ITEM_PAN, RACE_ITEM_PAN, RACE_ITEM_RAT_FACE,
-    },
+     RACE_ITEM_INVISIBLE,       RACE_ITEM_GHOST,
+     RACE_ITEM_GHOST,  RACE_ITEM_GHOST,
+     RACE_ITEM_SPEED_FAN,              RACE_ITEM_SPEED_FAN,
+     RACE_ITEM_SPEED_FAN, RACE_ITEM_PAN,
+     RACE_ITEM_PAN,     RACE_ITEM_PAN,
+     RACE_ITEM_PAN, RACE_ITEM_PAN,
+     RACE_ITEM_PAN, RACE_ITEM_PAN,
+     RACE_ITEM_PAN,       RACE_ITEM_RAT_FACE,
+     },
 };
 
 PickupSpawnEntry gRacePickupSpawnEntries[] = {
@@ -1062,9 +1097,7 @@ void renderFallingRock(FallingRockActor *arg0) {
             gSPSegment(gRegionAllocPtr++, 0x02, getRelocatableHeapBlockBase(gAssetHandles[0xA]));
             gSPSegment(gRegionAllocPtr++, 0x03, getRelocatableHeapBlockBase(gAssetHandles[0xB]));
             gSPMatrix(gRegionAllocPtr++, arg0->matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
-            gSPDisplayList(
-                gRegionAllocPtr++, gRaceCourseObjectDisplayLists[FALLING_ROCK_COURSE_OBJECT_MODEL_INDEX]
-            );
+            gSPDisplayList(gRegionAllocPtr++, gRaceCourseObjectDisplayLists[FALLING_ROCK_COURSE_OBJECT_MODEL_INDEX]);
         }
     }
 }
@@ -1596,22 +1629,21 @@ void updateRacePickupIdle(RacePickupActor *arg0) {
             // regardless of box color. Lower rankIndex values are closer to 1st place and
             // skew toward common/weaker tier values; higher values skew rarer/stronger.
             if (arg0->variant == 0) {
-                player->shotType =
-                    gShotRollTable[player->rankIndex][randomNextObject(player) & 0xF];
+                player->shotType = gShotRollTable[player->rankIndex][randomNextObject(player) & 0xF];
                 if (gTrainingCourseLesson != 0) {
                     player->shotType = RACE_SHOT_SLAPSTICK;
                 }
                 player->shotCount = 3;
                 player->shotPalette = 4;
             } else {
-                player->itemType =
-                    gItemRollTable[player->rankIndex][randomNextObject(player) & 0xF];
+                player->itemType = gItemRollTable[player->rankIndex][randomNextObject(player) & 0xF];
                 if (gTrainingCourseLesson != 0) {
                     player->itemType = RACE_ITEM_SPEED_FAN;
                 }
                 // Course index 8 special case, CPU opponents only. When a CPU's item roll
                 // lands on rock, there is a 255/256 chance to replace it with invisibility.
-                if ((gRaceCourseIndex.signedValue == RACE_COURSE_NINJA_LAND) && (player->isCpu != 0) && (player->itemType == RACE_ITEM_ROCK)) {
+                if ((gRaceCourseIndex.signedValue == RACE_COURSE_NINJA_LAND) && (player->isCpu != 0) &&
+                    (player->itemType == RACE_ITEM_ROCK)) {
                     if (randomNextMain() != 0) {
                         player->itemType = RACE_ITEM_INVISIBLE;
                     }
@@ -1837,11 +1869,7 @@ void initPickupShardParticle(PickupShardParticleActor *arg0) {
     arg0->rotVelY = randomNextMain() - 0x80;
     arg0->rotVelZ = randomNextMain() - 0x80;
     makeFixedRotationY(transform.rotation, arg0->rotY);
-    transformVec3iByFixedMatrix(
-        transform.rotation,
-        &gPickupShardInitialVelocities[arg0->task.userId],
-        &arg0->velocity
-    );
+    transformVec3iByFixedMatrix(transform.rotation, &gPickupShardInitialVelocities[arg0->task.userId], &arg0->velocity);
     getAssetTableImageAndPalette(getRelocatableHeapBlockBase(gAssetHandles[0x1C]), 0x22, &arg0->palette, &arg0->image);
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updatePickupShardParticle);
 }

@@ -15,7 +15,6 @@
 #include "game/engine/viewport_manager.h"
 #include "game/race/player/race_player_input.h"
 
-
 extern u8 D_800EC9DC;
 
 extern u8 gCourseSelectFromRaceTypeMenu;
@@ -95,7 +94,7 @@ void updateRaceSplitscreenSelectMenu(void) {
                     }
                     pressedInput = gPlayerInputPressed[0];
                     if ((pressedInput & (STICK_UP | U_JPAD)) || ((heldUp != 0) && (gMenuInputRepeatTimers[0] >= 0xB) &&
-                                                ((gMenuInputRepeatTimers[0] % 3) == 0))) {
+                                                                 ((gMenuInputRepeatTimers[0] % 3) == 0))) {
                         if (!gMenuInputRepeatTimers[0]) {
                             gMenuInputRepeatTimers[0] = (gMenuInputRepeatTimers[0] = gMenuInputRepeatTimers[0] + 1);
                         }

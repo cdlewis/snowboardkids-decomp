@@ -375,8 +375,7 @@ void initPassAwardOpponent(MenuScreenEffectActor *arg0) {
 }
 
 void createPassAwardOpponent(s32 arg0, s32 arg1) {
-    MenuScreenEffectActor *p =
-        createCallbackTaskWithUserId((CallbackTaskCallback)initPassAwardOpponent, 0, 0x64, arg1);
+    MenuScreenEffectActor *p = createCallbackTaskWithUserId((CallbackTaskCallback)initPassAwardOpponent, 0, 0x64, arg1);
     if (p != NULL) {
         p->unk18.word = arg0;
     }

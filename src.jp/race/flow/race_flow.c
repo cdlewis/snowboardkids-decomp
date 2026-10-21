@@ -519,7 +519,8 @@ void initRaceSceneFlow(void) {
     for (i = gPlayerCount, k = 0; i < 4; i++) {
         while (1) {
             duplicate = 1;
-            gRacePlayers[i].characterId = gRaceCourseOpponentCharacterIds.characterIds[gRaceCourseIndex.signedValue * 4 + k++];
+            gRacePlayers[i].characterId =
+                gRaceCourseOpponentCharacterIds.characterIds[gRaceCourseIndex.signedValue * 4 + k++];
             for (j = 0; j < gPlayerCount; j++) {
                 if (gRacePlayers[i].characterId == gRacePlayers[j].characterId) {
                     duplicate = 0;
@@ -1624,7 +1625,12 @@ void prepareRaceResultsFlow(void) {
         if ((gPlayerCount == 1) && (gRaceSplitscreenMode == 0)) {
             createCallbackTaskWithUserId((CallbackTaskCallback)updateRaceUiResultAwardBadgeDelay, 6, 0x64, 0xA9);
         }
-        createCallbackTaskWithUserId((CallbackTaskCallback)initFallingConfetti, 5, 0x64, gRaceResultsAwardPlayerNumber - 1);
+        createCallbackTaskWithUserId(
+            (CallbackTaskCallback)initFallingConfetti,
+            5,
+            0x64,
+            gRaceResultsAwardPlayerNumber - 1
+        );
     }
     updateRaceFlowFrame();
 }
@@ -1964,7 +1970,12 @@ void updateRaceResultsFlow(void) {
     }
 
     if (gRaceResultsAwardPlayerNumber != 0) {
-        createCallbackTaskWithUserId((CallbackTaskCallback)initFallingConfetti, 5, 0x64, gRaceResultsAwardPlayerNumber - 1);
+        createCallbackTaskWithUserId(
+            (CallbackTaskCallback)initFallingConfetti,
+            5,
+            0x64,
+            gRaceResultsAwardPlayerNumber - 1
+        );
     }
     updateRaceFlowFrame();
 }
@@ -1976,7 +1987,12 @@ void updateRaceResultsMusicFlow(void) {
         gMenuFlowState |= 0x20;
     }
     if (gRaceResultsAwardPlayerNumber != 0) {
-        createCallbackTaskWithUserId((CallbackTaskCallback)&initFallingConfetti, 5, 0x64, gRaceResultsAwardPlayerNumber - 1);
+        createCallbackTaskWithUserId(
+            (CallbackTaskCallback)&initFallingConfetti,
+            5,
+            0x64,
+            gRaceResultsAwardPlayerNumber - 1
+        );
     }
     updateRaceFlowFrame();
     if (gMenuFlowState & 0x10) {
@@ -1992,7 +2008,12 @@ void updateRaceResultsMusicFlow(void) {
 void fadeOutRaceResultsFlow(void) {
     gFramebufferRenderInterval.value = 0;
     if (gRaceResultsAwardPlayerNumber != 0) {
-        createCallbackTaskWithUserId((CallbackTaskCallback)initFallingConfetti, 5, 0x64, gRaceResultsAwardPlayerNumber - 1);
+        createCallbackTaskWithUserId(
+            (CallbackTaskCallback)initFallingConfetti,
+            5,
+            0x64,
+            gRaceResultsAwardPlayerNumber - 1
+        );
     }
     updateRaceFlowFrame();
     gRaceRumbleEnabled = 0;
@@ -2003,8 +2024,8 @@ void fadeOutRaceResultsFlow(void) {
         if (gCurrentGameTask->callbackData0 == 0) {
             stopSoundEffects();
             if ((gRaceSplitscreenMode == 2) &&
-                (((Unk80043040 *)getRelocatableHeapBlockBase(gAssetHandles[0x2B]))->unk8 != 0) && (gRaceGhostRecordStatus != 0) &&
-                (saveRaceRecordReplayData() != 0)) {
+                (((Unk80043040 *)getRelocatableHeapBlockBase(gAssetHandles[0x2B]))->unk8 != 0) &&
+                (gRaceGhostRecordStatus != 0) && (saveRaceRecordReplayData() != 0)) {
                 gRaceGhostRecordStatus = -1;
             }
             if (gRaceSplitscreenMode == 2) {

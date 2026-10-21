@@ -289,7 +289,8 @@ void updateMultiplayerCourseSelectMenu(void) {
         } else if (D_800EC9C0 == 0) {
             for (playerIndex = 0; playerIndex < gPlayerCount; playerIndex++) {
                 if (gMenuChoicePromptState[playerIndex] == 0) {
-                    if (((gCourseSelectStatus.previewModelState[playerIndex] == 1) && (gRacePlayers[playerIndex].menuState == 0)) &&
+                    if (((gCourseSelectStatus.previewModelState[playerIndex] == 1) &&
+                         (gRacePlayers[playerIndex].menuState == 0)) &&
                         (!(gCourseSelectSlideStates[playerIndex] & 1))) {
                         if (gCourseSelectInputLocked == 1) {
                             gRacePlayers[playerIndex].menuState = 9;

@@ -720,7 +720,7 @@ s32 getRaceCourseSurfaceHeight(s32 surfaceIndex, s32 x, s32 z) {
     s32 pad[2];
     s32 zDelta;
 
-    for (faceIndex = gRaceCourseSurfaces[surfaceIndex].faceStartIndex; \
+    for (faceIndex = gRaceCourseSurfaces[surfaceIndex].faceStartIndex;
          faceIndex < gRaceCourseSurfaces[surfaceIndex].faceEndIndex;
          faceIndex++) {
         if ((gRaceCourseSurfaceFaces[faceIndex].skipFirstEdgeCheck != 0) ||
@@ -842,18 +842,18 @@ void getRaceCourseSurfaceSpawnTransform(s32 arg0, s32 *x, s32 *y, s32 *z, s16 *a
     surfaceOffset = arg0 * sizeof(RaceCourseSurface);
     coordTablePtr = &gRaceCourseSurfaceCoords;
     *x = ((Vec3s *)((s32)*coordTablePtr +
-                              (((RaceCourseSurface *)((s32)gRaceCourseSurfaces + surfaceOffset))->referenceCoordIndex *
-                               sizeof(Vec3s))))
+                    (((RaceCourseSurface *)((s32)gRaceCourseSurfaces + surfaceOffset))->referenceCoordIndex *
+                     sizeof(Vec3s))))
              ->x
          << 0x11;
     *y = ((Vec3s *)((s32)*coordTablePtr +
-                              (((RaceCourseSurface *)((s32)gRaceCourseSurfaces + surfaceOffset))->referenceCoordIndex *
-                               sizeof(Vec3s))))
+                    (((RaceCourseSurface *)((s32)gRaceCourseSurfaces + surfaceOffset))->referenceCoordIndex *
+                     sizeof(Vec3s))))
              ->y
          << 0x11;
     *z = ((Vec3s *)((s32)*coordTablePtr +
-                              (((RaceCourseSurface *)((s32)gRaceCourseSurfaces + surfaceOffset))->referenceCoordIndex *
-                               sizeof(Vec3s))))
+                    (((RaceCourseSurface *)((s32)gRaceCourseSurfaces + surfaceOffset))->referenceCoordIndex *
+                     sizeof(Vec3s))))
              ->z
          << 0x11;
     *angle = -((RaceCourseSurface *)((s32)gRaceCourseSurfaces + surfaceOffset))->pathAngle;
@@ -886,8 +886,7 @@ void getRaceCourseTargetPositionAhead(s32 arg0, s32 arg1, s32 arg2, s32 *arg3, s
             *arg3 = (((s64)(-gRaceCourseSurfaceAngleSin)) * projected) / 0x1000;
             *arg4 = (((s64)gRaceCourseSurfaceAngleCos) * projected) / 0x1000;
         } else {
-            if (!arg3) {
-            }
+            if (!arg3) {}
             projected += 0xFF400000;
             *arg3 = (((s64)(-gRaceCourseSurfaceAngleSin)) * projected) / 0x1000;
             *arg4 = (((s64)gRaceCourseSurfaceAngleCos) * projected) / 0x1000;
@@ -903,10 +902,9 @@ void getRaceCourseTargetPositionAhead(s32 arg0, s32 arg1, s32 arg2, s32 *arg3, s
         distance = updateRacePlayerSmoothedPathOffset(arg5, pathIndex, arg6);
         temp =
             ((((s64)(-gRaceCourseSurfaceAngleSin)) * deltaX) + (((s64)gRaceCourseSurfaceAngleCos) * deltaZ)) / 0x1000;
-        *arg3 = ((((s64)gRaceCourseSurfaceAngleCos) * distance) + (((s64)(-gRaceCourseSurfaceAngleSin)) * temp)) /
-                0x1000;
-        *arg4 = ((((s64)gRaceCourseSurfaceAngleSin) * distance) + (((s64)gRaceCourseSurfaceAngleCos) * temp)) /
-                0x1000;
+        *arg3 =
+            ((((s64)gRaceCourseSurfaceAngleCos) * distance) + (((s64)(-gRaceCourseSurfaceAngleSin)) * temp)) / 0x1000;
+        *arg4 = ((((s64)gRaceCourseSurfaceAngleSin) * distance) + (((s64)gRaceCourseSurfaceAngleCos) * temp)) / 0x1000;
         *arg3 += gRaceCourseSurfaceCoords[gRaceCourseSurfaces[pathIndex].referenceCoordIndex].x << 0x11;
         *arg4 += gRaceCourseSurfaceCoords[gRaceCourseSurfaces[pathIndex].referenceCoordIndex].z << 0x11;
     } else {
@@ -953,7 +951,8 @@ void setRaceMotionAnimation(RacePlayer *player, s32 animationIndex) {
     player->animationFramesRemaining++;
     player->animationFrameCount = frameCount;
     animationHeader++;
-    frameDataOffset = (u8 *)animationHeader - (u8 *)getRelocatableHeapBlockBase(gAssetHandles[0x16 + player->playerIndex]);
+    frameDataOffset =
+        (u8 *)animationHeader - (u8 *)getRelocatableHeapBlockBase(gAssetHandles[0x16 + player->playerIndex]);
     player->animationStartOffset = frameDataOffset;
     player->animationFrameDataOffset = frameDataOffset;
     player->animationFrameTimer = 0;
@@ -1003,7 +1002,8 @@ void loadRaceMotionAnimationFrame(RacePlayer *player) {
         jointIndex++;
     } while (jointIndex != RACE_MOTION_JOINT_COUNT);
 
-    player->animationFrameDataOffset = (u8 *)frameData - (u8 *)getRelocatableHeapBlockBase(gAssetHandles[0x16 + player->playerIndex]);
+    player->animationFrameDataOffset =
+        (u8 *)frameData - (u8 *)getRelocatableHeapBlockBase(gAssetHandles[0x16 + player->playerIndex]);
     angle = player->modelParts[0].rotation.x;
     player->modelParts[13].rotation.x = angle;
     player->modelParts[12].rotation.x = angle;

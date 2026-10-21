@@ -686,7 +686,8 @@ void updateCharacterSelectLimitedCourseList(CharacterSelectCourseMenuFrameActor 
                 arg0->y[gRaceCourseIndex.signedValue] = -0x58;
                 arg0->state = COURSE_LIST_SUBMENU_OPEN;
                 createCallbackTask((CallbackTaskCallback)initCharacterSelectCourseRecordsPopup, 0, 0x62);
-                gMenuScratch0.task = createCallbackTask((CallbackTaskCallback)initCharacterSelectCourseExitPopup, 0, 0x63);
+                gMenuScratch0.task =
+                    createCallbackTask((CallbackTaskCallback)initCharacterSelectCourseExitPopup, 0, 0x63);
             }
             break;
 
@@ -931,8 +932,7 @@ void updateCharacterSelectCoursePreviewFrame(CharacterSelectCourseWidgetActor *a
     }
 
     if (switchState != gCharacterSelectCourseCursorState.previewFrameState) {
-        switchState = state = arg0->transition.bytes.state =
-            gCharacterSelectCourseCursorState.previewFrameState;
+        switchState = state = arg0->transition.bytes.state = gCharacterSelectCourseCursorState.previewFrameState;
     }
 
     switch (switchState) {
@@ -2899,7 +2899,8 @@ void updateCharacterSelectCourseSubmenuFrame(CharacterSelectCourseWidgetActor *a
             if (arg0->x >= -0x88) {
                 arg0->x = -0x88;
                 arg0->sprite.bytes.state = 1;
-                gMenuScratch0.task = createCallbackTask((CallbackTaskCallback)initCharacterSelectCourseNamePopup, 0, 0x63);
+                gMenuScratch0.task =
+                    createCallbackTask((CallbackTaskCallback)initCharacterSelectCourseNamePopup, 0, 0x63);
             }
             state = arg0->sprite.bytes.state;
             break;
@@ -3585,7 +3586,6 @@ void drawCharacterSelectCourseRecordsPopup(CharacterSelectCourseWidgetActor *act
     }
 }
 
-
 void updateCharacterSelectCourseRecordsPopup(CharacterSelectCourseWidgetActor *arg0) {
     u8 state = arg0->sprite.bytes.state;
     u8 unk;
@@ -3712,8 +3712,8 @@ void updateCharacterSelectCourseExitPopup(CharacterSelectCourseWidgetActor *arg0
     }
 
     (arg0 ? &gCharacterSelectCourseCursorState : &gCharacterSelectCourseCursorState)->submenuState = state;
-    (arg0 ? &gCharacterSelectCourseCursorState : &gCharacterSelectCourseCursorState)
-        ->submenuTimer = arg0->transition.bytes.timer;
+    (arg0 ? &gCharacterSelectCourseCursorState : &gCharacterSelectCourseCursorState)->submenuTimer =
+        arg0->transition.bytes.timer;
 
     if (arg0->transition.bytes.state == 6) {
         removeCallbackTask(arg0);

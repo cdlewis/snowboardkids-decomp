@@ -527,12 +527,7 @@ void drawTargetTimeChallengeHud(void *arg0) {
         drawAssetTableSprite(0x48, 0x54, getRelocatableHeapBlockBase(RACE_HUD_POPUP_FONT_HANDLE), 0x4F);
     }
 
-    drawAssetTableSprite(
-        -0x88,
-        -0x60,
-        getRelocatableHeapBlockBase(RACE_HUD_POPUP_FONT_HANDLE),
-        gRaceHudItemTileIds[1]
-    );
+    drawAssetTableSprite(-0x88, -0x60, getRelocatableHeapBlockBase(RACE_HUD_POPUP_FONT_HANDLE), gRaceHudItemTileIds[1]);
     drawAssetTableSprite(-0x88, 0x40, getRelocatableHeapBlockBase(RACE_HUD_POPUP_FONT_HANDLE), 0x24);
     drawAssetTableSprite(-0x88, 0x40, getRelocatableHeapBlockBase(RACE_HUD_POPUP_FONT_HANDLE), 0x25);
 
@@ -965,13 +960,7 @@ void drawMultiplayerRaceHud(void *arg0) {
 
     texture = getRelocatableHeapBlockBase(RACE_HUD_POPUP_FONT_HANDLE);
     player = &gRacePlayers[gCurrentViewportIndex];
-    drawScaledAssetTableSprite(
-        -8,
-        -0x38,
-        texture,
-        gRaceHudItemTileIds[player->itemType],
-        player->itemPalette + 1
-    );
+    drawScaledAssetTableSprite(-8, -0x38, texture, gRaceHudItemTileIds[player->itemType], player->itemPalette + 1);
 
     texture = getRelocatableHeapBlockBase(RACE_HUD_POPUP_FONT_HANDLE);
     drawScaledAssetTableSprite(-0x4C, 0x18, texture, gRacePlayers[gCurrentViewportIndex].rankIndex, 1);
@@ -1099,10 +1088,12 @@ void drawRaceCourseProgressMeter(void *arg0) {
 
     i = 3;
     do {
-        if (((gRacePlayers[order[i]].stateFlags & RACE_PLAYER_COLLISION_SQUASHED) != 0) || (gRacePlayers[order[i]].progressMeterSquashFrame != 0)) {
+        if (((gRacePlayers[order[i]].stateFlags & RACE_PLAYER_COLLISION_SQUASHED) != 0) ||
+            (gRacePlayers[order[i]].progressMeterSquashFrame != 0)) {
             gRacePlayers[order[i]].progressMeterSquashFrame++;
         }
-        if (((gRacePlayers[order[i]].stateFlags & RACE_PLAYER_COLLISION_SQUASHED) != 0) && (gRacePlayers[order[i]].progressMeterSquashFrame >= 5)) {
+        if (((gRacePlayers[order[i]].stateFlags & RACE_PLAYER_COLLISION_SQUASHED) != 0) &&
+            (gRacePlayers[order[i]].progressMeterSquashFrame >= 5)) {
             gRacePlayers[order[i]].progressMeterSquashFrame = 4;
         }
         if (gRacePlayers[order[i]].progressMeterSquashFrame >= 6) {
@@ -1138,7 +1129,9 @@ void drawRaceCourseProgressMeter(void *arg0) {
                 xBase,
                 (s16)(gRacePlayers[order[i]].progressMeterPosition + yBase),
                 temp.assetTable,
-                (&gRaceProgressMeterIconTiles[gRacePlayers[order[i]].progressMeterSquashFrame])[gRacePlayers[order[i]].characterId * 6],
+                (
+                    &gRaceProgressMeterIconTiles[gRacePlayers[order[i]].progressMeterSquashFrame]
+                )[gRacePlayers[order[i]].characterId * 6],
                 gRaceProgressMeterIconPalettes[gRacePlayers[order[i]].characterId]
             );
         } else {
@@ -1147,7 +1140,9 @@ void drawRaceCourseProgressMeter(void *arg0) {
                 xBase,
                 (s16)(gRacePlayers[order[i]].progressMeterPosition + yBase),
                 temp.assetTable,
-                (&gRaceProgressMeterIconTiles[gRacePlayers[order[i]].progressMeterSquashFrame])[gRacePlayers[order[i]].characterId * 6]
+                (
+                    &gRaceProgressMeterIconTiles[gRacePlayers[order[i]].progressMeterSquashFrame]
+                )[gRacePlayers[order[i]].characterId * 6]
             );
         }
         i--;

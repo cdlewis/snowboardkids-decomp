@@ -15,7 +15,6 @@
 #include "game/engine/viewport_manager.h"
 #include "game/race/player/race_player_input.h"
 
-
 extern u8 gMenuExitSelection;
 extern s16 gMenuFadeAlpha;
 extern u8 gCourseSelectFromRaceTypeMenu;

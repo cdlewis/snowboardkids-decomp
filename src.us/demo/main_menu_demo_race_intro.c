@@ -31,10 +31,10 @@ typedef struct {
 u8 gMainMenuDemoRaceIntroIndex = 0;
 MainMenuDemoRaceIntroEntry gMainMenuDemoRaceIntroEntries[] = {
     { RACE_COURSE_ROOKIE_MOUNTAIN, 0, 0, 0, (void *)&_24DBE0_ROM_START, (void *)&_24DBE0_ROM_END, 0, 1, 2, 3 },
-    { RACE_COURSE_BIG_SNOWMAN, 1, 0, 0, (void *)&_250260_ROM_START, (void *)&_250260_ROM_END, 4, 1, 2, 3 },
-    { RACE_COURSE_SUNSET_ROCK, 1, 1, 0, (void *)&_2521F0_ROM_START, (void *)&_2521F0_ROM_END, 2, 0, 1, 3 },
-    { RACE_COURSE_ANIMAL_LAND, 1, 2, 0, (void *)&_254380_ROM_START, (void *)&_254380_ROM_END, 1, 0, 1, 3 },
-    { RACE_COURSE_GRASS_VALLEY, 0, 0, 1, (void *)&_256420_ROM_START, (void *)&_256420_ROM_END, 3, 1, 4, 2 },
+    { RACE_COURSE_BIG_SNOWMAN,     1, 0, 0, (void *)&_250260_ROM_START, (void *)&_250260_ROM_END, 4, 1, 2, 3 },
+    { RACE_COURSE_SUNSET_ROCK,     1, 1, 0, (void *)&_2521F0_ROM_START, (void *)&_2521F0_ROM_END, 2, 0, 1, 3 },
+    { RACE_COURSE_ANIMAL_LAND,     1, 2, 0, (void *)&_254380_ROM_START, (void *)&_254380_ROM_END, 1, 0, 1, 3 },
+    { RACE_COURSE_GRASS_VALLEY,    0, 0, 1, (void *)&_256420_ROM_START, (void *)&_256420_ROM_END, 3, 1, 4, 2 },
 };
 
 extern s16 gMenuFadeAlpha;
@@ -82,8 +82,9 @@ void initMainMenuDemoRaceIntro(void) {
     gRacePlayers[1].snowboardTextureIndex = 2;
     gRacePlayers[2].snowboardTextureIndex = 3;
     gRacePlayers[3].snowboardTextureIndex = 4;
-    if (gRaceSplitscreenMode == 0) { gRacePlayers->isActive = 1;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           gRacePlayers[1].isActive = 1;
+    if (gRaceSplitscreenMode == 0) {
+        gRacePlayers->isActive = 1;
+        gRacePlayers[1].isActive = 1;
         gRacePlayers[2].isActive = 1;
         gRacePlayers[3].isActive = 1;
         gRacePlayerCount = 4;
@@ -115,7 +116,11 @@ void initMainMenuDemoRaceIntro(void) {
     players[3].unk15 = 0;
     players[3].soundDisabled = 0;
     players[3].replayInputSource = RACE_PLAYER_INPUT_REPLAY;
-    loadCompressedRomAsset(gMainMenuDemoRaceIntroEntries[gMainMenuDemoRaceIntroIndex].romStart, gMainMenuDemoRaceIntroEntries[gMainMenuDemoRaceIntroIndex].romEnd, 0x2B);
+    loadCompressedRomAsset(
+        gMainMenuDemoRaceIntroEntries[gMainMenuDemoRaceIntroIndex].romStart,
+        gMainMenuDemoRaceIntroEntries[gMainMenuDemoRaceIntroIndex].romEnd,
+        0x2B
+    );
     loadRaceCourseAssets();
     loadRaceCharacterAssets();
     gMenuFlowState = 0;
@@ -142,7 +147,7 @@ void initMainMenuDemoRaceIntro(void) {
         gRaceCameras[2].initialized.signedValue = 1;
         gRaceCameras[3].initialized.signedValue = 1;
         if (1) {
-            *((u8*)&gFramebufferRenderInterval.value) = 1;
+            *((u8 *)&gFramebufferRenderInterval.value) = 1;
         }
     }
     if (gRaceSplitscreenMode == 0) {

@@ -127,8 +127,10 @@ RacePlayerCheckpointEvent gAnimalLandCheckpointEvents[1] = {
 };
 
 RacePlayerCheckpointEvent *gRaceCourseCheckpointEventLists[10] = {
-    gBigSnowmanCheckpointEvents, gSunsetRockCheckpointEvents, gNightHighwayCheckpointEvents, gGrassValleyCheckpointEvents, gDizzyLandCheckpointEvents,
-    gQuicksandValleyCheckpointEvents, gSilverMountainCheckpointEvents, gAnimalLandCheckpointEvents, gNinjaLandCheckpointEvents, gRookieMountainCheckpointEvents,
+    gBigSnowmanCheckpointEvents,     gSunsetRockCheckpointEvents, gNightHighwayCheckpointEvents,
+    gGrassValleyCheckpointEvents,    gDizzyLandCheckpointEvents,  gQuicksandValleyCheckpointEvents,
+    gSilverMountainCheckpointEvents, gAnimalLandCheckpointEvents, gNinjaLandCheckpointEvents,
+    gRookieMountainCheckpointEvents,
 };
 
 u8 gSinglePlayerRankDisplayPatternFirst[4] = { 1, 0, 2, 0 };

@@ -18,11 +18,9 @@
     ((-(s64)(x) * (sizeX) + (s64)(y) * (sizeY) + (s64)(z) * (sizeZ)) / 0x1000)
 #define RACE_PLAYER_SURFACE_DOT2(a, b, c, d) ((product = (s64)(a) * (b)), ((product + (s64)(c) * (d)) / 0x1000))
 #define RACE_PLAYER_SURFACE_COLLISION_POINT(x, y, z, sizeX, sizeY, sizeZ) \
-    (((s64)(y) * (sizeY) + ((product = (s64)(x) * (sizeX)), \
-                            (product + (s64)(z) * (sizeZ)))) / 0x1000)
+    (((s64)(y) * (sizeY) + ((product = (s64)(x) * (sizeX)), (product + (s64)(z) * (sizeZ)))) / 0x1000)
 #define RACE_PLAYER_SURFACE_MIRRORED_COLLISION_POINT(x, y, z, sizeX, sizeY, sizeZ) \
-    (((s64)(y) * (sizeY) + ((product = -(s64)(x) * (sizeX)), \
-                            (product + (s64)(z) * (sizeZ)))) / 0x1000)
+    (((s64)(y) * (sizeY) + ((product = -(s64)(x) * (sizeX)), (product + (s64)(z) * (sizeZ)))) / 0x1000)
 
 typedef struct {
     Vec3i worldPos;
@@ -323,7 +321,8 @@ void resolveRacePlayerBodyCollisions(void) {
                 if (playerA->isActive != 0) {
                     playerB = &gRacePlayers[j];
                     if ((playerB->isActive != 0) && (playerA->soundDisabled == 0) && (playerB->soundDisabled == 0) &&
-                        !(playerA->stateFlags & RACE_PLAYER_COLLISION_SQUASHED) && !(playerB->stateFlags & RACE_PLAYER_COLLISION_SQUASHED)) {
+                        !(playerA->stateFlags & RACE_PLAYER_COLLISION_SQUASHED) &&
+                        !(playerB->stateFlags & RACE_PLAYER_COLLISION_SQUASHED)) {
                         temp = playerA->collisionBottomY - playerB->collisionBottomY;
                         if ((temp < 0 ? (temp = -temp, playerA->collisionHeight) : playerB->collisionHeight) >= temp) {
                             radius = playerB->collisionRadius + playerA->collisionRadius;
@@ -431,8 +430,12 @@ void pushRacePlayersOutOfCylinderAndApplyItemHit(Vec3i *pos, s32 xzSize, s32 ySi
                         gRacePlayers[i].pos.x -= pushX;
                         gRacePlayers[i].pos.z += pushZ;
 
-                        localX = ((s64)cosine * gRacePlayers[i].collisionVelocityX - (s64)sine * gRacePlayers[i].collisionVelocityZ) / 0x1000;
-                        localZ = ((s64)sine * gRacePlayers[i].collisionVelocityX + (s64)cosine * gRacePlayers[i].collisionVelocityZ) / 0x1000;
+                        localX = ((s64)cosine * gRacePlayers[i].collisionVelocityX -
+                                  (s64)sine * gRacePlayers[i].collisionVelocityZ) /
+                                 0x1000;
+                        localZ = ((s64)sine * gRacePlayers[i].collisionVelocityX +
+                                  (s64)cosine * gRacePlayers[i].collisionVelocityZ) /
+                                 0x1000;
                         if (localZ > 0) {
                             localZ = -localZ;
                         }
@@ -497,8 +500,10 @@ void pushRacePlayerOutOfCylinderAndApplyItemHit(Vec3i *pos, s32 xzSize, s32 ySiz
                     player->pos.x -= pushX;
                     player->pos.z += pushZ;
 
-                    localX = ((s64)cosine * player->collisionVelocityX - (s64)sine * player->collisionVelocityZ) / 0x1000;
-                    localZ = ((s64)sine * player->collisionVelocityX + (s64)cosine * player->collisionVelocityZ) / 0x1000;
+                    localX =
+                        ((s64)cosine * player->collisionVelocityX - (s64)sine * player->collisionVelocityZ) / 0x1000;
+                    localZ =
+                        ((s64)sine * player->collisionVelocityX + (s64)cosine * player->collisionVelocityZ) / 0x1000;
                     if (localZ > 0) {
                         localZ = -localZ;
                     }
@@ -1073,8 +1078,10 @@ s32 updateRacePlayerSurfaceContact(RacePlayer *player) {
         }
     }
 
-    player->surfacePitchAngle = calculateFixedAngleFromDeltaXZ(-(surfaceHeights[0] - surfaceHeights[2]), -longitudinalSpacing * 2);
-    player->surfaceRollAngle = calculateFixedAngleFromDeltaXZ(-(surfaceHeights[4] - surfaceHeights[5]), -sideSpacing * 2);
+    player->surfacePitchAngle =
+        calculateFixedAngleFromDeltaXZ(-(surfaceHeights[0] - surfaceHeights[2]), -longitudinalSpacing * 2);
+    player->surfaceRollAngle =
+        calculateFixedAngleFromDeltaXZ(-(surfaceHeights[4] - surfaceHeights[5]), -sideSpacing * 2);
     player->groundCorrectionY = 0;
     makeFixedRotationZXY(playerRotation.values, player->pitchAngle, player->facingAngle, player->leanAngle);
     for (i = 0; i < 4; i++) {
@@ -1111,10 +1118,20 @@ s32 updateRacePlayerSurfaceContact(RacePlayer *player) {
     effectRotation.transformedZ = FIXED_PRODUCT(playerRotation.values[5], player->collisionCenterOffset);
 
     if (player->stateFlags & 0x400) {
-        makeFixedRotationZYX(effectRotation.values, player->modelRotationX, -player->modelRotationY, -player->modelRotationZ);
+        makeFixedRotationZYX(
+            effectRotation.values,
+            player->modelRotationX,
+            -player->modelRotationY,
+            -player->modelRotationZ
+        );
         multiplyFixedMatrix3s(effectRotation.values, playerRotation.values, worldRotation.values);
     } else {
-        makeFixedRotationZYX(effectRotation.values, player->modelRotationX, player->modelRotationY, player->modelRotationZ);
+        makeFixedRotationZYX(
+            effectRotation.values,
+            player->modelRotationX,
+            player->modelRotationY,
+            player->modelRotationZ
+        );
         makeFixedRotationY(worldRotation.values, 0x800);
         multiplyFixedMatrix3s(worldRotation.values, playerRotation.values, intermediateRotation.values);
         multiplyFixedMatrix3s(effectRotation.values, intermediateRotation.values, worldRotation.values);
@@ -1185,7 +1202,8 @@ s32 updateRacePlayerSurfaceContact(RacePlayer *player) {
     }
 
     collisionX += player->pos.x + effectRotation.transformedX;
-    collisionY += player->pos.y - player->groundOffset + player->groundCorrectionY + effectRotation.transformedY + 0xA000;
+    collisionY +=
+        player->pos.y - player->groundOffset + player->groundCorrectionY + effectRotation.transformedY + 0xA000;
     collisionZ += player->pos.z + effectRotation.transformedZ;
     multiplyFixedMatrix3s(intermediateRotation.values, worldRotation.values, playerRotation.values);
     for (i = 0; i < 4; i++) {
@@ -1308,8 +1326,10 @@ s32 updateRacePlayerGroundAlignment(RacePlayer *player) {
         probeScratch.baseY = contactHeights[4];
     }
 
-    player->surfacePitchAngle = calculateFixedAngleFromDeltaXZ(-(surfaceHeights[0] - surfaceHeights[2]), -longitudinalSpacing * 2);
-    player->surfaceRollAngle = calculateFixedAngleFromDeltaXZ(-(surfaceHeights[4] - surfaceHeights[5]), -sideSpacing * 2);
+    player->surfacePitchAngle =
+        calculateFixedAngleFromDeltaXZ(-(surfaceHeights[0] - surfaceHeights[2]), -longitudinalSpacing * 2);
+    player->surfaceRollAngle =
+        calculateFixedAngleFromDeltaXZ(-(surfaceHeights[4] - surfaceHeights[5]), -sideSpacing * 2);
 
     player->groundCorrectionY = 0;
     makeFixedRotationZXY(playerRotation.values, player->pitchAngle, player->facingAngle, player->leanAngle);
@@ -1337,10 +1357,20 @@ s32 updateRacePlayerGroundAlignment(RacePlayer *player) {
     effectRotation.transformedZ = FIXED_PRODUCT(playerRotation.values[5], player->collisionCenterOffset);
 
     if (player->stateFlags & 0x400) {
-        makeFixedRotationZYX(effectRotation.values, player->modelRotationX, -player->modelRotationY, -player->modelRotationZ);
+        makeFixedRotationZYX(
+            effectRotation.values,
+            player->modelRotationX,
+            -player->modelRotationY,
+            -player->modelRotationZ
+        );
         multiplyFixedMatrix3s(effectRotation.values, playerRotation.values, worldRotation.values);
     } else {
-        makeFixedRotationZYX(effectRotation.values, player->modelRotationX, player->modelRotationY, player->modelRotationZ);
+        makeFixedRotationZYX(
+            effectRotation.values,
+            player->modelRotationX,
+            player->modelRotationY,
+            player->modelRotationZ
+        );
         makeFixedRotationY(worldRotation.values, 0x800);
         multiplyFixedMatrix3s(worldRotation.values, playerRotation.values, intermediateRotation.values);
         multiplyFixedMatrix3s(effectRotation.values, intermediateRotation.values, worldRotation.values);

@@ -520,7 +520,8 @@ void drawControllerPakRumbleCheckPrompt(ControllerPakRumbleCheckPromptActor *act
         );
     }
 
-    if ((actor->state == CONTROLLER_PAK_RUMBLE_INSERT_ACK) || (actor->state == CONTROLLER_PAK_RUMBLE_WARNING_ACK) || (actor->state == CONTROLLER_PAK_RUMBLE_DEVICE_SUMMARY)) {
+    if ((actor->state == CONTROLLER_PAK_RUMBLE_INSERT_ACK) || (actor->state == CONTROLLER_PAK_RUMBLE_WARNING_ACK) ||
+        (actor->state == CONTROLLER_PAK_RUMBLE_DEVICE_SUMMARY)) {
         drawMenuSprite(
             (s16)(actor->common.x + 0xD0),
             (s16)(actor->common.y + yAdjust + 0x20),
@@ -866,7 +867,6 @@ void drawControllerPakFileDeleteFileList(ControllerPakFileListActor *arg0) {
     u16 text7C[5];
     s32 var_a0;
 
-
     if (gControllerPakMenuState.visibleFileIndex == 0) {
         fileIndex = gControllerPakMenuState.fileIndex;
     } else if (gControllerPakMenuState.visibleFileIndex == 4) {
@@ -893,7 +893,7 @@ void drawControllerPakFileDeleteFileList(ControllerPakFileListActor *arg0) {
         }
         textB0[1] = (fileIndex + 1) % 10;
         textB0[2] = 0xFFFF;
-        drawMenuGlyphScript(arg0->positions[0].x + state, arg0->positions[0].y + j*0x10, textB0, 1, alpha, 8);
+        drawMenuGlyphScript(arg0->positions[0].x + state, arg0->positions[0].y + j * 0x10, textB0, 1, alpha, 8);
 
         if (gControllerPakFileStates[fileIndex].company_code != 0) {
             var_a3 = 0;
@@ -920,7 +920,7 @@ void drawControllerPakFileDeleteFileList(ControllerPakFileListActor *arg0) {
                 fileNameText[var_a3 + 1] = insertIndex - 0x10;
             }
             fileNameText[18] = 0xFFFF;
-            drawMenuGlyphScript(arg0->positions[1].x, arg0->positions[1].y + j*0x10, fileNameText, 1, alpha, 8);
+            drawMenuGlyphScript(arg0->positions[1].x, arg0->positions[1].y + j * 0x10, fileNameText, 1, alpha, 8);
 
             for (i = 0; i < 4; i++) {
                 insertIndex = (gControllerPakFileStates[fileIndex].game_code >> ((3 - i) * 8)) & 0xFF & 0xFF;
@@ -935,10 +935,10 @@ void drawControllerPakFileDeleteFileList(ControllerPakFileListActor *arg0) {
                 }
             }
             text7C[4] = 0xFFFF;
-            drawMenuGlyphScript(arg0->positions[2].x, arg0->positions[2].y + j*0x10, text7C, 1, alpha, 8);
+            drawMenuGlyphScript(arg0->positions[2].x, arg0->positions[2].y + j * 0x10, text7C, 1, alpha, 8);
 
             for (i = 0; i < 2; i++) {
-                insertIndex = (gControllerPakFileStates[fileIndex].company_code >> ((1 - i) * 8)) & 0xFF & 0xFF ;
+                insertIndex = (gControllerPakFileStates[fileIndex].company_code >> ((1 - i) * 8)) & 0xFF & 0xFF;
                 if ((insertIndex < 0x30) || (insertIndex >= 0x5B)) {
                     text7C[i] = 0xFFFE;
                 } else if (insertIndex >= 0x41) {
@@ -950,7 +950,7 @@ void drawControllerPakFileDeleteFileList(ControllerPakFileListActor *arg0) {
                 }
             }
             text7C[2] = 0xFFFF;
-            drawMenuGlyphScript(arg0->positions[3].x, arg0->positions[3].y + j*0x10, text7C, 1, alpha, 8);
+            drawMenuGlyphScript(arg0->positions[3].x, arg0->positions[3].y + j * 0x10, text7C, 1, alpha, 8);
 
             for (i = 0; i < 3; i++) {
                 textB0[i] = 0xFFFE;
@@ -967,7 +967,7 @@ void drawControllerPakFileDeleteFileList(ControllerPakFileListActor *arg0) {
                 }
             }
             textB0[3] = 0xFFFF;
-            drawMenuGlyphScript(arg0->positions[4].x, arg0->positions[4].y + j*0x10, textB0, 1, alpha, 8);
+            drawMenuGlyphScript(arg0->positions[4].x, arg0->positions[4].y + j * 0x10, textB0, 1, alpha, 8);
         }
         fileIndex++;
     }
