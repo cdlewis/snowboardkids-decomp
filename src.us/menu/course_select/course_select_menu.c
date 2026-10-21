@@ -160,12 +160,12 @@ void updateCourseSelectModeMenu(void) {
         if (gMenuSelectionConfirmTimer == 0) {
             if ((gRacePlayers[0].menuState == 0) && (COURSE_SELECT_STATUS_LAYOUT.cursorState == 1)) {
                 oldSelection = gCourseSelectModeSelection;
-                if (!(gPlayerInputHeld[0] & 0x10800) && !(gPlayerInputHeld[0] & 0x20400)) {
+                if (!(gPlayerInputHeld[0] & (STICK_UP | U_JPAD)) && !(gPlayerInputHeld[0] & (STICK_DOWN | D_JPAD))) {
                     gMenuInputRepeatTimers[0] = 0;
                 }
                 if (
-                    (gPlayerInputPressed[0] & 0x10800) ||
-                    ((gPlayerInputHeld[0] & 0x10800) && gMenuInputRepeatTimers[0] >= 0xB && ((gMenuInputRepeatTimers[0] % 3) == 0))
+                    (gPlayerInputPressed[0] & (STICK_UP | U_JPAD)) ||
+                    ((gPlayerInputHeld[0] & (STICK_UP | U_JPAD)) && gMenuInputRepeatTimers[0] >= 0xB && ((gMenuInputRepeatTimers[0] % 3) == 0))
                 ) {
                     if (!gMenuInputRepeatTimers[0]) {
                         gMenuInputRepeatTimers[0]++;
@@ -175,8 +175,8 @@ void updateCourseSelectModeMenu(void) {
                     }
                 } else {
                     if (
-                        (gPlayerInputPressed[0] & 0x20400) ||
-                        ((gPlayerInputHeld[0] & 0x20400) && gMenuInputRepeatTimers[0] >= 0xB && (gMenuInputRepeatTimers[0] % 3) == 0)
+                        (gPlayerInputPressed[0] & (STICK_DOWN | D_JPAD)) ||
+                        ((gPlayerInputHeld[0] & (STICK_DOWN | D_JPAD)) && gMenuInputRepeatTimers[0] >= 0xB && (gMenuInputRepeatTimers[0] % 3) == 0)
                     ) {
                         if (!gMenuInputRepeatTimers[0]) {
                             gMenuInputRepeatTimers[0]++;
@@ -201,7 +201,7 @@ void updateCourseSelectModeMenu(void) {
                         gShopMenuShowNewCoursesMessage = 0;
                     }
                 }
-                if (((gPlayerInputPressed[0] & 0x1000) || (gPlayerInputPressed[0] & 0x8000)) && gMenuFlowState == 2) {
+                if (((gPlayerInputPressed[0] & START_BUTTON) || (gPlayerInputPressed[0] & A_BUTTON)) && gMenuFlowState == 2) {
                     gMenuSelectionConfirmTimer = 1;
                     COURSE_SELECT_STATUS_LAYOUT.cursorState = 2;
                     COURSE_SELECT_STATUS_LAYOUT.cursorValue = 0x100;
@@ -213,7 +213,7 @@ void updateCourseSelectModeMenu(void) {
                         enqueueSoundEffect(0x46, 0x32);
                     }
                 } else {
-                    if ((gPlayerInputPressed[0] & 0x4000) && gMenuFlowState == 2 && gMenuSelectionConfirmTimer == 0) {
+                    if ((gPlayerInputPressed[0] & B_BUTTON) && gMenuFlowState == 2 && gMenuSelectionConfirmTimer == 0) {
                         gMenuSelectionConfirmTimer = 1;
                         COURSE_SELECT_STATUS_LAYOUT.cursorState = 2;
                         COURSE_SELECT_STATUS_LAYOUT.cursorValue = 0x100;
@@ -361,10 +361,10 @@ void updateCourseSelectCourseList(void) {
                     var_t1--;
                 }
                 sp30[1] = gCharacterSelectHighlightedRosterIndices[var_a3];
-                if ((!(gPlayerInputHeld[0] & 0x10800)) && !(gPlayerInputHeld[0] & 0x20400)) {
+                if ((!(gPlayerInputHeld[0] & (STICK_UP | U_JPAD))) && !(gPlayerInputHeld[0] & (STICK_DOWN | D_JPAD))) {
                     gMenuInputRepeatTimers[0] = 0;
                 }
-                if ((gPlayerInputPressed[0] & 0x10800) || (((gPlayerInputHeld[0] & 0x10800)) && ((tempTimer = gMenuInputRepeatTimers[0]) >= 9))) {
+                if ((gPlayerInputPressed[0] & (STICK_UP | U_JPAD)) || (((gPlayerInputHeld[0] & (STICK_UP | U_JPAD))) && ((tempTimer = gMenuInputRepeatTimers[0]) >= 9))) {
                     if (gMenuInputRepeatTimers[0] == 0) {
                         gMenuInputRepeatTimers[0]++;
                     }
@@ -372,7 +372,7 @@ void updateCourseSelectCourseList(void) {
                         gCharacterSelectHighlightedRosterIndices[0]--;
                         enqueueSoundEffect(0x19, 0x32);
                     }
-                } else if ((gPlayerInputPressed[0] & 0x20400) || ((gPlayerInputHeld[0] & 0x20400) && ((tempTimer = gMenuInputRepeatTimers[0]) >= 9))) {
+                } else if ((gPlayerInputPressed[0] & (STICK_DOWN | D_JPAD)) || ((gPlayerInputHeld[0] & (STICK_DOWN | D_JPAD)) && ((tempTimer = gMenuInputRepeatTimers[0]) >= 9))) {
                     if (gMenuInputRepeatTimers[0] == 0) {
                         gMenuInputRepeatTimers[0] = gMenuInputRepeatTimers[0] + 1;
                     }
@@ -414,7 +414,7 @@ void updateCourseSelectCourseList(void) {
                         gRacePlayers->selectionUnlockState = gGameSaveDataBuffer[0].courseUnlockStates[gRacePlayers->menuSelection];
                     }
                 }
-                if ((gCourseSelectHorizontalOffsets[0] == 0) && ((gPlayerInputPressed[var_a3] & 0x1000) || (gPlayerInputPressed[var_a3] & 0x8000))) {
+                if ((gCourseSelectHorizontalOffsets[0] == 0) && ((gPlayerInputPressed[var_a3] & START_BUTTON) || (gPlayerInputPressed[var_a3] & A_BUTTON))) {
                     enqueueSoundEffect(1, 0x32);
                     if ((gPlayerCount == 1) && (var_t1 == gCharacterSelectHighlightedRosterIndices[0])) {
                         gRacePlayers->menuState = 9;
@@ -428,7 +428,7 @@ void updateCourseSelectCourseList(void) {
                             createCallbackTask((CallbackTaskCallback)initCourseUnlockPricePanel, 0U, 0x62);
                         }
                     }
-                } else if (gPlayerInputPressed[var_a3] & 0x4000) {
+                } else if (gPlayerInputPressed[var_a3] & B_BUTTON) {
                     enqueueSoundEffect(1, 0x32);
                     gMenuInputRepeatTimers[0] = 0;
                     for (var_a2 = 0; var_a2 < gPlayerCount; var_a2++) { gRacePlayers[var_a2].menuState = 9; }
@@ -446,10 +446,10 @@ void updateCourseSelectCourseList(void) {
                 gCourseSelectSelectionTimers[0] = 0;
             }
             if ((gMenuChoicePromptState[var_a3] >= 2) && (gMenuChoicePromptState[var_a3] < 5)) {
-                if (!(gPlayerInputHeld[0] & 0x10800) && !(gPlayerInputHeld[0] & 0x20400)) {
+                if (!(gPlayerInputHeld[0] & (STICK_UP | U_JPAD)) && !(gPlayerInputHeld[0] & (STICK_DOWN | D_JPAD))) {
                     gMenuInputRepeatTimers[0] = 0;
                 }
-                if ((gPlayerInputPressed[var_a3] & 0x10800) || ((gPlayerInputHeld[var_a3] & 0x10800) && ((gMenuInputRepeatTimers[var_a3]) >= 9) && (gMenuInputRepeatTimers[var_a3] & 1))) {
+                if ((gPlayerInputPressed[var_a3] & (STICK_UP | U_JPAD)) || ((gPlayerInputHeld[var_a3] & (STICK_UP | U_JPAD)) && ((gMenuInputRepeatTimers[var_a3]) >= 9) && (gMenuInputRepeatTimers[var_a3] & 1))) {
                     if (gMenuInputRepeatTimers[var_a3] == 0) {
                         gMenuInputRepeatTimers[var_a3]++;
                     }
@@ -459,7 +459,7 @@ void updateCourseSelectCourseList(void) {
                         COURSE_SELECT_STATUS_LAYOUT.purchaseMessageState = 0;
                     }
                 } else {
-                    if ((gPlayerInputPressed[var_a3] & 0x20400) || ((gPlayerInputHeld[var_a3] & 0x20400) && ((gMenuInputRepeatTimers[var_a3]) >= 9) && (gMenuInputRepeatTimers[var_a3] & 1))) {
+                    if ((gPlayerInputPressed[var_a3] & (STICK_DOWN | D_JPAD)) || ((gPlayerInputHeld[var_a3] & (STICK_DOWN | D_JPAD)) && ((gMenuInputRepeatTimers[var_a3]) >= 9) && (gMenuInputRepeatTimers[var_a3] & 1))) {
                         if (gMenuInputRepeatTimers[var_a3] == 0) {
                             gMenuInputRepeatTimers[var_a3]++;
                         }
@@ -481,14 +481,14 @@ void updateCourseSelectCourseList(void) {
                 } else {
                     player->menuSelection = ((gMenuChoicePromptState[0] * 3) + (player->menuSelection % 3)) - 6;
                 }
-                if (gPlayerInputPressed[var_a3] & 0x4000) {
+                if (gPlayerInputPressed[var_a3] & B_BUTTON) {
                     enqueueSoundEffect(0x18, 0x32);
                     COURSE_SELECT_STATUS_LAYOUT.purchaseMessageState = 0;
                     if (gCourseSelectCourseIds[0][gCharacterSelectHighlightedRosterIndices[var_a3]]);
                     player->menuSelection = gCourseSelectCourseIds[0][gCharacterSelectHighlightedRosterIndices[var_a3]];
                     gMenuInputRepeatTimers[var_a3] = 0;
                     gMenuChoicePromptState[var_a3] += 3;
-                } else if ((gPlayerInputPressed[var_a3] & 0x8000) || (gPlayerInputPressed[var_a3] & 0x1000)) {
+                } else if ((gPlayerInputPressed[var_a3] & A_BUTTON) || (gPlayerInputPressed[var_a3] & START_BUTTON)) {
                     if (gGameSaveDataBuffer[0].courseUnlockStates[gRacePlayers->menuSelection] == -1) {
                         if ((u32) gRacePlayers->money >= (u32) gCourseUnlockPrices[gRacePlayers->menuSelection]) {
                             enqueueSoundEffect(0x49, 0x32);

@@ -167,7 +167,7 @@ void initRaceSetupMenu(void) {
 
 void updateRaceSetupPlayerCountMenu(void) {
     s32 confirmationNext;
-    s32 temp_a3;
+    s32 pressedInput;
     s32 substateNext;
     s32 temp_v0;
     u8 temp_v1;
@@ -178,7 +178,7 @@ void updateRaceSetupPlayerCountMenu(void) {
     one = 1;
     substateNext = 2;
     if ((gRaceSetupMenuSubState.state == one) &&
-        ((gPlayerInputPressed[0] & 0x8000) || (gPlayerInputPressed[0] & 0x1000))) {
+        ((gPlayerInputPressed[0] & A_BUTTON) || (gPlayerInputPressed[0] & START_BUTTON))) {
         enqueueSoundEffect(one, 0x32);
         gRaceSetupMenuSubState.state = substateNext;
         gRaceSetupMenuSubState.timer = 0;
@@ -188,12 +188,12 @@ void updateRaceSetupPlayerCountMenu(void) {
         confirmationValue = temp_v1;
         temp_v0 = temp_v1;
         if (temp_v1 == 0) {
-            temp_a3 = gPlayerInputPressed[0];
-            temp_v0 = gPlayerInputHeld[0] & 0x10800;
-            if ((temp_v0 == 0) && !(gPlayerInputHeld[0] & 0x20400)) {
+            pressedInput = gPlayerInputPressed[0];
+            temp_v0 = gPlayerInputHeld[0] & (STICK_UP | U_JPAD);
+            if ((temp_v0 == 0) && !(gPlayerInputHeld[0] & (STICK_DOWN | D_JPAD))) {
                 gMenuInputRepeatTimers[0] = 0;
             }
-            if ((temp_a3 & 0x10800) || ((temp_v0 != 0) && ((s32)gMenuInputRepeatTimers[0] >= 9) &&
+            if ((pressedInput & (STICK_UP | U_JPAD)) || ((temp_v0 != 0) && ((s32)gMenuInputRepeatTimers[0] >= 9) &&
                                         (((s32)gMenuInputRepeatTimers[0] % 3) == 0))) {
                 if (gMenuInputRepeatTimers[0] == 0) {
                     gMenuInputRepeatTimers[0] += 1;
@@ -202,8 +202,8 @@ void updateRaceSetupPlayerCountMenu(void) {
                     gPlayerCount -= 1;
                     enqueueSoundEffect(0x19, 0x32);
                 }
-            } else if ((temp_a3 & 0x20400) ||
-                       ((gPlayerInputHeld[0] & 0x20400) && ((s32)gMenuInputRepeatTimers[0] >= 9) &&
+            } else if ((pressedInput & (STICK_DOWN | D_JPAD)) ||
+                       ((gPlayerInputHeld[0] & (STICK_DOWN | D_JPAD)) && ((s32)gMenuInputRepeatTimers[0] >= 9) &&
                         (((s32)gMenuInputRepeatTimers[0] % 3) == 0))) {
                 if (gMenuInputRepeatTimers[0] == 0) {
                     gMenuInputRepeatTimers[0] += 1;
@@ -220,7 +220,7 @@ void updateRaceSetupPlayerCountMenu(void) {
                     gMenuInputRepeatTimers[0] = 0xA;
                 }
             }
-            if ((temp_a3 & 0x8000) || (temp_a3 & 0x1000)) {
+            if ((pressedInput & A_BUTTON) || (pressedInput & START_BUTTON)) {
                 gMenuSelectionConfirmTimer = 1;
                 enqueueSoundEffect(0x18, 0x32);
             }

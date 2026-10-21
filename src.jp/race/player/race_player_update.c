@@ -469,7 +469,7 @@ void updateRacePlayerMode00Grounded(RacePlayer *player) {
 
         if (player->unk57A == 0) {
             if (player->isCpu == 0) {
-                if (player->inputFlags & 0x8000) {
+                if (player->heldInput & A_BUTTON) {
                     player->mode = 2;
                     player->updateState = 0;
                     player->updateTimer = 0;
@@ -772,7 +772,7 @@ void updateRacePlayerAirborneLaunch(RacePlayer *player) {
         player->updateState++;
     }
 
-    if ((player->isCpu == 0) && !(player->inputFlags & 0x8000)) {
+    if ((player->isCpu == 0) && !(player->heldInput & A_BUTTON)) {
         player->stateFlags &= ~0x10;
     }
 
@@ -820,20 +820,20 @@ void updateRacePlayerTrickSubstateStart(RacePlayer *player) {
     player->unk2A2 = 0;
     player->unk2A4 = 0;
     if (player->isCpu == 0) {
-        if (player->currentInputFlags & 1) {
-            player->subStateTimer = 1;
+        if (player->pressedInput & R_CBUTTONS) {
+            player->subStateTimer = R_CBUTTONS;
             player->unk2A2 = 1;
         }
-        if (player->currentInputFlags & 2) {
-            player->subStateTimer = 2;
+        if (player->pressedInput & L_CBUTTONS) {
+            player->subStateTimer = L_CBUTTONS;
             player->unk2A2 = 3;
         }
-        if (player->currentInputFlags & 8) {
-            player->subStateTimer = 8;
+        if (player->pressedInput & U_CBUTTONS) {
+            player->subStateTimer = U_CBUTTONS;
             player->unk2A2 = 7;
         }
-        if (player->currentInputFlags & 4) {
-            player->subStateTimer = 4;
+        if (player->pressedInput & D_CBUTTONS) {
+            player->subStateTimer = D_CBUTTONS;
             player->unk2A2 = 5;
         }
         if (player->subStateTimer != 0) {
@@ -843,30 +843,30 @@ void updateRacePlayerTrickSubstateStart(RacePlayer *player) {
             player->subState++;
             if (player->stateFlags & 0x400) {
                 inputMask = player->subStateTimer;
-                if (inputMask & 1) {
+                if (inputMask & R_CBUTTONS) {
                     setRaceMotionAnimation(player, 0x17);
                     inputMask = player->subStateTimer;
                 }
-                if (inputMask & 2) {
+                if (inputMask & L_CBUTTONS) {
                     setRaceMotionAnimation(player, 0x15);
                     inputMask = player->subStateTimer;
                 }
             } else {
                 inputMask = player->subStateTimer;
-                if (inputMask & 1) {
+                if (inputMask & R_CBUTTONS) {
                     setRaceMotionAnimation(player, 0x15);
                     inputMask = player->subStateTimer;
                 }
-                if (inputMask & 2) {
+                if (inputMask & L_CBUTTONS) {
                     setRaceMotionAnimation(player, 0x17);
                     inputMask = player->subStateTimer;
                 }
             }
-            if (inputMask & 8) {
+            if (inputMask & U_CBUTTONS) {
                 setRaceMotionAnimation(player, 0x19);
                 inputMask = player->subStateTimer;
             }
-            if (inputMask & 4) {
+            if (inputMask & D_CBUTTONS) {
                 setRaceMotionAnimation(player, 0x1B);
             }
             player->stateFlags |= 0x800;
@@ -878,7 +878,7 @@ void updateRacePlayerTrickSubstateStart(RacePlayer *player) {
 void updateRacePlayerTrickSubstateHold(RacePlayer *player) {
     s16 inputMask;
 
-    if (!(player->inputFlags & player->subStateTimer)) {
+    if (!(player->heldInput & player->subStateTimer)) {
         player->subStateStep = 1;
     }
     if (stepRaceMotionAnimationUntilEnd(player) != 0) {
@@ -886,30 +886,30 @@ void updateRacePlayerTrickSubstateHold(RacePlayer *player) {
             player->subState++;
             if (player->stateFlags & 0x400) {
                 inputMask = player->subStateTimer;
-                if (inputMask & 1) {
+                if (inputMask & R_CBUTTONS) {
                     setRaceMotionAnimation(player, 0x18);
                     inputMask = player->subStateTimer;
                 }
-                if (inputMask & 2) {
+                if (inputMask & L_CBUTTONS) {
                     setRaceMotionAnimation(player, 0x16);
                     inputMask = player->subStateTimer;
                 }
             } else {
                 inputMask = player->subStateTimer;
-                if (inputMask & 1) {
+                if (inputMask & R_CBUTTONS) {
                     setRaceMotionAnimation(player, 0x16);
                     inputMask = player->subStateTimer;
                 }
-                if (inputMask & 2) {
+                if (inputMask & L_CBUTTONS) {
                     setRaceMotionAnimation(player, 0x18);
                     inputMask = player->subStateTimer;
                 }
             }
-            if (inputMask & 8) {
+            if (inputMask & U_CBUTTONS) {
                 setRaceMotionAnimation(player, 0x1A);
                 inputMask = player->subStateTimer;
             }
-            if (inputMask & 4) {
+            if (inputMask & D_CBUTTONS) {
                 setRaceMotionAnimation(player, 0x1C);
             }
         } else {

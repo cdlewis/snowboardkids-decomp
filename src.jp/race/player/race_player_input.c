@@ -5,8 +5,8 @@
 #include "game/race/player/race_player_input.h"
 #include "game/race/race_replay.h"
 
-#define INPUT_MASK_HARD_STEER_X 0xF0000
-#define INPUT_MASK_HARD_STEER_Y 0xC000
+#define INPUT_MASK_STICK_DIRECTIONS (STICK_UP | STICK_DOWN | STICK_RIGHT | STICK_LEFT)
+#define INPUT_MASK_AB_BUTTONS (A_BUTTON | B_BUTTON)
 
 typedef struct {
     /* 0x0 */ u8 buttons;
@@ -25,7 +25,7 @@ extern s32 gMenuFlowState;
 void recordRaceReplayInputFrame(RacePlayer *player) {
     RaceInputReplayHistory *history;
     s16 frame;
-    u32 inputFlags;
+    u32 heldInput;
 
     history = (RaceInputReplayHistory *)getRelocatableHeapBlockBase(gAssetHandles[0x2B]);
     frame = player->replayFrame;
@@ -34,33 +34,33 @@ void recordRaceReplayInputFrame(RacePlayer *player) {
         history[(u16)player->playerIndex].inputs[player->replayFrame].stickY = player->stickY;
         history[(u16)player->playerIndex].inputs[player->replayFrame].buttons = 0;
 
-        inputFlags = player->inputFlags;
-        if (inputFlags & 8) {
-            history[(u16)player->playerIndex].inputs[player->replayFrame].buttons |= 1;
-            inputFlags = player->inputFlags;
+        heldInput = player->heldInput;
+        if (heldInput & U_CBUTTONS) {
+            history[(u16)player->playerIndex].inputs[player->replayFrame].buttons |= RACE_REPLAY_BUTTON_C_UP;
+            heldInput = player->heldInput;
         }
-        if (inputFlags & 4) {
-            history[(u16)player->playerIndex].inputs[player->replayFrame].buttons |= 2;
-            inputFlags = player->inputFlags;
+        if (heldInput & D_CBUTTONS) {
+            history[(u16)player->playerIndex].inputs[player->replayFrame].buttons |= RACE_REPLAY_BUTTON_C_DOWN;
+            heldInput = player->heldInput;
         }
-        if (inputFlags & 1) {
-            history[(u16)player->playerIndex].inputs[player->replayFrame].buttons |= 8;
-            inputFlags = player->inputFlags;
+        if (heldInput & R_CBUTTONS) {
+            history[(u16)player->playerIndex].inputs[player->replayFrame].buttons |= RACE_REPLAY_BUTTON_C_RIGHT;
+            heldInput = player->heldInput;
         }
-        if (inputFlags & 2) {
-            history[(u16)player->playerIndex].inputs[player->replayFrame].buttons |= 4;
-            inputFlags = player->inputFlags;
+        if (heldInput & L_CBUTTONS) {
+            history[(u16)player->playerIndex].inputs[player->replayFrame].buttons |= RACE_REPLAY_BUTTON_C_LEFT;
+            heldInput = player->heldInput;
         }
-        if (inputFlags & 0x8000) {
-            history[(u16)player->playerIndex].inputs[player->replayFrame].buttons |= 0x10;
-            inputFlags = player->inputFlags;
+        if (heldInput & A_BUTTON) {
+            history[(u16)player->playerIndex].inputs[player->replayFrame].buttons |= RACE_REPLAY_BUTTON_A;
+            heldInput = player->heldInput;
         }
-        if (inputFlags & 0x4000) {
-            history[(u16)player->playerIndex].inputs[player->replayFrame].buttons |= 0x20;
-            inputFlags = player->inputFlags;
+        if (heldInput & B_BUTTON) {
+            history[(u16)player->playerIndex].inputs[player->replayFrame].buttons |= RACE_REPLAY_BUTTON_B;
+            heldInput = player->heldInput;
         }
-        if (inputFlags & 0x2000) {
-            history[(u16)player->playerIndex].inputs[player->replayFrame].buttons |= 0x40;
+        if (heldInput & Z_TRIG) {
+            history[(u16)player->playerIndex].inputs[player->replayFrame].buttons |= RACE_REPLAY_BUTTON_Z;
         }
 
         player->replayFrame++;
@@ -74,40 +74,40 @@ void playRaceReplayInputFrame(RacePlayer *player) {
     if (player->replayFrame < RACE_INPUT_REPLAY_FRAME_COUNT) {
         player->stickX = history[player->playerIndex].inputs[player->replayFrame].stickX;
         player->stickY = history[player->playerIndex].inputs[player->replayFrame].stickY;
-        player->inputFlags = 0;
-        if (history[player->playerIndex].inputs[player->replayFrame].buttons & 1) {
-            player->inputFlags |= 8;
+        player->heldInput = 0;
+        if (history[player->playerIndex].inputs[player->replayFrame].buttons & RACE_REPLAY_BUTTON_C_UP) {
+            player->heldInput |= U_CBUTTONS;
         }
-        if (history[player->playerIndex].inputs[player->replayFrame].buttons & 2) {
-            player->inputFlags |= 4;
+        if (history[player->playerIndex].inputs[player->replayFrame].buttons & RACE_REPLAY_BUTTON_C_DOWN) {
+            player->heldInput |= D_CBUTTONS;
         }
-        if (history[player->playerIndex].inputs[player->replayFrame].buttons & 8) {
-            player->inputFlags |= 1;
+        if (history[player->playerIndex].inputs[player->replayFrame].buttons & RACE_REPLAY_BUTTON_C_RIGHT) {
+            player->heldInput |= R_CBUTTONS;
         }
-        if (history[player->playerIndex].inputs[player->replayFrame].buttons & 4) {
-            player->inputFlags |= 2;
+        if (history[player->playerIndex].inputs[player->replayFrame].buttons & RACE_REPLAY_BUTTON_C_LEFT) {
+            player->heldInput |= L_CBUTTONS;
         }
-        if (history[player->playerIndex].inputs[player->replayFrame].buttons & 0x10) {
-            player->inputFlags |= 0x8000;
+        if (history[player->playerIndex].inputs[player->replayFrame].buttons & RACE_REPLAY_BUTTON_A) {
+            player->heldInput |= A_BUTTON;
         }
-        if (history[player->playerIndex].inputs[player->replayFrame].buttons & 0x20) {
-            player->inputFlags |= 0x4000;
+        if (history[player->playerIndex].inputs[player->replayFrame].buttons & RACE_REPLAY_BUTTON_B) {
+            player->heldInput |= B_BUTTON;
         }
-        if (history[player->playerIndex].inputs[player->replayFrame].buttons & 0x40) {
-            player->inputFlags |= 0x2000;
+        if (history[player->playerIndex].inputs[player->replayFrame].buttons & RACE_REPLAY_BUTTON_Z) {
+            player->heldInput |= Z_TRIG;
         }
         player->replayFrame++;
     } else {
         player->stickX = 0;
         player->stickY = 0;
-        player->inputFlags = 0;
+        player->heldInput = 0;
     }
 }
 
 void recordRaceInputHistoryFrame(RacePlayer *player) {
     RaceInputHistoryBuffer *history;
     s32 index;
-    u32 inputFlags;
+    u32 heldInput;
 
     if (player->unk15 == 5) {
         recordRaceReplayInputFrame(player);
@@ -125,33 +125,33 @@ void recordRaceInputHistoryFrame(RacePlayer *player) {
     history->stickY[history->writeIndex] = player->stickY;
     history->buttons[history->writeIndex] = 0;
 
-    inputFlags = player->inputFlags;
-    if (inputFlags & 8) {
-        history->buttons[history->writeIndex] |= 1;
-        inputFlags = player->inputFlags;
+    heldInput = player->heldInput;
+    if (heldInput & U_CBUTTONS) {
+        history->buttons[history->writeIndex] |= RACE_REPLAY_BUTTON_C_UP;
+        heldInput = player->heldInput;
     }
-    if (inputFlags & 4) {
-        history->buttons[history->writeIndex] |= 2;
-        inputFlags = player->inputFlags;
+    if (heldInput & D_CBUTTONS) {
+        history->buttons[history->writeIndex] |= RACE_REPLAY_BUTTON_C_DOWN;
+        heldInput = player->heldInput;
     }
-    if (inputFlags & 1) {
-        history->buttons[history->writeIndex] |= 8;
-        inputFlags = player->inputFlags;
+    if (heldInput & R_CBUTTONS) {
+        history->buttons[history->writeIndex] |= RACE_REPLAY_BUTTON_C_RIGHT;
+        heldInput = player->heldInput;
     }
-    if (inputFlags & 2) {
-        history->buttons[history->writeIndex] |= 4;
-        inputFlags = player->inputFlags;
+    if (heldInput & L_CBUTTONS) {
+        history->buttons[history->writeIndex] |= RACE_REPLAY_BUTTON_C_LEFT;
+        heldInput = player->heldInput;
     }
-    if (inputFlags & 0x8000) {
-        history->buttons[history->writeIndex] |= 0x10;
-        inputFlags = player->inputFlags;
+    if (heldInput & A_BUTTON) {
+        history->buttons[history->writeIndex] |= RACE_REPLAY_BUTTON_A;
+        heldInput = player->heldInput;
     }
-    if (inputFlags & 0x4000) {
-        history->buttons[history->writeIndex] |= 0x20;
-        inputFlags = player->inputFlags;
+    if (heldInput & B_BUTTON) {
+        history->buttons[history->writeIndex] |= RACE_REPLAY_BUTTON_B;
+        heldInput = player->heldInput;
     }
-    if (inputFlags & 0x2000) {
-        history->buttons[history->writeIndex] |= 0x40;
+    if (heldInput & Z_TRIG) {
+        history->buttons[history->writeIndex] |= RACE_REPLAY_BUTTON_Z;
     }
 
     index = (history->writeIndex + 1) & 0xFFFFFFFFFFFFFFFFu;
@@ -162,7 +162,7 @@ void recordRaceInputHistoryFrame(RacePlayer *player) {
 void playRaceInputHistoryFrame(RacePlayer *player) {
     RaceInputHistoryBuffer *history;
     RacePlayer *playerAlias;
-    s32 buttons;
+    s32 replayButtons;
     s32 index;
     u32 buttonIndex;
     u8 *buttonHistory;
@@ -192,39 +192,39 @@ void playRaceInputHistoryFrame(RacePlayer *player) {
         playerAlias->stickY = history->stickY[history->writeIndex];
         goto dummy_label;
     dummy_label:
-        playerAlias->inputFlags = 0;
+        playerAlias->heldInput = 0;
 
-        buttons = history->buttons[history->writeIndex] ^ 0;
-        if (buttons & 1) {
-            playerAlias->inputFlags |= 8;
+        replayButtons = history->buttons[history->writeIndex] ^ 0;
+        if (replayButtons & RACE_REPLAY_BUTTON_C_UP) {
+            playerAlias->heldInput |= U_CBUTTONS;
             buttonIndex = history->writeIndex;
-            buttons = buttonHistory[buttonIndex];
+            replayButtons = buttonHistory[buttonIndex];
         }
-        if (buttons & 2) {
-            playerAlias->inputFlags |= 4;
-            buttons = history->buttons[history->writeIndex];
+        if (replayButtons & RACE_REPLAY_BUTTON_C_DOWN) {
+            playerAlias->heldInput |= D_CBUTTONS;
+            replayButtons = history->buttons[history->writeIndex];
             if (history->stickY) {}
         }
-        if (buttons & 8) {
-            playerAlias->inputFlags |= 1;
-            buttons = history->buttons[history->writeIndex];
+        if (replayButtons & RACE_REPLAY_BUTTON_C_RIGHT) {
+            playerAlias->heldInput |= R_CBUTTONS;
+            replayButtons = history->buttons[history->writeIndex];
         }
-        if (buttons & 4) {
-            playerAlias->inputFlags |= 2;
-            buttons = history->buttons[history->writeIndex];
+        if (replayButtons & RACE_REPLAY_BUTTON_C_LEFT) {
+            playerAlias->heldInput |= L_CBUTTONS;
+            replayButtons = history->buttons[history->writeIndex];
         }
-        if (buttons & 0x10) {
-            playerAlias->inputFlags |= 0x8000;
-            buttons = history->buttons[history->writeIndex];
+        if (replayButtons & RACE_REPLAY_BUTTON_A) {
+            playerAlias->heldInput |= A_BUTTON;
+            replayButtons = history->buttons[history->writeIndex];
         }
-        if (buttons & 0x20) {
-            playerAlias->inputFlags |= 0x4000;
-            buttons = history->buttons[history->writeIndex];
+        if (replayButtons & RACE_REPLAY_BUTTON_B) {
+            playerAlias->heldInput |= B_BUTTON;
+            replayButtons = history->buttons[history->writeIndex];
         }
 
         if (1) {
-            if (buttons & 0x40) {
-                playerAlias->inputFlags |= 0x2000;
+            if (replayButtons & RACE_REPLAY_BUTTON_Z) {
+                playerAlias->heldInput |= Z_TRIG;
             }
             (*history).writeIndex++;
         }
@@ -236,10 +236,10 @@ void updateRacePlayerInput(RacePlayer *player) {
 
     if (!(gMenuFlowState & 1) && !(player->stateFlags & 0x40)) {
         index = player->playerIndex;
-        player->disabledInputFlags = gRacePlayers[index].inputFlags;
+        player->previousInput = gRacePlayers[index].heldInput;
 
         if (player->replayInputSource == RACE_PLAYER_INPUT_LIVE) {
-            player->inputFlags = gPlayerInputHeld[index];
+            player->heldInput = gPlayerInputHeld[index];
             player->stickX = gPlayerStickX[index];
             player->stickY = gPlayerStickY[index];
             if (player->unk15 != 0) {
@@ -249,39 +249,39 @@ void updateRacePlayerInput(RacePlayer *player) {
             playRaceInputHistoryFrame(player);
         }
 
-        player->inputFlags &= 0xFFF0FFFF;
+        player->heldInput &= ~(STICK_UP | STICK_DOWN | STICK_RIGHT | STICK_LEFT);
         if (player->stickX >= 0x1B) {
-            player->inputFlags |= 0x40000;
+            player->heldInput |= STICK_RIGHT;
         }
         if (player->stickX < -0x1A) {
-            player->inputFlags |= 0x80000;
+            player->heldInput |= STICK_LEFT;
         }
         if (player->stickY >= 0x1B) {
-            player->inputFlags |= 0x10000;
+            player->heldInput |= STICK_UP;
         }
         if (player->stickY < -0x1A) {
-            player->inputFlags |= 0x20000;
+            player->heldInput |= STICK_DOWN;
         }
         if (player->stickX < 8) {
-            player->inputFlags &= 0xFFFBFFFF;
+            player->heldInput &= ~STICK_RIGHT;
         }
         if (player->stickX >= -7) {
-            player->inputFlags &= 0xFFF7FFFF;
+            player->heldInput &= ~STICK_LEFT;
         }
         if (player->stickY < 8) {
-            player->inputFlags &= 0xFFFEFFFF;
+            player->heldInput &= ~STICK_UP;
         }
         if (player->stickY >= -7) {
-            player->inputFlags &= 0xFFFDFFFF;
+            player->heldInput &= ~STICK_DOWN;
         }
 
-        player->currentInputFlags = player->inputFlags & ~player->disabledInputFlags;
+        player->pressedInput = player->heldInput & ~player->previousInput;
         return;
     }
 
-    player->disabledInputFlags = 0;
-    player->inputFlags = 0;
-    player->currentInputFlags = 0;
+    player->previousInput = 0;
+    player->heldInput = 0;
+    player->pressedInput = 0;
     player->stickX = 0;
     player->stickY = 0;
 }
@@ -299,11 +299,11 @@ s32 getRaceInputTimerDecrementBonus(RacePlayer *player) {
             return 1;
         }
     }
-    temp_v0 = player->inputFlags & ~player->disabledInputFlags;
-    if (temp_v0 & INPUT_MASK_HARD_STEER_X) {
+    temp_v0 = player->heldInput & ~player->previousInput;
+    if (temp_v0 & INPUT_MASK_STICK_DIRECTIONS) {
         var_v1 = 1;
     }
-    if (temp_v0 & INPUT_MASK_HARD_STEER_Y) {
+    if (temp_v0 & INPUT_MASK_AB_BUTTONS) {
         var_v1++;
     }
     return var_v1;

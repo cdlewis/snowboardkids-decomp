@@ -526,7 +526,7 @@ void updateCharacterSelectCourseMenu(void) {
 
 void updateCharacterSelectCourseSubmenu(void) {
     u8 *menuState;
-    s32 input;
+    s32 pressedInput;
     int state;
 
     state = gRacePlayers[0].menuState;
@@ -534,11 +534,11 @@ void updateCharacterSelectCourseSubmenu(void) {
     if (state < 3) {
         switch (gCharacterSelectCourseCursorState.submenuState) {
             case 2:
-                input = gPlayerInputPressed[0];
-                if (input & B_BUTTON) {
+                pressedInput = gPlayerInputPressed[0];
+                if (pressedInput & B_BUTTON) {
                     gRacePlayers[0].menuState = 3;
                     enqueueSoundEffect(1, 0x32);
-                } else if ((input & A_BUTTON) || (input & START_BUTTON)) {
+                } else if ((pressedInput & A_BUTTON) || (pressedInput & START_BUTTON)) {
                     enqueueSoundEffect(1, 0x32);
                     gMenuChoicePromptState[0] = 1;
                     gCharacterSelectCourseCursorState.submenuState = 3;
@@ -547,22 +547,22 @@ void updateCharacterSelectCourseSubmenu(void) {
                 break;
             case 3:
                 if (gMenuChoicePromptState[0] >= 3) {
-                    input = gPlayerInputPressed[0];
-                    if ((input & (STICK_UP | U_JPAD)) && (gMenuChoicePromptState[0] != 3)) {
+                    pressedInput = gPlayerInputPressed[0];
+                    if ((pressedInput & (STICK_UP | U_JPAD)) && (gMenuChoicePromptState[0] != 3)) {
                         gMenuChoicePromptState[0]--;
                         enqueueSoundEffect(0x19, 0x32);
-                        input = gPlayerInputPressed[0];
-                    } else if ((input & (STICK_DOWN | D_JPAD)) && (gMenuChoicePromptState[0] != 4)) {
+                        pressedInput = gPlayerInputPressed[0];
+                    } else if ((pressedInput & (STICK_DOWN | D_JPAD)) && (gMenuChoicePromptState[0] != 4)) {
                         gMenuChoicePromptState[0]++;
                         enqueueSoundEffect(0x19, 0x32);
-                        input = gPlayerInputPressed[0];
+                        pressedInput = gPlayerInputPressed[0];
                     }
 
-                    if ((input & A_BUTTON) || (input & START_BUTTON)) {
+                    if ((pressedInput & A_BUTTON) || (pressedInput & START_BUTTON)) {
                         enqueueSoundEffect(0x18, 0x32);
                         gMenuChoicePromptState[0] += 2;
                         gCharacterSelectCourseCursorState.submenuState = 4;
-                    } else if (input & B_BUTTON) {
+                    } else if (pressedInput & B_BUTTON) {
                         enqueueSoundEffect(1, 0x32);
                         gMenuChoicePromptState[0] = 6;
                         gCharacterSelectCourseCursorState.submenuState = 4;

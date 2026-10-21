@@ -50,7 +50,7 @@ void updateRacePlayerShotUse(RacePlayer *player) {
 
     shouldFireShot = FALSE;
     if (player->isCpu == 0) {
-        if (player->currentInputFlags & Z_TRIG) {
+        if (player->pressedInput & Z_TRIG) {
             shouldFireShot = TRUE;
         }
     } else {
@@ -167,7 +167,7 @@ void updateRacePlayerItemUse(RacePlayer *player) {
 
     shouldUseItem = FALSE;
     if (player->isCpu == 0) {
-        if (player->currentInputFlags & B_BUTTON) {
+        if (player->pressedInput & B_BUTTON) {
             shouldUseItem = TRUE;
         }
     } else {

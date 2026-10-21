@@ -83,9 +83,9 @@ typedef struct RacePlayer {
     /* 0x078 */ char pad78[4];
     /* 0x07C */ s32 stateTimer;
     /* 0x080 */ s32 unk80;
-    /* 0x084 */ u32 inputFlags;
-    /* 0x088 */ u32 currentInputFlags;
-    /* 0x08C */ u32 disabledInputFlags;
+    /* 0x084 */ u32 heldInput; /* Buttons and digital stick directions held this frame. */
+    /* 0x088 */ u32 pressedInput; /* Inputs newly pressed this frame. */
+    /* 0x08C */ u32 previousInput; /* Held input from the previous frame. */
     /* 0x090 */ s8 stickX;
     /* 0x091 */ s8 stickY;
     /* 0x092 */ s8 unk92;

@@ -202,7 +202,7 @@ s32 advanceRaceSurfaceCueSequence(RaceSurfaceCue *cues, RacePlayer *player, s16 
     s16 cueValue;
     u32 surfaceType;
 
-    surfaceType = (player->inputFlags & 0xF0000) >> 0x10;
+    surfaceType = (player->heldInput & (STICK_UP | STICK_DOWN | STICK_RIGHT | STICK_LEFT)) >> 0x10;
     switch (player->surfaceCueState[cueIndex]) {
         case 0:
             cue = cues;

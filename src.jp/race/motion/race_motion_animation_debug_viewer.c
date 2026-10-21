@@ -41,34 +41,34 @@ void drawRaceMotionAnimationDebugViewerMotionNumber(void *unused) {
 }
 
 void updateRaceMotionAnimationDebugViewer(void) {
-    s32 buttons;
+    s32 pressedInput;
 
     if (gRacePlayers[0].mode == 0) {
         gRacePlayers[0].mode = 1;
         setRaceMotionAnimation((RaceMotionState *)&gRacePlayers[0], gRacePlayers[0].animationId);
         stepRaceMotionLoopingAnimation((RaceMotionState *)&gRacePlayers[0]);
     } else {
-        buttons = gPlayerInputPressed[0];
-        if (buttons & Z_TRIG) {
+        pressedInput = gPlayerInputPressed[0];
+        if (pressedInput & Z_TRIG) {
             if (gRacePlayers[0].stateFlags != 0) {
                 gRacePlayers[0].stateFlags = 0;
             } else {
                 gRacePlayers[0].stateFlags = 0x400;
             }
         }
-        if ((buttons & U_CBUTTONS) && (gRacePlayers[0].animationId != 0)) {
+        if ((pressedInput & U_CBUTTONS) && (gRacePlayers[0].animationId != 0)) {
             gRacePlayers[0].animationId--;
             gRacePlayers[0].mode = 0;
         }
-        if (buttons & D_CBUTTONS) {
+        if (pressedInput & D_CBUTTONS) {
             gRacePlayers[0].mode = 0;
             gRacePlayers[0].animationId++;
         }
         if (gPlayerInputHeld[0] & L_CBUTTONS) {
             stepRaceMotionLoopingAnimation((RaceMotionState *)&gRacePlayers[0]);
-            buttons = gPlayerInputPressed[0];
+            pressedInput = gPlayerInputPressed[0];
         }
-        if (buttons & R_CBUTTONS) {
+        if (pressedInput & R_CBUTTONS) {
             stepRaceMotionLoopingAnimation((RaceMotionState *)&gRacePlayers[0]);
         }
     }

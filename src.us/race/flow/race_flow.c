@@ -2473,23 +2473,23 @@ void initRaceRecordSettingsFlow(void) {
 }
 
 void updateRaceRecordSettingsFlow(void) {
-    s32 temp_v0;
+    s32 pressedInput;
 
     gMenuFadeAlpha -= 0x10;
     if (gMenuFadeAlpha < 0) {
         gMenuFadeAlpha = 0;
-        temp_v0 = gPlayerInputPressed[0];
-        if ((temp_v0 & (STICK_DOWN | D_JPAD)) && (gRaceLapCount != 9)) {
+        pressedInput = gPlayerInputPressed[0];
+        if ((pressedInput & (STICK_DOWN | D_JPAD)) && (gRaceLapCount != 9)) {
             enqueueSoundEffect(0x19, 0x32);
             gRaceLapCount += 1;
-            temp_v0 = gPlayerInputPressed[0];
+            pressedInput = gPlayerInputPressed[0];
         }
-        if ((temp_v0 & (STICK_UP | U_JPAD)) && (gRaceLapCount != 1)) {
+        if ((pressedInput & (STICK_UP | U_JPAD)) && (gRaceLapCount != 1)) {
             enqueueSoundEffect(0x19, 0x32);
             gRaceLapCount -= 1;
-            temp_v0 = gPlayerInputPressed[0];
+            pressedInput = gPlayerInputPressed[0];
         }
-        if (temp_v0 & (A_BUTTON | START_BUTTON)) {
+        if (pressedInput & (A_BUTTON | START_BUTTON)) {
             gMenuFlowState = 1;
             enqueueSoundEffect(0x18, 0x32);
             requestMusicSequenceStop(0x3C);

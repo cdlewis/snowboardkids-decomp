@@ -7,6 +7,15 @@
 #define PACKED_RACE_RECORD_REPLAY_BUFFER_SIZE 0x2F80
 #define COMPRESSED_RACE_RECORD_REPLAY_HALFWORD_COUNT 0x1000
 
+/* Packed replay button bits; distinct from the libultra controller masks. */
+#define RACE_REPLAY_BUTTON_C_UP 1
+#define RACE_REPLAY_BUTTON_C_DOWN 2
+#define RACE_REPLAY_BUTTON_C_LEFT 4
+#define RACE_REPLAY_BUTTON_C_RIGHT 8
+#define RACE_REPLAY_BUTTON_A 0x10
+#define RACE_REPLAY_BUTTON_B 0x20
+#define RACE_REPLAY_BUTTON_Z 0x40
+
 typedef struct RaceInputHistoryBuffer {
     /* 0x0000 */ s32 writeIndex;
     /* 0x0004 */ s32 lastWriteIndex;

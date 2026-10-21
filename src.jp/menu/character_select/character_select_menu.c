@@ -269,27 +269,27 @@ void updateCharacterSelectMenu(void) {
 
 void updateCharacterSelectConfirmationMenu(void) {
     s32 i;
-    s32 buttons;
+    s32 pressedInput;
     u32 selection;
     u8 oldSelection;
 
     if (gCharacterSelectHudState.bannerAlpha == 0x100) {
-        buttons = gPlayerInputPressed[0];
+        pressedInput = gPlayerInputPressed[0];
         selection = gCharacterSelectHudState.confirmationChoice;
         oldSelection = selection;
 
-        if ((buttons & (STICK_UP | U_JPAD)) && (selection != 0)) {
+        if ((pressedInput & (STICK_UP | U_JPAD)) && (selection != 0)) {
             selection = (gCharacterSelectHudState.confirmationChoice = selection - 1);
-        } else if ((buttons & (STICK_DOWN | D_JPAD)) && (selection == 0)) {
+        } else if ((pressedInput & (STICK_DOWN | D_JPAD)) && (selection == 0)) {
             selection = (gCharacterSelectHudState.confirmationChoice = selection + 1);
         }
 
         if (selection != oldSelection) {
             enqueueSoundEffect(0x19, 0x32);
-            buttons = gPlayerInputPressed[0];
+            pressedInput = gPlayerInputPressed[0];
         }
 
-        if ((buttons & A_BUTTON) || (buttons & START_BUTTON)) {
+        if ((pressedInput & A_BUTTON) || (pressedInput & START_BUTTON)) {
             enqueueSoundEffect(0x18, 0x32);
             if (gCharacterSelectHudState.confirmationChoice == 0) {
                 setCurrentGameTaskCallback(fadeOutCharacterSelectMenu, 0);
@@ -305,7 +305,7 @@ void updateCharacterSelectConfirmationMenu(void) {
                 gCharacterSelectHudState.phase = CHARACTER_SELECT_PHASE_ROSTER;
                 gCharacterSelectHudState.bannerAlpha = 0;
             }
-        } else if (buttons & B_BUTTON) {
+        } else if (pressedInput & B_BUTTON) {
             enqueueSoundEffect(0x18, 0x32);
             for (i = 0; i < gPlayerCount; i++) {
                 gRacePlayers[i].menuState = 0;
