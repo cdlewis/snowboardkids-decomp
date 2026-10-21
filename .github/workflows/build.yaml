@@ -84,3 +84,13 @@ jobs:
           name: ${{ matrix.version }}_report
           path: main/report.json
           if-no-files-found: error
+
+      - name: Trigger symbol regeneration
+        if: matrix.version == 'us'
+        env:
+          GH_TOKEN: ${{ secrets.SYMBOLS_DISPATCH_TOKEN }}
+          DECOMP_SHA: ${{ github.sha }}
+        run: |
+          gh api --method POST repos/cdlewis/snowboardkids-recomp-syms/dispatches \
+            -f event_type=decomp-updated \
+            -f "client_payload[sha]=$DECOMP_SHA"
