@@ -637,10 +637,6 @@ RaceUiRankTextRenderEntry D_800D7650[] = {
 
 u32 D_800D7740[] = { 0xFFFF0000, 0x00000000, 0x00000000, 0x00000000 };
 
-extern const char gRaceUiPendingTrickPrizeLabel[];
-extern const char gRaceUiPendingMakeBonusLabel[];
-extern const char gRaceUiPendingCompleteBonusLabel[];
-extern const char gRaceUiPendingMoneyLabel[];
 extern Gfx *gRegionAllocPtr;
 extern s16 gRaceLapCount;
 extern s16 gUiBlinkTimer;
@@ -653,16 +649,9 @@ extern u8 gCurrentViewportIndex;
 extern u8 gRaceChallengeFailed;
 extern u8 gRaceUpdatePaused;
 
-const char gRaceUiBoardReversePromptLabelBlinkOn[0x10] = "Board Reverse";
-const char gRaceUiBoardReversePromptLabelBlinkOff[0x10] = "Board Reverse";
-const char gRaceUiTrickScorePopupPointsFormat[0x4] = "%2d";
-const char gRaceUiTrickScorePopupBonusFormat[0xC] = "%3d";
-const char gRaceUiRankPrizeCounterFormat[0x4] = "%5d";
-const char gRaceUiCoinCounterFormat[0x4] = "%5d";
-
 void renderRaceCourseScrollingTexture(RaceCourseScrollingTextureActor *arg0) {
     volatile u8 pad[8];
-    Gfx *gfx;
+    Gfx *unused;
 
     gDPPipeSync(gRegionAllocPtr++);
     gSPSegment(gRegionAllocPtr++, 0x02, getRelocatableHeapBlockBase(ASSET_HANDLE(0x8)));
@@ -683,9 +672,14 @@ void renderRaceCourseScrollingTexture(RaceCourseScrollingTextureActor *arg0) {
         G_TX_NOLOD
     );
 
-    gfx = gRegionAllocPtr++;
-    gfx->words.w0 = ((arg0->textureScrollOffset * 4) & 0xFFF) | 0xF2000000;
-    gfx->words.w1 = ((arg0->textureScrollOffset + 0x40) << 2) & 0xFFF;
+    gDPSetTileSize(
+        gRegionAllocPtr++,
+        G_TX_RENDERTILE,
+        0,
+        arg0->textureScrollOffset << G_TEXTURE_IMAGE_FRAC,
+        0,
+        (arg0->textureScrollOffset + 0x40) << G_TEXTURE_IMAGE_FRAC
+    );
 
     gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, arg0->palette);
     gSPDisplayList(gRegionAllocPtr++, arg0->displayList);
@@ -724,10 +718,10 @@ void initRaceCourseScrollingTexture(RaceCourseScrollingTextureActor *arg0) {
 void drawRaceUiBoardReversePrompt(RaceUiPromptActor *arg0) {
     if (gCurrentViewportIndex == arg0->task.userId) {
         if (gUiBlinkTimer & 1) {
-            drawMenuAsciiTextDefaultScale(-0x34, arg0->y, gRaceUiBoardReversePromptLabelBlinkOn, 0);
+            drawMenuAsciiTextDefaultScale(-0x34, arg0->y, "Board Reverse", 0);
             return;
         }
-        drawMenuAsciiTextDefaultScale(-0x34, arg0->y, gRaceUiBoardReversePromptLabelBlinkOff, 1);
+        drawMenuAsciiTextDefaultScale(-0x34, arg0->y, "Board Reverse", 1);
     }
 }
 
@@ -777,7 +771,7 @@ void drawRaceUiTrickScorePopup(RaceUiPopupActor *arg0) {
             getRelocatableHeapBlockBase(gAssetHandles[0x1F]),
             0x8E
         );
-        sprintf(buffer, gRaceUiTrickScorePopupPointsFormat, arg0->parent);
+        sprintf(buffer, "%2d", arg0->parent);
         for (i = 0; i < 2; i++) {
             if (buffer[i] != ' ') {
                 drawAssetTableSpriteWithExplicitPalette(
@@ -791,6 +785,8 @@ void drawRaceUiTrickScorePopup(RaceUiPopupActor *arg0) {
         }
 
         if (arg0->playerIndex != 0) {
+            static const char bonusFormat[0xC] = "%3d";
+
             drawAssetTableSprite(
                 (s16)(arg0->x - 0x48),
                 (s16)(arg0->y.word + 0x12),
@@ -803,7 +799,7 @@ void drawRaceUiTrickScorePopup(RaceUiPopupActor *arg0) {
                 getRelocatableHeapBlockBase(gAssetHandles[0x1F]),
                 0x8E
             );
-            sprintf(buffer, gRaceUiTrickScorePopupBonusFormat, 0x12C);
+            sprintf(buffer, bonusFormat, 0x12C);
             for (i = 0; i != 3; i++) {
                 if (buffer[i] != ' ') {
                     drawAssetTableSpriteWithExplicitPalette(
@@ -919,12 +915,7 @@ void drawRaceUiPrizePayoutRankPanel(RaceUiAlpha18Actor *arg0) {
             gDPPipeSync(gRegionAllocPtr++);
             gDPSetCombineMode(gRegionAllocPtr++, G_CC_MODULATEIA_PRIM, G_CC_MODULATEIA_PRIM);
             gDPSetRenderMode(gRegionAllocPtr++, G_RM_XLU_SURF, G_RM_XLU_SURF2);
-            {
-                Gfx *gfx = gRegionAllocPtr++;
-
-                gfx->words.w0 = 0xFA000000;
-                gfx->words.w1 = (arg0->alpha & 0xFF) | ~0xFF;
-            }
+            gDPSetPrimColor(gRegionAllocPtr++, 0, 0, 0xFF, 0xFF, 0xFF, arg0->alpha);
         }
         drawAssetTableSprite(-0x68, -0x2C, getRelocatableHeapBlockBase(ASSET_HANDLE(0x1F)), 0x4D);
         drawAssetTableSprite(-0x42, -0xC, getRelocatableHeapBlockBase(ASSET_HANDLE(0x1F)), gRacePlayers[0].rankIndex);
@@ -956,7 +947,7 @@ void drawRaceUiPrizePayoutRankPrize(RaceUiAlpha18Actor *arg0) {
     volatile s16 *handles;
     s32 space;
 
-    sprintf(buffer + -8, gRaceUiRankPrizeCounterFormat, arg0->score);
+    sprintf(buffer + -8, "%5d", arg0->score);
     x = 0x20;
     handles = gAssetHandles;
  ptr = (u8 *) (((s32) padding) - 0x10); if (!ptr) { } space = ' '; loop: if ((*ptr) != 0) {
@@ -988,7 +979,7 @@ void drawRaceUiPrizePayoutCollectedCoins(void *arg0)
     i = 0;
     do
     {
-        sprintf(&buffer[i], gRaceUiCoinCounterFormat, gRacePlayers[0].score);
+        sprintf(&buffer[i], "%5d", gRacePlayers[0].score);
         x = 0x20;
         if (gRacePlayers[0].rankIndex == 3)
         {
@@ -1027,11 +1018,6 @@ void drawRaceUiPrizePayoutCollectedCoins(void *arg0)
 }
 // clang-format on
 
-const char gRaceUiTotalMoneyCounterFormat[0x4] = "%6d";
-const char gRaceUiRankPrizeLabel[0x10] = "-Rank Prize-";
-const char gRaceUiGetCoinLabel[0x10] = "  -Get Coin-";
-const char gRaceUiTotalMoneyLabel[0x10] = "-Total Money-";
-
 // IDO code generation for this function is sensitive to source line layout.
 // clang-format off
 void drawRaceUiPrizePayoutTotalMoney(void *arg0) {
@@ -1042,7 +1028,7 @@ void drawRaceUiPrizePayoutTotalMoney(void *arg0) {
     volatile s16 *handles;
     s32 space;
 
-    sprintf(buffer + -8, gRaceUiTotalMoneyCounterFormat, gRacePlayers[0].money);
+    sprintf(buffer + -8, "%6d", gRacePlayers[0].money);
     x = 0x18;
     handles = gAssetHandles;
  ptr = (u8 *) (((s32) padding) - 0x10); if (!ptr) { } space = ' '; loop: if ((*ptr) != 0) {
@@ -1066,9 +1052,9 @@ void drawRaceUiPrizePayoutLabels(RaceUiAlpha18Actor *arg0) {
         gDPSetRenderMode(gRegionAllocPtr++, G_RM_XLU_SURF, G_RM_XLU_SURF2);
         gDPSetPrimColor(gRegionAllocPtr++, 0, 0, 0xFF, 0xFF, 0xFF, arg0->alpha);
     }
-    drawMenuAsciiTextDefaultScale(8, -0x48, gRaceUiRankPrizeLabel, 5);
-    drawMenuAsciiTextDefaultScale(0, -0x18, gRaceUiGetCoinLabel, 5);
-    drawMenuAsciiTextDefaultScale(4, 0x18, gRaceUiTotalMoneyLabel, 5);
+    drawMenuAsciiTextDefaultScale(8, -0x48, "-Rank Prize-", 5);
+    drawMenuAsciiTextDefaultScale(0, -0x18, "  -Get Coin-", 5);
+    drawMenuAsciiTextDefaultScale(4, 0x18, "-Total Money-", 5);
     if (arg0->alpha != 0xFF) {
         gSPDisplayList(gRegionAllocPtr++, gMenuRenderModeResetDl);
     }
@@ -1300,19 +1286,6 @@ void drawRaceUiResultsBannerPlacements(RaceUiResultsBannerActor *arg0) {
     }
 }
 
-const char D_800E128C[4] = "*%d";
-const char gRaceResultsSlot0PlayerLabelFormat[4] = "%dP";
-const char gRaceResultsSlot0CpuLabel[4] = "COM";
-const char D_800E1298[4] = "*%d";
-const char gRaceResultsSlot1PlayerLabelFormat[4] = "%dP";
-const char gRaceResultsSlot1CpuLabel[4] = "COM";
-const char D_800E12A4[4] = "*%d";
-const char gRaceResultsSlot2PlayerLabelFormat[4] = "%dP";
-const char gRaceResultsSlot2CpuLabel[4] = "COM";
-const char D_800E12B0[4] = "*%d";
-const char gRaceResultsSlot3PlayerLabelFormat[4] = "%dP";
-const char gRaceResultsSlot3CpuLabel[4] = "COM";
-
 void drawRaceUiResultsBannerPlayerLabels(RaceUiResultsBannerActor *arg0) {
     RaceUiResultsBannerActor *actor;
     char text[0x64];
@@ -1326,50 +1299,50 @@ void drawRaceUiResultsBannerPlayerLabels(RaceUiResultsBannerActor *arg0) {
     }
 
     if (actor->player0 != -1) {
-        sprintf(text, D_800E128C, gRacePlayers[actor->player0].unk18);
+        sprintf(text, "*%d", gRacePlayers[actor->player0].unk18);
         if (gUiBlinkTimer & 1) {
             drawMenuAsciiTextDefaultScale(-0x20, -0x38, text, 6);
         } else {
             drawMenuAsciiTextDefaultScale(-0x20, -0x38, text, 0);
         }
         if (gRacePlayers[actor->player0].isCpu == 0) {
-            sprintf(text, gRaceResultsSlot0PlayerLabelFormat, gRacePlayers[actor->player0].playerIndex + 1);
+            sprintf(text, "%dP", gRacePlayers[actor->player0].playerIndex + 1);
             drawMenuAsciiTextDefaultScale(-0x30, -0x48, text, 5);
         } else {
-            drawMenuAsciiTextDefaultScale(-0x30, -0x48, gRaceResultsSlot0CpuLabel, 4);
+            drawMenuAsciiTextDefaultScale(-0x30, -0x48, "COM", 4);
         }
     }
 
     if (actor->player1 != -1) {
-        sprintf(text, D_800E1298, gRacePlayers[actor->player1].unk18);
+        sprintf(text, "*%d", gRacePlayers[actor->player1].unk18);
         drawMenuAsciiTextDefaultScale(0x70, -0x18, text, 6);
         if (gRacePlayers[actor->player1].isCpu == 0) {
-            sprintf(text, gRaceResultsSlot1PlayerLabelFormat, gRacePlayers[actor->player1].playerIndex + 1);
+            sprintf(text, "%dP", gRacePlayers[actor->player1].playerIndex + 1);
             drawMenuAsciiTextDefaultScale(0x60, -0x28, text, 5);
         } else {
-            drawMenuAsciiTextDefaultScale(0x60, -0x28, gRaceResultsSlot1CpuLabel, 4);
+            drawMenuAsciiTextDefaultScale(0x60, -0x28, "COM", 4);
         }
     }
 
     if (actor->player2 != -1) {
-        sprintf(text, D_800E12A4, gRacePlayers[actor->player2].unk18);
+        sprintf(text, "*%d", gRacePlayers[actor->player2].unk18);
         drawMenuAsciiTextDefaultScale(-0x20, 8, text, 6);
         if (gRacePlayers[actor->player2].isCpu == 0) {
-            sprintf(text, gRaceResultsSlot2PlayerLabelFormat, gRacePlayers[actor->player2].playerIndex + 1);
+            sprintf(text, "%dP", gRacePlayers[actor->player2].playerIndex + 1);
             drawMenuAsciiTextDefaultScale(-0x30, -8, text, 5);
         } else {
-            drawMenuAsciiTextDefaultScale(-0x30, -8, gRaceResultsSlot2CpuLabel, 4);
+            drawMenuAsciiTextDefaultScale(-0x30, -8, "COM", 4);
         }
     }
 
     if (actor->player3 != -1) {
-        sprintf(text, D_800E12B0, gRacePlayers[actor->player3].unk18);
+        sprintf(text, "*%d", gRacePlayers[actor->player3].unk18);
         drawMenuAsciiTextDefaultScale(0x70, 0x28, text, 6);
         if (gRacePlayers[actor->player3].isCpu == 0) {
-            sprintf(text, gRaceResultsSlot3PlayerLabelFormat, gRacePlayers[actor->player3].playerIndex + 1);
+            sprintf(text, "%dP", gRacePlayers[actor->player3].playerIndex + 1);
             drawMenuAsciiTextDefaultScale(0x60, 0x18, text, 5);
         } else {
-            drawMenuAsciiTextDefaultScale(0x60, 0x18, gRaceResultsSlot3CpuLabel, 4);
+            drawMenuAsciiTextDefaultScale(0x60, 0x18, "COM", 4);
         }
     }
 
@@ -1472,10 +1445,6 @@ void initRaceUiResultsBanner(RaceUiResultsBannerActor *actor) {
     setCallbackTaskCallback(actor, (CallbackTaskCallback)updateRaceUiResultsBannerFadeIn);
 }
 
-const char gRaceUiPackedTimeMinutesFormat[] = "%2.2d";
-const char gRaceUiPackedTimeSecondsFormat[] = "%2.2d";
-const char gRaceUiPackedTimeFractionFormat[] = "%2.2d";
-
 void drawRaceUiPackedTime(RaceTimer *arg0, s32 x, s32 arg2, s32 arg3) {
     char buffer[0x58];
     RaceTimer *record;
@@ -1486,7 +1455,7 @@ void drawRaceUiPackedTime(RaceTimer *arg0, s32 x, s32 arg2, s32 arg3) {
     record = arg0;
     y = arg2;
     color = arg3;
-    sprintf(&buffer[-0x10], gRaceUiPackedTimeMinutesFormat, record->minutes);
+    sprintf(&buffer[-0x10], "%2.2d", record->minutes);
     i = -0x10;
     do {
         /* IDO register allocation for this function depends on this empty loop. */
@@ -1510,7 +1479,7 @@ void drawRaceUiPackedTime(RaceTimer *arg0, s32 x, s32 arg2, s32 arg3) {
         color
     );
     x += 8;
-    sprintf(&buffer[-0x10], gRaceUiPackedTimeSecondsFormat, record->seconds);
+    sprintf(&buffer[-0x10], "%2.2d", record->seconds);
     i = -0x10;
     do {
         drawAssetTableSpriteWithExplicitPaletteWideIndex(
@@ -1531,7 +1500,7 @@ void drawRaceUiPackedTime(RaceTimer *arg0, s32 x, s32 arg2, s32 arg3) {
         color
     );
     x += 8;
-    sprintf(&buffer[-0x10], gRaceUiPackedTimeFractionFormat, record->fraction >> 8);
+    sprintf(&buffer[-0x10], "%2.2d", record->fraction >> 8);
     i = -0x10;
     do {
         drawAssetTableSpriteWithExplicitPaletteWideIndex(
@@ -1594,95 +1563,33 @@ void drawRaceUiCourseStatsRows(RaceUiCourseStatsActor *arg0) {
     }
 }
 
-// IDO code generation for this function is sensitive to source line layout.
-// clang-format off
 void drawRaceUiCourseStatsElapsedTime(RaceUiAlpha1AActor *arg0) {
-    Gfx *gfx;
-    s32 w0;
-    s32 w1;
 
-    /* IDO scheduling for this function depends on this block staying on one line. */
-    do { \
-        if (arg0->alpha != 0xFF) { \
-            gfx = gRegionAllocPtr; \
-            gRegionAllocPtr = gfx + 1; \
-            gfx->words.w1 = 0; \
-            gfx->words.w0 = 0xE7000000; \
-            gfx = gRegionAllocPtr; \
-            gRegionAllocPtr = gfx + 1; \
-            w1 = 0xFF2FFFFF; \
-            w0 = 0xFC119623; \
-            gfx->words.w0 = w0; \
-            gfx->words.w1 = w1; \
-            gfx = gRegionAllocPtr; \
-            gRegionAllocPtr = gfx + 1; \
-            w1 = 0x00504240; \
-            w0 = 0xB900031D; \
-            gfx->words.w0 = w0; \
-            gfx->words.w1 = w1; \
-            gfx = gRegionAllocPtr; \
-            gRegionAllocPtr = gfx + 1; \
-            gfx->words.w0 = 0xFA000000; \
-            gfx->words.w1 = (arg0->alpha & 0xFF) | (~0xFF); \
-        } \
-        drawRaceUiPackedTime(&gRaceElapsedTimer, -0x6C, -0x30, 0xC); \
-        if (arg0->alpha != 0xFF) { \
-            gfx = gRegionAllocPtr; \
-            gRegionAllocPtr = gfx + 1; \
-            w1 = (s32)gMenuRenderModeResetDl; \
-            w0 = 0x06000000; \
-            gfx->words.w0 = w0; \
-            gfx->words.w1 = w1; \
-        } \
-    } while (0);
+    if (arg0->alpha != 0xFF) {
+        gDPPipeSync(gRegionAllocPtr++);
+        gDPSetCombineMode(gRegionAllocPtr++, G_CC_MODULATEIA_PRIM, G_CC_MODULATEIA_PRIM);
+        gDPSetRenderMode(gRegionAllocPtr++, G_RM_XLU_SURF, G_RM_XLU_SURF2);
+        gDPSetPrimColor(gRegionAllocPtr++, 0, 0, 0xFF, 0xFF, 0xFF, arg0->alpha);
+    }
+    drawRaceUiPackedTime(&gRaceElapsedTimer, -0x6C, -0x30, 0xC);
+    if (arg0->alpha != 0xFF) {
+        gSPDisplayList(gRegionAllocPtr++, gMenuRenderModeResetDl);
+    }
 }
-// clang-format on
 
-const char gRaceUiLapTimeLabel[0xC] = "-Lap Time-";
-
-// IDO code generation for this function is sensitive to source line layout.
-// clang-format off
 void drawRaceUiCourseStatsLapTimeLabel(RaceUiAlpha18Actor *arg0) {
-    Gfx *gfx;
-    s32 w0;
-    s32 w1;
 
-    /* IDO scheduling for this function depends on this block staying on one line. */
-    do { \
-        if (arg0->alpha != 0xFF) { \
-            gfx = gRegionAllocPtr; \
-            gRegionAllocPtr = gfx + 1; \
-            gfx->words.w1 = 0; \
-            gfx->words.w0 = 0xE7000000; \
-            gfx = gRegionAllocPtr; \
-            gRegionAllocPtr = gfx + 1; \
-            w1 = 0xFF2FFFFF; \
-            w0 = 0xFC119623; \
-            gfx->words.w0 = w0; \
-            gfx->words.w1 = w1; \
-            gfx = gRegionAllocPtr; \
-            gRegionAllocPtr = gfx + 1; \
-            w1 = 0x00504240; \
-            w0 = 0xB900031D; \
-            gfx->words.w0 = w0; \
-            gfx->words.w1 = w1; \
-            gfx = gRegionAllocPtr; \
-            gRegionAllocPtr = gfx + 1; \
-            gfx->words.w0 = 0xFA000000; \
-            gfx->words.w1 = (arg0->alpha & 0xFF) | (~0xFF); \
-        } \
-        drawMenuAsciiTextDefaultScale(-0x74, -0x3C, gRaceUiLapTimeLabel, 5); \
-        if (arg0->alpha != 0xFF) { \
-            gfx = gRegionAllocPtr; \
-            gRegionAllocPtr = gfx + 1; \
-            w1 = (s32)gMenuRenderModeResetDl; \
-            w0 = 0x06000000; \
-            gfx->words.w0 = w0; \
-            gfx->words.w1 = w1; \
-        } \
-    } while (0);
+    if (arg0->alpha != 0xFF) {
+        gDPPipeSync(gRegionAllocPtr++);
+        gDPSetCombineMode(gRegionAllocPtr++, G_CC_MODULATEIA_PRIM, G_CC_MODULATEIA_PRIM);
+        gDPSetRenderMode(gRegionAllocPtr++, G_RM_XLU_SURF, G_RM_XLU_SURF2);
+        gDPSetPrimColor(gRegionAllocPtr++, 0, 0, 0xFF, 0xFF, 0xFF, arg0->alpha);
+    }
+    drawMenuAsciiTextDefaultScale(-0x74, -0x3C, "-Lap Time-", 5);
+    if (arg0->alpha != 0xFF) {
+        gSPDisplayList(gRegionAllocPtr++, gMenuRenderModeResetDl);
+    }
 }
-// clang-format on
 
 void updateRaceUiCourseStatsConfirmed(RaceUiCourseStatsActor *arg0) {
     addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawRaceUiCourseStatsElapsedTime, arg0);
@@ -1736,8 +1643,6 @@ void initRaceUiCourseStats(RaceUiCourseStatsActor *arg0) {
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceUiCourseStatsFadeInTitle);
 }
 
-const char gRaceUiScoreAttackPointTotalFormat[4] = "%2d";
-
 void drawRaceUiScoreAttackPointTotal(RaceUiAlpha18Actor *arg0) {
     volatile s32 x;
     char buffer[0x20];
@@ -1752,7 +1657,7 @@ void drawRaceUiScoreAttackPointTotal(RaceUiAlpha18Actor *arg0) {
     }
 
     drawAssetTableSprite(-0x6C, -0x24, getRelocatableHeapBlockBase(ASSET_HANDLE(0x1F)), 0x20);
-    sprintf(buffer + -8, gRaceUiScoreAttackPointTotalFormat, gRacePlayers[0].scoreAttackPointTotal);
+    sprintf(buffer + -8, "%2d", gRacePlayers[0].scoreAttackPointTotal);
 
     if (buffer[-8] != ' ') {
         drawAssetTableSprite(-0x4C, -0x1C, getRelocatableHeapBlockBase(ASSET_HANDLE(0x1F)), buffer[-8] - 5);
@@ -1771,11 +1676,6 @@ void drawRaceUiScoreAttackPointTotal(RaceUiAlpha18Actor *arg0) {
     }
 }
 
-const char gRaceUiCounterHitPrizeFormat[0x4] = "%5d";
-const char gRaceUiCounterPerfectHitBonusFormat[0x4] = "%5d";
-const char gRaceUiCounterCompleteBonusFormat[0x4] = "%5d";
-const char gRaceUiCounterMoneyFormat[0x4] = "%6d";
-
 void drawRaceUiHitPrizePayoutCounters(RaceUiCounterActor *arg0) {
     volatile u8 pad[4];
     SplitWord y;
@@ -1792,7 +1692,7 @@ void drawRaceUiHitPrizePayoutCounters(RaceUiCounterActor *arg0) {
     visibleRows = arg0->state;
     if (visibleRows >= 0) {
         x = 0x20;
-        sprintf(buffer, gRaceUiCounterHitPrizeFormat, arg0->value, arg0);
+        sprintf(buffer, "%5d", arg0->value, arg0);
         i = 0;
         rowY = y.half.lo;
     loop1:
@@ -1817,7 +1717,7 @@ void drawRaceUiHitPrizePayoutCounters(RaceUiCounterActor *arg0) {
     if (visibleRows > 0) {
         if (arg0->flag != 0) {
             x = 0x20;
-            sprintf(buffer, gRaceUiCounterPerfectHitBonusFormat, arg0->bonus, arg0);
+            sprintf(buffer, "%5d", arg0->bonus, arg0);
             i = 0;
             rowY = y.half.lo;
             i = 0;
@@ -1843,7 +1743,7 @@ void drawRaceUiHitPrizePayoutCounters(RaceUiCounterActor *arg0) {
 
     if (visibleRows >= 2) {
         x = 0x20;
-        sprintf(buffer, gRaceUiCounterCompleteBonusFormat, arg0->target, arg0);
+        sprintf(buffer, "%5d", arg0->target, arg0);
         i = 0;
         rowY = y.half.lo;
         i = 0;
@@ -1869,7 +1769,7 @@ void drawRaceUiHitPrizePayoutCounters(RaceUiCounterActor *arg0) {
     if (arg0) {}
     if (visibleRows >= 3) {
         x = 0x18;
-        sprintf(buffer, gRaceUiCounterMoneyFormat, gRacePlayers[0].money);
+        sprintf(buffer, "%6d", gRacePlayers[0].money);
         i = 0;
         rowY = y.half.lo;
         i = 0;
@@ -1890,8 +1790,6 @@ void drawRaceUiHitPrizePayoutCounters(RaceUiCounterActor *arg0) {
         drawAssetTableSpriteWideIndex(x, rowY, getRelocatableHeapBlockBase(gAssetHandles[0x1F]), 0x37);
     }
 }
-
-const char gRaceUiCourseValueFormat[4] = "%2d";
 
 // IDO code generation for this function is sensitive to source line layout.
 // clang-format off
@@ -1917,7 +1815,7 @@ void drawRaceUiScoreAttackCourseValues(RaceUiPopupActor *arg0) {
             color = 0xD;
         }
 
-        sprintf(buffer, gRaceUiCourseValueFormat, gGameSaveDataBuffer[0].scoreAttackScores[gRaceCourseIndex.signedValue][i]);
+        sprintf(buffer, "%2d", gGameSaveDataBuffer[0].scoreAttackScores[gRaceCourseIndex.signedValue][i]);
 
         if ((u8)buffer[0] != space) {
             drawAssetTableSpriteWithExplicitPalette(0x10, (s16)y, getRelocatableHeapBlockBase(gAssetHandles[0x1F]),
@@ -1941,67 +1839,26 @@ void drawRaceUiScoreAttackCourseValues(RaceUiPopupActor *arg0) {
 }
 // clang-format on
 
-const char gRaceUiScoreAttackTargetFormat[0x4] = "/%d";
-const char gRaceUiScoreAttackAsteriskLabel[0x4] = "*";
-const char gRaceUiScoreAttackTimeOutLabel[0xC] = "Time Out";
-
-// IDO code generation for this function is sensitive to source line layout.
-// clang-format off
 void drawRaceUiScoreAttackTargetStatus(RaceUiAlpha18Actor *arg0) {
-    Gfx *gfx;
-    s32 w0;
-    s32 w1;
-    char unused[8];
-    char sp20[0xC];
+    char buffer[0xC];
 
-    /* IDO scheduling for this function depends on this block staying on one line. */
-    do { \
-        if (arg0->alpha != 0xFF) { \
-            gfx = gRegionAllocPtr; \
-            gRegionAllocPtr = gfx + 1; \
-            gfx->words.w1 = 0; \
-            gfx->words.w0 = 0xE7000000; \
-            gfx = gRegionAllocPtr; \
-            gRegionAllocPtr = gfx + 1; \
-            w1 = 0xFF2FFFFF; \
-            w0 = 0xFC119623; \
-            gfx->words.w0 = w0; \
-            gfx->words.w1 = w1; \
-            gfx = gRegionAllocPtr; \
-            gRegionAllocPtr = gfx + 1; \
-            w1 = 0x00504240; \
-            if ((gRegionAllocPtr && gRegionAllocPtr) && gRegionAllocPtr) {} \
-            w0 = 0xB900031D; \
-            gfx->words.w0 = w0; \
-            gfx->words.w1 = w1; \
-            gfx = gRegionAllocPtr; \
-            gRegionAllocPtr = gfx + 1; \
-            gfx->words.w0 = 0xFA000000; \
-            gfx->words.w1 = (arg0->alpha & 0xFF) | (~0xFF); \
-        }
-        sprintf(&sp20[0x14], gRaceUiScoreAttackTargetFormat, gRacePlayers[0].scoreAttackPointTarget); \
-        drawMenuAsciiTextDefaultScale(-0x54, -0x14, gRaceUiScoreAttackAsteriskLabel, 6); \
-        drawMenuAsciiTextDefaultScale(-0x3C, -0x14, &sp20[0x14], 6); \
-        if (gRaceChallengeFailed != 0) { \
-            drawMenuAsciiTextDefaultScale(-0x68, -4, gRaceUiScoreAttackTimeOutLabel, 4); \
-        } \
-        if (arg0->alpha != 0xFF) { \
-            gfx = gRegionAllocPtr; \
-            gRegionAllocPtr = gfx + 1; \
-            w1 = (s32)gMenuRenderModeResetDl; \
-            w0 = 0x06000000; \
-            gfx->words.w0 = w0; \
-            gfx->words.w1 = w1; \
-        } \
-    } while (0);
+    if (arg0->alpha != 0xFF) {
+        gDPPipeSync(gRegionAllocPtr++);
+        gDPSetCombineMode(gRegionAllocPtr++, G_CC_MODULATEIA_PRIM, G_CC_MODULATEIA_PRIM);
+
+        gDPSetRenderMode(gRegionAllocPtr++, G_RM_XLU_SURF, G_RM_XLU_SURF2);
+        gDPSetPrimColor(gRegionAllocPtr++, 0, 0, 0xFF, 0xFF, 0xFF, arg0->alpha);
+    }
+    sprintf(buffer, "/%d", gRacePlayers[0].scoreAttackPointTarget);
+    drawMenuAsciiTextDefaultScale(-0x54, -0x14, "*", 6);
+    drawMenuAsciiTextDefaultScale(-0x3C, -0x14, buffer, 6);
+    if (gRaceChallengeFailed != 0) {
+        drawMenuAsciiTextDefaultScale(-0x68, -4, "Time Out", 4);
+    }
+    if (arg0->alpha != 0xFF) {
+        gSPDisplayList(gRegionAllocPtr++, gMenuRenderModeResetDl);
+    }
 }
-// clang-format on
-
-const char gRaceUiHitPrizeX1Label[0x14] = "-Hit Prize(*1G)-";
-const char gRaceUiHitPrizeX50Label[0x14] = "-Hit Prize(*50G)-";
-const char gRaceUiPerfectHitLabel[0x10] = "  -Perfect Hit-";
-const char gRaceUiCompleteBonusLabel[0x14] = "-Complete Bonus-";
-const char gRaceUiHitPrizeTotalMoneyLabel[0x10] = "-Total Money-";
 
 void drawRaceUiHitPrizePayoutLabels(RaceUiCounterActor *arg0) {
     s32 y;
@@ -2019,38 +1876,32 @@ void drawRaceUiHitPrizePayoutLabels(RaceUiCounterActor *arg0) {
     }
 
     if (gRaceChallengeFailed != 0) {
-        drawMenuAsciiTextDefaultScale(-8, (s16)y, gRaceUiHitPrizeX1Label, 5);
+        drawMenuAsciiTextDefaultScale(-8, (s16)y, "-Hit Prize(*1G)-", 5);
     } else {
-        drawMenuAsciiTextDefaultScale(-0xC, (s16)y, gRaceUiHitPrizeX50Label, 5);
+        drawMenuAsciiTextDefaultScale(-0xC, (s16)y, "-Hit Prize(*50G)-", 5);
     }
 
     y += 0x28;
     if (arg0->flag != 0) {
-        drawMenuAsciiTextDefaultScale(-0xC, (s16)y, gRaceUiPerfectHitLabel, 5);
+        drawMenuAsciiTextDefaultScale(-0xC, (s16)y, "  -Perfect Hit-", 5);
         y += 0x28;
     }
 
-    drawMenuAsciiTextDefaultScale(-8, (s16)y, gRaceUiCompleteBonusLabel, 5);
+    drawMenuAsciiTextDefaultScale(-8, (s16)y, "-Complete Bonus-", 5);
     y += 0x28;
-    drawMenuAsciiTextDefaultScale(4, (s16)y, gRaceUiHitPrizeTotalMoneyLabel, 5);
+    drawMenuAsciiTextDefaultScale(4, (s16)y, "-Total Money-", 5);
 
     if (arg0->alpha != 0xFF) {
         gSPDisplayList(gRegionAllocPtr++, gMenuRenderModeResetDl);
     }
 }
 
-const char gRaceUiCourseValueHitLabelRow1[0x4] = "Hit";
-const char gRaceUiCourseValueHitLabelRow2[0x4] = "Hit";
-const char gRaceUiCourseValueHitLabelRow3[0x4] = "Hit";
-const char gRaceUiCourseValueHitLabelRow4[0x4] = "Hit";
-const char gRaceUiCourseValueHitLabelRow5[0x4] = "Hit";
-
 void drawRaceUiScoreAttackHitLabels(void *arg0) {
-    drawMenuAsciiTextDefaultScale(0x20, -0x48, gRaceUiCourseValueHitLabelRow1, 6);
-    drawMenuAsciiTextDefaultScale(0x20, -0x28, gRaceUiCourseValueHitLabelRow2, 6);
-    drawMenuAsciiTextDefaultScale(0x20, -8, gRaceUiCourseValueHitLabelRow3, 6);
-    drawMenuAsciiTextDefaultScale(0x20, 0x18, gRaceUiCourseValueHitLabelRow4, 4);
-    drawMenuAsciiTextDefaultScale(0x20, 0x38, gRaceUiCourseValueHitLabelRow5, 4);
+    drawMenuAsciiTextDefaultScale(0x20, -0x48, "Hit", 6);
+    drawMenuAsciiTextDefaultScale(0x20, -0x28, "Hit", 6);
+    drawMenuAsciiTextDefaultScale(0x20, -8, "Hit", 6);
+    drawMenuAsciiTextDefaultScale(0x20, 0x18, "Hit", 4);
+    drawMenuAsciiTextDefaultScale(0x20, 0x38, "Hit", 4);
 }
 
 void updateRaceUiHitPrizeCourseValuesConfirmed(void *arg0) {
@@ -2262,55 +2113,19 @@ void initRaceUiHitPrizePayout(RaceUiCounterActor *arg0) {
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceUiHitPrizeFadeIn);
 }
 
-// IDO code generation for this function is sensitive to source line layout.
-// clang-format off
 void drawRaceUiCourseRecordElapsedTime(RaceUiAlphaActor *arg0) {
-    Gfx *gfx;
-    s32 w0;
-    s32 w1;
 
-    /* IDO scheduling for this function depends on this block staying on one line. */
-    do { \
-        if (arg0->alpha != 0xFF) { \
-            gfx = gRegionAllocPtr; \
-            gRegionAllocPtr = gfx + 1; \
-            gfx->words.w1 = 0; \
-            gfx->words.w0 = 0xE7000000; \
-            gfx = gRegionAllocPtr; \
-            gRegionAllocPtr = gfx + 1; \
-            w1 = 0xFF2FFFFF; \
-            w0 = 0xFC119623; \
-            gfx->words.w0 = w0; \
-            gfx->words.w1 = w1; \
-            gfx = gRegionAllocPtr; \
-            gRegionAllocPtr = gfx + 1; \
-            w1 = 0x00504240; \
-            w0 = 0xB900031D; \
-            gfx->words.w0 = w0; \
-            gfx->words.w1 = w1; \
-            gfx = gRegionAllocPtr; \
-            gRegionAllocPtr = gfx + 1; \
-            gfx->words.w0 = 0xFA000000; \
-            gfx->words.w1 = (arg0->alpha & 0xFF) | (~0xFF); \
-        } \
-        drawRaceUiPackedTime(&gRaceElapsedTimer, -0x68, -0x37, 0xC); \
-        if (arg0->alpha != 0xFF) { \
-            gfx = gRegionAllocPtr; \
-            gRegionAllocPtr = gfx + 1; \
-            w1 = (s32)gMenuRenderModeResetDl; \
-            w0 = 0x06000000; \
-            gfx->words.w0 = w0; \
-            gfx->words.w1 = w1; \
-        } \
-    } while (0);
+    if (arg0->alpha != 0xFF) {
+        gDPPipeSync(gRegionAllocPtr++);
+        gDPSetCombineMode(gRegionAllocPtr++, G_CC_MODULATEIA_PRIM, G_CC_MODULATEIA_PRIM);
+        gDPSetRenderMode(gRegionAllocPtr++, G_RM_XLU_SURF, G_RM_XLU_SURF2);
+        gDPSetPrimColor(gRegionAllocPtr++, 0, 0, 0xFF, 0xFF, 0xFF, arg0->alpha);
+    }
+    drawRaceUiPackedTime(&gRaceElapsedTimer, -0x68, -0x37, 0xC);
+    if (arg0->alpha != 0xFF) {
+        gSPDisplayList(gRegionAllocPtr++, gMenuRenderModeResetDl);
+    }
 }
-// clang-format on
-
-const char gRaceUiTargetTimeChallengePrizeCounterFormat[] = "%5d";
-const char gRaceUiTargetTimeChallengeSpeedFanGetCounterFormat[] = "%5d";
-const char gRaceUiTargetTimeChallengePerfectGetCounterFormat[] = "%5d";
-const char gRaceUiTargetTimeChallengeCompleteBonusCounterFormat[] = "%5d";
-const char gRaceUiTargetTimeChallengeMoneyCounterFormat[] = "%6d";
 
 void drawRaceUiCourseRecordPayoutCounters(RaceUiDualCounterActor *arg0) {
     volatile u8 pad[4];
@@ -2323,7 +2138,7 @@ void drawRaceUiCourseRecordPayoutCounters(RaceUiDualCounterActor *arg0) {
     y.word = -0x47;
     if (arg0->state >= 0) {
         x = 0x20;
-        sprintf(buffer, gRaceUiTargetTimeChallengePrizeCounterFormat, arg0->leftValue);
+        sprintf(buffer, "%5d", arg0->leftValue);
         i = 0;
         while (1) {
             if (buffer[i] == 0) {
@@ -2346,7 +2161,7 @@ void drawRaceUiCourseRecordPayoutCounters(RaceUiDualCounterActor *arg0) {
 
     if (arg0->state > 0) {
         x = 0x20;
-        sprintf(buffer, gRaceUiTargetTimeChallengeSpeedFanGetCounterFormat, arg0->rightValue);
+        sprintf(buffer, "%5d", arg0->rightValue);
         i = 0;
         tempY = y.half.lo;
         i = 0;
@@ -2372,7 +2187,7 @@ void drawRaceUiCourseRecordPayoutCounters(RaceUiDualCounterActor *arg0) {
     if (arg0->state >= 2) {
         x = 0x20;
         if (arg0->flag != 0) {
-            sprintf(buffer, gRaceUiTargetTimeChallengePerfectGetCounterFormat, arg0->bonus);
+            sprintf(buffer, "%5d", arg0->bonus);
             i = 0;
             tempY = y.half.lo;
             i = 0;
@@ -2398,7 +2213,7 @@ void drawRaceUiCourseRecordPayoutCounters(RaceUiDualCounterActor *arg0) {
 
     if (arg0->state >= 3) {
         x = 0x20;
-        sprintf(buffer, gRaceUiTargetTimeChallengeCompleteBonusCounterFormat, arg0->leftTarget);
+        sprintf(buffer, "%5d", arg0->leftTarget);
         i = 0;
         tempY = y.half.lo;
         i = 0;
@@ -2423,7 +2238,7 @@ void drawRaceUiCourseRecordPayoutCounters(RaceUiDualCounterActor *arg0) {
 
     if (arg0->state >= 4) {
         x = 0x18;
-        sprintf(buffer, gRaceUiTargetTimeChallengeMoneyCounterFormat, gRacePlayers[0].money);
+        sprintf(buffer, "%6d", gRacePlayers[0].money);
         i = 0;
         tempY = y.half.lo;
         i = 0;
@@ -2480,62 +2295,19 @@ void drawRaceUiCourseRecordRows(RaceUiPopupActor *arg0) {
 }
 // clang-format on
 
-const char gRaceUiTargetTimeChallengeLapTimeLabel[0xC] = "-Lap Time-";
-
-// IDO code generation for this function is sensitive to source line layout.
-// clang-format off
 void drawRaceUiCourseRecordLapTimeLabel(RaceUiAlphaActor *arg0) {
-    Gfx *gfx;
-    s32 w0;
-    s32 w1;
 
-    /* IDO scheduling for this function depends on this block staying on one line. */
-    do { \
-        if (arg0->alpha != 0xFF) { \
-            gfx = gRegionAllocPtr; \
-            gRegionAllocPtr = gfx + 1; \
-            gfx->words.w1 = 0; \
-            gfx->words.w0 = 0xE7000000; \
-            gfx = gRegionAllocPtr; \
-            gRegionAllocPtr = gfx + 1; \
-            w1 = 0xFF2FFFFF; \
-            w0 = 0xFC119623; \
-            gfx->words.w0 = w0; \
-            gfx->words.w1 = w1; \
-            gfx = gRegionAllocPtr; \
-            gRegionAllocPtr = gfx + 1; \
-            w1 = 0x00504240; \
-            w0 = 0xB900031D; \
-            gfx->words.w0 = w0; \
-            gfx->words.w1 = w1; \
-            gfx = gRegionAllocPtr; \
-            gRegionAllocPtr = gfx + 1; \
-            gfx->words.w0 = 0xFA000000; \
-            gfx->words.w1 = (arg0->alpha & 0xFF) | (~0xFF); \
-        } \
-        drawMenuAsciiTextDefaultScale(-0x70, -0x40, gRaceUiTargetTimeChallengeLapTimeLabel, 5); \
-        if (arg0->alpha != 0xFF) { \
-            gfx = gRegionAllocPtr; \
-            gRegionAllocPtr = gfx + 1; \
-            w1 = (s32)gMenuRenderModeResetDl; \
-            w0 = 0x06000000; \
-            gfx->words.w0 = w0; \
-            gfx->words.w1 = w1; \
-        } \
-    } while (0);
+    if (arg0->alpha != 0xFF) {
+        gDPPipeSync(gRegionAllocPtr++);
+        gDPSetCombineMode(gRegionAllocPtr++, G_CC_MODULATEIA_PRIM, G_CC_MODULATEIA_PRIM);
+        gDPSetRenderMode(gRegionAllocPtr++, G_RM_XLU_SURF, G_RM_XLU_SURF2);
+        gDPSetPrimColor(gRegionAllocPtr++, 0, 0, 0xFF, 0xFF, 0xFF, arg0->alpha);
+    }
+    drawMenuAsciiTextDefaultScale(-0x70, -0x40, "-Lap Time-", 5);
+    if (arg0->alpha != 0xFF) {
+        gSPDisplayList(gRegionAllocPtr++, gMenuRenderModeResetDl);
+    }
 }
-// clang-format on
-
-const char gRaceUiTargetTimeChallengeTargetLabel[0xC] = "-Target-";
-const char gRaceUiTargetTimeChallengeTargetTimeFormat[0x14] = "%2.2d'%2.2d\"%2.2d";
-const char gRaceUiTargetTimeChallengeFastLabel[0x8] = " -Fast-";
-const char gRaceUiTargetTimeChallengeDeltaTimeFormat[0x14] = "-%2.2d'%2.2d\"%2.2d";
-const char gRaceUiTargetTimeChallengeTimeOutLabel[0xC] = "Time Out";
-const char gRaceUiTargetTimeChallengePrizeLabel[0x10] = "  -Time Prize-";
-const char gRaceUiTargetTimeChallengeSpeedFanGetLabel[0x14] = " -Speed Fan Get-";
-const char gRaceUiTargetTimeChallengePerfectGetLabel[0x10] = "  -Perfect Get-";
-const char gRaceUiTargetTimeChallengeCompleteBonusLabel[0x14] = "-Complete Bonus-";
-const char gRaceUiTargetTimeChallengeMoneyLabel[0x10] = "  -Total Money-";
 
 void drawRaceUiCourseRecordPayoutLabels(RaceUiDualCounterActor *arg0) {
     char buf[0x18];
@@ -2552,37 +2324,31 @@ void drawRaceUiCourseRecordPayoutLabels(RaceUiDualCounterActor *arg0) {
     }
 
     if (gRaceChallengeFailed == 0) {
-        drawMenuAsciiTextDefaultScale(-0x68, -0x1F, gRaceUiTargetTimeChallengeTargetLabel, 7);
+        drawMenuAsciiTextDefaultScale(-0x68, -0x1F, "-Target-", 7);
         targetTime = &gRaceCourseTargetTimes[gRaceCourseIndex.signedValue];
         bufp = buf - 0xC;
-        sprintf(
-            bufp,
-            gRaceUiTargetTimeChallengeTargetTimeFormat,
-            targetTime->minutes,
-            targetTime->seconds,
-            targetTime->fraction >> 8
-        );
+        sprintf(bufp, "%2.2d'%2.2d\"%2.2d", targetTime->minutes, targetTime->seconds, targetTime->fraction >> 8);
         drawMenuAsciiTextDefaultScale(-0x68, -0x16, bufp, 7);
-        drawMenuAsciiTextDefaultScale(-0x68, -8, gRaceUiTargetTimeChallengeFastLabel, 7);
-        sprintf(bufp, gRaceUiTargetTimeChallengeDeltaTimeFormat, arg0->row, arg0->column, arg0->timeFraction >> 8);
+        drawMenuAsciiTextDefaultScale(-0x68, -8, " -Fast-", 7);
+        sprintf(bufp, "-%2.2d'%2.2d\"%2.2d", arg0->row, arg0->column, arg0->timeFraction >> 8);
         drawMenuAsciiTextDefaultScale(-0x6C, 1, bufp, 7);
     } else {
-        drawMenuAsciiTextDefaultScale(-0x68, -0x24, gRaceUiTargetTimeChallengeTimeOutLabel, 4);
+        drawMenuAsciiTextDefaultScale(-0x68, -0x24, "Time Out", 4);
     }
 
     y = -0x50;
-    drawMenuAsciiTextDefaultScale(-8, (s16)y, gRaceUiTargetTimeChallengePrizeLabel, 5);
+    drawMenuAsciiTextDefaultScale(-8, (s16)y, "  -Time Prize-", 5);
     y += 0x20;
-    drawMenuAsciiTextDefaultScale(-0xC, (s16)y, gRaceUiTargetTimeChallengeSpeedFanGetLabel, 5);
+    drawMenuAsciiTextDefaultScale(-0xC, (s16)y, " -Speed Fan Get-", 5);
     y += 0x20;
     if (arg0->flag != 0) {
-        drawMenuAsciiTextDefaultScale(-0xC, (s16)y, gRaceUiTargetTimeChallengePerfectGetLabel, 5);
+        drawMenuAsciiTextDefaultScale(-0xC, (s16)y, "  -Perfect Get-", 5);
         y += 0x20;
     }
-    drawMenuAsciiTextDefaultScale(-8, (s16)y, gRaceUiTargetTimeChallengeCompleteBonusLabel, 5);
+    drawMenuAsciiTextDefaultScale(-8, (s16)y, "-Complete Bonus-", 5);
     y += 0x20;
     textY = y;
-    drawMenuAsciiTextDefaultScale(-0xC, textY, gRaceUiTargetTimeChallengeMoneyLabel, 5);
+    drawMenuAsciiTextDefaultScale(-0xC, textY, "  -Total Money-", 5);
 
     if (arg0->alpha != 0xFF) {
         gSPDisplayList(gRegionAllocPtr++, gMenuRenderModeResetDl);
@@ -2833,9 +2599,6 @@ void initRaceUiCourseRecordPayout(RaceUiDualCounterActor *arg0) {
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceUiCourseRecordFadeIn);
 }
 
-const char gRaceUiTrickAttackPointTotalFormat[4] = "%d";
-const char gRaceUiTrickAttackSecondaryCounterFormat[4] = "%d";
-
 void drawRaceUiTrickAttackTotals(RaceUiDualCounterActor *arg0) {
     s32 i;
     char buffer[0x28];
@@ -2848,7 +2611,7 @@ void drawRaceUiTrickAttackTotals(RaceUiDualCounterActor *arg0) {
         gDPSetPrimColor(gRegionAllocPtr++, 0, 0, 0xFF, 0xFF, 0xFF, arg0->alpha18);
     }
 
-    sprintf(buffer, gRaceUiTrickAttackPointTotalFormat, gRacePlayers[0].trickAttackPointTotal);
+    sprintf(buffer, "%d", gRacePlayers[0].trickAttackPointTotal);
 
     x = -0x50;
     if (gRacePlayers[0].trickAttackPointTotal >= 10) {
@@ -2874,7 +2637,7 @@ void drawRaceUiTrickAttackTotals(RaceUiDualCounterActor *arg0) {
     }
 
     x = -0x50;
-    sprintf(buffer, gRaceUiTrickAttackSecondaryCounterFormat, gRacePlayers[0].trickAttackMakeCount);
+    sprintf(buffer, "%d", gRacePlayers[0].trickAttackMakeCount);
     if (gRacePlayers[0].trickAttackMakeCount >= 10) {
         x = -0x54;
     }
@@ -2902,11 +2665,6 @@ void drawRaceUiTrickAttackTotals(RaceUiDualCounterActor *arg0) {
     }
 }
 
-const char gRaceUiPendingTrickPrizeFormat[0x4] = "%5d";
-const char gRaceUiPendingMakeBonusFormat[0x4] = "%5d";
-const char gRaceUiPendingCompleteBonusFormat[0x4] = "%5d";
-const char gRaceUiPendingMoneyFormat[0x4] = "%6d";
-
 void drawRaceUiTrickPrizePayoutCounters(RaceUiCourseStatsActor *arg0) {
     volatile u8 pad[4];
     SplitWord y;
@@ -2920,7 +2678,7 @@ void drawRaceUiTrickPrizePayoutCounters(RaceUiCourseStatsActor *arg0) {
     visibleRows = arg0->visibleRows;
     x = 0x20;
     if (visibleRows >= 0) {
-        sprintf(buffer, gRaceUiPendingTrickPrizeFormat, arg0->pendingTrickPrize);
+        sprintf(buffer, "%5d", arg0->pendingTrickPrize);
         i = 0;
     loop1:
         if (buffer[i] != 0) {
@@ -2943,7 +2701,7 @@ void drawRaceUiTrickPrizePayoutCounters(RaceUiCourseStatsActor *arg0) {
 
     if (visibleRows > 0) {
         x = 0x20;
-        sprintf(buffer, gRaceUiPendingMakeBonusFormat, arg0->pendingMakeBonus);
+        sprintf(buffer, "%5d", arg0->pendingMakeBonus);
         i = 0;
         rowY = y.half.lo;
         i = 0;
@@ -2968,7 +2726,7 @@ void drawRaceUiTrickPrizePayoutCounters(RaceUiCourseStatsActor *arg0) {
 
     if (visibleRows >= 2) {
         x = 0x20;
-        sprintf(buffer, gRaceUiPendingCompleteBonusFormat, arg0->pendingCompleteBonus);
+        sprintf(buffer, "%5d", arg0->pendingCompleteBonus);
         i = 0;
         rowY = y.half.lo;
         i = 0;
@@ -2993,7 +2751,7 @@ void drawRaceUiTrickPrizePayoutCounters(RaceUiCourseStatsActor *arg0) {
 
     if (visibleRows >= 3) {
         x = 0x18;
-        sprintf(buffer, gRaceUiPendingMoneyFormat, gRacePlayers[0].money);
+        sprintf(buffer, "%6d", gRacePlayers[0].money);
         i = 0;
         rowY = y.half.lo;
         i = 0;
@@ -3014,8 +2772,6 @@ void drawRaceUiTrickPrizePayoutCounters(RaceUiCourseStatsActor *arg0) {
         drawAssetTableSpriteWideIndex(x, rowY, getRelocatableHeapBlockBase(gAssetHandles[0x1F]), 0x37);
     }
 }
-
-const char gRaceUiTrickValueFormat[0x4] = "%4d";
 
 // IDO code generation for this function is sensitive to source line layout.
 // clang-format off
@@ -3041,7 +2797,7 @@ void drawRaceUiTrickAttackCourseValues(RaceUiCourseStatsActor *arg0) {
             color = 0xD;
         }
 
-        sprintf(buffer, gRaceUiTrickValueFormat, gGameSaveDataBuffer[0].trickAttackScores[gRaceCourseIndex.signedValue][i]);
+        sprintf(buffer, "%4d", gGameSaveDataBuffer[0].trickAttackScores[gRaceCourseIndex.signedValue][i]);
 
         if ((u8)buffer[0] != space) {
             drawAssetTableSpriteWithExplicitPalette(0x10, (s16)y, getRelocatableHeapBlockBase(gAssetHandles[0x1F]),
@@ -3072,130 +2828,66 @@ void drawRaceUiTrickAttackCourseValues(RaceUiCourseStatsActor *arg0) {
 }
 // clang-format on
 
-const char gRaceUiTrickAttackResultsTrickLabel[0x8] = "-Trick-";
-const char gRaceUiTrickAttackResultsMakeLabel[0x8] = "-Make-";
-const char gRaceUiTrickAttackResultsTimeOutLabel[0xC] = "Time Out";
-const char gRaceUiPendingTrickPrizeLabel[0x10] = "  -Trick Prize-";
-const char gRaceUiPendingMakeBonusLabel[0x10] = "  -Make Bonus-";
-const char gRaceUiPendingCompleteBonusLabel[0x14] = "-Complete Bonus-";
-const char gRaceUiPendingMoneyLabel[0x10] = "  -Total Money-";
-
-// IDO code generation for this function is sensitive to source line layout.
-// clang-format off
 void drawRaceUiTrickAttackResultLabels(RaceUiAlpha18Actor *arg0) {
-    Gfx *gfx;
     const char *new_var2;
     s32 w0;
-    s32 w1;
     s32 new_var;
 
-    /* IDO scheduling for this function depends on this block staying on one line. */
-    do { \
-        if (arg0->alpha != 0xFF) { \
-            gfx = gRegionAllocPtr; \
-            gRegionAllocPtr = gfx + 1; \
-            gfx->words.w1 = 0; \
-            gfx->words.w0 = 0xE7000000; \
-            gfx = gRegionAllocPtr; \
-            gRegionAllocPtr = gfx + 1; \
-            w1 = 0xFF2FFFFF; \
-            w0 = 0xFC119623; \
-            gfx->words.w0 = w0; \
-            gfx->words.w1 = w1; \
-            if (!gfx) {} \
-            gfx = gRegionAllocPtr; \
-            gRegionAllocPtr = gfx + 1; \
-            w1 = 0x00504240; \
-            if ((gRegionAllocPtr && gRegionAllocPtr) && gRegionAllocPtr) {} \
-            w0 = 0xB900031D; \
-            gfx->words.w0 = w0; \
-            gfx->words.w1 = w1; \
-            gfx = gRegionAllocPtr; \
-            gRegionAllocPtr = gfx + 1; \
-            gfx->words.w0 = 0xFA000000; \
-            gfx->words.w1 = (arg0->alpha & 0xFF) | (~0xFF); \
-        } \
-        drawMenuAsciiTextDefaultScale(-0x68, -0x40, new_var2 = gRaceUiTrickAttackResultsTrickLabel, 6); \
-        drawMenuAsciiTextDefaultScale(-0x64, -0x1C, gRaceUiTrickAttackResultsMakeLabel, 5); \
-        w0 = 8; \
-        if (gRaceChallengeFailed != 0) { \
-            new_var = w0; \
-            drawMenuAsciiTextDefaultScale(-0x6C, new_var, gRaceUiTrickAttackResultsTimeOutLabel, 4); \
-        } \
-        if (arg0->alpha != 0xFF) { \
-            gfx = gRegionAllocPtr; \
-            gRegionAllocPtr = gfx + 1; \
-            w1 = (s32)gMenuRenderModeResetDl; \
-            w0 = 0x06000000; \
-            gfx->words.w0 = w0; \
-            gfx->words.w1 = w1; \
-        } \
-    } while (0);
-}
-// clang-format on
+    if (arg0->alpha != 0xFF) {
+        gDPPipeSync(gRegionAllocPtr++);
+        gDPSetCombineMode(gRegionAllocPtr++, G_CC_MODULATEIA_PRIM, G_CC_MODULATEIA_PRIM);
 
-// IDO code generation for this function is sensitive to source line layout.
-// clang-format off
+        gDPSetRenderMode(gRegionAllocPtr++, G_RM_XLU_SURF, G_RM_XLU_SURF2);
+        gDPSetPrimColor(gRegionAllocPtr++, 0, 0, 0xFF, 0xFF, 0xFF, arg0->alpha);
+    }
+    drawMenuAsciiTextDefaultScale(-0x68, -0x40, new_var2 = "-Trick-", 6);
+    drawMenuAsciiTextDefaultScale(-0x64, -0x1C, "-Make-", 5);
+    w0 = 8;
+    if (gRaceChallengeFailed != 0) {
+        new_var = w0;
+        drawMenuAsciiTextDefaultScale(-0x6C, new_var, "Time Out", 4);
+    }
+    if (arg0->alpha != 0xFF) {
+        gSPDisplayList(gRegionAllocPtr++, gMenuRenderModeResetDl);
+    }
+}
+
 void drawRaceUiTrickPrizePayoutLabels(RaceUiAlpha18Actor *arg0) {
-    Gfx *gfx;
-    s32 w0;
-    s32 w1;
     s32 y;
     RaceUiAlpha18Actor **arg0p = &arg0;
 
-    /* IDO scheduling for this function depends on this block staying on one line. */
-    do { if ((*arg0p)->alpha != 0xFF) {
-        gfx = gRegionAllocPtr;
-        gRegionAllocPtr = gfx + 1;
-        gfx->words.w1 = 0;
-        gfx->words.w0 = 0xE7000000;
+    if ((*arg0p)->alpha != 0xFF) {
+        gDPPipeSync(gRegionAllocPtr++);
 
-        gfx = gRegionAllocPtr;
-        gRegionAllocPtr = gfx + 1;
-        w1 = 0xFF2FFFFF;
-        w0 = 0xFC119623;
-        gfx->words.w0 = w0; \
-        gfx->words.w1 = w1; \
-        gfx = gRegionAllocPtr; \
-        gRegionAllocPtr = gfx + 1; \
-        w1 = 0x00504240; \
-        w0 = 0xB900031D; \
-        gfx->words.w0 = w0; \
-        gfx->words.w1 = w1; \
-        gfx = gRegionAllocPtr; \
-        gRegionAllocPtr = gfx + 1; \
-        gfx->words.w0 = 0xFA000000;
-        gfx->words.w1 = ((*arg0p)->alpha & 0xFF) | ~0xFF;
+        gDPSetCombineMode(gRegionAllocPtr++, G_CC_MODULATEIA_PRIM, G_CC_MODULATEIA_PRIM);
+        gDPSetRenderMode(gRegionAllocPtr++, G_RM_XLU_SURF, G_RM_XLU_SURF2);
+        gDPSetPrimColor(gRegionAllocPtr++, 0, 0, 0xFF, 0xFF, 0xFF, (*arg0p)->alpha);
     }
 
     y = -0x50;
-    drawMenuAsciiTextDefaultScale(-0xC, (s16)y, gRaceUiPendingTrickPrizeLabel, 5);
+    drawMenuAsciiTextDefaultScale(-0xC, (s16)y, "  -Trick Prize-", 5);
     y += 0x28;
-    drawMenuAsciiTextDefaultScale(-8, (s16)y, gRaceUiPendingMakeBonusLabel, 5);
+    drawMenuAsciiTextDefaultScale(-8, (s16)y, "  -Make Bonus-", 5);
     y += 0x28;
-    drawMenuAsciiTextDefaultScale(-8, (s16)y, gRaceUiPendingCompleteBonusLabel, 5);
+    drawMenuAsciiTextDefaultScale(-8, (s16)y, "-Complete Bonus-", 5);
     y += 0x28;
-    drawMenuAsciiTextDefaultScale(-0xC, (s16)y, gRaceUiPendingMoneyLabel, 5);
+    drawMenuAsciiTextDefaultScale(-0xC, (s16)y, "  -Total Money-", 5);
 
     if ((*arg0p)->alpha != 0xFF) {
         gSPDisplayList(gRegionAllocPtr++, gMenuRenderModeResetDl);
     }
-    } while (0);
 }
-// clang-format on
-
-const char gRaceUiTrickValuePointLabelRow1[0x4] = "P";
-const char gRaceUiTrickValuePointLabelRow2[0x4] = "P";
-const char gRaceUiTrickValuePointLabelRow3[0x4] = "P";
-const char gRaceUiTrickValuePointLabelRow4[0x4] = "P";
-const char gRaceUiTrickValuePointLabelRow5[0x8] = "P";
 
 void drawRaceUiTrickAttackPointLabels(void *arg0) {
-    drawMenuAsciiTextDefaultScale(0x30, -0x48, gRaceUiTrickValuePointLabelRow1, 6);
-    drawMenuAsciiTextDefaultScale(0x30, -0x28, gRaceUiTrickValuePointLabelRow2, 6);
-    drawMenuAsciiTextDefaultScale(0x30, -8, gRaceUiTrickValuePointLabelRow3, 6);
-    drawMenuAsciiTextDefaultScale(0x30, 0x18, gRaceUiTrickValuePointLabelRow4, 4);
-    drawMenuAsciiTextDefaultScale(0x30, 0x38, gRaceUiTrickValuePointLabelRow5, 4);
+    drawMenuAsciiTextDefaultScale(0x30, -0x48, "P", 6);
+    drawMenuAsciiTextDefaultScale(0x30, -0x28, "P", 6);
+    drawMenuAsciiTextDefaultScale(0x30, -8, "P", 6);
+    drawMenuAsciiTextDefaultScale(0x30, 0x18, "P", 4);
+    {
+        static const char pointLabel[8] = "P";
+
+        drawMenuAsciiTextDefaultScale(0x30, 0x38, pointLabel, 4);
+    }
 }
 
 void updateRaceUiTrickPrizeCourseValuesConfirmed(void *arg0) {
@@ -4168,8 +3860,6 @@ void spawnPanItemTargets(s16 arg0) {
     }
 }
 
-const char gRaceUiScorePopupPointsFormat[0x10] = "%4d";
-
 void drawRaceUiScorePopup(RaceUiPopupActor *arg0) {
     volatile u8 padding[0x20];
     char buffer[8];
@@ -4182,7 +3872,7 @@ void drawRaceUiScorePopup(RaceUiPopupActor *arg0) {
             getRelocatableHeapBlockBase(gAssetHandles[0x1F]),
             0x8B
         );
-        sprintf(buffer, gRaceUiScorePopupPointsFormat, arg0->parent);
+        sprintf(buffer, "%4d", arg0->parent);
         for (i = 0; i != 4; i++) {
             if (buffer[i] != ' ') {
                 drawAssetTableSpriteWithExplicitPalette(
@@ -4693,29 +4383,9 @@ void initRaceUiSpinHitTransitionEffect(RaceUiTransitionActor *arg0) {
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceUiSpinHitTransitionEffect);
 }
 
-// IDO code generation for this function is sensitive to source line layout.
-// clang-format off
 void renderRaceUiStunOrbitingIcon(RaceUiOrbitingSpriteActor *arg0) {
     volatile u8 padding[4];
     Transform3D sp64;
-    Gfx *temp_v0;
-    Gfx *temp_v0_2;
-    Gfx *temp_v0_3;
-    Gfx *temp_v0_4;
-    Gfx *temp_v0_5;
-    Gfx *temp_v0_6;
-    Gfx *temp_v0_7;
-    Gfx *temp_v0_8;
-    Gfx *temp_v0_9;
-    Gfx *temp_v0_10;
-    Gfx *temp_v0_11;
-    Gfx *temp_v0_12;
-    Gfx *temp_v0_13;
-    Gfx *temp_v0_14;
-    Gfx *temp_v0_15;
-    Gfx *temp_v0_16;
-    Gfx *temp_v0_17;
-    Gfx *temp_v0_18;
 
     if (gRenderMatricesDirty != 0) {
         arg0->matrixDirty = 1;
@@ -4730,66 +4400,29 @@ void renderRaceUiStunOrbitingIcon(RaceUiOrbitingSpriteActor *arg0) {
         arg0->matrix = allocFixedTransformMatrix(&sp64);
     }
 
-    do { \
-        if (arg0->matrix != NULL) { \
-            temp_v0 = gRegionAllocPtr++; \
-            temp_v0->words.w0 = 0x06000000; \
-            temp_v0->words.w1 = (u32)gAlphaSpriteRenderModeDl; \
-            temp_v0_2 = gRegionAllocPtr++; \
-            temp_v0_2->words.w0 = 0xFD500000; \
-            temp_v0_2->words.w1 = (u32)arg0->image; \
-            temp_v0_3 = gRegionAllocPtr++; \
-            temp_v0_3->words.w0 = 0xF5500000; \
-            temp_v0_3->words.w1 = 0x07080200; \
-            temp_v0_4 = gRegionAllocPtr++; \
-            temp_v0_4->words.w1 = 0; \
-            temp_v0_4->words.w0 = 0xE6000000; \
-            temp_v0_5 = gRegionAllocPtr++; \
-            temp_v0_5->words.w0 = 0xF3000000; \
-            temp_v0_5->words.w1 = 0x0703F800; \
-            temp_v0_6 = gRegionAllocPtr++; \
-            temp_v0_6->words.w1 = 0; \
-            temp_v0_6->words.w0 = 0xE7000000; \
-            temp_v0_7 = gRegionAllocPtr++; \
-            temp_v0_7->words.w0 = 0xF5400200; \
-            temp_v0_7->words.w1 = 0x00080200; \
-            temp_v0_8 = gRegionAllocPtr++; \
-            temp_v0_8->words.w0 = 0xF2000000; \
-            temp_v0_8->words.w1 = 0x0003C03C; \
-            temp_v0_9 = gRegionAllocPtr++; \
-            temp_v0_9->words.w0 = 0xFD100000; \
-            temp_v0_9->words.w1 = (u32)arg0->palette; \
-            temp_v0_10 = gRegionAllocPtr++; \
-            temp_v0_10->words.w1 = 0; \
-            temp_v0_10->words.w0 = 0xE8000000; \
-            temp_v0_11 = gRegionAllocPtr++; \
-            temp_v0_11->words.w0 = 0xF5000100; \
-            temp_v0_11->words.w1 = 0x07000000; \
-            temp_v0_12 = gRegionAllocPtr++; \
-            temp_v0_12->words.w1 = 0; \
-            temp_v0_12->words.w0 = 0xE6000000; \
-            temp_v0_13 = gRegionAllocPtr++; \
-            temp_v0_13->words.w0 = 0xF0000000; \
-            temp_v0_13->words.w1 = 0x0703C000; \
-            temp_v0_14 = gRegionAllocPtr++; \
-            temp_v0_14->words.w1 = 0; \
-            temp_v0_14->words.w0 = 0xE7000000; \
-            temp_v0_15 = gRegionAllocPtr++; \
-            temp_v0_15->words.w0 = 0x01020040; \
-            temp_v0_15->words.w1 = (u32)arg0->matrix; \
-            temp_v0_16 = gRegionAllocPtr++; \
-            temp_v0_16->words.w0 = 0x01000040; \
-            temp_v0_16->words.w1 = (u32)gViewportMatrix; \
-            temp_v0_17 = gRegionAllocPtr++; \
-            temp_v0_17->words.w0 = 0x0400103F; \
-            temp_v0_17->words.w1 = (u32)gRaceUiStunIconQuadVertices; \
-            temp_v0_18 = gRegionAllocPtr++; \
-            temp_v0_18->words.w0 = 0xB1060402; \
-            temp_v0_18->words.w1 = 0x00060200; \
-        } \
-    } while (0);
+    if (arg0->matrix != NULL) {
+        gSPDisplayList(gRegionAllocPtr++, gAlphaSpriteRenderModeDl);
+        gDPLoadTextureBlock_4b(
+            gRegionAllocPtr++,
+            arg0->image,
+            G_IM_FMT_CI,
+            16,
+            16,
+            0,
+            G_TX_CLAMP,
+            G_TX_CLAMP,
+            0,
+            0,
+            G_TX_NOLOD,
+            G_TX_NOLOD
+        );
+        gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, arg0->palette);
+        gSPMatrix(gRegionAllocPtr++, arg0->matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+        gSPMatrix(gRegionAllocPtr++, gViewportMatrix, G_MTX_NOPUSH | G_MTX_MUL | G_MTX_MODELVIEW);
+        gSPVertex(gRegionAllocPtr++, gRaceUiStunIconQuadVertices, 4, 0);
+        gSP1Quadrangle(gRegionAllocPtr++, 3, 2, 1, 0, 0);
+    }
 }
-// clang-format on
 
 void updateRaceUiStunOrbitingIcon(RaceUiOrbitingSpriteActor *arg0) {
     RacePlayer *player;
@@ -5337,35 +4970,15 @@ block_5:
     return 0;
 }
 
-// IDO code generation for this function is sensitive to source line layout.
-// clang-format off
 void renderRaceUiProjectile(RaceUiProjectileActor *arg0) {
     volatile s32 pad0;
     Transform3D sp7C;
     volatile u8 padding[4];
     s32 sp74;
-    Gfx *temp_v0_2;
-    Gfx *temp_v0_3;
-    Gfx *temp_v0_4;
-    Gfx *temp_v0_5;
-    Gfx *temp_v0_6;
-    Gfx *temp_v0_7;
-    Gfx *temp_v0_8;
-    Gfx *temp_v0_9;
-    Gfx *temp_v0_10;
-    Gfx *temp_v0_11;
-    Gfx *temp_v0_12;
-    Gfx *temp_v0_13;
-    Gfx *temp_v0_14;
-    Gfx *temp_v0_17;
-    Gfx *temp_v0_18;
-    Gfx *temp_t4;
-    s32 temp_t0;
     s32 var_ra;
-    s32 var_t5;
 
     if (gRenderMatricesDirty != 0) {
-        arg0->matrixDirty = (float) 1;
+        arg0->matrixDirty = (float)1;
     }
 
     if (arg0->matrixDirty != 0) {
@@ -5384,73 +4997,30 @@ void renderRaceUiProjectile(RaceUiProjectileActor *arg0) {
             sp74 = 4;
         } else {
             sp74 = 0;
-            do { } while (0);
         }
-        do { \
-            temp_v0_2 = gRegionAllocPtr++; \
-            temp_v0_2->words.w0 = 0x06000000; \
-            temp_v0_2->words.w1 = (u32)gAlphaSpriteRenderModeDl; \
-            temp_v0_3 = gRegionAllocPtr++; \
-            temp_v0_3->words.w0 = 0xFD500000; \
-            temp_v0_3->words.w1 = (u32)arg0->image; \
-            temp_v0_4 = gRegionAllocPtr++; \
-            temp_v0_4->words.w0 = 0xF5500000; \
-            temp_v0_4->words.w1 = 0x07080200; \
-            temp_v0_5 = gRegionAllocPtr++; \
-            temp_v0_5->words.w0 = 0xE6000000; \
-            temp_v0_5->words.w1 = 0; \
-            temp_t4 = gRegionAllocPtr++; \
-            temp_t4->words.w0 = 0xF3000000; \
-            temp_t0 = (((var_ra << 5) + 3) >> 2) - 1; \
-            if (temp_t0 < 0x7FF) { \
-                var_t5 = temp_t0; \
-            } else { \
-                var_t5 = 0x7FF; \
-            } \
-            temp_t4->words.w1 = (((var_t5 & 0xFFF) << 0xC) | 0x07000000) | 0x400; \
-            temp_v0_6 = gRegionAllocPtr++; \
-            temp_v0_6->words.w1 = 0; \
-            temp_v0_6->words.w0 = 0xE7000000; \
-            temp_v0_7 = gRegionAllocPtr++; \
-            temp_v0_7->words.w0 = 0xF5400400; \
-            temp_v0_7->words.w1 = 0x00080200; \
-            temp_v0_8 = gRegionAllocPtr++; \
-            temp_v0_8->words.w0 = 0xF2000000; \
-            temp_v0_8->words.w1 = (((var_ra - 1) << 2) & 0xFFF) | 0x0007C000; \
-            temp_v0_9 = gRegionAllocPtr++; \
-            temp_v0_9->words.w0 = 0xFD100000; \
-            temp_v0_9->words.w1 = (u32)arg0->palette; \
-            temp_v0_10 = gRegionAllocPtr++; \
-            temp_v0_10->words.w1 = 0; \
-            temp_v0_10->words.w0 = 0xE8000000; \
-            temp_v0_11 = gRegionAllocPtr++; \
-            temp_v0_11->words.w0 = 0xF5000100; \
-            temp_v0_11->words.w1 = 0x07000000; \
-            temp_v0_12 = gRegionAllocPtr++; \
-            temp_v0_12->words.w1 = 0; \
-            temp_v0_12->words.w0 = 0xE6000000; \
-            temp_v0_13 = gRegionAllocPtr++; \
-            temp_v0_13->words.w0 = 0xF0000000; \
-            temp_v0_13->words.w1 = 0x0703C000; \
-            temp_v0_14 = gRegionAllocPtr++; \
-            temp_v0_14->words.w1 = 0; \
-            temp_v0_14->words.w0 = 0xE7000000; \
-            temp_v0_17 = gRegionAllocPtr++; \
-            temp_v0_17->words.w0 = 0x01020040; \
-            temp_v0_17->words.w1 = (u32)arg0->matrix; \
-            temp_v0_18 = gRegionAllocPtr++; \
-            temp_v0_18->words.w0 = 0x01000040; \
-            temp_v0_18->words.w1 = (u32)gViewportMatrix; \
-            temp_v0_2 = gRegionAllocPtr++; \
-            temp_v0_2->words.w0 = 0x0400103F; \
-            temp_v0_2->words.w1 = (u32)(&gRaceUiProjectileVertices[sp74]); \
-            temp_v0_3 = gRegionAllocPtr++; \
-            temp_v0_3->words.w0 = 0xB1060402; \
-            temp_v0_3->words.w1 = 0x00060200; \
-        } while (0);
+
+        gSPDisplayList(gRegionAllocPtr++, gAlphaSpriteRenderModeDl);
+        gDPLoadTextureBlock_4b(
+            gRegionAllocPtr++,
+            arg0->image,
+            G_IM_FMT_CI,
+            32,
+            var_ra,
+            0,
+            G_TX_CLAMP,
+            G_TX_CLAMP,
+            0,
+            0,
+            G_TX_NOLOD,
+            G_TX_NOLOD
+        );
+        gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, arg0->palette);
+        gSPMatrix(gRegionAllocPtr++, arg0->matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+        gSPMatrix(gRegionAllocPtr++, gViewportMatrix, G_MTX_NOPUSH | G_MTX_MUL | G_MTX_MODELVIEW);
+        gSPVertex(gRegionAllocPtr++, (&gRaceUiProjectileVertices[sp74]), 4, 0);
+        gSP1Quadrangle(gRegionAllocPtr++, 3, 2, 1, 0, 0);
     }
 }
-// clang-format on
 
 void updateRaceUiProjectileFlyAway(RaceUiProjectileActor *arg0) {
     struct {

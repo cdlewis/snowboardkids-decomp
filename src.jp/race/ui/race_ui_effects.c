@@ -329,7 +329,7 @@ extern Vtx gRaceStartOverlayVertices[];
 
 void renderRaceCourseScrollingTexture(RaceCourseScrollingTextureActor *arg0) {
     volatile u8 pad[8];
-    Gfx *gfx;
+    Gfx *unused;
 
     gDPPipeSync(gRegionAllocPtr++);
     gSPSegment(gRegionAllocPtr++, 0x02, getRelocatableHeapBlockBase(ASSET_HANDLE(0x8)));
@@ -350,9 +350,14 @@ void renderRaceCourseScrollingTexture(RaceCourseScrollingTextureActor *arg0) {
         G_TX_NOLOD
     );
 
-    gfx = gRegionAllocPtr++;
-    gfx->words.w0 = ((arg0->textureScrollOffset * 4) & 0xFFF) | 0xF2000000;
-    gfx->words.w1 = ((arg0->textureScrollOffset + 0x40) << 2) & 0xFFF;
+    gDPSetTileSize(
+        gRegionAllocPtr++,
+        G_TX_RENDERTILE,
+        0,
+        arg0->textureScrollOffset << G_TEXTURE_IMAGE_FRAC,
+        0,
+        (arg0->textureScrollOffset + 0x40) << G_TEXTURE_IMAGE_FRAC
+    );
 
     gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, arg0->palette);
     gSPDisplayList(gRegionAllocPtr++, arg0->displayList);
@@ -1252,46 +1257,17 @@ void drawRaceUiCourseStatsElapsedTime(RaceUiAlpha1AActor *arg0) {
 }
 
 void drawRaceUiCourseStatsLapTimeLabel(RaceUiAlpha18Actor *arg0) {
-    Gfx *gfx;
-    s32 w0;
-    s32 w1;
 
-    /* IDO scheduling for this function depends on this block staying on one line. */
-    // clang-format off
-    do { \
-        if (arg0->alpha != 0xFF) { \
-            gfx = gRegionAllocPtr; \
-            gRegionAllocPtr = gfx + 1; \
-            gfx->words.w1 = 0; \
-            gfx->words.w0 = 0xE7000000; \
-            gfx = gRegionAllocPtr; \
-            gRegionAllocPtr = gfx + 1; \
-            w1 = 0xFF2FFFFF; \
-            w0 = 0xFC119623; \
-            gfx->words.w0 = w0; \
-            gfx->words.w1 = w1; \
-            gfx = gRegionAllocPtr; \
-            gRegionAllocPtr = gfx + 1; \
-            w1 = 0x00504240; \
-            w0 = 0xB900031D; \
-            gfx->words.w0 = w0; \
-            gfx->words.w1 = w1; \
-            gfx = gRegionAllocPtr; \
-            gRegionAllocPtr = gfx + 1; \
-            gfx->words.w0 = 0xFA000000; \
-            gfx->words.w1 = (arg0->alpha & 0xFF) | (~0xFF); \
-        } \
-        drawMenuAsciiTextDefaultScale(-0x74, -0x3C, gRaceUiLapTimeLabel, 5); \
-        if (arg0->alpha != 0xFF) { \
-            gfx = gRegionAllocPtr; \
-            gRegionAllocPtr = gfx + 1; \
-            w1 = (s32)gMenuRenderModeResetDl; \
-            w0 = 0x06000000; \
-            gfx->words.w0 = w0; \
-            gfx->words.w1 = w1; \
-        } \
-    } while (0);
-    // clang-format on
+    if (arg0->alpha != 0xFF) {
+        gDPPipeSync(gRegionAllocPtr++);
+        gDPSetCombineMode(gRegionAllocPtr++, G_CC_MODULATEIA_PRIM, G_CC_MODULATEIA_PRIM);
+        gDPSetRenderMode(gRegionAllocPtr++, G_RM_XLU_SURF, G_RM_XLU_SURF2);
+        gDPSetPrimColor(gRegionAllocPtr++, 0, 0, 0xFF, 0xFF, 0xFF, arg0->alpha);
+    }
+    drawMenuAsciiTextDefaultScale(-0x74, -0x3C, gRaceUiLapTimeLabel, 5);
+    if (arg0->alpha != 0xFF) {
+        gSPDisplayList(gRegionAllocPtr++, gMenuRenderModeResetDl);
+    }
 }
 
 void updateRaceUiCourseStatsConfirmed(RaceUiCourseStatsActor *arg0) {
@@ -2036,46 +2012,17 @@ void drawRaceUiCourseRecordRows(RaceUiPopupActor *arg0) {
 }
 
 void drawRaceUiCourseRecordLapTimeLabel(RaceUiAlphaActor *arg0) {
-    Gfx *gfx;
-    s32 w0;
-    s32 w1;
 
-    /* IDO scheduling for this function depends on this block staying on one line. */
-    // clang-format off
-    do { \
-        if (arg0->alpha != 0xFF) { \
-            gfx = gRegionAllocPtr; \
-            gRegionAllocPtr = gfx + 1; \
-            gfx->words.w1 = 0; \
-            gfx->words.w0 = 0xE7000000; \
-            gfx = gRegionAllocPtr; \
-            gRegionAllocPtr = gfx + 1; \
-            w1 = 0xFF2FFFFF; \
-            w0 = 0xFC119623; \
-            gfx->words.w0 = w0; \
-            gfx->words.w1 = w1; \
-            gfx = gRegionAllocPtr; \
-            gRegionAllocPtr = gfx + 1; \
-            w1 = 0x00504240; \
-            w0 = 0xB900031D; \
-            gfx->words.w0 = w0; \
-            gfx->words.w1 = w1; \
-            gfx = gRegionAllocPtr; \
-            gRegionAllocPtr = gfx + 1; \
-            gfx->words.w0 = 0xFA000000; \
-            gfx->words.w1 = (arg0->alpha & 0xFF) | (~0xFF); \
-        } \
-        drawMenuAsciiTextDefaultScale(-0x70, -0x40, gRaceUiTargetTimeChallengeLapTimeLabel, 5); \
-        if (arg0->alpha != 0xFF) { \
-            gfx = gRegionAllocPtr; \
-            gRegionAllocPtr = gfx + 1; \
-            w1 = (s32)gMenuRenderModeResetDl; \
-            w0 = 0x06000000; \
-            gfx->words.w0 = w0; \
-            gfx->words.w1 = w1; \
-        } \
-    } while (0);
-    // clang-format on
+    if (arg0->alpha != 0xFF) {
+        gDPPipeSync(gRegionAllocPtr++);
+        gDPSetCombineMode(gRegionAllocPtr++, G_CC_MODULATEIA_PRIM, G_CC_MODULATEIA_PRIM);
+        gDPSetRenderMode(gRegionAllocPtr++, G_RM_XLU_SURF, G_RM_XLU_SURF2);
+        gDPSetPrimColor(gRegionAllocPtr++, 0, 0, 0xFF, 0xFF, 0xFF, arg0->alpha);
+    }
+    drawMenuAsciiTextDefaultScale(-0x70, -0x40, gRaceUiTargetTimeChallengeLapTimeLabel, 5);
+    if (arg0->alpha != 0xFF) {
+        gSPDisplayList(gRegionAllocPtr++, gMenuRenderModeResetDl);
+    }
 }
 
 void drawRaceUiCourseRecordPayoutLabels(RaceUiDualCounterActor *arg0) {
@@ -4160,24 +4107,6 @@ void initRaceUiSpinHitTransitionEffect(RaceUiTransitionActor *arg0) {
 void renderRaceUiStunOrbitingIcon(RaceUiOrbitingSpriteActor *arg0) {
     volatile u8 padding[4];
     Transform3D sp64;
-    Gfx *temp_v0;
-    Gfx *temp_v0_2;
-    Gfx *temp_v0_3;
-    Gfx *temp_v0_4;
-    Gfx *temp_v0_5;
-    Gfx *temp_v0_6;
-    Gfx *temp_v0_7;
-    Gfx *temp_v0_8;
-    Gfx *temp_v0_9;
-    Gfx *temp_v0_10;
-    Gfx *temp_v0_11;
-    Gfx *temp_v0_12;
-    Gfx *temp_v0_13;
-    Gfx *temp_v0_14;
-    Gfx *temp_v0_15;
-    Gfx *temp_v0_16;
-    Gfx *temp_v0_17;
-    Gfx *temp_v0_18;
 
     if (gRenderMatricesDirty != 0) {
         arg0->matrixDirty = 1;
@@ -4192,66 +4121,28 @@ void renderRaceUiStunOrbitingIcon(RaceUiOrbitingSpriteActor *arg0) {
         arg0->matrix = allocFixedTransformMatrix(&sp64);
     }
 
-    // clang-format off
-    do { \
-        if (arg0->matrix != NULL) { \
-            temp_v0 = gRegionAllocPtr++; \
-            temp_v0->words.w0 = 0x06000000; \
-            temp_v0->words.w1 = (u32)gAlphaSpriteRenderModeDl; \
-            temp_v0_2 = gRegionAllocPtr++; \
-            temp_v0_2->words.w0 = 0xFD500000; \
-            temp_v0_2->words.w1 = (u32)arg0->image; \
-            temp_v0_3 = gRegionAllocPtr++; \
-            temp_v0_3->words.w0 = 0xF5500000; \
-            temp_v0_3->words.w1 = 0x07080200; \
-            temp_v0_4 = gRegionAllocPtr++; \
-            temp_v0_4->words.w1 = 0; \
-            temp_v0_4->words.w0 = 0xE6000000; \
-            temp_v0_5 = gRegionAllocPtr++; \
-            temp_v0_5->words.w0 = 0xF3000000; \
-            temp_v0_5->words.w1 = 0x0703F800; \
-            temp_v0_6 = gRegionAllocPtr++; \
-            temp_v0_6->words.w1 = 0; \
-            temp_v0_6->words.w0 = 0xE7000000; \
-            temp_v0_7 = gRegionAllocPtr++; \
-            temp_v0_7->words.w0 = 0xF5400200; \
-            temp_v0_7->words.w1 = 0x00080200; \
-            temp_v0_8 = gRegionAllocPtr++; \
-            temp_v0_8->words.w0 = 0xF2000000; \
-            temp_v0_8->words.w1 = 0x0003C03C; \
-            temp_v0_9 = gRegionAllocPtr++; \
-            temp_v0_9->words.w0 = 0xFD100000; \
-            temp_v0_9->words.w1 = (u32)arg0->palette; \
-            temp_v0_10 = gRegionAllocPtr++; \
-            temp_v0_10->words.w1 = 0; \
-            temp_v0_10->words.w0 = 0xE8000000; \
-            temp_v0_11 = gRegionAllocPtr++; \
-            temp_v0_11->words.w0 = 0xF5000100; \
-            temp_v0_11->words.w1 = 0x07000000; \
-            temp_v0_12 = gRegionAllocPtr++; \
-            temp_v0_12->words.w1 = 0; \
-            temp_v0_12->words.w0 = 0xE6000000; \
-            temp_v0_13 = gRegionAllocPtr++; \
-            temp_v0_13->words.w0 = 0xF0000000; \
-            temp_v0_13->words.w1 = 0x0703C000; \
-            temp_v0_14 = gRegionAllocPtr++; \
-            temp_v0_14->words.w1 = 0; \
-            temp_v0_14->words.w0 = 0xE7000000; \
-            temp_v0_15 = gRegionAllocPtr++; \
-            temp_v0_15->words.w0 = 0x01020040; \
-            temp_v0_15->words.w1 = (u32)arg0->matrix; \
-            temp_v0_16 = gRegionAllocPtr++; \
-            temp_v0_16->words.w0 = 0x01000040; \
-            temp_v0_16->words.w1 = (u32)gViewportMatrix; \
-            temp_v0_17 = gRegionAllocPtr++; \
-            temp_v0_17->words.w0 = 0x0400103F; \
-            temp_v0_17->words.w1 = (u32)gRaceUiStunIconQuadVertices; \
-            temp_v0_18 = gRegionAllocPtr++; \
-            temp_v0_18->words.w0 = 0xB1060402; \
-            temp_v0_18->words.w1 = 0x00060200; \
-        } \
-    } while (0);
-    // clang-format on
+    if (arg0->matrix != NULL) {
+        gSPDisplayList(gRegionAllocPtr++, gAlphaSpriteRenderModeDl);
+        gDPLoadTextureBlock_4b(
+            gRegionAllocPtr++,
+            arg0->image,
+            G_IM_FMT_CI,
+            16,
+            16,
+            0,
+            G_TX_CLAMP,
+            G_TX_CLAMP,
+            0,
+            0,
+            G_TX_NOLOD,
+            G_TX_NOLOD
+        );
+        gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, arg0->palette);
+        gSPMatrix(gRegionAllocPtr++, arg0->matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+        gSPMatrix(gRegionAllocPtr++, gViewportMatrix, G_MTX_NOPUSH | G_MTX_MUL | G_MTX_MODELVIEW);
+        gSPVertex(gRegionAllocPtr++, gRaceUiStunIconQuadVertices, 4, 0);
+        gSP1Quadrangle(gRegionAllocPtr++, 3, 2, 1, 0, 0);
+    }
 }
 
 void updateRaceUiStunOrbitingIcon(RaceUiOrbitingSpriteActor *arg0) {
@@ -4805,25 +4696,7 @@ void renderRaceUiProjectile(RaceUiProjectileActor *arg0) {
     Transform3D sp7C;
     volatile u8 padding[4];
     s32 sp74;
-    Gfx *temp_v0_2;
-    Gfx *temp_v0_3;
-    Gfx *temp_v0_4;
-    Gfx *temp_v0_5;
-    Gfx *temp_v0_6;
-    Gfx *temp_v0_7;
-    Gfx *temp_v0_8;
-    Gfx *temp_v0_9;
-    Gfx *temp_v0_10;
-    Gfx *temp_v0_11;
-    Gfx *temp_v0_12;
-    Gfx *temp_v0_13;
-    Gfx *temp_v0_14;
-    Gfx *temp_v0_17;
-    Gfx *temp_v0_18;
-    Gfx *temp_t4;
-    s32 temp_t0;
     s32 var_ra;
-    s32 var_t5;
 
     if (gRenderMatricesDirty != 0) {
         arg0->matrixDirty = (float)1;
@@ -4845,71 +4718,28 @@ void renderRaceUiProjectile(RaceUiProjectileActor *arg0) {
             sp74 = 4;
         } else {
             sp74 = 0;
-            do { } while (0); }
-        // clang-format off
-        do { \
-            temp_v0_2 = gRegionAllocPtr++; \
-            temp_v0_2->words.w0 = 0x06000000; \
-            temp_v0_2->words.w1 = (u32)gAlphaSpriteRenderModeDl; \
-            temp_v0_3 = gRegionAllocPtr++; \
-            temp_v0_3->words.w0 = 0xFD500000; \
-            temp_v0_3->words.w1 = (u32)arg0->image; \
-            temp_v0_4 = gRegionAllocPtr++; \
-            temp_v0_4->words.w0 = 0xF5500000; \
-            temp_v0_4->words.w1 = 0x07080200; \
-            temp_v0_5 = gRegionAllocPtr++; \
-            temp_v0_5->words.w0 = 0xE6000000; \
-            temp_v0_5->words.w1 = 0; \
-            temp_t4 = gRegionAllocPtr++; \
-            temp_t4->words.w0 = 0xF3000000; \
-            temp_t0 = (((var_ra << 5) + 3) >> 2) - 1; \
-            if (temp_t0 < 0x7FF) { \
-                var_t5 = temp_t0; \
-            } else { \
-                var_t5 = 0x7FF; \
-            } \
-            temp_t4->words.w1 = (((var_t5 & 0xFFF) << 0xC) | 0x07000000) | 0x400; \
-            temp_v0_6 = gRegionAllocPtr++; \
-            temp_v0_6->words.w1 = 0; \
-            temp_v0_6->words.w0 = 0xE7000000; \
-            temp_v0_7 = gRegionAllocPtr++; \
-            temp_v0_7->words.w0 = 0xF5400400; \
-            temp_v0_7->words.w1 = 0x00080200; \
-            temp_v0_8 = gRegionAllocPtr++; \
-            temp_v0_8->words.w0 = 0xF2000000; \
-            temp_v0_8->words.w1 = (((var_ra - 1) << 2) & 0xFFF) | 0x0007C000; \
-            temp_v0_9 = gRegionAllocPtr++; \
-            temp_v0_9->words.w0 = 0xFD100000; \
-            temp_v0_9->words.w1 = (u32)arg0->palette; \
-            temp_v0_10 = gRegionAllocPtr++; \
-            temp_v0_10->words.w1 = 0; \
-            temp_v0_10->words.w0 = 0xE8000000; \
-            temp_v0_11 = gRegionAllocPtr++; \
-            temp_v0_11->words.w0 = 0xF5000100; \
-            temp_v0_11->words.w1 = 0x07000000; \
-            temp_v0_12 = gRegionAllocPtr++; \
-            temp_v0_12->words.w1 = 0; \
-            temp_v0_12->words.w0 = 0xE6000000; \
-            temp_v0_13 = gRegionAllocPtr++; \
-            temp_v0_13->words.w0 = 0xF0000000; \
-            temp_v0_13->words.w1 = 0x0703C000; \
-            temp_v0_14 = gRegionAllocPtr++; \
-            temp_v0_14->words.w1 = 0; \
-            temp_v0_14->words.w0 = 0xE7000000; \
-            temp_v0_17 = gRegionAllocPtr++; \
-            temp_v0_17->words.w0 = 0x01020040; \
-            temp_v0_17->words.w1 = (u32)arg0->matrix; \
-            temp_v0_18 = gRegionAllocPtr++; \
-            temp_v0_18->words.w0 = 0x01000040; \
-            temp_v0_18->words.w1 = (u32)gViewportMatrix; \
-            temp_v0_2 = gRegionAllocPtr++; \
-            temp_v0_2->words.w0 = 0x0400103F; \
-            temp_v0_2->words.w1 = (u32)(&gRaceUiProjectileVertices[sp74]); \
-            temp_v0_3 = gRegionAllocPtr++; \
-            temp_v0_3->words.w0 = 0xB1060402; \
-            temp_v0_3->words.w1 = 0x00060200; \
-        } while (0);
-        // clang-format on
+        }
+
+        gSPDisplayList(gRegionAllocPtr++, gAlphaSpriteRenderModeDl);
+        gDPLoadTextureBlock_4b(
+            gRegionAllocPtr++,
+            arg0->image,
+            G_IM_FMT_CI,
+            32,
+            var_ra,
+            0,
+            G_TX_CLAMP,
+            G_TX_CLAMP,
+            0,
+            0,
+            G_TX_NOLOD,
+            G_TX_NOLOD
+        );
+        gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, arg0->palette);
+        gSPMatrix(gRegionAllocPtr++, arg0->matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+        gSPMatrix(gRegionAllocPtr++, gViewportMatrix, G_MTX_NOPUSH | G_MTX_MUL | G_MTX_MODELVIEW);
+        gSPVertex(gRegionAllocPtr++, (&gRaceUiProjectileVertices[sp74]), 4, 0);
+        gSP1Quadrangle(gRegionAllocPtr++, 3, 2, 1, 0, 0);
     }
 }
 
