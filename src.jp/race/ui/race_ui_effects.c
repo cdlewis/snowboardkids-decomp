@@ -4004,7 +4004,7 @@ void initRaceUiSingleTrailEffect(RaceUiSingleTrailActor *arg0) {
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceUiSingleTrailEffect);
 }
 
-void renderRaceUiFadingImpact(RaceUiFadingTrailActor *arg0) {
+void renderRaceUiFadingImpact(RaceUiFadingImpactActor *arg0) {
     volatile u8 pad[0x20];
     RaceUiDisplayCommand *unused;
 

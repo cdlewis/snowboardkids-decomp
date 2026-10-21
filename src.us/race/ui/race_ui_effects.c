@@ -82,7 +82,6 @@
 #define TIME_TRIAL_RECORD_DELTA_POPUP_START_Y -0x2C
 #define TIME_TRIAL_RECORD_DELTA_POPUP_START_VELOCITY 0x38
 #define TIME_TRIAL_RECORD_DELTA_POPUP_HOLD_TIMER 0x5A
-#define RACE_UI_TIME_TRIAL_SAVE_DATA ((RaceUiTimeTrialSaveData *)&gGameSaveDataBuffer[0])
 #define RACE_UI_GSP_VERTEX_F3DEX(pkt, v, n, v0) \
     gDma1p((pkt), G_VTX, (v), ((n) << 10) | (sizeof(Vtx) * (n) - 1), (v0) * 2)
 #define RACE_UI_GSP1QUADRANGLE_F3DEX(pkt, v0, v1, v2, v3, flag)                                  \
@@ -100,61 +99,11 @@ typedef struct {
 } RaceCourseScrollingTextureInit;
 
 typedef struct {
-    /* 0x00 */ u8 pad0[0x10];
-    /* 0x10 */ u16 index;
-    /* 0x12 */ u8 pad12[6];
-    /* 0x18 */ Vec3i pos;
-    /* 0x24 */ s16 angle;
-    /* 0x26 */ s16 angle2;
-    /* 0x28 */ s16 frame;
-    /* 0x2A */ s16 frameTarget;
-    /* 0x2C */ s16 rotX;
-    /* 0x2E */ s16 rotY;
-    /* 0x30 */ s16 scale;
-    /* 0x32 */ s16 scaleStep;
-} RaceUiModelActor;
-
-typedef struct {
-    /* 0x00 */ u8 pad0[0x10];
-    /* 0x10 */ u16 index;
-    /* 0x12 */ u8 pad12[6];
-    /* 0x18 */ void *ptr18;
-    /* 0x1C */ void *ptr1C;
-    /* 0x20 */ void *ptr20;
-    /* 0x24 */ s16 unk24;
-    /* 0x26 */ s16 unk26;
-    /* 0x28 */ Vec3i pos;
-    /* 0x34 */ s16 frame;
-    /* 0x36 */ s16 frameEnd;
-    /* 0x38 */ Vec3i assetPos;
-    /* 0x44 */ s32 assetX;
-    /* 0x48 */ Vec3i vec48;
-    /* 0x54 */ s16 state;
-    /* 0x56 */ s16 timer;
-    /* 0x58 */ s32 velX;
-    /* 0x5C */ s32 velY;
-    /* 0x60 */ s32 velZ;
-    /* 0x64 */ u8 pad64[4];
-    /* 0x68 */ s16 unk68;
-} RaceUiEffectActor;
-
-typedef struct {
     struct {
         u32 w0;
         u32 w1;
     } words;
 } RaceUiDisplayCommand;
-
-typedef struct {
-    /* 0x00 */ u8 pad0[0x18];
-    /* 0x18 */ Transform3D transformSource;
-    /* 0x38 */ Vec3i sourcePos;
-    /* 0x44 */ Mtx *matrix;
-    /* 0x48 */ s16 angle;
-    /* 0x4A */ s16 alpha;
-    /* 0x4C */ s16 scale;
-    /* 0x4E */ u8 matrixDirty;
-} RaceUiFragmentActor;
 
 typedef struct {
     /* 0x00 */ s16 active;
@@ -169,58 +118,6 @@ typedef struct {
     /* 0x10 */ s16 angle;
     /* 0x12 */ u8 pad12[2];
 } RaceUiRankTextRenderEntry;
-
-typedef struct {
-    /* 0x000 */ u8 pad0[0x12A];
-    /* 0x12A */ RaceTimer timeTrialRecordSplitTimes[11];
-} RaceUiTimeTrialSaveData;
-
-typedef struct {
-    /* 0x0000 */ u8 pad0[0x156];
-    /* 0x0156 */ RaceTimer resultNames[10][5];
-} RaceUiResultNameData;
-
-typedef struct {
-    /* 0x0000 */ u8 pad0[0x78A0];
-    /* 0x78A0 */ u8 resultIcons[10][5];
-} RaceUiResultIconData;
-
-typedef struct {
-    /* 0x0000 */ u8 pad0[0x7832];
-    /* 0x7832 */ u8 values[10][5];
-    /* 0x7864 */ u8 pad7864[0x7869 - 0x7864];
-    /* 0x7869 */ u8 icons[10][5];
-} RaceUiCourseValueData;
-
-typedef struct {
-    /* 0x0000 */ u8 pad0[0x4E];
-    /* 0x004E */ RaceTimer courseStatsNames[10][5];
-} RaceUiCourseStatsNameData;
-
-typedef struct {
-    /* 0x0000 */ u8 pad0[0x77FB];
-    /* 0x77FB */ u8 courseStatsIcons[10][5];
-} RaceUiCourseStatsIconData;
-
-typedef struct {
-    /* 0x0000 */ u8 pad0[0x7756];
-    /* 0x7756 */ u16 values[10][5];
-} RaceUiTrickValueData;
-
-typedef struct {
-    /* 0x0000 */ u8 pad0[0x77C4];
-    /* 0x77C4 */ u8 icons[10][5];
-} RaceUiTrickIconData;
-
-typedef struct {
-    /* 0x00 */ u8 pad0[0x30];
-    /* 0x30 */ u16 *script;
-    /* 0x34 */ s16 timer;
-    /* 0x36 */ s16 value;
-    /* 0x38 */ u8 pad38[8];
-    /* 0x40 */ s32 assetY;
-    /* 0x44 */ s32 assetX;
-} RaceUiScriptActor;
 
 typedef struct {
     /* 0x00 */ u8 pad30[4];
@@ -1659,24 +1556,21 @@ void drawRaceUiCourseStatsRows(RaceUiCourseStatsActor *arg0) {
         drawAssetTableSprite(-8, (s16)y, getRelocatableHeapBlockBase(gAssetHandles[0x1F]), row + 0x77);
         if ((row == actor->task.userId) && (gUiBlinkTimer & 1)) {
             drawRaceUiPackedTime(
-                &((RaceUiCourseStatsNameData *)&gGameSaveDataBuffer[0])
-                     ->courseStatsNames[gRaceCourseIndex.signedValue][row],
+                &gGameSaveDataBuffer[0].timeTrialRecords[gRaceCourseIndex.signedValue][row],
                 0x10,
                 y,
                 0x10
             );
         } else if (row < 3) {
             drawRaceUiPackedTime(
-                &((RaceUiCourseStatsNameData *)&gGameSaveDataBuffer[0])
-                     ->courseStatsNames[gRaceCourseIndex.signedValue][row],
+                &gGameSaveDataBuffer[0].timeTrialRecords[gRaceCourseIndex.signedValue][row],
                 0x10,
                 y,
                 0xC
             );
         } else {
             drawRaceUiPackedTime(
-                &((RaceUiCourseStatsNameData *)&gGameSaveDataBuffer[0])
-                     ->courseStatsNames[gRaceCourseIndex.signedValue][row],
+                &gGameSaveDataBuffer[0].timeTrialRecords[gRaceCourseIndex.signedValue][row],
                 0x10,
                 y,
                 0xD
@@ -1687,19 +1581,13 @@ void drawRaceUiCourseStatsRows(RaceUiCourseStatsActor *arg0) {
             0x58,
             (s16)y,
             getRelocatableHeapBlockBase(gAssetHandles[0x1F]),
-            ((((RaceUiCourseStatsIconData *)&gGameSaveDataBuffer[0])
-                  ->courseStatsIcons[gRaceCourseIndex.signedValue][row] &
-              7) +
-             0x51)
+            ((gGameSaveDataBuffer[0].timeTrialCharacterIds[gRaceCourseIndex.signedValue][row] & 7) + 0x51)
         );
         drawAssetTableSprite(
             0x6C,
             (s16)y,
             getRelocatableHeapBlockBase(gAssetHandles[0x1F]),
-            (((*((RaceUiCourseStatsIconData *)&gGameSaveDataBuffer[0]))
-                  .courseStatsIcons[gRaceCourseIndex.signedValue][row] >>
-              3) +
-             0x7C)
+            ((gGameSaveDataBuffer[0].timeTrialCharacterIds[gRaceCourseIndex.signedValue][row] >> 3) + 0x7C)
         );
     }
 }
@@ -2027,7 +1915,7 @@ void drawRaceUiScoreAttackCourseValues(RaceUiPopupActor *arg0) {
             color = 0xD;
         }
 
-        sprintf(buffer, gRaceUiCourseValueFormat, ((RaceUiCourseValueData *)&gGameSaveDataBuffer[0])->values[gRaceCourseIndex.signedValue][i]);
+        sprintf(buffer, gRaceUiCourseValueFormat, gGameSaveDataBuffer[0].scoreAttackScores[gRaceCourseIndex.signedValue][i]);
 
         if ((u8)buffer[0] != space) {
             drawAssetTableSpriteWithExplicitPalette(0x10, (s16)y, getRelocatableHeapBlockBase(gAssetHandles[0x1F]),
@@ -2041,9 +1929,9 @@ void drawRaceUiScoreAttackCourseValues(RaceUiPopupActor *arg0) {
         }
 
         drawAssetTableSprite(0x46, (s16)y, getRelocatableHeapBlockBase(gAssetHandles[0x1F]),
-                      (((RaceUiCourseValueData *)&gGameSaveDataBuffer[0])->icons[gRaceCourseIndex.signedValue][i] & 7) + 0x51);
+                      (gGameSaveDataBuffer[0].scoreAttackCharacterIds[gRaceCourseIndex.signedValue][i] & 7) + 0x51);
         drawAssetTableSprite(0x58, (s16)y, getRelocatableHeapBlockBase(gAssetHandles[0x1F]),
-                      (((RaceUiCourseValueData *)&gGameSaveDataBuffer[0])->icons[gRaceCourseIndex.signedValue][i] >> 3) + 0x7C);
+                      (gGameSaveDataBuffer[0].scoreAttackCharacterIds[gRaceCourseIndex.signedValue][i] >> 3) + 0x7C);
 
         i++;
         y += 0x20;
@@ -2571,11 +2459,11 @@ void drawRaceUiCourseRecordRows(RaceUiPopupActor *arg0) {
         } else {
             color = 0xD;
         }
-        drawRaceUiPackedTime(&((RaceUiResultNameData *)&gGameSaveDataBuffer[0])->resultNames[gRaceCourseIndex.signedValue][i], 0x10, y, color);
+        drawRaceUiPackedTime(&gGameSaveDataBuffer[0].raceRecords[gRaceCourseIndex.signedValue][i], 0x10, y, color);
         drawAssetTableSprite(0x58, (s16)y, getRelocatableHeapBlockBase(gAssetHandles[0x1F]),
-                      (((RaceUiResultIconData *)&gGameSaveDataBuffer[0])->resultIcons[gRaceCourseIndex.signedValue][i] & 7) + 0x51);
+                      (gGameSaveDataBuffer[0].raceRecordCharacterIds[gRaceCourseIndex.signedValue][i] & 7) + 0x51);
         drawAssetTableSprite(0x6C, (s16)y, getRelocatableHeapBlockBase(gAssetHandles[0x1F]),
-                      ((*((RaceUiResultIconData *)&gGameSaveDataBuffer[0])).resultIcons[gRaceCourseIndex.signedValue][i] >> 3) + 0x7C);
+                      (gGameSaveDataBuffer[0].raceRecordCharacterIds[gRaceCourseIndex.signedValue][i] >> 3) + 0x7C);
         i++;
         offset += 4;
         y += 0x20;
@@ -3139,7 +3027,7 @@ void drawRaceUiTrickAttackCourseValues(RaceUiCourseStatsActor *arg0) {
             color = 0xD;
         }
 
-        sprintf(buffer, gRaceUiTrickValueFormat, ((RaceUiTrickValueData *)&gGameSaveDataBuffer[0])->values[gRaceCourseIndex.signedValue][i]);
+        sprintf(buffer, gRaceUiTrickValueFormat, gGameSaveDataBuffer[0].trickAttackScores[gRaceCourseIndex.signedValue][i]);
 
         if ((u8)buffer[0] != space) {
             drawAssetTableSpriteWithExplicitPalette(0x10, (s16)y, getRelocatableHeapBlockBase(gAssetHandles[0x1F]),
@@ -3160,9 +3048,9 @@ void drawRaceUiTrickAttackCourseValues(RaceUiCourseStatsActor *arg0) {
         }
 
         drawAssetTableSprite(0x40, (s16)y, getRelocatableHeapBlockBase(gAssetHandles[0x1F]),
-                      (((RaceUiTrickIconData *)&gGameSaveDataBuffer[0])->icons[gRaceCourseIndex.signedValue][i] & 7) + 0x51);
+                      (gGameSaveDataBuffer[0].trickAttackCharacterIds[gRaceCourseIndex.signedValue][i] & 7) + 0x51);
         drawAssetTableSprite(0x54, (s16)y, getRelocatableHeapBlockBase(gAssetHandles[0x1F]),
-                      (((RaceUiTrickIconData *)&gGameSaveDataBuffer[0])->icons[gRaceCourseIndex.signedValue][i] >> 3) + 0x7C);
+                      (gGameSaveDataBuffer[0].trickAttackCharacterIds[gRaceCourseIndex.signedValue][i] >> 3) + 0x7C);
 
         i++;
         y += 0x20;
@@ -4596,7 +4484,7 @@ void initRaceUiSingleTrailEffect(RaceUiSingleTrailActor *arg0) {
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceUiSingleTrailEffect);
 }
 
-void renderRaceUiFadingImpact(RaceUiFadingTrailActor *arg0) {
+void renderRaceUiFadingImpact(RaceUiFadingImpactActor *arg0) {
     volatile u8 pad[0x20];
     RaceUiDisplayCommand *unused;
 
@@ -5744,7 +5632,7 @@ void initTimeTrialRecordDeltaPopup(RaceUiTimeTrialRecordDeltaPopupActor *popup) 
     popup->velocity = TIME_TRIAL_RECORD_DELTA_POPUP_START_VELOCITY;
     popup->isSlowerThanRecord = calculateRaceTimerDelta(
         &gRaceElapsedTimer,
-        &RACE_UI_TIME_TRIAL_SAVE_DATA->timeTrialRecordSplitTimes[gRaceCourseIndex.signedValue],
+        &gGameSaveDataBuffer[0].bestLapRecords[gRaceCourseIndex.signedValue],
         &popup->delta
     );
     setCallbackTaskCallback(popup, (CallbackTaskCallback)updateTimeTrialRecordDeltaPopupSlideIn);

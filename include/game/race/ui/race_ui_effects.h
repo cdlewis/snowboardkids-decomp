@@ -298,17 +298,6 @@ typedef struct RaceUiSingleTrailActor {
     /* 0x6A */ u8 matrixDirty;
 } RaceUiSingleTrailActor;
 
-typedef struct RaceUiFadingTrailActor {
-    /* 0x00 */ CallbackTaskHeader task;
-    /* 0x18 */ Transform3D copyBlock;
-    /* 0x38 */ Vec3i pos;
-    /* 0x44 */ Mtx *matrix;
-    /* 0x48 */ u8 pad48[2];
-    /* 0x4A */ s16 alpha;
-    /* 0x4C */ u8 pad4C[2];
-    /* 0x4E */ u8 matrixDirty;
-} RaceUiFadingTrailActor;
-
 typedef struct RaceUiEffectParticleActor {
     /* 0x00 */ CallbackTaskHeader task;
     /* 0x18 */ RaceUiEffectParticle *particles;
@@ -623,7 +612,7 @@ void spawnRaceUiThrownTrailObstacle(s16 arg0, void *arg1, void *arg2, s16 arg3);
 void renderRaceUiSingleTrailEffect(RaceUiSingleTrailActor *arg0);
 void updateRaceUiSingleTrailEffect(RaceUiSingleTrailActor *arg0);
 void initRaceUiSingleTrailEffect(RaceUiSingleTrailActor *arg0);
-void renderRaceUiFadingImpact(RaceUiFadingTrailActor *arg0);
+void renderRaceUiFadingImpact(RaceUiFadingImpactActor *arg0);
 void updateRaceUiFadingImpact(RaceUiFadingImpactActor *arg0);
 void initRaceUiFadingImpact(RaceUiFadingImpactActor *arg0);
 void spawnRaceUiFadingImpact(s32 x, s32 y, s32 z, s32 userId);
