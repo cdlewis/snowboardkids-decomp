@@ -45,8 +45,8 @@ void updateRaceMotionAnimationDebugViewer(void) {
 
     if (gRacePlayers[0].mode == 0) {
         gRacePlayers[0].mode = 1;
-        setRaceMotionAnimation((RaceMotionState *)&gRacePlayers[0], gRacePlayers[0].animationId);
-        stepRaceMotionLoopingAnimation((RaceMotionState *)&gRacePlayers[0]);
+        setRaceMotionAnimation(&gRacePlayers[0], gRacePlayers[0].animationId);
+        stepRaceMotionLoopingAnimation(&gRacePlayers[0]);
     } else {
         pressedInput = gPlayerInputPressed[0];
         if (pressedInput & Z_TRIG) {
@@ -65,11 +65,11 @@ void updateRaceMotionAnimationDebugViewer(void) {
             gRacePlayers[0].animationId++;
         }
         if (gPlayerInputHeld[0] & L_CBUTTONS) {
-            stepRaceMotionLoopingAnimation((RaceMotionState *)&gRacePlayers[0]);
+            stepRaceMotionLoopingAnimation(&gRacePlayers[0]);
             pressedInput = gPlayerInputPressed[0];
         }
         if (pressedInput & R_CBUTTONS) {
-            stepRaceMotionLoopingAnimation((RaceMotionState *)&gRacePlayers[0]);
+            stepRaceMotionLoopingAnimation(&gRacePlayers[0]);
         }
     }
     addRenderCallback(&gModelRenderCallbackList, (RenderCallback)drawRacePlayerModel, &gRacePlayers[0]);

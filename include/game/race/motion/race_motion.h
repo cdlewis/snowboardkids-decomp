@@ -63,42 +63,8 @@ typedef struct RaceMotionDecodedJointFrame {
     Vec3i stridePadding[RACE_MOTION_DECODED_JOINT_FRAME_PADDING_COUNT];
 } RaceMotionDecodedJointFrame;
 
-typedef struct RaceMotionStateJoint {
-    s32 previousPartOffsetZ;
-    char pad4[2];
-    Vec3s rotation;
-    s32 offsetX;
-    s32 offsetY;
-} RaceMotionStateJoint;
-
-typedef struct RaceMotionAnimationState {
-    RaceMotionStateJoint joints[RACE_MOTION_JOINT_COUNT];
-} RaceMotionAnimationState;
-
-typedef struct RaceMotionState {
-    u16 animationAssetSlot;
-    char pad2[0x332];
-    RaceMotionAnimationState animation;
-    char pad424[6];
-    Vec3s modelJointRotation;
-    char pad430[0xE];
-    Vec3s nextModelJointRotation;
-    char pad444[0xE];
-    s16 animationIndex;
-    s32 animationStartOffset;
-    s32 frameDataOffset;
-    s16 frameCount;
-    s16 framesRemaining;
-    char pad460[4];
-    s16 frameTimerReset;
-    s16 frameTimer;
-} RaceMotionState;
-
 typedef char RaceCourseSurfaceFaceSizeCheck[(sizeof(RaceCourseSurfaceFace) == 8) ? 1 : -1];
 typedef char RaceCourseSurfaceSizeCheck[(sizeof(RaceCourseSurface) == 0x1C) ? 1 : -1];
-typedef char RaceMotionStateJointSizeCheck[(sizeof(RaceMotionStateJoint) == 0x14) ? 1 : -1];
-typedef char RaceMotionAnimationStateSizeCheck[(sizeof(RaceMotionAnimationState) == 0xF0) ? 1 : -1];
-typedef char RaceMotionStateSizeCheck[(sizeof(RaceMotionState) == 0x468) ? 1 : -1];
 
 void initRaceCourseSurfaceData(void);
 s32 findRaceCourseSurfaceFromHint(s32 surfaceIndex, s32 x, s32 z);
@@ -142,26 +108,26 @@ void getRaceCourseTargetPositionAhead(
 );
 void getRaceCourseProgressPosition(s32 surfaceIndex, s32 *x, s32 *z, s32 playerIndex);
 s16 getRaceCourseNextSurface(s32 surfaceIndex);
-void setRaceMotionAnimation(RaceMotionState *state, s32 animationIndex);
-void loadRaceMotionAnimationFrame(RaceMotionState *state);
-void loadRaceMotionJointAnimationFrame(RaceMotionState *state);
-void interpolateRaceMotionAnimationFrame(RaceMotionState *state, s32 animIndex, s32 frameTimer, s32 frameTimerReset);
+void setRaceMotionAnimation(RacePlayer *player, s32 animationIndex);
+void loadRaceMotionAnimationFrame(RacePlayer *player);
+void loadRaceMotionJointAnimationFrame(RacePlayer *player);
+void interpolateRaceMotionAnimationFrame(RacePlayer *player, s32 animIndex, s32 frameTimer, s32 frameTimerReset);
 void interpolateRaceMotionJointAnimationFrame(
-    RaceMotionState *state,
+    RacePlayer *player,
     s32 animationIndex,
     s32 frameTimer,
     s32 frameTimerReset
 );
 void blendRaceMotionJointAnimation(
-    RaceMotionState *state,
+    RacePlayer *player,
     s32 animationIndex,
     s32 blendTimer,
     s32 blendDuration
 );
-void stepRaceMotionLoopingAnimation(RaceMotionState *state);
-void stepRaceMotionLoopingJointAnimation(RaceMotionState *state);
-s32 stepRaceMotionAnimationUntilEnd(RaceMotionState *state);
-s32 stepRaceMotionJointAnimationUntilEnd(RaceMotionState *state);
+void stepRaceMotionLoopingAnimation(RacePlayer *player);
+void stepRaceMotionLoopingJointAnimation(RacePlayer *player);
+s32 stepRaceMotionAnimationUntilEnd(RacePlayer *player);
+s32 stepRaceMotionJointAnimationUntilEnd(RacePlayer *player);
 void initRaceMotionModelParts(RacePlayer *player);
 
 #endif

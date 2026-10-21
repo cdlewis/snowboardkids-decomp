@@ -27,17 +27,6 @@
 #include "game/race/effects/snowboard_trail_effects.h"
 #include "game/engine/viewport_manager.h"
 
-#define stepRaceMotionJointAnimationUntilEnd(player) stepRaceMotionJointAnimationUntilEnd(RACE_MOTION_STATE(player))
-#define setRaceMotionAnimation(player, animIndex) setRaceMotionAnimation(RACE_MOTION_STATE(player), (animIndex))
-#define stepRaceMotionAnimationUntilEnd(player) stepRaceMotionAnimationUntilEnd(RACE_MOTION_STATE(player))
-#define RACE_MOTION_STATE(player) ((RaceMotionState *)(player))
-#define stepRaceMotionLoopingAnimation(player) stepRaceMotionLoopingAnimation(RACE_MOTION_STATE(player))
-#define blendRaceMotionJointAnimation(player, animationIndex, blendTimer, blendDuration) \
-    blendRaceMotionJointAnimation(RACE_MOTION_STATE(player), (animationIndex), (blendTimer), (blendDuration))
-#define stepRaceMotionLoopingJointAnimation(player) stepRaceMotionLoopingJointAnimation(RACE_MOTION_STATE(player))
-#define interpolateRaceMotionJointAnimationFrame(player, animIndex, frameTimer, frameTimerReset) \
-    interpolateRaceMotionJointAnimationFrame(RACE_MOTION_STATE(player), (animIndex), (frameTimer), (frameTimerReset))
-
 typedef struct {
     u8 matrix[0x20];
     s32 transformedX;
