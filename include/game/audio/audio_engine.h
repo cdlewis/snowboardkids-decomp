@@ -7,7 +7,6 @@
 #include <PR/sptask.h>
 
 typedef OSThread SchedulerThread;
-typedef OSViMode SchedulerViMode;
 
 typedef struct SchedulerClient {
     struct SchedulerClient *next;

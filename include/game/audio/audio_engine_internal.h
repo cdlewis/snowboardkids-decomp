@@ -38,7 +38,6 @@ extern u32 gAudioFrameCounter;
 extern u32 gPendingAudioDmaCount;
 extern AudioInfo *gNextAudioInfo;
 extern s32 gAudioUnderrunState;
-extern SchedulerViMode gSchedulerViModes[];
 extern u8 gSchedulerThreadStack[0x2000];
 extern u8 gSchedulerSwapBufferThreadStack[0x2000];
 extern AudioWorkBuffers gAudioWorkBuffers;

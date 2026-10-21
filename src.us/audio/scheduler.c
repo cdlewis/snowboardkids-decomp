@@ -26,7 +26,7 @@ void initScheduler(SchedulerState *arg0, u8 arg1, u8 arg2) {
     osCreateMesgQueue(&arg0->framebufferQueue, arg0->framebufferMsgs, 0x10);
     osCreateMesgQueue(&arg0->queue14C, arg0->msgs164, 0x10);
     osCreateViManager(0xFE);
-    osViSetMode(&gSchedulerViModes[arg1]);
+    osViSetMode(&osViModeTable[arg1]);
     osViBlack(1);
     osViSetEvent(&arg0->retraceQueue, (OSMesg)0x29A, arg2);
     osSetEventMesg(4, &arg0->retraceQueue, (OSMesg)0x29B);

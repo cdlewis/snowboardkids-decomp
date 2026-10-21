@@ -341,7 +341,7 @@ segments:
       - [0xDFED0, .data, ultra/os/initialize]
       - [0xDFEF0, .data, ultra/io/pimgr]
       - [0xDFF20, .data, ultra/io/vimgr]
-      - [0xDFF40, data]
+      - [0xDFF40, .data, ultra/io/vitbl]
       - [0xE0C60, .data, ultra/audio/sl]
       - [0xE0C70, .data, ultra/io/aisetnextbuf]
       - [0xE0C80, data]
