@@ -412,7 +412,7 @@ segments:
       - [0xE2830, .rodata, ultra/libc/xprintf]
       - [0xE2930, .rodata, ultra/gu/cosf]
       - [0xE2980, .rodata, ultra/io/devmgr]
-      - [0xE29A0, rodata]
+      - [0xE29A0, .rodata, ultra/gu/libm_vals]
       - [0xE29B0, .rodata, ultra/audio/drvrnew]
       - [0xE29D0, .rodata, ultra/audio/resample]
       - [0xE2A10, .rodata, ultra/audio/env]
