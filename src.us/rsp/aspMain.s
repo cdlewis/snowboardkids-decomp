@@ -8,3 +8,12 @@ endlabel aspMainTextStart
 
 .globl aspMainTextEnd
 aspMainTextEnd:
+
+.section .rodata, "a"
+
+dlabel aspMainDataStart
+.incbin "assets/rsp/aspMain.rodatabin.bin"
+enddlabel aspMainDataStart
+
+.globl aspMainDataEnd
+aspMainDataEnd:
