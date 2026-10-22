@@ -33,7 +33,7 @@ extern u8 gConnectedControllerBitmask;
 extern u8 gConnectedControllerCount;
 extern u8 gControllerReadPending;
 extern u8 gControllerSubsystemThreadStack[0x2000];
-extern void *D_800EC8B8;
+extern void *gControllerSubsystemThreadArg;
 
 void initControllerSubsystem(void) {
     s32 i;
@@ -71,7 +71,7 @@ loop:
         &gControllerSubsystemThread,
         4,
         controllerSubsystemThreadMain,
-        D_800EC8B8,
+        gControllerSubsystemThreadArg,
         gControllerSubsystemThreadStack + sizeof(gControllerSubsystemThreadStack),
         0x14
     );
