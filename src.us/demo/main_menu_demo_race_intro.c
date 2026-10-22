@@ -72,11 +72,6 @@ extern u8 gMainMenuModeSelection;
 extern s32 gMenuFlowState;
 extern u8 gFramebufferSwapHold;
 extern u8 gPendingFramebufferSwapCount;
-extern f32 gDemoRaceFullscreenAspectRatio;
-extern f32 gDemoRaceTopLeftAspectRatio;
-extern f32 gDemoRaceBottomLeftAspectRatio;
-extern f32 gDemoRaceTopRightAspectRatio;
-extern f32 gDemoRaceBottomRightAspectRatio;
 
 void initMainMenuDemoRaceIntro(void) {
     RacePlayer *players;
@@ -170,14 +165,14 @@ void initMainMenuDemoRaceIntro(void) {
     initRaceHud();
 
     if (gPlayerCount == 1) {
-        configureViewport(0, 0xA0, 0x78, 0x120U, 0xD0U, 0x140U, 0xF0U, gDemoRaceFullscreenAspectRatio);
+        configureViewport(0, 0xA0, 0x78, 0x120U, 0xD0U, 0x140U, 0xF0U, 1.333333373f);
         gRacePlayerHudStatuses[0].active = 1;
         gFramebufferRenderInterval.value = 0;
     } else {
-        configureViewport(0, 0x57, 0x43, 0x90U, 0x68U, 0xA0U, 0x78U, gDemoRaceTopLeftAspectRatio);
-        configureViewport(1, 0x57, 0xAD, 0x90U, 0x68U, 0xA0U, 0x78U, gDemoRaceBottomLeftAspectRatio);
-        configureViewport(2, 0xE9, 0x43, 0x90U, 0x68U, 0xA0U, 0x78U, gDemoRaceTopRightAspectRatio);
-        configureViewport(3, 0xE9, 0xAD, 0x90U, 0x68U, 0xA0U, 0x78U, gDemoRaceBottomRightAspectRatio);
+        configureViewport(0, 0x57, 0x43, 0x90U, 0x68U, 0xA0U, 0x78U, 1.333333373f);
+        configureViewport(1, 0x57, 0xAD, 0x90U, 0x68U, 0xA0U, 0x78U, 1.333333373f);
+        configureViewport(2, 0xE9, 0x43, 0x90U, 0x68U, 0xA0U, 0x78U, 1.333333373f);
+        configureViewport(3, 0xE9, 0xAD, 0x90U, 0x68U, 0xA0U, 0x78U, 1.333333373f);
         gRaceCameras[0].initialized.signedValue = 1;
         gRaceCameras[1].initialized.signedValue = 1;
         gRaceCameras[2].initialized.signedValue = 1;
