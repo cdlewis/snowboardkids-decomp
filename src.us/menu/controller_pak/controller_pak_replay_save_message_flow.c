@@ -14,6 +14,9 @@ extern s16 gMenuFadeAlpha;
 extern u8 gPendingFramebufferSwapCount;
 extern u8 gFramebufferSwapHold;
 
+/* Startup logo sequence (legacy Controller Pak/save-message names).
+ * Task 4 owns these pages while task 0 is suspended; the final fade resumes
+ * task 0. First page is ATLUS (_5E26E0), second is Racdym (_5E0E40). */
 void initControllerPakReplaySaveMessageFlow(void) {
     resetAllViewports();
     configureViewport(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.333333373f);

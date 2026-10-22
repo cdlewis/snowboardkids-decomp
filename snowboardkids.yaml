@@ -1595,6 +1595,7 @@ segments:
   - type: course_model_resources
     start: 0x163410
     name: BIG_SNOWMAN_COURSE_MODEL_RESOURCES
+    # Texture +0x5B80: 16x32 scenery figure; exact placed object unconfirmed.
     vram: 0
     graphics_start: 0xE35C0
     graphics_end: 0xEC9A0
@@ -1635,6 +1636,7 @@ segments:
   - type: course_model_resources
     start: 0x1A5620
     name: QUICKSAND_VALLEY_COURSE_MODEL_RESOURCES
+    # Texture +0x6980: 32x32 LIFT IN sign.
     vram: 0
     graphics_start: 0x118670
     graphics_end: 0x125C90
@@ -1643,6 +1645,7 @@ segments:
   - type: course_model_resources
     start: 0x1B3160
     name: SILVER_MOUNTAIN_COURSE_MODEL_RESOURCES
+    # Texture +0x2600: 32x16 artwork; wood-like identification remains tentative.
     vram: 0
     graphics_start: 0x125C90
     graphics_end: 0x131A90
@@ -1754,6 +1757,8 @@ segments:
   - type: sprite_table
     start: 0x1E74E0
     name: RACE_EFFECT_SPRITES
+    # Entry 18/palette 7: star +0x1FE0 (hit-effect group).
+    # Entry 41/palette 12: fragment +0x4EE0 (burst-text entries 39..42).
     vram: 0
 
   # Optional compressed course sprite tables. Animal Land (course 7) has no
@@ -1808,6 +1813,8 @@ segments:
   - type: sprite_table
     start: 0x1EF530
     name: SNOWBOARD_TEXTURES
+    # Entry 9/palette 9 at +0x4258 is declared 64x57. Board renderers load
+    # 64x64; the extra seven sampled rows lie outside the declared image.
     vram: 0
 
   - type: sprite_table

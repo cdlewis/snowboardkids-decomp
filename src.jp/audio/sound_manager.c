@@ -182,7 +182,7 @@ void initSoundManager(void) {
 
     init.count = 0x18;
     init.unk4 = &gSchedulerState;
-    init.outputRate = 0x6E;
+    init.threadPriority = 0x6E;
     init.heapBase = (u8 *)getRelocatableHeapBlockBase(gAssetHandles[3]);
     init.heapLen = SOUND_HEAP_SIZE;
     init.soundBank = (PlayerCommandBank *)getRelocatableHeapBlockBase(gAssetHandles[4]);
@@ -192,11 +192,11 @@ void initSoundManager(void) {
     init.fxHeader = D_800DAC2C;
     init.unk28 = D_800DADDC;
     init.maxUpdates = 0x100;
-    init.maxFXBusses = 0x5622;
-    init.unk34 = 0x2000;
-    init.unk38 = 1;
-    init.unk3C = 0x20;
-    init.unk40 = 0x1000;
+    init.outputRate = 0x5622;
+    init.commandListCapacity = 0x2000;
+    init.frameRateMultiplier = 1;
+    init.dmaBufferCount = 0x20;
+    init.dmaBufferSize = 0x1000;
     MusInitialize(&init);
     MusSetMasterVolume(1, 0x7FFF);
 }

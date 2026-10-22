@@ -190,7 +190,7 @@ typedef struct AudioDmaBuffer {
 
 typedef struct AudioSynthInitConfig {
     s32 outputRate;
-    s32 frameRate;
+    s32 frameRate; /* Multiplier: outputRate * frameRate / retraceRate samples per build. */
     s32 commandListSize;
 } AudioSynthInitConfig;
 
@@ -203,7 +203,7 @@ typedef struct PlayerCommandBank {
 typedef struct PlayerCommandInit {
     s32 count;
     void *unk4;
-    s32 outputRate;
+    s32 threadPriority; /* 0x08: audio thread and voice priority (110). */
     u8 *heapBase;
     s32 heapLen;
     PlayerCommandBank *soundBank;
@@ -213,11 +213,11 @@ typedef struct PlayerCommandInit {
     u8 **fxHeader;
     s32 *unk28;
     s32 maxUpdates;
-    s32 maxFXBusses;
-    s32 unk34;
-    s32 unk38;
-    s32 unk3C;
-    s32 unk40;
+    s32 outputRate; /* 0x30: requested output frequency in Hz (22050). */
+    s32 commandListCapacity;
+    s32 frameRateMultiplier;
+    s32 dmaBufferCount;
+    s32 dmaBufferSize;
 } PlayerCommandInit;
 
 typedef struct AudioInfo {
@@ -231,6 +231,10 @@ typedef struct AudioFrameMessage {
     AudioInfo *info;
 } AudioFrameMessage;
 
+/* 0x6C-byte builder view of the 0x70-byte AudioInitTask allocation.
+ * outBuf/outLen form the AudioInfo view at offset 0. Completion points at 0x68:
+ * AudioFrameMessage.type is there, and its info pointer lives at 0x6C, beyond
+ * this view. Allocation/copy sizes must preserve that trailing pointer. */
 typedef struct AudioTask {
     void *outBuf;
     s16 outLen;
@@ -261,7 +265,7 @@ typedef struct AudioTask {
     u8 unk68;
 } AudioTask;
 
-void initScheduler(SchedulerState *arg0, u8 arg1, u8 arg2);
+void initScheduler(SchedulerState *scheduler, u8 viModeIndex, u8 retraceInterval);
 OSMesgQueue *getSchedulerAudioTaskQueue(SchedulerState *scheduler);
 OSMesgQueue *getSchedulerGraphicsTaskQueue(SchedulerState *scheduler);
 void schedulerThreadMain(SchedulerState *scheduler);
@@ -318,6 +322,7 @@ s32 Fstartfx(PlayerCommandState *arg0, u8 *arg1);
 s32 Fbendrange(PlayerCommandState *arg0, u8 *arg1);
 s32 MusInitialize(PlayerCommandInit *arg0);
 void MusSetMasterVolume(s32 arg0, s32 arg1);
+/* First start relocates nonzero sequence offsets in place; the bank must be writable. */
 s32 MusStartSong(PlayerCommandData *arg0);
 s32 MusStartEffect(s32 arg0);
 s32 MusStartEffect2(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4);
@@ -340,6 +345,7 @@ void __MusIntProcessVibrato(PlayerCommandState *arg0);
 void __MusIntProcessContinuousVolume(PlayerCommandState *arg0);
 void __MusIntProcessContinuousPitchBend(PlayerCommandState *arg0);
 f32 __MusIntPowerOf2(f32 arg0);
+/* Mutates wave sample/loop/book pointers and wave flags in the supplied bank. */
 void __MusIntRemapPtrBank(PlayerCommandBank *bank, s32 sampleBaseOffset);
 s32 __MusIntRandom(s32 range);
 s32 __MusIntRandomWithContext(s32 range, u8 *sequencePos, PlayerCommandState *state);

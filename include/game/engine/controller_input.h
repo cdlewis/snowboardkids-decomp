@@ -9,7 +9,7 @@ typedef struct ControllerInputState {
     u16 buttons;
     s8 stickX;
     s8 stickY;
-    u8 pad4[2];
+    u8 pad4[2]; /* Padding in this view; read errors use gControllerPads[port].errno at byte 4. */
 } ControllerInputState;
 
 extern ControllerInputState gControllerInputState[PLAYER_INPUT_COUNT];

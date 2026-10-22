@@ -52,6 +52,7 @@ extern s32 gPlayerInputPressed[];
 extern RaceCamera gCurrentRaceCamera;
 extern s32 gMenuFlowState;
 
+/* Board-shop selection and preview setup; two players receive two board viewports. */
 void initMultiplayerCourseSelectMenu(void) {
     s32 j;
     s32 k;
@@ -245,6 +246,9 @@ void initMultiplayerCourseSelectMenu(void) {
 }
 
 // Matched by inspectredc via decomp.me scratch J668c.
+/* Multiplayer board shop: handles board selection/purchases and preview rotation.
+ * Confirmation continues through handleMultiplayerCourseSelectFlow, then
+ * initRaceRecordSettingsFlow and initRaceSceneFlow. */
 void updateMultiplayerCourseSelectMenu(void) {
     s32 input;
     s32 tempTimer;

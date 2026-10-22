@@ -16,6 +16,9 @@ typedef u8 RacePlayerOrder[RACE_PLAYER_COUNT];
 /* Recorded-input racers can have isCpu == 0, including title/menu demos.
  * gRaceDemoPlaybackEnabled alone does not identify all recorded playback.
  * Item-grant/refill mods should exclude replayInputSource != RACE_PLAYER_INPUT_LIVE.
+ * Title/menu demos and item-training preview races use source 5; saved ghosts
+ * use sources 1 and 2. Source 0 reads the controller; nonzero sources enter
+ * playRaceInputHistoryFrame, with source 5 delegating to replay playback.
  * These constants describe the s8 field; enum storage would change its layout. */
 typedef enum RacePlayerInputSource {
     RACE_PLAYER_INPUT_LIVE = 0,
@@ -57,6 +60,9 @@ typedef struct RacePlayer {
     /* 0x011 */ u8 characterVariant;
     /* 0x012 */ u8 snowboardTextureIndex;
     /* 0x013 */ s8 isActive;
+    /* Also suppresses body collisions, rumble and effects. Post-update skips
+     * main-RNG draws and track sparks when set. Saved ghost setup sets this
+     * flag; title/menu demos and item-training previews leave it clear. */
     /* 0x014 */ s8 soundDisabled;
     /* 0x015 */ s8 unk15;
     /* 0x016 */ s8 replayInputSource; /* RacePlayerInputSource */
@@ -220,7 +226,7 @@ typedef struct RacePlayer {
     /* 0x52D */ s8 cpuShotUseCooldown;
     /* 0x52E */ char pad52E[2];
     /* 0x530 */ Mtx *modelPartMatrices[RACE_PLAYER_MODEL_PART_CAPACITY];
-    /* 0x568 */ s32 score;
+    /* 0x568 */ s32 score; /* Race gold: pickups spend 100; distinct from menu/save money at 0x00C. */
     /* 0x56C */ s32 cumulativeRaceScore;
     /* 0x570 */ s16 collectedCourseCoinMarkerCount;
     /* 0x572 */ s16 totalCourseCoinMarkerCount;

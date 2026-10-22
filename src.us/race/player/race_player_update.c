@@ -296,6 +296,7 @@ void initRacePlayer(RacePlayer *player) {
     RacePlayerInitLocal previousPos;
     u32 size;
 
+    /* Clear pos through the end of RacePlayer, including race gold (score). */
     size = (s32)(player + 1) - (s32)&player->pos;
     previousPos.index = 0;
     if (size != 0) {
@@ -774,6 +775,11 @@ void updateRacePlayerMotionFeedback(RacePlayer *player) {
     }
 }
 
+/* Mode 2 supplies a push/jump: humans enter with A, CPUs also enter at low
+ * speed (movementSpeed < 0x30000 or localVelocityZ >= -0x2FFFF). Its release
+ * path in updateRacePlayerAirborneCruise adds a push as well as a jump.
+ * Human flag 0x400 uses board orientation relative to startSurfaceTargetX/Z
+ * at the course's pathIndex; elsewhere it follows signed local velocity. */
 void updateRacePlayerMode00Grounded(RacePlayer *player) {
     volatile s32 pad[26];
     s64 temp;
@@ -1370,6 +1376,8 @@ void updateRacePlayerAirborneLaunch(RacePlayer *player) {
     }
 }
 
+/* As in grounded mode, human flag 0x400 uses target-relative board orientation
+ * at the start surface and signed local velocity elsewhere. */
 void updateRacePlayerAirborneCruise(RacePlayer *player) {
     s32 sp2C;
     s32 var_a2;
@@ -5235,6 +5243,8 @@ void updateRacePlayerMode07SpiralExit(RacePlayer *player) {
     }
 }
 
+/* Success sets racer flags, copies gRacePlayerAttackStartTimer into unk57C,
+ * and decrements that shared timer if nonzero. This is a state transition. */
 s32 tryStartRacePlayerCourseObjectMode(s16 arg0) {
     s32 delta;
     s32 i;

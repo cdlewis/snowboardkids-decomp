@@ -135,9 +135,10 @@ void alSynNew(ALSynth *drvr, ALSynConfig *c) {
 }
 
 /*
- * slAudioFrame() is called every video frame, and is based on the video
- * frame interrupt. It is assumed to be an accurate time source for the
- * clients.
+ * The audio task builder calls alAudioFrame with its requested sample count.
+ * Player handlers run according to sample time within that span, potentially
+ * multiple times per build, independently of game updates. Parameter sample
+ * times are aligned down to sixteen samples below.
  */
 Acmd *alAudioFrame(Acmd *cmdList, s32 *cmdLen, s16 *outBuf, s32 outLen) {
     ALPlayer *client;

@@ -33,17 +33,17 @@ s32 MusInitialize(PlayerCommandInit *arg0) {
     synConfig.outputRate = 0;
     synConfig.heap = &gSoundPlayerHeap;
 
-    synthConfig.outputRate = arg0->maxFXBusses;
-    synthConfig.frameRate = arg0->unk38;
-    synthConfig.commandListSize = arg0->unk34;
+    synthConfig.outputRate = arg0->outputRate;
+    synthConfig.frameRate = arg0->frameRateMultiplier;
+    synthConfig.commandListSize = arg0->commandListCapacity;
 
     initAudioSynthesizer(
         arg0->unk4,
         &synConfig,
-        arg0->outputRate,
+        arg0->threadPriority,
         &synthConfig,
-        arg0->unk3C,
-        arg0->unk40,
+        arg0->dmaBufferCount,
+        arg0->dmaBufferSize,
         mus_vsyncs_per_second
     );
     __MusIntRemapPtrBank(arg0->soundBank, arg0->sampleBaseOffset);
@@ -62,7 +62,7 @@ s32 MusInitialize(PlayerCommandInit *arg0) {
         mus_channels[i].playing = 0;
         __MusIntInitialiseChannel(&mus_channels[i]);
         vc.unityPitch = 0;
-        vc.priority = arg0->outputRate;
+        vc.priority = arg0->threadPriority;
         vc.fxBus = 0;
         alSynAllocVoice(&gAudioSynthesizer, &mus_voices[i], &vc);
     }

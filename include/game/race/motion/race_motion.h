@@ -64,7 +64,11 @@ typedef struct RaceMotionDecodedJointFrame {
 typedef char RaceCourseSurfaceFaceSizeCheck[(sizeof(RaceCourseSurfaceFace) == 8) ? 1 : -1];
 typedef char RaceCourseSurfaceSizeCheck[(sizeof(RaceCourseSurface) == 0x1C) ? 1 : -1];
 
+/* Exposes payloads after each RaceMotionCountedTable header in asset slot 0x1B. */
 void initRaceCourseSurfaceData(void);
+/* Local adjacency traversal from a nearby hint. All negative neighbors are
+ * boundaries. An arbitrary distant hint (including zero) can return an unrelated
+ * boundary surface; this is not a global nearest-surface search. */
 s32 findRaceCourseSurfaceFromHint(s32 surfaceIndex, s32 x, s32 z);
 s32 findRaceCourseSurfaceAtPoint(s32 x, s32 z);
 void pushRaceCourseSurfaceBoundaryWithVelocity(s32 *velocityX, s32 *velocityZ, s32 radius);
@@ -95,6 +99,7 @@ s32 getRaceCourseSurfaceHeight(s32 surfaceIndex, s32 x, s32 z);
 s32 getRaceCourseSurfaceType(s32 surfaceIndex, s32 x, s32 z);
 u32 projectRaceCourseSurfaceProgress(s32 surfaceIndex, s32 x, s32 z);
 void getRaceCourseSurfaceSpawnTransform(s32 surfaceIndex, s32 *x, s32 *y, s32 *z, s16 *angle);
+/* Updates player path-offset smoothing and shared sine/cosine scratch as well as target outputs. */
 void getRaceCourseTargetPositionAhead(
     s32 surfaceIndex,
     s32 x,
@@ -104,6 +109,7 @@ void getRaceCourseTargetPositionAhead(
     s32 playerIndex,
     s32 lookahead
 );
+/* Position of one of the four original lanes at a station; writes shared angle scratch. */
 void getRaceCourseProgressPosition(s32 surfaceIndex, s32 *x, s32 *z, s32 playerIndex);
 s16 getRaceCourseNextSurface(s32 surfaceIndex);
 void setRaceMotionAnimation(RacePlayer *player, s32 animationIndex);

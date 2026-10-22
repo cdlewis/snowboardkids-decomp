@@ -3659,6 +3659,8 @@ void updateRaceUiBurstTextParticle(RaceUiTextParticleActor *arg0) {
     addRenderCallback(&gSceneModelRenderCallbackList, (RenderCallback)renderRaceUiAltBurstTextParticle, arg0);
 }
 
+/* RACE_EFFECT_SPRITES entries 39..42 include the fragment image at entry 41
+ * (+0x4EE0, palette 12). Alternate textures use a different group. */
 void initRaceUiBurstTextParticle(RaceUiTextParticleActor *arg0) {
     arg0->timer = 0;
     arg0->velocity = gRaceUiBurstTextInitialVelocities[arg0->task.userId];

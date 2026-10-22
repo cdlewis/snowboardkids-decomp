@@ -14,9 +14,9 @@ typedef struct {
 } HuffmanNode;
 
 typedef struct {
-    /* 0x0 */ s32 compressedSize;
+    /* 0x0 */ s32 decodedSize; /* Output allocation and decompression length. */
     /* 0x4 */ u8 flags;
-    /* 0x5 */ u8 pad5[3];
+    /* 0x5 */ u8 pad5[3]; /* DMA read-ahead: encoded payload starts at +5, not +8. */
 } CompressedAssetHeader;
 
 u8 gRandomTable[256] = {
@@ -315,12 +315,14 @@ void decompressHuffmanAssetPayload(u8 flags, u8 *compressedPayload, u8 *output, 
     }
 }
 
+/* ROM interval bounds the encoded input; decodedSize bounds the output.
+ * For example SOUND_POINTER_BANK occupies 0x8800 ROM bytes and decodes to 0xAB30. */
 void loadCompressedRomAsset(void *arg0, void *arg1, s32 arg2) {
     s16 *sp28;
     u8 *sp30;
 
     dmaReadRom((u32)arg0, &gCompressedAssetHeader, 8);
-    gAssetHandles[arg2] = allocRelocatableHeapBlock(gCompressedAssetHeader.compressedSize);
+    gAssetHandles[arg2] = allocRelocatableHeapBlock(gCompressedAssetHeader.decodedSize);
     gAssetHandles[0x20] = allocRelocatableHeapBlock((s32)arg1 - (s32)arg0);
     dmaReadRom((u32)arg0, (void *)getRelocatableHeapBlockBase(gAssetHandles[0x20]), (s32)arg1 - (s32)arg0);
     sp30 = (u8 *)getRelocatableHeapBlockBase(gAssetHandles[0x20]) + 5;
@@ -329,7 +331,7 @@ void loadCompressedRomAsset(void *arg0, void *arg1, s32 arg2) {
         gCompressedAssetHeader.flags,
         sp30,
         getRelocatableHeapBlockBase(*sp28),
-        gCompressedAssetHeader.compressedSize
+        gCompressedAssetHeader.decodedSize
     );
     getRelocatableHeapBlockBase(*sp28);
     gAssetHandles[0x20] = freeRelocatableHeapBlock(gAssetHandles[0x20]);

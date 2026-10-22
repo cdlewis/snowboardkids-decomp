@@ -200,6 +200,10 @@ RaceCpuBoardConfig gRookieMountainCpuBoardConfigs[8] = {
 /* Fixed course/character board setup, independent of dynamic rank assistance.
  * Silver Mountain (6): board properties index 8; Animal Land (7): board properties index 0;
  * Ninja Land (8): board properties index 8, except character 5 uses 14. */
+/* Indexed by [course][character]. boardPropertiesIndex selects CPU board tuning:
+ * Silver Mountain uses 8; Ninja Land uses 8 except character 5 uses 14;
+ * Animal Land uses 0. Separate from rank assistance and updateRacePlayer's
+ * fixed CPU target-speed addition of 0x6000. */
 RaceCpuBoardConfig *gRaceCpuBoardConfigsByCourse[10] = {
     gBigSnowmanCpuBoardConfigs,     gSunsetRockCpuBoardConfigs, gNightHighwayCpuBoardConfigs,
     gGrassValleyCpuBoardConfigs,    gDizzyLandCpuBoardConfigs,  gQuicksandValleyCpuBoardConfigs,

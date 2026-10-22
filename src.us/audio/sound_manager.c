@@ -15,6 +15,7 @@
 #define SOUND_MANAGER_QUEUE_CAPACITY 64
 #define SOUND_MANAGER_QUEUE_MASK (SOUND_MANAGER_QUEUE_CAPACITY - 1)
 
+/* Thirteen 16-byte slots, managed by the active list and free stack. */
 typedef struct SoundHandleNode {
     struct SoundHandleNode *prev;
     struct SoundHandleNode *next;
@@ -184,6 +185,10 @@ s32 D_800DBAAC[108] = {
     0x00000064, 0x00000064, 0x00000064, 0x00000064, 0x00000064, 0x00000064, 0x00000064, 0x00000064, 0x00000064,
 };
 
+/* loadMusicSequenceBank indexes 0..18 through this base: these ten entries
+ * are contiguous with the nine race entries below. Indices 8 and 9 duplicate
+ * index 2, so table indices do not each identify a distinct asset.
+ * Preserve the two arrays' order and layout. */
 SoundRomRange gMusicSequenceRomRanges[10] = {
     { (u32)&_541D50_ROM_START, (u32)&_541D50_ROM_END },
     { (u32)&_5457B0_ROM_START, (u32)&_5457B0_ROM_END },
@@ -365,7 +370,7 @@ void initSoundManager(void) {
 
     init.count = 0x18;
     init.unk4 = &gSchedulerState;
-    init.outputRate = 0x6E;
+    init.threadPriority = 0x6E;
     init.heapBase = (u8 *)getRelocatableHeapBlockBase(gAssetHandles[3]);
     init.heapLen = SOUND_HEAP_SIZE;
     init.soundBank = (PlayerCommandBank *)getRelocatableHeapBlockBase(gAssetHandles[4]);
@@ -375,11 +380,11 @@ void initSoundManager(void) {
     init.fxHeader = D_800DB8FC;
     init.unk28 = D_800DBAAC;
     init.maxUpdates = 0x100;
-    init.maxFXBusses = 0x5622;
-    init.unk34 = 0x2000;
-    init.unk38 = 1;
-    init.unk3C = 0x20;
-    init.unk40 = 0x1000;
+    init.outputRate = 0x5622;
+    init.commandListCapacity = 0x2000;
+    init.frameRateMultiplier = 1;
+    init.dmaBufferCount = 0x20;
+    init.dmaBufferSize = 0x1000;
     MusInitialize(&init);
     MusSetMasterVolume(1, 0x7FFF);
 }
@@ -394,6 +399,7 @@ void stopCurrentMusicSequence(s32 arg0) {
     }
 }
 
+/* arg0 is a combined table index (0..18), spanning both ROM-range arrays. */
 s32 loadMusicSequenceBank(s32 arg0) {
     s32 size;
     SoundRomRange *range;
@@ -483,6 +489,9 @@ SoundHandleNode *acquireSoundEffectHandleNode(void) {
     return gFreeSoundHandleStack[gFreeSoundHandleCount];
 }
 
+/* On pool exhaustion, return 1 to discard a request below the tail priority.
+ * Otherwise stop the tail once and return 0, retaining the current request until
+ * updateSoundManager reclaims a slot. */
 s32 startCurrentQueuedSoundEffect(void) {
     SoundHandleNode *temp_v0;
     SoundHandleNode *temp_v0_2;
@@ -546,6 +555,7 @@ s32 startCurrentQueuedSoundEffect(void) {
     return 1;
 }
 
+/* Stop/restart the audio thread to exclude it while shared audio state is changed. */
 void updateSoundManager(void) {
     SoundHandleNode *node;
     s32 *left;
@@ -673,6 +683,7 @@ s32 enqueueSoundEffectWithVolume(s16 arg0, s16 arg1, s16 arg2) {
     return 0;
 }
 
+/* Stop/restart the audio thread to exclude it while shared audio state is changed. */
 void stopSoundEffects(void) {
     osStopThread(&gAudioThread);
     gCurrentQueuedSoundType = 0;
@@ -682,6 +693,7 @@ void stopSoundEffects(void) {
     osStartThread(&gAudioThread);
 }
 
+/* Stop/restart the audio thread to exclude it while shared audio state is changed. */
 void fadeOutAllMusicSequences(void) {
     osStopThread(&gAudioThread);
     MusStop(3, 0x14);
@@ -881,6 +893,7 @@ void enqueuePlayerPositionalSoundEffect(s16 arg0, Vec3i *arg1, s16 arg2, s16 arg
     enqueuePositionalSoundRequest(arg0, arg1, arg2, arg3, 0.0f, arg4 + 4, minVolume);
 }
 
+/* Stop/restart the audio thread to exclude it while shared audio state is changed. */
 void playPendingPositionalSoundRequests(void) {
     PositionalSoundRequest *node;
     s16 mode;

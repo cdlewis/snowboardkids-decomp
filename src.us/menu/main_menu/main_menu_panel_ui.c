@@ -228,6 +228,7 @@ extern s16 gMenuFadeAlpha;
 extern s32 gMenuFlowState;
 extern s16 gUiBlinkTimer;
 
+/* Instruction panel above the item-training selection grid. */
 void drawMainMenuModeSelectFrame(void *arg0) {
     s32 edgeX;
     s32 edgeY;
@@ -271,6 +272,9 @@ void drawMainMenuModeSelectFrame(void *arg0) {
 
 // IDO code generation for this function is sensitive to source line layout.
 // clang-format off
+/* Item-training grid: selections 1..5 are weapons, 6..11 items, 12 Exit.
+ * SHARED_UI_SPRITES (handle 0x1F): top row entries 5/8/11/14/17,
+ * bottom row 20..25. */
 void drawMainMenuModeSelectIcons(MenuPanelActor *arg0) {
     s32 alpha;
     s32 i;
@@ -709,7 +713,8 @@ void initMainMenuModeSelectMenuOptions(MenuPanelActor *arg0) {
 
 /* Four rounded black preview masks: asset handle 6, entries 6..9, at
  * (-132,-100), (116,-100), (-132,4), (116,4) relative to the menu centre.
- * The initial training opening spans native x=28..292 and y=20..140.
+ * Lesson training and initMainMenuModePreviewRace (item-training description/demo)
+ * share the initial opening at native x=28..292 and y=20..140.
  * Downstream recomp must align the preview scissor and shade with these sprites:
  * round the converted opening inward to avoid exposing scene pixels beside them.
  * The 3D scene scissor ignores the sprite scissor-aspect override, so it still

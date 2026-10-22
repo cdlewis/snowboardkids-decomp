@@ -76,6 +76,8 @@ extern u8 gPendingFramebufferSwapCount;
 extern u8 gFramebufferSwapHold;
 extern s32 gMenuFlowState;
 
+/* Queue request 0x10 once, then wait for updateControllerInputState to clear
+ * the pending flag on completion before requesting another read. */
 void requestControllerRead(void) {
     if ((gControllerReadPending == 0) && (gConnectedControllerBitmask != 0)) {
         osSendMesg(&gControllerSubsystemRequestQueue, (OSMesg)CONTROLLER_REQUEST_READ_INPUT, OS_MESG_BLOCK);
@@ -83,6 +85,9 @@ void requestControllerRead(void) {
     }
 }
 
+/* Copy the complete six-byte OSContPad view only for connected, error-free
+ * ports. A pad error retains the previous state, including stick values already
+ * clamped by the game task scheduler. Completion still clears the pending flag. */
 // IDO code generation for this function is sensitive to source line layout.
 // clang-format off
 void updateControllerInputState(void) {

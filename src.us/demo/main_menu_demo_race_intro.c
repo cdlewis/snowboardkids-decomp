@@ -80,6 +80,7 @@ extern f32 gDemoRaceBottomRightAspectRatio;
 
 void initMainMenuDemoRaceIntro(void) {
     RacePlayer *players;
+    
     gRaceCourseIndex.signedValue = gMainMenuDemoRaceIntroEntries[gMainMenuDemoRaceIntroIndex].courseIndex;
     gRaceUpdatePaused = 0;
     gRaceCameraModeChangeDisabled = 0;
@@ -89,33 +90,38 @@ void initMainMenuDemoRaceIntro(void) {
     gMainMenuModeSelection = 0;
     gRaceSplitscreenMode = gMainMenuDemoRaceIntroEntries[gMainMenuDemoRaceIntroIndex].splitscreen;
     gRaceTypeSelection = gMainMenuDemoRaceIntroEntries[gMainMenuDemoRaceIntroIndex].raceType;
+    
     resetGameplayRng();
+    
     players = gRacePlayers;
-    gRacePlayers->isCpu = 0;
+    gRacePlayers[0].isCpu = 0;
     gRacePlayers[1].isCpu = 0;
     gRacePlayers[2].isCpu = 0;
     gRacePlayers[3].isCpu = 0;
-    gRacePlayers->characterId = gMainMenuDemoRaceIntroEntries[gMainMenuDemoRaceIntroIndex].player0Character;
-    gRacePlayers->characterVariant = 6;
+    
+    gRacePlayers[0].characterId = gMainMenuDemoRaceIntroEntries[gMainMenuDemoRaceIntroIndex].player0Character;
+    gRacePlayers[0].characterVariant = 6;
     gRacePlayers[1].characterId = gMainMenuDemoRaceIntroEntries[gMainMenuDemoRaceIntroIndex].player1Character;
     gRacePlayers[1].characterVariant = 6;
     gRacePlayers[2].characterId = gMainMenuDemoRaceIntroEntries[gMainMenuDemoRaceIntroIndex].player2Character;
     gRacePlayers[2].characterVariant = 6;
     gRacePlayers[3].characterId = gMainMenuDemoRaceIntroEntries[gMainMenuDemoRaceIntroIndex].player3Character;
     gRacePlayers[3].characterVariant = 6;
-    gRacePlayers->snowboardTextureIndex = 1;
+
+    gRacePlayers[0].snowboardTextureIndex = 1;
     gRacePlayers[1].snowboardTextureIndex = 2;
     gRacePlayers[2].snowboardTextureIndex = 3;
     gRacePlayers[3].snowboardTextureIndex = 4;
+    
     if (gRaceSplitscreenMode == 0) {
-        gRacePlayers->isActive = 1;
+        gRacePlayers[0].isActive = 1;
         gRacePlayers[1].isActive = 1;
         gRacePlayers[2].isActive = 1;
         gRacePlayers[3].isActive = 1;
         gRacePlayerCount = 4;
         gPlayerCount = 4;
     } else {
-        gRacePlayers->isActive = 1;
+        gRacePlayers[0].isActive = 1;
         gRacePlayers[1].isActive = 0;
         gRacePlayers[2].isActive = 0;
         gRacePlayers[3].isActive = 0;
@@ -141,11 +147,13 @@ void initMainMenuDemoRaceIntro(void) {
     players[3].unk15 = 0;
     players[3].soundDisabled = 0;
     players[3].replayInputSource = RACE_PLAYER_INPUT_REPLAY;
+    
     loadCompressedRomAsset(
         gMainMenuDemoRaceIntroEntries[gMainMenuDemoRaceIntroIndex].romStart,
         gMainMenuDemoRaceIntroEntries[gMainMenuDemoRaceIntroIndex].romEnd,
         0x2B
     );
+    
     loadRaceCourseAssets();
     loadRaceCharacterAssets();
     gMenuFlowState = 0;
@@ -154,10 +162,13 @@ void initMainMenuDemoRaceIntro(void) {
     gRacePlayerHudStatuses[0].active = 1;
     gFramebufferRenderInterval.value = 0;
     initRacePlayers();
+    
     if (!gMainMenuDemoRaceIntroEntries[gMainMenuDemoRaceIntroIndex].loadCourseAssets) {
         gPlayerCount = 1;
     }
+    
     initRaceHud();
+    
     if (gPlayerCount == 1) {
         configureViewport(0, 0xA0, 0x78, 0x120U, 0xD0U, 0x140U, 0xF0U, gDemoRaceFullscreenAspectRatio);
         gRacePlayerHudStatuses[0].active = 1;
@@ -175,11 +186,14 @@ void initMainMenuDemoRaceIntro(void) {
             *((u8 *)&gFramebufferRenderInterval.value) = 1;
         }
     }
+    
     if (gRaceSplitscreenMode == 0) {
         gPlayerCount = 4;
     }
+    
     initRaceCourseSceneTasks();
     setCurrentGameTaskCallback(waitForMainMenuDemoRaceIntroStart, 0);
+    
     gMenuFadeAlpha = 0xFF;
     gRaceRumbleEnabled = 0;
     gCurrentGameTask->callbackData0 = 0x384;

@@ -7,49 +7,49 @@ s32 gSchedulerYieldResult = 0;
 s32 gSchedulerYieldRequested = 0;
 s32 gSchedulerStartupRetraceCount = 0;
 
-void initScheduler(SchedulerState *arg0, u8 arg1, u8 arg2) {
-    arg0->curRSPTask = 0;
-    arg0->curRDPTask = 0;
-    arg0->clients = 0;
-    arg0->doAudio = 1;
-    arg0->doAudio = arg0->doAudio & 0xFFFFFFFFFFFFFFFF;
-    arg0->unk0 = 1;
-    arg0->unk2 = 3;
+void initScheduler(SchedulerState *scheduler, u8 viModeIndex, u8 retraceInterval) {
+    scheduler->curRSPTask = 0;
+    scheduler->curRDPTask = 0;
+    scheduler->clients = 0;
+    scheduler->doAudio = 1;
+    scheduler->doAudio = scheduler->doAudio & 0xFFFFFFFFFFFFFFFF;
+    scheduler->unk0 = 1;
+    scheduler->unk2 = 3;
     gSchedulerYieldResult = 0;
     gSchedulerYieldRequested = 0;
     gSchedulerRspTaskState = 0;
     gSchedulerRdpTaskActive = 0;
-    osCreateMesgQueue(&arg0->retraceQueue, arg0->retraceMsgs, 0x20);
-    osCreateMesgQueue(&arg0->queue1A4, arg0->msgs1BC, 0x10);
-    osCreateMesgQueue(&arg0->eventQueue, arg0->eventMsgs, 0x10);
-    osCreateMesgQueue(&arg0->messageQueue, arg0->messageMsgs, 0x10);
-    osCreateMesgQueue(&arg0->framebufferQueue, arg0->framebufferMsgs, 0x10);
-    osCreateMesgQueue(&arg0->queue14C, arg0->msgs164, 0x10);
+    osCreateMesgQueue(&scheduler->retraceQueue, scheduler->retraceMsgs, 0x20);
+    osCreateMesgQueue(&scheduler->queue1A4, scheduler->msgs1BC, 0x10);
+    osCreateMesgQueue(&scheduler->eventQueue, scheduler->eventMsgs, 0x10);
+    osCreateMesgQueue(&scheduler->messageQueue, scheduler->messageMsgs, 0x10);
+    osCreateMesgQueue(&scheduler->framebufferQueue, scheduler->framebufferMsgs, 0x10);
+    osCreateMesgQueue(&scheduler->queue14C, scheduler->msgs164, 0x10);
     osCreateViManager(0xFE);
-    osViSetMode(&osViModeTable[arg1]);
+    osViSetMode(&osViModeTable[viModeIndex]);
     osViBlack(1);
-    osViSetEvent(&arg0->retraceQueue, (OSMesg)0x29A, arg2);
-    osSetEventMesg(4, &arg0->retraceQueue, (OSMesg)0x29B);
-    osSetEventMesg(0xE, &arg0->retraceQueue, (OSMesg)0x29D);
-    osSetEventMesg(9, &arg0->queue1A4, (OSMesg)0x29C);
+    osViSetEvent(&scheduler->retraceQueue, (OSMesg)0x29A, retraceInterval);
+    osSetEventMesg(4, &scheduler->retraceQueue, (OSMesg)0x29B);
+    osSetEventMesg(0xE, &scheduler->retraceQueue, (OSMesg)0x29D);
+    osSetEventMesg(9, &scheduler->queue1A4, (OSMesg)0x29C);
     osCreateThread(
-        &arg0->thread258,
+        &scheduler->thread258,
         6,
         schedulerThreadEntry,
-        arg0,
+        scheduler,
         gSchedulerThreadStack + sizeof(gSchedulerThreadStack),
         0x78
     );
-    osStartThread(&arg0->thread258);
+    osStartThread(&scheduler->thread258);
     osCreateThread(
-        &arg0->thread408,
+        &scheduler->thread408,
         5,
         (void (*)(void *))schedulerSwapBufferThreadMain,
-        arg0,
+        scheduler,
         gSchedulerSwapBufferThreadStack + sizeof(gSchedulerSwapBufferThreadStack),
         0x64
     );
-    osStartThread(&arg0->thread408);
+    osStartThread(&scheduler->thread408);
 }
 
 OSMesgQueue *getSchedulerAudioTaskQueue(SchedulerState *scheduler) {
@@ -60,6 +60,8 @@ OSMesgQueue *getSchedulerGraphicsTaskQueue(SchedulerState *scheduler) {
     return &scheduler->eventQueue;
 }
 
+/* Client notifications may wait for outstanding RDP work; they do not count
+ * refreshes directly. The game thread alternates updates on these messages. */
 // IDO code generation for this function is sensitive to source line layout.
 // clang-format off
 void schedulerThreadMain(SchedulerState *arg0) {

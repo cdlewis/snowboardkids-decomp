@@ -49,6 +49,9 @@ Vtx gCourseTextureMarkerVertices[] = {
     { { { -4, 0, 0 }, 0x0000, { -16, 496 }, { 228, 228, 228, 255 } } },
 };
 
+/* Fogged texture-edge/cutout scenery: coverage is multiplied by texture alpha.
+ * Like opaque surfaces this compares and updates depth; depth flags alone do
+ * not distinguish the material role. */
 Gfx gEffectRenderModeSetupDl[] = {
     gsDPPipeSync(),
     gsSPTexture(0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_ON),
@@ -143,6 +146,8 @@ Vtx gRaceCourseSceneryFogPanelVertices[] = {
     { { { 40, 740, -1736 }, 0x0000, { 0, 0 }, { 0, 0, 0, 255 } } },
 };
 
+/* Fogged opaque panels (G_RM_AA_ZB_OPA_SURF2), distinct from the
+ * alpha-coverage texture-edge setup used by cutout scenery above. */
 Gfx gRaceCourseSceneryFogPanelDisplayList[] = {
     gsDPPipeSync(),
     gsDPSetCycleType(G_CYC_2CYCLE),

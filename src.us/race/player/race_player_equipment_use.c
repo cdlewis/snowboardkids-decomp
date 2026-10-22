@@ -41,6 +41,8 @@
  * See race_items.h for the separate runtime IDs for each inventory slot.
  */
 
+/* Human control: N64 Z (0x2000). Consume ammunition only after successful
+ * projectile task creation; failed allocation leaves the shot count intact. */
 void updateRacePlayerShotUse(RacePlayer *player) {
     s32 shouldFireShot;
     s32 deltaX;
@@ -161,6 +163,7 @@ void updateRacePlayerShotUse(RacePlayer *player) {
     }
 }
 
+/* Human control: N64 B (0x4000), using the blue-shop action slot. */
 void updateRacePlayerItemUse(RacePlayer *player) {
     s32 shouldUseItem;
     s32 itemType;

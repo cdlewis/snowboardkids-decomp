@@ -9,6 +9,9 @@
 #include <PR/ucode.h>
 #include "game/audio/audio_engine.h"
 
+/* Full 0x70-byte allocation. At 0x68, type/padding/msg overlay an
+ * AudioFrameMessage; msg at 0x6C points back to this task's AudioInfo at 0x00.
+ * Do not allocate or copy this object using sizeof(AudioTask). */
 typedef struct AudioInitTask {
     void *outBuf;
     u8 pad4[0x64];
@@ -34,6 +37,7 @@ extern AudioDmaState gAudioDmaState;
 extern AudioDmaBuffer *gAudioDmaBufferPool;
 extern s32 gAudioThreadStarted;
 extern s32 gAudioCmdListIndex;
+/* Builder attempts, including empty command lists; advanced by DMA reclamation. */
 extern u32 gAudioFrameCounter;
 extern u32 gPendingAudioDmaCount;
 extern AudioInfo *gNextAudioInfo;

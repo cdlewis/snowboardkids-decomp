@@ -68,6 +68,8 @@ Vtx gRacePlayerHitEffectQuadVertices[4] = {
     { { { -14, -11, 5 }, 0, { 0, 1024 }, { 0xFF, 0xFF, 0xFF, 0xFF } } },
 };
 
+/* RACE_EFFECT_SPRITES group at 18 includes the star image at +0x1FE0,
+ * palette 7; renderRacePlayerHitEffect adds the animation frame to this base. */
 s16 gRacePlayerHitEffectSpriteOffsets[4] = { 14, 18, 22, 26 };
 
 Gfx gRaceItemEffectTranslucentRenderSetupDl[6] = {

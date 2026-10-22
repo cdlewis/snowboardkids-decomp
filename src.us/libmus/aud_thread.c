@@ -2,6 +2,7 @@
 
 #define ARRAY_COUNT(array) (sizeof(array) / sizeof((array)[0]))
 
+/* Counts build attempts, even when alAudioFrame produces no RSP commands. */
 u32 gAudioFrameCounter = 0;
 u32 gPendingAudioDmaCount = 0;
 s32 gAudioCmdListIndex = 0;
@@ -96,6 +97,7 @@ void audioThreadMain(void *arg0) {
             case 3:
                 break;
             case 1:
+                /* Select with the pre-build count; reclamation increments it inside the builder. */
                 if (buildAudioTask((AudioTask *)gAudioWorkBuffers.tasks[gAudioFrameCounter % 3], gNextAudioInfo) != 0) {
                     osRecvMesg((OSMesgQueue *)gAudioTaskDoneQueue, &locals.msg, 1);
                     updateAudioUnderrunState((s32)((AudioFrameMessage *)locals.msg)->info);

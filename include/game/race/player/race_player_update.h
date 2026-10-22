@@ -83,6 +83,7 @@ void updateRacePlayerMode07LaunchRampPose(RacePlayer *player);
 void updateRacePlayerMode07LaunchRampDrift(RacePlayer *player);
 void updateRacePlayerMode07LaunchRampClimb(RacePlayer *player);
 void updateRacePlayerMode07SpiralExit(RacePlayer *player);
+/* On success mutates racer flags/unk57C and decrements the shared attack-start timer if nonzero. */
 s32 tryStartRacePlayerCourseObjectMode(s16 arg0);
 void dispatchRacePlayerMode30Attack(RacePlayer *player);
 void updateRacePlayerMode30AttackApproach(RacePlayer *player);

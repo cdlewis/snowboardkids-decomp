@@ -25,9 +25,10 @@
 #define PI_MANAGER_PRIORITY 150
 #define PI_MANAGER_MSG_COUNT 200
 #define DMA_CHUNK_SIZE 0x2000
-#define RETRACE_COUNT_NTSC 2
-#define RETRACE_COUNT_PAL 30
-#define RETRACE_COUNT_MODE 1
+/* osViModeTable indices; the separate interval controls osViSetEvent cadence. */
+#define SCHEDULER_VI_MODE_INDEX_NTSC 2
+#define SCHEDULER_VI_MODE_INDEX_PAL 30
+#define SCHEDULER_RETRACE_INTERVAL 1
 #define STARTUP_CALLBACK_PRIORITY 100
 #define BOOT_FADE_TIMER 0x3E4
 #define TITLE_FADE_TIMER 0x3B6
@@ -214,9 +215,9 @@ void initGameSystems(void) {
     osCreateMesgQueue(&gControllerInputUpdateQueue, gControllerInputUpdateMessages, 8);
     osCreateMesgQueue(&gFramebufferRenderDoneQueue, gFramebufferRenderDoneMessages, 8);
     if (osTvType == OS_TV_NTSC) {
-        initScheduler(&gSchedulerState, RETRACE_COUNT_NTSC, RETRACE_COUNT_MODE);
+        initScheduler(&gSchedulerState, SCHEDULER_VI_MODE_INDEX_NTSC, SCHEDULER_RETRACE_INTERVAL);
     } else {
-        initScheduler(&gSchedulerState, RETRACE_COUNT_PAL, RETRACE_COUNT_MODE);
+        initScheduler(&gSchedulerState, SCHEDULER_VI_MODE_INDEX_PAL, SCHEDULER_RETRACE_INTERVAL);
     }
     addSchedulerClient(&gSchedulerState, &gMainSchedulerClient, &gSchedulerClientQueue);
     initRelocatableHeap();
@@ -238,12 +239,13 @@ void initGameSystems(void) {
 
 void gameThreadMain(void *arg0) {
     OSMesg msg;
-    s32 initialized;
+    s32 skipGameUpdate;
     s32 finalType;
     volatile s32 done;
 
     msg = NULL;
-    initialized = 0;
+    /* Update on the first scheduler-client message, then alternate phases. */
+    skipGameUpdate = 0;
     done = 0;
     initGameSystems();
 
@@ -257,8 +259,8 @@ void gameThreadMain(void *arg0) {
         switch (*(s16 *)msg) {
             case 1:
                 gLastSchedulerRetraceCounter = gRetraceCounter;
-                if (initialized == 0) {
-                    initialized = 1;
+                if (skipGameUpdate == 0) {
+                    skipGameUpdate = 1;
                     updateGameTaskScheduler();
                     updateSoundManager();
                     serviceRumbleMotorRequest(0);
@@ -267,7 +269,7 @@ void gameThreadMain(void *arg0) {
                     serviceRumbleMotorRequest(3);
                     requestControllerRead();
                 } else {
-                    initialized = 0;
+                    skipGameUpdate = 0;
                 }
                 break;
             case 5:
@@ -369,11 +371,11 @@ extern u8 gCurrentViewportIndex;
 #define VIEWPORT_COUNT 4
 
 void appendViewportDisplayLists(u8 frameIndex) {
-    RenderCallbackNode **queue;
+    RenderCallbackNode **modelCallbackQueueHead;
     s32 hasModelCallbacks;
-    u32 upperMask;
-    s16 left;
-    s16 top;
+    u32 matrixUpperHalfwordMask;
+    s16 viewportLeft;
+    s16 viewportTop;
     s32 i;
 
     gUiBlinkTimer++;
@@ -394,7 +396,8 @@ void appendViewportDisplayLists(u8 frameIndex) {
     appendFadeOverlayDisplayList();
     gRenderMatricesDirty = 1;
 
-    upperMask = 0xFFFF0000;
+    /* Pack integer/fractional halfwords of N64 fixed-point camera matrices. */
+    matrixUpperHalfwordMask = 0xFFFF0000;
     for (gCurrentViewportIndex = 0; gCurrentViewportIndex < VIEWPORT_COUNT; gCurrentViewportIndex++) {
         if (gViewportStates[gCurrentViewportIndex].screenBoundsValid != 0) {
             gCurrentFrameRenderData->viewport.viewports[gCurrentViewportIndex] =
@@ -404,12 +407,12 @@ void appendViewportDisplayLists(u8 frameIndex) {
             gCurrentFrameRenderData->viewport.overlayProjections[gCurrentViewportIndex] =
                 gViewportStates[gCurrentViewportIndex].overlayProjectionMatrix;
 
-            left = gViewportStates[gCurrentViewportIndex].left;
-            top = gViewportStates[gCurrentViewportIndex].top;
-            gMenuViewportWidth = gViewportStates[gCurrentViewportIndex].right - left;
-            gMenuViewportHeight = gViewportStates[gCurrentViewportIndex].bottom - top;
-            gMenuViewportCenterX = left + (gMenuViewportWidth / 2);
-            gMenuViewportCenterY = top + (gMenuViewportHeight / 2);
+            viewportLeft = gViewportStates[gCurrentViewportIndex].left;
+            viewportTop = gViewportStates[gCurrentViewportIndex].top;
+            gMenuViewportWidth = gViewportStates[gCurrentViewportIndex].right - viewportLeft;
+            gMenuViewportHeight = gViewportStates[gCurrentViewportIndex].bottom - viewportTop;
+            gMenuViewportCenterX = viewportLeft + (gMenuViewportWidth / 2);
+            gMenuViewportCenterY = viewportTop + (gMenuViewportHeight / 2);
 
             gCurrentFrameRenderData->viewport.viewportMatrices[gCurrentViewportIndex] =
                 gRaceCameras[gCurrentViewportIndex].packedTransform;
@@ -495,46 +498,46 @@ void appendViewportDisplayLists(u8 frameIndex) {
             }
 
             gCurrentFrameRenderData->viewport.rotations[gCurrentViewportIndex].m[0][0] =
-                ((gRaceCameras[gCurrentViewportIndex].cameraTransform.rotation[0] << 4) & upperMask) |
+                ((gRaceCameras[gCurrentViewportIndex].cameraTransform.rotation[0] << 4) & matrixUpperHalfwordMask) |
                 ((gRaceCameras[gCurrentViewportIndex].cameraTransform.rotation[1] >> 12) & 0xFFFF);
             gCurrentFrameRenderData->viewport.rotations[gCurrentViewportIndex].m[0][1] =
-                (gRaceCameras[gCurrentViewportIndex].cameraTransform.rotation[2] << 4) & upperMask;
+                (gRaceCameras[gCurrentViewportIndex].cameraTransform.rotation[2] << 4) & matrixUpperHalfwordMask;
             gCurrentFrameRenderData->viewport.rotations[gCurrentViewportIndex].m[0][2] =
-                ((gRaceCameras[gCurrentViewportIndex].cameraTransform.rotation[3] << 4) & upperMask) |
+                ((gRaceCameras[gCurrentViewportIndex].cameraTransform.rotation[3] << 4) & matrixUpperHalfwordMask) |
                 ((gRaceCameras[gCurrentViewportIndex].cameraTransform.rotation[4] >> 12) & 0xFFFF);
             gCurrentFrameRenderData->viewport.rotations[gCurrentViewportIndex].m[0][3] =
-                (gRaceCameras[gCurrentViewportIndex].cameraTransform.rotation[5] << 4) & upperMask;
+                (gRaceCameras[gCurrentViewportIndex].cameraTransform.rotation[5] << 4) & matrixUpperHalfwordMask;
             gCurrentFrameRenderData->viewport.rotations[gCurrentViewportIndex].m[1][0] =
-                ((gRaceCameras[gCurrentViewportIndex].cameraTransform.rotation[6] << 4) & upperMask) |
+                ((gRaceCameras[gCurrentViewportIndex].cameraTransform.rotation[6] << 4) & matrixUpperHalfwordMask) |
                 ((gRaceCameras[gCurrentViewportIndex].cameraTransform.rotation[7] >> 12) & 0xFFFF);
             gCurrentFrameRenderData->viewport.rotations[gCurrentViewportIndex].m[1][1] =
-                (gRaceCameras[gCurrentViewportIndex].cameraTransform.rotation[8] << 4) & upperMask;
+                (gRaceCameras[gCurrentViewportIndex].cameraTransform.rotation[8] << 4) & matrixUpperHalfwordMask;
             gCurrentFrameRenderData->viewport.translations[gCurrentViewportIndex].m[1][2] =
-                (gRaceCameras[gCurrentViewportIndex].cameraTransform.translation.x & upperMask) |
+                (gRaceCameras[gCurrentViewportIndex].cameraTransform.translation.x & matrixUpperHalfwordMask) |
                 ((gRaceCameras[gCurrentViewportIndex].cameraTransform.translation.y >> 16) & 0xFFFF);
             gCurrentFrameRenderData->viewport.translations[gCurrentViewportIndex].m[1][3] =
-                (gRaceCameras[gCurrentViewportIndex].cameraTransform.translation.z & upperMask) | 1;
+                (gRaceCameras[gCurrentViewportIndex].cameraTransform.translation.z & matrixUpperHalfwordMask) | 1;
 
             gCurrentFrameRenderData->viewport.rotations[gCurrentViewportIndex].m[2][0] =
-                ((gRaceCameras[gCurrentViewportIndex].cameraTransform.rotation[0] << 20) & upperMask) |
+                ((gRaceCameras[gCurrentViewportIndex].cameraTransform.rotation[0] << 20) & matrixUpperHalfwordMask) |
                 ((gRaceCameras[gCurrentViewportIndex].cameraTransform.rotation[1] << 4) & 0xFFFF);
             gCurrentFrameRenderData->viewport.rotations[gCurrentViewportIndex].m[2][1] =
-                (gRaceCameras[gCurrentViewportIndex].cameraTransform.rotation[2] << 20) & upperMask;
+                (gRaceCameras[gCurrentViewportIndex].cameraTransform.rotation[2] << 20) & matrixUpperHalfwordMask;
             gCurrentFrameRenderData->viewport.rotations[gCurrentViewportIndex].m[2][2] =
-                ((gRaceCameras[gCurrentViewportIndex].cameraTransform.rotation[3] << 20) & upperMask) |
+                ((gRaceCameras[gCurrentViewportIndex].cameraTransform.rotation[3] << 20) & matrixUpperHalfwordMask) |
                 ((gRaceCameras[gCurrentViewportIndex].cameraTransform.rotation[4] << 4) & 0xFFFF);
             gCurrentFrameRenderData->viewport.rotations[gCurrentViewportIndex].m[2][3] =
-                (gRaceCameras[gCurrentViewportIndex].cameraTransform.rotation[5] << 20) & upperMask;
+                (gRaceCameras[gCurrentViewportIndex].cameraTransform.rotation[5] << 20) & matrixUpperHalfwordMask;
             gCurrentFrameRenderData->viewport.rotations[gCurrentViewportIndex].m[3][0] =
-                ((gRaceCameras[gCurrentViewportIndex].cameraTransform.rotation[6] << 20) & upperMask) |
+                ((gRaceCameras[gCurrentViewportIndex].cameraTransform.rotation[6] << 20) & matrixUpperHalfwordMask) |
                 ((gRaceCameras[gCurrentViewportIndex].cameraTransform.rotation[7] << 4) & 0xFFFF);
             gCurrentFrameRenderData->viewport.rotations[gCurrentViewportIndex].m[3][1] =
-                (gRaceCameras[gCurrentViewportIndex].cameraTransform.rotation[8] << 20) & upperMask;
+                (gRaceCameras[gCurrentViewportIndex].cameraTransform.rotation[8] << 20) & matrixUpperHalfwordMask;
             gCurrentFrameRenderData->viewport.translations[gCurrentViewportIndex].m[3][2] =
-                ((gRaceCameras[gCurrentViewportIndex].cameraTransform.translation.x << 16) & upperMask) |
+                ((gRaceCameras[gCurrentViewportIndex].cameraTransform.translation.x << 16) & matrixUpperHalfwordMask) |
                 (gRaceCameras[gCurrentViewportIndex].cameraTransform.translation.y & 0xFFFF);
             gCurrentFrameRenderData->viewport.translations[gCurrentViewportIndex].m[3][3] =
-                (gRaceCameras[gCurrentViewportIndex].cameraTransform.translation.z << 16) & upperMask;
+                (gRaceCameras[gCurrentViewportIndex].cameraTransform.translation.z << 16) & matrixUpperHalfwordMask;
 
             if (gBackdropRenderCallbackList != NULL) {
                 gSPPerspNormalize(gRegionAllocPtr++, gViewportStates[gCurrentViewportIndex].overlayPerspectiveNorm);
@@ -586,15 +589,15 @@ void appendViewportDisplayLists(u8 frameIndex) {
 
                 for (i = 0; i < MODEL_RENDER_CALLBACK_QUEUE_COUNT; i++) {
                     if (gModelRenderCallbackQueues[i].head != NULL) {
-                        queue = &gModelRenderCallbackQueues[i].head;
-                        if (queue == &gEffectRenderCallbackList) {
+                        modelCallbackQueueHead = &gModelRenderCallbackQueues[i].head;
+                        if (modelCallbackQueueHead == &gEffectRenderCallbackList) {
                             gSPMatrix(
                                 gRegionAllocPtr++,
                                 &gCurrentFrameRenderData->viewport.viewportMatrices[gCurrentViewportIndex],
                                 G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW
                             );
                         }
-                        runRenderCallbacks(queue);
+                        runRenderCallbacks(modelCallbackQueueHead);
                     }
                 }
             }

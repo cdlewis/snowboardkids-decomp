@@ -71,6 +71,8 @@ u16 gCharacterSelectCourseExitOptionIndex;
 CharacterSelectCourseCursorState gCharacterSelectCourseCursorState;
 
 extern s16 gMenuFadeAlpha;
+/* During this menu, gRaceCourseIndex is a list cursor, resolved through this
+ * table to a course ID on confirmation (e.g. index 0 -> Rookie 9, 1 -> Big Snowman 0). */
 extern CharacterSelectOptionList *gCharacterSelectActiveCourseOptions;
 extern s32 gMenuFlowState;
 extern u8 gMenuExitSelection;

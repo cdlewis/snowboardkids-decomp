@@ -209,6 +209,10 @@ void drawRacePlayerGroundShadow(RacePlayer *player) {
     }
 }
 
+/* SNOWBOARD_TEXTURES declares 64x57 images (e.g. entry 9/palette 9 at
+ * +0x4258). The matching renderer loads 64x64 below: the seven extra sampled
+ * rows are outside the declared image and must not be treated as authored art.
+ * The ghost renderer uses the same load contract. */
 void drawSnowboardModel(Mtx *matrix, s16 dlIndex, s16 textureIndex) {
     void *image;
     void *palette;
