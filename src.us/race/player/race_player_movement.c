@@ -355,7 +355,7 @@ void resolveRacePlayerBodyCollisions(void) {
                                 }
                                 if ((temp < radius) &&
                                     ((temp = integerSquareRoot64(
-                                          (s64)((0, xDiff)) * xDiff + (((s64)temp * temp) & 0xFFFFFFFFFFFFFFFF)
+                                          (s64)(0, xDiff) * xDiff + (((s64)temp * temp) & 0xFFFFFFFFFFFFFFFF)
                                       )) < radius)) {
                                     temp = ((radius - temp) * -1) / 2;
                                     angle = calculateFixedAngleBetweenXZPoints(
@@ -431,7 +431,7 @@ void pushRacePlayersOutOfCylinderAndApplyItemHit(Vec3i *pos, s32 xzSize, s32 ySi
                         temp = -temp;
                     }
                     if ((temp < xzLimit) && ((temp = integerSquareRoot64(
-                                                  (s64)((0, xDiff)) * xDiff + (((s64)temp * temp) & 0xFFFFFFFFFFFFFFFF)
+                                                  (s64)(0, xDiff) * xDiff + (((s64)temp * temp) & 0xFFFFFFFFFFFFFFFF)
                                               )) < xzLimit)) {
                         angle = calculateFixedAngleBetweenXZPoints(
                             pos->x,
@@ -506,7 +506,7 @@ void pushRacePlayerOutOfCylinderAndApplyItemHit(Vec3i *pos, s32 xzSize, s32 ySiz
                     zDiff = -zDiff;
                 }
                 if ((zDiff < xzLimit) && ((temp = integerSquareRoot64(
-                                               (s64)((0, xDiff)) * xDiff + (((s64)zDiff * zDiff) & 0xFFFFFFFFFFFFFFFF)
+                                               (s64)(0, xDiff) * xDiff + (((s64)zDiff * zDiff) & 0xFFFFFFFFFFFFFFFF)
                                            )) < xzLimit)) {
                     angle = calculateFixedAngleBetweenXZPoints(pos->x, pos->z, player->pos.x, player->pos.z);
                     sine = fixedSine(angle);
@@ -569,7 +569,7 @@ void pushRacePlayersOutOfCylinderOrApplyItemHit(Vec3i *pos, s32 xzSize, s32 ySiz
                         temp = -temp;
                     }
                     if ((temp < xzLimit) && ((temp = integerSquareRoot64(
-                                                  (s64)((0, xDiff)) * xDiff + (((s64)temp * temp) & 0xFFFFFFFFFFFFFFFF)
+                                                  (s64)(0, xDiff) * xDiff + (((s64)temp * temp) & 0xFFFFFFFFFFFFFFFF)
                                               )) < xzLimit)) {
                         if (gRacePlayers[i].movementSpeed < arg3) {
                             angle = calculateFixedAngleBetweenXZPoints(
@@ -631,7 +631,7 @@ void pushRacePlayerOutOfCylinder(Vec3i *pos, s32 xzSize, s32 ySize, s16 playerIn
                     zDiff = -zDiff;
                 }
                 if ((zDiff < xzLimit) && ((distance = integerSquareRoot64(
-                                               (s64)((0, xDiff)) * xDiff + (((s64)zDiff * zDiff) & 0xFFFFFFFFFFFFFFFF)
+                                               (s64)(0, xDiff) * xDiff + (((s64)zDiff * zDiff) & 0xFFFFFFFFFFFFFFFF)
                                            )) < xzLimit)) {
                     angle = calculateFixedAngleBetweenXZPoints(pos->x, pos->z, player->pos.x, player->pos.z);
                     sine = fixedSine(angle);

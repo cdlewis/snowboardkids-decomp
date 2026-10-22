@@ -93,7 +93,7 @@ CC      = $(IDO_DIR)/cc
 CC_CHECK = clang
 CLANG_FORMAT ?= clang-format
 CLANG_TIDY ?= clang-tidy
-LLVM_MAJOR_VERSION := 20
+LLVM_MAJOR_VERSION := 22
 LD      = $(CROSS)ld
 OBJDUMP = $(CROSS)objdump
 OBJCOPY = $(CROSS)objcopy
@@ -253,9 +253,10 @@ PROJECT_H_FILES := $(shell git ls-files 'include/**/*.h' 'include/*.h' 'src.us/*
 FORMAT_H_FILES := $(filter-out include/hasm.h include/include_asm.h include/sys/%,$(PROJECT_H_FILES))
 FORMAT_FILES := $(FORMAT_C_FILES) $(FORMAT_H_FILES)
 TIDY_C_FRAGMENT_FILES := \
-	$(SRC_DIR)/libmus/player_api.c \
-	$(SRC_DIR)/libmus/player_commands.c \
-	$(SRC_DIR)/libmus/player_commands_tail.c
+	$(foreach version,us jp, \
+		src.$(version)/libmus/player_api.c \
+		src.$(version)/libmus/player_commands.c \
+		src.$(version)/libmus/player_commands_tail.c)
 TIDY_C_FILES := $(filter-out %.inc.c $(TIDY_C_FRAGMENT_FILES),$(PROJECT_C_FILES))
 
 TEXTCONV = $(PYTHON) $(TOOLS_DIR)/textconv.py
@@ -532,9 +533,10 @@ decompilation-summary: all
 	$(PYTHON) $(TOOLS_DIR)/decompilation_summary.py
 endif
 
+# C99 enables tidy checks that do not support C89; build checks still use gnu89.
 # Tidy is diagnostic-only: automatic fixes can alter matching code generation.
 tidy: check-clang-tidy-version
-	$(CLANG_TIDY) $(TIDY_C_FILES) -- $(CC_CHECK_FLAGS) $(CC_CHECK_INCLUDES) $(C_DEFINES) $(CC_CHECK_MIPS_DEFINES)
+	$(CLANG_TIDY) $(TIDY_C_FILES) -- $(CC_CHECK_FLAGS) -std=gnu99 $(CC_CHECK_INCLUDES) $(C_DEFINES) $(CC_CHECK_MIPS_DEFINES)
 
 ###########
 ## CLEAN ##

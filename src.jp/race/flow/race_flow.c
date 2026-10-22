@@ -1685,8 +1685,10 @@ void updateRaceResultsFlow(void) {
                             if (gGameSaveDataBuffer[0].cupPlacements[gRaceCourseIndex.signedValue] == 0) {
                                 gGameSaveDataBuffer[0].cupPlacements[gRaceCourseIndex.signedValue] =
                                     gRacePlayers[0].rankIndex + 1;
-                            } else if ((gRacePlayers[0].rankIndex + 1) <
-                                       gGameSaveDataBuffer[0].cupPlacements[gRaceCourseIndex.signedValue]) {
+                            } else if (
+                                (gRacePlayers[0].rankIndex + 1) <
+                                gGameSaveDataBuffer[0].cupPlacements[gRaceCourseIndex.signedValue]
+                            ) {
                                 gGameSaveDataBuffer[0].cupPlacements[gRaceCourseIndex.signedValue] =
                                     gRacePlayers[0].rankIndex + 1;
                             }

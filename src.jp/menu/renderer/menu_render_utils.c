@@ -885,7 +885,7 @@ void selectMenuRenderScratchBuffer(s32 arg0) {
 
 void *allocMenuRenderScratch(s32 size) {
     u8 *oldPtr = gMenuRenderScratchPtr;
-    u8 *newPtr = ((0, oldPtr)) + ((((u32)(size + 3)) >> 2) * 4);
+    u8 *newPtr = (0, oldPtr) + ((((u32)(size + 3)) >> 2) * 4);
     s32 new_var2;
 
     new_var2 = newPtr - gMenuRenderScratchStart;

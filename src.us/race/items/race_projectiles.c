@@ -997,7 +997,7 @@ void initAreaBlastShotProjectile(RaceItemProjectileActor *arg0) {
     }
 
     transformVec3iByFixedMatrix(gRacePlayers[actor->playerIndex].modelPartTransforms[0].rotation, &sp58, &actor->pos);
-    actor->pos.x += ((0, gRacePlayers))[actor->playerIndex].modelPartTransforms[0].translation.x;
+    actor->pos.x += (0, gRacePlayers)[actor->playerIndex].modelPartTransforms[0].translation.x;
     actor->pos.y += gRacePlayers[actor->playerIndex].modelPartTransforms[0].translation.y;
     actor->pos.z += gRacePlayers[actor->playerIndex].modelPartTransforms[0].translation.z;
     actor->startAngle = gRacePlayers[actor->playerIndex].coursePathIndex;

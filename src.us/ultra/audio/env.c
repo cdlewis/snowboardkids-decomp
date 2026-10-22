@@ -87,7 +87,7 @@ Acmd *alEnvmixerPull(void *filter, s16 *outp, s32 outCount, s32 sampleOffset, Ac
         assert(samples <= AL_MAX_RSP_SAMPLES);
 
         switch (e->ctrlList->type) {
-            case (AL_FILTER_START_VOICE_ALT): {
+            case AL_FILTER_START_VOICE_ALT: {
                 ALStartParamAlt *param = (ALStartParamAlt *)e->ctrlList;
                 ALFilter *f = (ALFilter *)e;
                 s32 tmp;
@@ -135,9 +135,9 @@ Acmd *alEnvmixerPull(void *filter, s16 *outp, s32 outCount, s32 sampleOffset, Ac
 
             break;
 
-            case (AL_FILTER_SET_FXAMT):
-            case (AL_FILTER_SET_PAN):
-            case (AL_FILTER_SET_VOLUME):
+            case AL_FILTER_SET_FXAMT:
+            case AL_FILTER_SET_PAN:
+            case AL_FILTER_SET_VOLUME:
                 ptr = _pullSubFrame(e, &inp, &loutp, samples, sampleOffset, ptr);
 
                 if (e->delta >= e->segEnd) {
@@ -204,7 +204,7 @@ Acmd *alEnvmixerPull(void *filter, s16 *outp, s32 outCount, s32 sampleOffset, Ac
                 e->first = 1;
                 break;
 
-            case (AL_FILTER_START_VOICE): {
+            case AL_FILTER_START_VOICE: {
                 ALStartParam *p = (ALStartParam *)e->ctrlList;
 
                 /*
@@ -220,7 +220,7 @@ Acmd *alEnvmixerPull(void *filter, s16 *outp, s32 outCount, s32 sampleOffset, Ac
                 (*e->filter.setParam)(&e->filter, AL_FILTER_START, 0);
             } break;
 
-            case (AL_FILTER_STOP_VOICE): {
+            case AL_FILTER_STOP_VOICE: {
                 /*
                  * Changing to STOPPED and reset the filter
                  */
@@ -228,7 +228,7 @@ Acmd *alEnvmixerPull(void *filter, s16 *outp, s32 outCount, s32 sampleOffset, Ac
                 (*e->filter.setParam)(&e->filter, AL_FILTER_RESET, 0);
             } break;
 
-            case (AL_FILTER_FREE_VOICE): {
+            case AL_FILTER_FREE_VOICE: {
                 ALSynth *drvr = &alGlobals->drvr;
                 ALFreeParam *param = (ALFreeParam *)e->ctrlList;
                 param->pvoice->offset = 0;
@@ -278,7 +278,7 @@ s32 alEnvmixerParam(void *filter, s32 paramID, void *param) {
 
     switch (paramID) {
 
-        case (AL_FILTER_ADD_UPDATE):
+        case AL_FILTER_ADD_UPDATE:
             if (e->ctrlTail) {
                 e->ctrlTail->next = (ALParam *)param;
             } else {
@@ -288,7 +288,7 @@ s32 alEnvmixerParam(void *filter, s32 paramID, void *param) {
 
             break;
 
-        case (AL_FILTER_RESET):
+        case AL_FILTER_RESET:
             e->first = 1;
             e->motion = AL_STOPPED;
             e->volume = 1;
@@ -296,13 +296,13 @@ s32 alEnvmixerParam(void *filter, s32 paramID, void *param) {
                 (*f->source->setParam)(f->source, AL_FILTER_RESET, param);
             break;
 
-        case (AL_FILTER_START):
+        case AL_FILTER_START:
             e->motion = AL_PLAYING;
             if (f->source)
                 (*f->source->setParam)(f->source, AL_FILTER_START, param);
             break;
 
-        case (AL_FILTER_SET_SOURCE):
+        case AL_FILTER_SET_SOURCE:
             f->source = (ALFilter *)param;
             break;
 
@@ -377,7 +377,7 @@ f64 _frexpf(f64 value, s32 *eptr) {
 
     *eptr = 0;
     if (value == 0.0) /* nothing to do for zero */
-        return (value);
+        return value;
     absvalue = (value > 0.0) ? value : -value;
     for (; absvalue >= 1.0; absvalue *= 0.5)
         ++*eptr;
@@ -394,7 +394,7 @@ f64 _ldexpf(f64 in, s32 ex) {
         in *= (f64)exp;
     }
 
-    return (in);
+    return in;
 }
 
 /*

@@ -471,7 +471,7 @@ void updateCharacterSelectCourseMenu(void) {
                     } \
                     repeatTimer = *repeatTimerPtr; \
                     if ((pressedInput & (STICK_UP | U_JPAD)) || \
-                        (((upInput != 0) && (((s32)repeatTimer) >= 0xB)) && (((((s32)repeatTimer)) % 3) == 0))) { \
+                        (((upInput != 0) && (((s32)repeatTimer) >= 0xB)) && ((((s32)repeatTimer) % 3) == 0))) { \
                         if (!repeatTimer) { \
                             repeatTimer += 1; \
                         } \
@@ -481,9 +481,9 @@ void updateCharacterSelectCourseMenu(void) {
                         } \
                         *repeatTimerPtr = repeatTimer; \
                     } else if ((pressedInput & (STICK_DOWN | D_JPAD)) || \
-                               ((((*repeatTimerPtr = repeatTimer, input & (STICK_DOWN | D_JPAD))) && \
-                                 ((*repeatTimerPtr = (upInput = repeatTimer), ((s32)repeatTimer) >= 0xB))) && \
-                                ((*repeatTimerPtr = repeatTimer, ((((s32)repeatTimer)) % 3) == 0)))) { \
+                               (((*repeatTimerPtr = repeatTimer, input & (STICK_DOWN | D_JPAD)) && \
+                                 (*repeatTimerPtr = (upInput = repeatTimer), ((s32)repeatTimer) >= 0xB)) && \
+                                (*repeatTimerPtr = repeatTimer, (((s32)repeatTimer) % 3) == 0))) { \
                         *repeatTimerPtr = repeatTimer; \
                         if (repeatTimer == 0) { \
                             *repeatTimerPtr = repeatTimer + 1; \

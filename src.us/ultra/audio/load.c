@@ -352,12 +352,12 @@ s32 alLoadParam(void *filter, s32 paramID, void *param) {
     ALFilter *f = (ALFilter *)filter;
 
     switch (paramID) {
-        case (AL_FILTER_SET_WAVETABLE):
+        case AL_FILTER_SET_WAVETABLE:
             a->table = (ALWaveTable *)param;
             a->memin = (s32)a->table->base;
             a->sample = 0;
             switch (a->table->type) {
-                case (AL_ADPCM_WAVE):
+                case AL_ADPCM_WAVE:
 
                     /*
                      * Set up the correct handler
@@ -382,7 +382,7 @@ s32 alLoadParam(void *filter, s32 paramID, void *param) {
                     }
                     break;
 
-                case (AL_RAW16_WAVE):
+                case AL_RAW16_WAVE:
                     f->handler = alRaw16Pull;
                     if (a->table->waveInfo.rawWave.loop) {
                         a->loop.start = a->table->waveInfo.rawWave.loop->start;
@@ -398,7 +398,7 @@ s32 alLoadParam(void *filter, s32 paramID, void *param) {
             }
             break;
 
-        case (AL_FILTER_RESET):
+        case AL_FILTER_RESET:
             a->lastsam = 0;
             a->first = 1;
             a->sample = 0;

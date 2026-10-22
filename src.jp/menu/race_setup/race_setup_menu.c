@@ -153,9 +153,11 @@ void updateRaceSetupPlayerCountMenu(void) {
                     gPlayerCount -= 1;
                     enqueueSoundEffect(SFX_MENU_CURSOR, SFX_PRIORITY_NORMAL);
                 }
-            } else if ((pressedInput & (STICK_DOWN | D_JPAD)) ||
-                       ((gPlayerInputHeld[0] & (STICK_DOWN | D_JPAD)) && ((s32)gMenuInputRepeatTimers[0] >= 9) &&
-                        (((s32)gMenuInputRepeatTimers[0] % 3) == 0))) {
+            } else if (
+                (pressedInput & (STICK_DOWN | D_JPAD)) ||
+                ((gPlayerInputHeld[0] & (STICK_DOWN | D_JPAD)) && ((s32)gMenuInputRepeatTimers[0] >= 9) &&
+                 (((s32)gMenuInputRepeatTimers[0] % 3) == 0))
+            ) {
                 if (gMenuInputRepeatTimers[0] == 0) {
                     gMenuInputRepeatTimers[0] += 1;
                 }

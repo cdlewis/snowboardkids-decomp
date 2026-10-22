@@ -1636,8 +1636,9 @@ void updateCourseSelectExtraCourseIconList(CourseSelectExtraCourseIconListActor 
                                             }
                                         }
                                         iconMask *= 2;
-                                    } else if (gGameSaveDataBuffer[playerIndex].courseUnlockStates[iconIndex + 9] !=
-                                               -1) {
+                                    } else if (
+                                        gGameSaveDataBuffer[playerIndex].courseUnlockStates[iconIndex + 9] != -1
+                                    ) {
                                         actor->itemCounts[playerIndex]++;
                                         if (gPlayerCount == 1) {
                                             actor->tileIndices[playerIndex][actor->itemCounts[playerIndex] - 1] =
@@ -1647,9 +1648,10 @@ void updateCourseSelectExtraCourseIconList(CourseSelectExtraCourseIconListActor 
                                                 iconIndex + 0x1F;
                                         }
                                     }
-                                } else if (gGameSaveDataBuffer[playerIndex].courseUnlockStates
-                                               [(gRacePlayers[playerIndex].menuSelection % 3) + (iconIndex * 3)] !=
-                                           -1) {
+                                } else if (
+                                    gGameSaveDataBuffer[playerIndex].courseUnlockStates
+                                        [(gRacePlayers[playerIndex].menuSelection % 3) + (iconIndex * 3)] != -1
+                                ) {
                                     actor->itemCounts[playerIndex]++;
                                     if (gPlayerCount == 1) {
                                         actor->tileIndices[playerIndex][iconIndex] = iconIndex + 9;

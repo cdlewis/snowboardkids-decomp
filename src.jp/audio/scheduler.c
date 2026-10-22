@@ -80,7 +80,7 @@ loop: \
         case 0x29A: \
             gRetraceCounter = gRetraceCounter + 1; \
             gRetraceCounter = gRetraceCounter & 0xFFF; \
-            if ((started == 0) || (gSchedulerStartupRetraceCount < ((0, 0x16)))) { \
+            if ((started == 0) || (gSchedulerStartupRetraceCount < (0, 0x16))) { \
                 tryStartPendingRdpTask(arg0); \
                 pendingAudio = pendingAudio * 0; \
                 if (gSchedulerRdpTaskActive != 0) { \

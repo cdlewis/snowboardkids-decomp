@@ -4057,7 +4057,7 @@ void updateRacePlayerMode07LaunchRampClimb(RacePlayer *player) {
         if (player->unk80 >= -0x9FFFF) {
             player->unk80 -= 0x2000;
         }
-        makeFixedRotationXY((s16 *)scratch.matrix, 0x100, ((0, player))->facingAngle);
+        makeFixedRotationXY((s16 *)scratch.matrix, 0x100, (0, player)->facingAngle);
     }
 
     scratch.sourceX = 0;

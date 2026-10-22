@@ -282,7 +282,7 @@ void zoomMainMenuModePreviewRaceViewport(void) {
     timer = gCurrentGameTask->callbackData0;
     width = (s16)(((timer * 0x18) / 16) + 0x108);
     centerY = (s16)(((timer * 0x28) / 16) + 0x50);
-    height = (s16)(((((0, timer)) * 0x58) / 16) + 0x78);
+    height = (s16)((((0, timer) * 0x58) / 16) + 0x78);
     scaleY = (s16)(((timer * 0x64) / 16) + 0x8C);
     aspect = (f32)((((f64)timer * -0.9523809523809523) / 0x10) + 2.2857142857142856);
     timer = 0x140;

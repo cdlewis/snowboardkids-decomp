@@ -44,7 +44,7 @@ float fsin(float x) {
             return ((float)result);
         }
 
-        return (x);
+        return x;
     }
 
     if (xpt < 0x136) {
@@ -71,7 +71,7 @@ float fsin(float x) {
     }
 
     if (x != x) {
-        return (__libm_qnan_f);
+        return __libm_qnan_f;
     }
 
     return (zero.f);

@@ -111,11 +111,11 @@ s32 alResampleParam(void *filter, s32 paramID, void *param) {
 
     switch (paramID) {
 
-        case (AL_FILTER_SET_SOURCE):
+        case AL_FILTER_SET_SOURCE:
             f->source = (ALFilter *)param;
             break;
 
-        case (AL_FILTER_RESET):
+        case AL_FILTER_RESET:
             r->delta = 0.0;
             r->first = 1;
             r->motion = AL_STOPPED;
@@ -124,18 +124,18 @@ s32 alResampleParam(void *filter, s32 paramID, void *param) {
                 (*f->source->setParam)(f->source, AL_FILTER_RESET, 0);
             break;
 
-        case (AL_FILTER_START):
+        case AL_FILTER_START:
             r->motion = AL_PLAYING;
             if (f->source)
                 (*f->source->setParam)(f->source, AL_FILTER_START, 0);
             break;
 
-        case (AL_FILTER_SET_PITCH):
+        case AL_FILTER_SET_PITCH:
             data.i = (s32)param;
             r->ratio = data.f;
             break;
 
-        case (AL_FILTER_SET_UNITY_PITCH):
+        case AL_FILTER_SET_UNITY_PITCH:
             r->upitch = 1;
             break;
 

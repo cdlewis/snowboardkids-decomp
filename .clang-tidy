@@ -13,7 +13,5 @@ CheckOptions:
   # '1' remains compatible with older clang-tidy versions that may read this file through an editor.
   - key: readability-inconsistent-declaration-parameter-name.Strict
     value: 1
-  - key: readability-redundant-casting.IgnoreHeaders
-    value: 'common\.h'
   - key: misc-include-cleaner.IgnoreHeaders
     value: 'common\.h;ultratypes\.h;include_asm\.h;h>'

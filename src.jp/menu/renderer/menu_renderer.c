@@ -382,8 +382,8 @@ void drawMenuSpriteFixedScale(
     }
 
     flipMode &= 3;
-    sScale = gMenuSpriteFlipScales[(flipMode) * 2 + 0];
-    tScale = gMenuSpriteFlipScales[(flipMode) * 2 + 1];
+    sScale = gMenuSpriteFlipScales[flipMode * 2 + 0];
+    tScale = gMenuSpriteFlipScales[flipMode * 2 + 1];
 
     texS = texture->width;
     texT = texture->height;

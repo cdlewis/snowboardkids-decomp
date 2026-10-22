@@ -46,7 +46,7 @@ s32 alAuxBusParam(void *filter, s32 paramID, void *param) {
 
     switch (paramID) {
 
-        case (AL_FILTER_ADD_SOURCE):
+        case AL_FILTER_ADD_SOURCE:
             sources[m->sourceCount++] = (ALFilter *)param;
             break;
 

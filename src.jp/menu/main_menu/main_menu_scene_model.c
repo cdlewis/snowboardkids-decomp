@@ -253,8 +253,10 @@ s32 saveRaceRecordReplayData(void) {
 
     if (compressedLength > REPLAY_SAVE_MAX_NORMAL) {
         totalLength += compressedLength;
-    } else if ((gRaceCourseIndex.signedValue == RACE_COURSE_ROOKIE_MOUNTAIN) ||
-               (gRaceCourseIndex.signedValue == RACE_COURSE_NINJA_LAND)) {
+    } else if (
+        (gRaceCourseIndex.signedValue == RACE_COURSE_ROOKIE_MOUNTAIN) ||
+        (gRaceCourseIndex.signedValue == RACE_COURSE_NINJA_LAND)
+    ) {
         totalLength += REPLAY_SAVE_MAX_EXTRA;
     } else {
         totalLength += REPLAY_SAVE_MAX_NORMAL;

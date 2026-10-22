@@ -197,8 +197,9 @@ void updateControllerPakRaceRecordSaveFlow(void) {
                                     }
                                 } else if (gControllerPakStatusCodes[0] == 8) {
                                     gControllerPakRaceRecordSaveStatusTransition.nextStatus = 2;
-                                } else if ((gControllerPakStatusCodes[0] == 0xA) ||
-                                           (gControllerPakStatusCodes[0] == 0x11)) {
+                                } else if (
+                                    (gControllerPakStatusCodes[0] == 0xA) || (gControllerPakStatusCodes[0] == 0x11)
+                                ) {
                                     gControllerPakRaceRecordSaveStatusTransition.nextStatus = 0xF;
                                 } else if (gControllerPakStatusCodes[0] == 7) {
                                     gControllerPakRaceRecordSaveStatusTransition.nextStatus = 4;
