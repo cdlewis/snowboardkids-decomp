@@ -15,6 +15,9 @@
 #include "game/menu/renderer/menu_render_utils.h"
 #include "game/menu/renderer/menu_screen_effects.h"
 
+volatile u8 gTitleDemoRaceIntroViewportHeight;
+s8 gTitleDemoRaceIntroFadeStep;
+
 s16 gTitleDemoReplaySegmentFrames[16] = {
     0x0000, 0x0039, 0x006C, 0x00A1, 0x00D2, 0x0107, 0x0138, 0x026C,
     0x02A2, 0x02D3, 0x0307, 0x0339, 0x036E, 0x03A0, 0x03D4, 0x0413,

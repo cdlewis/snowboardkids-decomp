@@ -29,7 +29,7 @@ typedef struct {
     /* 0x24 */ Transform3D transform;
 } EndingShadowStack;
 
-extern MainMenuSceneActorShadow gEndingActorShadow;
+MainMenuSceneActorShadow gEndingActorShadow;
 extern Gfx *gRegionAllocPtr;
 Vtx gEndingActorShadowQuadVertices[4] = {
     { { { -16, 16, 0 }, 0, { 0, 0 }, { 0xFF, 0xFF, 0xFF, 0xFF } } },

@@ -27,6 +27,8 @@ typedef struct {
     /* 0x8 */ u8 *romEnd;
 } MainMenuModePreviewRaceCourseAsset;
 
+u8 gMainMenuSelectionResult;
+
 MainMenuModePreviewRaceCourseAsset gMainMenuModePreviewRaceCourseAssets[] = {
     { RACE_COURSE_BIG_SNOWMAN,     { RACE_COURSE_BIG_SNOWMAN, 0, 0 }, NULL,                     NULL                   },
     { RACE_COURSE_BIG_SNOWMAN,     { RACE_COURSE_BIG_SNOWMAN, 0, 0 }, (u8 *)&_258C80_ROM_START, (u8 *)&_258C80_ROM_END },

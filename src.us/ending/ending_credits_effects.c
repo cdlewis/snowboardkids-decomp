@@ -12,7 +12,7 @@
 
 extern Gfx *gRegionAllocPtr;
 extern s16 gMenuFadeAlpha;
-extern u16 gEndingCreditsTransitionSnowboardIconExpandFrameCounter;
+u16 gEndingCreditsTransitionSnowboardIconExpandFrameCounter;
 u16 gEndingCreditsNancyRunDustFrameOffsets[4] = { 0, 1, 2, 1 };
 u16 gEndingCreditsTommySnowmanEntranceFrameOffsets[4] = { 0, 1, 2, 1 };
 

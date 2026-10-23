@@ -20,13 +20,14 @@
 #include "game/menu/renderer/menu_render_utils.h"
 #include "game/menu/renderer/menu_renderer.h"
 
-/* These globals form the original 0x10-byte ending_credits_flow BSS contribution. */
+/* These globals form the original 0x20-byte ending_credits_flow BSS contribution. */
 s16 gEndingCreditsUnusedValue;
 u16 gEndingCreditsSequencePhase;
 u8 gEndingCreditsHandshakeState;
 u8 gEndingCreditsTransitionSnowboardIconSpinStep;
 s16 gEndingCreditsTransitionSnowboardIconAngle;
 u8 gEndingCreditsCharacterAuraDoneFlags[ENDING_CREDITS_CHARACTER_COUNT];
+Vec3i gMenuCameraTargetOffset;
 
 extern s16 gMenuFadeAlpha;
 extern u8 gPendingFramebufferSwapCount;
