@@ -11,6 +11,8 @@
 #include "game/menu/controller_pak/controller_pak_continue_prompt_flow.h"
 #include "game/engine/viewport_manager.h"
 
+ControllerPakContinuePromptTransition gControllerPakContinuePromptTransition;
+
 extern s16 gMenuFadeAlpha;
 extern s32 gMenuFlowState;
 extern u8 gPendingFramebufferSwapCount;

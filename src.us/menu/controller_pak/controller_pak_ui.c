@@ -16,9 +16,6 @@
 
 #define CONTROLLER_PAK_DELETE_PANEL_HANDLE (gAssetHandles[0x29])
 
-extern u8 gControllerPakMenuConfirmChoice;
-extern u8 gControllerPakMenuCursorState;
-extern u8 gControllerPakDeletePromptState;
 extern s32 gControllerPakFreeBytes;
 extern s32 gControllerPakFreeFileCount;
 
@@ -682,7 +679,7 @@ void drawControllerPakFileDeleteMainOptions(ControllerPakOptionsActor *arg0) {
 }
 
 void updateControllerPakFileDeleteMainOptionsUi(ControllerPakOptionsActor *arg0) {
-    switch (gControllerPakMenuCursorState) {
+    switch (gControllerPakMenuState.state) {
         case 0:
             if (arg0->timer < 0x10) {
                 arg0->scale -= 8;
@@ -726,7 +723,7 @@ void drawControllerPakFileDeleteConfirmOptions(ControllerPakOptionsActor *arg0) 
     } else {
         alpha = 0x80;
         otherAlpha = 0x80;
-        if (!gControllerPakMenuConfirmChoice) {}
+        if (!gControllerPakMenuState.confirmChoice) {}
     }
 
     drawMenuSpriteWithAlpha(
@@ -752,9 +749,9 @@ void drawControllerPakFileDeleteConfirmOptions(ControllerPakOptionsActor *arg0) 
         0
     );
 
-    if (gControllerPakMenuCursorState == 2) {
+    if (gControllerPakMenuState.state == 2) {
         drawMenuSpriteWithAlpha(
-            (s16)(actor->common.x + (gControllerPakMenuConfirmChoice * 0x70)),
+            (s16)(actor->common.x + (gControllerPakMenuState.confirmChoice * 0x70)),
             actor->common.y,
             getRelocatableHeapBlockBase(gAssetHandles[0x21]),
             5,
@@ -768,7 +765,7 @@ void drawControllerPakFileDeleteConfirmOptions(ControllerPakOptionsActor *arg0) 
 }
 
 void updateControllerPakFileDeleteConfirmOptionsUi(ControllerPakOptionsActor *arg0) {
-    switch (gControllerPakMenuCursorState) {
+    switch (gControllerPakMenuState.state) {
         case 0:
         case 1:
             break;
@@ -999,7 +996,7 @@ void drawControllerPakFileDeleteFileList(ControllerPakFileListActor *arg0) {
 }
 
 void updateControllerPakFileDeleteFileListUi(ControllerPakFileListActor *arg0) {
-    if (gControllerPakMenuCursorState == 1) {
+    if (gControllerPakMenuState.state == 1) {
         if (arg0->cursorTimer < 0x10) {
             arg0->cursorScale -= 9;
         } else {
@@ -1142,8 +1139,9 @@ void updateControllerPakFileDeleteErrorPromptUi(ControllerPakDeletePromptActor *
     u8 globalState;
     u8 state;
     u8 *statePtr;
+    ControllerPakMenuState *menuState = &gControllerPakMenuState;
 
-    globalState = gControllerPakDeletePromptState;
+    globalState = gControllerPakMenuState.unk6;
     state = arg0->timer;
     if (globalState != state) {
         state = globalState;
@@ -1177,7 +1175,7 @@ void updateControllerPakFileDeleteErrorPromptUi(ControllerPakDeletePromptActor *
             break;
     }
 
-    gControllerPakMenuState.unk6 = state;
+    menuState->unk6 = state;
     if (*statePtr == 3) {
         removeCallbackTask(arg0);
         return;

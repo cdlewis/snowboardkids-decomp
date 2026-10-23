@@ -24,10 +24,10 @@ typedef struct RaceRecordSaveCompletion {
     s32 pad8;
 } RaceRecordSaveCompletion;
 
-extern ControllerPakMenuState gControllerPakMenuState;
+ControllerPakRaceRecordSaveStatusTransition gControllerPakRaceRecordSaveStatusTransition;
+
 extern u8 gPendingFramebufferSwapCount;
 extern u8 gFramebufferSwapHold;
-extern u8 gControllerPakMenuCursorState;
 extern s32 gMenuFlowState;
 extern s16 gMenuFadeAlpha;
 
@@ -303,7 +303,7 @@ void updateControllerPakRaceRecordSaveOverwritePrompt(void) {
     if ((gPlayerInputPressed[0] & A_BUTTON) || (gPlayerInputPressed[0] & START_BUTTON)) {
         enqueueSoundEffect(SFX_CONFIRM, SFX_PRIORITY_NORMAL);
         if (gControllerPakMenuState.confirmChoice == 0) {
-            gControllerPakMenuCursorState = 0;
+            gControllerPakMenuState.state = 0;
             setCurrentGameTaskCallback(updateControllerPakRaceRecordSaveFlow, 0);
         } else {
             gMenuFlowState = 1;

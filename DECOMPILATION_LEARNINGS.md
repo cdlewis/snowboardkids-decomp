@@ -867,6 +867,12 @@ above can possibly work, so read them before spending a variant.
   target folds absolute addresses. IDO can preserve separate address bases for
   the flat and nested views. Defining the owning BSS object in the consuming
   source also affects folding; verify all consumers and the full ROM checksum.
+- **An early local pointer can preserve folded stores without an interior alias.**
+  In the Controller Pak race-record save UI, initializing a typed pointer to
+  the transition object at function entry, then using it for the final `step`
+  or `targetStatus` store, preserves the target's absolute store while other
+  accesses use the owning struct directly. Assigning the pointer immediately
+  before the store instead lets IDO reuse the aggregate base and changes code.
 - **Extern pointer globals are reloaded between aliased accesses.** For
   `g->field -= 1; if (g->field == 0)`, IDO re-emits the `lui`/`lw` of `g`
   between the store and the re-read (it cannot prove the store does not alias

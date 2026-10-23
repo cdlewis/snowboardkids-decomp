@@ -15,6 +15,8 @@
 #include "game/engine/viewport_manager.h"
 #include "game/race/player/race_player_input.h"
 
+RaceTypeSelectCursorState gRaceTypeSelectCursorTarget;
+
 extern u8 gMenuExitSelection;
 extern s16 gMenuFadeAlpha;
 extern u8 gCourseSelectFromRaceTypeMenu;
@@ -100,7 +102,7 @@ void updateRaceTypeSelectMenu(void) {
     } else {
         if (gRacePlayers[0].menuState == 0) {
             if (gMenuSelectionConfirmTimer == 0) {
-                if (gRaceTypeSelectCursorAnimState == 1) {
+                if (gRaceTypeSelectCursorTarget.state == 1) {
                     selection = gRaceTypeSelection;
                     heldInput = gPlayerInputHeld[0];
                     heldUp = heldInput & (STICK_UP | U_JPAD);
@@ -156,7 +158,6 @@ void updateRaceTypeSelectMenu(void) {
                     if (repeatTimer != 0) {
                         gMenuInputRepeatTimers[0] = repeatTimer + 1;
                         if (gMenuInputRepeatTimers[0 ^ 0] == 0xFFFF) {
-                            if (&gRaceTypeSelectCursorTarget) {}
                             selection = 0;
                             gMenuInputRepeatTimers[selection] = 0xC;
                         }

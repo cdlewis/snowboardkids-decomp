@@ -14,13 +14,14 @@
 #include "game/engine/viewport_manager.h"
 #include "game/race/race_state.h"
 
-extern u8 gControllerPakMenuCursorState;
-extern u8 gControllerPakDeletePromptState;
+ControllerPakMenuState gControllerPakMenuState;
+OSPfsState gControllerPakFileStates[16];
+s32 gControllerPakFreeBytes;
+s32 gControllerPakFreeFileCount;
+
 extern u8 gPendingFramebufferSwapCount;
 extern u8 gFramebufferSwapHold;
 extern s16 gMenuFadeAlpha;
-extern s32 gControllerPakFreeBytes;
-extern s32 gControllerPakFreeFileCount;
 extern s32 gMenuFlowState;
 
 void initControllerPakFileDeleteFlow(void) {
@@ -203,18 +204,18 @@ void updateControllerPakFileDeletePrompt(void) {
 void updateControllerPakFileDeleteErrorPrompt(void) {
     s32 state;
 
-    state = gControllerPakDeletePromptState;
+    state = gControllerPakMenuState.unk6;
     if (state == 1) {
         if ((gPlayerInputPressed[0] & A_BUTTON) || (gPlayerInputPressed[0] & START_BUTTON)) {
             enqueueSoundEffect(SFX_CONFIRM, SFX_PRIORITY_NORMAL);
-            gControllerPakDeletePromptState = 2;
+            gControllerPakMenuState.unk6 = 2;
             state = 2;
         }
     }
     if (state == 3) {
         gControllerPakRetryCounts[0] = 0;
         setCurrentGameTaskCallback(&updateControllerPakFileDeleteFileList, 0);
-        gControllerPakMenuCursorState = 1;
+        gControllerPakMenuState.state = 1;
     }
     updateCallbackTasks();
 }

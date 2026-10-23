@@ -77,10 +77,6 @@ ControllerPakRaceRecordSaveUiData gControllerPakRaceRecordSaveUiData = {
 #define gControllerPakRaceRecordSaveChoicePromptBottomSprites \
     (&gControllerPakRaceRecordSaveUiData.content.storage.choicePromptSprites[1])
 #define gControllerPakRaceRecordSaveExitMessage (gControllerPakRaceRecordSaveUiData.exitMessage)
-extern s16 gControllerPakRaceRecordSaveStatusTransitionAlpha;
-extern u16 gControllerPakRaceRecordSaveStatusTransitionTargetStatus;
-extern u16 gControllerPakRaceRecordSaveStatusTransitionNextStatus;
-extern u8 gControllerPakRaceRecordSaveStatusTransitionStep;
 
 #define CONTROLLER_PAK_RACE_RECORD_SAVE_SCORE_TEXTURE_HANDLE (gAssetHandles[0x21])
 
@@ -368,6 +364,7 @@ void drawControllerPakRaceRecordSaveStatusMessage(ControllerPakRaceRecordSaveSta
 void updateControllerPakRaceRecordSaveStatusMessage(ControllerPakRaceRecordSaveStatusMessageActor *arg0) {
     u8 state;
     u8 globalState;
+    ControllerPakRaceRecordSaveStatusTransition *transition = &gControllerPakRaceRecordSaveStatusTransition;
 
     state = arg0->state;
     if (state != (globalState = gControllerPakRaceRecordSaveStatusTransition.step)) {
@@ -416,7 +413,7 @@ void updateControllerPakRaceRecordSaveStatusMessage(ControllerPakRaceRecordSaveS
     }
 
     arg0->arrowFrame = (arg0->arrowFrame + 1) & 0xF;
-    gControllerPakRaceRecordSaveStatusTransitionStep = state;
+    transition->step = state;
     if ((u8)arg0->state == 5) {
         removeCallbackTask(arg0);
         return;
@@ -428,7 +425,7 @@ void initControllerPakRaceRecordSaveStatusMessage(ControllerPakRaceRecordSaveSta
     arg0->common.x = -0x42;
     arg0->common.y = -0xE;
     arg0->alpha = 0x100;
-    gControllerPakRaceRecordSaveStatusTransitionAlpha = 0x100;
+    gControllerPakRaceRecordSaveStatusTransition.alpha = 0x100;
     arg0->state = 0;
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateControllerPakRaceRecordSaveStatusMessage);
 }
@@ -438,7 +435,9 @@ void drawControllerPakRaceRecordSaveStatusChoicePrompt(ControllerPakRaceRecordSa
     int isEvenState;
     u16 alpha;
     s16 state;
+    ControllerPakRaceRecordSaveStatusTransition *transition;
 
+    transition = &gControllerPakRaceRecordSaveStatusTransition;
     state = gMenuChoicePromptState[0];
     if (state != 0) {
         isEvenState = !(state & 1);
@@ -496,7 +495,7 @@ void drawControllerPakRaceRecordSaveStatusChoicePrompt(ControllerPakRaceRecordSa
         }
     }
     if ((state >= 5) && (arg0->slideOffset == 0)) {
-        gControllerPakRaceRecordSaveStatusTransitionTargetStatus = arg0->nextStatus;
+        transition->targetStatus = arg0->nextStatus;
         gControllerPakRaceRecordSaveStatusTransition.step = 3;
         gMenuChoicePromptState[0] = 0;
         if (arg0->nextStatus == 0) {
@@ -511,8 +510,8 @@ void updateControllerPakRaceRecordSaveStatusChoicePrompt(ControllerPakRaceRecord
     s32 temp_a0;
     s32 var_v1;
 
-    if (gControllerPakRaceRecordSaveStatusTransitionNextStatus != arg0->nextStatus) {
-        arg0->nextStatus = gControllerPakRaceRecordSaveStatusTransitionNextStatus;
+    if (gControllerPakRaceRecordSaveStatusTransition.nextStatus != arg0->nextStatus) {
+        arg0->nextStatus = gControllerPakRaceRecordSaveStatusTransition.nextStatus;
     }
     if ((gMenuChoicePromptState[0] != 0) && (gMenuChoicePromptState[0] != 3) && (gMenuChoicePromptState[0] != 4)) {
         if (gMenuChoicePromptState[0] < 5) {

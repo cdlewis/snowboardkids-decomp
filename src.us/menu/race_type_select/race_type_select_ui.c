@@ -870,6 +870,7 @@ void drawRaceTypeSelectCursor(RaceTypeSelectAnimatedWidgetActor *arg0) {
 void updateRaceTypeSelectCursor(RaceTypeSelectAnimatedWidgetActor *arg0) {
     u8 state;
     u8 globalState;
+    RaceTypeSelectCursorState *cursor = &gRaceTypeSelectCursorTarget;
 
     state = arg0->state;
     if (state != (globalState = gRaceTypeSelectCursorTarget.state)) {
@@ -918,7 +919,7 @@ void updateRaceTypeSelectCursor(RaceTypeSelectAnimatedWidgetActor *arg0) {
             break;
     }
 
-    gRaceTypeSelectCursorAnimState = state;
+    cursor->state = state;
     if (arg0->state == 4) {
         removeCallbackTask(arg0);
         return;
