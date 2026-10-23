@@ -59,7 +59,11 @@ D_800DE7FC = gRacePlayerGroundProbeOffsets + 0x4C;
 D_800DE814 = gRacePlayerGroundProbeOffsets + 0x64;
 D_800DE818 = gRacePlayerGroundProbeOffsets + 0x68;
 
-/* Keep the end sentinel opaque to IDO loop-trip-count folding. */
+/* HUD status is the initialized byte of each 0xB0-byte camera. */
+gRacePlayerHudStatuses = gRaceCameras + 0xAC;
+
+/* Keep camera end sentinels opaque to IDO loop-trip-count folding. */
+gCourseSelectCameraUpdateEnd = gRaceCameras + 0x160;
 gRaceCamerasEnd = gRaceCameras + 0x2C0;
 
 /* Eight 0x0C slots; existing queue names alias their head words. */

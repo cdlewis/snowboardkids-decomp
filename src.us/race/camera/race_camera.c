@@ -7,7 +7,6 @@
 #include "game/race/player/race_player_input.h"
 #include "game/menu/renderer/menu_render_utils.h"
 
-#define RACE_CAMERA_COUNT 4
 #define RACE_CAMERA_STATE_SIZE 0xB0
 #define RACE_CAMERA_ANGLE_MASK 0xFFF
 #define RACE_CAMERA_FP_ONE 0x1000
@@ -145,7 +144,9 @@ RaceCameraTransition gRaceCameraPositionTransitions[] = {
     { 0, 0x0F, { 0xE21D1637, 0xED2A73FF, 0xE3E16721 }, { 0xE21D1637, 0xED3BB3FF, 0xE3E16721 } },
 };
 
-extern RaceCamera *gCurrentRaceCamera;
+RaceCamera gRaceCameras[RACE_CAMERA_COUNT];
+RaceCamera *gCurrentRaceCamera;
+
 extern s32 gRaceCameraReplayStartX;
 extern s32 gRaceCameraReplayStartY;
 extern s32 gRaceCameraReplayStartZ;
