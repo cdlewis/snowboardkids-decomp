@@ -455,7 +455,11 @@ segments:
       - { type: .bss, name: race/player/race_player_collision, vram: 0x80121D50 }
       - { type: .bss, name: race/player/race_player_movement, vram: 0x80121D70 }
       - { type: .bss, name: race/player/race_player_input, vram: 0x80121D80 }
-      - { type: bss, name: bss_chunk_a_3_race_player_tail, vram: 0x801235B0 }
+      - { type: .bss, name: engine/game_task_scheduler, vram: 0x801235B0 }
+      - { type: .bss, name: engine/system_runtime, vram: 0x801237B0 }
+      - { type: .bss, name: audio/scheduler, vram: 0x80156620 }
+      - { type: .bss, name: libmus/player, vram: 0x8015A630 }
+      - { type: .bss, name: libmus/aud_thread, vram: 0x8015A6A0 }
       - { type: .bss, name: ultra/os/seteventmesg, vram: 0x8015C980 }
       - { type: bss, name: bss_chunk_b, vram: 0x8015CA00 }
       - { type: .bss, name: ultra/os/initialize, vram: 0x8015CCD0 }

@@ -106,3 +106,46 @@ gPlayerPositionalSoundHandle3 = gPlayerPositionalSoundHandle0 + 12;
 
 /* The collision effect angle is the low half of the hit angle word. */
 gRacePlayerHitEffectAngle = gRacePlayerHitAngle + 2;
+
+/* Direct controller access aliases the four-player input arrays. */
+gPlayer2InputHeld = gPlayerInputHeld + 4;
+gPlayer3InputHeld = gPlayerInputHeld + 8;
+gPlayer4InputHeld = gPlayerInputHeld + 12;
+gPlayer2InputPrevious = gPlayerInputPrevious + 4;
+gPlayer3InputPrevious = gPlayerInputPrevious + 8;
+gPlayer4InputPrevious = gPlayerInputPrevious + 12;
+gPlayer2InputPressed = gPlayerInputPressed + 4;
+gPlayer3InputPressed = gPlayerInputPressed + 8;
+gPlayer4InputPressed = gPlayerInputPressed + 12;
+gPlayer2StickX = gPlayerStickX + 1;
+gPlayer3StickX = gPlayerStickX + 2;
+gPlayer4StickX = gPlayerStickX + 3;
+gPlayer2StickY = gPlayerStickY + 1;
+gPlayer3StickY = gPlayerStickY + 2;
+gPlayer4StickY = gPlayerStickY + 3;
+
+/* Menu callback list names expose the head words of six four-word slots. */
+gMenuOverlayRenderCallbackList = gMenuRenderCallbackQueueStorage + 0x0;
+D_80124848 = gMenuRenderCallbackQueueStorage + 0x10;
+gMenuForegroundRenderCallbackList = gMenuRenderCallbackQueueStorage + 0x20;
+gMenuRenderCallbackList = gMenuRenderCallbackQueueStorage + 0x30;
+gRaceOverlayRenderCallbackList = gMenuRenderCallbackQueueStorage + 0x40;
+gRaceForegroundRenderCallbackList = gMenuRenderCallbackQueueStorage + 0x50;
+gBackdropRenderCallbackList = gBackdropRenderCallbackQueueStorage;
+
+/* Model callback list names expose the head words of the eight queue slots. */
+gModelRenderCallbackList = gModelRenderCallbackQueueStorage + 0x0;
+gRaceObjectRenderCallbackList = gModelRenderCallbackQueueStorage + 0xC;
+gSceneModelRenderCallbackList = gModelRenderCallbackQueueStorage + 0x18;
+gRaceModelEffectRenderCallbackList = gModelRenderCallbackQueueStorage + 0x24;
+gModelRenderCallbackQueue4Head = gModelRenderCallbackQueueStorage + 0x30;
+gEffectRenderCallbackList = gModelRenderCallbackQueueStorage + 0x3C;
+gModelRenderCallbackQueue6Head = gModelRenderCallbackQueueStorage + 0x48;
+gModelRenderCallbackQueue7Head = gModelRenderCallbackQueueStorage + 0x54;
+
+/* Preserve the separate status-byte anchor used by IDO. */
+gFrameRenderTaskStatuses = gFrameRenderTasks + 0x66;
+
+/* Legacy audio views share typed heap and message queue storage. */
+gSoundPlayerHeapEnd = gSoundPlayerHeap + 4;
+gAudioTaskDoneQueue = gAudioTaskDoneQueueStorage;

@@ -36,8 +36,15 @@
 #define SCHEDULER_SWAPBUFFER_FLAG 0x40
 #define SCHEDULER_RETRACE_MASK 0xFFF
 #define FRAMEBUFFER_SWAP_RETRACE_DELAY 3
+#define VIEWPORT_COUNT 4
 
 #include "game/audio/audio_engine.h"
+
+/* Menu queues retain four words per slot; model queues use three. */
+typedef struct MenuRenderCallbackQueueSlot {
+    RenderCallbackNode *head;
+    u32 reserved[3];
+} MenuRenderCallbackQueueSlot;
 
 typedef struct {
     RenderCallbackQueueSlot queue0;
@@ -147,30 +154,47 @@ s16 gFadeTimer = BOOT_FADE_TIMER;
 
 s32 gClearFramebufferOnNextTask = 1;
 
-extern u8 gFadeColorRed;
-extern u8 gFadeColorGreen;
-extern u8 gFadeColorBlue;
-extern u16 gRetraceCounter;
+OSThread gBootThread;
+OSThread gGameThread;
+static u8 sSystemRuntimeUnusedThreadStorage[sizeof(OSThread)];
+OSMesgQueue gPiManagerQueue;
+OSMesg gPiManagerMessages[PI_MANAGER_MSG_COUNT];
+OSMesgQueue gRomDmaQueue;
+OSMesg gRomDmaMessages[1];
+OSMesgQueue gFramebufferRenderDoneQueue;
+OSMesg gFramebufferRenderDoneMessages[8];
+OSMesgQueue gSchedulerClientQueue;
+OSMesg gSchedulerClientMessages[2];
+OSMesgQueue gControllerInputUpdateQueue;
+OSMesg gControllerInputUpdateMessages[8];
+SchedulerState gSchedulerState;
+SchedulerClient gMainSchedulerClient;
+u16 gLastSchedulerRetraceCounter;
+u8 gRaceRecordSettingsEnabled;
+u8 gRaceCourseModelEffectsDisabled;
+u8 gRaceCourseOverlayEffectsDisabled;
+Gfx *gRegionAllocPtr;
+u8 gFramebufferColorBufferIndex;
+MenuRenderCallbackQueueSlot gMenuRenderCallbackQueueStorage[6];
+RenderCallbackQueueSlot gModelRenderCallbackQueueStorage[MODEL_RENDER_CALLBACK_QUEUE_COUNT];
+RenderCallbackQueueSlot gBackdropRenderCallbackQueueStorage;
+FrameRenderData *gCurrentFrameRenderData;
+FrameRenderTask gFrameRenderTasks[FRAME_RENDER_TASK_COUNT];
+FramebufferPrepareTask gFramebufferPrepareTasks[FRAME_RENDER_TASK_COUNT];
+u8 gCurrentViewportIndex;
+u8 gRenderMatricesDirty;
+s16 gMenuViewportWidth;
+s16 gMenuViewportHeight;
+s16 gMenuViewportCenterX;
+s16 gMenuViewportCenterY;
+s16 gUiBlinkTimer;
+Mtx *gViewportMatrix;
+u8 gFadeColorRed;
+u8 gFadeColorGreen;
+u8 gFadeColorBlue;
 
-extern OSThread gBootThread;
-extern OSMesgQueue gPiManagerQueue;
-extern OSMesg gPiManagerMessages[];
-extern OSThread gGameThread;
-extern OSMesgQueue gRomDmaQueue;
-extern OSMesg gRomDmaMessages[1];
-extern OSMesgQueue gSchedulerClientQueue;
-extern OSMesg gSchedulerClientMessages[2];
-extern OSMesgQueue gControllerInputUpdateQueue;
-extern OSMesg gControllerInputUpdateMessages[8];
-extern OSMesgQueue gFramebufferRenderDoneQueue;
-extern OSMesg gFramebufferRenderDoneMessages[8];
-extern SchedulerState gSchedulerState;
-extern SchedulerClient gMainSchedulerClient;
-extern u16 gLastSchedulerRetraceCounter;
-extern Gfx *gRegionAllocPtr;
-extern u8 gPendingFramebufferSwapCount;
+extern u16 gRetraceCounter;
 extern u8 gRumblePakConnectedMask;
-extern u8 gFramebufferColorBufferIndex;
 extern u8 gDepthBufferPhysicalAddress[];
 extern u8 gBootThreadStack[BOOT_THREAD_STACK_SIZE];
 extern u8 gGameThreadStack[GAME_THREAD_STACK_SIZE];
@@ -356,15 +380,6 @@ void dmaReadRom(u32 romOffset, void *ramAddress, s32 size) {
         ramAddress = (void *)((u8 *)ramAddress + transferSize);
     }
 }
-
-extern s16 gUiBlinkTimer;
-extern s16 gMenuViewportWidth;
-extern s16 gMenuViewportHeight;
-extern s16 gMenuViewportCenterX;
-extern s16 gMenuViewportCenterY;
-extern u8 gCurrentViewportIndex;
-
-#define VIEWPORT_COUNT 4
 
 void appendViewportDisplayLists(u8 frameIndex) {
     RenderCallbackNode **modelCallbackQueueHead;

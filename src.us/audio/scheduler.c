@@ -7,6 +7,11 @@ s32 gSchedulerYieldResult = 0;
 s32 gSchedulerYieldRequested = 0;
 s32 gSchedulerStartupRetraceCount = 0;
 
+u8 gSchedulerThreadStack[0x2000];
+u8 gSchedulerSwapBufferThreadStack[0x2000];
+s32 gSchedulerRspTaskState;
+u8 gSchedulerRdpTaskActive;
+
 void initScheduler(SchedulerState *scheduler, u8 viModeIndex, u8 retraceInterval) {
     scheduler->curRSPTask = 0;
     scheduler->curRDPTask = 0;

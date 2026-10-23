@@ -10,6 +10,26 @@ s32 gAudioThreadStarted = 0;
 AudioInfo *gNextAudioInfo = NULL;
 s32 gAudioUnderrunState = 1;
 
+AudioWorkBuffers gAudioWorkBuffers;
+SchedulerThread gAudioThread;
+OSMesgQueue gAudioThreadQueue;
+OSMesg gAudioThreadMessages[8];
+OSMesgQueue gAudioTaskDoneQueueStorage;
+OSMesg gAudioTaskDoneMessages[8];
+ALSynth gAudioSynthesizer;
+u8 gAudioThreadStack[0x2000];
+AudioDmaState gAudioDmaState;
+s32 gMinAudioTaskOutputLen;
+s32 gTargetAudioTaskOutputLen;
+s32 gMaxAudioTaskOutputLen;
+s32 gAudioCmdListCapacity;
+OSMesgQueue gAudioDmaQueue;
+SchedulerState *gAudioSchedulerState;
+AudioDmaBuffer *gAudioDmaBufferPool;
+OSIoMesg *gAudioDmaMessages;
+OSMesg *gAudioDmaMessageBuffer;
+s32 gAudioDmaBufferSize;
+
 void initAudioSynthesizer(
     SchedulerState *scheduler,
     ALSynConfig *config,

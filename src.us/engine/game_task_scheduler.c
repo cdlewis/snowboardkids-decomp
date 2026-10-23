@@ -18,17 +18,31 @@ s8 gAnalogStickResponseCurve[56] = {
     0,  0,  0,  0,  0,  0,  0,  0,  1,  1,  1,  2,  2,  2,  3,  3,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14,
     15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 31, 31, 31, 31, 31, 0, 0,  1,  0,  0,  0,
 };
-extern GameTask gGameTaskPool[GAME_TASK_COUNT];
-extern u8 gGameTaskCount;
-extern GameTask gActiveGameTaskList;
+s16 gFrameCounter;
+static u16 sFrameCounterPadding;
+s32 gMenuFlowState;
+GameTask *gCurrentGameTask;
+static u32 sCurrentGameTaskPadding;
+GameTask gGameTaskPool[GAME_TASK_COUNT];
+u8 gGameTaskCount;
+GameTask gActiveGameTaskList;
+GameTask *gFreeGameTaskStack[GAME_TASK_COUNT];
+u8 gPendingFramebufferSwapCount;
+u8 gFramebufferSwapHold;
+u8 gNextFramebufferRenderTaskIndex;
+u32 gMenuRenderScratchUsedSize;
+s32 gPlayerInputHeld[PLAYER_INPUT_COUNT];
+s32 gPlayerInputPrevious[PLAYER_INPUT_COUNT];
+s32 gPlayerInputPressed[PLAYER_INPUT_COUNT];
+s8 gPlayerStickX[PLAYER_INPUT_COUNT];
+s8 gPlayerStickY[PLAYER_INPUT_COUNT];
+s32 gPlayerInputRepeat[PLAYER_INPUT_COUNT];
+u8 gPlayerInputRepeatTimer[PLAYER_INPUT_COUNT];
+
 extern volatile GameTask gActiveGameTaskListView;
-extern GameTask *gFreeGameTaskStack[];
-extern s32 gPlayerInputPrevious[PLAYER_INPUT_COUNT];
 extern s32 gPlayer2InputPrevious;
 extern s32 gPlayer3InputPrevious;
 extern s32 gPlayer4InputPrevious;
-extern s32 gPlayerInputRepeat[PLAYER_INPUT_COUNT];
-extern u8 gPlayerInputRepeatTimer[PLAYER_INPUT_COUNT];
 
 CLANG_DIAGNOSTIC_PUSH
 CLANG_DIAGNOSTIC_IGNORE_DEPRECATED_NON_PROTOTYPE
