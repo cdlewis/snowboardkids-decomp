@@ -25,8 +25,6 @@
 #include "game/menu/renderer/menu_renderer.h"
 #include <PR/os_motor.h>
 
-#define OS_MESG_BLOCK 1
-
 typedef struct OSContPad {
     u16 button;
     s8 stick_x;

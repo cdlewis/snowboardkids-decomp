@@ -28,7 +28,6 @@
 #include "game/race/ui/race_hud.h"
 #include <PR/os_cache.h>
 
-#define RACE_UI_TRAIL_GFX_ALLOC_PTR (*(RaceUiDisplayCommand **)&gRegionAllocPtr)
 #define ASSET_HANDLE(index) (gAssetHandles[(index)])
 #define RACE_UI_SNOWBOARD_TRAIL_SCALE_X 0xF0000
 #define RACE_UI_SNOWBOARD_TRAIL_SCALE_Y 0x230000
@@ -79,13 +78,6 @@ typedef struct {
 } RaceCourseScrollingTextureInit;
 
 typedef struct {
-    struct {
-        u32 w0;
-        u32 w1;
-    } words;
-} RaceUiDisplayCommand;
-
-typedef struct {
     /* 0x00 */ s16 active;
     /* 0x02 */ s16 sentinel;
     /* 0x04 */ Vec3i position;
@@ -100,18 +92,11 @@ typedef struct {
 } RaceUiRankTextRenderEntry;
 
 typedef struct {
-    /* 0x00 */ u8 pad30[4];
+    /* 0x00 */ u8 pad0[4];
     /* 0x04 */ Vec3i vec;
     /* 0x10 */ Mat3x3 matrix;
-    /* 0x22 */ u8 pad52[0xC];
-} RaceUiSparkleTransformScratch;
-
-typedef struct {
-    /* 0x00 */ u8 pad30[4];
-    /* 0x04 */ Vec3i vec;
-    /* 0x10 */ Mat3x3 matrix;
-    /* 0x22 */ u8 pad52[4];
-} RaceUiSparkleRetargetScratch;
+    /* 0x22 */ u8 pad22[4];
+} RaceUiSparkleScratch;
 
 RaceCourseScrollingTextureInit gRaceCourseScrollingTextureInit[RACE_COURSE_SCROLLING_TEXTURE_COUNT] = {
     { (s32)QUICKSAND_VALLEY_COURSE_SCROLLING_TEXTURE_0_DISPLAY_LIST_command_000000, 0x0044, 0x00, 0x00 },
@@ -3182,7 +3167,8 @@ void renderRacePlayerSparkleEffect(RaceUiSparkleActor *arg0) {
 }
 
 void updateRacePlayerSparkleOrbit(RaceUiSparkleActor *arg0) {
-    RaceUiSparkleTransformScratch stack;
+    u8 pad[8];
+    RaceUiSparkleScratch stack;
     RacePlayer *player;
     s16 timer;
     s32 angle;
@@ -3239,7 +3225,7 @@ void updateRacePlayerSparkleRetarget(RaceUiSparkleActor *arg0) {
     s16 timer;
     s32 selectedPlayerIndex;
     s32 activeCount;
-    RaceUiSparkleRetargetScratch scratch;
+    RaceUiSparkleScratch scratch;
 
     if (gRaceUpdatePaused == 0) {
         if (gFrameCounter & 1) {
@@ -3395,7 +3381,7 @@ void spawnGhostItemEffect(s16 arg0) {
 
 void renderRaceUiExpiredSpeedFanEffect(RaceUiExpiredSpeedFanActor *arg0) {
     volatile u8 pad[0x20];
-    RaceUiDisplayCommand *unused;
+    Gfx *unused;
 
     if (gRenderMatricesDirty != 0) {
         arg0->matrixDirty = 1;
@@ -3408,13 +3394,13 @@ void renderRaceUiExpiredSpeedFanEffect(RaceUiExpiredSpeedFanActor *arg0) {
     }
 
     if (arg0->frontMatrix != NULL) {
-        gDPPipeSync(RACE_UI_TRAIL_GFX_ALLOC_PTR++);
-        gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x02, getRelocatableHeapBlockBase(ASSET_HANDLE(0xA)));
-        gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x03, getRelocatableHeapBlockBase(ASSET_HANDLE(0xB)));
-        gSPMatrix(RACE_UI_TRAIL_GFX_ALLOC_PTR++, arg0->frontMatrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
-        gSPDisplayList(RACE_UI_TRAIL_GFX_ALLOC_PTR++, gSpeedFanFrontDisplayList);
-        gSPMatrix(RACE_UI_TRAIL_GFX_ALLOC_PTR++, arg0->backMatrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
-        gSPDisplayList(RACE_UI_TRAIL_GFX_ALLOC_PTR++, gSpeedFanBackDisplayList);
+        gDPPipeSync(gRegionAllocPtr++);
+        gSPSegment(gRegionAllocPtr++, 0x02, getRelocatableHeapBlockBase(ASSET_HANDLE(0xA)));
+        gSPSegment(gRegionAllocPtr++, 0x03, getRelocatableHeapBlockBase(ASSET_HANDLE(0xB)));
+        gSPMatrix(gRegionAllocPtr++, arg0->frontMatrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+        gSPDisplayList(gRegionAllocPtr++, gSpeedFanFrontDisplayList);
+        gSPMatrix(gRegionAllocPtr++, arg0->backMatrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+        gSPDisplayList(gRegionAllocPtr++, gSpeedFanBackDisplayList);
     }
 }
 
@@ -3492,11 +3478,11 @@ void renderRaceUiItemStealTrailEffect(RaceUiRankTrailActor *arg0) {
     }
 
     if (arg0->matrix != NULL) {
-        gDPPipeSync(RACE_UI_TRAIL_GFX_ALLOC_PTR++);
-        gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x02, getRelocatableHeapBlockBase(ASSET_HANDLE(0xA)));
-        gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x03, getRelocatableHeapBlockBase(ASSET_HANDLE(0xB)));
-        gSPMatrix(RACE_UI_TRAIL_GFX_ALLOC_PTR++, arg0->matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
-        gSPDisplayList(RACE_UI_TRAIL_GFX_ALLOC_PTR++, &_ADDR_2003870_VRAM);
+        gDPPipeSync(gRegionAllocPtr++);
+        gSPSegment(gRegionAllocPtr++, 0x02, getRelocatableHeapBlockBase(ASSET_HANDLE(0xA)));
+        gSPSegment(gRegionAllocPtr++, 0x03, getRelocatableHeapBlockBase(ASSET_HANDLE(0xB)));
+        gSPMatrix(gRegionAllocPtr++, arg0->matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+        gSPDisplayList(gRegionAllocPtr++, &_ADDR_2003870_VRAM);
     }
 }
 
@@ -3745,7 +3731,7 @@ void spawnRaceUiAltBurstTextParticle(void *arg0, void *arg1, void *arg2, s16 arg
 
 void renderGhostSlowdownActor(RaceUiPodiumTrailActor *arg0) {
     volatile u8 pad[0x20];
-    volatile RaceUiDisplayCommand *unused;
+    volatile Gfx *unused;
 
     if (gRenderMatricesDirty != 0) {
         arg0->matrixDirty = 1;
@@ -3760,11 +3746,11 @@ void renderGhostSlowdownActor(RaceUiPodiumTrailActor *arg0) {
     }
 
     if (arg0->matrix != NULL) {
-        gDPPipeSync(RACE_UI_TRAIL_GFX_ALLOC_PTR++);
-        gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x02, getRelocatableHeapBlockBase(ASSET_HANDLE(0xA)));
-        gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x03, getRelocatableHeapBlockBase(ASSET_HANDLE(0xB)));
-        gSPMatrix(RACE_UI_TRAIL_GFX_ALLOC_PTR++, arg0->matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
-        gSPDisplayList(RACE_UI_TRAIL_GFX_ALLOC_PTR++, &PAN_DISPLAY_LIST_VRAM);
+        gDPPipeSync(gRegionAllocPtr++);
+        gSPSegment(gRegionAllocPtr++, 0x02, getRelocatableHeapBlockBase(ASSET_HANDLE(0xA)));
+        gSPSegment(gRegionAllocPtr++, 0x03, getRelocatableHeapBlockBase(ASSET_HANDLE(0xB)));
+        gSPMatrix(gRegionAllocPtr++, arg0->matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+        gSPDisplayList(gRegionAllocPtr++, &PAN_DISPLAY_LIST_VRAM);
     }
 }
 
@@ -4012,23 +3998,23 @@ void renderDizzyLandCarousel(DizzyLandCarouselActor *arg0) {
 
         if ((arg0->canopyMatrix != NULL) && (arg0->negativeSineHorsesMatrix != NULL) &&
             (arg0->positiveSineHorsesMatrix != NULL)) {
-            gDPPipeSync(RACE_UI_TRAIL_GFX_ALLOC_PTR++);
-            gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x02, getRelocatableHeapBlockBase(ASSET_HANDLE(0x8)));
-            gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x03, getRelocatableHeapBlockBase(ASSET_HANDLE(0x9)));
-            gSPMatrix(RACE_UI_TRAIL_GFX_ALLOC_PTR++, arg0->canopyMatrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
-            gSPDisplayList(RACE_UI_TRAIL_GFX_ALLOC_PTR++, &DIZZY_LAND_CAROUSEL_CANOPY_DISPLAY_LIST_VRAM);
+            gDPPipeSync(gRegionAllocPtr++);
+            gSPSegment(gRegionAllocPtr++, 0x02, getRelocatableHeapBlockBase(ASSET_HANDLE(0x8)));
+            gSPSegment(gRegionAllocPtr++, 0x03, getRelocatableHeapBlockBase(ASSET_HANDLE(0x9)));
+            gSPMatrix(gRegionAllocPtr++, arg0->canopyMatrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+            gSPDisplayList(gRegionAllocPtr++, &DIZZY_LAND_CAROUSEL_CANOPY_DISPLAY_LIST_VRAM);
             gSPMatrix(
-                RACE_UI_TRAIL_GFX_ALLOC_PTR++,
+                gRegionAllocPtr++,
                 arg0->negativeSineHorsesMatrix,
                 G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW
             );
-            gSPDisplayList(RACE_UI_TRAIL_GFX_ALLOC_PTR++, &DIZZY_LAND_CAROUSEL_HORSES_NEGATIVE_SINE_DISPLAY_LIST_VRAM);
+            gSPDisplayList(gRegionAllocPtr++, &DIZZY_LAND_CAROUSEL_HORSES_NEGATIVE_SINE_DISPLAY_LIST_VRAM);
             gSPMatrix(
-                RACE_UI_TRAIL_GFX_ALLOC_PTR++,
+                gRegionAllocPtr++,
                 arg0->positiveSineHorsesMatrix,
                 G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW
             );
-            gSPDisplayList(RACE_UI_TRAIL_GFX_ALLOC_PTR++, &DIZZY_LAND_CAROUSEL_HORSES_POSITIVE_SINE_DISPLAY_LIST_VRAM);
+            gSPDisplayList(gRegionAllocPtr++, &DIZZY_LAND_CAROUSEL_HORSES_POSITIVE_SINE_DISPLAY_LIST_VRAM);
         }
     }
 }
@@ -4046,7 +4032,7 @@ void initDizzyLandCarousel(DizzyLandCarouselActor *actor) {
 
 void renderRaceUiHeavyKnockdownTrailEffect(RaceUiRankTrailActor *arg0) {
     volatile u8 pad[0x20];
-    RaceUiDisplayCommand *unused;
+    Gfx *unused;
 
     if (gRenderMatricesDirty != 0) {
         arg0->matrixDirty = 1;
@@ -4058,11 +4044,11 @@ void renderRaceUiHeavyKnockdownTrailEffect(RaceUiRankTrailActor *arg0) {
     }
 
     if (arg0->matrix != NULL) {
-        gDPPipeSync(RACE_UI_TRAIL_GFX_ALLOC_PTR++);
-        gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x02, getRelocatableHeapBlockBase(ASSET_HANDLE(0xA)));
-        gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x03, getRelocatableHeapBlockBase(ASSET_HANDLE(0xB)));
-        gSPMatrix(RACE_UI_TRAIL_GFX_ALLOC_PTR++, arg0->matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
-        gSPDisplayList(RACE_UI_TRAIL_GFX_ALLOC_PTR++, &_ADDR_20019C0_VRAM);
+        gDPPipeSync(gRegionAllocPtr++);
+        gSPSegment(gRegionAllocPtr++, 0x02, getRelocatableHeapBlockBase(ASSET_HANDLE(0xA)));
+        gSPSegment(gRegionAllocPtr++, 0x03, getRelocatableHeapBlockBase(ASSET_HANDLE(0xB)));
+        gSPMatrix(gRegionAllocPtr++, arg0->matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+        gSPDisplayList(gRegionAllocPtr++, &_ADDR_20019C0_VRAM);
     }
 }
 
@@ -4198,7 +4184,7 @@ void spawnRaceUiThrownTrailObstacle(s16 arg0, void *arg1, void *arg2, s16 arg3) 
 
 void renderRaceUiSingleTrailEffect(RaceUiSingleTrailActor *arg0) {
     volatile u8 pad[0x20];
-    RaceUiDisplayCommand *unused;
+    Gfx *unused;
 
     if (gRenderMatricesDirty != 0) {
         arg0->matrixDirty = 1;
@@ -4210,11 +4196,11 @@ void renderRaceUiSingleTrailEffect(RaceUiSingleTrailActor *arg0) {
     }
 
     if (arg0->matrix != NULL) {
-        gDPPipeSync(RACE_UI_TRAIL_GFX_ALLOC_PTR++);
-        gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x02, getRelocatableHeapBlockBase(ASSET_HANDLE(0xA)));
-        gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x03, getRelocatableHeapBlockBase(ASSET_HANDLE(0xB)));
-        gSPMatrix(RACE_UI_TRAIL_GFX_ALLOC_PTR++, arg0->matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
-        gSPDisplayList(RACE_UI_TRAIL_GFX_ALLOC_PTR++, &_ADDR_2003538_VRAM);
+        gDPPipeSync(gRegionAllocPtr++);
+        gSPSegment(gRegionAllocPtr++, 0x02, getRelocatableHeapBlockBase(ASSET_HANDLE(0xA)));
+        gSPSegment(gRegionAllocPtr++, 0x03, getRelocatableHeapBlockBase(ASSET_HANDLE(0xB)));
+        gSPMatrix(gRegionAllocPtr++, arg0->matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+        gSPDisplayList(gRegionAllocPtr++, &_ADDR_2003538_VRAM);
     }
 }
 
@@ -4251,7 +4237,7 @@ void initRaceUiSingleTrailEffect(RaceUiSingleTrailActor *arg0) {
 
 void renderRaceUiFadingImpact(RaceUiFadingImpactActor *arg0) {
     volatile u8 pad[0x20];
-    RaceUiDisplayCommand *unused;
+    Gfx *unused;
 
     if (gRenderMatricesDirty != 0) {
         arg0->matrixDirty = 1;
@@ -4263,12 +4249,12 @@ void renderRaceUiFadingImpact(RaceUiFadingImpactActor *arg0) {
     }
 
     if (arg0->matrix != NULL) {
-        gDPPipeSync(RACE_UI_TRAIL_GFX_ALLOC_PTR++);
-        gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x02, getRelocatableHeapBlockBase(ASSET_HANDLE(0xA)));
-        gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x03, getRelocatableHeapBlockBase(ASSET_HANDLE(0xB)));
-        gSPMatrix(RACE_UI_TRAIL_GFX_ALLOC_PTR++, arg0->matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
-        gDPSetPrimColor(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0, 0, 0xFF, 0xFF, 0xFF, arg0->alpha);
-        gSPDisplayList(RACE_UI_TRAIL_GFX_ALLOC_PTR++, &_ADDR_20035F8_VRAM);
+        gDPPipeSync(gRegionAllocPtr++);
+        gSPSegment(gRegionAllocPtr++, 0x02, getRelocatableHeapBlockBase(ASSET_HANDLE(0xA)));
+        gSPSegment(gRegionAllocPtr++, 0x03, getRelocatableHeapBlockBase(ASSET_HANDLE(0xB)));
+        gSPMatrix(gRegionAllocPtr++, arg0->matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+        gDPSetPrimColor(gRegionAllocPtr++, 0, 0, 0xFF, 0xFF, 0xFF, arg0->alpha);
+        gSPDisplayList(gRegionAllocPtr++, &_ADDR_20035F8_VRAM);
     }
 }
 
@@ -4351,7 +4337,7 @@ void spawnRaceUiFadingImpact(s32 x, s32 y, s32 z, s32 userId) {
 
 void renderRaceUiSpinHitTransitionEffect(RaceUiTransitionActor *arg0) {
     volatile u8 pad[0x20];
-    RaceUiDisplayCommand *unused;
+    Gfx *unused;
 
     if (gRenderMatricesDirty != 0) {
         arg0->matrixDirty = 1;
@@ -4363,11 +4349,11 @@ void renderRaceUiSpinHitTransitionEffect(RaceUiTransitionActor *arg0) {
     }
 
     if (arg0->matrix != NULL) {
-        gDPPipeSync(RACE_UI_TRAIL_GFX_ALLOC_PTR++);
-        gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x02, getRelocatableHeapBlockBase(ASSET_HANDLE(0xA)));
-        gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x03, getRelocatableHeapBlockBase(ASSET_HANDLE(0xB)));
-        gSPMatrix(RACE_UI_TRAIL_GFX_ALLOC_PTR++, arg0->matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
-        gSPDisplayList(RACE_UI_TRAIL_GFX_ALLOC_PTR++, &_ADDR_2002490_VRAM);
+        gDPPipeSync(gRegionAllocPtr++);
+        gSPSegment(gRegionAllocPtr++, 0x02, getRelocatableHeapBlockBase(ASSET_HANDLE(0xA)));
+        gSPSegment(gRegionAllocPtr++, 0x03, getRelocatableHeapBlockBase(ASSET_HANDLE(0xB)));
+        gSPMatrix(gRegionAllocPtr++, arg0->matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+        gSPDisplayList(gRegionAllocPtr++, &_ADDR_2002490_VRAM);
     }
 }
 
@@ -4505,10 +4491,8 @@ void spawnRaceUiStunOrbitingIcons(s16 playerIndex) {
 }
 
 void renderDizzyLandTeacupBumper(DizzyLandTeacupBumperActor *arg0) {
-    struct {
-        Transform3D transform;
-        s16 unused[2];
-    } scratch;
+    s16 unused[2];
+    Transform3D transform;
 
     if (gRenderMatricesDirty != 0) {
         arg0->matrixDirty = 1;
@@ -4517,25 +4501,25 @@ void renderDizzyLandTeacupBumper(DizzyLandTeacupBumperActor *arg0) {
     if (isPositionNearCurrentRaceViewportCamera(&arg0->pos) != 0) {
         if (arg0->matrixDirty != 0) {
             arg0->matrixDirty = 0;
-            makeFixedRotationY(scratch.transform.rotation, arg0->yaw);
-            scratch.transform.rotation[0] = SCALE_MATRIX_COMPONENT(scratch.transform.rotation[0], arg0->xzScale);
-            scratch.transform.rotation[3] = SCALE_MATRIX_COMPONENT(scratch.transform.rotation[3], arg0->xzScale);
-            scratch.transform.rotation[6] = SCALE_MATRIX_COMPONENT(scratch.transform.rotation[6], arg0->xzScale);
-            scratch.transform.rotation[2] = SCALE_MATRIX_COMPONENT(scratch.transform.rotation[2], arg0->xzScale);
-            scratch.transform.rotation[5] = SCALE_MATRIX_COMPONENT(scratch.transform.rotation[5], arg0->xzScale);
-            scratch.transform.rotation[8] = SCALE_MATRIX_COMPONENT(scratch.transform.rotation[8], arg0->xzScale);
-            scratch.transform.translation.x = arg0->pos.x;
-            scratch.transform.translation.y = arg0->pos.y;
-            scratch.transform.translation.z = arg0->pos.z;
-            arg0->matrix = allocFixedTransformMatrix(&scratch.transform);
+            makeFixedRotationY(transform.rotation, arg0->yaw);
+            transform.rotation[0] = SCALE_MATRIX_COMPONENT(transform.rotation[0], arg0->xzScale);
+            transform.rotation[3] = SCALE_MATRIX_COMPONENT(transform.rotation[3], arg0->xzScale);
+            transform.rotation[6] = SCALE_MATRIX_COMPONENT(transform.rotation[6], arg0->xzScale);
+            transform.rotation[2] = SCALE_MATRIX_COMPONENT(transform.rotation[2], arg0->xzScale);
+            transform.rotation[5] = SCALE_MATRIX_COMPONENT(transform.rotation[5], arg0->xzScale);
+            transform.rotation[8] = SCALE_MATRIX_COMPONENT(transform.rotation[8], arg0->xzScale);
+            transform.translation.x = arg0->pos.x;
+            transform.translation.y = arg0->pos.y;
+            transform.translation.z = arg0->pos.z;
+            arg0->matrix = allocFixedTransformMatrix(&transform);
         }
 
         if (arg0->matrix != NULL) {
-            gDPPipeSync(RACE_UI_TRAIL_GFX_ALLOC_PTR++);
-            gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x02, getRelocatableHeapBlockBase(ASSET_HANDLE(0x8)));
-            gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x03, getRelocatableHeapBlockBase(ASSET_HANDLE(0x9)));
-            gSPMatrix(RACE_UI_TRAIL_GFX_ALLOC_PTR++, arg0->matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
-            gSPDisplayList(RACE_UI_TRAIL_GFX_ALLOC_PTR++, &DIZZY_LAND_TEACUP_BUMPER_DISPLAY_LIST_VRAM);
+            gDPPipeSync(gRegionAllocPtr++);
+            gSPSegment(gRegionAllocPtr++, 0x02, getRelocatableHeapBlockBase(ASSET_HANDLE(0x8)));
+            gSPSegment(gRegionAllocPtr++, 0x03, getRelocatableHeapBlockBase(ASSET_HANDLE(0x9)));
+            gSPMatrix(gRegionAllocPtr++, arg0->matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+            gSPDisplayList(gRegionAllocPtr++, &DIZZY_LAND_TEACUP_BUMPER_DISPLAY_LIST_VRAM);
         }
     }
 }
@@ -4594,10 +4578,8 @@ void initDizzyLandTeacupBumper(DizzyLandTeacupBumperActor *bumper) {
 }
 
 void renderDizzyLandFerrisWheel(DizzyLandFerrisWheelActor *arg0) {
-    struct {
-        Transform3D transform;
-        s16 unused[2];
-    } scratch;
+    s16 unused[2];
+    Transform3D transform;
     Vec3i transformedOffset;
 
     if (gRenderMatricesDirty != 0) {
@@ -4607,32 +4589,32 @@ void renderDizzyLandFerrisWheel(DizzyLandFerrisWheelActor *arg0) {
     if (isPositionNearCurrentRaceViewportCamera(&arg0->pos) != 0) {
         if (arg0->matrixDirty != 0) {
             arg0->matrixDirty = 0;
-            makeFixedRotationY(scratch.transform.rotation, arg0->yaw);
-            scratch.transform.translation.x = arg0->pos.x;
-            scratch.transform.translation.y = arg0->pos.y;
-            scratch.transform.translation.z = arg0->pos.z;
-            arg0->supportMatrix = allocFixedTransformMatrix(&scratch.transform);
+            makeFixedRotationY(transform.rotation, arg0->yaw);
+            transform.translation.x = arg0->pos.x;
+            transform.translation.y = arg0->pos.y;
+            transform.translation.z = arg0->pos.z;
+            arg0->supportMatrix = allocFixedTransformMatrix(&transform);
 
             transformVec3iByFixedMatrix(
-                scratch.transform.rotation,
+                transform.rotation,
                 &gDizzyLandFerrisWheelHubOffset,
                 &transformedOffset
             );
-            scratch.transform.translation.x += transformedOffset.x;
-            scratch.transform.translation.y += transformedOffset.y;
-            scratch.transform.translation.z += transformedOffset.z;
-            makeFixedRotationZY(scratch.transform.rotation, arg0->yaw, arg0->wheelAngle);
-            arg0->wheelMatrix = allocFixedTransformMatrix(&scratch.transform);
+            transform.translation.x += transformedOffset.x;
+            transform.translation.y += transformedOffset.y;
+            transform.translation.z += transformedOffset.z;
+            makeFixedRotationZY(transform.rotation, arg0->yaw, arg0->wheelAngle);
+            arg0->wheelMatrix = allocFixedTransformMatrix(&transform);
         }
 
         if (arg0->wheelMatrix != NULL) {
-            gDPPipeSync(RACE_UI_TRAIL_GFX_ALLOC_PTR++);
-            gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x02, getRelocatableHeapBlockBase(ASSET_HANDLE(0x8)));
-            gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x03, getRelocatableHeapBlockBase(ASSET_HANDLE(0x9)));
-            gSPMatrix(RACE_UI_TRAIL_GFX_ALLOC_PTR++, arg0->supportMatrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
-            gSPDisplayList(RACE_UI_TRAIL_GFX_ALLOC_PTR++, &DIZZY_LAND_FERRIS_WHEEL_SUPPORT_DISPLAY_LIST_VRAM);
-            gSPMatrix(RACE_UI_TRAIL_GFX_ALLOC_PTR++, arg0->wheelMatrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
-            gSPDisplayList(RACE_UI_TRAIL_GFX_ALLOC_PTR++, &DIZZY_LAND_FERRIS_WHEEL_DISPLAY_LIST_VRAM);
+            gDPPipeSync(gRegionAllocPtr++);
+            gSPSegment(gRegionAllocPtr++, 0x02, getRelocatableHeapBlockBase(ASSET_HANDLE(0x8)));
+            gSPSegment(gRegionAllocPtr++, 0x03, getRelocatableHeapBlockBase(ASSET_HANDLE(0x9)));
+            gSPMatrix(gRegionAllocPtr++, arg0->supportMatrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+            gSPDisplayList(gRegionAllocPtr++, &DIZZY_LAND_FERRIS_WHEEL_SUPPORT_DISPLAY_LIST_VRAM);
+            gSPMatrix(gRegionAllocPtr++, arg0->wheelMatrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+            gSPDisplayList(gRegionAllocPtr++, &DIZZY_LAND_FERRIS_WHEEL_DISPLAY_LIST_VRAM);
         }
     }
 }
@@ -4651,10 +4633,8 @@ void initDizzyLandFerrisWheel(DizzyLandFerrisWheelActor *arg0) {
 }
 
 void renderDizzyLandSpinningCabinRide(DizzyLandSpinningCabinRideActor *arg0) {
-    struct {
-        Transform3D transform;
-        s16 unused[2];
-    } scratch;
+    s16 unused[2];
+    Transform3D transform;
     s32 temp2;
     s32 pad;
     s32 pad2;
@@ -4670,17 +4650,17 @@ void renderDizzyLandSpinningCabinRide(DizzyLandSpinningCabinRideActor *arg0) {
 
     if (arg0->matrixDirty != 0) {
         arg0->matrixDirty = 0;
-        makeFixedRotationY(scratch.transform.rotation, arg0->baseYaw);
-        scratch.transform.translation.x = arg0->pos.x;
-        scratch.transform.translation.y = arg0->pos.y;
-        scratch.transform.translation.z = arg0->pos.z;
-        arg0->poleMatrix = allocFixedTransformMatrix(&scratch.transform);
+        makeFixedRotationY(transform.rotation, arg0->baseYaw);
+        transform.translation.x = arg0->pos.x;
+        transform.translation.y = arg0->pos.y;
+        transform.translation.z = arg0->pos.z;
+        arg0->poleMatrix = allocFixedTransformMatrix(&transform);
 
-        scratch.transform.translation.y += 0x01000000;
+        transform.translation.y += 0x01000000;
         temp.half.lo = fixedSine(arg0->pitchPhase) >> 5;
         temp2 = fixedSine(arg0->rollPhase) >> 5;
-        makeFixedRotationYZX(scratch.transform.rotation, temp.half.lo, arg0->spinAngle, temp2);
-        arg0->canopyMatrix = allocFixedTransformMatrix(&scratch.transform);
+        makeFixedRotationYZX(transform.rotation, temp.half.lo, arg0->spinAngle, temp2);
+        arg0->canopyMatrix = allocFixedTransformMatrix(&transform);
     }
 
     if (arg0->canopyMatrix != NULL) {
@@ -4912,7 +4892,7 @@ void initSilverMountainSnowParticles(RaceUiEffectParticleActor *actor) {
 }
 
 void renderRaceCourseRankModel(RaceUiRankParticleActor *arg0) {
-    RaceUiDisplayCommand *unused;
+    Gfx *unused;
     s32 displayListIndex;
 
     if (gRenderMatricesDirty != 0) {
@@ -4931,11 +4911,11 @@ void renderRaceCourseRankModel(RaceUiRankParticleActor *arg0) {
                 displayListIndex = 1;
             }
 
-            gDPPipeSync(RACE_UI_TRAIL_GFX_ALLOC_PTR++);
-            gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x02, getRelocatableHeapBlockBase(ASSET_HANDLE(0x8)));
-            gSPSegment(RACE_UI_TRAIL_GFX_ALLOC_PTR++, 0x03, getRelocatableHeapBlockBase(ASSET_HANDLE(0x9)));
-            gSPMatrix(RACE_UI_TRAIL_GFX_ALLOC_PTR++, arg0->matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
-            gSPDisplayList(RACE_UI_TRAIL_GFX_ALLOC_PTR++, arg0->displayLists[displayListIndex]);
+            gDPPipeSync(gRegionAllocPtr++);
+            gSPSegment(gRegionAllocPtr++, 0x02, getRelocatableHeapBlockBase(ASSET_HANDLE(0x8)));
+            gSPSegment(gRegionAllocPtr++, 0x03, getRelocatableHeapBlockBase(ASSET_HANDLE(0x9)));
+            gSPMatrix(gRegionAllocPtr++, arg0->matrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+            gSPDisplayList(gRegionAllocPtr++, arg0->displayLists[displayListIndex]);
         }
     }
 }
