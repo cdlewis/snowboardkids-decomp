@@ -11,29 +11,28 @@ typedef struct ControllerThreadMessageSlots {
     OSMesg request;
 } ControllerThreadMessageSlots;
 
-u8 gControllerSubsystemBssPrefix[8];
+u8 gConnectedControllerCount;
+OSThread gControllerSubsystemThread;
+u8 gControllerSubsystemThreadStack[0x2000];
+OSMesgQueue gControllerSubsystemRequestQueue;
+OSMesg gControllerSubsystemRequestMessages[8];
+OSMesgQueue gControllerSubsystemReplyQueue;
+OSMesg gControllerSubsystemReplyMessages[1];
+static u8 sControllerSubsystemReplyPadding[4];
+OSMesgQueue gControllerEventQueue;
+OSMesg gControllerEventMessages[1];
+s16 gControllerEventMessage;
+u8 gControllerReadPending;
+OSContStatus gControllerStatuses[MAXCONTROLLERS];
+OSContPad gControllerPads[MAXCONTROLLERS];
 ControllerInputState gControllerInputState[MAXCONTROLLERS];
 u8 gControllerSubsystemBssPadding[0x7C68];
 s32 gRumbleMotorStatuses[MAXCONTROLLERS];
 s16 gRumbleMotorRequestStates[MAXCONTROLLERS];
 
-extern OSThread gControllerSubsystemThread;
-extern OSMesgQueue gControllerSubsystemRequestQueue;
-extern OSMesg gControllerSubsystemRequestMessages[];
-extern OSMesgQueue gControllerSubsystemReplyQueue;
-extern OSMesg gControllerSubsystemReplyMessages[];
-extern OSMesgQueue gControllerEventQueue;
-extern OSMesg gControllerEventMessages[];
 extern OSMesgQueue gControllerInputUpdateQueue;
-extern s16 gControllerEventMessage;
-extern OSContPad gControllerPads[];
-extern OSContStatus gControllerStatuses[];
 extern OSPfs gRumblePakHandles[];
 extern u8 gConnectedControllerBitmask;
-extern u8 gConnectedControllerCount;
-extern u8 gControllerReadPending;
-extern u8 gControllerSubsystemThreadStack[0x2000];
-extern void *gControllerSubsystemThreadArg;
 
 void initControllerSubsystem(void) {
     s32 i;
@@ -71,7 +70,7 @@ loop:
         &gControllerSubsystemThread,
         4,
         controllerSubsystemThreadMain,
-        gControllerSubsystemThreadArg,
+        gControllerSubsystemThreadArg.argument,
         gControllerSubsystemThreadStack + sizeof(gControllerSubsystemThreadStack),
         0x14
     );

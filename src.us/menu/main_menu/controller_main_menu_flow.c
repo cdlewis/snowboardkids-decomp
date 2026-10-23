@@ -56,6 +56,30 @@ u8 gControllerPakSaveExtNameBytesEnd[0x84] = {
 };
 u8 gMainMenuReturnFromRace = 0;
 
+/* Shared controller and menu state, in original BSS address order. */
+u8 gRaceRumbleEnabled;
+static u8 sRaceRumbleEnabledPadding1;
+static u16 sRaceRumbleEnabledPadding2;
+u8 gRumblePakConnectedByController[PLAYER_INPUT_COUNT];
+ControllerSubsystemThreadContext gControllerSubsystemThreadArg;
+u8 D_800EC9C0;
+u8 gMenuSelectionConfirmTimer;
+u8 gRaceSplitscreenMode;
+RaceCamera *gCurrentMenuCameraObject;
+s16 gControllerPakStatusCodes[4];
+s16 gMenuChoicePromptState[4];
+u8 gControllerPakRetryCounts[4];
+u8 D_800EC9DC;
+u8 gCourseSelectFromRaceTypeMenu;
+static u16 sCourseSelectFromRaceTypeMenuPadding;
+u8 gControllerPakOperationCounts[4];
+u8 gRaceSetupSavePanelCreateTimer;
+u8 D_800EC9E5;
+u8 gCourseSelectModeSelection;
+static u8 sGameSaveDataBufferPadding;
+static u32 sGameSaveDataBufferPaddingWords[2];
+GameSaveDataBuffer gGameSaveDataBuffer;
+
 extern OSMesgQueue gControllerSubsystemRequestQueue;
 extern OSMesgQueue gControllerSubsystemReplyQueue;
 extern OSMesgQueue gControllerEventQueue;

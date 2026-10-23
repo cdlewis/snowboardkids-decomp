@@ -211,11 +211,6 @@ COURSE_SELECT_UNPADDED_BSS_O_FILES := \
 	$(BUILD_DIR)/asm/data/bss_chunk_a_2_course_select_tables_tail.bss.o \
 	$(BUILD_DIR)/asm/data/bss_chunk_a_2_course_select_status_tail.bss.o
 $(COURSE_SELECT_UNPADDED_BSS_O_FILES): ASFLAGS += -no-pad-sections
-# The weak, zero-initialized prompt state preserves IDO's original codegen;
-# raw BSS owns its storage. Remove only that verified trailing data block.
-$(BUILD_DIR)/src.us/menu/race_setup/race_setup_menu.o: C_OBJ_POSTPROCESS = \
-	$(PYTHON) $(TOOLS_DIR)/trim_elf_section_tail.py $@ .data 16 \
-		--undefine-symbol gControllerPakRumbleCheckPromptState
 
 LD_SCRIPT      = $(if $(filter shiftable,$(BUILD_MODE)),$(BUILD_DIR)/$(BASENAME).ld,$(BASE_LD_SCRIPT))
 LINKER_SCRIPTS = linker_scripts/hardware_regs.ld linker_scripts/n64_os_syms.ld linker_scripts/libultra_syms.ld \

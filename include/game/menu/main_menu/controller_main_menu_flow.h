@@ -18,6 +18,15 @@
 #define CONTROLLER_PAK_MAX_READ_RETRIES 3
 #define CONTROLLER_PAK_RETRY_LIMIT 3
 
+typedef struct ControllerSubsystemThreadContext {
+    void *argument;
+    u8 unk4[0x104];
+} ControllerSubsystemThreadContext;
+
+#if defined(VERSION_US)
+extern ControllerSubsystemThreadContext gControllerSubsystemThreadArg;
+#endif
+
 typedef struct SaveFileIdentity {
     s32 size;
     u32 gameCode;

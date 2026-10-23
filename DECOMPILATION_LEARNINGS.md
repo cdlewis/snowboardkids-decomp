@@ -861,6 +861,12 @@ above can possibly work, so read them before spending a variant.
   from CSE-ing their addresses. The relocations have different spellings in an
   isolated object, but resolve to identical linked instructions; verify this
   shape with the full-ROM checksum.
+- **A pointer to a nested union view can replace an interior linker alias.**
+  For overlapping prompt structs, allocate one union with flat fields and a
+  nested state struct, then use a local pointer to the nested state where the
+  target folds absolute addresses. IDO can preserve separate address bases for
+  the flat and nested views. Defining the owning BSS object in the consuming
+  source also affects folding; verify all consumers and the full ROM checksum.
 - **Extern pointer globals are reloaded between aliased accesses.** For
   `g->field -= 1; if (g->field == 0)`, IDO re-emits the `lui`/`lw` of `g`
   between the store and the re-read (it cannot prove the store does not alias

@@ -420,10 +420,9 @@ segments:
       - [0xE2AD0, .rodata, ultra/audio/reverb]
       - { start: 0xE2B00, type: rodatabin, use_src_path: True, name: rsp/aspMain }
       - { start: 0xE2DC0, type: rodatabin, use_src_path: True, name: rsp/f3dlx }
-      - { type: bss, name: bss_chunk_a, vram: 0x800E29C0 }
-      - { type: .bss, name: menu/main_menu/controller_subsystem, vram: 0x800E4C10 }
-      - { type: bss, name: bss_chunk_a_controller_tail, vram: 0x800EC8B0 }
-      - { type: .bss, name: menu/race_setup/race_setup_menu, vram: 0x8010AE00 }
+      - { type: .bss, name: menu/main_menu/controller_subsystem, vram: 0x800E29C0 }
+      - { type: .bss, name: menu/main_menu/controller_main_menu_flow, vram: 0x800EC8B0 }
+      - { type: .bss, name: menu/race_setup/race_setup_menu, vram: 0x8010ADD0 }
       - { type: .bss, name: menu/character_select/character_select_menu, vram: 0x8010AE50 }
       - { type: bss, name: bss_chunk_a_2_character_select_tail, vram: 0x8010AE70 }
       - { type: .bss, name: menu/character_select/character_select_course_menu, vram: 0x8010AE80 }

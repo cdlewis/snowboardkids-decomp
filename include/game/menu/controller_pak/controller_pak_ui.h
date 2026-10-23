@@ -24,19 +24,6 @@ typedef enum ControllerPakRumbleMessageIndex {
     CONTROLLER_PAK_RUMBLE_MESSAGE_CONFIRM = 3,
 } ControllerPakRumbleMessageIndex;
 
-/* These linker symbols overlap: transition + 2 is the state view.
- * confirmSelection also aliases gControllerPakRumbleCheckPromptConfirmSelection.
- * They must never be allocated as independent objects. */
-typedef struct {
-    /* 0x00 */ s16 pad0;
-    /* 0x02 */ u8 state;
-    /* 0x03 */ u8 pad3;
-    /* 0x04 */ u16 messageIndex;
-    /* 0x06 */ u16 timer;
-    /* 0x08 */ u8 selectedOption;
-    /* 0x09 */ u8 confirmSelection;
-} ControllerPakRumbleCheckPromptTransition;
-
 typedef struct {
     /* 0x00 */ u8 state;
     /* 0x01 */ u8 pad1;
@@ -46,12 +33,31 @@ typedef struct {
     /* 0x07 */ u8 confirmSelection;
 } ControllerPakRumbleCheckPromptState;
 
+/* Two C views of one prompt allocation. */
+typedef union {
+    struct {
+        /* 0x00 */ s16 pad0;
+        /* 0x02 */ u8 state;
+        /* 0x03 */ u8 pad3;
+        /* 0x04 */ u16 messageIndex;
+        /* 0x06 */ u16 timer;
+        /* 0x08 */ u8 selectedOption;
+        /* 0x09 */ u8 confirmSelection;
+    };
+    struct {
+        s16 transition;
+        ControllerPakRumbleCheckPromptState prompt;
+    };
+} ControllerPakRumbleCheckPromptTransition;
+
 typedef char ControllerPakRumbleTransitionSizeCheck[(sizeof(ControllerPakRumbleCheckPromptTransition) == 0xA) ? 1 : -1];
 typedef char ControllerPakRumbleStateSizeCheck[(sizeof(ControllerPakRumbleCheckPromptState) == 8) ? 1 : -1];
 
 extern ControllerPakRumbleCheckPromptTransition gControllerPakRumbleCheckPromptTransition;
+#if defined(VERSION_JP)
 extern ControllerPakRumbleCheckPromptState gControllerPakRumbleCheckPromptState;
 extern u8 gControllerPakRumbleCheckPromptConfirmSelection;
+#endif
 
 typedef struct {
     /* 0x00 */ char pad[0x18];

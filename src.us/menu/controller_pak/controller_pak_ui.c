@@ -539,7 +539,7 @@ void drawControllerPakRumbleCheckPrompt(ControllerPakRumbleCheckPromptActor *act
 // clang-format off
 void updateControllerPakRumbleCheckPrompt(ControllerPakRumbleCheckPromptActor *arg0) {
     u8 state;
-    u8 globalState;
+    u8 globalState; ControllerPakRumbleCheckPromptState *prompt = &gControllerPakRumbleCheckPromptTransition.prompt;
 
     state = arg0->state;
     if (state != (globalState = gControllerPakRumbleCheckPromptTransition.state)) {
@@ -609,7 +609,7 @@ void updateControllerPakRumbleCheckPrompt(ControllerPakRumbleCheckPromptActor *a
             break;
     }
 
-    gControllerPakRumbleCheckPromptState.state = state;
+    prompt->state = state;
     if (arg0->state == CONTROLLER_PAK_RUMBLE_DISMISSED) {
         removeCallbackTask(arg0);
         return;
