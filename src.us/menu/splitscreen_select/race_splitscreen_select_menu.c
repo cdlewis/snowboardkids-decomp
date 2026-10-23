@@ -15,6 +15,8 @@
 #include "game/engine/viewport_manager.h"
 #include "game/race/player/race_player_input.h"
 
+RaceSplitscreenSelectMenuState gRaceSplitscreenSelectCursorTarget;
+
 extern u8 D_800EC9DC;
 
 extern u8 gCourseSelectFromRaceTypeMenu;

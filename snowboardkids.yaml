@@ -424,7 +424,7 @@ segments:
       - { type: .bss, name: menu/main_menu/controller_main_menu_flow, vram: 0x800EC8B0 }
       - { type: .bss, name: menu/race_setup/race_setup_menu, vram: 0x8010ADD0 }
       - { type: .bss, name: menu/character_select/character_select_menu, vram: 0x8010AE50 }
-      - { type: bss, name: bss_chunk_a_2_character_select_tail, vram: 0x8010AE70 }
+      - { type: .bss, name: menu/splitscreen_select/race_splitscreen_select_menu, vram: 0x8010AE70 }
       - { type: .bss, name: menu/character_select/character_select_course_menu, vram: 0x8010AE80 }
       - { type: bss, name: bss_chunk_a_2_character_select_course_tail, vram: 0x8010AE90 }
       - { type: .bss, name: menu/course_select/course_select_selection_state, vram: 0x8010AEA0 }
