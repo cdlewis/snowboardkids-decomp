@@ -207,7 +207,6 @@ COURSE_SELECT_BSS_C_O_FILES := \
 COURSE_SELECT_UNPADDED_BSS_O_FILES := \
 	$(COURSE_SELECT_BSS_C_O_FILES) \
 	$(BUILD_DIR)/asm/data/bss_chunk_a_2_course_select_transition_tail.bss.o \
-	$(BUILD_DIR)/asm/data/bss_chunk_a_2_course_select_tables_tail.bss.o \
 	$(BUILD_DIR)/asm/data/bss_chunk_a_2_course_select_status_tail.bss.o
 $(COURSE_SELECT_UNPADDED_BSS_O_FILES): ASFLAGS += -no-pad-sections
 

@@ -429,7 +429,6 @@ segments:
       - { type: .bss, name: menu/course_select/course_select_selection_state, vram: 0x8010AEA0 }
       - { type: .bss, name: menu/course_select/course_select_transition_state, vram: 0x8010AEC8 }
       - { type: .bss, name: menu/course_select/course_select_course_tables, vram: 0x8010AED8 }
-      - { type: bss, name: bss_chunk_a_2_course_select_tables_tail, vram: 0x8010AF14 }
       - { type: .bss, name: menu/course_select/course_select_status, vram: 0x8010AF18 }
       - { type: bss, name: bss_chunk_a_2_course_select_status_tail, vram: 0x8010AF48 }
       - { type: bss, name: bss_chunk_a_2_course_select_tail, vram: 0x8010AF50 }
