@@ -36,10 +36,6 @@
 #define SCHEDULER_SWAPBUFFER_FLAG 0x40
 #define SCHEDULER_RETRACE_MASK 0xFFF
 #define FRAMEBUFFER_SWAP_RETRACE_DELAY 3
-#define OS_MESG_NOBLOCK 0
-#define OS_MESG_BLOCK 1
-#define OS_READ 0
-#define OS_TV_NTSC 1
 
 #include "game/audio/audio_engine.h"
 
