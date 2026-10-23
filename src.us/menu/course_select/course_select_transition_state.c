@@ -3,3 +3,5 @@
 u8 gCourseSelectColumnCounts[COURSE_SELECT_PLAYER_COUNT];
 u8 gCourseSelectSlideStates[COURSE_SELECT_PLAYER_COUNT];
 u16 gCourseSelectViewportSyncState;
+
+static u32 sCourseSelectTransitionPadding;
