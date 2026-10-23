@@ -3,6 +3,15 @@
 
 #include "common.h"
 
+typedef enum RaceCharacterId {
+    RACE_CHARACTER_SLASH = 0,
+    RACE_CHARACTER_NANCY = 1,
+    RACE_CHARACTER_JAM = 2,
+    RACE_CHARACTER_LINDA = 3,
+    RACE_CHARACTER_TOMMY = 4,
+    RACE_CHARACTER_SHINOBIN = 5
+} RaceCharacterId;
+
 typedef struct CharacterModelPart {
     /* 0x00 */ u8 parentPartIndex;
     /* 0x01 */ u8 mirroredPartIndex;

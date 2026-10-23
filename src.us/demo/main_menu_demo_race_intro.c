@@ -1,6 +1,7 @@
 #include "assets.h"
 #include "game/race/race_state.h"
 #include "game/demo/main_menu_demo_race_intro.h"
+#include "game/demo/main_menu_demo_race_intro_data.h"
 #include "game/audio/sound_manager.h"
 #include "game/engine/callback_task_scheduler.h"
 #include "game/engine/asset_manager.h"
@@ -14,53 +15,6 @@
 #include "game/race/ui/race_hud.h"
 #include "game/engine/viewport_manager.h"
 #include "game/race/player/race_player_input.h"
-
-typedef struct {
-    /* 0x00 */ u8 courseIndex;
-    /* 0x01 */ u8 splitscreen;
-    /* 0x02 */ u8 raceType;
-    /* 0x03 */ u8 loadCourseAssets;
-    /* 0x04 */ void *romStart;
-    /* 0x08 */ void *romEnd;
-    /* 0x0C */ u8 player0Character;
-    /* 0x0D */ u8 player1Character;
-    /* 0x0E */ u8 player2Character;
-    /* 0x0F */ u8 player3Character;
-} MainMenuDemoRaceIntroEntry;
-
-u8 gMainMenuDemoRaceIntroIndex = 0;
-MainMenuDemoRaceIntroEntry gMainMenuDemoRaceIntroEntries[] = {
-    { RACE_COURSE_ROOKIE_MOUNTAIN,
-     0, 0,
-     0, (void *)&MAIN_MENU_DEMO_ROOKIE_MOUNTAIN_REPLAY_ROM_START,
-     (void *)&MAIN_MENU_DEMO_ROOKIE_MOUNTAIN_REPLAY_ROM_END,
-     0, 1,
-     2, 3 },
-    { RACE_COURSE_BIG_SNOWMAN,
-     1, 0,
-     0, (void *)&MAIN_MENU_DEMO_BIG_SNOWMAN_REPLAY_ROM_START,
-     (void *)&MAIN_MENU_DEMO_BIG_SNOWMAN_REPLAY_ROM_END,
-     4, 1,
-     2, 3 },
-    { RACE_COURSE_SUNSET_ROCK,
-     1, 1,
-     0, (void *)&MAIN_MENU_DEMO_SUNSET_ROCK_REPLAY_ROM_START,
-     (void *)&MAIN_MENU_DEMO_SUNSET_ROCK_REPLAY_ROM_END,
-     2, 0,
-     1, 3 },
-    { RACE_COURSE_ANIMAL_LAND,
-     1, 2,
-     0, (void *)&MAIN_MENU_DEMO_ANIMAL_LAND_REPLAY_ROM_START,
-     (void *)&MAIN_MENU_DEMO_ANIMAL_LAND_REPLAY_ROM_END,
-     1, 0,
-     1, 3 },
-    { RACE_COURSE_GRASS_VALLEY,
-     0, 0,
-     1, (void *)&MAIN_MENU_DEMO_GRASS_VALLEY_REPLAY_ROM_START,
-     (void *)&MAIN_MENU_DEMO_GRASS_VALLEY_REPLAY_ROM_END,
-     3, 1,
-     4, 2 },
-};
 
 extern s16 gMenuFadeAlpha;
 extern s16 gRaceLapCount;
