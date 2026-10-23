@@ -37,3 +37,5 @@ u8 gCourseSelectSubmenuState;
 s16 gCourseSelectCursorValue;
 u16 gCourseSelectPurchaseMessageState;
 u8 gCourseSelectExtraCourseColumnState;
+
+static u32 sCourseSelectStatusPadding[2];

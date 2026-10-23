@@ -206,8 +206,7 @@ COURSE_SELECT_BSS_C_O_FILES := \
 	$(BUILD_DIR)/$(SRC_DIR)/menu/course_select/course_select_status.o
 COURSE_SELECT_UNPADDED_BSS_O_FILES := \
 	$(COURSE_SELECT_BSS_C_O_FILES) \
-	$(BUILD_DIR)/asm/data/bss_chunk_a_2_course_select_transition_tail.bss.o \
-	$(BUILD_DIR)/asm/data/bss_chunk_a_2_course_select_status_tail.bss.o
+	$(BUILD_DIR)/asm/data/bss_chunk_a_2_course_select_transition_tail.bss.o
 $(COURSE_SELECT_UNPADDED_BSS_O_FILES): ASFLAGS += -no-pad-sections
 
 LD_SCRIPT      = $(if $(filter shiftable,$(BUILD_MODE)),$(BUILD_DIR)/$(BASENAME).ld,$(BASE_LD_SCRIPT))
