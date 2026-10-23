@@ -461,7 +461,8 @@ segments:
       - { type: .bss, name: libmus/player, vram: 0x8015A630 }
       - { type: .bss, name: libmus/aud_thread, vram: 0x8015A6A0 }
       - { type: .bss, name: ultra/os/seteventmesg, vram: 0x8015C980 }
-      - { type: bss, name: bss_chunk_b, vram: 0x8015CA00 }
+      - { type: .bss, name: ultra/io/controller, vram: 0x8015CA00 }
+      - { type: .bss, name: ultra/io/motor, vram: 0x8015CA90 }
       - { type: .bss, name: ultra/os/initialize, vram: 0x8015CCD0 }
       - { type: .bss, name: ultra/io/pimgr, vram: 0x8015CCE0 }
       - { type: .bss, name: ultra/io/vimgr, vram: 0x8015DEB0 }
