@@ -47,11 +47,11 @@ def extract_source_assets(root, rom):
                 entry.update(preview=relative, declaration_dimensions=dimensions, encoded_word_count=len(values))
             entries.append(entry)
 
-    # The engine passes D_800DB098 through D_800DB8FC to MusStartEffect.
+    # The engine passes gSoundEffectCommandData through gSoundEffectCommandPointers to MusStartEffect.
     # Verify the existing C initializer against the original ROM before decoding it.
     path = root / "src.us/audio/sound_manager.c"
     source = path.read_text()
-    match = re.search(r"u32 D_800DB098\[[^]]+\]\s*=\s*\{(.*?)\};", source, re.S)
+    match = re.search(r"u32 gSoundEffectCommandData\[[^]]+\]\s*=\s*\{(.*?)\};", source, re.S)
     if match:
         words = literal_values(match[1])
         data = struct.pack(f">{len(words)}I", *words)
@@ -59,10 +59,10 @@ def extract_source_assets(root, rom):
         rom_offset = main["start"] + (0x800DB098 - main["vram"])
         if rom[rom_offset:rom_offset+len(data)] != data:
             raise ValueError("source sound-effect bank differs from original ROM")
-        table = re.search(r"u8 \*D_800DB8FC\[[^]]*\]\s*=\s*\{(.*?)\};", source, re.S)
+        table = re.search(r"u8 \*gSoundEffectCommandPointers\[[^]]*\]\s*=\s*\{(.*?)\};", source, re.S)
         if not table:
             raise ValueError("missing sound-effect pointer table")
-        offsets = [int(s,0)*4 for s in re.findall(r"&D_800DB098\[(0x[0-9A-Fa-f]+|\d+)\]", table[1])]
+        offsets = [int(s,0)*4 for s in re.findall(r"&gSoundEffectCommandData\[(0x[0-9A-Fa-f]+|\d+)\]", table[1])]
         starts = sorted(set(offsets))
         effects = []
         for start, end in zip(starts, starts[1:]+[len(data)]):
@@ -74,7 +74,7 @@ def extract_source_assets(root, rom):
         relative = "assets/source_views/sound_effects.yaml"
         write_yaml(root / relative, dict(schema_version=1, authority="src.us/audio/sound_manager.c",
                                         rom_start=rom_offset, effect_offsets=offsets, effects=effects))
-        entries.append(dict(name="D_800DB098", type="sound_effects", source="src.us/audio/sound_manager.c",
+        entries.append(dict(name="gSoundEffectCommandData", type="sound_effects", source="src.us/audio/sound_manager.c",
                             authority="source", status="source_backed", preview=relative))
     write_yaml(root / "assets/source_views/index.yaml", dict(schema_version=1, assets=entries))
     return entries

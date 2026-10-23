@@ -73,19 +73,19 @@ typedef struct {
     u8 characterIds[10 * 4];
 } RaceCourseCharacterIdTable;
 
-extern CourseGridEntry D_800DBD10[];
+extern CourseGridEntry gRaceReplayCourseGridEntries[];
 
 CourseGridEntry *gRaceReplayCourseGridLists[12] = {
-    D_800DBD10,
-    &D_800DBD10[12],
-    &D_800DBD10[24],
-    &D_800DBD10[39],
-    &D_800DBD10[54],
-    &D_800DBD10[67],
-    &D_800DBD10[83],
-    &D_800DBD10[119],
-    &D_800DBD10[107],
-    &D_800DBD10[95],
+    gRaceReplayCourseGridEntries,
+    &gRaceReplayCourseGridEntries[12],
+    &gRaceReplayCourseGridEntries[24],
+    &gRaceReplayCourseGridEntries[39],
+    &gRaceReplayCourseGridEntries[54],
+    &gRaceReplayCourseGridEntries[67],
+    &gRaceReplayCourseGridEntries[83],
+    &gRaceReplayCourseGridEntries[119],
+    &gRaceReplayCourseGridEntries[107],
+    &gRaceReplayCourseGridEntries[95],
     NULL,
     NULL,
 };

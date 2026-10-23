@@ -3132,3 +3132,11 @@ gRaceGhostRecordStatus = 0x80121B61;
 gModelRenderCallbackQueue4Head = 0x801248C8;
 gModelRenderCallbackQueue6Head = 0x801248E0;
 gModelRenderCallbackQueue7Head = 0x801248EC;
+
+// Sound manager tables and replay course-grid storage.
+gSoundBankWaveTuning = 0x800DABB0; // rom:0xDB7B0 size:0xFC
+gSoundBankWavePitchOffsets = 0x800DACAC; // rom:0xDB8AC size:0x3EC
+gSoundEffectCommandData = 0x800DB098; // rom:0xDBC98 size:0x864
+gSoundEffectCommandPointers = 0x800DB8FC; // rom:0xDC4FC size:0x1B0
+gSoundEffectDefaultPriorities = 0x800DBAAC; // rom:0xDC6AC size:0x1B0
+gRaceReplayCourseGridEntries = 0x800DBD10; // rom:0xDC910 size:0x780

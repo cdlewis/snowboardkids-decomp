@@ -58,7 +58,7 @@ typedef union SoundHalfArg {
     } half;
 } SoundHalfArg;
 
-u8 D_800DABB0[SOUND_BANK_WAVE_COUNT + 1] = {
+u8 gSoundBankWaveTuning[SOUND_BANK_WAVE_COUNT + 1] = {
     0xDF, 0xD5, 0xE5, 0xF9, 0xD5, 0xE4, 0xE2, 0xD5, 0xE1, 0xEA, 0xED, 0xE1, 0xD5, 0xD5, 0xE1, 0xD5, 0xE0, 0xC9,
     0xE1, 0xED, 0xD8, 0xC9, 0xCC, 0xCA, 0xF9, 0xD1, 0xD5, 0xE1, 0xC9, 0xED, 0xCF, 0xED, 0xE1, 0xED, 0xE3, 0xD5,
     0xE1, 0xF9, 0xED, 0xE1, 0xE1, 0xD5, 0xE1, 0xD5, 0xF9, 0xED, 0xF9, 0xED, 0xE1, 0xD5, 0xC9, 0xF9, 0xED, 0xE1,
@@ -75,9 +75,9 @@ u8 D_800DABB0[SOUND_BANK_WAVE_COUNT + 1] = {
     0xE1, 0xD5, 0xC9, 0xBD, 0xD5, 0xC9, 0xE1, 0xD5, 0xC9, 0xBD, 0xE1, 0xD5, 0xC9, 0xBD, 0xF9, 0xED, 0xD5, 0x00,
 };
 
-f32 D_800DACAC[SOUND_BANK_WAVE_COUNT] = { 0.0f };
+f32 gSoundBankWavePitchOffsets[SOUND_BANK_WAVE_COUNT] = { 0.0f };
 
-u32 D_800DB098[0x219] = {
+u32 gSoundEffectCommandData[0x219] = {
     0x80000000, 0x814C8401, 0x01017FFF, 0x7F019C7F, 0xA67F3022, 0x80000000, 0x814E8401, 0x01017FFF, 0x7F019C7F,
     0xA6693060, 0x80000000, 0x81508401, 0x01017FFF, 0x7F019C7F, 0xA66430FF, 0xFF800000, 0x81518401, 0x01017FFF,
     0x7F019C7F, 0xA66430FF, 0xFF800000, 0x81528401, 0x01017FFF, 0x7F019C7F, 0xA66430FF, 0xFF800000, 0x81538401,
@@ -140,37 +140,37 @@ u32 D_800DB098[0x219] = {
     0x80000000, 0x81708401, 0x01017FFF, 0x7F019C7F, 0xA67F3030, 0x80000000,
 };
 
-u8 *D_800DB8FC[108] = {
-    (u8 *)&D_800DB098[0x0],   (u8 *)&D_800DB098[0x1],   (u8 *)&D_800DB098[0x6],   (u8 *)&D_800DB098[0xB],
-    (u8 *)&D_800DB098[0x10],  (u8 *)&D_800DB098[0x15],  (u8 *)&D_800DB098[0x1A],  (u8 *)&D_800DB098[0x1F],
-    (u8 *)&D_800DB098[0x24],  (u8 *)&D_800DB098[0x29],  (u8 *)&D_800DB098[0x2E],  (u8 *)&D_800DB098[0x33],
-    (u8 *)&D_800DB098[0x38],  (u8 *)&D_800DB098[0x3D],  (u8 *)&D_800DB098[0x42],  (u8 *)&D_800DB098[0x47],
-    (u8 *)&D_800DB098[0x4C],  (u8 *)&D_800DB098[0x51],  (u8 *)&D_800DB098[0x56],  (u8 *)&D_800DB098[0x5B],
-    (u8 *)&D_800DB098[0x60],  (u8 *)&D_800DB098[0x65],  (u8 *)&D_800DB098[0x6A],  (u8 *)&D_800DB098[0x6F],
-    (u8 *)&D_800DB098[0x74],  (u8 *)&D_800DB098[0x79],  (u8 *)&D_800DB098[0x7E],  (u8 *)&D_800DB098[0x83],
-    (u8 *)&D_800DB098[0x88],  (u8 *)&D_800DB098[0x8D],  (u8 *)&D_800DB098[0x92],  (u8 *)&D_800DB098[0x97],
-    (u8 *)&D_800DB098[0x9C],  (u8 *)&D_800DB098[0xA1],  (u8 *)&D_800DB098[0xA6],  (u8 *)&D_800DB098[0xAB],
-    (u8 *)&D_800DB098[0xB0],  (u8 *)&D_800DB098[0xB5],  (u8 *)&D_800DB098[0xBA],  (u8 *)&D_800DB098[0xBF],
-    (u8 *)&D_800DB098[0xC4],  (u8 *)&D_800DB098[0xC9],  (u8 *)&D_800DB098[0xCE],  (u8 *)&D_800DB098[0xD3],
-    (u8 *)&D_800DB098[0xD8],  (u8 *)&D_800DB098[0xDD],  (u8 *)&D_800DB098[0xE2],  (u8 *)&D_800DB098[0xE7],
-    (u8 *)&D_800DB098[0xEC],  (u8 *)&D_800DB098[0xF1],  (u8 *)&D_800DB098[0xF6],  (u8 *)&D_800DB098[0xFB],
-    (u8 *)&D_800DB098[0x100], (u8 *)&D_800DB098[0x105], (u8 *)&D_800DB098[0x10A], (u8 *)&D_800DB098[0x10F],
-    (u8 *)&D_800DB098[0x114], (u8 *)&D_800DB098[0x119], (u8 *)&D_800DB098[0x11E], (u8 *)&D_800DB098[0x123],
-    (u8 *)&D_800DB098[0x128], (u8 *)&D_800DB098[0x12D], (u8 *)&D_800DB098[0x132], (u8 *)&D_800DB098[0x137],
-    (u8 *)&D_800DB098[0x13C], (u8 *)&D_800DB098[0x141], (u8 *)&D_800DB098[0x146], (u8 *)&D_800DB098[0x14B],
-    (u8 *)&D_800DB098[0x150], (u8 *)&D_800DB098[0x155], (u8 *)&D_800DB098[0x15A], (u8 *)&D_800DB098[0x15F],
-    (u8 *)&D_800DB098[0x164], (u8 *)&D_800DB098[0x169], (u8 *)&D_800DB098[0x16E], (u8 *)&D_800DB098[0x179],
-    (u8 *)&D_800DB098[0x17E], (u8 *)&D_800DB098[0x183], (u8 *)&D_800DB098[0x188], (u8 *)&D_800DB098[0x18D],
-    (u8 *)&D_800DB098[0x192], (u8 *)&D_800DB098[0x197], (u8 *)&D_800DB098[0x19C], (u8 *)&D_800DB098[0x1A1],
-    (u8 *)&D_800DB098[0x1A6], (u8 *)&D_800DB098[0x1AB], (u8 *)&D_800DB098[0x1B0], (u8 *)&D_800DB098[0x1B5],
-    (u8 *)&D_800DB098[0x1BA], (u8 *)&D_800DB098[0x1BF], (u8 *)&D_800DB098[0x1C4], (u8 *)&D_800DB098[0x1C9],
-    (u8 *)&D_800DB098[0x1CE], (u8 *)&D_800DB098[0x1D3], (u8 *)&D_800DB098[0x1D8], (u8 *)&D_800DB098[0x1DD],
-    (u8 *)&D_800DB098[0x1E2], (u8 *)&D_800DB098[0x1E7], (u8 *)&D_800DB098[0x1EC], (u8 *)&D_800DB098[0x1F1],
-    (u8 *)&D_800DB098[0x1F6], (u8 *)&D_800DB098[0x1FB], (u8 *)&D_800DB098[0x200], (u8 *)&D_800DB098[0x205],
-    (u8 *)&D_800DB098[0x20A], (u8 *)&D_800DB098[0x20F], (u8 *)&D_800DB098[0x214], (u8 *)&D_800DB098[0x174],
+u8 *gSoundEffectCommandPointers[108] = {
+    (u8 *)&gSoundEffectCommandData[0x0],   (u8 *)&gSoundEffectCommandData[0x1],   (u8 *)&gSoundEffectCommandData[0x6],   (u8 *)&gSoundEffectCommandData[0xB],
+    (u8 *)&gSoundEffectCommandData[0x10],  (u8 *)&gSoundEffectCommandData[0x15],  (u8 *)&gSoundEffectCommandData[0x1A],  (u8 *)&gSoundEffectCommandData[0x1F],
+    (u8 *)&gSoundEffectCommandData[0x24],  (u8 *)&gSoundEffectCommandData[0x29],  (u8 *)&gSoundEffectCommandData[0x2E],  (u8 *)&gSoundEffectCommandData[0x33],
+    (u8 *)&gSoundEffectCommandData[0x38],  (u8 *)&gSoundEffectCommandData[0x3D],  (u8 *)&gSoundEffectCommandData[0x42],  (u8 *)&gSoundEffectCommandData[0x47],
+    (u8 *)&gSoundEffectCommandData[0x4C],  (u8 *)&gSoundEffectCommandData[0x51],  (u8 *)&gSoundEffectCommandData[0x56],  (u8 *)&gSoundEffectCommandData[0x5B],
+    (u8 *)&gSoundEffectCommandData[0x60],  (u8 *)&gSoundEffectCommandData[0x65],  (u8 *)&gSoundEffectCommandData[0x6A],  (u8 *)&gSoundEffectCommandData[0x6F],
+    (u8 *)&gSoundEffectCommandData[0x74],  (u8 *)&gSoundEffectCommandData[0x79],  (u8 *)&gSoundEffectCommandData[0x7E],  (u8 *)&gSoundEffectCommandData[0x83],
+    (u8 *)&gSoundEffectCommandData[0x88],  (u8 *)&gSoundEffectCommandData[0x8D],  (u8 *)&gSoundEffectCommandData[0x92],  (u8 *)&gSoundEffectCommandData[0x97],
+    (u8 *)&gSoundEffectCommandData[0x9C],  (u8 *)&gSoundEffectCommandData[0xA1],  (u8 *)&gSoundEffectCommandData[0xA6],  (u8 *)&gSoundEffectCommandData[0xAB],
+    (u8 *)&gSoundEffectCommandData[0xB0],  (u8 *)&gSoundEffectCommandData[0xB5],  (u8 *)&gSoundEffectCommandData[0xBA],  (u8 *)&gSoundEffectCommandData[0xBF],
+    (u8 *)&gSoundEffectCommandData[0xC4],  (u8 *)&gSoundEffectCommandData[0xC9],  (u8 *)&gSoundEffectCommandData[0xCE],  (u8 *)&gSoundEffectCommandData[0xD3],
+    (u8 *)&gSoundEffectCommandData[0xD8],  (u8 *)&gSoundEffectCommandData[0xDD],  (u8 *)&gSoundEffectCommandData[0xE2],  (u8 *)&gSoundEffectCommandData[0xE7],
+    (u8 *)&gSoundEffectCommandData[0xEC],  (u8 *)&gSoundEffectCommandData[0xF1],  (u8 *)&gSoundEffectCommandData[0xF6],  (u8 *)&gSoundEffectCommandData[0xFB],
+    (u8 *)&gSoundEffectCommandData[0x100], (u8 *)&gSoundEffectCommandData[0x105], (u8 *)&gSoundEffectCommandData[0x10A], (u8 *)&gSoundEffectCommandData[0x10F],
+    (u8 *)&gSoundEffectCommandData[0x114], (u8 *)&gSoundEffectCommandData[0x119], (u8 *)&gSoundEffectCommandData[0x11E], (u8 *)&gSoundEffectCommandData[0x123],
+    (u8 *)&gSoundEffectCommandData[0x128], (u8 *)&gSoundEffectCommandData[0x12D], (u8 *)&gSoundEffectCommandData[0x132], (u8 *)&gSoundEffectCommandData[0x137],
+    (u8 *)&gSoundEffectCommandData[0x13C], (u8 *)&gSoundEffectCommandData[0x141], (u8 *)&gSoundEffectCommandData[0x146], (u8 *)&gSoundEffectCommandData[0x14B],
+    (u8 *)&gSoundEffectCommandData[0x150], (u8 *)&gSoundEffectCommandData[0x155], (u8 *)&gSoundEffectCommandData[0x15A], (u8 *)&gSoundEffectCommandData[0x15F],
+    (u8 *)&gSoundEffectCommandData[0x164], (u8 *)&gSoundEffectCommandData[0x169], (u8 *)&gSoundEffectCommandData[0x16E], (u8 *)&gSoundEffectCommandData[0x179],
+    (u8 *)&gSoundEffectCommandData[0x17E], (u8 *)&gSoundEffectCommandData[0x183], (u8 *)&gSoundEffectCommandData[0x188], (u8 *)&gSoundEffectCommandData[0x18D],
+    (u8 *)&gSoundEffectCommandData[0x192], (u8 *)&gSoundEffectCommandData[0x197], (u8 *)&gSoundEffectCommandData[0x19C], (u8 *)&gSoundEffectCommandData[0x1A1],
+    (u8 *)&gSoundEffectCommandData[0x1A6], (u8 *)&gSoundEffectCommandData[0x1AB], (u8 *)&gSoundEffectCommandData[0x1B0], (u8 *)&gSoundEffectCommandData[0x1B5],
+    (u8 *)&gSoundEffectCommandData[0x1BA], (u8 *)&gSoundEffectCommandData[0x1BF], (u8 *)&gSoundEffectCommandData[0x1C4], (u8 *)&gSoundEffectCommandData[0x1C9],
+    (u8 *)&gSoundEffectCommandData[0x1CE], (u8 *)&gSoundEffectCommandData[0x1D3], (u8 *)&gSoundEffectCommandData[0x1D8], (u8 *)&gSoundEffectCommandData[0x1DD],
+    (u8 *)&gSoundEffectCommandData[0x1E2], (u8 *)&gSoundEffectCommandData[0x1E7], (u8 *)&gSoundEffectCommandData[0x1EC], (u8 *)&gSoundEffectCommandData[0x1F1],
+    (u8 *)&gSoundEffectCommandData[0x1F6], (u8 *)&gSoundEffectCommandData[0x1FB], (u8 *)&gSoundEffectCommandData[0x200], (u8 *)&gSoundEffectCommandData[0x205],
+    (u8 *)&gSoundEffectCommandData[0x20A], (u8 *)&gSoundEffectCommandData[0x20F], (u8 *)&gSoundEffectCommandData[0x214], (u8 *)&gSoundEffectCommandData[0x174],
 };
 
-s32 D_800DBAAC[108] = {
+s32 gSoundEffectDefaultPriorities[108] = {
     0x00000000, 0x00000064, 0x00000064, 0x00000064, 0x00000064, 0x00000064, 0x00000064, 0x00000064, 0x00000064,
     0x00000064, 0x00000064, 0x00000064, 0x00000064, 0x00000064, 0x00000064, 0x00000064, 0x00000064, 0x00000064,
     0x00000064, 0x00000064, 0x00000064, 0x00000064, 0x00000064, 0x00000064, 0x00000064, 0x00000064, 0x00000064,
@@ -218,7 +218,7 @@ u16 gCourseMusicSequenceBanks[14] = {
     0x000B, 0x000C, 0x000E, 0x000D, 0x0012, 0x000F, 0x0011, 0x0010, 0x0010, 0x0010, 0x0000, 0x0000, 0x0000, 0x0000,
 };
 
-u32 D_800DBD10[0x1E0] = {
+u32 gRaceReplayCourseGridEntries[0x1E0] = {
     0x00000001, 0x00604A86, 0xFF196E38, 0xFA7F8A1E, 0x00000018, 0xF85B96A2, 0xFBAEE83B, 0xED360636, 0x00000021,
     0xEFB42C00, 0xF4B96C7C, 0xE0B58BE2, 0x0000002B, 0xE8D9F648, 0xF1D3B5D4, 0xDFF9C790, 0x00000030, 0xE21120DC,
     0xED4868D2, 0xE3BA5630, 0x00000037, 0xD78F9F12, 0xE779AEB1, 0xEB881F7B, 0x00000047, 0xCDBC86C0, 0xE3267ABB,
@@ -375,10 +375,10 @@ void initSoundManager(void) {
     init.heapLen = SOUND_HEAP_SIZE;
     init.soundBank = (PlayerCommandBank *)getRelocatableHeapBlockBase(gAssetHandles[4]);
     init.sampleBaseOffset = (s32)&_27E290_ROM_START;
-    init.tuningTable = D_800DABB0;
-    init.pitchOffsetTable = D_800DACAC;
-    init.fxHeader = D_800DB8FC;
-    init.unk28 = D_800DBAAC;
+    init.tuningTable = gSoundBankWaveTuning;
+    init.pitchOffsetTable = gSoundBankWavePitchOffsets;
+    init.fxHeader = gSoundEffectCommandPointers;
+    init.unk28 = gSoundEffectDefaultPriorities;
     init.maxUpdates = 0x100;
     init.outputRate = 0x5622;
     init.commandListCapacity = 0x2000;
