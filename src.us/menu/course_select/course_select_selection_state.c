@@ -6,3 +6,5 @@ u8 gCourseSelectPurchaseFlowActive;
 u8 gCourseSelectSelectedRows[COURSE_SELECT_PLAYER_COUNT];
 u8 gCourseSelectInputLocked;
 s8 gCourseSelectColumnUnlocked[COURSE_SELECT_PLAYER_COUNT][COURSE_SELECT_EXTRA_COURSE_COUNT];
+
+static u32 sCourseSelectSelectionPadding;
