@@ -16,6 +16,7 @@
 #define FIXED_MATRIX_ROWS(matrix) ((s16(*)[MAIN_MENU_SCENE_MODEL_MATRIX_AXES])(matrix))
 #define MAIN_MENU_SCENE_MODEL_MATRIX_AXES 3
 #define MAIN_MENU_CHARACTER_COUNT 6
+#define ASSET_HANDLE(index) (gAssetHandles[(index)])
 
 typedef struct MainMenuAnimationWritePart {
     s32 word0;
@@ -24,8 +25,6 @@ typedef struct MainMenuAnimationWritePart {
     s32 wordC;
     s32 word10;
 } MainMenuAnimationWritePart;
-
-#define ASSET_HANDLE(index) (gAssetHandles[(index)])
 
 Gfx *gMainMenuSceneModelPartDisplayLists[MAIN_MENU_CHARACTER_COUNT * (MAIN_MENU_SCENE_MODEL_PART_COUNT - 1)] = {
     SLASH_GRAPHICS_command_000000, SLASH_GRAPHICS_command_000068, SLASH_GRAPHICS_command_0000D8,
@@ -81,10 +80,11 @@ s16 *gMainMenuSceneModelPartInitDataByModel[MAIN_MENU_CHARACTER_COUNT + 1] = {
     NULL,
 };
 
+PackedRaceRecordReplay gPackedRaceRecordReplayBuffer;
+u16 gCompressedRaceRecordReplayBuffer[COMPRESSED_RACE_RECORD_REPLAY_HALFWORD_COUNT];
+
 extern u8 gCurrentViewportIndex;
 extern Gfx *gRegionAllocPtr;
-
-PackedRaceRecordReplay gPackedRaceRecordReplayBuffer;
 
 s32 compressRaceRecordReplayData(u8 *src, s32 srcLen, u16 *dst) {
     s32 count;

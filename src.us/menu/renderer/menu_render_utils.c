@@ -40,12 +40,14 @@ typedef struct {
     s32 w8, w9, w10, w11, w12, w13, w14, w15;
 } PackedMtxWords;
 
-extern s16 gMenuViewportWidth;
-extern s16 gMenuViewportHeight;
-extern s16 gMenuViewportCenterX;
-extern s16 gMenuViewportCenterY;
-extern Gfx *gRegionAllocPtr;
-extern void *gMenuAsciiFontPaletteBase;
+AssetHandles gAssetHandles;
+s16 gMenuAsciiFontPaletteIndex;
+s16 gMenuAsciiFontTextureNeedsLoad;
+void *gMenuAsciiFontPaletteBase;
+u8 *gRenderCallbackScratchPtr;
+u8 *gMenuRenderScratchPtr;
+u8 *gMenuRenderScratchStart;
+
 u16 gMenuDefaultSpritePalette[16] = {
     0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
 };
@@ -53,6 +55,13 @@ u16 gMenuDefaultSpritePalette[16] = {
 #ifdef SBK_SPRITE_PALETTE_REMAP
 static AssetTable *sMenuAsciiFontAsset;
 #endif
+
+extern s16 gMenuViewportWidth;
+extern s16 gMenuViewportHeight;
+extern s16 gMenuViewportCenterX;
+extern s16 gMenuViewportCenterY;
+extern Gfx *gRegionAllocPtr;
+extern u32 gMenuRenderScratchUsedSize;
 
 // IDO code generation for this function is sensitive to source line layout.
 // clang-format off
@@ -1119,8 +1128,6 @@ void drawMenuAsciiTextDefaultScale(s16 arg0, s16 arg1, const char *arg2, u16 arg
 }
 CLANG_DIAGNOSTIC_POP
 
-extern u8 *gRenderCallbackScratchPtr;
-
 void allocRenderCallbackScratchBuffer(void) {
     gAssetHandles[0] = allocRelocatableHeapBlock(0x4000);
 }
@@ -1178,9 +1185,6 @@ void allocMenuRenderScratchBuffers(void) {
     gAssetHandles[2] = allocRelocatableHeapBlock(0x8000);
 }
 
-extern u32 gMenuRenderScratchUsedSize;
-extern u8 *gMenuRenderScratchStart;
-extern u8 *gMenuRenderScratchPtr;
 
 void selectMenuRenderScratchBuffer(s32 arg0) {
     gMenuRenderScratchUsedSize = 0;

@@ -441,7 +441,9 @@ segments:
       - { type: .bss, name: demo/title_demo_race_intro, vram: 0x8010B1E0 }
       - { type: .bss, name: menu/main_menu/main_menu_race_flow, vram: 0x8010B1F0 }
       - { type: .bss, name: menu/main_menu/main_menu_scene_model, vram: 0x8010B200 }
-      - { type: bss, name: bss_chunk_a_2_main_menu_scene_model_tail, vram: 0x8010E180 }
+      - { type: .bss, name: engine/relocatable_heap, vram: 0x80110180 }
+      - { type: .bss, name: engine/asset_manager, vram: 0x80110920 }
+      - { type: .bss, name: menu/renderer/menu_render_utils, vram: 0x80112130 }
       - { type: .bss, name: race/effects/race_visual_effects, vram: 0x801121D0 }
       - { type: bss, name: bss_chunk_a_2_race_visual_effects_tail, vram: 0x801121E0 }
       - { type: .bss, name: engine/viewport_manager, vram: 0x801124B0 }

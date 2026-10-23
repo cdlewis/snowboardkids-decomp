@@ -19,22 +19,17 @@ typedef struct RelocatableHeapBlock {
     u8 status;
 } RelocatableHeapBlock;
 
-typedef struct RelocatableHeapBlockStartAlias {
-    u8 *start;
-    u8 pad[0x10];
-} RelocatableHeapBlockStartAlias;
+RelocatableHeapBlock gRelocatableHeapBlockListHead;
+static u8 sRelocatableHeapBlockListHeadPadding[4];
+RelocatableHeapBlock gRelocatableHeapBlockPool[RELOCATABLE_HEAP_BLOCK_COUNT];
+RelocatableHeapBlock *gRelocatableHeapFreeBlockStack[RELOCATABLE_HEAP_BLOCK_COUNT];
+u16 gRelocatableHeapUsedBlockCount;
+u8 *gRelocatableHeapNextFreeAddress;
 
-extern RelocatableHeapBlockStartAlias gRelocatableHeapBlockStartAliases[];
-extern RelocatableHeapBlock *gRelocatableHeapFreeBlockStack[];
-extern u16 gRelocatableHeapUsedBlockCount;
 extern u8 gRelocatableHeapStart[];
 
-extern RelocatableHeapBlock gRelocatableHeapBlockPool[];
-extern RelocatableHeapBlock *gFirstAllocatedRelocatableHeapBlock;
-extern u8 *gRelocatableHeapNextFreeAddress;
-
 void updateRelocatableHeapNextFreeAddress(void) {
-    RelocatableHeapBlock *node = gFirstAllocatedRelocatableHeapBlock;
+    RelocatableHeapBlock *node = gRelocatableHeapBlockListHead.next;
     RelocatableHeapBlock *next;
 
     if (node == NULL) {
@@ -64,7 +59,7 @@ void initRelocatableHeap(void) {
     }
 
     gRelocatableHeapUsedBlockCount = 0;
-    gFirstAllocatedRelocatableHeapBlock = NULL;
+    gRelocatableHeapBlockListHead.next = NULL;
     updateRelocatableHeapNextFreeAddress();
 }
 
@@ -85,8 +80,6 @@ void releaseRelocatableHeapBlockMetadata(RelocatableHeapBlock *block) {
     gRelocatableHeapFreeBlockStack[gRelocatableHeapUsedBlockCount] = block;
     block->status = RELOCATABLE_HEAP_BLOCK_FREE;
 }
-
-extern RelocatableHeapBlock gRelocatableHeapBlockListHead;
 
 s16 allocRelocatableHeapBlock(s32 size) {
     RelocatableHeapBlock *node;
@@ -195,7 +188,7 @@ void compactRelocatableHeap(void) {
     u8 *src;
     u32 blockStart;
 
-    block = gFirstAllocatedRelocatableHeapBlock;
+    block = gRelocatableHeapBlockListHead.next;
     nextFree = gRelocatableHeapStart;
     if (block != NULL) {
         do {
@@ -228,7 +221,7 @@ void compactRelocatableHeap(void) {
 }
 
 void *getRelocatableHeapBlockBase(s32 handle) {
-    return gRelocatableHeapBlockStartAliases[handle].start;
+    return gRelocatableHeapBlockPool[handle].start;
 }
 
 void lockRelocatableHeapBlock(s32 handle) {
