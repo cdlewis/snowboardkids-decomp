@@ -1255,7 +1255,7 @@ void updateCourseGateOpening(RaceCourseGateEffect *arg0) {
         temp_s0->openTimer--;
         if (temp_s0->openTimer == 0) {
             enqueuePositionalSoundEffect(
-                0x1C,
+                SFX_COURSE_GATE_CLOSE,
                 &gCourseGateSoundParams[gRaceCourseIndex.signedValue].position,
                 0x7F,
                 SFX_PRIORITY_NORMAL
@@ -1273,13 +1273,13 @@ void waitForCourseGateTrigger(RaceCourseGateEffect *arg0) {
         setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateCourseGateOpening);
         arg0->isOpen = 1;
         enqueuePositionalSoundEffect(
-            0x16,
+            SFX_COURSE_GATE_OPEN_1,
             &gCourseGateSoundParams[gRaceCourseIndex.signedValue].position,
             0x7F,
             SFX_PRIORITY_NORMAL
         );
         enqueuePositionalSoundEffect(
-            0x1B,
+            SFX_COURSE_GATE_OPEN_2,
             &gCourseGateSoundParams[gRaceCourseIndex.signedValue].position,
             0x7F,
             SFX_PRIORITY_NORMAL

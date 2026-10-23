@@ -156,19 +156,19 @@ s32 MusStartSong(PlayerCommandData *arg0) {
     return handle;
 }
 
-s32 MusStartEffect(s32 arg0) {
+s32 MusStartEffect(s32 soundId) {
     s32 i;
     PlayerCommandState *entry;
     s32 value;
 
-    value = gSoundPriorityTable[arg0];
+    value = gSoundPriorityTable[soundId];
     entry = mus_channels;
     i = 0;
     if (max_channels > 0) {
         do {
             i++;
             if (entry->pdata == 0) {
-                return __MusIntStartEffect(entry, arg0, 0x80, 0x80, value);
+                return __MusIntStartEffect(entry, soundId, 0x80, 0x80, value);
             }
             entry++;
         } while (i < max_channels);
@@ -176,12 +176,12 @@ s32 MusStartEffect(s32 arg0) {
     return 0;
 }
 
-s32 MusStartEffect2(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4) {
+s32 MusStartEffect2(s32 soundId, s32 arg1, s32 arg2, s32 arg3, s32 arg4) {
     s32 i;
     PlayerCommandState *entry;
 
     if (arg4 == -1) {
-        arg4 = gSoundPriorityTable[arg0];
+        arg4 = gSoundPriorityTable[soundId];
     }
 
     if (arg3 != 0) {
@@ -190,8 +190,8 @@ s32 MusStartEffect2(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4) {
         if (max_channels > 0) {
             do {
                 i++;
-                if (arg0 == entry->soundId) {
-                    return __MusIntStartEffect(entry, arg0, arg1, arg2, arg4);
+                if (soundId == entry->soundId) {
+                    return __MusIntStartEffect(entry, soundId, arg1, arg2, arg4);
                 }
                 entry++;
             } while (i < max_channels);
@@ -204,7 +204,7 @@ s32 MusStartEffect2(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4) {
         do {
             i++;
             if (entry->pdata == 0) {
-                return __MusIntStartEffect(entry, arg0, arg1, arg2, arg4);
+                return __MusIntStartEffect(entry, soundId, arg1, arg2, arg4);
             }
             entry++;
         } while (i < max_channels);

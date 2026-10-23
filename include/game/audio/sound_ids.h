@@ -1,7 +1,8 @@
 #ifndef SOUND_IDS_H
 #define SOUND_IDS_H
 
-/* Fixed indices into the libmus effect table, not waveform/sample indices.
+/* Indices into gSoundEffectCommandPointers, installed as PlayerCommandInit.fxHeader
+ * and selected by MusStartEffect/MusStartEffect2 and the sound-manager queue APIs.
  * Names describe established call-site roles; effects may serve multiple roles.
  * Voice roles follow enqueueRacePlayerVoiceSound; board loops follow motion feedback.
  * Entries without C callers retain UNUSED names and, when unidentified, sample indices.
@@ -34,16 +35,13 @@ typedef enum SoundEffectId {
     SFX_AREA_BLAST = 0x13,
     SFX_COLLISION_IMPACT = 0x14,
     SFX_ITEM_STEAL_END = 0x15,
-    /* No C caller; effect uses sample 100. */
-    SFX_UNUSED_SAMPLE_100 = 0x16,
+    SFX_COURSE_GATE_OPEN_1 = 0x16,
     SFX_TRICK_START = 0x17,
     SFX_CONFIRM = 0x18,
     SFX_MENU_CURSOR = 0x19,
     SFX_COIN_TICK = 0x1A,
-    /* No C caller; effect uses sample 102. */
-    SFX_UNUSED_SAMPLE_102 = 0x1B,
-    /* No C caller; effect uses sample 103. */
-    SFX_UNUSED_SAMPLE_103 = 0x1C,
+    SFX_COURSE_GATE_OPEN_2 = 0x1B,
+    SFX_COURSE_GATE_CLOSE = 0x1C,
     /* No C caller; effect uses sample 91. */
     SFX_UNUSED_SAMPLE_91 = 0x1D,
     SFX_BREAKABLE_SURFACE_LOOP = 0x1E,
@@ -130,9 +128,11 @@ typedef enum SoundEffectId {
     SFX_RAT_FACE_LAND = 0x68,
     SFX_RAT_FACE_STEAL = 0x69,
     SFX_PROJECTILE_LAUNCH = 0x6A,
-    /* No C caller; shares the main-menu entrance sample. */
+    /* Started by the main-menu entrance program; shares its sample. */
     SFX_MAIN_MENU_ENTER_ALT = 0x6B
 } SoundEffectId;
+
+#define SOUND_EFFECT_COUNT (SFX_MAIN_MENU_ENTER_ALT + 1)
 
 /* Common queue priorities. Higher values take precedence over lower values. */
 typedef enum SoundEffectPriority {

@@ -210,7 +210,7 @@ typedef struct PlayerCommandInit {
     s32 sampleBaseOffset;
     u8 *tuningTable;
     f32 *pitchOffsetTable;
-    u8 **fxHeader;
+    u8 **fxHeader; /* Command streams indexed by the MusStartEffect soundId. */
     s32 *unk28;
     s32 maxUpdates;
     s32 outputRate; /* 0x30: requested output frequency in Hz (22050). */
@@ -324,8 +324,8 @@ s32 MusInitialize(PlayerCommandInit *arg0);
 void MusSetMasterVolume(s32 arg0, s32 arg1);
 /* First start relocates nonzero sequence offsets in place; the bank must be writable. */
 s32 MusStartSong(PlayerCommandData *arg0);
-s32 MusStartEffect(s32 arg0);
-s32 MusStartEffect2(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4);
+s32 MusStartEffect(s32 soundId);
+s32 MusStartEffect2(s32 soundId, s32 arg1, s32 arg2, s32 arg3, s32 arg4);
 void MusStop(s32 arg0, s32 arg1);
 s32 MusAsk(s32 arg0);
 s32 MusHandleStop(s32 arg0, s32 arg1);
@@ -352,7 +352,7 @@ s32 __MusIntRandomWithContext(s32 range, u8 *sequencePos, PlayerCommandState *st
 void __MusIntInitialiseChannel(PlayerCommandState *arg0);
 s32 __MusIntFindChannel(s32 arg0, s32 arg1);
 void __MusIntMemSet(void *p, unsigned char c, s32 n);
-s32 __MusIntStartEffect(PlayerCommandState *arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4);
+s32 __MusIntStartEffect(PlayerCommandState *arg0, s32 soundId, s32 arg2, s32 arg3, s32 arg4);
 void initAudioSynthesizer(
     SchedulerState *scheduler,
     ALSynConfig *config,

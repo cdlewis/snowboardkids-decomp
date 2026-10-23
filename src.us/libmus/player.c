@@ -691,17 +691,17 @@ void __MusIntMemSet(void *p, unsigned char c, s32 n) {
     }
 }
 
-s32 __MusIntStartEffect(PlayerCommandState *arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4) {
+s32 __MusIntStartEffect(PlayerCommandState *arg0, s32 soundId, s32 arg2, s32 arg3, s32 arg4) {
     u8 *temp_v1;
 
     __MusIntInitialiseChannel(arg0);
-    arg0->soundId = arg1;
+    arg0->soundId = soundId;
     arg0->unkB0 = arg2;
     arg0->unkB2 = arg3;
     arg0->id = mus_current_handle;
     mus_current_handle += 1;
     arg0->unk20 = arg4;
-    temp_v1 = libmus_fxheader_current[arg1];
+    temp_v1 = libmus_fxheader_current[soundId];
     arg0->restartPos = temp_v1;
     arg0->pdata = temp_v1;
     return arg0->id;

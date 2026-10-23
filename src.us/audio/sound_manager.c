@@ -6,9 +6,11 @@
 #include "game/math/fixed_point_math.h"
 #include "game/engine/relocatable_heap.h"
 #include "game/audio/sound_manager.h"
+#include "game/audio/sound_wave_ids.h"
 #include "game/engine/system_runtime.h"
 #include "game/engine/runtime_memory.h"
 #include "libmus/libmus.h"
+#include "libmus/sequence_commands.h"
 #include "game/race/player/race_player_input.h"
 
 #define SOUND_MANAGER_FREE_HANDLE_COUNT 13
@@ -77,100 +79,1086 @@ u8 gSoundBankWaveTuning[SOUND_BANK_WAVE_COUNT + 1] = {
 
 f32 gSoundBankWavePitchOffsets[SOUND_BANK_WAVE_COUNT] = { 0.0f };
 
-u32 gSoundEffectCommandData[0x219] = {
-    0x80000000, 0x814C8401, 0x01017FFF, 0x7F019C7F, 0xA67F3022, 0x80000000, 0x814E8401, 0x01017FFF, 0x7F019C7F,
-    0xA6693060, 0x80000000, 0x81508401, 0x01017FFF, 0x7F019C7F, 0xA66430FF, 0xFF800000, 0x81518401, 0x01017FFF,
-    0x7F019C7F, 0xA66430FF, 0xFF800000, 0x81528401, 0x01017FFF, 0x7F019C7F, 0xA66430FF, 0xFF800000, 0x81538401,
-    0x01017FFF, 0x7F019C7F, 0xA67F30FF, 0xFF800000, 0x81548401, 0x01017FFF, 0x7F019C7F, 0xA67F30FF, 0xFF800000,
-    0x81558401, 0x01017FFF, 0x7F019C7F, 0xA67F30FF, 0xFF800000, 0x81568401, 0x01017FFF, 0x7F019C7F, 0xA67F3041,
-    0x80000000, 0x81578401, 0x01017FFF, 0x7F019C7F, 0xA67F3012, 0x80000000, 0x81588401, 0x01017FFF, 0x7F019C7F,
-    0xA67F3030, 0x80000000, 0x81598401, 0x01017FFF, 0x7F019C7F, 0xA67F3030, 0x80000000, 0x815A8401, 0x01017FFF,
-    0x7F019C7F, 0xA67F307F, 0x80000000, 0x815C8401, 0x01017FFF, 0x7F019C7F, 0xA67F30FF, 0xFF800000, 0x815D8401,
-    0x01017FFF, 0x7F019C7F, 0xA67F3030, 0x80000000, 0x815E8401, 0x01017FFF, 0x7F019C7F, 0xA67F3060, 0x80000000,
-    0x815F8401, 0x01017FFF, 0x7F019C7F, 0xA67F3012, 0x80000000, 0x81608401, 0x01017FFF, 0x7F019C7F, 0xA67F3080,
-    0x9E800000, 0x81618401, 0x01017FFF, 0x7F019C7F, 0xA67F3080, 0xAD800000, 0x81628401, 0x01017FFF, 0x7F019C7F,
-    0xA67F3022, 0x80000000, 0x81638401, 0x01017FFF, 0x7F019C7F, 0xA67F3030, 0x80000000, 0x81648401, 0x01017FFF,
-    0x7F019C7F, 0xA67F306F, 0x80000000, 0x81658401, 0x01017FFF, 0x7F019C7F, 0xA67F3080, 0x8E800000, 0x814B8401,
-    0x01017FFF, 0x7F019C7F, 0xA67F3022, 0x80000000, 0x814D8401, 0x01017FFF, 0x7F019C7F, 0xA67F3022, 0x80000000,
-    0x814F8401, 0x01017FFF, 0x7F019C7F, 0xA67F3031, 0x80000000, 0x81668401, 0x01017FFF, 0x7F019C7F, 0xA67F3041,
-    0x80000000, 0x81678401, 0x01017FFF, 0x7F019C7F, 0xA67F3030, 0x80000000, 0x815B8401, 0x01017FFF, 0x7F019C7F,
-    0xA67F2412, 0x80000000, 0x81688401, 0x01017FFF, 0x7F019C7F, 0xA66E24FF, 0xFF800000, 0x81698401, 0x01017FFF,
-    0x7F019C7F, 0xA67F2431, 0x80000000, 0x816A8401, 0x01017FFF, 0x7F019C7F, 0xA67F246F, 0x80000000, 0x816B8401,
-    0x01017FFF, 0x7F019C7F, 0xA67F241C, 0x80000000, 0x81718401, 0x01017FFF, 0x7F019C7F, 0xA67F3060, 0x80000000,
-    0x81738401, 0x01017FFF, 0x7F019C7F, 0xA67F3060, 0x80000000, 0x81748401, 0x01017FFF, 0x7F019C7F, 0xA67F3060,
-    0x80000000, 0x81768401, 0x01017FFF, 0x7F019C7F, 0xA67F307F, 0x80000000, 0x81778401, 0x01017FFF, 0x7F019C7F,
-    0xA67F3060, 0x80000000, 0x81788401, 0x01017FFF, 0x7F019C7F, 0xA67F307F, 0x80000000, 0x81798401, 0x01017FFF,
-    0x7F019C7F, 0xA67F3060, 0x80000000, 0x817B8401, 0x01017FFF, 0x7F019C7F, 0xA67F307F, 0x80000000, 0x817E8401,
-    0x01017FFF, 0x7F019C7F, 0xA67F3030, 0x80000000, 0x817F8401, 0x01017FFF, 0x7F019C7F, 0xA67F3060, 0x80000000,
-    0x81808084, 0x0101017F, 0xFF7F019C, 0x7FA67F30, 0x40800000, 0x81808184, 0x0101017F, 0xFF7F019C, 0x7FA67F30,
-    0x7F800000, 0x81808284, 0x0101017F, 0xFF7F019C, 0x7FA67F30, 0x40800000, 0x81808384, 0x0101017F, 0xFF7F019C,
-    0x7FA67F30, 0x60800000, 0x81808684, 0x0101017F, 0xFF7F019C, 0x7FA67F30, 0x30800000, 0x81808784, 0x0101017F,
-    0xFF7F019C, 0x7FA67F30, 0x60800000, 0x81808884, 0x0101017F, 0xFF7F019C, 0x7FA67F30, 0x60800000, 0x81808984,
-    0x0101017F, 0xFF7F019C, 0x7FA67F30, 0x60800000, 0x81808A84, 0x0101017F, 0xFF7F019C, 0x7FA67F30, 0x60800000,
-    0x81808B84, 0x0101017F, 0xFF7F019C, 0x7FA67F30, 0x40800000, 0x81808C84, 0x0101017F, 0xFF7F019C, 0x7FA67F30,
-    0x60800000, 0x81808E84, 0x0101017F, 0xFF7F019C, 0x7FA67F30, 0x60800000, 0x81808F84, 0x0101017F, 0xFF7F019C,
-    0x7FA67F30, 0x60800000, 0x81809084, 0x0101017F, 0xFF7F019C, 0x7FA67F30, 0x60800000, 0x81809184, 0x0101017F,
-    0xFF7F019C, 0x7FA67F30, 0x7F800000, 0x81809284, 0x0101017F, 0xFF7F019C, 0x7FA67830, 0x30800000, 0x81809384,
-    0x0101017F, 0xFF7F019C, 0x7FA67830, 0x60800000, 0x81809484, 0x0101017F, 0xFF7F019C, 0x7FA67830, 0x60800000,
-    0x81809584, 0x0101017F, 0xFF7F019C, 0x7FA67830, 0x40800000, 0x81809684, 0x0101017F, 0xFF7F019C, 0x7FA67830,
-    0x6B800000, 0x81809784, 0x0101017F, 0xFF7F019C, 0x7FA67830, 0x18800000, 0x81809884, 0x0101017F, 0xFF7F019C,
-    0x7FA67830, 0x18800000, 0x81809984, 0x0101017F, 0xFF7F019C, 0x7FA67830, 0x7F800000, 0x81809A84, 0x0101017F,
-    0xFF7F019C, 0x7FA67830, 0x48800000, 0x81809B84, 0x0101017F, 0xFF7F019C, 0x7FA67F30, 0x40800000, 0x81809C84,
-    0x0101017F, 0xFF7F019C, 0x7FA67F30, 0x40800000, 0x81809D84, 0x0101017F, 0xFF7F019C, 0x7FA67F30, 0x7F800000,
-    0x81809E84, 0x0101017F, 0xFF7F019C, 0x7FA67F30, 0x7F800000, 0x81809F84, 0x0101017F, 0xFF7F019C, 0x7FA67F30,
-    0x80BC8000, 0x8180A084, 0x0101017F, 0xFF7F019C, 0x7FA67F30, 0x40800000, 0xA76B8180, 0xB5840101, 0x017FFF7F,
-    0x019C00A6, 0x7F3080FF, 0x80000000, 0x8180B584, 0x0101017F, 0xFF7F019C, 0xFFA67F2F, 0x80FF8000, 0x8180A184,
-    0x0101017F, 0xFF7F019C, 0x7FA67F30, 0x7F800000, 0x8180A284, 0x0101017F, 0xFF7F019C, 0x7FA67F30, 0x60800000,
-    0x8180A684, 0x0101017F, 0xFF7F019C, 0x7FA67F30, 0x48800000, 0x8180A484, 0x0101017F, 0xFF7F019C, 0x7FA67F30,
-    0x40800000, 0x8180A584, 0x0101017F, 0xFF7F019C, 0x7FA67F30, 0x60800000, 0x8180A884, 0x0101017F, 0xFF7F019C,
-    0x7FA67F30, 0x60800000, 0x8180A884, 0x0101017F, 0xFF7F019C, 0x7FA67F30, 0x60800000, 0x8180A984, 0x0101017F,
-    0xFF7F019C, 0x7FA67F30, 0x80F88000, 0x8180AA84, 0x0101017F, 0xFF7F019C, 0x7FA67F30, 0x7F800000, 0x8180AB84,
-    0x0101017F, 0xFF7F019C, 0x7FA67F30, 0x60800000, 0x8180AC84, 0x0101017F, 0xFF7F019C, 0x7FA67F30, 0x7F800000,
-    0x8180AD84, 0x0101017F, 0xFF7F019C, 0x7FA67F30, 0x60800000, 0x8180AE84, 0x0101017F, 0xFF7F019C, 0x7FA67F30,
-    0x60800000, 0x8180AF84, 0x0101017F, 0xFF7F019C, 0x7FA67F30, 0x60800000, 0x8180B084, 0x0101017F, 0xFF7F019C,
-    0x7FA67F30, 0x60800000, 0x8180B184, 0x0101017F, 0xFF7F019C, 0x7FA67F30, 0x60800000, 0x8180B284, 0x0101017F,
-    0xFF7F019C, 0x7FA67F30, 0x60800000, 0x8180B284, 0x0101017F, 0xFF7F019C, 0x7FA67F30, 0x60800000, 0x8180B484,
-    0x0101017F, 0xFF7F019C, 0x7FA67C30, 0x60800000, 0x81728401, 0x01017FFF, 0x7F019C7F, 0xA67F3040, 0x80000000,
-    0x81758401, 0x01017FFF, 0x7F019C7F, 0xA67F3040, 0x80000000, 0x817A8401, 0x01017FFF, 0x7F019C7F, 0xA67F3030,
-    0x80000000, 0x817C8401, 0x01017FFF, 0x7F019C7F, 0xA67F3048, 0x80000000, 0x817D8401, 0x01017FFF, 0x7F019C7F,
-    0xA67B3040, 0x80000000, 0x81808484, 0x0101017F, 0xFF7F019C, 0x7FA67F30, 0x7F800000, 0x81808584, 0x0101017F,
-    0xFF7F019C, 0x7FA67F30, 0x60800000, 0x81808D84, 0x0101017F, 0xFF7F019C, 0x7FA67F30, 0x40800000, 0x816D8401,
-    0x01017FFF, 0x7F019C7F, 0xA67F3030, 0x80000000, 0x816C8401, 0x01017FFF, 0x7F019C7F, 0xA67F3080, 0x80800000,
-    0x816E8401, 0x01017FFF, 0x7F019C7F, 0xA67F3080, 0xFF800000, 0x816F8401, 0x01017FFF, 0x7F019C7F, 0xA67F3030,
-    0x80000000, 0x81708401, 0x01017FFF, 0x7F019C7F, 0xA67F3030, 0x80000000,
+u8 gSoundEffectNoneCommands[] = {
+    MUS_STOP(),
 };
 
-u8 *gSoundEffectCommandPointers[108] = {
-    (u8 *)&gSoundEffectCommandData[0x0],   (u8 *)&gSoundEffectCommandData[0x1],   (u8 *)&gSoundEffectCommandData[0x6],   (u8 *)&gSoundEffectCommandData[0xB],
-    (u8 *)&gSoundEffectCommandData[0x10],  (u8 *)&gSoundEffectCommandData[0x15],  (u8 *)&gSoundEffectCommandData[0x1A],  (u8 *)&gSoundEffectCommandData[0x1F],
-    (u8 *)&gSoundEffectCommandData[0x24],  (u8 *)&gSoundEffectCommandData[0x29],  (u8 *)&gSoundEffectCommandData[0x2E],  (u8 *)&gSoundEffectCommandData[0x33],
-    (u8 *)&gSoundEffectCommandData[0x38],  (u8 *)&gSoundEffectCommandData[0x3D],  (u8 *)&gSoundEffectCommandData[0x42],  (u8 *)&gSoundEffectCommandData[0x47],
-    (u8 *)&gSoundEffectCommandData[0x4C],  (u8 *)&gSoundEffectCommandData[0x51],  (u8 *)&gSoundEffectCommandData[0x56],  (u8 *)&gSoundEffectCommandData[0x5B],
-    (u8 *)&gSoundEffectCommandData[0x60],  (u8 *)&gSoundEffectCommandData[0x65],  (u8 *)&gSoundEffectCommandData[0x6A],  (u8 *)&gSoundEffectCommandData[0x6F],
-    (u8 *)&gSoundEffectCommandData[0x74],  (u8 *)&gSoundEffectCommandData[0x79],  (u8 *)&gSoundEffectCommandData[0x7E],  (u8 *)&gSoundEffectCommandData[0x83],
-    (u8 *)&gSoundEffectCommandData[0x88],  (u8 *)&gSoundEffectCommandData[0x8D],  (u8 *)&gSoundEffectCommandData[0x92],  (u8 *)&gSoundEffectCommandData[0x97],
-    (u8 *)&gSoundEffectCommandData[0x9C],  (u8 *)&gSoundEffectCommandData[0xA1],  (u8 *)&gSoundEffectCommandData[0xA6],  (u8 *)&gSoundEffectCommandData[0xAB],
-    (u8 *)&gSoundEffectCommandData[0xB0],  (u8 *)&gSoundEffectCommandData[0xB5],  (u8 *)&gSoundEffectCommandData[0xBA],  (u8 *)&gSoundEffectCommandData[0xBF],
-    (u8 *)&gSoundEffectCommandData[0xC4],  (u8 *)&gSoundEffectCommandData[0xC9],  (u8 *)&gSoundEffectCommandData[0xCE],  (u8 *)&gSoundEffectCommandData[0xD3],
-    (u8 *)&gSoundEffectCommandData[0xD8],  (u8 *)&gSoundEffectCommandData[0xDD],  (u8 *)&gSoundEffectCommandData[0xE2],  (u8 *)&gSoundEffectCommandData[0xE7],
-    (u8 *)&gSoundEffectCommandData[0xEC],  (u8 *)&gSoundEffectCommandData[0xF1],  (u8 *)&gSoundEffectCommandData[0xF6],  (u8 *)&gSoundEffectCommandData[0xFB],
-    (u8 *)&gSoundEffectCommandData[0x100], (u8 *)&gSoundEffectCommandData[0x105], (u8 *)&gSoundEffectCommandData[0x10A], (u8 *)&gSoundEffectCommandData[0x10F],
-    (u8 *)&gSoundEffectCommandData[0x114], (u8 *)&gSoundEffectCommandData[0x119], (u8 *)&gSoundEffectCommandData[0x11E], (u8 *)&gSoundEffectCommandData[0x123],
-    (u8 *)&gSoundEffectCommandData[0x128], (u8 *)&gSoundEffectCommandData[0x12D], (u8 *)&gSoundEffectCommandData[0x132], (u8 *)&gSoundEffectCommandData[0x137],
-    (u8 *)&gSoundEffectCommandData[0x13C], (u8 *)&gSoundEffectCommandData[0x141], (u8 *)&gSoundEffectCommandData[0x146], (u8 *)&gSoundEffectCommandData[0x14B],
-    (u8 *)&gSoundEffectCommandData[0x150], (u8 *)&gSoundEffectCommandData[0x155], (u8 *)&gSoundEffectCommandData[0x15A], (u8 *)&gSoundEffectCommandData[0x15F],
-    (u8 *)&gSoundEffectCommandData[0x164], (u8 *)&gSoundEffectCommandData[0x169], (u8 *)&gSoundEffectCommandData[0x16E], (u8 *)&gSoundEffectCommandData[0x179],
-    (u8 *)&gSoundEffectCommandData[0x17E], (u8 *)&gSoundEffectCommandData[0x183], (u8 *)&gSoundEffectCommandData[0x188], (u8 *)&gSoundEffectCommandData[0x18D],
-    (u8 *)&gSoundEffectCommandData[0x192], (u8 *)&gSoundEffectCommandData[0x197], (u8 *)&gSoundEffectCommandData[0x19C], (u8 *)&gSoundEffectCommandData[0x1A1],
-    (u8 *)&gSoundEffectCommandData[0x1A6], (u8 *)&gSoundEffectCommandData[0x1AB], (u8 *)&gSoundEffectCommandData[0x1B0], (u8 *)&gSoundEffectCommandData[0x1B5],
-    (u8 *)&gSoundEffectCommandData[0x1BA], (u8 *)&gSoundEffectCommandData[0x1BF], (u8 *)&gSoundEffectCommandData[0x1C4], (u8 *)&gSoundEffectCommandData[0x1C9],
-    (u8 *)&gSoundEffectCommandData[0x1CE], (u8 *)&gSoundEffectCommandData[0x1D3], (u8 *)&gSoundEffectCommandData[0x1D8], (u8 *)&gSoundEffectCommandData[0x1DD],
-    (u8 *)&gSoundEffectCommandData[0x1E2], (u8 *)&gSoundEffectCommandData[0x1E7], (u8 *)&gSoundEffectCommandData[0x1EC], (u8 *)&gSoundEffectCommandData[0x1F1],
-    (u8 *)&gSoundEffectCommandData[0x1F6], (u8 *)&gSoundEffectCommandData[0x1FB], (u8 *)&gSoundEffectCommandData[0x200], (u8 *)&gSoundEffectCommandData[0x205],
-    (u8 *)&gSoundEffectCommandData[0x20A], (u8 *)&gSoundEffectCommandData[0x20F], (u8 *)&gSoundEffectCommandData[0x214], (u8 *)&gSoundEffectCommandData[0x174],
+u8 gSoundEffectMenuAcceptCommands[] = {
+    MUS_WAVE(SOUND_WAVE_MENU_ACCEPT),
+    MUS_ENVELOPE_DEFAULT(1, 1, 1, 127, 255, 127, 1),
+    MUS_PAN(127),
+    MUS_VOLUME(127),
+    MUS_NOTE(48, 34),
+    MUS_STOP(),
 };
 
-s32 gSoundEffectDefaultPriorities[108] = {
+u8 gSoundEffectResultsTallyCompleteCommands[] = {
+    MUS_WAVE(SOUND_WAVE_RESULTS_TALLY_COMPLETE),
+    MUS_ENVELOPE_DEFAULT(1, 1, 1, 127, 255, 127, 1),
+    MUS_PAN(127),
+    MUS_VOLUME(105),
+    MUS_NOTE(48, 96),
+    MUS_STOP(),
+};
+
+u8 gSoundEffectBoardGlideLoopCommands[] = {
+    MUS_WAVE(SOUND_WAVE_BOARD_GLIDE_LOOP),
+    MUS_ENVELOPE_DEFAULT(1, 1, 1, 127, 255, 127, 1),
+    MUS_PAN(127),
+    MUS_VOLUME(100),
+    MUS_NOTE_LONG(48, MUS_DURATION_INFINITE),
+    MUS_STOP(),
+};
+
+u8 gSoundEffectBoardContactFallbackLoopCommands[] = {
+    MUS_WAVE(SOUND_WAVE_BOARD_CONTACT_FALLBACK_LOOP),
+    MUS_ENVELOPE_DEFAULT(1, 1, 1, 127, 255, 127, 1),
+    MUS_PAN(127),
+    MUS_VOLUME(100),
+    MUS_NOTE_LONG(48, MUS_DURATION_INFINITE),
+    MUS_STOP(),
+};
+
+u8 gSoundEffectBoardSurfaceSprayLoopCommands[] = {
+    MUS_WAVE(SOUND_WAVE_BOARD_SURFACE_SPRAY_LOOP),
+    MUS_ENVELOPE_DEFAULT(1, 1, 1, 127, 255, 127, 1),
+    MUS_PAN(127),
+    MUS_VOLUME(100),
+    MUS_NOTE_LONG(48, MUS_DURATION_INFINITE),
+    MUS_STOP(),
+};
+
+u8 gSoundEffectBoardSurfaceRumbleLoopCommands[] = {
+    MUS_WAVE(SOUND_WAVE_BOARD_SURFACE_RUMBLE_LOOP),
+    MUS_ENVELOPE_DEFAULT(1, 1, 1, 127, 255, 127, 1),
+    MUS_PAN(127),
+    MUS_VOLUME(127),
+    MUS_NOTE_LONG(48, MUS_DURATION_INFINITE),
+    MUS_STOP(),
+};
+
+u8 gSoundEffectSpeedFanLoopCommands[] = {
+    MUS_WAVE(SOUND_WAVE_SPEED_FAN_LOOP),
+    MUS_ENVELOPE_DEFAULT(1, 1, 1, 127, 255, 127, 1),
+    MUS_PAN(127),
+    MUS_VOLUME(127),
+    MUS_NOTE_LONG(48, MUS_DURATION_INFINITE),
+    MUS_STOP(),
+};
+
+u8 gSoundEffectCrashSlideLoopCommands[] = {
+    MUS_WAVE(SOUND_WAVE_CRASH_SLIDE_LOOP),
+    MUS_ENVELOPE_DEFAULT(1, 1, 1, 127, 255, 127, 1),
+    MUS_PAN(127),
+    MUS_VOLUME(127),
+    MUS_NOTE_LONG(48, MUS_DURATION_INFINITE),
+    MUS_STOP(),
+};
+
+u8 gSoundEffectShockCommands[] = {
+    MUS_WAVE(SOUND_WAVE_SHOCK),
+    MUS_ENVELOPE_DEFAULT(1, 1, 1, 127, 255, 127, 1),
+    MUS_PAN(127),
+    MUS_VOLUME(127),
+    MUS_NOTE(48, 65),
+    MUS_STOP(),
+};
+
+u8 gSoundEffectProjectileImpactCommands[] = {
+    MUS_WAVE(SOUND_WAVE_PROJECTILE_IMPACT),
+    MUS_ENVELOPE_DEFAULT(1, 1, 1, 127, 255, 127, 1),
+    MUS_PAN(127),
+    MUS_VOLUME(127),
+    MUS_NOTE(48, 18),
+    MUS_STOP(),
+};
+
+u8 gSoundEffectSpinHitCommands[] = {
+    MUS_WAVE(SOUND_WAVE_SPIN_HIT),
+    MUS_ENVELOPE_DEFAULT(1, 1, 1, 127, 255, 127, 1),
+    MUS_PAN(127),
+    MUS_VOLUME(127),
+    MUS_NOTE(48, 48),
+    MUS_STOP(),
+};
+
+u8 gSoundEffectGhostHitCommands[] = {
+    MUS_WAVE(SOUND_WAVE_GHOST_HIT),
+    MUS_ENVELOPE_DEFAULT(1, 1, 1, 127, 255, 127, 1),
+    MUS_PAN(127),
+    MUS_VOLUME(127),
+    MUS_NOTE(48, 48),
+    MUS_STOP(),
+};
+
+u8 gSoundEffectGhostSlowdownCommands[] = {
+    MUS_WAVE(SOUND_WAVE_GHOST_SLOWDOWN),
+    MUS_ENVELOPE_DEFAULT(1, 1, 1, 127, 255, 127, 1),
+    MUS_PAN(127),
+    MUS_VOLUME(127),
+    MUS_NOTE(48, 127),
+    MUS_STOP(),
+};
+
+u8 gSoundEffectSunsetRockAmbienceCommands[] = {
+    MUS_WAVE(SOUND_WAVE_SUNSET_ROCK_AMBIENCE),
+    MUS_ENVELOPE_DEFAULT(1, 1, 1, 127, 255, 127, 1),
+    MUS_PAN(127),
+    MUS_VOLUME(127),
+    MUS_NOTE_LONG(48, MUS_DURATION_INFINITE),
+    MUS_STOP(),
+};
+
+u8 gSoundEffectItemStealStartCommands[] = {
+    MUS_WAVE(SOUND_WAVE_ITEM_STEAL_START),
+    MUS_ENVELOPE_DEFAULT(1, 1, 1, 127, 255, 127, 1),
+    MUS_PAN(127),
+    MUS_VOLUME(127),
+    MUS_NOTE(48, 48),
+    MUS_STOP(),
+};
+
+u8 gSoundEffectItemUseCommands[] = {
+    MUS_WAVE(SOUND_WAVE_ITEM_USE),
+    MUS_ENVELOPE_DEFAULT(1, 1, 1, 127, 255, 127, 1),
+    MUS_PAN(127),
+    MUS_VOLUME(127),
+    MUS_NOTE(48, 96),
+    MUS_STOP(),
+};
+
+u8 gSoundEffectItemImpactCommands[] = {
+    MUS_WAVE(SOUND_WAVE_ITEM_IMPACT),
+    MUS_ENVELOPE_DEFAULT(1, 1, 1, 127, 255, 127, 1),
+    MUS_PAN(127),
+    MUS_VOLUME(127),
+    MUS_NOTE(48, 18),
+    MUS_STOP(),
+};
+
+u8 gSoundEffectItemBreakCommands[] = {
+    MUS_WAVE(SOUND_WAVE_ITEM_BREAK),
+    MUS_ENVELOPE_DEFAULT(1, 1, 1, 127, 255, 127, 1),
+    MUS_PAN(127),
+    MUS_VOLUME(127),
+    MUS_NOTE_LONG(48, 158),
+    MUS_STOP(),
+};
+
+u8 gSoundEffectAreaBlastCommands[] = {
+    MUS_WAVE(SOUND_WAVE_AREA_BLAST),
+    MUS_ENVELOPE_DEFAULT(1, 1, 1, 127, 255, 127, 1),
+    MUS_PAN(127),
+    MUS_VOLUME(127),
+    MUS_NOTE_LONG(48, 173),
+    MUS_STOP(),
+};
+
+u8 gSoundEffectCollisionImpactCommands[] = {
+    MUS_WAVE(SOUND_WAVE_COLLISION_IMPACT),
+    MUS_ENVELOPE_DEFAULT(1, 1, 1, 127, 255, 127, 1),
+    MUS_PAN(127),
+    MUS_VOLUME(127),
+    MUS_NOTE(48, 34),
+    MUS_STOP(),
+};
+
+u8 gSoundEffectItemStealEndCommands[] = {
+    MUS_WAVE(SOUND_WAVE_ITEM_STEAL_END),
+    MUS_ENVELOPE_DEFAULT(1, 1, 1, 127, 255, 127, 1),
+    MUS_PAN(127),
+    MUS_VOLUME(127),
+    MUS_NOTE(48, 48),
+    MUS_STOP(),
+};
+
+u8 gSoundEffectCourseGateOpen1Commands[] = {
+    MUS_WAVE(SOUND_WAVE_COURSE_GATE_OPEN_1),
+    MUS_ENVELOPE_DEFAULT(1, 1, 1, 127, 255, 127, 1),
+    MUS_PAN(127),
+    MUS_VOLUME(127),
+    MUS_NOTE(48, 111),
+    MUS_STOP(),
+};
+
+u8 gSoundEffectTrickStartCommands[] = {
+    MUS_WAVE(SOUND_WAVE_TRICK_START),
+    MUS_ENVELOPE_DEFAULT(1, 1, 1, 127, 255, 127, 1),
+    MUS_PAN(127),
+    MUS_VOLUME(127),
+    MUS_NOTE_LONG(48, 142),
+    MUS_STOP(),
+};
+
+u8 gSoundEffectConfirmCommands[] = {
+    MUS_WAVE(SOUND_WAVE_CONFIRM),
+    MUS_ENVELOPE_DEFAULT(1, 1, 1, 127, 255, 127, 1),
+    MUS_PAN(127),
+    MUS_VOLUME(127),
+    MUS_NOTE(48, 34),
+    MUS_STOP(),
+};
+
+u8 gSoundEffectMenuCursorCommands[] = {
+    MUS_WAVE(SOUND_WAVE_MENU_CURSOR),
+    MUS_ENVELOPE_DEFAULT(1, 1, 1, 127, 255, 127, 1),
+    MUS_PAN(127),
+    MUS_VOLUME(127),
+    MUS_NOTE(48, 34),
+    MUS_STOP(),
+};
+
+u8 gSoundEffectCoinTickCommands[] = {
+    MUS_WAVE(SOUND_WAVE_COIN_TICK),
+    MUS_ENVELOPE_DEFAULT(1, 1, 1, 127, 255, 127, 1),
+    MUS_PAN(127),
+    MUS_VOLUME(127),
+    MUS_NOTE(48, 49),
+    MUS_STOP(),
+};
+
+u8 gSoundEffectCourseGateOpen2Commands[] = {
+    MUS_WAVE(SOUND_WAVE_COURSE_GATE_OPEN_2),
+    MUS_ENVELOPE_DEFAULT(1, 1, 1, 127, 255, 127, 1),
+    MUS_PAN(127),
+    MUS_VOLUME(127),
+    MUS_NOTE(48, 65),
+    MUS_STOP(),
+};
+
+u8 gSoundEffectCourseGateCloseCommands[] = {
+    MUS_WAVE(SOUND_WAVE_COURSE_GATE_CLOSE),
+    MUS_ENVELOPE_DEFAULT(1, 1, 1, 127, 255, 127, 1),
+    MUS_PAN(127),
+    MUS_VOLUME(127),
+    MUS_NOTE(48, 48),
+    MUS_STOP(),
+};
+
+u8 gSoundEffectUnusedSample91Commands[] = {
+    MUS_WAVE(SOUND_WAVE_UNUSED_SAMPLE_91),
+    MUS_ENVELOPE_DEFAULT(1, 1, 1, 127, 255, 127, 1),
+    MUS_PAN(127),
+    MUS_VOLUME(127),
+    MUS_NOTE(36, 18),
+    MUS_STOP(),
+};
+
+u8 gSoundEffectBreakableSurfaceLoopCommands[] = {
+    MUS_WAVE(SOUND_WAVE_BREAKABLE_SURFACE_LOOP),
+    MUS_ENVELOPE_DEFAULT(1, 1, 1, 127, 255, 127, 1),
+    MUS_PAN(127),
+    MUS_VOLUME(110),
+    MUS_NOTE_LONG(36, MUS_DURATION_INFINITE),
+    MUS_STOP(),
+};
+
+u8 gSoundEffectItemPickupCommands[] = {
+    MUS_WAVE(SOUND_WAVE_ITEM_PICKUP),
+    MUS_ENVELOPE_DEFAULT(1, 1, 1, 127, 255, 127, 1),
+    MUS_PAN(127),
+    MUS_VOLUME(127),
+    MUS_NOTE(36, 49),
+    MUS_STOP(),
+};
+
+u8 gSoundEffectFallingRockBounceCommands[] = {
+    MUS_WAVE(SOUND_WAVE_FALLING_ROCK_BOUNCE),
+    MUS_ENVELOPE_DEFAULT(1, 1, 1, 127, 255, 127, 1),
+    MUS_PAN(127),
+    MUS_VOLUME(127),
+    MUS_NOTE(36, 111),
+    MUS_STOP(),
+};
+
+u8 gSoundEffectPlayerDescentCommands[] = {
+    MUS_WAVE(SOUND_WAVE_PLAYER_DESCENT),
+    MUS_ENVELOPE_DEFAULT(1, 1, 1, 127, 255, 127, 1),
+    MUS_PAN(127),
+    MUS_VOLUME(127),
+    MUS_NOTE(36, 28),
+    MUS_STOP(),
+};
+
+u8 gSoundEffectSlashTrickCommands[] = {
+    MUS_WAVE(SOUND_WAVE_SLASH_TRICK),
+    MUS_ENVELOPE_DEFAULT(1, 1, 1, 127, 255, 127, 1),
+    MUS_PAN(127),
+    MUS_VOLUME(127),
+    MUS_NOTE(48, 96),
+    MUS_STOP(),
+};
+
+u8 gSoundEffectSlashComplexTrickCommands[] = {
+    MUS_WAVE(SOUND_WAVE_SLASH_COMPLEX_TRICK),
+    MUS_ENVELOPE_DEFAULT(1, 1, 1, 127, 255, 127, 1),
+    MUS_PAN(127),
+    MUS_VOLUME(127),
+    MUS_NOTE(48, 96),
+    MUS_STOP(),
+};
+
+u8 gSoundEffectSlashHitCommands[] = {
+    MUS_WAVE(SOUND_WAVE_SLASH_HIT),
+    MUS_ENVELOPE_DEFAULT(1, 1, 1, 127, 255, 127, 1),
+    MUS_PAN(127),
+    MUS_VOLUME(127),
+    MUS_NOTE(48, 96),
+    MUS_STOP(),
+};
+
+u8 gSoundEffectSlashAttackSuccessCommands[] = {
+    MUS_WAVE(SOUND_WAVE_SLASH_ATTACK_SUCCESS),
+    MUS_ENVELOPE_DEFAULT(1, 1, 1, 127, 255, 127, 1),
+    MUS_PAN(127),
+    MUS_VOLUME(127),
+    MUS_NOTE(48, 127),
+    MUS_STOP(),
+};
+
+u8 gSoundEffectSlashCheerCommands[] = {
+    MUS_WAVE(SOUND_WAVE_SLASH_CHEER),
+    MUS_ENVELOPE_DEFAULT(1, 1, 1, 127, 255, 127, 1),
+    MUS_PAN(127),
+    MUS_VOLUME(127),
+    MUS_NOTE(48, 96),
+    MUS_STOP(),
+};
+
+u8 gSoundEffectSlashObstacleHitCommands[] = {
+    MUS_WAVE(SOUND_WAVE_SLASH_OBSTACLE_HIT),
+    MUS_ENVELOPE_DEFAULT(1, 1, 1, 127, 255, 127, 1),
+    MUS_PAN(127),
+    MUS_VOLUME(127),
+    MUS_NOTE(48, 127),
+    MUS_STOP(),
+};
+
+u8 gSoundEffectNancyTrickCommands[] = {
+    MUS_WAVE(SOUND_WAVE_NANCY_TRICK),
+    MUS_ENVELOPE_DEFAULT(1, 1, 1, 127, 255, 127, 1),
+    MUS_PAN(127),
+    MUS_VOLUME(127),
+    MUS_NOTE(48, 96),
+    MUS_STOP(),
+};
+
+u8 gSoundEffectNancyComplexTrickCommands[] = {
+    MUS_WAVE(SOUND_WAVE_NANCY_COMPLEX_TRICK),
+    MUS_ENVELOPE_DEFAULT(1, 1, 1, 127, 255, 127, 1),
+    MUS_PAN(127),
+    MUS_VOLUME(127),
+    MUS_NOTE(48, 127),
+    MUS_STOP(),
+};
+
+u8 gSoundEffectNancyHitCommands[] = {
+    MUS_WAVE(SOUND_WAVE_NANCY_HIT),
+    MUS_ENVELOPE_DEFAULT(1, 1, 1, 127, 255, 127, 1),
+    MUS_PAN(127),
+    MUS_VOLUME(127),
+    MUS_NOTE(48, 48),
+    MUS_STOP(),
+};
+
+u8 gSoundEffectNancyCheerCommands[] = {
+    MUS_WAVE(SOUND_WAVE_NANCY_CHEER),
+    MUS_ENVELOPE_DEFAULT(1, 1, 1, 127, 255, 127, 1),
+    MUS_PAN(127),
+    MUS_VOLUME(127),
+    MUS_NOTE(48, 96),
+    MUS_STOP(),
+};
+
+u8 gSoundEffectNancyAttackSuccessCommands[] = {
+    MUS_WAVE_LONG(SOUND_WAVE_NANCY_ATTACK_SUCCESS),
+    MUS_ENVELOPE_DEFAULT(1, 1, 1, 127, 255, 127, 1),
+    MUS_PAN(127),
+    MUS_VOLUME(127),
+    MUS_NOTE(48, 64),
+    MUS_STOP(),
+};
+
+u8 gSoundEffectNancyObstacleHitCommands[] = {
+    MUS_WAVE_LONG(SOUND_WAVE_NANCY_OBSTACLE_HIT),
+    MUS_ENVELOPE_DEFAULT(1, 1, 1, 127, 255, 127, 1),
+    MUS_PAN(127),
+    MUS_VOLUME(127),
+    MUS_NOTE(48, 127),
+    MUS_STOP(),
+};
+
+u8 gSoundEffectLindaTrickCommands[] = {
+    MUS_WAVE_LONG(SOUND_WAVE_LINDA_TRICK),
+    MUS_ENVELOPE_DEFAULT(1, 1, 1, 127, 255, 127, 1),
+    MUS_PAN(127),
+    MUS_VOLUME(127),
+    MUS_NOTE(48, 64),
+    MUS_STOP(),
+};
+
+u8 gSoundEffectLindaComplexTrickCommands[] = {
+    MUS_WAVE_LONG(SOUND_WAVE_LINDA_COMPLEX_TRICK),
+    MUS_ENVELOPE_DEFAULT(1, 1, 1, 127, 255, 127, 1),
+    MUS_PAN(127),
+    MUS_VOLUME(127),
+    MUS_NOTE(48, 96),
+    MUS_STOP(),
+};
+
+u8 gSoundEffectLindaHitCommands[] = {
+    MUS_WAVE_LONG(SOUND_WAVE_LINDA_HIT),
+    MUS_ENVELOPE_DEFAULT(1, 1, 1, 127, 255, 127, 1),
+    MUS_PAN(127),
+    MUS_VOLUME(127),
+    MUS_NOTE(48, 48),
+    MUS_STOP(),
+};
+
+u8 gSoundEffectLindaCheerCommands[] = {
+    MUS_WAVE_LONG(SOUND_WAVE_LINDA_CHEER),
+    MUS_ENVELOPE_DEFAULT(1, 1, 1, 127, 255, 127, 1),
+    MUS_PAN(127),
+    MUS_VOLUME(127),
+    MUS_NOTE(48, 96),
+    MUS_STOP(),
+};
+
+u8 gSoundEffectLindaAttackSuccessCommands[] = {
+    MUS_WAVE_LONG(SOUND_WAVE_LINDA_ATTACK_SUCCESS),
+    MUS_ENVELOPE_DEFAULT(1, 1, 1, 127, 255, 127, 1),
+    MUS_PAN(127),
+    MUS_VOLUME(127),
+    MUS_NOTE(48, 96),
+    MUS_STOP(),
+};
+
+u8 gSoundEffectLindaObstacleHitCommands[] = {
+    MUS_WAVE_LONG(SOUND_WAVE_LINDA_OBSTACLE_HIT),
+    MUS_ENVELOPE_DEFAULT(1, 1, 1, 127, 255, 127, 1),
+    MUS_PAN(127),
+    MUS_VOLUME(127),
+    MUS_NOTE(48, 96),
+    MUS_STOP(),
+};
+
+u8 gSoundEffectLindaUnusedVoiceCommands[] = {
+    MUS_WAVE_LONG(SOUND_WAVE_LINDA_UNUSED_VOICE),
+    MUS_ENVELOPE_DEFAULT(1, 1, 1, 127, 255, 127, 1),
+    MUS_PAN(127),
+    MUS_VOLUME(127),
+    MUS_NOTE(48, 96),
+    MUS_STOP(),
+};
+
+u8 gSoundEffectJamTrickCommands[] = {
+    MUS_WAVE_LONG(SOUND_WAVE_JAM_TRICK),
+    MUS_ENVELOPE_DEFAULT(1, 1, 1, 127, 255, 127, 1),
+    MUS_PAN(127),
+    MUS_VOLUME(127),
+    MUS_NOTE(48, 64),
+    MUS_STOP(),
+};
+
+u8 gSoundEffectJamComplexTrickCommands[] = {
+    MUS_WAVE_LONG(SOUND_WAVE_JAM_COMPLEX_TRICK),
+    MUS_ENVELOPE_DEFAULT(1, 1, 1, 127, 255, 127, 1),
+    MUS_PAN(127),
+    MUS_VOLUME(127),
+    MUS_NOTE(48, 96),
+    MUS_STOP(),
+};
+
+u8 gSoundEffectJamHitCommands[] = {
+    MUS_WAVE_LONG(SOUND_WAVE_JAM_HIT),
+    MUS_ENVELOPE_DEFAULT(1, 1, 1, 127, 255, 127, 1),
+    MUS_PAN(127),
+    MUS_VOLUME(127),
+    MUS_NOTE(48, 96),
+    MUS_STOP(),
+};
+
+u8 gSoundEffectJamAttackSuccessCommands[] = {
+    MUS_WAVE_LONG(SOUND_WAVE_JAM_ATTACK_SUCCESS),
+    MUS_ENVELOPE_DEFAULT(1, 1, 1, 127, 255, 127, 1),
+    MUS_PAN(127),
+    MUS_VOLUME(127),
+    MUS_NOTE(48, 96),
+    MUS_STOP(),
+};
+
+u8 gSoundEffectJamCheerCommands[] = {
+    MUS_WAVE_LONG(SOUND_WAVE_JAM_CHEER),
+    MUS_ENVELOPE_DEFAULT(1, 1, 1, 127, 255, 127, 1),
+    MUS_PAN(127),
+    MUS_VOLUME(127),
+    MUS_NOTE(48, 96),
+    MUS_STOP(),
+};
+
+u8 gSoundEffectJamObstacleHitCommands[] = {
+    MUS_WAVE_LONG(SOUND_WAVE_JAM_OBSTACLE_HIT),
+    MUS_ENVELOPE_DEFAULT(1, 1, 1, 127, 255, 127, 1),
+    MUS_PAN(127),
+    MUS_VOLUME(127),
+    MUS_NOTE(48, 127),
+    MUS_STOP(),
+};
+
+u8 gSoundEffectTommyTrickCommands[] = {
+    MUS_WAVE_LONG(SOUND_WAVE_TOMMY_TRICK),
+    MUS_ENVELOPE_DEFAULT(1, 1, 1, 127, 255, 127, 1),
+    MUS_PAN(127),
+    MUS_VOLUME(120),
+    MUS_NOTE(48, 48),
+    MUS_STOP(),
+};
+
+u8 gSoundEffectTommyComplexTrickCommands[] = {
+    MUS_WAVE_LONG(SOUND_WAVE_TOMMY_COMPLEX_TRICK),
+    MUS_ENVELOPE_DEFAULT(1, 1, 1, 127, 255, 127, 1),
+    MUS_PAN(127),
+    MUS_VOLUME(120),
+    MUS_NOTE(48, 96),
+    MUS_STOP(),
+};
+
+u8 gSoundEffectTommyHitCommands[] = {
+    MUS_WAVE_LONG(SOUND_WAVE_TOMMY_HIT),
+    MUS_ENVELOPE_DEFAULT(1, 1, 1, 127, 255, 127, 1),
+    MUS_PAN(127),
+    MUS_VOLUME(120),
+    MUS_NOTE(48, 96),
+    MUS_STOP(),
+};
+
+u8 gSoundEffectTommyCheerCommands[] = {
+    MUS_WAVE_LONG(SOUND_WAVE_TOMMY_CHEER),
+    MUS_ENVELOPE_DEFAULT(1, 1, 1, 127, 255, 127, 1),
+    MUS_PAN(127),
+    MUS_VOLUME(120),
+    MUS_NOTE(48, 64),
+    MUS_STOP(),
+};
+
+u8 gSoundEffectTommyObstacleHitCommands[] = {
+    MUS_WAVE_LONG(SOUND_WAVE_TOMMY_OBSTACLE_HIT),
+    MUS_ENVELOPE_DEFAULT(1, 1, 1, 127, 255, 127, 1),
+    MUS_PAN(127),
+    MUS_VOLUME(120),
+    MUS_NOTE(48, 107),
+    MUS_STOP(),
+};
+
+u8 gSoundEffectShinobinTrickCommands[] = {
+    MUS_WAVE_LONG(SOUND_WAVE_SHINOBIN_TRICK),
+    MUS_ENVELOPE_DEFAULT(1, 1, 1, 127, 255, 127, 1),
+    MUS_PAN(127),
+    MUS_VOLUME(120),
+    MUS_NOTE(48, 24),
+    MUS_STOP(),
+};
+
+u8 gSoundEffectShinobinHitCommands[] = {
+    MUS_WAVE_LONG(SOUND_WAVE_SHINOBIN_HIT),
+    MUS_ENVELOPE_DEFAULT(1, 1, 1, 127, 255, 127, 1),
+    MUS_PAN(127),
+    MUS_VOLUME(120),
+    MUS_NOTE(48, 24),
+    MUS_STOP(),
+};
+
+u8 gSoundEffectShinobinCheerCommands[] = {
+    MUS_WAVE_LONG(SOUND_WAVE_SHINOBIN_CHEER),
+    MUS_ENVELOPE_DEFAULT(1, 1, 1, 127, 255, 127, 1),
+    MUS_PAN(127),
+    MUS_VOLUME(120),
+    MUS_NOTE(48, 127),
+    MUS_STOP(),
+};
+
+u8 gSoundEffectShinobinObstacleHitCommands[] = {
+    MUS_WAVE_LONG(SOUND_WAVE_SHINOBIN_OBSTACLE_HIT),
+    MUS_ENVELOPE_DEFAULT(1, 1, 1, 127, 255, 127, 1),
+    MUS_PAN(127),
+    MUS_VOLUME(120),
+    MUS_NOTE(48, 72),
+    MUS_STOP(),
+};
+
+u8 gSoundEffectShopGreetingCommands[] = {
+    MUS_WAVE_LONG(SOUND_WAVE_SHOP_GREETING),
+    MUS_ENVELOPE_DEFAULT(1, 1, 1, 127, 255, 127, 1),
+    MUS_PAN(127),
+    MUS_VOLUME(127),
+    MUS_NOTE(48, 64),
+    MUS_STOP(),
+};
+
+u8 gSoundEffectCoursePurchasePromptCommands[] = {
+    MUS_WAVE_LONG(SOUND_WAVE_COURSE_PURCHASE_PROMPT),
+    MUS_ENVELOPE_DEFAULT(1, 1, 1, 127, 255, 127, 1),
+    MUS_PAN(127),
+    MUS_VOLUME(127),
+    MUS_NOTE(48, 64),
+    MUS_STOP(),
+};
+
+u8 gSoundEffectMenuBackCommands[] = {
+    MUS_WAVE_LONG(SOUND_WAVE_MENU_BACK),
+    MUS_ENVELOPE_DEFAULT(1, 1, 1, 127, 255, 127, 1),
+    MUS_PAN(127),
+    MUS_VOLUME(127),
+    MUS_NOTE(48, 127),
+    MUS_STOP(),
+};
+
+u8 gSoundEffectWarningCommands[] = {
+    MUS_WAVE_LONG(SOUND_WAVE_WARNING),
+    MUS_ENVELOPE_DEFAULT(1, 1, 1, 127, 255, 127, 1),
+    MUS_PAN(127),
+    MUS_VOLUME(127),
+    MUS_NOTE(48, 127),
+    MUS_STOP(),
+};
+
+u8 gSoundEffectUnusedSample159Commands[] = {
+    MUS_WAVE_LONG(SOUND_WAVE_UNUSED_SAMPLE_159),
+    MUS_ENVELOPE_DEFAULT(1, 1, 1, 127, 255, 127, 1),
+    MUS_PAN(127),
+    MUS_VOLUME(127),
+    MUS_NOTE_LONG(48, 188),
+    MUS_STOP(),
+};
+
+u8 gSoundEffectCoursePurchaseAvailableCommands[] = {
+    MUS_WAVE_LONG(SOUND_WAVE_COURSE_PURCHASE_AVAILABLE),
+    MUS_ENVELOPE_DEFAULT(1, 1, 1, 127, 255, 127, 1),
+    MUS_PAN(127),
+    MUS_VOLUME(127),
+    MUS_NOTE(48, 64),
+    MUS_STOP(),
+};
+
+u8 gSoundEffectMainMenuEnterCommands[] = {
+    MUS_START_EFFECT(SFX_MAIN_MENU_ENTER_ALT),
+    MUS_WAVE_LONG(SOUND_WAVE_MAIN_MENU_ENTER),
+    MUS_ENVELOPE_DEFAULT(1, 1, 1, 127, 255, 127, 1),
+    MUS_PAN(0),
+    MUS_VOLUME(127),
+    MUS_NOTE_LONG(48, 255),
+    MUS_STOP(),
+};
+
+u8 gSoundEffectMainMenuEnterAltCommands[] = {
+    MUS_WAVE_LONG(SOUND_WAVE_MAIN_MENU_ENTER_ALT),
+    MUS_ENVELOPE_DEFAULT(1, 1, 1, 127, 255, 127, 1),
+    MUS_PAN(255),
+    MUS_VOLUME(127),
+    MUS_NOTE_LONG(47, 255),
+    MUS_STOP(),
+};
+
+u8 gSoundEffectRaceReadyCommands[] = {
+    MUS_WAVE_LONG(SOUND_WAVE_RACE_READY),
+    MUS_ENVELOPE_DEFAULT(1, 1, 1, 127, 255, 127, 1),
+    MUS_PAN(127),
+    MUS_VOLUME(127),
+    MUS_NOTE(48, 127),
+    MUS_STOP(),
+};
+
+u8 gSoundEffectRaceGoCommands[] = {
+    MUS_WAVE_LONG(SOUND_WAVE_RACE_GO),
+    MUS_ENVELOPE_DEFAULT(1, 1, 1, 127, 255, 127, 1),
+    MUS_PAN(127),
+    MUS_VOLUME(127),
+    MUS_NOTE(48, 96),
+    MUS_STOP(),
+};
+
+u8 gSoundEffectTrickScoreLowCommands[] = {
+    MUS_WAVE_LONG(SOUND_WAVE_TRICK_SCORE_LOW),
+    MUS_ENVELOPE_DEFAULT(1, 1, 1, 127, 255, 127, 1),
+    MUS_PAN(127),
+    MUS_VOLUME(127),
+    MUS_NOTE(48, 72),
+    MUS_STOP(),
+};
+
+u8 gSoundEffectTrickScoreMediumCommands[] = {
+    MUS_WAVE_LONG(SOUND_WAVE_TRICK_SCORE_MEDIUM),
+    MUS_ENVELOPE_DEFAULT(1, 1, 1, 127, 255, 127, 1),
+    MUS_PAN(127),
+    MUS_VOLUME(127),
+    MUS_NOTE(48, 64),
+    MUS_STOP(),
+};
+
+u8 gSoundEffectTrickScoreHighCommands[] = {
+    MUS_WAVE_LONG(SOUND_WAVE_TRICK_SCORE_HIGH),
+    MUS_ENVELOPE_DEFAULT(1, 1, 1, 127, 255, 127, 1),
+    MUS_PAN(127),
+    MUS_VOLUME(127),
+    MUS_NOTE(48, 96),
+    MUS_STOP(),
+};
+
+u8 gSoundEffectTrickScoreTopCommands[] = {
+    MUS_WAVE_LONG(SOUND_WAVE_TRICK_SCORE_TOP),
+    MUS_ENVELOPE_DEFAULT(1, 1, 1, 127, 255, 127, 1),
+    MUS_PAN(127),
+    MUS_VOLUME(127),
+    MUS_NOTE(48, 96),
+    MUS_STOP(),
+};
+
+u8 gSoundEffectTrickBonusCommands[] = {
+    MUS_WAVE_LONG(SOUND_WAVE_TRICK_BONUS),
+    MUS_ENVELOPE_DEFAULT(1, 1, 1, 127, 255, 127, 1),
+    MUS_PAN(127),
+    MUS_VOLUME(127),
+    MUS_NOTE(48, 96),
+    MUS_STOP(),
+};
+
+u8 gSoundEffectFinalLapCommands[] = {
+    MUS_WAVE_LONG(SOUND_WAVE_FINAL_LAP),
+    MUS_ENVELOPE_DEFAULT(1, 1, 1, 127, 255, 127, 1),
+    MUS_PAN(127),
+    MUS_VOLUME(127),
+    MUS_NOTE_LONG(48, 248),
+    MUS_STOP(),
+};
+
+u8 gSoundEffectSparkleRetargetCommands[] = {
+    MUS_WAVE_LONG(SOUND_WAVE_SPARKLE_RETARGET),
+    MUS_ENVELOPE_DEFAULT(1, 1, 1, 127, 255, 127, 1),
+    MUS_PAN(127),
+    MUS_VOLUME(127),
+    MUS_NOTE(48, 127),
+    MUS_STOP(),
+};
+
+u8 gSoundEffectCourseColumnRightSelectCommands[] = {
+    MUS_WAVE_LONG(SOUND_WAVE_COURSE_COLUMN_RIGHT_SELECT),
+    MUS_ENVELOPE_DEFAULT(1, 1, 1, 127, 255, 127, 1),
+    MUS_PAN(127),
+    MUS_VOLUME(127),
+    MUS_NOTE(48, 96),
+    MUS_STOP(),
+};
+
+u8 gSoundEffectCourseColumnMiddleSelectCommands[] = {
+    MUS_WAVE_LONG(SOUND_WAVE_COURSE_COLUMN_MIDDLE_SELECT),
+    MUS_ENVELOPE_DEFAULT(1, 1, 1, 127, 255, 127, 1),
+    MUS_PAN(127),
+    MUS_VOLUME(127),
+    MUS_NOTE(48, 127),
+    MUS_STOP(),
+};
+
+u8 gSoundEffectCourseColumnLeftSelectCommands[] = {
+    MUS_WAVE_LONG(SOUND_WAVE_COURSE_COLUMN_LEFT_SELECT),
+    MUS_ENVELOPE_DEFAULT(1, 1, 1, 127, 255, 127, 1),
+    MUS_PAN(127),
+    MUS_VOLUME(127),
+    MUS_NOTE(48, 96),
+    MUS_STOP(),
+};
+
+u8 gSoundEffectSlashSelectCommands[] = {
+    MUS_WAVE_LONG(SOUND_WAVE_SLASH_SELECT),
+    MUS_ENVELOPE_DEFAULT(1, 1, 1, 127, 255, 127, 1),
+    MUS_PAN(127),
+    MUS_VOLUME(127),
+    MUS_NOTE(48, 96),
+    MUS_STOP(),
+};
+
+u8 gSoundEffectNancySelectCommands[] = {
+    MUS_WAVE_LONG(SOUND_WAVE_NANCY_SELECT),
+    MUS_ENVELOPE_DEFAULT(1, 1, 1, 127, 255, 127, 1),
+    MUS_PAN(127),
+    MUS_VOLUME(127),
+    MUS_NOTE(48, 96),
+    MUS_STOP(),
+};
+
+u8 gSoundEffectLindaSelectCommands[] = {
+    MUS_WAVE_LONG(SOUND_WAVE_LINDA_SELECT),
+    MUS_ENVELOPE_DEFAULT(1, 1, 1, 127, 255, 127, 1),
+    MUS_PAN(127),
+    MUS_VOLUME(127),
+    MUS_NOTE(48, 96),
+    MUS_STOP(),
+};
+
+u8 gSoundEffectJamSelectCommands[] = {
+    MUS_WAVE_LONG(SOUND_WAVE_JAM_SELECT),
+    MUS_ENVELOPE_DEFAULT(1, 1, 1, 127, 255, 127, 1),
+    MUS_PAN(127),
+    MUS_VOLUME(127),
+    MUS_NOTE(48, 96),
+    MUS_STOP(),
+};
+
+u8 gSoundEffectTommySelectCommands[] = {
+    MUS_WAVE_LONG(SOUND_WAVE_TOMMY_SELECT),
+    MUS_ENVELOPE_DEFAULT(1, 1, 1, 127, 255, 127, 1),
+    MUS_PAN(127),
+    MUS_VOLUME(127),
+    MUS_NOTE(48, 96),
+    MUS_STOP(),
+};
+
+u8 gSoundEffectTommySelectAltCommands[] = {
+    MUS_WAVE_LONG(SOUND_WAVE_TOMMY_SELECT_ALT),
+    MUS_ENVELOPE_DEFAULT(1, 1, 1, 127, 255, 127, 1),
+    MUS_PAN(127),
+    MUS_VOLUME(127),
+    MUS_NOTE(48, 96),
+    MUS_STOP(),
+};
+
+u8 gSoundEffectShinobinSelectCommands[] = {
+    MUS_WAVE_LONG(SOUND_WAVE_SHINOBIN_SELECT),
+    MUS_ENVELOPE_DEFAULT(1, 1, 1, 127, 255, 127, 1),
+    MUS_PAN(127),
+    MUS_VOLUME(124),
+    MUS_NOTE(48, 96),
+    MUS_STOP(),
+};
+
+u8 gSoundEffectSlashTrickAltCommands[] = {
+    MUS_WAVE(SOUND_WAVE_SLASH_TRICK_ALT),
+    MUS_ENVELOPE_DEFAULT(1, 1, 1, 127, 255, 127, 1),
+    MUS_PAN(127),
+    MUS_VOLUME(127),
+    MUS_NOTE(48, 64),
+    MUS_STOP(),
+};
+
+u8 gSoundEffectSlashHitAltCommands[] = {
+    MUS_WAVE(SOUND_WAVE_SLASH_HIT_ALT),
+    MUS_ENVELOPE_DEFAULT(1, 1, 1, 127, 255, 127, 1),
+    MUS_PAN(127),
+    MUS_VOLUME(127),
+    MUS_NOTE(48, 64),
+    MUS_STOP(),
+};
+
+u8 gSoundEffectNancyComplexTrickAltCommands[] = {
+    MUS_WAVE(SOUND_WAVE_NANCY_COMPLEX_TRICK_ALT),
+    MUS_ENVELOPE_DEFAULT(1, 1, 1, 127, 255, 127, 1),
+    MUS_PAN(127),
+    MUS_VOLUME(127),
+    MUS_NOTE(48, 48),
+    MUS_STOP(),
+};
+
+u8 gSoundEffectNancyUnusedVoiceCommands[] = {
+    MUS_WAVE(SOUND_WAVE_NANCY_UNUSED_VOICE),
+    MUS_ENVELOPE_DEFAULT(1, 1, 1, 127, 255, 127, 1),
+    MUS_PAN(127),
+    MUS_VOLUME(127),
+    MUS_NOTE(48, 72),
+    MUS_STOP(),
+};
+
+u8 gSoundEffectNancyHitAltCommands[] = {
+    MUS_WAVE(SOUND_WAVE_NANCY_HIT_ALT),
+    MUS_ENVELOPE_DEFAULT(1, 1, 1, 127, 255, 127, 1),
+    MUS_PAN(127),
+    MUS_VOLUME(123),
+    MUS_NOTE(48, 64),
+    MUS_STOP(),
+};
+
+u8 gSoundEffectLindaComplexTrickAltCommands[] = {
+    MUS_WAVE_LONG(SOUND_WAVE_LINDA_COMPLEX_TRICK_ALT),
+    MUS_ENVELOPE_DEFAULT(1, 1, 1, 127, 255, 127, 1),
+    MUS_PAN(127),
+    MUS_VOLUME(127),
+    MUS_NOTE(48, 127),
+    MUS_STOP(),
+};
+
+u8 gSoundEffectLindaHitAltCommands[] = {
+    MUS_WAVE_LONG(SOUND_WAVE_LINDA_HIT_ALT),
+    MUS_ENVELOPE_DEFAULT(1, 1, 1, 127, 255, 127, 1),
+    MUS_PAN(127),
+    MUS_VOLUME(127),
+    MUS_NOTE(48, 96),
+    MUS_STOP(),
+};
+
+u8 gSoundEffectJamHitAltCommands[] = {
+    MUS_WAVE_LONG(SOUND_WAVE_JAM_HIT_ALT),
+    MUS_ENVELOPE_DEFAULT(1, 1, 1, 127, 255, 127, 1),
+    MUS_PAN(127),
+    MUS_VOLUME(127),
+    MUS_NOTE(48, 64),
+    MUS_STOP(),
+};
+
+u8 gSoundEffectRatFaceAppearCommands[] = {
+    MUS_WAVE(SOUND_WAVE_RAT_FACE_APPEAR),
+    MUS_ENVELOPE_DEFAULT(1, 1, 1, 127, 255, 127, 1),
+    MUS_PAN(127),
+    MUS_VOLUME(127),
+    MUS_NOTE(48, 48),
+    MUS_STOP(),
+};
+
+u8 gSoundEffectTeacupBumpCommands[] = {
+    MUS_WAVE(SOUND_WAVE_TEACUP_BUMP),
+    MUS_ENVELOPE_DEFAULT(1, 1, 1, 127, 255, 127, 1),
+    MUS_PAN(127),
+    MUS_VOLUME(127),
+    MUS_NOTE_LONG(48, 128),
+    MUS_STOP(),
+};
+
+u8 gSoundEffectRatFaceLandCommands[] = {
+    MUS_WAVE(SOUND_WAVE_RAT_FACE_LAND),
+    MUS_ENVELOPE_DEFAULT(1, 1, 1, 127, 255, 127, 1),
+    MUS_PAN(127),
+    MUS_VOLUME(127),
+    MUS_NOTE_LONG(48, 255),
+    MUS_STOP(),
+};
+
+u8 gSoundEffectRatFaceStealCommands[] = {
+    MUS_WAVE(SOUND_WAVE_RAT_FACE_STEAL),
+    MUS_ENVELOPE_DEFAULT(1, 1, 1, 127, 255, 127, 1),
+    MUS_PAN(127),
+    MUS_VOLUME(127),
+    MUS_NOTE(48, 48),
+    MUS_STOP(),
+};
+
+u8 gSoundEffectProjectileLaunchCommands[] = {
+    MUS_WAVE(SOUND_WAVE_PROJECTILE_LAUNCH),
+    MUS_ENVELOPE_DEFAULT(1, 1, 1, 127, 255, 127, 1),
+    MUS_PAN(127),
+    MUS_VOLUME(127),
+    MUS_NOTE(48, 48),
+    MUS_STOP(),
+};
+
+u8 *gSoundEffectCommandPointers[SOUND_EFFECT_COUNT] = {
+    gSoundEffectNoneCommands,
+    gSoundEffectMenuAcceptCommands,
+    gSoundEffectResultsTallyCompleteCommands,
+    gSoundEffectBoardGlideLoopCommands,
+    gSoundEffectBoardContactFallbackLoopCommands,
+    gSoundEffectBoardSurfaceSprayLoopCommands,
+    gSoundEffectBoardSurfaceRumbleLoopCommands,
+    gSoundEffectSpeedFanLoopCommands,
+    gSoundEffectCrashSlideLoopCommands,
+    gSoundEffectShockCommands,
+    gSoundEffectProjectileImpactCommands,
+    gSoundEffectSpinHitCommands,
+    gSoundEffectGhostHitCommands,
+    gSoundEffectGhostSlowdownCommands,
+    gSoundEffectSunsetRockAmbienceCommands,
+    gSoundEffectItemStealStartCommands,
+    gSoundEffectItemUseCommands,
+    gSoundEffectItemImpactCommands,
+    gSoundEffectItemBreakCommands,
+    gSoundEffectAreaBlastCommands,
+    gSoundEffectCollisionImpactCommands,
+    gSoundEffectItemStealEndCommands,
+    gSoundEffectCourseGateOpen1Commands,
+    gSoundEffectTrickStartCommands,
+    gSoundEffectConfirmCommands,
+    gSoundEffectMenuCursorCommands,
+    gSoundEffectCoinTickCommands,
+    gSoundEffectCourseGateOpen2Commands,
+    gSoundEffectCourseGateCloseCommands,
+    gSoundEffectUnusedSample91Commands,
+    gSoundEffectBreakableSurfaceLoopCommands,
+    gSoundEffectItemPickupCommands,
+    gSoundEffectFallingRockBounceCommands,
+    gSoundEffectPlayerDescentCommands,
+    gSoundEffectSlashTrickCommands,
+    gSoundEffectSlashComplexTrickCommands,
+    gSoundEffectSlashHitCommands,
+    gSoundEffectSlashAttackSuccessCommands,
+    gSoundEffectSlashCheerCommands,
+    gSoundEffectSlashObstacleHitCommands,
+    gSoundEffectNancyTrickCommands,
+    gSoundEffectNancyComplexTrickCommands,
+    gSoundEffectNancyHitCommands,
+    gSoundEffectNancyCheerCommands,
+    gSoundEffectNancyAttackSuccessCommands,
+    gSoundEffectNancyObstacleHitCommands,
+    gSoundEffectLindaTrickCommands,
+    gSoundEffectLindaComplexTrickCommands,
+    gSoundEffectLindaHitCommands,
+    gSoundEffectLindaCheerCommands,
+    gSoundEffectLindaAttackSuccessCommands,
+    gSoundEffectLindaObstacleHitCommands,
+    gSoundEffectLindaUnusedVoiceCommands,
+    gSoundEffectJamTrickCommands,
+    gSoundEffectJamComplexTrickCommands,
+    gSoundEffectJamHitCommands,
+    gSoundEffectJamAttackSuccessCommands,
+    gSoundEffectJamCheerCommands,
+    gSoundEffectJamObstacleHitCommands,
+    gSoundEffectTommyTrickCommands,
+    gSoundEffectTommyComplexTrickCommands,
+    gSoundEffectTommyHitCommands,
+    gSoundEffectTommyCheerCommands,
+    gSoundEffectTommyObstacleHitCommands,
+    gSoundEffectShinobinTrickCommands,
+    gSoundEffectShinobinHitCommands,
+    gSoundEffectShinobinCheerCommands,
+    gSoundEffectShinobinObstacleHitCommands,
+    gSoundEffectShopGreetingCommands,
+    gSoundEffectCoursePurchasePromptCommands,
+    gSoundEffectMenuBackCommands,
+    gSoundEffectWarningCommands,
+    gSoundEffectUnusedSample159Commands,
+    gSoundEffectCoursePurchaseAvailableCommands,
+    gSoundEffectMainMenuEnterCommands,
+    gSoundEffectRaceReadyCommands,
+    gSoundEffectRaceGoCommands,
+    gSoundEffectTrickScoreLowCommands,
+    gSoundEffectTrickScoreMediumCommands,
+    gSoundEffectTrickScoreHighCommands,
+    gSoundEffectTrickScoreTopCommands,
+    gSoundEffectTrickBonusCommands,
+    gSoundEffectFinalLapCommands,
+    gSoundEffectSparkleRetargetCommands,
+    gSoundEffectCourseColumnRightSelectCommands,
+    gSoundEffectCourseColumnMiddleSelectCommands,
+    gSoundEffectCourseColumnLeftSelectCommands,
+    gSoundEffectSlashSelectCommands,
+    gSoundEffectNancySelectCommands,
+    gSoundEffectLindaSelectCommands,
+    gSoundEffectJamSelectCommands,
+    gSoundEffectTommySelectCommands,
+    gSoundEffectTommySelectAltCommands,
+    gSoundEffectShinobinSelectCommands,
+    gSoundEffectSlashTrickAltCommands,
+    gSoundEffectSlashHitAltCommands,
+    gSoundEffectNancyComplexTrickAltCommands,
+    gSoundEffectNancyUnusedVoiceCommands,
+    gSoundEffectNancyHitAltCommands,
+    gSoundEffectLindaComplexTrickAltCommands,
+    gSoundEffectLindaHitAltCommands,
+    gSoundEffectJamHitAltCommands,
+    gSoundEffectRatFaceAppearCommands,
+    gSoundEffectTeacupBumpCommands,
+    gSoundEffectRatFaceLandCommands,
+    gSoundEffectRatFaceStealCommands,
+    gSoundEffectProjectileLaunchCommands,
+    gSoundEffectMainMenuEnterAltCommands,
+};
+
+s32 gSoundEffectDefaultPriorities[SOUND_EFFECT_COUNT] = {
     0x00000000, 0x00000064, 0x00000064, 0x00000064, 0x00000064, 0x00000064, 0x00000064, 0x00000064, 0x00000064,
     0x00000064, 0x00000064, 0x00000064, 0x00000064, 0x00000064, 0x00000064, 0x00000064, 0x00000064, 0x00000064,
     0x00000064, 0x00000064, 0x00000064, 0x00000064, 0x00000064, 0x00000064, 0x00000064, 0x00000064, 0x00000064,
@@ -512,7 +1500,7 @@ s32 startCurrentQueuedSoundEffect(void) {
 
     var_a0 = gCurrentQueuedSoundId;
     if ((var_a0 >= 0x70) || (var_a0 < 0)) {
-        var_a0 = (gCurrentQueuedSoundId = 0);
+        var_a0 = (gCurrentQueuedSoundId = SFX_NONE);
     }
 
     temp_v0->handle =

@@ -2,8 +2,9 @@
 
 These assets already rebuild from C. Their source declarations remain authoritative.
 """
+import ast
+import operator
 import re
-import struct
 import subprocess
 
 from tools.course_surface_data_common import write_yaml, load_yaml
@@ -23,6 +24,52 @@ def literal_values(body):
     if re.sub(r"0x[\da-fA-F]+|\d+|[\s,{}]", "", body):
         raise ValueError("initializer contains non-literal expressions")
     return [int(v, 0) for v in re.findall(r"0x[\da-fA-F]+|\d+", body)]
+
+
+def sound_effect_ids(root):
+    source = (root / "include/game/audio/sound_ids.h").read_text()
+    body = re.search(r"typedef enum SoundEffectId\s*\{(.*?)\}", source, re.S)[1]
+    return {name: int(value, 0) for name, value in
+            re.findall(r"\b(SFX_\w+)\s*=\s*(0x[0-9A-Fa-f]+|\d+)", body)}
+
+
+def sequence_bytes(root, body):
+    """Expand the sequence macros and read their integer byte expressions."""
+    # The C compiler resolves enum operands; expose the same values to cpp.
+    effect_defines = "".join(f"#define {name} {value}\n" for name, value in sound_effect_ids(root).items())
+    expanded = subprocess.run(
+        ["cpp", "-P", "-undef", "-nostdinc", "-I", str(root / "include"), "-"],
+        input='#include "libmus/sequence_commands.h"\n#include "game/audio/sound_wave_ids.h"\n' + effect_defines + body,
+        text=True, capture_output=True, check=True,
+    ).stdout
+    operators = {ast.BitOr: operator.or_, ast.BitAnd: operator.and_,
+                 ast.LShift: operator.lshift, ast.RShift: operator.rshift}
+
+    def integer(node):
+        if isinstance(node, ast.Constant) and type(node.value) is int:
+            return node.value
+        if isinstance(node, ast.BinOp) and type(node.op) in operators:
+            return operators[type(node.op)](integer(node.left), integer(node.right))
+        raise ValueError("unsupported sequence byte expression")
+
+    return bytes(integer(ast.parse(value.strip(), mode="eval").body)
+                 for value in expanded.split(",") if value.strip())
+
+
+def sound_effect_bank(root, source):
+    """Read command arrays with IDO's four-byte alignment between symbols."""
+    arrays = re.findall(
+        r"u8 (gSoundEffect\w+Commands)\[\]\s*=\s*\{(.*?)\};", source, re.S,
+    )
+    if not arrays:
+        raise ValueError("missing sound-effect command bank")
+    data, offsets = bytearray(), {}
+    for name, body in arrays:
+        value = sequence_bytes(root, body)
+        offsets[name] = len(data)
+        data.extend(value)
+        data.extend(bytes(-len(data) % 4))
+    return bytes(data), offsets
 
 
 def extract_source_assets(root, rom):
@@ -47,14 +94,12 @@ def extract_source_assets(root, rom):
                 entry.update(preview=relative, declaration_dimensions=dimensions, encoded_word_count=len(values))
             entries.append(entry)
 
-    # The engine passes gSoundEffectCommandData through gSoundEffectCommandPointers to MusStartEffect.
+    # The engine passes individual command arrays through gSoundEffectCommandPointers to MusStartEffect.
     # Verify the existing C initializer against the original ROM before decoding it.
     path = root / "src.us/audio/sound_manager.c"
     source = path.read_text()
-    match = re.search(r"u32 gSoundEffectCommandData\[[^]]+\]\s*=\s*\{(.*?)\};", source, re.S)
-    if match:
-        words = literal_values(match[1])
-        data = struct.pack(f">{len(words)}I", *words)
+    if re.search(r"u8 gSoundEffect\w+Commands\[", source):
+        data, command_offsets = sound_effect_bank(root, source)
         main = next(s for s in load_yaml(root / "snowboardkids.yaml")["segments"] if isinstance(s,dict) and s.get("name") == "main")
         rom_offset = main["start"] + (0x800DB098 - main["vram"])
         if rom[rom_offset:rom_offset+len(data)] != data:
@@ -62,7 +107,7 @@ def extract_source_assets(root, rom):
         table = re.search(r"u8 \*gSoundEffectCommandPointers\[[^]]*\]\s*=\s*\{(.*?)\};", source, re.S)
         if not table:
             raise ValueError("missing sound-effect pointer table")
-        offsets = [int(s,0)*4 for s in re.findall(r"&gSoundEffectCommandData\[(0x[0-9A-Fa-f]+|\d+)\]", table[1])]
+        offsets = [command_offsets[name] for name in re.findall(r"\bgSoundEffect\w+Commands\b", table[1])]
         starts = sorted(set(offsets))
         effects = []
         for start, end in zip(starts, starts[1:]+[len(data)]):
@@ -74,7 +119,7 @@ def extract_source_assets(root, rom):
         relative = "assets/source_views/sound_effects.yaml"
         write_yaml(root / relative, dict(schema_version=1, authority="src.us/audio/sound_manager.c",
                                         rom_start=rom_offset, effect_offsets=offsets, effects=effects))
-        entries.append(dict(name="gSoundEffectCommandData", type="sound_effects", source="src.us/audio/sound_manager.c",
+        entries.append(dict(name="sound_effect_commands", type="sound_effects", source="src.us/audio/sound_manager.c",
                             authority="source", status="source_backed", preview=relative))
     write_yaml(root / "assets/source_views/index.yaml", dict(schema_version=1, assets=entries))
     return entries

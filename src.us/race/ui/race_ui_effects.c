@@ -154,8 +154,6 @@ Vec3i gRacePlayerSparkleOrbitOffset = {
     0,
 };
 
-u32 D_800D611C = 0x00000000;
-
 Vtx gRaceUiBurstTextQuadVertices[] = {
     { { { -16, 32, 0 }, 0x0000, { -16, -16 }, { 0xFF, 0xFF, 0xFF, 0x9B } } },
     { { { 16, 32, 0 }, 0x0000, { 1008, -16 }, { 0xFF, 0xFF, 0xFF, 0x9B } } },
@@ -4003,17 +4001,9 @@ void renderDizzyLandCarousel(DizzyLandCarouselActor *arg0) {
             gSPSegment(gRegionAllocPtr++, 0x03, getRelocatableHeapBlockBase(ASSET_HANDLE(0x9)));
             gSPMatrix(gRegionAllocPtr++, arg0->canopyMatrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
             gSPDisplayList(gRegionAllocPtr++, &DIZZY_LAND_CAROUSEL_CANOPY_DISPLAY_LIST_VRAM);
-            gSPMatrix(
-                gRegionAllocPtr++,
-                arg0->negativeSineHorsesMatrix,
-                G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW
-            );
+            gSPMatrix(gRegionAllocPtr++, arg0->negativeSineHorsesMatrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
             gSPDisplayList(gRegionAllocPtr++, &DIZZY_LAND_CAROUSEL_HORSES_NEGATIVE_SINE_DISPLAY_LIST_VRAM);
-            gSPMatrix(
-                gRegionAllocPtr++,
-                arg0->positiveSineHorsesMatrix,
-                G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW
-            );
+            gSPMatrix(gRegionAllocPtr++, arg0->positiveSineHorsesMatrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
             gSPDisplayList(gRegionAllocPtr++, &DIZZY_LAND_CAROUSEL_HORSES_POSITIVE_SINE_DISPLAY_LIST_VRAM);
         }
     }
@@ -4595,11 +4585,7 @@ void renderDizzyLandFerrisWheel(DizzyLandFerrisWheelActor *arg0) {
             transform.translation.z = arg0->pos.z;
             arg0->supportMatrix = allocFixedTransformMatrix(&transform);
 
-            transformVec3iByFixedMatrix(
-                transform.rotation,
-                &gDizzyLandFerrisWheelHubOffset,
-                &transformedOffset
-            );
+            transformVec3iByFixedMatrix(transform.rotation, &gDizzyLandFerrisWheelHubOffset, &transformedOffset);
             transform.translation.x += transformedOffset.x;
             transform.translation.y += transformedOffset.y;
             transform.translation.z += transformedOffset.z;
