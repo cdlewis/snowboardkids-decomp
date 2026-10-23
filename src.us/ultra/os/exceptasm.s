@@ -16,6 +16,10 @@
 #define KMC_WPORT       0xBFF08000
 #define KMC_STAT        0xBFF08004
 
+/* Temporary OSThread used to save the exception context. */
+.globl __osThreadSave
+.lcomm __osThreadSave, 0x1B0
+
 .rdata
 
 #define REDISPATCH 0x00

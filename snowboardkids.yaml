@@ -473,7 +473,7 @@ segments:
       - { type: .bss, name: ultra/io/leodiskinit, vram: 0x8015F1F0 }
       - { type: .bss, name: ultra/io/piacs, vram: 0x8015F270 }
       - { type: .bss, name: ultra/os/timerintr, vram: 0x8015F290 }
-      - { type: bss, name: bss_chunk_e, vram: 0x8015F2D0 }
+      - { type: .bss, name: ultra/os/exceptasm, vram: 0x8015F2D0 }
       - { type: .bss, name: ultra/io/leointerrupt, vram: 0x8015F480 }
 
   - name: buffers
