@@ -466,7 +466,7 @@ segments:
       - { type: .bss, name: ultra/os/initialize, vram: 0x8015CCD0 }
       - { type: .bss, name: ultra/io/pimgr, vram: 0x8015CCE0 }
       - { type: .bss, name: ultra/io/vimgr, vram: 0x8015DEB0 }
-      - { type: bss, name: bss_chunk_c, vram: 0x8015F0D0 }
+      - { type: .bss, name: ultra/io/sptask, vram: 0x8015F0D0 }
       - { type: .bss, name: ultra/io/siacs, vram: 0x8015F110 }
       - { type: .bss, name: ultra/io/pfsisplug, vram: 0x8015F130 }
       - { type: .bss, name: ultra/io/cartrominit, vram: 0x8015F170 }
