@@ -1263,38 +1263,40 @@ u32 gRaceReplayCourseGridEntries[0x1E0] = {
     0x00000000, 0x00000000, 0x00000000,
 };
 
-extern s32 gPendingMusicCommand;
-extern s32 gCurrentMusicSequenceHandle;
-extern s32 gMusicSequenceStopped;
-extern s32 gCurrentMusicSequenceBank;
-extern s32 gSoundQueueWriteIndex;
-extern s32 gSoundQueueReadIndex;
+s32 gPendingMusicCommand;
+s32 gPendingMusicCommandArg;
+s32 gCurrentMusicSequenceHandle;
+s32 gMusicSequenceStopped;
+SoundHandleNode gSoundHandleNodes[SOUND_MANAGER_FREE_HANDLE_COUNT];
+SoundHandleNode *gActiveSoundHandleListHead;
+SoundHandleNode *gActiveSoundHandleListTail;
+PositionalSoundRequest *gPendingPositionalSoundRequests;
+s32 gFreeSoundHandleCount;
+SoundHandleNode *gFreeSoundHandleStack[SOUND_MANAGER_FREE_HANDLE_COUNT];
+s32 gCurrentMusicSequenceBank;
+SoundQueueEntry gSoundQueue[SOUND_MANAGER_QUEUE_CAPACITY];
+s32 gSoundQueueWriteIndex;
+s32 gSoundQueueReadIndex;
+u8 gCurrentQueuedSoundType;
+u8 gCurrentQueuedSoundId;
+u8 gCurrentQueuedSoundVolume;
+u8 gCurrentQueuedSoundPan;
+u8 gCurrentQueuedSoundPriority;
+u8 gCurrentQueuedSoundAux;
+s32 gPlayerPositionalSoundHandle0[RACE_PLAYER_COUNT];
+s32 gPlayerLoopingSoundHandle0;
+s32 gPlayerLoopingSoundHandle1;
+s32 gPlayerLoopingSoundHandle2;
+s32 gPlayerLoopingSoundHandle3;
+s16 gPlayerLoopingSoundId0;
+s16 gPlayerLoopingSoundId1;
+s16 gPlayerLoopingSoundId2;
+s16 gPlayerLoopingSoundId3;
+s32 gSharedLoopingPositionalSoundHandle;
+
 extern s32 gPlayerPositionalSoundHandle1;
 extern s32 gPlayerPositionalSoundHandle2;
 extern s32 gPlayerPositionalSoundHandle3;
-extern s32 gPlayerLoopingSoundHandle0;
-extern s32 gPlayerLoopingSoundHandle1;
-extern s32 gPlayerLoopingSoundHandle2;
-extern s32 gPlayerLoopingSoundHandle3;
-extern s16 gPlayerLoopingSoundId0;
-extern s16 gPlayerLoopingSoundId1;
-extern s16 gPlayerLoopingSoundId2;
-extern s16 gPlayerLoopingSoundId3;
-extern s32 gSharedLoopingPositionalSoundHandle;
-extern SoundHandleNode gSoundHandleNodes[];
-extern SoundHandleNode *gActiveSoundHandleListHead;
-extern SoundHandleNode *gActiveSoundHandleListTail;
-extern s32 gFreeSoundHandleCount;
-extern SoundHandleNode *gFreeSoundHandleStack[];
-extern SoundQueueEntry gSoundQueue[];
-extern s32 gPendingMusicCommandArg;
-extern s32 gPlayerPositionalSoundHandle0[];
-extern u8 gCurrentQueuedSoundType;
-extern u8 gCurrentQueuedSoundId;
-extern u8 gCurrentQueuedSoundVolume;
-extern u8 gCurrentQueuedSoundPan;
-extern u8 gCurrentQueuedSoundPriority;
-extern u8 gCurrentQueuedSoundAux;
 extern SchedulerThread gAudioThread;
 extern SchedulerState gSchedulerState;
 
@@ -1833,8 +1835,6 @@ void countActiveSoundPlayers(void) {
 s32 countActiveMusicSequences(void) {
     return MusAsk(2);
 }
-
-extern PositionalSoundRequest *gPendingPositionalSoundRequests;
 
 void clearPendingPositionalSoundRequests(void) {
     gPendingPositionalSoundRequests = NULL;

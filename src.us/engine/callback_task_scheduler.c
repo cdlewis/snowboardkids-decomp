@@ -14,19 +14,21 @@ typedef struct CallbackTaskSchedulerBss {
     CallbackTask activeListSentinel;
 } CallbackTaskSchedulerBss;
 
-extern CallbackTask *gCurrentCallbackTask;
-extern CallbackTask *gFreeCallbackTaskPool[];
-extern u16 gFreeCallbackTaskCount;
-extern u16 gFreeCallbackTaskType0Count;
-extern u16 gFreeCallbackTaskType6Count;
-extern u16 gFreeCallbackTaskType5Count;
-extern u16 gFreeCallbackTaskType1Count;
-extern u16 gFreeCallbackTaskType2Count;
-extern u16 gFreeCallbackTaskType3Count;
-extern u16 gFreeCallbackTaskType4Count;
+CallbackTaskSchedulerBss gCallbackTaskSchedulerBssView;
+CallbackTask gCallbackTaskPool[0xD8];
+CallbackTask *gFreeCallbackTaskPool[0xD8];
+u16 gFreeCallbackTaskCount;
+u16 gFreeCallbackTaskType0Count;
+u16 gFreeCallbackTaskType6Count;
+u16 gFreeCallbackTaskType5Count;
+u16 gFreeCallbackTaskType1Count;
+u16 gFreeCallbackTaskType2Count;
+u16 gFreeCallbackTaskType3Count;
+u16 gFreeCallbackTaskType4Count;
+CallbackTask *gCurrentCallbackTask;
+
 extern CallbackTask gCallbackTaskActiveListSentinel;
 extern CallbackTask *gCallbackTaskActiveListHead;
-extern CallbackTaskSchedulerBss gCallbackTaskSchedulerBssView;
 extern CallbackTaskGroup gCallbackTaskPoolStartView0;
 extern CallbackTaskGroup gCallbackTaskPoolStartView1;
 extern CallbackTaskGroup gCallbackTaskPoolStartView2;

@@ -19,16 +19,6 @@
 #define RACE_HUD_MAIN_FONT_HANDLE (gAssetHandles[0x1C])
 #define RACE_HUD_POPUP_FONT_HANDLE (gAssetHandles[0x1F])
 
-extern s16 gRaceLapCount;
-extern u8 gRaceUpdatePaused;
-extern u8 gTrainingCourseLesson;
-extern u8 gMainMenuModeSelection;
-extern u8 gCurrentViewportIndex;
-extern s16 gUiBlinkTimer;
-extern u8 gRaceTimeTrialFinishRecorded;
-extern u8 gRaceChallengeFailed;
-extern s32 gMenuFlowState;
-
 u8 gRaceHudShotTileOffsets[8] = { 5, 5, 8, 11, 14, 17, 0, 0 };
 u8 gRaceHudItemTileIds[8] = { 4, 20, 21, 22, 23, 24, 25, 0 };
 
@@ -217,6 +207,22 @@ u32 D_800DC9A8[0x532] = {
     0x09090909, 0x09090909, 0x09090909, 0x09090909, 0x09090909, 0x09090909, 0x09090909, 0x09090909, 0x09090909,
     0x09090909, 0x09090909, 0x09090909, 0x09090909, 0x09090909, 0x09090909, 0x09090909
 };
+
+s16 gRaceHudMode;
+s16 gRaceHudCoinSpinnerFrame;
+RaceTimer gRaceElapsedTimer;
+RaceTimer gRaceChallengeTimeLimit;
+RaceTimer gRaceTimeTrialFinishTime;
+u8 gRaceTimeTrialFinishRecorded;
+u8 gRaceChallengeFailed;
+
+extern s16 gRaceLapCount;
+extern u8 gRaceUpdatePaused;
+extern u8 gTrainingCourseLesson;
+extern u8 gMainMenuModeSelection;
+extern u8 gCurrentViewportIndex;
+extern s16 gUiBlinkTimer;
+extern s32 gMenuFlowState;
 
 void initRaceHud(void) {
     LOAD_ASSET(SHARED_UI_SPRITES, 0x1F);

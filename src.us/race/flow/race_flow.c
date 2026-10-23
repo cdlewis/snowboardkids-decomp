@@ -218,24 +218,32 @@ u16 gRaceGhostReplayGridSwitchFrames[16] = {
     0x0335, 0x03A0, 0x040C, 0x0466, 0x7FFF, 0x0000, 0x0000, 0x0000,
 };
 
-extern s32 gRaceCameraReplayStartX;
-extern s32 gRaceCameraReplayStartY;
-extern s32 gRaceCameraReplayStartZ;
+s32 gRaceCameraReplayStartX;
+s32 gRaceCameraReplayStartY;
+s32 gRaceCameraReplayStartZ;
+static u32 sRaceCameraReplayStartPadding;
+RaceCourseIndexValue gRaceCourseIndex;
+s16 gRaceLapCount;
+s8 gRacePlayerCount;
+u8 gPlayerCount;
+u8 gRaceUpdatePaused;
+u8 gRacePauseMenuSelection;
+u8 gRaceCameraModeChangeDisabled;
+u8 gRaceDemoPlaybackEnabled;
+u8 gTrainingCourseLesson;
+u8 gMainMenuModeSelection;
+s16 gRacePlayerAttackStartTimer;
+u8 gRaceTypeSelection;
+u8 gRaceResultState;
+u8 gRaceResultsAwardPlayerNumber;
+s8 gRaceGhostRecordStatus;
+
 extern s32 gMenuFlowState;
-extern s16 gRaceLapCount;
 extern s16 gMenuFadeAlpha;
-extern s8 gRacePlayerCount;
-extern s16 gRacePlayerAttackStartTimer;
-extern u8 gTrainingCourseLesson;
-extern u8 gMainMenuModeSelection;
-extern u8 gRacePauseMenuSelection;
-extern u8 gRaceResultsAwardPlayerNumber;
-extern s8 gRaceGhostRecordStatus;
 extern u8 gRaceChallengeFailed;
 extern u8 gPendingFramebufferSwapCount;
 extern u8 gFramebufferSwapHold;
 extern u8 gRumblePakConnectedMask;
-extern u8 gRaceUpdatePaused;
 
 void initStartupControllerPakFlow(void) {
     LOAD_ASSET(_2427D0, 6);

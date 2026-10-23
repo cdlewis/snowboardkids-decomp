@@ -447,7 +447,13 @@ segments:
       - { type: .bss, name: race/effects/race_visual_effects, vram: 0x801121D0 }
       - { type: .bss, name: race/camera/race_camera, vram: 0x801121E0 }
       - { type: .bss, name: engine/viewport_manager, vram: 0x801124B0 }
-      - { type: bss, name: bss_chunk_a_3, vram: 0x80112770 }
+      - { type: .bss, name: engine/callback_task_scheduler, vram: 0x80112770 }
+      - { type: .bss, name: audio/sound_manager, vram: 0x80121850 }
+      - { type: .bss, name: race/flow/race_flow, vram: 0x80121B40 }
+      - { type: .bss, name: race/ui/race_hud, vram: 0x80121B70 }
+      - { type: .bss, name: race/motion/race_motion, vram: 0x80121B90 }
+      - { type: .bss, name: race/player/race_player_collision, vram: 0x80121D50 }
+      - { type: .bss, name: race/player/race_player_movement, vram: 0x80121D70 }
       - { type: .bss, name: race/player/race_player_input, vram: 0x80121D80 }
       - { type: bss, name: bss_chunk_a_3_race_player_tail, vram: 0x801235B0 }
       - { type: .bss, name: ultra/os/seteventmesg, vram: 0x8015C980 }

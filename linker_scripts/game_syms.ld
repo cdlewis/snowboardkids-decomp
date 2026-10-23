@@ -88,3 +88,21 @@ gRaceIntroCourseVertices = passAwardLabelFlashTileOffsets + 0x24;
 gRaceIntroAlternateCourseVertices = passAwardLabelFlashTileOffsets + 0x1A4;
 gRaceIntroCourseCommands = passAwardLabelFlashTileOffsets + 0x264;
 gRaceIntroAlternateCourseCommands = passAwardLabelFlashTileOffsets + 0x3E4;
+
+/* Overlapping callback scheduler views preserve the original IDO code generation. */
+gCallbackTaskActiveListSentinel = gCallbackTaskSchedulerBssView + 0x10;
+gCallbackTaskActiveListHead = gCallbackTaskSchedulerBssView + 0x14;
+gCallbackTaskPoolStartView0 = gCallbackTaskPool;
+gCallbackTaskPoolStartView1 = gCallbackTaskPool + 0x118;
+gCallbackTaskPoolStartView2 = gCallbackTaskPool + 0x230;
+gCallbackTaskPoolStartView3 = gCallbackTaskPool + 0x348;
+/* The final group cursor stops six pointer slots before the free stack ends. */
+gCallbackTaskPoolEnd = gFreeCallbackTaskPool + 0x348;
+
+/* Player sound handle views share the four-entry positional handle array. */
+gPlayerPositionalSoundHandle1 = gPlayerPositionalSoundHandle0 + 4;
+gPlayerPositionalSoundHandle2 = gPlayerPositionalSoundHandle0 + 8;
+gPlayerPositionalSoundHandle3 = gPlayerPositionalSoundHandle0 + 12;
+
+/* The collision effect angle is the low half of the hit angle word. */
+gRacePlayerHitEffectAngle = gRacePlayerHitAngle + 2;

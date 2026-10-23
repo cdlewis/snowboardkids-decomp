@@ -108,6 +108,8 @@ s16 gRacePlayerVoiceSoundIds7[] = { SFX_SLASH_CHEER,
                                     SFX_NONE,
                                     SFX_NONE };
 
+RacePlayerOrder gRaceOrderPlayerIds;
+
 extern s8 gRacePlayerCount;
 extern s32 gMenuFlowState;
 extern s16 gRaceLapCount;

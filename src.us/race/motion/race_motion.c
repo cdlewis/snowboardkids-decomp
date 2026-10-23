@@ -96,20 +96,26 @@ Vec3s *gRaceMotionModelPartPositions[] = {
     NULL,
 };
 
-extern Vec3s *gRaceCourseSurfaceCoords;
-extern RaceCourseSurfaceFace *gRaceCourseSurfaceFaces;
-extern RaceCourseSurface *gRaceCourseSurfaces;
-extern s32 gRaceCourseSurfaceAngleSin;
-extern s32 gRaceCourseSurfaceAngleCos;
-extern s32 gRaceCourseCollisionDeltaX;
-extern s32 gRaceCourseCollisionDeltaZ;
-extern s32 gRaceCourseCollisionEdgeDeltaX;
-extern s32 gRaceCourseCollisionEdgeDeltaZ;
-extern s32 gRaceCourseCollisionAdjustedX;
-extern s32 gRaceCourseCollisionAdjustedZ;
-extern volatile s32 gRaceMotionRotationFrameBuffer[];
+Vec3s *gRaceCourseSurfaceCoords;
+RaceCourseSurfaceFace *gRaceCourseSurfaceFaces;
+RaceCourseSurface *gRaceCourseSurfaces;
+s32 gRaceCourseSurfaceAngleSin;
+s32 gRaceCourseSurfaceAngleCos;
+static u32 sRaceCourseSurfaceAnglePadding;
+s32 gRaceCourseCollisionDeltaX;
+static u32 sRaceCourseCollisionDeltaXPadding;
+s32 gRaceCourseCollisionDeltaZ;
+s32 gRaceCourseCollisionEdgeDeltaX;
+static u32 sRaceCourseCollisionEdgeDeltaXPadding;
+s32 gRaceCourseCollisionEdgeDeltaZ;
+s32 gRaceCourseCollisionAdjustedX;
+static u32 sRaceCourseCollisionAdjustedXPadding;
+s32 gRaceCourseCollisionAdjustedZ;
+static u32 sRaceCourseCollisionAdjustedZPadding;
+volatile s32 gRaceMotionRotationFrameBuffer[0xC];
+RaceMotionDecodedJointFrame gRaceMotionJointFrameBuffer[RACE_MOTION_FRAME_SAMPLE_COUNT];
+
 extern volatile s32 gRaceMotionRotationDecodeFrameBuffer[];
-extern RaceMotionDecodedJointFrame gRaceMotionJointFrameBuffer[RACE_MOTION_FRAME_SAMPLE_COUNT];
 extern Vec3i gRaceMotionJointDecodeFrameBuffer[];
 extern s32 gRacePlayerHitCueId;
 

@@ -16,12 +16,14 @@
 #define RACE_PLAYER_COLLISION_HALF_TURN 0x800
 #define VEC3I_COMPONENT(vec, index) ((&(vec).x)[index])
 
-extern s32 gRacePlayerHitCueId;
-extern s32 gRacePlayerHitAngle;
-extern s32 gRacePlayerHitDistance;
+s32 gRacePlayerHitCueId;
+s32 gRacePlayerHitAngle;
+s32 gRacePlayerHitDistance;
+s32 gRacePlayerHitDeltaX;
+s32 gRacePlayerHitDeltaZ;
+
+/* The effect angle is the low half of gRacePlayerHitAngle. */
 extern s16 gRacePlayerHitEffectAngle;
-extern s32 gRacePlayerHitDeltaX;
-extern s32 gRacePlayerHitDeltaZ;
 void enqueueRacePlayerVoiceSound(RacePlayer *, s32);
 
 s32 tryQueueRacePlayerHitCueSpinout(RacePlayer *arg0) {
