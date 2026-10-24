@@ -1,4 +1,8 @@
 #include "common.h"
+#include "assets.h"
+#include "game/engine/asset_manager.h"
+#include "game/engine/viewport_manager.h"
+#include "game/menu/controller_pak/controller_pak_ui.h"
 #include "game/audio/sound_manager.h"
 #include "game/engine/callback_task_scheduler.h"
 #include "game/engine/controller_input.h"
@@ -7,12 +11,31 @@
 #include "game/menu/renderer/menu_renderer.h"
 #include "game/menu/renderer/menu_render_utils.h"
 
+extern f32 D_800DFD70;
+
+void func_8000C1B8(void);
 void func_8000C31C(void);
 
-// The assembly processor requires each file pragma on one line.
-// clang-format off
-#pragma GLOBAL_ASM("asm.jp/nonmatchings/menu/controller_pak/controller_pak_continue_prompt_flow/initControllerPakContinuePromptFlow.s")
-// clang-format on
+void initControllerPakContinuePromptFlow(void) {
+    requestMusicSequenceBank(3);
+    resetAllViewports();
+    configureViewport(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, D_800DFD70);
+    gFramebufferRenderInterval.value = 0;
+    gCurrentGameTask->callbackData0 = 0xFF;
+    gCurrentGameTask->callbackData1 = 0;
+    gMenuFlowState = 0;
+    gControllerPakContinuePromptTransition.state = 0;
+    gControllerPakContinuePromptTransition.x = 0x100;
+    LOAD_ASSET(_593D10, 0x22);
+    LOAD_ASSET(_598A70, 0x23);
+    LOAD_ASSET(_59AAA0, 0x24);
+    LOAD_ASSET(_60F1A0, 0x29);
+    initCallbackTaskScheduler(0);
+    createCallbackTask((CallbackTaskCallback)initControllerPakContinuePrompt, 0, 0x64);
+    gMenuFadeAlpha = gCurrentGameTask->callbackData0;
+    setCurrentGameTaskCallback(func_8000C1B8, 0);
+    updateCallbackTasks();
+}
 
 void func_8000C1B8(void) {
     s32 temp_a1;
