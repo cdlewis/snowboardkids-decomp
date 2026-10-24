@@ -17,6 +17,8 @@
 #define CHARACTER_SELECT_UI_BANNER_TEXTURE_HANDLE (gAssetHandles[0x29])
 #define CHARACTER_SELECT_UI_UNUSED_HANDLE (gAssetHandles[0x1F])
 
+extern u16 D_800B53E0[];
+
 void drawCharacterSelectConfirmationBanner(CharacterSelectUiBannerActor *arg0) {
     s32 i;
     s32 j;
@@ -595,9 +597,61 @@ void initCharacterSelectRosterIcons(CharacterSelectUiRosterIconActor *arg0) {
     setCallbackTaskCallback(actor, (CallbackTaskCallback)updateCharacterSelectRosterIcons);
 }
 
-// clang-format off
-#pragma GLOBAL_ASM("asm.jp/nonmatchings/menu/character_select/character_select_ui/drawCharacterSelectPlayerCursorMarkers.s")
-// clang-format on
+void drawCharacterSelectPlayerCursorMarkers(CharacterSelectUiPlayerCursorActor *arg0) {
+    s32 i;
+    s32 j;
+    s32 evenMatch;
+    s32 oddMatch;
+    u16 alpha;
+    u16 *tiles;
+    RacePlayer *player;
+
+    if (arg0->mode != 0) {
+        for (i = 0; i < (s32)gPlayerCount; i++) {
+            player = &gRacePlayers[i];
+            tiles = &D_800B53E0[i * 4];
+            evenMatch = 0;
+            oddMatch = 0;
+            j = 0;
+            if (player->menuState != 0) {
+                alpha = 0x100;
+            } else {
+                alpha = arg0->scale;
+            }
+            if (((s32)gPlayerCount) > 0) {
+                for (;;) {
+                    if ((j != i) &&
+                        (gCharacterSelectHighlightedRosterIndices[i] == gCharacterSelectHighlightedRosterIndices[j])) {
+                        /* The single iteration loop preserves IDO register allocation. */
+                        for (;;) {
+                            if (!(j & 1)) {
+                                evenMatch = 1;
+                            } else {
+                                oddMatch = 2;
+                            }
+                            break;
+                        }
+                    }
+                    j++;
+                    if (!(j < (s32)gPlayerCount)) {
+                        break;
+                    }
+                }
+            }
+            drawMenuSpriteWithAlpha(
+                arg0->x[i],
+                arg0->y,
+                getRelocatableHeapBlockBase(CHARACTER_SELECT_UI_PLAYER_FRAME_HANDLE),
+                (tiles + evenMatch)[oddMatch],
+                0x20,
+                0x20,
+                0,
+                alpha,
+                0
+            );
+        }
+    }
+}
 
 void updateCharacterSelectPlayerCursorMarkers(CharacterSelectUiPlayerCursorActor *arg0) {
     s32 i;
