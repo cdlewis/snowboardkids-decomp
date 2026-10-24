@@ -10,6 +10,9 @@
 
 #define ASSET_HANDLE(index) (gAssetHandles[(index)])
 #define TITLE_SCREEN_LOGO_SPRITE_HANDLE ASSET_HANDLE(37)
+#define TITLE_SCREEN_TEXTURE_HANDLE ASSET_HANDLE(0x21)
+
+extern u8 D_800E0380[];
 
 void drawMainMenuTitleLogo(MainMenuTitleLogoActor *arg0) {
     drawMenuTilemapSprite(&arg0->tilemapSprite.render, MENU_TILEMAP_TEXEL_8B, arg0->common.x, arg0->common.y);
@@ -28,7 +31,35 @@ void func_80032404(MainMenuTitleLogoActor *arg0) {
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateMainMenuTitleLogo);
 }
 
-#pragma GLOBAL_ASM("asm.jp/nonmatchings/menu/main_menu/main_menu_title_ui/drawMainMenuTitleOptions.s")
+void drawMainMenuTitleOptions(MainMenuTitleOptionsActor *arg0) {
+    s32 i;
+    s32 tile;
+    u16 palette;
+
+    for (i = 0; i < 3; i++) {
+        if (i == arg0->selectedOption) {
+            tile = ((i * 2) + 4) & 0xFFFF;
+            palette = 2;
+        } else {
+            tile = ((i * 2) + 5) & 0xFFFF;
+            palette = 3;
+        }
+        drawMenuSpriteWithAlpha(
+            arg0->common.x,
+            (s16)(arg0->labelY + (i * 0x10)),
+            getRelocatableHeapBlockBase(TITLE_SCREEN_TEXTURE_HANDLE),
+            tile,
+            0x20,
+            0x20,
+            0,
+            0x100,
+            palette + 1
+        );
+    }
+
+    drawMenuSprite(-0x46, 0x54, getRelocatableHeapBlockBase(TITLE_SCREEN_TEXTURE_HANDLE), 0xA, 0x20, 0x20, 0, 0);
+    drawMenuAsciiText(0x68, -0xA, D_800E0380, 0, 0x100);
+}
 
 void updateMainMenuTitleOptions(MainMenuTitleOptionsActor *arg0) {
     if (gCurrentGameTask->callbackData1 != (u16)(0, arg0->selectedOption)) {
