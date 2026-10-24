@@ -1,12 +1,73 @@
 #include "common.h"
 #include "game/race/race_state.h"
 #include "game/race/player/race_player_progress.h"
+#include "game/math/fixed_point_math.h"
+#include "game/race/motion/race_motion.h"
 
 extern s8 *D_800DD1A4[];
+extern RacePlayerCheckpointEvent *D_800DD360[];
 
 #pragma GLOBAL_ASM("asm.jp/nonmatchings/race/player/race_player_progress/updateRacePlayerRankDisplay.s")
 
-#pragma GLOBAL_ASM("asm.jp/nonmatchings/race/player/race_player_progress/func_8007B46C.s")
+void func_8007B46C(RacePlayer *player) {
+    RacePlayerCheckpointEvent *eventList;
+    RacePlayerCheckpointEvent *event;
+    s32 x;
+    s32 y;
+    s32 z;
+    s32 eventIndex;
+    s32 eventMask;
+    s16 angle;
+    s16 pathFrame;
+    s32 sine;
+    s32 cosine;
+
+    if (player->stateFlags & 0x1000) {
+        player->checkpointEventMask = 0;
+    }
+
+    player->checkpointHit = 0;
+    eventList = D_800DD360[gRaceCourseIndex.signedValue];
+    event = eventList;
+    eventIndex = 0;
+
+    for (;;) {
+        pathFrame = event->pathFrame;
+        if (pathFrame == -(u32)1) {
+            break;
+        }
+
+        eventMask = 1 << eventIndex;
+
+        if (!(player->checkpointEventMask & eventMask) && (player->coursePathIndex <= pathFrame) &&
+            (player->coursePathIndex > pathFrame - 3)) {
+            getRaceCourseSurfaceSpawnTransform(pathFrame, &x, &y, &z, &angle);
+
+            x = player->pos.x - x;
+            y = player->pos.y - y;
+            z = player->pos.z - z;
+
+            sine = fixedSine(-angle);
+            cosine = fixedCosine(-angle);
+            {
+                s64 innerProduct;
+
+                innerProduct = -(s64)sine * x;
+                z = (innerProduct + (s64)cosine * z) / 0x1000;
+            }
+
+            if (z < 0x600000 && z > 0) {
+                player->checkpointEventMask |= eventMask;
+                player->checkpointHit = 1;
+                player->surfaceCueOverrideMask = event->surfaceCueMask;
+                break;
+            }
+        }
+
+        eventIndex++;
+        event++;
+    }
+}
 
 s32 updateRacePlayerSmoothedPathOffset(s32 playerIndex, s32 pathIndex, s32 rankSlot) {
     s32 courseIndex;
