@@ -578,7 +578,105 @@ void drawMenuSpriteWithPaletteScale(s16 x, s16 y, AssetTable *asset, u16 index, 
     gDPPipeSync(gRegionAllocPtr++);
 }
 
-#pragma GLOBAL_ASM("asm.jp/nonmatchings/menu/renderer/menu_renderer/drawMenuSpriteSubrect.s")
+void drawMenuSpriteSubrect(
+    s16 x,
+    s16 y,
+    AssetTable *asset,
+    u16 index,
+    u8 srcX,
+    u8 srcY,
+    u8 width,
+    u8 height,
+    s32 scaleX,
+    s32 scaleY
+) {
+    AssetTableEntry *texture;
+    s32 minX;
+    u8 *paletteBase;
+    s32 left;
+    s32 top;
+    s32 right;
+    s32 bottom;
+    s32 texS;
+    s32 texT;
+    s32 minY;
+    u16 scaleXValue;
+    u16 scaleYValue;
+    s16 maxX;
+    s16 maxY;
+
+    texture = &asset->entries[index];
+    paletteBase = (asset->entryCount * sizeof(AssetTableEntry)) + (u8 *)asset + sizeof(AssetTableEntry);
+    scaleXValue = scaleX;
+    scaleYValue = scaleY;
+    left = (x + gMenuViewportCenterX) << 2;
+    top = (y + gMenuViewportCenterY) << 2;
+    right = (((width * scaleXValue) << 2) >> 5) + left;
+    bottom = height;
+    bottom *= scaleYValue;
+    bottom = ((bottom << 2) >> 5) + top;
+    // Keeping these assignments on one source line preserves IDO's instruction scheduling.
+    texS = srcX << 5;
+    texT = srcY << 5;
+    minY = (s16)((gMenuViewportCenterY - (gMenuViewportHeight / 2)) << 2);
+    maxY = (gMenuViewportCenterY + (gMenuViewportHeight / 2)) << 2;
+    minX = (s16)((gMenuViewportCenterX - (gMenuViewportWidth / 2)) << 2);
+    maxX = (gMenuViewportCenterX + (gMenuViewportWidth / 2)) << 2;
+
+    if ((left < maxX) && (top < maxY) && (right >= minX) && (bottom >= minY)) {
+        if (left < minX) {
+            x = 1;
+            while (x) {
+                texS = ((((minX - left) << 3) << 5) / scaleXValue) + texS;
+                left = minX;
+
+                x = 0;
+            }
+        }
+        if (top < minY) {
+            texT = ((((minY - top) << 3) << 5) / scaleYValue) + texT;
+            top = minY;
+        }
+        if (right >= maxX) {
+            right = maxX - 4;
+        }
+        if (bottom >= maxY) {
+            bottom = maxY - 4;
+        }
+
+        gDPLoadTextureTile_4b(
+            gRegionAllocPtr++,
+            texture->imageOffset + (u8 *)asset + 0x80000000,
+            G_IM_FMT_CI,
+            texture->width,
+            texture->height,
+            0,
+            0,
+            texture->width,
+            texture->height,
+            0,
+            G_TX_CLAMP,
+            G_TX_CLAMP,
+            G_TX_NOMASK,
+            G_TX_NOMASK,
+            G_TX_NOLOD,
+            G_TX_NOLOD
+        );
+        gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, paletteBase + (texture->paletteIndex << 5) + 0x80000000);
+        gSPTextureRectangle(
+            gRegionAllocPtr++,
+            left,
+            top,
+            right,
+            bottom,
+            G_TX_RENDERTILE,
+            texS,
+            texT,
+            (u16)(0x8000 / scaleXValue),
+            (u16)(0x8000 / scaleYValue)
+        );
+    }
+}
 
 void drawMenuSpriteFixedScale(
     s16 x,
@@ -703,7 +801,108 @@ void drawMenuSpriteTile(s16 arg0, s16 arg1, AssetTable *arg2, u16 arg3, u16 arg4
     drawMenuSpriteTileClipped(arg0, arg1, arg2, arg3, arg4, arg5, gMenuViewportWidth / 2, gMenuViewportHeight / 2);
 }
 
-#pragma GLOBAL_ASM("asm.jp/nonmatchings/menu/renderer/menu_renderer/drawMenuSpriteTileClipped.s")
+void drawMenuSpriteTileClipped(
+    s16 x,
+    s16 y,
+    AssetTable *table,
+    u16 entryIndex,
+    u16 unused,
+    u16 intensity,
+    s16 clipX,
+    s16 clipY
+) {
+    AssetTableEntry *entry;
+    volatile s32 padding2;
+    u8 *paletteBase;
+    volatile u8 padding0[0x18];
+    s32 y0;
+    s32 x1;
+    s32 y1;
+    s32 clipS;
+    s32 clipT;
+    volatile u8 padding1[8];
+    s32 x0;
+
+    paletteBase = (u8 *)(table->entryCount + table->entries);
+    entry = &table->entries[entryIndex];
+    entry += 0;
+    clipS = entry->width;
+    x1 = x0 = x + gMenuViewportCenterX;
+    y0 = y + gMenuViewportCenterY;
+    x1 += clipS;
+    y1 = y0 + entry->height;
+    clipS = 0;
+    clipT = 0;
+
+    if (x0 >= (gMenuViewportCenterX + clipX)) {
+        return;
+    }
+    if (y0 >= (gMenuViewportCenterY + clipY)) {
+        return;
+    }
+    if (x1 < (gMenuViewportCenterX - clipX)) {
+        return;
+    }
+    if (y1 < (gMenuViewportCenterY - clipY)) {
+        return;
+    }
+
+    if (x0 < (gMenuViewportCenterX - clipX)) {
+        clipS = (gMenuViewportCenterX - clipX) - x0;
+        x0 = (gMenuViewportCenterX - clipX);
+    }
+    if (y0 < (gMenuViewportCenterY - clipY)) {
+        clipT = (gMenuViewportCenterY - clipY) - y0;
+        y0 = (gMenuViewportCenterY - clipY);
+    }
+    if (x1 >= (gMenuViewportCenterX + clipX)) {
+        x1 = (gMenuViewportCenterX + clipX) - 1;
+    }
+    if (y1 >= (gMenuViewportCenterY + clipY)) {
+        y1 = (gMenuViewportCenterY + clipY) - 1;
+    }
+
+    gDPLoadTextureTile(
+        gRegionAllocPtr++,
+        entry->imageOffset + (u8 *)table,
+        G_IM_FMT_CI,
+        G_IM_SIZ_8b,
+        entry->width,
+        entry->height,
+        0,
+        0,
+        entry->width,
+        entry->height,
+        0,
+        G_TX_CLAMP,
+        G_TX_CLAMP,
+        G_TX_NOMASK,
+        G_TX_NOMASK,
+        G_TX_NOLOD,
+        G_TX_NOLOD
+    );
+    if (intensity != 0x100) {
+        gDPPipeSync(gRegionAllocPtr++);
+        gDPSetCombineMode(gRegionAllocPtr++, G_CC_MODULATEIA_PRIM, G_CC_MODULATEIA_PRIM);
+        gDPSetPrimColor(gRegionAllocPtr++, 0, 0, intensity, intensity, intensity, 0xFF);
+    }
+    gDPLoadTLUT_pal256(gRegionAllocPtr++, paletteBase + (entry->paletteIndex << 5));
+    gSPTextureRectangle(
+        gRegionAllocPtr++,
+        x0 << 2,
+        y0 << 2,
+        x1 << 2,
+        y1 << 2,
+        G_TX_RENDERTILE,
+        clipS << 5,
+        clipT << 5,
+        0x400,
+        0x400
+    );
+    if (intensity != 0x100) {
+        gSPDisplayList(gRegionAllocPtr++, gMenuRenderModeResetDl);
+    }
+}
 
 void func_8001130C(void) {}
 
