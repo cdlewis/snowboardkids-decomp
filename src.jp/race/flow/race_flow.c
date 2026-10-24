@@ -747,7 +747,87 @@ void drawRacePauseMenu(void *arg0) {
     drawAssetTableSpriteWithExplicitPalette(-0x1C, 0x14, getRelocatableHeapBlockBase(gAssetHandles[0x1F]), 0x5A, color);
 }
 
-#pragma GLOBAL_ASM("asm.jp/nonmatchings/race/flow/race_flow/updateRaceGameplayFlow.s")
+void updateRaceGameplayFlow(void) {
+    s32 opened;
+    s32 i;
+    s32 input;
+    s32 selection;
+    s32 valueTwo;
+
+    opened = 0;
+    for (i = 0; i < gPlayerCount; i++) {
+        if (((gRacePlayers[i].soundDisabled == 0) && (gRaceUpdatePaused == 0)) &&
+            (gPlayerInputPressed[i] & START_BUTTON)) {
+            gRacePauseMenuSelection = 0;
+            gRaceUpdatePaused = 1;
+            opened = 1;
+            enqueueSoundEffect(SFX_MENU_ACCEPT, SFX_PRIORITY_NORMAL);
+            requestRumbleMotorInit(0);
+            requestRumbleMotorInit(1);
+            requestRumbleMotorInit(2);
+            requestRumbleMotorInit(3);
+        }
+    }
+    valueTwo = 2;
+    if ((gRaceUpdatePaused != 0) && (opened == 0)) {
+        for (i = 0; i < gPlayerCount; i++) {
+            if (gRacePlayers[i].soundDisabled == 0) {
+                input = gPlayerInputPressed[i];
+                if (input & (STICK_UP | U_JPAD)) {
+                    selection = gRacePauseMenuSelection;
+                    if (selection != 0) {
+                        gRacePauseMenuSelection = selection - 1;
+                        enqueueSoundEffect(SFX_MENU_ACCEPT, SFX_PRIORITY_NORMAL);
+                        input = gPlayerInputPressed[i];
+                    }
+                }
+                if (input & (STICK_DOWN | D_JPAD)) {
+                    selection = gRacePauseMenuSelection;
+                    if (valueTwo != selection) {
+                        gRacePauseMenuSelection = selection + 1;
+                        enqueueSoundEffect(SFX_MENU_ACCEPT, SFX_PRIORITY_NORMAL);
+                        input = gPlayerInputPressed[i];
+                    }
+                }
+                if (input & START_BUTTON) {
+                    input = gRacePauseMenuSelection;
+                    if (input == 0) {
+                        gRaceUpdatePaused = 0;
+                        enqueueSoundEffect(SFX_MENU_ACCEPT, SFX_PRIORITY_NORMAL);
+                        input = gRacePauseMenuSelection;
+                    }
+                    if (input == 1) {
+                        gRaceRumbleEnabled = 0;
+                        gRaceUpdatePaused = 0;
+                        gFramebufferSwapHold = 1;
+                        enqueueSoundEffect(SFX_MENU_ACCEPT, SFX_PRIORITY_NORMAL);
+                        setCurrentGameTaskCallback(finalizeRaceExitFlow, 0);
+                        return;
+                    }
+                    if (valueTwo == input) {
+                        gRaceRumbleEnabled = 0;
+                        gRaceUpdatePaused = 0;
+                        gFramebufferSwapHold = 1;
+                        enqueueSoundEffect(SFX_MENU_ACCEPT, SFX_PRIORITY_NORMAL);
+                        setCurrentGameTaskCallback(finalizeRaceExitFlow, 0);
+                        return;
+                    }
+                }
+            }
+        }
+        addRenderCallback(&gMenuRenderCallbackList, drawRacePauseMenu, 0);
+    }
+
+    if (gRaceSplitscreenMode == valueTwo) {
+        saveRaceReplayCourseGridEntry();
+    }
+    updateRaceFlowFrameWithCourseEffects();
+    if (areRacePlayersFinished() != 0) {
+        gCurrentGameTask->callbackData0 = 0x3C;
+        gRaceRumbleEnabled = 0;
+        setCurrentGameTaskCallback(waitRaceFinishResultsFlow, 0);
+    }
+}
 
 void waitRaceFinishResultsFlow(void) {
     gRacePauseMenuSelection = 0;
