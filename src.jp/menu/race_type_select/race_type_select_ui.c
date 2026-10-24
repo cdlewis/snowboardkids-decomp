@@ -429,7 +429,77 @@ void initRaceTypeSelectOption0Frame(RaceTypeSelectOption0FrameActor *arg0) {
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceTypeSelectOption0Frame);
 }
 
+// drawRaceTypeSelectOption1Frame best standalone match: 99.952% (base_4.c)
 #pragma GLOBAL_ASM("asm.jp/nonmatchings/menu/race_type_select/race_type_select_ui/drawRaceTypeSelectOption1Frame.s")
+
+#ifdef NON_MATCHING
+void drawRaceTypeSelectOption1Frame(RaceTypeSelectOptionFrameActor *arg0) {
+    s32 shouldDraw;
+    s32 i;
+    s32 tileOffset;
+    s32 offset;
+
+    tileOffset = 0;
+    shouldDraw = 1;
+    for (i = 0; i < 16; i++, tileOffset++) {
+        drawMenuSpriteTileClipped(
+            (s16)(arg0->x + ((i & 3) << 5)),
+            (s16)(arg0->y + ((i / 4) << 5)),
+            getRelocatableHeapBlockBase(gAssetHandles[0x25]),
+            gRaceTypeSelectFrameTileMaps.optionFrames[(u16)arg0->optionIndex].centerTiles[tileOffset],
+            0,
+            0x100,
+            gMenuViewportWidth / 2,
+            (gMenuViewportHeight / 2) - 0x2F
+        );
+    }
+
+    tileOffset = 0;
+    i = 0x80;
+    offset = 0;
+    for (;;) {
+        drawMenuSpriteTileClipped(
+            (s16)(arg0->x + 0x80),
+            (s16)(arg0->y + offset),
+            getRelocatableHeapBlockBase(gAssetHandles[0x25]),
+            gRaceTypeSelectFrameTileMaps.optionFrames[(u16)arg0->optionIndex].rightEdgeTiles[tileOffset],
+            0,
+            0x100,
+            gMenuViewportWidth / 2,
+            (gMenuViewportHeight / 2) - 0x2F
+        );
+        drawMenuSpriteTileClipped(
+            (s16)(arg0->x + offset),
+            (s16)(arg0->y + 0x80),
+            getRelocatableHeapBlockBase(gAssetHandles[0x25]),
+            gRaceTypeSelectFrameTileMaps.optionFrames[(u16)arg0->optionIndex].bottomEdgeTiles[tileOffset],
+            0,
+            0x100,
+            gMenuViewportWidth / 2,
+            (gMenuViewportHeight / 2) - 0x2F
+        );
+        i = 0x80;
+        offset += 0x40;
+        tileOffset++;
+
+        if (!(offset != i))
+            break;
+    }
+    i++;
+    i--;
+
+    drawMenuSpriteTileClipped(
+        (s16)(arg0->x + 0x80),
+        (s16)(arg0->y + 0x80),
+        getRelocatableHeapBlockBase(gAssetHandles[0x25]),
+        gRaceTypeSelectFrameTileMaps.optionFrames[(u16)arg0->optionIndex].cornerTile,
+        0,
+        0x100,
+        gMenuViewportWidth / 2,
+        (gMenuViewportHeight / 2) - 0x2F
+    );
+}
+#endif
 
 void updateRaceTypeSelectOption1Frame(RaceTypeSelectOptionFrameActor *arg0) {
     int state;
@@ -501,7 +571,77 @@ void initRaceTypeSelectOption1Frame(RaceTypeSelectOptionFrameActor *arg0) {
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceTypeSelectOption1Frame);
 }
 
+// drawRaceTypeSelectOption2Frame best standalone match: 99.952% (base_4.c)
 #pragma GLOBAL_ASM("asm.jp/nonmatchings/menu/race_type_select/race_type_select_ui/drawRaceTypeSelectOption2Frame.s")
+
+#ifdef NON_MATCHING
+void drawRaceTypeSelectOption2Frame(RaceTypeSelectOptionFrameActor *arg0) {
+    s32 shouldDraw;
+    s32 i;
+    s32 tileOffset;
+    s32 offset;
+
+    tileOffset = 0;
+    shouldDraw = 1;
+    for (i = 0; i < 16; i++, tileOffset++) {
+        drawMenuSpriteTileClipped(
+            (s16)(arg0->x + ((i & 3) << 5)),
+            (s16)(arg0->y + ((i / 4) << 5)),
+            getRelocatableHeapBlockBase(gAssetHandles[0x25]),
+            gRaceTypeSelectFrameTileMaps.optionFrames[(u16)arg0->optionIndex].centerTiles[tileOffset],
+            0,
+            0x100,
+            gMenuViewportWidth / 2,
+            (gMenuViewportHeight / 2) - 0x2F
+        );
+    }
+
+    tileOffset = 0;
+    i = 0x80;
+    offset = 0;
+    for (;;) {
+        drawMenuSpriteTileClipped(
+            (s16)(arg0->x + 0x80),
+            (s16)(arg0->y + offset),
+            getRelocatableHeapBlockBase(gAssetHandles[0x25]),
+            gRaceTypeSelectFrameTileMaps.optionFrames[(u16)arg0->optionIndex].rightEdgeTiles[tileOffset],
+            0,
+            0x100,
+            gMenuViewportWidth / 2,
+            (gMenuViewportHeight / 2) - 0x2F
+        );
+        drawMenuSpriteTileClipped(
+            (s16)(arg0->x + offset),
+            (s16)(arg0->y + 0x80),
+            getRelocatableHeapBlockBase(gAssetHandles[0x25]),
+            gRaceTypeSelectFrameTileMaps.optionFrames[(u16)arg0->optionIndex].bottomEdgeTiles[tileOffset],
+            0,
+            0x100,
+            gMenuViewportWidth / 2,
+            (gMenuViewportHeight / 2) - 0x2F
+        );
+        i = 0x80;
+        offset += 0x40;
+        tileOffset++;
+
+        if (!(offset != i))
+            break;
+    }
+    i++;
+    i--;
+
+    drawMenuSpriteTileClipped(
+        (s16)(arg0->x + 0x80),
+        (s16)(arg0->y + 0x80),
+        getRelocatableHeapBlockBase(gAssetHandles[0x25]),
+        gRaceTypeSelectFrameTileMaps.optionFrames[(u16)arg0->optionIndex].cornerTile,
+        0,
+        0x100,
+        gMenuViewportWidth / 2,
+        (gMenuViewportHeight / 2) - 0x2F
+    );
+}
+#endif
 
 void updateRaceTypeSelectOption2Frame(RaceTypeSelectOptionFrameActor *arg0) {
     int state;
