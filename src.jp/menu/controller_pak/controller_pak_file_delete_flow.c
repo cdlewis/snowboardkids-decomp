@@ -1,4 +1,8 @@
 #include "common.h"
+#include "assets.h"
+#include "game/engine/asset_manager.h"
+#include "game/engine/viewport_manager.h"
+#include "game/race/race_state.h"
 #include "game/audio/sound_manager.h"
 #include "game/engine/callback_task_scheduler.h"
 #include "game/engine/controller_input.h"
@@ -10,14 +14,55 @@
 #include "game/menu/renderer/menu_renderer.h"
 #include "game/menu/renderer/menu_render_utils.h"
 
+extern f32 D_800DFD80;
+extern u8 D_5D4620[];
+extern u8 D_5D4C40[];
+
+void func_8000C5F0(void);
 void func_8000C6FC(void);
 void func_8000CA78(void);
 void func_8000CB0C(void);
+void func_800319D0(ControllerPakTwoPointActor *arg0);
+void func_80031E38(ControllerPakFileListActor *arg0);
 
-// The assembly processor requires each file pragma on one line.
-// clang-format off
-#pragma GLOBAL_ASM("asm.jp/nonmatchings/menu/controller_pak/controller_pak_file_delete_flow/initControllerPakFileDeleteFlow.s")
-// clang-format on
+void initControllerPakFileDeleteFlow(void) {
+    requestControllerPakProbe(0);
+    if (gControllerPakStatusCodes[0] != 1) {
+        setCurrentGameTaskCallback(func_8000CB0C, 0);
+        return;
+    }
+    resetAllViewports();
+    configureViewport(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, D_800DFD80);
+    gFramebufferRenderInterval.value = 0;
+    gCurrentGameTask->callbackData0 = 0;
+    gCurrentGameTask->callbackData1 = 0;
+    gMenuFlowState = 0;
+    gControllerPakRetryCounts[0] = 0;
+    gControllerPakFreeBytes = 0;
+    gControllerPakFreeFileCount = 0;
+    gRaceRumbleEnabled = 0;
+    gMenuFadeAlpha = gCurrentGameTask->callbackData0;
+    loadCompressedRomAsset(D_5D4620, D_5D4C40, 0x21);
+    LOAD_ASSET(_593D10, 0x22);
+    LOAD_ASSET(_598A70, 0x23);
+    LOAD_ASSET(_59AAA0, 0x24);
+    loadCompressedRomAsset(D_5D4C40, &_5E0E40_ROM_START, 0x26);
+    initCallbackTaskScheduler(0);
+    createCallbackTask((CallbackTaskCallback)&initControllerPakFileDeleteMainOptions, 0, 0x63);
+    createCallbackTask((CallbackTaskCallback)&initControllerPakFileDeleteConfirmOptions, 0, 0x63);
+    createCallbackTask((CallbackTaskCallback)&func_800319D0, 0, 0x63);
+    createCallbackTask((CallbackTaskCallback)&func_80031E38, 0, 0x63);
+    createCallbackTask((CallbackTaskCallback)&initControllerPakFileDeleteIcon, 0, 0x5E);
+    gControllerPakMenuState.mainChoice = 0;
+    gControllerPakMenuState.fileIndex = 0;
+    gControllerPakMenuState.confirmChoice = 0;
+    gControllerPakMenuState.state = 0;
+    gControllerPakMenuState.visibleFileIndex = 0;
+    gControllerPakMenuState.isEdgeScroll = 0;
+    requestControllerPakFileList();
+    requestControllerPakFreeSpaceUpdate();
+    setCurrentGameTaskCallback(func_8000C5F0, 0);
+}
 
 void func_8000C5F0(void) {
     if ((gPlayerInputPressed[0] & (STICK_RIGHT | R_JPAD)) && (gControllerPakMenuState.mainChoice != 1)) {
