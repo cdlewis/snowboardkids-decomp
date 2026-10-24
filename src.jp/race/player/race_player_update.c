@@ -29,6 +29,23 @@
 #include "game/race/flow/race_flow.h"
 
 typedef struct {
+    Vec3i position;
+    s16 surfaceHint;
+    s16 facingAngle;
+} RacePlayerPreviewStart;
+
+typedef union {
+    Vec3i *vec;
+    char *bytes;
+    u32 index;
+} RacePlayerInitLocal;
+
+typedef union {
+    s32 value;
+    u64 align;
+} RaceSpawnX;
+
+typedef struct {
     u8 matrix[0x20];
     s32 transformedX;
     s32 transformedY;
@@ -37,6 +54,12 @@ typedef struct {
     s32 sourceY;
     s32 sourceZ;
 } PlayerTransformScratch80095A88;
+
+extern RacePlayerPreviewStart D_800DDC48[];
+extern s32 D_800DDFF0[];
+extern void (*D_800DDF08[])(RacePlayer *);
+
+void func_8007B46C(RacePlayer *player);
 
 void initRacePlayers(void) {
     gRacePlayers[0].playerIndex = 0;
@@ -86,7 +109,225 @@ void applyRacePlayerProperties(RacePlayer *arg0) {
     player->reverseDeceleration = (temp_a1->reverseDeceleration + temp_a2->reverseDeceleration) << 4;
 }
 
+// initRacePlayer best match: 99.927%
 #pragma GLOBAL_ASM("asm.jp/nonmatchings/race/player/race_player_update/initRacePlayer.s")
+
+#ifdef NON_MATCHING
+void initRacePlayer(RacePlayer *player) {
+    RacePlayerInitLocal pos;
+    RacePlayerInitLocal previousPos;
+    u32 size;
+
+    /* Clear pos through the end of RacePlayer, including race gold (score). */
+    size = (s32)(player + 1) - (s32)&player->pos;
+    previousPos.index = 0;
+    if (size != 0) {
+        pos.bytes = (char *)&player->pos;
+        for (;;) {
+            previousPos.index++;
+            *pos.bytes = 0;
+            pos.bytes++;
+
+            if (!(previousPos.index < size))
+                break;
+        }
+    }
+
+    player->loopSoundPitch = 0.0f;
+    pos.vec = &player->pos;
+    initRaceMotionModelParts(player);
+    setRaceMotionAnimation(player, 1);
+
+    if (gRacePlayerCount == 4) {
+        switch (player->playerIndex) {
+            case 0:
+                player->pos.x = -0xC0000;
+                break;
+            case 1:
+                player->pos.x = 0xC0000;
+                break;
+            case 2:
+                player->pos.x = -0x240000;
+                break;
+            case 3:
+                player->pos.x = 0x240000;
+                break;
+        }
+    }
+    player->pos.z = -0x200000;
+
+    previousPos.vec = &player->previousPosition;
+    *previousPos.vec = *pos.vec;
+    player->targetGroundOffset = 0x40000;
+    player->collisionRadius = 0x80000;
+    player->collisionHeight = 0xE0000;
+
+    applyRacePlayerProperties(player);
+    if (player->isCpu != 0) {
+        player->lateralDeceleration = 0x10000;
+    }
+    if ((player->isCpu != 0) && (player->characterId == 5)) {
+        player->lateralDeceleration = 0xC0000;
+    }
+    if (gRaceSplitscreenMode == 2) {
+        player->itemType = RACE_ITEM_SPEED_FAN;
+    }
+    if (player->isCpu == 0) {
+        player->unk519 = 6;
+    }
+    if ((gRaceSplitscreenMode == 1) && (gRaceTypeSelection == 1)) {
+        player->shieldShotCount = 10;
+    }
+    if (gRaceCourseIndex.signedValue == RACE_COURSE_ROOKIE_MOUNTAIN) {
+        player->pos.z = -0xBD0000;
+    }
+    player->collisionCenterOffset = 0xC0000;
+
+    if ((player->isCpu == 0) && (player->soundDisabled == 0) && (gRaceCameraModeChangeDisabled == 0) &&
+        (player->forwardDeceleration != player->reverseDeceleration)) {
+        createCallbackTaskWithUserIdPreservingArgs(initRaceUiBoardReversePrompt, 0, 0x64, player->playerIndex);
+    }
+
+    if (gRaceDemoPlaybackEnabled == 1) {
+        if (player->playerIndex == 0) {
+            player->shotType = RACE_SHOT_FREEZE_SHOT;
+            player->shotCount = 3;
+        } else {
+            player->shotType = RACE_SHOT_BOMB;
+            player->shotCount = 3;
+        }
+        player->itemType = RACE_ITEM_SPEED_FAN;
+    }
+
+    switch (gTrainingCourseLesson) {
+        case 1:
+            player->facingAngle = 0x57E;
+            player->pos.x = 0xDB870B2D;
+            player->pos.z = 0xE72C26D8;
+            player->coursePathIndex = 0x34;
+            break;
+        case 2:
+        case 3:
+        case 4:
+        case 5:
+            player->facingAngle = 0xFD5;
+            player->pos.x = 0xAE2B01F4;
+            player->pos.z = 0xD6C4D18A;
+            player->coursePathIndex = 0x96;
+            break;
+        case 6:
+            player->facingAngle = 0x993;
+            player->pos.x = 0xC183C5F9;
+            player->pos.z = 0xCE51B844;
+            player->coursePathIndex = 0xAE;
+            break;
+        case 7:
+        case 8:
+            switch (player->playerIndex) {
+                case 0:
+                    player->facingAngle = 0xF7D;
+                    player->pos.x = 0x8FC2BA;
+                    player->pos.z = 0xFC4A83D8;
+                    player->coursePathIndex = 4;
+                    break;
+                case 2:
+                    player->facingAngle = 0x102;
+                    player->pos.x = 0x012FA8E0;
+                    player->pos.z = 0xF9850FD2;
+                    player->coursePathIndex = 8;
+                    break;
+                case 3:
+                    player->facingAngle = 0x8F;
+                    player->pos.x = 0xC2C658;
+                    player->pos.z = 0xFA155B82;
+                    player->coursePathIndex = 7;
+                    break;
+                case 1:
+                    player->facingAngle = 0x8F;
+                    player->pos.x = 0x017C2FC4;
+                    player->pos.z = 0xFA1B250E;
+                    player->coursePathIndex = 7;
+                    break;
+            }
+            break;
+        case 9:
+            player->facingAngle = 0x235;
+            player->pos.x = 0xFEAFF7CD;
+            player->pos.z = 0xF62C899D;
+            player->coursePathIndex = 0xE;
+            break;
+    }
+
+    switch (gMainMenuModeSelection) {
+        case 1:
+            player->shotType = RACE_SHOT_SLAPSTICK;
+            player->shotCount = 3;
+            break;
+        case 2:
+            player->shotType = RACE_SHOT_PARACHUTE;
+            player->shotCount = 3;
+            break;
+        case 3:
+            player->shotType = RACE_SHOT_FREEZE_SHOT;
+            player->shotCount = 3;
+            break;
+        case 4:
+            player->shotType = RACE_SHOT_SNOWMAN;
+            player->shotCount = 3;
+            break;
+        case 5:
+            player->shotType = RACE_SHOT_BOMB;
+            player->shotCount = 3;
+            break;
+        case 6:
+            player->itemType = RACE_ITEM_SPEED_FAN;
+            break;
+        case 7:
+            player->itemType = RACE_ITEM_GHOST;
+            break;
+        case 8:
+            player->itemType = RACE_ITEM_PAN;
+            break;
+        case 9:
+            player->itemType = RACE_ITEM_ROCK;
+            break;
+        case 10:
+            player->itemType = RACE_ITEM_RAT_FACE;
+            if (player->playerIndex != 0) {
+                player->score = 0x1388;
+            }
+            break;
+        case 11:
+            player->itemType = RACE_ITEM_INVISIBLE;
+            if (player->playerIndex == 2) {
+                player->itemType = RACE_ITEM_PAN;
+            }
+            player->shotType = RACE_SHOT_SLAPSTICK;
+            player->shotCount = 3;
+            break;
+    }
+
+    if (gMainMenuModeSelection != 0) {
+        *pos.vec = D_800DDC48[(gMainMenuModeSelection - 1) * 4 + player->playerIndex].position;
+        player->facingAngle = D_800DDC48[(gMainMenuModeSelection - 1) * 4 + player->playerIndex].facingAngle;
+        player->coursePathIndex = D_800DDC48[(gMainMenuModeSelection - 1) * 4 + player->playerIndex].surfaceHint;
+    }
+
+    player->coursePathIndex = findRaceCourseSurfaceFromHint(player->coursePathIndex, player->pos.x, player->pos.z);
+    player->pos.y = getRaceCourseSurfaceHeight(player->coursePathIndex, player->pos.x, player->pos.z);
+    if (!gRaceDemoPlaybackEnabled) {
+        player->pos.y += 0x40000;
+    }
+
+    *previousPos.vec = *pos.vec;
+    player->randomIndex = randomNextMain();
+    setRaceCameraMode(player->playerIndex, 1);
+
+    if ((gRaceDemoPlaybackEnabled == 0) && (gRaceSplitscreenMode == 0)) {
+        createCallbackTaskWithUserId((CallbackTaskCallback)waitForRaceStartPlayerEffect, 0, 1, player->playerIndex);
+    }
+}
+#endif
 
 void updateRacePlayers(void) {
     s32 i;
@@ -109,7 +350,192 @@ void updateRacePlayers(void) {
     }
 }
 
-#pragma GLOBAL_ASM("asm.jp/nonmatchings/race/player/race_player_update/updateRacePlayer.s")
+void updateRacePlayer(RacePlayer *player) {
+    s32 i;
+    s32 catchupDelta;
+    RaceSpawnX spawnX;
+    s32 spawnY;
+    s32 spawnZ;
+    s32 deltaX;
+    s32 speedDelta;
+    s32 verticalDelta;
+    s32 deltaZ;
+    s16 spawnAngle;
+    Vec3i offset;
+    Vec3i transformedOffset;
+    Transform3D mtx;
+    u8 cooldown;
+
+    player->anglePtr = NULL;
+    player->previousSurfaceType = player->surfaceType;
+    player->surfaceType = getRaceCourseSurfaceType(player->coursePathIndex, player->pos.x, player->pos.z);
+    if (player->stateFlags & 0x02000000) {
+        player->surfaceType = 0xB;
+    }
+
+    if (player->surfaceType >= 0x11 && player->surfaceType < 0x19 && !(player->stateFlags & 0x200)) {
+        offset.x = 0;
+        offset.y = 0;
+        offset.z = -0x2000;
+        getRaceCourseSurfaceSpawnTransform(player->coursePathIndex, &spawnX.value, &spawnY, &spawnZ, &spawnAngle);
+        spawnAngle = spawnAngle - (player->surfaceType << 9) + 0x2200;
+        makeFixedRotationY(mtx.rotation, spawnAngle);
+        transformVec3iByFixedMatrix(mtx.rotation, &offset, &transformedOffset);
+        player->pos.x += transformedOffset.x;
+        player->pos.y += transformedOffset.y;
+        player->pos.z += transformedOffset.z;
+    }
+
+    player->coursePathOffset = -projectRaceCourseSurfaceProgress(player->coursePathIndex, player->pos.x, player->pos.z);
+    player->velocity.x = player->pos.x - player->previousPosition.x;
+    player->velocity.y = player->pos.y - player->previousPosition.y;
+    player->velocity.z = player->pos.z - player->previousPosition.z;
+    if (player->verticalVelocityLimit < player->velocity.y) {
+        player->velocity.y = player->verticalVelocityLimit;
+    }
+    verticalDelta = player->velocity.y;
+    if (player->velocity.y < -0x400000) {
+        player->velocity.y = -0x400000;
+    }
+    if (player->velocity.y > 0x400000) {
+        player->velocity.y = 0x400000;
+    }
+
+    player->previousPosition = player->pos;
+    player->verticalVelocityLimit = 0x7FFFFFFF;
+    player->boardContactPoints[4] = player->boardContactPoints[0];
+    player->boardContactPoints[5] = player->boardContactPoints[1];
+
+    player->boardContactPoints[6] = player->boardContactPoints[2];
+    player->boardContactPoints[7] = player->boardContactPoints[3];
+    player->targetSpeedLimit = player->baseSpeedLimit;
+
+    for (i = 0; i < player->activeSparkleEffectCount; i++) {
+        player->targetSpeedLimit -= player->targetSpeedLimit >> 2;
+    }
+
+    if ((player->pendingItemHitFlags == 0) && (player->surfaceType == 1) && (player->targetSpeedLimit >= 0x50001)) {
+        player->targetSpeedLimit = 0x50000;
+    }
+
+    if (player->trailEffectTimer != 0) {
+        if ((gRaceSplitscreenMode == 1) && (gRaceTypeSelection == 0)) {
+            player->targetSpeedLimit += 0x40000;
+        } else {
+            player->targetSpeedLimit += 0x30000;
+        }
+    }
+
+    resolveRacePlayerHitReactions(player);
+
+    if ((player->isCpu == 0) || (player->cpuPaceMode == RACE_CPU_PACE_RANK_BONUS)) {
+        speedDelta = D_800DDFF0[player->rankIndex];
+        catchupDelta = speedDelta - player->rankSpeedBonus;
+        if (catchupDelta >= 0x21) {
+            catchupDelta = 0x20;
+        }
+        if (catchupDelta < -0x30) {
+            catchupDelta = -0x30;
+        }
+        player->rankSpeedBonus += catchupDelta;
+        player->targetSpeedLimit += player->rankSpeedBonus;
+    } else {
+        if (player->cpuPaceMode == RACE_CPU_PACE_CATCH_UP) {
+            player->targetSpeedLimit += 0x70000;
+        }
+        if (player->cpuPaceMode == RACE_CPU_PACE_SLOW_DOWN) {
+            player->targetSpeedLimit /= 3;
+        }
+        if ((player->cpuPaceMode == RACE_CPU_PACE_YIELD) && (player->rankIndex != 3)) {
+            player->targetSpeedLimit -= player->targetSpeedLimit >> 4;
+        }
+    }
+
+    if ((player->isCpu != 0) && (player->lapDigit >= (gRaceLapCount - 1))) {
+        if (((gRaceCourseStartEntries[gRaceCourseIndex.signedValue].pathIndex - 0x14) < player->coursePathIndex) &&
+            (player->coursePathIndex < gRaceCourseStartEntries[gRaceCourseIndex.signedValue].pathIndex)) {
+            player->targetSpeedLimit = player->baseSpeedLimit;
+        }
+    }
+
+    speedDelta = player->targetSpeedLimit - player->speedLimit;
+    if (speedDelta > 0xE00) {
+        speedDelta = 0xE00;
+    }
+    if (speedDelta < -0xE00) {
+        speedDelta = -0xE00;
+    }
+    player->speedLimit += speedDelta;
+    player->stateFlags &= ~0x800;
+
+    if (player->isCpu != 0) {
+        func_8007B46C(player);
+    }
+
+    if (player->unk578 != 0) {
+        player->unk578--;
+    }
+
+    D_800DDF08[player->mode](player);
+    player->unk517 = 0;
+    player->unk57B = 0;
+    player->isTargetedByAttack = 0;
+    player->stateFlags &= ~0x2000000;
+    if (player->stateFlags & 2) {
+        player->stateFlags &= ~2;
+    } else {
+        player->modelRotationX = 0;
+        player->modelRotationY = 0;
+        player->modelRotationZ = 0;
+    }
+
+    if (player->stateFlags & 0x80000) {
+        gViewportStates[player->playerIndex].overlayAlpha += 0x10;
+        if (gViewportStates[player->playerIndex].overlayAlpha > 0xFF) {
+            gViewportStates[player->playerIndex].overlayAlpha = 0xFF;
+        }
+    } else {
+        gViewportStates[player->playerIndex].overlayAlpha -= 0x10;
+        if (gViewportStates[player->playerIndex].overlayAlpha < 0) {
+            gViewportStates[player->playerIndex].overlayAlpha = 0;
+        }
+    }
+
+    deltaX = player->pos.x - player->previousPosition.x;
+    deltaZ = player->pos.z - player->previousPosition.z;
+    player->movementSpeed = integerSquareRoot64((s64)deltaX * deltaX + (s64)deltaZ * deltaZ);
+    player->collisionVelocityX = player->velocity.x;
+    player->collisionVelocityZ = player->velocity.z;
+    player->collisionBottomY = player->pos.y - 0x60000;
+
+    if (player->unk2D4 != 0) {
+        player->unk2D4--;
+    }
+
+    if (player->trailEffectTimer != 0) {
+        player->loopSoundId = SFX_SPEED_FAN_LOOP;
+        player->loopSoundVolume = 0x7F;
+        player->loopSoundPitch = 0.0f;
+        if (player->trailEffectTimer >= 0xDD) {
+            player->rumbleTimer = 2;
+            player->rumblePatternId = 0;
+        }
+    }
+
+    if (player->invisibilityTimer != 0) {
+        player->invisibilityTimer--;
+    }
+    if (player->stateFlags & 0x403040) {
+        player->invisibilityTimer = 0;
+    }
+
+    if (!(gMenuFlowState & 1)) {
+        cooldown = player->unk519;
+        if (cooldown != 0) {
+            player->unk519 = cooldown - 1;
+        }
+    }
+}
 
 void updateRacePlayerMotionFeedback(RacePlayer *player) {
     s16 angleDiff;
@@ -758,7 +1184,503 @@ void updateRacePlayerAirborneLaunch(RacePlayer *player) {
     }
 }
 
+// func_8008DC9C best match: 99.550%
 #pragma GLOBAL_ASM("asm.jp/nonmatchings/race/player/race_player_update/func_8008DC9C.s")
+
+#ifdef NON_MATCHING
+void func_8008DC9C(RacePlayer *player) {
+    s32 sp2C;
+    s32 var_a2;
+    s32 var_v1;
+
+    sp2C = 0;
+    if (player->isCpu == 0) {
+        if ((player->coursePathIndex == gRaceCourseStartEntries[gRaceCourseIndex.signedValue].pathIndex) &&
+            (!(player->stateFlags & 0x40))) {
+            var_v1 = calculateFixedAngleBetweenXZPoints(
+                         player->pos.x,
+                         player->pos.z,
+                         gRaceCourseStartEntries[gRaceCourseIndex.signedValue].startSurfaceTargetX,
+                         gRaceCourseStartEntries[gRaceCourseIndex.signedValue].startSurfaceTargetZ
+                     ) -
+                     player->facingAngle + 0x400;
+            if ((s16)(var_v1 & 0xFFF) < 0x800) {
+                if (player->stateFlags & 0x400) {
+                    player->stateFlags &= ~0x400;
+                    player->stanceTransitionFrame = 6 - player->stanceTransitionFrame;
+                }
+            } else {
+                if (!(player->stateFlags & 0x400)) {
+                    player->stateFlags |= 0x400;
+                    player->stanceTransitionFrame = 6 - player->stanceTransitionFrame;
+                }
+            }
+        } else {
+            if (player->localVelocityZ < (-0x8000)) {
+                if (player->stateFlags & 0x400) {
+                    player->stateFlags &= ~0x400;
+                    player->stanceTransitionFrame = 6 - player->stanceTransitionFrame;
+                }
+            }
+            if (player->localVelocityZ >= 0x8001) {
+                if (!(player->stateFlags & 0x400)) {
+                    player->stateFlags |= 0x400;
+                    player->stanceTransitionFrame = 6 - player->stanceTransitionFrame;
+                }
+            }
+        }
+        if (gRaceDemoPlaybackEnabled == 0) {
+            if (player->unk336 < 0x5A) {
+                player->unk336++;
+            }
+        }
+    }
+
+    if (player->stanceTransitionFrame != 0) {
+        player->stanceTransitionFrame--;
+        setRaceMotionAnimation(player, player->stanceTransitionFrame + 8);
+    } else if (player->animationId != 5) {
+        setRaceMotionAnimation(player, 5);
+    }
+
+    if (player->stateFlags & 0x10) {
+        if (player->isCpu == 0) {
+            if (!(player->heldInput & A_BUTTON)) {
+                player->stateFlags &= ~0x10;
+            }
+        } else {
+            player->stateFlags &= ~0x10;
+            if (player->unk525 != 0) {
+                player->modeValue = 0x46000;
+            }
+        }
+        if (player->stateFlags & 0x10) {
+            if (player->modeValue < 0x46000) {
+                player->modeValue += 0x2000;
+            }
+        }
+    }
+    updateRacePlayerShotUse(player);
+    updateRacePlayerLeanAngle(player, player->localVelocityZ, 0);
+    player->velocity.y -= player->gravity;
+    var_a2 = 0;
+    if (player->trailEffectTimer) {
+        var_a2 = -0x8000;
+        if (player->snowboardTrailSide != 0) {
+            var_a2 = 0x8000;
+        }
+    }
+    if (!(player->stateFlags & 0x10)) {
+        if (player->stateFlags & 0x400) {
+            sp2C = 0x30000;
+            if (((u8)player->unk519) != 0) {
+                var_a2 = 0x100000;
+            }
+            if (player->unk336 >= 0x3C) {
+                player->targetSpeedLimit += 0x50000;
+                player->speedLimit += 0x50000;
+                var_a2 += 0x50000;
+                enqueueRacePlayerVoiceSound(player, RACE_VOICE_TRICK);
+            }
+        } else {
+            sp2C = -0x30000;
+            if (((u8)player->unk519) != 0) {
+                var_a2 = -0x100000;
+            }
+            if (player->unk336 >= 0x3C) {
+                player->targetSpeedLimit += 0x50000;
+                player->speedLimit += 0x50000;
+                var_a2 += 0xFFFB0000;
+                enqueueRacePlayerVoiceSound(player, RACE_VOICE_TRICK);
+            }
+        }
+    }
+    updateRacePlayerLocalVelocity(
+        player,
+        sp2C,
+        var_a2,
+        player->lateralDeceleration,
+        player->forwardDeceleration,
+        player->reverseDeceleration
+    );
+    var_v1 = updateRacePlayerSurfaceCue(player);
+    if (!(player->stateFlags & 0x10)) {
+        if (player->modeValue < 0x46000) {
+            var_v1 = 0;
+        }
+        if (var_v1 >= 9) {
+            player->modeValue = 0x50000;
+        }
+        player->grabTrickId = 0;
+        switch (var_v1) {
+            case 1:
+                if (player->soundDisabled == 0) {
+                    enqueuePositionalSoundEffect(SFX_TRICK_START, (Vec3i *)(&player->pos), 0x7F, SFX_PRIORITY_NORMAL);
+                    enqueueRacePlayerVoiceSound(player, RACE_VOICE_TRICK);
+                }
+                player->mode = 0xD;
+                player->aerialTrickId = 1;
+                player->stateFlags |= 0x800;
+                break;
+
+            case 2:
+                if (player->soundDisabled == 0) {
+                    enqueuePositionalSoundEffect(SFX_TRICK_START, (Vec3i *)(&player->pos), 0x7F, SFX_PRIORITY_NORMAL);
+                    enqueueRacePlayerVoiceSound(player, RACE_VOICE_TRICK);
+                }
+                player->mode = 0xF;
+                player->aerialTrickId = 2;
+                player->stateFlags |= 0x800;
+                break;
+
+            case 3:
+                if (player->soundDisabled == 0) {
+                    enqueuePositionalSoundEffect(SFX_TRICK_START, (Vec3i *)(&player->pos), 0x7F, SFX_PRIORITY_NORMAL);
+                    enqueueRacePlayerVoiceSound(player, RACE_VOICE_TRICK);
+                }
+                player->mode = 0x10;
+                player->aerialTrickId = 3;
+                player->stateFlags |= 0x800;
+                break;
+
+            case 4:
+                if (player->soundDisabled == 0) {
+                    enqueuePositionalSoundEffect(SFX_TRICK_START, (Vec3i *)(&player->pos), 0x7F, SFX_PRIORITY_NORMAL);
+                    enqueueRacePlayerVoiceSound(player, RACE_VOICE_TRICK);
+                }
+                player->mode = 0x11;
+                player->aerialTrickId = 4;
+                player->stateFlags |= 0x800;
+                break;
+
+            case 5:
+                if (player->soundDisabled == 0) {
+                    enqueuePositionalSoundEffect(SFX_TRICK_START, (Vec3i *)(&player->pos), 0x7F, SFX_PRIORITY_NORMAL);
+                    enqueueRacePlayerVoiceSound(player, RACE_VOICE_COMPLEX_TRICK);
+                }
+                player->mode = 0x12;
+                player->aerialTrickId = 5;
+                player->stateFlags |= 0x800;
+                break;
+
+            case 6:
+                if (player->soundDisabled == 0) {
+                    enqueuePositionalSoundEffect(SFX_TRICK_START, (Vec3i *)(&player->pos), 0x7F, SFX_PRIORITY_NORMAL);
+                    enqueueRacePlayerVoiceSound(player, RACE_VOICE_COMPLEX_TRICK);
+                }
+                player->mode = 0x13;
+                player->aerialTrickId = 6;
+                player->stateFlags |= 0x800;
+                break;
+
+            case 7:
+                if (player->soundDisabled == 0) {
+                    enqueuePositionalSoundEffect(SFX_TRICK_START, (Vec3i *)(&player->pos), 0x7F, SFX_PRIORITY_NORMAL);
+                    enqueueRacePlayerVoiceSound(player, RACE_VOICE_COMPLEX_TRICK);
+                }
+                player->mode = 0x14;
+                player->aerialTrickId = 7;
+                player->stateFlags |= 0x800;
+                break;
+
+            case 8:
+                if (player->soundDisabled == 0) {
+                    enqueuePositionalSoundEffect(SFX_TRICK_START, (Vec3i *)(&player->pos), 0x7F, SFX_PRIORITY_NORMAL);
+                    enqueueRacePlayerVoiceSound(player, RACE_VOICE_COMPLEX_TRICK);
+                }
+                player->mode = 0x15;
+                player->aerialTrickId = 8;
+                player->stateFlags |= 0x800;
+                break;
+
+            case 9:
+                if (player->soundDisabled == 0) {
+                    enqueuePositionalSoundEffect(SFX_TRICK_START, (Vec3i *)(&player->pos), 0x7F, SFX_PRIORITY_NORMAL);
+                    enqueueRacePlayerVoiceSound(player, RACE_VOICE_COMPLEX_TRICK);
+                }
+                player->mode = 0x1F;
+                player->aerialTrickId = 0xB;
+                player->stateFlags |= 0x800;
+                break;
+
+            case 10:
+                if (player->soundDisabled == 0) {
+                    enqueuePositionalSoundEffect(SFX_TRICK_START, (Vec3i *)(&player->pos), 0x7F, SFX_PRIORITY_NORMAL);
+                    enqueueRacePlayerVoiceSound(player, RACE_VOICE_COMPLEX_TRICK);
+                }
+                player->mode = 0x20;
+                player->aerialTrickId = 0xB;
+                player->stateFlags |= 0x800;
+                break;
+
+            case 11:
+                if (player->soundDisabled == 0) {
+                    enqueuePositionalSoundEffect(SFX_TRICK_START, (Vec3i *)(&player->pos), 0x7F, SFX_PRIORITY_NORMAL);
+                    enqueueRacePlayerVoiceSound(player, RACE_VOICE_COMPLEX_TRICK);
+                }
+                player->mode = 0x21;
+                player->aerialTrickId = 0xC;
+                player->stateFlags |= 0x800;
+                break;
+
+            case 12:
+                if (player->soundDisabled == 0) {
+                    enqueuePositionalSoundEffect(SFX_TRICK_START, (Vec3i *)(&player->pos), 0x7F, SFX_PRIORITY_NORMAL);
+                    enqueueRacePlayerVoiceSound(player, RACE_VOICE_COMPLEX_TRICK);
+                }
+                player->mode = 0x22;
+                player->aerialTrickId = 0xD;
+                player->stateFlags |= 0x800;
+                break;
+
+            case 13:
+                if (player->soundDisabled == 0) {
+                    enqueuePositionalSoundEffect(SFX_TRICK_START, (Vec3i *)(&player->pos), 0x7F, SFX_PRIORITY_NORMAL);
+                    enqueueRacePlayerVoiceSound(player, RACE_VOICE_COMPLEX_TRICK);
+                }
+                player->mode = 0x23;
+                player->aerialTrickId = 0xA;
+                player->stateFlags |= 0x800;
+                break;
+
+            case 14:
+                if (player->soundDisabled == 0) {
+                    enqueuePositionalSoundEffect(SFX_TRICK_START, (Vec3i *)(&player->pos), 0x7F, SFX_PRIORITY_NORMAL);
+                    enqueueRacePlayerVoiceSound(player, RACE_VOICE_COMPLEX_TRICK);
+                }
+                player->mode = 0x24;
+                player->aerialTrickId = 0xC;
+                player->stateFlags |= 0x800;
+                break;
+
+            case 15:
+                if (player->soundDisabled == 0) {
+                    enqueuePositionalSoundEffect(SFX_TRICK_START, (Vec3i *)(&player->pos), 0x7F, SFX_PRIORITY_NORMAL);
+                    enqueueRacePlayerVoiceSound(player, RACE_VOICE_COMPLEX_TRICK);
+                }
+                player->mode = 0x25;
+                player->aerialTrickId = 0xB;
+                player->stateFlags |= 0x800;
+                break;
+
+            case 16:
+                if (player->soundDisabled == 0) {
+                    enqueuePositionalSoundEffect(SFX_TRICK_START, (Vec3i *)(&player->pos), 0x7F, SFX_PRIORITY_NORMAL);
+                    enqueueRacePlayerVoiceSound(player, RACE_VOICE_COMPLEX_TRICK);
+                }
+                player->mode = 0x26;
+                player->aerialTrickId = 0xD;
+                player->stateFlags |= 0x800;
+                break;
+
+            case 17:
+                if (player->soundDisabled == 0) {
+                    enqueuePositionalSoundEffect(SFX_TRICK_START, (Vec3i *)(&player->pos), 0x7F, SFX_PRIORITY_NORMAL);
+                    enqueueRacePlayerVoiceSound(player, RACE_VOICE_COMPLEX_TRICK);
+                }
+                player->mode = 0x27;
+                player->aerialTrickId = 0xE;
+                player->stateFlags |= 0x800;
+                break;
+
+            case 18:
+                if (player->soundDisabled == 0) {
+                    enqueuePositionalSoundEffect(SFX_TRICK_START, (Vec3i *)(&player->pos), 0x7F, SFX_PRIORITY_NORMAL);
+                    enqueueRacePlayerVoiceSound(player, RACE_VOICE_COMPLEX_TRICK);
+                }
+                player->mode = 0x29;
+                player->aerialTrickId = 9;
+                player->stateFlags |= 0x800;
+                break;
+
+            case 19:
+                if (player->soundDisabled == 0) {
+                    enqueuePositionalSoundEffect(SFX_TRICK_START, (Vec3i *)(&player->pos), 0x7F, SFX_PRIORITY_NORMAL);
+                    enqueueRacePlayerVoiceSound(player, RACE_VOICE_COMPLEX_TRICK);
+                }
+                player->mode = 0x2A;
+                player->aerialTrickId = 0xA;
+                player->stateFlags |= 0x800;
+                break;
+
+            case 20:
+                if (player->soundDisabled == 0) {
+                    enqueuePositionalSoundEffect(SFX_TRICK_START, (Vec3i *)(&player->pos), 0x7F, SFX_PRIORITY_NORMAL);
+                    enqueueRacePlayerVoiceSound(player, RACE_VOICE_COMPLEX_TRICK);
+                }
+                player->mode = 0x2B;
+                player->aerialTrickId = 0xC;
+                player->stateFlags |= 0x800;
+                break;
+
+            case 21:
+                if (player->soundDisabled == 0) {
+                    enqueuePositionalSoundEffect(SFX_TRICK_START, (Vec3i *)(&player->pos), 0x7F, SFX_PRIORITY_NORMAL);
+                    enqueueRacePlayerVoiceSound(player, RACE_VOICE_COMPLEX_TRICK);
+                }
+                player->mode = 0x2C;
+                player->aerialTrickId = 9;
+                player->stateFlags |= 0x800;
+                break;
+
+            case 22:
+                if (player->soundDisabled == 0) {
+                    enqueuePositionalSoundEffect(SFX_TRICK_START, (Vec3i *)(&player->pos), 0x7F, SFX_PRIORITY_NORMAL);
+                    enqueueRacePlayerVoiceSound(player, RACE_VOICE_COMPLEX_TRICK);
+                }
+                player->mode = 0x2D;
+                player->aerialTrickId = 0xA;
+                player->stateFlags |= 0x800;
+                break;
+
+            case 23:
+                if (player->soundDisabled == 0) {
+                    enqueuePositionalSoundEffect(SFX_TRICK_START, (Vec3i *)(&player->pos), 0x7F, SFX_PRIORITY_NORMAL);
+                    enqueueRacePlayerVoiceSound(player, RACE_VOICE_COMPLEX_TRICK);
+                }
+                player->mode = 0x2E;
+                player->aerialTrickId = 0xE;
+                player->stateFlags |= 0x800;
+                break;
+
+            case 24:
+                if (player->soundDisabled == 0) {
+                    enqueuePositionalSoundEffect(SFX_TRICK_START, (Vec3i *)(&player->pos), 0x7F, SFX_PRIORITY_NORMAL);
+                    enqueueRacePlayerVoiceSound(player, RACE_VOICE_COMPLEX_TRICK);
+                }
+                player->mode = 0x2F;
+                player->aerialTrickId = 9;
+                player->stateFlags |= 0x800;
+                break;
+
+            case 25:
+                if (player->soundDisabled == 0) {
+                    enqueuePositionalSoundEffect(SFX_TRICK_START, (Vec3i *)(&player->pos), 0x7F, SFX_PRIORITY_NORMAL);
+                    enqueueRacePlayerVoiceSound(player, RACE_VOICE_COMPLEX_TRICK);
+                }
+                player->mode = 0x30;
+                player->aerialTrickId = 0xB;
+                player->stateFlags |= 0x800;
+                break;
+
+            case 26:
+                if (player->soundDisabled == 0) {
+                    enqueuePositionalSoundEffect(SFX_TRICK_START, (Vec3i *)(&player->pos), 0x7F, SFX_PRIORITY_NORMAL);
+                    enqueueRacePlayerVoiceSound(player, RACE_VOICE_COMPLEX_TRICK);
+                }
+                player->mode = 0x31;
+                player->aerialTrickId = 0xD;
+                player->stateFlags |= 0x800;
+                break;
+
+            case 27:
+                if (player->soundDisabled == 0) {
+                    enqueuePositionalSoundEffect(SFX_TRICK_START, (Vec3i *)(&player->pos), 0x7F, SFX_PRIORITY_NORMAL);
+                    enqueueRacePlayerVoiceSound(player, RACE_VOICE_COMPLEX_TRICK);
+                }
+                player->mode = 0x32;
+                player->aerialTrickId = 9;
+                player->stateFlags |= 0x800;
+                break;
+
+            case 28:
+                if (player->soundDisabled == 0) {
+                    enqueuePositionalSoundEffect(SFX_TRICK_START, (Vec3i *)(&player->pos), 0x7F, SFX_PRIORITY_NORMAL);
+                    enqueueRacePlayerVoiceSound(player, RACE_VOICE_COMPLEX_TRICK);
+                }
+                player->mode = 0x33;
+                player->aerialTrickId = 0xA;
+                player->stateFlags |= 0x800;
+                break;
+
+            case 29:
+                if (player->soundDisabled == 0) {
+                    enqueuePositionalSoundEffect(SFX_TRICK_START, (Vec3i *)(&player->pos), 0x7F, SFX_PRIORITY_NORMAL);
+                    enqueueRacePlayerVoiceSound(player, RACE_VOICE_COMPLEX_TRICK);
+                }
+                player->mode = 0x34;
+                player->aerialTrickId = 0xC;
+                player->stateFlags |= 0x800;
+                break;
+
+            case 30:
+                if (player->soundDisabled == 0) {
+                    enqueuePositionalSoundEffect(SFX_TRICK_START, (Vec3i *)(&player->pos), 0x7F, SFX_PRIORITY_NORMAL);
+                    enqueueRacePlayerVoiceSound(player, RACE_VOICE_COMPLEX_TRICK);
+                }
+                player->mode = 0x35;
+                player->aerialTrickId = 0xA;
+                player->stateFlags |= 0x800;
+                break;
+
+            case 31:
+                if (player->soundDisabled == 0) {
+                    enqueuePositionalSoundEffect(SFX_TRICK_START, (Vec3i *)(&player->pos), 0x7F, SFX_PRIORITY_NORMAL);
+                    enqueueRacePlayerVoiceSound(player, RACE_VOICE_COMPLEX_TRICK);
+                }
+                player->mode = 0x36;
+                player->aerialTrickId = 0xC;
+                player->stateFlags |= 0x800;
+                break;
+
+            case 32:
+                if (player->soundDisabled == 0) {
+                    enqueuePositionalSoundEffect(SFX_TRICK_START, (Vec3i *)(&player->pos), 0x7F, SFX_PRIORITY_NORMAL);
+                    enqueueRacePlayerVoiceSound(player, RACE_VOICE_COMPLEX_TRICK);
+                }
+                player->mode = 0x37;
+                player->aerialTrickId = 9;
+                player->stateFlags |= 0x800;
+                break;
+
+            case 33:
+                if (player->soundDisabled == 0) {
+                    enqueuePositionalSoundEffect(SFX_TRICK_START, (Vec3i *)(&player->pos), 0x7F, SFX_PRIORITY_NORMAL);
+                    enqueueRacePlayerVoiceSound(player, RACE_VOICE_COMPLEX_TRICK);
+                }
+                player->mode = 0x38;
+                player->aerialTrickId = 0xA;
+                player->stateFlags |= 0x800;
+                break;
+
+            case 34:
+                if (player->soundDisabled == 0) {
+                    enqueuePositionalSoundEffect(SFX_TRICK_START, (Vec3i *)(&player->pos), 0x7F, SFX_PRIORITY_NORMAL);
+                    enqueueRacePlayerVoiceSound(player, RACE_VOICE_COMPLEX_TRICK);
+                }
+                player->mode = 0x39;
+                player->aerialTrickId = 0xD;
+                player->stateFlags |= 0x800;
+                break;
+
+            case 0:
+
+            default:
+                player->mode = 1;
+                player->aerialTrickId = 0;
+                break;
+        }
+
+        player->updateState = 0;
+        player->updateTimer = 0;
+        player->velocity.y += player->modeValue;
+        player->pos.y += 0x60000;
+        player->verticalVelocityLimit = player->velocity.y;
+        player->stateFlags |= 0x208;
+        setRaceMotionAnimation(player, 4);
+    } else {
+        updateRacePlayerSurfaceCue(player);
+    }
+    player->pos.x += player->velocity.x;
+    player->pos.y += player->velocity.y;
+    player->pos.z += player->velocity.z;
+    stepRaceMotionJointAnimationUntilEnd(player);
+    updateRacePlayerMotionFeedback(player);
+    if (player->unk517 != 0) {
+        enqueueRacePlayerVoiceSound(player, RACE_VOICE_ATTACK_SUCCESS);
+    }
+}
+#endif
 
 void resetRacePlayerTrickSubstate(RacePlayer *player) {
     player->subState = 0;
