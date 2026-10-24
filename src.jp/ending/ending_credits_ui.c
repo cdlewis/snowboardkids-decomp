@@ -17,7 +17,45 @@
 #define ENDING_CREDITS_PAGE_VISIBLE_FRAMES 0x96
 #define ENDING_CREDITS_PAGE_COUNT 0x19
 
-#pragma GLOBAL_ASM("asm.jp/nonmatchings/ending/ending_credits_ui/drawEndingCreditsPageText.s")
+typedef struct EndingCreditsPageTextLineLayout {
+    /* 0x00 */ s16 count;
+    /* 0x02 */ Vec2s positions[5];
+    /* 0x16 */ s16 pad16;
+} EndingCreditsPageTextLineLayout;
+
+extern MenuGlyphScript D_800B78D0[][60];
+extern EndingCreditsPageTextLineLayout D_800B8488[];
+
+CLANG_DIAGNOSTIC_PUSH
+CLANG_DIAGNOSTIC_IGNORE_UNINITIALIZED
+void drawEndingCreditsPageText(EndingCreditsPageTextActor *arg0) {
+    s32 lineCount;
+    s32 lineIndex;
+    s32 scriptIndex;
+    s32 lineLength;
+    s16 x, y;
+    u16 lineText[0x20];
+    u16 pad[10];
+    // The original function passes this local without initializing it.
+    u16 colorMode;
+
+    lineCount = D_800B8488[arg0->pageIndex].count;
+    scriptIndex = 0;
+    for (lineIndex = 0; lineIndex < lineCount; lineIndex++) {
+        x = D_800B8488[arg0->pageIndex].positions[lineIndex].x;
+        y = D_800B8488[arg0->pageIndex].positions[lineIndex].y;
+        lineLength = 0;
+        while (D_800B78D0[arg0->pageIndex][scriptIndex] != 0xFFFF) {
+            lineText[lineLength] = D_800B78D0[arg0->pageIndex][scriptIndex];
+            scriptIndex++;
+            lineLength++;
+        }
+        lineText[lineLength] = 0xFFFF;
+        scriptIndex++;
+        drawMenuGlyphScript(x, y, lineText, 0, arg0->alpha, colorMode);
+    }
+}
+CLANG_DIAGNOSTIC_POP
 
 void drawEndingCreditsTheEndText(EndingCreditsPageTextActor *arg0) {
     drawMenuSpriteWithAlpha(
