@@ -20,6 +20,7 @@ extern u8 D_5D4C40[];
 
 void func_8000C5F0(void);
 void func_8000C6FC(void);
+void func_8000C8E0(void);
 void func_8000CA78(void);
 void func_8000CB0C(void);
 void func_800319D0(ControllerPakTwoPointActor *arg0);
@@ -85,7 +86,56 @@ void func_8000C5F0(void) {
     updateCallbackTasks();
 }
 
-#pragma GLOBAL_ASM("asm.jp/nonmatchings/menu/controller_pak/controller_pak_file_delete_flow/func_8000C6FC.s")
+void func_8000C6FC(void) {
+    u8 direction = 0;
+
+    if ((gPlayerInputPressed[0] & (STICK_UP | U_JPAD)) && (gControllerPakMenuState.fileIndex != 0)) {
+        gControllerPakMenuState.fileIndex--;
+        direction = 1;
+    } else if ((gPlayerInputPressed[0] & (STICK_DOWN | D_JPAD)) && (gControllerPakMenuState.fileIndex != 0xF)) {
+        gControllerPakMenuState.fileIndex++;
+        direction = 2;
+    }
+    if (direction == 0) {
+        gControllerPakMenuState.isEdgeScroll = 0;
+    } else {
+        enqueueSoundEffect(SFX_MENU_CURSOR, SFX_PRIORITY_NORMAL);
+        if ((gControllerPakMenuState.visibleFileIndex != 0) && (gControllerPakMenuState.visibleFileIndex != 4)) {
+            gControllerPakMenuState.isEdgeScroll = 0;
+        } else if (gControllerPakMenuState.visibleFileIndex == 0 && direction == 2) {
+            gControllerPakMenuState.isEdgeScroll = 0;
+        } else {
+            if ((gControllerPakMenuState.visibleFileIndex == 4) && (direction == 1)) {
+                gControllerPakMenuState.isEdgeScroll = 0;
+            } else {
+                gControllerPakMenuState.isEdgeScroll = 1;
+            }
+        }
+
+        if (gControllerPakMenuState.isEdgeScroll == 0) {
+            if (direction == 1) {
+                gControllerPakMenuState.visibleFileIndex--;
+            } else {
+                gControllerPakMenuState.visibleFileIndex++;
+            }
+        }
+    }
+
+    if (((gPlayerInputPressed[0] & A_BUTTON) ||
+         (gPlayerInputPressed[0] & B_BUTTON, ((gPlayerInputPressed[0] & START_BUTTON) != 0))) &&
+        (gPlayerInputPressed[0] & B_BUTTON,
+         (gControllerPakFileStates[gControllerPakMenuState.fileIndex].company_code != 0))) {
+        enqueueSoundEffect(SFX_CONFIRM, SFX_PRIORITY_NORMAL);
+        setCurrentGameTaskCallback(func_8000C8E0, 0);
+        gControllerPakMenuState.state = 2;
+        gControllerPakMenuState.confirmChoice = 1;
+    } else if ((gPlayerInputPressed[0] & B_BUTTON) != 0) {
+        enqueueSoundEffect(SFX_CONFIRM, SFX_PRIORITY_NORMAL);
+        setCurrentGameTaskCallback(func_8000C5F0, 0);
+        gControllerPakMenuState.state = 0;
+    }
+    updateCallbackTasks();
+}
 
 void func_8000C8E0(void) {
     if ((gPlayerInputPressed[0] & (STICK_RIGHT | R_JPAD)) && (gControllerPakMenuState.confirmChoice != 1)) {
