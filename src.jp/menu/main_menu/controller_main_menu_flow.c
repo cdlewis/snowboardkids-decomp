@@ -35,6 +35,12 @@
 #define CONTROLLER_PAK_U16_AT(cursor, field) (*(u16 *)((cursor) + CONTROLLER_PAK_SAVE_FIELD_OFFSET(field)))
 #define CONTROLLER_PAK_SAVE_FIELD_OFFSET(field) ((u32) & (((GameSaveData *)0)->field))
 
+extern f32 D_800DFBE0;
+extern u8 D_5D1DE0[];
+extern u8 D_5D4620[];
+
+void func_80032404(MainMenuTitleLogoActor *arg0);
+
 void requestControllerRead(void) {
     if ((gControllerReadPending == 0) && (gConnectedControllerBitmask != 0)) {
         osSendMesg(&gControllerSubsystemRequestQueue, (OSMesg)CONTROLLER_REQUEST_READ_INPUT, OS_MESG_BLOCK);
@@ -734,7 +740,60 @@ void enterMainMenuFromRace(void) {
     suspendGameTask(3);
 }
 
-#pragma GLOBAL_ASM("asm.jp/nonmatchings/menu/main_menu/controller_main_menu_flow/initMainMenu.s")
+void initMainMenu(void) {
+    gMainMenuSecretCodeUnlocked = 0;
+    gMainMenuSecretCodeStep = 0;
+    resetAllViewports();
+    configureMenuViewport(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, D_800DFBE0);
+    gFramebufferRenderInterval.value = 0;
+    loadCompressedRomAsset(&_5DAF30_ROM_END, D_5D1DE0, 0x21);
+    loadCompressedRomAsset(D_5D1DE0, D_5D4620, 0x25);
+    LOAD_ASSET(_593D10, 0x22);
+    LOAD_RAW_ASSET(_1467B0, 8);
+    LOAD_ASSET(_1DE360, 9);
+    gCurrentGameTask->callbackData0 = 0xFF;
+    gCurrentGameTask->callbackData1 = 0;
+    gCurrentGameTask->callbackData2 = 0x32;
+    gCurrentGameTask->callbackData3 = 0x4B0;
+    initCallbackTaskScheduler(0);
+    createCallbackTask((CallbackTaskCallback)&initMainMenuTitleOptions, 0, 0x64);
+    createCallbackTask((CallbackTaskCallback)&initMainMenuTitleCursor, 0, 0x64);
+    createCallbackTask((CallbackTaskCallback)&func_80032404, 0, 0x64);
+    createCallbackTaskWithUserId((CallbackTaskCallback)&initTitleMenuSparkle, 0, 0x64, 0);
+    createCallbackTaskWithUserId((CallbackTaskCallback)initMainMenuBoardModels, 0, 0x64, 0);
+    setBootFadeColor(0x20, 0x40, 0x50);
+    loadMainMenuSceneModelAnimationBank();
+    initMainMenuSceneModel(0, 0);
+    setMainMenuSceneModelAnimation(0, 0);
+    setMainMenuSceneModelPosition(0, 0x83000, 0, -0x2BF000);
+    setMainMenuSceneModelRotation(0, 0, 0x30, 0);
+    initMainMenuSceneModel(1, 1);
+    setMainMenuSceneModelAnimation(1, 4);
+    setMainMenuSceneModelPosition(1, 0x564000, 0, 0x8C000);
+    setMainMenuSceneModelRotation(1, 0, 0xDD0, 0);
+    initMainMenuSceneModel(2, 2);
+    setMainMenuSceneModelAnimation(2, 3);
+    setMainMenuSceneModelPosition(2, -0x5ED000, 0, 0x3C8000);
+    setMainMenuSceneModelRotation(2, 0, 0x2D0, 0);
+    initMainMenuSceneModel(3, 3);
+    setMainMenuSceneModelAnimation(3, 1);
+    setMainMenuSceneModelPosition(3, -0x4C0000, 0, -0x47000);
+    setMainMenuSceneModelRotation(3, 0, 0x1B0, 0);
+    initMainMenuSceneModel(4, 4);
+    setMainMenuSceneModelAnimation(4, 5);
+    setMainMenuSceneModelPosition(4, 0x6DB000, 0, 0x4E9000);
+    setMainMenuSceneModelRotation(4, 0, 0xDD0, 0);
+    resetRaceCameras();
+    setRaceCameraMode(0, 0x1F);
+    gMenuFadeAlpha = (s16)gCurrentGameTask->callbackData0;
+    gMenuFadeOverlayActive = 1;
+    enqueueSoundEffect(SFX_MAIN_MENU_ENTER, SFX_PRIORITY_NORMAL);
+    setCurrentGameTaskCallback(&updateMainMenu, 0);
+    requestRumbleMotorInit(0U);
+    requestRumbleMotorInit(1U);
+    requestRumbleMotorInit(2U);
+    requestRumbleMotorInit(3U);
+}
 
 void updateMainMenu(void) {
     s32 unused[2];
