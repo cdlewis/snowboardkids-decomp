@@ -323,7 +323,7 @@ segments:
       - [0xE08D0, .rodata, menu/character_select/character_select_course_menu]
       - [0xE08E0, .rodata, menu/course_select/multiplayer_course_select_menu]
       - [0xE0900, .rodata, menu/race_type_select/race_type_select_menu]
-      - [0xE0910, rodatabin, data_E0910]
+      - [0xE0910, .rodata, menu/controller_pak/controller_pak_race_record_save_flow]
       - [0xE0960, .rodata, menu/course_select/course_select_menu]
       - [0xE0970, rodatabin, data_E0970]
       - [0xE0990, .rodata, menu/controller_pak/controller_pak_replay_save_message_flow]
