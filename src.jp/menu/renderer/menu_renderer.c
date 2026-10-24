@@ -31,7 +31,107 @@
 #define MENU_GLYPH_DEFAULT_FONT_BANK 0x22
 #define MENU_GLYPH_SCRIPT_COLOR 0xFFFC
 
-#pragma GLOBAL_ASM("asm.jp/nonmatchings/menu/renderer/menu_renderer/func_8000E6F0.s")
+extern u16 D_800B4AD0[];
+
+void func_8000E6F0(
+    s16 x,
+    s16 y,
+    AssetTable *table,
+    u16 entryIndex,
+    u16 scaleX,
+    u16 scaleY,
+    u8 startS,
+    u8 startT,
+    u8 width,
+    u8 height
+) {
+    AssetTableEntry *entry;
+    s32 minX;
+    u8 *paletteBase;
+    s32 left;
+    s32 top;
+    s32 right;
+    s32 bottom;
+    s32 texS;
+    s32 texT;
+    s32 minY;
+    u16 scaleXValue;
+    u16 scaleYValue;
+    s16 maxX;
+    s16 maxY;
+
+    entry = &table->entries[entryIndex];
+    paletteBase = (table->entryCount * sizeof(AssetTableEntry)) + (u8 *)table + sizeof(AssetTableEntry);
+    scaleXValue = scaleX;
+    scaleYValue = scaleY;
+    left = (x + gMenuViewportCenterX) << 2;
+    top = (y + gMenuViewportCenterY) << 2;
+    right = (((width * scaleXValue) << 2) >> 5) + left;
+    bottom = height;
+    bottom *= scaleYValue;
+    bottom = ((bottom << 2) >> 5) + top;
+    // Keeping these assignments on one source line preserves IDO's instruction scheduling.
+    texS = startS << 5;
+    texT = startT << 5;
+    minY = (s16)((gMenuViewportCenterY - (gMenuViewportHeight / 2)) << 2);
+    maxY = (gMenuViewportCenterY + (gMenuViewportHeight / 2)) << 2;
+    minX = (s16)((gMenuViewportCenterX - (gMenuViewportWidth / 2)) << 2);
+    maxX = (gMenuViewportCenterX + (gMenuViewportWidth / 2)) << 2;
+
+    if ((left < maxX) && (top < maxY) && (right >= minX) && (bottom >= minY)) {
+        if (left < minX) {
+            x = 1;
+            while (x) {
+                texS = ((((minX - left) << 3) << 5) / scaleXValue) + texS;
+                left = minX;
+
+                x = 0;
+            }
+        }
+        if (top < minY) {
+            texT = ((((minY - top) << 3) << 5) / scaleYValue) + texT;
+            top = minY;
+        }
+        if (right >= maxX) {
+            right = maxX - 4;
+        }
+        if (bottom >= maxY) {
+            bottom = maxY - 4;
+        }
+
+        gDPLoadTextureTile_4b(
+            gRegionAllocPtr++,
+            entry->imageOffset + (u8 *)table + 0x80000000,
+            G_IM_FMT_CI,
+            entry->width,
+            entry->height,
+            0,
+            0,
+            entry->width,
+            entry->height,
+            0,
+            G_TX_CLAMP,
+            G_TX_CLAMP,
+            G_TX_NOMASK,
+            G_TX_NOMASK,
+            G_TX_NOLOD,
+            G_TX_NOLOD
+        );
+        gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, paletteBase + (entry->paletteIndex << 5) + 0x80000000);
+        gSPTextureRectangle(
+            gRegionAllocPtr++,
+            left,
+            top,
+            right,
+            bottom,
+            G_TX_RENDERTILE,
+            texS,
+            texT,
+            (u16)(0x8000 / scaleXValue),
+            (u16)(0x8000 / scaleYValue)
+        );
+    }
+}
 
 void drawMenuSprite(s16 arg0, s16 arg1, AssetTable *arg2, u16 arg3, u16 arg4, u16 arg5, u8 arg6, u8 arg7) {
     s16 temp_v0;
@@ -53,7 +153,144 @@ void drawMenuSprite(s16 arg0, s16 arg1, AssetTable *arg2, u16 arg3, u16 arg4, u1
     );
 }
 
-#pragma GLOBAL_ASM("asm.jp/nonmatchings/menu/renderer/menu_renderer/drawMenuSpriteClipped.s")
+void drawMenuSpriteClipped(
+    s16 x,
+    s16 y,
+    AssetTable *table,
+    u16 imageIndex,
+    u16 scaleX,
+    u16 scaleY,
+    u8 flipMode,
+    u8 paletteIndex,
+    s16 clipLeft,
+    s16 clipTop,
+    s16 clipRight,
+    s16 clipBottom
+) {
+    AssetTableEntry *entry;
+    s32 selectedPalette;
+    u8 *palette;
+    s32 left;   // sp90
+    s32 top;    // sp8C
+    s32 right;  // sp88
+    s32 bottom; // sp84
+    s32 texS;   // sp80
+    s32 texT;   // sp7C
+    u32 height;
+    s32 minX;
+    s16 flipS; // sp72
+    s16 flipT; // sp70
+    s32 minY;
+    s32 maxX;
+    s32 maxY;
+
+    entry = &table->entries[imageIndex];
+    palette = table->entryCount * sizeof(AssetTableEntry) + (u8 *)table->entries;
+    if (scaleX > 0x200) {
+        return;
+    }
+    if (scaleX <= 0) {
+        return;
+    }
+    if (scaleY > 0x200) {
+        return;
+    }
+    if (scaleY <= 0) {
+        return;
+    }
+
+    flipS = gMenuSpriteFlipScales[(flipMode & 3) * 2 + 0];
+    flipT = gMenuSpriteFlipScales[(flipMode & 3) * 2 + 1];
+
+    texS = entry->width;
+    texT = entry->height;
+
+    left = (x + gMenuViewportCenterX) << 2;
+    top = (y + gMenuViewportCenterY) << 2;
+    right = left + (((scaleX * texS) << 2) >> 5);
+    bottom = top + (((scaleY * texT) << 2) >> 5);
+
+    height = entry->height;
+    texS = 0 * height;
+    texT = 0;
+    if (flipS == -1) {
+        texS = ((entry->width - 1) << 5);
+    }
+    if (flipT == -1) {
+        texT = ((entry->height - 1) << 5) - texT;
+    }
+
+    maxY = (s16)((gMenuViewportCenterY - clipTop) << 2);
+    minY = (s16)((gMenuViewportCenterY + clipBottom) << 2);
+    maxX = (s16)((gMenuViewportCenterX - clipLeft) << 2);
+    minX = (s16)((gMenuViewportCenterX + clipRight) << 2);
+    if ((left >= minX) || (top >= minY) || (right < maxX) || (bottom < maxY)) {
+        return;
+    }
+
+    if (left < maxX) {
+        texS = (((maxX - left) << 3) << 5) / scaleX;
+        if (flipS == -1) {
+            texS = ((entry->width - 1) << 5) - texS;
+        }
+        left = maxX;
+    }
+    if (top < maxY) {
+        texT = (((maxY - top) << 3) << 5) / scaleY;
+        if (flipT == -1) {
+            texT = ((entry->height - 1) << 5) - texT;
+        }
+        top = maxY;
+    }
+    if (right >= minX) {
+        right = minX - 4;
+    }
+    if (bottom >= minY) {
+        bottom = minY - 4;
+    }
+
+    if (paletteIndex == 0) {
+        selectedPalette = entry->paletteIndex;
+    } else {
+        selectedPalette = SPRITE_PALETTE_INDEX(table, (u16)(paletteIndex - 1));
+    }
+
+    gDPLoadTextureTile_4b(
+        gRegionAllocPtr++,
+        entry->imageOffset + (u8 *)table,
+        G_IM_FMT_CI,
+        entry->width,
+        entry->height,
+        0,
+        0,
+        entry->width,
+        entry->height,
+        0,
+        G_TX_CLAMP,
+        G_TX_CLAMP,
+        G_TX_NOMASK,
+        G_TX_NOMASK,
+        G_TX_NOLOD,
+        G_TX_NOLOD
+    );
+    if (selectedPalette != 0xFE) {
+        gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, (selectedPalette << 5) + (u8 *)palette);
+    } else {
+        gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, D_800B4AD0);
+    }
+    gSPTextureRectangle(
+        gRegionAllocPtr++,
+        left,
+        top,
+        right,
+        bottom,
+        G_TX_RENDERTILE,
+        texS,
+        texT,
+        (u16)((u16)(0x8000 / scaleX) * flipS),
+        (u16)((u16)(0x8000 / scaleY) * flipT)
+    );
+}
 
 void drawMenuSpriteWithAlpha(
     s16 arg0,
@@ -468,7 +705,7 @@ void drawMenuSpriteTile(s16 arg0, s16 arg1, AssetTable *arg2, u16 arg3, u16 arg4
 
 #pragma GLOBAL_ASM("asm.jp/nonmatchings/menu/renderer/menu_renderer/drawMenuSpriteTileClipped.s")
 
-#pragma GLOBAL_ASM("asm.jp/nonmatchings/menu/renderer/menu_renderer/func_8001130C.s")
+void func_8001130C(void) {}
 
 void drawMenuTextureByAssetId(s16 x, s16 y, AssetTable *unusedTable, u16 assetId, u16 width, u16 height) {
     s32 x0;
