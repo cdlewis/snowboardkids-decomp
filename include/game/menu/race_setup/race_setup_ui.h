@@ -40,8 +40,6 @@ typedef struct {
     /* 0x06 */ s16 y1;
 } Rect;
 
-extern s16 gRaceSetupSavePanelRects[2][4];
-
 typedef struct {
     /* 0x00 */ u8 pad0[0x18];
     union {
@@ -99,6 +97,25 @@ typedef struct {
     /* 0x1A */ s16 y;
     /* 0x1C */ MenuTilemapSprite sprite;
 } SpriteActor;
+
+typedef struct {
+    u8 noControllerPakMessage[0x1A];
+    u8 saveChoicePromptBottomSprites[1];
+    u8 saveChoicePromptTopSprites[0x41];
+} RaceSetupSavePromptData;
+
+extern s16 gRaceSetupSavePanelRects[2][4];
+
+#if defined(VERSION_JP)
+extern const char D_800DFDB0[];
+extern const char D_800DFDB4[];
+extern MenuGlyphScript gRaceSetupFourPlayerOptionText[];
+extern MenuGlyphScript gRaceSetupOnePlayerOptionText[];
+extern MenuGlyphScript gRaceSetupPlayerCountPromptText[][0x34];
+extern RaceSetupSavePromptData gRaceSetupSavePromptData;
+extern MenuGlyphScript gRaceSetupThreePlayerOptionText[];
+extern MenuGlyphScript gRaceSetupTwoPlayerOptionText[];
+#endif
 
 void drawRaceSetupPlayerCountPrompt(MenuIntroActor *arg0);
 void updateRaceSetupPlayerCountPrompt(MenuIntroActor *arg0);

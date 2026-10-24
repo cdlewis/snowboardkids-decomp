@@ -7,8 +7,6 @@
 #include "game/menu/main_menu/main_menu_scene_model.h"
 #include "game/menu/main_menu/main_menu_scene_model_renderer.h"
 
-extern MainMenuSceneActorShadow gEndingActorShadow;
-
 void noopEndingCreditsSlash(void) {
 }
 

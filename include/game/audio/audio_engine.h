@@ -265,6 +265,8 @@ typedef struct AudioTask {
     u8 unk68;
 } AudioTask;
 
+extern u16 gRetraceCounter;
+
 void initScheduler(SchedulerState *scheduler, u8 viModeIndex, u8 retraceInterval);
 OSMesgQueue *getSchedulerAudioTaskQueue(SchedulerState *scheduler);
 OSMesgQueue *getSchedulerGraphicsTaskQueue(SchedulerState *scheduler);

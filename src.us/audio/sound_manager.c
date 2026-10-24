@@ -12,45 +12,11 @@
 #include "libmus/libmus.h"
 #include "libmus/sequence_commands.h"
 #include "game/race/player/race_player_input.h"
+#include "game/audio/audio_engine_internal.h"
 
 #define SOUND_MANAGER_FREE_HANDLE_COUNT 13
 #define SOUND_MANAGER_QUEUE_CAPACITY 64
 #define SOUND_MANAGER_QUEUE_MASK (SOUND_MANAGER_QUEUE_CAPACITY - 1)
-
-/* Thirteen 16-byte slots, managed by the active list and free stack. */
-typedef struct SoundHandleNode {
-    struct SoundHandleNode *prev;
-    struct SoundHandleNode *next;
-    s32 handle;
-    u16 priority;
-    u8 stopRequested;
-    u8 volume;
-} SoundHandleNode;
-
-typedef struct SoundQueueEntry {
-    u8 type;
-    u8 soundId;
-    u8 volume;
-    u8 pan;
-    u8 priority;
-    u8 unk5;
-} SoundQueueEntry;
-
-typedef struct PositionalSoundRequest {
-    struct PositionalSoundRequest *next;
-    Vec3i pos;
-    s16 soundId;
-    s16 volume;
-    s16 minVolume;
-    s16 priority;
-    s16 mode;
-    f32 pitch;
-} PositionalSoundRequest;
-
-typedef struct SoundRomRange {
-    u32 romStart;
-    u32 romEnd;
-} SoundRomRange;
 
 typedef union SoundHalfArg {
     s32 word;
@@ -1293,12 +1259,6 @@ s16 gPlayerLoopingSoundId1;
 s16 gPlayerLoopingSoundId2;
 s16 gPlayerLoopingSoundId3;
 s32 gSharedLoopingPositionalSoundHandle;
-
-extern s32 gPlayerPositionalSoundHandle1;
-extern s32 gPlayerPositionalSoundHandle2;
-extern s32 gPlayerPositionalSoundHandle3;
-extern SchedulerThread gAudioThread;
-extern SchedulerState gSchedulerState;
 
 void *allocRenderCallbackScratch(s32 arg0);
 void requestMusicSequenceBank(s32 arg0);

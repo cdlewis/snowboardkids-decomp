@@ -50,67 +50,10 @@ typedef union {
 } RaceResultsReadyState;
 
 typedef struct {
-    u8 boardPropertiesIndex;
-    u8 snowboardTextureIndex;
-} RaceCpuBoardConfig;
-
-typedef struct {
-    u8 characterIds[10 * 4];
-} RaceCourseCharacterIdTable;
-
-typedef struct {
-    s16 status;
-    s16 courseId;
-    s32 unk4;
-    s32 unk8;
-    s32 unkC;
-} CourseGridEntry;
-
-typedef struct {
     s32 unk0;
     u8 pad4[4];
     s8 unk8;
 } Unk80043040;
-
-extern u8 gRaceResultsAwardPlayerNumber;
-
-extern u8 gRaceChallengeFailed;
-
-extern u8 gTrainingCourseLesson;
-
-extern RaceCourseCharacterIdTable gRaceCourseOpponentCharacterIds;
-
-extern u8 gMainMenuModeSelection;
-
-extern RaceCpuBoardConfig *gRaceCpuBoardConfigsByCourse[10];
-
-extern u8 gRaceCourseCpuPickupUseChances[12];
-
-extern s16 gRacePlayerAttackStartTimer;
-
-extern s8 gRacePlayerCount;
-
-extern u16 gRaceGhostReplayGridSwitchFrames[16];
-
-extern u8 gRaceUpdatePaused;
-
-extern s32 gRaceCameraReplayStartY;
-
-extern s32 gRaceCameraReplayStartZ;
-
-extern s32 gRaceCameraReplayStartX;
-
-extern s16 gRaceLapCount;
-
-extern CourseGridEntry *gRaceReplayCourseGridLists[12];
-
-extern s8 gRaceGhostRecordStatus;
-extern u8 gPendingEndingCreditsFlow;
-extern s32 gMenuFlowState;
-extern u8 gRumblePakConnectedMask;
-extern s16 gMenuFadeAlpha;
-extern u8 gRaceResultsAwardPlayerNumber;
-extern u8 gRacePauseMenuSelection;
 
 void initStartupControllerPakFlow(void) {
     LOAD_ASSET(_2427D0, 6);

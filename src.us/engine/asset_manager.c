@@ -4,20 +4,9 @@
 #include "game/engine/relocatable_heap.h"
 #include "game/engine/system_runtime.h"
 
-typedef struct {
-    /* 0x0 */ s16 prev;
-    /* 0x2 */ s16 next;
-    /* 0x4 */ s16 weight;
-    /* 0x6 */ s16 left;
-    /* 0x8 */ s16 right;
-    /* 0xA */ s16 value;
-} HuffmanNode;
 
-typedef struct {
-    /* 0x0 */ s32 decodedSize; /* Output allocation and decompression length. */
-    /* 0x4 */ u8 flags;
-    /* 0x5 */ u8 pad5[3]; /* DMA read-ahead: encoded payload starts at +5, not +8. */
-} CompressedAssetHeader;
+
+
 
 u8 gRandomTable[256] = {
     0xD4, 0xF5, 0xDA, 0x93, 0x49, 0xA0, 0xD3, 0x64, 0x58, 0xC9, 0x31, 0x9A, 0x56, 0x1E, 0x90, 0x34, 0xC7, 0x17, 0x3E,

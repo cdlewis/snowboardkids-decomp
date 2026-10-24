@@ -242,4 +242,19 @@ extern Gfx _14A200_command_0005E0[];
 extern Gfx _ADDR_20019C0_command_000000[];
 extern Gfx _ADDR_2002490_command_000000[];
 
+extern Gfx D_20028F0[];
+extern Gfx D_2002DB8[];
+extern u32 gMainMenuRotatingBoardDl[];
+extern u32 gMainMenuStaticBoardDl[];
+extern u32 gPassAwardPodiumVariant0Dl[];
+extern u32 gPassAwardPodiumVariant1Dl[];
+extern u32 gPassAwardPodiumVariant2Dl[];
+extern Gfx gRaceActionPickupDisplayList[];
+extern Vtx gRaceIntroAlternateCourseVertices[];
+extern Vtx gRaceIntroCourseVertices[];
+extern Gfx gRaceItemPickupDisplayList[];
+extern u32 gRookieMountainBackdropDl[];
+extern u32 gSpeedFanBackDisplayList[];
+extern u32 gSpeedFanFrontDisplayList[];
+
 #endif

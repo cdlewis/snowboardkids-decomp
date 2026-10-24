@@ -9,10 +9,8 @@
 #include "game/menu/main_menu/main_menu_scene_model.h"
 #include "game/menu/renderer/menu_renderer.h"
 #include "game/menu/race_setup/race_setup_ui.h"
+#include "game/engine/system_render.h"
 
-extern Gfx *gRegionAllocPtr;
-extern s16 gMenuFadeAlpha;
-extern u16 gEndingCreditsTransitionSnowboardIconExpandFrameCounter;
 u16 gEndingCreditsNancyRunDustFrameOffsets[4] = { 0, 1, 2, 1 };
 u16 gEndingCreditsTommySnowmanEntranceFrameOffsets[4] = { 0, 1, 2, 1 };
 

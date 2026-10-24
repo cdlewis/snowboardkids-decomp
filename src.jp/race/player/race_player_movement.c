@@ -10,6 +10,7 @@
 #include "game/race/player/race_player_movement.h"
 #include "game/math/fixed_point_math.h"
 #include "game/math/spatial_math.h"
+#include "game/race/flow/race_flow.h"
 
 #define FIXED_PRODUCT(a, b) ((s64)(a) * (b) / 0x1000)
 #define COLLISION_POINT(x, y, z, sizeX, sizeY, sizeZ) \
@@ -107,10 +108,6 @@ s16 gRacePlayerVoiceSoundIds7[] = { SFX_SLASH_CHEER,
                                     SFX_NONE,
                                     SFX_NONE,
                                     SFX_NONE };
-
-extern s8 gRacePlayerCount;
-extern s32 gMenuFlowState;
-extern s16 gRaceLapCount;
 
 void getRacePlayerRankingProgress(s32 arg0, s32 *arg1, s32 *arg2) {
     RacePlayer *player;

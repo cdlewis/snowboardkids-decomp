@@ -10,8 +10,6 @@
 #include "game/race/player/race_player_input.h"
 #include "game/race/player/race_player_update.h"
 
-extern const char gRaceMotionAnimationDebugViewerMotionNumberFormat[];
-
 void initRaceMotionAnimationDebugViewer(void) {
     RacePlayer *state;
     s16 temp_v0;

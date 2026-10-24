@@ -14,6 +14,7 @@
 #include "game/race/ui/race_hud.h"
 #include "game/engine/viewport_manager.h"
 #include "game/race/player/race_player_input.h"
+#include "game/race/flow/race_flow.h"
 
 typedef struct {
     /* 0x00 */ u8 courseIndex;
@@ -61,22 +62,6 @@ MainMenuDemoRaceIntroEntry gMainMenuDemoRaceIntroEntries[] = {
      3, 1,
      4, 2 },
 };
-
-extern s16 gMenuFadeAlpha;
-extern s16 gRaceLapCount;
-extern s16 gRacePlayerAttackStartTimer;
-extern s8 gRacePlayerCount;
-extern u8 gRaceUpdatePaused;
-extern u8 gTrainingCourseLesson;
-extern u8 gMainMenuModeSelection;
-extern s32 gMenuFlowState;
-extern u8 gFramebufferSwapHold;
-extern u8 gPendingFramebufferSwapCount;
-extern f32 gDemoRaceFullscreenAspectRatio;
-extern f32 gDemoRaceTopLeftAspectRatio;
-extern f32 gDemoRaceBottomLeftAspectRatio;
-extern f32 gDemoRaceTopRightAspectRatio;
-extern f32 gDemoRaceBottomRightAspectRatio;
 
 void initMainMenuDemoRaceIntro(void) {
     RacePlayer *players;

@@ -23,10 +23,6 @@ typedef struct ControllerSubsystemThreadContext {
     u8 unk4[0x104];
 } ControllerSubsystemThreadContext;
 
-#if defined(VERSION_US)
-extern ControllerSubsystemThreadContext gControllerSubsystemThreadArg;
-#endif
-
 typedef struct SaveFileIdentity {
     s32 size;
     u32 gameCode;
@@ -74,6 +70,12 @@ typedef enum ControllerSubsystemRequest {
     CONTROLLER_REQUEST_RETRY_RUMBLE_INIT = 0xD0
 } ControllerSubsystemRequest;
 
+#if defined(VERSION_US)
+extern ControllerSubsystemThreadContext gControllerSubsystemThreadArg;
+#else
+extern void *gControllerSubsystemThreadArg;
+#endif
+
 extern s16 gControllerPakStatusCodes[4];
 extern s16 gMenuChoicePromptState[4];
 extern u16 gMenuInputRepeatTimers[4];
@@ -90,6 +92,21 @@ extern s32 gControllerPakFreeFileCount;
 extern u8 gMainMenuSecretCodeUnlocked;
 extern u8 gMainMenuSelectionResult;
 extern u8 gMenuSelectionConfirmTimer;
+
+extern u8 D_800EC9C0;
+extern u8 D_800EC9DC;
+extern u8 gConnectedControllerBitmask;
+extern u8 gCourseSelectFromRaceTypeMenu;
+
+#if defined(VERSION_JP)
+extern u8 D_800EBD05;
+extern u8 gControllerPakSaveExtNameBytesEnd[];
+extern u8 gMainMenuReturnFromRace;
+#endif
+
+#if defined(VERSION_US)
+extern u8 D_800EC9E5;
+#endif
 
 void initControllerSubsystem(void);
 void controllerSubsystemThreadMain(void *threadArg);

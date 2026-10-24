@@ -6,6 +6,7 @@
 #include "game/math/spatial_math.h"
 #include "game/engine/callback_task_scheduler.h"
 #include "game/race/ui/race_hud.h"
+#include "game/race/course/race_course_props_and_pickups.h"
 
 #define DIZZY_LAND_TEACUP_BUMPER_BASE_SCALE 0x1000
 #define DIZZY_LAND_TEACUP_BUMPER_ROTATION_STEP 0x40
@@ -454,10 +455,142 @@ typedef struct RaceUiCourseSpriteActor {
     /* 0x62 */ u8 matrixDirty;
 } RaceUiCourseSpriteActor;
 
+typedef struct {
+    s32 displayListAddress;
+    u16 textureAssetId;
+    u8 useOverlayQueue;
+    u8 soundSourceIndex;
+} RaceCourseScrollingTextureInit;
+
+typedef struct {
+    /* 0x00 */ s16 active;
+    /* 0x02 */ s16 sentinel;
+    /* 0x04 */ Vec3i position;
+} RaceUiGfxCommandScriptEntry;
+
+typedef struct {
+    /* 0x00 */ s16 active;
+    /* 0x02 */ s16 pad2;
+    /* 0x04 */ Vec3i position;
+    /* 0x10 */ s16 angle;
+    /* 0x12 */ u8 pad12[2];
+} RaceUiRankTextRenderEntry;
+
 extern Vec3i gDizzyLandTeacupBumperPositions[10];
 extern Vec3i gDizzyLandFerrisWheelHubOffset;
 extern RaceUiProjectileVertexBlock gRaceUiProjectileVertices[8];
 extern Gfx gAlphaSpriteRenderModeDl[];
+
+#if defined(VERSION_JP)
+extern Vec3i D_800D6030[];
+extern RaceCoursePropModelEntry D_800D7650[];
+extern const char D_800E05AC[];
+extern const char D_800E05B8[];
+extern const char D_800E05C4[];
+extern const char D_800E05D0[];
+extern RaceUiGfxCommandScriptEntry *gCourseCoinMarkerEntryLists[];
+extern Vtx gCourseCoinMarkerQuadVertices[];
+extern RaceUiRankTextRenderEntry *gCourseScoreAttackRingEntryLists[];
+extern Vtx gCourseStartFinishSpriteVertices[];
+extern Vec3i gDizzyLandCarouselPositions[];
+extern Vec3i gDizzyLandFerrisWheelPositions[];
+extern s16 gDizzyLandFerrisWheelYaws[];
+extern Vec3i gDizzyLandSpinningCabinRidePositions[];
+extern Gfx *gRaceCourseRankModelDisplayLists[];
+extern RaceCourseScrollingTextureInit gRaceCourseScrollingTextureInit[];
+extern Vec3i gRacePlayerSparkleOrbitOffset;
+extern Vtx gRacePlayerSparkleQuadVertices[];
+extern s16 gRacePrizeAmountsByCourseAndRank[][4];
+extern const char gRaceResultsSlot0CpuLabel[];
+extern const char gRaceResultsSlot0PlayerLabelFormat[];
+extern const char gRaceResultsSlot1CpuLabel[];
+extern const char gRaceResultsSlot1PlayerLabelFormat[];
+extern const char gRaceResultsSlot2CpuLabel[];
+extern const char gRaceResultsSlot2PlayerLabelFormat[];
+extern const char gRaceResultsSlot3CpuLabel[];
+extern const char gRaceResultsSlot3PlayerLabelFormat[];
+extern Vtx gRaceStartOverlayVertices[];
+extern Gfx gRaceUiAltBurstTextRenderSetupDl[];
+extern const char gRaceUiBoardReversePromptLabelBlinkOff[];
+extern const char gRaceUiBoardReversePromptLabelBlinkOn[];
+extern Vec3i gRaceUiBurstTextInitialVelocities[];
+extern Vtx gRaceUiBurstTextQuadVertices[];
+extern Gfx gRaceUiBurstTextRenderSetupDl[];
+extern const char gRaceUiCoinCounterFormat[];
+extern const char gRaceUiCompleteBonusLabel[];
+extern const char gRaceUiCounterCompleteBonusFormat[];
+extern const char gRaceUiCounterHitPrizeFormat[];
+extern const char gRaceUiCounterMoneyFormat[];
+extern const char gRaceUiCounterPerfectHitBonusFormat[];
+extern const char gRaceUiCourseValueFormat[];
+extern const char gRaceUiCourseValueHitLabelRow1[];
+extern const char gRaceUiCourseValueHitLabelRow2[];
+extern const char gRaceUiCourseValueHitLabelRow3[];
+extern const char gRaceUiCourseValueHitLabelRow4[];
+extern const char gRaceUiCourseValueHitLabelRow5[];
+extern const char gRaceUiGetCoinLabel[];
+extern const char gRaceUiHitPrizeTotalMoneyLabel[];
+extern const char gRaceUiHitPrizeX1Label[];
+extern const char gRaceUiHitPrizeX50Label[];
+extern const char gRaceUiLapTimeLabel[];
+extern const char gRaceUiPackedTimeFractionFormat[];
+extern const char gRaceUiPackedTimeMinutesFormat[];
+extern const char gRaceUiPackedTimeSecondsFormat[];
+extern const char gRaceUiPendingCompleteBonusFormat[];
+extern const char gRaceUiPendingCompleteBonusLabel[];
+extern const char gRaceUiPendingMakeBonusFormat[];
+extern const char gRaceUiPendingMakeBonusLabel[];
+extern const char gRaceUiPendingMoneyFormat[];
+extern const char gRaceUiPendingMoneyLabel[];
+extern const char gRaceUiPendingTrickPrizeFormat[];
+extern const char gRaceUiPendingTrickPrizeLabel[];
+extern const char gRaceUiPerfectHitLabel[];
+extern const char gRaceUiRankPrizeCounterFormat[];
+extern const char gRaceUiRankPrizeLabel[];
+extern const char gRaceUiScoreAttackAsteriskLabel[];
+extern const char gRaceUiScoreAttackPointTotalFormat[];
+extern const char gRaceUiScoreAttackTargetFormat[];
+extern const char gRaceUiScoreAttackTimeOutLabel[];
+extern Vec3i gRaceUiStunIconHeadOffset;
+extern Vtx gRaceUiStunIconQuadVertices[];
+extern const char gRaceUiTargetTimeChallengeCompleteBonusCounterFormat[];
+extern const char gRaceUiTargetTimeChallengeCompleteBonusLabel[];
+extern const char gRaceUiTargetTimeChallengeDeltaTimeFormat[];
+extern const char gRaceUiTargetTimeChallengeFastLabel[];
+extern const char gRaceUiTargetTimeChallengeLapTimeLabel[];
+extern const char gRaceUiTargetTimeChallengeMoneyCounterFormat[];
+extern const char gRaceUiTargetTimeChallengeMoneyLabel[];
+extern const char gRaceUiTargetTimeChallengePerfectGetCounterFormat[];
+extern const char gRaceUiTargetTimeChallengePerfectGetLabel[];
+extern const char gRaceUiTargetTimeChallengePrizeCounterFormat[];
+extern const char gRaceUiTargetTimeChallengePrizeLabel[];
+extern const char gRaceUiTargetTimeChallengeSpeedFanGetCounterFormat[];
+extern const char gRaceUiTargetTimeChallengeSpeedFanGetLabel[];
+extern const char gRaceUiTargetTimeChallengeTargetLabel[];
+extern const char gRaceUiTargetTimeChallengeTargetTimeFormat[];
+extern const char gRaceUiTargetTimeChallengeTimeOutLabel[];
+extern const char gRaceUiTotalMoneyCounterFormat[];
+extern const char gRaceUiTotalMoneyLabel[];
+extern const char gRaceUiTrickAttackPointTotalFormat[];
+extern const char gRaceUiTrickAttackResultsMakeLabel[];
+extern const char gRaceUiTrickAttackResultsTimeOutLabel[];
+extern const char gRaceUiTrickAttackResultsTrickLabel[];
+extern const char gRaceUiTrickAttackSecondaryCounterFormat[];
+extern const char gRaceUiTrickScorePopupBonusFormat[];
+extern const char gRaceUiTrickScorePopupPointsFormat[];
+extern const char gRaceUiTrickValueFormat[];
+extern const char gRaceUiTrickValuePointLabelRow1[];
+extern const char gRaceUiTrickValuePointLabelRow2[];
+extern const char gRaceUiTrickValuePointLabelRow3[];
+extern const char gRaceUiTrickValuePointLabelRow4[];
+extern const char gRaceUiTrickValuePointLabelRow5[];
+extern u16 gRatFaceItemAnimation[];
+extern Vtx gSilverMountainSnowParticleVertices[];
+#endif
+
+#if defined(VERSION_US)
+extern RaceUiRankTextRenderEntry D_800D7650[];
+#endif
 
 void renderRaceCourseScrollingTexture(RaceCourseScrollingTextureActor *arg0);
 void updateRaceCourseScrollingTexture(RaceCourseScrollingTextureActor *arg0);

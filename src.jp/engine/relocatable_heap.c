@@ -10,29 +10,6 @@ typedef enum RelocatableHeapBlockStatus {
     RELOCATABLE_HEAP_BLOCK_LOCKED
 } RelocatableHeapBlockStatus;
 
-typedef struct RelocatableHeapBlock {
-    struct RelocatableHeapBlock *prev;
-    struct RelocatableHeapBlock *next;
-    u8 *start;
-    s32 size;
-    u8 index;
-    u8 status;
-} RelocatableHeapBlock;
-
-typedef struct RelocatableHeapBlockStartAlias {
-    u8 *start;
-    u8 pad[0x10];
-} RelocatableHeapBlockStartAlias;
-
-extern RelocatableHeapBlockStartAlias gRelocatableHeapBlockStartAliases[];
-extern RelocatableHeapBlock *gRelocatableHeapFreeBlockStack[];
-extern u16 gRelocatableHeapUsedBlockCount;
-extern u8 gRelocatableHeapStart[];
-
-extern RelocatableHeapBlock gRelocatableHeapBlockPool[];
-extern RelocatableHeapBlock *gFirstAllocatedRelocatableHeapBlock;
-extern u8 *gRelocatableHeapNextFreeAddress;
-
 void updateRelocatableHeapNextFreeAddress(void) {
     RelocatableHeapBlock *node = gFirstAllocatedRelocatableHeapBlock;
     RelocatableHeapBlock *next;
@@ -85,8 +62,6 @@ void releaseRelocatableHeapBlockMetadata(RelocatableHeapBlock *block) {
     gRelocatableHeapFreeBlockStack[gRelocatableHeapUsedBlockCount] = block;
     block->status = RELOCATABLE_HEAP_BLOCK_FREE;
 }
-
-extern RelocatableHeapBlock gRelocatableHeapBlockListHead;
 
 s16 allocRelocatableHeapBlock(s32 size) {
     RelocatableHeapBlock *node;

@@ -13,6 +13,8 @@
 #include "game/math/fixed_point_math.h"
 #include "game/race/player/race_player_input.h"
 #include <PR/os_cache.h>
+#include "game/engine/model_asset_symbols.h"
+#include "game/engine/system_render.h"
 
 #define ASSET_HANDLE(index) (gAssetHandles[(index)])
 #define RACE_INTRO_EFFECTS_GFX_CMD(pkt, cmd0, cmd1) \
@@ -21,21 +23,6 @@
         _g->words.w0 = (cmd0);                      \
         _g->words.w1 = (cmd1);                      \
     }
-
-typedef struct {
-    /* 0x00 */ s8 textureIndex;
-    /* 0x01 */ u8 pad1[3];
-    /* 0x04 */ Vec3i position;
-} RaceIntroRenderCommandEntry;
-
-extern Gfx *gRegionAllocPtr;
-extern Gfx D_20028F0[];
-extern Gfx D_2002DB8[];
-
-extern Vtx gRaceIntroCourseVertices[];
-extern Vtx gRaceIntroAlternateCourseVertices[];
-extern RaceIntroRenderCommandEntry gRaceIntroCourseCommands[];
-extern RaceIntroRenderCommandEntry gRaceIntroAlternateCourseCommands[];
 
 Vtx *gRaceIntroModelVerticesByCourse[7] = {
     gRaceIntroCourseVertices, gRaceIntroCourseVertices, gRaceIntroCourseVertices,          gRaceIntroCourseVertices,

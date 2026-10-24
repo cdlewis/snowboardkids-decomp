@@ -14,25 +14,13 @@
 #include "game/menu/renderer/menu_renderer.h"
 #include "game/race/player/race_player_input.h"
 
-typedef struct {
-    MenuGlyphScript statusMessagePrefix[0x2CB];
-    u8 choicePromptSprites[0x26];
-} ControllerPakRaceRecordSaveUiDataStorage;
 
-typedef struct {
-    MenuGlyphScript statusMessages[0x13][0x26];
-    u8 choicePromptSpriteSuffix[0x18];
-} ControllerPakRaceRecordSaveUiDataTyped;
 
-typedef union {
-    ControllerPakRaceRecordSaveUiDataTyped typed;
-    ControllerPakRaceRecordSaveUiDataStorage storage;
-} ControllerPakRaceRecordSaveUiDataContent;
 
-typedef struct {
-    ControllerPakRaceRecordSaveUiDataContent content;
-    MenuGlyphScript exitMessage[10];
-} ControllerPakRaceRecordSaveUiData;
+
+
+
+
 
 ControllerPakRaceRecordSaveUiData gControllerPakRaceRecordSaveUiData = {
     {

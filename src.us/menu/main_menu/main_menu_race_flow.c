@@ -17,6 +17,8 @@
 #include "game/race/player/race_player_update.h"
 #include "game/race/ui/race_hud.h"
 #include "game/engine/viewport_manager.h"
+#include "game/engine/system_runtime.h"
+#include "game/race/flow/race_flow.h"
 
 #define MAIN_MENU_MODE_PREVIEW_RACE_VIEWPORT_ZOOM_FRAMES 0x10
 
@@ -52,18 +54,6 @@ MainMenuModePreviewRaceCourseAsset gMainMenuModePreviewRaceCourseAssets[] = {
 s16 gMainMenuModePreviewRaceDurationBySelection[] = {
     0x384, 0x287, 0x2BB, 0x33B, 0x23F, 0x2B2, 0x2C7, 0x138, 0x1AF, 0x1FD, 0x16A, 0x1E2, 0, 0, 0, 0,
 };
-
-extern s16 gRaceLapCount;
-extern s8 gRacePlayerCount;
-extern u8 gRaceUpdatePaused;
-extern s16 gMenuFadeAlpha;
-extern u8 gFramebufferSwapHold;
-extern s32 gMenuFlowState;
-extern u8 gMainMenuModeSelection;
-extern s16 gRacePlayerAttackStartTimer;
-
-extern u8 gPendingFramebufferSwapCount;
-extern u8 gTrainingCourseLesson;
 
 void startMainMenuModePreviewRaceFlow(void) {
     gMainMenuModeSelection = 1;

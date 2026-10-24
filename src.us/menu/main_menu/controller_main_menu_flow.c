@@ -24,13 +24,8 @@
 #include "game/engine/viewport_manager.h"
 #include "game/menu/renderer/menu_renderer.h"
 #include <PR/os_motor.h>
-
-typedef struct OSContPad {
-    u16 button;
-    s8 stick_x;
-    s8 stick_y;
-    u8 errno;
-} OSContPad;
+#include "game/menu/main_menu/controller_subsystem.h"
+#include "game/menu/race_setup/race_setup_menu.h"
 
 #define CONTROLLER_PAK_SAVE_FIELD_OFFSET(field) ((u32) & (((GameSaveData *)0)->field))
 #define CONTROLLER_PAK_RECORD_AT(cursor, field) \
@@ -77,26 +72,6 @@ u8 gCourseSelectModeSelection;
 static u8 sGameSaveDataBufferPadding;
 static u32 sGameSaveDataBufferPaddingWords[2];
 GameSaveDataBuffer gGameSaveDataBuffer;
-
-extern OSMesgQueue gControllerSubsystemRequestQueue;
-extern OSMesgQueue gControllerSubsystemReplyQueue;
-extern OSMesgQueue gControllerEventQueue;
-extern s16 gControllerEventMessage;
-extern OSContPad gControllerPads[];
-extern s32 gControllerPakFileNos[];
-extern OSPfs gControllerPakHandles[];
-extern OSPfs gRumblePakHandles[];
-extern SaveFileIdentity gControllerPakSaveFileIdentity;
-extern u8 gControllerReadPending;
-extern s32 gControllerPakFileNos[];
-extern s16 gMenuFadeAlpha;
-extern u8 gMainMenuSecretCodeStep;
-extern u8 gConnectedControllerCount;
-extern u8 gRumblePakConnectedMask;
-extern OSMesgQueue gControllerInputUpdateQueue;
-extern u8 gPendingFramebufferSwapCount;
-extern u8 gFramebufferSwapHold;
-extern s32 gMenuFlowState;
 
 /* Queue request 0x10 once, then wait for updateControllerInputState to clear
  * the pending flag on completion before requesting another read. */

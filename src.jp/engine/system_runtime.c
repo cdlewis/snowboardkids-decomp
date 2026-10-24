@@ -39,32 +39,6 @@ typedef struct {
     RenderCallbackQueueSlot queue3;
 } RenderCallbackQueueGroup;
 
-extern OSMesgQueue gControllerInputUpdateQueue;
-
-extern OSMesgQueue gFramebufferRenderDoneQueue;
-
-extern OSMesgQueue gSchedulerClientQueue;
-
-extern u16 gRetraceCounter;
-
-extern OSMesgQueue gPiManagerQueue;
-
-extern OSThread gGameThread;
-
-extern OSMesg gPiManagerMessages[];
-
-extern u8 gGameThreadStack[GAME_THREAD_STACK_SIZE];
-
-extern u8 gBootThreadStack[BOOT_THREAD_STACK_SIZE];
-
-extern OSThread gBootThread;
-
-extern OSMesgQueue gRomDmaQueue;
-extern u8 gFadeColorBlue;
-extern s16 gFadeTimer;
-extern u8 gFadeColorRed;
-extern u8 gFadeColorGreen;
-
 void main(void *arg) {
     osInitialize();
     osCreateThread(

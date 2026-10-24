@@ -16,16 +16,14 @@
 #include "game/race/ui/race_ui_effects.h"
 #include "game/math/fixed_point_math.h"
 #include "game/math/spatial_math.h"
+#include "game/engine/system_render.h"
+#include "game/race/flow/race_flow.h"
 
 typedef struct {
     s32 pad;
     Vec3i transformed;
     Vec3i offset;
 } RaceItemProjectileTransformScratch;
-
-extern Gfx *gRegionAllocPtr;
-extern u8 gRaceUpdatePaused;
-extern s16 gUiBlinkTimer;
 
 Vtx gRaceItemProjectileQuadVertices[4] = {
     { { { -6, 6, 0 }, 0, { -16, -16 }, { 0xFF, 0xFF, 0xFF, 0xFF } } },

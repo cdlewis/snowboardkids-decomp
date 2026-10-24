@@ -22,36 +22,6 @@
 #define CONTROLLER_PAK_RACE_RECORD_SAVE_SCORE_TEXTURE_HANDLE (gAssetHandles[0x21])
 #define gControllerPakRaceRecordSaveExitMessage (gControllerPakRaceRecordSaveUiData.exitMessage)
 
-typedef struct {
-    MenuGlyphScript statusMessagePrefix[0x2CB];
-    u8 choicePromptSprites[0x26];
-} ControllerPakRaceRecordSaveUiDataStorage;
-
-typedef struct {
-    MenuGlyphScript statusMessages[0x13][0x26];
-    u8 choicePromptSpriteSuffix[0x18];
-} ControllerPakRaceRecordSaveUiDataTyped;
-
-typedef union {
-    ControllerPakRaceRecordSaveUiDataTyped typed;
-    ControllerPakRaceRecordSaveUiDataStorage storage;
-} ControllerPakRaceRecordSaveUiDataContent;
-
-typedef struct {
-    ControllerPakRaceRecordSaveUiDataContent content;
-    MenuGlyphScript exitMessage[10];
-} ControllerPakRaceRecordSaveUiData;
-
-extern u16 gControllerPakRaceRecordSaveStatusTransitionTargetStatus;
-
-extern u8 gControllerPakRaceRecordSaveStatusTransitionStep;
-
-extern u16 gControllerPakRaceRecordSaveStatusTransitionNextStatus;
-
-extern const char gControllerPakRaceRecordMoneyFormat[];
-extern s16 gControllerPakRaceRecordSaveStatusTransitionAlpha;
-extern ControllerPakRaceRecordSaveUiData gControllerPakRaceRecordSaveUiData;
-
 void drawControllerPakRaceRecordSaveScorePanel(ControllerPakRaceRecordSaveScorePanelActor *arg0) {
     s16 *new_var;
     s16 *badgeIndex;

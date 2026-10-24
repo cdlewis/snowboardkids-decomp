@@ -12,6 +12,8 @@
 #include "game/menu/main_menu/main_menu_panel_ui.h"
 #include "game/menu/renderer/menu_renderer.h"
 #include "game/menu/renderer/menu_render_utils.h"
+#include "game/menu/renderer/menu_screen_effects.h"
+#include "game/race/flow/race_flow.h"
 
 #define mainMenuModeSelectPrimaryIconTiles gMainMenuModeSelectByteData.titleAndPrimaryIcon.bytes.primaryIconTiles
 #define mainMenuModeSelectSecondaryIconTiles gMainMenuModeSelectByteData.secondaryIconTiles
@@ -25,45 +27,6 @@
 #define mainMenuModeSelectBottomRowIconTiles gMainMenuModeSelectByteData.bottomRowIconTiles
 #define MENU_PANEL_SCROLL_STEP 0x10
 #define MENU_PANEL_SCROLL_LIMIT 0x79
-
-typedef struct {
-    union {
-        MenuGlyphScript finalTitleText[12];
-        struct {
-            u8 finalTitleTextPrefix[0x17];
-            u8 primaryIconTiles[1];
-        } bytes;
-    } titleAndPrimaryIcon;
-    u8 topRowIconTiles[2];
-    u8 secondaryIconTiles[6];
-    u8 bottomRowIconTiles[8];
-    u8 upTargets[0x10];
-    u8 downTargets[0x10];
-    u8 leftTargets[0x10];
-    u8 rightTargets[0x10];
-} MainMenuModeSelectByteData;
-
-extern MenuGlyphScript *raceRecordLapCountTexts[];
-
-extern MenuGlyphScript raceRecordSettingsTitleText[];
-
-extern s16 courseRecordDigitTileOffsets[];
-
-extern s16 gRaceLapCount;
-
-extern MenuGlyphScript mainMenuSettingsTitleText[];
-
-extern MenuGlyphScript *mainMenuModeDescriptionTitles[];
-
-extern s16 gMenuFadeAlpha;
-
-extern MenuGlyphScript *mainMenuModeDescriptionTexts[];
-
-extern MenuGlyphScript mainMenuModeSelectTitleText[];
-extern MainMenuModeSelectByteData gMainMenuModeSelectByteData;
-extern u8 gMainMenuModeSelection;
-extern MenuGlyphScript raceGhostUnavailableText[];
-extern s32 gMenuFlowState;
 
 void drawMainMenuModeSelectFrame(void *arg0) {
     s32 edgeX;

@@ -14,17 +14,10 @@
 #include "game/menu/race_setup/race_setup_ui.h"
 #include "game/engine/viewport_manager.h"
 #include "game/race/player/race_player_input.h"
+#include "game/engine/system_runtime.h"
+#include "game/menu/race_setup/race_setup_menu.h"
 
 RaceSplitscreenSelectMenuState gRaceSplitscreenSelectCursorTarget;
-
-extern u8 D_800EC9DC;
-
-extern u8 gCourseSelectFromRaceTypeMenu;
-extern s32 gMenuFlowState;
-extern u8 gMenuExitSelection;
-extern s16 gMenuFadeAlpha;
-extern u8 gPendingFramebufferSwapCount;
-extern u8 gFramebufferSwapHold;
 
 void returnToRaceSplitscreenSelectMenu(void) {
     gCurrentGameTask->callbackData0 = 1;

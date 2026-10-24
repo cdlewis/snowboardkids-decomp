@@ -53,12 +53,6 @@ typedef union {
 typedef char ControllerPakRumbleTransitionSizeCheck[(sizeof(ControllerPakRumbleCheckPromptTransition) == 0xA) ? 1 : -1];
 typedef char ControllerPakRumbleStateSizeCheck[(sizeof(ControllerPakRumbleCheckPromptState) == 8) ? 1 : -1];
 
-extern ControllerPakRumbleCheckPromptTransition gControllerPakRumbleCheckPromptTransition;
-#if defined(VERSION_JP)
-extern ControllerPakRumbleCheckPromptState gControllerPakRumbleCheckPromptState;
-extern u8 gControllerPakRumbleCheckPromptConfirmSelection;
-#endif
-
 typedef struct {
     /* 0x00 */ char pad[0x18];
     /* 0x18 */ s16 x;
@@ -114,6 +108,23 @@ typedef struct {
     /* 0x1E */ u16 timer;
     /* 0x20 */ u8 selectedOption;
 } ControllerPakWindowActor;
+
+extern ControllerPakRumbleCheckPromptTransition gControllerPakRumbleCheckPromptTransition;
+#if defined(VERSION_JP)
+extern ControllerPakRumbleCheckPromptState gControllerPakRumbleCheckPromptState;
+extern u8 gControllerPakRumbleCheckPromptConfirmSelection;
+#endif
+
+extern Vec2s gCoursePreviewCloseSparkleOffsetsEnd[];
+
+#if defined(VERSION_JP)
+extern MenuGlyphScript gControllerPakContinuePromptText[];
+extern MenuGlyphScript gControllerPakCouldNotEraseNoteText[];
+extern MenuGlyphScript gControllerPakRumbleCheckNoEntryText[];
+extern MenuGlyphScript gControllerPakRumbleCheckNotUsedText[];
+extern MenuGlyphScript gControllerPakRumbleCheckPromptText[][0x34];
+extern MenuGlyphScript gControllerPakRumblePakText[];
+#endif
 
 void drawControllerPakContinuePrompt(ControllerPakOptionsActor *arg0);
 void updateControllerPakContinuePrompt(ControllerPakOptionsActor *arg0);

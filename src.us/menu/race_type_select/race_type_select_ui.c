@@ -11,6 +11,8 @@
 #include "game/menu/renderer/menu_renderer.h"
 #include "game/race/race_state.h"
 #include "game/race/player/race_player_input.h"
+#include "game/engine/game_task_scheduler.h"
+#include "game/menu/race_setup/race_setup_menu.h"
 
 #define ASSET_HANDLE(index) (gAssetHandles[(index)])
 RaceTypeSelectFrameTileTable gRaceTypeSelectFrameTileMaps = {
@@ -44,9 +46,6 @@ RaceTypeSelectDescriptionScriptTable gRaceTypeSelectPortraitScripts = {
      // clang-format on
     },
 };
-
-extern u8 gMenuExitSelection;
-extern s32 gMenuFlowState;
 
 const char gRaceTypeSelectEntryFeeFormat[] = "%6dG";
 

@@ -13,6 +13,8 @@
 #include "game/menu/main_menu/controller_main_menu_flow.h"
 #include "game/menu/renderer/menu_renderer.h"
 #include "game/race/player/race_player_input.h"
+#include "game/menu/controller_pak/controller_pak_ui.h"
+#include "game/menu/race_setup/race_setup_menu.h"
 
 typedef u16 CourseNumberGlyphScript[5];
 
@@ -27,17 +29,6 @@ typedef enum {
     COURSE_DETAILS_STATE_DONE = 7
 } CourseDetailsMenuState;
 
-typedef MenuGlyphScript ShopDescriptionText[0x46];
-
-typedef struct {
-    u16 center[16];
-    u16 right[2];
-    u16 bottom[2];
-    u16 corner;
-} ShopMenuFrameTileMap;
-
-typedef Vec2s ShopMenuSparklePattern[13];
-
 enum {
     COURSE_DETAILS_PAGE_COUNT = 2,
     COURSE_DETAILS_COURSES_PER_PAGE = 7,
@@ -45,37 +36,6 @@ enum {
     COURSE_DETAILS_ROW_SPACING = 0x13
 };
 
-typedef u16 CourseDetailsMenuEntryTilePages[COURSE_DETAILS_PAGE_COUNT][COURSE_DETAILS_COURSES_PER_PAGE];
-
-extern CourseDetailsMenuEntryTilePages gCourseDetailsMenuEntryTiles;
-
-extern u16 gCourseDetailsPreviewExtraTiles[];
-
-extern u16 gCourseDetailsPreviewCourseTiles[];
-
-extern ShopDescriptionText gShopMenuModeDescriptionText[5];
-
-extern const char gCourseUnlockPriceFormat4[];
-
-extern const char gCourseUnlockPriceFormat5[];
-
-extern const char gCourseUnlockPriceFormat6[];
-
-extern u8 gShopMenuShowNewCoursesMessage;
-
-extern u8 gShopMenuDescriptionSeen;
-
-extern s32 gMenuFlowState;
-extern u8 gMenuExitSelection;
-extern ShopMenuFrameTileMap gShopMenuPanelFrameTilemaps[2];
-extern const char gShopMenuMoneyFormat[];
-extern ShopMenuSparklePattern gShopMenuSparklePatterns[5];
-extern s16 gShopMenuSparkleInitTable[16];
-extern MenuGlyphScript gCourseUnlockPurchasePromptText[24];
-extern Vec2s gCoursePreviewCloseSparkleOffsetsEnd[];
-extern Vec2s gCoursePreviewCloseSparkleMirrorStart[2];
-extern Vec2s gCoursePreviewCloseSparkleOffsets[6];
-extern s16 gCoursePreviewViewportHeight;
 
 void drawShopMenuModeChoiceRows(ShopMenuRowActor *actor) {
     ShopMenuRowActor *savedActor;

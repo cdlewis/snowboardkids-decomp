@@ -2,6 +2,7 @@
 #define CHARACTER_SELECT_COURSE_UI_H
 
 #include "game/engine/callback_task_scheduler.h"
+#include "game/menu/renderer/menu_renderer.h"
 #include "game/menu/character_select/character_select_course_menu.h"
 
 typedef struct CharacterSelectCourseWidgetActor {
@@ -57,6 +58,50 @@ typedef struct CharacterSelectCourseRecordTime {
     /* 0x01 */ s8 seconds;
     /* 0x02 */ s16 centiseconds;
 } CharacterSelectCourseRecordTime;
+
+typedef MenuGlyphScript CharacterSelectCourseText[0x4A];
+
+typedef struct {
+    /* 0x00 */ u16 center[16];
+    /* 0x20 */ u16 right[2];
+    /* 0x24 */ u16 bottom[2];
+    /* 0x28 */ u16 corner;
+} CharacterSelectCourseFrameTileMap;
+
+typedef struct {
+    /* 0x00 */ u16 corner;
+    /* 0x02 */ u8 pad2[0x28];
+} CharacterSelectCourseFrameCornerTileMap;
+
+typedef struct {
+    u16 cornerTile;
+    u16 padding;
+    MenuGlyphScript exitText[14];
+} CharacterSelectCourseExitPreviewData;
+
+#if defined(VERSION_JP)
+extern u16 D_800B5A7C[];
+extern MenuGlyphScript D_800B6088[][0x30];
+extern MenuGlyphScript D_800B61A8[][0x30];
+extern MenuGlyphScript D_800B62C8[][0x38];
+extern MenuGlyphScript D_800B63A8[];
+extern const char D_800DFEB4[];
+extern const char D_800DFEB8[];
+extern const char D_800DFEBC[];
+extern const char D_800DFEC8[];
+extern const char D_800DFED0[];
+extern const char D_800DFED8[];
+extern u8 gCharacterSelectCourseDifficultyRatings[];
+extern CharacterSelectCourseExitPreviewData gCharacterSelectCourseExitPreviewData;
+extern CharacterSelectCourseText gCharacterSelectCourseNameText[];
+extern CharacterSelectCourseFrameCornerTileMap gCharacterSelectCoursePreviewFrameCornerTileMaps[];
+extern CharacterSelectCourseFrameTileMap gCharacterSelectCoursePreviewFrameTileMaps[];
+extern char gCharacterSelectCourseRecordHitsLabel[];
+extern char gCharacterSelectCourseRecordPointsLabel[];
+extern MenuGlyphScript gCharacterSelectCourseStartGameText[];
+extern const char gCharacterSelectCourseStatsScoreFormat[];
+extern u16 gCharacterSelectCourseStatsScoreValues[];
+#endif
 
 void drawCharacterSelectCourseListOptions(CharacterSelectCourseMenuFrameActor *arg0);
 void updateCharacterSelectUnlockedCourseList(CharacterSelectCourseMenuFrameActor *arg0);

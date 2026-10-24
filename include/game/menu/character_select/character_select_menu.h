@@ -33,6 +33,12 @@ typedef struct {
 extern CharacterSelectState gCharacterSelectHudState;
 extern s8 gCharacterSelectHighlightedRosterIndices[4];
 
+#if defined(VERSION_JP)
+extern f32 D_800DFCB0;
+extern u16 gCharacterSelectIdOrder[];
+extern s16 gCharacterSelectVoiceSoundIds[];
+#endif
+
 void initCharacterSelectMenu(void);
 void updateCharacterSelectMenu(void);
 void updateCharacterSelectConfirmationMenu(void);

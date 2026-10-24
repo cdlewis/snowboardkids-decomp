@@ -7,12 +7,11 @@
 #include "game/menu/main_menu/main_menu_title_ui.h"
 #include "game/menu/renderer/menu_renderer.h"
 #include "game/menu/race_setup/race_setup_ui.h"
+#include "game/menu/main_menu/controller_subsystem.h"
 
 #define ASSET_HANDLE(index) (gAssetHandles[(index)])
 #define TITLE_SCREEN_LOGO_SPRITE_HANDLE ASSET_HANDLE(37)
 #define TITLE_SCREEN_TEXTURE_HANDLE (gAssetHandles[0x21])
-
-extern u8 gConnectedControllerCount;
 
 void drawMainMenuTitleLogo(MainMenuTitleLogoActor *arg0) {
     drawMenuTilemapSprite(&arg0->tilemapSprite.render, MENU_TILEMAP_TEXEL_8B, arg0->common.x, arg0->common.y);

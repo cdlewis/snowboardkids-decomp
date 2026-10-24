@@ -35,6 +35,26 @@ typedef struct TrainingCourseUiActor {
     /* 0x2C */ u8 keepVisibleAfterConfirm;
 } TrainingCourseUiActor;
 
+#if defined(VERSION_JP)
+extern TrainingCourseUiScript gTrainingCourseEndingDialogScript[];
+extern TrainingCourseUiScript gTrainingCourseOpeningDialogScripts[][0x17C];
+#endif
+
+#if defined(VERSION_US)
+extern s16 gTrainingCourseLessonTitleXPositions[];
+#endif
+
+#if defined(VERSION_JP)
+void drawTrainingCourseDialog(TrainingCourseUiActor *);
+void drawTrainingCourseLessonEndMenu(TrainingCourseUiActor *arg0);
+void drawTrainingCourseLessonTitlePanel(TrainingCourseUiActor *);
+void redrawTrainingCourseDialog(TrainingCourseUiActor *);
+void redrawTrainingCourseLessonEndMenu(TrainingCourseUiActor *arg0);
+void updateTrainingCourseLessonEndMenu(TrainingCourseUiActor *);
+void updateTrainingCourseLessonTitlePanel(TrainingCourseUiActor *);
+void updateTrainingCourseLessonTitlePanelScrollOut(TrainingCourseUiActor *);
+#endif
+
 void initTrainingCourseLessonEndMenu(TrainingCourseUiActor *arg0);
 void initTrainingCourseOpeningDialog(TrainingCourseUiActor *arg0);
 void initTrainingCourseEndingDialog(TrainingCourseUiActor *arg0);

@@ -30,6 +30,14 @@ typedef char ViewportStateSizeCheck[(sizeof(ViewportState) == 0xB0) ? 1 : -1];
 
 extern ViewportState gViewportStates[];
 
+#if defined(VERSION_JP)
+extern const f32 gCustomViewportOverlayFarClip[];
+extern const f32 gDefaultViewportOverlayFarClip[];
+extern const f32 gMenuViewportFarClip[];
+extern const f32 gMenuViewportOverlayFarClip[];
+extern const f32 gRaceViewportOverlayFarClip[];
+#endif
+
 void resetAllViewports(void);
 void resetViewport(s32 arg0);
 void configureViewport(

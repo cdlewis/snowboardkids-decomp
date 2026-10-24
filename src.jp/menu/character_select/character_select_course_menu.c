@@ -17,8 +17,8 @@
 #include "game/menu/race_setup/race_setup_ui.h"
 #include "game/engine/viewport_manager.h"
 #include "game/race/player/race_player_input.h"
-
-typedef s16 CharacterSelectOptionList[10];
+#include "game/engine/system_runtime.h"
+#include "game/menu/race_setup/race_setup_menu.h"
 
 CharacterSelectCourseMenuData gCharacterSelectCourseMenuData = {
     {
@@ -69,15 +69,6 @@ CharacterSelectCourseMenuData gCharacterSelectCourseMenuData = {
 
 u16 gCharacterSelectCourseExitOptionIndex;
 CharacterSelectCourseCursorState gCharacterSelectCourseCursorState;
-
-extern s16 gMenuFadeAlpha;
-extern CharacterSelectOptionList *gCharacterSelectActiveCourseOptions;
-extern s32 gMenuFlowState;
-extern u8 gMenuExitSelection;
-extern u8 gHighestUnlockedCourse;
-extern u8 gCourseSelectFromRaceTypeMenu;
-extern u8 gPendingFramebufferSwapCount;
-extern u8 gFramebufferSwapHold;
 
 // IDO code generation for this function is sensitive to source line layout.
 // clang-format off

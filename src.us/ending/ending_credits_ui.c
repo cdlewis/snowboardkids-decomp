@@ -17,14 +17,7 @@
 #define ENDING_CREDITS_PAGE_VISIBLE_FRAMES 0x96
 #define ENDING_CREDITS_PAGE_COUNT 0x19
 
-typedef struct EndingObjectSpriteDebugViewerActor {
-    /* 0x00 */ u8 pad0[0x18];
-    /* 0x18 */ s16 x;
-    /* 0x1A */ s16 y;
-    /* 0x1C */ s16 spriteId;
-    /* 0x1E */ u8 enabled;
-    /* 0x1F */ u8 palette;
-} EndingObjectSpriteDebugViewerActor;
+
 
 typedef struct EndingCreditsPageTextLineLayout {
     /* 0x00 */ s16 count;

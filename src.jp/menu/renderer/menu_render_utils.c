@@ -32,15 +32,6 @@ typedef struct {
     s32 w8, w9, w10, w11, w12, w13, w14, w15;
 } PackedMtxWords;
 
-extern u16 gMenuDefaultSpritePalette[16];
-
-extern u8 *gRenderCallbackScratchPtr;
-extern u8 *gMenuRenderScratchPtr;
-extern u8 *gMenuRenderScratchStart;
-extern u32 gMenuRenderScratchUsedSize;
-
-extern void *allocRenderCallbackScratch(s32 arg0);
-
 void initMenuAssetHandles(void) {
     s16 *end;
     s16 *handle;

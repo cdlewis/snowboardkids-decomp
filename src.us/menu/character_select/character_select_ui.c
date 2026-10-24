@@ -11,12 +11,12 @@
 #include "game/menu/character_select/character_select_menu.h"
 #include "game/menu/character_select/character_select_ui.h"
 #include "game/race/player/race_player_input.h"
+#include "game/engine/game_task_scheduler.h"
 
 #define CHARACTER_SELECT_UI_UNUSED_HANDLE (gAssetHandles[0x1F])
 #define CHARACTER_SELECT_UI_PLAYER_FRAME_HANDLE (gAssetHandles[0x21])
 #define CHARACTER_SELECT_UI_BANNER_TEXTURE_HANDLE (gAssetHandles[0x29])
 #define CHARACTER_SELECT_UI_AVAILABLE_CHARACTER_ICON_HANDLE (gAssetHandles[0x1F])
-extern s32 gMenuFlowState;
 
 CharacterSelectUiConfirmationBannerText gCharacterSelectConfirmationBannerText = {
     {

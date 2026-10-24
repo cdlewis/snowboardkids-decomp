@@ -12,29 +12,15 @@
 #include "game/menu/main_menu/main_menu_panel_ui.h"
 #include "game/menu/renderer/menu_renderer.h"
 #include "game/menu/renderer/menu_render_utils.h"
+#include "game/engine/system_render.h"
+#include "game/menu/renderer/menu_screen_effects.h"
+#include "game/race/flow/race_flow.h"
 
 #define MENU_PANEL_SCROLL_STEP 0x10
 #define MENU_PANEL_SCROLL_LIMIT 0x79
 #define MENU_PANEL_TILE_SIZE 0x20
 #define MENU_PANEL_INPUT_REPEAT_FRAMES 4
 #define MENU_PANEL_TEXTURE_HANDLE (gAssetHandles[0x2A])
-
-typedef struct {
-    union {
-        MenuGlyphScript finalTitleText[12];
-        struct {
-            u8 finalTitleTextPrefix[0x17];
-            u8 primaryIconTiles[1];
-        } bytes;
-    } titleAndPrimaryIcon;
-    u8 topRowIconTiles[2];
-    u8 secondaryIconTiles[6];
-    u8 bottomRowIconTiles[8];
-    u8 upTargets[0x10];
-    u8 downTargets[0x10];
-    u8 leftTargets[0x10];
-    u8 rightTargets[0x10];
-} MainMenuModeSelectByteData;
 
 MenuGlyphScript mainMenuModeSelectTitleText[] = {
     // textconv requires these _() invocations to retain their original line layout.
@@ -220,13 +206,6 @@ MenuGlyphScript *raceRecordLapCountTexts[] = {
     gRaceRecordNineLapsText,
     NULL,
 };
-
-extern s16 courseRecordDigitTileOffsets[];
-extern u8 gMainMenuModeSelection;
-extern s16 gRaceLapCount;
-extern s16 gMenuFadeAlpha;
-extern s32 gMenuFlowState;
-extern s16 gUiBlinkTimer;
 
 /* Instruction panel above the item-training selection grid. */
 void drawMainMenuModeSelectFrame(void *arg0) {

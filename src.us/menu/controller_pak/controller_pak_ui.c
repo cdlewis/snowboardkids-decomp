@@ -16,9 +16,6 @@
 
 #define CONTROLLER_PAK_DELETE_PANEL_HANDLE (gAssetHandles[0x29])
 
-extern s32 gControllerPakFreeBytes;
-extern s32 gControllerPakFreeFileCount;
-
 /* This script ends in the overlapping sparkle sentinel immediately below. */
 MenuGlyphScript gControllerPakContinuePromptText[8] = {
     _FRAGMENT("{COLOR:7}CONTIN"),

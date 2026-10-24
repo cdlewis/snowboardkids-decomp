@@ -6,6 +6,7 @@
 #include "game/race/motion/race_motion.h"
 #include "game/race/player/race_player_input.h"
 #include "game/race/player/race_player_progress.h"
+#include "game/race/player/race_player_collision.h"
 
 u8 gRaceMotionModelPartCounts[] = {
     14, 14, 14, 14, 14, 14, 14, 0, 0xFF, 0, 1, 2, 1, 4, 1, 6, 6, 8, 6, 10, 0, 0, 0, 0,
@@ -95,23 +96,6 @@ Vec3s *gRaceMotionModelPartPositions[] = {
     NULL,
     NULL,
 };
-
-extern Vec3s *gRaceCourseSurfaceCoords;
-extern RaceCourseSurfaceFace *gRaceCourseSurfaceFaces;
-extern RaceCourseSurface *gRaceCourseSurfaces;
-extern s32 gRaceCourseSurfaceAngleSin;
-extern s32 gRaceCourseSurfaceAngleCos;
-extern s32 gRaceCourseCollisionDeltaX;
-extern s32 gRaceCourseCollisionDeltaZ;
-extern s32 gRaceCourseCollisionEdgeDeltaX;
-extern s32 gRaceCourseCollisionEdgeDeltaZ;
-extern s32 gRaceCourseCollisionAdjustedX;
-extern s32 gRaceCourseCollisionAdjustedZ;
-extern volatile s32 gRaceMotionRotationFrameBuffer[];
-extern volatile s32 gRaceMotionRotationDecodeFrameBuffer[];
-extern RaceMotionDecodedJointFrame gRaceMotionJointFrameBuffer[RACE_MOTION_FRAME_SAMPLE_COUNT];
-extern Vec3i gRaceMotionJointDecodeFrameBuffer[];
-extern s32 gRacePlayerHitCueId;
 
 void initRaceCourseSurfaceData(void) {
     RaceMotionCountedTable *coordTable;

@@ -10,29 +10,10 @@
 #include "game/engine/runtime_memory.h"
 #include "libmus/libmus.h"
 #include "game/race/player/race_player_input.h"
+#include "game/audio/audio_engine_internal.h"
 
 #define SOUND_MANAGER_QUEUE_MASK (SOUND_MANAGER_QUEUE_CAPACITY - 1)
 #define SOUND_MANAGER_QUEUE_CAPACITY 64
-
-typedef struct SoundHandleNode {
-    struct SoundHandleNode *prev;
-    struct SoundHandleNode *next;
-    s32 handle;
-    u16 priority;
-    u8 stopRequested;
-    u8 volume;
-} SoundHandleNode;
-
-typedef struct PositionalSoundRequest {
-    struct PositionalSoundRequest *next;
-    Vec3i pos;
-    s16 soundId;
-    s16 volume;
-    s16 minVolume;
-    s16 priority;
-    s16 mode;
-    f32 pitch;
-} PositionalSoundRequest;
 
 typedef union SoundHalfArg {
     s32 word;
@@ -42,90 +23,7 @@ typedef union SoundHalfArg {
     } half;
 } SoundHalfArg;
 
-typedef struct SoundRomRange {
-    u32 romStart;
-    u32 romEnd;
-} SoundRomRange;
-
-typedef struct SoundQueueEntry {
-    u8 type;
-    u8 soundId;
-    u8 volume;
-    u8 pan;
-    u8 priority;
-    u8 unk5;
-} SoundQueueEntry;
-
-extern s32 gPlayerPositionalSoundHandle0[];
-
-extern s32 gPlayerPositionalSoundHandle1;
-
-extern s16 gPlayerLoopingSoundId0;
-
-extern s32 gPlayerLoopingSoundHandle1;
-
-extern SoundHandleNode gSoundHandleNodes[];
-
-extern s32 gPlayerLoopingSoundHandle0;
-
-extern s32 gPlayerPositionalSoundHandle2;
-
-extern f32 D_800D9FDC[SOUND_BANK_WAVE_COUNT];
-
-extern s32 gPlayerPositionalSoundHandle3;
-
-extern u8 *D_800DAC2C[108];
-
-extern s16 gPlayerLoopingSoundId1;
-
-extern s16 gPlayerLoopingSoundId3;
-
-extern u8 D_800D9EE0[SOUND_BANK_WAVE_COUNT + 1];
-
-extern s32 D_800DADDC[108];
-
-extern s16 gPlayerLoopingSoundId2;
-
-extern SchedulerState gSchedulerState;
-
-extern s32 gPlayerLoopingSoundHandle3;
-
-extern s32 gPlayerLoopingSoundHandle2;
-
-extern u8 gCurrentQueuedSoundId;
-
-extern u8 gCurrentQueuedSoundPan;
-
-extern u8 gCurrentQueuedSoundVolume;
-
-extern u8 gCurrentQueuedSoundPriority;
-
-extern u8 gCurrentQueuedSoundAux;
-
-extern u16 gCourseMusicSequenceBanks[14];
-extern PositionalSoundRequest *gPendingPositionalSoundRequests;
-extern SoundHandleNode *gActiveSoundHandleListHead;
-extern SoundHandleNode *gActiveSoundHandleListTail;
-extern SoundHandleNode *gFreeSoundHandleStack[13];
-extern s32 gFreeSoundHandleCount;
-extern s32 gMusicSequenceStopped;
-extern s32 gCurrentMusicSequenceHandle;
-extern SoundRomRange gRaceMusicSequenceRomRanges[9];
-extern s32 gCurrentMusicSequenceBank;
-extern SoundRomRange gMusicSequenceRomRanges[10];
-extern s32 gSoundQueueWriteIndex;
-extern s32 gSoundQueueReadIndex;
-extern s32 gPendingMusicCommandArg;
-extern s32 gPendingMusicCommand;
-extern SoundQueueEntry gSoundQueue[];
-extern SchedulerThread gAudioThread;
-extern u8 gCurrentQueuedSoundType;
-extern s32 gSharedLoopingPositionalSoundHandle;
-
 void *allocRenderCallbackScratch(s32 size);
-extern void stopCurrentMusicSequence(s32 arg0);
-extern s32 reserveSoundEffectQueueWriteIndex(void);
-extern s32 calculatePositionalSoundVolume(Vec3i *pos, s32 volume);
 
 void initSoundManager(void) {
     PlayerCommandInit init;

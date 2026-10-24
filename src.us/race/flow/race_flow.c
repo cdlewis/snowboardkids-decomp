@@ -46,14 +46,6 @@
 #define RACE_PLAYER_READY_FLAG 0x40
 
 typedef struct {
-    /* 0x00 */ s16 status;
-    /* 0x02 */ s16 courseId;
-    /* 0x04 */ s32 unk4;
-    /* 0x08 */ s32 unk8;
-    /* 0x0C */ s32 unkC;
-} CourseGridEntry;
-
-typedef struct {
     /* 0x00 */ s32 unk0;
     /* 0x04 */ u8 pad4[0x8 - 0x4];
     /* 0x08 */ s8 unk8;
@@ -64,28 +56,17 @@ typedef union {
     u8 padding[12];
 } RaceResultsReadyState;
 
-typedef struct {
-    /* 0x00 */ u8 boardPropertiesIndex;
-    /* 0x01 */ u8 snowboardTextureIndex;
-} RaceCpuBoardConfig;
-
-typedef struct {
-    u8 characterIds[10 * 4];
-} RaceCourseCharacterIdTable;
-
-extern CourseGridEntry gRaceReplayCourseGridEntries[];
-
 CourseGridEntry *gRaceReplayCourseGridLists[12] = {
-    gRaceReplayCourseGridEntries,
-    &gRaceReplayCourseGridEntries[12],
-    &gRaceReplayCourseGridEntries[24],
-    &gRaceReplayCourseGridEntries[39],
-    &gRaceReplayCourseGridEntries[54],
-    &gRaceReplayCourseGridEntries[67],
-    &gRaceReplayCourseGridEntries[83],
-    &gRaceReplayCourseGridEntries[119],
-    &gRaceReplayCourseGridEntries[107],
-    &gRaceReplayCourseGridEntries[95],
+    (CourseGridEntry *)gRaceReplayCourseGridEntries,
+    &((CourseGridEntry *)gRaceReplayCourseGridEntries)[12],
+    &((CourseGridEntry *)gRaceReplayCourseGridEntries)[24],
+    &((CourseGridEntry *)gRaceReplayCourseGridEntries)[39],
+    &((CourseGridEntry *)gRaceReplayCourseGridEntries)[54],
+    &((CourseGridEntry *)gRaceReplayCourseGridEntries)[67],
+    &((CourseGridEntry *)gRaceReplayCourseGridEntries)[83],
+    &((CourseGridEntry *)gRaceReplayCourseGridEntries)[119],
+    &((CourseGridEntry *)gRaceReplayCourseGridEntries)[107],
+    &((CourseGridEntry *)gRaceReplayCourseGridEntries)[95],
     NULL,
     NULL,
 };
@@ -237,13 +218,6 @@ u8 gRaceTypeSelection;
 u8 gRaceResultState;
 u8 gRaceResultsAwardPlayerNumber;
 s8 gRaceGhostRecordStatus;
-
-extern s32 gMenuFlowState;
-extern s16 gMenuFadeAlpha;
-extern u8 gRaceChallengeFailed;
-extern u8 gPendingFramebufferSwapCount;
-extern u8 gFramebufferSwapHold;
-extern u8 gRumblePakConnectedMask;
 
 void initStartupControllerPakFlow(void) {
     LOAD_ASSET(_2427D0, 6);

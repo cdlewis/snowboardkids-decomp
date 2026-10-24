@@ -37,6 +37,33 @@ typedef struct CallbackTaskGroup {
     CallbackTask tasks[4];
 } CallbackTaskGroup;
 
+typedef struct CallbackTaskSchedulerBss {
+    u8 padding[0x10];
+    CallbackTask activeListSentinel;
+} CallbackTaskSchedulerBss;
+
+extern CallbackTask *gCallbackTaskActiveListHead;
+extern CallbackTask gCallbackTaskActiveListSentinel;
+extern CallbackTaskGroup gCallbackTaskPoolEnd;
+extern CallbackTaskGroup gCallbackTaskPoolStartView0;
+extern CallbackTaskGroup gCallbackTaskPoolStartView1;
+extern CallbackTaskGroup gCallbackTaskPoolStartView2;
+extern CallbackTaskGroup gCallbackTaskPoolStartView3;
+
+#if defined(VERSION_JP)
+extern CallbackTaskSchedulerBss gCallbackTaskSchedulerBssView;
+extern CallbackTask *gCurrentCallbackTask;
+extern u16 gFreeCallbackTaskCount;
+extern CallbackTask *gFreeCallbackTaskPool[];
+extern u16 gFreeCallbackTaskType0Count;
+extern u16 gFreeCallbackTaskType1Count;
+extern u16 gFreeCallbackTaskType2Count;
+extern u16 gFreeCallbackTaskType3Count;
+extern u16 gFreeCallbackTaskType4Count;
+extern u16 gFreeCallbackTaskType5Count;
+extern u16 gFreeCallbackTaskType6Count;
+#endif
+
 void initCallbackTaskScheduler(s32 arg0);
 void updateCallbackTasks(void);
 void updateCallbackTasksWithMinPriority(s32 minPriority);

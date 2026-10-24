@@ -4,6 +4,14 @@
 #include "common.h"
 #include "game/engine/callback_task_scheduler.h"
 
+typedef struct {
+    /* 0x00 */ s16 modelIndex;
+    char pad2[2];
+    /* 0x04 */ Vec3i pos;
+    /* 0x10 */ s16 assetIndex;
+    char pad12[2];
+} RaceCoursePropModelEntry;
+
 typedef struct FallingRockSpawnerActor {
     /* 0x00 */ CallbackTaskHeader task; /* userId selects the spawn list. */
     /* 0x18 */ s16 timer;

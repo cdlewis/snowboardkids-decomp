@@ -17,6 +17,8 @@
 #include "game/menu/course_select/course_select_menu.h"
 #include "game/menu/course_select/multiplayer_course_select_menu.h"
 #include "game/menu/main_menu/controller_main_menu_flow.h"
+#include "game/engine/system_runtime.h"
+#include "game/menu/main_menu/controller_subsystem.h"
 
 #define SAVE_CHOICE_USE_PAK 3
 #define SAVE_CHOICE_SKIP_PAK 4
@@ -25,51 +27,14 @@
 #define SAVE_PANEL_CREATE_DELAY 5
 #define SAVE_READY_CONFIRM_DELAY 0xF
 /* The transition fields own the storage; the weak view preserves IDO code generation. */
-typedef struct RaceSetupSaveDefaultTime {
-    s8 minutes;
-    s8 seconds;
-    s8 fraction;
-} RaceSetupSaveDefaultTime;
-#pragma weak gControllerPakRumbleCheckPromptState
-typedef union RaceSetupSaveDefaultTimeRow {
-    u8 bytes[sizeof(RaceSetupSaveDefaultTime) * 5];
-    RaceSetupSaveDefaultTime records[5];
-} RaceSetupSaveDefaultTimeRow;
-typedef union RaceSetupSaveDefaultTimeTable {
-    s8 bytes[sizeof(RaceSetupSaveDefaultTimeRow) * 2];
-    RaceSetupSaveDefaultTimeRow rows[2];
-} RaceSetupSaveDefaultTimeTable;
 
-typedef struct {
-    u16 trickAttackScores[5];
-    u16 padding;
-    MenuGlyphScript courseNames[8][18];
-    u16 tailPadding[2];
-} RaceSetupDefaultSaveData;
+#pragma weak gControllerPakRumbleCheckPromptState
 
 ControllerPakRumbleCheckPromptState gControllerPakRumbleCheckPromptState = { 0 };
 
 RaceSetupMenuSubState gRaceSetupMenuSubState;
 
 s16 gRaceSetupSavePanelRects[2][4];
-
-extern u8 gRumblePakConnectedMask;
-
-extern s16 gMenuFadeAlpha;
-
-extern char D_800EBD05;
-
-extern u8 gHighestUnlockedCourse;
-
-extern s32 gMenuFlowState;
-extern u8 gConnectedControllerCount;
-extern s16 gRaceSetupSavePanelInitialRects[4][2];
-extern RaceSetupSaveDefaultTime gDefaultTimeTrialRecords[11][5];
-extern RaceSetupDefaultSaveData gDefaultSaveRecordData;
-extern RaceSetupSaveDefaultTime gDefaultBestLapRecords[11];
-extern RaceSetupSaveDefaultTimeTable gDefaultRaceRecordsByCourseParity;
-extern u8 gDefaultScoreAttackScores[10];
-extern RaceSetupSaveDefaultTimeRow gDefaultRookieMountainRaceRecords[1];
 
 void initRaceSetupMenu(void) {
     s32 i;

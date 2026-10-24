@@ -12,6 +12,7 @@
 #include "game/engine/relocatable_heap.h"
 #include "game/menu/renderer/menu_renderer.h"
 #include "game/menu/renderer/menu_render_utils.h"
+#include "game/engine/system_render.h"
 
 #define ENDING_GFX_CMD(pkt, cmd0, cmd1) \
     {                                   \
@@ -30,14 +31,12 @@ typedef struct {
 } EndingShadowStack;
 
 MainMenuSceneActorShadow gEndingActorShadow;
-extern Gfx *gRegionAllocPtr;
 Vtx gEndingActorShadowQuadVertices[4] = {
     { { { -16, 16, 0 }, 0, { 0, 0 }, { 0xFF, 0xFF, 0xFF, 0xFF } } },
     { { { 16, 16, 0 }, 0, { 480, 0 }, { 0xFF, 0xFF, 0xFF, 0xFF } } },
     { { { 16, -16, 0 }, 0, { 480, 480 }, { 0xFF, 0xFF, 0xFF, 0xFF } } },
     { { { -16, -16, 0 }, 0, { 0, 480 }, { 0xFF, 0xFF, 0xFF, 0xFF } } },
 };
-extern s16 gAssetHandles[];
 
 void noopEndingCreditsTommy(void) {
 }

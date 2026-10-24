@@ -42,12 +42,6 @@ s16 gCourseSelectColumnSoundEffects[MULTIPLAYER_COURSE_SELECT_COLUMN_COUNT] = {
     SFX_NONE,
 };
 
-extern s16 gMenuFadeAlpha;
-extern u8 D_800EC9C0;
-extern s8 D_800EBD05;
-extern RaceCamera gCurrentRaceCamera;
-extern s32 gMenuFlowState;
-
 void initMultiplayerCourseSelectMenu(void) {
     s32 j;
     s32 k;

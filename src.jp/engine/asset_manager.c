@@ -4,21 +4,6 @@
 #include "game/engine/relocatable_heap.h"
 #include "game/engine/system_runtime.h"
 
-typedef struct {
-    /* 0x0 */ s16 prev;
-    /* 0x2 */ s16 next;
-    /* 0x4 */ s16 weight;
-    /* 0x6 */ s16 left;
-    /* 0x8 */ s16 right;
-    /* 0xA */ s16 value;
-} HuffmanNode;
-
-typedef struct {
-    /* 0x0 */ s32 compressedSize;
-    /* 0x4 */ u8 flags;
-    /* 0x5 */ u8 pad5[3];
-} CompressedAssetHeader;
-
 u8 gRandomTable[256] = {
     0xD4, 0xF5, 0xDA, 0x93, 0x49, 0xA0, 0xD3, 0x64, 0x58, 0xC9, 0x31, 0x9A, 0x56, 0x1E, 0x90, 0x34, 0xC7, 0x17, 0x3E,
     0x13, 0x0E, 0x09, 0xE2, 0xDF, 0xF6, 0xA9, 0x3D, 0x59, 0x2A, 0x5D, 0x95, 0x08, 0xFF, 0x91, 0xA7, 0x30, 0x66, 0x27,
@@ -41,10 +26,6 @@ u32 D_800D4008[2] = { 0, 0 };
 s16 gHuffmanQueueHead = -1;
 s16 gHuffmanQueueTail = -1;
 s16 gHuffmanQueueCount = 0;
-
-extern CompressedAssetHeader gCompressedAssetHeader;
-extern HuffmanNode gHuffmanNodes[];
-extern s32 gHuffmanNodeCount;
 
 s32 randomNextMain(void) {
     gMainRngIndex++;

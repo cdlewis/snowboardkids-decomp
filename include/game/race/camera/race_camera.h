@@ -51,6 +51,9 @@ extern RaceCamera gRaceCamerasEnd[];
 extern RaceCamera *gCurrentMenuCameraObject;
 extern u8 gRaceCameraModeChangeDisabled;
 
+extern RaceCamera gCourseSelectCameraUpdateEnd;
+extern RaceCamera *gCurrentRaceCamera;
+
 void setRaceCameraMode(u16 arg0, u16 arg1);
 void setRaceCameraModeForced(u16 arg0, u16 arg1);
 void resetRaceCameras(void);

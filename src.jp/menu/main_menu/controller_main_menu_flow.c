@@ -25,6 +25,8 @@
 #include "game/menu/renderer/menu_renderer.h"
 #include <PR/os_motor.h>
 #include <PR/os_cont.h>
+#include "game/menu/main_menu/controller_subsystem.h"
+#include "game/menu/race_setup/race_setup_menu.h"
 
 #define OS_MESG_BLOCK 1
 #define CONTROLLER_PAK_RECORD_AT(cursor, field) \
@@ -32,26 +34,6 @@
 #define CONTROLLER_PAK_U8_AT(cursor, field) (*(u8 *)((cursor) + CONTROLLER_PAK_SAVE_FIELD_OFFSET(field)))
 #define CONTROLLER_PAK_U16_AT(cursor, field) (*(u16 *)((cursor) + CONTROLLER_PAK_SAVE_FIELD_OFFSET(field)))
 #define CONTROLLER_PAK_SAVE_FIELD_OFFSET(field) ((u32) & (((GameSaveData *)0)->field))
-
-extern u8 gControllerPakSaveExtNameBytesEnd[0x84];
-
-extern s32 gControllerPakFileNos[];
-
-extern SaveFileIdentity gControllerPakSaveFileIdentity;
-
-extern u8 gMainMenuSecretCodeStep;
-
-extern u8 gRumblePakConnectedMask;
-extern u8 gControllerReadPending;
-extern OSMesgQueue gControllerSubsystemRequestQueue;
-extern u8 gConnectedControllerBitmask;
-extern OSContPad gControllerPads[];
-extern OSMesgQueue gControllerSubsystemReplyQueue;
-extern OSMesgQueue gControllerEventQueue;
-extern OSPfs gControllerPakHandles[];
-extern u8 gMainMenuReturnFromRace;
-extern s16 gMenuFadeAlpha;
-extern s32 gMenuFlowState;
 
 void requestControllerRead(void) {
     if ((gControllerReadPending == 0) && (gConnectedControllerBitmask != 0)) {

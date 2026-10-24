@@ -3,11 +3,6 @@
 #include "PR/gu.h"
 
 ViewportState gViewportStates[4];
-extern const f32 gMenuViewportOverlayFarClip[1];
-extern const f32 gMenuViewportFarClip[1];
-extern const f32 gRaceViewportOverlayFarClip[1];
-extern const f32 gCustomViewportOverlayFarClip[1];
-extern const f32 gDefaultViewportOverlayFarClip[1];
 
 void resetAllViewports(void) {
     s32 i;

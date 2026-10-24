@@ -2,6 +2,7 @@
 #define SYSTEM_RUNTIME_H
 
 #include "common.h"
+#include "game/audio/audio_engine.h"
 #include "game/engine/system_render.h"
 
 #define USE_ASSET(id)           \
@@ -18,6 +19,28 @@ extern u8 gRenderMatricesDirty;
 extern u8 gRaceRecordSettingsEnabled;
 extern u8 gRaceCourseModelEffectsDisabled;
 extern u8 gRaceCourseOverlayEffectsDisabled;
+
+extern OSMesgQueue gControllerInputUpdateQueue;
+extern s16 gMenuFadeAlpha;
+extern SchedulerState gSchedulerState;
+
+#if defined(VERSION_JP)
+extern OSThread gBootThread;
+extern u8 gFadeColorBlue;
+extern u8 gFadeColorGreen;
+extern u8 gFadeColorRed;
+extern s16 gFadeTimer;
+extern OSMesgQueue gFramebufferRenderDoneQueue;
+extern OSThread gGameThread;
+extern OSMesg gPiManagerMessages[];
+extern OSMesgQueue gPiManagerQueue;
+extern OSMesgQueue gRomDmaQueue;
+extern OSMesgQueue gSchedulerClientQueue;
+#endif
+
+#if defined(VERSION_US)
+extern u8 gDepthBufferPhysicalAddress[];
+#endif
 
 void dmaReadRom(u32 romOffset, void *ramAddress, s32 size);
 void appendFadeOverlayDisplayList(void);

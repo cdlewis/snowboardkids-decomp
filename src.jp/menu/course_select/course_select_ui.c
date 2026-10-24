@@ -19,17 +19,7 @@
 #include "game/math/fixed_point_math.h"
 #include "game/race/player/race_player_model_renderer.h"
 #include "game/race/player/race_player_input.h"
-
-typedef struct {
-    u8 speed;
-    u8 handling;
-    u8 trick;
-} CourseSelectCourseRating;
-
-typedef union {
-    CourseSelectCourseRating courses[8];
-    u8 values[0x18];
-} CourseSelectCourseRatingTable;
+#include "game/engine/system_render.h"
 
 typedef enum {
     COURSE_RATING_SPEED,
@@ -37,37 +27,6 @@ typedef enum {
     COURSE_RATING_TRICK,
     COURSE_RATING_COUNT
 } CourseSelectCourseRatingType;
-
-extern CourseSelectCourseRatingTable gCourseSelectCourseRatings;
-
-extern const char gCourseSelectHandlingFormat[];
-
-extern const char gCourseSelectUnknownTrickText[];
-
-extern const char gCourseSelectUnknownSpeedText[];
-
-extern const char gCourseSelectTrickFormat[];
-
-extern const char gCourseSelectSpeedFormat[];
-
-extern const char gCourseSelectUnknownHandlingText[];
-
-extern s16 gCourseSelectStatsPlayerMarkerLayout[][4];
-
-extern s32 gMenuFlowState;
-
-extern MenuGlyphScript gCourseSelectCompleteText[];
-
-extern u8 gCurrentViewportIndex;
-
-extern u8 D_800EC9C0;
-
-extern s16 gCourseSelectIconListXLayout[][4];
-
-extern s16 gCourseSelectIconListYLayout[][6];
-extern s16 gCourseSelectStatsPanelLayout[][4];
-extern const char gCourseSelectPlayerNumberFormat[];
-extern void drawCourseSelectCourseIconList(CourseSelectIconListActor *iconList);
 
 void drawCourseSelectSnowboardPreviewIn(CourseSelectCoursePreviewActor *arg0) {
     u8 sp2F;

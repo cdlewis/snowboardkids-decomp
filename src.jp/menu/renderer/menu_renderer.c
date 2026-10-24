@@ -31,9 +31,6 @@
 #define MENU_GLYPH_DEFAULT_FONT_BANK 0x22
 #define MENU_GLYPH_SCRIPT_COLOR 0xFFFC
 
-extern s16 gMenuFadeAlpha;
-extern s16 gMenuSpriteFlipScales[8];
-
 #pragma GLOBAL_ASM("asm.jp/nonmatchings/menu/renderer/menu_renderer/func_8000E6F0.s")
 
 void drawMenuSprite(s16 arg0, s16 arg1, AssetTable *arg2, u16 arg3, u16 arg4, u16 arg5, u8 arg6, u8 arg7) {

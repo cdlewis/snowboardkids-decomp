@@ -12,6 +12,7 @@
 #include "game/race/race_replay.h"
 #include "game/race/player/race_player_model_renderer.h"
 #include "game/race/scene/race_scene_setup.h"
+#include "game/engine/system_render.h"
 
 #define FIXED_MATRIX_ROWS(matrix) ((s16(*)[MAIN_MENU_SCENE_MODEL_MATRIX_AXES])(matrix))
 #define MAIN_MENU_SCENE_MODEL_MATRIX_AXES 3
@@ -82,9 +83,6 @@ s16 *gMainMenuSceneModelPartInitDataByModel[MAIN_MENU_CHARACTER_COUNT + 1] = {
 
 PackedRaceRecordReplay gPackedRaceRecordReplayBuffer;
 u16 gCompressedRaceRecordReplayBuffer[COMPRESSED_RACE_RECORD_REPLAY_HALFWORD_COUNT];
-
-extern u8 gCurrentViewportIndex;
-extern Gfx *gRegionAllocPtr;
 
 s32 compressRaceRecordReplayData(u8 *src, s32 srcLen, u16 *dst) {
     s32 count;

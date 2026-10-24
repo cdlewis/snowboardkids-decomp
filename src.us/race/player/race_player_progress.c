@@ -4,11 +4,10 @@
 #include "game/math/fixed_point_math.h"
 #include "game/race/motion/race_motion.h"
 #include "game/race/player/race_player_progress.h"
+#include "game/race/ui/race_hud.h"
 
 #define RANK_ARROW_DISTANCE 0x03800000
 #define RANK_ARROW_NEGATIVE_LIMIT ((s32)0xFC800001)
-
-extern u32 D_800DC9A8[];
 
 char D_800DDE70[4] = "\t\t\t";
 

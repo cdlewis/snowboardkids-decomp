@@ -39,11 +39,6 @@ s8 gPlayerStickY[PLAYER_INPUT_COUNT];
 s32 gPlayerInputRepeat[PLAYER_INPUT_COUNT];
 u8 gPlayerInputRepeatTimer[PLAYER_INPUT_COUNT];
 
-extern volatile GameTask gActiveGameTaskListView;
-extern s32 gPlayer2InputPrevious;
-extern s32 gPlayer3InputPrevious;
-extern s32 gPlayer4InputPrevious;
-
 CLANG_DIAGNOSTIC_PUSH
 CLANG_DIAGNOSTIC_IGNORE_DEPRECATED_NON_PROTOTYPE
 CLANG_DIAGNOSTIC_IGNORE_STRICT_PROTOTYPES

@@ -9,7 +9,38 @@
 typedef s16 AssetHandle;
 typedef AssetHandle AssetHandles[ASSET_HANDLE_COUNT];
 
+typedef struct {
+    /* 0x0 */ s16 prev;
+    /* 0x2 */ s16 next;
+    /* 0x4 */ s16 weight;
+    /* 0x6 */ s16 left;
+    /* 0x8 */ s16 right;
+    /* 0xA */ s16 value;
+} HuffmanNode;
+
+#if defined(VERSION_US)
+typedef struct {
+    /* 0x0 */ s32 decodedSize; /* Output allocation and decompression length. */
+    /* 0x4 */ u8 flags;
+    /* 0x5 */ u8 pad5[3]; /* DMA read-ahead: encoded payload starts at +5, not +8. */
+} CompressedAssetHeader;
+#endif
+
+#if defined(VERSION_JP)
+typedef struct {
+    /* 0x0 */ s32 compressedSize;
+    /* 0x4 */ u8 flags;
+    /* 0x5 */ u8 pad5[3];
+} CompressedAssetHeader;
+#endif
+
 extern AssetHandles gAssetHandles;
+
+#if defined(VERSION_JP)
+extern CompressedAssetHeader gCompressedAssetHeader;
+extern s32 gHuffmanNodeCount;
+extern HuffmanNode gHuffmanNodes[];
+#endif
 
 s32 randomNextMain(void);
 s32 randomNextSecondary(void);

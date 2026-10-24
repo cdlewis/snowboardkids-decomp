@@ -10,13 +10,9 @@
 #include "game/menu/renderer/menu_renderer.h"
 #include "game/menu/controller_pak/controller_pak_continue_prompt_flow.h"
 #include "game/engine/viewport_manager.h"
+#include "game/engine/system_runtime.h"
 
 ControllerPakContinuePromptTransition gControllerPakContinuePromptTransition;
-
-extern s16 gMenuFadeAlpha;
-extern s32 gMenuFlowState;
-extern u8 gPendingFramebufferSwapCount;
-extern u8 gFramebufferSwapHold;
 
 void initControllerPakContinuePromptFlow(void) {
     requestMusicSequenceBank(3);

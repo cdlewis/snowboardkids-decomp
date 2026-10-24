@@ -17,18 +17,8 @@
 #include "game/race/player/race_player_update.h"
 #include "game/race/ui/race_hud.h"
 #include "game/engine/viewport_manager.h"
-
-extern s16 gRaceLapCount;
-extern s8 gRacePlayerCount;
-extern u8 gRaceUpdatePaused;
-extern s16 gMenuFadeAlpha;
-extern u8 gFramebufferSwapHold;
-extern s32 gMenuFlowState;
-extern u8 gMainMenuModeSelection;
-extern s16 gRacePlayerAttackStartTimer;
-
-extern u8 gPendingFramebufferSwapCount;
-extern u8 gTrainingCourseLesson;
+#include "game/engine/system_runtime.h"
+#include "game/race/flow/race_flow.h"
 
 void startTrainingCourseFlow(void) {
     gTrainingCourseLesson = 1;

@@ -11,6 +11,7 @@
 #include "game/engine/viewport_manager.h"
 #include "game/race/camera/race_camera.h"
 #include <PR/os_cache.h>
+#include "game/engine/system_render.h"
 
 #define FONT_GFX_CMD(pkt, cmd0, cmd1) \
     {                                 \
@@ -55,13 +56,6 @@ u16 gMenuDefaultSpritePalette[16] = {
 #ifdef SBK_SPRITE_PALETTE_REMAP
 static AssetTable *sMenuAsciiFontAsset;
 #endif
-
-extern s16 gMenuViewportWidth;
-extern s16 gMenuViewportHeight;
-extern s16 gMenuViewportCenterX;
-extern s16 gMenuViewportCenterY;
-extern Gfx *gRegionAllocPtr;
-extern u32 gMenuRenderScratchUsedSize;
 
 // IDO code generation for this function is sensitive to source line layout.
 // clang-format off
@@ -1184,7 +1178,6 @@ void allocMenuRenderScratchBuffers(void) {
     gAssetHandles[1] = allocRelocatableHeapBlock(0x8000);
     gAssetHandles[2] = allocRelocatableHeapBlock(0x8000);
 }
-
 
 void selectMenuRenderScratchBuffer(s32 arg0) {
     gMenuRenderScratchUsedSize = 0;

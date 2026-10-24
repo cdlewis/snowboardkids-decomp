@@ -16,6 +16,9 @@
 #include "game/menu/main_menu/main_menu_scene_model.h"
 #include "game/menu/main_menu/main_menu_scene_model_renderer.h"
 #include "game/race/player/race_player_input.h"
+#include "game/engine/model_asset_symbols.h"
+#include "game/engine/system_render.h"
+#include "game/menu/main_menu/controller_subsystem.h"
 
 #define MAIN_MENU_GFX_CMD(pkt, cmd0, cmd1) \
     {                                      \
@@ -34,8 +37,6 @@ typedef struct {
     /* 0x00 */ Transform3D source;
     /* 0x20 */ s32 pad20;
 } TitleMenuRotatingBoardScratch;
-
-extern Gfx *gRegionAllocPtr;
 
 u8 raceSetupCharacterFocusAnimationIds[8] = { 0, 1, 0, 1, 2, 0, 0, 0 };
 
@@ -118,15 +119,6 @@ s16 passAwardLabelFlashTileOffsets[538] = {
     0xF4E3, 0x7F05, 0xD688, 0x7A09, 0x0100, 0x0000, 0xF52D, 0x87B9, 0xF4A4, 0xA1ED, 0xD7C9, 0xCCB7, 0xFF00, 0x0000,
     0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
 };
-extern s16 gMenuFadeAlpha;
-extern u8 gCurrentViewportIndex;
-extern u8 gConnectedControllerCount;
-extern u32 gPassAwardPodiumVariant0Dl[];
-extern u32 gPassAwardPodiumVariant1Dl[];
-extern u32 gPassAwardPodiumVariant2Dl[];
-extern u32 gMainMenuRotatingBoardDl[];
-extern u32 gMainMenuStaticBoardDl[];
-extern u32 gRookieMountainBackdropDl[];
 
 void drawPassAwardPodiumModels(MenuScreenEffectActor *);
 void drawPassAwardCourseBackdrop(void *);

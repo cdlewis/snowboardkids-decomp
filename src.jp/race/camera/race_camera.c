@@ -6,6 +6,8 @@
 #include "game/race/camera/race_camera.h"
 #include "game/race/player/race_player_input.h"
 #include "game/menu/renderer/menu_render_utils.h"
+#include "game/engine/game_task_scheduler.h"
+#include "game/race/flow/race_flow.h"
 
 #define RACE_CAMERA_COUNT 4
 #define RACE_CAMERA_STATE_SIZE 0xB0
@@ -144,14 +146,6 @@ RaceCameraTransition gRaceCameraPositionTransitions[] = {
     { 3, 0x3E, { 0xEEED56A1, 0xF451496A, 0xE00D77B0 }, { 0xECC6D0D7, 0xF405096A, 0xDF21D656 } },
     { 0, 0x0F, { 0xE21D1637, 0xED2A73FF, 0xE3E16721 }, { 0xE21D1637, 0xED3BB3FF, 0xE3E16721 } },
 };
-
-extern RaceCamera *gCurrentRaceCamera;
-extern s32 gRaceCameraReplayStartX;
-extern s32 gRaceCameraReplayStartY;
-extern s32 gRaceCameraReplayStartZ;
-extern s8 gRacePlayerCount;
-extern u8 gRaceUpdatePaused;
-extern s32 gMenuFlowState;
 
 void setRaceCameraMode(u16 arg0, u16 arg1) {
     RaceCamera *temp;

@@ -13,16 +13,12 @@
 #include "game/menu/renderer/menu_renderer.h"
 #include "game/engine/viewport_manager.h"
 #include "game/race/race_state.h"
+#include "game/engine/system_runtime.h"
 
 ControllerPakMenuState gControllerPakMenuState;
 OSPfsState gControllerPakFileStates[16];
 s32 gControllerPakFreeBytes;
 s32 gControllerPakFreeFileCount;
-
-extern u8 gPendingFramebufferSwapCount;
-extern u8 gFramebufferSwapHold;
-extern s16 gMenuFadeAlpha;
-extern s32 gMenuFlowState;
 
 void initControllerPakFileDeleteFlow(void) {
     requestControllerPakProbe(0);

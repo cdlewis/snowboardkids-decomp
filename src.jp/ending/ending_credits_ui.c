@@ -17,20 +17,6 @@
 #define ENDING_CREDITS_PAGE_VISIBLE_FRAMES 0x96
 #define ENDING_CREDITS_PAGE_COUNT 0x19
 
-typedef struct EndingObjectSpriteDebugViewerActor {
-    u8 pad0[0x18];
-    s16 x;
-    s16 y;
-    s16 spriteId;
-    u8 enabled;
-    u8 palette;
-} EndingObjectSpriteDebugViewerActor;
-
-extern void drawEndingCreditsPageText(EndingCreditsPageTextActor *arg0);
-extern void updateEndingCreditsTheEndTextFadeIn(EndingCreditsPageTextActor *arg0);
-extern void updateEndingCreditsPageText(EndingCreditsPageTextActor *arg0);
-extern void updateEndingObjectSpriteDebugViewer(EndingObjectSpriteDebugViewerActor *arg0);
-
 #pragma GLOBAL_ASM("asm.jp/nonmatchings/ending/ending_credits_ui/drawEndingCreditsPageText.s")
 
 void drawEndingCreditsTheEndText(EndingCreditsPageTextActor *arg0) {

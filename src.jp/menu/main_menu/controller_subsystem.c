@@ -5,6 +5,8 @@
 #include <PR/os_pfs.h>
 #include <PR/os_thread.h>
 #include "game/menu/main_menu/controller_main_menu_flow.h"
+#include "game/engine/system_runtime.h"
+#include "game/menu/main_menu/controller_subsystem.h"
 
 typedef struct ControllerThreadMessageSlots {
     OSMesg serialEvent;
@@ -16,24 +18,6 @@ ControllerInputState gControllerInputState[MAXCONTROLLERS];
 u8 gControllerSubsystemBssPadding[0x7C68];
 s32 gRumbleMotorStatuses[MAXCONTROLLERS];
 s16 gRumbleMotorRequestStates[MAXCONTROLLERS];
-
-extern OSThread gControllerSubsystemThread;
-extern OSMesgQueue gControllerSubsystemRequestQueue;
-extern OSMesg gControllerSubsystemRequestMessages[];
-extern OSMesgQueue gControllerSubsystemReplyQueue;
-extern OSMesg gControllerSubsystemReplyMessages[];
-extern OSMesgQueue gControllerEventQueue;
-extern OSMesg gControllerEventMessages[];
-extern OSMesgQueue gControllerInputUpdateQueue;
-extern s16 gControllerEventMessage;
-extern OSContPad gControllerPads[];
-extern OSContStatus gControllerStatuses[];
-extern OSPfs gRumblePakHandles[];
-extern u8 gConnectedControllerBitmask;
-extern u8 gConnectedControllerCount;
-extern u8 gControllerReadPending;
-extern u8 gControllerSubsystemThreadStack[0x2000];
-extern void *gControllerSubsystemThreadArg;
 
 void initControllerSubsystem(void) {
     s32 i;

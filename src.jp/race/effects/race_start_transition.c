@@ -14,6 +14,8 @@
 #include "game/race/camera/race_camera.h"
 #include "game/race/effects/race_start_transition.h"
 #include "game/engine/viewport_manager.h"
+#include "game/engine/system_runtime.h"
+#include "game/race/flow/race_flow.h"
 
 typedef struct PassAwardCameraTransformScratch {
     /* 0x00 */ Transform3D rotationTransform;
@@ -155,9 +157,6 @@ u8 gPassAwardOpponentCharacterIds[5][4] = {
 };
 
 u32 D_800BB824[3] = { 0, 0, 0 };
-
-extern u8 gPendingEndingCreditsFlow;
-extern s16 gMenuFadeAlpha;
 
 void updateMenuCameraObjectLookAtOrigin(void) {
     PassAwardCameraTransformScratch scratch;

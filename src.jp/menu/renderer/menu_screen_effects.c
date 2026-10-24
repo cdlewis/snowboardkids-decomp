@@ -16,6 +16,7 @@
 #include "game/menu/main_menu/main_menu_scene_model.h"
 #include "game/menu/main_menu/main_menu_scene_model_renderer.h"
 #include "game/race/player/race_player_input.h"
+#include "game/engine/model_asset_symbols.h"
 
 #define MAIN_MENU_GFX_CMD(pkt, cmd0, cmd1) \
     {                                      \
@@ -35,60 +36,10 @@ typedef struct {
     s32 pad20;
 } TitleMenuRotatingBoardScratch;
 
-extern s16 courseRecordDigitTileOffsets[10];
-
-extern s16 congratulationsBannerSpriteTileOffsets[10];
-
-extern Vtx congratulationsBannerModelVertices[4];
-
-extern s16 passAwardLabelFlashTileOffsets[538];
-
-extern u8 titleMenuSparkleTileFrames[16];
-
-extern s16 gMenuFadeAlpha;
-
-extern s16 raceSetupCharacterFocusSoundIds[6];
-
-extern u8 raceSetupCharacterFocusAnimationIds[8];
-extern u8 passAwardOpponentAnimationIds[4];
-extern s32 passAwardOpponentXPositions[6];
-extern char D_800E0520[];
-extern u32 gPassAwardPodiumVariant1Dl[];
-extern u32 gPassAwardPodiumVariant0Dl[];
-extern u32 gPassAwardPodiumVariant2Dl[];
-extern u32 gRookieMountainBackdropDl[];
-extern Vtx raceStartPlayerEffectVertices[4];
-extern s16 titleMenuSparklePositions[2];
-extern u32 gMainMenuRotatingBoardDl[];
-extern u32 gMainMenuStaticBoardDl[];
-extern void updateRaceStartPlayerEffectActive(MenuScreenEffectActor *);
-extern void updateCongratulationsBannerSprite(MenuScreenEffectActor *);
-
 void drawPassAwardLabel(MenuScreenEffectActor *);
 void drawCourseRecordBanner(MenuScreenEffectActor *);
 
 void drawRaceStartPlayerEffectSprite(MenuScreenEffectActor *);
-
-extern void drawFallingConfetti(MenuScreenEffectActor *arg0);
-extern void updateFallingConfettiSway(MenuScreenEffectActor *arg0);
-extern void updateFallingConfettiDrift(MenuScreenEffectActor *arg0);
-extern void drawPassAwardPodiumModels(MenuScreenEffectActor *);
-extern void drawPassAwardCourseBackdrop(void *);
-extern void renderPassAwardPodium(MenuScreenEffectActor *);
-extern void initPassAwardOpponent(MenuScreenEffectActor *arg0);
-extern void drawTitleScreenStartPrompt(MenuScreenEffectActor *);
-extern void drawTitleMenuSparkle(MenuScreenEffectActor *);
-extern void renderTitleMenuSparkle(MenuScreenEffectActor *arg0);
-extern void updateCourseRecordBannerFadeOut(MenuScreenEffectActor *);
-extern void drawRaceSetupNamePlate(MenuScreenEffectActor *);
-extern void updateRaceSetupNamePlateSlideOut(MenuScreenEffectActor *);
-extern void holdRaceSetupNamePlate(MenuScreenEffectActor *);
-extern void drawCongratulationsBannerModel(MenuScreenEffectActor *);
-extern void updateCongratulationsBannerModel(MenuScreenEffectActor *);
-extern void updatePassAwardLabelFadeIn(MenuScreenEffectActor *);
-extern void drawMainMenuRotatingBoardModel(MenuScreenEffectActor *);
-extern void drawMainMenuStaticBoardModel(void *);
-extern void renderMainMenuBoardModels(MenuScreenEffectActor *arg0);
 
 void drawFallingConfetti(MenuScreenEffectActor *arg0) {
     void *texture;

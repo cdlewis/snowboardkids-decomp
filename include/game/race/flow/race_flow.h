@@ -3,6 +3,45 @@
 
 #include "common.h"
 
+typedef struct {
+    /* 0x00 */ s16 status;
+    /* 0x02 */ s16 courseId;
+    /* 0x04 */ s32 unk4;
+    /* 0x08 */ s32 unk8;
+    /* 0x0C */ s32 unkC;
+} CourseGridEntry;
+
+typedef struct {
+    /* 0x00 */ u8 boardPropertiesIndex;
+    /* 0x01 */ u8 snowboardTextureIndex;
+} RaceCpuBoardConfig;
+
+typedef struct {
+    u8 characterIds[10 * 4];
+} RaceCourseCharacterIdTable;
+
+extern u8 gMainMenuModeSelection;
+extern u8 gPendingEndingCreditsFlow;
+extern s32 gRaceCameraReplayStartX;
+extern s32 gRaceCameraReplayStartY;
+extern s32 gRaceCameraReplayStartZ;
+extern s16 gRaceLapCount;
+extern s16 gRacePlayerAttackStartTimer;
+extern s8 gRacePlayerCount;
+extern u8 gRaceUpdatePaused;
+extern u8 gTrainingCourseLesson;
+
+#if defined(VERSION_JP)
+extern u8 gRaceCourseCpuPickupUseChances[];
+extern RaceCourseCharacterIdTable gRaceCourseOpponentCharacterIds;
+extern RaceCpuBoardConfig *gRaceCpuBoardConfigsByCourse[];
+extern s8 gRaceGhostRecordStatus;
+extern u16 gRaceGhostReplayGridSwitchFrames[];
+extern u8 gRacePauseMenuSelection;
+extern CourseGridEntry *gRaceReplayCourseGridLists[];
+extern u8 gRaceResultsAwardPlayerNumber;
+#endif
+
 void initStartupControllerPakFlow(void);
 void waitStartupRumbleInit(void);
 void routeStartupControllerPakFlow(void);

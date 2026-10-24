@@ -19,17 +19,7 @@
 #include "game/math/fixed_point_math.h"
 #include "game/race/player/race_player_model_renderer.h"
 #include "game/race/player/race_player_input.h"
-
-typedef struct {
-    u8 speed;
-    u8 handling;
-    u8 trick;
-} CourseSelectCourseRating;
-
-typedef union {
-    CourseSelectCourseRating courses[8];
-    u8 values[0x18];
-} CourseSelectCourseRatingTable;
+#include "game/engine/system_render.h"
 
 typedef enum {
     COURSE_RATING_SPEED,
@@ -37,11 +27,6 @@ typedef enum {
     COURSE_RATING_TRICK,
     COURSE_RATING_COUNT
 } CourseSelectCourseRatingType;
-
-extern const char gCourseSelectPlayerNumberFormat[];
-extern u8 D_800EC9C0;
-extern s32 gMenuFlowState;
-extern u8 gCurrentViewportIndex;
 
 MenuGlyphScript gCourseSelectUnusedText[] = {
     // textconv requires these _() invocations to retain their original line layout.

@@ -26,6 +26,7 @@
 #include "game/race/ui/race_ui_effects.h"
 #include "game/race/effects/snowboard_trail_effects.h"
 #include "game/engine/viewport_manager.h"
+#include "game/race/flow/race_flow.h"
 
 typedef struct {
     Vec3i position;
@@ -49,14 +50,6 @@ typedef union {
     s32 value;
     u64 align;
 } RaceSpawnX;
-
-extern u8 gMainMenuModeSelection;
-extern s8 gRacePlayerCount;
-extern u8 gRaceUpdatePaused;
-extern u8 gTrainingCourseLesson;
-extern s32 gMenuFlowState;
-extern s16 gRacePlayerAttackStartTimer;
-extern s16 gRaceLapCount;
 
 u16 gRacePlayerVoiceBaseSoundIds[] = {
     0, 100, 100, 120, 120, 150, 150, 150, 150, 220, 250, 300, 350, 400, 500, 0,

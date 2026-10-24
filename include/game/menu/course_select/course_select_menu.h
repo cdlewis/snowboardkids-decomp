@@ -92,6 +92,12 @@ extern u8 gCourseDetailsMenuSelection;
 extern u8 gCourseDetailsPreviewPage;
 extern u8 gCourseDetailsCloseFromBack;
 
+extern u16 gCourseDetailsPreviewCourseTiles[];
+extern u16 gCourseDetailsPreviewExtraTiles[];
+extern s16 gCoursePreviewViewportHeight;
+extern u8 gShopMenuDescriptionSeen;
+extern u8 gShopMenuShowNewCoursesMessage;
+
 void initCourseSelectMenu(void);
 void updateCourseSelectModeMenu(void);
 void initCourseSelectCourseList(void);

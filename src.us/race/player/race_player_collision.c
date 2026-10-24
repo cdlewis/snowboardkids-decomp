@@ -23,7 +23,6 @@ s32 gRacePlayerHitDeltaX;
 s32 gRacePlayerHitDeltaZ;
 
 /* The effect angle is the low half of gRacePlayerHitAngle. */
-extern s16 gRacePlayerHitEffectAngle;
 void enqueueRacePlayerVoiceSound(RacePlayer *, s32);
 
 s32 tryQueueRacePlayerHitCueSpinout(RacePlayer *arg0) {

@@ -2,6 +2,7 @@
 #define RACE_SETUP_MENU_H
 
 #include "common.h"
+#include "game/menu/renderer/menu_renderer.h"
 
 /* Player-count UI protocol; separate from ControllerPakSaveFlowStatus.
  * CHECKING dispatches initRaceSetupSaveMenu for every player count. Save panels
@@ -36,12 +37,51 @@ typedef struct RaceSetupMenuPackedData {
     u8 raceRecordChoicePromptStates[19];
 } RaceSetupMenuPackedData;
 
+typedef struct RaceSetupSaveDefaultTime {
+    s8 minutes;
+    s8 seconds;
+    s8 fraction;
+} RaceSetupSaveDefaultTime;
+
+typedef union RaceSetupSaveDefaultTimeRow {
+    u8 bytes[sizeof(RaceSetupSaveDefaultTime) * 5];
+    RaceSetupSaveDefaultTime records[5];
+} RaceSetupSaveDefaultTimeRow;
+
+typedef union RaceSetupSaveDefaultTimeTable {
+    s8 bytes[sizeof(RaceSetupSaveDefaultTimeRow) * 2];
+    RaceSetupSaveDefaultTimeRow rows[2];
+} RaceSetupSaveDefaultTimeTable;
+
+typedef struct {
+    u16 trickAttackScores[5];
+    u16 padding;
+    MenuGlyphScript courseNames[8][18];
+    u16 tailPadding[2];
+} RaceSetupDefaultSaveData;
+
 extern RaceSetupMenuSubState gRaceSetupMenuSubState;
 extern RaceSetupMenuPackedData gRaceSetupMenuPackedData;
 extern u8 gRaceSetupSavePanelFrameState;
 extern u8 gRaceSetupSavePanelCreateTimer;
 
 #define gControllerPakRaceRecordSaveStatusChoicePromptStates gRaceSetupMenuPackedData.raceRecordChoicePromptStates
+
+extern CallbackTask *gCharacterSelectSelectedTokensTask;
+extern u8 gHighestUnlockedCourse;
+extern u8 gMainMenuSecretCodeStep;
+extern u8 gMenuExitSelection;
+extern u8 gRumblePakConnectedMask;
+
+#if defined(VERSION_JP)
+extern RaceSetupSaveDefaultTime gDefaultBestLapRecords[];
+extern RaceSetupSaveDefaultTimeTable gDefaultRaceRecordsByCourseParity;
+extern RaceSetupSaveDefaultTimeRow gDefaultRookieMountainRaceRecords[];
+extern RaceSetupDefaultSaveData gDefaultSaveRecordData;
+extern u8 gDefaultScoreAttackScores[];
+extern RaceSetupSaveDefaultTime gDefaultTimeTrialRecords[][5];
+extern s16 gRaceSetupSavePanelInitialRects[][2];
+#endif
 
 void initRaceSetupMenu(void);
 void updateRaceSetupPlayerCountMenu(void);

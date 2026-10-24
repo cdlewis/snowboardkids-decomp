@@ -26,6 +26,7 @@
 #include "game/race/ui/race_ui_effects.h"
 #include "game/race/effects/snowboard_trail_effects.h"
 #include "game/engine/viewport_manager.h"
+#include "game/race/flow/race_flow.h"
 
 typedef struct {
     u8 matrix[0x20];
@@ -36,36 +37,6 @@ typedef struct {
     s32 sourceY;
     s32 sourceZ;
 } PlayerTransformScratch80095A88;
-
-extern s16 gRaceLapCount;
-
-extern u8 gMainMenuModeSelection;
-
-extern s32 gMenuFlowState;
-
-extern void (*gRacePlayerModePostUpdateHandlers[])(RacePlayer *);
-
-extern void (*gRacePlayerMode30StateHandlers[])(RacePlayer *);
-
-extern void (*gRacePlayerMode07StateHandlers[])(RacePlayer *);
-
-extern void (*gRacePlayerAirborneUpdateHandlers[])(RacePlayer *);
-
-extern void (*gRacePlayerMode35CharacterHandlers[])(RacePlayer *);
-
-extern void (*gRacePlayerMode32CharacterHandlers[])(RacePlayer *);
-
-extern u16 gRacePlayerVoiceBaseSoundIds[];
-
-extern u16 gRacePlayerVoiceSplitSoundOffsets[];
-
-extern u16 gRacePlayerVoiceLeadSoundOffsets[];
-
-extern s16 gRacePlayerAttackStartTimer;
-
-extern s8 gRacePlayerCount;
-extern u8 gRaceUpdatePaused;
-extern void (*gRacePlayerTrickSubstateHandlers[])(RacePlayer *);
 
 void initRacePlayers(void) {
     gRacePlayers[0].playerIndex = 0;

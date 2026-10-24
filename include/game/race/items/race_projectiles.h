@@ -44,6 +44,8 @@ typedef struct RaceItemProjectileActor {
 extern Vtx gRaceItemProjectileQuadVertices[4];
 extern Vtx gRockItemQuadVertices[4];
 
+extern u8 gRaceItemEffectTypeTableVariants[][28];
+
 s32 findRaceItemProjectileHomingTarget(Vec3i *pos, s32 radius, s16 angle, s16 playerIndex, s16 *outAngle);
 void renderWideHomingShotProjectile(RaceItemProjectileActor *arg0);
 void updateWideHomingShotProjectile(RaceItemProjectileActor *arg0);

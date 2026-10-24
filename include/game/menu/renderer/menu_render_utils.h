@@ -18,6 +18,16 @@ extern s16 gMenuAsciiFontPaletteIndex;
 extern s16 gMenuAsciiFontTextureNeedsLoad;
 extern u16 gMenuDefaultSpritePalette[16];
 
+#if defined(VERSION_JP)
+extern u8 *gMenuRenderScratchPtr;
+extern u8 *gMenuRenderScratchStart;
+extern u8 *gRenderCallbackScratchPtr;
+#endif
+
+#if defined(VERSION_JP)
+void *allocRenderCallbackScratch(s32 arg0);
+#endif
+
 void drawMenuAsciiFontTile(s16 x, s16 y, u16 s, u16 t, u16 paletteIndex);
 void initMenuAssetHandles(void);
 void releaseMenuAssetHandles(void);

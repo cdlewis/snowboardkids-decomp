@@ -149,6 +149,8 @@ extern Gfx gEffectRenderModeCleanupDl[];
  * Types 0/1 use tall quads and cylindrical collision; type 2 uses a small quad. */
 extern Vtx gCourseTextureMarkerVertices[12];
 
+extern Gfx *gRaceCourseObjectDisplayLists[];
+
 void drawRaceCountdownReadyPrompt(RaceCountdownEffect *effect);
 void drawRaceCountdownGoPrompt(RaceCountdownEffect *effect);
 void updateRaceCountdownGoPromptOut(RaceCountdownEffect *effect);

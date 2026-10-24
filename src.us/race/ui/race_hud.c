@@ -14,6 +14,9 @@
 #include "game/race/ui/race_ui_effects.h"
 #include "game/race/player/race_player_input.h"
 #include "game/engine/callback_task_scheduler.h"
+#include "game/engine/game_task_scheduler.h"
+#include "game/engine/system_render.h"
+#include "game/race/flow/race_flow.h"
 
 #define ASSET_HANDLE(index) (gAssetHandles[index])
 #define RACE_HUD_MAIN_FONT_HANDLE (gAssetHandles[0x1C])
@@ -215,14 +218,6 @@ RaceTimer gRaceChallengeTimeLimit;
 RaceTimer gRaceTimeTrialFinishTime;
 u8 gRaceTimeTrialFinishRecorded;
 u8 gRaceChallengeFailed;
-
-extern s16 gRaceLapCount;
-extern u8 gRaceUpdatePaused;
-extern u8 gTrainingCourseLesson;
-extern u8 gMainMenuModeSelection;
-extern u8 gCurrentViewportIndex;
-extern s16 gUiBlinkTimer;
-extern s32 gMenuFlowState;
 
 void initRaceHud(void) {
     LOAD_ASSET(SHARED_UI_SPRITES, 0x1F);

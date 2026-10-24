@@ -6,6 +6,7 @@
 #include "game/race/motion/race_motion.h"
 #include "game/race/player/race_player_input.h"
 #include "game/race/player/race_player_progress.h"
+#include "game/race/player/race_player_collision.h"
 
 u8 gRaceMotionModelPartCounts[] = {
     14, 14, 14, 14, 14, 14, 14, 0, 0xFF, 0, 1, 2, 1, 4, 1, 6, 6, 8, 6, 10, 0, 0, 0, 0,
@@ -114,10 +115,6 @@ s32 gRaceCourseCollisionAdjustedZ;
 static u32 sRaceCourseCollisionAdjustedZPadding;
 volatile s32 gRaceMotionRotationFrameBuffer[0xC];
 RaceMotionDecodedJointFrame gRaceMotionJointFrameBuffer[RACE_MOTION_FRAME_SAMPLE_COUNT];
-
-extern volatile s32 gRaceMotionRotationDecodeFrameBuffer[];
-extern Vec3i gRaceMotionJointDecodeFrameBuffer[];
-extern s32 gRacePlayerHitCueId;
 
 void initRaceCourseSurfaceData(void) {
     RaceMotionCountedTable *coordTable;

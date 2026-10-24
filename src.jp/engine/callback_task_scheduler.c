@@ -9,29 +9,7 @@
  * the two task creation functions. gCallbackTaskSchedulerBssView.activeListSentinel aliases
  * gCallbackTaskActiveListSentinel at offset 0x10.
  */
-typedef struct CallbackTaskSchedulerBss {
-    u8 padding[0x10];
-    CallbackTask activeListSentinel;
-} CallbackTaskSchedulerBss;
 
-extern CallbackTask *gCurrentCallbackTask;
-extern CallbackTask *gFreeCallbackTaskPool[];
-extern u16 gFreeCallbackTaskCount;
-extern u16 gFreeCallbackTaskType0Count;
-extern u16 gFreeCallbackTaskType6Count;
-extern u16 gFreeCallbackTaskType5Count;
-extern u16 gFreeCallbackTaskType1Count;
-extern u16 gFreeCallbackTaskType2Count;
-extern u16 gFreeCallbackTaskType3Count;
-extern u16 gFreeCallbackTaskType4Count;
-extern CallbackTask gCallbackTaskActiveListSentinel;
-extern CallbackTask *gCallbackTaskActiveListHead;
-extern CallbackTaskSchedulerBss gCallbackTaskSchedulerBssView;
-extern CallbackTaskGroup gCallbackTaskPoolStartView0;
-extern CallbackTaskGroup gCallbackTaskPoolStartView1;
-extern CallbackTaskGroup gCallbackTaskPoolStartView2;
-extern CallbackTaskGroup gCallbackTaskPoolStartView3;
-extern CallbackTaskGroup gCallbackTaskPoolEnd;
 void *createCallbackTaskPreservingArgsS32(CallbackTaskCallback callback, s32 type, s32 priority);
 void *createCallbackTaskS32(CallbackTaskCallback callback, s32 type, s32 priority);
 #pragma weak createCallbackTaskPreservingArgsS32 = createCallbackTaskPreservingArgs

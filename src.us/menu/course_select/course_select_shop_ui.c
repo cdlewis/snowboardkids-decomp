@@ -13,17 +13,8 @@
 #include "game/menu/main_menu/controller_main_menu_flow.h"
 #include "game/menu/renderer/menu_renderer.h"
 #include "game/race/player/race_player_input.h"
-
-typedef MenuGlyphScript ShopDescriptionText[0x46];
-
-typedef struct {
-    /* 0x00 */ u16 center[16];
-    /* 0x20 */ u16 right[2];
-    /* 0x24 */ u16 bottom[2];
-    /* 0x28 */ u16 corner;
-} ShopMenuFrameTileMap;
-
-typedef Vec2s ShopMenuSparklePattern[13];
+#include "game/menu/controller_pak/controller_pak_ui.h"
+#include "game/menu/race_setup/race_setup_menu.h"
 
 enum {
     COURSE_DETAILS_PAGE_COUNT = 2,
@@ -32,7 +23,6 @@ enum {
     COURSE_DETAILS_ROW_SPACING = 0x13
 };
 
-typedef u16 CourseDetailsMenuEntryTilePages[COURSE_DETAILS_PAGE_COUNT][COURSE_DETAILS_COURSES_PER_PAGE];
 
 typedef u16 CourseNumberGlyphScript[5];
 
@@ -112,8 +102,6 @@ Vec2s gCoursePreviewCloseSparkleMirrorStart[2] = {
     0x0000,
 };
 
-extern u8 gMenuExitSelection;
-
 // IDO code generation for this function is sensitive to source line layout.
 // clang-format off
 void drawShopMenuModeChoiceRows(ShopMenuRowActor *actor) {
@@ -143,14 +131,6 @@ void drawShopMenuModeChoiceRows(ShopMenuRowActor *actor) {
     }
 }
 // clang-format on
-
-extern u16 gCourseDetailsPreviewCourseTiles[];
-extern u16 gCourseDetailsPreviewExtraTiles[];
-extern Vec2s gCoursePreviewCloseSparkleOffsetsEnd[];
-extern u8 gShopMenuDescriptionSeen;
-extern u8 gShopMenuShowNewCoursesMessage;
-extern s16 gCoursePreviewViewportHeight;
-extern s32 gMenuFlowState;
 
 const char gShopMenuMoneyFormat[] = "%6dG";
 const char gCourseUnlockPriceFormat6[] = "%6dG";

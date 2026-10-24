@@ -9,6 +9,8 @@ typedef struct {
     /* 0x0D */ s8 characterId;
 } MainMenuSceneActorShadow;
 
+extern MainMenuSceneActorShadow gEndingActorShadow;
+
 void noopEndingCreditsTommy(void);
 void updateEndingTommyFinalPose(EndingCreditsCharacterActor *arg0);
 void updateEndingTommyStartFinalPose(EndingCreditsCharacterActor *arg0);

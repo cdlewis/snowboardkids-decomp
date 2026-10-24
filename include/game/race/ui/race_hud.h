@@ -34,6 +34,35 @@ extern const char gRaceHudTrainingScoreFormat[];
 extern const char gRaceHudTwoPlayerScoreFormat[];
 extern const char gRaceHudMultiplayerScoreFormat[];
 
+extern u8 gRaceChallengeFailed;
+
+#if defined(VERSION_US)
+extern u32 D_800DC9A8[];
+#endif
+
+#if defined(VERSION_JP)
+extern const char gRaceHudScoreAttackPointTargetFormat[];
+extern const char gRaceHudScoreAttackTimeLimitLabel[];
+extern const char gRaceHudTargetTimeChallengeFractionFormat[];
+extern const char gRaceHudTargetTimeChallengeLapProgressFormat[];
+extern const char gRaceHudTargetTimeChallengeLapTimeLabel[];
+extern const char gRaceHudTargetTimeChallengeMinutesFormat[];
+extern const char gRaceHudTargetTimeChallengeSecondaryCounterFormat[];
+extern const char gRaceHudTargetTimeChallengeSecondsFormat[];
+extern const char gRaceHudTargetTimeChallengeTargetTimeFormat[];
+extern const char gRaceHudTargetTimeChallengeTargetTimeLabel[];
+extern const char gRaceHudTimeTrialBestLapFormat[];
+extern const char gRaceHudTimeTrialBestLapLabel[];
+extern const char gRaceHudTimeTrialLapTimeLabel[];
+extern const char gRaceHudTrickAttackPointLabel[];
+extern const char gRaceHudTrickAttackTimeLimitLabel[];
+extern u16 gRaceProgressMeterIconPalettes[];
+extern u16 gRaceProgressMeterIconTiles[];
+extern u8 gRaceTimeTrialFinishRecorded;
+extern RaceTimer gScoreAttackTimeLimitsByCourse[];
+extern RaceTimer gTrickAttackTimeLimit;
+#endif
+
 void initRaceHud(void);
 void drawTrickAttackChallengeHud(void *arg0);
 void drawTrickAttackChallengeLabels(void *arg0);

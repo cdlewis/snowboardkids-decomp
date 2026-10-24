@@ -14,6 +14,7 @@
 #include "game/race/player/race_player_input.h"
 #include "game/menu/renderer/menu_render_utils.h"
 #include "game/menu/renderer/menu_screen_effects.h"
+#include "game/race/flow/race_flow.h"
 
 volatile u8 gTitleDemoRaceIntroViewportHeight;
 s8 gTitleDemoRaceIntroFadeStep;
@@ -36,17 +37,6 @@ u8 gTitleDemoCameraModes[24] = {
 RacePlayerReplaySnapshot gTitleDemoReplayPlayerSnapshots[4][16] = {
 #include "title_demo_replay_inputs.inc.c"
 };
-
-extern s16 gMenuFadeAlpha;
-extern u8 gPendingFramebufferSwapCount;
-extern s16 gRaceLapCount;
-extern s8 gRacePlayerCount;
-extern u8 gRaceUpdatePaused;
-extern u8 gTrainingCourseLesson;
-extern u8 gMainMenuModeSelection;
-extern s16 gRacePlayerAttackStartTimer;
-extern u8 gFramebufferSwapHold;
-extern s32 gMenuFlowState;
 
 #define RACE_PLAYER_REPLAY_SNAPSHOT(index) (((RacePlayerReplaySnapshot *)gRacePlayers)[index])
 

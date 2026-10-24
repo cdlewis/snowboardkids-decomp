@@ -45,6 +45,15 @@ typedef struct RaceIntroEffectActor {
     /* 0x44 */ s8 displayListValid;
 } RaceIntroEffectActor;
 
+typedef struct {
+    /* 0x00 */ s8 textureIndex;
+    /* 0x01 */ u8 pad1[3];
+    /* 0x04 */ Vec3i position;
+} RaceIntroRenderCommandEntry;
+
+extern RaceIntroRenderCommandEntry gRaceIntroAlternateCourseCommands[];
+extern RaceIntroRenderCommandEntry gRaceIntroCourseCommands[];
+
 void drawRaceIntroModelMeshes(RaceIntroMeshActor *arg0);
 void enqueueDrawRaceIntroModelMeshes(RaceIntroMeshActor *arg0);
 void initRaceIntroModelMeshes(RaceIntroMeshActor *arg0);

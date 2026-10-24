@@ -17,6 +17,7 @@
 #include "game/menu/renderer/menu_renderer.h"
 #include "game/engine/viewport_manager.h"
 #include "game/race/player/race_player_input.h"
+#include "game/engine/system_runtime.h"
 
 typedef struct RaceRecordSaveCompletion {
     s32 value;
@@ -25,11 +26,6 @@ typedef struct RaceRecordSaveCompletion {
 } RaceRecordSaveCompletion;
 
 ControllerPakRaceRecordSaveStatusTransition gControllerPakRaceRecordSaveStatusTransition;
-
-extern u8 gPendingFramebufferSwapCount;
-extern u8 gFramebufferSwapHold;
-extern s32 gMenuFlowState;
-extern s16 gMenuFadeAlpha;
 
 void initControllerPakRaceRecordSaveFlow(void) {
     resetAllViewports();

@@ -9,10 +9,7 @@
 #include "game/menu/renderer/menu_render_utils.h"
 #include "game/menu/renderer/menu_renderer.h"
 #include "game/engine/viewport_manager.h"
-
-extern s16 gMenuFadeAlpha;
-extern u8 gPendingFramebufferSwapCount;
-extern u8 gFramebufferSwapHold;
+#include "game/engine/system_runtime.h"
 
 /* Startup logo sequence (legacy Controller Pak/save-message names).
  * Task 4 owns these pages while task 0 is suspended; the final fade resumes

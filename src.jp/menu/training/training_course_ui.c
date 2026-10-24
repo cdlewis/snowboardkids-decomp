@@ -8,21 +8,9 @@
 #include "game/menu/main_menu/controller_main_menu_flow.h"
 #include "game/menu/training/training_course_ui.h"
 #include "game/menu/renderer/menu_renderer.h"
-
-extern u8 gTrainingCourseLesson;
-extern TrainingCourseUiScript gTrainingCourseOpeningDialogScripts[9][0x17C];
-extern TrainingCourseUiScript gTrainingCourseEndingDialogScript[0x40];
-
-extern void redrawTrainingCourseLessonEndMenu(TrainingCourseUiActor *arg0);
-extern void drawTrainingCourseLessonEndMenu(TrainingCourseUiActor *arg0);
-extern void updateTrainingCourseLessonEndMenu(TrainingCourseUiActor *);
-extern void drawTrainingCourseDialog(TrainingCourseUiActor *);
-extern void redrawTrainingCourseDialog(TrainingCourseUiActor *);
+#include "game/race/flow/race_flow.h"
 
 void updateTrainingCourseDialog(TrainingCourseUiActor *);
-extern void drawTrainingCourseLessonTitlePanel(TrainingCourseUiActor *);
-extern void updateTrainingCourseLessonTitlePanelScrollOut(TrainingCourseUiActor *);
-extern void updateTrainingCourseLessonTitlePanel(TrainingCourseUiActor *);
 
 #pragma GLOBAL_ASM("asm.jp/nonmatchings/menu/training/training_course_ui/drawTrainingCourseLessonEndMenu.s")
 

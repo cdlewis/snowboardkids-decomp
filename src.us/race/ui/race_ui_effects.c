@@ -27,6 +27,8 @@
 #include "game/race/camera/race_camera.h"
 #include "game/race/ui/race_hud.h"
 #include <PR/os_cache.h>
+#include "game/engine/system_render.h"
+#include "game/race/flow/race_flow.h"
 
 #define ASSET_HANDLE(index) (gAssetHandles[(index)])
 #define RACE_UI_SNOWBOARD_TRAIL_SCALE_X 0xF0000
@@ -69,27 +71,6 @@
 #define TIME_TRIAL_RECORD_DELTA_POPUP_START_Y -0x2C
 #define TIME_TRIAL_RECORD_DELTA_POPUP_START_VELOCITY 0x38
 #define TIME_TRIAL_RECORD_DELTA_POPUP_HOLD_TIMER 0x5A
-
-typedef struct {
-    s32 displayListAddress;
-    u16 textureAssetId;
-    u8 useOverlayQueue;
-    u8 soundSourceIndex;
-} RaceCourseScrollingTextureInit;
-
-typedef struct {
-    /* 0x00 */ s16 active;
-    /* 0x02 */ s16 sentinel;
-    /* 0x04 */ Vec3i position;
-} RaceUiGfxCommandScriptEntry;
-
-typedef struct {
-    /* 0x00 */ s16 active;
-    /* 0x02 */ s16 pad2;
-    /* 0x04 */ Vec3i position;
-    /* 0x10 */ s16 angle;
-    /* 0x12 */ u8 pad12[2];
-} RaceUiRankTextRenderEntry;
 
 typedef struct {
     /* 0x00 */ u8 pad0[4];
@@ -635,18 +616,6 @@ RaceUiRankTextRenderEntry D_800D7650[] = {
 };
 
 u32 D_800D7740[] = { 0xFFFF0000, 0x00000000, 0x00000000, 0x00000000 };
-
-extern Gfx *gRegionAllocPtr;
-extern s16 gRaceLapCount;
-extern s16 gUiBlinkTimer;
-extern s32 gMenuFlowState;
-extern s8 gRacePlayerCount;
-
-extern u32 gSpeedFanBackDisplayList[];
-extern u32 gSpeedFanFrontDisplayList[];
-extern u8 gCurrentViewportIndex;
-extern u8 gRaceChallengeFailed;
-extern u8 gRaceUpdatePaused;
 
 void renderRaceCourseScrollingTexture(RaceCourseScrollingTextureActor *arg0) {
     volatile u8 pad[8];

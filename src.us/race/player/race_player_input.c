@@ -4,6 +4,7 @@
 #include "game/engine/asset_manager.h"
 #include "game/race/player/race_player_input.h"
 #include "game/race/race_replay.h"
+#include "game/engine/game_task_scheduler.h"
 
 #define INPUT_MASK_STICK_DIRECTIONS (STICK_UP | STICK_DOWN | STICK_RIGHT | STICK_LEFT)
 #define INPUT_MASK_AB_BUTTONS (A_BUTTON | B_BUTTON)
@@ -19,8 +20,6 @@ typedef struct {
 } RaceInputReplayHistory;
 
 RacePlayer gRacePlayers[RACE_PLAYER_COUNT];
-
-extern s32 gMenuFlowState;
 
 void recordRaceReplayInputFrame(RacePlayer *player) {
     RaceInputReplayHistory *history;

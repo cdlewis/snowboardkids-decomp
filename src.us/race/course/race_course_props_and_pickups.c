@@ -17,6 +17,10 @@
 #include "game/math/fixed_point_math.h"
 #include "game/race/motion/race_motion.h"
 #include <PR/os_cache.h>
+#include "game/engine/model_asset_symbols.h"
+#include "game/engine/system_render.h"
+#include "game/race/flow/race_flow.h"
+#include "game/race/ui/race_ui_effects.h"
 
 #define RACE_MODEL_BUFFER_HANDLE gAssetHandles[0x24]
 #define RACE_PICKUP_G_TRI2 0xB1
@@ -42,14 +46,6 @@ typedef struct {
 } RacePickupMatrixScratch;
 
 typedef struct {
-    /* 0x00 */ s16 modelIndex;
-    char pad2[2];
-    /* 0x04 */ Vec3i pos;
-    /* 0x10 */ s16 assetIndex;
-    char pad12[2];
-} RaceCoursePropModelEntry;
-
-typedef struct {
     /* 0x00 */ Vec3i pos;
     /* 0x0C */ s16 rotation;
     /* 0x0E */ s16 variant;
@@ -57,9 +53,7 @@ typedef struct {
 
 u32 D_800D7750 = 0;
 
-extern RaceCoursePropModelEntry D_800D7650[];
-
-RaceCoursePropModelEntry *gRaceCoursePropModelLists[] = { D_800D7650 };
+RaceCoursePropModelEntry *gRaceCoursePropModelLists[] = { (RaceCoursePropModelEntry *)D_800D7650 };
 
 CourseCollectibleSpriteEntry gBigSnowmanCollectibleSpriteEntries[] = {
     { 0, 0,  { 15625394, -16267348, -92789296 }       },
@@ -788,12 +782,6 @@ Vec3i gPickupShardInitialVelocities[] = {
 
 u32 D_800D9C38[] = { 0, 0 };
 
-extern Gfx *gRaceCourseObjectDisplayLists[];
-extern u8 gRaceUpdatePaused;
-extern u8 gTrainingCourseLesson;
-extern Gfx gRaceItemPickupDisplayList[];
-extern Gfx gRaceActionPickupDisplayList[];
-extern Gfx *gRegionAllocPtr;
 typedef struct Scratch674B4 {
     Transform3D transform;
     s32 pad[3];

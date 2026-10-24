@@ -16,6 +16,8 @@
 #include "game/menu/renderer/menu_renderer.h"
 #include "game/menu/renderer/menu_render_utils.h"
 #include "game/race/player/race_player_input.h"
+#include "game/engine/game_task_scheduler.h"
+#include "game/menu/race_setup/race_setup_menu.h"
 
 #define CHARACTER_SELECT_ICON_TEXTURE_HANDLE (gAssetHandles[0x24])
 #define gCharacterSelectCourseExitPreviewCornerTile (gCharacterSelectCourseExitPreviewData.cornerTile)
@@ -38,26 +40,6 @@ enum {
 };
 
 typedef struct {
-    u16 corner;
-    u8 pad2[0x28];
-} CharacterSelectCourseFrameCornerTileMap;
-
-typedef struct {
-    u16 cornerTile;
-    u16 padding;
-    MenuGlyphScript exitText[14];
-} CharacterSelectCourseExitPreviewData;
-
-typedef struct {
-    u16 center[16];
-    u16 right[2];
-    u16 bottom[2];
-    u16 corner;
-} CharacterSelectCourseFrameTileMap;
-
-typedef MenuGlyphScript CharacterSelectCourseText[0x4A];
-
-typedef struct {
     u8 pad0[8];
     u8 next;
     u8 pad9[7];
@@ -75,47 +57,6 @@ typedef struct {
     s16 y2;
     s16 y3;
 } CharacterSelectCourseListInitLoop;
-
-extern u8 gCharacterSelectCourseDifficultyRatings[12];
-
-extern const char gCharacterSelectCourseStatsScoreFormat[];
-
-extern u16 gCharacterSelectCourseStatsScoreValues[10];
-
-extern char gCharacterSelectCourseRecordHitsLabel[];
-
-extern char gCharacterSelectCourseRecordPointsLabel[];
-
-extern CharacterSelectCourseFrameCornerTileMap gCharacterSelectCoursePreviewFrameCornerTileMaps[];
-
-extern CharacterSelectCourseExitPreviewData gCharacterSelectCourseExitPreviewData;
-
-extern CharacterSelectCourseFrameTileMap gCharacterSelectCoursePreviewFrameTileMaps[];
-
-extern const char D_800DFEC8[];
-
-extern const char D_800DFED0[];
-
-extern const char D_800DFED8[];
-
-extern s32 gMenuFlowState;
-
-extern CharacterSelectCourseText gCharacterSelectCourseNameText[10];
-
-extern u8 gCourseSelectFromRaceTypeMenu;
-
-extern u8 gHighestUnlockedCourse;
-extern MenuGlyphScript gCharacterSelectCourseStartGameText[44];
-
-extern MenuGlyphScript D_800B6088[3][0x30];
-extern MenuGlyphScript D_800B61A8[3][0x30];
-extern MenuGlyphScript D_800B62C8[2][0x38];
-extern MenuGlyphScript D_800B63A8[];
-
-extern u16 D_800B5A7C[];
-extern const char D_800DFEB4[];
-extern const char D_800DFEB8[];
-extern const char D_800DFEBC[];
 
 void drawCharacterSelectCourseListOptions(CharacterSelectCourseMenuFrameActor *arg0) {
     register CharacterSelectCourseMenuFrameActor *actor;

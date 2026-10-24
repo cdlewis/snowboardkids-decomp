@@ -27,29 +27,6 @@
 #define SAVE_STATUS_TRANSITION_FADE_OUT 2
 #define SAVE_STATUS_TRANSITION_DONE 3
 
-typedef struct {
-    u8 noControllerPakMessage[0x1A];
-    u8 saveChoicePromptBottomSprites[1];
-    u8 saveChoicePromptTopSprites[0x41];
-} RaceSetupSavePromptData;
-
-extern MenuGlyphScript gRaceSetupFourPlayerOptionText[10];
-
-extern MenuGlyphScript gRaceSetupThreePlayerOptionText[10];
-
-extern MenuGlyphScript gRaceSetupTwoPlayerOptionText[10];
-
-extern MenuGlyphScript gRaceSetupOnePlayerOptionText[10];
-
-extern const char D_800DFDB4[];
-
-extern const char D_800DFDB0[];
-
-extern RaceSetupSavePromptData gRaceSetupSavePromptData;
-
-extern MenuGlyphScript gRaceSetupPlayerCountPromptText[5][0x34];
-extern s32 gMenuFlowState;
-
 void drawRaceSetupPlayerCountPrompt(MenuIntroActor *arg0) {
     s32 i;
     s32 j;

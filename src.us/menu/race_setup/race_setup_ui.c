@@ -43,12 +43,6 @@ typedef struct {
     /* 0x20 */ s16 y;
 } RaceSetupSavePanelPlayerCoordinates;
 
-typedef struct {
-    u8 noControllerPakMessage[0x1A];
-    u8 saveChoicePromptBottomSprites[1];
-    u8 saveChoicePromptTopSprites[0x41];
-} RaceSetupSavePromptData;
-
 #define gRaceSetupNoControllerPakMessage (gRaceSetupSavePromptData.noControllerPakMessage)
 #define gRaceSetupSaveChoicePromptBottomSprites (gRaceSetupSavePromptData.saveChoicePromptBottomSprites)
 #define gRaceSetupSaveChoicePromptTopSprites (gRaceSetupSavePromptData.saveChoicePromptTopSprites)
@@ -158,7 +152,6 @@ RaceSetupSavePromptData gRaceSetupSavePromptData = {
 };
 const char gRaceSetupPlayerNumberFormat[] = "%d";
 const char gRaceSetupMoneyFormat[] = "%6d";
-extern s32 gMenuFlowState;
 void drawRaceSetupPlayerCountPrompt(MenuIntroActor *arg0) {
     s32 i;
     s32 j;

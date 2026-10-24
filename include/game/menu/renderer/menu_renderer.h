@@ -73,6 +73,10 @@ typedef struct MenuRenderSpriteActor {
 
 typedef u16 MenuGlyphScript;
 
+#if defined(VERSION_JP)
+extern s16 gMenuSpriteFlipScales[];
+#endif
+
 void drawMenuAssetRegion(
     s16 x,
     s16 y,

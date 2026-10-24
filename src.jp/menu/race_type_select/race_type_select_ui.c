@@ -12,13 +12,10 @@
 #include "game/menu/renderer/menu_renderer.h"
 #include "game/race/race_state.h"
 #include "game/race/player/race_player_input.h"
+#include "game/engine/game_task_scheduler.h"
+#include "game/menu/race_setup/race_setup_menu.h"
 
 #define ASSET_HANDLE(index) (gAssetHandles[(index)])
-
-extern s32 gMenuFlowState;
-
-extern u8 gMenuExitSelection;
-extern const char gRaceTypeSelectEntryFeeFormat[];
 
 void drawRaceTypeSelectOptionIcons(RaceTypeSelectOptionIconActor *arg0) {
     RaceTypeSelectOptionIconActor *savedArg;

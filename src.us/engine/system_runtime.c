@@ -39,6 +39,7 @@
 #define VIEWPORT_COUNT 4
 
 #include "game/audio/audio_engine.h"
+#include "game/menu/race_setup/race_setup_menu.h"
 
 /* Menu queues retain four words per slot; model queues use three. */
 typedef struct MenuRenderCallbackQueueSlot {
@@ -192,12 +193,6 @@ Mtx *gViewportMatrix;
 u8 gFadeColorRed;
 u8 gFadeColorGreen;
 u8 gFadeColorBlue;
-
-extern u16 gRetraceCounter;
-extern u8 gRumblePakConnectedMask;
-extern u8 gDepthBufferPhysicalAddress[];
-extern u8 gBootThreadStack[BOOT_THREAD_STACK_SIZE];
-extern u8 gGameThreadStack[GAME_THREAD_STACK_SIZE];
 
 void main(void *arg) {
     osInitialize();

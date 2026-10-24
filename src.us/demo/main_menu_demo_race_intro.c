@@ -15,17 +15,7 @@
 #include "game/race/ui/race_hud.h"
 #include "game/engine/viewport_manager.h"
 #include "game/race/player/race_player_input.h"
-
-extern s16 gMenuFadeAlpha;
-extern s16 gRaceLapCount;
-extern s16 gRacePlayerAttackStartTimer;
-extern s8 gRacePlayerCount;
-extern u8 gRaceUpdatePaused;
-extern u8 gTrainingCourseLesson;
-extern u8 gMainMenuModeSelection;
-extern s32 gMenuFlowState;
-extern u8 gFramebufferSwapHold;
-extern u8 gPendingFramebufferSwapCount;
+#include "game/race/flow/race_flow.h"
 
 void initMainMenuDemoRaceIntro(void) {
     RacePlayer *players;

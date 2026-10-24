@@ -9,6 +9,7 @@
 #include "game/menu/renderer/menu_renderer.h"
 #include "game/menu/renderer/menu_render_utils.h"
 #include "game/menu/renderer/sprite_palette_relocation.h"
+#include "game/engine/system_render.h"
 
 #define FONT_GFX_CMD(pkt, cmd0, cmd1) \
     {                                 \
@@ -49,13 +50,6 @@ u16 gMenuTransparentPalette[MENU_PALETTE_COLOR_COUNT] = {
 s16 gMenuSpriteFlipScales[8] = {
     1, 1, -1, 1, 1, -1, -1, -1,
 };
-
-extern Gfx *gRegionAllocPtr;
-extern s16 gMenuFadeAlpha;
-extern s16 gMenuViewportWidth;
-extern s16 gMenuViewportHeight;
-extern s16 gMenuViewportCenterX;
-extern s16 gMenuViewportCenterY;
 
 #ifdef SBK_SPRITE_PALETTE_REMAP
 u16 resolveSpritePaletteIndex(AssetTable *table, u16 index) {

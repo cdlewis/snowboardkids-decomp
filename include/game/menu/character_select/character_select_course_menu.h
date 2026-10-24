@@ -21,9 +21,15 @@ typedef struct {
     s16 singleCourseOption[8];
 } CharacterSelectCourseMenuData;
 
+typedef s16 CharacterSelectOptionList[10];
+
 extern CharacterSelectCourseMenuData gCharacterSelectCourseMenuData;
 extern u16 gCharacterSelectCourseExitOptionIndex;
 extern CharacterSelectCourseCursorState gCharacterSelectCourseCursorState;
+
+#if defined(VERSION_JP)
+extern CharacterSelectOptionList *gCharacterSelectActiveCourseOptions;
+#endif
 
 void initCharacterSelectCourseMenuFromRaceTypeSelect(void);
 void initCharacterSelectCourseMenuFromRace(void);

@@ -14,46 +14,12 @@
 #include "game/race/ui/race_ui_effects.h"
 #include "game/race/player/race_player_input.h"
 #include "game/engine/callback_task_scheduler.h"
+#include "game/engine/game_task_scheduler.h"
+#include "game/race/flow/race_flow.h"
 
 #define RACE_HUD_MAIN_FONT_HANDLE (gAssetHandles[0x1C])
 #define RACE_HUD_POPUP_FONT_HANDLE (gAssetHandles[0x1F])
 #define ASSET_HANDLE(index) (gAssetHandles[index])
-
-extern u16 gRaceProgressMeterIconTiles[36];
-
-extern u16 gRaceProgressMeterIconPalettes[6];
-
-extern s32 gMenuFlowState;
-
-extern s16 gRaceLapCount;
-
-extern u8 gTrainingCourseLesson;
-
-extern u8 gMainMenuModeSelection;
-
-extern RaceTimer gScoreAttackTimeLimitsByCourse[10];
-
-extern RaceTimer gTrickAttackTimeLimit;
-
-extern u8 gRaceTimeTrialFinishRecorded;
-
-extern const char gRaceHudTrickAttackPointLabel[];
-extern const char gRaceHudTrickAttackTimeLimitLabel[];
-extern const char gRaceHudScoreAttackTimeLimitLabel[];
-extern const char gRaceHudScoreAttackPointTargetFormat[];
-extern const char gRaceHudTargetTimeChallengeSecondaryCounterFormat[];
-extern const char gRaceHudTargetTimeChallengeFractionFormat[];
-extern const char gRaceHudTargetTimeChallengeSecondsFormat[];
-extern u8 gRaceChallengeFailed;
-extern const char gRaceHudTargetTimeChallengeMinutesFormat[];
-extern const char gRaceHudTargetTimeChallengeTargetTimeFormat[];
-extern const char gRaceHudTargetTimeChallengeTargetTimeLabel[];
-extern const char gRaceHudTargetTimeChallengeLapTimeLabel[];
-extern const char gRaceHudTargetTimeChallengeLapProgressFormat[];
-extern const char gRaceHudTimeTrialLapTimeLabel[];
-extern const char gRaceHudTimeTrialBestLapFormat[];
-extern const char gRaceHudTimeTrialBestLapLabel[];
-extern u8 gRaceUpdatePaused;
 
 void initRaceHud(void) {
     LOAD_ASSET(SHARED_UI_SPRITES, 0x1F);

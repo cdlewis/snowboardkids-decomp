@@ -2,6 +2,9 @@
 #define COURSE_SELECT_SHOP_UI_H
 
 #include "common.h"
+#include "game/menu/renderer/menu_renderer.h"
+
+typedef u16 CourseDetailsMenuEntryTilePages[2][7];
 
 typedef struct ShopMenuRowActor {
     char pad0[0x18];
@@ -82,6 +85,32 @@ typedef struct ShopMenuWidgetActor {
         /* 0x18 */ s16 randomValues[15];
     };
 } ShopMenuWidgetActor;
+
+typedef MenuGlyphScript ShopDescriptionText[0x46];
+
+typedef struct {
+    /* 0x00 */ u16 center[16];
+    /* 0x20 */ u16 right[2];
+    /* 0x24 */ u16 bottom[2];
+    /* 0x28 */ u16 corner;
+} ShopMenuFrameTileMap;
+
+typedef Vec2s ShopMenuSparklePattern[13];
+
+#if defined(VERSION_JP)
+extern CourseDetailsMenuEntryTilePages gCourseDetailsMenuEntryTiles;
+extern Vec2s gCoursePreviewCloseSparkleMirrorStart[];
+extern Vec2s gCoursePreviewCloseSparkleOffsets[];
+extern const char gCourseUnlockPriceFormat4[];
+extern const char gCourseUnlockPriceFormat5[];
+extern const char gCourseUnlockPriceFormat6[];
+extern MenuGlyphScript gCourseUnlockPurchasePromptText[];
+extern ShopDescriptionText gShopMenuModeDescriptionText[];
+extern const char gShopMenuMoneyFormat[];
+extern ShopMenuFrameTileMap gShopMenuPanelFrameTilemaps[];
+extern s16 gShopMenuSparkleInitTable[];
+extern ShopMenuSparklePattern gShopMenuSparklePatterns[];
+#endif
 
 void drawShopMenuModeChoiceRows(ShopMenuRowActor *arg0);
 void updateShopMenuModeChoiceRows(ShopMenuRowActor *arg0);

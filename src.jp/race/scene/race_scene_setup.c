@@ -13,6 +13,7 @@
 #include "game/race/course/race_course_props_and_pickups.h"
 #include "game/race/ui/race_ui_effects.h"
 #include "game/race/player/race_player_input.h"
+#include "game/race/flow/race_flow.h"
 
 CharacterRomAssetRangeTable gCharacterRawAssetRanges = {
     {
@@ -65,8 +66,6 @@ CharacterRomAssetRangeTable gCharacterModelAssetRanges = {
      }
 };
 
-extern u8 gTrainingCourseLesson;
-extern u8 gMainMenuModeSelection;
 void loadRaceCourseAssets(void) {
     s32 size;
 

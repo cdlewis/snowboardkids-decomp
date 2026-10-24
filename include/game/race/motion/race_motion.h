@@ -65,6 +65,25 @@ typedef char RaceCourseSurfaceFaceSizeCheck[(sizeof(RaceCourseSurfaceFace) == 8)
 typedef char RaceCourseSurfaceSizeCheck[(sizeof(RaceCourseSurface) == 0x1C) ? 1 : -1];
 
 /* Exposes payloads after each RaceMotionCountedTable header in asset slot 0x1B. */
+extern Vec3i gRaceMotionJointDecodeFrameBuffer[];
+extern volatile s32 gRaceMotionRotationDecodeFrameBuffer[];
+
+#if defined(VERSION_JP)
+extern s32 gRaceCourseCollisionAdjustedX;
+extern s32 gRaceCourseCollisionAdjustedZ;
+extern s32 gRaceCourseCollisionDeltaX;
+extern s32 gRaceCourseCollisionDeltaZ;
+extern s32 gRaceCourseCollisionEdgeDeltaX;
+extern s32 gRaceCourseCollisionEdgeDeltaZ;
+extern s32 gRaceCourseSurfaceAngleCos;
+extern s32 gRaceCourseSurfaceAngleSin;
+extern Vec3s *gRaceCourseSurfaceCoords;
+extern RaceCourseSurfaceFace *gRaceCourseSurfaceFaces;
+extern RaceCourseSurface *gRaceCourseSurfaces;
+extern RaceMotionDecodedJointFrame gRaceMotionJointFrameBuffer[];
+extern volatile s32 gRaceMotionRotationFrameBuffer[];
+#endif
+
 void initRaceCourseSurfaceData(void);
 /* Local adjacency traversal from a nearby hint. All negative neighbors are
  * boundaries. An arbitrary distant hint (including zero) can return an unrelated

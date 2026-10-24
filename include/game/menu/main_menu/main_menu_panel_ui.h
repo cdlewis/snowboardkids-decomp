@@ -2,6 +2,7 @@
 #define MAIN_MENU_PANEL_UI_H
 
 #include "common.h"
+#include "game/menu/renderer/menu_renderer.h"
 
 typedef struct MenuPanelActor {
     /* 0x00 */ char pad0[0x18];
@@ -13,6 +14,34 @@ typedef struct MenuPanelActor {
     /* 0x2A */ u8 selectedTile;
     /* 0x2B */ u8 selectionState;
 } MenuPanelActor;
+
+typedef struct {
+    union {
+        MenuGlyphScript finalTitleText[12];
+        struct {
+            u8 finalTitleTextPrefix[0x17];
+            u8 primaryIconTiles[1];
+        } bytes;
+    } titleAndPrimaryIcon;
+    u8 topRowIconTiles[2];
+    u8 secondaryIconTiles[6];
+    u8 bottomRowIconTiles[8];
+    u8 upTargets[0x10];
+    u8 downTargets[0x10];
+    u8 leftTargets[0x10];
+    u8 rightTargets[0x10];
+} MainMenuModeSelectByteData;
+
+#if defined(VERSION_JP)
+extern MainMenuModeSelectByteData gMainMenuModeSelectByteData;
+extern MenuGlyphScript *mainMenuModeDescriptionTexts[];
+extern MenuGlyphScript *mainMenuModeDescriptionTitles[];
+extern MenuGlyphScript mainMenuModeSelectTitleText[];
+extern MenuGlyphScript mainMenuSettingsTitleText[];
+extern MenuGlyphScript raceGhostUnavailableText[];
+extern MenuGlyphScript *raceRecordLapCountTexts[];
+extern MenuGlyphScript raceRecordSettingsTitleText[];
+#endif
 
 void drawMainMenuModeSelectFrame(void *arg0);
 void drawMainMenuModeSelectIcons(MenuPanelActor *arg0);

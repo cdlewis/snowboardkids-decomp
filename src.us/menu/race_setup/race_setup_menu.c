@@ -17,29 +17,8 @@
 #include "game/menu/course_select/course_select_menu.h"
 #include "game/menu/course_select/multiplayer_course_select_menu.h"
 #include "game/menu/main_menu/controller_main_menu_flow.h"
-
-typedef struct RaceSetupSaveDefaultTime {
-    s8 minutes;
-    s8 seconds;
-    s8 fraction;
-} RaceSetupSaveDefaultTime;
-
-typedef union RaceSetupSaveDefaultTimeRow {
-    u8 bytes[sizeof(RaceSetupSaveDefaultTime) * 5];
-    RaceSetupSaveDefaultTime records[5];
-} RaceSetupSaveDefaultTimeRow;
-
-typedef union RaceSetupSaveDefaultTimeTable {
-    s8 bytes[sizeof(RaceSetupSaveDefaultTimeRow) * 2];
-    RaceSetupSaveDefaultTimeRow rows[2];
-} RaceSetupSaveDefaultTimeTable;
-
-typedef struct {
-    u16 trickAttackScores[5];
-    u16 padding;
-    MenuGlyphScript courseNames[8][18];
-    u16 tailPadding[2];
-} RaceSetupDefaultSaveData;
+#include "game/engine/system_runtime.h"
+#include "game/menu/main_menu/controller_subsystem.h"
 
 u8 gMainMenuSecretCodeUnlocked = 0;
 u8 gMainMenuSecretCodeStep = 0;
@@ -120,11 +99,6 @@ u8 gRumblePakConnectedMask;
 
 RaceSetupMenuSubState gRaceSetupMenuSubState;
 s16 gRaceSetupSavePanelRects[2][4];
-
-extern u8 gConnectedControllerCount;
-extern s16 gMenuFadeAlpha;
-extern char D_800EC9E5;
-extern s32 gMenuFlowState;
 
 void initRaceSetupMenu(void) {
     s32 i;

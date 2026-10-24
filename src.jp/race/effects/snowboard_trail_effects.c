@@ -9,15 +9,13 @@
 #include "game/math/spatial_math.h"
 #include "game/math/fixed_point_math.h"
 #include "game/menu/renderer/menu_render_utils.h"
+#include "game/engine/model_asset_symbols.h"
+#include "game/engine/system_render.h"
+#include "game/race/flow/race_flow.h"
 
 #define SNOWBOARD_TRAIL_TIMER 0xF0
 #define SNOWBOARD_TRAIL_FLAG_FACING_BACKWARD 0x400
 #define SNOWBOARD_TRAIL_FLAG_CANCEL 0x3040
-
-extern u8 gRaceUpdatePaused;
-extern u32 gSpeedFanFrontDisplayList[];
-extern u32 gSpeedFanBackDisplayList[];
-extern Gfx *gRegionAllocPtr;
 
 void renderSpeedFanEffect(SpeedFanState *trail) {
     Gfx *unused;

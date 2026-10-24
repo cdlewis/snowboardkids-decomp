@@ -152,6 +152,17 @@ typedef struct CourseSelectAnimatedActor {
     /* 0x100 */ u8 transitionState[4];
 } CourseSelectAnimatedActor;
 
+typedef struct {
+    u8 speed;
+    u8 handling;
+    u8 trick;
+} CourseSelectCourseRating;
+
+typedef union {
+    CourseSelectCourseRating courses[8];
+    u8 values[0x18];
+} CourseSelectCourseRatingTable;
+
 extern CourseBoardLevelByCourseText gCourseSelectBoardLevelByCourseText[4];
 extern CourseExtraBoardLevelText gCourseSelectExtraCourseBoardLevelText[3];
 extern CourseModeDescriptionText gCourseSelectModeDescriptionText[7];
@@ -161,6 +172,28 @@ extern MenuGlyphScript gCourseSelectBoardLevelText[];
 /* Separate snowboard preview actors owned by gMenuScratch0.task (incoming,
  * slide states 0/1) and gMenuScratch1.task (outgoing, states 2/3). Both draw
  * through drawSnowboardModel. */
+
+extern const char gCourseSelectPlayerNumberFormat[];
+
+#if defined(VERSION_JP)
+extern MenuGlyphScript gCourseSelectCompleteText[];
+extern CourseSelectCourseRatingTable gCourseSelectCourseRatings;
+extern const char gCourseSelectHandlingFormat[];
+extern s16 gCourseSelectIconListXLayout[][4];
+extern s16 gCourseSelectIconListYLayout[][6];
+extern const char gCourseSelectSpeedFormat[];
+extern s16 gCourseSelectStatsPanelLayout[][4];
+extern s16 gCourseSelectStatsPlayerMarkerLayout[][4];
+extern const char gCourseSelectTrickFormat[];
+extern const char gCourseSelectUnknownHandlingText[];
+extern const char gCourseSelectUnknownSpeedText[];
+extern const char gCourseSelectUnknownTrickText[];
+#endif
+
+#if defined(VERSION_JP)
+void drawCourseSelectCourseIconList(CourseSelectIconListActor *iconList);
+#endif
+
 void drawCourseSelectSnowboardPreviewIn(CourseSelectCoursePreviewActor *arg0);
 void drawCourseSelectSnowboardPreviewOut(CourseSelectCoursePreviewActor *arg0);
 void updateCourseSelectPreviewModelIn(CourseSelectAnimatedActor *arg0);

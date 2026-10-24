@@ -18,6 +18,9 @@
 #include "game/race/camera/race_camera.h"
 #include "game/audio/sound_manager.h"
 #include "PR/os_cache.h"
+#include "game/engine/game_task_scheduler.h"
+#include "game/engine/system_render.h"
+#include "game/race/flow/race_flow.h"
 
 #define COURSE_INDEX_RELOAD (*(volatile s16 *)&gRaceCourseIndex.signedValue)
 #define ASSET_HANDLE(index) (gAssetHandles[(index)])
@@ -336,11 +339,6 @@ RaceCourseTriggerEntry gCourseTriggerEntries[] = {
      0xFBA, 0x400,
      (u32)ANIMAL_LAND_COURSE_TRIGGER_VOLUME_DISPLAY_LIST_command_000000 },
 };
-
-extern s32 gMenuFlowState;
-extern u8 gCurrentViewportIndex;
-extern u8 gRaceUpdatePaused;
-extern Gfx *gRegionAllocPtr;
 
 void drawRaceCountdownReadyPrompt(RaceCountdownEffect *arg0) {
     if (arg0->scaleStep != 0) {

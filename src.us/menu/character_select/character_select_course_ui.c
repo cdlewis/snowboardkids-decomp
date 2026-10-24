@@ -15,31 +15,13 @@
 #include "game/menu/renderer/menu_renderer.h"
 #include "game/menu/renderer/menu_render_utils.h"
 #include "game/race/player/race_player_input.h"
+#include "game/engine/game_task_scheduler.h"
+#include "game/menu/race_setup/race_setup_menu.h"
 
 #define CHARACTER_SELECT_FRAME_TEXTURE_HANDLE (gAssetHandles[0x21])
 #define CHARACTER_SELECT_ICON_TEXTURE_HANDLE (gAssetHandles[0x24])
 #define CHARACTER_SELECT_POPUP_FONT_HANDLE (gAssetHandles[0x1F])
 #define ASSET_HANDLE(index) (gAssetHandles[index])
-
-typedef MenuGlyphScript CharacterSelectCourseText[0x4A];
-
-typedef struct {
-    /* 0x00 */ u16 center[16];
-    /* 0x20 */ u16 right[2];
-    /* 0x24 */ u16 bottom[2];
-    /* 0x28 */ u16 corner;
-} CharacterSelectCourseFrameTileMap;
-
-typedef struct {
-    /* 0x00 */ u16 corner;
-    /* 0x02 */ u8 pad2[0x28];
-} CharacterSelectCourseFrameCornerTileMap;
-
-typedef struct {
-    u16 cornerTile;
-    u16 padding;
-    MenuGlyphScript exitText[14];
-} CharacterSelectCourseExitPreviewData;
 
 typedef struct {
     /* 0x00 */ u8 pad0[8];
@@ -211,9 +193,6 @@ MenuGlyphScript gCharacterSelectCourseStartGameText[44] = {
 #define gCharacterSelectCoursePreviewFrameCornerTileMaps \
     ((CharacterSelectCourseFrameCornerTileMap *)gCharacterSelectCoursePreviewFrameCornerTileMaps)
 #define gCharacterSelectCourseExitPreviewCornerTile (gCharacterSelectCourseExitPreviewData.cornerTile)
-extern u8 gHighestUnlockedCourse;
-extern u8 gCourseSelectFromRaceTypeMenu;
-extern s32 gMenuFlowState;
 
 void drawCharacterSelectCourseListOptions(CharacterSelectCourseMenuFrameActor *arg0) {
     register CharacterSelectCourseMenuFrameActor *actor;

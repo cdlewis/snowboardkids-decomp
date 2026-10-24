@@ -11,16 +11,12 @@
 #include "game/menu/splitscreen_select/race_splitscreen_select_ui.h"
 #include "game/menu/renderer/menu_renderer.h"
 #include "game/race/player/race_player_input.h"
+#include "game/engine/game_task_scheduler.h"
+#include "game/menu/race_setup/race_setup_menu.h"
+#include "game/menu/splitscreen_select/race_splitscreen_select_menu.h"
 
 #define RACE_SPLITSCREEN_SELECT_TEXTURE_HANDLE (gAssetHandles[0x21])
 #define ASSET_HANDLE(index) (gAssetHandles[(index)])
-
-extern s32 gMenuFlowState;
-
-extern u8 gRaceSplitscreenSelectCursorAnimState;
-
-extern u8 gMenuExitSelection;
-extern const char gRaceSplitscreenSelectEntryFeeFormat[];
 
 void drawRaceSplitscreenSelectPlayerCountIcons(RaceSplitscreenSelectOptionIconActor *icons) {
     RaceSplitscreenSelectOptionIconActor *savedIcons;

@@ -35,6 +35,47 @@ typedef struct MenuScreenEffectActor {
     /* 0x36 */ s16 alpha;
 } MenuScreenEffectActor;
 
+extern s16 courseRecordDigitTileOffsets[];
+
+#if defined(VERSION_JP)
+extern char D_800E0520[];
+extern Vtx congratulationsBannerModelVertices[];
+extern s16 congratulationsBannerSpriteTileOffsets[];
+extern s16 passAwardLabelFlashTileOffsets[];
+extern u8 passAwardOpponentAnimationIds[];
+extern s32 passAwardOpponentXPositions[];
+extern u8 raceSetupCharacterFocusAnimationIds[];
+extern s16 raceSetupCharacterFocusSoundIds[];
+extern Vtx raceStartPlayerEffectVertices[];
+extern s16 titleMenuSparklePositions[];
+extern u8 titleMenuSparkleTileFrames[];
+#endif
+
+#if defined(VERSION_JP)
+void drawCongratulationsBannerModel(MenuScreenEffectActor *);
+void drawFallingConfetti(MenuScreenEffectActor *arg0);
+void drawMainMenuRotatingBoardModel(MenuScreenEffectActor *);
+void drawMainMenuStaticBoardModel(void *);
+void drawPassAwardCourseBackdrop(void *);
+void drawPassAwardPodiumModels(MenuScreenEffectActor *);
+void drawRaceSetupNamePlate(MenuScreenEffectActor *);
+void drawTitleMenuSparkle(MenuScreenEffectActor *);
+void drawTitleScreenStartPrompt(MenuScreenEffectActor *);
+void holdRaceSetupNamePlate(MenuScreenEffectActor *);
+void initPassAwardOpponent(MenuScreenEffectActor *arg0);
+void renderMainMenuBoardModels(MenuScreenEffectActor *arg0);
+void renderPassAwardPodium(MenuScreenEffectActor *);
+void renderTitleMenuSparkle(MenuScreenEffectActor *arg0);
+void updateCongratulationsBannerModel(MenuScreenEffectActor *);
+void updateCongratulationsBannerSprite(MenuScreenEffectActor *);
+void updateCourseRecordBannerFadeOut(MenuScreenEffectActor *);
+void updateFallingConfettiDrift(MenuScreenEffectActor *arg0);
+void updateFallingConfettiSway(MenuScreenEffectActor *arg0);
+void updatePassAwardLabelFadeIn(MenuScreenEffectActor *);
+void updateRaceSetupNamePlateSlideOut(MenuScreenEffectActor *);
+void updateRaceStartPlayerEffectActive(MenuScreenEffectActor *);
+#endif
+
 void initFallingConfetti(MenuScreenEffectActor *arg0);
 void initPassAwardPodium(MenuScreenEffectActor *arg0);
 void initPassAwardWinner(MenuScreenEffectActor *arg0);

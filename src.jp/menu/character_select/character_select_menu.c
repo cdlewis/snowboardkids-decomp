@@ -12,6 +12,8 @@
 #include "game/engine/viewport_manager.h"
 #include "game/race/player/race_player_input.h"
 #include "game/audio/sound_manager.h"
+#include "game/engine/system_runtime.h"
+#include "game/menu/race_setup/race_setup_menu.h"
 
 #define CHARACTER_SELECT_MOVE_LEFT 1
 #define CHARACTER_SELECT_MOVE_RIGHT 2
@@ -23,25 +25,14 @@ s8 gCharacterSelectHighlightedRosterIndices[4];
  * bit 0 in initCharacterSelectRosterIcons. Duplicate selection is source-derived;
  * it has not been play-tested. */
 u8 gCharacterSelectUnrestrictedSelection;
-extern u16 gCharacterSelectIdOrder[];
-extern s16 gCharacterSelectVoiceSoundIds[];
 
-extern CallbackTask *gCharacterSelectSelectedTokensTask;
-extern s16 gMenuFadeAlpha;
-// Per-player highlighted index. During character-roster browsing
+// gMenuFlowState is the per-player highlighted index. During character-roster browsing
 // (gCharacterSelectHudState.phase == 3), this indexes gCharacterSelectIdOrder,
 // not RacePlayer.characterId directly. Live-observed values: 1 = Slash,
 // 2 = Nancy, 3 = Jam, 4 = Linda, 5 = Tommy; 0/6 are the two Shinobin slots.
 // During later board-type selection, this address is reused by different code:
 // 0 = Free Style, 1 = All Around, 2 = Alpine, 3 = back, and 4/5 appear to be
 // locked/unowned special board states.
-extern s32 gMenuFlowState;
-extern u8 D_800EBD05;
-extern u8 gMenuExitSelection;
-extern u8 gPendingFramebufferSwapCount;
-extern u8 gFramebufferSwapHold;
-
-extern f32 D_800DFCB0;
 
 void initCharacterSelectMenu(void) {
     s32 i;

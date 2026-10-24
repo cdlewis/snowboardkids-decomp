@@ -8,6 +8,7 @@
 #include "game/menu/main_menu/controller_main_menu_flow.h"
 #include "game/menu/training/training_course_ui.h"
 #include "game/menu/renderer/menu_renderer.h"
+#include "game/race/flow/race_flow.h"
 
 #define TRAINING_COURSE_UI_TEXTURE_HANDLE (gAssetHandles[0x2A])
 
@@ -85,8 +86,6 @@ TrainingCourseLessonTitleData gTrainingCourseLessonTitleText = {
     },
 };
 /* The final title-text slot and the first X position share the halfword at 0x800B51B6. */
-extern s16 gTrainingCourseLessonTitleXPositions[];
-extern u8 gTrainingCourseLesson;
 void drawTrainingCourseDialog(TrainingCourseUiActor *);
 void updateTrainingCourseDialog(TrainingCourseUiActor *);
 void redrawTrainingCourseDialog(TrainingCourseUiActor *);

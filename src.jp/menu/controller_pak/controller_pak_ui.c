@@ -13,24 +13,7 @@
 #include "game/menu/renderer/menu_renderer.h"
 #include "game/menu/race_setup/race_setup_ui.h"
 #include "game/race/player/race_player_input.h"
-
-extern MenuGlyphScript gControllerPakContinuePromptText[8];
-
-extern MenuGlyphScript gControllerPakCouldNotEraseNoteText[56];
-
-extern MenuGlyphScript gControllerPakRumblePakText[20];
-
-extern MenuGlyphScript gControllerPakRumbleCheckNoEntryText[12];
-
-extern MenuGlyphScript gControllerPakRumbleCheckPromptText[4][0x34];
-
-extern MenuGlyphScript gControllerPakRumbleCheckNotUsedText[12];
-
-extern u8 gControllerPakMenuConfirmChoice;
-
-extern u8 gControllerPakDeletePromptState;
-
-extern u8 gControllerPakMenuCursorState;
+#include "game/menu/controller_pak/controller_pak_file_delete_flow.h"
 
 void drawControllerPakContinuePrompt(ControllerPakOptionsActor *arg0) {
     s32 i;

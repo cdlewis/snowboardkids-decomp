@@ -29,10 +29,6 @@ s16 gEndingCreditsTransitionSnowboardIconAngle;
 u8 gEndingCreditsCharacterAuraDoneFlags[ENDING_CREDITS_CHARACTER_COUNT];
 Vec3i gMenuCameraTargetOffset;
 
-extern s16 gMenuFadeAlpha;
-extern u8 gPendingFramebufferSwapCount;
-extern u8 gFramebufferSwapHold;
-
 const f32 gEndingCreditsViewportAspectRatio[4] = { 1.333333373f, 0.0f, 0.0f, 0.0f };
 
 void initEndingCreditsFlow(void) {

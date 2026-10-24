@@ -42,6 +42,23 @@ extern u8 gPendingFramebufferSwapCount;
 extern u8 gFramebufferSwapHold;
 extern u8 gNextFramebufferRenderTaskIndex;
 
+extern volatile GameTask gActiveGameTaskListView;
+extern s32 gMenuFlowState;
+extern u32 gMenuRenderScratchUsedSize;
+extern s32 gPlayer2InputPrevious;
+extern s32 gPlayer3InputPrevious;
+extern s32 gPlayer4InputPrevious;
+
+#if defined(VERSION_JP)
+extern GameTask gActiveGameTaskList;
+extern GameTask *gFreeGameTaskStack[];
+extern u8 gGameTaskCount;
+extern GameTask gGameTaskPool[];
+extern s32 gPlayerInputPrevious[];
+extern s32 gPlayerInputRepeat[];
+extern u8 gPlayerInputRepeatTimer[];
+#endif
+
 void initGameTaskScheduler(void);
 /* Runs active game callbacks before updateFramebufferRenderScheduler. That
  * scheduler can omit framebuffer submission, so callback timers count game

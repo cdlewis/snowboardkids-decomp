@@ -1,6 +1,8 @@
 #ifndef RUNTIME_MEMORY_H
 #define RUNTIME_MEMORY_H
 
+#include "common.h"
+
 #define RELOCATABLE_HEAP_SIZE 0x1C0000
 #define INITIAL_BOOT_STACK_SIZE 0x2000
 #define BOOT_THREAD_STACK_SIZE 0x2000
@@ -9,5 +11,9 @@
 #define SOUND_HEAP_SIZE 0x80000
 #define MUSIC_SEQUENCE_BUFFER_SIZE 0x10000
 #define SOUND_BANK_WAVE_COUNT 0xFB
+
+extern u8 gBootThreadStack[BOOT_THREAD_STACK_SIZE];
+extern u8 gGameThreadStack[GAME_THREAD_STACK_SIZE];
+extern u8 gRelocatableHeapStart[];
 
 #endif

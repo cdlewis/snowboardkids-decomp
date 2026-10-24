@@ -22,9 +22,7 @@
 #include "game/menu/race_setup/race_setup_ui.h"
 #include "game/engine/viewport_manager.h"
 #include "game/race/player/race_player_input.h"
-
-extern u8 gPendingFramebufferSwapCount;
-extern u8 gFramebufferSwapHold;
+#include "game/engine/controller_input.h"
 
 #define MULTIPLAYER_COURSE_SELECT_PLAYER_RECORD_COUNT 4
 
@@ -43,14 +41,6 @@ s16 gCourseSelectColumnSoundEffects[MULTIPLAYER_COURSE_SELECT_COLUMN_COUNT] = {
     SFX_NONE,
     SFX_NONE,
 };
-
-extern s16 gMenuFadeAlpha;
-extern u8 D_800EC9C0;
-extern s8 D_800EC9E5;
-extern s32 gPlayerInputHeld[];
-extern s32 gPlayerInputPressed[];
-extern RaceCamera gCurrentRaceCamera;
-extern s32 gMenuFlowState;
 
 /* Board-shop selection and preview setup; two players receive two board viewports. */
 void initMultiplayerCourseSelectMenu(void) {

@@ -16,6 +16,8 @@
 #include "game/math/fixed_point_math.h"
 #include "game/race/player/race_player_input.h"
 #include "game/race/effects/race_visual_effects.h"
+#include "game/engine/system_render.h"
+#include "game/race/flow/race_flow.h"
 
 #define ASSET_HANDLE(index) (gAssetHandles[index])
 
@@ -26,8 +28,6 @@ typedef union {
         /* 0x4 */ u32 low;
     } word;
 } LongLongParts;
-
-extern u8 gRaceItemEffectTypeTableVariants[4][28];
 
 u8 *gRaceCourseItemEffectTypeTables[10] = {
     gRaceItemEffectTypeTableVariants[0], gRaceItemEffectTypeTableVariants[0], gRaceItemEffectTypeTableVariants[0],
@@ -137,9 +137,6 @@ Vtx gRacePlayerBlueTrickSparklesQuadVertices[4] = {
 };
 
 RaceItemDrawNode *gRaceItemTextureEffectDrawLists[4];
-extern u8 gRaceUpdatePaused;
-extern u8 gCurrentViewportIndex;
-extern Gfx *gRegionAllocPtr;
 
 void getAssetTableImageAndExplicitPalette(u8 *, u16, u16, void **, void **);
 

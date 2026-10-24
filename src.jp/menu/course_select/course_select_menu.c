@@ -20,6 +20,7 @@
 #include "game/engine/viewport_manager.h"
 #include "game/audio/sound_manager.h"
 #include "game/race/player/race_player_input.h"
+#include "game/menu/race_setup/race_setup_menu.h"
 
 typedef union {
     RacePlayer *selection;
@@ -37,18 +38,6 @@ u16 gCourseDetailsPreviewCourseTiles[] = {
 u16 gCourseDetailsPreviewExtraTiles[] = {
     6, 7, 8, 9, 10, 11, 12, 13, 0, 0,
 };
-
-extern s16 gMenuFadeAlpha;
-extern u8 D_800EC9C0;
-extern u8 gMenuExitSelection;
-extern u8 gShopMenuDescriptionSeen;
-extern u8 gShopMenuShowNewCoursesMessage;
-extern s16 gCoursePreviewViewportHeight;
-extern RaceCamera gCourseSelectCameraUpdateEnd;
-extern s8 gCourseSelectSelectedCourseSavedSlot;
-extern s32 gMenuFlowState;
-extern u8 gPendingFramebufferSwapCount;
-extern u8 gFramebufferSwapHold;
 
 void initCourseSelectMenu(void) {
     u32 size;

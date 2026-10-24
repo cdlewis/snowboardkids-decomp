@@ -2,6 +2,7 @@
 #define CONTROLLER_PAK_RACE_RECORD_SAVE_UI_H
 
 #include "common.h"
+#include "game/menu/renderer/menu_renderer.h"
 #include "game/engine/callback_task_scheduler.h"
 
 typedef struct {
@@ -44,6 +45,31 @@ typedef struct {
     /* 0x1C */ s16 alpha;
     /* 0x1E */ u8 state;
 } ControllerPakRaceRecordSaveExitMessageActor;
+
+typedef struct {
+    MenuGlyphScript statusMessagePrefix[0x2CB];
+    u8 choicePromptSprites[0x26];
+} ControllerPakRaceRecordSaveUiDataStorage;
+
+typedef struct {
+    MenuGlyphScript statusMessages[0x13][0x26];
+    u8 choicePromptSpriteSuffix[0x18];
+} ControllerPakRaceRecordSaveUiDataTyped;
+
+typedef union {
+    ControllerPakRaceRecordSaveUiDataTyped typed;
+    ControllerPakRaceRecordSaveUiDataStorage storage;
+} ControllerPakRaceRecordSaveUiDataContent;
+
+typedef struct {
+    ControllerPakRaceRecordSaveUiDataContent content;
+    MenuGlyphScript exitMessage[10];
+} ControllerPakRaceRecordSaveUiData;
+
+#if defined(VERSION_JP)
+extern const char gControllerPakRaceRecordMoneyFormat[];
+extern ControllerPakRaceRecordSaveUiData gControllerPakRaceRecordSaveUiData;
+#endif
 
 void drawControllerPakRaceRecordSaveScorePanel(ControllerPakRaceRecordSaveScorePanelActor *arg0);
 void updateControllerPakRaceRecordSaveScorePanel(ControllerPakRaceRecordSaveScorePanelActor *arg0);
