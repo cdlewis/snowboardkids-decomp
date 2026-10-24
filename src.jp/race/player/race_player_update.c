@@ -4513,7 +4513,22 @@ void func_800965C8(RacePlayer *player) {
     }
 }
 
-#pragma GLOBAL_ASM("asm.jp/nonmatchings/race/player/race_player_update/func_80096650.s")
+void func_80096650(RacePlayer *player) {
+    if (player->updateTimer == 0) {
+        player->updateTimer++;
+        player->modeValue = 0;
+        setRaceMotionAnimation(player, 0x26);
+    }
+    if (stepRaceMotionAnimationUntilEnd(player)) {
+        if (player->modeValue == 0) {
+            player->stateFlags |= 0x8000000;
+            player->modeValue = 0;
+            setRaceMotionAnimation(player, 0x27);
+        } else {
+            player->modeValue--;
+        }
+    }
+}
 
 void updateRacePlayerMode35Character5(RacePlayer *player) {
     if (player->updateTimer == 0) {
