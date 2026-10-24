@@ -46,4 +46,24 @@ s32 updateRacePlayerSmoothedPathOffset(s32 playerIndex, s32 pathIndex, s32 rankS
     return gRacePlayers[rankSlot].smoothedPathOffset;
 }
 
-#pragma GLOBAL_ASM("asm.jp/nonmatchings/race/player/race_player_progress/getRacePlayerPathOffset.s")
+s32 getRacePlayerPathOffset(s32 playerIndex, s32 pathIndex) {
+    s8 *entry;
+
+    if (gRaceCourseIndex.signedValue == RACE_COURSE_ANIMAL_LAND) {
+        if (playerIndex == 0) {
+            return 0xFFF40000;
+        }
+        if (playerIndex == 1) {
+            return 0xC0000;
+        }
+        if (playerIndex == 2) {
+            return 0xFFDC0000;
+        }
+        if (playerIndex == 3) {
+            return 0x240000;
+        }
+    }
+
+    entry = D_800DD1A4[(gRaceCourseIndex.signedValue * RACE_PLAYER_COUNT) + playerIndex];
+    return entry[pathIndex] << 0x12;
+}
