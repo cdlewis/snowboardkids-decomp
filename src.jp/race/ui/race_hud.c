@@ -25,6 +25,16 @@ extern const char D_800E0AE0[];
 extern const char D_800E0AE8[];
 extern const char D_800E0AF0[];
 
+extern const char D_800E0A30[];
+extern const char D_800E0A38[];
+extern const char D_800E0A40[];
+extern const char D_800E0A48[];
+extern const char D_800E0A4C[];
+extern const char D_800E0A64[];
+extern const char D_800E0A6C[];
+extern const char D_800E0A74[];
+extern const char D_800E0A7C[];
+
 void initRaceHud(void) {
     LOAD_ASSET(SHARED_UI_SPRITES, 0x1F);
     gRaceHudMode = RACE_HUD_MODE_NONE;
@@ -65,14 +75,233 @@ void initRaceHud(void) {
     gRaceChallengeFailed = 0;
 }
 
-#pragma GLOBAL_ASM("asm.jp/nonmatchings/race/ui/race_hud/drawTrickAttackChallengeHud.s")
+void drawTrickAttackChallengeHud(void *arg0) {
+    s32 x;
+    s32 i;
+    char buffer[4];
+    s32 padding[2];
+    s32 palette;
+    s32 finalPalette;
+
+    palette = 0xC;
+    if ((gRaceChallengeTimeLimit.minutes == 0) && (gRaceChallengeTimeLimit.seconds < 10) && (gUiBlinkTimer & 1)) {
+        palette = 0x10;
+    }
+
+    {
+        sprintf(buffer, D_800E0A30, gRaceChallengeTimeLimit.minutes);
+        finalPalette = (u16)palette;
+        x = 0x40;
+        for (i = 0; i < 2; i++, x += 8) {
+            drawAssetTableSpriteWithExplicitPalette(
+                (s16)x,
+                0x50,
+                getRelocatableHeapBlockBase(RACE_HUD_POPUP_FONT_HANDLE),
+                (u8)buffer[i] - 5,
+                finalPalette
+            );
+        }
+
+        x += 8;
+        sprintf(buffer, D_800E0A38, gRaceChallengeTimeLimit.seconds);
+        for (i = 0; i < 2; i++, x += 8) {
+            drawAssetTableSpriteWithExplicitPalette(
+                (s16)x,
+                0x50,
+                getRelocatableHeapBlockBase(RACE_HUD_POPUP_FONT_HANDLE),
+                (u8)buffer[i] - 5,
+                finalPalette
+            );
+        }
+
+        x += 8;
+        sprintf(buffer, D_800E0A40, gRaceChallengeTimeLimit.fraction >> 8);
+        for (i = 0; i < 2; i++, x += 8) {
+            drawAssetTableSpriteWithExplicitPalette(
+                (s16)x,
+                0x50,
+                getRelocatableHeapBlockBase(RACE_HUD_POPUP_FONT_HANDLE),
+                (u8)buffer[i] - 5,
+                finalPalette
+            );
+        }
+    }
+
+    drawAssetTableSpriteWithExplicitPalette(
+        0x50,
+        0x50,
+        getRelocatableHeapBlockBase(RACE_HUD_POPUP_FONT_HANDLE),
+        0x36,
+        finalPalette
+    );
+    drawAssetTableSpriteWithExplicitPalette(
+        0x68,
+        0x50,
+        getRelocatableHeapBlockBase(RACE_HUD_POPUP_FONT_HANDLE),
+        0x35,
+        finalPalette
+    );
+
+    if (gRacePlayers[0].trickAttackMakeCount < 10) {
+        x = -0x90;
+        i = 0;
+        if (gRacePlayers[0].trickAttackMakeCount > 0) {
+            for (;;) {
+                drawScaledAssetTableSprite(
+                    (s16)x,
+                    -0x68,
+                    getRelocatableHeapBlockBase(RACE_HUD_POPUP_FONT_HANDLE),
+                    0x26,
+                    1
+                );
+                i++;
+                x += 8;
+
+                if (!(i < gRacePlayers[0].trickAttackMakeCount))
+                    break;
+            }
+        }
+    } else {
+        drawAssetTableSprite(-0x84, -0x60, getRelocatableHeapBlockBase(RACE_HUD_POPUP_FONT_HANDLE), 0x26);
+    }
+
+    {
+
+        x = 0x64;
+        sprintf(buffer, D_800E0A48, gRacePlayers[0].trickAttackPointTotal);
+        for (i = 0; i != 4; i++, x += 8) {
+            if ((u8)buffer[i] != ' ') {
+                drawAssetTableSprite(
+                    (s16)x,
+                    -0x58,
+                    getRelocatableHeapBlockBase(RACE_HUD_POPUP_FONT_HANDLE),
+                    (u8)buffer[i] - 5
+                );
+            }
+        }
+    }
+
+    drawAssetTableSprite(-0x88, 0x40, getRelocatableHeapBlockBase(RACE_HUD_POPUP_FONT_HANDLE), 0x27);
+    drawAssetTableSprite(-0x88, 0x40, getRelocatableHeapBlockBase(RACE_HUD_POPUP_FONT_HANDLE), 0x28);
+    if (gRaceChallengeFailed != 0) {
+        drawAssetTableSprite(0x40, 0x54, getRelocatableHeapBlockBase(RACE_HUD_POPUP_FONT_HANDLE), 0x4F);
+    }
+
+    if (gRacePlayers[0].trickAttackMakeCount >= 10) {
+        sprintf(buffer, D_800E0A4C, gRacePlayers[0].trickAttackMakeCount);
+        drawAssetTableSprite(-0x64, -0x59, getRelocatableHeapBlockBase(RACE_HUD_POPUP_FONT_HANDLE), (u8)buffer[0] - 5);
+        drawAssetTableSprite(-0x5C, -0x59, getRelocatableHeapBlockBase(RACE_HUD_POPUP_FONT_HANDLE), (u8)buffer[1] - 5);
+    }
+}
 
 void drawTrickAttackChallengeLabels(void *arg0) {
     drawMenuAsciiTextDefaultScale(0x60, -0x61, gRaceHudTrickAttackPointLabel, 5);
     drawMenuAsciiTextDefaultScale(0x38, 0x47, gRaceHudTrickAttackTimeLimitLabel, 5);
 }
 
-#pragma GLOBAL_ASM("asm.jp/nonmatchings/race/ui/race_hud/drawScoreAttackChallengeHud.s")
+void drawScoreAttackChallengeHud(void *arg0) {
+    s32 x;
+    s32 i;
+    char buffer[4];
+    s32 padding[2];
+    s32 palette;
+    s32 finalPalette;
+
+    palette = 0xC;
+    if ((gRaceChallengeTimeLimit.minutes == 0) && (gRaceChallengeTimeLimit.seconds < 10) && (gUiBlinkTimer & 1)) {
+        palette = 0x10;
+    }
+
+    {
+        sprintf(buffer, D_800E0A64, gRaceChallengeTimeLimit.minutes);
+        finalPalette = (u16)palette;
+        x = 0x40;
+        for (i = 0; i < 2; i++, x += 8) {
+            drawAssetTableSpriteWithExplicitPalette(
+                (s16)x,
+                0x50,
+                getRelocatableHeapBlockBase(RACE_HUD_POPUP_FONT_HANDLE),
+                (u8)buffer[i] - 5,
+                finalPalette
+            );
+        }
+
+        x += 8;
+        sprintf(buffer, D_800E0A6C, gRaceChallengeTimeLimit.seconds);
+        for (i = 0; i < 2; i++, x += 8) {
+            drawAssetTableSpriteWithExplicitPalette(
+                (s16)x,
+                0x50,
+                getRelocatableHeapBlockBase(RACE_HUD_POPUP_FONT_HANDLE),
+                (u8)buffer[i] - 5,
+                finalPalette
+            );
+        }
+
+        x += 8;
+        sprintf(buffer, D_800E0A74, gRaceChallengeTimeLimit.fraction >> 8);
+        for (i = 0; i < 2; i++, x += 8) {
+            drawAssetTableSpriteWithExplicitPalette(
+                (s16)x,
+                0x50,
+                getRelocatableHeapBlockBase(RACE_HUD_POPUP_FONT_HANDLE),
+                (u8)buffer[i] - 5,
+                finalPalette
+            );
+        }
+    }
+
+    drawAssetTableSpriteWithExplicitPalette(
+        0x50,
+        0x50,
+        getRelocatableHeapBlockBase(RACE_HUD_POPUP_FONT_HANDLE),
+        0x36,
+        finalPalette
+    );
+    drawAssetTableSpriteWithExplicitPalette(
+        0x68,
+        0x50,
+        getRelocatableHeapBlockBase(RACE_HUD_POPUP_FONT_HANDLE),
+        0x35,
+        finalPalette
+    );
+    drawAssetTableSprite(0x68, -0x60, getRelocatableHeapBlockBase(RACE_HUD_POPUP_FONT_HANDLE), 0x20);
+
+    {
+
+        sprintf(buffer, D_800E0A7C, gRacePlayers[0].scoreAttackPointTotal);
+        x = 0;
+        for (i = 0; i < 2; i++, x += 8) {
+            if ((u8)buffer[i] != ' ') {
+                drawAssetTableSprite(
+                    (s16)(x + 0x60),
+                    -0x50,
+                    getRelocatableHeapBlockBase(RACE_HUD_POPUP_FONT_HANDLE),
+                    (u8)buffer[i] - 5
+                );
+            }
+        }
+    }
+
+    x = 0;
+    i = 0;
+    if (gRacePlayers[0].shieldShotCount > 0) {
+        for (;;) {
+            drawAssetTableSprite((s16)(x - 0x88), -0x60, getRelocatableHeapBlockBase(RACE_HUD_POPUP_FONT_HANDLE), 0x21);
+            i++;
+            x += 8;
+
+            if (!(i < gRacePlayers[0].shieldShotCount))
+                break;
+        }
+    }
+
+    drawAssetTableSprite(-0x88, 0x40, getRelocatableHeapBlockBase(RACE_HUD_POPUP_FONT_HANDLE), 0x22);
+    drawAssetTableSprite(-0x88, 0x40, getRelocatableHeapBlockBase(RACE_HUD_POPUP_FONT_HANDLE), 0x23);
+    if (gRaceChallengeFailed != 0) {
+        drawAssetTableSprite(0x40, 0x54, getRelocatableHeapBlockBase(RACE_HUD_POPUP_FONT_HANDLE), 0x4F);
+    }
+}
 
 void drawScoreAttackChallengeLabels(void *arg0) {
     char sp18[0x20];

@@ -5331,7 +5331,7 @@ void initRaceScoreAttackRingMatrices(RaceUiRankTextRenderActor *arg0) {
             entry->active = active;
             i++;
             entry++;
-        
+
 if (!(i < actor2->count)) break;
 }
         count = actor1->count;
