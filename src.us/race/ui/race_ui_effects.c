@@ -3495,7 +3495,7 @@ void updateRaceUiItemStealTrailEffect(RaceUiRankTrailActor *arg0) {
     }
 
     for (i = 0; i < 8; i++) {
-        spawnRaceUiBurstTextParticle((void *)arg0->pos.x, (void *)arg0->pos.y, (void *)arg0->pos.z, i);
+        spawnRaceUiBurstTextParticle(arg0->pos.x, arg0->pos.y, arg0->pos.z, i);
     }
 
     enqueuePositionalSoundEffect(SFX_ITEM_STEAL_END, &gRacePlayers[arg0->task.userId].pos, 0x7F, SFX_PRIORITY_NORMAL);
@@ -3672,27 +3672,27 @@ void initRaceUiBurstTextParticle(RaceUiTextParticleActor *arg0) {
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceUiBurstTextParticle);
 }
 
-void spawnRaceUiBurstTextParticle(void *arg0, void *arg1, void *arg2, s16 arg3) {
+void spawnRaceUiBurstTextParticle(s32 arg0, s32 arg1, s32 arg2, s16 arg3) {
     RaceUiTextParticleActor *actor =
         createCallbackTaskPreservingArgs((CallbackTaskCallback)initRaceUiBurstTextParticle, 5, 0x1E);
     if (actor != NULL) {
         actor->useAltTextures = 0;
         actor->task.userId = arg3;
-        actor->pos.x = (s32)arg0;
-        actor->pos.y = (s32)arg1;
-        actor->pos.z = (s32)arg2;
+        actor->pos.x = arg0;
+        actor->pos.y = arg1;
+        actor->pos.z = arg2;
     }
 }
 
-void spawnRaceUiAltBurstTextParticle(void *arg0, void *arg1, void *arg2, s16 arg3) {
+void spawnRaceUiAltBurstTextParticle(s32 arg0, s32 arg1, s32 arg2, s16 arg3) {
     RaceUiTextParticleActor *actor =
         createCallbackTaskPreservingArgs((CallbackTaskCallback)initRaceUiBurstTextParticle, 5, 0x1E);
     if (actor != NULL) {
         actor->useAltTextures = 1;
         actor->task.userId = arg3;
-        actor->pos.x = (s32)arg0;
-        actor->pos.y = (s32)arg1;
-        actor->pos.z = (s32)arg2;
+        actor->pos.x = arg0;
+        actor->pos.y = arg1;
+        actor->pos.z = arg2;
     }
 }
 
@@ -4040,9 +4040,9 @@ void updateRaceUiHeavyKnockdownTrailEffect(RaceUiRankTrailActor *arg0) {
 
     for (i = 0; i < 8; i++) {
         spawnRaceUiAltBurstTextParticle(
-            (void *)arg0->copyBlock.translation.x,
-            (void *)arg0->copyBlock.translation.y,
-            (void *)arg0->copyBlock.translation.z,
+            arg0->copyBlock.translation.x,
+            arg0->copyBlock.translation.y,
+            arg0->copyBlock.translation.z,
             i
         );
     }
@@ -5618,9 +5618,9 @@ void updateRaceScoreAttackRings(void *arg0) {
                                         i = 0;
                                         do {
                                             spawnRaceUiAltBurstTextParticle(
-                                                (void *)entry->position.x,
-                                                (void *)(entry->position.y + 0x70000),
-                                                (void *)entry->position.z,
+                                                entry->position.x,
+                                                entry->position.y + 0x70000,
+                                                entry->position.z,
                                                 i
                                             );
                                             i++;
