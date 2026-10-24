@@ -79,9 +79,15 @@ typedef struct {
 
 typedef struct {
     /* 0x00 */ char pad[0x18];
+#if defined(VERSION_JP)
+    /* 0x18 */ Vec2s positions[4];
+    /* 0x28 */ s16 cursorScale;
+    /* 0x2A */ u16 cursorTimer;
+#else
     /* 0x18 */ Vec2s positions[6];
     /* 0x30 */ s16 cursorScale;
     /* 0x32 */ u16 cursorTimer;
+#endif
 } ControllerPakFileListActor;
 
 typedef struct {

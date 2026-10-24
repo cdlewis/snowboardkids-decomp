@@ -15,6 +15,9 @@
 #include "game/race/player/race_player_input.h"
 #include "game/menu/controller_pak/controller_pak_file_delete_flow.h"
 
+void func_80031A10(ControllerPakFileListActor *arg0);
+void func_80031D9C(ControllerPakFileListActor *arg0);
+
 void drawControllerPakContinuePrompt(ControllerPakOptionsActor *arg0) {
     s32 i;
     s32 j;
@@ -767,13 +770,49 @@ void updateControllerPakFileDeleteFreeSpaceInfo(ControllerPakTwoPointActor *arg0
     addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawControllerPakFileDeleteFreeSpaceInfo, arg0);
 }
 
-#pragma GLOBAL_ASM("asm.jp/nonmatchings/menu/controller_pak/controller_pak_ui/func_800319D0.s")
+void func_800319D0(ControllerPakTwoPointActor *arg0) {
+    s32 temp_v0 = 0x34;
+
+    arg0->common.x = -0x24;
+    arg0->common.y = temp_v0;
+    arg0->x2 = 0x50;
+    arg0->y2 = temp_v0;
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateControllerPakFileDeleteFreeSpaceInfo);
+}
 
 #pragma GLOBAL_ASM("asm.jp/nonmatchings/menu/controller_pak/controller_pak_ui/func_80031A10.s")
 
-#pragma GLOBAL_ASM("asm.jp/nonmatchings/menu/controller_pak/controller_pak_ui/func_80031D9C.s")
+void func_80031D9C(ControllerPakFileListActor *arg0) {
+    if (gControllerPakMenuCursorState == 1) {
+        if (arg0->cursorTimer < 0x10) {
+            arg0->cursorScale -= 9;
+        } else {
+            arg0->cursorScale += 9;
+        }
+        arg0->cursorTimer = (arg0->cursorTimer + 1) & 0x1F;
+    } else {
+        arg0->cursorScale = 0x100;
+        arg0->cursorTimer = 0;
+    }
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)func_80031A10, (void *)arg0);
+}
 
-#pragma GLOBAL_ASM("asm.jp/nonmatchings/menu/controller_pak/controller_pak_ui/func_80031E38.s")
+void func_80031E38(ControllerPakFileListActor *arg0) {
+    s32 temp_v0 = -0x20;
+    s32 temp_v1 = -0x6C;
+
+    arg0->positions[0].x = temp_v1;
+    arg0->positions[0].y = temp_v0;
+    arg0->positions[1].x = -0x50;
+    arg0->positions[1].y = temp_v0;
+    arg0->positions[2].x = 0x58;
+    arg0->positions[2].y = temp_v0;
+    arg0->positions[3].x = temp_v1;
+    arg0->positions[3].y = -0x1F;
+    arg0->cursorScale = 0x100;
+    arg0->cursorTimer = 0;
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)func_80031D9C);
+}
 
 void drawControllerPakFileDeleteIcon(ControllerPakSpriteActor *arg0) {
     drawMenuTilemapSprite(&arg0->sprite.render, MENU_TILEMAP_TEXEL_4B, arg0->common.x, arg0->common.y);
