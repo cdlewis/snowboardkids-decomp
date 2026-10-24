@@ -136,6 +136,8 @@ typedef struct {
     RaceTimer timeTrialRecordSplitTimes[11];
 } RaceUiTimeTrialSaveData;
 
+extern const char D_800E07F0[];
+
 void renderRaceCourseScrollingTexture(RaceCourseScrollingTextureActor *arg0) {
     volatile u8 pad[8];
     Gfx *unused;
@@ -3439,7 +3441,41 @@ void spawnPanItemTargets(s16 arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm.jp/nonmatchings/race/ui/race_ui_effects/drawRaceUiScorePopup.s")
+void drawRaceUiScorePopup(RaceUiPopupActor *arg0) {
+    volatile u8 padding[0x20];
+    char buffer[8];
+    s32 i;
+
+    if (gCurrentViewportIndex == arg0->playerIndex) {
+        drawAssetTableSprite(
+            (s16)(arg0->x - 0x40),
+            (s16)(arg0->y.word - 8),
+            getRelocatableHeapBlockBase(gAssetHandles[0x1F]),
+            0x8B
+        );
+        drawAssetTableSprite((s16)(arg0->x + 0x28), (s16)(arg0->y.word - 8),
+            getRelocatableHeapBlockBase(gAssetHandles[0x1F]), 0x8C);
+        sprintf(buffer, D_800E07F0, arg0->parent);
+        for (i = 0; i != 4; i++) {
+            if (buffer[i] != ' ') {
+                drawAssetTableSpriteWithExplicitPalette(
+                    (s16)(arg0->x + (i * 8) - 8),
+                    (s16)(arg0->y.word - 8),
+                    getRelocatableHeapBlockBase(gAssetHandles[0x1F]),
+                    buffer[i] - 5,
+                    0xE
+                );
+            }
+        }
+        drawAssetTableSpriteWithExplicitPalette(
+            (s16)(arg0->x + (i * 8) - 8),
+            (s16)(arg0->y.word - 8),
+            getRelocatableHeapBlockBase(gAssetHandles[0x1F]),
+            0x37,
+            0xE
+        );
+    }
+}
 
 void updateRaceUiScorePopupSlideOut(RaceUiPopupActor *arg0) {
     arg0->x += arg0->velocity;
@@ -5256,7 +5292,53 @@ void updateRaceScoreAttackRings(void *arg0) {
     addRenderCallback(&gSceneModelRenderCallbackList, (RenderCallback)renderRaceScoreAttackRings, arg0);
 }
 
+// initRaceScoreAttackRingMatrices best match: 95.946%
 #pragma GLOBAL_ASM("asm.jp/nonmatchings/race/ui/race_ui_effects/initRaceScoreAttackRingMatrices.s")
+
+#ifdef NON_MATCHING
+void initRaceScoreAttackRingMatrices(RaceUiRankTextRenderActor *arg0) {
+    Transform3D scratch;
+    RaceUiRankTextRenderEntry *entry;
+    RaceUiRankTextRenderActor *actor1;
+    RaceUiRankTextRenderActor *actor2;
+    s32 i;
+    s32 active;
+    s32 count;
+
+    actor1 = arg0;
+    entry = gCourseScoreAttackRingEntryLists[gRaceCourseIndex.signedValue];
+    count = actor1->count;
+    i = 0;
+    if (count > 0) {
+        active = 1;
+        actor2 = arg0;
+        for (;;) {
+            makeFixedRotationY(scratch.rotation, entry->angle);
+            scratch.rotation[0] = scratch.rotation[0] / 12;
+            scratch.rotation[1] = scratch.rotation[1] / 12;
+            scratch.rotation[2] = scratch.rotation[2] / 12;
+            if ((!i) && (!i)) {}
+            scratch.rotation[3] = scratch.rotation[3] / 12;
+            scratch.rotation[4] = scratch.rotation[4] / 12;
+            scratch.rotation[5] = scratch.rotation[5] / 12;
+            scratch.rotation[6] = scratch.rotation[6] / 12;
+            scratch.rotation[7] = scratch.rotation[7] / 12;
+            scratch.rotation[8] = scratch.rotation[8] / 12;
+            scratch.translation.x = entry->position.x;
+            scratch.translation.y = entry->position.y;
+            scratch.translation.z = entry->position.z;
+            packFixedTransformMatrix(&scratch, &actor1->matrices[i]);
+            entry->active = active;
+            i++;
+            entry++;
+        
+if (!(i < actor2->count)) break;
+}
+        count = actor1->count;
+    }
+    osWritebackDCache(actor1->matrices, count << 6);
+}
+#endif
 
 void initRaceScoreAttackRings(RaceUiRankTextRenderActor *arg0) {
     RaceUiRankTextRenderEntry *var_v0;

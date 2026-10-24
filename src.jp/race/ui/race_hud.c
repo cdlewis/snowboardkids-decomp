@@ -21,6 +21,10 @@
 #define RACE_HUD_POPUP_FONT_HANDLE (gAssetHandles[0x1F])
 #define ASSET_HANDLE(index) (gAssetHandles[index])
 
+extern const char D_800E0AE0[];
+extern const char D_800E0AE8[];
+extern const char D_800E0AF0[];
+
 void initRaceHud(void) {
     LOAD_ASSET(SHARED_UI_SPRITES, 0x1F);
     gRaceHudMode = RACE_HUD_MODE_NONE;
@@ -150,7 +154,44 @@ void drawTargetTimeChallengeLabels(void *arg0) {
     drawMenuAsciiTextDefaultScale(-0x68, -0x48, sp28, 6);
 }
 
-#pragma GLOBAL_ASM("asm.jp/nonmatchings/race/ui/race_hud/drawTimeTrialHud.s")
+void drawTimeTrialHud(void *arg0) {
+    char buffer[0xC];
+    s32 x;
+    s32 i;
+
+    sprintf(buffer, D_800E0AE0, gRaceElapsedTimer.minutes);
+    x = 0x48;
+    for (i = 0; i < 2; i++, x += 8) {
+        drawAssetTableSprite((s16)x, 0x50, getRelocatableHeapBlockBase(RACE_HUD_POPUP_FONT_HANDLE), (u8)buffer[i] - 5);
+    }
+
+    x += 8;
+    sprintf(buffer, D_800E0AE8, gRaceElapsedTimer.seconds);
+    for (i = 0; i < 2; i++, x += 8) {
+        drawAssetTableSprite((s16)x, 0x50, getRelocatableHeapBlockBase(RACE_HUD_POPUP_FONT_HANDLE), (u8)buffer[i] - 5);
+    }
+
+    x += 8;
+    sprintf(buffer, D_800E0AF0, gRaceElapsedTimer.fraction >> 8);
+    for (i = 0; i != 2; i++, x += 8) {
+        drawAssetTableSprite((s16)x, 0x50, getRelocatableHeapBlockBase(RACE_HUD_POPUP_FONT_HANDLE), (u8)buffer[i] - 5);
+    }
+
+    drawAssetTableSprite(0x58, 0x50, getRelocatableHeapBlockBase(RACE_HUD_POPUP_FONT_HANDLE), 0x36);
+    drawAssetTableSprite(0x70, 0x50, getRelocatableHeapBlockBase(RACE_HUD_POPUP_FONT_HANDLE), 0x35);
+
+    if (gRacePlayers[0].itemType != RACE_ITEM_NONE) {
+        drawAssetTableSprite(
+            -0x10,
+            -0x60,
+            getRelocatableHeapBlockBase(RACE_HUD_POPUP_FONT_HANDLE),
+            gRaceHudItemTileIds[gRacePlayers[0].itemType]
+        );
+    }
+
+    drawAssetTableSprite(-0x88, 0x40, getRelocatableHeapBlockBase(RACE_HUD_POPUP_FONT_HANDLE), 0x24);
+    drawAssetTableSprite(-0x88, 0x40, getRelocatableHeapBlockBase(RACE_HUD_POPUP_FONT_HANDLE), 0x2A);
+}
 
 void drawTimeTrialLabels(void *unused) {
     char bestLapText[0x20];
