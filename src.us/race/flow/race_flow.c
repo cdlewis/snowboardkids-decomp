@@ -623,10 +623,10 @@ void initRaceSceneFlow(void) {
     gRacePlayers[1].characterId = gRacePlayers[1].selectedCharacterId;
     gRacePlayers[2].characterId = gRacePlayers[2].selectedCharacterId;
     gRacePlayers[3].characterId = gRacePlayers[3].selectedCharacterId;
-    gRacePlayers[0].characterVariant = gRacePlayers[0].menuSelection;
-    gRacePlayers[1].characterVariant = gRacePlayers[1].menuSelection;
-    gRacePlayers[2].characterVariant = gRacePlayers[2].menuSelection;
-    gRacePlayers[3].characterVariant = gRacePlayers[3].menuSelection;
+    gRacePlayers[0].snowboardIndex = gRacePlayers[0].menuSelection;
+    gRacePlayers[1].snowboardIndex = gRacePlayers[1].menuSelection;
+    gRacePlayers[2].snowboardIndex = gRacePlayers[2].menuSelection;
+    gRacePlayers[3].snowboardIndex = gRacePlayers[3].menuSelection;
     gRacePlayers[0].snowboardTextureIndex = gRacePlayers[0].selectionUnlockState;
     gRacePlayers[1].snowboardTextureIndex = gRacePlayers[1].selectionUnlockState;
     gRacePlayers[2].snowboardTextureIndex = gRacePlayers[2].selectionUnlockState;
@@ -648,7 +648,7 @@ void initRaceSceneFlow(void) {
         }
         characterEntry =
             &gRaceCpuBoardConfigsByCourse[gRaceCourseIndex.signedValue][gRacePlayers[i].characterId & 0xFFFFFFFFu];
-        gRacePlayers[i].characterVariant = characterEntry->boardPropertiesIndex;
+        gRacePlayers[i].snowboardIndex = characterEntry->boardPropertiesIndex;
         gRacePlayers[i].snowboardTextureIndex = characterEntry->snowboardTextureIndex;
     }
     if (gRaceSplitscreenMode == 0) {
@@ -684,7 +684,7 @@ void initRaceSceneFlow(void) {
         history->enabled = 1;
         history->courseId = gRaceCourseIndex.signedValue;
         history->characterId = gRacePlayers[0].characterId;
-        history->characterVariant = gRacePlayers[0].characterVariant;
+        history->snowboardIndex = gRacePlayers[0].snowboardIndex;
         history->unkC = gRacePlayers[0].snowboardTextureIndex;
 
         for (i = 0; i < 0x1194; i++) {
@@ -742,7 +742,7 @@ void initRaceSceneFlow(void) {
                 gRacePlayers[1].soundDisabled = 1;
                 gRacePlayers[1].replayInputSource = RACE_PLAYER_INPUT_HISTORY_07;
                 gRacePlayers[1].characterId = history->characterId;
-                gRacePlayers[1].characterVariant = history->characterVariant;
+                gRacePlayers[1].snowboardIndex = history->snowboardIndex;
                 gRacePlayers[1].snowboardTextureIndex = history->unkC;
                 gRacePlayerCount = 2;
             }
@@ -1962,7 +1962,7 @@ void updateRaceResultsFlow(void) {
                     gGameSaveDataBuffer[0].timeTrialRecords[gRaceCourseIndex.signedValue][recordIndex] =
                         gRaceElapsedTimer;
                     gGameSaveDataBuffer[0].timeTrialCharacterIds[gRaceCourseIndex.signedValue][recordIndex] =
-                        gRacePlayers[0].characterId + (gRacePlayers[0].characterVariant * 8);
+                        gRacePlayers[0].characterId + (gRacePlayers[0].snowboardIndex * 8);
                     if (recordIndex == 0) {
                         gGameSaveDataBuffer[0].bestLapRecords[gRaceCourseIndex.signedValue] =
                             gRaceTimeTrialFinishTime;
@@ -2008,7 +2008,7 @@ void updateRaceResultsFlow(void) {
                         gGameSaveDataBuffer[0].trickAttackScores[gRaceCourseIndex.signedValue][recordIndex] =
                             gRacePlayers[0].trickAttackPointTotal;
                         gGameSaveDataBuffer[0].trickAttackCharacterIds[gRaceCourseIndex.signedValue][recordIndex] =
-                            gRacePlayers[0].characterId + (gRacePlayers[0].characterVariant * 8);
+                            gRacePlayers[0].characterId + (gRacePlayers[0].snowboardIndex * 8);
                     }
                     if (gRacePlayers[0].trickAttackPointTotal >= 0x7D0) {
                         gGameSaveDataBuffer[0].extraCourseUnlockFlags |= 2;
@@ -2051,7 +2051,7 @@ void updateRaceResultsFlow(void) {
                         gGameSaveDataBuffer[0].scoreAttackScores[gRaceCourseIndex.signedValue][recordIndex] =
                             gRacePlayers[0].scoreAttackPointTotal;
                         gGameSaveDataBuffer[0].scoreAttackCharacterIds[gRaceCourseIndex.signedValue][recordIndex] =
-                            gRacePlayers[0].characterId + (gRacePlayers[0].characterVariant * 8);
+                            gRacePlayers[0].characterId + (gRacePlayers[0].snowboardIndex * 8);
                     }
                     if (recordIndex < 5) {
                         gRaceResultState = 1;
@@ -2099,7 +2099,7 @@ void updateRaceResultsFlow(void) {
                         gGameSaveDataBuffer[0].raceRecords[gRaceCourseIndex.signedValue][recordIndex] =
                             gRaceElapsedTimer;
                         gGameSaveDataBuffer[0].raceRecordCharacterIds[gRaceCourseIndex.signedValue][recordIndex] =
-                            gRacePlayers[0].characterId + (gRacePlayers[0].characterVariant * 8);
+                            gRacePlayers[0].characterId + (gRacePlayers[0].snowboardIndex * 8);
                     }
                     if (recordIndex < 5) {
                         gRaceResultState = 1;

@@ -355,9 +355,9 @@ void updateRaceStartPlayerEffectActive(MenuScreenEffectActor *arg0) {
     transformVec3iByFixedMatrix(sp38, &sp2C, (Vec3i *)&arg0->unk18);
 
     player = &gRacePlayers[arg0->index];
-    arg0->unk18.word += player->unk28.x;
-    arg0->unk1C.word += player->unk28.y;
-    arg0->unk20.word += player->unk28.z;
+    arg0->unk18.word += player->renderPosition.x;
+    arg0->unk1C.word += player->renderPosition.y;
+    arg0->unk20.word += player->renderPosition.z;
 
     addRenderCallback(
         &gRaceModelEffectRenderCallbackList,

@@ -57,7 +57,7 @@ typedef struct RacePlayer {
     /* 0x00B */ u8 unkB;
     /* 0x00C */ s32 money;
     /* 0x010 */ u8 characterId;
-    /* 0x011 */ u8 characterVariant;
+    /* 0x011 */ u8 snowboardIndex; /* Board properties and model index, separate from its texture. */
     /* 0x012 */ u8 snowboardTextureIndex;
     /* 0x013 */ s8 isActive;
     /* Also suppresses body collisions, rumble and effects. Post-update skips
@@ -72,7 +72,7 @@ typedef struct RacePlayer {
     /* 0x01A */ u8 cpuItemUseChance;
     /* 0x01B */ u8 cpuShotUseChance;
     /* 0x01C */ Vec3i pos;
-    /* 0x028 */ Vec3i unk28;
+    /* 0x028 */ Vec3i renderPosition; /* pos with ground offset/correction applied for rendering and effects. */
     /* 0x034 */ Vec3i previousPosition;
     /* 0x040 */ Vec3i velocity;
     /* 0x04C */ char pad4C[0xC];
@@ -87,39 +87,41 @@ typedef struct RacePlayer {
     /* 0x072 */ char pad72[2];
     /* 0x074 */ s32 verticalVelocityLimit;
     /* 0x078 */ char pad78[4];
-    /* 0x07C */ s32 stateTimer;
+    /* Mode-dependent scratch: frame timer, trick rotation progress, or jump impulse. */
+    /* 0x07C */ s32 modeValue;
     /* 0x080 */ s32 unk80;
     /* 0x084 */ u32 heldInput;     /* Buttons and digital stick directions held this frame. */
     /* 0x088 */ u32 pressedInput;  /* Inputs newly pressed this frame. */
     /* 0x08C */ u32 previousInput; /* Held input from the previous frame. */
     /* 0x090 */ s8 stickX;
     /* 0x091 */ s8 stickY;
-    /* 0x092 */ s8 unk92;
-    /* 0x093 */ s8 unk93;
+    /* 0x092 */ s8 stanceChangeTimer;
+    /* 0x093 */ s8 stanceTransitionFrame;
     /* 0x094 */ Transform3D modelPartTransforms[RACE_PLAYER_MODEL_PART_CAPACITY];
     /* 0x254 */ s32 localVelocityZ;
     /* 0x258 */ s32 localVelocityX;
-    /* 0x25C */ s32 unk25C;
+    /* 0x25C */ s32 baseSpeedLimit;
     /* 0x260 */ s32 gravity;
-    /* 0x264 */ s32 unk264;
-    /* 0x268 */ s32 unk268;
-    /* 0x26C */ s32 unk26C;
-    /* 0x270 */ s32 unk270;
-    /* 0x274 */ s32 unk274;
-    /* 0x278 */ s32 unk278;
-    /* 0x27C */ s32 unk27C;
+    /* 0x264 */ s32 aerialGravity;
+    /* 0x268 */ s32 turnStrength;
+    /* 0x26C */ s32 turnRadiusAtFullLean;
+    /* 0x270 */ s32 turnRadiusAtHalfLean;
+    /* 0x274 */ s32 lateralDeceleration;
+    /* 0x278 */ s32 forwardDeceleration;
+    /* 0x27C */ s32 reverseDeceleration;
     /* 0x280 */ s32 collisionRadius;
     /* 0x284 */ s32 collisionHeight;
-    /* 0x288 */ s16 unk288;
-    /* 0x28A */ s16 unk28A;
-    /* 0x28C */ s16 unk28C;
+    /* 0x288 */ s16 modelBasePitch;
+    /* 0x28A */ s16 modelBaseYaw;
+    /* 0x28C */ s16 modelBaseRoll;
     /* 0x28E */ char pad28E[2];
     /* 0x290 */ Vec3i projectedPos;
     /* 0x29C */ s32 movementSpeed;
-    /* 0x2A0 */ s16 unk2A0;
-    /* 0x2A2 */ s16 unk2A2;
-    /* 0x2A4 */ s16 unk2A4;
-    /* 0x2A6 */ s16 unk2A6;
+    /* Frames waiting for grab input; a press in the first six selects the early-input variant. */
+    /* 0x2A0 */ s16 grabInputFrames;
+    /* 0x2A2 */ s16 grabTrickId;
+    /* 0x2A4 */ s16 grabHoldFrames; /* Extra hold frames after the grab animation completes. */
+    /* 0x2A6 */ s16 aerialTrickId;
     /* 0x2A8 */ s16 surfaceCueState[6];
     /* 0x2B4 */ s16 surfaceCueStep[6];
     /* 0x2C0 */ s16 trickAttackPointTotal;
@@ -149,7 +151,8 @@ typedef struct RacePlayer {
     /* 0x2F4 */ s16 surfaceRollAngle;
     /* 0x2F6 */ s16 leanInput;
     /* 0x2F8 */ s16 leanScale;
-    /* 0x2FA */ s16 unk2FA;
+    /* Grounded lean-animation blend angle; launch-ramp modes reuse it as their target yaw. */
+    /* 0x2FA */ s16 modeAngle;
     /* 0x2FC */ u32 stateFlags;
     /* 0x300 */ s16 mode;
     /* 0x302 */ s16 updateState;
@@ -159,15 +162,15 @@ typedef struct RacePlayer {
     /* 0x30A */ s16 subStateTimer;
     /* 0x30C */ s16 subStateStep;
     /* 0x30E */ s16 subStateParam;
-    /* 0x310 */ s32 unk310;
+    /* 0x310 */ s32 targetSpeedLimit;
     /* 0x314 */ s32 speedLimit;
     /* 0x318 */ s32 rankSpeedBonus; /* Approaches rank table by at most +0x20/-0x30 per update. */
     /* 0x31C */ s16 unk31C;
     /* 0x31E */ s16 unk31E;
     /* 0x320 */ s16 invisibilityTimer;
     /* 0x322 */ char pad322[0xE];
-    /* 0x330 */ s8 unk330;
-    /* 0x331 */ s8 unk331;
+    /* 0x330 */ s8 surfaceType;
+    /* 0x331 */ s8 previousSurfaceType;
     /* 0x332 */ s16 unk332;
     /* 0x334 */ s16 unk334;
     /* 0x336 */ s16 unk336;
@@ -181,10 +184,10 @@ typedef struct RacePlayer {
     /* 0x460 */ char pad460[4];
     /* 0x464 */ s16 animationFrameDuration;
     /* 0x466 */ s16 animationFrameTimer;
-    /* 0x468 */ Vec3i markerPoints[RACE_PLAYER_COUNT];
+    /* 0x468 */ Vec3i shadowCorners[4]; /* Board corners projected onto the terrain for the shadow. */
     /* 0x498 */ Vtx *shadowVtx;
     /* 0x49C */ Mtx *shadowMtx;
-    /* 0x4A0 */ Vec3i groundMarkerSources[8];
+    /* 0x4A0 */ Vec3i boardContactPoints[8]; /* Current world-space corners [0..3], previous frame [4..7]. */
     /* 0x500 */ u8 groundContactMask;
     /* 0x501 */ char pad501[1];
     /* 0x502 */ s16 coursePathIndex;
@@ -239,10 +242,10 @@ typedef struct RacePlayer {
     /* 0x57E */ s16 progressMeterPosition;
     /* 0x580 */ s8 progressMeterSquashFrame;
     /* 0x581 */ s8 unk581;
-    /* 0x582 */ s16 unk582;
-    /* 0x584 */ s16 unk584;
+    /* 0x582 */ s16 loopSoundVolume;
+    /* 0x584 */ s16 loopSoundId;
     /* 0x586 */ char pad586[2];
-    /* 0x588 */ f32 unk588;
+    /* 0x588 */ f32 loopSoundPitch;
     /* 0x58C */ SpeedFanState speedFan;
     /* 0x604 */ s16 rumbleTimer;
     /* 0x606 */ s16 rumblePatternIndex;

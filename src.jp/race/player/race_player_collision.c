@@ -343,18 +343,18 @@ void resolveRacePlayerHitReactions(RacePlayer *arg0) {
         }
     }
     arg0->pendingItemHitFlags = 0;
-    if (arg0->unk330 == 3) {
-        if (arg0->unk331 == 3) {
+    if (arg0->surfaceType == 3) {
+        if (arg0->previousSurfaceType == 3) {
             tryQueueRacePlayerHitCueObstacle(arg0);
         }
     }
-    if (arg0->unk330 == 8) {
+    if (arg0->surfaceType == 8) {
         tryQueueRacePlayerHitCueObstacle(arg0);
     }
-    if ((arg0->unk330 == 6) || (arg0->unk330 == 0xC) || (arg0->unk330 == 0x10)) {
+    if ((arg0->surfaceType == 6) || (arg0->surfaceType == 0xC) || (arg0->surfaceType == 0x10)) {
         tryQueueRacePlayerHitCueTerrainFall(arg0);
     }
-    if ((arg0->unk330 == 7) || (arg0->unk330 == 0xE) || (arg0->unk330 == 0xF)) {
+    if ((arg0->surfaceType == 7) || (arg0->surfaceType == 0xE) || (arg0->surfaceType == 0xF)) {
         tryQueueRacePlayerHitCueTerrainCrash(arg0);
     }
     if (gRacePlayerHitCueId != 0) {
@@ -434,7 +434,7 @@ void resolveRacePlayerHitReactions(RacePlayer *arg0) {
                 }
                 break;
             case 1:
-                arg0->unk310 = 0xC000;
+                arg0->targetSpeedLimit = 0xC000;
                 break;
             case 7:
                 if (arg0->soundDisabled == 0) {
@@ -537,7 +537,7 @@ void resolveRacePlayerHitReactions(RacePlayer *arg0) {
                 arg0->mode = 6;
                 arg0->updateState = 0;
                 arg0->updateTimer = 0;
-                if (getRaceItemEffectType(arg0->unk330) != 0) {
+                if (getRaceItemEffectType(arg0->surfaceType) != 0) {
                     arg0->mode = 0x1C;
                 }
                 break;
@@ -606,9 +606,9 @@ void resolveRacePlayerCollisionVolumes(RacePlayer *player) {
     s32 sourceIndex;
     s32 parentPartIndex;
 
-    player->unk288 = player->pitchAngle;
-    player->unk28A = player->facingAngle;
-    player->unk28C = player->leanAngle;
+    player->modelBasePitch = player->pitchAngle;
+    player->modelBaseYaw = player->facingAngle;
+    player->modelBaseRoll = player->leanAngle;
     if (player->stateFlags & 0x400) {
         for (i = 0; i < player->modelPartCount; i++) {
             sinX = fixedSine(player->modelParts[player->modelParts[i].mirroredPartIndex].rotation.x);
@@ -636,7 +636,7 @@ void resolveRacePlayerCollisionVolumes(RacePlayer *player) {
         }
 
         makeFixedRotationZYX(effectMtx, player->modelRotationX, -player->modelRotationY, -player->modelRotationZ);
-        makeFixedRotationZXY(playerMtx, player->unk288, player->unk28A, player->unk28C);
+        makeFixedRotationZXY(playerMtx, player->modelBasePitch, player->modelBaseYaw, player->modelBaseRoll);
         offset[0] = (((s64)playerMtx[3]) * player->collisionCenterOffset) / 0x1000;
         offset[1] = (((s64)playerMtx[4]) * player->collisionCenterOffset) / 0x1000;
         offset[2] = (((s64)playerMtx[5]) * player->collisionCenterOffset) / 0x1000;
@@ -710,7 +710,7 @@ void resolveRacePlayerCollisionVolumes(RacePlayer *player) {
         }
 
         makeFixedRotationZYX(effectMtx, player->modelRotationX, player->modelRotationY, player->modelRotationZ);
-        makeFixedRotationZXY(playerMtx, player->unk288, player->unk28A, player->unk28C);
+        makeFixedRotationZXY(playerMtx, player->modelBasePitch, player->modelBaseYaw, player->modelBaseRoll);
         offset[0] = (((s64)playerMtx[3]) * player->collisionCenterOffset) / 0x1000;
         offset[1] = (((s64)playerMtx[4]) * player->collisionCenterOffset) / 0x1000;
         offset[2] = (((s64)playerMtx[5]) * player->collisionCenterOffset) / 0x1000;

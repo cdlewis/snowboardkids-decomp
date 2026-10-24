@@ -31,9 +31,9 @@
 #include "game/race/flow/race_flow.h"
 
 #define ASSET_HANDLE(index) (gAssetHandles[(index)])
-#define RACE_UI_SNOWBOARD_TRAIL_SCALE_X 0xF0000
-#define RACE_UI_SNOWBOARD_TRAIL_SCALE_Y 0x230000
-#define RACE_UI_SNOWBOARD_TRAIL_SCALE_Z 0
+#define RACE_UI_SNOWBOARD_TRAIL_BACK_OFFSET_X 0xF0000
+#define RACE_UI_SNOWBOARD_TRAIL_BACK_OFFSET_Y 0x230000
+#define RACE_UI_SNOWBOARD_TRAIL_BACK_OFFSET_Z 0
 #define RACE_UI_SNOWBOARD_TRAIL_TIMER 0xF
 #define RACE_UI_SNOWBOARD_TRAIL_INITIAL_VELOCITY_Y 0x20000
 #define RACE_UI_SINGLE_TRAIL_TIMER 0x3C
@@ -3179,9 +3179,9 @@ void updateRacePlayerSparkleOrbit(RaceUiSparkleActor *arg0) {
         transformVec3iByFixedMatrix(stack.matrix, &stack.vec, &arg0->pos);
 
         player = &gRacePlayers[arg0->playerIndex];
-        arg0->pos.x += player->unk28.x;
-        arg0->pos.y += player->unk28.y;
-        arg0->pos.z += player->unk28.z;
+        arg0->pos.x += player->renderPosition.x;
+        arg0->pos.y += player->renderPosition.y;
+        arg0->pos.z += player->renderPosition.z;
     }
 
     addRenderCallback(&gModelRenderCallbackQueue7Head, (RenderCallback)renderRacePlayerSparkleEffect, (void *)arg0);
@@ -3209,9 +3209,9 @@ void updateRacePlayerSparkleRetarget(RaceUiSparkleActor *arg0) {
         transformVec3iByFixedMatrix(scratch.matrix, &scratch.vec, &arg0->pos);
 
         player = &gRacePlayers[arg0->playerIndex];
-        arg0->pos.x += player->unk28.x;
-        arg0->pos.y += player->unk28.y;
-        arg0->pos.z += player->unk28.z;
+        arg0->pos.x += player->renderPosition.x;
+        arg0->pos.y += player->renderPosition.y;
+        arg0->pos.z += player->renderPosition.z;
         selectedPlayerIndex = gRaceOrderPlayerIds[1];
 
         timer = arg0->timer;
@@ -3286,9 +3286,9 @@ void updateRacePlayerSparkleRise(RaceUiSparkleActor *arg0) {
         transformVec3iByFixedMatrix(sp38, &sp2C, &arg0->pos);
 
         player = &gRacePlayers[arg0->playerIndex];
-        arg0->pos.x += player->unk28.x;
-        arg0->pos.y += player->unk28.y;
-        arg0->pos.z += player->unk28.z;
+        arg0->pos.x += player->renderPosition.x;
+        arg0->pos.y += player->renderPosition.y;
+        arg0->pos.z += player->renderPosition.z;
         arg0->alpha += arg0->alphaStep;
         if (arg0->alpha >= 0x100) {
             arg0->alpha = 0xFF;
@@ -3377,7 +3377,7 @@ void updateRaceUiExpiredSpeedFanEffect(RaceUiExpiredSpeedFanActor *arg0) {
     RaceUiExpiredSpeedFanActor *actor;
 
     actor = arg0;
-    actor->spinYaw += 0x240;
+    actor->spinAngleX += 0x240;
     if (gRaceUpdatePaused == 0) {
         actor->worldPos.y += actor->velocityY;
         actor->velocityY -= 0x8000;
@@ -3387,10 +3387,10 @@ void updateRaceUiExpiredSpeedFanEffect(RaceUiExpiredSpeedFanActor *arg0) {
     actor->frontTransform.translation.y = actor->worldPos.y;
     actor->frontTransform.translation.z = actor->worldPos.z;
 
-    makeFixedRotationX(sp30.rotation, actor->spinYaw);
-    sp30.translation.x = actor->scale.x;
-    sp30.translation.y = actor->scale.y;
-    sp30.translation.z = actor->scale.z;
+    makeFixedRotationX(sp30.rotation, actor->spinAngleX);
+    sp30.translation.x = actor->backOffset.x;
+    sp30.translation.y = actor->backOffset.y;
+    sp30.translation.z = actor->backOffset.z;
     composeFixedTransforms(&sp30, &actor->frontTransform, &actor->backTransform);
 
     actor->timer--;
@@ -3406,9 +3406,9 @@ void updateRaceUiExpiredSpeedFanEffect(RaceUiExpiredSpeedFanActor *arg0) {
 
 void initRaceUiExpiredSpeedFanEffect(RaceUiExpiredSpeedFanActor *actor) {
     actor->scaleStep = 1;
-    actor->scale.x = RACE_UI_SNOWBOARD_TRAIL_SCALE_X;
-    actor->scale.y = RACE_UI_SNOWBOARD_TRAIL_SCALE_Y;
-    actor->scale.z = RACE_UI_SNOWBOARD_TRAIL_SCALE_Z;
+    actor->backOffset.x = RACE_UI_SNOWBOARD_TRAIL_BACK_OFFSET_X;
+    actor->backOffset.y = RACE_UI_SNOWBOARD_TRAIL_BACK_OFFSET_Y;
+    actor->backOffset.z = RACE_UI_SNOWBOARD_TRAIL_BACK_OFFSET_Z;
     actor->timer = RACE_UI_SNOWBOARD_TRAIL_TIMER;
     actor->velocityY = RACE_UI_SNOWBOARD_TRAIL_INITIAL_VELOCITY_Y;
     updateRaceUiExpiredSpeedFanEffect(actor);
@@ -3423,7 +3423,7 @@ void spawnRaceUiExpiredSpeedFanEffect(RacePlayer *player) {
         actor->playerIndex = player->playerIndex;
         actor->worldPos = player->speedFan.worldPos;
         actor->frontTransform = player->speedFan.frontTransform;
-        actor->spinYaw = player->speedFan.spinYaw;
+        actor->spinAngleX = player->speedFan.spinAngleX;
     }
 }
 
@@ -3438,9 +3438,9 @@ void renderRaceUiItemStealTrailEffect(RaceUiRankTrailActor *arg0) {
     if (arg0->matrixDirty != 0) {
         arg0->matrixDirty = 0;
         player = &gRacePlayers[arg0->task.userId];
-        arg0->copyBlock.translation.x = player->unk28.x;
-        arg0->copyBlock.translation.y = player->unk28.y + 0x100000;
-        arg0->copyBlock.translation.z = player->unk28.z;
+        arg0->copyBlock.translation.x = player->renderPosition.x;
+        arg0->copyBlock.translation.y = player->renderPosition.y + 0x100000;
+        arg0->copyBlock.translation.z = player->renderPosition.z;
         arg0->matrix = allocFixedTransformMatrix(&arg0->copyBlock);
     }
 
@@ -3460,9 +3460,9 @@ void updateRaceUiItemStealTrailEffect(RaceUiRankTrailActor *arg0) {
 
     arg0->copyBlock = gIdentityFixedTransform;
     player = &gRacePlayers[arg0->task.userId];
-    arg0->pos.x = player->unk28.x;
-    arg0->pos.y = player->unk28.y;
-    arg0->pos.z = player->unk28.z;
+    arg0->pos.x = player->renderPosition.x;
+    arg0->pos.y = player->renderPosition.y;
+    arg0->pos.z = player->renderPosition.z;
 
     for (i = 0; i < 4; i++) {
         if (i != arg0->task.userId) {
@@ -3766,9 +3766,9 @@ void updateGhostSlowdownImpact(RaceUiPodiumTrailActor *arg0) {
         }
 
         player = &gRacePlayers[arg0->targetPlayerIndex];
-        arg0->pos.x = player->unk28.x;
-        arg0->pos.y = player->unk28.y + height;
-        arg0->pos.z = player->unk28.z;
+        arg0->pos.x = player->renderPosition.x;
+        arg0->pos.y = player->renderPosition.y + height;
+        arg0->pos.z = player->renderPosition.z;
     }
 
     gRacePlayers[arg0->targetPlayerIndex].isTargetedByAttack = 1;
@@ -3785,9 +3785,9 @@ void updateGhostSlowdownRise(RaceUiPodiumTrailActor *arg0) {
             arg0->height += arg0->velocity;
             arg0->copyBlock = gIdentityFixedTransform;
             player = &gRacePlayers[arg0->playerIndex];
-            arg0->pos.x = player->unk28.x;
-            arg0->pos.y = player->unk28.y + arg0->height;
-            arg0->pos.z = player->unk28.z;
+            arg0->pos.x = player->renderPosition.x;
+            arg0->pos.y = player->renderPosition.y + arg0->height;
+            arg0->pos.z = player->renderPosition.z;
 
             scale = arg0->state;
             arg0->copyBlock.rotation[0] = (arg0->copyBlock.rotation[0] * scale) / 64;
@@ -5008,9 +5008,9 @@ void updateRaceUiProjectileFlyAway(RaceUiProjectileActor *arg0) {
             gRacePlayers[actor->task.userId].facingAngle
         );
         transformVec3iByFixedMatrix(sp24.mtx, &actor->velocity, &actor->pos);
-        actor->pos.x += gRacePlayers[actor->task.userId].unk28.x;
-        actor->pos.y += gRacePlayers[actor->task.userId].unk28.y + actor->verticalVelocity;
-        actor->pos.z += gRacePlayers[actor->task.userId].unk28.z;
+        actor->pos.x += gRacePlayers[actor->task.userId].renderPosition.x;
+        actor->pos.y += gRacePlayers[actor->task.userId].renderPosition.y + actor->verticalVelocity;
+        actor->pos.z += gRacePlayers[actor->task.userId].renderPosition.z;
         temp = (actor->verticalVelocity += actor->verticalAcceleration);
         actor->verticalAcceleration += 0x10000;
         if (temp >= 0x300001) {
@@ -5040,9 +5040,9 @@ void updateRaceUiProjectileStealScores(RaceUiProjectileActor *arg0) {
         transformVec3iByFixedMatrix(sp44, &arg0->velocity, &arg0->pos);
 
         player = &gRacePlayers[arg0->task.userId];
-        arg0->pos.x += player->unk28.x;
-        arg0->pos.y += player->unk28.y;
-        arg0->pos.z += player->unk28.z;
+        arg0->pos.x += player->renderPosition.x;
+        arg0->pos.y += player->renderPosition.y;
+        arg0->pos.z += player->renderPosition.z;
         advanceRaceUiProjectileAnimation(arg0);
 
         i = 0;
@@ -5062,7 +5062,7 @@ void updateRaceUiProjectileStealScores(RaceUiProjectileActor *arg0) {
         if (flags & 8) {
             enqueuePositionalSoundEffect(
                 SFX_RAT_FACE_STEAL,
-                &gRacePlayers[arg0->task.userId].unk28,
+                &gRacePlayers[arg0->task.userId].renderPosition,
                 0x7F,
                 SFX_PRIORITY_NORMAL
             );
@@ -5075,7 +5075,7 @@ void updateRaceUiProjectileStealScores(RaceUiProjectileActor *arg0) {
             arg0->verticalVelocity = 0;
             enqueuePositionalSoundEffect(
                 SFX_PROJECTILE_LAUNCH,
-                &gRacePlayers[arg0->task.userId].unk28,
+                &gRacePlayers[arg0->task.userId].renderPosition,
                 0x7F,
                 SFX_PRIORITY_NORMAL
             );
@@ -5101,14 +5101,14 @@ void updateRaceUiProjectileBounceDown(RaceUiProjectileActor *arg0) {
         transformVec3iByFixedMatrix(sp2C, &actor->velocity, &actor->pos);
 
         player = &gRacePlayers[actor->task.userId];
-        actor->pos.x += player->unk28.x;
-        actor->pos.y += player->unk28.y + actor->verticalVelocity;
-        actor->pos.z += player->unk28.z;
+        actor->pos.x += player->renderPosition.x;
+        actor->pos.y += player->renderPosition.y + actor->verticalVelocity;
+        actor->pos.z += player->renderPosition.z;
         actor->verticalAcceleration += 0xFFFF0000;
         actor->verticalVelocity += actor->verticalAcceleration;
         if (actor->verticalVelocity <= 0) {
             actor->verticalVelocity = 0;
-            enqueuePositionalSoundEffect(SFX_RAT_FACE_LAND, &player->unk28, 0x7F, SFX_PRIORITY_NORMAL);
+            enqueuePositionalSoundEffect(SFX_RAT_FACE_LAND, &player->renderPosition, 0x7F, SFX_PRIORITY_NORMAL);
             advanceRaceUiProjectileAnimation(actor);
             setCallbackTaskCallback(actor, (CallbackTaskCallback)updateRaceUiProjectileStealScores);
         }
@@ -5131,9 +5131,9 @@ void updateRaceUiProjectileGrounded(RaceUiProjectileActor *arg0) {
         transformVec3iByFixedMatrix(sp2C, &actor->velocity, &actor->pos);
 
         player = &gRacePlayers[actor->task.userId];
-        actor->pos.x += player->unk28.x;
-        actor->pos.y += player->unk28.y;
-        actor->pos.z += player->unk28.z;
+        actor->pos.x += player->renderPosition.x;
+        actor->pos.y += player->renderPosition.y;
+        actor->pos.z += player->renderPosition.z;
         advanceRaceUiProjectileAnimation(actor);
         if (actor->flags != 0) {
             setCallbackTaskCallback(actor, (CallbackTaskCallback)updateRaceUiProjectileBounceDown);
@@ -5159,9 +5159,9 @@ void updateRaceUiProjectileInitialFall(RaceUiProjectileActor *arg0) {
         transformVec3iByFixedMatrix(sp2C, &actor->velocity, &actor->pos);
 
         player = &gRacePlayers[actor->task.userId];
-        actor->pos.x += player->unk28.x;
-        actor->pos.y += player->unk28.y + actor->verticalVelocity;
-        actor->pos.z += player->unk28.z;
+        actor->pos.x += player->renderPosition.x;
+        actor->pos.y += player->renderPosition.y + actor->verticalVelocity;
+        actor->pos.z += player->renderPosition.z;
         actor->verticalVelocity += actor->verticalAcceleration;
         actor->verticalAcceleration += 0xFFFF0000;
         if (actor->verticalVelocity <= 0) {
@@ -5183,7 +5183,7 @@ void initRatFaceItemEffect(RaceUiProjectileActor *arg0) {
     setRaceUiProjectileAnimation(arg0, gRatFaceItemAnimation);
     enqueuePositionalSoundEffect(
         SFX_RAT_FACE_APPEAR,
-        &gRacePlayers[arg0->task.userId].unk28,
+        &gRacePlayers[arg0->task.userId].renderPosition,
         0x7F,
         SFX_PRIORITY_NORMAL
     );

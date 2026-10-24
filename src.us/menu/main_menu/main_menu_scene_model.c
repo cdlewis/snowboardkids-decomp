@@ -219,7 +219,7 @@ s32 saveRaceRecordReplayData(void) {
 
     gPackedRaceRecordReplayBuffer.fields.frameCount = history->lastWriteIndex;
     gPackedRaceRecordReplayBuffer.fields.characterId = history->characterId;
-    gPackedRaceRecordReplayBuffer.fields.characterVariant = history->characterVariant;
+    gPackedRaceRecordReplayBuffer.fields.snowboardIndex = history->snowboardIndex;
 
     for (i = 0; i < history->lastWriteIndex; i++) {
         gPackedRaceRecordReplayBuffer.bytes[4 + (i * 3)] = history->stickX[i];
@@ -504,7 +504,7 @@ void loadCurrentRaceRecordReplayData(void) {
     history->enabled = 1;
     history->courseId = gRaceCourseIndex.signedValue;
     history->characterId = gPackedRaceRecordReplayBuffer.fields.characterId;
-    history->characterVariant = gPackedRaceRecordReplayBuffer.fields.characterVariant;
+    history->snowboardIndex = gPackedRaceRecordReplayBuffer.fields.snowboardIndex;
     history->unkC = 0;
 
     for (i = 0; i < history->lastWriteIndex; i++) {

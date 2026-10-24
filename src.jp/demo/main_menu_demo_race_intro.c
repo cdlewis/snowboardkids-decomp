@@ -81,13 +81,13 @@ void initMainMenuDemoRaceIntro(void) {
     gRacePlayers[2].isCpu = 0;
     gRacePlayers[3].isCpu = 0;
     gRacePlayers->characterId = gMainMenuDemoRaceIntroEntries[gMainMenuDemoRaceIntroIndex].player0Character;
-    gRacePlayers->characterVariant = 6;
+    gRacePlayers->snowboardIndex = 6;
     gRacePlayers[1].characterId = gMainMenuDemoRaceIntroEntries[gMainMenuDemoRaceIntroIndex].player1Character;
-    gRacePlayers[1].characterVariant = 6;
+    gRacePlayers[1].snowboardIndex = 6;
     gRacePlayers[2].characterId = gMainMenuDemoRaceIntroEntries[gMainMenuDemoRaceIntroIndex].player2Character;
-    gRacePlayers[2].characterVariant = 6;
+    gRacePlayers[2].snowboardIndex = 6;
     gRacePlayers[3].characterId = gMainMenuDemoRaceIntroEntries[gMainMenuDemoRaceIntroIndex].player3Character;
-    gRacePlayers[3].characterVariant = 6;
+    gRacePlayers[3].snowboardIndex = 6;
     gRacePlayers->snowboardTextureIndex = 1;
     gRacePlayers[1].snowboardTextureIndex = 2;
     gRacePlayers[2].snowboardTextureIndex = 3;

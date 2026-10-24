@@ -1225,20 +1225,20 @@ s32 updateRacePlayerSurfaceContact(RacePlayer *player) {
         transformVec3iByFixedMatrix(
             playerRotation.values,
             &gRacePlayerGroundProbeOffsets[i + 9],
-            &player->groundMarkerSources[i]
+            &player->boardContactPoints[i]
         );
-        player->groundMarkerSources[i].x += collisionX;
-        player->groundMarkerSources[i].y += collisionY;
-        player->groundMarkerSources[i].z += collisionZ;
-        player->markerPoints[i] = player->groundMarkerSources[i];
+        player->boardContactPoints[i].x += collisionX;
+        player->boardContactPoints[i].y += collisionY;
+        player->boardContactPoints[i].z += collisionZ;
+        player->shadowCorners[i] = player->boardContactPoints[i];
         terrainId = findRaceCourseSurfaceFromHint(
             player->coursePathIndex,
-            player->markerPoints[i].x,
-            player->markerPoints[i].z
+            player->shadowCorners[i].x,
+            player->shadowCorners[i].z
         );
-        player->markerPoints[i].y =
-            getRaceCourseSurfaceHeight(terrainId, player->markerPoints[i].x, player->markerPoints[i].z);
-        if ((player->markerPoints[i].y + 0x2C000) >= player->groundMarkerSources[i].y) {
+        player->shadowCorners[i].y =
+            getRaceCourseSurfaceHeight(terrainId, player->shadowCorners[i].x, player->shadowCorners[i].z);
+        if ((player->shadowCorners[i].y + 0x2C000) >= player->boardContactPoints[i].y) {
             player->groundContactMask |= 1 << i;
         }
     }
@@ -1463,12 +1463,12 @@ s32 updateRacePlayerGroundAlignment(RacePlayer *player) {
         transformVec3iByFixedMatrix(
             playerRotation.values,
             &gRacePlayerGroundProbeOffsets[i + 9],
-            &player->markerPoints[i]
+            &player->shadowCorners[i]
         );
-        player->markerPoints[i].x += probeScratch.collisionX;
-        player->markerPoints[i].z += probeScratch.collisionZ;
-        player->markerPoints[i].y =
-            getRaceCourseSurfaceHeight(terrainId, player->markerPoints[i].x, player->markerPoints[i].z);
+        player->shadowCorners[i].x += probeScratch.collisionX;
+        player->shadowCorners[i].z += probeScratch.collisionZ;
+        player->shadowCorners[i].y =
+            getRaceCourseSurfaceHeight(terrainId, player->shadowCorners[i].x, player->shadowCorners[i].z);
     }
 
     updateRacePlayerProjectedPosition(player);

@@ -228,7 +228,7 @@ void updateCourseSelectPreviewModelIn(CourseSelectAnimatedActor *arg0) {
             case 1:
                 if (gCourseSelectSlideStates[i] & 1) {
                     if (gCourseSelectHorizontalOffsets[i] < 0) {
-                        if ((s32)gRacePlayers[i].characterVariant >= 9) {
+                        if ((s32)gRacePlayers[i].snowboardIndex >= 9) {
                             actor->targetCourseIndex[i] = 2;
                         } else {
                             actor->targetCourseIndex[i] = (gRacePlayers[i].menuSelection % 3) - 1;
@@ -445,7 +445,7 @@ void updateCourseSelectPreviewModelOut(CourseSelectAnimatedActor *arg0) {
             case 1:
                 if (gCourseSelectSlideStates[i] & 1) {
                     if (gCourseSelectHorizontalOffsets[i] < 0) {
-                        if ((s32)gRacePlayers[i].characterVariant >= 9) {
+                        if ((s32)gRacePlayers[i].snowboardIndex >= 9) {
                             actor->targetCourseIndex[i] = 2;
                         } else {
                             actor->targetCourseIndex[i] = (gRacePlayers[i].menuSelection % 3) - 1;

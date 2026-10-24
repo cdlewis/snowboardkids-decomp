@@ -22,7 +22,7 @@ typedef struct RaceInputHistoryBuffer {
     /* 0x0008 */ s8 enabled;
     /* 0x0009 */ s8 courseId;
     /* 0x000A */ s8 characterId;
-    /* 0x000B */ s8 characterVariant;
+    /* 0x000B */ s8 snowboardIndex;
     /* 0x000C */ s8 unkC;
     /* 0x000D */ s8 stickX[RACE_INPUT_HISTORY_LENGTH];
     /* 0x11A1 */ s8 stickY[RACE_INPUT_HISTORY_LENGTH];
@@ -40,7 +40,7 @@ typedef union PackedRaceRecordReplay {
     struct {
         /* 0x0 */ s16 frameCount;
         /* 0x2 */ s8 characterId;
-        /* 0x3 */ s8 characterVariant;
+        /* 0x3 */ s8 snowboardIndex;
         /* 0x4 */ PackedRaceRecordInput inputs[1];
     } fields;
 } PackedRaceRecordReplay;

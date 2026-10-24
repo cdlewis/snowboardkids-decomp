@@ -173,9 +173,9 @@ void drawRacePlayerGroundShadow(RacePlayer *player) {
         }
 
         for (i = 0; i < RACE_PLAYER_SHADOW_VERTEX_COUNT; i++) {
-            player->shadowVtx[i].v.ob[0] = (player->markerPoints[i].x - player->markerPoints[0].x) >> 14;
-            player->shadowVtx[i].v.ob[1] = (player->markerPoints[i].y - player->markerPoints[0].y) >> 14;
-            player->shadowVtx[i].v.ob[2] = (player->markerPoints[i].z - player->markerPoints[0].z) >> 14;
+            player->shadowVtx[i].v.ob[0] = (player->shadowCorners[i].x - player->shadowCorners[0].x) >> 14;
+            player->shadowVtx[i].v.ob[1] = (player->shadowCorners[i].y - player->shadowCorners[0].y) >> 14;
+            player->shadowVtx[i].v.ob[2] = (player->shadowCorners[i].z - player->shadowCorners[0].z) >> 14;
             player->shadowVtx[i].v.flag = 0;
             player->shadowVtx[i].v.cn[0] = 0;
             player->shadowVtx[i].v.cn[1] = 0;
@@ -191,15 +191,15 @@ void drawRacePlayerGroundShadow(RacePlayer *player) {
         *player->shadowMtx = gRacePlayerShadowMatrixTemplate;
 
         player->shadowMtx->m[1][2] =
-            (player->markerPoints[0].x & 0xFFFF0000) | (((player->markerPoints[0].y + 0xA000) >> 16) & 0xFFFF);
-        player->shadowMtx->m[1][3] = (player->markerPoints[0].z & 0xFFFF0000) | 1;
+            (player->shadowCorners[0].x & 0xFFFF0000) | (((player->shadowCorners[0].y + 0xA000) >> 16) & 0xFFFF);
+        player->shadowMtx->m[1][3] = (player->shadowCorners[0].z & 0xFFFF0000) | 1;
         player->shadowMtx->m[3][2] =
-            ((player->markerPoints[0].x << 16) & 0xFFFF0000) | ((player->markerPoints[0].y + 0xA000) & 0xFFFF);
-        player->shadowMtx->m[3][3] = (player->markerPoints[0].z << 16) & 0xFFFF0000;
+            ((player->shadowCorners[0].x << 16) & 0xFFFF0000) | ((player->shadowCorners[0].y + 0xA000) & 0xFFFF);
+        player->shadowMtx->m[3][3] = (player->shadowCorners[0].z << 16) & 0xFFFF0000;
         player->stateFlags |= RACE_PLAYER_MODEL_RENDERER_FLAG_SHADOW_READY;
     }
 
-    if (isPositionNearCurrentRaceViewportCamera(player->markerPoints) != 0 &&
+    if (isPositionNearCurrentRaceViewportCamera(player->shadowCorners) != 0 &&
         (player->stateFlags & RACE_PLAYER_MODEL_RENDERER_FLAG_SHADOW_READY) != 0) {
         gSPDisplayList(gRegionAllocPtr++, gRacePlayerShadowRenderSetupDisplayList);
         gSPMatrix(gRegionAllocPtr++, player->shadowMtx, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
@@ -314,7 +314,7 @@ void drawRacePlayerModel(RacePlayer *player) {
 
     drawSnowboardModel(
         drawPlayer->modelPartMatrices[0],
-        drawPlayer->characterVariant,
+        drawPlayer->snowboardIndex,
         drawPlayer->snowboardTextureIndex
     );
 
@@ -402,7 +402,7 @@ void drawRaceGhostPlayerModel(RacePlayer *player) {
     alphaPulse = (alphaPulse * 4) + 0x26;
     gDPSetPrimColor(gRegionAllocPtr++, 0, 0, 0, 0, 0, alphaPulse);
 
-    drawGhostSnowboardModel(player->modelPartMatrices[0], player->characterVariant, player->snowboardTextureIndex);
+    drawGhostSnowboardModel(player->modelPartMatrices[0], player->snowboardIndex, player->snowboardTextureIndex);
 
     if ((player->stateFlags & RACE_PLAYER_MODEL_RENDERER_FLAG_HIDE_MESHES) == 0) {
         gDPPipeSync(gRegionAllocPtr++);

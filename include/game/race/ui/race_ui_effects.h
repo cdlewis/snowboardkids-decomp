@@ -214,14 +214,14 @@ typedef struct {
 typedef struct RaceUiExpiredSpeedFanActor {
     /* 0x00 */ CallbackTaskHeader task;
     /* 0x18 */ u8 pad18[0x24 - 0x18];
-    /* 0x24 */ Vec3i scale;
+    /* 0x24 */ Vec3i backOffset;
     /* 0x30 */ Vec3i worldPos;
     /* 0x3C */ s32 velocityY;
     /* 0x40 */ Transform3D frontTransform;
     /* 0x60 */ Transform3D backTransform;
     /* 0x80 */ s16 playerIndex;
     /* 0x82 */ u8 pad82[2];
-    /* 0x84 */ s16 spinYaw;
+    /* 0x84 */ s16 spinAngleX;
     /* 0x86 */ u8 pad86[2];
     /* 0x88 */ Mtx *frontMatrix;
     /* 0x8C */ Mtx *backMatrix;

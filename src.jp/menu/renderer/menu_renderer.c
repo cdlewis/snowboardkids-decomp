@@ -806,7 +806,7 @@ void drawMenuTilemapSprite(
 }
 
 void drawMenuGlyphScriptWithFontBank(
-    volatile s16 x,
+    s16 x,
     s16 y,
     MenuGlyphScript *script,
     s32 palette,
@@ -861,7 +861,7 @@ void drawMenuGlyphScriptWithFontBank(
     }
 }
 
-void drawMenuGlyphScriptDefaultFont(volatile s16 x, s16 y, MenuGlyphScript *script, s32 palette, u16 scale) {
+void drawMenuGlyphScriptDefaultFont(s16 x, s16 y, MenuGlyphScript *script, s32 palette, u16 scale) {
     u16 initialGlyph;
     s32 currentGlyph;
     MenuGlyphScript *cursor;
@@ -1025,7 +1025,7 @@ void drawMenuGlyph(s16 x, s16 y, u16 glyphIndex, u8 paletteIndex, u16 intensity,
 }
 
 void drawMenuColoredGlyphScript(
-    volatile s16 x,
+    s16 x,
     s16 y,
     MenuGlyphScript *script,
     s32 palette,
@@ -1087,7 +1087,7 @@ void drawMenuColoredGlyphScript(
 }
 
 void drawMenuGlyphScript(
-    volatile s16 x,
+    s16 x,
     s16 y,
     MenuGlyphScript *script,
     s32 palette,

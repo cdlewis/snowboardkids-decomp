@@ -388,13 +388,16 @@ $(BUILD_DIR)/%.o: $(TEXTCONV_DIR)/%.c
 # GNU as preserves the original 16-byte section padding; attributes align each table.
 DESIGNATED_DATA_C_O_FILES := \
 	$(BUILD_DIR)/src.us/race/player/race_player_properties.o \
-	$(BUILD_DIR)/src.us/demo/main_menu_demo_race_intro_data.o
+	$(BUILD_DIR)/src.us/demo/main_menu_demo_race_intro_data.o \
+	$(BUILD_DIR)/$(SRC_DIR)/demo/title_demo_race_intro_data.o
+# The title-demo tables end on a 16-byte boundary in both ROM versions.
+$(BUILD_DIR)/$(SRC_DIR)/demo/title_demo_race_intro_data.o: ASFLAGS := $(filter-out -no-pad-sections,$(ASFLAGS))
 $(DESIGNATED_DATA_C_O_FILES): $(BUILD_DIR)/%.o: $(TEXTCONV_DIR)/%.c
 	@mkdir -p $(dir $@)
 	$(PRINTF) "[$(GREEN)   c    $(NO_COL)]  $*.c\n"
 	$(V)$(CC_CHECK) --target=mips-unknown-linux-gnu -mabi=32 -march=mips3 -mno-abicalls -fno-pic -G0 \
 		-ffreestanding -fno-builtin -fno-common -fno-addrsig -std=gnu99 -Wall -Wextra \
-		$(CC_CHECK_INCLUDES) $(C_DEFINES) -U_MIPS_ISA $(CC_CHECK_MIPS_DEFINES) -S -o $(@:.o=.s) $<
+		$(CC_CHECK_INCLUDES) $(C_DEFINES) -U_MIPS_ISA $(CC_CHECK_MIPS_DEFINES) -iquote $(dir $*) -S -o $(@:.o=.s) $<
 	$(V)$(AS) $(ASFLAGS) -o $@ $(@:.o=.s)
 	$(V)$(RM) $(@:.o=.s)
 

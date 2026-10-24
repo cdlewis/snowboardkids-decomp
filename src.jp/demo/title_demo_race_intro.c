@@ -16,25 +16,6 @@
 #include "game/menu/renderer/menu_screen_effects.h"
 #include "game/race/flow/race_flow.h"
 
-s16 gTitleDemoReplaySegmentFrames[16] = {
-    0x0000, 0x0039, 0x006C, 0x00A1, 0x00D2, 0x0107, 0x0138, 0x026C,
-    0x02A2, 0x02D3, 0x0307, 0x0339, 0x036E, 0x03A0, 0x03D4, 0x0413,
-};
-
-s16 gTitleDemoCameraModeFrames[22] = {
-    0x0000, 0x0039, 0x006C, 0x00A1, 0x00D2, 0x0107, 0x0138, 0x015D, 0x01BE, 0x01D2, 0x01FE,
-    0x023A, 0x026C, 0x02A2, 0x02D3, 0x0307, 0x0339, 0x036E, 0x03A0, 0x03D4, 0x0413, 0x0000,
-};
-
-u8 gTitleDemoCameraModes[24] = {
-    0x08, 0x09, 0x0A, 0x0B, 0x10, 0x11, 0x0C, 0x12, 0x0D, 0x0E, 0x0F, 0x13,
-    0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1A, 0x1B, 0x1C, 0x00, 0x00, 0x00,
-};
-
-RacePlayerReplaySnapshot gTitleDemoReplayPlayerSnapshots[4][16] = {
-#include "title_demo_replay_inputs.inc.c"
-};
-
 #define RACE_PLAYER_REPLAY_SNAPSHOT(index) (((RacePlayerReplaySnapshot *)gRacePlayers)[index])
 
 void initTitleDemoRaceIntro(void) {
@@ -71,10 +52,10 @@ void initTitleDemoRaceIntro(void) {
     players[playerOne].characterId = one;
     players[2].characterId = two;
     players[3].characterId = three;
-    players[0].characterVariant = six;
-    players[1].characterVariant = six;
-    players[2].characterVariant = six;
-    players[3].characterVariant = six;
+    players[0].snowboardIndex = six;
+    players[1].snowboardIndex = six;
+    players[2].snowboardIndex = six;
+    players[3].snowboardIndex = six;
     players[0].snowboardTextureIndex = one;
     players[playerOne].snowboardTextureIndex = two;
     players[2].snowboardTextureIndex = three;

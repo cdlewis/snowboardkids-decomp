@@ -174,12 +174,12 @@ void initMainMenuModePreviewRace(void) {
     gRacePlayers[1].characterId = one0;
     gRacePlayers[2].characterId = two0;
     gRacePlayers[3].characterId = 3;
-    gRacePlayers->characterVariant = 0;
-    gRacePlayers[1].characterVariant = 0;
-    gRacePlayers[2].characterVariant = 0;
+    gRacePlayers->snowboardIndex = 0;
+    gRacePlayers[1].snowboardIndex = 0;
+    gRacePlayers[2].snowboardIndex = 0;
     /* Shared with the five-lap setup; retain this temporary for matching. */
     five1 = RACE_PLAYER_INPUT_REPLAY;
-    gRacePlayers[3].characterVariant = 0;
+    gRacePlayers[3].snowboardIndex = 0;
     gRacePlayers->snowboardTextureIndex = 3;
     gRacePlayers[1].snowboardTextureIndex = five0;
     player = gRacePlayers;
