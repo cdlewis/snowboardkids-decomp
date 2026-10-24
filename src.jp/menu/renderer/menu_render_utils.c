@@ -32,6 +32,10 @@ typedef struct {
     s32 w8, w9, w10, w11, w12, w13, w14, w15;
 } PackedMtxWords;
 
+extern void *D_801114D4;
+
+void func_800478A4(s16 x, s16 y, u16 s, u16 t, u16 paletteIndex);
+
 void initMenuAssetHandles(void) {
     s16 *end;
     s16 *handle;
@@ -401,7 +405,56 @@ void drawAssetTableSpriteWithDefaultPalette(s16 x, s16 y, AssetTable *table, u16
     );
 }
 
-#pragma GLOBAL_ASM("asm.jp/nonmatchings/menu/renderer/menu_render_utils/drawMenuFillRectangle.s")
+void drawMenuFillRectangle(s16 x, s16 y, s16 width, s16 height, u8 red, u8 green, u8 blue) {
+    volatile char pad[0x18];
+    s32 minY;
+    s32 maxY;
+    s32 y0;
+    s32 x1;
+    s32 y1;
+    s32 x0;
+    s32 minX;
+    s32 halfHeight;
+    s32 halfWidth;
+    s32 maxX;
+
+    x0 = x + gMenuViewportCenterX;
+    y0 = y + gMenuViewportCenterY;
+    x1 = x0 + width;
+    y1 = y0 + height;
+
+    halfWidth = gMenuViewportWidth / 2; maxX = gMenuViewportCenterX + halfWidth;
+    if (x0 < maxX) {
+        for (;;) { halfHeight = gMenuViewportHeight / 2; break; }
+        maxY = gMenuViewportCenterY + halfHeight;
+        minX = gMenuViewportCenterX - halfWidth;
+        if (y0 < maxY) {
+            minY = gMenuViewportCenterY - halfHeight;
+            if ((x1 >= minX) && (y1 >= minY)) {
+                if (x0 < minX) {
+                    x0 = minX;
+                }
+                if (y0 < minY) {
+                    y0 = minY;
+                }
+                if (x1 >= maxX) {
+                    x1 = maxX;
+                }
+                if (y1 >= maxY) {
+                    y1 = maxY;
+                }
+
+                gDPPipeSync(gRegionAllocPtr++);
+                gDPSetCycleType(gRegionAllocPtr++, G_CYC_FILL);
+                gDPSetRenderMode(gRegionAllocPtr++, G_RM_NOOP, G_RM_NOOP2);
+                gDPSetFillColor(gRegionAllocPtr++, (GPACK_RGBA5551(red, green, blue, 1) << 16) |
+                                                    GPACK_RGBA5551(red, green, blue, 1));
+                gDPFillRectangle(gRegionAllocPtr++, x0, y0, x1 - 1, y1 - 1);
+                gSPDisplayList(gRegionAllocPtr++, gMenuRenderModeResetDl);
+            }
+        }
+    }
+}
 
 void drawAssetTableSprite8bpp(s16 x, s16 y, AssetTable *table, u16 entryIndex) {
     AssetTableEntry *entry;
@@ -800,13 +853,156 @@ void drawScaledAssetTableSpriteWithExplicitPalette(
     gDPPipeSync(gRegionAllocPtr++);
 }
 
+// func_800478A4 best standalone match: 96.494% (base_8.c)
 #pragma GLOBAL_ASM("asm.jp/nonmatchings/menu/renderer/menu_render_utils/func_800478A4.s")
 
-#pragma GLOBAL_ASM("asm.jp/nonmatchings/menu/renderer/menu_render_utils/func_80047B5C.s")
+#ifdef NON_MATCHING
+// clang-format off
+void func_800478A4(s16 x, s16 y, u16 s, u16 t, u16 paletteIndex) {
+    s32 x0;
+    s32 y0;
+    s32 x1;
+    s32 y1;
+    volatile char pad[0x40];
+    s32 maxX;
+    s32 maxY;
+    s32 minX;
+    s32 minY;
+    s32 clipS;
+    s32 clipT;
+    s32 halfHeight;
 
+    x0 = x + gMenuViewportCenterX;
+    y0 = y + gMenuViewportCenterY;
+    x1 = x0 + 8;
+    y1 = y0 + 8;
+    clipS = 0;
+    clipT = 0;
+
+    maxX = gMenuViewportCenterX + (gMenuViewportWidth / 2);
+    if (x0 < maxX) {
+        halfHeight = gMenuViewportHeight / 2;
+        maxY = gMenuViewportCenterY + halfHeight;
+        minX = gMenuViewportCenterX - (gMenuViewportWidth / 2);
+        if (y0 < maxY) {
+            minY = gMenuViewportCenterY - halfHeight;
+            if ((x1 >= minX) && (y1 >= minY)) {
+                if (x0 < minX) {
+                    clipS = minX - x0;
+                    x0 = minX;
+                }
+                if (y0 < minY) {
+                    clipT = minY - y0;
+                    y0 = minY;
+                }
+                if (x1 >= maxX) {
+                    x1 = maxX - 1;
+                }
+                if (y1 >= maxY) {
+                    y1 = maxY - 1;
+                }
+
+                clipS += s;
+                clipT += t;
+
+                if (gMenuAsciiFontPaletteIndex != paletteIndex) {
+                    gMenuAsciiFontPaletteIndex = paletteIndex;
+                    gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, (paletteIndex << 5) + (u8 *)D_801114D4);
+                }
+
+                gSPTextureRectangle(
+                    gRegionAllocPtr++,
+                    x0 * 4,
+                    y0 * 4,
+                    x1 * 4,
+                    y1 * 4,
+                    0,
+                    clipS << 5,
+                    clipT << 5,
+                    0x400,
+                    0x400
+                );
+            }
+        }
+    }
+}
+// clang-format on
+#endif
+
+void func_80047B5C(void) {
+    MenuAsciiFontAsset *font = getRelocatableHeapBlockBase(gAssetHandles[6]);
+    D_801114D4 = (font->entryCount * sizeof(AssetTableEntry)) + (u8 *)font + sizeof(AssetTableEntry);
+    gDPLoadTextureTile_4b(gRegionAllocPtr++, font->imageOffset + (u8 *)font, G_IM_FMT_CI,
+        font->width, font->height, 0, 0, font->width, font->height, 0,
+        G_TX_CLAMP, G_TX_CLAMP, G_TX_NOMASK, G_TX_NOMASK, G_TX_NOLOD, G_TX_NOLOD);
+    gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, (font->paletteIndex << 5) + (u8 *)D_801114D4);
+    gMenuAsciiFontPaletteIndex = font->paletteIndex;
+}
+
+// drawMenuAsciiChar best standalone match: 99.167% (base_5.c)
 #pragma GLOBAL_ASM("asm.jp/nonmatchings/menu/renderer/menu_render_utils/drawMenuAsciiChar.s")
 
+#ifdef NON_MATCHING
+// clang-format off
+void drawMenuAsciiChar(s16 x, s16 y, u8 character, u16 palette) {
+    u32 tile;
+    s16 s;
+    tile = (character & 0xFF) - 0x20;
+    if (tile < 0x40) {
+        s = (tile & 7) * 8;
+        func_800478A4(x, y, (u16)s, tile & 0x38, palette);
+    }
+}
+// clang-format on
+#endif
+
+// drawMenuAsciiTextDefaultScale best standalone match: 96.143% (base_5.c)
 #pragma GLOBAL_ASM("asm.jp/nonmatchings/menu/renderer/menu_render_utils/drawMenuAsciiTextDefaultScale.s")
+
+#ifdef NON_MATCHING
+// clang-format off
+void drawMenuAsciiTextDefaultScale(s16 x, s16 y, const char *text, u16 palette) {
+    s32 cursorX;
+    const char *cursor;
+    char mask;
+    s32 cursorY;
+    s32 initialX;
+    s32 first;
+    s32 character;
+    s32 newline;
+    s32 more;
+
+
+    mask = 0xFF;
+    first = *text & mask;
+    cursorX = x;
+    cursor = text;
+    cursorY = y;
+    initialX = cursorX;
+    if ((0, first) != 0) {
+        character = first & 0xFF;
+        x = x;
+        newline = 0xA;
+        more = 1;
+        while (more) {
+            if (newline == character) {
+                cursorX = initialX;
+                cursorY += 8;
+            } else {
+                character = character - 0x20;
+                if ((u32)character < 0x40) {
+                    func_800478A4(cursorX, cursorY, ((character & 7) * 8) & 0xFFFF, character & 0x38, palette);
+                }
+                cursorX += 8;
+            }
+            character = cursor[1];
+            cursor++;
+            more = character != 0;
+        }
+    }
+}
+// clang-format on
+#endif
 
 void allocRenderCallbackScratchBuffer(void) {
     gAssetHandles[0] = allocRelocatableHeapBlock(0x4000);
