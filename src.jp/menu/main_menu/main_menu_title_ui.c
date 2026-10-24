@@ -9,6 +9,7 @@
 #include "game/menu/race_setup/race_setup_ui.h"
 
 #define ASSET_HANDLE(index) (gAssetHandles[(index)])
+#define TITLE_SCREEN_LOGO_SPRITE_HANDLE ASSET_HANDLE(37)
 
 void drawMainMenuTitleLogo(MainMenuTitleLogoActor *arg0) {
     drawMenuTilemapSprite(&arg0->tilemapSprite.render, MENU_TILEMAP_TEXEL_8B, arg0->common.x, arg0->common.y);
@@ -18,7 +19,14 @@ void updateMainMenuTitleLogo(MainMenuTitleLogoActor *arg0) {
     addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawMainMenuTitleLogo, arg0);
 }
 
-#pragma GLOBAL_ASM("asm.jp/nonmatchings/menu/main_menu/main_menu_title_ui/func_80032404.s")
+void func_80032404(MainMenuTitleLogoActor *arg0) {
+    initMenuTilemapSprite(&arg0->tilemapSprite, getRelocatableHeapBlockBase(TITLE_SCREEN_LOGO_SPRITE_HANDLE));
+    arg0->tilemapSprite.render.scrollX = 0x10;
+    arg0->tilemapSprite.render.scrollY = 0x18;
+    arg0->common.x = arg0->tilemapSprite.render.tilemapWidth;
+    arg0->common.y = arg0->tilemapSprite.render.tilemapHeight;
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateMainMenuTitleLogo);
+}
 
 #pragma GLOBAL_ASM("asm.jp/nonmatchings/menu/main_menu/main_menu_title_ui/drawMainMenuTitleOptions.s")
 
