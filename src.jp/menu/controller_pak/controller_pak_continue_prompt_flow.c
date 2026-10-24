@@ -5,6 +5,7 @@
 #include "game/engine/game_task_scheduler.h"
 #include "game/menu/controller_pak/controller_pak_continue_prompt_flow.h"
 #include "game/menu/renderer/menu_renderer.h"
+#include "game/menu/renderer/menu_render_utils.h"
 
 void func_8000C31C(void);
 
@@ -50,4 +51,22 @@ void func_8000C1B8(void) {
     if (gCurrentGameTask) {}
 }
 
-#pragma GLOBAL_ASM("asm.jp/nonmatchings/menu/controller_pak/controller_pak_continue_prompt_flow/func_8000C31C.s")
+void func_8000C31C(void) {
+    if (gCurrentGameTask->callbackData0 != 0xFF) {
+        gCurrentGameTask->callbackData0 = stepMenuFadeAlpha((s16)gCurrentGameTask->callbackData0, 0x24, 1);
+        if (gCurrentGameTask->callbackData0 == 0xFF) {
+            gFramebufferSwapHold = 1;
+            gControllerPakContinuePromptTransition.state = 3;
+        } else {
+            updateCallbackTasks();
+        }
+    } else {
+        if (gPendingFramebufferSwapCount == 2) {
+            releaseMenuAssetHandles();
+            gFramebufferSwapHold = 0;
+            gFramebufferRenderInterval.value = 0;
+            resumeGameTask(2);
+            removeGameTask(4);
+        }
+    }
+}
