@@ -19,6 +19,7 @@
 #include "PR/sptask.h"
 #include "PR/ucode.h"
 #include "game/audio/audio_engine.h"
+#include "game/menu/race_setup/race_setup_menu.h"
 
 #define OS_MESG_NOBLOCK 0
 #define MAIN_THREAD_ID 2
@@ -27,6 +28,9 @@
 #define BOOT_THREAD_ID 1
 #define THREAD_PRIORITY 10
 #define DMA_CHUNK_SIZE 0x2000
+#define SCHEDULER_VI_MODE_INDEX_NTSC 2
+#define SCHEDULER_RETRACE_INTERVAL 1
+#define STARTUP_CALLBACK_PRIORITY 100
 #define OS_MESG_BLOCK 1
 #define OS_READ 0
 #define BOOT_FADE_TIMER 0x3E4
@@ -38,6 +42,12 @@ typedef struct {
     RenderCallbackQueueSlot queue2;
     RenderCallbackQueueSlot queue3;
 } RenderCallbackQueueGroup;
+
+extern OSMesg D_80123330[1];
+extern OSMesg D_80123350[8];
+extern OSMesg D_80123388[2];
+extern OSMesg D_801233A8[8];
+extern SchedulerClient D_80123B40;
 
 void main(void *arg) {
     osInitialize();
@@ -69,7 +79,29 @@ void bootThreadMain(void *arg) {
     }
 }
 
-#pragma GLOBAL_ASM("asm.jp/nonmatchings/engine/system_runtime/initGameSystems.s")
+void initGameSystems(void) {
+    osCreateMesgQueue(&gRomDmaQueue, D_80123330, 1);
+    osCreateMesgQueue(&gSchedulerClientQueue, D_80123388, 2);
+    osCreateMesgQueue(&gControllerInputUpdateQueue, D_801233A8, 8);
+    osCreateMesgQueue(&gFramebufferRenderDoneQueue, D_80123350, 8);
+    initScheduler(&gSchedulerState, SCHEDULER_VI_MODE_INDEX_NTSC, SCHEDULER_RETRACE_INTERVAL);
+    addSchedulerClient(&gSchedulerState, &D_80123B40, &gSchedulerClientQueue);
+    initRelocatableHeap();
+    initMenuAssetHandles();
+    allocRenderCallbackScratchBuffer();
+    allocMenuRenderScratchBuffers();
+    initGameTaskScheduler();
+    initFramebufferRenderTaskState();
+    initControllerSubsystem();
+    resetAllViewports();
+    initSoundManager();
+    createGameTask(0, initStartupControllerPakFlow, STARTUP_CALLBACK_PRIORITY);
+    gRaceRecordSettingsEnabled = 0;
+    gRaceCourseModelEffectsDisabled = 0;
+    gRaceCourseOverlayEffectsDisabled = 0;
+    gRaceRumbleEnabled = 0;
+    gRumblePakConnectedMask = 0;
+}
 
 void gameThreadMain(void *arg0) {
     OSMesg msg;
