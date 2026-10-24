@@ -27,6 +27,8 @@
 #define SAVE_STATUS_TRANSITION_FADE_OUT 2
 #define SAVE_STATUS_TRANSITION_DONE 3
 
+extern MenuGlyphScript D_800B4D30[][38];
+
 void drawRaceSetupPlayerCountPrompt(MenuIntroActor *arg0) {
     s32 i;
     s32 j;
@@ -1032,7 +1034,45 @@ void initRaceSetupSavePanelFrame(RectListActor *arg0) {
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceSetupSavePanelFrame);
 }
 
+// drawRaceSetupSavePanelIcons best match: 91.913%
 #pragma GLOBAL_ASM("asm.jp/nonmatchings/menu/race_setup/race_setup_ui/drawRaceSetupSavePanelIcons.s")
+
+#ifdef NON_MATCHING
+void drawRaceSetupSavePanelIcons(TitleMenuIconStripActor *actor) {
+    s32 playerIndex;
+    s32 iconIndex;
+    s32 displayCount;
+    s32 alpha;
+    s32 paletteIndex;
+    GameSaveData *saveData;
+
+    for (playerIndex = 0; playerIndex < gPlayerCount; playerIndex++) {
+        if (gControllerPakStatusCodes[playerIndex] != 0x13) {
+            saveData = &gGameSaveDataBuffer[playerIndex];
+            displayCount = saveData->progressionLevel == 3 ? 3 : saveData->progressionLevel + 1;
+            for (iconIndex = 0; iconIndex < displayCount; iconIndex++) {
+                alpha = saveData->progressionLevel < iconIndex + 1 ? 0x70 : 0x100;
+                drawMenuSpriteWithAlpha(actor->panelX[playerIndex] + actor->iconOffsetX + iconIndex * 0x10,
+                    actor->panelY[playerIndex] + actor->iconOffsetY,
+                    getRelocatableHeapBlockBase(TITLE_MENU_FRAME_TEXTURE_HANDLE), 0x19, 32, 32, 0, alpha, 9 - iconIndex);
+            }
+            displayCount = 6;
+            if (saveData->progressionLevel == 1) displayCount = 7;
+            else if (saveData->progressionLevel == 2) displayCount = 8;
+            else if (saveData->progressionLevel == 3) displayCount = 9;
+            for (iconIndex = 0; iconIndex < displayCount; iconIndex++) {
+                paletteIndex = saveData->cupPlacements[gCharacterSelectCourseMenuData.playerBadgeDisplayOrder[iconIndex]];
+                alpha = 0x70;
+                if (paletteIndex != 0) {alpha = 0x100; paletteIndex += 6;}
+                else paletteIndex = 9;
+                drawMenuSpriteWithAlpha(actor->panelX[playerIndex] + actor->badgeOffsetX + iconIndex * 14,
+                    actor->panelY[playerIndex] + actor->badgeOffsetY,
+                    getRelocatableHeapBlockBase(TITLE_MENU_FRAME_TEXTURE_HANDLE), iconIndex + 0x1A, 32, 32, 0, alpha, paletteIndex);
+            }
+        }
+    }
+}
+#endif
 
 void updateRaceSetupSavePanelIcons(void *arg0) {
     RectListActor *temp_a2;
@@ -1065,7 +1105,73 @@ void initRaceSetupSavePanelIcons(RectListActor *arg0) {
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceSetupSavePanelIcons);
 }
 
-#pragma GLOBAL_ASM("asm.jp/nonmatchings/menu/race_setup/race_setup_ui/drawRaceSetupSaveStatusWidgets.s")
+void drawRaceSetupSaveStatusWidgets(TitleMenuWidgetActor *arg0) {
+    volatile s32 unused;
+    MenuIntroActor *intro;
+    TitleMenuWidgetActor *actor;
+    MenuGlyphScript *text;
+    u32 tile;
+    s32 i;
+    s16 state;
+    u16 alpha;
+
+    actor = arg0;
+    intro = gActiveMenuTask;
+    for (i = 0; i < gPlayerCount; i++) {
+        state = gControllerPakStatusCodes[i];
+        if (gControllerPakStatusCodes[i] != 8) {
+            if (gControllerPakStatusCodes[i] == 5) {
+                alpha = (u16)actor->alpha[i];
+            } else {
+                alpha = 0x100;
+            }
+
+            tile = 8;
+            drawMenuSpriteWithAlpha(
+                (s16)(actor->x[i] - 2),
+                (s16)(actor->y[i] + 0xC),
+                getRelocatableHeapBlockBase(TITLE_MENU_FRAME_TEXTURE_HANDLE),
+                tile,
+                0x20,
+                0x20,
+                0,
+                alpha,
+                0
+            );
+            drawMenuSpriteWithAlpha(
+                (s16)(actor->x[i] + 0x3E),
+                (s16)(actor->y[i] + 0xC),
+                getRelocatableHeapBlockBase(TITLE_MENU_FRAME_TEXTURE_HANDLE),
+                9,
+                0x20,
+                0x20,
+                0,
+                alpha,
+                0
+            );
+
+            text = D_800B4D30[gControllerPakStatusCodes[i]];
+            state = 2;
+            drawMenuGlyphScript((s16)(actor->x[i] + state), (s16)(actor->y[i] + 0x10), text, 1, actor->alpha[i], 0);
+
+            if ((actor->alpha[i] == 0x100) && (intro->state == 8)) {
+                state = gControllerPakStatusCodes[i];
+                if ((state == 4) || ((state >= 7) && (state != 0x12) && (gMenuChoicePromptState[i] == 0))) {
+                    drawMenuSprite(
+                        (s16)(actor->x[i] + 0x70),
+                        (s16)(actor->y[i] + 0x20),
+                        getRelocatableHeapBlockBase(TITLE_MENU_FRAME_TEXTURE_HANDLE),
+                        ((s32)actor->frame >= 8) + 5,
+                        0x20,
+                        0x20,
+                        0,
+                        0
+                    );
+                }
+            }
+        }
+    }
+}
 
 void updateRaceSetupSaveStatusWidgets(TitleMenuWidgetActor *arg0) {
     s32 transitionStateSum;
