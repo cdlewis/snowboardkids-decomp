@@ -10,9 +10,224 @@
 #include "game/menu/renderer/menu_renderer.h"
 #include "game/race/flow/race_flow.h"
 
+#define TRAINING_COURSE_UI_TEXTURE_HANDLE (gAssetHandles[0x2A])
+
+extern MenuGlyphScript D_800B4940[];
+extern MenuGlyphScript D_800B4954[][0x14];
+extern s16 D_800B4ABA[];
+
 void updateTrainingCourseDialog(TrainingCourseUiActor *);
 
-#pragma GLOBAL_ASM("asm.jp/nonmatchings/menu/training/training_course_ui/drawTrainingCourseLessonEndMenu.s")
+void drawTrainingCourseLessonEndMenu(TrainingCourseUiActor *arg0) {
+    s32 i;
+    s32 once;
+    s32 j;
+    s32 alpha;
+    s32 limit;
+    s32 selected;
+    u16 tileIndex;
+    void *texture;
+
+    drawMenuSprite(
+        arg0->x,
+        arg0->y,
+        getRelocatableHeapBlockBase(TRAINING_COURSE_UI_TEXTURE_HANDLE),
+        2,
+        0x20,
+        0x20,
+        0,
+        0
+    );
+    drawMenuSprite(
+        (s16)(arg0->x + 0x50),
+        arg0->y,
+        getRelocatableHeapBlockBase(TRAINING_COURSE_UI_TEXTURE_HANDLE),
+        4,
+        0x20,
+        0x20,
+        0,
+        0
+    );
+
+    i = 0;
+    for (;;) {
+        drawMenuSprite(
+            (s16)(arg0->x + i + 0x10),
+            arg0->y,
+            getRelocatableHeapBlockBase(TRAINING_COURSE_UI_TEXTURE_HANDLE),
+            3,
+            0x20,
+            0x20,
+            0,
+            0
+        );
+        drawMenuSprite(
+            (s16)(arg0->x + i + 0x10),
+            (s16)(arg0->y + 0x40),
+            getRelocatableHeapBlockBase(TRAINING_COURSE_UI_TEXTURE_HANDLE),
+            8,
+            0x20,
+            0x20,
+            0,
+            0
+        );
+        i += 0x10;
+
+        if (!(i < 0x40))
+            break;
+    }
+
+    drawMenuSprite(
+        arg0->x,
+        (s16)(arg0->y + 0x40),
+        getRelocatableHeapBlockBase(TRAINING_COURSE_UI_TEXTURE_HANDLE),
+        7,
+        0x20,
+        0x20,
+        0,
+        0
+    );
+    drawMenuSprite(
+        (s16)(arg0->x + 0x50),
+        (s16)(arg0->y + 0x40),
+        getRelocatableHeapBlockBase(TRAINING_COURSE_UI_TEXTURE_HANDLE),
+        9,
+        0x20,
+        0x20,
+        0,
+        0
+    );
+
+    i = 0;
+    limit = 0x40;
+    for (;;) {
+        /* This single iteration preserves IDO register allocation. */
+        once = 1;
+        while (once) {
+
+            drawMenuSprite(
+                arg0->x,
+                (s16)(arg0->y + i + 0x10),
+                getRelocatableHeapBlockBase(TRAINING_COURSE_UI_TEXTURE_HANDLE),
+                5,
+                0x20,
+                0x20,
+                0,
+                0
+            );
+            drawMenuSprite(
+                (s16)(arg0->x + 0x50),
+                (s16)(arg0->y + i + 0x10),
+                getRelocatableHeapBlockBase(TRAINING_COURSE_UI_TEXTURE_HANDLE),
+                6,
+                0x20,
+                0x20,
+                0,
+                0
+            );
+            j = 0;
+            for (;;) {
+                drawMenuSprite(
+                    (s16)(arg0->x + j + 0x10),
+                    (s16)(arg0->y + i + 0x10),
+                    getRelocatableHeapBlockBase(TRAINING_COURSE_UI_TEXTURE_HANDLE),
+                    0xB,
+                    0x20,
+                    0x20,
+                    0,
+                    0
+                );
+                j += 0x10;
+
+                if (!(j != limit))
+                    break;
+            }
+            i += 0x10;
+
+            once = 0;
+        }
+        if (!(i < 0x30))
+            break;
+    }
+
+    drawMenuSprite(
+        (s16)(arg0->x + 8),
+        (s16)(arg0->y + 4),
+        getRelocatableHeapBlockBase(TRAINING_COURSE_UI_TEXTURE_HANDLE),
+        0x15,
+        0x20,
+        0x20,
+        0,
+        0
+    );
+    texture = getRelocatableHeapBlockBase(TRAINING_COURSE_UI_TEXTURE_HANDLE);
+    drawMenuSprite(arg0->x + 0x44, arg0->y + 4, texture, gTrainingCourseLesson + 0xB, 0x20, 0x20, 0, 7);
+
+    if (gTrainingCourseLesson != 9) {
+        j = 0;
+        i = 0;
+        for (;;) {
+            alpha = (j == (u16)arg0->state.selectedAction) ? 0x100 : 0x60;
+            tileIndex = j + 0x16;
+            drawMenuSpriteWithAlpha(
+                (s16)(arg0->x + 8),
+                (s16)(arg0->y + i + 0x18),
+                getRelocatableHeapBlockBase(TRAINING_COURSE_UI_TEXTURE_HANDLE),
+                tileIndex,
+                0x20,
+                0x20,
+                0,
+                alpha,
+                0
+            );
+            j++;
+            i += 0x10;
+
+            if (!(j != 3))
+                break;
+        }
+    } else {
+        j = 0;
+        i = 0;
+        for (;;) {
+            alpha = ((j + 1) == (u16)arg0->state.selectedAction) ? 0x100 : 0x60;
+            tileIndex = j + 0x17;
+            drawMenuSpriteWithAlpha(
+                (s16)(arg0->x + 8),
+                (s16)(arg0->y + i + 0x20),
+                getRelocatableHeapBlockBase(TRAINING_COURSE_UI_TEXTURE_HANDLE),
+                tileIndex,
+                0x20,
+                0x20,
+                0,
+                alpha,
+                0
+            );
+            j++;
+            i += 0x10;
+
+            if (!(j != 2))
+                break;
+        }
+    }
+
+    if (gTrainingCourseLesson != 9) {
+        selected = (u16)arg0->state.selectedAction;
+    } else {
+        selected = (u16)arg0->state.selectedAction - 1;
+    }
+    drawMenuSpriteWithAlpha(
+        arg0->layout.textOffset.x,
+        (s16)(arg0->layout.textOffset.y + (selected * 0x10)),
+        getRelocatableHeapBlockBase(TRAINING_COURSE_UI_TEXTURE_HANDLE),
+        0xA,
+        0x20,
+        0x20,
+        0,
+        arg0->highlightScale,
+        0
+    );
+}
 
 void redrawTrainingCourseLessonEndMenu(TrainingCourseUiActor *arg0) {
     addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)redrawTrainingCourseLessonEndMenu, arg0);
@@ -364,7 +579,12 @@ void initTrainingCourseEndingDialog(TrainingCourseUiActor *arg0) {
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateTrainingCourseDialog);
 }
 
-#pragma GLOBAL_ASM("asm.jp/nonmatchings/menu/training/training_course_ui/drawTrainingCourseLessonTitlePanel.s")
+void drawTrainingCourseLessonTitlePanel(TrainingCourseUiActor *arg0) {
+    D_800B4940[7] = gTrainingCourseLesson;
+    drawMenuColoredGlyphScript(arg0->x, arg0->y, D_800B4940, 0, 0x100, 5, 0x29);
+    drawMenuColoredGlyphScript(D_800B4ABA[gTrainingCourseLesson], arg0->y + 0x18,
+        D_800B4954[gTrainingCourseLesson - 1], 0, 0x100, 4, 0x29);
+}
 
 void updateTrainingCourseLessonTitlePanelScrollOut(TrainingCourseUiActor *arg0) {
     arg0->y -= 0xA;
