@@ -1039,7 +1039,7 @@ void drawCourseSelectCourseCursors(CourseSelectCourseCursorsActor *arg0) {
 }
 
 void updateCourseSelectCourseCursors(CourseSelectCourseCursorsActor *arg0) {
-    register CourseSelectCourseCursorsActor *actor;
+    CourseSelectCourseCursorsActor *actor;
     s32 i;
     RacePlayer *player;
     u8 state;

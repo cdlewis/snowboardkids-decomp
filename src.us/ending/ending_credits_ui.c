@@ -17,8 +17,6 @@
 #define ENDING_CREDITS_PAGE_VISIBLE_FRAMES 0x96
 #define ENDING_CREDITS_PAGE_COUNT 0x19
 
-
-
 typedef struct EndingCreditsPageTextLineLayout {
     /* 0x00 */ s16 count;
     /* 0x02 */ Vec2s positions[5];
@@ -88,7 +86,7 @@ CLANG_DIAGNOSTIC_PUSH
 CLANG_DIAGNOSTIC_IGNORE_UNINITIALIZED
 CLANG_DIAGNOSTIC_IGNORE_SELF_ASSIGN
 void drawEndingCreditsPageText(EndingCreditsPageTextActor *arg0) {
-    register s32 lineCount;
+    s32 lineCount;
     s32 lineIndex;
     s32 scriptIndex;
     s32 lineLength;

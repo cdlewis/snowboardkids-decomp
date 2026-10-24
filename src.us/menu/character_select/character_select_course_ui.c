@@ -195,7 +195,7 @@ MenuGlyphScript gCharacterSelectCourseStartGameText[44] = {
 #define gCharacterSelectCourseExitPreviewCornerTile (gCharacterSelectCourseExitPreviewData.cornerTile)
 
 void drawCharacterSelectCourseListOptions(CharacterSelectCourseMenuFrameActor *arg0) {
-    register CharacterSelectCourseMenuFrameActor *actor;
+    CharacterSelectCourseMenuFrameActor *actor;
     s16 *characterIds;
     s32 i;
     s32 alpha;
@@ -512,7 +512,7 @@ void initCharacterSelectUnlockedCourseList(CharacterSelectCourseMenuFrameActor *
 // clang-format on
 
 void drawCharacterSelectLimitedCourseListOptions(CharacterSelectCourseMenuFrameActor *arg0) {
-    register CharacterSelectCourseMenuFrameActor *actor;
+    CharacterSelectCourseMenuFrameActor *actor;
     void *arrowTexture;
     volatile u8 pad;
     u16 tile;
@@ -891,8 +891,8 @@ void updateCharacterSelectCoursePreviewFrame(CharacterSelectCourseWidgetActor *a
     int switchState;
     u32 selectedSpriteIndex;
     int menuState;
-    register s32 selectedIndex;
-    register u16 spriteIndex;
+    s32 selectedIndex;
+    u16 spriteIndex;
 
     selectedIndex = gRaceCourseIndex.signedValue;
     spriteIndex = (u16)arg0->sprite.index;
@@ -2122,7 +2122,7 @@ void drawCharacterSelectCoursePreviewPanel9(CharacterSelectCourseWidgetActor *ar
     s32 shouldDraw;
     s32 i;
     s32 tileOffset;
-    register s32 offset;
+    s32 offset;
 
     tileOffset = 0;
     shouldDraw = 1;
@@ -2709,7 +2709,7 @@ void drawCharacterSelectCoursePlayerStatsPanel(CharacterSelectCourseWidgetActor 
     s32 yOffset;
     s32 valueOffset;
     s32 three;
-    register s32 i;
+    s32 i;
     do { \
         characterIds = gCharacterSelectCourseMenuData.courseOptionsByUnlock[gHighestUnlockedCourse]; \
         if (gPlayerCount == 1) { \

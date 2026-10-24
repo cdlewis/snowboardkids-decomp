@@ -788,7 +788,6 @@ void resolveRacePlayerCollisionVolumes(RacePlayer *player) {
         }
     }
     for (i = 0; i < player->modelPartCount; i++) {
-
         player->modelPartTransforms[i].rotation[0] /= 4;
         player->modelPartTransforms[i].rotation[1] /= 4;
         player->modelPartTransforms[i].rotation[2] /= 4;

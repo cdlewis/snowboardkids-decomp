@@ -77,7 +77,6 @@ CharacterSelectOptionList *gCharacterSelectActiveCourseOptions;
 // clang-format off
 void initCharacterSelectCourseMenuFromRaceTypeSelect(void) {
     s32 var_v1;
-    register s32 unused; /* Preserve IDO's spill layout. */
     s32 var_v0_3;
     u8 temp_v1;
     GameSaveData *var_v0;

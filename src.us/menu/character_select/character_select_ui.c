@@ -343,10 +343,9 @@ void initCharacterSelectConfirmationBanner(CharacterSelectUiBannerActor *arg0) {
 void drawCharacterSelectPlayerPanelFrames(CharacterSelectUiPlayerPanelFrameActor *actor) {
     s32 i;
     u16 alpha;
-    register CharacterSelectUiPlayerPanelFrameActor *panel;
+    CharacterSelectUiPlayerPanelFrameActor *panel;
     s32 playerNumber;
-    volatile s32 unusedStackPadding;
-    char text[8];
+    char text[0xC];
 
     for (i = 0; i < 4; i++) {
         if ((gPlayerCount - 1) < i) {

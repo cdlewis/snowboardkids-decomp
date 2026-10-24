@@ -1349,14 +1349,7 @@ void drawMenuTilemapSprite(
     }
 }
 
-void drawMenuGlyphScriptWithFontBank(
-    volatile s16 x,
-    s16 y,
-    MenuGlyphScript *script,
-    s32 palette,
-    u16 scale,
-    u16 fontBank
-) {
+void drawMenuGlyphScriptWithFontBank(s16 x, s16 y, MenuGlyphScript *script, s32 palette, u16 scale, u16 fontBank) {
     u16 firstGlyph;
     s32 glyphCode;
     MenuGlyphScript *scriptCursor;
@@ -1405,7 +1398,7 @@ void drawMenuGlyphScriptWithFontBank(
     }
 }
 
-void drawMenuGlyphScriptDefaultFont(volatile s16 x, s16 y, MenuGlyphScript *script, s32 palette, u16 scale) {
+void drawMenuGlyphScriptDefaultFont(s16 x, s16 y, MenuGlyphScript *script, s32 palette, u16 scale) {
     u16 initialGlyph;
     s32 currentGlyph;
     MenuGlyphScript *cursor;
@@ -1569,7 +1562,7 @@ void drawMenuGlyph(s16 x, s16 y, u16 glyphIndex, u8 paletteIndex, u16 intensity,
 }
 
 void drawMenuColoredGlyphScript(
-    volatile s16 x,
+    s16 x,
     s16 y,
     MenuGlyphScript *script,
     s32 palette,
@@ -1630,21 +1623,14 @@ void drawMenuColoredGlyphScript(
     }
 }
 
-void drawMenuGlyphScript(
-    volatile s16 x,
-    s16 y,
-    MenuGlyphScript *script,
-    s32 palette,
-    u16 scale,
-    volatile u16 colorMode
-) {
+void drawMenuGlyphScript(s16 x, s16 y, MenuGlyphScript *script, s32 palette, u16 scale, volatile u16 colorMode) {
     u16 firstGlyph;
     s32 glyphCode;
     MenuGlyphScript *scriptCursor;
     s32 drawX;
     s32 drawY;
     s32 spaceGlyph;
-    register s32 advance;
+    s32 advance;
     u16 glyphAdvance;
     u16 scaleValue;
     u16 colorModeValue;

@@ -963,10 +963,9 @@ void initRaceSetupPlayerCountCursor(FadeItemActor *arg0) {
 void drawRaceSetupSavePlayerPanels(TitleMenuWidgetItemView *actor) {
     s32 i;
     u16 alpha;
-    register TitleMenuWidgetItemView *panel;
+    TitleMenuWidgetItemView *panel;
     s32 playerNumber;
-    volatile s32 unusedStackPadding;
-    char text[8];
+    char text[0xC];
 
     for (i = 0; i < 4; i++) {
         if ((gPlayerCount - 1) < i) {
@@ -1168,14 +1167,14 @@ void drawRaceSetupSavePanelIcons(TitleMenuIconStripActor *actor) {
     s32 unusedStackPadding2[6];
     s32 playerCoordinateOffset;
     s16 *controllerPakStatus;
-    register s16 *badgeDisplayOrderStart;
-    register GameSaveData *saveData;
-    register RaceSetupSavePanelPlayerCoordinates *coordinateCursor;
-    register s32 xOffset;
-    register s32 alpha;
-    register s32 nextIconOrBadgeOffset;
-    register s16 *badgeOrder;
-    register GameSaveData *badgeSaveData;
+    s16 *badgeDisplayOrderStart;
+    GameSaveData *saveData;
+    RaceSetupSavePanelPlayerCoordinates *coordinateCursor;
+    s32 xOffset;
+    s32 alpha;
+    s32 nextIconOrBadgeOffset;
+    s16 *badgeOrder;
+    GameSaveData *badgeSaveData;
     s32 iconIndex;
     s32 displayCount;
     s32 paletteIndex;
@@ -1293,7 +1292,7 @@ void initRaceSetupSavePanelIcons(RectListActor *arg0) {
 void drawRaceSetupSaveStatusWidgets(TitleMenuWidgetActor *arg0) {
     volatile s32 unused;
     MenuIntroActor *intro;
-    register TitleMenuWidgetActor *actor;
+    TitleMenuWidgetActor *actor;
     MenuGlyphScript *text;
     u32 tile;
     s32 i;

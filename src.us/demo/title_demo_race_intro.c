@@ -42,7 +42,7 @@ RacePlayerReplaySnapshot gTitleDemoReplayPlayerSnapshots[4][16] = {
 
 void initTitleDemoRaceIntro(void) {
     RacePlayer *players;
-    register s32 one = 1;
+    s32 one = 1;
     s32 active = 1;
     s32 two = 2;
     s32 three = 3;

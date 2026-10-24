@@ -48,7 +48,7 @@ void updateRacePlayerShotUse(RacePlayer *player) {
     s32 deltaX;
     s32 deltaZ;
     s32 relativeTargetAngle;
-    register s32 targetPlayerIndex;
+    s32 targetPlayerIndex;
 
     shouldFireShot = FALSE;
     if (player->isCpu == 0) {

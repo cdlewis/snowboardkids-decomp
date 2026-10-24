@@ -4015,7 +4015,7 @@ void updateRaceUiHeavyKnockdownTrailEffect(RaceUiRankTrailActor *arg0) {
     RacePlayer *player;
     s32 i;
 
-    arg0->copyBlock = (&gRacePlayers[arg0->task.userId])->modelPartTransforms[0];
+    arg0->copyBlock = gRacePlayers[arg0->task.userId].modelPartTransforms[0];
     arg0->copyBlock.rotation[0] = arg0->copyBlock.rotation[0] / 4;
     arg0->copyBlock.rotation[1] = arg0->copyBlock.rotation[1] / 4;
     arg0->copyBlock.rotation[2] = arg0->copyBlock.rotation[2] / 4;
