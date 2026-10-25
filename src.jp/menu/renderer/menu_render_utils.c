@@ -853,12 +853,12 @@ void drawScaledAssetTableSpriteWithExplicitPalette(
     gDPPipeSync(gRegionAllocPtr++);
 }
 
-// func_800478A4 best standalone match: 96.494% (base_8.c)
+// func_800478A4 best standalone match: 99.885% (func_800478A4-2/base_5.c)
 #pragma GLOBAL_ASM("asm.jp/nonmatchings/menu/renderer/menu_render_utils/func_800478A4.s")
 
 #ifdef NON_MATCHING
 // clang-format off
-void func_800478A4(s16 x, s16 y, u16 s, u16 t, u16 paletteIndex) {
+void func_800478A4(s16 x, s16 y, u16 s, u16 t, volatile u16 paletteIndex) {
     s32 x0;
     s32 y0;
     s32 x1;
@@ -871,6 +871,7 @@ void func_800478A4(s16 x, s16 y, u16 s, u16 t, u16 paletteIndex) {
     s32 clipS;
     s32 clipT;
     s32 halfHeight;
+    s32 palette;
 
     x0 = x + gMenuViewportCenterX;
     y0 = y + gMenuViewportCenterY;
@@ -905,8 +906,9 @@ void func_800478A4(s16 x, s16 y, u16 s, u16 t, u16 paletteIndex) {
                 clipS += s;
                 clipT += t;
 
-                if (gMenuAsciiFontPaletteIndex != paletteIndex) {
-                    gMenuAsciiFontPaletteIndex = paletteIndex;
+                palette = paletteIndex;
+                if (gMenuAsciiFontPaletteIndex != palette) {
+                    gMenuAsciiFontPaletteIndex = palette;
                     gDPLoadTLUT_pal16(gRegionAllocPtr++, 0, (paletteIndex << 5) + (u8 *)D_801114D4);
                 }
 
@@ -926,6 +928,7 @@ void func_800478A4(s16 x, s16 y, u16 s, u16 t, u16 paletteIndex) {
         }
     }
 }
+
 // clang-format on
 #endif
 
