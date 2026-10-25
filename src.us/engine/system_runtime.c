@@ -498,9 +498,9 @@ void appendViewportDisplayLists(u8 frameIndex) {
                 );
             }
 
-            if (D_80124848 != NULL) {
+            if (gViewportOverlayRenderCallbackList != NULL) {
                 gSPDisplayList(gRegionAllocPtr++, gMenuRenderModeResetDl);
-                runRenderCallbacks(&D_80124848);
+                runRenderCallbacks(&gViewportOverlayRenderCallbackList);
             }
 
             gCurrentFrameRenderData->viewport.rotations[gCurrentViewportIndex].m[0][0] =
@@ -707,7 +707,7 @@ void resetRenderCallbackQueues(void) {
     }
     gBackdropRenderCallbackList = NULL;
     gMenuOverlayRenderCallbackList = NULL;
-    D_80124848 = NULL;
+    gViewportOverlayRenderCallbackList = NULL;
     gRaceOverlayRenderCallbackList = NULL;
     gMenuRenderCallbackList = NULL;
 }

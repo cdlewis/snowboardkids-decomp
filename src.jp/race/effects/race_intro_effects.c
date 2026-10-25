@@ -327,9 +327,9 @@ void drawRaceIntroFlyoverActor(RaceIntroEffectActor *arg0) {
             gSPSegment(gRegionAllocPtr++, 0x02, getRelocatableHeapBlockBase(ASSET_HANDLE(0xA)));
             gSPSegment(gRegionAllocPtr++, 0x03, getRelocatableHeapBlockBase(ASSET_HANDLE(0xB)));
             gSPMatrix(gRegionAllocPtr++, arg0->displayList0, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
-            gSPDisplayList(gRegionAllocPtr++, D_20028F0);
+            gSPDisplayList(gRegionAllocPtr++, gRaceIntroFlyoverBodyDisplayList);
             gSPMatrix(gRegionAllocPtr++, arg0->displayList1, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
-            gSPDisplayList(gRegionAllocPtr++, D_2002DB8);
+            gSPDisplayList(gRegionAllocPtr++, gRaceIntroFlyoverSpinningDisplayList);
         }
     }
 }

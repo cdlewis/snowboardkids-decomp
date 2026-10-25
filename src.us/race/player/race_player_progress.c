@@ -9,19 +9,19 @@
 #define RANK_ARROW_DISTANCE 0x03800000
 #define RANK_ARROW_NEGATIVE_LIMIT ((s32)0xFC800001)
 
-char D_800DDE70[4] = "\t\t\t";
+char gRacePlayerProgressUnusedData[4] = "\t\t\t";
 
 s8 *gRaceCoursePlayerPathOffsetTables[40] = {
-    (s8 *)&D_800DC9A8[0x002], (s8 *)&D_800DC9A8[0x002], (s8 *)&D_800DC9A8[0x030], (s8 *)&D_800DC9A8[0x05E],
-    (s8 *)&D_800DC9A8[0x08C], (s8 *)&D_800DC9A8[0x08C], (s8 *)&D_800DC9A8[0x0B4], (s8 *)&D_800DC9A8[0x0DC],
-    (s8 *)&D_800DC9A8[0x104], (s8 *)&D_800DC9A8[0x104], (s8 *)&D_800DC9A8[0x136], (s8 *)&D_800DC9A8[0x168],
-    (s8 *)&D_800DC9A8[0x19A], (s8 *)&D_800DC9A8[0x19A], (s8 *)&D_800DC9A8[0x1E4], (s8 *)&D_800DC9A8[0x22E],
-    (s8 *)&D_800DC9A8[0x278], (s8 *)&D_800DC9A8[0x278], (s8 *)&D_800DC9A8[0x2AD], (s8 *)&D_800DC9A8[0x2E2],
-    (s8 *)&D_800DC9A8[0x317], (s8 *)&D_800DC9A8[0x317], (s8 *)&D_800DC9A8[0x369], (s8 *)&D_800DC9A8[0x3BB],
-    (s8 *)&D_800DC9A8[0x40D], (s8 *)&D_800DC9A8[0x40D], (s8 *)&D_800DC9A8[0x44D], (s8 *)&D_800DC9A8[0x48D],
-    (s8 *)&D_800DC9A8[0x002], (s8 *)&D_800DC9A8[0x002], (s8 *)&D_800DC9A8[0x030], (s8 *)&D_800DC9A8[0x05E],
-    (s8 *)&D_800DC9A8[0x4CD], (s8 *)&D_800DC9A8[0x4CD], (s8 *)&D_800DC9A8[0x4DE], (s8 *)&D_800DC9A8[0x4EF],
-    (s8 *)&D_800DC9A8[0x500], (s8 *)&D_800DC9A8[0x500], (s8 *)&D_800DC9A8[0x511], (s8 *)&D_800DC9A8[0x522],
+    (s8 *)&gRaceCoursePlayerPathOffsetData[0x002], (s8 *)&gRaceCoursePlayerPathOffsetData[0x002], (s8 *)&gRaceCoursePlayerPathOffsetData[0x030], (s8 *)&gRaceCoursePlayerPathOffsetData[0x05E],
+    (s8 *)&gRaceCoursePlayerPathOffsetData[0x08C], (s8 *)&gRaceCoursePlayerPathOffsetData[0x08C], (s8 *)&gRaceCoursePlayerPathOffsetData[0x0B4], (s8 *)&gRaceCoursePlayerPathOffsetData[0x0DC],
+    (s8 *)&gRaceCoursePlayerPathOffsetData[0x104], (s8 *)&gRaceCoursePlayerPathOffsetData[0x104], (s8 *)&gRaceCoursePlayerPathOffsetData[0x136], (s8 *)&gRaceCoursePlayerPathOffsetData[0x168],
+    (s8 *)&gRaceCoursePlayerPathOffsetData[0x19A], (s8 *)&gRaceCoursePlayerPathOffsetData[0x19A], (s8 *)&gRaceCoursePlayerPathOffsetData[0x1E4], (s8 *)&gRaceCoursePlayerPathOffsetData[0x22E],
+    (s8 *)&gRaceCoursePlayerPathOffsetData[0x278], (s8 *)&gRaceCoursePlayerPathOffsetData[0x278], (s8 *)&gRaceCoursePlayerPathOffsetData[0x2AD], (s8 *)&gRaceCoursePlayerPathOffsetData[0x2E2],
+    (s8 *)&gRaceCoursePlayerPathOffsetData[0x317], (s8 *)&gRaceCoursePlayerPathOffsetData[0x317], (s8 *)&gRaceCoursePlayerPathOffsetData[0x369], (s8 *)&gRaceCoursePlayerPathOffsetData[0x3BB],
+    (s8 *)&gRaceCoursePlayerPathOffsetData[0x40D], (s8 *)&gRaceCoursePlayerPathOffsetData[0x40D], (s8 *)&gRaceCoursePlayerPathOffsetData[0x44D], (s8 *)&gRaceCoursePlayerPathOffsetData[0x48D],
+    (s8 *)&gRaceCoursePlayerPathOffsetData[0x002], (s8 *)&gRaceCoursePlayerPathOffsetData[0x002], (s8 *)&gRaceCoursePlayerPathOffsetData[0x030], (s8 *)&gRaceCoursePlayerPathOffsetData[0x05E],
+    (s8 *)&gRaceCoursePlayerPathOffsetData[0x4CD], (s8 *)&gRaceCoursePlayerPathOffsetData[0x4CD], (s8 *)&gRaceCoursePlayerPathOffsetData[0x4DE], (s8 *)&gRaceCoursePlayerPathOffsetData[0x4EF],
+    (s8 *)&gRaceCoursePlayerPathOffsetData[0x500], (s8 *)&gRaceCoursePlayerPathOffsetData[0x500], (s8 *)&gRaceCoursePlayerPathOffsetData[0x511], (s8 *)&gRaceCoursePlayerPathOffsetData[0x522],
 };
 
 RacePlayerCheckpointEvent gBigSnowmanCheckpointEvents[8] = {

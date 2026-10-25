@@ -106,7 +106,7 @@ void initMultiplayerCourseSelectMenu(void) {
     initCallbackTaskScheduler(0);
     createCallbackTask((CallbackTaskCallback)initScrollingMenuBackdropActor, 0, 0x63);
 
-    D_800EC9C0 = 0;
+    gCourseSelectTransitionTimer = 0;
     gActiveMenuTask = 0;
     gMenuScratch0.value = 0;
     gMenuScratch1.value = 0;
@@ -290,10 +290,10 @@ void updateMultiplayerCourseSelectMenu(void) {
                     gRacePlayers[playerIndex].menuState = 3;
                     playerIndex++;
                 }
-                D_800EC9C0 = 0xF;
+                gCourseSelectTransitionTimer = 0xF;
                 gMenuFlowState = 1;
             }
-        } else if (D_800EC9C0 == 0) {
+        } else if (gCourseSelectTransitionTimer == 0) {
             for (playerIndex = 0; playerIndex < gPlayerCount; playerIndex++) {
                 if (gMenuChoicePromptState[playerIndex] == 0) {
                     if (((gCourseSelectStatus.previewModelState[playerIndex] == 1) &&
@@ -530,14 +530,14 @@ void updateMultiplayerCourseSelectMenu(void) {
                     }
                 }
                 if (count == gPlayerCount) {
-                    D_800EC9C0 = 1;
+                    gCourseSelectTransitionTimer = 1;
                 }
             }
         } else {
-            D_800EC9C0++;
+            gCourseSelectTransitionTimer++;
         }
     }
-    if (D_800EC9C0 == 0x19) {
+    if (gCourseSelectTransitionTimer == 0x19) {
         setCurrentGameTaskCallback(fadeOutMultiplayerCourseSelectMenu, 0);
         if (gMenuFlowState == 0) {
             requestMusicSequenceStop(8);

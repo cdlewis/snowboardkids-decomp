@@ -60,7 +60,6 @@ extern Gfx gBackdropRenderSetupDisplayList[];
 extern Gfx gTranslucentOverlaySetupDisplayList[];
 extern s32 gClearFramebufferOnNextTask;
 extern u16 gDepthBuffer[];
-extern u8 D_369000[];
 extern u8 gF3dlxMicrocodeText[];
 extern u8 gRspDramStack[];
 extern u8 gRspOutputBuffer[];
@@ -371,9 +370,9 @@ void appendViewportDisplayLists(u8 frameIndex) {
                 );
             }
 
-            if (D_80124848 != NULL) {
+            if (gViewportOverlayRenderCallbackList != NULL) {
                 gSPDisplayList(gRegionAllocPtr++, gMenuRenderModeResetDl);
-                runRenderCallbacks(&D_80124848);
+                runRenderCallbacks(&gViewportOverlayRenderCallbackList);
             }
 
             gCurrentFrameRenderData->viewport.rotations[gCurrentViewportIndex].m[0][0] =
@@ -577,7 +576,7 @@ void resetRenderCallbackQueues(void) {
     }
     gBackdropRenderCallbackList = NULL;
     gMenuOverlayRenderCallbackList = NULL;
-    D_80124848 = NULL;
+    gViewportOverlayRenderCallbackList = NULL;
     gRaceOverlayRenderCallbackList = NULL;
     gMenuRenderCallbackList = NULL;
 }
@@ -659,7 +658,7 @@ void submitFramebufferRenderTask(u8 frameIndex) {
     gSPClearGeometryMode(gRegionAllocPtr++, G_ZBUFFER | G_SHADE | G_CULL_BOTH | G_FOG | G_LIGHTING | G_SHADING_SMOOTH);
     gSPClipRatio(gRegionAllocPtr++, FRUSTRATIO_1);
     gDPPipelineMode(gRegionAllocPtr++, G_PM_NPRIMITIVE);
-    gDPSetTextureImage(gRegionAllocPtr++, G_IM_FMT_RGBA, G_IM_SIZ_16b, FRAMEBUFFER_WIDTH, D_369000);
+    gDPSetTextureImage(gRegionAllocPtr++, G_IM_FMT_RGBA, G_IM_SIZ_16b, FRAMEBUFFER_WIDTH, gDepthBufferPhysicalAddress);
 
     if (gClearFramebufferOnNextTask != 0) {
         gClearFramebufferOnNextTask = 0;
@@ -876,7 +875,7 @@ void submitFramebufferRenderTask(u8 frameIndex) {
     gSPClearGeometryMode(gRegionAllocPtr++, G_ZBUFFER | G_SHADE | G_CULL_BOTH | G_FOG | G_LIGHTING | G_SHADING_SMOOTH);
     gSPClipRatio(gRegionAllocPtr++, FRUSTRATIO_1);
     gDPPipelineMode(gRegionAllocPtr++, G_PM_NPRIMITIVE);
-    gDPSetTextureImage(gRegionAllocPtr++, G_IM_FMT_RGBA, G_IM_SIZ_16b, FRAMEBUFFER_WIDTH, D_369000);
+    gDPSetTextureImage(gRegionAllocPtr++, G_IM_FMT_RGBA, G_IM_SIZ_16b, FRAMEBUFFER_WIDTH, gDepthBufferPhysicalAddress);
     gDPSetCycleType(gRegionAllocPtr++, G_CYC_FILL);
     gDPSetRenderMode(gRegionAllocPtr++, G_RM_NOOP, G_RM_NOOP2);
     gDPSetColorImage(gRegionAllocPtr++, G_IM_FMT_RGBA, G_IM_SIZ_16b, FRAMEBUFFER_WIDTH, gDepthBuffer);

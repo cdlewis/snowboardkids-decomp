@@ -26,7 +26,7 @@ u8 gRandomTable[256] = {
 };
 u16 gMainRngIndex = 0;
 u16 gSecondaryRngIndex = 0;
-u32 D_800D4008[2] = { 0, 0 };
+u32 gRandomGeneratorUnusedData[2] = { 0, 0 };
 s16 gHuffmanQueueHead = -1;
 s16 gHuffmanQueueTail = -1;
 s16 gHuffmanQueueCount = 0;

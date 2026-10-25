@@ -51,9 +51,9 @@ typedef struct {
     /* 0x0E */ s16 variant;
 } PickupSpawnEntry;
 
-u32 D_800D7750 = 0;
+u32 gRaceCoursePropUnusedData = 0;
 
-RaceCoursePropModelEntry *gRaceCoursePropModelLists[] = { (RaceCoursePropModelEntry *)D_800D7650 };
+RaceCoursePropModelEntry *gRaceCoursePropModelLists[] = { (RaceCoursePropModelEntry *)gRaceCoursePropModelEntries };
 
 CourseCollectibleSpriteEntry gBigSnowmanCollectibleSpriteEntries[] = {
     { 0, 0,  { 15625394, -16267348, -92789296 }       },
@@ -522,21 +522,21 @@ Vtx gCourseCollectibleSpriteVertices[] = {
     { { { -8, 0, 0 }, 0x0000, { -16, 496 }, { 0xFF, 0xFF, 0xFF, 0xFF } } },
 };
 
-PickupSpawnEntry D_800D9250[] = {
+PickupSpawnEntry gFallingRockSpawnGroup0[] = {
     { { -10240005, -428761254, -704984006 }, 2388, 43 },
     { { 1387044, -430127761, -703655696 },   2246, 43 },
     { { 10763468, -430127761, -704988804 },  2277, 44 },
     { { 28082686, -430127761, -705002068 },  2051, 44 },
 };
 
-PickupSpawnEntry D_800D9290[] = {
+PickupSpawnEntry gFallingRockSpawnGroup1[] = {
     { { 463730951, -721166967, -1036007256 }, 2087, 84 },
     { { 475535677, -721166967, -1038257650 }, 2081, 85 },
     { { 475535677, -721166967, -1038257650 }, 1938, 85 },
     { { 487472239, -724705911, -1039891444 }, 1938, 85 },
 };
 
-PickupSpawnEntry *gFallingRockSpawnLists[] = { D_800D9250, D_800D9290 };
+PickupSpawnEntry *gFallingRockSpawnLists[] = { gFallingRockSpawnGroup0, gFallingRockSpawnGroup1 };
 
 Vtx gRacePickupBaseVertices[] = {
     { { { -10, 20, 2 }, 0x0000, { -16, -16 }, { 0xFF, 0xFF, 0xFF, 0xFF } } },
@@ -780,7 +780,7 @@ Vec3i gPickupShardInitialVelocities[] = {
     { 262144,  323584, 16384   },
 };
 
-u32 D_800D9C38[] = { 0, 0 };
+u32 gPickupShardUnusedData[] = { 0, 0 };
 
 typedef struct Scratch674B4 {
     Transform3D transform;

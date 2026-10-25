@@ -242,8 +242,8 @@ extern Gfx _14A200_command_0005E0[];
 extern Gfx _ADDR_20019C0_command_000000[];
 extern Gfx _ADDR_2002490_command_000000[];
 
-extern Gfx D_20028F0[];
-extern Gfx D_2002DB8[];
+extern Gfx gRaceIntroFlyoverBodyDisplayList[];
+extern Gfx gRaceIntroFlyoverSpinningDisplayList[];
 extern u32 gMainMenuRotatingBoardDl[];
 extern u32 gMainMenuStaticBoardDl[];
 extern u32 gPassAwardPodiumVariant0Dl[];

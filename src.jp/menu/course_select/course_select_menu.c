@@ -76,7 +76,7 @@ void initCourseSelectMenu(void) {
     createCallbackTask((CallbackTaskCallback)initScrollingMenuBackdropActor, 0, 0x5E);
 
     gMenuSelectionConfirmTimer = 0;
-    D_800EC9C0 = 0;
+    gCourseSelectTransitionTimer = 0;
     gCourseDetailsCloseFromBack = 0;
     gRacePlayers[0].menuState = 0;
     gRacePlayers[0].menuSelection = 0;
@@ -333,10 +333,10 @@ void updateCourseSelectCourseList(void) {
             // clang-format off
             for (var_a3 = 0; var_a3 < var_a1; var_a3++) { gRacePlayers[var_a3].menuState = 3; }
             // clang-format on
-            D_800EC9C0 = 0xF;
+            gCourseSelectTransitionTimer = 0xF;
             gMenuFlowState = 1;
         }
-    } else if (D_800EC9C0 == 0) {
+    } else if (gCourseSelectTransitionTimer == 0) {
         var_a3 = 0;
         if (gMenuChoicePromptState[var_a3] == 0) {
             if ((gCourseSelectStatus.previewModelState[0] == 1) && (player->menuState == 0) &&
@@ -535,12 +535,12 @@ void updateCourseSelectCourseList(void) {
             createCallbackTask((CallbackTaskCallback)initCourseUnlockPurchasePrompt, 0U, 0x64);
         }
     } else {
-        D_800EC9C0++;
-        if (D_800EC9C0 >= 0x22) {
-            D_800EC9C0 = 0;
+        gCourseSelectTransitionTimer++;
+        if (gCourseSelectTransitionTimer >= 0x22) {
+            gCourseSelectTransitionTimer = 0;
         }
     }
-    if (D_800EC9C0 == 0x1B) {
+    if (gCourseSelectTransitionTimer == 0x1B) {
         gCurrentGameTask->callbackData0 = 1;
         gRacePlayers->menuState = 0;
         setCurrentGameTaskCallback(updateCourseSelectModeMenu, 0);
@@ -549,7 +549,7 @@ void updateCourseSelectCourseList(void) {
             gRacePlayers->menuSelection = 0;
         }
         gMenuFlowState = 0;
-        D_800EC9C0 = 0;
+        gCourseSelectTransitionTimer = 0;
         gMenuChoicePromptState[0] = 0;
         gCourseSelectSlideStates[0] = 0;
         for (var_a3 = 0; var_a3 < 4; var_a3++) {

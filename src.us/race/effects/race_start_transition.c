@@ -156,7 +156,7 @@ u8 gPassAwardOpponentCharacterIds[5][4] = {
     { 1, 2, 3, 0 },
 };
 
-u32 D_800BB824[3] = { 0, 0, 0 };
+u32 gPassAwardUnusedData[3] = { 0, 0, 0 };
 
 void updateMenuCameraObjectLookAtOrigin(void) {
     PassAwardCameraTransformScratch scratch;

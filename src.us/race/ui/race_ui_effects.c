@@ -90,12 +90,12 @@ RaceCourseScrollingTextureInit gRaceCourseScrollingTextureInit[RACE_COURSE_SCROL
     { (s32)SUNSET_ROCK_COURSE_SCROLLING_TEXTURE_1_DISPLAY_LIST_command_000000,      0x0003, 0x00, 0x00 },
 };
 
-Vec3i D_800D6030[] = {
+Vec3i gCourseScrollingTextureSoundPositions[] = {
     { 0,         0,          0          },
     { 830720709, -869519545, -903295274 },
 };
 
-u32 D_800D6048[2] = { 0, 0 };
+u32 gCourseScrollingTextureUnusedData[2] = { 0, 0 };
 
 s16 gRacePrizeAmountsByCourseAndRank[][4] = {
     { 0x0E10, 0x0384, 0x01F4, 0x0000 },
@@ -175,7 +175,7 @@ Vec3i gDizzyLandCarouselPositions[] = {
     { 87549465, -252463332, -675267970 },
 };
 
-u32 D_800D622C = 0x00000000;
+u32 gDizzyLandCarouselUnusedData = 0x00000000;
 
 Vtx gRaceUiStunIconQuadVertices[] = {
     { { { -3, 6, 0 }, 0x0000, { -16, -16 }, { 0xFF, 0xFF, 0xFF, 0xFF } } },
@@ -228,7 +228,7 @@ Vec3i gDizzyLandSpinningCabinRidePositions[] = {
     { 443402522, -387728215, -622554590 },
 };
 
-u32 D_800D634C = 0x00000000;
+u32 gDizzyLandSpinningCabinUnusedData = 0x00000000;
 
 Vtx gCourseStartFinishSpriteVertices[] = {
     { { { -158, 78, -740 }, 0x0000, { -16, -16 }, { 0xFF, 0xFF, 0xFF, 0xFF } } },
@@ -598,9 +598,9 @@ RaceUiRankTextRenderEntry *gCourseScoreAttackRingEntryLists[] = {
     NULL,
 };
 
-u32 D_800D7648[] = { 0x00000000, 0x00000000 };
+u32 gScoreAttackRingListsUnusedData[] = { 0x00000000, 0x00000000 };
 
-RaceUiRankTextRenderEntry D_800D7650[] = {
+RaceUiRankTextRenderEntry gRaceCoursePropModelEntries[] = {
     { 20, 0, { 641011, -78305057, -186895163 },     0,    { 0, 0 } },
     { 20, 0, { -7827915, -82173248, -199094759 },   0,    { 0, 0 } },
     { 20, 0, { 455639, -86056546, -217379481 },     1040, { 0, 0 } },
@@ -615,7 +615,7 @@ RaceUiRankTextRenderEntry D_800D7650[] = {
     { 20, 0, { 771558155, -822819526, -831960948 }, 3824, { 0, 0 } },
 };
 
-u32 D_800D7740[] = { 0xFFFF0000, 0x00000000, 0x00000000, 0x00000000 };
+u32 gRaceCoursePropModelTerminator[] = { 0xFFFF0000, 0x00000000, 0x00000000, 0x00000000 };
 
 void renderRaceCourseScrollingTexture(RaceCourseScrollingTextureActor *arg0) {
     volatile u8 pad[8];
@@ -662,7 +662,7 @@ void updateRaceCourseScrollingTexture(RaceCourseScrollingTextureActor *arg0) {
     if (temp_v0 != 0) {
         enqueuePlayerLoopingPositionalSoundRequest(
             SFX_SUNSET_ROCK_AMBIENCE,
-            &D_800D6030[temp_v0],
+            &gCourseScrollingTextureSoundPositions[temp_v0],
             0x7F,
             SFX_PRIORITY_NORMAL,
             0.0f,

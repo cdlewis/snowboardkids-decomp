@@ -151,15 +151,15 @@ void updateCourseSelectPreviewModelIn(CourseSelectAnimatedActor *arg0) {
                 break;
             case 3:
                 actor->transitionTimer[i]++;
-                if (D_800EC9C0 != 0) {
-                    D_800EC9C0 = 1;
+                if (gCourseSelectTransitionTimer != 0) {
+                    gCourseSelectTransitionTimer = 1;
                 }
                 if (actor->transitionTimer[i] == 0xF) {
                     actor->transitionTimer[i] = 0;
                     actor->transitionState[i] = 4;
                     if (gPlayerCount == 1) {
                         gRacePlayers[0].menuState = 3;
-                        D_800EC9C0 = 0x10;
+                        gCourseSelectTransitionTimer = 0x10;
                     }
                 }
                 break;
@@ -371,15 +371,15 @@ void updateCourseSelectPreviewModelOut(CourseSelectAnimatedActor *arg0) {
                 break;
             case 3:
                 actor->transitionTimer[i]++;
-                if (D_800EC9C0 != 0) {
-                    D_800EC9C0 = 1;
+                if (gCourseSelectTransitionTimer != 0) {
+                    gCourseSelectTransitionTimer = 1;
                 }
                 if (actor->transitionTimer[i] == 0xF) {
                     actor->transitionTimer[i] = 0;
                     actor->transitionState[i] = 4;
                     if (gPlayerCount == 1) {
                         gRacePlayers[0].menuState = 3;
-                        D_800EC9C0 = 0x10;
+                        gCourseSelectTransitionTimer = 0x10;
                     }
                 }
                 break;
@@ -2492,7 +2492,7 @@ void updateCourseSelectCompletePanels(CourseSelectCompletePanelsActor *actor) {
         }
     }
 
-    if (D_800EC9C0 == 0x10) {
+    if (gCourseSelectTransitionTimer == 0x10) {
         removeCallbackTask(task);
         for (i = 0; i < gPlayerCount; i++) {
             gRacePlayers[i].menuState = 3;

@@ -36,8 +36,6 @@
 #define CONTROLLER_PAK_SAVE_FIELD_OFFSET(field) ((u32) & (((GameSaveData *)0)->field))
 
 extern f32 gMainMenuViewportAspectRatio;
-extern u8 D_5D1DE0[];
-extern u8 D_5D4620[];
 
 void requestControllerRead(void) {
     if ((gControllerReadPending == 0) && (gConnectedControllerBitmask != 0)) {
@@ -744,8 +742,8 @@ void initMainMenu(void) {
     resetAllViewports();
     configureMenuViewport(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, gMainMenuViewportAspectRatio);
     gFramebufferRenderInterval.value = 0;
-    loadCompressedRomAsset(&_5DAF30_ROM_END, D_5D1DE0, 0x21);
-    loadCompressedRomAsset(D_5D1DE0, D_5D4620, 0x25);
+    loadCompressedRomAsset(&_5DAF30_ROM_END, &_5DCBE0_ROM_START, 0x21);
+    loadCompressedRomAsset(&_5DCBE0_ROM_START, &_5DFDD0_ROM_START, 0x25);
     LOAD_ASSET(_593D10, 0x22);
     LOAD_RAW_ASSET(_1467B0, 8);
     LOAD_ASSET(_1DE360, 9);

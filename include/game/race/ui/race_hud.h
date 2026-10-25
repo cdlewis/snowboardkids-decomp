@@ -37,7 +37,7 @@ extern const char gRaceHudMultiplayerScoreFormat[];
 extern u8 gRaceChallengeFailed;
 
 #if defined(VERSION_US)
-extern u32 D_800DC9A8[];
+extern u32 gRaceCoursePlayerPathOffsetData[];
 #endif
 
 #if defined(VERSION_JP)

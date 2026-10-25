@@ -14,19 +14,10 @@ gMainMenuRotatingBoardDl = _1467B0_command_000E48;
 gMainMenuStaticBoardDl = _1467B0_command_000E70;
 
 /* Shared race-model segment 2: handle 0xA. */
-D_2000910 = _148220_command_000000;
-D_2001678 = _148F88_command_000000;
-D_2001730 = _149040_command_000000;
-D_2001810 = _149120_command_000000;
-D_20018E8 = _1491F8_command_000000;
-D_20019C0 = _ADDR_20019C0_command_000000;
-D_2001D00 = _149610_command_000000;
 gSpeedFanFrontDisplayList = _1499B8_command_000160;
 gSpeedFanBackDisplayList = _1499B8_command_000300;
-D_2002490 = _ADDR_2002490_command_000000;
-D_2002660 = PAN_DISPLAY_LIST_command_000000;
-D_20028F0 = _14A200_command_000000;
-D_2002DB8 = _14A200_command_0004C8;
+gRaceIntroFlyoverBodyDisplayList = _14A200_command_000000;
+gRaceIntroFlyoverSpinningDisplayList = _14A200_command_0004C8;
 gRaceItemPickupDisplayList = SHARED_RACE_GRAPHICS_SUFFIX_command_000000;
 gRaceActionPickupDisplayList = SHARED_RACE_GRAPHICS_SUFFIX_command_000080;
 
@@ -36,7 +27,6 @@ gRookieMountainBackdropDl = ROOKIE_MOUNTAIN_COURSE_BACKDROP_DISPLAY_LIST_command
 /* Fixed physical/virtual addresses encoded in original data. */
 /* Physical GPU alias of gDepthBuffer (0x80369000), not an image asset. */
 gDepthBufferPhysicalAddress = gDepthBuffer - 0x80000000;
-D_80000000 = 0x80000000;
 
 /* Typed slot-zero subobject views used where IDO must retain distinct relocations. */
 gPrimaryCourseUnlockStates = gGameSaveDataBuffer + 0x3F;
@@ -49,15 +39,6 @@ gCharacterSelectCourseOptionsByUnlock = gCharacterSelectCourseMenuData;
 gPlayerBadgeDisplayOrder = gCharacterSelectCourseMenuData + 0x42;
 gCharacterSelectShortCourseOptions = gCharacterSelectCourseMenuData + 0x58;
 gCharacterSelectSingleCourseOption = gCharacterSelectCourseMenuData + 0x60;
-
-/* Race-course effect data subobject used by extracted collision assembly. */
-D_800DA856 = gCourseTriggerEntries + 0x16;
-
-/* Race-player ground probe subobjects used by extracted movement assembly. */
-D_800DE7F8 = gRacePlayerGroundProbeOffsets + 0x48;
-D_800DE7FC = gRacePlayerGroundProbeOffsets + 0x4C;
-D_800DE814 = gRacePlayerGroundProbeOffsets + 0x64;
-D_800DE818 = gRacePlayerGroundProbeOffsets + 0x68;
 
 /* HUD status is the initialized byte of each 0xB0-byte camera. */
 gRacePlayerHudStatuses = gRaceCameras + 0xAC;
@@ -126,7 +107,7 @@ gPlayer4StickY = gPlayerStickY + 3;
 
 /* Menu callback list names expose the head words of six four-word slots. */
 gMenuOverlayRenderCallbackList = gMenuRenderCallbackQueueStorage + 0x0;
-D_80124848 = gMenuRenderCallbackQueueStorage + 0x10;
+gViewportOverlayRenderCallbackList = gMenuRenderCallbackQueueStorage + 0x10;
 gMenuForegroundRenderCallbackList = gMenuRenderCallbackQueueStorage + 0x20;
 gMenuRenderCallbackList = gMenuRenderCallbackQueueStorage + 0x30;
 gRaceOverlayRenderCallbackList = gMenuRenderCallbackQueueStorage + 0x40;

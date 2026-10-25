@@ -15,8 +15,6 @@
 #include "game/menu/renderer/menu_render_utils.h"
 
 extern f32 gControllerPakFileDeleteViewportAspectRatio;
-extern u8 D_5D4620[];
-extern u8 D_5D4C40[];
 
 void initControllerPakFileDeleteFlow(void) {
     requestControllerPakProbe(0);
@@ -35,11 +33,11 @@ void initControllerPakFileDeleteFlow(void) {
     gControllerPakFreeFileCount = 0;
     gRaceRumbleEnabled = 0;
     gMenuFadeAlpha = gCurrentGameTask->callbackData0;
-    loadCompressedRomAsset(D_5D4620, D_5D4C40, 0x21);
+    loadCompressedRomAsset(&_5DFDD0_ROM_START, &_5E0350_ROM_START, 0x21);
     LOAD_ASSET(_593D10, 0x22);
     LOAD_ASSET(_598A70, 0x23);
     LOAD_ASSET(_59AAA0, 0x24);
-    loadCompressedRomAsset(D_5D4C40, &_5E0E40_ROM_START, 0x26);
+    loadCompressedRomAsset(&_5E0350_ROM_START, &_5E0E40_ROM_START, 0x26);
     initCallbackTaskScheduler(0);
     createCallbackTask((CallbackTaskCallback)&initControllerPakFileDeleteMainOptions, 0, 0x63);
     createCallbackTask((CallbackTaskCallback)&initControllerPakFileDeleteConfirmOptions, 0, 0x63);

@@ -482,8 +482,8 @@ extern RaceUiProjectileVertexBlock gRaceUiProjectileVertices[8];
 extern Gfx gAlphaSpriteRenderModeDl[];
 
 #if defined(VERSION_JP)
-extern Vec3i D_800D6030[];
-extern RaceCoursePropModelEntry D_800D7650[];
+extern Vec3i gCourseScrollingTextureSoundPositions[];
+extern RaceCoursePropModelEntry gRaceCoursePropModelEntries[];
 extern const char gRaceResultsSlot0WinCountFormat[];
 extern const char gRaceResultsSlot1WinCountFormat[];
 extern const char gRaceResultsSlot2WinCountFormat[];
@@ -589,7 +589,7 @@ extern Vtx gSilverMountainSnowParticleVertices[];
 #endif
 
 #if defined(VERSION_US)
-extern RaceUiRankTextRenderEntry D_800D7650[];
+extern RaceUiRankTextRenderEntry gRaceCoursePropModelEntries[];
 #endif
 
 void renderRaceCourseScrollingTexture(RaceCourseScrollingTextureActor *arg0);

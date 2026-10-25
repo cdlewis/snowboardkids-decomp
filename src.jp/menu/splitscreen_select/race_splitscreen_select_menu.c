@@ -37,7 +37,7 @@ void returnToRaceSplitscreenSelectMenu(void) {
 
 void initRaceSplitscreenSelectMenu(void) {
     requestMusicSequenceBank(1);
-    D_800EC9DC = 0;
+    gRaceSplitscreenSelectUnusedState = 0;
     gCourseSelectFromRaceTypeMenu = 0;
     resetAllViewports();
     configureViewport(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.333333373f);

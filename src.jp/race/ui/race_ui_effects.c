@@ -183,7 +183,7 @@ void updateRaceCourseScrollingTexture(RaceCourseScrollingTextureActor *arg0) {
     if (temp_v0 != 0) {
         enqueuePlayerLoopingPositionalSoundRequest(
             SFX_SUNSET_ROCK_AMBIENCE,
-            &D_800D6030[temp_v0],
+            &gCourseScrollingTextureSoundPositions[temp_v0],
             0x7F,
             SFX_PRIORITY_NORMAL,
             0.0f,

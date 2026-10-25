@@ -93,8 +93,8 @@ extern u8 gMainMenuSecretCodeUnlocked;
 extern u8 gMainMenuSelectionResult;
 extern u8 gMenuSelectionConfirmTimer;
 
-extern u8 D_800EC9C0;
-extern u8 D_800EC9DC;
+extern u8 gCourseSelectTransitionTimer;
+extern u8 gRaceSplitscreenSelectUnusedState;
 extern u8 gConnectedControllerBitmask;
 extern u8 gCourseSelectFromRaceTypeMenu;
 extern u8 gCharacterSelectFromRaceSetup;
