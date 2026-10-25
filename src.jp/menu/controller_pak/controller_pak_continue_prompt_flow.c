@@ -13,9 +13,6 @@
 
 extern f32 D_800DFD70;
 
-void func_8000C1B8(void);
-void func_8000C31C(void);
-
 void initControllerPakContinuePromptFlow(void) {
     requestMusicSequenceBank(3);
     resetAllViewports();
@@ -33,11 +30,11 @@ void initControllerPakContinuePromptFlow(void) {
     initCallbackTaskScheduler(0);
     createCallbackTask((CallbackTaskCallback)initControllerPakContinuePrompt, 0, 0x64);
     gMenuFadeAlpha = gCurrentGameTask->callbackData0;
-    setCurrentGameTaskCallback(func_8000C1B8, 0);
+    setCurrentGameTaskCallback(updateControllerPakContinuePromptFlow, 0);
     updateCallbackTasks();
 }
 
-void func_8000C1B8(void) {
+void updateControllerPakContinuePromptFlow(void) {
     s32 temp_a1;
     s32 temp_v0;
     s32 var_v0;
@@ -66,7 +63,7 @@ void func_8000C1B8(void) {
             gMenuFlowState = gCurrentGameTask->callbackData1;
             gControllerPakContinuePromptTransition.state = 2;
             gControllerPakContinuePromptTransition.x = 0x100;
-            setCurrentGameTaskCallback(func_8000C31C, 0);
+            setCurrentGameTaskCallback(closeControllerPakContinuePromptFlow, 0);
         }
     }
     updateCallbackTasks();
@@ -74,7 +71,7 @@ void func_8000C1B8(void) {
     if (gCurrentGameTask) {}
 }
 
-void func_8000C31C(void) {
+void closeControllerPakContinuePromptFlow(void) {
     if (gCurrentGameTask->callbackData0 != 0xFF) {
         gCurrentGameTask->callbackData0 = stepMenuFadeAlpha((s16)gCurrentGameTask->callbackData0, 0x24, 1);
         if (gCurrentGameTask->callbackData0 == 0xFF) {

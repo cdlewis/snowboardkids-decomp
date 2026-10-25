@@ -22,7 +22,7 @@ void updateMainMenuTitleLogo(MainMenuTitleLogoActor *arg0) {
     addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawMainMenuTitleLogo, arg0);
 }
 
-void func_80032404(MainMenuTitleLogoActor *arg0) {
+void initMainMenuTitleLogo(MainMenuTitleLogoActor *arg0) {
     initMenuTilemapSprite(&arg0->tilemapSprite, getRelocatableHeapBlockBase(TITLE_SCREEN_LOGO_SPRITE_HANDLE));
     arg0->tilemapSprite.render.scrollX = 0x10;
     arg0->tilemapSprite.render.scrollY = 0x18;

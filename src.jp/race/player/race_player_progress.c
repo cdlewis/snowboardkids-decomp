@@ -177,7 +177,7 @@ void updateRacePlayerRankDisplay(void) {
 }
 #endif
 
-void func_8007B46C(RacePlayer *player) {
+void updateRacePlayerCheckpointEvents(RacePlayer *player) {
     RacePlayerCheckpointEvent *eventList;
     RacePlayerCheckpointEvent *event;
     s32 x;

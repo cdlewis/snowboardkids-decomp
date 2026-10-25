@@ -34,8 +34,6 @@ typedef struct {
 
 extern void *D_801114D4;
 
-void func_800478A4(s16 x, s16 y, u16 s, u16 t, u16 paletteIndex);
-
 void initMenuAssetHandles(void) {
     s16 *end;
     s16 *handle;
@@ -853,12 +851,12 @@ void drawScaledAssetTableSpriteWithExplicitPalette(
     gDPPipeSync(gRegionAllocPtr++);
 }
 
-// func_800478A4 best standalone match: 99.885% (func_800478A4-2/base_5.c)
-#pragma GLOBAL_ASM("asm.jp/nonmatchings/menu/renderer/menu_render_utils/func_800478A4.s")
+// drawMenuAsciiFontTile best standalone match: 99.885% (drawMenuAsciiFontTile-2/base_5.c)
+#pragma GLOBAL_ASM("asm.jp/nonmatchings/menu/renderer/menu_render_utils/drawMenuAsciiFontTile.s")
 
 #ifdef NON_MATCHING
 // clang-format off
-void func_800478A4(s16 x, s16 y, u16 s, u16 t, volatile u16 paletteIndex) {
+void drawMenuAsciiFontTile(s16 x, s16 y, u16 s, u16 t, volatile u16 paletteIndex) {
     s32 x0;
     s32 y0;
     s32 x1;
@@ -932,7 +930,7 @@ void func_800478A4(s16 x, s16 y, u16 s, u16 t, volatile u16 paletteIndex) {
 // clang-format on
 #endif
 
-void func_80047B5C(void) {
+void initMenuAsciiFontTexture(void) {
     MenuAsciiFontAsset *font = getRelocatableHeapBlockBase(gAssetHandles[6]);
     D_801114D4 = (font->entryCount * sizeof(AssetTableEntry)) + (u8 *)font + sizeof(AssetTableEntry);
     gDPLoadTextureTile_4b(gRegionAllocPtr++, font->imageOffset + (u8 *)font, G_IM_FMT_CI,
@@ -952,7 +950,7 @@ void drawMenuAsciiChar(s16 x, s16 y, u8 character, u16 palette) {
     if (tile < 0x40) {
         s = (tile & 7) * 8;
         t = tile & 0x38;
-        func_800478A4(x, y, s, t, palette);
+        drawMenuAsciiFontTile(x, y, s, t, palette);
     }
 }
 
@@ -972,7 +970,6 @@ void drawMenuAsciiTextDefaultScale(s16 x, s16 y, const char *text, u16 palette) 
     s32 newline;
     s32 more;
 
-
     mask = 0xFF;
     first = *text & mask;
     cursorX = x;
@@ -991,7 +988,7 @@ void drawMenuAsciiTextDefaultScale(s16 x, s16 y, const char *text, u16 palette) 
             } else {
                 character = character - 0x20;
                 if ((u32)character < 0x40) {
-                    func_800478A4(cursorX, cursorY, ((character & 7) * 8) & 0xFFFF, character & 0x38, palette);
+                    drawMenuAsciiFontTile(cursorX, cursorY, ((character & 7) * 8) & 0xFFFF, character & 0x38, palette);
                 }
                 cursorX += 8;
             }

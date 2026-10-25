@@ -19,9 +19,6 @@
 extern u8 D_8010A2B4;
 #endif
 
-void func_80031A10(ControllerPakFileListActor *arg0);
-void func_80031D9C(ControllerPakFileListActor *arg0);
-
 void drawControllerPakContinuePrompt(ControllerPakOptionsActor *arg0) {
     s32 i;
     s32 j;
@@ -774,7 +771,7 @@ void updateControllerPakFileDeleteFreeSpaceInfo(ControllerPakTwoPointActor *arg0
     addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawControllerPakFileDeleteFreeSpaceInfo, arg0);
 }
 
-void func_800319D0(ControllerPakTwoPointActor *arg0) {
+void initControllerPakFileDeleteFreeSpaceInfo(ControllerPakTwoPointActor *arg0) {
     s32 temp_v0 = 0x34;
 
     arg0->common.x = -0x24;
@@ -784,12 +781,12 @@ void func_800319D0(ControllerPakTwoPointActor *arg0) {
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateControllerPakFileDeleteFreeSpaceInfo);
 }
 
-// func_80031A10 best match: 98.097% (base_8.c)
-#pragma GLOBAL_ASM("asm.jp/nonmatchings/menu/controller_pak/controller_pak_ui/func_80031A10.s")
+// drawControllerPakFileDeleteFileList best match: 98.097% (base_8.c)
+#pragma GLOBAL_ASM("asm.jp/nonmatchings/menu/controller_pak/controller_pak_ui/drawControllerPakFileDeleteFileList.s")
 
 #ifdef NON_MATCHING
 // clang-format off
-void func_80031A10(ControllerPakFileListActor *arg0) {
+void drawControllerPakFileDeleteFileList(ControllerPakFileListActor *arg0) {
     s32 i;
     s32 digits;
     u8 insertIndex;
@@ -899,7 +896,7 @@ void func_80031A10(ControllerPakFileListActor *arg0) {
 // clang-format on
 #endif
 
-void func_80031D9C(ControllerPakFileListActor *arg0) {
+void updateControllerPakFileDeleteFileListUi(ControllerPakFileListActor *arg0) {
     if (gControllerPakMenuCursorState == 1) {
         if (arg0->cursorTimer < 0x10) {
             arg0->cursorScale -= 9;
@@ -911,10 +908,10 @@ void func_80031D9C(ControllerPakFileListActor *arg0) {
         arg0->cursorScale = 0x100;
         arg0->cursorTimer = 0;
     }
-    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)func_80031A10, (void *)arg0);
+    addRenderCallback(&gMenuRenderCallbackList, (RenderCallback)drawControllerPakFileDeleteFileList, (void *)arg0);
 }
 
-void func_80031E38(ControllerPakFileListActor *arg0) {
+void initControllerPakFileDeleteFileList(ControllerPakFileListActor *arg0) {
     s32 temp_v0 = -0x20;
     s32 temp_v1 = -0x6C;
 
@@ -928,7 +925,7 @@ void func_80031E38(ControllerPakFileListActor *arg0) {
     arg0->positions[3].y = -0x1F;
     arg0->cursorScale = 0x100;
     arg0->cursorTimer = 0;
-    setCallbackTaskCallback(arg0, (CallbackTaskCallback)func_80031D9C);
+    setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateControllerPakFileDeleteFileListUi);
 }
 
 void drawControllerPakFileDeleteIcon(ControllerPakSpriteActor *arg0) {

@@ -15,9 +15,6 @@
 #include "game/menu/renderer/menu_renderer.h"
 #include "game/menu/renderer/menu_render_utils.h"
 
-void func_80008EBC(void);
-void func_8000951C(void);
-
 void initControllerPakRaceRecordSaveFlow(void) {
     resetAllViewports();
     configureViewport(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, 1.3333334f);
@@ -45,10 +42,10 @@ void initControllerPakRaceRecordSaveFlow(void) {
     gControllerPakRaceRecordSaveStatusTransition.alpha = 0;
     gControllerPakRaceRecordSaveStatusTransition.targetStatus = 0;
     gControllerPakRaceRecordSaveStatusTransition.nextStatus = 0;
-    setCurrentGameTaskCallback(func_80008EBC, 0);
+    setCurrentGameTaskCallback(updateControllerPakRaceRecordSaveFlow, 0);
 }
 
-void func_80008EBC(void) {
+void updateControllerPakRaceRecordSaveFlow(void) {
     /* Preserve the original IDO stack layout around the completion flag. */
     s32 padAfter[2];
     s32 completion;
@@ -248,12 +245,12 @@ void func_80008EBC(void) {
         gMenuSelectionConfirmTimer = 1;
     }
     if (gMenuSelectionConfirmTimer == 0x23) {
-        setCurrentGameTaskCallback(func_8000951C, 0);
+        setCurrentGameTaskCallback(fadeOutControllerPakRaceRecordSaveFlow, 0);
     }
     updateCallbackTasks();
 }
 
-void func_8000951C(void) {
+void fadeOutControllerPakRaceRecordSaveFlow(void) {
     s32 temp_v0 = gCurrentGameTask->callbackData0;
     if (temp_v0 != 0xFF) {
         gCurrentGameTask->callbackData0 = stepMenuFadeAlpha((s16)temp_v0, 0x20, 1);

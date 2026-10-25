@@ -39,8 +39,6 @@ extern f32 D_800DFBE0;
 extern u8 D_5D1DE0[];
 extern u8 D_5D4620[];
 
-void func_80032404(MainMenuTitleLogoActor *arg0);
-
 void requestControllerRead(void) {
     if ((gControllerReadPending == 0) && (gConnectedControllerBitmask != 0)) {
         osSendMesg(&gControllerSubsystemRequestQueue, (OSMesg)CONTROLLER_REQUEST_READ_INPUT, OS_MESG_BLOCK);
@@ -758,7 +756,7 @@ void initMainMenu(void) {
     initCallbackTaskScheduler(0);
     createCallbackTask((CallbackTaskCallback)&initMainMenuTitleOptions, 0, 0x64);
     createCallbackTask((CallbackTaskCallback)&initMainMenuTitleCursor, 0, 0x64);
-    createCallbackTask((CallbackTaskCallback)&func_80032404, 0, 0x64);
+    createCallbackTask((CallbackTaskCallback)&initMainMenuTitleLogo, 0, 0x64);
     createCallbackTaskWithUserId((CallbackTaskCallback)&initTitleMenuSparkle, 0, 0x64, 0);
     createCallbackTaskWithUserId((CallbackTaskCallback)initMainMenuBoardModels, 0, 0x64, 0);
     setBootFadeColor(0x20, 0x40, 0x50);

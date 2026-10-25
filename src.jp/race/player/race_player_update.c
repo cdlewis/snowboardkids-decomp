@@ -59,8 +59,6 @@ extern RacePlayerPreviewStart D_800DDC48[];
 extern s32 D_800DDFF0[];
 extern void (*D_800DDF08[])(RacePlayer *);
 
-void func_8007B46C(RacePlayer *player);
-
 void initRacePlayers(void) {
     gRacePlayers[0].playerIndex = 0;
     gRacePlayers[1].playerIndex = 1;
@@ -469,7 +467,7 @@ void updateRacePlayer(RacePlayer *player) {
     player->stateFlags &= ~0x800;
 
     if (player->isCpu != 0) {
-        func_8007B46C(player);
+        updateRacePlayerCheckpointEvents(player);
     }
 
     if (player->unk578 != 0) {
@@ -1075,7 +1073,7 @@ void updateRacePlayerMode22Airborne(RacePlayer *player) {
     }
 }
 
-void func_8008D91C(RacePlayer *player) {
+void dispatchRacePlayerAirborneMode(RacePlayer *player) {
     gRacePlayerAirborneUpdateHandlers[player->updateState](player);
 }
 
@@ -1184,11 +1182,11 @@ void updateRacePlayerAirborneLaunch(RacePlayer *player) {
     }
 }
 
-// func_8008DC9C best match: 99.550%
-#pragma GLOBAL_ASM("asm.jp/nonmatchings/race/player/race_player_update/func_8008DC9C.s")
+// updateRacePlayerAirborneCruise best match: 99.550%
+#pragma GLOBAL_ASM("asm.jp/nonmatchings/race/player/race_player_update/updateRacePlayerAirborneCruise.s")
 
 #ifdef NON_MATCHING
-void func_8008DC9C(RacePlayer *player) {
+void updateRacePlayerAirborneCruise(RacePlayer *player) {
     s32 sp2C;
     s32 var_a2;
     s32 var_v1;
@@ -4720,7 +4718,7 @@ void updateRacePlayerMode40Stun(RacePlayer *player) {
     player->rumblePatternId = 2;
 }
 
-void func_80094C4C(RacePlayer *player) {
+void dispatchRacePlayerMode07CourseObject(RacePlayer *player) {
     gRacePlayerMode07StateHandlers[player->updateState](player);
 }
 
@@ -5225,7 +5223,7 @@ void updateRacePlayerMode30AttackResolve(RacePlayer *player) {
     stepRaceMotionLoopingJointAnimation(player);
 }
 
-void func_80095F2C(RacePlayer *player) {
+void dispatchRacePlayerMode32Character(RacePlayer *player) {
     updateRacePlayerLeanAngle(player, 0, 0);
     gRacePlayerMode32CharacterHandlers[player->characterId](player);
 }
@@ -5362,7 +5360,7 @@ void updateRacePlayerMode32Character5(RacePlayer *player) {
     }
 }
 
-void func_800963D8(RacePlayer *player) {
+void dispatchRacePlayerMode35Character(RacePlayer *player) {
     updateRacePlayerLeanAngle(player, 0, 0);
     gRacePlayerMode35CharacterHandlers[player->characterId](player);
 }
@@ -5418,7 +5416,7 @@ void updateRacePlayerMode35Character2(RacePlayer *player) {
     }
 }
 
-void func_800965C8(RacePlayer *player) {
+void updateRacePlayerMode35Character3(RacePlayer *player) {
     if (player->updateTimer == 0) {
         player->updateTimer++;
         player->modeValue = 0;
@@ -5435,7 +5433,7 @@ void func_800965C8(RacePlayer *player) {
     }
 }
 
-void func_80096650(RacePlayer *player) {
+void updateRacePlayerMode35Character4(RacePlayer *player) {
     if (player->updateTimer == 0) {
         player->updateTimer++;
         player->modeValue = 0;

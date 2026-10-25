@@ -68,7 +68,6 @@ extern u8 D_80368C00[];
 extern u8 D_80360000[];
 extern u8 D_80368000[];
 
-void func_80047B5C(void);
 void writebackMenuRenderScratchBuffer(s32 frameIndex);
 
 void main(void *arg) {
@@ -252,7 +251,7 @@ void dmaReadRom(u32 romOffset, void *ramAddress, s32 size) {
     }
 }
 
-void func_80099610(u8 frameIndex) {
+void appendViewportDisplayLists(u8 frameIndex) {
     RenderCallbackNode **modelCallbackQueueHead;
     s32 hasModelCallbacks;
     u32 matrixUpperHalfwordMask;
@@ -490,7 +489,7 @@ void func_80099610(u8 frameIndex) {
                     runRenderCallbacks(&gRaceOverlayRenderCallbackList);
                 }
                 if (gRaceForegroundRenderCallbackList != NULL) {
-                    func_80047B5C();
+                    initMenuAsciiFontTexture();
                     runRenderCallbacks(&gRaceForegroundRenderCallbackList);
                 }
             }
@@ -528,7 +527,7 @@ void func_80099610(u8 frameIndex) {
             runRenderCallbacks(&gMenuRenderCallbackList);
         }
         if (gMenuForegroundRenderCallbackList != NULL) {
-            func_80047B5C();
+            initMenuAsciiFontTexture();
             runRenderCallbacks(&gMenuForegroundRenderCallbackList);
         }
     }
@@ -833,7 +832,7 @@ void submitFramebufferRenderTask(u8 frameIndex) {
     }
 
     gDPSetAlphaCompare(gRegionAllocPtr++, G_AC_NONE);
-    func_80099610(frameIndex);
+    appendViewportDisplayLists(frameIndex);
     gDPFullSync(gRegionAllocPtr++);
     gSPEndDisplayList(gRegionAllocPtr++);
 

@@ -33,7 +33,7 @@
 
 extern u16 D_800B4AD0[];
 
-void func_8000E6F0(
+void drawMenuAssetRegion(
     s16 x,
     s16 y,
     AssetTable *table,
@@ -904,7 +904,7 @@ void drawMenuSpriteTileClipped(
     }
 }
 
-void func_8001130C(void) {}
+void noOpMenuRendererCallback(void) {}
 
 void drawMenuTextureByAssetId(s16 x, s16 y, AssetTable *unusedTable, u16 assetId, u16 width, u16 height) {
     s32 x0;
