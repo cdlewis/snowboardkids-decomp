@@ -5292,27 +5292,23 @@ void updateRaceScoreAttackRings(void *arg0) {
     addRenderCallback(&gSceneModelRenderCallbackList, (RenderCallback)renderRaceScoreAttackRings, arg0);
 }
 
-// initRaceScoreAttackRingMatrices best match: 95.946%
-#pragma GLOBAL_ASM("asm.jp/nonmatchings/race/ui/race_ui_effects/initRaceScoreAttackRingMatrices.s")
-
-#ifdef NON_MATCHING
+// clang-format off
 void initRaceScoreAttackRingMatrices(RaceUiRankTextRenderActor *arg0) {
     Transform3D scratch;
     RaceUiRankTextRenderEntry *entry;
     RaceUiRankTextRenderActor *actor1;
     RaceUiRankTextRenderActor *actor2;
     s32 i;
-    s32 active;
-    s32 count;
+    register s32 active;
 
+
+    actor2 = arg0;
     actor1 = arg0;
     entry = gCourseScoreAttackRingEntryLists[gRaceCourseIndex.signedValue];
-    count = actor1->count;
     i = 0;
-    if (count > 0) {
+    
         active = 1;
-        actor2 = arg0;
-        for (;;) {
+        while (i < actor2->count) {
             makeFixedRotationY(scratch.rotation, entry->angle);
             scratch.rotation[0] = scratch.rotation[0] / 12;
             scratch.rotation[1] = scratch.rotation[1] / 12;
@@ -5331,14 +5327,11 @@ void initRaceScoreAttackRingMatrices(RaceUiRankTextRenderActor *arg0) {
             entry->active = active;
             i++;
             entry++;
-
-if (!(i < actor2->count)) break;
+        }
+        
+    osWritebackDCache(arg0->matrices, arg0->count << 6);
 }
-        count = actor1->count;
-    }
-    osWritebackDCache(actor1->matrices, count << 6);
-}
-#endif
+// clang-format on
 
 void initRaceScoreAttackRings(RaceUiRankTextRenderActor *arg0) {
     RaceUiRankTextRenderEntry *var_v0;
