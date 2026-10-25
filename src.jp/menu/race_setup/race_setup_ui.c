@@ -1034,11 +1034,12 @@ void initRaceSetupSavePanelFrame(RectListActor *arg0) {
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateRaceSetupSavePanelFrame);
 }
 
-// drawRaceSetupSavePanelIcons best match: 91.913%
+// drawRaceSetupSavePanelIcons best match: 99.208% (drawRaceSetupSavePanelIcons-16/base_3.c)
 #pragma GLOBAL_ASM("asm.jp/nonmatchings/menu/race_setup/race_setup_ui/drawRaceSetupSavePanelIcons.s")
 
 #ifdef NON_MATCHING
 void drawRaceSetupSavePanelIcons(TitleMenuIconStripActor *actor) {
+    s16 *badgeOrder;
     s32 playerIndex;
     s32 iconIndex;
     s32 displayCount;
@@ -1060,8 +1061,9 @@ void drawRaceSetupSavePanelIcons(TitleMenuIconStripActor *actor) {
             if (saveData->progressionLevel == 1) displayCount = 7;
             else if (saveData->progressionLevel == 2) displayCount = 8;
             else if (saveData->progressionLevel == 3) displayCount = 9;
+            badgeOrder = gCharacterSelectCourseMenuData.playerBadgeDisplayOrder;
             for (iconIndex = 0; iconIndex < displayCount; iconIndex++) {
-                paletteIndex = saveData->cupPlacements[gCharacterSelectCourseMenuData.playerBadgeDisplayOrder[iconIndex]];
+                paletteIndex = gGameSaveDataBuffer[playerIndex].cupPlacements[badgeOrder[iconIndex]];
                 alpha = 0x70;
                 if (paletteIndex != 0) {alpha = 0x100; paletteIndex += 6;}
                 else paletteIndex = 9;
