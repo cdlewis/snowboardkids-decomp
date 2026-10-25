@@ -476,11 +476,12 @@ void initCourseSelectPreviewModelOut(void *arg0) {
     setCallbackTaskCallback(actor, (CallbackTaskCallback)updateCourseSelectPreviewModelOut);
 }
 
-// drawCourseSelectCourseIconList best standalone match: 92.866% (base_6.c)
+// drawCourseSelectCourseIconList best standalone match: 99.729% (drawCourseSelectCourseIconList-5/base_3.c)
 #pragma GLOBAL_ASM("asm.jp/nonmatchings/menu/course_select/course_select_ui/drawCourseSelectCourseIconList.s")
 
 #ifdef NON_MATCHING
 void drawCourseSelectCourseIconList(CourseSelectIconListActor *iconList) {
+    CourseSelectIconListActor *playerItemCountActor;
     s32 playerIndex;
     s32 iconIndex;
     s32 highlightAlpha;
@@ -489,17 +490,16 @@ void drawCourseSelectCourseIconList(CourseSelectIconListActor *iconList) {
     s32 selectedCourseId;
     s32 selectionState;
     s32 splitScreenClipOffset;
-    u8 *playerItemCountActor;
     RacePlayer *player;
 
+    playerItemCountActor = iconList;
     playerIndex = 0;
 
     for (; playerIndex < (s32)gPlayerCount;) {
-        playerItemCountActor = &iconList->itemCounts[playerIndex];
         iconIndex = 0;
         leftClipOffset = (playerIndex >= 2) * 0x88;
 
-        for (; iconIndex < *playerItemCountActor;) {
+        for (; iconIndex < playerItemCountActor->itemCounts[playerIndex];) {
             if (iconIndex < (iconList->itemCounts[playerIndex] - 1)) {
                 for (;;) {
                     player = &gRacePlayers[playerIndex];
@@ -2207,22 +2207,18 @@ void drawCourseSelectPlayerPanels(CourseSelectPlayerPanelListActor *arg0) {
     }
 }
 
-// updateCourseSelectPlayerPanels best standalone match: 96.985% (base_4.c)
+// updateCourseSelectPlayerPanels best standalone match: 99.550% (updateCourseSelectPlayerPanels-6/base_10.c)
 #pragma GLOBAL_ASM("asm.jp/nonmatchings/menu/course_select/course_select_ui/updateCourseSelectPlayerPanels.s")
 
 #ifdef NON_MATCHING
 void updateCourseSelectPlayerPanels(CourseSelectPlayerPanelListActor *arg0) {
-    volatile u8 pad[8];
     s32 next;
     CourseSelectPlayerPanelListActor *actor;
     s32 i;
-    s16 *deltaX;
     s32 count;
     s32 step;
     u16 period;
     u16 timer;
-    s32 zero;
-    u8 *statePtr;
 
     actor = (CourseSelectPlayerPanelListActor *)arg0;
     if (gPlayerCount == 2) {
@@ -2233,24 +2229,23 @@ void updateCourseSelectPlayerPanels(CourseSelectPlayerPanelListActor *arg0) {
 
     i = 0;
     if (count > 0) {
-        statePtr = actor->state;
+
         for (;;) {
             next = i + 1;
-            switch (*statePtr) {
+            switch (actor->state[i]) {
                 case 0:
                     step = 0;
                     period = actor->period[i];
                     for (; step != 0x18;) {
-                        timer = actor->timer[i] + actor->speed[i];
-                        actor->x[i] += *(deltaX = &actor->deltaX[i]);
-                        actor->timer[i] = timer;
+                        actor->x[i] += actor->deltaX[i];
+                        timer = (actor->timer[i] += actor->speed[i]);
                         if (timer >= period) {
                             actor->y[i] += actor->deltaY[i];
                             actor->timer[i] = (unsigned long)timer - period;
                         }
                         step++;
                         if (actor->x[i] == actor->targetX[i]) {
-                            *statePtr = 1;
+                            actor->state[i] = 1;
                             if (count == next) {
                                 gMenuScratch0.task =
                                     createCallbackTask((CallbackTaskCallback)initCourseSelectPreviewModelIn, 0, 0x62);
@@ -2264,7 +2259,7 @@ void updateCourseSelectPlayerPanels(CourseSelectPlayerPanelListActor *arg0) {
                     break;
                 case 1:
                     if (gRacePlayers[i].menuState == 4) {
-                        *statePtr = 2;
+                        actor->state[i] = 2;
                         actor->timer[i] = 0;
                     }
                     break;
@@ -2272,23 +2267,19 @@ void updateCourseSelectPlayerPanels(CourseSelectPlayerPanelListActor *arg0) {
                     step = 0;
                     period = actor->period[i];
                     for (; step != 0x18;) {
-                        timer = actor->timer[i] + actor->speed[i];
                         actor->x[i] -= actor->deltaX[i];
-                        actor->timer[i] = timer;
+                        timer = (actor->timer[i] += actor->speed[i]);
                         if (timer >= period) {
                             actor->y[i] -= actor->deltaY[i];
                             actor->timer[i] = timer - period;
                         }
                         step++;
                         if (count == next) {
-                            zero = 0;
                             if (((gPlayerCount == 2) && (actor->x[0] >= actor->exitTargetX)) ||
-                                ((gPlayerCount >= 3) && (actor->exitTargetX >= actor->x[zero]))) {
-                                s32 j = zero;
-                                if (count > zero) {
-                                    for (; j != count; j++) {
-                                        actor->state[j] = 3;
-                                    }
+                                ((gPlayerCount >= 3) && (actor->exitTargetX >= actor->x[0]))) {
+                                s32 j;
+                                for (j = 0; j < count; j++) {
+                                    actor->state[j] = 3;
                                 }
                                 break;
                             }
@@ -2299,7 +2290,7 @@ void updateCourseSelectPlayerPanels(CourseSelectPlayerPanelListActor *arg0) {
                     break;
             }
             i++;
-            statePtr++;
+
 
             if (!(i != count))
                 break;
