@@ -11,12 +11,12 @@
 #include "game/menu/renderer/menu_renderer.h"
 #include "game/menu/renderer/menu_render_utils.h"
 
-extern f32 D_800E0A40;
+extern f32 gControllerPakContinuePromptViewportAspectRatio;
 
 void initControllerPakContinuePromptFlow(void) {
     requestMusicSequenceBank(3);
     resetAllViewports();
-    configureViewport(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, D_800E0A40);
+    configureViewport(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, gControllerPakContinuePromptViewportAspectRatio);
     gFramebufferRenderInterval.value = 0;
     gCurrentGameTask->callbackData0 = 0xFF;
     gCurrentGameTask->callbackData1 = 0;

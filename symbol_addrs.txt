@@ -3253,3 +3253,7 @@ gRaceResultsSlot0WinCountFormat = 0x800E128C; // rom:0xE1E8C size:0x4
 gRaceResultsSlot1WinCountFormat = 0x800E1298; // rom:0xE1E98 size:0x4
 gRaceResultsSlot2WinCountFormat = 0x800E12A4; // rom:0xE1EA4 size:0x4
 gRaceResultsSlot3WinCountFormat = 0x800E12B0; // rom:0xE1EB0 size:0x4
+gControllerPakContinuePromptViewportAspectRatio = 0x800E0A40; // rom:0xE1640 size:0x4
+gControllerPakFileDeleteViewportAspectRatio = 0x800E0A50; // rom:0xE1650 size:0x4
+gMainMenuViewportAspectRatio = 0x800E08B0; // rom:0xE14B0 size:0x4
+gMainMenuTitleTrademarkText = 0x800E1050; // rom:0xE1C50 size:0x3

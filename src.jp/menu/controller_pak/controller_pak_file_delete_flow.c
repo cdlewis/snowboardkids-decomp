@@ -14,7 +14,7 @@
 #include "game/menu/renderer/menu_renderer.h"
 #include "game/menu/renderer/menu_render_utils.h"
 
-extern f32 D_800E0A50;
+extern f32 gControllerPakFileDeleteViewportAspectRatio;
 extern u8 D_5D4620[];
 extern u8 D_5D4C40[];
 
@@ -25,7 +25,7 @@ void initControllerPakFileDeleteFlow(void) {
         return;
     }
     resetAllViewports();
-    configureViewport(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, D_800E0A50);
+    configureViewport(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, gControllerPakFileDeleteViewportAspectRatio);
     gFramebufferRenderInterval.value = 0;
     gCurrentGameTask->callbackData0 = 0;
     gCurrentGameTask->callbackData1 = 0;

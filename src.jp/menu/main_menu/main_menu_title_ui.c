@@ -12,7 +12,7 @@
 #define TITLE_SCREEN_LOGO_SPRITE_HANDLE ASSET_HANDLE(37)
 #define TITLE_SCREEN_TEXTURE_HANDLE ASSET_HANDLE(0x21)
 
-extern u8 D_800E1050[];
+extern u8 gMainMenuTitleTrademarkText[];
 
 void drawMainMenuTitleLogo(MainMenuTitleLogoActor *arg0) {
     drawMenuTilemapSprite(&arg0->tilemapSprite.render, MENU_TILEMAP_TEXEL_8B, arg0->common.x, arg0->common.y);
@@ -58,7 +58,7 @@ void drawMainMenuTitleOptions(MainMenuTitleOptionsActor *arg0) {
     }
 
     drawMenuSprite(-0x46, 0x54, getRelocatableHeapBlockBase(TITLE_SCREEN_TEXTURE_HANDLE), 0xA, 0x20, 0x20, 0, 0);
-    drawMenuAsciiText(0x68, -0xA, D_800E1050, 0, 0x100);
+    drawMenuAsciiText(0x68, -0xA, gMainMenuTitleTrademarkText, 0, 0x100);
 }
 
 void updateMainMenuTitleOptions(MainMenuTitleOptionsActor *arg0) {

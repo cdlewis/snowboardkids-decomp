@@ -35,7 +35,7 @@
 #define CONTROLLER_PAK_U16_AT(cursor, field) (*(u16 *)((cursor) + CONTROLLER_PAK_SAVE_FIELD_OFFSET(field)))
 #define CONTROLLER_PAK_SAVE_FIELD_OFFSET(field) ((u32) & (((GameSaveData *)0)->field))
 
-extern f32 D_800E08B0;
+extern f32 gMainMenuViewportAspectRatio;
 extern u8 D_5D1DE0[];
 extern u8 D_5D4620[];
 
@@ -742,7 +742,7 @@ void initMainMenu(void) {
     gMainMenuSecretCodeUnlocked = 0;
     gMainMenuSecretCodeStep = 0;
     resetAllViewports();
-    configureMenuViewport(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, D_800E08B0);
+    configureMenuViewport(0, 0xA0, 0x78, 0x120, 0xD0, 0x140, 0xF0, gMainMenuViewportAspectRatio);
     gFramebufferRenderInterval.value = 0;
     loadCompressedRomAsset(&_5DAF30_ROM_END, D_5D1DE0, 0x21);
     loadCompressedRomAsset(D_5D1DE0, D_5D4620, 0x25);
