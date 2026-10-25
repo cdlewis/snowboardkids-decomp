@@ -44,8 +44,8 @@ typedef enum RaceCpuPaceMode {
     RACE_CPU_PACE_YIELD = 3      /* Subtract 1/16 unless ranked fourth. */
 } RaceCpuPaceMode;
 
-/* Per-race state, cleared together by initRacePlayer.
- * Offsets are relative to this struct; unk/pad names retain RacePlayer offsets. */
+/* Player movement, animation, equipment, scoring, and effects during a race.
+ * Field offsets are relative to this struct; unk/pad names use RacePlayer offsets. */
 typedef struct RacePlayerState {
     /* 0x000 */ Vec3i pos;
     /* 0x00C */ Vec3i renderPosition; /* pos with ground offset/correction applied for rendering and effects. */
@@ -259,8 +259,6 @@ typedef struct RacePlayer {
     /* 0x01B */ u8 cpuShotUseChance;
     /* 0x01C */ RacePlayerState state;
 } RacePlayer;
-
-typedef char RacePlayerStateSizeCheck[(sizeof(RacePlayerState) == 0x5F0) ? 1 : -1];
 
 typedef char RacePlayerSizeCheck[(sizeof(RacePlayer) == 0x60C) ? 1 : -1];
 typedef char RacePlayerArraySizeCheck[((sizeof(RacePlayer) * RACE_PLAYER_COUNT) == 0x1830) ? 1 : -1];

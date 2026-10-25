@@ -35,12 +35,6 @@ typedef struct {
 } RacePlayerPreviewStart;
 
 typedef union {
-    Vec3i *vec;
-    char *bytes;
-    u32 index;
-} RacePlayerInitLocal;
-
-typedef union {
     s32 value;
     u64 align;
 } RaceSpawnX;
@@ -107,32 +101,19 @@ void applyRacePlayerProperties(RacePlayer *arg0) {
     player->state.reverseDeceleration = (temp_a1->reverseDeceleration + temp_a2->reverseDeceleration) << 4;
 }
 
-// initRacePlayer best match: 99.927%
-#pragma GLOBAL_ASM("asm.jp/nonmatchings/race/player/race_player_update/initRacePlayer.s")
-
-#ifdef NON_MATCHING
 void initRacePlayer(RacePlayer *player) {
-    RacePlayerInitLocal pos;
-    RacePlayerInitLocal previousPos;
+    u32 i;
+    char *bytes;
     u32 size;
 
-    /* Clear pos through the end of RacePlayer, including race gold (score). */
-    size = (s32)(player + 1) - (s32)&player->state.pos;
-    previousPos.index = 0;
-    if (size != 0) {
-        pos.bytes = (char *)&player->state.pos;
-        for (;;) {
-            previousPos.index++;
-            *pos.bytes = 0;
-            pos.bytes++;
-
-            if (!(previousPos.index < size))
-                break;
-        }
+    size = (char *)(&player->state + 1) - (char *)&player->state;
+    bytes = (char *)&player->state;
+    i = 0;
+    while (i < size) {
+        bytes[i++] = 0;
     }
 
     player->state.loopSoundPitch = 0.0f;
-    pos.vec = &player->state.pos;
     initRaceMotionModelParts(player);
     setRaceMotionAnimation(player, 1);
 
@@ -154,8 +135,7 @@ void initRacePlayer(RacePlayer *player) {
     }
     player->state.pos.z = -0x200000;
 
-    previousPos.vec = &player->state.previousPosition;
-    *previousPos.vec = *pos.vec;
+    player->state.previousPosition = player->state.pos;
     player->state.targetGroundOffset = 0x40000;
     player->state.collisionRadius = 0x80000;
     player->state.collisionHeight = 0xE0000;
@@ -306,7 +286,7 @@ void initRacePlayer(RacePlayer *player) {
     }
 
     if (gMainMenuModeSelection != 0) {
-        *pos.vec = D_800DDC48[(gMainMenuModeSelection - 1) * 4 + player->playerIndex].position;
+        player->state.pos = D_800DDC48[(gMainMenuModeSelection - 1) * 4 + player->playerIndex].position;
         player->state.facingAngle = D_800DDC48[(gMainMenuModeSelection - 1) * 4 + player->playerIndex].facingAngle;
         player->state.coursePathIndex = D_800DDC48[(gMainMenuModeSelection - 1) * 4 + player->playerIndex].surfaceHint;
     }
@@ -317,7 +297,7 @@ void initRacePlayer(RacePlayer *player) {
         player->state.pos.y += 0x40000;
     }
 
-    *previousPos.vec = *pos.vec;
+    player->state.previousPosition = player->state.pos;
     player->state.randomIndex = randomNextMain();
     setRaceCameraMode(player->playerIndex, 1);
 
@@ -325,7 +305,6 @@ void initRacePlayer(RacePlayer *player) {
         createCallbackTaskWithUserId((CallbackTaskCallback)waitForRaceStartPlayerEffect, 0, 1, player->playerIndex);
     }
 }
-#endif
 
 void updateRacePlayers(void) {
     s32 i;
