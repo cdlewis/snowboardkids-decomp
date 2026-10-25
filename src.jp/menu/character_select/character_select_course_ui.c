@@ -2490,34 +2490,74 @@ void initCharacterSelectCourseStatsBadge(CharacterSelectCourseWidgetActor *arg0)
     setCallbackTaskCallback(arg0, (CallbackTaskCallback)updateCharacterSelectCourseStatsBadge);
 }
 
-// clang-format off
-// drawCharacterSelectCoursePlayerStatsPanel best match: 99.899%
-#pragma GLOBAL_ASM("asm.jp/nonmatchings/menu/character_select/character_select_course_ui/drawCharacterSelectCoursePlayerStatsPanel.s")
-
-#ifdef NON_MATCHING
 void drawCharacterSelectCoursePlayerStatsPanel(CharacterSelectCourseWidgetActor *arg0) {
- s16 *characterIds;
- s32 three;
- s32 yOffset;
- char buf[8];
- s32 valueOffset;
- characterIds=gCharacterSelectCourseMenuData.courseOptionsByUnlock[gHighestUnlockedCourse];
- if (gPlayerCount==1) {
- drawMenuSprite(arg0->x,arg0->y,getRelocatableHeapBlockBase(gAssetHandles[0x21]),0x21,0x20,0x20,0,0);
- drawMenuSprite(arg0->x+0x30,arg0->y,getRelocatableHeapBlockBase(gAssetHandles[0x21]),0x22,0x20,0x20,0,0);
- sprintf(buf,gCharacterSelectCourseBestScoreFormat,(&gGameSaveDataBuffer[0].highScores[1])[characterIds[gRaceCourseIndex.signedValue]]);
- drawMenuAsciiText(arg0->x+0x14,arg0->y+0x2A,(u8*)buf,0,0x100);
- valueOffset=0;  yOffset=0;  three=3;  while(yOffset != 0x18) {  sprintf(buf,gCharacterSelectCourseMedalScoreFormat,gCharacterSelectCourseMedalScoreThresholds[gRaceCourseIndex.signedValue * three + valueOffset]);  drawMenuAsciiText(arg0->x+0x28,arg0->y+yOffset+9,(u8*)buf,0,0x100);  yOffset += 8;  valueOffset++;  }  } else {
- drawMenuSprite(arg0->x,arg0->y,getRelocatableHeapBlockBase(gAssetHandles[0x21]),0x26,0x20,0x20,0,0);
- drawMenuSprite(arg0->x,arg0->y+0x10,getRelocatableHeapBlockBase(gAssetHandles[0x21]),0x27,0x20,0x20,0,0);
- for(valueOffset=0,yOffset=0;valueOffset<4;valueOffset++,yOffset+=8) {
- sprintf(buf,gCharacterSelectCoursePlayerRankFormat,gRacePlayers[valueOffset].unk18);
- drawMenuAsciiText(arg0->x+0x40,arg0->y+yOffset+0x10,(u8*)buf,0,0x100);
- }
- }
+    s16 *characterIds;
+    s32 i;
+    char buf[12];
+
+    characterIds = gCharacterSelectCourseMenuData.courseOptionsByUnlock[gHighestUnlockedCourse];
+    if (gPlayerCount == 1) {
+        drawMenuSprite(
+            arg0->x,
+            arg0->y,
+            getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE),
+            0x21,
+            0x20,
+            0x20,
+            0,
+            0
+        );
+        drawMenuSprite(
+            arg0->x + 0x30,
+            arg0->y,
+            getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE),
+            0x22,
+            0x20,
+            0x20,
+            0,
+            0
+        );
+        sprintf(
+            buf,
+            gCharacterSelectCourseBestScoreFormat,
+            (&gGameSaveDataBuffer[0].highScores[1])[characterIds[gRaceCourseIndex.signedValue]]
+        );
+        drawMenuAsciiText(arg0->x + 0x14, arg0->y + 0x2A, (u8 *)buf, 0, 0x100);
+        for (i = 0; i < 3; i++) {
+            sprintf(
+                buf,
+                gCharacterSelectCourseMedalScoreFormat,
+                gCharacterSelectCourseMedalScoreThresholds[gRaceCourseIndex.signedValue * 3 + i]
+            );
+            drawMenuAsciiText(arg0->x + 0x28, arg0->y + (i * 8) + 9, (u8 *)buf, 0, 0x100);
+        }
+    } else {
+        drawMenuSprite(
+            arg0->x,
+            arg0->y,
+            getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE),
+            0x26,
+            0x20,
+            0x20,
+            0,
+            0
+        );
+        drawMenuSprite(
+            arg0->x,
+            arg0->y + 0x10,
+            getRelocatableHeapBlockBase(CHARACTER_SELECT_FRAME_TEXTURE_HANDLE),
+            0x27,
+            0x20,
+            0x20,
+            0,
+            0
+        );
+        for (i = 0; i < 4; i++) {
+            sprintf(buf, gCharacterSelectCoursePlayerRankFormat, gRacePlayers[i].unk18);
+            drawMenuAsciiText(arg0->x + 0x40, arg0->y + (i * 8) + 0x10, (u8 *)buf, 0, 0x100);
+        }
+    }
 }
-#endif
-// clang-format on
 
 // clang-format off
 void updateCharacterSelectCoursePlayerStatsPanel(CharacterSelectCourseWidgetActor *arg0) {
