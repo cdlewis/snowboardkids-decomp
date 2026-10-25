@@ -939,22 +939,19 @@ void func_80047B5C(void) {
     gMenuAsciiFontPaletteIndex = font->paletteIndex;
 }
 
-// drawMenuAsciiChar best standalone match: 99.167% (base_5.c)
-#pragma GLOBAL_ASM("asm.jp/nonmatchings/menu/renderer/menu_render_utils/drawMenuAsciiChar.s")
-
-#ifdef NON_MATCHING
-// clang-format off
 void drawMenuAsciiChar(s16 x, s16 y, u8 character, u16 palette) {
     u32 tile;
     s16 s;
-    tile = (character & 0xFF) - 0x20;
+    s16 t;
+
+    tile = (u8)character;
+    tile -= 0x20;
     if (tile < 0x40) {
         s = (tile & 7) * 8;
-        func_800478A4(x, y, (u16)s, tile & 0x38, palette);
+        t = tile & 0x38;
+        func_800478A4(x, y, s, t, palette);
     }
 }
-// clang-format on
-#endif
 
 // drawMenuAsciiTextDefaultScale best standalone match: 96.143% (base_5.c)
 #pragma GLOBAL_ASM("asm.jp/nonmatchings/menu/renderer/menu_render_utils/drawMenuAsciiTextDefaultScale.s")
